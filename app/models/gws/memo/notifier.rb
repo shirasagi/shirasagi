@@ -18,21 +18,30 @@ class Gws::Memo::Notifier
       cur_user = opts[:cur_user]
       item = opts[:item]
       from = item.try(:workflow_user) || cur_user
+      agent = item.try(:workflow_agent)
 
       title = "[#{I18n.t('workflow.mail.subject.request')}]#{item.name} - #{cur_site.name}"
 
       text = []
-      text << "#{from.name}さんより次の記事について承認依頼が届きました。"
-      text << "承認作業を行ってください。\n"
-
+      text << "#{from.name}さん#{agent ? "（代理: #{agent.name}さん）" : ""}より次の記事について承認依頼が届きました。"
+      text << "承認作業を行ってください。"
+      text << ""
       text << "- タイトル"
-      text << "  #{item.name}\n"
-
-      text << "- 申請者コメント" if comment.present?
-      text << "  #{comment}\n" if comment.present?
-
-      text << "- 記事URL"
-      text << "  #{url}\n"
+      text << "  #{item.name}"
+      text << ""
+      text << "- 申請者"
+      text << "  #{from.name}"
+      if agent
+        text << "  （代理: #{agent.name}）"
+      end
+      text << ""
+      if comment.present?
+        text << "- 申請者コメント"
+        text << "  #{comment}"
+        text << ""
+      end
+      text << "- URL"
+      text << "  #{url}"
 
       opts[:item_title] = title
       opts[:item_text] = text.join("\n")
@@ -47,20 +56,28 @@ class Gws::Memo::Notifier
       comment = opts.delete(:comment)
       cur_site = opts[:cur_site]
       item = opts[:item]
+      from = item.try(:workflow_user)
+      agent = item.try(:workflow_agent)
 
       title = "[#{I18n.t('workflow.mail.subject.approve')}]#{item.name} - #{cur_site.name}"
-      text = <<-TEXT
-      次の申請が承認されました。
 
-      - タイトル
-        #{item.name}
-
-      - 記事URL
-        #{url}
-      TEXT
+      text = []
+      text << "次の申請が承認されました。"
+      text << ""
+      text << "- タイトル"
+      text << "  #{item.name}"
+      text << ""
+      text << "- 申請者"
+      text << "  #{from.name}"
+      if agent
+        text << "  （代理: #{agent.name}）"
+      end
+      text << ""
+      text << "- URL"
+      text << "  #{url}"
 
       opts[:item_title] = title
-      opts[:item_text] = text
+      opts[:item_text] = text.join("\n")
 
       new(opts).deliver!
     end
@@ -73,24 +90,34 @@ class Gws::Memo::Notifier
       cur_site = opts[:cur_site]
       cur_user = opts[:cur_user]
       item = opts[:item]
+      from = item.try(:workflow_user)
+      agent = item.try(:workflow_agent)
 
       title = "[#{I18n.t('workflow.mail.subject.remand')}]#{item.name} - #{cur_site.name}"
-      text = <<-TEXT
-      #{cur_user.name}さんより次の申請について承認依頼が差し戻されました。
-      適宜修正を行い、再度承認依頼を行ってください。
 
-      - タイトル
-        #{item.name}
-
-      - 差し戻しコメント
-        #{comment}
-
-      - 記事URL
-        #{url}
-      TEXT
+      text = []
+      text << "#{cur_user.name}さんより次の申請について承認依頼が差し戻されました。"
+      text << "適宜修正を行い、再度承認依頼を行ってください。"
+      text << ""
+      text << "- タイトル"
+      text << "  #{item.name}"
+      text << ""
+      text << "- 申請者"
+      text << "  #{from.name}"
+      if agent
+        text << "  （代理: #{agent.name}）"
+      end
+      text << ""
+      if comment.present?
+        text << "- 差し戻しコメント"
+        text << "  #{comment}"
+        text << ""
+      end
+      text << "- URL"
+      text << "  #{url}"
 
       opts[:item_title] = title
-      opts[:item_text] = text
+      opts[:item_text] = text.join("\n")
 
       new(opts).deliver!
     rescue => e
@@ -105,21 +132,29 @@ class Gws::Memo::Notifier
       comment = opts.delete(:comment)
       cur_site = opts[:cur_site]
       item = opts[:item]
+      from = item.try(:workflow_user)
+      agent = item.try(:workflow_agent)
 
       title = "[#{I18n.t('workflow.mail.subject.approve')}]#{item.name} - #{cur_site.name}"
-      text = <<-TEXT
-      次の申請が承認されました。
-      申請内容を確認してください。
 
-      - タイトル
-        #{item.name}
-
-      - 記事URL
-        #{url}
-      TEXT
+      text = []
+      text << "次の申請が承認されました。"
+      text << "申請内容を確認してください。"
+      text << ""
+      text << "- タイトル"
+      text << "  #{item.name}"
+      text << ""
+      text << "- 申請者"
+      text << "  #{from.name}"
+      if agent
+        text << "  （代理: #{agent.name}）"
+      end
+      text << ""
+      text << "- URL"
+      text << "  #{url}"
 
       opts[:item_title] = title
-      opts[:item_text] = text
+      opts[:item_text] = text.join("\n")
 
       new(opts).deliver!
     end
@@ -131,24 +166,32 @@ class Gws::Memo::Notifier
       comment = opts.delete(:comment)
       cur_site = opts[:cur_site]
       item = opts[:item]
+      from = item.try(:workflow_user)
+      agent = item.try(:workflow_agent)
 
       title = "[#{I18n.t("workflow.mail.subject.#{item.workflow_state}")}]#{item.name} - #{cur_site.name}"
-      text = <<-TEXT
-      次の申請にコメントがありました。
-      コメントの内容を確認してください。
 
-      - タイトル
-        #{item.name}
-
-      - 記事URL
-        #{url}
-
-      - コメント
-        #{comment}
-      TEXT
+      text = []
+      text << "次の申請にコメントがありました。"
+      text << "コメントの内容を確認してください。"
+      text << ""
+      text << "- タイトル"
+      text << "  #{item.name}"
+      text << ""
+      text << "- 申請者"
+      text << "  #{from.name}"
+      if agent
+        text << "  （代理: #{agent.name}）"
+      end
+      text << ""
+      text << "- コメント"
+      text << "  #{comment}"
+      text << ""
+      text << "- URL"
+      text << "  #{url}"
 
       opts[:item_title] = title
-      opts[:item_text] = text
+      opts[:item_text] = text.join("\n")
 
       new(opts).deliver!
     end

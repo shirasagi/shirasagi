@@ -35,6 +35,12 @@
           <%= t("workflow.user_deleted") %>
         <% end %>
       </dd>
+      <% agent = @item.workflow_agent %>
+      <% if agent.present? %>
+      <dd>
+        <%= t(agent.email.blank? ? "agent_name" : "agent_name_with_email", scope: :workflow, long_name: agent.long_name, email: agent.email) %>
+      </dd>
+      <% end %>
 
       <dt><%= @model.t :workflow_state %></dt>
       <dd><%= t("workflow.state.#{@item.workflow_state}") if @item.workflow_state.present? %></dd>

@@ -195,6 +195,7 @@ class Gws::Workflow::FilesController < ApplicationController
     @new_item.attributes = get_params
     @new_item.in_clone_file = true
     @new_item.workflow_user_id = nil
+    @new_item.workflow_agent_id = nil
     @new_item.workflow_state = nil
     @new_item.workflow_comment = nil
     @new_item.workflow_pull_up = nil

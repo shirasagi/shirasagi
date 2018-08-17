@@ -88,6 +88,8 @@ ja:
       approver_file_droppable: ファイル追加ボタンをクリックするか、ここにファイルをドロップしてください。
     csv:
       approvers_or_circulations: 承認者・回覧者
+    agent_name: "（代理: %{long_name}）"
+    agent_name_with_email: "（代理: %{long_name}(%{email})）"
 
   modules:
     workflow: ワークフロー

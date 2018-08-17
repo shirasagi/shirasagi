@@ -20,6 +20,7 @@ module Workflow::Approver
     cattr_reader(:approver_user_class) { Cms::User }
 
     field :workflow_user_id, type: Integer
+    field :workflow_agent_id, type: Integer
     field :workflow_state, type: String
     field :workflow_comment, type: String
     field :workflow_pull_up, type: String
@@ -62,6 +63,14 @@ module Workflow::Approver
   def workflow_user
     if workflow_user_id.present?
       self.class.approver_user_class.where(id: workflow_user_id).first
+    else
+      nil
+    end
+  end
+
+  def workflow_agent
+    if workflow_agent_id.present?
+      self.class.approver_user_class.where(id: workflow_agent_id).first
     else
       nil
     end
@@ -393,7 +402,9 @@ module Workflow::Approver
   private
 
   def reset_workflow
-    self.unset(:workflow_user_id, :workflow_state, :workflow_comment, :workflow_approvers)
+    self.unset(
+      :workflow_user_id, :workflow_agent_id, :workflow_state, :workflow_comment, :workflow_approvers, :workflow_circulations
+    )
   end
 
   def cancel_request

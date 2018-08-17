@@ -32,9 +32,12 @@ class Gws::Workflow::PagesController < ApplicationController
     current_level = @item.workflow_current_level
     current_workflow_approvers = @item.workflow_approvers_at(current_level)
     current_workflow_approvers.each do |workflow_approver|
-      args = { f_uid: @item.workflow_user_id, t_uid: workflow_approver[:user_id],
-               site: @cur_site, page: @item,
-               url: params[:url], comment: params[:workflow_comment] }
+      args = {
+        f_uid: @item.workflow_user_id,
+        agent_uid: @item.workflow_agent_id,
+        t_uid: workflow_approver[:user_id],
+        site: @cur_site, page: @item, url: params[:url], comment: params[:workflow_comment]
+      }
       Workflow::Mailer.request_mail(args).deliver_now if validate_domain(args[:t_uid])
 
       Gws::Memo::Notifier.deliver_workflow_request!(
@@ -57,7 +60,13 @@ class Gws::Workflow::PagesController < ApplicationController
     end
 
     @item.approved = nil
-    @item.workflow_user_id = @cur_user._id
+    if params[:workflow_agent_type].to_s == "agent"
+      @item.workflow_user_id = Gws::User.site(@cur_site).in(id: params[:workflow_users]).first.id
+      @item.workflow_agent_id = @cur_user.id
+    else
+      @item.workflow_user_id = @cur_user.id
+      @item.workflow_agent_id = nil
+    end
     @item.workflow_state   = @model::WORKFLOW_STATE_REQUEST
     @item.workflow_comment = params[:workflow_comment]
     @item.workflow_pull_up = params[:workflow_pull_up]
@@ -85,7 +94,13 @@ class Gws::Workflow::PagesController < ApplicationController
     raise "403" unless @item.allowed?(:edit, @cur_user)
 
     @item.approved = nil
-    @item.workflow_user_id = @cur_user.id
+    if params[:workflow_agent_type].to_s == "agent"
+      @item.workflow_user_id = Gws::User.site(@cur_site).in(id: params[:workflow_users]).first.id
+      @item.workflow_agent_id = @cur_user.id
+    else
+      @item.workflow_user_id = @cur_user.id
+      @item.workflow_agent_id = nil
+    end
     @item.workflow_state = @model::WORKFLOW_STATE_REQUEST
     @item.workflow_comment = params[:workflow_comment]
     save_workflow_approvers = @item.workflow_approvers
@@ -150,7 +165,8 @@ class Gws::Workflow::PagesController < ApplicationController
       # finished workflow
       if validate_domain(@item.workflow_user_id)
         Workflow::Mailer.send_approve_mails(
-          f_uid: @cur_user.id, t_uids: [ @item.workflow_user_id ],
+          f_uid: @cur_user.id,
+          t_uids: [ @item.workflow_user_id, @item.workflow_agent_id ].compact,
           site: @cur_site, page: @item,
           url: params[:url], comment: params[:remand_comment]
         )
@@ -158,8 +174,8 @@ class Gws::Workflow::PagesController < ApplicationController
 
       Gws::Memo::Notifier.deliver_workflow_approve!(
         cur_site: @cur_site, cur_group: @cur_group, cur_user: @cur_user,
-        to_users: Gws::User.where(id: @item.workflow_user_id), item: @item,
-        url: params[:url], comment: params[:remand_comment]
+        to_users: Gws::User.in(id: [ @item.workflow_user_id, @item.workflow_agent_id ].compact),
+        item: @item, url: params[:url], comment: params[:remand_comment]
       ) rescue nil
 
       if @item.move_workflow_circulation_next_step
@@ -193,6 +209,7 @@ class Gws::Workflow::PagesController < ApplicationController
       recipients = []
       if @item.workflow_state == @model::WORKFLOW_STATE_REMAND
         recipients << @item.workflow_user_id
+        recipients << @item.workflow_agent_id if @item.workflow_agent_id.present?
       else
         prev_level_approvers = @item.workflow_approvers_at(@item.workflow_current_level)
         recipients += prev_level_approvers.map { |hash| hash[:user_id] }
@@ -243,7 +260,7 @@ class Gws::Workflow::PagesController < ApplicationController
     if comment.present? || file_ids.present?
       Gws::Memo::Notifier.deliver_workflow_comment!(
         cur_site: @cur_site, cur_group: @cur_group, cur_user: @cur_user,
-        to_users: [ @item.workflow_user ], item: @item,
+        to_users: [ @item.workflow_user, @item.workflow_agent ].compact, item: @item,
         url: params[:url], comment: comment
       )
     end

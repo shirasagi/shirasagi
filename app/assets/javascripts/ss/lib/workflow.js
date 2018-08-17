@@ -99,6 +99,22 @@ SS_Workflow.prototype = {
 
     return circulations;
   },
+  agentType: function() {
+    return this.$el.find('input[name=agent_type]:checked').val();
+  },
+  collectDelegatees: function() {
+    var delegatees = [];
+
+    if (this.agentType() !== "agent") {
+      return delegatees;
+    }
+
+    this.$el.find("input[name='workflow_delegatees']").each(function() {
+      delegatees.push($(this).prop("value"));
+    });
+
+    return delegatees;
+  },
   collectCirculationAttachmentUses: function() {
     var uses = [];
 
@@ -171,7 +187,9 @@ SS_Workflow.prototype = {
         forced_update_option: forced_update_option,
         workflow_circulations: circulations,
         workflow_circulation_attachment_uses: this.collectCirculationAttachmentUses(),
-        workflow_file_ids: workflow_file_ids
+        workflow_file_ids: workflow_file_ids,
+        workflow_agent_type: this.agentType(),
+        workflow_users: this.collectDelegatees()
       },
       success: function (data) {
         if (data["workflow_alert"]) {

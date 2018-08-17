@@ -85,7 +85,7 @@ class Gws::Workflow::WizardController < ApplicationController
     criteria = @item.approver_user_class.site(@cur_site)
     criteria = criteria.active
     criteria = criteria.in(group_ids: group_ids)
-    criteria = criteria.nin(id: same_level_user_ids + [ @item.workflow_user_id ])
+    criteria = criteria.nin(id: same_level_user_ids + [ @item.workflow_user_id, @item.workflow_agent_id ].compact)
     criteria = criteria.search(params[:s])
     criteria = criteria.order_by_title(@cur_site)
 

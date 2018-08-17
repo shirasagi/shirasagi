@@ -141,12 +141,22 @@ class Gws::Workflow::FileEnumerator < Enumerator
 
   def to_request_user_name(wf_file)
     if wf_file.workflow_member.present?
-      "#{wf_file.workflow_member.name}(#{I18n.t("workflow.member")})"
+      user_name = "#{wf_file.workflow_member.name}(#{I18n.t("workflow.member")})"
     elsif wf_file.workflow_user.present?
-      "#{wf_file.workflow_user.long_name}(#{wf_file.workflow_user.email})"
+      user_name = "#{wf_file.workflow_user.long_name}(#{wf_file.workflow_user.email})"
     else
-      nil
+      user_name = nil
     end
+    return nil if user_name.blank?
+
+    agent = wf_file.workflow_agent
+    return user_name if agent.blank?
+
+    agent_name = I18n.t(
+      agent.email.blank? ? "agent_name" : "agent_name_with_email",
+      scope: :workflow, long_name: agent.long_name, email: agent.email
+    )
+    user_name + agent_name
   end
 
   def to_workflow_state(wf_file)
