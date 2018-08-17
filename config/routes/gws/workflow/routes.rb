@@ -50,5 +50,9 @@ SS::Application.routes.draw do
     get "/wizard/:id/reroute" => "wizard#reroute"
     post "/wizard/:id/reroute" => "wizard#do_reroute"
     match "/wizard/:id" => "wizard#index", via: [:get, :post]
+
+    namespace "apis" do
+      get "delegatees" => "delegatees#index"
+    end
   end
 end

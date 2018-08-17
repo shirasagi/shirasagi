@@ -28,6 +28,10 @@ ja:
     labels:
       user: 作成者
       form: 帳票
+    search_delegatees:
+      index: 委任者を選択する
+      select: 委任者を設定する
+      search: 検索
 
   modules:
     gws/workflow: ワークフロー
