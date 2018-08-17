@@ -172,6 +172,11 @@ class Gws::Workflow::File
     SS::File.in(id: attachment_ids)
   end
 
+  def agent_enabled?
+    return false if form.blank?
+    form.agent_enabled?
+  end
+
   private
 
   def rewrite_file_ref
