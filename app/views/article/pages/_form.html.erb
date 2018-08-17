@@ -1,23 +1,31 @@
-<dl class="see">
-  <dt><%= @model.t :name %><%= @model.tt :title %></dt>
-  <dd><%= f.text_field :name %></dd>
+<div class="see">
+  <div class="col12 mb-3">
+    <label><%= @model.t :name %><%= @model.tt :title %></label>
+    <dd><%= f.text_field :name, class: "form-control" %></dd>
+  </div>
 
-  <dt><%= @model.t :index_name %><%= @model.tt :title_for_index %></dt>
-  <dd><%= f.text_field :index_name %></dd>
+  <div class="col12 mb-3">
+    <label><%= @model.t :index_name %><%= @model.tt :title_for_index %></label>
+    <%= f.text_field :index_name, class: "form-control" %>
+  </div>
 
-  <dt><%= @model.t :basename %><%= @model.tt :filename %></dt>
-  <dd>
-    <%= link_to t('ss.links.input'), '#', onclick: '$("#article-pages-form-dd-input").toggle(); $(this).hide(); return false;' %>
-    <%= f.text_field :basename, id: "article-pages-form-dd-input", class: "filename", style: "display: none" %>
-  </dd>
+  <div class="col12 mb-3">
+    <label><%= @model.t :basename %><%= @model.tt :filename %></label>
+    <%= link_to t('ss.links.input'), '#', onclick: '$("#article-pages-form-dd-input").toggle(); $(this).hide(); return false;', class: "btn btn-outline-secondary" %>
+    <%= f.text_field :basename, id: "article-pages-form-dd-input", class: "filename form-control", style: "display: none" %>
+  </div>
 
-  <dt><%= @model.t :layout_id %><%= @model.tt :layout_id %></dt>
-  <dd><%= f.select :layout_id, ancestral_layouts(@item.parent), include_blank: " " %></dd>
+  <div class="col12 mb-3">
+    <label><%= @model.t :layout_id %><%= @model.tt :layout_id %></label>
+    <%= f.select :layout_id, ancestral_layouts(@item.parent), include_blank: " ", class: "form-control" %>
+  </div>
 
   <%= render file: 'cms/pages/_form_body_parts', locals: { f: f } %>
 
   <%= render file: 'cms/pages/_form_template_form', locals: { f: f } %>
 
-  <dt><%= @model.t :order %><%= @model.tt :order %></dt>
-  <dd><%= f.number_field :order %></dd>
-</dl>
+  <div class="col12 mb-3">
+    <label><%= @model.t :order %><%= @model.tt :order %></label>
+    <%= f.number_field :order, class: "form-control" %>
+  </div>
+</div>

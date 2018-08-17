@@ -639,6 +639,9 @@ td {
   .dropdown-menu a {
     width: 50%;
   }
+  .nav-tabs {
+    margin-bottom: -15px;
+  }
 }
 // -------------------------------------------------------------------------------------------------
 // main-navi
@@ -1419,63 +1422,6 @@ h2.h4 + .more {
     table.index thead th:after {
       display: none;
     }
-  }
-}
-table.index {
-  width: 100%;
-  border: $border-gray5;
-  border-collapse: separate;
-  background: $white;
-  tr:nth-child(2n) {
-    background: #f8f8f8;
-  }
-  tr.current, tr:hover {
-    background: $gray1;
-  }
-  th, td {
-    padding: 6px 18px;
-    @include media-breakpoint-down(sm) { display: inline-block; }
-  }
-  th.checkbox,
-  td.checkbox {
-    width: 38px;
-    padding-right: 0;
-  }
-  thead th {
-    border-bottom: $border-gray5;
-    background: $gray1;
-    color: $gray2;
-    &.deselect {
-      width: 100px;
-    }
-    @include media-breakpoint-down(sm) {
-      display: inline-block;
-      padding: 5px 0;
-      border: none;
-      background: none;
-      @include media-breakpoint-down(sm) { width: auto !important; }
-      &:after {
-        content: "/";
-      }
-      &:first-child {
-        padding-left: 16px;
-      }
-      &:last-child {
-        padding-right: 16px;
-      }
-    }
-  }
-  .toggle {
-    cursor: pointer;
-  }
-  @include media-breakpoint-down(sm) {
-    thead {
-      background: $gray1;
-    }
-  }
-  .padding {
-    display: inline-block;
-    width: 15px;
   }
 }
 table.index.data-table {

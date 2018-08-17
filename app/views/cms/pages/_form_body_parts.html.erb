@@ -1,9 +1,11 @@
 <% if @item.respond_to?(:body_parts) && Cms::BodyLayout.site(@cur_site).present? %>
-  <% if Cms::BodyLayout.allowed?(:edit, @cur_user, site: @cur_site) %>
-    <dt><%= @model.t :body_layout_id %><%= @model.tt :body_layout_id %></dt>
-    <dd><%= f.select :body_layout_id, ancestral_body_layouts, include_blank: " " %></dd>
-  <% elsif @item.body_layout %>
-    <dt><%= @model.t :body_layout_id %><%= @model.tt :body_layout_id %></dt>
-    <dd><%= @item.body_layout.name %><%= f.hidden_field :body_layout_id %></dd>
-  <% end %>
+  <div class="col12 mb-3">
+    <% if Cms::BodyLayout.allowed?(:edit, @cur_user, site: @cur_site) %>
+      <label><%= @model.t :body_layout_id %><%= @model.tt :body_layout_id %></label>
+      <%= f.select :body_layout_id, ancestral_body_layouts, include_blank: " ", class: "form-control" %>
+    <% elsif @item.body_layout %>
+      <label><%= @model.t :body_layout_id %><%= @model.tt :body_layout_id %></label>
+      <%= @item.body_layout.name %><%= f.hidden_field :body_layout_id %>
+    <% end %>
+  </div>
 <% end %>

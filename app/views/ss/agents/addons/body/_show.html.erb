@@ -1,8 +1,6 @@
 <% return if @item.send(:html).blank? %>
 
-<dl class="see mod-ss-body">
-  <dd class="wide">
-    <%= html_editor "#mod-ss-body", height: "400px", readonly: true %>
-    <%= text_area_tag "mod-ss-body", @item.html, style: "height: 400px;" %>
-  </dd>
-</dl>
+<div class="see mod-ss-body pt-5">
+  <%= html_editor "#mod-ss-body", height: "400px", readonly: true %>
+  <%= text_area_tag "mod-ss-body", @item.html, style: "height: 400px;" %>
+</div>

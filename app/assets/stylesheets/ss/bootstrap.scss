@@ -12,6 +12,16 @@
   th {
     white-space: nowrap;
   }
+  td.categories ul {
+    margin: 0;
+    padding: 0;
+    li:after {
+      content: "、";
+    }
+    li:last-child:after {
+      content: "";
+    }
+  }
 }
 // form
 textarea.form-control {
@@ -38,4 +48,10 @@ textarea.form-control {
   i {
     margin-right: .5rem;
   }
+}
+// -------------------------------------------------------------------------------------------------
+// nav-tabs
+.nav-tabs .nav-link.active {
+  border-color: #009688;
+  color: #009688;
 }

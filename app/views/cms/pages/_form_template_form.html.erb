@@ -11,11 +11,12 @@
 
     cur_form = @item.form
   %>
-  <dt><%= @model.t :form_id %><%= @model.tt :form_id %></dt>
-  <dd>
+  <div class="col12 mb-3">
+    <label><%= @model.t :form_id %><%= @model.tt :form_id %></label>
     <div class="input-group">
-      <%= f.select(:form_id, options_from_collection_for_select(ancestral_forms, :id, :name, selected: cur_form.try(:id)), { include_blank: true }, { style: 'flex-grow: unset;' }) %>
-      <%= button_tag(t('ss.buttons.change'), type: :button, class: %w(btn btn-form-change)) %>
+      
+      <%= f.select(:form_id, options_from_collection_for_select(ancestral_forms, :id, :name, selected: cur_form.try(:id)), { include_blank: true }) %>
+      <div class="input-group-append"><%= button_tag(t('ss.buttons.change'), type: :button, class: %w(btn btn-outline-secondary)) %></div>
     </div>
 
     <%= jquery do %>
@@ -23,5 +24,5 @@
         formUrlTemplate: <%== cms_apis_form_path(id: ':id', item_type: 'page', item_id: @item.new_record? ? nil : @item.id).to_json %>
       });
     <% end %>
-  </dd>
+  </div>
 <% end %>

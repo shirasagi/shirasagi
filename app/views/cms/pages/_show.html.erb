@@ -1,35 +1,48 @@
-<dl class="see">
-  <dt><%= @model.t :name %></dt>
-  <dd><%= @item.send :name %></dd>
+<fieldset class="see" disabled>
+  <h2 class="h4">基本情報</h2>
+  <div class="col12 mb-3">
+    <label><%= @model.t :name %></label>
+    <input class="form-control" type="text" value="<%= @item.send :name %>" />
+  </div>
 
-  <dt><%= @model.t :index_name %></dt>
-  <dd><%= @item.send :index_name %></dd>
+  <div class="col12 mb-3">
+    <label><%= @model.t :index_name %></label>
+    <input class="form-control" type="text" value="<%= @item.send :index_name %>" />
+  </div>
 
-  <dt><%= @model.t :basename %></dt>
-  <dd><%= @item.send :basename %></dd>
-  <dd>
-    <%= @item.public? ? link_to(@item.full_url, @item.full_url, target: "_blank") : @item.full_url %>
-    (
-    <% if @cur_site.mobile_enabled? %>
-      <%= link_to t("cms.preview_pc_page"), cms_preview_path(path: @item.preview_path), target: "_blank" %>
-      |
-      <%= link_to t("cms.preview_mobile_page"), cms_mobile_preview_path(path: @item.preview_path), target: :_blank %>
-    <% else %>
-      <%= link_to t("cms.preview_page"), cms_preview_path(path: @item.preview_path), target: "_blank" %>
-    <% end %>
-    )
-  </dd>
+  <div class="col12 mb-3">
+    <label><%= @model.t :basename %></label>
+    <input class="form-control" type="text" value="<%= @item.send :basename %>" />
+    <small class="form-text text-muted">
+      <%= @item.public? ? link_to(@item.full_url, @item.full_url, target: "_blank") : @item.full_url %>
+      (
+      <% if @cur_site.mobile_enabled? %>
+        <%= link_to t("cms.preview_pc_page"), cms_preview_path(path: @item.preview_path), target: "_blank" %>
+        |
+        <%= link_to t("cms.preview_mobile_page"), cms_mobile_preview_path(path: @item.preview_path), target: :_blank %>
+      <% else %>
+        <%= link_to t("cms.preview_page"), cms_preview_path(path: @item.preview_path), target: "_blank" %>
+      <% end %>
+      )
+    </small>
+  </div>
 
   <% if @item.send(:layout_id).present? %>
-  <dt><%= @model.t :layout_id %></dt>
-  <dd><%= tryb{@item.layout.name} %></dd>
+  <div class="col12 mb-3">
+    <label><%= @model.t :layout_id %></label>
+    <input class="form-control" type="text" value="<%= tryb{@item.layout.name} %>" />
+  </div>
   <% end %>
 
   <% if @item.send(:body_layout_id).present? %>
-  <dt><%= @model.t :body_layout_id %></dt>
-  <dd><%= tryb{@item.body_layout.name} %></dd>
+  <div class="col12 mb-3">
+    <label><%= @model.t :body_layout_id %></label>
+    <input class="form-control" type="text" value="<%= tryb{@item.body_layout.name} %>" />
+  </div>
   <% end %>
 
-  <dt><%= @model.t :order %></dt>
-  <dd><%= @item.send :order %></dd>
-</dl>
+  <div class="col12 mb-3">
+    <label><%= @model.t :order %></label>
+    <input class="form-control" type="text" value="<%= @item.send :order %>" />
+  </div>
+</fieldset>

@@ -1,8 +1,9 @@
 <% return if @item.send(:html).blank? %>
 
-<dl class="see mod-cms-body">
-  <dd class="wide">
+<div class="see mod-cms-body pt-5">
+  <div class="col12 mb-3">
+    <h2 class="h4">本文</h2>
     <%= html_editor "#mod-cms-body", height: "400px", readonly: true %>
     <%= text_area_tag "mod-cms-body", @item.html, style: "height: 400px;" %>
-  </dd>
-</dl>
+  </div>
+</div>
