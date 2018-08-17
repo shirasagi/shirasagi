@@ -159,4 +159,9 @@ module SS::StandardHelper
       end
     end
   end
+
+  def define_ss_table(&block)
+    builder = SS::TableBuilder.new(binding)
+    builder.build(&block)
+  end
 end

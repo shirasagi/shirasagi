@@ -31,77 +31,99 @@
   </div>
 </div>
 
+<% @table_def ||= define_ss_table do |tbl| %>
+  <% tbl.column(class: "check") do %>
+    <% tbl.th do %><input type="checkbox" /><% end %>
+    <% tbl.td do |item| %><div class="checkbox"><input type="checkbox" name="ids[]" value="<%= item.id %>" /></div><% end %>
+  <% end %>
+  <% tbl.column(class: "state") do %>
+    <% tbl.th t("cms.status") %>
+    <% tbl.td do |item| %><span class="public"><%= t "ss.state.#{item.status}" %></span><% end %>
+  <% end %>
+  <% tbl.column(class: "title") do %>
+    <% tbl.th t("cms.apis.contents.title") %>
+    <% tbl.td do |item| %>
+      <% if @index_title %>
+        <% @index_title.call item %>
+      <% else %>
+        <% title = item.try(:name) || item.try(:title) || item.try(:filename) || "##{item.id}" %>
+        <%= link_to title, { action: :show, id: item } %>
+      <% end %>
+    <% end %>
+  <% end %>
+  <% tbl.column(class: "categories") do %>
+    <% tbl.th "カテゴリー" %>
+    <% tbl.td do |item| %>
+      <% if item.categories.present? %>
+        <ul>
+        <% item.categories.each do |cate| %>
+          <li><%= cate.name %></li>
+        <% end %>
+        </ul>
+      <% end %>
+    <% end %>
+  <% end %>
+  <% tbl.column(class: "author") do %>
+    <% tbl.th "作成者" %>
+    <% tbl.td do |item| %>
+      <% if item.user.present? %>
+        <%= item.user.long_name %>
+      <% end %>
+    <% end %>
+  <% end %>
+  <% tbl.column(class: "filename") do %>
+    <% tbl.th t("cms.options.sort.filename") %>
+    <% tbl.td do |item| %>
+      <% if item.try(:filename) %>
+        <% if params.dig(:s, :target) == 'descendant' %>
+          <%= item.filename %>
+        <% else %>
+          <%= File.basename item.filename %>
+        <% end %>
+      <% end %>
+    <% end %>
+  <% end %>
+  <% tbl.column(class: "tags") do %>
+    <% tbl.th "タグ" %>
+    <% tbl.td do |item| %>
+      <% if item.try(:tags) %>
+        <%= item.tags.join(",") %>
+      <% end %>
+    <% end %>
+  <% end %>
+  <% tbl.column(class: "datetime") do %>
+    <% tbl.th t("cms.options.sort.updated_1") %>
+    <% tbl.td do |item| %>
+      <% if item.try(:updated) %>
+        <%= item.updated.strftime("%Y/%m/%d %H:%M") %>
+      <% end %>
+    <% end %>
+  <% end %>
+<% end %>
+
 <div class="row">
   <div class="col mb-4">
     <div class="table-responsive">
       <table class="table table-striped">
         <thead>
-          <tr>
-          <thead>
-            <th class="check"><input type="checkbox" /></th>
-            <th><%= t "cms.status" %></th>
-            <th><%= t "cms.apis.contents.title" %></th>
-            <th>カテゴリー</th>
-            <th>作成者</th>
-            <th><%= t "cms.options.sort.filename" %></th>
-            <th>タグ</th>
-            <th><%= t "cms.options.sort.updated_1" %></th>
-            <th></th>
-          </tr>
+        <tr>
+          <% @table_def.columns.each do |column| %>
+            <%= column.render_th %>
+          <% end %>
+          <th></th>
+        </tr>
         </thead>
         <tbody>
-          <% @items.each do |item| %>
+        <% @items.each do |item| %>
           <% if @item_decorator %>
             <% item = @item_decorator.call(item)  %>
-          <% else %>
+          <% elsif item.respond_to?(:becomes_with_route) %>
             <% item = item.becomes_with_route %>
           <% end %>
           <tr>
-            <td class="check"><div class="checkbox"><input type="checkbox" name="ids[]" value="<%= item.id %>" /></div></td>
-            <% if item.try(:status) %>
-            <td class="state">
-              <span class="public"><%= t "ss.state.#{item.status}" %></span>
-            </td>
-            <% end %>
-            <td class="title">
-              <% if @index_title %>
-                <% @index_title.call item %>
-              <% else %>
-                <% title = item.try(:name) || item.try(:title) || item.try(:filename) || "##{item.id}" %>
-                <%= link_to title, { action: :show, id: item } %>
-              <% end %>
-            </td>
-            <td class="categories">
-              <% if item.categories.present? %>
-                <ul>
-                <% item.categories.each do |cate| %>
-                  <li><%= cate.name %></li>
-                <% end %>
-                </ul>
-              <% end %>
-            </td>
-            <td class="auther">
-              <% if item.user.present? %>
-                <%= item.user.long_name %>
-              <% end %>
-            </td>
-            <% if item.try(:filename) %>
-            <td class="filename">
-              <% if params.dig(:s, :target) == 'descendant' %>
-              <%= item.filename %>
-              <% else %>
-              <%= File.basename item.filename %>
-              <% end %>
-            </td>
-            <% end %>
-            <% if item.try(:tags) %>
-              <td class="tags"><%= item.tags.join(",") %></td>
-            <% end %>
-            <% if item.try(:updated) %>
-            <td class="datetime">
-              <%= item.updated.strftime("%Y/%m/%d %H:%M") %>
-            </td>
-            <% end %>              
+          <% @table_def.columns.each do |column| %>
+            <%= column.render_td(item) %>
+          <% end %>
             <td>
               <div class="dropdown">
                 <button class="btn bmd-btn-icon dropdown-toggle" type="button" id="ex1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="material-icons">more_vert</i></button>
@@ -141,7 +163,7 @@
               </div>
             </td>
           </tr>
-          <% end %>
+        <% end %>
         </tbody>
       </table>
     </div>
