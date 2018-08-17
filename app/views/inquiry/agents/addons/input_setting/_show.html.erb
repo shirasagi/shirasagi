@@ -1,50 +1,69 @@
-<dl class="see mod-inquiry-input-setting">
-  <dt><%= @model.t :input_type %></dt>
-  <dd><%= @item.label :input_type %></dd>
+<fieldset class="see mod-inquiry-input-setting" disabled>
+  <h2 class="h4">入力設定</h2>
+  <div class="col12 mb-3">
+    <label><%= @model.t :input_type %></label>
+    <input class="form-control" type="text" value="<%= @item.label :input_type %>" />
+  </div>
 
-  <dt><%= @model.t :select_options %></dt>
-  <dd><%=br @item.send(:select_options).join("\n") %></dd>
+  <div class="col12 mb-3">
+    <label><%= @model.t :select_options %></label>
+    <input class="form-control" type="text" value="<%=br @item.send(:select_options).join("\n") %>" />
+  </div>
 
-  <dt><%= @model.t :required %></dt>
-  <dd><%= @item.label :required %></dd>
+  <div class="col12 mb-3">
+    <label><%= @model.t :required %></label>
+    <input class="form-control" type="text" value="<%= @item.label :required %>" />
+  </div>
 
   <% if @item.send(:required_in_select_form) %>
-  <dt><%= @model.t :required_in_select_form %></dt>
-  <dd><%= @item.send(:required_in_select_form).join(", ") %></dd>
+  <div class="col12 mb-3">
+    <label><%= @model.t :required_in_select_form %></label>
+    <input class="form-control" type="text" value="<%= @item.send(:required_in_select_form).join(", ") %>" />
+  </div>
   <% end %>
 
-  <dt><%= @model.t :additional_attr %></dt>
-  <dd><%= @item.send :additional_attr %></dd>
+  <div class="col12 mb-3">
+    <label><%= @model.t :additional_attr %></label>
+    <input class="form-control" type="text" value="<%= @item.send :additional_attr %>" />
+  </div>
 
-  <dt><%= @model.t :input_confirm %></dt>
-  <dd><%= @item.label :input_confirm %></dd>
+  <div class="col12 mb-3">
+    <label><%= @model.t :input_confirm %></label>
+    <input class="form-control" type="text" value="<%= @item.label :input_confirm %>" />
+  </div>
 
-  <dt><%= @model.t :question %></dt>
-  <dd><%= @item.label :question %></dd>
+  <div class="col12 mb-3">
+    <label><%= @model.t :question %></label>
+    <input class="form-control" type="text" value="<%= @item.label :question %>" />
+  </div>
 
-  <dt><%= @model.t :max_upload_file_size %></dt>
-  <dd><%= @item.send :max_upload_file_size %></dd>
+  <div class="col12 mb-3">
+    <label><%= @model.t :max_upload_file_size %></label>
+    <input class="form-control" type="text" value="<%= @item.send :max_upload_file_size %>" />
+  </div>
 
   <% transfer = @item.transfers.try(:first) %>
   <% if transfer.present? && (transfer[:keyword].present? || transfer[:email].present?) %>
-  <dt><%= @model.t :transfers %></dt>
-  <dd>
-    <table class="index">
-      <thead>
-        <tr>
-          <th class="keyword"><%= @model.t(:transfers) %></th>
-          <th class="email"><%= @cur_user.t(:email) %></th>
-        </tr>
-      </thead>
-      <tbody>
-        <% @item.transfers.each do |transfer| %>
-        <tr class="keywords">
-          <td><%= transfer[:keyword] %></td>
-          <td><%= transfer[:email] %></td>
-        </tr>
-        <% end %>
-      </tbody>
-    </table>
-  </dd>
+  <div class="col12 mb-3">
+    <label><%= @model.t :transfers %></label>
+    <div>
+      <table class="index">
+        <thead>
+          <tr>
+            <th class="keyword"><%= @model.t(:transfers) %></th>
+            <th class="email"><%= @cur_user.t(:email) %></th>
+          </tr>
+        </thead>
+        <tbody>
+          <% @item.transfers.each do |transfer| %>
+          <tr class="keywords">
+            <td><%= transfer[:keyword] %></td>
+            <td><%= transfer[:email] %></td>
+          </tr>
+          <% end %>
+        </tbody>
+      </table>
+    </div>
+  </div>
   <% end %>
-</dl>
+</fieldset>

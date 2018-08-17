@@ -1,24 +1,26 @@
-<nav class="nav-menu">
-  <% if params[:action] =~ /index/ %>
-    <% if @model.allowed?(:edit, @cur_user, site: @cur_site, node: @cur_node) %>
-      <%= link_to t('ss.links.new'), action: :new %>
-      <%= link_to t('ss.links.download'), action: :download %>
+<div class="d-flex flex-wrap align-item-center justify-content-between mb-0">
+  <nav>
+    <% if params[:action] =~ /index/ %>
+      <% if @model.allowed?(:edit, @cur_user, site: @cur_site, node: @cur_node) %>
+        <%= link_to t('ss.links.new'), { action: :new }, class: "btn btn-outline-secondary" %>
+        <%= link_to t('ss.links.download'), { action: :download }, class: "btn btn-outline-secondary" %>
+      <% end %>
+    <% elsif params[:action] =~ /new|create|reply/ %>
+      <%= link_to t('ss.links.back_to_index'), { action: :index }, class: "btn btn-outline-secondary" %>
+    <% elsif params[:action] =~ /edit|update|delete/ %>
+      <% if @item.allowed?(:read, @cur_user, site: @cur_site, node: @cur_node) %>
+        <%= link_to t('ss.links.back_to_show'), { action: :show, id: @item }, class: "btn btn-outline-secondary" %>
+      <% end %>
+      <%= link_to t('ss.links.back_to_index'), action: :index %>
+    <% else %>
+      <% if @item.allowed?(:edit, @cur_user, site: @cur_site, node: @cur_node) %>
+        <%= link_to t('ss.links.edit'), { action: :edit, id: @item }, class: "btn btn-outline-secondary" %>
+        <%= link_to t('ss.links.reply'), action: :new_reply, id: @item unless @item.topic? %>
+      <% end %>
+      <% if @item.allowed?(:delete, @cur_user, site: @cur_site, node: @cur_node) %>
+        <%= link_to t('ss.links.delete'), { action: :delete, id: @item }, class: "btn btn-outline-secondary" %>
+      <% end %>
+      <%= link_to t('ss.links.back_to_index'), { action: :index }, class: "btn btn-outline-secondary" %>
     <% end %>
-  <% elsif params[:action] =~ /new|create|reply/ %>
-    <%= link_to t('ss.links.back_to_index'), action: :index %>
-  <% elsif params[:action] =~ /edit|update|delete/ %>
-    <% if @item.allowed?(:read, @cur_user, site: @cur_site, node: @cur_node) %>
-      <%= link_to t('ss.links.back_to_show'), action: :show, id: @item %>
-    <% end %>
-    <%= link_to t('ss.links.back_to_index'), action: :index %>
-  <% else %>
-    <% if @item.allowed?(:edit, @cur_user, site: @cur_site, node: @cur_node) %>
-      <%= link_to t('ss.links.edit'), action: :edit, id: @item %>
-      <%= link_to t('ss.links.reply'), action: :new_reply, id: @item unless @item.topic? %>
-    <% end %>
-    <% if @item.allowed?(:delete, @cur_user, site: @cur_site, node: @cur_node) %>
-      <%= link_to t('ss.links.delete'), action: :delete, id: @item %>
-    <% end %>
-    <%= link_to t('ss.links.back_to_index'), action: :index %>
-  <% end %>
-</nav>
+  </nav>
+</div>

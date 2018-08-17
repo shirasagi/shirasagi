@@ -1,19 +1,31 @@
-<dl class="see">
-  <dt><%= @model.t :name %></dt>
-  <dd><%= f.text_field :name %></dd>
+<div class="see">
+  <div class="mb-3">
+    <label><%= @model.t :name %></label>
+    <%= f.text_field :name, class: "form-control" %>
+  </div>
 
-  <dt><%= @model.t :poster_name %></dt>
-  <dd><%= f.text_field :poster %></dd>
+  <div class="mb-3">
+    <label><%= @model.t :poster_name %></label>
+    <%= f.text_field :poster, class: "form-control" %>
+  </div>
 
-  <dt><%= @model.t :text %></dt>
-  <dd><%= f.text_area :text %></dd>
+  <div class="mb-3">
+    <label><%= @model.t :text %></label>
+    <%= f.text_area :text, class: "form-control" %>
+  </div>
 
-  <dt><%= @model.t :email %></dt>
-  <dd><%= f.email_field :email %></dd>
+  <div class="mb-3">
+    <label><%= @model.t :email %></label>
+    <%= f.email_field :email, class: "form-control" %>
+  </div>
 
-  <dt><%= @model.t :poster_url %></dt>
-  <dd><%= f.text_field :poster_url %></dd>
+  <div class="mb-3">
+    <label><%= @model.t :poster_url %></label>
+    <%= f.text_field :poster_url, class: "form-control" %>
+  </div>
 
-  <dt><%= @model.t :delete_key %></dt>
-  <dd><%= f.text_field :delete_key %></dd>
-</dl>
+  <div class="mb-3">
+    <label><%= @model.t :delete_key %></label>
+    <%= f.text_field :delete_key, class: "form-control" %>
+  </div>
+</div>

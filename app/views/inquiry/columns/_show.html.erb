@@ -1,15 +1,22 @@
-<dl class="see">
-  <dt><%= @model.t :name %></dt>
-  <dd><%= @item.send :name %></dd>
-  <dt><%= @model.t :html %></dt>
-  <dd>
+<fieldset class="see" disabled>
+  <h2 class="h4">基本情報</h2>
+  <div class="col12 mb-3">
+    <label><%= @model.t :name %></label>
+    <input class="form-control" type="text" value="<%= @item.send :name %>" />
+  </div>
+  <div class="col12 mb-3">
+    <label><%= @model.t :html %></label>
     <% if @item.send(:html).present?  %>
       <%= html_editor "#inquiry_column_html", height: "200px", readonly: true %>
       <%= text_area_tag "inquiry_column_html", @item.html, style: "height: 200px;" %>
     <% end %>
-  </dd>
-  <dt><%= @model.t :state %></dt>
-  <dd><%= @item.label :state %></dd>
-  <dt><%= @model.t :order %></dt>
-  <dd><%= @item.send :order %></dd>
-</dl>
+  </div>
+  <div class="col12 mb-3">
+    <label><%= @model.t :state %></label>
+    <input class="form-control" type="text" value"<%= @item.label :state %>" />
+  </div>
+  <div class="col12 mb-3">
+    <label><%= @model.t :order %></label>
+    <input class="form-control" type="text" value"<%= @item.send :order %>" />
+  </div>
+</fieldset>

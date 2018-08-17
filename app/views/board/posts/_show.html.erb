@@ -1,19 +1,32 @@
-<dl class="see">
-  <dt><%= @model.t :name %></dt>
-  <dd><%= @item.name %></dd>
+<fieldset class="see" disabled>
+  <h2 class="h4">基本情報</h2>
+  <div class="mb-3">
+    <label><%= @model.t :name %></label>
+    <input class="form-control" type="text" value="<%= @item.name %>" />
+  </div>
 
-  <dt><%= @model.t :poster_name %></dt>
-  <dd><%= @item.poster %></dd>
+  <div class="mb-3">
+    <label><%= @model.t :poster_name %></label>
+    <input class="form-control" type="text" value="<%= @item.poster %>" />
+  </div>
 
-  <dt><%= @model.t :text %></dt>
-  <dd><%= @item.text %></dd>
+  <div class="mb-3">
+    <label><%= @model.t :text %></label>
+    <input class="form-control" type="text" value="<%= @item.text %>" />
+  </div>
 
-  <dt><%= @model.t :email %></dt>
-  <dd><%= @item.email %></dd>
+  <div class="mb-3">
+    <label><%= @model.t :email %></label>
+    <input class="form-control" type="text" value="<%= @item.email %>" />
+  </div>
 
-  <dt><%= @model.t :poster_url %></dt>
-  <dd><%= link_to @item.poster_url if @item.poster_url.present? %></dd>
+  <div class="mb-3">
+    <label><%= @model.t :poster_url %></label>
+    <input class="form-control" type="text" value="<%= link_to @item.poster_url if @item.poster_url.present? %>" />
+  </div>
 
-  <dt><%= @model.t :delete_key %></dt>
-  <dd><%= @item.delete_key %></dd>
-</dl>
+  <div class="mb-3">
+    <label><%= @model.t :delete_key %></label>
+    <input class="form-control" type="text" value="<%= @item.delete_key %>" />
+  </div>
+</fieldset>

@@ -1,3 +1,5 @@
-<nav class="nav-menu">
-  <%= link_to t('ss.links.preview'), cms_preview_path(path: "#{@cur_node.preview_path}results.html"), target: :_blank %>
-</nav>
+<div class="d-flex flex-wrap align-item-center justify-content-between">
+  <nav>
+    <%= link_to t('ss.links.preview'), cms_preview_path(path: "#{@cur_node.preview_path}results.html"), target: :_blank, class: "btn btn-outline-secondary" %>
+  </nav>
+</div>

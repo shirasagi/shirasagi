@@ -228,6 +228,11 @@ td {
   padding-bottom: 10px;
   padding-left: 10px;
 }
+.addon-view:first-child {
+  margin-top: 1.75rem;
+}
+
+
 .addon-view mb-4#addon-basic {
   .categories {
     float: left;
@@ -1045,45 +1050,24 @@ td {
 }
 
 // -------------------------------------------------------------------------------------------------
-// main-navi
-
-//#content-navi {
-//  @include box;
-//  float: left;
-//  width: 30%;
-//  padding: 10px;
-//  .content-navi-title {
-//    margin: -10px -10px 10px;
-//    padding: 10px 12px;
-//    border-bottom: 1px solid #f2f2f2;
-//    font-weight: bold;
-//    &:before {
-//      margin-right: 6px;
-//      padding-left: 3px;
-//      background: #f25a38;
-//      content: ' ';
-//    }
-//  }
-//}
-//@include media-breakpoint-down(sm) {
-//  #content-navi {
-//    float: none;
-//    overflow: scroll;
-//    width: auto;
-//    max-height: 200px;
-//    margin: 0 10px 10px;
-//  }
-//}
-
-// -------------------------------------------------------------------------------------------------
 // see
 .see label {
   @include display-flex;
   @include align-items(center);
 }
-.upload-drop-area .upload-drop-notice {
-  padding: 2rem 1rem;
+.upload-drop-area {
   background: $gray1;
+}
+.file-view {
+  .thumb {
+    display: block;
+    min-width: 200px;
+    min-height: 150px;
+    line-height: 150px;
+    overflow: hidden;
+    text-align: center;
+    background: $gray3;
+  }
 }
 // -------------------------------------------------------------------------------------------------
 // common view
@@ -1537,24 +1521,6 @@ table.form-index.sortable-index {
       @include ss-btn;
     }
   }
-}
-
-// search-ui
-.search-ui-form {
-  margin: 0 0 20px;
-  padding: 10px;
-  border: 1px solid #ddd;
-  form {
-    input[type=text] {
-      width: 80%;
-    }
-  }
-}
-.search-ui-select {
-  margin: 10px 0 0;
-  padding: 10px;
-  border: 1px solid #ddd;
-  background-color: #ffd;
 }
 
 // event-repeat-dates-ui

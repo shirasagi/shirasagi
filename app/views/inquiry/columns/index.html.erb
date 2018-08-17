@@ -1,32 +1,51 @@
-<div class="main-box">
-  <table class="index">
-    <thead>
-      <tr>
-        <th class="checkbox"><input type="checkbox" /></th>
-        <th><%= @model.t :name %></th>
-        <th><%= @model.t :order %></th>
-        <th class="datetime"><%= @model.t :updated %></th>
-      </tr>
-    </thead>
+<div class="list-head d-flex align-item-center">
+  <div class="btn-group align-self-end mb-0">
+    <select class="custom-select mr-sm-2">
+      <option selected>アクション</option>
+      <option value="1">並び順一括変更</option>
+      <option value="2">削除</option>
+    </select>
+  </div>
+</div>
+<div class="row">
+  <div class="col mb-4">
+    <table class="table table-striped">
+      <thead>
+        <tr>
+          <th class="checkbox"><input type="checkbox" /></th>
+          <th>ステータス</th>
+          <th><%= @model.t :name %></th>
+          <th>入力形式</th>
+          <th><%= @model.t :order %></th>
+          <th class="datetime"><%= @model.t :updated %></th>
+          <th></th>
+        </tr>
+      </thead>
 
-    <tbody>
-      <% @items.each do |item| %>
-      <tr class="list-item">
-        <td class="checkbox">
-          <input type="checkbox" name="ids[]" value="<%= item.id %>" />
-          <nav class="tap-menu">
-            <%= link_to t('ss.links.show'), action: :show, id: item if @cur_node.allowed?(:read, @cur_user, site: @cur_site) %>
-            <%= link_to t('ss.links.edit'), action: :edit, id: item if @cur_node.allowed?(:edit, @cur_user, site: @cur_site) %>
-            <%= link_to t('ss.links.delete'), action: :delete, id: item if @cur_node.allowed?(:edit, @cur_user, site: @cur_site) %>
-          </nav>
-        </td>
-        <td><%= link_to item.name, action: :show, id: item %></td>
-        <td><%= item.order %></td>
-        <td><%= item.updated.strftime("%Y/%m/%d %H:%M") %></td>
-      </tr>
-      <% end %>
-    </tbody>
-  </table>
+      <tbody>
+        <% @items.each do |item| %>
+        <tr class="list-item">
+          <td class="checkbox">
+            <input type="checkbox" name="ids[]" value="<%= item.id %>" />
+          </td>
+          <td class="state"><span class="public">公開中(ステータスごとにspanのclass変えたい)</span></td>
+          <td class="title"><%= link_to item.name, action: :show, id: item %></td>
+          <td class="type">入力形式</td>
+          <td class="order"><input class="form-control" type="text" value="<%= item.order %>" /></td>
+          <td class="datetime"><%= item.updated.strftime("%Y/%m/%d %H:%M") %></td>
+          <td class="menu">
+            <button class="btn bmd-btn-icon dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="material-icons">more_vert</i></button>
+            <div class="dropdown-menu dropdown-menu-left">
+              <%= link_to t('ss.links.show'), action: :show, id: item if @cur_node.allowed?(:read, @cur_user, site: @cur_site) %>
+              <%= link_to t('ss.links.edit'), action: :edit, id: item if @cur_node.allowed?(:edit, @cur_user, site: @cur_site) %>
+              <%= link_to t('ss.links.delete'), action: :delete, id: item if @cur_node.allowed?(:edit, @cur_user, site: @cur_site) %>
+            </div>
+          </td>
+        </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
 </div>
 
 <%= paginate @items if @items.try(:current_page) %>
