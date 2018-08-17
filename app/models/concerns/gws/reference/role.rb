@@ -42,6 +42,14 @@ module Gws::Reference
       @gws_role_permissions = nil
     end
 
+    def gws_role_permit_any?(site, *permissions)
+      permissions.flatten.each do |permission|
+        return true if gws_role_permissions["#{permission}_#{site.id}"].to_i > 0
+      end
+
+      false
+    end
+
     # @return [Integer] ???
     def gws_role_level(site)
       3
