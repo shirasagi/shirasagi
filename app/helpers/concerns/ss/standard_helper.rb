@@ -1,9 +1,9 @@
 module SS::StandardHelper
   extend ActiveSupport::Concern
 
-  def tryb(&block)
+  def tryb(*exceptions, &block)
     yield
-  rescue
+  rescue *exceptions
     nil
   end
 

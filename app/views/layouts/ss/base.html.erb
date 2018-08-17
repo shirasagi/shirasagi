@@ -355,7 +355,7 @@
 
 <div id="wrap">
   <div class="wrap d-flex flex-wrap">
-    <%= begin; render(file: "_content_navi"); rescue ActionView::MissingTemplate; nil; end %>
+    <%= tryb(ActionView::MissingTemplate) { render(file: "_content_navi") } %>
 
     <article id="main">
       <div class="content-search card mb-5">
