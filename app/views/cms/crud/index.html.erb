@@ -32,10 +32,7 @@
 </div>
 
 <% @table_def ||= define_ss_table do |tbl| %>
-  <% tbl.column(class: "check") do %>
-    <% tbl.th do %><input type="checkbox" /><% end %>
-    <% tbl.td do |item| %><div class="checkbox"><input type="checkbox" name="ids[]" value="<%= item.id %>" /></div><% end %>
-  <% end %>
+  <% tbl.column_checkbox %>
   <% tbl.column(class: "state") do %>
     <% tbl.th t("cms.status") %>
     <% tbl.td do |item| %><span class="public"><%= t "ss.state.#{item.status}" %></span><% end %>
@@ -91,11 +88,37 @@
       <% end %>
     <% end %>
   <% end %>
-  <% tbl.column(class: "datetime") do %>
-    <% tbl.th t("cms.options.sort.updated_1") %>
-    <% tbl.td do |item| %>
-      <% if item.try(:updated) %>
-        <%= item.updated.strftime("%Y/%m/%d %H:%M") %>
+  <% tbl.column_updated %>
+  <% tbl.tap_menu do |item| %>
+    <% if @tap_menu %>
+      <% @tap_menu.call item %>
+    <% else %>
+      <%= link_to(t('ss.links.show'), { action: :show, id: item }, { class: "dropdown-item" }) if item.allowed?(:read, @cur_user, site: @cur_site) %>
+      <%= link_to(t('ss.links.edit'), { action: :edit, id: item }, { class: "dropdown-item" }) if item.allowed?(:edit, @cur_user, site: @cur_site) %>
+      <%= link_to(t('ss.links.delete'), { action: :delete, id: item }, { class: "dropdown-item" }) if item.allowed?(:delete, @cur_user, site: @cur_site) %>
+
+      <% if @model.collection_name == :cms_nodes %>
+        <%= link_to t('ss.links.view_site'), item.full_url, class: "dropdown-item", target: :_blank if item.public? %>
+        <% if @cur_site.mobile_enabled? %>
+          <%= link_to t('ss.links.pc_preview'), cms_preview_path(path: item.preview_path), target: :_blank, class: "dropdown-item" %>
+          <%= link_to(t('ss.links.mobile_preview'), cms_mobile_preview_path(path: item.preview_path), target: :_blank, class: "dropdown-item") %>
+        <% else %>
+          <%= link_to t('ss.links.preview'), cms_preview_path(path: item.preview_path), target: :_blank, class: "dropdown-item" %>
+        <% end %>
+      <% elsif @model.collection_name == :cms_pages %>
+        <%= link_to t('ss.links.view_site'), item.full_url, class: "dropdown-item", target: :_blank if item.public? %>
+        <% if @cur_site.mobile_enabled? %>
+          <%= link_to t('ss.links.pc_preview'), cms_preview_path(path: item.preview_path), target: :_blank, class: "dropdown-item" %>
+          <%= link_to(t('ss.links.mobile_preview'), cms_mobile_preview_path(path: item.preview_path), target: :_blank, class: "dropdown-item") %>
+        <% else %>
+          <%= link_to t('ss.links.preview'), cms_preview_path(path: item.preview_path), target: :_blank, class: "dropdown-item" %>
+        <% end %>
+      <% end %>
+
+      <% if item.try(:image) %>
+        <%= link_to image_tag(item.image.thumb_url), item.image.url, { class: "thumb dropdown-item", target: "_blank" } %>
+      <% elsif item.try(:image?) %>
+        <%= link_to image_tag(item.thumb_url), item.url, { class: "thumb dropdown-item", target: "_blank" } %>
       <% end %>
     <% end %>
   <% end %>
@@ -110,7 +133,6 @@
           <% @table_def.columns.each do |column| %>
             <%= column.render_th %>
           <% end %>
-          <th></th>
         </tr>
         </thead>
         <tbody>
@@ -121,47 +143,9 @@
             <% item = item.becomes_with_route %>
           <% end %>
           <tr>
-          <% @table_def.columns.each do |column| %>
-            <%= column.render_td(item) %>
-          <% end %>
-            <td>
-              <div class="dropdown">
-                <button class="btn bmd-btn-icon dropdown-toggle" type="button" id="ex1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="material-icons">more_vert</i></button>
-                <div class="dropdown-menu dropdown-menu-left" aria-labelledby="ex1">
-                  <% if @tap_menu %>
-                    <% @tap_menu.call item %>
-                  <% else %>
-                    <%= link_to(t('ss.links.show'), { action: :show, id: item }, { class: "dropdown-item" }) if item.allowed?(:read, @cur_user, site: @cur_site) %>
-                    <%= link_to(t('ss.links.edit'), { action: :edit, id: item }, { class: "dropdown-item" }) if item.allowed?(:edit, @cur_user, site: @cur_site) %>
-                    <%= link_to(t('ss.links.delete'), { action: :delete, id: item }, { class: "dropdown-item" }) if item.allowed?(:delete, @cur_user, site: @cur_site) %>
-
-                    <% if @model.collection_name == :cms_nodes %>
-                      <%= link_to t('ss.links.view_site'), item.full_url, class: "dropdown-item", target: :_blank if item.public? %>
-                      <% if @cur_site.mobile_enabled? %>
-                        <%= link_to t('ss.links.pc_preview'), cms_preview_path(path: item.preview_path), target: :_blank, class: "dropdown-item" %>
-                        <%= link_to(t('ss.links.mobile_preview'), cms_mobile_preview_path(path: item.preview_path), target: :_blank, class: "dropdown-item") %>
-                      <% else %>
-                        <%= link_to t('ss.links.preview'), cms_preview_path(path: item.preview_path), target: :_blank, class: "dropdown-item" %>
-                      <% end %>
-                    <% elsif @model.collection_name == :cms_pages %>
-                      <%= link_to t('ss.links.view_site'), item.full_url, class: "dropdown-item", target: :_blank if item.public? %>
-                      <% if @cur_site.mobile_enabled? %>
-                        <%= link_to t('ss.links.pc_preview'), cms_preview_path(path: item.preview_path), target: :_blank, class: "dropdown-item" %>
-                        <%= link_to(t('ss.links.mobile_preview'), cms_mobile_preview_path(path: item.preview_path), target: :_blank, class: "dropdown-item") %>
-                      <% else %>
-                        <%= link_to t('ss.links.preview'), cms_preview_path(path: item.preview_path), target: :_blank, class: "dropdown-item" %>
-                      <% end %>
-                    <% end %>
-
-                    <% if item.try(:image) %>
-                      <%= link_to image_tag(item.image.thumb_url), item.image.url, { class: "thumb dropdown-item", target: "_blank" } %>
-                    <% elsif item.try(:image?) %>
-                      <%= link_to image_tag(item.thumb_url), item.url, { class: "thumb dropdown-item", target: "_blank" } %>
-                    <% end %>
-                  <% end %>
-                </div>
-              </div>
-            </td>
+            <% @table_def.columns.each do |column| %>
+              <%= column.render_td(item) %>
+            <% end %>
           </tr>
         <% end %>
         </tbody>

@@ -9,10 +9,7 @@
 </div>
 
 <% @table_def = define_ss_table do |tbl| %>
-  <% tbl.column(class: "check") do %>
-    <% tbl.th do %><input type="checkbox" /><% end %>
-    <% tbl.td do |item| %><div class="checkbox"><input type="checkbox" name="ids[]" value="<%= item.id %>" /></div><% end %>
-  <% end %>
+  <% tbl.column_checkbox %>
 
   <% tbl.column do %>
     <% tbl.th @model.t(:name) %>
@@ -24,16 +21,13 @@
     <% tbl.td do |item| %><%= item.order %><% end %>
   <% end %>
 
-  <% tbl.column(class: "datetime") do %>
-    <% tbl.th @model.t(:updated) %>
-    <% tbl.td do |item| %><%= I18n.l(item.updated) %><% end %>
-  <% end %>
-<% end %>
+  <% tbl.column_updated %>
 
-<% @tap_menu = proc do |item| %>
-  <%= link_to(t('ss.links.show'), { action: :show, id: item }, { class: "dropdown-item" }) if @cur_node.allowed?(:read, @cur_user, site: @cur_site) %>
-  <%= link_to(t('ss.links.edit'), { action: :edit, id: item }, { class: "dropdown-item" }) if @cur_node.allowed?(:edit, @cur_user, site: @cur_site) %>
-  <%= link_to(t('ss.links.delete'), { action: :delete, id: item }, { class: "dropdown-item" }) if @cur_node.allowed?(:edit, @cur_user, site: @cur_site) %>
+  <% tbl.tap_menu do |item| %>
+    <%= link_to(t('ss.links.show'), { action: :show, id: item }, { class: "dropdown-item" }) if @cur_node.allowed?(:read, @cur_user, site: @cur_site) %>
+    <%= link_to(t('ss.links.edit'), { action: :edit, id: item }, { class: "dropdown-item" }) if @cur_node.allowed?(:edit, @cur_user, site: @cur_site) %>
+    <%= link_to(t('ss.links.delete'), { action: :delete, id: item }, { class: "dropdown-item" }) if @cur_node.allowed?(:edit, @cur_user, site: @cur_site) %>
+  <% end %>
 <% end %>
 
 <%= render file: "cms/crud/index" %>
