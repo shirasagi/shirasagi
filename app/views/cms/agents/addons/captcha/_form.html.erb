@@ -1,4 +1,6 @@
-<dl class="see mod-cms-captcha">
-  <dt><%= @model.t :captcha %><%= @model.tt :captcha %></dt>
-  <dd><%= f.select :captcha, @item.captcha_options %></dd>
-</dl>
+<div class="see mod-cms-captcha">
+  <div class="mb-3">
+    <label><%= @model.t :captcha %><%= @model.tt :captcha %></label>
+    <%= f.select :captcha, @item.captcha_options, class: "form-control" %>
+  </div>
+</div>

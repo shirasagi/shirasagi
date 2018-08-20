@@ -1,16 +1,23 @@
-<dl class="see">
-  <dt><%= @model.t :name %><%= @model.tt :name %></dt>
-  <dd><%= f.text_field :name %></dd>
+<div class="see">
+  <div class="mb-3">
+    <label><%= @model.t :name %><%= @model.tt :name %></label>
+    <%= f.text_field :name, class="form-control" %>
+  </div>
 
-  <dt><%= @model.t :link_url %><%= @model.tt :link_url %></dt>
-  <dd><%= f.text_field :link_url, class: "alnum" %></dd>
+  <div class="mb-3">
+    <label><%= @model.t :link_url %><%= @model.tt :link_url %></label>
+    <%= f.text_field :link_url, class: "alnum form-control" %>
 
-  <dt><%= @model.t :file_id %><%= @model.tt :file_id %></dt>
-  <dd><%= f.file_field :in_file %></dd>
-  <% if @item.file %>
-  <dd><label><%= f.check_box :rm_file %><%= t "ss.buttons.delete" %> (<%= @item.file.filename %>)</label></dd>
-  <% end %>
+  <div class="mb-3">
+    <label><%= @model.t :file_id %><%= @model.tt :file_id %></label>
+    <%= f.file_field :in_file, class: "form-control" %>
+    <% if @item.file %>
+    <label><%= f.check_box :rm_file %><%= t "ss.buttons.delete" %> (<%= @item.file.filename %>)</label>
+    <% end %>
+  </div>
 
-  <dt><%= @model.t :order %><%= @model.tt :order %></dt>
-  <dd><%= f.number_field :order %></dd>
-</dl>
+  <div class="mb-3">
+    <label><%= @model.t :order %><%= @model.tt :order %></label>
+    <%= f.number_field :order, class: "form-control" %>
+  </div>
+</div>

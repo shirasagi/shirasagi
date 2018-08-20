@@ -1,13 +1,21 @@
-<dl class="see">
-  <dt><%= @model.t :name %></dt>
-  <dd><%= @item.send :name %></dd>
+<fieldset class="see" disabled>
+  <div class="mb-3">
+    <label><%= @model.t :name %></label>
+    <input class="form-control" type="text" value="<%= @item.send :name %>" />
+  </div>
 
-  <dt><%= @model.t :link_url %></dt>
-  <dd><%= link_to @item.link_url, @item.link_url, target: "_blank" %></dd>
+  <div class="mb-3">
+    <label><%= @model.t :link_url %></label>
+    <%= link_to @item.link_url, @item.link_url, target: "_blank" %>
+  </div>
 
-  <dt><%= @model.t :file_id %></dt>
-  <dd><%= show_image_info @item.file %></dd>
+  <div class="mb-3">
+    <label><%= @model.t :file_id %></label>
+    <%= show_image_info @item.file %>
+  </div>
 
-  <dt><%= @model.t :order %></dt>
-  <dd><%= @item.send :order %></dd>
-</dl>
+  <div class="mb-3">
+    <label><%= @model.t :order %></label>
+    <input class="form-control" type="text" value="<%= @item.send :order %>" />
+  </div>
+</fieldset>

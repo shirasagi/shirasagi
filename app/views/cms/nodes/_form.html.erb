@@ -6,22 +6,32 @@ url = params[:action] =~ /new|create/ ? url_for(action: :new) : url_for(action: 
 bind  = "$(this).parent().parent().parent().parent().hide();"
 bind << "location.href = '#{url}?route=' + $(this).val();"
 
-%><dl class="see">
-  <dt><%= @model.t :route %><%= @model.tt :route %></dt>
-  <dd><%= f.hidden_field :route %>
-    <%= @item.label :route %> &nbsp;<%= link_to t('ss.links.change'), routes_cms_nodes_path, class: "ajax-box" %></dd>
+%><div class="see">
+  <div class="mb-3">
+    <label><%= @model.t :route %><%= @model.tt :route %></label>
+    <%= f.hidden_field :route %>
+    <%= @item.label :route %> &nbsp;<%= link_to t('ss.links.change'), routes_cms_nodes_path, class: "ajax-box btn btn-outline-secondary btn-sm" %>
+  </div>
 
-  <dt><%= @model.t :name %><%= @model.tt :title %></dt>
-  <dd><%= f.text_field :name %></dd>
+  <div class="mb-3">
+    <label><%= @model.t :name %><%= @model.tt :title %></label>
+    <%= f.text_field :name, class: "form-control" %>
+  </div>
 
-  <dt><%= @model.t :index_name %><%= @model.tt :title_for_index %></dt>
-  <dd><%= f.text_field :index_name %></dd>
+  <div class="mb-3">
+    <label><%= @model.t :index_name %><%= @model.tt :title_for_index %></label>
+    <%= f.text_field :index_name, class: "form-control" %>
+  </div>
 
-  <dt><%= @model.t :basename %><%= @model.tt :foldername %></dt>
-  <dd><%= f.text_field :basename, class: "filename" %></dd>
+  <div class="mb-3">
+    <label><%= @model.t :basename %><%= @model.tt :foldername %></label>
+    <%= f.text_field :basename, class: "filename form-control" %>
+  </div>
 
-  <dt><%= @model.t :layout_id %><%= @model.tt :layout_id %></dt>
-  <dd><%= f.select :layout_id, ancestral_layouts(@item), include_blank: " " %></dd>
-</dl>
+  <div class="mb-3">
+    <label><%= @model.t :layout_id %><%= @model.tt :layout_id %></label>
+    <%= f.select :layout_id, ancestral_layouts(@item), include_blank: " ", class: "form-control" %>
+  </div>
+</div>
 
 <%= render file: file, locals: { f: f } if File.exists?(file) %>

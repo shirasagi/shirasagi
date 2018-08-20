@@ -9,6 +9,9 @@
   @include media-breakpoint-down(sm) {
     white-space: nowrap;
   }
+  th, td {
+    vertical-align: middle;
+  }
   th {
     white-space: nowrap;
   }
@@ -21,6 +24,10 @@
     li:last-child:after {
       content: "";
     }
+  }
+  .padding {
+    display: inline-block;
+    width: 15px;
   }
 }
 // form

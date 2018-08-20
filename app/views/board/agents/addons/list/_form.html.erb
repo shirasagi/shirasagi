@@ -1,15 +1,23 @@
 <%= code_editor ".mod-board-list .html", mode: :html %>
 
-<dl class="see mod-board-list">
-  <dt><%= @model.t :mode %><%= @model.tt :mode %></dt>
-  <dd><%= f.select :mode, @item.mode_options %></dd>
+<div class="see mod-board-list">
+  <div class="mb-3">
+    <label><%= @model.t :mode %><%= @model.tt :mode %></label>
+    <%= f.select :mode, @item.mode_options, class: "form-control" %>
+  </div>
 
-  <dt><%= @model.t :limit %><%= @model.tt :limit %></dt>
-  <dd><%= f.number_field :limit %></dd>
+  <div class="mb-3">
+    <label><%= @model.t :limit %><%= @model.tt :limit %></label>
+    <%= f.number_field :limit, class: "form-control" %>
+  </div>
 
-  <dt><%= @model.t :upper_html %><%= @model.tt :upper_html %></dt>
-  <dd><%= f.text_area :upper_html, class: :html %></dd>
+  <div class="mb-3">
+    <label><%= @model.t :upper_html %><%= @model.tt :upper_html %></label>
+    <%= f.text_area :upper_html, class: "html form-control", rows: "6" %>
+  </div>
 
-  <dt><%= @model.t :lower_html %><%= @model.tt :lower_html %></dt>
-  <dd><%= f.text_area :lower_html, class: :html %></dd>
-</dl>
+  <div class="mb-3">
+    <label><%= @model.t :lower_html %><%= @model.tt :lower_html %></label>
+    <%= f.text_area :lower_html, class: "html form-control", rows: "6" %>
+  </div>
+</div>

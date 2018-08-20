@@ -71,6 +71,10 @@ td {
   }
 }
 
+.CodeMirror {
+  border: 1px solid $gray4;
+}
+
 .ss-dropdown {
   position: relative;
   cursor: pointer;

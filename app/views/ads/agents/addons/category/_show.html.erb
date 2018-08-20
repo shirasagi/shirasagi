@@ -1,5 +1,7 @@
 <% return "" if @item.ads_categories.blank? %>
 
-<dl class="see">
-  <dd class="wide"><%= @item.send(:ads_categories).pluck(:name).join(", ") %></dd>
-</dl>
+<fieldset class="see" disabled>
+  <div class="mb-3">
+    <input class="form-control" type="text" value="<%= @item.send(:ads_categories).pluck(:name).join(", ") %>" />
+  </div>
+</fieldset>
