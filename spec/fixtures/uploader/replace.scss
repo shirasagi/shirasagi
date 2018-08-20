@@ -1,4 +1,15 @@
-header, footer, nav, section, article, figure, aside {
-  display: block;
-  margin: 0px;
+$red:red;
+$blue:green;
+$blue:blue;
+
+.red {
+  color:$red;
+}
+
+.green {
+  color:$green;
+}
+
+.blue {
+  color:$blue;
 }
