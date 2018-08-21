@@ -62,10 +62,6 @@ module SS::CapybaraSupport
     Capybara.javascript_driver = :chrome
     Capybara.default_max_wait_time = 15
 
-    config.before( :each ) do
-      SS::DownloadHelpers::clear_downloads
-    end
-
     config.filter_run_excluding(driver: :poltergeist)
     puts '[Capybara] with Google Chrome'
     true
