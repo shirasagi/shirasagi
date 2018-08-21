@@ -35,6 +35,7 @@ describe Gws::Workflow::FilesController, type: :feature, dbscope: :example, tmpd
         click_on I18n.t("workflow.search_approvers.index")
       end
       within "#cboxLoadedContent" do
+        expect(page).to have_content(user1.long_name)
         click_on user1.long_name
       end
 
@@ -42,6 +43,7 @@ describe Gws::Workflow::FilesController, type: :feature, dbscope: :example, tmpd
         click_on I18n.t("workflow.search_circulations.index")
       end
       within "#cboxLoadedContent" do
+        expect(page).to have_content(user2.long_name)
         click_on user2.long_name
       end
 
