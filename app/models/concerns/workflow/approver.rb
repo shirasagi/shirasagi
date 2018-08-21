@@ -402,8 +402,13 @@ module Workflow::Approver
   private
 
   def reset_workflow
+    destroy_workflow_approver_files
+
     self.unset(
-      :workflow_user_id, :workflow_agent_id, :workflow_state, :workflow_comment, :workflow_approvers, :workflow_circulations
+      :workflow_user_id, :workflow_agent_id, :workflow_state, :workflow_comment, :workflow_pull_up, :workflow_on_remand,
+      :workflow_approvers, :workflow_required_counts, :workflow_approver_attachment_uses,
+      :workflow_current_circulation_level, :workflow_circulations, :workflow_circulation_attachment_uses,
+      :approved
     )
   end
 
