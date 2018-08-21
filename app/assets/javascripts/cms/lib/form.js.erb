@@ -62,6 +62,8 @@ this.Syntax_Checker = (function () {
 
   Syntax_Checker.message = {
     notSetImgAlt: "<%= I18n.t('errors.messages.set_img_alt') %>",
+    notSetAppletAlt: "<%= I18n.t('errors.messages.set_applet_alt') %>",
+    notSetAreaAlt: "<%= I18n.t('errors.messages.set_area_alt') %>",
     invalidImgScheme: "<%= I18n.t('errors.messages.invalid_img_scheme') %>",
     notSetTableCaption: "<%= I18n.t('errors.messages.set_table_caption') %>",
     notSetThScope: "<%= I18n.t('errors.messages.set_th_scope') %>",
@@ -73,12 +75,15 @@ this.Syntax_Checker = (function () {
     invalidAdjacentA: "<%= I18n.t('errors.messages.invalid_adjacent_a') %>",
     checkInterwordSpace: "<%= I18n.t('errors.messages.check_interword_space') %>",
     checkLinkText: "<%= I18n.t('errors.messages.check_link_text') %>",
+    checkObjectText: "<%= I18n.t('errors.messages.check_object_text') %>",
     checkEmbeddedMedia: "<%= I18n.t('errors.messages.check_embedded_media') %>",
     replaceWord: "<%= I18n.t('errors.messages.replace_word') %>"
   };
 
   Syntax_Checker.detail = {
     notSetImgAlt: <%= I18n.t('errors.messages.syntax_check_detail.set_img_alt').to_json %>,
+    notSetAppletAlt: <%= I18n.t('errors.messages.syntax_check_detail.set_applet_alt').to_json %>,
+    notSetAreaAlt: <%= I18n.t('errors.messages.syntax_check_detail.set_area_alt').to_json %>,
     invalidImgScheme: <%= I18n.t('errors.messages.syntax_heck_detail.invalid_img_scheme').to_json %>,
     notSetTableCaption: <%= I18n.t('errors.messages.syntax_check_detail.set_table_caption').to_json %>,
     notSetThScope: <%= I18n.t('errors.messages.syntax_check_detail.set_th_scope').to_json %>,
@@ -90,6 +95,7 @@ this.Syntax_Checker = (function () {
     invalidAdjacentA: <%= I18n.t('errors.messages.syntax_check_detail.invalid_adjacent_a').to_json %>,
     checkInterwordSpace: <%= I18n.t('errors.messages.syntax_check_detail.check_interword_space').to_json %>,
     checkLinkText: <%= I18n.t('errors.messages.syntax_check_detail.check_link_text').to_json %>,
+    checkObjectText: <%= I18n.t('errors.messages.syntax_check_detail.check_object_text').to_json %>,
     checkEmbeddedMedia: <%= I18n.t('errors.messages.syntax_check_detail.check_embedded_media').to_json %>
   };
 
@@ -134,9 +140,12 @@ this.Syntax_Checker = (function () {
     Syntax_Checker.checkAdjacentA(html);
     Syntax_Checker.checkOrderOfH(html);
     Syntax_Checker.checkImgAlt(html);
+    Syntax_Checker.checkAppletAlt(html);
+    Syntax_Checker.checkAreaAlt(html);
     Syntax_Checker.checkImgDataUriScheme(html);
     Syntax_Checker.checkInterwordSpace(html);
     Syntax_Checker.checkLinkText(html);
+    Syntax_Checker.checkObjectText(html);
     Syntax_Checker.checkEmbeddedMedia(html);
     Syntax_Checker.checkReplaceWords(html);
     $('#errorSyntaxChecker').remove();
@@ -292,6 +301,42 @@ this.Syntax_Checker = (function () {
             code: Syntax_Checker.outerHtmlSummary(this),
             msg: Syntax_Checker.message["notSetImgAlt"],
             detail: Syntax_Checker.detail["notSetImgAlt"],
+            ele: this
+          }
+        ];
+        return Syntax_Checker.pushError(errors);
+      }
+    });
+  };
+
+  Syntax_Checker.checkAppletAlt = function (html) {
+    return $(html).find('applet').each(function () {
+      var alt, errors;
+      alt = $(this).attr('alt');
+      if (!alt || $.trim(alt) === "" || /^[\w\s\.\-]*$/.test(alt)) {
+        errors = [
+          {
+            code: Syntax_Checker.outerHtmlSummary(this),
+            msg: Syntax_Checker.message["notSetAppletAlt"],
+            detail: Syntax_Checker.detail["notSetAppletAlt"],
+            ele: this
+          }
+        ];
+        return Syntax_Checker.pushError(errors);
+      }
+    });
+  };
+
+  Syntax_Checker.checkAreaAlt = function (html) {
+    return $(html).find('area').each(function () {
+      var alt, errors;
+      alt = $(this).attr('alt');
+      if (!alt || $.trim(alt) === "" || /^[\w\s\.\-]*$/.test(alt)) {
+        errors = [
+          {
+            code: Syntax_Checker.outerHtmlSummary(this),
+            msg: Syntax_Checker.message["notSetAreaAlt"],
+            detail: Syntax_Checker.detail["notSetAreaAlt"],
             ele: this
           }
         ];
@@ -751,6 +796,23 @@ this.Syntax_Checker = (function () {
             code: Syntax_Checker.outerHtmlSummary(this),
             msg: Syntax_Checker.message["checkLinkText"],
             detail: Syntax_Checker.detail["checkLinkText"]
+          }
+        ];
+        return Syntax_Checker.pushError(errors);
+      }
+    });
+  };
+
+  Syntax_Checker.checkObjectText = function (html) {
+    $(html).find("object").each(function () {
+      var errors, text;
+      text = $(this).text();
+      if (!$.trim(text)) {
+        errors = [
+          {
+            code: Syntax_Checker.outerHtmlSummary(this),
+            msg: Syntax_Checker.message["checkObjectText"],
+            detail: Syntax_Checker.detail["checkObjectText"]
           }
         ];
         return Syntax_Checker.pushError(errors);
