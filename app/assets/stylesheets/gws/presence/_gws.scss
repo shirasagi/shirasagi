@@ -33,27 +33,27 @@
       display: flex;
       margin-bottom: 5px;
       &[data-value] {
-        background: #CCCCCC;
+        border: 2px solid #CCCCCC;
         padding: 0 2px;
         border-radius: 4px;
       }
       &[data-value="available"] {
-        background: springgreen;
+        border: 2px solid springgreen;
         padding: 0 2px;
         border-radius: 4px;
       }
       &[data-value="unavailable"] {
-        background: #ffc107;
+        border: 2px solid #ffc107;
         padding: 0 2px;
         border-radius: 4px;
       }
       &[data-value="leave"] {
-        background: #CCCCCC;
+        border: 2px solid #CCCCCC;
         padding: 0 2px;
         border-radius: 4px;
       }
       &[data-value="dayoff"] {
-        background: #CCCCCC;
+        border: 2px solid #CCCCCC;
         padding: 0 2px;
         border-radius: 4px;
       }
@@ -101,27 +101,27 @@
         display: inline-block;
         vertical-align: middle;
         &.available {
-          background: springgreen;
+          border: 2px solid springgreen;
           padding: 0 2px;
           border-radius: 4px;
         }
         &.unavailable {
-          background: #ffc107;
+          border: 2px solid #ffc107;
           padding: 0 2px;
           border-radius: 4px;
         }
         &.leave {
-          background: #CCCCCC;
+          border: 2px solid #CCCCCC;
           padding: 0 2px;
           border-radius: 4px;
         }
         &.dayoff {
-          background: #CCCCCC;
+          border: 2px solid #CCCCCC;
           padding: 0 2px;
           border-radius: 4px;
         }
         &.none {
-          background: #CCCCCC;
+          border: 2px solid #CCCCCC;
           padding: 0 2px;
           border-radius: 4px;
         }
