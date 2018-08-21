@@ -266,7 +266,7 @@ class Gws::Workflow::FilesController < ApplicationController
       job.perform_later(zip.serialize)
 
       flash[:notice_options] = { timeout: 0 }
-      redirect_to({ action: :index }, { notice: zip.delay_message })
+      redirect_to({ action: :show }, { notice: zip.delay_message })
     else
       raise '500' unless zip.save
       send_file(zip.path, type: zip.type, filename: zip.name, disposition: 'attachment', x_sendfile: true)
@@ -278,7 +278,7 @@ class Gws::Workflow::FilesController < ApplicationController
 
     files = @items.collect_attachments
     if files.blank?
-      redirect_to({ action: :show }, { notice: t("gws/workflow.notice.no_files") })
+      redirect_to({ action: :index }, { notice: t("gws/workflow.notice.no_files") })
       return
     end
 
