@@ -64,7 +64,6 @@ gem 'omniauth-twitter'
 gem 'omniauth-yahoojp'
 
 # SNS
-gem 'koala'
 gem 'twitter'
 
 # SAML

@@ -258,10 +258,6 @@ GEM
       kaminari-core (~> 1.0)
       mongoid
     kgio (2.11.2)
-    koala (3.0.0)
-      addressable
-      faraday
-      json (>= 1.8)
     kramdown (1.17.0)
     levenshtein (0.2.2)
     libv8 (3.16.14.19)
@@ -613,7 +609,6 @@ DEPENDENCIES
   json-jwt
   kaminari
   kaminari-mongoid
-  koala
   kramdown
   levenshtein
   mail-iso-2022-jp
@@ -673,4 +668,4 @@ DEPENDENCIES
   yard
 
 BUNDLED WITH
-   1.16.1
+   1.16.2
