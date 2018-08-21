@@ -1,36 +1,42 @@
 <%= code_editor ".mod-cms-nodelist .html", mode: :html, readonly: true %>
 
-<dl class="see mod-cms-nodelist">
-  <dt><%= @model.t :conditions %></dt>
-  <dd><%=br @item.conditions.join("\n") %></dd>
+<fieldset class="see mod-cms-nodelist" disabled>
+  <div class="col3">
+    <label><%= @model.t :conditions %></label>
+    <input class="form-control" type="text" value="<%=br @item.conditions.join("\n") %>" />
+  </div>
 
-  <dt><%= @model.t :sort %></dt>
-  <dd><%= @item.label :sort %></dd>
+  <div class="col3">
+    <label><%= @model.t :sort %></label>
+    <input class="form-control" type="text" value="<%= @item.label :sort %>" />
+  </div>
 
-  <dt><%= @model.t :limit %></dt>
-  <dd><%= @item.send :limit %></dd>
+  <div class="col3">
+    <label><%= @model.t :limit %></label>
+    <input class="form-control" type="text" value="<%= @item.send :limit %>" />
+  </div>
 
-  <dt><%= @model.t :upper_html %></dt>
-  <dd>
+  <div class="col3">
+    <label><%= @model.t :upper_html %></label>
     <% if @item.upper_html.present? %>
-    <%= text_area_tag :upper_html, @item.upper_html, class: "html" %>
+    <%= text_area_tag :upper_html, @item.upper_html, class: "html", rows: "6" %>
     <% end %>
-  </dd>
+  </div>
 
-  <dt><%= @model.t :loop_html %></dt>
-  <% if @item.send(:loop_setting).present? %>
-  <dd><%= tryb{@item.loop_setting.name} %></dd>
-  <% end %>
-  <dd>
+  <div class="col3">
+    <label><%= @model.t :loop_html %></label>
+    <% if @item.send(:loop_setting).present? %>
+    <input class="form-control" type="text" value="<%= tryb{@item.loop_setting.name} %>" />
+    <% end %>
     <% if @item.loop_html.present? %>
-    <%= text_area_tag :loop_html, @item.loop_html, class: "html", style: "height: 100px;"  %>
+    <%= text_area_tag :loop_html, @item.loop_html, class: "html", rows: "6" %>
     <% end %>
-  </dd>
+  </div>
 
-  <dt><%= @model.t :lower_html %></dt>
-  <dd>
+  <div class="col3">
+    <label><%= @model.t :lower_html %></label>
     <% if @item.lower_html.present? %>
-    <%= text_area_tag :lower_html, @item.lower_html, class: "html" %>
+    <%= text_area_tag :lower_html, @item.lower_html, class: "html", rows: "6" %>
     <% end %>
-  </dd>
-</dl>
+  </div>
+</fieldset>

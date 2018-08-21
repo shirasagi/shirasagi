@@ -1,23 +1,35 @@
 <%= code_editor ".mod-cms-nodelist .html", mode: :html %>
 <%= jquery do %> Cms_Editor_CodeMirror.lock('#item_loop_setting_id', '#item_loop_html'); <% end %>
 
-<dl class="see mod-cms-nodelist">
-  <dt><%= @model.t :conditions %><%= @model.tt :conditions %></dt>
-  <dd><%= f.text_area :conditions, value: @item.conditions.join("\n"), style: "height: 100px;" %></dd>
+<div class="see mod-cms-nodelist">
+  <div class="mb-3">
+    <label><%= @model.t :conditions %><%= @model.tt :conditions %></label>
+    <%= f.text_area :conditions, value: @item.conditions.join("\n"), class: "form-control" %>
+  </div>
 
-  <dt><%= @model.t :sort %><%= @model.tt :sort %></dt>
-  <dd><%= f.select :sort, @item.sort_options, include_blank: " " %></dd>
+  <div class="mb-3">
+    <label><%= @model.t :sort %><%= @model.tt :sort %></label>
+    <%= f.select :sort, @item.sort_options, include_blank: " ", class: "form-control" %>
+  </div>
 
-  <dt><%= @model.t :limit %><%= @model.tt :limit %></dt>
-  <dd><%= f.number_field :limit %></dd>
+  <div class="mb-3">
+    <label><%= @model.t :limit %><%= @model.tt :limit %></label>
+    <%= f.number_field :limit, class: "form-control" %>
+  </div>
 
-  <dt><%= @model.t :upper_html %><%= @model.tt :upper_html %></dt>
-  <dd><%= f.text_area :upper_html, class: :html %></dd>
+  <div class="mb-3">
+    <label><%= @model.t :upper_html %><%= @model.tt :upper_html %></label>
+    <%= f.text_area :upper_html, class: :html, rows: "6" %>
+  </div>
 
-  <dt><%= @model.t :loop_html %><%= @model.tt :loop_html %></dt>
-  <dd><%= f.select :loop_setting_id, ancestral_loop_settings, include_blank: t('cms.input_directly') %></dd>
-  <dd><%= f.text_area :loop_html, class: :html, style: "height: 100px;" %></dd>
+  <div class="mb-3">
+    <label><%= @model.t :loop_html %><%= @model.tt :loop_html %></label>
+    <%= f.select :loop_setting_id, ancestral_loop_settings, include_blank: t('cms.input_directly'), class: "form-control" %>
+    <%= f.text_area :loop_html, class: :html, rows: "6" %>
+  </div>
 
-  <dt><%= @model.t :lower_html %><%= @model.tt :lower_html %></dt>
-  <dd><%= f.text_area :lower_html, class: :html %></dd>
-</dl>
+  <div class="mb-3">
+    <label><%= @model.t :lower_html %><%= @model.tt :lower_html %></label>
+    <%= f.text_area :lower_html, class: :html, rows: "6" %>
+  </div>
+</div>

@@ -7,5 +7,7 @@
   <dd><%= f.select :state, @item.state_options %></dd>
 
   <dt><%= @model.t :released %><%= @model.tt :released %></dt>
+  <% if false %>
   <dd><%= f.text_field :released, class: "datetime js-datetime", value: tryb { @item.released.strftime("%Y/%m/%d %H:%M") } %></dd>
+  <% end %>
 </dl>
