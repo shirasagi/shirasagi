@@ -91,16 +91,6 @@ describe "gws_share_files", type: :feature, dbscope: :example, tmpdir: true do
     context "#download_all with auth", js: true do
       before { login_gws_user }
 
-      # after do
-      #   temporary = SecureRandom.hex(4).to_s
-      #   item.class.create_download_directory(gws_user._id,
-      #                                        item.class.download_root_path,
-      #                                        item.class.zip_path(gws_user._id, temporary))
-      #   File.open(item.class.zip_path(gws_user._id, temporary), "w").close
-      #   expect(FileTest.exist?(item.class.zip_path(gws_user._id, @created_zip_tmp_dir))).to be_falsey
-      #   expect(FileTest.exist?(item.class.zip_path(gws_user._id, temporary))).to be_truthy
-      # end
-
       it "#download_all" do
         item
         visit index_path
@@ -108,10 +98,13 @@ describe "gws_share_files", type: :feature, dbscope: :example, tmpdir: true do
         page.accept_confirm do
           find('.download-all').click
         end
-        wait_for_ajax
-        # @created_zip_tmp_dir = Dir.entries(item.class.download_root_path)
-        #                            .find{ |elem| elem.include?(gws_user._id.to_s + "_") }.split("_").last
-        # expect(FileTest.exist?(item.class.zip_path(gws_user._id, @created_zip_tmp_dir))).to be_truthy
+
+        wait_for_download
+
+        entry_names = ::Zip::File.open(downloads.first) do |entries|
+          entries.map { |entry| entry.name }
+        end
+        expect(entry_names).to include(item.name)
       end
     end
   end
