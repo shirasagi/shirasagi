@@ -1,5 +1,6 @@
 module Voice::Lockable
   extend ActiveSupport::Concern
+  extend SS::Translation
 
   EPOCH = Time.zone.at(0).utc.freeze
 

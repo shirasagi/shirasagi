@@ -113,6 +113,8 @@ ja:
         user_csv_file_id: ユーザーCSVファイル
       chorg/model/changeset:
         type: 種別
+        sources: 移動元
+        destinations: 移動先
       chorg/run_params:
         add_newly_created_group_to_site: 新規作成グループをサイトに追加
         reservation: 予約実行

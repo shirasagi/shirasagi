@@ -93,8 +93,11 @@ ja:
         form_id: アンケート
       gws/survey/notification:
         notification_notice_state: 通知
+        notification_noticed_at: 通知日時
       gws/addon/survey/group_setting:
         survey_default_due_date: 回答期限日初期値
+      gws/survey/answer_state:
+        answered_users_hash: 回答状況
 
   tooltip:
     gws/survey/form:

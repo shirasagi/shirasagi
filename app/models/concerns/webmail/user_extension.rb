@@ -1,5 +1,6 @@
 module Webmail::UserExtension
   extend ActiveSupport::Concern
+  extend SS::Translation
 
   included do
     field :imap_default_index, type: Integer, default: 0

@@ -71,6 +71,7 @@ ja:
       gws/discussion/todo: ToDo
       gws/discussion/release: 公開設定
       gws/discussion/group_setting: 電子会議室
+      gws/discussion/quota: 容量制限
 
   mongoid:
     models:
@@ -86,24 +87,20 @@ ja:
           topic_quota_over: "スレッドの容量制限を超過している為、保存できませんでした。"
     attributes:
       gws/discussion/postable:
-        topic_id: スレッド
-        parent_id: 親投稿
+        name: タイトル
+        depth: 層
         descendants_updated: スレッド内更新日時
         main_topic: メインスレッド
-        permanently: 編集禁止
-        permit_comment: コメント投稿
-      gws/discussion/forum:
-        name: タイトル
-        order: 並び順
-        forum_quota: 容量制限
-      gws/discussion/topic:
-        name: タイトル
-        order: 並び順
         permit_comment: コメント投稿
         permanently: 編集禁止
-        topic_quota: 容量制限
-      gws/discussion/post:
-        name: タイトル
+        forum_quota: 電子会議室容量制限
+        topic_quota: スレッド容量制限
+        order: 並び順
+        forum_id: 電子会議室
+        topic_id: スレッド
+        parent_id: 親投稿
+      gws/addon/discussion/quota:
+        size: 使用量
       gws/addon/discussion/group_permission:
         group_ids: 管理グループ
         groups_hash: 管理グループ

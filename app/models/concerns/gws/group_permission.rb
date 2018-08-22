@@ -1,5 +1,6 @@
 module Gws::GroupPermission
   extend ActiveSupport::Concern
+  extend SS::Translation
   include SS::Permission
 
   included do

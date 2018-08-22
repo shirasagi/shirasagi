@@ -261,7 +261,7 @@ ja:
       gws/addon/permission:
         group_ids: 管理グループ
         permission_level: 権限レベル
-      gws/addon/group_permission:
+      gws/group_permission:
         group_ids: 管理グループ
         groups_hash: 管理グループ(ハッシュ)
         user_ids: 管理ユーザー
@@ -281,7 +281,7 @@ ja:
         readable_members_hash: 閲覧ユーザー(ハッシュ)
         readable_custom_group_ids: 閲覧カスタムグループ
         readable_custom_groups_hash: 閲覧カスタムグループ(ハッシュ)
-      gws/addon/member:
+      gws/member:
         member_ids: 参加ユーザー
         member_group_ids: 参加グループ
         member_custom_group_ids: 参加カスタムグループ
@@ -342,6 +342,8 @@ ja:
         menu_discussion_state: 電子会議室
         menu_contrast_label: コントラスト
         menu_contrast_state: コントラスト
+        menu_presence_label: 在席管理の表示
+        menu_presence_state: 在席管理の表示
       gws/addon/system/log_setting:
         log_save_days: ログ保持日数
         log_main_severity: 標準機能のログ
@@ -391,7 +393,8 @@ ja:
         resizing_height: 画像リサイズ（高さ）
       gws/addon/edit_lock:
         lock_owner: 所有者
-        lock_until: 期限
+        lock_owner_id: ロック所有者
+        lock_until: ロック期限
       gws/addon/schedules:
         schedule_ids: スケジュール
       gws/addon/import/user:
@@ -417,6 +420,8 @@ ja:
         in_file: ファイル
       gws/addon/import/role:
         in_file: ファイル
+      gws/addon/link:
+        links: リンク
 
   tooltip:
     gws/model/category:
