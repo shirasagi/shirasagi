@@ -67,7 +67,7 @@ module SS::BaseFilter
       return @cur_user
     end
 
-    @cur_user = get_user_by_session
+    @cur_user = get_user_by_session || get_user_by_access_token
     if @cur_user
       set_last_logged_in
       return @cur_user
@@ -103,8 +103,11 @@ module SS::BaseFilter
         "last_logged_in" => Time.zone.now.to_i
       }
       session[:user]["password"] = SS::Crypt.encrypt(opts[:password]) if opts[:password].present?
+      session[:user]["expired_at"] = opts[:expired_at] if opts[:expired_at].present?
     end
-    cookies[:login_path] = { :value => request_path, :expires => 7.days.from_now }
+    if request_path =~ /\/login(\.\w+)?$/
+      cookies[:login_path] = { :value => request_path, :expires => 7.days.from_now }
+    end
     session[:logout_path] = opts[:logout_path]
     redirect_to sns_mypage_path if opts[:redirect]
     @cur_user = user

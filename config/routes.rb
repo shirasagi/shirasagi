@@ -52,6 +52,7 @@ SS::Application.routes.draw do
     resources :sys_notices, only: [:index, :show]
     get   "status" => "login#status", as: :login_status
     get   "auth_token" => "auth_token#index", as: :auth_token
+    get   "access_token" => "access_token#create", as: :access_token
     get   "cms" => "mypage#cms"
     get   "gws" => "mypage#gws"
 
