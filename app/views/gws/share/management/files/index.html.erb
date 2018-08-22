@@ -8,7 +8,7 @@
         <% opts = params[:folder] ? { id: item, folder: params[:folder] } : { id: item } %>
         <%= link_to t('ss.links.show'), opts.merge(action: :show) if item.allowed?(:read, @cur_user, site: @cur_site) %>
         <%= link_to t('ss.links.delete'), opts.merge(action: :delete) if item.allowed?(:delete, @cur_user, site: @cur_site) %>
-        <%= link_to t('gws/share.links.active'), opts.merge(action: :recover) if item.allowed?(:delete, @cur_user, site: @cur_site) %>
+        <%= link_to t('ss.links.restore'), opts.merge(action: :recover) if item.allowed?(:delete, @cur_user, site: @cur_site) %>
 
         <% if item.try(:image) %>
           <%= link_to image_tag(item.image.thumb_url), item.image.url, { class: "thumb", target: "_blank" } %>
