@@ -28,7 +28,7 @@
     </h2>
 
     <div class="mb-2 tree-item<%= ' is-current' if @folder.blank? %>">
-      <%= link_to t('gws/share.all'), gws_share_files_path %>
+      <%= link_to t('gws/share.all'), gws_share_files_path(category: params[:category]) %>
     </div>
     <div class="tree-navi"></div>
 

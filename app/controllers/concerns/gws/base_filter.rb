@@ -107,6 +107,6 @@ module Gws::BaseFilter
   end
 
   def set_tree_navi
-    @tree_navi = gws_share_apis_folder_list_path(id: params[:folder], type: params[:controller])
+    @tree_navi = gws_share_apis_folder_list_path(id: params[:folder], type: params[:controller], category: params[:category])
   end
 end

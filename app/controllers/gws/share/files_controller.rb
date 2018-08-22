@@ -18,12 +18,13 @@ class Gws::Share::FilesController < ApplicationController
 
   def set_crumbs
     set_folder
-    @crumbs << [@cur_site.menu_share_label || t("mongoid.models.gws/share"), gws_share_files_path]
+    @crumbs << [@cur_site.menu_share_label || t("mongoid.models.gws/share"), gws_share_files_path(category: params[:category])]
     if @folder.present?
       folder_hierarchy_count = @folder.name.split("/").count - 1
       0.upto(folder_hierarchy_count) do |i|
         item_name = @folder.name.split("/")[0, i+1].join("/")
-        item_path = gws_share_folder_files_path(folder: Gws::Share::Folder.site(@cur_site).find_by(name: item_name).id)
+        item_folder = Gws::Share::Folder.site(@cur_site).find_by(name: item_name)
+        item_path = gws_share_folder_files_path(folder: item_folder.id, category: params[:category])
         @crumbs << [@folder.name.split("/")[i], item_path]
       end
     end
@@ -35,7 +36,10 @@ class Gws::Share::FilesController < ApplicationController
 
   def set_category
     return if params[:category].blank?
-    @category ||= Gws::Share::Category.site(@cur_site).find(id: params[:category])
+
+    @category ||= Gws::Share::Category.site(@cur_site).where(id: params[:category]).first
+    return unless @category
+
     raise '403' unless @category.readable?(@cur_user) || @category.allowed?(:read, @cur_user, site: @cur_site)
   end
 
@@ -148,7 +152,7 @@ class Gws::Share::FilesController < ApplicationController
         tmp_file.close
       end
     else
-      location = { action: :show, folder: @item.folder_id } if params[:action] == "update" && before_folder_id != @item.folder_id
+      location = { action: :show, folder: @item.folder_id, category: params[:category] } if params[:action] == "update" && before_folder_id != @item.folder_id
       render_update @item.update, { location: location }
     end
   end
@@ -232,7 +236,7 @@ class Gws::Share::FilesController < ApplicationController
   def disable
     raise '403' unless @item.allowed?(:delete, @cur_user, site: @cur_site)
     notice = t("ss.notice.deleted")
-    location = gws_share_folder_files_path(folder: @item.folder_id)
+    location = { action: :index, folder: params[:folder], category: params[:category] }
     render_destroy @item.disable, { location: location, notice: notice }
   end
 

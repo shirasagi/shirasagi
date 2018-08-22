@@ -5,9 +5,10 @@
     <% @items.each do |item| %>
     <li class="list-item">
       <nav class="tap-menu">
-        <%= link_to t('ss.links.show'), action: :show, id: item, folder: item.folder_id if item.allowed?(:read, @cur_user, site: @cur_site) %>
-        <%= link_to t('ss.links.edit'), action: :edit, id: item, folder: item.folder_id if item.allowed?(:edit, @cur_user, site: @cur_site) %>
-        <%= link_to t('ss.links.delete'), action: :delete, id: item, folder: item.folder_id if item.allowed?(:delete, @cur_user, site: @cur_site) %>
+        <% opts = params[:folder] ? { id: item, folder: params[:folder] } : { id: item } %>
+        <%= link_to t('ss.links.show'), opts.merge(action: :show) if item.allowed?(:read, @cur_user, site: @cur_site) %>
+        <%= link_to t('ss.links.edit'), opts.merge(action: :edit) if item.allowed?(:edit, @cur_user, site: @cur_site) %>
+        <%= link_to t('ss.links.delete'), opts.merge(action: :delete) if item.allowed?(:delete, @cur_user, site: @cur_site) %>
 
         <% if item.try(:image) %>
           <%= link_to image_tag(item.image.thumb_url), item.image.url, { class: "thumb", target: "_blank" } %>
@@ -18,7 +19,7 @@
 
       <label class="check"><input type="checkbox" name="ids[]" value="<%= item.id %>" /></label>
       <div class="info">
-        <%= link_to({ action: :show, id: item, folder: item.folder_id }, class: "title") do %>
+        <%= link_to opts.merge(action: :show), class: "title" do %>
           <i class="material-icons md-18 md-dark title-icon">&#xE24D;</i>
           <%= item.name %>
         <% end %>
@@ -31,7 +32,7 @@
           <span class="gws-share-categories">
             <% item.categories.readable(@cur_user, site: @cur_site).compact.each do |category| %>
               <% if params[:folder].present? %>
-                <%= link_to category.trailing_name, gws_share_folder_files_path(folder: item.folder_id,category: category.id),
+                <%= link_to category.trailing_name, gws_share_folder_files_path(folder: item.folder_id, category: category.id),
                             class: "gws-category-label", style: category_label_css(category) %>
               <% else %>
                 <%= link_to category.trailing_name, gws_share_files_path(category: category.id),
@@ -60,7 +61,7 @@
     <% @sub_folders.each do |item| %>
     <li class="list-item">
       <div class="info">
-        <%= link_to gws_share_folder_files_path(folder: item), class: "title" do %>
+        <%= link_to gws_share_folder_files_path(folder: item, category: params[:category]), class: "title" do %>
           <i class="material-icons md-18 md-dark title-icon">&#xE2C8;</i>
           <%= item.trailing_name %>
         <% end %>
