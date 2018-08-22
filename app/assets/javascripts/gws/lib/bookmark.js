@@ -27,13 +27,13 @@ Gws_Bookmark.prototype.render = function(opts) {
   }
   var bookmarkName = opts['name'] || this.defaultName;
 
-  var span = $('<span class="bookmark-icon"></span>').append($('<i class="material-icons"></i>').html(icon));
-  var ul = $('<ul class="ss-dropdown-menu"></ul>');
-  var li = $('<li></li>');
-  li.append($('<input name="bookmark[name]" id="bookmark_name" class="bookmark-name" type="text">').val(bookmarkName));
-  li.append($('<input name="button" type="button" class="btn update" />').val(opts['save']));
-  li.append($('<input name="button" type="button" class="btn delete" />').val(opts['delete']));
-  ul.append($('<li><div class="bookmark-notice"></div></li>')).append(li);
+  var span = $('<span class="bookmark-icon dropdown-toggle" id="dropdown-bookmark" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></span>').append($('<i class="material-icons"></i>').html(icon));
+  var ul = $('<ul class="ss-dropdown-menu dropdown-menu" aria-labelledby="dropdown-bookmark"></ul>');
+  var li = $('<li class="dropdown-item"></li>');
+  li.append($('<input name="bookmark[name]" id="bookmark_name" class="bookmark-name form-control" type="text">').val(bookmarkName));
+  li.append($('<input name="button" type="button" class="btn btn-outline-secondary update" />').val(opts['save']));
+  li.append($('<input name="button" type="button" class="btn btn-outline-secondary delete" />').val(opts['delete']));
+  ul.append($('<li class="dropdown-item"><div class="bookmark-notice"></div></li>')).append(li);
   this.el.html(span).append(ul);
 
   this.el.click(function(e) {

@@ -89,41 +89,97 @@
           <% end %>
         <% end %>
       <% elsif @ss_mode == :gws %>
-        <% if @cur_site.menu_bookmark_visible? %>
-          <div class="gws-bookmark ss-dropdown ss-dropdown-toggle">
-            <% bookmark = Gws::Bookmark.find_by(user: @cur_user, site: @cur_site, url: request.fullpath) rescue nil %>
-            <%= jquery do %>
-              new Gws_Bookmark().render({
-                id: '<%= bookmark.try(:id) %>',
-                name: '<%= bookmark.try(:name) %>',
-                default_name: '<%= window_name %>',
-                url: '<%= gws_apis_bookmarks_path %>',
-                model: '<%= @model.name.underscore if @model %>',
-                save: '<%= I18n.t('ss.buttons.save') %>',
-                delete: '<%= I18n.t('ss.buttons.delete') %>'
-              });
-            <% end %>
-          </div>
-        <% end %>
+        <div class="btn-group mt-0 mb-0">
+          <% if @cur_site.menu_bookmark_visible? %>
+            <div class="gws-bookmark dropdown">
+              <% bookmark = Gws::Bookmark.find_by(user: @cur_user, site: @cur_site, url: request.fullpath) rescue nil %>
+              <%= jquery do %>
+                new Gws_Bookmark().render({
+                  id: '<%= bookmark.try(:id) %>',
+                  name: '<%= bookmark.try(:name) %>',
+                  default_name: '<%= window_name %>',
+                  url: '<%= gws_apis_bookmarks_path %>',
+                  model: '<%= @model.name.underscore if @model %>',
+                  save: '<%= I18n.t('ss.buttons.save') %>',
+                  delete: '<%= I18n.t('ss.buttons.delete') %>'
+                });
+              <% end %>
+            </div>
+          <% end %>
 
-        <% if Gws::Memo::Message.allowed?(:edit, @cur_user, site: @cur_site) %>
+          <% if Gws::Memo::Message.allowed?(:edit, @cur_user, site: @cur_site) %>
+            <%
+               search_condition = SS.config.gws.dig("popup_notice", "search_condition")
+              if search_condition == "unseen"
+                default_label  = t("gws/memo/message.links.seens")
+                switched_label = t("gws/memo/message.links.unseens")
+                default_url    = recent_gws_memo_messages_path(s: { unseen: @cur_user.id })
+                switched_url   = recent_gws_memo_messages_path
+              else
+                default_label  = t("gws/memo/message.links.unseens")
+                switched_label = t("gws/memo/message.links.seens")
+                default_url    = recent_gws_memo_messages_path
+                switched_url   = recent_gws_memo_messages_path(s: { unseen: @cur_user.id })
+              end
+            %>
+            <%= jquery do %>
+              $(".gws-memo-message .unseens").click(function() {
+                $(".gws-memo-message.popup-notice-container [data-url]").each(function() {
+                  var url = $(this).attr("data-url");
+                  var switched = $(this).attr("data-url-switched");
+                  $(this).attr("data-url", switched);
+                  $(this).attr("data-url-switched", url);
+                });
+                var label = $(this).text();
+                var switched = $(this).attr("data-label-switched");
+                $(this).text(switched);
+                $(this).attr("data-label-switched", label);
+              });
+              (new SS_PopupNotice(".gws-memo-message.popup-notice-container")).render();
+            <% end %>
+            <div class="gws-memo-message popup-notice-container dropdown">
+              <%= link_to gws_memo_messages_path, "class" => "user-message ajax-popup-notice toggle-popup-notice dropdown-toggle", "data-url" => default_url, "data-url-switched" => switched_url, "id" => "dropdown-message", "data-toggle" => "dropdown", "aria-haspopup" => "true", "aria-expanded" => "false" do %>
+                <% count = Gws::Memo::Message.unseens(@cur_user, @cur_site).size %>
+                <% if count > 0 %><span class="unseen"><%= count %></span><% end %>
+              <% end %>
+              <div class="popup-notice dropdown-menu" aria-labelledby="dropdown-message">
+                <header class="popup-notice-header d-flex justify-content-between align-items-center p-2">
+                  <h2>
+                    <%= t('modules.gws/memo/message') %>
+                  </h2>
+                  <p>
+                    <%= link_to default_label, "#",
+                      "class" => "ajax-popup-notice unseens",
+                      "data-url" => default_url,
+                      "data-url-switched" =>  switched_url,
+                      "data-label-switched" => switched_label
+                    %>
+                  </p>
+                </header>
+                <div class="dropdown-divider"></div>
+                <div class="popup-notice-items"></div>
+                <div class="dropdown-divider"></div>
+                <div class="text-center"><%= link_to t("ss.links.more_all"), gws_memo_messages_path, class: "btn btn-secondary" %></div>
+              </div>
+            </div>
+          <% end %>
           <%
-             search_condition = SS.config.gws.dig("popup_notice", "search_condition")
+            search_condition = SS.config.gws.dig("popup_notice", "search_condition")
             if search_condition == "unseen"
               default_label  = t("gws/memo/message.links.seens")
               switched_label = t("gws/memo/message.links.unseens")
-              default_url    = recent_gws_memo_messages_path(s: { unseen: @cur_user.id })
-              switched_url   = recent_gws_memo_messages_path
+              default_url    = recent_gws_memo_notices_path(s: { unseen: @cur_user.id })
+              switched_url   = recent_gws_memo_notices_path
             else
               default_label  = t("gws/memo/message.links.unseens")
               switched_label = t("gws/memo/message.links.seens")
-              default_url    = recent_gws_memo_messages_path
-              switched_url   = recent_gws_memo_messages_path(s: { unseen: @cur_user.id })
+              default_url    = recent_gws_memo_notices_path
+              switched_url   = recent_gws_memo_notices_path(s: { unseen: @cur_user.id })
             end
           %>
           <%= jquery do %>
-            $(".gws-memo-message .unseens").click(function() {
-              $(".gws-memo-message.popup-notice-container [data-url]").each(function() {
+            $(".gws-memo-notice .unseens").click(function() {
+              $(".gws-memo-notice.popup-notice-container [data-url]").each(function() {
                 var url = $(this).attr("data-url");
                 var switched = $(this).attr("data-url-switched");
                 $(this).attr("data-url", switched);
@@ -134,79 +190,33 @@
               $(this).text(switched);
               $(this).attr("data-label-switched", label);
             });
-            (new SS_PopupNotice(".gws-memo-message.popup-notice-container")).render();
+            (new SS_PopupNotice(".gws-memo-notice.popup-notice-container")).render();
           <% end %>
-          <div class="gws-memo-message popup-notice-container">
-            <%= link_to gws_memo_messages_path, "class" => "user-message ajax-popup-notice toggle-popup-notice", "data-url" => default_url, "data-url-switched" => switched_url do %>
-              <% count = Gws::Memo::Message.unseens(@cur_user, @cur_site).size %>
-              <% if count > 0 %><span class="unseen"><%= count %></span><% end %>
+          <div class="gws-memo-notice popup-notice-container dropdown">
+            <%= link_to gws_memo_notices_path, "class" => "ajax-popup-notice toggle-popup-notice dropdown-toggle", "data-url" => default_url, "data-url-switched" => switched_url, "id" => "dropdown-notice", "data-toggle" => "dropdown", "aria-haspopup" => "true", "aria-expanded" => "false" do %>
+              <i class="material-icons">&#xE7F4;</i>
+              <% count = Gws::Memo::Notice.unseens(@cur_user, @cur_site).size %>
+              <% if count > 0 %><span class="unseen popup-notice-unseen"><%= count %></span><% end %>
             <% end %>
-            <div class="popup-notice" style="display: none;">
-              <header class="popup-notice-header">
-                <h2>
-                  <%= t('modules.gws/memo/message') %>
+            <div class="popup-notice dropdown-menu" aria-labelledby="dropdown-notice">
+              <header class="popup-notice-header d-flex justify-content-between align-items-center p-2">
+                <h2 class="h5 mb-0">
+                  <%= t('modules.gws/memo/notice') %>
+                </h2>
+                <p>
                   <%= link_to default_label, "#",
                     "class" => "ajax-popup-notice unseens",
                     "data-url" => default_url,
                     "data-url-switched" =>  switched_url,
                     "data-label-switched" => switched_label
                   %>
-                </h2>
+                </p>
               </header>
+              <div class="dropdown-divider"></div>
               <div class="popup-notice-items"></div>
-              <%= link_to t("ss.links.more_all"), gws_memo_messages_path, class: "more-all" %>
+              <div class="dropdown-divider"></div>
+              <div class="text-center"><%= link_to t("ss.links.more_all"), gws_memo_notices_path, class: "btn btn-secondary" %></div>
             </div>
-          </div>
-        <% end %>
-        <%
-          search_condition = SS.config.gws.dig("popup_notice", "search_condition")
-          if search_condition == "unseen"
-            default_label  = t("gws/memo/message.links.seens")
-            switched_label = t("gws/memo/message.links.unseens")
-            default_url    = recent_gws_memo_notices_path(s: { unseen: @cur_user.id })
-            switched_url   = recent_gws_memo_notices_path
-          else
-            default_label  = t("gws/memo/message.links.unseens")
-            switched_label = t("gws/memo/message.links.seens")
-            default_url    = recent_gws_memo_notices_path
-            switched_url   = recent_gws_memo_notices_path(s: { unseen: @cur_user.id })
-          end
-        %>
-        <%= jquery do %>
-          $(".gws-memo-notice .unseens").click(function() {
-            $(".gws-memo-notice.popup-notice-container [data-url]").each(function() {
-              var url = $(this).attr("data-url");
-              var switched = $(this).attr("data-url-switched");
-              $(this).attr("data-url", switched);
-              $(this).attr("data-url-switched", url);
-            });
-            var label = $(this).text();
-            var switched = $(this).attr("data-label-switched");
-            $(this).text(switched);
-            $(this).attr("data-label-switched", label);
-          });
-          (new SS_PopupNotice(".gws-memo-notice.popup-notice-container")).render();
-        <% end %>
-        <div class="gws-memo-notice popup-notice-container">
-          <%= link_to gws_memo_notices_path, "class" => "ajax-popup-notice toggle-popup-notice", "data-url" => default_url, "data-url-switched" => switched_url do %>
-            <i class="material-icons">&#xE7F4;</i>
-            <% count = Gws::Memo::Notice.unseens(@cur_user, @cur_site).size %>
-            <% if count > 0 %><span class="unseen popup-notice-unseen"><%= count %></span><% end %>
-          <% end %>
-          <div class="popup-notice" style="display: none;">
-            <header class="popup-notice-header">
-              <h2>
-                <%= t('modules.gws/memo/notice') %>
-                <%= link_to default_label, "#",
-                  "class" => "ajax-popup-notice unseens",
-                  "data-url" => default_url,
-                  "data-url-switched" =>  switched_url,
-                  "data-label-switched" => switched_label
-                %>
-              </h2>
-            </header>
-            <div class="popup-notice-items"></div>
-            <%= link_to t("ss.links.more_all"), gws_memo_notices_path, class: "more-all" %>
           </div>
         </div>
       <% end %>
@@ -287,6 +297,51 @@
     <% elsif controller.navi_view_file %>
     <%= render partial: controller.navi_view_file %>
     <% end %>
+  </div>
+</div>
+
+<script>
+$(function () {
+  var $body = $('body');
+  $('#js__btn').on('click', function () {
+    $body.toggleClass('nav-open');
+  });
+  $('#js__nav').on('click', function () {
+    $body.removeClass('nav-open');
+  });
+});
+</script>
+<div id="navi">
+  <div class="wrap">
+    <div class="main-navi">
+      <div class="gws-menu-btn" id="js__btn">
+        <i class="material-icons"><span data-txt-menu="menu" data-txt-close="close"></span></i>
+      </div>
+      <nav class="gws-menu" id="js__nav">
+        <ul class="d-flex flex-wrap justify-content-center">
+          <li><a class="icon-portal" href="/.g1/">ポータル</a></li>
+          <li><a class="icon-schedule" href="/.g1/schedule">スケジュール</a></li>
+          <li><a class="icon-todo" href="/.g1/schedule/todo">ToDo</a></li>
+          <li><a class="icon-reminder" href="/.g1/reminder">リマインダー</a></li>
+          <li><a class="icon-memo" href="/.g1/memo/messages/INBOX">メッセージ</a></li>
+          <li><a class="icon-bookmark" href="/.g1/gws/bookmarks">お気に入り</a></li>
+          <li><a class="icon-attendance" href="/.g1/attendance">出退勤</a></li>
+          <li><a class="icon-report" href="/.g1/report/files">レポート</a></li>
+          <li><a class="icon-workflow" href="/.g1/workflow/files">ワークフロー</a></li>
+          <li><a class="icon-circular" href="/.g1/circular">回覧板</a></li>
+          <li><a class="icon-monitor" href="/.g1/monitor">照会・回答</a></li>
+          <li><a class="icon-board" href="/.g1/board">掲示板</a></li>
+          <li><a class="icon-faq" href="/.g1/faq/-/-/topics">よくある質問</a></li>
+          <li><a class="icon-question" href="/.g1/qna/-/-/topics">Ｑ＆Ａ</a></li>
+          <li><a class="icon-discussion" href="/.g1/discussion/-/forums">電子会議室</a></li>
+          <li><a class="icon-share" href="/.g1/share/files">共有ファイル</a></li>
+          <li><a class="icon-address" href="/.g1/shared_address/addresses">共有アドレス帳</a></li>
+          <li><a class="icon-address" href="/.g1/personal_address/addresses">個人アドレス帳</a></li>
+          <li><a class="icon-search" href="/.g1/elasticsearch/search">全文検索</a></li>
+          <li><a class="icon-conf" href="/.g1/gws/site">設定</a></li>
+        </ul>
+      </nav>
+    </div>
   </div>
 </div>
 

@@ -122,108 +122,40 @@ td {
 
 // -------------------------------------------------------------------------------------------------
 // Popup Notice
-.popup-notice-container {
-  position: relative;
-  @include media-breakpoint-down(sm) {
-    position: static;
-  }
-}
-.popup-notice-container .popup-notice {
-  position: absolute;
-  display: inline-block;
-  top: 100%;
-  right: -55px;
-  width: 450px;
-  box-shadow: 0px 3px 12px rgba(0, 0, 0, 0.2);
-  background: #ffffff;
-  @include media-breakpoint-down(sm) {
-    right: 0;
-    width: 100%;
-    max-width: 450px;
-  }
-  &:before {
-    content: "";
-    display: block;
-    position: absolute;
-    top: -14px;
-    right: 70px;
-    width: 0;
-    height: 0;
-    border: 9px solid transparent;
-    border-top: none;
-    border-bottom: 14px solid $white;
-    @include media-breakpoint-down(sm) {
-      right: 229px;
-    }
-  }
-  h2 {
-    padding: 10px;
-    border-bottom: 1px solid #f2f2f2;
-    a {
-      float: right;
-    }
-  }
-  ul {
-    margin: 0;
-    li {
-      padding: 15px;
-      border-bottom: 1px solid  #f2f2f2;
-      &.list-item {
-        width: 100%;
-        &.unseen {
-          background-color: #f9e9e3;
-        }
-        &:hover {
-          background: #fbeee8;
-        }
-      }
-    }
-  }
-  a { color: #f25a38 !important; }
-  .more-all {
-    display: inline-block;
-    float: left;
-    width: 100%;
-    padding: 10px 0;
-    background: #f2f2f2;
-    text-align: center;
-    &:hover {
-      background: #ebebeb;
-    }
-  }
-}
-.gws-memo-notice {
-  display: inline-block;
+.gws-memo-notice, .gws-memo-message, .gws-bookmark {
   &:hover {
     background: #424242;
   }
-  &>.ajax-popup-notice {
+  & > .ajax-popup-notice, .bookmark-icon {
     position: relative;
     display: block;
     padding: 12px;
-    .unseen {
-      position: absolute;
-      top: 7px;
-      right: 8px;
-      display: inline-block;
-      min-width: 16px;
-      padding: 0 2px;
-      border-radius: 4px;
-      background-color: #f00;
-      font-size: 80%;
-      text-align: center;
+    color: $white;
+    &:after {
+      display: none;
     }
   }
 }
 .gws-memo-message {
-  display: inline-block;
-  vertical-align: bottom;
-  @include media-breakpoint-down(sm) {
-    .popup-notice:before {
-      right: 279px;
-    }
+  & > .ajax-popup-notice {
+    width: 48px;
+    height: 48px;
+    background: url(/assets/img/ic-message-off.png) no-repeat center center;
   }
 }
+#head .user .unseen {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  display: inline-block;
+  min-width: 16px;
+  padding: 0 2px;
+  border-radius: 3px;
+  background: $red;
+  font-size: $px12;
+  text-align: center;
+}
+
 // -------------------------------------------------------------------------------------------------
 // gws-notice-post
 .gws-notice-post {
@@ -385,53 +317,6 @@ td {
     .text-zoom {
       span { margin-bottom: 0; }
     }
-    .gws-bookmark {
-      display: inline-block;
-      padding: 10px 10px;
-      &:hover {
-        background-color: #424242;
-      }
-      .bookmark-icon {
-        color: $white;
-      }
-      .ss-dropdown-menu {
-        right: 0;
-        padding: 5px 5px;
-        @include media-breakpoint-down(sm) { left: 0; }
-        input[type=text] {
-          width: 100%;
-          margin-top: 5px;
-        }
-        .btn {
-          margin-top: 5px;
-          margin-right: 5px;
-        }
-      }
-    }
-    .user-message {
-      display: block;
-      width: 50px;
-      height: 49px;
-      background-image: url(/assets/img/ic-message-off.png);
-      background-repeat: no-repeat;
-      background-position: center center;
-      text-decoration: none;
-      text-align: right;
-      &:hover {
-        background-color: $gray3;
-      }
-      .unseen {
-        display: inline-block;
-        min-width: 16px;
-        margin: 8px 8px 0 0;
-        padding: 0 2px;
-        border-radius: 4px;
-        background-color: #f00;
-        color: #fff;
-        font-size: 80%;
-        text-align: center;
-      }
-    }
     .gws-contrast {
       padding: 8px 10px;
       border-bottom: 1px solid  #f2f2f2;
@@ -450,7 +335,6 @@ td {
     .gws-contrast-loading, .gws-contrast-error {
       padding: 8px 10px;
     }
-
     #user-contrast-menu {
       height: auto;
       min-height: 200px;
@@ -612,6 +496,120 @@ td {
     padding: 0;
   }
 }
+.gws-menu-btn {
+  position: relative;
+  z-index: 9999;
+  @include media-breakpoint-down(sm) {
+    display: none;
+  }
+  span {
+    display: inline-block;
+    margin: 10px 30px;
+    padding: 5px 10px;
+    border: 1px solid $gray1;
+    border-radius: 3px;
+    color: $white;
+    font-size: $px16;
+    cursor: pointer;
+  }
+}
+.gws-menu-btn span:after {
+  content: attr(data-txt-menu);
+}
+.nav-open .gws-menu-btn span:after {
+  content: attr(data-txt-close);
+}
+.gws-menu {
+  position: fixed;
+  top: 0;
+  right: 0;
+  left: 0;
+  z-index: 9998;
+  height: 100%;
+  padding: 30px 30px 30px 120px ;
+  background: rgba(0,0,0,.8);
+  -webkit-transition: all .5s;
+  transition: all .5s;
+  visibility: hidden;
+  opacity: 0;
+  @include media-breakpoint-down(sm) {
+    position: static;
+  }
+  li a {
+    display: block;
+    width: 120px;
+    margin: 15px;
+    padding-top: 120px;
+    color: $white;
+    text-align: center;
+    &:hover {
+      text-decoration: none;
+    }
+  }
+  .icon-portal {
+    background: url(/assets/img/ic_gws-navi.png) no-repeat 0 0;
+  }
+  .icon-schedule {
+    background: url(/assets/img/ic_gws-navi.png) no-repeat -120px 0;
+  }
+  .icon-todo {
+    background: url(/assets/img/ic_gws-navi.png) no-repeat -240px 0;
+  }
+  .icon-reminder {
+    background: url(/assets/img/ic_gws-navi.png) no-repeat -360px 0;
+  }
+  .icon-memo {
+    background: url(/assets/img/ic_gws-navi.png) no-repeat -480px 0;
+  }
+  .icon-bookmark {
+    background: url(/assets/img/ic_gws-navi.png) no-repeat -600px 0;
+  }
+  .icon-attendance {
+    background: url(/assets/img/ic_gws-navi.png) no-repeat -720px 0;
+  }
+  .icon-report {
+    background: url(/assets/img/ic_gws-navi.png) no-repeat -840px 0;
+  }
+  .icon-workflow {
+    background: url(/assets/img/ic_gws-navi.png) no-repeat -960px 0;
+  }
+  .icon-circular {
+    background: url(/assets/img/ic_gws-navi.png) no-repeat -1080px 0;
+  }
+  .icon-monitor {
+    background: url(/assets/img/ic_gws-navi.png) no-repeat -1200px 0;
+  }
+  .icon-board {
+    background: url(/assets/img/ic_gws-navi.png) no-repeat -1320px 0;
+  }
+  .icon-faq {
+    background: url(/assets/img/ic_gws-navi.png) no-repeat -1440px 0;
+  }
+  .icon-question {
+    background: url(/assets/img/ic_gws-navi.png) no-repeat -1560px 0;
+  }
+  .icon-discussion {
+    background: url(/assets/img/ic_gws-navi.png) no-repeat -1680px 0;
+  }
+  .icon-share {
+    background: url(/assets/img/ic_gws-navi.png) no-repeat -1800px 0;
+  }
+  .icon-address {
+    background: url(/assets/img/ic_gws-navi.png) no-repeat -1920px 0;
+  }
+  .icon-search {
+    background: url(/assets/img/ic_gws-navi.png) no-repeat -2160px 0;
+  }
+  .icon-conf {
+    background: url(/assets/img/ic_gws-navi.png) no-repeat -2280px 0;
+  }
+}
+.nav-open .gws-menu {
+  -webkit-transition: all .5s;
+  transition: all .5s;
+  visibility: visible;
+  opacity: 1;
+}
 // -------------------------------------------------------------------------------------------------
 // content-head
 .content-head {
@@ -632,21 +630,6 @@ td {
   }
   .icon-content:before {
     background: url(/assets/img/ic_main-navi.png) no-repeat -32px 0;
-  }
-  .dropdown {
-    margin-left: 1.2rem;
-    .btn {
-      margin: 0;
-    }
-  }
-  .dropdown-menu {
-    min-width: 400px;
-    @include media-breakpoint-down(sm) {
-      min-width: 320px;
-    }
-  }
-  .dropdown-menu a {
-    width: 50%;
   }
   .nav-tabs {
     margin-bottom: -15px;
@@ -921,41 +904,6 @@ td {
     @include media-breakpoint-down(sm) {
       h2, &.active h2, &:hover h2 {
         background-position: 97% center;
-      }
-    }
-  }
-  .ss-dropdown-menu {
-    @include clear;
-    width: 400px;
-    top: -1px;
-    left: 211px;
-    margin: 0;
-    padding: 14px 10px 14px 20px;
-    border: $border-gray4;
-    border-left: none;
-    background: $white;
-    li {
-      float: left;
-      width: 180px;
-      &:nth-child(2n+1) {
-        clear: both;
-      }
-    }
-    a {
-      display: block;
-      width: 100%;
-      padding: 8px 0px 8px 15px;
-      background: url(/assets/img/ic-li.png) no-repeat left center;
-    }
-    @include media-breakpoint-down(sm) {
-      position: static;
-      width: 100%;
-      li {
-        width: 100%;
-        padding: 0;
-      }
-      a {
-        width: 100%;
       }
     }
   }
