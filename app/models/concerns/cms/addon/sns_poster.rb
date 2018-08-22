@@ -4,6 +4,10 @@ module Cms::Addon
     include Cms::Content
     extend SS::Addon
 
+    # media_ids is restricted up to 4
+    # see: https://developer.twitter.com/en/docs/tweets/post-and-engage/api-reference/post-statuses-update
+    TWITTER_MAX_MEDIA_COUNT = 4
+
     included do
 
       field :twitter_auto_post,   type: String, metadata: { branch: false }
@@ -85,20 +89,21 @@ module Cms::Addon
     def post_to_twitter
       tweet = "#{name}｜#{full_url}"
       client = connect_twitter
-      image_param = []
-      # 画像の添付があればuploadとupdateを用いて投稿
+      media_files = nil
       if file_ids.present?
-        i = 0
+        # 画像の添付を収集
+        media_files = []
         files.each do |file|
-          open(file.path, 'rb') do |f|
-            image_param << client.upload(f)
-          end
-          i += 1
-          break if i >= 4
+          next if !file.image?
+          media_files << ::File.new(file.path)
+          break if media_files.length >= TWITTER_MAX_MEDIA_COUNT
         end
-        twitter_param = client.update( tweet, { "media_ids"=> image_param.join(',') } )
-        # 画像の添付がなければupdateを用いて投稿
+      end
+      if media_files.present?
+        # 画像の添付があれば update_with_media を用いて投稿
+        twitter_param = client.update_with_media(tweet, media_files)
       else
+        # 画像の添付がなければ update を用いて投稿
         twitter_param = client.update(tweet)
       end
       # 戻り値から投稿IDを取得し、DBに保存
@@ -111,6 +116,12 @@ module Cms::Addon
     rescue => e
       Rails.logger.fatal("post_to_twitter failed: #{e.class} (#{e.message}):\n  #{e.backtrace.join("\n  ")}")
       self.set(twitter_post_error: "#{e.class} (#{e.message})")
+    ensure
+      if media_files.present?
+        media_files.each do |file|
+          file.close rescue nil
+        end
+      end
     end
 
     def delete_sns
