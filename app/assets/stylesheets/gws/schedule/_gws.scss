@@ -1,3 +1,8 @@
+// selected-files
+.selected-files span {
+  margin-right: 1rem;
+}
+
 // gws-schedule
 
 .gws-schedule-tool-calendars {
@@ -36,53 +41,6 @@
   }
   @include mb {
     top: auto;
-  }
-}
-.gws-schedule-box {
-  header {
-    @include clear;
-    line-height: 1.4;
-    .add-plan {
-      margin-left: 8px;
-      padding: 2px 5px;
-      border-radius: 4px;
-      background-color: #f40;
-      color: #fff;
-      font-size: 95%;
-      font-weight: normal;
-      text-decoration: none;
-      &:hover {
-        background-color: #f60;
-      }
-    }
-    .search {
-      float: right;
-      margin: -5px 0 -5px 20px;
-      * + * {
-        margin-left: 4px;
-      }
-      @include mb {
-        float: none;
-        margin: 0;
-        input[type="text"] {
-          width: auto !important;
-        }
-      }
-    }
-    .operations {
-      float: right;
-      margin: -5px 0 -5px 20px;
-      @include mb {
-        margin: 0;
-        .btn-print { display: none; }
-      }
-    }
-    h2 .search {
-      margin: -5px 0;
-    }
-    .bmd-form-group {
-      padding-top: unset;
-    }
   }
 }
 .gws-schedule-search {

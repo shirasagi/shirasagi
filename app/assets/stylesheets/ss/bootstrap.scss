@@ -56,6 +56,9 @@ textarea.form-control {
     margin-right: .5rem;
   }
 }
+.card-body.border-bottom {
+  border-bottom: 1px solid rgba(0, 0, 0, 0.05)!important;
+}
 .card-columns {
   @include media-breakpoint-only(xl) {
     column-count: 4;

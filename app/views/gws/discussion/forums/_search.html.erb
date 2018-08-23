@@ -1,7 +1,17 @@
 <% @s = OpenStruct.new params[:s] %>
-<div class="list-head-search">
-  <%= form_for :s, url: "", html: { class: "index-search", method: :get } do |f| %>
-    <%= f.text_field :keyword, style: "width: 300px;" %>
-    <input type="submit" value="<%= t('ss.buttons.search') %>" class="btn" />
-  <% end %>
+<div class="card mb-3">
+  <div class="card-body">
+    <%= form_for :s, url: "", html: { class: "index-search mb-0", method: :get } do |f| %>
+      <div class="form-row">
+        <div class="form-group pt-0">
+          <div class="input-group">
+            <%= f.text_field :keyword, class: "form-control", style: "width: 200px;" %>
+            <div class="input-group-append">
+              <input type="submit" value="<%= t('ss.buttons.search') %>" class="btn btn-outline-primary mb-0" />
+            </div>
+          </div>
+        </div>
+      </div>
+    <% end %>
+  </div>
 </div>

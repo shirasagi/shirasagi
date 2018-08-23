@@ -44,17 +44,27 @@
   });
 <% end %>
 
-<div class="operations">
-  <% if @download_url %>
-    <input type="button" value="CSV" class="btn btn-outline btn-csv" />
-  <% end %>
-  <input type="button" value="<%= t('ss.buttons.print') %>" class="btn btn-outline btn-print" />
-</div>
-
 <% category_options = @model.new(cur_site: @cur_site, cur_user: @cur_user).category_options %>
 <% @s = OpenStruct.new params[:s] %>
-<%= form_for :s, url: "", html: { method: :get, class: :search } do |f| %>
-  <%= f.select :category_id, category_options, include_blank: @model.t(:category_id) if category_options.present? %>
-  <%= f.text_field :keyword, style: "width: 140px;", placeholder: t("gws/schedule.search_plans") %>
-  <input type="submit" value="<%= t('ss.buttons.search') %>" class="btn btn-outline" />
+<%= form_for :s, url: "", html: { method: :get, class: "search mb-0" } do |f| %>
+  <div class="form-row">
+    <div class="form-group pt-0">
+      <%= f.select :category_id, category_options, include_blank: @model.t(:category_id) if category_options.present? %>
+    </div>
+    <div class="form-group pt-0">
+      <div class="input-group ml-2">
+        <%= f.text_field :keyword, placeholder: t("gws/schedule.search_plans"), class: "form-contorl", style: "width: 200px;" %>
+        <div class="input-group-append">
+          <input type="submit" value="<%= t('ss.buttons.search') %>" class="btn btn-outline-primary mb-0" />
+        </div>
+      </div>
+    </div>
+  </div>
 <% end %>
+
+<div class="operations">
+  <% if @download_url %>
+    <input type="button" value="CSV" class="btn-csv btn btn-outline-secondary mb-0" />
+  <% end %>
+  <input type="button" value="<%= t('ss.buttons.print') %>" class="btn-print btn btn-outline-secondary mb-0" />
+</div>

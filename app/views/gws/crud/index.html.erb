@@ -1,64 +1,74 @@
-<div class="index">
-  <%= render file: "_list_head" %>
+<%= render file: "_list_head" %>
 
-  <ul class="list-items">
-    <% @items.each do |item| %>
-    <li class="<%= @list_class ? Array[@list_class.call(item)].flatten.compact.join(' ') : 'list-item' %>">
-      <nav class="tap-menu">
-        <% if @tap_menu %>
-          <% @tap_menu.call item %>
+<div class="index table-responsive">
+  <table class="list-items table table-striped">
+    <thead>
+      <tr>
+        <th class="check"><input type="checkbox" /></th>
+        <th class="title">タイトル</th>
+        <th class="datetime">更新日時</th>
+        <th class="order">並び順</th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+      <% @items.each do |item| %>
+      <tr class="<%= @list_class ? Array[@list_class.call(item)].flatten.compact.join(' ') : 'list-item' %>">
+        <% if @index_check %>
+          <% @index_check.call item %>
         <% else %>
-          <%= link_to t('ss.links.show'), action: :show, id: item if item.allowed?(:read, @cur_user, site: @cur_site) %>
-          <%= link_to t('ss.links.edit'), action: :edit, id: item if item.allowed?(:edit, @cur_user, site: @cur_site) %>
-          <%= link_to t('ss.links.delete'), action: :delete, id: item if item.allowed?(:delete, @cur_user, site: @cur_site) %>
-
-          <% if item.try(:image) %>
-            <%= link_to image_tag(item.image.thumb_url), item.image.url, { class: "thumb", target: "_blank" } %>
-          <% elsif item.try(:image?) %>
-            <%= link_to image_tag(item.thumb_url), item.url, { class: "thumb", target: "_blank" } %>
-          <% end %>
-        <% end %>
-      </nav>
-
-      <% if @index_check %>
-        <% @index_check.call item %>
-      <% else %>
-        <label class="check"><input type="checkbox" name="ids[]" value="<%= item.id %>" /></label>
-      <% end %>
-
-      <div class="info">
-        <% if @index_title %>
-          <% @index_title.call item %>
-        <% else %>
-          <% title = item.try(:name) || item.try(:title) || item.try(:filename) || "##{item.id}" %>
-          <%= link_to title, { action: :show, id: item }, class: "title" %>
+          <td><div class="check"><input type="checkbox" name="ids[]" value="<%= item.id %>" /></div></td>
         <% end %>
 
-        <div class="meta">
-          <% if @index_meta %>
-            <% @index_meta.call item %>
+        <td class="title">
+          <% if @index_title %>
+            <% @index_title.call item %>
           <% else %>
-            <% if item.class.fields['_id'].type != BSON::ObjectId %>
-              <span class="id">#<%= item.id %></span>
-            <% end %>
-            <% if item.try(:updated) %>
-              <span class="datetime"><%= item.updated.strftime("%Y/%m/%d %H:%M") %></span>
-            <% end %>
-            <% if item.try(:filename) %>
-              <span class="filename"><%= File.basename item.filename %></span>
-            <% end %>
-            <% if item.try(:status) %>
-              <span class="state"><%= t "ss.state.#{item.status}" %></span>
-            <% end %>
-            <% if item.try(:order) %>
-              <span class="order"><%= item.order %></span>
-            <% end %>
+            <% title = item.try(:name) || item.try(:title) || item.try(:filename) || "##{item.id}" %>
+            <%= link_to title, { action: :show, id: item } %>
           <% end %>
-        </div>
-      </div>
-    </li>
-    <% end %>
-  </ul>
+        </td>
+
+        <% if @index_meta %>
+          <% @index_meta.call item %>
+        <% else %>
+          <% if item.try(:updated) %>
+            <td class="datetime"><%= item.updated.strftime("%Y/%m/%d %H:%M") %></td>
+          <% end %>
+          <% if item.try(:filename) %>
+            <td class="filename"><%= File.basename item.filename %></td>
+          <% end %>
+          <% if item.try(:status) %>
+            <td class="state"><%= t "ss.state.#{item.status}" %></td>
+          <% end %>
+          <% if item.try(:order) %>
+            <td class="order"><%= item.order %></td>
+          <% end %>
+        <% end %>
+        <td>
+          <div class="dropdown">
+            <button class="btn bmd-btn-icon dropdown-toggle" type="button" id="ex1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="material-icons">more_vert</i></button>
+            <div class="dropdown-menu dropdown-menu-left" aria-labelledby="ex1">
+            <% if @tap_menu %>
+              <% @tap_menu.call item %>
+            <% else %>
+                <%= link_to t('ss.links.show'), action: :show, id: item if item.allowed?(:read, @cur_user, site: @cur_site) %>
+                <%= link_to t('ss.links.edit'), action: :edit, id: item if item.allowed?(:edit, @cur_user, site: @cur_site) %>
+                <%= link_to t('ss.links.delete'), action: :delete, id: item if item.allowed?(:delete, @cur_user, site: @cur_site) %>
+
+                <% if item.try(:image) %>
+                  <%= link_to image_tag(item.image.thumb_url), item.image.url, { class: "thumb dropdown-item", target: "_blank" } %>
+                <% elsif item.try(:image?) %>
+                  <%= link_to image_tag(item.thumb_url), item.url, { class: "thumb dropdown-item", target: "_blank" } %>
+                <% end %>
+            <% end %>
+            </div>
+          </div>
+        </td>
+      </tr>
+      <% end %>
+    </tbody>
+  </table>
 </div>
 
 <%= paginate @items if @items.try(:current_page) %>

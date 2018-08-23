@@ -164,11 +164,6 @@ td {
   padding-bottom: 10px;
   padding-left: 10px;
 }
-.addon-view:first-child {
-  margin-top: 1.75rem;
-}
-
-
 .addon-view mb-4#addon-basic {
   .categories {
     float: left;
@@ -515,9 +510,15 @@ td {
 }
 .gws-menu-btn span:after {
   content: attr(data-txt-menu);
+  @include media-breakpoint-down(sm) {
+    display: none;
+  }
 }
 .nav-open .gws-menu-btn span:after {
   content: attr(data-txt-close);
+  @include media-breakpoint-down(sm) {
+    display: none;
+  }
 }
 .gws-menu {
   position: fixed;
@@ -534,6 +535,7 @@ td {
   opacity: 0;
   @include media-breakpoint-down(sm) {
     position: static;
+    height: auto;
   }
   li a {
     display: block;
@@ -1003,10 +1005,6 @@ td {
 
 // -------------------------------------------------------------------------------------------------
 // see
-.see label {
-  @include display-flex;
-  @include align-items(center);
-}
 .upload-drop-area {
   background: $gray1;
 }

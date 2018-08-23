@@ -1,18 +1,18 @@
-<div class="addon-view mb-5">
-  <div class="addon-head">
+<div class="addon-view card mb-3">
+  <div class="addon-head card-header">
     <h2><%= link_to topic.name, gws_discussion_forum_topic_comments_path(forum_id: @forum.id, topic_id: topic.id) %></h2>
   </div>
-  <div class="addon-body">
-    <header>
+  <div class="addon-body card-body border-bottom">
+    <header class="d-flex flex-wrap justify-content-between align-item-center mb-2">
       <div class="contributor">
         <span class="no"><%= "1." %></span>
         <%= topic.contributor_name %>
       </div>
-      <div class="datetime updated">
+      <div class="datetime updated text-secondary">
         <%= topic.updated.strftime("%Y/%m/%d %H:%M") %>
       </div>
     </header>
-    <div class="markdown-body">
+    <div class="markdown-body p-0">
       <%= topic.html %>
     </div>
     <% if topic.files.present? %>
@@ -39,17 +39,17 @@
     <div style="background: #f2f2f2; padding-bottom: 12px; border-left: hidden; border-right: hidden;"></div>
   <% end %>
   <% comments.each_with_index do |comment, i| %>
-    <div class="addon-body">
-      <header>
+    <div class="addon-body card-body border-bottom pb-2">
+      <header class="d-flex flex-wrap justify-content-between align-item-center mb-2">
         <div class="contributor">
           <span class="no"><%= "#{offset + i + 2}." %></span>
           <%= comment.contributor_name %>
         </div>
-        <div class="datetime updated">
+        <div class="datetime updated text-secondary">
           <%= comment.updated.strftime("%Y/%m/%d %H:%M") %>
         </div>
       </header>
-      <div class="markdown-body">
+      <div class="markdown-body p-0">
         <%= comment.html %>
       </div>
       <% if comment.files.present? %>
@@ -62,13 +62,13 @@
         <% end %>
       </div>
       <% end %>
-      <div class="menu">
+      <div class="menu d-flex flex-wrap justify-content-end">
         <% if !topic.permanently? %>
           <% if comment.allowed?(:edit, @cur_user, site: @cur_site) %>
-            <%= link_to t("ss.links.edit"), edit_gws_discussion_forum_topic_comment_path(forum_id: @forum.id, topic_id: topic.id, id: comment.id), class: 'btn primary' %>
+            <%= link_to t("ss.links.edit"), edit_gws_discussion_forum_topic_comment_path(forum_id: @forum.id, topic_id: topic.id, id: comment.id), class: 'btn btn-primary mb-0' %>
           <% end %>
           <% if comment.allowed?(:delete, @cur_user, site: @cur_site) %>
-            <%= link_to t("ss.links.delete"), delete_gws_discussion_forum_topic_comment_path(forum_id: @forum.id, topic_id: topic.id, id: comment.id), class: 'btn primary' %>
+            <%= link_to t("ss.links.delete"), delete_gws_discussion_forum_topic_comment_path(forum_id: @forum.id, topic_id: topic.id, id: comment.id), class: 'btn btn-primary mb-0' %>
           <% end %>
         <% end %>
       </div>
@@ -83,23 +83,19 @@
     end
   %>
   <% if (children_size + 1) >= @cur_site.discussion_comment_limit %>
-    <div class="addon-body reply-menu">
+    <div class="addon-body reply-menu card-footer border-0">
         <%= t("gws/discussion.notice.comment_limit", limit: @cur_site.discussion_comment_limit) %>
-        <span>
-          <%= link_to t("gws/discussion.links.topic.show"), gws_discussion_forum_topic_comments_path(forum_id: @forum.id, topic_id: topic.id) %>
-        </span>
-      </div>
+        <%= link_to t("gws/discussion.links.topic.show"), gws_discussion_forum_topic_comments_path(forum_id: @forum.id, topic_id: topic.id), class: "btn btn-outline-primary" %>
+    </div>
   <% else %>
     <% if reply_menu %>
-      <div class="addon-body reply-menu">
-        <span>
-          <%= link_to t("gws/discussion.links.topic.show"), gws_discussion_forum_topic_comments_path(forum_id: @forum.id, topic_id: topic.id) %>
-        </span>
-        <% if allowed_comment %>
-        <span>
-          <%= link_to t("gws/discussion.links.topic.reply"), "#", class: "open-reply" %>
-        </span>
-        <% end %>
+      <div class="addon-body reply-menu card-footer border-0">
+        <div class="d-flex justify-content-end">
+          <%= link_to t("gws/discussion.links.topic.show"), gws_discussion_forum_topic_comments_path(forum_id: @forum.id, topic_id: topic.id), class: "btn btn-outline-secondary" %>
+          <% if allowed_comment %>
+            <%= link_to t("gws/discussion.links.topic.reply"), "#", class: "open-reply btn btn-outline-secondary ml-2" %>
+          <% end %>
+        </div>
       </div>
     <% end %>
     <% if allowed_comment %>
@@ -108,55 +104,61 @@
           <%= error_messages_for :comment %>
         <% end %>
 
-        <!-- text -->
-        <div class="ss-addon-markdown">
-          <div class="ss-addon-markdown-toolbar">
-            <%= f.select :text_type, topic.text_type_options, {}, { value: 'plain', class: "ss-addon-markdown-type" } %>
+        <div class="card-body border-top">
+          <!-- text -->
+          <div class="ss-addon-markdown">
+            <div class="ss-addon-markdown-toolbar form-group pt-0">
+              <div class="input-group">
+                <%= f.select :text_type, topic.text_type_options, {}, { value: 'plain', class: "ss-addon-markdown-type custom-select" } %>
+              </div>
+            </div>
+            <div class="ss-addon-markdown-content form-group pt-0">
+              <%= f.text_area :text, value: "", class: "markdown form-control", rows: "10" %>
+            </div>
           </div>
-          <div class="ss-addon-markdown-content">
-            <%= f.text_area :text, value: "", class: "markdown", style: "height: 240px;", required: true %>
+
+          <!-- files -->
+          <div class="comment-files">
+            <div class="upload-drop-area col-12 mb-3 pt-3 pb-3"">
+              <div class="col12 d-flex justify-content-between align-items-center">
+                <%= f.hidden_field "file_ids[]", value: "" %>
+                <%= link_to t('ss.links.upload'), sns_apis_temp_files_path(@cur_user), class: "ajax-box btn btn-outline-secondary mb-0 mr-2" %>
+                <span class="upload-drop-notice"><%= t('ss.notice.file_droppable') %></span>
+              </div>
+            </div>
+            <div class="selected-files files mb-3" style="display: none;"></div>
           </div>
-        </div>
 
-        <!-- files -->
-        <div class="comment-files">
-          <%= f.hidden_field "file_ids[]", value: "" %>
-          <span class="upload-menu-new">
-            <%= link_to t('ss.links.upload'), sns_apis_temp_files_path(@cur_user), class: "ajax-box btn" %>
-          </span>
-          <span class="upload-drop-area">
-            <span class="upload-drop-notice"><%= t('ss.notice.file_droppable') %></span>
-          </span>
-          <div class="selected-files files" style="display: none;"></div>
-        </div>
-
-        <!-- contributor -->
-        <% show_radio_button = proc do |model, id, name, checked| %>
-          <label style="margin-right: 5px">
-            <%= radio_button_tag('tmp[contributor]', "#{model}:#{id}", checked, data: { model: model, id: id.to_s, name: name }) %>
-            <%= name %>
-          </label>
-        <% end %>
-        <div class="see discussion-contributor discussion-contributor<%= topic.id %>">
-          <%= f.hidden_field(:contributor_model) %>
-          <%= f.hidden_field(:contributor_id) %>
-          <%= f.hidden_field(:contributor_name) %>
-
-          <% show_radio_button.call('Gws::User', @cur_user.id, @cur_user.long_name, true) %>
-          <% @cur_user.groups.in_group(@cur_site).active.each do |group| %>
-            <% show_radio_button.call('Gws::Group', group.id, group.section_name, false) %>
+          <!-- contributor -->
+          <% show_radio_button = proc do |model, id, name, checked| %>
+            <div class="form-check form-check-inline">
+              <label class="align-middle">
+                <%= radio_button_tag('tmp[contributor]', "#{model}:#{id}", checked, data: { model: model, id: id.to_s, name: name }, class: "form-check-input") %>
+                <%= name %>
+              </label>
+            </div>
           <% end %>
-          <% Gws::CustomGroup.member(@cur_user).readable(@cur_user, site: @cur_site).each do |group| %>
-            <% show_radio_button.call('Gws::CustomGroup', group.id, group.name, false) %>
-          <% end %>
-        </div>
+          <fieldset class="see discussion-contributor discussion-contributor<%= topic.id %> mb-3">
+            <%= f.hidden_field(:contributor_model) %>
+            <%= f.hidden_field(:contributor_id) %>
+            <%= f.hidden_field(:contributor_name) %>
 
-        <!-- user_ids -->
-        <%= hidden_field_tag "item[user_ids][]", @cur_user.id %>
+            <% show_radio_button.call('Gws::User', @cur_user.id, @cur_user.long_name, true) %>
+            <% @cur_user.groups.in_group(@cur_site).active.each do |group| %>
+              <% show_radio_button.call('Gws::Group', group.id, group.section_name, false) %>
+            <% end %>
+            <% Gws::CustomGroup.member(@cur_user).readable(@cur_user, site: @cur_site).each do |group| %>
+              <% show_radio_button.call('Gws::CustomGroup', group.id, group.name, false) %>
+            <% end %>
+          </fieldset>
 
-        <!-- menu -->
-        <div class="menu">
-          <%= f.submit t("ss.links.reply"), class: 'btn primary' %>
+          <!-- user_ids -->
+          <%= hidden_field_tag "item[user_ids][]", @cur_user.id %>
+
+          <!-- menu -->
+          <div class="menu text-center">
+            <%= f.submit t("ss.links.reply"), class: 'btn btn-outline-primary mb-0' %>
+          </div>
         </div>
       </div>
     <% end %>

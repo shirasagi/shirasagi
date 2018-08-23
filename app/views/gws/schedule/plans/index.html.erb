@@ -17,16 +17,16 @@ Gws_Schedule_Calendar.render('#calendar', <%== calendar_options.to_json %>, <%==
 <%= render "gws/schedule/main/tabs" %>
 
 <section class="main-box gws-schedule-box">
-  <header>
-    <h2>
-      <%= (@user || @cur_user).long_name %>
-      <% if @user.blank? || @user.id == @cur_user.id %>
-        <%= link_to t('gws/schedule.links.add_plan'), { action: :new }, { class: 'add-plan btn btn-outline-primary' } %>
-      <% end %>
-    </h2>
-    <nav>
+  <div class="card mb-5">
+    <div class="card-body d-flex flex-wrap justify-content-between">
       <%= render file: '_search' %>
-    </nav>
+    </div>
+  </div>
+  <header class="d-flex flex-wrap mb-3 align-items-center">
+    <h2><%= (@user || @cur_user).long_name %></h2>
+    <% if @user.blank? || @user.id == @cur_user.id %>
+      <%= link_to t('gws/schedule.links.add_plan'), { action: :new }, { class: 'add-plan btn btn-outline-primary ml-3 mb-0' } %>
+    <% end %>
   </header>
   <div id="calendar" class="calendar"></div>
 </section>
