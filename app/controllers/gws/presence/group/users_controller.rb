@@ -30,6 +30,7 @@ class Gws::Presence::Group::UsersController < ApplicationController
   def index
     items
     @table_url = table_gws_presence_group_users_path(site: @cur_site, group: @group)
+    @paginate_params = { controller: 'gws/presence/group/users', action: 'index' }
   end
 
   def table

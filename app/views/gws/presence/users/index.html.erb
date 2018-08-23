@@ -4,7 +4,6 @@
 %>
 
 <div class="index presence-users editable-users">
-  <%= jquery do %>Gws_Presence_User.render();<% end %>
   <div class="list-head">
     <h2 class="list-head-title">
       <%= @cur_user.name %>
@@ -47,41 +46,11 @@
 </div>
 
 <%= jquery do %>
-var table_url = '<%= @table_url %>';
-$(".group-users .reload").on("click", function(){
-  param = $.param({ "s": { "keyword": $(".group-users [name='s[keyword]']").val() } });
-  $.ajax({
-    url: table_url + '?' + param,
-    beforeSend: function () {
-      $(".group-users .data-table-wrap").html(SS.loading);
-    },
-    success: function(data) {
-      $(".group-users .data-table-wrap").html(data);
-      var time = $(".group-users .data-table-wrap").find("time");
-      $(".group-users .list-head time").replaceWith(time).show();
-      time.show();
-    }
-  });
-});
-$(".group-users .list-head .search").on("submit", function(){
-  param = $.param({ "s": { "keyword": $(".group-users [name='s[keyword]']").val() } });
-  $.ajax({
-    url: table_url + '?' + param,
-    beforeSend: function () {
-      $(".group-users .data-table-wrap").html(SS.loading);
-    },
-    success: function(data) {
-      $(".group-users .data-table-wrap").html(data);
-      var time = $(".group-users .data-table-wrap").find("time");
-      $(".group-users .list-head time").replaceWith(time);
-      time.show();
-    },
-    error: function (xhr, status, error) {
-      console.log(error);
-      $(".group-users .data-table-wrap").html("");
-    }
-  });
-  return false;
+Gws_Presence_User.render();
+Gws_Presence_User_Reload.render({
+  "url": '<%= @table_url %>',
+  "paginate_params": <%== @paginate_params.to_json %>,
+  "page": <%= params[:page].to_i %>
 });
 <% end %>
 
