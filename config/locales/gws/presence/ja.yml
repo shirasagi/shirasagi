@@ -5,7 +5,7 @@ ja:
     buttons:
       register_reminder: リマインダーを登録
     links:
-      all_groups: 全てのグループ
+      all_groups: 全てのユーザー
     options:
       presence_state:
         available: 在席
@@ -33,8 +33,8 @@ ja:
     attributes:
       gws/user_presence:
         state: ステータス
-        plan: 予定
-        memo: メモ
+        plan: 状況
+        memo: 備考
         sync_available_state: 在席
         sync_unavailable_state: 離席
       gws/addon/presence/delegator_setting:
