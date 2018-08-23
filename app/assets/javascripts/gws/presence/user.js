@@ -1,6 +1,5 @@
 this.Gws_Presence_User = (function () {
-  function Gws_Presence_User() {
-  }
+  function Gws_Presence_User() {}
 
   Gws_Presence_User.render = function () {
     // selector
@@ -149,4 +148,58 @@ this.Gws_Presence_User = (function () {
   };
 
   return Gws_Presence_User;
+})();
+
+this.Gws_Presence_User_Reload = (function () {
+  function Gws_Presence_User_Reload() {}
+
+  Gws_Presence_User_Reload.render = function (opts = {}) {
+    var table_url = opts["url"];
+    var paginate_params = opts["paginate_params"];
+    var page = opts["page"];
+
+    $(".group-users .reload").on("click", function () {
+      param = $.param({
+        "s": {"keyword": $(".group-users [name='s[keyword]']").val()},
+        "paginate_params": paginate_params,
+        "page": page
+      });
+      $.ajax({
+        url: table_url + '?' + param,
+        beforeSend: function () {
+          $(".group-users .data-table-wrap").html(SS.loading);
+        },
+        success: function (data) {
+          $(".group-users .data-table-wrap").html(data);
+          var time = $(".group-users .data-table-wrap").find("time");
+          $(".group-users .list-head time").replaceWith(time).show();
+          time.show();
+        }
+      });
+    });
+    $(".group-users .list-head .search").on("submit", function () {
+      param = $.param({
+        "s": {"keyword": $(".group-users [name='s[keyword]']").val()},
+        "paginate_params": paginate_params,
+      });
+      $.ajax({
+        url: table_url + '?' + param,
+        beforeSend: function () {
+          $(".group-users .data-table-wrap").html(SS.loading);
+        },
+        success: function (data) {
+          $(".group-users .data-table-wrap").html(data);
+          var time = $(".group-users .data-table-wrap").find("time");
+          $(".group-users .list-head time").replaceWith(time);
+          time.show();
+        },
+        error: function (xhr, status, error) {
+          $(".group-users .data-table-wrap").html("");
+        }
+      });
+      return false;
+    });
+  }
+
+  return Gws_Presence_User_Reload;
 })();

@@ -379,10 +379,17 @@ module Gws::Model
       self.state == "public"
     end
 
-    def new_memo(ref = nil)
+    def new_memo(opts = {})
+      to = opts[:to]
+      ref = opts[:ref]
+
       if sign = Gws::Memo::Signature.site(@cur_site).default_sign(@cur_user)
         self.text = "\n\n#{sign}"
         self.html = "<p></p>" + h(sign.to_s).gsub(/\r\n|\n/, '<br />')
+      end
+
+      if to.present?
+        self.to_member_ids = to.is_a?(Array) ? to : [to]
       end
 
       if ref

@@ -2,9 +2,12 @@ require 'spec_helper'
 
 describe 'gws_presence_users', type: :request, dbscope: :example do
   let!(:site) { gws_site }
+  let!(:user) { gws_user }
+  let!(:custom_group) { create :gws_custom_group, member_ids: [user.id] }
   let(:auth_token_path) { sns_auth_token_path(format: :json) }
   let(:users_path) { gws_presence_apis_users_path(site: site.id, format: :json) }
   let(:group_users_path) { gws_presence_apis_group_users_path(site: site.id, group: gws_user.gws_default_group.id, format: :json) }
+  let(:custom_group_users_path) { gws_presence_apis_custom_group_users_path(site: site.id, group: custom_group.id, format: :json) }
   let(:update_path) { gws_presence_apis_user_path(site: site.id, id: gws_user.id, format: :json) }
 
   context "login with gws-admin" do
@@ -38,6 +41,16 @@ describe 'gws_presence_users', type: :request, dbscope: :example do
 
       json = JSON.parse(response.body)
       gws_admin = json["items"][1]
+      expect(gws_admin["id"]).to eq gws_user.id
+      expect(gws_admin["name"]).to eq gws_user.name
+    end
+
+    it "GET /.g:site/presence/c-:group/users.json" do
+      get custom_group_users_path
+      expect(response.status).to eq 200
+
+      json = JSON.parse(response.body)
+      gws_admin = json["items"][0]
       expect(gws_admin["id"]).to eq gws_user.id
       expect(gws_admin["name"]).to eq gws_user.name
     end

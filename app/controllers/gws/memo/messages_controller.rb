@@ -98,7 +98,7 @@ class Gws::Memo::MessagesController < ApplicationController
 
   def new
     @item = @model.new pre_params.merge(fix_params)
-    @item.new_memo
+    @item.new_memo(to: params[:to])
   end
 
   def create
@@ -216,7 +216,7 @@ class Gws::Memo::MessagesController < ApplicationController
     @item = @model.new pre_params.merge(fix_params)
     @ref = @model.site(@cur_site).find(params[:id]) rescue nil
 
-    @item.new_memo(@ref)
+    @item.new_memo(ref: @ref)
     @item.ref_file_ids = @ref.file_ids
     render :new
   end

@@ -1,6 +1,9 @@
 <%= jquery do %>Gws_Presence_User.render();<% end %>
-<% @time = Time.zone.now %>
-<time datetime="<%= @time %>>" style="display: none;"><%=l @time, format: :long %></time>
+<%
+  time = Time.zone.now
+  send_message = Gws::Memo::Message.allowed?(:edit, @cur_user, site: @cur_site)
+%>
+<time datetime="<%= time %>>" style="display: none;"><%=l time, format: :long %></time>
 <div class="wrap-table">
   <table class="index data-table">
     <thead>
@@ -8,6 +11,9 @@
       <th class="name"><%= Gws::User.t :name %></th>
       <th class="presence-plan"><%= Gws::UserPresence.t :plan %></th>
       <th class="presence-memo"><%= Gws::UserPresence.t :memo %></th>
+      <% if send_message %>
+        <th class="presence-send-message"><%= t("gws/memo/message.message") %></th>
+      <% end %>
     </tr>
     </thead>
     <tbody>
@@ -30,6 +36,11 @@
           <%= ajax_text_field_tag :presence_memo, user_presence.memo, item.id, (gws_presence_apis_user_path(id: item.id) + ".json") %>
           <i class="material-icons editicon" style="font-size: inherit">&#xE254;</i>
         </td>
+        <% if send_message %>
+          <td>
+            <%= link_to t("ss.links.new"), new_gws_memo_message_path(to: item.id) %>
+          </td>
+        <% end %>
       </tr>
     <% end %>
 
@@ -52,6 +63,11 @@
             <%= ajax_text_field_tag :presence_memo, user_presence.memo, item.id, (gws_presence_apis_user_path(id: item.id) + ".json") %>
             <i class="material-icons editicon" style="font-size: inherit">&#xE254;</i>
           </td>
+          <% if send_message %>
+            <td>
+              <%= link_to t("ss.links.new"), new_gws_memo_message_path(to: item.id) %>
+            </td>
+          <% end %>
         </tr>
       <% end %>
     <% else %>
@@ -70,6 +86,11 @@
           <td>
             <%= user_presence.memo %>
           </td>
+          <% if send_message %>
+            <td>
+              <%= link_to t("ss.links.new"), new_gws_memo_message_path(to: item.id) %>
+            </td>
+          <% end %>
         </tr>
       <% end %>
     <% end %>
@@ -77,3 +98,4 @@
     </tbody>
   </table>
 </div>
+<div class="list-more"><%= link_to t("gws/presence.links.all_groups"), gws_presence_users_path %></div>
