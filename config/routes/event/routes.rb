@@ -47,7 +47,7 @@ SS::Application.routes.draw do
   node "event" do
     get ":node/(index.:format)" => "public#index", cell: "nodes/page", node: /page|ical/
     get ":node/:display.:format" => "public#index", cell: "nodes/page", node: /page|ical/, display: /[a-z]*/
-    get ":node/:year:month(_:display).:format" => "public#monthly", cell: "nodes/page",
+    get ":node/:year:month(_:display).:format" => "public#index", cell: "nodes/page",
       node: /page|ical/, year: /\d{4}/, month: /\d{2}/, display: /[a-z]*/
     get ":node/:year:month:day.:format" => "public#daily", cell: "nodes/page",
       node: /page|ical/, year: /\d{4}/, month: /\d{2}/, day: /\d{2}/
