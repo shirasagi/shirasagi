@@ -87,6 +87,7 @@ ja:
       gws/notice/post:
         name: タイトル
         severity: 種別
+        total_file_size: 総添付ファイルサイズ
       gws/notice/folder:
         member_ids: 投稿ユーザー
         member_group_ids: 投稿グループ
@@ -103,9 +104,12 @@ ja:
       gws/addon/notice/category:
         category_ids: カテゴリー
       gws/addon/notice/resource_limitation:
+        notice_individual_body_size_limit: 本文個別容量制限
         notice_total_body_size_limit: 本文総容量制限
         notice_individual_file_size_limit: 添付ファイル個別容量制限
         notice_total_file_size_limit: 添付ファイル総容量制限
+        notice_total_body_size: 総本文サイズ
+        notice_total_file_size: 総添付ファイルサイズ
       gws/reference/notice/folder:
         folder_id: フォルダー
       gws/notice/comment:

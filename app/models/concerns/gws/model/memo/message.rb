@@ -22,7 +22,6 @@ module Gws::Model
       field :state, type: String, default: 'public'
       field :path, type: Hash, default: {}
       field :send_date, type: DateTime
-      field :import_info, type: Hash, default: nil
 
       field :to_member_name, type: String, default: ''
       field :from_member_name, type: String, default: ''

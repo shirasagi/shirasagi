@@ -133,7 +133,6 @@ ja:
         severity: 重要度
         topic_id: トピック
         parent_id: 親投稿
-        browsed_users_hash: 既読ユーザー
         descendants_updated: トピック内更新日時
         descendants_files_count: トピック内添付ファイル数
         descendants_total_file_size: トピック内添付ファイル容量
@@ -152,6 +151,8 @@ ja:
       gws/addon/board/notify_setting:
         notify_state: 通知設定
         subscribed_users_readable_state: 通知先表示
+      gws/board/browsing_state:
+        browsed_users_hash: 既読ユーザー
 
   tooltip:
     gws/board/postable:

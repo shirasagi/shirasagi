@@ -1,5 +1,6 @@
 module Gws::Member
   extend ActiveSupport::Concern
+  extend SS::Translation
 
   included do
     class_variable_set(:@@_keep_members_order, nil)

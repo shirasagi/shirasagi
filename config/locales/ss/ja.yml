@@ -372,6 +372,7 @@ ja:
         id: id
         created: 作成日時
         updated: 更新日時
+        deleted: 削除日時
         state: ステータス
         filepath: ファイルパス
         filename: ファイル名
@@ -403,7 +404,6 @@ ja:
         tel: 電話番号
         tel_ext: 内線番号
         tel_ext_short: 内線
-        title_ids: 役職
         in_title_id: 役職
         group_ids: グループ
         groups: グループ
@@ -424,6 +424,8 @@ ja:
         organization_id: 所属組織
         organization_uid: 職員番号
         switch_user_id: 切り替えユーザー
+        login_roles: ログイン種別
+        last_loggedin: 最終ログイン日時
       ss/model/user_title:
         code: 役職コード
         name: 役職名
@@ -432,6 +434,9 @@ ja:
         group_id: グループ
         activation_date: 有効期限（開始）
         expiration_date: 有効期限（終了）
+      ss/model/reference/user_titles:
+        title_ids: 役職
+        title_orders: 役職並び順
       ss/model/group:
         name: グループ名
         order: 表示順

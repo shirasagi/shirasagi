@@ -243,6 +243,10 @@ ja:
         notice_at: 通知日時
       gws/monitor/topic:
         name: 質問タイトル
+        due_date: 回答期限
+        admin_setting: 記事管理設定
+        notice_state: お知らせ表示設定
+        answer_state_hash: 回覧状況
       gws/monitor/post:
         name: 回答タイトル
       gws/monitor/category:
@@ -251,10 +255,6 @@ ja:
         category_ids: カテゴリー
       gws/addon/monitor/contributor:
         contributor_name: 投稿者名
-      gws/monitor/topic:
-        due_date: 回答期限
-        admin_setting: 記事管理設定
-        notice_state: お知らせ表示設定
 
   tooltip:
       gws/addon/monitor/group_setting:

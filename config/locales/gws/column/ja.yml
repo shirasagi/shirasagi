@@ -44,6 +44,8 @@ ja:
       gws/column/file_upload: ファイルアップロード
     attributes:
       gws/column/base:
+        _type: 型
+        class_name: クラス名
         route: 属性
         name: 名前
         order: 並び順
