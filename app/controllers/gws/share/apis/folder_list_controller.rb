@@ -77,7 +77,7 @@ class Gws::Share::Apis::FolderListController < ApplicationController
         order: item.depth == 1 ? item.order : item.parents.where(depth: 1).first.order,
         depth: item.depth,
         url: item_url(item),
-        tree_url: gws_share_apis_folder_list_path(id: item.id, type: @type),
+        tree_url: gws_share_apis_folder_list_path(id: item.id, type: @type, category: params[:category]),
         is_current: (@item.present? && item.id == @item.id),
         is_parent: (@item.present? && @item.name.start_with?("#{item.name}/"))
       }
@@ -86,8 +86,8 @@ class Gws::Share::Apis::FolderListController < ApplicationController
   end
 
   def item_url(item)
-    return gws_share_folder_files_path(folder: item.id) if @type == 'gws/share/files'
-    return gws_share_management_folder_files_path(folder: item.id) if @type == 'gws/share/management/files'
+    return gws_share_folder_files_path(folder: item.id, category: params[:category]) if @type == 'gws/share/files'
+    return gws_share_management_folder_files_path(folder: item.id, category: params[:category]) if @type == 'gws/share/management/files'
     return gws_share_folder_path(id: item.id) if @type == 'gws/share/folders'
   end
 end
