@@ -140,8 +140,7 @@ def create_schedule_plan(data)
   item.attributes = data
   item.user_ids = (Array[item.user_ids].flatten.compact + [item.cur_user.id]).uniq
   item.group_ids = (Array[item.group_ids].flatten.compact + item.cur_user.group_ids).uniq
-  # puts item.errors.full_messages unless item.save
-  item.save!
+  puts item.errors.full_messages unless item.save
   item
 end
 
