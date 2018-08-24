@@ -17,6 +17,7 @@ SS::Application.routes.draw do
     post :remand_update, on: :member
     post :pull_up_update, on: :member
     post :restart_update, on: :member
+    post :seen_update, on: :member
     match :request_cancel, on: :member, via: [:get, :post]
   end
 
@@ -32,6 +33,10 @@ SS::Application.routes.draw do
       resources :files, path: ':state', concerns: [:soft_deletion, :workflow], except: [:destroy] do
         get :print, on: :member
         match :copy, on: :member, via: %i[get post]
+        post :download_comment, on: :member
+        post :download_attachment, on: :member
+        post :download_all_comments, on: :collection
+        post :download_all_attachments, on: :collection
       end
       resources :files, path: ':state/:form_id', only: [:new, :create], as: 'form_files'
     end
@@ -45,6 +50,9 @@ SS::Application.routes.draw do
     get "/wizard/:id/reroute" => "wizard#reroute"
     post "/wizard/:id/reroute" => "wizard#do_reroute"
     match "/wizard/:id" => "wizard#index", via: [:get, :post]
-    match "/wizard/:id/circulation" => "wizard#circulation", via: [:get, :post]
+
+    namespace "apis" do
+      get "delegatees" => "delegatees#index"
+    end
   end
 end

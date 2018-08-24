@@ -47,9 +47,7 @@ module Gws::GroupPermission
       permits << "#{action}_private_#{self.class.permission_name}" if owned?(user) || (!opts[:strict] && new_record?)
     end
 
-    permits.each do |permit|
-      return true if user.gws_role_permissions["#{permit}_#{site.id}"].to_i > 0
-    end
+    return true if user.gws_role_permit_any?(site, *permits)
 
     errors.add :base, :auth_error
     false

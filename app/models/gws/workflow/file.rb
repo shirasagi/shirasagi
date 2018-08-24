@@ -8,6 +8,7 @@ class Gws::Workflow::File
   include SS::Addon::Markdown
   include Gws::Addon::File
   include Gws::Addon::Workflow::CustomForm
+  include Gws::Addon::Workflow::ApproverPrint
   include Gws::Addon::ReadableSetting
   include Gws::Addon::GroupPermission
   include Gws::Addon::History
@@ -80,6 +81,27 @@ class Gws::Workflow::File
         none
       end
     end
+
+    def enum_csv(site: nil, encoding: "Shift_JIS")
+      Gws::Workflow::FileEnumerator.new(site, all, encoding: encoding)
+    end
+
+    def collect_attachments
+      attachment_ids = []
+
+      attachment_ids += all.pluck(:file_ids).flatten.compact
+
+      all.pluck(:column_values).flatten.compact.each do |bson_doc|
+        if bson_doc["_type"] == Gws::Column::Value::FileUpload.name
+          attachment_ids += bson_doc["file_ids"] if bson_doc["file_ids"].present?
+        end
+      end
+      attachment_ids += all.pluck(:workflow_approvers).compact.flatten.map { |bson_doc| bson_doc["file_ids"] }.compact.flatten
+      attachment_ids += all.pluck(:workflow_circulations).compact.flatten.map { |bson_doc| bson_doc["file_ids"] }.compact.flatten
+
+      return SS::File.none if attachment_ids.blank?
+      SS::File.in(id: attachment_ids)
+    end
   end
 
   def reminder_user_ids
@@ -129,6 +151,35 @@ class Gws::Workflow::File
     options[:state] = 'all'
     options[:site] = site_id
     [ *ret, options ]
+  end
+
+  def enum_csv(encoding: "Shift_JIS")
+    Gws::Workflow::FileEnumerator.new(@cur_site || site, [ self ], encoding: encoding)
+  end
+
+  def collect_attachments
+    attachment_ids = []
+
+    attachment_ids += file_ids if file_ids.present?
+
+    if column_values.present?
+      column_values.each do |value|
+        if value.is_a?(Gws::Column::Value::FileUpload)
+          attachment_ids += value.file_ids if value.file_ids.present?
+        end
+      end
+    end
+
+    attachment_ids += workflow_approvers.map { |approver| approver[:file_ids] }.compact.flatten
+    attachment_ids += workflow_circulations.map { |circulation| circulation[:file_ids] }.compact.flatten
+
+    return SS::File.none if attachment_ids.blank?
+    SS::File.in(id: attachment_ids)
+  end
+
+  def agent_enabled?
+    return false if form.blank?
+    form.agent_enabled?
   end
 
   private

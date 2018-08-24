@@ -1,8 +1,9 @@
 <% addons = @item ? @item.class.addons : [] %>
 <%
 addons = addons.select do |addon|
-  [SS::Addon::Markdown, Gws::Addon::File, Gws::Addon::Workflow::CustomForm].include?(addon.klass)
+  [SS::Addon::Markdown, Gws::Addon::File, Gws::Addon::Workflow::CustomForm, Gws::Addon::Workflow::ApproverPrint].include?(addon.klass)
 end
+  @gws_workflow_print = true
 %>
 
 <div class="no-print" style="position: relative; width: 220mm;">

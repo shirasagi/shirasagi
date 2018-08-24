@@ -8,9 +8,11 @@
   end
 %>
 
-<% 1.upto(3) do |level| %>
+<% 1.upto(@model::MAX_CIRCULATIONS) do |level| %>
   <h1 class="workflow-level-header workflow-circulation-level-<%= level %>"><%= t("workflow.circulation_step") %> <%= @model.t :level, level: level %></h1>
   <dl class="see workflow-circulations workflow-circulation-level-<%= level %>">
+    <dt><%= @model.t :circulation_attachment_uses %><%= @model.tt :circulation_attachment_uses %></dt>
+    <dd><%= select_tag "item[circulation_attachment_uses][]", options_for_select(@item.circulation_attachment_use_options, @item.circulation_attachment_use_at(level)), id: nil, include_blank: true %></dd>
     <dt><%= @model.t :circulations %><%= @model.tt :circulations %></dt>
     <dd>
       <%# f.hidden_field("item[circulation_required_counts][]", value: "1", class: "hidden-ids", id: nil) %>

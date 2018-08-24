@@ -146,9 +146,9 @@ class Workflow::PagesController < ApplicationController
 
     save_level = @item.workflow_current_level
     if params[:action] == 'pull_up_update'
-      @item.pull_up_workflow_approver_state(@cur_user, params[:remand_comment])
+      @item.pull_up_workflow_approver_state(@cur_user, comment: params[:remand_comment])
     else
-      @item.approve_workflow_approver_state(@cur_user, params[:remand_comment])
+      @item.approve_workflow_approver_state(@cur_user, comment: params[:remand_comment])
     end
 
     @item.skip_history_backup = true if @item.respond_to?(:skip_history_backup)

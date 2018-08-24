@@ -3,6 +3,7 @@
   options.request_url = "<%= request.url %>";
   options.workflow_node = "workflow" + "<%= @cur_node? @cur_node.id : "" %>";
   options.redirect_location = "<%= @item.try(:branch?) ? @item.master.private_show_path : "" %>";
+  options.user_id = <%= @cur_user.id %>;
   options.errors = {};
   options.errors.not_select = "<%= @model.t :workflow_approvers %><%= t("errors.messages.not_select") %>";
 
@@ -10,7 +11,6 @@
 <% end %>
 
 <div class="mod-workflow">
-
   <% if @item.state == "closed" %>
     <% if @item.allowed?(:approve, @cur_user, site: @cur_site) && @item.workflow_state == "request" %>
       <% @item.workflow_pull_up_approvers_at(@item.workflow_current_level).each do |workflow_approver| %>
@@ -22,6 +22,17 @@
             </div>
             <div class="addon-body">
               <%= text_area :remand, :comment, value: "" %>
+              <% if @ss_mode == :gws && @item.workflow_approver_attachment_enabled_at?(workflow_approver[:level]) %>
+                <div class="upload">
+                  <span class="upload-menu-new">
+                    <%= link_to t('workflow.links.approver_file_upload'), sns_apis_temp_files_path(@cur_user), class: "ajax-box btn btn-file-upload" %>
+                  </span>
+                  <div class="upload-drop-area">
+                    <span class="upload-drop-notice"><%= t('workflow.notice.approver_file_droppable') %></span>
+                  </div>
+                  <div id="selected-files"></div>
+                </div>
+              <% end %>
               <div class="buttons">
                 <% if workflow_approver[:state] == 'request' %>
                 <%= button_tag t("workflow.buttons.approve"), { updatetype: :approve, class: "update-item btn-primary" } %>
@@ -56,6 +67,41 @@
     <% end %>
   <% end %>
 
+  <% if @ss_mode == :gws && @item.workflow_state == @model::WORKFLOW_STATE_APPROVE %>
+    <% @item.workflow_circulations.each_with_index do |workflow_circulation, index| %>
+      <% user_id = workflow_circulation[:user_id] %>
+      <% state = workflow_circulation[:state] %>
+      <% level = workflow_circulation[:level] %>
+      <% if user_id == @cur_user.id && state == "unseen" %>
+        <section class="mod-workflow-approve">
+          <div class="addon-view">
+            <div class="addon-head">
+              <h2><%= t("workflow.circulation_step") %><%= @model.tt(:circulation_step) %></h2>
+            </div>
+            <div class="addon-body">
+              <%= text_area :remand, :comment, value: "" %>
+              <% if @item.workflow_circulation_attachment_enabled_at?(level) %>
+                <div class="upload">
+                  <span class="upload-menu-new">
+                    <%= link_to t('workflow.links.approver_file_upload'), sns_apis_temp_files_path(@cur_user), class: "ajax-box btn btn-file-upload" %>
+                  </span>
+                  <div class="upload-drop-area">
+                    <span class="upload-drop-notice"><%= t('workflow.notice.approver_file_droppable') %></span>
+                  </div>
+                  <div id="selected-files"></div>
+                </div>
+              <% end %>
+
+              <div class="buttons">
+                <%= button_tag t("workflow.links.set_seen"), { updatetype: :seen, class: "update-item btn-primary" } %>
+              </div>
+            </div>
+          </div>
+        </section>
+      <% end %>
+    <% end %>
+  <% end %>
+
   <% if @item.workflow_state? %>
   <div class="mod-workflow-view">
     <dl class="see">
@@ -69,6 +115,13 @@
           <%= t("workflow.user_deleted") %>
         <% end %>
       </dd>
+
+      <% agent = @item.workflow_agent %>
+      <% if agent.present? %>
+      <dd>
+        <%= t(agent.email.blank? ? "agent_name" : "agent_name_with_email", scope: :workflow, long_name: agent.long_name, email: agent.email) %>
+      </dd>
+      <% end %>
 
       <dt><%= @model.t :workflow_state %></dt>
       <dd>
@@ -130,7 +183,26 @@
               <% end %>
               </td>
               <td><%= t("workflow.state.#{state}") %></td>
-              <td><%= workflow_approver[:comment] %></td>
+              <td>
+                <div class="approver-comment"><%= workflow_approver[:comment] %></div>
+                <% if @ss_mode == :gws && workflow_approver[:file_ids].present? %>
+                  <div class="approver-files">
+                    <% SS::File.in(id: workflow_approver[:file_ids]).each do |file| %>
+                      <%= link_to file.url, { class: "approver-file", target: "_blank" } do %>
+                        <% if file.image? %>
+                          <%= image_tag(file.thumb_url, class: "thumb") %>
+                        <% else %>
+                          <span class="thumb ext icon-<%= file.extname %>">
+                            <i class="material-icons">&#xE24D;</i><br>
+                            <span class="ext-name"><%= file.extname %></span>
+                          </span>
+                        <% end %>
+                        <span class="name"><%= file.humanized_name %></span>
+                      <% end %>
+                    <% end %>
+                  </div>
+                <% end %>
+              </td>
             </tr>
             <% end %>
           <% end %>
@@ -164,13 +236,28 @@
                   <% end %>
                   </td>
                   <td>
-                    <% if @item.workflow_state == @model::WORKFLOW_STATE_APPROVE && user_id == @cur_user.id && state == "unseen" %>
-                    <%= button_tag(t("workflow.links.set_seen"), type: "button", name: "set_seen", class: "btn", data: { user_id: user_id }) %>
-                    <% else %>
                     <%= t("workflow.circulation_state.#{state}") %>
+                  </td>
+                  <td>
+                    <div class="approver-comment"><%= workflow_circulation[:comment] %></div>
+                    <% if @ss_mode == :gws && workflow_circulation[:file_ids].present? %>
+                      <div class="approver-files">
+                        <% SS::File.in(id: workflow_circulation[:file_ids]).each do |file| %>
+                          <%= link_to file.url, { class: "approver-file", target: "_blank" } do %>
+                            <% if file.image? %>
+                              <%= image_tag(file.thumb_url, class: "thumb") %>
+                            <% else %>
+                              <span class="thumb ext icon-<%= file.extname %>">
+                                <i class="material-icons">&#xE24D;</i><br>
+                                <span class="ext-name"><%= file.extname %></span>
+                              </span>
+                            <% end %>
+                            <span class="name"><%= file.humanized_name %></span>
+                          <% end %>
+                        <% end %>
+                      </div>
                     <% end %>
                   </td>
-                  <td><%= workflow_circulation[:comment] %></td>
                 </tr>
               <% end %>
             <% end %>

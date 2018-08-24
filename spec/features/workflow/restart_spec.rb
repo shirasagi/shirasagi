@@ -60,9 +60,9 @@ describe "restart", dbscope: :example, js: true do
         expect(item.state).to eq "closed"
         expect(item.workflow_comment).to eq workflow_comment1
         expect(item.workflow_approvers.count).to eq 3
-        expect(item.workflow_approvers[0]).to eq({level: 1, user_id: user1.id, editable: '', state: 'request', comment: ''})
-        expect(item.workflow_approvers[1]).to eq({level: 2, user_id: user2.id, editable: '', state: 'pending', comment: ''})
-        expect(item.workflow_approvers[2]).to eq({level: 3, user_id: user3.id, editable: '', state: 'pending', comment: ''})
+        expect(item.workflow_approvers[0]).to include({level: 1, user_id: user1.id, editable: '', state: 'request', comment: ''})
+        expect(item.workflow_approvers[1]).to include({level: 2, user_id: user2.id, editable: '', state: 'pending', comment: ''})
+        expect(item.workflow_approvers[2]).to include({level: 3, user_id: user3.id, editable: '', state: 'pending', comment: ''})
 
         expect(Sys::MailLog.count).to eq 1
 
@@ -83,9 +83,9 @@ describe "restart", dbscope: :example, js: true do
         expect(item.workflow_state).to eq "remand"
         expect(item.state).to eq "closed"
         expect(item.workflow_approvers[0]).to \
-          eq({level: 1, user_id: user1.id, editable: '', state: 'remand', comment: remand_comment1})
-        expect(item.workflow_approvers[1]).to eq({level: 2, user_id: user2.id, editable: '', state: 'pending', comment: ''})
-        expect(item.workflow_approvers[2]).to eq({level: 3, user_id: user3.id, editable: '', state: 'pending', comment: ''})
+          include({level: 1, user_id: user1.id, editable: '', state: 'remand', comment: remand_comment1})
+        expect(item.workflow_approvers[1]).to include({level: 2, user_id: user2.id, editable: '', state: 'pending', comment: ''})
+        expect(item.workflow_approvers[2]).to include({level: 3, user_id: user3.id, editable: '', state: 'pending', comment: ''})
 
         expect(Sys::MailLog.count).to eq 2
 
@@ -110,9 +110,9 @@ describe "restart", dbscope: :example, js: true do
         expect(item.state).to eq "closed"
         expect(item.workflow_comment).to eq workflow_comment2
         expect(item.workflow_approvers.count).to eq 3
-        expect(item.workflow_approvers[0]).to eq({level: 1, user_id: user1.id, editable: '', state: 'request', comment: ''})
-        expect(item.workflow_approvers[1]).to eq({level: 2, user_id: user2.id, editable: '', state: 'pending', comment: ''})
-        expect(item.workflow_approvers[2]).to eq({level: 3, user_id: user3.id, editable: '', state: 'pending', comment: ''})
+        expect(item.workflow_approvers[0]).to include({level: 1, user_id: user1.id, editable: '', state: 'request', comment: ''})
+        expect(item.workflow_approvers[1]).to include({level: 2, user_id: user2.id, editable: '', state: 'pending', comment: ''})
+        expect(item.workflow_approvers[2]).to include({level: 3, user_id: user3.id, editable: '', state: 'pending', comment: ''})
 
         expect(Sys::MailLog.count).to eq 3
 
@@ -133,9 +133,9 @@ describe "restart", dbscope: :example, js: true do
         expect(item.workflow_state).to eq "request"
         expect(item.state).to eq "closed"
         expect(item.workflow_approvers[0]).to \
-          eq({level: 1, user_id: user1.id, editable: '', state: 'approve', comment: approve_comment1})
-        expect(item.workflow_approvers[1]).to eq({level: 2, user_id: user2.id, editable: '', state: 'request', comment: ''})
-        expect(item.workflow_approvers[2]).to eq({level: 3, user_id: user3.id, editable: '', state: 'pending', comment: ''})
+          include({level: 1, user_id: user1.id, editable: '', state: 'approve', comment: approve_comment1})
+        expect(item.workflow_approvers[1]).to include({level: 2, user_id: user2.id, editable: '', state: 'request', comment: ''})
+        expect(item.workflow_approvers[2]).to include({level: 3, user_id: user3.id, editable: '', state: 'pending', comment: ''})
 
         expect(Sys::MailLog.count).to eq 4
 
@@ -156,10 +156,10 @@ describe "restart", dbscope: :example, js: true do
         expect(item.workflow_state).to eq "request"
         expect(item.state).to eq "closed"
         expect(item.workflow_approvers[0]).to \
-          eq({level: 1, user_id: user1.id, editable: '', state: 'approve', comment: approve_comment1})
+          include({level: 1, user_id: user1.id, editable: '', state: 'approve', comment: approve_comment1})
         expect(item.workflow_approvers[1]).to \
-          eq({level: 2, user_id: user2.id, editable: '', state: 'approve', comment: approve_comment2})
-        expect(item.workflow_approvers[2]).to eq({level: 3, user_id: user3.id, editable: '', state: 'request', comment: ''})
+          include({level: 2, user_id: user2.id, editable: '', state: 'approve', comment: approve_comment2})
+        expect(item.workflow_approvers[2]).to include({level: 3, user_id: user3.id, editable: '', state: 'request', comment: ''})
 
         expect(Sys::MailLog.count).to eq 5
 
@@ -180,11 +180,11 @@ describe "restart", dbscope: :example, js: true do
         expect(item.workflow_state).to eq "approve"
         expect(item.state).to eq "public"
         expect(item.workflow_approvers[0]).to \
-          eq({level: 1, user_id: user1.id, editable: '', state: 'approve', comment: approve_comment1})
+          include({level: 1, user_id: user1.id, editable: '', state: 'approve', comment: approve_comment1})
         expect(item.workflow_approvers[1]).to \
-          eq({level: 2, user_id: user2.id, editable: '', state: 'approve', comment: approve_comment2})
+          include({level: 2, user_id: user2.id, editable: '', state: 'approve', comment: approve_comment2})
         expect(item.workflow_approvers[2]).to \
-          eq({level: 3, user_id: user3.id, editable: '', state: 'approve', comment: approve_comment3})
+          include({level: 3, user_id: user3.id, editable: '', state: 'approve', comment: approve_comment3})
 
         expect(Sys::MailLog.count).to eq 6
       end

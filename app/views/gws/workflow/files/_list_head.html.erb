@@ -8,5 +8,10 @@
     </div>
   </div>
 
+  <div class="operations">
+    <button class="btn btn-download" data-ss-list-head-method="post" data-ss-list-head-action="<%= url_for(action: :download_all_comments) %>" data-ss-confirmation="<%= t("ss.confirm.download") %>"><%= t("ss.buttons.csv") %></button>
+    <button class="btn btn-download" data-ss-list-head-method="post" data-ss-list-head-action="<%= url_for(action: :download_all_attachments) %>" data-ss-confirmation="<%= t("ss.confirm.download") %>"><%= t("gws/survey.buttons.zip_all_files") %></button>
+  </div>
+
   <%= render file: "_search" %>
 </div>

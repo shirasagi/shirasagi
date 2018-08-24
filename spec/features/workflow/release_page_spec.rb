@@ -91,7 +91,7 @@ describe "my_group", dbscope: :example, js: true do
         expect(item.state).to eq "ready"
         expect(item.release_date).to eq release_date
         expect(item.workflow_approvers).to \
-          include({level: 1, user_id: user1.id, editable: '', state: 'approve', comment: approve_comment1})
+          include({level: 1, user_id: user1.id, editable: '', state: 'approve', comment: approve_comment1, file_ids: nil})
         # backup is created
         expect(item.backups.count).to eq 2
 
@@ -173,7 +173,7 @@ describe "my_group", dbscope: :example, js: true do
           expect(item.state).to eq "ready"
           expect(item.release_date).to eq release_date
           expect(item.workflow_approvers).to \
-            include({level: 1, user_id: user1.id, editable: '', state: 'approve', comment: approve_comment1})
+            include({level: 1, user_id: user1.id, editable: '', state: 'approve', comment: approve_comment1, file_ids: nil})
           # backup is created
           expect(item.backups.count).to eq 2
 

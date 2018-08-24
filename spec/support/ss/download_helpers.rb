@@ -1,6 +1,5 @@
 module SS
   module DownloadHelpers
-
     TIMEOUT = 1
 
     module_function
@@ -17,26 +16,10 @@ module SS
       ::Dir["#{path}/*"]
     end
 
-    def download
-      downloads.first
-    end
-
     def wait_for_download
       ::Timeout.timeout(TIMEOUT) do
         sleep 0.1 while downloading?
       end
-    end
-
-    def download_content
-      wait_for_download
-      ::File.binread(download)
-    end
-
-    def download_csv
-      csv_content = download_content
-      csv_content.force_encoding('CP932')
-      csv_content.encode!('UTF-8')
-      CSV.parse(csv_content)
     end
 
     def downloaded?
@@ -50,5 +33,40 @@ module SS
     def clear_downloads
       ::FileUtils.rm_f(downloads)
     end
+
+    def enable_headless_chrome_download(driver)
+      @enabled_chromes ||= {}
+
+      bridge = driver.browser.send(:bridge)
+      return if @enabled_chromes[bridge.session_id]
+
+      path = "/session/#{bridge.session_id}/chromium/send_command"
+      cmd = {
+        cmd: 'Page.setDownloadBehavior',
+        params: {
+          behavior: 'allow',
+          downloadPath: SS::DownloadHelpers.path
+        }
+      }
+      bridge.http.call(:post, path, cmd)
+      @enabled_chromes[bridge.session_id] = true
+    end
+
+    module Helper
+      def self.extended(obj)
+        obj.before(:each) do
+          SS::DownloadHelpers.enable_headless_chrome_download(page.driver)
+          SS::DownloadHelpers.clear_downloads
+        end
+
+        obj.class_eval do
+          delegate :downloads, to: SS::DownloadHelpers
+          delegate :wait_for_download, to: SS::DownloadHelpers
+        end
+      end
+    end
+
   end
 end
+
+RSpec.configuration.extend(SS::DownloadHelpers::Helper, js: true)
