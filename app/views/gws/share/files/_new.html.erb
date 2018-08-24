@@ -19,6 +19,10 @@
 
   <div id="selected-files">
   </div>
+  <dl class="see">
+    <dt><%= Gws::Share::File.t :memo %><%= Gws::Share::File.tt :memo %></dt>
+    <dd><%= f.text_area :memo %></dd>
+  </dl>
 </div>
 
 <%= jquery do %>

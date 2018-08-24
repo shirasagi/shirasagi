@@ -197,6 +197,7 @@ ja:
         content_type: コンテンツタイプ
         resizing: リサイズ
         geo_location: 緯度・経度
+        memo: 補足情報
       gws/model/folder:
         name: フォルダー名
         depth: 階層
@@ -443,6 +444,8 @@ ja:
         - ファイル名（英数）を入力します。
       geo_location:
         - 緯度・経度を10進で入力します。
+      memo:
+        - 補足情報を入力します。
     gws/user:
       gws_main_group_ids:
         - ユーザーの所属する主なグループを選択します。

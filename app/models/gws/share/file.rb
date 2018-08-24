@@ -10,7 +10,8 @@ class Gws::Share::File
 
   field :folder_id, type: Integer
   field :deleted, type: DateTime
-  permit_params :folder_id, :deleted
+  field :memo, type: String
+  permit_params :folder_id, :deleted, :memo
 
   belongs_to :folder, class_name: "Gws::Share::Folder"
 

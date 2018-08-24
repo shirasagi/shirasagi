@@ -20,6 +20,9 @@
 
     <dt><%= @model.t :folder %><%= @model.tt :folder %></dt>
     <dd><%= f.select :folder_id, @item.folder_options %></dd>
+
+    <dt><%= @model.t :memo %><%= @model.tt :memo %></dt>
+    <dd><%= f.text_area :memo, value: @item.memo %></dd>
   <% end %>
 </dl>
 

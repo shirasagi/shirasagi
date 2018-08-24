@@ -2,7 +2,7 @@ require 'spec_helper'
 
 describe "gws_share_files", type: :feature, dbscope: :example, tmpdir: true do
   let(:site) { gws_site }
-  let(:item) { create :gws_share_file, folder_id: folder.id, category_ids: [category.id] }
+  let(:item) { create :gws_share_file, folder_id: folder.id, category_ids: [category.id], memo: "test" }
   let(:categorized_item) { create :gws_share_file, name: "categorized", folder_id: folder.id, category_ids: [category.id] }
   let(:uncategorized_item) { create :gws_share_file, name: "uncategorized", folder_id: folder.id, category_ids: [] }
   let!(:folder) { create :gws_share_folder }
@@ -50,9 +50,11 @@ describe "gws_share_files", type: :feature, dbscope: :example, tmpdir: true do
         click_on ss_file.name
       end
       within "form#item-form" do
+        fill_in "item[memo]", with: "new test"
         find('input[type=submit]').click
       end
       expect(current_path).not_to eq new_path
+      expect(Gws::Share::File.find_by(memo: "new test")).to be_present
       within ".tree-navi" do
         expect(page).to have_content(folder.name)
       end
@@ -67,18 +69,21 @@ describe "gws_share_files", type: :feature, dbscope: :example, tmpdir: true do
       expect(item.state).to eq "closed"
       expect(item.content_type).to eq "image/png"
       expect(item.category_ids).to eq [category.id]
+      expect(item.memo).to eq "test"
     end
 
     it "#edit", js: true do
       visit edit_path
-      wait_for_ajax
+      #wait_for_ajax
       within "form#item-form" do
         fill_in "item[name]", with: "modify"
+        fill_in "item[memo]", with: "edited"
         click_button "保存"
       end
       expect(current_path).not_to eq sns_login_path
       expect(page).to have_no_css("form#item-form")
       expect(page).to have_content(folder.name)
+      expect(item.reload.memo).to eq "edited"
     end
 
     it "#delete", js: true do
