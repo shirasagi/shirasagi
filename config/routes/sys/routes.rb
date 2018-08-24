@@ -35,6 +35,7 @@ SS::Application.routes.draw do
     post "test/mail" => "test/mail#create", as: :send_test_mail
 
     resource :menu_settings, only: [:show, :edit, :update]
+    resource :password_policy, only: [:show, :edit, :update]
 
     resources :users, concerns: [:deletion, :lock_and_unlock]
     resources :notice, concerns: :deletion

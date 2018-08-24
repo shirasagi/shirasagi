@@ -11,6 +11,7 @@ module SS::BaseFilter
     helper SS::EditorHelper
     helper SS::JbuilderHelper
     before_action :set_model
+    before_action :set_setting
     before_action :set_ss_assets
     before_action :logged_in?
     before_action :check_api_user
@@ -49,6 +50,10 @@ module SS::BaseFilter
 
   def set_model
     @model = self.class.model_class
+  end
+
+  def set_setting
+    @cur_setting ||= Sys::Setting.first || Sys::Setting.new
   end
 
   def set_ss_assets

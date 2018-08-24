@@ -3,10 +3,9 @@ module SS::Model::User
   extend SS::Translation
   include SS::Document
   include SS::Fields::Normalizer
+  include SS::Password
   include SS::Reference::UserExpiration
   include Ldap::Addon::User
-
-  attr_accessor :cur_site, :cur_user, :in_password, :decrypted_password, :self_edit
 
   TYPE_SNS = "sns".freeze
   TYPE_LDAP = "ldap".freeze
@@ -15,6 +14,8 @@ module SS::Model::User
   LOGIN_ROLE_LDAP = "ldap".freeze
 
   included do
+    attr_accessor :cur_site, :cur_user
+
     store_in collection: "ss_users"
     index({ email: 1 }, { sparse: true, unique: true })
     index({ uid: 1 }, { sparse: true, unique: true })
@@ -32,7 +33,6 @@ module SS::Model::User
     field :kana, type: String
     field :uid, type: String
     field :email, type: String
-    field :password, type: String
     field :tel, type: String
     field :tel_ext, type: String
     field :type, type: String
@@ -42,9 +42,6 @@ module SS::Model::User
     field :account_expiration_date, type: DateTime
     field :remark, type: String
     field :organization_uid, type: String
-
-    # 初期パスワード警告 / nil: 無効, 1: 有効
-    field :initial_password_warning, type: Integer
 
     # Session Lifetime in seconds
     field :session_lifetime, type: Integer
@@ -60,13 +57,10 @@ module SS::Model::User
 
     embeds_ids :groups, class_name: "SS::Group"
 
-    permit_params :name, :kana, :uid, :email, :password, :tel, :tel_ext, :type, :login_roles, :remark, group_ids: []
-    permit_params :in_password
-    permit_params :account_start_date, :account_expiration_date, :initial_password_warning, :session_lifetime
+    permit_params :name, :kana, :uid, :email, :tel, :tel_ext, :type, :login_roles, :remark, group_ids: []
+    permit_params :account_start_date, :account_expiration_date, :session_lifetime
     permit_params :restriction, :lock_state
     permit_params :organization_id, :organization_uid, :switch_user_id
-
-    before_validation :encrypt_password, if: ->{ in_password.present? }
 
     validates :name, presence: true, length: { maximum: 40 }
     validates :kana, length: { maximum: 40 }
@@ -75,7 +69,6 @@ module SS::Model::User
     validates :email, email: true, length: { maximum: 80 }
     validates :email, uniqueness: true, if: ->{ email.present? }
     validates :email, presence: true, if: ->{ uid.blank? }
-    validates :password, presence: true, if: ->{ ldap_dn.blank? }
     validates :last_loggedin, datetime: true
     validates :account_start_date, datetime: true
     validates :account_expiration_date, datetime: true
@@ -84,7 +77,6 @@ module SS::Model::User
     validate :validate_type
     validate :validate_uid
     validate :validate_account_expiration_date
-    validate :validate_initial_password, if: -> { self_edit }
 
     after_save :save_group_history, if: -> { @db_changes['group_ids'] }
     before_destroy :validate_cur_user, if: ->{ cur_user.present? }
@@ -189,10 +181,6 @@ module SS::Model::User
     %(#{name} <#{email}>)
   end
 
-  def encrypt_password
-    self.password = SS::Crypt.crypt(in_password)
-  end
-
   # detail, descriptive name
   def long_name
     uid = self.uid
@@ -240,13 +228,6 @@ module SS::Model::User
 
   def unlock
     update_attributes(lock_state: 'unlocked')
-  end
-
-  def initial_password_warning_options
-    [
-      [I18n.t('ss.options.state.disabled'), ''],
-      [I18n.t('ss.options.state.enabled'), 1],
-    ]
   end
 
   def root_groups
@@ -335,10 +316,6 @@ module SS::Model::User
     if account_start_date >= account_expiration_date
       errors.add :account_expiration_date, :greater_than, count: t(:account_start_date)
     end
-  end
-
-  def validate_initial_password
-    self.initial_password_warning = nil if password_changed?
   end
 
   def save_group_history
