@@ -34,7 +34,7 @@ module Kana::Convertor
           mecab_param = "-u #{userdic} " + mecab_param
         end
         mecab = @@mecab.new(mecab_param)
-        # http://mecab.googlecode.com/svn/trunk/mecab/doc/format.html
+        # https://taku910.github.io/mecab/format.html
 
         mecab.parse(text).split(/\n/).each do |line|
           next if line == "EOS"
