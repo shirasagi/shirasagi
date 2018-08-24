@@ -6,11 +6,20 @@ SS::Application.routes.draw do
     delete :destroy_all, on: :collection, path: ''
   end
 
+  concern :export do
+    get :download, on: :collection
+  end
+
+  concern :import do
+    get :import, on: :collection
+    post :import, on: :collection
+  end
+
   gws "facility" do
     resources :columns, path: 'items/:form_id/columns', concerns: [:deletion] do
       get :input_form, on: :collection
     end
-    resources :items, concerns: [:deletion]
+    resources :items, concerns: [:deletion, :export, :import]
     resources :categories, concerns: [:deletion]
     namespace :usage do
       get '/' => 'main#index', as: :main

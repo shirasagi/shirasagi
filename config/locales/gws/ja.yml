@@ -175,6 +175,10 @@ ja:
           not_create_same_folder: フォルダーは既に存在しているか、閲覧権限の無い同名のフォルダーが存在しています。
           not_move_to_same_name_folder: 移動先にフォルダーは既に存在しているか、閲覧権限の無い同名のフォルダーが存在しています。
           invalid_chars_as_name: "には次の文字は使えません: \\ / : * ? \" < > |"
+        gws/facility/item:
+          not_found: "%{line_no}: ID %{id} の設備は存在しません。"
+        gws/column/base:
+          not_found: " %{id}は存在しません。"
     attributes:
       gws/model/category:
         model: モデル
@@ -418,6 +422,8 @@ ja:
         text_color: 文字色
         color: 背景色
       gws/addon/import/group:
+        in_file: ファイル
+      gws/addon/import/facility/item:
         in_file: ファイル
       gws/addon/import/role:
         in_file: ファイル

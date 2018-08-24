@@ -25,6 +25,91 @@ ja:
       purpose: 利用目的
     errors:
       require_approver: 予約承認には管理ユーザーの登録が必要です。
+  gws/facility/item:
+    csv:
+      id: ID
+      name: 設備名
+      order: 並び順
+      category_id: カテゴリー
+      activation_date: 有効期限（開始）
+      expiration_date: 有効期限（終了）
+      minutes_limit: 時間制限
+      min_minutes_limit: 時間制限（最小）
+      max_minutes_limit: 時間制限（最大）
+      html: 内容本文
+      type: 内容形式
+      max_days_limit: 予約可能期間
+      reservation_start_date: 予約可能期間（開始）
+      reservation_end_date: 予約可能期間（終了）
+      approval_check_state: 予約承認
+      reservable_group_names: 予約可能グループ
+      reservable_member_names: 予約可能ユーザー
+      readable_setting_range: 公開範囲
+      readable_group_names: 閲覧グループ
+      readable_member_names: 閲覧ユーザー
+      group_names: 管理グループ
+      user_names: 管理ユーザー
+      permission_level: 権限レベル
+
+      approval_check_state_datas:
+        enabled: 有効
+        disabled: 無効
+      readable_setting_range_datas:
+        select: 選択範囲
+        public: 全公開
+        private: 非公開
+      type_datas:
+        plain: テキスト形式
+        markdown: Markdown形式
+
+      columns:
+        id: "追加入力%{n}ID"
+        type: "追加入力%{n}入力項目"
+        name: "追加入力%{n}名前"
+        order: "追加入力%{n}並び順"
+        required: "追加入力%{n}必須入力"
+        tooltips: "追加入力%{n}ツールチップ"
+        prefix_label: "追加入力%{n}前ラベル"
+        postfix_label: "追加入力%{n}後ラベル"
+        max_length: "追加入力%{n}最大長"
+        place_holder: "追加入力%{n}プレースホルダー"
+        additional_attr: "追加入力%{n}追加属性"
+        input_type: "追加入力%{n}種類"
+        min_decimal: "追加入力%{n}最小値"
+        max_decimal: "追加入力%{n}最大値"
+        initial_decimal: "追加入力%{n}初期値"
+        scale: "追加入力%{n}小数点以下の桁数"
+        minus_type: "追加入力%{n}負数の表示方法"
+        select_options: "追加入力%{n}選択肢"
+        upload_file_count: "追加入力%{n}ファイルアップロード数"
+
+        input_type_datas:
+          text: テキスト
+          email: メールアドレス
+          tel: 電話番号
+          date: 日付のみ
+          datetime: 日付＋時間
+
+        required_datas:
+          required: 必須
+          optional: 任意
+
+        minus_type_datas:
+          normal: "-"
+          triangle: △
+          filled_triangle: ▲
+
+  gws:
+    columns:
+      gws/text_field: 一行入力
+      gws/date_field: 日付入力
+      gws/number_field: 数値入力
+      gws/url_field: URL入力
+      gws/text_area: 複数行入力
+      gws/select: ドロップダウン
+      gws/radio_button: ラジオボタン
+      gws/check_box: チェックボックス
+      gws/file_upload: ファイルアップロード
 
   gws_role:
     read_other_gws_facility_items: 設備の閲覧（全て）
