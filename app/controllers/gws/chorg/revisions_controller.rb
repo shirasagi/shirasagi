@@ -6,6 +6,13 @@ class Gws::Chorg::RevisionsController < ApplicationController
   model Gws::Chorg::Revision
   append_view_path 'app/views/chorg/revisions'
 
+  def download
+    set_item
+    csv = @item.changesets_to_csv
+    filename = "revision_#{@item.name}_#{Time.zone.now.to_i}.csv"
+    send_data csv.encode("SJIS", invalid: :replace, undef: :replace), filename: filename
+  end
+
   private
 
   def set_crumbs

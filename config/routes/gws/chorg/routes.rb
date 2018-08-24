@@ -6,9 +6,13 @@ SS::Application.routes.draw do
     delete :destroy_all, on: :collection, path: ''
   end
 
+  concern :download do
+    get :download, on: :member
+  end
+
   gws 'chorg' do
     get '/' => redirect { |p, req| "#{req.path}/revisions" }, as: :main
-    resources :revisions, concerns: [:deletion]
+    resources :revisions, concerns: [:deletion, :download]
     resources :changesets, path: 'revisions/:rid/:type/changesets', concerns: [:deletion]
     resource :result, path: 'revisions/:rid/:type/results', only: [:show] do
       post :interrupt, on: :member

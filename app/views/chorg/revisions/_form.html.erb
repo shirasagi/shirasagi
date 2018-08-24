@@ -1,6 +1,19 @@
+<%= jquery do %>
+$('#item-form').submit(function(){
+  if ($("#item_in_revision_csv_file").val()) {
+    if (!confirm('<%= I18n.t("chorg.messages.import_revision_file_confirmation") %>')) {
+      return false;
+    }
+  }
+});
+<% end %>
+
 <dl class="see">
   <dt><%= @model.t :name %><%= @model.tt :name %></dt>
   <dd><%= f.text_field :name %></dd>
+
+  <dt><%= @model.t :revision_csv_file_id %><%= @model.tt :revision_csv_file_id %></dt>
+  <dd><%= f.file_field :in_revision_csv_file %></dd>
 
   <dt><%= @model.t :user_csv_file_id %><%= @model.tt :user_csv_file_id %></dt>
   <dd><%= f.file_field :in_user_csv_file %></dd>
