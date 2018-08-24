@@ -26,12 +26,16 @@ module Workflow::Approver
     field :workflow_on_remand, type: String
     field :workflow_approvers, type: Workflow::Extensions::WorkflowApprovers
     field :workflow_required_counts, type: Workflow::Extensions::Route::RequiredCounts
+    # 現在の回覧ステップ: 0 はまだ回覧が始まっていないことを意味する。
+    field :workflow_current_circulation_level, type: Integer, default: 0
+    field :workflow_circulations, type: Workflow::Extensions::WorkflowCirculations
     field :approved, type: DateTime
 
     permit_params :workflow_user_id, :workflow_state, :workflow_comment, :workflow_pull_up, :workflow_on_remand
     permit_params workflow_approvers: []
     permit_params workflow_required_counts: []
     permit_params :workflow_reset, :workflow_cancel_request
+    permit_params workflow_circulations: []
 
     before_validation :reset_workflow, if: -> { workflow_reset }
     validates :approved, datetime: true
@@ -52,7 +56,7 @@ module Workflow::Approver
 
   def workflow_user
     if workflow_user_id.present?
-      SS::User.where(id: workflow_user_id).first
+      self.class.approver_user_class.where(id: workflow_user_id).first
     else
       nil
     end
@@ -263,6 +267,93 @@ module Workflow::Approver
 
   def workflow_back_to_init?
     !workflow_back_to_previous?
+  end
+
+  def workflow_circulation_levels
+    workflow_circulations.map { |h| h[:level] }.uniq.compact.sort
+  end
+
+  def workflow_circulations_at(level)
+    return [] if level == 0
+
+    workflow_circulations.select { |h| h[:level] == level }
+  end
+
+  def workflow_circulation_users_at(level)
+    circulations = workflow_circulations_at(level)
+    user_ids = circulations.map { |h| h[:user_id] }.compact.uniq
+    return approver_user_class.none if user_ids.blank?
+
+    approver_user_class.site(@cur_site || self.site).in(id: user_ids)
+  end
+
+  def workflow_current_circulation_users
+    workflow_circulation_users_at(workflow_current_circulation_level)
+  end
+
+  def workflow_circulation_completed_at?(level)
+    circulations = workflow_circulations_at(level)
+    return false if circulations.blank?
+
+    circulations.all? { |circulation| circulation[:state] == "seen" }
+  end
+
+  def workflow_current_circulation_completed?
+    workflow_circulation_completed_at?(workflow_current_circulation_level)
+  end
+
+  def set_workflow_circulation_state_at(level, state: 'unseen', comment: '')
+    return false if level == 0
+
+    copy = workflow_circulations.to_a
+    targets = copy.select do |workflow_circulation|
+      workflow_circulation[:level] == level
+    end
+    return false if targets.blank?
+
+    targets.each do |workflow_circulation|
+      workflow_circulation[:state] = state
+      workflow_circulation[:comment] = comment.gsub(/\n|\r\n/, " ") if comment
+    end
+
+    # Be careful, partial update is meaningless. We must update entirely.
+    self.workflow_circulations = Workflow::Extensions::WorkflowCirculations.new(copy)
+    true
+  end
+
+  def update_current_workflow_circulation_state(user_or_id, state, comment: nil)
+    level = workflow_current_circulation_level
+    return false if level == 0
+
+    user_id = user_or_id.id if user_or_id.respond_to?(:id)
+    user_id ||= user_or_id.to_i
+
+    copy = workflow_circulations.to_a
+    targets = copy.select do |workflow_circulation|
+      workflow_circulation[:level] == level && workflow_circulation[:user_id] == user_id
+    end
+    return false if targets.blank?
+
+    # do loop even though targets length is always 1
+    targets.each do |workflow_circulation|
+      workflow_circulation[:state] = state
+      workflow_circulation[:comment] = comment.gsub(/\n|\r\n/, " ") if comment
+    end
+
+    # Be careful, partial update is meaningless. We must update entirely.
+    self.workflow_circulations = Workflow::Extensions::WorkflowCirculations.new(copy)
+    true
+  end
+
+  def move_workflow_circulation_next_step
+    next_level = workflow_current_circulation_level + 1
+
+    users = workflow_circulation_users_at(next_level).active
+    return false if users.blank?
+
+    set_workflow_circulation_state_at(next_level, state: "unseen", comment: "")
+    self.workflow_current_circulation_level = next_level
+    true
   end
 
   private

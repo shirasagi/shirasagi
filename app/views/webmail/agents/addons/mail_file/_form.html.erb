@@ -17,7 +17,7 @@ window.deleteContent = function(id) {
     }
   });
 };
-SS_Addon_TempFile.renderDrop($(".upload-drop-area"), <%= @cur_user.id %>);
+var tempFile = new SS_Addon_TempFile($(".upload-drop-area"), <%= @cur_user.id %>);
 <% end %>
 
 <dl class="see webmail-addon-mail-file">
@@ -53,7 +53,7 @@ SS_Addon_TempFile.renderDrop($(".upload-drop-area"), <%= @cur_user.id %>);
           </div>
 
           <div class="action">
-            <%= link_to t("ss.buttons.delete"), "#", :onclick => "deleteContent('ref-#{part.section}'); return false;" %>
+            <%= link_to t("ss.buttons.delete"), "#", onclick: "deleteContent('ref-#{part.section}'); return false;" %>
           </div>
         </div>
       <% end %>
@@ -76,7 +76,7 @@ SS_Addon_TempFile.renderDrop($(".upload-drop-area"), <%= @cur_user.id %>);
           </div>
 
           <div class="action">
-            <%= link_to t("ss.buttons.delete"), "#", :onclick => "deleteContent('#{file.id}'); return false;" %>
+            <%= link_to t("ss.buttons.delete"), "#", onclick: "deleteContent('#{file.id}'); return false;" %>
           </div>
         </div>
       <% end %>

@@ -16,6 +16,8 @@ ja:
     empty_route_options: 承認経路が設定されていません。
     request_cancelled_message: 承認申請は申請者によってキャンセルされました。
     restart_workflow: 再申請
+    circulation_step: 回覧
+    circulation_comment: コメント
     state:
       request: 申請中
       approve: 承認
@@ -25,6 +27,13 @@ ja:
       other_approved: 他者承認済
       other_remanded: 他者差し戻し
       other_pulled_up: 引き上げ
+    circulation_state:
+      seen: 確認済
+      unseen: 回覧中
+      pending: 下位承認待ち
+    links:
+      set_seen: 確認済にする
+      unset_seen: 回覧中に戻す
     buttons:
       select: 選択
       cancel: 取消
@@ -63,16 +72,26 @@ ja:
       index: 承認者を選択する
       select: 承認者を設定する
       search: 検索
+    search_circulations:
+      index: 回覧者を選択する
+      select: 回覧者を設定する
+      search: 検索
     confirm:
       request_cancel: 申請を取り消してもよろしいですか？
+      set_seen: 既読にしてもよろしいですか？
+      unset_seen: 未読にしてもよろしいですか？
     notice:
       request_cancelled: 申請を取り消しました。
+      set_seen: 既読にしました。
+      unset_seen: 未読にしました。
 
   modules:
     workflow: ワークフロー
     addons:
       workflow/approver: 承認
       workflow/branch: 差し替えページ
+      workflow/approver_view: 承認経路
+      workflow/circulation_view: 回覧経路
 
   cms_role:
     read_other_workflow_routes: 承認ルートの閲覧（全て）
@@ -94,6 +113,7 @@ ja:
         workflow_on_remand: 差し戻し時
         workflow_approvers: 承認者
         workflow_required_counts: 必要承認数
+        workflow_circulations: 回覧者
         approved: 承認日時
         comment: 差し戻しコメント
         approver_comment: 承認者コメント
@@ -102,6 +122,7 @@ ja:
         pull_up: 引き上げ承認
         on_remand: 差し戻し時
         approvers: 承認者
+        circulations: 回覧者
         required_counts: 必要承認数
         group_ids: グループ
         level: "%{level} 段目"
@@ -137,8 +158,10 @@ ja:
       workflow_comment:
         - 申請理由など承認者に対するコメントをを記述してください。
       workflow_approvers:
-        - 承認者を指定する場合は、右欄選択候補よりを対象者をクリックしてください。
-        - 承認者を解除する場合は、左欄申請先よりを対象者をクリックしてください。
+        - 承認者を選択します。
+      workflow_circulations:
+        - 回覧者を選択します。
+        - 回覧者へは承認後に回覧依頼の通知が送られます。
       approve_remand:
         - 承認依頼が届いています。申請者に対するコメントを入力（任意）の上、承認または差し戻しを選択してください。
       workflow_routes:

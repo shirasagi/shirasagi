@@ -4,7 +4,7 @@ SS_Workflow = function (el, options) {
 
   var pThis = this;
 
-  $(document).on("click", el + " .update-item", function (e) {
+  this.$el.on("click", ".update-item", function (e) {
     pThis.updateItem($(this));
     e.preventDefault();
     return false;
@@ -34,25 +34,33 @@ SS_Workflow = function (el, options) {
     pThis.loadRouteList();
   });
 
-  $(document).on("click", el + " .workflow-route-start", function (e) {
+  this.$el.on("click", ".workflow-route-start", function (e) {
     var routeId = $(this).siblings('#workflow_route:first').val();
     pThis.loadRoute(routeId);
     e.preventDefault();
     return false;
   });
 
-  $(document).on("click", el + " .workflow-route-cacnel", function (e) {
+  this.$el.on("click", ".workflow-route-cacnel", function (e) {
     pThis.loadRouteList();
     e.preventDefault();
     return false;
   });
 
-  $(document).on("click", el + " .workflow-reroute", function (e) {
+  this.$el.on("click", ".workflow-reroute", function (e) {
     var $this = $(this);
     var level = $this.data('level');
     var userId = $this.data('user-id');
 
     pThis.reroute(level, userId);
+    e.preventDefault();
+    return false;
+  });
+
+  this.$el.on("click", "button[name=set_seen]", function (e) {
+    var $this = $(this);
+    var userId = $this.data('user-id');
+    pThis.setSeen(userId);
     e.preventDefault();
     return false;
   });
@@ -71,6 +79,15 @@ SS_Workflow.prototype = {
 
     return approvers;
   },
+  collectCirculations: function() {
+    var circulations = [];
+
+    this.$el.find("input[name='workflow_circulations']").each(function() {
+      circulations.push($(this).prop("value"));
+    });
+
+    return circulations;
+  },
   composeWorkflowUrl: function(type) {
     var uri = location.pathname.split("/");
     uri[2] = this.options.workflow_node;
@@ -82,8 +99,9 @@ SS_Workflow.prototype = {
     return uri.join("/");
   },
   updateItem: function($this) {
+    var updatetype = $this.attr("updatetype");
     var approvers = this.collectApprovers();
-    if ($.isEmptyObject(approvers) && $this.attr("type") === "request") {
+    if ($.isEmptyObject(approvers) && updatetype === "request") {
       alert(this.options.errors.not_select);
       return;
     }
@@ -94,7 +112,6 @@ SS_Workflow.prototype = {
     });
 
     var uri = this.composeWorkflowUrl('pages');
-    var updatetype = $this.attr("updatetype");
     uri += "/" + updatetype + "_update";
     var workflow_comment = $("#workflow_comment").prop("value");
     var workflow_pull_up = $("#workflow_pull_up").prop("value");
@@ -107,6 +124,7 @@ SS_Workflow.prototype = {
     } else {
       forced_update_option = $("#forced-update").prop("checked");
     }
+    var circulations = this.collectCirculations();
     $.ajax({
       type: "POST",
       url: uri,
@@ -119,7 +137,8 @@ SS_Workflow.prototype = {
         workflow_required_counts: required_counts,
         remand_comment: remand_comment,
         url: this.options.request_url,
-        forced_update_option: forced_update_option
+        forced_update_option: forced_update_option,
+        workflow_circulations: circulations
       },
       success: function (data) {
         if (data["workflow_alert"]) {
@@ -267,6 +286,21 @@ SS_Workflow.prototype = {
             }
           }
         });
+      }
+    });
+  },
+  setSeen: function(userId) {
+    var uri = this.composeWorkflowUrl('wizard');
+    uri += "/circulation";
+    uri += "?redirect_to=" + encodeURIComponent(location.href);
+
+    var pThis = this;
+    $('<a/>').attr('href', uri).colorbox({
+      maxWidth: "80%",
+      maxHeight: "80%",
+      fixed: true,
+      open: true,
+      onCleanup: function() {
       }
     });
   }

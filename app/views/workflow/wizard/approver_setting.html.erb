@@ -1,34 +1,126 @@
 <%
 
-user_class = @item.approver_user_class
-group_class = user_class.group_class
-users = user_class.where(:group_ids.in => group_class.site(@cur_site).pluck(:id), :_id.ne => @cur_user._id)
+level = 1
+
+if params[:controller] =~ /^gws/
+  def groups_path; gws_apis_groups_path; end
+  def approvers_path(*args); gws_workflow_search_approvers_path(*args); end
+else
+  def groups_path; cms_apis_groups_path; end
+  def approvers_path(*args); workflow_search_approvers_path(*args); end
+end
 
 %>
 <%= jquery do %>
-  $(".workflow-multi-select").multiSelect({
-    selectableHeader: "<div class='ms-selectable-head'><%= t "workflow.selectable_users" %></div>",
-    selectionHeader: "<div class='ms-selection-head'><%= t "workflow.request_to" %></div>"
+  $(".ajax-box").each(function () {
+    var elem = $(this);
+    if (elem.hasClass("cboxElement")) {
+      return true;
+    }
+    if (!elem.attr("target") && !elem.data("target")) {
+      return elem.colorbox({
+        fixed: true,
+        width: "90%",
+        height: "90%"
+      });
+    }
+  });
+  $(".btn.deselect").on("click", SS_SearchUI.deselect);
+
+  var approverSelector = function($item) {
+    var $dl = SS_SearchUI.anchorAjaxBox.closest("dl");
+
+    var data = $item.closest("[data-id]");
+    var levelAndId = data.data("id").split(',');
+    var level = levelAndId[0];
+    var id = levelAndId[1];
+    var name = data.data("name") || data.find(".select-item").text() || $item.text() || data.text();
+
+    var $input = $('<input type="hidden" name="workflow_approvers">');
+    $input.val(level + "," + id + ",,pending,");
+
+    var $a = $('<a class="deselect btn" href="#"><%= I18n.t "ss.buttons.delete" %></a>');
+    $a.on("click", SS_SearchUI.deselect);
+
+    var $tr = $("<tr />").attr("data-id", levelAndId.join(','));
+    $tr.append($('<td />').append($input).append(name));
+    $tr.append($('<td />').append($a));
+    SS_SearchUI.anchorAjaxBox.closest("dl").find(".ajax-selected tbody").prepend($tr);
+    SS_SearchUI.anchorAjaxBox.closest("dl").find(".ajax-selected").trigger("change");
+  };
+
+  $('a.ajax-box.approvers').data('on-select', function($item) {
+    approverSelector($item);
+  });
+
+  var circulationSelector = function($item) {
+    var $dl = SS_SearchUI.anchorAjaxBox.closest("dl");
+
+    var data = $item.closest("[data-id]");
+    var levelAndId = data.data("id").split(',');
+    var id = levelAndId[1];
+    var name = data.data("name") || data.find(".select-item").text() || $item.text() || data.text();
+
+    var $input = $('<input type="hidden" name="workflow_circulations">');
+    $input.val("<%= level %>," + id + ",pending,");
+
+    var $a = $('<a class="deselect btn" href="#"><%= I18n.t "ss.buttons.delete" %></a>');
+    $a.on("click", SS_SearchUI.deselect);
+
+    var $tr = $("<tr />").attr("data-id", levelAndId.join(','));
+    $tr.append($('<td />').append($input).append(name));
+    $tr.append($('<td />').append($a));
+    SS_SearchUI.anchorAjaxBox.closest("dl").find(".ajax-selected tbody").prepend($tr);
+    SS_SearchUI.anchorAjaxBox.closest("dl").find(".ajax-selected").trigger("change");
+  };
+
+  $('a.ajax-box.circulations').data('on-select', function($item) {
+    circulationSelector($item);
   });
 <% end %>
 
 <dl class="see request-setting">
   <dt><%= @model.t :workflow_comment %><%= @model.tt :workflow_comment %></dt>
   <dd><%= text_area :workflow, :comment, value: @item.workflow_comment %></dd>
-  <% userids = [] %>
-  <% @item.workflow_approvers.each {|workflow_approver| userids << workflow_approver[:user_id]} if @item.workflow_approvers.present? %>
   <dt><%= @model.t :workflow_approvers %><%= @model.tt :workflow_approvers %></dt>
   <dd>
     <%= hidden_field_tag "workflow_required_counts", false %>
-    <select class="workflow-multi-select" multiple="multiple" name="multiselect">
-      <% users.each do |user| %>
-        <% next unless @item.allowed?(:approve, user, site: @cur_site) %>
-        <% next unless user.enabled? %>
-        <option value="1,<%= user.id %>,,pending," <%= 'selected="selected"' if userids.index(user._id) %>>
-          <%= "#{user.long_name}(#{user.email})" %></option>
-      <% end %>
-    </select>
+    <%= link_to t("workflow.search_approvers.index"), approvers_path(level: level), class: "btn ajax-box approvers" %>
   </dd>
+  <dd>
+    <table class="index ajax-selected approvers" style="display: none;">
+      <thead>
+        <tr>
+          <th class="name"><%= @model.t :name %></th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+      </tbody>
+    </table>
+  </dd>
+</dl>
+<% if @ss_mode == :gws %>
+<dl class="see request-setting">
+  <dt><%= @model.t :workflow_circulations %><%= @model.tt :workflow_circulations %></dt>
+  <dd>
+    <%= link_to t("workflow.search_circulations.index"), approvers_path(level: "circulation#{level}"), class: "btn ajax-box circulations" %>
+  </dd>
+  <dd>
+    <table class="index ajax-selected circulations" style="display: none;">
+      <thead>
+        <tr>
+          <th class="name"><%= @model.t :name %></th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+      </tbody>
+    </table>
+  </dd>
+</dl>
+<% end %>
+<dl class="see request-setting">
   <dd>
     <div class="buttons">
       <%= button_tag t("workflow.buttons.request"), { updatetype: :request, class: "update-item btn-primary" } %>

@@ -97,6 +97,61 @@ class Gws::Memo::Notifier
       Rails.logger.warn("#{e.class} (#{e.message}):\n  #{e.backtrace.join("\n  ")}")
       raise
     end
+
+    def deliver_workflow_circulations!(opts)
+      opts = opts.dup
+
+      url = opts.delete(:url)
+      comment = opts.delete(:comment)
+      cur_site = opts[:cur_site]
+      item = opts[:item]
+
+      title = "[#{I18n.t('workflow.mail.subject.approve')}]#{item.name} - #{cur_site.name}"
+      text = <<-TEXT
+      次の申請が承認されました。
+      申請内容を確認してください。
+
+      - タイトル
+        #{item.name}
+
+      - 記事URL
+        #{url}
+      TEXT
+
+      opts[:item_title] = title
+      opts[:item_text] = text
+
+      new(opts).deliver!
+    end
+
+    def deliver_workflow_comment!(opts)
+      opts = opts.dup
+
+      url = opts.delete(:url)
+      comment = opts.delete(:comment)
+      cur_site = opts[:cur_site]
+      item = opts[:item]
+
+      title = "[#{I18n.t("workflow.mail.subject.#{item.workflow_state}")}]#{item.name} - #{cur_site.name}"
+      text = <<-TEXT
+      次の申請にコメントがありました。
+      コメントの内容を確認してください。
+
+      - タイトル
+        #{item.name}
+
+      - 記事URL
+        #{url}
+
+      - コメント
+        #{comment}
+      TEXT
+
+      opts[:item_title] = title
+      opts[:item_text] = text
+
+      new(opts).deliver!
+    end
   end
 
   def item_title

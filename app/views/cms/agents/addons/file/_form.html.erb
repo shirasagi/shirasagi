@@ -27,22 +27,23 @@ window.deleteContent = function(id) {
   });
 };
 
+var options = {};
 <% if @cur_node %>
-SS_Addon_TempFile.selectUrl = function(id) {
+options.selectUrl = function(id) {
   return "/.s<%= @cur_site.id %>/cms/apis/node<%= @cur_node.id %>/cms/temp_files/" + id  + "/select";
 };
-SS_Addon_TempFile.uploadUrl = function() {
+options.uploadUrl = function() {
   return "/.s<%= @cur_site.id %>/cms/apis/node<%= @cur_node.id %>/cms/temp_files.json";
 };
 <% else %>
-SS_Addon_TempFile.selectUrl = function(id) {
+options.selectUrl = function(id) {
   return "/.s<%= @cur_site.id %>/cms/apis/temp_files/" + id  + "/select";
 };
-SS_Addon_TempFile.uploadUrl = function() {
+options.uploadUrl = function() {
   return "/.s<%= @cur_site.id %>/cms/apis/temp_files.json";
 };
 <% end %>
-SS_Addon_TempFile.renderDrop($(".upload-drop-area"), <%= @cur_user.id %>);
+var tempFile = new SS_Addon_TempFile($(".upload-drop-area"), <%= @cur_user.id %>, options);
 <% end %>
 
 <dl class="see">
@@ -92,14 +93,14 @@ SS_Addon_TempFile.renderDrop($(".upload-drop-area"), <%= @cur_user.id %>);
 
           <div class="action">
             <% content = link_to file.humanized_name, file.url, class: "icon-#{file.extname}" %>
-            <%= link_to t("sns.file_attach"), "#", :onclick => "insertContent('#{escape_javascript(content)}'); return false;" %>
+            <%= link_to t("sns.file_attach"), "#", onclick: "insertContent('#{escape_javascript(content)}'); return false;" %>
             <% if file.image? %>
               <% content = image_tag file.url, alt: file.name %>
-              <%= link_to t("sns.image_paste"), "#", :onclick => "insertContent('#{escape_javascript(content)}'); return false;" %>
+              <%= link_to t("sns.image_paste"), "#", onclick: "insertContent('#{escape_javascript(content)}'); return false;" %>
               <% content = link_to(file.url, alt: file.name, class: "ajax-box", target: "_blank") { image_tag(file.thumb_url, alt: file.name) } %>
-              <%= link_to t("sns.thumb_paste"), "#", :onclick => "insertContent('#{escape_javascript(content)}'); return false;" %>
+              <%= link_to t("sns.thumb_paste"), "#", onclick: "insertContent('#{escape_javascript(content)}'); return false;" %>
             <% end %>
-            <%= link_to t("ss.buttons.delete"), "#", :onclick => "deleteContent('#{file.id}'); return false;" %>
+            <%= link_to t("ss.buttons.delete"), "#", onclick: "deleteContent('#{file.id}'); return false;" %>
           </div>
         </div>
       <% end %>

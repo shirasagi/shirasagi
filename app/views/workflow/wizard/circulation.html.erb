@@ -1,0 +1,18 @@
+<%= form_tag({ action: :circulation }, { method: :post, class: "circulation-form" }) do %>
+  <dl class="see">
+    <dt class="wide"><%= t("workflow.circulation_comment") %></dt>
+    <dd class="wide"><%= text_area_tag("comment", nil, style: "width: 18em;") %></dd>
+  </dl>
+
+  <%= hidden_field_tag('redirect_to', @redirect_to) %>
+  <%= hidden_field_tag('url', @url) %>
+
+  <footer class="send">
+    <% if @crud_buttons %>
+      <% @crud_buttons.call f %>
+    <% else %>
+      <%= submit_tag t("ss.buttons.save"), class: 'btn-primary save' %>
+      <%= button_tag t("ss.buttons.cancel"), class: 'btn-default', type: :reset, onclick: "$.colorbox.close(); return false;" %>
+    <% end %>
+  </footer>
+<% end %>

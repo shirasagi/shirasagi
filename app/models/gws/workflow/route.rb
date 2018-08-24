@@ -1,5 +1,7 @@
 class Gws::Workflow::Route
   include ::Workflow::Model::Route
+  include ::Workflow::Addon::ApproverView
+  include ::Workflow::Addon::CirculationView
   include Gws::Referenceable
   include Gws::GroupPermission
   include Gws::Addon::History

@@ -31,15 +31,18 @@ describe Gws::Workflow::FilesController, type: :feature, dbscope: :example, tmpd
       # admin: 申請する
       #
       within ".mod-workflow-request" do
-        click_on "選択"
-
-        within ".ms-container" do
-          find("li.ms-elem-selectable", text: /#{::Regexp.escape(user1.uid)}/).click
-          find("li.ms-elem-selectable", text: /#{::Regexp.escape(user2.uid)}/).click
-        end
-
+        select I18n.t("mongoid.attributes.workflow/model/route.my_group"), from: "workflow_route"
+        click_on I18n.t("workflow.buttons.select")
+        click_on I18n.t("workflow.search_approvers.index")
+      end
+      within "#cboxLoadedContent" do
+        find("tr[data-id=\"1,#{user1.id}\"] input[type=checkbox]").click
+        find("tr[data-id=\"1,#{user2.id}\"] input[type=checkbox]").click
+        click_on I18n.t("workflow.search_approvers.select")
+      end
+      within ".mod-workflow-request" do
         fill_in "workflow[comment]", with: workflow_comment
-        click_on "申請"
+        click_on I18n.t("workflow.buttons.request")
       end
       expect(page).to have_css(".mod-workflow-view dd", text: /#{::Regexp.escape(user1.uid)}/)
 
@@ -62,7 +65,7 @@ describe Gws::Workflow::FilesController, type: :feature, dbscope: :example, tmpd
 
       within ".mod-workflow-approve" do
         fill_in "remand[comment]", with: remand_comment1
-        click_on "承認"
+        click_on I18n.t("workflow.buttons.approve")
       end
 
       expect(page).to have_css(".mod-workflow-view dd", text: /#{::Regexp.escape(remand_comment1)}/)
@@ -88,7 +91,7 @@ describe Gws::Workflow::FilesController, type: :feature, dbscope: :example, tmpd
 
       within ".mod-workflow-approve" do
         fill_in "remand[comment]", with: remand_comment2
-        click_on "承認"
+        click_on I18n.t("workflow.buttons.approve")
       end
 
       expect(page).to have_css(".mod-workflow-view dd", text: /#{::Regexp.escape(remand_comment2)}/)

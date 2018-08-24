@@ -4,7 +4,7 @@ describe "workflow_search_approvers", type: :feature, dbscope: :example do
   let(:site) { cms_site }
   let(:user) { cms_user }
   let(:group) { cms_group }
-  let(:index_path) { workflow_search_approvers_path site.id }
+  let(:index_path) { workflow_search_approvers_path(site: site, level: 1) }
 
   context "with auth" do
     before { login_cms_user }
