@@ -74,7 +74,7 @@ describe "gws_share_files", type: :feature, dbscope: :example, tmpdir: true do
 
     it "#edit", js: true do
       visit edit_path
-      #wait_for_ajax
+      wait_for_ajax
       within "form#item-form" do
         fill_in "item[name]", with: "modify"
         fill_in "item[memo]", with: "edited"
