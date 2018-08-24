@@ -2,7 +2,12 @@
 
 # Rails.application.config.session_store :cookie_store, key: '_ss_session'
 Rails.application.config.session_store :mongoid_store
-Rails.application.config.session_options = { cookie_only: false, key: '_ss_session' }
+Rails.application.config.session_options = begin
+  options = { cookie_only: false }
+  options[:key] = SS.config.ss.session["key"].presence || '_ss_session'
+  options[:secure] = SS.config.ss.session["secure"] if !SS.config.ss.session["secure"].nil?
+  options
+end
 
 if defined?(MongoidStore::Session)
   class MongoidStore::Session

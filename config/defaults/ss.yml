@@ -13,6 +13,11 @@ production: &production
   # JavaScripts on management pages.
   javascripts: ["ss/script"]
 
+  session:
+    key: '_ss_session'
+    # uncomment blow setting if you have been running SHIRASAGI with full https
+    # secure: true
+
 test:
   <<: *production
   disable: false
