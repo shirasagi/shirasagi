@@ -95,18 +95,8 @@
   }
 }
 .gws-memos {
-  .list-item {
-    padding: 5px 8px;
-    display: block;
-  }
   .list-item-head {
-    font-weight: bold;
-    padding-bottom: 8px;
     .head {
-      @include display-flex;
-      -js-display: flex;
-      height: 20px;
-      position: relative;
       .field {
         display: inline-block;
         cursor: pointer;
@@ -179,55 +169,16 @@
 }
 
 .gws-memo-folder {
-  .folder {
-    background: #ffffff !important;
+  .nav-item.unseen a {
+    color: $orange;
   }
-  .current {
-    background: #f2f2f2 !important;
-  }
-  .unseen {
-    font-weight: bold;
-    color: #f25a38;
+  .nav-item.unseen a:hover {
+    color: $primary2;
   }
 }
 
 .gws-memo-search {
   display: none;
-  margin: 0 10px;
-  padding: 10px 20px;
-  border-bottom: 1px solid #eee;
-
-  input[type="text"] {
-    width: 300px;
-  }
-}
-
-.gws-memo-dropdown {
-  display: inline;
-  font-weight: normal;
-  .ss-dropdown-menu {
-    left: 0;
-    margin: 0;
-    padding: 5px 0;
-    border: 1px solid #ccc;
-    @include box-shadow(0px 3px 12px rgba(0,0,0,.2));
-    background: #fff;
-    text-align: left;
-    a {
-      @include truncate;
-      padding: 5px 10px;
-      color: $black;
-    }
-    a:hover {
-      background-color: $gray1;
-      color: $orange;
-      text-decoration: none;
-    }
-    .pad {
-      display: inline-block;
-      width: 10px;
-    }
-  }
 }
 .gws-addon-memo-member {
   dl.cc-bcc {

@@ -711,15 +711,15 @@ td {
     &:hover, &.current:hover {
       color: $primary2;
     }
-    &.current {
-      color: $black;
-    }
     .material-icons {
       margin-right: 5px;
     }
     span {
       vertical-align: middle;
     }
+  }
+  .nav-item.is-current a, .nav-item.current a {
+    color: $black;
   }
   .folder-navi {
     position: fixed;
@@ -1492,29 +1492,14 @@ table.form-index.sortable-index {
 
 // -------------------------------------------------------------------------------------------------
 // messages
-
 .ss-messages {
-  .unseen .info {
-    font-weight: bold;
+  .unseen {
+    background: $gray2;
   }
-  .seen {
-    border-color: #e8e8e8;
-    background-color: #f4f4f4;
-  }
-  // .unseen {
-  //   border-color: #f2f2f2;
-  //   background-color: #f9e9e3;
-  // }
   .unseen:hover, .seen:hover {
     background: #ebebeb;
   }
-  // .unseen:hover, .seen:hover {
-  //   background: #fbeee8;
-  // }
   .icon {
-    float: left;
-    width: 28px;
-    &:first-of-type { margin-left: -7px; }
     .material-icopns { display: block; }
   }
   .icon a:hover .material-icons { opacity: 0.8; }

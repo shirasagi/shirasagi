@@ -1,29 +1,29 @@
-<nav class="nav-menu">
+<nav class="mb-3">
   <% if params[:action] =~ /index/ %>
     <% if @forum.allowed?(:edit, @cur_user, site: @cur_site) %>
-      <%= link_to t('gws/discussion.links.forum.edit'), edit_gws_discussion_forum_path(id: @forum.id) %>
+      <%= link_to t('gws/discussion.links.forum.edit'), edit_gws_discussion_forum_path(id: @forum.id), class: "btn btn-outline-secondary" %>
     <% end %>
     <% if @model.allowed?(:edit, @cur_user, site: @cur_site) %>
-      <%= link_to t('gws/discussion.links.topic.new'), action: :new %>
+      <%= link_to t('gws/discussion.links.topic.new'), { action: :new }, class: "btn btn-outline-secondary" %>
     <% end %>
   <% elsif params[:action] =~ /all/ %>
     <% if @model.allowed?(:edit, @cur_user, site: @cur_site) %>
-      <%= link_to t('gws/discussion.links.topic.new'), action: :new %>
+      <%= link_to t('gws/discussion.links.topic.new'), { action: :new }, class: "btn btn-outline-secondary" %>
     <% end %>
   <% elsif params[:action] =~ /new|create/ %>
-    <%= link_to t('ss.links.back'), action: :index %>
+    <%= link_to t('ss.links.back'), { action: :index }, class: "btn btn-outline-secondary" %>
   <% elsif params[:action] =~ /edit|update|delete|copy/ %>
-    <%= link_to t('ss.links.back'), gws_discussion_forum_topic_comments_path(topic_id: @item.id) %>
+    <%= link_to t('ss.links.back'), gws_discussion_forum_topic_comments_path(topic_id: @item.id), class: "btn btn-outline-secondary" %>
   <% else %>
     <% if @item.allowed?(:edit, @cur_user, site: @cur_site) %>
-      <%= link_to t('ss.links.edit'), action: :edit, id: @item %>
+      <%= link_to t('ss.links.edit'), action: :edit, id: @item, class: "btn btn-outline-secondary" %>
     <% end %>
     <% if @item.allowed?(:edit, @cur_user, site: @cur_site) %>
-      <%= link_to t('ss.links.copy'), action: :copy, id: @item %>
+      <%= link_to t('ss.links.copy'), action: :copy, id: @item, class: "btn btn-outline-secondary" %>
     <% end %>
     <% if @item.allowed?(:delete, @cur_user, site: @cur_site) %>
-      <%= link_to t('ss.links.delete'), action: :delete, id: @item %>
+      <%= link_to t('ss.links.delete'), action: :delete, id: @item, class: "btn btn-outline-secondary" %>
     <% end %>
-    <%= link_to t('ss.links.back'), gws_discussion_forum_topic_comments_path(topic_id: @item.id) %>
+    <%= link_to t('ss.links.back'), gws_discussion_forum_topic_comments_path(topic_id: @item.id), class: "btn btn-outline-secondary" %>
   <% end %>
 </nav>

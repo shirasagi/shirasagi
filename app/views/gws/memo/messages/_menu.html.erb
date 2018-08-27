@@ -1,28 +1,28 @@
-<nav class="nav-menu">
+<nav>
   <% if params[:action] =~ /index/ %>
     <% if @model.allowed?(:edit, @cur_user, site: @cur_site) %>
-      <%= link_to t('ss.links.new'), action: :new %>
+      <%= link_to t('ss.links.new'), { action: :new }, { class: "btn btn-outline-primary" } %>
     <% end %>
   <% elsif params[:action] =~ /new|create|lock/ %>
-    <%= link_to t('ss.links.back_to_index'), action: :index %>
+    <%= link_to t('ss.links.back_to_index'), { action: :index }, { class: "btn btn-outline-secondary" } %>
   <% elsif params[:action] =~ /edit|update|delete|mov|reply|forward|ref/ %>
-    <%= link_to t('ss.links.back_to_show'), action: :show %>
-    <%= link_to t('ss.links.back_to_index'), action: :index %>
+    <%= link_to t('ss.links.back_to_show'), { action: :show }, { class: "btn btn-outline-secondary" } %>
+    <%= link_to t('ss.links.back_to_index'), { action: :index }, { class: "btn btn-outline-secondary" } %>
   <% else %>
-    <%= link_to t('gws/memo/message.links.reply'), { action: :reply }, { class: 'reply' } unless @item.draft? %>
-    <%= link_to t('gws/memo/message.links.reply_all'), { action: :reply_all }, { class: 'reply_all' } unless @item.draft? %>
-    <%= link_to t('gws/memo/message.links.forward'), { action: :forward }, { class: 'forward' } unless @item.draft? %>
-    <%= link_to t('gws/memo/message.links.ref'), { action: :ref }, { class: 'new' } unless @item.draft? %>
+    <%= link_to t('gws/memo/message.links.reply'), { action: :reply }, { class: 'reply btn btn-outline-secondary' } unless @item.draft? %>
+    <%= link_to t('gws/memo/message.links.reply_all'), { action: :reply_all }, { class: 'reply_all btn btn-outline-secondary' } unless @item.draft? %>
+    <%= link_to t('gws/memo/message.links.forward'), { action: :forward }, { class: 'forward btn btn-outline-secondary' } unless @item.draft? %>
+    <%= link_to t('gws/memo/message.links.ref'), { action: :ref }, { class: 'new btn btn-outline-secondary' } unless @item.draft? %>
     <% if @item.draft? && (@cur_user.id == @item.user_id) %>
-      <%= link_to(t('ss.links.edit'), action: :edit, id: @item) %>
+      <%= link_to(t('ss.links.edit'), { action: :edit }, { id: @item }, { class: "btn btn-outline-secondary" }) %>
     <% end %>
     <% if %w(INBOX.Trash INBOX.Draft INBOX.Sent).exclude?(params[:folder]) %>
-      <%= link_to(t('gws/memo/message.links.trash'), action: :trash, id: @item) %>
+      <%= link_to(t('gws/memo/message.links.trash'), { action: :trash }, { id: @item }, { class: "btn btn-outline-secondary" }) %>
     <% end %>
     <% if %w(INBOX.Trash INBOX.Draft INBOX.Sent).include?(params[:folder]) %>
-      <%= link_to(t('ss.links.delete'), action: :delete, id: @item) %>
+      <%= link_to(t('ss.links.delete'), { action: :delete }, { id: @item }, { class: "btn btn-outline-secondary" }) %>
     <% end %>
-    <%= link_to(t('gws/memo/message.links.print'), action: :print, id: @item) %>
-    <%= link_to t('ss.links.back_to_index'), action: :index %>
+    <%= link_to(t('gws/memo/message.links.print'), { action: :print }, { id: @item }, { class: "btn btn-outline-secondary" }) %>
+    <%= link_to t('ss.links.back_to_index'), { action: :index }, { class: "btn btn-outline-secondary" } %>
   <% end %>
 </nav>

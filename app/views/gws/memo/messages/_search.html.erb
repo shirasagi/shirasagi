@@ -1,16 +1,19 @@
 <% @s = OpenStruct.new params[:s] %>
 <div class="gws-memo-search">
   <%= form_for :s, url: '', html: { method: :get } do |f| %>
-    <dl class="see">
-      <dt><%= @model.t :subject %></dt>
-      <dd><%= f.text_field :subject %></dd>
-      <dt><%= t 'gws/memo/message.message' %></dt>
-      <dd><%= f.text_field :text %></dd>
-      <dt></dt>
-      <dd>
-        <input type="submit" value="<%= t 'ss.buttons.search' %>" class="btn search" />
-        <input type="reset" value="<%= t 'ss.buttons.reset' %>" class="btn reset" />
-      </dd>
-    </dl>
+    <div class="form-row">
+      <div class="col-sm-6 mb-3">
+        <label><%= @model.t :subject %></label>
+        <%= f.text_field :subject, class: "form-control" %>
+      </div>
+      <div class="col-sm-6 mb-3">
+        <label><%= t 'gws/memo/message.message' %></label>
+        <%= f.text_field :text, class: "form-control" %>
+      </div>
+      <div class="form-group col-sm-12 text-center">
+        <input type="submit" value="<%= t 'ss.buttons.search' %>" class="search btn btn-outline-primary" />
+        <input type="reset" value="<%= t 'ss.buttons.reset' %>" class="reset btn btn-outline-secondary" />
+      </div>
+    </div>
   <% end %>
 </div>
