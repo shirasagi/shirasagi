@@ -38,8 +38,9 @@ module Event::Addon
 
     def ical_parse
       uri = URI.parse(ical_import_url)
-      file = open(uri, ical_url_options)
-      Icalendar::Calendar.parse(file.read)
+      open(uri, ical_url_options) do |file|
+        ::Icalendar::Calendar.parse(file)
+      end
     end
   end
 end
