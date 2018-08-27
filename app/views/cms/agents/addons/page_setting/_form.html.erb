@@ -11,5 +11,8 @@
 
     <dt><%= @model.t :auto_description %><%= @model.tt :auto_description %></dt>
     <dd><%= f.select :auto_description, @item.auto_description_options %></dd>
+
+     <dt><%= @model.t :max_name_length %><%= @model.tt :max_name_length %></dt>
+    <dd><%= f.select :max_name_length, @item.max_name_length_options %></dd>
   </dl>
 </dl>
