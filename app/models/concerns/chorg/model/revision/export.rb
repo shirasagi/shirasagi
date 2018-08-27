@@ -86,7 +86,7 @@ module Chorg::Model::Revision
         end
         table = CSV.read(in_revision_csv_file.path, headers: true, encoding: 'SJIS:UTF-8')
       rescue => e
-        @item.errors.add :base, e.to_s
+        errors.add :base, e.to_s
         return
       end
 
