@@ -95,79 +95,54 @@
   }
 }
 .gws-memos {
-  .list-item-head {
-    .head {
-      .field {
-        display: inline-block;
-        cursor: pointer;
-      }
-      .from, .to {
-        width: calc(50% - 100px);
-        text-indent: 79.84px;
-      }
-      .title {
-        width: calc(50% - 130px);
-      }
-      .priority {
-        width: 50px;
-      }
-      .datetime {
-        width: 120px;
-      }
-      .size {
-        width: 60px;
-      }
-    }
-    @include mb { display: none; }
+  td {
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
-  .info {
-    @include truncate;
-    @include display-flex;
-    -js-display: flex;
-    @include mb {
-      clear: both;
+  td.icon-star, td.icon-attachment {
+    padding: 0.75rem 0;
+  }
+  @include mb {
+    display: block;
+    white-space: nowrap;
+    thead { display: none; }
+    tbody {
       display: block;
     }
-    .field {
-      overflow: hidden;
-      text-overflow: ellipsis;
-      white-space: nowrap;
-      vertical-align: text-top;
-      @include mb {
-        display: inline-block;
-      }
+    tr {
+      position: relative;
+      display: block;
+      padding: 0.75rem;
+      border-top: 1px solid $gray2;
     }
-    .from, .to {
-      width: calc(50% - 132.84px);
-      padding-right: 5px;
-      @include mb {
-        width: 100%;
-        padding-right: 0;
-      }
+    th, td {
+      display: block;
+      padding: 0 ;
+      border: none;
     }
-    .title {
-      width: calc(50% - 75px);
-      padding-right: 5px;
-      font-size: 100%;
-      @include mb {
-        width: 100%;
-        padding-right: 0;
-      }
+    td.check {
+      float: left;
+      line-height: 6.5rem;
+      padding-right: 1rem;
     }
-    .priority {
-      width: 50px;
+    td.icon-star {
+      position: absolute;
+      top: 0.75rem;
+      right: 0.75rem;
     }
-    .datetime {
-      width: 120px;
-      font-weight: normal;
+    td.icon-attachment {
+      position: absolute;
+      top: 4rem;
+      right: 0.75rem;
     }
-    .size {
-      width: 60px;
-      font-weight: normal;
+    td.from, td.title, td.priority, td.datetime, td.size {
+      padding-right: 2rem;
+    }
+    td.title {
+      font-size: $px16;
     }
   }
 }
-
 .gws-memo-folder {
   .nav-item.unseen a {
     color: $orange;

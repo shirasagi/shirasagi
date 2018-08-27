@@ -32,8 +32,8 @@
   });
 <% end %>
 
-<div class="list-head d-flex align-items-center justify-content-between">
-  <div class="list-head-action btn-group">
+<div class="list-head d-flex align-items-center justify-content-between flex-wrap">
+  <div class="list-head-action btn-group flex-wrap">
 
     <% if %w(INBOX.Sent INBOX.Draft).exclude?(params[:folder]) %>
       <div class="gws-memo-dropdown move-menu dropdown mr-2">

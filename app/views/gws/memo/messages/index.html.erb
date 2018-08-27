@@ -1,4 +1,4 @@
-<div class="index gws-memos-index table-responsive">
+<div class="index gws-memos-index">
   <%= render file: '_list_head' %>
   <table class="list-items ss-messages gws-memos table">
     <thead class="list-item-head">
@@ -26,7 +26,7 @@
           <tr class="list-item <%= item.unseen?(@cur_user) ? 'unseen' : 'seen' %>">
         <% end %>
 
-          <td><label class="check"><%= check_box_tag 'ids[]', item.id %></label></td>
+          <td class="check"><label><%= check_box_tag 'ids[]', item.id %></label></td>
 
           <td class="icon icon-star <%= item.star?(@cur_user) ? 'on' : 'off' %>">
             <%= link_to options={action: :toggle_star, id: item.id}, method: :post do %>
@@ -44,7 +44,7 @@
           <% else %>
             <td class="field from" title="<%= item.from_member_name || t('gws/memo.no_senders') %>"><%= item.from_member_name || t('gws/memo.no_senders') %></td>
           <% end %>
-          <td><%= link_to item.display_subject, { action: :show, id: item.id }, class: 'field title', title: item.display_subject %></td>
+          <td class="field title"><%= link_to item.display_subject, { action: :show, id: item.id }, title: item.display_subject %></td>
           <td class="field priority"><%= item.label :priority %></td>
           <td class="field datetime"><%= item.display_send_date %></td>
           <td class="field size"><%= item.display_size %></td>
