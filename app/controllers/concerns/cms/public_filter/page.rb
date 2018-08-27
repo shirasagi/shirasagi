@@ -46,7 +46,7 @@ module Cms::PublicFilter::Page
     rescue StandardError => e
       return if e.to_s == "404"
       return if e.is_a? Mongoid::Errors::DocumentNotFound
-      raise e unless Rails.env.producton?
+      raise e
     end
 
     if response.content_type == "text/html" && page.layout
