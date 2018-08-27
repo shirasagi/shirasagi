@@ -3,13 +3,24 @@ class Event::Agents::Tasks::Node::PagesController < ApplicationController
   include Event::GeneratorFilter::Ical
 
   def generate
-    generate_node_ical @node
+    written = generate_node @node
+    if written
+      @task.log "#{@node.url}index.html" if @task
+    end
+
+    # initialize context before generating rss
+    init_context
+    if generate_node_ical @node
+      @task.log "#{@node.url}index.ics" if @task
+    end
 
     @start_date = Time.zone.today.advance(years: -1)
     @close_date = Time.zone.today.advance(years: 1)
 
     remove_old_pages
     generate_new_pages
+
+    written
   end
 
   private
@@ -22,11 +33,14 @@ class Event::Agents::Tasks::Node::PagesController < ApplicationController
     term = @start_date.advance(years: -1)..@start_date.advance(months: -1)
     term = term.map { |m| sprintf("#{m.year}%02d", m.month) }.uniq
     term.each do |date|
+      file = "#{@node.path}/#{date}.html"
+      Fs.rm_rf(file) if Fs.exists?(file)
+
       event_display_options.each do |display|
         file = "#{@node.path}/#{date}#{display}.html"
-        Fs.rm_rf file if Fs.exists?(file)
+        Fs.rm_rf(file) if Fs.exists?(file)
         file.sub!(/\.html$/, '.ics')
-        Fs.rm_rf file if Fs.exists?(file)
+        Fs.rm_rf(file) if Fs.exists?(file)
       end
     end
   end
@@ -38,7 +52,7 @@ class Event::Agents::Tasks::Node::PagesController < ApplicationController
         url  = "#{@node.url}#{date}#{display}.html"
         file = "#{@node.path}/#{date}#{display}.html"
 
-        if generate_node_ical @node, url: url, file: file
+        if generate_node(@node, url: url, file: file)
           @task.log url if @task
         end
       end
