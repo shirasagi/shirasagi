@@ -8,6 +8,7 @@ SS::Application.routes.draw do
 
   concern :download do
     get :download, on: :member
+    get :download_template, on: :collection
   end
 
   gws 'chorg' do

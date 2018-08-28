@@ -9,6 +9,7 @@ SS::Application.routes.draw do
 
   concern :download do
     get :download, on: :member
+    get :download_template, on: :collection
   end
 
   namespace('chorg', as: 'chorg', path: '.s:site/chorg', module: 'chorg') do
