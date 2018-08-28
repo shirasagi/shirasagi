@@ -9,6 +9,7 @@ describe 'gws_presence_users', type: :request, dbscope: :example do
   let(:group_users_path) { gws_presence_apis_group_users_path(site: site.id, group: gws_user.gws_default_group.id, format: :json) }
   let(:custom_group_users_path) { gws_presence_apis_custom_group_users_path(site: site.id, group: custom_group.id, format: :json) }
   let(:update_path) { gws_presence_apis_user_path(site: site.id, id: gws_user.id, format: :json) }
+  let(:states_path) { states_gws_presence_apis_users_path(site: site.id, format: :json) }
   let(:presence_states) { Gws::UserPresence.new.state_options.map(&:reverse).to_h }
   let(:presence_styles) { Gws::UserPresence.new.state_styles }
 
@@ -88,6 +89,18 @@ describe 'gws_presence_users', type: :request, dbscope: :example do
       expect(gws_admin["presence_memo"]).to eq "modified-memo"
       expect(gws_admin["presence_plan"]).to eq "modified-plan"
       expect(gws_admin["editable"]).to eq true
+    end
+
+    it "PUT /.g:site/presence/users/states.json" do
+      get states_path
+      expect(response.status).to eq 200
+
+      json = JSON.parse(response.body)
+      available = json["items"][0]
+      expect(available["name"]).to eq "available"
+      expect(available["label"]).to eq presence_states["available"]
+      expect(available["style"]).to eq presence_styles["available"]
+      expect(available["order"]).to eq 0
     end
   end
 end
