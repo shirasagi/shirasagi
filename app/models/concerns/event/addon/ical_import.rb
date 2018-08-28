@@ -24,6 +24,18 @@ module Event::Addon
       %w(manual auto).map { |m| [ I18n.t("event.options.ical_refresh_method.#{m}"), m ] }.to_a
     end
 
+    def ical_refresh_auto?
+      ical_refresh_method == "auto"
+    end
+
+    def ical_refresh_disabled?
+      ical_refresh_method.blank?
+    end
+
+    def ical_refresh_enabled?
+      !ical_refresh_disabled?
+    end
+
     def ical_page_state_options
       %w(public closed).map { |value| [I18n.t("ss.options.state.#{value}"), value] }
     end

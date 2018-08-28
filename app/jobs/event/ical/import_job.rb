@@ -7,13 +7,13 @@ class Event::Ical::ImportJob < Cms::ApplicationJob
 
   class << self
     def register_jobs(site, user = nil)
-      Event::Node::Ical.site(site).and_public.each do |node|
+      Event::Node::Page.site(site).and_public.each do |node|
         register_job(site, node, user)
       end
     end
 
     def register_job(site, node, user = nil)
-      if node.try(:ical_refresh_method) == 'auto'
+      if node.ical_refresh_auto?
         bind(site_id: site.id, node_id: node.id, user_id: user.present? ? user.id : nil).perform_later
       else
         Rails.logger.info("node `#{node.filename}` is prohibited to update")
@@ -526,7 +526,7 @@ class Event::Ical::ImportJob < Cms::ApplicationJob
 
   def put_history_log(page, action)
     log = History::Log.new
-    log.url          = Rails.application.routes.url_helpers.import_event_icals_path site, node
+    log.url          = Rails.application.routes.url_helpers.import_event_pages_path site, node
     log.controller   = "event/pages"
     log.user_id      = user.id if user
     log.site_id      = site.id if site

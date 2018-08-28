@@ -8,10 +8,16 @@ class Event::PagesController < ApplicationController
   append_view_path "app/views/cms/pages"
   navi_view "event/main/navi"
 
+  before_action :change_node_type
+
   private
 
   def fix_params
     { cur_user: @cur_user, cur_site: @cur_site, cur_node: @cur_node }
+  end
+
+  def change_node_type
+    @cur_node = @cur_node.becomes_with_route if @cur_node.class == Cms::Node
   end
 
   public
@@ -45,5 +51,11 @@ class Event::PagesController < ApplicationController
     rescue => e
       @item.errors.add :base, e.to_s
     end
+  end
+
+  def ical_refresh
+    return if request.get?
+    Event::Ical::ImportJob.bind(site_id: @cur_site.id, node_id: @cur_node.id, user_id: @cur_user.id).perform_later
+    redirect_to({ action: :index }, { notice: t("rss.messages.job_started") })
   end
 end

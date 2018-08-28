@@ -3,7 +3,7 @@ require 'spec_helper'
 describe Event::Ical::ImportJob, dbscope: :example do
   let(:url) { "http://#{unique_id}.example.jp/#{unique_id}.ics" }
   let(:site) { cms_site }
-  let(:node) { create :event_node_ical, site: site, ical_import_url: url }
+  let(:node) { create :event_node_page, site: site, ical_import_url: url }
   let(:user) { cms_user }
   let(:bindings) { { site_id: site.id, node_id: node.id, user_id: user.id } }
 
@@ -75,7 +75,7 @@ describe Event::Ical::ImportJob, dbscope: :example do
 
     context "ical_refresh_method is auto" do
       let(:path) { "event-1.ics" }
-      let!(:node) { create :event_node_ical, site: site, ical_import_url: url, ical_refresh_method: 'auto' }
+      let!(:node) { create :event_node_page, site: site, ical_import_url: url, ical_refresh_method: 'auto' }
 
       it do
         described_class.register_jobs(site, user)
@@ -85,7 +85,7 @@ describe Event::Ical::ImportJob, dbscope: :example do
 
     context "ical_refresh_method is manual" do
       let(:path) { "event-1.ics" }
-      let!(:node) { create :event_node_ical, site: site, ical_import_url: url, ical_refresh_method: 'manual' }
+      let!(:node) { create :event_node_page, site: site, ical_import_url: url, ical_refresh_method: 'manual' }
 
       it do
         expect { described_class.register_jobs(site, user) }.to change { enqueued_jobs.count }.by(0)
@@ -94,7 +94,7 @@ describe Event::Ical::ImportJob, dbscope: :example do
 
     context "when ical_max_docs is 1" do
       let(:path) { "event-1.ics" }
-      let(:node) { create :event_node_ical, site: site, ical_import_url: url, ical_max_docs: 1 }
+      let(:node) { create :event_node_page, site: site, ical_import_url: url, ical_max_docs: 1 }
 
       it do
         expect { described_class.bind(bindings).perform_now }.to change { Event::Page.count }.from(0).to(1)

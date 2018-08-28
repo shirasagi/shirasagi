@@ -10,8 +10,4 @@ FactoryBot.define do
   factory :event_node_search, class: Event::Node::Search, traits: [:cms_node] do
     route "event/search"
   end
-
-  factory :event_node_ical, class: Event::Node::Ical, traits: [:cms_node] do
-    route "event/ical"
-  end
 end
