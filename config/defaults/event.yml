@@ -9,7 +9,7 @@ production: &production
 
   # Event term that import ics
   ical_import_date_ago: 30
-  ical_import_date_after: 30
+  ical_import_date_after: 365
 
 test:
   <<: *production

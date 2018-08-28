@@ -7,6 +7,12 @@ describe Event::Ical::ImportJob, dbscope: :example do
   let(:user) { cms_user }
   let(:bindings) { { site_id: site.id, node_id: node.id, user_id: user.id } }
 
+  around do |example|
+    Timecop.travel("2018/08/28") do
+      example.run
+    end
+  end
+
   after { WebMock.reset! }
 
   context "when importing ics with http success" do

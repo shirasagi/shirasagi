@@ -97,8 +97,16 @@ class Event::Ical::ImportJob < Cms::ApplicationJob
     end
 
     now = Time.zone.now
-    @min_day = (now - 1.year).beginning_of_month
-    @max_day = (now + 1.year).end_of_month
+    if node.ical_import_date_ago.present?
+      @min_day = (now - node.ical_import_date_ago.days).beginning_of_day
+    else
+      @min_day = (now - SS.config.event.ical_import_date_ago.days).beginning_of_month
+    end
+    if node.ical_import_date_after.present?
+      @max_day = (now + node.ical_import_date_after.days).end_of_day
+    else
+      @max_day = (now + SS.config.event.ical_import_date_after.days).end_of_month
+    end
 
     @events = calendar.events
     if @events.blank?
@@ -171,10 +179,8 @@ class Event::Ical::ImportJob < Cms::ApplicationJob
     if to
       event_dates = day_range([], from, to)
     else
-      event_dates = [ from ]
+      event_dates = day_range([], from, from + 1.day)
     end
-
-    return event_dates.take(@max_dates_size) if event_dates.length > @max_dates_size
 
     evaluate_rrule(event_dates, event.rrule, dtstart: from)
     evaluate_rdate(event_dates, event.rdate)
@@ -182,6 +188,7 @@ class Event::Ical::ImportJob < Cms::ApplicationJob
 
     event_dates.uniq!
     event_dates.sort!
+    event_dates.select! { |d| @min_day <= d && d <= @max_day }
     event_dates.map! { |d| d.strftime("%Y/%m/%d") }
     event_dates = event_dates.take(@max_dates_size) if event_dates.length > @max_dates_size
     event_dates.join("\r\n")
