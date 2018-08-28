@@ -154,7 +154,11 @@ this.Gws_Presence_User = (function () {
 this.Gws_Presence_User_Reload = (function () {
   function Gws_Presence_User_Reload() {}
 
-  Gws_Presence_User_Reload.render = function (opts = {}) {
+  Gws_Presence_User_Reload.render = function (opts) {
+    if (opts == null) {
+      opts = {};
+    }
+
     var table_url = opts["url"];
     var paginate_params = opts["paginate_params"];
     var page = opts["page"];

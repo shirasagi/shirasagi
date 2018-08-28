@@ -3,8 +3,8 @@ this.SS_TreeUI = (function () {
 
   SS_TreeUI.closeImagePath = "/assets/img/tree-close.png";
 
-  SS_TreeUI.render = function (tree, options = {}) {
-    return new SS_TreeUI(tree, options);
+  SS_TreeUI.render = function (tree, opts) {
+    return new SS_TreeUI(tree, opts);
   };
 
   SS_TreeUI.toggleImage = function (img) {
@@ -27,13 +27,17 @@ this.SS_TreeUI = (function () {
     return img.addClass("closed");
   };
 
-  function SS_TreeUI(tree, options = {}) {
+  function SS_TreeUI(tree, opts) {
+    if (opts == null) {
+      opts = {}
+    }
+
     var root;
     var expand_all = null;
     this.tree = $(tree);
 
     root = [];
-    expand_all = options["expand_all"];
+    expand_all = opts["expand_all"];
 
     this.tree.find("tbody tr").each(function () {
       return root.push(parseInt($(this).attr("data-depth")));
