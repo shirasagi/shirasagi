@@ -1,29 +1,29 @@
 require 'spec_helper'
 
-describe "chorg_download_changesets", dbscope: :example do
-  let!(:site) { cms_site }
+describe "gws_chorg_download_revision", dbscope: :example do
+  let!(:site) { gws_site }
 
-  let!(:group0) { create(:revision_new_group) }
-  let!(:group1) { create(:revision_new_group) }
-  let!(:group2) { create(:revision_new_group) }
-  let!(:group3) { create(:revision_new_group) }
-  let!(:group4) { create(:revision_new_group) }
-  let!(:group5) { create(:revision_new_group) }
-  let!(:group6) { create(:revision_new_group) }
+  let!(:group0) { create(:gws_revision_new_group) }
+  let!(:group1) { create(:gws_revision_new_group) }
+  let!(:group2) { create(:gws_revision_new_group) }
+  let!(:group3) { create(:gws_revision_new_group) }
+  let!(:group4) { create(:gws_revision_new_group) }
+  let!(:group5) { create(:gws_revision_new_group) }
+  let!(:group6) { create(:gws_revision_new_group) }
 
-  let!(:revision) { create(:revision, site_id: site.id) }
+  let!(:revision) { create(:gws_revision, site_id: site.id) }
 
-  let!(:changeset0) { create(:add_changeset, revision_id: revision.id) }
-  let!(:changeset1) { create(:move_changeset, revision_id: revision.id, source: group0) }
-  let!(:changeset2) { create(:unify_changeset, revision_id: revision.id, sources: [group1, group2]) }
+  let!(:changeset0) { create(:gws_add_changeset, revision_id: revision.id) }
+  let!(:changeset1) { create(:gws_move_changeset, revision_id: revision.id, source: group0) }
+  let!(:changeset2) { create(:gws_unify_changeset, revision_id: revision.id, sources: [group1, group2]) }
   let!(:changeset3) do
-    create(:division_changeset, revision_id: revision.id, source: group3, destinations: [group4, group5])
+    create(:gws_division_changeset, revision_id: revision.id, source: group3, destinations: [group4, group5])
   end
-  let!(:changeset4) { create(:delete_changeset, revision_id: revision.id, source: group6) }
-  let!(:show_path) { chorg_revision_path site: site.id, id: revision.id }
+  let!(:changeset4) { create(:gws_delete_changeset, revision_id: revision.id, source: group6) }
+  let!(:show_path) { gws_chorg_revision_path site: site.id, id: revision.id }
 
-  context "changesets download in show path" do
-    before { login_cms_user }
+  context "revision download in show path" do
+    before { login_gws_user }
 
     it "#show" do
       visit show_path
