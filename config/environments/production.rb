@@ -14,7 +14,7 @@ Rails.application.configure do
 
   # Asset pipeline.
   config.assets.compress = true
-  config.assets.js_compressor = Uglifier.new(harmony: true)
+  config.assets.js_compressor = :uglifier
   config.assets.css_compressor = :sass
   config.assets.compile = true
   config.assets.digest = false
