@@ -29,6 +29,7 @@ module Chorg::Model::Changeset
     validate :validate_type
     validate :validate_sources, if: -> { type != TYPE_ADD }
     validate :validate_destinations, if: -> { type != TYPE_DELETE }
+    validate :validate_division_destinations, if: -> { type == TYPE_DIVISION }
     before_validation :set_revision_id, if: ->{ @cur_revision }
     before_validation :set_type, if: ->{ @cur_type }
     before_validation :filter_source_blank_ids
@@ -90,6 +91,14 @@ module Chorg::Model::Changeset
   def validate_destinations
     return if destinations.blank?
     errors.add :destinations, :invalid unless destinations.select { |e| e['name'].blank? }.blank?
+  end
+
+  def validate_division_destinations
+    return if destinations.blank?
+
+    if destinations.size > 3
+      errors.add :destinations, :less_than_or_equal_to, count: 3
+    end
   end
 
   def set_source_names

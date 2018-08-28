@@ -1,5 +1,6 @@
 class Chorg::Revision
   include Chorg::Model::Revision
+  include Chorg::Model::Revision::Export
   include SS::Reference::Site
   include Cms::SitePermission
 
