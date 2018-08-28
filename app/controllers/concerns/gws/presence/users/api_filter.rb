@@ -25,6 +25,7 @@ module Gws::Presence::Users::ApiFilter
       name: @item.user.name,
       presence_state: @item.state,
       presence_state_label: @item.label(:state),
+      presence_state_style: @item.state_style,
       presence_plan: @item.plan,
       presence_memo: @item.memo,
       editable: @manageable_user_ids.include?(@item.user_id),

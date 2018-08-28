@@ -4,6 +4,7 @@ describe 'gws_presence_users', type: :feature, dbscope: :example do
   context "basic crud", js: true do
     let!(:site) { gws_site }
     let!(:index_path) { gws_presence_users_path site }
+    let!(:presence_states) { Gws::UserPresence.new.state_options.map(&:reverse).to_h }
 
     before { login_gws_user }
 
@@ -12,7 +13,7 @@ describe 'gws_presence_users', type: :feature, dbscope: :example do
       expect(current_path).not_to eq sns_login_path
 
       find(".editable-users").click_on gws_user.name
-      find('.editable-users span', text: I18n.t("gws/presence.options.presence_state.available")).click
+      find('.editable-users span', text: presence_states["available"]).click
       wait_for_ajax
 
       find(".editable-users .editicon.presence-plan").click

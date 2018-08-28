@@ -9,6 +9,8 @@ describe 'gws_presence_users', type: :request, dbscope: :example do
   let(:group_users_path) { gws_presence_apis_group_users_path(site: site.id, group: gws_user.gws_default_group.id, format: :json) }
   let(:custom_group_users_path) { gws_presence_apis_custom_group_users_path(site: site.id, group: custom_group.id, format: :json) }
   let(:update_path) { gws_presence_apis_user_path(site: site.id, id: gws_user.id, format: :json) }
+  let(:presence_states) { Gws::UserPresence.new.state_options.map(&:reverse).to_h }
+  let(:presence_styles) { Gws::UserPresence.new.state_styles }
 
   context "login with gws-admin" do
     before do
@@ -67,7 +69,8 @@ describe 'gws_presence_users', type: :request, dbscope: :example do
       expect(gws_admin["id"]).to eq gws_user.id
       expect(gws_admin["name"]).to eq gws_user.name
       expect(gws_admin["presence_state"]).to eq "available"
-      expect(gws_admin["presence_state_label"]).to eq "在席"
+      expect(gws_admin["presence_state_label"]).to eq presence_states["available"]
+      expect(gws_admin["presence_state_style"]).to eq presence_styles["available"]
       expect(gws_admin["presence_memo"]).to eq "modified-memo"
       expect(gws_admin["presence_plan"]).to eq "modified-plan"
       expect(gws_admin["editable"]).to eq true
@@ -80,7 +83,8 @@ describe 'gws_presence_users', type: :request, dbscope: :example do
       expect(gws_admin["id"]).to eq gws_user.id
       expect(gws_admin["name"]).to eq gws_user.name
       expect(gws_admin["presence_state"]).to eq "available"
-      expect(gws_admin["presence_state_label"]).to eq "在席"
+      expect(gws_admin["presence_state_label"]).to eq presence_states["available"]
+      expect(gws_admin["presence_state_style"]).to eq presence_styles["available"]
       expect(gws_admin["presence_memo"]).to eq "modified-memo"
       expect(gws_admin["presence_plan"]).to eq "modified-plan"
       expect(gws_admin["editable"]).to eq true

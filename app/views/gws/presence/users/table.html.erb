@@ -21,7 +21,7 @@
     <% if @manageable %>
       <tr data-id="<%= item.id %>" class="editable">
         <td>
-          <span class="presence-state <%= user_presence.state.present? ? user_presence.state : "none" %>">
+          <span class="presence-state <%= user_presence.state_style %>">
             <%= user_presence.label :state %>
           </span>
           <%= link_to item.name, "", class: "select-presence-state group-name" %>
@@ -44,7 +44,7 @@
     <% else %>
       <tr>
         <td>
-          <span class="presence-state <%= user_presence.state.present? ? user_presence.state : "none" %>">
+          <span class="presence-state <%= user_presence.state_style%>">
             <%= user_presence.label :state %>
           </span>
           <span class="group-name"><%= item.name %></span>

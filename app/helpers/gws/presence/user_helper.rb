@@ -9,7 +9,7 @@ module Gws::Presence::UserHelper
     h << "<div class=\"presence-state-selector\" data-id=\"#{item.id}\" data-url=\"#{url}\" style=\"display: none;\">"
     user_presence.state_options.each do |k, v|
       s = (user_presence.state.to_s == v.to_s) ? "" : 'style="visibility:hidden"'
-      h << "<p data-value=\"#{v.present? ? v : "none"}\">"
+      h << "<p class=\"#{user_presence.state_style(v)}\" data-value=\"#{v}\">"
       h << "<i class=\"material-icons md-16\ selected-icon\" #{s}>done</i>"
       h << "<span>#{k}</span>"
       h << '</p>'

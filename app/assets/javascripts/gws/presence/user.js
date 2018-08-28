@@ -53,12 +53,13 @@ this.Gws_Presence_User = (function () {
   Gws_Presence_User.changedState = function (id, data) {
     var presence_state = data["presence_state"] || "none";
     var presence_state_label = data["presence_state_label"];
+    var presence_state_style = data["presence_state_style"];
     var state = $("tr[data-id=" + id + "] .presence-state");
     var selector = $("tr[data-id=" + id + "] .presence-state-selector");
 
     state.removeClass();
     state.addClass('presence-state');
-    state.addClass(presence_state);
+    state.addClass(presence_state_style);
     state.text(presence_state_label);
 
     selector.find("[data-value=" + presence_state + "] .selected-icon").css('visibility', 'visible');
