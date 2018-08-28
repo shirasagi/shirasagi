@@ -3,6 +3,8 @@ module Event::Addon
     extend ActiveSupport::Concern
     extend SS::Addon
 
+    MAX_EVENT_DATES_SIZE = 180
+
     included do
       field :event_name, type: String
       field :event_dates, type: Event::Extensions::EventDates
@@ -105,7 +107,9 @@ module Event::Addon
 
       if event_dates.present?
         event_array = Event::Extensions::EventDates.mongoize event_dates
-        errors.add :event_dates, :too_many_event_dates if event_array.size >= 180
+        if event_array.size > MAX_EVENT_DATES_SIZE
+          errors.add :event_dates, :too_many_event_dates, count: MAX_EVENT_DATES_SIZE
+        end
       end
     end
 

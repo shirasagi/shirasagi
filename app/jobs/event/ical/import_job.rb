@@ -146,29 +146,42 @@ class Event::Ical::ImportJob < Cms::ApplicationJob
       event_dates = [ from ]
     end
 
-    event_dates += evaluate_rdate(event.rdate)
+    return event_dates.take(Event::Page::MAX_EVENT_DATES_SIZE) if event_dates.length > Event::Page::MAX_EVENT_DATES_SIZE
+
+    evaluate_rdate_and_fold(event_dates, event.rdate)
 
     event_dates.uniq!
     event_dates.sort!
-    event_dates.map { |d| d.strftime("%Y/%m/%d") }.join("\r\n")
+    event_dates.map! { |d| d.strftime("%Y/%m/%d") }
+    event_dates = event_dates.take(Event::Page::MAX_EVENT_DATES_SIZE) if event_dates.length > Event::Page::MAX_EVENT_DATES_SIZE
+    event_dates.join("\r\n")
   end
 
-  def evaluate_rdate(rdate)
-    return [] if rdate.blank?
-    return rdate.map { |v| evaluate_rdate(v) }.flatten.uniq if rdate.is_a?(Array)
-    return evaluate_period(rdate) if rdate.is_a?(Icalendar::Values::Period)
+  def evaluate_rdate_and_fold(event_dates, rdate)
+    return event_dates if rdate.blank? || event_dates.length > Event::Page::MAX_EVENT_DATES_SIZE
 
-    val = extract_time(rdate)
-    return [] if !val
+    case rdate
+    when Array
+      rdate.each { |v| evaluate_rdate_and_fold(event_dates, v) }
+      event_dates.uniq!
+    when Icalendar::Values::Period
+      evaluate_period_and_fold(event_dates, rdate)
+    else
+      val = extract_time(rdate)
+      if val && !event_dates.include?(val)
+        event_dates << val
+      end
+    end
 
-    [ val ]
+    event_dates
   end
 
-  def evaluate_period(period)
+  def evaluate_period_and_fold(event_dates, period)
     period_start = extract_time(period.period_start)
     if period.explicit_end.present?
       explicit_end = extract_time(period.explicit_end)
-      return day_range(period_start.beginning_of_day, explicit_end.end_of_day)
+      event_dates += day_range(period_start.beginning_of_day, explicit_end.end_of_day)
+      event_dates.uniq!
     elsif period.duration.present?
       duration = period.duration
       implicit_end = period_start
@@ -177,10 +190,12 @@ class Event::Ical::ImportJob < Cms::ApplicationJob
       implicit_end += duration.hours.hours
       implicit_end += duration.minutes.minutes
       implicit_end += duration.seconds.seconds
-      return day_range(period_start.beginning_of_day, implicit_end.end_of_day)
-    else
-      []
+
+      event_dates += day_range(period_start.beginning_of_day, implicit_end.end_of_day)
+      event_dates.uniq!
     end
+
+    event_dates
   end
 
   def extract_text(ical_value)

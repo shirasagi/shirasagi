@@ -139,7 +139,7 @@ ja:
 
   errors:
     messages:
-      too_many_event_dates: の設定日が多すぎます。
+      too_many_event_dates: "の設定日が多すぎます。%{count} 個以下になるように設定してください。"
 
   job:
     models:
