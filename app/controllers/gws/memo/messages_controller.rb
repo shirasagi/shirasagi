@@ -322,4 +322,35 @@ class Gws::Memo::MessagesController < ApplicationController
       end
     end
   end
+
+  def latest
+    from = params[:from].present? ? Time.zone.parse(params[:from]) : Time.zone.now - 12.hours
+    @sort_hash = @cur_user.memo_message_sort_hash(@cur_folder, params[:sort], params[:order])
+
+    @unseen = @model.folder(@cur_folder, @cur_user).
+      site(@cur_site).
+      unseen(@cur_site).
+      reorder(@sort_hash)
+
+    @items = @model.folder(@cur_folder, @cur_user).
+      site(@cur_site).
+      reorder(@sort_hash).
+      limit(10).
+      entries
+
+    resp = {
+      recent: @unseen.where(:send_date.gte => from).size,
+      unseen: @unseen.size,
+      latest: @items.first.try(:send_date),
+      items: @items.map do |item|
+        {
+          date: item.send_date,
+          from: item.user_name,
+          subject: item.subject,
+          url: gws_memo_message_url(folder: 'INBOX', id: item.id)
+      }
+      end
+    }
+    render json: resp.to_json
+  end
 end

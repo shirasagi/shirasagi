@@ -61,4 +61,33 @@ class Gws::Memo::NoticesController < ApplicationController
   def show
     @item.set_seen(@cur_user).update if @item.state == "public"
   end
+
+  def latest
+    from = params[:from].present? ? Time.zone.parse(params[:from]) : Time.zone.now - 12.hours
+
+    @unseen = @model.site(@cur_site).
+      member(@cur_user).
+      undeleted(@cur_user).
+      unseen(@cur_user)
+
+    @items = @model.site(@cur_site).
+      member(@cur_user).
+      undeleted(@cur_user).
+      limit(10).
+      entries
+
+    resp = {
+      recent: @unseen.where(:created.gte => from).size,
+      unseen: @unseen.size,
+      latest: @items.first.try(:created),
+      items: @items.map do |item|
+        {
+          date: item.created,
+          subject: item.subject,
+          url: gws_memo_notice_url(id: item.id)
+        }
+      end
+    }
+    render json: resp.to_json
+  end
 end
