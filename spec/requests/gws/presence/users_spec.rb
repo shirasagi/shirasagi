@@ -91,7 +91,7 @@ describe 'gws_presence_users', type: :request, dbscope: :example do
       expect(gws_admin["editable"]).to eq true
     end
 
-    it "PUT /.g:site/presence/users/states.json" do
+    it "GET /.g:site/presence/users/states.json" do
       get states_path
       expect(response.status).to eq 200
 
