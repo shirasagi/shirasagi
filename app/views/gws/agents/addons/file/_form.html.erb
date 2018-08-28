@@ -23,23 +23,25 @@ SS_Addon_TempFile.renderDrop($(".upload-drop-area"), <%= @cur_user.id %>);
 <% end %>
 
 <div class="see gws-addon-file">
-  <%= f.hidden_field "file_ids[]", value: "" %>
-  <span class="upload-menu-new">
-    <%= link_to t('ss.links.upload'), sns_apis_temp_files_path(@cur_user), class: "ajax-box btn" %>
-  </span>
-  <span class="upload-menu-select">
-    <%= link_to t("sns.user_file"), sns_apis_user_files_path(@cur_user), class: "ajax-box btn" %>
-    <%= link_to t("modules.gws/share"), gws_apis_files_path, class: "ajax-box btn" %>
-  </span>
-  <div class="upload-drop-area">
-    <span class="upload-drop-notice"><%= t('ss.notice.file_droppable') %></span>
+  <div class="upload-drop-area col-12 mb-3 pt-3 pb-3">
+    <div class="col12 mb-3 d-flex justify-content-between">
+      <%= f.hidden_field "file_ids[]", value: "" %>
+      <div class="upload-menu-new">
+        <%= link_to t('ss.links.upload'), sns_apis_temp_files_path(@cur_user), class: "ajax-box btn btn-outline-secondary" %>
+      </div>
+      <div class="upload-menu-select">
+        <%= link_to t("sns.user_file"), sns_apis_user_files_path(@cur_user), class: "ajax-box btn btn-outline-secondary" %>
+        <%= link_to t("modules.gws/share"), gws_apis_files_path, class: "ajax-box btn btn-outline-secondary" %>
+      </div>
+    </div>
+    <p class="upload-drop-notice"><%= t('ss.notice.file_droppable') %></p>
   </div>
 
-  <div id="selected-files">
+  <div id="selected-files" class="card-columns mb-3">
     <% @item.files.each do |file| %>
-      <div id="file-<%= file.id %>" class="file-view">
+      <div id="file-<%= file.id %>" class="file-view card">
 
-        <%= link_to file.url, class: :thumb, target: "_blank" do %>
+        <%= link_to file.url, class: "thumb card-img-top", target: "_blank" do %>
           <% if file.image? %>
             <%= image_tag file.thumb_url, alt: file.name %>
           <% else %>
@@ -47,23 +49,22 @@ SS_Addon_TempFile.renderDrop($(".upload-drop-area"), <%= @cur_user.id %>);
           <% end %>
         <% end %>
 
-        <div class="name">
+        <div class="name card-body">
           <label>
             <input type="hidden" name="item[file_ids][]" value="<%= file.id %>" class="file-id" />
             <%= file.name %>
-          </label><br />
-        </div>
-
-        <div class="action">
-          <%= link_to t("ss.buttons.delete"), "#", :onclick => "deleteContent('#{file.id}'); return false;" %>
+          </label>
+          <div class="action">
+            <%= link_to t("ss.buttons.delete"), "#", :onclick => "deleteContent('#{file.id}'); return false;", class: "btn btn-secondary" %>
+          </div>
         </div>
       </div>
     <% end %>
 
     <% @item.ref_files.each do |file| %>
-      <div id="file-<%= file.id %>" class="file-view">
+      <div id="file-<%= file.id %>" class="file-view card">
 
-        <%= link_to file.url, class: :thumb, target: "_blank" do %>
+        <%= link_to file.url, class: "thumb card-img-top", target: "_blank" do %>
           <% if file.image? %>
             <%= image_tag file.thumb_url, alt: file.name %>
           <% else %>
@@ -71,16 +72,15 @@ SS_Addon_TempFile.renderDrop($(".upload-drop-area"), <%= @cur_user.id %>);
           <% end %>
         <% end %>
 
-        <div class="name">
+        <div class="name card-body">
           <label>
             <input type="hidden" name="item[ref_file_ids][]" value="<%= file.id %>" class="file-id" />
             <%= file.name %>
-          </label><br />
-        </div>
-
-        <div class="action">
-          <!-- attach and paste not supported -->
-          <%= link_to t("ss.buttons.delete"), "#", :onclick => "deleteContent('#{file.id}'); return false;" %>
+          </label>
+          <div class="action">
+            <!-- attach and paste not supported -->
+            <%= link_to t("ss.buttons.delete"), "#", :onclick => "deleteContent('#{file.id}'); return false;", class: "btn btn-secondary" %>
+          </div>
         </div>
       </div>
     <% end %>

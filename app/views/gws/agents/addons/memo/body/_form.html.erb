@@ -1,27 +1,31 @@
 <div class="webmail-addon-mail-body">
-  <div class="subject">
-    <%= f.text_field :subject, placeholder: @model.t(:subject) %>
-  </div>
-  <div class="options">
-    <%= f.select :format, @item.format_options, selected: @item.format %>
-    <%= f.select :signature, @item.signature_options, include_blank: t('mongoid.models.gws/memo/signature'), class: "add-template" %>
-  </div>
-  <div class="body-content body-text">
-    <%= f.text_area :text, style: "height: 400px;", placeholder: @model.t(:body) %>
-  </div>
-  <div class="body-content body-html">
-    <%= html_editor ".webmail-addon-mail-body .html", advanced: true, templates: false %>
-    <%= f.text_area :html, class: "html", style: "height: 400px;" %>
-  </div>
-  <% if @item.template_options.present?  %>
-  <div class="template-options">
-    <%= select_tag :template, options_for_select(@item.template_options), include_blank: t('mongoid.models.gws/memo/template'), class: "add-template" %>
-  </div>
-  <% end %>
-  <div class="header-options">
-    <label for="in-request-mdn">
-      <%= f.check_box :in_request_mdn, :id => "in-request-mdn" %>
-      <%= t('webmail.options.action.request_mdn') %>
-    </label>
+  <div class="form-row">
+    <div class="subject form-group col-sm-8">
+      <%= f.text_field :subject, placeholder: @model.t(:subject), class: "form-control" %>
+    </div>
+    <div class="form-group col-sm-2">
+      <%= f.select :format, @item.format_options, selected: @item.format, class: "form-control" %>
+    </div>
+    <div class="form-group col-sm-2">
+      <%= f.select :signature, @item.signature_options, include_blank: t('mongoid.models.gws/memo/signature'), class: "add-template form-control" %>
+    </div>
+    <div class="body-content body-text form-group col-12">
+      <%= f.text_area :text, style: "height: 400px;", placeholder: @model.t(:body) %>
+    </div>
+    <div class="body-content body-html">
+      <%= html_editor ".webmail-addon-mail-body .html", advanced: true, templates: false %>
+      <%= f.text_area :html, class: "html", style: "height: 400px;" %>
+    </div>
+    <% if @item.template_options.present?  %>
+    <div class="template-options">
+      <%= select_tag :template, options_for_select(@item.template_options), include_blank: t('mongoid.models.gws/memo/template'), class: "add-template" %>
+    </div>
+    <% end %>
+    <div class="header-options form-group col-12">
+      <label for="in-request-mdn">
+        <%= f.check_box :in_request_mdn, :id => "in-request-mdn" %>
+        <%= t('webmail.options.action.request_mdn') %>
+      </label>
+    </div>
   </div>
 </div>

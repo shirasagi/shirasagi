@@ -494,6 +494,7 @@ td {
 .gws-menu-btn {
   position: relative;
   z-index: 9999;
+  display: inline-block;
   @include media-breakpoint-down(sm) {
     display: none;
   }

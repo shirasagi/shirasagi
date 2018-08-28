@@ -1,4 +1,4 @@
-<nav>
+<nav class="btn-group">
   <% if params[:action] =~ /index/ %>
     <% if @model.allowed?(:edit, @cur_user, site: @cur_site) %>
       <%= link_to t('ss.links.new'), { action: :new }, { class: "btn btn-outline-primary" } %>

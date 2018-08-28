@@ -8,19 +8,19 @@ show_shared_addr = Gws::SharedAddress::Address.allowed?(:read, @cur_user, site: 
 show_shared_addr = false unless @cur_site.menu_shared_address_visible?
 %>
 
-<div class="gws-addon-memo-member">
-  <dl class="see to">
-    <dt><%= @model.t :to_member_ids %><%= @model.tt :to_member_ids %></dt>
-    <dd>
-      <%= f.hidden_field "in_to_members[]", value: "", class: "hidden-ids" %>
-      <%= link_to t("gws.organization_addresses"), gws_apis_users_path(site: @cur_site), class: "ajax-box" %>
-      <%= link_to t("modules.gws/shared_address"), gws_memo_apis_shared_addresses_path(site: @cur_site), class: "ajax-box" if show_shared_addr %>
-      <%= link_to t("mongoid.models.webmail/address"), gws_memo_apis_personal_addresses_path, class: "ajax-box" %>
-      <%= link_to t("ss.buttons.copy"), "#", class: "btn js-copy-users" %>
-      <%= link_to t("ss.buttons.paste"), "#", class: "btn js-paste-users" %>
-    </dd>
-    <dd>
-      <table class="index ajax-selected sortable-index">
+<div class="gws-addon-memo-member form-row">
+  <div class="col-12 mb-3">
+    <label><%= @model.t :to_member_ids %><%= @model.tt :to_member_ids %></label>
+    <div>
+      <%= f.hidden_field "in_to_members[]", value: "", class: "hidden-ids btn btn-outline-secondary" %>
+      <%= link_to t("gws.organization_addresses"), gws_apis_users_path(site: @cur_site), class: "ajax-box btn btn-outline-secondary" %>
+      <%= link_to t("modules.gws/shared_address"), gws_memo_apis_shared_addresses_path(site: @cur_site), class: "ajax-box btn btn-outline-secondary" if show_shared_addr %>
+      <%= link_to t("mongoid.models.webmail/address"), gws_memo_apis_personal_addresses_path, class: "ajax-box btn btn-outline-secondary" %>
+      <%= link_to t("ss.buttons.copy"), "#", class: "js-copy-users btn btn-outline-secondary" %>
+      <%= link_to t("ss.buttons.paste"), "#", class: "js-paste-users btn btn-outline-secondary" %>
+    </div>
+    <div>
+      <table class="index ajax-selected sortable-index table table-striped">
         <thead><tr><th class="name"><%= Gws::User.t :name %></th><th class="deselect"></th></tr></thead>
         <tbody>
           <% @item.sorted_to_members.each do |user| %>
@@ -43,25 +43,27 @@ show_shared_addr = false unless @cur_site.menu_shared_address_visible?
           <% end %>
         </tbody>
       </table>
-    </dd>
-  </dl>
+    </div>
+  </div>
 
   <% if cc_blank = @item.cc_members.blank? && @item.bcc_members.blank? %>
-    <a class="cc-bcc-label" href="#">[ <%= t 'webmail.links.show_cc_bcc' %> ]</a>
+    <div class="col-12 mb-3">
+      <a class="cc-bcc-label" href="#">[ <%= t 'webmail.links.show_cc_bcc' %> ]</a>
+    </div>
   <% end %>
 
-  <dl class="see cc-bcc cc  <%= 'hide' if cc_blank %>">
-    <dt><%= @model.t :cc_member_ids %><%= @model.tt :cc_member_ids %></dt>
-    <dd>
+  <div class="see cc-bcc cc col-12 mb-3  <%= 'hide' if cc_blank %>">
+    <label><%= @model.t :cc_member_ids %><%= @model.tt :cc_member_ids %></label>
+    <div>
       <%= f.hidden_field "in_cc_members[]", value: "", class: "hidden-ids" %>
 
-      <%= link_to t("gws.organization_addresses"), gws_apis_users_path(site: @cur_site), class: "ajax-box" %>
-      <%= link_to t("modules.gws/shared_address"), gws_memo_apis_shared_addresses_path(site: @cur_site), class: "ajax-box" if show_shared_addr %>
-      <%= link_to t("mongoid.models.webmail/address"), gws_memo_apis_personal_addresses_path, class: "ajax-box" %>
-      <%= link_to t("ss.buttons.copy"), "#", class: "btn js-copy-users" %>
-      <%= link_to t("ss.buttons.paste"), "#", class: "btn js-paste-users" %>
-    </dd>
-    <dd>
+      <%= link_to t("gws.organization_addresses"), gws_apis_users_path(site: @cur_site), class: "ajax-box btn btn-outline-secondary" %>
+      <%= link_to t("modules.gws/shared_address"), gws_memo_apis_shared_addresses_path(site: @cur_site), class: "ajax-box btn btn-outline-secondary" if show_shared_addr %>
+      <%= link_to t("mongoid.models.webmail/address"), gws_memo_apis_personal_addresses_path, class: "ajax-box btn btn-outline-secondary" %>
+      <%= link_to t("ss.buttons.copy"), "#", class: "btn js-copy-users btn btn-outline-secondary" %>
+      <%= link_to t("ss.buttons.paste"), "#", class: "btn js-paste-users btn btn-outline-secondary" %>
+    </div>
+    <div>
       <table class="index ajax-selected sortable-index">
         <thead><tr><th class="name"><%= Gws::User.t :name %></th><th class="deselect"></th></tr></thead>
         <tbody>
@@ -85,21 +87,21 @@ show_shared_addr = false unless @cur_site.menu_shared_address_visible?
         <% end %>
         </tbody>
       </table>
-    </dd>
-  </dl>
+    </div>
+  </div>
 
-  <dl class="see cc-bcc bcc  <%= 'hide' if cc_blank %>">
-    <dt><%= @model.t :bcc_member_ids %><%= @model.tt :bcc_member_ids %></dt>
-    <dd>
+  <div class="see cc-bcc bcc col-12 mb-3  <%= 'hide' if cc_blank %>">
+    <label><%= @model.t :bcc_member_ids %><%= @model.tt :bcc_member_ids %></label>
+    <div>
       <%= f.hidden_field "in_bcc_members[]", value: "", class: "hidden-ids" %>
 
-      <%= link_to t("gws.organization_addresses"), gws_apis_users_path(site: @cur_site), class: "ajax-box" %>
-      <%= link_to t("modules.gws/shared_address"), gws_memo_apis_shared_addresses_path(site: @cur_site), class: "ajax-box" if show_shared_addr %>
-      <%= link_to t("mongoid.models.webmail/address"), gws_memo_apis_personal_addresses_path, class: "ajax-box" %>
-      <%= link_to t("ss.buttons.copy"), "#", class: "btn js-copy-users" %>
-      <%= link_to t("ss.buttons.paste"), "#", class: "btn js-paste-users" %>
-    </dd>
-    <dd>
+      <%= link_to t("gws.organization_addresses"), gws_apis_users_path(site: @cur_site), class: "ajax-box btn btn-outline-secondary" %>
+      <%= link_to t("modules.gws/shared_address"), gws_memo_apis_shared_addresses_path(site: @cur_site), class: "ajax-box btn btn-outline-secondary" if show_shared_addr %>
+      <%= link_to t("mongoid.models.webmail/address"), gws_memo_apis_personal_addresses_path, class: "ajax-box btn btn-outline-secondary" %>
+      <%= link_to t("ss.buttons.copy"), "#", class: "btn js-copy-users btn btn-outline-secondary" %>
+      <%= link_to t("ss.buttons.paste"), "#", class: "btn js-paste-users btn btn-outline-secondary" %>
+    </div>
+    <div>
       <table class="index ajax-selected sortable-index">
         <thead><tr><th class="name"><%= Gws::User.t :name %></th><th class="deselect"></th></tr></thead>
         <tbody>
@@ -123,6 +125,6 @@ show_shared_addr = false unless @cur_site.menu_shared_address_visible?
         <% end %>
         </tbody>
       </table>
-    </dd>
-  </dl>
+    </div>
+  </div>
 </div>
