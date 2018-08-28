@@ -28,7 +28,7 @@
         <% user_presence = item.user_presence(@cur_site) || Gws::UserPresence.new %>
         <tr class="editable" data-id="<%= item.id %>">
           <td>
-            <span class="presence-state <%= user_presence.state.present? ? user_presence.state : "none" %>">
+            <span class="presence-state <%= user_presence.state_style %>">
               <%= user_presence.label :state %>
             </span>
             <%= link_to item.name, "", class: "select-presence-state group-name" %>
@@ -99,7 +99,7 @@ Gws_Presence_User_Reload.render({
         <% if @manageable %>
           <tr class="editable" data-id="<%= item.id %>">
             <td>
-              <span class="presence-state <%= user_presence.state.present? ? user_presence.state : "none" %>">
+              <span class="presence-state <%= user_presence.state_style %>">
                 <%= user_presence.label :state %>
               </span>
               <%= link_to item.name, "", class: "select-presence-state group-name" %>
@@ -120,7 +120,7 @@ Gws_Presence_User_Reload.render({
         <% else %>
           <tr>
             <td>
-              <span class="presence-state <%= user_presence.state.present? ? user_presence.state : "none" %>">
+              <span class="presence-state <%= user_presence.state_style %>">
                 <%= user_presence.label :state %>
               </span>
               <span class="group-name"><%= item.name %></span>

@@ -32,28 +32,18 @@
     p {
       display: flex;
       margin-bottom: 5px;
-      &[data-value] {
+      &.none {
         border: 2px solid #CCCCCC;
         padding: 0 2px;
         border-radius: 4px;
       }
-      &[data-value="available"] {
+      &.active {
         border: 2px solid springgreen;
         padding: 0 2px;
         border-radius: 4px;
       }
-      &[data-value="unavailable"] {
+      &.inactive {
         border: 2px solid #ffc107;
-        padding: 0 2px;
-        border-radius: 4px;
-      }
-      &[data-value="leave"] {
-        border: 2px solid #CCCCCC;
-        padding: 0 2px;
-        border-radius: 4px;
-      }
-      &[data-value="dayoff"] {
-        border: 2px solid #CCCCCC;
         padding: 0 2px;
         border-radius: 4px;
       }
@@ -103,23 +93,13 @@
       .presence-state, .select-presence-state {
         display: inline-block;
         vertical-align: middle;
-        &.available {
+        &.active {
           border: 2px solid springgreen;
           padding: 0 2px;
           border-radius: 4px;
         }
-        &.unavailable {
+        &.inactive {
           border: 2px solid #ffc107;
-          padding: 0 2px;
-          border-radius: 4px;
-        }
-        &.leave {
-          border: 2px solid #CCCCCC;
-          padding: 0 2px;
-          border-radius: 4px;
-        }
-        &.dayoff {
-          border: 2px solid #CCCCCC;
           padding: 0 2px;
           border-radius: 4px;
         }

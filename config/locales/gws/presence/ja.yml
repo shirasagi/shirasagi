@@ -6,13 +6,6 @@ ja:
       register_reminder: リマインダーを登録
     links:
       all_groups: 全てのユーザー
-    options:
-      presence_state:
-        available: 在席
-        unavailable: 離席
-        leave: 退社
-        dayoff: 休み
-        none: 未設定
 
   modules:
     gws/presence: 在席管理

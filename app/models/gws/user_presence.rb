@@ -9,35 +9,36 @@ class Gws::UserPresence
   attr_accessor :presence_state, :presence_plan, :presence_memo
 
   seqid :id
-  field :state, type: String
-  field :plan, type: String
-  field :memo, type: String
+  field :state, type: String, default: ""
+  field :plan, type: String, default: ""
+  field :memo, type: String, default: ""
   field :sync_available_state, type: String, default: "disabled"
   field :sync_unavailable_state, type: String, default: "disabled"
   permit_params :state, :plan, :memo
 
-  validates :state, inclusion: { in: I18n.t("gws/presence.options.presence_state").keys.map(&:to_s), allow_blank: true }
+  validates :state, inclusion: { in: ::SS.config.gws["presence"]["state"].map(&:keys).flatten }
   validates :plan, length: { maximum: 400 }
   validates :memo, length: { maximum: 400 }
 
   before_validation :set_presence_attributes
 
   def set_presence_attributes
-    self.presence_state = "" if presence_state == "none"
-
     self.state = presence_state if presence_state
     self.plan = presence_plan if presence_plan
     self.memo = presence_memo if presence_memo
   end
 
   def state_options
-    [
-      [I18n.t("gws/presence.options.presence_state.available"), "available"],
-      [I18n.t("gws/presence.options.presence_state.unavailable"), "unavailable"],
-      [I18n.t("gws/presence.options.presence_state.leave"), "leave"],
-      [I18n.t("gws/presence.options.presence_state.dayoff"), "dayoff"],
-      [I18n.t("gws/presence.options.presence_state.none"), ""]
-    ]
+   @_state_options ||= ::SS.config.gws["presence"]["state"].map { |h| h.first.reverse }
+  end
+
+  def state_styles
+    @_state_styles ||= ::SS.config.gws["presence"]["style"]
+  end
+
+  def state_style(state = nil)
+    key = state ? state : self.state
+    state_styles[key.to_s] || "none"
   end
 
   def sync_available_state_options

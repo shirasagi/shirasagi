@@ -17,7 +17,9 @@ SS::Application.routes.draw do
     end
 
     namespace "apis" do
-      resources :users, only: [:index, :show, :update]
+      resources :users, only: [:index, :show, :update] do
+        get :states, on: :collection
+      end
       namespace :group, path: 'g-:group' do
         resources :users, only: [:index, :show, :update]
       end
