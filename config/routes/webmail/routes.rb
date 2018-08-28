@@ -81,6 +81,7 @@ SS::Application.routes.draw do
 
     namespace "apis" do
       get "account-:account/recent" => "imap#recent", account: /\d+/, as: :recent
+      get "account-:account/latest" => "imap#latest", account: /\d+/
       get "account-:account/quota" => "imap#quota", account: /\d+/, as: :quota
       get "addresses" => "addresses#index"
     end

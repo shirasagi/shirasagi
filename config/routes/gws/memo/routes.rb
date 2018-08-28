@@ -20,6 +20,7 @@ SS::Application.routes.draw do
         post :move_all
         put :move
         get :recent
+        get :latest
       end
       member do
         get :trash
@@ -38,6 +39,7 @@ SS::Application.routes.draw do
 
     resources :notices, concerns: :deletion, only: [:index, :show, :destroy] do
       get :recent, on: :collection
+      get :latest, on: :collection
     end
 
     resources :comments, path: ':message_id/comments', only: [:create, :destroy]

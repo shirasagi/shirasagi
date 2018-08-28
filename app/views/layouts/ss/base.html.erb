@@ -218,7 +218,13 @@
           <% @account_menu.to_a.each do |link_params| %>
             <li><%= link_to *link_params %></li>
           <% end %>
-          <li><%= link_to t(:"sns.profile"), sns_cur_user_profile_path %></li>
+
+          <% if @ss_mode == :gws %>
+            <li><%= link_to t(:"sns.profile"), gws_user_profile_path %></li>
+          <% else %>
+            <li><%= link_to t(:"sns.profile"), sns_cur_user_profile_path %></li>
+          <% end %>
+
           <li>
             <div class="text-zoom" data-notice="<%= t('ss.notice.text_zoomed', count: ':size') %>">
               <label><%= t('ss.text_zoom') %></label>

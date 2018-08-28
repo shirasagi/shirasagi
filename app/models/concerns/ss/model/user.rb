@@ -124,7 +124,7 @@ module SS::Model::User
     def organization_authenticate(organization, id, password)
       user = self.where(
         organization_id: organization.id,
-        '$or' => [{ email: id }, { organization_uid: id }]
+        '$or' => [{ uid: id }, { email: id }, { organization_uid: id }]
       ).first
 
       return user if user.send(:dbpasswd_authenticate, password)
