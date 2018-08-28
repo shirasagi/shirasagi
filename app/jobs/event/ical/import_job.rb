@@ -1,7 +1,6 @@
 class Event::Ical::ImportJob < Cms::ApplicationJob
 
   queue_as :external
-  attr_reader :errors
 
   ICAL_WEEKDAYS = %w(SU MO TU WE TH FR SA).freeze
   ICAL_WEEKDAY_MAP = Hash[ICAL_WEEKDAYS.map.with_index { |wday, index| [wday, index] }].freeze
@@ -50,20 +49,17 @@ class Event::Ical::ImportJob < Cms::ApplicationJob
 
   def perform(*args)
     before_import(*args)
-    return if @errors.present?
-
-    Rails.logger.info("start importing calendars")
 
     if @calendars.present?
+      Rails.logger.info("start importing calendars. there are #{@calendars.length} calendars.")
       import_ical_calendars
     else
-      Rails.logger.info("no calendars")
+      Rails.logger.info("there are no calendars")
     end
 
     after_import
 
     Rails.logger.info("finish importing calendars")
-    @errors.empty?
   end
 
   private
@@ -73,15 +69,10 @@ class Event::Ical::ImportJob < Cms::ApplicationJob
   end
 
   def before_import(*args)
-    @errors = []
     @ical_links = []
     @max_dates_size = Event::Page::MAX_EVENT_DATES_SIZE
 
     @calendars = node.ical_parse
-  rescue => e
-    message = "Icalendar::Calendar.parse failure (#{e.message}):\n  #{e.backtrace.join("\n  ")}"
-    Rails.logger.info(message)
-    @errors << message
   end
 
   def import_ical_calendars
@@ -115,6 +106,7 @@ class Event::Ical::ImportJob < Cms::ApplicationJob
       return
     end
 
+    Rails.logger.debug("#{calendar_name}: there are #{@events.length} events in the calendar")
     import_ical_events
   ensure
     Time.zone = save_time_zone if save_time_zone
@@ -122,8 +114,11 @@ class Event::Ical::ImportJob < Cms::ApplicationJob
 
   def import_ical_events
     @events.each do |event|
-      if import_ical_event(event)
+      begin
         @ical_links << extract_text(event.uid)
+        import_ical_event(event)
+      rescue => e
+        Rails.logger.info("event import failure (#{e.message}):\n  #{e.backtrace.join("\n  ")}")
       end
     end
   end
@@ -135,7 +130,6 @@ class Event::Ical::ImportJob < Cms::ApplicationJob
     return item if save_or_update(item)
 
     Rails.logger.error(item.errors.full_messages.to_s)
-    @errors.concat(item.errors.full_messages)
     nil
   end
 
