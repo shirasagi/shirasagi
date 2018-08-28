@@ -52,17 +52,17 @@ class Event::Ical::ImportJob < Cms::ApplicationJob
     before_import(*args)
     return if @errors.present?
 
-    Rails.logger.info("start importing ics")
+    Rails.logger.info("start importing calendars")
 
     if @calendars.present?
       import_ical_calendars
     else
-      Rails.logger.info("no ics calendars")
+      Rails.logger.info("no calendars")
     end
 
     after_import
 
-    Rails.logger.info("finish importing ics")
+    Rails.logger.info("finish importing calendars")
     @errors.empty?
   end
 
