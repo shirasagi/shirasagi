@@ -175,33 +175,33 @@ module Chorg::Model::Revision
       @add_sets.each do |changeset, idx|
         next if changeset.valid?
         changeset.errors.full_messages.each do |e|
-          errors.add :base, "#{idx} : #{e}"
+          errors.add :base, "#{idx} (#{I18n.t("chorg.options.changeset_type.#{changeset.type}")}) : #{e}"
         end
       end
       @move_sets.each do |changeset, idx|
         next if changeset.valid?
         changeset.errors.full_messages.each do |e|
-          errors.add :base, "#{idx} : #{e}"
+          errors.add :base, "#{idx} (#{I18n.t("chorg.options.changeset_type.#{changeset.type}")}) : #{e}"
         end
       end
       @unify_sets.each do |key, changesets|
         changeset, idx = changesets
         next if changeset.valid?
         changeset.errors.full_messages.each do |e|
-          errors.add :base, "#{idx.join(",")} : #{e}"
+          errors.add :base, "#{idx.join(",")} (#{I18n.t("chorg.options.changeset_type.#{changeset.type}")}) : #{e}"
         end
       end
       @division_sets.each do |key, changesets|
         changeset, idx = changesets
         next if changeset.valid?
         changeset.errors.full_messages.each do |e|
-          errors.add :base, "#{idx.join(",")} : #{e}"
+          errors.add :base, "#{idx.join(",")} (#{I18n.t("chorg.options.changeset_type.#{changeset.type}")}) : #{e}"
         end
       end
       @delete_sets.each do |changeset, idx|
         next if changeset.valid?
         changeset.errors.full_messages.each do |e|
-          errors.add :base, "#{idx} : #{e}"
+          errors.add :base, "#{idx} (#{I18n.t("chorg.options.changeset_type.#{changeset.type}")}) : #{e}"
         end
       end
     end
