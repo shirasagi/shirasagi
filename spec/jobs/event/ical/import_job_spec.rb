@@ -53,7 +53,6 @@ describe Event::Ical::ImportJob, dbscope: :example, http_server: true do
       it do
         expect { described_class.bind(bindings).perform_now }.to change { Event::Page.count }.from(0).to(2)
         Event::Page.site(site).node(node).find_by(ical_link: 'doc-2').tap do |doc|
-          puts "event_dates=#{doc.event_dates}"
           expect(doc.event_dates).to include("2018/07/30", "2018/07/31", "2018/08/01", "2018/08/02", "2018/08/03")
           expect(doc.event_dates).to include("2018/08/27", "2018/08/28", "2018/08/29", "2018/08/30", "2018/08/31")
           expect(doc.event_dates).to include("2018/09/24", "2018/09/25", "2018/09/26", "2018/09/27", "2018/09/28")
@@ -67,7 +66,6 @@ describe Event::Ical::ImportJob, dbscope: :example, http_server: true do
       it do
         expect { described_class.bind(bindings).perform_now }.to change { Event::Page.count }.from(0).to(2)
         Event::Page.site(site).node(node).find_by(ical_link: 'doc-2').tap do |doc|
-          puts "event_dates=#{doc.event_dates}"
           expect(doc.event_dates).to include("2018/07/30", "2018/07/31", "2018/08/01", "2018/08/02", "2018/08/03")
           expect(doc.event_dates).to include("2018/08/27", "2018/08/28", "2018/08/29", "2018/08/30", "2018/08/31")
           expect(doc.event_dates).to include("2018/09/24", "2018/09/25", "2018/09/26", "2018/09/27", "2018/09/28")
@@ -186,6 +184,130 @@ describe Event::Ical::ImportJob, dbscope: :example, http_server: true do
         expect(doc.event_name).to eq doc.name
         expect(doc.event_dates).to include("2018/08/27", "2018/08/28", "2018/08/30", "2018/08/31")
         expect(doc.event_dates).not_to include("2018/08/29")
+      end
+    end
+  end
+
+  context "when importing ics with rrule" do
+    let(:url) { "http://127.0.0.1:#{http.port}/#{path}" }
+    let(:site) { cms_site }
+    let(:node) { create :event_node_ical, site: site, ical_import_url: url }
+    let(:user) { cms_user }
+    let(:bindings) { { site_id: site.id, node_id: node.id, user_id: user.id } }
+
+    context "daily" do
+      let(:path) { "event-rrule-1.ics" }
+
+      it do
+        expect { described_class.bind(bindings).perform_now }.to change { Event::Page.count }.from(0).to(3)
+
+        expect(Event::Page.site(site).node(node).where(ical_link: 'doc-1')).to be_present
+        Event::Page.site(site).node(node).find_by(ical_link: 'doc-1').tap do |doc|
+          expect(doc.name).to eq "event 1"
+          expect(doc.event_name).to eq doc.name
+          expect(doc.event_dates).to eq %w(2018/08/27 2018/08/28 2018/08/29 2018/08/30 2018/08/31).join("\r\n")
+        end
+
+        expect(Event::Page.site(site).node(node).where(ical_link: 'doc-2')).to be_present
+        Event::Page.site(site).node(node).find_by(ical_link: 'doc-2').tap do |doc|
+          expect(doc.name).to eq "event 2"
+          expect(doc.event_name).to eq doc.name
+          expect(doc.event_dates).to eq %w(2018/08/27 2018/08/28 2018/08/29 2018/08/30 2018/08/31 2018/09/01).join("\r\n")
+        end
+
+        expect(Event::Page.site(site).node(node).where(ical_link: 'doc-3')).to be_present
+        Event::Page.site(site).node(node).find_by(ical_link: 'doc-3').tap do |doc|
+          expect(doc.name).to eq "event 3"
+          expect(doc.event_name).to eq doc.name
+          expect(doc.event_dates).to start_with("2018/08/27\r\n")
+          expect(doc.event_dates).to end_with("\r\n2019/02/22")
+        end
+      end
+    end
+
+    context "weekly" do
+      let(:path) { "event-rrule-2.ics" }
+
+      it do
+        expect { described_class.bind(bindings).perform_now }.to change { Event::Page.count }.from(0).to(3)
+
+        expect(Event::Page.site(site).node(node).where(ical_link: 'doc-1')).to be_present
+        Event::Page.site(site).node(node).find_by(ical_link: 'doc-1').tap do |doc|
+          expect(doc.name).to eq "event 1"
+          expect(doc.event_name).to eq doc.name
+          expect(doc.event_dates).to eq %w(2018/08/27 2018/09/02 2018/09/03 2018/09/09 2018/09/10).join("\r\n")
+        end
+
+        expect(Event::Page.site(site).node(node).where(ical_link: 'doc-2')).to be_present
+        Event::Page.site(site).node(node).find_by(ical_link: 'doc-2').tap do |doc|
+          expect(doc.name).to eq "event 2"
+          expect(doc.event_name).to eq doc.name
+          expect(doc.event_dates).to eq %w(2018/08/27 2018/08/28 2018/08/29).join("\r\n")
+        end
+
+        expect(Event::Page.site(site).node(node).where(ical_link: 'doc-3')).to be_present
+        Event::Page.site(site).node(node).find_by(ical_link: 'doc-3').tap do |doc|
+          expect(doc.name).to eq "event 3"
+          expect(doc.event_name).to eq doc.name
+          expect(doc.event_dates).to start_with("2018/08/27\r\n")
+          expect(doc.event_dates).to end_with("\r\n2019/02/22")
+        end
+      end
+    end
+
+    context "monthly" do
+      let(:path) { "event-rrule-3.ics" }
+
+      it do
+        expect { described_class.bind(bindings).perform_now }.to change { Event::Page.count }.from(0).to(6)
+
+        expect(Event::Page.site(site).node(node).where(ical_link: 'doc-1')).to be_present
+        Event::Page.site(site).node(node).find_by(ical_link: 'doc-1').tap do |doc|
+          expect(doc.name).to eq "event 1"
+          expect(doc.event_name).to eq doc.name
+          dates = %w(2018/09/15 2018/10/01 2018/10/02 2018/10/03 2018/10/04 2018/10/05 2018/10/06 2018/10/07)
+          expect(doc.event_dates).to eq dates.join("\r\n")
+        end
+
+        expect(Event::Page.site(site).node(node).where(ical_link: 'doc-2')).to be_present
+        Event::Page.site(site).node(node).find_by(ical_link: 'doc-2').tap do |doc|
+          expect(doc.name).to eq "event 2"
+          expect(doc.event_name).to eq doc.name
+          expect(doc.event_dates).to eq %w(2018/09/15 2018/09/29 2018/09/30).join("\r\n")
+        end
+
+        expect(Event::Page.site(site).node(node).where(ical_link: 'doc-3')).to be_present
+        Event::Page.site(site).node(node).find_by(ical_link: 'doc-3').tap do |doc|
+          expect(doc.name).to eq "event 3"
+          expect(doc.event_name).to eq doc.name
+          expect(doc.event_dates).to start_with(%w(2018/09/15 2018/09/16 2018/09/17).join("\r\n"))
+          expect(doc.event_dates).to end_with(%w(2018/10/13 2018/10/14 2018/10/15).join("\r\n"))
+        end
+
+        expect(Event::Page.site(site).node(node).where(ical_link: 'doc-4')).to be_present
+        Event::Page.site(site).node(node).find_by(ical_link: 'doc-4').tap do |doc|
+          expect(doc.name).to eq "event 4"
+          expect(doc.event_name).to eq doc.name
+          dates = %w(2018/09/15 2018/09/24 2018/09/25 2018/09/26 2018/09/27 2018/09/28 2018/09/29 2018/09/30)
+          expect(doc.event_dates).to eq dates.join("\r\n")
+        end
+
+        # doc-5 の動作は Thunderbird と Google Calendar とで異なる。ここでは Google Calendar に合わせる。
+        expect(Event::Page.site(site).node(node).where(ical_link: 'doc-5')).to be_present
+        Event::Page.site(site).node(node).find_by(ical_link: 'doc-5').tap do |doc|
+          expect(doc.name).to eq "event 5"
+          expect(doc.event_name).to eq doc.name
+          expect(doc.event_dates).to eq %w(2018/09/15 2019/01/31 2019/03/31 2019/05/31 2019/07/31).join("\r\n")
+        end
+
+        expect(Event::Page.site(site).node(node).where(ical_link: 'doc-6')).to be_present
+        Event::Page.site(site).node(node).find_by(ical_link: 'doc-6').tap do |doc|
+          expect(doc.name).to eq "event 6"
+          expect(doc.event_name).to eq doc.name
+          dates = %w(2018/09/15 2018/09/30 2018/10/31 2018/11/30 2018/12/31 2019/01/31 2019/02/28 2019/03/31
+                     2019/04/30 2019/05/31 2019/06/30 2019/07/31 2019/08/31)
+          expect(doc.event_dates).to eq dates.join("\r\n")
+        end
       end
     end
   end
