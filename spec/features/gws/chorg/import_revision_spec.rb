@@ -1,18 +1,18 @@
 require 'spec_helper'
 
-describe "chorg_import_revision", dbscope: :example do
-  let!(:site) { cms_site }
-  let!(:new_path) { new_chorg_revision_path site: site.id }
+describe "gws_chorg_import_revision", dbscope: :example do
+  let!(:site) { gws_site }
+  let!(:new_path) { new_gws_chorg_revision_path site: site.id }
 
-  let(:group0) { create(:revision_new_group, name: "組織変更/グループ_1") }
-  let(:group1) { create(:revision_new_group, name: "組織変更/グループ_2") }
-  let(:group2) { create(:revision_new_group, name: "組織変更/グループ_3") }
-  let(:group3) { create(:revision_new_group, name: "組織変更/グループ_4") }
-  let(:group4) { create(:revision_new_group, name: "組織変更/グループ_5") }
-  let(:group5) { create(:revision_new_group, name: "組織変更/グループ_6") }
-  let(:group6) { create(:revision_new_group, name: "組織変更/グループ_7") }
-  let(:group7) { create(:revision_new_group, name: "組織変更/グループ_8") }
-  let(:group8) { create(:revision_new_group, name: "組織変更/グループ_9") }
+  let(:group0) { create(:gws_revision_new_group, name: "組織変更/グループ_1") }
+  let(:group1) { create(:gws_revision_new_group, name: "組織変更/グループ_2") }
+  let(:group2) { create(:gws_revision_new_group, name: "組織変更/グループ_3") }
+  let(:group3) { create(:gws_revision_new_group, name: "組織変更/グループ_4") }
+  let(:group4) { create(:gws_revision_new_group, name: "組織変更/グループ_5") }
+  let(:group5) { create(:gws_revision_new_group, name: "組織変更/グループ_6") }
+  let(:group6) { create(:gws_revision_new_group, name: "組織変更/グループ_7") }
+  let(:group7) { create(:gws_revision_new_group, name: "組織変更/グループ_8") }
+  let(:group8) { create(:gws_revision_new_group, name: "組織変更/グループ_9") }
 
   let!(:destination0) do
     [
@@ -75,7 +75,7 @@ describe "chorg_import_revision", dbscope: :example do
   end
 
   context "revision in new path" do
-    before { login_cms_user }
+    before { login_gws_user }
 
     it "#download_template" do
       visit new_path
@@ -101,7 +101,7 @@ describe "chorg_import_revision", dbscope: :example do
 
       expect(current_path).not_to eq new_path
 
-      revision = Chorg::Revision.first
+      revision = Gws::Chorg::Revision.first
       expect(revision).not_to eq nil
       expect(revision.name).to eq "sample"
 
@@ -132,7 +132,7 @@ describe "chorg_import_revision", dbscope: :example do
 
       expect(current_path).not_to eq new_path
 
-      revision = Chorg::Revision.first
+      revision = Gws::Chorg::Revision.first
       expect(revision).not_to eq nil
       expect(revision.name).to eq "sample"
 
@@ -171,7 +171,7 @@ describe "chorg_import_revision", dbscope: :example do
 
       expect(current_path).not_to eq new_path
 
-      revision = Chorg::Revision.first
+      revision = Gws::Chorg::Revision.first
       expect(revision).not_to eq nil
       expect(revision.name).to eq "sample"
 
@@ -219,7 +219,7 @@ describe "chorg_import_revision", dbscope: :example do
 
       expect(current_path).not_to eq new_path
 
-      revision = Chorg::Revision.first
+      revision = Gws::Chorg::Revision.first
       expect(revision).not_to eq nil
       expect(revision.name).to eq "sample"
 
@@ -260,7 +260,7 @@ describe "chorg_import_revision", dbscope: :example do
 
       expect(current_path).not_to eq new_path
 
-      revision = Chorg::Revision.first
+      revision = Gws::Chorg::Revision.first
       expect(revision).not_to eq nil
       expect(revision.name).to eq "sample"
 
