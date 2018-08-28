@@ -114,6 +114,7 @@ module Chorg::Model::Revision
         case type
         when changeset_class::TYPE_ADD
 
+          # 0 source, 1 destination
           changeset = changeset_class.new
           changeset.type = type
           changeset.cur_revision = self
@@ -122,6 +123,7 @@ module Chorg::Model::Revision
 
         when changeset_class::TYPE_MOVE
 
+          # 1 source, 1 destination
           changeset = changeset_class.new
           changeset.type = type
           changeset.cur_revision = self
@@ -131,6 +133,7 @@ module Chorg::Model::Revision
 
         when changeset_class::TYPE_UNIFY
 
+          # N sources, 1 destination
           key = [id, destination["name"]]
           if @unify_sets[key]
             changeset, _idx = @unify_sets[key]
@@ -147,6 +150,7 @@ module Chorg::Model::Revision
 
         when changeset_class::TYPE_DIVISION
 
+          # 1 source, N destinations
           key = [id, source["name"]]
           if @division_sets[key]
             changeset, _idx = @division_sets[key]
@@ -163,6 +167,7 @@ module Chorg::Model::Revision
 
         when changeset_class::TYPE_DELETE
 
+          # 1 source, 0 destination
           changeset = changeset_class.new
           changeset.type = type
           changeset.cur_revision = self
