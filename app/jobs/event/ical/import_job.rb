@@ -148,7 +148,8 @@ class Event::Ical::ImportJob < Cms::ApplicationJob
 
     return event_dates.take(Event::Page::MAX_EVENT_DATES_SIZE) if event_dates.length > Event::Page::MAX_EVENT_DATES_SIZE
 
-    evaluate_rdate_and_fold(event_dates, event.rdate)
+    evaluate_rdate(event_dates, event.rdate)
+    evaluate_exdate(event_dates, event.exdate)
 
     event_dates.uniq!
     event_dates.sort!
@@ -157,15 +158,15 @@ class Event::Ical::ImportJob < Cms::ApplicationJob
     event_dates.join("\r\n")
   end
 
-  def evaluate_rdate_and_fold(event_dates, rdate)
+  def evaluate_rdate(event_dates, rdate)
     return event_dates if rdate.blank? || event_dates.length > Event::Page::MAX_EVENT_DATES_SIZE
 
     case rdate
     when Array
-      rdate.each { |v| evaluate_rdate_and_fold(event_dates, v) }
+      rdate.each { |v| evaluate_rdate(event_dates, v) }
       event_dates.uniq!
     when Icalendar::Values::Period
-      evaluate_period_and_fold(event_dates, rdate)
+      evaluate_period(event_dates, rdate)
     else
       val = extract_time(rdate)
       if val && !event_dates.include?(val)
@@ -176,7 +177,7 @@ class Event::Ical::ImportJob < Cms::ApplicationJob
     event_dates
   end
 
-  def evaluate_period_and_fold(event_dates, period)
+  def evaluate_period(event_dates, period)
     period_start = extract_time(period.period_start)
     if period.explicit_end.present?
       explicit_end = extract_time(period.explicit_end)
@@ -193,6 +194,22 @@ class Event::Ical::ImportJob < Cms::ApplicationJob
 
       event_dates += day_range(period_start.beginning_of_day, implicit_end.end_of_day)
       event_dates.uniq!
+    end
+
+    event_dates
+  end
+
+  def evaluate_exdate(event_dates, exdate)
+    return event_dates if exdate.blank?
+
+    case exdate
+    when Array
+      exdate.each { |v| evaluate_exdate(event_dates, v) }
+    else
+      val = extract_time(exdate)
+      if val
+        event_dates.delete(val)
+      end
     end
 
     event_dates

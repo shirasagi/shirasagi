@@ -169,4 +169,24 @@ describe Event::Ical::ImportJob, dbscope: :example, http_server: true do
       expect(Event::Page.where(ical_link: 'doc-2')).to be_blank
     end
   end
+
+  context "when importing ics with exdate" do
+    let(:url) { "http://127.0.0.1:#{http.port}/#{path}" }
+    let(:site) { cms_site }
+    let(:node) { create :event_node_ical, site: site, ical_import_url: url }
+    let(:user) { cms_user }
+    let(:bindings) { { site_id: site.id, node_id: node.id, user_id: user.id } }
+    let(:path) { "event-exdate-1.ics" }
+
+    it do
+      expect { described_class.bind(bindings).perform_now }.to change { Event::Page.count }.from(0).to(1)
+      expect(Event::Page.site(site).node(node).where(ical_link: 'doc-1')).to be_present
+      Event::Page.site(site).node(node).find_by(ical_link: 'doc-1').tap do |doc|
+        expect(doc.name).to eq "Python 夏休み集中キャンプ"
+        expect(doc.event_name).to eq doc.name
+        expect(doc.event_dates).to include("2018/08/27", "2018/08/28", "2018/08/30", "2018/08/31")
+        expect(doc.event_dates).not_to include("2018/08/29")
+      end
+    end
+  end
 end
