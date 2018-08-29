@@ -184,6 +184,9 @@ class Event::Ical::ImportJob < Cms::ApplicationJob
     item = model.site(site).node(node).where(ical_uid: uid).first || model.new
     return item if item.persisted? && last_modified && item.updated >= last_modified
 
+    event_dates = generate_event_dates(event)
+    return if event_dates.blank?
+
     item.cur_site = site
     item.cur_node = node
     item.cur_user = user
@@ -193,6 +196,7 @@ class Event::Ical::ImportJob < Cms::ApplicationJob
     item.group_ids = Array.new(node.group_ids) if item.group_ids.blank?
 
     item.ical_uid = uid
+    item.event_dates = event_dates
     item.ical_link = extract_text(event.url)
     item.name = item.event_name = extract_text(event.summary)
     item.summary_html = item.content = extract_text(event.description)
@@ -203,7 +207,6 @@ class Event::Ical::ImportJob < Cms::ApplicationJob
     item.cost = extract_text(event.x_shirasagi_cost)
     item.released = extract_time(event.x_shirasagi_released)
 
-    item.event_dates = generate_event_dates(event)
     item
   end
 
@@ -381,14 +384,13 @@ class Event::Ical::ImportJob < Cms::ApplicationJob
 
     if ical_value.is_a?(Icalendar::Values::Date) || ical_value.is_a?(Icalendar::Values::DateTime)
       value = ical_value.value
-      case value
-      when DateTime
+      if value.is_a?(DateTime)
         if ical_value.tz_utc
           value.in_time_zone
         else
           Time.zone.local_to_utc(value).in_time_zone
         end
-      when Date
+      elsif value.respond_to?(:in_time_zone)
         value.in_time_zone
       end
     elsif ical_value.is_a?(String)
