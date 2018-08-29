@@ -13,6 +13,8 @@ class Event::Ical::ImportJob < Cms::ApplicationJob
     end
 
     def register_job(site, node, user = nil)
+      return if node.ical_refresh_disabled?
+
       if node.ical_refresh_auto?
         bind(site_id: site.id, node_id: node.id, user_id: user.present? ? user.id : nil).perform_later
       else

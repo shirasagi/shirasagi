@@ -1,5 +1,5 @@
 namespace :event do
-  task :import_icals => :environment do
+  task import_icals: :environment do
     sites = ENV["site"] ? Cms::Site.where(host: ENV["site"]) : Cms::Site.all
     sites.each do |site|
       node = Event::Node::Page.site(site).find_by(filename: ENV["node"]) if ENV["node"].present?
