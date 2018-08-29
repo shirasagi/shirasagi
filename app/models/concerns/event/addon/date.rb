@@ -78,9 +78,10 @@ module Event::Addon
         range = range.map do |d|
           "<time datetime=\"#{I18n.l d.to_date, format: :iso}\">#{I18n.l d.to_date, format: format.to_sym}</time>"
         end.join("<span>#{I18n.t "event.date_range_delimiter"}</span>")
+
         html << "<span class=\"#{cls}\">#{range}</span>"
       end
-      html.join
+      html.join("<br>")
     end
 
     def get_event_dates
