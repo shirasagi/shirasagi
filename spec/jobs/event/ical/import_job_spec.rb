@@ -29,8 +29,8 @@ describe Event::Ical::ImportJob, dbscope: :example do
 
       it do
         expect { described_class.bind(bindings).perform_now }.to change { Event::Page.count }.from(0).to(2)
-        expect(Event::Page.site(site).node(node).where(ical_link: 'doc-1')).to be_present
-        Event::Page.site(site).node(node).find_by(ical_link: 'doc-1').tap do |doc|
+        expect(Event::Page.site(site).node(node).where(ical_uid: 'doc-1')).to be_present
+        Event::Page.site(site).node(node).find_by(ical_uid: 'doc-1').tap do |doc|
           expect(doc.name).to eq "Python 夏休み集中キャンプ"
           expect(doc.event_name).to eq doc.name
           expect(doc.content).to eq "夏休み最後の週に Python の集中キャンプを実施します。"
@@ -42,8 +42,8 @@ describe Event::Ical::ImportJob, dbscope: :example do
           expect(doc.cost).to eq "2,000円"
           expect(doc.event_dates).to include("2018/08/27", "2018/08/28", "2018/08/29", "2018/08/30", "2018/08/31")
         end
-        expect(Event::Page.site(site).node(node).where(ical_link: 'doc-2')).to be_present
-        Event::Page.site(site).node(node).find_by(ical_link: 'doc-2').tap do |doc|
+        expect(Event::Page.site(site).node(node).where(ical_uid: 'doc-2')).to be_present
+        Event::Page.site(site).node(node).find_by(ical_uid: 'doc-2').tap do |doc|
           expect(doc.name).to eq "SUMMARY-○○○○○○○○○○"
           expect(doc.event_name).to eq doc.name
           expect(doc.content).to eq "DESCRIPTION-○○○○○○○○○○"
@@ -65,7 +65,7 @@ describe Event::Ical::ImportJob, dbscope: :example do
 
       it do
         expect { described_class.bind(bindings).perform_now }.to change { Event::Page.count }.from(0).to(2)
-        Event::Page.site(site).node(node).find_by(ical_link: 'doc-2').tap do |doc|
+        Event::Page.site(site).node(node).find_by(ical_uid: 'doc-2').tap do |doc|
           expect(doc.event_dates).to include("2018/07/30", "2018/07/31", "2018/08/01", "2018/08/02", "2018/08/03")
           expect(doc.event_dates).to include("2018/08/27", "2018/08/28", "2018/08/29", "2018/08/30", "2018/08/31")
           expect(doc.event_dates).to include("2018/09/24", "2018/09/25", "2018/09/26", "2018/09/27", "2018/09/28")
@@ -113,9 +113,9 @@ describe Event::Ical::ImportJob, dbscope: :example do
         described_class.bind(bindings).perform_now
         expect(Event::Page.count).to eq 2
 
-        doc1 = Event::Page.site(site).node(node).where(ical_link: 'doc-1').first
+        doc1 = Event::Page.site(site).node(node).where(ical_uid: 'doc-1').first
         expect(doc1.name).to eq "Python 夏休み集中キャンプ"
-        doc2 = Event::Page.site(site).node(node).where(ical_link: 'doc-2').first
+        doc2 = Event::Page.site(site).node(node).where(ical_uid: 'doc-2').first
         expect(doc2.name).to eq "SUMMARY-○○○○○○○○○○"
       end
     end
@@ -125,8 +125,8 @@ describe Event::Ical::ImportJob, dbscope: :example do
 
       it do
         expect { described_class.bind(bindings).perform_now }.to change { Event::Page.count }.from(0).to(1)
-        expect(Event::Page.site(site).node(node).where(ical_link: 'doc-1')).to be_present
-        Event::Page.site(site).node(node).find_by(ical_link: 'doc-1').tap do |doc|
+        expect(Event::Page.site(site).node(node).where(ical_uid: 'doc-1')).to be_present
+        Event::Page.site(site).node(node).find_by(ical_uid: 'doc-1').tap do |doc|
           expect(doc.name).to eq "Python 夏休み集中キャンプ"
           expect(doc.event_name).to eq doc.name
           expect(doc.event_dates).to include("2018/08/27", "2018/08/28", "2018/08/30", "2018/08/31")
@@ -142,22 +142,22 @@ describe Event::Ical::ImportJob, dbscope: :example do
         it do
           expect { described_class.bind(bindings).perform_now }.to change { Event::Page.count }.from(0).to(3)
 
-          expect(Event::Page.site(site).node(node).where(ical_link: 'doc-1')).to be_present
-          Event::Page.site(site).node(node).find_by(ical_link: 'doc-1').tap do |doc|
+          expect(Event::Page.site(site).node(node).where(ical_uid: 'doc-1')).to be_present
+          Event::Page.site(site).node(node).find_by(ical_uid: 'doc-1').tap do |doc|
             expect(doc.name).to eq "event 1"
             expect(doc.event_name).to eq doc.name
             expect(doc.event_dates).to eq %w(2018/08/27 2018/08/28 2018/08/29 2018/08/30 2018/08/31).join("\r\n")
           end
 
-          expect(Event::Page.site(site).node(node).where(ical_link: 'doc-2')).to be_present
-          Event::Page.site(site).node(node).find_by(ical_link: 'doc-2').tap do |doc|
+          expect(Event::Page.site(site).node(node).where(ical_uid: 'doc-2')).to be_present
+          Event::Page.site(site).node(node).find_by(ical_uid: 'doc-2').tap do |doc|
             expect(doc.name).to eq "event 2"
             expect(doc.event_name).to eq doc.name
             expect(doc.event_dates).to eq %w(2018/08/27 2018/08/28 2018/08/29 2018/08/30 2018/08/31 2018/09/01).join("\r\n")
           end
 
-          expect(Event::Page.site(site).node(node).where(ical_link: 'doc-3')).to be_present
-          Event::Page.site(site).node(node).find_by(ical_link: 'doc-3').tap do |doc|
+          expect(Event::Page.site(site).node(node).where(ical_uid: 'doc-3')).to be_present
+          Event::Page.site(site).node(node).find_by(ical_uid: 'doc-3').tap do |doc|
             expect(doc.name).to eq "event 3"
             expect(doc.event_name).to eq doc.name
             expect(doc.event_dates).to start_with("2018/08/27\r\n")
@@ -172,22 +172,22 @@ describe Event::Ical::ImportJob, dbscope: :example do
         it do
           expect { described_class.bind(bindings).perform_now }.to change { Event::Page.count }.from(0).to(3)
 
-          expect(Event::Page.site(site).node(node).where(ical_link: 'doc-1')).to be_present
-          Event::Page.site(site).node(node).find_by(ical_link: 'doc-1').tap do |doc|
+          expect(Event::Page.site(site).node(node).where(ical_uid: 'doc-1')).to be_present
+          Event::Page.site(site).node(node).find_by(ical_uid: 'doc-1').tap do |doc|
             expect(doc.name).to eq "event 1"
             expect(doc.event_name).to eq doc.name
             expect(doc.event_dates).to eq %w(2018/08/27 2018/09/02 2018/09/03 2018/09/09 2018/09/10).join("\r\n")
           end
 
-          expect(Event::Page.site(site).node(node).where(ical_link: 'doc-2')).to be_present
-          Event::Page.site(site).node(node).find_by(ical_link: 'doc-2').tap do |doc|
+          expect(Event::Page.site(site).node(node).where(ical_uid: 'doc-2')).to be_present
+          Event::Page.site(site).node(node).find_by(ical_uid: 'doc-2').tap do |doc|
             expect(doc.name).to eq "event 2"
             expect(doc.event_name).to eq doc.name
             expect(doc.event_dates).to eq %w(2018/08/27 2018/08/28 2018/08/29).join("\r\n")
           end
 
-          expect(Event::Page.site(site).node(node).where(ical_link: 'doc-3')).to be_present
-          Event::Page.site(site).node(node).find_by(ical_link: 'doc-3').tap do |doc|
+          expect(Event::Page.site(site).node(node).where(ical_uid: 'doc-3')).to be_present
+          Event::Page.site(site).node(node).find_by(ical_uid: 'doc-3').tap do |doc|
             expect(doc.name).to eq "event 3"
             expect(doc.event_name).to eq doc.name
             expect(doc.event_dates).to start_with("2018/08/27\r\n")
@@ -202,31 +202,31 @@ describe Event::Ical::ImportJob, dbscope: :example do
         it do
           expect { described_class.bind(bindings).perform_now }.to change { Event::Page.count }.from(0).to(6)
 
-          expect(Event::Page.site(site).node(node).where(ical_link: 'doc-1')).to be_present
-          Event::Page.site(site).node(node).find_by(ical_link: 'doc-1').tap do |doc|
+          expect(Event::Page.site(site).node(node).where(ical_uid: 'doc-1')).to be_present
+          Event::Page.site(site).node(node).find_by(ical_uid: 'doc-1').tap do |doc|
             expect(doc.name).to eq "event 1"
             expect(doc.event_name).to eq doc.name
             dates = %w(2018/09/15 2018/10/01 2018/10/02 2018/10/03 2018/10/04 2018/10/05 2018/10/06 2018/10/07)
             expect(doc.event_dates).to eq dates.join("\r\n")
           end
 
-          expect(Event::Page.site(site).node(node).where(ical_link: 'doc-2')).to be_present
-          Event::Page.site(site).node(node).find_by(ical_link: 'doc-2').tap do |doc|
+          expect(Event::Page.site(site).node(node).where(ical_uid: 'doc-2')).to be_present
+          Event::Page.site(site).node(node).find_by(ical_uid: 'doc-2').tap do |doc|
             expect(doc.name).to eq "event 2"
             expect(doc.event_name).to eq doc.name
             expect(doc.event_dates).to eq %w(2018/09/15 2018/09/29 2018/09/30).join("\r\n")
           end
 
-          expect(Event::Page.site(site).node(node).where(ical_link: 'doc-3')).to be_present
-          Event::Page.site(site).node(node).find_by(ical_link: 'doc-3').tap do |doc|
+          expect(Event::Page.site(site).node(node).where(ical_uid: 'doc-3')).to be_present
+          Event::Page.site(site).node(node).find_by(ical_uid: 'doc-3').tap do |doc|
             expect(doc.name).to eq "event 3"
             expect(doc.event_name).to eq doc.name
             expect(doc.event_dates).to start_with(%w(2018/09/15 2018/09/16 2018/09/17).join("\r\n"))
             expect(doc.event_dates).to end_with(%w(2018/10/13 2018/10/14 2018/10/15).join("\r\n"))
           end
 
-          expect(Event::Page.site(site).node(node).where(ical_link: 'doc-4')).to be_present
-          Event::Page.site(site).node(node).find_by(ical_link: 'doc-4').tap do |doc|
+          expect(Event::Page.site(site).node(node).where(ical_uid: 'doc-4')).to be_present
+          Event::Page.site(site).node(node).find_by(ical_uid: 'doc-4').tap do |doc|
             expect(doc.name).to eq "event 4"
             expect(doc.event_name).to eq doc.name
             dates = %w(2018/09/15 2018/09/24 2018/09/25 2018/09/26 2018/09/27 2018/09/28 2018/09/29 2018/09/30)
@@ -234,15 +234,15 @@ describe Event::Ical::ImportJob, dbscope: :example do
           end
 
           # doc-5 の動作は Thunderbird と Google Calendar とで異なる。ここでは Google Calendar に合わせる。
-          expect(Event::Page.site(site).node(node).where(ical_link: 'doc-5')).to be_present
-          Event::Page.site(site).node(node).find_by(ical_link: 'doc-5').tap do |doc|
+          expect(Event::Page.site(site).node(node).where(ical_uid: 'doc-5')).to be_present
+          Event::Page.site(site).node(node).find_by(ical_uid: 'doc-5').tap do |doc|
             expect(doc.name).to eq "event 5"
             expect(doc.event_name).to eq doc.name
             expect(doc.event_dates).to eq %w(2018/09/15 2019/01/31 2019/03/31 2019/05/31 2019/07/31).join("\r\n")
           end
 
-          expect(Event::Page.site(site).node(node).where(ical_link: 'doc-6')).to be_present
-          Event::Page.site(site).node(node).find_by(ical_link: 'doc-6').tap do |doc|
+          expect(Event::Page.site(site).node(node).where(ical_uid: 'doc-6')).to be_present
+          Event::Page.site(site).node(node).find_by(ical_uid: 'doc-6').tap do |doc|
             expect(doc.name).to eq "event 6"
             expect(doc.event_name).to eq doc.name
             dates = %w(2018/09/15 2018/09/30 2018/10/31 2018/11/30 2018/12/31 2019/01/31 2019/02/28 2019/03/31
@@ -272,16 +272,16 @@ describe Event::Ical::ImportJob, dbscope: :example do
         travel_to('2018-05-01 00:00')
         described_class.bind(bindings).perform_now
         expect(Event::Page.count).to eq 2
-        expect(Event::Page.site(site).node(node).where(ical_link: 'doc-1')).to be_present
-        expect(Event::Page.site(site).node(node).where(ical_link: 'doc-2')).to be_present
+        expect(Event::Page.site(site).node(node).where(ical_uid: 'doc-1')).to be_present
+        expect(Event::Page.site(site).node(node).where(ical_uid: 'doc-2')).to be_present
 
         travel_to('2018-07-01 00:00')
         described_class.bind(bindings).perform_now
         expect(Event::Page.count).to eq 1
-        expect(Event::Page.site(site).node(node).where(ical_link: 'doc-1')).to be_present
-        expect(Event::Page.where(ical_link: 'doc-2')).to be_blank
+        expect(Event::Page.site(site).node(node).where(ical_uid: 'doc-1')).to be_present
+        expect(Event::Page.where(ical_uid: 'doc-2')).to be_blank
 
-        doc1 = Event::Page.site(site).node(node).where(ical_link: 'doc-1').first
+        doc1 = Event::Page.site(site).node(node).where(ical_uid: 'doc-1').first
         expect(doc1.name).to eq 'new_doc1'
       end
     end
@@ -300,13 +300,13 @@ describe Event::Ical::ImportJob, dbscope: :example do
       it do
         described_class.bind(bindings).perform_now
         expect(Event::Page.count).to eq 2
-        expect(Event::Page.site(site).node(node).where(ical_link: 'doc-1')).to be_present
-        expect(Event::Page.site(site).node(node).where(ical_link: 'doc-2')).to be_present
+        expect(Event::Page.site(site).node(node).where(ical_uid: 'doc-1')).to be_present
+        expect(Event::Page.site(site).node(node).where(ical_uid: 'doc-2')).to be_present
 
         described_class.bind(bindings).perform_now
         expect(Event::Page.count).to eq 0
-        expect(Event::Page.where(ical_link: 'doc-1')).to be_blank
-        expect(Event::Page.where(ical_link: 'doc-2')).to be_blank
+        expect(Event::Page.where(ical_uid: 'doc-1')).to be_blank
+        expect(Event::Page.where(ical_uid: 'doc-2')).to be_blank
       end
     end
 
@@ -323,13 +323,13 @@ describe Event::Ical::ImportJob, dbscope: :example do
       it do
         described_class.bind(bindings).perform_now
         expect(Event::Page.count).to eq 2
-        expect(Event::Page.site(site).node(node).where(ical_link: 'doc-1')).to be_present
-        expect(Event::Page.site(site).node(node).where(ical_link: 'doc-2')).to be_present
+        expect(Event::Page.site(site).node(node).where(ical_uid: 'doc-1')).to be_present
+        expect(Event::Page.site(site).node(node).where(ical_uid: 'doc-2')).to be_present
 
         described_class.bind(bindings).perform_now
         expect(Event::Page.count).to eq 2
-        expect(Event::Page.site(site).node(node).where(ical_link: 'doc-1')).to be_present
-        expect(Event::Page.site(site).node(node).where(ical_link: 'doc-2')).to be_present
+        expect(Event::Page.site(site).node(node).where(ical_uid: 'doc-1')).to be_present
+        expect(Event::Page.site(site).node(node).where(ical_uid: 'doc-2')).to be_present
       end
     end
 
@@ -346,13 +346,13 @@ describe Event::Ical::ImportJob, dbscope: :example do
       it do
         described_class.bind(bindings).perform_now
         expect(Event::Page.count).to eq 2
-        expect(Event::Page.site(site).node(node).where(ical_link: 'doc-1')).to be_present
-        expect(Event::Page.site(site).node(node).where(ical_link: 'doc-2')).to be_present
+        expect(Event::Page.site(site).node(node).where(ical_uid: 'doc-1')).to be_present
+        expect(Event::Page.site(site).node(node).where(ical_uid: 'doc-2')).to be_present
 
         described_class.bind(bindings).perform_now
         expect(Event::Page.count).to eq 2
-        expect(Event::Page.site(site).node(node).where(ical_link: 'doc-1')).to be_present
-        expect(Event::Page.site(site).node(node).where(ical_link: 'doc-2')).to be_present
+        expect(Event::Page.site(site).node(node).where(ical_uid: 'doc-1')).to be_present
+        expect(Event::Page.site(site).node(node).where(ical_uid: 'doc-2')).to be_present
       end
     end
   end

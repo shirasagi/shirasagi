@@ -80,7 +80,7 @@ class Event::Ical::ImportJob < Cms::ApplicationJob
   end
 
   def before_import(*args)
-    @ical_links = []
+    @ical_uids = []
     @max_dates_size = Event::Page::MAX_EVENT_DATES_SIZE
     @options = args.extract_options!
 
@@ -153,9 +153,9 @@ class Event::Ical::ImportJob < Cms::ApplicationJob
         # recurrence_id が設定されたイベントは、繰り返しイベントの一部が変更されたもの。
         # recurrence_id が設定されており、すでに取り込み済みの場合は、単に無視する。
         # ※シラサギでは繰り返しイベントの一部を変更したイベントはサポートしない。
-        next if event.recurrence_id.present? && @ical_links.include?(uid)
+        next if event.recurrence_id.present? && @ical_uids.include?(uid)
 
-        @ical_links << uid
+        @ical_uids << uid
         import_ical_event(event)
       rescue => e
         Rails.logger.info("event import failure (#{e.message}):\n  #{e.backtrace.join("\n  ")}")
@@ -179,7 +179,7 @@ class Event::Ical::ImportJob < Cms::ApplicationJob
 
     last_modified = extract_time(event.last_modified)
 
-    item = model.site(site).node(node).where(ical_link: uid).first || model.new
+    item = model.site(site).node(node).where(ical_uid: uid).first || model.new
     return item if item.persisted? && last_modified && item.updated >= last_modified
 
     item.cur_site = site
@@ -190,7 +190,8 @@ class Event::Ical::ImportJob < Cms::ApplicationJob
     item.permission_level = node.permission_level if item.permission_level.blank?
     item.group_ids = Array.new(node.group_ids) if item.group_ids.blank?
 
-    item.ical_link = uid
+    item.ical_uid = uid
+    item.ical_link = extract_text(event.url)
     item.name = item.event_name = extract_text(event.summary)
     item.summary_html = item.content = extract_text(event.description)
     item.venue = extract_text(event.location)
@@ -552,10 +553,10 @@ class Event::Ical::ImportJob < Cms::ApplicationJob
   end
 
   def remove_unimported_pages
-    return unless @ical_links
+    return unless @ical_uids
 
     criteria = model.site(site).node(node)
-    criteria = criteria.nin(ical_link: @ical_links)
+    criteria = criteria.nin(ical_uid: @ical_uids)
     criteria.each do |item|
       item.destroy
       put_history_log(item, :destroy)

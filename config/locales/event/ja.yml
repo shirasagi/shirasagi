@@ -141,6 +141,7 @@ ja:
         ical_import_date_ago: 取り込み制限(過去)
         ical_import_date_after: 取り込み制限(未来)
       event/addon/ical_link:
+        ical_uid: ソースID
         ical_link: ソースURL
 
   datetime:
@@ -256,6 +257,8 @@ ja:
         - 取り込む未来のイベントの日時を日単位で制限します。
         - 省略した場合、1 年以上先のイベントは取り込みません。
     event/addon/ical_link:
+      ical_uid:
+        - ソースIDを設定します。
       ical_link:
         - ソースURLを設定します。
     event/page:

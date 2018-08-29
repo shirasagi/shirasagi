@@ -4,8 +4,9 @@ module Event::Addon
     extend ActiveSupport::Concern
 
     included do
+      field :ical_uid, type: String
       field :ical_link, type: String
-      permit_params :ical_link
+      permit_params :ical_uid, :ical_link
     end
 
     module ClassMethods
@@ -40,10 +41,6 @@ module Event::Addon
 
     def json_url
       ical_link.present? ? nil : super
-    end
-
-    def serve_static_file?
-      ical_link.blank?
     end
   end
 end
