@@ -8,24 +8,26 @@
       <%= hidden_field_tag key, params[key] %>
     <% end %>
 
-    <dl class="see">
-      <dt><%= t "gws/memo/message.folder" %></dt>
-      <dd>
+    <div class="see content-search d-flex flex-wrap align-items-center">
+      <h2><%= t "gws/memo/message.folder" %></h2>
+      <div class="form-group mr-3">
         <%= f.select :folder,
           options_for_select(@folders.map { |folder| [folder.name, folder.folder_path] }, selected: @cur_folder.folder_path),
-          {}, { class: "submit-on-change" } %>
-      </dd>
+          {}, { class: "submit-on-change form-control" } %>
+      </div>
 
-      <dt><%= @model.t :subject %></dt>
-      <dd>
+      <h2><%= @model.t :subject %></h2>
+      <div class="form-group input-group">
         <%= f.text_field :subject, value: params.dig(:s, :subject) %>
-        <%= f.submit  t("ss.buttons.search"), class: :btn %>
-      </dd>
-    </dl>
+        <div class="input-group-append">
+          <%= f.submit  t("ss.buttons.search"), class: "btn btn-outline-secondary" %>
+        </div>
+      </div>
+    </div>
   <% end %>
 </div>
 
-<table class="index">
+<table class="index table table-striped">
   <thead class="list-head">
     <tr>
       <% if @multi %>

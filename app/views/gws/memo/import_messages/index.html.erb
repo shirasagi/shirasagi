@@ -3,19 +3,19 @@
 
   <div class="addon-views">
     <div class="addon-view mb-5" id="addon-basic">
-      <div class="addon-head"><h2><%= t("ss.import") %></h2></div>
-      <div class="addon-body">
-        <dl class="see">
-          <dt><%= @model.t :in_file %></dt>
-          <dd><%= f.file_field :in_file, class: "file" %></dd>
+      <h2 class="h4"><%= t("ss.import") %></h2>
+      <div class="addon-body form-row">
+        <div class="see form-group col-12 mb-3">
+          <label><%= @model.t :in_file %></label>
+          <%= f.file_field :in_file, class: "file form-control-file" %>
 
-          <dd class="wide" style="color: #b30; margin-top: 10px;">
+          <p class="text-warning mt-3">
             <%=br t("gws/memo/message.import.caution") %>
-          </dd>
-        </dl>
+          </p>
+        </div>
       </div>
       <footer class="send">
-        <%= f.submit t("ss.import"), class: :save %>
+        <%= f.submit t("ss.import"), class: "save btn btn-outline-primary" %>
       </footer>
     </div>
   </div>

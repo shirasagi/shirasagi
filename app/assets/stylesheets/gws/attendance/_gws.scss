@@ -19,33 +19,6 @@
     }
   }
 
-  .attendance-box {
-    @include box;
-    @include mb { margin: 0 10px 10px; }
-  }
-
-  .attendance-box-title {
-    //margin: -15px -10px 15px;
-    padding: 8px 10px;
-    border-bottom: $border-gray1;
-    background: rgba(0,0,0,.02);
-    font-weight: bold;
-  }
-
-  .attendance-box-main {
-    padding: 8px 10px;
-  }
-
-  .nav-menu, .nav-operation {
-    margin: 5px 0;
-    display: inline-block;
-  }
-
-  .nav-operation {
-    float: right;
-    @include mb { float: none; }
-  }
-
   .reason-tooltip {
     position: relative;
     display: inline-block;
@@ -101,23 +74,8 @@
     }
   }
 
-  .today-wrap {
-    overflow-x: auto;
-  }
-
   .today {
     white-space: nowrap;
-    border-collapse: collapse;
-    border-spacing: 0px;
-
-    th, td {
-      padding: 5px;
-      border: 1px solid $gray4;
-    }
-
-    th {
-      background-color: $gray1;
-    }
 
     th.time, td.time {
       width: 6em;
@@ -128,29 +86,8 @@
     }
   }
 
-  .time-card-wrap {
-    overflow-x: auto;
-  }
-
   .time-card {
     white-space: nowrap;
-    border-collapse: collapse;
-    border-spacing: 0px;
-
-    th {
-      padding: 5px;
-      border: 1px solid $gray4;
-    }
-
-    td {
-      padding: 5px;
-      border: 1px solid $gray4;
-    }
-
-    tr.header {
-      background-color: $gray1;
-    }
-
     tr.current {
       background-color: #ffffae;
     }
@@ -161,10 +98,6 @@
 
     th.time, td.time {
       width: 6em;
-    }
-
-    td.time {
-      text-align: center;
     }
 
     th.memo, td.memo {
@@ -184,7 +117,7 @@
     }
 
     .focus {
-      background-color: #f2a950;
+      background-color: #ffddd3;
     }
   }
 }

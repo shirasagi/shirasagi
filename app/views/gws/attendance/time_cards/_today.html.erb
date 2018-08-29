@@ -24,12 +24,11 @@
   <% end %>
 <% end %>
 
-<div class="attendance-box">
-  <div class="attendance-box-title"><%= I18n.l(@today.to_date, format: :full) %></div>
-
-  <div class="attendance-box-main">
+<div class="attendance-box card mb-5">
+  <div class="attendance-box-main card-body">
+    <h2 class="attendance-box-title card-title"><%= I18n.l(@today.to_date, format: :full) %></h2>
     <div class="today-wrap">
-      <table class="today">
+      <table class="today table table-striped">
         <thead>
         <tr>
           <% field_names.each do |field_name| %>

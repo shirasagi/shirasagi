@@ -1,6 +1,6 @@
 <div class="gws-addon-memo-priority form-row">
-  <dl class="see col-12">
+  <div class="see col-12">
     <label><%= @model.t :priority %><%= @model.tt :priority %></label>
     <%= f.select :priority, @item.priority_options, include_blank: true, class: "form-control" %>
-  </dl>
+  </div>
 </div>

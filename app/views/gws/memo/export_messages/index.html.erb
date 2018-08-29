@@ -36,37 +36,35 @@ $('a.ajax-box').data('on-select', function($item) {
 
   <div class="addon-views">
     <div class="addon-view mb-5" id="addon-basic">
-      <div class="addon-head"><h2><%= t("ss.export") %></h2></div>
-      <div class="addon-body">
-        <dl class="see" style="margin-top: 20px;">
-          <dt><%= t "gws/memo/message.message" %><%= @model.tt :from_member_ids %></dt>
-          <dd>
+      <h2 class="h4"><%= t("ss.export") %></h2>
+      <div class="addon-body form-row">
+        <div class="see col-12 mb-3">
+          <label><%= t "gws/memo/message.message" %><%= @model.tt :from_member_ids %></label>
+          <div>
             <%= f.hidden_field "message_ids[]", value: "", class: "hidden-ids" %>
-            <%= link_to t("ss.links.select"), gws_memo_apis_messages_path(site: @cur_site), class: "ajax-box" %>
-          </dd>
-          <dd>
-            <table class="index ajax-selected" style="display: none;">
-              <thead>
-              <tr>
-                <th class="from">
-                  <i class="material-icons md-15" style="visibility: hidden;">&#xE226;</i>
-                  <%= @model.t :from %>
-                </th>
-                <th class="name"><%= @model.t :subject %></th>
-                <th class="priority"><%= @model.t :priority %></th>
-                <th class="send_date"><%= @model.t :display_send_date %></th>
-                <th class="size"><%= @model.t :size %></th>
-                <th class="deselect"></th>
-              </tr>
-              </thead>
-              <tbody></tbody>
-            </table>
-          </dd>
-        </dl>
+            <%= link_to t("ss.links.select"), gws_memo_apis_messages_path(site: @cur_site), class: "ajax-box btn btn-outline-secondary" %>
+          </div>
+          <table class="index ajax-selected table table-striped" style="display: none;">
+            <thead>
+            <tr>
+              <th class="from">
+                <i class="material-icons md-15" style="visibility: hidden;">&#xE226;</i>
+                <%= @model.t :from %>
+              </th>
+              <th class="name"><%= @model.t :subject %></th>
+              <th class="priority"><%= @model.t :priority %></th>
+              <th class="send_date"><%= @model.t :display_send_date %></th>
+              <th class="size"><%= @model.t :size %></th>
+              <th class="deselect"></th>
+            </tr>
+            </thead>
+            <tbody></tbody>
+          </table>
+        </div>
       </div>
 
       <footer class="send">
-        <%= f.submit t("ss.export"), { class: "btn btn-primary" } %>
+        <%= f.submit t("ss.export"), { class: "btn btn-outline-primary" } %>
       </footer>
     </div>
   </div>

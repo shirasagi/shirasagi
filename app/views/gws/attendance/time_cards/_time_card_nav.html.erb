@@ -1,16 +1,18 @@
-<div class="nav-group">
-  <nav class="nav-menu input-group" style="width: auto;">
-    <%= select_tag(:year_month, options_for_select(year_month_options, params[:year_month]), include_blank: true) %>
-    <%= link_to(t('gws/attendance.prev_month'), { action: :index, year_month: @cur_month.last_month.strftime('%Y%m') }, class: :btn) %>
-    <%= link_to(t('gws/attendance.next_month'), { action: :index, year_month: @cur_month.next_month.strftime('%Y%m') }, class: :btn) %>
-    <% if @item && @item.locked? %>
-      <span><%= t('gws/attendance.already_locked') %></span>
-    <% end %>
-  </nav>
+<div class="nav-group form-row mb-3">
+  <div class="col-sm-4">
+    <nav class="nav-menu input-group">
+      <%= select_tag(:year_month, options_for_select(year_month_options, params[:year_month]), include_blank: true, class: "form-control") %>
+      <%= link_to(t('gws/attendance.prev_month'), { action: :index, year_month: @cur_month.last_month.strftime('%Y%m') }, class: "btn btn-outline-secondary mr-1") %>
+      <%= link_to(t('gws/attendance.next_month'), { action: :index, year_month: @cur_month.next_month.strftime('%Y%m') }, class: "btn btn-outline-secondary") %>
+      <% if @item && @item.locked? %>
+        <span><%= t('gws/attendance.already_locked') %></span>
+      <% end %>
+    </nav>
+  </div>
   <% if @item.present? %>
-  <nav class="nav-operation">
-    <%= link_to(t('ss.buttons.download'), { action: :download }, class: :btn) %>
-    <%= link_to(t('ss.buttons.print'), { action: :print }, class: :btn) %>
+  <nav class="nav-operation col-sm-8 text-right">
+    <%= link_to(t('ss.buttons.download'), { action: :download }, class: "btn btn-outline-secondary mr-1") %>
+    <%= link_to(t('ss.buttons.print'), { action: :print }, class: "btn btn-outline-secondary") %>
   </nav>
   <% end %>
 </div>
