@@ -145,7 +145,17 @@ class Event::Ical::ImportJob < Cms::ApplicationJob
   def import_ical_events
     @events.each do |event|
       begin
-        @ical_links << extract_text(event.uid)
+        uid = extract_text(event.uid)
+
+        # uid is required. if absent, we simply ignore it.
+        next if uid.blank?
+
+        # recurrence_id が設定されたイベントは、繰り返しイベントの一部が変更されたもの。
+        # recurrence_id が設定されており、すでに取り込み済みの場合は、単に無視する。
+        # ※シラサギでは繰り返しイベントの一部を変更したイベントはサポートしない。
+        next if event.recurrence_id.present? && @ical_links.include?(uid)
+
+        @ical_links << uid
         import_ical_event(event)
       rescue => e
         Rails.logger.info("event import failure (#{e.message}):\n  #{e.backtrace.join("\n  ")}")
