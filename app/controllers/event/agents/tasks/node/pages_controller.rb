@@ -26,7 +26,7 @@ class Event::Agents::Tasks::Node::PagesController < ApplicationController
   private
 
   def event_display_options
-    ['', '_list', '_table']
+    %w(index list table)
   end
 
   def remove_old_pages
@@ -37,9 +37,10 @@ class Event::Agents::Tasks::Node::PagesController < ApplicationController
       Fs.rm_rf(file) if Fs.exists?(file)
 
       event_display_options.each do |display|
-        file = "#{@node.path}/#{date}#{display}.html"
+        base = "#{@node.path}/#{date}/#{display}"
+        file = "#{base}.html"
         Fs.rm_rf(file) if Fs.exists?(file)
-        file.sub!(/\.html$/, '.ics')
+        file = "#{base}.ics"
         Fs.rm_rf(file) if Fs.exists?(file)
       end
     end
@@ -49,9 +50,10 @@ class Event::Agents::Tasks::Node::PagesController < ApplicationController
     term = (@start_date..@close_date).map { |m| sprintf("#{m.year}%02d", m.month) }.uniq
     term.each do |date|
       event_display_options.each do |display|
-        url  = "#{@node.url}#{date}#{display}.html"
-        file = "#{@node.path}/#{date}#{display}.html"
+        url  = "#{@node.url}#{date}/#{display}.html"
+        file = "#{@node.path}/#{date}/#{display}.html"
 
+        init_context
         if generate_node(@node, url: url, file: file)
           @task.log url if @task
         end

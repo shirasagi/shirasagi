@@ -59,8 +59,10 @@ class Event::Agents::Nodes::PageController < ApplicationController
   private
 
   def set_display
+    default_display = @cur_node.event_display.to_s.start_with?('table') ? 'table' : 'list'
     @cur_display = params[:display].to_s.presence
-    @cur_display ||= @cur_node.event_display.to_s.start_with?('table') ? 'table' : 'list'
+    @cur_display ||= default_display
+    @cur_display = default_display if @cur_display == "index"
     raise '404' if @cur_display != 'list' && @cur_display != 'table'
     raise '404' if @cur_display == 'list' && @cur_node.event_display == 'table_only'
     raise '404' if @cur_display == 'table' && @cur_node.event_display == 'list_only'

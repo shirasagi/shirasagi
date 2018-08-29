@@ -28,15 +28,15 @@ describe Cms::Node::GenerateJob, dbscope: :example do
     it do
       expect(File.exist?("#{node.path}/index.html")).to be_truthy
       expect(File.exist?("#{node.path}/index.ics")).to be_truthy
-      expect(File.exist?("#{node.path}/index_table.html")).to be_falsey
-      expect(File.exist?("#{node.path}/index_list.html")).to be_falsey
+      expect(File.exist?("#{node.path}/table.html")).to be_falsey
+      expect(File.exist?("#{node.path}/list.html")).to be_falsey
 
       this_month = Time.zone.now.beginning_of_month
       cur_month = this_month - 1.year
       while cur_month <= this_month + 1.year
-        expect(File.exist?("#{node.path}/#{cur_month.strftime("%Y%m")}.html")).to be_truthy
-        expect(File.exist?("#{node.path}/#{cur_month.strftime("%Y%m")}_list.html")).to be_truthy
-        expect(File.exist?("#{node.path}/#{cur_month.strftime("%Y%m")}_table.html")).to be_truthy
+        expect(File.exist?("#{node.path}/#{cur_month.strftime("%Y%m")}/index.html")).to be_truthy
+        expect(File.exist?("#{node.path}/#{cur_month.strftime("%Y%m")}/list.html")).to be_truthy
+        expect(File.exist?("#{node.path}/#{cur_month.strftime("%Y%m")}/table.html")).to be_truthy
 
         cur_month += 1.month
       end

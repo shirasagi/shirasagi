@@ -44,20 +44,20 @@ describe "event_agents_nodes_page", type: :feature, dbscope: :example do
       expect(page).to have_css("div#event-list")
     end
 
-    it "monthly_list" do
+    it "monthly list" do
       time = Time.zone.now
       year = time.year
       month = time.month
-      visit sprintf("#{node.url}%04d%02d_list.html", year, month)
+      visit sprintf("#{node.url}%04d%02d/list.html", year, month)
       expect(status_code).to eq 200
       expect(page).to have_css("div#event-list")
     end
 
-    it "monthly_table" do
+    it "monthly table" do
       time = Time.zone.now
       year = time.year
       month = time.month
-      visit sprintf("#{node.url}%04d%02d_table.html", year, month)
+      visit sprintf("#{node.url}%04d%02d/table.html", year, month)
       expect(status_code).to eq 200
       expect(page).to have_css("div#event-table")
     end
@@ -93,7 +93,7 @@ describe "event_agents_nodes_page", type: :feature, dbscope: :example do
       expect(page).to have_css("div#event-table")
     end
 
-    it "monthly" do
+    it "monthly index type1" do
       time = Time.zone.now
       year = time.year
       month = time.month
@@ -103,20 +103,30 @@ describe "event_agents_nodes_page", type: :feature, dbscope: :example do
       expect(page).to have_css("div#event-list")
     end
 
-    it "monthly_list" do
+    it "monthly index type2" do
       time = Time.zone.now
       year = time.year
       month = time.month
-      visit sprintf("#{list_node.url}%04d%02d_list.html", year, month)
+      visit sprintf("#{list_node.url}%04d%02d/index.html", year, month)
+      expect(status_code).to eq 200
+      expect(page).to have_title(::Regexp.compile(I18n.l(Date.new(year, month, 1), format: :long_month)))
+      expect(page).to have_css("div#event-list")
+    end
+
+    it "monthly list" do
+      time = Time.zone.now
+      year = time.year
+      month = time.month
+      visit sprintf("#{list_node.url}%04d%02d/list.html", year, month)
       expect(status_code).to eq 200
       expect(page).to have_css("div#event-list")
     end
 
-    it "monthly_table" do
+    it "monthly table" do
       time = Time.zone.now
       year = time.year
       month = time.month
-      visit sprintf("#{list_node.url}%04d%02d_table.html", year, month)
+      visit sprintf("#{list_node.url}%04d%02d/table.html", year, month)
       expect(status_code).to eq 200
       expect(page).to have_css("div#event-table")
     end
@@ -141,7 +151,7 @@ describe "event_agents_nodes_page", type: :feature, dbscope: :example do
       expect(page).to have_css("div#event-table")
     end
 
-    it "monthly" do
+    it "monthly index type1" do
       time = Time.zone.now
       year = time.year
       month = time.month
@@ -151,20 +161,30 @@ describe "event_agents_nodes_page", type: :feature, dbscope: :example do
       expect(page).to have_css("div#event-table")
     end
 
-    it "monthly_list" do
+    it "monthly index type2" do
       time = Time.zone.now
       year = time.year
       month = time.month
-      visit sprintf("#{table_node.url}%04d%02d_list.html", year, month)
+      visit sprintf("#{table_node.url}%04d%02d/index.html", year, month)
+      expect(status_code).to eq 200
+      expect(page).to have_title(::Regexp.compile(I18n.l(Date.new(year, month, 1), format: :long_month)))
+      expect(page).to have_css("div#event-table")
+    end
+
+    it "monthly list" do
+      time = Time.zone.now
+      year = time.year
+      month = time.month
+      visit sprintf("#{table_node.url}%04d%02d/list.html", year, month)
       expect(status_code).to eq 200
       expect(page).to have_css("div#event-list")
     end
 
-    it "monthly_table" do
+    it "monthly table" do
       time = Time.zone.now
       year = time.year
       month = time.month
-      visit sprintf("#{table_node.url}%04d%02d_table.html", year, month)
+      visit sprintf("#{table_node.url}%04d%02d/table.html", year, month)
       expect(status_code).to eq 200
       expect(page).to have_css("div#event-table")
     end
@@ -183,7 +203,11 @@ describe "event_agents_nodes_page", type: :feature, dbscope: :example do
       expect(page).to have_css("div#event-list")
     end
 
-    it "monthly" do
+    it "table" do
+      expect { visit "#{list_only_node.url}table.html" }.to raise_error "404"
+    end
+
+    it "monthly index type1" do
       time = Time.zone.now
       year = time.year
       month = time.month
@@ -193,13 +217,31 @@ describe "event_agents_nodes_page", type: :feature, dbscope: :example do
       expect(page).to have_css("div#event-list")
     end
 
-    it "monthly_list" do
+    it "monthly index type1" do
       time = Time.zone.now
       year = time.year
       month = time.month
-      visit sprintf("#{list_only_node.url}%04d%02d_list.html", year, month)
+      visit sprintf("#{list_only_node.url}%04d%02d/index.html", year, month)
+      expect(status_code).to eq 200
+      expect(page).to have_title(::Regexp.compile(I18n.l(Date.new(year, month, 1), format: :long_month)))
+      expect(page).to have_css("div#event-list")
+    end
+
+    it "monthly list" do
+      time = Time.zone.now
+      year = time.year
+      month = time.month
+      visit sprintf("#{list_only_node.url}%04d%02d/list.html", year, month)
       expect(status_code).to eq 200
       expect(page).to have_css("div#event-list")
+    end
+
+    it "monthly table" do
+      time = Time.zone.now
+      year = time.year
+      month = time.month
+      url = sprintf("#{list_only_node.url}%04d%02d/table.html", year, month)
+      expect { visit url }.to raise_error "404"
     end
   end
 
@@ -210,27 +252,49 @@ describe "event_agents_nodes_page", type: :feature, dbscope: :example do
       expect(page).to have_css("div#event-table")
     end
 
+    it "list" do
+      expect { visit "#{table_only_node.url}list.html" }.to raise_error "404"
+    end
+
     it "table" do
       visit "#{table_only_node.url}table.html"
       expect(status_code).to eq 200
       expect(page).to have_css("div#event-table")
     end
 
-    it "monthly" do
+    it "monthly index type1" do
       time = Time.zone.now
       year = time.year
       month = time.month
-      visit sprintf("#{table_only_node.url}%04d%02d.html", year, month)
+      visit sprintf("#{table_only_node.url}%04d%02d/index.html", year, month)
       expect(status_code).to eq 200
       expect(page).to have_title(::Regexp.compile(I18n.l(Date.new(year, month, 1), format: :long_month)))
       expect(page).to have_css("div#event-table")
+    end
+
+    it "monthly index type2" do
+      time = Time.zone.now
+      year = time.year
+      month = time.month
+      visit sprintf("#{table_only_node.url}%04d%02d/index.html", year, month)
+      expect(status_code).to eq 200
+      expect(page).to have_title(::Regexp.compile(I18n.l(Date.new(year, month, 1), format: :long_month)))
+      expect(page).to have_css("div#event-table")
+    end
+
+    it "monthly list" do
+      time = Time.zone.now
+      year = time.year
+      month = time.month
+      url = sprintf("#{table_only_node.url}%04d%02d/list.html", year, month)
+      expect { visit url }.to raise_error "404"
     end
 
     it "monthly_table" do
       time = Time.zone.now
       year = time.year
       month = time.month
-      visit sprintf("#{table_only_node.url}%04d%02d_table.html", year, month)
+      visit sprintf("#{table_only_node.url}%04d%02d/table.html", year, month)
       expect(status_code).to eq 200
       expect(page).to have_css("div#event-table")
     end
