@@ -6,8 +6,12 @@ describe 'gws_presence_users', type: :request, dbscope: :example do
   let!(:custom_group) { create :gws_custom_group, member_ids: [user.id] }
   let(:auth_token_path) { sns_auth_token_path(format: :json) }
   let(:users_path) { gws_presence_apis_users_path(site: site.id, format: :json) }
-  let(:group_users_path) { gws_presence_apis_group_users_path(site: site.id, group: gws_user.gws_default_group.id, format: :json) }
-  let(:custom_group_users_path) { gws_presence_apis_custom_group_users_path(site: site.id, group: custom_group.id, format: :json) }
+  let(:group_users_path) do
+    gws_presence_apis_group_users_path(site: site.id, group: gws_user.gws_default_group.id, format: :json)
+  end
+  let(:custom_group_users_path) do
+    gws_presence_apis_custom_group_users_path(site: site.id, group: custom_group.id, format: :json)
+  end
   let(:update_path) { gws_presence_apis_user_path(site: site.id, id: gws_user.id, format: :json) }
   let(:states_path) { states_gws_presence_apis_users_path(site: site.id, format: :json) }
   let(:presence_states) { Gws::UserPresence.new.state_options.map(&:reverse).to_h }
