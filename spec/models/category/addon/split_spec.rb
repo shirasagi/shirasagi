@@ -4,10 +4,6 @@ describe Category::Addon::Integration, dbscope: :example do
   let!(:site) { cms_site }
   let!(:user) { cms_user }
 
-  context "validation error" do
-    #
-  end
-
   context "1 depth category nodes" do
     before do
       Fs.rm_rf "#{site.path}/integration"
