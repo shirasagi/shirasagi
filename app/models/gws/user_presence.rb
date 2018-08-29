@@ -29,7 +29,7 @@ class Gws::UserPresence
   end
 
   def state_options
-   @_state_options ||= ::SS.config.gws["presence"]["state"].map { |h| h.first.reverse }
+    @_state_options ||= ::SS.config.gws["presence"]["state"].map { |h| h.first.reverse }
   end
 
   def state_styles
@@ -37,7 +37,7 @@ class Gws::UserPresence
   end
 
   def state_style(state = nil)
-    key = state ? state : self.state
+    key = state || self.state
     state_styles[key.to_s] || "none"
   end
 

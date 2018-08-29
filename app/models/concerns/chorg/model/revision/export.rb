@@ -33,21 +33,21 @@ module Chorg::Model::Revision
             # N sources, 1 destination
             destination = item.destinations.to_a.first || {}
             item.sources.to_a.each do |source|
-              data << changeset_csv_line(item, source, destination)
+              data << changeset_to_csv_line(item, source, destination)
             end
           when changeset_class::TYPE_DIVISION
 
             # 1 source, N destinations
             source = item.sources.to_a.first || {}
             item.destinations.to_a.each do |destination|
-              data << changeset_csv_line(item, source, destination)
+              data << changeset_to_csv_line(item, source, destination)
             end
           else
 
             # 1 source, 1 destination
             source = item.sources.to_a.first || {}
             destination = item.destinations.to_a.first || {}
-            data << changeset_csv_line(item, source, destination)
+            data << changeset_to_csv_line(item, source, destination)
           end
         end
       end
@@ -55,7 +55,7 @@ module Chorg::Model::Revision
 
     private
 
-    def changeset_csv_line(changeset, source, destination)
+    def changeset_to_csv_line(changeset, source, destination)
       line = []
       line << changeset.id
       line << I18n.t("chorg.options.changeset_type.#{changeset.type}")
@@ -71,14 +71,42 @@ module Chorg::Model::Revision
       line
     end
 
+    def csv_line_to_changeset_attributes(line)
+      @_type_labels ||= I18n.t("chorg.options.changeset_type").map { |k, v| [v, k] }.to_h
+
+      source_name = line[I18n.t("chorg.import.changeset.source")].to_s.strip
+
+      attr = {}
+      attr["id"] = line[I18n.t("chorg.import.changeset.id")].to_s.strip.to_i
+      attr["type"] = @_type_labels[line[I18n.t("chorg.import.changeset.type")]].to_s.strip
+      attr["source"] = {
+        "name" =>source_name
+      }
+      attr["destination"] = {
+        "name" => line[I18n.t("chorg.import.changeset.destination")].to_s.strip,
+        "order" => line[I18n.t("chorg.import.changeset.order")].to_s.strip,
+        "contact_tel" => line[I18n.t("chorg.import.changeset.contact_tel")].to_s.strip,
+        "contact_fax" => line[I18n.t("chorg.import.changeset.contact_fax")].to_s.strip,
+        "contact_email" => line[I18n.t("chorg.import.changeset.contact_email")].to_s.strip,
+        "contact_link_url" => line[I18n.t("chorg.import.changeset.contact_link_url")].to_s.strip,
+        "contact_link_name" => line[I18n.t("chorg.import.changeset.contact_link_name")].to_s.strip,
+        "ldap_dn" => line[I18n.t("chorg.import.changeset.ldap_dn")].to_s.strip
+      }
+
+      if source_name.present?
+        group = SS::Group.where(name: source_name).first
+        attr["source"]["id"] = group.id if group
+      end
+
+      attr
+    end
+
     def validate_in_revision_csv_file
       @add_sets = []
       @move_sets = []
       @unify_sets = {}
       @division_sets = {}
       @delete_sets = []
-
-      type_labels = I18n.t("chorg.options.changeset_type").map { |k, v| [v, k] }.to_h
 
       begin
         if ::File.extname(in_revision_csv_file.original_filename) != ".csv"
@@ -90,26 +118,12 @@ module Chorg::Model::Revision
         return
       end
 
-      table.each_with_index do |row, idx|
-        id = row[I18n.t("chorg.import.changeset.id")].to_s.strip.to_i
-        type = type_labels[row[I18n.t("chorg.import.changeset.type")]].to_s.strip
-        source = {
-          "name" => row[I18n.t("chorg.import.changeset.source")].to_s.strip
-        }
-        destination = {
-          "name" => row[I18n.t("chorg.import.changeset.destination")].to_s.strip,
-          "order" => row[I18n.t("chorg.import.changeset.order")].to_s.strip,
-          "contact_tel" => row[I18n.t("chorg.import.changeset.contact_tel")].to_s.strip,
-          "contact_fax" => row[I18n.t("chorg.import.changeset.contact_fax")].to_s.strip,
-          "contact_email" => row[I18n.t("chorg.import.changeset.contact_email")].to_s.strip,
-          "contact_link_url" => row[I18n.t("chorg.import.changeset.contact_link_url")].to_s.strip,
-          "contact_link_name" => row[I18n.t("chorg.import.changeset.contact_link_name")].to_s.strip,
-          "ldap_dn" => row[I18n.t("chorg.import.changeset.ldap_dn")].to_s.strip,
-        }
-        if source["name"].present?
-          group = SS::Group.where(name: source["name"]).first
-          source["id"] = group.id if group
-        end
+      table.each_with_index do |line, idx|
+        attr = csv_line_to_changeset_attributes(line)
+        id = attr["id"]
+        type = attr["type"]
+        source = attr["source"]
+        destination = attr["destination"]
 
         case type
         when changeset_class::TYPE_ADD
@@ -136,9 +150,9 @@ module Chorg::Model::Revision
           # N sources, 1 destination
           key = [id, destination["name"]]
           if @unify_sets[key]
-            changeset, _idx = @unify_sets[key]
+            changeset, before_idx = @unify_sets[key]
             changeset.sources << source
-            @unify_sets[key] = [changeset, _idx + [idx + 2]]
+            @unify_sets[key] = [changeset, before_idx + [idx + 2]]
           else
             changeset= changeset_class.new
             changeset.type = type
@@ -153,9 +167,9 @@ module Chorg::Model::Revision
           # 1 source, N destinations
           key = [id, source["name"]]
           if @division_sets[key]
-            changeset, _idx = @division_sets[key]
+            changeset, before_idx = @division_sets[key]
             changeset.destinations << destination
-            @division_sets[key] = [changeset, _idx + [idx + 2]]
+            @division_sets[key] = [changeset, before_idx + [idx + 2]]
           else
             changeset = changeset_class.new
             changeset.type = type
