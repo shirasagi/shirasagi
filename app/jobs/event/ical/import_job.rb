@@ -19,6 +19,15 @@ class Event::Ical::ImportJob < Cms::ApplicationJob
         Rails.logger.info("node `#{node.filename}` is prohibited to update")
       end
     end
+
+    def validate_ical(path)
+      open(path) do |io|
+        ::Icalendar::Calendar.parse(io)
+      end
+      true
+    rescue
+      false
+    end
   end
 
   class DaysInMonthEnumerator
@@ -60,6 +69,8 @@ class Event::Ical::ImportJob < Cms::ApplicationJob
     after_import
 
     Rails.logger.info("finish importing calendars")
+  ensure
+    @files.destroy_all if @files
   end
 
   private
@@ -71,8 +82,19 @@ class Event::Ical::ImportJob < Cms::ApplicationJob
   def before_import(*args)
     @ical_links = []
     @max_dates_size = Event::Page::MAX_EVENT_DATES_SIZE
+    @options = args.extract_options!
 
-    @calendars = node.ical_parse
+    if args.present? && SS::File.in(id: args).exists?
+      @files = SS::File.in(id: args)
+      @calendars = []
+      @files.each do |file|
+        open(file.path) do |io|
+          @calendars += ::Icalendar::Calendar.parse(io)
+        end
+      end
+    else
+      @calendars = node.ical_parse
+    end
   end
 
   def import_ical_calendars
@@ -477,12 +499,18 @@ class Event::Ical::ImportJob < Cms::ApplicationJob
   end
 
   def after_import
-    # remove unimported pages
-    remove_unimported_pages
+    sync = @options[:sync]
+    sync = true if sync.nil?
+    if sync
+      # remove unimported pages
+      remove_unimported_pages
+    end
 
     # remove old pages
-    model.limit_docs(site, node, node.ical_max_docs) do |item|
-      put_history_log(item, :destroy)
+    if node.ical_refresh_enabled?
+      model.limit_docs(site, node, node.ical_max_docs) do |item|
+        put_history_log(item, :destroy)
+      end
     end
   end
 
@@ -502,10 +530,10 @@ class Event::Ical::ImportJob < Cms::ApplicationJob
       action = :update
     end
 
-    log_msg = "#{action} #{page.class.to_s.underscore}(#{page.id})"
-    log_msg = "#{log_msg} by #{user.name}(#{user.id})" if user
     ret = page.save
     if ret
+      log_msg = "#{action} #{page.class.to_s.underscore}(#{page.id})"
+      log_msg += " by #{user.name}(#{user.id})" if user
       Rails.logger.info(log_msg)
       put_history_log(page, action)
     end

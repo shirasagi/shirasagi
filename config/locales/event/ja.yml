@@ -65,6 +65,10 @@ ja:
         end_blank: 終了日を入力してください。
         not_found_dates: 該当する日付が見つかりませんでした。
 
+    tooltips:
+      file_import:
+        - "CSV形式またはiCal形式のファイルをインポートすることができます。"
+
   modules:
     event: イベント
     addons:
@@ -105,6 +109,12 @@ ja:
     models:
       event/page: イベントページ
       event/search: イベント検索ページ
+    errors:
+      models:
+        event/page:
+          invalid_csv_or_ical: CSV形式のファイルまたはiCal形式のファイルを選択してください。
+          malformed_csv: 未サポートのCSV形式のファイルです。正しいCSV形式のファイルを選択してください。
+          malformed_ical: 未サポートのiCal形式のファイルです。正しいiCal形式のファイルを選択してください。
     attributes:
       cms/model/page:
         event_name: イベントタイトル
@@ -248,3 +258,6 @@ ja:
     event/addon/ical_link:
       ical_link:
         - ソースURLを設定します。
+    event/page:
+      file_import:
+        - "CSV形式またはiCal形式のファイルをインポートすることができます。"

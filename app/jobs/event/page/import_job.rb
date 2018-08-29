@@ -1,6 +1,15 @@
 require "csv"
 
 class Event::Page::ImportJob < Cms::ApplicationJob
+  class << self
+    def validate_csv(path)
+      CSV.foreach(path, headers: true, encoding: 'SJIS:UTF-8')
+      true
+    rescue
+      false
+    end
+  end
+
   def put_log(message)
     Rails.logger.info(message)
   end

@@ -32,12 +32,18 @@ class Event::PagesController < ApplicationController
     @item = @model.new
     return if request.get?
 
-    begin
-      file = params[:item].try(:[], :file)
-      if file.nil? || ::File.extname(file.original_filename) != ".csv"
-        raise I18n.t("errors.messages.invalid_csv")
+    file = params[:item].try(:[], :file)
+    file_type = nil
+    if file.present?
+      file_type = SS::MimeType.find(file.original_filename, nil)
+    end
+
+    if file_type == "text/comma-separated-values"
+      # check CSV
+      if !Event::Page::ImportJob.validate_csv(file.path)
+        @item.errors.add :base, :malformed_csv
+        return
       end
-      CSV.read(file.path, headers: true, encoding: 'SJIS:UTF-8')
 
       # save csv to use in job
       ss_file = SS::File.new
@@ -47,15 +53,37 @@ class Event::PagesController < ApplicationController
 
       # call job
       Event::Page::ImportJob.bind(site_id: @cur_site, node_id: @cur_node).perform_later(ss_file.id)
-      flash.now[:notice] = I18n.t("ss.notice.started_import")
-    rescue => e
-      @item.errors.add :base, e.to_s
+      redirect_to({ action: :import }, { notice: I18n.t("ss.notice.started_import") })
+      return
     end
+
+    if file_type == "text/calendar"
+      # check ical
+      if !Event::Ical::ImportJob.validate_ical(file.path)
+        @item.errors.add :base, :malformed_ical
+        return
+      end
+
+      # save csv to use in job
+      ss_file = SS::File.new
+      ss_file.in_file = file
+      ss_file.model = "event/import"
+      ss_file.save
+
+      # call job
+      job = Event::Ical::ImportJob.bind(site_id: @cur_site.id, node_id: @cur_node.id, user_id: @cur_user.id)
+      job.perform_later(ss_file.id, sync: false)
+      redirect_to({ action: :import }, { notice: I18n.t("ss.notice.started_import") })
+      return
+    end
+
+    @item.errors.add :base, :invalid_csv_or_ical
   end
 
   def ical_refresh
     return if request.get?
-    Event::Ical::ImportJob.bind(site_id: @cur_site.id, node_id: @cur_node.id, user_id: @cur_user.id).perform_later
+    job = Event::Ical::ImportJob.bind(site_id: @cur_site.id, node_id: @cur_node.id, user_id: @cur_user.id)
+    job.perform_later
     redirect_to({ action: :index }, { notice: t("rss.messages.job_started") })
   end
 end
