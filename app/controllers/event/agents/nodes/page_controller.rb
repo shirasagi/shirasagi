@@ -126,10 +126,11 @@ class Event::Agents::Nodes::PageController < ApplicationController
   def index_ics
     if @year_presented
       start_date = @date
+      close_date = @date.advance(months: 1)
     else
-      start_date = @date.advance(months: -1)
+      start_date = @date.advance(days: - SS.config.event.ical_export_date_ago).beginning_of_month
+      close_date = @date.advance(days: SS.config.event.ical_export_date_after).end_of_month
     end
-    close_date = @date.advance(months: 1)
     dates = (start_date..close_date).map { |d| d.mongoize }
     @items = @items.where(:event_dates.in => dates)
     render :index
