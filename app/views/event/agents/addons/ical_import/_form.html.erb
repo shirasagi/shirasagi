@@ -16,6 +16,9 @@
   <dt><%= @model.t :ical_max_docs %><%= @model.tt :ical_max_docs %></dt>
   <dd><%= f.number_field :ical_max_docs %></dd>
 
+  <dt><%= @model.t :ical_sync_method %><%= @model.tt :ical_sync_method %></dt>
+  <dd><%= f.select :ical_sync_method, @item.ical_sync_method_options %></dd>
+
   <dt><%= @model.t :ical_page_state %><%= @model.tt :ical_page_state %></dt>
   <dd><%= f.select :ical_page_state, @item.ical_page_state_options, include_blank: true %></dd>
 

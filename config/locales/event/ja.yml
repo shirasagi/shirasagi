@@ -53,6 +53,9 @@ ja:
       ical_refresh_method:
         manual: 手動
         auto: 自動
+      ical_sync_method:
+        full: 完全
+        add_only: 追加
 
     apis:
       repeat_dates:
@@ -137,6 +140,7 @@ ja:
         ical_basic_password: ベーシック認証パスワード
         ical_max_docs: 最大保存件数
         ical_refresh_method: 更新方法
+        ical_sync_method: 同期方法
         ical_page_state: ページステータス
         ical_import_date_ago: 取り込み制限(過去)
         ical_import_date_after: 取り込み制限(未来)
@@ -247,6 +251,10 @@ ja:
         - iCal取り込みの更新方法を指定します。
         - 手動の場合は、管理画面上でインポートを行うことで取り込みを行います。
         - 自動の場合は、インストール時に設定した周期で自動で取り込みを行います。
+      ical_sync_method:
+        - 取り込んだイベント情報の同期方法を指定します。
+        - 「完全」を指定した場合、iCal配信URLの情報と完全に同期します。iCal配信URLに存在するイベント情報は追加または更新され、iCal配信URLに存在しないイベント情報は削除されます。
+        - 「追加」を指定した場合、iCal配信URLに存在するイベント情報は追加または更新されます。イベント情報を削除することはありません。
       ical_page_state:
         - iCal を取り込んだ際の記事のステータスを設定します。
         - 設定しない場合、記事は公開保存されます。

@@ -511,7 +511,7 @@ class Event::Ical::ImportJob < Cms::ApplicationJob
 
   def after_import
     sync = @options[:sync]
-    sync = true if sync.nil?
+    sync = node.ical_sync_full? if sync.nil?
     if sync
       # remove unimported pages
       remove_unimported_pages
