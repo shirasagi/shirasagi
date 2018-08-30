@@ -6,16 +6,16 @@
   <div class="addon-views">
     <div class="addon-view mb-5" id="addon-basic">
       <div class="addon-body">
-        <dl class="see">
-          <dt><%= Gws::Attendance::Record.t :memo %></dt>
-          <dd><%= f.text_field :memo %></dd>
-        </dl>
+        <div class="form-group">
+          <label><%= Gws::Attendance::Record.t :memo %></label>
+          <%= f.text_field :memo %>
+        </div>
       </div>
     </div>
   </div>
 
   <footer class="send">
-    <%= f.submit t("ss.buttons.save"), class: 'btn-primary save' %>
-    <%= f.button t("gws/attendance.buttons.close"), class: 'btn-default', type: :reset, onclick: "$.colorbox.close(); return false;" %>
+    <%= f.submit t("ss.buttons.save"), class: 'save btn-outline-primary' %>
+    <%= f.button t("gws/attendance.buttons.close"), class: 'btn btn-outline-secondary', type: :reset, onclick: "$.colorbox.close(); return false;" %>
   </footer>
 <% end %>

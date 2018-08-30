@@ -5,27 +5,33 @@
 
   <% val = @record.send(params[:type]) %>
   <div class="addon-views">
-    <div class="addon-view mb-5" id="addon-basic">
+    <div class="addon-view mb-3" id="addon-basic">
       <div class="addon-body">
-        <dl class="see">
-          <dt><%= t('gws/attendance.edit_cell.time') %></dt>
-          <dd>
-            <div class="input-group" style="width: 20em;">
+        <div class="form-group">
+          <label><%= t('gws/attendance.edit_cell.time') %></label>
+          <div class="form-row">
+            <div class="col-sm-2">
               <%= f.select(:in_hour, hour_options, selected: val.try(:hour) || Time.zone.now.hour, include_blank: true) %>
-              <%= f.select(:in_minute, minute_options, selected: val.try(:min) || Time.zone.now.min, include_blank: true) %>
-              <%= button_tag(t('ss.buttons.clear'), type: 'reset', name: 'clear', class: 'btn') %>
             </div>
-          </dd>
-          <dt><%= @model.t :in_reason %></dt>
-          <dd><%= f.text_field(:in_reason) %></dd>
-        </dl>
+            <div class="col-sm-2">
+              <%= f.select(:in_minute, minute_options, selected: val.try(:min) || Time.zone.now.min, include_blank: true) %>
+            </div>
+            <div class="col">
+              <%= button_tag(t('ss.buttons.clear'), type: 'reset', name: 'clear', class: 'btn btn-outline-secondary') %>
+            </div>
+          </div>
+        </div>
+        <div class="form-group">
+          <label><%= @model.t :in_reason %></label>
+          <%= f.text_field(:in_reason) %>
+          </div>
       </div>
     </div>
   </div>
 
   <footer class="send">
-    <%= f.submit t("ss.buttons.save"), class: 'btn-primary save' %>
-    <%= f.button t("gws/attendance.buttons.close"), class: 'btn-default', type: :reset, onclick: "$.colorbox.close(); return false;" %>
+    <%= f.submit t("ss.buttons.save"), class: 'save btn btn-outline-primary' %>
+    <%= f.button t("gws/attendance.buttons.close"), class: 'btn btn-outline-secondary', type: :reset, onclick: "$.colorbox.close(); return false;" %>
   </footer>
 <% end %>
 
