@@ -1,11 +1,10 @@
 namespace :event do
   task import_icals: :environment do
-    sites = ENV["site"] ? Cms::Site.where(host: ENV["site"]) : Cms::Site.all
-    sites.each do |site|
-      node = Event::Node::Page.site(site).find_by(filename: ENV["node"]) if ENV["node"].present?
-
-      if node.present?
-        Event::Ical::ImportJob.register_job(site, node)
+    ::Tasks::Cms.each_sites do |site|
+      if ENV.key?("node")
+        ::Tasks::Cms.with_node(site, ENV["node"]) do |node|
+          Event::Ical::ImportJob.register_job(site, node)
+        end
       else
         Event::Ical::ImportJob.register_jobs(site)
       end
