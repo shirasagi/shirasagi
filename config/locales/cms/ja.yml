@@ -218,6 +218,9 @@ ja:
         text: テキスト
         email: メールアドレス
         tel: 電話番号
+      max_name_length:
+        '80': 80文字
+        '0': 無制限
 
     sns_share:
       fb_like: Facebook いいね！
@@ -491,6 +494,7 @@ ja:
       cms/site:
         auto_keywords: キーワード自動設定
         auto_description: 概要自動設定
+        max_name_length: ページタイトル文字数制限
         keywords: 追加キーワード
       cms/model/member:
         name: 氏名
@@ -1047,7 +1051,8 @@ ja:
         - 自動入力される概要は本文から生成されます。
       keywords:
         - キーワード自動設定が有効時にこの項目が自動入力に追加されます。
-
+      max_name_length:
+        - ページタイトルの文字数設定の最大テキスト長を設定します。
     cms/model/part:
       route:
         - |-

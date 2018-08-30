@@ -26,14 +26,15 @@ module Cms::Content
     permit_params :state, :name, :index_name, :filename, :basename, :order, :released, :route
 
     validates :state, presence: true
-    validates :name, presence: true, length: { maximum: 80 }
+    validates :name, presence: true
     validates :filename, uniqueness: { scope: :site_id }, length: { maximum: 200 }
     validates :released, datetime: true
-
     after_validation :set_released, if: -> { public? }
     before_validation :set_filename
     before_validation :validate_filename
     after_validation :set_depth, if: ->{ filename.present? }
+
+    validate :validate_name, if: ->{ name.present? }
 
     scope :filename, ->(name) { where filename: name.sub(/^\//, "") }
     scope :node, ->(node, target = nil) {
@@ -217,5 +218,12 @@ module Cms::Content
 
     self.filename = filename.sub(/\..*$/, "") + fix_extname if fix_extname && basename.present?
     @basename = filename.sub(/.*\//, "") if @basename
+  end
+
+  def validate_name
+    return if @cur_site.max_name_length <= 0
+    if name.length > @cur_site.max_name_length
+      errors.add :name, :too_long, { count: @cur_site.max_name_length }
+    end
   end
 end
