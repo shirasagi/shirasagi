@@ -30,6 +30,7 @@ describe "gws_survey", type: :feature, dbscope: :example, js: true do
         click_on I18n.t("gws.apis.categories.index")
       end
       within "#cboxLoadedContent" do
+        expect(page).to have_content(cate.name)
         click_on cate.name
       end
       within "form#item-form" do

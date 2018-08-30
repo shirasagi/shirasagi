@@ -94,11 +94,11 @@ RSpec.describe Map::MapHelper, type: :helper do
       before { SS.config.replace_value_at(:map, :api, "googlemaps") }
 
       it 'render_map' do
-        expect(map).to include('Map.load("#map-canvas")')
+        expect(map).to include('Googlemaps_Map.load("#map-canvas", {})')
       end
 
       it 'render_map_form' do
-        expect(map_form).to include('Map.setForm(Map_Form)')
+        expect(map_form).to include('Googlemaps_Map.setForm(Map_Form)')
       end
 
       it 'render_facility_search_map' do
@@ -106,7 +106,7 @@ RSpec.describe Map::MapHelper, type: :helper do
       end
 
       it 'render_member_photo_form_map' do
-        expect(member_photo_form_map).to include('Map.setForm(Member_Photo_Form)')
+        expect(member_photo_form_map).to include('Googlemaps_Map.setForm(Member_Photo_Form)')
       end
     end
 
@@ -114,11 +114,11 @@ RSpec.describe Map::MapHelper, type: :helper do
       before { SS.config.replace_value_at(:map, :api, "openlayers") }
 
       it 'render_map' do
-        expect(map_g).to include('Map.load("#map-canvas")')
+        expect(map_g).to include('Googlemaps_Map.load("#map-canvas", {})')
       end
 
       it 'render_map_form' do
-        expect(map_form_g).to include('Map.setForm(Map_Form)')
+        expect(map_form_g).to include('Googlemaps_Map.setForm(Map_Form)')
       end
 
       it 'render_facility_search_map' do
@@ -126,7 +126,7 @@ RSpec.describe Map::MapHelper, type: :helper do
       end
 
       it 'render_member_photo_form_map' do
-        expect(member_photo_form_map_g).to include('Map.setForm(Member_Photo_Form)')
+        expect(member_photo_form_map_g).to include('Googlemaps_Map.setForm(Member_Photo_Form)')
       end
     end
   end

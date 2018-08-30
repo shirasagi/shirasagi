@@ -29,6 +29,7 @@ describe 'gws_memo_lists', type: :feature, dbscope: :example, js: true do
 
       wait_for_ajax
       within '#cboxLoadedContent' do
+        expect(page).to have_content(gws_user.name)
         click_on gws_user.name
       end
 

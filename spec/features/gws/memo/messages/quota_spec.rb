@@ -38,6 +38,7 @@ describe 'gws_memo_messages', type: :feature, dbscope: :example, js: true do
 
       wait_for_ajax
       within '#cboxLoadedContent' do
+        expect(page).to have_content(recipient.name)
         click_on recipient.name
       end
 
@@ -80,6 +81,7 @@ describe 'gws_memo_messages', type: :feature, dbscope: :example, js: true do
 
       wait_for_ajax
       within '#cboxLoadedContent' do
+        expect(page).to have_content(recipient.name)
         click_on recipient.name
       end
 
