@@ -100,7 +100,7 @@ class Cms::Agents::Nodes::ArchiveController < ApplicationController
   end
 
   def redirect_to_archive_index
-    redirect_to "#{@cur_site.full_url}#{params[:public_path]}/#{Time.zone.now.strftime('%Y%m')}"
+    redirect_to "#{@cur_site.full_url}#{@cur_main_path[1..-1].sub('/index.html', '')}/#{Time.zone.now.strftime('%Y%m')}"
   end
 
   # def rss
