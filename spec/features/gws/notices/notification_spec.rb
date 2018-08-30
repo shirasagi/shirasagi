@@ -43,6 +43,7 @@ describe "gws_notices", type: :feature, dbscope: :example, js: true do
         end
       end
       within '#cboxLoadedContent' do
+        expect(page).to have_content(recipient1.name)
         click_on recipient1.name
       end
       within 'form#item-form' do

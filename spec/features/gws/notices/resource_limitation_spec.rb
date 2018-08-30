@@ -27,6 +27,7 @@ describe "gws_notices", type: :feature, dbscope: :example, tmpdir: true, js: tru
       end
     end
     within '#cboxLoadedContent' do
+      expect(page).to have_content(notice_file.name)
       click_on notice_file.name
     end
     within 'form#item-form' do

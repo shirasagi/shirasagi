@@ -42,6 +42,7 @@ describe "my_group", dbscope: :example, js: true do
           click_on I18n.t("workflow.search_approvers.index")
         end
         within "#cboxLoadedContent" do
+          expect(page).to have_content(user1.long_name)
           click_on user1.long_name
         end
         within ".mod-workflow-request" do
@@ -124,6 +125,7 @@ describe "my_group", dbscope: :example, js: true do
             click_on I18n.t("workflow.search_approvers.index")
           end
           within "#cboxLoadedContent" do
+            expect(page).to have_content(user1.long_name)
             click_on user1.long_name
           end
           within ".mod-workflow-request" do

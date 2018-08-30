@@ -73,7 +73,7 @@ describe "gws_users", type: :feature, dbscope: :example, js: true do
     let(:form) do
       Gws::UserForm.create!(cur_site: site, state: 'public')
     end
-    let!(:column1) { create(:gws_column_text_field, cur_site: site, cur_form: form) }
+    let!(:column1) { create(:gws_column_text_field, cur_site: site, cur_form: form, input_type: "text") }
     let(:name) { unique_id }
     let(:new_name) { unique_id }
 
