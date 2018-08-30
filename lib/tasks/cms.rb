@@ -149,6 +149,7 @@ module Tasks
           return
         end
 
+        node = node.becomes_with_route rescue node
         yield node
       end
 
