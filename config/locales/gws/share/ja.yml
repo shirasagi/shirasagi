@@ -94,6 +94,7 @@ ja:
         folder: フォルダー
         folder_id: フォルダー名
         url_copy: URLのコピー
+        memo: 補足情報
       gws/share/folder:
         file_ids: ファイル
       gws/share/file_uploader:

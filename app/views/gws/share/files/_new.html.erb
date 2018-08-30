@@ -21,6 +21,11 @@
   </div>
 </div>
 
+<dl class="see">
+  <dt><%= Gws::Share::File.t :memo %><%= Gws::Share::File.tt :memo %></dt>
+  <dd><%= f.text_area :memo %></dd>
+</dl>
+
 <%= jquery do %>
   window.deleteContent = function (id) {
     $("#item-form .file-view").each(function() {
