@@ -56,48 +56,43 @@
 </div>
 <% end %>
 
-<div class="row">
-  <div class="col mb-4">
-    <h2 class="h4"><%= t "cms.content" %></h2>
-    <div class="table-responsive">
-      <table class="table table-striped">
-        <thead>
-          <tr>
-            <th><%= t "cms.status" %></th>
-            <th><%= t "cms.apis.contents.title" %></th>
-            <th><%= Cms::Node.t :route %></th>
-            <th><%= t "cms.options.sort.filename" %></th>
-            <th><%= t "cms.options.sort.updated_1" %></th>
-          </tr>
-        </thead>
-        <tbody>
-          <% @items.each do |item| %>
-          <tr>
-            <td class="state"><span class="public"><%= t "ss.state.#{item.status}" %></span></td>
-            <td class="title"><%= link_to item.name, contents_path(item) %></td>
-            <td class="route"><%= t "modules.#{item.route.sub(/\/.*/, '')}" %></td>
-            <td class="filename"><%= File.basename item.filename %></td>
-            <td class="datetime"><%= item.updated.strftime("%Y/%m/%d %H:%M") %></td>
-            <td class="menu">
-              <div class="dropdown">
-                <button class="btn bmd-btn-icon dropdown-toggle" type="button" id="ex1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="material-icons">more_vert</i></button>
-                <div class="dropdown-menu dropdown-menu-left" aria-labelledby="ex1">
-                  <%= link_to t("cms.content"), contents_path(item), class: "dropdown-item" %>
-                  <%= link_to t('ss.links.view_site'), item.full_url, target: :_blank, class: "dropdown-item" %>
-                  <% if @cur_site.mobile_enabled? %>
-                    <%= link_to t('ss.links.pc_preview'), cms_preview_path(path: item.preview_path), target: :_blank, class: "dropdown-item" %>
-                    <%= link_to(t('ss.links.mobile_preview'), cms_mobile_preview_path(path: item.preview_path), target: :_blank, class: "dropdown-item") %>
-                  <% else %>
-                    <%= link_to t('ss.links.preview'), cms_preview_path(path: item.preview_path), target: :_blank, class: "dropdown-item" %>
-                  <% end %>
-              </div>
-            </td>
-          </tr>
-          <% end %>
-        </tbody>
-      </table>
-    </div>
-  </div>
-</div>
+<% @table_def ||= define_ss_table do |tbl| %>
+  <% tbl.column(class: "state") do %>
+    <% tbl.th t("cms.status") %>
+    <% tbl.td do |item| %><span class="public"><%= t "ss.state.#{item.status}" %></span><% end %>
+  <% end %>
 
-<%= paginate @items if @items.try(:current_page) %>
+  <% tbl.column(class: "title") do %>
+    <% tbl.th @model.t(:name) %>
+    <% tbl.td do |item| %><%= link_to item.name, contents_path(item) %><% end %>
+  <% end %>
+
+  <% tbl.column(class: "route") do %>
+    <% tbl.th @model.t(:route) %>
+    <% tbl.td do |item| %><%= t "modules.#{item.route.sub(/\/.*/, '')}" %><% end %>
+  <% end %>
+
+  <% tbl.column(class: "filename") do %>
+    <% tbl.th @model.t(:filename) %>
+    <% tbl.td do |item| %><%= ::File.basename(item.filename) %><% end %>
+  <% end %>
+
+  <% tbl.column_updated %>
+
+  <% tbl.tap_menu do |item| %>
+    <% if @tap_menu %>
+      <% @tap_menu.call item %>
+    <% else %>
+      <%= link_to t("cms.content"), contents_path(item), class: "dropdown-item" %>
+      <%= link_to t('ss.links.view_site'), item.full_url, target: :_blank, class: "dropdown-item" %>
+      <% if @cur_site.mobile_enabled? %>
+        <%= link_to t('ss.links.pc_preview'), cms_preview_path(path: item.preview_path), target: :_blank, class: "dropdown-item" %>
+        <%= link_to(t('ss.links.mobile_preview'), cms_mobile_preview_path(path: item.preview_path), target: :_blank, class: "dropdown-item") %>
+      <% else %>
+        <%= link_to t('ss.links.preview'), cms_preview_path(path: item.preview_path), target: :_blank, class: "dropdown-item" %>
+      <% end %>
+    <% end %>
+  <% end %>
+<% end %>
+
+<%= render file: "cms/crud/index" %>
