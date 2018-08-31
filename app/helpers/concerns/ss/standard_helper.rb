@@ -2,6 +2,14 @@ module SS::StandardHelper
   extend ActiveSupport::Concern
 
   def tryb(*exceptions, &block)
+    if exceptions.present?
+      tryb2(*exceptions, &block)
+    else
+      tryb2(StandardError, &block)
+    end
+  end
+
+  def tryb2(*exceptions, &block)
     yield
   rescue *exceptions
     nil
