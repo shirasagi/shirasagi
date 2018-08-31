@@ -1,0 +1,39 @@
+<div class="fixed-navi">
+  <script>
+    $(function () {
+      var $fixElement = $('.fixed-navi .wrap');
+      var baseFixPoint = $fixElement.offset().top;
+      var fixClass = 'is-fixed';
+
+      function fixFunction() {
+        var windowScrolltop = $(window).scrollTop();
+        if (windowScrolltop >= baseFixPoint) {
+          $fixElement.addClass(fixClass);
+        } else {
+          $fixElement.removeClass(fixClass);
+        }
+      }
+
+      $(window).on('load scroll', function () {
+        fixFunction();
+      });
+    });
+  </script>
+  <div class="wrap">
+    <ul class="nav flex-column mb-4">
+      <li class="nav-item"><a class="nav-link current" href="#"><span>基本情報</span></a></li>
+      <li class="nav-item"><a class="nav-link" href="#"><span>排他制御</span></a></li>
+      <li class="nav-item"><a class="nav-link" href="#"><span>アドオンへのアンカーリンク</span></a></li>
+      <li class="nav-item"><a class="nav-link" href="#"><span>承認</span></a></li>
+      <li class="nav-item"><a class="nav-link" href="#"><span>メタ情報</span></a></li>
+      <li class="nav-item"><a class="nav-link" href="#"><span>SNS自動投稿設定</span></a></li>
+      <li class="nav-item"><a class="nav-link" href="#"><span>本文</span></a></li>
+      <li class="nav-item"><a class="nav-link" href="#"><span>本文パーツ</span></a></li>
+    </ul>
+    <nav class="col">
+      <button type="reset" name="button" class="btn btn-outline-secondary">キャンセル</button>
+      <button type="submit" name="commit" class="save btn btn-outline-primary">下書き保存</button>
+      <button type="submit" name="commit" class="save btn btn-outline-success">公開保存</button>
+    </nav>
+  </div>
+</div>

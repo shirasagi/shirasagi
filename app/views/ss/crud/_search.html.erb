@@ -1,7 +1,40 @@
-<% @s = OpenStruct.new params[:s] %>
-<div class="list-head-search">
-  <%= form_for :s, url: "", html: { class: "index-search", method: :get } do |f| %>
-    <%= f.text_field :keyword, style: "width: 300px;" %>
-    <input type="submit" value="<%= t('ss.buttons.search') %>" class="btn" />
-  <% end %>
+<div class="content-search card mb-5">
+  <div class="card-body">
+    <form>
+      <div class="search-group d-flex align-items-center flex-wrap">
+        <h2>絞り込み</h2>
+        <div class="d-flex align-items-center flex-wrap">
+          <div class="form-group">
+            <select class="form-control">
+              <option>ステータスを選択する</option>
+              <option>公開中</option>
+              <option>公開待ち</option>
+              <option>非公開</option>
+              <option>公開終了間近</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <select class="form-control">
+              <option>承認ステータス</option>
+              <option>申請したもの</option>
+              <option>依頼されたもの</option>
+              <option>差し戻されたもの</option>
+            </select>
+          </div>
+          <button type="button" class="btn btn-outline-secondary">カテゴリーを選択する</button>
+          <button type="button" class="btn btn-outline-secondary">ユーザーを選択する</button>
+        </div>
+      </div>
+      <div class="search-group d-flex align-items-center flex-wrap">
+        <h2>キーワード</h2>
+        <div class="form-group">
+          <input class="keyword form-control" type="text" placeholder="タイトル・本文から検索する">
+        </div>
+      </div>
+    </form>
+    <div class="search-group d-flex align-items-center flex-wrap justify-content-between">
+      <button type="button" class="btn btn-outline-primary">検索</button>
+      <button type="button" class="detailed-search btn btn-outline-secondary">詳細検索</button>
+    </div>
+  </div>
 </div>

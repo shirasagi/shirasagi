@@ -1,27 +1,46 @@
 <% addons = @addons || @item.try(:addons) || [] %>
 
-<%= form_for :item, url: { action: :update }, html: { id: "item-form", method: :put, multipart: true, autocomplete: :off } do |f| %>
-<%= error_messages_for :item %>
+<div id="wrap">
+  <div class="wrap d-flex flex-wrap">
+    <article id="main">
+      <div class="wrap d-flex">
+        <div class="wrap-body">
+          <% if ::File.exists?("#{Rails.root}/app/views/#{params[:controller]}/_menu.html.erb") %>
+            <div id="menu"><%= render partial: "#{params[:controller]}/menu" %></div>
+          <% elsif controller.menu_view_file %>
+            <div id="menu"><%= render partial: controller.menu_view_file %></div>
+          <% end %>
 
-<%= hidden_field_tag :_updated, params[:_updated] || @item.updated if @item.respond_to?(:updated) %>
+          <%= form_for :item, url: { action: :update }, html: { id: "item-form", method: :put, multipart: true, autocomplete: :off } do |f| %>
+            <%= error_messages_for :item %>
 
-<div class="addon-views">
-  <div class="addon-view mb-5" id="addon-basic">
-    <% if addons.size > 0 %><h2 class="h4"><%= @addon_basic_name || t("ss.basic_info") %></h2><% end %>
-    <%= render file: '_form', locals: { f: f } %>
+            <%= hidden_field_tag :_updated, params[:_updated] || @item.updated if @item.respond_to?(:updated) %>
+
+            <div class="addon-views">
+              <div class="addon-view mb-5" id="addon-basic">
+                <% if addons.size > 0 %><h2 class="h4"><%= @addon_basic_name || t("ss.basic_info") %></h2>
+                <% end %>
+                <%= render file: '_form', locals: { f: f } %>
+              </div>
+              <%= render file: "_addons_form", locals: { f: f, addons: addons } if addons.size > 0 %>
+            </div>
+
+            <footer class="send">
+              <% if @crud_buttons %>
+                <% @crud_buttons.call f %>
+              <% else %>
+                <%= f.submit t("ss.buttons.save"), class: 'btn btn-primary save' %>
+                <%= f.button t("ss.buttons.cancel"), class: 'btn btn-default', type: :reset, onclick: "location.href='#{url_for(action: :show)}'; return false;" %>
+              <% end %>
+            </footer>
+
+          <% end %>
+
+          <%= jquery do %> SS.confirmUnloading();<% end %>
+        </div>
+
+        <%= render file: "_addon_navi" %>
+      </div>
+    </article>
   </div>
-  <%= render file: "_addons_form", locals: { f: f, addons: addons } if addons.size > 0 %>
 </div>
-
-<footer class="send">
-  <% if @crud_buttons %>
-    <% @crud_buttons.call f %>
-  <% else %>
-    <%= f.submit t("ss.buttons.save"), class: 'btn btn-primary save' %>
-    <%= f.button t("ss.buttons.cancel"), class: 'btn btn-default', type: :reset, onclick: "location.href='#{url_for(action: :show)}'; return false;" %>
-  <% end %>
-</footer>
-
-<% end %>
-
-<%= jquery do %> SS.confirmUnloading(); <% end %>

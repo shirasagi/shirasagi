@@ -1,75 +1,48 @@
-<div class="list-head d-flex align-item-center justify-content-between">
-  <div class="btn-group align-self-end mb-0" role="group" aria-label="Basic example">
-    <button class="btn btn-outline-secondary">削除する</button>
-  </div>
-  <div class="form-row align-items-center">
-    <div class="col-auto my-1">
-      <label class="" for="inlineFormCustomSelect">ソート</label>
-      <select class="custom-select mr-sm-2" id="inlineFormCustomSelect">
-        <option value="1">更新日時（降順）</option>
-        <option value="2">更新日時（昇順）</option>
-        <option value="3">作成日時（降順）</option>
-        <option value="4">作成日時（昇順）</option>
-        <option value="5">公開日時（降順）</option>
-        <option value="6">公開日時（昇順）</option>
-        <option value="7">承認日時（降順）</option>
-        <option value="8">承認日時（昇順）</option>
-        <option value="9">タイトル（降順）</option>
-        <option value="10">タイトル（昇順）</option>
-        <option value="11">ファイル名（降順）</option>
-        <option value="12">ファイル名（昇順）</option>
-      </select>
-    </div>
-    <div class="col-auto my-1">
-      <label class="" for="inlineFormCustomSelect">表示件数</label>
-      <select class="custom-select mr-sm-2" id="inlineFormCustomSelect">
-        <option value="1">50</option>
-        <option value="2">100</option>
-        <option value="3">200</option>
-      </select>
-    </div>
-  </div>
-</div>
-
 <% @table_def ||= define_ss_table do |tbl| %>
   <% tbl.column_checkbox %>
+
   <% tbl.column(class: "state") do %>
     <% tbl.th t("cms.status") %>
-    <% tbl.td do |item| %><span class="public"><%= t "ss.state.#{item.status}" %></span><% end %>
+    <% tbl.td do |item| %><span class="public"><%= t "ss.state.#{item.status}" %></span>
+    <% end %>
   <% end %>
+
   <% tbl.column(class: "title") do %>
-    <% tbl.th t("cms.apis.contents.title") %>
+    <% tbl.th t("mongoid.attributes.cms/content.name") %>
     <% tbl.td do |item| %>
       <% if @index_title %>
         <% @index_title.call item %>
       <% else %>
         <% title = item.try(:name) || item.try(:title) || item.try(:filename) || "##{item.id}" %>
-        <%= link_to title, { action: :show, id: item } %>
+        <%= link_to title, {action: :show, id: item} %>
       <% end %>
     <% end %>
   <% end %>
+
   <% tbl.column(class: "categories") do %>
-    <% tbl.th "カテゴリー" %>
+    <% tbl.th t("mongoid.attributes.cms/model/page.category_ids") %>
     <% tbl.td do |item| %>
       <% if item.categories.present? %>
         <ul>
-        <% item.categories.each do |cate| %>
-          <li><%= cate.name %></li>
-        <% end %>
+          <% item.categories.each do |cate| %>
+            <li><%= cate.name %></li>
+          <% end %>
         </ul>
       <% end %>
     <% end %>
   <% end %>
+
   <% tbl.column(class: "author") do %>
-    <% tbl.th "作成者" %>
+    <% tbl.th t("mongoid.attributes.cms/content.user") %>
     <% tbl.td do |item| %>
       <% if item.user.present? %>
         <%= item.user.long_name %>
       <% end %>
     <% end %>
   <% end %>
+
   <% tbl.column(class: "filename") do %>
-    <% tbl.th t("cms.options.sort.filename") %>
+    <% tbl.th t("mongoid.attributes.ss/document.filename") %>
     <% tbl.td do |item| %>
       <% if item.try(:filename) %>
         <% if params.dig(:s, :target) == 'descendant' %>
@@ -80,22 +53,25 @@
       <% end %>
     <% end %>
   <% end %>
+
   <% tbl.column(class: "tags") do %>
-    <% tbl.th "タグ" %>
+    <% tbl.th t("mongoid.attributes.cms/addon/tag.tags") %>
     <% tbl.td do |item| %>
       <% if item.try(:tags) %>
         <%= item.tags.join(",") %>
       <% end %>
     <% end %>
   <% end %>
+
   <% tbl.column_updated %>
+
   <% tbl.tap_menu do |item| %>
     <% if @tap_menu %>
       <% @tap_menu.call item %>
     <% else %>
-      <%= link_to(t('ss.links.show'), { action: :show, id: item }, { class: "dropdown-item" }) if item.allowed?(:read, @cur_user, site: @cur_site) %>
-      <%= link_to(t('ss.links.edit'), { action: :edit, id: item }, { class: "dropdown-item" }) if item.allowed?(:edit, @cur_user, site: @cur_site) %>
-      <%= link_to(t('ss.links.delete'), { action: :delete, id: item }, { class: "dropdown-item" }) if item.allowed?(:delete, @cur_user, site: @cur_site) %>
+      <%= link_to(t('ss.links.show'), {action: :show, id: item}, {class: "dropdown-item"}) if item.allowed?(:read, @cur_user, site: @cur_site) %>
+      <%= link_to(t('ss.links.edit'), {action: :edit, id: item}, {class: "dropdown-item"}) if item.allowed?(:edit, @cur_user, site: @cur_site) %>
+      <%= link_to(t('ss.links.delete'), {action: :delete, id: item}, {class: "dropdown-item"}) if item.allowed?(:delete, @cur_user, site: @cur_site) %>
 
       <% if @model.collection_name == :cms_nodes %>
         <%= link_to t('ss.links.view_site'), item.full_url, class: "dropdown-item", target: :_blank if item.public? %>
@@ -116,42 +92,12 @@
       <% end %>
 
       <% if item.try(:image) %>
-        <%= link_to image_tag(item.image.thumb_url), item.image.url, { class: "thumb dropdown-item", target: "_blank" } %>
+        <%= link_to image_tag(item.image.thumb_url), item.image.url, {class: "thumb dropdown-item", target: "_blank"} %>
       <% elsif item.try(:image?) %>
-        <%= link_to image_tag(item.thumb_url), item.url, { class: "thumb dropdown-item", target: "_blank" } %>
+        <%= link_to image_tag(item.thumb_url), item.url, {class: "thumb dropdown-item", target: "_blank"} %>
       <% end %>
     <% end %>
   <% end %>
 <% end %>
 
-<div class="row">
-  <div class="col mb-4">
-    <div class="table-responsive">
-      <table class="table table-striped">
-        <thead>
-        <tr>
-          <% @table_def.columns.each do |column| %>
-            <%= column.render_th %>
-          <% end %>
-        </tr>
-        </thead>
-        <tbody>
-        <% @items.each do |item| %>
-          <% if @item_decorator %>
-            <% item = @item_decorator.call(item)  %>
-          <% elsif item.respond_to?(:becomes_with_route) %>
-            <% item = item.becomes_with_route %>
-          <% end %>
-          <tr>
-            <% @table_def.columns.each do |column| %>
-              <%= column.render_td(item) %>
-            <% end %>
-          </tr>
-        <% end %>
-        </tbody>
-      </table>
-    </div>
-  </div>
-</div>
-
-<%= paginate @items if @items.try(:current_page) %>
+<%= render file: "ss/crud/index" %>

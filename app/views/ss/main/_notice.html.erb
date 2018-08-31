@@ -1,0 +1,15 @@
+<aside id="notice">
+  <div class="wrap"><%= notice %></div>
+</aside>
+
+<% if notice %>
+<script> SS.notice('<%= br notice %>', <%== flash[:notice_options].to_json %>); </script>
+<% end %>
+
+<% if @cur_user.present? %>
+  <% if @cur_user.initial_password_warning.present? %>
+  <div class="warning">
+    <%= link_to t("ss.warning.initial_password"), sns_cur_user_account_path %>
+  </div>
+  <% end %>
+<% end %>

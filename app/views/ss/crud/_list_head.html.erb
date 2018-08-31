@@ -1,12 +1,32 @@
-<div class="list-head">
-  <label class="check"><input type="checkbox" /></label>
-
-  <div class="list-head-action">
-    <%= render file: "_list_head_tags" %>
-    <div class="list-head-action-destroy">
-      <button class="destroy-all btn"><%= t :"ss.links.delete" %></button>
+<div class="list-head d-flex align-item-center justify-content-between">
+  <div class="btn-group align-self-end mb-0" role="group" aria-label="Basic example">
+    <button class="btn btn-outline-secondary">削除する</button>
+  </div>
+  <div class="form-row align-items-center">
+    <div class="col-auto my-1">
+      <label class="" for="inlineFormCustomSelect">ソート</label>
+      <select class="custom-select mr-sm-2" id="inlineFormCustomSelect">
+        <option value="1">更新日時（降順）</option>
+        <option value="2">更新日時（昇順）</option>
+        <option value="3">作成日時（降順）</option>
+        <option value="4">作成日時（昇順）</option>
+        <option value="5">公開日時（降順）</option>
+        <option value="6">公開日時（昇順）</option>
+        <option value="7">承認日時（降順）</option>
+        <option value="8">承認日時（昇順）</option>
+        <option value="9">タイトル（降順）</option>
+        <option value="10">タイトル（昇順）</option>
+        <option value="11">ファイル名（降順）</option>
+        <option value="12">ファイル名（昇順）</option>
+      </select>
+    </div>
+    <div class="col-auto my-1">
+      <label class="" for="inlineFormCustomSelect">表示件数</label>
+      <select class="custom-select mr-sm-2" id="inlineFormCustomSelect">
+        <option value="1">50</option>
+        <option value="2">100</option>
+        <option value="3">200</option>
+      </select>
     </div>
   </div>
-
-  <%= render file: "_search" %>
 </div>

@@ -1,54 +1,24 @@
-<div class="index">
-  <%= render file: "_list_head" %>
+<div id="wrap">
+  <div class="wrap d-flex flex-wrap">
+    <%= tryb(ActionView::MissingTemplate) {render(file: "_content_navi")} %>
 
-  <ul class="list-items">
-    <% @items.each do |item| %>
-    <li class="list-item">
-      <nav class="tap-menu">
-        <% if @tap_menu %>
-          <% @tap_menu.call item %>
-        <% else %>
-          <%= link_to t('ss.links.show'), action: :show, id: item if item.allowed?(:read, @cur_user) %>
-          <%= link_to t('ss.links.edit'), action: :edit, id: item if item.allowed?(:edit, @cur_user) %>
-          <%= link_to t('ss.links.delete'), action: :delete, id: item  if item.allowed?(:delete, @cur_user) %>
+    <article id="main">
+      <%= render file: "_search" %>
 
-          <% if item.try(:image) %>
-            <%= link_to image_tag(item.image.thumb_url), item.image.url, { class: "thumb", target: "_blank" } %>
-          <% elsif item.try(:image?) %>
-            <%= link_to image_tag("#{item.thumb_url}?_=#{item.updated.to_i}", alt: ''), item.url, { class: "thumb", target: "_blank" } %>
+      <div class="wrap d-flex">
+        <div class="wrap-body">
+          <% if ::File.exists?("#{Rails.root}/app/views/#{params[:controller]}/_menu.html.erb") %>
+            <div id="menu"><%= render partial: "#{params[:controller]}/menu" %></div>
+          <% elsif controller.menu_view_file %>
+            <div id="menu"><%= render partial: controller.menu_view_file %></div>
           <% end %>
-        <% end %>
-      </nav>
 
-      <label class="check"><input type="checkbox" name="ids[]" value="<%= item.id %>" /></label>
-      <div class="info">
-        <% if @index_title %>
-          <% @index_title.call item %>
-        <% else %>
-          <% title = item.try(:name) || item.try(:title) || item.try(:filename) || "##{item.id}" %>
-          <%= link_to title, { action: :show, id: item }, class: "title" %>
-        <% end %>
-
-        <div class="meta">
-          <% if @index_meta %>
-            <% @index_meta.call item %>
-          <% else %>
-            <span class="id">#<%= item.id %></span>
-            <% if item.try(:updated) %>
-              <span class="datetime"><%= item.updated.strftime("%Y/%m/%d %H:%M") %></span>
-            <% end %>
-            <% if item.try(:filename) %>
-              <span class="filename"><%= File.basename item.filename %></span>
-            <% end %>
-            <% if item.try(:status) %>
-              <span class="state"><%= t "ss.state.#{item.status}" %></span>
-            <% end %>
-          <% end %>
+          <%= render file: "_list_head" %>
+          <%= render file: "_index" %>
         </div>
-      </div>
-    </li>
-    <% end %>
-  </ul>
-</div>
 
-<%= paginate @items if @items.try(:current_page) %>
+      </div>
+    </article>
+
+  </div>
+</div>

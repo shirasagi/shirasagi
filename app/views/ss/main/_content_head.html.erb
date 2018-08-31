@@ -1,0 +1,65 @@
+<section class="content-head">
+  <div class="d-flex justify-content-between flex-wrap">
+    <div class="title">
+      <h1 class="icon-content d-flex align-items-center">コンテンツのタイトル</h1>
+      <% if @crumbs.size > 0 %>
+      <ol class="breadcrumb">
+        <% @crumbs.each_with_index do |item, idx| %>
+          <li class="breadcrumb-item" <%== %(class="active") if @crumbs.size == idx + 1 %>><%= link_to *item %></li>
+        <% end %>
+
+        <% if @webmail_other_account_path && @cur_user.imap_settings.size > 1 %>
+          <li class="webmail-accounts">
+            <span><%= t('webmail.links.select_account') %></span>
+            <%= select_tag :select_account,
+              options_for_select(account_options(@webmail_other_account_path), send(@webmail_other_account_path, params[:account])), class: "webmail-select-account"
+            %>
+          </li>
+        <% end %>
+      </ol>
+      <% end %>
+    </div>
+    <div class="dropdown">
+      <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">モジュールの切り替え</button>
+      <div class="dropdown-menu d-flex flex-wrap" aria-labelledby="dropdownMenuButton">
+        <a class="dropdown-item" href="/.s1/ads146">広告管理</a>
+        <a class="dropdown-item" href="/.s1/article146">記事</a>
+        <a class="dropdown-item" href="/.s1/board146">掲示板</a>
+        <a class="dropdown-item" href="/.s1/category146">カテゴリー</a>
+        <a class="dropdown-item" href="/.s1/ckan146">CKAN</a>
+        <a class="dropdown-item" href="/.s1/cms146/nodes?mod=cms">標準機能</a>
+        <a class="dropdown-item" href="/.s1/event146">イベント</a>
+        <a class="dropdown-item" href="/.s1/ezine146">メールマガジン</a>
+        <a class="dropdown-item" href="/.s1/facility146">施設</a>
+        <a class="dropdown-item" href="/.s1/faq146">FAQ</a>
+        <a class="dropdown-item" href="/.s1/garbage146">ゴミDB</a>
+        <a class="dropdown-item" href="/.s1/inquiry146">メールフォーム</a>
+        <a class="dropdown-item" href="/.s1/key_visual146">キービジュアル</a>
+        <a class="dropdown-item" href="/.s1/mail_page146">メール取込</a>
+        <a class="dropdown-item" href="/.s1/member146">メンバー</a>
+        <a class="dropdown-item" href="/.s1/opendata146">オープンデータ</a>
+        <a class="dropdown-item" href="/.s1/rss146">RSS取込</a>
+        <a class="dropdown-item" href="/.s1/sitemap146">サイトマップ</a>
+        <a class="dropdown-item" href="/.s1/uploader146">アップローダー</a>
+        <a class="dropdown-item" href="/.s1/urgency146">緊急災害レイアウト</a>
+      </div>
+    </div>
+  </div>
+  <ul class="nav nav-tabs">
+    <li class="nav-item">
+      <a class="nav-link active" href="#">質問項目</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" href="#">回答データ</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" href="#">集計結果</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" href="#">フィードバック</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" href="#">フォルダー設定</a>
+    </li>
+  </ul>
+</section>

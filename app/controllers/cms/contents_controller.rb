@@ -1,5 +1,6 @@
 class Cms::ContentsController < ApplicationController
   include Cms::BaseFilter
+  include Cms::CrudFilter
 
   navi_view "cms/main/navi"
 

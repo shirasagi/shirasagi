@@ -1,0 +1,83 @@
+<% @table_def ||= define_ss_table do |tbl| %>
+  <% tbl.column_checkbox %>
+
+  <% tbl.column(class: "state") do %>
+    <% tbl.th t("cms.status") %>
+    <% tbl.td do |item| %>
+      <% if item.try(:status) %>
+        <span class="public"><%= t "ss.state.#{item.status}" %></span>
+      <% end %>
+    <% end %>
+  <% end %>
+
+  <% tbl.column(class: "title") do %>
+    <% tbl.th t("mongoid.attributes.cms/content.name") %>
+    <% tbl.td do |item| %>
+      <% if @index_title %>
+        <% @index_title.call item %>
+      <% else %>
+        <% title = item.try(:name) || item.try(:title) || item.try(:filename) || "##{item.id}" %>
+        <%= link_to title, { action: :show, id: item }, class: "title" %>
+      <% end %>
+    <% end %>
+  <% end %>
+
+  <% tbl.column(class: "filename") do %>
+    <% tbl.th t("mongoid.attributes.ss/document.filename") %>
+    <% tbl.td do |item| %>
+      <% if item.try(:filename) %>
+        <%= ::File.basename(item.filename) %>
+      <% end %>
+    <% end %>
+  <% end %>
+
+  <% tbl.column_updated %>
+
+  <% tbl.tap_menu do |item| %>
+    <% if @tap_menu %>
+      <% @tap_menu.call item %>
+    <% else %>
+      <%= link_to(t('ss.links.show'), { action: :show, id: item }, { class: "dropdown-item" }) if item.allowed?(:read, @cur_user) %>
+      <%= link_to(t('ss.links.edit'), { action: :edit, id: item }, { class: "dropdown-item" }) if item.allowed?(:edit, @cur_user) %>
+      <%= link_to(t('ss.links.delete'), { action: :delete, id: item }, { class: "dropdown-item" }) if item.allowed?(:delete, @cur_user) %>
+
+      <% if item.try(:image) %>
+        <%= link_to image_tag(item.image.thumb_url), item.image.url, { class: "dropdown-item thumb", target: "_blank" } %>
+      <% elsif item.try(:image?) %>
+        <%= link_to image_tag("#{item.thumb_url}?_=#{item.updated.to_i}", alt: ''), item.url, { class: "dropdown-item thumb", target: "_blank" } %>
+      <% end %>
+    <% end %>
+  <% end %>
+<% end %>
+
+<div class="row">
+  <div class="col mb-4">
+    <div class="table-responsive">
+      <table class="table table-striped">
+        <thead>
+        <tr>
+          <% @table_def.columns.each do |column| %>
+            <%= column.render_th %>
+          <% end %>
+        </tr>
+        </thead>
+        <tbody>
+        <% @items.each do |item| %>
+          <% if @item_decorator %>
+            <% item = @item_decorator.call(item) %>
+          <% elsif item.respond_to?(:becomes_with_route) %>
+            <% item = item.becomes_with_route %>
+          <% end %>
+          <tr>
+            <% @table_def.columns.each do |column| %>
+              <%= column.render_td(item) %>
+            <% end %>
+          </tr>
+        <% end %>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<%= paginate @items if @items.try(:current_page) %>

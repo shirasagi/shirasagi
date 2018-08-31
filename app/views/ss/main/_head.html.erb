@@ -1,0 +1,72 @@
+<header id="head" class="d-flex justify-content-center align-items-center">
+  <div class="sp-menu-button">
+    <a href="#" class="">
+      <span></span>
+      <span></span>
+      <span></span>
+    </a>
+  </div>
+  <div class="ss-head-item application-name dropdown d-flex align-items-center">
+    <h1><%= link_to sns_mypage_path do %><img src="/assets/img/logo.png" srcset="/assets/img/logo.png 1x, /assets/img/logo@2x.png 2x" alt="SHIRASAGI" /><% end %></h1>
+    <button class="btn dropdown-toggle dropdown-toggle-split" type="button" id="buttonMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span class="sr-only">Toggle Dropdown</span></button>
+
+    <div class="dropdown-menu" aria-labelledby="buttonMenu1">
+      <% if SS.config.cms.disable.blank? && SS.config.cms.disable_navi.blank? %>
+        <% if @ss_mode == :cms %>
+          <%= link_to t('ss.links.cms'), cms_contents_path(@cur_site), class: "dropdown-item current" %>
+        <% else %>
+          <%= link_to t('ss.links.cms'), sns_cms_path, class: "dropdown-item" %>
+        <% end %>
+      <% end %>
+
+      <% if SS.config.gws.disable.blank? && SS.config.gws.disable_navi.blank? %>
+        <% if @ss_mode == :gws %>
+          <%= link_to t('ss.links.gws'), gws_portal_path(@cur_site), class: "dropdown-item current" %>
+        <% else %>
+          <%= link_to t('ss.links.gws'), sns_gws_path, class: "dropdown-item" %>
+        <% end %>
+      <% end %>
+
+      <% if SS.config.webmail.disable.blank? && SS.config.webmail.disable_navi.blank? %>
+        <% if @ss_mode == :webmail %>
+          <%= link_to t('webmail.mail'), webmail_mails_path(account: params[:account] || @cur_user.imap_default_index), class: "dropdown-item current" %>
+        <% else %>
+          <%= link_to t('webmail.mail'), webmail_mails_path(account: params[:account] || @cur_user.imap_default_index), class: "dropdown-item" %>
+        <% end %>
+      <% end %>
+    </div>
+  </div>
+  <% if @ss_mode == :cms %>
+    <div class="site-navi">
+      <%= link_to t("cms.view_site"), @cur_site.full_url, target: "_blank", class: "btn btn-secondary view-site" %>
+      <%= link_to t("cms.preview_site"), "#{cms_preview_path}#{@cur_site.url}", target: "_blank", class: "btn btn-secondary preview-site" %>
+    </div>
+  <% end %>
+
+  <% if Rails.env.development? %>
+    <div class="ss-head-item env dev d-flex align-items-center">&lt;Development&gt;</div>
+  <% end %>
+
+  <% if @cur_user %>
+    <div class="ss-head-item user">
+      <% if @ss_mode == :webmail %>
+        <% gws_user = @cur_user.gws_user %>
+        <% gws_role = gws_user.gws_roles.in(permissions: "edit_private_gws_memo_messages").reorder(site_id: 1).first %>
+        <% gws_group = gws_role.site if gws_role %>
+        <% if SS.config.gws.disable.blank? && gws_group %>
+          <%= link_to gws_memo_messages_path(site: gws_group.id), class: "user-message" do %>
+            <% count = Gws::Memo::Message.unseens(@cur_user, gws_group).size %>
+            <% if count > 0 %><span class="unseen"><%= count %></span><% end %>
+          <% end %>
+        <% end %>
+      <% elsif @ss_mode == :gws %>
+        <div class="btn-group mt-0 mb-0">
+          <%= render partial: "ss/main/head_user_gws_bookmark" %>
+          <%= render partial: "ss/main/head_user_gws_memo_message" %>
+          <%= render partial: "ss/main/head_user_gws_memo_notice" %>
+        </div>
+      <% end %>
+      <%= render partial: "ss/main/head_user_dropdown" %>
+    </div>
+  <% end %>
+</header><!-- /#head -->
