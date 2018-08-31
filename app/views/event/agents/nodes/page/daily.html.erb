@@ -19,6 +19,7 @@
 
 <div id="event-list">
   <% @events.each do |page, categories| %>
+    <% page = page.becomes_with_route %>
     <div class="page">
       <article class="<%= @cur_node.render_loop_html(page, html: '#{new}') %>">
         <header>

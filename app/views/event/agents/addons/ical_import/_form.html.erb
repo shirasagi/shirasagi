@@ -1,0 +1,30 @@
+<dl class="see mod-event-ical_import">
+  <dt><%= @model.t :ical_refresh_method %><%= @model.tt :ical_refresh_method %></dt>
+  <dd><%= f.select :ical_refresh_method, @item.ical_refresh_method_options, include_blank: t("ss.options.state.disabled") %></dd>
+
+  <dt><%= @model.t :ical_import_url %><%= @model.tt :ical_import_url %></dt>
+  <dd><%= f.text_field :ical_import_url %></dd>
+
+  <% if SS.config.event.basic_authentication %>
+  <dt><%= @model.t :ical_basic_certs %><%= @model.tt :ical_basic_certs %></dt>
+  <dd>
+    <%= f.text_field :ical_basic_user, style: "width: 30%", placeholder: "user" %>
+    <%= f.password_field :ical_basic_password, value: @item.ical_basic_password, style: "width: 30%", placeholder: "password" %>
+  </dd>
+  <% end %>
+
+  <dt><%= @model.t :ical_max_docs %><%= @model.tt :ical_max_docs %></dt>
+  <dd><%= f.number_field :ical_max_docs %></dd>
+
+  <dt><%= @model.t :ical_sync_method %><%= @model.tt :ical_sync_method %></dt>
+  <dd><%= f.select :ical_sync_method, @item.ical_sync_method_options %></dd>
+
+  <dt><%= @model.t :ical_page_state %><%= @model.tt :ical_page_state %></dt>
+  <dd><%= f.select :ical_page_state, @item.ical_page_state_options, include_blank: true %></dd>
+
+  <dt><%= @model.t :ical_import_date_ago %><%= @model.tt :ical_import_date_ago %></dt>
+  <dd><%= f.number_field :ical_import_date_ago, value: @item.ical_import_date_ago, min: 0 %> <%= I18n.t('ss.units.days_before') %></dd>
+
+  <dt><%= @model.t :ical_import_date_after %><%= @model.tt :ical_import_date_after %></dt>
+  <dd><%= f.number_field :ical_import_date_after, value: @item.ical_import_date_after, min: 0 %> <%= I18n.t('ss.units.days_after') %></dd>
+</dl>

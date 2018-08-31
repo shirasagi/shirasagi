@@ -12,6 +12,7 @@ module Event::Node
     include Cms::Addon::NodeAutoPostSetting
     include Category::Addon::Setting
     include Event::Addon::CalendarList
+    include Event::Addon::IcalImport
     include Cms::Addon::TagSetting
     include Cms::Addon::ForMemberNode
     include Cms::Addon::Release
@@ -22,9 +23,17 @@ module Event::Node
 
     default_scope ->{ where(route: "event/page") }
 
+    after_save :purge_pages, if: ->{ ical_refresh_enabled? && @db_changes && @db_changes["ical_max_docs"] }
+
     def condition_hash
       cond = super
       cond.merge "event_dates.0" => { "$exists" => true }
+    end
+
+    private
+
+    def purge_pages
+      Event::Page.limit_docs(@cur_site, self, ical_max_docs)
     end
   end
 

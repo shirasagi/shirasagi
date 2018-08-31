@@ -1,7 +1,6 @@
 ja:
   event:
     page: イベントページ
-    category: カテゴリー
     add_date: 日付フォームを追加する
     add_repeat_dates: 一括設定
     del_date: 削除
@@ -23,6 +22,9 @@ ja:
     search:
       no-result: 検索結果が見つかりませんでした。
 
+    links:
+      ical_refresh: iCal配信取込
+
     submit:
       search: 検索する
       reset: リセット
@@ -43,6 +45,17 @@ ja:
         event_dates_today: イベント日(今日)
         event_dates_tomorrow: イベント日(明日)
         event_dates_week: イベント日(一週間以内)
+      event_display:
+        list: リスト形式
+        table: 表形式
+        list_only: リスト形式のみ
+        table_only: 表形式のみ
+      ical_refresh_method:
+        manual: 手動
+        auto: 自動
+      ical_sync_method:
+        full: 完全
+        add_only: 追加
 
     apis:
       repeat_dates:
@@ -55,6 +68,10 @@ ja:
         end_blank: 終了日を入力してください。
         not_found_dates: 該当する日付が見つかりませんでした。
 
+    tooltips:
+      file_import:
+        - "CSV形式またはiCal形式のファイルをインポートすることができます。"
+
   modules:
     event: イベント
     addons:
@@ -62,6 +79,8 @@ ja:
       event/calendar_list: リスト表示
       event/page_list: リスト表示
       event/body: イベント情報
+      event/ical_import: ical取り込み
+      event/ical_link: iCal情報
 
   cms:
     nodes:
@@ -93,6 +112,12 @@ ja:
     models:
       event/page: イベントページ
       event/search: イベント検索ページ
+    errors:
+      models:
+        event/page:
+          invalid_csv_or_ical: CSV形式のファイルまたはiCal形式のファイルを選択してください。
+          malformed_csv: 未サポートのCSV形式のファイルです。正しいCSV形式のファイルを選択してください。
+          malformed_ical: 未サポートのiCal形式のファイルです。正しいiCal形式のファイルを選択してください。
     attributes:
       cms/model/page:
         event_name: イベントタイトル
@@ -106,6 +131,22 @@ ja:
         value: 内容
         contact: お問い合わせ
         event_keyword: イベント検索ワード
+      event/addon/calendar_list:
+        event_display: 表示形式
+      event/addon/ical_import:
+        ical_import_url: iCal配信URL
+        ical_basic_certs: ベーシック認証
+        ical_basic_user: ベーシック認証ユーザー
+        ical_basic_password: ベーシック認証パスワード
+        ical_max_docs: 最大保存件数
+        ical_refresh_method: 更新方法
+        ical_sync_method: 同期方法
+        ical_page_state: ページステータス
+        ical_import_date_ago: 取り込み制限(過去)
+        ical_import_date_after: 取り込み制限(未来)
+      event/addon/ical_link:
+        ical_uid: ソースID
+        ical_link: ソースURL
 
   datetime:
     prompts:
@@ -113,11 +154,12 @@ ja:
 
   errors:
     messages:
-      too_many_event_dates: の設定日が多すぎます。
+      too_many_event_dates: "の設定日が多すぎます。%{count} 個以下になるように設定してください。"
 
   job:
     models:
       event/page/import_job: イベントページインポート
+      event/ical/import_job: iCalインポート
 
   tooltip:
     event/addon/date:
@@ -191,3 +233,42 @@ ja:
             &lt;/header>
             &lt;p>#{summary}&lt;/p>
           &lt;/article>
+    event/addon/calendar_list:
+      event_display:
+        - イベントカレンダーの表示形式を指定します。
+    event/addon/ical_import:
+      ical_import_url:
+        - iCal配信URLを設定します。
+      ical_basic_certs:
+        - iCal配信URLにベーシック認証が掛かっている場合、ユーザーとパスワードを設定します。
+      ical_max_docs:
+        - 最大保存件数を設定します。
+        -
+        - iCal を取り込んだ際に記事数が「最大保存件数」を超えた場合、イベント開始日の古い順に記事を削除し、記事数が「最大保存件数」以下になるように調整します。
+        -
+        - 「最大保存件数」に 0 を指定すると、無制限に記事を保存します。
+      ical_refresh_method:
+        - iCal取り込みの更新方法を指定します。
+        - 手動の場合は、管理画面上でインポートを行うことで取り込みを行います。
+        - 自動の場合は、インストール時に設定した周期で自動で取り込みを行います。
+      ical_sync_method:
+        - 取り込んだイベント情報の同期方法を指定します。
+        - 「完全」を指定した場合、iCal配信URLの情報と完全に同期します。iCal配信URLに存在するイベント情報は追加または更新され、iCal配信URLに存在しないイベント情報は削除されます。
+        - 「追加」を指定した場合、iCal配信URLに存在するイベント情報は追加または更新されます。イベント情報を削除することはありません。
+      ical_page_state:
+        - iCal を取り込んだ際の記事のステータスを設定します。
+        - 設定しない場合、記事は公開保存されます。
+      ical_import_date_ago:
+        - 取り込む過去のイベントの日時を日単位で制限します。
+        - 省略した場合、前月分より過去のイベントは取り込みません。
+      ical_import_date_after:
+        - 取り込む未来のイベントの日時を日単位で制限します。
+        - 省略した場合、1 年以上先のイベントは取り込みません。
+    event/addon/ical_link:
+      ical_uid:
+        - ソースIDを設定します。
+      ical_link:
+        - ソースURLを設定します。
+    event/page:
+      file_import:
+        - "CSV形式またはiCal形式のファイルをインポートすることができます。"

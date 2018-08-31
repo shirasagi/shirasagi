@@ -11,6 +11,7 @@ class Event::Page
   include Category::Addon::Category
   include Cms::Addon::ParentCrumb
   include Event::Addon::Body
+  include Event::Addon::IcalLink
   include Cms::Addon::AdditionalInfo
   include Event::Addon::Date
   include Map::Addon::Page

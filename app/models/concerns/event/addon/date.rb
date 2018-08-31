@@ -3,6 +3,8 @@ module Event::Addon
     extend ActiveSupport::Concern
     extend SS::Addon
 
+    MAX_EVENT_DATES_SIZE = 180
+
     included do
       field :event_name, type: String
       field :event_dates, type: Event::Extensions::EventDates
@@ -61,27 +63,11 @@ module Event::Addon
     end
 
     def dates_to_html(format = :default)
-      event_dates = self[:event_dates]
-      return "" unless event_dates.present?
+      return "" unless self[:event_dates].present?
 
       html = []
-      dates = []
-      range = []
 
-      event_dates = event_dates.split(/\r\n|\n/).map do |d|
-        d = Time.zone.parse(d) rescue nil
-      end.compact
-
-      event_dates.each do |d|
-        if range.present? && range.last.tomorrow != d
-          dates << range
-          range = []
-        end
-        range << d
-      end
-
-      dates << range if range.present?
-      dates.each do |range|
+      get_event_dates.each do |range|
         cls = "event-dates"
 
         if range.size != 1
@@ -92,9 +78,27 @@ module Event::Addon
         range = range.map do |d|
           "<time datetime=\"#{I18n.l d.to_date, format: :iso}\">#{I18n.l d.to_date, format: format.to_sym}</time>"
         end.join("<span>#{I18n.t "event.date_range_delimiter"}</span>")
+
         html << "<span class=\"#{cls}\">#{range}</span>"
       end
-      html.join
+      html.join("<br>")
+    end
+
+    def get_event_dates
+      event_dates = self[:event_dates]
+      return "" unless event_dates.present?
+      dates = []
+      range = []
+      event_dates.split(/\R/).each do |d|
+        date = Time.zone.parse(d) rescue next
+        if range.present? && range.last.tomorrow != date
+          dates << range
+          range = []
+        end
+        range << date
+      end
+      dates << range if range.present?
+      dates
     end
 
     private
@@ -104,7 +108,9 @@ module Event::Addon
 
       if event_dates.present?
         event_array = Event::Extensions::EventDates.mongoize event_dates
-        errors.add :event_dates, :too_many_event_dates if event_array.size >= 180
+        if event_array.size > MAX_EVENT_DATES_SIZE
+          errors.add :event_dates, :too_many_event_dates, count: MAX_EVENT_DATES_SIZE
+        end
       end
     end
 

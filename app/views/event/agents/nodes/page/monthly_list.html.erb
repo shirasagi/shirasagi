@@ -19,9 +19,13 @@
 
 <nav class="event-date">
   <h2 class="<%= event_h1_class @month %>"><%= "#{@year}#{t_date('year')}#{@month}#{t_date('month')}" %></h2>
+  <% unless @cur_node.event_display.to_s.end_with?('only') %>
+    <span class="list current"><%= link_to_monthly Date.new(@year, @month, 1), name: I18n.t("event.options.event_display.list"), display: 'list' %></span>
+    <span class="table"><%= link_to_monthly Date.new(@year, @month, 1), name: I18n.t("event.options.event_display.table"), display: 'table' %></span>
+  <% end %>
   <ul>
-    <li class="prev"><%= link_to_monthly Date.new(@year, @month, 1).advance(days: -1) %></li>
-    <li class="next"><%= link_to_monthly Date.new(@year, @month, 1).advance(months: 1) %></li>
+    <li class="prev"><%= link_to_monthly Date.new(@year, @month, 1).advance(days: -1), display: params[:display] %></li>
+    <li class="next"><%= link_to_monthly Date.new(@year, @month, 1).advance(months: 1), display: params[:display] %></li>
   </ul>
 </nav>
 
@@ -43,6 +47,7 @@
     <dd class="no-event"><%= t("event.no_event") %></dd>
     <% end %>
     <% pages.each do |page, categories| %>
+    <% page = page.becomes_with_route %>
     <dd class="page" data-id="<%= categories.pluck(:id).join(" ") %>">
       <article class="<%= @cur_node.render_loop_html(page, html: '#{new}') %>">
         <% if categories.present? %>

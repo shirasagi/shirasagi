@@ -1,16 +1,18 @@
 require 'spec_helper'
 
 describe Cms::Node::GenerateJob, dbscope: :example do
+  let(:site)   { cms_site }
+  let(:layout) { create_cms_layout }
+  let(:node)   { create :article_node_page, cur_site: cms_site, layout_id: layout.id }
+  let!(:page)  { create :article_page, cur_site: cms_site, cur_node: node, layout_id: layout.id }
+
+  before do
+    Cms::Task.create!(site_id: site.id, node_id: nil, name: 'cms:generate_nodes', state: 'ready')
+    Cms::Task.create!(site_id: site.id, node_id: node.id, name: 'cms:generate_nodes', state: 'ready')
+  end
+
   describe "#perform without node" do
-    let(:site)   { cms_site }
-    let(:layout) { create_cms_layout }
-    let(:node)   { create :article_node_page, cur_site: cms_site, layout_id: layout.id }
-    let!(:page)  { create :article_page, cur_site: cms_site, cur_node: node, layout_id: layout.id }
-
     before do
-      Cms::Task.create!(site_id: site.id, node_id: node.id, name: 'cms:generate_nodes', state: 'ready')
-      Cms::Task.create!(site_id: site.id, node_id: nil, name: 'cms:generate_nodes', state: 'ready')
-
       described_class.bind(site_id: site).perform_now
     end
 
@@ -44,15 +46,7 @@ describe Cms::Node::GenerateJob, dbscope: :example do
   end
 
   describe "#perform with node" do
-    let(:site)   { cms_site }
-    let(:layout) { create_cms_layout }
-    let(:node)   { create :article_node_page, cur_site: cms_site, layout_id: layout.id }
-    let!(:page)  { create :article_page, cur_site: cms_site, cur_node: node, layout_id: layout.id }
-
     before do
-      Cms::Task.create!(site_id: site.id, node_id: nil, name: 'cms:generate_nodes', state: 'ready')
-      Cms::Task.create!(site_id: site.id, node_id: node.id, name: 'cms:generate_nodes', state: 'ready')
-
       described_class.bind(site_id: site, node_id: node).perform_now
     end
 

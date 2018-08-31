@@ -1,0 +1,30 @@
+<dl class="see mod-event-ical_import">
+  <dt><%= @model.t :ical_refresh_method %></dt>
+  <dd><%= @item.label(:ical_refresh_method).presence || t("ss.options.state.disabled") %></dd>
+
+  <dt><%= @model.t :ical_import_url %></dt>
+  <dd><%= @item.ical_import_url %></dd>
+
+  <dt><%= @model.t :ical_max_docs %></dt>
+  <dd><%= @item.ical_max_docs %></dd>
+
+  <dt><%= @model.t :ical_sync_method %></dt>
+  <dd><%= @item.label :ical_sync_method %></dd>
+
+  <dt><%= @model.t :ical_page_state %></dt>
+  <dd><%= @item.label :ical_page_state %></dd>
+
+  <dt><%= @model.t :ical_import_date_ago %></dt>
+  <dd>
+    <% if @item.ical_import_date_ago.present? %>
+      <%= @item.ical_import_date_ago %> <%= I18n.t('ss.units.days_before') %>
+    <% end %>
+  </dd>
+
+  <dt><%= @model.t :ical_import_date_after %></dt>
+  <dd>
+    <% if @item.ical_import_date_after.present? %>
+      <%= @item.ical_import_date_after %> <%= I18n.t('ss.units.days_after') %>
+    <% end %>
+  </dd>
+</dl>
