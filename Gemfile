@@ -115,6 +115,7 @@ group :development do
   gem 'brakeman', require: false
   gem 'guard-brakeman', require: false
   gem 'yard', require: false
+  gem 'terminal-notifier-guard', require: false
 end
 
 group :test do
