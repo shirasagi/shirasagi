@@ -74,7 +74,9 @@ save_layout filename: "top.layout.html", name: "トップレイアウト"
 save_layout filename: "one.layout.html", name: "1カラム"
 save_layout filename: "faq-top.layout.html", name: "FAQトップ"
 save_layout filename: "faq.layout.html", name: "FAQ"
-save_layout filename: "event.layout.html", name: "イベントカレンダー"
+save_layout filename: "event.layout.html", name: "イベントページ"
+save_layout filename: "event-top.layout.html", name: "イベントトップ"
+save_layout filename: "event-search.layout.html", name: "イベント検索"
 save_layout filename: "map.layout.html", name: "施設ガイド"
 save_layout filename: "garbage.layout.html", name: "ゴミ品目検索"
 save_layout filename: "ezine.layout.html", name: "メールマガジン"
@@ -433,7 +435,7 @@ save_node route: "cms/photo_album", filename: "docs/photo", name: "写真一覧"
 save_node route: "sitemap/page", filename: "sitemap", name: "サイトマップ"
 
 ## event
-save_node route: "event/page", filename: "calendar", name: "イベントカレンダー", conditions: %w(docs),
+save_node route: "event/page", filename: "calendar", name: "イベントカレンダー", conditions: %w(docs), event_display: "table",
   st_category_ids: %w(calendar/bunka calendar/kohen calendar/sports).map{ |c| categories[c].id }
 
 ## uploader
@@ -791,7 +793,10 @@ save_node route: "member/photo_spot", filename: "kanko-info/photo/spot", name: "
 
 ## layout
 Cms::Node.where(site_id: @site._id, route: /^article\//).update_all(layout_id: layouts["pages"].id)
-Cms::Node.where(site_id: @site._id, route: /^event\//).update_all(layout_id: layouts["event"].id)
+Cms::Node.where(site_id: @site._id, route: /^event\//, filename: "calendar").
+  update_all(layout_id: layouts["event-top"].id)
+Cms::Node.where(site_id: @site._id, route: /^event\//, filename: "calendar/search").
+  update_all(layout_id: layouts["event-search"].id)
 Cms::Node.where(site_id: @site._id, route: /^category\//, filename: "oshirase").
   update_all(layout_id: layouts["more"].id)
 Cms::Node.where(site_id: @site._id, route: /^category\//, filename: "kanko").
