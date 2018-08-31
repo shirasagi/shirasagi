@@ -221,9 +221,11 @@ module Cms::Content
   end
 
   def validate_name
-    return if @cur_site.max_name_length <= 0
-    if name.length > @cur_site.max_name_length
-      errors.add :name, :too_long, { count: @cur_site.max_name_length }
+    max_name_length = @cur_site.try(:max_name_length).to_i
+
+    return if max_name_length <= 0
+    if name.length > max_name_length
+      errors.add :name, :too_long, { count: max_name_length }
     end
   end
 end
