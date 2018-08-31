@@ -5,7 +5,7 @@ module Sns::LoginFilter
     protect_from_forgery except: :remote_login
     after_action :user_logged_in, only: [:login]
     after_action :user_logged_out, only: [:logout]
-    skip_before_action :verify_authenticity_token unless SS.config.env.protect_csrf
+    skip_before_action :verify_authenticity_token, raise: false unless SS.config.env.protect_csrf
     prepend_view_path "app/views/sns/login"
     layout "ss/login"
     navi_view nil
