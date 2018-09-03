@@ -9,6 +9,7 @@ module Webmail::BaseFilter
     navi_view "webmail/main/navi"
     before_action :set_webmail_mode
     before_action :validate_service, if: ->{ SS.config.service.webmail_limitation.present? }
+    before_action :set_webmail_logged_in, if: ->{ @cur_user }
     before_action :imap_disconnect
     before_action :imap_initialize, if: ->{ @cur_user }
     # before_action :imap_login
@@ -29,6 +30,21 @@ module Webmail::BaseFilter
     msg = [I18n.t("service.messages.disabled_app", name: I18n.t("modules.webmail"))]
     msg << I18n.t("service.messages.over_quota") if @account.webmail_quota_over?
     render html: msg.join("<br />").html_safe
+  end
+
+  def set_webmail_logged_in
+    webmail_session = session[:webmail]
+    webmail_session ||= {}
+    webmail_session['last_logged_in'] ||= begin
+      Webmail::History.info!(
+        :controller, @cur_user,
+        path: request.path, controller: self.class.name.underscore, action: action_name,
+        model: Webmail::User.name.underscore, item_id: @cur_user.id, mode: 'login', name: @cur_user.name
+      )
+      Time.zone.now.to_i
+    end
+
+    session[:webmail] = webmail_session
   end
 
   def set_crumbs
