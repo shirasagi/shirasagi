@@ -30,6 +30,16 @@ def webmail_admin
   user
 end
 
+def webmail_admin_role
+  create_webmail_users
+  Webmail::Role.find_by(name: I18n.t('webmail.roles.admin'))
+end
+
+def webmail_user_role
+  create_webmail_users
+  Webmail::Role.find_by(name: I18n.t('webmail.roles.user'))
+end
+
 def login_webmail_user
   login_user webmail_user
 end

@@ -4,6 +4,7 @@ module Webmail::BaseFilter
   include Sns::BaseFilter
 
   included do
+    self.user_class = Webmail::User
     helper Webmail::MailHelper
     navi_view "webmail/main/navi"
     before_action :set_webmail_mode
@@ -35,7 +36,7 @@ module Webmail::BaseFilter
   end
 
   def imap_initialize
-    @imap_setting = @cur_user.imap_settings[params[:account].to_i]
+    @imap_setting = @cur_user.imap_settings[params[:account].to_i] if params.key?(:account)
 
     if @imap_setting
       @redirect_path = webmail_login_failed_path(account: params[:account])

@@ -1,5 +1,7 @@
 module Webmail
   class Initializer
+    # ユーザー
+    Webmail::Role.permission :edit_webmail_users
     # ロール/権限
     Webmail::Role.permission :edit_webmail_roles
 
@@ -12,8 +14,6 @@ module Webmail
     Webmail::Role.permission :read_webmail_individual_usage
 
     SS::User.include Webmail::UserExtension
-    SS::User.include Webmail::Reference::Role
-
     Cms::User.include Webmail::UserExtension
     Gws::User.include Webmail::UserExtension
   end
