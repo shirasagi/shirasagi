@@ -85,6 +85,9 @@ end
   <% if Webmail::Role.allowed?(:read, @cur_user) %>
     <h3><%= link_to t('mongoid.models.webmail/role'), webmail_roles_path %></h3>
   <% end %>
+  <% if Webmail::History.allowed?(:read, @cur_user) %>
+    <h3><%= link_to t('mongoid.models.webmail/history'), webmail_histories_path %></h3>
+  <% end %>
 </nav>
 
 <% if @quota %>

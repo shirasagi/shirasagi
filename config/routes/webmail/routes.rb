@@ -63,6 +63,12 @@ SS::Application.routes.draw do
     end
     resources :roles, concerns: [:deletion, :export]
 
+    resources :histories, only: [:index]
+    resources :histories, only: [:index, :show], path: 'histories/:ymd', as: :daily_histories do
+      match :download, on: :collection, via: [:get, :post]
+    end
+    resources :history_archives, concerns: [:deletion], only: [:index, :show, :destroy]
+
     resources :mails, concerns: [:deletion, :mail], path: 'account-:account/mails/:mailbox',
       account: /\d+/, mailbox: /[^\/]+/, defaults: { mailbox: 'INBOX' }
     resources :mailboxes, path: 'account-:account/mailboxes', account: /\d+/, concerns: [:deletion, :mailbox]

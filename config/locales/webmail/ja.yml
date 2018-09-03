@@ -139,6 +139,7 @@ ja:
   webmail_role:
     edit_webmail_users: ユーザーの管理
     edit_webmail_roles: 権限/ロールの管理
+    read_webmail_histories: 操作履歴の閲覧
     use_webmail_group_imap_setting: グループ代表メールの使用
     edit_webmail_group_imap_setting: グループ代表メールの管理
     read_webmail_individual_usage: メールボックス使用量の表示（全て）
@@ -148,6 +149,7 @@ ja:
       webmail/user: ユーザー
       webmail/role: 権限/ロール
       webmail/history: 操作履歴
+      webmail/history/archive_file: アーカイブ
       webmail/mail: メール
       webmail/mailbox: フォルダー
       webmail/quota: 容量
