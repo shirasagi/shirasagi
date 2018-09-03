@@ -57,8 +57,8 @@ module Webmail::BaseFilter
     redirect_to @redirect_path
   end
 
-  def rescue_imap_no_response_error(e)
-    raise e if Rails.env.development?
-    render plain: e.to_s, layout: true
+  def rescue_imap_no_response_error(exception)
+    raise exception if Rails.env.development?
+    render plain: exception.to_s, layout: true
   end
 end
