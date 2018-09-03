@@ -2,6 +2,7 @@ ja:
   modules:
     webmail: ウェブメール
     addons:
+      webmail/role: 権限/ロール
       webmail/history: 変更履歴
       webmail/mail_body: 内容
       webmail/mail_file: 添付ファイル
@@ -27,6 +28,9 @@ ja:
       cache: キャッシュ
       account: アカウント
       special_mailbox: 特別なフォルダー
+    roles:
+      admin: 管理者
+      user: 一般ユーザー
     search:
       columns:
         text: キーワード
@@ -132,8 +136,15 @@ ja:
       blank_conditions: 条件を入力してください。
       blank_apply_mailbox: 適用するフォルダーを選択してください。
 
+  webmail_role:
+    edit_webmail_roles: 権限/ロールの管理
+    use_webmail_group_imap_setting: グループ代表メールの使用
+    edit_webmail_group_imap_setting: グループ代表メールの管理
+    read_webmail_individual_usage: メールボックス使用量の表示（全て）
+
   mongoid:
     models:
+      webmail/role: 権限/ロール
       webmail/history: 操作履歴
       webmail/mail: メール
       webmail/mailbox: フォルダー
@@ -159,6 +170,8 @@ ja:
       webmail/user_extension:
         imap_default_index: IMAP/既定アカウント
         imap_settings: IMAP/ユーザー設定
+      webmail/reference/role:
+        webmail_role_ids: ロール
       webmail/user:
         in_file: ファイル
         account_index: アカウント番号
@@ -242,6 +255,10 @@ ja:
         threshold_mb: 警告表示
 
   tooltip:
+    webmail/reference/role:
+      webmail_role_ids:
+        - ユーザーの権限/ロールを選択します。
+
     webmail/mailbox:
       name:
         - フォルダー名を入力します。
@@ -267,3 +284,4 @@ ja:
   job:
     models:
       webmail/history_archive_job: 操作履歴アーカイブ作成
+      webmail/role_import_job: ロール/権限インポート

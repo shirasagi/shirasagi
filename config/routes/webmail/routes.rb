@@ -58,6 +58,8 @@ SS::Application.routes.draw do
     match "logout" => "login#logout", as: :logout, via: [:get]
     match "login"  => "login#login", as: :login, via: [:get, :post]
 
+    resources :roles, concerns: [:deletion, :export]
+
     resources :mails, concerns: [:deletion, :mail], path: 'account-:account/mails/:mailbox',
       account: /\d+/, mailbox: /[^\/]+/, defaults: { mailbox: 'INBOX' }
     resources :mailboxes, path: 'account-:account/mailboxes', account: /\d+/, concerns: [:deletion, :mailbox]
