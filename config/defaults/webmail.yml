@@ -35,6 +35,11 @@ production: &production
   # Upper limit of user's imap account
   imap_account_limit: 5
 
+  history:
+    save_days: 90
+    severity: info
+    severity_notice: disabled
+
 test:
   <<: *production
   disable: false
