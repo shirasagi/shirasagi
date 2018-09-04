@@ -5,7 +5,7 @@ class Inquiry::ColumnsController < ApplicationController
   model Inquiry::Column
 
   append_view_path "app/views/cms/pages"
-  navi_view "inquiry/main/navi"
+  mod_navi_view "inquiry/main/mod_navi"
 
   private
 

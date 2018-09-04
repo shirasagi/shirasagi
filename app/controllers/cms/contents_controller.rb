@@ -3,6 +3,7 @@ class Cms::ContentsController < ApplicationController
   include Cms::CrudFilter
 
   navi_view "cms/main/navi"
+  menu_view nil
 
   private
 
@@ -17,7 +18,6 @@ class Cms::ContentsController < ApplicationController
     @cms_notices = Cms::Notice.site(@cur_site).and_public.target_to(@cur_user).page(1).per(5)
 
     @model = Cms::Node
-    self.menu_view_file = nil
 
     @mod = params[:mod]
     cond = {}

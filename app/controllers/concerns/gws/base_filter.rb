@@ -18,6 +18,7 @@ module Gws::BaseFilter
     before_action :set_crumbs
     after_action :put_history_log, if: ->{ @cur_user }
     navi_view "gws/main/navi"
+    content_head_view "gws/main/content_head"
   end
 
   private

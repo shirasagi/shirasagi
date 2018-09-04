@@ -1,0 +1,9 @@
+<div class="dropdown">
+  <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">モジュールの切り替え</button>
+  <div class="dropdown-menu d-flex flex-wrap" aria-labelledby="dropdownMenuButton">
+    <% Cms::Node.modules.each do |name, key| %>
+      <% path = key == "cms" ? node_nodes_path(mod: "cms") : send("#{key}_main_path") %>
+      <%= link_to name, path, class: "dropdown-item" %>
+    <% end %>
+  </div>
+</div>

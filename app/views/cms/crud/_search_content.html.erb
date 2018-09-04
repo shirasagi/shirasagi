@@ -1,4 +1,32 @@
-<% @s = OpenStruct.new params[:s] %>
+<% @s ||= OpenStruct.new params[:s] %>
+<div class="content-search card mb-5">
+  <div class="card-body">
+    <%= form_for :s, url: "", html: { method: :get } do |f| %>
+      <% if @node_target_options %>
+        <div class="search-group d-flex align-items-center flex-wrap">
+          <h2>絞り込み</h2>
+          <div class="d-flex align-items-center flex-wrap">
+            <div class="form-group">
+              <%= f.select :target, @node_target_options, class: "form-control" %>
+            </div>
+          </div>
+        </div>
+      <% end %>
+      <div class="search-group d-flex align-items-center flex-wrap">
+        <h2>キーワード</h2>
+        <div class="form-group">
+          <%= f.text_field :keyword, class: "keyword form-control", placeholder: "タイトル・本文から検索する" %>
+        </div>
+      </div>
+      <div class="search-group d-flex align-items-center flex-wrap justify-content-between">
+        <button type="submit" class="btn btn-outline-primary">検索</button>
+        <button type="button" class="detailed-search btn btn-outline-secondary">詳細検索</button>
+      </div>
+    <% end %>
+  </div>
+</div>
+
+<% if false %>
 <div class="list-head-search">
   <%= form_for :s, url: "", html: { class: "index-search", method: :get } do |f| %>
     <%= f.text_field :keyword, style: "width: 300px;" %>
@@ -6,3 +34,4 @@
     <input type="submit" value="<%= t('ss.buttons.search') %>" class="btn" />
   <% end %>
 </div>
+<% end %>

@@ -17,6 +17,8 @@ module Cms::BaseFilter
     before_action :set_node
     before_action :set_group, if: ->{ @cur_user }
     before_action :set_crumbs
+
+    content_head_view "cms/main/content_head"
   end
 
   private

@@ -5,7 +5,7 @@ class Inquiry::NodesController < ApplicationController
   model Inquiry::Node::Form
 
   prepend_view_path "app/views/cms/node/nodes"
-  navi_view "inquiry/nodes/navi"
+  mod_navi_view "inquiry/main/mod_navi"
 
   before_action :redirect_with_route, only: :index
 

@@ -5,7 +5,7 @@ class Inquiry::AnswersController < ApplicationController
   model Inquiry::Answer
 
   append_view_path "app/views/cms/pages"
-  navi_view "inquiry/main/navi"
+  mod_navi_view "inquiry/main/mod_navi"
 
   private
 

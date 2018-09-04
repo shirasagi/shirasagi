@@ -6,7 +6,7 @@
     new Gws_Bookmark().render({
       id: '<%= bookmark.try(:id) %>',
       name: '<%= bookmark.try(:name) %>',
-      default_name: '<%= window_name %>',
+      default_name: '<%= ss_window_name %>',
       url: '<%= gws_apis_bookmarks_path %>',
       model: '<%= @model.name.underscore if @model %>',
       save: '<%= I18n.t('ss.buttons.save') %>',

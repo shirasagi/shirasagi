@@ -22,7 +22,7 @@
   <% tbl.column(class: "categories") do %>
     <% tbl.th t("mongoid.attributes.cms/model/page.category_ids") %>
     <% tbl.td do |item| %>
-      <% if item.categories.present? %>
+      <% if item.try(:categories).present? %>
         <ul>
           <% item.categories.each do |cate| %>
             <li><%= cate.name %></li>

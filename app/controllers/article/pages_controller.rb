@@ -7,7 +7,7 @@ class Article::PagesController < ApplicationController
   model Article::Page
 
   append_view_path "app/views/cms/pages"
-  navi_view "article/main/navi"
+  mod_navi_view "article/main/mod_navi"
 
   private
 

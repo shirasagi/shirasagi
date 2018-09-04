@@ -1,21 +1,26 @@
 module SS::LayoutFilter
   extend ActiveSupport::Concern
 
+  VIEW_ACCESSORS = %i[navi menu content_head mod_navi].freeze
+
   included do
-    cattr_accessor(:navi_view_file) { nil }
-    cattr_accessor(:menu_view_file) { nil }
+    cattr_reader(:view_files, instance_reader: false) { {} }
     before_action { @crumbs = [] }
+
+    VIEW_ACCESSORS.each do |s|
+      define_method("#{s}_view_file") do
+        self.class.view_files[s]
+      end
+    end
   end
 
   module ClassMethods
     private
 
-    def navi_view(file)
-      self.navi_view_file = file
-    end
-
-    def menu_view(file)
-      self.menu_view_file = file
+    VIEW_ACCESSORS.each do |s|
+      define_method("#{s}_view") do |file|
+        self.view_files[s] = file
+      end
     end
   end
 end

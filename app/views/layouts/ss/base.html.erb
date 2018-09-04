@@ -5,9 +5,8 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge" />
 <meta name="viewport" content="width=device-width,initial-scale=1.0,user-scalable=yes,minimum-scale=1.0,maximum-scale=2.0" />
 <%
-  window_name = @item.try(:name) || @crumbs.last.try(:first)
-  if window_name.present?
-    title = "#{window_name} | #{SS.config.ss.application_name}"
+  if ss_window_name.present?
+    title = "#{ss_window_name} | #{SS.config.ss.application_name}"
   else
     title = SS.config.ss.application_name
   end
@@ -23,13 +22,35 @@
 </head>
 <body>
   <div id="page">
+    <%# head %>
     <%= yield(:head).presence || render(partial: "ss/main/head") %>
-    <%= yield(:navi).presence || render(partial: "ss/main/navi") %>
+
+    <%# navi %>
+    <%
+      navi = nil
+      if ::File.exists?("#{Rails.root}/app/views/#{params[:controller]}/_navi.html.erb")
+        navi = "#{params[:controller]}/navi.html.erb"
+      elsif controller.navi_view_file
+        navi = controller.navi_view_file
+      end
+    %>
+    <% if navi %>
+      <div id="navi">
+        <div class="wrap">
+          <%= render partial: navi %>
+        </div>
+      </div>
+    <% end %>
+
+    <%# content_head %>
     <%= yield(:content_head).presence || render(partial: "ss/main/content_head") %>
+
+    <%# notice %>
     <%= yield(:notice).presence || render(partial: "ss/main/notice") %>
 
     <%= yield %>
 
+    <%# foot %>
     <%= yield(:foot).presence || render(partial: "ss/main/foot") %>
   </div>
 </body>

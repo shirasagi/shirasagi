@@ -45,6 +45,10 @@ module SS::StandardHelper
     nil
   end
 
+  def ss_window_name
+    @ss_window_name ||= @item.try(:name) || @crumbs.last.try(:first)
+  end
+
   def url_for(*args)
     url = super
     if SS::MobileSupport.mobile?(request)

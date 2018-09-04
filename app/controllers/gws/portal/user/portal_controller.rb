@@ -7,7 +7,7 @@ class Gws::Portal::User::PortalController < ApplicationController
 
   before_action :set_portal_setting
 
-  navi_view "gws/portal/main/navi"
+  mod_navi_view "gws/portal/main/mod_navi"
 
   private
 
