@@ -39,7 +39,7 @@ else
     end
   end
 
-  if ENV["GUARD_BAKEMAN"]
+  if ENV["GUARD_BRAKEMAN"]
     guard 'brakeman', all_on_start: false do
       watch(%r{^app/.+\.(erb|haml|rhtml|rb)$})
       watch(%r{^config/.+\.rb$})
