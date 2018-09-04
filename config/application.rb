@@ -1,4 +1,4 @@
-require File.expand_path('../boot', __FILE__)
+require File.expand_path('boot', __dir__)
 
 # require "active_record/railtie"
 require "action_controller/railtie"
@@ -62,15 +62,14 @@ module SS
     def current_session_id
       return unless @current_env
 
-      session = @current_env[Rack::Session::Abstract::ENV_SESSION_KEY]
+      session = @current_env[Rack::RACK_SESSION]
       return unless session
 
       session.id
     end
 
     def current_request_id
-      return unless @current_env
-      @current_env['action_dispatch.request_id'] || @env['HTTP_X_REQUEST_ID']
+      current_request.request_id
     end
   end
 
