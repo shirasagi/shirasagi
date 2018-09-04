@@ -69,7 +69,11 @@ module SS
     end
 
     def current_request_id
-      current_request.request_id
+      if current_request
+        current_request.request_id
+      else
+        nil
+      end
     end
   end
 
