@@ -232,6 +232,7 @@ cat <<EOF | sudo tee /etc/nginx/conf.d/header.conf
 proxy_set_header Host \$host;
 proxy_set_header X-Real-IP \$remote_addr;
 proxy_set_header Remote-Addr \$remote_addr;
+proxy_set_header X-Forwarded-Proto \$scheme;
 proxy_set_header X-Forwarded-Host \$http_host;
 proxy_set_header X-Forwarded-Server \$host;
 proxy_set_header X-Forwarded-For \$proxy_add_x_forwarded_for;
