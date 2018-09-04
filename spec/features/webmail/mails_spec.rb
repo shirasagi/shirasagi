@@ -35,6 +35,9 @@ describe "webmail_mails", type: :feature, dbscope: :example, imap: true do
         pending "delivery_method is :test"
       end
 
+      # reload mails
+      first(".webmail-navi-mailboxes .reload").click
+
       # reply
       click_link item_title
       click_link I18n.t('webmail.links.reply')
