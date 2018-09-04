@@ -32,6 +32,9 @@ describe "webmail_gws_messages", type: :feature, dbscope: :example, imap: true d
         pending "delivery_method is :test"
       end
 
+      # reload mails
+      first(".webmail-navi-mailboxes .reload").click
+
       click_link item_title
 
       # gws_message
