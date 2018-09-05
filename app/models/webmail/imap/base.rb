@@ -26,7 +26,9 @@ module Webmail::Imap
 
     def login
       begin
-        self.conn = Net::IMAP.new conf[:host], conf[:options].symbolize_keys
+        host = conf[:host]
+        options = conf[:options].symbolize_keys
+        self.conn = Net::IMAP.new host, options
         conn.authenticate conf[:auth_type], conf[:account], conf[:password]
         return true
       rescue SocketError, Net::IMAP::Error, Errno::ECONNREFUSED => e

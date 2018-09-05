@@ -13,6 +13,18 @@
   <dt><%= @model.t :imap_host %></dt>
   <dd><%= setting.imap_host.presence || default %></dd>
 
+  <dt><%= @model.t :imap_port %></dt>
+  <dd><%= setting.imap_port.presence || default %></dd>
+
+  <dt><%= @model.t :imap_ssl_use %></dt>
+  <dd>
+    <% if setting.imap_ssl_use.present? %>
+      <%= t("webmail.options.imap_ssl_use.#{setting.imap_ssl_use}") %>
+    <% else %>
+      <%= default %>
+    <% end %>
+  </dd>
+
   <dt><%= @model.t :imap_auth_type %></dt>
   <dd><%= setting.imap_auth_type.presence || default %></dd>
 

@@ -42,7 +42,7 @@ class Webmail::UsersController < ApplicationController
     @item = @model.new
     return if request.get?
 
-    @item.attributes = get_params
+    @item = Webmail::AccountExport.new params.require(:item).permit(Webmail::AccountExport.permitted_fields).merge(fix_params)
     result = @item.import_csv
     flash.now[:notice] = t("ss.notice.saved") if result
     render_create result, location: { action: :import }, render: { file: :import }
@@ -52,7 +52,7 @@ class Webmail::UsersController < ApplicationController
     raise "403" unless @model.allowed?(:edit, @cur_user)
 
     items = @model.all.allow(:edit, @cur_user).reorder(id: 1)
-    @item = @model.new
+    @item = Webmail::AccountExport.new
     send_data @item.export_csv(items), filename: "webmail_accounts_#{Time.zone.now.to_i}.csv"
   end
 
@@ -60,7 +60,7 @@ class Webmail::UsersController < ApplicationController
     raise "403" unless @model.allowed?(:edit, @cur_user)
 
     items = @model.all.allow(:edit, @cur_user).reorder(id: 1)
-    @item = @model.new
+    @item = Webmail::AccountExport.new
     send_data @item.export_template_csv(items), filename: "webmail_accounts_template.csv"
   end
 end

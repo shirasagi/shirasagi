@@ -5,8 +5,10 @@ module Webmail::UserExtension
   included do
     field :imap_default_index, type: Integer, default: 0
     field :imap_settings, type: Webmail::Extensions::ImapSettings, default: []
-    permit_params :default_imap_index, imap_settings: [
-      :from, :address, :imap_host, :imap_auth_type, :imap_account, :in_imap_password,
+    permit_params :default_imap_index
+    permit_params imap_settings: [
+      :from, :address, :imap_host, :imap_port, :imap_ssl_use,
+      :imap_auth_type, :imap_account, :in_imap_password,
       :imap_sent_box, :imap_draft_box, :imap_trash_box, :threshold_mb,
       :default
     ]
@@ -18,16 +20,22 @@ module Webmail::UserExtension
     %w(LOGIN PLAIN CRAM-MD5 DIGEST-MD5).map { |c| [c, c] }
   end
 
+  def imap_ssl_use_options
+    %w(disabled enabled).map { |c| [I18n.t("webmail.options.imap_ssl_use.#{c}"), c] }
+  end
+
   def imap_default_settings
-    yaml = SS.config.webmail.clients['default'] || {}
-    {
-      address: email,
-      host: yaml['host'].presence,
-      options: yaml['options'].presence || {},
-      auth_type: yaml['auth_type'].presence,
-      account: send(yaml['account'].presence).to_s,
-      password: decrypted_password
-    }
+    @imap_default_settings ||= begin
+      yaml = SS.config.webmail.clients['default'] || {}
+      {
+        address: email,
+        host: yaml['host'].presence,
+        options: (yaml['options'].presence || {}).symbolize_keys,
+        auth_type: yaml['auth_type'].presence,
+        account: send(yaml['account'].presence).to_s,
+        password: decrypted_password
+      }
+    end
   end
 
   private
