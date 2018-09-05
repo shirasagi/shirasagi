@@ -1,0 +1,44 @@
+require 'spec_helper'
+
+describe "webmail_group_mailboxes", type: :feature, dbscope: :example, imap: true do
+  let(:group) { create :webmail_group }
+  let(:user) { create :webmail_user, group_ids: [group.id] }
+  let(:item_title) { "rspec-#{unique_id}" }
+  let(:index_path) { webmail_group_mailboxes_path(group: group) }
+
+  context "with auth" do
+    before { login_user(user) }
+
+    it "#index", js: true do
+      visit index_path
+      expect(current_path).to eq index_path
+
+      # new
+      click_link I18n.t('ss.links.new')
+      within "form#item-form" do
+        fill_in "item[name]", with: item_title
+      end
+      click_button I18n.t('ss.buttons.save')
+      expect(current_path).to eq index_path
+
+      # edit
+      click_link item_title
+      click_link I18n.t('ss.links.edit')
+      within "form#item-form" do
+        fill_in "item[name]", with: "#{item_title}2"
+      end
+      click_button I18n.t('ss.buttons.save')
+
+      # delete
+      click_link item_title
+      click_link I18n.t('ss.links.delete')
+      click_button I18n.t('ss.buttons.delete')
+
+      # reload
+      click_link I18n.t('webmail.links.reload_mailboxes')
+      click_button I18n.t('webmail.buttons.sync')
+
+      expect(current_path).to eq index_path
+    end
+  end
+end

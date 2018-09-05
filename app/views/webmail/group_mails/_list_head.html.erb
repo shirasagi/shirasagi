@@ -1,0 +1,43 @@
+<div class="list-head">
+  <label class="check"><input type="checkbox" /></label>
+
+  <div class="list-head-action webmail-mails-head">
+    <div class="dropdown dropdown-toggle">
+      <button class="btn move-all" data-href="<%= url_for action: :move %>">
+        <%= t :"webmail.links.move" %> <i class="material-icons md-13">&#xE313;</i>
+      </button>
+    </div>
+    <div class="dropdown dropdown-toggle">
+      <button class="btn copy-all" data-href="<%= url_for action: :copy %>">
+        <%= t :"webmail.links.copy" %> <i class="material-icons md-13">&#xE313;</i>
+      </button>
+    </div>
+    <button class="btn destroy-all">
+      <%= t :"ss.links.delete" %>
+    </button>
+    <div class="dropdown dropdown-toggle">
+      <button class="btn">
+        <%= t :"webmail.links.etc" %> <i class="material-icons md-13">&#xE313;</i>
+      </button>
+      <ul class="dropdown-menu webmail-dropdown-menu">
+        <li><a class="update-all set-seen-all" href="<%= url_for action: :set_seen %>">
+          <%= t :"webmail.links.set_seen" %></a></li>
+        <li><a class="update-all unset-seen-all" href="<%= url_for action: :unset_seen %>">
+          <%= t :"webmail.links.unset_seen" %></a></li>
+        <li><a class="update-all set-star-all" href="<%= url_for action: :set_star %>">
+          <%= t :"webmail.links.set_star" %></a></li>
+        <li><a class="update-all unset-star-all" href="<%= url_for action: :unset_star %>">
+          <%= t :"webmail.links.unset_star" %></a></li>
+        <li><a class="delete-all" href="<%= url_for action: :empty %>">
+          <%= t :"webmail.links.empty_mailbox" %></a></li>
+      </ul>
+    </div>
+    <div style="display: none;" class="rename-mailbox" data-href="<%= url_for action: :rename_mailbox, mailbox: :INBOX %>"></div>
+  </div>
+
+  <div class="list-head-search">
+    <input type="button" value="<%= t 'ss.buttons.search' %>" class="btn search" />
+  </div>
+</div>
+
+<%= render file: "_search" %>

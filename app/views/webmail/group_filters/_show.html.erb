@@ -1,0 +1,26 @@
+<dl class="see">
+  <dt><%= @model.t :name %></dt>
+  <dd><%= @item.send :name %></dd>
+
+  <dt><%= @model.t :conditions %></dt>
+  <dd>
+    <div class="mb-2">
+      [ <%= @item.label :conjunction %> ]
+    </div>
+    <%= safe_join @item.conditions_summary, '<br />'.html_safe %>
+  </dd>
+
+  <dt><%= @model.t :action %></dt>
+  <dd>
+    <%= @item.label :action %>
+    <% if @item.mailbox_required? %>
+      <span class="mx-2">/</span> <%= @item.send :decode_mailbox %>
+    <% end %>
+  </dd>
+
+  <dt><%= @model.t :state %></dt>
+  <dd><%= @item.label :state %></dd>
+
+  <dt><%= @model.t :order %></dt>
+  <dd><%= @item.send :order %></dd>
+</dl>

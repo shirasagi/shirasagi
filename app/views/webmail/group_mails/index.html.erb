@@ -1,0 +1,86 @@
+<%= jquery do %>
+  Webmail_Mail_List.render();
+<% end %>
+
+<% if @sys_notices.present? %>
+<div class="notices">
+  <div class="index">
+    <!--
+    <div class="list-head"><%= t "sys.notice" %></div>
+    -->
+    <ul class="list-items">
+      <% @sys_notices.each do |item| %>
+      <li class="list-item">
+        <div class="info">
+          <%= link_to item.name, webmail_sys_notice_path(id: item), class: "title notice-severity-#{item.notice_severity}" %>
+          <span class="datetime"><%= item.released.strftime("%Y/%m/%d %H:%M") %></span>
+        </div>
+      </li>
+      <% end %>
+    </ul>
+    <% if @sys_notices.next_page %>
+    <div class="notices-more"><%= link_to I18n.t("ss.links.more"), webmail_sys_notices_path %></div>
+    <% end %>
+  </div>
+</div>
+<% end %>
+
+<div class="index">
+  <%= render file: "_list_head" %>
+
+  <ul class="list-items ss-messages webmail-mails">
+    <li class="list-item-head">
+      <div class="head">
+        <% if @imap.sent_box?(@mailbox) %>
+          <span class="field to"><%= @model.t :to %></span>
+        <% else %>
+          <span class="field from"><%= @model.t :from %></span>
+        <% end %>
+        <span class="field title"><%= @model.t :subject %></span>
+        <span class="field datetime"><%= @model.t :internal_date %></span>
+        <span class="field size"><%= @model.t :size %></span>
+      </div>
+    </li>
+
+    <% @items.each do |item| %>
+    <li class="list-item <%= item.flags.map(&:downcase).join(' ') %> <%= 'unseen' if item.unseen? %> mail-draggable" data-uid="<%= item.uid %>">
+      <nav class="tap-menu">
+        <%= link_to t('ss.links.show'), action: :show, id: item.uid %>
+        <%= link_to t('webmail.links.reply'), action: :reply, id: item.uid unless item.draft? %>
+        <%= link_to t('webmail.links.reply_all'), action: :reply_all, id: item.uid unless item.draft? %>
+        <%= link_to t('webmail.links.forward'), action: :forward, id: item.uid unless item.draft? %>
+        <%= link_to t('ss.links.delete'), action: :delete, id: item.uid %>
+      </nav>
+
+      <label class="check">
+        <input type="checkbox" name="ids[]" value="<%= item.uid %>" />
+      </label>
+      <div class="icon icon-star <%= item.star? ? 'on' : 'off' %>">
+        <%= link_to action: :show, id: item.uid do %>
+          <i class="material-icons md-18">&#xE838;</i>
+        <% end %>
+      </div>
+      <div class="icon icon-attachment">
+        <i class="material-icons md-15"><%== item.attachments? ? '&#xE226;' : '&nbsp;' %></i>
+      </div>
+      <div class="info">
+        <% if @imap.sent_box?(@mailbox) %>
+          <span class="field to" title="<%= item.display_to.map(&:address).join(', ') %>">
+            <%= item.display_to.map(&:name).join(', ') %>
+          </span>
+        <% else %>
+          <span class="field from" title="<%= item.display_sender.address %>">
+            <%= item.display_sender.name %>
+          </span>
+        <% end %>
+        <%= link_to item.display_subject, { action: :show, id: item.uid }, class: "field title", title: item.display_subject %>
+        <span class="field datetime"><%= tryb { item.internal_date.strftime("%Y/%m/%d %H:%M") } %></span>
+        <span class="field size"><%= item.display_size %></span>
+      </div>
+    </li>
+    <% end %>
+  </ul>
+</div>
+
+<%= paginate @items if @items.try(:current_page) %>
+

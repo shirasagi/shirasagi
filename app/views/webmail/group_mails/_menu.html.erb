@@ -1,0 +1,59 @@
+<nav class="nav-menu">
+  <% if params[:action] =~ /index/ %>
+    <%= link_to(t('ss.links.new'), { action: :new }, class: :new) if @model.allowed?(:edit, @cur_user) %>
+  <% elsif params[:action] =~ /new|create/ %>
+    <%= link_to(t('ss.links.back_to_index'), { action: :index }, class: "back-to-index") %>
+  <% elsif params[:action] =~ /edit|update|delete/ %>
+    <%= link_to(t('ss.links.back_to_show'), { action: :show }, class: "back-to-show") %>
+    <%= link_to(t('ss.links.back_to_index'), { action: :index }, class: "back-to-index") %>
+  <% else %>
+    <%= link_to t('ss.links.edit'), { action: :edit }, class: :edit if @item.draft? && (@imap.draft_box == @mailbox) %>
+    <%= link_to t('webmail.links.reply'), { action: :reply }, { class: 'reply' } unless @item.draft? %>
+    <%= link_to t('webmail.links.reply_all'), { action: :reply_all }, { class: 'reply-all' } unless @item.draft? %>
+    <%= link_to t('webmail.links.forward'), { action: :forward }, { class: 'forward' } unless @item.draft? %>
+
+    <%
+      groups = nil
+      groups = @cur_user.root_groups.select do |group|
+        Gws::Memo::Message.allowed?(:edit, @cur_user.gws_user, site: group)
+      end if !@item.draft? && SS.config.gws.disable.blank?
+    %>
+    <% if groups && groups.size >= 2 %>
+      <div class="dropdown webmail-dropdown dropdown-toggle">
+        <a><%= t('webmail.links.forward_gws_message') %> <i class="material-icons md-13">&#xE313;</i></a>
+        <ul class="dropdown-menu webmail-dropdown-menu">
+          <% groups.each do |group| %>
+          <li><%= link_to group.name, new_webmail_gws_group_message_path(site: group.id, mailbox: @mailbox) %></li>
+          <% end %>
+        </ul>
+      </div>
+    <% elsif groups.present? %>
+      <% group = groups.first %>
+      <%= link_to t('webmail.links.forward_gws_message'), new_webmail_gws_group_message_path(site: group.id, mailbox: @mailbox) %>
+    <% end %>
+
+    <%= link_to(t('ss.links.delete'), { action: :delete }, class: :delete) %>
+
+    <div class="dropdown webmail-dropdown dropdown-toggle">
+      <a><%= t 'webmail.links.etc' %> <i class="material-icons md-13">&#xE313;</i></a>
+      <ul class="dropdown-menu webmail-dropdown-menu">
+        <li><%= link_to t('webmail.links.print'), '#', class: 'print-mail' %></li>
+        <li><%= link_to t('webmail.links.set_seen'), { action: :set_seen }, { class: 'update-mail set-seen' } %></li>
+        <li><%= link_to t('webmail.links.unset_seen'), { action: :unset_seen }, { class: 'update-mail unset-seen' } %></li>
+        <li><%= link_to t('webmail.links.set_star'), { action: :set_star }, { class: 'update-mail set-star' } %></li>
+        <li><%= link_to t('webmail.links.unset_star'), { action: :unset_star }, { class: 'update-mail unset-star' } %></li>
+        <li><%= link_to t('webmail.links.header_view'), { action: :header_view }, target: '_blank' %></li>
+        <li><%= link_to t('webmail.links.source_view'), { action: :source_view }, target: '_blank' %></li>
+        <li><%= link_to t("ss.download"), { action: :download } %></li>
+      </ul>
+    </div>
+
+    <%= link_to(t('ss.links.back_to_index'), { action: :index }, class: "back-to-index") %>
+  <% end %>
+</nav>
+
+<% if @quota && @quota.quota? %>
+  <div class="webmail-quota-alert" <%== @quota.over_threshold? ? '' : 'style="display: none;"' %>>
+    <%= @quota.threshold_label %>
+  </div>
+<% end %>

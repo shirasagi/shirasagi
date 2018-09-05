@@ -1,7 +1,7 @@
-class Webmail::AddressesController < ApplicationController
+class Webmail::GroupAddressesController < ApplicationController
   include Webmail::BaseFilter
+  include Webmail::GroupFilter
   include Sns::CrudFilter
-
   model Webmail::Address
 
   before_action :set_address_group
@@ -11,8 +11,7 @@ class Webmail::AddressesController < ApplicationController
 
   def set_crumbs
     set_address_group
-    account = params[:account] || @cur_user.imap_default_index
-    @crumbs << [t("mongoid.models.webmail/address"), webmail_addresses_path(account: account)]
+    @crumbs << [t("mongoid.models.webmail/address"), webmail_group_addresses_path(params[:group])]
     @crumbs << [@address_group.name, action: :index] if @address_group
     @webmail_other_account_path = :webmail_addresses_path
   end

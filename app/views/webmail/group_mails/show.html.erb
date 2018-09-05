@@ -1,0 +1,116 @@
+<% addons = @item ? @item.class.addons : [] %>
+
+<%= jquery do %>
+  Webmail_Mail_Address.render({
+    lang: {
+      send: "<%= t('webmail.links.address.send') %>",
+      entry: "<%= t('webmail.links.address.entry') %>",
+      copy: "<%= t('webmail.links.address.copy') %>"
+    },
+    urls: {
+      send: "<%= new_webmail_group_mail_path %>",
+      add: "<%= add_webmail_group_addresses_path %>"
+    }
+  });
+<% end %>
+
+<div class="addon-views">
+  <div class="addon-view webmail-mail" id="addon-basic">
+    <div class="addon-head">
+      <span class="icon-star <%= @item.star? ? 'on' : 'off' %>">
+        <i class="material-icons">&#xE838;</i>
+      </span>
+      <h2 class="subject">
+        <%= @item.display_subject %>
+      </h2>
+      <div class="from">
+        <span class="address-item dropdown webmail-dropdown dropdown-toggle"
+          data-name="<%= @item.display_sender.name %>" data-email="<%= @item.display_sender.email %>">
+          <%= @item.display_sender.address %>
+          <ul class="dropdown-menu webmail-dropdown-menu"></ul>
+        </span>
+      </div>
+      <div class="date"><%= tryb { @item.internal_date.strftime("%Y/%m/%d %H:%M") } %></div>
+    </div>
+
+    <% if (@item.to + @item.cc + @item.bcc).present? %>
+    <div class="address-header">
+      <% if @item.to.present? %>
+      <div class="address-field">
+        <div class="label"><%= @model.t :to %></div>
+        <div class="value">
+          <% @item.display_to.each do |addr| %>
+            <span class="address-item dropdown webmail-dropdown dropdown-toggle"
+              data-name="<%= addr.name %>" data-email="<%= addr.email %>">
+              <%= addr.name %>
+              <ul class="dropdown-menu webmail-dropdown-menu"></ul>
+            </span>
+          <% end %>
+        </div>
+      </div>
+      <% end %>
+
+      <% if @item.cc.present? %>
+      <div class="address-field">
+        <div class="label"><%= @model.t :cc %></div>
+        <div class="value">
+          <% @item.display_cc.each do |addr| %>
+            <span class="address-item dropdown webmail-dropdown dropdown-toggle"
+              data-name="<%= addr.name %>" data-email="<%= addr.email %>">
+              <%= addr.name %>
+              <ul class="dropdown-menu webmail-dropdown-menu"></ul>
+            </span>
+          <% end %>
+        </div>
+      </div>
+      <% end %>
+
+      <% if @item.bcc.present? %>
+      <div class="address-field">
+        <div class="label"><%= @model.t :bcc %></div>
+        <div class="value">
+          <% @item.display_bcc.each do |addr| %>
+            <span class="address-item dropdown webmail-dropdown dropdown-toggle"
+              data-name="<%= addr.name %>" data-email="<%= addr.email %>">
+              <%= addr.name %>
+              <ul class="dropdown-menu webmail-dropdown-menu"></ul>
+            </span>
+          <% end %>
+        </div>
+      </div>
+      <% end %>
+    </div>
+    <% end %>
+
+    <% if @item.requested_mdn? %>
+    <div class="request-mdn-notice">
+      <span class="message">
+        <i class="material-icons md-18">info</i>
+        <span><%= t("webmail.notice.requested_mdn") %></span>
+      </span>
+      <span class="action">
+        <%= button_tag t("webmail.buttons.send_mdn"), "class" => "send-mdn", "href" => send_mdn_webmail_mail_path %>
+        <%= button_tag t("webmail.buttons.ignore_mdn"), "class" => "ignore-mdn", "href" => ignore_mdn_webmail_mail_path %>
+      </span>
+    </div>
+    <% end %>
+
+    <% if @item.attachments.present? %>
+    <div class="attachments" id="mail-attachments">
+      <% @item.attachments.each do |part| %>
+        <div class="file">
+          <%= link_to({ action: :parts, section: part.section }, target: part.link_target) do %>
+            <i class="material-icons md-18"><%== part.image? ? '&#xE3F4;' : '&#xE24D;' %></i>
+            <%= part.filename %>
+          <% end %>
+        </div>
+      <% end %>
+    </div>
+    <% end %>
+
+    <div class="addon-body">
+      <%= render file: "_show" %>
+    </div>
+  </div>
+  <%= render file: "_addons_show", locals: { addons: addons } if addons.size > 0 %>
+</div>

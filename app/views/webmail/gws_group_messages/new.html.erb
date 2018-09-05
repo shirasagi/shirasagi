@@ -1,0 +1,17 @@
+<%= jquery do %>
+  Gws_Memo_Message.render();
+  $("#addon-basic").hide();
+  $(".js-send").on("click", function() {
+    if (!confirm('<%= I18n.t("gws/memo/message.confirm.send") %>')) {
+    return false;
+    }
+  });
+<% end %>
+
+<% @crud_buttons = proc do |f| %>
+  <%= f.submit t('ss.buttons.send'), class: 'btn-primary save js-send' %>
+  <%= f.button t('ss.buttons.cancel'), class: 'btn-default', type: :reset,
+        onclick: "location.href='#{webmail_group_mail_path(mailbox: params[:mailbox])}'; return false;" %>
+<% end %>
+
+<%= render file: 'ss/crud/new' %>

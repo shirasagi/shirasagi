@@ -1,0 +1,6 @@
+<% @index_meta = proc do |item| %>
+  <span class="datetime"><%= item.updated.strftime("%Y/%m/%d %H:%M") %></span>
+  <span class="filename"><%= item.email %></span>
+<% end %>
+
+<%= render file: "ss/crud/index" %>

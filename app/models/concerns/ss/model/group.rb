@@ -5,6 +5,7 @@ module SS::Model::Group
   include SS::Scope::ActivationDate
   include Ldap::Addon::Group
   include SS::Fields::DependantNaming
+  include Webmail::GroupExtension
 
   attr_accessor :in_password
 

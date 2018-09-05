@@ -1,0 +1,64 @@
+<dl class="see">
+  <dt><%= @model.t :address_group_id %></dt>
+  <dd><%= tryb { @item.address_group.name } %></dd>
+
+  <dt><%= @model.t :name %></dt>
+  <dd><%= @item.send :name %></dd>
+
+  <dt><%= @model.t :kana %></dt>
+  <dd><%= @item.send :kana %></dd>
+
+  <dt><%= @model.t :company %></dt>
+  <dd><%= @item.send :company %></dd>
+
+  <dt><%= @model.t :title %></dt>
+  <dd><%= @item.send :title %></dd>
+
+  <dt><%= @model.t :tel %></dt>
+  <dd><%= @item.send :tel %></dd>
+
+  <dt><%= @model.t :email %></dt>
+  <dd><%= @item.send :email %></dd>
+
+  <dt><%= @model.t :home_postal_code %></dt>
+  <dd><%= @item.send :home_postal_code %></dd>
+
+  <dt><%= @model.t :home_prefecture %></dt>
+  <dd><%= @item.send :home_prefecture %></dd>
+
+  <dt><%= @model.t :home_city %></dt>
+  <dd><%= @item.send :home_city %></dd>
+
+  <dt><%= @model.t :home_street_address %></dt>
+  <dd><%= @item.send :home_street_address %></dd>
+
+  <dt><%= @model.t :home_tel %></dt>
+  <dd><%= @item.send :home_tel %></dd>
+
+  <dt><%= @model.t :home_fax %></dt>
+  <dd><%= @item.send :home_fax %></dd>
+
+  <dt><%= @model.t :office_postal_code %></dt>
+  <dd><%= @item.send :office_postal_code %></dd>
+
+  <dt><%= @model.t :office_prefecture %></dt>
+  <dd><%= @item.send :office_prefecture %></dd>
+
+  <dt><%= @model.t :office_city %></dt>
+  <dd><%= @item.send :office_city %></dd>
+
+  <dt><%= @model.t :office_street_address %></dt>
+  <dd><%= @item.send :office_street_address %></dd>
+
+  <dt><%= @model.t :office_tel %></dt>
+  <dd><%= @item.send :office_tel %></dd>
+
+  <dt><%= @model.t :office_fax %></dt>
+  <dd><%= @item.send :office_fax %></dd>
+
+  <dt><%= @model.t :personal_webpage %></dt>
+  <dd><%= @item.send :personal_webpage %></dd>
+
+  <dt><%= @model.t :memo %></dt>
+  <dd><%= br @item.send :memo %></dd>
+</dl>
