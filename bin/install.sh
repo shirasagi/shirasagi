@@ -372,7 +372,7 @@ PIDFile=${SS_DIR}/tmp/pids/unicorn.pid
 Type=forking
 TimeoutSec=300
 
-ExecStart=${RVM_HOME}/wrappers/default/bundle exec rake unicorn:start
+ExecStart=${RVM_HOME}/wrappers/default/bundle exec unicorn_rails -c config/unicorn.rb -D
 ExecStop=${RVM_HOME}/wrappers/default/bundle exec rake unicorn:stop
 ExecReload=${RVM_HOME}/wrappers/default/bundle exec rake unicorn:restart
 
