@@ -16,7 +16,11 @@ class Gws::UserProfilesController < ApplicationController
       format.json {
         index = @cur_user.imap_default_index || 0
         imap_setting = @cur_user.imap_settings[index]
-        imap_setting = imap_setting.imap_settings(@cur_user.imap_default_settings)
+        if imap_setting
+          imap_setting = imap_setting.imap_settings(@cur_user.imap_default_settings)
+        else
+          imap_setting = @cur_user.imap_default_settings
+        end
 
         data = {
           authenticity_token: session[:_csrf_token],
