@@ -163,6 +163,9 @@ ja:
       target_node_name: フォルダー名
       started_job: 処理を開始します。ジョブ実行履歴で結果をご確認下さい
     options:
+      readable_setting_range:
+        public: 全公開
+        select: 選択範囲
       sort:
         name: タイトル
         filename: ファイル名
@@ -352,7 +355,8 @@ ja:
     import_page: 取り込みページ
     addons:
       cms/role: ロール
-      cms/group_permission: 権限
+      cms/group_permission: 管理権限
+      cms/readable_setting: 閲覧権限
       cms/node_setting: フォルダー設定
       cms/meta: メタ情報
       cms/html: HTML
@@ -567,6 +571,12 @@ ja:
         group_ids: 管理グループ
         groups: 管理グループ
         permission_level: 権限レベル
+      cms/addon/readable_setting:
+        readable_setting_range: 公開範囲
+        readable_group_ids: 閲覧グループ
+        readable_groups_hash: 閲覧グループ(ハッシュ)
+        readable_member_ids: 閲覧ユーザー
+        readable_members_hash: 閲覧ユーザー(ハッシュ)
       cms/addon/list/model:
         conditions: 検索条件(URL)
         loop_html: ループHTML
@@ -828,6 +838,14 @@ ja:
       check_links: 次のリンクを確認しました。
 
   tooltip:
+    cms/addon/readable_setting:
+      readable_setting_range:
+        - <b>全公開</b> - 誰でも閲覧できます。
+        - <b>選択範囲</b> - 選択した対象のみ閲覧できます。
+      readable_group_ids:
+        - 閲覧を許可するグループを選択します。
+      readable_member_ids:
+        - 閲覧を許可するユーザーを選択します。
     cms/model/page:
       destination_filename:
         - ページやフォルダーを移動します。

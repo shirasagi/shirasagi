@@ -1,6 +1,7 @@
 module Category::Node
   class Base
     include Cms::Model::Node
+    include Cms::Addon::ReadableSetting
 
     default_scope ->{ where(route: /^category\//) }
   end
@@ -12,6 +13,7 @@ module Category::Node
     include Cms::Addon::NodeList
     include Cms::Addon::ChildList
     include Cms::Addon::Release
+    include Cms::Addon::ReadableSetting
     include Cms::Addon::GroupPermission
     include History::Addon::Backup
     include Category::Addon::Integration
@@ -28,6 +30,7 @@ module Category::Node
     include Cms::Addon::Release
     include Cms::Addon::DefaultReleasePlan
     include Cms::Addon::MaxFileSizeSetting
+    include Cms::Addon::ReadableSetting
     include Cms::Addon::GroupPermission
     include History::Addon::Backup
     include Category::Addon::Integration
