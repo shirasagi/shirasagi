@@ -1,33 +1,35 @@
-<%= jquery do %>
-  $('.mod-webmail-account .imap-test').click(function() {
-    var dl = $(this).closest('.mod-webmail-account');
-    var imap_host = dl.find('.imap_host').val();
-    var imap_auth_type = dl.find('.imap_auth_type').val();
-    var imap_account = dl.find('.imap_account').val();
-    var in_imap_password = dl.find('.in_imap_password').val();
+<% if number <= 1 %>
+  <%= jquery do %>
+    $('.mod-webmail-account .imap-test').click(function() {
+      var dl = $(this).closest('.mod-webmail-account');
+      var imap_host = dl.find('.imap_host').val();
+      var imap_auth_type = dl.find('.imap_auth_type').val();
+      var imap_account = dl.find('.imap_account').val();
+      var in_imap_password = dl.find('.in_imap_password').val();
 
-    $.ajax({
-      url: '<%= url_for action: :test_connection %>',
-      method: 'POST',
-      data: {
-        item: {
-          imap_host: imap_host,
-          imap_auth_type: imap_auth_type,
-          imap_account: imap_account,
-          in_imap_password: in_imap_password,
+      $.ajax({
+        url: '<%= url_for action: :test_connection %>',
+        method: 'POST',
+        data: {
+          item: {
+            imap_host: imap_host,
+            imap_auth_type: imap_auth_type,
+            imap_account: imap_account,
+            in_imap_password: in_imap_password,
+          }
+        },
+        beforeSend: function(data) {
+          dl.find('.imap-test-resp').html('Connecting ...');
+        },
+        success: function(data) {
+          dl.find('.imap-test-resp').html(data);
+        },
+        error: function(data) {
+          dl.find('.imap-test-resp').html('Error');
         }
-      },
-      beforeSend: function(data) {
-        dl.find('.imap-test-resp').html('Connecting ...');
-      },
-      success: function(data) {
-        dl.find('.imap-test-resp').html(data);
-      },
-      error: function(data) {
-        dl.find('.imap-test-resp').html('Error');
-      },
+      });
     });
-  });
+  <% end %>
 <% end %>
 
 <dl class="see mod-webmail-account">
