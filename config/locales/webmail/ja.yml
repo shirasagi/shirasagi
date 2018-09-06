@@ -7,6 +7,7 @@ ja:
       webmail/mail_body: 内容
       webmail/mail_file: 添付ファイル
       webmail/apply_filter: フィルター適用
+      webmail/user_extension: アカウント
 
   webmail:
     mail: メール
