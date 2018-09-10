@@ -46,7 +46,7 @@ module Webmail::Imap
     def imap_find
       begin
         imap.conn.getquotaroot('INBOX')[1]
-      rescue Net::IMAP::ResponseParseError
+      rescue Net::IMAP::ResponseParseError, TypeError
         nil
       end
     end
