@@ -5,16 +5,17 @@ class Member::Agents::Parts::PhotoSlideController < ApplicationController
     begin
       if @cur_part.node_url.present?
         require "uri"
-        uri      = URI.parse(@cur_part.node_url)
-        host     = uri.host
-        filename = uri.path.sub(/^\//, "").sub(/\/$/, "")
-        site     = Cms::Site.in(domains: host).first
-        node     = Member::Node::Photo.site(site).where(filename: filename).first
+        uri = URI.parse(@cur_part.node_url)
+        Member::Node::Photo.each do |item|
+          next if item.url != uri.path || !item.site.domains.include?(uri.host)
+          @site = item.site
+          @node = item
+        end
 
-        raise "404" unless site && node
+        raise "404" unless @site && @node
 
-        @items = Member::Photo.site(site).
-          node(node).
+        @items = Member::Photo.site(@site).
+          node(@node).
           and_public(@cur_date).
           slideable.
           order_by(slide_order: 1)
