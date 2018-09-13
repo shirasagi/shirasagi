@@ -9,8 +9,8 @@ module Gws::StaffRecord::PublicYearlyFilter
 
   def set_year
     year_id = params.dig(:s, :year_id)
-    @cur_year = Gws::StaffRecord::Year.where(id: year_id).first if year_id
-    @cur_year ||= Gws::StaffRecord::Year.first
+    @cur_year = Gws::StaffRecord::Year.site(@cur_site).where(id: year_id).first if year_id
+    @cur_year ||= Gws::StaffRecord::Year.site(@cur_site).first
 
     render(text: I18n.t('gws/staff_record.errors.no_data'), layout: true) unless @cur_year
   end
