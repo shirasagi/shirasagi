@@ -32,6 +32,8 @@ ja:
         day: YYYY年 M月 D日（ddd）
     links:
       add_plan: 予定を作成
+      download: ダウンロード
+      import: インポート
       add_todo: ToDoを作成
       add_holiday: 休日を作成
       show_month: 月表示
@@ -112,6 +114,22 @@ ja:
       unable_to_reserve_all_days: 設備の利用時間が制限されているため終日予約することができません。
       faciliy_day_lte: 予約時間は%{count}日以内の値にしてください。
       not_found_reservable_facilities: 予約可能な設備が見つかりません。
+
+    csv:
+      id: ID
+      name: タイトル
+      start_on: 開始日
+      end_on: 終了日
+      color: 表示色
+      repeat_plan_datas:
+        id: 繰り返しID
+        repeat_type: 繰り返し
+        repeat_start: 繰り返し開始日
+        repeat_end: 繰り返し終了日
+        interval: 繰り返し間隔
+        repeat_base: 繰り返し基準
+        wdays: 曜日
+
   gws/schedule/todo:
     active: 削除を取り消す
     disabled_items: 削除済み
@@ -208,6 +226,10 @@ ja:
       models:
         gws/schedule/plan:
           file_size_exceeds_limit: 添付ファイルのサイズ（%{size}）が最大サイズ（%{limit}）を超えました。
+        gws/schedule/holiday:
+          attributes:
+            base:
+              not_found: "%{line_no}: Id %{id} の休日は存在しません。"
     attributes:
       gws/schedule/planable:
         name: タイトル
