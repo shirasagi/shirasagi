@@ -84,7 +84,8 @@ class Gws::Memo::NoticesController < ApplicationController
         {
           date: item.created,
           subject: item.subject,
-          url: gws_memo_notice_url(id: item.id)
+          url: gws_memo_notice_url(id: item.id),
+          unseen: item.unseen?(@cur_user)
         }
       end
     }

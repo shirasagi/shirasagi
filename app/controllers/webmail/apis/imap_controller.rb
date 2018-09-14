@@ -55,7 +55,8 @@ class Webmail::Apis::ImapController < ApplicationController
           date: item.internal_date,
           from: item.display_sender.name,
           subject: item.display_subject,
-          url: webmail_mail_url(mailbox: 'INBOX', id: item.uid)
+          url: webmail_mail_url(mailbox: 'INBOX', id: item.uid),
+          unseen: item.unseen?
         }
       end
     }
