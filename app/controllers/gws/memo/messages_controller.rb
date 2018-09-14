@@ -329,7 +329,7 @@ class Gws::Memo::MessagesController < ApplicationController
 
     @unseen = @model.folder(@cur_folder, @cur_user).
       site(@cur_site).
-      unseen(@cur_site).
+      unseen(@cur_user).
       reorder(@sort_hash)
 
     @items = @model.folder(@cur_folder, @cur_user).
@@ -347,7 +347,8 @@ class Gws::Memo::MessagesController < ApplicationController
           date: item.send_date,
           from: item.user_name,
           subject: item.subject,
-          url: gws_memo_message_url(folder: 'INBOX', id: item.id)
+          url: gws_memo_message_url(folder: 'INBOX', id: item.id),
+          unseen: item.unseen?(@cur_user)
       }
       end
     }
