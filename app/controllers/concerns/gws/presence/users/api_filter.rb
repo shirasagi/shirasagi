@@ -60,7 +60,7 @@ module Gws::Presence::Users::ApiFilter
   end
 
   def set_user
-    @user = @model.where(id: params[:id]).in(group_ids: @groups.pluck(:id)).first
+    @user = @model.active.where(id: params[:id]).in(group_ids: @groups.pluck(:id)).first
   end
 
   public
