@@ -50,4 +50,7 @@
 
   <dt><%= @model.t :imap_default_index %></dt>
   <dd><%= check_box_tag "", 1, default_index, class: "default-index", disabled: true %></dd>
+
+  <dt><%= @model.t :imap_aliase %></dt>
+  <dd><%= setting.imap_aliase %></dd>
 </dl>

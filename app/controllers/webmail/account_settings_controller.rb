@@ -29,7 +29,7 @@ class Webmail::AccountSettingsController < ApplicationController
           :name, :from, :address, :imap_host, :imap_port, :imap_ssl_use,
           :imap_auth_type, :imap_account, :in_imap_password,
           :imap_sent_box, :imap_draft_box, :imap_trash_box, :threshold_mb,
-          :default
+          :default, :imap_aliase
         ]
       },
     ]

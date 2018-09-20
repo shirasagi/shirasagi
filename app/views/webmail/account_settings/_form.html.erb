@@ -79,6 +79,9 @@
   <dt><%= @model.t :imap_default_index %><%= @model.tt :imap_default_index %></dt>
   <dd><%= check_box_tag "item[imap_settings][][default]", 1, default_index, class: "default-index" %></dd>
 
+  <dt><%= @model.t :imap_aliase %><%= @model.tt :imap_aliase %></dt>
+  <dd><%= text_field_tag "item[imap_settings][][imap_aliase]", setting.imap_aliase %></dd>
+
   <dt></dt>
   <dd>
     <%= button_tag t('webmail.buttons.test_connection'), class: 'imap-test', type: :button %>

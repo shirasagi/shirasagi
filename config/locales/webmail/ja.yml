@@ -177,6 +177,7 @@ ja:
         imap_draft_box: 下書きフォルダー
         imap_trash_box: ゴミ箱フォルダー
         threshold_mb: 警告表示
+        imap_aliase: 転送先メールアドレス
       webmail/user_extension:
         imap_default_index: IMAP/既定アカウント
         imap_settings: IMAP/ユーザー設定
