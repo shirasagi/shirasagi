@@ -21,7 +21,7 @@ SS.ajaxForm("form.user-file", {
           $.ajax({
             url: url,
             success: function(data) {
-              $("#selected-files").append(data);
+              $("#selected-files").prepend(data);
             }
           });
         }
