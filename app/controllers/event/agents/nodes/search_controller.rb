@@ -9,10 +9,14 @@ class Event::Agents::Nodes::SearchController < ApplicationController
   def index
     @categories = []
     @items = []
+    @facilities = []
+    if @facility_ids.present?
+      @facilities = Facility::Node::Page.site(@cur_site).where({:id.in => @facility_ids})
+    end
     if @cur_node.parent
       @categories = Cms::Node.site(@cur_site).where({:id.in => @cur_node.parent.st_category_ids}).sort(filename: 1)
     end
-    if @keyword.present? || @category_ids.present? || @start_date.present? || @close_date.present?
+    if @keyword.present? || @category_ids.present? || @start_date.present? || @close_date.present? || @facility_ids.present?
       list_events
     end
   end
@@ -20,7 +24,7 @@ class Event::Agents::Nodes::SearchController < ApplicationController
   private
 
   def set_params
-    safe_params = params.permit(:search_keyword, category_ids: [], event: [ :start_date, :close_date])
+    safe_params = params.permit(:search_keyword, category_ids: [], event: [ :start_date, :close_date], facility_ids: [])
     @keyword = safe_params[:search_keyword].presence
     @category_ids = safe_params[:category_ids].presence || []
     @category_ids = @category_ids.map(&:to_i)
@@ -30,6 +34,8 @@ class Event::Agents::Nodes::SearchController < ApplicationController
     end
     @start_date = Date.parse(@start_date) if @start_date.present?
     @close_date = Date.parse(@close_date) if @close_date.present?
+    @facility_ids = safe_params[:facility_ids].presence || []
+    @facility_ids = @facility_ids.reject(&:blank?).map(&:to_i)
   end
 
   def list_events
@@ -37,6 +43,7 @@ class Event::Agents::Nodes::SearchController < ApplicationController
     criteria = criteria.search(keyword: @keyword) if @keyword.present?
     criteria = criteria.where(@cur_node.condition_hash)
     criteria = criteria.in(category_ids: @category_ids) if @category_ids.present?
+    criteria = criteria.in(facility_ids: @facility_ids) if @facility_ids.present?
 
     if @start_date.present? && @close_date.present?
       criteria = criteria.search(dates: @start_date..@close_date)

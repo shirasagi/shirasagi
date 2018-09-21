@@ -1,3 +1,6 @@
+<script type="text/javascript" src="/assets/ss/script.js"></script>
+<link href="/assets/css/colorbox/colorbox.css" media="all" rel="stylesheet" />
+
 <%= form_for(:item, url: "#{@cur_node.url}", method: "get", html: { class: 'event-search' }) do %>
   <fieldset class="keyword">
     <label for="search_keyword"><%= t("event.keyword") %></label>
@@ -23,6 +26,31 @@
     </div>
   </fieldset>
 
+  <dl class="see mod-event-facilities">
+    <dt><%= t("event.facility.setting") %></dt>
+    <dd>
+      <%= hidden_field_tag "facility_ids[]", "",class: "hidden-ids" %>
+      <%= link_to t("event.apis.facilities.index"), cms_apis_nodes_path(@cur_site, model: 'Facility::Node::Page', public_view: "true"), class: "ajax-box" %>
+    </dd>
+    <dd>
+      <table class="index ajax-selected">
+        <thead>
+          <tr>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          <% @facilities.each do |fac| %>
+            <tr data-id="<%= fac.id %>">
+              <td><%= hidden_field_tag "facility_ids[]", fac.id %> <%= fac.name %></td>
+              <td><%= link_to t("ss.buttons.delete"), "#", class: "deselect btn" %></td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    </dd>
+  </dl>
+
   <footer class="send">
     <%= submit_tag t('event.submit.search'), name: nil %>
     <%= link_to t("event.submit.reset"), @cur_node.url, class: 'btn' %>
@@ -36,3 +64,20 @@
 </div>
 
 <%= paginate @items if @items.try(:current_page) %>
+
+<style type="text/css">
+<!--
+  dl.mod-event-facilities dt {
+    background-color: transparent !important;
+    padding-left: 10px !important;
+    padding-right: 0px !important;
+    margin-right: 0px !important;
+  }
+  table.ajax-selected {
+    margin-left: 160px !important;
+  }
+  a.deselect {
+    margin-left: 20px !important;
+  }
+-->
+</style>
