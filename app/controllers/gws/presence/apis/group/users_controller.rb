@@ -16,7 +16,7 @@ class Gws::Presence::Apis::Group::UsersController < ApplicationController
   end
 
   def set_user
-    @user = @group.users.and(id: params[:id]).first
+    @user = @group.users.active.and(id: params[:id]).first
   end
 
   public
@@ -24,7 +24,7 @@ class Gws::Presence::Apis::Group::UsersController < ApplicationController
   def index
     raise "403" unless Gws::UserPresence.allowed?(:use, @cur_user, site: @cur_site)
 
-    @items = @group.users
+    @items = @group.users.active
     if params[:limit]
       @items = @items.page(params[:page].to_i).per(params[:limit])
     end

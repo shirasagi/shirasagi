@@ -22,7 +22,7 @@ class Gws::Presence::Group::UsersController < ApplicationController
   end
 
   def items
-    @items = @group.users.search(params[:s]).page(params[:page]).per(25)
+    @items = @group.users.active.search(params[:s]).page(params[:page]).per(25)
   end
 
   public
