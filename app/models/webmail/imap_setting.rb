@@ -62,6 +62,10 @@ class Webmail::ImapSetting < Hash
     self[:imap_trash_box].presence || "INBOX.Trash"
   end
 
+  def imap_alias
+    self[:imap_alias]
+  end
+
   def threshold_mb
     self[:threshold_mb]
   end
@@ -90,6 +94,7 @@ class Webmail::ImapSetting < Hash
     conf[:imap_sent_box] = imap_sent_box if imap_sent_box.present?
     conf[:imap_draft_box] = imap_draft_box if imap_draft_box.present?
     conf[:imap_trash_box] = imap_trash_box if imap_trash_box.present?
+    conf[:imap_alias] = imap_alias if imap_alias.present?
     conf
   end
 

@@ -24,6 +24,7 @@ describe "webmail_users", type: :feature, dbscope: :example do
         expect(imap_setting.name).to eq '規定の設定1'
         expect(imap_setting.from).to eq 'ユーザー1'
         expect(imap_setting.address).to eq 'user1@example.jp'
+        expect(imap_setting.imap_alias).to eq 'user1@blue.example.jp'
         expect(imap_setting.imap_host).to eq 'imap1.example.jp'
         expect(imap_setting.imap_port).to eq 123
         expect(imap_setting.imap_ssl_use).to eq 'enabled'

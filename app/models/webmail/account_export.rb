@@ -16,6 +16,8 @@ class Webmail::AccountExport
       getter: ->(item, index, setting){ setting.from }, setter: :set_item_imap_from }.freeze,
     { key: 'address', label: Webmail::ImapSetting.t('address'),
       getter: ->(item, index, setting){ setting.address }, setter: :set_item_imap_address }.freeze,
+    { key: 'imap_alias', label: Webmail::ImapSetting.t('imap_alias'),
+      getter: ->(item, index, setting){ setting.imap_alias }, setter: :set_item_imap_alias }.freeze,
     { key: 'imap_host', label: Webmail::ImapSetting.t('imap_host'),
       getter: ->(item, index, setting){ setting.imap_host }, setter: :set_item_imap_host }.freeze,
     { key: 'imap_port', label: Webmail::ImapSetting.t('imap_port'),
@@ -194,6 +196,10 @@ class Webmail::AccountExport
 
   def set_item_imap_address(row, item, setting)
     setting[:address] = str(row, 'address')
+  end
+
+  def set_item_imap_alias(row, item, setting)
+    setting[:imap_alias] = str(row, 'imap_alias')
   end
 
   def set_item_imap_host(row, item, setting)
