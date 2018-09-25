@@ -103,6 +103,11 @@ describe "facility_item", type: :feature, dbscope: :example do
         expect(page.response_headers['Content-Type']).to eq("text/csv")
         expect(page.response_headers['Content-Disposition']).to eq("attachment; filename=\"gws_items_#{time.to_i}.csv\"")
       end
+
+      csv = CSV.parse(page.html.encode("UTF-8", "SJIS"), headers: true)
+      expect(csv.headers.include?(I18n.t("gws/facility/item.csv.id"))).to be_truthy
+      expect(csv.headers.include?(I18n.t("gws/facility/item.csv.name"))).to be_truthy
+      expect(csv.headers.include?(I18n.t("gws/facility/item.csv.category_id"))).to be_truthy
     end
   end
 end
