@@ -2,12 +2,12 @@ module Tasks
   module WebMail
     class ExportMailTransfer
       class << self
-        def exec(path)
-          if path.blank?
-            puts "pathを指定してください"
+        def exec(output)
+          if output.blank?
+            puts "outputを指定してください"
             return
           end
-          File.open(path, "w") do |f|
+          File.open(output, "w") do |f|
             SS::User.pluck(:imap_settings).each do |settings|
               settings.each do |setting|
                 if setting[:imap_aliase].present?
