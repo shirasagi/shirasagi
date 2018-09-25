@@ -1,6 +1,6 @@
-id,ユーザーID,職員番号,アカウント番号,アカウント名,名前,メールアドレス,IMAP/ホスト,IMAP/認証方式,IMAP/ユーザー名,IMAP/パスワード,警告表示,送信済みフォルダー,下書きフォルダー,ゴミ箱フォルダー
-101,user1,2,1,規定の設定,ユーザー1,user1@example.jp,imap.example.jp,PLAIN,user1@example.jp,pass,,,,
-102,user2,3,1,規定の設定,ユーザー2,user2@example.jp,imap.example.jp,PLAIN,user2@example.jp,pass,,,,
-103,user3,5,1,規定の設定,ユーザー3,user3@example.jp,imap.example.jp,PLAIN,user3@example.jp,pass,,,,
-104,user4,6,1,規定の設定,ユーザー4,user4@example.jp,imap.example.jp,PLAIN,user4@example.jp,pass,,,,
-105,user5,7,1,規定の設定,ユーザー5,user5@example.jp,imap.example.jp,PLAIN,user5@example.jp,pass,,,,
+id,ユーザーID,職員番号,アカウント番号,アカウント名,名前,メールアドレス,IMAP/ホスト,IMAP/ポート,IMAP/SSL,IMAP/認証方式,IMAP/ユーザー名,IMAP/パスワード,警告表示,送信済みフォルダー,下書きフォルダー,ゴミ箱フォルダー,既定のアカウント
+101,user1,2,1,規定の設定1,ユーザー1,user1@example.jp,imap1.example.jp,123,使用する,PLAIN,user1@example.jp,pass1,987,INBOX.Sent,INBOX.Draft,INBOX.Trash,1
+102,user2,3,1,規定の設定2,ユーザー2,user2@example.jp,imap2.example.jp,321,使用しない,LOGIN,user2@example.jp,pass2,789,INBOX.Sent,INBOX.Draft,INBOX.Trash,1
+103,user3,5,1,規定の設定3,ユーザー3,user3@example.jp,imap3.example.jp,987,使用する,CRAM-MD5,user3@example.jp,pass3,321,INBOX.Sent,INBOX.Draft,INBOX.Trash,1
+104,user4,6,1,規定の設定4,ユーザー4,user4@example.jp,imap4.example.jp,789,使用しない,DIGEST-MD5,user4@example.jp,pass4,123,INBOX.Sent,INBOX.Draft,INBOX.Trash,1
+105,user5,7,1,規定の設定5,,,,,,,,,,,,,1

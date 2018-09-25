@@ -5,7 +5,6 @@ class Webmail::User
   include Webmail::Addon::Role
   include Webmail::Permission
   include Webmail::UserExtension
-  include Webmail::AccountExport
 
   set_permission_name "webmail_users", :edit
 end

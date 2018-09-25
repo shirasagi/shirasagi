@@ -73,6 +73,9 @@ ja:
       filter_operator:
         include: に次を含む
         exclude: に次を含まない
+      imap_ssl_use:
+        disabled: 使用しない
+        enabled: 使用する
 
     links:
       back_to_contents: 受信トレイへ戻る
@@ -163,6 +166,8 @@ ja:
         from: 名前
         address: メールアドレス
         imap_host: IMAP/ホスト
+        imap_port: IMAP/ポート
+        imap_ssl_use: IMAP/SSL
         imap_auth_type: IMAP/認証方式
         imap_account: IMAP/ユーザー名
         imap_password: IMAP/パスワード
@@ -249,6 +254,8 @@ ja:
         from: 名前
         address: メールアドレス
         imap_host: IMAP/ホスト
+        imap_port: IMAP/ポート
+        imap_ssl_use: IMAP/SSL
         imap_auth_type: IMAP/認証方式
         imap_account: IMAP/ユーザー名
         imap_password: IMAP/パスワード
@@ -257,6 +264,7 @@ ja:
         imap_draft_box: 下書きフォルダー
         imap_trash_box: ゴミ箱フォルダー
         threshold_mb: 警告表示
+        default: 既定のアカウント
 
   tooltip:
     webmail/reference/role:

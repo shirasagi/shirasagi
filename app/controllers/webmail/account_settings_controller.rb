@@ -21,11 +21,13 @@ class Webmail::AccountSettingsController < ApplicationController
 
   def permit_fields
     [
-      :imap_host, :imap_auth_type, :imap_account, :in_imap_password,
+      :imap_host, :imap_port, :imap_ssl_use,
+      :imap_auth_type, :imap_account, :in_imap_password,
       :imap_sent_box, :imap_draft_box, :imap_trash_box,
       {
         imap_settings: [
-          :name, :from, :address, :imap_host, :imap_auth_type, :imap_account, :in_imap_password,
+          :name, :from, :address, :imap_host, :imap_port, :imap_ssl_use,
+          :imap_auth_type, :imap_account, :in_imap_password,
           :imap_sent_box, :imap_draft_box, :imap_trash_box, :threshold_mb,
           :default
         ]
@@ -40,11 +42,14 @@ class Webmail::AccountSettingsController < ApplicationController
   def set_default_settings
     label = t('webmail.default_settings')
     conf = @cur_user.imap_default_settings
+    ssl_use = conf[:options][:usessl] ? "enabled" : "disabled"
 
     @defaults = {
       from: @cur_user.name,
       address: conf[:address],
       host: "#{label} / #{conf[:host]}",
+      port: "#{label} / #{conf[:options][:port]}",
+      ssl_use: "#{label} / #{I18n.t("webmail.options.imap_ssl_use.#{ssl_use}")}",
       auth_type: "#{label} / #{conf[:auth_type]}",
       account: "#{label} / #{conf[:account]}",
       password: "#{label} / #{conf[:password].to_s.gsub(/./, '*')}"
