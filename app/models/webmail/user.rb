@@ -2,9 +2,9 @@
 class Webmail::User
   include SS::Model::User
   include SS::Reference::UserTitles
+  include Webmail::Addon::UserExtension
   include Webmail::Addon::Role
   include Webmail::Permission
-  include Webmail::UserExtension
 
   set_permission_name "webmail_users", :edit
 end

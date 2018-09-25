@@ -1,0 +1,43 @@
+<% default_setting = t('webmail.default_settings') %>
+
+<% render_row = proc do |number, setting, default| %>
+  <% imap = Webmail::Imap::Base.new(@item, setting) %>
+  <% quota = imap.quota.cache_find %>
+  <tr>
+    <td class="index"><%= "#{t('webmail.account_setting')}#{number}" %></td>
+    <td class="name"><%= setting.name %></td>
+    <td class="imap-host"><%= setting.imap_host.presence || default_setting %></td>
+    <% if SS.config.webmail.cache_quota %>
+      <td class="quota" style="width: 160px">
+        <% if quota.present? %>
+          <% percent = quota.usage * 100 / quota.quota.to_f %>
+          <div class="ss-quota-bar" data-reloaded="<%= quota.reloaded.iso8601 %>" data-percent="<%= percent %>">
+            <div class="label">
+              <%= (quota.usage * 1_024).to_s(:human_size) %>/<%= (quota.quota * 1_024).to_s(:human_size) %>
+            </div>
+            <div class="usage" style="width: <%= percent %>%"></div>
+          </div>
+        <% else %>
+          <div class="ss-quota-bar">
+            <div class="label">--/--</div>
+            <div class="usage" style="width: 0px"></div>
+          </div>
+        <% end %>
+      </td>
+    <% end %>
+  </tr>
+<% end %>
+<dl class="see webmail-addon-user-extension">
+  <dt class="wide"></dt>
+  <dd class="wide">
+    <table class="index">
+    <% if @item.imap_settings.blank? %>
+      <% render_row.call(1, Webmail::ImapSetting.new, true) %>
+    <% else %>
+      <% @item.imap_settings.each_with_index do |setting, i| %>
+        <% render_row.call(i + 1, setting, @cur_user.imap_default_index == i) %>
+      <% end %>
+    <% end %>
+    </table>
+  </dd>
+</dl>
