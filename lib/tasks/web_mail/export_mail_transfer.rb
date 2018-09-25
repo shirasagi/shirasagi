@@ -8,10 +8,10 @@ module Tasks
             return
           end
           File.open(output, "w") do |f|
-            SS::User.pluck(:imap_settings).each do |settings|
-              settings.each do |setting|
+            SS::User.each do |user|
+              user.imap_settings.each do |setting|
                 if setting[:imap_aliase].present?
-                  f.puts("#{setting[:name]} : #{setting[:imap_aliase]}")
+                  f.puts("#{setting[:from].presence || user.imap_default_settings[:address]} #{setting[:imap_aliase]}")
                 end
               end
             end
