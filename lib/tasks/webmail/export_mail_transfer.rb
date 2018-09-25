@@ -1,5 +1,5 @@
 module Tasks
-  module WebMail
+  module Webmail
     class ExportMailTransfer
       class << self
         def exec(output)
