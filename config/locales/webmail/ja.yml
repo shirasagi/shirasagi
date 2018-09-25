@@ -255,6 +255,7 @@ ja:
         name: アカウント名
         from: 名前
         address: メールアドレス
+        imap_alias: 転送先メールアドレス
         imap_host: IMAP/ホスト
         imap_port: IMAP/ポート
         imap_ssl_use: IMAP/SSL
