@@ -46,6 +46,9 @@
   <dt><%= @model.t :address %><%= @model.tt :address %></dt>
   <dd><%= text_field_tag "item[imap_settings][][address]", setting.address, placeholder: @defaults[:address], class: :address %></dd>
 
+  <dt><%= @model.t :imap_aliase %><%= @model.tt :imap_aliase %></dt>
+  <dd><%= text_field_tag "item[imap_settings][][imap_aliase]", setting.imap_aliase %></dd>
+
   <dt><%= @model.t :imap_host %><%= @model.tt :imap_host %></dt>
   <dd><%= text_field_tag "item[imap_settings][][imap_host]", setting.imap_host, placeholder: @defaults[:host], class: :imap_host %></dd>
 
@@ -78,9 +81,6 @@
 
   <dt><%= @model.t :imap_default_index %><%= @model.tt :imap_default_index %></dt>
   <dd><%= check_box_tag "item[imap_settings][][default]", 1, default_index, class: "default-index" %></dd>
-
-  <dt><%= @model.t :imap_aliase %><%= @model.tt :imap_aliase %></dt>
-  <dd><%= text_field_tag "item[imap_settings][][imap_aliase]", setting.imap_aliase %></dd>
 
   <dt></dt>
   <dd>
