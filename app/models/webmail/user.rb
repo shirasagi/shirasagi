@@ -2,11 +2,10 @@
 class Webmail::User
   include SS::Model::User
   include SS::Reference::UserTitles
-  include Sys::Addon::Role
-  include Sys::Reference::Role
-  include Sys::Permission
+  include Webmail::Addon::Role
+  include Webmail::Permission
   include Webmail::UserExtension
   include Webmail::AccountExport
 
-  set_permission_name "sys_users", :edit
+  set_permission_name "webmail_users", :edit
 end

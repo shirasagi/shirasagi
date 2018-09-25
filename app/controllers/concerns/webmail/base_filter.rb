@@ -4,10 +4,12 @@ module Webmail::BaseFilter
   include Sns::BaseFilter
 
   included do
+    self.user_class = Webmail::User
     helper Webmail::MailHelper
     navi_view "webmail/main/navi"
     before_action :set_webmail_mode
     before_action :validate_service, if: ->{ SS.config.service.webmail_limitation.present? }
+    before_action :set_webmail_logged_in, if: ->{ @cur_user }
     before_action :imap_disconnect
     before_action :imap_initialize, if: ->{ @cur_user }
     # before_action :imap_login
@@ -30,12 +32,27 @@ module Webmail::BaseFilter
     render html: msg.join("<br />").html_safe
   end
 
+  def set_webmail_logged_in
+    webmail_session = session[:webmail]
+    webmail_session ||= {}
+    webmail_session['last_logged_in'] ||= begin
+      Webmail::History.info!(
+        :controller, @cur_user,
+        path: request.path, controller: self.class.name.underscore, action: action_name,
+        model: Webmail::User.name.underscore, item_id: @cur_user.id, mode: 'login', name: @cur_user.name
+      )
+      Time.zone.now.to_i
+    end
+
+    session[:webmail] = webmail_session
+  end
+
   def set_crumbs
     # @crumbs << [t("modules.webmail"), webmail_mails_path]
   end
 
   def imap_initialize
-    @imap_setting = @cur_user.imap_settings[params[:account].to_i]
+    @imap_setting = @cur_user.imap_settings[params[:account].to_i] if params.key?(:account)
 
     if @imap_setting
       @redirect_path = webmail_login_failed_path(account: params[:account])
@@ -56,8 +73,8 @@ module Webmail::BaseFilter
     redirect_to @redirect_path
   end
 
-  def rescue_imap_no_response_error(e)
-    raise e if Rails.env.development?
-    render plain: e.to_s, layout: true
+  def rescue_imap_no_response_error(exception)
+    raise exception if Rails.env.development?
+    render plain: exception.to_s, layout: true
   end
 end

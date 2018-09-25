@@ -1,5 +1,5 @@
 FactoryBot.define do
-  factory :webmail_user, class: SS::User do
+  factory :webmail_user, class: Webmail::User do
     conf = SS.config.webmail.test_user || {}
 
     name 'user_name'

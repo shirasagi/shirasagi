@@ -52,17 +52,20 @@ module Webmail::AccountExport
 
   def update_row(row, index)
     id = row[t("id")].to_s.strip
-    item = self.class.allow(:read, @cur_user).where(id: id).first
+    if id.blank?
+      errors.add :base, "#{index + 1}: id is required"
+      return
+    end
 
+    item = self.class.allow(:read, @cur_user).where(id: id).first
     if item.blank?
-      item = self.class.new
-      errors.add :base, "#{index + 1}: Could not find ##{data[:id]}"
-      return item
+      errors.add :base, "#{index + 1}: Could not find ##{id}"
+      return
     end
 
     if !item.allowed?(:edit, @cur_user)
       errors.add :base, "#{index + 1}: #{I18n.t('errors.messages.auth_error')}"
-      return item
+      return
     end
 
     account_index    = row[t("account_index")].to_s.strip.to_i - 1

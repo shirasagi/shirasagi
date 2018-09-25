@@ -1,0 +1,95 @@
+<%= jquery do %>
+  $("#random-password").click(function() {
+    $("#item_in_password").attr({ type: 'text' }).val(SS.randomPassword());
+  });
+<% end %>
+
+<dl class="see mod-sys-user">
+  <dt><%= @model.t :name %><%= @model.tt :name %></dt>
+  <dd><%= f.text_field :name %></dd>
+
+  <dt><%= @model.t :kana %><%= @model.tt :kana %></dt>
+  <dd><%= f.text_field :kana %></dd>
+
+  <dt><%= @model.t :uid %><%= @model.tt :uid %></dt>
+  <dd><%= f.text_field :uid %></dd>
+
+  <dt><%= @model.t :organization_uid %><%= @model.tt :organization_uid %></dt>
+  <dd><%= f.text_field :organization_uid %></dd>
+
+  <dt><%= @model.t :email %><%= @model.tt :email %></dt>
+  <dd><%= f.email_field :email %></dd>
+
+  <dt><%= @model.t :in_password %><%= @model.tt :in_password %></dt>
+  <dd>
+    <%= f.password_field :in_password, style: "width: 200px" %>
+    <%= button_tag t("ss.buttons.random_password"), type: :button, id: "random-password", class: "btn" %>
+    <span id="random-password-view"></span>
+  </dd>
+
+  <dt><%= @model.t :tel %><%= @model.tt :tel %></dt>
+  <dd><%= f.text_field :tel %></dd>
+
+  <dt><%= @model.t :tel_ext %><%= @model.tt :tel_ext %></dt>
+  <dd><%= f.text_field :tel_ext %></dd>
+
+  <dt><%= @model.t :type %><%= @model.tt :type %></dt>
+  <dd><%= f.select :type, @item.type_options %></dd>
+
+  <dt><%= @model.t :account_start_date %><%= @model.tt :account_start_date %></dt>
+  <dd><%= f.text_field :account_start_date, class: "datetime js-datetime", value: tryb { @item.account_start_date.strftime("%Y/%m/%d %H:%M") } %></dd>
+
+  <dt><%= @model.t :account_expiration_date %><%= @model.tt :account_expiration_date %></dt>
+  <dd><%= f.text_field :account_expiration_date, class: "datetime js-datetime", value: tryb { @item.account_expiration_date.strftime("%Y/%m/%d %H:%M") } %></dd>
+
+  <dt><%= @model.t :initial_password_warning %><%= @model.tt :initial_password_warning %></dt>
+  <dd><%= f.select :initial_password_warning, @item.initial_password_warning_options %></dd>
+
+  <dt><%= @model.t :session_lifetime %><%= @model.tt :session_lifetime %></dt>
+  <dd>
+    <%= f.number_field :session_lifetime, autocomplete: :on, list: :session_lifetime %>
+    <datalist id="session_lifetime">
+      <% @item.session_lifetime_options.each do |label, value| %>
+        <option label="<%= label %>" value="<%= value %>">
+      <% end %>
+    </datalist>
+  </dd>
+
+  <dt><%= @model.t :restriction %><%= @model.tt :restriction %></dt>
+  <dd><%= f.select :restriction, @item.restriction_options %></dd>
+
+  <dt><%= @model.t :lock_state %><%= @model.tt :lock_state %></dt>
+  <dd><%= f.select :lock_state, @item.lock_state_options, include_blank: true %></dd>
+
+  <dt><%= @model.t :organization_id %><%= @model.tt :organization_id %></dt>
+  <dd><%= f.select :organization_id, @item.organization_id_options %></dd>
+
+  <dt><%= @model.t :group_ids %><%= @model.tt :group_ids %></dt>
+  <dd>
+    <%= f.hidden_field "group_ids[]", value: "", class: "hidden-ids" %>
+    <%= link_to t("ss.apis.groups.index"), sys_apis_groups_path, class: "ajax-box" %>
+  </dd>
+  <dd>
+    <table class="index ajax-selected">
+      <thead>
+        <tr>
+          <th class="name"><%= Sys::Group.t :name %></th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        <% @item.groups.each do |group| %>
+          <tr data-id="<%= group.id %>">
+            <td><%= f.hidden_field "group_ids[]", value: group.id %> <%= group.name %></td>
+            <td><%= link_to t("ss.buttons.delete"), "#", class: "deselect btn" %></td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </dd>
+</dl>
+
+<dl class="see mod-gws-user-remark">
+  <dt><%= @model.t :remark %><%= @model.tt :remark %></dt>
+  <dd><%= f.text_area :remark %></dd>
+</dl>

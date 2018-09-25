@@ -49,12 +49,6 @@ SS::Application.routes.draw do
       put :decode, on: :member, action: :commit_decode
     end
 
-    namespace "webmail" do
-      resources :accounts, only: [:index], concerns: [:export] do
-        get :download_template, :on => :collection
-      end
-    end
-
     namespace "apis" do
       get "groups" => "groups#index"
       get "sites" => "sites#index"

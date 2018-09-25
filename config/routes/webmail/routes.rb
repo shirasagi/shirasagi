@@ -3,7 +3,7 @@ SS::Application.routes.draw do
   Webmail::Initializer
 
   concern :deletion do
-    get :delete, :on => :member
+    get :delete, on: :member
     delete :destroy_all, on: :collection, path: ''
   end
 
@@ -45,18 +45,29 @@ SS::Application.routes.draw do
   end
 
   concern :mailbox do
-    get :reload, :on => :collection
-    post :reload, :on => :collection
+    get :reload, on: :collection
+    post :reload, on: :collection
   end
 
   concern :filter do
-    post :apply, :on => :member
+    post :apply, on: :member
   end
 
   namespace "webmail", path: ".webmail" do
     get "/" => "main#index", as: :main
     match "logout" => "login#logout", as: :logout, via: [:get]
     match "login"  => "login#login", as: :login, via: [:get, :post]
+
+    resources :users, concerns: [:deletion, :export] do
+      get :download_template, on: :collection
+    end
+    resources :roles, concerns: [:deletion, :export]
+
+    resources :histories, only: [:index]
+    resources :histories, only: [:index, :show], path: 'histories/:ymd', as: :daily_histories do
+      match :download, on: :collection, via: [:get, :post]
+    end
+    resources :history_archives, concerns: [:deletion], only: [:index, :show, :destroy]
 
     resources :mails, concerns: [:deletion, :mail], path: 'account-:account/mails/:mailbox',
       account: /\d+/, mailbox: /[^\/]+/, defaults: { mailbox: 'INBOX' }
@@ -69,7 +80,7 @@ SS::Application.routes.draw do
     resources :filters, path: 'account-:account/filters', concerns: [:deletion, :export, :filter]
     resource :cache_setting, path: 'account-:account/cache_setting', only: [:show, :update]
     resource :account_setting, only: [:show, :edit, :update] do
-      post :test_connection, :on => :member
+      post :test_connection, on: :member
     end
     get :login_failed, to: "login_failed#index", path: 'account-:account/login_failed', account: /\d+/
     resources :sys_notices, only: [:index, :show]

@@ -2,6 +2,8 @@ ja:
   modules:
     webmail: ウェブメール
     addons:
+      webmail/role: 権限/ロール
+      webmail/history: 変更履歴
       webmail/mail_body: 内容
       webmail/mail_file: 添付ファイル
       webmail/apply_filter: フィルター適用
@@ -26,6 +28,9 @@ ja:
       cache: キャッシュ
       account: アカウント
       special_mailbox: 特別なフォルダー
+    roles:
+      admin: 管理者
+      user: 一般ユーザー
     search:
       columns:
         text: キーワード
@@ -33,6 +38,12 @@ ja:
         to: 宛先
         subject: 件名
         body: 本文
+    history:
+      mode:
+        create: 登録
+        update: 変更
+        delete: 削除
+        login: ログイン
     buttons:
       test_connection: 接続確認
       clear_cache: キャッシュ削除
@@ -125,8 +136,20 @@ ja:
       blank_conditions: 条件を入力してください。
       blank_apply_mailbox: 適用するフォルダーを選択してください。
 
+  webmail_role:
+    edit_webmail_users: ユーザーの管理
+    edit_webmail_roles: 権限/ロールの管理
+    read_webmail_histories: 操作履歴の閲覧
+    use_webmail_group_imap_setting: グループ代表メールの使用
+    edit_webmail_group_imap_setting: グループ代表メールの管理
+    read_webmail_individual_usage: メールボックス使用量の表示（全て）
+
   mongoid:
     models:
+      webmail/user: ユーザー
+      webmail/role: 権限/ロール
+      webmail/history: 操作履歴
+      webmail/history/archive_file: アーカイブ
       webmail/mail: メール
       webmail/mailbox: フォルダー
       webmail/quota: 容量
@@ -151,9 +174,32 @@ ja:
       webmail/user_extension:
         imap_default_index: IMAP/既定アカウント
         imap_settings: IMAP/ユーザー設定
+      webmail/reference/role:
+        webmail_role_ids: ロール
       webmail/user:
         in_file: ファイル
         account_index: アカウント番号
+      webmail/history:
+        session_id: セッションID
+        request_id: リクエストID
+        severity: 重要度
+        name: 名称
+        mode: 区分
+        model: モデル
+        controller: コントローラー
+        job: ジョブ
+        mode_name: 区分名
+        model_name: モデル名
+        controller_name: コントローラー名
+        job_name: ジョブ名
+        item_id: 項目ID
+        path: URL
+        action: アクション
+        message: メッセージ
+        updated_fields: 変更箇所
+        updated_field_names: 変更箇所
+        user_name: ユーザー
+        created: 変更日時
       webmail/mail:
         size: サイズ
         date: 日付
@@ -213,6 +259,10 @@ ja:
         threshold_mb: 警告表示
 
   tooltip:
+    webmail/reference/role:
+      webmail_role_ids:
+        - ユーザーの権限/ロールを選択します。
+
     webmail/mailbox:
       name:
         - フォルダー名を入力します。
@@ -234,3 +284,8 @@ ja:
     webmail/filter:
       in_file:
         - CSVファイルを指定しフィルターのインポートを行います。
+
+  job:
+    models:
+      webmail/history_archive_job: 操作履歴アーカイブ作成
+      webmail/role_import_job: ロール/権限インポート
