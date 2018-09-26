@@ -42,7 +42,7 @@ class Gws::Memo::ExportMessagesController < ApplicationController
       return
     end
 
-    Gws::Memo::MessageExportJob.bind(site_id: @cur_site.id, user_id: @cur_user).perform_now(message_ids: message_ids, root_url: root_url)
+    Gws::Memo::MessageExportJob.bind(site_id: @cur_site.id, user_id: @cur_user).perform_now(message_ids: message_ids, root_url: root_url, format: params.dig(:item, :format))
     render_create true, location: { action: :start_export }, notice: I18n.t("gws/memo/message.notice.start_export")
   end
 

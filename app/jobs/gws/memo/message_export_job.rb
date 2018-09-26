@@ -5,6 +5,7 @@ class Gws::Memo::MessageExportJob < Gws::ApplicationJob
     @root_url = opts[:root_url].to_s
     @output_zip = SS::DownloadJobFile.new(user, "gws-memo-messages-#{@datetime.strftime('%Y%m%d%H%M%S')}.zip")
     @output_dir = @output_zip.path.sub(::File.extname(@output_zip.path), "")
+    @output_format = opts[:format]
 
     return if @message_ids.blank?
 
@@ -16,6 +17,7 @@ class Gws::Memo::MessageExportJob < Gws::ApplicationJob
 
     zip = Gws::Memo::MessageExport::Zip.new(@output_zip.path)
     zip.output_dir = @output_dir
+    zip.output_format = @output_format
     zip.compress
 
     FileUtils.rm_rf(@output_dir)
@@ -48,7 +50,11 @@ class Gws::Memo::MessageExportJob < Gws::ApplicationJob
       end
       data['export_info'] = { 'version' => SS.version, 'exported' => @datetime }
 
-      write_json(sanitize_filename("#{item.id}_#{item.display_subject}"), data.to_json)
+      if @output_format == "json"
+        write_json(sanitize_filename("#{item.id}_#{item.display_subject}"), data.to_json)
+      elsif @output_format == "eml"
+        write_eml(sanitize_filename("#{item.id}_#{item.display_subject}"), data)
+      end
     end
   end
 
@@ -66,6 +72,47 @@ class Gws::Memo::MessageExportJob < Gws::ApplicationJob
 
   def write_json(name, data)
     File.write("#{@output_dir}/#{name}.json", data)
+  end
+
+  def write_eml(name, data)
+    File.open("#{@output_dir}/#{name}.eml", "w") do |f|
+      f.puts "Subject: #{data['subject']}"
+      f.puts "From: #{data['from_member_name']}"
+      f.puts "To: #{data['to_member_name']}"
+      f.puts "Cc: #{data['cc_member_name']}"
+      if data["seen"].any?{|key, value| key == user.id.to_s}
+        s_status = "既読"
+      else
+        s_status = "未読"
+      end
+      if data["star"].any?{|key, value| key == user.id.to_s}
+        s_status += ", スター"
+      end
+      f.puts "X-Shirasagi-Status: #{s_status}"
+      if data["files"].present?
+        boundary = "------------#{SecureRandom.hex(16)}"
+        f.puts "Content-Type: multipart/mixed; boundary=\"#{boundary}\""
+        f.puts ""
+        f.puts "This is a multi-part message in MIME format."
+        f.puts boundary
+        f.puts "Content-Type: text/plain; charset=UTF-8"
+        f.puts data["text"]
+        data["files"].each do |file|
+          f.puts boundary
+          f.puts "Content-Type: #{file['content_type']}"
+          f.puts " name=\"=?UTF-8?B?#{file['filename'].toutf8}\""
+          f.puts "Content-Transfer-Encoding: base64"
+          f.puts "Content-Disposition: attachment;"
+          f.puts " filename*=iso-2022-jp''#{file['filename'].tosjis}\""
+          f.puts ""
+          f.puts file["base64"]
+          f.puts boundary
+        end
+      else
+        f.puts "Content-Type: text/plain; charset=UTF-8"
+        f.puts data["text"]
+      end
+    end
   end
 
   def sanitize_filename(filename)
