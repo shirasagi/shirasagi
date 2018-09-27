@@ -1,13 +1,11 @@
 require 'spec_helper'
 
-describe "gws_schedule_holidays", type: :feature, dbscope: :example do
+describe "gws_schedule_holidays", type: :feature, dbscope: :example, js: true do
   let(:site) { gws_site }
   let(:path) { gws_schedule_holidays_path site }
   let(:item) { create :gws_schedule_holiday }
-  let(:import_path) { import_gws_schedule_holidays_path site.id }
-  let(:download_path) { download_gws_schedule_holidays_path site.id }
 
-  context "with auth", js: true do
+  context "with auth" do
     before { login_gws_user }
 
     it "#index" do
@@ -52,69 +50,87 @@ describe "gws_schedule_holidays", type: :feature, dbscope: :example do
       wait_for_ajax
       expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
     end
+  end
+end
 
-    describe "#import", js: false do
-      before { visit import_path }
-      context "when the all datas on csv is valid" do
-        it "imported the datas" do
-          within "form" do
-            attach_file "item[in_file]", "#{Rails.root}/spec/fixtures/gws/schedule/gws_holidays_1.csv"
-            click_button I18n.t('ss.links.import')
-          end
-          expect(status_code).to eq 200
-          expect(current_path).to eq path
-          not_repeat = Gws::Schedule::Holiday.site(site).where(name: "not_repeat").first
-          repeat = Gws::Schedule::Holiday.site(site).where(name: "repeat").first
+describe "gws_schedule_holidays", type: :feature, dbscope: :example do
+  let(:site) { gws_site }
+  let(:path) { gws_schedule_holidays_path site }
+  let(:item) { create :gws_schedule_holiday }
+  let(:import_path) { import_gws_schedule_holidays_path site.id }
+  let(:download_path) { download_gws_schedule_holidays_path site.id }
 
-          expect(not_repeat).to be_valid
-          expect(not_repeat.start_on).to eq Date.strptime('2019/1/1', '%Y/%m/%d')
-          expect(not_repeat.end_on).to eq Date.strptime('2019/1/3', '%Y/%m/%d')
-          expect(not_repeat.color).to eq "#99dd66"
-          expect(not_repeat.repeat_plan).to be_nil
+  before { login_gws_user }
 
-          expect(repeat).to be_valid
-          expect(repeat.start_on).to eq Date.strptime('2019/2/1', '%Y/%m/%d')
-          expect(repeat.end_on).to eq Date.strptime('2019/2/2', '%Y/%m/%d')
-          expect(repeat.color).to eq "#99dd50"
-          expect(repeat.repeat_plan.repeat_type).to eq "weekly"
-          expect(repeat.repeat_plan.interval).to eq 1
-          expect(repeat.repeat_plan.repeat_start).to eq Date.strptime('2019/2/1', '%Y/%m/%d')
-          expect(repeat.repeat_plan.repeat_end).to eq Date.strptime('2019/3/1', '%Y/%m/%d')
-          expect(repeat.repeat_plan.wdays).to eq []
-          expect(repeat.repeat_plan.repeat_base).to eq "date"
+  describe "#import" do
+    before { visit import_path }
+    context "when the all datas on csv is valid" do
+      it "imported the datas" do
+        within "form" do
+          attach_file "item[in_file]", "#{Rails.root}/spec/fixtures/gws/schedule/gws_holidays_1.csv"
+          click_button I18n.t('ss.links.import')
         end
-      end
+        expect(status_code).to eq 200
+        expect(current_path).to eq path
+        not_repeat = Gws::Schedule::Holiday.site(site).where(name: "not_repeat").first
+        repeat = Gws::Schedule::Holiday.site(site).where(name: "repeat").first
 
-      context "when some data on csv is invalid" do
-        it "does not import the only data on CSVfile" do
-          within "form" do
-            attach_file "item[in_file]", "#{Rails.root}/spec/fixtures/gws/schedule/gws_holidays_2.csv"
-            click_button I18n.t('ss.links.import')
-          end
-          expect(page).to have_http_status(200)
-          holidays = Gws::Schedule::Holiday.site(site)
-          valid_holiday = Gws::Schedule::Holiday.site(site).where(name: "valid").first
-          expect(holidays.size).to eq 1
-          expect(holidays).to include valid_holiday
-          expect(holidays.map(&:name)).not_to include "invalid"
-        end
+        expect(not_repeat).to be_valid
+        expect(not_repeat.start_on).to eq Date.strptime('2019/1/1', '%Y/%m/%d')
+        expect(not_repeat.end_on).to eq Date.strptime('2019/1/3', '%Y/%m/%d')
+        expect(not_repeat.color).to eq "#99dd66"
+        expect(not_repeat.repeat_plan).to be_nil
+
+        expect(repeat).to be_valid
+        expect(repeat.start_on).to eq Date.strptime('2019/2/1', '%Y/%m/%d')
+        expect(repeat.end_on).to eq Date.strptime('2019/2/2', '%Y/%m/%d')
+        expect(repeat.color).to eq "#99dd50"
+        expect(repeat.repeat_plan.repeat_type).to eq "weekly"
+        expect(repeat.repeat_plan.interval).to eq 1
+        expect(repeat.repeat_plan.repeat_start).to eq Date.strptime('2019/2/1', '%Y/%m/%d')
+        expect(repeat.repeat_plan.repeat_end).to eq Date.strptime('2019/3/1', '%Y/%m/%d')
+        expect(repeat.repeat_plan.wdays).to eq []
+        expect(repeat.repeat_plan.repeat_base).to eq "date"
       end
     end
 
-    describe "#download", js: false do
-      before do
-        item
-        visit path
-      end
-      let(:time){ Time.zone.now }
-      it "downloads CSVfile" do
-        Timecop.freeze(time) do
-          click_link I18n.t('ss.links.download')
-          expect(status_code).to eq 200
-          expect(page.response_headers['Content-Type']).to eq("text/csv")
-          expect(page.response_headers['Content-Disposition']).to eq("attachment; filename=\"gws_holidays_#{time.to_i}.csv\"")
+    context "when some data on csv is invalid" do
+      it "does not import the only data on CSVfile" do
+        within "form" do
+          attach_file "item[in_file]", "#{Rails.root}/spec/fixtures/gws/schedule/gws_holidays_2.csv"
+          click_button I18n.t('ss.links.import')
         end
+        expect(page).to have_http_status(200)
+        holidays = Gws::Schedule::Holiday.site(site)
+        valid_holiday = Gws::Schedule::Holiday.site(site).where(name: "valid").first
+        expect(holidays.size).to eq 1
+        expect(holidays).to include valid_holiday
+        expect(holidays.map(&:name)).not_to include "invalid"
       end
+    end
+  end
+
+  describe "#download" do
+    before do
+      item
+      visit path
+    end
+    let(:time){ Time.zone.now }
+    it "downloads CSVfile" do
+      Timecop.freeze(time) do
+        click_link I18n.t('ss.links.download')
+        expect(status_code).to eq 200
+        expect(page.response_headers['Content-Type']).to eq("text/csv")
+        expect(page.response_headers['Content-Disposition']).to eq("attachment; filename=\"gws_holidays_#{time.to_i}.csv\"")
+      end
+
+      csv = CSV.parse(page.html.encode("UTF-8", "SJIS"), headers: true)
+      expect(csv.headers.include?(I18n.t("gws/schedule.csv.id"))).to be_truthy
+      expect(csv.headers.include?(I18n.t("gws/schedule.csv.name"))).to be_truthy
+      expect(csv.headers.include?(I18n.t("gws/schedule.csv.start_on"))).to be_truthy
+      expect(csv.headers.include?(I18n.t("gws/schedule.csv.end_on"))).to be_truthy
+      expect(csv.headers.include?(I18n.t("gws/schedule.csv.repeat_plan_datas.repeat_type"))).to be_truthy
+      expect(csv.headers.include?(I18n.t("gws/schedule.csv.repeat_plan_datas.repeat_start"))).to be_truthy
     end
   end
 end
