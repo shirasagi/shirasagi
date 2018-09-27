@@ -168,6 +168,7 @@ ja:
           used_folder: フィルターが使用中のフォルダーは削除できません。
           not_found_parent: 親フォルダーが存在しません。
           found_children: 子フォルダーが存在します。
+          found_messages: "%{name}にメールが存在します。"
     attributes:
       gws/memo/notice:
         name: 件名

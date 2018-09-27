@@ -189,6 +189,12 @@
     font-weight: bold;
     color: #f25a38;
   }
+
+  @for $i from 0 through 40 {
+    .depth-#{$i} {
+      padding-left: #{$i * 20}px;
+    }
+  }
 }
 
 .gws-memo-search {

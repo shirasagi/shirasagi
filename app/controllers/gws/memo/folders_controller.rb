@@ -35,6 +35,6 @@ class Gws::Memo::FoldersController < ApplicationController
     @items = @model.user(@cur_user).
       site(@cur_site).
       search(params[:s]).
-      page(params[:page]).per(50)
+      page(params[:page]).per(50).tree_sort
   end
 end

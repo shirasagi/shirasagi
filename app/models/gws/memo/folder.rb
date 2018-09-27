@@ -4,6 +4,7 @@ class Gws::Memo::Folder
   include Gws::Reference::Site
   include Gws::SitePermission
   include SS::Fields::DependantNaming
+  include Gws::Model::Memo::Folder
 
   set_permission_name 'private_gws_memo_messages', :edit
 
@@ -32,6 +33,7 @@ class Gws::Memo::Folder
 
   scope :descendent, ->(name) { where( name: /^#{::Regexp.escape(name)}\// ) }
 
+  before_destroy :destroy_folders
   before_destroy :validate_destroy
 
   private
@@ -49,6 +51,24 @@ class Gws::Memo::Folder
     errors.add :base, :used_folder if filters.count > 0
     errors.add :base, :found_children if children.exists?
     errors.empty?
+  end
+
+  def destroy_children
+    dependant_scope.ne(_id: _id).where(name: /^#{::Regexp.escape(name)}\//).find_each(&:destroy)
+  end
+
+  def verify_folders
+    folders = dependant_scope.where(name: /^#{name}.*/)
+    folders.each do |folder|
+      next if folder.messages.blank?
+      errors.add :base, I18n.t("mongoid.errors.models.gws/memo/folder.found_messages", name: folder.name)
+    end
+  end
+
+  def destroy_folders
+    verify_folders
+    return throw :abort if errors.present?
+    destroy_children
   end
 
   public
@@ -86,7 +106,7 @@ class Gws::Memo::Folder
   end
 
   def ancestor_or_self
-    dependant_scope.where(:name.in => ancestor_or_self_names)
+    dependant_scope.reorder(:name.asc).where(:name.in => ancestor_or_self_names)
   end
 
   def ancestor_or_self_names
