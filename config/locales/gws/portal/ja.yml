@@ -20,6 +20,7 @@ ja:
       gws/portal/portlet/notice: お知らせ設定
       gws/portal/portlet/presence: 在席管理設定
       gws/portal/portlet/survey: アンケート
+      gws/portal/portlet/markdown: 内容
 
   gws/portal:
     self_portal: 個人
@@ -89,6 +90,9 @@ ja:
       survey:
         name: アンケート
         text: 新着または期限間近のアンケートを表示します。
+      markdown:
+        name: テキスト
+        text: 固定テキストをポータルに表示します。
     links:
       manage_portlets: ポートレットの管理
       arrange_portlets: ポートレットの配置

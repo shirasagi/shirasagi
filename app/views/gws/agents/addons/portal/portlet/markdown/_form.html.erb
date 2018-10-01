@@ -1,0 +1,12 @@
+<%= jquery do %>
+  SS_Addon_Markdown.render();
+<% end %>
+
+<div class="ss-addon-markdown">
+  <div class="ss-addon-markdown-toolbar">
+    <%= f.select :portal_text_type, @item.portal_text_type_options, {},  class: "ss-addon-markdown-type" %>
+  </div>
+  <div class="ss-addon-markdown-content">
+    <%= f.text_area :portal_text, class: "markdown", style: "height: 240px;" %>
+  </div>
+</div>
