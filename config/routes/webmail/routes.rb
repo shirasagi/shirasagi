@@ -99,6 +99,13 @@ SS::Application.routes.draw do
       webmail_mode: /[a-z]+/, concerns: [:deletion, :export, :filter], defaults: { webmail_mode: 'account' }
     resource :cache_setting, path: ':webmail_mode-:account/cache_setting', only: [:show, :update],
       webmail_mode: /[a-z]+/, defaults: { webmail_mode: 'account' }
+    resources :import_mails, only: :index, path: ':webmail_mode-:account/import_mails',
+      webmail_mode: /[a-z]+/, account: /\d+/, concerns: [:deletion], defaults: { webmail_mode: 'account' }
+    resources :export_mails, only: :index, path: ':webmail_mode-:account/export_mails',
+      webmail_mode: /[a-z]+/, account: /\d+/, concerns: [:deletion], defaults: { webmail_mode: 'account' } do
+      put :export, on: :collection
+      get :start_export, on: :collection
+    end
 
     resources :sys_notices, only: [:index, :show]
 
@@ -109,6 +116,8 @@ SS::Application.routes.draw do
         webmail_mode: /[a-z]+/, account: /\d+/, defaults: { webmail_mode: 'account' }
       get ":webmail_mode-:account/quota" => "imap#quota",
         webmail_mode: /[a-z]+/, account: /\d+/, as: :quota, defaults: { webmail_mode: 'account' }
+      get ":webmail_mode-:account/mails" => "mails#index",
+        webmail_mode: /[a-z]+/, account: /\d+/, as: :mails, defaults: { webmail_mode: 'account' }
       get "addresses" => "addresses#index"
     end
   end
