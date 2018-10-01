@@ -1,7 +1,7 @@
 <div class="addon-views">
   <div class="addon-view">
     <div class="addon-body">
-      <%== I18n.t("webmail.notice.imap_login_failed", account_settings: link_to(t("webmail.account_setting"), webmail_account_setting_path)) %>
+      <%== I18n.t("webmail.notice.imap_login_failed", account_settings: link_to(t("webmail.account_setting"), @webmail_mode == :group ? sys_group_path(params[:account]) : webmail_account_setting_path)) %>
     </div>
   </div>
 

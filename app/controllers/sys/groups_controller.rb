@@ -25,7 +25,7 @@ class Sys::GroupsController < ApplicationController
 
     @item.default_imap_setting = {
       from: @cur_user.name,
-      address: conf[:address],
+      address: @item.contact_email.presence || conf[:address],
       host: "#{label} / #{conf[:host]}",
       auth_type: "#{label} / #{conf[:auth_type]}",
       account: "#{label} / #{conf[:account]}",

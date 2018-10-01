@@ -23,13 +23,13 @@
         <a><%= t('webmail.links.forward_gws_message') %> <i class="material-icons md-13">&#xE313;</i></a>
         <ul class="dropdown-menu webmail-dropdown-menu">
           <% groups.each do |group| %>
-          <li><%= link_to group.name, new_webmail_gws_message_path(site: group.id, mailbox: @mailbox) %></li>
+          <li><%= link_to group.name, new_webmail_gws_message_path(site: group.id, mailbox: @mailbox, webmail_mode: @webmail_mode) %></li>
           <% end %>
         </ul>
       </div>
     <% elsif groups.present? %>
       <% group = groups.first %>
-      <%= link_to t('webmail.links.forward_gws_message'), new_webmail_gws_message_path(site: group.id, mailbox: @mailbox) %>
+      <%= link_to t('webmail.links.forward_gws_message'), new_webmail_gws_message_path(site: group.id, mailbox: @mailbox, webmail_mode: @webmail_mode) %>
     <% end %>
 
     <%= link_to(t('ss.links.delete'), { action: :delete }, class: :delete) %>

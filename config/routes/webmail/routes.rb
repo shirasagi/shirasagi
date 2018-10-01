@@ -44,37 +44,6 @@ SS::Application.routes.draw do
     end
   end
 
-  concern :group_mail do
-    collection do
-      put :set_seen
-      put :unset_seen
-      put :set_star
-      put :unset_star
-      put :move
-      put :rename_mailbox
-      put :copy
-      delete :empty
-    end
-    member do
-      get :download
-      get :parts, path: 'parts/:section', format: false, section: /[^\/]+/
-      get :header_view
-      get :source_view
-      put :set_seen
-      put :unset_seen
-      put :set_star
-      put :unset_star
-      put :move
-      put :copy
-      get :reply
-      get :reply_all
-      get :forward
-      put :send_mdn
-      put :ignore_mdn
-      resources :gws_group_messages, path: 'group_messages/g:site', site: /\d+/, only: [:new, :create]
-    end
-  end
-
   concern :mailbox do
     get :reload, on: :collection
     post :reload, on: :collection
@@ -100,47 +69,32 @@ SS::Application.routes.draw do
     end
     resources :history_archives, concerns: [:deletion], only: [:index, :show, :destroy]
 
-    resources :mails, concerns: [:deletion, :mail], path: 'account-:account/mails/:mailbox',
-      account: /\d+/, mailbox: /[^\/]+/, defaults: { mailbox: 'INBOX' }
-    resources :group_mails, concerns: [:deletion, :group_mail], path: 'group:group/mails/:mailbox',
-      group: /\d+/, mailbox: /[^\/]+/, defaults: { mailbox: 'INBOX' }
-    resources :mailboxes, path: 'account-:account/mailboxes', account: /\d+/, concerns: [:deletion, :mailbox]
-    resources :group_mailboxes, path: 'group:group/mailboxes', group: /\d+/, concerns: [:deletion, :mailbox]
-    resources :addresses, path: 'account-:account/addresses', account: /\d+/, concerns: [:deletion, :export] do
+    resources :mails, concerns: [:deletion, :mail], path: ':webmail_mode-:account/mails/:mailbox',
+      webmail_mode: /[a-z]+/, account: /\d+/, mailbox: /[^\/]+/, defaults: { webmail_mode: 'account', mailbox: 'INBOX' }
+    resources :mailboxes, path: ':webmail_mode-:account/mailboxes',
+      webmail_mode: /[a-z]+/, account: /\d+/, concerns: [:deletion, :mailbox], defaults: { webmail_mode: 'account' }
+    resources :addresses, path: ':webmail_mode-:account/addresses', webmail_mode: /[a-z]+/, account: /\d+/, concerns: [:deletion, :export], defaults: { webmail_mode: 'account' } do
       get :add, on: :collection
     end
-    resources :group_addresses, path: 'group:group/addresses', group: /\d+/, concerns: [:deletion, :export] do
-      get :add, on: :collection
-    end
-    resources :address_groups, path: 'account-:account/addresses_groups', account: /\d+/, concerns: [:deletion]
-    resources :group_address_groups, path: 'group:group/addresses_groups', group: /\d+/, concerns: [:deletion]
-    resources :signatures, path: 'account-:account/signatures', account: /\d+/, concerns: [:deletion]
-    resources :group_signatures, path: 'group:group/signatures', account: /\d+/, concerns: [:deletion]
-    resources :filters, path: 'account-:account/filters', concerns: [:deletion, :export, :filter]
-    resources :group_filters, path: 'group:group/filters', concerns: [:deletion, :export, :filter]
-    resource :cache_setting, path: 'account-:account/cache_setting', only: [:show, :update]
-    resource :group_cache_setting, path: 'group:group/cache_setting', only: [:show, :update]
+    resources :address_groups, path: ':webmail_mode-:account/addresses_groups', webmail_mode: /[a-z]+/, account: /\d+/, concerns: [:deletion], defaults: { webmail_mode: 'account' }
+    resources :signatures, path: ':webmail_mode-:account/signatures', webmail_mode: /[a-z]+/, account: /\d+/, concerns: [:deletion], defaults: { webmail_mode: 'account' }
+    resources :filters, path: ':webmail_mode-:account/filters', webmail_mode: /[a-z]+/, concerns: [:deletion, :export, :filter], defaults: { webmail_mode: 'account' }
+    resource :cache_setting, path: ':webmail_mode-:account/cache_setting', only: [:show, :update], webmail_mode: /[a-z]+/, defaults: { webmail_mode: 'account' }
     resource :account_setting, only: [:show, :edit, :update] do
       post :test_connection, on: :member
     end
-    get :login_failed, to: "login_failed#index", path: 'account-:account/login_failed', account: /\d+/
-    get :group_login_failed, to: "group_login_failed#index", path: 'group:group/login_failed', group: /\d+/
+    get :login_failed, to: "login_failed#index", path: ':webmail_mode-:account/login_failed', webmail_mode: /[a-z]+/, account: /\d+/, defaults: { webmail_mode: 'account' }
     resources :sys_notices, only: [:index, :show]
 
     # with group
-    scope(path: "account-:account/address_group-:address_group", as: "address_group") do
+    scope(path: ":webmail_mode-:account/address_group-:group", as: "group", defaults: { webmail_mode: 'account' }) do
       resources :addresses, concerns: [:deletion, :export]
     end
 
-    scope(path: "group:group/address_group-:address_group", as: "address_group") do
-      resources :group_addresses, concerns: [:deletion, :export]
-    end
-
     namespace "apis" do
-      get "account-:account/recent" => "imap#recent", account: /\d+/, as: :recent
-      get "account-:account/latest" => "imap#latest", account: /\d+/
-      get "group:group/recent" => "group_imap#recent", group: /\d+/, as: :group_recent
-      get "account-:account/quota" => "imap#quota", account: /\d+/, as: :quota
+      get ":webmail_mode-:account/recent" => "imap#recent", webmail_mode: /[a-z]+/, account: /\d+/, as: :recent, defaults: { webmail_mode: 'account' }
+      get ":webmail_mode-:account/latest" => "imap#latest", webmail_mode: /[a-z]+/, account: /\d+/, defaults: { webmail_mode: 'account' }
+      get ":webmail_mode-:account/quota" => "imap#quota", webmail_mode: /[a-z]+/, account: /\d+/, as: :quota, defaults: { webmail_mode: 'account' }
       get "addresses" => "addresses#index"
     end
   end

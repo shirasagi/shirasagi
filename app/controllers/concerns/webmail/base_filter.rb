@@ -21,6 +21,7 @@ module Webmail::BaseFilter
 
   def set_webmail_mode
     @ss_mode = :webmail
+    @webmail_mode = params[:webmail_mode].try(:to_sym) || :account
   end
 
   def validate_service
@@ -52,16 +53,30 @@ module Webmail::BaseFilter
   end
 
   def imap_initialize
-    @imap_setting = @cur_user.imap_settings[params[:account].to_i] if params.key?(:account)
+    @imap_setting = if @webmail_mode == :group
+      @cur_user.groups.find_by(id: params[:account]).imap_setting
+    else
+      @cur_user.imap_settings[params[:account].to_i]
+    end
 
     if @imap_setting
-      @redirect_path = webmail_login_failed_path(account: params[:account])
+      @redirect_path = webmail_login_failed_path(account: params[:account], webmail_mode: @webmail_mode)
     else
-      @redirect_path = webmail_account_setting_path
+      @redirect_path  = if @webmail_mode == :group
+        sys_group_path(id: params[:account])
+      else
+        webmail_account_setting_path
+      end
+
       @imap_setting = Webmail::ImapSetting.new
     end
 
     @imap = Webmail::Imap::Base.new(@cur_user, @imap_setting)
+
+    return if @webmail_mode != :group
+    address = @imap_setting.address.presence || Sys::Group.where(id: params[:account]).first.try(:contact_email)
+    return if address.blank?
+    @imap.address = address
   end
 
   def imap_disconnect

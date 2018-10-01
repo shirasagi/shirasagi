@@ -18,7 +18,7 @@ class Webmail::MailsController < ApplicationController
 
   def set_crumbs
     mailbox = Webmail::Mailbox.new(imap: @imap, name: Net::IMAP.decode_utf7(params[:mailbox]))
-    @crumbs << [t("webmail.mail"), webmail_mails_path]
+    @crumbs << [t("webmail.mail"), webmail_mails_path(webmail_mode: @webmail_mode)]
     @crumbs << [mailbox.basename, { action: :index }]
     @webmail_other_account_path = :webmail_mails_path
   end
