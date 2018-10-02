@@ -54,19 +54,19 @@ module Webmail::BaseFilter
 
   def imap_initialize
     @imap_setting = if @webmail_mode == :group
-      @cur_user.groups.find_by(id: params[:account]).imap_setting
-    else
-      @cur_user.imap_settings[params[:account].to_i]
-    end
+                      @cur_user.groups.find_by(id: params[:account]).imap_setting
+                    elsif params.key?(:account)
+                      @cur_user.imap_settings[params[:account].to_i]
+                    end
 
     if @imap_setting
       @redirect_path = webmail_login_failed_path(account: params[:account], webmail_mode: @webmail_mode)
     else
       @redirect_path  = if @webmail_mode == :group
-        sys_group_path(id: params[:account])
-      else
-        webmail_account_setting_path
-      end
+                          sys_group_path(id: params[:account])
+                        else
+                          webmail_account_setting_path
+                        end
 
       @imap_setting = Webmail::ImapSetting.new
     end

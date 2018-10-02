@@ -33,8 +33,9 @@ module Webmail::GroupExtension
   end
 
   def init_imap_setting
+    address = Sys::Group.where(id: id).first.try(:contact_email)
     imap = Webmail::ImapSetting.new
-    imap[:address] = Sys::Group.where(id: id).first&.contact_email
+    imap[:address] = address if address.present?
     imap
   end
 

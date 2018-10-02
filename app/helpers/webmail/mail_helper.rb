@@ -20,7 +20,7 @@ module Webmail::MailHelper
 
   def group_options(path_helper)
     @cur_user.groups
-             .select { |group| group.imap_setting&.name.present? }
+             .select { |group| group.imap_setting.try(:name).present? }
              .map { |group| [group.imap_setting.name, send(path_helper, webmail_mode: :group, account: group.id)] }
   end
 
