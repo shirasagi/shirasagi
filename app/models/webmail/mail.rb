@@ -135,6 +135,11 @@ class Webmail::Mail
     true
   end
 
+  def import_mail(msg)
+    imap.select('INBOX')
+    imap.conn.append('INBOX', msg, [:Seen], Time.zone.now)
+  end
+
   def requested_mdn?
     return false if flags.include?(:"$MDNSent")
     return false if disposition_notification_to.blank?

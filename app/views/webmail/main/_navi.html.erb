@@ -93,6 +93,7 @@ end
 <% account_config_links << link_to_webmail_signatures_path(group_imap_permission: :edit_webmail_group_imap_signatures) %>
 <% account_config_links << link_to_webmail_filters_path(group_imap_permission: :edit_webmail_group_imap_filters) %>
 <% account_config_links << link_to_webmail_cache_setting_path(group_imap_permission: :edit_webmail_group_imap_caches) %>
+<% account_config_links << link_to(t('webmail.settings.import_mails'), webmail_import_mails_path(account: params[:account] || @cur_user.imap_default_index)) %>
 <% account_config_links << link_to(t('webmail.settings.export_mails'), webmail_export_mails_path(account: params[:account] || @cur_user.imap_default_index)) %>
 
 <% account_config_links.compact! %>

@@ -31,6 +31,8 @@ ja:
       subject: "[メール] エクスポートが完了しました。"
       notiry_message: "ダウンロードの準備が完了しました。\n下記のURLからダウンロードしてください。\n\n%{link}"
       start_message: "エクスポート処理を開始しました。\nエクスポート処理が完了次第、ダウンロードリンクが通知されます。"
+    import:
+      start_import: インポートしました。
     box:
       inbox: 受信トレイ
       sent: 送信済み
@@ -302,6 +304,10 @@ ja:
         imap_trash_box: ゴミ箱フォルダー
         threshold_mb: 警告表示
         default: 既定のアカウント
+      webmail/mail_importer:
+        in_file: ファイル
+    models:
+      webmail/mail_importer: インポート
 
   tooltip:
     webmail/reference/role:
