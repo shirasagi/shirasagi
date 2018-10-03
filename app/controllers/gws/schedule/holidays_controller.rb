@@ -4,6 +4,7 @@ class Gws::Schedule::HolidaysController < ApplicationController
   include Gws::Schedule::CalendarFilter
 
   navi_view "gws/schedule/main/navi"
+  menu_view "gws/schedule/main/menu"
 
   model Gws::Schedule::Holiday
 
@@ -46,5 +47,20 @@ class Gws::Schedule::HolidaysController < ApplicationController
       search(params[:s])
 
     render json: @items.map { |m| m.calendar_format(editable: true) }.to_json
+  end
+
+  def download
+    csv = @model.unscoped.site(@cur_site).to_csv
+    send_data csv.encode("SJIS", invalid: :replace, undef: :replace), filename: "gws_holidays_#{Time.zone.now.to_i}.csv"
+  end
+
+  def import
+    return if request.get?
+    @item = @model.new get_params
+    @item.cur_site = @cur_site
+    @item.cur_user = @cur_user
+    result = @item.import
+    flash.now[:notice] = t("ss.notice.saved") if !result && @item.imported > 0
+    render_create result, location: { action: :index }, render: { file: :import }
   end
 end
