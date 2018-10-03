@@ -33,9 +33,9 @@ class Webmail::MailExportJob < SS::ApplicationJob
 
   def export_webmail_mails
     @mail_ids.each do |id|
-      m = Webmail::Mail.find_by(uid: id)
+      m = Webmail::Mail.find_by(id: id)
       @imap.select(m.mailbox)
-      mail = @imap.mails.find id, :rfc822
+      mail = @imap.mails.find m.uid, :rfc822
       write_eml(sanitize_filename("#{mail.id}_#{mail.subject}"), mail.rfc822)
     end
   end

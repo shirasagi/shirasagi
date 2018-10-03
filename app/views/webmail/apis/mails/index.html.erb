@@ -38,7 +38,7 @@
   <tbody class="items">
     <% @items.each do |item| %>
       <tr class="list-item"
-        data-id="<%= item.uid %>"
+        data-id="<%= item.id %>"
         data-attachments="<%= item.attachments? ? 1 : nil %>"
         data-from="<%= item.from[0] %>"
         data-name="<%= item.subject %>"
