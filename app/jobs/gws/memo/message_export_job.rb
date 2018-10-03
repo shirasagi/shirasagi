@@ -38,11 +38,11 @@ class Gws::Memo::MessageExportJob < Gws::ApplicationJob
       end
       if item.to_members.present?
         data['to_members'] = item.to_members.map { |u| user_attributes(u) }
-        data['to_members_name_email'] = item.to_members.map { |u| user_name_email(u)}
+        data['to_members_name_email'] = item.to_members.map { |u| user_name_email(u) }
       end
       if item.cc_members.present?
         data['cc_members'] = item.cc_members.map { |u| user_attributes(u) }
-        data['cc_members_name_email'] = item.cc_members.map { |u| user_name_email(u)}
+        data['cc_members_name_email'] = item.cc_members.map { |u| user_name_email(u) }
       end
       if item.bcc_members.present?
         data['bcc_members'] = item.bcc_members.select{ |u| u.id == user.id }.map { |u| user_attributes(u) }
@@ -51,7 +51,7 @@ class Gws::Memo::MessageExportJob < Gws::ApplicationJob
         data['files'] = item.files.map { |file| file_attributes(file) }
       end
       if item.from
-        data['from_name_email'] = "#{item.from.name} <#{item.from.email}>"
+        data['from_name_email'] = user_name_email(item.from)
       end
       data['export_info'] = { 'version' => SS.version, 'exported' => @datetime }
 
@@ -141,6 +141,10 @@ class Gws::Memo::MessageExportJob < Gws::ApplicationJob
   end
 
   def user_name_email(user)
-    "#{user.name} <#{user.email}>"
+    if user.email.present?
+      "#{user.name} <#{user.email}>"
+    else
+      user.name
+    end
   end
 end
