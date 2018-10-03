@@ -28,6 +28,7 @@ ja:
     child_folder: 子フォルダー
     folder_name: フォルダー名
     message: メッセージ
+    format: フォーマット
     select_check: 件のメッセージを選択
     commit_params_check: 送信
     export_messages: エクスポート
