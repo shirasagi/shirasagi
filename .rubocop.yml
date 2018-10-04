@@ -1,6 +1,7 @@
 inherit_from: .rubocop_todo.yml
 
 AllCops:
+  TargetRubyVersion: 2.4
   Exclude:
     - Guardfile
     - Vagrantfile
@@ -73,7 +74,7 @@ Metrics/ModuleLength:
   Max: 500
 
 Naming/UncommunicativeMethodParamName:
-  AllowedNames: [ 'ns' ]
+  AllowedNames: [ 'ns', 'to' ]
 
 Rails:
   Enabled: true

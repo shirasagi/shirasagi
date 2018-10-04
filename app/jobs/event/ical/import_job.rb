@@ -23,7 +23,7 @@ class Event::Ical::ImportJob < Cms::ApplicationJob
     end
 
     def validate_ical(path)
-      open(path) do |io|
+      ::File.open(path) do |io|
         ::Icalendar::Calendar.parse(io)
       end
       true
@@ -90,7 +90,7 @@ class Event::Ical::ImportJob < Cms::ApplicationJob
       @files = SS::File.in(id: args)
       @calendars = []
       @files.each do |file|
-        open(file.path) do |io|
+        ::File.open(file.path) do |io|
           @calendars += ::Icalendar::Calendar.parse(io)
         end
       end
@@ -190,9 +190,9 @@ class Event::Ical::ImportJob < Cms::ApplicationJob
     item.cur_site = site
     item.cur_node = node
     item.cur_user = user
-    item.layout_id = node.page_layout_id if node.page_layout_id.present?
+    item.layout_id = node.page_layout_id
     item.state = node.ical_page_state if node.ical_page_state.present?
-    item.category_ids = Array.new(node.ical_category_ids) if node.ical_category_ids.present?
+    item.category_ids = Array.new(node.ical_category_ids)
     item.permission_level = node.permission_level if item.permission_level.blank?
     item.group_ids = Array.new(node.group_ids) if item.group_ids.blank?
 

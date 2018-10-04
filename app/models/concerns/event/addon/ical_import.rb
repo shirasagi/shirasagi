@@ -66,7 +66,7 @@ module Event::Addon
 
     def ical_parse
       uri = URI.parse(ical_import_url)
-      open(uri, ical_url_options) do |file|
+      uri.open(ical_url_options) do |file|
         file.set_encoding("UTF-8")
         ::Icalendar::Calendar.parse(file)
       end
