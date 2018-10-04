@@ -3,7 +3,10 @@ require 'spec_helper'
 describe Event::Ical::ImportJob, dbscope: :example do
   let(:url) { "http://#{unique_id}.example.jp/#{unique_id}.ics" }
   let(:site) { cms_site }
-  let(:node) { create :event_node_page, site: site, ical_refresh_method: 'auto', ical_import_url: url }
+  let(:cate) { create :category_node_page, site: site }
+  let(:node) do
+    create :event_node_page, site: site, ical_refresh_method: 'auto', ical_import_url: url, ical_category_ids: [ cate.id ]
+  end
   let(:user) { cms_user }
   let(:bindings) { { site_id: site.id, node_id: node.id, user_id: user.id } }
 
@@ -32,6 +35,7 @@ describe Event::Ical::ImportJob, dbscope: :example do
         expect(Event::Page.site(site).node(node).where(ical_uid: 'doc-1')).to be_present
         Event::Page.site(site).node(node).find_by(ical_uid: 'doc-1').tap do |doc|
           expect(doc.name).to eq "Python 夏休み集中キャンプ"
+          expect(doc.category_ids).to eq [ cate.id ]
           expect(doc.event_name).to eq doc.name
           expect(doc.content).to eq "夏休み最後の週に Python の集中キャンプを実施します。"
           expect(doc.summary_html).to eq doc.content
@@ -45,6 +49,7 @@ describe Event::Ical::ImportJob, dbscope: :example do
         expect(Event::Page.site(site).node(node).where(ical_uid: 'doc-2')).to be_present
         Event::Page.site(site).node(node).find_by(ical_uid: 'doc-2').tap do |doc|
           expect(doc.name).to eq "SUMMARY-○○○○○○○○○○"
+          expect(doc.category_ids).to eq [ cate.id ]
           expect(doc.event_name).to eq doc.name
           expect(doc.content).to eq "DESCRIPTION-○○○○○○○○○○"
           expect(doc.summary_html).to eq doc.content

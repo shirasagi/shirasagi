@@ -13,8 +13,10 @@ module Event::Addon
       field :ical_page_state, type: String
       field :ical_import_date_ago, type: Integer
       field :ical_import_date_after, type: Integer
+      embeds_ids :ical_categories, class_name: 'Cms::Node'
       permit_params :ical_import_url, :ical_basic_user, :ical_basic_password, :ical_max_docs
       permit_params :ical_refresh_method, :ical_page_state, :ical_import_date_ago, :ical_import_date_after
+      permit_params ical_category_ids: []
       validates :ical_refresh_method, inclusion: { in: %w(manual auto), allow_blank: true }
       validates :ical_sync_method, inclusion: { in: %w(full add_only), allow_blank: true }
       validates :ical_page_state, inclusion: { in: %w(public closed), allow_blank: true }

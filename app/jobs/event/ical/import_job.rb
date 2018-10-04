@@ -192,6 +192,7 @@ class Event::Ical::ImportJob < Cms::ApplicationJob
     item.cur_user = user
     item.layout_id = node.page_layout_id if node.page_layout_id.present?
     item.state = node.ical_page_state if node.ical_page_state.present?
+    item.category_ids = Array.new(node.ical_category_ids) if node.ical_category_ids.present?
     item.permission_level = node.permission_level if item.permission_level.blank?
     item.group_ids = Array.new(node.group_ids) if item.group_ids.blank?
 
