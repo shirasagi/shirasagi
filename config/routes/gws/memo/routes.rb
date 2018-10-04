@@ -49,6 +49,7 @@ SS::Application.routes.draw do
       get "personal_addresses" => "personal_addresses#index"
       get "messages" => "messages#index"
       get "categories" => "categories#index"
+      get "folders/:mode" => "folders#index", as: 'folders'
     end
 
     scope '/management' do

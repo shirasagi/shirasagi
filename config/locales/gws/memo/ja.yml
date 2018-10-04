@@ -169,6 +169,9 @@ ja:
           not_found_parent: 親フォルダーが存在しません。
           found_children: 子フォルダーが存在します。
           found_messages: "%{name}にメールが存在します。"
+          attributes:
+            in_basename:
+              invalid_chars_as_name: "には次の文字は使えません: \\ / : * ? \" < > |"
     attributes:
       gws/memo/notice:
         name: 件名
@@ -210,6 +213,7 @@ ja:
       gws/memo/folder:
         name: フォルダー名
         path: パス
+        in_parent: 親フォルダー
         order: 並び順
       gws/memo/filter:
         name: フィルター名
@@ -265,6 +269,8 @@ ja:
       order:
         - フォルダーの並び順を数字で入力します。
         - 番号の小さい順にフォルダーが表示されます。
+      in_parent:
+        - 親フォルダーを選択してください。
     gws/memo/filter:
       name:
         - フィルターの名前を入力します。

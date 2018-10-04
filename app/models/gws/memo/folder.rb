@@ -15,12 +15,13 @@ class Gws::Memo::Folder
 
   has_many :filters, class_name: 'Gws::Memo::Filter'
 
-  permit_params :name, :order, :path
+  permit_params :name, :order, :path, :in_parent, :in_basename
 
   validates :name, presence: true, uniqueness: { scope: [:site_id, :user_id] }, length: {maximum: 80}
   validates :order, numericality: { greater_than_or_equal_to: 0, less_than_or_equal_to: 999_999, allow_blank: true }
   validate :validate_parent_name
 
+  before_validation :set_name_and_depth, if: ->{ in_basename.present? }
   default_scope ->{ order_by order: 1 }
 
   scope :children, ->(name) do
