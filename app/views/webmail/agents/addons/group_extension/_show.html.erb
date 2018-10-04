@@ -8,7 +8,7 @@
   <dd><%= @item.imap_setting.from.presence || @cur_user.name %></dd>
 
   <dt><%= @model.t :address %></dt>
-  <dd><%= @item.imap_setting.address.presence || @item.contact_email || @cur_user.email %></dd>
+  <dd><%= @item.imap_setting.address.presence || @contact_email || @cur_user.email %></dd>
 
   <dt><%= @model.t :imap_host %></dt>
   <dd><%= @item.imap_setting.imap_host.presence || default %></dd>

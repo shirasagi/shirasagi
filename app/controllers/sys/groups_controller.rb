@@ -6,6 +6,7 @@ class Sys::GroupsController < ApplicationController
 
   menu_view "sys/crud/menu"
 
+  before_action :set_contact_email, only: [:show, :edit]
   before_action :set_default_settings, only: [:edit, :update]
   after_action :reload_nginx, only: [:create, :update, :destroy, :destroy_all]
 
@@ -19,13 +20,17 @@ class Sys::GroupsController < ApplicationController
     SS::Nginx::Config.new.write.reload_server
   end
 
+  def set_contact_email
+    @contact_email = @item.contact_email
+  end
+
   def set_default_settings
     label = t('webmail.default_settings')
     conf = @cur_user.imap_default_settings
 
     @item.default_imap_setting = {
       from: @cur_user.name,
-      address: @item.contact_email.presence || conf[:address],
+      address: @contact_email.presence || conf[:address],
       host: "#{label} / #{conf[:host]}",
       auth_type: "#{label} / #{conf[:auth_type]}",
       account: "#{label} / #{conf[:account]}",

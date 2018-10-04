@@ -6,6 +6,8 @@ class Gws::GroupsController < ApplicationController
 
   navi_view "gws/main/conf_navi"
 
+  before_action :set_contact_email, only: [:show, :edti]
+  before_action :set_default_settings, only: [:edit, :update]
   after_action :reload_nginx, only: [:create, :update, :destroy, :destroy_all]
 
   private
@@ -25,6 +27,24 @@ class Gws::GroupsController < ApplicationController
 
   def reload_nginx
     SS::Nginx::Config.new.write.reload_server
+  end
+
+  def set_contact_email
+    @contact_email = Sys::Group.where(id: @item.id).first.try(:contact_email)
+  end
+
+  def set_default_settings
+    label = t('webmail.default_settings')
+    conf = @cur_user.imap_default_settings
+
+    @item.default_imap_setting = {
+      from: @cur_user.name,
+      address: @contact_email.presence || conf[:address],
+      host: "#{label} / #{conf[:host]}",
+      auth_type: "#{label} / #{conf[:auth_type]}",
+      account: "#{label} / #{conf[:account]}",
+      password: "#{label} / #{conf[:password].to_s.gsub(/./, '*')}"
+    }
   end
 
   public

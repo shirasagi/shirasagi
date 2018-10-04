@@ -28,9 +28,52 @@
       },
     });
   });
+
+  $(".delete-imap-setting").click(function() {
+    var setting = $(this).closest(".imap-setting");
+    var value = false;
+    setting.find("input").each(function() {
+      if ($(this).val()) {
+        value = true;
+      };
+    });
+    if (!value || confirm('<%= t("ss.confirm.delete") %>')) {
+      ($(".imap-setting").length > 1) ? setting.remove() : clearSetting(setting);
+      setDataIds();
+      toggleImapButton();
+    }
+  });
+
+  var setDataIds = function() {
+    $(".imap-setting").each(function(i, ele) {
+      var data_id = i + 1;
+      var header = $(ele).find(".addon-head h2").text().replace(/\d+$/, data_id);
+
+      $(ele).attr("data-id", data_id);
+      $(ele).find(".addon-head h2").text(header);
+    });
+  }
+
+  var toggleImapButton = function() {
+    if ($(".imap-setting").length >= <%= SS.config.webmail.imap_account_limit %>) {
+      $(".add-imap-setting").parent("div").hide();
+    }
+    else {
+      $(".add-imap-setting").parent("div").show();
+    }
+  }
+
+  var clearSetting = function(ele) {
+    ele.find("input").val("");
+    ele.find('input[type="checkbox"]').prop("checked", false);
+    ele.find('[name="item[imap_settings][][imap_sent_box]"]').val("<%= @item.imap_setting.imap_sent_box %>");
+    ele.find('[name="item[imap_settings][][imap_draft_box]"]').val("<%= @item.imap_setting.imap_draft_box %>");
+    ele.find('[name="item[imap_settings][][imap_trash_box]"]').val("<%= @item.imap_setting.imap_trash_box %>");
+    ele.find('.imap-test-resp').text("");
+  }
 <% end %>
 
-<dl class="see mod-webmail-account">
+<dl class="see mod-webmail-account imap-setting">
   <dt><%= @model.t :imap_setting_name %><%= @model.tt :imap_setting_name %></dt>
   <dd><%= text_field_tag "item[imap_settings][][name]", @item.imap_setting.name, class: :name %></dd>
 
