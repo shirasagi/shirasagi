@@ -24,7 +24,7 @@ describe 'gws_memo_folders', type: :feature, dbscope: :example do
 
       name = "name-#{unique_id}"
       within "form#item-form" do
-        fill_in "item[name]", with: name
+        fill_in "item[in_basename]", with: name
         click_button "保存"
       end
       expect(first('#addon-basic')).to have_text(name)
@@ -40,7 +40,7 @@ describe 'gws_memo_folders', type: :feature, dbscope: :example do
 
       name = "modify-#{unique_id}"
       within "form#item-form" do
-        fill_in "item[name]", with: name
+        fill_in "item[in_basename]", with: name
         click_button "保存"
       end
       expect(first('#addon-basic')).to have_text(name)
@@ -60,7 +60,8 @@ describe 'gws_memo_folders', type: :feature, dbscope: :example do
       context "parent exists" do
         it "creates a child" do
           within "form#item-form" do
-            fill_in "item[name]", with: "#{item.name}/childs"
+            fill_in "item[in_basename]", with: "#{item.name}/childs"
+            within ""
             expect{ click_button "保存" }.to change { Gws::Memo::Folder.count }.by(1)
           end
           expect(current_path).to eq gws_memo_folder_path site, Gws::Memo::Folder
@@ -71,7 +72,7 @@ describe 'gws_memo_folders', type: :feature, dbscope: :example do
       context "parent does'nt exist" do
         it "does'nt create a child" do
           within "form#item-form" do
-            fill_in "item[name]", with: "test/child"
+            fill_in "item[in_basename]", with: "test/child"
             expect{ click_button "保存" }.not_to(change { Gws::Memo::Folder.count })
           end
           expect(current_path).to eq gws_memo_folders_path site
@@ -84,7 +85,7 @@ describe 'gws_memo_folders', type: :feature, dbscope: :example do
       it "is updated" do
         name = "modify-#{unique_id}"
         within "form#item-form" do
-          fill_in "item[name]", with: name
+          fill_in "item[in_basename]", with: name
           click_button "保存"
         end
         expect(first('#addon-basic')).to have_text(name)
@@ -100,7 +101,7 @@ describe 'gws_memo_folders', type: :feature, dbscope: :example do
           name = "modify-#{unique_id}"
           modify_child_name = "#{name}/child"
           within "form#item-form" do
-            fill_in "item[name]", with: name
+            fill_in "item[in_basename]", with: name
             expect do
               click_button "保存"
             end.to change { Gws::Memo::Folder.find(id: item.id).name }.from(item.name).to(name)
@@ -118,7 +119,7 @@ describe 'gws_memo_folders', type: :feature, dbscope: :example do
         it "is not updated" do
           modify_child_name = "test/child"
           within "form#item-form" do
-            fill_in "item[name]", with: modify_child_name
+            fill_in "item[in_basename]", with: modify_child_name
             expect{ click_button "保存" }.not_to(change { Gws::Memo::Folder.find(id: child_item.id).name })
           end
         end
