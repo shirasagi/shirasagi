@@ -30,8 +30,23 @@ class Webmail::ExportMailsController < ApplicationController
   end
 
   def export
-    mail_ids = params.dig(:item, :mail_ids)
-    mail_ids = mail_ids.select(&:present?) if mail_ids
+    @item = @model.new
+    if params.dig(:item, :all_export).blank?
+      @item.errors.add(:all_export, :blank)
+      render action: :index
+      return
+    end
+    if params.dig(:item, :all_export).to_s == "select"
+      mail_ids = params.dig(:item, :mail_ids)
+      mail_ids = mail_ids.select(&:present?) if mail_ids
+      if mail_ids.blank?
+        @item.errors.add(:mail_ids, :blank)
+        render action: :index
+        return
+      end
+    else
+      mail_ids = []
+    end
     root_url = params.dig(:item, :root_url)
 
     job_class = Webmail::MailExportJob.bind(user_id: @cur_user, user_password: SS::Crypt.encrypt(@cur_user.decrypted_password))

@@ -27,6 +27,8 @@ ja:
     personal: 個人
     imap_default_index: 既定アカウント
     export:
+      all_mail: 全てのメール
+      select_mail: 選択したメール
       start_export: エクスポートを開始しました。
       subject: "[メール] エクスポートが完了しました。"
       notiry_message: "ダウンロードの準備が完了しました。\n下記のURLからダウンロードしてください。\n\n%{link}"
@@ -260,6 +262,8 @@ ja:
         unseen: 未読
         flagged: スター付き
         internal_date: 送信日時
+        all_export: 対象
+        mail_ids: メール
       webmail/mailbox:
         original_name: フォルダー名(UTF-7)
         name: フォルダー名

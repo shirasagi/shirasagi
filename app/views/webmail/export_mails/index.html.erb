@@ -37,6 +37,11 @@ $('a.ajax-box').data('on-select', function($item) {
 
       <div class="addon-body">
         <dl class="see" style="margin-top: 20px;">
+          <dt><%= @model.t :all_export %></dt>
+          <dd>
+            <label><%= f.radio_button :all_export, 'all' %> <%= t("webmail.export.all_mail") %></label>
+            <label><%= f.radio_button :all_export, 'select' %> <%= t("webmail.export.select_mail") %></label>
+          </dd>
           <dt><%= t "webmail.mail" %></dt>
           <dd>
             <%= f.hidden_field "mail_ids[]", value: "", class: "hidden-ids" %>
