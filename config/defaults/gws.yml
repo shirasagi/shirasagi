@@ -59,6 +59,10 @@ production: &production
       - model: faq
       - model: qna
 
+    portlet_settings:
+      ad:
+        image_limit: 5
+
   chorg:
     models:
       - "Gws::Board::Category"

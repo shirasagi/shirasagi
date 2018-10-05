@@ -1,0 +1,24 @@
+<script>
+$(function(){
+  $('.bxslider').bxSlider({
+    auto: true,
+    slideWidth: 600,
+    speed: <%= @portlet.time %>,
+    mode: 'horizontal'
+  });
+});
+</script>
+<div class="main-box">
+  <div class="portlet-title"><%= @portlet.name %></div>
+  <ul class="bxslider">
+    <% @portlet.files.shuffle.each do |file| %>
+      <li>
+        <% if file.try(:image) %>
+          <%= image_tag(file.image.url, width: 600) %>
+        <% elsif file.try(:image?) %>
+          <%= image_tag(file.url, width: 600) %>
+        <% end %>
+      </li>
+    <% end %>
+  </ul>
+</div>

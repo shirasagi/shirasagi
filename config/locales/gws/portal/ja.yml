@@ -20,6 +20,7 @@ ja:
       gws/portal/portlet/notice: お知らせ設定
       gws/portal/portlet/presence: 在席管理設定
       gws/portal/portlet/survey: アンケート
+      gws/portal/portlet/ad: 広告
 
   gws/portal:
     self_portal: 個人
@@ -89,6 +90,9 @@ ja:
       survey:
         name: アンケート
         text: 新着または期限間近のアンケートを表示します。
+      ad:
+        name: 広告
+        text: 広告を表示します。
     links:
       manage_portlets: ポートレットの管理
       arrange_portlets: ポートレットの配置
@@ -179,6 +183,17 @@ ja:
         survey_answered_state: 回答・未回答
         survey_sort: 並び順
         survey_category_ids: カテゴリー
+      gws/addon/portal/portlet/ad:
+        files: ファイル
+        time: 画像切り替え時間
+        ad_sort: 並び順
+        ad_category_ids: カテゴリー
+    errors:
+      models:
+        gws/addon/portal/portlet/ad:
+          attributes:
+            files:
+              too_many_files: "は%{limit}つまで添付することができます。"
 
   tooltip:
     gws/portal/user_setting:
