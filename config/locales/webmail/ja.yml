@@ -11,6 +11,8 @@ ja:
       webmail/group_extension: 代表メール
 
   webmail:
+    account_config: アカウント設定
+    system_config: システム設定
     mail: メール
     message: メッセージ
     mailbox: フォルダー

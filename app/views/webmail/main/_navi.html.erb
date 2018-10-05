@@ -68,27 +68,6 @@ end
     <% end %>
   </ul>
 </div>
-<% end %>
-
-<nav class="mod-navi">
-  <h2><%= t("ss.config") %></h2>
-  <h3><%= link_to t('mongoid.models.webmail/mailbox'), webmail_mailboxes_path(account: params[:account] || @cur_user.imap_default_index, webmail_mode: @webmail_mode) %></h3>
-  <h3><%= link_to t('mongoid.models.webmail/address'), webmail_addresses_path(account: params[:account] || @cur_user.imap_default_index, webmail_mode: @webmail_mode) %></h3>
-  <h4><%= link_to t('mongoid.models.webmail/address_group').sub(/.*\//, ''), webmail_address_groups_path(account: params[:account] || @cur_user.imap_default_index, webmail_mode: @webmail_mode) %></h4>
-  <h3><%= link_to t('mongoid.models.webmail/signature'), webmail_signatures_path(account: params[:account] || @cur_user.imap_default_index, webmail_mode: @webmail_mode) %></h3>
-  <h3><%= link_to t('mongoid.models.webmail/filter'), webmail_filters_path(account: params[:account] || @cur_user.imap_default_index, webmail_mode: @webmail_mode) %></h3>
-  <h3><%= link_to t('webmail.settings.cache'), webmail_cache_setting_path(account: params[:account] || @cur_user.imap_default_index, webmail_mode: @webmail_mode) %></h3>
-  <h3><%= link_to t('webmail.settings.account'), webmail_account_setting_path %></h3>
-  <% if Webmail::User.allowed?(:read, @cur_user) %>
-    <h3><%= link_to t('mongoid.models.webmail/user'), webmail_users_path %></h3>
-  <% end %>
-  <% if Webmail::Role.allowed?(:read, @cur_user) %>
-    <h3><%= link_to t('mongoid.models.webmail/role'), webmail_roles_path %></h3>
-  <% end %>
-  <% if Webmail::History.allowed?(:read, @cur_user) %>
-    <h3><%= link_to t('mongoid.models.webmail/history'), webmail_histories_path %></h3>
-  <% end %>
-</nav>
 
 <% if @quota %>
 <nav class="mod-navi webmail-navi webmail-navi-quota">
@@ -104,3 +83,28 @@ end
   </div>
 </nav>
 <% end %>
+<% end %>
+
+<nav class="mod-navi">
+  <h2><%= t("webmail.account_config") %></h2>
+  <h3><%= link_to t('mongoid.models.webmail/mailbox'), webmail_mailboxes_path(account: params[:account] || @cur_user.imap_default_index, webmail_mode: @webmail_mode) %></h3>
+  <h3><%= link_to t('mongoid.models.webmail/address'), webmail_addresses_path(account: params[:account] || @cur_user.imap_default_index, webmail_mode: @webmail_mode) %></h3>
+  <h4><%= link_to t('mongoid.models.webmail/address_group').sub(/.*\//, ''), webmail_address_groups_path(account: params[:account] || @cur_user.imap_default_index, webmail_mode: @webmail_mode) %></h4>
+  <h3><%= link_to t('mongoid.models.webmail/signature'), webmail_signatures_path(account: params[:account] || @cur_user.imap_default_index, webmail_mode: @webmail_mode) %></h3>
+  <h3><%= link_to t('mongoid.models.webmail/filter'), webmail_filters_path(account: params[:account] || @cur_user.imap_default_index, webmail_mode: @webmail_mode) %></h3>
+  <h3><%= link_to t('webmail.settings.cache'), webmail_cache_setting_path(account: params[:account] || @cur_user.imap_default_index, webmail_mode: @webmail_mode) %></h3>
+</nav>
+
+<nav class="mod-navi">
+  <h2><%= t("webmail.system_config") %></h2>
+  <h3><%= link_to t('webmail.settings.account'), webmail_account_setting_path %></h3>
+  <% if Webmail::User.allowed?(:read, @cur_user) %>
+    <h3><%= link_to t('mongoid.models.webmail/user'), webmail_users_path %></h3>
+  <% end %>
+  <% if Webmail::Role.allowed?(:read, @cur_user) %>
+    <h3><%= link_to t('mongoid.models.webmail/role'), webmail_roles_path %></h3>
+  <% end %>
+  <% if Webmail::History.allowed?(:read, @cur_user) %>
+    <h3><%= link_to t('mongoid.models.webmail/history'), webmail_histories_path %></h3>
+  <% end %>
+</nav>
