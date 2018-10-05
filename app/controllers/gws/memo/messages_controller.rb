@@ -51,7 +51,8 @@ class Gws::Memo::MessagesController < ApplicationController
   end
 
   def set_folders
-    @folders = Gws::Memo::Folder.static_items(@cur_user, @cur_site) + Gws::Memo::Folder.user(@cur_user).site(@cur_site)
+    @folders = Gws::Memo::Folder.static_items(@cur_user, @cur_site) +
+               Gws::Memo::Folder.user(@cur_user).site(@cur_site).tree_sort.map.to_a
     @folders.each { |folder| folder.site = @cur_site }
   end
 
