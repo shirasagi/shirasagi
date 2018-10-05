@@ -1,10 +1,15 @@
 <div class="addon-views">
   <div class="addon-view">
     <div class="addon-body">
-      <%== I18n.t("webmail.notice.imap_login_failed", account_settings: link_to(t("webmail.account_setting"), @webmail_mode == :group ? sys_group_path(params[:account]) : webmail_account_setting_path)) %>
+      <% if @webmail_mode == :group %>
+        <%== I18n.t("webmail.notice.imap_login_failed_group") %>
+      <% else %>
+        <%== I18n.t("webmail.notice.imap_login_failed", account_settings: link_to(t("webmail.account_setting"), webmail_account_setting_path)) %>
+      <% end %>
     </div>
   </div>
 
+  <% if @imap_setting %>
   <div class="addon-view">
     <div class="addon-body">
       <dl class="see">
@@ -25,4 +30,5 @@
       </dl>
     </div>
   </div>
+  <% end %>
 </div>
