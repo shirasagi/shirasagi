@@ -1,4 +1,4 @@
-module Webmail::GroupExtension
+module Webmail::Addon::GroupExtension
   extend ActiveSupport::Concern
   extend SS::Addon
 

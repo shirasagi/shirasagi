@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe Webmail::GroupExtension, type: :model, dbscope: :example do
+describe Webmail::Addon::GroupExtension, type: :model, dbscope: :example do
   subject(:group) { create :webmail_group }
   subject(:setting) { group.imap_setting }
 

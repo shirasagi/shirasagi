@@ -1,8 +1,8 @@
 FactoryBot.define do
-  factory :webmail_group, class: SS::Group do
+  factory :webmail_group, class: Webmail::Group do
     conf = SS.config.webmail.test_user || {}
 
-    name 'group_name'
+    name { "group-#{unique_id}" }
 
     setting = Webmail::ImapSetting.new
     setting[:name] = 'group_name'
