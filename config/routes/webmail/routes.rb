@@ -74,10 +74,11 @@ SS::Application.routes.draw do
       webmail_mode: /[a-z]+/, account: /\d+/, mailbox: /[^\/]+/, defaults: { webmail_mode: 'account', mailbox: 'INBOX' }
     resources :mailboxes, path: ':webmail_mode-:account/mailboxes',
       webmail_mode: /[a-z]+/, account: /\d+/, concerns: [:deletion, :mailbox], defaults: { webmail_mode: 'account' }
-    resources :addresses, path: ':webmail_mode-:account/addresses', webmail_mode: /[a-z]+/, account: /\d+/, concerns: [:deletion, :export], defaults: { webmail_mode: 'account' } do
+    get "addresses" => "addresses#index", as: "addresses_main"
+    resources :addresses, path: "addresses/:group", concerns: [:deletion, :export] do
       get :add, on: :collection
     end
-    resources :address_groups, path: ':webmail_mode-:account/addresses_groups', webmail_mode: /[a-z]+/, account: /\d+/, concerns: [:deletion], defaults: { webmail_mode: 'account' }
+    resources :address_groups, concerns: [:deletion]
     resources :signatures, path: ':webmail_mode-:account/signatures', webmail_mode: /[a-z]+/, account: /\d+/, concerns: [:deletion], defaults: { webmail_mode: 'account' }
     resources :filters, path: ':webmail_mode-:account/filters', webmail_mode: /[a-z]+/, concerns: [:deletion, :export, :filter], defaults: { webmail_mode: 'account' }
     resource :cache_setting, path: ':webmail_mode-:account/cache_setting', only: [:show, :update], webmail_mode: /[a-z]+/, defaults: { webmail_mode: 'account' }
@@ -86,11 +87,6 @@ SS::Application.routes.draw do
     end
     get :login_failed, to: "login_failed#index", path: ':webmail_mode-:account/login_failed', webmail_mode: /[a-z]+/, account: /\d+/, defaults: { webmail_mode: 'account' }
     resources :sys_notices, only: [:index, :show]
-
-    # with group
-    scope(path: ":webmail_mode-:account/address_group-:group", as: "group", defaults: { webmail_mode: 'account' }) do
-      resources :addresses, concerns: [:deletion, :export]
-    end
 
     namespace "apis" do
       get ":webmail_mode-:account/recent" => "imap#recent", webmail_mode: /[a-z]+/, account: /\d+/, as: :recent, defaults: { webmail_mode: 'account' }

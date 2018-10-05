@@ -12,6 +12,7 @@ ja:
 
   webmail:
     account_config: アカウント設定
+    personal_config: 個人設定
     system_config: システム設定
     mail: メール
     message: メッセージ
