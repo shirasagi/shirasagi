@@ -1,5 +1,7 @@
 module Webmail
   class Initializer
+    # グループ
+    Webmail::Role.permission :edit_webmail_groups
     # ユーザー
     Webmail::Role.permission :edit_webmail_users
     # ロール/権限

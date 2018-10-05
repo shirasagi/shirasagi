@@ -98,6 +98,9 @@ end
 <nav class="mod-navi">
   <h2><%= t("webmail.system_config") %></h2>
   <h3><%= link_to t('webmail.settings.account'), webmail_account_setting_path %></h3>
+  <% if Webmail::Group.allowed?(:read, @cur_user) %>
+    <h3><%= link_to t('mongoid.models.webmail/group'), webmail_groups_path %></h3>
+  <% end %>
   <% if Webmail::User.allowed?(:read, @cur_user) %>
     <h3><%= link_to t('mongoid.models.webmail/user'), webmail_users_path %></h3>
   <% end %>

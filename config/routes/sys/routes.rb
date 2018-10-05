@@ -14,8 +14,8 @@ SS::Application.routes.draw do
   end
 
   concern :role do
-    get "role/edit" => "groups#role_edit", :on => :member
-    put "role" => "groups#role_update", :on => :member
+    get "role/edit" => "groups#role_edit", on: :member
+    put "role" => "groups#role_update", on: :member
   end
 
   concern :lock_and_unlock do

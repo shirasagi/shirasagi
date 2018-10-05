@@ -144,6 +144,7 @@ ja:
       blank_apply_mailbox: 適用するフォルダーを選択してください。
 
   webmail_role:
+    edit_webmail_groups: グループの管理
     edit_webmail_users: ユーザーの管理
     edit_webmail_roles: 権限/ロールの管理
     read_webmail_histories: 操作履歴の閲覧
@@ -153,6 +154,7 @@ ja:
 
   mongoid:
     models:
+      webmail/group: グループ
       webmail/user: ユーザー
       webmail/role: 権限/ロール
       webmail/history: 操作履歴

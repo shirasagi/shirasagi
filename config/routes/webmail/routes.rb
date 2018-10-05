@@ -58,6 +58,7 @@ SS::Application.routes.draw do
     match "logout" => "login#logout", as: :logout, via: [:get]
     match "login"  => "login#login", as: :login, via: [:get, :post]
 
+    resources :groups, concerns: [:deletion]
     resources :users, concerns: [:deletion, :export] do
       get :download_template, on: :collection
     end
