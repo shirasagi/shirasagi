@@ -6,8 +6,9 @@ module Webmail::Addon::GroupExtension
     attr_accessor :default_imap_setting
     field :imap_settings, type: Webmail::Extensions::ImapSettings, default: []
     permit_params imap_settings: %i(
-      name from address imap_host imap_auth_type
-      imap_account in_imap_password imap_sent_box imap_draft_box imap_trash_box
+      name from address imap_host imap_port imap_ssl_use
+      imap_auth_type imap_account in_imap_password
+      imap_sent_box imap_draft_box imap_trash_box
       threshold_mb
     )
 
@@ -20,6 +21,10 @@ module Webmail::Addon::GroupExtension
 
   def imap_auth_type_options
     %w(LOGIN PLAIN CRAM-MD5 DIGEST-MD5)
+  end
+
+  def imap_ssl_use_options
+    %w(disabled enabled).map { |c| [I18n.t("webmail.options.imap_ssl_use.#{c}"), c] }
   end
 
   def default_imap_setting_changed?
@@ -36,6 +41,7 @@ module Webmail::Addon::GroupExtension
 
   def validate_imap_settings
     return self.imap_settings = [] if !default_imap_setting_changed?
+    imap_setting[:imap_port] = (imap_setting.imap_port.to_i > 0) ? imap_setting.imap_port.to_i : nil
     imap_setting[:threshold_mb] = (imap_setting.threshold_mb.to_i > 0) ? imap_setting.threshold_mb.to_i : nil
     imap_setting.set_imap_password
     self.imap_settings = [imap_setting]

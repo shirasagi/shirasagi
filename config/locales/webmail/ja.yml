@@ -188,11 +188,13 @@ ja:
         imap_settings: IMAP/ユーザー設定
       webmail/reference/role:
         webmail_role_ids: ロール
-      ss/model/group:
+      webmail/addon/group_extension:
         imap_setting_name: アカウント名
         from: 名前
         address: メールアドレス
         imap_host: IMAP/ホスト
+        imap_port: IMAP/ポート
+        imap_ssl_use: IMAP/SSL
         imap_auth_type: IMAP/認証方式
         imap_account: IMAP/ユーザー名
         imap_password: IMAP/パスワード
