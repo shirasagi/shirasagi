@@ -11,6 +11,7 @@ module Webmail::BaseFilter
     before_action :validate_service, if: ->{ SS.config.service.webmail_limitation.present? }
     before_action :set_webmail_logged_in, if: ->{ @cur_user }
     before_action :imap_disconnect
+    before_action :set_imap_setting, if: ->{ @cur_user }
     before_action :imap_initialize, if: ->{ @cur_user }
     # before_action :imap_login
     after_action :imap_disconnect
@@ -22,6 +23,7 @@ module Webmail::BaseFilter
   def set_webmail_mode
     @ss_mode = :webmail
     @webmail_mode = params[:webmail_mode].try(:to_sym) || :account
+    raise "404" unless %i[account group].include?(@webmail_mode)
   end
 
   def validate_service
@@ -52,24 +54,29 @@ module Webmail::BaseFilter
     # @crumbs << [t("modules.webmail"), webmail_mails_path]
   end
 
-  def imap_initialize
-    @imap_setting = if @webmail_mode == :group
-                      @cur_user.groups.find_by(id: params[:account]).imap_setting
-                    elsif params.key?(:account)
-                      @cur_user.imap_settings[params[:account].to_i]
-                    end
-
-    if @imap_setting
-      @redirect_path = webmail_login_failed_path(account: params[:account], webmail_mode: @webmail_mode)
-    else
-      @redirect_path  = if @webmail_mode == :group
-                          sys_group_path(id: params[:account])
-                        else
-                          webmail_account_setting_path
-                        end
-
-      @imap_setting = Webmail::ImapSetting.new
+  def set_imap_setting
+    if @webmail_mode == :group
+      raise "403" if !@cur_user.webmail_permitted_all?(:use_webmail_group_imap_setting)
+      @imap_setting = @cur_user.groups.find_by(id: params[:account]).imap_settings.first
+    elsif params.key?(:account)
+      @imap_setting = @cur_user.imap_settings[params[:account].to_i]
     end
+
+    if @webmail_mode == :account && params[:account].to_i == 0
+      # 既定の個人アカウントの場合にのみ webmail_account_setting_path とする。
+      @redirect_path = webmail_account_setting_path
+    else
+      # それ以外（追加の個人アカウントやグループ代表メールアカウント）の場合、エラーを表示する。
+      @redirect_path = webmail_login_failed_path(account: params[:account], webmail_mode: @webmail_mode)
+    end
+  end
+
+  def imap_initialize
+    if @webmail_mode == :account && params[:account].to_i == 0
+      @imap_setting ||= Webmail::ImapSetting.new
+    end
+
+    raise "404" unless @imap_setting
 
     @imap = Webmail::Imap::Base.new(@cur_user, @imap_setting)
 

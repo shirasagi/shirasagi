@@ -22,6 +22,8 @@ describe "webmail_signatures", type: :feature, dbscope: :example do
     let(:group) { create :webmail_group }
     let(:index_path) { webmail_signatures_path(account: group.id, webmail_mode: :group) }
 
+    before { webmail_user.add_to_set(group_ids: [ group.id ]) }
+
     it_behaves_like 'webmail signatures flow'
   end
 end

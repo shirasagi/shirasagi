@@ -19,13 +19,18 @@ module Webmail::MailHelper
   end
 
   def group_options(path_helper)
+    return [] if !@cur_user.webmail_permitted_all?(:use_webmail_group_imap_setting)
+
     @cur_user.groups
              .select { |group| group.imap_setting.try(:name).present? }
              .map { |group| [group.imap_setting.name, send(path_helper, webmail_mode: :group, account: group.id)] }
   end
 
   def webmail_other_account?(path_helper)
-    @cur_user.imap_settings.any? || @cur_user.groups.map(&:imap_setting).select(&:present?).any?
+    return true if @cur_user.imap_settings.any?
+    return false if !@cur_user.webmail_permitted_all?(:use_webmail_group_imap_setting)
+
+    @cur_user.groups.pluck(:imap_settings).select(&:present?).any?
   end
 
   def webmail_other_account_select(path_helper)

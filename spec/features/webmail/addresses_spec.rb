@@ -32,6 +32,8 @@ describe "webmail_addresses", type: :feature, dbscope: :example do
     let(:group) { create :webmail_group }
     let(:index_path) { webmail_addresses_path(account: group.id, webmail_mode: :group) }
 
+    before { webmail_user.add_to_set(group_ids: [ group.id ]) }
+
     it_behaves_like 'webmail addresses flow'
   end
 end

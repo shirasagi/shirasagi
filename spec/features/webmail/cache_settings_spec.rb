@@ -37,6 +37,8 @@ describe "webmail_cache_settings", type: :feature, dbscope: :example do
     let(:group) { create :webmail_group }
     let(:show_path) { webmail_cache_setting_path(account: group.id, webmail_mode: :group) }
 
+    before { webmail_user.add_to_set(group_ids: [ group.id ]) }
+
     it_behaves_like 'webmail cache settings flow'
   end
 end
