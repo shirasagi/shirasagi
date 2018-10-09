@@ -1,7 +1,7 @@
 class Webmail::Filter
   include SS::Document
   include SS::Reference::User
-  include SS::UserPermission
+  include Webmail::ImapPermission
   include Webmail::ImapAccessor
   include Webmail::Addon::ApplyFilter
 

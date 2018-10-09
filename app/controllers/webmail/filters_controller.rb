@@ -1,6 +1,6 @@
 class Webmail::FiltersController < ApplicationController
   include Webmail::BaseFilter
-  include Sns::CrudFilter
+  include Webmail::ImapCrudFilter
 
   model Webmail::Filter
 
@@ -21,7 +21,6 @@ class Webmail::FiltersController < ApplicationController
 
   def index
     @items = @model.
-      user(@cur_user).
       and_imap(@imap).
       search(params[:s]).
       page(params[:page]).
@@ -31,7 +30,7 @@ class Webmail::FiltersController < ApplicationController
   def download
     s_params = params[:s] || {}
 
-    @items = @model.user(@cur_user).
+    @items = @model.
       and_imap(@imap).
       search(s_params)
 
