@@ -22,7 +22,7 @@ class Webmail::FiltersController < ApplicationController
   def index
     @items = @model.
       user(@cur_user).
-      imap_setting(@cur_user, @imap_setting).
+      and_imap(@imap).
       search(params[:s]).
       page(params[:page]).
       per(50)
@@ -32,7 +32,7 @@ class Webmail::FiltersController < ApplicationController
     s_params = params[:s] || {}
 
     @items = @model.user(@cur_user).
-      imap_setting(@cur_user, @imap_setting).
+      and_imap(@imap).
       search(s_params)
 
     send_enum enum_csv, type: 'text/csv; charset=Shift_JIS', filename: "personal_filters_#{Time.zone.now.to_i}.csv"

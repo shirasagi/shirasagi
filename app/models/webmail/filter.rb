@@ -36,9 +36,8 @@ class Webmail::Filter
 
   default_scope -> { order_by order: 1 }
 
-  scope :imap_setting, ->(user, setting) {
-    conf = setting.imap_settings(user.imap_default_settings)
-    where host: conf[:host], account: conf[:account]
+  scope :and_imap, ->(imap) {
+    where imap.account_scope
   }
 
   scope :enabled, -> { where state: 'enabled' }

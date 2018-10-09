@@ -88,7 +88,7 @@ module Webmail::Imap
       return 0 if inbox.status.recent == 0
 
       imap.examine('INBOX')
-      filters = Webmail::Filter.user(imap.user).imap_setting(imap.user, imap.setting).enabled.entries
+      filters = Webmail::Filter.user(imap.user).and_imap(imap).enabled.entries
 
       filters.each do |filter|
         filter.imap = imap
