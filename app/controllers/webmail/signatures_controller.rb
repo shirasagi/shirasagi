@@ -1,6 +1,6 @@
 class Webmail::SignaturesController < ApplicationController
   include Webmail::BaseFilter
-  include Sns::CrudFilter
+  include Webmail::ImapCrudFilter
 
   model Webmail::Signature
 
@@ -12,14 +12,14 @@ class Webmail::SignaturesController < ApplicationController
   end
 
   def fix_params
-    { cur_user: @cur_user }
+    @imap.account_scope.merge(cur_user: @cur_user)
   end
 
   public
 
   def index
     @items = @model.
-      user(@cur_user).
+      and_imap(@imap).
       search(params[:s]).
       page(params[:page]).
       per(50)

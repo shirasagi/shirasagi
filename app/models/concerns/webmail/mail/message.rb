@@ -24,7 +24,7 @@ module Webmail::Mail::Message
   end
 
   def new_mail
-    if sign = Webmail::Signature.default_sign(imap.user)
+    if sign = Webmail::Signature.default_sign(imap)
       self.text = "\n\n#{sign}"
       self.html = "<p></p>" + h(sign.to_s).gsub(/\r\n|\n/, '<br />')
     end
@@ -65,7 +65,7 @@ module Webmail::Mail::Message
   end
 
   def set_reply_body(ref)
-    sign = Webmail::Signature.default_sign(imap.user)
+    sign = Webmail::Signature.default_sign(imap)
     self.format = ref.format
     self.text = reply_body_text(ref, sign)
     self.html = reply_body_html(ref, sign)

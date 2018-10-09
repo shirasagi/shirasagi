@@ -72,12 +72,6 @@ class Webmail::Mail
     %w(text html).map { |c| [c.upcase, c] }
   end
 
-  def signature_options
-    Webmail::Signature.user(cur_user).map do |c|
-      [c.name, c.text]
-    end
-  end
-
   def replied_mail
     return nil if reply_uid.blank?
     @replied_mail ||= imap.mails.find(reply_uid)

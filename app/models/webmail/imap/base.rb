@@ -52,6 +52,9 @@ module Webmail::Imap
     end
 
     def account_scope
+      # host and account are required
+      return if conf[:host].blank? || conf[:account].blank?
+
       { host: conf[:host], account: conf[:account] }
     end
 
