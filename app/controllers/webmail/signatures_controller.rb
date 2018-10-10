@@ -4,6 +4,8 @@ class Webmail::SignaturesController < ApplicationController
 
   model Webmail::Signature
 
+  before_action :check_group_imap_permissions, if: ->{ @webmail_mode == :group }
+
   private
 
   def set_crumbs
@@ -13,6 +15,12 @@ class Webmail::SignaturesController < ApplicationController
 
   def fix_params
     @imap.account_scope.merge(cur_user: @cur_user)
+  end
+
+  def check_group_imap_permissions
+    unless @cur_user.webmail_permitted_any?(:edit_webmail_group_imap_signatures)
+      redirect_to webmail_mails_path(account: params[:account], webmail_mode: @webmail_mode)
+    end
   end
 
   public

@@ -3,11 +3,19 @@ class Webmail::CacheSettingsController < ApplicationController
 
   menu_view false
 
+  before_action :check_group_imap_permissions, if: ->{ @webmail_mode == :group }
+
   private
 
   def set_crumbs
     @crumbs << [t("webmail.settings.cache"), { action: :show } ]
     @webmail_other_account_path = :webmail_cache_setting_path
+  end
+
+  def check_group_imap_permissions
+    unless @cur_user.webmail_permitted_any?(:edit_webmail_group_imap_caches)
+      redirect_to webmail_mails_path(account: params[:account], webmail_mode: @webmail_mode)
+    end
   end
 
   public

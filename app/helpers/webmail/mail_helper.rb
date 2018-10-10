@@ -45,4 +45,46 @@ module Webmail::MailHelper
       class: "webmail-select-account"
     ).html_safe
   end
+
+  def link_to_webmail_account_config_path(options = {})
+    options[:account] ||= params[:account]
+    options[:account] ||= @cur_user.imap_default_index
+    options[:webmail_mode] ||= @webmail_mode.to_s
+
+    label = options.delete(:label)
+    path_proc = options.delete(:path_proc)
+    group_imap_permission = options.delete(:group_imap_permission)
+
+    return link_to(label, path_proc.call(options)) if @webmail_mode == :account || !group_imap_permission
+    return link_to(label, path_proc.call(options)) if @cur_user.webmail_permitted_any?(group_imap_permission)
+    nil
+  end
+
+  def link_to_webmail_mailboxes_path(options = {})
+    options[:label] = t('mongoid.models.webmail/mailbox')
+    options[:path_proc] = proc { |options| webmail_mailboxes_path(options) }
+
+    link_to_webmail_account_config_path(options)
+  end
+
+  def link_to_webmail_signatures_path(options = {})
+    options[:label] = t('mongoid.models.webmail/signature')
+    options[:path_proc] = proc { |options| webmail_signatures_path(options) }
+
+    link_to_webmail_account_config_path(options)
+  end
+
+  def link_to_webmail_filters_path(options = {})
+    options[:label] = t('mongoid.models.webmail/filter')
+    options[:path_proc] = proc { |options| webmail_filters_path(options) }
+
+    link_to_webmail_account_config_path(options)
+  end
+
+  def link_to_webmail_cache_setting_path(options = {})
+    options[:label] = t('webmail.settings.cache')
+    options[:path_proc] = proc { |options| webmail_cache_setting_path(options) }
+
+    link_to_webmail_account_config_path(options)
+  end
 end

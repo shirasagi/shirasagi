@@ -5,6 +5,7 @@ class Webmail::FiltersController < ApplicationController
   model Webmail::Filter
 
   before_action :imap_login, except: [:index]
+  before_action :check_group_imap_permissions, if: ->{ @webmail_mode == :group }
 
   private
 
@@ -15,6 +16,12 @@ class Webmail::FiltersController < ApplicationController
 
   def fix_params
     @imap.account_scope.merge(cur_user: @cur_user, imap: @imap)
+  end
+
+  def check_group_imap_permissions
+    unless @cur_user.webmail_permitted_any?(:edit_webmail_group_imap_filters)
+      redirect_to webmail_mails_path(account: params[:account], webmail_mode: @webmail_mode)
+    end
   end
 
   public

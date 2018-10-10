@@ -1,6 +1,7 @@
 ja:
   modules:
     webmail: ウェブメール
+    webmail/group_imap: グループ代表メール
     addons:
       webmail/role: 権限/ロール
       webmail/history: 変更履歴
@@ -151,6 +152,10 @@ ja:
     edit_webmail_roles: 権限/ロールの管理
     read_webmail_histories: 操作履歴の閲覧
     use_webmail_group_imap_setting: グループ代表メールの使用
+    edit_webmail_group_imap_mailboxes: グループ代表メールのフォルダーの管理
+    edit_webmail_group_imap_signatures: グループ代表メールの署名の管理
+    edit_webmail_group_imap_filters: グループ代表メールのフィルターの管理
+    edit_webmail_group_imap_caches: グループ代表メールのキャッシュの管理
 
   mongoid:
     models:

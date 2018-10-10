@@ -85,13 +85,21 @@ end
 <% end %>
 <% end %>
 
-<nav class="mod-navi">
-  <h2><%= t("webmail.account_config") %></h2>
-  <h3><%= link_to t('mongoid.models.webmail/mailbox'), webmail_mailboxes_path(account: params[:account] || @cur_user.imap_default_index, webmail_mode: @webmail_mode) %></h3>
-  <h3><%= link_to t('mongoid.models.webmail/signature'), webmail_signatures_path(account: params[:account] || @cur_user.imap_default_index, webmail_mode: @webmail_mode) %></h3>
-  <h3><%= link_to t('mongoid.models.webmail/filter'), webmail_filters_path(account: params[:account] || @cur_user.imap_default_index, webmail_mode: @webmail_mode) %></h3>
-  <h3><%= link_to t('webmail.settings.cache'), webmail_cache_setting_path(account: params[:account] || @cur_user.imap_default_index, webmail_mode: @webmail_mode) %></h3>
-</nav>
+<% account_config_links = [] %>
+<% account_config_links << link_to_webmail_mailboxes_path(group_imap_permission: :edit_webmail_group_imap_mailboxes) %>
+<% account_config_links << link_to_webmail_signatures_path(group_imap_permission: :edit_webmail_group_imap_signatures) %>
+<% account_config_links << link_to_webmail_filters_path(group_imap_permission: :edit_webmail_group_imap_filters) %>
+<% account_config_links << link_to_webmail_cache_setting_path(group_imap_permission: :edit_webmail_group_imap_caches) %>
+<% account_config_links.compact! %>
+
+<% if account_config_links.present? %>
+  <nav class="mod-navi">
+    <h2><%= t("webmail.account_config") %></h2>
+    <% account_config_links.each do |account_config_link| %>
+      <h3><%= account_config_link %></h3>
+    <% end %>
+  </nav>
+<% end %>
 
 <nav class="mod-navi">
   <h2><%= t("webmail.personal_config") %></h2>
