@@ -1,5 +1,10 @@
-<% return if @item.imap_setting.blank? %>
-<% default = t('webmail.default_settings') %>
+<%
+  return if @item.imap_setting.blank?
+
+  default = t('webmail.default_settings')
+  imap = Webmail::Imap::Base.new(@cur_user, @item.imap_setting)
+  quota = imap.quota.load rescue nil
+%>
 
 <dl class="see">
   <dt><%= @model.t :imap_setting_name %></dt>
@@ -47,5 +52,15 @@
   <% if @item.imap_setting.threshold_mb %>
   <dt><%= @model.t :threshold_mb %></dt>
   <dd><%= @item.imap_setting.threshold_mb %><%= t "ss.units.mega_byte" %></dd>
+  <% end %>
+
+  <% if quota %>
+  <dt><%= t('mongoid.models.webmail/quota') %></dt>
+  <dd style="width: 210px;">
+    <div class="ss-quota-bar">
+      <div class="label"><%= quota.label %></div>
+      <div class="usage <%= quota.over_threshold? ? 'over-threshold' : '' %>" style="width: <%= quota.percentage %>%"></div>
+    </div>
+  </dd>
   <% end %>
 </dl>
