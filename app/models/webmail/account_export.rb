@@ -103,7 +103,13 @@ class Webmail::AccountExport
       errors.add :base, "#{index + 1}: #{Webmail::User.t('account_index')} is required"
       return
     end
+
     account_index = account_index.to_i
+    account_index -= 1
+    if account_index < 0
+      errors.add :base, "#{index + 1}: #{Webmail::User.t('account_index')} should be greater than 0"
+      return
+    end
 
     item = Webmail::User.allow(:read, @cur_user).where(id: id).first
     if item.blank?
@@ -117,7 +123,7 @@ class Webmail::AccountExport
     end
 
     setting = item.imap_settings[account_index]
-    setting ||= Webmail::ImapSetting.new
+    setting ||= Webmail::ImapSetting.default
 
     ACCOUNT_EXPORT_DEF.each { |d| invoke(d[:setter], row, item, setting) }
 
@@ -129,7 +135,6 @@ class Webmail::AccountExport
     end
 
     imap_settings = item.imap_settings.to_a
-    imap_settings.delete_at(account_index)
     imap_settings[account_index] = setting
     imap_settings = imap_settings.compact
     item.imap_settings = imap_settings
@@ -161,7 +166,7 @@ class Webmail::AccountExport
       break
     end
 
-    errors.add :in_file, :invalid_file_type if unmatched > 3
+    errors.add :in_file, :invalid_file_type if unmatched > 4
     in_file.rewind
   rescue
     errors.add :in_file, :invalid_file_type
