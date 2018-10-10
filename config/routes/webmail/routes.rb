@@ -82,19 +82,26 @@ SS::Application.routes.draw do
       get :add, on: :collection
     end
     resources :address_groups, concerns: [:deletion]
-    resources :signatures, path: ':webmail_mode-:account/signatures', webmail_mode: /[a-z]+/, account: /\d+/, concerns: [:deletion], defaults: { webmail_mode: 'account' }
-    resources :filters, path: ':webmail_mode-:account/filters', webmail_mode: /[a-z]+/, concerns: [:deletion, :export, :filter], defaults: { webmail_mode: 'account' }
-    resource :cache_setting, path: ':webmail_mode-:account/cache_setting', only: [:show, :update], webmail_mode: /[a-z]+/, defaults: { webmail_mode: 'account' }
+    resources :signatures, path: ':webmail_mode-:account/signatures',
+      webmail_mode: /[a-z]+/, account: /\d+/, concerns: [:deletion], defaults: { webmail_mode: 'account' }
+    resources :filters, path: ':webmail_mode-:account/filters',
+      webmail_mode: /[a-z]+/, concerns: [:deletion, :export, :filter], defaults: { webmail_mode: 'account' }
+    resource :cache_setting, path: ':webmail_mode-:account/cache_setting', only: [:show, :update],
+      webmail_mode: /[a-z]+/, defaults: { webmail_mode: 'account' }
     resource :account_setting, only: [:show, :edit, :update] do
       post :test_connection, on: :member
     end
-    get :login_failed, to: "login_failed#index", path: ':webmail_mode-:account/login_failed', webmail_mode: /[a-z]+/, account: /\d+/, defaults: { webmail_mode: 'account' }
+    get :login_failed, to: "login_failed#index", path: ':webmail_mode-:account/login_failed',
+      webmail_mode: /[a-z]+/, account: /\d+/, defaults: { webmail_mode: 'account' }
     resources :sys_notices, only: [:index, :show]
 
     namespace "apis" do
-      get ":webmail_mode-:account/recent" => "imap#recent", webmail_mode: /[a-z]+/, account: /\d+/, as: :recent, defaults: { webmail_mode: 'account' }
-      get ":webmail_mode-:account/latest" => "imap#latest", webmail_mode: /[a-z]+/, account: /\d+/, defaults: { webmail_mode: 'account' }
-      get ":webmail_mode-:account/quota" => "imap#quota", webmail_mode: /[a-z]+/, account: /\d+/, as: :quota, defaults: { webmail_mode: 'account' }
+      get ":webmail_mode-:account/recent" => "imap#recent",
+        webmail_mode: /[a-z]+/, account: /\d+/, as: :recent, defaults: { webmail_mode: 'account' }
+      get ":webmail_mode-:account/latest" => "imap#latest",
+        webmail_mode: /[a-z]+/, account: /\d+/, defaults: { webmail_mode: 'account' }
+      get ":webmail_mode-:account/quota" => "imap#quota",
+        webmail_mode: /[a-z]+/, account: /\d+/, as: :quota, defaults: { webmail_mode: 'account' }
       get "addresses" => "addresses#index"
     end
   end
