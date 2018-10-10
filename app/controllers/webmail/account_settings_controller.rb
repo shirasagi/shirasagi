@@ -7,6 +7,7 @@ class Webmail::AccountSettingsController < ApplicationController
   menu_view "ss/crud/resource_menu"
 
   skip_before_action :imap_initialize
+  before_action :check_permissions
   before_action :set_default_settings
 
   private
@@ -39,6 +40,10 @@ class Webmail::AccountSettingsController < ApplicationController
     @item = @cur_user
   end
 
+  def check_permissions
+    raise "403" unless @cur_user.webmail_permitted_any?(:edit_webmail_user_accounts)
+  end
+
   def set_default_settings
     label = t('webmail.default_settings')
     conf = @cur_user.imap_default_settings
@@ -63,7 +68,7 @@ class Webmail::AccountSettingsController < ApplicationController
   end
 
   def edit
-    #
+    # render
   end
 
   def test_connection

@@ -1,7 +1,7 @@
 <div class="addon-views">
   <div class="addon-view">
     <div class="addon-body">
-      <% if @webmail_mode == :group %>
+      <% if @webmail_mode == :group ||!@cur_user.webmail_permitted_any?(:edit_webmail_user_accounts) %>
         <%== I18n.t("webmail.notice.imap_login_failed_group") %>
       <% else %>
         <%== I18n.t("webmail.notice.imap_login_failed", account_settings: link_to(t("webmail.account_setting"), webmail_account_setting_path)) %>
@@ -15,18 +15,6 @@
       <dl class="see">
         <dt><%= @model.t :imap_setting_name %></dt>
         <dd><%= @imap_setting.name %></dd>
-
-        <dt><%= @model.t :address %></dt>
-        <dd><%= @imap.address %></dd>
-
-        <dt><%= @model.t :imap_host %></dt>
-        <dd><%= @imap.conf[:host] %></dd>
-
-        <dt><%= @model.t :imap_auth_type %></dt>
-        <dd><%= @imap.conf[:auth_type] %></dd>
-
-        <dt><%= @model.t :imap_account %></dt>
-        <dd><%= @imap.conf[:account] %></dd>
       </dl>
     </div>
   </div>

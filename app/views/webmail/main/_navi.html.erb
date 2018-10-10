@@ -107,19 +107,29 @@ end
   <h4><%= link_to t('mongoid.models.webmail/address_group').sub(/.*\//, ''), webmail_address_groups_path %></h4>
 </nav>
 
-<nav class="mod-navi">
-  <h2><%= t("webmail.system_config") %></h2>
-  <h3><%= link_to t('webmail.settings.account'), webmail_account_setting_path %></h3>
-  <% if Webmail::Group.allowed?(:read, @cur_user) %>
-    <h3><%= link_to t('mongoid.models.webmail/group'), webmail_groups_path %></h3>
-  <% end %>
-  <% if Webmail::User.allowed?(:read, @cur_user) %>
-    <h3><%= link_to t('mongoid.models.webmail/user'), webmail_users_path %></h3>
-  <% end %>
-  <% if Webmail::Role.allowed?(:read, @cur_user) %>
-    <h3><%= link_to t('mongoid.models.webmail/role'), webmail_roles_path %></h3>
-  <% end %>
-  <% if Webmail::History.allowed?(:read, @cur_user) %>
-    <h3><%= link_to t('mongoid.models.webmail/history'), webmail_histories_path %></h3>
-  <% end %>
-</nav>
+<%
+  system_config_links = []
+  if @cur_user.webmail_permitted_any?(:edit_webmail_user_accounts)
+    system_config_links << link_to(t('webmail.settings.account'), webmail_account_setting_path)
+  end
+  if Webmail::Group.allowed?(:read, @cur_user)
+    system_config_links << link_to(t('mongoid.models.webmail/group'), webmail_groups_path)
+  end
+  if Webmail::User.allowed?(:read, @cur_user)
+    system_config_links << link_to(t('mongoid.models.webmail/user'), webmail_users_path)
+  end
+  if Webmail::Role.allowed?(:read, @cur_user)
+    system_config_links << link_to(t('mongoid.models.webmail/role'), webmail_roles_path)
+  end
+  if Webmail::History.allowed?(:read, @cur_user)
+    system_config_links << link_to(t('mongoid.models.webmail/history'), webmail_histories_path)
+  end
+%>
+<% if system_config_links.present? %>
+  <nav class="mod-navi">
+    <h2><%= t("webmail.system_config") %></h2>
+    <% system_config_links.each do |system_config_link| %>
+      <h3><%= system_config_link %></h3>
+    <% end %>
+  </nav>
+<% end %>

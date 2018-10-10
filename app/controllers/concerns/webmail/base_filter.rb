@@ -63,11 +63,18 @@ module Webmail::BaseFilter
     end
 
     if @webmail_mode == :account && params[:account].to_i == 0
-      # 既定の個人アカウントの場合にのみ webmail_account_setting_path とする。
-      @redirect_path = webmail_account_setting_path
+      if @cur_user.webmail_permitted_any?(:edit_webmail_user_accounts)
+        # 既定の個人アカウントの場合にのみ webmail_account_setting_path とする。
+        @redirect_path = webmail_account_setting_path
+      else
+        # 個人アカウントを管理する権限がないので、エラーを表示する。
+        @redirect_path = webmail_login_failed_path(
+          account: params[:account] || @cur_user.imap_default_index, webmail_mode: @webmail_mode)
+      end
     else
       # それ以外（追加の個人アカウントやグループ代表メールアカウント）の場合、エラーを表示する。
-      @redirect_path = webmail_login_failed_path(account: params[:account], webmail_mode: @webmail_mode)
+      @redirect_path = webmail_login_failed_path(
+        account: params[:account] || @cur_user.imap_default_index, webmail_mode: @webmail_mode)
     end
   end
 
