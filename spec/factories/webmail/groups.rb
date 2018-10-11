@@ -4,7 +4,7 @@ FactoryBot.define do
 
     name { "group-#{unique_id}" }
 
-    setting = Webmail::ImapSetting.new
+    setting = Webmail::ImapSetting.default
     setting[:name] = 'group_name'
     setting[:address] = conf['address'] || 'webmail@example.jp'
     setting[:imap_host] = conf['host'] || 'localhost'

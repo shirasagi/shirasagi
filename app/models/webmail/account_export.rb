@@ -69,7 +69,7 @@ class Webmail::AccountExport
     csv = CSV.generate do |data|
       data << ACCOUNT_EXPORT_DEF.map { |d| d[:label] }
       items.each do |item|
-        setting = Webmail::ImapSetting.new
+        setting = Webmail::ImapSetting.default
         line = ACCOUNT_EXPORT_DEF.map do |d|
           invoke d[:getter], item, 0, setting
         end

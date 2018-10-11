@@ -32,7 +32,7 @@
   <dd class="wide">
     <table class="index">
     <% if @item.imap_settings.blank? %>
-      <% render_row.call(1, Webmail::ImapSetting.new, true) %>
+      <% render_row.call(1, Webmail::ImapSetting.default, true) %>
     <% else %>
       <% @item.imap_settings.each_with_index do |setting, i| %>
         <% render_row.call(i + 1, setting, @item.imap_default_index == i) %>

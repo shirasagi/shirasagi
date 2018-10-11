@@ -7,7 +7,7 @@ FactoryBot.define do
     in_password 'pass'
     group_ids { [ ss_group.id ] }
 
-    setting = Webmail::ImapSetting.new
+    setting = Webmail::ImapSetting.default
     setting[:name] = 'user_name'
     setting[:address] = conf['email'] || 'webmail@example.jp'
     setting[:imap_host] = conf['host'] || 'localhost'

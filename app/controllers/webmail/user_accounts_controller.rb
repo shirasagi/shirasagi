@@ -28,7 +28,7 @@ class Webmail::UserAccountsController < ApplicationController
     @index = Integer(params[:id])
     @item = @items[@index]
     if @index == 0
-      @item ||= Webmail::ImapSetting.new
+      @item ||= Webmail::ImapSetting.default
     end
 
     raise "404" if @item.nil?
@@ -68,12 +68,12 @@ class Webmail::UserAccountsController < ApplicationController
 
   def new
     raise "403" unless @user.allowed?(:edit, @cur_user)
-    @item = Webmail::ImapSetting.new pre_params.merge(fix_params)
+    @item = Webmail::ImapSetting.default.merge(pre_params.merge(fix_params).symbolize_keys)
   end
 
   def create
     raise "403" unless @user.allowed?(:edit, @cur_user)
-    @item = Webmail::ImapSetting.new
+    @item = Webmail::ImapSetting.default
     @item.merge!(get_params.to_h.symbolize_keys)
     if @item.invalid?
       render_create false
@@ -156,7 +156,7 @@ class Webmail::UserAccountsController < ApplicationController
   end
 
   def test_connection
-    setting = Webmail::ImapSetting.new
+    setting = Webmail::ImapSetting.default
     setting.merge!(get_params.to_h.symbolize_keys)
     setting.set_imap_password
     setting.valid?

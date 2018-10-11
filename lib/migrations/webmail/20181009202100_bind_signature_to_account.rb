@@ -19,7 +19,7 @@ class SS::Migration20170523000000
     return [] if user.blank?
 
     if user.imap_settings.blank?
-      setting = Webmail::ImapSetting.new
+      setting = Webmail::ImapSetting.default
     else
       setting = user.imap_settings[0]
     end

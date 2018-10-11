@@ -1,4 +1,4 @@
-<% setting = Webmail::ImapSetting.new %>
+<% setting = Webmail::ImapSetting.default %>
 <%= jquery do %>
   $(".add-imap-setting").click(function() {
     var setting = $(".imap-setting:last").clone(true);
@@ -73,7 +73,7 @@
 
   <div class="addon-views">
     <% if @item.imap_settings.blank? %>
-      <% render_form.call(1, Webmail::ImapSetting.new, true) %>
+      <% render_form.call(1, Webmail::ImapSetting.default, true) %>
     <% else %>
       <% @item.imap_settings.each_with_index do |setting, i| %>
         <% render_form.call(i + 1, setting, @cur_user.imap_default_index == i) %>

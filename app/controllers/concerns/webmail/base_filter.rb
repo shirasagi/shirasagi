@@ -80,7 +80,7 @@ module Webmail::BaseFilter
 
   def imap_initialize
     if @webmail_mode == :account && params[:account].to_i == 0
-      @imap_setting ||= Webmail::ImapSetting.new
+      @imap_setting ||= Webmail::ImapSetting.default
     end
 
     raise "404" unless @imap_setting

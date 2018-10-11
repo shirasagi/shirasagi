@@ -16,7 +16,7 @@ module Webmail::Addon::GroupExtension
   end
 
   def imap_setting
-    @imap_setting ||= imap_settings[0] || Webmail::ImapSetting.new
+    @imap_setting ||= imap_settings[0] || Webmail::ImapSetting.default
   end
 
   def imap_auth_type_options
@@ -28,7 +28,7 @@ module Webmail::Addon::GroupExtension
   end
 
   def default_imap_setting_changed?
-    new_imap_setting = Webmail::ImapSetting.new
+    new_imap_setting = Webmail::ImapSetting.default
 
     default_imap_setting = imap_setting.keys.each_with_object({}) do |key, h|
       h[key] = new_imap_setting[key] || new_imap_setting.imap_settings[key] || ''

@@ -11,7 +11,7 @@
   <% end %>
 
   <% if @item.imap_settings.blank? %>
-    <% setting = Webmail::ImapSetting.new %>
+    <% setting = Webmail::ImapSetting.default %>
     <div class="addon-view imap-setting" data-id="<%= number %>">
       <div class="addon-head"><h2><%= "#{t('webmail.account_setting')}#{number}" %></h2></div>
       <div class="addon-body">

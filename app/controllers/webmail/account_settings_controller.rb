@@ -72,7 +72,7 @@ class Webmail::AccountSettingsController < ApplicationController
   end
 
   def test_connection
-    setting = Webmail::ImapSetting.new
+    setting = Webmail::ImapSetting.default
     setting.merge!(get_params.to_h.symbolize_keys)
     setting.set_imap_password
     setting.valid?
