@@ -31,7 +31,7 @@
   <ul class="list-items ss-messages webmail-mails">
     <li class="list-item-head">
       <div class="head">
-        <% if @imap.sent_box?(@mailbox) %>
+        <% if @imap.sent_box?(@mailbox) || @imap.draft_box?(@mailbox) %>
           <span class="field to"><%= @model.t :to %></span>
         <% else %>
           <span class="field from"><%= @model.t :from %></span>
@@ -64,7 +64,7 @@
         <i class="material-icons md-15"><%== item.attachments? ? '&#xE226;' : '&nbsp;' %></i>
       </div>
       <div class="info">
-        <% if @imap.sent_box?(@mailbox) %>
+        <% if @imap.sent_box?(@mailbox) || @imap.draft_box?(@mailbox) %>
           <span class="field to" title="<%= item.display_to.map(&:address).join(', ') %>">
             <%= item.display_to.map(&:name).join(', ') %>
           </span>
