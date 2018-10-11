@@ -108,12 +108,12 @@ class Webmail::Mailbox
   end
 
   # @param [Net::IMAP::MailboxList] ml
-  def parse_mailbox_list(ml)
-    self.name = Net::IMAP.decode_utf7(ml.name)
-    self.original_name = ml.name
-    self.delim = ml.delim
-    self.attr = ml.attr.map(&:to_s) || []
-    self.depth = original_name.split(ml.delim).size - 1
+  def parse_mailbox_list(box)
+    self.name = Net::IMAP.decode_utf7(box.name)
+    self.original_name = box.name
+    self.delim = box.delim
+    self.attr = box.attr.map(&:to_s) || []
+    self.depth = original_name.split(box.delim).size - 1
   end
 
   private
@@ -151,8 +151,8 @@ class Webmail::Mailbox
     rescue_imap_error(e)
   end
 
-  def rescue_imap_error(e)
-    errors.add :base, e.to_s
+  def rescue_imap_error(exception)
+    errors.add :base, exception.to_s
     return false
   end
 end
