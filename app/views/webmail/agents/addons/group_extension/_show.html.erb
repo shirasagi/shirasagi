@@ -2,7 +2,7 @@
   return if @item.imap_setting.blank?
 
   default = t('webmail.default_settings')
-  imap = Webmail::Imap::Base.new(@cur_user, @item.imap_setting)
+  imap = Webmail::Imap::Base.new_by_user(@cur_user, @item.imap_setting)
   quota = imap.quota.load rescue nil
 %>
 

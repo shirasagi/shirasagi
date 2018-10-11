@@ -37,6 +37,23 @@ module Webmail::Addon::GroupExtension
     default_imap_setting != imap_setting
   end
 
+  def imap_default_setting
+    @imap_default_setting ||= begin
+      yaml = SS.config.webmail.clients['default'] || {}
+      {
+        address: contact_email,
+        host: yaml['host'].presence,
+        options: (yaml['options'].presence || {}).symbolize_keys,
+        auth_type: yaml['auth_type'].presence,
+        account: contact_email
+      }
+    end
+  end
+
+  def initialize_imap
+    Webmail::Imap::Base.new_by_group(self, imap_settings.first)
+  end
+
   private
 
   def validate_imap_settings

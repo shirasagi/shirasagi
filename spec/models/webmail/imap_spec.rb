@@ -3,7 +3,7 @@ require 'spec_helper'
 describe Webmail::Imap, type: :model, dbscope: :example do
   let(:user) { create :webmail_user }
   let(:setting) { user.imap_settings.first }
-  subject(:imap) { Webmail::Imap::Base.new(user, setting) }
+  subject(:imap) { Webmail::Imap::Base.new_by_user(user, setting) }
 
   it do
     expect(imap.special_mailboxes.is_a?(Array)).to be_truthy

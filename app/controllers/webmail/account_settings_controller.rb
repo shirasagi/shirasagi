@@ -6,7 +6,6 @@ class Webmail::AccountSettingsController < ApplicationController
 
   menu_view "ss/crud/resource_menu"
 
-  skip_before_action :imap_initialize
   before_action :check_permissions
   before_action :set_default_settings
 
@@ -77,7 +76,7 @@ class Webmail::AccountSettingsController < ApplicationController
     setting.set_imap_password
     setting.valid?
 
-    @imap = Webmail::Imap::Base.new(@cur_user, setting)
+    @imap = Webmail::Imap::Base.new_by_user(@cur_user, setting)
     @imap.conf[:password] ||= @cur_user.decrypted_password
 
     if @imap.login

@@ -161,7 +161,7 @@ class Webmail::UserAccountsController < ApplicationController
     setting.set_imap_password
     setting.valid?
 
-    @imap = Webmail::Imap::Base.new(@user, setting)
+    @imap = Webmail::Imap::Base.new_by_user(@user, setting)
     if @imap.login
       render plain: "Login Success."
     else

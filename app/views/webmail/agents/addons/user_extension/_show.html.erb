@@ -1,7 +1,7 @@
 <% default_setting = t('webmail.default_settings') %>
 
 <% render_row = proc do |number, setting, default| %>
-  <% imap = Webmail::Imap::Base.new(@item, setting) %>
+  <% imap = Webmail::Imap::Base.new_by_user(@item, setting) %>
   <% quota = imap.quota.cache_find %>
   <tr>
     <td class="name"><%= link_to setting.name.presence || default_setting, webmail_user_account_path(user_id: @item.id, id: number - 1) %></td>

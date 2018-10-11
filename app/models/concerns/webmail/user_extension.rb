@@ -38,6 +38,14 @@ module Webmail::UserExtension
     end
   end
 
+  def initialize_imap(account_index)
+    setting = imap_settings[account_index]
+    setting = Webmail::ImapSetting.default if setting.nil? && account_index == 0
+    return if setting.nil?
+
+    Webmail::Imap::Base.new_by_user(self, setting)
+  end
+
   private
 
   def validate_imap_settings

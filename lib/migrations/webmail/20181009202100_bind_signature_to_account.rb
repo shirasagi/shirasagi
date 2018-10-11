@@ -24,7 +24,7 @@ class SS::Migration20170523000000
       setting = user.imap_settings[0]
     end
 
-    imap = Webmail::Imap::Base.new(user, setting)
+    imap = Webmail::Imap::Base.new_by_user(user, setting)
     imap.account_scope
   end
 end

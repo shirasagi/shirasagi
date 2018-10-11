@@ -11,7 +11,6 @@ module Webmail::BaseFilter
     before_action :validate_service, if: ->{ SS.config.service.webmail_limitation.present? }
     before_action :set_webmail_logged_in, if: ->{ @cur_user }
     before_action :imap_disconnect
-    before_action :set_imap_setting, if: ->{ @cur_user }
     before_action :imap_initialize, if: ->{ @cur_user }
     # before_action :imap_login
     after_action :imap_disconnect
@@ -54,13 +53,17 @@ module Webmail::BaseFilter
     # @crumbs << [t("modules.webmail"), webmail_mails_path]
   end
 
-  def set_imap_setting
+  def imap_initialize
     if @webmail_mode == :group
       raise "403" if !@cur_user.webmail_permitted_all?(:use_webmail_group_imap_setting)
-      @imap_setting = @cur_user.groups.find_by(id: params[:account]).imap_settings.first
+      group = @cur_user.groups.find_by(id: params[:account])
+      @imap = group.initialize_imap
     elsif params.key?(:account)
-      @imap_setting = @cur_user.imap_settings[params[:account].to_i]
+      @imap = @cur_user.initialize_imap(params[:account].to_i)
     end
+    return if @imap.blank?
+
+    @imap_setting = @imap.setting
 
     if @webmail_mode == :account && params[:account].to_i == 0
       if @cur_user.webmail_permitted_any?(:edit_webmail_user_accounts)
@@ -76,21 +79,6 @@ module Webmail::BaseFilter
       @redirect_path = webmail_login_failed_path(
         account: params[:account] || @cur_user.imap_default_index, webmail_mode: @webmail_mode)
     end
-  end
-
-  def imap_initialize
-    if @webmail_mode == :account && params[:account].to_i == 0
-      @imap_setting ||= Webmail::ImapSetting.default
-    end
-
-    raise "404" unless @imap_setting
-
-    @imap = Webmail::Imap::Base.new(@cur_user, @imap_setting)
-
-    return if @webmail_mode != :group
-    address = @imap_setting.address.presence || Sys::Group.where(id: params[:account]).first.try(:contact_email)
-    return if address.blank?
-    @imap.address = address
   end
 
   def imap_disconnect
