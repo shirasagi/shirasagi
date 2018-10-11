@@ -120,6 +120,8 @@ SS::Application.routes.draw do
         webmail_mode: /[a-z]+/, account: /\d+/, as: :quota, defaults: { webmail_mode: 'account' }
       get ":webmail_mode-:account/mails" => "mails#index",
         webmail_mode: /[a-z]+/, account: /\d+/, as: :mails, defaults: { webmail_mode: 'account' }
+      get ":webmail_mode-:account/mails/imap_error" => "mails#imap_error",
+        webmail_mode: /[a-z]+/, account: /\d+/, as: :mails_imap_error, defaults: { webmail_mode: 'account' }
       get "addresses" => "addresses#index"
     end
   end

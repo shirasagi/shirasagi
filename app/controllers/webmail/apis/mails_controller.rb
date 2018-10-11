@@ -4,10 +4,16 @@ class Webmail::Apis::MailsController < ApplicationController
 
   model Webmail::Mail
 
-  before_action :imap_login
-  before_action :set_folders
+  before_action :imap_login, except: :imap_error
+  before_action :set_folders, except: :imap_error
 
   private
+
+  def imap_initialize
+    super
+
+    @redirect_path = webmail_apis_mails_imap_error_path
+  end
 
   def set_folders
     @mailboxes = @imap.mailboxes.load
@@ -33,5 +39,8 @@ class Webmail::Apis::MailsController < ApplicationController
       page(params[:page]).
       per(50).
       all
+  end
+
+  def imap_error
   end
 end
