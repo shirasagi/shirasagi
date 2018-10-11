@@ -25,6 +25,7 @@ ja:
     delete_mailbox_for_reload: 削除されるフォルダー
     account_setting: アカウント設定
     personal: 個人
+    imap_default_index: 既定アカウント
     box:
       inbox: 受信トレイ
       sent: 送信済み

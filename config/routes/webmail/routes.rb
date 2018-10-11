@@ -61,6 +61,9 @@ SS::Application.routes.draw do
     resources :groups, concerns: [:deletion]
     resources :users, concerns: [:deletion, :export] do
       get :download_template, on: :collection
+      resources :accounts, concerns: [:deletion], controller: "user_accounts" do
+        post :test_connection, on: :collection
+      end
     end
     resources :roles, concerns: [:deletion, :export]
 
