@@ -64,21 +64,7 @@ module Webmail::BaseFilter
     return if @imap.blank?
 
     @imap_setting = @imap.setting
-
-    if @webmail_mode == :account && params[:account].to_i == 0
-      if @cur_user.webmail_permitted_any?(:edit_webmail_user_accounts)
-        # 既定の個人アカウントの場合にのみ webmail_account_setting_path とする。
-        @redirect_path = webmail_account_setting_path
-      else
-        # 個人アカウントを管理する権限がないので、エラーを表示する。
-        @redirect_path = webmail_login_failed_path(
-          account: params[:account] || @cur_user.imap_default_index, webmail_mode: @webmail_mode)
-      end
-    else
-      # それ以外（追加の個人アカウントやグループ代表メールアカウント）の場合、エラーを表示する。
-      @redirect_path = webmail_login_failed_path(
-        account: params[:account] || @cur_user.imap_default_index, webmail_mode: @webmail_mode)
-    end
+    @webmail_redirect_path = [ :render, "app/views/webmail/main/login_failed" ]
   end
 
   def imap_disconnect
@@ -86,8 +72,16 @@ module Webmail::BaseFilter
   end
 
   def imap_login
-    return if @imap.login
-    redirect_to @redirect_path
+    @webmail_imap_login = @imap.login
+    return if @webmail_imap_login
+
+    method, path = @webmail_redirect_path
+    case method
+    when :render
+      render file: path
+    else
+      redirect_to path
+    end
   end
 
   def rescue_imap_no_response_error(exception)

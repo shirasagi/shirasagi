@@ -91,8 +91,6 @@ SS::Application.routes.draw do
     resource :account_setting, only: [:show, :edit, :update] do
       post :test_connection, on: :member
     end
-    get :login_failed, to: "login_failed#index", path: ':webmail_mode-:account/login_failed',
-      webmail_mode: /[a-z]+/, account: /\d+/, defaults: { webmail_mode: 'account' }
     resources :sys_notices, only: [:index, :show]
 
     namespace "apis" do
