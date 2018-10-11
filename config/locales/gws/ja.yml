@@ -127,6 +127,7 @@ ja:
       gws/role: 権限/ロール
       gws/group_permission: 管理権限
       gws/file: ファイル
+      gws/link_file: ファイル
       gws/release: 公開設定
       gws/history: 変更履歴
       gws/share/history: 変更履歴

@@ -1,0 +1,114 @@
+<%= jquery do %>
+
+var onSelect;
+var $element = $.colorbox.element();
+if ($element) {
+  onSelect = $element.data('on-select');
+}
+
+SS.ajaxForm("form.user-file", {
+  success: function(data) {
+    $("#cboxLoadedContent").load("<%= url_for(action: :index) %>", function() {
+      if (!Array.isArray(data) || data.length == 0) return;
+
+      $.each(data, function(index, file) {
+        var item = $(".user-files .select[data-id='" + file._id + "']");
+        var url = item.attr('href');
+        if (!url) return true;
+        if (onSelect) {
+          onSelect(item);
+        } else {
+          $.ajax({
+            url: url,
+            success: function(data) {
+              $("#selected-files").append(data);
+            }
+          });
+        }
+      });
+      $.colorbox.close();
+    });
+  },
+  error: function(xhr) {
+    if (xhr.status == 413) {
+      alert(["== Error =="].concat("<%= I18n.t('errors.messages.request_entity_too_large') %>").join("\n"));
+    } else {
+      try {
+        alert(["== Error =="].concat(xhr.responseJSON).join("\n"));
+      } catch {
+        alert(["== Error =="].concat(xhr.statusText).join("\n"));
+      }
+    }
+  }
+});
+
+if (onSelect) {
+  $(".user-files .select").on('click', function(e) {
+    onSelect($(this));
+    e.preventDefault();
+    return false;
+  });
+} else {
+  SS.ajax(".user-files .select", {
+    success: function(data) {
+      var dataFileId = $('<div>' + data + '</div>').find("[data-file-id]").attr("data-file-id");
+      if (dataFileId) {
+        $("#selected-files .file-view[data-file-id='" + dataFileId + "']").remove();
+      }
+      $("#selected-files").append(data);
+      $.colorbox.close();
+    }
+  });
+}
+
+SS.ajaxDelete(".user-files .delete");
+
+var resizing = $('#file-resizing').val();
+if (resizing) {
+  var label = $('#file-resizing').attr('data-label');
+  var option = $('<option>').val(resizing).text(label).prop('selected', true);
+  $('select.image-size').append(option);
+}
+<% end %>
+
+<% if @model.allowed?(:edit, @cur_user, site: @cur_site, node: @cur_node) %>
+  <%= form_for :item, url: { action: :create }, html: { class: "user-file", multipart: true } do |f| %>
+  <%= error_messages_for :item %>
+
+    <div class="search-ui-form">
+      <%= f.file_field :in_files, multiple: :multiple, required: :required %>
+      <%= f.select :resizing, @model.resizing_options, { include_blank: t("ss.resize_image") }, { class: "image-size" } %>
+      <%= f.submit t("ss.buttons.save"), class: "save btn", style: "margin-left: 10px;" %>
+    </div>
+
+  <% end %>
+<% end %>
+
+<div class="index user-files">
+  <% @items.each do |item| %>
+  <article class="file-view" id="user-file<%= item.id %>">
+    <a class="thumb select" href="<%= url_for action: :select, id: item %>" data-id="<%= item.id %>" data-humanized-name="<%= item.humanized_name %>">
+      <% if item.image? %>
+      <img src="<%= url_for(action: :thumb, id: item, _: item.updated.to_i) %>" alt="<%= item.basename %>" />
+      <% else %>
+      <span class="ext icon-<%= item.extname %>"><%= item.extname %></span>
+      <% end %>
+    </a>
+    <div class="name">
+      <%= item.name %>
+    </div>
+    <nav class="menu">
+      <% if item.allowed?(:edit, @cur_user, site: @cur_site) %>
+        <%= link_to t("ss.buttons.edit"), { action: :edit, id: item }, class: "edit" %>
+      <% end %>
+      <% if item.allowed?(:delete, @cur_user, site: @cur_site) %>
+        <%= link_to t("ss.buttons.delete"), { action: :destroy, id: item }, class: "delete", "data-remove" => "#user-file#{item.id}" %>
+      <% end %>
+    </nav>
+  </article>
+  <% end %>
+</div>
+
+<div style="clear: both;"></div>
+
+<%= paginate @items if @items.try(:current_page) %>
