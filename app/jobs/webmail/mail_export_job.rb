@@ -4,6 +4,7 @@ class Webmail::MailExportJob < SS::ApplicationJob
     @mail_ids = opts[:mail_ids]
 
     imap_setting = user.imap_settings[opts[:account].to_i]
+    imap_setting = Webmail::ImapSetting.new unless imap_setting
     @imap = Webmail::Imap::Base.new(user, imap_setting)
     @imap.login
     @imap.select("INBOX")

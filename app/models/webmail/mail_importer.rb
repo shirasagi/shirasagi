@@ -38,6 +38,7 @@ class Webmail::MailImporter
 
     item = Webmail::Mail.new
     imap_setting = @cur_user.imap_settings[@account]
+    imap_setting = Webmail::ImapSetting.new unless imap_setting
     imap = Webmail::Imap::Base.new(@cur_user, imap_setting)
     imap.login
     imap.select("INBOX")
