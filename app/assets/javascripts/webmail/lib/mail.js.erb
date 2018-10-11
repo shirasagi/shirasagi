@@ -167,6 +167,29 @@ this.Webmail_Mail_List = (function () {
       });
       return false;
     });
+    $(".list-head .set-seen-all, .list-head .unset-seen-all").on("click", function () {
+      var uids;
+      uids = Webmail_Mail_List.findCheckedUids();
+      if (uids.length === 0) {
+        return false;
+      }
+      $('.dropdown-menu').removeClass('active');
+      $.ajax({
+        url: $(this).data('href'),
+        method: 'POST',
+        dataType: 'json',
+        data: {
+          _method: 'put',
+          authenticity_token: $('meta[name="csrf-token"]').attr('content'),
+          ids: uids
+        },
+        success: function (data) {
+          Webmail_Mail_List.renderListFlags(uids, data.action);
+          return SS.notice(data.notice);
+        }
+      });
+      return false;
+    });
     return this.renderDropEvents();
   };
 
