@@ -4,13 +4,18 @@ describe "webmail_users", type: :feature, dbscope: :example do
   before { login_webmail_admin }
 
   context "download template" do
+    let!(:user1) { create(:ss_user, id: 101, email: "#{unique_id}-1@example.jp") }
+    let!(:user2) { create(:ss_user, id: 102, email: "#{unique_id}-2@example.jp") }
+    let!(:user3) { create(:ss_user, id: 103, email: "#{unique_id}-3@example.jp") }
+
     it do
       visit webmail_users_path
       click_on I18n.t("ss.links.import")
       click_on I18n.t('ss.links.download_template')
 
-      csv_lines = CSV.parse(page.html.encode("UTF-8"))
-      expect(csv_lines.length).to be > 0
+      csv = CSV.parse(page.html.encode("UTF-8"), headers: true)
+      expect(csv).to have_at_least(1).items
+      expect(csv.headers).to have(Webmail::AccountExport::EXPORT_DEF.length).items
     end
   end
 
@@ -22,6 +27,12 @@ describe "webmail_users", type: :feature, dbscope: :example do
     let!(:user5) { create(:ss_user, id: 105, email: "#{unique_id}-5@example.jp") }
 
     it do
+      expect(user1).to have(0).imap_settings
+      expect(user2).to have(0).imap_settings
+      expect(user3).to have(0).imap_settings
+      expect(user4).to have(0).imap_settings
+      expect(user5).to have(0).imap_settings
+
       visit webmail_users_path
       click_on I18n.t("ss.links.import")
       within "form" do
@@ -31,6 +42,7 @@ describe "webmail_users", type: :feature, dbscope: :example do
       expect(page).to have_css("#notice", text: I18n.t("ss.notice.saved"))
 
       user1.reload
+      expect(user1).to have(1).imap_settings
       user1.imap_settings.first.tap do |imap_setting|
         expect(imap_setting.name).to eq '規定の設定1'
         expect(imap_setting.from).to eq 'ユーザー1'
@@ -48,6 +60,18 @@ describe "webmail_users", type: :feature, dbscope: :example do
         expect(imap_setting.imap_trash_box).to eq 'INBOX.Trash'
       end
       expect(user1.imap_default_index).to eq 0
+
+      user2.reload
+      expect(user2).to have(1).imap_settings
+
+      user3.reload
+      expect(user3).to have(1).imap_settings
+
+      user4.reload
+      expect(user4).to have(1).imap_settings
+
+      user5.reload
+      expect(user5).to have(1).imap_settings
     end
   end
 

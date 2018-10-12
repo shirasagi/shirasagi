@@ -3,43 +3,28 @@ class Webmail::AccountExport
   extend SS::Translation
   include SS::PermitParams
 
-  ACCOUNT_EXPORT_DEF = [
-    { key: 'id', label: Webmail::User.t('id'), getter: proc { |item| item.id } }.freeze,
-    { key: 'uid', label: Webmail::User.t('uid'), getter: proc { |item| item.uid } }.freeze,
-    { key: 'organization_uid', label: Webmail::User.t('organization_uid'),
-      getter: proc { |item| item.organization_uid } }.freeze,
-    { key: 'account_index', label: Webmail::User.t('account_index'),
-      getter: ->(item, index, setting){ index + 1 } }.freeze,
-    { key: 'name', label: Webmail::ImapSetting.t('name'),
-      getter: ->(item, index, setting){ setting.name }, setter: :set_item_imap_name }.freeze,
-    { key: 'from', label: Webmail::ImapSetting.t('from'),
-      getter: ->(item, index, setting){ setting.from }, setter: :set_item_imap_from }.freeze,
-    { key: 'address', label: Webmail::ImapSetting.t('address'),
-      getter: ->(item, index, setting){ setting.address }, setter: :set_item_imap_address }.freeze,
-    { key: 'imap_alias', label: Webmail::ImapSetting.t('imap_alias'),
-      getter: ->(item, index, setting){ setting.imap_alias }, setter: :set_item_imap_alias }.freeze,
-    { key: 'imap_host', label: Webmail::ImapSetting.t('imap_host'),
-      getter: ->(item, index, setting){ setting.imap_host }, setter: :set_item_imap_host }.freeze,
-    { key: 'imap_port', label: Webmail::ImapSetting.t('imap_port'),
-      getter: ->(item, index, setting){ setting.imap_port }, setter: :set_item_imap_port }.freeze,
-    { key: 'imap_ssl_use', label: Webmail::ImapSetting.t('imap_ssl_use'),
-      getter: :get_item_imap_ssl_use, setter: :set_item_imap_ssl_use }.freeze,
-    { key: 'imap_auth_type', label: Webmail::ImapSetting.t('imap_auth_type'),
-      getter: ->(item, index, setting){ setting.imap_auth_type }, setter: :set_item_imap_auth_type }.freeze,
-    { key: 'imap_account', label: Webmail::ImapSetting.t('imap_account'),
-      getter: ->(item, index, setting){ setting.imap_account }, setter: :set_item_imap_account }.freeze,
-    { key: 'imap_password', label: Webmail::ImapSetting.t('imap_password'),
-      getter: ->(item, index, setting){ setting.in_imap_password }, setter: :set_item_imap_password }.freeze,
-    { key: 'threshold_mb', label: Webmail::ImapSetting.t('threshold_mb'),
-      getter: ->(item, index, setting){ setting.threshold_mb }, setter: :set_item_imap_threshold_mb }.freeze,
-    { key: 'imap_sent_box', label: Webmail::ImapSetting.t('imap_sent_box'),
-      getter: ->(item, index, setting){ setting.imap_sent_box }, setter: :set_item_imap_sent_box }.freeze,
-    { key: 'imap_draft_box', label: Webmail::ImapSetting.t('imap_draft_box'),
-      getter: ->(item, index, setting){ setting.imap_draft_box }, setter: :set_item_imap_draft_box }.freeze,
-    { key: 'imap_trash_box', label: Webmail::ImapSetting.t('imap_trash_box'),
-      getter: ->(item, index, setting){ setting.imap_trash_box }, setter: :set_item_imap_trash_box }.freeze,
-    { key: 'default', label: Webmail::ImapSetting.t('default'),
-      getter: :get_item_imap_default, setter: :set_item_imap_default }.freeze,
+  EXPORT_DEF = [
+    # SS::Model::User
+    { key: 'id', label: Webmail::User.t('id'), setter: :none }.freeze,
+    { key: 'uid', label: Webmail::User.t('uid'), setter: :none }.freeze,
+    { key: 'organization_uid', label: Webmail::User.t('organization_uid'), setter: :none }.freeze,
+    # Webmail::UserExtension
+    { key: 'imap_setting.account_index', label: Webmail::User.t('account_index'), setter: :none }.freeze,
+    { key: 'imap_setting.name', label: Webmail::ImapSetting.t('name') }.freeze,
+    { key: 'imap_setting.from', label: Webmail::ImapSetting.t('from') }.freeze,
+    { key: 'imap_setting.address', label: Webmail::ImapSetting.t('address') }.freeze,
+    { key: 'imap_setting.imap_alias', label: Webmail::ImapSetting.t('imap_alias') }.freeze,
+    { key: 'imap_setting.imap_host', label: Webmail::ImapSetting.t('imap_host') }.freeze,
+    { key: 'imap_setting.imap_port', label: Webmail::ImapSetting.t('imap_port') }.freeze,
+    { key: 'imap_setting.imap_ssl_use', label: Webmail::ImapSetting.t('imap_ssl_use') }.freeze,
+    { key: 'imap_setting.imap_auth_type', label: Webmail::ImapSetting.t('imap_auth_type') }.freeze,
+    { key: 'imap_setting.imap_account', label: Webmail::ImapSetting.t('imap_account') }.freeze,
+    { key: 'imap_setting.imap_password', label: Webmail::ImapSetting.t('imap_password') }.freeze,
+    { key: 'imap_setting.threshold_mb', label: Webmail::ImapSetting.t('threshold_mb') }.freeze,
+    { key: 'imap_setting.imap_sent_box', label: Webmail::ImapSetting.t('imap_sent_box') }.freeze,
+    { key: 'imap_setting.imap_draft_box', label: Webmail::ImapSetting.t('imap_draft_box') }.freeze,
+    { key: 'imap_setting.imap_trash_box', label: Webmail::ImapSetting.t('imap_trash_box') }.freeze,
+    { key: 'imap_setting.default', label: Webmail::ImapSetting.t('default') }.freeze,
   ].freeze
 
   attr_accessor :cur_user, :in_file
@@ -47,16 +32,11 @@ class Webmail::AccountExport
 
   def export_csv(items)
     csv = CSV.generate do |data|
-      data << ACCOUNT_EXPORT_DEF.map { |d| d[:label] }
+      data << EXPORT_DEF.map { |export_def| export_def[:label] }
       items.each do |item|
         item.imap_settings.each_with_index do |setting, i|
-          line = ACCOUNT_EXPORT_DEF.map do |d|
-            getter = d[:getter]
-            if getter.is_a?(Symbol)
-              send(getter, item, i, setting)
-            else
-              getter.call(item, i, setting)
-            end
+          line = EXPORT_DEF.map do |export_def|
+            export_field(item, i, setting, export_def)
           end
           data << line
         end
@@ -67,11 +47,11 @@ class Webmail::AccountExport
 
   def export_template_csv(items)
     csv = CSV.generate do |data|
-      data << ACCOUNT_EXPORT_DEF.map { |d| d[:label] }
+      data << EXPORT_DEF.map { |export_def| export_def[:label] }
       items.each do |item|
         setting = Webmail::ImapSetting.default
-        line = ACCOUNT_EXPORT_DEF.map do |d|
-          invoke d[:getter], item, 0, setting
+        line = EXPORT_DEF.map do |export_def|
+          export_field(item, 0, setting, export_def)
         end
         data << line
       end
@@ -91,6 +71,8 @@ class Webmail::AccountExport
     errors.empty?
   end
 
+  private
+
   def update_row(row, index)
     id = str(row, 'id')
     if id.blank?
@@ -98,7 +80,7 @@ class Webmail::AccountExport
       return
     end
 
-    account_index = str(row, 'account_index')
+    account_index = str(row, 'imap_setting.account_index')
     if !account_index.numeric?
       errors.add :base, "#{index + 1}: #{Webmail::User.t('account_index')} is required"
       return
@@ -125,7 +107,7 @@ class Webmail::AccountExport
     setting = item.imap_settings[account_index]
     setting ||= Webmail::ImapSetting.default
 
-    ACCOUNT_EXPORT_DEF.each { |d| invoke(d[:setter], row, item, setting) }
+    EXPORT_DEF.each { |export_def| import_field(row, item, setting, export_def) }
 
     if setting.invalid?
       setting.errors.full_messages.each do |msg|
@@ -150,8 +132,6 @@ class Webmail::AccountExport
     item
   end
 
-  private
-
   def validate_import_file
     return errors.add :in_file, :blank if in_file.blank?
 
@@ -160,8 +140,8 @@ class Webmail::AccountExport
 
     unmatched = 0
     CSV.foreach(in_file.path, headers: true, encoding: 'SJIS:UTF-8') do |row|
-      ACCOUNT_EXPORT_DEF.each do |d|
-        unmatched += 1 if !row.key?(d[:label])
+      EXPORT_DEF.each do |export_def|
+        unmatched += 1 if !row.key?(export_def[:label])
       end
       break
     end
@@ -174,53 +154,123 @@ class Webmail::AccountExport
 
   def str(row, key)
     label = key.to_s
-    d = ACCOUNT_EXPORT_DEF.find { |d| d[:key].to_s == label }
-    if d.present?
-      label = d[:label]
+    export_def = EXPORT_DEF.find { |export_def| export_def[:key].to_s == label }
+    if export_def.present?
+      label = export_def[:label]
     end
     row[label].to_s.strip
   end
 
-  def invoke(method, *args)
-    return if method.blank?
+  def export_field(item, index, setting, export_def)
+    getter = export_def[:getter]
+    if getter.nil?
+      method = "get_item_#{export_def[:key].tr(".", "_")}".to_sym
+      getter = method if respond_to?(method, true)
+    end
+    if getter.nil?
+      getter = method(:get_item_field).curry.call(export_def[:key])
+    end
 
-    if method.is_a?(Symbol)
-      send(method, *args)
+    if getter.is_a?(Symbol)
+      send(getter, item, index, setting)
     else
-      method.call(*args)
+      getter.call(item, index, setting)
     end
   end
 
-  def set_item_imap_name(row, item, setting)
-    setting[:name] = str(row, 'name')
+  def get_item_field(field_name, item, index, setting)
+    val = item
+    field_name.split(".").each do |f|
+      if f == "imap_setting"
+        val = setting
+      else
+        val = val.send(f)
+      end
+      break if val.nil?
+    end
+
+    return if val.nil?
+
+    if val.is_a?(Date) || val.is_a?(Time)
+      return I18n.l(val)
+    end
+
+    val.to_s
   end
 
-  def set_item_imap_from(row, item, setting)
-    setting[:from] = str(row, 'from')
+  def get_item_imap_setting_account_index(item, index, setting)
+    index + 1
   end
 
-  def set_item_imap_address(row, item, setting)
-    setting[:address] = str(row, 'address')
-  end
-
-  def set_item_imap_alias(row, item, setting)
-    setting[:imap_alias] = str(row, 'imap_alias')
-  end
-
-  def set_item_imap_host(row, item, setting)
-    setting[:imap_host] = str(row, 'imap_host')
-  end
-
-  def set_item_imap_port(row, item, setting)
-    setting[:imap_port] = str(row, 'imap_port')
-  end
-
-  def get_item_imap_ssl_use(item, index, setting)
+  def get_item_imap_setting_imap_ssl_use(item, index, setting)
     setting.imap_ssl_use.present? ? I18n.t("webmail.options.imap_ssl_use.#{setting.imap_ssl_use}") : nil
   end
 
-  def set_item_imap_ssl_use(row, item, setting)
-    ssl_use = str(row, 'imap_ssl_use').presence
+  def get_item_imap_setting_default(item, index, setting)
+    index == item.imap_default_index ? index + 1 : nil
+  end
+
+  def import_field(row, item, setting, export_def)
+    setter = export_def[:setter]
+    if setter.nil?
+      method = "set_item_#{export_def[:key].tr(".", "_")}".to_sym
+      setter = method if respond_to?(method, true)
+    end
+    if setter.nil?
+      setter = method(:set_item_field).curry.call(export_def[:key])
+    end
+
+    if setter.is_a?(Symbol)
+      return if setter == :none
+      send(setter, row, item, setting)
+    else
+      setter.call(row, item, setting)
+    end
+  end
+
+  def set_item_field(field_name, row, item, setting)
+    names = field_name.split(".")
+    setter = names.pop
+
+    target = item
+    names.each do |f|
+      if f == "imap_setting"
+        target = setting
+      else
+        target = target.send(f)
+      end
+      break if target.nil?
+    end
+
+    target.send("#{setter}=", str(row, field_name))
+  end
+
+  def set_item_imap_setting_name(row, item, setting)
+    setting[:name] = str(row, 'imap_setting.name')
+  end
+
+  def set_item_imap_setting_from(row, item, setting)
+    setting[:from] = str(row, 'imap_setting.from')
+  end
+
+  def set_item_imap_setting_address(row, item, setting)
+    setting[:address] = str(row, 'imap_setting.address')
+  end
+
+  def set_item_imap_setting_imap_alias(row, item, setting)
+    setting[:imap_alias] = str(row, 'imap_setting.imap_alias')
+  end
+
+  def set_item_imap_setting_imap_host(row, item, setting)
+    setting[:imap_host] = str(row, 'imap_setting.imap_host')
+  end
+
+  def set_item_imap_setting_imap_port(row, item, setting)
+    setting[:imap_port] = str(row, 'imap_setting.imap_port')
+  end
+
+  def set_item_imap_setting_imap_ssl_use(row, item, setting)
+    ssl_use = str(row, 'imap_setting.imap_ssl_use').presence
     if ssl_use.present?
       key_value = I18n.t("webmail.options.imap_ssl_use").to_a.find { |key, value| value == ssl_use }
       ssl_use = key_value.present? ? key_value[0].to_s : nil
@@ -229,16 +279,16 @@ class Webmail::AccountExport
     setting[:imap_ssl_use] = ssl_use
   end
 
-  def set_item_imap_auth_type(row, item, setting)
-    setting[:imap_auth_type] = str(row, 'imap_auth_type')
+  def set_item_imap_setting_imap_auth_type(row, item, setting)
+    setting[:imap_auth_type] = str(row, 'imap_setting.imap_auth_type')
   end
 
-  def set_item_imap_account(row, item, setting)
-    setting[:imap_account] = str(row, 'imap_account')
+  def set_item_imap_setting_imap_account(row, item, setting)
+    setting[:imap_account] = str(row, 'imap_setting.imap_account')
   end
 
-  def set_item_imap_password(row, item, setting)
-    pass = str(row, 'imap_password')
+  def set_item_imap_setting_imap_password(row, item, setting)
+    pass = str(row, 'imap_setting.imap_password')
     if pass.present?
       setting[:in_imap_password] = pass
     else
@@ -246,28 +296,24 @@ class Webmail::AccountExport
     end
   end
 
-  def set_item_imap_threshold_mb(row, item, setting)
-    setting[:threshold_mb] = str(row, 'threshold_mb')
+  def set_item_imap_setting_threshold_mb(row, item, setting)
+    setting[:threshold_mb] = str(row, 'imap_setting.threshold_mb')
   end
 
-  def set_item_imap_sent_box(row, item, setting)
-    setting[:imap_sent_box] = str(row, 'imap_sent_box')
+  def set_item_imap_setting_imap_sent_box(row, item, setting)
+    setting[:imap_sent_box] = str(row, 'imap_setting.imap_sent_box')
   end
 
-  def set_item_imap_draft_box(row, item, setting)
-    setting[:imap_draft_box] = str(row, 'imap_draft_box')
+  def set_item_imap_setting_imap_draft_box(row, item, setting)
+    setting[:imap_draft_box] = str(row, 'imap_setting.imap_draft_box')
   end
 
-  def set_item_imap_trash_box(row, item, setting)
-    setting[:imap_trash_box] = str(row, 'imap_trash_box')
+  def set_item_imap_setting_imap_trash_box(row, item, setting)
+    setting[:imap_trash_box] = str(row, 'imap_setting.imap_trash_box')
   end
 
-  def get_item_imap_default(item, index, setting)
-    index == item.imap_default_index ? index + 1 : nil
-  end
-
-  def set_item_imap_default(row, item, setting)
-    return if str(row, 'default').blank?
-    item.imap_default_index = str(row, 'account_index').to_i - 1
+  def set_item_imap_setting_default(row, item, setting)
+    return if str(row, 'imap_setting.default').blank?
+    item.imap_default_index = str(row, 'imap_setting.account_index').to_i - 1
   end
 end
