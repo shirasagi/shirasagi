@@ -40,7 +40,6 @@
       <a><%= t 'webmail.links.etc' %> <i class="material-icons md-13">&#xE313;</i></a>
       <ul class="dropdown-menu webmail-dropdown-menu">
         <li><%= link_to t('webmail.links.print'), '#', class: 'print-mail' %></li>
-        <li><%= link_to t('webmail.links.set_seen'), { action: :set_seen }, { class: 'update-mail set-seen' } %></li>
         <li><%= link_to t('webmail.links.unset_seen'), { action: :unset_seen }, { class: 'update-mail unset-seen' } %></li>
         <li><%= link_to t('webmail.links.set_star'), { action: :set_star }, { class: 'update-mail set-star' } %></li>
         <li><%= link_to t('webmail.links.unset_star'), { action: :unset_star }, { class: 'update-mail unset-star' } %></li>
