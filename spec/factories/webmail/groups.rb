@@ -14,4 +14,8 @@ FactoryBot.define do
 
     imap_settings Webmail::Extensions::ImapSettings.new([setting])
   end
+
+  factory :webmail_group_with_no_imap, class: Webmail::Group do
+    name { "group-#{unique_id}" }
+  end
 end
