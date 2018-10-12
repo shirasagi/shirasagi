@@ -38,7 +38,9 @@ class Webmail::ImportMailsController < ApplicationController
       render file: :index
       return
     end
-    if ::File.extname(file.original_filename) != ".zip"
+
+    file_type = SS::MimeType.find(file.original_filename, nil)
+    if !@model::SUPPORTED_MIME_TYPES.include?(file_type)
       @item.errors.add :in_file, :invalid_file_type
       render file: :index
       return
@@ -49,7 +51,7 @@ class Webmail::ImportMailsController < ApplicationController
     @item.in_file = file
     @item.import_mails
 
-    render_create true, location: { action: :index }, notice: I18n.t("webmail.import.start_import")
+    render_create @item.errors.blank?, location: { action: :index }, render: { file: :index }, notice: I18n.t("webmail.import.start_import")
   end
 
   def start_import
