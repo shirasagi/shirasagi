@@ -12,7 +12,7 @@ describe "webmail_users", type: :feature, dbscope: :example do
 
       csv = CSV.parse(page.html.encode("UTF-8"), headers: true)
       expect(csv).to have_at_least(1).items
-      expect(csv.headers).to have(Webmail::AccountExport::EXPORT_DEF.length).items
+      expect(csv.headers).to have(Webmail::UserExport::EXPORT_DEF.length).items
     end
   end
 end

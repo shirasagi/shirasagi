@@ -1,30 +1,55 @@
-class Webmail::AccountExport
+class Webmail::UserExport
   include ActiveModel::Model
   extend SS::Translation
   include SS::PermitParams
 
+  def self.with_imap_prefix(label)
+    return label if label.start_with?("IMAP/")
+    "IMAP/#{label}"
+  end
+
   EXPORT_DEF = [
     # SS::Model::User
     { key: 'id', label: Webmail::User.t('id'), setter: :none }.freeze,
-    { key: 'uid', label: Webmail::User.t('uid'), setter: :none }.freeze,
-    { key: 'organization_uid', label: Webmail::User.t('organization_uid'), setter: :none }.freeze,
+    { key: 'name', label: Webmail::User.t('name') }.freeze,
+    { key: 'kana', label: Webmail::User.t('kana') }.freeze,
+    { key: 'uid', label: Webmail::User.t('uid') }.freeze,
+    { key: 'organization_uid', label: Webmail::User.t('organization_uid') }.freeze,
+    { key: 'email', label: Webmail::User.t('email') }.freeze,
+    { key: 'password', label: Webmail::User.t('password'), getter: :none }.freeze,
+    { key: 'tel', label: Webmail::User.t('tel') }.freeze,
+    { key: 'tel_ext', label: Webmail::User.t('tel_ext') }.freeze,
+    { key: 'type', label: Webmail::User.t('type') }.freeze,
+    { key: 'account_start_date', label: Webmail::User.t('account_start_date') }.freeze,
+    { key: 'account_expiration_date', label: Webmail::User.t('account_expiration_date') }.freeze,
+    { key: 'initial_password_warning', label: Webmail::User.t('initial_password_warning') }.freeze,
+    { key: 'session_lifetime', label: Webmail::User.t('session_lifetime') }.freeze,
+    { key: 'restriction', label: Webmail::User.t('restriction') }.freeze,
+    { key: 'lock_state', label: Webmail::User.t('lock_state') }.freeze,
+    { key: 'organization_id', label: Webmail::User.t('organization_id') }.freeze,
+    { key: 'group_ids', label: Webmail::User.t('group_ids') }.freeze,
+    { key: 'remark', label: Webmail::User.t('remark') }.freeze,
+    # Ldap::Addon::Group
+    { key: 'ldap_dn', label: Webmail::User.t('ldap_dn') }.freeze,
+    # Webmail::Addon::Role
+    { key: 'webmail_role_ids', label: Webmail::User.t('webmail_role_ids') }.freeze,
     # Webmail::UserExtension
-    { key: 'imap_setting.account_index', label: Webmail::User.t('account_index'), setter: :none }.freeze,
-    { key: 'imap_setting.name', label: Webmail::ImapSetting.t('name') }.freeze,
-    { key: 'imap_setting.from', label: Webmail::ImapSetting.t('from') }.freeze,
-    { key: 'imap_setting.address', label: Webmail::ImapSetting.t('address') }.freeze,
-    { key: 'imap_setting.imap_alias', label: Webmail::ImapSetting.t('imap_alias') }.freeze,
-    { key: 'imap_setting.imap_host', label: Webmail::ImapSetting.t('imap_host') }.freeze,
-    { key: 'imap_setting.imap_port', label: Webmail::ImapSetting.t('imap_port') }.freeze,
-    { key: 'imap_setting.imap_ssl_use', label: Webmail::ImapSetting.t('imap_ssl_use') }.freeze,
-    { key: 'imap_setting.imap_auth_type', label: Webmail::ImapSetting.t('imap_auth_type') }.freeze,
-    { key: 'imap_setting.imap_account', label: Webmail::ImapSetting.t('imap_account') }.freeze,
-    { key: 'imap_setting.imap_password', label: Webmail::ImapSetting.t('imap_password') }.freeze,
-    { key: 'imap_setting.threshold_mb', label: Webmail::ImapSetting.t('threshold_mb') }.freeze,
-    { key: 'imap_setting.imap_sent_box', label: Webmail::ImapSetting.t('imap_sent_box') }.freeze,
-    { key: 'imap_setting.imap_draft_box', label: Webmail::ImapSetting.t('imap_draft_box') }.freeze,
-    { key: 'imap_setting.imap_trash_box', label: Webmail::ImapSetting.t('imap_trash_box') }.freeze,
-    { key: 'imap_setting.default', label: Webmail::ImapSetting.t('default') }.freeze,
+    { key: 'imap_setting.account_index', label: with_imap_prefix(Webmail::User.t('account_index')), setter: :none }.freeze,
+    { key: 'imap_setting.name', label: with_imap_prefix(Webmail::ImapSetting.t('name')) }.freeze,
+    { key: 'imap_setting.from', label: with_imap_prefix(Webmail::ImapSetting.t('from')) }.freeze,
+    { key: 'imap_setting.address', label: with_imap_prefix(Webmail::ImapSetting.t('address')) }.freeze,
+    { key: 'imap_setting.imap_alias', label: with_imap_prefix(Webmail::ImapSetting.t('imap_alias')) }.freeze,
+    { key: 'imap_setting.imap_host', label: with_imap_prefix(Webmail::ImapSetting.t('imap_host')) }.freeze,
+    { key: 'imap_setting.imap_port', label: with_imap_prefix(Webmail::ImapSetting.t('imap_port')) }.freeze,
+    { key: 'imap_setting.imap_ssl_use', label: with_imap_prefix(Webmail::ImapSetting.t('imap_ssl_use')) }.freeze,
+    { key: 'imap_setting.imap_auth_type', label: with_imap_prefix(Webmail::ImapSetting.t('imap_auth_type')) }.freeze,
+    { key: 'imap_setting.imap_account', label: with_imap_prefix(Webmail::ImapSetting.t('imap_account')) }.freeze,
+    { key: 'imap_setting.imap_password', label: with_imap_prefix(Webmail::ImapSetting.t('imap_password')), getter: :none }.freeze,
+    { key: 'imap_setting.threshold_mb', label: with_imap_prefix(Webmail::ImapSetting.t('threshold_mb')) }.freeze,
+    { key: 'imap_setting.imap_sent_box', label: with_imap_prefix(Webmail::ImapSetting.t('imap_sent_box')) }.freeze,
+    { key: 'imap_setting.imap_draft_box', label: with_imap_prefix(Webmail::ImapSetting.t('imap_draft_box')) }.freeze,
+    { key: 'imap_setting.imap_trash_box', label: with_imap_prefix(Webmail::ImapSetting.t('imap_trash_box')) }.freeze,
+    { key: 'imap_setting.default', label: with_imap_prefix(Webmail::ImapSetting.t('default')) }.freeze,
   ].freeze
 
   attr_accessor :cur_user, :in_file
@@ -75,8 +100,28 @@ class Webmail::AccountExport
 
   def update_row(row, index)
     id = str(row, 'id')
-    if id.blank?
-      errors.add :base, "#{index + 1}: #{Webmail::User.t('id')} is required"
+    if id.present?
+      item = Webmail::User.allow(:read, @cur_user).where(id: id).first
+      if item.blank?
+        errors.add :base, "#{index + 1}: Could not find ##{id}"
+        return
+      end
+    else
+      uid = str(row, 'uid')
+      if uid.present?
+        item = Webmail::User.allow(:read, @cur_user).where(uid: uid).first
+      end
+
+      email = str(row, 'uid')
+      if item.blank? && email.present?
+        item = Webmail::User.allow(:read, @cur_user).where(email: email).first
+      end
+
+      item ||= Webmail::User.new
+    end
+
+    if !item.allowed?(:edit, @cur_user)
+      errors.add :base, "#{index + 1}: #{I18n.t('errors.messages.auth_error')}"
       return
     end
 
@@ -90,17 +135,6 @@ class Webmail::AccountExport
     account_index -= 1
     if account_index < 0
       errors.add :base, "#{index + 1}: #{Webmail::User.t('account_index')} should be greater than 0"
-      return
-    end
-
-    item = Webmail::User.allow(:read, @cur_user).where(id: id).first
-    if item.blank?
-      errors.add :base, "#{index + 1}: Could not find ##{id}"
-      return
-    end
-
-    if !item.allowed?(:edit, @cur_user)
-      errors.add :base, "#{index + 1}: #{I18n.t('errors.messages.auth_error')}"
       return
     end
 
@@ -172,6 +206,7 @@ class Webmail::AccountExport
     end
 
     if getter.is_a?(Symbol)
+      return if getter == :none
       send(getter, item, index, setting)
     else
       getter.call(item, index, setting)
@@ -196,6 +231,34 @@ class Webmail::AccountExport
     end
 
     val.to_s
+  end
+
+  def get_item_type(item, index, setting)
+    item.label(:type)
+  end
+
+  def get_item_initial_password_warning(item, index, setting)
+    item.label(:initial_password_warning)
+  end
+
+  def get_item_restriction(item, index, setting)
+    item.label(:restriction)
+  end
+
+  def get_item_lock_state(item, index, setting)
+    item.label(:lock_state)
+  end
+
+  def get_item_organization_id(item, index, setting)
+    item.organization.try(:name)
+  end
+
+  def get_item_group_ids(item, index, setting)
+    item.groups.pluck(:name).join("\n")
+  end
+
+  def get_item_webmail_role_ids(item, index, setting)
+    item.webmail_roles.pluck(:name).join("\n")
   end
 
   def get_item_imap_setting_account_index(item, index, setting)
@@ -229,6 +292,9 @@ class Webmail::AccountExport
   end
 
   def set_item_field(field_name, row, item, setting)
+    account_index = str(row, 'imap_setting.account_index').to_i - 1
+    return if account_index != 0
+
     names = field_name.split(".")
     setter = names.pop
 
@@ -243,6 +309,87 @@ class Webmail::AccountExport
     end
 
     target.send("#{setter}=", str(row, field_name))
+  end
+
+  def set_item_password(row, item, setting)
+    account_index = str(row, 'imap_setting.account_index').to_i - 1
+    return if account_index != 0
+
+    password = str(row, 'password')
+    if password.present?
+      item.in_password = password
+    else
+      item.password = nil
+    end
+  end
+
+  def set_item_type(row, item, setting)
+    account_index = str(row, 'imap_setting.account_index').to_i - 1
+    return if account_index != 0
+
+    type = str(row, 'type')
+    option = item.type_options.find { |option| option[0] == type }
+    item.type = option ? option[1] : nil
+  end
+
+  def set_item_initial_password_warning(row, item, setting)
+    account_index = str(row, 'imap_setting.account_index').to_i - 1
+    return if account_index != 0
+
+    initial_password_warning = str(row, 'initial_password_warning')
+    option = item.initial_password_warning_options.find { |option| option[0] == initial_password_warning }
+    item.initial_password_warning = option ? option[1] : nil
+  end
+
+  def set_item_restriction(row, item, setting)
+    account_index = str(row, 'imap_setting.account_index').to_i - 1
+    return if account_index != 0
+
+    restriction = str(row, 'restriction')
+    option = item.restriction_options.find { |option| option[0] == restriction }
+    item.restriction = option ? option[1] : nil
+  end
+
+  def set_item_lock_state(row, item, setting)
+    account_index = str(row, 'imap_setting.account_index').to_i - 1
+    return if account_index != 0
+
+    lock_state = str(row, 'lock_state')
+    option = item.lock_state_options.find { |option| option[0] == lock_state }
+    item.lock_state = option ? option[1] : nil
+  end
+
+  def set_item_organization_id(row, item, setting)
+    account_index = str(row, 'imap_setting.account_index').to_i - 1
+    return if account_index != 0
+
+    organization = str(row, 'organization_id')
+    group = nil
+    if organization.present?
+      group = SS::Group.unscoped.where(name: organization).first
+    end
+
+    item.organization_id = group ? group.id : nil
+  end
+
+  def set_item_group_ids(row, item, setting)
+    account_index = str(row, 'imap_setting.account_index').to_i - 1
+    return if account_index != 0
+
+    groups = str(row, 'group_ids').split("\n")
+    groups = SS::Group.unscoped.in(name: groups)
+
+    item.group_ids = groups.pluck(:id)
+  end
+
+  def set_item_webmail_role_ids(row, item, setting)
+    account_index = str(row, 'imap_setting.account_index').to_i - 1
+    return if account_index != 0
+
+    roles = str(row, 'webmail_role_ids').split("\n")
+    roles = Webmail::Role.in(name: roles)
+
+    item.webmail_role_ids = roles.pluck(:id)
   end
 
   def set_item_imap_setting_name(row, item, setting)
