@@ -1,66 +1,45 @@
-<%
-  return if @item.imap_setting.blank?
+<% default_setting = t('webmail.default_settings') %>
 
-  default = t('webmail.default_settings')
-  imap = Webmail::Imap::Base.new_by_user(@cur_user, @item.imap_setting)
-  quota = imap.quota.load rescue nil
-%>
-
-<dl class="see">
-  <dt><%= @model.t :imap_setting_name %></dt>
-  <dd><%= @item.imap_setting.name %></dd>
-
-  <dt><%= @model.t :from %></dt>
-  <dd><%= @item.imap_setting.from.presence || @cur_user.name %></dd>
-
-  <dt><%= @model.t :address %></dt>
-  <dd><%= @item.imap_setting.address.presence || @contact_email || @cur_user.email %></dd>
-
-  <dt><%= @model.t :imap_host %></dt>
-  <dd><%= @item.imap_setting.imap_host.presence || default %></dd>
-
-  <dt><%= @model.t :imap_port %></dt>
-  <dd><%= @item.imap_setting.imap_port.presence || default %></dd>
-
-  <dt><%= @model.t :imap_ssl_use %></dt>
-  <dd>
-    <% if @item.imap_setting.imap_ssl_use.present? %>
-      <%= t("webmail.options.imap_ssl_use.#{@item.imap_setting.imap_ssl_use}") %>
-    <% else %>
-      <%= default %>
+<% render_row = proc do |number, setting| %>
+  <% imap = Webmail::Imap::Base.new_by_group(@item, setting) %>
+  <% quota = imap.quota.cache_find %>
+  <tr>
+    <td class="name"><%= link_to setting.name.presence || default_setting, webmail_group_account_path(group_id: @item.id) %></td>
+    <td class="imap-host"><%= setting.imap_host.presence || default_setting %></td>
+    <% if SS.config.webmail.cache_quota %>
+      <td class="quota" style="width: 160px">
+        <% if quota.present? %>
+          <% percent = quota.usage * 100 / quota.quota.to_f %>
+          <div class="ss-quota-bar" data-reloaded="<%= quota.reloaded.iso8601 %>" data-percent="<%= percent %>">
+            <div class="label">
+              <%= (quota.usage * 1_024).to_s(:human_size) %>/<%= (quota.quota * 1_024).to_s(:human_size) %>
+            </div>
+            <div class="usage" style="width: <%= percent %>%"></div>
+          </div>
+        <% else %>
+          <div class="ss-quota-bar">
+            <div class="label">--/--</div>
+            <div class="usage" style="width: 0px"></div>
+          </div>
+        <% end %>
+      </td>
     <% end %>
-  </dd>
+  </tr>
+<% end %>
 
-  <dt><%= @model.t :imap_auth_type %></dt>
-  <dd><%= @item.imap_setting.imap_auth_type.presence || default %></dd>
-
-  <dt><%= @model.t :imap_account %></dt>
-  <dd><%= @item.imap_setting.imap_account.presence || default %></dd>
-
-  <dt><%= @model.t :imap_password %></dt>
-  <dd><%= ('*' * @item.imap_setting.decrypt_imap_password.to_s.size).presence || default %></dd>
-
-  <dt><%= @model.t :imap_sent_box %></dt>
-  <dd><%= @item.imap_setting.imap_sent_box %></dd>
-
-  <dt><%= @model.t :imap_draft_box %></dt>
-  <dd><%= @item.imap_setting.imap_draft_box %></dd>
-
-  <dt><%= @model.t :imap_account %></dt>
-  <dd><%= @item.imap_setting.imap_trash_box %></dd>
-
-  <% if @item.imap_setting.threshold_mb %>
-  <dt><%= @model.t :threshold_mb %></dt>
-  <dd><%= @item.imap_setting.threshold_mb %><%= t "ss.units.mega_byte" %></dd>
-  <% end %>
-
-  <% if quota %>
-  <dt><%= t('mongoid.models.webmail/quota') %></dt>
-  <dd style="width: 210px;">
-    <div class="ss-quota-bar">
-      <div class="label"><%= quota.label %></div>
-      <div class="usage <%= quota.over_threshold? ? 'over-threshold' : '' %>" style="width: <%= quota.percentage %>%"></div>
-    </div>
-  </dd>
+<dl class="see webmail-addon-group-extension">
+  <dt class="wide"></dt>
+  <% if @item.imap_settings.present? %>
+    <dd class="wide">
+      <table class="index">
+        <% @item.imap_settings.each_with_index do |setting, i| %>
+          <% render_row.call(i + 1, setting) %>
+        <% end %>
+      </table>
+    </dd>
+  <% else %>
+    <dd class="wide">
+      <%= link_to t('webmail.buttons.add_account'), edit_webmail_group_account_path(group_id: @item), class: 'btn btn-add-imap-setting' %>
+    </dd>
   <% end %>
 </dl>
