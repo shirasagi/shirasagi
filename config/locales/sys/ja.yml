@@ -30,6 +30,7 @@ ja:
     site_copy/task_status: 実行状況
     roles:
       admin: 管理者
+      user: 一般ユーザー
     auth: 認証
     auth/saml: SAML
     auth/open_id_connect: OpenID Connect

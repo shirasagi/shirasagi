@@ -41,6 +41,7 @@ end
 
 puts "# roles"
 sys_r01 = save_role name: I18n.t('sys.roles.admin'), permissions: Sys::Role.permission_names
+sys_r02 = save_role name: I18n.t('sys.roles.user'), permissions: %w(use_cms use_gws use_webmail)
 
 def save_user(data, only_on_creates = {})
   if item = SS::User.where(uid: data[:uid]).first
@@ -63,36 +64,36 @@ sys = save_user(
 )
 adm = save_user(
   { name: "サイト管理者", uid: "admin", email: "admin@example.jp", in_password: "pass", kana: "サイトカンリシャ " },
-  { group_ids: [g11.id], organization_id: g00.id, organization_uid: "0000000" }
+  { group_ids: [g11.id], sys_role_ids: [sys_r02.id], organization_id: g00.id, organization_uid: "0000000" }
 )
 u01 = save_user(
   { name: "鈴木 茂", uid: "user1", email: "user1@example.jp", in_password: "pass", kana: "スズキ シゲル" },
-  { group_ids: [g11.id], organization_id: g00.id, organization_uid: "0000002" }
+  { group_ids: [g11.id], sys_role_ids: [sys_r02.id], organization_id: g00.id, organization_uid: "0000002" }
 )
 u02 = save_user(
   { name: "渡辺 和子", uid: "user2", email: "user2@example.jp", in_password: "pass", kana: "ワタナベ カズコ" },
-  { group_ids: [g21.id], organization_id: g00.id, organization_uid: "0000003" }
+  { group_ids: [g21.id], sys_role_ids: [sys_r02.id], organization_id: g00.id, organization_uid: "0000003" }
 )
 u03 = save_user(
   { name: "斎藤　拓也", uid: "user3", email: "user3@example.jp", in_password: "pass", kana: "サイトウ　タクヤ" },
-  { group_ids: [g12.id, g22.id], organization_id: g00.id, organization_uid: "0000005" }
+  { group_ids: [g12.id, g22.id], sys_role_ids: [sys_r02.id], organization_id: g00.id, organization_uid: "0000005" }
 )
 u04 = save_user(
   { name: "伊藤 幸子", uid: "user4", email: "user4@example.jp", in_password: "pass", kana: "イトウ サチコ" },
-  { group_ids: [g21.id], organization_id: g00.id, organization_uid: "0000006" }
+  { group_ids: [g21.id], sys_role_ids: [sys_r02.id], organization_id: g00.id, organization_uid: "0000006" }
 )
 u05 = save_user(
   { name: "高橋 清", uid: "user5", email: "user5@example.jp", in_password: "pass", kana: "タカハシ キヨシ" },
-  { group_ids: [g12.id], organization_id: g00.id, organization_uid: "0000007" }
+  { group_ids: [g12.id], sys_role_ids: [sys_r02.id], organization_id: g00.id, organization_uid: "0000007" }
 )
 
 sys.add_to_set(group_ids: [g11.id], sys_role_ids: [sys_r01.id])
-adm.add_to_set(group_ids: [g11.id])
-u01.add_to_set(group_ids: [g11.id])
-u02.add_to_set(group_ids: [g21.id])
-u03.add_to_set(group_ids: [g12.id, g22.id])
-u04.add_to_set(group_ids: [g21.id])
-u05.add_to_set(group_ids: [g12.id])
+adm.add_to_set(group_ids: [g11.id], sys_role_ids: [sys_r02.id])
+u01.add_to_set(group_ids: [g11.id], sys_role_ids: [sys_r02.id])
+u02.add_to_set(group_ids: [g21.id], sys_role_ids: [sys_r02.id])
+u03.add_to_set(group_ids: [g12.id, g22.id], sys_role_ids: [sys_r02.id])
+u04.add_to_set(group_ids: [g21.id], sys_role_ids: [sys_r02.id])
+u05.add_to_set(group_ids: [g12.id], sys_role_ids: [sys_r02.id])
 
 ## -------------------------------------
 # Gws Roles
