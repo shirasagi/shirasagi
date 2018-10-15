@@ -34,6 +34,7 @@ module Gws
     Gws::Role.permission :delete_private_gws_links
 
     Gws::Role.permission :edit_gws_contrasts
+    Gws::Role.permission :edit_gws_bookmarks
 
     SS::File.model "gws/file", Gws::File
     SS::File.model "share/file", Gws::Share::File
