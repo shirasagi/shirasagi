@@ -11,7 +11,7 @@ class Webmail::MailsController < ApplicationController
   before_action :imap_login
   before_action :apply_recent_filters, only: [:index]
   before_action :set_mailbox
-  before_action :set_item, only: [:show, :edit, :update, :delete, :destroy]
+  before_action :set_item, only: [:show, :edit, :update, :delete, :destroy, :parts_batch_download]
   before_action :set_view_name, only: [:new, :create, :edit, :update]
 
   private
@@ -161,6 +161,27 @@ class Webmail::MailsController < ApplicationController
 
     send_data part.decoded, filename: part.filename,
               content_type: part.content_type, disposition: disposition
+  end
+
+  def parts_batch_download
+    io = ::StringIO.new('')
+    io.set_encoding(Encoding::CP932)
+
+    buffer = Zip::OutputStream.write_buffer(io) do |out|
+      @item.attachments.each do |part|
+        if SS.config.webmail.store_mails
+          file = @imap.mails.find_part_and_store params[:id], part.section
+        else
+          file = @imap.mails.find_part params[:id], part.section
+        end
+
+        out.put_next_entry(part.filename.encode('cp932'))
+        out.write file.decoded
+      end
+    end
+
+    send_data buffer.string, filename: "#{@item.subject}.zip",
+              content_type: 'application/zip', disposition: :attachment
   end
 
   def reply

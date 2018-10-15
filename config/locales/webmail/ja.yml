@@ -70,6 +70,7 @@ ja:
       add_account: アカウントを追加する
       send_mdn: 開封確認を送付する
       ignore_mdn: 要求を無視する
+      batch_download: 一括ダウンロード
     options:
       action:
         copy: コピーする

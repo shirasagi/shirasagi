@@ -106,6 +106,9 @@
           <%= "( #{number_to_human_size(part.decoded.size)} )" %>
         </div>
       <% end %>
+      <div class="batch-download">
+        <%= link_to t('webmail.buttons.batch_download'), { action: :parts_batch_download }, { class: 'btn' } %>
+      </div>
     </div>
     <% end %>
 

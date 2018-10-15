@@ -27,6 +27,7 @@ SS::Application.routes.draw do
     member do
       get :download
       get :parts, path: 'parts/:section', format: false, section: /[^\/]+/
+      get :parts_batch_download
       get :header_view
       get :source_view
       put :set_seen
