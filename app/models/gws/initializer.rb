@@ -35,6 +35,7 @@ module Gws
 
     Gws::Role.permission :edit_gws_contrasts
     Gws::Role.permission :edit_gws_bookmarks
+    Gws::Role.permission :edit_gws_personal_addresses
 
     SS::File.model "gws/file", Gws::File
     SS::File.model "share/file", Gws::Share::File

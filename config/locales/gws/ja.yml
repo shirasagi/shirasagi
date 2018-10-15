@@ -121,6 +121,7 @@ ja:
     delete_private_gws_links: リンク集の削除（所有）
     edit_gws_contrasts: コントラストの管理
     edit_gws_bookmarks: お気に入りの利用
+    edit_gws_personal_addresses: 個人アドレス帳の利用
 
   modules:
     gws: 標準機能
