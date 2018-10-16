@@ -79,21 +79,27 @@ SS::Application.routes.draw do
     end
     resources :history_archives, concerns: [:deletion], only: [:index, :show, :destroy]
 
-    resources :mails, concerns: [:deletion, :mail], path: ':webmail_mode-:account/mails/:mailbox',
-      webmail_mode: /[a-z]+/, account: /\d+/, mailbox: /[^\/]+/, defaults: { webmail_mode: 'account', mailbox: 'INBOX' }
-    resources :mailboxes, path: ':webmail_mode-:account/mailboxes',
-      webmail_mode: /[a-z]+/, account: /\d+/, concerns: [:deletion, :mailbox], defaults: { webmail_mode: 'account' }
     get "addresses" => "addresses#index", as: "addresses_main"
     resources :addresses, path: "addresses/:group", concerns: [:deletion, :export] do
       get :add, on: :collection
     end
     resources :address_groups, concerns: [:deletion]
+
+    resource :account, only: [:show, :edit, :update], path: ':webmail_mode-:account/account',
+      webmail_mode: /[a-z]+/, account: /\d+/, defaults: { webmail_mode: 'account' } do
+      post :test_connection, on: :member
+    end
+    resources :mails, concerns: [:deletion, :mail], path: ':webmail_mode-:account/mails/:mailbox',
+      webmail_mode: /[a-z]+/, account: /\d+/, mailbox: /[^\/]+/, defaults: { webmail_mode: 'account', mailbox: 'INBOX' }
+    resources :mailboxes, path: ':webmail_mode-:account/mailboxes',
+      webmail_mode: /[a-z]+/, account: /\d+/, concerns: [:deletion, :mailbox], defaults: { webmail_mode: 'account' }
     resources :signatures, path: ':webmail_mode-:account/signatures',
       webmail_mode: /[a-z]+/, account: /\d+/, concerns: [:deletion], defaults: { webmail_mode: 'account' }
     resources :filters, path: ':webmail_mode-:account/filters',
       webmail_mode: /[a-z]+/, concerns: [:deletion, :export, :filter], defaults: { webmail_mode: 'account' }
     resource :cache_setting, path: ':webmail_mode-:account/cache_setting', only: [:show, :update],
       webmail_mode: /[a-z]+/, defaults: { webmail_mode: 'account' }
+
     resource :account_setting, only: [:show, :edit, :update] do
       post :test_connection, on: :member
     end

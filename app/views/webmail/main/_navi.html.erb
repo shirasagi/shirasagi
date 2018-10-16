@@ -86,6 +86,9 @@ end
 <% end %>
 
 <% account_config_links = [] %>
+<% if @webmail_mode == :account && @cur_user.webmail_permitted_any?(:read_webmail_accounts) %>
+<% account_config_links << link_to(t('webmail.settings.account'), webmail_account_path(account: params[:account].presence || @cur_user.imap_default_index)) %>
+<% end %>
 <% account_config_links << link_to_webmail_mailboxes_path(group_imap_permission: :edit_webmail_group_imap_mailboxes) %>
 <% account_config_links << link_to_webmail_signatures_path(group_imap_permission: :edit_webmail_group_imap_signatures) %>
 <% account_config_links << link_to_webmail_filters_path(group_imap_permission: :edit_webmail_group_imap_filters) %>

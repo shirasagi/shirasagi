@@ -147,7 +147,8 @@ ja:
       blank_apply_mailbox: 適用するフォルダーを選択してください。
 
   webmail_role:
-    edit_webmail_user_accounts: アカウントの管理
+    read_webmail_accounts: アカウントの閲覧
+    edit_webmail_accounts: アカウントの編集
     edit_webmail_groups: グループの管理
     edit_webmail_users: ユーザーの管理
     edit_webmail_roles: 権限/ロールの管理
