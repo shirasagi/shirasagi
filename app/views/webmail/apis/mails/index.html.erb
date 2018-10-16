@@ -1,0 +1,64 @@
+<%= jquery do %>
+  SS_SearchUI.modal();
+<% end %>
+
+<div class="search-ui-form">
+  <%= form_for :s, url: { action: :index }, html: { method: "GET", class: :search } do |f| %>
+
+    <dl class="see">
+      <dt><%= t "webmail.mailbox" %></dt>
+      <dd>
+        <%= f.select :mailbox,
+          options_for_select(@mailboxes.all.map { |mailbox| [mailbox.basename, mailbox.original_name] }, selected: @cur_mailbox.original_name),
+          {}, { class: "submit-on-change" } %>
+      </dd>
+
+      <dt><%= @model.t :subject %></dt>
+      <dd>
+        <%= f.text_field :subject, value: params.dig(:s, :subject) %>
+        <%= f.submit  t("ss.buttons.search"), class: :btn %>
+      </dd>
+    </dl>
+  <% end %>
+</div>
+
+<table class="index">
+  <thead class="list-head">
+    <tr>
+      <th class="checkbox"><input type="checkbox" /></th>
+      <th class="from">
+        <i class="material-icons md-15" style="visibility: hidden;">&#xE226;</i>
+        <%= @model.t :from %>
+      </th>
+      <th class="name"><%= @model.t :subject %></th>
+      <th class="send_date"><%= @model.t :internal_date %></th>
+      <th class="size"><%= @model.t :size %></th>
+    </tr>
+  </thead>
+  <tbody class="items">
+    <% @items.each do |item| %>
+      <tr class="list-item"
+        data-id="<%= item.id %>"
+        data-attachments="<%= item.attachments? ? 1 : nil %>"
+        data-from="<%= item.from[0] %>"
+        data-name="<%= item.subject %>"
+        data-send_date="<%= item.internal_date.strftime("%Y/%m/%d %H:%M") %>"
+        data-display_size="<%= item.display_size %>">
+        <td class="checkbox"><input type="checkbox" name="ids[]" value="<%= item.id %>" /></td>
+        <td>
+          <i class="material-icons md-15" <%== item.attachments? ? '' : 'style="visibility: hidden;"' %>>&#xE226;</i>
+          <%= item.from[0] %>
+        </td>
+        <td><%= link_to item.subject, "#", class: @multi ? "select-item" : "select-single-item" %></td>
+        <td><%= item.internal_date.strftime("%Y/%m/%d %H:%M") %></td>
+        <td><%= item.display_size %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<div class="search-ui-select">
+  <%= button_tag t("ss.links.select"), { type: :button, class: "select-items btn" } %>
+</div>
+
+<%= paginate @items if @items.try(:current_page) %>

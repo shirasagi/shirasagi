@@ -17,7 +17,7 @@ class Webmail::Mail
   attr_accessor :flags, :text, :html, :attachments, :format,
                 :reply_uid, :forward_uid, :signature,
                 :to_text, :cc_text, :bcc_text,
-                :in_request_mdn, :in_request_dsn
+                :in_request_mdn, :in_request_dsn, :all_export, :mail_ids
 
   field :host, type: String
   field :account, type: String
@@ -133,6 +133,11 @@ class Webmail::Mail
       imap.uids_delete([uid])
     end
     true
+  end
+
+  def import_mail(msg)
+    imap.select('INBOX')
+    imap.conn.append('INBOX', msg, [:Seen], Time.zone.now)
   end
 
   def requested_mdn?
