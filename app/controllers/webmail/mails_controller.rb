@@ -192,7 +192,7 @@ class Webmail::MailsController < ApplicationController
     end
 
     @item = @model.new pre_params.merge(fix_params)
-    @item.new_reply(@ref)
+    @item.new_reply(@ref, params[:without_body].present?)
     render :new
   end
 
@@ -204,7 +204,7 @@ class Webmail::MailsController < ApplicationController
     end
 
     @item = @model.new pre_params.merge(fix_params)
-    @item.new_reply_all(@ref)
+    @item.new_reply_all(@ref, params[:without_body].present?)
     render :new
   end
 

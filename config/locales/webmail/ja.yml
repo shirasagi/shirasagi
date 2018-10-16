@@ -107,7 +107,9 @@ ja:
       set_star: スターをつける
       unset_star: スターをはずす
       reply: 返信する
+      reply_without_body: 返信する（引用なし）
       reply_all: 全員に返信
+      reply_all_without_body: 全員に返信（引用なし）
       forward: 転送する
       edit_as_new: 新規メールとして編集
       move: 移動する
