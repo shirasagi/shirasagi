@@ -19,7 +19,7 @@ class Gws::Portal::UserSetting
 
   def portlet_models
     %w(free links reminder schedule todo bookmark report workflow circular monitor board faq qna share
-       attendance notice presence survey).map do |key|
+       attendance notice presence survey ad).map do |key|
       Gws::Portal::UserPortlet.portlet_model(key)
     end
   end
