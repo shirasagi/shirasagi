@@ -139,6 +139,11 @@ li.webmail-accounts {
 .webmail-mail-search-label {
   padding: 10px 20px;
   border-bottom: 1px solid #eee;
+
+  .webmail-mail-search-label-reset {
+    width: 100%;
+    text-align: right;
+  }
 }
 .webmail-mail-search {
   display: none;

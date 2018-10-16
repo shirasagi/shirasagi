@@ -1,9 +1,12 @@
 <%
 @s = OpenStruct.new params[:s]
 %>
-<% if label = searched_label(params[:s]) %>
+<% if label = searched_label(@s.to_h) %>
 <div class="webmail-mail-search-label">
   <%= label %>
+  <div class="webmail-mail-search-label-reset">
+    <%= link_to t('ss.buttons.reset'), { action: :index }, { class: 'btn reset' } %>
+  </div>
 </div>
 <% end %>
 

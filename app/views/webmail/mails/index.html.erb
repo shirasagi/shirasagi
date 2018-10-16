@@ -68,11 +68,11 @@
       <div class="info">
         <% if @imap.sent_box?(@mailbox) || @imap.draft_box?(@mailbox) %>
           <span class="field to" title="<%= item.display_to.map(&:address).join(', ') %>">
-            <%= item.display_to.map(&:name).join(', ') %>
+            <%= link_to item.display_to.map(&:name).join(', '), { action: :index, 's[to]': item.display_to.first.name } if item.display_to.present? %>
           </span>
         <% else %>
           <span class="field from" title="<%= item.display_sender.address %>">
-            <%= item.display_sender.name %>
+            <%= link_to item.display_sender.name, { action: :index, 's[from]': item.display_sender.name } %>
           </span>
         <% end %>
         <%= link_to item.display_subject, { action: :show, id: item.uid }, class: "field title", title: item.display_subject %>
