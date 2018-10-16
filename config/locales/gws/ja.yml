@@ -210,6 +210,8 @@ ja:
         state: 状態
         in_basename: フォルダー名
         in_parent: 親フォルダー
+      gws/model/memo/folder:
+        in_basename: フォルダー名
       gws/user:
         gws_main_group_ids: グループ（主）
         gws_default_group_ids: グループ（既定）
