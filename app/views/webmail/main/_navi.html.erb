@@ -112,9 +112,6 @@ end
 
 <%
   system_config_links = []
-  if @cur_user.webmail_permitted_any?(:edit_webmail_user_accounts)
-    system_config_links << link_to(t('webmail.settings.account'), webmail_account_setting_path)
-  end
   if Webmail::Group.allowed?(:read, @cur_user)
     system_config_links << link_to(t('mongoid.models.webmail/group'), webmail_groups_path)
   end

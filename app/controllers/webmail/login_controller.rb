@@ -7,11 +7,7 @@ class Webmail::LoginController < ApplicationController
   private
 
   def default_logged_in_path
-    if @cur_user.imap_settings.present?
-      webmail_main_path(account: @cur_user.imap_default_index)
-    else
-      webmail_account_setting_path
-    end
+    webmail_main_path(account: params[:account].presence || @cur_user.imap_default_index)
   end
 
   def get_params

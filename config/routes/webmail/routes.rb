@@ -100,9 +100,6 @@ SS::Application.routes.draw do
     resource :cache_setting, path: ':webmail_mode-:account/cache_setting', only: [:show, :update],
       webmail_mode: /[a-z]+/, defaults: { webmail_mode: 'account' }
 
-    resource :account_setting, only: [:show, :edit, :update] do
-      post :test_connection, on: :member
-    end
     resources :sys_notices, only: [:index, :show]
 
     namespace "apis" do
