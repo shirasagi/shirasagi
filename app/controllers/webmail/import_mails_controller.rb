@@ -26,10 +26,21 @@ class Webmail::ImportMailsController < ApplicationController
   public
 
   def index
+    if @webmail_mode == :group
+      redirect_to webmail_mails_path(webmail_mode: @webmail_mode)
+      return
+    end
+
+
     @item = @model.new
   end
 
   def import
+    if @webmail_mode == :group
+      redirect_to webmail_mails_path(webmail_mode: @webmail_mode)
+      return
+    end
+
     @item = @model.new
 
     file = params.dig(:item, :in_file)

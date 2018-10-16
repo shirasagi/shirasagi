@@ -26,10 +26,20 @@ class Webmail::ExportMailsController < ApplicationController
   public
 
   def index
+    if @webmail_mode == :group
+      redirect_to webmail_mails_path(webmail_mode: @webmail_mode)
+      return
+    end
+
     @item = @model.new
   end
 
   def export
+    if @webmail_mode == :group
+      redirect_to webmail_mails_path(webmail_mode: @webmail_mode)
+      return
+    end
+
     @item = @model.new
     if params.dig(:item, :all_export).blank?
       @item.errors.add(:all_export, :blank)
