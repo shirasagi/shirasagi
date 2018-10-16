@@ -55,6 +55,19 @@ module Webmail::Mail::Message
     set_ref_files(ref.attachments)
   end
 
+  def new_edit(ref)
+    self.edit_as_new_uid = ref.uid
+    self.to = ref.to
+    self.cc = ref.cc
+    self.to_text = self.to.join('; ')
+    self.cc_text = self.cc.join('; ')
+    self.subject = ref.subject
+    self.format = ref.format
+    self.text = ref.text
+    self.html = ref.html
+    set_ref_files(ref.attachments)
+  end
+
   def set_reply_header(ref)
     self.subject = "Re: " + ref.subject.to_s.gsub(/^Re:\s*/, '')
 

@@ -109,6 +109,7 @@ ja:
       reply: 返信する
       reply_all: 全員に返信
       forward: 転送する
+      edit_as_new: 新規メールとして編集
       move: 移動する
       copy: コピーする
       print: 印刷する

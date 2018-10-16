@@ -220,6 +220,18 @@ class Webmail::MailsController < ApplicationController
     render :new
   end
 
+  def edit_as_new
+    if SS.config.webmail.store_mails
+      @ref = @imap.mails.find_and_store params[:id], :body
+    else
+      @ref = @imap.mails.find params[:id], :body
+    end
+
+    @item = @model.new pre_params.merge(fix_params)
+    @item.new_edit(@ref)
+    render :new
+  end
+
   def create
     @item = @model.new
     @item.attributes = get_params

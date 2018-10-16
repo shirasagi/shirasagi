@@ -13,6 +13,7 @@
     <%= link_to t('webmail.links.reply'), { action: :reply }, { class: 'reply' } unless @item.draft? %>
     <%= link_to t('webmail.links.reply_all'), { action: :reply_all }, { class: 'reply-all' } unless @item.draft? %>
     <%= link_to t('webmail.links.forward'), { action: :forward }, { class: 'forward' } unless @item.draft? %>
+    <%= link_to t('webmail.links.edit_as_new'), { action: :edit_as_new }, { class: 'edit-as-new' } unless @item.draft? %>
 
     <%
       groups = nil
