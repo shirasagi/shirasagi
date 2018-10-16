@@ -5,6 +5,7 @@ class Webmail::MailboxesController < ApplicationController
   model Webmail::Mailbox
 
   before_action :imap_login
+  before_action :check_group_imap_permissions, if: ->{ @webmail_mode == :group }
 
   private
 
@@ -27,6 +28,12 @@ class Webmail::MailboxesController < ApplicationController
 
   def crud_redirect_url
     { action: :index }
+  end
+
+  def check_group_imap_permissions
+    unless @cur_user.webmail_permitted_any?(:edit_webmail_group_imap_mailboxes)
+      redirect_to webmail_mails_path(account: params[:account], webmail_mode: @webmail_mode)
+    end
   end
 
   public

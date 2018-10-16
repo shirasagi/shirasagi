@@ -8,6 +8,9 @@ production: &production
   # Disable quota
   disable_quota: false
 
+  # Disable alias
+  disable_alias: true
+
   # Default settings
   clients:
     default:
@@ -43,6 +46,7 @@ production: &production
 test:
   <<: *production
   disable: false
+  disable_alias: false
 
 development:
   <<: *production

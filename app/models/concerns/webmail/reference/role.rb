@@ -32,4 +32,12 @@ module Webmail::Reference::Role
   def clear_webmail_role_permissions
     @webmail_role_permissions = nil
   end
+
+  def webmail_permitted_all?(*permissions)
+    permissions.all? { |permission| webmail_role_permissions[permission.to_s].to_i > 0 }
+  end
+
+  def webmail_permitted_any?(*permissions)
+    permissions.any? { |permission| webmail_role_permissions[permission.to_s].to_i > 0 }
+  end
 end

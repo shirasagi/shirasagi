@@ -7,19 +7,23 @@ class Webmail::MailsController < ApplicationController
   model Webmail::Mail
 
   skip_before_action :set_selected_items
+  before_action :set_crumbs
   before_action :imap_login
   before_action :apply_recent_filters, only: [:index]
   before_action :set_mailbox
   before_action :set_item, only: [:show, :edit, :update, :delete, :destroy]
   before_action :set_view_name, only: [:new, :create, :edit, :update]
-  before_action :set_crumbs
 
   private
 
   def set_crumbs
-    mailbox = Webmail::Mailbox.new(imap: @imap, name: Net::IMAP.decode_utf7(params[:mailbox]))
-    @crumbs << [t("webmail.mail"), webmail_mails_path]
-    @crumbs << [mailbox.basename, { action: :index }]
+    @crumbs << [t("webmail.mail"), webmail_mails_path(webmail_mode: @webmail_mode)]
+    if @imap
+      mailbox = Webmail::Mailbox.new(imap: @imap, name: Net::IMAP.decode_utf7(params[:mailbox]))
+      @crumbs << [mailbox.basename, { action: :index }]
+    else
+      @crumbs << [params[:mailbox], { action: :index }]
+    end
     @webmail_other_account_path = :webmail_mails_path
   end
 

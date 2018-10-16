@@ -1,0 +1,18 @@
+<div class="addon-views">
+  <div class="addon-view">
+    <div class="addon-body">
+      <%== I18n.t("webmail.notice.imap_login_failed") %>
+    </div>
+  </div>
+
+  <% if @imap_setting %>
+  <div class="addon-view">
+    <div class="addon-body">
+      <dl class="see">
+        <dt><%= Webmail::User.t :imap_setting_name %></dt>
+        <dd><%= @imap_setting.name %></dd>
+      </dl>
+    </div>
+  </div>
+  <% end %>
+</div>

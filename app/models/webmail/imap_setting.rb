@@ -6,6 +6,14 @@ class Webmail::ImapSetting < Hash
   validates :threshold_mb, numericality: { only_integer: true, greater_than: 0, allow_blank: true }
   validates :imap_auth_type, inclusion: { in: %w(LOGIN PLAIN CRAM-MD5 DIGEST-MD5), allow_blank: true }
 
+  class << self
+    def default
+      ret = new
+      ret[:name] = I18n.t('webmail.default_settings')
+      ret
+    end
+  end
+
   def name
     self[:name]
   end

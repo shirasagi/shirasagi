@@ -56,9 +56,8 @@ class Webmail::Mail
 
   default_scope -> { order_by internal_date: -1 }
 
-  scope :imap_setting, ->(user, setting) {
-    conf = setting.imap_settings(user.imap_default_settings)
-    where host: conf[:host], account: conf[:account]
+  scope :and_imap, ->(imap) {
+    where imap.account_scope
   }
 
   scope :search, ->(params) {
@@ -71,12 +70,6 @@ class Webmail::Mail
 
   def format_options
     %w(text html).map { |c| [c.upcase, c] }
-  end
-
-  def signature_options
-    Webmail::Signature.user(cur_user).map do |c|
-      [c.name, c.text]
-    end
   end
 
   def replied_mail

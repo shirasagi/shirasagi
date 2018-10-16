@@ -3,25 +3,47 @@ module Webmail::Imap
   class Base
     include Webmail::Imap::UidsCommand
 
-    attr_accessor :user, :conf, :setting, :conn, :error, :address
-    attr_reader :sent_box, :draft_box, :trash_box
+    attr_accessor :conf, :setting, :conn, :error, :address, :email_address
+    attr_accessor :sent_box, :draft_box, :trash_box
 
-    def initialize(user, setting)
-      self.user  = user
-      self.conf  = setting.imap_settings(user.imap_default_settings)
-      self.setting = setting
+    private_class_method :new
 
-      @address   = conf[:address]
-      @sent_box  = conf[:imap_sent_box]
-      @draft_box = conf[:imap_draft_box]
-      @trash_box = conf[:imap_trash_box]
+    class << self
+      def new_by_user(user, setting)
+        ret = new
+        ret.conf = conf = setting.imap_settings(user.imap_default_settings)
+        ret.setting = setting
 
-      self
-    end
+        ret.address = address = conf[:address]
+        ret.email_address = format_email_addree(conf[:from].presence || user.name, address)
+        ret.sent_box = conf[:imap_sent_box]
+        ret.draft_box = conf[:imap_draft_box]
+        ret.trash_box = conf[:imap_trash_box]
 
-    def email_address
-      return %(#{conf[:from]} <#{address}>) if conf[:from].present?
-      %(#{user.name} <#{address}>)
+        ret
+      end
+
+      def new_by_group(group, setting)
+        ret = new
+        ret.conf = conf = setting.imap_settings(group.imap_default_setting)
+        ret.setting = setting
+
+        ret.address = address = conf[:address].presence || group.contact_email
+        ret.email_address = format_email_addree(conf[:from].presence || group.name, address)
+        ret.sent_box = conf[:imap_sent_box]
+        ret.draft_box = conf[:imap_draft_box]
+        ret.trash_box = conf[:imap_trash_box]
+
+        ret
+      end
+
+      def format_email_addree(name, address)
+        if name.present?
+          %(#{name} <#{address}>)
+        else
+          address
+        end
+      end
     end
 
     def login
@@ -42,8 +64,6 @@ module Webmail::Imap
         conn.disconnect rescue nil
       end
       self.conn = nil
-      self.conf = nil
-      self.user = nil
       self.error = nil
     end
 
@@ -52,6 +72,9 @@ module Webmail::Imap
     end
 
     def account_scope
+      # host and account are required
+      return if conf[:host].blank? || conf[:account].blank?
+
       { host: conf[:host], account: conf[:account] }
     end
 
