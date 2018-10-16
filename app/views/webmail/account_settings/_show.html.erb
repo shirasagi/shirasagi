@@ -10,8 +10,10 @@
   <dt><%= @model.t :address %></dt>
   <dd><%= setting.address.presence || @cur_user.email %></dd>
 
+  <% if !SS.config.webmail.disable_alias %>
   <dt><%= @model.t :imap_alias %></dt>
   <dd><%= setting.imap_alias %></dd>
+  <% end %>
 
   <dt><%= @model.t :imap_host %></dt>
   <dd><%= setting.imap_host.presence || default %></dd>
