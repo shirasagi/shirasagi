@@ -40,6 +40,7 @@ SS::Application.routes.draw do
       get :reply_all
       get :forward
       get :edit_as_new
+      get :print
       put :send_mdn
       put :ignore_mdn
       resources :gws_messages, path: 'messages/g:site', site: /\d+/, only: [:new, :create]

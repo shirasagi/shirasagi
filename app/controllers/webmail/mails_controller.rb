@@ -11,7 +11,7 @@ class Webmail::MailsController < ApplicationController
   before_action :imap_login
   before_action :apply_recent_filters, only: [:index]
   before_action :set_mailbox
-  before_action :set_item, only: [:show, :edit, :update, :delete, :destroy, :parts_batch_download]
+  before_action :set_item, only: [:show, :edit, :update, :delete, :destroy, :parts_batch_download, :print]
   before_action :set_view_name, only: [:new, :create, :edit, :update]
 
   private
@@ -329,5 +329,9 @@ class Webmail::MailsController < ApplicationController
       format.html { redirect_to location, notice: t("webmail.notice.#{action}") }
       format.json { render json: { action: params[:action], notice: t("webmail.notice.#{action}") } }
     end
+  end
+
+  def print
+    render file: 'print', layout: 'ss/print'
   end
 end
