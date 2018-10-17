@@ -87,4 +87,16 @@ module Webmail::MailHelper
 
     link_to_webmail_account_config_path(options)
   end
+
+  def email_addresses_to_link(text)
+    # ref. # https://github.com/tenderlove/rails_autolink/blob/v1.1.6/lib/rails_autolink/helpers.rb#L81-L82
+    #
+    # AUTO_EMAIL_LOCAL_RE = /[\w.!#\$%&'*\/=?^`{|}~+-]/
+    # AUTO_EMAIL_RE = /[\w.!#\$%+-]\.?#{AUTO_EMAIL_LOCAL_RE}*@[\w-]+(?:\.[\w-]+)+/
+    email_regex = /[\w.!#\$%+-]\.?#{/[\w.!#\$%&'*\/=?^`{|}~+-]/}*@[\w-]+(?:\.[\w-]+)+/
+
+    text.gsub(email_regex) do |address|
+      link_to address, new_webmail_mail_path(mailbox: @mailbox, item: { to: address })
+    end.html_safe
+  end
 end
