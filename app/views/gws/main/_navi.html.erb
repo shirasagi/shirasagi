@@ -44,10 +44,8 @@
     <h2><%= link_to @cur_site.menu_report_label || t('modules.gws/report'), gws_report_files_main_path, class: "icon-report" %></h2>
   <% end %>
 
-  <% if @cur_site.menu_workflow_visible? %>
-    <% if Gws::Workflow::File.allowed?(:read, @cur_user, site: @cur_site) %>
-      <h2><%= link_to @cur_site.menu_workflow_label || t('modules.gws/workflow'), gws_workflow_files_main_path, class: "icon-workflow" %></h2>
-    <% end %>
+  <% if @cur_site.menu_workflow_visible? && Gws::Workflow.allowed?(:use, @cur_user, site: @cur_site) %>
+    <h2><%= link_to @cur_site.menu_workflow_label || t('modules.gws/workflow'), gws_workflow_files_main_path, class: "icon-workflow" %></h2>
   <% end %>
 
   <% if @cur_site.menu_circular_visible? && Gws::Circular.allowed?(:use, @cur_user, site: @cur_site) %>

@@ -1,5 +1,7 @@
 module Gws::Workflow
   class Initializer
+    Gws::Role.permission :use_gws_workflow, module_name: 'gws/workflow'
+
     Gws::Role.permission :read_other_gws_workflow_routes, module_name: 'gws/workflow'
     Gws::Role.permission :read_private_gws_workflow_routes, module_name: 'gws/workflow'
     Gws::Role.permission :edit_other_gws_workflow_routes, module_name: 'gws/workflow'
