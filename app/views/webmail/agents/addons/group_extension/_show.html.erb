@@ -2,7 +2,7 @@
 
 <% render_row = proc do |number, setting| %>
   <% imap = Webmail::Imap::Base.new_by_group(@item, setting) %>
-  <% quota = imap.quota.cache_find %>
+  <% quota = imap.quota.cache_find rescue nil %>
   <tr>
     <td class="name"><%= link_to setting.name.presence || default_setting, webmail_group_account_path(group_id: @item.id) %></td>
     <td class="imap-host"><%= setting.imap_host.presence || default_setting %></td>
