@@ -68,10 +68,8 @@
     <h2><%= link_to @cur_site.menu_faq_label || t('modules.gws/faq'), gws_faq_topics_path(mode: '-', category: '-'), class: "icon-faq" %></h2>
   <% end %>
 
-  <% if @cur_site.menu_qna_visible? %>
-    <% if Gws::Qna::Post.allowed?(:read, @cur_user, site: @cur_site) %>
-      <h2><%= link_to @cur_site.menu_qna_label || t('modules.gws/qna'), gws_qna_topics_path(mode: '-', category: '-'), class: "icon-question" %></h2>
-    <% end %>
+  <% if @cur_site.menu_qna_visible? && Gws::Qna.allowed?(:use, @cur_user, site: @cur_site) %>
+    <h2><%= link_to @cur_site.menu_qna_label || t('modules.gws/qna'), gws_qna_topics_path(mode: '-', category: '-'), class: "icon-question" %></h2>
   <% end %>
 
   <% if @cur_site.menu_discussion_visible? %>
