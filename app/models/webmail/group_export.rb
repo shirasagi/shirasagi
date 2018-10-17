@@ -109,7 +109,8 @@ class Webmail::GroupExport
     EXPORT_DEF.each { |export_def| import_field(row, item, setting, export_def) }
 
     if setting[:name].present?
-      if setting.invalid?
+      setting.set_imap_password
+      if setting.invalid?(:group)
         setting.errors.full_messages.each do |msg|
           errors.add :base, "#{index + 1}: #{msg}"
         end

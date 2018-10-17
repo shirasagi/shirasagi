@@ -5,6 +5,8 @@ class Webmail::ImapSetting < Hash
   validates :imap_port, numericality: { only_integer: true, greater_than: 0, allow_blank: true }
   validates :threshold_mb, numericality: { only_integer: true, greater_than: 0, allow_blank: true }
   validates :imap_auth_type, inclusion: { in: %w(LOGIN PLAIN CRAM-MD5 DIGEST-MD5), allow_blank: true }
+  validates :imap_account, presence: true, on: :group
+  validates :imap_password, presence: true, on: :group
 
   class << self
     def default
