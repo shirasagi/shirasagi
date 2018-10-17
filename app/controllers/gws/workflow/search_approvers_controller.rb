@@ -11,16 +11,16 @@ class Gws::Workflow::SearchApproversController < ApplicationController
 
   def set_group
     if params[:s].present? && params[:s][:group].present?
-      @group = @cur_site.descendants.active.find(params[:s][:group])
+      @group = @cur_site.descendants_and_self.active.find(params[:s][:group])
     else
       @group = @cur_user.groups.active.in_group(@cur_site).first
     end
 
-    @groups = @cur_site.descendants.active.tree_sort(root_name: @cur_site.name)
+    @groups = @cur_site.descendants_and_self.active.tree_sort(root_name: @cur_site.name)
   end
 
   def group_ids
-    @cur_site.descendants.active.in_group(@group).pluck(:id)
+    @group.descendants_and_self.active.pluck(:id)
   end
 
   public
