@@ -117,7 +117,7 @@
   <h2><%= link_to t('gws.site_config'), gws_site_path, class: "icon-conf" %></h2>
 </nav>
 
-<% if @cur_site.menu_staff_record_visible? %>
+<% if @cur_site.menu_staff_record_visible? && Gws::StaffRecord.allowed?(:use, @cur_user, site: @cur_site) %>
   <nav class="mod-navi">
     <h2><%= @cur_site.menu_staff_record_label || I18n.t('gws/staff_record.staff_records') %></h2>
     <h3><%= link_to t('gws/staff_record.staff_records'), gws_staff_record_public_records_path %></h3>
