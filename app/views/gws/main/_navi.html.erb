@@ -36,10 +36,8 @@
     <h2><%= link_to @cur_site.menu_bookmark_label || t('modules.gws/bookmark'), gws_bookmarks_path, class: "icon-bookmark" %></h2>
   <% end %>
 
-  <% if @cur_site.menu_attendance_visible? %>
-    <% if Gws::Attendance::TimeCard.allowed?(:use, @cur_user, site: @cur_site) %>
-      <h2><%= link_to @cur_site.menu_attendance_label || t('modules.gws/attendance'), gws_attendance_main_path, class: "icon-attendance" %></h2>
-    <% end %>
+  <% if @cur_site.menu_attendance_visible? && Gws::Attendance.allowed?(:use, @cur_user, site: @cur_site) %>
+    <h2><%= link_to @cur_site.menu_attendance_label || t('modules.gws/attendance'), gws_attendance_main_path, class: "icon-attendance" %></h2>
   <% end %>
 
   <% if @cur_site.menu_report_visible? && Gws::Report.allowed?(:use, @cur_user, site: @cur_site) %>
