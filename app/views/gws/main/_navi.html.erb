@@ -80,10 +80,8 @@
     <h2><%= link_to @cur_site.menu_share_label || t('modules.gws/share'), gws_share_files_path, class: "icon-share" %></h2>
   <% end %>
 
-  <% if @cur_site.menu_shared_address_visible? %>
-    <% if Gws::SharedAddress::Address.allowed?(:read, @cur_user, site: @cur_site) %>
-      <h2><%= link_to @cur_site.menu_shared_address_label || t('modules.gws/shared_address'), gws_shared_address_addresses_path, class: "icon-address" %></h2>
-    <% end %>
+  <% if @cur_site.menu_shared_address_visible? && Gws::SharedAddress.allowed?(:use, @cur_user, site: @cur_site) %>
+    <h2><%= link_to @cur_site.menu_shared_address_label || t('modules.gws/shared_address'), gws_shared_address_addresses_path, class: "icon-address" %></h2>
   <% end %>
 
   <% if @cur_site.menu_personal_address_visible? && @cur_user.gws_role_permit_any?(@cur_site, :edit_gws_personal_addresses) %>
