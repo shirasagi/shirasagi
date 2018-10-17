@@ -56,7 +56,7 @@
     <% end %>
   <% end %>
 
-  <% if @cur_site.menu_circular_visible? %>
+  <% if @cur_site.menu_circular_visible? && Gws::Circular.allowed?(:use, @cur_user, site: @cur_site) %>
     <h2><%= link_to @cur_site.menu_circular_label || t('modules.gws/circular'), gws_circular_main_path, class: 'icon-circular' %></h2>
   <% end %>
 
