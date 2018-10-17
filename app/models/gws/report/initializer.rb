@@ -1,5 +1,7 @@
 module Gws::Report
   class Initializer
+    Gws::Role.permission :use_gws_report, module_name: 'gws/report'
+
     Gws::Role.permission :read_other_gws_report_files, module_name: 'gws/report'
     Gws::Role.permission :read_private_gws_report_files, module_name: 'gws/report'
     Gws::Role.permission :edit_other_gws_report_files, module_name: 'gws/report'
