@@ -10,92 +10,90 @@
     </div>
   <% end %>
 
-  <% if @cur_site.menu_schedule_visible? && (Gws::Schedule::Plan.allowed?(:use, @cur_user, site: @cur_site) || @cur_user.gws_role_permit_any?(@cur_site, :use_private_gws_facility_plans)) %>
-    <% use_schedule = true %>
+  <% if @cur_site.menu_schedule_visible? && Gws.module_usable?(:schedule, @cur_site, @cur_user) %>
     <h2><%= link_to @cur_site.menu_schedule_label || t('modules.gws/schedule'), gws_schedule_main_path, class: "icon-schedule" %></h2>
   <% end %>
 
-  <% if @cur_site.menu_todo_visible? && Gws::Schedule::Todo.allowed?(:use, @cur_user, site: @cur_site) %>
-    <% use_todo = true %>
+  <% if @cur_site.menu_todo_visible? && Gws.module_usable?(:todo, @cur_site, @cur_user) %>
     <h2><%= link_to @cur_site.menu_todo_label || t('modules.gws/schedule/todo'), gws_schedule_todo_main_path, class: "icon-todo" %></h2>
   <% end %>
 
-  <% if @cur_site.menu_reminder_visible? && (use_schedule || use_todo) %>
+  <% if @cur_site.menu_reminder_visible? && Gws.module_usable?(:reminder, @cur_site, @cur_user) %>
     <h2><%= link_to @cur_site.menu_reminder_label || t('mongoid.models.gws/reminder'), gws_reminder_main_path, class: "icon-reminder" %></h2>
   <% end %>
 
-  <% if @cur_site.menu_presence_visible? && Gws::Presence.allowed?(:use, @cur_user, site: @cur_site) %>
+  <% if @cur_site.menu_presence_visible? && Gws.module_usable?(:presence, @cur_site, @cur_user) %>
     <h2><%= link_to @cur_site.menu_presence_label || t('mongoid.models.gws/presence'), gws_presence_group_users_path(group: @cur_user.gws_main_group(@cur_site)), class: "icon-presence" %></h2>
   <% end %>
 
-  <% if @cur_site.menu_memo_visible? && Gws::Memo.allowed?(:use, @cur_user, site: @cur_site) %>
+  <% if @cur_site.menu_memo_visible? && Gws.module_usable?(:memo, @cur_site, @cur_user) %>
     <h2><%= link_to @cur_site.menu_memo_label || t('modules.gws/memo'), gws_memo_messages_path, class: "icon-memo" %></h2>
   <% end %>
 
-  <% if @cur_site.menu_bookmark_visible? && Gws::Bookmark.allowed?(:read, @cur_user, site: @cur_site) %>
+  <% if @cur_site.menu_bookmark_visible? && Gws.module_usable?(:bookmark, @cur_site, @cur_user) %>
     <h2><%= link_to @cur_site.menu_bookmark_label || t('modules.gws/bookmark'), gws_bookmarks_path, class: "icon-bookmark" %></h2>
   <% end %>
 
-  <% if @cur_site.menu_attendance_visible? && Gws::Attendance.allowed?(:use, @cur_user, site: @cur_site) %>
+  <% if @cur_site.menu_attendance_visible? && Gws.module_usable?(:attendance, @cur_site, @cur_user) %>
     <h2><%= link_to @cur_site.menu_attendance_label || t('modules.gws/attendance'), gws_attendance_main_path, class: "icon-attendance" %></h2>
   <% end %>
 
-  <% if @cur_site.menu_report_visible? && Gws::Report.allowed?(:use, @cur_user, site: @cur_site) %>
+  <% if @cur_site.menu_report_visible? && Gws.module_usable?(:report, @cur_site, @cur_user) %>
     <h2><%= link_to @cur_site.menu_report_label || t('modules.gws/report'), gws_report_files_main_path, class: "icon-report" %></h2>
   <% end %>
 
-  <% if @cur_site.menu_workflow_visible? && Gws::Workflow.allowed?(:use, @cur_user, site: @cur_site) %>
+  <% if @cur_site.menu_workflow_visible? && Gws.module_usable?(:workflow, @cur_site, @cur_user) %>
     <h2><%= link_to @cur_site.menu_workflow_label || t('modules.gws/workflow'), gws_workflow_files_main_path, class: "icon-workflow" %></h2>
   <% end %>
 
-  <% if @cur_site.menu_circular_visible? && Gws::Circular.allowed?(:use, @cur_user, site: @cur_site) %>
+  <% if @cur_site.menu_circular_visible? && Gws.module_usable?(:circular, @cur_site, @cur_user) %>
     <h2><%= link_to @cur_site.menu_circular_label || t('modules.gws/circular'), gws_circular_main_path, class: 'icon-circular' %></h2>
   <% end %>
 
-  <% if @cur_site.menu_monitor_visible? && Gws::Monitor.allowed?(:use, @cur_user, site: @cur_site) %>
+  <% if @cur_site.menu_monitor_visible? && Gws.module_usable?(:monitor, @cur_site, @cur_user) %>
     <h2><%= link_to @cur_site.menu_monitor_label || t('modules.gws/monitor'), gws_monitor_main_path, class: 'icon-monitor' %></h2>
   <% end %>
 
-  <% if @cur_site.menu_survey_visible? && Gws::Survey.allowed?(:use, @cur_user, site: @cur_site) %>
+  <% if @cur_site.menu_survey_visible? && Gws.module_usable?(:survey, @cur_site, @cur_user) %>
     <h2><%= link_to @cur_site.menu_survey_label || t('modules.gws/survey'), gws_survey_main_path, class: 'icon-survey' %></h2>
   <% end %>
 
-  <% if @cur_site.menu_board_visible? && Gws::Board.allowed?(:use, @cur_user, site: @cur_site) %>
+  <% if @cur_site.menu_board_visible? && Gws.module_usable?(:board, @cur_site, @cur_user) %>
     <h2><%= link_to @cur_site.menu_board_label || t('modules.gws/board'), gws_board_main_path, class: "icon-board" %></h2>
   <% end %>
 
-  <% if @cur_site.menu_faq_visible? && Gws::Faq.allowed?(:use, @cur_user, site: @cur_site) %>
+  <% if @cur_site.menu_faq_visible? && Gws.module_usable?(:faq, @cur_site, @cur_user) %>
     <h2><%= link_to @cur_site.menu_faq_label || t('modules.gws/faq'), gws_faq_topics_path(mode: '-', category: '-'), class: "icon-faq" %></h2>
   <% end %>
 
-  <% if @cur_site.menu_qna_visible? && Gws::Qna.allowed?(:use, @cur_user, site: @cur_site) %>
+  <% if @cur_site.menu_qna_visible? && Gws.module_usable?(:qna, @cur_site, @cur_user) %>
     <h2><%= link_to @cur_site.menu_qna_label || t('modules.gws/qna'), gws_qna_topics_path(mode: '-', category: '-'), class: "icon-question" %></h2>
   <% end %>
 
-  <% if @cur_site.menu_discussion_visible? && Gws::Discussion.allowed?(:use, @cur_user, site: @cur_site) %>
+  <% if @cur_site.menu_discussion_visible? && Gws.module_usable?(:discussion, @cur_site, @cur_user) %>
     <h2><%= link_to @cur_site.menu_discussion_label || t('modules.gws/discussion'), gws_discussion_forums_path(mode: '-'), class: "icon-discussion" %></h2>
   <% end %>
 
-  <% if @cur_site.menu_share_visible? && Gws::Share.allowed?(:use, @cur_user, site: @cur_site) %>
+  <% if @cur_site.menu_share_visible? && Gws.module_usable?(:discussion, @cur_site, @cur_user) %>
     <h2><%= link_to @cur_site.menu_share_label || t('modules.gws/share'), gws_share_files_path, class: "icon-share" %></h2>
   <% end %>
 
-  <% if @cur_site.menu_shared_address_visible? && Gws::SharedAddress.allowed?(:use, @cur_user, site: @cur_site) %>
+  <% if @cur_site.menu_shared_address_visible? && Gws.module_usable?(:shared_address, @cur_site, @cur_user) %>
     <h2><%= link_to @cur_site.menu_shared_address_label || t('modules.gws/shared_address'), gws_shared_address_addresses_path, class: "icon-address" %></h2>
   <% end %>
 
-  <% if @cur_site.menu_personal_address_visible? && @cur_user.gws_role_permit_any?(@cur_site, :edit_gws_personal_addresses) %>
+  <% if @cur_site.menu_personal_address_visible? && Gws.module_usable?(:personal_address, @cur_site, @cur_user) %>
     <h2><%= link_to @cur_site.menu_personal_address_label || t('modules.gws/personal_address'), gws_personal_address_addresses_path, class: "icon-address" %></h2>
   <% end %>
 
-  <% if @cur_site.menu_elasticsearch_visible? && Gws::Elasticsearch.allowed?(:use, @cur_user, site: @cur_site) %>
+  <% if @cur_site.menu_elasticsearch_visible? && Gws.module_usable?(:elasticsearch, @cur_site, @cur_user) %>
     <h2><%= link_to @cur_site.menu_elasticsearch_label || t('modules.gws/elasticsearch'), gws_elasticsearch_search_main_path, class: "icon-search" %></h2>
   <% end %>
 
   <h2><%= link_to t('gws.site_config'), gws_site_path, class: "icon-conf" %></h2>
 </nav>
 
-<% if @cur_site.menu_staff_record_visible? && Gws::StaffRecord.allowed?(:use, @cur_user, site: @cur_site) %>
+<% if @cur_site.menu_staff_record_visible? && Gws.module_usable?(:staff_record, @cur_site, @cur_user) %>
   <nav class="mod-navi">
     <h2><%= @cur_site.menu_staff_record_label || I18n.t('gws/staff_record.staff_records') %></h2>
     <h3><%= link_to t('gws/staff_record.staff_records'), gws_staff_record_public_records_path %></h3>

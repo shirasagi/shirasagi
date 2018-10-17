@@ -16,4 +16,8 @@ class Gws::Survey::Initializer
   Gws::Role.permission :edit_private_gws_survey_categories, module_name: 'gws/survey'
   Gws::Role.permission :delete_other_gws_survey_categories, module_name: 'gws/survey'
   Gws::Role.permission :delete_private_gws_survey_categories, module_name: 'gws/survey'
+
+  Gws.module_usable :survey do |site, user|
+    Gws::Survey.allowed?(:use, user, site: site)
+  end
 end

@@ -17,6 +17,9 @@ module Gws::Monitor
     Gws::Role.permission :edit_private_gws_monitor_categories, module_name: 'gws/monitor'
     Gws::Role.permission :delete_other_gws_monitor_categories, module_name: 'gws/monitor'
     Gws::Role.permission :delete_private_gws_monitor_categories, module_name: 'gws/monitor'
+
+    Gws.module_usable :monitor do |site, user|
+      Gws::Monitor.allowed?(:use, user, site: site)
+    end
   end
 end
-

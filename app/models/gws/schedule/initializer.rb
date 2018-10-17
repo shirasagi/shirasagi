@@ -30,5 +30,17 @@ module Gws::Schedule
     Gws::Role.permission :trash_other_gws_schedule_todos, module_name: 'gws/schedule'
     Gws::Role.permission :trash_private_gws_schedule_todos, module_name: 'gws/schedule'
     Gws::Role.permission :use_private_gws_schedule_todos, module_name: 'gws/schedule'
+
+    Gws.module_usable :schedule do |site, user|
+      Gws::Schedule::Plan.allowed?(:use, user, site: site) || user.gws_role_permit_any?(site, :use_private_gws_facility_plans)
+    end
+
+    Gws.module_usable :todo do |site, user|
+      Gws::Schedule::Todo.allowed?(:use, user, site: site)
+    end
+
+    Gws.module_usable :reminder do |site, user|
+      Gws.module_usable?(:schedule, site, user) || Gws.module_usable?(:todo, site, user)
+    end
   end
 end

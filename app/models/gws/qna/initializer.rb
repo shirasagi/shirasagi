@@ -17,5 +17,9 @@ module Gws::Qna
     Gws::Role.permission :edit_private_gws_qna_categories, module_name: 'gws/qna'
     Gws::Role.permission :delete_other_gws_qna_categories, module_name: 'gws/qna'
     Gws::Role.permission :delete_private_gws_qna_categories, module_name: 'gws/qna'
+
+    Gws.module_usable :qna do |site, user|
+      Gws::Qna.allowed?(:use, user, site: site)
+    end
   end
 end

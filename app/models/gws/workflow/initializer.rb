@@ -30,5 +30,9 @@ module Gws::Workflow
     Gws::Role.permission :edit_private_gws_workflow_forms, module_name: 'gws/workflow'
     Gws::Role.permission :delete_other_gws_workflow_forms, module_name: 'gws/workflow'
     Gws::Role.permission :delete_private_gws_workflow_forms, module_name: 'gws/workflow'
+
+    Gws.module_usable :workflow do |site, user|
+      Gws::Workflow.allowed?(:use, user, site: site)
+    end
   end
 end

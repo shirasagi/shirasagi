@@ -17,5 +17,9 @@ module Gws::Circular
     Gws::Role.permission :edit_private_gws_circular_categories, module_name: 'gws/circular'
     Gws::Role.permission :delete_other_gws_circular_categories, module_name: 'gws/circular'
     Gws::Role.permission :delete_private_gws_circular_categories, module_name: 'gws/circular'
+
+    Gws.module_usable :circular do |site, user|
+      Gws::Circular.allowed?(:use, user, site: site)
+    end
   end
 end

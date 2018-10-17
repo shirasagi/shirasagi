@@ -32,5 +32,9 @@ module Gws::StaffRecord
 
     Gws::Role.permission :edit_other_gws_staff_record_charges, module_name: 'gws/staff_record'
     Gws::Role.permission :edit_private_gws_staff_record_charges, module_name: 'gws/staff_record'
+
+    Gws.module_usable :staff_record do |site, user|
+      Gws::StaffRecord.allowed?(:use, user, site: site)
+    end
   end
 end

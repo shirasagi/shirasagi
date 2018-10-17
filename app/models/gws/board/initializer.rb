@@ -17,5 +17,9 @@ module Gws::Board
     Gws::Role.permission :edit_private_gws_board_categories, module_name: 'gws/board'
     Gws::Role.permission :delete_other_gws_board_categories, module_name: 'gws/board'
     Gws::Role.permission :delete_private_gws_board_categories, module_name: 'gws/board'
+
+    Gws.module_usable :board do |site, user|
+      Gws::Board.allowed?(:use, user, site: site)
+    end
   end
 end

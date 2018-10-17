@@ -39,5 +39,13 @@ module Gws
 
     SS::File.model "gws/file", Gws::File
     SS::File.model "share/file", Gws::Share::File
+
+    Gws.module_usable :bookmark do |site, user|
+      Gws::Bookmark.allowed?(:read, user, site: site)
+    end
+
+    Gws.module_usable :personal_address do |site, user|
+      user.gws_role_permit_any?(site, :edit_gws_personal_addresses)
+    end
   end
 end

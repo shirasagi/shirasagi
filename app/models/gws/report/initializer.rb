@@ -24,5 +24,9 @@ module Gws::Report
     Gws::Role.permission :edit_private_gws_report_categories, module_name: 'gws/report'
     Gws::Role.permission :delete_other_gws_report_categories, module_name: 'gws/report'
     Gws::Role.permission :delete_private_gws_report_categories, module_name: 'gws/report'
+
+    Gws.module_usable :report do |site, user|
+      Gws::Report.allowed?(:use, user, site: site)
+    end
   end
 end

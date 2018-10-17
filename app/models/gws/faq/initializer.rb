@@ -17,5 +17,9 @@ module Gws::Faq
     Gws::Role.permission :edit_private_gws_faq_categories, module_name: 'gws/faq'
     Gws::Role.permission :delete_other_gws_faq_categories, module_name: 'gws/faq'
     Gws::Role.permission :delete_private_gws_faq_categories, module_name: 'gws/faq'
+
+    Gws.module_usable :faq do |site, user|
+      Gws::Faq.allowed?(:use, user, site: site)
+    end
   end
 end

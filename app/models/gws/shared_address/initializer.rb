@@ -17,5 +17,9 @@ module Gws::SharedAddress
     Gws::Role.permission :edit_private_gws_shared_address_groups, module_name: 'gws/shared_address'
     Gws::Role.permission :delete_other_gws_shared_address_groups, module_name: 'gws/shared_address'
     Gws::Role.permission :delete_private_gws_shared_address_groups, module_name: 'gws/shared_address'
+
+    Gws.module_usable :shared_address do |site, user|
+      Gws::SharedAddress.allowed?(:use, user, site: site)
+    end
   end
 end

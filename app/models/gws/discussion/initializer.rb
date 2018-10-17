@@ -20,5 +20,9 @@ module Gws::Discussion
     Gws::Role.permission :edit_private_gws_discussion_posts, module_name: 'gws/discussion'
     Gws::Role.permission :delete_other_gws_discussion_posts, module_name: 'gws/discussion'
     Gws::Role.permission :delete_private_gws_discussion_posts, module_name: 'gws/discussion'
+
+    Gws.module_usable :discussion do |site, user|
+      Gws::Discussion.allowed?(:use, user, site: site)
+    end
   end
 end
