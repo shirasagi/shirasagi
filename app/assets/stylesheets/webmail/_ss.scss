@@ -3,7 +3,7 @@
 // -------------------------------------------------------------------------------------------------
 // menu and common
 
-.webmail-dropdown-menu {
+.webmail-dropdown-menu, .webmail-address-dropdown-menu {
   left: 0;
   margin: 0;
   padding: 5px 0;
@@ -124,7 +124,7 @@ li.webmail-accounts {
 // -------------------------------------------------------------------------------------------------
 // mails
 
-.webmail-mails-head {
+.webmail-mails-head, .webmail-address-head {
   .dropdown {
     display: inline;
     font-weight: normal;

@@ -85,6 +85,7 @@ SS::Application.routes.draw do
     get "addresses" => "addresses#index", as: "addresses_main"
     resources :addresses, path: "addresses/:group", concerns: [:deletion, :export] do
       get :add, on: :collection
+      put :move, path: 'move/:group_id', group_id: /\d+/, on: :collection
     end
     resources :address_groups, concerns: [:deletion]
 
