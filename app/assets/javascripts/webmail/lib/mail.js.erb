@@ -231,11 +231,13 @@ this.Webmail_Mail_List = (function () {
         });
         break;
       case 'set_seen':
+        Webmail_Mail_Navi.reloadMailbox({ notice: -1 });
         items.each(function () {
           return $(this).removeClass('unseen').addClass('seen');
         });
         break;
       case 'unset_seen':
+        Webmail_Mail_Navi.reloadMailbox({ notice: -1 });
         items.each(function () {
           return $(this).removeClass('seen').addClass('unseen');
         });
