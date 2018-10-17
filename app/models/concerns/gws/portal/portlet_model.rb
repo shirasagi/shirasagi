@@ -40,7 +40,7 @@ module Gws::Portal::PortletModel
     notice:     { size_x: 2, size_y: 3, addons: [Gws::Addon::Portal::Portlet::Notice] },
     presence:   { size_x: 4, size_y: 2, addons: [Gws::Addon::Portal::Portlet::Presence] },
     survey:     { size_x: 2, size_y: 3, addons: [Gws::Addon::Portal::Portlet::Survey] },
-    ad:         { size_x: 2, size_y: 3, addons: [Gws::Addon::Portal::Portlet::Ad] },
+    ad:         { size_x: 2, size_y: 3, addons: [Gws::Addon::Portal::Portlet::Ad] }
   }.freeze
 
   included do
@@ -112,7 +112,7 @@ module Gws::Portal::PortletModel
       {
         type: type,
         name: I18n.t("gws/portal.portlets.#{type}.name"),
-        text: I18n.t("gws/portal.portlets.#{type}.text"),
+        text: I18n.t("gws/portal.portlets.#{type}.text")
       }
     end
 
