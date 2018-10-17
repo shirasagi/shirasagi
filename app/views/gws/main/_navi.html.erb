@@ -64,10 +64,8 @@
     <h2><%= link_to @cur_site.menu_board_label || t('modules.gws/board'), gws_board_main_path, class: "icon-board" %></h2>
   <% end %>
 
-  <% if @cur_site.menu_faq_visible? %>
-    <% if Gws::Faq::Post.allowed?(:read, @cur_user, site: @cur_site) %>
-      <h2><%= link_to @cur_site.menu_faq_label || t('modules.gws/faq'), gws_faq_topics_path(mode: '-', category: '-'), class: "icon-faq" %></h2>
-    <% end %>
+  <% if @cur_site.menu_faq_visible? && Gws::Faq.allowed?(:use, @cur_user, site: @cur_site) %>
+    <h2><%= link_to @cur_site.menu_faq_label || t('modules.gws/faq'), gws_faq_topics_path(mode: '-', category: '-'), class: "icon-faq" %></h2>
   <% end %>
 
   <% if @cur_site.menu_qna_visible? %>
