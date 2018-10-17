@@ -72,10 +72,8 @@
     <h2><%= link_to @cur_site.menu_qna_label || t('modules.gws/qna'), gws_qna_topics_path(mode: '-', category: '-'), class: "icon-question" %></h2>
   <% end %>
 
-  <% if @cur_site.menu_discussion_visible? %>
-    <% if Gws::Discussion::Forum.allowed?(:read, @cur_user, site: @cur_site) %>
-      <h2><%= link_to @cur_site.menu_discussion_label || t('modules.gws/discussion'), gws_discussion_forums_path(mode: '-'), class: "icon-discussion" %></h2>
-    <% end %>
+  <% if @cur_site.menu_discussion_visible? && Gws::Discussion.allowed?(:use, @cur_user, site: @cur_site) %>
+    <h2><%= link_to @cur_site.menu_discussion_label || t('modules.gws/discussion'), gws_discussion_forums_path(mode: '-'), class: "icon-discussion" %></h2>
   <% end %>
 
   <% if @cur_site.menu_share_visible? %>

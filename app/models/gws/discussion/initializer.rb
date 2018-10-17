@@ -1,5 +1,7 @@
 module Gws::Discussion
   class Initializer
+    Gws::Role.permission :use_gws_discussion, module_name: 'gws/discussion'
+
     Gws::Role.permission :read_other_gws_discussion_forums, module_name: 'gws/discussion'
     Gws::Role.permission :read_private_gws_discussion_forums, module_name: 'gws/discussion'
     Gws::Role.permission :edit_other_gws_discussion_forums, module_name: 'gws/discussion'
