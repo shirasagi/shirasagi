@@ -16,7 +16,9 @@
 
 <nav class="mod-navi main-features">
   <h2><%= t "modules.gws" %></h2>
-  <h3><%= link_to t('gws.site_info'), gws_site_path %></h3>
+  <% if @cur_user.gws_role_permit_any?(@cur_site, :read_gws_organization) %>
+    <h3><%= link_to t('gws.site_info'), gws_site_path %></h3>
+  <% end %>
   <% if Gws::Group.allowed?(:read, @cur_user, site: @cur_site) %>
     <h3><%= link_to t('mongoid.models.ss/group'), gws_groups_path %></h3>
   <% end %>

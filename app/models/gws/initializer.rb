@@ -33,6 +33,7 @@ module Gws
     Gws::Role.permission :delete_other_gws_links
     Gws::Role.permission :delete_private_gws_links
 
+    Gws::Role.permission :read_gws_organization
     Gws::Role.permission :edit_gws_contrasts
     Gws::Role.permission :edit_gws_bookmarks
     Gws::Role.permission :edit_gws_personal_addresses
