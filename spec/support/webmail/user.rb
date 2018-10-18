@@ -25,7 +25,7 @@ end
 def webmail_user
   create_webmail_users
   user = Webmail::User.find_by(uid: 'user')
-  user.in_password = 'pass'
+  user.in_password = user.decrypted_password = 'pass'
   user
 end
 
@@ -34,14 +34,14 @@ def webmail_imap
 
   create_webmail_users
   user = Webmail::User.find_by(uid: 'imap')
-  user.in_password = SS.config.webmail.test_pass || "pass"
+  user.in_password = user.decrypted_password = SS.config.webmail.test_pass || "pass"
   user
 end
 
 def webmail_admin
   create_webmail_users
   user = Webmail::User.find_by(uid: 'admin')
-  user.in_password = 'pass'
+  user.in_password = user.decrypted_password = 'pass'
   user
 end
 

@@ -10,6 +10,13 @@ class Webmail::MailImporter
     def t(*args)
       human_attribute_name(*args)
     end
+
+    def import_mails(user, account, *mails)
+      importer = Webmail::MailImporter.new(cur_user: user, account: account)
+      mails.each do |mail|
+        importer.import_webmail_mail(mail)
+      end
+    end
   end
 
   def import_mails
@@ -24,6 +31,22 @@ class Webmail::MailImporter
     when "message/rfc822"
       import_from_email_file
     end
+  end
+
+  def imap
+    @map ||= begin
+      imap_setting = @cur_user.imap_settings[@account]
+      imap_setting ||= Webmail::ImapSetting.new
+      imap = Webmail::Imap::Base.new_by_user(@cur_user, imap_setting)
+      imap.login
+      imap
+    end
+  end
+
+  def import_webmail_mail(mail)
+    item = Webmail::Mail.new
+    item.imap = imap
+    item.import_mail(mail.to_s)
   end
 
   private
@@ -64,17 +87,6 @@ class Webmail::MailImporter
     end
 
     import_webmail_mail(msg)
-  end
-
-  def import_webmail_mail(msg)
-    item = Webmail::Mail.new
-    imap_setting = @cur_user.imap_settings[@account]
-    imap_setting ||= Webmail::ImapSetting.new
-    imap = Webmail::Imap::Base.new_by_user(@cur_user, imap_setting)
-    imap.login
-    imap.select("INBOX")
-    item.imap = imap
-    item.import_mail(msg.to_s)
   end
 
   def add_too_large_file_error(params)
