@@ -15,29 +15,29 @@ module Webmail::MailHelper
   end
 
   def account_options(path_helper)
-    @cur_user.imap_settings.map.with_index { |setting, i| [ setting.name, send(path_helper, i) ] }
+    @cur_user.webmail_user.imap_settings.map.with_index { |setting, i| [ setting.name, send(path_helper, i) ] }
   end
 
   def group_options(path_helper)
-    return [] if !@cur_user.webmail_permitted_all?(:use_webmail_group_imap_setting)
+    return [] if !@cur_user.webmail_user.webmail_permitted_all?(:use_webmail_group_imap_setting)
 
-    @cur_user.groups
+    @cur_user.webmail_user.groups
              .select { |group| group.imap_setting.try(:name).present? }
              .map { |group| [group.imap_setting.name, send(path_helper, webmail_mode: :group, account: group.id)] }
   end
 
   def webmail_other_account?(path_helper)
-    return true if @cur_user.imap_settings.any?
-    return false if !@cur_user.webmail_permitted_all?(:use_webmail_group_imap_setting)
+    return true if @cur_user.webmail_user.imap_settings.any?
+    return false if !@cur_user.webmail_user.webmail_permitted_all?(:use_webmail_group_imap_setting)
 
-    @cur_user.groups.pluck(:imap_settings).select(&:present?).any?
+    @cur_user.webmail_user.groups.pluck(:imap_settings).select(&:present?).any?
   end
 
   def webmail_other_account_select(path_helper)
     options  = account_options(path_helper) + group_options(path_helper)
     selected = send(path_helper, webmail_mode: @webmail_mode || :account, account: params[:account])
 
-    options.unshift([nil, send(path_helper, @cur_user.imap_default_index)]) if account_options(path_helper).blank?
+    options.unshift([nil, send(path_helper, @cur_user.webmail_user.imap_default_index)]) if account_options(path_helper).blank?
 
     select_tag(
       :select_account,
@@ -48,7 +48,7 @@ module Webmail::MailHelper
 
   def link_to_webmail_account_config_path(options = {})
     options[:account] ||= params[:account]
-    options[:account] ||= @cur_user.imap_default_index
+    options[:account] ||= @cur_user.webmail_user.imap_default_index
     options[:webmail_mode] ||= @webmail_mode.to_s
 
     label = options.delete(:label)
@@ -56,7 +56,7 @@ module Webmail::MailHelper
     group_imap_permission = options.delete(:group_imap_permission)
 
     return link_to(label, path_proc.call(options)) if @webmail_mode == :account || !group_imap_permission
-    return link_to(label, path_proc.call(options)) if @cur_user.webmail_permitted_any?(group_imap_permission)
+    return link_to(label, path_proc.call(options)) if @cur_user.webmail_user.webmail_permitted_any?(group_imap_permission)
     nil
   end
 

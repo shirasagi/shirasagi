@@ -285,6 +285,18 @@ module SS::Model::User
     @gws_user ||= is_a?(Gws::User) ? self : Gws::User.find(id)
   end
 
+  def webmail_user
+    @webmail_user ||= begin
+      if is_a?(Webmail::User)
+        self
+      else
+        user = Webmail::User.find(id)
+        user.decrypted_password = decrypted_password
+        user
+      end
+    end
+  end
+
   private
 
   def dbpasswd_authenticate(in_passwd)

@@ -137,6 +137,10 @@ module SS::Model::Group
     is_a?(Gws::Group) ? self : Gws::Group.find(id)
   end
 
+  def webmail_group
+    is_a?(Webmail::Group) ? self : Webmail::Group.find(id)
+  end
+
   private
 
   def validate_name
