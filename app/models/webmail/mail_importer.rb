@@ -69,8 +69,8 @@ class Webmail::MailImporter
   def import_webmail_mail(msg)
     item = Webmail::Mail.new
     imap_setting = @cur_user.imap_settings[@account]
-    imap_setting = Webmail::ImapSetting.new unless imap_setting
-    imap = Webmail::Imap::Base.new(@cur_user, imap_setting)
+    imap_setting ||= Webmail::ImapSetting.new
+    imap = Webmail::Imap::Base.new_by_user(@cur_user, imap_setting)
     imap.login
     imap.select("INBOX")
     item.imap = imap
