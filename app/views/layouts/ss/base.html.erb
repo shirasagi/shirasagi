@@ -76,15 +76,22 @@
     <% if @cur_user %>
     <nav class="user">
       <% if @ss_mode == :webmail %>
-        <% gws_user = @cur_user.gws_user %>
-        <% gws_role = gws_user.gws_roles.in(permissions: "edit_private_gws_memo_messages").reorder(site_id: 1).first %>
-        <% gws_group = gws_role.site if gws_role %>
-        <% if SS.config.gws.disable.blank? && gws_group %>
-          <%= link_to gws_memo_messages_path(site: gws_group.id), class: "user-message" do %>
-            <% count = Gws::Memo::Message.unseens(@cur_user, gws_group).size %>
-            <% if count > 0 %><span class="unseen"><%= count %></span><% end %>
-          <% end %>
-        <% end %>
+        <%
+          if SS.config.gws.disable.blank?
+            gws_user = @cur_user.gws_user
+            sites = gws_user.root_groups.select do |site|
+              Gws::Memo::Message.allowed?(:edit, gws_user, site: site)
+            end
+            if sites.present?
+              site = sites.sort_by { |site| site.id }.first
+              count = Gws::Memo::Message.unseens(@cur_user, site).size
+              span_unseen = content_tag("span", count, class: "unseen") if count > 0
+              @output_buffer << link_to(gws_memo_messages_path(site: site), class: "user-message") do
+                span_unseen
+              end
+            end
+          end
+        %>
       <% elsif @ss_mode == :gws %>
         <% if @cur_site.menu_bookmark_visible? %>
           <div class="gws-bookmark dropdown dropdown-toggle">
