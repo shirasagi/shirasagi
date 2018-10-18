@@ -1,8 +1,8 @@
 require 'spec_helper'
 
-describe "webmail_gws_messages", type: :feature, dbscope: :example, imap: true do
+describe "webmail_gws_messages", type: :feature, dbscope: :example, imap: true, js: true do
   let(:site) { create :gws_group }
-  let(:user) { create :webmail_user, group_ids: [site.id] }
+  let(:user) { webmail_imap }
   let(:role) { create :gws_role_admin, cur_site: site, cur_user: user }
   let(:item_title) { "rspec-#{unique_id}" }
   let(:messages_path) { gws_memo_messages_path(site: site.id) }
@@ -15,7 +15,7 @@ describe "webmail_gws_messages", type: :feature, dbscope: :example, imap: true d
         gws_user.add_to_set(gws_role_ids: role.id)
       end
 
-      it "#show", js: true do
+      it "#show" do
         # new/create
         visit index_path
         click_link I18n.t('ss.links.new')
@@ -63,6 +63,8 @@ describe "webmail_gws_messages", type: :feature, dbscope: :example, imap: true d
   describe "webmail_mode is group" do
     let(:group) { create :webmail_group }
     let(:index_path) { webmail_mails_path(account: group.id, webmail_mode: :group) }
+
+    before { user.add_to_set(group_ids: [ group.id ]) }
 
     it_behaves_like 'webmail gws messages flow'
   end

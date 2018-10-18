@@ -8,7 +8,7 @@ FactoryBot.define do
     setting[:name] = 'group_name'
     setting[:address] = conf['address'] || 'webmail@example.jp'
     setting[:imap_host] = conf['host'] || 'localhost'
-    setting[:imap_account] = conf['account'] || 'email'
+    setting[:imap_account] = SS.config.webmail.test_user || conf['account'] || 'email'
     setting[:in_imap_password] = conf['password'] || 'pass'
     setting.set_imap_password
 

@@ -1,14 +1,14 @@
 require 'spec_helper'
 
-describe "webmail_mails", type: :feature, dbscope: :example, imap: true do
-  let(:user) { create :webmail_user }
+describe "webmail_mails", type: :feature, dbscope: :example, imap: true, js: true do
+  let(:user) { webmail_imap }
   let(:item_title) { "rspec-#{unique_id}" }
 
   shared_examples "webmail mails flow" do
     context "with auth" do
       before { login_user(user) }
 
-      it "#index", js: true do
+      it "#index" do
         visit index_path
 
         find(".webmail-navi-mailboxes .inbox-sent").click
@@ -18,7 +18,7 @@ describe "webmail_mails", type: :feature, dbscope: :example, imap: true do
         find(".webmail-navi-quota .reload").click
       end
 
-      it "#show", js: true do
+      it "#show" do
         # new/create
         visit index_path
         click_link I18n.t('ss.links.new')
@@ -98,6 +98,8 @@ describe "webmail_mails", type: :feature, dbscope: :example, imap: true do
   describe "webmail_mode is group" do
     let(:group) { create :webmail_group }
     let(:index_path) { webmail_mails_path(account: group.id, webmail_mode: :group) }
+
+    before { user.add_to_set(group_ids: [ group.id ]) }
 
     it_behaves_like 'webmail mails flow'
   end

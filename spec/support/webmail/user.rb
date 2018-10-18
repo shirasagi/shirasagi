@@ -14,12 +14,27 @@ def create_webmail_users
   user = Webmail::User.create! name: "webmail-user", uid: "user", email: "user@example.jp", in_password: "pass",
     group_ids: [g11.id], webmail_role_ids: [user_role.id],
     organization_id: g00.id, organization_uid: "org-user"
+  if SS.config.webmail.test_user.present?
+    Webmail::User.create! name: "webmail-imap", uid: "imap",
+      email: SS.config.webmail.test_user, in_password: SS.config.webmail.test_pass || "pass",
+      group_ids: [g11.id], webmail_role_ids: [user_role.id],
+      organization_id: g00.id, organization_uid: "org-imap"
+  end
 end
 
 def webmail_user
   create_webmail_users
   user = Webmail::User.find_by(uid: 'user')
   user.in_password = 'pass'
+  user
+end
+
+def webmail_imap
+  raise "not supported in imap: false" if SS.config.webmail.test_user.blank?
+
+  create_webmail_users
+  user = Webmail::User.find_by(uid: 'imap')
+  user.in_password = SS.config.webmail.test_pass || "pass"
   user
 end
 
@@ -42,6 +57,11 @@ end
 
 def login_webmail_user
   login_user webmail_user
+end
+
+def login_webmail_imap
+  raise "not supported in imap: false" if SS.config.webmail.test_user.blank?
+  login_user webmail_imap
 end
 
 def login_webmail_admin
