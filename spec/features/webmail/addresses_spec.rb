@@ -13,7 +13,9 @@ describe "webmail_addresses", type: :feature, dbscope: :example do
 
     it "#import" do
       visit index_path
-      click_link I18n.t('ss.links.import')
+      within ".nav-menu" do
+        click_link I18n.t('ss.links.import')
+      end
       click_button I18n.t('ss.import')
     end
   end

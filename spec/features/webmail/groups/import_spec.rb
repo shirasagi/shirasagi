@@ -11,7 +11,9 @@ describe "webmail_groups", type: :feature, dbscope: :example do
   context "download template" do
     it do
       visit webmail_groups_path
-      click_on I18n.t("ss.links.import")
+      within ".nav-menu" do
+        click_on I18n.t("ss.links.import")
+      end
       click_on I18n.t('ss.links.download_template')
 
       csv = CSV.parse(page.html.encode("UTF-8"), headers: true)
@@ -30,7 +32,9 @@ describe "webmail_groups", type: :feature, dbscope: :example do
       expect(group4).to have(0).imap_settings
 
       visit webmail_groups_path
-      click_on I18n.t("ss.links.import")
+      within ".nav-menu" do
+        click_on I18n.t("ss.links.import")
+      end
       within "form" do
         attach_file "item[in_file]", "#{Rails.root}/spec/fixtures/webmail/group_accounts_1-1.csv"
         click_button I18n.t("ss.import")
@@ -76,7 +80,9 @@ describe "webmail_groups", type: :feature, dbscope: :example do
   context "import group_accounts_1-1.csv and overwrite with group_accounts_1-2.csv" do
     it do
       visit webmail_groups_path
-      click_on I18n.t("ss.links.import")
+      within ".nav-menu" do
+        click_on I18n.t("ss.links.import")
+      end
       within "form" do
         attach_file "item[in_file]", "#{Rails.root}/spec/fixtures/webmail/group_accounts_1-1.csv"
         click_button I18n.t("ss.import")
@@ -84,7 +90,9 @@ describe "webmail_groups", type: :feature, dbscope: :example do
       expect(page).to have_css("#notice", text: I18n.t("ss.notice.saved"))
 
       visit webmail_groups_path
-      click_on I18n.t("ss.links.import")
+      within ".nav-menu" do
+        click_on I18n.t("ss.links.import")
+      end
       within "form" do
         attach_file "item[in_file]", "#{Rails.root}/spec/fixtures/webmail/group_accounts_1-2.csv"
         click_button I18n.t("ss.import")
