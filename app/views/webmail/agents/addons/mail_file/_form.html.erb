@@ -36,9 +36,9 @@ var tempFile = new SS_Addon_TempFile($(".upload-drop-area"), <%= @cur_user.id %>
     <div id="selected-files">
       <% @item.ref_files.each do |part| %>
         <div class="file-view">
-          <%= link_to(parts_webmail_mail_path(section: part.section), target: part.link_target, class: :thumb) do %>
+          <%= link_to(parts_webmail_mail_path(webmail_mode: @webmail_mode, account: params[:account] || @cur_user.imap_default_index, section: part.section), target: part.link_target, class: :thumb) do %>
             <% if part.image? %>
-              <%= image_tag parts_webmail_mail_path(section: part.section), alt: part.filename %>
+              <%= image_tag parts_webmail_mail_path(webmail_mode: @webmail_mode, account: params[:account] || @cur_user.imap_default_index, section: part.section), alt: part.filename %>
             <% else %>
               <% extname = File.extname(part.filename) %>
               <span class="ext icon-<%= extname %>"><%= extname %></span>

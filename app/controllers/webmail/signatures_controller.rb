@@ -19,7 +19,7 @@ class Webmail::SignaturesController < ApplicationController
 
   def check_group_imap_permissions
     unless @cur_user.webmail_permitted_any?(:edit_webmail_group_imap_signatures)
-      redirect_to webmail_mails_path(account: params[:account], webmail_mode: @webmail_mode)
+      redirect_to webmail_mails_path(webmail_mode: @webmail_mode, account: params[:account])
     end
   end
 

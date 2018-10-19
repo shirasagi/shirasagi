@@ -61,9 +61,9 @@
       <% if SS.config.webmail.disable.blank? && SS.config.webmail.disable_navi.blank? %>
       <div class="webmail">
         <% if @ss_mode == :webmail %>
-        <h2><%= link_to t('webmail.mail'), webmail_mails_path(account: params[:account] || @cur_user.imap_default_index), class: "current" %></h2>
+        <h2><%= link_to t('webmail.mail'), webmail_mails_path(webmail_mode: :account, account: params[:account] || @cur_user.imap_default_index), class: "current" %></h2>
         <% else %>
-        <h2><%= link_to t('webmail.mail'), webmail_mails_path(account: params[:account] || @cur_user.imap_default_index) %></h2>
+        <h2><%= link_to t('webmail.mail'), webmail_mails_path(webmail_mode: :account, account: params[:account] || @cur_user.imap_default_index) %></h2>
         <% end %>
       </div>
       <% end %>
