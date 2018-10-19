@@ -15,12 +15,22 @@
       <tbody>
         <% @items.each do |item| %>
           <% item.plans.each do |plan| %>
+            <%
+              plan_history = plan.histories.where(mode: 'update').first
+              if plan_history.present?
+                group_name = plan_history.user_group_name.split("/")[1..-1].join(' ')
+                user_name = plan_history.user_name
+              else
+                group_name = plan.section_name
+                user_name = plan.user.name
+              end
+            %>
             <tr>
               <td><%= item.name %></td>
               <td><%= l(plan.start_at, format: :gws_long) %></td>
               <td><%= l(plan.end_at, format: :gws_long) %></td>
-              <td><%= plan.section_name %></td>
-              <td><%= tryb { plan.user.name } %></td>
+              <td><%= group_name %></td>
+              <td><%= user_name %></td>
 
               <% if plan.readable?(@cur_user, site: @cur_site) %>
               <td><%= plan.name %></td>
