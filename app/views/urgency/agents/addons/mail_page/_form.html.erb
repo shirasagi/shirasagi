@@ -1,0 +1,28 @@
+<dl class="see mod-urgency-mail_page">
+  <dt><%= @item.t :urgency_state %><%= @model.tt :urgency_state %></dt>
+  <dd><%= f.select :urgency_state, @item.urgency_state_options %></dd>
+
+  <dt><%= @item.t :urgency_node_id %><%= @model.tt :urgency_node_id %></dt>
+  <dd class="wide" style="line-height: 2.5">
+    <%= f.hidden_field "urgency_node_id", value: "", class: "hidden-ids" %>
+    <%= link_to t("cms.apis.nodes.index"), cms_apis_nodes_path(single: 1, model: "Urgency::Node::Layout"), class: "ajax-box" %>
+  </dd>
+  <dd>
+    <table class="index ajax-selected">
+      <thead>
+      <tr>
+        <th class="name"><%= Cms::Node.t :name %></th>
+        <th></th>
+      </tr>
+      </thead>
+      <tbody>
+      <% if @item.urgency_node %>
+        <tr data-id="<%= @item.urgency_node_id %>">
+          <td><%= f.hidden_field "urgency_node_id", value: @item.urgency_node_id %> <%= @item.urgency_node.name %></td>
+          <td><%= link_to t("ss.buttons.delete"), "#", class: "btn deselect" %></td>
+        </tr>
+      <% end %>
+      </tbody>
+    </table>
+  </dd>
+</dl>
