@@ -18,6 +18,7 @@ ja:
     urgency: 緊急災害レイアウト
     addons:
       urgency/layout: 緊急災害レイアウト設定
+      urgency/mail_page: 緊急災害レイアウト設定
 
   cms:
     nodes:
@@ -27,3 +28,14 @@ ja:
     attributes:
       urgency/node/layout:
         urgency_default_layout: 通常時レイアウト
+        urgency_mail_page_layout: メール取込レイアウト
+      urgency/addon/mail_page:
+        urgency_state: 切り替え
+        urgency_node_id: フォルダー
+
+  tooltip:
+    urgency/addon/mail_page:
+      urgency_state:
+        - メールを取り込んだ際に緊急災害レイアウトに切り替えるか設定します。
+      urgency_node_id:
+        - 連携する緊急災害レイアウトフォルダーを設定します。
