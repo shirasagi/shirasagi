@@ -41,7 +41,8 @@ this.Webmail_Mail_Navi = (function () {
         if (data.notice && opts['notice'] !== -1) {
           SS.notice(data.notice);
         }
-        if (data.inbox.recent > 0) {
+        var uidnext = navi.find("a[data-name='INBOX']").data("uidnext")
+        if (uidnext != data.inbox.uidnext) {
           if (location.pathname === data.inbox.url) {
             location.href = data.inbox.url;
           }

@@ -19,7 +19,7 @@ end
   <% end if @mailboxes  %>
 
   <h2>
-    <%= link_to webmail_mails_path(account: params[:account] || @cur_user.imap_default_index, webmail_mode: @webmail_mode), 'data-name' => 'INBOX', 'class' => 'mail-droppable mailbox-droppable' do %>
+    <%= link_to webmail_mails_path(account: params[:account] || @cur_user.imap_default_index, webmail_mode: @webmail_mode), data: { name: 'INBOX', uidnext: @mailboxes ? @mailboxes.inbox.uidnext : nil }, class: 'mail-droppable mailbox-droppable' do %>
       <i class="material-icons">&#xE0E1;</i><%= t('webmail.box.inbox') %>
       <% if @mailboxes && inbox = @mailboxes.inbox %>
         <span class="unseen count<%= inbox.unseen %>">(<%= inbox.unseen %>)</span>
