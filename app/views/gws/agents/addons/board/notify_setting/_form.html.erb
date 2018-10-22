@@ -1,14 +1,16 @@
-<dl class="see addon-gws-board-notify-setting">
-  <dt><%= @model.t :notify_state %><%= @model.tt :notify_state %></dt>
-  <dd><%= f.select :notify_state, @item.notify_state_options %></dd>
+<% if @cur_site.notify_model?(@model) %>
+  <dl class="see addon-gws-board-notify-setting">
+    <dt><%= @model.t :notify_state %><%= @model.tt :notify_state %></dt>
+    <dd><%= f.select :notify_state, @item.notify_state_options %></dd>
 
-  <dt><%= @model.t :subscribed_users_readable_state %><%= @model.tt :subscribed_users_readable_state %></dt>
-  <dd>
-    <% @item.subscribed_users_readable_state_options.each do |k, v| %>
-      <label class="mr-2">
-        <%= f.radio_button :subscribed_users_readable_state, v %>
-        <%= k %>
-      </label>
-    <% end %>
-  </dd>
-</dl>
+    <dt><%= @model.t :subscribed_users_readable_state %><%= @model.tt :subscribed_users_readable_state %></dt>
+    <dd>
+      <% @item.subscribed_users_readable_state_options.each do |k, v| %>
+        <label class="mr-2">
+          <%= f.radio_button :subscribed_users_readable_state, v %>
+          <%= k %>
+        </label>
+      <% end %>
+    </dd>
+  </dl>
+<% end %>

@@ -13,6 +13,8 @@ class Gws::Monitor::Post
   around_save ::Gws::Elasticsearch::Indexer::MonitorPostJob.callback
   around_destroy ::Gws::Elasticsearch::Indexer::MonitorPostJob.callback
 
+  delegate :subscribed_users, to: :topic
+
   # gws/file addon support
   def state
     topic.try(:state)

@@ -84,28 +84,28 @@ ja:
 
   gws_notification:
     gws/qna/topic:
-      subject: "[更新通知][Ｑ＆Ａ] %{name}"
-      text: |
-        「%{name}」が作成または更新されました。
+      subject: "[Ｑ＆Ａ] 「%{name}」が届きました。"
+      text: "%{text}"
+      mail_text: |
+        %{subject}
 
         %{text}
 
     gws/qna/post:
-      subject: "[更新通知][Ｑ＆Ａ] %{name}"
-      text: |
-        「%{name}」に投稿がありました。
+      subject: "[Ｑ＆Ａ] 「%{name}」に新しい投稿がありました。"
+      text: "%{text}"
+      mail_text: |
+        %{subject}
 
         %{text}
 
     gws/qna/topic/destroy:
-      subject: "[削除通知][Ｑ＆Ａ] %{name}"
-      text: |
-        「%{name}」が削除されました。
+      subject: "[Ｑ＆Ａ] 「%{name}」が削除されました。"
+      text: ""
 
     gws/qna/post/destroy:
-      subject: "[削除通知][Ｑ＆Ａ] %{name}"
-      text: |
-        「%{name}」の投稿が削除されました。
+      subject: "[Ｑ＆Ａ] 「%{name}」の投稿が削除されました。"
+      text: "%{text}"
 
   mongoid:
     models:

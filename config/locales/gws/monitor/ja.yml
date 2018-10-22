@@ -194,6 +194,31 @@ ja:
     delete_other_gws_monitor_topics: 記事の削除（全て）
     delete_private_gws_monitor_topics: 記事の削除（所有）
 
+  gws_notification:
+    gws/monitor/topic:
+      subject: "[照会・回答] 「%{name}」が届きました。"
+      text: "%{text}"
+      mail_text: |
+        %{subject}
+
+        %{text}
+
+    gws/monitor/post:
+      subject: "[照会・回答] 「%{name}」に新しい投稿がありました。"
+      text: "%{text}"
+      mail_text: |
+        %{subject}
+
+        %{text}
+
+    gws/monitor/topic/destroy:
+      subject: "[照会・回答] 「%{name}」が削除されました。"
+      text: ""
+
+    gws/monitor/post/destroy:
+      subject: "[照会・回答] 「%{name}」の投稿が削除されました。"
+      text: "%{text}"
+
   mongoid:
     models:
       gws/monitor/topic: トピック

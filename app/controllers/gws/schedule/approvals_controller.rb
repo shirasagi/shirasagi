@@ -62,18 +62,26 @@ class Gws::Schedule::ApprovalsController < ApplicationController
   end
 
   def send_approval_approve_mail
+    exclusion_user_ids = @cur_schedule.members.reject{|user| user.use_notice?(@cur_schedule)}.map(&:id)
+    exclusion_user_ids << @cur_user.id
+    exclusion_user_ids.uniq!
+
     Gws::Schedule::Notifier::Approval.deliver_approve!(
       cur_site: @cur_site, cur_group: @cur_group, cur_user: @cur_user,
-      to_users: @cur_schedule.members, item: @cur_schedule,
+      to_users: @cur_schedule.members.nin(id: exclusion_user_ids), item: @cur_schedule,
       url: gws_schedule_plan_url(id: @cur_schedule),
       comment: params.dig(:comment, :text)
     ) rescue nil
   end
 
   def send_approval_deny_mail
+    exclusion_user_ids = @cur_schedule.members.reject{|user| user.use_notice?(@cur_schedule)}.map(&:id)
+    exclusion_user_ids << @cur_user.id
+    exclusion_user_ids.uniq!
+
     Gws::Schedule::Notifier::Approval.deliver_remand!(
       cur_site: @cur_site, cur_group: @cur_group, cur_user: @cur_user,
-      to_users: @cur_schedule.members, item: @cur_schedule,
+      to_users: @cur_schedule.members.nin(id: exclusion_user_ids), item: @cur_schedule,
       url: gws_schedule_plan_url(id: @cur_schedule),
       comment: params.dig(:comment, :text)
     ) rescue nil

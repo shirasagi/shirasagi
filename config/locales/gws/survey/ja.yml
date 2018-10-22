@@ -143,10 +143,12 @@ ja:
 
   gws_notification:
     gws/survey/form:
-      subject: "[回答依頼] %{name}"
-      text: |
-        「%{name}」への回答をお願いします。
-        %{path} をブラウザで開き、表示された画面に記載のアンケートへ回答してください。
+      subject: "[アンケート] 「%{name}」の回答依頼が届きました。"
+      text: "%{path}"
+      mail_text: |
+        %{subject}
+
+        %{text}
 
   job:
     models:

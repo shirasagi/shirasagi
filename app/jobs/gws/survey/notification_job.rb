@@ -1,8 +1,11 @@
 class Gws::Survey::NotificationJob < Gws::ApplicationJob
   def perform(*args)
+    return unless site.notify_model?(Gws::Survey::Form)
+
     @now = Time.zone.now
     @options = args.extract_options!.with_indifferent_access
     @ids = args
+    @cur_user_id = @options[:cur_user_id]
     select_items
     send_all_notifications
   end
@@ -62,12 +65,13 @@ class Gws::Survey::NotificationJob < Gws::ApplicationJob
 
   def send_one_notification(item)
     recipients = load_recipients(item)
+    recipients = recipients.select{|recipient| recipient.id != @cur_user_id && recipient.use_notice?(item)}
     if recipients.blank?
       Rails.logger.info("#{item.name}: 通知対象ユーザーが見つかりません")
       return
     end
 
-    path = Rails.application.routes.url_helpers.edit_gws_survey_readable_file_url(
+    path = Rails.application.routes.url_helpers.edit_gws_survey_readable_file_path(
       protocol: site.canonical_scheme, host: site.canonical_domain,
       site: site, folder_id: '-', category_id: '-', readable_id: item
     )
@@ -76,7 +80,7 @@ class Gws::Survey::NotificationJob < Gws::ApplicationJob
     subject = I18n.t("gws_notification.#{i18n_key}.subject", name: item.name, default: item.name)
     text = ApplicationController.helpers.sanitize(item.description.presence || '', tags: [])
     text = text.truncate(60)
-    text = I18n.t("gws_notification.#{i18n_key}.text", name: item.name, text: text, path: path, default: text)
+    text = I18n.t("gws_notification.#{i18n_key}.text", name: item.name, text: text, path: path, default: path)
 
     message = Gws::Memo::Notice.new
     message.cur_site = site
@@ -88,6 +92,8 @@ class Gws::Survey::NotificationJob < Gws::ApplicationJob
     message.text = text
 
     message.save!
+
+    Gws::Memo::Mailer.notice_mail(message, recipients, item).try(:deliver_now)
 
     Rails.logger.info("#{item.name}: 通知送信")
   end

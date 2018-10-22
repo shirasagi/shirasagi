@@ -166,6 +166,8 @@ class Gws::Circular::Post
   end
 
   def send_notification
+    return unless @cur_site.notify_model?(self)
+
     added_member_ids = removed_member_ids = []
 
     if state == 'public'
@@ -191,11 +193,18 @@ class Gws::Circular::Post
       removed_member_ids = (cur_member_ids + prev_member_ids).uniq
     end
 
+    cur_user_id = @cur_user.try(:id) || user.id
+    added_member_ids   -= [cur_user_id]
+    removed_member_ids -= [cur_user_id]
+    added_member_ids.select!{|user_id| Gws::User.find(user_id).use_notice?(self)}
+    removed_member_ids.select!{|user_id| Gws::User.find(user_id).use_notice?(self)}
+
     return if added_member_ids.blank? && removed_member_ids.blank?
     create_memo_notice(added_member_ids, removed_member_ids)
   end
 
   def create_memo_notice(added_member_ids, removed_member_ids)
+    url_helper = Rails.application.routes.url_helpers
     if added_member_ids.present?
       message = Gws::Memo::Notice.new
       message.cur_site = site
@@ -204,8 +213,11 @@ class Gws::Circular::Post
       message.send_date = Time.zone.now
       message.subject = I18n.t("gws_notification.gws/circular/post.subject", name: name)
       message.format = 'text'
-      message.text = I18n.t("gws_notification.gws/circular/post.text", name: name, text: text)
+      message.text = url_helper.gws_circular_post_path(id: id, site: cur_site.id, category: '-', mode: '-')
       message.save!
+
+      to_users = added_member_ids.map{|user_id| Gws::User.find(user_id)}
+      Gws::Memo::Mailer.notice_mail(message, to_users, self).try(:deliver_now)
     end
 
     if removed_member_ids.present?
@@ -218,6 +230,9 @@ class Gws::Circular::Post
       message.format = 'text'
       message.text = I18n.t("gws_notification.gws/circular/post/remove.text", name: name)
       message.save!
+
+      to_users = removed_member_ids.map{|user_id| Gws::User.find(user_id)}
+      Gws::Memo::Mailer.notice_mail(message, to_users, self).try(:deliver_now)
     end
   end
 end

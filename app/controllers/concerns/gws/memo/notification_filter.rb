@@ -15,6 +15,7 @@ module Gws::Memo::NotificationFilter
     return if request.get?
     #return if response.code !~ /^3/
     return if @item.errors.present?
+    return unless @cur_site.notify_model?(@item.class)
 
     if @item.respond_to?(:notify_enabled?)
       return unless @item.notify_enabled?
@@ -22,6 +23,7 @@ module Gws::Memo::NotificationFilter
 
     users = @item.subscribed_users
     users = users.nin(id: @cur_user.id) if @cur_user
+    users = users.select{|user| user.use_notice?(@item)}
 
     return if users.blank?
 
@@ -36,6 +38,7 @@ module Gws::Memo::NotificationFilter
   def send_destroy_notification
     return if request.get?
     return if response.code !~ /^3/
+    return unless @cur_site.notify_model?(@item.class)
 
     @destroyed_items ||= []
     @destroyed_items << @destroyed_item if @destroyed_item
@@ -47,11 +50,27 @@ module Gws::Memo::NotificationFilter
       end
 
       users = users.nin(id: @cur_user.id) if @cur_user
+      users = users.select{|user| user.use_notice?(item)}
       next if users.blank?
 
       i18n_key = item.class.model_name.i18n_key
-      subject = I18n.t("gws_notification.#{i18n_key}/destroy.subject", name: item.name)
-      text = I18n.t("gws_notification.#{i18n_key}/destroy.text", name: item.name)
+
+      if item.try(:_parent).try(:name).present?
+        name = item._parent.name
+      elsif item.try(:parent).try(:name).present?
+        name = item.parent.name
+      elsif item.try(:schedule).try(:name).present?
+        name = item.schedule.name
+      elsif item.try(:name).present?
+        name = item.name
+      else
+        name = ''
+      end
+
+      subject = I18n.t("gws_notification.#{i18n_key}/destroy.subject", name: name)
+      if !item.try(:_parent).present? && !item.try(:parent).present? && !item.try(:schedule).present?
+        text = I18n.t("gws_notification.#{i18n_key}/destroy.text", name: name)
+      end
 
       Gws::Memo::Notifier.deliver!(
         cur_site: @cur_site, cur_group: @cur_group, cur_user: @cur_user,

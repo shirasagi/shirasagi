@@ -363,81 +363,84 @@ ja:
 
   gws_notification:
     gws/schedule/plan:
-      subject: "[更新通知][スケジュール] %{name}"
-      text: |
-        「%{name}」が作成または更新されました。
+      subject: "[スケジュール] 「%{name}」が登録または更新されました。"
+      text: "%{text}"
+      mail_text: |
+        %{subject}
 
         %{text}
 
     gws/schedule/comment:
-      subject: "[更新通知][スケジュール] %{name}"
-      text: |
-        「%{name}」にコメントがありました。
+      subject: "[スケジュール] 「%{name}」にコメントがありました。"
+      text: "%{text}"
+      mail_text: |
+        %{subject}
 
         %{text}
 
     gws/schedule/todo:
-      subject: "[更新通知][ToDo] %{name}"
-      text: |
-        「%{name}」が作成または更新されました。
+      subject: "[ToDo] 「%{name}」が登録または更新されました。"
+      text: "%{text}"
+      mail_text: |
+        %{subject}
 
         %{text}
 
     gws/schedule/attendance:
-      subject: "[更新通知][スケジュール] %{name}"
-      text: |
-        「%{name}」の出欠確認に回答がありました。
+      subject: "[スケジュール] 「%{name}」の出欠確認に回答がありました。"
+      text: "%{text}"
+      mail_text: |
+        %{subject}
 
     gws/schedule/plan/destroy:
-      subject: "[削除通知][スケジュール] %{name}"
-      text: |
-        「%{name}」が削除されました。
+      subject: "[スケジュール] 「%{name}」が削除されました。"
+      text: ""
 
     gws/schedule/comment/destroy:
-      subject: "[削除通知][スケジュール] %{name}"
-      text: |
-        「%{name}」のコメントが削除されました。
+      subject: "[スケジュール] 「%{name}」のコメントが削除されました。"
+      text: "%{text}"
 
     gws/schedule/todo/destroy:
-      subject: "[削除通知][ToDo] %{name}"
-      text: |
-        「%{name}」が削除されました。
+      subject: "[ToDo] 「%{name}」が削除されました。"
+      text: ""
 
     gws/schedule/todo/finish:
-      subject: "[更新通知][ToDo] %{name}"
-      text: |
-        「%{name}」が完了になりました。
+      subject: "[ToDo] 「%{name}」が完了になりました。"
+      text: "%{text}"
+      mail_text: |
+        %{subject}
 
     gws/schedule/todo/revert:
-      subject: "[更新通知][ToDo] %{name}"
-      text: |
-        「%{name}」が未完了になりました。
+      subject: "[ToDo] 「%{name}」が未完了になりました。"
+      text: "%{text}"
+      mail_text: |
+        %{subject}
 
     gws/schedule/attendance/destroy:
-      subject: "[削除通知][スケジュール] %{name}"
-      text: |
-        「%{name}」の出欠確認の回答が削除されました。
+      subject: "[スケジュール] 「%{name}」の出欠確認の回答が削除されました。"
+      text: "%{text}"
 
     gws/schedule/plan/approval/request:
-      subject: "[承認依頼][スケジュール] %{name}"
-      text: |
-        %{from}さんより次の予定について承認依頼が届きました。
-        承認作業を行ってください。
+      subject: "[スケジュール]「%{name}」の承認依頼が届きました。"
+      text: "%{text}"
+      mail_text: |
+        %{subject}
 
         %{text}
 
     gws/schedule/plan/approval/approve:
-      subject: "[承認完了][スケジュール] %{name}"
-      text: |
-        次の予定が承認されました。
+      subject: "[スケジュール] 「%{name}」の承認が完了しました。"
+      text: "%{text}"
+      mail_text: |
+        %{subject}
 
         %{text}
 
     gws/schedule/plan/approval/remand:
-      subject: "[差し戻し][スケジュール] %{name}"
-      text: |
-        %{from}さんより次の予定について承認依頼が差し戻されました。
-        適宜修正を行い、再度承認依頼を行ってください。
+      subject: "[スケジュール] 「%{name}」の承認依頼が%{from}さんから差し戻されました。"
+      text: "%{text}"
+      mail_text: |
+        %{subject}
 
         %{text}
 

@@ -61,6 +61,7 @@ class Gws::Memo::MessageExportJob < Gws::ApplicationJob
     item.format = "text"
     item.text = I18n.t("gws/memo/message.export.notiry_message", link: ::File.join(@root_url, @output_zip.url))
     item.send_date = @datetime
+    item.export = true
     item.save!
   end
 

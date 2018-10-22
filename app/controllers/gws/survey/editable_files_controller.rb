@@ -66,7 +66,7 @@ class Gws::Survey::EditableFilesController < ApplicationController
     end
 
     job_class = Gws::Survey::NotificationJob.bind(site_id: @cur_site)
-    job_class.perform_later(@cur_form.id.to_s, { resend: true, unanswered_only: true })
+    job_class.perform_later(@cur_form.id.to_s, { resend: true, unanswered_only: true, cur_user_id: @cur_user.id })
     redirect_to({ action: :index }, { notice: I18n.t('gws/survey.notices.notification_job_started') })
   end
 

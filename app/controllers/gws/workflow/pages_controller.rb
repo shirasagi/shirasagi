@@ -30,16 +30,8 @@ class Gws::Workflow::PagesController < ApplicationController
 
   def request_approval
     current_level = @item.workflow_current_level
-    current_workflow_approvers = @item.workflow_approvers_at(current_level)
+    current_workflow_approvers = @item.workflow_approvers_at(current_level).reject{|approver| approver[:user_id] == @cur_user.id}
     current_workflow_approvers.each do |workflow_approver|
-      args = {
-        f_uid: @item.workflow_user_id,
-        agent_uid: @item.workflow_agent_id,
-        t_uid: workflow_approver[:user_id],
-        site: @cur_site, page: @item, url: params[:url], comment: params[:workflow_comment]
-      }
-      Workflow::Mailer.request_mail(args).deliver_now if validate_domain(args[:t_uid])
-
       Gws::Memo::Notifier.deliver_workflow_request!(
         cur_site: @cur_site, cur_group: @cur_group, cur_user: @cur_user,
         to_users: Gws::User.where(id: workflow_approver[:user_id]), item: @item,
@@ -163,27 +155,28 @@ class Gws::Workflow::PagesController < ApplicationController
     workflow_state = @item.workflow_state
     if workflow_state == @model::WORKFLOW_STATE_APPROVE
       # finished workflow
-      if validate_domain(@item.workflow_user_id)
-        Workflow::Mailer.send_approve_mails(
-          f_uid: @cur_user.id,
-          t_uids: [ @item.workflow_user_id, @item.workflow_agent_id ].compact,
-          site: @cur_site, page: @item,
-          url: params[:url], comment: params[:remand_comment]
-        )
+      to_user_ids = ([ @item.workflow_user_id, @item.workflow_agent_id ].compact) - [@cur_user.id]
+      if to_user_ids.present?
+        notify_user_ids = to_user_ids.select{|user_id| Gws::User.find(user_id).use_notice?(@item)}.uniq
+        if notify_user_ids.present?
+          Gws::Memo::Notifier.deliver_workflow_approve!(
+            cur_site: @cur_site, cur_group: @cur_group, cur_user: @cur_user,
+            to_users: Gws::User.in(id: notify_user_ids),
+            item: @item, url: params[:url], comment: params[:remand_comment]
+          ) rescue nil
+        end
       end
 
-      Gws::Memo::Notifier.deliver_workflow_approve!(
-        cur_site: @cur_site, cur_group: @cur_group, cur_user: @cur_user,
-        to_users: Gws::User.in(id: [ @item.workflow_user_id, @item.workflow_agent_id ].compact),
-        item: @item, url: params[:url], comment: params[:remand_comment]
-      ) rescue nil
-
       if @item.move_workflow_circulation_next_step
-        Gws::Memo::Notifier.deliver_workflow_circulations!(
-          cur_site: @cur_site, cur_group: @cur_group, cur_user: @cur_user,
-          to_users: @item.workflow_current_circulation_users.active, item: @item,
-          url: params[:url], comment: params[:remand_comment]
-        ) rescue nil
+        current_circulation_users = @item.workflow_current_circulation_users.nin(id: @cur_user.id).active
+        current_circulation_users = current_circulation_users.select{|user| user.use_notice?(@item)}
+        if current_circulation_users.present?
+          Gws::Memo::Notifier.deliver_workflow_circulations!(
+            cur_site: @cur_site, cur_group: @cur_group, cur_user: @cur_user,
+            to_users: current_circulation_users, item: @item,
+            url: params[:url], comment: params[:remand_comment]
+          ) rescue nil
+        end
         @item.save
       end
 
@@ -214,21 +207,16 @@ class Gws::Workflow::PagesController < ApplicationController
         prev_level_approvers = @item.workflow_approvers_at(@item.workflow_current_level)
         recipients += prev_level_approvers.map { |hash| hash[:user_id] }
       end
+      recipients -= [@cur_user.id]
 
-      mail_recipients = recipients.select { |user_id| validate_domain(user_id) }
-      if mail_recipients.present?
-        Workflow::Mailer.send_remand_mails(
-          f_uid: @cur_user.id, t_uids: mail_recipients,
-          site: @cur_site, page: @item,
+      notify_user_ids = recipients.select{|user_id| Gws::User.find(user_id).use_notice?(@item)}.uniq
+      if notify_user_ids.present?
+        Gws::Memo::Notifier.deliver_workflow_remand!(
+          cur_site: @cur_site, cur_group: @cur_group, cur_user: @cur_user,
+          to_users: Gws::User.and_enabled.in(id: notify_user_ids), item: @item,
           url: params[:url], comment: params[:remand_comment]
-        )
+        ) rescue nil
       end
-
-      Gws::Memo::Notifier.deliver_workflow_remand!(
-        cur_site: @cur_site, cur_group: @cur_group, cur_user: @cur_user,
-        to_users: Gws::User.and_enabled.in(id: recipients), item: @item,
-        url: params[:url], comment: params[:remand_comment]
-      ) rescue nil
     end
     render json: { workflow_state: @item.workflow_state }
   end
@@ -257,19 +245,24 @@ class Gws::Workflow::PagesController < ApplicationController
       return
     end
 
-    if comment.present? || file_ids.present?
+    to_users = ([ @item.workflow_user, @item.workflow_agent ].compact) - [@cur_user]
+    to_users.select!{|user| user.use_notice?(@item)}
+
+    if (comment.present? || file_ids.present?) && to_users.present?
       Gws::Memo::Notifier.deliver_workflow_comment!(
         cur_site: @cur_site, cur_group: @cur_group, cur_user: @cur_user,
-        to_users: [ @item.workflow_user, @item.workflow_agent ].compact, item: @item,
+        to_users: to_users, item: @item,
         url: params[:url], comment: comment
       )
     end
 
-    if @item.workflow_current_circulation_completed?
-      if @item.move_workflow_circulation_next_step
+    if @item.workflow_current_circulation_completed? && @item.move_workflow_circulation_next_step
+      current_circulation_users = @item.workflow_current_circulation_users.nin(id: @cur_user.id).active
+      current_circulation_users = current_circulation_users.select{|user| user.use_notice?(@item)}
+      if current_circulation_users.present?
         Gws::Memo::Notifier.deliver_workflow_circulations!(
           cur_site: @cur_site, cur_group: @cur_group, cur_user: @item.workflow_user,
-          to_users: @item.workflow_current_circulation_users.active, item: @item,
+          to_users: current_circulation_users, item: @item,
           url: params[:url], comment: comment
         )
       end

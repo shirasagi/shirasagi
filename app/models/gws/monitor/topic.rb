@@ -203,6 +203,22 @@ class Gws::Monitor::Topic
     due_date < now
   end
 
+  def subscribed_users
+    return Gws::User.none if new_record?
+    return Gws::User.none if categories.blank?
+
+    conds = []
+    conds << { id: { '$in' => categories.pluck(:subscribed_member_ids).flatten } }
+    conds << { group_ids: { '$in' => categories.pluck(:subscribed_group_ids).flatten } }
+
+    if Gws::Monitor::Category.subscription_setting_included_custom_groups?
+      custom_gropus = Gws::CustomGroup.in(id: categories.pluck(:subscribed_custom_group_ids))
+      conds << { id: { '$in' => custom_gropus.pluck(:member_ids).flatten } }
+    end
+
+    Gws::User.where('$and' => [ { '$or' => conds } ])
+  end
+
   private
 
   def set_descendants_updated_with_released

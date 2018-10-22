@@ -36,6 +36,13 @@ ja:
       myself: 本人が申請する
       agent: 代理で申請する
 
+  gws_notification:
+    gws/workflow/file:
+      mail_text: |
+        %{subject}
+
+        %{text}
+
   modules:
     gws/workflow: ワークフロー
     addons:

@@ -45,9 +45,11 @@ ja:
       restart: 再申請
     mail:
       subject:
-        request: 承認申請
-        approve: 最終承認完了
-        remand: 承認差し戻し
+        request: "[ワークフロー]「%{name}」の承認申請が届きました。"
+        approve: "[ワークフロー]「%{name}」の最終承認が完了しました。"
+        remand: "[ワークフロー]「%{name}」の承認申請が差し戻されました。"
+        circular: "[ワークフロー]「%{name}」が届きました。"
+        comment: "[ワークフロー]「%{name}」にコメントがありました。"
     page:
       ready: 公開待ち
       closed: 非公開

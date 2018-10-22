@@ -74,16 +74,18 @@ ja:
 
   gws_notification:
     gws/circular/post:
-      subject: "[更新通知][回覧板] %{name}"
-      text: |
-        「%{name}」が公開されました。
+      subject: "[回覧板] 「%{name}」が届きました。"
+      text: "%{text}"
+      mail_text: |
+        %{subject}
 
         %{text}
 
     gws/circular/post/remove:
-      subject: "[更新通知][回覧板] %{name}"
-      text: |
-        「%{name}」が取り下げられました。
+      subject: "[回覧板] 「%{name}」が取り下げられました。"
+      text: ""
+      mail_text: |
+        %{subject}
 
   mongoid:
     models:

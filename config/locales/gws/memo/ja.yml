@@ -103,10 +103,19 @@ ja:
         - 送信後３日間のみ表示する
         - 送信後４日間のみ表示する
         - 送信後５日間のみ表示する
+  gws/memo/notice_user_settings:
+    options:
+      email:
+        notify: 転送する
+        silence: 転送しない
+    send_mail_setting: メール転送
+    send_mail_address: 転送先メールアドレス
+
   modules:
     gws/memo: メッセージ
     gws/memo/message: メッセージ
     gws/memo/notice: 通知
+    gws/memo/notice_mail: メール通知
     addons:
       gws/memo/comments: コメント
       gws/memo/group_setting: メッセージ
@@ -248,6 +257,34 @@ ja:
         notify_state: 通知設定
       gws/addon/memo/message_sort:
         gws_memo_message_sort: メッセージ並び順
+      gws/memo/notice_user_setting:
+        notice_schedule_user_setting: スケジュール
+        notice_todo_user_setting: ToDo
+        notice_presence_user_setting: 在席状況
+        notice_workflow_user_setting: ワークフロー
+        notice_circular_user_setting: 回覧板
+        notice_monitor_user_setting: 照会・回答
+        notice_survey_user_setting: アンケート
+        notice_board_user_setting: 掲示板
+        notice_faq_user_setting: よくある質問
+        notice_qna_user_setting: Q&A
+        notice_discussion_user_setting: 電子会議室
+        notice_report_user_setting: レポート
+        notice_announcement_user_setting: お知らせ
+        notice_schedule_email_user_setting: スケジュール通知メール転送
+        notice_todo_email_user_setting: ToDo通知メール転送
+        notice_presence_email_user_setting: 在席状況通知メール転送
+        notice_workflow_email_user_setting: ワークフロー通知メール転送
+        notice_circular_email_user_setting: 回覧板通知メール転送
+        notice_monitor_email_user_setting: 照会・回答通知メール転送
+        notice_survey_email_user_setting: アンケート通知メール転送
+        notice_board_email_user_setting: 掲示板通知メール転送
+        notice_faq_email_user_setting: よくある質問通知メール転送
+        notice_qna_email_user_setting: Q&A通知メール転送
+        notice_discussion_email_user_setting: 電子会議室通知メール転送
+        notice_report_email_user_setting: レポート通知メール転送
+        notice_announcement_email_user_setting: お知らせ通知メール転送
+        send_notice_mail_address: 転送先メールアドレス
 
   activemodel:
     models:
