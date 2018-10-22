@@ -41,8 +41,8 @@ ja:
         normal: 通常回覧
         simple: 簡易回覧
       article_state:
-        both: 両方
-        unseen: 未読のみ
+        both: 全表示
+        unseen: 未読
       circular_delete_threshold:
         - 6ヶ月
         - 1年
