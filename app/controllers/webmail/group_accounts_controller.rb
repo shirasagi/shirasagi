@@ -75,8 +75,9 @@ class Webmail::GroupAccountsController < ApplicationController
     raise "403" unless @group.allowed?(:edit, @cur_user)
 
     @item.merge!(get_params.to_h.symbolize_keys)
-    if @item.invalid?
-      render_create false
+    @item.set_imap_password
+    if @item.invalid?(:group)
+      render_update false
       return
     end
 
@@ -110,7 +111,7 @@ class Webmail::GroupAccountsController < ApplicationController
     setting = Webmail::ImapSetting.default
     setting.merge!(get_params.to_h.symbolize_keys)
     setting.set_imap_password
-    setting.valid?
+    setting.valid?(:group)
 
     @imap = Webmail::Imap::Base.new_by_group(@group, setting)
     if @imap.login

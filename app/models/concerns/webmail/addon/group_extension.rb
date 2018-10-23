@@ -62,7 +62,7 @@ module Webmail::Addon::GroupExtension
     imap_setting[:threshold_mb] = (imap_setting.threshold_mb.to_i > 0) ? imap_setting.threshold_mb.to_i : nil
     imap_setting.set_imap_password
     self.imap_settings = [imap_setting]
-    return if imap_setting.valid?
+    return if imap_setting.valid?(:group)
     errors.add :base, imap_setting.errors.full_messages.join(", ")
   end
 end
