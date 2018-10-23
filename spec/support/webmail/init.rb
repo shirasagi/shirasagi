@@ -54,3 +54,7 @@ def webmail_load_mail(name)
   end
   item
 end
+
+def webmail_import_mail(user, mail, account: 0)
+  Webmail::MailImporter.import_mails(user, account, mail)
+end

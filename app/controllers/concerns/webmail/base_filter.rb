@@ -55,9 +55,9 @@ module Webmail::BaseFilter
 
   def imap_initialize
     if @webmail_mode == :group
-      raise "403" if !@cur_user.webmail_permitted_all?(:use_webmail_group_imap_setting)
+      raise "403" if !@cur_user.webmail_user.webmail_permitted_all?(:use_webmail_group_imap_setting)
       group = @cur_user.groups.find_by(id: params[:account])
-      @imap = group.initialize_imap
+      @imap = group.webmail_group.initialize_imap
     elsif params.key?(:account)
       @imap = @cur_user.initialize_imap(params[:account].to_i)
     end

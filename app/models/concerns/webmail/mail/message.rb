@@ -40,7 +40,7 @@ module Webmail::Mail::Message
 
   def new_reply_all(ref)
     self.reply_uid = ref.uid
-    self.to = (ref.from + ref.to).reject { |c| imap.user.email.present? && c.include?(imap.user.email) }
+    self.to = (ref.from + ref.to).reject { |c| c.include?(imap.address) }
     self.cc = ref.cc
     self.to_text = self.to.join('; ')
     self.cc_text = self.cc.join('; ')

@@ -1,39 +1,52 @@
 require 'spec_helper'
 
-describe "webmail_gws_messages", type: :feature, dbscope: :example, imap: true do
-  let(:site) { create :gws_group }
-  let(:user) { create :webmail_user, group_ids: [site.id] }
+describe "webmail_gws_messages", type: :feature, dbscope: :example, imap: true, js: true do
+  let(:user) { webmail_imap }
+  let(:site) { user.root_groups.first }
   let(:role) { create :gws_role_admin, cur_site: site, cur_user: user }
   let(:item_title) { "rspec-#{unique_id}" }
+  let(:item_texts) { [ "message-#{unique_id}", "message-#{unique_id}" ] }
   let(:messages_path) { gws_memo_messages_path(site: site.id) }
 
   shared_examples "webmail gws messages flow" do
     context "with auth" do
-      before { login_user(user) }
       before do
-        gws_user = Gws::User.find(user.id)
-        gws_user.add_to_set(gws_role_ids: role.id)
+        ActionMailer::Base.deliveries.clear
+
+        gws_user = user.gws_user
+        gws_user.add_to_set(gws_role_ids: [ role.id ])
+
+        login_user(user)
       end
 
-      it "#show", js: true do
+      after do
+        ActionMailer::Base.deliveries.clear
+      end
+
+      it "#show" do
         # new/create
         visit index_path
         click_link I18n.t('ss.links.new')
         within "form#item-form" do
           fill_in "to", with: user.email + "\n"
           fill_in "item[subject]", with: item_title
-          fill_in "item[text]", with: "message\n" * 2
+          fill_in "item[text]", with: item_texts.join("\n")
         end
         click_button I18n.t('ss.buttons.send')
         sleep 1
         expect(current_path).to eq index_path
 
-        if Webmail::Mailer.delivery_method == :test
-          pending "delivery_method is :test"
+        expect(ActionMailer::Base.deliveries).to have(1).items
+        ActionMailer::Base.deliveries.first.tap do |mail|
+          expect(mail.to.first).to eq user.email
+          expect(mail.subject).to eq item_title
+          expect(mail.body.multipart?).to be_falsey
+          expect(mail.body.raw_source).to include(item_texts.join("\r\n"))
         end
+        webmail_import_mail(user, ActionMailer::Base.deliveries.first)
 
         # reload mails
-        first(".webmail-navi-mailboxes .reload").click
+        visit index_path
 
         click_link item_title
 
@@ -63,6 +76,8 @@ describe "webmail_gws_messages", type: :feature, dbscope: :example, imap: true d
   describe "webmail_mode is group" do
     let(:group) { create :webmail_group }
     let(:index_path) { webmail_mails_path(account: group.id, webmail_mode: :group) }
+
+    before { user.add_to_set(group_ids: [ group.id ]) }
 
     it_behaves_like 'webmail gws messages flow'
   end

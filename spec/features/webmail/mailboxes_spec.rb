@@ -1,14 +1,14 @@
 require 'spec_helper'
 
-describe "webmail_mailboxes", type: :feature, dbscope: :example, imap: true do
-  let(:user) { create :webmail_user }
+describe "webmail_mailboxes", type: :feature, dbscope: :example, imap: true, js: true do
+  let(:user) { webmail_imap }
   let(:item_title) { "rspec-#{unique_id}" }
 
   shared_examples "webmail mailboxes flow" do
     context "with auth" do
       before { login_user(user) }
 
-      it "#index", js: true do
+      it "#index" do
         visit index_path
         expect(current_path).to eq index_path
 
@@ -51,6 +51,8 @@ describe "webmail_mailboxes", type: :feature, dbscope: :example, imap: true do
   describe "webmail_mode is group" do
     let(:group) { create :webmail_group }
     let(:index_path) { webmail_mailboxes_path(account: group.id, webmail_mode: :group) }
+
+    before { user.add_to_set(group_ids: [ group.id ]) }
 
     it_behaves_like 'webmail mailboxes flow'
   end
