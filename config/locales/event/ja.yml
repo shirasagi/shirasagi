@@ -144,6 +144,7 @@ ja:
         ical_page_state: ページステータス
         ical_import_date_ago: 取り込み制限(過去)
         ical_import_date_after: 取り込み制限(未来)
+        ical_category_ids: ページカテゴリー
       event/addon/ical_link:
         ical_uid: ソースID
         ical_link: ソースURL
@@ -264,6 +265,8 @@ ja:
       ical_import_date_after:
         - 取り込む未来のイベントの日時を日単位で制限します。
         - 省略した場合、1 年以上先のイベントは取り込みません。
+      ical_category_ids:
+        - iCal を取り込んだ際の記事のカテゴリーを設定します。
     event/addon/ical_link:
       ical_uid:
         - ソースIDを設定します。

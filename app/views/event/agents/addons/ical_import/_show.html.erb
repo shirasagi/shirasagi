@@ -27,4 +27,7 @@
       <%= @item.ical_import_date_after %> <%= I18n.t('ss.units.days_after') %>
     <% end %>
   </dd>
+
+  <dt><%= @model.t :ical_category_ids %></dt>
+  <dd><%= @item.ical_categories.pluck(:name).join("\n") %></dd>
 </dl>
