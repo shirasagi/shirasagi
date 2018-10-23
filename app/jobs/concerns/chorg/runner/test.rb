@@ -35,7 +35,7 @@ module Chorg::Runner::Test
     true
   end
 
-  def move_users_group(_, _)
+  def move_users_group(_from_id, _to_id)
   end
 
   def import_user_csv

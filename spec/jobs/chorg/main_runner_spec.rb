@@ -578,28 +578,61 @@ describe Chorg::MainRunner, dbscope: :example do
     let(:revision) { create(:revision, site_id: site.id) }
     let(:changeset) { create(:delete_changeset, revision_id: revision.id, source: group) }
 
-    it do
-      # ensure create models
-      expect(changeset).not_to be_nil
-      # execute
-      job = described_class.bind(site_id: site, task_id: task)
-      expect { job.perform_now(revision.name, 'newly_created_group_to_site' => 'add') }.not_to raise_error
+    context 'with default delete_method (disable_if_possible)' do
+      it do
+        # ensure create models
+        expect(changeset).not_to be_nil
+        # execute
+        job = described_class.bind(site_id: site, task_id: task)
+        expect { job.perform_now(revision.name, 'newly_created_group_to_site' => 'add') }.not_to raise_error
 
-      # check for job was succeeded
-      expect(Job::Log.count).to eq 1
-      Job::Log.first.tap do |log|
-        expect(log.logs).to include(include('INFO -- : Started Job'))
-        expect(log.logs).to include(include('INFO -- : Completed Job'))
+        # check for job was succeeded
+        expect(Job::Log.count).to eq 1
+        Job::Log.first.tap do |log|
+          expect(log.logs).to include(include('INFO -- : Started Job'))
+          expect(log.logs).to include(include('INFO -- : Completed Job'))
+        end
+
+        expect(Cms::Group.unscoped.where(id: group.id).first.active?).to be_falsey
+
+        task.reload
+        expect(task.state).to eq 'stop'
+        expect(task.entity_logs.count).to eq 1
+        expect(task.entity_logs[0]['model']).to eq 'Cms::Group'
+        expect(task.entity_logs[0]['id']).to eq group.id.to_s
+        expect(task.entity_logs[0]['deletes']).to include('name', 'contact_email')
+      end
+    end
+
+    context 'with always_delete' do
+      before do
+        revision.delete_method = 'always_delete'
+        revision.save!
       end
 
-      expect(Cms::Group.where(id: group.id).first).to be_nil
+      it do
+        # ensure create models
+        expect(changeset).not_to be_nil
+        # execute
+        job = described_class.bind(site_id: site, task_id: task)
+        expect { job.perform_now(revision.name, 'newly_created_group_to_site' => 'add') }.not_to raise_error
 
-      task.reload
-      expect(task.state).to eq 'stop'
-      expect(task.entity_logs.count).to eq 1
-      expect(task.entity_logs[0]['model']).to eq 'Cms::Group'
-      expect(task.entity_logs[0]['id']).to eq group.id.to_s
-      expect(task.entity_logs[0]['deletes']).to include('name', 'contact_email')
+        # check for job was succeeded
+        expect(Job::Log.count).to eq 1
+        Job::Log.first.tap do |log|
+          expect(log.logs).to include(include('INFO -- : Started Job'))
+          expect(log.logs).to include(include('INFO -- : Completed Job'))
+        end
+
+        expect(Cms::Group.unscoped.where(id: group.id).first).to be_nil
+
+        task.reload
+        expect(task.state).to eq 'stop'
+        expect(task.entity_logs.count).to eq 1
+        expect(task.entity_logs[0]['model']).to eq 'Cms::Group'
+        expect(task.entity_logs[0]['id']).to eq group.id.to_s
+        expect(task.entity_logs[0]['deletes']).to include('name', 'contact_email')
+      end
     end
   end
 
