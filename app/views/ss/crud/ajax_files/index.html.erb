@@ -35,7 +35,7 @@ SS.ajaxForm("form.user-file", {
     } else {
       try {
         alert(["== Error =="].concat(xhr.responseJSON).join("\n"));
-      } catch {
+      } catch(_error) {
         alert(["== Error =="].concat(xhr.statusText).join("\n"));
       }
     }
