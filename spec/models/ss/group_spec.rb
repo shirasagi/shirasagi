@@ -28,4 +28,48 @@ describe SS::Group, type: :model, dbscope: :example do
       expect(child.name).to start_with(new_name)
     end
   end
+
+  context ".descendants" do
+    let!(:root) { create(:ss_group) }
+    let!(:group1) { create(:ss_group, name: "#{root.name}/#{unique_id}") }
+    let!(:group11) { create(:ss_group, name: "#{group1.name}/#{unique_id}") }
+    let!(:group12) { create(:ss_group, name: "#{group1.name}/#{unique_id}") }
+    let!(:group2) { create(:ss_group, name: "#{root.name}/#{unique_id}") }
+    let!(:group21) { create(:ss_group, name: "#{group2.name}/#{unique_id}") }
+    let!(:group22) { create(:ss_group, name: "#{group2.name}/#{unique_id}") }
+
+    it do
+      ids = root.descendants.pluck(:id)
+      expect(ids).to have(6).items
+      expect(ids).to include(group1.id, group11.id, group12.id, group2.id, group21.id, group22.id)
+    end
+
+    it do
+      ids = group1.descendants.pluck(:id)
+      expect(ids).to have(2).items
+      expect(ids).to include(group11.id, group12.id)
+    end
+  end
+
+  context ".descendants_and_self" do
+    let!(:root) { create(:ss_group) }
+    let!(:group1) { create(:ss_group, name: "#{root.name}/#{unique_id}") }
+    let!(:group11) { create(:ss_group, name: "#{group1.name}/#{unique_id}") }
+    let!(:group12) { create(:ss_group, name: "#{group1.name}/#{unique_id}") }
+    let!(:group2) { create(:ss_group, name: "#{root.name}/#{unique_id}") }
+    let!(:group21) { create(:ss_group, name: "#{group2.name}/#{unique_id}") }
+    let!(:group22) { create(:ss_group, name: "#{group2.name}/#{unique_id}") }
+
+    it do
+      ids = root.descendants_and_self.pluck(:id)
+      expect(ids).to have(7).items
+      expect(ids).to include(root.id, group1.id, group11.id, group12.id, group2.id, group21.id, group22.id)
+    end
+
+    it do
+      ids = group1.descendants_and_self.pluck(:id)
+      expect(ids).to have(3).items
+      expect(ids).to include(group1.id, group11.id, group12.id)
+    end
+  end
 end
