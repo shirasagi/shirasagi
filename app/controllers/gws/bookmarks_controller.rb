@@ -17,6 +17,7 @@ class Gws::BookmarksController < ApplicationController
   public
 
   def index
+    raise "403" unless @model.allowed?(:read, @cur_user, site: @cur_site)
     @items = @model.site(@cur_site).
       user(@cur_user).
       search(params[:s]).

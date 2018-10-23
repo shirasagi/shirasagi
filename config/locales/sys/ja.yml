@@ -30,6 +30,7 @@ ja:
     site_copy/task_status: 実行状況
     roles:
       admin: 管理者
+      user: 一般ユーザー
     auth: 認証
     auth/saml: SAML
     auth/open_id_connect: OpenID Connect
@@ -72,6 +73,9 @@ ja:
     edit_sys_roles: 権限/ロールの管理
     edit_sys_settings: システム設定の管理
     edit_sys_mail_logs: メールログの管理
+    use_cms: CMSの利用
+    use_gws: GWSの利用
+    use_webmail: メールの利用
 
   mongoid:
     models:

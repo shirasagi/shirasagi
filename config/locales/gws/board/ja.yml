@@ -69,6 +69,7 @@ ja:
       gws/board/notify_setting: 通知
 
   gws_role:
+    use_gws_board: 掲示板の利用
     read_other_gws_board_posts: 投稿の閲覧（全て）
     read_private_gws_board_posts: 投稿の閲覧（所有）
     edit_other_gws_board_posts: 投稿の編集（全て）

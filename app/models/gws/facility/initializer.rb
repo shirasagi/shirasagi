@@ -13,5 +13,7 @@ module Gws::Facility
     Gws::Role.permission :edit_private_gws_facility_categories, module_name: 'gws/facility'
     Gws::Role.permission :delete_other_gws_facility_categories, module_name: 'gws/facility'
     Gws::Role.permission :delete_private_gws_facility_categories, module_name: 'gws/facility'
+
+    Gws::Role.permission :use_private_gws_facility_plans, module_name: 'gws/facility'
   end
 end

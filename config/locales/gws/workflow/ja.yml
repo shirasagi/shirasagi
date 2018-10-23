@@ -44,6 +44,8 @@ ja:
       gws/workflow/approver_print: 承認
 
   gws_role:
+    use_gws_workflow: ワークフローの利用
+
     read_other_gws_workflow_routes: 承認ルートの閲覧（全て）
     read_private_gws_workflow_routes: 承認ルートの閲覧（所有）
     edit_other_gws_workflow_routes: 承認ルートの編集（全て）

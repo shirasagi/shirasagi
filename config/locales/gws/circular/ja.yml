@@ -57,6 +57,7 @@ ja:
       gws/circular/group_setting: 回覧板
       gws/circular/category: カテゴリー
   gws_role:
+    use_gws_circular: 回覧板の利用
     read_other_gws_circular_posts: 回覧板の閲覧（全て）
     read_private_gws_circular_posts: 回覧板の閲覧（所有）
     edit_other_gws_circular_posts: 回覧板の編集（全て）

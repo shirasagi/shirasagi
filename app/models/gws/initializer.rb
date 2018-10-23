@@ -33,9 +33,20 @@ module Gws
     Gws::Role.permission :delete_other_gws_links
     Gws::Role.permission :delete_private_gws_links
 
+    Gws::Role.permission :read_gws_organization
     Gws::Role.permission :edit_gws_contrasts
+    Gws::Role.permission :edit_gws_bookmarks
+    Gws::Role.permission :edit_gws_personal_addresses
 
     SS::File.model "gws/file", Gws::File
     SS::File.model "share/file", Gws::Share::File
+
+    Gws.module_usable :bookmark do |site, user|
+      Gws::Bookmark.allowed?(:read, user, site: site)
+    end
+
+    Gws.module_usable :personal_address do |site, user|
+      user.gws_role_permit_any?(site, :edit_gws_personal_addresses)
+    end
   end
 end

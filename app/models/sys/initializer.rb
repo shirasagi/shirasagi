@@ -7,5 +7,9 @@ module Sys
     Sys::Role.permission :edit_sys_users
     Sys::Role.permission :edit_sys_roles
     Sys::Role.permission :edit_sys_mail_logs
+
+    Sys::Role.permission :use_cms, module_name: 'sys'
+    Sys::Role.permission :use_gws, module_name: 'sys'
+    Sys::Role.permission :use_webmail, module_name: 'sys'
   end
 end

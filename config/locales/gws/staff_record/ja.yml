@@ -25,6 +25,8 @@ ja:
       no_data: 公開されている情報はありません。
 
   gws_role:
+    use_gws_staff_record: 電子職員録の利用
+
     read_other_gws_staff_record_years: 年度の閲覧（全て）
     read_private_gws_staff_record_years: 年度の閲覧（所有）
     edit_other_gws_staff_record_years: 年度の編集（全て）

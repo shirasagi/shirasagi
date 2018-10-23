@@ -11,6 +11,7 @@ class Gws::User
   include Gws::Addon::ReadableSetting
   include SS::Addon::UserGroupHistory
   include Gws::Addon::History
+  include Sys::Reference::Role
 
   set_permission_name "gws_users", :edit
 

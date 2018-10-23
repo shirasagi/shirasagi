@@ -34,7 +34,8 @@ SS::Application.routes.draw do
     get 'csv' => 'csv#index', as: :csv
     post 'import_csv' => 'csv#import', as: :import_csv
 
-    get '/' => redirect { |p, req| "#{req.path}/plans" }, as: :main
+    # get '/' => redirect { |p, req| "#{req.path}/plans" }, as: :main
+    get '/', to: "main#index", as: :main
     resources :plans, concerns: [:plans, :export], except: [:destroy]
     resources :list_plans, concerns: :plans
     resources :user_plans, path: 'users/:user/plans', concerns: :plans

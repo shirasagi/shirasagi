@@ -37,6 +37,7 @@ ja:
       readable: 受信トレイ
 
   gws_role:
+    use_gws_survey: アンケートの利用
     read_other_gws_survey_forms: アンケートの閲覧（全て）
     read_private_gws_survey_forms: アンケートの閲覧（所有）
     edit_other_gws_survey_forms: アンケートの編集（全て）
