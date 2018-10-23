@@ -25,6 +25,7 @@ options.uploadUrl = function() {
 var tempFile = new SS_Addon_TempFile($(".upload-drop-area"), <%= @cur_user.id %>, options);
 <% end %>
 
+<%= hidden_field_tag 'file_size', 'true', { id: 'show-file-size' } %>
 <dl class="see webmail-addon-mail-file">
   <dd class="wide">
     <%= f.hidden_field "file_ids[]", value: "" %>

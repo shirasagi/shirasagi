@@ -28,8 +28,13 @@ this.SS_Addon_TempFile = (function () {
       var file = files[j];
       var id = file["_id"];
       var url = this.selectUrl(id);
+      var params = {};
+      if ($('#show-file-size').val()) {
+        params['file_size'] = $('#show-file-size').val();
+      }
       $.ajax({
         url: url,
+        data: params,
         success: function (data) {
           $("#selected-files").append(data);
         }
