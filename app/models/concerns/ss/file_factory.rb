@@ -53,6 +53,7 @@ module SS::FileFactory
       item.cur_node = cur_node if respond_to?(:cur_node)
       item.in_file = file
       item.resizing = resizing
+      item.unnormalize = unnormalize
       if item.save
         self.saved_files << item
         next
