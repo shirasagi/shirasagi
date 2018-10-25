@@ -93,7 +93,8 @@ class Gws::Survey::NotificationJob < Gws::ApplicationJob
 
     message.save!
 
-    Gws::Memo::Mailer.notice_mail(message, recipients, item).try(:deliver_now)
+    mail = Gws::Memo::Mailer.notice_mail(message, recipients, item)
+    mail.deliver_now if mail
 
     Rails.logger.info("#{item.name}: 通知送信")
   end

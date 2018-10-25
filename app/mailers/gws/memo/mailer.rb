@@ -21,15 +21,14 @@ class Gws::Memo::Mailer < ActionMailer::Base
     @item = item
     @users = users.select{|user| user.use_notice_email?(@item)}
     @cur_site = @item.try(:site) || @item.try(:cur_group) || @item.try(:_parent).try(:site)
-    return unless @cur_site.allow_send_mail? || @users.present?
+    return false unless @cur_site.allow_send_mail? || @users.present?
     from = ActionMailer::Base.default[:from]
+    bcc = @users.map(&:send_notice_mail_address).select(&:present?)
+    return false unless bcc.present?
     subject = @notice.subject
     body = I18n.t("gws_notification.#{i18n_key}.mail_text", subject: subject, text: page_url, default: item_text)
-    mail(from: from, bcc: notice_address, subject: subject, body: body)
-  end
 
-  def notice_address
-    @users.map(&:send_notice_mail_address).select(&:present?)
+    mail(from: from, bcc: bcc, subject: subject, body: body)
   end
 
   def i18n_key
@@ -56,8 +55,12 @@ class Gws::Memo::Mailer < ActionMailer::Base
 
   def page_url
     url_helper = Rails.application.routes.url_helpers
-    url =  root_url(only_path: false)
+
+    url =  @cur_site.domains.first
+    return "" if url.blank?
+    url = "http://" + url unless  url =~ /^http/
     url = url.chop if url =~ /\/$/
+
     if @notice
       url += url_helper.gws_memo_notice_path(id: @notice.id, site: @cur_site.id)
     else

@@ -44,6 +44,7 @@ class Gws::Discussion::Topic
     item.save!
 
     to_users = notify_member_ids.map{|user_id| Gws::User.find(user_id)}
-    Gws::Memo::Mailer.notice_mail(item, to_users, self).try(:deliver_now)
+    mail = Gws::Memo::Mailer.notice_mail(item, to_users, self)
+    mail.deliver_now if mail
   end
 end

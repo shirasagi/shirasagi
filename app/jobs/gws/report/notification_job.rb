@@ -47,6 +47,7 @@ class Gws::Report::NotificationJob < Gws::ApplicationJob
     message.text = mail.decoded
     message.save!
 
-    Gws::Memo::Mailer.notice_mail(message, [recipient], @item).try(:deliver_now)
+    mail =  Gws::Memo::Mailer.notice_mail(message, [recipient], @item)
+    mail.deliver_now if mail
   end
 end

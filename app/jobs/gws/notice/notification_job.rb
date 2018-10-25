@@ -67,7 +67,8 @@ class Gws::Notice::NotificationJob < Gws::ApplicationJob
 
     message.save!
 
-    Gws::Memo::Mailer.notice_mail(message, recipients, notice).try(:deliver_now)
+    mail = Gws::Memo::Mailer.notice_mail(message, recipients, notice)
+    mail.deliver_now if mail
   end
 
   def send_notification_by_email(notice)

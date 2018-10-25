@@ -217,7 +217,8 @@ class Gws::Circular::Post
       message.save!
 
       to_users = added_member_ids.map{|user_id| Gws::User.find(user_id)}
-      Gws::Memo::Mailer.notice_mail(message, to_users, self).try(:deliver_now)
+      mail = Gws::Memo::Mailer.notice_mail(message, to_users, self)
+      mail.deliver_now if mail
     end
 
     if removed_member_ids.present?
@@ -232,7 +233,8 @@ class Gws::Circular::Post
       message.save!
 
       to_users = removed_member_ids.map{|user_id| Gws::User.find(user_id)}
-      Gws::Memo::Mailer.notice_mail(message, to_users, self).try(:deliver_now)
+      mail = Gws::Memo::Mailer.notice_mail(message, to_users, self)
+      mail.deliver_now if mail
     end
   end
 end

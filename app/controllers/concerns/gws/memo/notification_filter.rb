@@ -5,7 +5,7 @@ module Gws::Memo::NotificationFilter
     before_action :set_destroyed_item, only: [:destroy, :soft_delete]
     before_action :set_destroyed_items, only: [:destroy_all, :soft_delete_all]
 
-    after_action :send_update_notification, only: [:create, :update]
+    after_action :send_update_notification, only: [:create, :update, :publish]
     after_action :send_destroy_notification, only: [:destroy, :destroy_all, :soft_delete, :soft_delete_all]
   end
 
@@ -17,9 +17,7 @@ module Gws::Memo::NotificationFilter
     return if @item.errors.present?
     return unless @cur_site.notify_model?(@item.class)
 
-    if @item.respond_to?(:notify_enabled?)
-      return unless @item.notify_enabled?
-    end
+    return unless item_notify_enabled?(@item)
 
     users = @item.subscribed_users
     users = users.nin(id: @cur_user.id) if @cur_user
@@ -45,9 +43,7 @@ module Gws::Memo::NotificationFilter
     return if @destroyed_items.blank?
 
     @destroyed_items.each do |item, users|
-      if item.respond_to?(:notify_enabled?)
-        next unless item.notify_enabled?
-      end
+      next unless item_notify_enabled?(item)
 
       users = users.nin(id: @cur_user.id) if @cur_user
       users = users.select{|user| user.use_notice?(item)}
@@ -96,6 +92,23 @@ module Gws::Memo::NotificationFilter
       @destroyed_items ||= []
       @items.each do |item|
         @destroyed_items << [item.dup, item.subscribed_users]
+      end
+    end
+  end
+
+  def item_notify_enabled?(item)
+    case item.model_name.i18n_key
+    when :"gws/board/post"
+      return item.topic.notify_enabled?
+    when :"gws/schedule/comment"
+      return item.schedule.notify_enabled?
+    when  :"gws/schedule/attendance"
+      return item._parent.notify_enabled?
+    else
+      if item.respond_to?(:notify_enabled?)
+        return item.notify_enabled?
+      else
+        return true
       end
     end
   end
