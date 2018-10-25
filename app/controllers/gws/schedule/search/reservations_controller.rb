@@ -21,7 +21,15 @@ class Gws::Schedule::Search::ReservationsController < ApplicationController
   end
 
   def validate_plan
-    plan = Gws::Schedule::Plan.new params[:item].to_unsafe_h
+    item_params = params[:item].to_unsafe_h
+    item_id = item_params[:id]
+
+    if item_id.present?
+      plan = Gws::Schedule::Plan.find(item_id)
+      plan.attributes = item_params
+    else
+      plan = Gws::Schedule::Plan.new item_params
+    end
     plan.cur_user = @cur_user
     plan.cur_site = @cur_site
     plan.valid?
