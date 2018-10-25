@@ -20,6 +20,13 @@ class Gws::Schedule::Search::ReservationsController < ApplicationController
     params.require(:s).permit(Gws::Schedule::PlanSearch.permitted_fields).merge(pre_params).merge(fix_params)
   end
 
+  def validate_plan
+    plan = Gws::Schedule::Plan.new params[:item].to_unsafe_h
+    plan.cur_user = @cur_user
+    plan.cur_site = @cur_site
+    plan.valid?
+  end
+
   public
 
   def index
@@ -41,7 +48,6 @@ class Gws::Schedule::Search::ReservationsController < ApplicationController
     params_min_hour = params.dig(:d, :min_hour).presence
     params_max_hour = params.dig(:d, :max_hour).presence
 
-    @reservation_valid = true
     @items.each do |date, hours|
       min_hour = @cur_site.facility_min_hour || 8
       max_hour = @cur_site.facility_max_hour || 22
@@ -55,11 +61,9 @@ class Gws::Schedule::Search::ReservationsController < ApplicationController
       end
 
       @hour_range[date] = (min_hour.to_i...max_hour.to_i)
-
-      if @reservation_valid
-        @reservation_valid = (@hour_range[date].to_a - hours[1].values.flatten).blank?
-      end
     end
+
+    @reservation_valid = validate_plan
 
     render layout: false
   end

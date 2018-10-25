@@ -140,7 +140,14 @@
       d.max_hour = maxHour;
     }
 
-    return($.param({ s: s, d: d }));
+    var item = {};
+    $.each($('form#item-form').serializeArray(), function(i, input) {
+      if (input["name"].match(/item\[/)) {
+        item[input["name"]] = input["value"];
+      }
+    });
+
+    return $.param(Object.assign({ s: s, d: d }, item));
   };
 
   var confirmFacilityReservation = function() {
@@ -218,14 +225,12 @@
     $.ajax({
       url: href,
       success: function(data) {
-        html_facility_reservation = $('<div></div>').html(data)
-        if ($(html_facility_reservation).find('.reservation.exist').length) {
-          confirmFacilityReservation();
-        } else if (!$(html_facility_reservation).find('.date').length) {
-          confirmFacilityReservation();
-        } else {
+        html_facility_reservation = $('<div></div>').html(data);
+        if($(html_facility_reservation).find(".reservation-valid.free").length) {
           proceed();
           $('form#item-form').submit();
+        } else {
+          confirmFacilityReservation();
         }
       }
     });
