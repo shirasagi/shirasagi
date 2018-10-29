@@ -4,7 +4,7 @@ module Cms::Addon::ReadableSetting
 
   included do
 
-    field :readable_setting_range, type: String, default: 'select'
+    field :readable_setting_range, type: String, default: 'public'
     field :readable_groups_hash, type: Hash
     field :readable_members_hash, type: Hash
 
