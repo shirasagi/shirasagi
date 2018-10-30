@@ -42,7 +42,16 @@ describe "webmail_export_mails", type: :feature, dbscope: :example, imap: true, 
         click_on I18n.t("ss.export")
       end
 
-      expect(page).to have_content("ダウンロードの準備が完了しました。")
+      within "#addon-basic" do
+        expect(page).to have_content(I18n.t("webmail.export.notiry_message").split("\n").first)
+        expect(page).to have_link(href: /\.zip$/)
+      end
+
+      expect(Gws::Job::Log.count).to eq 1
+      Job::Log.first.tap do |log|
+        expect(log.logs).to include(include('INFO -- : Started Job'))
+        expect(log.logs).to include(include('INFO -- : Completed Job'))
+      end
     end
   end
 
@@ -62,7 +71,16 @@ describe "webmail_export_mails", type: :feature, dbscope: :example, imap: true, 
         click_on I18n.t("ss.export")
       end
 
-      expect(page).to have_content("ダウンロードの準備が完了しました。")
+      within "#addon-basic" do
+        expect(page).to have_content(I18n.t("webmail.export.notiry_message").split("\n").first)
+        expect(page).to have_link(href: /\.zip$/)
+      end
+
+      expect(Gws::Job::Log.count).to eq 1
+      Job::Log.first.tap do |log|
+        expect(log.logs).to include(include('INFO -- : Started Job'))
+        expect(log.logs).to include(include('INFO -- : Completed Job'))
+      end
     end
   end
 end
