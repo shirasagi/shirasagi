@@ -56,7 +56,7 @@ var tempFile = new SS_Addon_TempFile($(".upload-drop-area"), <%= @cur_user.id %>
               <input type="hidden" name="item[ref_file_ids][]" value="ref-<%= part.section %>" class="file-id" />
               <%= part.filename %>
             </label><br />
-            <span class="file-size"><%= "( #{number_to_human_size(part.decoded.size)} )" %></span>
+            <span class="file-size"><%= "( #{number_to_human_size(part.part.size)} )" %></span>
           </div>
 
           <div class="action">
