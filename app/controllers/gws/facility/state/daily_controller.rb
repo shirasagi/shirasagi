@@ -5,6 +5,7 @@ class Gws::Facility::State::DailyController < ApplicationController
 
   navi_view "gws/schedule/main/navi"
   menu_view 'gws/facility/state/main/menu'
+  helper Gws::Facility::State::Daily::PlanHelper
 
   private
 
