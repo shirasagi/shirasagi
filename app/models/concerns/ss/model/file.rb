@@ -7,7 +7,7 @@ module SS::Model::File
   include SS::ExifGeoLocation
   include ActiveSupport::NumberHelper
 
-  attr_accessor :in_file, :resizing
+  attr_accessor :in_file, :resizing, :unnormalize
 
   included do
     cattr_accessor(:root, instance_accessor: false) { "#{Rails.root}/private/files" }
@@ -28,7 +28,7 @@ module SS::Model::File
     permit_params :in_file, :state, :name, :filename, :resizing, :in_data_url
 
     before_validation :set_filename, if: ->{ in_file.present? }
-    before_validation :normalize_filename
+    before_validation :normalize_filename, if: -> { !unnormalize }
 
     validates :model, presence: true
     validates :state, presence: true
