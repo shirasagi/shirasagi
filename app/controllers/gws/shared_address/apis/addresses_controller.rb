@@ -3,18 +3,21 @@ class Gws::SharedAddress::Apis::AddressesController < ApplicationController
 
   model Gws::SharedAddress::Address
 
+  before_action :set_groups
   before_action :set_group
   before_action :set_multi
   before_action :set_inherit_params
 
   private
 
+  def set_groups
+    @groups = Gws::SharedAddress::Group.site(@cur_site).readable(@cur_user, site: @cur_site)
+  end
+
   def set_group
     if params[:s].present? && params[:s][:group].present?
-      @address_group = Gws::SharedAddress::Group.find(params[:s][:group]) rescue nil
+      @address_group = @groups.find(params[:s][:group]) rescue nil
     end
-
-    @groups = Gws::SharedAddress::Group.site(@cur_site).allow(:read, @cur_user, site: @cur_site)
   end
 
   def set_multi
