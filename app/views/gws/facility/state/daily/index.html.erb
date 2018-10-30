@@ -18,18 +18,19 @@
             <%
               plan_history = plan.histories.where(mode: 'update').first
               if plan_history.present?
-                group_name = plan_history.user_group_name.split("/")[1..-1].join(' ')
+                group_id = plan_history.user_group_id
                 user_name = plan_history.user_name
               else
-                group_name = plan.section_name
+                group_id = plan.user_group_id
                 user_name = plan.user.name
               end
+              group_id = plan.user.gws_main_group(@cur_site).id if group_id.nil?
             %>
             <tr>
               <td><%= item.name %></td>
               <td><%= l(plan.start_at, format: :gws_long) %></td>
               <td><%= l(plan.end_at, format: :gws_long) %></td>
-              <td><%= group_name %></td>
+              <td><%= group_section_name(group_id) %></td>
               <td><%= user_name %></td>
 
               <% if plan.readable?(@cur_user, site: @cur_site) %>
