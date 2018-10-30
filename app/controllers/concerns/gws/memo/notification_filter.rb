@@ -19,11 +19,15 @@ module Gws::Memo::NotificationFilter
 
     return unless item_notify_enabled?(@item)
 
-    users = @item.subscribed_users
-    users = users.nin(id: @cur_user.id) if @cur_user
-    users = users.select{|user| user.use_notice?(@item)}
+    if @item.class.name.include?("Gws::Monitor")
+      users = []
+    else
+      users = @item.subscribed_users
+      users = users.nin(id: @cur_user.id) if @cur_user
+      users = users.select{|user| user.use_notice?(@item)}
 
-    return if users.blank?
+      return if users.blank?
+    end
 
     Gws::Memo::Notifier.deliver!(
       cur_site: @cur_site, cur_group: @cur_group, cur_user: @cur_user,
@@ -36,18 +40,19 @@ module Gws::Memo::NotificationFilter
   def send_destroy_notification
     return if request.get?
     return if response.code !~ /^3/
-    return unless @cur_site.notify_model?(@item.class)
 
     @destroyed_items ||= []
     @destroyed_items << @destroyed_item if @destroyed_item
     return if @destroyed_items.blank?
 
     @destroyed_items.each do |item, users|
-      next unless item_notify_enabled?(item)
+      next unless @cur_site.notify_model?(item) || item_notify_enabled?(item)
 
-      users = users.nin(id: @cur_user.id) if @cur_user
-      users = users.select{|user| user.use_notice?(item)}
-      next if users.blank?
+      if !item.class.name.include?("Gws::Monitor")
+        users = users.nin(id: @cur_user.id) if @cur_user
+        users = users.select{|user| user.use_notice?(item)}
+        next if users.blank?
+      end
 
       i18n_key = item.class.model_name.i18n_key
 
@@ -80,7 +85,9 @@ module Gws::Memo::NotificationFilter
   def set_destroyed_item
     return if request.get?
 
-    if @item
+    if @item && @item.class.name.include?("Gws::Monitor")
+      @destroyed_item = [@item.dup, []]
+    elsif @item
       @destroyed_item = [@item.dup, @item.subscribed_users]
     end
   end
@@ -91,7 +98,11 @@ module Gws::Memo::NotificationFilter
     if @items.present?
       @destroyed_items ||= []
       @items.each do |item|
-        @destroyed_items << [item.dup, item.subscribed_users]
+        if item.class.name.include?("Gws::Monitor")
+          @destroyed_items << [item.dup, []]
+        else
+          @destroyed_items << [item.dup, item.subscribed_users]
+        end
       end
     end
   end

@@ -232,6 +232,7 @@ class Gws::Memo::Notifier
     cur_user.cur_site ||= cur_group
 
     class_name = item.class.name
+
     url_helper = Rails.application.routes.url_helpers
     if item.try(:_parent).present?
       id = item._parent.id
@@ -256,6 +257,7 @@ class Gws::Memo::Notifier
     elsif class_name.include?("Gws::Monitor")
       return unless item.state == "public"
       url = url_helper.gws_monitor_topic_path(id: id, site: cur_site.id, category: '-', mode: '-')
+      deliver_monitor(id)
     else
       url = ''
     end
@@ -278,6 +280,15 @@ class Gws::Memo::Notifier
   end
 
   private
+
+  def deliver_monitor(id)
+    topic = Gws::Monitor::Topic.find(id)
+    to_members = Gws::User.in(group_ids: Gws::Group.in(id: topic.attend_group_ids).pluck(:id)).pluck(:id)
+    to_members -= [cur_user.id]
+    to_members.select!{|user_id| Gws::User.find(user_id).use_notice?(item)}
+    return if to_members.blank?
+    self.to_users = to_members.map{|user_id| Gws::User.find(user_id)}
+  end
 
   def from_user
     @from_user ||= begin
