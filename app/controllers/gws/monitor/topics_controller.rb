@@ -2,6 +2,7 @@ class Gws::Monitor::TopicsController < ApplicationController
   include Gws::BaseFilter
   include Gws::CrudFilter
   include Gws::Monitor::TopicFilter
+  include Gws::Memo::NotificationFilter
 
   before_action :check_attended
 

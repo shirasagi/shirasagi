@@ -6,6 +6,8 @@
   <% if Gws::UserPresence.allowed?(:use, @cur_user, site: @cur_site) %>
     <h3><%= link_to @cur_site.menu_presence_label || t('mongoid.models.gws/presence'), gws_presence_user_setting_path %></h3>
   <% end %>
+
+  <h3><%= link_to t('modules.addons.gws/system/notice_setting'), gws_memo_notice_user_settings_path %></h3>
 </nav>
 
 <%= render partial: "gws/main/navi" %>

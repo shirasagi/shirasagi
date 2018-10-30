@@ -238,6 +238,9 @@ ja:
         deny: 許可しない
         required: 必須
         optional: 任意
+        notify: 通知する
+        silence: 通知しない
+        force_silence: 通知しない（全体管理）
       resizing:
         320x240: 320x240 (QVGA横)
         240x320: 240x320 (QVGA縦)

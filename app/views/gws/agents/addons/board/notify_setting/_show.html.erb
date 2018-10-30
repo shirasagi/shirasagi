@@ -1,7 +1,9 @@
-<dl class="see addon-gws-memo-notify-setting">
-  <dt><%= @model.t :notify_state %><%= @model.tt :notify_state %></dt>
-  <dd><%= @item.label :notify_state %></dd>
+<% if @cur_site.notify_model?(@model) %>
+  <dl class="see addon-gws-memo-notify-setting">
+    <dt><%= @model.t :notify_state %><%= @model.tt :notify_state %></dt>
+    <dd><%= @item.label :notify_state %></dd>
 
-  <dt><%= @model.t :subscribed_users_readable_state %><%= @model.tt :subscribed_users_readable_state %></dt>
-  <dd><%= @item.label :subscribed_users_readable_state %></dd>
-</dl>
+    <dt><%= @model.t :subscribed_users_readable_state %><%= @model.tt :subscribed_users_readable_state %></dt>
+    <dd><%= @item.label :subscribed_users_readable_state %></dd>
+  </dl>
+<% end %>

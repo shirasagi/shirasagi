@@ -6,9 +6,9 @@ describe Gws::Notice::NotificationJob, dbscope: :example do
   let(:scheme) { %w(http https).sample }
   let(:domain) { "#{unique_id}.example.jp" }
   let(:sender) { gws_user }
-  let!(:recipient1) { create(:gws_user) }
-  let!(:recipient2) { create(:gws_user, group_ids: [ group1.id ]) }
-  let!(:recipient3) { create(:gws_user) }
+  let!(:recipient1) { create(:gws_user, notice_announcement_email_user_setting: 'notify', send_notice_mail_address: 'recipient1@example.jp', email: 'recipient1@example.jp') }
+  let!(:recipient2) { create(:gws_user, group_ids: [ group1.id ], notice_announcement_email_user_setting: 'notify', send_notice_mail_address: 'recipient2@example.jp', email: 'recipient2@example.jp') }
+  let!(:recipient3) { create(:gws_user, notice_announcement_email_user_setting: 'notify', send_notice_mail_address: 'recipient3@example.jp', email: 'recipient3@example.jp') }
   let!(:custom_group1) { create :gws_custom_group, member_ids: [recipient3.id] }
   let(:now) { Time.zone.now.beginning_of_minute }
   let(:folder) { create(:gws_notice_folder) }
@@ -65,20 +65,16 @@ describe Gws::Notice::NotificationJob, dbscope: :example do
       Gws::Memo::Notice.first.tap do |message|
         expect(message.member_ids).to include(recipient1.id, recipient2.id, recipient3.id)
         expect(message.subject).to eq I18n.t('gws_notification.gws/notice/post.subject', name: notice.name)
-        expect(message.text).to include(notice.name)
-        expect(message.text).to \
-          include("#{scheme}://#{domain}/.g#{site.id}/notice/-/-/readables/#{notice.id}")
+        expect(message.text).to include("/.g#{site.id}/notice/-/-/readables/#{notice.id}")
       end
 
-      expect(ActionMailer::Base.deliveries.length).to eq 3
+      expect(ActionMailer::Base.deliveries.length).to eq 1
       ActionMailer::Base.deliveries.first.tap do |notify_mail|
         expect(notify_mail.from.first).to eq site.sender_email
-        expect(notify_mail.to.first).to eq recipient1.email
+        expect(notify_mail.bcc.first).to eq recipient1.email
         expect(notify_mail.subject).to eq I18n.t('gws_notification.gws/notice/post.subject', name: notice.name)
         expect(notify_mail.body.multipart?).to be_falsey
-        expect(notify_mail.body.raw_source).to include(notice.name)
-        expect(notify_mail.body.raw_source).to \
-          include("#{scheme}://#{domain}/.g#{site.id}/notice/-/-/readables/#{notice.id}")
+        expect(notify_mail.body.raw_source).to include("/.g#{site.id}/memo/notices/#{notice.id}")
       end
     end
   end
@@ -114,20 +110,16 @@ describe Gws::Notice::NotificationJob, dbscope: :example do
       Gws::Memo::Notice.first.tap do |message|
         expect(message.member_ids).to include(recipient1.id, recipient2.id, recipient3.id)
         expect(message.subject).to eq I18n.t('gws_notification.gws/notice/post.subject', name: notice.name)
-        expect(message.text).to include(notice.name)
-        expect(message.text).to \
-          include("#{scheme}://#{domain}/.g#{site.id}/notice/-/-/readables/#{notice.id}")
+        expect(message.text).to include("/.g#{site.id}/notice/-/-/readables/#{notice.id}")
       end
 
-      expect(ActionMailer::Base.deliveries.length).to eq 3
+      expect(ActionMailer::Base.deliveries.length).to eq 1
       ActionMailer::Base.deliveries.first.tap do |notify_mail|
         expect(notify_mail.from.first).to eq site.sender_email
-        expect(notify_mail.to.first).to eq recipient1.email
+        expect(notify_mail.bcc.first).to eq recipient1.email
         expect(notify_mail.subject).to eq I18n.t('gws_notification.gws/notice/post.subject', name: notice.name)
         expect(notify_mail.body.multipart?).to be_falsey
-        expect(notify_mail.body.raw_source).to include(notice.name)
-        expect(notify_mail.body.raw_source).to \
-          include("#{scheme}://#{domain}/.g#{site.id}/notice/-/-/readables/#{notice.id}")
+        expect(notify_mail.body.raw_source).to include("/.g#{site.id}/memo/notices/#{notice.id}")
       end
     end
   end
@@ -188,20 +180,16 @@ describe Gws::Notice::NotificationJob, dbscope: :example do
       Gws::Memo::Notice.first.tap do |message|
         expect(message.member_ids).to include(recipient1.id, recipient2.id, recipient3.id)
         expect(message.subject).to eq I18n.t('gws_notification.gws/notice/post.subject', name: notice.name)
-        expect(message.text).to include(notice.name)
-        expect(message.text).to \
-          include("#{scheme}://#{domain}/.g#{site.id}/notice/-/-/readables/#{notice.id}")
+        expect(message.text).to include("/.g#{site.id}/notice/-/-/readables/#{notice.id}")
       end
 
       expect(ActionMailer::Base.deliveries.length).to be > 0
       ActionMailer::Base.deliveries.first.tap do |notify_mail|
         expect(notify_mail.from.first).to eq site.sender_email
-        expect(notify_mail.to.first).not_to be_nil
+        expect(notify_mail.bcc.first).not_to be_nil
         expect(notify_mail.subject).to eq I18n.t('gws_notification.gws/notice/post.subject', name: notice.name)
         expect(notify_mail.body.multipart?).to be_falsey
-        expect(notify_mail.body.raw_source).to include(notice.name)
-        expect(notify_mail.body.raw_source).to \
-          include("#{scheme}://#{domain}/.g#{site.id}/notice/-/-/readables/#{notice.id}")
+        expect(notify_mail.body.raw_source).to include("/.g#{site.id}/memo/notices/#{notice.id}")
       end
     end
   end

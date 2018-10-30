@@ -42,6 +42,8 @@ SS::Application.routes.draw do
       get :latest, on: :collection
     end
 
+    resource :notice_user_settings, only: [:show, :edit, :update]
+
     resources :comments, path: ':message_id/comments', only: [:create, :destroy]
 
     namespace "apis" do

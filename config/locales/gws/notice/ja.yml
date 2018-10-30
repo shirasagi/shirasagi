@@ -61,10 +61,12 @@ ja:
 
   gws_notification:
     gws/notice/post:
-      subject: "お知らせが掲載されました"
-      text: |
-        お知らせに「%{name}」が掲載されました。
-        %{path} をブラウザで開き、内容をご確認ください。
+      subject: "[お知らせ] 「%{name}」が掲載されました。"
+      text: "%{path}"
+      mail_text: |
+        %{subject}
+
+        %{text}
 
   mongoid:
     models:

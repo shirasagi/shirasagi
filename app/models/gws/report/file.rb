@@ -106,6 +106,8 @@ class Gws::Report::File
   private
 
   def send_notification_mail
+    return unless @cur_site.notify_model?(self)
+
     added_member_ids = removed_member_ids = []
 
     if state == 'public'
@@ -130,6 +132,12 @@ class Gws::Report::File
       added_member_ids = []
       removed_member_ids = (cur_member_ids + prev_member_ids).uniq
     end
+
+    cur_user_id = @cur_user.try(:id) || user.id
+    added_member_ids   -= [cur_user_id]
+    removed_member_ids -= [cur_user_id]
+    added_member_ids.select!{|user_id| Gws::User.find(user_id).use_notice?(self)}
+    removed_member_ids.select!{|user_id| Gws::User.find(user_id).use_notice?(self)}
 
     return if added_member_ids.blank? && removed_member_ids.blank?
 

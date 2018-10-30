@@ -1,0 +1,30 @@
+<%= jquery do %> SS_AddonTabs.hide(".addon-gws-system-notice-setting"); <% end %>
+
+<% render_notice_setting = proc do |type| %>
+  <dt class="depth-2"><%= @model.t("notice_#{type}_state") %></dt>
+  <dd>
+    <%= @item.label("notice_#{type}_state")  %>
+  </dd>
+<% end %>
+
+<dl class="see addon-gws-system-notice-setting">
+  <dt><%= t "gws.notice_setting.functions" %></dt>
+  <dd></dd>
+  <% render_notice_setting.call(:schedule) %>
+  <% render_notice_setting.call(:todo) %>
+  <% render_notice_setting.call(:workflow) %>
+  <% render_notice_setting.call(:circular) %>
+  <% render_notice_setting.call(:monitor) %>
+  <% render_notice_setting.call(:survey) %>
+  <% render_notice_setting.call(:board) %>
+  <% render_notice_setting.call(:faq) %>
+  <% render_notice_setting.call(:qna) %>
+  <% render_notice_setting.call(:discussion) %>
+  <% render_notice_setting.call(:report) %>
+  <% render_notice_setting.call(:announcement) %>
+
+  <dt><%= @model.t("send_notice_email_state") %></dt>
+  <dd>
+    <%= @item.label("send_notice_email_state") %>
+  </dd>
+</dl>
