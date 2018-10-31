@@ -443,6 +443,7 @@ module Workflow::Approver
   end
 
   def validate_workflow_approvers_role
+    return if cur_site.nil?
     return if errors.present?
 
     # check whether approvers have read permission.
