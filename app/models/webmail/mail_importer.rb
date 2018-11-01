@@ -46,7 +46,7 @@ class Webmail::MailImporter
   def import_webmail_mail(mail)
     item = Webmail::Mail.new
     item.imap = imap
-    item.import_mail(mail.to_s)
+    item.import_mail(mail.to_s, date_time: mail.date)
   end
 
   private
@@ -55,6 +55,7 @@ class Webmail::MailImporter
     Zip::File.open(in_file.path) do |entries|
       entries.each do |entry|
         next if !entry.file?
+        next if ::File.basename(entry.name) =~ /^\./
 
         entry_type = SS::MimeType.find(entry.name, nil)
         next if entry_type != "message/rfc822"

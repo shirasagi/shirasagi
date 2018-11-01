@@ -135,9 +135,11 @@ class Webmail::Mail
     true
   end
 
-  def import_mail(msg)
+  def import_mail(msg, opts = {})
+    date_time = opts[:date_time] || Time.zone.now
+
     imap.select('INBOX')
-    imap.conn.append('INBOX', msg, [:Seen], Time.zone.now)
+    imap.conn.append('INBOX', msg, [:Seen], date_time.to_time)
   end
 
   def requested_mdn?
