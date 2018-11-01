@@ -62,7 +62,7 @@ class Webmail::MailsController < ApplicationController
     @navi_mailboxes = true
     @mailbox = params[:mailbox]
 
-    if params[:action] == 'index' || params[:action] =~ /^(set_|unset_)/
+    if params[:action] == 'index' || params[:action] =~ /^(set_|unset_|send_mdn|ignore_mdn)/
       @imap.select(@mailbox)
     else
       @imap.examine(@mailbox)
