@@ -46,7 +46,7 @@ class Webmail::MailImporter
   def import_webmail_mail(mail)
     item = Webmail::Mail.new
     item.imap = imap
-    item.import_mail(mail.to_s)
+    item.import_mail(mail.to_s, date_time: mail.date)
   end
 
   private
