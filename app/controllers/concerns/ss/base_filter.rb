@@ -109,7 +109,11 @@ module SS::BaseFilter
       }
       session[:user]["password"] = SS::Crypt.encrypt(opts[:password]) if opts[:password].present?
     end
-    cookies[:login_path] = { :value => request_path, :expires => 7.days.from_now }
+    if request.get?
+      cookies[:login_path] = { :value => request_path, :expires => 7.days.from_now }
+    else
+      cookies.delete(:login_path)
+    end
     session[:logout_path] = opts[:logout_path]
     redirect_to sns_mypage_path if opts[:redirect]
     @cur_user = user
