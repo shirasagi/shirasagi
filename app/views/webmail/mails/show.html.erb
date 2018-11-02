@@ -103,7 +103,13 @@
             <i class="material-icons md-18"><%== part.image? ? '&#xE3F4;' : '&#xE24D;' %></i>
             <%= part.filename %>
           <% end %>
+          <%= "( #{number_to_human_size(part.part.size)} )" %>
         </div>
+      <% end %>
+      <% if params[:action] != 'print' %>
+      <div class="batch-download">
+        <%= link_to t('webmail.buttons.batch_download'), { action: :parts_batch_download }, { class: 'btn' } %>
+      </div>
       <% end %>
     </div>
     <% end %>

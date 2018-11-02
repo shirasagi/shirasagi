@@ -15,7 +15,7 @@ class Webmail::Mail
   #index({ host: 1, account: 1, mailbox: 1, uid: 1 }, { unique: true })
 
   attr_accessor :flags, :text, :html, :attachments, :format,
-                :reply_uid, :forward_uid, :signature,
+                :reply_uid, :forward_uid, :edit_as_new_uid, :signature,
                 :to_text, :cc_text, :bcc_text,
                 :in_request_mdn, :in_request_dsn, :all_export, :mail_ids
 

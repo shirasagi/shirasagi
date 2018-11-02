@@ -27,6 +27,7 @@ SS::Application.routes.draw do
     member do
       get :download
       get :parts, path: 'parts/:section', format: false, section: /[^\/]+/
+      get :parts_batch_download
       get :header_view
       get :source_view
       put :set_seen
@@ -38,6 +39,8 @@ SS::Application.routes.draw do
       get :reply
       get :reply_all
       get :forward
+      get :edit_as_new
+      get :print
       put :send_mdn
       put :ignore_mdn
       resources :gws_messages, path: 'messages/g:site', site: /\d+/, only: [:new, :create]
@@ -82,6 +85,7 @@ SS::Application.routes.draw do
     get "addresses" => "addresses#index", as: "addresses_main"
     resources :addresses, path: "addresses/:group", concerns: [:deletion, :export] do
       get :add, on: :collection
+      put :move, path: 'move/:group_id', group_id: /\d+/, on: :collection
     end
     resources :address_groups, concerns: [:deletion]
 

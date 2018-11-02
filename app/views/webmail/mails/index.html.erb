@@ -25,13 +25,15 @@
 </div>
 <% end %>
 
+<%= paginate @items if @items.try(:current_page) %>
+
 <div class="index">
   <%= render file: "_list_head" %>
 
   <ul class="list-items ss-messages webmail-mails">
     <li class="list-item-head">
       <div class="head">
-        <% if @imap.sent_box?(@mailbox) %>
+        <% if @imap.sent_box?(@mailbox) || @imap.draft_box?(@mailbox) %>
           <span class="field to"><%= @model.t :to %></span>
         <% else %>
           <span class="field from"><%= @model.t :from %></span>
@@ -47,7 +49,9 @@
       <nav class="tap-menu">
         <%= link_to t('ss.links.show'), action: :show, id: item.uid %>
         <%= link_to t('webmail.links.reply'), action: :reply, id: item.uid unless item.draft? %>
+        <%= link_to t('webmail.links.reply_without_body'), { action: :reply, id: item.uid, without_body: true } unless item.draft? %>
         <%= link_to t('webmail.links.reply_all'), action: :reply_all, id: item.uid unless item.draft? %>
+        <%= link_to t('webmail.links.reply_all_without_body'), { action: :reply_all, id: item.uid, without_body: true } unless item.draft? %>
         <%= link_to t('webmail.links.forward'), action: :forward, id: item.uid unless item.draft? %>
         <%= link_to t('ss.links.delete'), action: :delete, id: item.uid %>
       </nav>
@@ -64,13 +68,13 @@
         <i class="material-icons md-15"><%== item.attachments? ? '&#xE226;' : '&nbsp;' %></i>
       </div>
       <div class="info">
-        <% if @imap.sent_box?(@mailbox) %>
+        <% if @imap.sent_box?(@mailbox) || @imap.draft_box?(@mailbox) %>
           <span class="field to" title="<%= item.display_to.map(&:address).join(', ') %>">
-            <%= item.display_to.map(&:name).join(', ') %>
+            <%= link_to item.display_to.map(&:name).join(', '), { action: :index, 's[to]': item.display_to.first.email } if item.display_to.present? %>
           </span>
         <% else %>
           <span class="field from" title="<%= item.display_sender.address %>">
-            <%= item.display_sender.name %>
+            <%= link_to item.display_sender.name, { action: :index, 's[from]': item.display_sender.email } %>
           </span>
         <% end %>
         <%= link_to item.display_subject, { action: :show, id: item.uid }, class: "field title", title: item.display_subject %>

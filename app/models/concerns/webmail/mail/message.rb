@@ -30,28 +30,41 @@ module Webmail::Mail::Message
     end
   end
 
-  def new_reply(ref)
+  def new_reply(ref, without_body)
     self.reply_uid = ref.uid
     self.to = ref.from
     self.to_text = self.to.join('; ')
     set_reply_header(ref)
-    set_reply_body(ref)
+    set_reply_body(ref) unless without_body
   end
 
-  def new_reply_all(ref)
+  def new_reply_all(ref, without_body)
     self.reply_uid = ref.uid
     self.to = (ref.from + ref.to).reject { |c| c.include?(imap.address) }
     self.cc = ref.cc
     self.to_text = self.to.join('; ')
     self.cc_text = self.cc.join('; ')
     set_reply_header(ref)
-    set_reply_body(ref)
+    set_reply_body(ref) unless without_body
   end
 
   def new_forward(ref)
     self.forward_uid = ref.uid
     self.subject = "Fw: " + ref.subject.to_s.gsub(/^Fw:\s*/, '')
     set_reply_body(ref)
+    set_ref_files(ref.attachments)
+  end
+
+  def new_edit(ref)
+    self.edit_as_new_uid = ref.uid
+    self.to = ref.to
+    self.cc = ref.cc
+    self.to_text = self.to.join('; ')
+    self.cc_text = self.cc.join('; ')
+    self.subject = ref.subject
+    self.format = ref.format
+    self.text = ref.text
+    self.html = ref.html
     set_ref_files(ref.attachments)
   end
 

@@ -11,6 +11,9 @@
       <input type="hidden" name="item[file_ids][]" value="<%= @item.id %>" class="file-id" />
       <%= @item.name %>
     </label><br />
+    <% if params[:file_size] %>
+    <span class="file-size"><%= "( #{number_to_human_size(@item.size)} )" %></span>
+    <% end %>
   </div>
   <div class="action">
     <% content = link_to "#{@item.name} (#{@item.extname.upcase} #{number_to_human_size(@item.size)})", @item.url, class: "icon-#{@item.extname}" %>

@@ -41,14 +41,14 @@ end
         end
         names << box.name
       %>
-      <a class="<%= box.css_class %> mailbox-droppable depth-<%= box.depth %>" data-name="<%= box.original_name %>" data-basename="<%= box.original_name.sub(/.*\./, '') %>"
+      <a class="<%= box.css_class %> mailbox-droppable depth-<%= box.depth %>" data-name="<%= box.original_name %>" data-basename="<%= box.original_name.sub(/.*\./, '') %>" title="<%= name %>"
         <% if !box.noselect? %>
           href="<%= webmail_mails_path(webmail_mode: @webmail_mode, mailbox: box.original_name) %>"
         <% end %>
       >
         <%== "<span class='pad'></span>" * padd %>
         <i class="material-icons md-18"><%== box.icon %></i>
-        <span class="mailbox-name"><%= name %></span>
+        <span class="mailbox-name"><%= name.truncate(12) %></span>
         <span class="unseen count<%= box.unseen %>">(<%= box.unseen %>)</span>
       </a>
     <% end %>

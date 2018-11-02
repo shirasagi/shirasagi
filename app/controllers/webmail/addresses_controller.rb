@@ -8,6 +8,7 @@ class Webmail::AddressesController < ApplicationController
   before_action :set_address_group
   before_action :set_crumbs
   before_action :set_group_navi, only: [:index]
+  before_action :set_selected_items, only: [:destroy_all, :move]
 
   private
 
@@ -93,5 +94,20 @@ class Webmail::AddressesController < ApplicationController
     else
       redirect_to action: :new, item: params[:item].to_unsafe_h
     end
+  end
+
+  def move
+    group = Webmail::AddressGroup.find(params[:group_id]) rescue nil
+    return if group.nil? || @items.nil?
+
+    data = []
+    @items.each do |item|
+      item.address_group = group
+      if item.update
+        data << { id: item.id.to_s, name: group.name }
+      end
+    end
+
+    render json: data.to_json
   end
 end
