@@ -55,7 +55,10 @@ class Sns::Login::SamlController < ApplicationController
     response = OneLogin::RubySaml::Response.new(params[:SAMLResponse])
     response.settings = settings
 
-    raise "403" unless response.is_valid?
+    if !response.is_valid?
+      render_login nil, nil, alert: response.status_message.presence
+      return
+    end
 
     user = SS::User.uid_or_email(response.nameid).and_enabled.and_unlocked.first
     if user.blank?
