@@ -13,4 +13,7 @@
 
   <dt><%= @model.t :x509_cert %><%= @model.tt :x509_cert %></dt>
   <dd><%= f.file_field :in_x509_cert %></dd>
+
+  <dt><%= @model.t :force_authn_state %><%= @model.tt :force_authn_state %></dt>
+  <dd><%= f.select :force_authn_state, @item.force_authn_state_options, include_blank: true %></dd>
 </dl>

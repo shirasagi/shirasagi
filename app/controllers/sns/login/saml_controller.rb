@@ -28,6 +28,7 @@ class Sns::Login::SamlController < ApplicationController
       settings.idp_slo_target_url = @item.slo_url
       settings.idp_cert = SS::Crypt.decrypt(@item.x509_cert)
       settings.idp_cert_fingerprint = @item.fingerprint
+      settings.force_authn = true if @item.force_authn?
     end
   end
 
