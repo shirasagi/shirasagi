@@ -4,3 +4,4 @@ spec/fixtures/gws/user/*.csv binary
 spec/fixtures/opendata/*.csv binary
 spec/fixtures/webmail/*.csv binary
 spec/fixtures/webmail/*.eml binary
+spec/fixtures/sys/auth/*.der binary
