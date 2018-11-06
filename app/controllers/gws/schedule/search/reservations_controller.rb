@@ -22,6 +22,7 @@ class Gws::Schedule::Search::ReservationsController < ApplicationController
 
   def set_plan
     item_params = params[:item].to_unsafe_h
+    item_params.delete(:facility_column_values)
     item_id = item_params[:id]
 
     if item_id.present?
