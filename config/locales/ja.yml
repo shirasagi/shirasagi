@@ -124,6 +124,7 @@ ja:
       invalid_csv: CSV形式のファイルを選択してください。
       malformed_csv: CSVの形式が正しくありません。正しい形式のCSVファイルを選択してください。
       invalid_email_included: に不正なメールアドレスが含まれています。
+      smtp_delivery_error: "メールを送信できませんでした。STMPエラーメッセージ： %{message}"
       duplicate: の重複が存在します。
       less_than: は%{count}より小さい値にしてください。
       less_than_or_equal_to: は%{count}以下の値にしてください。

@@ -123,7 +123,13 @@ class Webmail::Mail
     msg = Webmail::Mailer.new_message(self)
     return false unless validate_message(msg)
 
-    msg = msg.deliver_now.to_s
+    begin
+      msg = msg.deliver_now.to_s
+    rescue Net::SMTPError => e
+      errors.add :base, I18n.t("errors.messages.smtp_delivery_error", message: e.message)
+      return false
+    end
+
     replied_mail.set_answered if replied_mail
 
     imap.select('INBOX')
