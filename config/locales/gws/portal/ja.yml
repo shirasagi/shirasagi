@@ -21,6 +21,7 @@ ja:
       gws/portal/portlet/presence: 在席管理設定
       gws/portal/portlet/survey: アンケート
       gws/portal/portlet/ad: 広告
+      gws/portal/portlet/link_file: ファイル
 
   gws/portal:
     self_portal: 個人

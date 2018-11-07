@@ -1,7 +1,9 @@
-module Gws::Addon
+module Gws::Addon::Portal::Portlet
   module LinkFile
     extend ActiveSupport::Concern
     extend SS::Addon
+
+    set_addon_type :gws_portlet
 
     included do
       attr_accessor :in_clone_file, :ref_file_ids, :link_urls
