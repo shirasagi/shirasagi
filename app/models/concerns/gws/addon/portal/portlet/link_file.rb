@@ -31,15 +31,15 @@ module Gws::Addon::Portal::Portlet
 
         ids = []
         files.each do |file|
-          file.update_attributes(link_url: link_urls[file.id.to_s])
+          file.update(link_url: link_urls[file.id.to_s])
           if !add_ids.include?(file.id)
-            file.update_attributes(state: state) if state_changed?
+            file.update(state: state) if state_changed?
           elsif !allowed_other_user_files? && @cur_user && @cur_user.id != file.user_id
             next
           elsif file.model == "share/file"
-            file.update_attributes(site_id: site_id, state: state)
+            file.update(site_id: site_id, state: state)
           else
-            file.update_attributes(site_id: site_id, model: model_name.i18n_key, state: state)
+            file.update(site_id: site_id, model: model_name.i18n_key, state: state)
           end
           ids << file.id
         end
