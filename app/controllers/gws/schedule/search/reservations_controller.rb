@@ -33,13 +33,17 @@ class Gws::Schedule::Search::ReservationsController < ApplicationController
     end
     @plan.cur_user = @cur_user
     @plan.cur_site = @cur_site
+
+    @plan.user_id = @cur_user.id
+    @plan.site_id = @cur_site.id
   end
 
   public
 
   def index
     set_plan
-    @reservation_valid = @plan.valid?
+    @plan.send(:validate_facility_double_booking)
+    @reservation_valid = @plan.errors.empty?
 
     @submit = params[:submit].present?
 
