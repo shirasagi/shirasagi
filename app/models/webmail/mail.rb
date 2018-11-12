@@ -11,6 +11,7 @@ class Webmail::Mail
   include Webmail::Mail::Message
   include Webmail::Addon::MailBody
   include Webmail::Addon::MailFile
+  include ActiveSupport::NumberHelper
 
   #index({ host: 1, account: 1, mailbox: 1, uid: 1 }, { unique: true })
 
@@ -91,6 +92,7 @@ class Webmail::Mail
     validate_email_address(msg, :to)
     validate_email_address(msg, :cc)
     validate_email_address(msg, :bcc)
+    validate_email_size
     errors.blank?
   end
 
@@ -105,6 +107,21 @@ class Webmail::Mail
       errors.add field, :invalid_email_included
     end
     errors.blank?
+  end
+
+  def validate_email_size
+    limit = SS.config.webmail.send_mail_size_limit
+
+    return if size.to_i <= 0
+    return if limit.to_i <= 0
+
+    if limit.to_i < size.to_i
+      errors.add :base,
+        I18n.t("errors.messages.too_large_mail_size",
+          size: number_to_human_size(size),
+          limit: number_to_human_size(limit)
+        )
+    end
   end
 
   def save_draft

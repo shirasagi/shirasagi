@@ -26,7 +26,8 @@ module Webmail::Addon
         part = imap.mails.find_part ref_file_uid, section
         OpenStruct.new(
           name: part.filename,
-          read: part.decoded
+          read: part.decoded,
+          size: part.part.size
         )
       end
     end
