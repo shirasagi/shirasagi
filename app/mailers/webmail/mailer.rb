@@ -37,10 +37,6 @@ class Webmail::Mailer < ActionMailer::Base
     mail
   end
 
-  def attachments_size
-    @attachments_size.to_i
-  end
-
   def mdn_message(item)
     require "nkf"
     @item = item
