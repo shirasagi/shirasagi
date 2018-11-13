@@ -52,10 +52,6 @@ module SS::Model::User
     # 利用停止
     field :lock_state, type: String
 
-    # ワンタイムトークン
-    field :access_token, type: String
-    field :access_token_expiration_date, type: DateTime
-
     belongs_to :organization, class_name: "SS::Group"
     belongs_to :switch_user, class_name: "SS::User"
 
@@ -232,12 +228,6 @@ module SS::Model::User
 
   def unlock
     update_attributes(lock_state: 'unlocked')
-  end
-
-  def valid_access_token?
-    return false if access_token_expiration_date.blank?
-    return false if access_token_expiration_date < Time.zone.now
-    true
   end
 
   def root_groups

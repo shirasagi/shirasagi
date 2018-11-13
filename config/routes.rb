@@ -53,6 +53,7 @@ SS::Application.routes.draw do
     get   "status" => "login#status", as: :login_status
     get   "auth_token" => "auth_token#index", as: :auth_token
     post  "access_token" => "access_token#create", as: :access_token
+    get  "access_token" => "access_token#create", as: :access_token_2
     get   "cms" => "mypage#cms"
     get   "gws" => "mypage#gws"
 
