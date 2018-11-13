@@ -11,7 +11,6 @@ class Webmail::Mail
   include Webmail::Mail::Message
   include Webmail::Addon::MailBody
   include Webmail::Addon::MailFile
-  include ActiveSupport::NumberHelper
 
   #index({ host: 1, account: 1, mailbox: 1, uid: 1 }, { unique: true })
 
@@ -117,10 +116,7 @@ class Webmail::Mail
 
     if limit.to_i < size.to_i
       errors.add :base,
-        I18n.t("errors.messages.too_large_mail_size",
-          size: number_to_human_size(size),
-          limit: number_to_human_size(limit)
-        )
+        I18n.t("errors.messages.too_large_mail_size", size: size.to_s(:human_size), limit: limit.to_s(:human_size))
     end
   end
 
