@@ -39,7 +39,7 @@ production: &production
   imap_account_limit: 5
 
   # Upper limit of mail's attachments file size(byte). 0 is unlimited
-  send_mail_size_limit: 1024
+  send_mail_size_limit: 0
 
   history:
     save_days: 90
