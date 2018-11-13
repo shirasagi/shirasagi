@@ -16,8 +16,8 @@ class Gws::Presence::UsersController < ApplicationController
   end
 
   def items
-    @items = @model.active.in(group_ids: @groups.pluck(:id)).
-      search(params[:s]).page(params[:page]).per(25)
+    @items = @model.active.in(group_ids: @groups.pluck(:id)).search(params[:s]).order_by_title(@cur_site).
+      page(params[:page]).per(25)
   end
 
   public
