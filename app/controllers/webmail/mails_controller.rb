@@ -116,7 +116,12 @@ class Webmail::MailsController < ApplicationController
       resp = @item.send_mail
     end
 
-    @item.destroy_files
+    if resp
+      @item.destroy_files
+    else
+      @item.set_ref_files(@item.attachments)
+    end
+
     render_create resp, notice: notice
   end
 
@@ -244,7 +249,7 @@ class Webmail::MailsController < ApplicationController
       resp = @item.send_mail
     end
 
-    @item.destroy_files
+    @item.destroy_files if resp
     render_create resp, notice: notice
   end
 

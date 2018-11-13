@@ -91,6 +91,7 @@ class Webmail::Mail
     validate_email_address(msg, :to)
     validate_email_address(msg, :cc)
     validate_email_address(msg, :bcc)
+    validate_email_size
     errors.blank?
   end
 
@@ -105,6 +106,18 @@ class Webmail::Mail
       errors.add field, :invalid_email_included
     end
     errors.blank?
+  end
+
+  def validate_email_size
+    limit = SS.config.webmail.send_mail_size_limit
+
+    return if size.to_i <= 0
+    return if limit.to_i <= 0
+
+    if limit.to_i < size.to_i
+      errors.add :base,
+        I18n.t("errors.messages.too_large_mail_size", size: size.to_s(:human_size), limit: limit.to_s(:human_size))
+    end
   end
 
   def save_draft
@@ -123,7 +136,13 @@ class Webmail::Mail
     msg = Webmail::Mailer.new_message(self)
     return false unless validate_message(msg)
 
-    msg = msg.deliver_now.to_s
+    begin
+      msg = msg.deliver_now.to_s
+    rescue Net::SMTPError => e
+      errors.add :base, I18n.t("errors.messages.smtp_delivery_error", message: e.message)
+      return false
+    end
+
     replied_mail.set_answered if replied_mail
 
     imap.select('INBOX')
