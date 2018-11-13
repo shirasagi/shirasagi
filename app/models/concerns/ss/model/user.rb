@@ -22,9 +22,9 @@ module SS::Model::User
     index({ organization_uid: 1, organization_id: 1 }, { unique: true, sparse: true })
 
     # Create indexes each site_ids.
-    # > db.ss_users.ensureIndex({ organization_uid: 1, "title_orders.1": -1, uid: 1 });
+    # > db.ss_users.ensureIndex({ "title_orders.1": -1, organization_uid: 1, uid: 1 });
     #
-    # index({ organization_uid: 1, "title_orders.#{site_id}" => -1, uid: 1  })
+    # index({ "title_orders.#{site_id}" => -1, organization_uid: 1, uid: 1  })
 
     cattr_reader(:group_class) { SS::Group }
 
