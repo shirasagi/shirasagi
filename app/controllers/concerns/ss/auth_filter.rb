@@ -37,6 +37,8 @@ module SS::AuthFilter
     return nil unless token
     return nil unless token.enabled?
 
+    @login_path = token.login_path
+    @logout_path = token.logout_path
     user = token.user
     token.destroy
     return nil if user.blank?

@@ -46,4 +46,16 @@ class Gws::LoginController < ApplicationController
 
     render_login @item, email_or_uid, session: true, password: password, logout_path: gws_logout_path(site: @cur_site)
   end
+
+  def access_token
+    token = SS::AccessToken.new(
+      login_path: gws_login_path(site: @cur_site),
+      logout_path: gws_logout_path(site: @cur_site),
+      cur_user: @cur_user
+    )
+    token.create_token
+    raise '403' unless token.save
+
+    render plain: token.token
+  end
 end

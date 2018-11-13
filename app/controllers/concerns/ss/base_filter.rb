@@ -63,7 +63,7 @@ module SS::BaseFilter
   end
 
   def login_path_by_cookie
-    cookies[:login_path] || sns_login_path
+    cookies[:login_path].presence || sns_login_path
   end
 
   def logged_in?
@@ -75,7 +75,7 @@ module SS::BaseFilter
     @cur_user = get_user_by_access_token
     if @cur_user
       redirct = request.fullpath.sub(/(\?|&)access_token=.*/, '')
-      set_user(@cur_user, session: true, login_path: false, logout_path: nil)
+      set_user(@cur_user, session: true, login_path: @login_path, logout_path: @logout_path)
       return redirect_to(redirct)
     end
 
@@ -116,8 +116,9 @@ module SS::BaseFilter
       }
       session[:user]["password"] = SS::Crypt.encrypt(opts[:password]) if opts[:password].present?
     end
-    if request.get? && opts[:login_path] != false
-      cookies[:login_path] = { :value => request_path, :expires => 7.days.from_now }
+    if request.get?
+      login_path = opts[:login_path] || request_path
+      cookies[:login_path] = { :value => login_path, :expires => 7.days.from_now }
     else
       cookies.delete(:login_path)
     end

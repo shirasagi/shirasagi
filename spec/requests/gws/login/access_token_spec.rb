@@ -1,11 +1,11 @@
 require 'spec_helper'
 require "csv"
 
-describe "Sns::AccessTokenController", type: :request, dbscope: :example do
-  let!(:site) { ss_site }
-  let!(:user) { ss_user }
+describe "Gws::LoginController#access_token", type: :request, dbscope: :example do
+  let!(:site) { gws_site }
+  let!(:user) { gws_user }
   let(:auth_token_path) { sns_auth_token_path(format: :json) }
-  let(:access_token_path) { sns_access_token_path }
+  let(:access_token_path) { gws_access_token_path(site: site) }
   let(:test_path) { sns_connection_path }
 
   context "user" do
@@ -18,7 +18,7 @@ describe "Sns::AccessTokenController", type: :request, dbscope: :example do
       params = {
         'authenticity_token' => @auth_token,
         'item[email]' => user.email,
-        'item[password]' => user.in_password
+        'item[password]' => "pass"
       }
       post sns_login_path(format: :json), params: params
     end
@@ -30,9 +30,6 @@ describe "Sns::AccessTokenController", type: :request, dbscope: :example do
 
         expect(response.status).to eq 200
         expect(response.body.size).to be_between(10, 20)
-
-        user.reload
-        expect(token).to eq user.access_token
 
         get "#{test_path}?access_token=#{token}"
         expect(response.status).to eq 302
