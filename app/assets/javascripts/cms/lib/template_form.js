@@ -188,6 +188,231 @@ Cms_TemplateForm.prototype.bindOne = function(el, options) {
       }
     });
   }
+  moveToIndex = parseInt(moveToIndex);
+
+  var $source = $evSource.closest(".column-value");
+  var source = $source[0];
+
+  var $columnValues = this.$el.find(".column-value");
+  var sourceIndex = -1;
+  $columnValues.each(function(index) {
+    if (this === source) {
+      sourceIndex = index;
+      return false;
+    }
+  });
+  if (sourceIndex < 0) {
+    return;
+  }
+
+  if (moveToIndex === sourceIndex || moveToIndex >= $columnValues.length || moveToIndex < 0) {
+    // are set some alert animations needed?
+    return;
+  }
+
+  var $moveTo;
+  var moveToMethod;
+  if (moveToIndex < sourceIndex) {
+    // move up
+    $moveTo = $($columnValues[moveToIndex]);
+    moveToMethod = $moveTo.before.bind($moveTo);
+  } else {
+    // move down
+    $moveTo = $($columnValues[moveToIndex]);
+    moveToMethod = $moveTo.after.bind($moveTo);
+  }
+
+  var moveTo = $moveTo[0];
+
+  if (moveToIndex < sourceIndex) {
+    // moveUp
+    source.style.transitionDuration = Cms_TemplateForm.duration + "ms";
+    source.style.transform = "translateY(" + (moveTo.offsetTop - source.offsetTop) + "px)";
+
+    var sourceBottom = source.offsetTop + source.offsetHeight;
+    var prev = $columnValues[sourceIndex - 1];
+    var prevBottom = prev.offsetTop + prev.offsetHeight;
+    var diff = sourceBottom - prevBottom;
+
+    for (var i = moveToIndex; i < sourceIndex; i++) {
+      var el = $columnValues[i];
+      el.style.transitionDuration = Cms_TemplateForm.duration + "ms";
+      el.style.transform = "translateY(" + diff + "px)";
+    }
+
+    setTimeout(function() {
+      $columnValues.each(function() {
+        if (this.style.transitionDuration) {
+          this.style.transitionDuration = "";
+          this.style.transform = "";
+        }
+      });
+      moveToMethod($source);
+      self.resetOrder();
+    }, Cms_TemplateForm.duration);
+  } else if (moveToIndex > sourceIndex) {
+    // moveDown
+    var moveToBottom = moveTo.offsetTop + moveTo.offsetHeight;
+    var sourceBottom = source.offsetTop + source.offsetHeight;
+    source.style.transitionDuration = Cms_TemplateForm.duration + "ms";
+    source.style.transform = "translateY(" + (moveToBottom - sourceBottom) + "px)";
+
+    var next = $columnValues[sourceIndex + 1];
+    var diff = source.offsetTop - next.offsetTop;
+
+    for (var i = sourceIndex + 1; i <= moveToIndex; i++) {
+      var el = $columnValues[i];
+      el.style.transitionDuration = Cms_TemplateForm.duration + "ms";
+      el.style.transform = "translateY(" + diff + "px)";
+    }
+
+    setTimeout(function() {
+      $columnValues.each(function() {
+        if (this.style.transitionDuration) {
+          this.style.transitionDuration = "";
+          this.style.transform = "";
+        }
+      });
+      moveToMethod($source);
+      self.resetOrder();
+    }, Cms_TemplateForm.duration);
+  }
+};
+
+Cms_TemplateForm.prototype.moveUp = function($evTarget) {
+  var $columnValue = $evTarget.closest(".column-value");
+  if (! $columnValue[0]) {
+    return;
+  }
+
+  var $prev = $columnValue.prev(".column-value");
+  if (! $prev[0]) {
+    return;
+  }
+
+  var self = this;
+  this.swapElement($prev, $columnValue, function() {
+    $prev.before($columnValue);
+    self.resetOrder();
+  });
+};
+
+Cms_TemplateForm.prototype.moveDown = function($evTarget) {
+  var $columnValue = $evTarget.closest(".column-value");
+  if (! $columnValue[0]) {
+    return;
+  }
+
+  var $next = $columnValue.next(".column-value");
+  if (! $next[0]) {
+    return;
+  }
+
+  var self = this;
+  this.swapElement($columnValue, $next, function() {
+    $next.after($columnValue);
+    self.resetOrder();
+  });
+};
+
+Cms_TemplateForm.prototype.swapElement = function($upper, $lower, completion) {
+  var upper = $upper[0];
+  var lower = $lower[0];
+
+  var diff = lower.offsetTop - upper.offsetTop;
+  var spacing = lower.offsetTop - (upper.offsetTop + upper.offsetHeight);
+
+  var saveUpperTransitionDuration = upper.style.transitionDuration;
+  var saveLowerTransitionDuration = lower.style.transitionDuration;
+
+  upper.style.transitionDuration = Cms_TemplateForm.duration + 'ms';
+  lower.style.transitionDuration = Cms_TemplateForm.duration + 'ms';
+  upper.style.transform = "translateY(" + (lower.offsetHeight + spacing) + "px)";
+  lower.style.transform = "translateY(" + (-diff) + "px)";
+
+  setTimeout(function() {
+    upper.style.transitionDuration = saveUpperTransitionDuration;
+    lower.style.transitionDuration = saveLowerTransitionDuration;
+    upper.style.transform = "translateY(0)";
+    lower.style.transform = "translateY(0)";
+
+    completion();
+  }, Cms_TemplateForm.duration);
+};
+
+Cms_TemplateForm.prototype.remove = function($evTarget) {
+  var $columnValue = $evTarget.closest(".column-value");
+  if (! $columnValue[0]) {
+    return;
+  }
+
+  if (! confirm(Cms_TemplateForm.confirms.delete)) {
+    return;
+  }
+
+  var self = this;
+  $columnValue.addClass("column-value-deleting").fadeOut(Cms_TemplateForm.duration).queue(function() {
+    $columnValue.remove();
+    self.resetOrder();
+  });
+};
+
+Cms_TemplateForm.prototype.selectFile = function($columnValue, $item) {
+  var $fileView = $columnValue.find(".column-value-files");
+  $fileView.addClass("hide");
+
+  $.colorbox.close();
+
+  var fileId = $item.data('id');
+  // var humanizedName = $item.data('humanized-name');
+  // if (! fileId || ! humanizedName) {
+  //   return;
+  // }
+  //
+  // var $element = $.colorbox.element();
+  // $element.siblings('input.file-id').val(fileId);
+  // $element.siblings('span.humanized-name').text(humanizedName);
+  // $element.siblings('.btn-file-delete').show();
+
+  if (! fileId) {
+    return;
+  }
+
+  $.ajax({
+    url: Cms_TemplateForm.paths.formTempFileSelect.replace(":fileId", fileId),
+    type: 'GET',
+    success: function(html) {
+      $fileView.html(html);
+    },
+    error: function(xhr, status, error) {
+      $fileView.html(error);
+    },
+    complete: function() {
+      $fileView.removeClass("hide");
+    }
+  });
+};
+
+Cms_TemplateForm.prototype.addList = function($target) {
+  var $columnValue = $target.closest(".column-value");
+  var template = $columnValue.find(".template").html();
+
+  var list = $columnValue.find(".list");
+  list.append(template);
+  this.resetListOrder($columnValue);
+};
+
+Cms_TemplateForm.prototype.removeList = function($target) {
+  var $columnValue = $target.closest(".column-value");
+  var $li = $target.closest("li");
+  $li.remove();
+  this.resetListOrder($columnValue);
+};
+
+Cms_TemplateForm.prototype.resetListOrder = function($columnValue) {
+  $columnValue.find('.list li').each(function(index, element) {
+    $(element).find('input[name="item[column_values][][in_wrap][lists][][order]"]').val(index + 1);
+  });
 };
 
 Cms_TemplateForm.prototype.resetOrder = function() {
