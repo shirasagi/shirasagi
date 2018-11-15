@@ -1,0 +1,87 @@
+<% show ||= false %>
+<% controller ||= false %>
+<% id = value.try(:id) || BSON::ObjectId.new %>
+<% id = "column-value-#{id}" %>
+<%
+  @buttons = []
+  @buttons << :syntax_check if @inplace_syntax_check
+  @buttons << :link_check if @inplace_link_check
+  @buttons << :form_check if @inplace_form_check
+%>
+<div id="<%= id %>" class="column-value column-value-<%= column._type.parameterize %>">
+  <div class="column-value-header">
+    <div class="column-value-header-group">
+      <label <% if controller %>class="sortable-handle"<% end %>>
+        <% if controller %>
+          <i class="material-icons">swap_vert</i>
+        <% end %>
+        <%= column.name %>
+      </label>
+      <% if !show && column.tooltips.present? %>
+        <div class="tooltip">?
+          <ul>
+            <% column.tooltips.each do |tooltip| %>
+              <li><%= tooltip %><br></li>
+            <% end %>
+          </ul>
+        </div>
+      <% end %>
+    </div>
+
+    <% if controller %>
+      <% alignment_options = %w(flow left center right).map { |v| [ I18n.t("cms.options.alignment.#{v}"), v ] } %>
+      <% if show %>
+        <div class="column-value-header-group">
+          <label>
+            <%= t("mongoid.attributes.cms/column/value/base.alignment") %>
+            <%= select_tag("alignment", options_for_select(alignment_options, value.alignment), id: nil, disabled: true) %>
+          </label>
+        </div>
+      <% else %>
+        <div class="column-value-header-group">
+          <label>
+            <%= t("mongoid.attributes.cms/column/value/base.alignment") %>
+            <%= select_tag("#{f.object_name}[][alignment]", options_for_select(alignment_options, value.try(:alignment)), id: nil) %>
+          </label>
+        </div>
+      <% end %>
+
+      <div class="column-value-header-group">
+        <button type="button" class="column-value-controller-move-up"><i class="material-icons md-14">keyboard_arrow_up</i></button>
+        <%= select_tag("#{f.object_name}[][order]", [], class: "column-value-controller-move-position no-form-control") %>
+        <button type="button" class="column-value-controller-move-down"><i class="material-icons md-14">keyboard_arrow_down</i></button>
+      </div>
+      <div class="column-value-header-group">
+        <button type="button" class="column-value-controller-delete">
+          <i class="material-icons md-14">delete</i> <%= t("ss.links.delete") %>
+        </button>
+      </div>
+    <% end %>
+  </div>
+  <div class="column-value-body">
+    <% if !show %>
+      <%= hidden_field_tag "#{f.object_name}[][column_id]", column.id, id: nil %>
+      <%= hidden_field_tag "#{f.object_name}[][_type]", column.value_type, id: nil %>
+    <% end %>
+    <%= yield(id) %>
+
+    <% if @buttons.present? %>
+    <div class="inplace-checkers">
+      <% @buttons.each do |button| %>
+        <% case button %>
+        <% when :syntax_check %>
+          <%= button_tag t("cms.syntax_check"), { type: :button, class: "btn syntax-check" } %>
+        <% when :link_check %>
+          <%= button_tag t("cms.link_check"), { type: :button, class: "btn link-check" } %>
+        <% when :form_check %>
+          <%= button_tag t("cms.form_check"), { type: :button, class: "btn form-check" } %>
+        <% when :source_cleaner %>
+          <%= button_tag t("cms.source_cleaner"), { type: :button, class: "btn", id: "#{id}-source-cleaner" } %>
+        <% when String %>
+          <%= button %>
+        <% end %>
+      <% end %>
+    </div>
+    <% end %>
+  </div>
+</div>

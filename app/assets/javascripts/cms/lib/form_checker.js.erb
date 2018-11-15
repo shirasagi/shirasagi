@@ -1,0 +1,135 @@
+this.Form_Checker = (function () {
+  function ResultBox(form) {
+    this.$el = null;
+    this.$elBody = null;
+    this.form = form;
+  }
+
+  ResultBox.prototype.init = function() {
+    if (this.$el) {
+      return this;
+    }
+
+    var $div = $("#errorFormChecker");
+    if ($div[0]) {
+      this.$el = $div;
+      this.$elBody = $div.find(".errorExplanationBody");
+
+      return this.moveLast();
+    }
+
+    $div = $("<div/>", { id: 'errorFormChecker', class: 'errorExplanation' });
+    $div.append("<h2>" + Form_Checker.message.header + "</h2>");
+
+    var $body = $("<div/>", { class: 'errorExplanationBody' });
+    $div.append($body);
+
+    this.$el = $div;
+    this.$elBody = $body;
+
+    return this.moveLast();
+  };
+
+  ResultBox.prototype.moveLast = function() {
+    $(this.form.addonSelector).append(this.$el);
+    return this;
+  };
+
+  ResultBox.prototype.showMessage = function(message) {
+    this.init();
+    this.$elBody.html(message);
+    this.moveLast();
+
+    return this;
+  };
+
+  ResultBox.prototype.showChecking = function() {
+    return this.showMessage(SS.loading);
+  };
+
+  ResultBox.prototype.showResult = function (errors) {
+    if (!errors || errors.length == 0) {
+      this.$elBody.html("");
+      this.$elBody.append("<p>" + Form_Checker.message.noErrors + "</p>");
+      return;
+    }
+
+     var $ul = $("<ul/>");
+     $.each(errors, function() {
+       $ul.append('<li>' + this + '</li>');
+     });
+
+    this.$elBody.html("");
+    this.$elBody.append("<p>" + Form_Checker.message["body"] + "</p>");
+    this.$elBody.append($ul);
+
+    return this.moveLast();
+  };
+
+  function Form_Checker(el, form) {
+    this.$el = $(el);
+    this.form = form;
+    this.resultBox = new ResultBox(form);
+  }
+
+  Form_Checker.message = {
+    header: "<%= I18n.t('cms.form_check') %>",
+    body: "<%= I18n.t('errors.template.body') %>",
+    noErrors: "<%= I18n.t('errors.template.no_errors') %>",
+    formCheckerError: "<%= I18n.t('errors.messages.form_check_failed_to_connect') %>"
+  };
+
+  Form_Checker.render = function (form) {
+    form = form || Cms_Form;
+    var instance = new Form_Checker(document, form);
+    instance.render();
+    return instance;
+  }
+
+  Form_Checker.prototype.render = function () {
+    var self = this;
+
+    this.$el.on("click", "button.form-check", function () {
+      var button = this;
+      button.disabled = true;
+
+      var complete = function() {
+        button.disabled = false;
+      }
+
+      self.asyncCheck().done(complete).fail(complete);
+    });
+  }
+
+  Form_Checker.prototype.asyncCheck = function () {
+    var defer = $.Deferred();
+
+    this.resultBox.showChecking();
+
+    var formData = this.form.getFormData($("#" + Form_Preview.form_id));
+    var self = this;
+
+    $.ajax({
+      type: "POST",
+      url: this.form.form_check_path,
+      data: formData,
+      processData: false,
+      contentType: false,
+      cache: false,
+      success: function (data) {
+        self.resultBox.showResult(data);
+        defer.resolve({ status: (data && data.length > 0) ? "error" : "ok" });
+      },
+      error: function (xhr, status, error) {
+        var msg = Form_Checker.message.formCheckerError + ": " + form.form_check_path;
+        Form_Checker.resultBox.showMessage("<p>" + msg + "</p>");
+        defer.reject(xhr, status, error);
+      }
+    });
+
+    return defer.promise();
+  }
+
+  return Form_Checker;
+
+})();

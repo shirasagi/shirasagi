@@ -159,4 +159,44 @@ module ApplicationHelper
       end
     end
   end
+
+  def content_tag_if(name, content_or_options_with_block = nil, options = nil, escape = true, &block)
+    # content_tag(*args, &block)
+    if block_given?
+      options = content_or_options_with_block if content_or_options_with_block.is_a?(Hash)
+    end
+
+    if_condition = options ? options.delete(:if) : nil
+    if if_condition.respond_to?(:call)
+      if_condition = if_condition.call
+    end
+
+    if if_condition
+      return content_tag(name, content_or_options_with_block, options, escape, &block)
+    end
+
+    if block_given?
+      return yield
+    end
+
+    content_or_options_with_block
+  end
+
+  # factory method for Liquid::Template
+  def parse_liquid(source, options = {})
+    template = Liquid::Template.parse(source, options)
+    template.assigns["parts"] = SS::LiquidPartDrop.get(@cur_site)
+
+    template.registers[:preview] = @preview
+    template.registers[:mobile] = controller.filters.include?(:mobile)
+    template.registers[:cur_site] = @cur_site
+    template.registers[:cur_path] = @cur_path
+    template.registers[:cur_main_path] = @cur_main_path
+    template.registers[:cur_part] = @cur_part if @cur_part
+    template.registers[:cur_node] = @cur_node if @cur_node
+    template.registers[:cur_page] = @cur_page if @cur_page
+    template.registers[:cur_date] = @cur_date if @cur_date
+
+    template
+  end
 end

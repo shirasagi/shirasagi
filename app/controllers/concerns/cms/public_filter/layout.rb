@@ -18,6 +18,17 @@ module Cms::PublicFilter::Layout
     end
   end
 
+  def filter_include?(key)
+    filters.any? { |f| f == key || f.is_a?(Hash) && f.key?(key) }
+  end
+
+  def filter_options(key)
+    found = filters.find { |f| f == key || f.is_a?(Hash) && f.key?(key) }
+    return if found.nil?
+    return found[key] if found.is_a?(Hash)
+    true
+  end
+
   def find_part(path)
     part = Cms::Part.site(@cur_site).filename(path).first
     return unless part
@@ -43,9 +54,9 @@ module Cms::PublicFilter::Layout
     body.gsub!('#{part_name}', ERB::Util.html_escape(part.name))
 
     if body =~ /\#\{part_parent[^}]*?_name\}/
-      part_parent = part.parent ? part.parent : part
+      part_parent = part.parent || part
       body.gsub!('#{part_parent_name}', ERB::Util.html_escape(part_parent.name))
-      part_parent = part_parent.parent ? part_parent.parent : part_parent
+      part_parent = part_parent.parent || part_parent
       body.gsub!('#{part_parent.parent_name}', ERB::Util.html_escape(part_parent.name))
     end
 
@@ -92,7 +103,20 @@ module Cms::PublicFilter::Layout
     end
 
     html = render_template_variables(html)
-    html.sub!(/(\{\{ yield \}\}|<\/ yield \/>)/) { response.body }
+    html.sub!(/(\{\{ yield \}\}|<\/ yield \/>)/) do
+      body = []
+      if @preview && !html.include?("ss-preview-content-begin")
+        body << "<div id=\"ss-preview-content-begin\" class=\"ss-preview-hide\"></div>"
+      end
+
+      body << response.body
+
+      if @preview && !html.include?("ss-preview-content-begin")
+        body << "<div id=\"ss-preview-content-end\" class=\"ss-preview-hide\"></div>"
+      end
+
+      body.join
+    end
 
     html = html.sub(/<title>(.*?)<\/title>(\r|\n)*/) do
       @window_name = ::Regexp.last_match(1)
@@ -100,6 +124,16 @@ module Cms::PublicFilter::Layout
     end
 
     html = html.sub(/<meta[^>]*charset=[^>]*>/) { '' }
+
+    previewable = @preview && @cur_layout.allowed?(:read, @cur_user, site: @cur_site)
+    if previewable
+      layout_info = {
+        id: @cur_layout.id, name: @cur_layout.name, filename: @cur_layout.filename,
+        path: cms_layout_path(site: @cur_site, id: @cur_layout)
+      }
+      data_attrs = layout_info.map { |k, v| "data-layout-#{k}=\"#{CGI.escapeHTML(v.to_s)}\"" }
+      html = html.sub(/<body/, %(<body #{data_attrs.join(" ")}"))
+    end
 
     html
   end
@@ -167,25 +201,29 @@ module Cms::PublicFilter::Layout
   end
 
   def render_layout_part(part)
-    classes = ['preview-part', "preview-part-#{part.id}", 'preview-hide'].join(' ')
+    previewable = @preview && part.allowed?(:read, @cur_user, site: @cur_site, node: @cur_node)
     html = []
-    if @preview && Cms::Part.allowed?(:read, @cur_user, site: @cur_site, node: @cur_node)
+    if previewable
       if part.parent
         part_path = node_part_path(site: @cur_site, cid: part.parent.id, id: part.id)
       else
         part_path = cms_part_path(site: @cur_site, id: part.id)
       end
-      html << "<a class='#{classes}' target='_blank' href='#{part_path}'>"
-      html << part.name
-      html << '</a>'
+
+      part_info = {
+        id: part.id, name: part.name, filename: part.filename,
+        path: part_path
+      }
+      data_attrs = part_info.map { |k, v| "data-part-#{k}=\"#{CGI.escapeHTML(v.to_s)}\"" }
+      html << "<div class=\"ss-preview-part\" #{data_attrs.join(" ")}>"
     end
     if part.ajax_view == "enabled" && !filters.include?(:mobile) && !@preview
       html << part.ajax_html
     else
       html << render_part(part.becomes_with_route)
     end
-    if @preview && Cms::Part.allowed?(:read, @cur_user, site: @cur_site, node: @cur_node)
-      html << "<span class='preview-part-#{part.id}'></span>"
+    if previewable
+      html << "</div>"
     end
     html.join
   end

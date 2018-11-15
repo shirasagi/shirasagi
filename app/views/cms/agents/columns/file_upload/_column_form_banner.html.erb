@@ -1,0 +1,2 @@
+<%= text_field_tag("#{f.object_name}[][in_wrap][banner_text]", value.try(:banner_text), column.form_options(:banner_text).merge(id: nil)) %>
+<%= text_field_tag("#{f.object_name}[][in_wrap][banner_link]", value.try(:banner_link), column.form_options(:banner_link).merge(id: nil)) %>

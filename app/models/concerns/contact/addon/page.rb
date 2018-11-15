@@ -15,6 +15,21 @@ module Contact::Addon
       permit_params :contact_state, :contact_group_id, :contact_charge
       permit_params :contact_tel, :contact_fax, :contact_email
       permit_params :contact_link_url, :contact_link_name
+
+      if respond_to? :liquidize
+        liquidize do
+          export :contact_state
+          export :contact_charge
+          export :contact_tel
+          export :contact_fax
+          export :contact_email
+          export :contact_link_url
+          export :contact_link_name
+          export as: :contact_group do
+            contact_group.present? && contact_group.active? ? contact_group : nil
+          end
+        end
+      end
     end
 
     def contact_state_options

@@ -16,12 +16,17 @@ module Cms
     Cms::Part.plugin "cms/monthly_nav"
     Cms::Column.plugin 'cms/text_field'
     Cms::Column.plugin 'cms/date_field'
-    Cms::Column.plugin 'cms/url_field'
+    Cms::Column.plugin 'cms/url_field2'
     Cms::Column.plugin 'cms/text_area'
     Cms::Column.plugin 'cms/select'
     Cms::Column.plugin 'cms/radio_button'
     Cms::Column.plugin 'cms/check_box'
     Cms::Column.plugin 'cms/file_upload'
+    Cms::Column.plugin 'cms/headline'
+    Cms::Column.plugin 'cms/list'
+    Cms::Column.plugin 'cms/youtube'
+    Cms::Column.plugin 'cms/free'
+    Cms::Column.plugin 'cms/table'
 
     Cms::Role.permission :edit_cms_sites
     Cms::Role.permission :edit_cms_groups

@@ -25,12 +25,18 @@ this.Cms_Source_Cleaner = (function (superClass) {
 
   Cms_Source_Cleaner.config = {};
 
-  Cms_Source_Cleaner.render = function () {
-    return $(".source-cleaner").on("click", function () {
-      var html;
-      html = Cms_Source_Cleaner.getEditorHtml();
+  Cms_Source_Cleaner.render = function (el, options) {
+    if (!el) {
+      el = ".source-cleaner";
+    }
+    if (!options) {
+      options = {};
+    }
+
+    $(el).on("click", function () {
+      var html = Cms_Source_Cleaner.getEditorHtml(options.editor);
       html = Cms_Source_Cleaner.cleanUp(html);
-      return Cms_Source_Cleaner.setEditorHtml(html);
+      return Cms_Source_Cleaner.setEditorHtml(html, { id: options.editor });
     });
   };
 

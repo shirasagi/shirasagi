@@ -1,0 +1,136 @@
+/**
+ *= require mdi/material-icons
+ */
+
+@import "compass-mixins/lib/compass";
+@import "ss/init";
+
+// -------------------------------------------------------------------------------------------------
+// preview
+
+#ss-preview {
+  background-color: #323232;
+  color: white;
+  font-size: 0.8rem;
+  @include box-shadow(0px 1px 5px #666);
+  padding: 10px 0;
+  width: 100%;
+
+  .ss-preview-wrap {
+    @include display-flex;
+  }
+
+  .ss-preview-wrap-column {
+    padding: 0 10px;
+    &:first-child {
+      margin-right: auto;
+    }
+  }
+
+  .ss-preview-wrap-column ~ .ss-preview-wrap-column {
+    border-left: 1px solid $gray2;
+  }
+
+  .ss-preview-btn-group {
+    display: inline-block;
+  }
+
+  .ss-preview-btn-group ~ .ss-preview-btn-group {
+    margin-left: 8px;
+  }
+
+  .ss-preview-active {
+    border: 1px solid green;
+  }
+
+  .ss-preview-btn-toggle-inplace {
+    &:after {
+      content: " off";
+    }
+    &.ss-preview-active:after {
+      content: " on";
+    }
+  }
+
+  .ss-preview-notice {
+    color: #f6fa86;
+    a {
+      color: white;
+    }
+
+    &.ss-preview-workflow-notice {
+      display: inline-block;
+    }
+  }
+}
+.ss-preview-hide {
+  display: none !important;
+}
+
+#ss-preview-overlay {
+  position: absolute;
+  border: 3px solid $gray5;
+  @include border-radius(2px);
+
+  .ss-preview-overlay-tool {
+    position: absolute;
+    margin: 0;
+    padding: 0;
+    top: 0;
+    right: 0;
+    background-color: rgb(242, 242, 242);
+  }
+  * {
+    display: inline-block;
+  }
+  .ss-preview-overlay-name {
+    font-size: 0.8em;
+  }
+}
+
+#ss-preview-content-begin {
+  display: block;
+  margin: 0;
+  padding: 8px;
+  background-color: rgb(242, 242, 242);
+  @include box-shadow(0px 1px 5px #666);
+}
+
+#ss-preview-inplace-item-form {
+  margin-top: 8px;
+  margin-bottom: 8px;
+  padding: 8px;
+
+  .btn {
+    -webkit-appearance: button;
+  }
+
+  .tooltip {
+    display: none;
+  }
+
+  .hide { display: none; }
+
+  @import "cms/column";
+}
+
+#ss-preview-form-palette {
+  margin-top: 8px;
+  margin-bottom: 8px;
+  width: 100%;
+};
+
+.ss-preview-dialog {
+  &.ui-dialog {
+    .ui-dialog-title {
+      display: none;
+    }
+
+    .ui-dialog-content {
+      width: 100%;
+      padding: 5px;
+      @include box-sizing(border-box);
+    }
+  }
+}
+

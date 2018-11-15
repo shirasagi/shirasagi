@@ -1,0 +1,20 @@
+<% if form.sub_type_static? %>
+  <%= render 'cms/forms/columns_form_static', local_assigns %>
+<% else %>
+  <%= render 'cms/forms/columns_form_entry', local_assigns %>
+<% end %>
+
+<div>
+  <%= button_tag(t("cms.syntax_check"), name: nil, type: "button", class: "btn syntax-check") %>
+  <%= button_tag(t("cms.mobile_size_check"), name: nil, type: "button", class: "btn mobile-size-check") %>
+  <%= button_tag(t("cms.link_check"), name: nil, type: "button", class: "btn link-check") %>
+  <% if !@preview %>
+    <%= button_tag(t("cms.preview"), name: nil, type: "button", class: "btn preview") %>
+  <% end %>
+</div>
+
+<%= jquery do %>
+  Cms_Form.addonSelector = "#addon-cms-agents-addons-form-page .addon-body";
+  Cms_Form.form_html_path = <%== cms_apis_form_html_path(id: form).to_json %>;
+  Cms_Form.form_link_check_path = <%== cms_apis_form_link_check_path(id: form).to_json %>;
+<% end %>

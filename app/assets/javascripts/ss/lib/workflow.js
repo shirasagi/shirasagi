@@ -41,7 +41,7 @@ SS_Workflow = function (el, options) {
     return false;
   });
 
-  this.$el.on("click", ".workflow-route-cacnel", function (e) {
+  this.$el.on("click", ".workflow-route-cancel", function (e) {
     pThis.loadRouteList();
     e.preventDefault();
     return false;
@@ -63,7 +63,7 @@ SS_Workflow = function (el, options) {
   });
 
   this.tempFile = new SS_Addon_TempFile(
-    $(".mod-workflow-approve .upload-drop-area"), this.options.user_id,
+    ".mod-workflow-approve .upload-drop-area", this.options.user_id,
     { select: function(files, dropArea) { pThis.onDropFile(files, dropArea); } }
   );
 };
@@ -133,10 +133,14 @@ SS_Workflow.prototype = {
 
     return fileIds;
   },
-  composeWorkflowUrl: function(type) {
+  composeWorkflowUrl: function(controller) {
+    if (this.options && this.options.paths && this.options.paths[controller]) {
+      return this.options.paths[controller];
+    }
+
     var uri = location.pathname.split("/");
     uri[2] = this.options.workflow_node;
-    uri[3] = type;
+    uri[3] = controller;
     if (uri.length > 5) {
       uri.splice(4, 1);
     }

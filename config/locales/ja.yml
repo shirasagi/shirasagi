@@ -41,6 +41,7 @@ ja:
       month: ! '%Y/%1m'
       iso_month: ! '%Y-%m'
       long_month: ! '%Y年%1m月'
+      picker: ! '%Y/%m/%d'
     month_names:
     -
     - 1月
@@ -155,6 +156,7 @@ ja:
       request_entity_too_large: データのサイズが大きすぎます。
       contact_system_administrator: システム管理者にお問い合わせください。
       try_again_later: 時間を置いてもう一度お試しください。
+      malformed_liquid_template: "の形式が正しくありません。%{error}"
     template:
       body: 次の項目を確認してください。
       header:
@@ -228,6 +230,7 @@ ja:
       iso: ! '%Y-%m-%d %H:%M'
       long: ! '%Y年%1m月%1d日 %H時%M分'
       short: ! '%y/%m/%d %H:%M'
+      picker: ! '%Y/%m/%d %H:%M'
     pm: 午後
   # remove these aliases after 'activemodel' and 'activerecord' namespaces are removed from Rails repository
   activemodel:
