@@ -26,16 +26,18 @@ $(".create-branch").on("click", function () {
     type: "POST",
     url: path,
     beforeSend: function () {
+      $(".result").addClass("wide");
       $(".result").show();
       $(".result").html(SS.loading);
     },
     success: function (data) {
+      $(".result").removeClass("wide");
       $(".result").html(data);
       $(".result a").removeClass();
       toggleCreateBranchButton();
     },
     error: function (data, status) {
-      alert(["== Error =="].concat(data.responseJSON).join("\n"));
+      $(".result").html("<div class=\"errorExplanation\">" + ["== Error =="].concat(data.responseJSON).join("\n") + "</div>");
     }
   });
 });

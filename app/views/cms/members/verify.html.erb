@@ -10,18 +10,15 @@
 <%= error_messages_for :item %>
 
 <div class="addon-views">
-  <div class="addon-view" id="addon-basic">
-    <div class="addon-head"><h2><%= t("ss.confirm.send") %></h2></div>
-    <div class="addon-body">
-      <dl class="see">
-        <dt><%= @node.t :subject %></dt>
-        <dd><%= @node.subject %></dd>
+  <%= render "ss/crud/addon", addon: { id: "addon-basic", head: t("ss.confirm.send") } do %>
+    <dl class="see">
+      <dt><%= @node.t :subject %></dt>
+      <dd><%= @node.subject %></dd>
 
-        <dt><%= t('modules.addons.ss/body') %></dt>
-        <dd><%= text_area_tag :name, text, readonly: true %></dd>
-      </dl>
-    </div>
-  </div>
+      <dt><%= t('modules.addons.ss/body') %></dt>
+      <dd><%= text_area_tag :name, text, readonly: true %></dd>
+    </dl>
+  <% end %>
 </div>
 
 <footer class="send">

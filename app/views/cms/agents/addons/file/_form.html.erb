@@ -43,8 +43,16 @@ options.uploadUrl = function() {
   return "/.s<%= @cur_site.id %>/cms/apis/temp_files.json";
 };
 <% end %>
-var tempFile = new SS_Addon_TempFile($(".upload-drop-area"), <%= @cur_user.id %>, options);
+var tempFile = new SS_Addon_TempFile(".upload-drop-area", <%= @cur_user.id %>, options);
 <% end %>
+
+<%
+  addon ||= local_assigns.fetch(:addon, {})
+  if @item.respond_to?(:form) && @item.form.present?
+    css_class = Array(addon[:class])
+    addon[:class] = css_class + %w(hide)
+  end
+%>
 
 <dl class="see">
   <dd class="wide">

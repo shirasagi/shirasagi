@@ -2,12 +2,9 @@
   <%= error_messages_for :item %>
 
 <div class="addon-views">
-  <div class="addon-view" id="addon-basic">
-    <div class="addon-head"><h2><%= t("rss.confirm.import") %></h2></div>
-    <div class="addon-body">
-      <%= render file: "_import" %>
-    </div>
-  </div>
+  <%= render "ss/crud/addon", addon: { id: "addon-basic", head: t("rss.confirm.import") } do %>
+    <%= render file: "_import" %>
+  <% end %>
 </div>
 
 <footer class="send">

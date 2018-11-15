@@ -10,6 +10,21 @@ class Article::PagesController < ApplicationController
 
   private
 
+  def pre_params
+    params = super
+
+    n = @cur_node.becomes_with_route
+    if n.respond_to?(:st_forms) && n.st_form_ids.include?(n.st_form_default_id)
+      default_form = n.st_form_default
+    end
+
+    if default_form.present?
+      params[:form_id] = default_form.id
+    end
+
+    params
+  end
+
   def fix_params
     { cur_user: @cur_user, cur_site: @cur_site, cur_node: @cur_node }
   end

@@ -1,0 +1,14 @@
+<% errors ||= [] %>
+<% if errors.present? && errors.any? { |_link, status| status == :failure } %>
+  <div id="errorLinkChecker" class="errorExplanation">
+    <h2><%= t "cms.check_links" %></h2>
+    <div class="errorExplanationBody">
+      <p><%= t "errors.template.check_links" %></p>
+      <ul>
+        <% errors.select { |_link, status| status == :failure }.each do |link, _status| %>
+          <li><%= link %> <span class="failure"><%= t('errors.messages.link_check_failure') %></span></li>
+        <% end %>
+      </ul>
+    </div>
+  </div>
+<% end %>

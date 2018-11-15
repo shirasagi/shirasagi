@@ -57,6 +57,14 @@ module Event::Addon
           template_variable_handler_event_deadline(name, issuer, :short)
         end
       end
+
+      if respond_to? :liquidize
+        liquidize do
+          export :event_name
+          export :get_event_dates, as: :event_dates
+          export :event_deadline
+        end
+      end
     end
 
     module ClassMethods

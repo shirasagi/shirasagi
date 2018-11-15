@@ -1,0 +1,28 @@
+#ajax-box.ss-ajax-in-iframe-content {
+  height: 100%;
+  padding: 10px;
+
+  #item-form {
+    height: 100%;
+  }
+
+  .column-value {
+    // 60px: footer height
+    //height: calc(100% - 60px);
+    .inplace-checkers {
+      margin-top: 5px;
+      #errorSyntaxChecker {
+        margin-top: 5px;
+      }
+    }
+  }
+
+  .column-value-body {
+    height: 100%;
+
+    textarea {
+      height: 100%;
+      resize: none;
+    }
+  }
+}

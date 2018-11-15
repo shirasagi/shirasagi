@@ -28,6 +28,12 @@ module Cms::Model::Page
     after_destroy :remove_file
 
     template_variable_handler(:categories, :template_variable_handler_categories)
+
+    liquidize do
+      export as: :categories do
+        categories.and_public.order_by(order: 1, name: 1)
+      end
+    end
   end
 
   def date

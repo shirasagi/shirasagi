@@ -8,6 +8,8 @@ SS_TreeNavi.prototype.render = function(url) {
   var _this = this;
   var loading = $(SS.loading);
 
+  this.registerEvents();
+
   $.ajax({
     url: url,
     beforeSend: function() {
@@ -18,7 +20,6 @@ SS_TreeNavi.prototype.render = function(url) {
     },
     success: function(data) {
       _this.el.append(_this.renderItems(data.items));
-      _this.registerEvents();
     },
     error: function(xhr, status, error) {
       _this.showError(xhr, status, error);
@@ -44,7 +45,6 @@ SS_TreeNavi.prototype.renderChildren = function(item) {
     },
     success: function(data) {
       item.after(_this.renderItems(data.items));
-      _this.registerEvents();
     },
     error: function(xhr, status, error) {
       _this.showError(xhr, status, error);
@@ -64,7 +64,7 @@ SS_TreeNavi.prototype.renderItems = function(data) {
     var cls = is_open ? ['is-open is-cache'] : ['is-close'];
     if (item.is_current) cls.push('is-current');
 
-    return '<div class="tree-item ' + cls.join(' ') + '" data-filename="' + item.filename + '">' +
+    return '<div class="tree-item ' + cls.join(' ') + '" data-id="' + item.id + '" data-filename="' + item.filename + '"' + '>' +
       '<div class="item-pad"></div>'.repeat(item.depth - 1) +
       '<a class="item-mark" href="' + item.tree_url + '">' + mark + '</a>' +
       '<a class="item-name" href="' + item.url + '">' + item.name.replace('<','') + '</a>' +
@@ -74,19 +74,17 @@ SS_TreeNavi.prototype.renderItems = function(data) {
 
 SS_TreeNavi.prototype.registerEvents = function() {
   var _this = this;
-  _this.el.find('.tree-item').not('.is-event').each(function() {
-    var item = $(this);
-    item.addClass('is-event');
+  this.el.on("click", ".tree-item .item-mark", function() {
+    var $this = $(this);
+    var item = $this.closest(".tree-item");
 
-    item.find('.item-mark').click(function() {
-      if (item.hasClass('is-open')) {
-        _this.closeItem(item, $(this));
-      } else {
-        _this.openItem(item, $(this));
-      }
-      return false;
-    });
-  });
+    if (item.hasClass('is-open')) {
+      _this.closeItem(item, $(this));
+    } else {
+      _this.openItem(item, $(this));
+    }
+    return false;
+  })
 };
 
 SS_TreeNavi.prototype.openItem = function(item, mark) {

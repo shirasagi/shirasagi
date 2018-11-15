@@ -1,0 +1,44 @@
+<% value ||= nil %>
+<% controller ||= false %>
+<% lists = value.try(:lists) %>
+<%= render 'cms/agents/columns/main/base', f: f, column: column, value: value, controller: controller do |id| %>
+  <%= content_tag column.list_type.to_sym, class: "list" do %>
+    <% if lists.present? %>
+      <% lists.each do |list| %>
+        <%= render 'cms/agents/columns/list/column_form_ul', f: f, column: column, order: list[:order], text: list[:text] %>
+      <% end %>
+    <% else %>
+      <%= render 'cms/agents/columns/list/column_form_ul', f: f, column: column, order: 1, text: '' %>
+    <% end %>
+  <% end %>
+
+  <div class="inplace-checkers">
+    <%= button_tag t("cms.buttons.column_add_list"), class: "btn btn-add-list", type: 'button' %>
+    <% if @inplace_syntax_check%>
+      <%= button_tag t("cms.syntax_check"), { type: :button, class: "btn syntax-check" } %>
+    <% end %>
+  </div>
+  <script type="text/html" class="template">
+    <%= render 'cms/agents/columns/list/column_form_ul', f: f, column: column, order: 0, text: '' %>
+  </script>
+
+  <% if @inplace_syntax_check %>
+    <%= jquery do %>
+      Cms_Inplace_Form.resolveType = "textlist";
+      Cms_Inplace_Form.getContent = function () {
+        var values = {};
+        var key = 1;
+        $('<%= "##{id}" %> [name="item[column_values][][in_wrap][lists][][text]"').each(function () {
+          values[key] = $(this).val();
+          key += 1;
+        });
+        return values;
+      };
+      Cms_Inplace_Form.setContent = function (content, opts) {
+        key = opts["listkey"] - 1;
+        ele = $('<%= "##{id}" %> [name="item[column_values][][in_wrap][lists][][text]"')[key]
+        $(ele).val(content);
+      };
+    <% end %>
+  <% end %>
+<% end %>
