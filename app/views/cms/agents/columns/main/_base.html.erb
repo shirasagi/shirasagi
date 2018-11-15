@@ -1,0 +1,37 @@
+<% show ||= false %>
+<% controller ||= false %>
+<div class="column-value">
+  <div class="column-value-header">
+    <div class="column-value-header-group">
+      <label><%= column.name %></label>
+      <% if !show && column.tooltips.present? %>
+        <div class="tooltip">?
+          <ul>
+            <% column.tooltips.each do |tooltip| %>
+              <li><%= tooltip %><br></li>
+            <% end %>
+          </ul>
+        </div>
+      <% end %>
+    </div>
+    <% if controller %>
+      <div class="column-value-header-group">
+        <button type="button" class="column-value-controller-move-up"><i class="material-icons md-14">keyboard_arrow_up</i></button>
+        <%= select_tag("#{f.object_name}[][order]", [], class: "column-value-controller-move-position no-form-control") %>
+        <button type="button" class="column-value-controller-move-down"><i class="material-icons md-14">keyboard_arrow_down</i></button>
+      </div>
+      <div class="column-value-header-group">
+        <button type="button" class="column-value-controller-delete">
+          <i class="material-icons md-14">delete</i> <%= t("ss.links.delete") %>
+        </button>
+      </div>
+    <% end %>
+  </div>
+  <div class="column-value-body">
+    <% if !show %>
+      <%= hidden_field_tag "#{f.object_name}[][column_id]", column.id, id: nil %>
+      <%= hidden_field_tag "#{f.object_name}[][_type]", column.value_type, id: nil %>
+    <% end %>
+    <%= yield %>
+  </div>
+</div>

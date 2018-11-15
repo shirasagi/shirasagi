@@ -8,6 +8,9 @@
   <dt><%= @model.t :state %></dt>
   <dd><%= @item.label :state %></dd>
 
+  <dt><%= @model.t :sub_type %></dt>
+  <dd><%= @item.label :sub_type %></dd>
+
   <dt><%= @model.t :column_ids %></dt>
   <dd><%= link_to(t('cms.buttons.manage_columns'), cms_form_columns_path(form_id: @item), class: :btn) %></dd>
   <dd>

@@ -3,28 +3,57 @@ this.SS_AddonTabs = (function () {
   }
 
   SS_AddonTabs.render = function () {
-    return $('.toggle-head').on('click', function () {
-      return $(this).parent().find('.toggle-body').animate({
-        height: 'toggle'
-      }, 'fast');
+    return $(document).on('click', '.toggle-head', function () {
+      SS_AddonTabs.toggleWithAnimation(this);
     });
   };
 
+  SS_AddonTabs.findAddonView = function (view) {
+    var $view = $(view);
+    var $addonView;
+    if ($view.hasClass("addon-view")) {
+      $addonView = $view;
+    } else {
+      $addonView = $view.closest('.addon-view');
+    }
+
+    return $addonView;
+  };
+
   SS_AddonTabs.head = function (content) {
-    return $(content).parent().parent().find('.addon-head');
+    var $addonView = SS_AddonTabs.findAddonView(content);
+    return $addonView.find('.addon-head');
   };
 
   SS_AddonTabs.show = function (view) {
-    return $(view).parent().show();
+    var $addonView = SS_AddonTabs.findAddonView(view);
+    $addonView.find('.toggle-body').show();
+    $addonView.removeClass('body-closed');
+    $addonView.trigger('ss:addonShown');
   };
 
   SS_AddonTabs.hide = function (view) {
-    return $(view).parent().hide();
+    var $addonView = SS_AddonTabs.findAddonView(view);
+    $addonView.find('.toggle-body').hide();
+    $addonView.addClass('body-closed');
+    $addonView.trigger('ss:addonHided');
+  };
+
+  SS_AddonTabs.toggleWithAnimation = function (view) {
+    var $addonView = SS_AddonTabs.findAddonView(view);
+    $addonView.find('.toggle-body').animate({ height: 'toggle' }, 'fast', function() {
+      $addonView.toggleClass('body-closed');
+      if ($addonView.hasClass('body-closed')) {
+        $addonView.trigger('ss:addonHided');
+      } else {
+        $addonView.trigger('ss:addonShown');
+      }
+    });
   };
 
   SS_AddonTabs.toggleView = function (view) {
     console.log("SS_AddonTabs.toggleView is deprecated");
-    return $(view).parent().hide();
+    SS_AddonTabs.hide(view);
   };
   //TODO: depracated
 

@@ -1,0 +1,156 @@
+<%
+  show_path ||= nil
+  cms_form = nil
+%>
+<% head_for(self) do %>
+  <%= stylesheet_link_tag("cms/preview/main") %>
+  <%= javascript_include_tag("cms/preview/main") %>
+  <script>
+    Link_Checker.url = <%== SS.config.cms.link_check_url.to_json %>;
+    Link_Checker.rootUrl = <%== @cur_site.full_root_url.to_json %>;
+
+    Mobile_Size_Checker.enabled    = <%== @cur_site.mobile_enabled?.to_json %>;
+    Mobile_Size_Checker.mobile_size = <%== @cur_site.mobile_size.to_json %>;
+    Mobile_Size_Checker.check_size = <%== number_to_human_size(@cur_site.mobile_size).to_json %>;
+    Mobile_Size_Checker.hostFullUrl = <%== @cur_site.full_url.to_json %>;
+    Mobile_Size_Checker.message["SizeCheckError"] = <%== I18n.t(
+      'errors.messages.mobile_size_check_failed_to_size',
+      mobile_size: number_to_human_size(@cur_site.mobile_size)
+      ).to_json %>
+
+    <% if rendered %>
+      Form_Preview.form_id = "ss-preview-inplace-item-form";
+      Form_Preview.page_route = <%== (rendered[:page] || rendered[:node]).route.to_json %>;
+
+      Cms_TemplateForm.userId = <%= @cur_user.id %>;
+      Cms_TemplateForm.confirms.delete = <%== t("ss.confirm.delete").to_json %>;
+      Cms_TemplateForm.paths.formColumn = <%== cms_apis_form_column_new_path(id: ":formId", column_id: ":columnId").to_json %>;
+      Cms_TemplateForm.paths.formTempFileSelect = <%== cms_apis_form_temp_file_select_path(id: ":fileId").to_json %>;
+      Cms_TemplateForm.paths.formUrlTemplate = <%== cms_apis_form_path(id: ':id', item_id: (rendered[:page] || rendered[:node]).new_record? ? nil : (rendered[:page] || rendered[:node]).id).to_json %>;
+    <% end %>
+
+    SS_Preview.libs.jquery = <%== { js: javascript_path("cms/preview/jquery"), css: stylesheet_path("cms/preview/jquery") }.to_json %>;
+    SS_Preview.libs.datetimePicker = <%== { js: javascript_path("cms/preview/datetimepicker"), css: stylesheet_path("cms/preview/datetimepicker") }.to_json %>;
+    SS_Preview.libs.colorbox = <%== { js: javascript_path("/assets/js/jquery.colorbox-min.js"), css: "/assets/css/colorbox/colorbox.css" }.to_json %>;
+    SS_Preview.confirms.delete = <%== t("ss.confirm.delete").to_json %>;
+    SS_Preview.notices.deleted = <%== t("ss.notice.deleted").to_json %>;
+
+    <% if rendered %>
+      SS_Preview.item.type = <%== rendered[:type].to_json %>;
+      <% if rendered[:layout] %>
+        SS_Preview.item.layoutId = <%== rendered[:layout].id.to_json %>;
+      <% end %>
+      <% if rendered[:node] %>
+        SS_Preview.item.nodeId = <%== rendered[:node].id.to_json %>;
+      <% end %>
+      <% if rendered[:page] %>
+        SS_Preview.item.pageId = <%== rendered[:page].id.to_json %>;
+        <% if rendered[:page].respond_to?(:form) %>
+          <% cms_form = rendered[:page].form %>
+          <% if cms_form %>
+            SS_Preview.item.formId = <%== cms_form.id.to_json %>;
+            SS_Preview.item.formSubType = <%== cms_form.sub_type.to_json %>;
+          <% end %>
+        <% end %>
+      <% end %>
+    <% end %>
+
+    <% if @cur_site.subdir.present? %>
+      SS_Preview.preview_path = <%== @cur_site.subdir.to_json %>;
+    <% end %>
+    SS_Preview.mobile_path = <%== @cur_site.mobile_path.to_json %>;
+    <% if @preview_page %>
+      SS_Preview.request_path = <%== request.path.to_json %>;
+      SS_Preview.form_item = <%== @preview_item.to_json %>;
+    <% end %>
+    <% if mode == :preview && rendered %>
+      <% if %i[page].include?(rendered[:type]) %>
+        SS_Preview.inplaceFormPath.page = <%== edit_cms_apis_preview_inplace_edit_page_path(site: @cur_site, id: ":id").to_json %>;
+        SS_Preview.inplaceFormPath.columnValue.new = <%== "#{new_cms_apis_preview_inplace_edit_page_column_value_path(site: @cur_site, page_id: ":pageId")}?column_id=:columnId".to_json %>;
+        SS_Preview.inplaceFormPath.columnValue.edit = <%== edit_cms_apis_preview_inplace_edit_page_column_value_path(site: @cur_site, page_id: ":pageId", id: ":id").to_json %>;
+        SS_Preview.inplaceFormPath.columnValue.destroy = <%== cms_apis_preview_inplace_edit_page_column_value_path(site: @cur_site, page_id: ":pageId", id: ":id").to_json %>;
+        SS_Preview.inplaceFormPath.columnValue.moveUp = <%== move_up_cms_apis_preview_inplace_edit_page_column_value_path(site: @cur_site, page_id: ":pageId", id: ":id").to_json %>;
+        SS_Preview.inplaceFormPath.columnValue.moveDown = <%== move_down_cms_apis_preview_inplace_edit_page_column_value_path(site: @cur_site, page_id: ":pageId", id: ":id").to_json %>;
+        SS_Preview.inplaceFormPath.columnValue.moveAt = <%== move_at_cms_apis_preview_inplace_edit_page_column_value_path(site: @cur_site, page_id: ":pageId", id: ":id").to_json %>;
+        SS_Preview.inplaceFormPath.palette = <%== palette_cms_apis_preview_inplace_edit_form_path(site: @cur_site, id: ":id").to_json %>;
+      <% end %>
+    <% end %>
+  </script>
+<% end %>
+<% foot_for(self) do %>
+  <div id="ss-preview-overlay" class="ss-preview-hide">
+    <div class="ss-preview-overlay-tool">
+      <span class="ss-preview-overlay-name"><%= t("ss.links.edit") %></span>
+      <div class="ss-preview-btn-group ss-preview-overlay-btn-group-edit">
+        <button type="button" class="ss-preview-overlay-btn-edit"><%= t("ss.links.edit") %></button>
+      </div>
+
+      <% if cms_form && cms_form.sub_type_entry? %>
+      <div class="ss-preview-btn-group ss-preview-overlay-btn-group-move">
+        <button type="button" class="ss-preview-overlay-btn-move-up"><i class="material-icons md-14">keyboard_arrow_up</i></button>
+        <select class="ss-preview-overlay-btn-move-position"></select>
+        <button type="button" class="ss-preview-overlay-btn-move-down"><i class="material-icons md-14">keyboard_arrow_down</i></button>
+      </div>
+
+      <div class="ss-preview-btn-group ss-preview-overlay-btn-group-delete">
+        <button type="button" class="ss-preview-overlay-btn-delete"><%= t("ss.links.delete") %></button>
+      </div>
+      <% end %>
+    </div>
+  </div>
+  <script>
+    SS_Preview.render();
+  </script>
+<% end %>
+<div id="ss-preview">
+  <div>
+    <div class="ss-preview-btn-group">
+      <input type="text" class="ss-preview-date" value="<%= I18n.l(@cur_date, format: :picker)  %>" />
+      <% if @cur_site.mobile_enabled? %>
+        <input type="button" class="ss-preview-btn ss-preview-btn-outline ss-preview-btn-pc" value="<%= t("ss.links.pc") %>">
+        <input type="button" class="ss-preview-btn ss-preview-btn-outline ss-preview-btn-mobile" value="<%= t("ss.links.mobile") %>">
+      <% else %>
+        <input type="button" class="ss-preview-btn ss-preview-btn-outline ss-preview-btn-pc" value="<%= t("cms.preview_page") %>">
+      <% end %>
+    </div>
+    <% if !mobile %>
+      <div class="ss-preview-btn-group ss-preview-part-group ss-preview-hide">
+        <select class="ss-preview-part-list">
+          <option value=""><%= t("cms.part") %></option>
+        </select>
+        <button type="button" class="ss-preview-btn ss-preview-btn-outline ss-preview-btn-edit-part"><%= t("ss.buttons.edit") %></button>
+      </div>
+      <div class="ss-preview-btn-group ss-preview-hide">
+        <button type="button" class="ss-preview-btn ss-preview-btn-outline ss-preview-btn-edit-layout"><%= t("cms.layout") %></button>
+      </div>
+    <% end %>
+  </div>
+  <% if mode == :preview && !mobile %>
+    <div>
+      <div class="ss-preview-btn-group">
+        <button type="button" class="ss-preview-btn ss-preview-btn-outline-primary ss-preview-btn-toggle-inplace"><%= t("cms.inplace_edit") %></button>
+      </div>
+      <div class="ss-preview-btn-group">
+        <select class="ss-preview-node-list">
+          <option value="">記事</option>
+        </select>
+        <button type="button" class="ss-preview-btn ss-preview-btn-outline"><%= t("ss.buttons.new") %></button>
+        <button type="button" class="ss-preview-btn ss-preview-btn-outline"><%= t("cms.draft_page") %></button>
+        <% if show_path %>
+          <button type="button" class="ss-preview-btn ss-preview-btn-outline ss-preview-btn-open-path" data-path="<%= show_path %>"><%= t("ss.links.back_to_administration") %></button>
+        <% end %>
+      </div>
+    </div>
+  <% end %>
+  <div id="ss-preview-messages" <% if @intercepted_notice.blank? %>class="ss-preview-hide"<% end %>>
+    <% if @intercepted_notice %>
+    <div id="ss-preview-notice"><%= @intercepted_notice %></div>
+    <% end %>
+    <div id="ss-preview-error-explanation" class="ss-preview-hide">
+      <h2><%= t("errors.template.header.other") %></h2>
+      <p><%= t("errors.template.body") %></p>
+      <ul>
+      </ul>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,9 @@
+<div class="column-value-palette">
+  <h3><%= t("ss.buttons.add") %></h3>
+  <fieldset>
+    <% form.columns.order_by(order: 1).each do |column| %>
+      <button type="button" class="btn btn-outline-primary" data-form-id="<%= form.id %>" data-column-id="<%= column.id %>"><%= column.name %></button>
+    <% end %>
+  </fieldset>
+  <div class="column-value-palette-error hide"></div>
+</div>

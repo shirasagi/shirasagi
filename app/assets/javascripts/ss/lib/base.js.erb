@@ -1,0 +1,425 @@
+this.SS = (function () {
+  function SS() {
+  }
+
+  SS.config = {};
+
+  SS.head = "";
+
+  SS.href = "";
+
+  SS.loading = '<img style="vertical-align:middle" src="/assets/img/loading.gif" alt="loading.." border="0" widtth="16" height="11" />';
+
+  SS.noticeTimeoutId = null;
+
+  SS.page = "";
+
+  SS.pageName = null;
+
+  SS.parts = null;
+
+  SS.siteName = null;
+
+  SS.disableClick = function (el) {
+    if (el.data('clicked')) {
+      return false;
+    }
+    el.data('clicked', true);
+    return true;
+  };
+
+  SS.load = function () {
+  };
+
+  SS.render = function (box) {
+    if (box == null) {
+      box = null;
+    }
+    if (box) {
+      this.renderInBox(box);
+    } else {
+      this.renderNotInBox();
+    }
+    //default
+    box = $(document);
+    //eternal links
+    box.find("a[href^=http]").each(function () {
+      return $(this).addClass("external");
+    });
+    this.renderAjaxBox();
+    return this.renderDateTimePicker();
+  };
+
+  SS.renderNotInBox = function () {
+    return SS_Login.render();
+  };
+
+  SS.renderInBox = function (box) {
+    var anchorCallback;
+    anchorCallback = function () {
+      return $("#cboxLoadedContent a").each(function () {
+        var elem;
+        elem = $(this);
+        elem.addClass("cboxElement");
+        if (!elem.attr("target") && !elem.data("target")) {
+          return elem.colorbox({
+            fixed: true,
+            width: "90%",
+            height: "90%",
+            onComplete: anchorCallback
+          });
+        }
+      });
+    };
+    return $(box).find("a").each(function () {
+      var elem;
+      elem = $(this);
+      if (!elem.attr("target") && !elem.data("target")) {
+        return elem.colorbox({
+          fixed: true,
+          width: "90%",
+          height: "90%",
+          onComplete: anchorCallback
+        });
+      }
+    });
+  };
+
+  SS.renderLayout = function (url) {
+    var body, head;
+    head = $("head");
+    body = $("body");
+    SS.head = head.html();
+    SS.page = $("#page").html();
+    body.html("");
+    return $.ajax({
+      type: "GET",
+      url: SS_Kana.url(url),
+      dataType: "json",
+      cache: true,
+      async: false,
+      success: function (data) {
+        var cache;
+        body.append(data.body.replace("</ yield />", SS.page));
+        $("#ss-site-name").html(SS.siteName);
+        $("#ss-page-name").html(SS.pageName);
+        if (data.href !== SS.href) {
+          cache = $.ajaxSettings.cache;
+          $.ajaxSettings.cache = true;
+          if (SS.href) {
+            head.children("link").remove();
+            head.children("script").remove();
+          }
+          head.append(data.head);
+          $.ajaxSettings.cache = cache;
+        }
+        SS.href = data.href;
+        return SS.renderTools();
+      },
+      error: function (req, status, error) {
+        return body.html(SS.page);
+      },
+      complete: function () {
+        return $(".ss-part").each(function () {
+          return SS.renderPart($(this));
+        });
+      }
+    });
+  };
+
+  SS.renderPart = function (elem) {
+    var url;
+    url = elem.data("href") || elem.attr("href");
+    url = SS_Kana.url(url.replace(/\.html/, ".json"));
+    elem.append(" " + SS.loading);
+    return $.ajax({
+      type: "GET",
+      url: url,
+      dataType: "json",
+      data: "ref=" + SS_Kana.url(location.pathname, false),
+      success: function (data) {
+        return $(elem).replaceWith(data);
+      },
+      error: function () {
+        return $(elem).find("img").remove();
+      },
+      complete: function () {
+        SS.part = SS.part - 1;
+        if (SS.part === 0) {
+          return SS_Recommend.render();
+        }
+      }
+    });
+  };
+
+  SS.ajaxForm = function (elem, params) {
+    var defaults;
+    if (params == null) {
+      params = {};
+    }
+    elem = $(elem);
+    defaults = {
+      url: elem.attr("action") + ".json",
+      dataType: "json",
+      success: function () {
+      },
+      error: function (data, status) {
+        alert(["== Error =="].concat(data.responseJSON).join("\n"));
+      }
+    };
+    elem.on("submit", function (e) {
+      $(this).ajaxSubmit($.extend(true, defaults, params));
+      e.preventDefault();
+    });
+  };
+
+  SS.ajax = function (elem, params) {
+    if (params == null) {
+      params = {};
+    }
+    return $(elem).click(function (e) {
+      var defaults, self;
+      self = $(this);
+      defaults = {
+        url: self.attr("href"),
+        beforeSend: function () {
+          return self.html(SS.loading);
+        },
+        success: function () {
+          return console.log("success");
+        },
+        error: function (data, status) {
+          return alert("== Error ==");
+        }
+      };
+      $.ajax($.extend(true, defaults, params));
+      e.preventDefault();
+      return false;
+    });
+  };
+
+  SS.ajaxDelete = function (elem, params) {
+    if (params == null) {
+      params = {};
+    }
+    return $(elem).click(function (e) {
+      var defaults, self;
+      if (!confirm("<%= I18n.t 'ss.confirm.delete' %>")) {
+        return false;
+      }
+      self = $(this);
+      defaults = {
+        type: "DELETE",
+        data: "_method=delete",
+        url: self.attr("href") + ".json",
+        dataType: "json",
+        beforeSend: function () {
+          return self.html(SS.loading);
+        },
+        success: function () {
+          if (self.data("remove")) {
+            return $(self.data("remove")).remove();
+          }
+        },
+        error: function (data, status) {
+          return alert(["== Error =="].concat(data.responseJSON).join("\n"));
+        }
+      };
+      $.ajax($.extend(true, defaults, params));
+      e.preventDefault();
+      return false;
+    });
+  };
+
+  SS.notice = function (message, opts) {
+    var notice;
+    if (opts == null) {
+      opts = {};
+    }
+    SS.clearNotice();
+    notice = $('#notice');
+    if (!notice.hasClass('js-notice')) {
+      notice.addClass('js-notice').click(function () {
+        return notice.slideUp('normal');
+      });
+    }
+    notice.find('.wrap').html(message);
+    notice.slideDown('normal');
+    if (opts) {
+      if (opts.timeout === 0) {
+        return;
+      }
+    }
+    SS.noticeTimeoutId = setTimeout((function () {
+      return $('#notice').slideUp('normal');
+    }), 1800);
+    return SS.noticeTimeoutId;
+  };
+
+  SS.clearNotice = function () {
+    var notice;
+    if (SS.noticeTimeoutId) {
+      clearTimeout(SS.noticeTimeoutId);
+      SS.noticeTimeoutId = null;
+    }
+    notice = $('#notice');
+    notice.hide();
+    return notice.find('.wrap').html('');
+  };
+
+  SS.confirmUnloading = function () {
+    var changed;
+    changed = false;
+    $("input[type=text],textarea,select").change(function () {
+      return changed = true;
+    });
+    $(window).on("beforeunload", function () {
+      if (changed) {
+        return "<%= I18n.t 'ss.confirm.unload' %>";
+      }
+    });
+    return $("input[type=submit]").click(function () {
+      changed = false;
+      return true;
+    });
+  };
+
+  SS.randomPassword = function (length) {
+    var chars, i, j, pass, ref1;
+    if (length == null) {
+      length = 8;
+    }
+    chars = 'abcdefghijkmnopqrstuvwxyz!@#$%&-+ABCDEFGHIJKLMNOP234567890';
+    pass = '';
+    for (i = j = 0, ref1 = length; 0 <= ref1 ? j <= ref1 : j >= ref1; i = 0 <= ref1 ? ++j : --j) {
+      i = Math.floor(Math.random() * chars.length);
+      pass += chars.charAt(i);
+    }
+    return pass;
+  };
+
+  SS.fileCheck = function () {
+    return $('#item_files').change(function () {
+      var form, uri;
+      form = $(this).val();
+      if (!form) {
+        $(".js-uploader-alert-message").hide();
+        return;
+      }
+      uri = location.pathname.split("/");
+      return $.ajax({
+        type: "get",
+        url: uri.join("/"),
+        dataType: "json",
+        data: {
+          "do": "check",
+          item_files: form
+        },
+        success: function (data) {
+          if (data["message"]) {
+            $(".js-uploader-alert-message").html(data["message"]);
+            return $(".js-uploader-alert-message").show();
+          } else {
+            return $(".js-uploader-alert-message").hide();
+          }
+        },
+        error: function (xhr, status) {
+          var errors;
+          try {
+            errors = $.parseJSON(xhr.responseText);
+            return alert(["== Error =="].concat(errors).join("\n"));
+          } catch (_error) {
+            return alert(["== Error =="].concat(xhr["statusText"]).join("\n"));
+          }
+        }
+      });
+    });
+  };
+
+  // renderAjaxBox([box][, params])
+  SS.renderAjaxBox = function () {
+    var box = null;
+    var params = null;
+
+    // parse arguments
+    if (arguments.length > 0) {
+      if (typeof (arguments[0]) === "object") {
+        if (arguments[0].jquery) {
+          box = arguments[0];
+        } else {
+          params = arguments[0];
+        }
+      } else {
+        box = $(arguments[0]);
+      }
+
+      if (!params && arguments.length > 1) {
+        params = arguments[1];
+      }
+    }
+
+    if (!box) {
+      box = $(document);
+    }
+
+    if (!params) {
+      params = {
+        fixed: true,
+        width: "90%",
+        height: "90%"
+      };
+    }
+
+    box.find(".ajax-box:not(.cboxElement)").each(function () {
+      var elem = $(this);
+      if (elem.attr("target") || elem.data("target")) {
+        return;
+      }
+
+      elem.colorbox(params);
+    });
+  };
+
+  // datetimepicker
+
+  SS.renderDateTimePicker = function () {
+    $.datetimepicker.setLocale('ja');
+    if ($.support.opacity) {
+      $.each($(".js-date"), function () {
+        var data, opts;
+        opts = {
+          timepicker: false,
+          format: 'Y/m/d',
+          closeOnDateSelect: true,
+          scrollInput: false
+        };
+        data = $(this).data();
+        if (data.minDate !== null) {
+          opts.minDate = data.minDate;
+        }
+        if (data.maxDate !== null) {
+          opts.maxDate = data.maxDate;
+        }
+        return $(this).datetimepicker(opts);
+      });
+      return $.each($(".js-datetime"), function () {
+        var data, opts;
+        opts = {
+          roundTime: 'ceil',
+          step: 30
+        };
+        data = $(this).data();
+        if (data.minDate !== null) {
+          opts.minDate = data.minDate;
+        }
+        if (data.maxDate !== null) {
+          opts.maxDate = data.maxDate;
+        }
+        return $(this).datetimepicker(opts);
+      });
+    }
+  };
+
+  return SS;
+
+})();

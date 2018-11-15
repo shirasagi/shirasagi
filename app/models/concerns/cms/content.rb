@@ -7,6 +7,7 @@ module Cms::Content
   include SS::Reference::Site
   include Cms::GroupPermission
   include Cms::Addon::CheckLinks
+  include SS::Liquidization
 
   attr_accessor :cur_node, :basename
   attr_accessor :serve_static_relation_files
@@ -55,6 +56,24 @@ module Cms::Content
         ])
       end
     }
+
+    liquidize do
+      export :id
+      export :name
+      export :index_name
+      export :url
+      export :full_url
+      export :basename
+      export :filename
+      export :date
+      export :released
+      export :updated
+      export :created
+      export :parent do
+        p = self.parent
+        p == false ? nil : p
+      end
+    end
   end
 
   module ClassMethods

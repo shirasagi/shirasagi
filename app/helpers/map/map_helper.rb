@@ -65,23 +65,26 @@ module Map::MapHelper
       map_options[:layers] = SS.config.map.layers
       map_options[:max_point_form] = max_point_form if max_point_form.present?
 
+      # 初回アドオン表示後に地図を描画しないと、クリックした際にマーカーがずれてしまう
       s = []
-      s << 'var canvas = $("' + selector + '")[0];'
-      s << "var opts = #{map_options.to_json};"
-      s << 'var map = new Openlayers_Map_Form(canvas, opts);'
-      s << 'SS_AddonTabs.hide(".mod-map");'
+      s << 'SS_AddonTabs.findAddonView(".mod-map").one("ss:addonShown", function() {'
+      s << '  var canvas = $("' + selector + '")[0];'
+      s << "  var opts = #{map_options.to_json};"
+      s << '  var map = new Openlayers_Map_Form(canvas, opts);'
+      s << '});'
     else
       include_googlemaps_api(opts)
 
       s = []
-      s << 'SS_AddonTabs.hide(".mod-map");'
-      s << 'Googlemaps_Map.center = ' + center.to_json + ';' if center.present?
-      s << 'Map_Form.maxPointForm = ' + max_point_form.to_json + ';' if max_point_form.present?
+      s << "Googlemaps_Map.center = #{center.to_json};" if center.present?
+      s << "Map_Form.maxPointForm = #{max_point_form.to_json};" if max_point_form.present?
       s << 'Googlemaps_Map.setForm(Map_Form);'
-      s << "Googlemaps_Map.load(\"" + selector + "\", #{map_options.to_json});"
+      s << "Googlemaps_Map.load(#{selector.to_json}, #{map_options.to_json});"
       s << 'Googlemaps_Map.renderMarkers();'
       s << 'Googlemaps_Map.renderEvents();'
-      s << 'SS_AddonTabs.head(".mod-map").click(function() { Googlemaps_Map.resize(); });'
+      s << 'SS_AddonTabs.findAddonView(".mod-map").on("ss:addonShown", function() {'
+      s << '  Googlemaps_Map.resize();'
+      s << '});'
     end
 
     jquery { s.join("\n").html_safe }

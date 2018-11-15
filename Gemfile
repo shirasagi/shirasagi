@@ -55,6 +55,7 @@ gem 'ungarbled'
 gem 'rubyzip'
 gem 'thinreports'
 gem 'bootsnap', require: false
+gem 'liquid'
 
 # OAuth
 gem 'oauth2', git: 'https://github.com/oauth-xx/oauth2.git' #'~> 1.5.0'

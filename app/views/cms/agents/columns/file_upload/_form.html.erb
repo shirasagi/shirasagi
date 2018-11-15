@@ -4,4 +4,13 @@
 
   <dt><%= @model.t :html_additional_attr %><%= @model.tt :html_additional_attr %></dt>
   <dd><%= f.text_field :html_additional_attr %></dd>
+
+  <dt><%= @model.t :label %><%= @model.tt :label %></dt>
+  <dd></dd>
+
+  <dt class="depth-2"><%= @model.t :max_length %><%= @model.tt :label_max_length %></dt>
+  <dd class="depth-2"><%= f.number_field :label_max_length %></dd>
+
+  <dt class="depth-2"><%= @model.t :place_holder %><%= @model.tt :label_place_holder %></dt>
+  <dd class="depth-2"><%= f.text_field :label_place_holder %></dd>
 </dl>

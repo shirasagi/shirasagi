@@ -65,6 +65,10 @@ ja:
     view_site: サイト確認
     word_dictionary: 単語置換辞書
     form_not_selected: 定型フォームが選択されていません
+    default_form: 既定のフォーム
+    column_value_error_template: "%{name}の%{error}"
+    draft_page: 下書きページ
+    inplace_edit: ダイレクト編集モード
 
     adobe_reader:
       remark:
@@ -224,6 +228,9 @@ ja:
       max_name_length:
         '80': 80文字
         '0': 無制限
+      form_sub_type:
+        static: 定型フォーム
+        entry: ブロック型入力
 
     sns_share:
       fb_like: Facebook いいね！
@@ -265,6 +272,7 @@ ja:
       cms/text_field: 一行入力
       cms/date_field: 日付入力
       cms/url_field: URL入力
+      cms/url_field2: URL入力
       cms/text_area: 複数行入力
       cms/select: ドロップダウン
       cms/radio_button: ラジオボタン
@@ -406,6 +414,7 @@ ja:
       cms/child_list: 子リスト表示
       cms/form/node: 定型フォーム
       cms/form/page: 定型フォーム
+      cms/column/layout: レイアウト
       cms/column/text_like: 制約条件
       cms/column/select_like: 選択
 
@@ -443,6 +452,7 @@ ja:
       cms/column/text_field: 一行入力
       cms/column/date_field: 日付入力
       cms/column/url_field: URL入力
+      cms/column/url_field2: URL入力
       cms/column/text_area: 複数行入力
       cms/column/select: ドロップダウン
       cms/column/radio_button: ラジオボタン
@@ -715,6 +725,7 @@ ja:
         name: 名前
         order: 並び順
         column_ids: 入力項目
+        sub_type: 目的
       cms/addon/form/node:
         st_form_ids: 定型フォーム設定
       cms/addon/form/page:
@@ -734,6 +745,17 @@ ja:
       cms/column/url_field:
         html_tag: HTMLタグ
         html_additional_attr: HTML追加属性
+      cms/column/url_field2:
+        html_tag: HTMLタグ
+        html_additional_attr: HTML追加属性
+        label_max_length: リンクテキスト最大長
+        label_place_holder: リンクテキストプレースホルダー
+        link_max_length: リンクURL最大長
+        link_place_holder: リンクURLプレースホルダー
+        label: リンクテキスト
+        link: リンクURL
+        max_length: 最大長
+        place_holder: プレースホルダー
       cms/column/select:
         place_holder: プレースホルダー
       cms/addon/column/text_like:
@@ -742,9 +764,44 @@ ja:
         additional_attr: 追加属性
       cms/addon/column/select_like:
         select_options: 選択肢
+      cms/addon/column/layout:
+        layout: レイアウト
       cms/column/file_upload:
         html_tag: HTMLタグ
         html_additional_attr: HTML追加属性
+        label_max_length: リンクテキスト最大長
+        label_place_holder: リンクテキストプレースホルダー
+        label: リンクテキスト
+        max_length: 最大長
+        place_holder: プレースホルダー
+      cms/column/value/check_box:
+        values: 選択肢
+      cms/column/value/date_field:
+        html_tag: HTMLタグ
+        html_additional_attr: HTML追加属性
+        date: 日付
+      cms/column/value/file_upload:
+        html_tag: HTMLタグ
+        html_additional_attr: HTML追加属性
+        file_id: ファイル
+        label: リンクテキスト
+      cms/column/value/radio_button:
+        value: 選択肢
+      cms/column/value/select:
+        value: 選択肢
+      cms/column/value/text_area:
+        value: 文
+      cms/column/value/text_field:
+        value: 文字列
+      cms/column/value/url_field:
+        html_tag: HTMLタグ
+        html_additional_attr: HTML追加属性
+        value: URL
+      cms/column/value/url_field2:
+        html_tag: HTMLタグ
+        html_additional_attr: HTML追加属性
+        label: リンクテキスト
+        value: リンクURL
 
   errors:
     messages:
@@ -1595,18 +1652,22 @@ ja:
       name:
         - テンプレート名を入力します。
         - 日本語での入力が可能です。
+      sub_type:
+        - 「定型フォーム」を選択すると、定型フォーム型の入力画面を表示しますので、ユーザーは予め決められた入力項目を入力することで記事を作成することが可能となります。
+        -
+        - 「ブロック型」を選択すると、ブロック型入力画面を表示しますので、ユーザーが自由に入力項目を組み合わせて記事を作成することが可能となります。
       column_ids:
         - 定型フォームのコラムを設定します。
       html: |-
         定型フォームのHTMLを設定します。
-        {{ 項目名 }}のように記述することで該当する項目の入力値を表示します。
+        {{ values["項目名"] }}のように記述することで該当する項目の入力値を表示します。
 
         使用例：
           &lt;dl>
             &lt;dt>項目&lt;/dt>
-            &lt;dd>{{ 項目名1 }}&lt;/dd>
+            &lt;dd>{{ values["項目名1"] }}&lt;/dd>
             &lt;dt>項目&lt;/dt>
-            &lt;dd>{{項目名2}}&lt;/dd>
+            &lt;dd>{{ values["項目名2"] }}&lt;/dd>
           &lt;/dl>
 
     cms/addon/form/node:
@@ -1640,12 +1701,58 @@ ja:
         - 公開側のHTMLタグを選択します。
       html_additional_attr:
         - 公開側のHTMLタグの追加属性を指定します。
+      layout: |-
+        入力項目のHTMLを設定します。
+        未設定の場合、既定の HTML を表示します。
+
+        使用例：
+          {% if value.date %}
+            &lt;span>{{ value.date | date: "%Y年%1m月%1d日" }}&lt;/span>
+          {% endif %}
 
     cms/column/url_field:
       html_tag:
         - 公開側のHTMLタグを選択します。
       html_additional_attr:
         - 公開側のHTMLタグの追加属性を指定します。
+      layout: |-
+        入力項目のHTMLを設定します。
+        未設定の場合、既定の HTML を表示します。
+
+        使用例：
+          {% if value.link %}
+            {% if value.label %}
+              &lt;a href="{{ value.link }}">{{ value.label }}&lt;/a>
+            {% else %}
+              &lt;a href="{{ value.link }}">{{ value.link }}&lt;/a>
+            {% endif %}
+          {% endif %}
+
+    cms/column/url_field2:
+      html_tag:
+        - 公開側のHTMLタグを選択します。
+      html_additional_attr:
+        - 公開側のHTMLタグの追加属性を指定します。
+      label_max_length:
+        - リンクテキストの最大長を入力します。
+      label_place_holder:
+        - リンクテキストのプレースホルダーを入力します。
+      link_max_length:
+        - リンクURLの最大長を入力します。
+      link_place_holder:
+        - リンクURLのプレースホルダーを入力します。
+      layout: |-
+        入力項目のHTMLを設定します。
+        未設定の場合、既定の HTML を表示します。
+
+        使用例：
+          {% if value.link %}
+            {% if value.label %}
+              &lt;a href="{{ value.link }}">{{ value.label }}&lt;/a>
+            {% else %}
+              &lt;a href="{{ value.link }}">{{ value.link }}&lt;/a>
+            {% endif %}
+          {% endif %}
 
     cms/column/select:
       place_holder:
@@ -1656,6 +1763,22 @@ ja:
         - 公開側のHTMLタグを選択します。
       html_additional_attr:
         - 公開側のHTMLタグの追加属性を指定します。
+      label_max_length:
+        - リンクテキストの最大長を入力します。
+      label_place_holder:
+        - リンクテキストのプレースホルダーを入力します。
+      layout: |-
+        入力項目のHTMLを設定します。
+        未設定の場合、既定の HTML を表示します。
+
+        使用例：
+          {% if value.file %}
+            {% if value.image? %}
+              &lt;a href="{{ value.file.url }}">&lt;img src="{{ value.file.thumb_url }}" alt="{{ value.file.name }}" title="{{ value.file.basename }}">&lt;/a>
+            {% else %}
+              &lt;a href="{{ value.file.url }}">{{ value.file.humanized_name }}&lt;/a>
+            {% endif %}
+          {% endif %}
 
     cms/addon/column/text_like:
       max_length:
@@ -1669,6 +1792,26 @@ ja:
       select_options:
         - 回答の選択肢を入力します。
         - テキストを改行で区切ることで複数の選択肢を入力することができます。
+
+    cms/addon/column/layout:
+      layout: |-
+        入力項目のHTMLを設定します。
+        未設定の場合、既定の HTML を表示します。
+
+        使用例：
+          {% if value.value %}
+            &lt;h2>{{ value.value }}&lt;/h2>
+          {% endif %}
+
+    cms/column/text_area:
+      layout: |-
+        入力項目のHTMLを設定します。
+        未設定の場合、既定の HTML を表示します。
+
+        使用例：
+          {% if value.value %}
+            &lt;p>{{ value.value | newline_to_br }}&lt;/p>
+          {% endif %}
 
   all_content:
     page_id: ページID

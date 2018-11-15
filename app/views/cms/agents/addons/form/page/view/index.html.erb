@@ -1,16 +1,23 @@
-<% return "" if @cur_page.form.blank? %>
-
 <%
-html = @cur_page.form.html.to_s
-html.gsub!(/\{\{(.+)\}\}/) do
-  name_or_id = $1.strip
-  column_value = @cur_page.column_values.
-    where('$or' => [ { id: name_or_id }, { name: name_or_id } ]).
-    order_by(order: 1, created: 1).
-    first
-  if column_value
-    column_value.to_html
+  return "" if @cur_page.form.blank?
+
+  html = @cur_page.form.html
+  if html.blank?
+    html = @cur_page.form.build_default_html
   end
-end
+
+  template = Liquid::Template.parse(html)
+
+  render_opts = { "values" => @cur_page.column_values.to_liquid, "page" => @cur_page.to_liquid, "parts" => SS::LiquidPartDrop.new(@cur_site) }
+  registers = { preview: @preview, mobile: controller.filters.include?(:mobile), cur_site: @cur_site, cur_page: @cur_page, cur_path: @cur_path, cur_date: @cur_date, cur_main_path: @cur_main_path }
+  html = template.render(render_opts, { filters: [SS::LiquidFilters], registers: registers }).html_safe
 %>
+<% if @preview %>
+  <div id="ss-preview-form-start" class="ss-preview-hide" data-form-id="<%== @cur_page.form.id %>" data-form-sub-type="<%== @cur_page.form.sub_type %>"></div>
+<% end %>
+
 <%== html %>
+
+<% if @preview %>
+  <div id="ss-preview-form-end" class="ss-preview-hide" data-form-id="<%== @cur_page.form.id %>" data-form-sub-type="<%== @cur_page.form.sub_type %>"></div>
+<% end %>

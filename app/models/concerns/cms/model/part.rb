@@ -11,6 +11,27 @@ module Cms::Model::Part
     field :mobile_view, type: String, default: "show"
     field :ajax_view, type: String, default: "disabled"
     permit_params :mobile_view, :ajax_view
+
+    liquidize do
+      export as: :html do |context|
+        if ajax_view == "enabled" && !context.registers[:mobile] && !context.registers[:preview]
+          next self.ajax_html
+        end
+
+        next self.html if self.route == "cms/free"
+
+        options = {
+          cur_site: cur_site,
+          cur_page: context.registers[:cur_page],
+          cur_path: context.registers[:cur_path],
+          cur_main_path: context.registers[:cur_main_path],
+          cur_date: context.registers[:cur_date]
+        }
+        agent = Cms::PartAgent.attach(self, options)
+        resp = agent.render
+        resp.body
+      end
+    end
   end
 
   def route_options

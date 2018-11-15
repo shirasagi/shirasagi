@@ -266,4 +266,111 @@ describe SS::File, dbscope: :example do
       end
     end
   end
+
+  describe "#copy" do
+    context "when non-image file is given" do
+      let(:src) do
+        file = SS::File.new
+        Fs::UploadedFile.create_from_file("spec/fixtures/cms/all_contents_1.csv") do |upload_file|
+          file.in_file = upload_file
+          file.model = "ss/file"
+          file.save!
+        end
+        file
+      end
+      let(:copy) { src.copy }
+
+      it do
+        expect(src.thumb).to be_blank
+
+        expect(copy.id).not_to eq src.id
+        expect(copy.name).to eq src.name
+        expect(copy.filename).to eq src.filename
+        expect(copy.content_type).to eq src.content_type
+        expect(copy.size).to eq src.size
+        expect(copy.model).to eq "ss/temp_file"
+        expect(copy.thumb).to be_nil
+      end
+    end
+
+    context "when non-image file is given" do
+      let(:src) do
+        file = SS::File.new
+        Fs::UploadedFile.create_from_file("spec/fixtures/ss/logo.png") do |upload_file|
+          file.in_file = upload_file
+          file.model = "ss/file"
+          file.save!
+        end
+        file
+      end
+      let(:copy) { src.copy }
+
+      it do
+        expect(src.thumb).not_to be_blank
+
+        expect(copy.id).not_to eq src.id
+        expect(copy.name).to eq src.name
+        expect(copy.filename).to eq src.filename
+        expect(copy.content_type).to eq src.content_type
+        expect(copy.size).to eq src.size
+        expect(copy.model).to eq "ss/temp_file"
+        expect(copy.thumb.id).not_to eq src.thumb.id
+      end
+    end
+  end
+
+  describe "#copy_if_necessary" do
+    context "when ss/file is given" do
+      let(:src) do
+        file = SS::File.new
+        Fs::UploadedFile.create_from_file("spec/fixtures/cms/all_contents_1.csv") do |upload_file|
+          file.in_file = upload_file
+          file.model = "ss/file"
+          file.save!
+        end
+        file
+      end
+      let(:copy) { src.copy_if_necessary }
+
+      it do
+        expect(copy).to eq src
+      end
+    end
+
+    context "when ss/user_file is given" do
+      let(:src) do
+        file = SS::UserFile.new
+        Fs::UploadedFile.create_from_file("spec/fixtures/cms/all_contents_1.csv") do |upload_file|
+          file.in_file = upload_file
+          file.model = "ss/user_file"
+          file.save!
+        end
+        file
+      end
+      let(:copy) { src.copy_if_necessary }
+
+      it do
+        expect(copy).not_to eq src
+      end
+    end
+
+    context "when cms/file is given" do
+      let(:site) { create :cms_site }
+      let(:src) do
+        file = Cms::File.new
+        Fs::UploadedFile.create_from_file("spec/fixtures/cms/all_contents_1.csv") do |upload_file|
+          file.cur_site = site
+          file.in_file = upload_file
+          file.model = "cms/file"
+          file.save!
+        end
+        file
+      end
+      let(:copy) { src.copy_if_necessary }
+
+      it do
+        expect(copy).not_to eq src
+      end
+    end
+  end
 end

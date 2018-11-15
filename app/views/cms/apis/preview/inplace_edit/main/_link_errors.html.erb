@@ -1,0 +1,13 @@
+<% if @item.errors.present? %>
+  <%# リンクのエラーのサンプル。 %>
+  <%# 将来、正しい実装が提供されたら削除する。 %>
+  <div id="errorLinkChecker" class="errorExplanation">
+    <h2>リンクチェック</h2>
+    <div class="errorExplanationBody">
+      <p>次のリンクを確認しました。</p>
+      <ul>
+        <li>http://www.example.jp:3551/fs/3/7/9/_/bil0130-003.jpg <span class="failure">失敗</span></li>
+      </ul>
+    </div>
+  </div>
+<% end %>

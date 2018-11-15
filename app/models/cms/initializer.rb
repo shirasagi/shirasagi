@@ -16,7 +16,7 @@ module Cms
     Cms::Part.plugin "cms/monthly_nav"
     Cms::Column.plugin 'cms/text_field'
     Cms::Column.plugin 'cms/date_field'
-    Cms::Column.plugin 'cms/url_field'
+    Cms::Column.plugin 'cms/url_field2'
     Cms::Column.plugin 'cms/text_area'
     Cms::Column.plugin 'cms/select'
     Cms::Column.plugin 'cms/radio_button'

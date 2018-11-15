@@ -17,11 +17,4 @@ class Cms::Column::TextField < Cms::Column::Base
     options['type'] = input_type
     options
   end
-
-  def serialize_value(value)
-    Cms::Column::Value::TextField.new(
-      column_id: self.id, name: self.name, order: self.order,
-      value: value
-    )
-  end
 end

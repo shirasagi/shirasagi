@@ -1,3 +1,24 @@
 <dl class="see mod-cms-form-node">
-  <dd class="wide"><%= br @item.st_forms.pluck(:name).join("\n") %></dd>
+  <dd class="wide">
+    <table class="index">
+      <thead>
+      <tr>
+        <th class="name"><%= Cms::Form.t(:name) %></th>
+        <th class="name"><%= t("cms.default_form") %></th>
+      </tr>
+      </thead>
+      <tbody>
+      <% @item.st_forms.each do |form| %>
+        <tr data-id="<%= form.id %>">
+          <td><%= form.name %></td>
+          <td>
+            <% if @item.st_form_default_id == form.id %>
+              <i class="material-icons md-13">check</i>
+            <% end %>
+          </td>
+        </tr>
+      <% end %>
+      </tbody>
+    </table>
+  </dd>
 </dl>

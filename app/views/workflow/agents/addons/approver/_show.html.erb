@@ -16,40 +16,35 @@
       <% @item.workflow_pull_up_approvers_at(@item.workflow_current_level).each do |workflow_approver| %>
         <% next if @cur_user._id != workflow_approver[:user_id] || @item.approve_disabled?(workflow_approver[:state]) %>
         <section class="mod-workflow-approve">
-          <div class="addon-view">
-            <div class="addon-head">
-              <h2><%= t("workflow.buttons.approve") %>/<%= t("workflow.buttons.remand") %><%= @model.tt :approve_remand %></h2>
-            </div>
-            <div class="addon-body">
-              <%= text_area :remand, :comment, value: "" %>
-              <% if @ss_mode == :gws && @item.workflow_approver_attachment_enabled_at?(workflow_approver[:level]) %>
-                <div class="upload">
-                  <span class="upload-menu-new">
-                    <%= link_to t('workflow.links.approver_file_upload'), sns_apis_temp_files_path(@cur_user), class: "ajax-box btn btn-file-upload" %>
-                  </span>
-                  <div class="upload-drop-area">
-                    <span class="upload-drop-notice"><%= t('workflow.notice.approver_file_droppable') %></span>
-                  </div>
-                  <div id="selected-files"></div>
+          <%= render "ss/crud/addon", addon: { head: "#{t("workflow.buttons.approve")}/#{t("workflow.buttons.remand")}#{@model.tt :approve_remand}" } do %>
+            <%= text_area :remand, :comment, value: "" %>
+            <% if @ss_mode == :gws && @item.workflow_approver_attachment_enabled_at?(workflow_approver[:level]) %>
+              <div class="upload">
+                <span class="upload-menu-new">
+                  <%= link_to t('workflow.links.approver_file_upload'), sns_apis_temp_files_path(@cur_user), class: "ajax-box btn btn-file-upload" %>
+                </span>
+                <div class="upload-drop-area">
+                  <span class="upload-drop-notice"><%= t('workflow.notice.approver_file_droppable') %></span>
                 </div>
-              <% end %>
-              <div class="buttons">
-                <% if workflow_approver[:state] == 'request' %>
-                <%= button_tag t("workflow.buttons.approve"), { updatetype: :approve, class: "update-item btn-primary" } %>
-                <%= button_tag t("workflow.buttons.remand"), { updatetype: :remand, class: "update-item btn-default" } %>
-                <% elsif workflow_approver[:state] == 'pending' %>
-                <%= button_tag t("workflow.buttons.pull_up"), { updatetype: :pull_up, class: "update-item btn-primary" } %>
-                <% end %>
+                <div id="selected-files"></div>
               </div>
-              <% if @ss_mode == :cms %>
-              <div class="checkbox">
-                <label>
-                  <%= check_box_tag 'forced-update', true, @cur_site.forced_update == "enabled", class: 'forced' %><%= t("errors.messages.forced_update") %>
-                </label>
-              </div>
+            <% end %>
+            <div class="buttons">
+              <% if workflow_approver[:state] == 'request' %>
+              <%= button_tag t("workflow.buttons.approve"), { updatetype: :approve, class: "update-item btn-primary" } %>
+              <%= button_tag t("workflow.buttons.remand"), { updatetype: :remand, class: "update-item btn-default" } %>
+              <% elsif workflow_approver[:state] == 'pending' %>
+              <%= button_tag t("workflow.buttons.pull_up"), { updatetype: :pull_up, class: "update-item btn-primary" } %>
               <% end %>
             </div>
-          </div>
+            <% if @ss_mode == :cms %>
+            <div class="checkbox">
+              <label>
+                <%= check_box_tag 'forced-update', true, @cur_site.forced_update == "enabled", class: 'forced' %><%= t("errors.messages.forced_update") %>
+              </label>
+            </div>
+            <% end %>
+          <% end %>
         </section>
       <% end %>
     <% end %>
@@ -74,29 +69,24 @@
       <% level = workflow_circulation[:level] %>
       <% if user_id == @cur_user.id && state == "unseen" %>
         <section class="mod-workflow-approve">
-          <div class="addon-view">
-            <div class="addon-head">
-              <h2><%= t("workflow.circulation_step") %><%= @model.tt(:circulation_step) %></h2>
-            </div>
-            <div class="addon-body">
-              <%= text_area :remand, :comment, value: "" %>
-              <% if @item.workflow_circulation_attachment_enabled_at?(level) %>
-                <div class="upload">
-                  <span class="upload-menu-new">
-                    <%= link_to t('workflow.links.approver_file_upload'), sns_apis_temp_files_path(@cur_user), class: "ajax-box btn btn-file-upload" %>
-                  </span>
-                  <div class="upload-drop-area">
-                    <span class="upload-drop-notice"><%= t('workflow.notice.approver_file_droppable') %></span>
-                  </div>
-                  <div id="selected-files"></div>
+          <%= render "ss/crud/addon", addon: { head: "#{t("workflow.circulation_step")}#{@model.tt(:circulation_step)}" } do %>
+            <%= text_area :remand, :comment, value: "" %>
+            <% if @item.workflow_circulation_attachment_enabled_at?(level) %>
+              <div class="upload">
+                <span class="upload-menu-new">
+                  <%= link_to t('workflow.links.approver_file_upload'), sns_apis_temp_files_path(@cur_user), class: "ajax-box btn btn-file-upload" %>
+                </span>
+                <div class="upload-drop-area">
+                  <span class="upload-drop-notice"><%= t('workflow.notice.approver_file_droppable') %></span>
                 </div>
-              <% end %>
-
-              <div class="buttons">
-                <%= button_tag t("workflow.links.set_seen"), { updatetype: :seen, class: "update-item btn-primary" } %>
+                <div id="selected-files"></div>
               </div>
+            <% end %>
+
+            <div class="buttons">
+              <%= button_tag t("workflow.links.set_seen"), { updatetype: :seen, class: "update-item btn-primary" } %>
             </div>
-          </div>
+          <% end %>
         </section>
       <% end %>
     <% end %>

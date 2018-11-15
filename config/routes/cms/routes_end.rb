@@ -158,7 +158,10 @@ SS::Application.routes.draw do
       get "related_page" => "related_page#index"
       get "node_tree/:id" => "node_tree#index", as: :node_tree
       get "forms" => "forms#index"
-      get "forms/:id/:item_type/form" => "forms#form", as: :form
+      get "forms/temp_file/:id/select" => "forms#select_temp_file", as: :form_temp_file_select
+      get "forms/:id/form" => "forms#form", as: :form
+      get "forms/:id/columns/:column_id/new" => "forms#new_column", as: :form_column_new
+      match "forms/:id/html" => "forms#html", as: :form_html, via: %i[post put]
 
       resources :files, concerns: :deletion do
         get :select, on: :member
@@ -182,6 +185,20 @@ SS::Application.routes.draw do
       end
       namespace "opendata_ref" do
         get "datasets:cid" => "datasets#index", as: 'datasets'
+      end
+      namespace "preview" do
+        namespace "inplace_edit" do
+          resources :pages, only: %i[edit update] do
+            resources :column_values, only: %i[new create edit update destroy] do
+              post :move_up, on: :member
+              post :move_down, on: :member
+              post :move_at, on: :member
+            end
+          end
+          resources :forms, only: %i[] do
+            get :palette, on: :member
+          end
+        end
       end
     end
   end

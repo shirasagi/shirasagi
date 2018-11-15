@@ -8,6 +8,9 @@
   <dt><%= @model.t :state %><%= @model.tt :state %></dt>
   <dd><%= f.select :state, @item.state_options %></dd>
 
+  <dt><%= @model.t :sub_type %><%= @model.tt :sub_type %></dt>
+  <dd><%= f.select :sub_type, @item.sub_type_options %></dd>
+
   <dt><%= @model.t :column_ids %></dt>
   <dd>
     <% if @item.columns.present? %>

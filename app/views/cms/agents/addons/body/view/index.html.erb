@@ -1,5 +1,7 @@
 <% if @cur_page.html.present? %>
-<article class="body">
-  <%== @cur_page.html %>
-</article>
+  <%= content_tag_if("div", class: "ss-preview-page", data: { "page-id" => @cur_page.id, "page-route" => @cur_page.route }, if: @preview) do %>
+    <article class="body">
+      <%== @cur_page.html %>
+    </article>
+  <% end %>
 <% end %>

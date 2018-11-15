@@ -1,0 +1,85 @@
+/**
+ *= require mdi/material-icons
+ */
+
+@import "compass-mixins/lib/compass";
+@import "ss/init";
+
+// -------------------------------------------------------------------------------------------------
+// preview
+
+#ss-preview {
+  background-color: rgb(242, 242, 242);
+  @include box-shadow(0px 1px 5px #666);
+  padding: 5px;
+  width: 100%;
+  z-index: 5001;
+
+  .ss-preview-btn-group {
+    display: inline-block;
+  }
+
+  .ss-preview-btn-group ~ .ss-preview-btn-group {
+    margin-left: 8px;
+  }
+
+  .ss-preview-active {
+    border: 1px solid green;
+  }
+}
+.ss-preview-hide {
+  display: none !important;
+}
+
+#ss-preview-overlay {
+  position: absolute;
+  border: 3px solid $gray5;
+  @include border-radius(2px);
+
+  .ss-preview-overlay-tool {
+    position: absolute;
+    margin: 0;
+    padding: 0;
+    top: 0;
+    right: 0;
+    background-color: rgb(242, 242, 242);
+  }
+  * {
+    display: inline-block;
+  }
+  .ss-preview-overlay-name {
+    font-size: 0.8em;
+  }
+}
+
+#ss-preview-content-begin {
+  display: block;
+  margin: 0;
+  padding: 8px;
+  background-color: rgb(242, 242, 242);
+  @include box-shadow(0px 1px 5px #666);
+}
+
+#ss-preview-inplace-item-form {
+  margin-top: 8px;
+  margin-bottom: 8px;
+  padding: 8px;
+
+  .btn {
+    -webkit-appearance: button;
+  }
+
+  .tooltip {
+    display: none;
+  }
+
+  .hide { display: none; }
+
+  @import "cms/column";
+}
+
+#ss-preview-form-palette {
+  margin-top: 8px;
+  margin-bottom: 8px;
+  width: 100%;
+};

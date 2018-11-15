@@ -1,0 +1,34 @@
+.column-value ~ .column-value {
+  margin-top: 15px;
+}
+
+.column-value-header {
+  @include display-flex;
+  @include flex-direction(row);
+  padding: 5px 0;
+  label {
+    color: #a0522d;
+    font-weight: bold;
+  }
+  .column-value-header-group:first-child {
+    margin-right: auto;
+  }
+  .column-value-header-group ~ .column-value-header-group {
+    margin-left: 16px;
+  }
+}
+
+.column-value-body {
+  padding-bottom: 5px;
+}
+
+.column-value-files {
+  -js-display: flex;
+  @include display-flex;
+  @include flex-wrap(wrap);
+  margin-top: 10px;
+  @include clear;
+  @include mb {
+    margin-top: 10px;
+  }
+}

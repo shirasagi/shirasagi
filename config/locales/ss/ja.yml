@@ -57,6 +57,7 @@ ja:
       back: 戻る
       back_to_show: 詳細へ戻る
       back_to_index: 一覧へ戻る
+      back_to_administration: 管理画面へ戻る
       parent_directory: 上の階層へ
       preview: プレビュー
       pc_preview: PCプレビュー
@@ -131,6 +132,7 @@ ja:
       restore: 元に戻す
       close: 閉じる
       csv: CSV
+      ignore_alerts_and_save: 警告を無視して保存する
     confirm:
       delete: 削除してよろしいですか？
       soft_delete: 削除してよろしいですか？

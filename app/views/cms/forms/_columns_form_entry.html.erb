@@ -1,0 +1,13 @@
+<%= f.fields_for :column_values do |g| %>
+  <% column_values.order_by(order: 1, id: 1).each do |column_value| %>
+    <% column = column_value.column %>
+    <% next if column.blank? %>
+    <%= render file: column.column_form_path, locals: { f: g, column: column, value: column_value, controller: true } %>
+  <% end %>
+
+  <%= render "cms/forms/columns_form_palette", form: form %>
+<% end %>
+
+<%= jquery do %>
+  Cms_TemplateForm.bind(<%== "##{addon_id}".to_json %>, { type: 'entry' });
+<% end %>

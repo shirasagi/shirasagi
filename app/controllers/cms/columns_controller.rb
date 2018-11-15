@@ -42,6 +42,18 @@ class Cms::ColumnsController < ApplicationController
     { cur_site: @cur_site, cur_form: @cur_form }
   end
 
+  def pre_params
+    ret = super || {}
+
+    max_order = @cur_form.columns.max(:order) || 0
+    ret[:order] = max_order + 10
+
+    if @cur_form.sub_type_entry?
+      ret[:required] = "optional"
+    end
+    ret
+  end
+
   def column_type_options
     items = {}
 
