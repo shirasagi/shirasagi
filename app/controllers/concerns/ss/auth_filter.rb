@@ -30,6 +30,23 @@ module SS::AuthFilter
     user
   end
 
+  def get_user_by_access_token
+    return nil if params[:access_token].blank?
+
+    token = SS::AccessToken.and_token(params[:access_token]).first
+    return nil unless token
+    return nil unless token.enabled?
+
+    @login_path = token.login_path
+    @logout_path = token.logout_path
+    user = token.user
+    token.destroy
+    return nil if user.blank?
+    return nil if user.disabled?
+
+    user
+  end
+
   def set_last_logged_in(timestamp = Time.zone.now.to_i)
     session[:user]["last_logged_in"] = timestamp if session[:user]
   end
