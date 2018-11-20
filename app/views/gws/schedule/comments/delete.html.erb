@@ -14,6 +14,6 @@
 
 <footer class="send">
   <%= f.submit t("ss.buttons.delete"), class: 'btn-danger delete' %>
-  <%= link_to(t("ss.buttons.cancel"), params[:redirect_to], class: 'btn-default') %>
+  <%= link_to(t("ss.buttons.cancel"), URI.parse(params[:redirect_to].to_s).path, class: 'btn-default') %>
 </footer>
 <% end %>
