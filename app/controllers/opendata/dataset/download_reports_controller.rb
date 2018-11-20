@@ -10,7 +10,12 @@ class Opendata::Dataset::DownloadReportsController < ApplicationController
   private
 
   def set_item
-    attributes = params[:item] || {}
+    if params[:item]
+      attributes = params[:item].to_unsafe_h
+    else
+      attributes = {}
+    end
+
     attributes.merge!(
       cur_node: @cur_node,
       cur_site: @cur_site,
