@@ -11,7 +11,7 @@ ja:
       gws/portal/portlet/board: 掲示板設定
       gws/portal/portlet/faq: よくある質問設定
       gws/portal/portlet/qna: Ｑ＆Ａ設定
-      gws/portal/portlet/circular: 掲示板設定
+      gws/portal/portlet/circular: 回覧板設定
       gws/portal/portlet/monitor: 照会・回答設定
       gws/portal/portlet/share: 共有ファイル設定
       gws/portal/portlet/report: レポート設定
@@ -163,6 +163,7 @@ ja:
         qna_category_ids: カテゴリー
       gws/addon/portal/portlet/circular:
         circular_category_ids: カテゴリー
+        circular_article_state: 表示種別
       gws/addon/portal/portlet/monitor:
         monitor_category_ids: カテゴリー
         monitor_answerable_article: 表示範囲
@@ -200,3 +201,6 @@ ja:
     gws/portal/group_setting:
     gws/portal/portlet_model:
       name: ポートレット名を入力します。
+      circular_article_state:
+        - <b>未読</b> - 未読のみをポータルに表示する。
+        - <b>全表示</b> - 既読・未読すべてをポータルに表示する。
