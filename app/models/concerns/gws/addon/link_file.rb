@@ -3,6 +3,8 @@ module Gws::Addon
     extend ActiveSupport::Concern
     extend SS::Addon
 
+    set_addon_type :gws_portlet
+
     included do
       attr_accessor :in_clone_file, :ref_file_ids, :link_urls
       embeds_ids :files, class_name: "SS::LinkFile"
