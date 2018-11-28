@@ -34,7 +34,7 @@ class Gws::Discussion::Topic
     item.member_ids = notify_member_ids
     item.subject = I18n.t("gws/discussion.notify_message.topic.subject", forum_name: forum.name, topic_name: name)
     item.format = "text"
-    item.text = I18n.t("gws/discussion.notify_message.topic.text", topic_name: name, text: url)
+    item.url = I18n.t("gws/discussion.notify_message.topic.text", topic_name: name, text: url)
     item.send_date = Time.zone.now
 
     # set topic

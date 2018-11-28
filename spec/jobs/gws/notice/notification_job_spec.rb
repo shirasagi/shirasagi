@@ -65,7 +65,7 @@ describe Gws::Notice::NotificationJob, dbscope: :example do
       Gws::Memo::Notice.first.tap do |message|
         expect(message.member_ids).to include(recipient1.id, recipient2.id, recipient3.id)
         expect(message.subject).to eq I18n.t('gws_notification.gws/notice/post.subject', name: notice.name)
-        expect(message.text).to include("/.g#{site.id}/notice/-/-/readables/#{notice.id}")
+        expect(message.url).to include("/.g#{site.id}/notice/-/-/readables/#{notice.id}")
       end
 
       expect(ActionMailer::Base.deliveries.length).to eq 1
@@ -110,7 +110,7 @@ describe Gws::Notice::NotificationJob, dbscope: :example do
       Gws::Memo::Notice.first.tap do |message|
         expect(message.member_ids).to include(recipient1.id, recipient2.id, recipient3.id)
         expect(message.subject).to eq I18n.t('gws_notification.gws/notice/post.subject', name: notice.name)
-        expect(message.text).to include("/.g#{site.id}/notice/-/-/readables/#{notice.id}")
+        expect(message.url).to include("/.g#{site.id}/notice/-/-/readables/#{notice.id}")
       end
 
       expect(ActionMailer::Base.deliveries.length).to eq 1
@@ -180,7 +180,7 @@ describe Gws::Notice::NotificationJob, dbscope: :example do
       Gws::Memo::Notice.first.tap do |message|
         expect(message.member_ids).to include(recipient1.id, recipient2.id, recipient3.id)
         expect(message.subject).to eq I18n.t('gws_notification.gws/notice/post.subject', name: notice.name)
-        expect(message.text).to include("/.g#{site.id}/notice/-/-/readables/#{notice.id}")
+        expect(message.url).to include("/.g#{site.id}/notice/-/-/readables/#{notice.id}")
       end
 
       expect(ActionMailer::Base.deliveries.length).to be > 0
