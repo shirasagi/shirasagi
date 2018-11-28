@@ -44,7 +44,7 @@ class Gws::Report::NotificationJob < Gws::ApplicationJob
     message.send_date = Time.zone.now
     message.subject = mail.subject
     message.format = 'text'
-    message.text = mail.decoded
+    message.url = mail.decoded
     message.save!
 
     mail =  Gws::Memo::Mailer.notice_mail(message, [recipient], @item)
