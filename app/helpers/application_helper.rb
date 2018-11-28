@@ -1,4 +1,6 @@
 module ApplicationHelper
+  include Category::CategoryHelper
+
   def tryb(&block)
     begin
       yield

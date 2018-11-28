@@ -24,34 +24,47 @@ module Webmail::Mail::Message
   end
 
   def new_mail
-    if sign = Webmail::Signature.default_sign(imap.user)
+    if sign = Webmail::Signature.default_sign(imap)
       self.text = "\n\n#{sign}"
       self.html = "<p></p>" + h(sign.to_s).gsub(/\r\n|\n/, '<br />')
     end
   end
 
-  def new_reply(ref)
+  def new_reply(ref, without_body)
     self.reply_uid = ref.uid
     self.to = ref.from
     self.to_text = self.to.join('; ')
     set_reply_header(ref)
-    set_reply_body(ref)
+    set_reply_body(ref) unless without_body
   end
 
-  def new_reply_all(ref)
+  def new_reply_all(ref, without_body)
     self.reply_uid = ref.uid
-    self.to = (ref.from + ref.to).reject { |c| imap.user.email.present? && c.include?(imap.user.email) }
+    self.to = (ref.from + ref.to).reject { |c| c.include?(imap.address) }
     self.cc = ref.cc
     self.to_text = self.to.join('; ')
     self.cc_text = self.cc.join('; ')
     set_reply_header(ref)
-    set_reply_body(ref)
+    set_reply_body(ref) unless without_body
   end
 
   def new_forward(ref)
     self.forward_uid = ref.uid
     self.subject = "Fw: " + ref.subject.to_s.gsub(/^Fw:\s*/, '')
     set_reply_body(ref)
+    set_ref_files(ref.attachments)
+  end
+
+  def new_edit(ref)
+    self.edit_as_new_uid = ref.uid
+    self.to = ref.to
+    self.cc = ref.cc
+    self.to_text = self.to.join('; ')
+    self.cc_text = self.cc.join('; ')
+    self.subject = ref.subject
+    self.format = ref.format
+    self.text = ref.text
+    self.html = ref.html
     set_ref_files(ref.attachments)
   end
 
@@ -65,7 +78,7 @@ module Webmail::Mail::Message
   end
 
   def set_reply_body(ref)
-    sign = Webmail::Signature.default_sign(imap.user)
+    sign = Webmail::Signature.default_sign(imap)
     self.format = ref.format
     self.text = reply_body_text(ref, sign)
     self.html = reply_body_html(ref, sign)

@@ -25,6 +25,9 @@
         text-decoration: none;
       }
     }
+    .xdsoft_other_month {
+      pointer-events: none;
+    }
   }
   .xdsoft_datepicker {
     width: 190px;
@@ -521,7 +524,7 @@
     overflow: visible !important;
   }
   .fc-scrollpane-inner {
-    min-height: 38px;
+    min-height: 84px;
   }
   .fc-body .fc-scrollpane-inner {
     padding-top: 4px;

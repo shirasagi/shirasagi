@@ -24,7 +24,7 @@ class Gws::Presence::Apis::Group::UsersController < ApplicationController
   def index
     raise "403" unless Gws::UserPresence.allowed?(:use, @cur_user, site: @cur_site)
 
-    @items = @group.users.active
+    @items = @group.users.active.order_by_title(@cur_site)
     if params[:limit]
       @items = @items.page(params[:page].to_i).per(params[:limit])
     end

@@ -3,7 +3,6 @@ class Article::PagesController < ApplicationController
   include Cms::PageFilter
   include Workflow::PageFilter
   include Cms::OpendataRef::PageFilter
-
   model Article::Page
 
   append_view_path "app/views/cms/pages"

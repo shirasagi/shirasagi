@@ -1,0 +1,12 @@
+<div class="no-print" style="position: relative; width: 220mm;">
+  <%= link_to(I18n.t('ss.links.back'), { action: :show, id: @item.uid }) %>
+  <span style="position: absolute; right: 8px;">
+    <%= link_to t('webmail.links.print'), '#', { class: 'print-mail' } %>
+  </span>
+</div>
+
+<div class="sheet webmail-mail-preview">
+  <div class="main">
+    <%= render file: 'show' %>
+  </div>
+</div>

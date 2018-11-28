@@ -128,6 +128,7 @@ ja:
         discussion_comment_limit: コメントの上限
 
   gws_role:
+    use_gws_discussion: 電子会議室の利用
     read_other_gws_discussion_forums: 電子会議室の閲覧（全て）
     read_private_gws_discussion_forums: 電子会議室の閲覧（所有）
     edit_other_gws_discussion_forums: 電子会議室の編集（全て）

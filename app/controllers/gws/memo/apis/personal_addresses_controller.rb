@@ -34,6 +34,8 @@ class Gws::Memo::Apis::PersonalAddressesController < ApplicationController
   public
 
   def index
+    raise "403" unless @cur_user.gws_role_permit_any?(@cur_site, :edit_gws_personal_addresses)
+
     s_params = params[:s] || {}
     s_params[:address_group_id] = @address_group.id if @address_group.present?
 

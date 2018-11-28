@@ -21,6 +21,8 @@ module Webmail::BaseFilter
 
   def set_webmail_mode
     @ss_mode = :webmail
+    @webmail_mode = params[:webmail_mode].try(:to_sym) || :account
+    raise "404" unless %i[account group].include?(@webmail_mode)
   end
 
   def validate_service
@@ -52,16 +54,17 @@ module Webmail::BaseFilter
   end
 
   def imap_initialize
-    @imap_setting = @cur_user.imap_settings[params[:account].to_i] if params.key?(:account)
-
-    if @imap_setting
-      @redirect_path = webmail_login_failed_path(account: params[:account])
-    else
-      @redirect_path = webmail_account_setting_path
-      @imap_setting = Webmail::ImapSetting.new
+    if @webmail_mode == :group
+      raise "403" if !@cur_user.webmail_user.webmail_permitted_all?(:use_webmail_group_imap_setting)
+      group = @cur_user.groups.find_by(id: params[:account])
+      @imap = group.webmail_group.initialize_imap
+    elsif params.key?(:account)
+      @imap = @cur_user.initialize_imap(params[:account].to_i)
     end
+    return if @imap.blank?
 
-    @imap = Webmail::Imap::Base.new(@cur_user, @imap_setting)
+    @imap_setting = @imap.setting
+    @webmail_redirect_path = [ :render, "app/views/webmail/main/login_failed" ]
   end
 
   def imap_disconnect
@@ -69,8 +72,16 @@ module Webmail::BaseFilter
   end
 
   def imap_login
-    return if @imap.login
-    redirect_to @redirect_path
+    @webmail_imap_login = @imap.login
+    return if @webmail_imap_login
+
+    method, path = @webmail_redirect_path
+    case method
+    when :render
+      render file: path
+    else
+      redirect_to path
+    end
   end
 
   def rescue_imap_no_response_error(exception)

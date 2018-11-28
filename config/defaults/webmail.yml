@@ -8,6 +8,9 @@ production: &production
   # Disable quota
   disable_quota: false
 
+  # Disable alias
+  disable_alias: true
+
   # Default settings
   clients:
     default:
@@ -35,6 +38,9 @@ production: &production
   # Upper limit of user's imap account
   imap_account_limit: 5
 
+  # Upper limit of mail's attachments file size(byte). 0 is unlimited
+  send_mail_size_limit: 0
+
   history:
     save_days: 90
     severity: info
@@ -43,6 +49,7 @@ production: &production
 test:
   <<: *production
   disable: false
+  disable_alias: false
 
 development:
   <<: *production

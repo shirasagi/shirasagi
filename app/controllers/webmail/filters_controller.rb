@@ -1,10 +1,11 @@
 class Webmail::FiltersController < ApplicationController
   include Webmail::BaseFilter
-  include Sns::CrudFilter
+  include Webmail::ImapCrudFilter
 
   model Webmail::Filter
 
   before_action :imap_login, except: [:index]
+  before_action :check_group_imap_permissions, if: ->{ @webmail_mode == :group }
 
   private
 
@@ -17,12 +18,17 @@ class Webmail::FiltersController < ApplicationController
     @imap.account_scope.merge(cur_user: @cur_user, imap: @imap)
   end
 
+  def check_group_imap_permissions
+    unless @cur_user.webmail_permitted_any?(:edit_webmail_group_imap_filters)
+      redirect_to webmail_mails_path(webmail_mode: @webmail_mode, account: params[:account])
+    end
+  end
+
   public
 
   def index
     @items = @model.
-      user(@cur_user).
-      imap_setting(@cur_user, @imap_setting).
+      and_imap(@imap).
       search(params[:s]).
       page(params[:page]).
       per(50)
@@ -31,8 +37,8 @@ class Webmail::FiltersController < ApplicationController
   def download
     s_params = params[:s] || {}
 
-    @items = @model.user(@cur_user).
-      imap_setting(@cur_user, @imap_setting).
+    @items = @model.
+      and_imap(@imap).
       search(s_params)
 
     send_enum enum_csv, type: 'text/csv; charset=Shift_JIS', filename: "personal_filters_#{Time.zone.now.to_i}.csv"

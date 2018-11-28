@@ -4,8 +4,8 @@ describe "webmail_users", type: :feature, dbscope: :example do
   before { login_webmail_admin }
 
   context "user extension" do
-    let(:setting) { Webmail::ImapSetting.new }
-    let(:imap) { Webmail::Imap::Base.new(webmail_admin, setting) }
+    let(:setting) { Webmail::ImapSetting.default }
+    let(:imap) { Webmail::Imap::Base.new_by_user(webmail_admin, setting) }
     let(:quota_limit) { 10 }
     let(:quota_usage) { rand(1..quota_limit) }
 

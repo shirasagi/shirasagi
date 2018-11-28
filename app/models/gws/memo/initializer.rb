@@ -34,5 +34,9 @@ module Gws::Memo
     Gws::Role.permission :edit_private_gws_memo_templates, module_name: 'gws/memo'
     Gws::Role.permission :delete_other_gws_memo_templates, module_name: 'gws/memo'
     Gws::Role.permission :delete_private_gws_memo_templates, module_name: 'gws/memo'
+
+    Gws.module_usable :memo do |site, user|
+      Gws::Memo.allowed?(:use, user, site: site)
+    end
   end
 end

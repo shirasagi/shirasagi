@@ -20,4 +20,6 @@
 
   <dt><%= @item.t :limit %> </dt>
   <dd><%= f.number_field :limit %></dd>
+  <dt><%= @model.t :circular_article_state %><%= @model.tt :circular_article_state %></dt>
+  <dd><%= f.select :circular_article_state, @item.circular_article_state_options %></dd>
 </dl>

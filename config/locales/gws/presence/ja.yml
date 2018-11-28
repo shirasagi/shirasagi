@@ -15,7 +15,7 @@ ja:
       gws/presence/delegator_setting: 在席管理
 
   gws_role:
-    use_gws_user_presences: 在席状況の閲覧
+    use_gws_user_presences: 在席状況の利用
     manage_private_gws_user_presences: 在席状況の管理（自所属）
     manage_all_gws_user_presences: 在席状況の管理（全て）
     manage_custom_group_gws_user_presences: 在席状況の管理（所属カスタムグループ）

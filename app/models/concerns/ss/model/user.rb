@@ -22,9 +22,9 @@ module SS::Model::User
     index({ organization_uid: 1, organization_id: 1 }, { unique: true, sparse: true })
 
     # Create indexes each site_ids.
-    # > db.ss_users.ensureIndex({ "title_orders.1": -1, uid: 1 });
+    # > db.ss_users.ensureIndex({ "title_orders.1": -1, organization_uid: 1, uid: 1 });
     #
-    # index({ "title_orders.#{site_id}" => -1, uid: 1  })
+    # index({ "title_orders.#{site_id}" => -1, organization_uid: 1, uid: 1  })
 
     cattr_reader(:group_class) { SS::Group }
 
@@ -283,6 +283,18 @@ module SS::Model::User
   # Cast
   def gws_user
     @gws_user ||= is_a?(Gws::User) ? self : Gws::User.find(id)
+  end
+
+  def webmail_user
+    @webmail_user ||= begin
+      if is_a?(Webmail::User)
+        self
+      else
+        user = Webmail::User.find(id)
+        user.decrypted_password = decrypted_password
+        user
+      end
+    end
   end
 
   private

@@ -1,0 +1,20 @@
+<% default = t('webmail.default_settings') %>
+
+<dl class="see">
+  <dt><%= @model.t :imap_setting_name %></dt>
+  <dd><%= @item.name %></dd>
+
+  <dt><%= @model.t :from %></dt>
+  <dd><%= @item.from.presence || @cur_user.name %></dd>
+
+  <% if !SS.config.webmail.disable_alias %>
+  <dt><%= @model.t :imap_alias %></dt>
+  <dd><%= @item.imap_alias %></dd>
+  <% end %>
+
+  <dt><%= @model.t :imap_account %></dt>
+  <dd><%= @item.imap_account.presence || default %></dd>
+
+  <dt><%= @model.t :imap_password %></dt>
+  <dd><%= ('*' * 8).presence || default %></dd>
+</dl>

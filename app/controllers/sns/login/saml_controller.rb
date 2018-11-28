@@ -2,6 +2,8 @@ class Sns::Login::SamlController < ApplicationController
   include Sns::BaseFilter
   include Sns::LoginFilter
 
+  READY_STATE_EXPIRES_IN = 10.minutes.to_i
+
   skip_before_action :verify_authenticity_token, raise: false, only: :consume
   skip_before_action :logged_in?
   before_action :set_item
@@ -26,6 +28,7 @@ class Sns::Login::SamlController < ApplicationController
       settings.idp_slo_target_url = @item.slo_url
       settings.idp_cert = SS::Crypt.decrypt(@item.x509_cert)
       settings.idp_cert_fingerprint = @item.fingerprint
+      settings.force_authn = true if @item.force_authn?
     end
   end
 
@@ -38,18 +41,25 @@ class Sns::Login::SamlController < ApplicationController
 
   def init
     request = OneLogin::RubySaml::Authrequest.new
-    state = session['ss.sso.state'] = SecureRandom.hex(24)
-    redirect_to(request.create(settings, RelayState: state))
+    state = SecureRandom.hex(24)
+    session['ss.sso.state'] = { value: state, created: Time.zone.now.to_i }
+    redirect_to(request.create(settings, RelayState: state, ForceAuthn: "true"))
   end
 
   def consume
     state = params[:RelayState]
-    raise "404" if session.delete('ss.sso.state') != state
+    session_state = session.delete('ss.sso.state')
+    raise "404" if session_state.blank?
+    raise "404" if session_state[:value] != state
+    raise "404" if session_state[:created] + READY_STATE_EXPIRES_IN < Time.zone.now.to_i
 
     response = OneLogin::RubySaml::Response.new(params[:SAMLResponse])
     response.settings = settings
 
-    raise "403" unless response.is_valid?
+    if !response.is_valid?
+      render_login nil, nil, alert: response.status_message.presence
+      return
+    end
 
     user = SS::User.uid_or_email(response.nameid).and_enabled.and_unlocked.first
     if user.blank?

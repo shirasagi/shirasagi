@@ -22,7 +22,7 @@ module Chorg::Runner::Main
 
   def delete_entity(entity)
     task.store_entity_deletes(entity)
-    if user_like?(entity) || group_like?(entity)
+    if @item.disable_if_possible? && (user_like?(entity) || group_like?(entity))
       entity.disable
     else
       entity.delete

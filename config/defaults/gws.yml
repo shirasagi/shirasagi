@@ -59,6 +59,10 @@ production: &production
       - model: faq
       - model: qna
 
+    portlet_settings:
+      ad:
+        image_limit: 5
+
   chorg:
     models:
       - "Gws::Board::Category"
@@ -138,6 +142,7 @@ production: &production
     search_condition: unseen
 
   notice:
+    default_notice_individual_body_size_limit: 1_048_576
     default_notice_total_body_size_limit: 31_457_280
     default_notice_individual_file_size_limit: 10_485_760
     default_notice_total_file_size_limit: 31_457_280

@@ -27,4 +27,28 @@
 
   <dt><%= @model.t :ical_import_date_after %><%= @model.tt :ical_import_date_after %></dt>
   <dd><%= f.number_field :ical_import_date_after, value: @item.ical_import_date_after, min: 0 %> <%= I18n.t('ss.units.days_after') %></dd>
+
+  <dt><%= @model.t :ical_category_ids %><%= @model.tt :ical_category_ids %></dt>
+  <dd>
+    <%= hidden_field_tag "#{f.object_name}[ical_category_ids][]", nil, class: "hidden-ids" %>
+    <%= link_to t("cms.apis.categories.index"), cms_apis_categories_path(single: 1), class: "btn ajax-box" %>
+  </dd>
+  <dd>
+    <table class="index ajax-selected">
+      <thead>
+      <tr>
+        <th class="name"><%= @model.t :ical_category_ids %></th>
+        <th></th>
+      </tr>
+      </thead>
+      <tbody>
+      <% @item.ical_categories.each do |item| %>
+        <tr data-id="<%= item.id %>">
+          <td><%= hidden_field_tag "#{f.object_name}[ical_category_ids][]", item.id %> <%= item.name %></td>
+          <td><%= link_to t("ss.buttons.delete"), "#", class: "deselect btn" %></td>
+        </tr>
+      <% end %>
+      </tbody>
+    </table>
+  </dd>
 </dl>

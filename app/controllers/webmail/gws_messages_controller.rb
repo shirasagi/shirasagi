@@ -15,7 +15,7 @@ class Webmail::GwsMessagesController < ApplicationController
   private
 
   def set_crumbs
-    @crumbs << [t("webmail.mail"), webmail_mails_path ]
+    @crumbs << [t("webmail.mail"), webmail_mails_path(webmail_mode: @webmail_mode) ]
   end
 
   def fix_params

@@ -59,6 +59,7 @@ ja:
       gws/faq/category: カテゴリー
 
   gws_role:
+    use_gws_faq: よくある質問の利用
     read_other_gws_faq_posts: 投稿の閲覧（全て）
     read_private_gws_faq_posts: 投稿の閲覧（所有）
     edit_other_gws_faq_posts: 投稿の編集（全て）

@@ -8,7 +8,7 @@ if ($element) {
 
 SS.ajaxForm("form.user-file", {
   success: function(data) {
-    $("#cboxLoadedContent").load("<%= url_for(action: :index) %>", function() {
+    $("#cboxLoadedContent").load("<%= url_for(action: :index, file_size: params[:file_size]) %>", function() {
       if (!Array.isArray(data) || data.length == 0) return;
 
       $.each(data, function(index, file) {
@@ -35,7 +35,7 @@ SS.ajaxForm("form.user-file", {
     } else {
       try {
         alert(["== Error =="].concat(xhr.responseJSON).join("\n"));
-      } catch {
+      } catch(_error) {
         alert(["== Error =="].concat(xhr.statusText).join("\n"));
       }
     }
@@ -78,6 +78,7 @@ if (resizing) {
     <div class="search-ui-form">
       <%= f.file_field :in_files, multiple: :multiple, required: :required %>
       <%= f.select :resizing, @model.resizing_options, { include_blank: t("ss.resize_image") }, { class: "image-size" } %>
+      <%= hidden_field_tag :unnormalize, params[:unnormalize] if params[:unnormalize].present? %>
       <%= f.submit t("ss.buttons.save"), class: "save btn", style: "margin-left: 10px;" %>
     </div>
 
@@ -87,7 +88,12 @@ if (resizing) {
 <div class="index user-files">
   <% @items.each do |item| %>
   <article class="file-view" id="user-file<%= item.id %>">
-    <a class="thumb select" href="<%= url_for action: :select, id: item %>" data-id="<%= item.id %>" data-humanized-name="<%= item.humanized_name %>">
+    <%
+      opts = { action: :select, id: item }
+      opts[:unnormalize] = true if params[:unnormalize].present?
+      opts[:file_size] = true if params[:file_size].present?
+    %>
+    <a class="thumb select" href="<%= url_for opts %>" data-id="<%= item.id %>" data-humanized-name="<%= item.humanized_name %>">
       <% if item.image? %>
       <img src="<%= url_for(action: :thumb, id: item, _: item.updated.to_i) %>" alt="<%= item.basename %>" />
       <% else %>
@@ -96,10 +102,14 @@ if (resizing) {
     </a>
     <div class="name">
       <%= item.name %>
+      <% if params[:file_size] %>
+      <br />
+      <span class="file-size"><%= "( #{number_to_human_size(item.size)} )" %></span>
+      <% end %>
     </div>
     <nav class="menu">
       <% if item.allowed?(:edit, @cur_user, site: @cur_site) %>
-        <%= link_to t("ss.buttons.edit"), { action: :edit, id: item }, class: "edit" %>
+        <%= link_to t("ss.buttons.edit"), { action: :edit, id: item, file_size: params[:file_size] }, class: "edit" %>
       <% end %>
       <% if item.allowed?(:delete, @cur_user, site: @cur_site) %>
         <%= link_to t("ss.buttons.delete"), { action: :destroy, id: item }, class: "delete", "data-remove" => "#user-file#{item.id}" %>

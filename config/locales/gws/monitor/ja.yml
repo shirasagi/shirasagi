@@ -173,6 +173,8 @@ ja:
       gws/monitor/group_setting: 照会・回答
 
   gws_role:
+    use_gws_monitor: 照会・回答の利用
+
     read_other_gws_monitor_posts: 投稿の閲覧（全て）
     read_private_gws_monitor_posts: 投稿の閲覧（所有）
     edit_other_gws_monitor_posts: 投稿の編集（全て）
