@@ -6,7 +6,7 @@
     <% if @model.allowed?(:read, @cur_user, site: @cur_site, node: @cur_node) %>
       <%= link_to(t('ss.links.download'), { action: :download }) rescue nil %>
     <% end %>
-    <% if @model.allowed?(:edit, @cur_user, site: @cur_site, node: @cur_node) %>
+    <% if @model.allowed?(:import, @cur_user, site: @cur_site, node: @cur_node) %>
       <%= link_to(t('ss.links.import'), { action: :import }) rescue nil %>
     <% end %>
   <% elsif params[:action] =~ /new|create|lock|download|import/ %>

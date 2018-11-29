@@ -21,5 +21,7 @@ module Event
     Cms::Role.permission :revoke_private_event_pages
     Cms::Role.permission :move_private_event_pages
     Cms::Role.permission :move_other_event_pages
+    Cms::Role.permission :import_private_event_pages
+    Cms::Role.permission :import_other_event_pages
   end
 end
