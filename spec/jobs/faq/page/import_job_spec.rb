@@ -26,7 +26,7 @@ describe Faq::Page::ImportJob, dbscope: :example do
     context "with node_1" do
       before do
         perform_enqueued_jobs do
-          described_class.bind(site_id: site, node_id: node_1).perform_later(ss_file.id)
+          described_class.bind(site_id: site, node_id: node_1, user_id: cms_user).perform_later(ss_file.id)
         end
       end
 
@@ -72,7 +72,7 @@ describe Faq::Page::ImportJob, dbscope: :example do
     context "with node_2" do
       before do
         perform_enqueued_jobs do
-          described_class.bind(site_id: site, node_id: node_2).perform_later(ss_file.id)
+          described_class.bind(site_id: site, node_id: node_2, user_id: cms_user).perform_later(ss_file.id)
         end
       end
 

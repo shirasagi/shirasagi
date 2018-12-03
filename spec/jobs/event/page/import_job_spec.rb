@@ -17,7 +17,7 @@ describe Event::Page::ImportJob, dbscope: :example do
     context "with node" do
       before do
         perform_enqueued_jobs do
-          described_class.bind(site_id: site, node_id: node).perform_later(ss_file.id)
+          described_class.bind(site_id: site, node_id: node, user_id: cms_user).perform_later(ss_file.id)
         end
       end
 

@@ -296,6 +296,8 @@ ja:
     delete_private_cms_nodes: フォルダーの削除（所有）
     move_other_cms_nodes: フォルダーの移動（全て）
     move_private_cms_nodes: フォルダーの移動（所有）
+    import_other_cms_nodes: フォルダーのインポート（全て）
+    import_private_cms_nodes: フォルダーのインポート（所有）
     read_other_cms_pages: 固定ページの閲覧（全て）
     read_private_cms_pages: 固定ページの閲覧（所有）
     edit_other_cms_pages: 固定ページの編集（全て）
