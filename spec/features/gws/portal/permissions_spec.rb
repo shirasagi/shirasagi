@@ -41,7 +41,7 @@ describe "gws_portal_permissions", type: :feature, dbscope: :example do
 
     it "secured portals" do
       role = user.gws_roles[0]
-      role.update_attributes(permissions: [])
+      role.update(permissions: %w(use_gws_board))
       user.clear_gws_role_permissions
 
       visit gws_portal_path(site: site)
