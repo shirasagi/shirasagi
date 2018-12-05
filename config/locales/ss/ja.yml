@@ -337,6 +337,7 @@ ja:
       ss/approve_setting: 承認設定
       ss/editor_setting: エディタ設定
       ss/mail_setting: メール設定
+      ss/link_file: ファイル
 
   mongoid:
     models:

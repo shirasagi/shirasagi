@@ -11,6 +11,9 @@ ja:
   sys:
     conf: システム設定
     notice: システムのお知らせ
+    login:
+      ad: 広告
+    ad: ログイン画面広告
     server_name: サーバー名
     server_addr: サーバーIPアドレス
     remote_addr: 接続元IPアドレス
@@ -170,6 +173,8 @@ ja:
         password_min_change_char_count: 相違数
         password_max_failure_use: 最大失敗回数の使用
         password_max_failure_count: 最大失敗回数
+      sys/ad:
+        time: 画像切り替え時間
 
   errors:
     messages:

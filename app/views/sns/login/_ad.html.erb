@@ -1,0 +1,37 @@
+<% @ad = Sys::Setting.first %>
+<% if @ad.files.present? %>
+  <script>
+  $(function(){
+    $('.bxslider').bxSlider({
+      auto: true,
+      slideWidth: 600,
+      speed: <%= @ad.time.to_i %>,
+      mode: 'horizontal'
+    });
+  });
+  </script>
+  <div class="main-box login-ad">
+    <header>
+      <h2><%= t('sys.login.ad') %></h2>
+    </header>
+    <ul class="bxslider">
+      <% @ad.files.shuffle.each do |file| %>
+        <li>
+          <% if file.try(:image) %>
+            <% if file.link_url.present? %>
+              <%= link_to image_tag(file.image.url, width: 600), file.link_url %>
+            <% else %>
+              <%= link_to image_tag(file.image.url, width: 600), "#" %>
+            <% end %>
+          <% elsif file.try(:image?) %>
+            <% if file.link_url.present? %>
+              <%= link_to image_tag(file.url, width: 600), file.link_url %>
+            <% else %>
+              <%= link_to image_tag(file.url, width: 600), "#" %>
+            <% end %>
+          <% end %>
+        </li>
+      <% end %>
+    </ul>
+  </div>
+<% end %>

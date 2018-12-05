@@ -119,6 +119,28 @@
     width: 320px;
   }
 }
+
+.login-ad {
+  float: left;
+  margin: 20px 10px;
+
+  h2 {
+    font-weight: bold;
+    margin-bottom: 20px;
+  }
+  .main-box {
+    h2 {
+      margin-bottom: 10px;
+    }
+  }
+  .datetime {
+    margin-left: 5px;
+    color: #888;
+  }
+  li {
+    width: 600px;
+  }
+}
 @include mb {
   .login-notice {
     padding: 10px;
