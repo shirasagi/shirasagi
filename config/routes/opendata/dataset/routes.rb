@@ -25,7 +25,13 @@ SS::Application.routes.draw do
     resources :dataset_groups, concerns: :deletion, module: :dataset do
       get "search" => "dataset_groups/search#index", on: :collection
     end
+    get 'export_datasets' => 'dataset/export_datasets#index'
+    put 'export_datasets' => 'dataset/export_datasets#export'
+    get 'start_export_datasets' => 'dataset/export_datasets#start_export'
+    get 'import_datasets' => 'dataset/import_datasets#index'
+    put 'import_datasets' => 'dataset/import_datasets#import'
     resources :datasets, concerns: [:deletion, :copy, :command], module: :dataset do
+
       get "search" => "datasets/search#index", on: :collection
       get :check_for_update, on: :member
       resources :resources, concerns: :deletion do

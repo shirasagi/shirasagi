@@ -6,6 +6,7 @@ class Opendata::Dataset
   include Opendata::Addon::Category
   include Opendata::Addon::Area
   include Opendata::Addon::DatasetGroup
+  include Opendata::Addon::Dataset::Export
   include Opendata::Reference::Member
   include Opendata::Common
   include Opendata::Addon::CmsRef::Page
