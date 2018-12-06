@@ -9,6 +9,8 @@ class SS::FilenameConvertor
         "#{id}#{::File.extname(filename)}"
       when "underscore"
         filename.gsub(/[^\w\-\.]/, "_")
+      when "hex"
+        "#{SecureRandom.hex(16)}#{::File.extname(filename)}"
       else
         filename
       end
