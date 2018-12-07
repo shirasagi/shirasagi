@@ -57,6 +57,7 @@ class Inquiry::Agents::Nodes::FormController < ApplicationController
       @data[column.id] = [param]
       if (column.input_type == 'text_field' || column.input_type == 'text_area') && column.transfers.present? && param.present?
         column.transfers.each do |transfer|
+          next if transfer[:email].blank? || transfer[:keyword].blank?
           @to.push(transfer[:email]) if param.include?(transfer[:keyword])
         end
       end
