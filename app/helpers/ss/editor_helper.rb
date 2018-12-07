@@ -165,7 +165,9 @@ module SS::EditorHelper
     opts[:removePlugins] ||= ['colorbutton'] if color_button == 'disabled'
 
     opts[:contentsCss] ||= []
-    opts[:contentsCss] += ["#{@cur_site.try(:full_root_url)}#{editor_css_path}"] if editor_css_path.present?
+    if editor_css_path.present?
+      opts[:contentsCss] << ::File.join(@cur_site.full_url, editor_css_path)
+    end
 
     opts
   end
@@ -197,7 +199,9 @@ module SS::EditorHelper
     end
 
     opts[:content_css] ||= []
-    opts[:content_css] += ["#{@cur_site.try(:full_root_url)}#{editor_css_path}"] if editor_css_path.present?
+    if editor_css_path.present?
+      opts[:contents_css] << ::File.join(@cur_site.full_url, editor_css_path)
+    end
 
     opts
   end
