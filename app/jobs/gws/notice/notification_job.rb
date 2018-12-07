@@ -1,6 +1,6 @@
 class Gws::Notice::NotificationJob < Gws::ApplicationJob
   def perform
-    return unless site.notify_model?( Gws::Notice::Post)
+    return unless site.notify_model?(Gws::Notice::Post)
 
     @now = Time.zone.now
     select_items
@@ -42,8 +42,8 @@ class Gws::Notice::NotificationJob < Gws::ApplicationJob
 
   def send_notification_by_message(notice)
     recipients = notice.overall_readers.site(@cur_site || site).active
-    recipients = recipients.select{|recipient| recipient.id != user.id} if user
-    recipients = recipients.select{|recipient| recipient.use_notice?(notice)}
+    recipients = recipients.reject { |recipient| recipient.id == user.id } if user
+    recipients = recipients.select { |recipient| recipient.use_notice?(notice) }
     return if recipients.blank?
 
     path = Rails.application.routes.url_helpers.gws_notice_readable_path(
@@ -69,17 +69,5 @@ class Gws::Notice::NotificationJob < Gws::ApplicationJob
 
     mail = Gws::Memo::Mailer.notice_mail(message, recipients, notice)
     mail.deliver_now if mail
-  end
-
-  def send_notification_by_email(notice)
-    notice.overall_readers.site(@cur_site || site).active.pluck(:email).compact.uniq.each do |email|
-      next if email.blank?
-
-      mail = Gws::Notice::Mailer.notify_mail(site, notice, email)
-      next if mail.blank?
-
-      mail.deliver_now
-      Rails.logger.info("#{notice.name}: #{email}へ通知送信")
-    end
   end
 end
