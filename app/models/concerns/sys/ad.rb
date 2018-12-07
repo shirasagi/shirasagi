@@ -5,7 +5,8 @@ module Sys::Ad
   included do
     include SS::Addon::LinkFile
     field :time, type: Integer
-    permit_params :time
+    field :width, type: Integer
+    permit_params :time, :width
     after_save :file_state_update
   end
 

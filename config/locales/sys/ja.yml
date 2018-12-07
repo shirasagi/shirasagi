@@ -175,6 +175,7 @@ ja:
         password_max_failure_count: 最大失敗回数
       sys/ad:
         time: 画像切り替え時間
+        width: 横幅
 
   errors:
     messages:

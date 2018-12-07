@@ -1,11 +1,11 @@
 <% @ad = Sys::Setting.first %>
-<% if @ad.files.present? %>
+<% if @ad.try(:files).present? %>
   <script>
   $(function(){
     $('.bxslider').bxSlider({
       auto: true,
-      slideWidth: 600,
-      speed: <%= @ad.time.to_i %>,
+      slideWidth: <%= @ad.width.to_i %>,
+      pause: <%= @ad.time.to_i * 1000 %>,
       mode: 'horizontal'
     });
   });
@@ -19,15 +19,15 @@
         <li>
           <% if file.try(:image) %>
             <% if file.link_url.present? %>
-              <%= link_to image_tag(file.image.url, width: 600), file.link_url %>
+              <%= link_to image_tag(file.image.url, width: @ad.width.to_i), file.link_url %>
             <% else %>
-              <%= link_to image_tag(file.image.url, width: 600), "#" %>
+              <%= link_to image_tag(file.image.url, width: @ad.width.to_i), "#" %>
             <% end %>
           <% elsif file.try(:image?) %>
             <% if file.link_url.present? %>
-              <%= link_to image_tag(file.url, width: 600), file.link_url %>
+              <%= link_to image_tag(file.url, width: @ad.width.to_i), file.link_url %>
             <% else %>
-              <%= link_to image_tag(file.url, width: 600), "#" %>
+              <%= link_to image_tag(file.url, width: @ad.width.to_i), "#" %>
             <% end %>
           <% end %>
         </li>
