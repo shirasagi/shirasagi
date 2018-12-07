@@ -77,7 +77,7 @@ module Tasks
 
       def import_site
         with_site(ENV['site']) do |site|
-          puts "Please input import file: site=[site_name]" or break if ENV['file'].blank?
+          puts "Please input import file: file=[file_path]" or break if ENV['file'].blank?
 
           file = ENV['file']
           puts "File not found: #{ENV['file']}" or break unless ::File.exist?(file)
