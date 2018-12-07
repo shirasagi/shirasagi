@@ -6,9 +6,18 @@ describe Gws::Notice::NotificationJob, dbscope: :example do
   let(:scheme) { %w(http https).sample }
   let(:domain) { "#{unique_id}.example.jp" }
   let(:sender) { gws_user }
-  let!(:recipient1) { create(:gws_user, notice_announcement_email_user_setting: 'notify', send_notice_mail_address: 'recipient1@example.jp', email: 'recipient1@example.jp') }
-  let!(:recipient2) { create(:gws_user, group_ids: [ group1.id ], notice_announcement_email_user_setting: 'notify', send_notice_mail_address: 'recipient2@example.jp', email: 'recipient2@example.jp') }
-  let!(:recipient3) { create(:gws_user, notice_announcement_email_user_setting: 'notify', send_notice_mail_address: 'recipient3@example.jp', email: 'recipient3@example.jp') }
+  let!(:recipient1) do
+    create(:gws_user, notice_announcement_email_user_setting: 'notify',
+           send_notice_mail_address: 'recipient1@example.jp', email: 'recipient1@example.jp')
+  end
+  let!(:recipient2) do
+    create(:gws_user, group_ids: [ group1.id ], notice_announcement_email_user_setting: 'notify',
+           send_notice_mail_address: 'recipient2@example.jp', email: 'recipient2@example.jp')
+  end
+  let!(:recipient3) do
+    create(:gws_user, notice_announcement_email_user_setting: 'notify',
+           send_notice_mail_address: 'recipient3@example.jp', email: 'recipient3@example.jp')
+  end
   let!(:custom_group1) { create :gws_custom_group, member_ids: [recipient3.id] }
   let(:now) { Time.zone.now.beginning_of_minute }
   let(:folder) { create(:gws_notice_folder) }
@@ -39,7 +48,6 @@ describe Gws::Notice::NotificationJob, dbscope: :example do
     let!(:notice) do
       create(
         :gws_notice_post, cur_site: site, cur_user: sender, folder: folder,
-        message_notification: 'enabled', email_notification: 'enabled',
         readable_setting_range: 'select', readable_member_ids: [recipient1.id],
         readable_group_ids: [group1.id], readable_custom_group_ids: [custom_group1.id],
         state: 'public'
@@ -83,7 +91,6 @@ describe Gws::Notice::NotificationJob, dbscope: :example do
     let!(:notice) do
       create(
         :gws_notice_post, cur_site: site, cur_user: sender, folder: folder,
-        message_notification: 'enabled', email_notification: 'enabled',
         readable_setting_range: 'select', readable_member_ids: [recipient1.id],
         readable_group_ids: [group1.id], readable_custom_group_ids: [custom_group1.id],
         state: 'public',
@@ -128,7 +135,6 @@ describe Gws::Notice::NotificationJob, dbscope: :example do
     let!(:notice) do
       create(
         :gws_notice_post, cur_site: site, cur_user: sender, folder: folder,
-        message_notification: 'enabled', email_notification: 'enabled',
         readable_setting_range: 'select', readable_member_ids: [recipient1.id],
         readable_group_ids: [group1.id], readable_custom_group_ids: [custom_group1.id],
         state: 'closed'
@@ -162,7 +168,6 @@ describe Gws::Notice::NotificationJob, dbscope: :example do
       recipient2
       create(
         :gws_notice_post, cur_site: site, cur_user: sender, folder: folder,
-        message_notification: 'enabled', email_notification: 'enabled',
         readable_setting_range: 'public', state: 'public'
       )
     end
@@ -200,7 +205,6 @@ describe Gws::Notice::NotificationJob, dbscope: :example do
       recipient2
       create(
         :gws_notice_post, cur_site: site, cur_user: sender, folder: folder,
-        message_notification: 'enabled', email_notification: 'enabled',
         readable_setting_range: 'private', state: 'public'
       )
     end

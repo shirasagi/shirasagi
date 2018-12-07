@@ -35,9 +35,6 @@ describe "gws_notices", type: :feature, dbscope: :example, js: true do
         fill_in 'item[name]', with: name
         fill_in 'item[text]', with: text
 
-        select I18n.t('gws.options.notification.enabled'), from: 'item[message_notification]'
-        select I18n.t('gws.options.notification.enabled'), from: 'item[email_notification]'
-
         within '#addon-gws-agents-addons-readable_setting' do
           click_on I18n.t('ss.apis.users.index')
         end
@@ -55,8 +52,6 @@ describe "gws_notices", type: :feature, dbscope: :example, js: true do
       Gws::Notice::Post.all.first.tap do |item|
         expect(item.name).to eq name
         expect(item.text).to eq text
-        expect(item.message_notification).to eq 'enabled'
-        expect(item.email_notification).to eq 'enabled'
         expect(item.notification_noticed).to be_nil
         expect(item.state).to eq 'public'
       end
@@ -76,21 +71,11 @@ describe "gws_notices", type: :feature, dbscope: :example, js: true do
         # record notification_noticed
         expect(notice.notification_noticed).not_to be_nil
 
-        expect(ActionMailer::Base.deliveries.length).to be > 0
-        ActionMailer::Base.deliveries.first.tap do |mail|
-          expect(mail.from.first).to eq site.sender_email
-          expect(mail.to.first).not_to be_nil
-          expect(mail.subject).to eq I18n.t('gws_notification.gws/notice/post.subject', name: notice.name)
-          expect(mail.body.multipart?).to be_falsey
-          expect(mail.body.raw_source).to include(notice.name)
-        end
-
         expect(Gws::Memo::Notice.count).to eq 1
         Gws::Memo::Notice.first.tap do |message|
           expect(message.subject).to eq I18n.t('gws_notification.gws/notice/post.subject', name: notice.name)
-          expect(message.text).to include(notice.name)
           expect(message.text).to \
-            include("#{site.canonical_scheme}://#{site.canonical_domain}/.g#{site.id}/notice/-/-/readables/#{notice.id}")
+            include("/.g#{site.id}/notice/-/-/readables/#{notice.id}")
         end
       end
     end
@@ -100,7 +85,6 @@ describe "gws_notices", type: :feature, dbscope: :example, js: true do
     let!(:item) do
       create(
         :gws_notice_post, cur_site: site, folder: folder,
-        message_notification: 'enabled', email_notification: 'enabled',
         notification_noticed: Time.zone.now - 1.day
       )
     end
