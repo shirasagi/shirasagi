@@ -146,6 +146,7 @@ ja:
       member/group_invitation_setting: グループ招待メール設定
       member/member_invitation_setting: 会員招待メール
       member/login_link: ログイン
+      member/editor_setting: エディタ設定
 
   cms:
     nodes:

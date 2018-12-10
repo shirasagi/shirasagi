@@ -2,7 +2,7 @@ require 'spec_helper'
 
 describe Gws::Notice::Folder, type: :model, dbscope: :example do
   describe '.create_my_folder!' do
-    let(:default_notice_individual_body_size_limit) { 240 }
+    let(:default_notice_individual_body_size_limit) { SS.config.gws.notice['default_notice_individual_body_size_limit'] }
     let(:default_notice_total_body_size_limit) { SS.config.gws.notice['default_notice_total_body_size_limit'] }
     let(:default_notice_individual_file_size_limit) { SS.config.gws.notice['default_notice_individual_file_size_limit'] }
     let(:default_notice_total_file_size_limit) { SS.config.gws.notice['default_notice_total_file_size_limit'] }
