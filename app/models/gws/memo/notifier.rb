@@ -271,7 +271,7 @@ class Gws::Memo::Notifier
 
     message.subject = subject || I18n.t("gws_notification.#{i18n_key}.subject", name: item_title, default: item_title)
     message.format = 'text'
-    message.text = text || I18n.t("gws_notification.#{i18n_key}.text", name: item_title, text: url, default: item_text)
+    message.url = text || I18n.t("gws_notification.#{i18n_key}.text", name: item_title, text: url, default: item_text)
 
     message.save!
 

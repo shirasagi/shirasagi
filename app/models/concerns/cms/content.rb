@@ -154,8 +154,10 @@ module Cms::Content
     return @parent unless @parent.nil?
     return @parent = false if depth == 1 || filename !~ /\//
 
-    path = File.dirname(filename)
-    @parent = Cms::Node.where(site_id: site_id).in_path(path).sort(depth: -1).first
+    @parent ||= begin
+      path = File.dirname(filename)
+      Cms::Node.where(site_id: site_id).in_path(path).order_by(depth: -1).to_a.first
+    end
   end
 
   def becomes_with_route(name = nil)

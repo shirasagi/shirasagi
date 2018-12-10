@@ -13,12 +13,12 @@ describe "cms_page_search", dbscope: :example do
 
     it do
       visit index_path
-      click_on "新規作成"
+      click_on I18n.t("ss.links.new")
 
       within "form#item-form" do
         fill_in "item[name]", with: name
         fill_in "item[search_name]", with: search_name
-        click_on "保存"
+        click_on I18n.t("ss.buttons.save")
       end
 
       within "#addon-basic .addon-body .see" do
@@ -35,16 +35,16 @@ describe "cms_page_search", dbscope: :example do
         expect(item.search_name).to eq search_name
       end
 
-      click_on "サイト管理"
+      click_on cms_site.name
       expect(page).to have_css("nav.main-navi h2 a.icon-search", text: name)
 
       visit index_path
       click_on name
-      click_on "編集する"
+      click_on I18n.t("ss.links.edit")
 
       within "form#item-form" do
         fill_in "item[name]", with: name2
-        click_on "保存"
+        click_on I18n.t("ss.buttons.save")
       end
 
       expect(Cms::PageSearch.site(site).count).to eq 1
@@ -54,13 +54,13 @@ describe "cms_page_search", dbscope: :example do
         expect(item.search_name).to eq search_name
       end
 
-      click_on "サイト管理"
+      click_on cms_site.name
       expect(page).to have_css("nav.main-navi h2 a.icon-search", text: name2)
 
       visit index_path
       click_on name2
-      click_on "削除する"
-      click_on "削除"
+      click_on I18n.t("ss.links.delete")
+      click_on I18n.t("ss.buttons.delete")
 
       expect(Cms::PageSearch.site(site).count).to eq 0
     end

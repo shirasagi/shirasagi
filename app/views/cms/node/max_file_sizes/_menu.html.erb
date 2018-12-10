@@ -3,12 +3,6 @@
     <% if @model.allowed?(:edit, @cur_user, site: @cur_site, node: @cur_node) %>
       <%= link_to t('ss.links.new'), { action: :new }, class: :new %>
     <% end %>
-    <% if @model.allowed?(:read, @cur_user, site: @cur_site, node: @cur_node) %>
-      <%= link_to(t('ss.links.download'), { action: :download }) rescue nil %>
-    <% end %>
-    <% if @model.allowed?(:edit, @cur_user, site: @cur_site, node: @cur_node) %>
-      <%= link_to(t('ss.links.import'), { action: :import }) rescue nil %>
-    <% end %>
   <% elsif params[:action] =~ /new|create|lock|download|import/ %>
     <%= link_to t('ss.links.back_to_index'), { action: :index }, class: "back-to-index" %>
   <% elsif params[:action] =~ /edit|update|delete|move|contains_urls/ %>

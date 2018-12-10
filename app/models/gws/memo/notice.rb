@@ -23,7 +23,7 @@ class Gws::Memo::Notice
   field :state, type: String, default: 'public' # always public
   field :send_date, type: DateTime
   field :export, type: Boolean, default: false
-  field :old, type: Boolean, default: false
+  field :url, type: String, default: ''
 
   validates :member_ids, presence: true
   validates :subject, presence: true

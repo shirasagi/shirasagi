@@ -108,6 +108,8 @@ ja:
     reroute_private_event_pages: ページの承認経路変更（所有）
     revoke_other_event_pages: ページの承認申請取消（全て）
     revoke_private_event_pages: ページの承認申請取消（所有）
+    import_other_event_pages: ページのインポート（全て）
+    import_private_event_pages: ページのインポート（所有）
 
   mongoid:
     models:

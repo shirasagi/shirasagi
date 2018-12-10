@@ -416,6 +416,8 @@ ja:
       mail_text: |
         %{subject}
 
+        %{text}
+
     gws/schedule/plan/destroy:
       subject: "[スケジュール] 「%{name}」が削除されました。"
       text: ""

@@ -22,6 +22,7 @@ describe 'gws_presence_users', type: :feature, dbscope: :example do
       expect(Gws::User.find(gws_user.id).user_presence(site).state).to eq ""
 
       find("#head .user .name", text: gws_user.name).click
+      expect(page).to have_content(I18n.t("ss.logout"))
       click_link I18n.t("ss.logout")
       expect(current_path).to eq sns_login_path
       expect(Gws::User.find(gws_user.id).user_presence(site).state).to eq ""

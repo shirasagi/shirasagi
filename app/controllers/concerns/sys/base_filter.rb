@@ -1,6 +1,7 @@
 module Sys::BaseFilter
   extend ActiveSupport::Concern
   include SS::BaseFilter
+  include Sys::LinkFilter
 
   included do
     before_action { @crumbs << [t("sys.conf"), sys_main_path] }
