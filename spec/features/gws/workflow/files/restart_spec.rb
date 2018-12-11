@@ -64,7 +64,6 @@ describe Gws::Workflow::FilesController, type: :feature, dbscope: :example, js: 
       expect(item.workflow_approvers).to \
         include({level: 3, user_id: user3.id, editable: '', state: 'pending', comment: ''})
 
-      expect(Sys::MailLog.count).to eq 1
       expect(Gws::Memo::Notice.count).to eq 1
 
       #
@@ -92,7 +91,6 @@ describe Gws::Workflow::FilesController, type: :feature, dbscope: :example, js: 
       expect(item.workflow_approvers).to \
         include({level: 3, user_id: user3.id, editable: '', state: 'pending', comment: ''})
 
-      expect(Sys::MailLog.count).to eq 2
       expect(Gws::Memo::Notice.count).to eq 2
 
       #
@@ -120,7 +118,6 @@ describe Gws::Workflow::FilesController, type: :feature, dbscope: :example, js: 
       expect(item.workflow_approvers).to \
         include({level: 3, user_id: user3.id, editable: '', state: 'pending', comment: ''})
 
-      expect(Sys::MailLog.count).to eq 3
       expect(Gws::Memo::Notice.count).to eq 3
 
       #
@@ -151,7 +148,6 @@ describe Gws::Workflow::FilesController, type: :feature, dbscope: :example, js: 
       expect(item.workflow_approvers).to \
         include({level: 3, user_id: user3.id, editable: '', state: 'pending', comment: '', file_ids: nil})
 
-      expect(Sys::MailLog.count).to eq 4
       expect(Gws::Memo::Notice.count).to eq 4
 
       #
@@ -180,7 +176,6 @@ describe Gws::Workflow::FilesController, type: :feature, dbscope: :example, js: 
       expect(item.workflow_approvers).to \
         include({level: 3, user_id: user3.id, editable: '', state: 'pending', comment: '', file_ids: nil})
 
-      expect(Sys::MailLog.count).to eq 5
       expect(Gws::Memo::Notice.count).to eq 5
 
       #
@@ -209,7 +204,6 @@ describe Gws::Workflow::FilesController, type: :feature, dbscope: :example, js: 
       expect(item.workflow_approvers).to \
         include({level: 3, user_id: user3.id, editable: '', state: 'request', comment: '', file_ids: nil})
 
-      expect(Sys::MailLog.count).to eq 6
       expect(Gws::Memo::Notice.count).to eq 6
 
       #
@@ -238,7 +232,6 @@ describe Gws::Workflow::FilesController, type: :feature, dbscope: :example, js: 
       expect(item.workflow_approvers).to \
         include({level: 3, user_id: user3.id, editable: '', state: 'approve', comment: approve_comment4, file_ids: nil})
 
-      expect(Sys::MailLog.count).to eq 7
       expect(Gws::Memo::Notice.count).to eq 7
     end
   end
