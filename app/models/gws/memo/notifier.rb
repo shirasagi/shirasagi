@@ -22,7 +22,7 @@ class Gws::Memo::Notifier
       from = item.try(:workflow_user) || cur_user
       agent = item.try(:workflow_agent)
 
-      title = I18n.t("gws_notification.subject.request", name: item.name)
+      title = I18n.t("gws_notification.gws/workflow/file.request", name: item.name)
 
       text = []
       text << "#{from.name}さん#{agent ? "（代理: #{agent.name}さん）" : ""}より次の記事について承認依頼が届きました。"
@@ -63,7 +63,7 @@ class Gws::Memo::Notifier
       from = item.try(:workflow_user)
       agent = item.try(:workflow_agent)
 
-      title = I18n.t("gws_notification.subject.approve", name: item.name)
+      title = I18n.t("gws_notification.gws/workflow/file.approve", name: item.name)
 
       text = []
       text << "次の申請が承認されました。"
@@ -98,7 +98,7 @@ class Gws::Memo::Notifier
       from = item.try(:workflow_user)
       agent = item.try(:workflow_agent)
 
-      title = I18n.t("gws_notification.subject.remand", name: item.name)
+      title = I18n.t("gws_notification.gws/workflow/file.remand", name: item.name)
 
       text = []
       text << "#{cur_user.name}さんより次の申請について承認依頼が差し戻されました。"
@@ -142,7 +142,7 @@ class Gws::Memo::Notifier
       from = item.try(:workflow_user)
       agent = item.try(:workflow_agent)
 
-      title = I18n.t("gws_notification.subject.circular", name: item.name)
+      title = I18n.t("gws_notification.gws/workflow/file.circular", name: item.name)
 
       text = []
       text << "次の申請が承認されました。"
@@ -178,7 +178,7 @@ class Gws::Memo::Notifier
       from = item.try(:workflow_user)
       agent = item.try(:workflow_agent)
 
-      title = I18n.t("gws_notification.subject.comment", name: item.name)
+      title = I18n.t("gws_notification.gws/workflow/file.comment", name: item.name)
 
       text = []
       text << "次の申請にコメントがありました。"
