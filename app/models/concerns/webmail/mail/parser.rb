@@ -55,10 +55,16 @@ module Webmail::Mail::Parser
   def parse_address_field(field)
     return [] if field.blank?
 
-    ::Mail::AddressList.new(field.value).addresses.map do |addr|
+    if field.value.include?('=?ISO-2022-JP?')
+      value = NKF.nkf("-w", field.value)
+    else
+      value = field.value
+    end
+
+    ::Mail::AddressList.new(value).addresses.map do |addr|
       if addr.display_name.present?
-        charset = field.value.start_with?('=?ISO-2022-JP?') ? 'CP50220' : nil
-        addr.decoded.encode('UTF-8', charset) rescue addr.decoded
+        #charset = field.value.start_with?('=?ISO-2022-JP?') ? 'CP50220' : nil
+        addr.decoded.encode('UTF-8', nil) rescue addr.decoded
       else
         addr.address
       end
