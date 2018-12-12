@@ -81,7 +81,12 @@ module Webmail::Mail::Parser
   def parse_subject(mail)
     value = mail.header_fields.find { |m| m.name.casecmp('subject') == 0 }.try(:value)
     return mail.subject unless value
-    decode_jp(mail.subject, value.start_with?('=?ISO-2022-JP?') ? 'ISO-2022-JP' : nil)
+
+    if value.include?('=?ISO-2022-JP?')
+      NKF.nkf("-w", value)
+    else
+      decode_jp(mail.subject, nil)
+    end
   end
 
   def parse_body_structure
