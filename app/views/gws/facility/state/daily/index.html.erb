@@ -22,9 +22,9 @@
                 user_name = plan_history.user_name
               else
                 group_id = plan.user_group_id
-                user_name = plan.user.name
+                user_name = plan.user.name if plan.user.present?
               end
-              group_id = plan.user.gws_main_group(@cur_site).id if group_id.nil?
+              group_id = plan.user.gws_main_group(@cur_site).id if group_id.nil? && plan.user.present?
             %>
             <tr>
               <td><%= item.name %></td>
