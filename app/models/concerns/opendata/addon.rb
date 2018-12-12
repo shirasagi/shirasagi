@@ -4,8 +4,10 @@ module Opendata::Addon
     extend ActiveSupport::Concern
 
     included do
+      cattr_accessor(:required_categories, instance_accessor: false) { true }
       embeds_ids :categories, class_name: "Opendata::Node::Category", metadata: { on_copy: :safe }
       permit_params category_ids: []
+      validates :category_ids, presence: true, if: ->{ self.class.required_categories }
     end
   end
 

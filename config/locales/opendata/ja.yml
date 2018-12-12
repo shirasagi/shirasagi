@@ -387,6 +387,8 @@ ja:
     attributes:
       opendata/addon/category:
         category_ids: 分野
+      opendata/addon/area:
+        area_ids: 地域
       opendata/addon/category_setting:
         st_category_ids: 分野
       opendata/addon/rdf_store:
@@ -466,8 +468,6 @@ ja:
         name: タイトル
         site_id: サイト
         user_id: 作成者
-        category_ids: カテゴリー
-        area_ids: 地域
         dataset_id: 関連データセット
         app_id: 関連アプリ
         point: 評価
