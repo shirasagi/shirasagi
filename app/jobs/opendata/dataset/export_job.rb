@@ -89,7 +89,7 @@ class Opendata::Dataset::ExportJob < Cms::ApplicationJob
       item.id,
       item.name,
       item.format,
-      item.license_id,
+      item.license.try(:name),
       item.text,
       item.file.try(:name),
       item.tsv.try(:name)

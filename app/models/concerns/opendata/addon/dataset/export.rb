@@ -5,6 +5,24 @@ module Opendata::Addon
     extend ActiveSupport::Concern
     extend SS::Addon
 
+    def category_name_tree
+      id_list = categories.where(route: /^category\//).pluck(:id)
+
+      ct_list = []
+      id_list.each do |id|
+        name_list = []
+        filename_str = []
+        filename_array = Cms::Node.where(_id: id).pluck(:filename).first.split(/\//)
+        filename_array.each do |filename|
+          filename_str << filename
+          node = Cms::Node.site(site).where(filename: filename_str.join("/")).first
+          name_list << node.name if node
+        end
+        ct_list << name_list.join("/")
+      end
+      ct_list.sort
+    end
+
     module ClassMethods
       def csv_headers
         %w(
@@ -33,21 +51,21 @@ module Opendata::Addon
           item.id,
           item.name,
           item.text,
-          item.tags.join(","),
+          item.tags.join("\n"),
 
           # category area
-          item.category_ids.join(","),
-          item.area_ids.join(","),
+          item.category_name_tree.join("\n"),
+          item.areas.pluck(:name).join("\n"),
 
           # dataset_group
-          item.dataset_group_ids.join(","),
+          item.dataset_groups.pluck(:name).join("\n"),
 
           # released
           item.released.try(:strftime, "%Y/%m/%d %H:%M"),
 
           # contact
           item.contact_state,
-          item.contact_group_id,
+          item.contact_group.try(:name),
           item.contact_charge,
           item.contact_tel,
           item.contact_fax,
@@ -56,10 +74,10 @@ module Opendata::Addon
           item.contact_link_name,
 
           # related pages
-          item.related_pages.pluck(:filename).join(","),
+          item.related_pages.pluck(:filename).join("\n"),
 
           # groups
-          item.group_ids.join(",")
+          item.groups.pluck(:name).join("\n")
         ]
       end
     end

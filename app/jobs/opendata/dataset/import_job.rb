@@ -79,7 +79,7 @@ class Opendata::Dataset::ImportJob < Cms::ApplicationJob
 
   def update_resource_row(dataset, row)
     item = dataset.resources.detect {|resource| resource.id == resource_value(row, :id).to_i}
-    return if item.blank?
+    item = dataset.resources.new if item.blank?
     set_resource_attributes(row, dataset, item)
 
     if item.save
@@ -101,6 +101,24 @@ class Opendata::Dataset::ImportJob < Cms::ApplicationJob
     row[Opendata::Resource.t(key)].try(:strip)
   end
 
+  def category_name_tree_to_ids(name_trees)
+    category_ids = []
+    name_trees.each do |cate|
+      ct_list = []
+      names = cate.split("/")
+      names.each_with_index do |n, d|
+        ct = Cms::Node.site(site).where(name: n, depth: d + 1).first
+        ct_list << ct if ct
+      end
+
+      if ct_list.present? && ct_list.size == names.size
+        ct = ct_list.last
+        category_ids << ct.id if ct.route =~ /^category\//
+      end
+    end
+    category_ids
+  end
+
   def set_dataset_attributes(row, item)
     # basic
     item.name = value(row, :name)
@@ -108,18 +126,21 @@ class Opendata::Dataset::ImportJob < Cms::ApplicationJob
     item.tags = value(row, :tags).split(",")
 
     # category area
-    item.category_ids = value(row, :categories).split(",")
-    item.area_ids = value(row, :area_ids).split(",")
+    category_name_tree = ary_value(row, :categories)
+    category_ids = category_name_tree_to_ids(category_name_tree)
+    categories = Category::Node::Base.site(site).in(id: category_ids)
+    item.area_ids = Opendata::Node::Area.in(name: ary_value(row, :area_ids)).pluck(:id)
 
     # dataset_group
-    item.dataset_group_ids = value(row, :dataset_group_ids).split(",")
+    dataset_group_names = ary_value(row, :dataset_group_ids)
+    item.dataset_group_ids = Opendata::DatasetGroup.in(name: dataset_group_names).pluck(:id)
 
     # released
     item.released = Time.zone.strptime(value(row, :released), "%Y/%m/%d %H:%M")
 
     # contact
     item.contact_state = value(row, :contact_state)
-    item.contact_group_id = value(row, :contact_group)
+    item.contact_group_id = SS::Group.where(name: value(row, :contact_group_id)).first.try(:id)
     item.contact_charge = value(row, :contact_charge)
     item.contact_tel = value(row, :contact_tel)
     item.contact_fax = value(row, :contact_fax)
@@ -132,16 +153,17 @@ class Opendata::Dataset::ImportJob < Cms::ApplicationJob
     item.related_page_ids = Cms::Page.site(site).in(filename: page_names).pluck(:id)
 
     # groups
-    item.group_ids = value(row, :groups).split(",")
+    group_names = ary_value(row, :groups)
+    item.group_ids = SS::Group.in(name: group_names).pluck(:id)
   end
 
   def set_resource_attributes(row, dataset, item)
     item.name = resource_value(row, :name)
     item.format = resource_value(row, :format)
-    item.license_id = resource_value(row, :license_id)
+    item.license_id = Opendata::License.find_by(name: resource_value(row, :license_id)).try(:id)
     item.text = resource_value(row, :text)
     if resource_value(row, :file_id).present?
-      file_path = Dir.glob("#{@import_dir}/#{dataset.id}/#{item.id}/#{resource_value(row, :file_id)}").first || Dir.glob("#{@import_dir}/*/#{dataset.id}/#{item.id}/#{resource_value(row, :file_id)}").first
+      file_path = Dir.glob("#{@import_dir}/#{dataset.id}/#{resource_value(row, :id)}/#{resource_value(row, :file_id)}").first || Dir.glob("#{@import_dir}/*/#{dataset.id}/#{resource_value(row, :id)}/#{resource_value(row, :file_id)}").first
       file = SS::File.new(model: "opendata/resource", state: "public")
       file.in_file = Fs::UploadedFile.create_from_file(File.open(file_path, "r"))
       file.save
