@@ -168,6 +168,7 @@ class Event::Ical::ImportJob < Cms::ApplicationJob
   def import_ical_event(event)
     item = build_event_page(event)
     return unless item
+    return unless item.allowed?(:import, user, site: site, node: node)
 
     return item if save_or_update(item)
 
@@ -182,6 +183,7 @@ class Event::Ical::ImportJob < Cms::ApplicationJob
     last_modified = extract_time(event.last_modified)
 
     item = model.site(site).node(node).where(ical_uid: uid).first || model.new
+    return unless item.allowed?(:import, user, site: site, node: node)
     return item if item.persisted? && last_modified && item.updated >= last_modified
 
     event_dates = generate_event_dates(event)
