@@ -1,3 +1,5 @@
+require "csv"
+
 class Inquiry::ResultsController < ApplicationController
   include Cms::BaseFilter
   include Cms::CrudFilter
@@ -6,6 +8,7 @@ class Inquiry::ResultsController < ApplicationController
 
   append_view_path "app/views/cms/pages"
   navi_view "inquiry/main/navi"
+  before_action :set_aggregation
 
   private
 
@@ -13,11 +16,7 @@ class Inquiry::ResultsController < ApplicationController
     { cur_site: @cur_site, node_id: @cur_node.id }
   end
 
-  public
-
-  def index
-    raise "403" unless @cur_node.allowed?(:read, @cur_user, site: @cur_site)
-
+  def set_aggregation
     @cur_node = @cur_node.becomes_with_route
     @columns = @cur_node.columns.order_by(order: 1)
     @answer_count = @cur_node.answers.count
@@ -26,5 +25,35 @@ class Inquiry::ResultsController < ApplicationController
     options[:site] = @cur_site
     options[:node] = @cur_node
     @aggregation = @cur_node.aggregate_select_columns(options)
+  end
+
+  public
+
+  def index
+    raise "403" unless @cur_node.allowed?(:read, @cur_user, site: @cur_site)
+  end
+
+  def download
+    csv = CSV.generate do |data|
+      data << [t("inquiry.total_count"), @answer_count]
+      @columns.each do |column|
+        data << []
+        data << [column.name]
+        if column.input_type =~ /(select|radio_button|check_box)/
+          column.select_options.each do |opts|
+            data << [opts, @aggregation[{ "column_id" => column.id, "value" => opts }]]
+          end
+        else
+          column.answer_data(@answer_data_opts).each do |item|
+            if item.value.present?
+              data << [item.value]
+            end
+          end
+        end
+      end
+    end
+
+    send_data csv.encode("SJIS", invalid: :replace, undef: :replace),
+              filename: "inquiry_results_#{Time.zone.now.to_i}.csv"
   end
 end
