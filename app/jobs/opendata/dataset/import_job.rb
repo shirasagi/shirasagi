@@ -65,9 +65,11 @@ class Opendata::Dataset::ImportJob < Cms::ApplicationJob
   def update_dataset_row(row)
     item = model.find_or_initialize_by(site_id: site.id, id: value(row, :id).to_i)
     set_dataset_attributes(row, item)
+    item.cur_node = node
 
-    if item.save
-      resources_csv = Dir.glob("#{@import_dir}/#{item.id}/*.csv").first || Dir.glob("#{@import_dir}/*/#{item.id}/*.csv").first
+    if item.valid?
+      item.save
+      resources_csv = Dir.glob("#{@import_dir}/#{value(row, :id)}/*.csv").first || Dir.glob("#{@import_dir}/*/#{value(row, :id)}/*.csv").first
 
       put_log("import start #{resources_csv}")
       import_resource_csv(resources_csv, item)
