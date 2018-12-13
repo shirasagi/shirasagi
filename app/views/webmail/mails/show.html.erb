@@ -103,7 +103,7 @@
             <i class="material-icons md-18"><%== part.image? ? '&#xE3F4;' : '&#xE24D;' %></i>
             <%= part.filename %>
           <% end %>
-          <%= "( #{number_to_human_size(part.part.size)} )" %>
+          <%= "( #{number_to_human_size(part.size)} )" %>
         </div>
       <% end %>
       <% if params[:action] != 'print' %>
