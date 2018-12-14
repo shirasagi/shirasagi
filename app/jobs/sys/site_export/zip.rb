@@ -8,6 +8,7 @@ class Sys::SiteExport::Zip
   end
 
   def compress
+    Zip.write_zip64_support = true
     Zip::File.open(@path, Zip::File::CREATE) do |zip|
       add_json(zip)
       add_private_files(zip)
