@@ -1,4 +1,6 @@
 class Gws::Memo::Mailer < ActionMailer::Base
+  include SS::AttachmentSupport
+
   def forward_mail(item, forward_emails)
     @item = item
     @cur_user = item.user
@@ -10,7 +12,7 @@ class Gws::Memo::Mailer < ActionMailer::Base
     subject = "[#{I18n.t("gws/memo/message.message")}]#{I18n.t("gws/memo/forward.subject")}:#{@cur_user.name}"
 
     @item.files.each do |file|
-      attachments[file.name] = file.read
+      add_attachment_file(file)
     end
 
     mail(from: from, bcc: forward_emails, subject: subject)
