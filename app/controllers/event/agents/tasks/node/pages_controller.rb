@@ -30,7 +30,7 @@ class Event::Agents::Tasks::Node::PagesController < ApplicationController
   end
 
   def remove_old_pages
-    term = @start_date.advance(years: -1)..@start_date.advance(months: -1)
+    term = @start_date.advance(years: -1)..@close_date
     term = term.map { |m| sprintf("#{m.year}%02d", m.month) }.uniq
     term.each do |date|
       file = "#{@node.path}/#{date}.html"
