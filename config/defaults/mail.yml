@@ -16,7 +16,7 @@ production: &production
 
   # message settings
   default_from: noreply@example.jp
-  default_charset: iso-2022-jp
+  default_charset: utf-8
 
 test:
   delivery_method: test
