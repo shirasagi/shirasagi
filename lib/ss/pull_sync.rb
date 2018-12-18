@@ -1,7 +1,6 @@
 class SS::PullSync
   def initialize(model)
     @model = model
-    @client_name = model.client_name
     @collection_name = model.collection_name
     @public_clients = Mongoid::Config.clients.select { |name, client| name =~ /^public(_|$)/ }
   end
