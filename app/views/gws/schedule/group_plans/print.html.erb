@@ -1,6 +1,9 @@
 <%= jquery do %>
 Gws_Schedule_Multiple_Calendar.renderController('#calendar-controller', {}, <%== (params[:calendar] || {}).to_json %>);
 SS_Clipboard.renderCopy();
+Gws_Schedule_Integration.paths.newMemoMessage = <%== new_gws_memo_message_path(folder: "INBOX").to_json %>;
+Gws_Schedule_Integration.paths.newWebmail = <%== new_webmail_mail_path(webmail_mode: "account", account: 0, mailbox: "INBOX").to_json %>;
+Gws_Schedule_Integration.render();
 <% end %>
 
 <div class="no-print">
@@ -17,20 +20,7 @@ SS_Clipboard.renderCopy();
   <% @users.each_with_index do |user, idx| %>
     <div class="calendar-multiple-header">
       <%= link_to user.long_name, gws_schedule_user_plans_path(user: user.id), class: "calendar-name" %>
-      <div class="calendar-attr">
-        <span class="group">
-          <%= tryb { user.gws_main_group(@cur_site).trailing_name } %>
-        </span>
-        <% if title = user.title(@cur_site) %>
-          <span class="user-title"><%= title.name %></span>
-        <% end %>
-        <% if user.email.present? %>
-          <span class="email"><%= mail_to user.email %></span>
-        <% end %>
-        <% if user.tel_label.present? %>
-          <span class="tel"><%= user.tel_label %></span>
-        <% end %>
-      </div>
+      <%= render "gws/schedule/main/calendar_attr", user: user %>
     </div>
     <div class="calendar multiple" id="cal-<%= user.id %>"></div>
 
