@@ -15,8 +15,8 @@ describe Category::Node::Base, type: :model, dbscope: :example do
 
     it do
       categories = Category::Node::Base.all.where(filename: /#{cate0.filename}/).tree_sort
-      expect(categories.count).to eq 7
       categories = categories.to_a
+      expect(categories.count).to eq 7
       expect(categories[0].id).to eq cate0.id
       expect(categories[1].id).to eq cate1.id
       expect(categories[2].id).to eq cate11.id

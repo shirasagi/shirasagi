@@ -337,6 +337,7 @@ ja:
       ss/approve_setting: 承認設定
       ss/editor_setting: エディタ設定
       ss/mail_setting: メール設定
+      ss/link_file: ファイル
 
   mongoid:
     models:
@@ -355,6 +356,7 @@ ja:
       ss/max_file_size: 最大ファイルサイズ
       ss/thumb_file: サムネイルファイル
       ss/migration: DBマイグレーション
+      ss/access_token: アクセストークン
     errors:
       models:
         ss/model/group:

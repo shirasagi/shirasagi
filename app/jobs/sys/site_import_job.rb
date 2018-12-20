@@ -123,7 +123,7 @@ class Sys::SiteImportJob < SS::ApplicationJob
   def import_dst_site
     @dst_site.group_ids = convert_ids(@cms_groups_map, @src_site.group_ids)
     @src_site.attributes.each do |key, val|
-      next if key =~ /^(created|updated|name|host|domains|.*_id)$/
+      next if key =~ /^(created|updated|name|host|domains|.*_id|.*_ids)$/
       @dst_site[key] = val
     end
     @dst_site.save

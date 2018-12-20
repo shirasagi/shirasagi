@@ -22,7 +22,7 @@ class Gws::Share::FilesController < ApplicationController
     if @folder.present?
       folder_hierarchy_count = @folder.name.split("/").count - 1
       0.upto(folder_hierarchy_count) do |i|
-        item_name = @folder.name.split("/")[0, i+1].join("/")
+        item_name = @folder.name.split("/")[0, i + 1].join("/")
         item_folder = Gws::Share::Folder.site(@cur_site).find_by(name: item_name)
         item_path = gws_share_folder_files_path(folder: item_folder.id, category: params[:category])
         @crumbs << [@folder.name.split("/")[i], item_path]
@@ -57,7 +57,7 @@ class Gws::Share::FilesController < ApplicationController
     p = super
     p[:readable_member_ids] = [@cur_user.id]
     p[:folder_id] = params[:folder] if params[:folder]
-    p[:category_ids] = [ @category.id ] if @category.present?
+    p[:category_ids] = [@category.id] if @category.present?
     p
   end
 
@@ -175,7 +175,7 @@ class Gws::Share::FilesController < ApplicationController
     if params[:history_id].present?
       history_item = Gws::Share::History.where(item_id: @item.id, _id: params[:history_id]).first
       server_dir = File.dirname(@item.path)
-      uploadfile_path = server_dir + "/#{@item.id}_#{history_item.uploadfile_srcname}"
+      uploadfile_path = File.join(server_dir, "#{@item.id}_#{history_item.uploadfile_srcname}")
     end
 
     if Fs.mode == :file && Fs.file?(uploadfile_path)
@@ -196,7 +196,7 @@ class Gws::Share::FilesController < ApplicationController
     else
       respond_to do |format|
         format.html { render }
-        format.json { render json: [ t("errors.messages.locked", user: @item.lock_owner.long_name) ], status: :locked }
+        format.json { render json: [t("errors.messages.locked", user: @item.lock_owner.long_name)], status: :locked }
       end
     end
   end
@@ -228,7 +228,7 @@ class Gws::Share::FilesController < ApplicationController
     else
       respond_to do |format|
         format.html { render file: :show }
-        format.json { render json: [ t("errors.messages.locked", user: @item.lock_owner.long_name) ], status: :locked }
+        format.json { render json: [t("errors.messages.locked", user: @item.lock_owner.long_name)], status: :locked }
       end
     end
   end

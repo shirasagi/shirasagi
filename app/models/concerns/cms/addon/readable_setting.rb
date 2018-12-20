@@ -20,7 +20,6 @@ module Cms::Addon::ReadableSetting
 
     # Allow readable settings and readable permissions.
     scope :readable, ->(user, opts = {}) {
-      return none unless self.allowed?(:read, user, opts)
       or_conds = readable_conditions(user, opts)
       where("$and" => [{ "$or" => or_conds }])
     }

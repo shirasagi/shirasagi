@@ -25,22 +25,11 @@
     </h2>
   <% end %>
 
-  <h2 class="sys-conf">
-    <%= link_to "#" do %>
-      <i class="material-icons">&#xE8B8;</i><%= t("sys.conf") %>
-    <% end %>
-  </h2>
+  <% if sys_conf_path.present? %>
+    <h2 class="sys-conf">
+      <%= link_to sys_conf_path do %>
+        <i class="material-icons">&#xE8B8;</i><%= t("sys.conf") %>
+      <% end %>
+    </h2>
+  <% end %>
 </nav>
-
-<%= jquery do %>
-  var conf = $('.mod-navi a').first().attr('href');
-  if (conf) {
-    $('.main-navi .sys-conf a').attr('href', conf);
-  } else {
-    $('.main-navi .sys-conf').remove();
-  }
-<% end %>
-
-<div class="hide">
-  <%= render 'sys/main/navi' %>
-</div>

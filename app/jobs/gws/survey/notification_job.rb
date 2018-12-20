@@ -89,7 +89,7 @@ class Gws::Survey::NotificationJob < Gws::ApplicationJob
     message.send_date = @now
     message.subject = subject
     message.format = 'text'
-    message.text = text
+    message.url = text
 
     message.save!
 

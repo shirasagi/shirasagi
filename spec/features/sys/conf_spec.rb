@@ -138,20 +138,7 @@ describe "sys_conf", type: :feature, dbscope: :example do
 
     it "#index" do
       visit sns_mypage_path
-      first('.main-navi .sys-conf a').click
-      within 'nav.mod-navi' do
-        expect(page).to have_css('h2', text: 'システム設定')
-        expect(page).to have_no_css('h3 a', text: 'サイト')
-        expect(page).to have_no_css('h3 a', text: 'グループ')
-        expect(page).to have_no_css('h3 a', text: 'ユーザー')
-        expect(page).to have_no_css('h3 a', text: '権限/ロール')
-        expect(page).to have_no_css('h3 a', text: '認証')
-        expect(page).to have_no_css('h3 a', text: '最大ファイルサイズ')
-        expect(page).to have_no_css('h3 a', text: 'サイト複製')
-        expect(page).to have_no_css('h3 a', text: 'テスト')
-        expect(page).to have_no_css('h3 a', text: '操作履歴')
-        expect(page).to have_no_css('h3 a', text: 'ジョブ')
-      end
+      expect(page).to have_no_css('.main-navi .sys-conf a')
     end
   end
 end

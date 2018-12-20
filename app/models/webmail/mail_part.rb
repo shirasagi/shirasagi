@@ -49,6 +49,10 @@ class Webmail::MailPart
     self.class.decode(data, part)
   end
 
+  def size
+    part.size
+  end
+
   class << self
     def list(parts)
       parts.map { |sec, part| new(part, sec) }

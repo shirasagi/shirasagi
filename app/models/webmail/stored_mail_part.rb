@@ -20,4 +20,8 @@ class Webmail::StoredMailPart
   def link_target
     image? ? '_blank' : nil
   end
+
+  def size
+    part.body.raw_source.size
+  end
 end

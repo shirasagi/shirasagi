@@ -62,7 +62,7 @@ class Board::PostsController < ApplicationController
   def download
     raise "403" unless @model.allowed?(:read, @cur_user, site: @cur_site, node: @cur_node)
 
-    csv = @model.site(@cur_site).node(@cur_node).order(updated: -1).to_csv
+    csv = @model.site(@cur_site).node(@cur_node).allow(:read, @cur_user, site: @cur_site, node: @cur_node).order(updated: -1).to_csv
     send_data csv.encode("SJIS", invalid: :replace, undef: :replace), filename: "board_posts_#{Time.zone.now.to_i}.csv"
   end
 end

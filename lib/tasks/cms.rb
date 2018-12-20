@@ -66,7 +66,7 @@ module Tasks
       end
 
       def export_site
-        with_site do |site|
+        with_site(ENV['site']) do |site|
           job = ::Sys::SiteExportJob.new
           job.task = mock_task(
             source_site_id: site.id
@@ -76,8 +76,8 @@ module Tasks
       end
 
       def import_site
-        with_site do |site|
-          puts "Please input import file: site=[site_name]" or break if ENV['file'].blank?
+        with_site(ENV['site']) do |site|
+          puts "Please input import file: file=[file_path]" or break if ENV['file'].blank?
 
           file = ENV['file']
           puts "File not found: #{ENV['file']}" or break unless ::File.exist?(file)
@@ -92,18 +92,18 @@ module Tasks
       end
 
       def set_subdir_url
-        with_site do |site|
+        with_site(ENV['site']) do |site|
           puts "# layouts"
-          gsub_attrs(::Cms::Layout.site(site))
+          gsub_attrs(::Cms::Layout.site(site), site)
 
           puts "# parts"
-          gsub_attrs(::Cms::Part.site(site))
+          gsub_attrs(::Cms::Part.site(site), site)
 
           puts "# pages"
-          gsub_attrs(::Cms::Page.site(site))
+          gsub_attrs(::Cms::Page.site(site), site)
 
           puts "# nodes"
-          gsub_attrs(::Cms::Node.site(site))
+          gsub_attrs(::Cms::Node.site(site), site)
         end
       end
 
@@ -167,22 +167,22 @@ module Tasks
         task
       end
 
-      def gsub_path(html)
+      def gsub_path(html, site)
         html.gsub(/(href|src)=".*?"/) do |m|
           url = m.match(/.*?="(.*?)"/)[1]
           if url =~ /^\/(assets|assets-dev|fs)\//
             m
-          elsif url =~ /^#{@site.url}/
+          elsif url =~ /^#{site.url}/
             m
           elsif url =~ /^\/(?!\/)/
-            m.sub(/="\//, "=\"#{@site.url}")
+            m.sub(/="\//, "=\"#{site.url}")
           else
             m
           end
         end
       end
 
-      def gsub_attrs(criteria)
+      def gsub_attrs(criteria, site)
         all_ids = criteria.pluck(:id)
         all_ids.each_slice(100) do |ids|
           criteria.klass.where(:id.in => ids).each do |item|
@@ -191,7 +191,7 @@ module Tasks
             attrs.each do |attr|
               next unless item.respond_to?(attr) && item.respond_to?("#{attr}=")
               next unless item.send(attr).present?
-              item.send("#{attr}=", gsub_path(item.send(attr)))
+              item.send("#{attr}=", gsub_path(item.send(attr), site))
             end
             item.save!
 

@@ -101,6 +101,44 @@ describe 'members/agents/nodes/registration', type: :feature, dbscope: :example 
         expect(page.find("input[name='item[in_birth][month]']", visible: false).value).to eq birthday.month.to_s
         expect(page.find("input[name='item[in_birth][day]']", visible: false).value).to eq birthday.day.to_s
 
+        click_button I18n.t("member.buttons.back")
+      end
+
+      within "form" do
+        expect(page.find("input[name='item[name]']").value).to eq name
+        expect(page.find("input[name='item[email]']").value).to eq email
+        expect(page.find("input[name='item[email_again]']").value).to eq nil
+        fill_in "item[email_again]", with: email
+        expect(page.find("input[name='item[kana]']").value).to eq kana
+        expect(page.find("input[name='item[organization_name]']").value).to eq organization_name
+        expect(page.find("input[name='item[job]']").value).to eq job
+        expect(page.find("input[name='item[tel]']").value).to eq tel
+        expect(page.find("input[name='item[postal_code]']").value).to eq postal_code
+        expect(page.find("input[name='item[addr]']").value).to eq addr
+        expect(page).to have_checked_field(I18n.t("member.options.sex.#{sex}"))
+        expect(page).to have_select('item[in_birth][era]', selected: I18n.t('ss.options.wareki.seireki'))
+        expect(page.find("input[name='item[in_birth][year]']").value).to eq birthday.year.to_s
+        expect(page).to have_select('item[in_birth][month]', selected: birthday.month.to_s)
+        expect(page).to have_select('item[in_birth][day]', selected: birthday.day.to_s)
+
+        click_button "確認画面へ"
+      end
+
+      within "form" do
+        expect(page.find("input[name='item[name]']", visible: false).value).to eq name
+        expect(page.find("input[name='item[email]']", visible: false).value).to eq email
+        expect(page.find("input[name='item[kana]']", visible: false).value).to eq kana
+        expect(page.find("input[name='item[organization_name]']", visible: false).value).to eq organization_name
+        expect(page.find("input[name='item[job]']", visible: false).value).to eq job
+        expect(page.find("input[name='item[tel]']", visible: false).value).to eq tel
+        expect(page.find("input[name='item[postal_code]']", visible: false).value).to eq postal_code
+        expect(page.find("input[name='item[addr]']", visible: false).value).to eq addr
+        expect(page.find("input[name='item[sex]']", visible: false).value).to eq sex
+        expect(page.find("input[name='item[in_birth][era]']", visible: false).value).to eq "seireki"
+        expect(page.find("input[name='item[in_birth][year]']", visible: false).value).to eq birthday.year.to_s
+        expect(page.find("input[name='item[in_birth][month]']", visible: false).value).to eq birthday.month.to_s
+        expect(page.find("input[name='item[in_birth][day]']", visible: false).value).to eq birthday.day.to_s
+
         click_button "登録"
       end
 

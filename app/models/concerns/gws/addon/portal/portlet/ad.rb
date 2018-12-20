@@ -6,7 +6,7 @@ module Gws::Addon::Portal::Portlet
     set_addon_type :gws_portlet
 
     included do
-      include Gws::Addon::LinkFile
+      include Gws::Addon::Portal::Portlet::LinkFile
       field :state, type: String
       field :time, type: Integer
       permit_params :state, :time

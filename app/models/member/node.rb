@@ -74,10 +74,10 @@ module Member::Node
     include Cms::Model::Node
     include Cms::Addon::NodeSetting
     include Cms::Addon::Meta
+    include Member::Addon::EditorSetting
     include Cms::Addon::Release
     include Cms::Addon::GroupPermission
     include History::Addon::Backup
-    include SS::Addon::EditorSetting
 
     default_scope ->{ where(route: "member/my_blog") }
 
@@ -115,7 +115,7 @@ module Member::Node
     end
 
     def layout_options
-      Member::BlogLayout.where(filename: /^#{filename}\//).
+      Member::BlogLayout.site(site).where(filename: /^#{filename}\//).
         map { |item| [item.name, item.id] }
     end
   end
@@ -124,7 +124,6 @@ module Member::Node
     include Cms::Model::Node
     include Cms::Reference::Member
     include Member::Addon::Blog::PageSetting
-    include Cms::Addon::EditorSetting
     include Cms::Addon::PageList
     include Cms::Addon::GroupPermission
 

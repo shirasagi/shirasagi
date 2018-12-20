@@ -137,6 +137,10 @@ class Uploader::File
         end
       end
       list.to_blob
+    rescue
+      # ImageMagick doesn't able to handle all image formats. There ara some formats causing unsupported handler exception.
+      # Not all image formats have exif. Some formats link svg or ico haven't exif.
+      binary
     end
   end
 

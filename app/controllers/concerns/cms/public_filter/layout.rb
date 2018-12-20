@@ -171,7 +171,12 @@ module Cms::PublicFilter::Layout
     classes = ['preview-part', "preview-part-#{part.id}", 'preview-hide'].join(' ')
     html = []
     if @preview && Cms::Part.allowed?(:read, @cur_user, site: @cur_site, node: @cur_node)
-      html << "<a class='#{classes}' target='_blank' href='#{cms_part_path(site: @cur_site, id: part.id)}'>"
+      if part.parent
+        part_path = node_part_path(site: @cur_site, cid: part.parent.id, id: part.id)
+      else
+        part_path = cms_part_path(site: @cur_site, id: part.id)
+      end
+      html << "<a class='#{classes}' target='_blank' href='#{part_path}'>"
       html << part.name
       html << '</a>'
     end

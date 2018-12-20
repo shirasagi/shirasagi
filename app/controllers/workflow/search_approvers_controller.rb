@@ -24,7 +24,10 @@ class Workflow::SearchApproversController < ApplicationController
 
   def index
     @level = params[:level]
+    @approver_ids = params[:approver_ids].to_a.map(&:to_i)
+
     criteria = @model.site(@cur_site).active.search(params[:s])
+    criteria = criteria.in(id: @approver_ids) if @approver_ids.present?
     criteria = criteria.in(group_ids: group_ids) if @group
     @items = criteria.order_by(_id: 1).page(params[:page]).per(50)
   end

@@ -6,4 +6,7 @@
 
   <dt><%= @model.t :event_dates %></dt>
   <dd class="event-dates"><%= raw @item.dates_to_html(:long) %></dd>
+
+  <dt><%= @model.t :event_deadline %></dt>
+  <dd><%= tryb { I18n.l(@item.event_deadline) } %></dd>
 </dl>

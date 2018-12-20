@@ -37,7 +37,7 @@ class Cms::Agents::Parts::CrumbController < ApplicationController
   end
 
   def find_node(item, path)
-    Cms::Node.site(@cur_site).in_path(path).order(depth: -1).reverse_each do |node|
+    Cms::Node.site(@cur_site).in_path(path).order_by(depth: -1).reverse_each do |node|
       next if @cur_node && @cur_node.depth >= node.depth
       item << [node.name, node.url]
     end
