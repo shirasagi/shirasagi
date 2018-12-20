@@ -12,7 +12,7 @@ describe Gws::Reminder::NotificationJob, dbscope: :example do
       in_reminder_conditions: [ reminder_condition ])
   end
   let(:reminder) { schedule.reminder(gws_user) }
-  let(:default_from) { ActionMailer::Base.default[:from] }
+  let(:default_from) { SS.config.mail.default_from }
   let(:sender_email) { "sys@example.jp" }
 
   before do

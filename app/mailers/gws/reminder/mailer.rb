@@ -5,7 +5,7 @@ class Gws::Reminder::Mailer < ActionMailer::Base
     @reminder = reminder
     @item = reminder.item
 
-    from = from_email(site).presence || ActionMailer::Base.default[:from]
+    from = site.sender_address
     to = format_email(reminder.user)
     return nil if to.blank?
 
@@ -24,16 +24,6 @@ class Gws::Reminder::Mailer < ActionMailer::Base
       "#{user.name} <#{user.email}>"
     else
       user.email
-    end
-  end
-
-  def from_email(site)
-    return if site.sender_email.blank?
-
-    if site.sender_name.present?
-      "#{site.sender_name} <#{site.sender_email}>"
-    else
-      site.sender_email
     end
   end
 end
