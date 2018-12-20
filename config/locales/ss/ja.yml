@@ -578,6 +578,7 @@ ja:
       ss/model/mail_setting:
         sender_name: 差出人名
         sender_email: 差出人メールアドレス
+        sender_user_id: 差出ユーザー
         mail_signature: 署名
 
   tooltip:
