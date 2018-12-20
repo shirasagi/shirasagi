@@ -6,7 +6,7 @@ class Gws::Memo::Mailer < ActionMailer::Base
     @to = @item.sorted_to_members.map { |item| "#{item.name} <#{item.email}>" }.join(", ")
     @cc = @item.sorted_cc_members.map { |item| "#{item.name} <#{item.email}>" }.join(", ")
 
-    from = @cur_site.memo_email.presence || ActionMailer::Base.default[:from]
+    from = @cur_site.sender_address
     subject = "[#{I18n.t("gws/memo/message.message")}]#{I18n.t("gws/memo/forward.subject")}:#{@cur_user.name}"
 
     @item.files.each do |file|
