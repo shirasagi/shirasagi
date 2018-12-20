@@ -58,18 +58,22 @@ class Webmail::MailPart
       parts.map { |sec, part| new(part, sec) }
     end
 
-    def decode(data, part)
+    def decode(data, part, options = {})
       return if data.blank?
-
-      charset = part.param ? part.param['CHARSET'].presence : nil
-      charset = 'CP50220' if charset.try(:upcase) == 'ISO-2022-JP'
 
       body = ::Mail::Body.new(data)
       body.encoding = part.encoding
 
       data = body.decoded
-      data = data.encode('UTF-8', charset) if charset
-      data = data.html_safe if part.subtype == 'HTML'
+      if options && options[:charset]
+        charset = part.param ? part.param['CHARSET'].presence : nil
+        charset = 'CP50220' if charset.try(:upcase) == 'ISO-2022-JP'
+
+        data = data.encode('UTF-8', charset) if charset
+      end
+      if part.subtype == 'HTML' && options && options[:html_safe]
+        data = data.html_safe
+      end
       data
     end
   end

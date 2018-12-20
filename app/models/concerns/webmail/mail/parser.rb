@@ -130,8 +130,8 @@ module Webmail::Mail::Parser
     return if attr.blank?
 
     resp = imap.conn.uid_fetch(uid, attr)
-    self.text = Webmail::MailPart.decode resp[0].attr["BODY[#{text_part_no}]"], text_part
-    self.html = Webmail::MailPart.decode resp[0].attr["BODY[#{html_part_no}]"], html_part
+    self.text = Webmail::MailPart.decode(resp[0].attr["BODY[#{text_part_no}]"], text_part, charset: true)
+    self.html = Webmail::MailPart.decode(resp[0].attr["BODY[#{html_part_no}]"], html_part, charset: true, html_safe: true)
   end
 
   def parse_rfc822_body
