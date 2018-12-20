@@ -10,7 +10,7 @@ module Webmail::Mail::Parser
       uid: data.attr["UID"],
       internal_date: data.attr['INTERNALDATE'],
       flags: data.attr['FLAGS'] || [],
-      size: data.attr['RFC822.SIZE'],
+      size: data.attr['RFC822.SIZE']
     }
     self.flags = flags.map(&:to_sym)
 

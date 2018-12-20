@@ -21,14 +21,14 @@ class Gws::Memo::Mailer < ActionMailer::Base
     @cur_site = @item.try(:site) || @item.try(:cur_group) || @item.try(:_parent).try(:site)
     return false unless @cur_site.allow_send_mail?
 
-    @users = users.select{|user| user.use_notice_email?(@item)}
+    @users = users.select{ |user| user.use_notice_email?(@item) }
     return false unless @users.present?
 
     @notice = notice
     subject = @notice.subject
     @body = I18n.t("gws_notification.#{i18n_key}.mail_text", subject: subject, text: page_url)
     set_group_settings
-    bcc = @users.map(&:send_notice_mail_address).select{|email| email.present? && @cur_site.email_domain_allowed?(email)}
+    bcc = @users.map(&:send_notice_mail_address).select{ |email| email.present? && @cur_site.email_domain_allowed?(email) }
 
     return false unless bcc.present?
 
