@@ -8,12 +8,10 @@ module Gws::Addon::Memo::GroupSetting
     field :memo_quota, type: Integer, default: nil
     field :memo_filesize_limit, type: Integer, default: nil
     field :memo_reminder, type: Integer, default: 3
-    field :memo_email, type: String
 
-    permit_params :memo_quota, :memo_filesize_limit, :memo_reminder, :memo_email
+    permit_params :memo_quota, :memo_filesize_limit, :memo_reminder
 
     validates :memo_reminder, numericality: true
-    validates :memo_email, email: true, if: ->{ memo_email.present? }
   end
 
   def memo_filesize_limit
@@ -31,10 +29,6 @@ module Gws::Addon::Memo::GroupSetting
 
   def memo_reminder_name
     I18n.t('gws/memo/group_setting.options.reminder')[memo_reminder]
-  end
-
-  def memo_email
-    self[:memo_email]
   end
 
   class << self

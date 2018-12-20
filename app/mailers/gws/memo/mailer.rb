@@ -8,7 +8,7 @@ class Gws::Memo::Mailer < ActionMailer::Base
     @to = @item.sorted_to_members.map { |item| "#{item.name} <#{item.email}>" }.join(", ")
     @cc = @item.sorted_cc_members.map { |item| "#{item.name} <#{item.email}>" }.join(", ")
 
-    from = @cur_site.memo_email.presence || ActionMailer::Base.default[:from]
+    from = @cur_site.sender_address
     subject = "[#{I18n.t("gws/memo/message.message")}]#{I18n.t("gws/memo/forward.subject")}:#{@cur_user.name}"
 
     @item.files.each do |file|
@@ -38,19 +38,7 @@ class Gws::Memo::Mailer < ActionMailer::Base
   end
 
   def set_group_settings
-    @from = begin
-      if @cur_site.sender_user_id.present? && send_user = Gws::User.find_by(id: @cur_site.sender_user_id)
-        "#{send_user.name} <#{send_user.email}>"
-      elsif @cur_site.sender_email.present?
-        if @cur_site.sender_name.present?
-          "#{@cur_site.sender_name} <#{@cur_site.sender_email}>"
-        else
-          @cur_site.sender_email
-        end
-      else
-        SS.config.mail.default_from
-      end
-    end
+    @from = @cur_site.sender_address
 
     if signature = @cur_site.mail_signature.presence
       @body << "\r\n"
