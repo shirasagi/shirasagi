@@ -4,6 +4,8 @@ class Rdf::Class
   include Rdf::Object
   include Opendata::Addon::Category
 
+  self.required_categories = false
+
   belongs_to :sub_class, class_name: "Rdf::Class"
 
   permit_params :sub_class_id

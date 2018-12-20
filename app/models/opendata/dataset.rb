@@ -20,6 +20,8 @@ class Opendata::Dataset
 
   set_permission_name "opendata_datasets"
 
+  self.required_categories = false
+
   scope :formast_is, ->(word, *fields) {
     options = fields.extract_options!
     method = options[:method].presence || 'and'
