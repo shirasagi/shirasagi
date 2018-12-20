@@ -12,17 +12,24 @@ class Event::Agents::Parts::CalendarController < ApplicationController
 
     if @cur_part.parent.present?
       @condition_hash = @cur_part.parent.becomes_with_route.try(:condition_hash)
+    else
+      @condition_hash = {}
     end
 
     start_date = @current_month_date.advance(days: -1 * @current_month_date.wday)
     close_date = start_date.advance(days: 7 * 6)
+    dates = (start_date...close_date).to_a
 
-    (start_date...close_date).each do |d|
-      @dates.push [ d, events(d) ]
+    set_event_dates(dates.collect(&:mongoize))
+    dates.each do |d|
+      @dates.push [ d, @event_dates.include?(d) ]
     end
 
-    @render_url = @cur_part.url
-    @render_url = cms_preview_path(preview_date: params[:preview_date], path: @cur_part.url.sub(/^\//, "")) if preview_path?
+    if preview_path?
+      @render_url = cms_preview_path(preview_date: params[:preview_date], path: @cur_part.url.sub(/^\//, ""))
+    else
+      @render_url = @cur_part.url
+    end
   end
 
   private
@@ -53,12 +60,11 @@ class Event::Agents::Parts::CalendarController < ApplicationController
     end
   end
 
-  def events(date)
-    @condition_hash = {} unless @condition_hash
-    events = Cms::Page.site(@cur_site).and_public(@cur_date).
+  def set_event_dates(dates)
+    @event_dates = Cms::Page.site(@cur_site).and_public(@cur_date).
       where(@condition_hash).
-      where(:event_dates.in => [date.mongoize]).
-      entries.
-      sort_by{ |page| page.event_dates.size }
+      in(event_dates: dates).
+      pluck(:event_dates).
+      flatten.compact.uniq.sort
   end
 end
