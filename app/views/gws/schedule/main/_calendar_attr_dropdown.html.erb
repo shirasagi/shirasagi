@@ -1,0 +1,32 @@
+<%
+  menu_items = []
+
+  if Gws::Memo.allowed?(:use, @cur_user, site: @cur_site) && Gws::Memo.allowed?(:use, user, site: @cur_site)
+    menu_items << content_tag("li", class: "dropdown-menu-item") do
+      link_to t("ss.links.send_message"), '#', class: "send-message"
+    end
+  end
+
+  if user.email.present?
+    menu_items << content_tag("li", class: "dropdown-menu-item") do
+      if Webmail.allowed?(:use, @cur_user)
+        link_to t("ss.links.send_email"), '#', class: "send-email"
+      else
+        mail_to user.email
+      end
+    end
+
+    menu_items << content_tag("li", class: "dropdown-menu-item") do
+      link_to t("ss.links.copy_email_address"), '#', class: "copy-email-address"
+    end
+  end
+%>
+
+<% return if menu_items.blank? %>
+
+<ul class="dropdown-menu gws-dropdown-menu">
+  <li class="dropdown-menu-item disabled"><%= user.long_name %></li>
+  <% menu_items.each do |menu_item| %>
+    <%= menu_item %>
+  <% end %>
+</ul>

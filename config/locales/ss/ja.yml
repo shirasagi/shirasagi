@@ -86,6 +86,9 @@ ja:
       unlock_user: 利用停止を解除する
       trash: ゴミ箱
       restore: 元に戻す
+      send_email: メールを作成する
+      send_message: メッセージを作成する
+      copy_email_address: メールアドレスをコピー
     buttons:
       save: 保存
       new: 新規作成
