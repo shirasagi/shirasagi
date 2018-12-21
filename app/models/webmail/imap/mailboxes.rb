@@ -85,14 +85,14 @@ module Webmail::Imap
     end
 
     def apply_recent_filters
-      return 0 if inbox.status.recent == 0
+      return 0 if inbox.status.unseen == 0
 
       imap.examine('INBOX')
       filters = Webmail::Filter.and_imap(imap).enabled.entries
 
       filters.each do |filter|
         filter.imap = imap
-        filter.uids = filter.uids_search(%w[NEW])
+        filter.uids = filter.uids_search(%w[UNSEEN])
       end
 
       counts = filters.map do |filter|
