@@ -1,13 +1,13 @@
 class Gws::Reminder::Mailer < ActionMailer::Base
   helper Gws::Schedule::PlanHelper
 
-  def notify_mail(reminder)
+  def notify_mail(site, reminder)
     @reminder = reminder
     @item = reminder.item
 
-    from = format_email(reminder.user)
-    return nil if from.blank?
-    to = from
+    from = site.sender_address
+    to = format_email(reminder.user)
+    return nil if to.blank?
 
     subject = I18n.t(
       "gws/reminder.notification.subject",
