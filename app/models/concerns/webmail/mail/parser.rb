@@ -153,20 +153,21 @@ module Webmail::Mail::Parser
 
     msg = Mail::Message.new(rfc822)
     if msg.multipart?
-      if part = msg.find_first_mime_type('text/plain')
+      if text_part = msg.find_first_mime_type('text/plain')
         self.format = 'text'
-        self.text = decode_jp(part.body.to_s, part.charset)
+        self.text = decode_jp(text_part.body.to_s, text_part.charset)
       end
-      if part = msg.find_first_mime_type('text/html')
+      if html_part = msg.find_first_mime_type('text/html')
         self.format = 'html'
-        self.html = decode_jp(part.body.to_s, part.charset)
+        self.html = decode_jp(html_part.body.to_s, html_part.charset)
       end
 
       @_all_parts = {}
       self.attachments = []
       msg.all_parts.each_with_index do |part, i|
         @_all_parts[i + 1] = part
-        self.attachments << Webmail::StoredMailPart.new(part, i + 1) if part.attachment?
+        next if part == text_part || part == html_part
+        self.attachments << Webmail::StoredMailPart.new(part, i + 1)
       end
     else
       if msg.mime_type == 'text/plain'
