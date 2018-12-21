@@ -80,9 +80,6 @@
       width: 10%;
     }
     td {
-      overflow: hidden;
-      text-overflow: ellipsis;
-      white-space: nowrap;
       .group-name {
         display: inline-block;
         vertical-align: middle;
@@ -109,9 +106,17 @@
           border-radius: 4px;
         }
       }
+      &.presence-state-toggle {
+        position: relative;
+      }
     }
     .editable .presence-state {
       cursor: pointer;
+    }
+    .no-overflow {
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
     }
   }
   &.group-users {
