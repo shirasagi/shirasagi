@@ -90,23 +90,36 @@ module Webmail::Mail::Parser
   end
 
   def parse_body_structure
-    if body_structure.multipart? #&& body_structure.subtype == "MIXED"
-      self.attachments = Webmail::MailPart.list(all_parts).select(&:attachment?)
-    else
-      self.attachments = []
-    end
-
-    if info = find_first_mime_type('text/plain')
+    text_part, html_part, other_parts = split_body_and_others
+    if text_part.present?
       self.format       = 'text'
-      self.text_part_no = info[0]
-      self.text_part    = info[1]
+      self.text_part_no = text_part[0]
+      self.text_part    = text_part[1]
     end
 
-    if info = find_first_mime_type('text/html')
+    if html_part.present?
       self.format       = 'html'
-      self.html_part_no = info[0]
-      self.html_part    = info[1]
+      self.text_part_no = html_part[0]
+      self.text_part    = html_part[1]
     end
+
+    self.attachments = []
+    if other_parts.present?
+      other_parts.each do |sec, part|
+        self.attachments << Webmail::MailPart.new(part, sec)
+      end
+    end
+  end
+
+  def split_body_and_others
+    text_part = find_first_mime_type('text/plain')
+    html_part = find_first_mime_type('text/html')
+
+    other_parts = all_parts.dup
+    other_parts.reject! { |pos, _part| pos == text_part[0] } if text_part.present?
+    other_parts.reject! { |pos, _part| pos == html_part[0] } if html_part.present?
+
+    [ text_part, html_part, other_parts ]
   end
 
   def all_parts
