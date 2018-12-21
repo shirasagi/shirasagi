@@ -1,0 +1,32 @@
+Date: Thu, 18 Oct 2018 14:51:09 +0900
+From: webmail-imap <user5@example.jp>
+To: user5@example.jp
+Message-ID: <5bc81f4d74ffa_122ba3fe9c16180ec53727@example.jpl>
+Subject: rspec-f5ttl71mhn
+Mime-Version: 1.0
+Content-Type: multipart/alternative;
+ boundary="------------97F3F05C86C6CA0671D1AA3C"
+Content-Language: en-US
+
+This is a multi-part message in MIME format.
+--------------97F3F05C86C6CA0671D1AA3C
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+
+_*test*_
+
+--------------97F3F05C86C6CA0671D1AA3C
+Content-Type: text/html; charset=utf-8
+Content-Transfer-Encoding: 7bit
+
+<html>
+  <head>
+
+    <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  </head>
+  <body text="#000000" bgcolor="#FFFFFF">
+    <u><b>test</b></u>
+  </body>
+</html>
+
+--------------97F3F05C86C6CA0671D1AA3C--

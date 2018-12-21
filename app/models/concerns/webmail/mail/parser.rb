@@ -99,8 +99,8 @@ module Webmail::Mail::Parser
 
     if html_part.present?
       self.format       = 'html'
-      self.text_part_no = html_part[0]
-      self.text_part    = html_part[1]
+      self.html_part_no = html_part[0]
+      self.html_part    = html_part[1]
     end
 
     self.attachments = []
