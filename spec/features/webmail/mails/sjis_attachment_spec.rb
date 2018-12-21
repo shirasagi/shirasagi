@@ -1,24 +1,23 @@
 require 'spec_helper'
 
-describe "webmail_mails", type: :feature, dbscope: :example, imap: true, js: true do
-  context "when mail is forwarded" do
+describe "webmail_mails", type: :feature, dbscope: :example, imap: true, js: true, tmpdir: true do
+  context "when mail is sent with sjis text file" do
     let(:user) { webmail_imap }
-    let(:item_from) { "from-#{unique_id}@example.jp" }
-    let(:item_tos) { Array.new(rand(1..10)) { "to-#{unique_id}@example.jp" } }
-    let(:item_ccs) { Array.new(rand(1..10)) { "cc-#{unique_id}@example.jp" } }
     let(:item_subject) { "subject-#{unique_id}" }
     let(:item_texts) { Array.new(rand(1..10)) { "message-#{unique_id}" } }
+    let(:content) { Rails.root.join("spec/fixtures/webmail/sjis.bin") }
+    let!(:file) do
+      tmp_ss_file(contents: content, user: user, content_type: "text/plain")
+    end
 
-    shared_examples "webmail/mails forward flow" do
-      let(:item) do
-        Mail.new(from: item_from, to: item_tos + [ address ], cc: item_ccs, subject: item_subject, body: item_texts.join("\n"))
-      end
-
+    shared_examples "webmail/mails send with sjis text attachment flow" do
       before do
-        webmail_import_mail(user, item)
-
         ActionMailer::Base.deliveries.clear
         login_user(user)
+
+        file.name = "テストあいう.txt"
+        file.filename = "テストあいう.txt"
+        file.save!
       end
 
       after do
@@ -26,24 +25,35 @@ describe "webmail_mails", type: :feature, dbscope: :example, imap: true, js: tru
       end
 
       it do
-        # forward
+        # send
         visit index_path
-        click_link item_subject
-        click_link I18n.t('webmail.links.forward')
+        click_link I18n.t('ss.links.new')
         within "form#item-form" do
           fill_in "to", with: user.email + "\n"
+          fill_in "item[subject]", with: item_subject
+          fill_in "item[text]", with: item_texts.join("\n")
+
+          click_on I18n.t("ss.links.upload")
         end
-        click_button I18n.t('ss.buttons.send')
+        within "#cboxLoadedContent" do
+          expect(page).to have_content(file.name)
+          first(".file-view a").click
+        end
+        within "form#item-form" do
+          click_on I18n.t('ss.buttons.send')
+        end
 
         expect(ActionMailer::Base.deliveries).to have(1).items
         ActionMailer::Base.deliveries.first.tap do |mail|
           expect(mail.from.first).to eq address
-          expect(mail.to).to have(1).items
           expect(mail.to.first).to eq user.email
-          expect(mail.cc).to be_nil
-          expect(mail.subject).to eq "Fw: #{item_subject}"
-          expect(mail.body.multipart?).to be_falsey
-          expect(mail.body.raw_source).to include(item_texts.map { |t| "> #{t}" }.join("\r\n"))
+          expect(mail.subject).to eq item_subject
+          expect(mail.multipart?).to be_truthy
+          expect(mail.parts.length).to eq 2
+          expect(mail.parts[0].body.raw_source).to include(item_texts.join("\r\n"))
+          expect(mail.parts[1].content_type).to include("text/plain")
+          expect(mail.parts[1].content_type).to include("Shift_JIS")
+          expect(mail.parts[1].body.raw_source).to eq Base64.encode64(File.binread(content))
         end
       end
     end
@@ -62,7 +72,7 @@ describe "webmail_mails", type: :feature, dbscope: :example, imap: true, js: tru
         let(:index_path) { webmail_mails_path(account: 0) }
         let(:address) { user.email }
 
-        it_behaves_like "webmail/mails forward flow"
+        it_behaves_like "webmail/mails send with sjis text attachment flow"
       end
 
       describe "webmail_mode is group" do
@@ -72,7 +82,7 @@ describe "webmail_mails", type: :feature, dbscope: :example, imap: true, js: tru
 
         before { user.add_to_set(group_ids: [ group.id ]) }
 
-        it_behaves_like "webmail/mails forward flow"
+        it_behaves_like "webmail/mails send with sjis text attachment flow"
       end
     end
 

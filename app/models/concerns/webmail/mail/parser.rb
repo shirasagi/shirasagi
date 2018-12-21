@@ -90,23 +90,36 @@ module Webmail::Mail::Parser
   end
 
   def parse_body_structure
-    if body_structure.multipart? #&& body_structure.subtype == "MIXED"
-      self.attachments = Webmail::MailPart.list(all_parts).select(&:attachment?)
-    else
-      self.attachments = []
-    end
-
-    if info = find_first_mime_type('text/plain')
+    text_part, html_part, other_parts = split_body_and_others
+    if text_part.present?
       self.format       = 'text'
-      self.text_part_no = info[0]
-      self.text_part    = info[1]
+      self.text_part_no = text_part[0]
+      self.text_part    = text_part[1]
     end
 
-    if info = find_first_mime_type('text/html')
+    if html_part.present?
       self.format       = 'html'
-      self.html_part_no = info[0]
-      self.html_part    = info[1]
+      self.text_part_no = html_part[0]
+      self.text_part    = html_part[1]
     end
+
+    self.attachments = []
+    if other_parts.present?
+      other_parts.each do |sec, part|
+        self.attachments << Webmail::MailPart.new(part, sec)
+      end
+    end
+  end
+
+  def split_body_and_others
+    text_part = find_first_mime_type('text/plain')
+    html_part = find_first_mime_type('text/html')
+
+    other_parts = all_parts.dup
+    other_parts.reject! { |pos, _part| pos == text_part[0] } if text_part.present?
+    other_parts.reject! { |pos, _part| pos == html_part[0] } if html_part.present?
+
+    [ text_part, html_part, other_parts ]
   end
 
   def all_parts
@@ -140,20 +153,21 @@ module Webmail::Mail::Parser
 
     msg = Mail::Message.new(rfc822)
     if msg.multipart?
-      if part = msg.find_first_mime_type('text/plain')
+      if text_part = msg.find_first_mime_type('text/plain')
         self.format = 'text'
-        self.text = decode_jp(part.body.to_s, part.charset)
+        self.text = decode_jp(text_part.body.to_s, text_part.charset)
       end
-      if part = msg.find_first_mime_type('text/html')
+      if html_part = msg.find_first_mime_type('text/html')
         self.format = 'html'
-        self.html = decode_jp(part.body.to_s, part.charset)
+        self.html = decode_jp(html_part.body.to_s, html_part.charset)
       end
 
       @_all_parts = {}
       self.attachments = []
       msg.all_parts.each_with_index do |part, i|
         @_all_parts[i + 1] = part
-        self.attachments << Webmail::StoredMailPart.new(part, i + 1) if part.attachment?
+        next if part == text_part || part == html_part
+        self.attachments << Webmail::StoredMailPart.new(part, i + 1)
       end
     else
       if msg.mime_type == 'text/plain'

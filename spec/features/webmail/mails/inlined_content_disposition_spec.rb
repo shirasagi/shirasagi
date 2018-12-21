@@ -1,15 +1,15 @@
 require 'spec_helper'
 
 describe "webmail_mails", type: :feature, dbscope: :example, imap: true do
-  context "when mail is deleted" do
+  context "when inlined content disposition is given" do
     let(:user) { webmail_imap }
-    let(:item_from) { "from-#{unique_id}@example.jp" }
-    let(:item_subject) { "subject-#{unique_id}" }
-    let(:item_texts) { Array.new(rand(1..10)) { "message-#{unique_id}" } }
+    let(:item) do
+      mail = Mail.read(Rails.root.join("spec/fixtures/webmail/inlined_content_disposition.eml"))
+      mail.subject = "#{mail.subject} - #{unique_id}"
+      mail
+    end
 
-    shared_examples "webmail/mails delete flow" do
-      let(:item) { Mail.new(from: item_from, to: address, subject: item_subject, body: item_texts.join("\n")) }
-
+    shared_examples "webmail/mails inlined content-disposition flow" do
       before do
         webmail_import_mail(user, item)
 
@@ -22,16 +22,10 @@ describe "webmail_mails", type: :feature, dbscope: :example, imap: true do
       end
 
       it do
-        # delete
         visit index_path
-        expect { Webmail::Mail.find_by(subject: item_subject) }.not_to raise_error
-
-        click_link item_subject
-        click_link I18n.t('ss.links.delete')
-        click_button I18n.t('ss.buttons.delete')
-        expect(current_path).to eq index_path
-
-        expect { Webmail::Mail.find_by(subject: item_subject) }.to raise_error Mongoid::Errors::DocumentNotFound
+        click_on item.subject
+        expect(page).to have_css("#addon-basic .body--text", text: "test")
+        expect(page).to have_css("#mail-attachments .file", text: "テストあいう.txt")
       end
     end
 
@@ -47,19 +41,17 @@ describe "webmail_mails", type: :feature, dbscope: :example, imap: true do
 
       describe "webmail_mode is account" do
         let(:index_path) { webmail_mails_path(account: 0) }
-        let(:address) { user.email }
 
-        it_behaves_like 'webmail/mails delete flow'
+        it_behaves_like "webmail/mails inlined content-disposition flow"
       end
 
       describe "webmail_mode is group" do
         let(:group) { create :webmail_group }
         let(:index_path) { webmail_mails_path(account: group.id, webmail_mode: :group) }
-        let(:address) { group.contact_email }
 
         before { user.add_to_set(group_ids: [ group.id ]) }
 
-        it_behaves_like 'webmail/mails delete flow'
+        it_behaves_like "webmail/mails inlined content-disposition flow"
       end
     end
 
