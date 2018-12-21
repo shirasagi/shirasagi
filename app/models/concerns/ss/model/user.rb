@@ -19,7 +19,7 @@ module SS::Model::User
     store_in collection: "ss_users"
     index({ email: 1 }, { sparse: true, unique: true })
     index({ uid: 1 }, { sparse: true, unique: true })
-    index({ organization_uid: 1, organization_id: 1 }, { unique: true, sparse: true })
+    index({ organization_uid: 1, organization_id: 1 }, { sparse: true })
 
     # Create indexes each site_ids.
     # > db.ss_users.ensureIndex({ "title_orders.1": -1, organization_uid: 1, uid: 1 });
