@@ -55,7 +55,7 @@ class Webmail::Filter
   end
 
   def field_options
-    %w(from to cc bcc subject body).map { |m| [I18n.t("webmail.options.filter_field.#{m}"), m] }
+    %w(from to cc subject body).map { |m| [I18n.t("webmail.options.filter_field.#{m}"), m] }
   end
 
   def operator_options
@@ -95,17 +95,23 @@ class Webmail::Filter
   end
 
   def search_keys
-    keys = []
-    keys << 'OR' if conjunction == 'or'
-
-    conditions.each do |cond|
+    reduced = conditions.map do |cond|
       next if cond[:field].blank? || cond[:value].blank?
+      keys = []
       keys << 'NOT' if cond[:operator] == 'exclude'
       keys << cond[:field].upcase
       keys << cond[:value].dup.force_encoding('ASCII-8BIT')
+      keys
     end
 
-    keys
+    return reduced.flatten if conjunction != 'or' || reduced.length <= 1
+
+    while reduced.length > 1
+      terms = reduced.pop(2)
+      reduced << [ "OR", terms[0], terms[1] ]
+    end
+
+    reduced.flatten
   end
 
   def uids_search(keys = [])
