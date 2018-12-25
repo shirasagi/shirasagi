@@ -7,7 +7,7 @@ module Webmail::Mail::Fields
   end
 
   def display_subject
-    subject.presence || "No title"
+    subject.presence || I18n.t("webmail.no_subjects")
   end
 
   def display_sender
