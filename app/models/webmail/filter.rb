@@ -24,6 +24,9 @@ class Webmail::Filter
   field :conditions, type: Array, default: []
   field :action, type: String
 
+  field :filter_error_at, type: DateTime
+  field :filter_errors, type: Array
+
   permit_params :host, :account, :mailbox, :name, :state, :order, :action, :conjunction
   permit_params conditions: [:field, :operator, :value]
 
@@ -123,6 +126,8 @@ class Webmail::Filter
   end
 
   def uids_apply(uids)
+    self.set(filter_error_at: nil, filter_errors: nil)
+
     count = 0
     return count if uids.blank?
 
@@ -141,6 +146,9 @@ class Webmail::Filter
     end
 
     count
+  rescue Net::IMAP::ResponseError => e
+    self.set(filter_error_at: Time.zone.now, filter_errors: [ NKF.nkf("-w", e.to_s) ])
+    false
   end
 
   private

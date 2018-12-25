@@ -100,7 +100,7 @@ module Webmail::Imap
       end
 
       update_status
-      counts.inject(:+) || 0
+      counts.reject { |v| v == false }.sum || 0
     end
 
     def cache_find
