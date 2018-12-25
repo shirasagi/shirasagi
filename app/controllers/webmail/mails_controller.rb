@@ -56,6 +56,8 @@ class Webmail::MailsController < ApplicationController
   def apply_recent_filters
     @mailboxes = @imap.mailboxes.load
     @mailboxes.apply_recent_filters
+  rescue => e
+    Rails.logger.warn("#{e.class} (#{e.message}):\n  #{e.backtrace.join("\n  ")}")
   end
 
   def set_mailbox
