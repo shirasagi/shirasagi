@@ -54,7 +54,7 @@ class ApplicationController < ActionController::Base
     name = ::Regexp.last_match[1]
     filename = ::Regexp.last_match[2]
 
-    encoded = ::URI.encode_www_form_component(filename)
+    encoded = ERB::Util.url_encode(filename)
     headers['Content-Disposition'] = "#{name}; filename*=UTF-8''#{encoded}" if encoded != filename
   end
 
