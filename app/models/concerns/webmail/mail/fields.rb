@@ -27,7 +27,7 @@ module Webmail::Mail::Fields
   end
 
   def display_address(address)
-    return [] if address.blank?
+    return {} if address.blank?
     begin
       addr = ::Mail::Address.new(address)
       name = addr.display_name.presence || addr.address
