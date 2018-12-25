@@ -49,7 +49,7 @@ class Webmail::Filter
     criteria = where({})
     return criteria if params.blank?
 
-    criteria = criteria.keyword_in params[:keyword], :name if params[:keyword].present?
+    criteria = criteria.keyword_in params[:keyword], :name, :filter_errors if params[:keyword].present?
     criteria
   }
 
