@@ -13,6 +13,9 @@
   <span class="state"><%= item.label :state %></span>
   <span class="order"><%= item.order %></span>
   <span class="summary"><%= item.conditions_summary.first %></span>
+  <% if item.filter_errors.present? %>
+    <span class="webmail-category-label webmail-error"><%= item.filter_errors.first.truncate(60) %></span>
+  <% end %>
 <% end %>
 
 <%= render file: "ss/crud/index" %>

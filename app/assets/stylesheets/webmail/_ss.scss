@@ -44,6 +44,21 @@ li.webmail-accounts {
   margin-top: 5px;
   margin-right: 10px;
 }
+.webmail-category-label {
+  display: inline-block;
+  padding: 1px 5px;
+  @include border-radius(3px);
+  background-color: #e8e8e8;
+  background-image: url(/assets/img/gws/bg-plan.png);
+  color: #444;
+  font-size: 90%;
+  font-weight: normal;
+
+  &.webmail-error {
+    background-color: #FF4000;
+    color: #ffffff;
+  }
+}
 
 // -------------------------------------------------------------------------------------------------
 // navi
