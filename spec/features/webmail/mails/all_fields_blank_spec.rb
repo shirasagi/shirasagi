@@ -20,8 +20,11 @@ describe "webmail_mails", type: :feature, dbscope: :example, imap: true, js: tru
       it do
         visit index_path
         first("li.list-item").click
-        expect(page).to have_css("#addon-basic .subject", text: "No title")
+        expect(page).to have_css("#addon-basic .subject", text: I18n.t("webmail.no_subjects"))
         expect(page).to have_css("#addon-basic .body--text", text: "message-47ma7vziwcu")
+
+        click_on I18n.t("ss.links.delete")
+        expect(page).to have_css("#addon-basic", text: I18n.t("webmail.no_subjects"))
       end
     end
 
