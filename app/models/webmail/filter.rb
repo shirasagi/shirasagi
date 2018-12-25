@@ -55,7 +55,7 @@ class Webmail::Filter
   end
 
   def field_options
-    %w(from to cc subject body).map { |m| [I18n.t("webmail.options.filter_field.#{m}"), m] }
+    %w(from to cc bcc subject body).map { |m| [I18n.t("webmail.options.filter_field.#{m}"), m] }
   end
 
   def operator_options
