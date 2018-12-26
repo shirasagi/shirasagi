@@ -154,7 +154,7 @@ class Webmail::MailsController < ApplicationController
       @item = @imap.mails.find params[:id], :rfc822
     end
 
-    send_data @item.rfc822, filename: "#{@item.subject}.eml",
+    send_data @item.rfc822, filename: "#{@item.display_subject}.eml",
               content_type: 'message/rfc822', disposition: :attachment
   end
 

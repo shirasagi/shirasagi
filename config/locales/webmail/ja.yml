@@ -26,6 +26,8 @@ ja:
     account_setting: アカウント設定
     personal: 個人
     imap_default_index: 既定アカウント
+    no_subjects: 'No title'
+    no_senders: '差出人不明'
     export:
       all_mail: 全てのメール
       select_mail: 選択したメール

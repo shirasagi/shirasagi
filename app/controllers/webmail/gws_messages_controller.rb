@@ -46,7 +46,7 @@ class Webmail::GwsMessagesController < ApplicationController
 
   def new
     @item = @model.new fix_params
-    @item.subject = @mail.subject
+    @item.subject = @mail.display_subject
     @item.text = @mail.text
     @item.html = @mail.html
     @item.format = @mail.format
