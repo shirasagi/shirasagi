@@ -292,6 +292,8 @@ ja:
         conditions/value: 値
         action: アクション
         mailbox: フォルダー
+        filter_error_at: エラー日時
+        filter_errors: エラー内容
 
   activemodel:
     attributes:
