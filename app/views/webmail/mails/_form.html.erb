@@ -55,7 +55,15 @@ Webmail_Address_Autocomplete.render(
   <dt><%= @model.t :bcc %></dt>
   <dd><%= text_field_tag "bcc", nil, "class" => "address autocomplete", "data-name" => "item[bcc][]" %></dd>
   <dd>
-    <div class="selected-address"></div>
+    <div class="selected-address">
+      <% @item.bcc.each do |address| %>
+        <span>
+          <%= address %>
+          <i class="material-icons md-18 md-inactive deselect">close</i>
+          <input type="hidden" name="item[bcc][]" value="<%= address %>">
+        </span>
+      <% end %>
+    </div>
   </dd>
   <dd><%= render 'address_form', { f: f, field: :bcc } %></dd>
 </dl>
