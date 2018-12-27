@@ -121,9 +121,14 @@ class Webmail::Mail
   end
 
   def save_draft
-    msg = Webmail::Mailer.new_message(self).to_s
+    msg = Webmail::Mailer.new_message(self)
 
-    imap.conn.append(imap.draft_box, msg, [:Draft, :Seen], Time.zone.now)
+    # save all headers
+    msg.header.fields.each do |field|
+      field.include_in_headers = true if field.respond_to?(:include_in_headers)
+    end
+
+    imap.conn.append(imap.draft_box, msg.to_s, [:Draft, :Seen], Time.zone.now)
     if draft?
       imap.select(imap.draft_box)
       imap.uids_delete([uid])
@@ -136,7 +141,7 @@ class Webmail::Mail
     return false unless validate_message(msg)
 
     begin
-      msg = msg.deliver_now.to_s
+      msg.deliver_now
     rescue Net::SMTPError => e
       errors.add :base, I18n.t("errors.messages.smtp_delivery_error", message: e.message)
       return false
@@ -144,7 +149,7 @@ class Webmail::Mail
 
     replied_mail.set_answered if replied_mail
 
-    imap.conn.append(imap.sent_box, msg, [:Seen], Time.zone.now)
+    imap.conn.append(imap.sent_box, msg.to_s, [:Seen], Time.zone.now)
     if draft?
       imap.select(imap.draft_box)
       imap.uids_delete([uid])
@@ -156,7 +161,7 @@ class Webmail::Mail
     date_time = opts[:date_time] || Time.zone.now
 
     imap.select('INBOX')
-    imap.conn.append('INBOX', msg, [:Seen], date_time.to_time)
+    imap.conn.append('INBOX', msg.to_s, [:Seen], date_time.to_time)
   end
 
   def requested_mdn?
