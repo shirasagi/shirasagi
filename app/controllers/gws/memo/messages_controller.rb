@@ -43,10 +43,12 @@ class Gws::Memo::MessagesController < ApplicationController
   end
 
   def set_cur_folder
-    if params[:folder] =~ /^(INBOX|INBOX\.Trash|INBOX\.Draft|INBOX\.Sent)$/
-      @cur_folder = Gws::Memo::Folder.static_items(@cur_user, @cur_site).find{ |dir| dir.folder_path == params[:folder] }
-    else
-      @cur_folder = Gws::Memo::Folder.user(@cur_user).site(@cur_site).find_by(_id: params[:folder])
+    @cur_folder ||= begin
+      if Gws::Memo::Folder::STATIC_FOLDER_NAMES.include?(params[:folder])
+        Gws::Memo::Folder.static_items(@cur_user, @cur_site).find { |dir| dir.folder_path == params[:folder] }
+      else
+        Gws::Memo::Folder.user(@cur_user).site(@cur_site).find_by(id: params[:folder])
+      end
     end
   end
 
@@ -352,7 +354,7 @@ class Gws::Memo::MessagesController < ApplicationController
           subject: item.subject,
           url: gws_memo_message_url(folder: 'INBOX', id: item.id),
           unseen: item.unseen?(@cur_user)
-      }
+        }
       end
     }
     render json: resp.to_json
