@@ -278,6 +278,7 @@ ja:
       cms/radio_button: ラジオボタン
       cms/check_box: チェックボックス
       cms/file_upload: ファイルアップロード
+      cms/headline: 見出し入力
 
   cms_role:
     edit_cms_sites: サイトの管理
@@ -458,6 +459,7 @@ ja:
       cms/column/radio_button: ラジオボタン
       cms/column/check_box: チェックボックス
       cms/column/file_upload: ファイルアップロード
+      cms/column/headline: 見出し入力
     errors:
       models:
         cms/model/node:
@@ -802,6 +804,9 @@ ja:
         html_additional_attr: HTML追加属性
         label: リンクテキスト
         value: リンクURL
+      cms/column/value/headline:
+        head: 見出し
+        text: テキスト
 
   errors:
     messages:

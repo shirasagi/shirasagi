@@ -22,6 +22,7 @@ module Cms
     Cms::Column.plugin 'cms/radio_button'
     Cms::Column.plugin 'cms/check_box'
     Cms::Column.plugin 'cms/file_upload'
+    Cms::Column.plugin 'cms/headline'
 
     Cms::Role.permission :edit_cms_sites
     Cms::Role.permission :edit_cms_groups
