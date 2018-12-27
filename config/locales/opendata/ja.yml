@@ -35,6 +35,11 @@ ja:
     notice:
       deleted_account: アカウントを削除しました。
       started_building_rdf_job: "RDF 変換処理を開始しました。処理結果は「ジョブ実行履歴」で確認してください。"
+      start_export: エクスポートを開始しました。
+    export:
+      subject: '[オープンデータ/データセット] エクスポートが完了しました。'
+      notiry_message: "ダウンロードの準備が完了しました。\n下記のURLからダウンロードしてください。\n\n<a href=%{link}>%{link}</a>"
+      start_message: "エクスポート処理を開始しました。\nエクスポート処理が完了次第、ダウンロードリンクが通知されます。"
     errors:
       messages:
         invalid_rdf: RDFストアの登録に失敗しました。
@@ -384,6 +389,9 @@ ja:
       opendata/csv2rdf_setting: RDF変換設定
       opendata/member_notice: 会員通知
       opendata/resources: リソース
+      opendata/export_datasets: エクスポート
+      opendata/import_datasets: インポート
+      opendata/dataset_importer: インポート
     attributes:
       opendata/addon/category:
         category_ids: 分野
@@ -530,6 +538,7 @@ ja:
   activemodel:
     models:
       opendata/dataset_download_report: ダウンロードレポート
+      opendata/dataset_importer: インポート
     attributes:
       opendata/dataset_download_report:
         period: 期間
@@ -539,6 +548,8 @@ ja:
         day: 日
         month: 月
         year: 年
+      opendata/dataset_importer:
+        in_file: ファイル
     errors:
       models:
         opendata/dataset_download_report:
