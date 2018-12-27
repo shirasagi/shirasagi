@@ -57,6 +57,8 @@ class Gws::Memo::MessagesController < ApplicationController
   end
 
   def send_forward_mails
+    return if @item.draft?
+
     forward_emails = Gws::Memo::Forward.site(@cur_site).
       in(user_id: @item.member_ids).
       where(default: "enabled").
