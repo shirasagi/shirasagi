@@ -16,7 +16,8 @@ module Webmail::Mail::Message
     #  headers[:"Disposition-Notification-To"] = Webmail::Converter.extract_address(headers[:from])
     #end
 
-    headers.select { |k, v| v.present? }
+    headers.select! { |_k, v| v.present? }
+    headers
   end
 
   def merge_address_field(array, str)

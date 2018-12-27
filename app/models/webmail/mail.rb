@@ -123,7 +123,6 @@ class Webmail::Mail
   def save_draft
     msg = Webmail::Mailer.new_message(self).to_s
 
-    imap.select('INBOX')
     imap.conn.append(imap.draft_box, msg, [:Draft, :Seen], Time.zone.now)
     if draft?
       imap.select(imap.draft_box)
@@ -145,7 +144,6 @@ class Webmail::Mail
 
     replied_mail.set_answered if replied_mail
 
-    imap.select('INBOX')
     imap.conn.append(imap.sent_box, msg, [:Seen], Time.zone.now)
     if draft?
       imap.select(imap.draft_box)
