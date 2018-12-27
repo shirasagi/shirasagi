@@ -6,16 +6,16 @@ module Opendata::Addon
     extend SS::Addon
 
     def category_name_tree
-      id_list = categories.where(route: /^category\//).pluck(:id)
+      id_list = categories.pluck(:id)
 
       ct_list = []
       id_list.each do |id|
         name_list = []
         filename_str = []
-        filename_array = Cms::Node.where(_id: id).pluck(:filename).first.split(/\//)
+        filename_array = Opendata::Node::Category.where(_id: id).pluck(:filename).first.split(/\//)
         filename_array.each do |filename|
           filename_str << filename
-          node = Cms::Node.site(site).where(filename: filename_str.join("/")).first
+          node = Opendata::Node::Category.site(site).where(filename: filename_str.join("/")).first
           name_list << node.name if node
         end
         ct_list << name_list.join("/")

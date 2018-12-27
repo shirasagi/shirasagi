@@ -107,15 +107,12 @@ class Opendata::Dataset::ImportJob < Cms::ApplicationJob
     category_ids = []
     name_trees.each do |cate|
       ct_list = []
-      names = cate.split("/")
-      names.each_with_index do |n, d|
-        ct = Cms::Node.site(site).where(name: n, depth: d + 1).first
-        ct_list << ct if ct
-      end
+      ct = Opendata::Node::Category.site(site).where(name: cate).first
+      ct_list << ct if ct
 
-      if ct_list.present? && ct_list.size == names.size
+      if ct_list.present?
         ct = ct_list.last
-        category_ids << ct.id if ct.route =~ /^category\//
+        category_ids << ct.id
       end
     end
     category_ids
@@ -125,12 +122,13 @@ class Opendata::Dataset::ImportJob < Cms::ApplicationJob
     # basic
     item.name = value(row, :name)
     item.text = value(row, :text)
-    item.tags = value(row, :tags).split(",")
+    item.tags = value(row, :tags).to_s.split(",")
 
     # category area
     category_name_tree = ary_value(row, :categories)
     category_ids = category_name_tree_to_ids(category_name_tree)
-    categories = Category::Node::Base.site(site).in(id: category_ids)
+    categories = Opendata::Node::Category.site(site).in(id: category_ids)
+    item.category_ids = categories.pluck(:id)
     item.area_ids = Opendata::Node::Area.in(name: ary_value(row, :area_ids)).pluck(:id)
 
     # dataset_group
