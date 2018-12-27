@@ -7,13 +7,14 @@ describe 'gws_memo_messages', type: :feature, dbscope: :example, js: true do
     let(:subject) { "subject-#{unique_id}" }
     let(:texts) { Array.new(rand(1..10)) { "text-#{unique_id}" } }
     let(:text) { texts.join("\r\n") }
+    let(:forward_email) { "#{unique_id}@example.jp" }
 
     before do
       ActionMailer::Base.deliveries.clear
 
       Gws::Memo::Forward.create!(
         cur_site: site, cur_user: recipient,
-        default: "enabled", email: "#{unique_id}@example.jp"
+        default: "enabled", email: forward_email
       )
 
       login_gws_user
@@ -44,9 +45,35 @@ describe 'gws_memo_messages', type: :feature, dbscope: :example, js: true do
 
         click_on I18n.t('ss.buttons.draft_save')
       end
+      expect(page).to have_css('#notice', text: I18n.t("ss.notice.saved"))
 
       # do not send forward mail
       expect(ActionMailer::Base.deliveries).to have(0).items
+
+      # send message
+      visit gws_memo_messages_path(site)
+      within ".gws-memo-folder" do
+        click_on I18n.t("gws/memo/folder.inbox_draft")
+      end
+      click_on subject
+      click_on I18n.t("ss.links.edit")
+      within 'form#item-form' do
+        page.accept_confirm do
+          click_on I18n.t("ss.buttons.send")
+        end
+      end
+      expect(page).to have_css('#notice', text: I18n.t("ss.notice.sent"))
+
+      # send forward mail
+      expect(ActionMailer::Base.deliveries).to have(1).items
+      ActionMailer::Base.deliveries.first.tap do |mail|
+        expect(mail.from.first).to eq site.sender_address
+        expect(mail.bcc.first).to eq forward_email
+        expect(mail.subject).to eq "[#{I18n.t("gws/memo/message.message")}]#{I18n.t("gws/memo/forward.subject")}:#{gws_user.name}"
+        expect(mail.body.multipart?).to be_falsey
+        expect(mail.body.raw_source).to include(subject)
+        expect(mail.body.raw_source).to include(text)
+      end
     end
   end
 end
