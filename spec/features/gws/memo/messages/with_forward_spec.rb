@@ -8,6 +8,7 @@ describe 'gws_memo_messages', type: :feature, dbscope: :example, js: true do
     let(:texts) { Array.new(rand(1..10)) { "text-#{unique_id}" } }
     let(:text) { texts.join("\r\n") }
     let(:forward_email) { "#{unique_id}@example.jp" }
+    let(:forward_subject) { "[#{I18n.t("gws/memo/message.message")}]#{I18n.t("gws/memo/forward.subject")}:#{gws_user.name}" }
 
     shared_examples "save as draft and send" do
       before do
@@ -72,7 +73,7 @@ describe 'gws_memo_messages', type: :feature, dbscope: :example, js: true do
         ActionMailer::Base.deliveries.first.tap do |mail|
           expect(mail.from.first).to eq site.sender_address
           expect(mail.bcc.first).to eq forward_email
-          expect(mail.subject).to eq "[#{I18n.t("gws/memo/message.message")}]#{I18n.t("gws/memo/forward.subject")}:#{gws_user.name}"
+          expect(mail.subject).to eq forward_subject
           expect(mail.body.multipart?).to be_falsey
           expect(mail.body.raw_source).to include(subject)
           expect(mail.body.raw_source).to include(text)
