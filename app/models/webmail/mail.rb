@@ -149,6 +149,11 @@ class Webmail::Mail
 
     replied_mail.set_answered if replied_mail
 
+    # save all headers
+    msg.header.fields.each do |field|
+      field.include_in_headers = true if field.respond_to?(:include_in_headers)
+    end
+
     imap.conn.append(imap.sent_box, msg.to_s, [:Seen], Time.zone.now)
     if draft?
       imap.select(imap.draft_box)
