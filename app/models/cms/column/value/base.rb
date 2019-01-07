@@ -24,7 +24,7 @@ class Cms::Column::Value::Base
       self.to_html(preview: context.registers[:preview])
     end
     export as: :to_s do |context|
-      self.to_html(preview: drop.context.registers[:preview])
+      self.to_html(preview: context.registers[:preview])
     end
     export as: :type do
       self.class.name
