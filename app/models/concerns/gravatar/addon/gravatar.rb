@@ -34,9 +34,7 @@ module Gravatar::Addon
     end
 
     def email_for_gravatar
-      Rails.logger.debug("#email_for_gravatar")
       view_kind = gravatar_image_view_kind.presence || SS.config.gravatar.view_kind
-      Rails.logger.debug("view_kind=#{view_kind}")
       case view_kind
       when 'disable'
         nil
