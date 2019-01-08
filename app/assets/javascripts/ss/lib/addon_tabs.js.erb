@@ -36,7 +36,7 @@ this.SS_AddonTabs = (function () {
     var $addonView = SS_AddonTabs.findAddonView(view);
     $addonView.find('.toggle-body').hide();
     $addonView.addClass('body-closed');
-    $addonView.trigger('ss:addonHided');
+    $addonView.trigger('ss:addonHidden');
   };
 
   SS_AddonTabs.toggleWithAnimation = function (view) {
@@ -44,7 +44,7 @@ this.SS_AddonTabs = (function () {
     $addonView.find('.toggle-body').animate({ height: 'toggle' }, 'fast', function() {
       $addonView.toggleClass('body-closed');
       if ($addonView.hasClass('body-closed')) {
-        $addonView.trigger('ss:addonHided');
+        $addonView.trigger('ss:addonHidden');
       } else {
         $addonView.trigger('ss:addonShown');
       }
