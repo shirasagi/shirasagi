@@ -21,7 +21,7 @@ module Cms::Addon::ReadableSetting
     # Allow readable settings and readable permissions.
     scope :readable, ->(user, opts = {}) {
       or_conds = readable_conditions(user, opts)
-      where("$and" => [{ "$or" => or_conds }])
+      allow(:read, user, opts).where("$and" => [{ "$or" => or_conds }])
     }
   end
 
@@ -106,6 +106,7 @@ module Cms::Addon::ReadableSetting
 
     def readable_conditions(user, opts = {})
       or_conds = [
+        { readable_setting_range: 'public' },
         { "readable_group_ids.0" => { "$exists" => false },
           "readable_member_ids.0" => { "$exists" => false } },
         { :readable_group_ids.in => user.group_ids },
