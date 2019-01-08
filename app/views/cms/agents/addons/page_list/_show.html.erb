@@ -1,6 +1,7 @@
-<%= code_editor ".mod-cms-pagelist .html", mode: :html, readonly: true %>
+<% addon ||= local_assigns.fetch(:addon, {}) %>
+<%= code_editor "##{addon[:id]} .html", mode: :html, readonly: true %>
 
-<dl class="see mod-cms-pagelist">
+<dl class="see">
   <dt><%= @model.t :conditions %></dt>
   <dd><%=br @item.conditions.join("\n") %></dd>
 
@@ -8,7 +9,7 @@
   <dd><%= @item.label :sort %></dd>
 
   <dt><%= @model.t :limit %></dt>
-  <dd><%= @item.send :limit %></dd>
+  <dd><%= @item.limit %></dd>
 
   <% if @item.loop_format_liquid? %>
     <dt><%= @model.t :loop_liquid %></dt>
@@ -26,7 +27,7 @@
     </dd>
 
     <dt><%= @model.t :loop_html %></dt>
-    <% if @item.send(:loop_setting).present? %>
+    <% if @item.loop_setting.present? %>
     <dd><%= tryb{@item.loop_setting.name} %></dd>
     <% end %>
     <dd>
@@ -43,6 +44,8 @@
     </dd>
   <% end %>
 
-  <dt><%= @model.t :new_days %></dt>
-  <dd><%= @item.send :new_days %> <%= t "datetime.prompts.day" %></dd>
+  <% if @model.use_new_days %>
+    <dt><%= @model.t :new_days %></dt>
+    <dd><%= @item.new_days %> <%= t "datetime.prompts.day" %></dd>
+  <% end %>
 </dl>

@@ -4,6 +4,10 @@ module Cms::Addon
     extend SS::Addon
     include Cms::Addon::List::Model
 
+    included do
+      self.use_new_days = false
+    end
+
     def sort_options
       [
         [I18n.t('cms.options.sort.name'), 'name'],

@@ -6,6 +6,7 @@ module Cms::Addon::List
     attr_accessor :cur_date
 
     included do
+      cattr_accessor(:use_new_days, instance_accessor: false) { true }
       cattr_accessor(:use_liquid, instance_accessor: false) { true }
 
       field :conditions, type: SS::Extensions::Words

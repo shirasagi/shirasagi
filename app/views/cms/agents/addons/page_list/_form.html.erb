@@ -1,27 +1,29 @@
-<%= code_editor ".mod-cms-pagelist .html", mode: :html %>
+<% addon ||= local_assigns.fetch(:addon, {}) %>
+
+<%= code_editor "##{addon[:id]} .html", mode: :html %>
 <%= jquery do %>
   Cms_Editor_CodeMirror.lock('#item_loop_setting_id', '#item_loop_html');
 
   <% if @model.use_liquid %>
+  var $addon = $("<%= "##{addon[:id]}" %>");
   var changeLoopFormat = function() {
-    var format = $("select[name='item[loop_format]']").val();
-    console.log(format);
+    var format = $addon.find("select[name='item[loop_format]']").val();
     if (format === "liquid") {
-      $(".mod-cms-pagelist.loop-format-shirasagi").addClass("hide");
-      $(".mod-cms-pagelist.loop-format-liquid").removeClass("hide");
+      $addon.find(".loop-format-shirasagi").addClass("hide");
+      $addon.find(".loop-format-liquid").removeClass("hide");
     } else {
-      $(".mod-cms-pagelist.loop-format-shirasagi").removeClass("hide");
-      $(".mod-cms-pagelist.loop-format-liquid").addClass("hide");
+      $addon.find(".loop-format-shirasagi").removeClass("hide");
+      $addon.find(".loop-format-liquid").addClass("hide");
     }
   };
 
   changeLoopFormat();
 
-  $("select[name='item[loop_format]']").on("change", changeLoopFormat);
+  $addon.find("select[name='item[loop_format]']").on("change", changeLoopFormat);
   <% end %>
 <% end %>
 
-<dl class="see mod-cms-pagelist">
+<dl class="see">
   <dt><%= @model.t :conditions %><%= @model.tt :conditions %></dt>
   <dd><%= f.text_area :conditions, value: @item.conditions.join("\n"), style: "height: 100px;" %></dd>
 
@@ -37,7 +39,7 @@
   <% end %>
 </dl>
 
-<dl class="see mod-cms-pagelist loop-format-shirasagi">
+<dl class="see loop-format-shirasagi">
   <dt><%= @model.t :upper_html %><%= @model.tt :upper_html %></dt>
   <dd><%= f.text_area :upper_html, class: :html %></dd>
 
@@ -50,13 +52,15 @@
 </dl>
 
 <% if @model.use_liquid %>
-  <dl class="see mod-cms-pagelist loop-format-liquid">
+  <dl class="see loop-format-liquid">
     <dt><%= @model.t :loop_liquid %><%= @model.tt :loop_liquid %></dt>
-    <dd><%= f.text_area :loop_liquid, class: :html, style: "height: 100px;" %></dd>
+    <dd><%= f.text_area :loop_liquid, class: :html, style: "height: 300px;" %></dd>
   </dl>
 <% end %>
 
-<dl class="see mod-cms-pagelist">
-  <dt><%= @model.t :new_days %><%= @model.tt :new_days %></dt>
-  <dd class="short"><%= f.number_field :new_days %> <span class="postfix"><%= t "datetime.prompts.day" %></span></dd>
-</dl>
+<% if @model.use_new_days %>
+  <dl class="see">
+    <dt><%= @model.t :new_days %><%= @model.tt :new_days %></dt>
+    <dd class="short"><%= f.number_field :new_days %> <span class="postfix"><%= t "datetime.prompts.day" %></span></dd>
+  </dl>
+<% end %>
