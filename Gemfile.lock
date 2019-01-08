@@ -44,15 +44,6 @@ GIT
       rack (>= 1.2, < 3)
 
 GIT
-  remote: https://github.com/roo-rb/roo-xls.git
-  revision: 8aedc44f8fd73450d5da62ac7487fcd8ebfb6550
-  specs:
-    roo-xls (1.2.0)
-      nokogiri
-      roo (>= 2.0.0, < 3)
-      spreadsheet (> 0.9.0)
-
-GIT
   remote: https://github.com/roo-rb/roo.git
   revision: 8f65109c6728dd77f62b0a5c68dd42ab207dd914
   specs:
@@ -481,7 +472,6 @@ GEM
       rainbow (>= 2.2.2, < 4.0)
       ruby-progressbar (~> 1.7)
       unicode-display_width (~> 1.0, >= 1.0.1)
-    ruby-ole (1.2.12.1)
     ruby-progressbar (1.9.0)
     ruby-saml (1.8.0)
       nokogiri (>= 1.5.10)
@@ -530,8 +520,6 @@ GEM
     sparql-client (3.0.0)
       net-http-persistent (>= 2.9, < 4)
       rdf (~> 3.0)
-    spreadsheet (1.1.8)
-      ruby-ole (>= 1.0)
     spring (2.0.2)
       activesupport (>= 4.2)
     sprockets (3.7.1)
@@ -670,7 +658,6 @@ DEPENDENCIES
   rmagick
   romaji
   roo!
-  roo-xls!
   rspec
   rspec-collection_matchers
   rspec-its
