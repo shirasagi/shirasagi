@@ -231,6 +231,9 @@ ja:
       form_sub_type:
         static: 定型フォーム
         entry: ブロック型入力
+      loop_format:
+        shirasagi: SHIRASAGI
+        liquid: Liquid
 
     sns_share:
       fb_like: Facebook いいね！
@@ -597,6 +600,8 @@ ja:
         upper_html: 上部HTML
         lower_html: 下部HTML
         new_days: NEWマーク期間
+        loop_format: ループHTML形式
+        loop_liquid: ループHTML
       cms/addon/page_group_list:
         condition_groups: 検索条件(グループ)
       cms/addon/tabs:

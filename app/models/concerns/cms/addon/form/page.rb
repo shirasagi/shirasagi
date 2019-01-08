@@ -48,6 +48,10 @@ module Cms::Addon::Form::Page
     after_generate_file :generate_public_files, if: ->{ serve_static_relation_files? } if respond_to?(:after_generate_file)
     after_remove_file :remove_public_files if respond_to?(:after_remove_file)
     after_merge_branch :merge_column_values rescue nil
+
+    liquidize do
+      export :column_values, as: :values
+    end
   end
 
   private

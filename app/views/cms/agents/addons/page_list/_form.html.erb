@@ -1,5 +1,23 @@
 <%= code_editor ".mod-cms-pagelist .html", mode: :html %>
-<%= jquery do %> Cms_Editor_CodeMirror.lock('#item_loop_setting_id', '#item_loop_html'); <% end %>
+<%= jquery do %>
+  Cms_Editor_CodeMirror.lock('#item_loop_setting_id', '#item_loop_html');
+
+  var changeLoopFormat = function() {
+    var format = $("select[name='item[loop_format]']").val();
+    console.log(format);
+    if (format === "liquid") {
+      $(".mod-cms-pagelist.loop-format-shirasagi").addClass("hide");
+      $(".mod-cms-pagelist.loop-format-liquid").removeClass("hide");
+    } else {
+      $(".mod-cms-pagelist.loop-format-shirasagi").removeClass("hide");
+      $(".mod-cms-pagelist.loop-format-liquid").addClass("hide");
+    }
+  };
+
+  changeLoopFormat();
+
+  $("select[name='item[loop_format]']").on("change", changeLoopFormat);
+<% end %>
 
 <dl class="see mod-cms-pagelist">
   <dt><%= @model.t :conditions %><%= @model.tt :conditions %></dt>
@@ -11,6 +29,11 @@
   <dt><%= @model.t :limit %><%= @model.tt :limit %></dt>
   <dd><%= f.number_field :limit %></dd>
 
+  <dt><%= @model.t :loop_format %><%= @model.tt :loop_format %></dt>
+  <dd><%= f.select :loop_format, @item.loop_format_options %></dd>
+</dl>
+
+<dl class="see mod-cms-pagelist loop-format-shirasagi">
   <dt><%= @model.t :upper_html %><%= @model.tt :upper_html %></dt>
   <dd><%= f.text_area :upper_html, class: :html %></dd>
 
@@ -20,7 +43,14 @@
 
   <dt><%= @model.t :lower_html %><%= @model.tt :lower_html %></dt>
   <dd><%= f.text_area :lower_html, class: :html %></dd>
+</dl>
 
+<dl class="see mod-cms-pagelist loop-format-liquid">
+  <dt><%= @model.t :loop_liquid %><%= @model.tt :loop_liquid %></dt>
+  <dd><%= f.text_area :loop_liquid, class: :html, style: "height: 100px;" %></dd>
+</dl>
+
+<dl class="see mod-cms-pagelist">
   <dt><%= @model.t :new_days %><%= @model.tt :new_days %></dt>
   <dd class="short"><%= f.number_field :new_days %> <span class="postfix"><%= t "datetime.prompts.day" %></span></dd>
 </dl>

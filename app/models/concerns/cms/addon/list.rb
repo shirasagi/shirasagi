@@ -13,16 +13,36 @@ module Cms::Addon::List
       field :upper_html, type: String
       field :lower_html, type: String
       field :new_days, type: Integer, default: 1
+      field :loop_format, type: String
+      field :loop_liquid, type: String
 
       belongs_to :loop_setting, class_name: 'Cms::LoopSetting'
 
       permit_params :conditions, :sort, :limit, :loop_html, :loop_setting_id, :upper_html, :lower_html, :new_days
+      permit_params :loop_format, :loop_liquid
 
       before_validation :validate_conditions
+
+      validates :loop_format, inclusion: { in: %w(shirasagi liquid), allow_blank: true }
+      validate :validate_loop_liquid
     end
 
     def sort_options
       []
+    end
+
+    def loop_format_options
+      %w(shirasagi liquid).map do |v|
+        [ I18n.t("cms.options.loop_format.#{v}"), v ]
+      end
+    end
+
+    def loop_format_liquid?
+      loop_format == "liquid"
+    end
+
+    def loop_format_shirasagi?
+      !loop_format_liquid?
     end
 
     def sort_hash
@@ -97,6 +117,15 @@ module Cms::Addon::List
       self.conditions = conditions.map do |m|
         m.strip.sub(/^\w+:\/\/.*?\//, "").sub(/^\//, "").sub(/\/$/, "")
       end.compact.uniq
+    end
+
+    def validate_loop_liquid
+      return if !loop_format_liquid?
+      return if loop_liquid.blank?
+
+      Liquid::Template.parse(loop_liquid, error_mode: :strict)
+    rescue Liquid::Error => e
+      self.errors.add :loop_liquid, :malformed_liquid_template, error: e.to_s
     end
   end
 end
