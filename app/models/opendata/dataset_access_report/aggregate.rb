@@ -47,15 +47,11 @@ module Opendata::DatasetAccessReport::Aggregate
     end
 
     def first_line_header(ymd_header)
-      [nil, nil, nil] + ymd_header
+      [Opendata::Dataset.t("no"), nil, nil, nil, Opendata::Dataset.t("area_ids")] + ymd_header
     end
 
     def dataset_line_header(dataset)
-      [dataset.name, nil, dataset.full_url]
-    end
-
-    def resource_line_header(resource)
-      [nil, resource.filename, nil]
+      [dataset.no, dataset.name, nil, dataset.full_url, dataset.areas.pluck(:name).join("\n")]
     end
 
     def encode_sjis_csv(row)
@@ -65,21 +61,30 @@ module Opendata::DatasetAccessReport::Aggregate
 
   class Year < Base
     def enum_csv
-      results = aggregate.map(&:to_h)
+      results = {}
+      aggregate.each do |r|
+        key = r["_id"]["year"].to_s
+        results[key] ||= {}
+        results[key][r["_id"]["target_id"].to_i] = r["count"]
+      end
+
+      dataset_ids = datasets.pluck(:id)
 
       Enumerator.new do |data|
         data << encode_sjis_csv(first_line_header(ymd_header))
 
-        datasets.each do |dataset|
+        dataset_ids.each do |dataset_id|
+          dataset = Opendata::Dataset.find(dataset_id) rescue nil
+          next unless dataset
+
           row = dataset_line_header(dataset)
           ymd_header.each do |year|
-            result = results.find do |r|
-              r.extract_id == {
-                "target_id" => dataset.id.to_s,
-                "year" => year
-              }
-            end
-            row.push(result.try(:[], "count") || 0)
+            key = year.to_s
+
+            count = 0
+            count += results.dig(key, dataset.id).to_i
+
+            row << count
           end
           data << encode_sjis_csv(row)
         end
@@ -106,7 +111,14 @@ module Opendata::DatasetAccessReport::Aggregate
 
   class Month < Base
     def enum_csv
-      results = aggregate.map(&:to_h)
+      results = {}
+      aggregate.each do |r|
+        key = "#{r["_id"]["year"]}-#{r["_id"]["month"]}"
+        results[key] ||= {}
+        results[key][r["_id"]["target_id"].to_i] = r["count"]
+      end
+
+      dataset_ids = datasets.pluck(:id)
 
       Enumerator.new do |data|
         prev_year = nil
@@ -120,7 +132,10 @@ module Opendata::DatasetAccessReport::Aggregate
         end
         data << encode_sjis_csv(first_line_header(months))
 
-        datasets.each do |dataset|
+        dataset_ids.each do |dataset_id|
+          dataset = Opendata::Dataset.find(dataset_id) rescue nil
+          next unless dataset
+
           row = dataset_line_header(dataset)
           prev_year = nil
           ymd_header.each do |date|
@@ -129,14 +144,12 @@ module Opendata::DatasetAccessReport::Aggregate
               prev_year = date.year
             end
 
-            result = results.find do |r|
-              r.extract_id == {
-                "target_id" => dataset.id.to_s,
-                "year" => date.year,
-                "month" => date.month
-              }
-            end
-            row.push(result.try(:[], "count") || 0)
+            key = "#{date.year}-#{date.month}"
+
+            count = 0
+            count += results.dig(key, dataset.id).to_i
+
+            row << count
           end
           data << encode_sjis_csv(row)
         end
@@ -162,8 +175,14 @@ module Opendata::DatasetAccessReport::Aggregate
 
   class Day < Base
     def enum_csv
-      results = aggregate.map(&:to_h)
-      puts results
+      results = {}
+      aggregate.each do |r|
+        key = "#{r["_id"]["year"]}-#{r["_id"]["month"]}-#{r["_id"]["day"]}"
+        results[key] ||= {}
+        results[key][r["_id"]["target_id"].to_i] = r["count"]
+      end
+
+      dataset_ids = datasets.pluck(:id)
 
       Enumerator.new do |data|
         prev_month = nil
@@ -177,7 +196,10 @@ module Opendata::DatasetAccessReport::Aggregate
         end
         data << encode_sjis_csv(first_line_header(days))
 
-        datasets.each do |dataset|
+        dataset_ids.each do |dataset_id|
+          dataset = Opendata::Dataset.find(dataset_id) rescue nil
+          next unless dataset
+
           row = dataset_line_header(dataset)
           prev_month = nil
           ymd_header.each do |date|
@@ -186,15 +208,12 @@ module Opendata::DatasetAccessReport::Aggregate
               prev_month = date.month
             end
 
-            result = results.find do |r|
-              r.extract_id == {
-                "target_id" => dataset.id.to_s,
-                "year" => date.year,
-                "month" => date.month,
-                "day" => date.day
-              }
-            end
-            row.push(result.try(:[], "count") || 0)
+            key = "#{date.year}-#{date.month}-#{date.day}"
+
+            count = 0
+            count += results.dig(key, dataset.id).to_i
+
+            row << count
           end
           data << encode_sjis_csv(row)
         end

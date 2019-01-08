@@ -47,15 +47,15 @@ module Opendata::DatasetDownloadReport::Aggregate
     end
 
     def first_line_header(ymd_header)
-      [nil, nil, nil] + ymd_header
+      [Opendata::Dataset.t("no"), nil, nil, nil, Opendata::Dataset.t("area_ids")] + ymd_header
     end
 
     def dataset_line_header(dataset)
-      [dataset.name, nil, dataset.full_url]
+      [dataset.no, dataset.name, nil, dataset.full_url, dataset.areas.pluck(:name).join("\n")]
     end
 
     def resource_line_header(resource)
-      [nil, resource.filename, nil]
+      [nil, nil, resource.filename, nil, nil]
     end
 
     def encode_sjis_csv(row)
@@ -102,6 +102,8 @@ module Opendata::DatasetDownloadReport::Aggregate
 
           resources = dataset.resources.to_a
           resources.each do |resource|
+            next if resource.source_url.present?
+
             row = resource_line_header(resource)
             ymd_header.each do |year|
               key = year.to_s
@@ -205,6 +207,8 @@ module Opendata::DatasetDownloadReport::Aggregate
 
           resources = dataset.resources.to_a
           resources.each do |resource|
+            next if resource.source_url.present?
+
             row = resource_line_header(resource)
             prev_year = nil
             ymd_header.each do |date|
@@ -315,6 +319,8 @@ module Opendata::DatasetDownloadReport::Aggregate
 
           resources = dataset.resources.to_a
           resources.each do |resource|
+            next if resource.source_url.present?
+
             row = resource_line_header(resource)
             prev_month = nil
             ymd_header.each do |date|

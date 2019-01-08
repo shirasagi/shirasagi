@@ -115,6 +115,10 @@ class Opendata::Dataset
     end
   end
 
+  def no
+    sprintf("%010d", id.to_i)
+  end
+
   private
 
   def validate_filename
