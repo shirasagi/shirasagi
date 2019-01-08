@@ -216,6 +216,8 @@ module Opendata::Node
     include Cms::Addon::GroupPermission
     include History::Addon::Backup
 
+    self.use_liquid = false
+
     default_scope ->{ where(route: "opendata/my_dataset") }
   end
 
@@ -228,6 +230,8 @@ module Opendata::Node
     include Cms::Addon::GroupPermission
     include History::Addon::Backup
 
+    self.use_liquid = false
+
     default_scope ->{ where(route: "opendata/my_app") }
   end
 
@@ -239,6 +243,8 @@ module Opendata::Node
     include Cms::Addon::Release
     include Cms::Addon::GroupPermission
     include History::Addon::Backup
+
+    self.use_liquid = false
 
     default_scope ->{ where(route: "opendata/my_idea") }
   end
