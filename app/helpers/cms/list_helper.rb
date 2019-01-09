@@ -50,28 +50,9 @@ module Cms::ListHelper
     cur_item.cur_date = @cur_date
 
     if cur_item.loop_format_shirasagi?
-      h = []
-
-      h << cur_item.upper_html.html_safe if cur_item.upper_html.present?
-      if block_given?
-        h << capture(&block)
-      else
-        @items.each do |item|
-          if cur_item.loop_setting.present?
-            ih = item.render_template(cur_item.loop_setting.html, self)
-          elsif cur_item.loop_html.present?
-            ih = cur_item.render_loop_html(item)
-          else
-            ih = cur_item.render_loop_html(item, html: Cms::ListHelper::DEFAULT_NODE_LOOP_HTML)
-          end
-          h << ih.gsub('#{current}', current_url?(item.url).to_s)
-        end
-      end
-      h << cur_item.lower_html.html_safe if cur_item.lower_html.present?
-
-      h.join.html_safe
+      render_list_with_shirasagi(cur_item, Cms::ListHelper::DEFAULT_NODE_LOOP_HTML, &block)
     else
-      source = cur_item.loop_liquid.presence || DEFAULT_NODE_LOOP_LIQUID
+      source = cur_item.loop_liquid.presence || Cms::ListHelper::DEFAULT_NODE_LOOP_LIQUID
       assigns = { "nodes" => @items.to_a.map(&:becomes_with_route) }
       render_list_with_liquid(source, assigns)
     end
@@ -82,33 +63,41 @@ module Cms::ListHelper
     cur_item.cur_date = @cur_date
 
     if cur_item.loop_format_shirasagi?
-      h = []
-      h << cur_item.upper_html.html_safe if cur_item.upper_html.present?
-      if block_given?
-        h << capture(&block)
-      else
-        @items.each do |item|
-          if cur_item.loop_setting.present?
-            ih = item.render_template(cur_item.loop_setting.html, self)
-          elsif cur_item.loop_html.present?
-            ih = cur_item.render_loop_html(item)
-          else
-            ih = cur_item.render_loop_html(item, html: Cms::ListHelper::DEFAULT_PAGE_LOOP_HTML)
-          end
-          h << ih.gsub('#{current}', current_url?(item.url).to_s)
-        end
-      end
-      h << cur_item.lower_html.html_safe if cur_item.lower_html.present?
-
-      h.join("\n").html_safe
+      render_list_with_shirasagi(cur_item, Cms::ListHelper::DEFAULT_PAGE_LOOP_HTML, &block)
     else
-      source = cur_item.loop_liquid.presence || DEFAULT_PAGE_LOOP_LIQUID
+      source = cur_item.loop_liquid.presence || Cms::ListHelper::DEFAULT_PAGE_LOOP_LIQUID
       assigns = { "pages" => @items.to_a.map(&:becomes_with_route) }
       render_list_with_liquid(source, assigns)
     end
   end
 
   private
+
+  def render_list_with_shirasagi(cur_item, default_loop_html, &block)
+    h = []
+
+    h << cur_item.upper_html.html_safe if cur_item.upper_html.present?
+    if block_given?
+      h << capture(&block)
+    else
+      if cur_item.loop_setting.present?
+        loop_html = cur_item.loop_setting.html
+      elsif cur_item.loop_html.present?
+        loop_html = cur_item.loop_html
+      else
+        loop_html = default_loop_html
+      end
+
+      @items.each do |item|
+        ih = cur_item.render_loop_html(item, html: loop_html)
+        ih.gsub!('#{current}', current_url?(item.url).to_s)
+        h << ih
+      end
+    end
+    h << cur_item.lower_html.html_safe if cur_item.lower_html.present?
+
+    h.join("\n").html_safe
+  end
 
   def render_list_with_liquid(source, assigns)
     template = parse_liquid(source)
