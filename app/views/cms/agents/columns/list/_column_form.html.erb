@@ -1,0 +1,46 @@
+<% list_name = SecureRandom.hex(4) %>
+
+<div id="add-li-<%= list_name%>" style='display:none'>
+  <%= render 'cms/agents/columns/list/column_form_ul', f: f, column: column, order: 0, text: '' %>
+</div>
+
+<%= jquery do %>
+function reorder() {
+  $("#column-value-list-<%= list_name %>").find('li').each( function( index, element ) {
+    $(element).find('input:hidden').val(index+1);
+  });
+}
+
+$(".addList").on("click", function() {
+  var list = $("#column-value-list-<%= list_name %>");
+  var li = $("#add-li-<%= list_name%>").find('li').clone();
+  console.log(li);
+  list.append(li);
+  reorder();
+})
+
+$("#column-value-list-<%= list_name %>").on("click", ".deleteList", function() {
+  var parent = $(this).parent();
+  var order = parent.find('input:hidden').val();
+  parent.remove();
+  reorder();
+})
+<% end %>
+
+<% value ||= nil %>
+<% controller ||= false %>
+<% lists = value.try(:lists) %>
+<%= render 'cms/agents/columns/main/base', f: f, column: column, value: value, controller: controller do %>
+  <% if lists.present? %>
+    <%= content_tag column.list_type.to_sym, id: "column-value-list-#{list_name}" do %>
+      <% lists.each do |list| %>
+        <%= render 'cms/agents/columns/list/column_form_ul', f: f, column: column, order: list[:order], text: list[:text] %>
+      <% end %>
+    <% end %>
+  <% else %>
+    <%= content_tag column.list_type.to_sym, id: "column-value-list-#{list_name}" do %>
+      <%= render 'cms/agents/columns/list/column_form_ul', f: f, column: column, order: 1, text: '' %>
+    <% end %>
+  <% end %>
+  <%= button_tag t("cms.buttons.column_add_list"), class: "btn addList", type: 'button' %>
+<% end %>

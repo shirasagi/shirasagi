@@ -23,6 +23,7 @@ module Cms
     Cms::Column.plugin 'cms/check_box'
     Cms::Column.plugin 'cms/file_upload'
     Cms::Column.plugin 'cms/headline'
+    Cms::Column.plugin 'cms/list'
 
     Cms::Role.permission :edit_cms_sites
     Cms::Role.permission :edit_cms_groups

@@ -94,6 +94,7 @@ ja:
       manage_columns: 入力項目を管理する
       save_as_branch: 差替保存
       ignore_alerts_and_save_as_branch: 警告を無視して差替保存
+      column_add_list: リストを追加する
     confirm:
       delete_item: 項目を削除してよろしいですか？
       close: 非公開状態で保存しようとしています
@@ -228,6 +229,9 @@ ja:
         text: テキスト
         email: メールアドレス
         tel: 電話番号
+      column_list_type:
+        ol: 番号付きリスト
+        ul: 番号なしリスト
       max_name_length:
         '80': 80文字
         '0': 無制限
@@ -285,6 +289,7 @@ ja:
       cms/check_box: チェックボックス
       cms/file_upload: ファイルアップロード
       cms/headline: 見出し入力
+      cms/list: リスト入力
 
   cms_role:
     edit_cms_sites: サイトの管理
@@ -466,6 +471,7 @@ ja:
       cms/column/check_box: チェックボックス
       cms/column/file_upload: ファイルアップロード
       cms/column/headline: 見出し入力
+      cms/column/list: リスト入力
     errors:
       models:
         cms/model/node:
@@ -784,6 +790,8 @@ ja:
         label: リンクテキスト
         max_length: 最大長
         place_holder: プレースホルダー
+      cms/column/list:
+        list_type: 種類
       cms/column/value/check_box:
         values: 選択肢
       cms/column/value/date_field:
@@ -814,6 +822,9 @@ ja:
         value: リンクURL
       cms/column/value/headline:
         head: 見出し
+        text: テキスト
+      cms/column/value/list:
+        order: 順番
         text: テキスト
 
   errors:
@@ -1825,6 +1836,10 @@ ja:
           {% if value.value %}
             &lt;p>{{ value.value | newline_to_br }}&lt;/p>
           {% endif %}
+
+    cms/column/list:
+      list_type:
+        - 種類を選択します。
 
   all_content:
     page_id: ページID

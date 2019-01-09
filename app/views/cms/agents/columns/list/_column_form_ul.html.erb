@@ -1,0 +1,4 @@
+<li>
+  <%= hidden_field_tag("#{f.object_name}[][in_wrap][lists][][order]", order) %>
+  <%= text_field_tag("#{f.object_name}[][in_wrap][lists][][text]", text, column.form_options.merge(id: nil)) %> <%= button_tag t("ss.links.delete"), class: "btn delete deleteList", type: 'button' %>
+</li>
