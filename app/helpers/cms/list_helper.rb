@@ -71,28 +71,9 @@ module Cms::ListHelper
 
       h.join.html_safe
     else
-      template = Liquid::Template.parse(cur_item.loop_liquid.presence || DEFAULT_NODE_LOOP_LIQUID)
-
-      render_opts = { "nodes" => @items.to_a.map(&:becomes_with_route), "parts" => SS::LiquidPartDrop.get(@cur_site) }
-      if @cur_part
-        render_opts["part"] = @cur_part
-      end
-      if @cur_node
-        render_opts["node"] = @cur_node
-      end
-
-      registers = {
-        preview: @preview,
-        mobile: controller.filters.include?(:mobile),
-        cur_site: @cur_site,
-        cur_part: @cur_part,
-        cur_node: @cur_node,
-        cur_page: @cur_page,
-        cur_path: @cur_path,
-        cur_date: @cur_date,
-        cur_main_path: @cur_main_path
-      }
-      template.render(render_opts, { filters: [SS::LiquidFilters], registers: registers }).html_safe
+      source = cur_item.loop_liquid.presence || DEFAULT_NODE_LOOP_LIQUID
+      assigns = { "nodes" => @items.to_a.map(&:becomes_with_route) }
+      render_list_with_liquid(source, assigns)
     end
   end
 
@@ -121,28 +102,24 @@ module Cms::ListHelper
 
       h.join("\n").html_safe
     else
-      template = Liquid::Template.parse(cur_item.loop_liquid.presence || DEFAULT_PAGE_LOOP_LIQUID)
-
-      render_opts = { "pages" => @items.to_a.map(&:becomes_with_route), "parts" => SS::LiquidPartDrop.get(@cur_site) }
-      if @cur_part
-        render_opts["part"] = @cur_part
-      end
-      if @cur_node
-        render_opts["node"] = @cur_node
-      end
-
-      registers = {
-        preview: @preview,
-        mobile: controller.filters.include?(:mobile),
-        cur_site: @cur_site,
-        cur_part: @cur_part,
-        cur_node: @cur_node,
-        cur_page: @cur_page,
-        cur_path: @cur_path,
-        cur_date: @cur_date,
-        cur_main_path: @cur_main_path
-      }
-      template.render(render_opts, { filters: [SS::LiquidFilters], registers: registers }).html_safe
+      source = cur_item.loop_liquid.presence || DEFAULT_PAGE_LOOP_LIQUID
+      assigns = { "pages" => @items.to_a.map(&:becomes_with_route) }
+      render_list_with_liquid(source, assigns)
     end
+  end
+
+  private
+
+  def render_list_with_liquid(source, assigns)
+    template = parse_liquid(source)
+
+    if @cur_part
+      assigns["part"] = @cur_part
+    end
+    if @cur_node
+      assigns["node"] = @cur_node
+    end
+
+    template.render(assigns).html_safe
   end
 end
