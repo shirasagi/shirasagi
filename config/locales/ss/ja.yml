@@ -212,6 +212,7 @@ ja:
     state:
       public: 公開中
       closed: 非公開
+      edit: 編集中
       draft: 下書き
       ready: 公開待ち
       request: 申請中

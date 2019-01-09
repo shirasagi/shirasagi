@@ -10,7 +10,7 @@
     <span class="route"><%= t "modules.#{item.route.sub(/\/.*/, '')}" %></span>
   <% end %>
   <% if item.try(:status) %>
-    <span class="state"><%= t "ss.state.#{item.status}" %></span>
+    <%= colored_state_label(item) %>
   <% end %>
   <% comments = item.comments.select { |c| c.status == "request" } %>
   <% if comments.present? %>

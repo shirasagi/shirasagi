@@ -44,4 +44,20 @@ module Cms::NodeHelper
 
     safe_join(h)
   end
+
+  def colored_state_label(item)
+    if item.status == "public"
+      %(<span class="state public">#{t("ss.state.#{item.status}")}</span>).html_safe
+    elsif item.status == "ready"
+      %(<span class="state ready">#{t("ss.state.#{item.status}")}</span>).html_safe
+    elsif item.respond_to?(:workflow_state) && item.workflow_state == "remand"
+      %(<span class="state remand">#{t("ss.state.#{item.status}")}</span>).html_safe
+    elsif item.status == "request"
+      %(<span class="state request">#{t("ss.state.#{item.status}")}</span>).html_safe
+    elsif item.first_released.blank?
+      %(<span class="state edit">#{t("ss.state.edit")}</span>).html_safe
+    else
+      %(<span class="state closed">#{t("ss.state.closed")}</span>).html_safe
+    end
+  end
 end

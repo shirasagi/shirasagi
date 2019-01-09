@@ -52,14 +52,49 @@
     color: #888;
   }
 }
+
 .notices-more {
   padding: 0 10px 10px;
   text-align: right;
 }
+
 .list-item {
   .title.notice-severity-high {
-    color: $pink;
+    color:$pink;
     font-weight: bold;
+  }
+  .state {
+    display: inline-block;
+    padding: 1px 5px;
+    @include border-radius(3px);
+    background-image: url(/assets/img/gws/bg-plan.png);
+    font-size: 90%;
+    font-weight: normal;
+
+    &.public {
+      background-color: #09ff00;
+      color: #000000;
+    }
+    &.closed {
+      background-color: #8e9494;
+      color: #fff;
+    }
+    &.ready {
+      background-color: #FFF700;
+      color: #000000;
+    }
+    &.request {
+      background-color: #3227ff;
+      color: #fff;
+    }
+    &.edit {
+      background-color: #ff23fe;
+      color: #fff;
+    }
+    &.remand {
+      background-color: #000000;
+      color: #fffdfd;
+    }
   }
 }
 
