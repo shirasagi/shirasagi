@@ -8,7 +8,7 @@
 
   template = Liquid::Template.parse(html)
 
-  render_opts = { "values" => @cur_page.column_values.to_liquid, "page" => @cur_page.to_liquid, "parts" => SS::LiquidPartDrop.new(@cur_site) }
+  render_opts = { "values" => @cur_page.column_values.to_liquid, "page" => @cur_page.to_liquid, "parts" => SS::LiquidPartDrop.get(@cur_site) }
   registers = { preview: @preview, mobile: controller.filters.include?(:mobile), cur_site: @cur_site, cur_page: @cur_page, cur_path: @cur_path, cur_date: @cur_date, cur_main_path: @cur_main_path }
   html = template.render(render_opts, { filters: [SS::LiquidFilters], registers: registers }).html_safe
 %>

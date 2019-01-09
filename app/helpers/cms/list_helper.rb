@@ -73,7 +73,7 @@ module Cms::ListHelper
     else
       template = Liquid::Template.parse(cur_item.loop_liquid.presence || DEFAULT_NODE_LOOP_LIQUID)
 
-      render_opts = { "nodes" => @items.to_a.map(&:becomes_with_route), "parts" => SS::LiquidPartDrop.new(@cur_site) }
+      render_opts = { "nodes" => @items.to_a.map(&:becomes_with_route), "parts" => SS::LiquidPartDrop.get(@cur_site) }
       if @cur_part
         render_opts["part"] = @cur_part
       end
@@ -123,7 +123,7 @@ module Cms::ListHelper
     else
       template = Liquid::Template.parse(cur_item.loop_liquid.presence || DEFAULT_PAGE_LOOP_LIQUID)
 
-      render_opts = { "pages" => @items.to_a.map(&:becomes_with_route), "parts" => SS::LiquidPartDrop.new(@cur_site) }
+      render_opts = { "pages" => @items.to_a.map(&:becomes_with_route), "parts" => SS::LiquidPartDrop.get(@cur_site) }
       if @cur_part
         render_opts["part"] = @cur_part
       end
