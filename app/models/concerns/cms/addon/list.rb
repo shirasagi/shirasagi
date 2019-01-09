@@ -27,7 +27,7 @@ module Cms::Addon::List
       before_validation :validate_conditions
 
       validates :loop_format, inclusion: { in: %w(shirasagi liquid), allow_blank: true }
-      validate :validate_loop_liquid
+      validates :loop_liquid, liquid_format: true, if: ->{ loop_format_liquid? }
     end
 
     def sort_options
@@ -120,15 +120,6 @@ module Cms::Addon::List
       self.conditions = conditions.map do |m|
         m.strip.sub(/^\w+:\/\/.*?\//, "").sub(/^\//, "").sub(/\/$/, "")
       end.compact.uniq
-    end
-
-    def validate_loop_liquid
-      return if !loop_format_liquid?
-      return if loop_liquid.blank?
-
-      Liquid::Template.parse(loop_liquid, error_mode: :strict)
-    rescue Liquid::Error => e
-      self.errors.add :loop_liquid, :malformed_liquid_template, error: e.to_s
     end
   end
 end

@@ -25,7 +25,7 @@ class Cms::Form
   validates :order, numericality: { greater_than_or_equal_to: 0, less_than_or_equal_to: 999_999, allow_blank: true }
   validates :state, presence: true, inclusion: { in: %w(public closed), allow_blank: true }
   validates :sub_type, presence: true, inclusion: { in: %w(static entry), allow_blank: true }
-  validate :validate_html
+  validates :html, liquid_format: true
 
   scope :and_public, -> {
     where(state: 'public')
@@ -68,15 +68,5 @@ class Cms::Form
 
   def build_default_html
     DEFAULT_TEMPLATE
-  end
-
-  private
-
-  def validate_html
-    return if html.blank?
-
-    Liquid::Template.parse(html, error_mode: :strict)
-  rescue Liquid::Error => e
-    self.errors.add :html, :malformed_liquid_template, error: e.to_s
   end
 end
