@@ -38,6 +38,35 @@ module Cms::Model::Node
     }
 
     template_variable_handler('pages.count', :template_variable_handler_pages_count)
+
+    liquidize do
+      export :nodes do |context|
+        site = context.registers[:cur_site]
+        date = context.registers[:cur_date]
+
+        criteria = Cms::Node.site(site).and_public(date)
+        if self.respond_to?(:condition_hash)
+          criteria = criteria.where(self.condition_hash)
+        else
+          criteria = criteria.where({ filename: /^#{self.filename}\//, depth: self.depth + 1 })
+        end
+        criteria = criteria.reorder(self.sort_hash) if self.respond_to?(:sort_hash)
+        criteria.to_a.map(&:becomes_with_route)
+      end
+      export :pages do |context|
+        site = context.registers[:cur_site]
+        date = context.registers[:cur_date]
+
+        criteria = Cms::Page.site(site).and_public(date)
+        if self.respond_to?(:condition_hash)
+          criteria = criteria.where(self.condition_hash)
+        else
+          criteria = criteria.where({ filename: /^#{self.filename}\//, depth: self.depth + 1 })
+        end
+        criteria = criteria.reorder(self.sort_hash) if self.respond_to?(:sort_hash)
+        criteria.to_a.map(&:becomes_with_route)
+      end
+    end
   end
 
   module ClassMethods

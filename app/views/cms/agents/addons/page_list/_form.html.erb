@@ -11,9 +11,11 @@
     if (format === "liquid") {
       $addon.find(".loop-format-shirasagi").addClass("hide");
       $addon.find(".loop-format-liquid").removeClass("hide");
+      $("#addon-cms-agents-addons-child_list").addClass("hide");
     } else {
       $addon.find(".loop-format-shirasagi").removeClass("hide");
       $addon.find(".loop-format-liquid").addClass("hide");
+      $("#addon-cms-agents-addons-child_list").removeClass("hide");
     }
   };
 
