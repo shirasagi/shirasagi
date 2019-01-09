@@ -15,8 +15,8 @@ module SS::Model::MailSetting
 
   def sender_address
     @sender_address ||= begin
-      if sender_user.present? && sender_user.active? && send_user.email.present?
-        "#{send_user.name} <#{send_user.email}>"
+      if sender_user.present? && sender_user.active? && sender_user.email.present?
+        "#{sender_user.name} <#{sender_user.email}>"
       elsif sender_email.present?
         if sender_name.present?
           "#{sender_name} <#{sender_email}>"
