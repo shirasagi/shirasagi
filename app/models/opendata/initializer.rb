@@ -50,6 +50,7 @@ module Opendata
     Cms::Role.permission :reroute_private_opendata_datasets
     Cms::Role.permission :revoke_other_opendata_datasets
     Cms::Role.permission :revoke_private_opendata_datasets
+    Cms::Role.permission :import_other_opendata_datasets
 
     Cms::Role.permission :read_other_opendata_apps
     Cms::Role.permission :read_private_opendata_apps

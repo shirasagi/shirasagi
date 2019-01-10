@@ -460,6 +460,7 @@ ja:
     reroute_private_opendata_ideas: アイデアの承認経路変更（所有）
     revoke_other_opendata_ideas: アイデアの承認申請取消（全て）
     revoke_private_opendata_ideas: アイデアの承認申請取消（所有）
+    import_other_opendata_datasets: データセットのインポート
     edit_other_opendata_harvests: ハーベスト機能の利用
     edit_other_opendata_harvested: ハーベスト機能の取込みデータセット強制編集
     edit_other_opendata_public_entity_datasets: データセット一覧ダウンロードの利用
