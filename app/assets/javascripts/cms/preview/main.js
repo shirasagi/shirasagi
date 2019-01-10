@@ -190,6 +190,20 @@ SS_Preview = (function () {
 
     this.$el.on("click", ".ss-preview-btn-toggle-inplace", function () {
       self.toggleInplaceMode();
+
+      if (self.inplaceMode) {
+        if (window.history.pushState) {
+          window.history.pushState(null, null, window.location.pathname + "#inplace");
+        } else {
+          window.location.hash = "#inplace";
+        }
+      } else {
+        if (window.history.pushState) {
+          window.history.pushState(null, null, window.location.pathname);
+        } else {
+          window.location.hash = "";
+        }
+      }
     });
 
     $(document).on("click", ".ss-preview-btn-open-path", function () {
@@ -209,6 +223,21 @@ SS_Preview = (function () {
 
     if (SS_Preview.request_path) {
       $('body a [href="#"]').val("onclick", "return false;");
+    }
+
+    if (window.history.pushState) {
+      // history api is available
+      window.addEventListener("popstate", function() {
+        if (window.location.hash === "#inplace") {
+          self.startInplaceMode();
+        } else {
+          self.stopInplaceMode();
+        }
+      });
+    }
+
+    if (window.location.hash === "#inplace") {
+      this.startInplaceMode();
     }
   };
 
@@ -675,22 +704,62 @@ SS_Preview = (function () {
   //
 
   SS_Preview.prototype.toggleInplaceMode = function() {
+    if (this.inplaceMode) {
+      this.stopInplaceMode();
+    } else {
+      this.startInplaceMode();
+    }
+  };
+
+  SS_Preview.prototype.startInplaceMode = function() {
     var button = this.$el.find(".ss-preview-btn-toggle-inplace");
 
-    this.inplaceMode = !this.inplaceMode;
-    if (this.inplaceMode) {
-      button.addClass("ss-preview-active");
-      $("#ss-preview-notice").addClass("ss-preview-hide");
-      if (this.formPalette) {
-        this.formPalette.show();
-      }
-    } else {
-      button.removeClass("ss-preview-active");
-      this.overlay.hide();
-      if (this.formPalette) {
-        this.formPalette.hide();
-      }
+    this.inplaceMode = true;
+    button.addClass("ss-preview-active");
+    $("#ss-preview-notice").addClass("ss-preview-hide");
+    if (this.formPalette) {
+      this.formPalette.show();
     }
+
+    $("a[href]").each(function() {
+      var $a = $(this);
+      var href = $a.attr("href");
+      if (!href) {
+        return;
+      }
+      if (!href.startsWith("/")) {
+        return;
+      }
+      if (href.includes("#")) {
+        return;
+      }
+
+      $a.attr("href", href + "#inplace");
+    });
+  };
+
+  SS_Preview.prototype.stopInplaceMode = function() {
+    var button = this.$el.find(".ss-preview-btn-toggle-inplace");
+
+    this.inplaceMode = false;
+    button.removeClass("ss-preview-active");
+    this.overlay.hide();
+    if (this.formPalette) {
+      this.formPalette.hide();
+    }
+
+    $("a[href]").each(function() {
+      var $a = $(this);
+      var href = $a.attr("href");
+      if (!href) {
+        return;
+      }
+      if (!href.startsWith("/")) {
+        return;
+      }
+
+      $a.attr("href", href.replace("#inplace", ""));
+    });
   };
 
   //
@@ -879,7 +948,6 @@ SS_Preview = (function () {
 
   Overlay.prototype.setInfo = function(info) {
     this.$overlay.data("mode", info.mode);
-    this.$overlay.data("id", info.id);
     this.$overlay.data("id", info.id);
 
     if (info.name) {
