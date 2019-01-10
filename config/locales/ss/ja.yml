@@ -95,6 +95,7 @@ ja:
       new: 新規作成
       draft_save: 下書き保存
       closed_save: 非公開保存
+      publish: 公開
       publish_save: 公開保存
       ignore_alert: 警告を無視する
       cancel: キャンセル

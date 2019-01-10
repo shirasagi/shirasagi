@@ -103,54 +103,78 @@
   </script>
 <% end %>
 <div id="ss-preview">
-  <div>
-    <div class="ss-preview-btn-group">
-      <input type="text" class="ss-preview-date" value="<%= I18n.l(@cur_date, format: :picker)  %>" />
-      <% if @cur_site.mobile_enabled? %>
-        <input type="button" class="ss-preview-btn ss-preview-btn-outline ss-preview-btn-pc" value="<%= t("ss.links.pc") %>">
-        <input type="button" class="ss-preview-btn ss-preview-btn-outline ss-preview-btn-mobile" value="<%= t("ss.links.mobile") %>">
-      <% else %>
-        <input type="button" class="ss-preview-btn ss-preview-btn-outline ss-preview-btn-pc" value="<%= t("cms.preview_page") %>">
+  <div class="ss-preview-wrap">
+    <div class="ss-preview-wrap-column">
+      <% if mode == :preview && !mobile %>
+        <div class="ss-preview-wrap-row">
+          <div class="ss-preview-btn-group">
+            <button type="button" class="ss-preview-btn ss-preview-btn-outline-primary ss-preview-btn-toggle-inplace"><%= t("cms.inplace_edit") %></button>
+          </div>
+          <div class="ss-preview-btn-group">
+            <select class="ss-preview-node-list">
+              <option value="">記事</option>
+            </select>
+            <button type="button" class="ss-preview-btn ss-preview-btn-outline"><%= t("ss.buttons.new") %></button>
+            <button type="button" class="ss-preview-btn ss-preview-btn-outline"><%= t("cms.draft_page") %></button>
+          </div>
+        </div>
       <% end %>
-    </div>
-    <% if !mobile %>
-      <div class="ss-preview-btn-group ss-preview-part-group ss-preview-hide">
-        <select class="ss-preview-part-list">
-          <option value=""><%= t("cms.part") %></option>
-        </select>
-        <button type="button" class="ss-preview-btn ss-preview-btn-outline ss-preview-btn-edit-part"><%= t("ss.buttons.edit") %></button>
-      </div>
-      <div class="ss-preview-btn-group ss-preview-hide">
-        <button type="button" class="ss-preview-btn ss-preview-btn-outline ss-preview-btn-edit-layout"><%= t("cms.layout") %></button>
-      </div>
-    <% end %>
-  </div>
-  <% if mode == :preview && !mobile %>
-    <div>
-      <div class="ss-preview-btn-group">
-        <button type="button" class="ss-preview-btn ss-preview-btn-outline-primary ss-preview-btn-toggle-inplace"><%= t("cms.inplace_edit") %></button>
-      </div>
-      <div class="ss-preview-btn-group">
-        <select class="ss-preview-node-list">
-          <option value="">記事</option>
-        </select>
-        <button type="button" class="ss-preview-btn ss-preview-btn-outline"><%= t("ss.buttons.new") %></button>
-        <button type="button" class="ss-preview-btn ss-preview-btn-outline"><%= t("cms.draft_page") %></button>
-        <% if show_path %>
-          <button type="button" class="ss-preview-btn ss-preview-btn-outline ss-preview-btn-open-path" data-path="<%= show_path %>"><%= t("ss.links.back_to_administration") %></button>
+
+      <div id="ss-preview-messages" class="ss-preview-wrap-row">
+        <% if @intercepted_notice %>
+        <div id="ss-preview-notice"><%= @intercepted_notice %></div>
+        <% end %>
+        <div id="ss-preview-error-explanation" class="ss-preview-hide">
+          <h2><%= t("errors.template.header.other") %></h2>
+          <p><%= t("errors.template.body") %></p>
+          <ul>
+          </ul>
+        </div>
+
+        <% if rendered && rendered[:page] %>
+          <% page = rendered[:page] %>
+          <div class="ss-preview-btn-group">
+            <% if page.state == "closed" && page.allowed?(:edit, @cur_user, site: @cur_site) && page.workflow_member.blank? && !page.workflow_requested? %>
+              <button type="button" id="ss-preview-btn-approve" class="ss-preview-btn ss-preview-btn-outline"><%= t("workflow.buttons.approve") %></button>
+            <% end %>
+            <% if page.state == "closed" && page.allowed?(:release, @cur_user, site: @cur_site) %>
+              <button type="button" id="ss-preview-btn-publish" class="ss-preview-btn ss-preview-btn-outline"><%= t("ss.buttons.publish") %></button>
+            <% end %>
+          </div>
         <% end %>
       </div>
     </div>
-  <% end %>
-  <div id="ss-preview-messages" <% if @intercepted_notice.blank? %>class="ss-preview-hide"<% end %>>
-    <% if @intercepted_notice %>
-    <div id="ss-preview-notice"><%= @intercepted_notice %></div>
-    <% end %>
-    <div id="ss-preview-error-explanation" class="ss-preview-hide">
-      <h2><%= t("errors.template.header.other") %></h2>
-      <p><%= t("errors.template.body") %></p>
-      <ul>
-      </ul>
+
+    <div class="ss-preview-wrap-column">
+      <div class="ss-preview-wrap-row ss-preview-btn-group">
+        <label for="ss-preview-date"><%= t("cms.preview_date") %></label>
+        <input type="text" id="ss-preview-date" class="ss-preview-date" value="<%= I18n.l(@cur_date, format: :picker)  %>" />
+        <% if @cur_site.mobile_enabled? %>
+          <input type="button" class="ss-preview-btn ss-preview-btn-outline ss-preview-btn-pc" value="<%= t("ss.links.pc") %>">
+          <input type="button" class="ss-preview-btn ss-preview-btn-outline ss-preview-btn-mobile" value="<%= t("ss.links.mobile") %>">
+        <% else %>
+          <input type="button" class="ss-preview-btn ss-preview-btn-outline ss-preview-btn-pc" value="<%= t("cms.preview_page") %>">
+        <% end %>
+      </div>
+
+      <div class="ss-preview-wrap-row">
+        <% if !mobile %>
+          <div class="ss-preview-btn-group ss-preview-part-group ss-preview-hide">
+            <select class="ss-preview-part-list">
+              <option value=""><%= t("cms.part") %></option>
+            </select>
+            <button type="button" class="ss-preview-btn ss-preview-btn-outline ss-preview-btn-edit-part"><%= t("ss.buttons.edit") %></button>
+          </div>
+          <div class="ss-preview-btn-group ss-preview-hide">
+            <button type="button" class="ss-preview-btn ss-preview-btn-outline ss-preview-btn-edit-layout"><%= t("cms.layout") %></button>
+          </div>
+        <% end %>
+        <% if show_path %>
+          <div class="ss-preview-btn-group">
+            <button type="button" class="ss-preview-btn ss-preview-btn-outline ss-preview-btn-open-path" data-path="<%= show_path %>"><%= t("ss.links.back_to_administration") %></button>
+          </div>
+        <% end %>
+      </div>
     </div>
   </div>
 </div>

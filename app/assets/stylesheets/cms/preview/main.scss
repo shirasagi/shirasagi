@@ -9,11 +9,26 @@
 // preview
 
 #ss-preview {
-  background-color: rgb(242, 242, 242);
+  background-color: #323232;
+  color: white;
   @include box-shadow(0px 1px 5px #666);
-  padding: 5px;
+  padding: 10px 0;
   width: 100%;
-  z-index: 5001;
+
+  .ss-preview-wrap {
+    @include display-flex;
+  }
+
+  .ss-preview-wrap-column {
+    padding: 0 10px;
+    &:first-child {
+      margin-right: auto;
+    }
+  }
+
+  .ss-preview-wrap-column ~ .ss-preview-wrap-column {
+    border-left: 1px solid $gray2;
+  }
 
   .ss-preview-btn-group {
     display: inline-block;
@@ -25,6 +40,15 @@
 
   .ss-preview-active {
     border: 1px solid green;
+  }
+
+  .ss-preview-btn-toggle-inplace {
+    &:after {
+      content: " off";
+    }
+    &.ss-preview-active:after {
+      content: " on";
+    }
   }
 }
 .ss-preview-hide {

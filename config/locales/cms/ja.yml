@@ -68,7 +68,8 @@ ja:
     default_form: 既定のフォーム
     column_value_error_template: "%{name}の%{error}"
     draft_page: 下書きページ
-    inplace_edit: ダイレクト編集モード
+    inplace_edit: 編集モード
+    preview_date: プレビュー日時
 
     adobe_reader:
       remark:
