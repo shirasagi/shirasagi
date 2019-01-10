@@ -9,6 +9,7 @@ class Inquiry::ResultsController < ApplicationController
   append_view_path "app/views/cms/pages"
   navi_view "inquiry/main/navi"
   before_action :set_aggregation
+  before_action :check_permission
 
   private
 
@@ -27,10 +28,13 @@ class Inquiry::ResultsController < ApplicationController
     @aggregation = @cur_node.aggregate_select_columns(options)
   end
 
+  def check_permission
+    raise "403" unless @cur_node.allowed?(:read, @cur_user, site: @cur_site)
+  end
+
   public
 
   def index
-    raise "403" unless @cur_node.allowed?(:read, @cur_user, site: @cur_site)
   end
 
   def download
