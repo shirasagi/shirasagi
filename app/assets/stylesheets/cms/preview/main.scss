@@ -11,6 +11,7 @@
 #ss-preview {
   background-color: #323232;
   color: white;
+  font-size: 0.8rem;
   @include box-shadow(0px 1px 5px #666);
   padding: 10px 0;
   width: 100%;
@@ -48,6 +49,13 @@
     }
     &.ss-preview-active:after {
       content: " on";
+    }
+  }
+
+  .ss-preview-branch-notice {
+    color: #f6fa86;
+    a {
+      color: white;
     }
   }
 }
