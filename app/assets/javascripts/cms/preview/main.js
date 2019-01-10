@@ -345,9 +345,19 @@ SS_Preview = (function () {
         processData: false,
         contentType: false,
         cache: false,
-        success: function(_html) {
+        success: function(data, textStatus, xhr) {
           $.colorbox.close();
-          location.reload();
+          if (typeof data === "string") {
+            // data is html
+            location.reload();
+          } else {
+            // data is json
+            if (data.location) {
+              location.href = data.location;
+            } else {
+              location.reload();
+            }
+          }
         },
         error: function(xhr, status, error) {
           var $html = $(xhr.responseText);

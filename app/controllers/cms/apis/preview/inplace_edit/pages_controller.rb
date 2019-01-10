@@ -6,6 +6,7 @@ class Cms::Apis::Preview::InplaceEdit::PagesController < ApplicationController
   layout "ss/ajax_in_iframe"
 
   before_action :set_inplace_mode
+  helper_method :creates_branch?
 
   private
 
@@ -13,23 +14,63 @@ class Cms::Apis::Preview::InplaceEdit::PagesController < ApplicationController
     @inplace_mode = true
   end
 
+  def creates_branch?
+    @item.state != "closed"
+  end
+
+  def save_with_overwrite
+    render_update @item.save
+  end
+
+  def save_as_branch
+    if @item.branches.present?
+      @item.errors.add :base, :branch_is_already_existed
+      render_save_as_branch false
+      return
+    end
+
+    @item.cur_site = @cur_site
+    @item.cur_node = @item.parent if @item.parent
+    @item.cur_user = @cur_user
+    copy = @item.new_clone
+    copy.master = @item
+    result = copy.save
+    if result
+      path_params = { path: copy.filename, anchor: "inplace" }
+      path_params[:preview_date] = params[:preview_date].to_s if params[:preview_date].present?
+      location = cms_preview_path(path_params)
+    else
+      @item.errors.messages[:base] += copy.errors.full_messages
+    end
+
+    render_save_as_branch result, location
+  end
+
+  def render_save_as_branch(result, location = nil)
+    if result && location
+      flash[:notice] = I18n.t("workflow.notice.created_branch_page")
+      render json: { location: location }, status: :ok, content_type: json_content_type
+    else
+      render file: :edit, status: :unprocessable_entity
+    end
+  end
+
   public
 
   def edit
     raise "403" if !@item.allowed?(:edit, @cur_user, site: @cur_site)
-    if @item.state == "public"
-      raise "403" if !@item.allowed?(:approve, @cur_user, site: @cur_site)
-    end
-
     super
   end
 
   def update
+    @item.attributes = get_params
+    @item.in_updated = params[:_updated] if @item.respond_to?(:in_updated)
     raise "403" if !@item.allowed?(:edit, @cur_user, site: @cur_site)
-    if @item.state == "public"
-      raise "403" if !@item.allowed?(:approve, @cur_user, site: @cur_site)
-    end
 
-    super
+    if creates_branch?
+      save_as_branch
+    else
+      save_with_overwrite
+    end
   end
 end
