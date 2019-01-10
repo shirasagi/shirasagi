@@ -65,14 +65,14 @@
     <% end %>
     <% if mode == :preview && rendered %>
       <% if %i[page].include?(rendered[:type]) %>
-        SS_Preview.inplaceFormPath.page = <%== edit_cms_apis_preview_inplace_edit_page_path(site: @cur_site, id: ":id").to_json %>;
-        SS_Preview.inplaceFormPath.columnValue.new = <%== "#{new_cms_apis_preview_inplace_edit_page_column_value_path(site: @cur_site, page_id: ":pageId")}?column_id=:columnId".to_json %>;
-        SS_Preview.inplaceFormPath.columnValue.edit = <%== edit_cms_apis_preview_inplace_edit_page_column_value_path(site: @cur_site, page_id: ":pageId", id: ":id").to_json %>;
-        SS_Preview.inplaceFormPath.columnValue.destroy = <%== cms_apis_preview_inplace_edit_page_column_value_path(site: @cur_site, page_id: ":pageId", id: ":id").to_json %>;
-        SS_Preview.inplaceFormPath.columnValue.moveUp = <%== move_up_cms_apis_preview_inplace_edit_page_column_value_path(site: @cur_site, page_id: ":pageId", id: ":id").to_json %>;
-        SS_Preview.inplaceFormPath.columnValue.moveDown = <%== move_down_cms_apis_preview_inplace_edit_page_column_value_path(site: @cur_site, page_id: ":pageId", id: ":id").to_json %>;
-        SS_Preview.inplaceFormPath.columnValue.moveAt = <%== move_at_cms_apis_preview_inplace_edit_page_column_value_path(site: @cur_site, page_id: ":pageId", id: ":id").to_json %>;
-        SS_Preview.inplaceFormPath.palette = <%== palette_cms_apis_preview_inplace_edit_form_path(site: @cur_site, id: ":id").to_json %>;
+        SS_Preview.inplaceFormPath.page = <%== edit_cms_apis_preview_inplace_edit_page_path(site: @cur_site, preview_date: params[:preview_date], id: ":id").to_json %>;
+        SS_Preview.inplaceFormPath.columnValue.new = <%== "#{new_cms_apis_preview_inplace_edit_page_column_value_path(site: @cur_site, preview_date: params[:preview_date], page_id: ":pageId")}?column_id=:columnId".to_json %>;
+        SS_Preview.inplaceFormPath.columnValue.edit = <%== edit_cms_apis_preview_inplace_edit_page_column_value_path(site: @cur_site, preview_date: params[:preview_date], page_id: ":pageId", id: ":id").to_json %>;
+        SS_Preview.inplaceFormPath.columnValue.destroy = <%== cms_apis_preview_inplace_edit_page_column_value_path(site: @cur_site, preview_date: params[:preview_date], page_id: ":pageId", id: ":id").to_json %>;
+        SS_Preview.inplaceFormPath.columnValue.moveUp = <%== move_up_cms_apis_preview_inplace_edit_page_column_value_path(site: @cur_site, preview_date: params[:preview_date], page_id: ":pageId", id: ":id").to_json %>;
+        SS_Preview.inplaceFormPath.columnValue.moveDown = <%== move_down_cms_apis_preview_inplace_edit_page_column_value_path(site: @cur_site, preview_date: params[:preview_date], page_id: ":pageId", id: ":id").to_json %>;
+        SS_Preview.inplaceFormPath.columnValue.moveAt = <%== move_at_cms_apis_preview_inplace_edit_page_column_value_path(site: @cur_site, preview_date: params[:preview_date], page_id: ":pageId", id: ":id").to_json %>;
+        SS_Preview.inplaceFormPath.palette = <%== palette_cms_apis_preview_inplace_edit_form_path(site: @cur_site, preview_date: params[:preview_date], id: ":id").to_json %>;
       <% end %>
     <% end %>
   </script>
