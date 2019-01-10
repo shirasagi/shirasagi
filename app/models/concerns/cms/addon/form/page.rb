@@ -54,6 +54,13 @@ module Cms::Addon::Form::Page
     end
   end
 
+  # for creating branch page
+  def copy_column_values(from_item)
+    self.column_values = from_item.column_values.map do |column_value|
+      column_value.new_clone
+    end
+  end
+
   private
 
   def validate_column_values
