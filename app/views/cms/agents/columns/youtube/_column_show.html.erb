@@ -1,0 +1,6 @@
+<%= render 'cms/agents/columns/main/base', show: true, column: column, value: value do %>
+  <%= Cms::Column::Value::Youtube.t("url") %>:<%= value.url %><br />
+  <%= Cms::Column::Value::Youtube.t("width") %>:<%= value.width %>
+  <%= Cms::Column::Value::Youtube.t("height") %>:<%= value.height %><br />
+  <%= Cms::Column::Value::Youtube.t("auto_width") %>:<%= value.auto_width %><br />
+<% end %>

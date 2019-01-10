@@ -24,6 +24,7 @@ module Cms
     Cms::Column.plugin 'cms/file_upload'
     Cms::Column.plugin 'cms/headline'
     Cms::Column.plugin 'cms/list'
+    Cms::Column.plugin 'cms/youtube'
 
     Cms::Role.permission :edit_cms_sites
     Cms::Role.permission :edit_cms_groups
