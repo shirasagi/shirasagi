@@ -52,7 +52,7 @@ module Opendata::DatasetCopy
                         uuid: nil,
                         revision_id: nil,
                         file_id: nil,
-                        in_file: r.file.uploaded_file,
+                        in_file: (r.source_url.present? ? nil : r.file.uploaded_file),
                         tsv_id: nil,
                         in_tsv: r.tsv.try(:uploaded_file),
                         created: Time.zone.now,

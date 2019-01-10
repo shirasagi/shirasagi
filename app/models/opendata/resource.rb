@@ -14,11 +14,11 @@ class Opendata::Resource
 
   permit_params :name, :text, :format, :license_id, :source_url
 
-  validates :in_file, presence: true, if: ->{ file_id.blank? }
+  validates :in_file, presence: true, if: ->{ file_id.blank? || (in_file.blank? && source_url.blank?) }
   validates :format, presence: true
   #validates :source_url, format: /\A#{URI::regexp(%w(https http))}$\z/, if: ->{ source_url.present? }
 
-  before_validation :set_source_url_file, if: ->{ source_url.present? }
+  before_validation :set_source_url, if: ->{ source_url.present? }
   before_validation :set_filename, if: ->{ in_file.present? }
   before_validation :escape_source_url, if: ->{ source_url.present? }
   before_validation :validate_in_file, if: ->{ in_file.present? }
@@ -96,15 +96,17 @@ class Opendata::Resource
     dataset.save(validate: false)
   end
 
-  def set_source_url_file
-    return if in_file
+  def set_source_url
+    if in_file
+      self.source_url = nil
+    else
+      uploaded_file = ::Fs::UploadedFile.new("ss_file")
+      uploaded_file.write(source_url)
+      uploaded_file.rewind
+      uploaded_file.original_filename = "resource-#{uuid}.txt"
+      uploaded_file.content_type = 'text/plain'
 
-    uploaded_file = ::Fs::UploadedFile.new("ss_file")
-    uploaded_file.write(source_url)
-    uploaded_file.rewind
-    uploaded_file.original_filename = "resource-#{uuid}.txt"
-    uploaded_file.content_type = 'text/plain'
-
-    self.in_file = uploaded_file
+      self.in_file = uploaded_file
+    end
   end
 end

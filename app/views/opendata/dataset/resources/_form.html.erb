@@ -37,7 +37,7 @@ $(".publish_save").on("click", function(e){
   <dd><%= f.file_field :in_file %></dd>
 
   <dt><%= @model.t :source_url %><%= @model.tt :source_url %></dt>
-  <dd><%= f.text_field :source_url %></dd>
+  <dd><%= f.url_field :source_url, placeholder: t("opendata.notice.source_url") %></dd>
 
   <dt><%= @model.t :name %><%= required_label %></dt>
   <dd><%= f.text_field :name %></dd>

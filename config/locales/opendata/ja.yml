@@ -49,6 +49,7 @@ ja:
       deleted_account: アカウントを削除しました。
       started_building_rdf_job: "RDF 変換処理を開始しました。処理結果は「ジョブ実行履歴」で確認してください。"
       start_export: エクスポートを開始しました。
+      source_url: "リンクを登録する際にURLを入力してください。ファイルを設定した場合は入力の必要はありません。"
     export:
       subject: '[オープンデータ/データセット] エクスポートが完了しました。'
       notiry_message: "ダウンロードの準備が完了しました。\n下記のURLからダウンロードしてください。\n\n<a href=%{link}>%{link}</a>"
