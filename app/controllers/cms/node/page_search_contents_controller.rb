@@ -1,10 +1,12 @@
 class Cms::Node::PageSearchContentsController < ApplicationController
   include Cms::BaseFilter
-  include Cms::NodeFilter
+  include Cms::CrudFilter
 
   navi_view "cms/main/navi"
   menu_view nil
   model Cms::PageSearch
+
+  append_view_path "app/views/cms/page_search_contents"
 
   before_action -> { @list_head_search = true }, only: :show
 
