@@ -285,6 +285,7 @@ ja:
       cms/headline: 見出し入力
       cms/list: リスト入力
       cms/youtube: YouTube埋め込み
+      cms/free: 自由入力
 
   cms_role:
     edit_cms_sites: サイトの管理
@@ -468,6 +469,7 @@ ja:
       cms/column/headline: 見出し入力
       cms/column/list: リスト入力
       cms/column/youtube: YouTube埋め込み
+      cms/column/free: 自由入力
     errors:
       models:
         cms/model/node:
@@ -825,6 +827,8 @@ ja:
         width: 幅
         height: 高さ
         auto_width: 画面幅に合わせる
+      cms/column/value/free:
+        value: テキスト
 
   errors:
     messages:
