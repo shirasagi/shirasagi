@@ -352,7 +352,7 @@ SS_Preview = (function () {
             location.reload();
           } else {
             // data is json
-            if (data.location) {
+            if (data && data.location) {
               location.href = data.location;
             } else {
               location.reload();
@@ -494,14 +494,18 @@ SS_Preview = (function () {
       url: url,
       type: "POST",
       data: { _method: "DELETE", authenticity_token: token },
-      success: function() {
+      success: function(data, textStatus, xhr) {
         self.overlay.hide();
 
-        var $column = $(document).find(".ss-preview-column[data-page-id='" + ids.pageId + "'][data-column-id='" + ids.columnId + "']");
-        $column.fadeOut("fast", function() {
-          $column.remove();
-          // self.showInfo("削除しました。");
-        });
+        if (data && data.location) {
+          location.href = data.location;
+        } else {
+          var $column = $(document).find(".ss-preview-column[data-page-id='" + ids.pageId + "'][data-column-id='" + ids.columnId + "']");
+          $column.fadeOut("fast", function () {
+            $column.remove();
+            // self.showInfo("削除しました。");
+          });
+        }
       },
       error: function(xhr, status, error) {
         alert(error);
@@ -518,8 +522,14 @@ SS_Preview = (function () {
       url: url,
       type: "POST",
       data: { authenticity_token: token },
-      success: function(data) {
-        self.finishColumnMoveUp(ids, data);
+      success: function(data, textStatus, xhr) {
+        self.overlay.hide();
+
+        if (data.location) {
+          location.href = data.location;
+        } else {
+          self.finishColumnMoveUp(ids, data);
+        }
       },
       error: function(xhr, status, error) {
         alert(error);
@@ -555,7 +565,13 @@ SS_Preview = (function () {
       type: "POST",
       data: { authenticity_token: token },
       success: function(data) {
-        self.finishColumnMoveDown(ids, data);
+        self.overlay.hide();
+
+        if (data.location) {
+          location.href = data.location;
+        } else {
+          self.finishColumnMoveDown(ids, data);
+        }
       },
       error: function(xhr, status, error) {
         alert(error);

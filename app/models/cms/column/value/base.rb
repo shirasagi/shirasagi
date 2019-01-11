@@ -58,7 +58,7 @@ class Cms::Column::Value::Base
   end
 
   def new_clone
-    ret = self.class.new self.attributes.to_h.except('_id', '_type', 'created', 'updated')
+    ret = self.class.new self.attributes.to_h.except('_type')
     ret.instance_variable_set(:@new_clone, true)
     ret
   end

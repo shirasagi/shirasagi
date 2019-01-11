@@ -1,5 +1,5 @@
 <div class="see column-values">
-  <% column_values.order_by(order: 1, id: 1).each do |column_value| %>
+  <% column_values.order_by(order: 1, name: 1).each do |column_value| %>
     <% column = form.columns.find(column_value.column_id) rescue nil %>
     <% next if column.blank? %>
     <% if column.column_show_path %>

@@ -1,21 +1,17 @@
 class Cms::Apis::Preview::InplaceEdit::PagesController < ApplicationController
   include Cms::ApiFilter
+  include Cms::InplaceEditFilter
 
   model Cms::Page
 
   layout "ss/ajax_in_iframe"
 
   before_action :set_inplace_mode
-  helper_method :creates_branch?
 
   private
 
   def set_inplace_mode
     @inplace_mode = true
-  end
-
-  def creates_branch?
-    @item.state != "closed"
   end
 
   def save_with_overwrite
