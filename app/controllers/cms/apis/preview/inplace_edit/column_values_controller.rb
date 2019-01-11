@@ -53,7 +53,7 @@ class Cms::Apis::Preview::InplaceEdit::ColumnValuesController < ApplicationContr
 
     location = { action: :edit, id: @cur_column_value }
     if result
-      flash["ss.inplace_edit.notice"] = t("ss.notice.saved")
+      flash["cms.preview.notice"] = t("ss.notice.saved")
     end
     render_create result, location: location, render: { file: :new, status: :unprocessable_entity }
   end
@@ -96,7 +96,7 @@ class Cms::Apis::Preview::InplaceEdit::ColumnValuesController < ApplicationContr
     path_params[:preview_date] = params[:preview_date].to_s if params[:preview_date].present?
     location = cms_preview_path(path_params)
 
-    flash["ss.inplace_edit.notice"] = t("ss.notice.saved")
+    flash["cms.preview.notice"] = t("ss.notice.saved")
     render_save_as_branch result, location
   end
 
@@ -152,7 +152,7 @@ class Cms::Apis::Preview::InplaceEdit::ColumnValuesController < ApplicationContr
 
   def render_save_as_branch(result, location = nil)
     if result && location
-      flash["ss.inplace_edit.notice"] = I18n.t("workflow.notice.created_branch_page")
+      flash["cms.preview.notice"] = I18n.t("workflow.notice.created_branch_page")
       render json: { location: location }, status: :ok, content_type: json_content_type
     else
       render file: :edit, status: :unprocessable_entity

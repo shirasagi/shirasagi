@@ -99,7 +99,11 @@
     </div>
   </div>
   <script>
-    SS_Preview.render();
+    var opts = {};
+    <% if @preview_notice %>
+      opts.notice = <%== @preview_notice.to_json %>;
+    <% end %>
+    SS_Preview.render(opts);
   </script>
 <% end %>
 <div id="ss-preview">
@@ -121,16 +125,6 @@
       <% end %>
 
       <div id="ss-preview-messages" class="ss-preview-wrap-row">
-        <% if @intercepted_notice %>
-          <div id="ss-preview-notice"><%= @intercepted_notice %></div>
-        <% end %>
-        <div id="ss-preview-error-explanation" class="ss-preview-hide">
-          <h2><%= t("errors.template.header.other") %></h2>
-          <p><%= t("errors.template.body") %></p>
-          <ul>
-          </ul>
-        </div>
-
         <% if rendered && (page = rendered[:page]) %>
           <% if page.try(:master?) && page.branches.present? %>
             <% branch_page = page.branches.order_by(id: -1).first %>
@@ -187,5 +181,7 @@
         <% end %>
       </div>
     </div>
+  </div>
+  <div class="ss-preview-notice-wrap" style="display: none;">
   </div>
 </div>

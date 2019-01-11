@@ -44,7 +44,7 @@ class Cms::Apis::Preview::InplaceEdit::PagesController < ApplicationController
 
   def render_save_as_branch(result, location = nil)
     if result && location
-      flash[:notice] = I18n.t("workflow.notice.created_branch_page")
+      flash["cms.preview.notice"] = I18n.t("workflow.notice.created_branch_page")
       render json: { location: location }, status: :ok, content_type: json_content_type
     else
       render file: :edit, status: :unprocessable_entity

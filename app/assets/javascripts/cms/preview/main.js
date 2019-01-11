@@ -35,7 +35,7 @@ SS_Preview = (function () {
 
   SS_Preview.minFrameSize = { width: 600, height: 240 };
 
-  SS_Preview.render = function () {
+  SS_Preview.render = function (opts) {
     if (SS_Preview.instance) {
       return;
     }
@@ -47,7 +47,7 @@ SS_Preview = (function () {
       var lazyInitialize = function() {
         countDownLatch -= 1;
         if (countDownLatch === 0) {
-          SS_Preview.instance.initialize();
+          SS_Preview.instance.initialize(opts);
         }
       };
 
@@ -142,7 +142,18 @@ SS_Preview = (function () {
     document.getElementsByTagName("head")[0].appendChild(script);
   };
 
-  SS_Preview.prototype.initialize = function() {
+  SS_Preview.notice = function (message) {
+    if (!SS_Preview.instance) {
+      return;
+    }
+    if (!SS_Preview.instance.notice) {
+      return;
+    }
+
+    SS_Preview.instance.notice.show(message);
+  };
+
+  SS_Preview.prototype.initialize = function(opts) {
     this.$el = $(this.el);
     this.$datePicker = this.$el.find(".ss-preview-date");
     this.$datePicker.datetimepicker({
@@ -238,6 +249,12 @@ SS_Preview = (function () {
 
     if (window.location.hash === "#inplace") {
       this.startInplaceMode();
+    }
+
+    // initialize notice;
+    this.notice = new Notice(this);
+    if (opts.notice) {
+      this.notice.show(opts.notice);
     }
   };
 
@@ -503,12 +520,12 @@ SS_Preview = (function () {
           var $column = $(document).find(".ss-preview-column[data-page-id='" + ids.pageId + "'][data-column-id='" + ids.columnId + "']");
           $column.fadeOut("fast", function () {
             $column.remove();
-            // self.showInfo("削除しました。");
+            self.notice.show("削除しました。");
           });
         }
       },
       error: function(xhr, status, error) {
-        alert(error);
+        self.notice.show(error);
       }
     });
   };
@@ -529,10 +546,11 @@ SS_Preview = (function () {
           location.href = data.location;
         } else {
           self.finishColumnMoveUp(ids, data);
+          self.notice.show("移動しました。");
         }
       },
       error: function(xhr, status, error) {
-        alert(error);
+        self.notice.show(error);
       }
     });
   };
@@ -571,10 +589,11 @@ SS_Preview = (function () {
           location.href = data.location;
         } else {
           self.finishColumnMoveDown(ids, data);
+          self.notice.show("移動しました。");
         }
       },
       error: function(xhr, status, error) {
-        alert(error);
+        self.notice.show(error);
       }
     });
   };
@@ -609,9 +628,10 @@ SS_Preview = (function () {
       data: { authenticity_token: token, order: order },
       success: function(data) {
         self.finishColumnMovePosition(ids, order, data);
+        self.notice.show("移動しました。");
       },
       error: function(xhr, status, error) {
-        alert(error);
+        self.notice.show(error);
       }
     });
   };
@@ -1072,6 +1092,46 @@ SS_Preview = (function () {
 
     var url = SS_Preview.inplaceFormPath.columnValue.new.replace(":pageId", SS_Preview.item.pageId).replace(":columnId", columnId);
     this.container.openDialogInFrame(url);
+  };
+
+  //
+  // Notice
+  //
+
+  function Notice(container) {
+    this.container = container;
+    this.$el = this.container.$el.find(".ss-preview-notice-wrap");
+    this.timerId = null;
+  }
+
+  Notice.speed = "normal";
+  Notice.holdInMillis = 1800;
+
+  Notice.prototype.show = function(message) {
+    this.hide();
+
+    var self = this;
+    this.$el.html(message).slideDown(Notice.speed, function() {
+      self.noticeShown();
+    });
+  };
+
+  Notice.prototype.hide = function() {
+    if (this.timerId) {
+      clearTimeout(this.timerId);
+      this.timerId = null;
+    }
+
+    this.$el.hide();
+    this.$el.html("");
+  };
+
+  Notice.prototype.noticeShown = function() {
+    var self = this;
+    this.timerId = setTimeout(function () {
+      self.$el.slideUp(Notice.speed);
+      self.timerId = null;
+    }, Notice.holdInMillis);
   };
 
   return SS_Preview;
