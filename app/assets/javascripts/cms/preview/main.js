@@ -10,7 +10,13 @@ SS_Preview = (function () {
     this.parts = [];
   }
 
-  SS_Preview.libs = {};
+  SS_Preview.libs = {
+    jquery: { isInstalled: function() { return !!window.jQuery; }, js: null, css: null },
+    datetimePicker: { isInstalled: function() { return !!$.datetimepicker; }, js: null, css: null },
+    colorbox: { isInstalled: function() { return !!$.colorbox; }, js: null, css: null },
+    dialog: { isInstalled: function() { return $.ui && $.ui.dialog; }, js: null, css: null },
+    resizable: { isInstalled: function() { return $.ui && $.ui.resizable; }, js: null, css: null }
+  };
 
   SS_Preview.confirms = { delete: null };
 
@@ -44,18 +50,14 @@ SS_Preview = (function () {
     SS_Preview.instance = new SS_Preview("#ss-preview");
 
     SS_Preview.loadJQuery(function() {
-      var countDownLatch = 4;
-      var lazyInitialize = function() {
-        countDownLatch -= 1;
-        if (countDownLatch === 0) {
-          SS_Preview.instance.initialize(opts);
-        }
-      };
-
-      SS_Preview.loadDatetimePicker(lazyInitialize);
-      SS_Preview.loadColorbox(lazyInitialize);
-      SS_Preview.loadDialog(lazyInitialize);
-      SS_Preview.loadResizable(lazyInitialize);
+      $.when(
+        SS_Preview.lazyLoad(SS_Preview.libs.datetimePicker),
+        SS_Preview.lazyLoad(SS_Preview.libs.colorbox),
+        SS_Preview.lazyLoad(SS_Preview.libs.dialog),
+        SS_Preview.lazyLoad(SS_Preview.libs.resizable)
+      ).done(function () {
+        SS_Preview.instance.initialize(opts);
+      });
     });
   };
 
@@ -85,124 +87,48 @@ SS_Preview = (function () {
     document.getElementsByTagName("head")[0].appendChild(script);
   };
 
-  SS_Preview.loadDatetimePicker = function (callback) {
-    if ($.datetimepicker) {
-      if (callback) {
-        callback();
-      }
-      return;
+  SS_Preview.lazyLoad = function (data) {
+    var d = new $.Deferred;
+
+    if (data.isInstalled()) {
+      d.resolve();
+      return d.promise();
     }
 
-    var link = document.createElement("link");
-    link.rel = "stylesheet";
-    link.href = SS_Preview.libs.datetimePicker.css;
+    var link;
+    if (data.css) {
+      link = document.createElement("link");
+      link.rel = "stylesheet";
+      link.href = data.css;
+    }
 
-    var script = document.createElement("script");
-    script.type = "text/javascript";
-    script.src = SS_Preview.libs.datetimePicker.js;
+    var script;
+    if (data.js) {
+      script = document.createElement("script");
+      script.type = "text/javascript";
+      script.src = data.js;
+    }
 
-    if (script.readyState) {
-      // IE
-    } else {
-      if (callback) {
+    if (link) {
+      document.getElementsByTagName("head")[0].appendChild(link);
+    }
+
+    if (script) {
+      if (script.readyState) {
+        // IE
+        d.resolve();
+      } else {
         script.onload = function () {
-          callback();
+          d.resolve();
         }
       }
-    }
 
-    document.getElementsByTagName("head")[0].appendChild(link);
-    document.getElementsByTagName("head")[0].appendChild(script);
-  };
-
-  SS_Preview.loadColorbox = function (callback) {
-    if ($.colorbox) {
-      if (callback) {
-        callback();
-      }
-      return;
-    }
-
-    var link = document.createElement("link");
-    link.rel = "stylesheet";
-    link.href = SS_Preview.libs.colorbox.css;
-
-    var script = document.createElement("script");
-    script.type = "text/javascript";
-    script.src = SS_Preview.libs.colorbox.js;
-
-    if (script.readyState) {
-      // IE
+      document.getElementsByTagName("head")[0].appendChild(script);
     } else {
-      if (callback) {
-        script.onload = function () {
-          callback();
-        }
-      }
+      d.resolve();
     }
 
-    document.getElementsByTagName("head")[0].appendChild(link);
-    document.getElementsByTagName("head")[0].appendChild(script);
-  };
-
-  SS_Preview.loadDialog = function (callback) {
-    if ($.ui && $.ui.dialog) {
-      if (callback) {
-        callback();
-      }
-      return;
-    }
-
-    var link = document.createElement("link");
-    link.rel = "stylesheet";
-    link.href = SS_Preview.libs.dialog.css;
-
-    var script = document.createElement("script");
-    script.type = "text/javascript";
-    script.src = SS_Preview.libs.dialog.js;
-
-    if (script.readyState) {
-      // IE
-    } else {
-      if (callback) {
-        script.onload = function () {
-          callback();
-        }
-      }
-    }
-
-    document.getElementsByTagName("head")[0].appendChild(link);
-    document.getElementsByTagName("head")[0].appendChild(script);
-  };
-
-  SS_Preview.loadResizable = function (callback) {
-    // if ($.ui && $.ui.dialog) {
-    //   if (callback) {
-    //     callback();
-    //   }
-    //   return;
-    // }
-
-    var link = document.createElement("link");
-    link.rel = "stylesheet";
-    link.href = SS_Preview.libs.resizable.css;
-
-    var script = document.createElement("script");
-    script.type = "text/javascript";
-    script.src = SS_Preview.libs.resizable.js;
-
-    if (script.readyState) {
-      // IE
-    } else {
-      if (callback) {
-        script.onload = function () {
-          callback();
-        }
-      }
-    }
-
-    document.getElementsByTagName("head")[0].appendChild(link);
-    document.getElementsByTagName("head")[0].appendChild(script);
+    return d.promise();
   };
 
   SS_Preview.notice = function (message) {
