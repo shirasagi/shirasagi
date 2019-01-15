@@ -31,11 +31,23 @@ module Opendata::Addon::ZipDataset
 
     begin
       Timeout.timeout(60) do
-        Zip::File.open(output_zip, Zip::File::CREATE) do |zip|
-          dataset.resources.each do |resource|
-            path = resource.file.path
+        files = []
+        dataset.resources.each do |resource|
+          if resource.source_url.present?
+            name = "#{resource.name}-#{resource.id}.txt"
+            file = Tempfile.open(name)
+            file.puts(resource.source_url)
+            file.rewind
+            files << [name, file]
+          else
             name = "#{resource.file.name.split(".").join("-#{resource.id}.")}"
-            zip.add(name.encode('cp932'), path)
+            files << [name, resource.file]
+          end
+        end
+
+        Zip::File.open(output_zip, Zip::File::CREATE) do |zip|
+          files.each do |name, file|
+            zip.add(name.encode('cp932', invalid: :replace, undef: :replace), file.path)
           end
         end
       end
@@ -43,11 +55,12 @@ module Opendata::Addon::ZipDataset
       message = "compression time out\n" + dataset.resources.map(&:full_url).join("\n")
       name = "resource-#{uuid}.txt"
 
-      Tempfile.create(name) do |f|
-        f.write(message)
-        Zip::File.open(output_zip, Zip::File::CREATE) do |zip|
-          zip.add(name, f.path)
-        end
+      file = Tempfile.open(name)
+      file.puts(message)
+      file.rewind
+
+      Zip::File.open(output_zip, Zip::File::CREATE) do |zip|
+        zip.add(name, file.path)
       end
     end
   rescue => e

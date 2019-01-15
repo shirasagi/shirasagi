@@ -14,7 +14,7 @@ class Opendata::Resource
 
   permit_params :name, :text, :format, :license_id, :source_url
 
-  validates :in_file, presence: true, if: ->{ file_id.blank? || (in_file.blank? && source_url.blank?) }
+  validates :in_file, presence: true, if: ->{ file_id.blank? && source_url.blank? }
   validates :format, presence: true
   #validates :source_url, format: /\A#{URI::regexp(%w(https http))}$\z/, if: ->{ source_url.present? }
 
@@ -100,13 +100,8 @@ class Opendata::Resource
     if in_file
       self.source_url = nil
     else
-      uploaded_file = ::Fs::UploadedFile.new("ss_file")
-      uploaded_file.write(source_url)
-      uploaded_file.rewind
-      uploaded_file.original_filename = "resource-#{uuid}.txt"
-      uploaded_file.content_type = 'text/plain'
-
-      self.in_file = uploaded_file
+      self.filename = nil
+      self.file.destroy if file
     end
   end
 end
