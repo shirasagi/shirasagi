@@ -1,20 +1,33 @@
 class Opendata::Agents::Nodes::Dataset::ResourceController < ApplicationController
   include Cms::NodeFilter::View
   include Opendata::UrlHelper
+  include SS::AuthFilter
 
   before_action :accept_cors_request
   before_action :set_dataset
+  before_action :deny
 
   private
 
   def set_dataset
     @dataset_path = @cur_main_path.sub(/\/resource\/.*/, ".html")
 
-    @dataset = Opendata::Dataset.site(@cur_site).and_public.
-      filename(@dataset_path).
-      first
-
+    @dataset = Opendata::Dataset.site(@cur_site).filename(@dataset_path).first
     raise "404" unless @dataset
+  end
+
+  def deny
+    return if @dataset.public?
+    return if SS.config.env.remote_preview
+
+    user = get_user_by_session
+    raise "404" unless user
+
+    set_last_logged_in
+  end
+
+  def set_last_modified
+    response.headers["Last-Modified"] = CGI::rfc1123_date(@dataset.updated.in_time_zone)
   end
 
   public
@@ -53,6 +66,8 @@ class Opendata::Agents::Nodes::Dataset::ResourceController < ApplicationControll
       geojson_content
     elsif @item.pdf_present?
       pdf_content
+    elsif @item.image_present?
+      image_content
     else
       raise "404"
     end
@@ -104,5 +119,9 @@ class Opendata::Agents::Nodes::Dataset::ResourceController < ApplicationControll
     else
       render :pdf_content, layout: 'cms/ajax'
     end
+  end
+
+  def image_content
+    render :image_content, layout: 'cms/ajax'
   end
 end

@@ -184,20 +184,29 @@ categories = [
                 <%= urs.t :rdf_iri %> <%= link_to urs.rdf_iri, "#{sparql_path}?graph_name=#{urs.rdf_iri}" %>
               </div>
               <% end %>
-            </div>
-            <div class="icons">
-              <% if license = urs.license %>
-              <span class="license">
-                <% label = tryb { image_tag license.file.url, alt: license.name } || license.name %>
-                <% if license.related_url.present? %>
-                  <%= link_to label, license.related_url, target: "_blank" %>
-                <% else %>
-                  <%= label %>
+
+              <div class="icons">
+                <% if license = urs.license %>
+                  <span class="license">
+                    <% label = tryb { image_tag license.file.url, alt: license.name } || license.name %>
+                    <% if license.related_url.present? %>
+                      <%= link_to label, license.related_url, target: "_blank" %>
+                    <% else %>
+                      <%= label %>
+                    <% end %>
+                  </span>
                 <% end %>
-              </span>
-              <% end %>
-              <div class="content-wrap"><%= link_to I18n.t("opendata.labels.preview"), urs.content_url, class: "content" if urs.tsv_present? %></div>
-              <div class="download-wrap"><%= link_to I18n.t("opendata.labels.downloaded"), urs.download_url, class: "download" %></div>
+                <div class="content-wrap"><%= link_to I18n.t("opendata.labels.preview"), urs.content_url, class: "content" if urs.tsv_present? %></div>
+                <div class="download-wrap"><%= link_to I18n.t("opendata.labels.downloaded"), urs.download_url, class: "download" %></div>
+
+                <div class="clipboard-wrap">
+                  <%= link_to t("opendata.links.copy_url"), urs.url,
+                    "class" => "ss-clipboard-copy",
+                    "data-clip-attr" => "data-full-url",
+                    "data-full-url" => urs.full_url
+                  %>
+                </div>
+              </div>
             </div>
           </div>
           <% end %>

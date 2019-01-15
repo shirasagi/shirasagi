@@ -31,7 +31,7 @@ module Opendata::Resource::Model
 
   def content_url
     return source_url if source_url.present?
-    dataset.full_url.sub(/\.html$/, "") + "#{URI.escape(context_path)}/#{id}/content.html"
+    dataset.url.sub(/\.html$/, "") + "#{URI.escape(context_path)}/#{id}/content.html"
   end
 
   def download_url

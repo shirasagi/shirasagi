@@ -42,7 +42,7 @@ module Opendata::Resource::Previewable
   public
 
   def previewable?
-    tsv_present? || xls_present? || kml_present? || geojson_present? || pdf_present?
+    tsv_present? || xls_present? || kml_present? || geojson_present? || pdf_present? || image_present?
   end
 
   def kml_present?
@@ -55,6 +55,10 @@ module Opendata::Resource::Previewable
 
   def pdf_present?
     %w(PDF).index(format.to_s.upcase) != nil
+  end
+
+  def image_present?
+    %w(BMP GIF JPEG JPG PNG).index(format.to_s.upcase) != nil
   end
 
   def extract_map_points(data)
