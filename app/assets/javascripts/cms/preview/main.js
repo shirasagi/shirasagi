@@ -43,7 +43,7 @@ SS_Preview = (function () {
     SS_Preview.instance = new SS_Preview("#ss-preview");
 
     SS_Preview.loadJQuery(function() {
-      var countDownLatch = 3;
+      var countDownLatch = 4;
       var lazyInitialize = function() {
         countDownLatch -= 1;
         if (countDownLatch === 0) {
@@ -54,6 +54,7 @@ SS_Preview = (function () {
       SS_Preview.loadDatetimePicker(lazyInitialize);
       SS_Preview.loadColorbox(lazyInitialize);
       SS_Preview.loadDialog(lazyInitialize);
+      SS_Preview.loadResizable(lazyInitialize);
     });
   };
 
@@ -158,6 +159,36 @@ SS_Preview = (function () {
     var script = document.createElement("script");
     script.type = "text/javascript";
     script.src = SS_Preview.libs.dialog.js;
+
+    if (script.readyState) {
+      // IE
+    } else {
+      if (callback) {
+        script.onload = function () {
+          callback();
+        }
+      }
+    }
+
+    document.getElementsByTagName("head")[0].appendChild(link);
+    document.getElementsByTagName("head")[0].appendChild(script);
+  };
+
+  SS_Preview.loadResizable = function (callback) {
+    // if ($.ui && $.ui.dialog) {
+    //   if (callback) {
+    //     callback();
+    //   }
+    //   return;
+    // }
+
+    var link = document.createElement("link");
+    link.rel = "stylesheet";
+    link.href = SS_Preview.libs.resizable.css;
+
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src = SS_Preview.libs.resizable.js;
 
     if (script.readyState) {
       // IE
