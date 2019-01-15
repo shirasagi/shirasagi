@@ -13,6 +13,7 @@ class Opendata::Dataset
   include Opendata::Common
   include Opendata::Addon::CmsRef::Page
   include Cms::Addon::Release
+  include Cms::Addon::ReleasePlan
   include Contact::Addon::Page
   include Cms::Addon::RelatedPage
   include Opendata::Addon::Harvest::Dataset

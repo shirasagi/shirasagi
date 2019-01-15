@@ -26,7 +26,9 @@ module Opendata::DatasetCopy
                       point: 0,
                       downloaded: 0,
                       filename: "#{dirname}/",
-                      basename: "")
+                      basename: "",
+                      release_date: nil,
+                      close_date: nil)
     item = self.class.new(attributes)
     item.reset_harvest_attributes
     item.instance_variable_set(:@original, self)
