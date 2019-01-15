@@ -43,6 +43,14 @@ GIT
       multi_xml (~> 0.5)
       rack (>= 1.2, < 3)
 
+GIT
+  remote: https://github.com/roo-rb/roo.git
+  revision: 8f65109c6728dd77f62b0a5c68dd42ab207dd914
+  specs:
+    roo (2.7.1)
+      nokogiri (~> 1)
+      rubyzip (>= 1.2.1, < 2.0.0)
+
 GEM
   remote: https://rubygems.org/
   specs:
@@ -581,6 +589,7 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
+  addressable
   autosize-rails
   bootsnap
   brakeman
@@ -648,6 +657,7 @@ DEPENDENCIES
   rdf-turtle
   rmagick
   romaji
+  roo!
   rspec
   rspec-collection_matchers
   rspec-its
@@ -676,4 +686,4 @@ DEPENDENCIES
   yard
 
 BUNDLED WITH
-   1.16.2
+   1.16.4

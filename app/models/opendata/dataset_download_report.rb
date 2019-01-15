@@ -44,8 +44,16 @@ class Opendata::DatasetDownloadReport
     Time.zone.local(end_year, end_month).end_of_month
   end
 
+  def aggregate
+    Opendata::DatasetDownloadReport::Aggregate.generate(self)
+  end
+
   def csv
-    Opendata::DatasetDownloadReport::Aggregate.generate_csv(self)
+    aggregate.csv
+  end
+
+  def enum_csv
+    aggregate.enum_csv
   end
 
   private

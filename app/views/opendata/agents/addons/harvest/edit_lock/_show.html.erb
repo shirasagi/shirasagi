@@ -1,0 +1,16 @@
+<% return unless @item.harvest_importer %>
+
+<dl class="see">
+  <dd class="wide">
+    <% source_url = @item.harvest_source_url.present? ? @item.harvest_source_url : @item.harvest_importer.source_url %>
+    <%= link_to @item.harvest_importer.name, source_url, target: "_blank" %>
+    <%= t("opendata.messages.harvest_imported_dataset") %>
+  </dd>
+</dl>
+
+<%= jquery do %>
+  var self = $('#addon-opendata-agents-addons-harvest-edit_lock');
+  var top = $('#addon-basic');
+  top.before(self);
+<% end %>
+

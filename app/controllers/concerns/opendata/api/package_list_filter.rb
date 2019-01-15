@@ -43,11 +43,10 @@ module Opendata::Api::PackageListFilter
 
     package_list = []
     datasets.each do |dataset|
-      package_list << dataset[:name]
+      package_list << dataset[:uuid]
     end
 
     res = {help: help, success: true, result: package_list}
     render json: res
   end
-
 end

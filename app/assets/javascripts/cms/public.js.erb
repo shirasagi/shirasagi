@@ -7,6 +7,7 @@
 //= require ss/lib/font
 //= require ss/lib/module
 //= require ss/lib/mobile
+//= require ss/lib/clipboard
 //= require cms/lib/editor
 //= require ads/lib/banner
 //= require event/lib/monthly
@@ -20,6 +21,7 @@
 //= require map/openlayers/map
 //= require map/openlayers/facility/search
 //= require map/openlayers/member/photo/form
+//= require map/openlayers/opendata/dataset_map
 //= require jplayer/jquery.jplayer
 
 $(function () {
@@ -161,6 +163,49 @@ this.SS = (function () {
     } catch (_error) {
       e = _error;
     }
+  };
+
+  SS.renderInBox = function (box) {
+    var anchorCallback;
+    anchorCallback = function () {
+      return $("#cboxLoadedContent a").each(function () {
+        var elem;
+        elem = $(this);
+        elem.addClass("cboxElement");
+        if (!elem.attr("target") && !elem.data("target")) {
+          return elem.colorbox({
+            fixed: true,
+            width: "90%",
+            height: "90%",
+            onComplete: anchorCallback
+          });
+        }
+      });
+    };
+    return $(box).find("a").each(function () {
+      var elem;
+      elem = $(this);
+      if (!elem.attr("target") && !elem.data("target")) {
+        return elem.colorbox({
+          fixed: true,
+          width: "90%",
+          height: "90%",
+          onComplete: anchorCallback
+        });
+      }
+    });
+  };
+
+  SS.renderClipboardCopy = function () {
+    $(".ss-clipboard-copy").click(function () {
+      var clip_attr = $(this).attr("data-clip-attr");
+      if (clip_attr) {
+        SS_Clipboard.copy($(this).attr(clip_attr), { "success_alert": true });
+      } else {
+        SS_Clipboard.copy($(this).text(), { "success_alert": true });
+      }
+      return false;
+    })
   };
 
   SS.ajax = function (elem, params) {

@@ -17,7 +17,13 @@
       <td><%= link_to item.name, "#{@item_url}#{item.id}/" %></td>
       <td><%= tryb{item.updated.strftime("%Y年%1m月%1d日 %1H時%1M分")} %></td>
       <td><%= item.format %></td>
-      <td><%= number_to_human_size item.size %></td>
+      <td>
+        <% if item.source_url.present? %>
+          <%= t("opendata.labels.external_link") %>
+        <% else %>
+          <%= number_to_human_size item.size %>
+        <% end %>
+      </td>
     </tr>
     <% end %>
   </tbody>

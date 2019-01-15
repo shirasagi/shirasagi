@@ -1,10 +1,14 @@
 <dl class="see">
-  <% if @item.file %>
-  <dt><%= @model.t :file_id %></dt>
-  <dd>
-    <%= link_to @item.filename, opendata_dataset_resource_file_path(resource_id: @item.id) %>
-    (<%= number_to_human_size @item.size %>)
-  </dd>
+
+  <% if @item.source_url.blank? %>
+    <dt><%= @model.t :file_id %></dt>
+    <dd>
+      <%= link_to @item.filename, opendata_dataset_resource_file_path(resource_id: @item.id) %>
+      (<%= number_to_human_size @item.size %>)
+    </dd>
+  <% else %>
+    <dt><%= @model.t :source_url %></dt>
+    <dd><%= link_to @item.source_url, @item.source_url, target: "_blank" %></dd>
   <% end %>
 
   <dt><%= @model.t :name %></dt>
@@ -28,9 +32,13 @@
   <% end %>
 </dl>
 
+<% if @dataset.harvest_imported.blank? %>
+
 <footer class="send">
   <%= button_tag t("opendata.links.add_resource"), onclick: "location.href='#{url_for(action: :new)}'; return false;", type: :button %>
   <% if @item.tsv_present? %>
   <%= button_tag t("opendata.links.build_rdf"), onclick: "location.href='#{url_for(controller: :csv2rdf_settings, action: :header_size, resource_id: @item)}'; return false;", type: :button %>
   <% end %>
 </footer>
+
+<% end %>

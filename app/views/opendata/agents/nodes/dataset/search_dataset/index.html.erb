@@ -6,6 +6,7 @@
 <% end %>
 
 <%= paginate @items %>
+<%= link_to t("opendata.search_datasets.bluk_download"), "#{@cur_node.url}bulk_download?#{{ ids: @items.pluck(:id) }.to_query}", class: "download-all" %>
 
 <div class="opendata-search-datasets pages">
   <% @items.each do |item| %>
@@ -13,6 +14,12 @@
     <header>
       <time datetime="<%= item.date.to_date %>"><%= I18n.l item.date.to_date, format: :long %></time>
       <h2><%= link_to item.name, item.url %>
+        <% if item.zip_exist? %>
+        <div class="download">
+          <%= link_to(t("opendata.search_datasets.download", size: item.resources.size), search_dataset_download_path(item)) %>
+        </div>
+        <% end %>
+
         <% if item.parent.becomes_with_route.show_point? %>
         <span class="point"><%= item.point.to_i %></span>
         <% end %>

@@ -8,6 +8,7 @@ module Opendata::DatasetSearchable
       params << :tag
       params << :area_id
       params << :category_id
+      params << :estat_category_id
       params << :dataset_group
       params << :dataset_group_id
       params << :format
@@ -25,7 +26,7 @@ module Opendata::DatasetSearchable
     def search(params)
       criteria = self.all
       return criteria if params.blank?
-      [ :search_keyword, :search_ids, :search_name, :search_tag, :search_area_id, :search_category_id,
+      [ :search_keyword, :search_ids, :search_name, :search_tag, :search_area_id, :search_category_id, :search_estat_category_id,
         :search_dataset_group, :search_dataset_group_id, :search_format, :search_license_id, :search_poster ].each do |m|
         criteria = criteria.send(m, params)
       end
@@ -88,6 +89,22 @@ module Opendata::DatasetSearchable
 
       operator = params[:option].presence == 'any_conditions' ? "$or" : "$and"
       all.where(operator => [ category_ids: { "$in" => category_ids } ])
+    end
+
+    def search_estat_category_id(params)
+      return all if params.blank? || params[:estat_category_id].blank?
+
+      estat_category_id = params[:estat_category_id].to_i
+      estat_category_node = Cms::Node.site(params[:site]).and_public.where(id: estat_category_id).first
+      return all if estat_category_node.blank?
+
+      estat_category_ids = [ estat_category_id ]
+      estat_category_node.all_children.and_public.each do |child|
+        estat_category_ids << child.id
+      end
+
+      operator = params[:option].presence == 'any_conditions' ? "$or" : "$and"
+      all.where(operator => [ estat_category_ids: { "$in" => estat_category_ids } ])
     end
 
     def search_dataset_group(params)

@@ -1,0 +1,14 @@
+<% @index_meta = proc do |item| %>
+  <span class="id">#<%= item.id %></span>
+  <span class="datetime"><%= item.updated.strftime("%Y/%m/%d %H:%M") %></span>
+  <span class="filename"><%= File.basename item.filename %></span>
+  <span class="route"><%= t "modules.#{item.route.sub(/\/.*/, '')}" %></span>
+  <span class="state"><%= t "ss.state.#{item.status}" %></span>
+  <span class="tags"><%= item.tags.join(",") %></span>
+
+  <% if item.harvest_imported %>
+    <span class="opendata-harvest"><%= item.harvest_importer ? item.harvest_importer.name : t("opendata.links.deleted") %></span>
+  <% end %>
+<% end %>
+
+<%= render file: "cms/crud/index" %>
