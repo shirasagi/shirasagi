@@ -4,16 +4,16 @@ sort.renderItems(<%== @item.conditions.to_json %>);
 <% end %>
 
 <dl class="see">
-  <dt><%= "分野" %><%= @model.tt :category_id %></dt>
+  <dt><%= t("opendata.labels.category") %><%= @model.tt :category_id %></dt>
   <dd>
     <%= "#{@category.name}（#{@category.filename}）" %>
     <%= f.hidden_field "category_id", value: @category.id %>
   </dd>
 
-  <dt><%= "並び順" %><%= @model.tt :order %></dt>
+  <dt><%= t("opendata.labels.sort") %><%= @model.tt :order %></dt>
   <dd><%= f.number_field :order %></dd>
 
-  <dt>AND条件</dt>
+  <dt><%= t("opendata.labels.and_condition") %></dt>
   <dd>
     <table class="index form-index sortable-index">
       <thead>

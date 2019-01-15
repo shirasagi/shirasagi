@@ -35,7 +35,7 @@ describe Opendata::NotifyDatasetPlanJob, dbscope: :example do
       create(
         :opendata_dataset,
         cur_node: node,
-        update_plan: "年に一回ほど更新します。",
+        update_plan: "update per year",
         update_plan_mail_state: "enabled",
         update_plan_date: Time.zone.today
       )
@@ -44,7 +44,7 @@ describe Opendata::NotifyDatasetPlanJob, dbscope: :example do
       create(
         :opendata_dataset,
         cur_node: node,
-        update_plan: "年に一回ほど更新します。",
+        update_plan: "update per year",
         update_plan_mail_state: "disabled",
         update_plan_date: Time.zone.today
       )
@@ -75,7 +75,7 @@ describe Opendata::NotifyDatasetPlanJob, dbscope: :example do
       create(
         :opendata_dataset,
         cur_node: node,
-        update_plan: "年に一回ほど更新します。",
+        update_plan: "update per year",
         update_plan_mail_state: "enabled",
         update_plan_date: Time.zone.tomorrow
       )

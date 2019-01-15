@@ -7,7 +7,7 @@
   <span class="tags"><%= item.tags.join(",") %></span>
 
   <% if item.harvest_imported %>
-    <span class="opendata-harvest"><%= item.harvest_importer ? item.harvest_importer.name : "削除済み" %></span>
+    <span class="opendata-harvest"><%= item.harvest_importer ? item.harvest_importer.name : t("opendata.links.deleted") %></span>
   <% end %>
 <% end %>
 

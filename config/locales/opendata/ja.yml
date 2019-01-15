@@ -11,6 +11,9 @@ ja:
     tag: タグ
     dataset_group: グループ
     harvest: ハーベスト
+    ckan:
+      group: CKANグループ
+      organization: CKAN組織
     links:
       add_resource: 新しいリソースを追加する
       add_url_resource: 新しいURLを追加する
@@ -27,6 +30,7 @@ ja:
       harvest_destroy_datasets: 関連するデータセットを削除する
       dataset_map_search_datasets: データセットを探す
       dataset_map_datasets_limit: 最大１０件までデータセットを選択できます。
+      deleted: 削除済み
     search_datasets:
       index: データセットを選択する
       search: データセットを検索
@@ -50,6 +54,7 @@ ja:
       started_building_rdf_job: "RDF 変換処理を開始しました。処理結果は「ジョブ実行履歴」で確認してください。"
       start_export: エクスポートを開始しました。
       source_url: "リンクを登録する際にURLを入力してください。ファイルを設定した場合は入力の必要はありません。"
+      resource_preview_error: リソースをプレビューできませんでした。
     export:
       subject: '[オープンデータ/データセット] エクスポートが完了しました。'
       notiry_message: "ダウンロードの準備が完了しました。\n下記のURLからダウンロードしてください。\n\n<a href=%{link}>%{link}</a>"
@@ -100,6 +105,9 @@ ja:
         cannot_connect_fuseki: Fusekiに接続できません。
         import_started: インポート処理を開始しました。
         destroy_started: 削除処理を開始しました。
+        invalid_type: タイプが不正です。
+        invalid_operator: 操作が不正です。
+        invalid_regexp: 正規表現が不正です。
     crawl_state:
       same:
       updated: 更新
@@ -215,6 +223,8 @@ ja:
       list_view: 一覧表示
       map_view: 地図表示
       not_found_dataset: データセットがみつかりません。
+      and_condition: AND条件
+      convert_setting: コンバート設定
     messages:
       max_row_notice: "最大 %{max} 行を表示しています。"
       max_pdf_preview_notice: "最大で%{max}ページ表示しています。"
@@ -222,6 +232,7 @@ ja:
       sent_rdf_success: RDFストアの登録に成功しました。
       require_at_least_two_rows: "2 行以下の CSV ファイルは変換できません。"
       harvest_imported_dataset: "よりインポートされたデータセットです。\n変更を行う場合は対象サイトのデータセットを更新して再インポートしてください。"
+      harvest_import_category_settings: "既存の分野設定を破棄しCSVファイルにて上書きします。"
     sort_options:
       released: 新着順
       popular: 人気順
@@ -265,6 +276,10 @@ ja:
     api_state_options:
       enabled: 有
       disabled: 無
+    harvest_api_options:
+      ckan: "Ckan API"
+      shirasagi_api: "Shirasagi API"
+      shirasagi_scraper: "Shirasagi スクレイピング"
     assoc_job:
       dataset_text: "%{name} の一覧は %{url} でも公開されているので、%{url} もご覧ください。"
       resource_text: "%{name} は %{now} 時点の情報を元に作成しています。"

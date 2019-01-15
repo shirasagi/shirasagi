@@ -10,6 +10,7 @@ ja:
     import: インポート
     import_log: インポートログ
     export: エクスポート
+    export_log: エクスポートログ
     login: ログイン
     logout: ログアウト
     module: モジュール
@@ -27,6 +28,7 @@ ja:
     encoding: 文字コード
     text_zoom: 文字サイズ
     default_here_label: "詳細はこちら⇒"
+    errors: エラー
 
     views:
       login/login:
@@ -140,6 +142,7 @@ ja:
       unload: 入力したデータは保存されません。
       clone: 複製してよろしいですか？
       redirect: 下記のページにアクセスしようとしています。
+      export: エクスポートを開始してよろしいですか？
       import: インポートを開始してよろしいですか？
       download: ダウンロードしてよろしいですか？
       set_tag: タグを設定してよろしいですか？

@@ -2,16 +2,16 @@
   <%= error_messages_for :item %>
 
   <section class="main-box">
-    <header><h2><%= "エクスポート" %></h2></header>
+    <header><h2><%= t("ss.links.export") %></h2></header>
 
     <dl class="see">
-      <dt><%= "エクスポートログ" %></dt>
+      <dt><%= t("ss.export_log") %></dt>
       <dd><%= link_to t("job.log"), job_cms_logs_path, target: "_blank" %></dd>
     </dl>
   </section>
 
   <footer class="send">
-    <%= f.submit "エクスポート", class: :save, onclick: "return confirm('エクスポート処理を開始しますか？')" %>
+    <%= f.submit t("ss.links.export"), class: :save, onclick: "return confirm('#{t("ss.confirm.export")}')" %>
     <%= f.button t("ss.buttons.cancel"), class: 'btn-default', onclick: "location.href='#{url_for(action: :index)}'; return false;" %>
   </footer>
 <% end %>

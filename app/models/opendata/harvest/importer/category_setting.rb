@@ -40,16 +40,16 @@ class ::Opendata::Harvest::Importer::CategorySetting
     self.conditions.each do |cond|
 
       if !type_keys.include?(cond["type"])
-        errors.add :base, "タイプが不正です。"
+        errors.add :base, I18n.t("opendata.errors.messages.invalid_type")
       end
       if !operator_keys.include?(cond["operator"])
-        errors.add :base, "操作が不正です。"
+        errors.add :base, I18n.t("opendata.errors.messages.invalid_operator")
       end
 
       begin
         ::Regexp.new(cond["value"]) if cond["type"] == "regexp"
       rescue => e
-        errors.add :base, "正規表現が不正です。 #{e.message}"
+        errors.add :base, "#{I18n.t("opendata.errors.messages.invalid_regexp")} #{e.message}"
       end
     end
     errors.add :conditions, :empty if conditions.blank?

@@ -1,11 +1,11 @@
 <dl class="see">
-  <dt><%= "カテゴリー" %></dt>
+  <dt><%= t("opendata.labels.category") %></dt>
   <dd><%= "#{@item.category.name}（#{@item.category.filename}）" if @item.category %></dd>
 
-  <dt><%= "並び順" %></dt>
+  <dt><%= t("opendata.labels.sort") %></dt>
   <dd><%= @item.order %></dd>
 
-  <dt>AND条件</dt>
+  <dt><%= t("opendata.labels.and_condition") %></dt>
   <dd>
     <table class="index">
       <tbody>

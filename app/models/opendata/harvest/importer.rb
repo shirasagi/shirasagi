@@ -59,11 +59,7 @@ class Opendata::Harvest::Importer
   end
 
   def api_type_options
-    [
-      ["Ckan API", "ckan"],
-      ["Shirasagi API", "shirasagi_api"],
-      ["Shirasagi スクレイピング", "shirasagi_scraper"],
-    ]
+    I18n.t("opendata.harvest_api_options").map { |k, v| [v, k] }
   end
 
   def state_options
