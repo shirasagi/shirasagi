@@ -165,26 +165,6 @@ categories = [
               </div>
               <% end %>
             </div>
-            <div class="icons">
-              <% if license = rs.license %>
-              <span class="license">
-                <% label = tryb { image_tag license.file.url, alt: license.name } || license.name %>
-                <% if license.related_url.present? %>
-                  <%= link_to label, license.related_url, target: "_blank" %>
-                <% else %>
-                  <%= label %>
-                <% end %>
-              </span>
-              <% end %>
-              <div class="content-wrap"><%= link_to I18n.t("opendata.labels.preview"), rs.content_url, class: "content" if rs.tsv_present? %></div>
-              <div class="download-wrap">
-                <% if controller.preview_path? %>
-                  <%= link_to I18n.t("opendata.labels.downloaded"), rs.file.url, class: "download" %>
-                <% else %>
-                  <%= link_to I18n.t("opendata.labels.downloaded"), rs.url, class: "download" %>
-                <% end %>
-              </div>
-            </div>
           </div>
           <% end %>
 
