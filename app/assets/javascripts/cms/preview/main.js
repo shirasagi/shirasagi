@@ -33,7 +33,8 @@ SS_Preview = (function () {
 
   SS_Preview.instance = null;
 
-  SS_Preview.minFrameSize = { width: 600, height: 240 };
+  SS_Preview.minFrameSize = { width: 320, height: 150 };
+  SS_Preview.initialFrameSize = { width: 780, height: 180 };
 
   SS_Preview.render = function (opts) {
     if (SS_Preview.instance) {
@@ -352,19 +353,20 @@ SS_Preview = (function () {
     });
   };
 
-  SS_Preview.prototype.adjustColorBoxSize = function(frame) {
+  SS_Preview.prototype.adjustDialogSize = function(frame) {
     var width = frame.contentWindow.document.body.scrollWidth;
     var height = frame.contentWindow.document.body.scrollHeight;
 
-    if (width < SS_Preview.minFrameSize.width) {
-      width = SS_Preview.minFrameSize.width;
+    if (width < SS_Preview.initialFrameSize.width) {
+      width = SS_Preview.initialFrameSize.width;
     }
-    if (height < SS_Preview.minFrameSize.height) {
-      height = SS_Preview.minFrameSize.height;
+    if (height < SS_Preview.initialFrameSize.height) {
+      height = SS_Preview.initialFrameSize.height;
     }
 
     var maxWidth = Math.floor(window.innerWidth * 0.9);
     var maxHeight = Math.floor(window.innerHeight * 0.9);
+
     if (width > maxWidth) {
       width = maxWidth;
     }
@@ -372,7 +374,13 @@ SS_Preview = (function () {
       height = maxHeight;
     }
 
-    $.colorbox.resize({ width: width, height: height });
+    if ($(frame).closest("#cboxLoadedContent")[0]) {
+      $.colorbox.resize({ width: width, height: height });
+    }
+
+    if ($(frame).closest(".ui-dialog")[0]) {
+      $(frame).dialog("option", "width", width).dialog("option", "height", height).css("display", "").css("width", "");
+    }
   };
 
   SS_Preview.prototype.initializeFrame = function(frame) {
@@ -382,7 +390,7 @@ SS_Preview = (function () {
       return;
     }
 
-    this.adjustColorBoxSize(frame);
+    this.adjustDialogSize(frame);
 
     var self = this;
     self.saveIfNoAlerts = false;
@@ -392,7 +400,12 @@ SS_Preview = (function () {
       var el = ev.target;
 
       if (el.tagName === "BUTTON" && el.classList.contains("btn-cancel")) {
-        $.colorbox.close();
+        if ($(frame).closest("#cboxLoadedContent")[0]) {
+          $.colorbox.close();
+        }
+        if ($(frame).closest(".ui-dialog")[0]) {
+          $(frame).dialog("close");
+        }
       }
 
       if (el.tagName === "INPUT" && el.name === "save_if_no_alerts") {
@@ -443,7 +456,7 @@ SS_Preview = (function () {
           var $itemForm = $html.find("#item-form");
 
           itemForm.innerHTML = $itemForm.html();
-          self.adjustColorBoxSize(frame);
+          self.adjustDialogSize(frame);
         }
       });
 
@@ -455,27 +468,51 @@ SS_Preview = (function () {
     };
   };
 
+  // SS_Preview.prototype.openDialogInFrame = function(url) {
+  //   var self = this;
+  //
+  //   // open edit form in iframe
+  //   $.colorbox({
+  //     href: url,
+  //     iframe: true,
+  //     fixed: true,
+  //     width: SS_Preview.initialFrameSize.width,
+  //     height: SS_Preview.initialFrameSize.height,
+  //     opacity: 0.15,
+  //     overlayClose: false,
+  //     escKey: false,
+  //     arrowKey: false,
+  //     closeButton: false,
+  //     onComplete: function() {
+  //       var frame = $("#cboxLoadedContent iframe")[0];
+  //       frame.onload = function() {
+  //         self.initializeFrame(frame);
+  //       };
+  //     }
+  //   });
+  // };
   SS_Preview.prototype.openDialogInFrame = function(url) {
     var self = this;
 
-    // open edit form in iframe
-    $.colorbox({
-      href: url,
-      iframe: true,
-      fixed: true,
-      width: SS_Preview.minFrameSize.width,
-      height: SS_Preview.minFrameSize.height,
-      opacity: 0.15,
-      overlayClose: false,
-      escKey: false,
-      arrowKey: false,
-      closeButton: false,
-      onComplete: function() {
-        var frame = $("#cboxLoadedContent iframe")[0];
-        frame.onload = function() {
-          self.initializeFrame(frame);
-        };
-      }
+    var $frame = $("<iframe></iframe>", {
+      id: "ss-preview-column-form", name: "ss-preview-column-form",
+      frameborder: "0", allowfullscreen: true,
+      src: url
+    });
+
+    $frame[0].onload = function() { self.initializeFrame($frame[0]); };
+
+    $frame.dialog({
+      autoOpen: true,
+      width: SS_Preview.initialFrameSize.width,
+      height: SS_Preview.initialFrameSize.height,
+      minWidth: SS_Preview.minFrameSize.width,
+      minHeight: SS_Preview.minFrameSize.height,
+      closeOnEscape: false,
+      dialogClass: "ss-preview-dialog ss-preview-dialog-column",
+      draggable: true,
+      modal: true,
+      resizable: true
     });
   };
 
