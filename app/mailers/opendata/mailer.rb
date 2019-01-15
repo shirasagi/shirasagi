@@ -30,7 +30,7 @@ class Opendata::Mailer < ActionMailer::Base
   end
 
   def notify_dataset_update_plan(site, datasets)
-    @subject = "更新予定のデータセット"
+    @subject = I18n.t("opendata.notify_update_plan.subject")
     @datasets = datasets
     @site = site
 

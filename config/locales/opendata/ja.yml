@@ -56,6 +56,8 @@ ja:
       start_message: "エクスポート処理を開始しました。"
       export_message: "エクスポート処理が完了次第、ログインユーザーのメールアドレスにダウンロードリンクが通知されます。"
       emtpy_email_message: "ログインユーザーにメールアドレスが設定されていません。"
+    notify_update_plan:
+      subject: 更新予定のデータセット
     reports:
       report: レポート
       download_reports: ダウンロード数

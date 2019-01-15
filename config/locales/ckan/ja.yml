@@ -21,14 +21,14 @@ ja:
     parts:
       ckan/status: 件数
       ckan/page: ページリスト
-      ckan/reference: 参照
+      ckan/reference: 参照（ハーベスト）
 
   modules:
     ckan: CKAN
     addons:
       ckan/server: CKAN 新着
       ckan/status: CKAN 件数
-      ckan/reference: 参照
+      ckan/reference: 参照（ハーベスト）
 
   mongoid:
     attributes:
