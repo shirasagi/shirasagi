@@ -137,11 +137,11 @@ categories = [
 
                 <div class="download-wrap">
                   <% if rs.source_url.present? %>
-                    <%= link_to I18n.t("opendata.labels.downloaded"), rs.url, class: "download", target: "_blank" %>
+                    <%= link_to I18n.t("opendata.labels.downloaded"), rs.url, class: "download", "data-url": rs.file.url, target: "_blank" %>
                   <% elsif controller.preview_path? %>
-                    <%= link_to I18n.t("opendata.labels.downloaded"), rs.file.url, class: "download" %>
+                    <%= link_to I18n.t("opendata.labels.downloaded"), rs.file.url, class: "download", "data-url": rs.file.url %>
                   <% else %>
-                    <%= link_to I18n.t("opendata.labels.downloaded"), rs.url, class: "download" %>
+                    <%= link_to I18n.t("opendata.labels.downloaded"), rs.url, class: "download", "data-url": rs.file.url %>
                   <% end %>
                 </div>
 
@@ -198,7 +198,7 @@ categories = [
                   </span>
                 <% end %>
                 <div class="content-wrap"><%= link_to I18n.t("opendata.labels.preview"), urs.content_url, class: "content" if urs.tsv_present? %></div>
-                <div class="download-wrap"><%= link_to I18n.t("opendata.labels.downloaded"), urs.download_url, class: "download" %></div>
+                <div class="download-wrap"><%= link_to I18n.t("opendata.labels.downloaded"), urs.download_url, class: "download", "data-url": urs.file.url %></div>
 
                 <div class="clipboard-wrap">
                   <%= link_to t("opendata.links.copy_url"), urs.url,
