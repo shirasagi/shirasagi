@@ -35,7 +35,7 @@ SS_Preview = (function () {
 
   SS_Preview.minFrameSize = { width: 600, height: 240 };
 
-  SS_Preview.render = function () {
+  SS_Preview.render = function (opts) {
     if (SS_Preview.instance) {
       return;
     }
@@ -47,7 +47,7 @@ SS_Preview = (function () {
       var lazyInitialize = function() {
         countDownLatch -= 1;
         if (countDownLatch === 0) {
-          SS_Preview.instance.initialize();
+          SS_Preview.instance.initialize(opts);
         }
       };
 
@@ -142,7 +142,18 @@ SS_Preview = (function () {
     document.getElementsByTagName("head")[0].appendChild(script);
   };
 
-  SS_Preview.prototype.initialize = function() {
+  SS_Preview.notice = function (message) {
+    if (!SS_Preview.instance) {
+      return;
+    }
+    if (!SS_Preview.instance.notice) {
+      return;
+    }
+
+    SS_Preview.instance.notice.show(message);
+  };
+
+  SS_Preview.prototype.initialize = function(opts) {
     this.$el = $(this.el);
     this.$datePicker = this.$el.find(".ss-preview-date");
     this.$datePicker.datetimepicker({
@@ -190,6 +201,20 @@ SS_Preview = (function () {
 
     this.$el.on("click", ".ss-preview-btn-toggle-inplace", function () {
       self.toggleInplaceMode();
+
+      if (self.inplaceMode) {
+        if (window.history.pushState) {
+          window.history.pushState(null, null, window.location.pathname + "#inplace");
+        } else {
+          window.location.hash = "#inplace";
+        }
+      } else {
+        if (window.history.pushState) {
+          window.history.pushState(null, null, window.location.pathname);
+        } else {
+          window.location.hash = "";
+        }
+      }
     });
 
     $(document).on("click", ".ss-preview-btn-open-path", function () {
@@ -209,6 +234,27 @@ SS_Preview = (function () {
 
     if (SS_Preview.request_path) {
       $('body a [href="#"]').val("onclick", "return false;");
+    }
+
+    if (window.history.pushState) {
+      // history api is available
+      window.addEventListener("popstate", function() {
+        if (window.location.hash === "#inplace") {
+          self.startInplaceMode();
+        } else {
+          self.stopInplaceMode();
+        }
+      });
+    }
+
+    if (window.location.hash === "#inplace") {
+      this.startInplaceMode();
+    }
+
+    // initialize notice;
+    this.notice = new Notice(this);
+    if (opts.notice) {
+      this.notice.show(opts.notice);
     }
   };
 
@@ -316,9 +362,19 @@ SS_Preview = (function () {
         processData: false,
         contentType: false,
         cache: false,
-        success: function(_html) {
+        success: function(data, textStatus, xhr) {
           $.colorbox.close();
-          location.reload();
+          if (typeof data === "string") {
+            // data is html
+            location.reload();
+          } else {
+            // data is json
+            if (data && data.location) {
+              location.href = data.location;
+            } else {
+              location.reload();
+            }
+          }
         },
         error: function(xhr, status, error) {
           var $html = $(xhr.responseText);
@@ -455,17 +511,21 @@ SS_Preview = (function () {
       url: url,
       type: "POST",
       data: { _method: "DELETE", authenticity_token: token },
-      success: function() {
+      success: function(data, textStatus, xhr) {
         self.overlay.hide();
 
-        var $column = $(document).find(".ss-preview-column[data-page-id='" + ids.pageId + "'][data-column-id='" + ids.columnId + "']");
-        $column.fadeOut("fast", function() {
-          $column.remove();
-          // self.showInfo("削除しました。");
-        });
+        if (data && data.location) {
+          location.href = data.location;
+        } else {
+          var $column = $(document).find(".ss-preview-column[data-page-id='" + ids.pageId + "'][data-column-id='" + ids.columnId + "']");
+          $column.fadeOut("fast", function () {
+            $column.remove();
+            self.notice.show("削除しました。");
+          });
+        }
       },
       error: function(xhr, status, error) {
-        alert(error);
+        self.notice.show(error);
       }
     });
   };
@@ -479,11 +539,18 @@ SS_Preview = (function () {
       url: url,
       type: "POST",
       data: { authenticity_token: token },
-      success: function(data) {
-        self.finishColumnMoveUp(ids, data);
+      success: function(data, textStatus, xhr) {
+        self.overlay.hide();
+
+        if (data.location) {
+          location.href = data.location;
+        } else {
+          self.finishColumnMoveUp(ids, data);
+          self.notice.show("移動しました。");
+        }
       },
       error: function(xhr, status, error) {
-        alert(error);
+        self.notice.show(error);
       }
     });
   };
@@ -516,10 +583,17 @@ SS_Preview = (function () {
       type: "POST",
       data: { authenticity_token: token },
       success: function(data) {
-        self.finishColumnMoveDown(ids, data);
+        self.overlay.hide();
+
+        if (data.location) {
+          location.href = data.location;
+        } else {
+          self.finishColumnMoveDown(ids, data);
+          self.notice.show("移動しました。");
+        }
       },
       error: function(xhr, status, error) {
-        alert(error);
+        self.notice.show(error);
       }
     });
   };
@@ -554,9 +628,10 @@ SS_Preview = (function () {
       data: { authenticity_token: token, order: order },
       success: function(data) {
         self.finishColumnMovePosition(ids, order, data);
+        self.notice.show("移動しました。");
       },
       error: function(xhr, status, error) {
-        alert(error);
+        self.notice.show(error);
       }
     });
   };
@@ -675,22 +750,62 @@ SS_Preview = (function () {
   //
 
   SS_Preview.prototype.toggleInplaceMode = function() {
+    if (this.inplaceMode) {
+      this.stopInplaceMode();
+    } else {
+      this.startInplaceMode();
+    }
+  };
+
+  SS_Preview.prototype.startInplaceMode = function() {
     var button = this.$el.find(".ss-preview-btn-toggle-inplace");
 
-    this.inplaceMode = !this.inplaceMode;
-    if (this.inplaceMode) {
-      button.addClass("ss-preview-active");
-      $("#ss-preview-notice").addClass("ss-preview-hide");
-      if (this.formPalette) {
-        this.formPalette.show();
-      }
-    } else {
-      button.removeClass("ss-preview-active");
-      this.overlay.hide();
-      if (this.formPalette) {
-        this.formPalette.hide();
-      }
+    this.inplaceMode = true;
+    button.addClass("ss-preview-active");
+    $("#ss-preview-notice").addClass("ss-preview-hide");
+    if (this.formPalette) {
+      this.formPalette.show();
     }
+
+    $("a[href]").each(function() {
+      var $a = $(this);
+      var href = $a.attr("href");
+      if (!href) {
+        return;
+      }
+      if (!href.startsWith("/")) {
+        return;
+      }
+      if (href.includes("#")) {
+        return;
+      }
+
+      $a.attr("href", href + "#inplace");
+    });
+  };
+
+  SS_Preview.prototype.stopInplaceMode = function() {
+    var button = this.$el.find(".ss-preview-btn-toggle-inplace");
+
+    this.inplaceMode = false;
+    button.removeClass("ss-preview-active");
+    this.overlay.hide();
+    if (this.formPalette) {
+      this.formPalette.hide();
+    }
+
+    $("a[href]").each(function() {
+      var $a = $(this);
+      var href = $a.attr("href");
+      if (!href) {
+        return;
+      }
+      if (!href.startsWith("/")) {
+        return;
+      }
+
+      $a.attr("href", href.replace("#inplace", ""));
+    });
   };
 
   //
@@ -880,7 +995,6 @@ SS_Preview = (function () {
   Overlay.prototype.setInfo = function(info) {
     this.$overlay.data("mode", info.mode);
     this.$overlay.data("id", info.id);
-    this.$overlay.data("id", info.id);
 
     if (info.name) {
       this.$overlay.find(".ss-preview-overlay-name").text(info.name).removeClass("ss-preview-hide");
@@ -978,6 +1092,46 @@ SS_Preview = (function () {
 
     var url = SS_Preview.inplaceFormPath.columnValue.new.replace(":pageId", SS_Preview.item.pageId).replace(":columnId", columnId);
     this.container.openDialogInFrame(url);
+  };
+
+  //
+  // Notice
+  //
+
+  function Notice(container) {
+    this.container = container;
+    this.$el = this.container.$el.find(".ss-preview-notice-wrap");
+    this.timerId = null;
+  }
+
+  Notice.speed = "normal";
+  Notice.holdInMillis = 1800;
+
+  Notice.prototype.show = function(message) {
+    this.hide();
+
+    var self = this;
+    this.$el.html(message).slideDown(Notice.speed, function() {
+      self.noticeShown();
+    });
+  };
+
+  Notice.prototype.hide = function() {
+    if (this.timerId) {
+      clearTimeout(this.timerId);
+      this.timerId = null;
+    }
+
+    this.$el.hide();
+    this.$el.html("");
+  };
+
+  Notice.prototype.noticeShown = function() {
+    var self = this;
+    this.timerId = setTimeout(function () {
+      self.$el.slideUp(Notice.speed);
+      self.timerId = null;
+    }, Notice.holdInMillis);
   };
 
   return SS_Preview;

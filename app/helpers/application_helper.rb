@@ -181,4 +181,22 @@ module ApplicationHelper
 
     content_or_options_with_block
   end
+
+  # factory method for Liquid::Template
+  def parse_liquid(source, options = {})
+    template = Liquid::Template.parse(source, options)
+    template.assigns["parts"] = SS::LiquidPartDrop.get(@cur_site)
+
+    template.registers[:preview] = @preview
+    template.registers[:mobile] = controller.filters.include?(:mobile)
+    template.registers[:cur_site] = @cur_site
+    template.registers[:cur_path] = @cur_path
+    template.registers[:cur_main_path] = @cur_main_path
+    template.registers[:cur_part] = @cur_part if @cur_part
+    template.registers[:cur_node] = @cur_node if @cur_node
+    template.registers[:cur_page] = @cur_page if @cur_page
+    template.registers[:cur_date] = @cur_date if @cur_date
+
+    template
+  end
 end

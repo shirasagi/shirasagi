@@ -86,6 +86,7 @@ ja:
       set_seen: 既読にしました。
       unset_seen: 未読にしました。
       approver_file_droppable: ファイル追加ボタンをクリックするか、ここにファイルをドロップしてください。
+      created_branch_page: 差し替えページを作成しました。
     csv:
       approvers_or_circulations: 承認者・回覧者
     agent_name: "（代理: %{long_name}）"
@@ -160,6 +161,7 @@ ja:
       user_email_blank: "以下のユーザーがメールアドレスを設定していないため、実行されませんでした。実行するには「メールアドレスが未設定でも実行する。」を選択してください。"
       forced_update: "メールアドレスが未設定でも実行する。"
       no_approvers: 承認者がみつかりません。
+      branch_is_already_existed: 差し替えページが作成されています。
 
   tooltip:
     workflow/addon/approver:

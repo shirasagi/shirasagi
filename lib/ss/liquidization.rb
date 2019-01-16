@@ -11,10 +11,10 @@ module SS::Liquidization
       raise "block is required" if args.first.nil? && !block_given?
 
       define_method(export_name.to_s) do
-        if args.first
-          @delegatee.send(args.first)
-        else
+        if block_given?
           @delegatee.instance_exec(@context, &block)
+        else
+          @delegatee.send(args.first)
         end
       end
     end

@@ -1,6 +1,6 @@
 <%= f.fields_for :column_values do |g| %>
   <% if column_values.present? %>
-    <% column_values.order_by(order: 1, id: 1).each do |column_value| %>
+    <% column_values.order_by(order: 1, name: 1).each do |column_value| %>
       <% column = column_value.column %>
       <% next if column.blank? %>
       <%= render file: column.column_form_path, locals: { f: g, column: column, value: column_value, controller: true } %>

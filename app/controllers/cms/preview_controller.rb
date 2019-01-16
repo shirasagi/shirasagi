@@ -9,7 +9,7 @@ class Cms::PreviewController < ApplicationController
 
   before_action :set_controller
   before_action :set_preview_date
-  before_action :intercept_notice
+  before_action :set_preview_notice
   before_action :set_cur_path, only: %i[index]
   before_action :set_form_data, only: %i[form_preview]
   before_action :render_contents
@@ -34,8 +34,8 @@ class Cms::PreviewController < ApplicationController
     @cur_date = params[:preview_date].present? ? params[:preview_date].in_time_zone : Time.zone.now
   end
 
-  def intercept_notice
-    @intercepted_notice = flash["ss.inplace_edit.notice"]
+  def set_preview_notice
+    @preview_notice = flash["cms.preview.notice"]
   end
 
   def set_cur_path

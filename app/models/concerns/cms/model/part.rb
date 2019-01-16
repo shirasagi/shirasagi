@@ -28,7 +28,9 @@ module Cms::Model::Part
           cur_date: context.registers[:cur_date]
         }
         agent = Cms::PartAgent.attach(self, options)
-        resp = agent.render
+        resp = context["parts"].in_render(self) do
+          agent.render
+        end
         resp.body
       end
     end

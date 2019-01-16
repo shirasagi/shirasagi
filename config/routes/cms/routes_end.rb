@@ -187,7 +187,7 @@ SS::Application.routes.draw do
       namespace "opendata_ref" do
         get "datasets:cid" => "datasets#index", as: 'datasets'
       end
-      namespace "preview" do
+      scope "preview(:preview_date)", module: "preview", as: "preview" do
         namespace "inplace_edit" do
           resources :pages, only: %i[edit update] do
             resources :column_values, only: %i[new create edit update destroy] do
