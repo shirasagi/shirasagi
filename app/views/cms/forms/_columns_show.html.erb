@@ -4,7 +4,7 @@
     <% next if column.blank? %>
     <% if column.column_show_path %>
       <%= render file: column.column_show_path, locals: { column: column, value: column_value } %>
-    <% else %>
+    <% elsif column_value.class != Cms::Column::Value::Base && column_value.respond_to?(:value) %>
       <%= render 'cms/agents/columns/main/base', show: true, column: column, value: column_value do %>
         <%= br [ column_value.value.presence ].compact.flatten.join(', ') %>
       <% end %>
