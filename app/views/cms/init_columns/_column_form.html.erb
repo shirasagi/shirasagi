@@ -1,0 +1,12 @@
+<% buf = render(file: "_form", locals: { f: f }) %>
+
+<%
+  addon_options = {}
+  addon_options[:id] = "init-column-#{@model.name.underscore.gsub('/', '-')}"
+  addon_options[:head] = @model.model_name.human
+  addon_options[:toggle] = true
+%>
+
+<%= render "ss/crud/addon", addon: addon_options do %>
+  <%= buf %>
+<% end %>

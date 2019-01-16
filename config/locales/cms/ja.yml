@@ -96,6 +96,7 @@ ja:
       add_crumb: パンくずを追加する
       send_verify_mail: 登録確認メールを送信する
       manage_columns: 入力項目を管理する
+      manage_init_columns: 初期ブロックを管理する
       column_add_list: リストを追加する
     confirm:
       delete_item: 項目を削除してよろしいですか？
@@ -466,6 +467,7 @@ ja:
       cms/loop_setting: ループHTML
       cms/command: コマンド
       cms/form: 定型フォーム
+      cms/init_column: 初期ブロック
       cms/column/base: 入力項目
       cms/column/text_field: 一行入力
       cms/column/date_field: 日付入力
@@ -747,11 +749,15 @@ ja:
         name: 名前
         order: 並び順
         column_ids: 入力項目
+        init_column_ids: 初期ブロック
         sub_type: 目的
       cms/addon/form/node:
         st_form_ids: 定型フォーム設定
       cms/addon/form/page:
         form_id: 定型フォーム
+      cms/init_column:
+        name: 名前
+        order: 並び順
       cms/column/base:
         route: 属性
         name: 名前
@@ -1720,6 +1726,10 @@ ja:
     cms/addon/form/page:
       form_id:
         - 定型フォームを設定します。
+    cms/init_column:
+      order:
+        - 表示順を入力します。
+        - 数字が小さいほど上位に表示されます。
     cms/column/base:
       name:
         - 入力項目名を入力します。

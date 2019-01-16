@@ -1,0 +1,12 @@
+<% addons = @item ? @item.class.addons : [] %>
+
+<div class="addon-views">
+  <%
+    addon_options = {}
+    addon_options[:id] = "addon-basic"
+    addon_options[:head] = t("ss.basic_info") if addons.size > 0
+  %>
+  <%= render "ss/crud/addon", addon: addon_options do %>
+    <%= render file: "_show" %>
+  <% end %>
+</div>

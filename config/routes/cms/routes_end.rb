@@ -102,6 +102,7 @@ SS::Application.routes.draw do
     resources :source_cleaner_templates, concerns: [:deletion, :template]
     resources :word_dictionaries, concerns: [:deletion, :template]
     resources :forms, concerns: [:deletion] do
+      resources :init_columns, concerns: [:deletion]
       resources :columns, concerns: [:deletion], except: [:new, :create]
       resources :columns, path: 'columns/:type', only: [:new, :create], as: 'columns_type'
     end

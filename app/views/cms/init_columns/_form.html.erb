@@ -1,0 +1,11 @@
+<dl class="see">
+  <dt><%= @column.t :route %></dt>
+  <dd><%= @column.class.model_name.human %></dd>
+
+  <dt><%= @column.t :name %></dt>
+  <dd><%= @column.name %></dd>
+
+  <dt><%= @model.t :order %><%= @model.tt :order %></dt>
+  <dd><%= f.number_field :order %></dd>
+  <%= f.hidden_field :column_id, value: @column.id %>
+</dl>

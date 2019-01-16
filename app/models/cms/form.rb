@@ -16,6 +16,7 @@ class Cms::Form
   field :state, type: String
   field :sub_type, type: String
   has_many :columns, class_name: 'Cms::Column::Base', dependent: :destroy, inverse_of: :form
+  has_many :init_columns, class_name: 'Cms::InitColumn', dependent: :destroy, inverse_of: :form
 
   attr_accessor :cur_user
 
