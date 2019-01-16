@@ -17,6 +17,16 @@
             <%= file.name %>
           </label><br />
         </div>
+        <div>
+          <% case column.file_type %>
+          <% when "image" %>
+            <label><%= Cms::Column::Value::FileUpload.t(:image_text) %>: <%= value.try(:image_text) %></label>
+          <% when "video" %>
+            <label><%= Cms::Column::Value::FileUpload.t(:video_description) %>: <%= value.try(:video_description) %></label>
+          <% when "banner" %>
+            <label><%= Cms::Column::Value::FileUpload.t(:banner_link) %>: <%= value.try(:banner_link) %></label>
+          <% end %>
+        </div>
       </div>
     </div>
   <% end %>

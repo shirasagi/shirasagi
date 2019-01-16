@@ -25,5 +25,5 @@
     <% end %>
   </div>
 
-  <%= text_field_tag("#{f.object_name}[][in_wrap][label]", value.try(:label), column.form_options(:label).merge(id: nil)) %>
+  <%= render "cms/agents/columns/file_upload/column_form_#{column.file_type}", f: f, column: column, value: value %>
 <% end %>

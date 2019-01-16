@@ -3,15 +3,24 @@ class Cms::Column::Value::FileUpload < Cms::Column::Value::Base
   field :html_additional_attr, type: String, default: ''
   belongs_to :file, class_name: 'SS::File'
   field :label, type: String
+  field :image_text, type: String
+  field :video_description, type: String
+  field :attachment_text, type: String
+  field :banner_link, type: String
+  field :banner_text, type: String
 
-  permit_values :file_id, :label
+  permit_values :file_id, :label, :image_text, :video_description, :attachment_text, :banner_link, :banner_text
 
   before_save :before_save_file
   after_destroy :delete_file
 
   liquidize do
     export :file
-    export :label
+    export :image_text
+    export :video_description
+    export :attachment_text
+    export :banner_link
+    export :banner_text
   end
 
   def value
@@ -46,6 +55,12 @@ class Cms::Column::Value::FileUpload < Cms::Column::Value::Base
 
     if column.required? && file.blank?
       self.errors.add(:file_id, :blank)
+    end
+
+    if column.file_type == 'banner'
+      if banner_link.blank?
+        self.errors.add(:banner_link, :blank)
+      end
     end
 
     return if file.blank?
@@ -111,28 +126,24 @@ class Cms::Column::Value::FileUpload < Cms::Column::Value::Base
   # override Cms::Column::Value::Base#to_default_html
   def to_default_html
     return '' if file.blank?
-
-    options = html_additional_attr_to_h
-    case html_tag
-    when 'a+img'
-      outer_options = options.dup
-      outer_options['class'] = [ options['class'] ].flatten.compact
-      outer_options['class'] << file_icon
-      ApplicationController.helpers.link_to(file.url, outer_options) do
-        options['alt'] ||= file.name
-        options['title'] ||= file.basename
-        ApplicationController.helpers.image_tag(file.thumb_url, options)
+    case column.file_type
+    when 'image'
+      ApplicationController.helpers.link_to(file.url) do
+        ApplicationController.helpers.image_tag(file.url, alt: image_text)
       end
-    when 'a'
-      options['class'] = [ options['class'] ].flatten.compact
-      options['class'] << file_icon
-      ApplicationController.helpers.link_to(label.presence || file.humanized_name, file.url, options)
-    when 'img'
-      options['alt'] ||= file.name
-      options['title'] ||= file.basename
-      ApplicationController.helpers.image_tag(file.url, options)
-    else
-      ApplicationController.helpers.sanitize(file.humanized_name)
+    when 'video'
+      div_content = []
+      div_content << ApplicationController.helpers.video_tag(file.url, controls: 'controls')
+      div_content << ApplicationController.helpers.content_tag(:div, video_description)
+      ApplicationController.helpers.content_tag(:div) do
+        div_content.join.html_safe
+      end
+    when 'attachment'
+      ApplicationController.helpers.link_to((attachment_text || file.extname), file.url)
+    when 'banner'
+      ApplicationController.helpers.link_to(banner_link) do
+        ApplicationController.helpers.image_tag(file.url, alt: banner_text)
+      end
     end
   end
 end

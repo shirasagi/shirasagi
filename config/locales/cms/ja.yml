@@ -69,6 +69,11 @@ ja:
     column_value_error_template: "%{name}の%{error}"
     draft_page: 下書きページ
     inplace_edit: ダイレクト編集モード
+    column_file_upload:
+      image_text_place_holder: 代替えテキストを入力してください。
+      video_description_place_holder: 動画の内容を説明する文書を入力してください。
+      attachment_text_place_holder: リンクテキストとして表示するファイル名を入力してください。
+      banner_link_place_holder: URLを入力してください。
 
     adobe_reader:
       remark:
@@ -229,6 +234,11 @@ ja:
       column_list_type:
         ol: 番号付きリスト
         ul: 番号なしリスト
+      column_file_type:
+        image: 画像
+        video: 動画
+        attachment: 添付ファイル
+        banner: バナー
       max_name_length:
         '80': 80文字
         '0': 無制限
@@ -786,6 +796,7 @@ ja:
         label: リンクテキスト
         max_length: 最大長
         place_holder: プレースホルダー
+        file_type: ファイルタイプ
       cms/column/list:
         list_type: 種類
       cms/column/value/check_box:
@@ -799,6 +810,10 @@ ja:
         html_additional_attr: HTML追加属性
         file_id: ファイル
         label: リンクテキスト
+        image_text: 代替えテキスト
+        video_description: 動画の内容
+        attachment_text: リンクテキスト
+        banner_link: URL
       cms/column/value/radio_button:
         value: 選択肢
       cms/column/value/select:
