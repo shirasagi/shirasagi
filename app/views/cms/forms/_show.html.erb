@@ -39,4 +39,34 @@
     </table>
     <% end %>
   </dd>
+
+  <dt><%= @model.t :init_column_ids %></dt>
+  <dd><%= link_to(t('cms.buttons.manage_init_columns'), cms_form_init_columns_path(form_id: @item), class: :btn) %></dd>
+  <dd>
+    <% if @item.init_columns.present? %>
+    <table class="index">
+      <thead>
+      <tr>
+        <th class="order"><%= Cms::Column::Base.t :order %></th>
+        <th class="name"><%= Cms::Column::Base.t :name %></th>
+        <th class="name"><%= Cms::Column::Base.t :route %></th>
+        <th class="required"><%= Cms::Column::Base.t :required %></th>
+        <th class="datetime"><%= Cms::Column::Base.t :updated %></th>
+      </tr>
+      </thead>
+      <tbody>
+      <% @item.init_columns.order_by(order: 1).each do |init_column| %>
+        <% column = init_column.column || Cms::Column::Base.new %>
+        <tr data-id="<%= init_column.id %>">
+          <td><%= init_column.order %></td>
+          <td><%= column.name %> </td>
+          <td><%= column.class.model_name.human %> </td>
+          <td><%= column.label :required %></td>
+          <td><%= I18n.l(init_column.updated) %></td>
+        </tr>
+      <% end %>
+      </tbody>
+    </table>
+    <% end %>
+  </dd>
 </dl>
