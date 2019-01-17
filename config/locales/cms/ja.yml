@@ -70,6 +70,11 @@ ja:
     draft_page: 下書きページ
     inplace_edit: 編集モード
     preview_date: プレビュー日時
+    column_file_upload:
+      image_text_place_holder: 代替えテキストを入力してください。
+      video_description_place_holder: 動画の内容を説明する文書を入力してください。
+      attachment_text_place_holder: リンクテキストとして表示するファイル名を入力してください。
+      banner_link_place_holder: URLを入力してください。
 
     adobe_reader:
       remark:
