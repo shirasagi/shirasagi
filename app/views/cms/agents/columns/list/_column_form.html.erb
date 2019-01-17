@@ -14,7 +14,6 @@ function reorder() {
 $(".addList").on("click", function() {
   var list = $("#column-value-list-<%= list_name %>");
   var li = $("#add-li-<%= list_name%>").find('li').clone();
-  console.log(li);
   list.append(li);
   reorder();
 })
@@ -25,6 +24,25 @@ $("#column-value-list-<%= list_name %>").on("click", ".deleteList", function() {
   parent.remove();
   reorder();
 })
+
+<% if @inplace_syntax_check %>
+Cms_Inplace_Form.resolveType = "textlist";
+Cms_Inplace_Form.getContent = function () {
+  var values = {};
+  var key = 1;
+  $('<%= "#column-value-list-#{list_name}" %> [name="item[column_values][][in_wrap][lists][][text]"').each(function () {
+    values[key] = $(this).val();
+    key += 1;
+  });
+  return values;
+};
+Cms_Inplace_Form.setContent = function (content, opts) {
+  key = opts["listkey"] - 1;
+  ele = $('<%= "#column-value-list-#{list_name}" %> [name="item[column_values][][in_wrap][lists][][text]"')[key]
+  $(ele).val(content);
+};
+<% end %>
+
 <% end %>
 
 <% value ||= nil %>
@@ -42,5 +60,11 @@ $("#column-value-list-<%= list_name %>").on("click", ".deleteList", function() {
       <%= render 'cms/agents/columns/list/column_form_ul', f: f, column: column, order: 1, text: '' %>
     <% end %>
   <% end %>
-  <%= button_tag t("cms.buttons.column_add_list"), class: "btn addList", type: 'button' %>
+
+  <div class="inplace-checkers">
+    <%= button_tag t("cms.buttons.column_add_list"), class: "btn addList", type: 'button' %>
+    <% if @inplace_syntax_check%>
+      <%= button_tag t("cms.syntax_check"), { type: :button, class: "btn syntax-check" } %>
+    <% end %>
+  </div>
 <% end %>

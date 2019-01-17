@@ -17,4 +17,8 @@ class Cms::Column::TextField < Cms::Column::Base
     options['type'] = input_type
     options
   end
+
+  def syntax_check_enabled?
+    true
+  end
 end

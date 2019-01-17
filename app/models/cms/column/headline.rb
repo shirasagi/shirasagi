@@ -18,4 +18,8 @@ class Cms::Column::Headline < Cms::Column::Base
       super()
     end
   end
+
+  def syntax_check_enabled?
+    true
+  end
 end

@@ -1,6 +1,25 @@
 <% value ||= nil %>
 <% controller ||= false %>
+<% name = "#{f.object_name}[][in_wrap][text]" %>
+
+<% if @inplace_syntax_check %>
+<%= javascript_tag do %>
+Cms_Inplace_Form.getContent = function () {
+  return $('[name="<%= name %>"]').val();
+};
+Cms_Inplace_Form.setContent = function (content) {
+  $('[name="<%= name %>"]').val(content);
+};
+<% end %>
+<% end %>
+
 <%= render 'cms/agents/columns/main/base', f: f, column: column, value: value, controller: controller do %>
   <%= select_tag("#{f.object_name}[][in_wrap][head]", options_for_select(column.headline_list.invert, value.try(:head)), column.form_options(:head).merge(id: nil, style: "width: 10%;")) %>
-  <%= text_field_tag("#{f.object_name}[][in_wrap][text]", value.try(:text), column.form_options(:text).merge(id: nil, style: "width: 70%;")) %>
+  <%= text_field_tag(name, value.try(:text), column.form_options(:text).merge(id: nil, style: "width: 70%;")) %>
+
+  <% if @inplace_syntax_check %>
+    <div class="inplace-checkers">
+      <%= button_tag t("cms.syntax_check"), { type: :button, class: "btn syntax-check" } %>
+    </div>
+  <% end %>
 <% end %>

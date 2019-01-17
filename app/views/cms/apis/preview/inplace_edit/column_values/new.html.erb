@@ -1,6 +1,25 @@
+<%
+  replace_words_conf = Cms::WordDictionary.site(@cur_site).to_config
+
+  @inplace_syntax_check = @cur_column.syntax_check_enabled?
+  @inplace_syntax_check = @cur_site.syntax_check_enabled? if @inplace_syntax_check
+  @inplace_syntax_check = @cur_node.syntax_check_enabled? if @inplace_syntax_check && @cur_node
+  @inplace_syntax_check = @item.parent.syntax_check_enabled? if @inplace_syntax_check && @item.try(:parent)
+%>
+<%= jquery do %>
+
+<% if replace_words_conf[:replace_words].present? %>
+Syntax_Checker.config = <%= raw replace_words_conf.to_json %>
+<% end %>
+
+<% if @inplace_syntax_check %>
+Cms_Inplace_Form.render();
+<% end %>
+
+<% end %>
+
 <%= form_for :item, url: { action: :create }, html: { id: "item-form", multipart: true, autocomplete: :off } do |f| %>
   <%= error_messages_for :item %>
-  <%= render "cms/apis/preview/inplace_edit/main/accessibility_errors" %>
   <%= render "cms/apis/preview/inplace_edit/main/link_errors" %>
 
   <%= hidden_field_tag :_updated, params[:_updated] || @item.updated if @item.respond_to?(:updated) %>
@@ -18,7 +37,10 @@
       end
     %>
     <%= f.submit labels[0], name: "save_if_no_alerts", class: 'btn-primary save' %>
-    <%= f.submit labels[1], name: "ignore_alerts_and_save", class: 'btn-default' %>
+    <% if @inplace_syntax_check %>
+      <%= f.submit labels[1], name: "ignore_alerts_and_save", class: 'btn-default' %>
+    <% end %>
+
     <%= f.button t("ss.buttons.close"), name: "cancel", class: 'btn-default btn-cancel', type: :reset %>
   </footer>
 <% end %>

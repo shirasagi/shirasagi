@@ -51,7 +51,7 @@
 
     <% if source_cleaner_conf[:source_cleaner].present? %>
       Cms_Source_Cleaner.config = <%= raw source_cleaner_conf.to_json %>
-      Cms_Source_Cleaner.render();
+      Cms_Source_Cleaner.render(".source-cleaner");
     <% end %>
 
   <% end %>

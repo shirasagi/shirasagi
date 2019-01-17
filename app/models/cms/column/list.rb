@@ -11,4 +11,8 @@ class Cms::Column::List < Cms::Column::Base
       [ I18n.t("cms.options.column_list_type.#{v}"), v ]
     end
   end
+
+  def syntax_check_enabled?
+    true
+  end
 end

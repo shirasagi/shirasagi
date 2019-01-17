@@ -108,6 +108,10 @@ module SS::Model::Column
     raise NotImplementedError
   end
 
+  def syntax_check_enabled?
+    false
+  end
+
   private
 
   def set_form_id

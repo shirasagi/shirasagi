@@ -4,7 +4,6 @@
 %>
 
 <%= form_for :item, url: { action: :update }, html: { id: "item-form", method: :put, multipart: true, autocomplete: :off } do |f| %>
-  <%= render "cms/apis/preview/inplace_edit/main/accessibility_errors" %>
   <%= render "cms/apis/preview/inplace_edit/main/link_errors" %>
 
   <%= hidden_field_tag :_updated, params[:_updated] || @item.updated if @item.respond_to?(:updated) %>

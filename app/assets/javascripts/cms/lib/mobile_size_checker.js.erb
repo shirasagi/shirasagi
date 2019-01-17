@@ -1,0 +1,255 @@
+this.Mobile_Size_Checker = (function () {
+  function ResultBox() {
+    this.$el = null;
+    this.$elBody = null;
+  }
+
+  ResultBox.prototype.init = function() {
+    if (this.$el) {
+      return this;
+    }
+
+    var $div = $("#errorMobileChecker");
+    if ($div[0]) {
+      this.$el = $div;
+      this.$elBody = $div.find(".errorExplanationBody");
+
+      return this.moveLast();
+    }
+
+    $div = $("<div/>", { id: 'errorMobileChecker', class: 'errorExplanation' });
+    $div.append("<h2>" + Mobile_Size_Checker.message["header"] + "</h2>");
+
+    var $body = $("<div/>", { class: 'errorExplanationBody' });
+    $div.append($body);
+
+    this.$el = $div;
+    this.$elBody = $body;
+
+    return this.moveLast();
+  };
+
+  ResultBox.prototype.moveLast = function() {
+    $(Cms_Form.addonSelector).append(this.$el);
+    return this;
+  };
+
+  ResultBox.prototype.showMessage = function(message) {
+    this.init();
+    this.$elBody.html(message);
+    this.moveLast();
+
+    return this;
+  }
+
+  ResultBox.prototype.showChecking = function() {
+    return this.showMessage(SS.loading);
+  };
+
+  ResultBox.prototype.showResult = function () {
+    if (Mobile_Size_Checker.error.length === 0) {
+      return this.showMessage("<p>" + Mobile_Size_Checker.message["mobile_check"] + "</p>");
+    }
+
+    var ref = Mobile_Size_Checker.error;
+    this.$elBody.html('');
+    for (var j = 0, len = ref.length; j < len; j++) {
+      var err = ref[j];
+      this.$elBody.append('<p class="error">' + err + '</p>');
+    }
+
+    return this.moveLast();
+  };
+
+  function Mobile_Size_Checker() {
+  }
+
+  Mobile_Size_Checker.message = {
+    header: "<%= I18n.t('cms.mobile_size_check') %>",
+    body: "",
+    success: "<%= I18n.t('errors.messages.mobile_size_check_success') %>",
+    failure: "<%= I18n.t('errors.messages.mobile_size_check_failure') %>",
+    mobile_disable: "<%= I18n.t('errors.messages.mobile_size_check_disable') %>",
+    mobile_check: "<%= I18n.t('errors.messages.mobile_size_check_size') %>",
+    SizeCheckServerError: "<%= I18n.t('errors.messages.mobile_size_check_server_error') %>"
+  };
+
+  Mobile_Size_Checker.error = [];
+
+  Mobile_Size_Checker.url = "/.cms/mobile_size_check/check.json";
+
+  Mobile_Size_Checker.rootUrl = "";
+
+  Mobile_Size_Checker.imgs = [];
+
+  Mobile_Size_Checker.hostFullUrl = "";
+
+  Mobile_Size_Checker.resultBox = new ResultBox();
+
+  Mobile_Size_Checker.render = function () {
+    return $(document).on("click", "button.mobile-size-check", function () {
+
+      if (!Mobile_Size_Checker.enabled) {
+        Mobile_Size_Checker.resultBox.showMessage("<p>" + Mobile_Size_Checker.message["mobile_disable"] + "</p>");
+        return;
+      }
+
+      var button = this;
+      button.disabled = true;
+
+      Mobile_Size_Checker.resultBox.showChecking();
+      Mobile_Size_Checker.reset();
+
+      var resolved = function(html) {
+        Mobile_Size_Checker.check(html, true, function () {
+          Mobile_Size_Checker.resultBox.showResult();
+          button.disabled = false;
+        });
+      };
+
+      var rejected = function(xhr, status, error) {
+        Mobile_Size_Checker.resultBox.showMessage("<p>" + Mobile_Size_Checker.message["SizeCheckServerError"] + "</p>");
+        button.disabled = false;
+      }
+
+      Cms_Form.getHtml(resolved, rejected);
+    });
+  };
+
+  Mobile_Size_Checker.reset = function () {
+    this.message["body"] = "";
+    this.imgs = {};
+    this.error = "";
+  };
+
+  Mobile_Size_Checker.get_str_byte = function (str) {
+    var ESCAPECHAR, ESCAPEDLEN_TABLE, char, i, size;
+    ESCAPECHAR = ";,/?:@&=+$ ";
+    ESCAPEDLEN_TABLE = [0, 1, 1, 1, 2, 3, 2, 3, 4, 3];
+    size = 0;
+    if (str === null || str === "") {
+      return size;
+    }
+    for (i in str) {
+      char = str[i];
+      if (ESCAPECHAR.indexOf(char) >= 0) {
+        size++;
+      } else {
+        size += ESCAPEDLEN_TABLE[encodeURI(char).length];
+      }
+    }
+    return size;
+  };
+
+  Mobile_Size_Checker.check = function (html, async, complete) {
+    var err_str, imgs, isThumb, j, len, mobile_size, numOfImage, ref, size, src, str_id, str_src;
+    mobile_size = Mobile_Size_Checker.mobile_size;
+    size = Mobile_Size_Checker.get_str_byte(html);
+    if (mobile_size < size) {
+      err_str = "<p class=\"error\">";
+      err_str += Mobile_Size_Checker.message["SizeCheckError"];
+      err_str += "(本文サイズ：" + (parseInt(size / 1024)) + "KB";
+      err_str += "</p>";
+      Mobile_Size_Checker.error = [err_str];
+      complete();
+      return;
+    }
+    numOfImage = $(html).find('img').length;
+    if (numOfImage === 0) {
+      complete();
+      return;
+    }
+    imgs = [];
+    isThumb = {};
+    ref = $(html).find('img[src]');
+    for (j = 0, len = ref.length; j < len; j++) {
+      src = ref[j];
+      str_src = $(src).attr('src');
+      str_src = str_src.replace(Mobile_Size_Checker.hostFullUrl.replace(/\/$/, ""), "");
+      str_id = str_src.match(/^\/fs\/(.+?)\/_\//);
+      isThumb[str_id[1].replace(/\//g, "")] = str_src.match(/_\/thumb\//);
+      imgs.push(parseInt(str_id[1].replace(/\//g, "")));
+    }
+    $.ajax({
+      type: "POST",
+      url: Mobile_Size_Checker.url,
+      cache: false,
+      data: JSON.stringify({
+        img_ids: imgs,
+        mobile_size: mobile_size,
+        is_thumb: isThumb
+      }),
+      contentType: 'application/json',
+      dataType: "json",
+      crossDomain: true,
+      async: async,
+      success: function (res, status) {
+        if (res["errors"].length > 0) {
+          return Mobile_Size_Checker.error = res["errors"];
+        }
+      },
+      error: function (xhr, status, error) {
+        var str_err;
+        str_err = "<p>";
+        str_err += Mobile_Size_Checker.message["SizeCheckServerError"];
+        str_err += "</p>";
+        Mobile_Size_Checker.error = [str_err];
+      },
+      complete: function (xhr, status) {
+        complete();
+      }
+    });
+  };
+
+  Mobile_Size_Checker.checkHtmlSize = function (html) {
+    Mobile_Size_Checker.reset();
+    if (Mobile_Size_Checker.enabled) {
+      return Mobile_Size_Checker.check(html, false, function () {
+        var err, errors, j, len, ref, result;
+        if (Mobile_Size_Checker.error.length > 0) {
+          result = Mobile_Size_Checker.result_open();
+          errors = [];
+          ref = Mobile_Size_Checker.error;
+          for (j = 0, len = ref.length; j < len; j++) {
+            err = ref[j];
+            errors.push({
+              code: "",
+              msg: err,
+              detail: err
+            });
+            result.append('<p class="error">' + err + '</p>');
+          }
+          Syntax_Checker.pushError(errors);
+          return Mobile_Size_Checker.result_close(result);
+        }
+      });
+    }
+  };
+
+  Mobile_Size_Checker.validateHtml = function (form, submit, opts) {
+    var count = Syntax_Checker.errorCount;
+    if (Mobile_Size_Checker.checkHtmlSize(opts.html)) {
+      return;
+    }
+    if (!Syntax_Checker.errors[count]) {
+      return;
+    }
+
+    var error, i, j, len, ref, results;
+    ref = Syntax_Checker.errors[count];
+    results = [];
+    for (i = j = 0, len = ref.length; j < len; i = ++j) {
+      error = ref[i];
+      if (error["correct"] && Syntax_Checker.autoCorrect) {
+        results.push(Form_Alert.add("<%= I18n.t('cms.auto_correct.notice') %>", this, error["msg"]));
+      } else {
+        results.push(Form_Alert.add("<%= I18n.t('cms.mobile_size_check') %>", this, error["msg"]));
+      }
+    }
+
+    return results;
+  };
+
+  return Mobile_Size_Checker;
+
+})();

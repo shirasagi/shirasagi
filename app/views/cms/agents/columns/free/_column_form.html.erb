@@ -1,14 +1,35 @@
 <% value ||= nil %>
 <% controller ||= false %>
+<% editor_id = "inplace-free" %>
 <% source_cleaner_conf = Cms::SourceCleanerTemplate.site(@cur_site).and_public.to_config %>
-<%= render 'cms/agents/columns/main/base', f: f, column: column, value: value, controller: controller do %>
-  <%= text_area_tag("#{f.object_name}[][in_wrap][value]", value.try(:value), column.form_options.merge(id: nil, class: "html", style: "height: 400px;")) %>
-  <%= html_editor ".column-value-body .html", advanced: Cms::EditorExtension.allowed?(:use, @cur_user, site: @cur_site) %>
-  <%= button_tag t("cms.source_cleaner"), { type: :button, class: "btn source-cleaner" } if source_cleaner_conf[:source_cleaner].present? %>
-<% end %>
+
 <%= jquery do %>
-  <% if source_cleaner_conf[:source_cleaner].present? %>
-    Cms_Source_Cleaner.config = <%= raw source_cleaner_conf.to_json %>
-    Cms_Source_Cleaner.render();
-  <% end %>
+
+<% if source_cleaner_conf[:source_cleaner].present? %>
+  Cms_Source_Cleaner.config = <%= raw source_cleaner_conf.to_json %>
+  Cms_Source_Cleaner.render(".source-cleaner", { id: "<%= editor_id %>" });
+<% end %>
+
+<% if @inplace_syntax_check %>
+Cms_Inplace_Form.resolveType = "html";
+Cms_Inplace_Form.getContent = function () {
+  return Cms_Form.getEditorHtml("<%= editor_id %>");
+};
+Cms_Inplace_Form.setContent = function (content) {
+  Cms_Form.setEditorHtml(content, { id: "<%= editor_id %>" });
+};
+<% end %>
+
+<% end %>
+
+<%= render 'cms/agents/columns/main/base', f: f, column: column, value: value, controller: controller do %>
+  <%= text_area_tag("#{f.object_name}[][in_wrap][value]", value.try(:value), column.form_options.merge(id: editor_id, class: "html", style: "height: 400px;")) %>
+  <%= html_editor ".column-value-body .html", advanced: Cms::EditorExtension.allowed?(:use, @cur_user, site: @cur_site) %>
+
+  <div class="inplace-checkers">
+    <% if @inplace_syntax_check %>
+      <%= button_tag t("cms.syntax_check"), { type: :button, class: "btn syntax-check" } %>
+    <% end %>
+    <%= button_tag t("cms.source_cleaner"), { type: :button, class: "btn source-cleaner" } if source_cleaner_conf[:source_cleaner].present? %>
+  </div>
 <% end %>

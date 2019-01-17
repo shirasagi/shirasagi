@@ -1,0 +1,176 @@
+this.Cms_Inplace_Form = (function () {
+  function Cms_Inplace_Form() {
+  }
+
+  Cms_Inplace_Form.render = function () {
+    Syntax_Checker.render(Cms_Inplace_Form);
+    Inplace_Form_Alert.addValidation(Cms_Inplace_Form.validateContent);
+    if (Syntax_Checker.autoCorrect) {
+      Inplace_Form_Alert.addBeforeSave(Syntax_Checker.correctAll);
+    }
+    Inplace_Form_Alert.render();
+  };
+
+  Cms_Inplace_Form.addonSelector = ".inplace-checkers";
+  Cms_Inplace_Form.resolveType = "text";
+
+  Cms_Inplace_Form.getContent = function () {
+    return null;
+  };
+
+  Cms_Inplace_Form.setContent = function () {
+    return null;
+  };
+
+  Cms_Inplace_Form.getHtml = function (resolved, reject) {
+    resolved(Cms_Inplace_Form.getContent(), Cms_Inplace_Form.resolveType);
+  };
+
+  Cms_Inplace_Form.setEditorHtml = function (content, opts) {
+    opts = opts || {}
+    Cms_Inplace_Form.setContent(content, opts);
+  };
+
+  Cms_Inplace_Form.validateContent = function (form, submit, opts) {
+    if (Cms_Inplace_Form.resolveType == "html") {
+      Syntax_Checker.validateHtml(form, submit, opts)
+    }
+    else {
+      Syntax_Checker.validateText(form, submit, opts)
+    }
+  };
+
+  return Cms_Inplace_Form;
+
+})();
+
+this.Inplace_Form_Alert = (function () {
+  function Inplace_Form_Alert() {
+  }
+
+  Cms_Inplace_Form.alert = Inplace_Form_Alert;
+
+  Inplace_Form_Alert.alerts = {};
+
+  Inplace_Form_Alert.validations = [];
+
+  Inplace_Form_Alert.beforeSaves = [];
+
+  Inplace_Form_Alert.render = function () {
+    $('input:submit[name="save_if_no_alerts"]').on("click.form_alert", function (ev) {
+      var submit = this;
+      var form = $(submit).closest("form");
+
+      var resolved = function(content, type) {
+        type = type || "html";
+
+        if (!Inplace_Form_Alert.validate(form, submit, { content: content, type: type })) {
+          Inplace_Form_Alert.showAlert(form, submit);
+          return false;
+        }
+
+        $(submit).off(".form_alert");
+        $(submit).trigger("click");
+      };
+
+      var rejected = function(xhr, status, error) {
+        alert(error);
+      };
+
+      Cms_Inplace_Form.getHtml(resolved, rejected);
+
+      ev.preventDefault();
+      return false;
+    });
+  };
+
+  Inplace_Form_Alert.validate = function (form, submit, opts) {
+    var type;
+
+    Inplace_Form_Alert.alerts = {};
+
+    type = opts["type"];
+    if (type == "textlist") {
+      $.each(Inplace_Form_Alert.validations, function () {
+        for ( var key in opts["content"] ) {
+          opts["html"] = opts["content"][key];
+          this(form, submit, opts);
+        }
+      });
+    }
+    else {
+      opts["html"] = opts["content"];
+      $.each(Inplace_Form_Alert.validations, function () {
+        this(form, submit, opts);
+      });
+    }
+
+    return $.isEmptyObject(Inplace_Form_Alert.alerts);
+  };
+
+  Inplace_Form_Alert.addValidation = function (validate) {
+    return Inplace_Form_Alert.validations.push(validate);
+  };
+
+  Inplace_Form_Alert.runBeforeSave = function (form, submit) {
+    return $.each(Inplace_Form_Alert.beforeSaves, function () {
+      return this(form, submit);
+    });
+  };
+
+  Inplace_Form_Alert.showAlert = function (form, submit) {
+    var div = $('<div id="alertExplanation" class="errorExplanation">');
+    div.append("<h2><%= I18n.t('cms.alert') %></h2>");
+    var ref = Inplace_Form_Alert.alerts;
+    for (var addon in ref) {
+      var fields = ref[addon];
+      div.append('<p>' + addon + '</p>');
+      var ul = $("<ul>").appendTo(div);
+      var i, j, len;
+      for (i = j = 0, len = fields.length; j < len; i = ++j) {
+        var field = fields[i];
+        if (field["msg"]) {
+          ul.append('<li>' + field["msg"] + '</li>');
+        }
+      }
+    }
+    // caution: below IE8, you must use document.createElement() method to create <footer>
+    var footer = $(document.createElement("footer")).addClass('send');
+    footer.append('<button name="button" type="button" class="btn-primary save"><%= I18n.t("ss.buttons.ignore_alert") %></button>');
+    footer.append('<button name="button" type="button" class="btn-default cancel"><%= I18n.t("ss.buttons.cancel") %></button>');
+    $.colorbox({
+      html: div.get(0).outerHTML + footer.get(0).outerHTML,
+      maxHeight: "80%",
+      fixed: true
+    });
+    $("#cboxLoadedContent").find(".save").on("click", function () {
+      Inplace_Form_Alert.runBeforeSave(form, submit);
+      $(submit).off(".form_alert");
+      $(submit).trigger("click");
+    });
+    $("#cboxLoadedContent").find(".cancel").on("click", function (e) {
+      $.colorbox.close();
+      return false;
+    });
+  }
+
+  Inplace_Form_Alert.addBeforeSave = function (callback) {
+    return Inplace_Form_Alert.beforeSaves.push(callback);
+  };
+
+  Inplace_Form_Alert.add = function (addon, ele, msg) {
+    var base;
+    (base = Inplace_Form_Alert.alerts)[addon] || (base[addon] = []);
+    return Inplace_Form_Alert.alerts[addon].push({
+      "ele": ele,
+      "msg": msg
+    });
+  };
+
+  Inplace_Form_Alert.justText = function (ele) {
+    return $(ele).clone().children().remove().end().text();
+  };
+
+  return Inplace_Form_Alert;
+
+})();

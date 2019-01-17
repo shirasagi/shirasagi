@@ -1,5 +1,24 @@
 <% value ||= nil %>
 <% controller ||= false %>
+<% name = "#{f.object_name}[][in_wrap][value]" %>
+
+<% if @inplace_syntax_check %>
+<%= javascript_tag do %>
+Cms_Inplace_Form.getContent = function () {
+  return $('[name="<%= name %>"]').val();
+};
+Cms_Inplace_Form.setContent = function (content) {
+  $('[name="<%= name %>"]').val(content);
+};
+<% end %>
+<% end %>
+
 <%= render 'cms/agents/columns/main/base', f: f, column: column, value: value, controller: controller do %>
-  <%= text_area_tag("#{f.object_name}[][in_wrap][value]", value.try(:value), column.form_options.merge(id: nil)) %>
+  <%= text_area_tag(name, value.try(:value), column.form_options.merge(id: nil)) %>
+
+  <% if @inplace_syntax_check %>
+    <div class="inplace-checkers">
+      <%= button_tag t("cms.syntax_check"), { type: :button, class: "btn syntax-check" } %>
+    </div>
+  <% end %>
 <% end %>
