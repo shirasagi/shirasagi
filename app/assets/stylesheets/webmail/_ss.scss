@@ -220,7 +220,7 @@ li.webmail-accounts {
     }
     .title {
       width: calc(100% - 380px);
-      widht: -webkit-calc(100% - 380px);
+      width: -webkit-calc(100% - 380px);
       padding-right: 5px;
       font-size: 100%;
       @include mb {
@@ -412,7 +412,7 @@ li.webmail-accounts {
   .subject {
     float: left;
     width: calc(100% - 300px);
-    widht: -webkit-calc(100% - 300px);
+    width: -webkit-calc(100% - 300px);
     min-width: 300px;
     margin-bottom: 15px;
     input {
