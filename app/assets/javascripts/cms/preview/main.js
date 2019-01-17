@@ -10,7 +10,13 @@ SS_Preview = (function () {
     this.parts = [];
   }
 
-  SS_Preview.libs = {};
+  SS_Preview.libs = {
+    jquery: { isInstalled: function() { return !!window.jQuery; }, js: null, css: null },
+    datetimePicker: { isInstalled: function() { return !!$.datetimepicker; }, js: null, css: null },
+    colorbox: { isInstalled: function() { return !!$.colorbox; }, js: null, css: null },
+    dialog: { isInstalled: function() { return $.ui && $.ui.dialog; }, js: null, css: null },
+    resizable: { isInstalled: function() { return $.ui && $.ui.resizable; }, js: null, css: null }
+  };
 
   SS_Preview.confirms = { delete: null };
 
@@ -33,7 +39,8 @@ SS_Preview = (function () {
 
   SS_Preview.instance = null;
 
-  SS_Preview.minFrameSize = { width: 600, height: 240 };
+  SS_Preview.minFrameSize = { width: 320, height: 150 };
+  SS_Preview.initialFrameSize = { width: 780, height: 180 };
 
   SS_Preview.render = function (opts) {
     if (SS_Preview.instance) {
@@ -43,16 +50,14 @@ SS_Preview = (function () {
     SS_Preview.instance = new SS_Preview("#ss-preview");
 
     SS_Preview.loadJQuery(function() {
-      var countDownLatch = 2;
-      var lazyInitialize = function() {
-        countDownLatch -= 1;
-        if (countDownLatch === 0) {
-          SS_Preview.instance.initialize(opts);
-        }
-      };
-
-      SS_Preview.loadDatetimePicker(lazyInitialize);
-      SS_Preview.loadColorbox(lazyInitialize);
+      $.when(
+        SS_Preview.lazyLoad(SS_Preview.libs.datetimePicker),
+        SS_Preview.lazyLoad(SS_Preview.libs.colorbox),
+        SS_Preview.lazyLoad(SS_Preview.libs.dialog),
+        SS_Preview.lazyLoad(SS_Preview.libs.resizable)
+      ).done(function () {
+        SS_Preview.instance.initialize(opts);
+      });
     });
   };
 
@@ -82,64 +87,48 @@ SS_Preview = (function () {
     document.getElementsByTagName("head")[0].appendChild(script);
   };
 
-  SS_Preview.loadDatetimePicker = function (callback) {
-    if ($.datetimepicker) {
-      if (callback) {
-        callback();
-      }
-      return;
+  SS_Preview.lazyLoad = function (data) {
+    var d = new $.Deferred;
+
+    if (data.isInstalled()) {
+      d.resolve();
+      return d.promise();
     }
 
-    var link = document.createElement("link");
-    link.rel = "stylesheet";
-    link.href = SS_Preview.libs.datetimePicker.css;
+    var link;
+    if (data.css) {
+      link = document.createElement("link");
+      link.rel = "stylesheet";
+      link.href = data.css;
+    }
 
-    var script = document.createElement("script");
-    script.type = "text/javascript";
-    script.src = SS_Preview.libs.datetimePicker.js;
+    var script;
+    if (data.js) {
+      script = document.createElement("script");
+      script.type = "text/javascript";
+      script.src = data.js;
+    }
 
-    if (script.readyState) {
-      // IE
-    } else {
-      if (callback) {
+    if (link) {
+      document.getElementsByTagName("head")[0].appendChild(link);
+    }
+
+    if (script) {
+      if (script.readyState) {
+        // IE
+        d.resolve();
+      } else {
         script.onload = function () {
-          callback();
+          d.resolve();
         }
       }
-    }
 
-    document.getElementsByTagName("head")[0].appendChild(link);
-    document.getElementsByTagName("head")[0].appendChild(script);
-  };
-
-  SS_Preview.loadColorbox = function (callback) {
-    if ($.colorbox) {
-      if (callback) {
-        callback();
-      }
-      return;
-    }
-
-    var link = document.createElement("link");
-    link.rel = "stylesheet";
-    link.href = SS_Preview.libs.colorbox.css;
-
-    var script = document.createElement("script");
-    script.type = "text/javascript";
-    script.src = SS_Preview.libs.colorbox.js;
-
-    if (script.readyState) {
-      // IE
+      document.getElementsByTagName("head")[0].appendChild(script);
     } else {
-      if (callback) {
-        script.onload = function () {
-          callback();
-        }
-      }
+      d.resolve();
     }
 
-    document.getElementsByTagName("head")[0].appendChild(link);
-    document.getElementsByTagName("head")[0].appendChild(script);
+    return d.promise();
   };
 
   SS_Preview.notice = function (message) {
@@ -290,19 +279,20 @@ SS_Preview = (function () {
     });
   };
 
-  SS_Preview.prototype.adjustColorBoxSize = function(frame) {
+  SS_Preview.prototype.adjustDialogSize = function(frame) {
     var width = frame.contentWindow.document.body.scrollWidth;
     var height = frame.contentWindow.document.body.scrollHeight;
 
-    if (width < SS_Preview.minFrameSize.width) {
-      width = SS_Preview.minFrameSize.width;
+    if (width < SS_Preview.initialFrameSize.width) {
+      width = SS_Preview.initialFrameSize.width;
     }
-    if (height < SS_Preview.minFrameSize.height) {
-      height = SS_Preview.minFrameSize.height;
+    if (height < SS_Preview.initialFrameSize.height) {
+      height = SS_Preview.initialFrameSize.height;
     }
 
     var maxWidth = Math.floor(window.innerWidth * 0.9);
     var maxHeight = Math.floor(window.innerHeight * 0.9);
+
     if (width > maxWidth) {
       width = maxWidth;
     }
@@ -310,7 +300,13 @@ SS_Preview = (function () {
       height = maxHeight;
     }
 
-    $.colorbox.resize({ width: width, height: height });
+    if ($(frame).closest("#cboxLoadedContent")[0]) {
+      $.colorbox.resize({ width: width, height: height });
+    }
+
+    if ($(frame).closest(".ui-dialog")[0]) {
+      $(frame).dialog("option", "width", width).dialog("option", "height", height).css("display", "").css("width", "");
+    }
   };
 
   SS_Preview.prototype.initializeFrame = function(frame) {
@@ -320,7 +316,7 @@ SS_Preview = (function () {
       return;
     }
 
-    this.adjustColorBoxSize(frame);
+    this.adjustDialogSize(frame);
 
     var self = this;
     self.saveIfNoAlerts = false;
@@ -330,7 +326,12 @@ SS_Preview = (function () {
       var el = ev.target;
 
       if (el.tagName === "BUTTON" && el.classList.contains("btn-cancel")) {
-        $.colorbox.close();
+        if ($(frame).closest("#cboxLoadedContent")[0]) {
+          $.colorbox.close();
+        }
+        if ($(frame).closest(".ui-dialog")[0]) {
+          $(frame).dialog("close");
+        }
       }
 
       if (el.tagName === "INPUT" && el.name === "save_if_no_alerts") {
@@ -381,7 +382,7 @@ SS_Preview = (function () {
           var $itemForm = $html.find("#item-form");
 
           itemForm.innerHTML = $itemForm.html();
-          self.adjustColorBoxSize(frame);
+          self.adjustDialogSize(frame);
         }
       });
 
@@ -393,27 +394,51 @@ SS_Preview = (function () {
     };
   };
 
+  // SS_Preview.prototype.openDialogInFrame = function(url) {
+  //   var self = this;
+  //
+  //   // open edit form in iframe
+  //   $.colorbox({
+  //     href: url,
+  //     iframe: true,
+  //     fixed: true,
+  //     width: SS_Preview.initialFrameSize.width,
+  //     height: SS_Preview.initialFrameSize.height,
+  //     opacity: 0.15,
+  //     overlayClose: false,
+  //     escKey: false,
+  //     arrowKey: false,
+  //     closeButton: false,
+  //     onComplete: function() {
+  //       var frame = $("#cboxLoadedContent iframe")[0];
+  //       frame.onload = function() {
+  //         self.initializeFrame(frame);
+  //       };
+  //     }
+  //   });
+  // };
   SS_Preview.prototype.openDialogInFrame = function(url) {
     var self = this;
 
-    // open edit form in iframe
-    $.colorbox({
-      href: url,
-      iframe: true,
-      fixed: true,
-      width: SS_Preview.minFrameSize.width,
-      height: SS_Preview.minFrameSize.height,
-      opacity: 0.15,
-      overlayClose: false,
-      escKey: false,
-      arrowKey: false,
-      closeButton: false,
-      onComplete: function() {
-        var frame = $("#cboxLoadedContent iframe")[0];
-        frame.onload = function() {
-          self.initializeFrame(frame);
-        };
-      }
+    var $frame = $("<iframe></iframe>", {
+      id: "ss-preview-column-form", name: "ss-preview-column-form",
+      frameborder: "0", allowfullscreen: true,
+      src: url
+    });
+
+    $frame[0].onload = function() { self.initializeFrame($frame[0]); };
+
+    $frame.dialog({
+      autoOpen: true,
+      width: SS_Preview.initialFrameSize.width,
+      height: SS_Preview.initialFrameSize.height,
+      minWidth: SS_Preview.minFrameSize.width,
+      minHeight: SS_Preview.minFrameSize.height,
+      closeOnEscape: false,
+      dialogClass: "ss-preview-dialog ss-preview-dialog-column",
+      draggable: true,
+      modal: true,
+      resizable: true
     });
   };
 

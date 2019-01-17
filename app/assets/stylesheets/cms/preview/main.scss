@@ -115,3 +115,18 @@
   margin-bottom: 8px;
   width: 100%;
 };
+
+.ss-preview-dialog {
+  &.ui-dialog {
+    .ui-dialog-title {
+      display: none;
+    }
+
+    .ui-dialog-content {
+      width: 100%;
+      padding: 5px;
+      @include box-sizing(border-box);
+    }
+  }
+}
+
