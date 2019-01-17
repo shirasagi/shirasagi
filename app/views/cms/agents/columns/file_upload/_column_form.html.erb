@@ -6,24 +6,26 @@
   form_options['class'] = [ form_options['class'].presence ].flatten.compact
   form_options['class'] << 'file-id'
 %>
-<%= render 'cms/agents/columns/main/base', f: f, column: column, value: value, controller: controller do %>
-  <span class="upload-menu-new">
-    <%= link_to t('ss.links.upload'), cms_apis_temp_files_path, class: "ajax-box btn btn-file-upload" %>
-  </span>
-  <span class="upload-menu-select">
-    <%= link_to t("sns.user_file"), sns_apis_user_files_path(@cur_user), class: "ajax-box btn btn-file-upload" %>
-    <%= link_to t("cms.file"), cms_apis_files_path, class: "ajax-box btn btn-file-upload" %>
-  </span>
+<% if File.exists?(Rails.root.join("app/views/cms/agents/columns/file_upload/column_form_#{column.file_type}")) %>
+  <%= render 'cms/agents/columns/main/base', f: f, column: column, value: value, controller: controller do %>
+    <span class="upload-menu-new">
+      <%= link_to t('ss.links.upload'), cms_apis_temp_files_path, class: "ajax-box btn btn-file-upload" %>
+    </span>
+    <span class="upload-menu-select">
+      <%= link_to t("sns.user_file"), sns_apis_user_files_path(@cur_user), class: "ajax-box btn btn-file-upload" %>
+      <%= link_to t("cms.file"), cms_apis_files_path, class: "ajax-box btn btn-file-upload" %>
+    </span>
 
-  <div class="column-value-upload-drop-area">
-    <span class="column-value-upload-drop-notice"><%= t('ss.notice.file_droppable') %></span>
-  </div>
+    <div class="column-value-upload-drop-area">
+      <span class="column-value-upload-drop-notice"><%= t('ss.notice.file_droppable') %></span>
+    </div>
 
-  <div class="column-value-files<% if !file %> hide<% end %>">
-    <% if file %>
-      <%= render 'cms/apis/forms/select_temp_file', item: file %>
-    <% end %>
-  </div>
+    <div class="column-value-files<% if !file %> hide<% end %>">
+      <% if file %>
+        <%= render 'cms/apis/forms/select_temp_file', item: file %>
+      <% end %>
+    </div>
 
-  <%= render "cms/agents/columns/file_upload/column_form_#{column.file_type}", f: f, column: column, value: value %>
+    <%= render "cms/agents/columns/file_upload/column_form_#{column.file_type}", f: f, column: column, value: value %>
+  <% end %>
 <% end %>
