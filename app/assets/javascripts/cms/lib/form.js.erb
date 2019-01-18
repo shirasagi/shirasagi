@@ -69,7 +69,6 @@ this.Syntax_Checker = (function () {
     notSetThScope: "<%= I18n.t('errors.messages.set_th_scope') %>",
     invalidOrderOfH: "<%= I18n.t('errors.messages.invalid_order_of_h') %>",
     invalidMultibyteCharacter: "<%= I18n.t('errors.messages.invalid_multibyte_character') %>",
-    invalidDependentCharacter: "<%= I18n.t('errors.messages.invalid_dependent_character') %>",
     invalidKanaCharacter: "<%= I18n.t('errors.messages.invalid_kana_character') %>",
     invalidDateFormat: "<%= I18n.t('errors.messages.invalid_date_format') %>",
     invalidAdjacentA: "<%= I18n.t('errors.messages.invalid_adjacent_a') %>",
@@ -89,7 +88,6 @@ this.Syntax_Checker = (function () {
     notSetThScope: <%= I18n.t('errors.messages.syntax_check_detail.set_th_scope').to_json %>,
     invalidOrderOfH: <%= I18n.t('errors.messages.syntax_check_detail.invalid_order_of_h').to_json %>,
     invalidMultibyteCharacter: <%= I18n.t('errors.messages.syntax_check_detail.invalid_multibyte_character').to_json %>,
-    invalidDependentCharacter: <%= I18n.t('errors.messages.syntax_check_detail.invalid_dependent_character').to_json %>,
     invalidKanaCharacter: <%= I18n.t('errors.messages.syntax_check_detail.invalid_kana_character').to_json %>,
     invalidDateFormat: <%= I18n.t('errors.messages.syntax_check_detail.invalid_date_format').to_json %>,
     invalidAdjacentA: <%= I18n.t('errors.messages.syntax_check_detail.invalid_adjacent_a').to_json %>,
@@ -98,8 +96,6 @@ this.Syntax_Checker = (function () {
     checkObjectText: <%= I18n.t('errors.messages.syntax_check_detail.check_object_text').to_json %>,
     checkEmbeddedMedia: <%= I18n.t('errors.messages.syntax_check_detail.check_embedded_media').to_json %>
   };
-
-  Syntax_Checker.dependentCharacter = "<%= I18n.t('dependent_character').join %>";
 
   Syntax_Checker.mediaExtensions = ["aac", "aif", "aiff", "au", "avi", "flac", "flv", "mid", "midi", "mp3", "m4a", "mp4", "mpg", "mpeg", "oga", "ogg", "tta", "vdo", "wav", "wma", "wmv"];
 
@@ -134,7 +130,6 @@ this.Syntax_Checker = (function () {
     html = Cms_Form.getEditorHtml();
     Syntax_Checker.checkTable(html);
     Syntax_Checker.checkMultibyteCharacter(html);
-    Syntax_Checker.checkDependentCharacter(html);
     Syntax_Checker.checkKanaCharacter(html);
     Syntax_Checker.checkDateFormat(html);
     Syntax_Checker.checkAdjacentA(html);
@@ -197,7 +192,6 @@ this.Syntax_Checker = (function () {
     var html;
     html = Cms_Form.getEditorHtml();
     html = Syntax_Checker.correctMultibyteCharacter(html);
-    html = Syntax_Checker.correctDependentCharacter("<div>" + html + "</div>");
     html = Syntax_Checker.correctKanaCharacter("<div>" + html + "</div>");
     html = Syntax_Checker.correctDateFormat("<div>" + html + "</div>");
     if ($("<div>" + html + "</div>").find("table").length) {
@@ -556,33 +550,6 @@ this.Syntax_Checker = (function () {
       return this.textContent = text;
     });
     return ret.html();
-  };
-
-  Syntax_Checker.checkDependentCharacter = function (html) {
-    var c, errors, regex;
-    regex = new RegExp("[" + Syntax_Checker.dependentCharacter + "]", "g");
-    c = html.match(regex);
-    if (!$.isEmptyObject(c)) {
-      errors = [
-        {
-          code: c.join(","),
-          msg: Syntax_Checker.message["invalidDependentCharacter"],
-          detail: Syntax_Checker.detail["invalidDependentCharacter"],
-          ele: html,
-          correct: Syntax_Checker.correctDependentCharacter
-        }
-      ];
-      return Syntax_Checker.pushError(errors);
-    }
-  };
-
-  Syntax_Checker.correctDependentCharacter = function (html) {
-    var regex;
-    regex = new RegExp("[" + Syntax_Checker.dependentCharacter + "]", "g");
-    html = html.replace(regex, function (c) {
-      return "<%= I18n.t('cms.auto_correct.dependent_character') %>";
-    });
-    return $(html).html();
   };
 
   Syntax_Checker.checkKanaCharacter = function (html) {
