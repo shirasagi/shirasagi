@@ -392,6 +392,12 @@ SS_Preview = (function () {
       ev.preventDefault();
       return false;
     };
+
+    if (frame.contentWindow.CKEDITOR) {
+      frame.contentWindow.CKEDITOR.on("instanceReady", function (ev) {
+        self.adjustRichEditorHeight(ev.editor);
+      });
+    }
   };
 
   // SS_Preview.prototype.openDialogInFrame = function(url) {
@@ -438,8 +444,39 @@ SS_Preview = (function () {
       dialogClass: "ss-preview-dialog ss-preview-dialog-column",
       draggable: true,
       modal: true,
-      resizable: true
+      resizable: true,
+      resize: function(ev, ui) {
+        if (ui.originalSize.height - ui.size.height != 0) {
+          self.adjustAllRichEditorHeight($frame);
+        }
+      }
     });
+  };
+
+  SS_Preview.prototype.adjustAllRichEditorHeight = function($frame) {
+    var self = this;
+    if ($frame[0].contentWindow.CKEDITOR) {
+      $.each($frame[0].contentWindow.CKEDITOR.instances, function (key, editor) {
+        self.adjustRichEditorHeight(editor);
+      });
+    }
+  };
+
+  SS_Preview.prototype.adjustRichEditorHeight = function(editor) {
+    if (editor.status !== "ready") {
+      return;
+    }
+
+    var $el = $(editor.element.$);
+    var $parent = $el.parent();
+    var height = $parent.height();
+
+    height = height - 40;
+    if (height < 50) {
+      height = 50;
+    }
+
+    editor.resize("100%", height.toString());
   };
 
   SS_Preview.prototype.openPageEdit = function(pageId) {
