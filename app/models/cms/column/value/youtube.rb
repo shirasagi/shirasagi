@@ -60,7 +60,7 @@ class Cms::Column::Value::Youtube < Cms::Column::Value::Base
     return '' if iframe.blank?
 
     if auto_width
-      ApplicationController.helpers.content_tag(:div, class: "youtube-auto-width") do
+      ApplicationController.helpers.content_tag(:div, class: "youtube-auto-width youtube-embed-wrapper") do
         iframe.try(:html_safe)
       end
     else
