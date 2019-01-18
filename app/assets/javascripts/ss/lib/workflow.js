@@ -41,7 +41,7 @@ SS_Workflow = function (el, options) {
     return false;
   });
 
-  this.$el.on("click", ".workflow-route-cacnel", function (e) {
+  this.$el.on("click", ".workflow-route-cancel", function (e) {
     pThis.loadRouteList();
     e.preventDefault();
     return false;
