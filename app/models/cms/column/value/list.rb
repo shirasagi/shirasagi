@@ -10,7 +10,7 @@ class Cms::Column::Value::List < Cms::Column::Value::Base
   private
 
   def text_blank?
-    lists.all?{|list| list[:text].blank?}
+    lists.all?{ |list| list[:text].blank? }
   end
 
   def validate_value
@@ -23,7 +23,7 @@ class Cms::Column::Value::List < Cms::Column::Value::Base
     return if text_blank?
 
     if column.max_length.present? && column.max_length > 0
-      if lists.any?{|list| list[:text].length > column.max_length}
+      if lists.any?{ |list| list[:text].length > column.max_length }
         self.errors.add(:text, :less_than_or_equal_to, count: column.max_length)
       end
     end
@@ -32,7 +32,7 @@ class Cms::Column::Value::List < Cms::Column::Value::Base
   def to_default_html
     return '' if text_blank?
 
-    li = lists.map {|list| ApplicationController.helpers.content_tag(:li, list[:text])}.join("\n")
+    li = lists.map { |list| ApplicationController.helpers.content_tag(:li, list[:text]) }.join("\n")
     ApplicationController.helpers.content_tag(column.list_type.to_sym, li.html_safe)
   end
 end

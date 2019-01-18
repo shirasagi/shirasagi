@@ -3,7 +3,7 @@ class Cms::Column::Value::Base
   include SS::Document
   include SS::Liquidization
 
-  LINK_CHECK_EXCLUSION_FIELDS = %w(_id created updated deleted text_index column_id name order class_name _type file_id)
+  LINK_CHECK_EXCLUSION_FIELDS = %w(_id created updated deleted text_index column_id name order class_name _type file_id).freeze
 
   class_attribute :_permit_values, instance_accessor: false
   self._permit_values = []

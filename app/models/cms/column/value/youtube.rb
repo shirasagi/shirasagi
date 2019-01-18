@@ -26,10 +26,10 @@ class Cms::Column::Value::Youtube < Cms::Column::Value::Base
         width: width,
         height: height,
         frameborder: "0",
-        allow: "accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" ,
+        allow: "accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture",
         allowfullscreen: "allowfullscreen"
-       }
-     ).to_s
+      }
+    ).to_s
   end
 
   def get_youtube_id
