@@ -578,7 +578,7 @@ this.Syntax_Checker = (function () {
     results = [];
     for (k in words) {
       v = words[k];
-      c = html.match(RegExp("" + k, "g"));
+      c = html.match(RegExp("" + k.replace(/([.?*+$\[\]\/\\(){}|\-])/g, '\\$1'), "g"));
       if (!$.isEmptyObject(c)) {
         errors = [
           {
@@ -615,7 +615,7 @@ this.Syntax_Checker = (function () {
       return this.nodeType === 3;
     }).each(function () {
       var text;
-      text = this.textContent.replace(RegExp("" + key, "g"), function (c) {
+      text = this.textContent.replace(RegExp("" + key.replace(/([.?*+$\[\]\/\\(){}|\-])/g, '\\$1'), "g"), function (c) {
         return value;
       });
       return this.textContent = text;
@@ -1324,7 +1324,7 @@ this.Form_Alert = (function () {
       results.push($(form).find(addonIds.join(",")).find("input,textarea").not(excludes.join(",")).each(function () {
         var addonName, fieldName, val;
         val = $(this).val();
-        if (val && !$.isEmptyObject(val.match(RegExp("" + k, "g")))) {
+        if (val && !$.isEmptyObject(val.match(RegExp("" + k.replace(/([.?*+$\[\]\/\\(){}|\-])/g, '\\$1'), "g")))) {
           $(this).closest("dl").show();
           addonName = $(this).closest(".addon-view").find(".addon-head").text();
           fieldName = Form_Alert.justText($(this).closest("dd").prev("dt"));
