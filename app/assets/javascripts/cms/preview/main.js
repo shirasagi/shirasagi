@@ -1,4 +1,3 @@
-//= require ss/lib/addon/temp_file
 //= require cms/lib/form
 //= require cms/lib/template_form
 

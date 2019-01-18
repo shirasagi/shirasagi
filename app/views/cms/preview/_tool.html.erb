@@ -6,18 +6,6 @@
   <%= stylesheet_link_tag("cms/preview/main") %>
   <%= javascript_include_tag("cms/preview/main") %>
   <script>
-    Link_Checker.url = <%== SS.config.cms.link_check_url.to_json %>;
-    Link_Checker.rootUrl = <%== @cur_site.full_root_url.to_json %>;
-
-    Mobile_Size_Checker.enabled    = <%== @cur_site.mobile_enabled?.to_json %>;
-    Mobile_Size_Checker.mobile_size = <%== @cur_site.mobile_size.to_json %>;
-    Mobile_Size_Checker.check_size = <%== number_to_human_size(@cur_site.mobile_size).to_json %>;
-    Mobile_Size_Checker.hostFullUrl = <%== @cur_site.full_url.to_json %>;
-    Mobile_Size_Checker.message["SizeCheckError"] = <%== I18n.t(
-      'errors.messages.mobile_size_check_failed_to_size',
-      mobile_size: number_to_human_size(@cur_site.mobile_size)
-      ).to_json %>
-
     <% if rendered %>
       Form_Preview.form_id = "ss-preview-inplace-item-form";
       Form_Preview.page_route = <%== (rendered[:page] || rendered[:node]).route.to_json %>;
