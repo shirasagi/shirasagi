@@ -3,7 +3,7 @@ module Opendata::Dataset::DatasetFilter
 
   included do
     before_action :set_dataset_with_aggregation,
-      only: [:index_estat_categories, :index_areas, :index_tags, :index_formats, :index_licenses]
+      only: [:index_categories, :index_estat_categories, :index_areas, :index_tags, :index_formats, :index_licenses]
   end
 
   private
@@ -78,6 +78,11 @@ module Opendata::Dataset::DatasetFilter
   end
 
   public
+
+  def index_categories
+    @categories = aggregate_categories(100)
+    render "opendata/agents/nodes/dataset/dataset/categories", layout: "opendata/dataset_aggregation"
+  end
 
   def index_estat_categories
     @estat_categories = aggregate_estat_categories(100)

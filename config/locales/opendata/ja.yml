@@ -394,6 +394,7 @@ ja:
       opendata/area: 地域
       opendata/dataset: データセット
       opendata/dataset_category: データセット分野
+      opendata/dataset_estat_category: データセットeStat分野
       opendata/dataset_area: データセット地域
       opendata/search_dataset_group: データセットグループ検索
       opendata/search_dataset: データセット検索

@@ -9,6 +9,11 @@ $(".crumbs .page:last").html('<%= @area_node ? @area_node.name : @cur_node.name 
 
 <%= jquery do %>
 SS_Tabs.render("#opendata-tabs-<%= @cur_node.id %>");
+$(".categories a.more").colorbox({
+  fixed: true,
+  height: "80%"
+});
+
 $(".estat-categories a.more").colorbox({
   fixed: true,
   height: "80%"
@@ -69,7 +74,7 @@ return $(".licenses a.more").colorbox({
   <header><h1><%= I18n.t("opendata.labels.category") %></h1></header>
   <%= render file: "opendata/agents/nodes/dataset/dataset/categories" %>
   <% if @categories_popped %>
-    <nav><%= link_to t('ss.links.more'), "#{@node_url}categories/", class: "more" %></nav>
+    <nav><%= link_to t('ss.links.more'), "#{@dataset_path}categories/", class: "more" %></nav>
   <% end %>
 </article>
 
@@ -77,7 +82,7 @@ return $(".licenses a.more").colorbox({
   <header><h1><%= I18n.t("opendata.labels.estat-category") %></h1></header>
   <%= render file: "opendata/agents/nodes/dataset/dataset/estat_categories" %>
   <% if @estat_categories_popped %>
-    <nav><%= link_to t('ss.links.more'), "#{@node_url}estat_categories/", class: "more" %></nav>
+    <nav><%= link_to t('ss.links.more'), "#{@dataset_path}estat_categories/", class: "more" %></nav>
   <% end %>
 </article>
 
@@ -85,7 +90,7 @@ return $(".licenses a.more").colorbox({
   <header><h1><%= I18n.t("opendata.labels.tag") %></h1></header>
   <%= render file: "opendata/agents/nodes/dataset/dataset/tags" %>
   <% if @tags.popped? %>
-    <nav><%= link_to t('ss.links.more'), "#{@node_url}tags/", class: "more" %></nav>
+    <nav><%= link_to t('ss.links.more'), "#{@dataset_path}tags/", class: "more" %></nav>
   <% end %>
 </article>
 
@@ -93,7 +98,7 @@ return $(".licenses a.more").colorbox({
   <header><h1><%= I18n.t("opendata.labels.format") %></h1></header>
   <%= render file: "opendata/agents/nodes/dataset/dataset/formats" %>
   <% if @formats.popped? %>
-    <nav><%= link_to t('ss.links.more'), "#{@node_url}formats/", class: "more" %></nav>
+    <nav><%= link_to t('ss.links.more'), "#{@dataset_path}formats/", class: "more" %></nav>
   <% end %>
 </article>
 
@@ -101,6 +106,6 @@ return $(".licenses a.more").colorbox({
   <header><h1><%= I18n.t("opendata.labels.license") %></h1></header>
   <%= render file: "opendata/agents/nodes/dataset/dataset/licenses" %>
   <% if @licenses.popped? %>
-    <nav><%= link_to t('ss.links.more'), "#{@node_url}licenses/", class: "more" %></nav>
+    <nav><%= link_to t('ss.links.more'), "#{@dataset_path}licenses/", class: "more" %></nav>
   <% end %>
 </article>
