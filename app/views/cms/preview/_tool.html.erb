@@ -69,6 +69,8 @@
         SS_Preview.inplaceFormPath.columnValue.moveAt = <%== move_at_cms_apis_preview_inplace_edit_page_column_value_path(site: @cur_site, preview_date: params[:preview_date], page_id: ":pageId", id: ":id").to_json %>;
         SS_Preview.inplaceFormPath.palette = <%== palette_cms_apis_preview_inplace_edit_form_path(site: @cur_site, preview_date: params[:preview_date], id: ":id").to_json %>;
       <% end %>
+
+      SS_Preview.approvePath = <%== cms_apis_preview_workflow_wizard_frame_path(site: @cur_site, preview_date: params[:preview_date], id: ":id").to_json %>;
     <% end %>
   </script>
 <% end %>

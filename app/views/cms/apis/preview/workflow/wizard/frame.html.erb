@@ -1,0 +1,20 @@
+<%= jquery do %>
+  var options = {};
+  options.request_url = "<%= request.url %>";
+  options.workflow_node = "workflow" + "<%= @item.parent ? @item.parent.id : "" %>";
+  options.redirect_location = "<%= @item.try(:branch?) ? @item.master.private_show_path : "" %>";
+  options.user_id = <%= @cur_user.id %>;
+  options.errors = {};
+  options.errors.not_select = "<%= @model.t :workflow_approvers %><%= t("errors.messages.not_select") %>";
+  options.paths = {};
+  options.paths.wizard = <%== cms_apis_preview_workflow_wizard_path.to_json %>;
+  options.paths.pages = <%== "/.s#{@cur_site.id}/workflow/pages/#{@item.id}".to_json %>;
+
+  var workflow = new SS_Workflow('#ss-ajax-in-iframe-content', options);
+<% end %>
+
+<section class="mod-workflow-request">
+  <div class="see request-setting workflow-partial-section">
+    <%= render file: "index" %>
+  </div>
+</section>

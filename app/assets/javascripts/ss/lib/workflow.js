@@ -134,6 +134,10 @@ SS_Workflow.prototype = {
     return fileIds;
   },
   composeWorkflowUrl: function(type) {
+    if (this.options && this.options.paths && this.options.paths[type]) {
+      return this.options.paths[type];
+    }
+
     var uri = location.pathname.split("/");
     uri[2] = this.options.workflow_node;
     uri[3] = type;

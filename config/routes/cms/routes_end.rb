@@ -200,6 +200,14 @@ SS::Application.routes.draw do
             get :palette, on: :member
           end
         end
+
+        namespace "workflow" do
+          match "/wizard/:id/approver_setting" => "wizard#approver_setting", via: [:get, :post], as: "wizard_approver_setting"
+          get "/wizard/:id/reroute" => "wizard#reroute", as: "wizard_reroute"
+          post "/wizard/:id/reroute" => "wizard#do_reroute"
+          get "/wizard/:id/frame" => "wizard#frame", as: "wizard_frame"
+          match "/wizard/:id" => "wizard#index", via: [:get, :post], as: "wizard"
+        end
       end
     end
   end

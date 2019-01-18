@@ -518,6 +518,10 @@ SS_Preview = (function () {
       self.openPartEdit(list.val());
     });
 
+    this.$el.on("click", "#ss-preview-btn-approve", function() {
+      self.openApprove();
+    });
+
     this.$el.find(".ss-preview-part-group").removeClass("ss-preview-hide");
 
     $(document).on("mouseover", ".ss-preview-part", function() {
@@ -804,6 +808,15 @@ SS_Preview = (function () {
     }
 
     window.open(part.path, "_blank");
+  };
+
+  //
+  // Approve
+  //
+
+  SS_Preview.prototype.openApprove = function() {
+    var url = SS_Preview.approvePath.replace(":id", SS_Preview.item.pageId);
+    this.openDialogInFrame(url);
   };
 
   //
