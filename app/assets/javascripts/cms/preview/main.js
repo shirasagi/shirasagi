@@ -20,8 +20,7 @@ SS_Preview = (function () {
     jquery: { isInstalled: function() { return !!window.jQuery; }, js: null, css: null },
     datetimePicker: { isInstalled: function() { return !!$.datetimepicker; }, js: null, css: null },
     colorbox: { isInstalled: function() { return !!$.colorbox; }, js: null, css: null },
-    dialog: { isInstalled: function() { return $.ui && $.ui.dialog; }, js: null, css: null },
-    resizable: { isInstalled: function() { return $.ui && $.ui.resizable; }, js: null, css: null }
+    dialog: { isInstalled: function() { return $.ui && $.ui.dialog; }, js: null, css: null }
   };
 
   SS_Preview.confirms = { delete: null };
@@ -61,8 +60,7 @@ SS_Preview = (function () {
       $.when(
         SS_Preview.lazyLoad(SS_Preview.libs.datetimePicker),
         SS_Preview.lazyLoad(SS_Preview.libs.colorbox),
-        SS_Preview.lazyLoad(SS_Preview.libs.dialog),
-        SS_Preview.lazyLoad(SS_Preview.libs.resizable)
+        SS_Preview.lazyLoad(SS_Preview.libs.dialog)
       ).done(function () {
         SS_Preview.instance.initialize(opts);
       });
