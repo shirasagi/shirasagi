@@ -52,10 +52,14 @@
     }
   }
 
-  .ss-preview-branch-notice {
+  .ss-preview-notice {
     color: #f6fa86;
     a {
       color: white;
+    }
+
+    &.ss-preview-workflow-notice {
+      display: inline-block;
     }
   }
 }

@@ -43,6 +43,11 @@ class Cms::Apis::Preview::Workflow::WizardController < ApplicationController
   end
 
   def frame
+    render layout: false
+  end
+
+  def comment
+    render layout: false
   end
 
   def approver_setting

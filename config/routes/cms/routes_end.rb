@@ -206,6 +206,7 @@ SS::Application.routes.draw do
           get "/wizard/:id/reroute" => "wizard#reroute", as: "wizard_reroute"
           post "/wizard/:id/reroute" => "wizard#do_reroute"
           get "/wizard/:id/frame" => "wizard#frame", as: "wizard_frame"
+          get "/wizard/:id/comment" => "wizard#comment", as: "wizard_comment"
           match "/wizard/:id" => "wizard#index", via: [:get, :post], as: "wizard"
         end
       end

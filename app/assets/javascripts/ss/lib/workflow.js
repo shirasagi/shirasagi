@@ -133,14 +133,14 @@ SS_Workflow.prototype = {
 
     return fileIds;
   },
-  composeWorkflowUrl: function(type) {
-    if (this.options && this.options.paths && this.options.paths[type]) {
-      return this.options.paths[type];
+  composeWorkflowUrl: function(controller) {
+    if (this.options && this.options.paths && this.options.paths[controller]) {
+      return this.options.paths[controller];
     }
 
     var uri = location.pathname.split("/");
     uri[2] = this.options.workflow_node;
-    uri[3] = type;
+    uri[3] = controller;
     if (uri.length > 5) {
       uri.splice(4, 1);
     }

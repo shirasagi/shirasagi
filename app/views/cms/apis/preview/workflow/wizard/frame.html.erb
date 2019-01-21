@@ -10,7 +10,7 @@
   options.paths.wizard = <%== cms_apis_preview_workflow_wizard_path.to_json %>;
   options.paths.pages = <%== "/.s#{@cur_site.id}/workflow/pages/#{@item.id}".to_json %>;
 
-  var workflow = new SS_Workflow('#ss-ajax-in-iframe-content', options);
+  var workflow = new SS_Workflow('#ss-preview-dialog-frame', options);
 <% end %>
 
 <section class="mod-workflow-request">

@@ -1,6 +1,13 @@
 //= require cms/lib/form
 //= require cms/lib/template_form
 
+//= require ss/lib/workflow
+//= require ss/lib/addon/temp_file
+//= require ss/lib/search_ui
+//= require ss/lib/list_ui
+//= require ss/lib/tree_ui
+//= require ss/lib/dropdown
+
 SS_Preview = (function () {
   function SS_Preview(el) {
     this.el = el;
@@ -35,6 +42,8 @@ SS_Preview = (function () {
   SS_Preview.previewToolHeight = 70;
 
   SS_Preview.inplaceFormPath = { page: null, columnValue: {}, palette: null };
+
+  SS_Preview.workflowPath = { wizard: null, pages: null };
 
   SS_Preview.instance = null;
 
@@ -139,6 +148,14 @@ SS_Preview = (function () {
     }
 
     SS_Preview.instance.notice.show(message);
+  };
+
+  SS_Preview.bindToWorkflowCommentForm = function (updateType) {
+    if (!SS_Preview.instance) {
+      return;
+    }
+
+    SS_Preview.instance.bindToWorkflowCommentForm(updateType);
   };
 
   SS_Preview.prototype.initialize = function(opts) {
@@ -426,7 +443,7 @@ SS_Preview = (function () {
     var self = this;
 
     var $frame = $("<iframe></iframe>", {
-      id: "ss-preview-column-form", name: "ss-preview-column-form",
+      id: "ss-preview-dialog-frame",
       frameborder: "0", allowfullscreen: true,
       src: url
     });
@@ -444,12 +461,56 @@ SS_Preview = (function () {
       draggable: true,
       modal: true,
       resizable: true,
+      close: function(ev, ui) {
+        // explicitly destroy dialog and remove elemtns because dialog elements is still remained
+        $(this).dialog('destroy').remove();
+      },
       resize: function(ev, ui) {
         if (ui.originalSize.height - ui.size.height != 0) {
           self.adjustAllRichEditorHeight($frame);
         }
       }
     });
+  };
+
+  SS_Preview.prototype.openDialog = function(url) {
+    var self = this;
+
+    $.ajax({
+      url: url,
+      type: "GET",
+      success: function(data, textStatus, xhr) {
+        var $frame = $("div#ss-preview-dialog-frame");
+        if (! $frame[0]) {
+          $frame = $("<div></div>", { id: "ss-preview-dialog-frame" });
+        }
+        $frame.html(data);
+        $frame.dialog({
+          autoOpen: true,
+          width: SS_Preview.initialFrameSize.width,
+          height: SS_Preview.initialFrameSize.height,
+          minWidth: SS_Preview.minFrameSize.width,
+          minHeight: SS_Preview.minFrameSize.height,
+          closeOnEscape: false,
+          dialogClass: "ss-preview-dialog ss-preview-dialog-column",
+          draggable: true,
+          modal: true,
+          resizable: true,
+          close: function(ev, ui) {
+            // explicitly destroy dialog and remove elemtns because dialog elements is still remained
+            $(this).dialog('destroy').remove();
+          },
+          resize: function(ev, ui) {
+            if (ui.originalSize.height - ui.size.height != 0) {
+              self.adjustAllRichEditorHeight($frame);
+            }
+          }
+        });
+      },
+      error: function(xhr, status, error) {
+        self.notice.show(error);
+      }
+    })
   };
 
   SS_Preview.prototype.adjustAllRichEditorHeight = function($frame) {
@@ -518,8 +579,18 @@ SS_Preview = (function () {
       self.openPartEdit(list.val());
     });
 
-    this.$el.on("click", "#ss-preview-btn-approve", function() {
-      self.openApprove();
+    this.$el.on("click", "#ss-preview-btn-workflow-start", function() {
+      self.openWorkflowApprove();
+    });
+
+    this.$el.on("click", "#ss-preview-btn-workflow-approve", function() {
+      self.openWorkflowComment("approve");
+    });
+    this.$el.on("click", "#ss-preview-btn-workflow-remand", function() {
+      self.openWorkflowComment("remand");
+    });
+    this.$el.on("click", "#ss-preview-btn-workflow-pull-up", function() {
+      self.openWorkflowComment("pull-up");
     });
 
     this.$el.find(".ss-preview-part-group").removeClass("ss-preview-hide");
@@ -811,12 +882,61 @@ SS_Preview = (function () {
   };
 
   //
-  // Approve
+  // Workflow Approve
   //
 
-  SS_Preview.prototype.openApprove = function() {
-    var url = SS_Preview.approvePath.replace(":id", SS_Preview.item.pageId);
-    this.openDialogInFrame(url);
+  SS_Preview.prototype.openWorkflowApprove = function() {
+    var url = SS_Preview.workflowPath.wizard.replace(":id", SS_Preview.item.pageId) + "/frame";
+    this.openDialog(url);
+  };
+
+  SS_Preview.prototype.openWorkflowComment = function(updateType) {
+    var url = SS_Preview.workflowPath.wizard.replace(":id", SS_Preview.item.pageId) + "/comment?update_type=" + updateType;
+    this.openDialog(url);
+  };
+
+  SS_Preview.prototype.bindToWorkflowCommentForm = function(updateType) {
+    var $frame = $("#ss-preview-dialog-frame");
+    $frame.on("click", "input[type=submit]", function() {
+      var remandComment = $frame.find("textarea[name=comment]").prop("value");
+      var action = updateType + "_update";
+      var url = SS_Preview.workflowPath.pages.replace(":id", SS_Preview.item.pageId);
+      url += "/" + action;
+
+      $frame.dialog("close");
+
+      $.ajax({
+        type: "POST",
+        url: url,
+        data: {
+          remand_comment: remandComment,
+          url: SS_Preview.request_path,
+          forced_update_option: true
+        },
+        success: function (data) {
+          if (data.workflow_alert) {
+            self.notice.show(data.workflow_alert);
+            return;
+          }
+
+          location.reload();
+        },
+        error: function(xhr, status) {
+          try {
+            var errors = $.parseJSON(xhr.responseText);
+            var msg = ["== Error =="].concat(errors).join("\n");
+            self.notice.show(msg);
+          }
+          catch (ex) {
+            var msg = ["== Error =="].concat(xhr["statusText"]).join("\n");
+            self.notice.show(msg);
+          }
+        }
+      });
+    });
+    $frame.on("click", "button[type=reset]", function() {
+      $frame.dialog("close");
+    });
   };
 
   //

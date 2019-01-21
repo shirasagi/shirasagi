@@ -18,6 +18,7 @@ ja:
     restart_workflow: 再申請
     circulation_step: 回覧
     circulation_comment: コメント
+    comment: コメント
     state:
       request: 申請中
       approve: 承認
