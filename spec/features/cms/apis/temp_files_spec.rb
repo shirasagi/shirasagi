@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 describe "cms_apis_temp_files", dbscope: :example, tmpdir: true do
-  let(:site) { cms_site }
+  let(:site) { cms_site.set(multibyte_filename_state: 'disabled') }
   let(:item) do
     tmp_ss_file(contents: "#{Rails.root}/spec/fixtures/ss/logo.png", site: site, user: cms_user, model: 'ss/temp_file')
   end
@@ -59,6 +59,18 @@ describe "cms_apis_temp_files", dbscope: :example, tmpdir: true do
         click_button "削除"
       end
       expect(current_path).to eq index_path
+    end
+  end
+
+  context "when filename is use multibyte character" do
+    before { login_cms_user }
+    it "#new" do
+      visit new_path
+      within "#ajax-form" do
+        attach_file "item[in_files][]", "#{Rails.root}/spec/fixtures/ss/ロゴ.png"
+        click_button "保存"
+      end
+      expect(page).to have_css('#errorExplanation')
     end
   end
 end
