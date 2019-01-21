@@ -16,7 +16,7 @@
       <% @item.workflow_pull_up_approvers_at(@item.workflow_current_level).each do |workflow_approver| %>
         <% next if @cur_user._id != workflow_approver[:user_id] || @item.approve_disabled?(workflow_approver[:state]) %>
         <section class="mod-workflow-approve">
-          <%= render "ss/crud/addon", addon: { head: "#{t("workflow.buttons.approve")}/#{t("workflow.buttons.remand")}#{@model.tt :approve_remand}" } do %>
+          <%= render "ss/crud/addon", addon: { head: "#{t("workflow.buttons.approve")}/#{t("workflow.buttons.remand")}#{@model.tt :approve_remand}".html_safe } do %>
             <%= text_area :remand, :comment, value: "" %>
             <% if @ss_mode == :gws && @item.workflow_approver_attachment_enabled_at?(workflow_approver[:level]) %>
               <div class="upload">
