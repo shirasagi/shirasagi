@@ -21,14 +21,14 @@ class Gws::Memo::MessageExport::Zip
   def add_json(zip)
     Dir.glob("#{@output_dir}/*.json").each do |file|
       name = ::File.basename(file)
-      zip.add(name.encode('cp932'), file)
+      zip.add(name.encode('cp932', invalid: :replace, undef: :replace, replace: "_"), file)
     end
   end
 
   def add_eml(zip)
     Dir.glob("#{@output_dir}/*.eml").each do |file|
       name = ::File.basename(file)
-      zip.add(name.encode('cp932'), file)
+      zip.add(name.encode('cp932', invalid: :replace, undef: :replace, replace: "_"), file)
     end
   end
 end
