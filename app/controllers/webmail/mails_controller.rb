@@ -182,7 +182,7 @@ class Webmail::MailsController < ApplicationController
           file = @imap.mails.find_part params[:id], part.section
         end
 
-        out.put_next_entry(part.filename.encode('cp932'))
+        out.put_next_entry(part.filename.encode('cp932', invalid: :replace, undef: :replace, replace: "_"))
         out.write file.decoded
       end
     end

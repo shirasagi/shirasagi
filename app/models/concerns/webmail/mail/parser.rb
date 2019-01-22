@@ -64,7 +64,7 @@ module Webmail::Mail::Parser
     ::Mail::AddressList.new(value).addresses.map do |addr|
       if addr.display_name.present?
         #charset = field.value.start_with?('=?ISO-2022-JP?') ? 'CP50220' : nil
-        addr.decoded.encode('UTF-8', nil) rescue addr.decoded
+        addr.decoded.encode('UTF-8', nil, invalid: :replace, undef: :replace) rescue addr.decoded
       else
         addr.address
       end
@@ -190,7 +190,7 @@ module Webmail::Mail::Parser
     return str if src_encoding == 'UTF-8'
 
     src_encoding = 'CP50220' if src_encoding.try(:upcase) == 'ISO-2022-JP'
-    str.encode('UTF-8', src_encoding) rescue str.encode('UTF-8')
+    str.encode('UTF-8', src_encoding, invalid: :replace, undef: :replace)
   end
 
   def flatten_all_parts(part, pos = [], buf = {})
