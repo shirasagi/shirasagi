@@ -12,9 +12,9 @@ SS::Application.routes.draw do
   end
 
   content "opendata" do
-    get "datasets_approve" => "dataset/datasets#index_approve"
-    get "datasets_request" => "dataset/datasets#index_request"
-    get "datasets_closed" => "dataset/datasets#index_closed"
+    match "datasets_approve" => "dataset/datasets#index_approve", via: [:get, :delete]
+    match "datasets_request" => "dataset/datasets#index_request", via: [:get, :delete]
+    match "datasets_closed" => "dataset/datasets#index_closed", via: [:get, :delete]
     resources :my_datasets, concerns: :deletion_all, module: "mypage/dataset"
   end
 

@@ -12,9 +12,9 @@ SS::Application.routes.draw do
   end
 
   content "opendata" do
-    get "apps_approve" => "app/apps#index_approve"
-    get "apps_request" => "app/apps#index_request"
-    get "apps_closed" => "app/apps#index_closed"
+    match "apps_approve" => "app/apps#index_approve", via: [:get, :delete]
+    match "apps_request" => "app/apps#index_request", via: [:get, :delete]
+    match "apps_closed" => "app/apps#index_closed", via: [:get, :delete]
     resources :my_apps, concerns: :deletion_all, module: "mypage/app"
   end
 

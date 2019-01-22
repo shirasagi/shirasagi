@@ -21,11 +21,19 @@ module Member::Photo::PageFilter
   public
 
   def index_listable
+    if request.delete?
+      set_selected_items
+      return render_destroy_all(destroy_items, location: { action: :index_listable })
+    end
     cond = { listable_state: "public" }
     render_items(cond)
   end
 
   def index_slideable
+    if request.delete?
+      set_selected_items
+      return render_destroy_all(destroy_items, location: { action: :index_slideable })
+    end
     cond = { slideable_state: "public" }
     render_items(cond)
   end

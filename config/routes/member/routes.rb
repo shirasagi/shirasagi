@@ -37,8 +37,8 @@ SS::Application.routes.draw do
     resources :blog_page_locations, concerns: :deletion
 
     resources :photos, concerns: [:deletion, :command] do
-      get :index_listable, on: :collection
-      get :index_slideable, on: :collection
+      match :index_listable, on: :collection, via: [:get, :delete]
+      match :index_slideable, on: :collection, via: [:get, :delete]
     end
     resources :photo_searches, concerns: :deletion
     resources :photo_categories, concerns: :deletion

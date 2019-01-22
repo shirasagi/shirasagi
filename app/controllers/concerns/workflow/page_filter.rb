@@ -21,6 +21,10 @@ module Workflow::PageFilter
   public
 
   def index_approve
+    if request.delete?
+      set_selected_items
+      return render_destroy_all(destroy_items, location: { action: :index_approve })
+    end
     cond = {
       '$and' => [
         {
@@ -44,11 +48,19 @@ module Workflow::PageFilter
   end
 
   def index_request
+    if request.delete?
+      set_selected_items
+      return render_destroy_all(destroy_items, location: { action: :index_request })
+    end
     cond = { workflow_user_id: @cur_user._id }
     render_items(cond)
   end
 
   def index_wait_close
+    if request.delete?
+      set_selected_items
+      return render_destroy_all(destroy_items, location: { action: :index_wait_close })
+    end
     days = @cur_node.becomes_with_route.try(:close_days_before) || @cur_site.close_days_before || SS.config.cms.close_days_before
     days ||= 0
     cond = {
@@ -59,11 +71,19 @@ module Workflow::PageFilter
   end
 
   def index_ready
+    if request.delete?
+      set_selected_items
+      return render_destroy_all(destroy_items, location: { action: :index_ready })
+    end
     cond = { state: "ready" }
     render_items(cond)
   end
 
   def index_closed
+    if request.delete?
+      set_selected_items
+      return render_destroy_all(destroy_items, location: { action: :index_closed })
+    end
     cond = { state: "closed" }
     render_items(cond)
   end

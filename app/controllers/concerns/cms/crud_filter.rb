@@ -27,6 +27,21 @@ module Cms::CrudFilter
     raise e
   end
 
+  def destroy_items
+    entries = @items.entries
+    @items = []
+
+    entries.each do |item|
+      if item.allowed?(:delete, @cur_user, site: @cur_site, node: @cur_node)
+        next if item.destroy
+      else
+        item.errors.add :base, :auth_error
+      end
+      @items << item
+    end
+    entries.size != @items.size
+  end
+
   public
 
   def index
@@ -81,18 +96,7 @@ module Cms::CrudFilter
   end
 
   def destroy_all
-    entries = @items.entries
-    @items = []
-
-    entries.each do |item|
-      if item.allowed?(:delete, @cur_user, site: @cur_site, node: @cur_node)
-        next if item.destroy
-      else
-        item.errors.add :base, :auth_error
-      end
-      @items << item
-    end
-    render_destroy_all(entries.size != @items.size)
+    render_destroy_all(destroy_items)
   end
 
   def disable_all
