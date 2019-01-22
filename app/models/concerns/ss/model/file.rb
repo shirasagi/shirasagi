@@ -33,7 +33,7 @@ module SS::Model::File
     validates :model, presence: true
     validates :state, presence: true
     validates :filename, presence: true, if: ->{ in_file.blank? && in_files.blank? }
-    validate :validate_filename
+    validate :validate_filename, if: ->{ filename.present? }
     validates_with SS::FileSizeValidator, if: ->{ size.present? }
 
     before_save :mangle_filename
@@ -194,7 +194,7 @@ module SS::Model::File
 
   def validate_filename
     if multibyte_filename_disabled? && filename !~ /^\/?([\w\-]+\/)*[\w\-]+\.[\w\-\.]+$/
-      errors.add :in_file, :invalid_filename
+      errors.add :base, :invalid_filename
     end
   end
 
