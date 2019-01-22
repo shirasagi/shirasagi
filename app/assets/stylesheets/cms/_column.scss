@@ -41,3 +41,39 @@
   text-align: left;
   float: left;
 }
+
+.table-menu {
+  display: none;
+  position: fixed;
+  width: 200px;
+  background-color: #fff;
+  border: 1px solid #ccc;
+  box-shadow: 1px 1px 1px rgba(0,0,0,.2);
+  z-index: 1000;
+}
+.table-menu.show {
+  display: block;
+}
+.table-menu ul {
+  list-style: none;
+  padding: 10px 0;
+}
+.table-menu ul li {
+  padding: 4px 10px;
+  font-size: 14px;
+  color: #333;
+}
+
+#table-editor th, #table-editor td {
+  border: solid 1px;  /* 枠線指定 */
+  padding: 10px;      /* 余白指定 */
+}
+
+#table-editor th {
+  background-color: #777;
+}
+
+#table-editor table {
+  border-collapse: collapse; /* セルの線を重ねる */
+  table-layout: fixed;
+}

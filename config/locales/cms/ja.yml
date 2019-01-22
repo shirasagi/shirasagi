@@ -75,6 +75,11 @@ ja:
       video_description_place_holder: 動画の内容を説明する文書を入力してください。
       attachment_text_place_holder: リンクテキストとして表示するファイル名を入力してください。
       banner_link_place_holder: URLを入力してください。
+    column_table:
+      width: 列数
+      height: 行数
+      header: ヘッダ
+      create: 表を作成する
 
     adobe_reader:
       remark:
@@ -243,6 +248,11 @@ ja:
         video: 動画
         attachment: 添付ファイル
         banner: バナー
+      column_header_type:
+        top: 上部
+        left: 左側
+        top-left: 上部と左側
+        none: なし
       max_name_length:
         '80': 80文字
         '0': 無制限
@@ -303,6 +313,7 @@ ja:
       cms/list: リスト入力
       cms/youtube: YouTube埋め込み
       cms/free: 自由入力
+      cms/table: 表
 
   cms_role:
     edit_cms_sites: サイトの管理
@@ -488,6 +499,7 @@ ja:
       cms/column/list: リスト入力
       cms/column/youtube: YouTube埋め込み
       cms/column/free: 自由入力
+      cms/column/table: 表
     errors:
       models:
         cms/model/node:
@@ -858,6 +870,8 @@ ja:
         auto_width: 画面幅に合わせる
       cms/column/value/free:
         value: テキスト
+      cms/column/value/table:
+        value: 表
 
   errors:
     messages:
