@@ -127,6 +127,7 @@ module Opendata::Part
 
   class DatasetCounter
     include Cms::Model::Part
+    include Opendata::Addon::CounterHtml
     include Cms::Addon::Release
     include Cms::Addon::GroupPermission
     include History::Addon::Backup

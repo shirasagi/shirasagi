@@ -5,8 +5,5 @@ class Opendata::Agents::Parts::Dataset::DatasetCounterController < ApplicationCo
   public
 
   def index
-    @datasets = Opendata::Dataset.site(@cur_site).and_public
-    @tags = @datasets.aggregate_array :tags
-    @dataset_groups = Opendata::DatasetGroup.site(@cur_site).and_public
   end
 end
