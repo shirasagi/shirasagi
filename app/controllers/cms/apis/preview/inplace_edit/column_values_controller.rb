@@ -103,6 +103,7 @@ class Cms::Apis::Preview::InplaceEdit::ColumnValuesController < ApplicationContr
   def save_with_overwrite
     if params.key?(:save_if_no_alerts)
       result = @item.valid?(%i[update accessibility link])
+      result &&= @item.column_link_errors.blank?
       if result
         result = @item.save
       end

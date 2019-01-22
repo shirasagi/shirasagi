@@ -3,6 +3,8 @@ module Cms::Addon::Form::Page
   extend SS::Addon
 
   included do
+    attr_reader :column_link_errors
+
     belongs_to :form, class_name: 'Cms::Form'
     embeds_many :column_values, class_name: 'Cms::Column::Value::Base', cascade_callbacks: true, validate: false,
                 after_add: :update_column_values_updated, after_remove: :update_column_values_updated,
@@ -15,6 +17,7 @@ module Cms::Addon::Form::Page
     # default validation `validates_associated :column_values` is not suitable for column_values.
     # So, specific validation should be defined.
     validate :validate_column_values
+    validate :validate_column_links, on: :link
 
     before_save :delete_unlinked_files
 
@@ -49,6 +52,17 @@ module Cms::Addon::Form::Page
             "cms.column_value_error_template", name: column_value.name,
             error: column_value.errors.full_message(attribute, error))
         end
+      end
+    end
+  end
+
+  def validate_column_links
+    @column_link_errors = []
+
+    column_values.each do |column_value|
+      column_value.valid?(:link)
+      if column_value.link_errors.present?
+        @column_link_errors += column_value.link_errors
       end
     end
   end
