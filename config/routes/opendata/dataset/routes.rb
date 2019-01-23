@@ -28,6 +28,7 @@ SS::Application.routes.draw do
     get "dataset_public_entity_download" => "dataset/public_entity#download", as: :dataset_public_entity_download
     resources :crawls, concerns: :deletion, module: :dataset
     resources :dataset_categories, concerns: :deletion, module: :dataset
+    resources :dataset_estat_categories, concerns: :deletion, module: :dataset
     resources :dataset_areas, concerns: :deletion, module: :dataset
     resources :dataset_groups, concerns: :deletion, module: :dataset do
       get "search" => "dataset_groups/search#index", on: :collection
@@ -116,6 +117,11 @@ SS::Application.routes.draw do
     # get "dataset_category/:name/formats" => "public#index_formats", cell: "nodes/dataset/dataset_category"
     # get "dataset_category/:name/licenses" => "public#index_licenses", cell: "nodes/dataset/dataset_category"
 
+    get "dataset_estat_category/" => "public#index", cell: "nodes/dataset/dataset_estat_category"
+    get "dataset_estat_category/rss.xml" => "public#rss", cell: "nodes/dataset/dataset_estat_category"
+    get "dataset_estat_category/:name/" => "public#index", cell: "nodes/dataset/dataset_estat_category"
+    get "dataset_estat_category/:name/rss.xml" => "public#rss", cell: "nodes/dataset/dataset_estat_category"
+
     get "dataset_area/" => "public#index", cell: "nodes/dataset/dataset_area"
     get "dataset_area/rss.xml" => "public#rss", cell: "nodes/dataset/dataset_area"
     get "dataset_area/*name/rss.xml" => "public#rss", cell: "nodes/dataset/dataset_area", name: /[^\.]+/
@@ -125,6 +131,7 @@ SS::Application.routes.draw do
 
     get "dataset/(index.:format)" => "public#index", cell: "nodes/dataset/dataset"
     get "dataset/rss.xml" => "public#rss", cell: "nodes/dataset/dataset"
+    get "dataset/categories" => "public#index_categories", cell: "nodes/dataset/dataset"
     get "dataset/estat_categories" => "public#index_estat_categories", cell: "nodes/dataset/dataset"
     get "dataset/areas" => "public#index_areas", cell: "nodes/dataset/dataset"
     get "dataset/tags" => "public#index_tags", cell: "nodes/dataset/dataset"

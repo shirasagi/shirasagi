@@ -69,6 +69,18 @@ module Opendata::Node
     default_scope ->{ where(route: "opendata/dataset_category") }
   end
 
+  class DatasetEstatCategory
+    include Cms::Model::Node
+    include Cms::Addon::NodeSetting
+    include Cms::Addon::Meta
+    include Opendata::DatasetChildNode
+    include Cms::Addon::Release
+    include Cms::Addon::GroupPermission
+    include History::Addon::Backup
+
+    default_scope ->{ where(route: "opendata/dataset_estat_category") }
+  end
+
   class DatasetArea
     include Cms::Model::Node
     include Cms::Addon::NodeSetting

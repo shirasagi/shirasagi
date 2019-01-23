@@ -1,4 +1,4 @@
-class Opendata::Agents::Nodes::Dataset::DatasetCategoryController < ApplicationController
+class Opendata::Agents::Nodes::Dataset::DatasetEstatCategoryController < ApplicationController
   include Cms::NodeFilter::View
   include Opendata::UrlHelper
   include Opendata::Dataset::DatasetFilter
@@ -7,12 +7,12 @@ class Opendata::Agents::Nodes::Dataset::DatasetCategoryController < ApplicationC
 
   def pages
     @cur_node.cur_subcategory = params[:name]
-    @item = @cur_node.related_category
+    @item = @cur_node.related_estat_category
     raise "404" unless @item
 
     @cur_node.name = @item.name
 
-    Opendata::Dataset.site(@cur_site).search(site: @cur_site, category_id: @item.id).and_public
+    Opendata::Dataset.site(@cur_site).search(site: @cur_site, estat_category_id: @item.id).and_public
   end
 
   def node_url
@@ -29,7 +29,7 @@ class Opendata::Agents::Nodes::Dataset::DatasetCategoryController < ApplicationC
     @count          = pages.size
     @node_url       = node_url
     @dataset_path   = dataset_path
-    default_options = { "s[category_id]" => @item.id }
+    default_options = { "s[estat_category_id]" => @item.id }
     @search_path    = ->(options = {}) { search_datasets_path(default_options.merge(options)) }
     @rss_path       = ->(options = {}) { build_path("#{search_datasets_path}rss.xml", default_options.merge(options)) }
     @items          = pages.order_by(released: -1).limit(10)
@@ -53,15 +53,15 @@ class Opendata::Agents::Nodes::Dataset::DatasetCategoryController < ApplicationC
         rss: @rss_path.call("sort" => "attention") }
     ]
 
-    @show_categories = false
-    @show_estat_categories = true
+    @show_categories = true
+    @show_estat_categories = false
 
     max = 50
-    @areas            = aggregate_areas(max)
-    @estat_categories = aggregate_estat_categories(max)
-    @tags             = aggregate_tags(max)
-    @formats          = aggregate_formats(max)
-    @licenses         = aggregate_licenses(max)
+    @areas = aggregate_areas(max)
+    @categories = aggregate_categories(max)
+    @tags = aggregate_tags(max)
+    @formats = aggregate_formats(max)
+    @licenses = aggregate_licenses(max)
   end
 
   def rss

@@ -294,6 +294,24 @@ ja:
       assoc_file_is_not_updated: 連携ファイルは更新されていません。リソースは最新です。
       assoc_file_is_removed: 連携ファイルは削除されています。
     association_is_removed: 削除されています
+    counter_html:
+      - '<div class="catalog-date">'
+      - '  <div class="title"><h2 class="catalog">データカタログ</h2></div>'
+      - '  <article class="date-number">'
+      - '    <div class="dateset">'
+      - '      <span class="number">#{dataset_count}</span>'
+      - '      <span>データセット</span>'
+      - '    </div>'
+      - '    <div class="tag">'
+      - '      <span class="number">#{dataset_tag_count}</span>'
+      - '      <span>タグ</span>'
+      - '    </div>'
+      - '    <div class="group">'
+      - '      <span class="number">#{dataset_group_count}</span>'
+      - '      <span>グループ</span>'
+      - '    </div>'
+      - '  </article>'
+      - '</div>'
 
     # Web API
     api:
@@ -386,6 +404,7 @@ ja:
       opendata/update_plan: 更新頻度
       opendata/node_area: "都道府県 市区町村"
       opendata/pref_code: 地域コード
+      opendata/counter_html: レイアウト
 
   cms:
     nodes:
@@ -394,6 +413,7 @@ ja:
       opendata/area: 地域
       opendata/dataset: データセット
       opendata/dataset_category: データセット分野
+      opendata/dataset_estat_category: データセットeStat分野
       opendata/dataset_area: データセット地域
       opendata/search_dataset_group: データセットグループ検索
       opendata/search_dataset: データセット検索
@@ -513,6 +533,8 @@ ja:
       opendata/addon/url_rdf_store:
         rdf_iri: グラフ名
         rdf_error: RDF登録エラー
+      opendata/addon/counter_html:
+        html: HTML
       opendata/member:
         icon_id: アイコン画像
       opendata/license:
@@ -849,18 +871,21 @@ ja:
         - 更新予定日のメール通知が有効の場合、メール通知されます。
         - メール通知を有効にするには該当のタスクをサーバー設定する必要があります。
       update_plan_mail_state: 更新予定日のメール通知を設定します。
-
-  job:
-    models:
-      opendata/csv2rdf_converter/job: RDF変換ジョブ
-      opendata/facility/assoc_job: 施設CSV取り込みジョブ
-      opendata/cms_integration/assoc_job: 記事連携設定ジョブ
-      opendata/harvest/harvest_datasets_job: ハーベストジョブ
-      opendata/harvest/import_datasets_job: ハーベストインポートジョブ
-      opendata/harvest/export_datasets_job: ハーベストエクスポート削除ジョブ
-      opendata/harvest/destroy_datasets_job: ハーベスト関連データセット削除ジョブ
-
-  tooltip:
+    opendata/addon/counter_html:
+      html:
+        - HTMLを設定します。
+        - |-
+          下記のテンプレートが使用可能です。
+          #{dataset_count}　データセット件数が表示されます。
+          #{dataset_tag_count}　データセットのタグ件数が表示されます。
+          #{dataset_group_count}　データセットのグループ件数が表示されます。
+          #{estat_dataset_count}　eStat分野が設定されたデータセット件数が表示されます。
+          #{estat_dataset_tag_count}　eStat分野が設定されたデータセットのタグ件数が表示されます。
+          #{estat_dataset_group_count}　eStat分野が設定されたデータセットのグループ件数が表示されます。
+          #{app_count}　アプリ件数が表示されます。
+          #{app_tag_count}　アプリのタグ件数が表示されます。
+          #{idea_count}　アイデア件数が表示されます。
+          #{idea_tag_count}　アイデアのタグ件数が表示されます。
     opendata/harvest/importer:
       name:
         - 名前を設定します。
@@ -900,3 +925,13 @@ ja:
         - APIキーを設定します。
       order:
         - 並び順を設定します。
+
+  job:
+    models:
+      opendata/csv2rdf_converter/job: RDF変換ジョブ
+      opendata/facility/assoc_job: 施設CSV取り込みジョブ
+      opendata/cms_integration/assoc_job: 記事連携設定ジョブ
+      opendata/harvest/harvest_datasets_job: ハーベストジョブ
+      opendata/harvest/import_datasets_job: ハーベストインポートジョブ
+      opendata/harvest/export_datasets_job: ハーベストエクスポート削除ジョブ
+      opendata/harvest/destroy_datasets_job: ハーベスト関連データセット削除ジョブ

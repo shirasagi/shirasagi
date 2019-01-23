@@ -5,6 +5,7 @@ module Opendata
     Cms::Node.plugin "opendata/area"
     Cms::Node.plugin "opendata/dataset"
     Cms::Node.plugin "opendata/dataset_category"
+    Cms::Node.plugin "opendata/dataset_estat_category"
     Cms::Node.plugin "opendata/dataset_area"
     Cms::Node.plugin "opendata/search_dataset_group"
     Cms::Node.plugin "opendata/search_dataset"

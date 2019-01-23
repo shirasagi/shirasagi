@@ -35,6 +35,7 @@ class Opendata::Agents::Nodes::Dataset::DatasetAreaController < ApplicationContr
 
     default_options = {}
     default_options = { "s[area_id]" => @area_node.id } if @area_node
+    @dataset_path   = dataset_path
     @search_path    = ->(options = {}) { search_datasets_path(default_options.merge(options)) }
 
     @rss_path       = ->(options = {}) { build_path("#{search_datasets_path}rss.xml", default_options.merge(options)) }

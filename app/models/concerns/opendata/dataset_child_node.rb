@@ -35,4 +35,20 @@ module Opendata::DatasetChildNode
 
     nil
   end
+
+  def related_estat_category
+    category_path = url.sub(parent_dataset_node.url, '')
+    category_path = category_path[0..-2] if category_path.end_with?('/')
+    category_path = "#{category_path}/#{@cur_subcategory}" if @cur_subcategory
+
+    node = Cms::Node.site(@cur_site || self.site).and_public.where(filename: category_path).first
+    return node.becomes_with_route if node
+
+    (parent_dataset_node.st_estat_categories || parent_dataset_node.default_st_estat_categories || []).each do |cate|
+      node = Cms::Node.site(@cur_site || self.site).and_public.where(filename: "#{cate.filename}/#{category_path}").first
+      return node.becomes_with_route if node
+    end
+
+    nil
+  end
 end
