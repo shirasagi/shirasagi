@@ -9,6 +9,7 @@ module Cms::TemplateVariable
     template_variable_handler(:html, :template_variable_handler_html)
     template_variable_handler(:index_name) { |name, issuer| template_variable_handler_name(:name_for_index, issuer) }
     template_variable_handler(:class, :template_variable_handler_class)
+    template_variable_handler(:class_categories, :template_variable_handler_class_categories)
     template_variable_handler(:new, :template_variable_handler_new)
     template_variable_handler(:date, :template_variable_handler_date)
     template_variable_handler('date.default') { |name, issuer| template_variable_handler_date(name, issuer, :default) }
@@ -37,6 +38,11 @@ module Cms::TemplateVariable
   def template_variable_handler_class(name, issuer)
     return nil if try(:basename).blank?
     self.basename.sub(/\..*/, "").dasherize
+  end
+
+  def template_variable_handler_class_categories(name, issuer)
+    return nil if try(:categories).blank?
+    self.categories.and_public.order_by(order: 1, name: 1).map { |cate| cate.basename }.join(" ")
   end
 
   def template_variable_handler_new(name, issuer)
