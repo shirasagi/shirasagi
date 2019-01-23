@@ -7,6 +7,7 @@ class Article::Page
   include Cms::Addon::Meta
   include Cms::Addon::SnsPoster
   include Gravatar::Addon::Gravatar
+  include Cms::Addon::Thumb
   include Cms::Addon::Body
   include Cms::Addon::BodyPart
   include Cms::Addon::File
