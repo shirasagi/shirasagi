@@ -28,9 +28,9 @@ this.Cms_Form = (function () {
   Cms_Form.form_link_check_path = null;
 
   Cms_Form.getFormData = function($form) {
-    var formData = {};
+    var formData = new FormData();
     $.each($form.serializeArray(), function() {
-      formData[this.name] = this.value;
+      formData.append(this.name, this.value);
     });
     return formData;
   };
@@ -49,12 +49,14 @@ this.Cms_Form = (function () {
     }
 
     var formData = Cms_Form.getFormData($("#" + Form_Preview.form_id));
-    formData["route"] = Form_Preview.page_route;
+    formData.append("route", Form_Preview.page_route);
 
     $.ajax({
       type: "POST",
       url: Cms_Form.form_html_path,
       data: formData,
+      processData: false,
+      contentType: false,
       cache: false,
       success: function(html) { resolve("<div>" + html + "</div>") },
       error: function(xhr, status, error) {
@@ -1363,12 +1365,14 @@ this.Link_Checker = (function () {
       }
 
       var formData = Cms_Form.getFormData($("#" + Form_Preview.form_id));
-      formData["route"] = Form_Preview.page_route;
+      formData.append("route", Form_Preview.page_route);
 
       $.ajax({
         type: "POST",
         url: Cms_Form.form_link_check_path,
         data: formData,
+        processData: false,
+        contentType: false,
         cache: false,
         success: function(data) {
           Link_Checker.reset();
