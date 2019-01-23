@@ -125,7 +125,7 @@ class Cms::Column::Value::Base
       next if LINK_CHECK_EXCLUSION_FIELDS.include?(key)
       val = send(key)
       next unless val.is_a?(String)
-      find_href(val).each do |url|
+      find_url(val).each do |url|
         next if url[0] == '#'
         if url[0] == "/"
           str = column.form.site.https == "enabled" ? "https://" : "http://"
@@ -142,8 +142,8 @@ class Cms::Column::Value::Base
     end
   end
 
-  def find_href(val)
-    val.scan(%r!<a href="(.+?)">.+?</a>!).flatten
+  def find_url(val)
+    val.scan(%r!<a href="(.+?)">.+?</a>!).flatten | URI.extract(val)
   end
 
   def link_check(url, result)
