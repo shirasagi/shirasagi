@@ -120,11 +120,12 @@ class Cms::Column::Value::Base
 
   def validate_link_check
     @link_errors = []
-    result = {}
+    check = {}
     fields.each_key do |key|
       next if LINK_CHECK_EXCLUSION_FIELDS.include?(key)
       val = send(key)
       next unless val.is_a?(String)
+      next if val.blank?
       find_url(val).each do |url|
         next if url[0] == '#'
         if url[0] == "/"
@@ -132,24 +133,18 @@ class Cms::Column::Value::Base
           str += column.form.site.domains_with_subdir[0]
           url = str + url
         end
-        result = link_check(url, result)
-        if result[url] == 200
-          @link_errors << [url, I18n.t('errors.messages.link_check_success')]
-        else
-          @link_errors << [url, I18n.t('errors.messages.link_check_failure')]
-        end
+
+        next if check.key?(url)
+        check[url] = true
+
+        result = check_url(url)
+        @link_errors << [url, result]
       end
     end
   end
 
   def find_url(val)
     val.scan(%r!<a href="(.+?)">.+?</a>!).flatten | URI.extract(val, %w(http https))
-  end
-
-  def link_check(url, result)
-    return result if result[url]
-    result[url] = check_url(::URI.escape(url))
-    return result
   end
 
   def check_url(url)
@@ -164,14 +159,17 @@ class Cms::Column::Value::Base
     }
 
     begin
-      timeout(2) do
-        open(url, opts) { |f| return f.status[0].to_i }
+      Timeout.timeout(2) do
+        URI.open(url, opts) { |f| return f.status[0].to_i }
       end
+
+      :success
     rescue Timeout::Error
-      return 0
+      return :failure
     rescue => e
-      return 200 if progress_data_size
+      return :success if progress_data_size
     end
-    return 0
+
+    :failure
   end
 end

@@ -1379,14 +1379,9 @@ this.Link_Checker = (function () {
 
           $.each(data, function() {
             var link = this[0];
-            var msg = this[1];
+            var status = this[1];
 
-            if (msg === "成功") {
-              msg = '<span class="success">' + Link_Checker.message["success"] + '</span>';
-            } else {
-              msg = '<span class="failure">' + msg + '</span>';
-            }
-
+            var msg = '<span class="' + status + '">' + Link_Checker.message[status] + '</span>';
             Link_Checker.addMessage(link, null, msg);
           })
 
