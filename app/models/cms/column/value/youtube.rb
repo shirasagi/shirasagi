@@ -26,10 +26,10 @@ class Cms::Column::Value::Youtube < Cms::Column::Value::Base
         width: width,
         height: height,
         frameborder: "0",
-        allow: "accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" ,
+        allow: "accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture",
         allowfullscreen: "allowfullscreen"
-       }
-     ).to_s
+      }
+    ).to_s
   end
 
   def get_youtube_id
@@ -60,7 +60,7 @@ class Cms::Column::Value::Youtube < Cms::Column::Value::Base
     return '' if iframe.blank?
 
     if auto_width
-      ApplicationController.helpers.content_tag(:div, class: "youtube-auto-width") do
+      ApplicationController.helpers.content_tag(:div, class: "youtube-auto-width youtube-embed-wrapper") do
         iframe.try(:html_safe)
       end
     else

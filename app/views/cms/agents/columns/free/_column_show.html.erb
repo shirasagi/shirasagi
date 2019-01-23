@@ -1,3 +1,4 @@
 <%= render 'cms/agents/columns/main/base', show: true, column: column, value: value do %>
-  <%= value.value.try(:html_safe) %>
+  <%= html_editor "#mod-cms-body", height: "400px", readonly: true %>
+  <%= text_area_tag "mod-cms-body", value.value, style: "height: 400px;" %>
 <% end %>

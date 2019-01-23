@@ -3,10 +3,12 @@ class Cms::Column::Value::Base
   include SS::Document
   include SS::Liquidization
 
+  LINK_CHECK_EXCLUSION_FIELDS = %w(_id created updated deleted text_index column_id name order class_name _type file_id).freeze
+
   class_attribute :_permit_values, instance_accessor: false
   self._permit_values = []
 
-  attr_reader :in_wrap
+  attr_reader :in_wrap, :link_errors
 
   embedded_in :page, inverse_of: :column_values
   belongs_to :column, class_name: 'Cms::Column::Base'
@@ -17,6 +19,8 @@ class Cms::Column::Value::Base
   after_initialize :copy_column_settings, if: ->{ new_record? }
 
   validate :validate_value
+
+  validate :validate_link_check, on: :link
 
   liquidize do
     export :name
@@ -112,5 +116,62 @@ class Cms::Column::Value::Base
 
   def to_default_html
     ApplicationController.helpers.sanitize(self.value)
+  end
+
+  def validate_link_check
+    @link_errors = []
+    result = {}
+    fields.each_key do |key|
+      next if LINK_CHECK_EXCLUSION_FIELDS.include?(key)
+      val = send(key)
+      next unless val.is_a?(String)
+      find_url(val).each do |url|
+        next if url[0] == '#'
+        if url[0] == "/"
+          str = column.form.site.https == "enabled" ? "https://" : "http://"
+          str += column.form.site.domains_with_subdir[0]
+          url = str + url
+        end
+        result = link_check(url, result)
+        if result[url] == 200
+          @link_errors << [url, I18n.t('errors.messages.link_check_success')]
+        else
+          @link_errors << [url, I18n.t('errors.messages.link_check_failure')]
+        end
+      end
+    end
+  end
+
+  def find_url(val)
+    val.scan(%r!<a href="(.+?)">.+?</a>!).flatten | URI.extract(val, %w(http https))
+  end
+
+  def link_check(url, result)
+    return result if result[url]
+    result[url] = check_url(::URI.escape(url))
+    return result
+  end
+
+  def check_url(url)
+    proxy = ( url =~ /^https/ ) ? ENV['HTTPS_PROXY'] : ENV['HTTP_PROXY']
+    progress_data_size = nil
+    opts = {
+      proxy: proxy,
+      progress_proc: ->(size) do
+        progress_data_size = size
+        raise "200"
+      end
+    }
+
+    begin
+      timeout(2) do
+        open(url, opts) { |f| return f.status[0].to_i }
+      end
+    rescue Timeout::Error
+      return 0
+    rescue => e
+      return 200 if progress_data_size
+    end
+    return 0
   end
 end

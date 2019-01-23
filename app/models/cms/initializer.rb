@@ -26,6 +26,7 @@ module Cms
     Cms::Column.plugin 'cms/list'
     Cms::Column.plugin 'cms/youtube'
     Cms::Column.plugin 'cms/free'
+    Cms::Column.plugin 'cms/table'
 
     Cms::Role.permission :edit_cms_sites
     Cms::Role.permission :edit_cms_groups
