@@ -37,12 +37,12 @@ module Cms::TemplateVariable
 
   def template_variable_handler_class(name, issuer)
     return nil if try(:basename).blank?
-    self.basename.sub(/\..*/, "").dasherize
+    SS.config.cms.template_variable_handler_prefix['class'] + self.basename.sub(/\..*/, "").dasherize
   end
 
   def template_variable_handler_class_categories(name, issuer)
     return nil if try(:categories).blank?
-    self.categories.and_public.order_by(order: 1, name: 1).map { |cate| cate.basename }.join(" ")
+    self.categories.and_public.order_by(order: 1, name: 1).map { |cate| SS.config.cms.template_variable_handler_prefix['class_categories'] + cate.basename }.join(" ")
   end
 
   def template_variable_handler_new(name, issuer)

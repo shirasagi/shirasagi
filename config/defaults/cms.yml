@@ -130,6 +130,10 @@ production: &production
     path:
       - '/config/commands'
 
+  template_variable_handler_prefix:
+    class: ''
+    class_categories: 'item-'
+
 test:
   <<: *production
 
