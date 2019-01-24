@@ -1,12 +1,12 @@
-<% if @item.errors.present? %>
-  <%# リンクのエラーのサンプル。 %>
-  <%# 将来、正しい実装が提供されたら削除する。 %>
+<% if @item.column_link_errors.present? && @item.column_link_errors.any? { |_link, status| status == :failure } %>
   <div id="errorLinkChecker" class="errorExplanation">
-    <h2>リンクチェック</h2>
+    <h2><%= t "cms.check_links" %></h2>
     <div class="errorExplanationBody">
-      <p>次のリンクを確認しました。</p>
+      <p><%= t "errors.template.check_links" %></p>
       <ul>
-        <li>http://www.example.jp:3551/fs/3/7/9/_/bil0130-003.jpg <span class="failure">失敗</span></li>
+        <% @item.column_link_errors.select { |_link, status| status == :failure }.each do |link, _status| %>
+          <li><%= link %> <span class="failure"><%= t('errors.messages.link_check_failure') %></span></li>
+        <% end %>
       </ul>
     </div>
   </div>

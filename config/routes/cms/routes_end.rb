@@ -163,6 +163,7 @@ SS::Application.routes.draw do
       get "forms/:id/form" => "forms#form", as: :form
       get "forms/:id/columns/:column_id/new" => "forms#new_column", as: :form_column_new
       match "forms/:id/html" => "forms#html", as: :form_html, via: %i[post put]
+      match "forms/:id/link_check" => "forms#link_check", as: :form_link_check, via: %i[post put]
 
       resources :files, concerns: :deletion do
         get :select, on: :member
@@ -199,6 +200,15 @@ SS::Application.routes.draw do
           resources :forms, only: %i[] do
             get :palette, on: :member
           end
+        end
+
+        namespace "workflow" do
+          match "/wizard/:id/approver_setting" => "wizard#approver_setting", via: [:get, :post], as: "wizard_approver_setting"
+          get "/wizard/:id/reroute" => "wizard#reroute", as: "wizard_reroute"
+          post "/wizard/:id/reroute" => "wizard#do_reroute"
+          get "/wizard/:id/frame" => "wizard#frame", as: "wizard_frame"
+          get "/wizard/:id/comment" => "wizard#comment", as: "wizard_comment"
+          match "/wizard/:id" => "wizard#index", via: [:get, :post], as: "wizard"
         end
       end
     end

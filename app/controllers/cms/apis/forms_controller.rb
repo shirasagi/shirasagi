@@ -3,7 +3,7 @@ class Cms::Apis::FormsController < ApplicationController
 
   model Cms::Form
 
-  before_action :set_page_data, only: %i[html]
+  before_action :set_page_data, only: %i[html link_check]
 
   private
 
@@ -72,5 +72,20 @@ class Cms::Apis::FormsController < ApplicationController
     end
 
     render html: html.html_safe, layout: false
+  end
+
+  def link_check
+    if !@page.respond_to?(:form) || @page.form.blank?
+      head :no_content
+      return
+    end
+
+    @page.valid?(:link)
+    if @page.column_link_errors.blank?
+      head :no_content
+      return
+    end
+
+    render json: @page.column_link_errors.to_json, content_type: json_content_type
   end
 end

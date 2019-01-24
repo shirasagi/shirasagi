@@ -1,6 +1,12 @@
-//= require ss/lib/addon/temp_file
 //= require cms/lib/form
 //= require cms/lib/template_form
+
+//= require ss/lib/workflow
+//= require ss/lib/addon/temp_file
+//= require ss/lib/search_ui
+//= require ss/lib/list_ui
+//= require ss/lib/tree_ui
+//= require ss/lib/dropdown
 
 SS_Preview = (function () {
   function SS_Preview(el) {
@@ -14,8 +20,7 @@ SS_Preview = (function () {
     jquery: { isInstalled: function() { return !!window.jQuery; }, js: null, css: null },
     datetimePicker: { isInstalled: function() { return !!$.datetimepicker; }, js: null, css: null },
     colorbox: { isInstalled: function() { return !!$.colorbox; }, js: null, css: null },
-    dialog: { isInstalled: function() { return $.ui && $.ui.dialog; }, js: null, css: null },
-    resizable: { isInstalled: function() { return $.ui && $.ui.resizable; }, js: null, css: null }
+    dialog: { isInstalled: function() { return $.ui && $.ui.dialog; }, js: null, css: null }
   };
 
   SS_Preview.confirms = { delete: null };
@@ -37,6 +42,8 @@ SS_Preview = (function () {
 
   SS_Preview.inplaceFormPath = { page: null, columnValue: {}, palette: null };
 
+  SS_Preview.workflowPath = { wizard: null, pages: null };
+
   SS_Preview.instance = null;
 
   SS_Preview.minFrameSize = { width: 320, height: 150 };
@@ -53,8 +60,7 @@ SS_Preview = (function () {
       $.when(
         SS_Preview.lazyLoad(SS_Preview.libs.datetimePicker),
         SS_Preview.lazyLoad(SS_Preview.libs.colorbox),
-        SS_Preview.lazyLoad(SS_Preview.libs.dialog),
-        SS_Preview.lazyLoad(SS_Preview.libs.resizable)
+        SS_Preview.lazyLoad(SS_Preview.libs.dialog)
       ).done(function () {
         SS_Preview.instance.initialize(opts);
       });
@@ -140,6 +146,14 @@ SS_Preview = (function () {
     }
 
     SS_Preview.instance.notice.show(message);
+  };
+
+  SS_Preview.bindToWorkflowCommentForm = function (updateType) {
+    if (!SS_Preview.instance) {
+      return;
+    }
+
+    SS_Preview.instance.bindToWorkflowCommentForm(updateType);
   };
 
   SS_Preview.prototype.initialize = function(opts) {
@@ -392,6 +406,12 @@ SS_Preview = (function () {
       ev.preventDefault();
       return false;
     };
+
+    if (frame.contentWindow.CKEDITOR) {
+      frame.contentWindow.CKEDITOR.on("instanceReady", function (ev) {
+        self.adjustRichEditorHeight(ev.editor);
+      });
+    }
   };
 
   // SS_Preview.prototype.openDialogInFrame = function(url) {
@@ -421,7 +441,7 @@ SS_Preview = (function () {
     var self = this;
 
     var $frame = $("<iframe></iframe>", {
-      id: "ss-preview-column-form", name: "ss-preview-column-form",
+      id: "ss-preview-dialog-frame",
       frameborder: "0", allowfullscreen: true,
       src: url
     });
@@ -438,8 +458,83 @@ SS_Preview = (function () {
       dialogClass: "ss-preview-dialog ss-preview-dialog-column",
       draggable: true,
       modal: true,
-      resizable: true
+      resizable: true,
+      close: function(ev, ui) {
+        // explicitly destroy dialog and remove elemtns because dialog elements is still remained
+        $(this).dialog('destroy').remove();
+      },
+      resize: function(ev, ui) {
+        if (ui.originalSize.height - ui.size.height != 0) {
+          self.adjustAllRichEditorHeight($frame);
+        }
+      }
     });
+  };
+
+  SS_Preview.prototype.openDialog = function(url) {
+    var self = this;
+
+    $.ajax({
+      url: url,
+      type: "GET",
+      success: function(data, textStatus, xhr) {
+        var $frame = $("div#ss-preview-dialog-frame");
+        if (! $frame[0]) {
+          $frame = $("<div></div>", { id: "ss-preview-dialog-frame" });
+        }
+        $frame.html(data);
+        $frame.dialog({
+          autoOpen: true,
+          width: SS_Preview.initialFrameSize.width,
+          height: SS_Preview.initialFrameSize.height,
+          minWidth: SS_Preview.minFrameSize.width,
+          minHeight: SS_Preview.minFrameSize.height,
+          closeOnEscape: false,
+          dialogClass: "ss-preview-dialog ss-preview-dialog-column",
+          draggable: true,
+          modal: true,
+          resizable: true,
+          close: function(ev, ui) {
+            // explicitly destroy dialog and remove elemtns because dialog elements is still remained
+            $(this).dialog('destroy').remove();
+          },
+          resize: function(ev, ui) {
+            if (ui.originalSize.height - ui.size.height != 0) {
+              self.adjustAllRichEditorHeight($frame);
+            }
+          }
+        });
+      },
+      error: function(xhr, status, error) {
+        self.notice.show(error);
+      }
+    })
+  };
+
+  SS_Preview.prototype.adjustAllRichEditorHeight = function($frame) {
+    var self = this;
+    if ($frame[0].contentWindow.CKEDITOR) {
+      $.each($frame[0].contentWindow.CKEDITOR.instances, function (key, editor) {
+        self.adjustRichEditorHeight(editor);
+      });
+    }
+  };
+
+  SS_Preview.prototype.adjustRichEditorHeight = function(editor) {
+    if (editor.status !== "ready") {
+      return;
+    }
+
+    var $el = $(editor.element.$);
+    var $parent = $el.parent();
+    var height = $parent.height();
+
+    height = height - 40;
+    if (height < 50) {
+      height = 50;
+    }
+
+    editor.resize("100%", height.toString());
   };
 
   SS_Preview.prototype.openPageEdit = function(pageId) {
@@ -480,6 +575,20 @@ SS_Preview = (function () {
 
     this.$el.on("click", ".ss-preview-btn-edit-part", function() {
       self.openPartEdit(list.val());
+    });
+
+    this.$el.on("click", "#ss-preview-btn-workflow-start", function() {
+      self.openWorkflowApprove();
+    });
+
+    this.$el.on("click", "#ss-preview-btn-workflow-approve", function() {
+      self.openWorkflowComment("approve");
+    });
+    this.$el.on("click", "#ss-preview-btn-workflow-remand", function() {
+      self.openWorkflowComment("remand");
+    });
+    this.$el.on("click", "#ss-preview-btn-workflow-pull-up", function() {
+      self.openWorkflowComment("pull-up");
     });
 
     this.$el.find(".ss-preview-part-group").removeClass("ss-preview-hide");
@@ -768,6 +877,64 @@ SS_Preview = (function () {
     }
 
     window.open(part.path, "_blank");
+  };
+
+  //
+  // Workflow Approve
+  //
+
+  SS_Preview.prototype.openWorkflowApprove = function() {
+    var url = SS_Preview.workflowPath.wizard.replace(":id", SS_Preview.item.pageId) + "/frame";
+    this.openDialog(url);
+  };
+
+  SS_Preview.prototype.openWorkflowComment = function(updateType) {
+    var url = SS_Preview.workflowPath.wizard.replace(":id", SS_Preview.item.pageId) + "/comment?update_type=" + updateType;
+    this.openDialog(url);
+  };
+
+  SS_Preview.prototype.bindToWorkflowCommentForm = function(updateType) {
+    var $frame = $("#ss-preview-dialog-frame");
+    $frame.on("click", "input[type=submit]", function() {
+      var remandComment = $frame.find("textarea[name=comment]").prop("value");
+      var action = updateType + "_update";
+      var url = SS_Preview.workflowPath.pages.replace(":id", SS_Preview.item.pageId);
+      url += "/" + action;
+
+      $frame.dialog("close");
+
+      $.ajax({
+        type: "POST",
+        url: url,
+        data: {
+          remand_comment: remandComment,
+          url: SS_Preview.request_path,
+          forced_update_option: true
+        },
+        success: function (data) {
+          if (data.workflow_alert) {
+            self.notice.show(data.workflow_alert);
+            return;
+          }
+
+          location.reload();
+        },
+        error: function(xhr, status) {
+          try {
+            var errors = $.parseJSON(xhr.responseText);
+            var msg = ["== Error =="].concat(errors).join("\n");
+            self.notice.show(msg);
+          }
+          catch (ex) {
+            var msg = ["== Error =="].concat(xhr["statusText"]).join("\n");
+            self.notice.show(msg);
+          }
+        }
+      });
+    });
+    $frame.on("click", "button[type=reset]", function() {
+      $frame.dialog("close");
+    });
   };
 
   //
