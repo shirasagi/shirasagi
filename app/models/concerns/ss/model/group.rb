@@ -56,6 +56,10 @@ module SS::Model::Group
     def tree_sort(options = {})
       SS::TreeList.build self, options
     end
+
+    def roots
+      self.not(name: /\//)
+    end
   end
 
   def full_name
