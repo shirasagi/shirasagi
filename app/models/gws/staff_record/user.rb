@@ -110,13 +110,22 @@ class Gws::StaffRecord::User
     %w(
       id name code order kana multi_section section_name title_name tel_ext
       charge_name charge_address charge_tel divide_duties remark staff_records_view divide_duties_view
+      group_ids user_ids permission_level
     )
   end
 
   def export_convert_item(item, data)
-    data[5]  = item.label(:multi_section)
+    # multi_section
+    data[5] = item.label(:multi_section)
+    # staff_records_view
     data[14] = item.label(:staff_records_view)
+    # divide_duties_views
     data[15] = item.label(:divide_duties_view)
+    # group_ids
+    data[16] = Gws::Group.site(@cur_site).in(id: data[16]).active.pluck(:name).join("\n")
+    # user_ids
+    data[17] = Gws::User.site(@cur_site).in(id: data[17]).active.pluck(:uid).join("\n")
+
     data
   end
 
@@ -127,6 +136,10 @@ class Gws::StaffRecord::User
     show = I18n.t("ss.options.state.show")
     data[:staff_records_view] = (data[:staff_records_view] == show) ? 'show' : 'hide'
     data[:divide_duties_view] = (data[:divide_duties_view] == show) ? 'show' : 'hide'
+
+    data[:group_ids] = Gws::Group.site(@cur_site).active.in(name: data[:group_ids]).pluck(:id)
+    data[:user_ids] = Gws::User.site(@cur_site).active.in(uid: data[:user_ids]).pluck(:id)
+
     data
   end
 
