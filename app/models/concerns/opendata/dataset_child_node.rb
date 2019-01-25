@@ -51,4 +51,16 @@ module Opendata::DatasetChildNode
 
     nil
   end
+
+  def related_area
+    category_path = url.sub(parent_dataset_node.url, '')
+    category_path = category_path[0..-2] if category_path.end_with?('/')
+    category_path = "#{category_path}/#{@cur_subcategory}" if @cur_subcategory
+
+    node = Cms::Node.site(@cur_site || self.site).and_public.where(filename: category_path).first
+    dump(node.try(:name))
+    return node.becomes_with_route if node
+
+    nil
+  end
 end
