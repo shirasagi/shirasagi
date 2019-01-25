@@ -698,9 +698,12 @@ this.Syntax_Checker = (function () {
 
   Syntax_Checker.checkAdjacentA = function (html) {
     return $(html).find("a[href]").each(function () {
-      var errors, next;
-      next = $(this).next('a[href="' + $(this).attr("href") + '"]');
-      if (next.length) {
+      var errors, next, href;
+
+      href = $(this).attr("href");
+      next = $(this).next("a[href]");
+
+      if (next.length && href == next.attr("href")) {
         errors = [
           {
             code: Syntax_Checker.outerHtmlSummary(this) + Syntax_Checker.outerHtmlSummary(next),
@@ -716,9 +719,12 @@ this.Syntax_Checker = (function () {
   };
 
   Syntax_Checker.correctAdjacentA = function (a) {
-    var next;
-    next = $(a).next('a[href="' + $(a).attr("href") + '"]');
-    if (next.length) {
+    var next, href;
+
+    href = $(a).attr("href");
+    next = $(a).next("a[href]");
+
+    if (next.length && href == next.attr("href")) {
       if ($(a).html() !== $(next).html()) {
         $(a).html($(a).html() + $(next).html());
       }
