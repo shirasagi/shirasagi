@@ -12,7 +12,7 @@ module Webmail::Addon
         pre = $1
         src = $2
         suf = $3
-        if src =~ /^cid:/
+        if src.start_with?("cid:")
           all_parts.each do |pos, part|
             next unless part.content_id.to_s.include?(src.sub(/^cid:/, ''))
             src = "parts/#{pos}"
