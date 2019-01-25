@@ -44,7 +44,7 @@ module Gws::Export
         idx = field_vals.index(k)
         data[field_keys[idx]] = v if idx
       end
-      # rows << data
+
       next if data.blank?
       item = import_data(data.with_indifferent_access)
       errors.add :base, "##{no} " + item.errors.full_messages.join("\n") if item.errors.present?
@@ -55,10 +55,28 @@ module Gws::Export
 
   private
 
-  def each_csv
-    CSV.foreach(in_file.path, headers: true, encoding: 'SJIS:UTF-8') do |row|
-      yield row
+  def utf8_file?
+    in_file.rewind
+    bom = in_file.read(3)
+    in_file.rewind
+
+    bom.force_encoding("UTF-8")
+    UTF8_BOM == bom
+  end
+
+  def each_csv(&block)
+    io = in_file.to_io
+    if utf8_file?
+      io.seek(3)
+      io.set_encoding('UTF-8')
+    else
+      io.set_encoding('SJIS:UTF-8')
     end
+
+    csv = CSV.new(io, { headers: true })
+    csv.each(&block)
+  ensure
+    io.set_encoding("ASCII-8BIT")
   end
 
   def export_fields
@@ -115,11 +133,12 @@ module Gws::Export
     else
       data.delete(:id)
       item = import_new_item(data)
-      item.user_ids = [@cur_user.id] if item.respond_to?(:user_ids)
     end
 
     item.cur_user = @cur_user
     item.cur_site = @cur_site if @cur_site
+    # cur_user must be contained because some permission errors may occur if it absents.
+    item.user_ids = (Array(item.user_ids) + [@cur_user.id]).uniq if item.respond_to?(:user_ids)
     item.save
     item
   end
