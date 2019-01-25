@@ -36,29 +36,30 @@ module Gws::Export
     field_keys = export_fields
     field_vals = export_field_names
 
-    rows = []
-    CSV.read(in_file.path, headers: true, encoding: 'SJIS:UTF-8').each do |row|
+    no = 0
+    each_csv do |row|
+      no += 1
       data = {}
       row.each do |k, v|
         idx = field_vals.index(k)
         data[field_keys[idx]] = v if idx
       end
-      rows << data
-    end
-
-    import_array(rows)
-  end
-
-  def import_array(rows)
-    rows.each_with_index do |data, no|
+      # rows << data
       next if data.blank?
       item = import_data(data.with_indifferent_access)
       errors.add :base, "##{no} " + item.errors.full_messages.join("\n") if item.errors.present?
     end
-    return errors.empty?
+
+    errors.empty?
   end
 
   private
+
+  def each_csv
+    CSV.foreach(in_file.path, headers: true, encoding: 'SJIS:UTF-8') do |row|
+      yield row
+    end
+  end
 
   def export_fields
     fields = self.class.fields.keys
@@ -82,7 +83,12 @@ module Gws::Export
     return errors.add :in_file, :invalid_file_type if ::File.extname(fname) !~ /^\.csv$/i
 
     begin
-      CSV.read(in_file.path, headers: true, encoding: 'SJIS:UTF-8')
+      no = 0
+      each_csv do |row|
+        no += 1
+        # check csv record up to 100
+        break if no >= 100
+      end
       in_file.rewind
     rescue => e
       errors.add :in_file, :invalid_file_type
