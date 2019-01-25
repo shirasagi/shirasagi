@@ -100,7 +100,7 @@ module Webmail::Mail::Message
   def reply_body_html(ref, sign = nil)
     if ref.html.present?
       bq = ref.sanitize_html(remove_image: true)
-    else
+    elsif ref.text.present?
       bq = h(decode_jp(ref.text.to_s)).gsub(/\r\n|\n/, '<br />')
     end
 

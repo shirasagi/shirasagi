@@ -23,7 +23,7 @@ module Webmail::Addon
       end
 
       html = ApplicationController.helpers.sanitize_with(html, attributes: %w(data-url))
-      html = html.gsub!(/<img.*?>/im, '') if opts[:remove_image]
+      html.gsub!(/<img.*?>/im, '') if opts[:remove_image]
       html
     end
   end
