@@ -2,9 +2,11 @@ module Gws::Export
   extend ActiveSupport::Concern
   extend SS::Translation
 
+  UTF8_BOM = "\uFEFF".freeze
+
   included do
-    attr_accessor :in_file
-    permit_params :in_file
+    attr_accessor :in_file, :in_csv_encoding
+    permit_params :in_file, :in_csv_encoding
   end
 
   def export_csv(items)
@@ -18,7 +20,13 @@ module Gws::Export
       end
     end
 
-    csv.encode("SJIS", invalid: :replace, undef: :replace)
+    if in_csv_encoding.present? && in_csv_encoding.casecmp("UTF-8") == 0
+      csv = UTF8_BOM + csv
+    else
+      csv = csv.encode("SJIS", invalid: :replace, undef: :replace)
+    end
+
+    csv
   end
 
   def import_csv
