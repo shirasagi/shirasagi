@@ -8,6 +8,14 @@ module Opendata::Addon
       embeds_ids :categories, class_name: "Opendata::Node::Category", metadata: { on_copy: :safe }
       permit_params category_ids: []
       validates :category_ids, presence: true, if: ->{ self.class.required_categories }
+
+      if respond_to?(:template_variable_handler)
+        template_variable_handler('categories.class', :template_variable_handler_dataset_categories)
+      end
+    end
+
+    def template_variable_handler_dataset_categories(name, issuer)
+      categories.to_a.map { |cate| "category-#{cate.basename}" }.join(" ")
     end
   end
 
@@ -18,6 +26,14 @@ module Opendata::Addon
     included do
       embeds_ids :estat_categories, class_name: "Opendata::Node::EstatCategory", metadata: { on_copy: :safe }
       permit_params estat_category_ids: []
+
+      if respond_to?(:template_variable_handler)
+        template_variable_handler('estat-categories.class', :template_variable_handler_estat_dataset_categories)
+      end
+    end
+
+    def template_variable_handler_estat_dataset_categories(name, issuer)
+      estat_categories.to_a.map { |cate| "estat-#{cate.basename}" }.join(" ")
     end
   end
 
