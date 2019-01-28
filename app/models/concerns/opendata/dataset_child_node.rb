@@ -58,7 +58,6 @@ module Opendata::DatasetChildNode
     category_path = "#{category_path}/#{@cur_subcategory}" if @cur_subcategory
 
     node = Cms::Node.site(@cur_site || self.site).and_public.where(filename: category_path).first
-    dump(node.try(:name))
     return node.becomes_with_route if node
 
     nil
