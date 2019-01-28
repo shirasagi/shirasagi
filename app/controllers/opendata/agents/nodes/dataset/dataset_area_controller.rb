@@ -5,26 +5,26 @@ class Opendata::Agents::Nodes::Dataset::DatasetAreaController < ApplicationContr
 
   private
 
-  def set_area_node
-    @node_url = @cur_node.url
-    return if params[:name].blank?
+  def pages
+    @cur_node.cur_subcategory = params[:name]
+    @item = @cur_node.related_area
+    raise "404" unless @item
 
-    filename = ::File.join(@cur_node.basename, params[:name])
-    @area_node = Cms::Node.site(@cur_site).where(filename: filename).first
-    raise "404" unless @area_node
+    @cur_node.name = @item.name
 
-    @area_node = @area_node.becomes_with_route
-    @cur_node.name = @area_node.name
-    @node_url = "#{@cur_node.url}#{params[:name]}/"
+    if @item.route == "opendata/area"
+      Opendata::Dataset.site(@cur_site).search(site: @cur_site, area_id: @item.id).and_public
+    else
+      area_ids = Opendata::Node::Area.site(@cur_site).where(filename: /^#{@item.filename}\//).pluck(:id)
+      Opendata::Dataset.site(@cur_site).in(area_ids: area_ids).and_public
+    end
   end
 
-  def pages
-    set_area_node
-
-    if @area_node && @area_node.route == "opendata/area"
-      Opendata::Dataset.site(@cur_site).search(site: @cur_site, area_id: @area_node.id).and_public
+  def node_url
+    if name = params[:name]
+      "#{@cur_node.url}#{name}/"
     else
-      Opendata::Dataset.site(@cur_site).search(site: @cur_site).and_public
+      @cur_node.url
     end
   end
 
@@ -32,12 +32,10 @@ class Opendata::Agents::Nodes::Dataset::DatasetAreaController < ApplicationContr
 
   def index
     @count          = pages.size
-
-    default_options = {}
-    default_options = { "s[area_id]" => @area_node.id } if @area_node
+    @node_url       = node_url
     @dataset_path   = dataset_path
+    default_options = { "s[area_id]" => @item.id }
     @search_path    = ->(options = {}) { search_datasets_path(default_options.merge(options)) }
-
     @rss_path       = ->(options = {}) { build_path("#{search_datasets_path}rss.xml", default_options.merge(options)) }
     @items          = pages.order_by(released: -1).limit(10)
     @point_items    = pages.order_by(point: -1).limit(10)
