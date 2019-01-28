@@ -10,12 +10,12 @@ module Opendata::Addon
       validates :category_ids, presence: true, if: ->{ self.class.required_categories }
 
       if respond_to?(:template_variable_handler)
-        template_variable_handler('categories.class', :template_variable_handler_dataset_categories)
+        template_variable_handler('class_categories', :template_variable_handler_class_categories)
       end
     end
 
-    def template_variable_handler_dataset_categories(name, issuer)
-      categories.to_a.map { |cate| "category-#{cate.basename}" }.join(" ")
+    def template_variable_handler_class_categories(name, issuer)
+      categories.to_a.map { |cate| "dataset-#{cate.basename}" }.join(" ")
     end
   end
 
@@ -28,11 +28,11 @@ module Opendata::Addon
       permit_params estat_category_ids: []
 
       if respond_to?(:template_variable_handler)
-        template_variable_handler('estat-categories.class', :template_variable_handler_estat_dataset_categories)
+        template_variable_handler('class_estat_categories', :template_variable_handler_class_estat_categories)
       end
     end
 
-    def template_variable_handler_estat_dataset_categories(name, issuer)
+    def template_variable_handler_class_estat_categories(name, issuer)
       estat_categories.to_a.map { |cate| "estat-#{cate.basename}" }.join(" ")
     end
   end

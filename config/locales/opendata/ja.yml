@@ -980,5 +980,5 @@ ja:
           #{event_deadline.short} イベントの締切日が「15/04/01 12:34」の形式で表示されます。
           #{tags} リンク先ページのタグが表示されます。
 
-          #{categories.class} ページに設定されている分野のフォルダー名が「category-」の形式で表示されます。
-          #{estat_categories.class} ページに設定されているeStat分野のフォルダー名が「estat-」の形式で表示されます。
+          #{class_categories} リンク先ページ内が分野に関連付けられている場合、全てのカテゴリのフォルダ名が表示されます。
+          #{class_estat_categories} リンク先ページ内がeStat分野に関連付けられている場合、全てのカテゴリのフォルダ名が表示されます。
