@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe "webmail_mails", type: :feature, dbscope: :example, imap: true do
+describe "webmail_mails", type: :feature, dbscope: :example, imap: true, js: true do
   context "when html mail is given" do
     let(:user) { webmail_imap }
     let(:item) do
@@ -25,6 +25,42 @@ describe "webmail_mails", type: :feature, dbscope: :example, imap: true do
         visit index_path
         click_on item.subject
         expect(page).to have_css("#addon-basic .body--html", text: "test")
+
+        within first(".nav-menu .dropdown") do
+          # click_on I18n.t("ss.links.reply")
+          first("a").click
+          # click_on I18n.t("ss.links.reply")
+          first("li").click
+        end
+
+        within "form#item-form" do
+          click_on I18n.t("ss.buttons.send")
+        end
+
+        expect(ActionMailer::Base.deliveries).to have(1).items
+        ActionMailer::Base.deliveries.first.tap do |mail|
+          expect(mail.subject).to eq "Re: #{item.subject}"
+          expect(mail.content_type).to include("text/html")
+          expect(mail.body.multipart?).to be_falsey
+          expect(mail.body.raw_source).to include("<b>test</b>")
+        end
+
+        visit index_path
+        click_on item.subject
+        click_on I18n.t("webmail.links.forward")
+
+        within "form#item-form" do
+          fill_in "to", with: user.email + "\n"
+          click_on I18n.t("ss.buttons.send")
+        end
+
+        expect(ActionMailer::Base.deliveries).to have(2).items
+        ActionMailer::Base.deliveries.last.tap do |mail|
+          expect(mail.subject).to eq "Fw: #{item.subject}"
+          expect(mail.content_type).to include("text/html")
+          expect(mail.body.multipart?).to be_falsey
+          expect(mail.body.raw_source).to include("<b>test</b>")
+        end
       end
     end
 
