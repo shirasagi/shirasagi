@@ -54,7 +54,6 @@
   <dd class="wide allowed-categories">
     <%= f.hidden_field "estat_category_ids[]", value: "" %>
 
-    <%= @disallowed_categories %>
     <% @estat_categories.each do |cate| %>
       <div class="parent">
         <%= cate_form(cate) %>
