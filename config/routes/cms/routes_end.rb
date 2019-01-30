@@ -210,6 +210,8 @@ SS::Application.routes.draw do
           get "/wizard/:id/comment" => "wizard#comment", as: "wizard_comment"
           match "/wizard/:id" => "wizard#index", via: [:get, :post], as: "wizard"
         end
+
+        get "/redirector/new-page/(:cid)" => "redirector#new_page", as: "redirector_new_page"
       end
     end
   end

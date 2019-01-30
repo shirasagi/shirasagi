@@ -71,6 +71,7 @@
       SS_Preview.workflowPath.wizard = <%== cms_apis_preview_workflow_wizard_path(site: @cur_site, preview_date: params[:preview_date], id: ":id").to_json %>;
       SS_Preview.workflowPath.pages = <%== "/.s#{@cur_site.id}/workflow/pages/:id".to_json %>;
       SS_Preview.previewPath = <%== cms_preview_path(path: ":path").to_json %>;
+      SS_Preview.redirectorPath.newPage = <%== cms_apis_preview_redirector_new_page_path(site: @cur_site, cid: ":nodeId").to_json %>;
     <% end %>
   </script>
 <% end %>
@@ -111,11 +112,22 @@
           <div class="ss-preview-btn-group">
             <button type="button" class="ss-preview-btn ss-preview-btn-outline-primary ss-preview-btn-toggle-inplace"><%= t("cms.inplace_edit") %></button>
           </div>
+          <%
+            if rendered[:page] && rendered[:page].parent
+              node = rendered[:page].parent
+            end
+            if rendered[:node]
+              node = rendered[:node]
+            end
+          %>
+          <div class="ss-preview-btn-group" data-node-id="<%= node.try(:id) %>">
+            <span class="ss-preview-dropdown">
+              <label for="ss-preview-btn-select-node"><%= node.try(:name) || @cur_site.name %></label>
+              <a id="ss-preview-btn-select-node" class="ss-preview-btn ss-preview-btn-outline" href="<%= cms_apis_nodes_path(layout: "iframe", single: true) %>">▼</a>
+            </span>
+            <button type="button" id="ss-preview-btn-create-new-page" class="ss-preview-btn ss-preview-btn-outline"><%= t("ss.buttons.new") %></button>
+          </div>
           <div class="ss-preview-btn-group">
-            <select class="ss-preview-node-list">
-              <option value="">記事</option>
-            </select>
-            <button type="button" class="ss-preview-btn ss-preview-btn-outline"><%= t("ss.buttons.new") %></button>
             <%
               page_params = { layout: "iframe", single: true, s: { statuses: %w(ready request remand draft closed) } }
               if rendered[:page] && rendered[:page].parent

@@ -44,6 +44,8 @@ SS_Preview = (function () {
 
   SS_Preview.workflowPath = { wizard: null, pages: null };
 
+  SS_Preview.redirectorPath = { newPage: null };
+
   SS_Preview.instance = null;
 
   SS_Preview.minFrameSize = { width: 320, height: 150 };
@@ -225,6 +227,25 @@ SS_Preview = (function () {
       if (path) {
         window.open(path, "_blank")
       }
+    });
+
+    var $selectNodeBtn = this.$el.find("#ss-preview-btn-select-node");
+    $selectNodeBtn.colorbox({ iframe: true, fixed: true, width: "90%", height: "90%" })
+      .data("on-select", function($item) {
+        var $dataEl = $item.closest("[data-id]");
+        var id = $dataEl.data("id");
+        var name = $dataEl.find(".name").text();
+
+        var $nodeDataEl = $selectNodeBtn.closest("[data-node-id]");
+        $nodeDataEl.data("node-id", id);
+        $nodeDataEl.find("label").html(name);
+      });
+
+    this.$el.find("#ss-preview-btn-create-new-page").on("click", function() {
+      var $nodeDataEl = $selectNodeBtn.closest("[data-node-id]");
+      var nodeId = $nodeDataEl.data("node-id");
+
+      window.open(SS_Preview.redirectorPath.newPage.replace(":nodeId", nodeId));
     });
 
     this.$el.find("#ss-preview-btn-select-draft-page")
