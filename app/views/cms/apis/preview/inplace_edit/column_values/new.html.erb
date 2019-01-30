@@ -37,9 +37,7 @@ Cms_Inplace_Form.render();
       end
     %>
     <%= f.submit labels[0], name: "save_if_no_alerts", class: 'btn-primary save' %>
-    <% if @inplace_syntax_check %>
-      <%= f.submit labels[1], name: "ignore_alerts_and_save", class: 'btn-default' %>
-    <% end %>
+    <%= f.submit labels[1], name: "ignore_alerts_and_save", class: 'btn-default' %>
 
     <%= f.button t("ss.buttons.close"), name: "cancel", class: 'btn-default btn-cancel', type: :reset %>
   </footer>
