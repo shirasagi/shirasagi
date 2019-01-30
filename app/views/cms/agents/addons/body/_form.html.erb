@@ -5,7 +5,7 @@
   syntax_check = @cur_site.syntax_check_enabled? if syntax_check.nil?
 
   addon ||= local_assigns.fetch(:addon, {})
-  if @item.form.present?
+  if @item.respond_to?(:form) && @item.form.present?
     css_class = Array(addon[:class])
     addon[:class] = css_class + %w(hide)
   end
