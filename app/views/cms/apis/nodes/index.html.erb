@@ -11,6 +11,7 @@
   <%= text_field_tag 's[name]', params[:s].try(:[], :name) %>
   <%= hidden_field_tag :single, params[:single] if params[:single].present? %>
   <%= hidden_field_tag :model, params[:model] if params[:model].present? %>
+  <%= hidden_field_tag :layout, params[:layout] if params[:layout].present? %>
   <%= submit_tag t("cms.apis.nodes.search"), class: :btn %>
 <% end %>
 </div>
