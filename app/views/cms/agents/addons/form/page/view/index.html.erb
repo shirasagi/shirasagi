@@ -10,12 +10,14 @@
   assigns = { "values" => @cur_page.column_values.to_liquid, "page" => @cur_page.to_liquid }
   html = template.render(assigns).html_safe
 %>
-<% if @preview %>
-  <div id="ss-preview-form-start" class="ss-preview-hide" data-form-id="<%== @cur_page.form.id %>" data-form-sub-type="<%== @cur_page.form.sub_type %>"></div>
-<% end %>
+<%= content_tag_if("article", class: "body", if: @cur_page.form.sub_type_entry?) do %>
+  <% if @preview %>
+    <div id="ss-preview-form-start" class="ss-preview-hide" data-form-id="<%== @cur_page.form.id %>" data-form-sub-type="<%== @cur_page.form.sub_type %>"></div>
+  <% end %>
 
-<%== html %>
+  <%== html %>
 
-<% if @preview %>
-  <div id="ss-preview-form-end" class="ss-preview-hide" data-form-id="<%== @cur_page.form.id %>" data-form-sub-type="<%== @cur_page.form.sub_type %>"></div>
+  <% if @preview %>
+    <div id="ss-preview-form-end" class="ss-preview-hide" data-form-id="<%== @cur_page.form.id %>" data-form-sub-type="<%== @cur_page.form.sub_type %>"></div>
+  <% end %>
 <% end %>
