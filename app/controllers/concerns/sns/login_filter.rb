@@ -25,7 +25,7 @@ module Sns::LoginFilter
     if params[:ref].blank?
       redirect_to default_logged_in_path
     elsif params[:ref] =~ /^\/[^\/]/
-      redirect_to params[:ref]
+      redirect_to URI.parse(params[:ref].to_s).path
     else
       render "sns/login/redirect"
     end

@@ -1,0 +1,24 @@
+<%
+  css_classes = %w(calendar-attr)
+  dropdown = render("gws/schedule/main/calendar_attr_dropdown", user: user)
+  if dropdown.present?
+    css_classes += %w(dropdown gws-dropdown dropdown-toggle clickable)
+  end
+%>
+
+<div class="<%= css_classes.join(' ') %>" data-email="<%= user.email %>" data-user-id="<%= user.id %>">
+  <span class="group">
+    <%= tryb { user.gws_main_group(@cur_site).trailing_name } %>
+  </span>
+  <% if title = user.title(@cur_site) %>
+    <span class="user-title"><%= title.name %></span>
+  <% end %>
+  <% if user.email.present? %>
+    <span class="email js-clipboard-copy"><%= user.email %></span>
+  <% end %>
+  <% if user.tel_label.present? %>
+    <span class="tel"><%= user.tel_label %></span>
+  <% end %>
+
+  <%= dropdown %>
+</div>

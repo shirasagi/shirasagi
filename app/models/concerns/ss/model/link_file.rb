@@ -33,7 +33,6 @@ module SS::Model::LinkFile
 
     validates :model, presence: true
     validates :state, presence: true
-    validates :link_url, presence: true
     validates :filename, presence: true, if: ->{ in_file.blank? && in_files.blank? }
     validate :validate_filename
     validates_with SS::FileSizeValidator, if: ->{ size.present? }

@@ -109,3 +109,43 @@ CKEDITOR.stylesSet.add( 'default', [
 	{ name: 'Square Bulleted List',	element: 'ul',		styles: { 'list-style-type': 'square' } }
 ] );
 
+CKEDITOR.stylesSet.add( 'webmail', [
+	{ name: 'Italic Title',		element: 'h2', styles: { 'font-style': 'italic' } },
+	{ name: 'Subtitle',			element: 'h3', styles: { 'color': '#aaa', 'font-style': 'italic' } },
+	{
+		name: 'Special Container',
+		element: 'div',
+		styles: {
+			padding: '5px 10px',
+			background: '#eee',
+			border: '1px solid #ccc'
+		}
+	},
+
+	{ name: 'Big',				element: 'big' },
+	{ name: 'Small',			element: 'small' },
+
+	{ name: 'Deleted Text',		element: 'del' },
+	{ name: 'Inserted Text',	element: 'ins' },
+
+	{ name: 'Cited Work',		element: 'cite' },
+
+	/* Object Styles */
+
+	{
+		name: 'Compact table',
+		element: 'table',
+		attributes: {
+			cellpadding: '5',
+			cellspacing: '0',
+			border: '1',
+			bordercolor: '#ccc'
+		},
+		styles: {
+			'border-collapse': 'collapse'
+		}
+	},
+
+	{ name: 'Borderless Table',		element: 'table',	styles: { 'border-style': 'hidden', 'background-color': '#E6E6FA' } },
+	{ name: 'Square Bulleted List',	element: 'ul',		styles: { 'list-style-type': 'square' } }
+]);

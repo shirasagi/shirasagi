@@ -1,4 +1,19 @@
 module Map::MapHelper
+  def default_map_api(opts = {})
+    map_setting = opts[:site].map_setting rescue {}
+    opts[:api] || map_setting[:api] || SS.config.map.api
+  end
+
+  def include_map_api(opts = {})
+    api = default_map_api(opts)
+
+    if api == "openlayers"
+      include_openlayers_api
+    else
+      include_googlemaps_api(opts)
+    end
+  end
+
   def include_googlemaps_api(opts = {})
     map_setting = opts[:site].map_setting rescue {}
 
@@ -19,9 +34,7 @@ module Map::MapHelper
   end
 
   def render_map(selector, opts = {})
-    map_setting = opts[:site].map_setting rescue {}
-
-    api = opts[:api] || map_setting[:api] || SS.config.map.api
+    api = default_map_api(opts)
     markers = opts[:markers]
     map_options = opts[:map] || {}
 
@@ -49,9 +62,7 @@ module Map::MapHelper
   end
 
   def render_map_form(selector, opts = {})
-    map_setting = opts[:site].map_setting rescue {}
-
-    api = opts[:api] || map_setting[:api] || SS.config.map.api
+    api = default_map_api(opts)
     center = opts[:center] || SS.config.map.map_center
     max_point_form = opts[:max_point_form] || SS.config.map.map_max_point_form
     map_options = opts[:map] || {}
@@ -88,9 +99,7 @@ module Map::MapHelper
   end
 
   def render_facility_search_map(selector, opts = {})
-    map_setting = opts[:site].map_setting rescue {}
-
-    api = opts[:api] || map_setting[:api] || SS.config.map.api
+    api = default_map_api(opts)
     center = opts[:center] || SS.config.map.map_center
     markers = opts[:markers]
 
@@ -119,9 +128,7 @@ module Map::MapHelper
   end
 
   def render_member_photo_form_map(selector, opts = {})
-    map_setting = opts[:site].map_setting rescue {}
-
-    api = opts[:api] || map_setting[:api] || SS.config.map.api
+    api = default_map_api(opts)
     center = opts[:center] || SS.config.map.map_center
     map_options = opts[:map] || {}
 

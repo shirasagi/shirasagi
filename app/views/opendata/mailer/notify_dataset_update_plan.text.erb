@@ -1,0 +1,6 @@
+<% message.subject = @subject %>
+以下のデータセットが本日更新予定に設定されています。
+
+<% @datasets.each do |dataset| %>
+- <%= dataset.name %> <%= ::File.join(@site.mypage_full_url, dataset.private_show_path) %>
+<% end %>

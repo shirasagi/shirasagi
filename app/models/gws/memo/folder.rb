@@ -6,6 +6,8 @@ class Gws::Memo::Folder
   include SS::Fields::DependantNaming
   include Gws::Model::Memo::Folder
 
+  STATIC_FOLDER_NAMES = %w(INBOX INBOX.Trash INBOX.Draft INBOX.Sent).freeze
+
   set_permission_name 'private_gws_memo_messages', :edit
 
   seqid :id

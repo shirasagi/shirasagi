@@ -11,6 +11,7 @@ class Voice::File
   include Voice::Downloadable
   include Voice::Lockable
 
+  store_in_default_post
   set_permission_name "cms_tools", :use
 
   field :error, type: String

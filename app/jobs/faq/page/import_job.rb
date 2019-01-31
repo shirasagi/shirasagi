@@ -33,8 +33,10 @@ class Faq::Page::ImportJob < Cms::ApplicationJob
   def update_row(row)
     filename = "#{node.filename}/#{row[model.t(:filename)]}"
     item = model.find_or_initialize_by(site_id: site.id, filename: filename)
+    raise I18n.t('errors.messages.auth_error') unless item.allowed?(:import, user, site: site, node: node)
     item.site = site
     set_page_attributes(row, item)
+    raise I18n.t('errors.messages.auth_error') unless item.allowed?(:import, user, site: site, node: node)
 
     if item.save
       item

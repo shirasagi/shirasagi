@@ -6,7 +6,7 @@ module Gws::Addon::Portal::Portlet
     set_addon_type :gws_portlet
 
     included do
-      field :circular_article_state, type: String
+      field :circular_article_state, type: String, default: "unseen"
       embeds_ids :circular_categories, class_name: "Gws::Circular::Category"
       permit_params circular_category_ids: []
       permit_params :circular_article_state

@@ -1,8 +1,9 @@
 class Opendata::UrlResource
   include SS::Document
   include Opendata::Resource::Model
-  include SS::Relation::File
+  include Opendata::Resource::Previewable
   include Opendata::Addon::UrlRdfStore
+  include Opendata::Addon::Harvest::Resource
 
   field :original_url, type: String
   field :original_updated, type: DateTime

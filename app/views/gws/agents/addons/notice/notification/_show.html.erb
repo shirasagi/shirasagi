@@ -1,16 +1,4 @@
-<%
-return if @cur_site.canonical_domain.blank?
-%>
-
 <dl class="see">
-  <% if @cur_site.menu_memo_visible? %>
-  <dt><%= @model.t :message_notification %></dt>
-  <dd><%= @item.label :message_notification %></dd>
-  <% end %>
-
-  <dt><%= @model.t :email_notification %></dt>
-  <dd><%= @item.label :email_notification %></dd>
-
   <dt><%= @model.t :notification_noticed %></dt>
   <dd><%= tryb { I18n.l(@item.notification_noticed) } %></dd>
 </dl>

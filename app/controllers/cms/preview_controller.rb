@@ -121,8 +121,9 @@ class Cms::PreviewController < ApplicationController
   end
 
   def render_preview
-    preview_url = cms_preview_path preview_date: params[:preview_date]
+    return if response.content_type != "text/html"
 
+    preview_url = cms_preview_path preview_date: params[:preview_date]
     body = response.body.force_encoding("utf-8")
     body.gsub!(/(href|src)=".*?"/) do |m|
       url = m.match(/.*?="(.*?)"/)[1]
@@ -218,7 +219,7 @@ class Cms::PreviewController < ApplicationController
   end
 
   def render_form_preview
-    require "uri"
+    return if response.content_type != "text/html"
 
     body = response.body
     body.gsub!(/(href|src)=".*?"/) do |m|

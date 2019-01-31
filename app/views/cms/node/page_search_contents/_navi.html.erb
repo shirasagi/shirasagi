@@ -1,0 +1,14 @@
+<%
+  route = @cur_node.view_route || @cur_node.route
+  mod = route.to_s.sub(/\/.+?$/, "")
+  navi_path = "#{Rails.root}/app/views/#{route}/_navi.html.erb"
+  mod_path = "#{Rails.root}/app/views/#{mod}/main/_navi.html.erb"
+%>
+
+<% if ::File.exists?(navi_path) %>
+  <%= render file: navi_path %>
+<% elsif ::File.exist?(mod_path) %>
+  <%= render file: mod_path %>
+<% else %>
+  <%= render partial: controller.navi_view_file %>
+<% end %>

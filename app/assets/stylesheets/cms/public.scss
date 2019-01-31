@@ -9,3 +9,8 @@
 #ss-loading {
   display: none;
 }
+
+// colorbox
+#cboxTitle, #cboxCurrent, #cboxNext, #cboxPrevious, #cboxSlideshow {
+  display: none !important;
+}

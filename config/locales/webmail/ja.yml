@@ -26,6 +26,8 @@ ja:
     account_setting: アカウント設定
     personal: 個人
     imap_default_index: 既定アカウント
+    no_subjects: 'No title'
+    no_senders: '差出人不明'
     export:
       all_mail: 全てのメール
       select_mail: 選択したメール
@@ -114,7 +116,6 @@ ja:
       edit_as_new: 新規メールとして編集
       move: 移動する
       copy: コピーする
-      print: 印刷する
       apply: 適用する
       show_cc_bcc: CC , BCC の表示
       show_image: 画像の表示
@@ -292,6 +293,8 @@ ja:
         conditions/value: 値
         action: アクション
         mailbox: フォルダー
+        filter_error_at: エラー日時
+        filter_errors: エラー内容
 
   activemodel:
     attributes:

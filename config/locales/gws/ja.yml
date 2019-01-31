@@ -267,6 +267,7 @@ ja:
         site_id: 組織
       gws/export:
         in_file: ファイル
+        in_csv_encoding: 文字コード
       gws/addon/file:
         file_ids: ファイル
       gws/addon/role:
@@ -304,7 +305,6 @@ ja:
       gws/addon/system/file_setting:
         multibyte_filename_state: 日本語ファイル名
       gws/addon/system/group_setting:
-        sender_user_id: 差出ユーザー
         sendmail_domains: メール送信許可ドメイン
         canonical_scheme: グループウェアスキーム
         canonical_domain: グループウェアドメイン
@@ -495,6 +495,7 @@ ja:
       sender_user_id:
         - 差出ユーザーを選択します。
         - 掲示板の新着投稿通知などの差出人として使用されます。
+        - また、差出人ユーザーと差出人メールアドレスの両方が設定されている場合、差出人ユーザーの方が優先的に使用されます。
       sendmail_domains:
         - メール送信許可ドメインを入力します。
       canonical_scheme:

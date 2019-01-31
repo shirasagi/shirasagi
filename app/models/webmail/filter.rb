@@ -24,6 +24,9 @@ class Webmail::Filter
   field :conditions, type: Array, default: []
   field :action, type: String
 
+  field :filter_error_at, type: DateTime
+  field :filter_errors, type: Array
+
   permit_params :host, :account, :mailbox, :name, :state, :order, :action, :conjunction
   permit_params conditions: [:field, :operator, :value]
 
@@ -46,7 +49,7 @@ class Webmail::Filter
     criteria = where({})
     return criteria if params.blank?
 
-    criteria = criteria.keyword_in params[:keyword], :name if params[:keyword].present?
+    criteria = criteria.keyword_in params[:keyword], :name, :filter_errors if params[:keyword].present?
     criteria
   }
 
@@ -95,17 +98,23 @@ class Webmail::Filter
   end
 
   def search_keys
-    keys = []
-    keys << 'OR' if conjunction == 'or'
-
-    conditions.each do |cond|
+    reduced = conditions.map do |cond|
       next if cond[:field].blank? || cond[:value].blank?
+      keys = []
       keys << 'NOT' if cond[:operator] == 'exclude'
       keys << cond[:field].upcase
       keys << cond[:value].dup.force_encoding('ASCII-8BIT')
+      keys
     end
 
-    keys
+    return reduced.flatten if conjunction != 'or' || reduced.length <= 1
+
+    while reduced.length > 1
+      terms = reduced.pop(2)
+      reduced << [ "OR", terms[0], terms[1] ]
+    end
+
+    reduced.flatten
   end
 
   def uids_search(keys = [])
@@ -117,6 +126,8 @@ class Webmail::Filter
   end
 
   def uids_apply(uids)
+    self.set(filter_error_at: nil, filter_errors: nil)
+
     count = 0
     return count if uids.blank?
 
@@ -135,6 +146,9 @@ class Webmail::Filter
     end
 
     count
+  rescue Net::IMAP::ResponseError => e
+    self.set(filter_error_at: Time.zone.now, filter_errors: [ NKF.nkf("-w", e.to_s) ])
+    false
   end
 
   private

@@ -1,0 +1,13 @@
+<div class="resource-content">
+  <div class="resource-name">
+    <%= @item.name %>
+  </div>
+  <div class="resource-pdf">
+    <% @images.each do |image| %>
+      <img src="data:image/png;base64,<%== image %>">
+    <% end %>
+  </div>
+  <span class="max-pdf-preview-notice">
+    <%= t("opendata.messages.max_pdf_preview_notice", max: @limit) %>
+  </span>
+</div>

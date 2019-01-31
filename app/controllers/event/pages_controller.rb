@@ -52,7 +52,7 @@ class Event::PagesController < ApplicationController
       ss_file.save
 
       # call job
-      Event::Page::ImportJob.bind(site_id: @cur_site, node_id: @cur_node).perform_later(ss_file.id)
+      Event::Page::ImportJob.bind(site_id: @cur_site, node_id: @cur_node, user_id: @cur_user).perform_later(ss_file.id)
       redirect_to({ action: :import }, { notice: I18n.t("ss.notice.started_import") })
       return
     end

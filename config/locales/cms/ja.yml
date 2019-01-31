@@ -145,7 +145,6 @@ ja:
     auto_correct:
       link: 自動修正
       notice: アクセシビリティチェック（保存時に自動で修正されます）
-      dependent_character: "[機種依存文字]"
       caption: キャプション
     links:
       ruby_on: ふりがなをつける
@@ -296,6 +295,8 @@ ja:
     delete_private_cms_nodes: フォルダーの削除（所有）
     move_other_cms_nodes: フォルダーの移動（全て）
     move_private_cms_nodes: フォルダーの移動（所有）
+    import_other_cms_nodes: フォルダーのインポート（全て）
+    import_private_cms_nodes: フォルダーのインポート（所有）
     read_other_cms_pages: 固定ページの閲覧（全て）
     read_private_cms_pages: 固定ページの閲覧（所有）
     edit_other_cms_pages: 固定ページの編集（全て）
@@ -778,7 +779,6 @@ ja:
       not_found_parent_group: 親グループが存在しません。
       invalid_order_of_h: 見出しの順番が不正です。
       invalid_multibyte_character: 英数字は半角文字を入力してください。
-      invalid_dependent_character: 機種依存文字が含まれています。
       invalid_kana_character: 半角カナ文字が含まれています。
       invalid_date_format: 日付の表記は○年○月○日としてください。
       invalid_adjacent_a: 隣接する同じリンクを一つのリンクにまとめてください。
@@ -811,9 +811,6 @@ ja:
         invalid_multibyte_character:
           - 本文に全角英数が含まれています。
           - 半角英数に置き換えるか削除してください。
-        invalid_dependent_character:
-          - 本文に機種依存文字が含まれています。
-          - 他の文字に置き換えるか削除してください。
         invalid_kana_character:
           - 本文に半角カナ文字が含まれています。
           - 全角文字に置き換えるか削除してください。

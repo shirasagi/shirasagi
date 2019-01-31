@@ -56,6 +56,8 @@ class Webmail::MailsController < ApplicationController
   def apply_recent_filters
     @mailboxes = @imap.mailboxes.load
     @mailboxes.apply_recent_filters
+  rescue => e
+    Rails.logger.warn("#{e.class} (#{e.message}):\n  #{e.backtrace.join("\n  ")}")
   end
 
   def set_mailbox
@@ -152,7 +154,7 @@ class Webmail::MailsController < ApplicationController
       @item = @imap.mails.find params[:id], :rfc822
     end
 
-    send_data @item.rfc822, filename: "#{@item.subject}.eml",
+    send_data @item.rfc822, filename: "#{@item.display_subject}.eml",
               content_type: 'message/rfc822', disposition: :attachment
   end
 
@@ -180,7 +182,7 @@ class Webmail::MailsController < ApplicationController
           file = @imap.mails.find_part params[:id], part.section
         end
 
-        out.put_next_entry(part.filename.encode('cp932'))
+        out.put_next_entry(part.filename.encode('cp932', invalid: :replace, undef: :replace, replace: "_"))
         out.write file.decoded
       end
     end

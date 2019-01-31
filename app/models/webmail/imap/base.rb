@@ -47,15 +47,14 @@ module Webmail::Imap
     end
 
     def login
-      begin
-        host = conf[:host]
-        options = conf[:options].symbolize_keys
-        self.conn = Net::IMAP.new host, options
-        conn.authenticate conf[:auth_type], conf[:account], conf[:password]
-        return true
-      rescue SocketError, Net::IMAP::Error, Errno::ECONNREFUSED => e
-        self.error = e.to_s
-      end
+      host = conf[:host]
+      options = conf[:options].symbolize_keys
+      self.conn = Net::IMAP.new host, options
+      conn.authenticate conf[:auth_type], conf[:account], conf[:password]
+      return true
+    rescue => e
+      Rails.logger.info("#{e.class} (#{e.message}):\n  #{e.backtrace.join("\n  ")}")
+      self.error = e.to_s
       false
     end
 

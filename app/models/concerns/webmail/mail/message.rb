@@ -16,7 +16,8 @@ module Webmail::Mail::Message
     #  headers[:"Disposition-Notification-To"] = Webmail::Converter.extract_address(headers[:from])
     #end
 
-    headers.select { |k, v| v.present? }
+    headers.select! { |_k, v| v.present? }
+    headers
   end
 
   def merge_address_field(array, str)
@@ -50,7 +51,7 @@ module Webmail::Mail::Message
 
   def new_forward(ref)
     self.forward_uid = ref.uid
-    self.subject = "Fw: " + ref.subject.to_s.gsub(/^Fw:\s*/, '')
+    self.subject = "Fw: " + ref.display_subject.to_s.gsub(/^Fw:\s*/, '')
     set_reply_body(ref)
     set_ref_files(ref.attachments)
   end
@@ -61,7 +62,7 @@ module Webmail::Mail::Message
     self.cc = ref.cc
     self.to_text = self.to.join('; ')
     self.cc_text = self.cc.join('; ')
-    self.subject = ref.subject
+    self.subject = ref.display_subject
     self.format = ref.format
     self.text = ref.text
     self.html = ref.html
@@ -69,7 +70,7 @@ module Webmail::Mail::Message
   end
 
   def set_reply_header(ref)
-    self.subject = "Re: " + ref.subject.to_s.gsub(/^Re:\s*/, '')
+    self.subject = "Re: " + ref.display_subject.to_s.gsub(/^Re:\s*/, '')
 
     if ref.message_id.present?
       self.in_reply_to = ref.message_id
@@ -99,7 +100,7 @@ module Webmail::Mail::Message
   def reply_body_html(ref, sign = nil)
     if ref.html.present?
       bq = ref.sanitize_html(remove_image: true)
-    else
+    elsif ref.text.present?
       bq = h(decode_jp(ref.text.to_s)).gsub(/\r\n|\n/, '<br />')
     end
 

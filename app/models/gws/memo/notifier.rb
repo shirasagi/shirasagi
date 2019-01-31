@@ -22,7 +22,7 @@ class Gws::Memo::Notifier
       from = item.try(:workflow_user) || cur_user
       agent = item.try(:workflow_agent)
 
-      title = I18n.t("gws_notification.subject.request", name: item.name)
+      title = I18n.t("gws_notification.gws/workflow/file.request", name: item.name)
 
       text = []
       text << "#{from.name}さん#{agent ? "（代理: #{agent.name}さん）" : ""}より次の記事について承認依頼が届きました。"
@@ -63,7 +63,7 @@ class Gws::Memo::Notifier
       from = item.try(:workflow_user)
       agent = item.try(:workflow_agent)
 
-      title = I18n.t("gws_notification.subject.approve", name: item.name)
+      title = I18n.t("gws_notification.gws/workflow/file.approve", name: item.name)
 
       text = []
       text << "次の申請が承認されました。"
@@ -98,7 +98,7 @@ class Gws::Memo::Notifier
       from = item.try(:workflow_user)
       agent = item.try(:workflow_agent)
 
-      title = I18n.t("gws_notification.subject.remand", name: item.name)
+      title = I18n.t("gws_notification.gws/workflow/file.remand", name: item.name)
 
       text = []
       text << "#{cur_user.name}さんより次の申請について承認依頼が差し戻されました。"
@@ -142,7 +142,7 @@ class Gws::Memo::Notifier
       from = item.try(:workflow_user)
       agent = item.try(:workflow_agent)
 
-      title = I18n.t("gws_notification.subject.circular", name: item.name)
+      title = I18n.t("gws_notification.gws/workflow/file.circular", name: item.name)
 
       text = []
       text << "次の申請が承認されました。"
@@ -178,7 +178,7 @@ class Gws::Memo::Notifier
       from = item.try(:workflow_user)
       agent = item.try(:workflow_agent)
 
-      title = I18n.t("gws_notification.subject.comment", name: item.name)
+      title = I18n.t("gws_notification.gws/workflow/file.comment", name: item.name)
 
       text = []
       text << "次の申請にコメントがありました。"
@@ -231,6 +231,28 @@ class Gws::Memo::Notifier
   def deliver!
     cur_user.cur_site ||= cur_group
 
+    url = item_to_url(item)
+
+    message = Gws::Memo::Notice.new
+    message.cur_site = cur_site
+    message.cur_user = cur_user
+    message.member_ids = to_users.pluck(:id)
+
+    message.send_date = Time.zone.now
+
+    message.subject = subject || I18n.t("gws_notification.#{i18n_key}.subject", name: item_title, default: item_title)
+    message.format = 'text'
+    message.url = text || I18n.t("gws_notification.#{i18n_key}.text", name: item_title, text: url, default: item_text)
+
+    message.save!
+
+    mail = Gws::Memo::Mailer.notice_mail(message, to_users, item)
+    mail.deliver_now if mail
+  end
+
+  private
+
+  def item_to_url(item)
     class_name = item.class.name
 
     url_helper = Rails.application.routes.url_helpers
@@ -262,40 +284,16 @@ class Gws::Memo::Notifier
       url = ''
     end
 
-    message = Gws::Memo::Notice.new
-    message.cur_site = cur_site
-    message.cur_user = cur_user
-    message.member_ids = to_users.pluck(:id)
-
-    message.send_date = Time.zone.now
-
-    message.subject = subject || I18n.t("gws_notification.#{i18n_key}.subject", name: item_title, default: item_title)
-    message.format = 'text'
-    message.text = text || I18n.t("gws_notification.#{i18n_key}.text", name: item_title, text: url, default: item_text)
-
-    message.save!
-
-    mail = Gws::Memo::Mailer.notice_mail(message, to_users, item)
-    mail.deliver_now if mail
+    url
   end
 
-  private
-
-  def deliver_monitor(id)
-    topic = Gws::Monitor::Topic.find(id)
+  def deliver_monitor(monitor_id)
+    topic = Gws::Monitor::Topic.find(monitor_id)
     to_members = Gws::User.in(group_ids: Gws::Group.in(id: topic.attend_group_ids).pluck(:id)).pluck(:id)
     to_members -= [cur_user.id]
-    to_members.select!{|user_id| Gws::User.find(user_id).use_notice?(item)}
+    to_members.select! { |user_id| Gws::User.find(user_id).use_notice?(item) }
     return if to_members.blank?
-    self.to_users = to_members.map{|user_id| Gws::User.find(user_id)}
-  end
-
-  def from_user
-    @from_user ||= begin
-      user = cur_site.sender_user
-      user ||= cur_user
-      user
-    end
+    self.to_users = to_members.map { |user_id| Gws::User.find(user_id) }
   end
 
   def i18n_key

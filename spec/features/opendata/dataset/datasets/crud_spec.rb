@@ -24,6 +24,11 @@ describe "opendata_datasets", type: :feature, dbscope: :example do
           :opendata_node_category,
           filename: "#{category_folder.filename}/opendata_category1",
           depth: category_folder.depth + 1)
+        estat_category_folder = create_once(:cms_node_node, filename: "estat_category")
+        create_once(
+          :opendata_node_estat_category,
+          filename: "#{estat_category_folder.filename}/opendata_estat_category1",
+          depth: estat_category_folder.depth + 1)
         area_folder = create_once(:cms_node_node, filename: "area")
         create_once(
           :opendata_node_area,
@@ -37,6 +42,7 @@ describe "opendata_datasets", type: :feature, dbscope: :example do
           fill_in "item[name]", with: "sample"
           fill_in "item[text]", with: "sample"
           all("input[type=checkbox][id^='item_category_ids']").each { |c| check c[:id] }
+          all("input[type=checkbox][id^='item_estat_category_ids']").each { |c| check c[:id] }
           all("input[type=checkbox][id^='item_area_ids']").each { |c| check c[:id] }
           click_button "保存"
         end
@@ -54,6 +60,13 @@ describe "opendata_datasets", type: :feature, dbscope: :example do
           filename: "#{category_folder.filename}/opendata_category1",
           depth: category_folder.depth + 1)
       end
+      let(:estat_category_folder) { create_once(:cms_node_node, filename: "estat-category") }
+      let(:estat_category) do
+        create_once(
+          :opendata_node_estat_category,
+          filename: "#{estat_category_folder.filename}/opendata_estat_category1",
+          depth: estat_category_folder.depth + 1)
+      end
       let(:area_folder) { create_once(:cms_node_node, filename: "area") }
       let(:area) do
         create_once(
@@ -65,6 +78,7 @@ describe "opendata_datasets", type: :feature, dbscope: :example do
         create_once :opendata_dataset,
                     filename: "#{node.filename}/#{unique_id}.html",
                     category_ids: [ category.id ],
+                    estat_category_ids: [estat_category.id],
                     area_ids: [ area.id ]
       end
       let(:show_path) { opendata_dataset_path site, node, item }
@@ -148,11 +162,13 @@ describe "opendata_datasets", type: :feature, dbscope: :example do
 
   context "public side" do
     let(:category) { create_once :opendata_node_category, filename: "opendata_category1" }
+    let(:estat_category) { create_once :opendata_node_estat_category, filename: "opendata_estat_category1" }
     let(:area) { create_once :opendata_node_area, filename: "opendata_area_1" }
     let(:item) do
       create_once :opendata_dataset,
                   filename: "#{node.filename}/#{unique_id}.html",
                   category_ids: [ category.id ],
+                  estat_category_ids: [estat_category.id],
                   area_ids: [ area.id ]
     end
     let(:public_path) { item.url }

@@ -32,7 +32,6 @@ class Opendata::App
   permit_params :text, :appurl, :license, :dataset_ids, :tags, tags: []
 
   validates :text, presence: true
-  validates :category_ids, presence: true
   validates :license, presence: true
   validate :validate_appurl
 

@@ -10,7 +10,7 @@ class Gws::Reminder::NotificationJob < Gws::ApplicationJob
     reminder_ids = Gws::Reminder.site(site).notify_between(from, to).pluck(:id)
     reminder_ids.each do |reminder_id|
       item = Gws::Reminder.find(reminder_id)
-      mail = Gws::Reminder::Mailer.notify_mail(item)
+      mail = Gws::Reminder::Mailer.notify_mail(site, item)
       next if mail.blank?
 
       item.notifications.each do |notification|

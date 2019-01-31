@@ -74,6 +74,7 @@ this.Gws_Schedule_Multiple_Calendar = (function () {
         }
       },
       eventAfterAllRender: function (view) {
+        $(window).trigger('resize');
       }
     };
   };

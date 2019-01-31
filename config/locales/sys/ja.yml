@@ -11,6 +11,9 @@ ja:
   sys:
     conf: システム設定
     notice: システムのお知らせ
+    login:
+      ad: 広告
+    ad: ログイン画面広告
     server_name: サーバー名
     server_addr: サーバーIPアドレス
     remote_addr: 接続元IPアドレス
@@ -59,6 +62,7 @@ ja:
     postal_code: 郵便番号
     postal_code_normalize_city: 以下に掲載がない場合
     import_official_japan_postal_service_csv: 日本郵政CSVの取り込み
+    prefecture_code: 地域コード
     password_effective_period: パスワードの有効期限
     password_constraint: パスワードの制約
     password_change_constraint: パスワード変更時の制約
@@ -170,6 +174,9 @@ ja:
         password_min_change_char_count: 相違数
         password_max_failure_use: 最大失敗回数の使用
         password_max_failure_count: 最大失敗回数
+      sys/ad:
+        time: 画像切り替え時間
+        width: 横幅
 
   errors:
     messages:
@@ -263,3 +270,4 @@ ja:
       sys/site_copy_job: サイト複製
       sys/postal_code/import_job: 郵便番号インポート
       sys/postal_code/official_csv_import_job: 日本郵便CSVインポート
+      sys/prefecture_code/import_job: 地域コードインポート

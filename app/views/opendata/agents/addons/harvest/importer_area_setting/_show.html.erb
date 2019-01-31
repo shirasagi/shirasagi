@@ -1,0 +1,5 @@
+<%= jquery do %> SS_AddonTabs.hide(".mod-opendata_harvest_area_setting"); <% end %>
+<dl class="see mod-opendata_harvest_area_setting">
+  <dt><%= @model.t :default_area_ids %></dt>
+  <dd><%= @item.default_areas.pluck(:name).join(", ") %></dd>
+</dl>

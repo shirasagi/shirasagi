@@ -19,7 +19,7 @@ module SS::Model::User
     store_in collection: "ss_users"
     index({ email: 1 }, { sparse: true, unique: true })
     index({ uid: 1 }, { sparse: true, unique: true })
-    index({ organization_uid: 1, organization_id: 1 }, { unique: true, sparse: true })
+    index({ organization_uid: 1, organization_id: 1 }, { sparse: true })
 
     # Create indexes each site_ids.
     # > db.ss_users.ensureIndex({ "title_orders.1": -1, organization_uid: 1, uid: 1 });
@@ -256,9 +256,11 @@ module SS::Model::User
     restriction == 'api_only'
   end
 
-  def organization_id_options(site = nil)
+  def organization_id_options(sites = [])
     list = [organization]
-    list << site if site.is_a?(Gws::Group)
+    sites.each do |site|
+      list << site if site.is_a?(Gws::Group)
+    end
     list.compact.uniq(&:id).map { |c| [c.name, c.id] }
   end
 

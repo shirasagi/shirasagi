@@ -64,7 +64,7 @@ class Webmail::MailExportJob < SS::ApplicationJob
   end
 
   def write_eml(name, data)
-    File.write("#{@output_dir}/#{name}.eml", data)
+    File.binwrite("#{@output_dir}/#{name}.eml", data)
   end
 
   def sanitize_filename(filename)

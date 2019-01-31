@@ -73,9 +73,13 @@
             <%= link_to item.display_to.map(&:name).join(', '), { action: :index, 's[to]': item.display_to.first.email } if item.display_to.present? %>
           </span>
         <% else %>
-          <span class="field from" title="<%= item.display_sender.address %>">
-            <%= link_to item.display_sender.name, { action: :index, 's[from]': item.display_sender.email } %>
-          </span>
+          <% if item.display_sender.present? %>
+            <span class="field from" title="<%= item.display_sender.address %>">
+              <%= link_to item.display_sender.name, { action: :index, 's[from]': item.display_sender.email } %>
+            </span>
+          <% else %>
+            <span class="field from"><%= t("webmail.no_senders") %></span>
+          <% end %>
         <% end %>
         <%= link_to item.display_subject, { action: :show, id: item.uid }, class: "field title", title: item.display_subject %>
         <span class="field datetime"><%= tryb { item.internal_date.strftime("%Y/%m/%d %H:%M") } %></span>
