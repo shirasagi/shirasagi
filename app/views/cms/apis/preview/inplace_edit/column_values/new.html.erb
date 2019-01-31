@@ -20,7 +20,7 @@ Cms_Inplace_Form.render();
 
 <%= form_for :item, url: { action: :create }, html: { id: "item-form", multipart: true, autocomplete: :off } do |f| %>
   <%= error_messages_for :cur_column_value %>
-  <%= render "cms/apis/preview/inplace_edit/main/link_errors", errors: @cur_column_value.link_errors %>
+  <%= render "cms/apis/preview/inplace_edit/main/link_errors", errors: @cur_column_value ? @cur_column_value.link_errors : [] %>
 
   <%= hidden_field_tag :_updated, params[:_updated] || @item.updated if @item.respond_to?(:updated) %>
 
