@@ -1008,4 +1008,3 @@ describe Opendata::NotifyDatasetPlanJob, dbscope: :example do
     end
   end
 end
-

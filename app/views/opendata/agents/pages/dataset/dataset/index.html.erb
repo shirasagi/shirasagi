@@ -100,21 +100,6 @@ categories = [
   <%= auto_link paragraph(@cur_page.text) %>
 </div>
 
-<% if @cur_page.dataland? %>
-<div class="dataland">
-  <dl class="dataland-attributes">
-    <dt><%= @cur_page.t :survey_cycle %></dt>
-    <dd><%= @cur_page.label :survey_cycle %></dd>
-
-    <dt><%= @cur_page.t :survey_group %></dt>
-    <dd><%= @cur_page.label :survey_group %></dd>
-
-    <dt><%= @cur_page.t :survey_method %></dt>
-    <dd><%= @cur_page.label :survey_method %></dd>
-  </dl>
-</div>
-<% end %>
-
 <div class="dataset-tabs tabs"  id="dataset-tabs-<%= @cur_node.id %>">
   <article class="tab" id="cms-tab-<%= @cur_node.id %>-0">
     <header><h2><%= I18n.t("opendata.labels.resource") %></h2></header>
