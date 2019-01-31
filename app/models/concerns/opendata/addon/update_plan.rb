@@ -14,7 +14,7 @@ module Opendata::Addon::UpdatePlan
   end
 
   def update_plan_unit_options
-    %w(yearly monthly).map do |v|
+    %w(monthly quarterly yearly two_yearly three_yearly four_yearly five_yearly).map do |v|
       [ I18n.t("opendata.update_plan_unit_options.#{v}"), v ]
     end
   end

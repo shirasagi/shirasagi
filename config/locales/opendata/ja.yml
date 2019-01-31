@@ -272,7 +272,12 @@ ja:
       unmatch: 一致しない
     update_plan_unit_options:
       monthly: 毎月
+      quarterly: 四半期
       yearly: 毎年
+      two_yearly: ２年
+      three_yearly: ３年
+      four_yearly: ４年
+      five_yearly: ５年
     api_state_options:
       enabled: 有
       disabled: 無
@@ -905,7 +910,15 @@ ja:
       update_plan_date:
         - 更新予定日を入力します。
         - 更新予定日のメール通知が有効の場合、メール通知されます。
-        - メール通知を有効にするには該当のタスクをサーバー設定する必要があります。
+        - ""
+        - 毎月　：更新予定日 から １ヶ月毎
+        - 四半期：更新予定日 から ３ヶ月毎
+        - 毎年　：更新予定日 から １年毎
+        - ２年毎：更新予定日 から ２年毎
+        - ３年毎：更新予定日 から ３年毎
+        - ４年毎：更新予定日 から ４年毎
+        - ５年毎：更新予定日 から ５年毎
+        - 空欄　：更新予定日
       update_plan_mail_state: 更新予定日のメール通知を設定します。
     opendata/addon/counter_html:
       html:
