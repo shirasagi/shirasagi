@@ -12,18 +12,14 @@
     <% end %>
   <% end %>
 
-  <div class="inplace-checkers">
-    <%= button_tag t("cms.buttons.column_add_list"), class: "btn btn-add-list", type: 'button' %>
-    <% if @inplace_syntax_check%>
-      <%= button_tag t("cms.syntax_check"), { type: :button, class: "btn syntax-check" } %>
-    <% end %>
-  </div>
+  <% @buttons.unshift(button_tag(t("cms.buttons.column_add_list"), class: "btn btn-add-list", type: 'button')) %>
+
   <script type="text/html" class="template">
     <%= render 'cms/agents/columns/list/column_form_ul', f: f, column: column, order: 0, text: '' %>
   </script>
 
-  <% if @inplace_syntax_check %>
-    <%= jquery do %>
+  <%= jquery do %>
+    <% if @inplace_syntax_check %>
       Cms_Inplace_Form.resolveType = "textlist";
       Cms_Inplace_Form.getContent = function () {
         var values = {};
@@ -40,5 +36,7 @@
         $(ele).val(content);
       };
     <% end %>
+
+    Cms_Column_List.render(<%== "##{id}".to_json %>);
   <% end %>
 <% end %>

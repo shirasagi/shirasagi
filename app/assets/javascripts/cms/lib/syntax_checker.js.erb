@@ -133,29 +133,40 @@ this.Syntax_Checker = (function () {
     Syntax_Checker.resultBox.form = form;
 
     $(document).on("click", "button.syntax-check", function () {
-      Syntax_Checker.resultBox.showChecking();
-
       var button = this;
       button.disabled = true;
 
-      var resolved = function(content, type) {
-        type = type || "html";
-        try {
-          Syntax_Checker.check(content, type);
-        } catch (e) {
-          Syntax_Checker.resultBox.showMessage("<p>" + e + "</p>");
-        } finally {
-          button.disabled = false;
-        }
-      };
-
-      var rejected = function(xhr, status, error) {
-        Syntax_Checker.resultBox.showMessage("<p>" + error + "</p>");
+      var complete = function() {
         button.disabled = false;
       };
 
-      Syntax_Checker.resultBox.form.getHtml(resolved, rejected);
+      Syntax_Checker.asyncCheck().done(complete).fail(complete);
     });
+  };
+
+  Syntax_Checker.asyncCheck = function () {
+    var defer = $.Deferred();
+
+    var resolved = function(content, type) {
+      type = type || "html";
+      try {
+        Syntax_Checker.check(content, type);
+        defer.resolve({ status: Syntax_Checker.errorCount === 0 ? "ok" : "failed" });
+      } catch (e) {
+        Syntax_Checker.resultBox.showMessage("<p>" + e + "</p>");
+        defer.reject(null, null, error);
+      }
+    };
+
+    var rejected = function(xhr, status, error) {
+      Syntax_Checker.resultBox.showMessage("<p>" + error + "</p>");
+      defer.reject(xhr, status, error);
+    };
+
+    Syntax_Checker.resultBox.showChecking();
+    Syntax_Checker.resultBox.form.getHtml(resolved, rejected);
+
+    return defer.promise();
   };
 
   Syntax_Checker.check = function (content, type) {

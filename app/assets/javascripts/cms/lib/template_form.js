@@ -226,14 +226,6 @@ Cms_TemplateForm.prototype.bindOne = function(el, options) {
 
   this.tempFile = new SS_Addon_TempFile($(".column-value-upload-drop-area"), Cms_TemplateForm.userId, tempFileOptions);
 
-  this.$el.on('click', '.btn-add-list', function() {
-    self.addList($(this));
-  });
-
-  this.$el.on('click', '.btn-delete-list', function() {
-    self.removeList($(this));
-  });
-
   if (options && options.type === "entry") {
     this.$el.find(".addon-body").sortable({
       axis: "y",
@@ -477,27 +469,5 @@ Cms_TemplateForm.prototype.selectFile = function($columnValue, $item) {
     complete: function() {
       $fileView.removeClass("hide");
     }
-  });
-};
-
-Cms_TemplateForm.prototype.addList = function($target) {
-  var $columnValue = $target.closest(".column-value");
-  var template = $columnValue.find(".template").html();
-
-  var list = $columnValue.find(".list");
-  list.append(template);
-  this.resetListOrder($columnValue);
-};
-
-Cms_TemplateForm.prototype.removeList = function($target) {
-  var $columnValue = $target.closest(".column-value");
-  var $li = $target.closest("li");
-  $li.remove();
-  this.resetListOrder($columnValue);
-};
-
-Cms_TemplateForm.prototype.resetListOrder = function($columnValue) {
-  $columnValue.find('.list li').each(function(index, element) {
-    $(element).find('input[name="item[column_values][][in_wrap][lists][][order]"]').val(index + 1);
   });
 };

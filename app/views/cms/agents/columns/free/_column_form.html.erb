@@ -6,14 +6,9 @@
   <%= text_area_tag("#{f.object_name}[][in_wrap][value]", value.try(:value), column.form_options.merge(id: editor_id, class: "html", style: "height: 400px;")) %>
   <%= html_editor "##{editor_id}", advanced: Cms::EditorExtension.allowed?(:use, @cur_user, site: @cur_site) %>
 
-  <div class="inplace-checkers">
-    <% if @inplace_syntax_check %>
-      <%= button_tag t("cms.syntax_check"), { type: :button, class: "btn syntax-check" } %>
-    <% end %>
-    <% if source_cleaner_conf[:source_cleaner].present? %>
-      <%= button_tag t("cms.source_cleaner"), { type: :button, class: "btn", id: "#{id}-source-cleaner" } %>
-    <% end %>
-  </div>
+  <% if source_cleaner_conf[:source_cleaner].present? %>
+    <% @buttons << :source_cleaner %>
+  <% end %>
 
   <%= jquery do %>
     <% if source_cleaner_conf[:source_cleaner].present? %>

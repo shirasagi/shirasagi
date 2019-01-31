@@ -15,10 +15,4 @@ Cms_Inplace_Form.setContent = function (content) {
 
 <%= render 'cms/agents/columns/main/base', f: f, column: column, value: value, controller: controller do %>
   <%= text_area_tag(name, value.try(:value), column.form_options.merge(id: nil)) %>
-
-  <% if @inplace_syntax_check %>
-    <div class="inplace-checkers">
-      <%= button_tag t("cms.syntax_check"), { type: :button, class: "btn syntax-check" } %>
-    </div>
-  <% end %>
 <% end %>

@@ -38,4 +38,12 @@ class Cms::Column::UrlField2 < Cms::Column::Base
       super()
     end
   end
+
+  def syntax_check_enabled?
+    true
+  end
+
+  def link_check_enabled?
+    true
+  end
 end

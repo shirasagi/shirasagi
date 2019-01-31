@@ -112,6 +112,10 @@ module SS::Model::Column
     false
   end
 
+  def link_check_enabled?
+    false
+  end
+
   private
 
   def set_form_id

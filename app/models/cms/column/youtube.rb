@@ -10,4 +10,12 @@ class Cms::Column::Youtube < Cms::Column::Base
       super()
     end
   end
+
+  def syntax_check_enabled?
+    true
+  end
+
+  def link_check_enabled?
+    true
+  end
 end

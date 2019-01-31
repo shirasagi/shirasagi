@@ -22,4 +22,8 @@ class Cms::Column::Headline < Cms::Column::Base
   def syntax_check_enabled?
     true
   end
+
+  def link_check_enabled?
+    true
+  end
 end

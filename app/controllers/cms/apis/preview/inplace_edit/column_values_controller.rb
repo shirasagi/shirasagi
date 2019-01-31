@@ -9,7 +9,7 @@ class Cms::Apis::Preview::InplaceEdit::ColumnValuesController < ApplicationContr
   before_action :set_inplace_mode
   before_action :set_item
   before_action :set_column, only: %i[new]
-  before_action :set_column_and_value, only: %i[edit update destroy move_up move_down move_at]
+  before_action :set_column_and_value, only: %i[edit update destroy move_up move_down move_at link_check form_check]
 
   private
 
@@ -389,5 +389,21 @@ class Cms::Apis::Preview::InplaceEdit::ColumnValuesController < ApplicationContr
     else
       move_at_with_overwrite
     end
+  end
+
+  def link_check
+    safe_params = params.require(:item).permit(@model.permit_params)
+    column_value_param = safe_params[:column_values].first
+    @cur_column_value.attributes = column_value_param[:in_wrap]
+    @cur_column_value.valid?(%i[link])
+    render json: @cur_column_value.link_errors.to_json, content_type: json_content_type
+  end
+
+  def form_check
+    safe_params = params.require(:item).permit(@model.permit_params)
+    column_value_param = safe_params[:column_values].first
+    @cur_column_value.attributes = column_value_param[:in_wrap]
+    @cur_column_value.valid?(%i[update])
+    render json: @cur_column_value.errors.full_messages.to_json, content_type: json_content_type
   end
 end

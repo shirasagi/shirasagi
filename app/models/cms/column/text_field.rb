@@ -21,4 +21,8 @@ class Cms::Column::TextField < Cms::Column::Base
   def syntax_check_enabled?
     true
   end
+
+  def link_check_enabled?
+    true
+  end
 end

@@ -1,5 +1,7 @@
+//= require cms/lib/form
 //= require cms/lib/inplace_form
 //= require cms/lib/syntax_checker
+//= require cms/lib/form_checker
 //= require cms/lib/mobile_size_checker
 //= require cms/lib/link_checker
 
@@ -34,6 +36,10 @@ this.Cms_Form = (function () {
   Cms_Form.getFormData = function($form) {
     var formData = new FormData();
     $.each($form.serializeArray(), function() {
+      if (this.name === "_method") {
+        return;
+      }
+
       formData.append(this.name, this.value);
     });
     return formData;

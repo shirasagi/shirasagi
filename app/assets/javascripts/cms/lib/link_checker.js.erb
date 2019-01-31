@@ -1,7 +1,8 @@
 this.Link_Checker = (function () {
-  function ResultBox() {
+  function ResultBox(form) {
     this.$el = null;
     this.$elBody = null;
+    this.form = form;
   }
 
   ResultBox.prototype.init = function() {
@@ -30,7 +31,7 @@ this.Link_Checker = (function () {
   };
 
   ResultBox.prototype.moveLast = function() {
-    $(Cms_Form.addonSelector).append(this.$el);
+    $(this.form.addonSelector).append(this.$el);
     return this;
   };
 
@@ -46,16 +47,11 @@ this.Link_Checker = (function () {
     return this.showMessage(SS.loading);
   };
 
-  ResultBox.prototype.showResult = function () {
-    if (Link_Checker.error !== "") {
-      return this.showMessage(Link_Checker.error);
-    }
-
+  ResultBox.prototype.showResult = function (links) {
     var $ul = $("<ul/>");
-    for (var link in Link_Checker.links) {
-      var msg = Link_Checker.links[link];
+    $.each(links, function(link, msg) {
       $ul.append('<li>' + msg + '</li>');
-    }
+    });
 
     this.$elBody.html("");
     this.$elBody.append("<p>" + Link_Checker.message["checkLinks"] + "</p>");
@@ -64,7 +60,12 @@ this.Link_Checker = (function () {
     return this.moveLast();
   };
 
-  function Link_Checker() {
+  function Link_Checker(el, form) {
+    this.$el = $(el);
+    this.form = form;
+    this.links = {};
+    this.linkErrorCount = 0;
+    this.resultBox = new ResultBox(form);
   }
 
   Link_Checker.message = {
@@ -76,118 +77,86 @@ this.Link_Checker = (function () {
     linkCheckerError: "<%= I18n.t('errors.messages.link_check_failed_to_connect') %>"
   };
 
-  Link_Checker.links = {};
-
-  Link_Checker.error = "";
-
   Link_Checker.url = "/.cms/link_check/check.json";
 
   Link_Checker.rootUrl = "";
 
-  Link_Checker.resultBox = new ResultBox();
+  Link_Checker.instance = null;
 
-  Link_Checker.render = function () {
-    return $(document).on("click", "button.link-check", function () {
-      $.support.cors = true;
+  Link_Checker.render = function (form) {
+    form = form || Cms_Form;
 
-      var button = this;
-      button.disabled = true;
-
-      Link_Checker.resultBox.showChecking();
-
-      var rejected = function(xhr, status, error) {
-        Link_Checker.resultBox.showMessage("<p>" + Link_Checker.message["linkCheckerError"] + ": " + Cms_Form.form_html_path + "</p>");
-        button.disabled = false;
-      };
-
-      if (Cms_Form.addonSelector === ".mod-cms-body") {
-        var html = Cms_Form.getEditorHtml();
-
-        Link_Checker.reset();
-        Link_Checker.check(html, function () {
-          Link_Checker.resultBox.showResult();
-          button.disabled = false;
-        });
-        return;
-      }
-
-      if (! Cms_Form.form_link_check_path) {
-        rejected(null, null, "form link check path is not configured");
-        return;
-      }
-
-      var formData = Cms_Form.getFormData($("#" + Form_Preview.form_id));
-      formData.append("route", Form_Preview.page_route);
-
-      $.ajax({
-        type: "POST",
-        url: Cms_Form.form_link_check_path,
-        data: formData,
-        processData: false,
-        contentType: false,
-        cache: false,
-        success: function(data) {
-          Link_Checker.reset();
-
-          $.each(data, function() {
-            var link = this[0];
-            var status = this[1];
-
-            var msg = '<span class="' + status + '">' + Link_Checker.message[status] + '</span>';
-            Link_Checker.addMessage(link, null, msg);
-          })
-
-          Link_Checker.resultBox.showResult();
-          button.disabled = false;
-        },
-        error: function(xhr, status, error) {
-          rejected(xhr, status, error);
-        }
-      });
-    });
+    var instance = Link_Checker.instance = new Link_Checker(document, form);
+    instance.render();
+    return instance;
   };
 
   Link_Checker.reset = function () {
-    this.links = {};
-    this.error = "";
-  };
-
-  Link_Checker.addMessage = function (link, state, msg) {
-    if (! msg) {
-      if (state) {
-        msg = '<span class="success">' + Link_Checker.message["success"] + '</span>';
-      } else {
-        msg = '<span class="failure">' + Link_Checker.message["failure"] + '</span>';
-      }
-    }
-    return Link_Checker.links[link] = link + " " + msg;
-  };
-
-  Link_Checker.check = function (html, complete) {
-    var href, j, len, link, links, numOfLinks, ref;
-    numOfLinks = $(html).find('a[href]').length;
-    if (numOfLinks === 0) {
-      Link_Checker.error = "<p>" + Link_Checker.message["noLinks"] + "</p>";
-      complete();
+    if (! Link_Checker.instance) {
       return;
     }
-    links = [];
-    ref = $(html).find('a[href]');
-    for (j = 0, len = ref.length; j < len; j++) {
-      href = ref[j];
-      link = $(href).attr('href');
+
+    Link_Checker.instance.reset();
+  };
+
+  Link_Checker.prototype.render = function () {
+    var self = this;
+    return this.$el.on("click", "button.link-check", function () {
+      var button = this;
+      button.disabled = true;
+
+      var complete = function() {
+        button.disabled = false;
+      };
+
+      self.asyncCheck().done(complete).fail(complete);
+    });
+  };
+
+  Link_Checker.prototype.asyncCheck = function () {
+    if (this.form.addonSelector === ".mod-cms-body") {
+      return this.asyncCheckInEditor();
+    } else {
+      return this.asyncCheckInForm();
+    }
+  };
+
+  Link_Checker.prototype.asyncCheckInEditor = function () {
+    var self = this;
+    var defer = $.Deferred();
+
+    this.beforeCheck();
+
+    var $html = $(this.form.getEditorHtml());
+
+    var links = [];
+    $html.find('a[href]').each(function() {
+      var link = $(this).attr('href');
       if (link === "#") {
-        continue;
+        return;
       }
+
       if (link[0] === "#") {
-        Link_Checker.addMessage(link, $(html).find(link).length !== 0);
+        self.addMessage(link, $html.find(link).length !== 0);
       } else {
         if (/^\//.test(link)) {
           link = Link_Checker.rootUrl + link.slice(1);
         }
         links.push(link);
       }
+    });
+
+    if (links.length === 0) {
+      if ($.isEmptyObject(this.links)) {
+        this.resultBox.showMessage("<p>" + Link_Checker.message["noLinks"] + "</p>");
+      } else {
+        this.resultBox.showResult(this.links);
+      }
+
+      defer.resolve({ status: (this.linkErrorCount === 0 ? "ok" : "failed") });
+      return defer.promise();
     }
+
     $.ajax({
       type: "POST",
       url: Link_Checker.url,
@@ -199,19 +168,103 @@ this.Link_Checker = (function () {
       dataType: "json",
       crossDomain: true,
       success: function (res, status) {
-        var code;
-        for (link in res) {
-          code = res[link];
-          Link_Checker.addMessage(link, code === 200);
-        }
+        $.each(res, function(link, code) {
+          self.addMessage(link, code === 200);
+        });
+
+        self.resultBox.showResult(self.links);
+        defer.resolve({ status: (self.linkErrorCount === 0 ? "ok" : "failed") });
       },
       error: function (xhr, status, error) {
-        Link_Checker.error = "<p>" + Link_Checker.message["linkCheckerError"] + ": " + Link_Checker.url + "</p>";
-      },
-      complete: function (xhr, status) {
-        complete();
+        var msg = Link_Checker.message["linkCheckerError"] + ": " + Link_Checker.url;
+        self.resultBox.showMessage("<p>" + msg + "</p>");
+        defer.reject(xhr, status, error);
       }
     });
+
+    return defer.promise();
+  };
+
+  Link_Checker.prototype.asyncCheckInForm = function () {
+    var self = this;
+    var defer = $.Deferred();
+
+    this.beforeCheck();
+
+    if (! this.form.form_link_check_path) {
+      var msg = "form link check path is not configured";
+
+      this.resultBox.showMessage("<p>" + msg + "</p>");
+      defer.reject(null, null, msg);
+      return;
+    }
+
+    var formData = this.form.getFormData($("#" + Form_Preview.form_id));
+    formData.append("route", Form_Preview.page_route);
+
+    $.ajax({
+      type: "POST",
+      url: self.form.form_link_check_path,
+      data: formData,
+      processData: false,
+      contentType: false,
+      cache: false,
+      success: function(data) {
+        if (!data || data.length === 0) {
+          self.resultBox.showMessage("<p>" + Link_Checker.message["noLinks"] + "</p>");
+          defer.resolve({ status: "ok" });
+          return;
+        }
+
+        result = "ok";
+
+        $.each(data, function() {
+          var link = this[0];
+          var status = this[1];
+
+          var msg = '<span class="' + status + '">' + Link_Checker.message[status] + '</span>';
+          self.addMessage(link, null, msg);
+
+          if (status === "failure") {
+            result = "failed";
+          }
+        })
+
+        self.resultBox.showResult(self.links);
+        defer.resolve({ status: result });
+      },
+      error: function(xhr, status, error) {
+        var msg = Link_Checker.message["linkCheckerError"] + ": " + self.form.form_link_check_path;
+        self.resultBox.showMessage("<p>" + msg + "</p>");
+        defer.reject(xhr, status, error);
+      }
+    });
+
+    return defer.promise();
+  };
+
+  Link_Checker.prototype.reset = function () {
+    this.links = {};
+    this.linkErrorCount = 0;
+  };
+
+  Link_Checker.prototype.beforeCheck = function () {
+    this.reset();
+
+    $.support.cors = true;
+    this.resultBox.showChecking();
+  };
+
+  Link_Checker.prototype.addMessage = function (link, state, msg) {
+    if (! msg) {
+      if (state) {
+        msg = '<span class="success">' + Link_Checker.message["success"] + '</span>';
+      } else {
+        msg = '<span class="failure">' + Link_Checker.message["failure"] + '</span>';
+        this.linkErrorCount++;
+      }
+    }
+    this.links[link] = link + " " + msg;
   };
 
   return Link_Checker;

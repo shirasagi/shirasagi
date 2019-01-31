@@ -2,6 +2,12 @@
 <% controller ||= false %>
 <% id = value.try(:id) || BSON::ObjectId.new %>
 <% id = "column-value-#{id}" %>
+<%
+  @buttons = []
+  @buttons << :syntax_check if @inplace_syntax_check
+  @buttons << :link_check if @inplace_link_check
+  @buttons << :form_check if @inplace_form_check
+%>
 <div id="<%= id %>" class="column-value column-value-<%= column._type.parameterize %>">
   <div class="column-value-header">
     <div class="column-value-header-group">
@@ -58,5 +64,24 @@
       <%= hidden_field_tag "#{f.object_name}[][_type]", column.value_type, id: nil %>
     <% end %>
     <%= yield(id) %>
+
+    <% if @buttons.present? %>
+    <div class="inplace-checkers">
+      <% @buttons.each do |button| %>
+        <% case button %>
+        <% when :syntax_check %>
+          <%= button_tag t("cms.syntax_check"), { type: :button, class: "btn syntax-check" } %>
+        <% when :link_check %>
+          <%= button_tag t("cms.link_check"), { type: :button, class: "btn link-check" } %>
+        <% when :form_check %>
+          <%= button_tag t("cms.form_check"), { type: :button, class: "btn form-check" } %>
+        <% when :source_cleaner %>
+          <%= button_tag t("cms.source_cleaner"), { type: :button, class: "btn", id: "#{id}-source-cleaner" } %>
+        <% when String %>
+          <%= button %>
+        <% end %>
+      <% end %>
+    </div>
+    <% end %>
   </div>
 </div>

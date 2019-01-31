@@ -15,4 +15,8 @@ class Cms::Column::List < Cms::Column::Base
   def syntax_check_enabled?
     true
   end
+
+  def link_check_enabled?
+    true
+  end
 end

@@ -25,6 +25,7 @@ ja:
     input_directly: 直接入力する
     layout: レイアウト
     link_check: リンクチェック
+    form_check: 内容チェック
     list_view: リスト表示
     loop_html: ループHTML
     max_file_size: 最大ファイルサイズ
@@ -905,6 +906,7 @@ ja:
       link_check_success: 成功
       link_check_failure: 失敗
       link_check_failed_to_connect: リンクチェックに失敗しました。次のURLに接続できません。
+      form_check_failed_to_connect: 内容チェックに失敗しました。次のURLに接続できません。
       mobile_size_check_success: 成功
       mobile_size_check_failure: 失敗
       mobile_size_check_disable: モバイルサイズが設定されていません。

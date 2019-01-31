@@ -6,4 +6,12 @@ class Cms::Column::Table < Cms::Column::Base
       [ I18n.t("cms.options.column_header_type.#{v}", default: v), v ]
     end
   end
+
+  def syntax_check_enabled?
+    true
+  end
+
+  def link_check_enabled?
+    true
+  end
 end
