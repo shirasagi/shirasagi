@@ -280,6 +280,31 @@ ja:
       ckan: "Ckan API"
       shirasagi_api: "Shirasagi API"
       shirasagi_scraper: "Shirasagi スクレイピング"
+<<<<<<< HEAD
+=======
+    survey_cycle_options:
+      quarterly: "四半期ごと"
+      yearly: "毎年"
+      two_yearly: "２年"
+      three_yearly: "３年"
+      four_yearly: "４年"
+      five_yearly: "５年"
+      occasionally: "不定期"
+      other: "その他"
+    survey_group_options:
+      city: "市町村-調査対象"
+      pref: "県-調査対象"
+      pref_city: "県-市町村-調査対象"
+      country: "国-調査対象"
+      country_pref: "国-県-調査対象"
+      country_pref_city: "国-県-市町村-調査対象"
+      other: "その他"
+    survey_method_options:
+      complete_survey: "全数調査"
+      random_sampling: "標本調査（無作為抽出）"
+      judgment_sampling: "標本調査（有意抽出）"
+      other: "その他"
+>>>>>>> 2c36d7fd0... [fix] opendata : notify_dataset_plan
     assoc_job:
       dataset_text: "%{name} の一覧は %{url} でも公開されているので、%{url} もご覧ください。"
       resource_text: "%{name} は %{now} 時点の情報を元に作成しています。"
@@ -786,6 +811,17 @@ ja:
               period: 期間の指定が不正です。開始と終了は同じ、または開始が終了より過去の日付となるよう入力してください。
       template:
         header: 入力内容を確認してください。
+
+  job:
+    models:
+      opendata/csv2rdf_converter/job: RDF変換ジョブ
+      opendata/facility/assoc_job: 施設CSV取り込みジョブ
+      opendata/cms_integration/assoc_job: 記事連携設定ジョブ
+      opendata/harvest/harvest_datasets_job: ハーベストジョブ
+      opendata/harvest/import_datasets_job: ハーベストインポートジョブ
+      opendata/harvest/export_datasets_job: ハーベストエクスポート削除ジョブ
+      opendata/harvest/destroy_datasets_job: ハーベスト関連データセット削除ジョブ
+      opendata/notify_dataset_plan_job: データセット更新通知ジョブ
 
   tooltip:
     opendata/dataset:
