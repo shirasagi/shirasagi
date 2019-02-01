@@ -25,7 +25,7 @@ ja:
     input_directly: 直接入力する
     layout: レイアウト
     link_check: リンクチェック
-    form_check: 内容チェック
+    form_check: 制約チェック
     list_view: リスト表示
     loop_html: ループHTML
     max_file_size: 最大ファイルサイズ

@@ -116,6 +116,10 @@ module SS::Model::Column
     false
   end
 
+  def form_check_enabled?
+    required?
+  end
+
   private
 
   def set_form_id

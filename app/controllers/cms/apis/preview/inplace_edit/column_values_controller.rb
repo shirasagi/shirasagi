@@ -9,7 +9,7 @@ class Cms::Apis::Preview::InplaceEdit::ColumnValuesController < ApplicationContr
   before_action :set_inplace_mode
   before_action :set_item
   before_action :set_column, only: %i[new]
-  before_action :set_column_and_value, only: %i[edit update destroy move_up move_down move_at link_check form_check]
+  before_action :set_column_and_value, only: %i[edit update destroy move_up move_down move_at]
 
   private
 
@@ -35,13 +35,16 @@ class Cms::Apis::Preview::InplaceEdit::ColumnValuesController < ApplicationContr
     raise "404" if @cur_column.blank?
   end
 
-  def create_with_overwrite
+  def new_column_value
     safe_params = params.require(:item).permit(@model.permit_params)
     column_value_param = safe_params[:column_values].first
     column_value_param[:order] = @item.column_values.present? ? @item.column_values.max(:order) + 1 : 0
     @cur_column_value = @item.column_values.build(column_value_param)
     @cur_column = @cur_column_value.column
+  end
 
+  def create_with_overwrite
+    new_column_value
     if params.key?(:save_if_no_alerts)
       result = @item.valid?(%i[update accessibility link])
       if result
@@ -392,17 +395,29 @@ class Cms::Apis::Preview::InplaceEdit::ColumnValuesController < ApplicationContr
   end
 
   def link_check
-    safe_params = params.require(:item).permit(@model.permit_params)
-    column_value_param = safe_params[:column_values].first
-    @cur_column_value.attributes = column_value_param[:in_wrap]
+    if params[:id].present?
+      set_column_and_value
+      safe_params = params.require(:item).permit(@model.permit_params)
+      column_value_param = safe_params[:column_values].first
+      @cur_column_value.attributes = column_value_param[:in_wrap]
+    else
+      new_column_value
+    end
+
     @cur_column_value.valid?(%i[link])
     render json: @cur_column_value.link_errors.to_json, content_type: json_content_type
   end
 
   def form_check
-    safe_params = params.require(:item).permit(@model.permit_params)
-    column_value_param = safe_params[:column_values].first
-    @cur_column_value.attributes = column_value_param[:in_wrap]
+    if params[:id].present?
+      set_column_and_value
+      safe_params = params.require(:item).permit(@model.permit_params)
+      column_value_param = safe_params[:column_values].first
+      @cur_column_value.attributes = column_value_param[:in_wrap]
+    else
+      new_column_value
+    end
+
     @cur_column_value.valid?(%i[update])
     render json: @cur_column_value.errors.full_messages.to_json, content_type: json_content_type
   end

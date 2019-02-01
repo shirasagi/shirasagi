@@ -1,7 +1,7 @@
 <%
   replace_words_conf = Cms::WordDictionary.site(@cur_site).to_config
 
-  @inplace_form_check = true
+  @inplace_form_check = @cur_column.form_check_enabled?
 
   @inplace_syntax_check = @cur_column.syntax_check_enabled?
   @inplace_syntax_check = @cur_site.syntax_check_enabled? if @inplace_syntax_check

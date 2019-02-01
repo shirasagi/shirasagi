@@ -67,4 +67,8 @@ class Cms::Column::FileUpload < Cms::Column::Base
   def link_check_enabled?
     true
   end
+
+  def form_check_enabled?
+    super || (label_max_length.present? && label_max_length > 0) || (file_type == 'banner')
+  end
 end

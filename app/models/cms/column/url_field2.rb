@@ -46,4 +46,8 @@ class Cms::Column::UrlField2 < Cms::Column::Base
   def link_check_enabled?
     true
   end
+
+  def form_check_enabled?
+    super || (label_max_length.present? && label_max_length > 0) || (link_max_length.present? && link_max_length > 0)
+  end
 end

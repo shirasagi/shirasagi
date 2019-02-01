@@ -195,6 +195,8 @@ SS::Application.routes.draw do
               post :move_up, on: :member
               post :move_down, on: :member
               post :move_at, on: :member
+              post :link_check, on: :collection
+              post :form_check, on: :collection
               post :link_check, on: :member
               post :form_check, on: :member
             end
