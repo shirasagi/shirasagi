@@ -60,8 +60,16 @@ this.Cms_Inplace_Form = (function () {
         return true;
       }
 
-      $.when.apply($, promises).then(function(syntaxChkResult, linkChkResult, formChkResult) {
-        if (syntaxChkResult.status === "ok" && linkChkResult.status === "ok" && formChkResult.status === "ok") {
+      $.when.apply($, promises).then(function() {
+        var result = true;
+        for (var i = 0; i < arguments.length; i++) {
+          if (arguments[i].status !== "ok") {
+            result = false;
+            break;
+          }
+        }
+
+        if (result) {
           $this.off(".form_alert");
           $this.trigger("click");
         }
