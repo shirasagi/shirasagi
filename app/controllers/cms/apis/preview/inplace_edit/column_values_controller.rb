@@ -45,14 +45,7 @@ class Cms::Apis::Preview::InplaceEdit::ColumnValuesController < ApplicationContr
 
   def create_with_overwrite
     new_column_value
-    if params.key?(:save_if_no_alerts)
-      result = @item.valid?(%i[update accessibility link])
-      if result
-        result = @item.save
-      end
-    else
-      result = @item.save
-    end
+    result = @item.save
 
     location = { action: :edit, id: @cur_column_value }
     if result
@@ -80,14 +73,7 @@ class Cms::Apis::Preview::InplaceEdit::ColumnValuesController < ApplicationContr
     @cur_column_value = branch.column_values.build(column_value_param)
     @cur_column = @cur_column_value.column
 
-    if params.key?(:save_if_no_alerts)
-      result = branch.valid?(%i[update accessibility link])
-      if result
-        result = branch.save
-      end
-    else
-      result = branch.save
-    end
+    result = branch.save
 
     if !result
       @item.errors.messages[:base] += branch.errors.full_messages
@@ -109,15 +95,6 @@ class Cms::Apis::Preview::InplaceEdit::ColumnValuesController < ApplicationContr
       render: { file: :edit, status: :unprocessable_entity }
     }
 
-    if params.key?(:save_if_no_alerts)
-      result = @cur_column_value.valid?(%i[update accessibility link])
-      result &&= @cur_column_value.link_errors.all? { |_link, status| status == :success }
-      if !result
-        render_update false, render_opts
-        return
-      end
-    end
-
     result = @item.save
     render_update result, render_opts
   end
@@ -127,15 +104,6 @@ class Cms::Apis::Preview::InplaceEdit::ColumnValuesController < ApplicationContr
       @item.errors.add :base, :branch_is_already_existed
       render_save_as_branch false
       return
-    end
-
-    if params.key?(:save_if_no_alerts)
-      result = @cur_column_value.valid?(%i[update accessibility link])
-      result &&= @cur_column_value.link_errors.all? { |_link, status| status == :success }
-      if !result
-        render_save_as_branch false
-        return
-      end
     end
 
     @item.cur_site = @cur_site
