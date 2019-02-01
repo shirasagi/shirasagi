@@ -9,7 +9,7 @@ class Cms::Apis::Preview::InplaceEdit::ColumnValuesController < ApplicationContr
   before_action :set_inplace_mode
   before_action :set_item
   before_action :set_column, only: %i[new]
-  before_action :set_column_and_value, only: %i[edit update destroy move_up move_down move_at link_check form_check]
+  before_action :set_column_and_value, only: %i[edit update destroy move_up move_down move_at]
 
   private
 
