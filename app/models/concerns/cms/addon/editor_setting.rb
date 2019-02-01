@@ -24,7 +24,6 @@ module Cms::Addon::EditorSetting
   end
 
   def syntax_check_enabled?
-    return nil if syntax_check.blank?
-    syntax_check == 'enabled' ? true : false
+    syntax_check != 'disabled'
   end
 end
