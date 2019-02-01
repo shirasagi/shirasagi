@@ -24,6 +24,6 @@ module SS::Model::EditorSetting
   end
 
   def syntax_check_enabled?
-    syntax_check == 'enabled' || syntax_check.blank?
+    syntax_check != 'disabled'
   end
 end
