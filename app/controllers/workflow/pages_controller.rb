@@ -74,17 +74,11 @@ class Workflow::PagesController < ApplicationController
 
   def create_success_response
     json = { workflow_state: @item.workflow_state }
+
     redirect = json[:redirect] = {}
-    if @item.workflow_state == "approve"
-      branch = @item.try(:branch?)
-      redirect[:reload] = !branch
-      redirect[:show] = branch ? @item.master.private_show_path : @item.private_show_path
-      redirect[:url] = branch ? @item.master.url : @item.url
-    else
-      redirect[:reload] = true
-      redirect[:show] = @item.private_show_path
-      redirect[:url] = @item.url
-    end
+    redirect[:reload] = params[:id].to_i == @item.id
+    redirect[:show] = @item.private_show_path
+    redirect[:url] = @item.url
 
     json
   end
@@ -189,6 +183,14 @@ class Workflow::PagesController < ApplicationController
       return
     end
 
+    merged = false
+    if @item.workflow_state == @model::WORKFLOW_STATE_APPROVE && @item.try(:branch?) && @item.state == "public"
+      save = @item.master
+      @item.delete
+      @item = save
+      merged = true
+    end
+
     current_level = @item.workflow_current_level
     if save_level != current_level
       # escalate workflow
@@ -197,15 +199,12 @@ class Workflow::PagesController < ApplicationController
 
     if @item.workflow_state == @model::WORKFLOW_STATE_APPROVE
       # finished workflow
-      url = params[:url].to_s
-      url.sub!(/#{@item.id}$/, @item.master.id.to_s) if @item.try(:branch?) && @item.state == "public"
+      url = merged ? @item.private_show_path : params[:url].to_s
       Workflow::Mailer.send_approve_mails(
         f_uid: @cur_user._id, t_uids: [ @item.workflow_user_id ],
         site: @cur_site, page: @item,
         url: url, comment: params[:remand_comment]
       )
-
-      @item.delete if @item.try(:branch?) && @item.state == "public"
     end
 
     render json: create_success_response
