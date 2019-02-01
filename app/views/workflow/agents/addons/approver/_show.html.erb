@@ -2,7 +2,6 @@
   var options = {};
   options.request_url = "<%= request.url %>";
   options.workflow_node = "workflow" + "<%= @cur_node? @cur_node.id : "" %>";
-  options.redirect_location = "<%= @item.try(:branch?) ? @item.master.private_show_path : "" %>";
   options.user_id = <%= @cur_user.id %>;
   options.errors = {};
   options.errors.not_select = "<%= @model.t :workflow_approvers %><%= t("errors.messages.not_select") %>";

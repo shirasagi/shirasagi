@@ -80,8 +80,7 @@ module Cms::Addon::Form::Page
   end
 
   def merge_column_values
-    update_column_values(in_branch.column_values.presence || [])
-    in_branch.column_values = []
+    copy_column_values(in_branch)
   end
 
   def update_column_values_updated(*_args)

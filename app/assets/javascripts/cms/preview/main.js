@@ -951,6 +951,16 @@ SS_Preview = (function () {
             return;
           }
 
+          if (data.redirect.reload) {
+            location.reload();
+            return;
+          }
+
+          if (data.redirect.url) {
+            location.href = SS_Preview.previewPath.replace(":path", data.redirect.url.slice(1));
+            return;
+          }
+
           location.reload();
         },
         error: function(xhr, status) {
