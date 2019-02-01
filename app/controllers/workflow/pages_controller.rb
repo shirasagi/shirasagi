@@ -72,6 +72,23 @@ class Workflow::PagesController < ApplicationController
     message
   end
 
+  def create_success_response
+    json = { workflow_state: @item.workflow_state }
+    redirect = json[:redirect] = {}
+    if @item.workflow_state == "approve"
+      branch = @item.try(:branch?)
+      redirect[:reload] = !branch
+      redirect[:show] = branch ? @item.master.private_show_path : @item.private_show_path
+      redirect[:url] = branch ? @item.master.url : @item.url
+    else
+      redirect[:reload] = true
+      redirect[:show] = @item.private_show_path
+      redirect[:url] = @item.url
+    end
+
+    json
+  end
+
   public
 
   def request_update
@@ -98,7 +115,7 @@ class Workflow::PagesController < ApplicationController
 
     if @item.save
       request_approval
-      render json: { workflow_state: @item.workflow_state }
+      render json: create_success_response
     else
       render json: @item.errors.full_messages, status: :unprocessable_entity
     end
@@ -128,7 +145,7 @@ class Workflow::PagesController < ApplicationController
 
     if @item.save
       request_approval
-      render json: { workflow_state: @item.workflow_state }
+      render json: create_success_response
     else
       render json: @item.errors.full_messages, status: :unprocessable_entity
     end
@@ -191,7 +208,7 @@ class Workflow::PagesController < ApplicationController
       @item.delete if @item.try(:branch?) && @item.state == "public"
     end
 
-    render json: { workflow_state: @item.workflow_state }
+    render json: create_success_response
   end
 
   alias pull_up_update approve_update
@@ -228,7 +245,7 @@ class Workflow::PagesController < ApplicationController
         url: params[:url], comment: params[:remand_comment]
       )
     end
-    render json: { workflow_state: @item.workflow_state }
+    render json: create_success_response
   end
 
   def request_cancel
