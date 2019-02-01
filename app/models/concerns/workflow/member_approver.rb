@@ -43,8 +43,10 @@ module Workflow::MemberApprover
       end
       self.workflow_required_counts = route.required_counts
       return true
+    elsif status == "ready"
+      self.state = "ready"
     elsif status == "public"
-      self.state = (self.state = "ready") ? "ready" : "public"
+      self.state = "public"
     else
       self.state = "closed"
     end

@@ -38,7 +38,6 @@ describe "opendata_datasets_release", type: :feature, dbscope: :example do
         click_link "新規作成"
         expect(status_code).to eq 200
 
-        dump(page.html)
         within "form#item-form" do
           attach_file "item[in_file]", "#{Rails.root}/spec/fixtures/ss/logo.png"
           fill_in "item[name]", with: "sample1"
@@ -46,7 +45,7 @@ describe "opendata_datasets_release", type: :feature, dbscope: :example do
           select license.name, from: 'item_license_id'
           click_button "保存"
         end
-        dump(page.html)
+
         expect(status_code).to eq 200
         expect(first('#addon-basic')).to have_text("logo.png")
 
