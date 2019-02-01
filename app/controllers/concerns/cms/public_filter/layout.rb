@@ -83,7 +83,8 @@ module Cms::PublicFilter::Layout
       m
     end
 
-    html = render_layout_parts(body)
+    html = render_conditional_tag(body)
+    html = render_layout_parts(html)
 
     if notice
       notice_html   = %(<div id="ss-notice"><div class="wrap">#{notice}</div></div>)
@@ -138,9 +139,7 @@ module Cms::PublicFilter::Layout
       convert_date
     end
 
-    html.gsub!(conditional_tag_template) do
-      render_conditional_tag(::Regexp.last_match)
-    end
+    html = render_conditional_tag(html)
 
     html
   end
