@@ -147,10 +147,9 @@ this.Syntax_Checker = (function () {
   Syntax_Checker.asyncCheck = function () {
     var defer = $.Deferred();
 
-    var resolved = function(content, type) {
-      type = type || "html";
+    var resolved = function(content, options) {
       try {
-        Syntax_Checker.check(content, type);
+        Syntax_Checker.check(content, options);
         defer.resolve({ status: Syntax_Checker.errorCount === 0 ? "ok" : "failed" });
       } catch (e) {
         Syntax_Checker.resultBox.showMessage("<p>" + e + "</p>");
@@ -169,7 +168,13 @@ this.Syntax_Checker = (function () {
     return defer.promise();
   };
 
-  Syntax_Checker.check = function (content, type) {
+  Syntax_Checker.check = function (content, options) {
+    var type, afterCheck;
+
+    options = options || {};
+    type = options["type"] || "html";
+    afterCheck = options["afterCheck"];
+
     Syntax_Checker.reset();
 
     if (content) {
@@ -183,6 +188,10 @@ this.Syntax_Checker = (function () {
         Syntax_Checker.checkHtml(content);
       }
     }
+
+    if (afterCheck) {
+      afterCheck(content, options);
+    };
 
     Syntax_Checker.resultBox.showResult();
   };
