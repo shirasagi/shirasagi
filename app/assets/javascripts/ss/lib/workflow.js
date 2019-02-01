@@ -148,6 +148,7 @@ SS_Workflow.prototype = {
     return uri.join("/");
   },
   updateItem: function($this) {
+    var pThis = this;
     var updatetype = $this.attr("updatetype");
     var approvers = this.collectApprovers();
     if ($.isEmptyObject(approvers) && updatetype === "request") {
@@ -165,7 +166,6 @@ SS_Workflow.prototype = {
     var workflow_comment = $("#workflow_comment").prop("value");
     var workflow_pull_up = $("#workflow_pull_up").prop("value");
     var workflow_on_remand = $("#workflow_on_remand").prop("value");
-    var redirect_location = this.options.redirect_location;
     var remand_comment = $("#remand_comment").prop("value");
     var forced_update_option;
     if (updatetype == "request") {
@@ -196,15 +196,27 @@ SS_Workflow.prototype = {
         workflow_users: this.collectDelegatees()
       },
       success: function (data) {
-        if (data["workflow_alert"]) {
-          alert(data["workflow_alert"]);
+        if (data.workflow_alert) {
+          alert(data.workflow_alert);
           return;
         }
-        if (data["workflow_state"] === "approve" && redirect_location !== "") {
-          location.href = redirect_location;
-        } else {
+
+        if (data.redirect && data.redirect.reload) {
           location.reload();
+          return;
         }
+
+        if (data.redirect && data.redirect.show) {
+          location.href = data.redirect.show;
+          return;
+        }
+
+        if (data["workflow_state"] === "approve" && pThis.options.redirect_location) {
+          location.href = pThis.options.redirect_location;
+          return;
+        }
+
+        location.reload();
       },
       error: function(xhr, status) {
         try {

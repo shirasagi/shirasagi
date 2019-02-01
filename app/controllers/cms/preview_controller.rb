@@ -172,7 +172,7 @@ class Cms::PreviewController < ApplicationController
       self.headers[k] = v
     end
 
-    if !@contents_headers["Content-Type"].include?("text/html")
+    if !@contents_headers["Content-Type"].include?("text/html") || @contents_status != 200
       self.response_body = @contents_body
       return
     end
