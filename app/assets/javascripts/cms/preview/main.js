@@ -496,11 +496,6 @@ SS_Preview = (function () {
       close: function(ev, ui) {
         // explicitly destroy dialog and remove elemtns because dialog elements is still remained
         $(this).dialog('destroy').remove();
-      },
-      resize: function(ev, ui) {
-        if (ui.originalSize.height - ui.size.height != 0) {
-          self.adjustAllRichEditorHeight($frame);
-        }
       }
     });
   };
@@ -531,11 +526,6 @@ SS_Preview = (function () {
           close: function(ev, ui) {
             // explicitly destroy dialog and remove elemtns because dialog elements is still remained
             $(this).dialog('destroy').remove();
-          },
-          resize: function(ev, ui) {
-            if (ui.originalSize.height - ui.size.height != 0) {
-              self.adjustAllRichEditorHeight($frame);
-            }
           }
         });
       },
@@ -543,15 +533,6 @@ SS_Preview = (function () {
         self.notice.show(error);
       }
     })
-  };
-
-  SS_Preview.prototype.adjustAllRichEditorHeight = function($frame) {
-    var self = this;
-    if ($frame[0].contentWindow.CKEDITOR) {
-      $.each($frame[0].contentWindow.CKEDITOR.instances, function (key, editor) {
-        self.adjustRichEditorHeight(editor);
-      });
-    }
   };
 
   SS_Preview.prototype.adjustRichEditorHeight = function(editor) {
