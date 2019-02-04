@@ -392,9 +392,8 @@ SS_Preview = (function () {
 
       return true;
     });
-
     itemForm.onsubmit = function(ev) {
-      var formData = new FormData(itemForm);
+      var formData = frame.contentWindow.Cms_Form.getFormData(frame.contentWindow.$(itemForm), { preserveMethod: true });
       if (self.saveIfNoAlerts) {
         formData.append("save_if_no_alerts", "button");
       }
@@ -440,6 +439,7 @@ SS_Preview = (function () {
       ev.preventDefault();
       return false;
     };
+
 
     if (frame.contentWindow.CKEDITOR) {
       frame.contentWindow.CKEDITOR.on("instanceReady", function (ev) {
