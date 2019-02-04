@@ -127,12 +127,22 @@ module Gws::Circular::PostFilter
   end
 
   def set_seen_all
-    @items.each{ |item| item.set_seen(@cur_user).save if item.unseen?(@cur_user) }
+    @items.each do |item|
+      if item.unseen?(@cur_user)
+        item.attributes = fix_params
+        item.set_seen(@cur_user).save
+      end
+    end
     render_destroy_all(false)
   end
 
   def unset_seen_all
-    @items.each{ |item| item.unset_seen(@cur_user).save if item.seen?(@cur_user) }
+    @items.each do |item|
+      if item.seen?(@cur_user)
+        item.attributes = fix_params
+        item.unset_seen(@cur_user).save
+      end
+    end
     render_destroy_all(false)
   end
 end
