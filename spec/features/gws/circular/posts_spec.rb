@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe "gws_circular_posts", type: :feature, dbscope: :example do
+describe "gws_circular_posts", type: :feature, dbscope: :example, js: true do
   let(:site) { gws_site }
   let(:item) { create :gws_circular_post, :gws_circular_posts }
   let(:item2) { create :gws_circular_post, :gws_circular_posts_item2 }
@@ -16,15 +16,45 @@ describe "gws_circular_posts", type: :feature, dbscope: :example do
     end
 
     it "#index display unseen" do
-      item
+      expect(item.seen?(gws_user)).to be_falsey
+
       visit index_path
-      expect(page).to have_content('未読')
+      expect(page).to have_content(I18n.t("gws/circular.post.unseen"))
+
+      first(".list-item input[value='#{item.id}']").click
+      within ".list-head-action" do
+        page.accept_alert do
+          click_on I18n.t("gws/circular.post.set_seen")
+        end
+      end
+      expect(page).to have_css('#notice', text: I18n.t("gws/circular.notice.set_seen"))
+
+      item.reload
+      expect(item.seen?(gws_user)).to be_truthy
+
+      visit index_path
+      expect(page).to have_content(I18n.t("gws/circular.post.seen"))
     end
 
     it "#index display seen" do
-      item2
+      expect(item2.seen?(gws_user)).to be_truthy
+
       visit index_path
-      expect(page).to have_content('既読')
+      expect(page).to have_content(I18n.t("gws/circular.post.seen"))
+
+      first(".list-item input[value='#{item2.id}']").click
+      within ".list-head-action" do
+        page.accept_alert do
+          click_on I18n.t("gws/circular.post.unset_seen")
+        end
+      end
+      expect(page).to have_css('#notice', text: I18n.t("gws/circular.notice.unset_seen"))
+
+      item2.reload
+      expect(item2.unseen?(gws_user)).to be_truthy
+
+      visit index_path
+      expect(page).to have_content(I18n.t("gws/circular.post.unseen"))
     end
 
     it "#show" do
