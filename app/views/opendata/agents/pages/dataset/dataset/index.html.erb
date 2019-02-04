@@ -96,6 +96,11 @@ categories = [
   <% end %>
 </nav>
 
+<% api_url = api_package_show_path(id: @cur_page.uuid) %>
+<% if api_url.present? %>
+<div class="api"><%= link_to "WEBAPI", api_url %></div>
+<% end %>
+
 <div class="text">
   <%= auto_link paragraph(@cur_page.text) %>
 </div>
@@ -226,7 +231,10 @@ categories = [
           <dd><%= sprintf("%010d", @cur_page.id) %></dd>
 
           <dt><%= @cur_page.t :api_state %></dt>
-          <dd><%= @cur_page.label :api_state %></dd>
+          <dd>
+            <span class="api-state"><%= @cur_page.label :api_state %></span>
+            <span class="api-uuid"><%= @cur_page.uuid %></span>
+          </dd>
 
           <% if code && code.prefecture.present?  %>
           <dt><%= code.t :prefecture %></dt>
