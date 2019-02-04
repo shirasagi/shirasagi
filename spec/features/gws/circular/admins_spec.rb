@@ -3,7 +3,6 @@ require 'spec_helper'
 describe "gws_circular_admins", type: :feature, dbscope: :example do
   let(:site) { gws_site }
   let(:item) { create(:gws_circular_post, :gws_circular_posts) }
-  let(:item2) { create(:gws_circular_post, :gws_circular_posts_item2) }
 
   context "with auth" do
     before { login_gws_user }
