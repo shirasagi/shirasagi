@@ -15,7 +15,15 @@ class Cms::Apis::Preview::InplaceEdit::PagesController < ApplicationController
   end
 
   def save_with_overwrite
-    render_update @item.save
+    result = @item.save
+
+    if !result
+      render file: :edit, status: :unprocessable_entity
+      return
+    end
+
+    flash["cms.preview.notice"] = I18n.t("ss.notice.saved")
+    render json: { reload: true }, status: :ok, content_type: json_content_type
   end
 
   def save_as_branch
