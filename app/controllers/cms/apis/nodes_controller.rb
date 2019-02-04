@@ -22,7 +22,6 @@ class Cms::Apis::NodesController < ApplicationController
     return if model.blank?
     return unless model.ancestors.include?(Cms::Model::Node)
 
-    @public_view = true if params[:public_view] == "true"
     @model = model
   end
 end

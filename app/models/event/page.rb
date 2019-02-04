@@ -15,12 +15,12 @@ class Event::Page
   include Cms::Addon::AdditionalInfo
   include Event::Addon::Date
   include Map::Addon::Page
+  include Event::Addon::Facility
   include Cms::Addon::Tag
   include Cms::Addon::RelatedPage
   include Cms::Addon::Release
   include Cms::Addon::ReleasePlan
   include Cms::Addon::GroupPermission
-  include Event::Addon::Facility
   include History::Addon::Backup
   include Event::Addon::Csv::Page
   include Cms::Addon::ForMemberPage
