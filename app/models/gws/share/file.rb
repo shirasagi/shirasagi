@@ -76,7 +76,7 @@ class Gws::Share::File
     library = Gws::Share::Folder.find(folder_id).name.split('/')[0].to_s
     Gws::Share::Folder.site(@cur_site)
       .allow(:read, @cur_user, site: @cur_site)
-      .where(name: /^#{library}$|^#{library}\// )
+      .where(name: /\A#{library}\z|\A#{library}\// )
       .pluck(:name, :id)
   end
 
