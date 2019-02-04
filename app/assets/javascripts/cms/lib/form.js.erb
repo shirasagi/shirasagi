@@ -33,10 +33,14 @@ this.Cms_Form = (function () {
   Cms_Form.form_html_path = null;
   Cms_Form.form_link_check_path = null;
 
-  Cms_Form.getFormData = function($form) {
+  Cms_Form.getFormData = function($form, options) {
+    if (!options) {
+      options = {};
+    }
+
     var formData = new FormData();
     $.each($form.serializeArray(), function() {
-      if (this.name === "_method") {
+      if (!options.preserveMethod && this.name === "_method") {
         return;
       }
 
