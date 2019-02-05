@@ -60,7 +60,7 @@
 
 .list-item {
   .title.notice-severity-high {
-    color:$pink;
+    color: $pink;
     font-weight: bold;
   }
   .state {
@@ -71,27 +71,27 @@
     font-size: 90%;
     font-weight: normal;
 
-    &.public {
+    &.state_public {
       background-color: #09ff00;
       color: #000000;
     }
-    &.closed {
+    &.state_closed {
       background-color: #8e9494;
       color: #fff;
     }
-    &.ready {
+    &.state_ready {
       background-color: #FFF700;
       color: #000000;
     }
-    &.request {
+    &.state_request {
       background-color: #3227ff;
       color: #fff;
     }
-    &.edit {
+    &.state_edit {
       background-color: #ff23fe;
       color: #fff;
     }
-    &.remand {
+    &.state_remand {
       background-color: #000000;
       color: #fffdfd;
     }
