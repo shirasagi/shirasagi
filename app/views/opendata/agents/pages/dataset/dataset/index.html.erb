@@ -137,7 +137,7 @@ categories = [
 
                 <div class="download-wrap">
                   <% if rs.source_url.present? %>
-                    <%= link_to I18n.t("opendata.labels.downloaded"), rs.url, class: "download", "data-url": rs.file.url, target: "_blank" %>
+                    <%= link_to I18n.t("opendata.labels.downloaded"), rs.source_url, class: "download external", "data-url": rs.source_url, target: "_blank" %>
                   <% elsif controller.preview_path? %>
                     <%= link_to I18n.t("opendata.labels.downloaded"), rs.file.url, class: "download", "data-url": rs.file.url %>
                   <% else %>
