@@ -45,7 +45,8 @@ class Cms::PreviewController < ApplicationController
     @cur_body_layout = Cms::BodyLayout.site(@cur_site).where(id: page.body_layout_id).first
     page.layout_id = nil if @cur_layout.nil?
     page.body_layout_id = nil if @cur_body_layout.nil?
-    @cur_node = Cms::Node.site(@cur_site).where(filename: /^#{path.sub(/\/$/, "")}/).first
+    @cur_node = page.cur_node = Cms::Node.site(@cur_site).where(filename: /^#{path.sub(/\/$/, "")}/).first
+    page.valid?
     @cur_page = page
     @preview_page = page
     @preview_item = preview_item
