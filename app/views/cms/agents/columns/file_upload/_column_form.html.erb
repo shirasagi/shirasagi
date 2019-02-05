@@ -6,7 +6,7 @@
   form_options['class'] = [ form_options['class'].presence ].flatten.compact
   form_options['class'] << 'file-id'
 %>
-<%= render 'cms/agents/columns/main/base', f: f, column: column, value: value, controller: controller do %>
+<%= render 'cms/agents/columns/main/base', f: f, column: column, value: value, controller: controller do |id| %>
   <span class="upload-menu-new">
     <%= link_to t('ss.links.upload'), cms_apis_temp_files_path, class: "ajax-box btn btn-file-upload" %>
   </span>
@@ -26,4 +26,8 @@
   </div>
 
   <%= render "cms/agents/columns/file_upload/column_form_#{column.file_type.presence || "image"}", f: f, column: column, value: value %>
+
+  <%= jquery do %>
+    Cms_Column_FileUpload.render(<%== "##{id}".to_json %>);
+  <% end %>
 <% end %>

@@ -16,6 +16,8 @@ this.SS_Addon_TempFile = (function () {
       this.uploadUrl = options.uploadUrl;
     }
 
+    console.log(this.selector);
+
     this.render();
   }
 
@@ -54,16 +56,19 @@ this.SS_Addon_TempFile = (function () {
     var _this = this;
 
     $(document).on("dragenter", this.selector, function(ev) {
+      console.log("dragenter");
       $(this).addClass('file-dragenter');
       return false;
     });
 
     $(document).on("dragleave", this.selector, function(ev) {
+      console.log("dragleave");
       $(this).removeClass('file-dragenter');
       return false;
     });
 
     $(document).on("dragover", this.selector, function(ev) {
+      console.log("v");
       $(this).addClass('file-dragenter');
       return false;
     });
