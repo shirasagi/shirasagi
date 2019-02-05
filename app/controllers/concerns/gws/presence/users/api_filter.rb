@@ -33,7 +33,7 @@ module Gws::Presence::Users::ApiFilter
   end
 
   def set_groups
-    @groups = @cur_site.root.to_a + @cur_site.root.descendants.to_a
+    @groups = @cur_site.root.to_a + @cur_site.root.descendants.active.to_a
   end
 
   def set_editable_users
