@@ -19,7 +19,7 @@ module Opendata::Addon::ZipDataset
     "#{Rails.root}/private/opendata/datasets/#{dataset.id.to_s.split("").join("/")}/_"
   end
 
-  def zip_exist?
+  def zip_exists?
     File.exist?("#{zip_path}/opendata-datasets-#{dataset.id}.zip")
   end
 
@@ -28,6 +28,8 @@ module Opendata::Addon::ZipDataset
 
     FileUtils.rm_rf(output_zip)
     FileUtils.mkdir_p(zip_path)
+
+    return if dataset.resources.blank?
 
     begin
       Timeout.timeout(60) do
@@ -70,7 +72,7 @@ module Opendata::Addon::ZipDataset
   def remove_dataset_zip
     output_zip = "#{zip_path}/opendata-datasets-#{dataset.id}.zip"
 
-    FileUtils.rm_rf(output_zip) if zip_exist?
+    FileUtils.rm_rf(output_zip) if zip_exists?
   rescue => e
     Rails.logger.warn("#{e.class} (#{e.message}):\n  #{e.backtrace.join("\n  ")}")
   end

@@ -74,7 +74,7 @@ class Opendata::Agents::Nodes::Dataset::SearchDatasetController < ApplicationCon
     Zip::File.open(t.path, Zip::File::CREATE) do |zip|
       @items.each do |item|
         path = "#{item.zip_path}/opendata-datasets-#{item.id}.zip"
-        next unless item.zip_exist?
+        next unless item.zip_exists?
         zip.add("#{item.name}-#{item.id}.zip".encode('cp932', invalid: :replace, undef: :replace), path)
         item.resources.each do |resource|
           if Mongoid::Config.clients[:default_post].blank?
