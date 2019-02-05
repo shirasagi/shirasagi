@@ -1,20 +1,20 @@
-<%= javascript_include_tag "cms/table_editor" %>
 <% value ||= nil %>
 <% controller ||= false %>
-<%= render 'cms/agents/columns/main/base', f: f, column: column, value: value, controller: controller do %>
-  <%= hidden_field_tag("#{f.object_name}[][in_wrap][value]", value.try(:value)) %>
-  <%= I18n.t("cms.column_table.height") %><input type="text" id="height" style="width:50px" />
-  <%= I18n.t("cms.column_table.width") %><input type="text" id="width" style="width:50px" />
-  <%= I18n.t("cms.column_table.header") %><%= select_tag :hedaer, options_for_select(column.header_type_options), id: "header" %>
-  <button type="button" id="create-table"><%= I18n.t("cms.column_table.create") %></button>
+<%= render 'cms/agents/columns/main/base', f: f, column: column, value: value, controller: controller do |id| %>
+  <%= javascript_include_tag "cms/table_editor", table_name: id %>
+  <%= hidden_field_tag("#{f.object_name}[][in_wrap][value]", value.try(:value), id: "hidden-value-#{id}") %>
+  <%= I18n.t("cms.column_table.height") %><input type="text" id="height-<%= id %>" style="width:50px" />
+  <%= I18n.t("cms.column_table.width") %><input type="text" id="width-<%= id %>" style="width:50px" />
+  <%= I18n.t("cms.column_table.header") %><%= select_tag :hedaer, options_for_select(column.header_type_options), id: "header-#{id}" %>
+  <button type="button" id="create-table-<%= id %>"><%= I18n.t("cms.column_table.create") %></button>
 
-  <div id="table-editor" onContextmenu="return false;">
+  <div class="table-editor" id="table-editor-<%= id %>" onContextmenu="return false;">
     <% if value.try(:value).present? %>
       <%= value.value.html_safe %>
     <% end %>
   </div>
 
-  <div class="table-menu" id="table-menu">
+  <div class="table-menu" id="table-menu-<%= id %>">
     <ul>
       <li id="change-th">thに変換する</li>
       <li id="change-td">tdに変換する</li>

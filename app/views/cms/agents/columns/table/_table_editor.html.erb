@@ -1,8 +1,9 @@
-$(document).on('click', 'button#create-table', function () {
-  var table_editor = $('#table-editor');
-  var width = parseInt($('#width').val());
-  var height = parseInt($('#height').val());
-  var header = $('#header').val();
+<%= jquery do %>
+$(document).on('click', 'button#create-table-<%= table_name %>', function () {
+  var table_editor = $('#table-editor-<%= table_name %>');
+  var width = parseInt($('#width-<%= table_name %>').val());
+  var height = parseInt($('#height-<%= table_name %>').val());
+  var header = $('#header-<%= table_name %>').val();
   var table = $('<table></table>')
   var tbody = $("<tbody></tbody>")
   var tr = "";
@@ -40,7 +41,7 @@ $(document).on('click', 'button#create-table', function () {
   table_editor.html(table);
 });
 
-$(document).on('click', 'td, th', function () {
+$(document).on('click', '#table-editor-<%= table_name %> td, #table-editor-<%= table_name %> th', function () {
   var editable = $(this);
 
   // セルをクリックしたら取得したセルの値をtextareaに追加してセル内にtextareaを挿入
@@ -50,16 +51,15 @@ $(document).on('click', 'td, th', function () {
         // フォーカスが外れた時、セルに値を追加して不要なtextareaを削除
         editable.append($(this).val());
         editable.find('textarea').remove();
-        $('#item_column_values__in_wrap_value').val($('#table-editor').html())
       })
       .on('click', function (e) {
         e.stopPropagation();
       });
 });
 
-$(document).on('contextmenu', '#table-editor td, #table-editor th', function (e){
-  var tableMenu = $('#table-menu');
-  var tableEditor = $('#table-editor');
+$(document).on('contextmenu', '#table-editor-<%= table_name %> td, #table-editor-<%= table_name %> th', function (e){
+  var tableMenu = $('#table-menu-<%= table_name %>');
+  var tableEditor = $('#table-editor-<%= table_name %>');
   tableMenu.addClass('show');
   tableMenu.offset({
     top: e.pageY,
@@ -69,25 +69,25 @@ $(document).on('contextmenu', '#table-editor td, #table-editor th', function (e)
 });
 
 $(document).on('click', 'body', function (){
-  var tableMenu = $('#table-menu');
+  var tableMenu = $('#table-menu-<%= table_name %>');
   if(tableMenu.hasClass('show')) {
     tableMenu.removeClass('show');
   }
 });
 
-$(document).on('click', '#table-menu #change-th', function (){
+$(document).on('click', '#table-menu-<%= table_name %> #change-th', function (){
   tableDom.replaceWith("<th>"+ tableDom.html() +"</th>");
 });
 
-$(document).on('click', '#table-menu #change-td', function (){
+$(document).on('click', '#table-menu-<%= table_name %> #change-td', function (){
   tableDom.replaceWith("<td>"+ tableDom.html() +"</td>");
 });
 
-$(document).on('click', '#table-menu #remove-tr', function (){
+$(document).on('click', '#table-menu-<%= table_name %> #remove-tr', function (){
   tableDom.parent().remove();
 });
 
-$(document).on('click', '#table-menu #remove-tds', function (){
+$(document).on('click', '#table-menu-<%= table_name %> #remove-tds', function (){
   var cellIndex = tableDom[0].cellIndex;
   var table = tableDom.parent().parent();
   for (var i=0; i<table[0].rows.length; i++){
@@ -95,7 +95,7 @@ $(document).on('click', '#table-menu #remove-tds', function (){
   }
 });
 
-$(document).on('click', '#table-menu #append-top', function (){
+$(document).on('click', '#table-menu-<%= table_name %> #append-top', function (){
   var table = tableDom.parent().parent();
   var columnNum = table[0].rows[0].cells.length;
   var newTr = "<tr>";
@@ -106,7 +106,7 @@ $(document).on('click', '#table-menu #append-top', function (){
   tableDom.parent().before(newTr);
 });
 
-$(document).on('click', '#table-menu #append-bottom', function (){
+$(document).on('click', '#table-menu-<%= table_name %> #append-bottom', function (){
   var table = tableDom.parent().parent();
   var columnNum = table[0].rows[0].cells.length;
   var newTr = "<tr>";
@@ -117,7 +117,7 @@ $(document).on('click', '#table-menu #append-bottom', function (){
   tableDom.parent().after(newTr);
 });
 
-$(document).on('click', '#table-menu #append-right', function (){
+$(document).on('click', '#table-menu-<%= table_name %> #append-right', function (){
   var cellIndex = tableDom[0].cellIndex;
   var table = tableDom.parent().parent();
   for (var i=0; i<table[0].rows.length; i++){
@@ -129,7 +129,7 @@ $(document).on('click', '#table-menu #append-right', function (){
   }
 });
 
-$(document).on('click', '#table-menu #append-left', function (){
+$(document).on('click', '#table-menu-<%= table_name %> #append-left', function (){
   var cellIndex = tableDom[0].cellIndex;
   var table = tableDom.parent().parent();
   for (var i=0; i<table[0].rows.length; i++){
@@ -140,3 +140,9 @@ $(document).on('click', '#table-menu #append-left', function (){
     }
   }
 });
+
+$(document).on('DOMSubtreeModified propertychange', '#table-editor-<%= table_name %>', function (){
+  $('#hidden-value-<%= table_name %>').val($('#table-editor-<%= table_name %>').html());
+});
+
+<% end %>

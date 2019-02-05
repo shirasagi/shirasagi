@@ -72,16 +72,16 @@
   color: #333;
 }
 
-#table-editor th, #table-editor td {
+.table-editor th, .table-editor td {
   border: solid 1px;  /* 枠線指定 */
   padding: 10px;      /* 余白指定 */
 }
 
-#table-editor th {
+.table-editor th {
   background-color: #777;
 }
 
-#table-editor table {
+.table-editor table {
   border-collapse: collapse; /* セルの線を重ねる */
   table-layout: fixed;
 }
