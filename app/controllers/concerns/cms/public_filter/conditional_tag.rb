@@ -55,15 +55,15 @@ module Cms::PublicFilter::ConditionalTag
 
   def conditional_tag_handler(matchdata, data)
     case matchdata[:cond]
-    when 'is_page' then condition = @cur_page && @cur_page.filename.start_with?(matchdata[:path])
-    when 'is_node' then condition = !@cur_page && @cur_node.filename.start_with?(matchdata[:path])
+    when 'is_page' then condition = @cur_page && @cur_page.filename.to_s.start_with?(matchdata[:path])
+    when 'is_node' then condition = !@cur_page && @cur_node.filename.to_s.start_with?(matchdata[:path])
     when 'in_node'
       @cur_item = @cur_page || @cur_node
-      condition = @cur_item.filename.start_with?(matchdata[:path])
+      condition = @cur_item.filename.to_s.start_with?(matchdata[:path])
     when 'has_pages'
       return false if @cur_page
-      condition = Cms::Page.where({ filename: /^#{@cur_node.filename}\// }).first.present?
-      condition ||= Cms::Page.in({ category_ids: @cur_node._id }).first.present?
+      condition = Cms::Page.where({ filename: /^#{@cur_node.to_s.filename}\// }).first.present?
+      condition ||= Cms::Page.in({ category_ids: @cur_node.try(:id) }).first.present?
     else return false
     end
     @data = condition ? data : false
