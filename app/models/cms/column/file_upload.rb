@@ -26,6 +26,12 @@ class Cms::Column::FileUpload < Cms::Column::Base
     end
   end
 
+  def image_html_type_options
+    %w(image thumb).map do |v|
+      [ I18n.t("cms.options.column_image_html_type.#{v}", default: v), v ]
+    end
+  end
+
   def form_options(type = nil)
     if type == :label
       options = {}
@@ -45,7 +51,6 @@ class Cms::Column::FileUpload < Cms::Column::Base
     elsif type == :attachment_text
       options = {}
       options['placeholder'] = I18n.t("cms.column_file_upload.attachment_text_place_holder")
-      options['type'] = 'url'
       options
     elsif type == :banner_link
       options = {}

@@ -250,6 +250,9 @@ ja:
         video: 動画
         attachment: 添付ファイル
         banner: バナー
+      column_image_html_type:
+        thumb: サムネイル
+        image: 画像貼付
       column_header_type:
         top: 上部
         left: 左側
