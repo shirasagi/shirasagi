@@ -43,7 +43,9 @@ def create_item(model, data)
   puts data[:name]
   cond = { site_id: @site._id, name: data[:name] }
   item = model.find_or_initialize_by(cond)
-  item.attributes = data.reverse_merge(cur_site: @site, cur_user: u('admin'))
+  item.attributes = data
+  item.cur_site ||= @site
+  item.cur_user ||= u('admin') if item.respond_to?(:cur_user)
   if item.respond_to?("user_ids=")
     item.user_ids = (Array[item.user_ids].flatten.compact + [item.cur_user.id]).uniq
   end
@@ -108,3 +110,5 @@ load "#{Rails.root}/db/seeds/gws/contents/max.rb"
 load "#{Rails.root}/db/seeds/gws/contents/attendance.rb"
 load "#{Rails.root}/db/seeds/gws/contents/presence.rb"
 load "#{Rails.root}/db/seeds/gws/contents/survey.rb"
+load "#{Rails.root}/db/seeds/gws/contents/contrast.rb"
+
