@@ -1,5 +1,6 @@
 module Gws::Monitor::TopicFilter
   extend ActiveSupport::Concern
+  include Gws::Memo::NotificationFilter
 
   included do
     model Gws::Monitor::Topic

@@ -1,12 +1,4 @@
-<div class="no-print" style="position: relative; width: 220mm;">
-  <%= link_to(I18n.t('ss.links.back'), { action: :show }) %>
-  <span id="fontsize" style="position: absolute; right: 8px;">
-    文字サイズ
-    <span id="ss-small">小さく</span>
-    <span id="ss-medium">標準</span>
-    <span id="ss-large">大きく</span>
-  </span>
-</div>
+<%= render 'ss/crud/print_preview_head', links: [[ I18n.t('ss.links.back'), { action: :show } ]] %>
 
 <div class="sheet">
   <%= render file: 'show_tree' %>

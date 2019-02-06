@@ -6,7 +6,7 @@ class Webmail::Extensions::ImapSettings < Array
   class << self
     def demongoize(object)
       object = object.to_a.map do |h|
-        Webmail::ImapSetting.new.replace(h.symbolize_keys)
+        Webmail::ImapSetting.default.replace(h.symbolize_keys)
       end
       self.new(object)
     end

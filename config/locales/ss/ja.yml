@@ -10,6 +10,7 @@ ja:
     import: インポート
     import_log: インポートログ
     export: エクスポート
+    export_log: エクスポートログ
     login: ログイン
     logout: ログアウト
     module: モジュール
@@ -27,6 +28,7 @@ ja:
     encoding: 文字コード
     text_zoom: 文字サイズ
     default_here_label: "詳細はこちら⇒"
+    errors: エラー
 
     views:
       login/login:
@@ -75,6 +77,7 @@ ja:
       integrate: 統合する
       download: ダウンロード
       download_template: 雛形をダウンロード
+      export: エクスポート
       resize: リサイズする
       set_tag: タグ設定
       reset_tags: タグ解除
@@ -86,6 +89,9 @@ ja:
       unlock_user: 利用停止を解除する
       trash: ゴミ箱
       restore: 元に戻す
+      send_email: メールを作成する
+      send_message: メッセージを作成する
+      copy_email_address: メールアドレスをコピー
     buttons:
       save: 保存
       new: 新規作成
@@ -136,6 +142,7 @@ ja:
       unload: 入力したデータは保存されません。
       clone: 複製してよろしいですか？
       redirect: 下記のページにアクセスしようとしています。
+      export: エクスポートを開始してよろしいですか？
       import: インポートを開始してよろしいですか？
       download: ダウンロードしてよろしいですか？
       set_tag: タグを設定してよろしいですか？
@@ -160,6 +167,8 @@ ja:
       restored: 元に戻しました。
       run: 実行しました。
       already_job_started: 実行準備中であるか、実行中です。
+      clipboard_copied: コピーしました。
+      clipboard_copy_failed: コピーできませんでした。クリップボードがサポートされていません。
     info:
       soft_delete: データの実削除ではなく無効状態として保存されます。
     warning:
@@ -238,6 +247,9 @@ ja:
         deny: 許可しない
         required: 必須
         optional: 任意
+        notify: 通知する
+        silence: 通知しない
+        force_silence: 通知しない（全体管理）
       resizing:
         320x240: 320x240 (QVGA横)
         240x320: 240x320 (QVGA縦)
@@ -310,6 +322,7 @@ ja:
     tasks:
       started: 開始しました。
       interrupted: 中断命令を送信しました。
+      confirm_start: 処理を開始しますか？
       confirm_reset: 処理が終わっていない場合、複数回実行されてしまいます。\nタスクを削除してよろしいですか？
     units:
       count: 件
@@ -334,6 +347,7 @@ ja:
       ss/approve_setting: 承認設定
       ss/editor_setting: エディタ設定
       ss/mail_setting: メール設定
+      ss/link_file: ファイル
 
   mongoid:
     models:
@@ -352,6 +366,7 @@ ja:
       ss/max_file_size: 最大ファイルサイズ
       ss/thumb_file: サムネイルファイル
       ss/migration: DBマイグレーション
+      ss/access_token: アクセストークン
     errors:
       models:
         ss/model/group:
@@ -551,6 +566,12 @@ ja:
         city_kana: 区市町村（カナ）
         town: 町名
         town_kana: 町名（カナ）
+      ss/model/prefecture_code:
+        code: 都道府県又は市区町村コード
+        prefecture: 都道府県名
+        prefecture_kana: 都道府県名（カナ）
+        city: 市区町村名
+        city_kana: 市区町村名（カナ）
       ss/thumb_file:
         original_id: 元画像ID
         image_size: 画像サイズ
@@ -573,6 +594,7 @@ ja:
       ss/model/mail_setting:
         sender_name: 差出人名
         sender_email: 差出人メールアドレス
+        sender_user_id: 差出ユーザー
         mail_signature: 署名
 
   tooltip:

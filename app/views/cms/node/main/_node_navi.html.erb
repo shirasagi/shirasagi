@@ -1,3 +1,12 @@
+<% search_folders = Cms::PageSearch.site(@cur_site).allow(:read, @cur_user, site: @cur_site).order_by(order: 1) %>
+<% if search_folders.present? %>
+  <nav class="main-navi">
+    <% search_folders.each do |search_folder| %>
+      <h2><%= link_to search_folder.name, node_page_search_contents_path(id: search_folder), class: "icon-search" %></h2>
+    <% end %>
+  </nav>
+<% end %>
+
 <nav class="main-navi">
   <h2><%= link_to t("cms.content"), cms_contents_path, class: "icon-content" %></h2>
   <h2><%= link_to t("cms.node"), node_nodes_path, class: "icon-node" %></h2>

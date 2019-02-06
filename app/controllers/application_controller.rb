@@ -44,6 +44,20 @@ class ApplicationController < ActionController::Base
     self.response_body = Rack::Chunked::Body.new(enum)
   end
 
+  def send_file_headers!(options)
+    super(options)
+
+    disposition = headers['Content-Disposition']
+    return if disposition.blank?
+    return unless /(.+); filename="(.+)"/ =~ disposition
+
+    name = ::Regexp.last_match[1]
+    filename = ::Regexp.last_match[2]
+
+    encoded = ERB::Util.url_encode(filename)
+    headers['Content-Disposition'] = "#{name}; filename*=UTF-8''#{encoded}" if encoded != filename
+  end
+
   def ss_send_file(file, opts = {})
     if Fs.mode == :file
       opts[:x_sendfile] = true unless opts.key?(:x_sendfile)

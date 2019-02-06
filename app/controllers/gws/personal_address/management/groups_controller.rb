@@ -20,6 +20,8 @@ class Gws::PersonalAddress::Management::GroupsController < ApplicationController
   public
 
   def index
+    raise "403" unless @cur_user.gws_role_permit_any?(@cur_site, :edit_gws_personal_addresses)
+
     @items = @model.user(@cur_user).
       search(params[:s]).
       page(params[:page]).per(50)

@@ -22,7 +22,7 @@ this.SS_SearchUI = (function () {
 
   SS_SearchUI.select = function (item) {
     var selector;
-    selector = $.colorbox.element().data('on-select');
+    selector = this.anchorAjaxBox.data('on-select');
     if (selector) {
       return selector(item);
     } else {

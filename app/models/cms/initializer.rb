@@ -99,6 +99,8 @@ module Cms
     Cms::Role.permission :move_private_cms_pages
     Cms::Role.permission :move_other_cms_nodes
     Cms::Role.permission :move_other_cms_pages
+    Cms::Role.permission :import_private_cms_nodes
+    Cms::Role.permission :import_other_cms_nodes
     Cms::Role.permission :unlock_other_cms_pages
 
     SS::File.model "cms/editor_template", SS::File

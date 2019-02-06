@@ -1,19 +1,26 @@
 class Opendata::Resource
   include SS::Document
   include Opendata::Resource::Model
+  include Opendata::Resource::Previewable
   include Opendata::Addon::RdfStore
   include Opendata::Addon::CmsRef::AttachmentFile
+  include Opendata::Addon::Harvest::Resource
+  include Opendata::Addon::ZipDataset
 
   attr_accessor :workflow, :status
 
   embedded_in :dataset, class_name: "Opendata::Dataset", inverse_of: :resource
+  field :order, type: Integer, default: 0
 
-  permit_params :name, :text, :format, :license_id
+  permit_params :name, :text, :format, :license_id, :source_url
 
-  validates :in_file, presence: true, if: ->{ file_id.blank? }
+  validates :in_file, presence: true, if: ->{ file_id.blank? && source_url.blank? }
   validates :format, presence: true
+  #validates :source_url, format: /\A#{URI::regexp(%w(https http))}$\z/, if: ->{ source_url.present? }
 
+  before_validation :set_source_url, if: ->{ source_url.present? }
   before_validation :set_filename, if: ->{ in_file.present? }
+  before_validation :escape_source_url, if: ->{ source_url.present? }
   before_validation :validate_in_file, if: ->{ in_file.present? }
   before_validation :validate_in_tsv, if: ->{ in_tsv.present? }
   before_validation :set_format
@@ -31,11 +38,37 @@ class Opendata::Resource
     )
   end
 
+  def create_bulk_download_history
+    Opendata::ResourceBulkDownloadHistory.create_download_history(
+      dataset_id: dataset.id,
+      resource_id: id
+    )
+  end
+
+  def create_dataset_download_history
+    Opendata::ResourceDatasetDownloadHistory.create_download_history(
+      dataset_id: dataset.id,
+      resource_id: id
+    )
+  end
+
+  def create_preview_history
+    Opendata::ResourcePreviewHistory.create_preview_history(
+      dataset_id: dataset.id,
+      resource_id: id
+    )
+  end
+
   private
 
   def set_filename
     self.filename = in_file.original_filename
     self.format = filename.sub(/.*\./, "").upcase if format.blank?
+  end
+
+  def escape_source_url
+    return if source_url.ascii_only?
+    self.source_url = ::Addressable::URI.escape(source_url)
   end
 
   def validate_in_file
@@ -49,7 +82,9 @@ class Opendata::Resource
   end
 
   def set_format
-    self.format = format.upcase if format.present?
+    return if format.blank?
+
+    self.format = format.upcase
     self.rm_tsv = "1" if %(CSV TSV).index(format)
   end
 
@@ -59,5 +94,14 @@ class Opendata::Resource
     dataset.apply_status(status, workflow) if status.present?
     dataset.released ||= Time.zone.now
     dataset.save(validate: false)
+  end
+
+  def set_source_url
+    if in_file
+      self.source_url = nil
+    else
+      self.filename = nil
+      self.file.destroy if file
+    end
   end
 end

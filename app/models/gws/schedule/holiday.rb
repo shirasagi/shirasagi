@@ -9,6 +9,7 @@ class Gws::Schedule::Holiday
   include Gws::Addon::Schedule::Repeat
   include Gws::SitePermission
   include Gws::Addon::History
+  include Gws::Addon::Import::Schedule::Holiday
 
   set_permission_name "gws_schedule_holidays", :edit
 

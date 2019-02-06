@@ -7,19 +7,23 @@ class Webmail::MailsController < ApplicationController
   model Webmail::Mail
 
   skip_before_action :set_selected_items
+  before_action :set_crumbs
   before_action :imap_login
   before_action :apply_recent_filters, only: [:index]
   before_action :set_mailbox
-  before_action :set_item, only: [:show, :edit, :update, :delete, :destroy]
+  before_action :set_item, only: [:show, :edit, :update, :delete, :destroy, :parts_batch_download, :print]
   before_action :set_view_name, only: [:new, :create, :edit, :update]
-  before_action :set_crumbs
 
   private
 
   def set_crumbs
-    mailbox = Webmail::Mailbox.new(imap: @imap, name: Net::IMAP.decode_utf7(params[:mailbox]))
-    @crumbs << [t("webmail.mail"), webmail_mails_path]
-    @crumbs << [mailbox.basename, { action: :index }]
+    @crumbs << [t("webmail.mail"), webmail_mails_path(webmail_mode: @webmail_mode)]
+    if @imap
+      mailbox = Webmail::Mailbox.new(imap: @imap, name: Net::IMAP.decode_utf7(params[:mailbox]))
+      @crumbs << [mailbox.basename, { action: :index }]
+    else
+      @crumbs << [params[:mailbox], { action: :index }]
+    end
     @webmail_other_account_path = :webmail_mails_path
   end
 
@@ -52,13 +56,15 @@ class Webmail::MailsController < ApplicationController
   def apply_recent_filters
     @mailboxes = @imap.mailboxes.load
     @mailboxes.apply_recent_filters
+  rescue => e
+    Rails.logger.warn("#{e.class} (#{e.message}):\n  #{e.backtrace.join("\n  ")}")
   end
 
   def set_mailbox
     @navi_mailboxes = true
     @mailbox = params[:mailbox]
 
-    if params[:action] == 'index' || params[:action] =~ /^(set_|unset_)/
+    if params[:action] == 'index' || params[:action] =~ /^(set_|unset_|send_mdn|ignore_mdn)/
       @imap.select(@mailbox)
     else
       @imap.examine(@mailbox)
@@ -112,7 +118,12 @@ class Webmail::MailsController < ApplicationController
       resp = @item.send_mail
     end
 
-    @item.destroy_files
+    if resp
+      @item.destroy_files
+    else
+      @item.set_ref_files(@item.attachments)
+    end
+
     render_create resp, notice: notice
   end
 
@@ -143,7 +154,7 @@ class Webmail::MailsController < ApplicationController
       @item = @imap.mails.find params[:id], :rfc822
     end
 
-    send_data @item.rfc822, filename: "#{@item.subject}.eml",
+    send_data @item.rfc822, filename: "#{@item.display_subject}.eml",
               content_type: 'message/rfc822', disposition: :attachment
   end
 
@@ -159,6 +170,27 @@ class Webmail::MailsController < ApplicationController
               content_type: part.content_type, disposition: disposition
   end
 
+  def parts_batch_download
+    io = ::StringIO.new('')
+    io.set_encoding(Encoding::CP932)
+
+    buffer = Zip::OutputStream.write_buffer(io) do |out|
+      @item.attachments.each do |part|
+        if SS.config.webmail.store_mails
+          file = @imap.mails.find_part_and_store params[:id], part.section
+        else
+          file = @imap.mails.find_part params[:id], part.section
+        end
+
+        out.put_next_entry(part.filename.encode('cp932', invalid: :replace, undef: :replace, replace: "_"))
+        out.write file.decoded
+      end
+    end
+
+    send_data buffer.string, filename: "#{@item.subject}.zip",
+              content_type: 'application/zip', disposition: :attachment
+  end
+
   def reply
     if SS.config.webmail.store_mails
       @ref = @imap.mails.find_and_store params[:id], :body
@@ -167,7 +199,7 @@ class Webmail::MailsController < ApplicationController
     end
 
     @item = @model.new pre_params.merge(fix_params)
-    @item.new_reply(@ref)
+    @item.new_reply(@ref, params[:without_body].present?)
     render :new
   end
 
@@ -179,7 +211,7 @@ class Webmail::MailsController < ApplicationController
     end
 
     @item = @model.new pre_params.merge(fix_params)
-    @item.new_reply_all(@ref)
+    @item.new_reply_all(@ref, params[:without_body].present?)
     render :new
   end
 
@@ -195,6 +227,18 @@ class Webmail::MailsController < ApplicationController
     render :new
   end
 
+  def edit_as_new
+    if SS.config.webmail.store_mails
+      @ref = @imap.mails.find_and_store params[:id], :body
+    else
+      @ref = @imap.mails.find params[:id], :body
+    end
+
+    @item = @model.new pre_params.merge(fix_params)
+    @item.new_edit(@ref)
+    render :new
+  end
+
   def create
     @item = @model.new
     @item.attributes = get_params
@@ -207,7 +251,7 @@ class Webmail::MailsController < ApplicationController
       resp = @item.send_mail
     end
 
-    @item.destroy_files
+    @item.destroy_files if resp
     render_create resp, notice: notice
   end
 
@@ -292,5 +336,9 @@ class Webmail::MailsController < ApplicationController
       format.html { redirect_to location, notice: t("webmail.notice.#{action}") }
       format.json { render json: { action: params[:action], notice: t("webmail.notice.#{action}") } }
     end
+  end
+
+  def print
+    render file: 'print', layout: 'ss/print'
   end
 end

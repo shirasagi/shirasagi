@@ -15,42 +15,49 @@
 //Tabs
 SS_Tabs.render("#dataset-tabs-<%= @cur_node.id %>");
 
-  <% if @cur_node.show_point? %>
-    //show point
-  Opendata_Point.render("<%= path_prefix %><%= @cur_page.point_url %>");
-  <% end %>
+<% if @cur_node.show_point? %>
+//show point
+Opendata_Point.render("<%= path_prefix %><%= @cur_page.point_url %>");
+<% end %>
 
-  //show apps
-  $.ajax({
-    url: "<%= path_prefix %><%= @cur_page.dataset_apps_url %>",
-    success: function (data) {
-      $(".dataset-apps").html(data);
-    }
-  });
+//show apps
+$.ajax({
+  url: "<%= path_prefix %><%= @cur_page.dataset_apps_url %>",
+  success: function (data) {
+    $(".dataset-apps").html(data);
+  }
+});
 
-  //show ideas
+//show ideas
 $.ajax({
   url: "<%= path_prefix %><%= @cur_page.dataset_ideas_url %>",
   success: function (data) {
     $(".dataset-ideas").html(data);
-
-  //hide categorise
   }
 });
+
+//hide categorise
 $(".categories a[data-class=other]").click(function () {
   var type;
   type = $(this).attr("class");
   $(".categories a." + type).show();
   $(this).remove();
   return false;
-  // preview
-
 });
+
+//preview
 $("a.content").colorbox({
   fixed: true,
   width: "90%",
-  height: "90%"
+  height: "90%",
+  onComplete: function () {
+    if (window.colorbox_onComplete) {
+      window.colorbox_onComplete();
+    }
+  }
 });
+
+SS.renderClipboardCopy();
 <% end %>
 
 <header>
@@ -70,6 +77,7 @@ $("a.content").colorbox({
 max = 3
 categories = [
   { items: @cur_page.categories, type: :category, name: :name, key: :category_id, val: :id },
+  { items: @cur_page.estat_categories, type: "estat-category", name: :name, key: :estat_category_id, val: :id },
   { items: @cur_page.areas.sort(order: 1), type: :area, name: :name, key: :area_id, val: :id },
   { items: @cur_page.tags, type: :tag, name: :to_s, key: :tag, val: :to_s },
 ]
@@ -106,32 +114,57 @@ categories = [
           <div class="resource">
             <div class="info">
               <div class="name format-<%= rs.format.downcase %>">
-                <%= rs.name %> (<%= rs.format %> <%= number_to_human_size(rs.size) %>)
+                <%= rs.name %> (<%= rs.format %> <%= rs.source_url.present? ? t("opendata.labels.external_link") : number_to_human_size(rs.size) %>)
               </div>
+
+              <div class="icons">
+                <% if license = rs.license %>
+                  <span class="license">
+                    <% label = tryb { image_tag license.file.url, alt: license.name } || license.name %>
+                    <% if license.related_url.present? %>
+                      <%= link_to label, license.related_url, target: "_blank" %>
+                    <% else %>
+                      <%= label %>
+                    <% end %>
+                  </span>
+                <% end %>
+
+                <% if rs.source_url.blank? %>
+                  <div class="content-wrap">
+                    <%= link_to I18n.t("opendata.labels.preview"), rs.content_url, class: "content" if rs.previewable? %>
+                  </div>
+                <% end %>
+
+                <div class="download-wrap">
+                  <% if rs.source_url.present? %>
+                    <%= link_to I18n.t("opendata.labels.downloaded"), rs.source_url, class: "download external", "data-url": rs.source_url, target: "_blank" %>
+                  <% elsif controller.preview_path? %>
+                    <%= link_to I18n.t("opendata.labels.downloaded"), rs.file.url, class: "download", "data-url": rs.file.url %>
+                  <% else %>
+                    <%= link_to I18n.t("opendata.labels.downloaded"), rs.url, class: "download", "data-url": rs.file.url %>
+                  <% end %>
+                </div>
+
+                <div class="clipboard-wrap">
+                  <%= link_to t("opendata.links.copy_url"), rs.url,
+                    "class" => "ss-clipboard-copy",
+                    "data-clip-attr" => "data-full-url",
+                    "data-full-url" => rs.full_url
+                  %>
+                </div>
+              </div>
+
               <% if rs.text.present? %>
               <div class="text">
                 <%= auto_link paragraph(rs.text) %>
               </div>
               <% end %>
+
               <% if rs.rdf_iri.present? %>
               <div class="sparql">
                 <%= rs.t :rdf_iri %> <%= link_to rs.rdf_iri, "#{sparql_path}?graph_name=#{rs.rdf_iri}" %>
               </div>
               <% end %>
-            </div>
-            <div class="icons">
-              <% if license = rs.license %>
-              <span class="license">
-                <% label = tryb { image_tag license.file.url, alt: license.name } || license.name %>
-                <% if license.related_url.present? %>
-                  <%= link_to label, license.related_url, target: "_blank" %>
-                <% else %>
-                  <%= label %>
-                <% end %>
-              </span>
-              <% end %>
-              <div class="content-wrap"><%= link_to I18n.t("opendata.labels.preview"), rs.content_url, class: "content" if rs.tsv_present? %></div>
-              <div class="download-wrap"><%= link_to I18n.t("opendata.labels.downloaded"), rs.url, class: "download" %></div>
             </div>
           </div>
           <% end %>
@@ -152,35 +185,81 @@ categories = [
                 <%= urs.t :rdf_iri %> <%= link_to urs.rdf_iri, "#{sparql_path}?graph_name=#{urs.rdf_iri}" %>
               </div>
               <% end %>
-            </div>
-            <div class="icons">
-              <% if license = urs.license %>
-              <span class="license">
-                <% label = tryb { image_tag license.file.url, alt: license.name } || license.name %>
-                <% if license.related_url.present? %>
-                  <%= link_to label, license.related_url, target: "_blank" %>
-                <% else %>
-                  <%= label %>
+
+              <div class="icons">
+                <% if license = urs.license %>
+                  <span class="license">
+                    <% label = tryb { image_tag license.file.url, alt: license.name } || license.name %>
+                    <% if license.related_url.present? %>
+                      <%= link_to label, license.related_url, target: "_blank" %>
+                    <% else %>
+                      <%= label %>
+                    <% end %>
+                  </span>
                 <% end %>
-              </span>
-              <% end %>
-              <div class="content-wrap"><%= link_to I18n.t("opendata.labels.preview"), urs.content_url, class: "content" if urs.tsv_present? %></div>
-              <div class="download-wrap"><%= link_to I18n.t("opendata.labels.downloaded"), urs.download_url, class: "download" %></div>
+                <div class="content-wrap"><%= link_to I18n.t("opendata.labels.preview"), urs.content_url, class: "content" if urs.tsv_present? %></div>
+                <div class="download-wrap"><%= link_to I18n.t("opendata.labels.downloaded"), urs.download_url, class: "download", "data-url": urs.file.url %></div>
+
+                <div class="clipboard-wrap">
+                  <%= link_to t("opendata.links.copy_url"), urs.url,
+                    "class" => "ss-clipboard-copy",
+                    "data-clip-attr" => "data-full-url",
+                    "data-full-url" => urs.full_url
+                  %>
+                </div>
+              </div>
             </div>
           </div>
           <% end %>
         </div>
 
-        <dl class="author">
+        <%
+           pref, city = @cur_page.pref_codes
+           if city.present?
+             code = city.first
+           elsif pref.present?
+             code = pref.first
+           end
+        %>
+        <dl class="cio-format author">
+          <dt><%= @cur_page.t :no %></dt>
+          <dd><%= sprintf("%010d", @cur_page.id) %></dd>
+
+          <dt><%= @cur_page.t :api_state %></dt>
+          <dd><%= @cur_page.label :api_state %></dd>
+
+          <% if code && code.prefecture.present?  %>
+          <dt><%= code.t :prefecture %></dt>
+          <dd><%= code.prefecture %></dd>
+          <% end %>
+
+          <% if code && code.city.present?  %>
+          <dt><%= code.t :city %></dt>
+          <dd><%= code.city %></dd>
+          <% end %>
+
+          <% if code %>
+          <dt><%= code.t :code %></dt>
+          <dd><%= code.code %></dd>
+          <% end %>
+
+          <% if @cur_page.update_plan.present? %>
+          <dt><%= @cur_page.t :update_plan %></dt>
+          <dd><%= @cur_page.update_plan %></dd>
+          <% end %>
+
           <% if @cur_page.member_id.present? %>
             <dt><%= @cur_page.t :user_id %></dt>
             <dd>
               <% if @cur_page.member %>
-              <%= link_to @cur_page.member.name, "#{member_path}#{@cur_page.member.id}" %>
+                <%= link_to @cur_page.member.name, "#{member_path}#{@cur_page.member.id}" %>
               <% else %>
-              <%= I18n.t("opendata.labels.guest_user") %>
+                <%= I18n.t("opendata.labels.guest_user") %>
               <% end %>
             </dd>
+          <% elsif @cur_page.contact_charge.present? %>
+            <dt><%= @cur_page.t :user_id %></dt>
+            <dd><%= @cur_page.contact_charge %><br /></dd>
           <% elsif @cur_page.contact_group %>
             <dt><%= @cur_page.t :user_id %></dt>
             <dd><%= @cur_page.contact_group.name.sub(/.*\//, "") %><br /></dd>
@@ -192,9 +271,13 @@ categories = [
           <dt><%= @cur_page.t :downloaded %></dt>
           <dd><%= @cur_page.downloaded.to_i %><%= I18n.t("opendata.labels.time")%></dd>
 
+          <dt><%= @cur_page.t :created %></dt>
+          <dd><%= tryb{@cur_page.created.strftime("%Y-%m-%d")} %><br /></dd>
+
           <dt><%= @cur_page.t :updated %></dt>
-          <dd><%= tryb{@cur_page.updated.strftime("%Y年%1m月%1d日 %1H時%1M分")} %><br /></dd>
+          <dd><%= tryb{@cur_page.updated.strftime("%Y-%m-%d")} %><br /></dd>
         </dl>
+
       </div>
     </div>
     <nav class="feed"></nav>

@@ -8,6 +8,7 @@ ja:
     gws/shared_address: 共有アドレス帳
 
   gws_role:
+    use_gws_shared_address: 共有アドレス帳の利用
     read_other_gws_shared_address_addresses: アドレス帳の閲覧（全て）
     read_private_gws_shared_address_addresses: アドレス帳の閲覧（所有）
     edit_other_gws_shared_address_addresses: アドレス帳の編集（全て）

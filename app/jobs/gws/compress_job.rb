@@ -18,6 +18,7 @@ class Gws::CompressJob < Gws::ApplicationJob
     message.subject       = subject
     message.format        = 'text'
     message.text          = item.decoded
+    message.export        = true
     message.save!
   end
 end

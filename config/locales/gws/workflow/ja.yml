@@ -36,6 +36,19 @@ ja:
       myself: 本人が申請する
       agent: 代理で申請する
 
+  gws_notification:
+    gws/workflow/file:
+      mail_text: |
+        %{subject}
+
+        %{text}
+
+      request: "[ワークフロー]「%{name}」の承認申請が届きました。"
+      approve: "[ワークフロー]「%{name}」の最終承認が完了しました。"
+      remand: "[ワークフロー]「%{name}」の承認申請が差し戻されました。"
+      circular: "[ワークフロー]「%{name}」が届きました。"
+      comment: "[ワークフロー]「%{name}」にコメントがありました。"
+
   modules:
     gws/workflow: ワークフロー
     addons:
@@ -44,6 +57,8 @@ ja:
       gws/workflow/approver_print: 承認
 
   gws_role:
+    use_gws_workflow: ワークフローの利用
+
     read_other_gws_workflow_routes: 承認ルートの閲覧（全て）
     read_private_gws_workflow_routes: 承認ルートの閲覧（所有）
     edit_other_gws_workflow_routes: 承認ルートの編集（全て）

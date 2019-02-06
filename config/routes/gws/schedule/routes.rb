@@ -13,6 +13,11 @@ SS::Application.routes.draw do
     get :download, on: :collection
   end
 
+  concern :import do
+    get :import, on: :collection
+    post :import, on: :collection
+  end
+
   concern :deletion do
     get :delete, on: :member
     delete :destroy_all, on: :collection, path: ''
@@ -29,7 +34,8 @@ SS::Application.routes.draw do
     get 'csv' => 'csv#index', as: :csv
     post 'import_csv' => 'csv#import', as: :import_csv
 
-    get '/' => redirect { |p, req| "#{req.path}/plans" }, as: :main
+    # get '/' => redirect { |p, req| "#{req.path}/plans" }, as: :main
+    get '/', to: "main#index", as: :main
     resources :plans, concerns: [:plans, :export], except: [:destroy]
     resources :list_plans, concerns: :plans
     resources :user_plans, path: 'users/:user/plans', concerns: :plans
@@ -39,7 +45,7 @@ SS::Application.routes.draw do
     resources :trashes, concerns: [:deletion], except: [:new, :create, :edit, :update] do
       match :undo_delete, on: :member, via: [:get, :post]
     end
-    resources :holidays, concerns: [:plans, :deletion]
+    resources :holidays, concerns: [:plans, :deletion, :export, :import]
     resources :comments, path: ':plan_id/comments', only: [:create, :edit, :update, :destroy], concerns: :deletion
     resource :attendance, path: ':plan_id/:user_id/attendance', only: [:edit, :update]
     resource :approval, path: ':plan_id/:user_id/approval', only: [:edit, :update]

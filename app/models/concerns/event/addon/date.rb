@@ -8,7 +8,8 @@ module Event::Addon
     included do
       field :event_name, type: String
       field :event_dates, type: Event::Extensions::EventDates
-      permit_params :event_name, :event_dates
+      field :event_deadline, type: DateTime
+      permit_params :event_name, :event_dates, :event_deadline
 
       validate :validate_event
 
@@ -36,6 +37,24 @@ module Event::Addon
         end
         template_variable_handler('event_dates.full') do |name, issuer|
           template_variable_handler_event_dates(name, issuer, :full)
+        end
+        template_variable_handler('event_deadline') do |name, issuer|
+          template_variable_handler_event_deadline(name, issuer)
+        end
+        template_variable_handler('event_deadline.default') do |name, issuer|
+          template_variable_handler_event_deadline(name, issuer, :default)
+        end
+        template_variable_handler('event_deadline.iso') do |name, issuer|
+          template_variable_handler_event_deadline(name, issuer, :iso)
+        end
+        template_variable_handler('event_deadline.long') do |name, issuer|
+          template_variable_handler_event_deadline(name, issuer, :long)
+        end
+        template_variable_handler('event_deadline.full') do |name, issuer|
+          template_variable_handler_event_deadline(name, issuer, :full)
+        end
+        template_variable_handler('event_deadline.short') do |name, issuer|
+          template_variable_handler_event_deadline(name, issuer, :short)
         end
       end
     end
@@ -116,6 +135,15 @@ module Event::Addon
 
     def template_variable_handler_event_dates(name, issuer, format = :default)
       dates_to_html(format)
+    end
+
+    def template_variable_handler_event_deadline(name, issuer, format = nil)
+      return if self.event_deadline.blank?
+      if format.nil?
+        I18n.l self.event_deadline
+      else
+        I18n.l self.event_deadline, format: format.to_sym
+      end
     end
   end
 end

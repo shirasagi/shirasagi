@@ -1,6 +1,7 @@
 class Gws::Monitor::CommentsController < ApplicationController
   include Gws::BaseFilter
   include Gws::CrudFilter
+  include Gws::Memo::NotificationFilter
 
   model Gws::Monitor::Post
 

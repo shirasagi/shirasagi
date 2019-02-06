@@ -1,5 +1,7 @@
 module Gws::Share
   class Initializer
+    Gws::Role.permission :use_gws_share, module_name: 'gws/share'
+
     Gws::Role.permission :read_other_gws_share_files, module_name: 'gws/share'
     Gws::Role.permission :read_private_gws_share_files, module_name: 'gws/share'
     Gws::Role.permission :edit_other_gws_share_files, module_name: 'gws/share'
@@ -28,5 +30,9 @@ module Gws::Share
 
     Gws::Role.permission :download_other_gws_share_folders, module_name: 'gws/share'
     Gws::Role.permission :download_private_gws_share_folders, module_name: 'gws/share'
+
+    Gws.module_usable :share do |site, user|
+      Gws::Share.allowed?(:use, user, site: site)
+    end
   end
 end

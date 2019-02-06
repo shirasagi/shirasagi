@@ -29,10 +29,18 @@ class Event::Agents::Tasks::Node::PagesController < ApplicationController
     %w(index list table)
   end
 
+  def each_month(from, to)
+    i = from
+    while i <= to
+      yield i
+      i += 1.month
+    end
+  end
+
   def remove_old_pages
-    term = @start_date.advance(years: -1)..@start_date.advance(months: -1)
-    term = term.map { |m| sprintf("#{m.year}%02d", m.month) }.uniq
-    term.each do |date|
+    each_month(@start_date.advance(years: -1), @close_date) do |m|
+      date = sprintf("#{m.year}%02d", m.month)
+
       file = "#{@node.path}/#{date}.html"
       Fs.rm_rf(file) if Fs.exists?(file)
 
@@ -47,8 +55,8 @@ class Event::Agents::Tasks::Node::PagesController < ApplicationController
   end
 
   def generate_new_pages
-    term = (@start_date..@close_date).map { |m| sprintf("#{m.year}%02d", m.month) }.uniq
-    term.each do |date|
+    each_month(@start_date, @close_date) do |m|
+      date = sprintf("#{m.year}%02d", m.month)
       event_display_options.each do |display|
         url  = "#{@node.url}#{date}/#{display}.html"
         file = "#{@node.path}/#{date}/#{display}.html"

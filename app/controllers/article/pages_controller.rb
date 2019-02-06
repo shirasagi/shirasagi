@@ -3,7 +3,6 @@ class Article::PagesController < ApplicationController
   include Cms::PageFilter
   include Workflow::PageFilter
   include Cms::OpendataRef::PageFilter
-
   model Article::Page
 
   append_view_path "app/views/cms/pages"
@@ -18,7 +17,11 @@ class Article::PagesController < ApplicationController
   public
 
   def download
-    csv = @model.site(@cur_site).node(@cur_node).to_csv.encode("SJIS", invalid: :replace, undef: :replace)
+    csv = @model.site(@cur_site).
+      node(@cur_node).
+      allow(:read, @cur_user, site: @cur_site, node: @cur_node).
+      to_csv.
+      encode("SJIS", invalid: :replace, undef: :replace)
     filename = @model.to_s.tableize.gsub(/\//, "_")
     send_data csv, filename: "#{filename}_#{Time.zone.now.to_i}.csv"
   end
@@ -41,7 +44,7 @@ class Article::PagesController < ApplicationController
       ss_file.save
 
       # call job
-      Article::Page::ImportJob.bind(site_id: @cur_site, node_id: @cur_node).perform_later(ss_file.id)
+      Article::Page::ImportJob.bind(site_id: @cur_site, node_id: @cur_node, user_id: @cur_user).perform_later(ss_file.id)
       flash.now[:notice] = I18n.t("ss.notice.started_import")
     rescue => e
       @item.errors.add :base, e.to_s

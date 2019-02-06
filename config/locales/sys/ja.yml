@@ -11,6 +11,9 @@ ja:
   sys:
     conf: システム設定
     notice: システムのお知らせ
+    login:
+      ad: 広告
+    ad: ログイン画面広告
     server_name: サーバー名
     server_addr: サーバーIPアドレス
     remote_addr: 接続元IPアドレス
@@ -25,12 +28,12 @@ ja:
     password_policy: パスワードポリシー
     max_file_size: 最大ファイルサイズ
     site_copy: サイト複製
-    webmail_account: メールアカウント
     site_copy/description: ※フォルダー、固定ページ、レイアウト、パーツは必須で複製されます
     site_copy/started_job: サイト複製を開始しました。
     site_copy/task_status: 実行状況
     roles:
       admin: 管理者
+      user: 一般ユーザー
     auth: 認証
     auth/saml: SAML
     auth/open_id_connect: OpenID Connect
@@ -44,6 +47,9 @@ ja:
         files: 共有ファイル
         editor_templates: テンプレート
         dictionaries: かな辞書
+      force_authn_state:
+        enabled: 要求する
+        disabled: 要求しない
     links:
       new_from_metadata: メタデータ インポート
       new_from_discovery: Discovery から作成
@@ -56,6 +62,7 @@ ja:
     postal_code: 郵便番号
     postal_code_normalize_city: 以下に掲載がない場合
     import_official_japan_postal_service_csv: 日本郵政CSVの取り込み
+    prefecture_code: 地域コード
     password_effective_period: パスワードの有効期限
     password_constraint: パスワードの制約
     password_change_constraint: パスワード変更時の制約
@@ -73,6 +80,9 @@ ja:
     edit_sys_roles: 権限/ロールの管理
     edit_sys_settings: システム設定の管理
     edit_sys_mail_logs: メールログの管理
+    use_cms: CMSの利用
+    use_gws: GWSの利用
+    use_webmail: メールの利用
 
   mongoid:
     models:
@@ -113,6 +123,7 @@ ja:
         x509_cert: X509公開鍵証明書
         identifier: Identifier
         metadata: メタデータ
+        force_authn_state: 再認証
       sys/addon/open_id_connect_setting:
         client_id: Client ID
         client_secret: Client Secret
@@ -163,6 +174,9 @@ ja:
         password_min_change_char_count: 相違数
         password_max_failure_use: 最大失敗回数の使用
         password_max_failure_count: 最大失敗回数
+      sys/ad:
+        time: 画像切り替え時間
+        width: 横幅
 
   errors:
     messages:
@@ -245,8 +259,15 @@ ja:
         - ログインの最大失敗回数を設定します。
         - この回数を超えてログインに失敗すると、当該ユーザーは利用停止状態になります。
 
+    sys/addon/saml_setting:
+      force_authn_state:
+        - 再認証を要求するかどうかを選択します。
+        - 「要求する」を選択した場合、IdP はユーザーを常に認証します。
+        - 「要求しない」を選択した場合、IdP はセッションが存在する場合はセッションからの ID 情報を応答し、セッションが存在しない場合はユーザーを認証します。
+
   job:
     models:
       sys/site_copy_job: サイト複製
       sys/postal_code/import_job: 郵便番号インポート
       sys/postal_code/official_csv_import_job: 日本郵便CSVインポート
+      sys/prefecture_code/import_job: 地域コードインポート

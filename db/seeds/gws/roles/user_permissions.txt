@@ -15,6 +15,8 @@ delete_private_gws_share_files
 delete_private_gws_workflow_files
 download_private_gws_share_folders
 edit_gws_attendance_time_cards
+edit_gws_bookmarks
+edit_gws_personal_addresses
 edit_private_gws_board_posts
 edit_private_gws_circular_posts
 edit_private_gws_custom_groups
@@ -32,6 +34,7 @@ edit_private_gws_schedule_todos
 edit_private_gws_share_files
 edit_private_gws_staff_record_charges
 edit_private_gws_workflow_files
+read_gws_organization
 read_private_gws_board_categories
 read_private_gws_board_posts
 read_private_gws_circular_categories
@@ -84,5 +87,18 @@ trash_private_gws_schedule_todos
 trash_private_gws_share_files
 trash_private_gws_workflow_files
 use_gws_attendance_time_cards
+use_gws_board
+use_gws_circular
+use_gws_discussion
+use_gws_elasticsearch
+use_gws_faq
+use_gws_monitor
+use_gws_qna
+use_gws_report
+use_gws_share
+use_gws_shared_address
+use_gws_staff_record
+use_gws_survey
 use_gws_user_presences
+use_gws_workflow
 write_private_gws_share_files

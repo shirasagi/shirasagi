@@ -39,7 +39,7 @@ class Gws::Apis::UsersController < ApplicationController
     @multi = params[:single].blank?
 
     if @custom_group.present?
-      criteria = @custom_group.members
+      criteria = @custom_group.overall_members
     else
       criteria = @model.site(@cur_site)
     end

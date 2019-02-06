@@ -1,0 +1,7 @@
+<dl class="see mod-urgency-mail_page">
+  <dt><%= @item.t :urgency_state %></dt>
+  <dd><%= @item.label :urgency_state %></dd>
+
+  <dt><%= @item.t :urgency_node_id %></dt>
+  <dd><%= "#{@item.urgency_node.name} (#{@item.urgency_node.filename})" if @item.urgency_node %></dd>
+</dl>

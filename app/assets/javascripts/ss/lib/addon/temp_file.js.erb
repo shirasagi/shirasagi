@@ -30,8 +30,13 @@ this.SS_Addon_TempFile = (function () {
       var file = files[j];
       var id = file["_id"];
       var url = this.selectUrl(id);
+      var params = {};
+      if ($('#show-file-size').val()) {
+        params['file_size'] = $('#show-file-size').val();
+      }
       file_views.push($.ajax({
         url: url,
+        data: params,
         success: function (data) {
           var file_name = $(data).find(".name").text().trim();
           sorted_name_and_datas.push({name: file_name, data: data});

@@ -146,6 +146,7 @@ ja:
       member/group_invitation_setting: グループ招待メール設定
       member/member_invitation_setting: 会員招待メール
       member/login_link: ログイン
+      member/editor_setting: エディタ設定
 
   cms:
     nodes:
@@ -255,6 +256,8 @@ ja:
       member/addon/photo/license_setting:
         license_free: 誰でも利用可
         license_not_free: 許可が必要
+      member/addon/photo/slide:
+        node_url: フォトフォルダーURL
       member/addon/registration/sender_address:
         sender_name: 送信者名
         sender_email: 送信メールアドレス
@@ -498,6 +501,10 @@ ja:
       license_name:
         - ライセンスを設定します。
         - フォルダーに設定したテキストが表示されます。
+    member/addon/photo/slide:
+      node_url:
+        - フォトフォルダーのURLを設定します。
+        - マルチテナントの場合、他サイトのURLを設定することでスライド表示が可能です。
     member/addon/blog/blog_setting:
       page_limit:
         - ページ表示件数を設定します。

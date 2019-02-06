@@ -74,7 +74,7 @@ module Gws::Schedule::PlanFilter
   def send_approval_mail
     Gws::Schedule::Notifier::Approval.deliver_request!(
       cur_site: @cur_site, cur_group: @cur_group, cur_user: @cur_user,
-      to_users: @item.all_approvers, item: @item,
+      to_users: @item.all_approvers.nin(id: @cur_user.id), item: @item,
       url: url_for(action: :show, id: @item)
     ) rescue nil
   end

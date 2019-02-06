@@ -50,21 +50,24 @@ ja:
       no_todos: 登録されていません
     notify_message:
       topic:
-        subject: '[電子会議室] %{forum_name} に投稿がありました'
-        text: |-
-          スレッドが作成されました。
-
-          スレッド: %{topic_name}
-
-          %{text}
+        subject: '[電子会議室] %{forum_name} に「%{topic_name}」スレッドが作成されました。'
+        text: "%{text}"
       post:
-        subject: '[電子会議室] %{forum_name}(%{topic_name}) に投稿がありました'
-        text: |-
-          コメントが投稿されました。
+        subject: '[電子会議室] %{forum_name}(%{topic_name}) に新しい投稿がありました。'
+        text: "%{text}"
 
-          スレッド: %{topic_name}
+  gws_notification:
+    gws/discussion/topic:
+        mail_text: |
+          %{subject}
 
           %{text}
+    gws/discussion/post:
+         mail_text: |
+          %{subject}
+
+          %{text}
+
   modules:
     gws/discussion: 電子会議室
     addons:
@@ -125,6 +128,7 @@ ja:
         discussion_comment_limit: コメントの上限
 
   gws_role:
+    use_gws_discussion: 電子会議室の利用
     read_other_gws_discussion_forums: 電子会議室の閲覧（全て）
     read_private_gws_discussion_forums: 電子会議室の閲覧（所有）
     edit_other_gws_discussion_forums: 電子会議室の編集（全て）

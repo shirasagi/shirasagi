@@ -10,5 +10,5 @@ def name_hier(category)
 end
 %>
 <dl class="see">
-  <dd class="wide"><%= @item.categories.map { |cate| name_hier(cate) }.join(", ") %></dd>
+  <dd class="wide"><%=br @item.categories.map { |cate| name_hier(cate) }.join("\n") %></dd>
 </dl>

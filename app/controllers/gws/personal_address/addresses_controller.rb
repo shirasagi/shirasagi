@@ -4,6 +4,7 @@ class Gws::PersonalAddress::AddressesController < ApplicationController
 
   model Webmail::Address
 
+  before_action :check_permission
   before_action :set_address_group
   before_action :set_group_navi, only: [:index]
 
@@ -19,6 +20,10 @@ class Gws::PersonalAddress::AddressesController < ApplicationController
 
   def fix_params
     { cur_user: @cur_user }
+  end
+
+  def check_permission
+    raise "403" unless @cur_user.gws_role_permit_any?(@cur_site, :edit_gws_personal_addresses)
   end
 
   def set_address_group

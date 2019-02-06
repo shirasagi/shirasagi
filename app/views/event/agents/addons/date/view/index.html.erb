@@ -1,0 +1,6 @@
+<% if @cur_page.event_deadline.present? %>
+  <dl class="see body">
+    <dt><%= @cur_page.class.t :event_deadline %></dt>
+    <dd><%=br I18n.l(@cur_page.event_deadline, format: :long) %></dd>
+  </dl>
+<% end %>

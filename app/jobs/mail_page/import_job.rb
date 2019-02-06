@@ -23,6 +23,11 @@ class MailPage::ImportJob < Cms::ApplicationJob
     nodes.each do |node|
       node.create_page_from_mail(mail)
       put_log("imported: #{node.name}(#{node.filename})")
+
+      if node.urgency_enabled?
+        node.urgency_switch_layout
+        put_log("switch layout")
+      end
     end
 
     Fs.rm_rf file

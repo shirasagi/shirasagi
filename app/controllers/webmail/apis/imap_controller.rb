@@ -24,9 +24,11 @@ class Webmail::Apis::ImapController < ApplicationController
     resp = {
       notice: notice_message(inbox),
       inbox: {
+        messages: inbox.messages,
         recent: inbox.recent,
+        uidnext: inbox.uidnext,
         unseen: inbox.unseen,
-        url: webmail_mails_path
+        url: webmail_mails_path(webmail_mode: @webmail_mode || :account, account: params[:account])
       },
       mailboxes: @mailboxes.all.map do |box|
         {
@@ -55,7 +57,8 @@ class Webmail::Apis::ImapController < ApplicationController
           date: item.internal_date,
           from: item.display_sender.name,
           subject: item.display_subject,
-          url: webmail_mail_url(mailbox: 'INBOX', id: item.uid)
+          url: webmail_mail_url(webmail_mode: @webmail_mode || :account, account: params[:account], mailbox: 'INBOX', id: item.uid),
+          unseen: item.unseen?
         }
       end
     }

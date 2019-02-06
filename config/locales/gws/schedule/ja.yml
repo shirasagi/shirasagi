@@ -32,6 +32,8 @@ ja:
         day: YYYY年 M月 D日（ddd）
     links:
       add_plan: 予定を作成
+      download: ダウンロード
+      import: インポート
       add_todo: ToDoを作成
       add_holiday: 休日を作成
       show_month: 月表示
@@ -112,6 +114,22 @@ ja:
       unable_to_reserve_all_days: 設備の利用時間が制限されているため終日予約することができません。
       faciliy_day_lte: 予約時間は%{count}日以内の値にしてください。
       not_found_reservable_facilities: 予約可能な設備が見つかりません。
+
+    csv:
+      id: ID
+      name: タイトル
+      start_on: 開始日
+      end_on: 終了日
+      color: 表示色
+      repeat_plan_datas:
+        id: 繰り返しID
+        repeat_type: 繰り返し
+        repeat_start: 繰り返し開始日
+        repeat_end: 繰り返し終了日
+        interval: 繰り返し間隔
+        repeat_base: 繰り返し基準
+        wdays: 曜日
+
   gws/schedule/todo:
     active: 削除を取り消す
     disabled_items: 削除済み
@@ -179,6 +197,7 @@ ja:
     delete_private_gws_schedule_plans: 予定の削除（所有）
     trash_other_gws_schedule_plans: 予定ゴミ箱の管理（全て）
     trash_private_gws_schedule_plans: 予定ゴミ箱の管理（所有）
+    use_private_gws_schedule_plans: 予定の利用
     read_other_gws_schedule_categories: 種別の閲覧（全て）
     read_private_gws_schedule_categories: 種別の閲覧（所有）
     edit_other_gws_schedule_categories: 種別の編集（全て）
@@ -193,6 +212,7 @@ ja:
     delete_private_gws_schedule_todos: ToDoの削除（所有）
     trash_other_gws_schedule_todos: ToDoゴミ箱の管理（全て）
     trash_private_gws_schedule_todos: ToDoゴミ箱の管理（所有）
+    use_private_gws_schedule_todos: ToDoの利用
 
   mongoid:
     models:
@@ -208,6 +228,10 @@ ja:
       models:
         gws/schedule/plan:
           file_size_exceeds_limit: 添付ファイルのサイズ（%{size}）が最大サイズ（%{limit}）を超えました。
+        gws/schedule/holiday:
+          attributes:
+            base:
+              not_found: "%{line_no}: Id %{id} の休日は存在しません。"
     attributes:
       gws/schedule/planable:
         name: タイトル
@@ -363,81 +387,86 @@ ja:
 
   gws_notification:
     gws/schedule/plan:
-      subject: "[更新通知][スケジュール] %{name}"
-      text: |
-        「%{name}」が作成または更新されました。
+      subject: "[スケジュール] 「%{name}」が登録または更新されました。"
+      text: "%{text}"
+      mail_text: |
+        %{subject}
 
         %{text}
 
     gws/schedule/comment:
-      subject: "[更新通知][スケジュール] %{name}"
-      text: |
-        「%{name}」にコメントがありました。
+      subject: "[スケジュール] 「%{name}」にコメントがありました。"
+      text: "%{text}"
+      mail_text: |
+        %{subject}
 
         %{text}
 
     gws/schedule/todo:
-      subject: "[更新通知][ToDo] %{name}"
-      text: |
-        「%{name}」が作成または更新されました。
+      subject: "[ToDo] 「%{name}」が登録または更新されました。"
+      text: "%{text}"
+      mail_text: |
+        %{subject}
 
         %{text}
 
     gws/schedule/attendance:
-      subject: "[更新通知][スケジュール] %{name}"
-      text: |
-        「%{name}」の出欠確認に回答がありました。
+      subject: "[スケジュール] 「%{name}」の出欠確認に回答がありました。"
+      text: "%{text}"
+      mail_text: |
+        %{subject}
+
+        %{text}
 
     gws/schedule/plan/destroy:
-      subject: "[削除通知][スケジュール] %{name}"
-      text: |
-        「%{name}」が削除されました。
+      subject: "[スケジュール] 「%{name}」が削除されました。"
+      text: ""
 
     gws/schedule/comment/destroy:
-      subject: "[削除通知][スケジュール] %{name}"
-      text: |
-        「%{name}」のコメントが削除されました。
+      subject: "[スケジュール] 「%{name}」のコメントが削除されました。"
+      text: "%{text}"
 
     gws/schedule/todo/destroy:
-      subject: "[削除通知][ToDo] %{name}"
-      text: |
-        「%{name}」が削除されました。
+      subject: "[ToDo] 「%{name}」が削除されました。"
+      text: ""
 
     gws/schedule/todo/finish:
-      subject: "[更新通知][ToDo] %{name}"
-      text: |
-        「%{name}」が完了になりました。
+      subject: "[ToDo] 「%{name}」が完了になりました。"
+      text: "%{text}"
+      mail_text: |
+        %{subject}
 
     gws/schedule/todo/revert:
-      subject: "[更新通知][ToDo] %{name}"
-      text: |
-        「%{name}」が未完了になりました。
+      subject: "[ToDo] 「%{name}」が未完了になりました。"
+      text: "%{text}"
+      mail_text: |
+        %{subject}
 
     gws/schedule/attendance/destroy:
-      subject: "[削除通知][スケジュール] %{name}"
-      text: |
-        「%{name}」の出欠確認の回答が削除されました。
+      subject: "[スケジュール] 「%{name}」の出欠確認の回答が削除されました。"
+      text: "%{text}"
 
     gws/schedule/plan/approval/request:
-      subject: "[承認依頼][スケジュール] %{name}"
-      text: |
-        %{from}さんより次の予定について承認依頼が届きました。
-        承認作業を行ってください。
+      subject: "[スケジュール]「%{name}」の承認依頼が届きました。"
+      text: "%{text}"
+      mail_text: |
+        %{subject}
 
         %{text}
 
     gws/schedule/plan/approval/approve:
-      subject: "[承認完了][スケジュール] %{name}"
-      text: |
-        次の予定が承認されました。
+      subject: "[スケジュール] 「%{name}」の承認が完了しました。"
+      text: "%{text}"
+      mail_text: |
+        %{subject}
 
         %{text}
 
     gws/schedule/plan/approval/remand:
-      subject: "[差し戻し][スケジュール] %{name}"
-      text: |
-        %{from}さんより次の予定について承認依頼が差し戻されました。
-        適宜修正を行い、再度承認依頼を行ってください。
+      subject: "[スケジュール] 「%{name}」の承認依頼が%{from}さんから差し戻されました。"
+      text: "%{text}"
+      mail_text: |
+        %{subject}
 
         %{text}
 

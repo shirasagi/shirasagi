@@ -1,0 +1,45 @@
+<%= jquery do %>
+  $('.webmail-address-dropdown-menu').find('a').on('click', function() {
+    uids = $('.list-items .list-item input:checkbox:checked').map(function () {
+      return $(this).val();
+    });
+    $.ajax({
+      url: $(this).data('href'),
+      method: 'POST',
+      data: {
+        _method: 'put',
+        authenticity_token: $('meta[name="csrf-token"]').attr('content'),
+        ids: uids.get()
+      },
+      success: function (data) {
+        SS.notice('<%= t('ss.notice.saved') %>');
+        $.each(data, function(i, value) {
+          $('.group[data-id=' + value['id'] + ']').html(value['name']);
+        });
+      }
+    });
+  });
+<% end %>
+
+<div class="list-head">
+  <label class="check"><input type="checkbox" /></label>
+
+  <div class="list-head-action webmail-address-head">
+    <%= render file: "_list_head_tags" %>
+    <div class="list-head-action-destroy">
+      <button class="destroy-all btn"><%= t :"ss.links.delete" %></button>
+    </div>
+    <div class="dropdown dropdown-toggle">
+      <button class="btn move" data-href="#">
+        <%= t :"webmail.links.move" %> <i class="material-icons md-13">&#xE313;</i>
+      </button>
+      <ul class="dropdown-menu webmail-address-dropdown-menu">
+        <% @group_navi.each do |item| %>
+          <li><%= link_to item.name, '#', { data: { href: move_webmail_addresses_path(group_id: item.id) } } %></li>
+        <% end %>
+      </ul>
+    </div>
+  </div>
+
+  <%= render file: "_search" %>
+</div>

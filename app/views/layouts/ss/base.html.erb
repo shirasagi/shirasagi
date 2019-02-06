@@ -38,7 +38,7 @@
     </div>
 
     <div class="application-menu">
-      <% if SS.config.cms.disable.blank? && SS.config.cms.disable_navi.blank? %>
+      <% if SS.config.cms.disable.blank? && SS.config.cms.disable_navi.blank? && Cms.allowed?(:use, @cur_user) %>
       <div class="cms">
         <% if @ss_mode == :cms %>
         <h2><%= link_to t('ss.links.cms'), cms_contents_path(@cur_site), class: "current" %></h2>
@@ -48,7 +48,7 @@
       </div>
       <% end %>
 
-      <% if SS.config.gws.disable.blank? && SS.config.gws.disable_navi.blank? %>
+      <% if SS.config.gws.disable.blank? && SS.config.gws.disable_navi.blank? && Gws.allowed?(:use, @cur_user) %>
       <div class="gws">
         <% if @ss_mode == :gws %>
         <h2><%= link_to t('ss.links.gws'), gws_portal_path(@cur_site), class: "current" %></h2>
@@ -58,13 +58,14 @@
       </div>
       <% end %>
 
-      <% if SS.config.webmail.disable.blank? && SS.config.webmail.disable_navi.blank? %>
+      <% if SS.config.webmail.disable.blank? && SS.config.webmail.disable_navi.blank? && Webmail.allowed?(:use, @cur_user) %>
       <div class="webmail">
-        <% if @ss_mode == :webmail %>
-        <h2><%= link_to t('webmail.mail'), webmail_mails_path(account: params[:account] || @cur_user.imap_default_index), class: "current" %></h2>
-        <% else %>
-        <h2><%= link_to t('webmail.mail'), webmail_mails_path(account: params[:account] || @cur_user.imap_default_index) %></h2>
-        <% end %>
+        <%
+          webmail_mode =  params[:webmail_mode] || :account
+          account = params[:account] || @cur_user.imap_default_index
+          opts = (@ss_mode == :webmail) ? { class: "current" } : {}
+        %>
+        <h2><%= link_to t('webmail.mail'), webmail_mails_path(webmail_mode: webmail_mode, account: account), opts %></h2>
       </div>
       <% end %>
     </div>
@@ -76,17 +77,24 @@
     <% if @cur_user %>
     <nav class="user">
       <% if @ss_mode == :webmail %>
-        <% gws_user = @cur_user.gws_user %>
-        <% gws_role = gws_user.gws_roles.in(permissions: "edit_private_gws_memo_messages").reorder(site_id: 1).first %>
-        <% gws_group = gws_role.site if gws_role %>
-        <% if SS.config.gws.disable.blank? && gws_group %>
-          <%= link_to gws_memo_messages_path(site: gws_group.id), class: "user-message" do %>
-            <% count = Gws::Memo::Message.unseens(@cur_user, gws_group).size %>
-            <% if count > 0 %><span class="unseen"><%= count %></span><% end %>
-          <% end %>
-        <% end %>
+        <%
+          if SS.config.gws.disable.blank?
+            gws_user = @cur_user.gws_user
+            sites = gws_user.root_groups.select do |site|
+              Gws::Memo::Message.allowed?(:edit, gws_user, site: site)
+            end
+            if sites.present?
+              site = sites.sort_by { |site| site.id }.first
+              count = Gws::Memo::Message.unseens(@cur_user, site).size
+              span_unseen = content_tag("span", count, class: "unseen") if count > 0
+              @output_buffer << link_to(gws_memo_messages_path(site: site), class: "user-message") do
+                span_unseen
+              end
+            end
+          end
+        %>
       <% elsif @ss_mode == :gws %>
-        <% if @cur_site.menu_bookmark_visible? %>
+        <% if @cur_site.menu_bookmark_visible? && Gws::Bookmark.allowed?(:read, @cur_user, site: @cur_site) %>
           <div class="gws-bookmark dropdown dropdown-toggle">
             <% bookmark = Gws::Bookmark.find_by(user: @cur_user, site: @cur_site, url: request.fullpath) rescue nil %>
             <%= jquery do %>
@@ -336,12 +344,10 @@
           <li <%== %(class="active") if @crumbs.size == idx + 1 %>><%= link_to *item %></li>
         <% end %>
 
-        <% if @webmail_other_account_path && @cur_user.imap_settings.size > 1 %>
+        <% if @webmail_other_account_path && webmail_other_account?(@webmail_other_account_path) %>
           <li class="webmail-accounts">
             <span><%= t('webmail.links.select_account') %></span>
-            <%= select_tag :select_account,
-              options_for_select(account_options(@webmail_other_account_path), send(@webmail_other_account_path, params[:account])), class: "webmail-select-account"
-            %>
+            <%= webmail_other_account_select(@webmail_other_account_path) %>
           </li>
         <% end %>
       </ol>

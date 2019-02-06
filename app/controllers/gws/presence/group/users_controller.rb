@@ -17,12 +17,13 @@ class Gws::Presence::Group::UsersController < ApplicationController
     @group = Gws::Group.find(params[:group])
     raise "404" unless @group.name.start_with?(@cur_site.name)
 
-    @groups = @cur_site.root.to_a + @cur_site.root.descendants.to_a
+    @groups = @cur_site.root.to_a + @cur_site.root.descendants.active.to_a
     @custom_groups = Gws::CustomGroup.site(@cur_site).in(member_ids: @cur_user.id)
   end
 
   def items
-    @items = @group.users.search(params[:s]).page(params[:page]).per(25)
+    @items = @group.users.active.search(params[:s]).order_by_title(@cur_site).
+      page(params[:page]).per(25)
   end
 
   public
@@ -39,7 +40,7 @@ class Gws::Presence::Group::UsersController < ApplicationController
   end
 
   def portlet
-    items
+    @items = @group.users.active.search(params[:s]).order_by_title(@cur_site)
     @manageable_users, @group_users = @items.partition { |item| @editable_user_ids.include?(item.id) }
     render file: :portlet, layout: false
   end

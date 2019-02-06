@@ -1,0 +1,72 @@
+class Webmail::RoleImportJob < SS::ApplicationJob
+  include Job::SS::TaskFilter
+  include SS::ZipFileImport
+
+  self.task_name = 'webmail:role_import'
+
+  class << self
+    def valid_csv?(file)
+      count = 0
+      ::CSV.foreach(file.path, headers: true, encoding: 'SJIS:UTF-8') do |row|
+        count += 1 if row.key?(Webmail::Role.t("id"))
+        count += 1 if row.key?(Webmail::Role.t("name"))
+        count += 1 if row.key?(Webmail::Role.t("permissions"))
+        count += 1 if row.key?(Webmail::Role.t("permission_level"))
+        break
+      end
+      count >= 3
+    rescue
+      false
+    end
+  end
+
+  private
+
+  def import_file
+    i = 2
+    ::CSV.foreach(@cur_file.path, headers: true, encoding: 'SJIS:UTF-8') do |row|
+      import_row(row, i)
+      i += 1
+    end
+    nil
+  end
+
+  def import_row(row, index)
+    id               = val(row, "id")
+    name             = val(row, "name")
+    permissions      = val(row, "permissions").split("\n")
+    permission_level = val(row, "permission_level").to_i
+
+    if id.present?
+      item = Webmail::Role.unscoped.where(id: id).first
+      if item.blank?
+        Rails.logger.warn("#{index}行目: 指定された ID #{id} を持つ権限/ロールが見つからないため無視します。")
+        return nil
+      end
+
+      if name.blank?
+        item.disable
+        Rails.logger.info("#{index}行目: 権限/ロール #{id} を無効にしました。")
+        return nil
+      end
+    else
+      item = Webmail::Role.new
+    end
+
+    item.name             = name
+    item.permissions      = item.normalized_permissions(permissions)
+    item.permission_level = (permission_level <= 0) ? 1 : permission_level
+
+    if !item.save
+      Rails.logger.warn("#{index}行目: 権限/ロール #{id} をインポート中にエラーが発生しました。エラー:\n#{item.errors.full_messages.join("\n")}")
+      return nil
+    end
+
+    Rails.logger.info("#{index}行目: 権限/ロール #{id} をインポートしました。")
+    item
+  end
+
+  def val(row, key)
+    row[Webmail::Role.t(key)].to_s.strip
+  end
+end

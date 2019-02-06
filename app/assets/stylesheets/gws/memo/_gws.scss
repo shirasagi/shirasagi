@@ -85,6 +85,9 @@
     margin-top: 5px;
   }
 }
+#content-navi.gws-content-navi {
+  overflow-x: scroll;
+}
 @media screen and (max-width:1080px) and (min-width:768px) {
   div {
     &#content-navi.gws-content-navi,
@@ -178,7 +181,20 @@
   }
 }
 
-.gws-memo-folder {
+table.index.gws-memo-folder {
+  position: relative;
+  width: auto;
+  min-width: 100%;
+  border-collapse: collapse;
+  table-layout: fixed;
+  &:before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 100%;
+    width: 12px;
+    height: 1px;
+  }
   .folder {
     background: #ffffff !important;
   }
@@ -188,6 +204,12 @@
   .unseen {
     font-weight: bold;
     color: #f25a38;
+  }
+
+  @for $i from 0 through 40 {
+    .depth-#{$i} {
+      padding-left: #{$i * 20}px;
+    }
   }
 }
 

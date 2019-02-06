@@ -1,3 +1,9 @@
+<% @tap_menu = proc do |item| %>
+  <%= link_to t('ss.links.show'), action: :show, id: item if item.allowed?(:read, @imap) %>
+  <%= link_to t('ss.links.edit'), action: :edit, id: item if item.allowed?(:edit, @imap) %>
+  <%= link_to t('ss.links.delete'), action: :delete, id: item  if item.allowed?(:delete, @imap) %>
+<% end %>
+
 <% @index_title = proc do |item| %>
   <%= link_to item.name, { action: :show, id: item.id }, class: "title" %>
 <% end %>
@@ -7,6 +13,9 @@
   <span class="state"><%= item.label :state %></span>
   <span class="order"><%= item.order %></span>
   <span class="summary"><%= item.conditions_summary.first %></span>
+  <% if item.filter_errors.present? %>
+    <span class="webmail-category-label webmail-error"><%= item.filter_errors.first.truncate(60) %></span>
+  <% end %>
 <% end %>
 
 <%= render file: "ss/crud/index" %>

@@ -41,7 +41,8 @@ this.Webmail_Mail_Navi = (function () {
         if (data.notice && opts['notice'] !== -1) {
           SS.notice(data.notice);
         }
-        if (data.inbox.recent > 0) {
+        var uidnext = navi.find("a[data-name='INBOX']").data("uidnext")
+        if (uidnext != data.inbox.uidnext) {
           if (location.pathname === data.inbox.url) {
             location.href = data.inbox.url;
           }
@@ -166,6 +167,29 @@ this.Webmail_Mail_List = (function () {
       });
       return false;
     });
+    $(".list-head .set-seen-all, .list-head .unset-seen-all").on("click", function () {
+      var uids;
+      uids = Webmail_Mail_List.findCheckedUids();
+      if (uids.length === 0) {
+        return false;
+      }
+      $('.dropdown-menu').removeClass('active');
+      $.ajax({
+        url: $(this).data('href'),
+        method: 'POST',
+        dataType: 'json',
+        data: {
+          _method: 'put',
+          authenticity_token: $('meta[name="csrf-token"]').attr('content'),
+          ids: uids
+        },
+        success: function (data) {
+          Webmail_Mail_List.renderListFlags(uids, data.action);
+          return SS.notice(data.notice);
+        }
+      });
+      return false;
+    });
     return this.renderDropEvents();
   };
 
@@ -207,11 +231,13 @@ this.Webmail_Mail_List = (function () {
         });
         break;
       case 'set_seen':
+        Webmail_Mail_Navi.reloadMailbox({ notice: -1 });
         items.each(function () {
           return $(this).removeClass('unseen').addClass('seen');
         });
         break;
       case 'unset_seen':
+        Webmail_Mail_Navi.reloadMailbox({ notice: -1 });
         items.each(function () {
           return $(this).removeClass('seen').addClass('unseen');
         });
@@ -441,11 +467,6 @@ this.Webmail_Mail_Detail = (function () {
         return false;
       });
     }
-    $(".print-mail").on("click", function () {
-      $('body').addClass('webmail-print');
-      window.print();
-      return false;
-    });
     $(".update-mail").on("click", function () {
       $('.dropdown-menu').removeClass('active');
       $.ajax({

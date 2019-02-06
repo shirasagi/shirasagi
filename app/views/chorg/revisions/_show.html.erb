@@ -13,6 +13,9 @@
     <dd><%= tryb { @item.content_csv_file.humanized_name } %></dd>
   <% end %>
 
+  <dt><%= @model.t :delete_method %></dt>
+  <dd><%= @item.label :delete_method %></dd>
+
   <% Chorg::Changeset::TYPES.each do |type| %>
     <% changesets = @item.send("#{type}_changesets") %>
     <%= render file: "_#{params[:action]}_#{type}", locals: { type: type, changesets: changesets } %>

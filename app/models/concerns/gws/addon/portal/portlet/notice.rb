@@ -7,7 +7,7 @@ module Gws::Addon::Portal::Portlet
 
     included do
       field :notice_severity, type: String
-      field :notice_browsed_state, type: String
+      field :notice_browsed_state, type: String, default: "unread"
       embeds_ids :notice_categories, class_name: "Gws::Notice::Category"
       embeds_ids :notice_folders, class_name: "Gws::Notice::Folder"
       permit_params :notice_severity, :notice_browsed_state, notice_category_ids: [], notice_folder_ids: []

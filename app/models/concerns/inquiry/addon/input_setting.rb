@@ -16,6 +16,7 @@ module Inquiry::Addon
       permit_params :input_type, :required, :additional_attr
       permit_params :select_options, :input_confirm, :question, :max_upload_file_size
       permit_params required_in_select_form: []
+      permit_params transfers: [:keyword, :email]
 
       validates :input_type, presence: true, inclusion: {
         in: %w(text_field text_area email_field radio_button select check_box upload_file form_select)

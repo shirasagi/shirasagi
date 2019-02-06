@@ -10,7 +10,7 @@ module Webmail::Mail::Parser
       uid: data.attr["UID"],
       internal_date: data.attr['INTERNALDATE'],
       flags: data.attr['FLAGS'] || [],
-      size: data.attr['RFC822.SIZE'],
+      size: data.attr['RFC822.SIZE']
     }
     self.flags = flags.map(&:to_sym)
 
@@ -55,10 +55,16 @@ module Webmail::Mail::Parser
   def parse_address_field(field)
     return [] if field.blank?
 
-    ::Mail::AddressList.new(field.value).addresses.map do |addr|
+    if field.value.include?('=?ISO-2022-JP?')
+      value = NKF.nkf("-w", field.value)
+    else
+      value = field.value
+    end
+
+    ::Mail::AddressList.new(value).addresses.map do |addr|
       if addr.display_name.present?
-        charset = field.value.start_with?('=?ISO-2022-JP?') ? 'CP50220' : nil
-        addr.decoded.encode('UTF-8', charset) rescue addr.decoded
+        #charset = field.value.start_with?('=?ISO-2022-JP?') ? 'CP50220' : nil
+        addr.decoded.encode('UTF-8', nil, invalid: :replace, undef: :replace) rescue addr.decoded
       else
         addr.address
       end
@@ -75,27 +81,45 @@ module Webmail::Mail::Parser
   def parse_subject(mail)
     value = mail.header_fields.find { |m| m.name.casecmp('subject') == 0 }.try(:value)
     return mail.subject unless value
-    decode_jp(mail.subject, value.start_with?('=?ISO-2022-JP?') ? 'ISO-2022-JP' : nil)
+
+    if value.include?('=?ISO-2022-JP?')
+      NKF.nkf("-w", value)
+    else
+      decode_jp(mail.subject, nil)
+    end
   end
 
   def parse_body_structure
-    if body_structure.multipart? #&& body_structure.subtype == "MIXED"
-      self.attachments = Webmail::MailPart.list(all_parts).select(&:attachment?)
-    else
-      self.attachments = []
-    end
-
-    if info = find_first_mime_type('text/plain')
+    text_part, html_part, other_parts = split_body_and_others
+    if text_part.present?
       self.format       = 'text'
-      self.text_part_no = info[0]
-      self.text_part    = info[1]
+      self.text_part_no = text_part[0]
+      self.text_part    = text_part[1]
     end
 
-    if info = find_first_mime_type('text/html')
+    if html_part.present?
       self.format       = 'html'
-      self.html_part_no = info[0]
-      self.html_part    = info[1]
+      self.html_part_no = html_part[0]
+      self.html_part    = html_part[1]
     end
+
+    self.attachments = []
+    if other_parts.present?
+      other_parts.each do |sec, part|
+        self.attachments << Webmail::MailPart.new(part, sec)
+      end
+    end
+  end
+
+  def split_body_and_others
+    text_part = find_first_mime_type('text/plain')
+    html_part = find_first_mime_type('text/html')
+
+    other_parts = all_parts.dup
+    other_parts.reject! { |pos, _part| pos == text_part[0] } if text_part.present?
+    other_parts.reject! { |pos, _part| pos == html_part[0] } if html_part.present?
+
+    [ text_part, html_part, other_parts ]
   end
 
   def all_parts
@@ -119,8 +143,8 @@ module Webmail::Mail::Parser
     return if attr.blank?
 
     resp = imap.conn.uid_fetch(uid, attr)
-    self.text = Webmail::MailPart.decode resp[0].attr["BODY[#{text_part_no}]"], text_part
-    self.html = Webmail::MailPart.decode resp[0].attr["BODY[#{html_part_no}]"], html_part
+    self.text = Webmail::MailPart.decode(resp[0].attr["BODY[#{text_part_no}]"], text_part, charset: true)
+    self.html = Webmail::MailPart.decode(resp[0].attr["BODY[#{html_part_no}]"], html_part, charset: true, html_safe: true)
   end
 
   def parse_rfc822_body
@@ -129,20 +153,21 @@ module Webmail::Mail::Parser
 
     msg = Mail::Message.new(rfc822)
     if msg.multipart?
-      if part = msg.find_first_mime_type('text/plain')
+      if text_part = msg.find_first_mime_type('text/plain')
         self.format = 'text'
-        self.text = decode_jp(part.body.to_s, part.charset)
+        self.text = decode_jp(text_part.body.to_s, text_part.charset)
       end
-      if part = msg.find_first_mime_type('text/html')
+      if html_part = msg.find_first_mime_type('text/html')
         self.format = 'html'
-        self.html = decode_jp(part.body.to_s, part.charset)
+        self.html = decode_jp(html_part.body.to_s, html_part.charset)
       end
 
       @_all_parts = {}
       self.attachments = []
       msg.all_parts.each_with_index do |part, i|
         @_all_parts[i + 1] = part
-        self.attachments << Webmail::StoredMailPart.new(part, i + 1) if part.attachment?
+        next if part == text_part || part == html_part
+        self.attachments << Webmail::StoredMailPart.new(part, i + 1)
       end
     else
       if msg.mime_type == 'text/plain'
@@ -159,10 +184,13 @@ module Webmail::Mail::Parser
   private
 
   def decode_jp(str, src_encoding = nil)
+    return "" if str.blank?
+
     str.force_encoding('UTF-8')
-    return str if str.blank? || src_encoding == 'UTF-8'
+    return str if src_encoding == 'UTF-8'
+
     src_encoding = 'CP50220' if src_encoding.try(:upcase) == 'ISO-2022-JP'
-    str.encode('UTF-8', src_encoding) rescue str.encode('UTF-8')
+    str.encode('UTF-8', src_encoding, invalid: :replace, undef: :replace)
   end
 
   def flatten_all_parts(part, pos = [], buf = {})

@@ -22,6 +22,18 @@ describe "inquiry_columns" do
       visit new_path
       within "form#item-form" do
         fill_in "item[name]", with: "sample"
+        fill_in "item[html]", with: "<p>sample</p>"
+        select I18n.t('ss.options.state.public'), from: 'item_state'
+        fill_in "item[order]", with: 0
+        select I18n.t('inquiry.options.input_type.text_field'), from: 'item_input_type'
+        fill_in "item[select_options]", with: "sample"
+        select I18n.t('inquiry.options.required.required'), from: 'item_required'
+        fill_in "item[additional_attr]", with: "sample"
+        select I18n.t('inquiry.options.input_confirm.disabled'), from: 'item_input_confirm'
+        select I18n.t('ss.options.state.disabled'), from: 'item_question'
+        fill_in "item[max_upload_file_size]", with: 0
+        fill_in "item[transfers][][keyword]", with: "sample"
+        fill_in "item[transfers][][email]", with: "sample@example.jp"
         click_button "保存"
       end
       expect(status_code).to eq 200
@@ -33,6 +45,7 @@ describe "inquiry_columns" do
       visit show_path
       expect(status_code).to eq 200
       expect(current_path).not_to eq sns_login_path
+      expect(page).to have_css('td', text: 'sample@example.jp')
     end
 
     it "#edit" do

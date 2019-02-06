@@ -35,6 +35,16 @@ class Gws::Memo::FoldersController < ApplicationController
     @items = @model.user(@cur_user).
       site(@cur_site).
       search(params[:s]).
-      page(params[:page]).per(50)
+      page(params[:page]).per(50).tree_sort
+  end
+
+  def create
+    @item = @model.new get_params
+    @item.attributes["action"] = params["action"]
+    if @item.in_parent.present?
+      parent_folder = @model.where(site_id: @cur_site.id, id: @item.in_parent).first
+    end
+    raise "403" unless @item.allowed?(:edit, @cur_user, site: @cur_site)
+    render_create @item.save
   end
 end

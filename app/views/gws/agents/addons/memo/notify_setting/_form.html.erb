@@ -1,4 +1,6 @@
-<dl class="see addon-gws-memo-notify-setting">
-  <dt><%= @model.t :notify_state %><%= @model.tt :notify_state %></dt>
-  <dd><%= f.select :notify_state, @item.notify_state_options %></dd>
-</dl>
+<% if @cur_site.notify_model?(@model) %>
+  <dl class="see addon-gws-memo-notify-setting">
+    <dt><%= @model.t :notify_state %><%= @model.tt :notify_state %></dt>
+    <dd><%= f.select :notify_state, @item.notify_state_options %></dd>
+  </dl>
+<% end %>

@@ -33,6 +33,6 @@ class Sns::Login::EnvironmentController < ApplicationController
       return
     end
 
-    render_login user, nil, session: true
+    render_login user, nil, session: true, login_path: sns_login_path
   end
 end

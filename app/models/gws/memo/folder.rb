@@ -4,6 +4,9 @@ class Gws::Memo::Folder
   include Gws::Reference::Site
   include Gws::SitePermission
   include SS::Fields::DependantNaming
+  include Gws::Model::Memo::Folder
+
+  STATIC_FOLDER_NAMES = %w(INBOX INBOX.Trash INBOX.Draft INBOX.Sent).freeze
 
   set_permission_name 'private_gws_memo_messages', :edit
 
@@ -14,12 +17,13 @@ class Gws::Memo::Folder
 
   has_many :filters, class_name: 'Gws::Memo::Filter'
 
-  permit_params :name, :order, :path
+  permit_params :name, :order, :path, :in_parent, :in_basename
 
   validates :name, presence: true, uniqueness: { scope: [:site_id, :user_id] }, length: {maximum: 80}
   validates :order, numericality: { greater_than_or_equal_to: 0, less_than_or_equal_to: 999_999, allow_blank: true }
   validate :validate_parent_name
 
+  before_validation :set_name_and_depth, if: ->{ in_basename.present? }
   default_scope ->{ order_by order: 1 }
 
   scope :children, ->(name) do
@@ -32,6 +36,7 @@ class Gws::Memo::Folder
 
   scope :descendent, ->(name) { where( name: /^#{::Regexp.escape(name)}\// ) }
 
+  before_destroy :destroy_folders
   before_destroy :validate_destroy
 
   private
@@ -49,6 +54,24 @@ class Gws::Memo::Folder
     errors.add :base, :used_folder if filters.count > 0
     errors.add :base, :found_children if children.exists?
     errors.empty?
+  end
+
+  def destroy_children
+    dependant_scope.ne(_id: _id).where(name: /^#{::Regexp.escape(name)}\//).find_each(&:destroy)
+  end
+
+  def verify_folders
+    folders = dependant_scope.where(name: /^#{name}.*/)
+    folders.each do |folder|
+      next if folder.messages.blank?
+      errors.add :base, I18n.t("mongoid.errors.models.gws/memo/folder.found_messages", name: folder.name)
+    end
+  end
+
+  def destroy_folders
+    verify_folders
+    return throw :abort if errors.present?
+    destroy_children
   end
 
   public
@@ -86,7 +109,7 @@ class Gws::Memo::Folder
   end
 
   def ancestor_or_self
-    dependant_scope.where(:name.in => ancestor_or_self_names)
+    dependant_scope.reorder(:name.asc).where(:name.in => ancestor_or_self_names)
   end
 
   def ancestor_or_self_names

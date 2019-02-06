@@ -22,14 +22,9 @@ class Gws::Notice::Folder
 
         folder = self.site(site).where(name: full_name, depth: depth).first_or_create! do |folder|
           if last_folder
-            folder.notice_individual_body_size_limit = last_folder.notice_individual_body_size_limit
-            folder.notice_total_body_size_limit = last_folder.notice_total_body_size_limit
-            folder.notice_individual_file_size_limit = last_folder.notice_individual_file_size_limit
-            folder.notice_total_file_size_limit = last_folder.notice_total_file_size_limit
+            copy_limits(last_folder, folder)
           else
-            folder.notice_total_body_size_limit = SS.config.gws.notice['default_notice_total_body_size_limit']
-            folder.notice_individual_file_size_limit = SS.config.gws.notice['default_notice_individual_file_size_limit']
-            folder.notice_total_file_size_limit = SS.config.gws.notice['default_notice_total_file_size_limit']
+            set_default_limits(folder)
           end
 
           group_ids = Gws::Group.all.active.where(name: full_name).pluck(:id)
@@ -64,6 +59,28 @@ class Gws::Notice::Folder
     def for_post_reader(site, user)
       or_conds = self.readable_conditions(user, site: site)
       self.site(site).where('$and' => [{ '$or' => or_conds }])
+    end
+
+    private
+
+    def copy_limits(source, dest)
+      dest.notice_individual_body_size_limit = source.notice_individual_body_size_limit
+      dest.notice_total_body_size_limit = source.notice_total_body_size_limit
+      dest.notice_individual_file_size_limit = source.notice_individual_file_size_limit
+      dest.notice_total_file_size_limit = source.notice_total_file_size_limit
+    end
+
+    def set_default_limits(folder)
+      %i[
+        notice_individual_body_size_limit notice_total_body_size_limit
+        notice_individual_file_size_limit notice_total_file_size_limit
+      ].each do |attr|
+        SS.config.gws.notice["default_#{attr}"].tap do |limit|
+          if limit.present?
+            folder.send("#{attr}=", limit)
+          end
+        end
+      end
     end
   end
 

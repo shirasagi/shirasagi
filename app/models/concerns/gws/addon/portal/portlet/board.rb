@@ -7,7 +7,7 @@ module Gws::Addon::Portal::Portlet
 
     included do
       field :board_severity, type: String
-      field :board_browsed_state, type: String
+      field :board_browsed_state, type: String, default: "unread"
       embeds_ids :board_categories, class_name: "Gws::Board::Category"
       permit_params :board_severity, :board_browsed_state, board_category_ids: []
     end

@@ -1,0 +1,50 @@
+<% default = t('webmail.default_settings') %>
+
+<dl class="see">
+  <dt><%= @model.t :imap_setting_name %></dt>
+  <dd><%= @item.name %></dd>
+
+  <dt><%= @model.t :from %></dt>
+  <dd><%= @item.from.presence || @group.section_name %></dd>
+
+  <dt><%= @model.t :address %></dt>
+  <dd><%= @item.address.presence || @group.contact_email %></dd>
+
+  <dt><%= @model.t :imap_host %></dt>
+  <dd><%= @item.imap_host.presence || default %></dd>
+
+  <dt><%= @model.t :imap_port %></dt>
+  <dd><%= @item.imap_port.presence || default %></dd>
+
+  <dt><%= @model.t :imap_ssl_use %></dt>
+  <dd>
+    <% if @item.imap_ssl_use.present? %>
+      <%= t("webmail.options.imap_ssl_use.#{@item.imap_ssl_use}") %>
+    <% else %>
+      <%= default %>
+    <% end %>
+  </dd>
+
+  <dt><%= @model.t :imap_auth_type %></dt>
+  <dd><%= @item.imap_auth_type.presence || default %></dd>
+
+  <dt><%= @model.t :imap_account %></dt>
+  <dd><%= @item.imap_account.presence || default %></dd>
+
+  <dt><%= @model.t :imap_password %></dt>
+  <dd><%= ('*' * 8).presence || default %></dd>
+
+  <dt><%= @model.t :imap_sent_box %></dt>
+  <dd><%= @item.imap_sent_box %></dd>
+
+  <dt><%= @model.t :imap_draft_box %></dt>
+  <dd><%= @item.imap_draft_box %></dd>
+
+  <dt><%= @model.t :imap_trash_box %></dt>
+  <dd><%= @item.imap_trash_box %></dd>
+
+  <% if @item.threshold_mb %>
+  <dt><%= @model.t :threshold_mb %></dt>
+  <dd><%= @item.threshold_mb %><%= t "ss.units.mega_byte" %></dd>
+  <% end %>
+</dl>

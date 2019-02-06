@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 describe "cms_apis_files", dbscope: :example, tmpdir: true do
-  let(:site) { cms_site }
+  let(:site) { cms_site.set(multibyte_filename_state: 'disabled') }
   let(:item) { tmp_ss_file(contents: "#{Rails.root}/spec/fixtures/ss/logo.png", site: site, user: cms_user, model: 'cms/file') }
   let(:index_path) { cms_apis_files_path site.id }
   let(:new_path) { new_cms_apis_file_path site.id }
@@ -28,6 +28,7 @@ describe "cms_apis_files", dbscope: :example, tmpdir: true do
       expect(status_code).to eq 200
       expect(current_path).not_to eq new_path
       expect(page).to have_no_css("form#item-form")
+      expect(page).to have_no_css('#errorExplanation')
     end
 
     it "#show" do
@@ -57,6 +58,18 @@ describe "cms_apis_files", dbscope: :example, tmpdir: true do
         click_button "削除"
       end
       expect(current_path).to eq index_path
+    end
+  end
+
+  context "when filename is use multibyte character" do
+    before { login_cms_user }
+    it "#new" do
+      visit new_path
+      within "#ajax-form" do
+        attach_file "item[in_files][]", "#{Rails.root}/spec/fixtures/ss/ロゴ.png"
+        click_button "保存"
+      end
+      expect(page).to have_css('#errorExplanation')
     end
   end
 end

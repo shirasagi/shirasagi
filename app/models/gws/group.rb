@@ -18,6 +18,7 @@ class Gws::Group
   include Gws::Addon::Elasticsearch::GroupSetting
   include Gws::Addon::System::FileSetting
   include Gws::Addon::System::MenuSetting
+  include Gws::Addon::System::NoticeSetting
   include Gws::Addon::System::LogSetting
   include Gws::Addon::System::GroupSetting
   include Gws::Addon::History

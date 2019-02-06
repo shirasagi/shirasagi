@@ -40,6 +40,12 @@ module Cms::Model::Node
     template_variable_handler('pages.count', :template_variable_handler_pages_count)
   end
 
+  module ClassMethods
+    def tree_sort(options = {})
+      Cms::NodeTreeList.build self, options
+    end
+  end
+
   def becomes_with_route(name = nil)
     super (name || route).sub("/", "/node/")
   end

@@ -66,7 +66,7 @@ class Voice::OpenJtalk
     # execute command
     status = Voice::Command.run_with_logging(cmd, "openjtalk")
 
-    raise Voice::VoiceSynthesisError, I18n.t("voice.synthesis_fail.open_jtalk") unless status.exitstatus == 0
+    raise Voice::VoiceSynthesisError, I18n.t("voice.synthesis_fail.open_jtalk") unless status.exitstatus.to_i == 0
     raise Voice::VoiceSynthesisError, I18n.t("voice.synthesis_fail.open_jtalk") unless ::File.exists?(output)
     raise Voice::VoiceSynthesisError, I18n.t("voice.synthesis_fail.open_jtalk") if ::File.size(output) == 0
   end

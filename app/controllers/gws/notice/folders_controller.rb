@@ -14,11 +14,28 @@ class Gws::Notice::FoldersController < ApplicationController
   end
 
   def pre_params
-    {
-      notice_total_body_size_limit: SS.config.gws.notice['default_notice_total_body_size_limit'],
-      notice_individual_file_size_limit: SS.config.gws.notice['default_notice_individual_file_size_limit'],
-      notice_total_file_size_limit: SS.config.gws.notice['default_notice_total_file_size_limit'],
-    }
+    ret = {}
+    SS.config.gws.notice['default_notice_individual_body_size_limit'].tap do |limit|
+      if limit.present?
+        ret[:notice_individual_body_size_limit] = limit
+      end
+    end
+    SS.config.gws.notice['default_notice_total_body_size_limit'].tap do |limit|
+      if limit.present?
+        ret[:notice_total_body_size_limit] = limit
+      end
+    end
+    SS.config.gws.notice['default_notice_individual_file_size_limit'].tap do |limit|
+      if limit.present?
+        ret[:notice_individual_file_size_limit] = limit
+      end
+    end
+    SS.config.gws.notice['default_notice_total_file_size_limit'].tap do |limit|
+      if limit.present?
+        ret[:notice_total_file_size_limit] = limit
+      end
+    end
+    ret
   end
 
   def fix_params

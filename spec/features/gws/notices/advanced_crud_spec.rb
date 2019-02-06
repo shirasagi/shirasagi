@@ -49,10 +49,12 @@ describe "gws_notices", type: :feature, dbscope: :example, js: true do
         end
       end
       within '#cboxLoadedContent' do
+        expect(page).to have_content(site.name)
         find('button.dropdown.btn').click
         within '.dropdown-container' do
           click_on site.name
         end
+        expect(page).to have_content(editor.name)
         click_on editor.name
       end
       within 'form#item-form' do
@@ -62,10 +64,12 @@ describe "gws_notices", type: :feature, dbscope: :example, js: true do
         end
       end
       within '#cboxLoadedContent' do
+        expect(page).to have_content(site.name)
         find('button.dropdown.btn').click
         within '.dropdown-container' do
           click_on site.name
         end
+        expect(page).to have_content(reader.name)
         click_on reader.name
       end
       within 'form#item-form' do

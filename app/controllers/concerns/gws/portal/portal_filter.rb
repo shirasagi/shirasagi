@@ -38,7 +38,9 @@ module Gws::Portal::PortalFilter
 
   def show_portal
     @items = @portal.portlets.presence || @portal.default_portlets
-    @items.select! { |item| @cur_site.menu_visible?(item.portlet_model) }
+    @items.select! do |item|
+      @cur_site.menu_visible?(item.portlet_model) && Gws.module_usable?(item.portlet_model, @cur_site, @cur_user)
+    end
     render file: "gws/portal/common/portal/show"
   end
 

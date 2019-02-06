@@ -116,7 +116,7 @@ class Gws::Share::Management::FilesController < ApplicationController
     if params[:history_id].present?
       history_item = Gws::Share::History.where(item_id: @item.id, _id: params[:history_id]).first
       server_dir = File.dirname(@item.path)
-      uploadfile_path = server_dir + "/#{@item.id}_#{history_item.uploadfile_srcname}"
+      uploadfile_path = File.join(server_dir, "#{@item.id}_#{history_item.uploadfile_srcname}")
     end
 
     if Fs.mode == :file && Fs.file?(uploadfile_path)

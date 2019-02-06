@@ -37,7 +37,7 @@ gem 'diffy'
 gem 'dynamic_form'
 gem 'fast_blank'
 gem 'fullcalendar.io-rails', '~> 2.6.0'
-gem 'holiday_japan', '~> 1.2.5'
+gem 'holiday_japan'
 gem 'icalendar'
 gem 'kaminari'
 gem 'kaminari-mongoid'
@@ -55,6 +55,9 @@ gem 'ungarbled'
 gem 'rubyzip'
 gem 'thinreports'
 gem 'bootsnap', require: false
+gem 'addressable', require: 'addressable/uri'
+gem 'roo', git: 'https://github.com/roo-rb/roo.git' #'~> 2.7.0'
+#gem 'roo-xls', git: "https://github.com/roo-rb/roo-xls.git"
 
 # OAuth
 gem 'oauth2', git: 'https://github.com/oauth-xx/oauth2.git' #'~> 1.5.0'

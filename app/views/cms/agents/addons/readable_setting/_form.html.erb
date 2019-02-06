@@ -1,0 +1,74 @@
+<%
+
+  if params[:action] =~ /new/
+    if @default_readable_setting
+      @default_readable_setting.call
+    else
+      @item.readable_setting_range = 'public'
+      @item.readable_group_ids = [@cur_group.id]
+    end
+  end
+
+%>
+<%= jquery do %>
+  (new Cms_ReadableSetting('.cms-addon-readable-setting')).render();
+<% end %>
+
+<div class="cms-addon-readable-setting">
+  <dl class="see buttons">
+    <dt><%= @model.t :readable_setting_range %><%= @model.tt :readable_setting_range %></dt>
+    <dd>
+      <% @item.readable_setting_range_options.each do |label, value| %>
+      <label class="mr-2">
+        <%= f.radio_button :readable_setting_range, value, class: "btn-#{value}" %>
+        <%= label %>
+      </label>
+      <% end %>
+    </dd>
+  </dl>
+
+  <div class="cms-addon-readable-setting-select">
+
+    <dl class="see cms-addon-readable-setting-group">
+      <dt><%= @model.t :readable_group_ids %><%= @model.tt :readable_group_ids %></dt>
+      <dd>
+        <%= f.hidden_field "readable_group_ids[]", value: "", class: "hidden-ids" %>
+        <%= link_to t("ss.apis.groups.index"), cms_apis_groups_path, class: "btn ajax-box" %>
+      </dd>
+      <dd>
+        <table class="index ajax-selected">
+          <thead><tr><th class="name"><%= Cms::Group.t :name %></th><th class="deselect"></th></tr></thead>
+          <tbody>
+            <% @item.readable_groups.each do |group| %>
+            <tr data-id="<%= group.id %>">
+              <td><%= f.hidden_field "readable_group_ids[]", value: group.id, id: nil %> <%= group.name %></td>
+              <td><%= link_to t("ss.buttons.delete"), "#", class: "deselect btn" %></td>
+            </tr>
+            <% end %>
+          </tbody>
+        </table>
+      </dd>
+    </dl>
+
+    <dl class="see cms-addon-readable-setting-member">
+      <dt><%= @model.t :readable_member_ids %><%= @model.tt :readable_member_ids %></dt>
+      <dd>
+        <%= f.hidden_field "readable_member_ids[]", value: "", class: "hidden-ids" %>
+        <%= link_to t("ss.apis.users.index"), cms_apis_users_path, class: "btn ajax-box" %>
+      </dd>
+      <dd>
+        <table class="index ajax-selected">
+          <thead><tr><th class="name"><%= Cms::User.t :name %></th><th class="deselect"></th></tr></thead>
+          <tbody>
+            <% @item.readable_members.each do |user| %>
+            <tr data-id="<%= user.id %>">
+              <td><%= f.hidden_field "readable_member_ids[]", value: user.id, id: nil %> <%= user.long_name %></td>
+              <td><%= link_to t("ss.buttons.delete"), "#", class: "deselect btn" %></td>
+            </tr>
+            <% end %>
+          </tbody>
+        </table>
+      </dd>
+    </dl>
+  </div>
+</div>

@@ -1,0 +1,6 @@
+<%= code_editor ".mod-counter_html .html", mode: :html, readonly: true %>
+
+<dl class="see mod-counter_html">
+  <dt><%= @model.t :html %></dt>
+  <dd><%= text_area_tag "html", @item.html, style: "height: 400px", class: "html" %></dd>
+</dl>
