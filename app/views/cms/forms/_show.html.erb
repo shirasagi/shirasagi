@@ -40,6 +40,7 @@
     <% end %>
   </dd>
 
+  <% if @item.sub_type_entry? %>
   <dt><%= @model.t :init_column_ids %></dt>
   <dd><%= link_to(t('cms.buttons.manage_init_columns'), cms_form_init_columns_path(form_id: @item), class: :btn) %></dd>
   <dd>
@@ -69,4 +70,5 @@
     </table>
     <% end %>
   </dd>
+  <% end %>
 </dl>

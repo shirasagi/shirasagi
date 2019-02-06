@@ -6,14 +6,22 @@ class Cms::InitColumnsController < ApplicationController
 
   navi_view 'cms/main/conf_navi'
 
+  before_action :set_form
+  before_action :check_form_type
+  before_action :set_items, only: %i[index]
+  before_action :set_item, only: %i[show edit update delete destroy]
+
   private
 
   def set_form
     @cur_form ||= Cms::Form.site(@cur_site).find(params[:form_id])
   end
 
+  def check_form_type
+    raise "404" if @cur_form.blank? || !@cur_form.sub_type_entry?
+  end
+
   def set_items
-    set_form
     @items = @cur_form.init_columns
   end
 
@@ -56,7 +64,6 @@ class Cms::InitColumnsController < ApplicationController
   public
 
   def index
-    set_items
     raise '403' unless @cur_form.allowed?(:read, @cur_user, site: @cur_site)
 
     @items = @items.order_by(order: 1).
