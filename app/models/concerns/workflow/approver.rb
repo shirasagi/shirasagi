@@ -277,8 +277,21 @@ module Workflow::Approver
     true
   end
 
+  def approve_enabled?(state)
+    !approve_disabled?(state)
+  end
+
   def workflow_requested?
     workflow_state == WORKFLOW_STATE_REQUEST
+  end
+
+  def find_workflow_request_to(user)
+    return if self.workflow_state != "request"
+
+    approvers = self.workflow_pull_up_approvers_at(self.workflow_current_level)
+    approvers.find do |approver|
+      user.id == approver[:user_id] && self.approve_enabled?(approver[:state])
+    end
   end
 
   def workflow_approver_editable?(user)

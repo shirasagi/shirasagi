@@ -58,6 +58,10 @@ module SS::Model::Column
         column.serialize_value(value)
       end
     end
+
+    def value_type
+      @value_type ||= name.insert(name.rindex("::"), "::Value").constantize
+    end
   end
 
   def required_options
@@ -98,8 +102,22 @@ module SS::Model::Column
     File.exists?(file) ? file : nil
   end
 
+  delegate :value_type, to: :class
+
   def serialize_value(*args)
     raise NotImplementedError
+  end
+
+  def syntax_check_enabled?
+    false
+  end
+
+  def link_check_enabled?
+    false
+  end
+
+  def form_check_enabled?
+    required?
   end
 
   private

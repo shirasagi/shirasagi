@@ -1,0 +1,100 @@
+this.Cms_Inplace_Form = (function () {
+  function Cms_Inplace_Form() {
+  }
+
+  Cms_Inplace_Form.addonSelector = ".inplace-checkers";
+  Cms_Inplace_Form.resolveType = "text";
+
+  Cms_Inplace_Form.getFormData = Cms_Form.getFormData;
+
+  Cms_Inplace_Form.options = { check: { form: true, syntax: true, link: true } };
+  Cms_Inplace_Form.linkChecker = null;
+  Cms_Inplace_Form.formChecker = null;
+
+  Cms_Inplace_Form.render = function () {
+    if (Cms_Inplace_Form.options.check.syntax) {
+      Syntax_Checker.render(Cms_Inplace_Form);
+    }
+    if (Cms_Inplace_Form.options.check.link) {
+      Cms_Inplace_Form.linkChecker = Link_Checker.render(Cms_Inplace_Form);
+    }
+    if (Cms_Inplace_Form.options.check.form) {
+      Cms_Inplace_Form.formChecker = Form_Checker.render(Cms_Inplace_Form);
+    }
+    Cms_Inplace_Form.renderSaveIfNoAlerts();
+  };
+
+  Cms_Inplace_Form.getContent = function () {
+    return null;
+  };
+
+  Cms_Inplace_Form.setContent = function () {
+    return null;
+  };
+
+  Cms_Inplace_Form.getHtml = function (resolved, reject) {
+    resolved(
+      Cms_Inplace_Form.getContent(),
+      { type: Cms_Inplace_Form.resolveType, afterCheck: Cms_Inplace_Form.afterSyntaxCheck }
+    );
+  };
+
+  Cms_Inplace_Form.setEditorHtml = function (content, opts) {
+    opts = opts || {}
+    Cms_Inplace_Form.setContent(content, opts);
+  };
+
+  Cms_Inplace_Form.afterSyntaxCheck = function () {
+
+    // emptyAttributesCheck
+    $("[data-check-presence]").each(function () {
+      var attr = $(this).attr("data-check-presence");
+      if(attr && !$(this).val()) {
+        Syntax_Checker.pushError([{ code: attr, msg: (attr + '<%= I18n.t("errors.messages.blank") %>'), ele: this } ]);
+      }
+    });
+
+  };
+
+  Cms_Inplace_Form.renderSaveIfNoAlerts = function () {
+    $('input:submit[name="save_if_no_alerts"]').on("click.form_alert", function (ev) {
+      var $this = $(this);
+
+      var promises = [];
+      if (Cms_Inplace_Form.options.check.syntax) {
+        promises.push(Syntax_Checker.asyncCheck());
+      }
+      if (Cms_Inplace_Form.options.check.link) {
+        promises.push(Cms_Inplace_Form.linkChecker.asyncCheck());
+      }
+      if (Cms_Inplace_Form.options.check.form) {
+        promises.push(Cms_Inplace_Form.formChecker.asyncCheck());
+      }
+
+      if (promises.length === 0) {
+        return true;
+      }
+
+      $.when.apply($, promises).then(function() {
+        var result = true;
+        for (var i = 0; i < arguments.length; i++) {
+          if (arguments[i].status !== "ok") {
+            result = false;
+            break;
+          }
+        }
+
+        if (result) {
+          $this.off(".form_alert");
+          $this.trigger("click");
+        }
+      });
+
+      ev.preventDefault();
+      return false;
+    });
+  };
+
+  return Cms_Inplace_Form;
+
+})();

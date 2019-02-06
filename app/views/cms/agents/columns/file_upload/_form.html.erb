@@ -1,7 +1,4 @@
 <dl class="see mod-cms-column-file-upload">
-  <dt><%= @model.t :html_tag %><%= @model.tt :html_tag %></dt>
-  <dd><%= f.select :html_tag, @item.html_tag_options %></dd>
-
-  <dt><%= @model.t :html_additional_attr %><%= @model.tt :html_additional_attr %></dt>
-  <dd><%= f.text_field :html_additional_attr %></dd>
+  <dt><%= @model.t :file_type %><%= @model.tt :file_type %></dt>
+  <dd><%= f.select :file_type, @item.file_type_options %></dd>
 </dl>

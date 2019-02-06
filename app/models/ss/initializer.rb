@@ -6,5 +6,7 @@ module SS
     SS::File.model "ss/temp_file", SS::TempFile
     SS::File.model "ss/thumb_file", SS::ThumbFile
     SS::File.model "ss/user_file", SS::UserFile
+
+    Liquid::Template.register_filter(SS::LiquidFilters)
   end
 end

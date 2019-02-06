@@ -20,10 +20,14 @@ this.Cms_Editor_Module = (function () {
     return html;
   };
 
-  Cms_Editor_Module.setEditorHtml = function (html, id) {
-    if (id == null) {
-      id = null;
+  Cms_Editor_Module.setEditorHtml = function (html, opts) {
+    var id = null;
+
+    opts = opts || {};
+    if (opts["id"]) {
+      id = opts["id"];
     }
+
     id || (id = Cms_Form.editorId);
     if (typeof tinymce !== 'undefined') {
       return tinymce.get(id).setContent(html);

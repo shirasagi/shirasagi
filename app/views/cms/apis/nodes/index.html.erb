@@ -1,10 +1,17 @@
-<%= jquery do %> SS_SearchUI.modal(); <% end %>
+<%= jquery do %>
+  <% if params[:layout] == "iframe" %>
+    window.top.SS_SearchUI.modal({ $el: $("#ajax-box") });
+  <% else %>
+    SS_SearchUI.modal();
+  <% end %>
+<% end %>
 
 <div class="search-ui-form">
 <%= form_tag({ action: :index }, { method: "GET", class: :search }) do %>
   <%= text_field_tag 's[name]', params[:s].try(:[], :name) %>
   <%= hidden_field_tag :single, params[:single] if params[:single].present? %>
   <%= hidden_field_tag :model, params[:model] if params[:model].present? %>
+  <%= hidden_field_tag :layout, params[:layout] if params[:layout].present? %>
   <%= submit_tag t("cms.apis.nodes.search"), class: :btn %>
 <% end %>
 </div>

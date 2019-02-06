@@ -1237,10 +1237,10 @@ _::-webkit-full-page-media, _:future, :root .gws-memo-message .popup-notice:befo
     background-position: -32px -864px !important;
   }
   .icon-presence:before {
-    background-position: left -896px !important;    
+    background-position: left -896px !important;
   }
   .icon-presence:hover:before {
-    background-position: -32px -896px !important;    
+    background-position: -32px -896px !important;
   }
   .icon-survey:before {
     background-position: left -928px !important;
@@ -1805,7 +1805,7 @@ footer.send {
 
 // -------------------------------------------------------------------------------------------------
 // addon
-#addon-cms-agents-addons-file .see, .addon-view .see, .mod-workflow-approve .upload {
+#addon-cms-agents-addons-file .see, .addon-view .see, .mod-workflow-approve .upload, .column-value {
   .upload-menu-select {
     float: right;
     @include mb {
@@ -1818,14 +1818,14 @@ footer.send {
       margin-bottom: 10px;
     }
   }
-  .upload-drop-area {
+  .upload-drop-area, .column-value-upload-drop-area {
     margin-top: 10px;
     padding-top: 15px;
     padding-bottom: 15px;
     @include border-radius(3px);
     background: #f2f2f2;
   }
-  .upload-drop-notice {
+  .upload-drop-notice, .column-value-upload-drop-notice {
     margin-left: 20px;
     color: #b30;
   }
@@ -1847,7 +1847,6 @@ footer.send {
   clear: both;
 }
 .file-view {
-  float: left;
   width: 164px;
   margin: 0px 28px 20px 0px;
   @include mb {
@@ -2907,5 +2906,173 @@ form .CodeMirror {
   .usage.over-threshold {
     background-color: #ff0f0f;
     @include background(linear-gradient(top, #ffcccc, #ff0f0f));
+  }
+}
+// -------------------------------------------------------------------------------------------------
+// public preview
+body.ss-ajax-in-iframe {
+  .upload-menu-select {
+    float: right;
+  }
+  .column-value-upload-drop-area {
+    text-align: center;
+    color: #ba1f24;
+    padding: 20px 0;
+  }
+  #ajax-box.ss-ajax-in-iframe-content .column-value-body textarea {
+    height: 64vh;
+  }
+  .list {
+    padding-left: 18px;
+    li {
+      margin-bottom: 15px;
+    }
+  }
+  .inplace-checkers {
+    padding-left: 18px;
+  }
+  footer.send {
+    margin-bottom: 28px;
+  }
+  fieldset {
+    border: none;
+  }
+  .btn-outline-primary {
+    margin-bottom: 5px;
+  }
+  .column-value-body {
+    button {
+      height: 33px;
+      box-sizing: border-box;
+      padding: 5px 10px;
+      border-radius: 3px;
+      @include background(linear-gradient(top, #ffffff, #ebecec));
+      *zoom: 1;
+      filter: progid:DXImageTransform.Microsoft.gradient(gradientType=0, startColorstr='#FFFFFFFF', endColorstr='#FFEBECEC');
+      filter: none \9;
+    }
+  }
+  .column-youtube-left {
+    margin-top: 10px;
+    @include mb {
+      float: none;
+    }
+  }
+}
+.column-value-cms-column-table {
+  input, select {
+    margin-left: 5px;
+    @include mb {
+      margin: 10px 0;
+    }
+  }
+  #create-table {
+    @include btn;
+  }
+  #table-editor {
+    margin-top: 30px;
+    table {
+      width: 100%;
+    }
+    th {
+      background: #bbb;
+    }
+    th ,td {
+      padding: 20px 10px;
+      font-size: $px16;
+      border-collapse: collapse;
+    }
+  }
+}
+
+.column-value-controller-move-up,
+.column-value-controller-move-down,
+.column-value-controller-delete {
+  min-height: 2.8em;
+  @include btn;
+}
+.column-value-palette {
+  fieldset {
+    margin: 0;
+    padding: 0;
+    border: none;
+    button {
+      margin-bottom: 5px;
+    }
+  }
+  h3 {
+    zoom: 1;
+    min-width: 180px;
+    padding: 20px 0;
+    color: #a0522d;
+    font-weight: bold;
+  }
+}
+.column-value-body {
+  .list {
+    padding-left: 18px;
+    li {
+      margin-bottom: 15px;
+    }
+  }
+  .inplace-checkers {
+    padding-left: 18px;
+  }
+}
+.column-value-cms-column-youtube {
+  .column-youtube-left {
+    margin-top: 8px;
+    @include mb {
+      float: none;
+      margin: 10px 0;
+    }
+  }
+  .column-youtube-right {
+    @include display-flex;
+    @include justify-content(flex-end);
+    @include align-items(center);
+    @include mb {
+      display: block;
+      text-align: left;
+    }
+    input:first-child {
+      margin-right: 5px;
+      @include mb {
+        margin-right: 0;
+      }
+    }
+  }
+  input {
+    margin-left: 5px;
+    @include mb {
+      margin: 10px 0;
+    }
+  }
+}
+button {
+  &.syntax-check, &.mobile-size-check, &.link-check, &.preview {
+    margin-bottom: 5px;
+  }
+}
+.column-value-body select,
+.column-value-cms-column-urlfield2 .column-value-body input[type=text],
+.list input {
+  @include mb {
+    margin-bottom: 10px;
+  }
+}
+.column-value .column-value-header .column-value-header-group:first-child {
+  @include display-flex;
+  @include align-items(center);
+}
+.addon-view .column-value {
+  padding: 15px;
+  background: #f2f2f2;
+}
+
+.column-value .column-value-header {
+  @include flex-wrap(wrap);
+  .column-value-header-group {
+    margin-bottom: 10px;
   }
 }

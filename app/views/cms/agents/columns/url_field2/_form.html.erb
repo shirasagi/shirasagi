@@ -1,0 +1,25 @@
+<dl class="see mod-cms-column-file-upload">
+  <dt><%= @model.t :html_tag %><%= @model.tt :html_tag %></dt>
+  <dd><%= f.select :html_tag, @item.html_tag_options, include_blank: true %></dd>
+
+  <dt><%= @model.t :html_additional_attr %><%= @model.tt :html_additional_attr %></dt>
+  <dd><%= f.text_field :html_additional_attr %></dd>
+
+  <dt><%= @model.t :label %><%= @model.tt :label %></dt>
+  <dd></dd>
+
+  <dt class="depth-2"><%= @model.t :max_length %><%= @model.tt :label_max_length %></dt>
+  <dd class="depth-2"><%= f.number_field :label_max_length %></dd>
+
+  <dt class="depth-2"><%= @model.t :place_holder %><%= @model.tt :label_place_holder %></dt>
+  <dd class="depth-2"><%= f.text_field :label_place_holder %></dd>
+
+  <dt><%= @model.t :link %><%= @model.tt :link %></dt>
+  <dd></dd>
+
+  <dt class="depth-2"><%= @model.t :max_length %><%= @model.tt :link_max_length %></dt>
+  <dd class="depth-2"><%= f.number_field :link_max_length %></dd>
+
+  <dt class="depth-2"><%= @model.t :place_holder %><%= @model.tt :link_place_holder %></dt>
+  <dd class="depth-2"><%= f.text_field :link_place_holder %></dd>
+</dl>

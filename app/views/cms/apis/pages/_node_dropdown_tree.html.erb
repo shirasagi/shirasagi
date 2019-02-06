@@ -1,0 +1,26 @@
+<%= jquery do %>
+  SS_Dropdown.render();
+  (new SS_TreeNavi("form.search .tree-navi")).render(<%== cms_apis_node_tree_path(id: @selected_node.try(:id).to_i).to_json %>);
+
+  var $form = $("form.search");
+  $form.on("click", ".item-name", function() {
+    var $treeItem = $(this).closest(".tree-item");
+    var nodeId = $treeItem.data("id");
+
+    $form.find("[name='s[node]']").val(nodeId);
+    $form.submit();
+
+    return false;
+  });
+<% end %>
+
+<dt><%= t("cms.node") %></dt>
+<dd>
+  <button class="dropdown btn" type="button"><%= @selected_node ? @selected_node.name : @cur_site.name %> <span class="caret">&#x25BC;</span></button>
+  <%= f.hidden_field("node", value: @selected_node.try(:id)) %>
+  <div class="dropdown-container" style="background: white; padding: 5px;">
+    <div><%= link_to @cur_site.name, "#", class: "item-name" %></div>
+    <div class="tree-navi">
+    </div>
+  </div>
+</dd>

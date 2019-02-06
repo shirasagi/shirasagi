@@ -102,6 +102,7 @@ SS::Application.routes.draw do
     resources :source_cleaner_templates, concerns: [:deletion, :template]
     resources :word_dictionaries, concerns: [:deletion, :template]
     resources :forms, concerns: [:deletion] do
+      resources :init_columns, concerns: [:deletion]
       resources :columns, concerns: [:deletion], except: [:new, :create]
       resources :columns, path: 'columns/:type', only: [:new, :create], as: 'columns_type'
     end
@@ -156,10 +157,13 @@ SS::Application.routes.draw do
       get "members" => "members#index"
       get "sites" => "sites#index"
       get "users" => "users#index"
-      get "related_page" => "related_page#index"
       get "node_tree/:id" => "node_tree#index", as: :node_tree
       get "forms" => "forms#index"
-      get "forms/:id/:item_type/form" => "forms#form", as: :form
+      get "forms/temp_file/:id/select" => "forms#select_temp_file", as: :form_temp_file_select
+      get "forms/:id/form" => "forms#form", as: :form
+      get "forms/:id/columns/:column_id/new" => "forms#new_column", as: :form_column_new
+      match "forms/:id/html" => "forms#html", as: :form_html, via: %i[post put]
+      match "forms/:id/link_check" => "forms#link_check", as: :form_link_check, via: %i[post put]
 
       resources :files, concerns: :deletion do
         get :select, on: :member
@@ -183,6 +187,35 @@ SS::Application.routes.draw do
       end
       namespace "opendata_ref" do
         get "datasets:cid" => "datasets#index", as: 'datasets'
+      end
+      scope "preview(:preview_date)", module: "preview", as: "preview" do
+        namespace "inplace_edit" do
+          resources :pages, only: %i[edit update] do
+            resources :column_values, only: %i[new create edit update destroy] do
+              post :move_up, on: :member
+              post :move_down, on: :member
+              post :move_at, on: :member
+              post :link_check, on: :collection
+              post :form_check, on: :collection
+              post :link_check, on: :member
+              post :form_check, on: :member
+            end
+          end
+          resources :forms, only: %i[] do
+            get :palette, on: :member
+          end
+        end
+
+        namespace "workflow" do
+          match "/wizard/:id/approver_setting" => "wizard#approver_setting", via: [:get, :post], as: "wizard_approver_setting"
+          get "/wizard/:id/reroute" => "wizard#reroute", as: "wizard_reroute"
+          post "/wizard/:id/reroute" => "wizard#do_reroute"
+          get "/wizard/:id/frame" => "wizard#frame", as: "wizard_frame"
+          get "/wizard/:id/comment" => "wizard#comment", as: "wizard_comment"
+          match "/wizard/:id" => "wizard#index", via: [:get, :post], as: "wizard"
+        end
+
+        get "/redirector/new-page/(:cid)" => "redirector#new_page", as: "redirector_new_page"
       end
     end
   end

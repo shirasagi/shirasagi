@@ -41,6 +41,7 @@ class Cms::Apis::NodeTreeController < ApplicationController
   def items_hash(items)
     items = items.map do |item|
       {
+        id: item.id,
         name: item.name,
         filename: item.filename,
         depth: item.depth,
