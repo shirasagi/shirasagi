@@ -704,6 +704,21 @@ SS_Preview = (function () {
     });
   };
 
+  SS_Preview.camelize = function(str) {
+    return str.replace(/(?:^\w|[A-Z]|\b\w)/g, function(letter, index) {
+      return index == 0 ? letter.toLowerCase() : letter.toUpperCase();
+    }).replace(/[\s-]+/g, '');
+  };
+
+  SS_Preview.setData = function($el, name, value) {
+    $el.data(name, value);
+
+    var camelizedName = SS_Preview.camelize(name);
+    $el.each(function() {
+      this.dataset[camelizedName] = value;
+    });
+  };
+
   SS_Preview.prototype.finishColumnMoveUp = function(ids, data) {
     this.overlay.hide();
 
@@ -717,8 +732,8 @@ SS_Preview = (function () {
     }
 
     Cms_TemplateForm.swapElement($prev, $target, function() {
-      $prev.data("column-order", data[$prev.data("column-id")]);
-      $target.data("column-order", data[$target.data("column-id")]);
+      SS_Preview.setData($prev, "column-order", data[$prev.data("column-id")]);
+      SS_Preview.setData($target, "column-order", data[$target.data("column-id")]);
       $target.after($prev);
     });
   };
@@ -762,8 +777,8 @@ SS_Preview = (function () {
     }
 
     Cms_TemplateForm.swapElement($target, $next, function() {
-      $next.data("column-order", data[$next.data("column-id")]);
-      $target.data("column-order", data[$target.data("column-id")]);
+      SS_Preview.setData($next, "column-order", data[$next.data("column-id")]);
+      SS_Preview.setData($target, "column-order", data[$target.data("column-id")]);
       $target.before($next);
     });
   };
@@ -779,7 +794,6 @@ SS_Preview = (function () {
       data: { authenticity_token: token, order: order },
       success: function(data) {
         self.finishColumnMovePosition(ids, order, data);
-        self.notice.show("移動しました。");
       },
       error: function(xhr, status, error) {
         self.notice.show(error);
@@ -790,31 +804,28 @@ SS_Preview = (function () {
   SS_Preview.prototype.finishColumnMovePosition = function(ids, order, data) {
     this.overlay.hide();
 
-    var $target = $(document).find(".ss-preview-column[data-page-id='" + ids.pageId + "'][data-column-id='" + ids.columnId + "']");
-    if (!$target[0]) {
+    var $source = $(document).find(".ss-preview-column[data-page-id='" + ids.pageId + "'][data-column-id='" + ids.columnId + "']");
+    if (!$source[0]) {
+      return;
+    }
+    var sourceOrder = $source.data("column-order");
+
+    var $destination = $(document).find(".ss-preview-column[data-page-id='" + ids.pageId + "'][data-column-order='" + order + "']");
+    if (!$destination[0]) {
       return;
     }
 
-    var move_p;
-    if (order === -1) {
-      var all = $(document).find("#ss-preview-form-end").prevAll(".ss-preview-column[data-page-id='" + ids.pageId + "']");
-      if (all[0]) {
-        move_p = function() { $(all[0]).after($target); };
+    Cms_TemplateForm.insertElement($source, $destination, function() {
+      $(document).find(".ss-preview-column[data-page-id='" + ids.pageId + "']").each(function() {
+        var $this = $(this);
+        SS_Preview.setData($this, "column-order", data[$this.data("column-id")]);
+      });
+      if (order < sourceOrder) {
+        $destination.before($source);
+      } else {
+        $destination.after($source);
       }
-    } else {
-      var $prev = $(document).find(".ss-preview-column[data-page-id='" + ids.pageId + "'][data-column-order='" + order + "']");
-      move_p = function() { $prev.before($target); };
-    }
-    if (!move_p) {
-      return;
-    }
-
-    $(document).find(".ss-preview-column[data-page-id='" + ids.pageId + "']").each(function() {
-      var $this = $(this);
-      $this.data("column-order", data[$this.data("column-id")]);
     });
-
-    move_p();
   };
 
   SS_Preview.prototype.previewPc = function() {
