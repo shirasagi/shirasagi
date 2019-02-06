@@ -119,17 +119,6 @@ Cms_TemplateForm.prototype.bind = function(el, options) {
   }
 
   this.resetOrder();
-
-  var self = this;
-  this.$el.find('.btn-file-upload').each(function() {
-    var $this = $(this);
-    var $columnValue = $this.closest(".column-value");
-    if (! $columnValue[0]) {
-      return;
-    }
-
-    $this.data("on-select", function($item) { self.selectFile($columnValue, $item) });
-  });
 };
 
 Cms_TemplateForm.prototype.bindOne = function(el, options) {
@@ -171,7 +160,6 @@ Cms_TemplateForm.prototype.bindOne = function(el, options) {
         // SS.render();
         SS.renderAjaxBox();
         SS.renderDateTimePicker();
-        $inserted.find(".btn-file-upload").data("on-select", function($item) { self.selectFile($inserted, $item) });
         self.resetOrder();
       },
       error: function(xhr, status, error) {
@@ -183,48 +171,6 @@ Cms_TemplateForm.prototype.bindOne = function(el, options) {
       }
     });
   });
-
-  this.$el.on("click", ".btn-file-delete", function(e) {
-    var $this = $(this);
-    var $fileView = $this.closest(".file-view");
-
-    $fileView.fadeOut(Cms_TemplateForm.duration).queue(function() {
-      $fileView.remove();
-    });
-
-    e.preventDefault();
-    return false;
-  });
-
-  var tempFileOptions = {};
-  tempFileOptions.uploadUrl = function() {
-    return "/.s" + Cms_TemplateForm.userId + "/cms/apis/temp_files.json";
-  };
-  tempFileOptions.select = function(files, dropArea) {
-    if (! files[0]) {
-      return;
-    }
-
-    var $fileView = $(dropArea).closest(".column-value").find(".column-value-files");
-    $fileView.addClass("hide");
-
-    var fileId = files[0]["_id"];
-    $.ajax({
-      url: Cms_TemplateForm.paths.formTempFileSelect.replace(":fileId", fileId),
-      type: 'GET',
-      success: function(html) {
-        $fileView.html(html);
-      },
-      error: function(xhr, status, error) {
-        $fileView.html(error);
-      },
-      complete: function() {
-        $fileView.removeClass("hide");
-      }
-    });
-  };
-
-  this.tempFile = new SS_Addon_TempFile($(".column-value-upload-drop-area"), Cms_TemplateForm.userId, tempFileOptions);
 
   if (options && options.type === "entry") {
     this.$el.find(".addon-body").sortable({
@@ -433,41 +379,5 @@ Cms_TemplateForm.prototype.remove = function($evTarget) {
   $columnValue.addClass("column-value-deleting").fadeOut(Cms_TemplateForm.duration).queue(function() {
     $columnValue.remove();
     self.resetOrder();
-  });
-};
-
-Cms_TemplateForm.prototype.selectFile = function($columnValue, $item) {
-  var $fileView = $columnValue.find(".column-value-files");
-  $fileView.addClass("hide");
-
-  $.colorbox.close();
-
-  var fileId = $item.data('id');
-  // var humanizedName = $item.data('humanized-name');
-  // if (! fileId || ! humanizedName) {
-  //   return;
-  // }
-  //
-  // var $element = $.colorbox.element();
-  // $element.siblings('input.file-id').val(fileId);
-  // $element.siblings('span.humanized-name').text(humanizedName);
-  // $element.siblings('.btn-file-delete').show();
-
-  if (! fileId) {
-    return;
-  }
-
-  $.ajax({
-    url: Cms_TemplateForm.paths.formTempFileSelect.replace(":fileId", fileId),
-    type: 'GET',
-    success: function(html) {
-      $fileView.html(html);
-    },
-    error: function(xhr, status, error) {
-      $fileView.html(error);
-    },
-    complete: function() {
-      $fileView.removeClass("hide");
-    }
   });
 };

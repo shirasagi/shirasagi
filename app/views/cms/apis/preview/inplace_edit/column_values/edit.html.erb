@@ -25,6 +25,8 @@ Cms_Inplace_Form.options.check.syntax = <%== @inplace_syntax_check.to_json %>;
 Cms_Inplace_Form.options.check.link = <%== @inplace_link_check.to_json %>;
 Cms_Inplace_Form.render();
 
+Cms_Column_FileUpload.userId = <%= @cur_user.id %>;
+Cms_Column_FileUpload.fileSelectPath = <%== cms_apis_form_temp_file_select_path(id: ":fileId").to_json %>;
 <% end %>
 
 <%= form_for :item, url: { action: :update }, html: { id: "item-form", method: :put, multipart: true, autocomplete: :off } do |f| %>
