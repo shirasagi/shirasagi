@@ -716,10 +716,11 @@ SS_Preview = (function () {
       return;
     }
 
-    $prev.data("column-order", data[$prev.data("column-id")]);
-    $target.data("column-order", data[$target.data("column-id")]);
-
-    $target.after($prev);
+    Cms_TemplateForm.swapElement($prev, $target, function() {
+      $prev.data("column-order", data[$prev.data("column-id")]);
+      $target.data("column-order", data[$target.data("column-id")]);
+      $target.after($prev);
+    });
   };
 
   SS_Preview.prototype.postColumnMoveDown = function(ids) {
@@ -760,10 +761,11 @@ SS_Preview = (function () {
       return;
     }
 
-    $next.data("column-order", data[$next.data("column-id")]);
-    $target.data("column-order", data[$target.data("column-id")]);
-
-    $target.before($next);
+    Cms_TemplateForm.swapElement($target, $next, function() {
+      $next.data("column-order", data[$next.data("column-id")]);
+      $target.data("column-order", data[$target.data("column-id")]);
+      $target.before($next);
+    });
   };
 
   SS_Preview.prototype.postColumnMovePosition = function(ids, order) {

@@ -316,7 +316,7 @@ Cms_TemplateForm.prototype.moveUp = function($evTarget) {
   }
 
   var self = this;
-  this.swapElement($prev, $columnValue, function() {
+  Cms_TemplateForm.swapElement($prev, $columnValue, function() {
     $prev.before($columnValue);
     self.resetOrder();
   });
@@ -334,21 +334,18 @@ Cms_TemplateForm.prototype.moveDown = function($evTarget) {
   }
 
   var self = this;
-  this.swapElement($columnValue, $next, function() {
+  Cms_TemplateForm.swapElement($columnValue, $next, function() {
     $next.after($columnValue);
     self.resetOrder();
   });
 };
 
-Cms_TemplateForm.prototype.swapElement = function($upper, $lower, completion) {
+Cms_TemplateForm.swapElement = function($upper, $lower, completion) {
   var upper = $upper[0];
   var lower = $lower[0];
 
   var diff = lower.offsetTop - upper.offsetTop;
   var spacing = lower.offsetTop - (upper.offsetTop + upper.offsetHeight);
-
-  var saveUpperTransitionDuration = upper.style.transitionDuration;
-  var saveLowerTransitionDuration = lower.style.transitionDuration;
 
   upper.style.transitionDuration = Cms_TemplateForm.duration + 'ms';
   lower.style.transitionDuration = Cms_TemplateForm.duration + 'ms';
@@ -356,10 +353,10 @@ Cms_TemplateForm.prototype.swapElement = function($upper, $lower, completion) {
   lower.style.transform = "translateY(" + (-diff) + "px)";
 
   setTimeout(function() {
-    upper.style.transitionDuration = saveUpperTransitionDuration;
-    lower.style.transitionDuration = saveLowerTransitionDuration;
-    upper.style.transform = "translateY(0)";
-    lower.style.transform = "translateY(0)";
+    upper.style.transitionDuration = "";
+    lower.style.transitionDuration = "";
+    upper.style.transform = "";
+    lower.style.transform = "";
 
     completion();
   }, Cms_TemplateForm.duration);
