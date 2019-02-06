@@ -1082,17 +1082,7 @@ SS_Preview = (function () {
     this.container = container;
     this.$overlay = $("#ss-preview-overlay");
 
-    var select = this.$overlay.find(".ss-preview-overlay-btn-move-position");
-    if (select[0]) {
-      var html = [];
-      $(document).find(".ss-preview-column[data-column-order]").each(function () {
-        var order = parseInt(this.dataset.columnOrder, 10);
-        html.push("<option value=\"" + order + "\">" + (order + 1) + "</option>");
-      });
-      html.push("<option value=\"-1\">末尾</option>");
-
-      select.html(html.join(""));
-    }
+    this.initPosition();
 
     var self = this;
     this.$overlay.on("click", ".ss-preview-overlay-btn-edit", function() {
@@ -1132,6 +1122,19 @@ SS_Preview = (function () {
     this.on = this.$overlay.on.bind(this.$overlay);
     this.off = this.$overlay.off.bind(this.$overlay);
   }
+
+  Overlay.prototype.initPosition = function() {
+    var select = this.$overlay.find(".ss-preview-overlay-btn-move-position");
+    if (select[0]) {
+      var html = [];
+      $(document).find(".ss-preview-column[data-column-order]").each(function () {
+        var order = parseInt(this.dataset.columnOrder, 10);
+        html.push("<option value=\"" + order + "\">" + (order + 1) + "</option>");
+      });
+
+      select.html(html.join(""));
+    }
+  };
 
   Overlay.prototype.hide = function() {
     this.$overlay.addClass("ss-preview-hide");

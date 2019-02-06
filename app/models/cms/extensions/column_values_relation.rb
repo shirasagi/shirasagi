@@ -44,21 +44,15 @@ module Cms::Extensions::ColumnValuesRelation
     copy.each_with_index { |value, index| value.order = index }
   end
 
-  def move_at(value_id, order)
+  def move_at(source_id, destination_index)
     copy = Array(self.order_by(order: 1, name: 1).to_a)
-    index = copy.index { |value| value.id == value_id }
+    source_index = copy.index { |value| value.id == source_id }
+    return if !source_index || source_index == destination_index
 
-    if index && index != order
-      delete_index = index
+    destination_index = 0 if destination_index < 0
+    destination_index = -1 if destination_index >= copy.length
 
-      insert_index = order
-      insert_index = -1 if insert_index < 0
-      insert_index = -1 if insert_index >= copy.length
-      insert_index -= 1 if delete_index < insert_index
-
-      copy.insert(insert_index, copy.delete_at(delete_index))
-    end
-
+    copy.insert(destination_index, copy.delete_at(source_index))
     copy.each_with_index { |value, index| value.order = index }
   end
 end
