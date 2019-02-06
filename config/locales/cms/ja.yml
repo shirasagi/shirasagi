@@ -265,7 +265,7 @@ ja:
         shirasagi: SHIRASAGI
         liquid: Liquid
       alignment:
-        flow: 成り行き
+        flow: 自動
         left: 左
         center: 中央
         right: 右
