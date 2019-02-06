@@ -237,7 +237,7 @@ SS_Preview = (function () {
         var name = $dataEl.find(".name").text();
 
         var $nodeDataEl = $selectNodeBtn.closest("[data-node-id]");
-        $nodeDataEl.data("node-id", id);
+        SS_Preview.setData($nodeDataEl, "node-id", id);
         $nodeDataEl.find("label").html(name);
       });
 
@@ -1226,8 +1226,8 @@ SS_Preview = (function () {
   };
 
   Overlay.prototype.setInfo = function(info) {
-    this.$overlay.data("mode", info.mode);
-    this.$overlay.data("id", info.id);
+    SS_Preview.setData(this.$overlay, "mode", info.mode);
+    SS_Preview.setData(this.$overlay, "id", info.id);
 
     if (info.name) {
       this.$overlay.find(".ss-preview-overlay-name").text(info.name).removeClass("ss-preview-hide");
