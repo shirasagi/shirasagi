@@ -11,11 +11,11 @@ module Webmail::Imap
     def sort
       @list.sort_by! do |item|
         if imap.inbox?(item.name)
-          "#{01}#{item.name.downcase}"
+          "01#{item.name.downcase}"
         elsif !imap.special_mailbox?(item.name)
-          "#{02}#{item.name.downcase}"
+          "02#{item.name.downcase}"
         else
-          "#{03}#{item.name.downcase}"
+          "03#{item.name.downcase}"
         end
       end
       self
@@ -49,7 +49,7 @@ module Webmail::Imap
       imap_names = imap_items.map(&:name)
 
       create_names = imap_names - cache_names
-      create_items = imap_items.select { |ml| create_names.include?(ml.name) }
+      create_items = imap_items.select { |box| create_names.include?(box.name) }
       create_mailboxes(create_items)
 
       delete_names = cache_names - imap_names
@@ -60,8 +60,8 @@ module Webmail::Imap
       @list = cache_find
       @list.each do |item|
         next if create_names.include?(item.original_name)
-        if ml = imap_items.find { |ml| ml.name == item.original_name }
-          item.attr = ml.attr.map(&:to_s)
+        if box = imap_items.find { |box| box.name == item.original_name }
+          item.attr = box.attr.map(&:to_s)
         end
         item.status.save
       end
@@ -88,11 +88,11 @@ module Webmail::Imap
       return 0 if inbox.status.recent == 0
 
       imap.examine('INBOX')
-      filters = Webmail::Filter.user(imap.user).imap_setting(imap.user, imap.setting).enabled.entries
+      filters = Webmail::Filter.and_imap(imap).enabled.entries
 
       filters.each do |filter|
         filter.imap = imap
-        filter.uids = filter.uids_search(['NEW'])
+        filter.uids = filter.uids_search(%w[NEW])
       end
 
       counts = filters.map do |filter|
@@ -100,7 +100,7 @@ module Webmail::Imap
       end
 
       update_status
-      counts.inject(:+) || 0
+      counts.reject { |v| v == false }.sum || 0
     end
 
     def cache_find
@@ -112,10 +112,10 @@ module Webmail::Imap
     end
 
     def create_mailboxes(list)
-      list.map do |ml|
+      list.map do |box|
         item = Webmail::Mailbox.new(imap.account_scope)
         item.imap = imap
-        item.parse_mailbox_list(ml)
+        item.parse_mailbox_list(box)
         item.status
         item.save
         item

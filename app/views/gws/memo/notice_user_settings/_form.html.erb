@@ -1,0 +1,34 @@
+<% render_notice_user_setting = proc do |type| %>
+  <dt class="depth-2"><%= @model.t("notice_#{type}_user_setting") %></dt>
+  <dd></dd>
+  <dt class="depth-3"><%= t("modules.gws/memo/notice")%></dt>
+  <dd>
+    <%= f.select "notice_#{type}_user_setting", @item.send("notice_#{type}_user_setting_options") %>
+  </dd>
+  <dt class="depth-3"><%= t("gws/memo/notice_user_settings.send_mail_setting") %></dt>
+  <dd>
+    <%= f.select "notice_#{type}_email_user_setting", @item.send("notice_#{type}_email_user_setting_options") %>
+  </dd>
+<% end %>
+
+<dl class="see">
+  <dt><%= t "modules.addons.gws/system/notice_setting" %></dt>
+  <dd></dd>
+  <% render_notice_user_setting.call(:schedule) %>
+  <% render_notice_user_setting.call(:todo) %>
+  <% render_notice_user_setting.call(:workflow) %>
+  <% render_notice_user_setting.call(:circular) %>
+  <% render_notice_user_setting.call(:monitor) %>
+  <% render_notice_user_setting.call(:survey) %>
+  <% render_notice_user_setting.call(:board) %>
+  <% render_notice_user_setting.call(:faq) %>
+  <% render_notice_user_setting.call(:qna) %>
+  <% render_notice_user_setting.call(:discussion) %>
+  <% render_notice_user_setting.call(:report) %>
+  <% render_notice_user_setting.call(:announcement) %>
+  <dt></dt><dd></dd>
+  <dt><%= t "gws/memo/notice_user_settings.send_mail_address" %></dt>
+  <dd>
+    <%= f.email_field :send_notice_mail_address %>
+  </dd>
+</dl>

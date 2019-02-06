@@ -145,7 +145,6 @@ ja:
     auto_correct:
       link: 自動修正
       notice: アクセシビリティチェック（保存時に自動で修正されます）
-      dependent_character: "[機種依存文字]"
       caption: キャプション
     links:
       ruby_on: ふりがなをつける
@@ -163,6 +162,9 @@ ja:
       target_node_name: フォルダー名
       started_job: 処理を開始します。ジョブ実行履歴で結果をご確認下さい
     options:
+      readable_setting_range:
+        public: 全公開
+        select: 選択範囲
       sort:
         name: タイトル
         filename: ファイル名
@@ -293,6 +295,8 @@ ja:
     delete_private_cms_nodes: フォルダーの削除（所有）
     move_other_cms_nodes: フォルダーの移動（全て）
     move_private_cms_nodes: フォルダーの移動（所有）
+    import_other_cms_nodes: フォルダーのインポート（全て）
+    import_private_cms_nodes: フォルダーのインポート（所有）
     read_other_cms_pages: 固定ページの閲覧（全て）
     read_private_cms_pages: 固定ページの閲覧（所有）
     edit_other_cms_pages: 固定ページの編集（全て）
@@ -352,7 +356,8 @@ ja:
     import_page: 取り込みページ
     addons:
       cms/role: ロール
-      cms/group_permission: 権限
+      cms/group_permission: 管理権限
+      cms/readable_setting: 閲覧権限
       cms/node_setting: フォルダー設定
       cms/meta: メタ情報
       cms/html: HTML
@@ -567,6 +572,12 @@ ja:
         group_ids: 管理グループ
         groups: 管理グループ
         permission_level: 権限レベル
+      cms/addon/readable_setting:
+        readable_setting_range: 公開範囲
+        readable_group_ids: 閲覧グループ
+        readable_groups_hash: 閲覧グループ(ハッシュ)
+        readable_member_ids: 閲覧ユーザー
+        readable_members_hash: 閲覧ユーザー(ハッシュ)
       cms/addon/list/model:
         conditions: 検索条件(URL)
         loop_html: ループHTML
@@ -768,7 +779,6 @@ ja:
       not_found_parent_group: 親グループが存在しません。
       invalid_order_of_h: 見出しの順番が不正です。
       invalid_multibyte_character: 英数字は半角文字を入力してください。
-      invalid_dependent_character: 機種依存文字が含まれています。
       invalid_kana_character: 半角カナ文字が含まれています。
       invalid_date_format: 日付の表記は○年○月○日としてください。
       invalid_adjacent_a: 隣接する同じリンクを一つのリンクにまとめてください。
@@ -801,9 +811,6 @@ ja:
         invalid_multibyte_character:
           - 本文に全角英数が含まれています。
           - 半角英数に置き換えるか削除してください。
-        invalid_dependent_character:
-          - 本文に機種依存文字が含まれています。
-          - 他の文字に置き換えるか削除してください。
         invalid_kana_character:
           - 本文に半角カナ文字が含まれています。
           - 全角文字に置き換えるか削除してください。
@@ -828,6 +835,14 @@ ja:
       check_links: 次のリンクを確認しました。
 
   tooltip:
+    cms/addon/readable_setting:
+      readable_setting_range:
+        - <b>全公開</b> - 誰でも閲覧できます。
+        - <b>選択範囲</b> - 選択した対象のみ閲覧できます。
+      readable_group_ids:
+        - 閲覧を許可するグループを選択します。
+      readable_member_ids:
+        - 閲覧を許可するユーザーを選択します。
     cms/model/page:
       destination_filename:
         - ページやフォルダーを移動します。
@@ -992,6 +1007,7 @@ ja:
         - |-
           下記のように記述します。
           #{class}　リンク先のファイル名が表示されます。ファイル名に拡張子がある場合、拡張子を除いた部分が表示されます。
+          #{class_categories} リンク先ページ内がカテゴリに関連付けられている場合、全てのカテゴリのフォルダ名が表示されます。
           #{date}　リンク先のページの公開日時が「2015/4/1」の形式で表示されます。
           #{date.default}　リンク先のページの公開日時が「2015/4/1」の形式で表示されます。
           #{date.iso}　リンク先のページの公開日時が「2015-04-01」の形式で表示されます。
@@ -1012,6 +1028,7 @@ ja:
           #{group}　リンク先ページの所有グループが表示されます。
           #{groups}　リンク先ページの全ての所有グループが表示されます。
           #{img.src}　リンク先ページ内に画像が存在する場合、リンク先ページの先頭の画像が表示されます。それ以外の場合、既定のパスが表示されます。
+          #{thumb.src}　リンク先ページ内のサムネイル画像が表示されます。サムネイル画像が指定されていない場合は、#{img.src}に準じます。
           #{categories}　リンク先ページ内がカテゴリに関連付けられている場合、リンク先ページのカテゴリリストが表示されます。
           #{pages.count}　リンク先ページ内にページが存在する場合、リンク先ページ内のページ数が表示されます。
           #{tags} リンク先ページののタグが表示されます。

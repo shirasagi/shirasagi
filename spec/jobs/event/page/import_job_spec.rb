@@ -7,7 +7,9 @@ describe Event::Page::ImportJob, dbscope: :example do
     Cms::Group.where(name: name).first_or_create!(attributes_for(:cms_group, name: name))
   end
   let!(:layout) { create(:cms_layout, site: site, name: "イベントカレンダー") }
-  let!(:node) { create(:event_node_page, site: site, filename: "calendar") }
+  let!(:node) { create(:event_node_page, site: site, filename: "calendar", group_ids: [ group.id ]) }
+  let(:role) { create(:cms_role_admin, site_id: site.id, permissions: ['import_private_event_pages']) }
+  let(:user) { create(:cms_user, uid: unique_id, name: unique_id, group_ids: [ group.id ], role: role) }
 
   let!(:file_path) { "#{::Rails.root}/spec/fixtures/event/import_job/event_pages.csv" }
   let!(:in_file) { Fs::UploadedFile.create_from_file(file_path) }
@@ -17,7 +19,7 @@ describe Event::Page::ImportJob, dbscope: :example do
     context "with node" do
       before do
         perform_enqueued_jobs do
-          described_class.bind(site_id: site, node_id: node).perform_later(ss_file.id)
+          described_class.bind(site_id: site, node_id: node, user_id: user).perform_later(ss_file.id)
         end
       end
 
@@ -27,7 +29,7 @@ describe Event::Page::ImportJob, dbscope: :example do
         expect(log.logs).to include(include("INFO -- : Completed Job"))
 
         items = Event::Page.site(site).where(filename: /^#{node.filename}\//, depth: 2)
-        expect(items.count).to be 3
+        expect(items.count).to be 4
 
         item = items.where(filename: "#{node.filename}/page1.html").first
         expect(item.name).to eq "住民相談会を開催します。"

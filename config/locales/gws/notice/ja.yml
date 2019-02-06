@@ -61,10 +61,12 @@ ja:
 
   gws_notification:
     gws/notice/post:
-      subject: "お知らせが掲載されました"
-      text: |
-        お知らせに「%{name}」が掲載されました。
-        %{path} をブラウザで開き、内容をご確認ください。
+      subject: "[お知らせ] 「%{name}」が掲載されました。"
+      text: "%{path}"
+      mail_text: |
+        %{subject}
+
+        %{text}
 
   mongoid:
     models:
@@ -93,8 +95,6 @@ ja:
         member_group_ids: 投稿グループ
         member_custom_group_ids: 投稿カスタムグループ
       gws/addon/notice/notification:
-        message_notification: メッセージ通知
-        email_notification: メール通知
         notification_noticed: 通知日時
       gws/addon/notice/comment_setting:
         comment_state: コメント投稿
@@ -127,11 +127,6 @@ ja:
         - 「重要なお知らせ」にチェックをつけた場合、コンテンツ内の先頭に目立つ色で表示されます。
 
     gws/addon/notice/notification:
-      message_notification:
-        - お知らせをメッセージで通知する場合、「通知する」を選択してください。
-      email_notification:
-        - お知らせをメール通知で通知する場合、「通知する」を選択してください。
-        - メールアドレスが未設定のユーザーには通知されませんのでご注意ください。
       notification_noticed:
         - 通知した日時を表示しています。
         - 通知日時をクリアすることで、再度、通知が送信されるようになります。

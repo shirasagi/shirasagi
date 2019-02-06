@@ -253,22 +253,49 @@ describe Gws::Chorg::MainRunner, dbscope: :example do
     let(:revision) { create(:gws_revision, site_id: site.id) }
     let(:changeset) { create(:gws_delete_changeset, revision_id: revision.id, source: group) }
 
-    it do
-      # ensure create models
-      expect(changeset).not_to be_nil
+    context 'with default delete_method (disable_if_possible)' do
+      it do
+        # ensure create models
+        expect(changeset).not_to be_nil
 
-      # execute
-      job = described_class.bind(site_id: site, task_id: task)
-      expect { job.perform_now(revision.name, job_opts) }.not_to raise_error
+        # execute
+        job = described_class.bind(site_id: site, task_id: task)
+        expect { job.perform_now(revision.name, job_opts) }.not_to raise_error
 
-      # check for job was succeeded
-      expect(Gws::Job::Log.count).to eq 1
-      Gws::Job::Log.first.tap do |log|
-        expect(log.logs).to include(include('INFO -- : Started Job'))
-        expect(log.logs).to include(include('INFO -- : Completed Job'))
+        # check for job was succeeded
+        expect(Gws::Job::Log.count).to eq 1
+        Gws::Job::Log.first.tap do |log|
+          expect(log.logs).to include(include('INFO -- : Started Job'))
+          expect(log.logs).to include(include('INFO -- : Completed Job'))
+        end
+
+        expect(Gws::Group.where(id: group.id).first.active?).to be_falsey
+      end
+    end
+
+    context 'with always_delete' do
+      before do
+        revision.delete_method = 'always_delete'
+        revision.save!
       end
 
-      expect(Gws::Group.where(id: group.id).first.active?).to be_falsey
+      it do
+        # ensure create models
+        expect(changeset).not_to be_nil
+
+        # execute
+        job = described_class.bind(site_id: site, task_id: task)
+        expect { job.perform_now(revision.name, job_opts) }.not_to raise_error
+
+        # check for job was succeeded
+        expect(Gws::Job::Log.count).to eq 1
+        Gws::Job::Log.first.tap do |log|
+          expect(log.logs).to include(include('INFO -- : Started Job'))
+          expect(log.logs).to include(include('INFO -- : Completed Job'))
+        end
+
+        expect(Gws::Group.where(id: group.id).first).to be_nil
+      end
     end
   end
 end

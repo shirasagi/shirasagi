@@ -1,11 +1,13 @@
 class Cms::SearchContents::PagesController < ApplicationController
   include Cms::BaseFilter
   include Cms::ApiFilter::Contents
+  include Cms::CrudFilter
 
   model Cms::PageSearch
 
   append_view_path "app/views/cms/search_contents/pages"
   navi_view "cms/search_contents/navi"
+  menu_view nil
   before_action :set_item
 
   private
@@ -47,6 +49,14 @@ class Cms::SearchContents::PagesController < ApplicationController
       end
     end
     attr
+  end
+
+  def set_selected_items
+    ids = params[:ids]
+    raise "400" unless ids
+    ids = ids.split(",") if ids.is_a?(String)
+    @items = Cms::Page.in(id: ids)
+    raise "400" unless @items.present?
   end
 
   public

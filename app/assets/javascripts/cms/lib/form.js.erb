@@ -69,7 +69,6 @@ this.Syntax_Checker = (function () {
     notSetThScope: "<%= I18n.t('errors.messages.set_th_scope') %>",
     invalidOrderOfH: "<%= I18n.t('errors.messages.invalid_order_of_h') %>",
     invalidMultibyteCharacter: "<%= I18n.t('errors.messages.invalid_multibyte_character') %>",
-    invalidDependentCharacter: "<%= I18n.t('errors.messages.invalid_dependent_character') %>",
     invalidKanaCharacter: "<%= I18n.t('errors.messages.invalid_kana_character') %>",
     invalidDateFormat: "<%= I18n.t('errors.messages.invalid_date_format') %>",
     invalidAdjacentA: "<%= I18n.t('errors.messages.invalid_adjacent_a') %>",
@@ -84,12 +83,11 @@ this.Syntax_Checker = (function () {
     notSetImgAlt: <%= I18n.t('errors.messages.syntax_check_detail.set_img_alt').to_json %>,
     notSetAppletAlt: <%= I18n.t('errors.messages.syntax_check_detail.set_applet_alt').to_json %>,
     notSetAreaAlt: <%= I18n.t('errors.messages.syntax_check_detail.set_area_alt').to_json %>,
-    invalidImgScheme: <%= I18n.t('errors.messages.syntax_heck_detail.invalid_img_scheme').to_json %>,
+    invalidImgScheme: <%= I18n.t('errors.messages.syntax_check_detail.invalid_img_scheme').to_json %>,
     notSetTableCaption: <%= I18n.t('errors.messages.syntax_check_detail.set_table_caption').to_json %>,
     notSetThScope: <%= I18n.t('errors.messages.syntax_check_detail.set_th_scope').to_json %>,
     invalidOrderOfH: <%= I18n.t('errors.messages.syntax_check_detail.invalid_order_of_h').to_json %>,
     invalidMultibyteCharacter: <%= I18n.t('errors.messages.syntax_check_detail.invalid_multibyte_character').to_json %>,
-    invalidDependentCharacter: <%= I18n.t('errors.messages.syntax_check_detail.invalid_dependent_character').to_json %>,
     invalidKanaCharacter: <%= I18n.t('errors.messages.syntax_check_detail.invalid_kana_character').to_json %>,
     invalidDateFormat: <%= I18n.t('errors.messages.syntax_check_detail.invalid_date_format').to_json %>,
     invalidAdjacentA: <%= I18n.t('errors.messages.syntax_check_detail.invalid_adjacent_a').to_json %>,
@@ -98,8 +96,6 @@ this.Syntax_Checker = (function () {
     checkObjectText: <%= I18n.t('errors.messages.syntax_check_detail.check_object_text').to_json %>,
     checkEmbeddedMedia: <%= I18n.t('errors.messages.syntax_check_detail.check_embedded_media').to_json %>
   };
-
-  Syntax_Checker.dependentCharacter = "<%= I18n.t('dependent_character').join %>";
 
   Syntax_Checker.mediaExtensions = ["aac", "aif", "aiff", "au", "avi", "flac", "flv", "mid", "midi", "mp3", "m4a", "mp4", "mpg", "mpeg", "oga", "ogg", "tta", "vdo", "wav", "wma", "wmv"];
 
@@ -134,7 +130,6 @@ this.Syntax_Checker = (function () {
     html = Cms_Form.getEditorHtml();
     Syntax_Checker.checkTable(html);
     Syntax_Checker.checkMultibyteCharacter(html);
-    Syntax_Checker.checkDependentCharacter(html);
     Syntax_Checker.checkKanaCharacter(html);
     Syntax_Checker.checkDateFormat(html);
     Syntax_Checker.checkAdjacentA(html);
@@ -197,7 +192,6 @@ this.Syntax_Checker = (function () {
     var html;
     html = Cms_Form.getEditorHtml();
     html = Syntax_Checker.correctMultibyteCharacter(html);
-    html = Syntax_Checker.correctDependentCharacter("<div>" + html + "</div>");
     html = Syntax_Checker.correctKanaCharacter("<div>" + html + "</div>");
     html = Syntax_Checker.correctDateFormat("<div>" + html + "</div>");
     if ($("<div>" + html + "</div>").find("table").length) {
@@ -558,33 +552,6 @@ this.Syntax_Checker = (function () {
     return ret.html();
   };
 
-  Syntax_Checker.checkDependentCharacter = function (html) {
-    var c, errors, regex;
-    regex = new RegExp("[" + Syntax_Checker.dependentCharacter + "]", "g");
-    c = html.match(regex);
-    if (!$.isEmptyObject(c)) {
-      errors = [
-        {
-          code: c.join(","),
-          msg: Syntax_Checker.message["invalidDependentCharacter"],
-          detail: Syntax_Checker.detail["invalidDependentCharacter"],
-          ele: html,
-          correct: Syntax_Checker.correctDependentCharacter
-        }
-      ];
-      return Syntax_Checker.pushError(errors);
-    }
-  };
-
-  Syntax_Checker.correctDependentCharacter = function (html) {
-    var regex;
-    regex = new RegExp("[" + Syntax_Checker.dependentCharacter + "]", "g");
-    html = html.replace(regex, function (c) {
-      return "<%= I18n.t('cms.auto_correct.dependent_character') %>";
-    });
-    return $(html).html();
-  };
-
   Syntax_Checker.checkKanaCharacter = function (html) {
     var c, errors;
     c = html.match(/[｡-ﾟ]/g);
@@ -611,7 +578,7 @@ this.Syntax_Checker = (function () {
     results = [];
     for (k in words) {
       v = words[k];
-      c = html.match(RegExp("" + k, "g"));
+      c = html.match(RegExp("" + k.replace(/([.?*+$\[\]\/\\(){}|\-])/g, '\\$1'), "g"));
       if (!$.isEmptyObject(c)) {
         errors = [
           {
@@ -648,7 +615,7 @@ this.Syntax_Checker = (function () {
       return this.nodeType === 3;
     }).each(function () {
       var text;
-      text = this.textContent.replace(RegExp("" + key, "g"), function (c) {
+      text = this.textContent.replace(RegExp("" + key.replace(/([.?*+$\[\]\/\\(){}|\-])/g, '\\$1'), "g"), function (c) {
         return value;
       });
       return this.textContent = text;
@@ -731,9 +698,12 @@ this.Syntax_Checker = (function () {
 
   Syntax_Checker.checkAdjacentA = function (html) {
     return $(html).find("a[href]").each(function () {
-      var errors, next;
-      next = $(this).next('a[href="' + $(this).attr("href") + '"]');
-      if (next.length) {
+      var errors, next, href;
+
+      href = $(this).attr("href");
+      next = $(this).next("a[href]");
+
+      if (next.length && href == next.attr("href")) {
         errors = [
           {
             code: Syntax_Checker.outerHtmlSummary(this) + Syntax_Checker.outerHtmlSummary(next),
@@ -749,9 +719,12 @@ this.Syntax_Checker = (function () {
   };
 
   Syntax_Checker.correctAdjacentA = function (a) {
-    var next;
-    next = $(a).next('a[href="' + $(a).attr("href") + '"]');
-    if (next.length) {
+    var next, href;
+
+    href = $(a).attr("href");
+    next = $(a).next("a[href]");
+
+    if (next.length && href == next.attr("href")) {
       if ($(a).html() !== $(next).html()) {
         $(a).html($(a).html() + $(next).html());
       }
@@ -1357,7 +1330,7 @@ this.Form_Alert = (function () {
       results.push($(form).find(addonIds.join(",")).find("input,textarea").not(excludes.join(",")).each(function () {
         var addonName, fieldName, val;
         val = $(this).val();
-        if (val && !$.isEmptyObject(val.match(RegExp("" + k, "g")))) {
+        if (val && !$.isEmptyObject(val.match(RegExp("" + k.replace(/([.?*+$\[\]\/\\(){}|\-])/g, '\\$1'), "g")))) {
           $(this).closest("dl").show();
           addonName = $(this).closest(".addon-view").find(".addon-head").text();
           fieldName = Form_Alert.justText($(this).closest("dd").prev("dt"));

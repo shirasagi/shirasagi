@@ -29,7 +29,6 @@ module Gws::Survey::Notification
   def send_notification
     return if notification_notice_state != "enabled"
     return if !public?
-
-    Gws::Survey::NotificationJob.bind(site_id: site.id).perform_now(id.to_s)
+    Gws::Survey::NotificationJob.bind(site_id: site.id).perform_now(id.to_s, cur_user_id: @cur_user.id)
   end
 end

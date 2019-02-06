@@ -27,7 +27,7 @@ module Chorg::Addon::EntityLog
     dirname = ::File.dirname(entity_log_path)
     ::FileUtils.mkdir_p(dirname) if !Dir.exists?(dirname)
 
-    @entity_log_file = open(entity_log_path, 'w')
+    @entity_log_file = ::File.open(entity_log_path, 'w')
     @entity_log_file.sync = true
   end
 

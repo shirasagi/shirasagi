@@ -124,6 +124,8 @@ ja:
       invalid_csv: CSV形式のファイルを選択してください。
       malformed_csv: CSVの形式が正しくありません。正しい形式のCSVファイルを選択してください。
       invalid_email_included: に不正なメールアドレスが含まれています。
+      too_large_mail_size: "メールの添付ファイルサイズが大きすぎます。合計: %{size}（制限値: %{limit}）"
+      smtp_delivery_error: "メールを送信できませんでした。STMPエラーメッセージ： %{message}"
       duplicate: の重複が存在します。
       less_than: は%{count}より小さい値にしてください。
       less_than_or_equal_to: は%{count}以下の値にしてください。
@@ -150,7 +152,6 @@ ja:
       not_exist: は存在しません。
       not_found_parent_nodes: に親フォルダー「%{name}」がありません。
       root_node_save_error: ルートフォルダーを作成できませんでした。
-      imap_setting_validation_error: "必須項目が入力されていません。"
       request_entity_too_large: データのサイズが大きすぎます。
       contact_system_administrator: システム管理者にお問い合わせください。
       try_again_later: 時間を置いてもう一度お試しください。
@@ -242,15 +243,3 @@ ja:
       next: 次のページ # "Next &rsaquo;"
       last: "&raquo;"
       truncate: "..."
-  dependent_character:
-    - ①②③④⑤⑥⑦⑧⑨⑩⑪⑫⑬⑭⑮⑯⑰⑱⑲⑳
-    - ⅠⅡⅢⅣⅤⅥⅦⅧⅨⅩ㍉㌔㌢㍍㌘㌧㌃㌶㍑㍗
-    - ㌍㌦㌣㌫㍊㌻㎜㎝㎞㎎㎏㏄㎡㍻〝〟№㏍℡㊤
-    - ㊥㊦㊧㊨㈱㈲㈹㍾㍽㍼㍻©®㈷㈰㈪㈫㈬㈭㈮㈯
-    - ㊗㊐㊊㊋㊌㊍㊎㊏㋀㋁㋂㋃㋄㋅㋆㋇㋈㋉㋊㋋
-    - ㏠㏡㏢㏣㏤㏥㏦㏧㏨㏩㏪㏫㏬㏭㏮㏯㏰㏱㏲㏳
-    - ㏴㏵㏶㏷㏸㏹㏺㏻㏼㏽㏾↔↕↖↗↘↙⇒⇔⇐⇑⇓⇕⇖⇗⇘⇙
-    - ㋐㋑㋒㋓㋔㋕㋖㋗㋘㋙㊑㊒㊓㊔㊕㊟㊚㊛㊜㊣
-    - ㊡㊢㊫㊬㊭㊮㊯㊰㊞㊖㊩㊝㊘㊙㊪㈳㈴㈵㈶㈸
-    - ㈺㈻㈼㈽㈾㈿►☺◄☻‼㎀㎁㎂㎃㎄㎈㎉㎊㎋㎌㎍
-    - ㎑㎒㎓ⅰⅱⅲⅳⅴⅵⅶⅷⅸⅹ〠♠♣♥♤♧♡￤＇

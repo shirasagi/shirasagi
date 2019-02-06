@@ -11,13 +11,13 @@ class Gws::Presence::UsersController < ApplicationController
   end
 
   def set_group
-    @groups = @cur_site.root.to_a + @cur_site.root.descendants.to_a
+    @groups = @cur_site.root.to_a + @cur_site.root.descendants.active.to_a
     @custom_groups = Gws::CustomGroup.site(@cur_site).in(member_ids: @cur_user.id)
   end
 
   def items
-    @items = @model.active.in(group_ids: @groups.pluck(:id)).
-      search(params[:s]).page(params[:page]).per(25)
+    @items = @model.active.in(group_ids: @groups.pluck(:id)).search(params[:s]).order_by_title(@cur_site).
+      page(params[:page]).per(25)
   end
 
   public

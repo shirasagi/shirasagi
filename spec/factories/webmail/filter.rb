@@ -3,8 +3,13 @@ FactoryBot.define do
     cur_user { ss_user }
 
     name { "name-#{unique_id}" }
-    from { "text-#{unique_id}" }
-    action "copy"
-    mailbox "INBOX"
+    conjunction { %w(and or).sample }
+    conditions do
+      Array.new(rand(1..5)) do
+        { field: %w(from to cc subject body).sample, operator: %w(include exclude).sample, value: unique_id }
+      end
+    end
+    action { %w(copy move trash delete).sample }
+    mailbox { %w(INBOX INBOX.Draft INBOX.Sent INBOX.Trash).sample }
   end
 end

@@ -1,0 +1,27 @@
+To: user5@example.jp
+From: webmail-imap <user5@example.jp>
+Subject: test
+Message-ID: <13b6d377-ad32-4475-7d42-0905e8357972@example.jp>
+Date: Thu, 20 Dec 2018 19:56:58 +0900
+MIME-Version: 1.0
+Content-Type: multipart/mixed;
+ boundary="------------A3F01795E619D0B7CC33012E"
+Content-Language: en-US
+
+This is a multi-part message in MIME format.
+--------------A3F01795E619D0B7CC33012E
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+
+test
+
+--------------A3F01795E619D0B7CC33012E
+Content-Type: text/plain; charset=Shift_JIS;
+ name="=?UTF-8?B?44OG44K544OI44GC44GE44GGLnR4dA==?="
+Content-Transfer-Encoding: base64
+Content-Disposition: inline;
+ filename*0*=utf-8''%E3%83%86%E3%82%B9%E3%83%88%E3%81%82%E3%81%84%E3%81%86;
+ filename*1*=%2E%74%78%74
+
+gqCCooKkgqaCqAo=
+--------------A3F01795E619D0B7CC33012E--

@@ -41,6 +41,7 @@ end
 
 areas = Opendata::Node::Area.site(@cur_site).sort(order: 1).pluck(:name, :id)
 categories = transform_category(@cur_categories)
+estat_categories = transform_category(@cur_estat_categories)
 licenses = Opendata::License.site(@cur_site).and_public.sort(order: 1).pluck(:name, :id)
 groups = Opendata::DatasetGroup.site(@cur_site).and_public.sort(order: 1).pluck(:name, :id)
 @s = OpenStruct.new
@@ -54,6 +55,10 @@ groups = Opendata::DatasetGroup.site(@cur_site).and_public.sort(order: 1).pluck(
   <dl class="category">
     <dt><%= f.label(:category_id, I18n.t("opendata.labels.category_ids")) %></dt>
     <dd><%= f.select(:category_id, categories, include_blank: "") %></dd>
+  </dl>
+  <dl class="estat_category">
+    <dt><%= f.label(:estat_category_id, I18n.t("opendata.labels.estat_category_ids")) %></dt>
+    <dd><%= f.select(:estat_category_id, estat_categories, include_blank: "") %></dd>
   </dl>
   <dl class="area">
     <dt><%= f.label(:area_id, I18n.t("opendata.labels.area")) %></dt>

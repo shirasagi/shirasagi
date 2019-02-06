@@ -45,7 +45,8 @@ class Cms::PreviewController < ApplicationController
     @cur_body_layout = Cms::BodyLayout.site(@cur_site).where(id: page.body_layout_id).first
     page.layout_id = nil if @cur_layout.nil?
     page.body_layout_id = nil if @cur_body_layout.nil?
-    @cur_node = Cms::Node.site(@cur_site).where(filename: /^#{path.sub(/\/$/, "")}/).first
+    @cur_node = page.cur_node = Cms::Node.site(@cur_site).where(filename: /^#{path.sub(/\/$/, "")}/).first
+    page.valid?
     @cur_page = page
     @preview_page = page
     @preview_item = preview_item
@@ -121,8 +122,9 @@ class Cms::PreviewController < ApplicationController
   end
 
   def render_preview
-    preview_url = cms_preview_path preview_date: params[:preview_date]
+    return if response.content_type != "text/html"
 
+    preview_url = cms_preview_path preview_date: params[:preview_date]
     body = response.body.force_encoding("utf-8")
     body.gsub!(/(href|src)=".*?"/) do |m|
       url = m.match(/.*?="(.*?)"/)[1]
@@ -177,21 +179,38 @@ class Cms::PreviewController < ApplicationController
       h << "<option value=''>#{t('cms.part')}</option>"
       @parts.each_value do |part|
         next if part.blank?
-        h << "<option value='#{cms_part_path(site: @cur_site, id: part.id)}'>#{part.name}</option>"
+        if part.parent
+          part_path = node_part_path(site: @cur_site, cid: part.parent.id, id: part.id)
+        else
+          part_path = cms_part_path(site: @cur_site, id: part.id)
+        end
+        h << "<option value='#{part_path}'>#{part.name}</option>"
       end
       h << '</select>'
       h << '<input type="button" class="preview-part-button preview-hide" value="' + t('cms.part') + '">'
     end
     if @cur_layout && Cms::Layout.allowed?(:read, @cur_user, site: @cur_site, node: @cur_node)
-      layout_path = cms_layout_path(site: @cur_site, id: @cur_layout.id)
+      if @cur_layout.parent
+        layout_path = node_layout_path(site: @cur_site, cid: @cur_layout.parent.id, id: @cur_layout.id)
+      else
+        layout_path = cms_layout_path(site: @cur_site, id: @cur_layout.id)
+      end
       h << "<input type='button' onclick='window.open(\"#{layout_path}\")' value='#{t('cms.layout')}'>"
     end
     if @cur_node && Cms::Node.allowed?(:read, @cur_user, site: @cur_site, node: @cur_node)
-      node_path = cms_node_path(site: @cur_site, id: @cur_node.id)
+      if @cur_node.parent
+        node_path = node_node_path(site: @cur_site, cid: @cur_node.parent.id, id: @cur_node.id)
+      else
+        node_path = cms_node_path(site: @cur_site, id: @cur_node.id)
+      end
       h << "<input type='button' onclick='window.open(\"#{node_path}\")' value='#{t('cms.node')}'>"
     end
     if @cur_page && Cms::Page.allowed?(:read, @cur_user, site: @cur_site, node: @cur_node)
-      page_path = cms_page_path(site: @cur_site, id: @cur_page.id)
+      if @cur_page.parent
+        page_path = node_page_path(site: @cur_site, cid: @cur_page.parent.id, id: @cur_page.id)
+      else
+        page_path = cms_page_path(site: @cur_site, id: @cur_page.id)
+      end
       h << "<input type='button' onclick='window.open(\"#{page_path}\")' value='#{Cms::Page.model_name.human}'>"
     end
     h << '</div>'
@@ -201,7 +220,7 @@ class Cms::PreviewController < ApplicationController
   end
 
   def render_form_preview
-    require "uri"
+    return if response.content_type != "text/html"
 
     body = response.body
     body.gsub!(/(href|src)=".*?"/) do |m|

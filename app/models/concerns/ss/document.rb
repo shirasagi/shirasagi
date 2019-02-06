@@ -93,7 +93,7 @@ module SS::Document
       store = opts[:store_as] || "#{name.to_s.singularize}_ids"
       field store, type: SS::Extensions::ObjectIds, default: [],
             overwrite: true, metadata: { elem_class: opts[:class_name] }.merge(opts[:metadata] || {})
-      define_method(name) { opts[:class_name].constantize.where :_id.in => send(store) }
+      define_method(name) { opts[:class_name].constantize.where("$and" => [{ :_id.in => send(store) }]) }
     end
 
     def addon(path)

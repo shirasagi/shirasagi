@@ -7,9 +7,9 @@ insertContent = function(cont) {
     CKEDITOR.instances[Cms_Form.editorId].insertHtml(cont);
   }
 };
-insertContents = function() {
-  if (!SS.disableClick($(this))) {
-    return false;
+insertContents = function(el) {
+  if (!SS.disableClick(el)) {
+    return;
   }
   $("#ajax-box .items input:checkbox").filter(":checked").each(function() {
     var item = $(this);
@@ -17,7 +17,7 @@ insertContents = function() {
     var text = "<a href='/" + data.find(".filename").text() + "'>" + data.find(".select-item").text() + '</a>';
     insertContent(text);
   });
-  return $.colorbox.close();
+  $.colorbox.close();
 };
 <% end %>
 
@@ -43,7 +43,8 @@ insertContents = function() {
         <td class="checkbox">
           <input type="checkbox" name="ids[]" value="<%= item.id %>" />
         </td>
-        <% link = "insertContent(\"<a href='#{item.url}'>#{item.name}</a>\");" %>
+        <% content = link_to(item.name, item.url) %>
+        <% link = "insertContent('#{escape_javascript(content)}'); return false;" %>
         <td class="name"><%= link_to item.name, "#", class: "select-item", onclick: link %></td>
         <td class="filename"><%= item.filename %></td>
         <td class="updated"><%= item.updated.strftime("%Y/%m/%d %H:%M") %></td>
@@ -53,7 +54,7 @@ insertContents = function() {
 </table>
 
 <div class="search-ui-select">
-  <%= link_to t("cms.apis.pages.select"), "#", class: "btn", onclick: 'insertContents();' %>
+  <%= link_to t("cms.apis.pages.select"), "#", class: "btn", onclick: 'insertContents($(this)); return false;' %>
 </div>
 
 <%= paginate @items if @items.try(:current_page) %>

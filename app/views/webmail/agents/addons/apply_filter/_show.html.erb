@@ -17,5 +17,13 @@ $('.btn.apply-filter').click(function(){
     <%= f.submit t("webmail.links.apply"), class: 'btn apply-filter' %>
   </dd>
 </dl>
+<% end %>
 
+<% if @item.filter_error_at.present? %>
+  <dl class="see">
+    <dt><%= @model.t :filter_error_at %></dt>
+    <dd><%= I18n.l(@item.filter_error_at) %></dd>
+    <dt><%= @model.t :filter_errors %></dt>
+    <dd><%= br @item.filter_errors.join("\n") %></dd>
+  </dl>
 <% end %>

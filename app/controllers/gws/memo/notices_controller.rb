@@ -60,6 +60,9 @@ class Gws::Memo::NoticesController < ApplicationController
 
   def show
     @item.set_seen(@cur_user).update if @item.state == "public"
+    if !@item.export
+      redirect_to @item.url.empty? ? request.referer : @item.url
+    end
   end
 
   def latest

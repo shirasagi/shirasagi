@@ -39,6 +39,12 @@ $('a.ajax-box').data('on-select', function($item) {
       <div class="addon-head"><h2><%= t("ss.export") %></h2></div>
       <div class="addon-body">
         <dl class="see" style="margin-top: 20px;">
+          <dt><%= t "gws/memo/message.format" %></dt>
+          <dd>
+            <%= f.select :format, ["json", "eml"] %>
+          </dd>
+        </dl>
+        <dl class="see" style="margin-top: 20px;">
           <dt><%= t "gws/memo/message.message" %><%= @model.tt :from_member_ids %></dt>
           <dd>
             <%= f.hidden_field "message_ids[]", value: "", class: "hidden-ids" %>

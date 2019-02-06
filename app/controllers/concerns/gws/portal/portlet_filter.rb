@@ -49,6 +49,6 @@ module Gws::Portal::PortletFilter
     @portal.portlets.destroy_all
     @portal.save_default_portlets
 
-    redirect_to action: :index, notice: I18n.t('ss.notice.initialized')
+    redirect_to({ action: :index }, { notice: I18n.t('ss.notice.initialized') })
   end
 end

@@ -17,17 +17,23 @@ window.deleteContent = function(id) {
     }
   });
 };
-var tempFile = new SS_Addon_TempFile($(".upload-drop-area"), <%= @cur_user.id %>);
+
+var options = {};
+options.uploadUrl = function() {
+  return "/.u" + <%= @cur_user.id %> + "/apis/temp_files.json?unnormalize=true";
+};
+var tempFile = new SS_Addon_TempFile($(".upload-drop-area"), <%= @cur_user.id %>, options);
 <% end %>
 
+<%= hidden_field_tag 'file_size', 'true', { id: 'show-file-size' } %>
 <dl class="see webmail-addon-mail-file">
   <dd class="wide">
     <%= f.hidden_field "file_ids[]", value: "" %>
     <span class="upload-menu-new">
-      <%= link_to t('ss.links.upload'), sns_apis_temp_files_path(@cur_user), class: "ajax-box btn" %>
+      <%= link_to t('ss.links.upload'), sns_apis_temp_files_path(@cur_user, unnormalize: true, file_size: true), class: "ajax-box btn" %>
     </span>
     <span class="upload-menu-select">
-      <%= link_to t("sns.user_file"), sns_apis_user_files_path(@cur_user), class: "ajax-box btn" %>
+      <%= link_to t("sns.user_file"), sns_apis_user_files_path(@cur_user, unnormalize: true, file_size: true), class: "ajax-box btn" %>
     </span>
     <div class="upload-drop-area">
       <span class="upload-drop-notice"><%= t('ss.notice.file_droppable') %></span>
@@ -36,9 +42,9 @@ var tempFile = new SS_Addon_TempFile($(".upload-drop-area"), <%= @cur_user.id %>
     <div id="selected-files">
       <% @item.ref_files.each do |part| %>
         <div class="file-view">
-          <%= link_to(parts_webmail_mail_path(section: part.section), target: part.link_target, class: :thumb) do %>
+          <%= link_to(parts_webmail_mail_path(webmail_mode: @webmail_mode, account: params[:account] || @cur_user.imap_default_index, mailbox: @mailbox, section: part.section), target: part.link_target, class: :thumb) do %>
             <% if part.image? %>
-              <%= image_tag parts_webmail_mail_path(section: part.section), alt: part.filename %>
+              <%= image_tag parts_webmail_mail_path(webmail_mode: @webmail_mode, account: params[:account] || @cur_user.imap_default_index, mailbox: @mailbox, section: part.section), alt: part.filename %>
             <% else %>
               <% extname = File.extname(part.filename) %>
               <span class="ext icon-<%= extname %>"><%= extname %></span>
@@ -50,6 +56,7 @@ var tempFile = new SS_Addon_TempFile($(".upload-drop-area"), <%= @cur_user.id %>
               <input type="hidden" name="item[ref_file_ids][]" value="ref-<%= part.section %>" class="file-id" />
               <%= part.filename %>
             </label><br />
+            <span class="file-size"><%= "( #{number_to_human_size(part.part.size)} )" %></span>
           </div>
 
           <div class="action">
@@ -73,6 +80,7 @@ var tempFile = new SS_Addon_TempFile($(".upload-drop-area"), <%= @cur_user.id %>
               <input type="hidden" name="item[file_ids][]" value="<%= file.id %>" class="file-id" />
               <%= file.name %>
             </label><br />
+            <span class="file-size"><%= "( #{number_to_human_size(file.size)} )" %></span>
           </div>
 
           <div class="action">

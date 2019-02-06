@@ -1,15 +1,9 @@
 <%
 
-## locals: [:f, :field]
-addresses = @item.send(field).map(&:presence).uniq.compact
-
 ## root groups
 groups = @cur_user.root_groups.entries.map(&:gws_group)
 
 %>
-<%= javascript_tag do %>
-SS_SearchUI.select = Webmail_Mail_Form_Address.select;
-<% end %>
 
 <dl class="see webmail-address-field">
   <dd class="wide">

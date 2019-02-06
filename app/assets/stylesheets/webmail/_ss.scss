@@ -3,7 +3,7 @@
 // -------------------------------------------------------------------------------------------------
 // menu and common
 
-.webmail-dropdown-menu {
+.webmail-dropdown-menu, .webmail-address-dropdown-menu {
   left: 0;
   margin: 0;
   padding: 5px 0;
@@ -44,6 +44,21 @@ li.webmail-accounts {
   margin-top: 5px;
   margin-right: 10px;
 }
+.webmail-category-label {
+  display: inline-block;
+  padding: 1px 5px;
+  @include border-radius(3px);
+  background-color: #e8e8e8;
+  background-image: url(/assets/img/gws/bg-plan.png);
+  color: #444;
+  font-size: 90%;
+  font-weight: normal;
+
+  &.webmail-error {
+    background-color: #FF4000;
+    color: #ffffff;
+  }
+}
 
 // -------------------------------------------------------------------------------------------------
 // navi
@@ -74,10 +89,7 @@ li.webmail-accounts {
     a {
       display: block;
       width: 100%;
-      overflow: hidden;
       padding: 5px 5px 5px 14px;
-      white-space: nowrap;
-      text-overflow: ellipsis;
     }
     a:last-child {
       margin-bottom: 8px;
@@ -127,7 +139,7 @@ li.webmail-accounts {
 // -------------------------------------------------------------------------------------------------
 // mails
 
-.webmail-mails-head {
+.webmail-mails-head, .webmail-address-head {
   .dropdown {
     display: inline;
     font-weight: normal;
@@ -142,6 +154,11 @@ li.webmail-accounts {
 .webmail-mail-search-label {
   padding: 10px 20px;
   border-bottom: 1px solid #eee;
+
+  .webmail-mail-search-label-reset {
+    width: 100%;
+    text-align: right;
+  }
 }
 .webmail-mail-search {
   display: none;
@@ -150,7 +167,7 @@ li.webmail-accounts {
   border-bottom: 1px solid #eee;
   label.flag {
    width: auto;
-   padding: 0px 15px 0px 15px;
+   padding: 0 15px 0 15px;
   }
 }
 
@@ -203,7 +220,7 @@ li.webmail-accounts {
     }
     .title {
       width: calc(100% - 380px);
-      widht: -webkit-calc(100% - 380px);
+      width: -webkit-calc(100% - 380px);
       padding-right: 5px;
       font-size: 100%;
       @include mb {
@@ -305,8 +322,23 @@ li.webmail-accounts {
   .addon-body {
     min-height: 200px;
     border-top: 1px solid #e4e4e4;
-    .body--html img[data-url] {
-       height: none;
+    .body--html {
+      ul {
+        li {
+          list-style-type: disc;
+        }
+      }
+
+      blockquote {
+        padding: 2px 8px 2px 20px;
+        border-left-style: solid;
+        border-left-color: #ccc;
+        border-left-width: 5px;
+      }
+
+      img[data-url] {
+         height: unset;
+      }
     }
   }
   .attachments {
@@ -315,6 +347,11 @@ li.webmail-accounts {
     .file {
       display: inline-block;
       margin: 0 10px 10px 0;
+    }
+
+    .batch-download {
+      width: 100%;
+      text-align: right;
     }
   }
 }
@@ -348,7 +385,7 @@ li.webmail-accounts {
     span {
       float: left;
       max-width: 500px;
-      margin: 0px 4px 4px 0px;
+      margin: 0 4px 4px 0;
       padding: 2px 5px;
       border: 1px solid #bbccdd;
       border-radius: 3px;
@@ -375,7 +412,7 @@ li.webmail-accounts {
   .subject {
     float: left;
     width: calc(100% - 300px);
-    widht: -webkit-calc(100% - 300px);
+    width: -webkit-calc(100% - 300px);
     min-width: 300px;
     margin-bottom: 15px;
     input {
@@ -438,5 +475,38 @@ li.webmail-accounts {
 .webmail-filter-conditions {
   div {
     margin: 15px 0 0;
+  }
+}
+
+// -------------------------------------------------------------------------------------------------
+// tab
+
+.webmail-tabs {
+  @include clear;
+  margin-top: -1px;
+  a {
+    display: block;
+    float: left;
+    margin: 1px 0 -1px 6px;
+    border: 1px solid $gray4;
+    border-left: 3px solid #bbb;
+    border-radius: 0 4px 0 0;
+    background-color: $gray5;
+    color: #000;
+    .tab-name {
+      display: block;
+      padding: 5px 8px;
+      text-align: center;
+    }
+    &:hover {
+      border-left-color: $orange;
+      background-color: #fff;
+      text-decoration: none;
+    }
+  }
+  a.current {
+    border-bottom-color: #fff;
+    border-left-color: $orange;
+    background-color: #fff;
   }
 }

@@ -57,7 +57,6 @@ describe Gws::Workflow::FilesController, type: :feature, dbscope: :example, tmpd
       expect(item.workflow_approvers).to \
         include({level: 1, user_id: user2.id, editable: '', state: 'request', comment: ''})
 
-      expect(Sys::MailLog.count).to eq 2
       expect(Gws::Memo::Notice.count).to eq 2
 
       #
@@ -83,7 +82,6 @@ describe Gws::Workflow::FilesController, type: :feature, dbscope: :example, tmpd
       expect(item.workflow_approvers).to \
         include({level: 1, user_id: user2.id, editable: '', state: 'request', comment: ''})
 
-      expect(Sys::MailLog.count).to eq 2
       expect(Gws::Memo::Notice.count).to eq 2
 
       #
@@ -109,7 +107,6 @@ describe Gws::Workflow::FilesController, type: :feature, dbscope: :example, tmpd
       expect(item.workflow_approvers).to \
         include({level: 1, user_id: user2.id, editable: '', state: 'approve', comment: remand_comment2, file_ids: nil})
 
-      expect(Sys::MailLog.count).to eq 3
       expect(Gws::Memo::Notice.count).to eq 3
     end
   end

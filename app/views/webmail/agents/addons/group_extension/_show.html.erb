@@ -1,0 +1,45 @@
+<% default_setting = t('webmail.default_settings') %>
+
+<% render_row = proc do |number, setting| %>
+  <% imap = Webmail::Imap::Base.new_by_group(@item, setting) %>
+  <% quota = imap.quota.cache_find rescue nil %>
+  <tr>
+    <td class="name"><%= link_to setting.name.presence || default_setting, webmail_group_account_path(group_id: @item.id) %></td>
+    <td class="imap-host"><%= setting.imap_host.presence || default_setting %></td>
+    <% if SS.config.webmail.cache_quota %>
+      <td class="quota" style="width: 160px">
+        <% if quota.present? %>
+          <% percent = quota.usage * 100 / quota.quota.to_f %>
+          <div class="ss-quota-bar" data-reloaded="<%= quota.reloaded.iso8601 %>" data-percent="<%= percent %>">
+            <div class="label">
+              <%= (quota.usage * 1_024).to_s(:human_size) %>/<%= (quota.quota * 1_024).to_s(:human_size) %>
+            </div>
+            <div class="usage" style="width: <%= percent %>%"></div>
+          </div>
+        <% else %>
+          <div class="ss-quota-bar">
+            <div class="label">--/--</div>
+            <div class="usage" style="width: 0px"></div>
+          </div>
+        <% end %>
+      </td>
+    <% end %>
+  </tr>
+<% end %>
+
+<dl class="see webmail-addon-group-extension">
+  <dt class="wide"></dt>
+  <% if @item.imap_settings.present? %>
+    <dd class="wide">
+      <table class="index">
+        <% @item.imap_settings.each_with_index do |setting, i| %>
+          <% render_row.call(i + 1, setting) %>
+        <% end %>
+      </table>
+    </dd>
+  <% else %>
+    <dd class="wide">
+      <%= link_to t('webmail.buttons.add_account'), edit_webmail_group_account_path(group_id: @item), class: 'btn btn-add-imap-setting' %>
+    </dd>
+  <% end %>
+</dl>

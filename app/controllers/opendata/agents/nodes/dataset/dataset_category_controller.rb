@@ -28,6 +28,7 @@ class Opendata::Agents::Nodes::Dataset::DatasetCategoryController < ApplicationC
   def index
     @count          = pages.size
     @node_url       = node_url
+    @dataset_path   = dataset_path
     default_options = { "s[category_id]" => @item.id }
     @search_path    = ->(options = {}) { search_datasets_path(default_options.merge(options)) }
     @rss_path       = ->(options = {}) { build_path("#{search_datasets_path}rss.xml", default_options.merge(options)) }
@@ -52,11 +53,15 @@ class Opendata::Agents::Nodes::Dataset::DatasetCategoryController < ApplicationC
         rss: @rss_path.call("sort" => "attention") }
     ]
 
+    @show_categories = false
+    @show_estat_categories = true
+
     max = 50
-    @areas    = aggregate_areas(max)
-    @tags     = aggregate_tags(max)
-    @formats  = aggregate_formats(max)
-    @licenses = aggregate_licenses(max)
+    @areas            = aggregate_areas(max)
+    @estat_categories = aggregate_estat_categories(max)
+    @tags             = aggregate_tags(max)
+    @formats          = aggregate_formats(max)
+    @licenses         = aggregate_licenses(max)
   end
 
   def rss

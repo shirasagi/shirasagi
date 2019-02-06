@@ -1,0 +1,9 @@
+<nav class="nav-menu">
+  <% if params[:action] =~ /edit|update|delete/ %>
+    <%= link_to(t('ss.links.back_to_show'), { action: :show, account: @index }, class: "back-to-show") %>
+  <% else %>
+    <% if @cur_user.webmail_permitted_any?(:edit_webmail_accounts) %>
+      <%= link_to(t('ss.links.edit'), { action: :edit, account: @index }, class: :edit) %>
+    <% end %>
+  <% end %>
+</nav>

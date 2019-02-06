@@ -42,6 +42,8 @@ SS::Application.routes.draw do
       get :latest, on: :collection
     end
 
+    resource :notice_user_settings, only: [:show, :edit, :update]
+
     resources :comments, path: ':message_id/comments', only: [:create, :destroy]
 
     namespace "apis" do
@@ -49,6 +51,7 @@ SS::Application.routes.draw do
       get "personal_addresses" => "personal_addresses#index"
       get "messages" => "messages#index"
       get "categories" => "categories#index"
+      get "folders/:mode" => "folders#index", as: 'folders'
     end
 
     scope '/management' do

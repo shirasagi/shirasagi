@@ -69,6 +69,7 @@ ja:
       gws/board/notify_setting: 通知
 
   gws_role:
+    use_gws_board: 掲示板の利用
     read_other_gws_board_posts: 投稿の閲覧（全て）
     read_private_gws_board_posts: 投稿の閲覧（所有）
     edit_other_gws_board_posts: 投稿の編集（全て）
@@ -86,28 +87,28 @@ ja:
 
   gws_notification:
     gws/board/topic:
-      subject: "[更新通知][掲示板] %{name}"
-      text: |
-        「%{name}」が作成または更新されました。
+      subject: "[掲示板] 「%{name}」が登録または更新されました。"
+      text: "%{text}"
+      mail_text: |
+         %{subject}
 
-        %{text}
+         %{text}
 
     gws/board/post:
-      subject: "[更新通知][掲示板] %{name}"
-      text: |
-        「%{name}」に投稿がありました。
+      subject: "[掲示板] 「%{name}」に新しい投稿がありました。"
+      text: "%{text}"
+      mail_text: |
+        %{subject}
 
         %{text}
 
     gws/board/topic/destroy:
-      subject: "[削除通知][掲示板] %{name}"
-      text: |
-        「%{name}」が削除されました。
+      subject: "[掲示板] 「%{name}」が削除されました。"
+      text: ""
 
     gws/board/post/destroy:
-      subject: "[削除通知][掲示板] %{name}"
-      text: |
-        「%{name}」の投稿が削除されました。
+      subject: "[掲示板] 「%{name}」の投稿が削除されました。"
+      text: "%{text}"
 
   mongoid:
     models:

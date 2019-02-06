@@ -6,7 +6,7 @@ describe Webmail::Imap::Mail, type: :model, dbscope: :example do
   let(:cond) { item.condition }
 
   context 'default scope' do
-    let(:item) { Webmail::Imap::Base.new(user, setting).mails }
+    let(:item) { Webmail::Imap::Base.new_by_user(user, setting).mails }
 
     it do
       expect(cond[:mailbox]).to eq 'INBOX'
@@ -21,7 +21,7 @@ describe Webmail::Imap::Mail, type: :model, dbscope: :example do
 
   context 'custom scope' do
     let(:item) do
-      Webmail::Imap::Base.new(user, setting).mails.
+      Webmail::Imap::Base.new_by_user(user, setting).mails.
         mailbox('INBOX.test').
         search(from: 'aaa', since: '2017-01-01').
         per(10).page(2)

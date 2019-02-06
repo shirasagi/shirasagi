@@ -13,6 +13,7 @@ module Cms::Addon
 
       if respond_to?(:template_variable_handler)
         template_variable_handler('img.src', :template_variable_handler_img_src)
+        template_variable_handler('thumb.src', :template_variable_handler_thumb_src)
       end
     end
 
@@ -43,6 +44,10 @@ module Cms::Addon
       extract_img_src(html) || default_img_src
     end
 
+    def template_variable_handler_thumb_src(name, issuer)
+      thumb_path || extract_img_src(html) || default_img_src
+    end
+
     def default_img_src
       ERB::Util.html_escape("/assets/img/dummy.png")
     end
@@ -62,6 +67,10 @@ module Cms::Addon
         img_source = ::File.dirname(url) + '/' + img_source
       end
       img_source
+    end
+
+    def thumb_path
+      "/fs/#{thumb.id}/#{thumb.filename}" if thumb.present?
     end
   end
 end

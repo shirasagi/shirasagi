@@ -17,9 +17,16 @@
   </tr>
 
   <tr class="parent-row">
-    <td class="field"><%= @model.t :category_ids %><%= required_label %></td>
+    <td class="field"><%= @model.t :category_ids %></td>
     <td class="input">
       <%= render(file: 'opendata/agents/nodes/mypage/main/_category_form', locals: { f: f, model: Opendata::Node::Dataset }) %>
+    </td>
+  </tr>
+
+  <tr class="parent-row">
+    <td class="field"><%= @model.t :estat_category_ids %></td>
+    <td class="input">
+      <%= render(file: 'opendata/agents/nodes/mypage/main/_estat_category_form', locals: { f: f, model: Opendata::Node::Dataset }) %>
     </td>
   </tr>
 

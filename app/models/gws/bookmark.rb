@@ -2,12 +2,14 @@ class Gws::Bookmark
   include SS::Document
   include Gws::Reference::User
   include Gws::Reference::Site
-  include SS::UserPermission
+  include Gws::SitePermission
 
   BOOKMARK_MODEL_TYPES = %w(
     portal reminder bookmark schedule memo board faq qna report workflow
     circular discussion monitor share shared_address elasticsearch staff_record
   ).freeze
+
+  set_permission_name 'gws_bookmarks', :edit
 
   seqid :id
   field :name, type: String

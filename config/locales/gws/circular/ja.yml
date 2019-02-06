@@ -41,8 +41,8 @@ ja:
         normal: 通常回覧
         simple: 簡易回覧
       article_state:
-        both: 両方
-        unseen: 未読のみ
+        both: 全表示
+        unseen: 未読
       circular_delete_threshold:
         - 6ヶ月
         - 1年
@@ -57,6 +57,7 @@ ja:
       gws/circular/group_setting: 回覧板
       gws/circular/category: カテゴリー
   gws_role:
+    use_gws_circular: 回覧板の利用
     read_other_gws_circular_posts: 回覧板の閲覧（全て）
     read_private_gws_circular_posts: 回覧板の閲覧（所有）
     edit_other_gws_circular_posts: 回覧板の編集（全て）
@@ -74,16 +75,18 @@ ja:
 
   gws_notification:
     gws/circular/post:
-      subject: "[更新通知][回覧板] %{name}"
-      text: |
-        「%{name}」が公開されました。
+      subject: "[回覧板] 「%{name}」が届きました。"
+      text: "%{text}"
+      mail_text: |
+        %{subject}
 
         %{text}
 
     gws/circular/post/remove:
-      subject: "[更新通知][回覧板] %{name}"
-      text: |
-        「%{name}」が取り下げられました。
+      subject: "[回覧板] 「%{name}」が取り下げられました。"
+      text: ""
+      mail_text: |
+        %{subject}
 
   mongoid:
     models:

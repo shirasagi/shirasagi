@@ -1,20 +1,33 @@
 class Opendata::Agents::Nodes::Dataset::ResourceController < ApplicationController
   include Cms::NodeFilter::View
   include Opendata::UrlHelper
+  include SS::AuthFilter
 
   before_action :accept_cors_request
   before_action :set_dataset
+  before_action :deny
 
   private
 
   def set_dataset
     @dataset_path = @cur_main_path.sub(/\/resource\/.*/, ".html")
 
-    @dataset = Opendata::Dataset.site(@cur_site).and_public.
-      filename(@dataset_path).
-      first
-
+    @dataset = Opendata::Dataset.site(@cur_site).filename(@dataset_path).first
     raise "404" unless @dataset
+  end
+
+  def deny
+    return if @dataset.public?
+    return if SS.config.env.remote_preview
+
+    user = get_user_by_session
+    raise "404" unless user
+
+    set_last_logged_in
+  end
+
+  def set_last_modified
+    response.headers["Last-Modified"] = CGI::rfc1123_date(@dataset.updated.in_time_zone)
   end
 
   public
@@ -39,8 +52,76 @@ class Opendata::Agents::Nodes::Dataset::ResourceController < ApplicationControll
     @cur_node.layout_id = nil
 
     @item = @dataset.resources.find_by id: params[:id]
-    raise "404" unless @item.tsv_present?
+    if Mongoid::Config.clients[:default_post].blank?
+      @item.create_preview_history
+    end
 
-    head :ok unless @data = @item.parse_tsv
+    if @item.tsv_present?
+      tsv_content
+    elsif @item.xls_present?
+      xls_content
+    elsif @item.kml_present?
+      kml_content
+    elsif @item.geojson_present?
+      geojson_content
+    elsif @item.pdf_present?
+      pdf_content
+    elsif @item.image_present?
+      image_content
+    else
+      raise "404"
+    end
+  rescue => e
+    Rails.logger.error("#{e.class} (#{e.message}):\n  #{e.backtrace.join("\n  ")}")
+    render :error_content, layout: 'cms/ajax'
+  end
+
+  def tsv_content
+    @data = @item.parse_tsv
+    @map_markers = @item.extract_map_points(@data)
+
+    if @data.blank?
+      raise "404"
+    elsif @map_markers.present?
+      render :map_content
+    else
+      render :content, layout: 'cms/ajax'
+    end
+  end
+
+  def xls_content
+    @sheets, @data = @item.parse_xls_page(params[:page])
+    @map_markers = @item.extract_map_points(@data)
+
+    if @data.blank?
+      raise "404"
+    elsif @map_markers.present?
+      render :map_content, layout: 'cms/ajax'
+    else
+      render :content, layout: 'cms/ajax'
+    end
+  end
+
+  def kml_content
+    render :kml_content, layout: 'cms/ajax'
+  end
+
+  def geojson_content
+    render :geojson_content, layout: 'cms/ajax'
+  end
+
+  def pdf_content
+    @limit = SS.config.opendata.preview["pdf"]["page_limit"]
+    @images = @item.extract_pdf_base64_images(@limit)
+
+    if @images.blank?
+      raise "404"
+    else
+      render :pdf_content, layout: 'cms/ajax'
+    end
+  end
+
+  def image_content
+    render :image_content, layout: 'cms/ajax'
   end
 end

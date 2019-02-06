@@ -124,4 +124,14 @@ module Opendata::Part
       end
     end
   end
+
+  class DatasetCounter
+    include Cms::Model::Part
+    include Opendata::Addon::CounterHtml
+    include Cms::Addon::Release
+    include Cms::Addon::GroupPermission
+    include History::Addon::Backup
+
+    default_scope ->{ where(route: "opendata/dataset_counter") }
+  end
 end

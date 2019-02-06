@@ -1,4 +1,7 @@
 <dl class="see mod-event">
   <dt><%= @model.t :urgency_default_layout %></dt>
-  <dd><%= @item.send(:urgency_default_layout).try(:name).to_s %></dd>
+  <dd><%= @item.urgency_default_layout.try(:name) %></dd>
+
+  <dt><%= @model.t :urgency_mail_page_layout %></dt>
+  <dd><%= @item.urgency_mail_page_layout.try(:name) %></dd>
 </dl>

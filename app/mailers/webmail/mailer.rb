@@ -1,13 +1,18 @@
 class Webmail::Mailer < ActionMailer::Base
+  include SS::AttachmentSupport
+
   def new_message(item)
     @item = item
 
+    @item.size = 0
     @item.ref_files_with_data.each do |file|
-      attachments[file.name] = file.read
+      add_attachment_file(file)
+      @item.size += file.size
     end
 
     @item.files.each do |file|
-      attachments[file.name] = file.read
+      add_attachment_file(file)
+      @item.size += file.size
     end
 
     if @item.in_request_mdn == "1"

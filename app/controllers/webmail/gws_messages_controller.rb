@@ -15,7 +15,7 @@ class Webmail::GwsMessagesController < ApplicationController
   private
 
   def set_crumbs
-    @crumbs << [t("webmail.mail"), webmail_mails_path ]
+    @crumbs << [t("webmail.mail"), webmail_mails_path(webmail_mode: @webmail_mode) ]
   end
 
   def fix_params
@@ -46,7 +46,7 @@ class Webmail::GwsMessagesController < ApplicationController
 
   def new
     @item = @model.new fix_params
-    @item.subject = @mail.subject
+    @item.subject = @mail.display_subject
     @item.text = @mail.text
     @item.html = @mail.html
     @item.format = @mail.format

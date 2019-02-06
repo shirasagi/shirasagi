@@ -10,6 +10,7 @@ class Gws::Facility::Item
   include Gws::Addon::ReadableSetting
   include Gws::Addon::GroupPermission
   include Gws::Addon::History
+  include Gws::Addon::Import::Facility::Item
 
   store_in collection: "gws_facilities"
 

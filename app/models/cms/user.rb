@@ -6,6 +6,7 @@ class Cms::User
   include Cms::SitePermission
   include Cms::Addon::Import::User
   include SS::Addon::UserGroupHistory
+  include Sys::Reference::Role
 
   set_permission_name "cms_users", :edit
 

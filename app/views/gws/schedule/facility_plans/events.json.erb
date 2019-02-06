@@ -1,0 +1,11 @@
+<%
+
+start_at = params[:s][:start].to_date rescue nil
+end_at = params[:s][:end].to_date rescue nil
+
+if start_at && end_at
+  @events += group_holidays(start_at, end_at)
+  @events += calendar_holidays(start_at, end_at)
+end
+
+%><%== @events.to_json %>

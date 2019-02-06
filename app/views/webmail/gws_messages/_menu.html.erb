@@ -1,3 +1,3 @@
 <nav class="nav-menu">
-  <%= link_to(t('ss.links.back_to_show'), webmail_mail_path(mailbox: params[:mailbox]), class: "back-to-show") %>
+  <%= link_to(t('ss.links.back_to_show'), webmail_mail_path(webmail_mode: @webmail_mode, account: params[:account] || @cur_user.imap_default_index, mailbox: params[:mailbox]), class: "back-to-show") %>
 </nav>

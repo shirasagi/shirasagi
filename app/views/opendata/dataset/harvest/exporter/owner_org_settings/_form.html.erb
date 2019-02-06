@@ -1,0 +1,34 @@
+<dl class="see">
+  <dt><%= @model.t :name %><%= @item.tt :name %><%= required_label %></dt>
+  <dd><%= f.text_field :name %></dd>
+
+  <dt><%= @model.t :ckan_id %><%= @item.tt :ckan_id %><%= required_label %></dt>
+  <dd><%= f.text_field :ckan_id %></dd>
+
+  <dt><%= @model.t :order %><%= @item.tt :order %></dt>
+  <dd><%= f.number_field :order %></dd>
+
+  <dt><%= @model.t :group_ids %><%= @model.tt :group_ids %></dt>
+  <dd>
+    <%= f.hidden_field "group_ids[]", value: "", class: "hidden-ids" %>
+    <%= link_to t("ss.apis.groups.index"), cms_apis_groups_path, class: "ajax-box" %>
+  </dd>
+  <dd>
+    <table class="index ajax-selected">
+      <thead>
+      <tr>
+        <th class="name"><%= Cms::Group.t :name %></th>
+        <th></th>
+      </tr>
+      </thead>
+      <tbody>
+      <% @item.groups.each do |group| %>
+        <tr data-id="<%= group.id %>">
+          <td><%= f.hidden_field "group_ids[]", value: group.id %> <%= group.name %></td>
+          <td><%= link_to t("ss.buttons.delete"), "#", class: "deselect btn" %></td>
+        </tr>
+      <% end %>
+      </tbody>
+    </table>
+  </dd>
+</dl>

@@ -1,0 +1,12 @@
+<%= form_for :item, url: { action: :download }, html: { method: :get } do |f| %>
+  <%= error_messages_for :item %>
+
+  <section class="main-box">
+    <header><h2><%= t("opendata.public_entity.format") %></h2></header>
+    <p class="description"><%= t("opendata.public_entity.download") %></p>
+
+    <footer class="send">
+      <%= f.submit t("ss.links.download"), class: :save %>
+    </footer>
+  </section>
+<% end %>

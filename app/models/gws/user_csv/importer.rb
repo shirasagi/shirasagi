@@ -31,6 +31,8 @@ class Gws::UserCsv::Importer
       @row = row
 
       item = build_item
+      next if item.blank?
+
       save_item(item)
       save_form_data(item)
     end
@@ -81,16 +83,9 @@ class Gws::UserCsv::Importer
   end
 
   def build_item
-    id = row_value('id')
-    if id.present?
-      item = Gws::User.unscoped.where(id: id).first
-      if item.blank?
-        errors.add(:base, :not_found, line_no: @row_index, id: id)
-        return nil
-      end
-    else
-      item = Gws::User.new
-    end
+    item, fatal_error = find_item
+    return if fatal_error
+    item ||= Gws::User.new
     item.cur_site = cur_site
     item.cur_user = cur_user
 
@@ -109,6 +104,31 @@ class Gws::UserCsv::Importer
     end
 
     item
+  end
+
+  def find_item
+    id = row_value('id')
+    if id.present?
+      item = Gws::User.unscoped.site(cur_site).where(id: id).first
+      if item.blank?
+        errors.add(:base, :not_found, line_no: @row_index, id: id)
+        return [ nil, true ]
+      end
+
+      return [ item, false ]
+    end
+
+    %w(uid email).each do |key|
+      val = row_value(key)
+      next if val.blank?
+
+      item = Gws::User.unscoped.site(cur_site).where(key => val).first
+      next if item.blank?
+
+      return [ item, false ]
+    end
+
+    [ nil, false ]
   end
 
   def set_password(item)
@@ -188,8 +208,11 @@ class Gws::UserCsv::Importer
   end
 
   def set_errors(item)
+    sig = "#{Gws::User.t(:uid)}: #{item.uid}の" if item.uid.present?
+    sig ||= "#{Gws::User.t(:email)}: #{item.email}の" if item.email.present?
+    sig ||= "#{Gws::User.t(:id)}: #{item.id}の" if item.persisted?
     item.errors.full_messages.each do |error|
-      errors.add(:base, "#{@row_index}: #{error}")
+      errors.add(:base, "#{@row_index}行目: #{sig}#{error}")
     end
   end
 

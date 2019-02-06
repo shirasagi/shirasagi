@@ -1,0 +1,15 @@
+<% @index_title = proc do |item| %>
+  <%= link_to(item.humanized_name, { action: :show, id: item }, class: 'title') %>
+<% end %>
+
+<div class="webmail-history-tabs webmail-tabs">
+  <%= link_to webmail_histories_path, class: "users" do %>
+    <span class="tab-name"><%= t('mongoid.models.webmail/history') %></span>
+  <% end %>
+
+  <%= link_to webmail_history_archives_path, class: "times current" do %>
+    <span class="tab-name"><%= t('mongoid.models.webmail/history/archive_file') %></span>
+  <% end %>
+</div>
+
+<%= render file: 'ss/crud/index' %>

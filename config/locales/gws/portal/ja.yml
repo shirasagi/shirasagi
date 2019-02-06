@@ -11,7 +11,7 @@ ja:
       gws/portal/portlet/board: 掲示板設定
       gws/portal/portlet/faq: よくある質問設定
       gws/portal/portlet/qna: Ｑ＆Ａ設定
-      gws/portal/portlet/circular: 掲示板設定
+      gws/portal/portlet/circular: 回覧板設定
       gws/portal/portlet/monitor: 照会・回答設定
       gws/portal/portlet/share: 共有ファイル設定
       gws/portal/portlet/report: レポート設定
@@ -20,6 +20,8 @@ ja:
       gws/portal/portlet/notice: お知らせ設定
       gws/portal/portlet/presence: 在席管理設定
       gws/portal/portlet/survey: アンケート
+      gws/portal/portlet/ad: 広告
+      gws/portal/portlet/link_file: ファイル
 
   gws/portal:
     self_portal: 個人
@@ -89,6 +91,9 @@ ja:
       survey:
         name: アンケート
         text: 新着または期限間近のアンケートを表示します。
+      ad:
+        name: 広告
+        text: 広告を表示します。
     links:
       manage_portlets: ポートレットの管理
       arrange_portlets: ポートレットの配置
@@ -159,6 +164,7 @@ ja:
         qna_category_ids: カテゴリー
       gws/addon/portal/portlet/circular:
         circular_category_ids: カテゴリー
+        circular_article_state: 表示種別
       gws/addon/portal/portlet/monitor:
         monitor_category_ids: カテゴリー
         monitor_answerable_article: 表示範囲
@@ -179,9 +185,23 @@ ja:
         survey_answered_state: 回答・未回答
         survey_sort: 並び順
         survey_category_ids: カテゴリー
+      gws/addon/portal/portlet/ad:
+        files: ファイル
+        time: 画像切り替え時間
+        ad_sort: 並び順
+        ad_category_ids: カテゴリー
+    errors:
+      models:
+        gws/addon/portal/portlet/ad:
+          attributes:
+            files:
+              too_many_files: "は%{limit}つまで添付することができます。"
 
   tooltip:
     gws/portal/user_setting:
     gws/portal/group_setting:
     gws/portal/portlet_model:
       name: ポートレット名を入力します。
+      circular_article_state:
+        - <b>未読</b> - 未読のみをポータルに表示する。
+        - <b>全表示</b> - 既読・未読すべてをポータルに表示する。

@@ -29,4 +29,7 @@ $('#item-form').submit(function(){
     <dd><label><%= f.check_box :rm_content_csv_file %><%= t('ss.buttons.delete') %> (<%= @item.content_csv_file.filename %>)</label></dd>
     <% end %>
   <% end %>
+
+  <dt><%= @model.t :delete_method %><%= @model.tt :delete_method %></dt>
+  <dd><%= f.select :delete_method, @item.delete_method_options %></dd>
 </dl>

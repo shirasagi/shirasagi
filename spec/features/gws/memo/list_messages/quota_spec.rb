@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe 'gws_memo_list_messages', type: :feature, dbscope: :example, js: true do
+describe 'gws_memo_list_messages', type: :feature, dbscope: :example do
   let(:site) { gws_site }
   let(:quota_size) { rand(10) }
   let!(:sender) { create(:gws_user, cur_site: site, gws_role_ids: gws_user.gws_role_ids) }

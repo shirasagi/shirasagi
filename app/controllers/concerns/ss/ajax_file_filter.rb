@@ -24,8 +24,9 @@ module SS::AjaxFileFilter
     end
 
     item.in_file = @item.uploaded_file
-    item.state   = "public"
-    item.name    = @item.name
+    item.state = "public"
+    item.name = @item.name
+    item.unnormalize = true if params[:unnormalize].present?
     item.save
     item.in_file.delete
     @item = item
