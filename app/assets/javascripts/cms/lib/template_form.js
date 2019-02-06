@@ -247,61 +247,10 @@ Cms_TemplateForm.prototype.movePosition = function($evSource) {
     moveToMethod = $moveTo.after.bind($moveTo);
   }
 
-  var moveTo = $moveTo[0];
-
-  if (moveToIndex < sourceIndex) {
-    // moveUp
-    source.style.transitionDuration = Cms_TemplateForm.duration + "ms";
-    source.style.transform = "translateY(" + (moveTo.offsetTop - source.offsetTop) + "px)";
-
-    var sourceBottom = source.offsetTop + source.offsetHeight;
-    var prev = $columnValues[sourceIndex - 1];
-    var prevBottom = prev.offsetTop + prev.offsetHeight;
-    var diff = sourceBottom - prevBottom;
-
-    for (var i = moveToIndex; i < sourceIndex; i++) {
-      var el = $columnValues[i];
-      el.style.transitionDuration = Cms_TemplateForm.duration + "ms";
-      el.style.transform = "translateY(" + diff + "px)";
-    }
-
-    setTimeout(function() {
-      $columnValues.each(function() {
-        if (this.style.transitionDuration) {
-          this.style.transitionDuration = "";
-          this.style.transform = "";
-        }
-      });
-      moveToMethod($source);
-      self.resetOrder();
-    }, Cms_TemplateForm.duration);
-  } else if (moveToIndex > sourceIndex) {
-    // moveDown
-    var moveToBottom = moveTo.offsetTop + moveTo.offsetHeight;
-    var sourceBottom = source.offsetTop + source.offsetHeight;
-    source.style.transitionDuration = Cms_TemplateForm.duration + "ms";
-    source.style.transform = "translateY(" + (moveToBottom - sourceBottom) + "px)";
-
-    var next = $columnValues[sourceIndex + 1];
-    var diff = source.offsetTop - next.offsetTop;
-
-    for (var i = sourceIndex + 1; i <= moveToIndex; i++) {
-      var el = $columnValues[i];
-      el.style.transitionDuration = Cms_TemplateForm.duration + "ms";
-      el.style.transform = "translateY(" + diff + "px)";
-    }
-
-    setTimeout(function() {
-      $columnValues.each(function() {
-        if (this.style.transitionDuration) {
-          this.style.transitionDuration = "";
-          this.style.transform = "";
-        }
-      });
-      moveToMethod($source);
-      self.resetOrder();
-    }, Cms_TemplateForm.duration);
-  }
+  Cms_TemplateForm.insertElement($source, $moveTo, function() {
+    moveToMethod($source);
+    self.resetOrder();
+  });
 };
 
 Cms_TemplateForm.prototype.moveUp = function($evTarget) {
@@ -316,7 +265,7 @@ Cms_TemplateForm.prototype.moveUp = function($evTarget) {
   }
 
   var self = this;
-  this.swapElement($prev, $columnValue, function() {
+  Cms_TemplateForm.swapElement($prev, $columnValue, function() {
     $prev.before($columnValue);
     self.resetOrder();
   });
@@ -334,21 +283,18 @@ Cms_TemplateForm.prototype.moveDown = function($evTarget) {
   }
 
   var self = this;
-  this.swapElement($columnValue, $next, function() {
+  Cms_TemplateForm.swapElement($columnValue, $next, function() {
     $next.after($columnValue);
     self.resetOrder();
   });
 };
 
-Cms_TemplateForm.prototype.swapElement = function($upper, $lower, completion) {
+Cms_TemplateForm.swapElement = function($upper, $lower, completion) {
   var upper = $upper[0];
   var lower = $lower[0];
 
   var diff = lower.offsetTop - upper.offsetTop;
   var spacing = lower.offsetTop - (upper.offsetTop + upper.offsetHeight);
-
-  var saveUpperTransitionDuration = upper.style.transitionDuration;
-  var saveLowerTransitionDuration = lower.style.transitionDuration;
 
   upper.style.transitionDuration = Cms_TemplateForm.duration + 'ms';
   lower.style.transitionDuration = Cms_TemplateForm.duration + 'ms';
@@ -356,10 +302,82 @@ Cms_TemplateForm.prototype.swapElement = function($upper, $lower, completion) {
   lower.style.transform = "translateY(" + (-diff) + "px)";
 
   setTimeout(function() {
-    upper.style.transitionDuration = saveUpperTransitionDuration;
-    lower.style.transitionDuration = saveLowerTransitionDuration;
-    upper.style.transform = "translateY(0)";
-    lower.style.transform = "translateY(0)";
+    upper.style.transitionDuration = "";
+    lower.style.transitionDuration = "";
+    upper.style.transform = "";
+    lower.style.transform = "";
+
+    completion();
+  }, Cms_TemplateForm.duration);
+};
+
+Cms_TemplateForm.insertElement = function($source, $destination, completion) {
+  var source = $source[0];
+  var destination = $destination[0];
+
+  if (source === destination) {
+    completion();
+    return;
+  }
+
+  var sourceDisplacement;
+  var destinationDisplacement;
+  var intermediateElements = [];
+  if (destination.offsetTop < source.offsetTop) {
+    // moveUp
+    if (source === destination.nextElementSibling) {
+      Cms_TemplateForm.swapElement($destination, $source, completion);
+      return;
+    }
+
+    var sourceBottom = source.offsetTop + source.offsetHeight;
+    var prev = source.previousElementSibling;
+    var prevBottom = prev.offsetTop + prev.offsetHeight;
+
+    sourceDisplacement = destination.offsetTop - source.offsetTop;
+    destinationDisplacement = sourceBottom - prevBottom;
+
+    var el = destination;
+    while (el !== source) {
+      intermediateElements.push(el);
+      el = el.nextElementSibling;
+    }
+  } else if (destination.offsetTop > source.offsetTop) {
+    // moveDown
+    if (source === destination.previousElementSibling) {
+      Cms_TemplateForm.swapElement($source, $destination, completion);
+      return;
+    }
+
+    var destinationBottom = destination.offsetTop + destination.offsetHeight;
+    var sourceBottom = source.offsetTop + source.offsetHeight;
+    var next = source.nextElementSibling;
+
+    sourceDisplacement = destinationBottom - sourceBottom;
+    destinationDisplacement = source.offsetTop - next.offsetTop;
+
+    var el = destination;
+    while (el !== source) {
+      intermediateElements.push(el);
+      el = el.previousElementSibling;
+    }
+  }
+
+  source.style.transitionDuration = Cms_TemplateForm.duration + "ms";
+  source.style.transform = "translateY(" + sourceDisplacement + "px)";
+
+  intermediateElements.forEach(function(el) {
+    el.style.transitionDuration = Cms_TemplateForm.duration + "ms";
+    el.style.transform = "translateY(" + destinationDisplacement + "px)";
+  });
+
+  setTimeout(function() {
+    source.style.transitionDuration = "";
+    source.style.transform = "";
+    intermediateElements.forEach(function(el) {
+      el.style.transitionDuration = "";
+      el.style.transform = "";
+    });
 
     completion();
   }, Cms_TemplateForm.duration);

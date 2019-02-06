@@ -237,7 +237,7 @@ SS_Preview = (function () {
         var name = $dataEl.find(".name").text();
 
         var $nodeDataEl = $selectNodeBtn.closest("[data-node-id]");
-        $nodeDataEl.data("node-id", id);
+        SS_Preview.setData($nodeDataEl, "node-id", id);
         $nodeDataEl.find("label").html(name);
       });
 
@@ -704,6 +704,21 @@ SS_Preview = (function () {
     });
   };
 
+  SS_Preview.camelize = function(str) {
+    return str.replace(/(?:^\w|[A-Z]|\b\w)/g, function(letter, index) {
+      return index == 0 ? letter.toLowerCase() : letter.toUpperCase();
+    }).replace(/[\s-]+/g, '');
+  };
+
+  SS_Preview.setData = function($el, name, value) {
+    $el.data(name, value);
+
+    var camelizedName = SS_Preview.camelize(name);
+    $el.each(function() {
+      this.dataset[camelizedName] = value;
+    });
+  };
+
   SS_Preview.prototype.finishColumnMoveUp = function(ids, data) {
     this.overlay.hide();
 
@@ -716,10 +731,11 @@ SS_Preview = (function () {
       return;
     }
 
-    $prev.data("column-order", data[$prev.data("column-id")]);
-    $target.data("column-order", data[$target.data("column-id")]);
-
-    $target.after($prev);
+    Cms_TemplateForm.swapElement($prev, $target, function() {
+      SS_Preview.setData($prev, "column-order", data[$prev.data("column-id")]);
+      SS_Preview.setData($target, "column-order", data[$target.data("column-id")]);
+      $target.after($prev);
+    });
   };
 
   SS_Preview.prototype.postColumnMoveDown = function(ids) {
@@ -760,10 +776,11 @@ SS_Preview = (function () {
       return;
     }
 
-    $next.data("column-order", data[$next.data("column-id")]);
-    $target.data("column-order", data[$target.data("column-id")]);
-
-    $target.before($next);
+    Cms_TemplateForm.swapElement($target, $next, function() {
+      SS_Preview.setData($next, "column-order", data[$next.data("column-id")]);
+      SS_Preview.setData($target, "column-order", data[$target.data("column-id")]);
+      $target.before($next);
+    });
   };
 
   SS_Preview.prototype.postColumnMovePosition = function(ids, order) {
@@ -777,7 +794,6 @@ SS_Preview = (function () {
       data: { authenticity_token: token, order: order },
       success: function(data) {
         self.finishColumnMovePosition(ids, order, data);
-        self.notice.show("移動しました。");
       },
       error: function(xhr, status, error) {
         self.notice.show(error);
@@ -788,31 +804,28 @@ SS_Preview = (function () {
   SS_Preview.prototype.finishColumnMovePosition = function(ids, order, data) {
     this.overlay.hide();
 
-    var $target = $(document).find(".ss-preview-column[data-page-id='" + ids.pageId + "'][data-column-id='" + ids.columnId + "']");
-    if (!$target[0]) {
+    var $source = $(document).find(".ss-preview-column[data-page-id='" + ids.pageId + "'][data-column-id='" + ids.columnId + "']");
+    if (!$source[0]) {
+      return;
+    }
+    var sourceOrder = $source.data("column-order");
+
+    var $destination = $(document).find(".ss-preview-column[data-page-id='" + ids.pageId + "'][data-column-order='" + order + "']");
+    if (!$destination[0]) {
       return;
     }
 
-    var move_p;
-    if (order === -1) {
-      var all = $(document).find("#ss-preview-form-end").prevAll(".ss-preview-column[data-page-id='" + ids.pageId + "']");
-      if (all[0]) {
-        move_p = function() { $(all[0]).after($target); };
+    Cms_TemplateForm.insertElement($source, $destination, function() {
+      $(document).find(".ss-preview-column[data-page-id='" + ids.pageId + "']").each(function() {
+        var $this = $(this);
+        SS_Preview.setData($this, "column-order", data[$this.data("column-id")]);
+      });
+      if (order < sourceOrder) {
+        $destination.before($source);
+      } else {
+        $destination.after($source);
       }
-    } else {
-      var $prev = $(document).find(".ss-preview-column[data-page-id='" + ids.pageId + "'][data-column-order='" + order + "']");
-      move_p = function() { $prev.before($target); };
-    }
-    if (!move_p) {
-      return;
-    }
-
-    $(document).find(".ss-preview-column[data-page-id='" + ids.pageId + "']").each(function() {
-      var $this = $(this);
-      $this.data("column-order", data[$this.data("column-id")]);
     });
-
-    move_p();
   };
 
   SS_Preview.prototype.previewPc = function() {
@@ -1082,17 +1095,7 @@ SS_Preview = (function () {
     this.container = container;
     this.$overlay = $("#ss-preview-overlay");
 
-    var select = this.$overlay.find(".ss-preview-overlay-btn-move-position");
-    if (select[0]) {
-      var html = [];
-      $(document).find(".ss-preview-column[data-column-order]").each(function () {
-        var order = parseInt(this.dataset.columnOrder, 10);
-        html.push("<option value=\"" + order + "\">" + (order + 1) + "</option>");
-      });
-      html.push("<option value=\"-1\">末尾</option>");
-
-      select.html(html.join(""));
-    }
+    this.initPosition();
 
     var self = this;
     this.$overlay.on("click", ".ss-preview-overlay-btn-edit", function() {
@@ -1132,6 +1135,19 @@ SS_Preview = (function () {
     this.on = this.$overlay.on.bind(this.$overlay);
     this.off = this.$overlay.off.bind(this.$overlay);
   }
+
+  Overlay.prototype.initPosition = function() {
+    var select = this.$overlay.find(".ss-preview-overlay-btn-move-position");
+    if (select[0]) {
+      var html = [];
+      $(document).find(".ss-preview-column[data-column-order]").each(function () {
+        var order = parseInt(this.dataset.columnOrder, 10);
+        html.push("<option value=\"" + order + "\">" + (order + 1) + "</option>");
+      });
+
+      select.html(html.join(""));
+    }
+  };
 
   Overlay.prototype.hide = function() {
     this.$overlay.addClass("ss-preview-hide");
@@ -1210,8 +1226,8 @@ SS_Preview = (function () {
   };
 
   Overlay.prototype.setInfo = function(info) {
-    this.$overlay.data("mode", info.mode);
-    this.$overlay.data("id", info.id);
+    SS_Preview.setData(this.$overlay, "mode", info.mode);
+    SS_Preview.setData(this.$overlay, "id", info.id);
 
     if (info.name) {
       this.$overlay.find(".ss-preview-overlay-name").text(info.name).removeClass("ss-preview-hide");
