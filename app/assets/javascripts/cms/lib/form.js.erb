@@ -79,6 +79,7 @@ this.Cms_Form = (function () {
         }
       }
     });
+  };
 
   Cms_Form.getEditorHtml = function (id) {
     var html;
@@ -170,7 +171,7 @@ this.Form_Alert = (function () {
     return $.each(Form_Alert.beforeSaves, function () {
       return this(form, submit);
     });
-  }
+  };
 
   Form_Alert.showAlert = function (form, submit) {
     var div = $('<div id="alertExplanation" class="errorExplanation">');

@@ -119,41 +119,4 @@ module Cms::Addon::Form::Page
       SS::File.in(id: file_ids).destroy_all
     end
   end
-
-  def update_column_values_updated(*_args)
-    self.column_values_updated = Time.zone.now
-  end
-
-  def column_values_was
-    docs = attribute_was("column_values")
-
-    if docs.present?
-      docs = docs.map do |doc|
-        Mongoid::Factory.build(Cms::Column::Value::Base, doc)
-      end
-    end
-
-    docs || []
-  end
-
-  def delete_unlinked_files
-    file_ids_is = []
-    self.column_values.each do |column_value|
-      file_ids_is += column_value.all_file_ids
-    end
-    file_ids_is.compact!
-    file_ids_is.uniq!
-
-    file_ids_was = []
-    column_values_was.each do |column_value|
-      file_ids_was += column_value.all_file_ids
-    end
-    file_ids_was.compact!
-    file_ids_was.uniq!
-
-    unlinked_file_ids = file_ids_was - file_ids_is
-    unlinked_file_ids.each_slice(20) do |file_ids|
-      SS::File.in(id: file_ids).destroy_all
-    end
-  end
 end
