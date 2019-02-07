@@ -12,3 +12,4 @@ Cms_Inplace_Form.setContent = function (content) {
 <% end %>
 
 <%= text_field_tag(name, value.try(:image_text), column.form_options(:image_text).merge(id: nil, "data-check-presence": Cms::Column::FileUpload.t("image_text"))) %>
+<%= select_tag("#{f.object_name}[][in_wrap][image_html_type]", options_for_select(column.image_html_type_options, value.try(:image_html_type)), style: "width: 10%;") %>

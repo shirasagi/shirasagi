@@ -81,6 +81,9 @@ ja:
       height: 行数
       header: ヘッダ
       create: 表を作成する
+    column_youtube_auto_width:
+      enabled: 画面幅に合わせる
+      disabled: 画面幅に合わせない
 
     adobe_reader:
       remark:
@@ -250,6 +253,9 @@ ja:
         video: 動画
         attachment: 添付ファイル
         banner: バナー
+      column_image_html_type:
+        thumb: サムネイル
+        image: 画像貼付
       column_header_type:
         top: 上部
         left: 左側
@@ -511,6 +517,10 @@ ja:
       models:
         cms/model/node:
           routed_folders_under_uploader: アップローダー下に属性付きフォルダーは作成できません。アップローダーに切り替え、新規フォルダーよりフォルダーを作成してください。
+        cms/column/value/youtube:
+          attributes:
+            url:
+              youtube_id_can_not_get: からYouTubeIDが取得できませんでした。
     attributes:
       cms/content:
         released: 公開日時

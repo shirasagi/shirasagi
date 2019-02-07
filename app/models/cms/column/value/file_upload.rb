@@ -4,12 +4,13 @@ class Cms::Column::Value::FileUpload < Cms::Column::Value::Base
   belongs_to :file, class_name: 'SS::File'
   field :label, type: String
   field :image_text, type: String
+  field :image_html_type, type: String
   field :video_description, type: String
   field :attachment_text, type: String
   field :banner_link, type: String
   field :banner_text, type: String
 
-  permit_values :file_id, :label, :image_text, :video_description, :attachment_text, :banner_link, :banner_text
+  permit_values :file_id, :label, :image_text, :image_html_type, :video_description, :attachment_text, :banner_link, :banner_text
 
   before_save :before_save_file
   after_destroy :delete_file
@@ -17,6 +18,7 @@ class Cms::Column::Value::FileUpload < Cms::Column::Value::Base
   liquidize do
     export :file
     export :image_text
+    export :image_html_type
     export :video_description
     export :attachment_text
     export :banner_link
@@ -128,8 +130,12 @@ class Cms::Column::Value::FileUpload < Cms::Column::Value::Base
     return '' if file.blank?
     case column.file_type
     when 'image'
-      ApplicationController.helpers.link_to(file.url) do
-        ApplicationController.helpers.image_tag(file.url, alt: image_text)
+      if image_html_type == "thumb"
+        ApplicationController.helpers.link_to(file.url) do
+          ApplicationController.helpers.image_tag(file.thumb_url, alt: image_text || file.humanized_name)
+        end
+      elsif image_html_type == "image"
+        ApplicationController.helpers.image_tag(file.url, alt: image_text || file.humanized_name)
       end
     when 'video'
       div_content = []
@@ -139,7 +145,7 @@ class Cms::Column::Value::FileUpload < Cms::Column::Value::Base
         div_content.join.html_safe
       end
     when 'attachment'
-      ApplicationController.helpers.link_to((attachment_text || file.extname), file.url)
+      ApplicationController.helpers.link_to("#{(attachment_text || file.extname)}(#{file.extname.upcase} #{ActionController::Base.helpers.number_to_human_size(file.size)})", file.url)
     when 'banner'
       ApplicationController.helpers.link_to(banner_link) do
         ApplicationController.helpers.image_tag(file.url, alt: banner_text)
