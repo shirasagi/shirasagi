@@ -279,19 +279,20 @@ this.SS = (function () {
     return notice.find('.wrap').html('');
   };
 
+  SS.formChanged = false;
+
   SS.confirmUnloading = function () {
-    var changed;
-    changed = false;
+    SS.formChanged = false;
     $("input[type=text],textarea,select").change(function () {
-      return changed = true;
+      SS.formChanged = true;
     });
     $(window).on("beforeunload", function () {
-      if (changed) {
+      if (SS.formChanged) {
         return "<%= I18n.t 'ss.confirm.unload' %>";
       }
     });
-    return $("input[type=submit]").click(function () {
-      changed = false;
+    $("input[type=submit]").click(function () {
+      SS.formChanged = false;
       return true;
     });
   };
