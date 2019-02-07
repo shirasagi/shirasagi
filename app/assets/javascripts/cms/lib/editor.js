@@ -93,8 +93,12 @@ this.Cms_Editor_CKEditor = (function () {
     if (opts == null) {
       opts = {};
     }
-    $(selector).ckeditor(opts);
-    return CKEDITOR.on('dialogDefinition', function (ev) {
+    var editor = $(selector).ckeditor(opts).editor;
+    editor.on("change", function() {
+      SS.formChanged = true;
+    });
+
+    CKEDITOR.on('dialogDefinition', function (ev) {
       var def, info, name, text;
       name = ev.data.name;
       def = ev.data.definition;
