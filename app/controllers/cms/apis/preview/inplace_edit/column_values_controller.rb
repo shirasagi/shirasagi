@@ -56,7 +56,7 @@ class Cms::Apis::Preview::InplaceEdit::ColumnValuesController < ApplicationContr
 
   def create_as_branch
     if @item.branches.present?
-      @item.errors.add(:base, :branch_is_already_existed)
+      @cur_column_value.errors.add(:base, :branch_is_already_existed)
       render_save_as_branch false
       return
     end
@@ -76,7 +76,7 @@ class Cms::Apis::Preview::InplaceEdit::ColumnValuesController < ApplicationContr
     result = branch.save
 
     if !result
-      @item.errors.messages[:base] += branch.errors.full_messages
+      @cur_column_value.errors.messages[:base] += branch.errors.full_messages
       render_create_as_branch false
       return
     end
@@ -96,12 +96,13 @@ class Cms::Apis::Preview::InplaceEdit::ColumnValuesController < ApplicationContr
     }
 
     result = @item.save
+    flash["cms.preview.notice"] = t("ss.notice.saved") if result
     render_update result, render_opts
   end
 
   def save_as_branch
     if @item.branches.present?
-      @item.errors.add :base, :branch_is_already_existed
+      @cur_column_value.errors.add :base, :branch_is_already_existed
       render_save_as_branch false
       return
     end
@@ -113,7 +114,7 @@ class Cms::Apis::Preview::InplaceEdit::ColumnValuesController < ApplicationContr
     branch.master = @item
     result = branch.save
     if !result
-      @item.errors.messages[:base] += branch.errors.full_messages
+      @cur_column_value.errors.messages[:base] += branch.errors.full_messages
       render_save_as_branch false
       return
     end
@@ -387,6 +388,9 @@ class Cms::Apis::Preview::InplaceEdit::ColumnValuesController < ApplicationContr
     end
 
     @cur_column_value.valid?(%i[update])
+    if creates_branch? && @item.branches.present?
+      @cur_column_value.errors.add(:base, :branch_is_already_existed)
+    end
     render json: @cur_column_value.errors.full_messages.to_json, content_type: json_content_type
   end
 end
