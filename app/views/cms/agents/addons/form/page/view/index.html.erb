@@ -12,12 +12,16 @@
 %>
 <%= content_tag_if("article", class: "body", if: @cur_page.form.sub_type_entry?) do %>
   <% if @preview %>
-    <div id="ss-preview-form-start" class="ss-preview-hide" data-form-id="<%== @cur_page.form.id %>" data-form-sub-type="<%== @cur_page.form.sub_type %>"></div>
+    <% render_preview_form = proc do |id| %>
+      <%= content_tag("div", "", id: id, class: "ss-preview-hide", data: { "form-id" => @cur_page.form.id, "form-sub-type" => @cur_page.form.sub_type }) %>
+    <% end %>
+
+    <% render_preview_form.call("ss-preview-form-start") %>
   <% end %>
 
   <%== html %>
 
   <% if @preview %>
-    <div id="ss-preview-form-end" class="ss-preview-hide" data-form-id="<%== @cur_page.form.id %>" data-form-sub-type="<%== @cur_page.form.sub_type %>"></div>
+    <% render_preview_form.call("ss-preview-form-end") %>
   <% end %>
 <% end %>
