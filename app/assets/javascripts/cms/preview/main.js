@@ -1284,6 +1284,13 @@ SS_Preview = (function () {
       var el = ev.target;
       if (el.tagName === "BUTTON" && el.dataset.formId && el.dataset.columnId) {
         self.clickPalette(el);
+        return;
+      }
+
+      var button = $(el).closest("button[data-form-id]")[0];
+      if (button && button.dataset.formId && button.dataset.columnId) {
+        self.clickPalette(button);
+        return;
       }
     });
   };
