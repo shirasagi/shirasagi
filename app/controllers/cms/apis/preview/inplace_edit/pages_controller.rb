@@ -6,9 +6,17 @@ class Cms::Apis::Preview::InplaceEdit::PagesController < ApplicationController
 
   layout "ss/ajax_in_iframe"
 
+  before_action :set_cur_node
   before_action :set_inplace_mode
 
   private
+
+  def set_cur_node
+    @cur_node ||= begin
+      parent = @item.parent
+      parent ? parent : nil
+    end
+  end
 
   def set_inplace_mode
     @inplace_mode = true
