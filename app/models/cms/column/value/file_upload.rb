@@ -145,7 +145,7 @@ class Cms::Column::Value::FileUpload < Cms::Column::Value::Base
         div_content.join.html_safe
       end
     when 'attachment'
-      ApplicationController.helpers.link_to("#{(attachment_text || file.extname)}(#{file.extname.upcase} #{ActionController::Base.helpers.number_to_human_size(file.size)})", file.url)
+      ApplicationController.helpers.link_to((attachment_text || file.humanized_name), file.url)
     when 'banner'
       ApplicationController.helpers.link_to(banner_link) do
         ApplicationController.helpers.image_tag(file.url, alt: banner_text)
