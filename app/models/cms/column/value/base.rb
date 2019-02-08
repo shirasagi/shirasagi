@@ -126,7 +126,10 @@ class Cms::Column::Value::Base
     end
 
     template = Liquid::Template.parse(layout)
-    template.render(@liquid_context).html_safe
+    @liquid_context.stack do
+      @liquid_context["value"] = self
+      template.render(@liquid_context).html_safe
+    end
   end
 
   def validate_value
