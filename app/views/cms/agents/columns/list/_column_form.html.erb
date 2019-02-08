@@ -2,21 +2,28 @@
 <% controller ||= false %>
 <% lists = value.try(:lists) %>
 <%= render 'cms/agents/columns/main/base', f: f, column: column, value: value, controller: controller do |id| %>
+  <% render_item = proc do |text| %>
+    <li>
+      <%= text_field_tag("#{f.object_name}[][in_wrap][lists][]", text, column.form_options.merge(id: nil)) %>
+      <%= button_tag t("ss.links.delete"), class: "btn delete btn-delete-list", type: 'button' %>
+    </li>
+  <% end %>
+
   <%= content_tag column.list_type.to_sym, class: "list" do %>
     <% if lists.present? %>
       <% lists.each do |list| %>
-        <%= render 'cms/agents/columns/list/column_form_ul', f: f, column: column, order: list[:order], text: list[:text] %>
+        <% render_item.call(list) %>
       <% end %>
     <% else %>
-      <%= render 'cms/agents/columns/list/column_form_ul', f: f, column: column, order: 1, text: '' %>
+      <% render_item.call('') %>
     <% end %>
   <% end %>
 
-  <% @buttons.unshift(button_tag(t("cms.buttons.column_add_list"), class: "btn btn-add-list", type: 'button')) %>
-
   <script type="text/html" class="template">
-    <%= render 'cms/agents/columns/list/column_form_ul', f: f, column: column, order: 0, text: '' %>
+    <% render_item.call('') %>
   </script>
+
+  <% @buttons.unshift(button_tag(t("cms.buttons.column_add_list"), class: "btn btn-add-list", type: 'button')) %>
 
   <%= jquery do %>
     <% if @inplace_syntax_check %>
@@ -24,7 +31,7 @@
       Cms_Inplace_Form.getContent = function () {
         var values = {};
         var key = 1;
-        $('<%= "##{id}" %> [name="item[column_values][][in_wrap][lists][][text]"').each(function () {
+        $('<%= "##{id}" %> [name="item[column_values][][in_wrap][lists][]"').each(function () {
           values[key] = $(this).val();
           key += 1;
         });
