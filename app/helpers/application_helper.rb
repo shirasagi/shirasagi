@@ -176,7 +176,7 @@ module ApplicationHelper
     end
 
     if block_given?
-      return yield
+      return capture { yield }
     end
 
     content_or_options_with_block
