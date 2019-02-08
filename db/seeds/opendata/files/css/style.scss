@@ -689,6 +689,7 @@ textarea {
 .opendata-search-datasets, .opendata-search-groups,
 .opendata-search-apps,
 .opendata-search-ideas {
+  clear: both;
   article {
     position: relative;
   }
