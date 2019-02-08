@@ -64,30 +64,20 @@ class Opendata::Dataset::ExportJob < Cms::ApplicationJob
   end
 
   def resources_to_csv(resources)
-    csv = CSV.generate do |data|
-      resource = Opendata::Resource.new
-      data << csv_headers.map { |k| resource.t k }
+    CSV.generate do |data|
+      headers = %w(id name format license_id text file_id tsv_id).map { |k| Opendata::Resource.t(k) }
+
+      data << headers
       resources.each do |item|
+        data << item.id
+        data << item.name
+        data << item.format
+        data << item.license.try(:name)
+        data << item.text
+        data << item.file.try(:name)
+        data << item.tsv.try(:name)
         data << csv_line(item)
       end
     end
-  end
-
-  def csv_headers
-    %w(
-      id name format license_id text file_id tsv_id
-    )
-  end
-
-  def csv_line(item)
-    [
-      item.id,
-      item.name,
-      item.format,
-      item.license.try(:name),
-      item.text,
-      item.file.try(:name),
-      item.tsv.try(:name)
-    ]
   end
 end
