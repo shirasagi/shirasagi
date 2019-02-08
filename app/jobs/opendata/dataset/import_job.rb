@@ -16,7 +16,7 @@ class Opendata::Dataset::ImportJob < Cms::ApplicationJob
 
     Zip::File.open(file.path) do |entries|
       entries.each do |entry|
-        path = "#{@import_dir}/" + entry.name.encode("utf-8", "cp932").tr('\\', '/')
+        path = "#{@import_dir}/" + entry.name.encode("utf-8", "cp932", invalid: :replace, undef: :replace).tr('\\', '/')
 
         if entry.directory?
           FileUtils.mkdir_p(path)
@@ -103,11 +103,11 @@ class Opendata::Dataset::ImportJob < Cms::ApplicationJob
     row[Opendata::Resource.t(key)].try(:strip)
   end
 
-  def category_name_tree_to_ids(name_trees)
+  def category_name_tree_to_ids(name_trees, klass)
     category_ids = []
     name_trees.each do |cate|
       ct_list = []
-      ct = Opendata::Node::Category.site(site).where(name: cate).first
+      ct = klass.site(site).where(name: cate).first
       ct_list << ct if ct
 
       if ct_list.present?
@@ -124,11 +124,19 @@ class Opendata::Dataset::ImportJob < Cms::ApplicationJob
     item.text = value(row, :text)
     item.tags = value(row, :tags).to_s.split(",")
 
-    # category area
+    # category
     category_name_tree = ary_value(row, :categories)
-    category_ids = category_name_tree_to_ids(category_name_tree)
+    category_ids = category_name_tree_to_ids(category_name_tree, Opendata::Node::Category)
     categories = Opendata::Node::Category.site(site).in(id: category_ids)
     item.category_ids = categories.pluck(:id)
+
+    # estat_category
+    estat_category_name_tree = ary_value(row, :estat_categories)
+    estat_category_ids = category_name_tree_to_ids(estat_category_name_tree, Opendata::Node::EstatCategory)
+    estat_categories = Opendata::Node::EstatCategory.site(site).in(id: estat_category_ids)
+    item.estat_category_ids = estat_categories.pluck(:id)
+
+    # area
     item.area_ids = Opendata::Node::Area.in(name: ary_value(row, :area_ids)).pluck(:id)
 
     # dataset_group
