@@ -53,6 +53,8 @@ SS_Preview = (function () {
 
   SS_Preview.pageTitle = "<%= I18n.t("modules.addons.cms/body") %>";
 
+  SS_Preview.userInplaceEdit = true;
+
   SS_Preview.render = function (opts) {
     if (SS_Preview.instance) {
       return;
@@ -257,7 +259,7 @@ SS_Preview = (function () {
         var filename = $dataEl.find(".filename").text();
 
         var url = SS_Preview.previewPath.replace(":path", filename);
-        if (self.inplaceMode) {
+        if (window.location.hash === "#inplace") {
           url += "#inplace";
         }
         window.location.href = url;
@@ -990,6 +992,10 @@ SS_Preview = (function () {
   };
 
   SS_Preview.prototype.startInplaceMode = function() {
+    if (!SS_Preview.userInplaceEdit) {
+      return;
+    }
+
     var button = this.$el.find(".ss-preview-btn-toggle-inplace");
 
     this.inplaceMode = true;

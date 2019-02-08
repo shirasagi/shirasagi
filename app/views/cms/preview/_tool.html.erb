@@ -71,6 +71,8 @@
       SS_Preview.workflowPath.pages = <%== "/.s#{@cur_site.id}/workflow/pages/:id".to_json %>;
       SS_Preview.previewPath = <%== cms_preview_path(path: ":path").to_json %>;
       SS_Preview.redirectorPath.newPage = <%== cms_apis_preview_redirector_new_page_path(site: @cur_site, cid: ":nodeId").to_json %>;
+
+      SS_Preview.userInplaceEdit = <%== inplace_editable?.to_json %>;
     <% end %>
   </script>
 <% end %>
