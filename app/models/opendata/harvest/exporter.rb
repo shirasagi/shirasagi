@@ -13,6 +13,7 @@ class Opendata::Harvest::Exporter
 
   field :name, type: String
   field :url, type: String
+  field :api_type, type: String
   field :api_key, type: String
   field :order, type: Integer, default: 0
 
@@ -24,11 +25,12 @@ class Opendata::Harvest::Exporter
   has_many :dataset_relations, class_name: 'Opendata::Harvest::Exporter::DatasetRelation', dependent: :destroy, inverse_of: :exporter
 
   validates :name, presence: true
+  validates :api_type, presence: true
   validates :url, presence: true
   validates :api_key, presence: true
   validate :validate_host, if: -> { url.present? }
 
-  permit_params :name, :url, :api_key, :order
+  permit_params :name, :url, :api_type, :api_key, :order
 
   default_scope -> { order_by(order: 1) }
 
@@ -47,5 +49,9 @@ class Opendata::Harvest::Exporter
   def order
     value = self[:order].to_i
     value < 0 ? 0 : value
+  end
+
+  def api_type_options
+    I18n.t("opendata.harvest_exporter_api_options").map { |k, v| [v, k] }
   end
 end

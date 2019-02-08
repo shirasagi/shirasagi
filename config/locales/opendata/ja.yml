@@ -281,10 +281,12 @@ ja:
     api_state_options:
       enabled: 有
       disabled: 無
-    harvest_api_options:
+    harvest_importer_api_options:
       ckan: "Ckan API"
       shirasagi_api: "Shirasagi API"
-      shirasagi_scraper: "Shirasagi スクレイピング"
+      #shirasagi_scraper: "Shirasagi スクレイピング"
+    harvest_exporter_api_options:
+      ckan: "Ckan API"
     assoc_job:
       dataset_text: "%{name} の一覧は %{url} でも公開されているので、%{url} もご覧ください。"
       resource_text: "%{name} は %{now} 時点の情報を元に作成しています。"
@@ -687,6 +689,7 @@ ja:
       opendata/harvest/exporter:
         name: 名前
         url: URL
+        api_type: API
         api_key: APIキー
         order: 並び順
       opendata/harvest/exporter/group_setting:
@@ -696,6 +699,11 @@ ja:
         order: 並び順
         category_ids: 分野
         estat_category_ids: eStat分野
+      opendata/harvest/exporter/owner_org_setting:
+        name: 名前
+        ckan_id: "CKAN ID"
+        order: 並び順
+        group_ids: グループ
       opendata/addon/site_setting:
         dataset_workflow_route: データセット承認
         app_workflow_route: アプリ承認
@@ -934,6 +942,8 @@ ja:
         - 名前を設定します。
       url:
         - URLを設定します。
+      api_type:
+        - APIを設定します。
       api_key:
         - APIキーを設定します。
       order:

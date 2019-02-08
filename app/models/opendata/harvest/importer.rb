@@ -59,7 +59,7 @@ class Opendata::Harvest::Importer
   end
 
   def api_type_options
-    I18n.t("opendata.harvest_api_options").map { |k, v| [v, k] }
+    I18n.t("opendata.harvest_importer_api_options").map { |k, v| [v, k] }
   end
 
   def state_options
