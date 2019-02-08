@@ -1,7 +1,7 @@
 class Cms::Column::Value::List < Cms::Column::Value::Base
-  field :lists, type: Cms::Extensions::List
+  field :lists, type: SS::Extensions::Lines
 
-  permit_values lists: [ :order, :text ]
+  permit_values lists: []
 
   liquidize do
     export :lists
@@ -10,7 +10,7 @@ class Cms::Column::Value::List < Cms::Column::Value::Base
   private
 
   def text_blank?
-    lists.all?{ |list| list[:text].blank? }
+    lists.all? { |list| list.blank? }
   end
 
   def validate_value
@@ -32,7 +32,7 @@ class Cms::Column::Value::List < Cms::Column::Value::Base
   def to_default_html
     return '' if text_blank?
 
-    li = lists.map { |list| ApplicationController.helpers.content_tag(:li, list[:text]) }.join("\n")
+    li = lists.map { |list| ApplicationController.helpers.content_tag(:li, list) }.join("\n")
     ApplicationController.helpers.content_tag(column.list_type.to_sym, li.html_safe)
   end
 end

@@ -26,18 +26,10 @@ Cms_Column_List.prototype.addList = function($target) {
 
   var list = $columnValue.find(".list");
   list.append(template);
-  this.resetListOrder($columnValue);
 };
 
 Cms_Column_List.prototype.removeList = function($target) {
   var $columnValue = $target.closest(".column-value");
   var $li = $target.closest("li");
   $li.remove();
-  this.resetListOrder($columnValue);
-};
-
-Cms_Column_List.prototype.resetListOrder = function($columnValue) {
-  $columnValue.find('.list li').each(function(index, element) {
-    $(element).find('input[name="item[column_values][][in_wrap][lists][][order]"]').val(index + 1);
-  });
 };
