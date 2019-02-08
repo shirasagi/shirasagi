@@ -15,6 +15,12 @@ module Cms::Addon
         template_variable_handler('img.src', :template_variable_handler_img_src)
         template_variable_handler('thumb.src', :template_variable_handler_thumb_src)
       end
+
+      if respond_to?(:liquidize)
+        liquidize do
+          export :html
+        end
+      end
     end
 
     def html
