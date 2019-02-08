@@ -30,7 +30,11 @@ class Opendata::Dataset::ExportJob < Cms::ApplicationJob
   end
 
   def export_resources
-    @items.each do |item|
+    ids = @items.pluck(:id)
+    ids.each do |id|
+      item = Opendata::Dataset.find(id) rescue nil
+
+      next if item.nil?
       next if item.resources.blank?
 
       csv = resources_to_csv(item.resources).encode("cp932", invalid: :replace, undef: :replace)
