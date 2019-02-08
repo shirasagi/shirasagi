@@ -6,10 +6,9 @@ class Opendata::Dataset::ImportJob < Cms::ApplicationJob
   end
 
   def perform(ss_file_id)
-    file = ::SS::File.find(ss_file_id) rescue nil
+    file = ::SS::File.find(ss_file_id)
 
-    @datetime = Time.zone.now
-    @import_dir = "#{Rails.root}/private/import/opendata-datasets-#{@datetime.strftime('%Y%m%d%H%M%S')}"
+    @import_dir = "#{Rails.root}/private/import/opendata-datasets-#{Time.zone.now.to_i}"
 
     FileUtils.rm_rf(@import_dir)
     FileUtils.mkdir_p(@import_dir)
