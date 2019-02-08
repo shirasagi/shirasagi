@@ -26,10 +26,15 @@ class Opendata::Dataset::ImportJob < Cms::ApplicationJob
       end
     end
 
-    dataset_csv = Dir.glob("#{@import_dir}/*.csv").first || Dir.glob("#{@import_dir}/*/*.csv").first
+    dataset_csv = Dir.glob("#{@import_dir}/datasets.csv").first
+    dataset_csv ||= Dir.glob("#{@import_dir}/*/datasets.csv").first
 
-    put_log("import start #{dataset_csv}")
-    import_dataset_csv(dataset_csv)
+    if dataset_csv
+      put_log("import start #{dataset_csv}")
+      import_dataset_csv(dataset_csv)
+    else
+      put_log("not found datasets.csv")
+    end
 
     FileUtils.rm_rf(@import_dir)
   end
@@ -69,10 +74,15 @@ class Opendata::Dataset::ImportJob < Cms::ApplicationJob
 
     if item.valid?
       item.save
-      resources_csv = Dir.glob("#{@import_dir}/#{value(row, :id)}/*.csv").first || Dir.glob("#{@import_dir}/*/#{value(row, :id)}/*.csv").first
+      resources_csv = Dir.glob("#{@import_dir}/#{value(row, :id)}/resources.csv").first
+      resources_csv ||= Dir.glob("#{@import_dir}/*/#{value(row, :id)}/resources.csv").first
 
-      put_log("import start #{resources_csv}")
-      import_resource_csv(resources_csv, item)
+      if resources_csv
+        put_log("import start #{resources_csv}")
+        import_resource_csv(resources_csv, item)
+      else
+        put_log("not found resources.csv (#{item.name})")
+      end
       item
     else
       raise item.errors.full_messages.join(", ")
