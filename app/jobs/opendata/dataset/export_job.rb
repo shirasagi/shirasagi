@@ -23,13 +23,13 @@ class Opendata::Dataset::ExportJob < Cms::ApplicationJob
   end
 
   def export_datasets
-    data = @items.to_csv.encode("SJIS", invalid: :replace, undef: :replace)
+    data = @items.to_csv.encode("cp932", invalid: :replace, undef: :replace)
     write_csv("datasets", data)
   end
 
   def export_resources
     @items.each do |item|
-      data = resources_to_csv(item.resources).encode("SJIS", invalid: :replace, undef: :replace)
+      data = resources_to_csv(item.resources).encode("cp932", invalid: :replace, undef: :replace)
       write_resource_csv("resources", data, item.id)
       item.resources.each do |resource|
         write_file(resource.file.name, resource.file.path, item.id, resource.id) if resource.file.present?
@@ -47,12 +47,12 @@ class Opendata::Dataset::ExportJob < Cms::ApplicationJob
   end
 
   def write_csv(name, data)
-    File.write("#{@output_dir}/#{name}.csv", data, :encoding => "SJIS")
+    File.write("#{@output_dir}/#{name}.csv", data, encoding: "cp932")
   end
 
   def write_resource_csv(name, data, id)
     FileUtils.mkdir_p("#{@output_dir}/#{id}")
-    File.write("#{@output_dir}/#{id}/#{name}.csv", data, :encoding => "SJIS")
+    File.write("#{@output_dir}/#{id}/#{name}.csv", data, encoding: "cp932")
   end
 
   def write_file(name, path, dataset_id, resource_id)
