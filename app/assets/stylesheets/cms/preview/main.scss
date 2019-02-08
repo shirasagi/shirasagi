@@ -13,6 +13,7 @@
   padding: 15px;
   background-color: #323232;
   font-size: 0.8rem;
+  font-family: $font-base;
   color: white;
   box-sizing: border-box;
   .ss-preview-dropdown ,#ss-preview-btn-select-draft-page {
@@ -21,11 +22,43 @@
     text-decoration: none;
     vertical-align: top;
   }
-  button, select, #ss-preview-btn-select-draft-page, .ss-preview-dropdown, input,
-  .ss-preview-dropdown ,#ss-preview-btn-select-draft-page, .ss-preview-part-list {
+  button, select, #ss-preview-btn-select-draft-page, input,
+  #ss-preview-btn-select-draft-page, .ss-preview-part-list {
     @include btn;
+    margin: 0;
+    width: auto;
+    height: auto;
     min-height: 2.6em;
     box-sizing: border-box;
+  }
+  .ss-preview-dropdown {
+    float: left;
+    @include display-flex;
+    @include justify-content(center);
+    @include align-items(center);
+    label {
+      height: 29px;
+      padding: 4px 12px;
+      background: #d9d9d9;
+      border-radius: 3px 0 0 3px;
+      box-sizing: border-box;
+      border: none;
+    }
+    #ss-preview-btn-select-node {
+      @include btn;
+      height: 29px;
+      border-radius: 0;
+      border: 1px solid #bbb;
+      border-left: none;
+      border-right: none;
+      box-sizing: border-box;
+      text-decoration: none;
+    }
+  }
+  #ss-preview-btn-create-new-page {
+    height: 29px;
+    border-radius: 0 3px 3px 0;
+    border: 1px solid #bbb;
   }
   .ss-preview-part-list {
     height: 2.6em;
@@ -84,6 +117,22 @@
   #ss-preview-date, .ss-preview-btn-pc, .ss-preview-btn-mobile {
     margin-bottom: 10px;
   }
+  #ss-preview-date {
+    border-radius: 3px 0 0 3px;
+    border-right: none;
+    @include mb {
+      box-sizing: border-box;
+    }
+  }
+  .ss-preview-btn-pc {
+    border-radius: 0;
+    border: 1px solid #bbb;
+    border-right: none;
+  }
+  .ss-preview-btn-mobile {
+    border-radius: 0 3px 3px 0;
+    border: 1px solid #bbb;
+  }
   .ss-preview-wrap-column ~ .ss-preview-wrap-column {
     padding-left: 10px;
     border-left: 1px solid $gray2;
@@ -98,7 +147,16 @@
     }
     &.ss-preview-wrap-row {
       float: right;
+      @include display-flex;
+      @include align-items(center);
+      @include flex-wrap(wrap);
       padding-bottom: 10px;
+      label {
+        margin: 0 10px 9px 0;
+        @include mb {
+          width: 100%;
+        }
+      }
     }
   }
   .ss-preview-btn-group ~ .ss-preview-btn-group {
@@ -107,10 +165,6 @@
       margin-left: 0;
     }
   }
-  .ss-preview-active {
-    border: 1px solid green;
-  }
-
   .ss-preview-btn-toggle-inplace {
     &:after {
       content: " off";
@@ -139,17 +193,19 @@
   border: 6px solid rgba(0, 0, 0, 0.8);
   box-sizing: border-box;
   @include transition(0.18s);
+  pointer-events: none;
   .ss-preview-overlay-tool {
     position: absolute;
     top: -59px;
     right: -6px;
     width: calc(100% + 12px);
     margin: 0;
-    padding: 10px;
+    padding: 0 10px;
     box-sizing: border-box;
     @include display-flex;
     @include align-items(center);
     background-color: rgba(0, 0, 0, 0.8);
+    pointer-events: none;
     @include mb {
       display: block;
     }
@@ -167,8 +223,9 @@
       vertical-align: top;
     }
     .ss-preview-btn-group {
-      margin-right: 5px;
+      padding: 12px 5px 12px 0;
       font-size: 0.8rem;
+      pointer-events: auto;
     }
   }
   * {
@@ -237,4 +294,224 @@ body.ss-ajax-in-iframe {
 
 .upload-menu-select {
   float: right;
+}
+
+.ss-alignment-left {
+  float: left;
+}
+
+.ss-alignment-right {
+  float: right;
+}
+#ajax-box {
+  margin: 10px;
+}
+.ajax-selected {
+  margin-bottom: 15px;
+}
+.search-ui-form {
+  margin: 0 0 20px;
+  padding: 10px;
+  border: 1px solid #ddd;
+}
+.dropdown-container {
+  tr {
+    background: $white;
+    &:hover {
+      background: #f8f8f8;
+    }
+    &:nth-child(2n) {
+      background: #f8f8f8;
+    }
+  }
+}
+table.index {
+  width: 100%;
+  border: 1px solid #dcdcdc;
+  .checkbox {
+    width: 38px;
+    text-align: center;
+    padding-right: 0;
+  }
+  th, td {
+    padding: 6px 18px;
+    font-size: $px13;
+    a {
+      font-size: $px13;
+      color: #f25a38;
+      text-decoration: none;
+    }
+  }
+  thead {
+    th {
+      padding-right: 0;
+      text-align: left;
+      border-bottom: 1px solid #dcdcdc;
+      background: #f2f2f2;
+      color: #999999;
+    }
+    tr {
+      background: $white;
+      &:nth-child(2n) {
+        background: #f8f8f8;
+      }
+    }
+  }
+  .ajax-selected {
+    margin-bottom: 15px;
+  }
+}
+.mod-workflow-request, .search-ui-form {
+  font-size: $px12;
+  dl.see > dt:before, dl.see > dd:before, dl.see > dt:after, dl.see > dd:after {
+    content: "";
+    @include clear;
+    clear: both;
+  }
+  dl.see > dt ~ dt, dl.see > dd ~ dd {
+    margin-top: 15px;
+  }
+  dt {
+    zoom: 1;
+    float: left;
+    min-width: 180px;
+    padding: 5px 0;
+    color: #a0522d;
+    font-weight: bold;
+    line-height: 1.4em;
+  }
+  dd {
+    margin: 0 0 0 180px;
+    input[type=text] {
+      @include box-sizing(border-box);
+      border: 1px solid #d0d0d0;
+      @include border-radius(3px);
+      @include box-sizing(inset 0 1px 3px #dcdcdc);
+      vertical-align: middle;
+      width: 80%;
+      padding: 6px;
+    }
+  }
+  .btn {
+    @include btn;
+  }
+  .dropdown-container {
+    display: none;
+    position: absolute;
+    overflow: auto;
+    width: 70%;
+    max-height: 70%;
+    margin-top: 2px;
+    -webkit-box-shadow: 1px 2px 4px #888;
+    -moz-box-shadow: 1px 2px 4px #888;
+    box-shadow: 1px 2px 4px #888;
+    font-weight: normal;
+    z-index: 101;
+  }
+}
+.mod-workflow-request {
+  dt {
+    .tooltip {
+      position: relative;
+      display: inline-block;
+      width: 16px;
+      height: 16px;
+      margin-left: 5px;
+      line-height: 1.1;
+      @include border-radius(8px);
+      background: #f25a38;
+      color: #ffffff;
+      text-align: center;
+      cursor: pointer;
+      ul {
+        position: absolute;
+        display: none;
+        top: 30px;
+        left: -25px;
+        width: 30em;
+        padding: 15px;
+        border: 1px solid #d0d0d0;
+        line-height: 1.6;
+        z-index: 100;
+        list-style: none;
+        background: #ffffff;
+        -webkit-box-shadow: 0 1px 6px #d0d0d0;
+        -moz-box-shadow: 0 1px 6px #d0d0d0;
+        box-shadow: 0 1px 6px #d0d0d0;
+        color: #000000;
+        font-size: 90%;
+        font-weight: normal;
+        text-align: left;
+        @include mb {
+          width: 15em;
+        }
+        cursor: auto;
+        &:before {
+          content: "";
+          position: absolute;
+          left: 215px;
+          top: -13px;
+          left: 20px;
+          width: 0;
+          height: 0;
+          border-left: 12px solid transparent;
+          border-right: 12px solid transparent;
+          border-bottom: 12px solid #d0d0d0;
+          background-color: white;
+        }
+        &:after {
+          content: "";
+          position: absolute;
+          left: 215px;
+          top: -12px;
+          width: 0;
+          height: 0;
+          border-left: 12px solid transparent;
+          border-right: 12px solid transparent;
+          border-bottom: 12px solid #ffffff;
+        }
+      }
+    }
+  }
+  dd {
+    select {
+      @include box-sizing(border-box);
+      border: 1px solid #d0d0d0;
+      @include border-radius(3px);
+      @include box-shadow(inset 0 1px 3px #dcdcdc);
+      vertical-align: middle;
+      height: 2.4em;
+      max-width: 100%;
+      padding: 0 4px;
+    }
+    textarea {
+      @include box-sizing(border-box);
+      border: 1px solid #d0d0d0;
+      @include border-radius(3px);
+      @include box-shadow(inset 0 1px 3px #dcdcdc);
+      vertical-align: middle;
+      width: calc(100% - 180px);
+      height: 6.5em;
+      padding: 5px 5px;
+      line-height: 1.4;
+    }
+    .btn {
+      @include btn;
+      box-sizing: border-box;
+      padding: 8px 12px;
+      height: 2.7em;
+      text-decoration: none;
+    }
+    .btn-primary {
+      @include btn-red;
+    }
+    .btn-default {
+      @include btn-gray-l;
+    }
+    .buttons button {
+      margin: 0px 10px 0px 0px;
+      padding: 0px 30px;
+      font-size: 100%;
+    }
+  }
 }
