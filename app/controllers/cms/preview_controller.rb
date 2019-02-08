@@ -33,6 +33,7 @@ class Cms::PreviewController < ApplicationController
     page = rendered[:page]
     return true if page.blank?
     return true if page.state != "public"
+    return true if !page.respond_to?(:master?)
     return true if !page.master?
     return true if page.branches.blank?
 
