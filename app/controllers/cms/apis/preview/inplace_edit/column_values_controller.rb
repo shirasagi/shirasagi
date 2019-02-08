@@ -55,9 +55,16 @@ class Cms::Apis::Preview::InplaceEdit::ColumnValuesController < ApplicationContr
   end
 
   def create_as_branch
+    safe_params = params.require(:item).permit(@model.permit_params)
+    column_value_param = safe_params[:column_values].first
+    column_value_param[:order] = @item.column_values.present? ? @item.column_values.max(:order) + 1 : 0
+
     if @item.branches.present?
+      @cur_column_value = @item.column_values.build(column_value_param)
+      @cur_column = @cur_column_value.column
+
       @cur_column_value.errors.add(:base, :branch_is_already_existed)
-      render_save_as_branch false
+      render_create_as_branch false
       return
     end
 
@@ -67,9 +74,6 @@ class Cms::Apis::Preview::InplaceEdit::ColumnValuesController < ApplicationContr
     branch = @item.new_clone
     branch.master = @item
 
-    safe_params = params.require(:item).permit(@model.permit_params)
-    column_value_param = safe_params[:column_values].first
-    column_value_param[:order] = branch.column_values.present? ? branch.column_values.max(:order) + 1 : 0
     @cur_column_value = branch.column_values.build(column_value_param)
     @cur_column = @cur_column_value.column
 
@@ -85,8 +89,16 @@ class Cms::Apis::Preview::InplaceEdit::ColumnValuesController < ApplicationContr
     path_params[:preview_date] = params[:preview_date].to_s if params[:preview_date].present?
     location = cms_preview_path(path_params)
 
-    flash["cms.preview.notice"] = t("ss.notice.saved")
-    render_save_as_branch result, location
+    render_create_as_branch result, location
+  end
+
+  def render_create_as_branch(result, location = nil)
+    if result && location
+      flash["cms.preview.notice"] = I18n.t("workflow.notice.created_branch_page")
+      render json: { location: location }, status: :ok, content_type: json_content_type
+    else
+      render file: :new, status: :unprocessable_entity
+    end
   end
 
   def save_with_overwrite
