@@ -118,4 +118,13 @@ module SS::LiquidFilters
       string + input.to_s
     end
   end
+
+  def ss_img_src(input)
+    ::SS::Html.extract_img_src(input.to_s)
+  end
+
+  def expand_path(input, path)
+    return input if input.blank?
+    ::File.expand_path(input.to_s, path.to_s)
+  end
 end

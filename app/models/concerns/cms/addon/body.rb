@@ -3,6 +3,8 @@ module Cms::Addon
     extend ActiveSupport::Concern
     extend SS::Addon
 
+    DEFAULT_IMG_SRC = "/assets/img/dummy.png".freeze
+
     included do
       field :html, type: String
       field :markdown, type: String
@@ -55,24 +57,11 @@ module Cms::Addon
     end
 
     def default_img_src
-      ERB::Util.html_escape("/assets/img/dummy.png")
+      ERB::Util.html_escape(DEFAULT_IMG_SRC)
     end
 
     def extract_img_src(html)
-      return nil unless html =~ /\<\s*?img\s+[^>]*\/?>/i
-
-      img_tag = $&
-      return nil unless img_tag =~ /src\s*=\s*(['"]?[^'"]+['"]?)/
-
-      img_source = $1
-      img_source = img_source[1..-1] if img_source.start_with?("'", '"')
-      img_source = img_source[0..-2] if img_source.end_with?("'", '"')
-      img_source = img_source.strip
-      if img_source.start_with?('.') && respond_to?(:url)
-        # convert relative path to absolute path
-        img_source = ::File.dirname(url) + '/' + img_source
-      end
-      img_source
+      ::SS::Html.extract_img_src(html, respond_to?(:url) ? url : nil)
     end
 
     def thumb_path
