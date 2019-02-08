@@ -31,6 +31,8 @@ class Opendata::Dataset::ExportJob < Cms::ApplicationJob
 
   def export_resources
     @items.each do |item|
+      next if item.resources.blank?
+
       csv = resources_to_csv(item.resources).encode("cp932", invalid: :replace, undef: :replace)
       dir = "#{@output_dir}/#{item.id}"
       path = "#{dir}/resources.csv"
