@@ -70,4 +70,11 @@ class Cms::Form
   def build_default_html
     DEFAULT_TEMPLATE
   end
+
+  def render_html(page, registers)
+    layout = html.presence || build_default_html
+    template = ::Cms.parse_liquid(layout, registers)
+    assigns = { "values" => page.column_values.to_liquid, "page" => page.to_liquid }
+    template.render(assigns).html_safe
+  end
 end

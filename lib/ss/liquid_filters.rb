@@ -100,4 +100,31 @@ module SS::LiquidFilters
   def human_size(input)
     input.to_s(:human_size)
   end
+
+  def ss_append(input, string)
+    string = string.to_s
+    if input.is_a?(Array) || input.is_a?(Hash) || input.is_a?(Enumerable)
+      InputIterator.new(input).map { |v| v.to_s + string }
+    else
+      input.to_s + string
+    end
+  end
+
+  def ss_prepend(input, string)
+    string = string.to_s
+    if input.is_a?(Array) || input.is_a?(Hash) || input.is_a?(Enumerable)
+      InputIterator.new(input).map { |v| string + v.to_s }
+    else
+      string + input.to_s
+    end
+  end
+
+  def ss_img_src(input)
+    ::SS::Html.extract_img_src(input.to_s)
+  end
+
+  def expand_path(input, path)
+    return input if input.blank?
+    ::File.expand_path(input.to_s, path.to_s)
+  end
 end

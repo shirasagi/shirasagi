@@ -60,7 +60,7 @@ module Cms::Content
     liquidize do
       export :id
       export :name
-      export :name_for_index, as: :index_name
+      export :index_name
       export :url
       export :full_url
       export :basename

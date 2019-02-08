@@ -38,7 +38,7 @@ module Cms::ListHelper
     ih << '<article class="item-{{ page.css_class }} {% if page.new? %}new{% endif %} {% if page.current? %}current{% endif %}">'
     ih << '  <header>'
     ih << '    <time datetime="{{ page.date }}">{{ page.date | ss_date: "long" }}</time>'
-    ih << '    <h2><a href="{{ page.url }}">{{ page.index_name }}</a></h2>'
+    ih << '    <h2><a href="{{ page.url }}">{{ page.index_name | default: page.name }}</a></h2>'
     ih << '  </header>'
     ih << '</article>'
     ih << '{% endfor %}'
@@ -100,7 +100,7 @@ module Cms::ListHelper
   end
 
   def render_list_with_liquid(source, assigns)
-    template = parse_liquid(source)
+    template = ::Cms.parse_liquid(source, liquid_registers)
 
     if @cur_part
       assigns["part"] = @cur_part

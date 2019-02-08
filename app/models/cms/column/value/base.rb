@@ -27,10 +27,20 @@ class Cms::Column::Value::Base
     export :name
     export :alignment
     export as: :html do |context|
-      self.to_html(preview: context.registers[:preview])
+      if @liquid_context
+        to_default_html
+      else
+        @liquid_context = context
+        to_html(preview: context.registers[:preview])
+      end
     end
     export as: :to_s do |context|
-      self.to_html(preview: context.registers[:preview])
+      if @liquid_context
+        to_default_html
+      else
+        @liquid_context = context
+        to_html(preview: context.registers[:preview])
+      end
     end
     export as: :type do
       self.class.name
@@ -115,10 +125,8 @@ class Cms::Column::Value::Base
       return to_default_html
     end
 
-    render_opts = { "value" => self }
-
     template = Liquid::Template.parse(layout)
-    template.render(render_opts).html_safe
+    template.render(@liquid_context).html_safe
   end
 
   def validate_value
