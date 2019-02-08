@@ -4,6 +4,9 @@ class Cms::Column::Value::List < Cms::Column::Value::Base
   permit_values lists: []
 
   liquidize do
+    export :list_type do
+      column.list_type
+    end
     export :lists
   end
 
