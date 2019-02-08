@@ -108,9 +108,11 @@
     <div class="ss-preview-wrap-column">
       <% if mode == :preview && !mobile %>
         <div class="ss-preview-wrap-row">
+          <% if inplace_editable? %>
           <div class="ss-preview-btn-group">
             <button type="button" class="ss-preview-btn ss-preview-btn-outline-primary ss-preview-btn-toggle-inplace"><%= t("cms.inplace_edit") %></button>
           </div>
+          <% end %>
           <%
             if rendered[:page] && rendered[:page].parent
               node = rendered[:page].parent

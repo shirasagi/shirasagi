@@ -14,7 +14,7 @@ class Cms::PreviewController < ApplicationController
   before_action :set_form_data, only: %i[form_preview]
   before_action :render_contents
 
-  helper_method :head_for, :foot_for
+  helper_method :head_for, :foot_for, :inplace_editable?
 
   private
 
@@ -24,6 +24,18 @@ class Cms::PreviewController < ApplicationController
 
   def foot_for(view, &block)
     @foot_html = view.capture(&block)
+  end
+
+  def inplace_editable?
+    rendered = @contents_env["ss.rendered"]
+    return false if rendered.blank?
+
+    page = rendered[:page]
+    return true if page.blank?
+    return true if page.state != "public"
+    return true if !page.master?
+
+    false
   end
 
   def set_controller
