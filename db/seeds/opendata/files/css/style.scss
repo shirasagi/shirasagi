@@ -696,6 +696,11 @@ textarea {
   .categories {
     margin-top: 15px;
   }
+  .download {
+    position: absolute;
+    bottom: 10px;
+    right: 15px;
+  }
 }
 .opendata-search-apps {
   border: 2px solid $green;
@@ -706,11 +711,6 @@ textarea {
 .download-all {
   float: right;
   margin-right: 15px;
-}
-.download {
-  position: absolute;
-  bottom: 10px;
-  right: 15px;
 }
 .download-all, .download a {
   @include btn-black;
@@ -821,8 +821,10 @@ textarea {
       padding: 12px;
       border-bottom: $border-gray2;
       .info {
-        float: left;
-        div {
+        @include display-flex;
+        @include align-items(center);
+        @include justify-content(space-between);
+        .name {
           padding: 7px 0 7px 35px;
         }
         div[class^="name format-"] {
@@ -875,10 +877,10 @@ textarea {
         }
       }
       .icons {
-        @include clear;
-        float: right;
+        @include display-flex;
+        @include align-items(center);
+        @include flex-wrap(wrap);
         span, div {
-          float: left;
           margin-left: $item-margin;
           &:empty {
             display: none;
