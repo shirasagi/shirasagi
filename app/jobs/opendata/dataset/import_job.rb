@@ -154,7 +154,8 @@ class Opendata::Dataset::ImportJob < Cms::ApplicationJob
     item.dataset_group_ids = Opendata::DatasetGroup.in(name: dataset_group_names).pluck(:id)
 
     # released
-    item.released = Time.zone.strptime(value(row, :released), "%Y/%m/%d %H:%M")
+    released = value(row, :released)
+    item.released = Time.zone.strptime(released, "%Y/%m/%d %H:%M") if released.present?
 
     # contact
     item.contact_state = value(row, :contact_state)
