@@ -65,7 +65,7 @@ class Cms::Column::Value::Base
       wrap_css_classes << "ss-preview-column"
     end
 
-    if self._parent.form.sub_type_entry?
+    if column.form.sub_type_entry?
       wrap_css_classes << "ss-alignment"
       wrap_css_classes << "ss-alignment-#{alignment.presence || "flow"}"
     end
@@ -125,11 +125,10 @@ class Cms::Column::Value::Base
       return to_default_html
     end
 
+    render_opts = { "value" => self }
+
     template = Liquid::Template.parse(layout)
-    @liquid_context.stack do
-      @liquid_context["value"] = self
-      template.render(@liquid_context).html_safe
-    end
+    template.render(render_opts).html_safe
   end
 
   def validate_value
