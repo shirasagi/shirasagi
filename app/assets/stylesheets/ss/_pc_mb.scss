@@ -2919,17 +2919,11 @@ body.ss-ajax-in-iframe {
     color: #ba1f24;
     padding: 20px 0;
   }
-  #ajax-box.ss-ajax-in-iframe-content .column-value-body textarea {
-    height: 64vh;
-  }
   .list {
     padding-left: 18px;
     li {
       margin-bottom: 15px;
     }
-  }
-  .inplace-checkers {
-    padding-left: 18px;
   }
   footer.send {
     margin-bottom: 28px;
@@ -2959,6 +2953,7 @@ body.ss-ajax-in-iframe {
     }
   }
 }
+
 .column-value-cms-column-table {
   input, select {
     margin-left: 5px;
@@ -2966,7 +2961,7 @@ body.ss-ajax-in-iframe {
       margin: 10px 0;
     }
   }
-  #create-table {
+  button {
     @include btn;
   }
   #table-editor {
@@ -3014,9 +3009,9 @@ body.ss-ajax-in-iframe {
     li {
       margin-bottom: 15px;
     }
-  }
-  .inplace-checkers {
-    padding-left: 18px;
+    &+.inplace-checkers {
+      padding-left: 18px;
+    }
   }
 }
 .column-value-cms-column-youtube {
