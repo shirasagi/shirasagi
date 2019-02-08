@@ -176,9 +176,11 @@ class Opendata::Dataset::ImportJob < Cms::ApplicationJob
   end
 
   def set_resource_attributes(row, dataset, item)
+    license = Opendata::License.where(name: resource_value(row, :license_id)).first
+
     item.name = resource_value(row, :name)
     item.format = resource_value(row, :format)
-    item.license_id = Opendata::License.find_by(name: resource_value(row, :license_id)).try(:id)
+    item.license_id = license.id if license
     item.text = resource_value(row, :text)
     if resource_value(row, :file_id).present?
       path1 = "#{@import_dir}/#{dataset.id}/#{resource_value(row, :id)}/#{resource_value(row, :file_id)}"
