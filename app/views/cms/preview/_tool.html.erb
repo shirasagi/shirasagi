@@ -182,10 +182,6 @@
                   <button type="button" id="ss-preview-btn-workflow-start" class="ss-preview-btn ss-preview-btn-outline"><%= t("workflow.buttons.approve") %></button>
                 <% end %>
               <% end %>
-
-              <% if page.allowed?(:release, @cur_user, site: @cur_site) && !page.workflow_requested? %>
-                <button type="button" id="ss-preview-btn-publish" class="ss-preview-btn ss-preview-btn-outline"><%= t("ss.buttons.publish") %></button>
-              <% end %>
             </div>
           <% end %>
         <% end %>
