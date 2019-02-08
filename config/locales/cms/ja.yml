@@ -1280,6 +1280,11 @@ ja:
         - 指定順での並び順は降順です
       limit:
         - リストの表示件数を指定します。
+      loop_format:
+        - ループHTML形式の形式を選択します。
+        -
+        - "SHIRASAGI: シラサギ形式で上部 HTML, ループ HTML, 下部 HTMLを記述します。"
+        - "Liquid: Liquid 形式でループ HTML を記述します。"
       upper_html:
         - リスト部分の上部に任意の内容のHTMLを記述することが可能です。
         - |-
@@ -1340,6 +1345,19 @@ ja:
       lower_html:
         - リスト部分の下部に任意の内容のHTMLを記述することが可能です。
         - 上部HTMLと同じテンプレートが使用できます。
+      loop_liquid:
+        - Liquid 形式で記述します。
+        - |-
+          使用例：
+          {% for page in pages %}
+          &lt;article class="item-{{ page.css_class }} {% if page.new? %}new{% endif %} {% if page.current? %}current{% endif %}">
+            &lt;header>
+              &lt;time datetime="{{ page.date }}">{{ page.date | ss_date: "long" }}&lt;/time>
+              &lt;h2>&lt;a href="{{ page.url }}">{{ page.index_name }}&lt;/a>&lt;/h2>
+            &lt;/header>
+            &lt;p>#{summary}&lt;/p>
+          &lt;/article>
+          {% endfor %}
       new_days:
         - 設定した期間内に作成されたページへのリンクにNEWマークを付与するためのclassがふられます。
 
@@ -1747,7 +1765,7 @@ ja:
       column_ids:
         - 定型フォームのコラムを設定します。
       html: |-
-        定型フォームのHTMLを設定します。
+        定型フォームのHTMLを Liquid 形式で設定します。
         {{ values["項目名"] }}のように記述することで該当する項目の入力値を表示します。
 
         使用例：
@@ -1860,15 +1878,15 @@ ja:
       label_place_holder:
         - リンクテキストのプレースホルダーを入力します。
       layout: |-
-        入力項目のHTMLを設定します。
+        入力項目のHTMLを Liquid 形式で設定します。
         未設定の場合、既定の HTML を表示します。
 
-        使用例：
+        使用例（ファイルアップロードの場合）：
           {% if value.file %}
             {% if value.image? %}
-              &lt;a href="{{ value.file.url }}">&lt;img src="{{ value.file.thumb_url }}" alt="{{ value.file.name }}" title="{{ value.file.basename }}">&lt;/a>
+              &lt;a href="{{ value.file.url }}">&lt;img src="{{ value.file.thumb_url }}" alt="{{ value.image_text | default: value.file.humanized_name }}" title="{{ value.file.basename }}">&lt;/a>
             {% else %}
-              &lt;a href="{{ value.file.url }}">{{ value.file.humanized_name }}&lt;/a>
+              &lt;a href="{{ value.file.url }}">{{ value.attachment_text | default: value.file.humanized_name }}&lt;/a>
             {% endif %}
           {% endif %}
 
