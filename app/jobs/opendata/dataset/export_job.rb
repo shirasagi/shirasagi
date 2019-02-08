@@ -1,10 +1,9 @@
 class Opendata::Dataset::ExportJob < Cms::ApplicationJob
   def perform(opts = {})
-    @datetime = Time.zone.now
     @items = Opendata::Dataset.site(site).node(node).allow(:read, user)
 
     @root_url = opts[:root_url].to_s
-    @output_zip = SS::DownloadJobFile.new(user, "opendata-datasets-#{@datetime.strftime('%Y%m%d%H%M%S')}.zip")
+    @output_zip = SS::DownloadJobFile.new(user, "opendata-datasets-#{Time.zone.now.to_i}.zip")
     @output_dir = @output_zip.path.sub(::File.extname(@output_zip.path), "")
 
     FileUtils.rm_rf(@output_dir)
@@ -25,13 +24,13 @@ class Opendata::Dataset::ExportJob < Cms::ApplicationJob
 
   def export_datasets
     data = @items.to_csv.encode("SJIS", invalid: :replace, undef: :replace)
-    write_csv(sanitize_filename("opendata-datasets-#{node.id}"), data)
+    write_csv("datasets", data)
   end
 
   def export_resources
     @items.each do |item|
       data = resources_to_csv(item.resources).encode("SJIS", invalid: :replace, undef: :replace)
-      write_resource_csv(sanitize_filename("opendata-datasets-#{node.id}-resources-#{item.id}"), data, item.id)
+      write_resource_csv("resources", data, item.id)
       item.resources.each do |resource|
         write_file(resource.file.name, resource.file.path, item.id, resource.id) if resource.file.present?
         write_file(resource.tsv.name, resource.tsv.path, item.id, resource.id) if resource.tsv.present?
@@ -62,10 +61,6 @@ class Opendata::Dataset::ExportJob < Cms::ApplicationJob
     FileUtils.mkdir_p("#{@output_dir}/#{dataset_id}/#{resource_id}")
     File.write("#{@output_dir}/#{dataset_id}/#{resource_id}/#{name}", data)
     file.close
-  end
-
-  def sanitize_filename(filename)
-    filename.gsub(/[\<\>\:\"\/\\\|\?\*]/, '_').slice(0...250)
   end
 
   def resources_to_csv(resources)
