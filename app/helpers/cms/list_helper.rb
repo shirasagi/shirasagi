@@ -100,7 +100,7 @@ module Cms::ListHelper
   end
 
   def render_list_with_liquid(source, assigns)
-    template = parse_liquid(source)
+    template = ::Cms.parse_liquid(source, liquid_registers)
 
     if @cur_part
       assigns["part"] = @cur_part

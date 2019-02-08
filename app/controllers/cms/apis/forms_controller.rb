@@ -61,16 +61,16 @@ class Cms::Apis::FormsController < ApplicationController
       return
     end
 
-    html = @page.form.html
-    if html.present?
-      template = Liquid::Template.parse(html)
+    registers = {
+      cur_site: @cur_site,
+      preview: @preview,
+      cur_path: @page.url,
+      mobile: false,
+      cur_page: @page
+    }
+    registers[:cur_main_path] = @cur_site.url == "/" ? @page.url : @page.url.sub(/^#{::Regexp.escape(@cur_site.url)}/, "/")
 
-      render_opts = { "values" => @page.column_values.to_liquid }
-      html = template.render(render_opts).html_safe
-    else
-      html = @page.column_values.map(&:to_html).join.html_safe
-    end
-
+    html = @page.form.render_html(@page, registers)
     render html: html.html_safe, layout: false
   end
 

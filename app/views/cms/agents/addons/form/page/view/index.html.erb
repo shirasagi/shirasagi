@@ -1,14 +1,6 @@
 <%
   return "" if @cur_page.form.blank?
-
-  html = @cur_page.form.html
-  if html.blank?
-    html = @cur_page.form.build_default_html
-  end
-
-  template = parse_liquid(html)
-  assigns = { "values" => @cur_page.column_values.to_liquid, "page" => @cur_page.to_liquid }
-  html = template.render(assigns).html_safe
+  html = @cur_page.form.render_html(@cur_page, liquid_registers)
 %>
 <%= content_tag_if("article", class: "body", if: @cur_page.form.sub_type_entry?) do %>
   <% if @preview %>
