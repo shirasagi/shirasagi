@@ -34,6 +34,7 @@ class Cms::PreviewController < ApplicationController
     return true if page.blank?
     return true if page.state != "public"
     return true if !page.master?
+    return true if page.branches.blank?
 
     false
   end
