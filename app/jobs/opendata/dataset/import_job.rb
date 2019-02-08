@@ -45,7 +45,7 @@ class Opendata::Dataset::ImportJob < Cms::ApplicationJob
         item = update_dataset_row(row)
         put_log("update #{i}: #{item.name}")
       rescue => e
-        put_log("error  #{i}: #{e}")
+        put_log("#{e.class} (#{e.message}):\n  #{e.backtrace.join("\n  ")}")
       end
     end
   end
@@ -57,7 +57,7 @@ class Opendata::Dataset::ImportJob < Cms::ApplicationJob
         item = update_resource_row(dataset, row)
         put_log("update #{i}: #{item.try(:name)}")
       rescue => e
-        put_log("error  #{i}: #{e}")
+        put_log("#{e.class} (#{e.message}):\n  #{e.backtrace.join("\n  ")}")
       end
     end
   end
@@ -171,7 +171,13 @@ class Opendata::Dataset::ImportJob < Cms::ApplicationJob
     item.license_id = Opendata::License.find_by(name: resource_value(row, :license_id)).try(:id)
     item.text = resource_value(row, :text)
     if resource_value(row, :file_id).present?
-      file_path = Dir.glob("#{@import_dir}/#{dataset.id}/#{resource_value(row, :id)}/#{resource_value(row, :file_id)}").first || Dir.glob("#{@import_dir}/*/#{dataset.id}/#{resource_value(row, :id)}/#{resource_value(row, :file_id)}").first
+      path1 = "#{@import_dir}/#{dataset.id}/#{resource_value(row, :id)}/#{resource_value(row, :file_id)}"
+      path2 = "#{@import_dir}/*/#{dataset.id}/#{resource_value(row, :id)}/#{resource_value(row, :file_id)}"
+
+      file_path = Dir.glob(path1).first
+      file_path ||= Dir.glob(path2).first
+      raise "not_found file_path #{path1}" if file_path.blank?
+
       file = SS::File.new(model: "opendata/resource", state: "public")
       file.in_file = Fs::UploadedFile.create_from_file(File.open(file_path, "r"))
       file.save
