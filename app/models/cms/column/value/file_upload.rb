@@ -13,7 +13,7 @@ class Cms::Column::Value::FileUpload < Cms::Column::Value::Base
   permit_values :file_id, :label, :image_text, :image_html_type, :video_description, :attachment_text, :banner_link, :banner_text
 
   before_save :before_save_file
-  after_destroy :delete_file
+  after_destroy :destroy_file
 
   liquidize do
     export :file
@@ -121,7 +121,7 @@ class Cms::Column::Value::FileUpload < Cms::Column::Value::Base
     end
   end
 
-  def delete_file
+  def destroy_file
     return if file.blank?
 
     self.file.destroy
