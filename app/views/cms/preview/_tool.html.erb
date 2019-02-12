@@ -25,7 +25,9 @@
     SS_Preview.libs.dialog.js = <%== javascript_path("cms/preview/jquery-ui").to_json %>;
     SS_Preview.libs.dialog.css = <%== stylesheet_path("cms/preview/jquery-ui").to_json %>;
     SS_Preview.confirms.delete = <%== t("ss.confirm.delete").to_json %>;
+    SS_Preview.confirms.publish = <%== t("ss.confirm.publish").to_json %>;
     SS_Preview.notices.deleted = <%== t("ss.notice.deleted").to_json %>;
+    SS_Preview.notices.published = <%== t("ss.notice.published").to_json %>;
 
     <% if rendered %>
       SS_Preview.item.type = <%== rendered[:type].to_json %>;
@@ -65,6 +67,9 @@
         SS_Preview.inplaceFormPath.columnValue.moveDown = <%== move_down_cms_apis_preview_inplace_edit_page_column_value_path(site: @cur_site, preview_date: params[:preview_date], page_id: ":pageId", id: ":id").to_json %>;
         SS_Preview.inplaceFormPath.columnValue.moveAt = <%== move_at_cms_apis_preview_inplace_edit_page_column_value_path(site: @cur_site, preview_date: params[:preview_date], page_id: ":pageId", id: ":id").to_json %>;
         SS_Preview.inplaceFormPath.palette = <%== palette_cms_apis_preview_inplace_edit_form_path(site: @cur_site, preview_date: params[:preview_date], id: ":id").to_json %>;
+        SS_Preview.publishPath = <%== publish_cms_apis_preview_page_path(site: @cur_site, preview_date: params[:preview_date], id: rendered[:page]).to_json %>;
+      <% elsif %i[node].include?(rendered[:type]) %>
+        SS_Preview.publishPath = <%== publish_cms_apis_preview_node_path(site: @cur_site, preview_date: params[:preview_date], id: rendered[:node]).to_json %>;
       <% end %>
 
       SS_Preview.workflowPath.wizard = <%== cms_apis_preview_workflow_wizard_path(site: @cur_site, preview_date: params[:preview_date], id: ":id").to_json %>;
@@ -182,6 +187,18 @@
                   <button type="button" id="ss-preview-btn-workflow-start" class="ss-preview-btn ss-preview-btn-outline"><%= t("workflow.buttons.approve") %></button>
                 <% end %>
               <% end %>
+
+              <% if page.allowed?(:release, @cur_user, site: @cur_site) && !page.workflow_requested? %>
+                <button type="button" id="ss-preview-btn-publish" class="ss-preview-btn ss-preview-btn-outline"><%= t("ss.buttons.publish") %></button>
+              <% end %>
+            </div>
+          <% end %>
+        <% end %>
+
+        <% if rendered && (node = rendered[:node]) %>
+          <% if node.state == "closed" && node.allowed?(:edit, @cur_user, site: @cur_site) %>
+            <div class="ss-preview-btn-group">
+              <button type="button" id="ss-preview-btn-publish" class="ss-preview-btn ss-preview-btn-outline"><%= t("ss.buttons.publish") %></button>
             </div>
           <% end %>
         <% end %>
