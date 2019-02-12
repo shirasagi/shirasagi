@@ -7,7 +7,7 @@ def create_time_card(site, user, date)
   time_card.save
 
   d = date.beginning_of_month
-  while d < date.end_of_month && d < @now.beginning_of_day
+  while d < date.end_of_month
     if d.wday == 0 || d.wday == 6
       d += 1.day
       next
@@ -45,8 +45,16 @@ def create_time_cards_3months(site)
   end
 end
 
+def create_time_cards_6months(site)
+  now = Time.zone.now.end_of_month
+  (0..6).each do |i|
+    create_time_cards(site, now + i.months)
+  end
+end
+
 Gws::Group.all.active.each do |group|
   next unless group.root?
 
   create_time_cards_3months(group)
+  create_time_cards_6months(group)
 end
