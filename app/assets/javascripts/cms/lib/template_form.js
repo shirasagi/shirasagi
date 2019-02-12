@@ -101,6 +101,7 @@ Cms_TemplateForm.prototype.activateForm = function() {
   $('#addon-cms-agents-addons-body').addClass('hide');
   $('#addon-cms-agents-addons-file').addClass('hide');
   Cms_Form.addonSelector = "#addon-cms-agents-addons-form-page .addon-body";
+  Cms_Form.activateSyntaxChecks();
 };
 
 Cms_TemplateForm.prototype.deactivateForm = function() {
@@ -109,6 +110,7 @@ Cms_TemplateForm.prototype.deactivateForm = function() {
   $('#addon-cms-agents-addons-body').removeClass('hide');
   $('#addon-cms-agents-addons-file').removeClass('hide');
   Cms_Form.addonSelector = ".mod-cms-body";
+  Cms_Form.activateSyntaxChecks();
 };
 
 Cms_TemplateForm.prototype.bind = function(el, options) {
@@ -160,6 +162,7 @@ Cms_TemplateForm.prototype.bindOne = function(el, options) {
         // SS.render();
         SS.renderAjaxBox();
         SS.renderDateTimePicker();
+        Cms_Form.activateSyntaxChecks();
         self.resetOrder();
       },
       error: function(xhr, status, error) {
@@ -397,5 +400,6 @@ Cms_TemplateForm.prototype.remove = function($evTarget) {
   $columnValue.addClass("column-value-deleting").fadeOut(Cms_TemplateForm.duration).queue(function() {
     $columnValue.remove();
     self.resetOrder();
+    Cms_Form.activateSyntaxChecks();
   });
 };

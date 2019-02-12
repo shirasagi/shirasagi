@@ -19,15 +19,12 @@
       Cms_Source_Cleaner.render(<%== "##{id}-source-cleaner".to_json %>, <%== { editor: editor_id }.to_json %>);
     <% end %>
 
-    <% if @inplace_syntax_check %>
-      Cms_Inplace_Form.resolveType = "html";
-      Cms_Inplace_Form.getContent = function () {
-        return Cms_Form.getEditorHtml("<%= editor_id %>");
-      };
-      Cms_Inplace_Form.setContent = function (content) {
-        Cms_Form.setEditorHtml(content, { id: "<%= editor_id %>" });
-      };
-    <% end %>
+    Cms_Form.addSyntaxCheck("<%= id %>", {
+      name: "<%= column.name %>",
+      resolve: "html",
+      getContent: function () { return Cms_Form.getEditorHtml("<%= editor_id %>"); },
+      setContent: function (content) { Cms_Form.setEditorHtml(content, { id: "<%= editor_id %>" }); },
+    });
   <% end %>
 
   <% @extra_bodies << proc do %>

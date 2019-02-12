@@ -26,23 +26,28 @@
   <% @buttons.unshift(button_tag(t("cms.buttons.column_add_list"), class: "btn btn-add-list", type: 'button')) %>
 
   <%= jquery do %>
-    <% if @inplace_syntax_check %>
-      Cms_Inplace_Form.resolveType = "textlist";
-      Cms_Inplace_Form.getContent = function () {
-        var values = {};
-        var key = 1;
+    Cms_Form.addSyntaxCheck("<%= id %>", {
+      resolve: "text",
+      type: "array",
+      name: "<%= column.name %>",
+      getContent: function () {
+        var contents = [];
         $('<%= "##{id}" %> [name="item[column_values][][in_wrap][lists][]"').each(function () {
-          values[key] = $(this).val();
-          key += 1;
+          contents.push($(this).val());
         });
-        return values;
-      };
-      Cms_Inplace_Form.setContent = function (content, opts) {
-        key = opts["listkey"] - 1;
-        ele = $('<%= "##{id}" %> [name="item[column_values][][in_wrap][lists][][text]"')[key]
-        $(ele).val(content);
-      };
-    <% end %>
+        return contents;
+      },
+      setContent: function (content) {
+        var selector, ele;
+        selector = $('<%= "##{id}" %> [name="item[column_values][][in_wrap][lists][]"');
+        $.each(content, function (idx, value) {
+          ele = selector[idx];
+          if (ele) {
+            $(ele).val(value);
+          }
+        });
+      },
+    });
 
     Cms_Column_List.render(<%== "##{id}".to_json %>);
   <% end %>

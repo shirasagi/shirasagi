@@ -1,14 +1,12 @@
 <% name = "#{f.object_name}[][in_wrap][image_text]" %>
 
-<% if @inplace_syntax_check %>
-<%= javascript_tag do %>
-Cms_Inplace_Form.getContent = function () {
-  return $('[name="<%= name %>"]').val();
-};
-Cms_Inplace_Form.setContent = function (content) {
-  $('[name="<%= name %>"]').val(content);
-};
-<% end %>
+<%= jquery do %>
+Cms_Form.addSyntaxCheck("<%= id %>", {
+  resolve: "text",
+  name: "<%= column.name %>",
+  getContent: function () { return $('#<%= id %> [name="<%= name %>"]').val(); },
+  setContent: function (content) { return $('#<%= id %> [name="<%= name %>"]').val(content); },
+});
 <% end %>
 
 <%= text_field_tag(name, value.try(:image_text), column.form_options(:image_text).merge(id: nil, "data-check-presence": Cms::Column::FileUpload.t("image_text"))) %>

@@ -106,9 +106,6 @@ production: &production
   # Link Check Ajax URL
   link_check_url: /.cms/link_check/check.json
 
-  # Correct Page's HTML When Saving
-  auto_correct_page_html: false
-
   editor_template_thumb: "/assets/img/editor-template.png"
 
   # Skip login for preview

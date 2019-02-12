@@ -6,7 +6,12 @@
   @inplace_syntax_check = @cur_column.syntax_check_enabled?
   @inplace_syntax_check = @cur_site.syntax_check_enabled? if @inplace_syntax_check
   @inplace_syntax_check = @cur_node.syntax_check_enabled? if @inplace_syntax_check && @cur_node
-  @inplace_syntax_check = @item.parent.syntax_check_enabled? if @inplace_syntax_check && @item.try(:parent)
+  if @cur_node && @cur_node.respond_to?(:syntax_check_enabled?)
+    @inplace_syntax_check = @cur_node.syntax_check_enabled? if @inplace_syntax_check
+  end
+  if @item.parent && @item.parent.respond_to?(:syntax_check_enabled?)
+    @inplace_syntax_check = @item.parent.syntax_check_enabled? if @inplace_syntax_check
+  end
 
   @inplace_link_check = @cur_column.link_check_enabled?
 %>
@@ -52,4 +57,8 @@
 
     <%= f.button t("ss.buttons.close"), name: "cancel", class: 'btn-default btn-cancel', type: :reset %>
   </footer>
+<% end %>
+
+<%= jquery do %>
+  Cms_Form.activateSyntaxChecks();
 <% end %>

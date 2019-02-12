@@ -1,8 +1,12 @@
 <%
   source_cleaner_conf = Cms::SourceCleanerTemplate.site(@cur_site).and_public.to_config
   replace_words_conf = Cms::WordDictionary.site(@cur_site).to_config
-  syntax_check = @cur_node.syntax_check_enabled? if @cur_node
-  syntax_check = @cur_site.syntax_check_enabled? if syntax_check.nil?
+
+  syntax_check = true
+  syntax_check = @cur_site.syntax_check_enabled? if syntax_check
+  if @cur_node && @cur_node.respond_to?(:syntax_check_enabled?)
+    syntax_check = @cur_node.syntax_check_enabled? if syntax_check
+  end
 
   addon ||= local_assigns.fetch(:addon, {})
   if @item.respond_to?(:form) && @item.form.present?
@@ -38,21 +42,28 @@
       'errors.messages.mobile_size_check_failed_to_size',
       mobile_size: number_to_human_size(@cur_site.mobile_size)
       ) %>"
-    Syntax_Checker.autoCorrect     = <%= SS.config.cms.auto_correct_page_html == true %>;
-    Syntax_Checker.enabled = <%= syntax_check %>;
-
-    <% if replace_words_conf[:replace_words].present? %>
-      Syntax_Checker.config = <%= raw replace_words_conf.to_json %>
-    <% end %>
 
     Form_Preview.page_route        = "<%= @item.try(:route) %>";
     Form_Preview.form_preview_path = "<%= cms_form_preview_path(path: "#{tryb{@cur_node.filename + "/"}}.html") %>";
-    Cms_Form.render();
 
     <% if source_cleaner_conf[:source_cleaner].present? %>
       Cms_Source_Cleaner.config = <%= raw source_cleaner_conf.to_json %>
       Cms_Source_Cleaner.render(".source-cleaner");
     <% end %>
+
+    <% if replace_words_conf[:replace_words].present? %>
+      Syntax_Checker.config = <%= raw replace_words_conf.to_json %>
+    <% end %>
+
+    Cms_Form.options.check.syntax = <%= syntax_check %>;
+    Cms_Form.render();
+    Cms_Form.addSyntaxCheck("addon-cms-agents-addons-body", {
+    resolve: "html",
+      name: "<%= t("modules.addons.cms/body") %>",
+      getContent: function () { return Cms_Form.getEditorHtml(); },
+      setContent: function (content) { Cms_Form.setEditorHtml(content); },
+    });
+    Cms_Form.activateSyntaxChecks();
 
   <% end %>
 

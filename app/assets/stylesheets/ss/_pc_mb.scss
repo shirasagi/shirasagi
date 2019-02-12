@@ -2593,6 +2593,12 @@ form .CodeMirror {
       }
     }
   }
+  .column-name {
+    color: #a0522d;
+    font-weight: bold;
+    padding-bottom: 5px;
+    list-style: none;
+  }
 }
 #alertExplanation {
   margin: 0px 0px 20px;

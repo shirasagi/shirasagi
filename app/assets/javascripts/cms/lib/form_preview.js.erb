@@ -1,0 +1,90 @@
+this.Form_Preview = (function () {
+  function Form_Preview() {
+  }
+
+  Form_Preview.form_preview_path;
+
+  Form_Preview.form_id = "item-form";
+
+  Form_Preview.page_route;
+
+  Form_Preview.render = function () {
+    return $("button.preview").on("click", function (e) {
+      var basename, errors, form, height, i, name, ref, token, v, width;
+      name = $("#" + Form_Preview.form_id + " input[name='item[name]']").val();
+      basename = $("#" + Form_Preview.form_id + " input[name='item[basename]']").val();
+      errors = [];
+      if (!name) {
+        errors.push("<%= I18n.t('errors.messages.set_name') %>");
+      }
+      if (basename) {
+        if (!/^[\w\-]+(\.html)?$/.test(basename)) {
+          errors.push("<%= I18n.t('errors.messages.invalid_filename') %>");
+        }
+      } else {
+        errors.push("<%= I18n.t('errors.messages.set_filename') %>");
+      }
+      if (!$.isEmptyObject(errors)) {
+        alert(errors.join("\n"));
+        return false;
+      }
+      token = $('meta[name="csrf-token"]').attr('content');
+      form = $("<form>");
+      $(form).attr("method", "post");
+      $(form).attr("action", Form_Preview.form_preview_path);
+      $(form).attr("target", "FormPreview");
+      ref = $("#" + Form_Preview.form_id).serializeArray();
+      for (i in ref) {
+        v = ref[i];
+        if (!/^item\[/.test(v["name"])) {
+          continue;
+        }
+        if ("item[html]" === v["name"]) {
+          continue;
+        }
+        if ("item[body_parts][]" === v["name"]) {
+          continue;
+        }
+        form.append($("<input/>", {
+          name: v["name"].replace(/^item\[/, "preview_item["),
+          value: v["value"],
+          type: "hidden"
+        }));
+      }
+      $("textarea[id^=item_html_part_]").each(function () {
+        var id;
+        id = $(this).attr("id");
+        name = $(this).attr("name").replace(/^item\[/, "preview_item[");
+        return form.append($("<input/>", {
+          name: name,
+          value: Cms_Form.getEditorHtml(id),
+          type: "hidden"
+        }));
+      });
+      form.append($("<input/>", {
+        name: "preview_item[route]",
+        value: Form_Preview.page_route,
+        type: "hidden"
+      }));
+      form.append($("<input/>", {
+        name: "preview_item[html]",
+        value: Cms_Form.getEditorHtml("item_html"),
+        type: "hidden"
+      }));
+      form.append($("<input/>", {
+        name: "authenticity_token",
+        value: token,
+        type: "hidden"
+      }));
+      width = $(window).width();
+      height = $(window).height();
+      window.open("about:blank", "FormPreview", "width=" + width + ",height=" + height + ",resizable=yes,scrollbars=yes");
+      form.appendTo("body");
+      form.submit();
+      return false;
+    });
+  };
+
+  return Form_Preview;
+
+})();

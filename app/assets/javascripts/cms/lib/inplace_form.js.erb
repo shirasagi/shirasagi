@@ -13,7 +13,7 @@ this.Cms_Inplace_Form = (function () {
 
   Cms_Inplace_Form.render = function () {
     if (Cms_Inplace_Form.options.check.syntax) {
-      Syntax_Checker.render(Cms_Inplace_Form);
+      Syntax_Checker.render(Cms_Inplace_Form, { afterCheck: Cms_Inplace_Form.afterSyntaxCheck });
     }
     if (Cms_Inplace_Form.options.check.link) {
       Cms_Inplace_Form.linkChecker = Link_Checker.render(Cms_Inplace_Form);
@@ -24,36 +24,31 @@ this.Cms_Inplace_Form = (function () {
     Cms_Inplace_Form.renderSaveIfNoAlerts();
   };
 
-  Cms_Inplace_Form.getContent = function () {
-    return null;
-  };
-
-  Cms_Inplace_Form.setContent = function () {
-    return null;
-  };
-
-  Cms_Inplace_Form.getHtml = function (resolved, reject) {
-    resolved(
-      Cms_Inplace_Form.getContent(),
-      { type: Cms_Inplace_Form.resolveType, afterCheck: Cms_Inplace_Form.afterSyntaxCheck }
-    );
-  };
-
   Cms_Inplace_Form.setEditorHtml = function (content, opts) {
     opts = opts || {}
     Cms_Inplace_Form.setContent(content, opts);
   };
 
   Cms_Inplace_Form.afterSyntaxCheck = function () {
-
     // emptyAttributesCheck
     $("[data-check-presence]").each(function () {
       var attr = $(this).attr("data-check-presence");
       if(attr && !$(this).val()) {
-        Syntax_Checker.pushError([{ code: attr, msg: (attr + '<%= I18n.t("errors.messages.blank") %>'), ele: this } ]);
+        var id = null;
+
+        id = $(this).closest(".column-value").attr("id");
+
+        Syntax_Checker.errors.push(
+          {
+            id: id,
+            idx: 0,
+            code: attr,
+            msg: (attr + '<%= I18n.t("errors.messages.blank") %>'),
+            ele: this
+          }
+        );
       }
     });
-
   };
 
   Cms_Inplace_Form.renderSaveIfNoAlerts = function () {
