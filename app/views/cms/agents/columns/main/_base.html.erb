@@ -7,6 +7,8 @@
   @buttons << :syntax_check if @inplace_syntax_check
   @buttons << :link_check if @inplace_link_check
   @buttons << :form_check if @inplace_form_check
+
+  @extra_bodies = []
 %>
 <div id="<%= id %>" class="column-value column-value-<%= column._type.parameterize %>">
   <div class="column-value-header">
@@ -84,4 +86,12 @@
     </div>
     <% end %>
   </div>
+
+  <% if @extra_bodies.present? %>
+    <% @extra_bodies.each do |extra_body| %>
+      <div class="column-value-body">
+        <% extra_body.call(id) %>
+      </div>
+    <% end %>
+  <% end %>
 </div>

@@ -1,4 +1,5 @@
 <% value ||= nil %>
+<% files = value.try(:files) %>
 <% controller ||= false %>
 <% source_cleaner_conf = Cms::SourceCleanerTemplate.site(@cur_site).and_public.to_config %>
 <%= render 'cms/agents/columns/main/base', f: f, column: column, value: value, controller: controller do |id| %>
@@ -27,5 +28,55 @@
         Cms_Form.setEditorHtml(content, { id: "<%= editor_id %>" });
       };
     <% end %>
+  <% end %>
+
+  <% @extra_bodies << proc do %>
+    <span class="upload-menu-new">
+      <%= link_to t('ss.links.upload'), cms_apis_temp_files_path, class: "ajax-box btn btn-file-upload" %>
+    </span>
+    <span class="upload-menu-select">
+      <%= link_to t("sns.user_file"), sns_apis_user_files_path(@cur_user), class: "ajax-box btn btn-file-upload" %>
+      <%= link_to t("cms.file"), cms_apis_files_path, class: "ajax-box btn btn-file-upload" %>
+    </span>
+
+    <div class="column-value-upload-drop-area">
+      <span class="column-value-upload-drop-notice"><%= t('ss.notice.file_droppable') %></span>
+    </div>
+
+    <div class="column-value-files<% if files.blank? %> hide<% end %>">
+      <% if files.present? %>
+        <% files.each do |file| %>
+          <div class="file-view" data-file-id="<%= file.id %>" data-name="<%= file.name %>" data-humanized-name="<%= file.humanized_name %>" data-url="<%= file.url %>" data-thumb-url="<%= file.thumb_url %>" data-extname="<%= file.extname %>">
+            <%= link_to file.url, class: :thumb, target: "_blank" do %>
+              <% if file.image? %>
+                <%= image_tag file.thumb_url, alt: file.name %>
+              <% else %>
+                <span class="ext icon-<%= file.extname %>"><%= file.extname %></span>
+              <% end %>
+            <% end %>
+
+            <div class="name">
+              <label>
+                <%= hidden_field_tag("#{f.object_name}[][in_wrap][file_ids][]", file.id, id: nil) %>
+                <%= file.name %>
+              </label>
+            </div>
+
+            <div class="action">
+              <%= link_to t("sns.file_attach"), "#", class: "btn-file-attach" %>
+              <% if file.image? %>
+                <%= link_to t("sns.image_paste"), "#", class: "btn-file-image-paste" %>
+                <%= link_to t("sns.thumb_paste"), "#", class: "btn-file-thumb-paste" %>
+              <% end %>
+              <%= link_to t("ss.buttons.delete"), "#", class: "btn-file-delete" %>
+            </div>
+          </div>
+        <% end %>
+      <% end %>
+    </div>
+  <% end %>
+
+  <%= jquery do %>
+    Cms_Column_Free.render(<%== "##{id}".to_json %>, <%== { objectName: f.object_name, editorId: "##{editor_id}" }.to_json %>);
   <% end %>
 <% end %>
