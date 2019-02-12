@@ -677,7 +677,7 @@ SS_Preview = (function () {
           var $column = $(document).find(".ss-preview-column[data-page-id='" + ids.pageId + "'][data-column-id='" + ids.columnId + "']");
           $column.fadeOut("fast", function () {
             $column.remove();
-            self.notice.show("削除しました。");
+            self.notice.show(SS_Preview.notices.delete);
           });
         }
       },
