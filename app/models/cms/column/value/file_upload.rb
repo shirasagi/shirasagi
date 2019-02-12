@@ -106,6 +106,9 @@ class Cms::Column::Value::FileUpload < Cms::Column::Value::Base
 
     attrs = {}
 
+    if file.site_id != _parent.site_id
+      attrs[:site_id] = _parent.site_id
+    end
     if file.model != 'cms/column'
       attrs[:model] = 'cms/column'
     end
@@ -114,7 +117,7 @@ class Cms::Column::Value::FileUpload < Cms::Column::Value::Base
     end
 
     if attrs.present?
-      file.set(attrs)
+      file.update(attrs)
     end
   end
 
