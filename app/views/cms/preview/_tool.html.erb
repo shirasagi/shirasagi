@@ -67,6 +67,7 @@
         SS_Preview.inplaceFormPath.columnValue.moveAt = <%== move_at_cms_apis_preview_inplace_edit_page_column_value_path(site: @cur_site, preview_date: params[:preview_date], page_id: ":pageId", id: ":id").to_json %>;
         SS_Preview.inplaceFormPath.palette = <%== palette_cms_apis_preview_inplace_edit_form_path(site: @cur_site, preview_date: params[:preview_date], id: ":id").to_json %>;
         SS_Preview.publishPath = <%== publish_cms_apis_preview_page_path(site: @cur_site, preview_date: params[:preview_date], id: rendered[:page]).to_json %>;
+        SS_Preview.lockPath = <%== lock_cms_apis_preview_page_path(site: @cur_site, preview_date: params[:preview_date], id: rendered[:page]).to_json %>;
       <% elsif %i[node].include?(rendered[:type]) %>
         SS_Preview.publishPath = <%== publish_cms_apis_preview_node_path(site: @cur_site, preview_date: params[:preview_date], cid: rendered[:node]).to_json %>;
       <% end %>

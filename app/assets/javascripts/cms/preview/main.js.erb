@@ -14,6 +14,7 @@ SS_Preview = (function () {
     this.inplaceMode = false;
     this.layouts = [];
     this.parts = [];
+    this.editLock = new EditLock(this);
   }
 
   SS_Preview.libs = {
@@ -25,7 +26,7 @@ SS_Preview = (function () {
 
   SS_Preview.confirms = { delete: null, publish: null };
 
-  SS_Preview.notices = { deleted: null };
+  SS_Preview.notices = { deleted: null, publish: null };
 
   SS_Preview.item = {};
 
@@ -45,6 +46,12 @@ SS_Preview = (function () {
   SS_Preview.workflowPath = { wizard: null, pages: null };
 
   SS_Preview.redirectorPath = { newPage: null };
+
+  SS_Preview.publishPath = null;
+
+  SS_Preview.lockPath = null;
+
+  SS_Preview.refreshLockInterval = 2 * 60 * 1000;
 
   SS_Preview.instance = null;
 
@@ -100,7 +107,7 @@ SS_Preview = (function () {
   };
 
   SS_Preview.lazyLoad = function (data) {
-    var d = new $.Deferred;
+    var d = $.Deferred();
 
     if (data.isInstalled()) {
       d.resolve();
@@ -209,21 +216,21 @@ SS_Preview = (function () {
     }
 
     this.$el.on("click", ".ss-preview-btn-toggle-inplace", function () {
-      self.toggleInplaceMode();
+      var before = self.inplaceMode;
+      self.toggleInplaceMode().always(function() {
+        if (before === self.inplaceMode) {
+          return;
+        }
+        if (!window.history.pushState) {
+          return;
+        }
 
-      if (self.inplaceMode) {
-        if (window.history.pushState) {
+        if (self.inplaceMode) {
           window.history.pushState(null, null, window.location.pathname + "#inplace");
         } else {
-          window.location.hash = "#inplace";
-        }
-      } else {
-        if (window.history.pushState) {
           window.history.pushState(null, null, window.location.pathname);
-        } else {
-          window.location.hash = "";
         }
-      }
+      });
     });
 
     $(document).on("click", ".ss-preview-btn-open-path", function () {
@@ -986,6 +993,7 @@ SS_Preview = (function () {
   //
   // Public
   //
+
   SS_Preview.prototype.publish = function() {
     if (! confirm(SS_Preview.confirms.publish)) {
       return;
@@ -1023,70 +1031,163 @@ SS_Preview = (function () {
   };
 
   //
+  // Lock / Unlock
+  //
+
+  function EditLock(container) {
+    this.container = container;
+    this.timerId = null;
+  }
+
+  EditLock.prototype.acquire = function() {
+    if (!SS_Preview.lockPath) {
+      return $.Deferred().resolve().promise();
+    }
+
+    var self = this;
+    var url = SS_Preview.lockPath;
+    var token = $('meta[name="csrf-token"]').attr('content');
+
+    return $.ajax({
+      url: url,
+      type: "POST",
+      dataType: "json",
+      cache: false,
+      data: { authenticity_token: token }
+    }).fail(function(xhr, status, error) {
+      if (self.container.notice) {
+        if (xhr.responseJSON) {
+          self.container.notice.show(xhr.responseJSON.join("\n"));
+        } else {
+          self.container.notice.show(error);
+        }
+      }
+    });
+  };
+
+  EditLock.prototype.release = function() {
+    if (!SS_Preview.lockPath) {
+      return $.Deferred().resolve().promise();
+    }
+
+    var self = this;
+    var url = SS_Preview.lockPath;
+    var token = $('meta[name="csrf-token"]').attr('content');
+
+    return $.ajax({
+      url: url,
+      type: "POST",
+      dataType: "json",
+      cache: false,
+      data: { _method: "delete", authenticity_token: token }
+    }).fail(function(xhr, status, error) {
+      if (self.container.notice) {
+        if (xhr.responseJSON) {
+          self.container.notice.show(xhr.responseJSON.join("\n"));
+        } else {
+          self.container.notice.show(error);
+        }
+      }
+    });
+  };
+
+  EditLock.prototype.startRefreshLoop = function(failed) {
+    var self = this;
+    self.timerId = setTimeout(function() { self.acquire().fail(failed); self.startRefreshLoop(); }, SS_Preview.refreshLockInterval);
+  };
+
+  EditLock.prototype.stopRefreshLoop = function() {
+    if (this.timerId) {
+      clearTimeout(this.timerId);
+    }
+    this.timerId = null;
+  };
+
+  //
   // Inplace Edit
   //
 
   SS_Preview.prototype.toggleInplaceMode = function() {
     if (this.inplaceMode) {
-      this.stopInplaceMode();
+      return this.stopInplaceMode();
     } else {
-      this.startInplaceMode();
+      return this.startInplaceMode();
     }
   };
 
   SS_Preview.prototype.startInplaceMode = function() {
     if (!SS_Preview.userInplaceEdit) {
-      return;
+      return $.Deferred().resolve().promise();
     }
 
-    var button = this.$el.find(".ss-preview-btn-toggle-inplace");
+    var self = this;
+    return this.editLock.acquire().done(function() {
+      self.inplaceMode = true;
 
-    this.inplaceMode = true;
-    button.addClass("ss-preview-active");
-    $("#ss-preview-notice").addClass("ss-preview-hide");
-    if (this.formPalette) {
-      this.formPalette.show();
-    }
+      var button = self.$el.find(".ss-preview-btn-toggle-inplace");
+      button.addClass("ss-preview-active");
 
-    $("a[href]").each(function() {
-      var $a = $(this);
-      var href = $a.attr("href");
-      if (!href) {
-        return;
-      }
-      if (!href.startsWith("/")) {
-        return;
-      }
-      if (href.includes("#")) {
-        return;
+      $("#ss-preview-notice").addClass("ss-preview-hide");
+      if (self.formPalette) {
+        self.formPalette.show();
       }
 
-      $a.attr("href", href + "#inplace");
+      $("a[href]").each(function() {
+        var $a = $(this);
+        var href = $a.attr("href");
+        if (!href) {
+          return;
+        }
+        if (!href.startsWith("/")) {
+          return;
+        }
+        if (href.includes("#")) {
+          return;
+        }
+
+        $a.attr("href", href + "#inplace");
+      });
+
+      self.editLock.startRefreshLoop(function() { self.stopInplaceMode(true); });
+      window.location.hash = "#inplace";
     });
   };
 
-  SS_Preview.prototype.stopInplaceMode = function() {
-    var button = this.$el.find(".ss-preview-btn-toggle-inplace");
+  SS_Preview.prototype.stopInplaceMode = function(dontCareLock) {
+    var self = this;
+    var afterReleased = function() {
+      window.location.hash = "";
+      self.editLock.stopRefreshLoop();
 
-    this.inplaceMode = false;
-    button.removeClass("ss-preview-active");
-    this.overlay.hide();
-    if (this.formPalette) {
-      this.formPalette.hide();
+      var button = self.$el.find(".ss-preview-btn-toggle-inplace");
+
+      self.inplaceMode = false;
+      button.removeClass("ss-preview-active");
+      self.overlay.hide();
+      if (self.formPalette) {
+        self.formPalette.hide();
+      }
+
+      $("a[href]").each(function () {
+        var $a = $(this);
+        var href = $a.attr("href");
+        if (!href) {
+          return;
+        }
+        if (!href.startsWith("/")) {
+          return;
+        }
+
+        $a.attr("href", href.replace("#inplace", ""));
+      });
+    };
+
+    if (dontCareLock) {
+      afterReleased();
+      return $.Deferred().resolve().promise();
     }
 
-    $("a[href]").each(function() {
-      var $a = $(this);
-      var href = $a.attr("href");
-      if (!href) {
-        return;
-      }
-      if (!href.startsWith("/")) {
-        return;
-      }
-
-      $a.attr("href", href.replace("#inplace", ""));
-    });
+    return this.editLock.release().always(afterReleased);
   };
 
   //

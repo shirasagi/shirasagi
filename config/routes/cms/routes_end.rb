@@ -221,6 +221,8 @@ SS::Application.routes.draw do
         end
         resources :pages, only: [] do
           post :publish, on: :member
+          post :lock, on: :member
+          delete :lock, on: :member, action: :unlock
         end
       end
     end
