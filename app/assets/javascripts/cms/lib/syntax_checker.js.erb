@@ -259,6 +259,7 @@ this.Syntax_Checker = (function () {
 
   Syntax_Checker.checkHtml =  function (id, content) {
     Syntax_Checker.checkDateFormat(id, content);
+    Syntax_Checker.checkInterwordSpace(id, content);
     Syntax_Checker.checkKanaCharacter(id, content);
     Syntax_Checker.checkMultibyteCharacter(id, content);
     Syntax_Checker.checkReplaceWords(id, content);
@@ -269,7 +270,6 @@ this.Syntax_Checker = (function () {
     Syntax_Checker.checkEmbeddedMedia(id, content);
     Syntax_Checker.checkImgAlt(id, content);
     Syntax_Checker.checkImgDataUriScheme(id, content);
-    Syntax_Checker.checkInterwordSpace(id, content);
     Syntax_Checker.checkLinkText(id, content);
     Syntax_Checker.checkObjectText(id, content);
     Syntax_Checker.checkOrderOfH(id, content);
@@ -278,6 +278,7 @@ this.Syntax_Checker = (function () {
 
   Syntax_Checker.checkText =  function (id, content) {
     Syntax_Checker.checkDateFormat(id, content);
+    Syntax_Checker.checkInterwordSpace(id, content);
     Syntax_Checker.checkKanaCharacter(id, content);
     Syntax_Checker.checkMultibyteCharacter(id, content);
     Syntax_Checker.checkReplaceWords(id, content);
@@ -1022,7 +1023,10 @@ this.Syntax_Checker = (function () {
 
     $.each(array, function(idx, html) {
       html = $(html);
-      $(html).find(":not(iframe)").each(function () {
+
+      $(html).find(":not(iframe)").addBack().contents().filter(function () {
+        return this.nodeType == 3;
+      }).each(function () {
         var i, j, ref, text;
         text = $.trim(Syntax_Checker.justText(this));
         if (/[　]/.test(text)) {
