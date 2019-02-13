@@ -4,6 +4,7 @@ Cms_Column_FileUpload = function(el, options) {
 };
 
 Cms_Column_FileUpload.userId = null;
+Cms_Column_FileUpload.fileUploadPath = null;
 Cms_Column_FileUpload.fileSelectPath = null;
 
 Cms_Column_FileUpload.render = function(el, options) {
@@ -16,6 +17,10 @@ Cms_Column_FileUpload.prototype.getUserId = function() {
   return this.options.userId || Cms_Column_FileUpload.userId;
 };
 
+Cms_Column_FileUpload.prototype.getFileUploadPath = function() {
+  return this.options.fileUploadPath || Cms_Column_FileUpload.fileUploadPath;
+};
+
 Cms_Column_FileUpload.prototype.getFileSelectPath = function() {
   return this.options.fileSelectPath || Cms_Column_FileUpload.fileSelectPath;
 };
@@ -25,7 +30,7 @@ Cms_Column_FileUpload.prototype.getTempFileOptions = function() {
   var ret = {};
 
   ret.uploadUrl = function() {
-    return "/.s" + self.getUserId() + "/cms/apis/temp_files.json";
+    return self.getFileUploadPath();
   };
 
   ret.select = function(files, dropArea) {
