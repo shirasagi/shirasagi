@@ -77,6 +77,10 @@
   padding: 10px;      /* 余白指定 */
 }
 
+.table-editor .edited {
+  padding: 0px;
+}
+
 .table-editor th {
   background-color: #777;
 }
@@ -84,4 +88,20 @@
 .table-editor table {
   border-collapse: collapse; /* セルの線を重ねる */
   table-layout: fixed;
+}
+
+.table-editor textarea {
+  height: 100%;
+  width: 100%;
+}
+
+.table-editor .controll {
+  background-color: #fff;
+  padding: 10px 20px;
+  cursor: pointer;
+  cursor: hand;
+}
+
+.table-editor .controll:hover {
+  background-color: #f4b942;
 }

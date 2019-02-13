@@ -24,4 +24,8 @@ class Cms::Column::Value::Table < Cms::Column::Value::Base
       end
     end
   end
+
+  def to_default_html
+    ApplicationController.helpers.br_not_h(self.value.to_s)
+  end
 end

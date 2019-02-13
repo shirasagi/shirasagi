@@ -81,6 +81,7 @@ ja:
       height: 行数
       header: ヘッダ
       create: 表を作成する
+      caption: キャプション
     column_youtube_auto_width:
       enabled: 画面幅に合わせる
       disabled: 画面幅に合わせない
