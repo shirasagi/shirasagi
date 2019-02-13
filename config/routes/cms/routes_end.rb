@@ -215,7 +215,7 @@ SS::Application.routes.draw do
           match "/wizard/:id" => "wizard#index", via: [:get, :post], as: "wizard"
         end
 
-        resources :nodes, only: [] do
+        resources :nodes, param: :cid, only: [] do
           post :publish, on: :member
         end
         resources :pages, only: [] do

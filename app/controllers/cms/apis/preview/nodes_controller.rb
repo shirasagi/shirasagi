@@ -3,8 +3,6 @@ class Cms::Apis::Preview::NodesController < ApplicationController
 
   model Cms::Node
 
-  before_action :set_item, only: [:publish]
-
   private
 
   def fix_params
@@ -14,17 +12,17 @@ class Cms::Apis::Preview::NodesController < ApplicationController
   public
 
   def publish
-    raise "403" if !@item.allowed?(:edit, @cur_user, site: @cur_site)
+    raise "403" if !@cur_node.allowed?(:edit, @cur_user, site: @cur_site)
 
-    if @item.try(:release_date).present?
-      @item.state = "ready"
+    if @cur_node.try(:release_date).present?
+      @cur_node.state = "ready"
     else
-      @item.state = "public"
+      @cur_node.state = "public"
     end
-    result = @item.save
+    result = @cur_node.save
 
     if !result
-      render json: @item.errors.full_messages, status: :unprocessable_entity
+      render json: @cur_node.errors.full_messages, status: :unprocessable_entity
       return
     end
 
