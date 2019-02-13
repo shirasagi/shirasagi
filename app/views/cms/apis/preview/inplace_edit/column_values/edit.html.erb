@@ -13,20 +13,22 @@
   @inplace_link_check = @cur_column.link_check_enabled?
 %>
 <%= jquery do %>
+  <% if replace_words_conf[:replace_words].present? %>
+    Syntax_Checker.config = <%= raw replace_words_conf.to_json %>
+  <% end %>
 
-<% if replace_words_conf[:replace_words].present? %>
-Syntax_Checker.config = <%= raw replace_words_conf.to_json %>
-<% end %>
+  Cms_Inplace_Form.form_link_check_path = <%== url_for(action: :link_check).to_json %>;
+  Cms_Inplace_Form.form_check_path = <%== url_for(action: :form_check).to_json %>;
+  Cms_Inplace_Form.options.check.form = <%== @inplace_form_check.to_json %>;
+  Cms_Inplace_Form.options.check.syntax = <%== @inplace_syntax_check.to_json %>;
+  Cms_Inplace_Form.options.check.link = <%== @inplace_link_check.to_json %>;
+  Cms_Inplace_Form.render();
 
-Cms_Inplace_Form.form_link_check_path = <%== url_for(action: :link_check).to_json %>;
-Cms_Inplace_Form.form_check_path = <%== url_for(action: :form_check).to_json %>;
-Cms_Inplace_Form.options.check.form = <%== @inplace_form_check.to_json %>;
-Cms_Inplace_Form.options.check.syntax = <%== @inplace_syntax_check.to_json %>;
-Cms_Inplace_Form.options.check.link = <%== @inplace_link_check.to_json %>;
-Cms_Inplace_Form.render();
+  Cms_Column_FileUpload.userId = <%= @cur_user.id %>;
+  Cms_Column_FileUpload.fileSelectPath = <%== cms_apis_form_temp_file_select_path(id: ":fileId").to_json %>;
 
-Cms_Column_FileUpload.userId = <%= @cur_user.id %>;
-Cms_Column_FileUpload.fileSelectPath = <%== cms_apis_form_temp_file_select_path(id: ":fileId").to_json %>;
+  Cms_Column_Free.userId = <%= @cur_user.id %>;
+  Cms_Column_Free.fileSelectPath = <%== select_cms_apis_temp_file_path(id: ":fileId").to_json %>;
 <% end %>
 
 <%= form_for :item, url: { action: :update }, html: { id: "item-form", method: :put, multipart: true, autocomplete: :off } do |f| %>
