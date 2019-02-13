@@ -217,12 +217,11 @@ SS::Application.routes.draw do
 
         resources :nodes, param: :cid, only: [] do
           post :publish, on: :member
+          get :new_page, on: :member
         end
         resources :pages, only: [] do
           post :publish, on: :member
         end
-
-        get "/redirector/new-page/(:cid)" => "redirector#new_page", as: "redirector_new_page"
       end
     end
   end
