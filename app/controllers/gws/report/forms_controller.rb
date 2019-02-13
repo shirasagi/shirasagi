@@ -21,26 +21,26 @@ class Gws::Report::FormsController < ApplicationController
   def publish
     set_item
     if @item.public?
-      redirect_to({ action: :show }, { notice: t('gws/workflow.notice.published') })
+      redirect_to({ action: :show }, { notice: t('ss.notice.published') })
       return
     end
     return if request.get?
 
     @item.state = 'public'
-    render_opts = { render: { file: :publish }, notice: t('gws/workflow.notice.published') }
+    render_opts = { render: { file: :publish }, notice: t('ss.notice.published') }
     render_update @item.save, render_opts
   end
 
   def depublish
     set_item
     if @item.closed?
-      redirect_to({ action: :show }, { notice: t('gws/workflow.notice.depublished') })
+      redirect_to({ action: :show }, { notice: t('ss.notice.depublished') })
       return
     end
     return if request.get?
 
     @item.state = 'closed'
-    render_opts = { render: { file: :depublish }, notice: t('gws/workflow.notice.depublished') }
+    render_opts = { render: { file: :depublish }, notice: t('ss.notice.depublished') }
     render_update @item.save, render_opts
   end
 end
