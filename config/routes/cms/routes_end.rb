@@ -215,14 +215,15 @@ SS::Application.routes.draw do
           match "/wizard/:id" => "wizard#index", via: [:get, :post], as: "wizard"
         end
 
-        resources :nodes, only: [] do
+        resources :nodes, param: :cid, only: [] do
           post :publish, on: :member
+          get :new_page, on: :member
         end
         resources :pages, only: [] do
           post :publish, on: :member
+          post :lock, on: :member
+          delete :lock, on: :member, action: :unlock
         end
-
-        get "/redirector/new-page/(:cid)" => "redirector#new_page", as: "redirector_new_page"
       end
     end
   end

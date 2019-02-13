@@ -1,7 +1,9 @@
 class Cms::Apis::Preview::PagesController < ApplicationController
   include Cms::ApiFilter
+  include Cms::LockFilter
 
   model Cms::Page
+  append_view_path "app/views/cms/crud"
 
   before_action :set_item, only: [:publish]
   before_action :set_cur_node, only: [:publish]
