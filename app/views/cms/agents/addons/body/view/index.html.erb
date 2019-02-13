@@ -1,4 +1,4 @@
-<% if @cur_page.html.present? && @cur_page.try(:form).blank? %>
+<% if @cur_page.try(:form).blank? && (@cur_page.html.present? || @preview)  %>
   <%= content_tag_if("div", class: "ss-preview-page", data: { "page-id" => @cur_page.id, "page-route" => @cur_page.route }, if: @preview) do %>
     <article class="body">
       <%== @cur_page.html %>

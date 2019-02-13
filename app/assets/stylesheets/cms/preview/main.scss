@@ -283,6 +283,9 @@
     }
   }
 }
+.ss-preview-page, .ss-preview-column {
+  min-height: 1em;
+}
 body.ss-ajax-in-iframe {
   background: none;
 }
