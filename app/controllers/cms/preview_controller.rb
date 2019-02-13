@@ -143,12 +143,12 @@ class Cms::PreviewController < ApplicationController
     end
     if @head_html
       body.sub!(/<head.*?>/im) do
-        ::Regexp.last_match[0] + @head_html
+        ::Regexp.last_match[0] + String.new(@head_html)
       end
     end
     if @foot_html
       body.sub!(/<\/body>/im) do
-        @foot_html + ::Regexp.last_match[0]
+        String.new(@foot_html) + ::Regexp.last_match[0]
       end
     end
     body
