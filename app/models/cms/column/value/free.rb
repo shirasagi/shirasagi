@@ -9,6 +9,7 @@ class Cms::Column::Value::Free < Cms::Column::Value::Base
 
   liquidize do
     export :value
+    export :files
   end
 
   def all_file_ids
