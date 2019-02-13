@@ -1,3 +1,11 @@
+<%
+  syntax_check = true
+  syntax_check = @cur_site.syntax_check_enabled? if syntax_check
+  if @cur_node && @cur_node.respond_to?(:syntax_check_enabled?)
+    syntax_check = @cur_node.syntax_check_enabled? if syntax_check
+  end
+%>
+
 <% if form.sub_type_static? %>
   <%= render 'cms/forms/columns_form_static', local_assigns %>
 <% else %>
@@ -5,7 +13,7 @@
 <% end %>
 
 <div>
-  <%= button_tag(t("cms.syntax_check"), name: nil, type: "button", class: "btn syntax-check") %>
+  <%= button_tag(t("cms.syntax_check"), name: nil, type: "button", class: "btn syntax-check") if syntax_check %>
   <%= button_tag(t("cms.mobile_size_check"), name: nil, type: "button", class: "btn mobile-size-check") %>
   <%= button_tag(t("cms.link_check"), name: nil, type: "button", class: "btn link-check") %>
   <% if !@preview %>

@@ -25,7 +25,7 @@
     <% end %>
   </div>
 
-  <%= render "cms/agents/columns/file_upload/column_form_#{column.file_type.presence || "image"}", f: f, column: column, value: value %>
+  <%= render "cms/agents/columns/file_upload/column_form_#{column.file_type.presence || "image"}", f: f, id: id, column: column, value: value %>
 
   <%= jquery do %>
     Cms_Column_FileUpload.render(<%== "##{id}".to_json %>);
