@@ -1093,6 +1093,12 @@ SS_Preview = (function () {
 
   EditLock.prototype.startRefreshLoop = function(failed) {
     var self = this;
+
+    if (self.timerId) {
+      // loop was already started
+      return;
+    }
+
     self.timerId = setTimeout(function() { self.acquire().fail(failed); self.startRefreshLoop(); }, SS_Preview.refreshLockInterval);
   };
 
@@ -1118,6 +1124,10 @@ SS_Preview = (function () {
   SS_Preview.prototype.startInplaceMode = function() {
     if (!SS_Preview.userInplaceEdit) {
       return $.Deferred().resolve().promise();
+    }
+    if (this.inplaceMode) {
+      // already in inplace mode
+      return;
     }
 
     var self = this;
