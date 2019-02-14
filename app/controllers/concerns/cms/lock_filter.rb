@@ -8,6 +8,11 @@ module Cms::LockFilter
       return
     end
 
+    if !@item.respond_to?(:acquire_lock)
+      head :unprocessable_entity
+      return
+    end
+
     if @item.acquire_lock(force: params[:force].present?)
       render
     else
@@ -22,6 +27,11 @@ module Cms::LockFilter
     set_item rescue nil
     if @item.blank?
       head :no_content
+      return
+    end
+
+    if !@item.respond_to?(:release_lock)
+      head :unprocessable_entity
       return
     end
 

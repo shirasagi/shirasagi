@@ -1093,6 +1093,12 @@ SS_Preview = (function () {
 
   EditLock.prototype.startRefreshLoop = function(failed) {
     var self = this;
+
+    if (self.timerId) {
+      // loop was already started
+      return;
+    }
+
     self.timerId = setTimeout(function() { self.acquire().fail(failed); self.startRefreshLoop(); }, SS_Preview.refreshLockInterval);
   };
 
@@ -1118,6 +1124,10 @@ SS_Preview = (function () {
   SS_Preview.prototype.startInplaceMode = function() {
     if (!SS_Preview.userInplaceEdit) {
       return $.Deferred().resolve().promise();
+    }
+    if (this.inplaceMode) {
+      // already in inplace mode
+      return;
     }
 
     var self = this;
@@ -1154,14 +1164,17 @@ SS_Preview = (function () {
   };
 
   SS_Preview.prototype.stopInplaceMode = function(dontCareLock) {
+    if (!this.inplaceMode) {
+      // already exited from inplace mode
+      return
+    }
+
     var self = this;
     var afterReleased = function() {
-      window.location.hash = "";
       self.editLock.stopRefreshLoop();
 
       var button = self.$el.find(".ss-preview-btn-toggle-inplace");
 
-      self.inplaceMode = false;
       button.removeClass("ss-preview-active");
       self.overlay.hide();
       if (self.formPalette) {
@@ -1180,6 +1193,9 @@ SS_Preview = (function () {
 
         $a.attr("href", href.replace("#inplace", ""));
       });
+
+      self.inplaceMode = false;
+      window.location.hash = "";
     };
 
     if (dontCareLock) {
