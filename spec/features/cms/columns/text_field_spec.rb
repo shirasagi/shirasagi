@@ -2,7 +2,7 @@ require 'spec_helper'
 
 describe Cms::ColumnsController, dbscope: :example, js: true do
   let(:site) { cms_site }
-  let(:form) { create(:cms_form, cur_site: site) }
+  let(:form) { create(:cms_form, cur_site: site, sub_type: 'static') }
   let(:name) { unique_id }
 
   before { login_cms_user }

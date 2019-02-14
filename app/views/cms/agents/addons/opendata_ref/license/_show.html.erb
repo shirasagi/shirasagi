@@ -1,5 +1,8 @@
 <% return "" if @item.opendata_license_ids.blank? %>
-<%= jquery do %> SS_AddonTabs.hide(".mod-cms-opendata-license"); <% end %>
+<%
+  addon ||= local_assigns.fetch(:addon, {})
+  addon[:display_body] = "hide"
+%>
 
 <dl class="see mod-cms-opendata-license">
   <dt><%= @model.t :opendata_license_ids %></dt>
