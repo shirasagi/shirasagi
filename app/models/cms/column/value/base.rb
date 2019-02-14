@@ -8,7 +8,7 @@ class Cms::Column::Value::Base
   class_attribute :_permit_values, instance_accessor: false
   self._permit_values = []
 
-  attr_reader :in_wrap, :link_errors
+  attr_reader :in_wrap, :link_errors, :origin_id
 
   embedded_in :page, inverse_of: :column_values
   belongs_to :column, class_name: 'Cms::Column::Base'
@@ -96,8 +96,10 @@ class Cms::Column::Value::Base
   end
 
   def new_clone
-    ret = self.class.new self.attributes.to_h.except('id', '_id', '_type')
+    ret = self.class.new self.attributes.to_h.except('_type')
     ret.instance_variable_set(:@new_clone, true)
+    ret.instance_variable_set(:@origin_id, ret.id)
+    ret.id = nil
     ret.created = Time.zone.now
     ret.updated = Time.zone.now
     ret
