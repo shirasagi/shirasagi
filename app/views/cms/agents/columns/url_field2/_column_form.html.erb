@@ -8,10 +8,21 @@
 
   <%= jquery do %>
     Cms_Form.addSyntaxCheck("<%= id %>", {
-    resolve: "text",
-    name: "<%= column.name %>",
-    getContent: function () { return $('#<%= id %> [name="<%= name %>"]').val(); },
-    setContent: function (content) { return $('#<%= id %> [name="<%= name %>"]').val(content); },
+      resolve: "text",
+      name: "<%= column.name %>",
+      getContent: function () { return $('#<%= id %> [name="<%= name %>"]').val(); },
+      setContent: function (content) { return $('#<%= id %> [name="<%= name %>"]').val(content); },
+      afterCheck: function (id, content) {
+        var text;
+        text = content["content"];
+        if (text && text.length <= 3) {
+         Syntax_Checker.errors.push({
+           id: id, idx: 0, code: text,
+           msg: Syntax_Checker.message["checkLinkText"],
+           detail: Syntax_Checker.detail["checkLinkText"]
+         });
+        }
+      }
     });
   <% end %>
 <% end %>

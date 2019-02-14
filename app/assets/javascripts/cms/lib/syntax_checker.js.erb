@@ -203,13 +203,15 @@ this.Syntax_Checker = (function () {
     var type = options["type"] || "string";
     var getContent = options["getContent"];
     var setContent = options["setContent"];
+    var afterCheck = options["afterCheck"];
 
     Syntax_Checker.checks[id] = {
       name: name,
       resolve: resolve,
       type: type,
       getContent: getContent,
-      setContent: setContent
+      setContent: setContent,
+      afterCheck: afterCheck
     };
   };
 
@@ -223,7 +225,7 @@ this.Syntax_Checker = (function () {
     var contents = {};
 
     $.each(Syntax_Checker.checks, function(id, check) {
-      contents[id] = { content: check["getContent"](), resolve: check["resolve"], type: check["type"] };
+      contents[id] = { content: check["getContent"](), resolve: check["resolve"], type: check["type"], afterCheck: check["afterCheck"] };
     });
 
     return contents;
@@ -231,8 +233,6 @@ this.Syntax_Checker = (function () {
 
   Syntax_Checker.check = function () {
     var contents, afterCheck;
-
-    afterCheck = Syntax_Checker.afterCheck;
 
     Syntax_Checker.reset();
 
@@ -244,10 +244,15 @@ this.Syntax_Checker = (function () {
       else {
         Syntax_Checker.checkText(id, content);
       }
+
+      afterCheck = content["afterCheck"];
+      if (afterCheck) {
+        afterCheck(id, content);
+      }
     });
 
-    if (afterCheck) {
-      afterCheck();
+    if (Syntax_Checker.afterCheck) {
+      Syntax_Checker.afterCheck();
     };
 
     return Syntax_Checker.errors;
