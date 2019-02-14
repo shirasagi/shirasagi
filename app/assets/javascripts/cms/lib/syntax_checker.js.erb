@@ -175,6 +175,8 @@ this.Syntax_Checker = (function () {
     });
   };
 
+  Syntax_Checker.config = {};
+
   Syntax_Checker.asyncCheck = function () {
     var defer = $.Deferred();
 
@@ -186,7 +188,7 @@ this.Syntax_Checker = (function () {
         defer.resolve({ status: Syntax_Checker.errors.length == 0 ? "ok" : "failed" });
       } catch (e) {
         Syntax_Checker.resultBox.showMessage("<p>" + e + "</p>");
-        defer.reject(null, null, error);
+        defer.reject(null, null, e);
       }
     };
 
