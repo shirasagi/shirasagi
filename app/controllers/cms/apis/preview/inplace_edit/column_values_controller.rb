@@ -340,6 +340,7 @@ class Cms::Apis::Preview::InplaceEdit::ColumnValuesController < ApplicationContr
   end
 
   def destroy
+    @item.attributes = fix_params
     raise "403" unless @item.allowed?(:edit, @cur_user, site: @cur_site, node: @cur_node)
 
     if creates_branch?
@@ -350,6 +351,7 @@ class Cms::Apis::Preview::InplaceEdit::ColumnValuesController < ApplicationContr
   end
 
   def move_up
+    @item.attributes = fix_params
     raise "403" unless @item.allowed?(:edit, @cur_user, site: @cur_site, node: @cur_node)
 
     if creates_branch?
@@ -360,6 +362,7 @@ class Cms::Apis::Preview::InplaceEdit::ColumnValuesController < ApplicationContr
   end
 
   def move_down
+    @item.attributes = fix_params
     raise "403" unless @item.allowed?(:edit, @cur_user, site: @cur_site, node: @cur_node)
 
     if creates_branch?
@@ -370,6 +373,7 @@ class Cms::Apis::Preview::InplaceEdit::ColumnValuesController < ApplicationContr
   end
 
   def move_at
+    @item.attributes = fix_params
     raise "403" unless @item.allowed?(:edit, @cur_user, site: @cur_site, node: @cur_node)
 
     if creates_branch?
