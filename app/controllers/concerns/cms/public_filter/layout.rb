@@ -249,11 +249,11 @@ module Cms::PublicFilter::Layout
   public
 
   def mobile_path?
-    filters.include?(:mobile)
+    filter_include?(:mobile)
   end
 
   def preview_path?
-    filters.include?(:preview)
+    filter_include?(:preview)
   end
 
   def stylesheets
