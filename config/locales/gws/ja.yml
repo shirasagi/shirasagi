@@ -128,7 +128,6 @@ ja:
 
   modules:
     gws: 標準機能
-    gws/contrast: コントラスト
     addons:
       gws/role: 権限/ロール
       gws/group_permission: 管理権限
