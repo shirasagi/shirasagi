@@ -67,14 +67,17 @@ class Opendata::Dataset::ImportJob < Cms::ApplicationJob
   end
 
   def update_dataset_row(row)
-    item = model.find_or_initialize_by(site_id: site.id, id: value(row, :id).to_i)
-    set_dataset_attributes(row, item)
+    @dataset_id = value(row, :id).to_i
+    item = model.where(site_id: site.id, id: @dataset_id).first || model.new
+    item.cur_site = site
     item.cur_node = node
+
+    set_dataset_attributes(row, item)
 
     if item.valid?
       item.save
-      resources_csv = Dir.glob("#{@import_dir}/#{value(row, :id)}/resources.csv").first
-      resources_csv ||= Dir.glob("#{@import_dir}/*/#{value(row, :id)}/resources.csv").first
+      resources_csv = Dir.glob("#{@import_dir}/#{@dataset_id}/resources.csv").first
+      resources_csv ||= Dir.glob("#{@import_dir}/*/#{@dataset_id}/resources.csv").first
 
       if resources_csv
         put_log("import start #{resources_csv}")
@@ -89,7 +92,8 @@ class Opendata::Dataset::ImportJob < Cms::ApplicationJob
   end
 
   def update_resource_row(dataset, row)
-    item = dataset.resources.detect {|resource| resource.id == resource_value(row, :id).to_i}
+    id = resource_value(row, :id).to_i
+    item = dataset.resources.detect { |resource| resource.id == id }
     item = dataset.resources.new if item.blank?
     set_resource_attributes(row, dataset, item)
 
@@ -183,8 +187,8 @@ class Opendata::Dataset::ImportJob < Cms::ApplicationJob
     item.license_id = license.id if license
     item.text = resource_value(row, :text)
     if resource_value(row, :file_id).present?
-      path1 = "#{@import_dir}/#{dataset.id}/#{resource_value(row, :id)}/#{resource_value(row, :file_id)}"
-      path2 = "#{@import_dir}/*/#{dataset.id}/#{resource_value(row, :id)}/#{resource_value(row, :file_id)}"
+      path1 = "#{@import_dir}/#{@dataset_id}/#{resource_value(row, :id)}/#{resource_value(row, :file_id)}"
+      path2 = "#{@import_dir}/*/#{@dataset_id}/#{resource_value(row, :id)}/#{resource_value(row, :file_id)}"
 
       file_path = Dir.glob(path1).first
       file_path ||= Dir.glob(path2).first
@@ -192,15 +196,20 @@ class Opendata::Dataset::ImportJob < Cms::ApplicationJob
 
       file = SS::File.new(model: "opendata/resource", state: "public")
       file.in_file = Fs::UploadedFile.create_from_file(File.open(file_path, "r"))
-      file.save
+      file.save!
       item.filename = file.name
       item.file_id = file.id
     end
     if resource_value(row, :tsv_id).present?
-      tsv_path = Dir.glob("#{@import_dir}/#{dataset.id}/#{item.id}/#{resource_value(row, :tsv_id)}").first || Dir.glob("#{@import_dir}/*/#{dataset.id}/#{item.id}/#{resource_value(row, :tsv_id)}").first
+      tsv_path1 = "#{@import_dir}/#{@dataset_id}/#{resource_value(row, :id)}/#{resource_value(row, :tsv_id)}"
+      tsv_path2 = "#{@import_dir}/*/#{@dataset_id}/#{resource_value(row, :id)}/#{resource_value(row, :tsv_id)}"
+
+      tsv_file_path = Dir.glob(tsv_path1).first
+      tsv_file_path ||= Dir.glob(tsv_path2).first
+
       tsv = SS::File.new(model: "opendata/resource", state: "public")
-      tsv.in_file = Fs::UploadedFile.create_from_file(File.open(tsv_path, "r"))
-      tsv.save
+      tsv.in_file = Fs::UploadedFile.create_from_file(File.open(tsv_file_path, "r"))
+      tsv.save!
       item.tsv_id = tsv.id
     end
   end
