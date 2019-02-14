@@ -1,5 +1,5 @@
 <% return if @item.html.blank? %>
-<% return if @item.form.present? %>
+<% return if @item.try(:form).present? %>
 
 <dl class="see mod-cms-body">
   <dd class="wide">
