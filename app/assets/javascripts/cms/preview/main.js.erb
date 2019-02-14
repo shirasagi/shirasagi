@@ -1018,11 +1018,7 @@ SS_Preview = (function () {
 
           var $button = self.$el.find("#ss-preview-btn-publish")
           var $buttonContainer = $button.closest(".ss-preview-btn-group");
-
-          $button.remove();
-          if ($buttonContainer.children().length === 0) {
-            $buttonContainer.remove();
-          }
+          $buttonContainer.remove();
         }
       },
       error: function(xhr, status, error) {
