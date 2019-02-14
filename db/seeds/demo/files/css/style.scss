@@ -1271,11 +1271,11 @@ $aboutlist: about, event, mayor, assembly, institution, sight, consultation, qa;
       border: $border-hgry;
     }
   }
-  .float-left {
+  .float-left, .ss-alignment-left {
     float: left;
     margin: 0 $item-margin $item-margin 0;
   }
-  .float-right {
+  .float-right, .ss-alignment-right {
     float: right;
     margin: 0 0 $item-margin $item-margin;
   }
@@ -1629,8 +1629,8 @@ $aboutlist: about, event, mayor, assembly, institution, sight, consultation, qa;
 }
 #calendar {
   header.title {
-  color: $blue;
-  border-top: 2px solid $blue;
+    color: $blue;
+    border-top: 2px solid $blue;
   }
   .calendar-nav {
     text-align: center;
