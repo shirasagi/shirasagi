@@ -7,6 +7,7 @@ class Cms::Apis::Preview::PagesController < ApplicationController
 
   before_action :set_item, only: [:publish]
   before_action :set_cur_node, only: [:publish]
+  before_action :check_lockable_item, only: [:lock, :unlock]
 
   private
 
@@ -16,6 +17,22 @@ class Cms::Apis::Preview::PagesController < ApplicationController
 
   def set_cur_node
     @cur_node ||= (@item.parent || nil)
+  end
+
+  def set_item
+    super
+    return @item if @item.blank? || @item.class != Cms::Page
+    @item = @item.becomes_with_route rescue @item
+  end
+
+  def check_lockable_item
+    set_item
+
+    if !@item.respond_to?(:acquire_lock)
+      # respond ok if @item doesn't support lock or unlock operation
+      render json: [], status: :ok
+      return
+    end
   end
 
   public
