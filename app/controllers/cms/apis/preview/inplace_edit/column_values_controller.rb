@@ -178,7 +178,8 @@ class Cms::Apis::Preview::InplaceEdit::ColumnValuesController < ApplicationContr
     branch = @item.new_clone
     branch.master = @item
 
-    @cur_column_value = branch.column_values.find(params[:id])
+    id = params[:id].to_s
+    @cur_column_value = branch.column_values.find { |item| item.origin_id.to_s == id }
     @cur_column = @cur_column_value.column
 
     @cur_column_value.destroy

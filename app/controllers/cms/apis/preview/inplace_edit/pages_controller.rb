@@ -11,6 +11,18 @@ class Cms::Apis::Preview::InplaceEdit::PagesController < ApplicationController
 
   private
 
+  def fix_params
+    { cur_user: @cur_user, cur_site: @cur_site }
+  end
+
+  def set_item
+    super
+    return @item if @item.blank? || @item.class != Cms::Page
+
+    @item = @item.becomes_with_route rescue @item
+    @model = @item.class
+  end
+
   def set_cur_node
     @cur_node ||= begin
       parent = @item.parent
