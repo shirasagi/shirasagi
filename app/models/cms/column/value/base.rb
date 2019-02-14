@@ -192,18 +192,14 @@ class Cms::Column::Value::Base
       end
     }
 
-    begin
-      Timeout.timeout(2) do
-        URI.open(url, opts) { |f| return f.status[0].to_i }
-      end
-
-      :success
-    rescue Timeout::Error
-      return :failure
-    rescue => e
-      return :success if progress_data_size
+    Timeout.timeout(2) do
+      ::OpenURI.open_uri(url, opts) { |_f| }
     end
 
+    :success
+  rescue Timeout::Error
     :failure
+  rescue => _e
+    progress_data_size ? :success : :failure
   end
 end
