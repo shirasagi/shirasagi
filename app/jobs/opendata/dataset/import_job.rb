@@ -117,18 +117,8 @@ class Opendata::Dataset::ImportJob < Cms::ApplicationJob
   end
 
   def category_name_tree_to_ids(name_trees, klass)
-    category_ids = []
-    name_trees.each do |cate|
-      ct_list = []
-      ct = klass.site(site).where(name: cate).first
-      ct_list << ct if ct
-
-      if ct_list.present?
-        ct = ct_list.last
-        category_ids << ct.id
-      end
-    end
-    category_ids
+    names = name_trees.map { |name| name.split(/\//).last }
+    klass.site(site).in(name: names).pluck(:id)
   end
 
   def set_dataset_attributes(row, item)
@@ -138,23 +128,19 @@ class Opendata::Dataset::ImportJob < Cms::ApplicationJob
     item.tags = value(row, :tags).to_s.split(",")
 
     # category
-    category_name_tree = ary_value(row, :categories)
-    category_ids = category_name_tree_to_ids(category_name_tree, Opendata::Node::Category)
-    categories = Opendata::Node::Category.site(site).in(id: category_ids)
-    item.category_ids = categories.pluck(:id)
+    category_name_tree = ary_value(row, :category_ids)
+    item.category_ids = category_name_tree_to_ids(category_name_tree, Opendata::Node::Category)
 
     # estat_category
-    estat_category_name_tree = ary_value(row, :estat_categories)
-    estat_category_ids = category_name_tree_to_ids(estat_category_name_tree, Opendata::Node::EstatCategory)
-    estat_categories = Opendata::Node::EstatCategory.site(site).in(id: estat_category_ids)
-    item.estat_category_ids = estat_categories.pluck(:id)
+    estat_category_name_tree = ary_value(row, :estat_category_ids)
+    item.estat_category_ids = category_name_tree_to_ids(estat_category_name_tree, Opendata::Node::EstatCategory)
 
     # area
-    item.area_ids = Opendata::Node::Area.in(name: ary_value(row, :area_ids)).pluck(:id)
+    item.area_ids = Opendata::Node::Area.in(name: ary_value(row, :area_ids)).pluck(:id).uniq
 
     # dataset_group
     dataset_group_names = ary_value(row, :dataset_group_ids)
-    item.dataset_group_ids = Opendata::DatasetGroup.in(name: dataset_group_names).pluck(:id)
+    item.dataset_group_ids = Opendata::DatasetGroup.in(name: dataset_group_names).pluck(:id).uniq
 
     # released
     released = value(row, :released)
