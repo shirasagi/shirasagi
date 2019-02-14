@@ -13,6 +13,10 @@ class Cms::Apis::Preview::InplaceEdit::ColumnValuesController < ApplicationContr
 
   private
 
+  def fix_params
+    { cur_user: @cur_user, cur_site: @cur_site }
+  end
+
   def set_inplace_mode
     @inplace_mode = true
   end
