@@ -66,7 +66,7 @@
       width: calc(100% - 52px);
     }
   }
-  #ss-preview-btn-workflow-start {
+  #ss-preview-btn-workflow-start, #ss-preview-btn-workflow-approve {
     border: 1px solid #b23a3d;
     background: #e13026;
     @include background-image(linear-gradient(top, #e13026, #b23a3d));
@@ -282,6 +282,10 @@
       @include box-sizing(border-box);
     }
   }
+  dt.see {
+    color: #a0522d;
+    font-weight: bold;
+  }
 }
 .ss-preview-page, .ss-preview-column {
   min-height: 1em;
@@ -487,17 +491,6 @@ table.index {
       max-width: 100%;
       padding: 0 4px;
     }
-    textarea {
-      @include box-sizing(border-box);
-      border: 1px solid #d0d0d0;
-      @include border-radius(3px);
-      @include box-shadow(inset 0 1px 3px #dcdcdc);
-      vertical-align: middle;
-      width: calc(100% - 180px);
-      height: 6.5em;
-      padding: 5px 5px;
-      line-height: 1.4;
-    }
     .btn {
       @include btn;
       box-sizing: border-box;
@@ -505,16 +498,42 @@ table.index {
       height: 2.7em;
       text-decoration: none;
     }
-    .btn-primary {
-      @include btn-red;
-    }
-    .btn-default {
-      @include btn-gray-l;
-    }
     .buttons button {
       margin: 0px 10px 0px 0px;
       padding: 0px 30px;
       font-size: 100%;
     }
+  }
+}
+.ss-preview-dialog {
+  textarea {
+    @include input;
+    width: 100%;
+    height: 6.5em;
+    padding: 5px 5px;
+    line-height: 1.4;
+  }
+  .btn-primary, .commit {
+    @include btn-red;
+    
+  }
+  .btn-default {
+    @include btn-gray-l;
+  }
+  .btn-primary, .commit, .btn-default {
+    font-size: $px13;
+  }
+  .send {
+    margin-top: 10px;
+    text-align: center;
+    input, button {
+      vertical-align: top;
+    }
+  }
+  dt.wide {
+    margin-bottom: 15px;
+    color: #a0522d;
+    font-size: $px13;
+    font-weight: bold;
   }
 }
