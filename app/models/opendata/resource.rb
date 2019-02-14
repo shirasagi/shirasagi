@@ -72,9 +72,9 @@ class Opendata::Resource
   end
 
   def validate_in_file
-    if %(CSV TSV).index(format)
-      errors.add :file_id, :invalid if parse_tsv(in_file).blank?
-    end
+    #if %(CSV TSV).index(format)
+    #  errors.add :file_id, :invalid if parse_tsv(in_file).blank?
+    #end
   end
 
   def validate_in_tsv
