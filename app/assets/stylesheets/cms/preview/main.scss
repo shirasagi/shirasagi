@@ -393,7 +393,7 @@ table.index {
       @include box-sizing(border-box);
       border: 1px solid #d0d0d0;
       @include border-radius(3px);
-      @include box-sizing(inset 0 1px 3px #dcdcdc);
+      @include box-sizing("inset 0 1px 3px #dcdcdc");
       vertical-align: middle;
       width: 80%;
       padding: 6px;
