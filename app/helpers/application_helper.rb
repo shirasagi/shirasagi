@@ -13,6 +13,10 @@ module ApplicationHelper
     h(str.to_s).gsub(/(\r\n?)|(\n)/, "<br />").html_safe
   end
 
+  def br_not_h(str)
+    str.to_s.gsub(/(\r\n?)|(\n)/, "<br />").html_safe
+  end
+
   def paragraph(str)
     texts = h(str.to_s).split(/(\r\n?)|(\n)/)
     texts.map! { |t| t.strip }

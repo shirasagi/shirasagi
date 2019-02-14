@@ -22,6 +22,7 @@ class Cms::Column::Value::Youtube < Cms::Column::Value::Base
   private
 
   def set_iframe
+    self.youtube_id = get_youtube_id
     return if self.youtube_id.blank?
     self.iframe = ApplicationController.helpers.content_tag(:iframe, nil,
       {
@@ -37,10 +38,20 @@ class Cms::Column::Value::Youtube < Cms::Column::Value::Base
 
   def get_youtube_id
     uri = URI::parse(url)
-    return '' if uri.query.blank?
-    q_array = URI::decode_www_form(uri.query)
-    q_hash = Hash[q_array]
-    q_hash["v"]
+
+    if uri.host == "youtu.be"
+      return uri.path[1..-1]
+    end
+
+    if uri.host.end_with?(".youtube.com")
+      return if uri.query.blank?
+
+      value = URI::decode_www_form(uri.query).find { |k, _| k == "v" }
+      return value ? value[1] : nil
+    end
+
+    # other
+    nil
   end
 
   def validate_value

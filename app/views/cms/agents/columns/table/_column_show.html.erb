@@ -1,5 +1,5 @@
 <%= render 'cms/agents/columns/main/base', show: true, column: column, value: value do %>
   <div class="table-editor">
-    <%= value.value.try(:html_safe) %>
+    <%= br_not_h(value.value.to_s) %>
   </div>
 <% end %>
