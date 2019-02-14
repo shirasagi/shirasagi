@@ -30,10 +30,12 @@ this.SS_SearchUI = (function () {
     }
   };
 
-  SS_SearchUI.selectItems = function () {
-    var self;
-    self = this;
-    $("#ajax-box .items input:checkbox").filter(":checked").each(function () {
+  SS_SearchUI.selectItems = function ($el) {
+    if (! $el) {
+      $el = $("#ajax-box");
+    }
+    var self = this;
+    $el.find(".items input:checkbox").filter(":checked").each(function () {
       return self.select($(this));
     });
     return self.anchorAjaxBox.closest("dl").find(".ajax-selected").show();
@@ -50,11 +52,15 @@ this.SS_SearchUI = (function () {
     return e.preventDefault();
   };
 
-  SS_SearchUI.toggleSelectButton = function () {
-    if ($("#ajax-box .items input:checkbox").filter(":checked").size() > 0) {
-      return $("#ajax-box .select-items").parent("div").show();
+  SS_SearchUI.toggleSelectButton = function ($el) {
+    if (! $el) {
+      $el = $("#ajax-box");
+    }
+
+    if ($el.find(".items input:checkbox").filter(":checked").size() > 0) {
+      return $el.find(".select-items").parent("div").show();
     } else {
-      return $("#ajax-box .select-items").parent("div").hide();
+      return $el.find(".select-items").parent("div").hide();
     }
   };
 
@@ -70,43 +76,45 @@ this.SS_SearchUI = (function () {
   };
 
   SS_SearchUI.modal = function (options) {
-    var el, i, len, self, submit_on_changes;
-    if (options == null) {
+    if (!options) {
       options = {};
     }
-    self = this;
-    if ($.colorbox.element().hasClass("ajax-box")) {
-      self.anchorAjaxBox = $.colorbox.element();
-    }
-    $("#ajax-box form.search").on("submit", function (e) {
-      $(this).ajaxSubmit({
-        url: $(this).attr("action"),
-        success: function (data) {
-          return $("#cboxLoadedContent").html(data);
-        },
-        error: function (data, status) {
-          return alert("== Error ==");
-        }
-      });
-      return e.preventDefault();
-    });
-    $("#ajax-box .pagination a").on("click", function (e) {
-      return self.selectItems();
-    });
-    submit_on_changes = options.submit_on_changes;
-    if (!submit_on_changes) {
-      submit_on_changes = ["#s_group"];
-    }
-    for (i = 0, len = submit_on_changes.length; i < len; i++) {
-      el = submit_on_changes[i];
-      $("#ajax-box " + el).on("change", function (e) {
-        self.selectItems();
-        return $("#ajax-box form.search").submit();
+
+    var self = this;
+
+    var colorbox = options.colorbox || $.colorbox;
+    self.anchorAjaxBox = options.anchor || colorbox.element();
+
+    var $el = options.$el || $("#ajax-box");
+
+    var isSameWindow = (window == $el[0].ownerDocument.defaultView)
+    if (isSameWindow) {
+      $el.find("form.search").on("submit", function (ev) {
+        $(this).ajaxSubmit({
+          url: $(this).attr("action"),
+          success: function (data) {
+            return $("#cboxLoadedContent").html(data);
+          },
+          error: function (data, status) {
+            return alert("== Error ==");
+          }
+        });
+        ev.preventDefault();
+        return false;
       });
     }
-    $("#ajax-box .submit-on-change").on("change", function (e) {
-      self.selectItems();
-      return $("#ajax-box form.search").submit();
+    $el.find(".pagination a").on("click", function (ev) {
+      return self.selectItems($el);
+    });
+    $.each(options.submit_on_changes || ["#s_group"], function() {
+      $el.find(this).on("change", function (ev) {
+        self.selectItems($el);
+        return $el.find("form.search").submit();
+      });
+    });
+    $el.find(".submit-on-change").on("change", function (ev) {
+      self.selectItems($el);
+      return $el.find("form.search").submit();
     });
     self.anchorAjaxBox.closest("dl").find(".ajax-selected tr[data-id]").each(function () {
       var id, item, tr;
@@ -116,19 +124,22 @@ this.SS_SearchUI = (function () {
       item = tr.find(".select-item,.select-single-item").html();
       return tr.find(".select-item,.select-single-item").replaceWith("<span class='select-item' style='color: #888'>" + item + "</span>");
     });
-    SS_ListUI.render("table.index");
-    $("#ajax-box a.select-item").on("click", function (e) {
+    $el.find("table.index").each(function() {
+      SS_ListUI.render(this);
+    });
+    $el.find("a.select-item").on("click", function (ev) {
       if (!SS.disableClick($(this))) {
         return false;
       }
       //append newly selected item
       self.select($(this));
       self.anchorAjaxBox.closest("dl").find(".ajax-selected").show();
-      e.preventDefault();
-      return $.colorbox.close();
+      ev.preventDefault();
+      colorbox.close();
+      return false;
     });
-      //remove old items
-    $("#ajax-box .select-single-item").on("click", function (e) {
+    //remove old items
+    $el.find(".select-single-item").on("click", function (ev) {
       if (!SS.disableClick($(this))) {
         return false;
       }
@@ -140,21 +151,23 @@ this.SS_SearchUI = (function () {
       //append newly selected item
       self.select($(this));
       self.anchorAjaxBox.closest("dl").find(".ajax-selected").show();
-      e.preventDefault();
-      return $.colorbox.close();
+      ev.preventDefault();
+      colorbox.close();
+      return false;
     });
-    $("#ajax-box .select-items").on("click", function (e) {
+    $el.find(".select-items").on("click", function (ev) {
       if (!SS.disableClick($(this))) {
         return false;
       }
-      self.selectItems();
-      e.preventDefault();
-      return $.colorbox.close();
+      self.selectItems($el);
+      ev.preventDefault();
+      colorbox.close();
+      return false;
     });
-    $("#ajax-box .index").on("change", function (e) {
-      return self.toggleSelectButton();
+    $el.find(".index").on("change", function (ev) {
+      return self.toggleSelectButton($el);
     });
-    return self.toggleSelectButton();
+    return self.toggleSelectButton($el);
   };
 
   return SS_SearchUI;

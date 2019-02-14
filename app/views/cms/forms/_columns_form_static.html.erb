@@ -1,0 +1,16 @@
+<%
+  def find_column_value(column_values, column)
+    column_values.where(column_id: column.id).first
+  end
+%>
+
+<%= f.fields_for :column_values do |g| %>
+  <% form.columns.order_by(order: 1, id: 1).each do |column| %>
+    <% column_value = find_column_value(column_values, column) %>
+    <%= render file: column.column_form_path, locals: { f: g, column: column, value: column_value, controller: false } %>
+  <% end %>
+<% end %>
+
+<%= jquery do %>
+  Cms_TemplateForm.bind(<%== "##{addon_id}".to_json %>, { type: 'static' });
+<% end %>

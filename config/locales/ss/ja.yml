@@ -59,6 +59,7 @@ ja:
       back: 戻る
       back_to_show: 詳細へ戻る
       back_to_index: 一覧へ戻る
+      back_to_administration: 管理画面へ戻る
       parent_directory: 上の階層へ
       preview: プレビュー
       pc_preview: PCプレビュー
@@ -97,6 +98,7 @@ ja:
       new: 新規作成
       draft_save: 下書き保存
       closed_save: 非公開保存
+      publish: 公開
       publish_save: 公開保存
       ignore_alert: 警告を無視する
       cancel: キャンセル
@@ -134,6 +136,7 @@ ja:
       restore: 元に戻す
       close: 閉じる
       csv: CSV
+      ignore_alerts_and_save: 警告を無視して保存する
     confirm:
       delete: 削除してよろしいですか？
       soft_delete: 削除してよろしいですか？
@@ -152,6 +155,8 @@ ja:
       restore: 元に戻してよろしいですか？
       move: 移動してよろしいですか？
       send: 送信してよろしいですか？
+      publish: 公開してよろしいですか？
+      depublish: 非公開にしてよろしいですか？
     notice:
       saved: 保存しました。
       deleted: 削除しました。
@@ -169,6 +174,8 @@ ja:
       already_job_started: 実行準備中であるか、実行中です。
       clipboard_copied: コピーしました。
       clipboard_copy_failed: コピーできませんでした。クリップボードがサポートされていません。
+      published: 公開しました。
+      depublished: 非公開にしました。
     info:
       soft_delete: データの実削除ではなく無効状態として保存されます。
     warning:

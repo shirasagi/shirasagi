@@ -36,7 +36,7 @@ class Opendata::Harvest::Importer
   has_many :datasets, class_name: 'Opendata::Dataset', inverse_of: :harvest_importer
   has_many :reports, class_name: 'Opendata::Harvest::Importer::Report', dependent: :destroy, inverse_of: :importer
 
-  permit_params :name, :source_url, :api_type, :order, :resource_size_limit_mb
+  permit_params :name, :source_url, :state, :api_type, :order, :resource_size_limit_mb
   permit_params :basicauth_state, :basicauth_username, :basicauth_password
 
   default_scope -> { order_by(order: 1) }
@@ -59,7 +59,7 @@ class Opendata::Harvest::Importer
   end
 
   def api_type_options
-    I18n.t("opendata.harvest_api_options").map { |k, v| [v, k] }
+    I18n.t("opendata.harvest_importer_api_options").map { |k, v| [v, k] }
   end
 
   def state_options

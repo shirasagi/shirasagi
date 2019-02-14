@@ -1,21 +1,13 @@
 <% addons = @item ? @item.class.addons : [] %>
 
 <div class="addon-views">
-  <div class="addon-view" id="addon-basic">
-    <% if addons.size > 0 %><div class="addon-head"><h2><%= t "ss.basic_info"%></h2></div><% end %>
-    <div class="addon-body">
-      <%= render file: "_show" %>
-    </div>
-  </div>
+  <%= render "ss/crud/addon", addon: { id: "addon-basic", head: t("ss.basic_info"), toggle: true } do %>
+    <%= render file: "_show" %>
+  <% end %>
   <%= render file: "_addons_show", locals: { addons: addons } if addons.size > 0 %>
 </div>
 
 <%= jquery do %>
-  $("#addon-basic .addon-head").addClass("toggle-head");
-  $("#addon-basic .addon-body").addClass("toggle-body");
-  // re-initialize toggles
-  $('.toggle-head').off('click');
-  SS_AddonTabs.render();
   SS_AddonTabs.hide(".addon-body dl.see");
 <% end %>
 

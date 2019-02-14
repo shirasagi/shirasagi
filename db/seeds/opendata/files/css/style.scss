@@ -563,11 +563,14 @@ textarea {
 }
 // -----------------------------------------------------------------------------
 // .areas, .tags, .formats, .licenses
-.areas, .tags, .formats, .licenses {
+.estat-categories ,.areas, .tags, .formats, .licenses {
   clear: both;
   div {
     @include clear;
     margin-bottom: $box-margin;
+    div {
+      padding: 10px 10px 0;
+    }
   }
   article {
     float: left;
@@ -586,6 +589,12 @@ textarea {
     a {
       @include btn-black;
     }
+  }
+}
+.estat-categories article a {
+  background: $hpurple;
+  &:hover {
+    background: #f1dcfc;
   }
 }
 .areas article a {
@@ -642,18 +651,17 @@ textarea {
 .opendata-search-apps-form,
 .opendata-search-ideas-form {
   @include clear;
+  clear: both;
+  @include display-flex;
+  @include flex-wrap(wrap);
   margin: $box-margin 0;
   padding: 12px;
   border: 2px solid $sky;
   dl {
-    float: left;
     width: 249px;
     margin-right: $item-margin;
-    &:nth-child(4n), &:nth-child(7n) {
+    &:nth-child(3n+1) {
       margin-right: 0;
-    }
-    &:nth-child(5n), &:nth-child(8n) {
-      clear: both;
     }
     &.group {
       margin-right: $item-margin;
@@ -674,15 +682,41 @@ textarea {
   }
   .send input {
     float: right;
-    margin-top : 10px;
+    margin-top : 20px;
     @include btn-black;
   }
 }
-.opendata-search-apps-form {
+.opendata-search-datasets, .opendata-search-groups,
+.opendata-search-apps,
+.opendata-search-ideas {
+  clear: both;
+  article {
+    position: relative;
+  }
+  .categories {
+    margin-top: 15px;
+  }
+  .download {
+    position: absolute;
+    bottom: 10px;
+    right: 15px;
+  }
+}
+.opendata-search-apps {
   border: 2px solid $green;
 }
 .opendata-search-ideas-form {
   border: 2px solid $yellow;
+}
+.download-all {
+  float: right;
+  margin-right: 15px;
+}
+.download-all, .download a {
+  @include btn-black;
+  &:hover {
+    color: $white;
+  }
 }
 // -----------------------------------------------------------------------------
 // one
@@ -726,6 +760,12 @@ textarea {
       @include border-radius(3px);
       color: $black1;
       text-decoration: none;
+    }
+    .estat-category {
+      background: $hpurple;
+      &:hover {
+        background: #f1dcfc;
+      }
     }
     .category {
       background: #ffcf38;
@@ -781,8 +821,10 @@ textarea {
       padding: 12px;
       border-bottom: $border-gray2;
       .info {
-        float: left;
-        div {
+        @include display-flex;
+        @include align-items(center);
+        @include justify-content(space-between);
+        .name {
           padding: 7px 0 7px 35px;
         }
         div[class^="name format-"] {
@@ -835,10 +877,10 @@ textarea {
         }
       }
       .icons {
-        @include clear;
-        float: right;
+        @include display-flex;
+        @include align-items(center);
+        @include flex-wrap(wrap);
         span, div {
-          float: left;
           margin-left: $item-margin;
           &:empty {
             display: none;
@@ -1004,6 +1046,12 @@ textarea {
         float: left;
       }
     }
+  }
+}
+.api {
+  margin-bottom: $box-margin;
+  a {
+    @include btn-black;
   }
 }
 .app .one {
@@ -1511,7 +1559,7 @@ textarea {
 // -----------------------------------------------------------------------------
 // .areas, .tags, .formats, .licenses
 .dataset {
-  .areas, .tags, .formats, .licenses {
+  .areas, .tags, .formats, .licenses, .estat-categories {
     h1 {
       @include midashi-dataset;
     }

@@ -1,8 +1,12 @@
 <% buf = render(file: @item.form_file, locals: { f: f }) if @item.form_file %>
 <% return if buf.blank? %>
-<div class="addon-view" id="column-<%= @model.name.underscore.gsub('/', '-') %>">
-  <div class="addon-head toggle-head"><h2><%= @model.model_name.human %></h2></div>
-  <div class="addon-body toggle-body">
-    <%= buf %>
-  </div>
-</div>
+
+<%
+  addon_options = {}
+  addon_options[:id] = "column-#{@model.name.underscore.gsub('/', '-')}"
+  addon_options[:head] = @model.model_name.human
+  addon_options[:toggle] = true
+%>
+<%= render "ss/crud/addon", addon: addon_options do %>
+  <%= buf %>
+<% end %>

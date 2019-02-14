@@ -1,0 +1,13 @@
+<% name = "#{f.object_name}[][in_wrap][image_text]" %>
+
+<%= jquery do %>
+Cms_Form.addSyntaxCheck("<%= id %>", {
+  resolve: "text",
+  name: "<%= column.name %>",
+  getContent: function () { return $('#<%= id %> [name="<%= name %>"]').val(); },
+  setContent: function (content) { return $('#<%= id %> [name="<%= name %>"]').val(content); },
+});
+<% end %>
+
+<%= text_field_tag(name, value.try(:image_text), column.form_options(:image_text).merge(id: nil, "data-check-presence": Cms::Column::FileUpload.t("image_text"))) %>
+<%= select_tag("#{f.object_name}[][in_wrap][image_html_type]", options_for_select(column.image_html_type_options, value.try(:image_html_type)), style: "width: 10%;") %>

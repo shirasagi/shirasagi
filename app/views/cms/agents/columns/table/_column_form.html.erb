@@ -1,0 +1,34 @@
+<% table_name = SecureRandom.hex(4) %>
+<% value ||= nil %>
+<% controller ||= false %>
+<%= render 'cms/agents/columns/main/base', f: f, column: column, value: value, controller: controller do %>
+  <%= render 'cms/agents/columns/table/table_editor', table_name: table_name %>
+  <%= hidden_field_tag("#{f.object_name}[][in_wrap][value]", value.try(:value), id: "hidden-value-#{table_name}") %>
+  <%= I18n.t("cms.column_table.height") %><input type="text" id="height-<%= table_name %>" style="width:50px" />
+  <%= I18n.t("cms.column_table.width") %><input type="text" id="width-<%= table_name %>" style="width:50px" />
+  <%= I18n.t("cms.column_table.header") %><%= select_tag :hedaer, options_for_select(column.header_type_options), id: "header-#{table_name}" %>
+  <button type="button" id="create-table-<%= table_name %>"><%= I18n.t("cms.column_table.create") %></button><br />
+
+  <%= I18n.t("cms.column_table.caption") %><input type="text" id="caption-<%= table_name %>" style="width:50%;" />
+  <div class="table-editor" id="table-editor-<%= table_name %>">
+    <% if value.try(:value).present? %>
+      <%= value.value.html_safe %>
+    <% end %>
+  </div>
+
+  <div class="table-menu" id="table-menu-top-<%= table_name %>">
+    <ul>
+      <li id="remove-tds">列を削除する</li>
+      <li id="append-right">右に列を挿入する</li>
+      <li id="append-left">左に列を挿入する</li>
+    </ul>
+  </div>
+
+  <div class="table-menu" id="table-menu-left-<%= table_name %>">
+    <ul>
+      <li id="remove-tr">行を削除する</li>
+      <li id="append-top">上に行を挿入する</li>
+      <li id="append-bottom">下に行を挿入する</li>
+    </ul>
+  </div>
+<% end %>

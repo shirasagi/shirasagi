@@ -43,8 +43,16 @@ options.uploadUrl = function() {
   return "/.s<%= @cur_site.id %>/cms/apis/temp_files.json";
 };
 <% end %>
-var tempFile = new SS_Addon_TempFile($(".upload-drop-area"), <%= @cur_user.id %>, options);
+var tempFile = new SS_Addon_TempFile(".upload-drop-area", <%= @cur_user.id %>, options);
 <% end %>
+
+<%
+  addon ||= local_assigns.fetch(:addon, {})
+  if @item.respond_to?(:form) && @item.form.present?
+    css_class = Array(addon[:class])
+    addon[:class] = css_class + %w(hide)
+  end
+%>
 
 <dl class="see">
   <dd class="wide">
@@ -57,7 +65,7 @@ var tempFile = new SS_Addon_TempFile($(".upload-drop-area"), <%= @cur_user.id %>
 
     <span class="upload-menu-new">
       <% if @cur_node %>
-        <%= link_to t('ss.links.upload'), cms_apis_node_temp_files_path, class: "ajax-box btn" %>
+        <%= link_to t('ss.links.upload'), cms_apis_node_temp_files_path(cid: @cur_node), class: "ajax-box btn" %>
       <% else %>
         <%= link_to t('ss.links.upload'), cms_apis_temp_files_path, class: "ajax-box btn" %>
       <% end %>

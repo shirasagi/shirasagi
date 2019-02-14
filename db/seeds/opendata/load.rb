@@ -264,6 +264,7 @@ save_node filename: "estat-bunya/estat15/estat1505", name: "医療", route: "ope
 save_node filename: "estat-bunya/estat16/estat1601", name: "貿易・国際収支", route: "opendata/estat_category", order: 1601
 save_node filename: "estat-bunya/estat16/estat1602", name: "国際協力", route: "opendata/estat_category", order: 1602
 save_node filename: "estat-bunya/estat99/estat9999", name: "その他", route: "opendata/estat_category", order: 9999
+estat_categories = Opendata::Node::EstatCategory.site(@site).map { |m| [m.filename, m] }.to_h
 
 save_node filename: "chiiki", name: "地域", route: "cms/node"
 save_node filename: "chiiki/shirasagi", name: "シラサギ市", route: "opendata/area", order: 1
@@ -518,6 +519,7 @@ def save_resource(dataset, data)
   end
 end
 
+datasets = []
 1.step(5) do |i|
   dataset = save_data filename: "dataset/#{i}.html", name: "サンプルデータ【#{i}】", route: "opendata/dataset",
     layout_id: layouts["dataset-page"].id, text: "サンプルデータ【#{i}】", member_id: @member_1.id, tags: %w(タグ),
@@ -527,7 +529,15 @@ end
   if i == 1
     save_resource(dataset, name: "サンプルリソース", filename: "sample.txt", license_id: license_cc_by.id)
   end
+  datasets << dataset
 end
+
+dataset5 = datasets[4]
+dataset5.add_to_set(
+  estat_category_ids: [
+    estat_categories["estat-bunya/estat1/estat101"].id, estat_categories["estat-bunya/estat5/estat501"].id
+  ]
+)
 
 ## -------------------------------------
 puts "# opendata apps"

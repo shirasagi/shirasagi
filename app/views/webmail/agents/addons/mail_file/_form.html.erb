@@ -22,7 +22,7 @@ var options = {};
 options.uploadUrl = function() {
   return "/.u" + <%= @cur_user.id %> + "/apis/temp_files.json?unnormalize=true";
 };
-var tempFile = new SS_Addon_TempFile($(".upload-drop-area"), <%= @cur_user.id %>, options);
+var tempFile = new SS_Addon_TempFile(".upload-drop-area", <%= @cur_user.id %>, options);
 <% end %>
 
 <%= hidden_field_tag 'file_size', 'true', { id: 'show-file-size' } %>

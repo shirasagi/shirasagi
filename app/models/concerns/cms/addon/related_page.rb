@@ -8,6 +8,12 @@ module Cms::Addon
       field :related_page_sort, type: String
       permit_params related_page_ids: []
       permit_params :related_page_sort
+
+      if respond_to? :liquidize
+        liquidize do
+          export(as: :related_pages) { related_pages.and_public.order_by(related_page_sort_hash) }
+        end
+      end
     end
 
     def related_page_sort_options

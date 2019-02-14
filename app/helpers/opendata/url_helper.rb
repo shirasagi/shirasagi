@@ -128,4 +128,16 @@ module Opendata::UrlHelper
     raise "member login is disabled since Member::Node::Login is not registered" unless node
     build_path(node.url, options)
   end
+
+  def api_package_list_path(options = {})
+    node = Opendata::Node::Api.site(@cur_site).first
+    return nil unless node
+    ::File.join(node.url, "package_list") + "?" + options.to_query
+  end
+
+  def api_package_show_path(options = {})
+    node = Opendata::Node::Api.site(@cur_site).first
+    return nil unless node
+    ::File.join(node.url, "package_show") + "?" + options.to_query
+  end
 end

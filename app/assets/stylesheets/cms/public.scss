@@ -14,3 +14,18 @@
 #cboxTitle, #cboxCurrent, #cboxNext, #cboxPrevious, #cboxSlideshow {
   display: none !important;
 }
+
+.youtube-auto-width {
+  position: relative;
+  padding-bottom: 56.25%;
+  padding-top: 30px;
+  height: 0;
+  overflow: hidden;
+}
+.youtube-auto-width iframe {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}

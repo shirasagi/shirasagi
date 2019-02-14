@@ -1,5 +1,5 @@
 <% value ||= nil %>
-<%= render file: 'cms/agents/columns/main/_common_label', locals: { column: column } %>
-<dd>
-  <%= text_field_tag("#{object_name}[#{column.id}]", value.try(:value), column.form_options) %>
-</dd>
+<% controller ||= false %>
+<%= render 'cms/agents/columns/main/base', f: f, column: column, value: value, controller: controller do %>
+  <%= text_field_tag("#{f.object_name}[][in_wrap][value]", value.try(:value), column.form_options.merge(id: nil)) %>
+<% end %>

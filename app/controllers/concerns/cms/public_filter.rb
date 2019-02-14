@@ -10,8 +10,9 @@ module Cms::PublicFilter
     #before_action :redirect_slash, if: ->{ request.env["REQUEST_PATH"] =~ /\/[^\.]+[^\/]$/ }
     before_action :deny_path
     before_action :parse_path
+    before_action :set_preview_params
     before_action :compile_scss
-    before_action :x_sendfile, unless: ->{ filters.include?(:mobile) || filters.include?(:kana) }
+    before_action :x_sendfile, unless: ->{ filter_include?(:mobile) || filter_include?(:kana) || @preview }
   end
 
   def index
@@ -39,10 +40,7 @@ module Cms::PublicFilter
     host = request_host
     path = request_path
 
-    @cur_site ||= begin
-      site = SS::Site.find_by_domain(host, path)
-      request.env["ss.site"] = site
-    end
+    @cur_site ||= request.env["ss.site"] ||= SS::Site.find_by_domain(host, path)
     return if @cur_site
 
     if path =='/' && group = SS::Group.where(domains: host).first
@@ -88,6 +86,16 @@ module Cms::PublicFilter
     @file = File.join(@cur_site.root_path, @cur_path)
   end
 
+  def set_preview_params
+    options = filter_options(:preview)
+    if options
+      @preview = true
+      @cur_user = options[:user]
+      @cur_date = options[:date]
+      @preview_page = options[:page]
+    end
+  end
+
   def compile_scss
     return if @cur_path !~ /\.css$/
     return if @cur_path =~ /\/_[^\/]*$/
@@ -130,21 +138,25 @@ module Cms::PublicFilter
 
   def enum_contents
     Enumerator.new do |y|
-      if @html =~ /\.part\.html$/ && part = find_part(@html)
-        y << proc { render_and_send_part(part) }
-        next
-      end
+      if @preview_page
+        y << proc { render_and_send_page(@preview_page) }
+      else
+        if @html =~ /\.part\.html$/ && part = find_part(@html)
+          y << proc { render_and_send_part(part) }
+          next
+        end
 
-      if page = find_page(@cur_main_path)
-        y << proc { render_and_send_page(page) }
-      end
+        if page = find_page(@cur_main_path)
+          y << proc { render_and_send_page(page) }
+        end
 
-      if !@cur_main_path.include?('.') && !@cur_main_path.end_with?('/') && page = find_page("#{@cur_main_path}/index.html")
-        y << proc { render_and_send_page(page) }
-      end
+        if !@cur_main_path.include?('.') && !@cur_main_path.end_with?('/') && page = find_page("#{@cur_main_path}/index.html")
+          y << proc { render_and_send_page(page) }
+        end
 
-      if node = find_node(@cur_main_path)
-        y << proc { render_and_send_node(node) }
+        if node = find_node(@cur_main_path)
+          y << proc { render_and_send_node(node) }
+        end
       end
     end
   end
@@ -156,6 +168,7 @@ module Cms::PublicFilter
     return false if !resp
 
     send_part(resp)
+    request.env["ss.rendered"] = { type: :part, part: part }
     true
   end
 
@@ -165,15 +178,22 @@ module Cms::PublicFilter
 
     self.response = resp
     send_page(page)
+    request.env["ss.rendered"] = { type: :page, page: page, layout: @cur_layout }
     true
   end
 
   def render_and_send_node(node)
+    if node.route == 'uploader/file' && Fs.file?(@file)
+      x_sendfile
+      return true
+    end
+
     resp = render_node(node)
     return false if !resp
 
     self.response = resp
     send_page(node)
+    request.env["ss.rendered"] = { type: :node, node: node, layout: @cur_layout }
     true
   end
 
@@ -196,18 +216,18 @@ module Cms::PublicFilter
     raise "404"
   end
 
-  def rescue_action(e = nil)
-    return render_error(e, status: e.to_s.to_i) if e.to_s.numeric?
-    return render_error(e, status: 404) if e.is_a? Mongoid::Errors::DocumentNotFound
-    return render_error(e, status: 404) if e.is_a? ActionController::RoutingError
-    raise e
+  def rescue_action(exception = nil)
+    return render_error(exception, status: exception.to_s.to_i) if exception.to_s.numeric?
+    return render_error(exception, status: 404) if exception.is_a? Mongoid::Errors::DocumentNotFound
+    return render_error(exception, status: 404) if exception.is_a? ActionController::RoutingError
+    raise exception
   end
 
-  def render_error(e, opts = {})
+  def render_error(exception, opts = {})
     # for development
     if Rails.application.config.consider_all_requests_local
       logger.error "404 #{@cur_path}"
-      raise e
+      raise exception
     end
 
     self.response = ActionDispatch::Response.new

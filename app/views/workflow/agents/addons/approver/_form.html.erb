@@ -13,7 +13,7 @@
   <% end %>
   <% end %>
 
-  <% if @item.allowed?(:release, @cur_user) %>
+  <% if @item.allowed?(:release, @cur_user, site: @cur_site) %>
   $(".save").val("<%= t("ss.buttons.draft_save") %>");
   $("<input />").attr("type", "submit")
     .attr("name", "publish_save")

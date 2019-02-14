@@ -18,12 +18,7 @@ ja:
       depublish: 非公開にする
       download_comment: 承認/回覧コメントCSV
       download_attachment: 添付ファイルダウンロード
-    confirm:
-      publish: 公開してよろしいですか？
-      depublish: 非公開にしてよろしいですか？
     notice:
-      published: 公開しました。
-      depublished: 非公開にしました。
       no_files: "添付ファイルがありません。"
     labels:
       user: 作成者

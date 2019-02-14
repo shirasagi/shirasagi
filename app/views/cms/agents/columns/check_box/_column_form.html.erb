@@ -1,10 +1,10 @@
-<% value ||= [] %>
-<%= render file: 'cms/agents/columns/main/_common_label', locals: { column: column } %>
-<dd>
+<% values = value.try(:values) || [] %>
+<% controller ||= false %>
+<%= render 'cms/agents/columns/main/base', f: f, column: column, value: value, controller: controller do %>
   <% column.select_options.each do |val| %>
     <label>
-      <%= check_box_tag("#{object_name}[#{column.id}][]", val, value.try(:values).try(:include?, val), column.form_options) %>
+      <%= check_box_tag("#{f.object_name}[][in_wrap][values][]", val, values.include?(val), column.form_options.merge(id: nil)) %>
       <%= val %>
     </label>
   <% end %>
-</dd>
+<% end %>

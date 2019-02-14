@@ -6,6 +6,9 @@ module Cms::Addon::List
     attr_accessor :cur_date
 
     included do
+      cattr_accessor(:use_new_days, instance_accessor: false) { true }
+      cattr_accessor(:use_liquid, instance_accessor: false) { true }
+
       field :conditions, type: SS::Extensions::Words
       field :sort, type: String
       field :limit, type: Integer, default: 20
@@ -13,16 +16,36 @@ module Cms::Addon::List
       field :upper_html, type: String
       field :lower_html, type: String
       field :new_days, type: Integer, default: 1
+      field :loop_format, type: String
+      field :loop_liquid, type: String
 
       belongs_to :loop_setting, class_name: 'Cms::LoopSetting'
 
       permit_params :conditions, :sort, :limit, :loop_html, :loop_setting_id, :upper_html, :lower_html, :new_days
+      permit_params :loop_format, :loop_liquid
 
       before_validation :validate_conditions
+
+      validates :loop_format, inclusion: { in: %w(shirasagi liquid), allow_blank: true }
+      validates :loop_liquid, liquid_format: true, if: ->{ loop_format_liquid? }
     end
 
     def sort_options
       []
+    end
+
+    def loop_format_options
+      %w(shirasagi liquid).map do |v|
+        [ I18n.t("cms.options.loop_format.#{v}"), v ]
+      end
+    end
+
+    def loop_format_liquid?
+      loop_format == "liquid"
+    end
+
+    def loop_format_shirasagi?
+      !loop_format_liquid?
     end
 
     def sort_hash

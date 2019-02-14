@@ -86,6 +86,7 @@ class Opendata::Agents::Nodes::Dataset::SearchDatasetController < ApplicationCon
     end
     send_data ::Fs.read(t.path), type: 'application/zip', filename: "#{t("opendata.dataset")}_#{Time.zone.now.to_i}.zip",
       disposition: :attachment, x_sendfile: true
+    t.delete
     t.close
   end
 end

@@ -1,16 +1,23 @@
 this.SS_ListUI = (function () {
   function SS_ListUI() { }
 
-  SS_ListUI.render = function () {
-    $(".list-head input:checkbox").change(function () {
+  SS_ListUI.render = function (el) {
+    var $el;
+    if (el) {
+      $el = $(el);
+    } else {
+      $el = $(document);
+    }
+
+    $el.find(".list-head input:checkbox").change(function () {
       var chk;
       chk = $(this).prop('checked');
-      return $('.list-item').each(function () {
+      return $el.find('.list-item').each(function () {
         $(this).toggleClass('checked', chk);
         return $(this).find('input:checkbox').prop('checked', chk);
       });
     });
-    $(".list-item").each(function () {
+    $el.find(".list-item").each(function () {
       var list;
       list = $(this);
       list.find("input:checkbox").change(function () {
@@ -33,13 +40,13 @@ this.SS_ListUI = (function () {
         return menu.css("left", relX - menu.width() + 5).css("top", relY).show();
       });
       return list.mouseleave(function () {
-        return $(".tap-menu").hide();
+        return $el.find(".tap-menu").hide();
       });
     });
-    $(".list-head .destroy-all").on("click", function () {
+    $el.find(".list-head .destroy-all").on("click", function () {
       var checked, form, i, id, len, token;
       token = $('meta[name="csrf-token"]').attr('content');
-      checked = $(".list-item input:checkbox:checked").map(function () {
+      checked = $el.find(".list-item input:checkbox:checked").map(function () {
         return $(this).val();
       });
       if (checked.length === 0) {
@@ -72,13 +79,13 @@ this.SS_ListUI = (function () {
       }
       return form.appendTo(document.body).submit();
     });
-    $(".list-head .set-tag-all").on("click", function () {
+    $el.find(".list-head .set-tag-all").on("click", function () {
       var checked, form, i, id, len, tag, token;
       token = $('meta[name="csrf-token"]').attr('content');
-      checked = $(".list-item input:checkbox:checked").map(function () {
+      checked = $el.find(".list-item input:checkbox:checked").map(function () {
         return $(this).val();
       });
-      tag = $(".list-head .tag").val();
+      tag = $el.find(".list-head .tag").val();
       if (checked.length === 0) {
         return false;
       }
@@ -112,13 +119,13 @@ this.SS_ListUI = (function () {
       }
       return form.appendTo(document.body).submit();
     });
-    $(".list-head .reset-tag-all").on("click", function () {
+    $el.find(".list-head .reset-tag-all").on("click", function () {
       var checked, form, i, id, len, tag, token;
       token = $('meta[name="csrf-token"]').attr('content');
-      checked = $(".list-item input:checkbox:checked").map(function () {
+      checked = $el.find(".list-item input:checkbox:checked").map(function () {
         return $(this).val();
       });
-      tag = $(".list-head .tag").val();
+      tag = $el.find(".list-head .tag").val();
       if (checked.length === 0) {
         return false;
       }
@@ -157,7 +164,7 @@ this.SS_ListUI = (function () {
       }
       return form.appendTo(document.body).submit();
     });
-    return $(".list-head [data-ss-list-head-method]").on("click", function () {
+    $el.find(".list-head [data-ss-list-head-method]").on("click", function () {
       var action, checked, confirmation, form, i, id, key, len, method, params, value;
       method = $(this).data('ss-list-head-method') || 'post';
       action = $(this).data('ss-list-head-action') || '';
@@ -169,7 +176,7 @@ this.SS_ListUI = (function () {
         params._method = method;
         method = 'post';
       }
-      checked = $(".list-item input:checkbox:checked").map(function () {
+      checked = $el.find(".list-item input:checkbox:checked").map(function () {
         return $(this).val();
       });
       if (checked.length === 0) {

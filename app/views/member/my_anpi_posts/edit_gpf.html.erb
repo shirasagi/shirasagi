@@ -2,12 +2,9 @@
   <%= error_messages_for :item %>
 
   <div class="addon-views">
-    <div class="addon-view" id="addon-basic">
-      <div class="addon-head"><h2><%= t "member.confirm.post_gpf" %></h2></div>
-      <div class="addon-body">
-        <%= render file: "_gpf" %>
-      </div>
-    </div>
+    <%= render "ss/crud/addon", addon: { id: "addon-basic", head: t("member.confirm.post_gpf") } do %>
+      <%= render file: "_gpf" %>
+    <% end %>
   </div>
 
   <footer class="send">

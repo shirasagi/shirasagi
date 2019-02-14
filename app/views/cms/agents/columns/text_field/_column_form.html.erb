@@ -1,5 +1,16 @@
 <% value ||= nil %>
-<%= render file: 'cms/agents/columns/main/_common_label', locals: { column: column } %>
-<dd>
-  <%= text_field_tag("#{object_name}[#{column.id}]", value.try(:value), column.form_options) %>
-</dd>
+<% controller ||= false %>
+<% name = "#{f.object_name}[][in_wrap][value]" %>
+
+<%= render 'cms/agents/columns/main/base', f: f, column: column, value: value, controller: controller do |id| %>
+  <%= text_field_tag(name, value.try(:value), column.form_options.merge(id: nil)) %>
+
+  <%= jquery do %>
+    Cms_Form.addSyntaxCheck("<%= id %>", {
+      resolve: "text",
+      name: "<%= column.name %>",
+      getContent: function () { return $('#<%= id %> [name="<%= name %>"]').val(); },
+      setContent: function (content) { return $('#<%= id %> [name="<%= name %>"]').val(content); },
+    });
+  <% end %>
+<% end %>

@@ -1,0 +1,12 @@
+<% return if @item.layout.blank? %>
+
+<%
+  addon ||= local_assigns.fetch(:addon, {})
+%>
+<%= code_editor "##{addon[:id]} .html", mode: :html, readonly: true %>
+
+<dl class="see">
+  <dd class="wide">
+    <%= text_area_tag "item[layout]", @item.layout, style: "height: 400px", class: "html" %>
+  </dd>
+</dl>

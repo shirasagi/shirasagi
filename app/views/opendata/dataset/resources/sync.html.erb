@@ -2,12 +2,9 @@
   <%= error_messages_for :item %>
 
   <div class="addon-views">
-    <div class="addon-view" id="addon-basic">
-      <div class="addon-head"><h2><%= t("ldap.confirm.sync") %></h2></div>
-      <div class="addon-body">
-        <%= render file: "_sync" %>
-      </div>
-    </div>
+    <%= render "ss/crud/addon", addon: { id: "addon-basic", head: t("ldap.confirm.sync") } do %>
+      <%= render file: "_sync" %>
+    <% end %>
   </div>
 
   <footer class="send">

@@ -1,6 +1,6 @@
 <%= jquery do %>
 
-  $(".workflow-route-cacnel").on("click", function (e) {
+  $(".workflow-route-cancel").on("click", function (e) {
     var uri;
     uri = [];
     uri[0] = location.pathname.split("/")[0];
@@ -74,7 +74,7 @@ $(".ms-container").each(function () {
   <dd>
     <div class="buttons">
       <%= button_tag t("workflow.state.request"), { updatetype: :request, class: "update-item" } %>
-      <%= button_tag t("workflow.state.cancel"), { class: "workflow-route-cacnel" } %>
+      <%= button_tag t("workflow.state.cancel"), { class: "workflow-route-cancel" } %>
     </div>
   </dd>
 </dl>

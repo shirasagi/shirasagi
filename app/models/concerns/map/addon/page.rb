@@ -8,6 +8,13 @@ module Map::Addon
       field :map_zoom_level, type: Integer
       permit_params map_points: [ :name, :loc, :text, :link, :image ]
       permit_params :map_zoom_level
+
+      if respond_to? :liquidize
+        liquidize do
+          export :map_points
+          export :map_zoom_level
+        end
+      end
     end
   end
 end
