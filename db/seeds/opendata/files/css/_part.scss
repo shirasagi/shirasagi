@@ -58,6 +58,7 @@ $gray4: #666;
 $border-yellow: 2px solid $yellow;
 $border-orange: 2px solid $orange;
 $border-red: 2px solid $red;
+$border-gray: 2px solid $gray1;
 $border-gray2: 1px solid $gray2;
 $border-black1: 1px solid $black1;
 
@@ -145,6 +146,12 @@ $item-margin: 14px;
   font-size: $px16;
   border-bottom: $border-red;
   background: $yellow;
+}
+@mixin midashi-area {
+  padding: 10px;
+  font-size: $px16;
+  border-bottom: $border-yellow;
+  background: $hgreen;
 }
 @mixin midashi-beige {
   padding: 10px;
