@@ -20,6 +20,10 @@ class Cms::Apis::FormsController < ApplicationController
       page.lock_owner_id = nil if page.respond_to?(:lock_owner_id)
       page.lock_until = nil if page.respond_to?(:lock_until)
       page.basename = page.basename.sub(/\..+?$/, "") + ".html" if page.basename.present?
+
+      # invoke `before_validation` handlers
+      page.valid?
+
       page
     end
   end
