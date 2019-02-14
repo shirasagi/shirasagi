@@ -66,7 +66,7 @@
       width: calc(100% - 52px);
     }
   }
-  #ss-preview-btn-workflow-start {
+  #ss-preview-btn-workflow-start, #ss-preview-btn-workflow-approve {
     border: 1px solid #b23a3d;
     background: #e13026;
     @include background-image(linear-gradient(top, #e13026, #b23a3d));
@@ -525,5 +525,15 @@ table.index {
   }
   .send {
     margin-top: 10px;
+    text-align: center;
+    input, button {
+      vertical-align: top;
+    }
+  }
+  dt.wide {
+    margin-bottom: 15px;
+    color: #a0522d;
+    font-size: $px13;
+    font-weight: bold;
   }
 }

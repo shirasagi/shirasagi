@@ -1823,7 +1823,7 @@ footer.send {
     padding-top: 15px;
     padding-bottom: 15px;
     @include border-radius(3px);
-    background: #f2f2f2;
+    background: $white;
   }
   .upload-drop-notice, .column-value-upload-drop-notice {
     margin-left: 20px;
@@ -2929,6 +2929,7 @@ body.ss-ajax-in-iframe {
     padding-left: 18px;
     li {
       margin-bottom: 15px;
+      list-style: disc;
     }
   }
   footer.send {
@@ -2969,6 +2970,9 @@ body.ss-ajax-in-iframe {
   }
   button {
     @include btn;
+  }
+  label + button {
+    margin: 1em 0;
   }
   #table-editor {
     margin-top: 30px;
@@ -3051,7 +3055,7 @@ body.ss-ajax-in-iframe {
   }
 }
 button {
-  &.syntax-check, &.mobile-size-check, &.link-check, &.preview {
+  &.syntax-check, &.mobile-size-check, &.link-check, &.preview, &.btn-add-list {
     margin-bottom: 5px;
   }
 }
@@ -3075,5 +3079,43 @@ button {
   @include flex-wrap(wrap);
   .column-value-header-group {
     margin-bottom: 10px;
+  }
+}
+.column-value-cms-column-table {
+  .table-editor {
+    overflow-x: scroll;
+    .controll {
+      background-color: $black;
+      border: 1px dashed $white;
+      @include transition(0.3s);
+    }
+    .controll-top {
+      &:before {
+        content: "▼";
+        @include display-flex;
+        @include align-items(center);
+        @include justify-content(center);
+        float: none;
+        text-align: center;
+        color: $white;
+      }
+    }
+    .controll-left {
+      &:before {
+        content: "▶︎";
+        @include display-flex;
+        @include align-items(center);
+        @include justify-content(center);
+        float: none;
+        text-align: center;
+        color: $white;
+      }
+    }
+    tbody tr:first-child th:last-child {
+      border-right: 1px solid $black;
+    }
+    tbody tr:last-child th:first-child {
+      border-bottom: 1px solid $black;
+    }
   }
 }
