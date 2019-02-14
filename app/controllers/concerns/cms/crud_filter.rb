@@ -96,7 +96,7 @@ module Cms::CrudFilter
   end
 
   def destroy_all
-    render_destroy_all(destroy_items)
+    render_destroy_all(destroy_items, location: request.path)
   end
 
   def disable_all

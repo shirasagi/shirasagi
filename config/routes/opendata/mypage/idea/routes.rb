@@ -12,9 +12,10 @@ SS::Application.routes.draw do
   end
 
   content "opendata" do
-    match "ideas_approve" => "idea/ideas#index_approve", via: [:get, :delete]
-    match "ideas_request" => "idea/ideas#index_request", via: [:get, :delete]
-    match "ideas_closed" => "idea/ideas#index_closed", via: [:get, :delete]
+    get "ideas_approve" => "idea/ideas#index_approve"
+    get "ideas_request" => "idea/ideas#index_request"
+    get "ideas_closed" => "idea/ideas#index_closed"
+    delete "ideas_:state" => "idea/ideas#destroy_all", state: /approve|request|closed/
     resources :my_ideas, concerns: :deletion_all, module: "mypage/idea"
   end
 

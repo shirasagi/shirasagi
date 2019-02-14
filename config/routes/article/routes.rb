@@ -59,11 +59,12 @@ SS::Application.routes.draw do
   end
 
   content "article" do
-    match "index_approve" => "pages#index_approve", via: [:get, :delete]
-    match "index_request" => "pages#index_request", via: [:get, :delete]
-    match "index_ready" => "pages#index_ready", via: [:get, :delete]
-    match "index_closed" => "pages#index_closed", via: [:get, :delete]
-    match 'index_wait_close' => 'pages#index_wait_close', via: [:get, :delete]
+    get "index_approve" => "pages#index_approve"
+    get "index_request" => "pages#index_request"
+    get "index_ready" => "pages#index_ready"
+    get "index_closed" => "pages#index_closed"
+    get 'index_wait_close' => 'pages#index_wait_close'
+    delete "index_:state" => "pages#destroy_all", state: /approve|request|ready|closed|wait_close/
   end
 
   node "article" do

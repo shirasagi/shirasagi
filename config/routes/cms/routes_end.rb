@@ -46,10 +46,7 @@ SS::Application.routes.draw do
   end
 
   concern :index_state_deletion do
-    delete :index_approve, on: :collection
-    delete :index_request, on: :collection
-    delete :index_ready, on: :collection
-    delete :index_closed, on: :collection
+    delete "index_:state", action: :destroy_all, on: :collection, state: /approve|request|ready|closed/
   end
 
   concern :contains_urls do
