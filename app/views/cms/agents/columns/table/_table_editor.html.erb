@@ -70,7 +70,7 @@ $(document).on('click', '#table-editor-<%= table_name %> td, #table-editor-<%= t
     editable.addClass("edited");
 
     // セルをクリックしたら取得したセルの値をtextareaに追加してセル内にtextareaを挿入
-    editable.html('<textarea style="width:100%">' + editable.html() + '</textarea>').find('textarea')
+    editable.html('<textarea style="width:100px;">' + editable.html() + '</textarea>').find('textarea')
         .focus()
         .on('blur', function () {
           // フォーカスが外れた時、セルに値を追加して不要なtextareaを削除

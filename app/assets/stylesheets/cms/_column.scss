@@ -73,8 +73,16 @@
 }
 
 .table-editor th, .table-editor td {
+  min-width: 100px;
   border: solid 1px;  /* 枠線指定 */
   padding: 10px;      /* 余白指定 */
+}
+
+.table-editor th:before {
+  display: block;
+  float: left;
+  height: 30px;
+  content: "";
 }
 
 .table-editor .edited {
