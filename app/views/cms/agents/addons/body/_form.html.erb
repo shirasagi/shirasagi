@@ -58,7 +58,7 @@
     Cms_Form.options.check.syntax = <%= syntax_check %>;
     Cms_Form.render();
     Cms_Form.addSyntaxCheck("addon-cms-agents-addons-body", {
-    resolve: "html",
+      resolve: "html",
       name: "<%= t("modules.addons.cms/body") %>",
       getContent: function () { return Cms_Form.getEditorHtml(); },
       setContent: function (content) { Cms_Form.setEditorHtml(content); },
