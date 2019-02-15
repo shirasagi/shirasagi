@@ -107,7 +107,7 @@ module Opendata::Harvest::ShirasagiApiImporter
 
     dataset.updated = Time.zone.parse(attributes["updated"])
     dataset.created = Time.zone.parse(attributes["created"])
-    dataset.released = dataset.updated
+    dataset.released = Time.zone.parse(attributes["released"])
 
     dataset.harvest_importer = self
     dataset.harvest_host = source_host
