@@ -196,7 +196,7 @@ describe Opendata::UrlResource, dbscope: :example, http_server: true do
       end
 
       it do
-        expect { subject.save! }.to raise_error
+        expect { subject.save! }.to raise_error Mongoid::Errors::Validations
       end
     end
 
@@ -211,7 +211,7 @@ describe Opendata::UrlResource, dbscope: :example, http_server: true do
       end
 
       it do
-        expect { subject.save! }.to raise_error
+        expect { subject.save! }.to raise_error Mongoid::Errors::Validations
       end
     end
   end
