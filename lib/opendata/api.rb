@@ -183,11 +183,13 @@ module Opendata::Api
     package_resource[:updated] = resource.updated
 
     package_resource[:download_url] = resource.full_url
-    if resource.source_url
+    if resource.source_url.present?
       package_resource[:url] = resource.source_url
       package_resource[:format] = "html"
     else
-      package_resource[:url] = resource.file.full_url
+      file = resource.file
+      file.site = @cur_site
+      package_resource[:url] = file.full_url
       package_resource[:format] = resource.format
     end
 
