@@ -59,7 +59,9 @@ class Opendata::Harvest::Importer
   end
 
   def api_type_options
-    I18n.t("opendata.harvest_importer_api_options").map { |k, v| [v, k] }
+    SS.config.opendata.harvest["importer_api"].map do |k|
+      [ I18n.t("opendata.harvest_importer_api_options.#{k}"), k ]
+    end
   end
 
   def state_options
