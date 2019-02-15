@@ -1,4 +1,4 @@
-<% return if controller.filters.include?(:preview) %>
+<% return if controller.filter_include?(:preview) %>
 <% if @app.present? %>
 <%= jquery do %>
 var add;
