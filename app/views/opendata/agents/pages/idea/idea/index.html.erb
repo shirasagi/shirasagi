@@ -2,8 +2,8 @@
 <script src="/assets/js/jquery.colorbox.js"></script>
 <%
   path_prefix = nil
-  if controller.filters.include?(:preview)
-    path_prefix = cms_preview_path(preview_date: params[:preview_date])
+  if controller.filter_include?(:preview)
+    path_prefix = cms_preview_path(site: @cur_site, preview_date: params[:preview_date])
   end
 
   if path_prefix.present? && path_prefix.end_with?('/')
