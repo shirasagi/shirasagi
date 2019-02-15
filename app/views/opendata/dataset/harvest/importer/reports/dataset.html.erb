@@ -61,22 +61,24 @@
 
 <br>
 
-<table class="see index history-backup">
-  <tbody>
-  <tr>
-    <th colspan="2"><%= t("ss.errors") %></th>
-  </tr>
-    <% style = (@item.state == "failed") ? 'background-color: #ffdada;' : "" %>
+<% if @item.state == "failed" %>
+  <table class="see index history-backup">
+    <tbody>
     <tr>
-      <th style="<%= style %>"><%= t("opendata.dataset") %></th>
-      <td style="<%= style %>"><%=br @item.error_messages.join("\n") %></td>
+      <th colspan="2"><%= t("opendata.labels.errors") %></th>
     </tr>
-    <% @item.resources.each_with_index do |resource, idx| %>
-      <% style = (resource.state == "failed") ? 'background-color: #ffdada;' : "" %>
+      <% style = (@item.state == "failed") ? 'background-color: #ffdada;' : "" %>
       <tr>
-        <th style="<%= style %>"><%= "#{t("opendata.labels.resource")}#{idx + 1}" %></th>
-        <td style="<%= style %>"><%=br resource.error_messages.join("\n") %></td>
+        <th style="<%= style %>"><%= t("opendata.dataset") %></th>
+        <td style="<%= style %>"><%=br @item.error_messages.join("\n") %></td>
       </tr>
-    <% end %>
-  </tbody>
-</table>
+      <% @item.resources.each_with_index do |resource, idx| %>
+        <% style = (resource.state == "failed") ? 'background-color: #ffdada;' : "" %>
+        <tr>
+          <th style="<%= style %>"><%= "#{t("opendata.labels.resource")}#{idx + 1}" %></th>
+          <td style="<%= style %>"><%=br resource.error_messages.join("\n") %></td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+<% end %>
