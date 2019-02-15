@@ -98,11 +98,6 @@ module Cms::PageFilter
     if result && @item.try(:branch?) && @item.state == "public"
       location = { action: :index }
       @item.delete
-    elsif @item.is_a?(Cms::Addon::EditLock)
-      unless @item.acquire_lock
-        redirect_to action: :lock
-        return
-      end
     end
     render_update result, location: location
   end
