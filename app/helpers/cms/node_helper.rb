@@ -47,13 +47,13 @@ module Cms::NodeHelper
 
   def colored_state_label(item)
     if item.status =~ /public|ready|request/
-      %(<span class="state state_#{item.status}">#{t("ss.state.#{item.status}")}</span>)
+      %(<span class="state state-#{item.status}">#{t("ss.state.#{item.status}")}</span>)
     elsif item.respond_to?(:workflow_state) && item.workflow_state == "remand"
-      %(<span class="state state_remand">#{t("ss.state.#{item.status}")}</span>)
+      %(<span class="state state-remand">#{t("ss.state.#{item.status}")}</span>)
     elsif item.first_released.blank?
-      %(<span class="state state_edit">#{t("ss.state.edit")}</span>)
+      %(<span class="state state-edit">#{t("ss.state.edit")}</span>)
     else
-      %(<span class="state state_closed">#{t("ss.state.closed")}</span>)
+      %(<span class="state state-closed">#{t("ss.state.closed")}</span>)
     end.html_safe
   end
 end

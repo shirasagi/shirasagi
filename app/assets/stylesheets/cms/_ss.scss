@@ -71,27 +71,27 @@
     font-size: 90%;
     font-weight: normal;
 
-    &.state_public {
+    &.state-public {
       background-color: #09ff00;
       color: #000000;
     }
-    &.state_closed {
+    &.state-closed {
       background-color: #8e9494;
       color: #fff;
     }
-    &.state_ready {
+    &.state-ready {
       background-color: #FFF700;
       color: #000000;
     }
-    &.state_request {
+    &.state-request {
       background-color: #3227ff;
       color: #fff;
     }
-    &.state_edit {
+    &.state-edit {
       background-color: #ff23fe;
       color: #fff;
     }
-    &.state_remand {
+    &.state-remand {
       background-color: #000000;
       color: #fffdfd;
     }
