@@ -67,7 +67,9 @@ class Opendata::Harvest::ShirasagiScraper
       resource["name"] = node.css(".info .name").text.to_s.strip
       resource["text"] = node.css(".info .text").text.to_s.strip
 
-      href = node.css(".icons a.download").first.attributes["href"].value
+      a_download = node.css(".icons a.download").first
+      href = a_download.attributes["data-url"].value
+      href = a_download.attributes["href"].value if href.blank?
       href = ::Addressable::URI.unescape(href)
       resource["url"] = ::File.join(url, href)
 
