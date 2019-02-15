@@ -60,9 +60,18 @@ class Gws::Memo::NoticesController < ApplicationController
 
   def show
     @item.set_seen(@cur_user).update if @item.state == "public"
-    if !@item.export
-      redirect_to @item.url.empty? ? request.referer : @item.url
+
+    if @item.url.present?
+      redirect_to @item.url
+      return
     end
+
+    if @item.text.present? || @item.html.present?
+      render
+      return
+    end
+
+    redirect_to request.referer, notice: I18n.t("gws/circular.notice.set_seen")
   end
 
   def latest
