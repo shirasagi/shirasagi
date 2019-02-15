@@ -121,7 +121,11 @@ $(document).on('click', '#table-menu-left-<%= table_name %> #append-top', functi
   removeControllTable();
   var newTr = "<tr>";
   for (var i=0; i<columnNum-1; i++) {
-    newTr = newTr + "<td></td>";
+    if (parent[0].cells[i].tagName == "TH"){
+      newTr = newTr + "<th></th>";
+    } else {
+      newTr = newTr + "<td></td>";
+    }
   }
   newTr = newTr + "</tr>";
   parent.before(newTr);
@@ -135,7 +139,11 @@ $(document).on('click', '#table-menu-left-<%= table_name %> #append-bottom', fun
   removeControllTable();
   var newTr = "<tr>";
   for (var i=0; i<columnNum-1; i++) {
-    newTr = newTr + "<td></td>";
+    if (parent[0].cells[i].tagName == "TH"){
+      newTr = newTr + "<th></th>";
+    } else {
+      newTr = newTr + "<td></td>";
+    }
   }
   newTr = newTr + "</tr>";
   parent.after(newTr);
