@@ -4,14 +4,13 @@
 %>
 
 <%= form_for :item, url: { action: :update }, html: { id: "item-form", method: :put, multipart: true, autocomplete: :off } do |f| %>
-  <%= error_messages_for :item %>
-  <%= render "cms/apis/preview/inplace_edit/main/link_errors", errors: @item.column_link_errors %>
-
   <%= hidden_field_tag :_updated, params[:_updated] || @item.updated if @item.respond_to?(:updated) %>
 
   <div class="addon-views">
     <%= render file: "_addons_form", locals: { f: f, addons: addons } if addons.size > 0 %>
   </div>
+
+  <%= error_messages_for :item %>
 
   <footer class="send">
     <%= f.submit creates_branch? ? t("cms.buttons.save_as_branch") : t("ss.buttons.save"), name: "save_if_no_alerts", class: 'btn-primary save' %>
