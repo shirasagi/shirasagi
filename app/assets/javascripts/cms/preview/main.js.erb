@@ -26,7 +26,7 @@ SS_Preview = (function () {
 
   SS_Preview.confirms = { delete: null, publish: null };
 
-  SS_Preview.notices = { deleted: null, publish: null };
+  SS_Preview.notices = { deleted: null, published: null, moved: null };
 
   SS_Preview.item = {};
 
@@ -685,7 +685,7 @@ SS_Preview = (function () {
           var $column = $(document).find(".ss-preview-column[data-page-id='" + ids.pageId + "'][data-column-id='" + ids.columnId + "']");
           $column.fadeOut("fast", function () {
             $column.remove();
-            self.notice.show(SS_Preview.notices.delete);
+            self.notice.show(SS_Preview.notices.deleted);
           });
         }
       },
@@ -711,7 +711,7 @@ SS_Preview = (function () {
           location.href = data.location;
         } else {
           self.finishColumnMoveUp(ids, data);
-          self.notice.show("移動しました。");
+          self.notice.show(SS_Preview.notices.moved);
         }
       },
       error: function(xhr, status, error) {
@@ -770,7 +770,7 @@ SS_Preview = (function () {
           location.href = data.location;
         } else {
           self.finishColumnMoveDown(ids, data);
-          self.notice.show("移動しました。");
+          self.notice.show(SS_Preview.notices.moved);
         }
       },
       error: function(xhr, status, error) {
@@ -809,7 +809,12 @@ SS_Preview = (function () {
       type: "POST",
       data: { authenticity_token: token, order: order },
       success: function(data) {
-        self.finishColumnMovePosition(ids, order, data);
+        if (data.location) {
+          location.href = data.location;
+        } else {
+          self.finishColumnMovePosition(ids, order, data);
+          self.notice.show(SS_Preview.notices.moved);
+        }
       },
       error: function(xhr, status, error) {
         self.notice.show(error);

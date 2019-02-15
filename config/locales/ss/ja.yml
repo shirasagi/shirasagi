@@ -176,6 +176,7 @@ ja:
       clipboard_copy_failed: コピーできませんでした。クリップボードがサポートされていません。
       published: 公開しました。
       depublished: 非公開にしました。
+      moved: 移動しました。
     info:
       soft_delete: データの実削除ではなく無効状態として保存されます。
     warning:
