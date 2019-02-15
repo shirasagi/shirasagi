@@ -132,7 +132,7 @@ module Cms::PublicFilter::Layout
         path: cms_layout_path(site: @cur_site, id: @cur_layout)
       }
       data_attrs = layout_info.map { |k, v| "data-layout-#{k}=\"#{CGI.escapeHTML(v.to_s)}\"" }
-      html = html.sub(/<body/, %(<body #{data_attrs.join(" ")}"))
+      html = html.sub(/<body/, %(<body #{data_attrs.join(" ")}))
     end
 
     html
