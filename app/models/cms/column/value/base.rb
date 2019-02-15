@@ -99,7 +99,7 @@ class Cms::Column::Value::Base
     ret = self.class.new self.attributes.to_h.except('_type')
     ret.instance_variable_set(:@new_clone, true)
     ret.instance_variable_set(:@origin_id, ret.id)
-    ret.id = nil
+    ret.id = BSON::ObjectId.new
     ret.created = Time.zone.now
     ret.updated = Time.zone.now
     ret

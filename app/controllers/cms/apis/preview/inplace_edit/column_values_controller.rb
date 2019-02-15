@@ -179,7 +179,7 @@ class Cms::Apis::Preview::InplaceEdit::ColumnValuesController < ApplicationContr
     branch.master = @item
 
     id = params[:id].to_s
-    @cur_column_value = branch.column_values.find { |item| item.origin_id.to_s == id }
+    @cur_column_value = branch.column_values.to_a.find { |item| item.origin_id.to_s == id }
     @cur_column = @cur_column_value.column
 
     @cur_column_value.destroy
@@ -236,7 +236,8 @@ class Cms::Apis::Preview::InplaceEdit::ColumnValuesController < ApplicationContr
     branch = @item.new_clone
     branch.master = @item
 
-    @cur_column_value = branch.column_values.find(params[:id])
+    id = params[:id].to_s
+    @cur_column_value = branch.column_values.to_a.find { |item| item.origin_id.to_s == id }
     @cur_column = @cur_column_value.column
 
     branch.column_values.move_up(@cur_column_value.id)
@@ -261,7 +262,8 @@ class Cms::Apis::Preview::InplaceEdit::ColumnValuesController < ApplicationContr
     branch = @item.new_clone
     branch.master = @item
 
-    @cur_column_value = branch.column_values.find(params[:id])
+    id = params[:id].to_s
+    @cur_column_value = branch.column_values.to_a.find { |item| item.origin_id.to_s == id }
     @cur_column = @cur_column_value.column
 
     branch.column_values.move_down(@cur_column_value.id)
@@ -288,7 +290,8 @@ class Cms::Apis::Preview::InplaceEdit::ColumnValuesController < ApplicationContr
     branch = @item.new_clone
     branch.master = @item
 
-    @cur_column_value = branch.column_values.find(params[:id])
+    id = params[:id].to_s
+    @cur_column_value = branch.column_values.to_a.find { |item| item.origin_id.to_s == id }
     @cur_column = @cur_column_value.column
 
     branch.column_values.move_at(@cur_column_value.id, order)
