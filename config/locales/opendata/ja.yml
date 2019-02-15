@@ -57,7 +57,7 @@ ja:
       resource_preview_error: リソースをプレビューできませんでした。
     export:
       subject: '[オープンデータ/データセット] エクスポートが完了しました。'
-      notiry_message: "ダウンロードの準備が完了しました。\n下記のURLからダウンロードしてください。\n\n<a href=%{link}>%{link}</a>"
+      notiry_message: "ダウンロードの準備が完了しました。\n下記のURLからダウンロードしてください。\n\n%{link}"
       start_message: "エクスポート処理を開始しました。"
       export_message: "エクスポート処理が完了次第、ログインユーザーのメールアドレスにダウンロードリンクが通知されます。"
       emtpy_email_message: "ログインユーザーにメールアドレスが設定されていません。"
@@ -1006,3 +1006,4 @@ ja:
       opendata/harvest/export_datasets_job: ハーベストエクスポート削除ジョブ
       opendata/harvest/destroy_datasets_job: ハーベスト関連データセット削除ジョブ
       opendata/notify_dataset_plan_job: データセット更新通知ジョブ
+      opendata/dataset/import_job: データセットインポートジョブ

@@ -57,7 +57,7 @@ this.SS = (function () {
   SS.renderInBox = function (box) {
     var anchorCallback;
     anchorCallback = function () {
-      return $("#cboxLoadedContent a").each(function () {
+      return $("#cboxLoadedContent .ajax-box:not(.cboxElement)").each(function () {
         var elem;
         elem = $(this);
         elem.addClass("cboxElement");
@@ -71,7 +71,7 @@ this.SS = (function () {
         }
       });
     };
-    return $(box).find("a").each(function () {
+    return $(box).find(".ajax-box:not(.cboxElement)").each(function () {
       var elem;
       elem = $(this);
       if (!elem.attr("target") && !elem.data("target")) {

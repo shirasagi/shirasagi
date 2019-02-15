@@ -80,6 +80,8 @@ save_layout filename: "app-bunya.layout.html", name: "アプリ：分野、ア�
 save_layout filename: "app-page.layout.html", name: "アプリ：詳細ページ"
 save_layout filename: "app-top.layout.html", name: "アプリ：トップ"
 save_layout filename: "dataset-bunya.layout.html", name: "データ：分野、データ検索、グループ検索"
+save_layout filename: "dataset-map.layout.html", name: "地図"
+save_layout filename: "chiiki.layout.html", name: "地域"
 save_layout filename: "dataset-page.layout.html", name: "データ：詳細ページ"
 save_layout filename: "dataset-top.layout.html", name: "データ：トップ"
 save_layout filename: "idea-bunya.layout.html", name: "アイデア：分野、アイデア検索"
@@ -135,6 +137,20 @@ save_node filename: "dataset", name: "データカタログ", route: "opendata/d
   page_layout_id: layouts["dataset-page"].id
 save_node filename: "dataset/bunya", name: "分野", route: "opendata/dataset_category",
   layout_id: layouts["dataset-bunya"].id
+save_node filename: "dataset/chiiki", name: "地域", route: "opendata/dataset_area",
+  layout_id: layouts["chiiki"].id
+save_node filename: "dataset/chiiki/shirasagi", name: "シラサギ市", route: "opendata/dataset_area",
+  layout_id: layouts["chiiki"].id
+save_node filename: "dataset/chiiki/shirasagi/higashi", name: "東区", route: "opendata/dataset_area",
+  layout_id: layouts["chiiki"].id
+save_node filename: "dataset/chiiki/shirasagi/kita", name: "北区", route: "opendata/dataset_area",
+  layout_id: layouts["chiiki"].id
+save_node filename: "dataset/chiiki/shirasagi/minami", name: "南区", route: "opendata/dataset_area",
+  layout_id: layouts["chiiki"].id
+save_node filename: "dataset/chiiki/shirasagi/nishi", name: "西区", route: "opendata/dataset_area",
+  layout_id: layouts["chiiki"].id
+save_node filename: "dataset/map", name: "地図", route: "opendata/dataset_map",
+  layout_id: layouts["dataset-map"].id
 save_node filename: "dataset/search_group", name: "データセットグループ検索", route: "opendata/search_dataset_group",
   layout_id: layouts["dataset-bunya"].id
 save_node filename: "dataset/search", name: "データセット検索", route: "opendata/search_dataset",
@@ -365,6 +381,8 @@ save_part filename: "portal-tab.part.html", name: "ポータル：新着タブ",
   route: "cms/tabs", conditions: %w(docs event), limit: 5
 save_part filename: "sns-share.part.html", name: "SNSシェアボタン", route: "cms/sns_share"
 save_part filename: "tab.part.html", name: "サイト切り替えタブ", route: "cms/free"
+save_part filename: "opendatamap.part.html", name: "ポータル：オープンデータマップ", route: "cms/free"
+save_part filename: "portal-area.part.html", name: "ポータル：地域", route: "cms/free"
 
 ## -------------------------------------
 puts "# pages"
@@ -470,13 +488,13 @@ def save_license(data)
   item
 end
 
-license_cc_by = save_license name: "表示（CC BY）", in_file: license_file("cc-by.png"), order: 1, default_state: 'default'
-save_license name: "表示-継承（CC BY-SA）", in_file: license_file("cc-by-sa.png"), order: 2
-save_license name: "表示-改変禁止（CC BY-ND）", in_file: license_file("cc-by-nd.png"), order: 3
-save_license name: "表示-非営利（CC BY-NC）", in_file: license_file("cc-by-nc.png"), order: 4
-save_license name: "表示-非営利-継承（CC BY-NC-SA）", in_file: license_file("cc-by-nc-sa.png"), order: 5
-save_license name: "表示-非営利-改変禁止（CC BY-NC-ND）", in_file: license_file("cc-by-nc-nd.png"), order: 6
-save_license name: "いかなる権利も保有しない（CC 0）", in_file: license_file("cc-zero.png"), order: 7
+license_cc_by = save_license name: "表示（CC BY）", in_file: license_file("cc-by.png"), order: 1, default_state: 'default', uid: "cc-by"
+save_license name: "表示-継承（CC BY-SA）", in_file: license_file("cc-by-sa.png"), order: 2, uid: "cc-by-sa"
+save_license name: "表示-改変禁止（CC BY-ND）", in_file: license_file("cc-by-nd.png"), order: 3, uid: "cc-by-nd"
+save_license name: "表示-非営利（CC BY-NC）", in_file: license_file("cc-by-nc.png"), order: 4, uid: "cc-by-nc"
+save_license name: "表示-非営利-継承（CC BY-NC-SA）", in_file: license_file("cc-by-nc-sa.png"), order: 5, uid: "cc-by-nc-sa"
+save_license name: "表示-非営利-改変禁止（CC BY-NC-ND）", in_file: license_file("cc-by-nc-nd.png"), order: 6, uid: "cc-by-nc-nd"
+save_license name: "いかなる権利も保有しない（CC 0）", in_file: license_file("cc-zero.png"), order: 7, uid: "cc-zero"
 
 ## -------------------------------------
 puts "# opendata dataset_groups"
@@ -528,6 +546,9 @@ datasets = []
     area_ids: Opendata::Node::Area.site(@site).pluck(:_id).sample(1)
   if i == 1
     save_resource(dataset, name: "サンプルリソース", filename: "sample.txt", license_id: license_cc_by.id)
+  elsif i == 5
+    save_resource(dataset, name: "sample.csv", filename: "sample.csv", license_id: license_cc_by.id)
+    save_resource(dataset, name: "sample2.xlsx", filename: "sample2.xlsx", license_id: license_cc_by.id)
   end
   datasets << dataset
 end

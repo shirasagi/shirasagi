@@ -106,6 +106,47 @@ this.Cms_Form = (function () {
         );
       }
     });
+
+    var h = [], ids = [], code, id, errorIdx, ref, i, j;
+    $("#addon-cms-agents-addons-form-page .column-value-cms-column-headline").each(function () {
+      ids.push($(this).attr("id"));
+      h.push($(this).find('[name="item[column_values][][in_wrap][head]"]').val());
+    });
+
+    // orderOfH
+    errorIdx = [];
+    if (h.length) {
+      for (i = j = 0, ref = h.length - 1; 0 <= ref ? j <= ref : j >= ref; i = 0 <= ref ? ++j : --j) {
+        if (i === 0) {
+          if (!/h[12]/i.test(h[i])) {
+            errorIdx.push(i);
+          }
+        } else {
+          if (/h3/i.test(h[i])) {
+            if (!/h[234]/i.test(h[i - 1])) {
+              errorIdx.push(i);
+            }
+          } else if (/h4/i.test(h[i])) {
+            if (!/h[34]/i.test(h[i - 1])) {
+              errorIdx.push(i);
+            }
+          }
+        }
+      }
+    }
+
+    for (i = 0; i < errorIdx.length; i++) {
+      var idx = errorIdx[i];
+      Syntax_Checker.errors.push(
+        {
+          id: ids[idx],
+          idx: 0,
+          code: h[idx],
+          msg: Syntax_Checker.message["invalidOrderOfH"],
+          detail: Syntax_Checker.detail["invalidOrderOfH"]
+        }
+      );
+    }
   };
 
   // get page html (use in Mobile_Size_Checker at Form_Alert)

@@ -6,17 +6,16 @@ class Opendata::Dataset::ImportJob < Cms::ApplicationJob
   end
 
   def perform(ss_file_id)
-    file = ::SS::File.find(ss_file_id) rescue nil
+    file = ::SS::File.find(ss_file_id)
 
-    @datetime = Time.zone.now
-    @import_dir = "#{Rails.root}/private/import/opendata-datasets-#{@datetime.strftime('%Y%m%d%H%M%S')}"
+    @import_dir = "#{Rails.root}/private/import/opendata-datasets-#{Time.zone.now.to_i}"
 
     FileUtils.rm_rf(@import_dir)
     FileUtils.mkdir_p(@import_dir)
 
     Zip::File.open(file.path) do |entries|
       entries.each do |entry|
-        path = "#{@import_dir}/" + entry.name.encode("utf-8", "cp932").tr('\\', '/')
+        path = "#{@import_dir}/" + entry.name.encode("utf-8", "cp932", invalid: :replace, undef: :replace).tr('\\', '/')
 
         if entry.directory?
           FileUtils.mkdir_p(path)
@@ -26,10 +25,15 @@ class Opendata::Dataset::ImportJob < Cms::ApplicationJob
       end
     end
 
-    dataset_csv = Dir.glob("#{@import_dir}/*.csv").first || Dir.glob("#{@import_dir}/*/*.csv").first
+    dataset_csv = Dir.glob("#{@import_dir}/datasets.csv").first
+    dataset_csv ||= Dir.glob("#{@import_dir}/*/datasets.csv").first
 
-    put_log("import start #{dataset_csv}")
-    import_dataset_csv(dataset_csv)
+    if dataset_csv
+      put_log("import start #{dataset_csv}")
+      import_dataset_csv(dataset_csv)
+    else
+      put_log("not found datasets.csv")
+    end
 
     FileUtils.rm_rf(@import_dir)
   end
@@ -45,7 +49,7 @@ class Opendata::Dataset::ImportJob < Cms::ApplicationJob
         item = update_dataset_row(row)
         put_log("update #{i}: #{item.name}")
       rescue => e
-        put_log("error  #{i}: #{e}")
+        put_log("#{e.class} (#{e.message}):\n  #{e.backtrace.join("\n  ")}")
       end
     end
   end
@@ -57,22 +61,30 @@ class Opendata::Dataset::ImportJob < Cms::ApplicationJob
         item = update_resource_row(dataset, row)
         put_log("update #{i}: #{item.try(:name)}")
       rescue => e
-        put_log("error  #{i}: #{e}")
+        put_log("#{e.class} (#{e.message}):\n  #{e.backtrace.join("\n  ")}")
       end
     end
   end
 
   def update_dataset_row(row)
-    item = model.find_or_initialize_by(site_id: site.id, id: value(row, :id).to_i)
-    set_dataset_attributes(row, item)
+    @dataset_id = value(row, :id).to_i
+    item = model.where(site_id: site.id, id: @dataset_id).first || model.new
+    item.cur_site = site
     item.cur_node = node
+
+    set_dataset_attributes(row, item)
 
     if item.valid?
       item.save
-      resources_csv = Dir.glob("#{@import_dir}/#{value(row, :id)}/*.csv").first || Dir.glob("#{@import_dir}/*/#{value(row, :id)}/*.csv").first
+      resources_csv = Dir.glob("#{@import_dir}/#{@dataset_id}/resources.csv").first
+      resources_csv ||= Dir.glob("#{@import_dir}/*/#{@dataset_id}/resources.csv").first
 
-      put_log("import start #{resources_csv}")
-      import_resource_csv(resources_csv, item)
+      if resources_csv
+        put_log("import start #{resources_csv}")
+        import_resource_csv(resources_csv, item)
+      else
+        put_log("not found resources.csv (#{item.name})")
+      end
       item
     else
       raise item.errors.full_messages.join(", ")
@@ -80,7 +92,8 @@ class Opendata::Dataset::ImportJob < Cms::ApplicationJob
   end
 
   def update_resource_row(dataset, row)
-    item = dataset.resources.detect {|resource| resource.id == resource_value(row, :id).to_i}
+    id = resource_value(row, :id).to_i
+    item = dataset.resources.detect { |resource| resource.id == id }
     item = dataset.resources.new if item.blank?
     set_resource_attributes(row, dataset, item)
 
@@ -103,19 +116,9 @@ class Opendata::Dataset::ImportJob < Cms::ApplicationJob
     row[Opendata::Resource.t(key)].try(:strip)
   end
 
-  def category_name_tree_to_ids(name_trees)
-    category_ids = []
-    name_trees.each do |cate|
-      ct_list = []
-      ct = Opendata::Node::Category.site(site).where(name: cate).first
-      ct_list << ct if ct
-
-      if ct_list.present?
-        ct = ct_list.last
-        category_ids << ct.id
-      end
-    end
-    category_ids
+  def category_name_tree_to_ids(name_trees, klass)
+    names = name_trees.map { |name| name.split(/\//).last }
+    klass.site(site).in(name: names).pluck(:id)
   end
 
   def set_dataset_attributes(row, item)
@@ -124,19 +127,24 @@ class Opendata::Dataset::ImportJob < Cms::ApplicationJob
     item.text = value(row, :text)
     item.tags = value(row, :tags).to_s.split(",")
 
-    # category area
-    category_name_tree = ary_value(row, :categories)
-    category_ids = category_name_tree_to_ids(category_name_tree)
-    categories = Opendata::Node::Category.site(site).in(id: category_ids)
-    item.category_ids = categories.pluck(:id)
-    item.area_ids = Opendata::Node::Area.in(name: ary_value(row, :area_ids)).pluck(:id)
+    # category
+    category_name_tree = ary_value(row, :category_ids)
+    item.category_ids = category_name_tree_to_ids(category_name_tree, Opendata::Node::Category)
+
+    # estat_category
+    estat_category_name_tree = ary_value(row, :estat_category_ids)
+    item.estat_category_ids = category_name_tree_to_ids(estat_category_name_tree, Opendata::Node::EstatCategory)
+
+    # area
+    item.area_ids = Opendata::Node::Area.in(name: ary_value(row, :area_ids)).pluck(:id).uniq
 
     # dataset_group
     dataset_group_names = ary_value(row, :dataset_group_ids)
-    item.dataset_group_ids = Opendata::DatasetGroup.in(name: dataset_group_names).pluck(:id)
+    item.dataset_group_ids = Opendata::DatasetGroup.in(name: dataset_group_names).pluck(:id).uniq
 
     # released
-    item.released = Time.zone.strptime(value(row, :released), "%Y/%m/%d %H:%M")
+    released = value(row, :released)
+    item.released = Time.zone.strptime(released, "%Y/%m/%d %H:%M") if released.present?
 
     # contact
     item.contact_state = value(row, :contact_state)
@@ -158,23 +166,36 @@ class Opendata::Dataset::ImportJob < Cms::ApplicationJob
   end
 
   def set_resource_attributes(row, dataset, item)
+    license = Opendata::License.where(name: resource_value(row, :license_id)).first
+
     item.name = resource_value(row, :name)
     item.format = resource_value(row, :format)
-    item.license_id = Opendata::License.find_by(name: resource_value(row, :license_id)).try(:id)
+    item.license_id = license.id if license
     item.text = resource_value(row, :text)
     if resource_value(row, :file_id).present?
-      file_path = Dir.glob("#{@import_dir}/#{dataset.id}/#{resource_value(row, :id)}/#{resource_value(row, :file_id)}").first || Dir.glob("#{@import_dir}/*/#{dataset.id}/#{resource_value(row, :id)}/#{resource_value(row, :file_id)}").first
+      path1 = "#{@import_dir}/#{@dataset_id}/#{resource_value(row, :id)}/#{resource_value(row, :file_id)}"
+      path2 = "#{@import_dir}/*/#{@dataset_id}/#{resource_value(row, :id)}/#{resource_value(row, :file_id)}"
+
+      file_path = Dir.glob(path1).first
+      file_path ||= Dir.glob(path2).first
+      raise "not_found file_path #{path1}" if file_path.blank?
+
       file = SS::File.new(model: "opendata/resource", state: "public")
       file.in_file = Fs::UploadedFile.create_from_file(File.open(file_path, "r"))
-      file.save
+      file.save!
       item.filename = file.name
       item.file_id = file.id
     end
     if resource_value(row, :tsv_id).present?
-      tsv_path = Dir.glob("#{@import_dir}/#{dataset.id}/#{item.id}/#{resource_value(row, :tsv_id)}").first || Dir.glob("#{@import_dir}/*/#{dataset.id}/#{item.id}/#{resource_value(row, :tsv_id)}").first
+      tsv_path1 = "#{@import_dir}/#{@dataset_id}/#{resource_value(row, :id)}/#{resource_value(row, :tsv_id)}"
+      tsv_path2 = "#{@import_dir}/*/#{@dataset_id}/#{resource_value(row, :id)}/#{resource_value(row, :tsv_id)}"
+
+      tsv_file_path = Dir.glob(tsv_path1).first
+      tsv_file_path ||= Dir.glob(tsv_path2).first
+
       tsv = SS::File.new(model: "opendata/resource", state: "public")
-      tsv.in_file = Fs::UploadedFile.create_from_file(File.open(tsv_path, "r"))
-      tsv.save
+      tsv.in_file = Fs::UploadedFile.create_from_file(File.open(tsv_file_path, "r"))
+      tsv.save!
       item.tsv_id = tsv.id
     end
   end

@@ -49,19 +49,24 @@ Cms_Column_Free.prototype.getTempFileOptions = function() {
     var $fileView = self.$el.find(".column-value-files");
     $fileView.addClass("hide");
 
-    var fileId = files[0]["_id"];
-    $.ajax({
-      url: self.getFileSelectPath().replace(":fileId", fileId),
-      type: 'GET',
-      success: function(html) {
-        self.addFile(html);
-      },
-      error: function(xhr, status, error) {
-        $fileView.html(error);
-      },
-      complete: function() {
-        $fileView.removeClass("hide");
-      }
+    var promises = [];
+    $.each(files, function() {
+      var fileId = this["_id"];
+      var promise = $.ajax({
+        url: self.getFileSelectPath().replace(":fileId", fileId),
+        type: 'GET',
+        success: function(html) {
+          self.addFile(html);
+        }
+      });
+
+      promises.push(promise);
+    });
+
+    $.when.apply($, promises).fail(function(xhr, status, error) {
+      $fileView.html(error);
+    }).always(function() {
+      $fileView.removeClass("hide");
     });
   };
 

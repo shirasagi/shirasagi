@@ -611,7 +611,7 @@ textarea {
 // -----------------------------------------------------------------------------
 // category-nodes cms-nodes
 .category-nodes, .cms-nodes {
- @include clear;
+  @include clear;
   article {
     width: 50%;
     float: left;
@@ -1003,7 +1003,7 @@ textarea {
     table {
       @include table;
     }
-    .float-left {
+    .float-left, .ss-alignment-left {
       float: left;
       margin: 0 15px 15px 0;
       @include mb {
@@ -1011,7 +1011,7 @@ textarea {
         margin: 0 0 15px 0;
       }
     }
-    .float-right {
+    .float-right, .ss-alignment-right {
       float: right;
       margin: 0 0 15px 15px;
       @include mb {

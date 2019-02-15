@@ -186,7 +186,26 @@ SS_Preview = (function () {
     this.initializePage();
     this.initializeColumn();
 
-    // initialize overlay;
+    // initialize workflow
+    this.$el.on("click", "#ss-preview-btn-workflow-start", function() {
+      self.openWorkflowApprove();
+    });
+
+    this.$el.on("click", "#ss-preview-btn-workflow-approve", function() {
+      self.openWorkflowComment("approve");
+    });
+    this.$el.on("click", "#ss-preview-btn-workflow-remand", function() {
+      self.openWorkflowComment("remand");
+    });
+    this.$el.on("click", "#ss-preview-btn-workflow-pull-up", function() {
+      self.openWorkflowComment("pull-up");
+    });
+
+    this.$el.on("click", "#ss-preview-btn-publish", function () {
+      self.publish();
+    });
+
+    // initialize overlay
     this.overlay = new Overlay(this);
     this.overlay.on("part:edit", function(ev, data) {
       self.openPartEdit(data.id);
@@ -603,24 +622,6 @@ SS_Preview = (function () {
       self.openPartEdit(list.val());
     });
 
-    this.$el.on("click", "#ss-preview-btn-workflow-start", function() {
-      self.openWorkflowApprove();
-    });
-
-    this.$el.on("click", "#ss-preview-btn-workflow-approve", function() {
-      self.openWorkflowComment("approve");
-    });
-    this.$el.on("click", "#ss-preview-btn-workflow-remand", function() {
-      self.openWorkflowComment("remand");
-    });
-    this.$el.on("click", "#ss-preview-btn-workflow-pull-up", function() {
-      self.openWorkflowComment("pull-up");
-    });
-
-    this.$el.on("click", "#ss-preview-btn-publish", function () {
-      self.publish();
-    });
-
     this.$el.find(".ss-preview-part-group").removeClass("ss-preview-hide");
 
     $(document).on("mouseover", ".ss-preview-part", function() {
@@ -1017,11 +1018,7 @@ SS_Preview = (function () {
 
           var $button = self.$el.find("#ss-preview-btn-publish")
           var $buttonContainer = $button.closest(".ss-preview-btn-group");
-
-          $button.remove();
-          if ($buttonContainer.children().length === 0) {
-            $buttonContainer.remove();
-          }
+          $buttonContainer.remove();
         }
       },
       error: function(xhr, status, error) {

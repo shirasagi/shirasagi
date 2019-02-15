@@ -1,5 +1,8 @@
 <% return "" if @cur_node.becomes_with_route.try(:opendata_site_ids).blank? %>
-<%= jquery do %> SS_AddonTabs.hide(".mod-cms-opendata-dataset-group"); <% end %>
+<%
+  addon ||= local_assigns.fetch(:addon, {})
+  addon[:display_body] = "hide"
+%>
 
 <% dataset_groups = Opendata::DatasetGroup.in(site_id: @cur_node.becomes_with_route.opendata_site_ids).and_public.pluck(:name, :id) %>
 <dl class="see mod-cms-opendata-dataset-group category-form">

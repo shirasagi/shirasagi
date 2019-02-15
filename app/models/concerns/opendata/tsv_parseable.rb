@@ -20,8 +20,7 @@ module Opendata::TsvParseable
     begin
       data = NKF.nkf("-wd", src.read)
       src.try(:rewind)
-      sep = data =~ /\t/ ? "\t" : ","
-      CSV.parse(data, col_sep: sep, quote_char: '"')
+      CSV.parse(data)
     rescue => e
       logger.warn("#{e.class} (#{e.message}):\n  #{e.backtrace.join("\n  ")}")
       puts("#{e.class} (#{e.message}):\n  #{e.backtrace.join("\n  ")}")

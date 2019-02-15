@@ -10,8 +10,8 @@ describe "cms_preview", type: :feature, dbscope: :example do
     let(:node_category_child1) { create :category_node_page, cur_site: site, cur_node: node_category_root }
     let(:html) { '<h2>見出し2</h2><p>内容が入ります。</p><h3>見出し3</h3><p>内容が入ります。内容が入ります。</p>' }
     let(:item) { create(:article_page, cur_site: site, cur_node: node, html: html, category_ids: [ node_category_child1.id ]) }
-    let(:pc_preview_path) { "#{cms_preview_path(site: site)}#{item.url}" }
-    let(:mobile_preview_path) { "#{cms_preview_path(site: site)}#{site.mobile_location}#{item.url}" }
+    let(:pc_preview_path) { cms_preview_path(site: site, path: item.url[1..-1]) }
+    let(:mobile_preview_path) { cms_preview_path(site: site, path: "#{site.mobile_location}#{item.url}"[1..-1]) }
 
     before { login_cms_user }
 
@@ -40,8 +40,8 @@ describe "cms_preview", type: :feature, dbscope: :example do
     let!(:node_child2) { create :category_node_node, cur_site: site, cur_node: node_root }
     let!(:node_faq_search) { create :faq_node_search, cur_site: site, cur_node: node_root }
     let(:faq_part_search) { create(:faq_part_search, cur_site: site, cur_node: node_faq_search) }
-    let(:pc_preview_path) { "#{cms_preview_path(site: site)}#{node_root.url}" }
-    let(:mobile_preview_path) { "#{cms_preview_path(site: site)}#{site.mobile_location}#{node_root.url}" }
+    let(:pc_preview_path) { cms_preview_path(site: site, path: node_root.url[1..-1]) }
+    let(:mobile_preview_path) { cms_preview_path(site: site, path: "#{site.mobile_location}#{node_root.url}"[1..-1]) }
 
     before do
       category_part_node = create(
@@ -78,11 +78,13 @@ describe "cms_preview", type: :feature, dbscope: :example do
         expect(page).to have_css('div.category-nodes nav#category-list')
         expect(page).to have_selector('h2', text: "#{node_root.name} > #{node_root.name}")
         expect(page).to have_selector('footer', text: "#{node_root.name} > #{node_root.name} > #{category_part_node.name}")
-        expect(page).to have_css('a.preview-part', text: faq_part_search.name)
-        expect(page).to have_xpath("//input[@value='#{I18n.t('cms.part')}']")
-        expect(page).to have_xpath("//input[@value='#{I18n.t('cms.layout')}']")
-        expect(page).to have_xpath("//input[@value='#{I18n.t('cms.node')}']")
-        expect(page).not_to have_xpath("//input[@value='#{Cms::Page.model_name.human}']")
+        expect(page).to have_css("body[data-layout-id=#{node_root.layout_id}]")
+        expect(page).to have_css("#ss-preview")
+        expect(page).to have_css("#ss-preview .ss-preview-btn-toggle-inplace")
+        expect(page).to have_css("#ss-preview #ss-preview-btn-create-new-page")
+        expect(page).to have_css("#ss-preview #ss-preview-btn-select-draft-page")
+        expect(page).to have_css("#ss-preview-overlay")
+        expect(page).to have_css(".ss-preview-part[data-part-id=#{faq_part_search.id}] .faq-search")
       end
     end
 
@@ -96,10 +98,13 @@ describe "cms_preview", type: :feature, dbscope: :example do
         expect(page).to have_css('div.category-nodes div#category-list')
         expect(page).to have_selector('h2', text: "#{node_root.name} > #{node_root.name}")
         expect(page).to have_selector('div', text: "#{node_root.name} > #{node_root.name} > #{category_part_node.name}")
-        expect(page).to have_xpath("//input[@value='#{I18n.t('cms.part')}']")
-        expect(page).to have_xpath("//input[@value='#{I18n.t('cms.layout')}']")
-        expect(page).to have_xpath("//input[@value='#{I18n.t('cms.node')}']")
-        expect(page).not_to have_xpath("//input[@value='#{Cms::Page.model_name.human}']")
+        expect(page).to have_css("body[data-layout-id=#{node_root.layout_id}]")
+        expect(page).to have_css("#ss-preview")
+        expect(page).to have_no_css("#ss-preview .ss-preview-btn-togglea-inplace")
+        expect(page).to have_no_css("#ss-preview #ss-preview-btn-create-new-page")
+        expect(page).to have_no_css("#ss-preview #ss-preview-btn-select-draft-page")
+        expect(page).to have_css("#ss-preview-overlay")
+        expect(page).to have_css(".ss-preview-part[data-part-id=#{faq_part_search.id}] .faq-search")
       end
     end
   end
