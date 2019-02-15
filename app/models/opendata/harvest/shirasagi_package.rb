@@ -18,7 +18,7 @@ class Opendata::Harvest::ShirasagiPackage
   def open_options
     opts = {}
     opts[:http_basic_authentication] = @http_basic_authentication if @http_basic_authentication
-    opts[:read_timeout] = 20
+    opts[:read_timeout] = 10
     opts
   end
 

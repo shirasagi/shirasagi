@@ -182,6 +182,7 @@ module Opendata::Harvest::ShirasagiApiImporter
     resource.format = format
 
     license = get_license_from_uid(attributes.dig("license", "uid"))
+    license ||= get_license_from_name(attributes.dig("license", "name"))
     put_log("could not found license #{attributes.dig("license", "uid")}") if license.nil?
     resource.license = license
 
