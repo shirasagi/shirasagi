@@ -28,6 +28,12 @@ production: &production
     pdf:
       page_limit: 3
 
+  harvest:
+    importer_api:
+      - ckan
+      - shirasagi_api
+      #- shirasagi_scraper
+
   # SPARQL Endpoint
   fuseki:
     disable: true

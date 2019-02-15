@@ -39,6 +39,7 @@ module Opendata::Api
     package[:filename] = dataset.filename
     package[:url] = dataset.full_url
     package[:text] = dataset.text
+    package[:update_plan] = dataset.update_plan
     package[:state] = dataset.state
     package[:released] = dataset.released
     package[:created] = dataset.created

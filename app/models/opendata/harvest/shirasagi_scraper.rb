@@ -54,10 +54,10 @@ class Opendata::Harvest::ShirasagiScraper
     dataset["categories"] = doc.css("nav.categories .category").map { |node| node.text.to_s.strip }
     dataset["areas"] = doc.css("nav.categories .area").map { |node| node.text.to_s.strip }
 
-    dt = doc.css(".author dt").select { |node| node.text.to_s.strip == "データ作成者" }.first
-    dataset["author"] = dt.css("+ dd").text.to_s.strip if dt
-
-    dataset["updated"] = parse_datetime(doc)
+    dataset["author"] = parse_author_block(doc, "データ作成者") { |dd| dd.text.to_s.strip }
+    dataset["created"] = parse_author_block(doc, "作成日時") { |dd| parse_datetime(dd.text.to_s.strip) }
+    dataset["updated"] = parse_author_block(doc, "更新日時") { |dd| parse_datetime(dd.text.to_s.strip) }
+    dataset["update_plan"] = parse_author_block(doc, "更新頻度") { |dd| dd.text.to_s.strip }
 
     dataset["resources"] = doc.css(".resources .resource").map do |node|
 
@@ -67,7 +67,9 @@ class Opendata::Harvest::ShirasagiScraper
       resource["name"] = node.css(".info .name").text.to_s.strip
       resource["text"] = node.css(".info .text").text.to_s.strip
 
-      href = node.css(".icons a.download").first.attributes["href"].value
+      a_download = node.css(".icons a.download").first
+      href = a_download.attributes["data-url"].value
+      href = a_download.attributes["href"].value if href.blank?
       href = ::Addressable::URI.unescape(href)
       resource["url"] = ::File.join(url, href)
 
@@ -89,11 +91,18 @@ class Opendata::Harvest::ShirasagiScraper
 
   private
 
-  def parse_datetime(doc)
-    datetime_text = doc.css(".author dd:last").text.to_s.strip
+  def parse_author_block(doc, name)
+    doc.css("dl.author dt").each do |dt|
+      if dt.text.strip == name
+        return yield dt.css("+ dd")
+      end
+    end
+    nil
+  end
 
-    datetime_array = datetime_text.scan(/(\d+)年(\d+)月(\d+)日 (\d+)時(\d+)分/).flatten
-    datetime_array = datetime_text.scan(/(\d+)-(\d+)-(\d+)/).flatten if datetime_array.blank?
+  def parse_datetime(text)
+    datetime_array = text.scan(/(\d+)年(\d+)月(\d+)日 (\d+)時(\d+)分/).flatten
+    datetime_array = text.scan(/(\d+)-(\d+)-(\d+)/).flatten if datetime_array.blank?
 
     datetime = "#{datetime_array[0]}/#{datetime_array[1]}/#{datetime_array[2]}"
     datetime += " #{datetime_array[3]}:#{datetime_array[4]}" if datetime_array[3] && datetime_array[4]

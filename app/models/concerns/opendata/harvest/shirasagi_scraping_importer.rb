@@ -102,6 +102,7 @@ module Opendata::Harvest::ShirasagiScrapingImporter
     #dataset.uuid = attributes["uuid"]
     dataset.name = attributes["name"]
     dataset.text = attributes["text"]
+    dataset.update_plan = attributes["update_plan"]
     dataset.contact_charge = attributes["author"] if attributes["author"].present?
     dataset.group_ids = group_ids
 

@@ -225,6 +225,7 @@ ja:
       not_found_dataset: データセットがみつかりません。
       and_condition: AND条件
       convert_setting: コンバート設定
+      errors: エラー
     messages:
       max_row_notice: "最大 %{max} 行を表示しています。"
       max_pdf_preview_notice: "最大で%{max}ページ表示しています。"
@@ -284,7 +285,7 @@ ja:
     harvest_importer_api_options:
       ckan: "Ckan API"
       shirasagi_api: "Shirasagi API"
-      #shirasagi_scraper: "Shirasagi スクレイピング"
+      shirasagi_scraper: "Shirasagi スクレイピング"
     harvest_exporter_api_options:
       ckan: "Ckan API"
     assoc_job:

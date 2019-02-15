@@ -142,14 +142,14 @@ class Opendata::Harvest::CkanPackage
   ## package(dataset) apis
 
   def package_list
-    result = open(package_list_url, read_timeout: 20).read
+    result = open(package_list_url, read_timeout: 10).read
     result = ::JSON.parse(result)
     validate_result("package_list", result)
     result["result"]
   end
 
   def package_show(id)
-    result = open(package_show_url(id), read_timeout: 20).read
+    result = open(package_show_url(id), read_timeout: 10).read
     result = ::JSON.parse(result)
     validate_result("package_show", result)
     result["result"]
@@ -235,7 +235,7 @@ class Opendata::Harvest::CkanPackage
   ## resource apis
 
   def resource_show(id)
-    result = open(resource_show_url(id), read_timeout: 20).read
+    result = open(resource_show_url(id), read_timeout: 10).read
     result = ::JSON.parse(result)
     validate_result("resource_show", result)
     result["result"]
@@ -361,14 +361,14 @@ class Opendata::Harvest::CkanPackage
   ## group apis
 
   def group_list
-    result = open(group_list_url, read_timeout: 20).read
+    result = open(group_list_url, read_timeout: 10).read
     result = ::JSON.parse(result)
     validate_result("group_list", result)
     result["result"]
   end
 
   def group_show(id)
-    result = open(group_show_url(id), read_timeout: 20).read
+    result = open(group_show_url(id), read_timeout: 10).read
     result = ::JSON.parse(result)
     validate_result("group_show", result)
     result["result"]
@@ -415,14 +415,14 @@ class Opendata::Harvest::CkanPackage
   ## organization
 
   def organization_list
-    result = open(organization_list_url, read_timeout: 20).read
+    result = open(organization_list_url, read_timeout: 10).read
     result = ::JSON.parse(result)
     validate_result("organization_list", result)
     result["result"]
   end
 
   def organization_show(id)
-    result = open(organization_show_url(id), read_timeout: 20).read
+    result = open(organization_show_url(id), read_timeout: 10).read
     result = ::JSON.parse(result)
     validate_result("organization_show", result)
     result["result"]

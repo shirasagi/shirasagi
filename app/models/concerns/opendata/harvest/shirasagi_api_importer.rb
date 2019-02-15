@@ -102,12 +102,13 @@ module Opendata::Harvest::ShirasagiApiImporter
     dataset.uuid = attributes["uuid"]
     dataset.name = attributes["name"]
     dataset.text = attributes["text"]
+    dataset.update_plan = attributes["update_plan"]
     dataset.contact_charge = attributes["author"] if attributes["author"].present?
     dataset.group_ids = group_ids
 
     dataset.updated = Time.zone.parse(attributes["updated"])
     dataset.created = Time.zone.parse(attributes["created"])
-    dataset.released = dataset.updated
+    dataset.released = Time.zone.parse(attributes["released"])
 
     dataset.harvest_importer = self
     dataset.harvest_host = source_host
@@ -182,6 +183,7 @@ module Opendata::Harvest::ShirasagiApiImporter
     resource.format = format
 
     license = get_license_from_uid(attributes.dig("license", "uid"))
+    license ||= get_license_from_name(attributes.dig("license", "name"))
     put_log("could not found license #{attributes.dig("license", "uid")}") if license.nil?
     resource.license = license
 
