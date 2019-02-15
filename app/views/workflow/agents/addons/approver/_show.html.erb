@@ -68,7 +68,7 @@
       <% level = workflow_circulation[:level] %>
       <% if user_id == @cur_user.id && state == "unseen" %>
         <section class="mod-workflow-approve">
-          <%= render "ss/crud/addon", addon: { head: "#{t("workflow.circulation_step")}#{@model.tt(:circulation_step)}" } do %>
+          <%= render "ss/crud/addon", addon: { head: "#{t("workflow.circulation_step")}#{@model.tt(:circulation_step)}".html_safe } do %>
             <%= text_area :remand, :comment, value: "" %>
             <% if @item.workflow_circulation_attachment_enabled_at?(level) %>
               <div class="upload">
