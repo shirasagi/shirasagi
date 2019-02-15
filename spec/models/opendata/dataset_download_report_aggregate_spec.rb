@@ -167,7 +167,8 @@ describe Opendata::DatasetDownloadReport::Aggregate, dbscope: :example do
 
       it do
         file_path = "#{Rails.root}/spec/fixtures/opendata/dataset_download_report/year.csv"
-        expected_csv = File.read(file_path)
+        expected_csv = File.binread(file_path)
+        expected_csv.force_encoding("SJIS")
         is_expected.to eq expected_csv
       end
     end
@@ -213,7 +214,8 @@ describe Opendata::DatasetDownloadReport::Aggregate, dbscope: :example do
 
       it do
         file_path = "#{Rails.root}/spec/fixtures/opendata/dataset_download_report/month.csv"
-        expected_csv = File.read(file_path)
+        expected_csv = File.binread(file_path)
+        expected_csv.force_encoding("SJIS")
         is_expected.to eq expected_csv
       end
     end
@@ -261,7 +263,8 @@ describe Opendata::DatasetDownloadReport::Aggregate, dbscope: :example do
 
       it do
         file_path = "#{Rails.root}/spec/fixtures/opendata/dataset_download_report/day.csv"
-        expected_csv = File.read(file_path)
+        expected_csv = File.binread(file_path)
+        expected_csv.force_encoding("SJIS")
         is_expected.to eq expected_csv
       end
     end
