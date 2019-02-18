@@ -72,6 +72,17 @@ class Workflow::PagesController < ApplicationController
     message
   end
 
+  def create_success_response
+    json = { workflow_state: @item.workflow_state }
+
+    redirect = json[:redirect] = {}
+    redirect[:reload] = params[:id].to_i == @item.id
+    redirect[:show] = @item.private_show_path
+    redirect[:url] = @item.url
+
+    json
+  end
+
   public
 
   def request_update
@@ -98,7 +109,7 @@ class Workflow::PagesController < ApplicationController
 
     if @item.save
       request_approval
-      render json: { workflow_state: @item.workflow_state }
+      render json: create_success_response
     else
       render json: @item.errors.full_messages, status: :unprocessable_entity
     end
@@ -128,7 +139,7 @@ class Workflow::PagesController < ApplicationController
 
     if @item.save
       request_approval
-      render json: { workflow_state: @item.workflow_state }
+      render json: create_success_response
     else
       render json: @item.errors.full_messages, status: :unprocessable_entity
     end
@@ -172,6 +183,14 @@ class Workflow::PagesController < ApplicationController
       return
     end
 
+    merged = false
+    if @item.workflow_state == @model::WORKFLOW_STATE_APPROVE && @item.try(:branch?) && @item.state == "public"
+      save = @item.master
+      @item.destroy
+      @item = save
+      merged = true
+    end
+
     current_level = @item.workflow_current_level
     if save_level != current_level
       # escalate workflow
@@ -180,18 +199,15 @@ class Workflow::PagesController < ApplicationController
 
     if @item.workflow_state == @model::WORKFLOW_STATE_APPROVE
       # finished workflow
-      url = params[:url].to_s
-      url.sub!(/#{@item.id}$/, @item.master.id.to_s) if @item.try(:branch?) && @item.state == "public"
+      url = merged ? @item.private_show_path : params[:url].to_s
       Workflow::Mailer.send_approve_mails(
         f_uid: @cur_user._id, t_uids: [ @item.workflow_user_id ],
         site: @cur_site, page: @item,
         url: url, comment: params[:remand_comment]
       )
-
-      @item.delete if @item.try(:branch?) && @item.state == "public"
     end
 
-    render json: { workflow_state: @item.workflow_state }
+    render json: create_success_response
   end
 
   alias pull_up_update approve_update
@@ -228,7 +244,7 @@ class Workflow::PagesController < ApplicationController
         url: params[:url], comment: params[:remand_comment]
       )
     end
-    render json: { workflow_state: @item.workflow_state }
+    render json: create_success_response
   end
 
   def request_cancel

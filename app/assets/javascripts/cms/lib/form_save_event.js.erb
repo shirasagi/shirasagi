@@ -1,0 +1,19 @@
+this.Form_Save_Event = (function () {
+  function Form_Save_Event() {
+  }
+
+  Form_Save_Event.render = function () {
+    return document.onkeydown = function (e) {
+      if (event.ctrlKey || event.metaKey) {
+        if (event.keyCode === 83) {
+          event.keyCode = 0;
+          $("#" + Form_Preview.form_id).submit();
+          return false;
+        }
+      }
+    };
+  };
+
+  return Form_Save_Event;
+
+})();

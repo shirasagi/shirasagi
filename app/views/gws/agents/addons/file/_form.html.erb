@@ -19,7 +19,7 @@ window.deleteContent = function(id) {
     }
   });
 };
-var tempFile = new SS_Addon_TempFile($(".upload-drop-area"), <%= @cur_user.id %>);
+var tempFile = new SS_Addon_TempFile(".upload-drop-area", <%= @cur_user.id %>);
 <% end %>
 
 <div class="see gws-addon-file">

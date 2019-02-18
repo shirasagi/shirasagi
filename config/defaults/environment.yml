@@ -37,6 +37,7 @@ mime_type_map:
 # multibyte filename validation
 #   underscore - replace multibyte characters to underscore
 #   sequence - replace filename to sequence id if filename include multibyte characters
+#   hex - replace filename with fixed length
 multibyte_filename: underscore
 
 # json response datetime_format

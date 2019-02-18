@@ -267,6 +267,7 @@ ja:
         site_id: 組織
       gws/export:
         in_file: ファイル
+        in_csv_encoding: 文字コード
       gws/addon/file:
         file_ids: ファイル
       gws/addon/role:

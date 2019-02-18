@@ -1,0 +1,76 @@
+<%
+  headers = {}
+  @aggregate.ymd_header.each do |header|
+    headers["#{header.year}-#{header.month}"] ||= []
+    headers["#{header.year}-#{header.month}"] << header.day
+  end
+  aggregate = @aggregate.aggregate.map(&:to_h)
+  dataset_ids = {}
+  aggregate_hash = {}
+  aggregate.each do |item|
+    count = item["count"]
+    item = item["_id"]
+    aggregate_hash["#{item["year"]}-#{item["month"]}"] ||= {}
+    aggregate_hash["#{item["year"]}-#{item["month"]}"]["#{item["dataset_id"]}-#{item["resource_id"]}"] ||= 0
+    aggregate_hash["#{item["year"]}-#{item["month"]}"]["#{item["dataset_id"]}-#{item["resource_id"]}"] += count
+    dataset_ids["#{item["year"]}-#{item["month"]}"] ||= []
+    dataset_ids["#{item["year"]}-#{item["month"]}"] << item["dataset_id"]
+  end
+  datasets = {}
+  @aggregate.datasets.in(id: dataset_ids.values.flatten).each do |dataset|
+    datasets[dataset.id] = dataset
+  end
+%>
+
+<div class="index">
+  <% headers.each do |ym, days| %>
+
+    <% if aggregate_hash[ym].present? %>
+
+      <% year, month = ym.split("-") %>
+      <div class="list-head"><%= "#{year}年 #{month}月" %></div>
+      <div class="reports-table">
+        <table class="index">
+          <thead>
+            <tr>
+              <th colspan="100%"><%= t("opendata.download_reports.dataset_data") %></th>
+            </tr>
+          </thead>
+          <tbody>
+            <%
+              ym_dataset_ids = dataset_ids[ym].uniq
+              ym_dataset_ids.each do |id|
+                dataset = datasets[id]
+            %>
+              <tr>
+                <td colspan="100%"><%= dataset.name %></td>
+              </tr>
+              <% dataset.resources.each do |resource| %>
+                <tr>
+                  <td colspan="7">
+                    <span class="resource-name"><%= resource.name %></span>
+                  </td>
+                  <% if aggregate_hash[ym] %>
+                    <th><%= aggregate_hash[ym]["#{dataset.id}-#{resource.id}"].to_i %></th>
+                  <% else %>
+                    <th><%= 0 %></th>
+                  <% end %>
+                </tr>
+              <% end %>
+            <% end %>
+          </tbody>
+        </table>
+      </div>
+
+    <% else %>
+
+      <% year, month = ym.split("-") %>
+      <div class="list-head"><%= "#{year}年 #{month}月" %></div>
+      <div class="reports-table">
+        <p class="not-exists"><%= t("opendata.reports.not_exists_reports") %></p>
+      </div>
+
+    <% end %>
+
+  <% end %>
+</div>

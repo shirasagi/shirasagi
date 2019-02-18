@@ -1,4 +1,19 @@
 module Map::MapHelper
+  def default_map_api(opts = {})
+    map_setting = opts[:site].map_setting rescue {}
+    opts[:api] || map_setting[:api] || SS.config.map.api
+  end
+
+  def include_map_api(opts = {})
+    api = default_map_api(opts)
+
+    if api == "openlayers"
+      include_openlayers_api
+    else
+      include_googlemaps_api(opts)
+    end
+  end
+
   def include_googlemaps_api(opts = {})
     map_setting = opts[:site].map_setting rescue {}
 
@@ -19,9 +34,7 @@ module Map::MapHelper
   end
 
   def render_map(selector, opts = {})
-    map_setting = opts[:site].map_setting rescue {}
-
-    api = opts[:api] || map_setting[:api] || SS.config.map.api
+    api = default_map_api(opts)
     markers = opts[:markers]
     map_options = opts[:map] || {}
 
@@ -49,9 +62,7 @@ module Map::MapHelper
   end
 
   def render_map_form(selector, opts = {})
-    map_setting = opts[:site].map_setting rescue {}
-
-    api = opts[:api] || map_setting[:api] || SS.config.map.api
+    api = default_map_api(opts)
     center = opts[:center] || SS.config.map.map_center
     max_point_form = opts[:max_point_form] || SS.config.map.map_max_point_form
     map_options = opts[:map] || {}
@@ -65,32 +76,33 @@ module Map::MapHelper
       map_options[:layers] = SS.config.map.layers
       map_options[:max_point_form] = max_point_form if max_point_form.present?
 
+      # 初回アドオン表示後に地図を描画しないと、クリックした際にマーカーがずれてしまう
       s = []
-      s << 'var canvas = $("' + selector + '")[0];'
-      s << "var opts = #{map_options.to_json};"
-      s << 'var map = new Openlayers_Map_Form(canvas, opts);'
-      s << 'SS_AddonTabs.hide(".mod-map");'
+      s << 'SS_AddonTabs.findAddonView(".mod-map").one("ss:addonShown", function() {'
+      s << '  var canvas = $("' + selector + '")[0];'
+      s << "  var opts = #{map_options.to_json};"
+      s << '  var map = new Openlayers_Map_Form(canvas, opts);'
+      s << '});'
     else
       include_googlemaps_api(opts)
 
       s = []
-      s << 'SS_AddonTabs.hide(".mod-map");'
-      s << 'Googlemaps_Map.center = ' + center.to_json + ';' if center.present?
-      s << 'Map_Form.maxPointForm = ' + max_point_form.to_json + ';' if max_point_form.present?
+      s << "Googlemaps_Map.center = #{center.to_json};" if center.present?
+      s << "Map_Form.maxPointForm = #{max_point_form.to_json};" if max_point_form.present?
       s << 'Googlemaps_Map.setForm(Map_Form);'
-      s << "Googlemaps_Map.load(\"" + selector + "\", #{map_options.to_json});"
+      s << "Googlemaps_Map.load(#{selector.to_json}, #{map_options.to_json});"
       s << 'Googlemaps_Map.renderMarkers();'
       s << 'Googlemaps_Map.renderEvents();'
-      s << 'SS_AddonTabs.head(".mod-map").click(function() { Googlemaps_Map.resize(); });'
+      s << 'SS_AddonTabs.findAddonView(".mod-map").on("ss:addonShown", function() {'
+      s << '  Googlemaps_Map.resize();'
+      s << '});'
     end
 
     jquery { s.join("\n").html_safe }
   end
 
   def render_facility_search_map(selector, opts = {})
-    map_setting = opts[:site].map_setting rescue {}
-
-    api = opts[:api] || map_setting[:api] || SS.config.map.api
+    api = default_map_api(opts)
     center = opts[:center] || SS.config.map.map_center
     markers = opts[:markers]
 
@@ -119,9 +131,7 @@ module Map::MapHelper
   end
 
   def render_member_photo_form_map(selector, opts = {})
-    map_setting = opts[:site].map_setting rescue {}
-
-    api = opts[:api] || map_setting[:api] || SS.config.map.api
+    api = default_map_api(opts)
     center = opts[:center] || SS.config.map.map_center
     map_options = opts[:map] || {}
 

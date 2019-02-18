@@ -5,6 +5,7 @@ module Webmail::BaseFilter
 
   included do
     self.user_class = Webmail::User
+    helper Webmail::EditorHelper
     helper Webmail::MailHelper
     navi_view "webmail/main/navi"
     before_action :set_webmail_mode

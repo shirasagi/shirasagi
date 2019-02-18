@@ -16,10 +16,14 @@ class Opendata::Dataset::ExportDatasetsController < ApplicationController
   public
 
   def index
+    raise "403" unless Opendata::Dataset.allowed?(:read, @cur_user, site: @cur_site, node: @cur_node)
+
     @item = @model.new
   end
 
   def export
+    raise "403" unless Opendata::Dataset.allowed?(:read, @cur_user, site: @cur_site, node: @cur_node)
+
     root_url = params.dig(:item, :root_url)
 
     Opendata::Dataset::ExportJob.bind(site_id: @cur_site.id, user_id: @cur_user, node_id: @cur_node.id).perform_now(root_url: root_url)

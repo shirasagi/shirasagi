@@ -4,12 +4,9 @@
 <%= error_messages_for :item %>
 
 <div class="addon-views">
-  <div class="addon-view" id="addon-basic">
-    <% if addons.size > 0 %><header class="addon-head"><h2><%= t "ss.basic_info"%></h2></header><% end %>
-    <div class="addon-body">
-      <%= render file: '_form', locals: { f: f } %>
-    </div>
-  </div>
+  <%= render "ss/crud/addon", addon: { id: "addon-basic", head: t("ss.basic_info") } do %>
+    <%= render file: '_form', locals: { f: f } %>
+  <% end %>
   <%= render file: "_addons_form", locals: { f: f, addons: addons } if addons.size > 0 %>
 </div>
 

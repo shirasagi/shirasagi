@@ -1,0 +1,27 @@
+#ajax-box.ss-ajax-in-iframe-content {
+  height: 100%;
+  margin: 0;
+  padding: 10px;
+
+  #item-form {
+    height: 100%;
+  }
+
+  .column-value {
+    .inplace-checkers {
+      margin-top: 5px;
+      #errorSyntaxChecker {
+        margin-top: 5px;
+      }
+    }
+  }
+
+  .column-value-body {
+    height: 100%;
+
+    textarea {
+      height: 15em;
+      resize: vertical;
+    }
+  }
+}

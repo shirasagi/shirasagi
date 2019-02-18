@@ -107,6 +107,8 @@ module Member::Node
     include Cms::Addon::GroupPermission
     include History::Addon::Backup
 
+    self.use_liquid = false
+
     default_scope ->{ where(route: "member/blog") }
 
     def sort_hash
@@ -127,6 +129,8 @@ module Member::Node
     include Cms::Addon::PageList
     include Cms::Addon::GroupPermission
 
+    self.use_liquid = false
+
     set_permission_name "member_blogs"
 
     default_scope ->{ where(route: "member/blog_page") }
@@ -146,6 +150,8 @@ module Member::Node
     include Cms::Addon::Release
     include Cms::Addon::GroupPermission
     include History::Addon::Backup
+
+    self.use_liquid = false
 
     default_scope ->{ where(route: "member/blog_page_location") }
 
@@ -181,6 +187,8 @@ module Member::Node
     include Cms::Addon::GroupPermission
     include History::Addon::Backup
 
+    self.use_liquid = false
+
     default_scope ->{ where(route: "member/photo") }
   end
 
@@ -192,6 +200,8 @@ module Member::Node
     include Cms::Addon::Release
     include Cms::Addon::GroupPermission
     include History::Addon::Backup
+
+    self.use_liquid = false
 
     default_scope ->{ where(route: "member/photo_search") }
   end
@@ -205,6 +215,8 @@ module Member::Node
     include Cms::Addon::GroupPermission
     include History::Addon::Backup
 
+    self.use_liquid = false
+
     default_scope ->{ where(route: "member/photo_spot") }
   end
 
@@ -216,6 +228,8 @@ module Member::Node
     include Cms::Addon::Release
     include Cms::Addon::GroupPermission
     include History::Addon::Backup
+
+    self.use_liquid = false
 
     default_scope ->{ where(route: "member/photo_category") }
 
@@ -244,6 +258,8 @@ module Member::Node
     include Cms::Addon::Release
     include Cms::Addon::GroupPermission
     include History::Addon::Backup
+
+    self.use_liquid = false
 
     default_scope ->{ where(route: "member/photo_location") }
 

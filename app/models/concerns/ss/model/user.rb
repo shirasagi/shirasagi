@@ -256,9 +256,11 @@ module SS::Model::User
     restriction == 'api_only'
   end
 
-  def organization_id_options(site = nil)
+  def organization_id_options(sites = [])
     list = [organization]
-    list << site if site.is_a?(Gws::Group)
+    sites.each do |site|
+      list << site if site.is_a?(Gws::Group)
+    end
     list.compact.uniq(&:id).map { |c| [c.name, c.id] }
   end
 

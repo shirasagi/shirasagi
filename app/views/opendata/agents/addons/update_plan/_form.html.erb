@@ -1,0 +1,14 @@
+<dl class="see mod-opendata_update-plan">
+  <dt><%= @model.t :update_plan %><%= @model.tt :update_plan %></dt>
+  <dd><%= f.text_field :update_plan %></dd>
+
+  <dt><%= @model.t :update_plan_date %><%= @model.tt :update_plan_date %></dt>
+  <dd>
+    <%= f.text_field :update_plan_date, value: tryb{@item.update_plan_date.strftime("%Y/%m/%d")}, class: "date js-date" %>
+    <%= "-" %>
+    <%= f.select :update_plan_unit, @item.update_plan_unit_options, include_blank: true %>
+  </dd>
+
+  <dt><%= @model.t :update_plan_mail_state %><%= @model.tt :update_plan_mail_state %></dt>
+  <dd><%= f.select :update_plan_mail_state, @item.update_plan_mail_state_options %></dd>
+</dl>

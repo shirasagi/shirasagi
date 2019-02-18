@@ -467,11 +467,6 @@ this.Webmail_Mail_Detail = (function () {
         return false;
       });
     }
-    $(".print-mail").on("click", function () {
-      $('body').addClass('webmail-print');
-      window.print();
-      return false;
-    });
     $(".update-mail").on("click", function () {
       $('.dropdown-menu').removeClass('active');
       $.ajax({

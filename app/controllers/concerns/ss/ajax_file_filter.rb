@@ -14,22 +14,7 @@ module SS::AjaxFileFilter
 
   def select_with_clone
     set_item
-
-    item = SS::TempFile.new
-
-    @item.attributes.each do |key, val|
-      next if key =~ /^(id|file_id)$/
-      next if key =~ /^(group_ids|permission_level|category_ids)$/
-      item.send("#{key}=", val) unless item.send(key)
-    end
-
-    item.in_file = @item.uploaded_file
-    item.state = "public"
-    item.name = @item.name
-    item.unnormalize = true if params[:unnormalize].present?
-    item.save
-    item.in_file.delete
-    @item = item
+    @item = @item.copy(unnormalize: params[:unnormalize].to_s.presence)
 
     render file: :select, layout: !request.xhr?
   end

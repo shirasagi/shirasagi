@@ -12,6 +12,12 @@ module Cms::Addon
 
       after_generate_file :generate_thumb_public_file, if: ->{ serve_static_relation_files? } if respond_to?(:after_generate_file)
       after_remove_file :remove_thumb_public_file if respond_to?(:after_remove_file)
+
+      if respond_to?(:liquidize)
+        liquidize do
+          export :thumb
+        end
+      end
     end
 
     private

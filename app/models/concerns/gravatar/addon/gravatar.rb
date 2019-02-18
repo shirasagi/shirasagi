@@ -11,12 +11,30 @@ module Gravatar::Addon
       validates :gravatar_image_view_kind, inclusion: { in: %w(disable cms_user_email special_email), allow_blank: true }
       validates :gravatar_email, email: true
       validates :gravatar_email, presence: true, if: ->{ gravatar_image_view_kind == 'special_email' }
+
+      if respond_to? :liquidize
+        liquidize do
+          export as: :gravatar_disabled do
+            SS.config.gravatar.disable
+          end
+          export as: :gravatar_enabled do
+            !SS.config.gravatar.disable
+          end
+          export as: :gravatar_image_size do
+            SS.config.gravatar.image_size
+          end
+          export as: :gravatar_default_image_path do
+            SS.config.gravatar.default_image_path
+          end
+          export :gravatar_image_view_kind
+          export :gravatar_email
+          export :gravatar_screen_name
+        end
+      end
     end
 
     def email_for_gravatar
-      Rails.logger.debug("#email_for_gravatar")
       view_kind = gravatar_image_view_kind.presence || SS.config.gravatar.view_kind
-      Rails.logger.debug("view_kind=#{view_kind}")
       case view_kind
       when 'disable'
         nil

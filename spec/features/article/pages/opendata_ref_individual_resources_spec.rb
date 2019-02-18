@@ -53,10 +53,12 @@ describe "article_pages", dbscope: :example, tmpdir: true, js: true, fragile: tr
         #
         visit article_pages_path(site, article_node)
         click_on article_page.name
+        wait_for_ajax
         find('#addon-cms-agents-addons-opendata_ref-resource .addon-head h2').click
 
         within "div.od-resource-file[data-file-id='#{file2.id}']" do
           expect(page).to have_css('span.od-resource-file-save-status', text: '')
+          expect(page).to have_content(file2.name)
           select I18n.t('cms.options.opendata_resource.existance'), from: "item[opendata_resources][#{file2.id}][state]"
           # click_on I18n.t('cms.apis.opendata_ref.datasets.index')
           find('a', text: I18n.t('cms.apis.opendata_ref.datasets.index')).click
@@ -198,10 +200,12 @@ describe "article_pages", dbscope: :example, tmpdir: true, js: true, fragile: tr
         #
         visit article_pages_path(site, article_node)
         click_on article_page.name
+        wait_for_ajax
         find('#addon-cms-agents-addons-opendata_ref-resource .addon-head h2').click
 
         within "div.od-resource-file[data-file-id='#{file2.id}']" do
           expect(page).to have_css('span.od-resource-file-save-status', text: '')
+          expect(page).to have_content(file2.name)
           select I18n.t('cms.options.opendata_resource.existance'), from: "item[opendata_resources][#{file2.id}][state]"
           # click_on I18n.t('cms.apis.opendata_ref.datasets.index')
           find('a', text: I18n.t('cms.apis.opendata_ref.datasets.index')).click

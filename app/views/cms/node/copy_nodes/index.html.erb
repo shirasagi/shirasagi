@@ -2,29 +2,23 @@
 <%= error_messages_for :item %>
 
 <div class="addon-views">
-  <div class="addon-view" id="addon-basic">
-    <div class="addon-head toggle-head"><h2><%= t "cms.copy_nodes.from" %></h2></div>
-    <div class="addon-body toggle-body">
-      <dl class="see">
-        <dt><%= t "mongoid.attributes.cms/content.name" %></dt>
-        <dd><%= tryb { @cur_node.name }%></dd>
-        <dt><%= t "mongoid.attributes.cms/model/node.filename" %></dt>
-        <dd><%= tryb { @cur_node.basename }%> <%= tryb { "(#{@cur_node.filename})" } if @cur_node.depth != 1 %></dd>
-      </dl>
-    </div>
-  </div>
+  <%= render "ss/crud/addon", addon: { id: "addon-basic", head: t("cms.copy_nodes.from"), toggle: true } do %>
+    <dl class="see">
+      <dt><%= t "mongoid.attributes.cms/content.name" %></dt>
+      <dd><%= tryb { @cur_node.name }%></dd>
+      <dt><%= t "mongoid.attributes.cms/model/node.filename" %></dt>
+      <dd><%= tryb { @cur_node.basename }%> <%= tryb { "(#{@cur_node.filename})" } if @cur_node.depth != 1 %></dd>
+    </dl>
+  <% end %>
 
-  <div class="addon-view" id="addon-basic">
-    <div class="addon-head toggle-head"><h2><%= t "cms.copy_nodes.to" %></h2></div>
-    <div class="addon-body toggle-body">
-      <dl class="see">
-        <dt><%= t "cms.copy_nodes.target_node_name" %><%= tt "cms/model/node.foldername" %></dt>
-        <dd><%= f.text_field :target_node_name, class: :filename %></dd>
-        <dt><%= t "cms.copy_nodes.job_history" %></dt>
-        <dd><%= link_to t("cms.copy_nodes.link_to_job_history"), job_cms_logs_path %></dd>
-      </dl>
-    </div>
-  </div>
+  <%= render "ss/crud/addon", addon: { id: "addon-basic", head: t("cms.copy_nodes.to"), toggle: true } do %>
+    <dl class="see">
+      <dt><%= t "cms.copy_nodes.target_node_name" %><%= tt "cms/model/node.foldername" %></dt>
+      <dd><%= f.text_field :target_node_name, class: :filename %></dd>
+      <dt><%= t "cms.copy_nodes.job_history" %></dt>
+      <dd><%= link_to t("cms.copy_nodes.link_to_job_history"), job_cms_logs_path %></dd>
+    </dl>
+  <% end %>
 </div>
 
 <footer class="send">

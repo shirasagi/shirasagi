@@ -1,0 +1,178 @@
+this.Form_Alert = (function () {
+  function Form_Alert() {};
+
+  Cms_Form.alert = Form_Alert;
+
+  Form_Alert.alerts = {};
+
+  Form_Alert.validations = [];
+
+  Form_Alert.beforeSaves = [];
+
+  Form_Alert.render = function () {
+    $("input:submit").on("click.form_alert", function (e) {
+      var submit = this;
+      var form = $(submit).closest("form");
+
+      var resolved = function(html) {
+        if (!Form_Alert.validate(form, submit, { html: html })) {
+          Form_Alert.showAlert(form, submit);
+          return;
+        }
+
+        $(submit).off(".form_alert");
+        $(submit).trigger("click");
+      };
+
+      var rejected = function(xhr, status, error) {
+        alert(error);
+      };
+
+      Cms_Form.getHtml(resolved, rejected);
+
+      e.preventDefault();
+      return false;
+    });
+  };
+
+  Form_Alert.validate = function (form, submit, opts) {
+    Form_Alert.alerts = {};
+    $.each(Form_Alert.validations, function () {
+      this(form, submit, opts);
+    });
+
+    return $.isEmptyObject(Form_Alert.alerts);
+  };
+
+  Form_Alert.addValidation = function (validate) {
+    return Form_Alert.validations.push(validate);
+  };
+
+  Form_Alert.runBeforeSave = function (form, submit) {
+    return $.each(Form_Alert.beforeSaves, function () {
+      return this(form, submit);
+    });
+  };
+
+  Form_Alert.showAlert = function (form, submit) {
+    var div = $('<div id="alertExplanation" class="errorExplanation">');
+    div.append("<h2><%= I18n.t('cms.alert') %></h2>");
+    var ref = Form_Alert.alerts;
+    for (var addon in ref) {
+      var fields = ref[addon];
+      div.append('<p>' + addon + '</p>');
+      var ul = $("<ul>").appendTo(div);
+      var i, j, len;
+      for (i = j = 0, len = fields.length; j < len; i = ++j) {
+        var field = fields[i];
+        if (field["msg"]) {
+          ul.append('<li>' + field["msg"] + '</li>');
+        }
+      }
+    }
+    // caution: below IE8, you must use document.createElement() method to create <footer>
+    var footer = $(document.createElement("footer")).addClass('send');
+    footer.append('<button name="button" type="button" class="btn-primary save"><%= I18n.t("ss.buttons.ignore_alert") %></button>');
+    footer.append('<button name="button" type="button" class="btn-default cancel"><%= I18n.t("ss.buttons.cancel") %></button>');
+    $.colorbox({
+      html: div.get(0).outerHTML + footer.get(0).outerHTML,
+      maxHeight: "80%",
+      fixed: true
+    });
+    $("#cboxLoadedContent").find(".save").on("click", function () {
+      Form_Alert.runBeforeSave(form, submit);
+      $(submit).off(".form_alert");
+      return $(submit).trigger("click");
+    });
+    $("#cboxLoadedContent").find(".cancel").on("click", function (e) {
+      $.colorbox.close();
+      return false;
+    });
+  };
+
+  Form_Alert.addBeforeSave = function (callback) {
+    return Form_Alert.beforeSaves.push(callback);
+  };
+
+  Form_Alert.validateSyntaxCheck = function (form, submit, opts) {
+    Syntax_Checker.asyncCheck();
+    $.each(Syntax_Checker.errors, function(id, error) {
+      Form_Alert.add("<%= I18n.t('cms.syntax_check') %>", error["ele"], error["msg"]);
+    });
+  };
+
+  Form_Alert.presence = function (form, submit) {
+    return $(form).find("input.presence,textarea.presence").each(function () {
+      var addonName, fieldName;
+      if ($(this).val() === "") {
+        $(this).closest("dl").show();
+        addonName = $(this).closest(".addon-view").find("header").text();
+        fieldName = Form_Alert.justText($(this).closest("dd").prev("dt"));
+        return Form_Alert.add(addonName, this, fieldName + "<%= I18n.t('errors.messages.blank') %>");
+      }
+    });
+  };
+
+  Form_Alert.clonedName = function (form, submit) {
+    var addonName, fieldName, name;
+    name = $(form).find("#addon-basic #item_name");
+    if ($(submit).hasClass("publish_save") && /^\[<%= I18n.t('workflow.cloned_name_prefix') %>\]/.test($(name).val())) {
+      addonName = $(name).closest(".addon-view").find("header").text();
+      fieldName = Form_Alert.justText($(name).closest("dd").prev("dt"));
+      return Form_Alert.add(addonName, name, "<%= I18n.t('errors.messages.cloned_name') %>");
+    }
+  };
+
+  Form_Alert.closeConfirmation = function (form, submit) {
+    var addonName, msg;
+    if ($(submit).attr("data-close-confirmation")) {
+      addonName = '<%= I18n.t("cms.confirm.close") %>';
+      msg = null;
+      if ($(submit).attr("data-contain-links-path")) {
+        msg = '<a href="' + $(submit).attr("data-contain-links-path") + '" target="_blank">' + '<%= I18n.t("cms.confirm.check_contains_urls") %>' + '</a>';
+      }
+      return Form_Alert.add(addonName, null, msg);
+    }
+  };
+
+  Form_Alert.add = function (addon, ele, msg) {
+    var base;
+    (base = Form_Alert.alerts)[addon] || (base[addon] = []);
+    return Form_Alert.alerts[addon].push({
+      "ele": ele,
+      "msg": msg
+    });
+  };
+
+  Form_Alert.justText = function (ele) {
+    return $(ele).clone().children().remove().end().text();
+  };
+
+  Form_Alert.validateReplaceWord = function (form, submit) {
+    var addonIds, excludes, k, results, v, words;
+    words = Syntax_Checker.config["replace_words"];
+    if (!words) {
+      return;
+    }
+    addonIds = ["#addon-basic", "#addon-cms-agents-addons-meta", "#addon-event-agents-addons-date", "#addon-map-agents-addons-page"];
+    excludes = ['[name="item[basename]"]', "location-search.keyword"];
+    results = [];
+    for (k in words) {
+      v = words[k];
+      results.push($(form).find(addonIds.join(",")).find("input,textarea").not(excludes.join(",")).each(function () {
+        var addonName, fieldName, val;
+        val = $(this).val();
+        if (val && !$.isEmptyObject(val.match(RegExp("" + k.replace(/([.?*+$\[\]\/\\(){}|\-])/g, '\\$1'), "g")))) {
+          $(this).closest("dl").show();
+          addonName = $(this).closest(".addon-view").find(".addon-head").text();
+          fieldName = Form_Alert.justText($(this).closest("dd").prev("dt"));
+          return Form_Alert.add(addonName, this, fieldName + "<%= I18n.t('errors.messages.replace_word_validation') %>" + ("「" + k + "」→「" + v + "」"));
+        }
+      }));
+    }
+    return results;
+  };
+
+  return Form_Alert;
+
+})();

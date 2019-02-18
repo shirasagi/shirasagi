@@ -69,7 +69,7 @@ class Webmail::MailPart
         charset = part.param ? part.param['CHARSET'].presence : nil
         charset = 'CP50220' if charset.try(:upcase) == 'ISO-2022-JP'
 
-        data = data.encode('UTF-8', charset) if charset
+        data = data.encode('UTF-8', charset, invalid: :replace, undef: :replace) if charset
       end
       if part.subtype == 'HTML' && options && options[:html_safe]
         data = data.html_safe

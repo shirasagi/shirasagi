@@ -1,0 +1,20 @@
+<%
+  controller.javascript "/assets/js/jquery.colorbox.js"
+  controller.stylesheet "/assets/css/colorbox/colorbox.css"
+%>
+
+<%= jquery do %>
+var opts = { "center": <%== SS.config.map.map_center.reverse.to_json %> };
+Openlayers_Dataset_Map.render("#map-canvas", opts);
+<% end %>
+
+<div class="dataset-search">
+  <nav class="settings">
+    <%= link_to t("opendata.links.dataset_map_search_datasets"), "#{@cur_node.url}search.html", id: "ajax-search" %>
+  </nav>
+  <section class="selected-dataset"></section>
+  <div class="datasets-limit"><%= t("opendata.links.dataset_map_datasets_limit") %></div>
+</div>
+<div class="dataset-map">
+  <div id="map-canvas" style="height: 600px;"></div>
+</div>

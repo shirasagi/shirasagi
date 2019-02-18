@@ -7,9 +7,8 @@ SS::Application.routes.draw do
   end
 
   concern :export do
-    get :download, on: :collection
-    get :import, on: :collection
-    post :import, on: :collection
+    match :download, on: :collection, via: %i[get post]
+    match :import, on: :collection, via: %i[get post]
   end
 
   gws "staff_record" do

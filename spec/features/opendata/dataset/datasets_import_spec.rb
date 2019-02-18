@@ -4,7 +4,6 @@ describe "opendata_datasets_import", type: :feature, dbscope: :example, js: true
   let(:site) { cms_site }
   let(:node) { create_once :opendata_node_dataset, name: "opendata_dataset" }
   let!(:node_search) { create_once :opendata_node_search_dataset }
-  let(:index_path) { opendata_datasets_path site, node }
   let(:import_path) { opendata_import_datasets_path site, node }
 
   context "with auth" do
@@ -12,9 +11,7 @@ describe "opendata_datasets_import", type: :feature, dbscope: :example, js: true
     describe "#import_zip" do
 
       it do
-        visit index_path
-        click_on I18n.t("ss.links.import")
-        expect(current_path).to eq import_path
+        visit import_path
 
         within "form#item-form" do
           attach_file "item[in_file]", "#{Rails.root}/spec/fixtures/opendata/dataset_import.zip"

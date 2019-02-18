@@ -1,0 +1,20 @@
+<% links ||= [] %>
+<% paper_width = @portrait == "horizontal" ? "310mm" : "220mm" %>
+<div class="no-print" style="position: relative; width: <%= paper_width %>;">
+  <% if links.present? %>
+    <% links.each do |name, url| %>
+      <%= link_to name, url %>
+    <% end %>
+  <% end %>
+
+  <span style="position: absolute; right: 8px;">
+    <span id="fontsize">
+      文字サイズ
+      <span id="ss-small">小さく</span>
+      <span id="ss-medium">標準</span>
+      <span id="ss-large">大きく</span>
+    </span>
+    |
+    <%= link_to t('ss.links.print'), '#', { id: 'print-to-printer', onclick: "window.print(); return false;" } %>
+  </span>
+</div>

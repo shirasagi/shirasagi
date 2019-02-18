@@ -16,7 +16,8 @@ module Webmail::Mail::Message
     #  headers[:"Disposition-Notification-To"] = Webmail::Converter.extract_address(headers[:from])
     #end
 
-    headers.select { |k, v| v.present? }
+    headers.select! { |_k, v| v.present? }
+    headers
   end
 
   def merge_address_field(array, str)
@@ -99,7 +100,7 @@ module Webmail::Mail::Message
   def reply_body_html(ref, sign = nil)
     if ref.html.present?
       bq = ref.sanitize_html(remove_image: true)
-    else
+    elsif ref.text.present?
       bq = h(decode_jp(ref.text.to_s)).gsub(/\r\n|\n/, '<br />')
     end
 

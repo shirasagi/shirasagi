@@ -1,0 +1,9 @@
+<%
+  @exporter_options = Opendata::Harvest::Exporter.site(@cur_site).map do |exporter|
+    [exporter.name, exporter.id]
+  end
+%>
+<dl class="see mod-ckan-reference">
+  <dt><%= @model.t :exporter_id %><%= @model.tt :exporter_id %></dt>
+  <dd><%= f.select :exporter_id, @exporter_options, include_blank: true %></dd>
+</dl>

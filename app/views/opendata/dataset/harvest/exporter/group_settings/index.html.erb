@@ -1,0 +1,24 @@
+<div class="index">
+  <%= render file: "_list_head" %>
+
+  <ul class="list-items">
+    <% @items.each do |item| %>
+      <li class="list-item">
+        <nav class="tap-menu">
+          <%= link_to t('ss.links.show'), action: :show, id: item.id if item.allowed?(:read, @cur_user, site: @cur_site) %>
+          <%= link_to t('ss.links.edit'), action: :edit, id: item.id if item.allowed?(:edit, @cur_user, site: @cur_site) %>
+          <%= link_to t('ss.links.delete'), action: :delete, id: item.id if item.allowed?(:delete, @cur_user, site: @cur_site) %>
+        </nav>
+
+        <label class="check"><input type="checkbox" name="ids[]" value="<%= item.id %>" /></label>
+        <div class="info">
+          <% title = "#{item.order}. #{item.name} (#{item.ckan_id})" %>
+          <%= link_to title, { action: :show, id: item.id }, class: "title" %>
+        </div>
+      </li>
+    <% end %>
+  </ul>
+</div>
+
+<%= paginate @items if @items.try(:current_page) %>
+

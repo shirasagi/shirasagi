@@ -114,7 +114,7 @@ class Inquiry::Agents::Nodes::FormController < ApplicationController
     query = {}
     if @answer.source_url.present?
       if params[:preview]
-        query[:ref] = view_context.cms_preview_path(site: @cur_site, path: @answer.source_content.filename)
+        query[:ref] = view_context.cms_preview_path(site: @cur_site, path: @answer.source_content.url[1..-1])
       else
         query[:ref] = @answer.source_url
       end

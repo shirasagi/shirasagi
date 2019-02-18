@@ -24,4 +24,20 @@ class Cms::Apis::NodesController < ApplicationController
 
     @model = model
   end
+
+  public
+
+  def index
+    @single = params[:single].present?
+    @multi = !@single
+
+    @items = @model.site(@cur_site).
+      search(params[:s]).
+      order_by(_id: -1).
+      page(params[:page]).per(50)
+
+    if params[:layout] == "iframe"
+      render layout: "ss/ajax_in_iframe"
+    end
+  end
 end

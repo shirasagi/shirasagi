@@ -3,6 +3,7 @@ class Opendata::License
   include SS::Reference::User
   include SS::Reference::Site
   include SS::Relation::File
+  include Opendata::Addon::Harvest::License
   include Cms::Addon::GroupPermission
 
   set_permission_name :opendata_datasets

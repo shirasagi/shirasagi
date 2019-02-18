@@ -1,0 +1,9 @@
+<%
+  addon ||= local_assigns.fetch(:addon, {})
+%>
+<%= code_editor "##{addon[:id]} .html", mode: :html %>
+
+<dl class="see">
+  <dt class="wide"><%= @model.tt :layout %></dt>
+  <dd class="wide"><%= f.text_area :layout, style: "height: 400px", class: "html" %></dd>
+</dl>
