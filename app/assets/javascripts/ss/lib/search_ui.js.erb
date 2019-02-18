@@ -90,13 +90,16 @@ this.SS_SearchUI = (function () {
     var isSameWindow = (window == $el[0].ownerDocument.defaultView)
     if (isSameWindow) {
       $el.find("form.search").on("submit", function (ev) {
+        var $div = $("<span />", { class: "loading" }).html(SS.loading);
+        $el.find("[type=submit]").after($div);
+
         $(this).ajaxSubmit({
           url: $(this).attr("action"),
           success: function (data) {
-            return $("#cboxLoadedContent").html(data);
+            $el.closest("#cboxLoadedContent").html(data);
           },
           error: function (data, status) {
-            return alert("== Error ==");
+            $div.html("== Error ==");
           }
         });
         ev.preventDefault();
@@ -107,13 +110,16 @@ this.SS_SearchUI = (function () {
       self.selectItems($el);
 
       if (isSameWindow) {
-        $(this).ajaxSubmit({
+        $el.find(".pagination").html(SS.loading);
+
+        $.ajax({
           url: $(this).attr("href"),
+          type: "GET",
           success: function (data) {
-            return $("#cboxLoadedContent").html(data);
+            $el.closest("#cboxLoadedContent").html(data);
           },
           error: function (data, status) {
-            return alert("== Error ==");
+            $el.find(".pagination").html("== Error ==");
           }
         });
 
