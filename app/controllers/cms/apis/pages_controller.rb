@@ -19,7 +19,7 @@ class Cms::Apis::PagesController < ApplicationController
       s.statuses = Array(s.statuses).flatten.map(&:to_s).select(&:present?)
       if s.statuses.blank?
         # set default statuses
-        s.statuses = KNOWN_STATUSES
+        s.statuses = KNOWN_STATUSES - %w(closed)
       else
         # sanitize statuses
         s.statuses &= KNOWN_STATUSES
