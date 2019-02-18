@@ -14,7 +14,7 @@
   <%= hidden_field_tag "force", "true" %>
   <footer class="send">
     <%= f.submit t("ss.buttons.unlock_and_edit_forcibly"), class: "btn-primary" %>
-    <%= f.button t("ss.buttons.cancel"), type: :reset, onclick: "location.href='#{url_for(action: :show)}'; return false;" %>
+    <%= f.button t("ss.buttons.cancel"), type: :reset, onclick: "location.href='#{url_for(action: :show)}'; return false;", class: "btn-default" %>
   </footer>
 <% end %>
 <% else %>
