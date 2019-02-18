@@ -39,6 +39,7 @@
       <% end %>
       <th class="name"><%= @model.t :name %></th>
       <th class="filename"><%= @model.t :filename %></th>
+      <th class="state"><%= @model.t :state %></th>
       <th class="updated"><%= @model.t :updated %></th>
     </tr>
   </thead>
@@ -52,6 +53,7 @@
         <% end %>
         <td class="name"><%= link_to item.name, "#", class: @multi ? "select-item" : "select-single-item" %></td>
         <td class="filename"><%= item.filename %></td>
+        <td class="state"><%= colored_state_label(item) %></td>
         <td class="updated"><%= item.updated.strftime("%Y/%m/%d %H:%M") %></td>
       </tr>
     <% end %>
