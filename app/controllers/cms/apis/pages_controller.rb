@@ -49,7 +49,7 @@ class Cms::Apis::PagesController < ApplicationController
     @single = params[:single].present?
     @multi = !@single
 
-    @items = @model.site(@cur_site)
+    @items = @model.site(@cur_site).exists(master_id: false)
     if @selected_node.present?
       @items = @items.where(filename: /^#{::Regexp.escape(@selected_node.filename)}\//)
     end
