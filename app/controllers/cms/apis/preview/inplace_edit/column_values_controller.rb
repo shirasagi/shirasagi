@@ -158,10 +158,7 @@ class Cms::Apis::Preview::InplaceEdit::ColumnValuesController < ApplicationContr
         format.json { head :no_content }
       end
     else
-      respond_to do |format|
-        format.html { render file: :edit, status: :unprocessable_entity }
-        format.json { render json: @item.errors.full_messages, status: :unprocessable_entity }
-      end
+      render json: @item.errors.full_messages, status: :unprocessable_entity
     end
   end
 
@@ -188,7 +185,16 @@ class Cms::Apis::Preview::InplaceEdit::ColumnValuesController < ApplicationContr
     path_params = { path: branch.filename, anchor: "inplace" }
     path_params[:preview_date] = params[:preview_date].to_s if params[:preview_date].present?
     location = cms_preview_path(path_params)
-    render_save_as_branch result, location
+    render_destroy_as_branch result, location
+  end
+
+  def render_destroy_as_branch(result, location = nil)
+    if result && location
+      flash["cms.preview.notice"] = I18n.t("workflow.notice.created_branch_page")
+      render json: { location: location }, status: :ok, content_type: json_content_type
+    else
+      render json: @item.errors.full_messages, status: :unprocessable_entity
+    end
   end
 
   def render_move(result)
@@ -196,10 +202,7 @@ class Cms::Apis::Preview::InplaceEdit::ColumnValuesController < ApplicationContr
       json = Hash[@item.column_values.map { |value| [ value.id, value.order ] }]
       render json: json, status: :ok, content_type: json_content_type
     else
-      respond_to do |format|
-        format.html { render file: :edit, status: :unprocessable_entity }
-        format.json { render json: @item.errors.full_messages, status: :unprocessable_entity }
-      end
+      render json: @item.errors.full_messages, status: :unprocessable_entity
     end
   end
 
@@ -211,10 +214,7 @@ class Cms::Apis::Preview::InplaceEdit::ColumnValuesController < ApplicationContr
       json = { location: location }
       render json: json, status: :ok, content_type: json_content_type
     else
-      respond_to do |format|
-        format.html { render file: :edit, status: :unprocessable_entity }
-        format.json { render json: @item.errors.full_messages, status: :unprocessable_entity }
-      end
+      render json: @item.errors.full_messages, status: :unprocessable_entity
     end
   end
 
@@ -303,6 +303,11 @@ class Cms::Apis::Preview::InplaceEdit::ColumnValuesController < ApplicationContr
   def new
     raise "403" if !@item.allowed?(:edit, @cur_user, site: @cur_site)
 
+    if @item.locked? && !@item.lock_owned?
+      render json: [ t("errors.messages.locked", user: @item.lock_owner.long_name) ], status: :locked
+      return
+    end
+
     @preview = true
     render action: :new
   end
@@ -323,6 +328,11 @@ class Cms::Apis::Preview::InplaceEdit::ColumnValuesController < ApplicationContr
 
   def edit
     raise "403" if !@item.allowed?(:edit, @cur_user, site: @cur_site)
+
+    if @item.locked? && !@item.lock_owned?
+      render json: [ t("errors.messages.locked", user: @item.lock_owner.long_name) ], status: :locked
+      return
+    end
 
     @preview = true
     render action: :edit
@@ -347,6 +357,11 @@ class Cms::Apis::Preview::InplaceEdit::ColumnValuesController < ApplicationContr
     @item.attributes = fix_params
     raise "403" unless @item.allowed?(:edit, @cur_user, site: @cur_site, node: @cur_node)
 
+    if @item.locked? && !@item.lock_owned?
+      render json: [ t("errors.messages.locked", user: @item.lock_owner.long_name) ], status: :locked
+      return
+    end
+
     if creates_branch?
       destroy_as_branch
     else
@@ -357,6 +372,11 @@ class Cms::Apis::Preview::InplaceEdit::ColumnValuesController < ApplicationContr
   def move_up
     @item.attributes = fix_params
     raise "403" unless @item.allowed?(:edit, @cur_user, site: @cur_site, node: @cur_node)
+
+    if @item.locked? && !@item.lock_owned?
+      render json: [ t("errors.messages.locked", user: @item.lock_owner.long_name) ], status: :locked
+      return
+    end
 
     if creates_branch?
       move_up_as_branch
@@ -369,6 +389,11 @@ class Cms::Apis::Preview::InplaceEdit::ColumnValuesController < ApplicationContr
     @item.attributes = fix_params
     raise "403" unless @item.allowed?(:edit, @cur_user, site: @cur_site, node: @cur_node)
 
+    if @item.locked? && !@item.lock_owned?
+      render json: [ t("errors.messages.locked", user: @item.lock_owner.long_name) ], status: :locked
+      return
+    end
+
     if creates_branch?
       move_down_as_branch
     else
@@ -379,6 +404,11 @@ class Cms::Apis::Preview::InplaceEdit::ColumnValuesController < ApplicationContr
   def move_at
     @item.attributes = fix_params
     raise "403" unless @item.allowed?(:edit, @cur_user, site: @cur_site, node: @cur_node)
+
+    if @item.locked? && !@item.lock_owned?
+      render json: [ t("errors.messages.locked", user: @item.lock_owner.long_name) ], status: :locked
+      return
+    end
 
     if creates_branch?
       move_at_as_branch

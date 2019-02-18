@@ -564,7 +564,13 @@ SS_Preview = (function () {
         });
       },
       error: function(xhr, status, error) {
-        self.notice.show(error);
+        try {
+          var errors = xhr.responseJSON;
+          var msg = errors.join("\n");
+          self.notice.show(msg);
+        } catch (ex) {
+          self.notice.show("Error: " + error);
+        }
       }
     })
   };
@@ -694,7 +700,13 @@ SS_Preview = (function () {
         }
       },
       error: function(xhr, status, error) {
-        self.notice.show(error);
+        try {
+          var errors = xhr.responseJSON;
+          var msg = errors.join("\n");
+          self.notice.show(msg);
+        } catch (ex) {
+          self.notice.show("Error: " + error);
+        }
       }
     });
   };
@@ -719,7 +731,13 @@ SS_Preview = (function () {
         }
       },
       error: function(xhr, status, error) {
-        self.notice.show(error);
+        try {
+          var errors = xhr.responseJSON;
+          var msg = errors.join("\n");
+          self.notice.show(msg);
+        } catch (ex) {
+          self.notice.show("Error: " + error);
+        }
       }
     });
   };
@@ -778,7 +796,13 @@ SS_Preview = (function () {
         }
       },
       error: function(xhr, status, error) {
-        self.notice.show(error);
+        try {
+          var errors = xhr.responseJSON;
+          var msg = errors.join("\n");
+          self.notice.show(msg);
+        } catch (ex) {
+          self.notice.show("Error: " + error);
+        }
       }
     });
   };
@@ -821,7 +845,13 @@ SS_Preview = (function () {
         }
       },
       error: function(xhr, status, error) {
-        self.notice.show(error);
+        try {
+          var errors = xhr.responseJSON;
+          var msg = errors.join("\n");
+          self.notice.show(msg);
+        } catch (ex) {
+          self.notice.show("Error: " + error);
+        }
       }
     });
   };
@@ -947,14 +977,13 @@ SS_Preview = (function () {
   };
 
   SS_Preview.prototype.bindToWorkflowCommentForm = function(updateType) {
+    var self = this;
     var $frame = $("#ss-preview-dialog-frame");
     $frame.on("click", "input[type=submit]", function() {
       var remandComment = $frame.find("textarea[name=comment]").prop("value");
       var action = updateType + "_update";
       var url = SS_Preview.workflowPath.pages.replace(":id", SS_Preview.item.pageId);
       url += "/" + action;
-
-      $frame.dialog("close");
 
       $.ajax({
         type: "POST",
@@ -982,16 +1011,17 @@ SS_Preview = (function () {
 
           location.reload();
         },
-        error: function(xhr, status) {
+        error: function(xhr, status, error) {
           try {
-            var errors = $.parseJSON(xhr.responseText);
-            var msg = ["== Error =="].concat(errors).join("\n");
+            var errors = xhr.responseJSON;
+            var msg = errors.join("\n");
             self.notice.show(msg);
+          } catch (ex) {
+            self.notice.show("Error: " + error);
           }
-          catch (ex) {
-            var msg = ["== Error =="].concat(xhr["statusText"]).join("\n");
-            self.notice.show(msg);
-          }
+        },
+        complete: function() {
+          $frame.dialog("close");
         }
       });
     });
@@ -1031,7 +1061,13 @@ SS_Preview = (function () {
         }
       },
       error: function(xhr, status, error) {
-        self.notice.show(error);
+        try {
+          var errors = xhr.responseJSON;
+          var msg = errors.join("\n");
+          self.notice.show(msg);
+        } catch (ex) {
+          self.notice.show("Error: " + error);
+        }
       }
     });
   };
