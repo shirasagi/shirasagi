@@ -104,7 +104,24 @@ this.SS_SearchUI = (function () {
       });
     }
     $el.find(".pagination a").on("click", function (ev) {
-      return self.selectItems($el);
+      self.selectItems($el);
+
+      if (isSameWindow) {
+        $(this).ajaxSubmit({
+          url: $(this).attr("href"),
+          success: function (data) {
+            return $("#cboxLoadedContent").html(data);
+          },
+          error: function (data, status) {
+            return alert("== Error ==");
+          }
+        });
+
+        ev.preventDefault();
+        return false;
+      } else {
+        return true;
+      }
     });
     $.each(options.submit_on_changes || ["#s_group"], function() {
       $el.find(this).on("change", function (ev) {
