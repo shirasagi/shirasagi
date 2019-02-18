@@ -1,6 +1,6 @@
+# 権限判定用モデル
 class Opendata::PublicEntityDataset
-  include Cms::Model::Page
-  include Cms::Addon::GroupPermission
+  include Cms::SitePermission
 
-  set_permission_name "opendata_public_entity_datasets", :edit
+  set_permission_name "other_opendata_public_entity_datasets", :edit
 end

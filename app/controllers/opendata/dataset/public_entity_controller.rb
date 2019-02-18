@@ -16,8 +16,12 @@ class Opendata::Dataset::PublicEntityController < ApplicationController
 
   public
 
+  def index
+    raise "403" unless @model.allowed?(:edit, @cur_user, site: @cur_site, node: @cur_node)
+  end
+
   def download
-    raise "403" unless @model.allowed?(:read, @cur_user, site: @cur_site, node: @cur_node)
+    raise "403" unless @model.allowed?(:edit, @cur_user, site: @cur_site, node: @cur_node)
 
     @items = Opendata::Dataset.site(@cur_site).and_public.order_by(id: -1)
     send_enum @items.public_entity_enum_csv(@cur_node), type: 'text/csv; charset=Shift_JIS',
