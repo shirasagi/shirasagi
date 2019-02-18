@@ -1127,6 +1127,7 @@ $aboutlist: about, event, mayor, assembly, institution, sight, consultation, qa;
   margin-bottom: $box-margin;
   border-top: $border-hgry;
   text-align: right;
+  clear: both;
   header {
     @include inline-block;
     margin: 5px 0;
@@ -1177,6 +1178,9 @@ $aboutlist: about, event, mayor, assembly, institution, sight, consultation, qa;
 }
 .map-page {
   margin-bottom: $box-margin;
+}
+article.body {
+  clear: both;
 }
 .page article, .one article.body,
 .page .related-pages, .page footer.contact,
@@ -1274,12 +1278,20 @@ $aboutlist: about, event, mayor, assembly, institution, sight, consultation, qa;
   .float-left, .ss-alignment-left {
     float: left;
     margin: 0 $item-margin $item-margin 0;
+    @include mb {
+      margin: 0;
+      float: none;
+    }
   }
   .float-right, .ss-alignment-right {
     float: right;
     margin: 0 0 $item-margin $item-margin;
+    @include mb {
+      margin: 0;
+      float: none;
+    }
   }
-  .clear {
+  .clear, .ss-alignment-center {
     clear: both;
   }
   .two-photo {
@@ -1629,8 +1641,8 @@ $aboutlist: about, event, mayor, assembly, institution, sight, consultation, qa;
 }
 #calendar {
   header.title {
-    color: $blue;
-    border-top: 2px solid $blue;
+  color: $blue;
+  border-top: 2px solid $blue;
   }
   .calendar-nav {
     text-align: center;
