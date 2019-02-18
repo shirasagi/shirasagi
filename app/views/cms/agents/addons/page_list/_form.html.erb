@@ -51,6 +51,12 @@
 
   <dt><%= @model.t :lower_html %><%= @model.tt :lower_html %></dt>
   <dd><%= f.text_area :lower_html, class: :html %></dd>
+
+  <dt><%= @model.t :no_items_display_state %><%= @model.tt :no_items_display_state %></dt>
+  <dd><%= f.select :no_items_display_state, @item.no_items_display_state_options, include_blank: true %></dd>
+
+  <dt><%= @model.t :substitute_html %><%= @model.tt :substitute_html %></dt>
+  <dd><%= f.text_area :substitute_html, class: :html %></dd>
 </dl>
 
 <% if @model.use_liquid %>

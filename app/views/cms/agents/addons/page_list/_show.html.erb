@@ -42,6 +42,16 @@
       <%= text_area_tag :lower_html, @item.lower_html, class: "html" %>
       <% end %>
     </dd>
+
+    <dt><%= @model.t :no_items_display_state %></dt>
+    <dd><%= @item.label :no_items_display_state %></dd>
+
+    <dt><%= @model.t :substitute_html %></dt>
+    <dd>
+      <% if @item.substitute_html.present? %>
+        <%= text_area_tag :substitute_html, @item.substitute_html, class: "html" %>
+      <% end %>
+    </dd>
   <% end %>
 
   <% if @model.use_new_days %>

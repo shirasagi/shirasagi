@@ -47,6 +47,9 @@ module Cms::ListHelper
 
   def render_node_list(&block)
     cur_item = @cur_part || @cur_node
+    if @items.blank? && cur_item.try(:no_items_display_state) == 'hide'
+      return cur_item.substitute_html.to_s.html_safe
+    end
     cur_item.cur_date = @cur_date
 
     if cur_item.loop_format_shirasagi?
@@ -60,6 +63,9 @@ module Cms::ListHelper
 
   def render_page_list(&block)
     cur_item = @cur_part || @cur_node
+    if @items.blank? && cur_item.try(:no_items_display_state) == 'hide'
+      return cur_item.substitute_html.to_s.html_safe
+    end
     cur_item.cur_date = @cur_date
 
     if cur_item.loop_format_shirasagi?
@@ -80,6 +86,7 @@ module Cms::ListHelper
     if block_given?
       h << capture(&block)
     else
+      h << cur_item.substitute_html.to_s.html_safe if @items.blank?
       if cur_item.loop_setting.present?
         loop_html = cur_item.loop_setting.html
       elsif cur_item.loop_html.present?
