@@ -14,9 +14,12 @@ class Opendata::UrlResource
 
   permit_params :name, :text, :license_id, :original_url, :crawl_update
 
-  validates :crawl_update, presence: true
+  before_validation :validate_original_url, if: -> { original_url.present? }
 
-  validate :validate_original_url, if: -> { in_file.blank? }
+  validates :original_url, presence: true
+  validates :original_updated, presence: true
+  validates :crawl_state, presence: true
+  validates :crawl_update, presence: true
 
   after_save -> { dataset.save(validate: false) }
   after_destroy -> { dataset.save(validate: false) }
@@ -95,39 +98,55 @@ class Opendata::UrlResource
   end
 
   def validate_original_url
-    uri = URI.parse(original_url)
+    begin
+      uri = URI.parse(original_url)
+    rescue => e
+      errors.add :original_url, :invalid
+      return
+    end
+
     if uri.path == '/'
       errors.add :original_url, :invalid
       return
     end
 
-    Tempfile.open('temp') do |temp_file|
-      last_modified = download_to(temp_file)
-      break if last_modified.blank?
+    if in_file.present?
+      # set file manually from in_file
 
-      self.original_updated = last_modified
-      self.filename = ::File.basename(uri.path) if self.filename.blank?
-
-      ss_file = SS::File.new
-      ss_file.in_file = ActionDispatch::Http::UploadedFile.new(tempfile: temp_file,
-                                                               filename: self.filename,
-                                                               type: 'application/octet-stream')
-      ss_file.model = self.class.to_s.underscore
-
-      ss_file.content_type = self.format = self.filename.sub(/.*\./, "").upcase
-      ss_file.filename = self.filename
-      ss_file.save
-      send("file_id=", ss_file.id)
+      self.original_updated = Time.zone.now
+      self.filename = in_file.original_filename
       self.crawl_state = "same"
+    else
+      # download file from original_url
+
+      begin
+        Tempfile.open('temp') do |temp_file|
+          last_modified = download_to(temp_file)
+          break if last_modified.blank?
+
+          self.original_updated = last_modified
+          self.filename = ::File.basename(uri.path) if self.filename.blank?
+
+          ss_file = SS::File.new
+          ss_file.in_file = ActionDispatch::Http::UploadedFile.new(tempfile: temp_file,
+                                                                   filename: self.filename,
+                                                                   type: 'application/octet-stream')
+          ss_file.model = self.class.to_s.underscore
+
+          ss_file.content_type = self.format = self.filename.sub(/.*\./, "").upcase
+          ss_file.filename = self.filename
+          ss_file.save
+          send("file_id=", ss_file.id)
+          self.crawl_state = "same"
+        end
+      rescue Timeout::Error => e
+        logger.warn("#{e.class} (#{e.message}):\n  #{e.backtrace.join("\n  ")}")
+        errors.add :base, I18n.t("opendata.errors.messages.invalid_timeout")
+      rescue => e
+        logger.warn("#{e.class} (#{e.message}):\n  #{e.backtrace.join("\n  ")}")
+        errors.add :original_url, :invalid
+      end
     end
-  rescue Timeout::Error => e
-    logger.warn("#{e.class} (#{e.message}):\n  #{e.backtrace.join("\n  ")}")
-    errors.add :base, I18n.t("opendata.errors.messages.invalid_timeout")
-  rescue => e
-    logger.warn("#{e.class} (#{e.message}):\n  #{e.backtrace.join("\n  ")}")
-    errors.add :original_url, :invalid
-  ensure
-    in_file.close(true) if in_file
   end
 
   def download_to(temp_file, time_out: 30)
