@@ -7,7 +7,7 @@ class Cms::Apis::PagesController < ApplicationController
   before_action :set_selected_node
   helper_method :statuses_option
 
-  KNOWN_STATUSES = %w(public ready request remand draft closed).freeze
+  KNOWN_STATUSES = %w(public ready request remand edit closed).freeze
 
   private
 
@@ -66,15 +66,15 @@ class Cms::Apis::PagesController < ApplicationController
           conds << { state: "closed", workflow_state: "request" }
         when "remand"
           conds << { state: "closed", workflow_state: "remand" }
-        when "draft"
+        when "edit"
           conds << {
             state: "closed", :first_released.exists => false,
-            :workflow_state.ne => "request", :workflow_state.ne => "remand"
+            :workflow_state.exists => false
           }
         when "closed"
           conds << {
             state: "closed", :first_released.exists => true,
-            :workflow_state.ne => "request", :workflow_state.ne => "remand"
+            :workflow_state.exists => false
           }
         end
       end
