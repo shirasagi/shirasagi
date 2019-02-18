@@ -8,6 +8,7 @@ class Cms::Apis::Preview::Workflow::WizardController < ApplicationController
   before_action :set_route, only: [:approver_setting]
   before_action :set_item
   before_action :check_item_status
+  before_action :check_item_lock_status
 
   private
 
@@ -34,6 +35,13 @@ class Cms::Apis::Preview::Workflow::WizardController < ApplicationController
   def check_item_status
     # 非公開状態でないと、承認に関するあらゆる操作はできない
     raise "404" if @item.state != "closed"
+  end
+
+  def check_item_lock_status
+    if @item.locked? && !@item.lock_owned?
+      render json: [ t("errors.messages.locked", user: @item.lock_owner.long_name) ], status: :locked
+      return
+    end
   end
 
   public
