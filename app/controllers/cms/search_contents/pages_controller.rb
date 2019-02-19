@@ -73,4 +73,22 @@ class Cms::SearchContents::PagesController < ApplicationController
       send_enum @item.enum_csv, type: 'text/csv; charset=Shift_JIS', filename: filename
     end
   end
+
+  def destroy_all_pages
+    set_selected_items
+
+    entries = @items.entries
+    @items = []
+
+    entries.each do |item|
+      item = item.becomes_with_route rescue item
+      if item.allowed?(:delete, @cur_user, site: @cur_site, node: @cur_node)
+        next if item.destroy
+      else
+        item.errors.add :base, :auth_error
+      end
+      @items << item
+    end
+    render_destroy_all(entries.size != @items.size, location: cms_page_search_contents_path)
+  end
 end

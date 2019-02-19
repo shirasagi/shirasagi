@@ -66,14 +66,14 @@ SS::Application.routes.draw do
   namespace "cms", path: ".s:site" do
     get "/" => "main#index", as: :main
     match "logout" => "login#logout", as: :logout, via: [:get]
-    match "login"  => "login#login", as: :login, via: [:get, :post]
+    match "login" => "login#login", as: :login, via: [:get, :post]
     get "preview(:preview_date)/(*path)" => "preview#index", as: :preview
     post "preview(:preview_date)/(*path)" => "preview#form_preview", as: :form_preview
   end
 
   namespace "cms", path: ".s:site/cms" do
     get "/" => "main#index"
-    resource  :site
+    resource :site
     resources :roles, concerns: [:deletion, :download, :import]
     resources :users, concerns: [:deletion, :download, :import] do
       post :lock_all, on: :collection
@@ -124,6 +124,7 @@ SS::Application.routes.draw do
 
     resources :page_searches, concerns: :deletion do
       get :search, on: :member
+      delete :search, on: :member, action: :destroy_all_pages
     end
 
     get "check_links" => "check_links#index"
@@ -146,6 +147,7 @@ SS::Application.routes.draw do
     get "search_contents/:id" => "page_search_contents#show", as: "page_search_contents"
     delete "search_contents/pages" => "search_contents/pages#destroy_all"
     get "search_contents/:id/download" => "page_search_contents#download", as: "download_page_search_contents"
+    delete "search_contents/:id" => "search_contents/pages#destroy_all_pages"
 
     resources :check_links_pages, only: [:show, :index]
     resources :check_links_nodes, only: [:show, :index]
@@ -269,21 +271,21 @@ SS::Application.routes.draw do
   node "cms" do
     get "node/(index.:format)" => "public#index", cell: "nodes/node"
     get "page/(index.:format)" => "public#index", cell: "nodes/page"
-    get "page/rss.xml"         => "public#rss", cell: "nodes/page", format: "xml"
+    get "page/rss.xml" => "public#rss", cell: "nodes/page", format: "xml"
     get "group_page/(index.:format)" => "public#index", cell: "nodes/group_page"
-    get "group_page/rss.xml"         => "public#rss", cell: "nodes/group_page", format: "xml"
+    get "group_page/rss.xml" => "public#rss", cell: "nodes/group_page", format: "xml"
     get "import_node/(index.:format)" => "public#index", cell: "nodes/import_node"
-    get "import_node/rss.xml"         => "public#rss", cell: "nodes/import_node", format: "xml"
+    get "import_node/rss.xml" => "public#rss", cell: "nodes/import_node", format: "xml"
     get "archive/:ymd/(index.:format)" => "public#index", cell: "nodes/archive", ymd: /\d+/
     get "archive" => "public#redirect_to_archive_index", cell: "nodes/archive"
     get "photo_album" => "public#index", cell: "nodes/photo_album"
   end
 
   part "cms" do
-    get "free"  => "public#index", cell: "parts/free"
-    get "node"  => "public#index", cell: "parts/node"
-    get "page"  => "public#index", cell: "parts/page"
-    get "tabs"  => "public#index", cell: "parts/tabs"
+    get "free" => "public#index", cell: "parts/free"
+    get "node" => "public#index", cell: "parts/node"
+    get "page" => "public#index", cell: "parts/page"
+    get "tabs" => "public#index", cell: "parts/tabs"
     get "crumb" => "public#index", cell: "parts/crumb"
     get "sns_share" => "public#index", cell: "parts/sns_share"
     get "calendar_nav" => "public#index", cell: "parts/calendar_nav"
@@ -296,9 +298,9 @@ SS::Application.routes.draw do
   end
 
   match "*public_path" => "cms/public#index", public_path: /[^\.].*/,
-    via: [:get, :post, :put, :patch, :delete], format: true
+        via: [:get, :post, :put, :patch, :delete], format: true
   match "*public_path" => "cms/public#index", public_path: /[^\.].*/,
-    via: [:get, :post, :put, :patch, :delete], format: false
+        via: [:get, :post, :put, :patch, :delete], format: false
 
   root "cms/public#index", defaults: { format: :html }
 end
