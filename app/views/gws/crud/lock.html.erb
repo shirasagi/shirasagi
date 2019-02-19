@@ -14,11 +14,11 @@
   <%= hidden_field_tag "force", "true" %>
   <footer class="send">
     <%= f.submit t("ss.buttons.unlock_and_edit_forcibly"), class: "btn-primary" %>
-    <%= f.button t("ss.buttons.cancel"), type: :reset, onclick: "location.href='#{url_for(action: :show)}'; return false;" %>
+    <%= f.button t("ss.buttons.cancel"), class: "btn-default", type: :reset, onclick: "location.href='#{url_for(action: :show)}'; return false;" %>
   </footer>
 <% end %>
 <% else %>
   <footer class="send">
-    <%= button_tag t("ss.buttons.cancel"), type: :reset, onclick: "location.href='#{url_for(action: :show)}'; return false;", class: "btn-default" %>
+    <%= button_tag t("ss.buttons.cancel"), class: "btn-default", type: :reset, onclick: "location.href='#{url_for(action: :show)}'; return false;" %>
   </footer>
 <% end %>
