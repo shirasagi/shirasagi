@@ -109,7 +109,7 @@ if (resizing) {
     </div>
     <nav class="menu">
       <% if item.allowed?(:edit, @cur_user, site: @cur_site) %>
-        <%= link_to t("ss.buttons.edit"), { action: :edit, id: item, file_size: params[:file_size] }, class: "edit" %>
+        <%= link_to t("ss.buttons.edit"), { action: :edit, id: item, file_size: params[:file_size] }, class: %w(edit ajax-box) %>
       <% end %>
       <% if item.allowed?(:delete, @cur_user, site: @cur_site) %>
         <%= link_to t("ss.buttons.delete"), { action: :destroy, id: item }, class: "delete", "data-remove" => "#user-file#{item.id}" %>
