@@ -11,8 +11,8 @@
   </section>
 
   <footer class="send">
-    <%= f.submit t("ldap.buttons.sync"), class: :save %>
-    <%= f.button t("ss.buttons.cancel"), type: :reset, onclick: "location.href='#{url_for(action: :show)}'; return false;" %>
+    <%= f.submit t("ldap.buttons.sync"), class: "save" %>
+    <%= f.button t("ss.buttons.cancel"), class: "btn-default", type: :reset, onclick: "location.href='#{url_for(action: :show)}'; return false;" %>
   </footer>
 <% end %>
 
