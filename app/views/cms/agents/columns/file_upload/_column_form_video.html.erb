@@ -1,1 +1,12 @@
-<%= text_area_tag("#{f.object_name}[][in_wrap][video_description]", value.try(:video_description), column.form_options(:video_description).merge(id: nil)) %>
+<% name = "#{f.object_name}[][in_wrap][video_description]" %>
+
+<%= jquery do %>
+Cms_Form.addSyntaxCheck("<%= id %>", {
+  resolve: "text",
+  name: "<%= column.name %>",
+  getContent: function () { return $('#<%= id %> [name="<%= name %>"]').val(); },
+  setContent: function (content) { return $('#<%= id %> [name="<%= name %>"]').val(content); },
+});
+<% end %>
+
+<%= text_area_tag(name, value.try(:video_description), column.form_options(:video_description).merge(id: nil, "data-check-presence": t("cms.column_file_upload.video_description"))) %>
