@@ -85,10 +85,13 @@ class ApplicationController < ActionController::Base
     request.env["HTTP_X_REAL_IP"] || request.remote_addr
   end
 
-  def browser
-    require "browser"
-    Browser.new(request.user_agent, accept_language: request.accept_language)
+  def pc_browser?
+    return @is_pc_browser if !@is_pc_browser.nil?
+
+    platform = browser.platform
+    @is_pc_browser = platform.windows? || platform.mac? || platform.linux?
   end
+  helper_method :pc_browser?
 
   # Accepts the request for Cross-Origin Resource Sharing.
   # @return boolean

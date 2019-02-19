@@ -8,7 +8,7 @@
   <% end %>
 
   <dt><%= @model.t :name %><%= @model.tt :name %></dt>
-  <dd><%= f.text_field :name, autofocus: true %></dd>
+  <dd><%= f.text_field :name, autofocus: pc_browser? %></dd>
 
   <dt><%= @model.t :severity %><%= @model.tt :severity %></dt>
   <dd>
