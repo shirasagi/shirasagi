@@ -39,14 +39,17 @@
       name: "<%= column.name %>",
       getContent: function () {
         var array = [];
+        var caption = $('#caption-<%= table_name %>').val();
+        array.push(caption);
         $('#<%= id %> .table-editor tbody td,#<%= id %> .table-editor tbody th').not(".controll").each(function () {
           array.push($(this).text());
         });
         return array;
       },
       setContent: function (content) {
+        $('#caption-<%= table_name %>').val(content[0]);
 　　　   $('#<%= id %> .table-editor tbody td,#<%= id %> .table-editor tbody th').not(".controll").each(function (i) {
-          $(this).text(content[i]);
+          $(this).text(content[i + 1]);
         });
       }
     });
