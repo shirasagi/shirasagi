@@ -16,14 +16,25 @@ class Article::PagesController < ApplicationController
 
   public
 
-  def download
-    csv = @model.site(@cur_site).
+  def download_all
+    if request.get?
+      return
+    end
+
+    csv_params = params.require(:item).permit(:encoding)
+    csv_params.merge!(fix_params)
+
+    ctiteria = @model.site(@cur_site).
       node(@cur_node).
-      allow(:read, @cur_user, site: @cur_site, node: @cur_node).
-      to_csv.
-      encode("SJIS", invalid: :replace, undef: :replace)
+      allow(:read, @cur_user, site: @cur_site, node: @cur_node)
+
+    enumerable = ctiteria.enum_csv(csv_params)
+
     filename = @model.to_s.tableize.gsub(/\//, "_")
-    send_data csv, filename: "#{filename}_#{Time.zone.now.to_i}.csv"
+    filename = "#{filename}_#{Time.zone.now.to_i}.csv"
+
+    response.status = 200
+    send_enum enumerable, type: enumerable.content_type, filename: filename
   end
 
   def import
