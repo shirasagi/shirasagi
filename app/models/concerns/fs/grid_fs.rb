@@ -116,5 +116,9 @@ module Fs::GridFs
       path = path.gsub('\\*', ".*")
       Mongoid::GridFs.file_model.where(filename: /^#{path}$/).map { |fs| fs.filename }
     end
+
+    def to_io(path)
+      raise NotImplementedError
+    end
   end
 end
