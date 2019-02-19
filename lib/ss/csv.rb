@@ -11,6 +11,7 @@ class SS::Csv
       @cur_user = options[:cur_user]
       @cur_node = options[:cur_node]
       @columns = []
+      @context = self
     end
 
     attr_reader :cur_site, :cur_user
@@ -41,7 +42,7 @@ class SS::Csv
         if head_proc.blank?
           klass.t column[:id]
         else
-          head_proc.call
+          @context.instance_exec(&head_proc)
         end
       end
 
@@ -49,12 +50,10 @@ class SS::Csv
     end
 
     def _draw_data(item)
-      # klass = @criteria.klass
-
       terms = @columns.map do |column|
         body_proc = column[:body]
         if body_proc.present?
-          next body_proc.call(item)
+          next @context.instance_exec(item, &body_proc)
         end
 
         type = column[:type]
@@ -117,25 +116,34 @@ class SS::Csv
     alias draw_data _draw_data
   end
 
-  def initialize
+  def initialize(options)
+    @context = options[:context] || self
     @columns = []
   end
 
+  attr_reader :context
+
   class << self
-    def draw(&block)
-      ret = new
-      ret.draw(&block)
+    def draw(options = {}, &block)
+      ret = new(options)
+      ret.draw(&block) if block_given?
       ret
     end
   end
 
   def draw(&block)
-    instance_exec(&block)
+    @context.instance_exec(self, &block)
   end
 
   def column(id, options = {}, &block)
-    @column = { id: id }.merge(options)
-    @columns << @column
+    id = id.to_s.to_sym
+    @column = @columns.find { |c| c[:id] == id }
+    if @column.present?
+      @column.merge!(options)
+    else
+      @column = { id: id }.merge(options)
+      @columns << @column
+    end
     instance_exec(&block) if block_given?
     @column = nil
   end
@@ -157,6 +165,7 @@ class SS::Csv
     end
 
     ret = klass.new(criteria, options)
+    ret.instance_variable_set(:@context, @context)
     ret.instance_variable_set(:@columns, @columns)
     ret
   end

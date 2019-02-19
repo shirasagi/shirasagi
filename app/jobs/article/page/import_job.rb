@@ -89,7 +89,8 @@ class Article::Page::ImportJob < Cms::ApplicationJob
   end
 
   def value(row, key)
-    row[model.t(key)].try(:strip)
+    key = model.t(key) if key.is_a?(Symbol)
+    row[key].try(:strip)
   end
 
   def ary_value(row, key, delim: "\n")
@@ -156,6 +157,7 @@ class Article::Page::ImportJob < Cms::ApplicationJob
     # related pages
     page_names = ary_value(row, :related_pages)
     item.related_page_ids = Cms::Page.site(site).in(filename: page_names).pluck(:id)
+    item.related_page_sort = label_value(item, row, "#{model.t(:related_pages)}#{model.t(:related_page_sort)}")
 
     # crumb
     item.parent_crumb_urls = value(row, :parent_crumb)

@@ -857,6 +857,7 @@ ja:
       cms/column/list:
         list_type: 種類
       cms/column/value/base:
+        order: 並び順
         alignment: 配置
       cms/column/value/check_box:
         values: 選択肢
