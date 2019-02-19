@@ -1,6 +1,6 @@
 <dl class="see">
   <dt><%= @model.t :code %><%= @model.tt :code %></dt>
-  <dd><%= f.text_field :code, autofocus: true %></dd>
+  <dd><%= f.text_field :code, autofocus: pc_browser? %></dd>
 
   <dt><%= @model.t :name %><%= @model.tt :name %></dt>
   <dd><%= f.text_field :name %></dd>

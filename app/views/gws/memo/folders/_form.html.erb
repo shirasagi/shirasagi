@@ -6,7 +6,7 @@
 <dl class="see">
   <%= f.hidden_field :path %>
   <dt><%= @model.t :name %><%= @model.tt :name %></dt>
-  <dd><%= f.text_field :in_basename, autofocus: true, value: @item.trailing_name %></dd>
+  <dd><%= f.text_field :in_basename, autofocus: pc_browser?, value: @item.trailing_name %></dd>
 
   <% if @item.new_record? %>
     <dt><%= @model.t :in_parent %><%= @model.tt :in_parent %></dt>
