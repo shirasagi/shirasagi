@@ -1,6 +1,9 @@
 <% return "" unless @item.opendata_dataset_state.present? %>
 <% return "" if @item.opendata_dataset_state == 'none' %>
-<%= jquery do %> SS_AddonTabs.hide("dl.mod-cms-opendata-dataset"); <% end %>
+<%
+  addon ||= local_assigns.fetch(:addon, {})
+  addon[:display_body] = "hide"
+%>
 
 <dl class="see mod-cms-opendata-dataset">
   <dt><%= @model.t :opendata_dataset_state %></dt>

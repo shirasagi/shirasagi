@@ -18,10 +18,11 @@ class Cms::Column::TextField < Cms::Column::Base
     options
   end
 
-  def serialize_value(value)
-    Cms::Column::Value::TextField.new(
-      column_id: self.id, name: self.name, order: self.order,
-      value: value
-    )
+  def syntax_check_enabled?
+    true
+  end
+
+  def link_check_enabled?
+    true
   end
 end

@@ -16,10 +16,14 @@ class Opendata::Dataset::ImportDatasetsController < ApplicationController
   public
 
   def index
+    raise "403" unless Opendata::Dataset.allowed?(:import, @cur_user, site: @cur_site, node: @cur_node)
+
     @model.new
   end
 
   def import
+    raise "403" unless Opendata::Dataset.allowed?(:import, @cur_user, site: @cur_site, node: @cur_node)
+
     @item = @model.new
 
     file = params.dig(:item, :in_file)

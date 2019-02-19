@@ -296,14 +296,6 @@ class Gws::Memo::Notifier
     self.to_users = to_members.map { |user_id| Gws::User.find(user_id) }
   end
 
-  def from_user
-    @from_user ||= begin
-      user = cur_site.sender_user
-      user ||= cur_user
-      user
-    end
-  end
-
   def i18n_key
     @i18n_key ||= item.class.model_name.i18n_key
   end

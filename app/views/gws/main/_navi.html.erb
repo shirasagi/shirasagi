@@ -74,7 +74,7 @@
     <h2><%= link_to @cur_site.menu_discussion_label || t('modules.gws/discussion'), gws_discussion_forums_path(mode: '-'), class: "icon-discussion" %></h2>
   <% end %>
 
-  <% if @cur_site.menu_share_visible? && Gws.module_usable?(:discussion, @cur_site, @cur_user) %>
+  <% if @cur_site.menu_share_visible? && Gws.module_usable?(:share, @cur_site, @cur_user) %>
     <h2><%= link_to @cur_site.menu_share_label || t('modules.gws/share'), gws_share_files_path, class: "icon-share" %></h2>
   <% end %>
 

@@ -38,8 +38,18 @@
     <li><%= link_to t("workflow.page.request"), opendata_datasets_request_path, class: "icon-node" %></li>
   </ul>
   <h3><%= link_to Opendata::DatasetDownloadReport.model_name.human, opendata_dataset_download_reports_path, class: "icon-node" %></h3>
-  <h3><%= link_to t("mongoid.models.opendata/export_datasets"), opendata_export_datasets_path, class: "icon-node" %></h3>
-  <h3><%= link_to t("mongoid.models.opendata/import_datasets"), opendata_import_datasets_path, class: "icon-node" %></h3>
+
+  <% if Opendata::PublicEntityDataset.allowed?(:edit, @cur_user, site: @cur_site, node: @cur_node) %>
+    <h3><%= link_to t("opendata.public_entity.format"), opendata_dataset_public_entity_path, class: "icon-node" %></h3>
+  <% end %>
+
+  <% if Opendata::Harvest::Importer.allowed?(:read, @cur_user, site: @cur_site, node: @cur_node) %>
+    <h3><span><%= t("opendata.harvest") %></span></h3>
+    <ul class="narrow-page">
+      <h3><%= link_to t("ss.links.import"), opendata_harvest_importers_path, class: "icon-node" %></h3>
+      <h3><%= link_to t("ss.links.export"), opendata_harvest_exporters_path, class: "icon-node" %></h3>
+    </ul>
+  <% end %>
 <% elsif @cur_node.route == "opendata/app" %>
   <h3><span><%= t "workflow.pages" %></span></h3>
   <ul class="narrow-page">

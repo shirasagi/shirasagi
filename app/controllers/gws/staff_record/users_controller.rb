@@ -26,10 +26,15 @@ class Gws::StaffRecord::UsersController < ApplicationController
   end
 
   def download
+    if request.get?
+      @item = @model.new(fix_params)
+      return
+    end
+
     items = @cur_year.yearly_users.site(@cur_site).
       allow(:read, @cur_user, site: @cur_site)
 
-    @item = @model.new(fix_params)
+    @item = @model.new(get_params)
     send_data @item.export_csv(items), filename: "staff_record_#{@cur_year.code}_users_#{Time.zone.now.to_i}.csv"
   end
 

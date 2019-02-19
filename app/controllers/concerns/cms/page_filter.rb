@@ -58,7 +58,7 @@ module Cms::PageFilter
 
   def index
     if @cur_node
-      raise "403" unless @cur_node.allowed?(:read, @cur_user, site: @cur_site)
+      raise "403" unless @cur_node.allowed?(:read, @cur_user, site: @cur_site, node: @cur_node)
 
       set_items
       @items = @items.search(params[:s]).
@@ -68,13 +68,13 @@ module Cms::PageFilter
 
   def create
     @item = @model.new get_params
-    raise "403" unless @item.allowed?(:edit, @cur_user)
-    if params.dig(:item, :column_values).present? && @item.form.present?
-      new_column_values = @item.build_column_values(params.dig(:item, :column_values))
-      @item.update_column_values(new_column_values)
-    end
+    raise "403" unless @item.allowed?(:edit, @cur_user, site: @cur_site, node: @cur_node)
+    # if params.dig(:item, :column_values).present? && @item.form.present?
+    #   new_column_values = @item.build_column_values(params.dig(:item, :column_values))
+    #   @item.update_column_values(new_column_values)
+    # end
     if @item.state == "public"
-      raise "403" unless @item.allowed?(:release, @cur_user)
+      raise "403" unless @item.allowed?(:release, @cur_user, site: @cur_site, node: @cur_node)
       @item.state = "ready" if @item.try(:release_date).present?
     end
     render_create @item.save
@@ -83,13 +83,13 @@ module Cms::PageFilter
   def update
     @item.attributes = get_params
     @item.in_updated = params[:_updated] if @item.respond_to?(:in_updated)
-    raise "403" unless @item.allowed?(:edit, @cur_user)
-    if params.dig(:item, :column_values).present? && @item.form.present?
-      new_column_values = @item.build_column_values(params.dig(:item, :column_values))
-      @item.update_column_values(new_column_values)
-    end
+    raise "403" unless @item.allowed?(:edit, @cur_user, site: @cur_site, node: @cur_node)
+    # if params.dig(:item, :column_values).present? && @item.form.present?
+    #   new_column_values = @item.build_column_values(params.dig(:item, :column_values))
+    #   @item.update_column_values(new_column_values)
+    # end
     if @item.state == "public"
-      raise "403" unless @item.allowed?(:release, @cur_user)
+      raise "403" unless @item.allowed?(:release, @cur_user, site: @cur_site, node: @cur_node)
       @item.state = "ready" if @item.try(:release_date).present?
     end
 
@@ -172,7 +172,7 @@ module Cms::PageFilter
   end
 
   def contains_urls
-    raise "403" unless @item.allowed?(:read, @cur_user, site: @cur_site)
+    raise "403" unless @item.allowed?(:read, @cur_user, site: @cur_site, node: @cur_node)
     render
   end
 

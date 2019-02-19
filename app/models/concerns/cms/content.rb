@@ -7,6 +7,7 @@ module Cms::Content
   include SS::Reference::Site
   include Cms::GroupPermission
   include Cms::Addon::CheckLinks
+  include SS::Liquidization
 
   attr_accessor :cur_node, :basename
   attr_accessor :serve_static_relation_files
@@ -55,6 +56,41 @@ module Cms::Content
         ])
       end
     }
+
+    liquidize do
+      export :id
+      export :name
+      export :index_name
+      export :url
+      export :full_url
+      export :basename
+      export :filename
+      export :order
+      export :date
+      export :released
+      export :updated
+      export :created
+      export :parent do
+        p = self.parent
+        p == false ? nil : p
+      end
+      export :css_class do |context|
+        issuer = context.registers[:cur_part] || context.registers[:cur_node]
+        template_variable_handler_class("class", issuer)
+      end
+      export :new? do |context|
+        issuer = context.registers[:cur_part] || context.registers[:cur_node]
+        issuer.respond_to?(:in_new_days?) && issuer.in_new_days?(self.date)
+      end
+      export :current? do |context|
+        # ApplicationHelper#current_url?
+        current = context.registers[:cur_path].sub(/\?.*/, "")
+        break false if current.delete("/").blank?
+        break true if self.url.sub(/\/index\.html$/, "/") == current.sub(/\/index\.html$/, "/")
+        break true if current =~ /^#{::Regexp.escape(url)}(\/|\?|$)/
+        false
+      end
+    end
   end
 
   module ClassMethods

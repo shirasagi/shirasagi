@@ -11,6 +11,14 @@ module Cms::GroupPermission
       template_variable_handler(:group, :template_variable_handler_group)
       template_variable_handler(:groups, :template_variable_handler_groups)
     end
+
+    if respond_to?(:liquidize)
+      liquidize do
+        export :groups do
+          groups.active
+        end
+      end
+    end
   end
 
   def owned?(user)

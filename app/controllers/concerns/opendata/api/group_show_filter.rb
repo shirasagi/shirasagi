@@ -26,27 +26,23 @@ module Opendata::Api::GroupShowFilter
     help = t("opendata.api.group_show_help")
     id = params[:id]
     id = URI.decode(id) if id
-    include_datasets = params[:include_datasets] || "true"
 
     error = group_show_check(id)
     if error
       render json: {help: help, success: false, error: error} and return
     end
 
-    groups = Opendata::DatasetGroup.site(@cur_site).and_public
-    groups = groups.any_of({"id" => id}, {"name" => id}).order_by(name: 1)
+    dataset_group = Opendata::DatasetGroup.site(@cur_site).and_public.
+      any_of({"id" => id}, {"name" => id}).order_by(name: 1).first
 
-    if groups.count > 0
-      group = convert_dataset_group(groups[0][:id])
-      datasets = Opendata::Dataset.site(@cur_site).and_public.any_in dataset_group_ids: group[:id]
-      group[:package_count] = datasets.count
-      if include_datasets =~ /^true$/i
-        group[:packages] = convert_packages(datasets)
-      else
-        group[:packages] = []
-      end
+    if dataset_group
+      datasets = Opendata::Dataset.site(@cur_site).and_public.in(dataset_group_ids: dataset_group.id)
 
-      res = {help: help, success: true, result: group}
+      result = convert_dataset_group(dataset_group)
+      result[:package_count] = datasets.count
+      result[:packages] = convert_packages(datasets)
+
+      res = {help: help, success: true, result: result}
     else
       res = {help: help, success: false}
       res[:error] = {message: "Not found", __type: "Not Found Error"}

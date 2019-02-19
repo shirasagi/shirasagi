@@ -27,11 +27,13 @@ class Opendata::Dataset::DownloadReportsController < ApplicationController
   public
 
   def index
+    @item.type ||= "day"
+    @aggregate = @item.aggregate
   end
 
   def download
     return render :index unless @item.valid?
-    send_data @item.csv.encode("SJIS", invalid: :replace, undef: :replace),
+    send_enum @item.enum_csv, type: 'text/csv; charset=Shift_JIS',
       filename: "dataset_download_report_#{Time.zone.now.to_i}.csv"
   end
 end

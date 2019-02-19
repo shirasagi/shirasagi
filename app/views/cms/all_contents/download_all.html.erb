@@ -8,13 +8,11 @@
 </div>
 
 <div class="addon-views">
-  <div class="addon-view" id="cms-all-contents-download-all">
-    <div class="addon-head"><h2><%= t("cms.all_content.download_head") %></h2></div>
-    <div class="addon-body">
-      <p class="description"><%= t("cms.all_content.download_description") %></p>
-    </div>
-    <footer class="send">
-      <%= link_to t('ss.links.download'), cms_all_contents_download_path(format: :csv), {class: "btn btn-primary"} %>
-    </footer>
-  </div>
+  <%= render "ss/crud/addon", addon: { id: "cms-all-contents-download-all", head: t("cms.all_content.download_head") } do %>
+    <p class="description"><%= t("cms.all_content.download_description") %></p>
+  <% end %>
 </div>
+
+<footer class="send">
+  <%= link_to t('ss.links.download'), cms_all_contents_download_path(format: :csv), {class: "btn btn-primary"} %>
+</footer>

@@ -1,0 +1,23 @@
+<%
+  file = @item.file
+  file.site = @cur_site
+  selector = "map-canvas-#{SecureRandom.uuid}"
+%>
+
+<script type="text/javascript">
+window.colorbox_onComplete = function() {
+  var canvas = $("#<%= selector %>")[0];
+  var opts = { zoom: 20 };
+  var map = new Openlayers_Map(canvas, opts);
+  map.loadLayer("<%= file.full_url %>", ol.format.GeoJSON);
+  return false;
+};
+</script>
+
+<div class="resource-content">
+  <div class="resource-name"><%= @item.name %></div>
+
+  <div class="resource-map">
+    <div id="<%= selector %>" class="map-canvas" style="width: 100%; height: 400px;"></div>
+  </div>
+</div>

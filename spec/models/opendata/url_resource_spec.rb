@@ -30,7 +30,7 @@ describe Opendata::UrlResource, dbscope: :example, http_server: true do
     end
 
     describe "#content_url" do
-      its(:content_url) { is_expected.to eq "#{dataset.full_url.sub(/\.html$/, "")}/url_resource/#{subject.id}/content.html" }
+      its(:content_url) { is_expected.to eq "#{dataset.url.sub(/\.html$/, "")}/url_resource/#{subject.id}/content.html" }
     end
 
     describe "#path" do
@@ -196,7 +196,7 @@ describe Opendata::UrlResource, dbscope: :example, http_server: true do
       end
 
       it do
-        expect { subject.save! }.to raise_error
+        expect { subject.save! }.to raise_error Mongoid::Errors::Validations
       end
     end
 
@@ -211,7 +211,7 @@ describe Opendata::UrlResource, dbscope: :example, http_server: true do
       end
 
       it do
-        expect { subject.save! }.to raise_error
+        expect { subject.save! }.to raise_error Mongoid::Errors::Validations
       end
     end
   end

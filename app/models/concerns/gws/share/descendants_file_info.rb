@@ -39,7 +39,7 @@ module Gws::Share::DescendantsFileInfo
       folder = Gws::Share::Folder.site(site).where(name: path).first
       next unless folder
 
-      descendants_folder_ids = Gws::Share::Folder.site(site).where(name: /^#{folder.name}\//).pluck(:id)
+      descendants_folder_ids = Gws::Share::Folder.site(site).where(name: /^#{::Regexp.escape(folder.name)}\//).pluck(:id)
       descendants_folder_ids << folder.id
       descendants_files = Gws::Share::File.site(site).in(folder_id: descendants_folder_ids)
 

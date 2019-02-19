@@ -15,6 +15,7 @@ SS::Application.routes.draw do
     get "ideas_approve" => "idea/ideas#index_approve"
     get "ideas_request" => "idea/ideas#index_request"
     get "ideas_closed" => "idea/ideas#index_closed"
+    delete "ideas_:state" => "idea/ideas#destroy_all", state: /approve|request|closed/
     resources :my_ideas, concerns: :deletion_all, module: "mypage/idea"
   end
 

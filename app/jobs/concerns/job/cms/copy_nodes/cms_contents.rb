@@ -148,7 +148,7 @@ module Job::Cms::CopyNodes::CmsContents
   def update_html_strings(src_content, dest_content)
     from = "/" + src_content.filename.match(/(.*\/).*.part.html/)[1]
     to = "/" + dest_content.filename.match(/(.*\/).*.part.html/)[1]
-    [:html, :upper_html, :lower_html, :loop_html].each do |attribute|
+    [:html, :upper_html, :lower_html, :loop_html, :loop_liquid].each do |attribute|
       next if dest_content[attribute].nil?
       dest_content[attribute] = src_content[attribute].gsub(from, to)
     end

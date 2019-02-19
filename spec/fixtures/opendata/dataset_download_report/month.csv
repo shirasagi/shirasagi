@@ -1,6 +1,6 @@
-,,,2017å¹´,12,2018å¹´,1,2
-dataset1,,http://test.localhost.jp/dataset/1.html
-,resourceA.txt,,,1,,0,1
-,resourceB.txt,,,1,,2,0
-dataset2,,http://test.localhost.jp/dataset/2.html
-,resourceC.txt,,,0,,0,0
+No,,,,’nˆæ,2017”N,12,2018”N,1,2
+0000000001,dataset1,,http://test.localhost.jp/dataset/1.html,""
+,,resourceA.txt,,,,1,,0,1
+,,resourceB.txt,,,,1,,2,0
+0000000002,dataset2,,http://test.localhost.jp/dataset/2.html,""
+,,resourceC.txt,,,,0,,0,0

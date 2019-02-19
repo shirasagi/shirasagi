@@ -1,7 +1,15 @@
+<% render_form = proc do |form_id, form_name| %>
+  <tr data-id="<%= form_id %>">
+    <td><%= f.hidden_field 'st_form_ids[]', value: form_id %> <%= form_name %></td>
+    <td><%= check_box_tag "#{f.object_name}[st_form_default_id]", form_id, @item.st_form_default_id == form_id %></td>
+    <td><%= link_to t('ss.buttons.delete'), '#', class: 'deselect btn' %></td>
+  </tr>
+<% end %>
 <dl class="see mod-cms-form-node">
   <dt><%= @model.t :st_form_ids %><%= @model.tt :st_form_ids %></dt>
   <dd class="wide" style="line-height: 2.5">
-    <%= f.hidden_field 'st_form_ids[]', value: '', class: 'hidden-ids' %>
+    <%= f.hidden_field 'st_form_ids[]', id: nil, value: '', class: 'hidden-ids' %>
+    <%= f.hidden_field 'st_form_default_id', id: nil, value: '' %>
     <%= link_to t('cms.apis.forms.index'), cms_apis_forms_path, class: "ajax-box" %>
   </dd>
   <dd>
@@ -9,17 +17,39 @@
       <thead>
       <tr>
         <th class="name"><%= Cms::Form.t(:name) %></th>
+        <th class="name"><%= t("cms.default_form") %></th>
         <th></th>
       </tr>
       </thead>
       <tbody>
       <% @item.st_forms.each do |form| %>
-        <tr data-id="<%= form.id %>">
-          <td><%= f.hidden_field 'st_form_ids[]', value: form.id %> <%= form.name %></td>
-          <td><%= link_to t('ss.buttons.delete'), '#', class: 'deselect btn' %></td>
-        </tr>
+        <% render_form.call(form.id, form.name) %>
       <% end %>
       </tbody>
     </table>
   </dd>
 </dl>
+
+<script type="text/html" class="form-template">
+  <% render_form.call(":id", ":name") %>
+</script>
+
+<%= jquery do %>
+  var template = $("#addon-cms-agents-addons-form-node .form-template").html();
+
+  $("#addon-cms-agents-addons-form-node a.ajax-box").data("on-select", function($item) {
+    $.colorbox.close();
+
+    var $data = $item.closest("[data-id]");
+    var formId = $data.data('id');
+    var formName = $data.data("name") || $data.find(".select-item").text() || $item.text() || $data.text();
+    if (! formId || !formName) {
+      return;
+    }
+
+    var html = template.replace(/:id/g, formId).replace(/:name/, formName);
+
+    var $tbody = $("#addon-cms-agents-addons-form-node table.ajax-selected tbody");
+    $tbody.prepend(html);
+  });
+<% end %>

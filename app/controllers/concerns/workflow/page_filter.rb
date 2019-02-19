@@ -44,8 +44,7 @@ module Workflow::PageFilter
   end
 
   def index_request
-    cond = { workflow_user_id: @cur_user._id }
-    render_items(cond)
+    render_items({ workflow_user_id: @cur_user._id })
   end
 
   def index_wait_close
@@ -59,13 +58,10 @@ module Workflow::PageFilter
   end
 
   def index_ready
-    cond = { state: "ready" }
-    render_items(cond)
+    render_items({ state: "ready" })
   end
 
   def index_closed
-    cond = { state: "closed" }
-    render_items(cond)
+    render_items({ state: "closed" })
   end
-
 end

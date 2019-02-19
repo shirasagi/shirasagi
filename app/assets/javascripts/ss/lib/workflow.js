@@ -41,7 +41,7 @@ SS_Workflow = function (el, options) {
     return false;
   });
 
-  this.$el.on("click", ".workflow-route-cacnel", function (e) {
+  this.$el.on("click", ".workflow-route-cancel", function (e) {
     pThis.loadRouteList();
     e.preventDefault();
     return false;
@@ -63,7 +63,7 @@ SS_Workflow = function (el, options) {
   });
 
   this.tempFile = new SS_Addon_TempFile(
-    $(".mod-workflow-approve .upload-drop-area"), this.options.user_id,
+    ".mod-workflow-approve .upload-drop-area", this.options.user_id,
     { select: function(files, dropArea) { pThis.onDropFile(files, dropArea); } }
   );
 };
@@ -133,10 +133,14 @@ SS_Workflow.prototype = {
 
     return fileIds;
   },
-  composeWorkflowUrl: function(type) {
+  composeWorkflowUrl: function(controller) {
+    if (this.options && this.options.paths && this.options.paths[controller]) {
+      return this.options.paths[controller];
+    }
+
     var uri = location.pathname.split("/");
     uri[2] = this.options.workflow_node;
-    uri[3] = type;
+    uri[3] = controller;
     if (uri.length > 5) {
       uri.splice(4, 1);
     }
@@ -144,6 +148,7 @@ SS_Workflow.prototype = {
     return uri.join("/");
   },
   updateItem: function($this) {
+    var pThis = this;
     var updatetype = $this.attr("updatetype");
     var approvers = this.collectApprovers();
     if ($.isEmptyObject(approvers) && updatetype === "request") {
@@ -161,7 +166,6 @@ SS_Workflow.prototype = {
     var workflow_comment = $("#workflow_comment").prop("value");
     var workflow_pull_up = $("#workflow_pull_up").prop("value");
     var workflow_on_remand = $("#workflow_on_remand").prop("value");
-    var redirect_location = this.options.redirect_location;
     var remand_comment = $("#remand_comment").prop("value");
     var forced_update_option;
     if (updatetype == "request") {
@@ -192,15 +196,27 @@ SS_Workflow.prototype = {
         workflow_users: this.collectDelegatees()
       },
       success: function (data) {
-        if (data["workflow_alert"]) {
-          alert(data["workflow_alert"]);
+        if (data.workflow_alert) {
+          alert(data.workflow_alert);
           return;
         }
-        if (data["workflow_state"] === "approve" && redirect_location !== "") {
-          location.href = redirect_location;
-        } else {
+
+        if (data.redirect && data.redirect.reload) {
           location.reload();
+          return;
         }
+
+        if (data.redirect && data.redirect.show) {
+          location.href = data.redirect.show;
+          return;
+        }
+
+        if (data["workflow_state"] === "approve" && pThis.options.redirect_location) {
+          location.href = pThis.options.redirect_location;
+          return;
+        }
+
+        location.reload();
       },
       error: function(xhr, status) {
         try {

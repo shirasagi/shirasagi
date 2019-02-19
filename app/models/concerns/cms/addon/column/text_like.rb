@@ -24,4 +24,8 @@ module Cms::Addon::Column::TextLike
     options['placeholder'] = place_holder if place_holder.present?
     options
   end
+
+  def form_check_enabled?
+    super || (max_length.present? && max_length > 0)
+  end
 end

@@ -6,9 +6,7 @@ Gws_Schedule_Integration.paths.newWebmail = <%== new_webmail_mail_path(webmail_m
 Gws_Schedule_Integration.render();
 <% end %>
 
-<div class="no-print">
-  <%= link_to(I18n.t('ss.links.back'), { action: :index }.merge(request.query_parameters)) %>
-</div>
+<%= render 'ss/crud/print_preview_head', links: [[ I18n.t('ss.links.back'), { action: :index }.merge(request.query_parameters) ]] %>
 
 <section class="main-box gws-schedule-box sheet">
   <header>

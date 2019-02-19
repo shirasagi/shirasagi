@@ -11,6 +11,16 @@ module Opendata::Addon
     end
   end
 
+  module EstatCategory
+    extend SS::Addon
+    extend ActiveSupport::Concern
+
+    included do
+      embeds_ids :estat_categories, class_name: "Opendata::Node::EstatCategory", metadata: { on_copy: :safe }
+      permit_params estat_category_ids: []
+    end
+  end
+
   module CategorySetting
     extend SS::Addon
     extend ActiveSupport::Concern
@@ -41,6 +51,36 @@ module Opendata::Addon
     end
   end
 
+  module EstatCategorySetting
+    extend SS::Addon
+    extend ActiveSupport::Concern
+
+    included do
+      embeds_ids :st_estat_categories, class_name: "Cms::Node"
+      permit_params st_estat_category_ids: []
+    end
+
+    def default_st_estat_categories
+      site = self.try(:cur_site) || self.try(:site)
+      return [] if site.blank?
+      categories = Opendata::Node::EstatCategory.site(site).sort(depth: 1, order: 1)
+      first_node = categories.first
+      return [] if first_node.blank?
+      return [first_node.parent].compact
+    end
+
+    def st_parent_estat_categories
+      categories = []
+      parents = st_estat_categories.sort_by { |cate| cate.filename.count("/") }
+      while parents.present?
+        parent = parents.shift
+        parents = parents.map { |c| c.filename !~ /^#{parent.filename}\// ? c : nil }.compact
+        categories << parent
+      end
+      categories
+    end
+  end
+
   module Area
     extend SS::Addon
     extend ActiveSupport::Concern
@@ -48,6 +88,11 @@ module Opendata::Addon
     included do
       embeds_ids :areas, class_name: "Opendata::Node::Area"
       permit_params area_ids: []
+    end
+
+    def pref_codes
+      codes = areas.map { |area| area.pref_code }.compact
+      codes.partition { |code| code.city.blank? }
     end
   end
 

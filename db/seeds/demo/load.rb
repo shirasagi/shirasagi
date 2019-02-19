@@ -12,6 +12,7 @@ require "#{Rails.root}/db/seeds/cms/workflow"
 require "#{Rails.root}/db/seeds/cms/members"
 
 Dir.chdir @root = File.dirname(__FILE__)
+g_seisaku = SS::Group.where(name: "シラサギ市/企画政策部/政策課").first
 
 ## -------------------------------------
 puts "# files"
@@ -187,7 +188,7 @@ puts "# forms"
 
 def save_form(data)
   puts data[:name]
-  cond = { site_id: @site._id, name: data[:name] }
+  cond = { site_id: @site._id, name: data[:name], sub_type: data[:sub_type] }
   html = File.read("forms/" + data.delete(:filename)) rescue nil
 
   item = Cms::Form.find_or_create_by(cond)
@@ -218,6 +219,18 @@ def save_column(type, data)
     model = Cms::Column::Select
   when :file_upload
     model = Cms::Column::FileUpload
+  when :head_line
+    model = Cms::Column::Headline
+  when :url_field_2
+    model = Cms::Column::UrlField2
+  when :list
+    model = Cms::Column::List
+  when :table
+    model = Cms::Column::Table
+  when :youtube
+    model = Cms::Column::Youtube
+  when :free
+    model = Cms::Column::Free
   end
   puts data[:name]
   cond = { site_id: @site._id, form_id: data[:form].id, name: data[:name] }
@@ -227,22 +240,98 @@ def save_column(type, data)
   item
 end
 
-form = save_form(name: '観光情報', order: 10, state: 'public', filename: '1.html')
+def save_init_column(data)
+  puts "[#{data[:order]}]#{data[:column].name}"
+  cond = { site_id: @site._id, order: data[:order] }
+
+  item = Cms::InitColumn.find_or_create_by(cond)
+  item.attributes = data.reverse_merge(cur_site: @site)
+  puts item.errors.full_messages unless item.save
+  item
+end
+
+form = save_form(name: '観光情報', order: 10, state: 'public', filename: '1.html', sub_type: 'static', group_ids: [g_seisaku.id])
 
 form_columns = [
-  save_column(:file_upload, form: form, name: 'メイン画像', order: 10, required: 'required', tooltips: '画像ファイルをアップロードしてください。', html_tag: 'img'),
-  save_column(:text_area, form: form, name: '説明文', order: 20, required: 'required', tooltips: '説明文を入力してください。'),
-  save_column(:text, form: form, name: '所在地', order: 30, required: 'optional', tooltips: '住所を入力してください。', input_type: 'text'),
+  save_column(:file_upload, form: form, name: 'メイン画像', order: 10, required: 'required', tooltips: '画像ファイルをアップロードしてください。', html_tag: 'img', file_type: 'image', layout: %Q({% if value.file %}\n<img src="{{ value.file.url }}" alt="{{ value.image_text | default: value.file.humanized_name }}"　/>\n{% endif %})),
+  save_column(:text_area, form: form, name: '説明文', order: 20, required: 'required', tooltips: '観光地の説明を入力してください。'),
+  save_column(:text, form: form, name: '所在地', order: 30, required: 'optional', tooltips: '所在地を入力してください。', input_type: 'text'),
   save_column(:text, form: form, name: 'アクセス', order: 40, required: 'optional', tooltips: 'アクセス情報を入力してください。', input_type: 'text'),
   save_column(:text, form: form, name: '営業時間', order: 50, required: 'optional', tooltips: '営業時間を入力してください。', input_type: 'text'),
   save_column(:text, form: form, name: '休業日', order: 60, required: 'optional', tooltips: '休業日を入力してください。', input_type: 'text'),
-  save_column(:text, form: form, name: '料金', order: 70, required: 'optional', input_type: 'text'),
-  save_column(:text, form: form, name: '電話番号', order: 80, required: 'optional', tooltips: '電話番号を入力してください。', input_type: 'text'),
-  save_column(:text, form: form, name: 'E-mail', order: 90, required: 'optional', tooltips: 'メールアドレスを入力してください。', input_type: 'email'),
-  save_column(:url, form: form, name: 'ホームページ', order: 100, required: 'optional', tooltips: 'URLを入力してください。', html_tag: 'a'),
-  save_column(:file_upload, form: form, name: '写真1', order: 110, required: 'optional', tooltips: '写真をアップロードしてください。', html_tag: 'a+img'),
-  save_column(:file_upload, form: form, name: '写真2', order: 120, required: 'optional', tooltips: '写真をアップロードしてください。', html_tag: 'a+img'),
+  save_column(:text, form: form, name: '料金', order: 70, required: 'optional', tooltips: '料金を入力してください。', input_type: 'text'),
+  save_column(:text, form: form, name: '電話番号', order: 80, required: 'optional', tooltips: '電話番号を入力してください。', input_type: 'tel'),
+  save_column(:text, form: form, name: 'E-mail', order: 90, required: 'optional', tooltips: 'E-mailを入力してください。', input_type: 'email'),
+  save_column(:url, form: form, name: 'ホームページ', order: 100, required: 'optional', tooltips: 'ホームページのURLを入力してください。'),
+  save_column(:file_upload, form: form, name: '写真1', order: 110, required: 'optional', tooltips: '写真を登録してください。', html_tag: 'img', file_type: 'image', layout: %Q(<a href="{{ value.file.url }}"><img src="{{ value.file.thumb_url }}" alt="{{ value.image_text | default: value.file.humanized_name }}"></a>)),
+  save_column(:file_upload, form: form, name: '写真2', order: 120, required: 'optional', tooltips: '写真を登録してください。', html_tag: 'img', file_type: 'image', layout: %Q(<a href="{{ value.file.url }}"><img src="{{ value.file.thumb_url }}" alt="{{ value.image_text | default: value.file.humanized_name }}"></a>)),
+  save_column(:file_upload, form: form, name: '写真3', order: 130, required: 'optional', tooltips: '写真を登録してください。', html_tag: 'img', file_type: 'image', layout: %Q(<a href="{{ value.file.url }}"><img src="{{ value.file.thumb_url }}" alt="{{ value.image_text | default: value.file.humanized_name }}"></a>)),
+  save_column(:file_upload, form: form, name: '写真4', order: 140, required: 'optional', tooltips: '写真を登録してください。', html_tag: 'img', file_type: 'image', layout: %Q(<a href="{{ value.file.url }}"><img src="{{ value.file.thumb_url }}" alt="{{ value.image_text | default: value.file.humanized_name }}"></a>)),
+  save_column(:file_upload, form: form, name: '写真5', order: 150, required: 'optional', tooltips: '写真を登録してください。', html_tag: 'img', file_type: 'image', layout: %Q(<a href="{{ value.file.url }}"><img src="{{ value.file.thumb_url }}" alt="{{ value.image_text | default: value.file.humanized_name }}"></a>)),
 ]
+
+form_2 = save_form(name: 'イベント報告', order: 20, state: 'public', filename: '2.html', sub_type: 'static', group_ids: [g_seisaku.id])
+
+form_columns_2 = [
+  save_column(:file_upload, form: form_2, name: 'メイン写真', order: 10, required: 'required', tooltips: '写真を登録してください。', html_tag: 'img', file_type: 'image', layout: %Q({% if value.file %}\n<img src="{{ value.file.url }}" alt="{{ value.image_text | default: value.file.humanized_name }}"　/>\n{% endif %})),
+  save_column(:file_upload, form: form_2, name: 'サブ写真1', order: 20, required: 'optional', tooltips: '写真を登録してください。', html_tag: 'img', file_type: 'image', layout: %Q({% if value.file %}\n<img src="{{ value.file.url }}" alt="{{ value.image_text | default: value.file.humanized_name }}"　/>\n{% endif %})),
+  save_column(:file_upload, form: form_2, name: 'サブ写真2', order: 30, required: 'optional', tooltips: '写真を登録してください。', html_tag: 'img', file_type: 'image', layout: %Q({% if value.file %}\n <img src="{{ value.file.url }}" alt="{{ value.image_text | default: value.file.humanized_name }}"　/>\n{% endif %})),
+  save_column(:text_area, form: form_2, name: '内容', order: 40, required: 'optional', tooltips: 'イベント報告を入力してください。', layout: %Q({% if value.value %}\n<p>{{ value.value }}</p>\n{% endif %}))
+]
+
+form_3 = save_form(name: '広報シラサギ', order: 30, state: 'public', filename: '3.html', sub_type: 'static', group_ids: [g_seisaku.id])
+
+form_columns_3 = [
+  save_column(:file_upload, form: form_3, name: '表紙画像', order: 10, required: 'required', tooltips: '表紙の画像を登録してください。', html_tag: 'img', file_type: 'image', layout: %Q({% if value.file %}\n<img src="{{ value.file.url }}" alt="{{ value.image_text | default: value.file.humanized_name }}"　/>\n{% endif %})),
+  save_column(:file_upload, form: form_3, name: '全ページ', order: 20, required: 'required', tooltips: '全ページのPDFを登録してください。', html_tag: 'img', file_type: 'attachment'),
+  save_column(:file_upload, form: form_3, name: '個別ページ1', order: 30, required: 'optional', tooltips: '個別ページのPDFを登録してください。', html_tag: 'img',file_type: 'attachment'),
+  save_column(:file_upload, form: form_3, name: '個別ページ2', order: 40, required: 'optional', tooltips: '個別ページのPDFを登録してください。', html_tag: 'img', file_type: 'attachment'),
+  save_column(:file_upload, form: form_3, name: '個別ページ3', order: 50, required: 'optional', tooltips: '個別ページのPDFを登録してください。', html_tag: 'img', file_type: 'attachment'),
+  save_column(:file_upload, form: form_3, name: '個別ページ4', order: 60, required: 'optional', tooltips: '個別ページのPDFを登録してください。', html_tag: 'img', file_type: 'attachment'),
+  save_column(:file_upload, form: form_3, name: '個別ページ5', order: 70, required: 'optional', tooltips: '個別ページのPDFを登録してください。', html_tag: 'img', file_type: 'attachment'),
+  save_column(:file_upload, form: form_3, name: '個別ページ6', order: 80, required: 'optional', tooltips: '個別ページのPDFを登録してください。', html_tag: 'img', file_type: 'attachment'),
+  save_column(:file_upload, form: form_3, name: '個別ページ7', order: 90, required: 'optional', tooltips: '個別ページのPDFを登録してください。', html_tag: 'img', file_type: 'attachment'),
+  save_column(:file_upload, form: form_3, name: '個別ページ8', order: 100, required: 'optional', tooltips: '個別ページのPDFを登録してください。', html_tag: 'img', file_type: 'attachment'),
+  save_column(:file_upload, form: form_3, name: '個別ページ9', order: 110, required: 'optional', tooltips: '個別ページのPDFを登録してください。', html_tag: 'img', file_type: 'attachment'),
+  save_column(:file_upload, form: form_3, name: '個別ページ10', order: 120, required: 'optional', tooltips: '個別ページのPDFを登録してください。', html_tag: 'img', file_type: 'attachment'),
+]
+
+form_4 = save_form(name: 'ブロック入力', order: 40, state: 'public', sub_type: 'entry', group_ids: [g_seisaku.id])
+
+form_columns_4 = [
+  save_column(:text, form: form_4, name: '一行入力', order: 10, required: 'optional', input_type: 'text', layout: "{% if value.value %}\n<p>{{ value.value }}</p>\n{% endif %}"),
+  save_column(:text_area, form: form_4, name: '複数行入力', order: 20, required: 'optional', layout: "{% if value.value %}\n<p>{{ value.value | newline_to_br }}</p>\n{% endif %}"),
+  save_column(:head_line, form: form_4, name: '見出し', order: 30, required: 'optional'),
+  save_column(:url_field_2, form: form_4, name: 'リンク', order: 40, required: 'optional', layout: %Q({% if value.link %}\n{% if value.label %}\n<p><a href="{{ value.link }}">{{ value.label }}</a></p>\n{% else %}\n<p><a href="{{ value.link }}">{{ value.link }}</a></p>\n{% endif %}\n{% endif %})),
+  save_column(:file_upload, form: form_4, name: 'イメージ', order: 50, required: 'optional', file_type: 'image', layout: "<p>{{ value.html }}</p>"),
+  save_column(:file_upload, form: form_4, name: '添付ファイル', order: 60, required: 'optional', file_type: 'attachment', layout: %Q(<p><a href="{{ value.file.url }}">{{ value.attachment_text  }}</a></p>)),
+  save_column(:list, form: form_4, name: '番号付きリスト', order: 70, required: 'optional', list_type: 'ol'),
+  save_column(:list, form: form_4, name: '番号なしリスト', order: 80, required: 'optional', list_type: 'ol'),
+  save_column(:table, form: form_4, name: '表', order: 90, required: 'optional'),
+  save_column(:youtube, form: form_4, name: 'YouTube埋め込み', order: 100, required: 'optional'),
+  save_column(:file_upload, form: form_4, name: '動画埋め込み', order: 110, required: 'optional', file_type: 'video'),
+  save_column(:free, form: form_4, name: '自由入力', order: 120, required: 'optional'),
+]
+
+form_5 = save_form(name: 'インタビュー', order: 50, state: 'public', sub_type: 'entry', group_ids: [g_seisaku.id])
+
+form_columns_5 = [
+  save_column(:file_upload, form: form_5, name: '画像', order: 10, required: 'optional', tooltips: '画像を登録してください。', file_type: 'image', layout: %Q({% if value.file %}\n<p><img src="{{ value.file.url }}" alt="{{ value.image_text | default: value.file.humanized_name }}"　/></p>\n{% endif %})),
+  save_column(:text, form: form_5, name: '名前', order: 20, required: 'optional', tooltips: '名前を入力してください。', input_type: 'text', layout: %Q({% if value.value %}\n<p class="inteview-name">{{ value.value }}</p>\n{% endif %})),
+  save_column(:head_line, form: form_5, name: '質問', order: 30, required: 'optional', tooltips: '質問を入力してください。', layout: %Q({% if value.text %}\n<h2>{{ value.text }}</h2>\n{% endif %})),
+  save_column(:text_area, form: form_5, name: '回答', order: 40, required: 'optional', tooltips: '回答を入力してください。', layout: %Q({% if value.value %}\n<p>{{ value.value }}</p>\n{% endif %})),
+  save_column(:file_upload, form: form_5, name: '画像左', order: 50, required: 'optional', tooltips: "画像を登録してください。\nテキストの左に回り込みます。", file_type: 'image', layout: %Q({% if value.file %}\n<p class="float-left"><img src="{{ value.file.url }}" alt="{{ value.image_text | default: value.file.humanized_name }}"　/></p>\n{% endif %})),
+  save_column(:file_upload, form: form_5, name: '画像右', order: 60, required: 'optional', tooltips: "画像を登録してください。\nテキストの右に回り込みます。", file_type: 'image', layout: %Q({% if value.file %}\n<p class="float-right"><img src="{{ value.file.url }}" alt="{{ value.image_text | default: value.file.humanized_name }}"　/></p>\n{% endif %})),
+]
+
+save_init_column(order: 10, form: form_5, column: form_columns_5[0])
+save_init_column(order: 20, form: form_5, column: form_columns_5[1])
+save_init_column(order: 30, form: form_5, column: form_columns_5[2])
+save_init_column(order: 40, form: form_5, column: form_columns_5[4])
+save_init_column(order: 50, form: form_5, column: form_columns_5[3])
+save_init_column(order: 60, form: form_5, column: form_columns_5[2])
+save_init_column(order: 70, form: form_5, column: form_columns_5[5])
+save_init_column(order: 80, form: form_5, column: form_columns_5[3])
 
 ## -------------------------------------
 puts "# nodes"
@@ -423,7 +512,7 @@ categories = Hash[*array.flatten]
 save_node route: "cms/node", filename: "use", name: "ご利用案内"
 
 ## article
-save_node route: "article/page", filename: "docs", name: "記事", shortcut: "show", st_form_ids: [form.id]
+save_node route: "article/page", filename: "docs", name: "記事", shortcut: "show", st_form_ids: [form.id, form_2.id, form_3.id, form_4.id, form_5.id], st_form_default_id: form_4.id
 
 ## archive
 save_node route: "cms/archive", filename: "docs/archive", name: "アーカイブ", layout_id: layouts["pages"].id, conditions: %w(docs)
@@ -1081,24 +1170,99 @@ save_page route: "event/page", filename: "calendar/page28.html", name: "住民�
 file_7 = save_ss_files "ss_files/key_visual/keyvisual01.jpg", filename: "keyvisual01.jpg", name: "keyvisual01.jpg", model: "ss/temp_file"
 file_8 = save_ss_files "ss_files/key_visual/keyvisual02.jpg", filename: "keyvisual02.jpg", name: "keyvisual02.jpg", model: "ss/temp_file"
 file_9 = save_ss_files "ss_files/key_visual/keyvisual03.jpg", filename: "keyvisual03.jpg", name: "keyvisual03.jpg", model: "ss/temp_file"
+file_10 = save_ss_files "ss_files/article/img.png", filename: "img.jpg", name: "img.jpg", model: "ss/temp_file"
+file_11 = save_ss_files "ss_files/article/magazine.png", filename: "magazine.png", name: "magazine.png", model: "ss/temp_file"
+file_12 = save_ss_files "ss_files/article/img_min.png", filename: "img_min.png", name: "img_min.png", model: "ss/temp_file"
+file_13 = save_ss_files "ss_files/article/pdf_file.pdf", filename: "pdf_file.pdf", name: "テスト", model: "ss/temp_file"
+file_14 = save_ss_files "ss_files/article/file.pdf", filename: "file.pdf", name: "2019年1月号表紙", model: "ss/temp_file"
+file_15 = save_ss_files "ss_files/article/file(2).pdf", filename: "file(2).pdf", name: "お知らせ", model: "ss/temp_file"
+file_16 = save_ss_files "ss_files/article/file(3).pdf", filename: "file(3).pdf", name: "くらしの情報", model: "ss/temp_file"
+file_17 = save_ss_files "ss_files/article/file(4).pdf", filename: "file(4).pdf", name: "まちの話題", model: "ss/temp_file"
+file_18 = save_ss_files "ss_files/article/file(5).pdf", filename: "file(5).pdf", name: "トピックス", model: "ss/temp_file"
+file_19 = save_ss_files "ss_files/article/file(6).pdf", filename: "file(6).pdf", name: "フォトニュース", model: "ss/temp_file"
+file_20 = save_ss_files "ss_files/article/file(7).pdf", filename: "file(7).pdf", name: "保健だより", model: "ss/temp_file"
+file_21 = save_ss_files "ss_files/article/file(8).pdf", filename: "file(8).pdf", name: "図書だより", model: "ss/temp_file"
+file_22 = save_ss_files "ss_files/article/file(9).pdf", filename: "file(9).pdf", name: "広報SHIRASAGI 2019年1月号 ", model: "ss/temp_file"
+file_23 = save_ss_files "ss_files/article/file(10).pdf", filename: "file(10).pdf", name: "新年のご挨拶", model: "ss/temp_file"
+file_24 = save_ss_files "ss_files/article/file(11).pdf", filename: "file(11).pdf", name: "議会だより", model: "ss/temp_file"
 
 save_page route: "article/page", filename: "docs/page29.html", name: "シラサギ博物館",
   layout_id: layouts["pages"].id, form_id: form.id, category_ids: [categories["kanko/geijyutsu"].id],
+  keywords: "記事, 文化・芸術", description: "説明文を入力します。" * 6,
   column_values: [
-    form_columns[0].serialize_value(file_7.id),
-    form_columns[1].serialize_value("説明文を入力します。説明文を入力します。説明文を入力します。説明文を入力します。説明文を入力します。説明文を入力します。"),
-    form_columns[2].serialize_value("大鷺県シラサギ市小鷺町1丁目1番地1号"),
-    form_columns[3].serialize_value("シラサギ駅から徒歩5分"),
-    form_columns[4].serialize_value("午前10時から午後4時"),
-    form_columns[5].serialize_value("毎週水曜日"),
-    form_columns[6].serialize_value("大人600円、中高生500円、小学生300円"),
-    form_columns[7].serialize_value("00-0000-0000"),
-    form_columns[8].serialize_value("shirasagi@example.jp"),
-    form_columns[9].serialize_value("http://demo.ss-proj.org/"),
-    form_columns[10].serialize_value(file_8.id),
-    form_columns[11].serialize_value(file_9.id),
+    form_columns[0].value_type.new(column: form_columns[0], file_id: file_10.id, image_text: "メイン写真", image_html_type: "image"),
+    form_columns[1].value_type.new(column: form_columns[1], value: "説明文を入力します。" * 6),
+    form_columns[2].value_type.new(column: form_columns[2], value: "大鷺県シラサギ市小鷺町1丁目1番地1号"),
+    form_columns[3].value_type.new(column: form_columns[3], value: "シラサギ駅から徒歩5分"),
+    form_columns[4].value_type.new(column: form_columns[4], value: "午前10時から午後4時"),
+    form_columns[5].value_type.new(column: form_columns[5], value: "毎週水曜日"),
+    form_columns[6].value_type.new(column: form_columns[6], value: "大人600円、中高生500円、小学生300円"),
+    form_columns[7].value_type.new(column: form_columns[7], value: "00-0000-0000"),
+    form_columns[8].value_type.new(column: form_columns[8], value: "shirasagi@example.jp"),
+    form_columns[9].value_type.new(column: form_columns[9], value: "http://demo.ss-proj.org/"),
+    form_columns[10].value_type.new(column: form_columns[10], file_id: file_10.id, image_text: "写真1", image_html_type: "image"),
+    form_columns[11].value_type.new(column: form_columns[11], file_id: file_10.id, image_text: "写真2", image_html_type: "image"),
+    form_columns[12].value_type.new(column: form_columns[12], file_id: file_10.id, image_text: "写真3", image_html_type: "image"),
+    form_columns[13].value_type.new(column: form_columns[13], file_id: file_10.id, image_text: "写真4", image_html_type: "image"),
+    form_columns[14].value_type.new(column: form_columns[14], file_id: file_10.id, image_text: "写真5", image_html_type: "image"),
   ],
   map_points: [{ "name" => "", "loc" => [35.7186823, 139.7741203], "text" => "" }],
+  group_ids: [g_seisaku.id]
+
+save_page route: "article/page", filename: "docs/page30.html", name: "ふれあいフェスティバル開催報告",
+  layout_id: layouts["pages"].id, form_id: form_2.id, keywords: "記事, イベント", released: '2019/01/30 10:52',
+  category_ids: [categories["oshirase/event"].id],
+  column_values: [
+    form_columns_2[0].value_type.new(column: form_columns_2[0], file_id: file_10.id, image_text: "画像1", image_html_type: "image"),
+    form_columns_2[1].value_type.new(column: form_columns_2[1], file_id: file_10.id, image_text: "画像2", image_html_type: "image"),
+    form_columns_2[2].value_type.new(column: form_columns_2[2], file_id: file_10.id, image_text: "画像3", image_html_type: "image"),
+    form_columns_2[3].value_type.new(column: form_columns_2[3], value: [ "1月30日、シラサギ博物館でふれあいフェスティバルを開催しました。", "内容を入力します。" * 15, "内容を入力します。" * 15 ].join("\n")),
+  ],
+  group_ids: [g_seisaku.id]
+
+save_page route: "article/page", filename: "docs/page31.html", name: "広報SHIRASAGI 2019年1月号",
+  layout_id: layouts["pages"].id, form_id: form_3.id, category_ids: [categories["shisei/koho/shirasagi"].id], keywords: "記事, 広報SHIRASAGI",
+  file_ids: [file_14.id, file_15.id, file_16.id, file_17.id, file_18.id, file_19.id, file_20.id, file_21.id, file_22.id, file_23.id, file_24.id,],
+  column_values: [
+    form_columns_3[0].value_type.new(column: form_columns_3[0], file_id: file_11.id, image_text: "広報SHIRASAGI 2019年1月号   表紙", image_html_type: "image"),
+    form_columns_3[1].value_type.new(column: form_columns_3[1], file_id: file_22.id, image_text: "広報SHIRASAGI 2019年1月号"),
+    form_columns_3[2].value_type.new(column: form_columns_3[2], file_id: file_14.id, image_text: "2019年1月号表紙"),
+    form_columns_3[3].value_type.new(column: form_columns_3[3], file_id: file_23.id, image_text: "新年のご挨拶"),
+    form_columns_3[4].value_type.new(column: form_columns_3[4], file_id: file_18.id, image_text: "トピックス"),
+    form_columns_3[5].value_type.new(column: form_columns_3[5], file_id: file_16.id, image_text: "くらしの情報"),
+    form_columns_3[6].value_type.new(column: form_columns_3[6], file_id: file_20.id, image_text: "保健だより"),
+    form_columns_3[7].value_type.new(column: form_columns_3[7], file_id: file_17.id, image_text: "まちの話題"),
+    form_columns_3[8].value_type.new(column: form_columns_3[8], file_id: file_19.id, image_text: "フォトニュース"),
+    form_columns_3[9].value_type.new(column: form_columns_3[9], file_id: file_24.id, image_text: "議会だより"),
+    form_columns_3[10].value_type.new(column: form_columns_3[10], file_id: file_15.id, image_text: "お知らせ"),
+    form_columns_3[11].value_type.new(column: form_columns_3[11], file_id: file_21.id, image_text: "図書だより"),
+  ],
+  group_ids: [g_seisaku.id]
+
+save_page route: "article/page", filename: "docs/page32.html", name: "インタビュー",
+  layout_id: layouts["pages"].id, form_id: form_5.id, keywords: "記事",
+  column_values: [
+    # 画像
+    form_columns_5[0].value_type.new(column: form_columns_5[0], order: 0, file_id: file_10.id, image_text: "画像", image_html_type: "image"),
+    # 名前
+    form_columns_5[1].value_type.new(column: form_columns_5[1], order: 1, value: "白鷺 太郎さん"),
+    # 質問
+    form_columns_5[2].value_type.new(column: form_columns_5[2], order: 2, head: "h1", text: "質問を入力します。"),
+    # 画像左
+    form_columns_5[4].value_type.new(column: form_columns_5[4], order: 3, file_id: file_12.id, image_text: "画像", image_html_type: "image"),
+    # 回答
+    form_columns_5[3].value_type.new(column: form_columns_5[3], order: 4, value: [ "回答を入力します。" * 10, "回答を入力します。" * 10, "回答を入力します。" * 10, "回答を入力します。" * 10  ].join("\n")),
+    # 質問
+    form_columns_5[2].value_type.new(column: form_columns_5[2], order: 5, head: "h1", text: "質問を入力します。" * 2),
+    # 画像右
+    form_columns_5[5].value_type.new(column: form_columns_5[5], order: 6, file_id: file_12.id, image_text: "画像", image_html_type: "image"),
+    # 回答
+    form_columns_5[3].value_type.new(column: form_columns_5[3], order: 7, value: [ "回答を入力します。" * 10, "回答を入力します。" * 10, "回答を入力します。" * 10, "回答を入力します。" * 10 ].join("\n")),
+    # 質問
+    form_columns_5[2].value_type.new(column: form_columns_5[2], order: 8, head: "h1", text: "質問を入力します。" * 2),
+    # 回答
+    form_columns_5[3].value_type.new(column: form_columns_5[3], order: 9, value: [ "回答を入力します。" * 10, "回答を入力します。" * 10, "回答を入力します。" * 10, "回答を入力します。" * 10 ].join("\n")),
+  ],
   group_ids: [g_seisaku.id]
 
 ## -------------------------------------
@@ -1599,6 +1763,23 @@ save_source_cleaner_template name: "style", target_type: "attribute", target_val
 ## -------------------------------------
 puts "# postal code"
 Sys::PostalCode::OfficialCsvImportJob.import_from_zip("postal_code/13tokyo.zip")
+
+## -------------------------------------
+puts "# word dictionary"
+
+def save_word_dictionary(data)
+  puts data[:name]
+  cond = { site_id: @site.id, name: data[:name] }
+
+  body_file = data.delete(:body_file)
+  data[:body] = ::File.read(body_file)
+
+  item = Cms::WordDictionary.find_or_initialize_by cond
+  puts item.errors.full_messages unless item.update data
+  item
+end
+
+save_word_dictionary name: "機種依存文字", body_file: "#{Rails.root}/db/seeds/cms/word_dictionary/dependent_characters.txt"
 
 @site.editor_css_path = '/css/ckeditor_contents.css'
 @site.update!

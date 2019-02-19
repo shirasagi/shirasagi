@@ -4,7 +4,13 @@
   <dt><%= @model.t :related_page_ids %><%= @model.tt :related_page_ids %></dt>
   <dd>
     <%= f.hidden_field "related_page_ids[]", value: "", class: "hidden-ids" %>
-    <%= link_to t("cms.apis.pages.index"), cms_apis_pages_path, class: "ajax-box" %>
+    <%
+      page_params = {}
+      if @cur_node
+        page_params[:s] = { node: @cur_node }
+      end
+    %>
+    <%= link_to t("cms.apis.related_pages.index"), cms_apis_pages_path(page_params), class: "ajax-box" %>
   </dd>
   <dd>
     <table class="index ajax-selected">

@@ -62,6 +62,10 @@ class Gws::Workflow::FilesController < ApplicationController
     @cur_form ||= @item.form if @item.present?
   rescue Mongoid::Errors::DocumentNotFound => e
     return render_destroy(true) if params[:action] == 'destroy'
+    if params[:action] == 'show' && params[:state] != "all"
+      redirect_to gws_workflow_file_path(state: "all")
+      return
+    end
     raise e
   end
 

@@ -23,7 +23,7 @@ FactoryBot.define do
     trait :gws_circular_posts_item2 do
       member_ids { [gws_user.id] }
       due_date { Time.zone.tomorrow }
-      seen { { gws_user.group_ids.first.to_s => Time.zone.now } }
+      seen { { gws_user.id.to_s => Time.zone.now } }
     end
 
     trait :gws_circular_trashes do

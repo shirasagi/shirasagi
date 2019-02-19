@@ -2,7 +2,7 @@ module Mobile::PublicFilter
   extend ActiveSupport::Concern
 
   def mobile_path?
-    filters.include?(:mobile)
+    filter_include?(:mobile)
   end
 
   private

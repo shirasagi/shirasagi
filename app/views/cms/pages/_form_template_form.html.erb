@@ -17,9 +17,19 @@
     <%= button_tag(t('ss.buttons.change'), type: :button, class: %w(btn btn-form-change)) %>
 
     <%= jquery do %>
-      Cms_TemplateForm.render({
-        formUrlTemplate: <%== cms_apis_form_path(id: ':id', item_type: 'page', item_id: @item.new_record? ? nil : @item.id).to_json %>
-      });
+      Cms_Column_FileUpload.userId = <%= @cur_user.id %>;
+      Cms_Column_FileUpload.fileUploadPath = <%== cms_apis_temp_files_path(format: "json").to_json %>;
+      Cms_Column_FileUpload.fileSelectPath = <%== cms_apis_form_temp_file_select_path(id: ":fileId").to_json %>;
+
+      Cms_Column_Free.userId = <%= @cur_user.id %>;
+      Cms_Column_Free.fileUploadPath = <%== cms_apis_temp_files_path(format: "json").to_json %>;
+      Cms_Column_Free.fileSelectPath = <%== select_cms_apis_temp_file_path(id: ":fileId").to_json %>;
+
+      Cms_TemplateForm.userId = <%= @cur_user.id %>;
+      Cms_TemplateForm.confirms.delete = <%== t("ss.confirm.delete").to_json %>;
+      Cms_TemplateForm.paths.formColumn = <%== cms_apis_form_column_new_path(id: ":formId", column_id: ":columnId").to_json %>;
+      Cms_TemplateForm.paths.formUrlTemplate = <%== cms_apis_form_path(id: ':id', item_id: @item.new_record? ? nil : @item.id).to_json %>;
+      Cms_TemplateForm.render();
     <% end %>
   </dd>
 <% end %>

@@ -17,7 +17,7 @@ class Opendata::Dataset::Export::Zip
   def add_csv(zip)
     Dir.glob("#{@output_dir}/**/*").each do |file|
       name = file.gsub("#{@output_dir}/", "")
-      zip.add(name.encode('cp932'), file)
+      zip.add(name.encode('cp932', invalid: :replace, undef: :replace, replace: "_"), file)
     end
   end
 end

@@ -22,6 +22,8 @@ module Opendata::DatasetTemplateVariables
     template_variable_handler(:dataset_downloaded, :template_variable_handler_dataset_downloaded)
     template_variable_handler(:dataset_apps_count, :template_variable_handler_dataset_apps_count)
     template_variable_handler(:dataset_ideas_count, :template_variable_handler_dataset_ideas_count)
+    template_variable_handler('class_estat_categories', :template_variable_handler_class_estat_categories)
+    template_variable_handler('class_categories', :template_variable_handler_class_categories)
   end
 
   private
@@ -57,5 +59,13 @@ module Opendata::DatasetTemplateVariables
 
   def template_variable_handler_dataset_ideas_count(name, issuer)
     ERB::Util.html_escape(ideas.size.to_s)
+  end
+
+  def template_variable_handler_class_categories(name, issuer)
+    categories.to_a.map { |cate| "dataset-#{cate.basename}" }.join(" ")
+  end
+
+  def template_variable_handler_class_estat_categories(name, issuer)
+    estat_categories.to_a.map { |cate| "estat-#{cate.basename}" }.join(" ")
   end
 end

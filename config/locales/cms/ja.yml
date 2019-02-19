@@ -25,6 +25,7 @@ ja:
     input_directly: 直接入力する
     layout: レイアウト
     link_check: リンクチェック
+    form_check: 制約チェック
     list_view: リスト表示
     loop_html: ループHTML
     max_file_size: 最大ファイルサイズ
@@ -65,6 +66,25 @@ ja:
     view_site: サイト確認
     word_dictionary: 単語置換辞書
     form_not_selected: 定型フォームが選択されていません
+    default_form: 既定のフォーム
+    column_value_error_template: "%{name}の%{error}"
+    draft_page: 下書きページ
+    inplace_edit: 編集モード
+    preview_date: プレビュー日時
+    column_file_upload:
+      image_text_place_holder: 代替えテキストを入力してください。
+      video_description_place_holder: 動画の内容を説明する文書を入力してください。
+      attachment_text_place_holder: リンクテキストとして表示するファイル名を入力してください。
+      banner_link_place_holder: URLを入力してください。
+    column_table:
+      width: 列数
+      height: 行数
+      header: ヘッダ
+      create: 表を作成する
+      caption: キャプション
+    column_youtube_auto_width:
+      enabled: 画面幅に合わせる
+      disabled: 画面幅に合わせない
 
     adobe_reader:
       remark:
@@ -87,6 +107,10 @@ ja:
       add_crumb: パンくずを追加する
       send_verify_mail: 登録確認メールを送信する
       manage_columns: 入力項目を管理する
+      manage_init_columns: 初期ブロックを管理する
+      save_as_branch: 差替保存
+      ignore_alerts_and_save_as_branch: 警告を無視して差替保存
+      column_add_list: リストを追加する
     confirm:
       delete_item: 項目を削除してよろしいですか？
       close: 非公開状態で保存しようとしています
@@ -114,9 +138,11 @@ ja:
         search: フォルダーを検索
         select: フォルダーを設定する
       pages:
+        index: ページを選択する
+        search: ページを検索
+        select: ページを設定する
+      related_pages:
         index: 関連記事を選択する
-        search: 関連記事を検索
-        select: 関連記事を設定する
       pages_routes:
         index: ページ属性を選択する
         search: ページ属性を検索
@@ -145,7 +171,6 @@ ja:
     auto_correct:
       link: 自動修正
       notice: アクセシビリティチェック（保存時に自動で修正されます）
-      dependent_character: "[機種依存文字]"
       caption: キャプション
     links:
       ruby_on: ふりがなをつける
@@ -221,9 +246,36 @@ ja:
         text: テキスト
         email: メールアドレス
         tel: 電話番号
+      column_list_type:
+        ol: 番号付きリスト
+        ul: 番号なしリスト
+      column_file_type:
+        image: 画像
+        video: 動画
+        attachment: 添付ファイル
+        banner: バナー
+      column_image_html_type:
+        thumb: サムネイル
+        image: 画像貼付
+      column_header_type:
+        top: 上部
+        left: 左側
+        top-left: 上部と左側
+        none: なし
       max_name_length:
         '80': 80文字
         '0': 無制限
+      form_sub_type:
+        static: 定型フォーム
+        entry: ブロック型入力
+      loop_format:
+        shirasagi: SHIRASAGI
+        liquid: Liquid
+      alignment:
+        flow: 自動
+        left: 左
+        center: 中央
+        right: 右
 
     sns_share:
       fb_like: Facebook いいね！
@@ -233,7 +285,6 @@ ja:
       tweet: ツイート
       hatena: はてなブックマーク
       hatena_add: このエントリーをはてなブックマークに追加
-      google: Google+
       line: LINEで送る
 
     opendata_ref/license:
@@ -265,11 +316,17 @@ ja:
       cms/text_field: 一行入力
       cms/date_field: 日付入力
       cms/url_field: URL入力
+      cms/url_field2: URL入力
       cms/text_area: 複数行入力
       cms/select: ドロップダウン
       cms/radio_button: ラジオボタン
       cms/check_box: チェックボックス
       cms/file_upload: ファイルアップロード
+      cms/headline: 見出し入力
+      cms/list: リスト入力
+      cms/youtube: YouTube埋め込み
+      cms/free: 自由入力
+      cms/table: 表
 
   cms_role:
     edit_cms_sites: サイトの管理
@@ -406,6 +463,7 @@ ja:
       cms/child_list: 子リスト表示
       cms/form/node: 定型フォーム
       cms/form/page: 定型フォーム
+      cms/column/layout: レイアウト
       cms/column/text_like: 制約条件
       cms/column/select_like: 選択
 
@@ -439,19 +497,30 @@ ja:
       cms/loop_setting: ループHTML
       cms/command: コマンド
       cms/form: 定型フォーム
+      cms/init_column: 初期ブロック
       cms/column/base: 入力項目
       cms/column/text_field: 一行入力
       cms/column/date_field: 日付入力
       cms/column/url_field: URL入力
+      cms/column/url_field2: URL入力
       cms/column/text_area: 複数行入力
       cms/column/select: ドロップダウン
       cms/column/radio_button: ラジオボタン
       cms/column/check_box: チェックボックス
       cms/column/file_upload: ファイルアップロード
+      cms/column/headline: 見出し入力
+      cms/column/list: リスト入力
+      cms/column/youtube: YouTube埋め込み
+      cms/column/free: 自由入力
+      cms/column/table: 表
     errors:
       models:
         cms/model/node:
           routed_folders_under_uploader: アップローダー下に属性付きフォルダーは作成できません。アップローダーに切り替え、新規フォルダーよりフォルダーを作成してください。
+        cms/column/value/youtube:
+          attributes:
+            url:
+              youtube_id_can_not_get: からYouTubeIDが取得できませんでした。
     attributes:
       cms/content:
         released: 公開日時
@@ -585,6 +654,10 @@ ja:
         upper_html: 上部HTML
         lower_html: 下部HTML
         new_days: NEWマーク期間
+        loop_format: ループHTML形式
+        loop_liquid: ループHTML
+        no_items_display_state: ページ未検出時表示
+        substitute_html: 代替HTML
       cms/addon/page_group_list:
         condition_groups: 検索条件(グループ)
       cms/addon/tabs:
@@ -715,10 +788,15 @@ ja:
         name: 名前
         order: 並び順
         column_ids: 入力項目
+        init_column_ids: 初期ブロック
+        sub_type: 目的
       cms/addon/form/node:
         st_form_ids: 定型フォーム設定
       cms/addon/form/page:
         form_id: 定型フォーム
+      cms/init_column:
+        name: 名前
+        order: 並び順
       cms/column/base:
         route: 属性
         name: 名前
@@ -734,6 +812,17 @@ ja:
       cms/column/url_field:
         html_tag: HTMLタグ
         html_additional_attr: HTML追加属性
+      cms/column/url_field2:
+        html_tag: HTMLタグ
+        html_additional_attr: HTML追加属性
+        label_max_length: リンクテキスト最大長
+        label_place_holder: リンクテキストプレースホルダー
+        link_max_length: リンクURL最大長
+        link_place_holder: リンクURLプレースホルダー
+        label: リンクテキスト
+        link: リンクURL
+        max_length: 最大長
+        place_holder: プレースホルダー
       cms/column/select:
         place_holder: プレースホルダー
       cms/addon/column/text_like:
@@ -742,9 +831,69 @@ ja:
         additional_attr: 追加属性
       cms/addon/column/select_like:
         select_options: 選択肢
+      cms/addon/column/layout:
+        layout: レイアウト
       cms/column/file_upload:
         html_tag: HTMLタグ
         html_additional_attr: HTML追加属性
+        label_max_length: リンクテキスト最大長
+        label_place_holder: リンクテキストプレースホルダー
+        label: リンクテキスト
+        image_text: 代替えテキスト
+        max_length: 最大長
+        place_holder: プレースホルダー
+        file_type: ファイルタイプ
+      cms/column/list:
+        list_type: 種類
+      cms/column/value/base:
+        alignment: 配置
+      cms/column/value/check_box:
+        values: 選択肢
+      cms/column/value/date_field:
+        html_tag: HTMLタグ
+        html_additional_attr: HTML追加属性
+        date: 日付
+      cms/column/value/file_upload:
+        html_tag: HTMLタグ
+        html_additional_attr: HTML追加属性
+        file_id: ファイル
+        label: リンクテキスト
+        image_text: 代替えテキスト
+        video_description: 動画の内容
+        attachment_text: リンクテキスト
+        banner_link: URL
+      cms/column/value/radio_button:
+        value: 選択肢
+      cms/column/value/select:
+        value: 選択肢
+      cms/column/value/text_area:
+        value: 文
+      cms/column/value/text_field:
+        value: 文字列
+      cms/column/value/url_field:
+        html_tag: HTMLタグ
+        html_additional_attr: HTML追加属性
+        value: URL
+      cms/column/value/url_field2:
+        html_tag: HTMLタグ
+        html_additional_attr: HTML追加属性
+        label: リンクテキスト
+        value: リンクURL
+      cms/column/value/headline:
+        head: 見出し
+        text: テキスト
+      cms/column/value/list:
+        order: 順番
+        text: テキスト
+      cms/column/value/youtube:
+        url: URL
+        width: 幅
+        height: 高さ
+        auto_width: 画面幅に合わせる
+      cms/column/value/free:
+        value: テキスト
+      cms/column/value/table:
+        value: 表
 
   errors:
     messages:
@@ -770,6 +919,7 @@ ja:
       link_check_success: 成功
       link_check_failure: 失敗
       link_check_failed_to_connect: リンクチェックに失敗しました。次のURLに接続できません。
+      form_check_failed_to_connect: 内容チェックに失敗しました。次のURLに接続できません。
       mobile_size_check_success: 成功
       mobile_size_check_failure: 失敗
       mobile_size_check_disable: モバイルサイズが設定されていません。
@@ -778,9 +928,8 @@ ja:
       mobile_size_check_server_error: 本文データサイズのチェック中にサーバーエラーが発生しました。
       not_a_child_group: はサイトに所属するグループを設定してください。
       not_found_parent_group: 親グループが存在しません。
-      invalid_order_of_h: 見出しの順番が不正です。
+      invalid_order_of_h: 見出し(H)の順番が不正です。
       invalid_multibyte_character: 英数字は半角文字を入力してください。
-      invalid_dependent_character: 機種依存文字が含まれています。
       invalid_kana_character: 半角カナ文字が含まれています。
       invalid_date_format: 日付の表記は○年○月○日としてください。
       invalid_adjacent_a: 隣接する同じリンクを一つのリンクにまとめてください。
@@ -808,14 +957,10 @@ ja:
           - 行方向であればscope="colを設定してください。
           - 列方向であればscope="row"を設定してください。
         invalid_order_of_h:
-          - 見出し(H)の順番が不正です。
           - 適切な順に配置してください。
         invalid_multibyte_character:
           - 本文に全角英数が含まれています。
           - 半角英数に置き換えるか削除してください。
-        invalid_dependent_character:
-          - 本文に機種依存文字が含まれています。
-          - 他の文字に置き換えるか削除してください。
         invalid_kana_character:
           - 本文に半角カナ文字が含まれています。
           - 全角文字に置き換えるか削除してください。
@@ -1012,6 +1157,7 @@ ja:
         - |-
           下記のように記述します。
           #{class}　リンク先のファイル名が表示されます。ファイル名に拡張子がある場合、拡張子を除いた部分が表示されます。
+          #{class_categories} リンク先ページ内がカテゴリに関連付けられている場合、全てのカテゴリのフォルダ名が表示されます。
           #{date}　リンク先のページの公開日時が「2015/4/1」の形式で表示されます。
           #{date.default}　リンク先のページの公開日時が「2015/4/1」の形式で表示されます。
           #{date.iso}　リンク先のページの公開日時が「2015-04-01」の形式で表示されます。
@@ -1032,6 +1178,7 @@ ja:
           #{group}　リンク先ページの所有グループが表示されます。
           #{groups}　リンク先ページの全ての所有グループが表示されます。
           #{img.src}　リンク先ページ内に画像が存在する場合、リンク先ページの先頭の画像が表示されます。それ以外の場合、既定のパスが表示されます。
+          #{thumb.src}　リンク先ページ内のサムネイル画像が表示されます。サムネイル画像が指定されていない場合は、#{img.src}に準じます。
           #{categories}　リンク先ページ内がカテゴリに関連付けられている場合、リンク先ページのカテゴリリストが表示されます。
           #{pages.count}　リンク先ページ内にページが存在する場合、リンク先ページ内のページ数が表示されます。
           #{tags} リンク先ページののタグが表示されます。
@@ -1135,6 +1282,11 @@ ja:
         - 指定順での並び順は降順です
       limit:
         - リストの表示件数を指定します。
+      loop_format:
+        - ループHTML形式の形式を選択します。
+        -
+        - "SHIRASAGI: シラサギ形式で上部 HTML, ループ HTML, 下部 HTMLを記述します。"
+        - "Liquid: Liquid 形式でループ HTML を記述します。"
       upper_html:
         - リスト部分の上部に任意の内容のHTMLを記述することが可能です。
         - |-
@@ -1173,7 +1325,11 @@ ja:
           #{categories}　リンク先ページ内がカテゴリに関連付けられている場合、リンク先ページのカテゴリリストが表示されます。
           #{pages.count}　リンク先ページ内にページが存在する場合、リンク先ページ内のページ数が表示されます。
           #{tags} リンク先ページのタグが表示されます。
-          #{child_items} カテゴリーリストで使用できるカテゴリー内リストが表示されます。
+          #{child_items} フォルダー内のフォルダーやページが子リストで表示されます。
+          #{category_nodes} フォルダー内のカテゴリーフォルダーが子リストで表示されます。
+          #{category_pages} カテゴリーが設定されたページが子リストで表示されます。
+          #{child_nodes} フォルダー内のフォルダーが子リストで表示されます。
+          #{child_pages} フォルダー内のページが子リストで表示されます。
 
           #{if 条件分岐タグA}内容A#{end} 条件分岐タグAがtrueのとき、内容Aを表示します。
           #{if 条件分岐タグA}内容A#{elsif 条件分岐タグB}内容B#{end} 条件分岐タグAがtrueの場合は内容A、条件分岐タグAがfalseかつ条件分岐タグBがtrueの場合は内容Bを表示します。
@@ -1195,6 +1351,23 @@ ja:
       lower_html:
         - リスト部分の下部に任意の内容のHTMLを記述することが可能です。
         - 上部HTMLと同じテンプレートが使用できます。
+      no_items_display_state:
+        - ページが見つからない時、上部HTMLと下部HTMLを表示するか設定できます。
+      substitute_html:
+        - ページが見つからない時、ループHTMLの代わりに表示するHTMLを記述することが可能です。
+      loop_liquid:
+        - Liquid 形式で記述します。
+        - |-
+          使用例：
+          {% for page in pages %}
+          &lt;article class="item-{{ page.css_class }} {% if page.new? %}new{% endif %} {% if page.current? %}current{% endif %}">
+            &lt;header>
+              &lt;time datetime="{{ page.date }}">{{ page.date | ss_date: "long" }}&lt;/time>
+              &lt;h2>&lt;a href="{{ page.url }}">{{ page.index_name }}&lt;/a>&lt;/h2>
+            &lt;/header>
+            &lt;p>#{summary}&lt;/p>
+          &lt;/article>
+          {% endfor %}
       new_days:
         - 設定した期間内に作成されたページへのリンクにNEWマークを付与するためのclassがふられます。
 
@@ -1515,7 +1688,7 @@ ja:
     cms/addon/child_list:
       child_list:
         - |-
-          #{child_items}を記述時に表示するリストについて設定します。
+          #{child_items}などを記述時に表示する子リストについて設定します。
       child_limit:
         - リストの表示件数を指定します。
       child_loop_html:
@@ -1595,18 +1768,22 @@ ja:
       name:
         - テンプレート名を入力します。
         - 日本語での入力が可能です。
+      sub_type:
+        - 「定型フォーム」を選択すると、定型フォーム型の入力画面を表示しますので、ユーザーは予め決められた入力項目を入力することで記事を作成することが可能となります。
+        -
+        - 「ブロック型」を選択すると、ブロック型入力画面を表示しますので、ユーザーが自由に入力項目を組み合わせて記事を作成することが可能となります。
       column_ids:
         - 定型フォームのコラムを設定します。
       html: |-
-        定型フォームのHTMLを設定します。
-        {{ 項目名 }}のように記述することで該当する項目の入力値を表示します。
+        定型フォームのHTMLを Liquid 形式で設定します。
+        {{ values["項目名"] }}のように記述することで該当する項目の入力値を表示します。
 
         使用例：
           &lt;dl>
             &lt;dt>項目&lt;/dt>
-            &lt;dd>{{ 項目名1 }}&lt;/dd>
+            &lt;dd>{{ values["項目名1"] }}&lt;/dd>
             &lt;dt>項目&lt;/dt>
-            &lt;dd>{{項目名2}}&lt;/dd>
+            &lt;dd>{{ values["項目名2"] }}&lt;/dd>
           &lt;/dl>
 
     cms/addon/form/node:
@@ -1617,6 +1794,10 @@ ja:
     cms/addon/form/page:
       form_id:
         - 定型フォームを設定します。
+    cms/init_column:
+      order:
+        - 表示順を入力します。
+        - 数字が小さいほど上位に表示されます。
     cms/column/base:
       name:
         - 入力項目名を入力します。
@@ -1640,12 +1821,58 @@ ja:
         - 公開側のHTMLタグを選択します。
       html_additional_attr:
         - 公開側のHTMLタグの追加属性を指定します。
+      layout: |-
+        入力項目のHTMLを設定します。
+        未設定の場合、既定の HTML を表示します。
+
+        使用例：
+          {% if value.date %}
+            &lt;span>{{ value.date | date: "%Y年%1m月%1d日" }}&lt;/span>
+          {% endif %}
 
     cms/column/url_field:
       html_tag:
         - 公開側のHTMLタグを選択します。
       html_additional_attr:
         - 公開側のHTMLタグの追加属性を指定します。
+      layout: |-
+        入力項目のHTMLを設定します。
+        未設定の場合、既定の HTML を表示します。
+
+        使用例：
+          {% if value.link %}
+            {% if value.label %}
+              &lt;a href="{{ value.link }}">{{ value.label }}&lt;/a>
+            {% else %}
+              &lt;a href="{{ value.link }}">{{ value.link }}&lt;/a>
+            {% endif %}
+          {% endif %}
+
+    cms/column/url_field2:
+      html_tag:
+        - 公開側のHTMLタグを選択します。
+      html_additional_attr:
+        - 公開側のHTMLタグの追加属性を指定します。
+      label_max_length:
+        - リンクテキストの最大長を入力します。
+      label_place_holder:
+        - リンクテキストのプレースホルダーを入力します。
+      link_max_length:
+        - リンクURLの最大長を入力します。
+      link_place_holder:
+        - リンクURLのプレースホルダーを入力します。
+      layout: |-
+        入力項目のHTMLを設定します。
+        未設定の場合、既定の HTML を表示します。
+
+        使用例：
+          {% if value.link %}
+            {% if value.label %}
+              &lt;a href="{{ value.link }}">{{ value.label }}&lt;/a>
+            {% else %}
+              &lt;a href="{{ value.link }}">{{ value.link }}&lt;/a>
+            {% endif %}
+          {% endif %}
 
     cms/column/select:
       place_holder:
@@ -1656,6 +1883,22 @@ ja:
         - 公開側のHTMLタグを選択します。
       html_additional_attr:
         - 公開側のHTMLタグの追加属性を指定します。
+      label_max_length:
+        - リンクテキストの最大長を入力します。
+      label_place_holder:
+        - リンクテキストのプレースホルダーを入力します。
+      layout: |-
+        入力項目のHTMLを Liquid 形式で設定します。
+        未設定の場合、既定の HTML を表示します。
+
+        使用例（ファイルアップロードの場合）：
+          {% if value.file %}
+            {% if value.image? %}
+              &lt;a href="{{ value.file.url }}">&lt;img src="{{ value.file.thumb_url }}" alt="{{ value.image_text | default: value.file.humanized_name }}" title="{{ value.file.basename }}">&lt;/a>
+            {% else %}
+              &lt;a href="{{ value.file.url }}">{{ value.attachment_text | default: value.file.humanized_name }}&lt;/a>
+            {% endif %}
+          {% endif %}
 
     cms/addon/column/text_like:
       max_length:
@@ -1669,6 +1912,30 @@ ja:
       select_options:
         - 回答の選択肢を入力します。
         - テキストを改行で区切ることで複数の選択肢を入力することができます。
+
+    cms/addon/column/layout:
+      layout: |-
+        入力項目のHTMLを設定します。
+        未設定の場合、既定の HTML を表示します。
+
+        使用例：
+          {% if value.value %}
+            &lt;h2>{{ value.value }}&lt;/h2>
+          {% endif %}
+
+    cms/column/text_area:
+      layout: |-
+        入力項目のHTMLを設定します。
+        未設定の場合、既定の HTML を表示します。
+
+        使用例：
+          {% if value.value %}
+            &lt;p>{{ value.value | newline_to_br }}&lt;/p>
+          {% endif %}
+
+    cms/column/list:
+      list_type:
+        - 種類を選択します。
 
   all_content:
     page_id: ページID

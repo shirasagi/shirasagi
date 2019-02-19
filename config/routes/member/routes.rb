@@ -39,6 +39,7 @@ SS::Application.routes.draw do
     resources :photos, concerns: [:deletion, :command] do
       get :index_listable, on: :collection
       get :index_slideable, on: :collection
+      delete "index_:state", action: :destroy_all, on: :collection, state: /listable|slideable/
     end
     resources :photo_searches, concerns: :deletion
     resources :photo_categories, concerns: :deletion

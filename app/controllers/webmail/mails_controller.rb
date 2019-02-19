@@ -9,7 +9,7 @@ class Webmail::MailsController < ApplicationController
   skip_before_action :set_selected_items
   before_action :set_crumbs
   before_action :imap_login
-  before_action :apply_recent_filters, only: [:index]
+  before_action :apply_recent_filters, only: [:index, :show]
   before_action :set_mailbox
   before_action :set_item, only: [:show, :edit, :update, :delete, :destroy, :parts_batch_download, :print]
   before_action :set_view_name, only: [:new, :create, :edit, :update]
@@ -182,7 +182,7 @@ class Webmail::MailsController < ApplicationController
           file = @imap.mails.find_part params[:id], part.section
         end
 
-        out.put_next_entry(part.filename.encode('cp932'))
+        out.put_next_entry(part.filename.encode('cp932', invalid: :replace, undef: :replace, replace: "_"))
         out.write file.decoded
       end
     end

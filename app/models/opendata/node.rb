@@ -14,10 +14,11 @@ module Opendata::Node
     include Cms::Addon::GroupPermission
     include History::Addon::Backup
 
+    attr_accessor :count
     default_scope ->{ where(route: "opendata/category") }
   end
 
-  class Area
+  class EstatCategory
     include Cms::Model::Node
     include Cms::Addon::NodeSetting
     include Cms::Addon::Meta
@@ -26,6 +27,19 @@ module Opendata::Node
     include History::Addon::Backup
 
     attr_accessor :count
+    default_scope ->{ where(route: "opendata/estat_category") }
+  end
+
+  class Area
+    include Cms::Model::Node
+    include Opendata::Addon::PrefCode
+    include Cms::Addon::NodeSetting
+    include Cms::Addon::Meta
+    include Cms::Addon::Release
+    include Cms::Addon::GroupPermission
+    include History::Addon::Backup
+
+    attr_accessor :count, :code
     default_scope ->{ where(route: "opendata/area") }
   end
 
@@ -35,6 +49,7 @@ module Opendata::Node
     include Cms::Addon::Meta
     include Opendata::Addon::DatasetPageSetting
     include Opendata::Addon::CategorySetting
+    include Opendata::Addon::EstatCategorySetting
     include Cms::Addon::Release
     include Cms::Addon::GroupPermission
     include History::Addon::Backup
@@ -52,6 +67,30 @@ module Opendata::Node
     include History::Addon::Backup
 
     default_scope ->{ where(route: "opendata/dataset_category") }
+  end
+
+  class DatasetEstatCategory
+    include Cms::Model::Node
+    include Cms::Addon::NodeSetting
+    include Cms::Addon::Meta
+    include Opendata::DatasetChildNode
+    include Cms::Addon::Release
+    include Cms::Addon::GroupPermission
+    include History::Addon::Backup
+
+    default_scope ->{ where(route: "opendata/dataset_estat_category") }
+  end
+
+  class DatasetArea
+    include Cms::Model::Node
+    include Cms::Addon::NodeSetting
+    include Cms::Addon::Meta
+    include Opendata::DatasetChildNode
+    include Cms::Addon::Release
+    include Cms::Addon::GroupPermission
+    include History::Addon::Backup
+
+    default_scope ->{ where(route: "opendata/dataset_area") }
   end
 
   class SearchDatasetGroup
@@ -76,6 +115,16 @@ module Opendata::Node
     include History::Addon::Backup
 
     default_scope ->{ where(route: "opendata/search_dataset") }
+  end
+
+  class DatasetMap
+    include Cms::Model::Node
+    include Cms::Addon::Meta
+    include Cms::Addon::Release
+    include Cms::Addon::GroupPermission
+    include History::Addon::Backup
+
+    default_scope ->{ where(route: "opendata/dataset_map") }
   end
 
   class Sparql
@@ -216,6 +265,8 @@ module Opendata::Node
     include Cms::Addon::GroupPermission
     include History::Addon::Backup
 
+    self.use_liquid = false
+
     default_scope ->{ where(route: "opendata/my_dataset") }
   end
 
@@ -228,6 +279,8 @@ module Opendata::Node
     include Cms::Addon::GroupPermission
     include History::Addon::Backup
 
+    self.use_liquid = false
+
     default_scope ->{ where(route: "opendata/my_app") }
   end
 
@@ -239,6 +292,8 @@ module Opendata::Node
     include Cms::Addon::Release
     include Cms::Addon::GroupPermission
     include History::Addon::Backup
+
+    self.use_liquid = false
 
     default_scope ->{ where(route: "opendata/my_idea") }
   end

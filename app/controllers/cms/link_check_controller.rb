@@ -35,15 +35,14 @@ class Cms::LinkCheckController < ApplicationController
       end
     }
 
-    begin
-      timeout(2) do
-        open(url, opts) { |f| return f.status[0].to_i }
-      end
-    rescue Timeout::Error
-      return 0
-    rescue => e
-      return 200 if progress_data_size
+    Timeout.timeout(2) do
+      open(url, opts) { |_f| }
     end
-    return 0
+
+    200
+  rescue Timeout::Error
+    0
+  rescue => _e
+    progress_data_size ? 200 : 0
   end
 end

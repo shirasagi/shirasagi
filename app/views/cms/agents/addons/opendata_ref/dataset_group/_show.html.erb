@@ -1,5 +1,8 @@
 <% return "" if @item.opendata_dataset_group_ids.blank? %>
-<%= jquery do %> SS_AddonTabs.hide(".mod-cms-opendata-dataset-group"); <% end %>
+<%
+  addon ||= local_assigns.fetch(:addon, {})
+  addon[:display_body] = "hide"
+%>
 
 <dl class="see mod-cms-opendata-dataset-group">
   <dt><%= @model.t :opendata_dataset_group_ids %></dt>

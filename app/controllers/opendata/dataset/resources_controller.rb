@@ -16,7 +16,7 @@ class Opendata::Dataset::ResourcesController < ApplicationController
   end
 
   def set_dataset
-    raise "403" unless dataset.allowed?(:edit, @cur_user, site: @cur_site)
+    raise "403" unless dataset.allowed?(:read, @cur_user, site: @cur_site)
     @crumbs << [@dataset.name, opendata_dataset_path(id: @dataset)]
   end
 

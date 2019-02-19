@@ -15,6 +15,7 @@ SS::Application.routes.draw do
     get "datasets_approve" => "dataset/datasets#index_approve"
     get "datasets_request" => "dataset/datasets#index_request"
     get "datasets_closed" => "dataset/datasets#index_closed"
+    delete "datasets_:state" => "dataset/datasets#destroy_all", state: /approve|request|closed/
     resources :my_datasets, concerns: :deletion_all, module: "mypage/dataset"
   end
 
