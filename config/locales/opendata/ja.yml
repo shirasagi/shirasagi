@@ -576,7 +576,7 @@ ja:
         harvest_text_index: テキストインデックス
         harvest_ckan_groups: CKANグループ
         harvest_ckan_tags: CKANタグ
-        harvest_shirasagi_categories: SHIRASAGIタグ
+        harvest_shirasagi_categories: SHIRASAGI分野
         harvest_shirasagi_areas: SHIRASAGI地域
       opendata/resource:
         file_id: ファイル
