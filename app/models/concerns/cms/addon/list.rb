@@ -18,20 +18,27 @@ module Cms::Addon::List
       field :new_days, type: Integer, default: 1
       field :loop_format, type: String
       field :loop_liquid, type: String
+      field :no_items_display_state, type: String
+      field :substitute_html, type: String
 
       belongs_to :loop_setting, class_name: 'Cms::LoopSetting'
 
       permit_params :conditions, :sort, :limit, :loop_html, :loop_setting_id, :upper_html, :lower_html, :new_days
-      permit_params :loop_format, :loop_liquid
+      permit_params :no_items_display_state, :substitute_html, :loop_format, :loop_liquid
 
       before_validation :validate_conditions
 
+      validates :no_items_display_state, inclusion: { in: %w(show hide), allow_blank: true }
       validates :loop_format, inclusion: { in: %w(shirasagi liquid), allow_blank: true }
       validates :loop_liquid, liquid_format: true, if: ->{ loop_format_liquid? }
     end
 
     def sort_options
       []
+    end
+
+    def no_items_display_state_options
+      %w(show hide).map { |v| [ I18n.t("ss.options.state.#{v}"), v ] }
     end
 
     def loop_format_options
