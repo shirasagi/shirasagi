@@ -72,11 +72,20 @@ ja:
     inplace_edit: 編集モード
     preview_date: プレビュー日時
     column_file_upload:
-      image_text_place_holder: 代替えテキストを入力してください。
-      video_description: 動画の内容説明
-      video_description_place_holder: 動画の内容を説明する文書を入力してください。
-      attachment_text_place_holder: リンクテキストとして表示するファイル名を入力してください。
-      banner_link_place_holder: URLを入力してください。
+      image:
+        label: 代替えテキスト
+        label_place_holder: 代替えテキストを入力してください。
+      video:
+        text: 動画の内容説明
+        text_place_holder: 動画の内容を説明する文書を入力してください。
+      attachment:
+        label: ファイル名
+        label_place_holder: リンクテキストとして表示するファイル名を入力してください。
+      banner:
+        label: 代替えテキスト
+        link: URL
+        label_place_holder: 代替えテキストを入力してください。
+        link_place_holder: URLを入力してください。
     column_table:
       width: 列数
       height: 行数
@@ -860,11 +869,10 @@ ja:
         html_tag: HTMLタグ
         html_additional_attr: HTML追加属性
         file_id: ファイル
-        label: リンクテキスト
-        image_text: 代替えテキスト
-        video_description: 動画の内容
-        attachment_text: リンクテキスト
-        banner_link: URL
+        label: リンクテキスト・代替テキスト
+        image_html_type: 貼付方法
+        text: 動画の内容説明
+        link: URL
       cms/column/value/radio_button:
         value: 選択肢
       cms/column/value/select:

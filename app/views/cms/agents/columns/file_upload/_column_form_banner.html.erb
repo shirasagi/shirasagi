@@ -1,2 +1,2 @@
-<%= text_field_tag("#{f.object_name}[][in_wrap][banner_text]", value.try(:banner_text), column.form_options(:banner_text).merge(id: nil)) %>
-<%= text_field_tag("#{f.object_name}[][in_wrap][banner_link]", value.try(:banner_link), column.form_options(:banner_link).merge(id: nil)) %>
+<%= text_field_tag("#{f.object_name}[][in_wrap][label]", value.try(:label), id: nil, placeholder: t("cms.column_file_upload.banner.label_place_holder")) %>
+<%= url_field_tag("#{f.object_name}[][in_wrap][link]", value.try(:link), id: nil, placeholder: t("cms.column_file_upload.banner.link_place_holder")) %>
