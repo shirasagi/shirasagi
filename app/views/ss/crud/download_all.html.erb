@@ -14,7 +14,7 @@
 
   <footer class="send">
     <%= f.submit t('ss.buttons.download'), class: 'btn-primary save' %>
-    <%= f.button t('ss.buttons.cancel'), class: 'btn-default', type: :reset, onclick: "location.href='#{url_for(action: :index)}'; return false;" %>
+    <%= link_to t('ss.buttons.cancel'), { action: :index }, { class: 'btn-default' } %>
   </footer>
 <% end %>
 
