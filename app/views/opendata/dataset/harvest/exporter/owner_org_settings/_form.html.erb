@@ -1,14 +1,14 @@
 <dl class="see">
-  <dt><%= @model.t :name %><%= @item.tt :name %><%= required_label %></dt>
+  <dt><%= @model.t :name %><%= required_label %></dt>
   <dd><%= f.text_field :name %></dd>
 
-  <dt><%= @model.t :ckan_id %><%= @item.tt :ckan_id %><%= required_label %></dt>
+  <dt><%= @model.t :ckan_id %><%= required_label %></dt>
   <dd><%= f.text_field :ckan_id %></dd>
 
-  <dt><%= @model.t :order %><%= @item.tt :order %></dt>
+  <dt><%= @model.t :order %></dt>
   <dd><%= f.number_field :order %></dd>
 
-  <dt><%= @model.t :group_ids %><%= @model.tt :group_ids %></dt>
+  <dt><%= @model.t :group_ids %></dt>
   <dd>
     <%= f.hidden_field "group_ids[]", value: "", class: "hidden-ids" %>
     <%= link_to t("ss.apis.groups.index"), cms_apis_groups_path, class: "ajax-box" %>
