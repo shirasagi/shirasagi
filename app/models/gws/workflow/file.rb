@@ -186,6 +186,7 @@ class Gws::Workflow::File
 
   def rewrite_file_ref
     text = self.text
+    return if text.blank?
 
     in_clone_file.each do |old_id, new_id|
       old_file = SS::File.find(old_id) rescue nil
