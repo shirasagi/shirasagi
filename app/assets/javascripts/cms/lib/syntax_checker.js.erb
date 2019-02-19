@@ -360,24 +360,22 @@ this.Syntax_Checker = (function () {
     var array = [];
 
     if (type == "array") {
-      $.each(value, function(_, c) {
-        if (c) {
-          if (resolve == "html") {
-            array.push(c);
-          }
-          else {
-            array.push("<div>" + c + "</div>");
-          }
+      $.each(value, function(_, v) {
+        v = v || "";
+        if (resolve == "html") {
+          array.push(v);
+        }
+        else {
+          array.push("<div>" + v + "</div>");
         }
       });
     } else {
-      if (value) {
-        if (resolve == "html") {
-          array.push(value);
-        }
-        else {
-          array.push("<div>" + value + "</div>");
-        }
+      value = value || "";
+      if (resolve == "html") {
+        array.push(value);
+      }
+      else {
+        array.push("<div>" + value + "</div>");
       }
     }
     return array;

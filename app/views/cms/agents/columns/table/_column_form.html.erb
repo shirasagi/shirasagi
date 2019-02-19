@@ -1,13 +1,13 @@
 <% table_name = SecureRandom.hex(4) %>
 <% value ||= nil %>
 <% controller ||= false %>
-<%= render 'cms/agents/columns/main/base', f: f, column: column, value: value, controller: controller do %>
+<%= render 'cms/agents/columns/main/base', f: f, column: column, value: value, controller: controller do |id| %>
   <%= render 'cms/agents/columns/table/table_editor', table_name: table_name %>
   <%= hidden_field_tag("#{f.object_name}[][in_wrap][value]", value.try(:value), id: "hidden-value-#{table_name}") %>
   <label class="column-table-height"><%= I18n.t("cms.column_table.height") %><input type="text" id="height-<%= table_name %>" style="width:50px" /></label>
   <label class="column-table-width"><%= I18n.t("cms.column_table.width") %><input type="text" id="width-<%= table_name %>" style="width:50px" /></label>
   <label class="column-table-header"><%= I18n.t("cms.column_table.header") %><%= select_tag :hedaer, options_for_select(column.header_type_options), id: "header-#{table_name}" %></label>
-  <label class="column-table-caption"><%= I18n.t("cms.column_table.caption") %><input type="text" id="caption-<%= table_name %>" style="width:50%;" /></label>
+  <label class="column-table-caption"><%= I18n.t("cms.column_table.caption") %><input type="text" id="caption-<%= table_name %>" style="width:50%;" data-check-presence="<%= I18n.t("cms.column_table.caption") %>" /></label>
   <button type="button" id="create-table-<%= table_name %>"><%= I18n.t("cms.column_table.create") %></button><br />
 
   <div class="table-editor" id="table-editor-<%= table_name %>">
@@ -31,4 +31,24 @@
       <li id="append-bottom">下に行を挿入する</li>
     </ul>
   </div>
+
+  <%= jquery do %>
+    Cms_Form.addSyntaxCheck("<%= id %>", {
+      resolve: "text",
+      type: "array",
+      name: "<%= column.name %>",
+      getContent: function () {
+        var array = [];
+        $('#<%= id %> .table-editor tbody td,#<%= id %> .table-editor tbody th').not(".controll").each(function () {
+          array.push($(this).text());
+        });
+        return array;
+      },
+      setContent: function (content) {
+　　　   $('#<%= id %> .table-editor tbody td,#<%= id %> .table-editor tbody th').not(".controll").each(function (i) {
+          $(this).text(content[i]);
+        });
+      }
+    });
+  <% end %>
 <% end %>
