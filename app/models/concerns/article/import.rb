@@ -169,7 +169,9 @@ module Article::Import
       drawer.column "#{form.id}/#{column.id}/alignment" do
         drawer.head { "#{form.name}/#{column.name}/#{value_type.t(:alignment)}" }
         drawer.body do |item|
-          find_column_value(item, form, column).try { |v| v.alignment ? I18n.t("cms.options.alignment.#{v.alignment}") : nil }
+          find_column_value(item, form, column).try do |v|
+            v.alignment ? I18n.t("cms.options.alignment.#{v.alignment}") : nil
+          end
         end
       end
     end
@@ -198,7 +200,9 @@ module Article::Import
         drawer.column "#{form.id}/#{column.id}/image_html_type" do
           drawer.head { "#{form.name}/#{column.name}/#{value_type.t(:image_html_type)}" }
           drawer.body do |item|
-            find_column_value(item, form, column).try { |v| v.image_html_type ? I18n.t("cms.options.column_image_html_type.#{v.image_html_type}") : nil }
+            find_column_value(item, form, column).try do |v|
+              v.image_html_type ? I18n.t("cms.options.column_image_html_type.#{v.image_html_type}") : nil
+            end
           end
         end
       when 'video'
@@ -233,7 +237,7 @@ module Article::Import
     def draw_column_headline(drawer, form, column, value_type)
       drawer.column "#{form.id}/#{column.id}/head" do
         drawer.head { "#{form.name}/#{column.name}/#{value_type.t(:head)}" }
-        drawer.body { |item| find_column_value(item, form, column).try { |v| v.label(:head) } }
+        drawer.body { |item| find_column_value(item, form, column).try { |v| v.head } }
       end
       drawer.column "#{form.id}/#{column.id}/text" do
         drawer.head { "#{form.name}/#{column.name}/#{value_type.t(:text)}" }
@@ -286,7 +290,11 @@ module Article::Import
       end
       drawer.column "#{form.id}/#{column.id}/auto_width" do
         drawer.head { "#{form.name}/#{column.name}/#{value_type.t(:auto_width)}" }
-        drawer.body { |item| find_column_value(item, form, column).try { |v| v.label(:auto_width) } }
+        drawer.body do |item|
+          find_column_value(item, form, column).try do |v|
+            v.auto_width ? I18n.t("cms.column_youtube_auto_width.#{v.auto_width}") : nil
+          end
+        end
       end
     end
 

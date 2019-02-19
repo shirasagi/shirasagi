@@ -56,6 +56,8 @@ class Article::Page::ImportJob < Cms::ApplicationJob
     file.destroy
   end
 
+  private
+
   def model
     Article::Page
   end
@@ -66,7 +68,7 @@ class Article::Page::ImportJob < Cms::ApplicationJob
       begin
         i += 1
         item = update_row(row)
-        put_log("update #{i + 1}: #{item.name}")
+        put_log("update #{i + 1}: #{item.name}") if item.present?
       rescue => e
         put_log("error  #{i + 1}: #{e}")
       end
@@ -93,12 +95,20 @@ class Article::Page::ImportJob < Cms::ApplicationJob
     row[key].try(:strip)
   end
 
+  def to_array(value, delim: "\n")
+    value.to_s.split(delim).map(&:strip)
+  end
+
   def ary_value(row, key, delim: "\n")
-    row[model.t(key)].to_s.split(delim).map(&:strip)
+    to_array(row[model.t(key)], delim: delim)
+  end
+
+  def from_label(value, options)
+    options.to_h[value].to_s.presence
   end
 
   def label_value(item, row, key)
-    item.send("#{key}_options").to_h[value(row, key)]
+    from_label(value(row, key), item.send("#{key}_options"))
   end
 
   def category_name_tree_to_ids(name_trees)
@@ -129,6 +139,15 @@ class Article::Page::ImportJob < Cms::ApplicationJob
     item.body_layout_id = body_layout_id
     item.order = value(row, :order)
 
+    form_id = value(row, :form_id)
+    if form_id.present?
+      form = node.st_forms.where(name: form_id).first
+    end
+    if form.present? && form.sub_type_entry?
+      raise I18n.t("errors.messages.import_with_entry_form_is_not_supported")
+    end
+    item.form = form
+
     # meta
     item.keywords = value(row, :keywords)
     item.description = value(row, :description)
@@ -157,7 +176,7 @@ class Article::Page::ImportJob < Cms::ApplicationJob
     # related pages
     page_names = ary_value(row, :related_pages)
     item.related_page_ids = Cms::Page.site(site).in(filename: page_names).pluck(:id)
-    item.related_page_sort = label_value(item, row, "#{model.t(:related_pages)}#{model.t(:related_page_sort)}")
+    item.related_page_sort = from_label(value(row, "#{model.t(:related_pages)}#{model.t(:related_page_sort)}"), item.related_page_sort_options)
 
     # crumb
     item.parent_crumb_urls = value(row, :parent_crumb)
@@ -186,5 +205,178 @@ class Article::Page::ImportJob < Cms::ApplicationJob
     # state
     state = label_value(item, row, :state)
     item.state = state.presence || "public"
+
+    # column values
+    return if form.blank?
+
+    keys = row.headers.select { |k| k.start_with?("#{form.name}/") }.map { |k| k.split("/") }
+    keys = keys.group_by { |form_name, column_name, value_name| column_name }
+    values = keys.map do |column_name, value_names|
+      column = form.columns.where(name: column_name).first
+      next if column.blank?
+
+      values = value_names.map do |_, _, value_name|
+        [ value_name, value(row, "#{form.name}/#{column.name}/#{value_name}") ]
+      end
+
+      value_type = column.class.value_type
+      deserialize_method = "deserialize_column_#{value_type.name.demodulize.underscore}"
+      attrs = send(deserialize_method, form, column, values)
+
+      column_value = item.column_values.where(column_id: column.id).first
+      if column_value.blank?
+        column_value = column.value_type.new(column: column, name: column.name, order: column.order)
+      end
+      column_value.attributes = Hash[attrs.compact]
+      column_value
+    end
+
+    item.column_values = values
+  end
+
+  def deserialize_column_check_box(form, column, values)
+    value_type = column.value_type
+
+    values.map do |name, value|
+      case name
+      when value_type.t(:alignment)
+        [ :alignment, from_label(value, I18n.t("cms.options.alignment").invert) ]
+      when value_type.t(:values)
+        [ :values, to_array(value, delim: ",") ]
+      end
+    end
+  end
+
+  def deserialize_column_date_field(form, column, values)
+    value_type = column.value_type
+
+    values.map do |name, value|
+      case name
+      when value_type.t(:alignment)
+        [ :alignment, from_label(value, I18n.t("cms.options.alignment").invert) ]
+      when value_type.t(:date)
+        [ :date, value ]
+      end
+    end
+  end
+
+  def deserialize_column_file_upload(form, column, values)
+    value_type = column.value_type
+
+    values.map do |name, value|
+      case name
+      when value_type.t(:alignment)
+        [ :alignment, from_label(value, I18n.t("cms.options.alignment").invert) ]
+      else
+        case column.file_type
+        when 'image'
+          case name
+          when I18n.t("cms.column_file_upload.image.file_label")
+            [ :file_label, value ]
+          when value_type.t(:image_html_type)
+            [ :image_html_type, from_label(value, I18n.t("cms.options.column_image_html_type").invert) ]
+          end
+        when 'video'
+          case name
+          when I18n.t("cms.column_file_upload.video.text")
+            [ :text, value ]
+          end
+        when 'attachment'
+          case name
+          when I18n.t("cms.column_file_upload.attachment.file_label")
+            [ :file_label, value ]
+          end
+        when 'banner'
+          case name
+          when I18n.t("cms.column_file_upload.banner.link_url")
+            [ :link_url, value ]
+          when I18n.t("cms.column_file_upload.banner.file_label")
+            [ :file_label, value ]
+          end
+        end
+      end
+    end
+  end
+
+  def deserialize_column_free(form, column, values)
+    value_type = column.value_type
+
+    values.map do |name, value|
+      case name
+      when value_type.t(:alignment)
+        [ :alignment, from_label(value, I18n.t("cms.options.alignment").invert) ]
+      when value_type.t(:value)
+        [ :value, value ]
+      end
+    end
+  end
+
+  def deserialize_column_headline(form, column, values)
+    value_type = column.value_type
+
+    values.map do |name, value|
+      case name
+      when value_type.t(:alignment)
+        [ :alignment, from_label(value, I18n.t("cms.options.alignment").invert) ]
+      when value_type.t(:head)
+        [ :head, from_label(value, column.headline_list) ]
+      when value_type.t(:text)
+        [ :text, value ]
+      end
+    end
+  end
+
+  def deserialize_column_list(form, column, values)
+    value_type = column.value_type
+
+    values.map do |name, value|
+      case name
+      when value_type.t(:alignment)
+        [ :alignment, from_label(value, I18n.t("cms.options.alignment").invert) ]
+      when value_type.t(:lists)
+        [ :lists, to_array(value) ]
+      end
+    end
+  end
+
+  alias deserialize_column_radio_button deserialize_column_free
+  alias deserialize_column_select deserialize_column_free
+  alias deserialize_column_table deserialize_column_free
+  alias deserialize_column_text_area deserialize_column_free
+  alias deserialize_column_text_field deserialize_column_free
+  alias deserialize_column_url_field deserialize_column_free
+
+  def deserialize_column_url_field2(form, column, values)
+    value_type = column.value_type
+
+    values.map do |name, value|
+      case name
+      when value_type.t(:alignment)
+        [ :alignment, from_label(value, I18n.t("cms.options.alignment").invert) ]
+      when value_type.t(:link_url)
+        [ :link_url, value ]
+      when value_type.t(:link_label)
+        [ :link_label, value ]
+      end
+    end
+  end
+
+  def deserialize_column_youtube(form, column, values)
+    value_type = column.value_type
+
+    values.map do |name, value|
+      case name
+      when value_type.t(:alignment)
+        [ :alignment, from_label(value, I18n.t("cms.options.alignment").invert) ]
+      when value_type.t(:youtube_id)
+        [ :youtube_id, value ]
+      when value_type.t(:width)
+        [ :width, value ]
+      when value_type.t(:height)
+        [ :height, value ]
+      when value_type.t(:auto_width)
+        [ :auto_width, from_label(value, I18n.t("cms.column_youtube_auto_width").invert) ]
+      end
+    end
   end
 end
