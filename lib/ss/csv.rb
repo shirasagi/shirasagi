@@ -1,4 +1,6 @@
 class SS::Csv
+  UTF8_BOM = "\uFEFF".freeze
+
   class Base
     include Enumerable
 
@@ -108,8 +110,6 @@ class SS::Csv
   end
 
   class UTF8 < Base
-    UTF8_BOM = "\uFEFF".freeze
-
     def draw_header
       UTF8_BOM + _draw_header
     end

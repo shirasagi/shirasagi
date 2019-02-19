@@ -46,7 +46,9 @@ class Article::PagesController < ApplicationController
       if file.nil? || ::File.extname(file.original_filename) != ".csv"
         raise I18n.t("errors.messages.invalid_csv")
       end
-      CSV.read(file.path, headers: true, encoding: 'SJIS:UTF-8')
+      if !Article::Page::ImportJob.valid_csv?(file)
+        raise I18n.t("errors.messages.malformed_csv")
+      end
 
       # save csv to use in job
       ss_file = SS::File.new

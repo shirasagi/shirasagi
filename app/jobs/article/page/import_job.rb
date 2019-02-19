@@ -1,6 +1,48 @@
 require "csv"
 
 class Article::Page::ImportJob < Cms::ApplicationJob
+  class << self
+    def valid_csv?(file)
+      no = 0
+      each_csv(file) do |row|
+        no += 1
+        # check csv record up to 100
+        break if no >= 100
+      end
+      file.rewind
+
+      true
+    rescue => e
+      false
+    end
+
+    def each_csv(file, &block)
+      io = file.to_io
+      if utf8_file?(io)
+        io.seek(3)
+        io.set_encoding('UTF-8')
+      else
+        io.set_encoding('SJIS:UTF-8')
+      end
+
+      csv = CSV.new(io, { headers: true })
+      csv.each(&block)
+    ensure
+      io.set_encoding("ASCII-8BIT")
+    end
+
+    private
+
+    def utf8_file?(file)
+      file.rewind
+      bom = file.read(3)
+      file.rewind
+
+      bom.force_encoding("UTF-8")
+      SS::Csv::UTF8_BOM == bom
+    end
+  end
+
   def put_log(message)
     Rails.logger.info(message)
   end
@@ -19,9 +61,10 @@ class Article::Page::ImportJob < Cms::ApplicationJob
   end
 
   def import_csv(file)
-    table = CSV.read(file.path, headers: true, encoding: 'SJIS:UTF-8')
-    table.each_with_index do |row, i|
+    i = 0
+    self.class.each_csv(file) do |row|
       begin
+        i += 1
         item = update_row(row)
         put_log("update #{i + 1}: #{item.name}")
       rescue => e
