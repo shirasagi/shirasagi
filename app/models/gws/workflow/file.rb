@@ -186,14 +186,15 @@ class Gws::Workflow::File
 
   def rewrite_file_ref
     text = self.text
+    return if text.blank?
 
     in_clone_file.each do |old_id, new_id|
       old_file = SS::File.find(old_id) rescue nil
       new_file = SS::File.find(new_id) rescue nil
       next if old_file.blank? || new_file.blank?
 
-      text.gsub!("=\"#{old_file.url}\"", "=\"#{new_file.url}\"")
-      text.gsub!("=\"#{old_file.thumb_url}\"", "=\"#{new_file.thumb_url}\"")
+      text.gsub!("#{old_file.url}", "#{new_file.url}")
+      text.gsub!("#{old_file.thumb_url}", "#{new_file.thumb_url}") if old_file.thumb.present? && new_file.thumb.present?
     end
 
     self.text = text
