@@ -1,3 +1,5 @@
+<% return if @item.default_areas.blank? %>
+
 <%= jquery do %> SS_AddonTabs.hide(".mod-opendata_harvest_area_setting"); <% end %>
 <dl class="see mod-opendata_harvest_area_setting">
   <dt><%= @model.t :default_area_ids %></dt>
