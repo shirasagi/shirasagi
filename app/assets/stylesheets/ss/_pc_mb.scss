@@ -1826,7 +1826,8 @@ footer.send {
     background: $white;
   }
   .upload-drop-notice, .column-value-upload-drop-notice {
-    margin-left: 20px;
+    display: inline-block;
+    margin: 0 20px;
     color: #b30;
   }
   .file-dragenter {
@@ -3018,6 +3019,7 @@ body.ss-ajax-in-iframe {
     padding-left: 18px;
     li {
       margin-bottom: 15px;
+      list-style: disc;
     }
     &+.inplace-checkers {
       padding-left: 18px;
@@ -3071,7 +3073,7 @@ button {
   @include align-items(center);
 }
 .addon-view .column-value {
-  padding: 15px;
+  padding: 10px 15px;
   background: #f2f2f2;
 }
 
@@ -3082,12 +3084,26 @@ button {
   }
 }
 .column-value-cms-column-table {
+  .column-table-caption {
+    display: inline-block;
+    width: 65%;
+    input {
+      width: calc(100% - 83px) !important;
+    }
+  }
   .table-editor {
     overflow-x: scroll;
     .controll {
+      padding: 0;
       background-color: $black;
       border: 1px dashed $white;
       @include transition(0.3s);
+    }
+    th ,td {
+      padding: 5px;
+      textarea {
+        height: 27px;
+      }
     }
     .controll-top {
       &:before {
@@ -3117,5 +3133,10 @@ button {
     tbody tr:last-child th:first-child {
       border-bottom: 1px solid $black;
     }
+  }
+}
+.column-value-body {
+  iframe, video {
+    max-width: 100%;
   }
 }
