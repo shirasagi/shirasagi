@@ -1,0 +1,7 @@
+{% if value.link %}
+{% if value.label %}
+<p><a href="{{ value.link }}">{{ value.label }}</a></p>
+{% else %}
+<p><a href="{{ value.link }}">{{ value.link }}</a></p>
+{% endif %}
+{% endif %}
