@@ -21,12 +21,10 @@ module Member::Photo::PageFilter
   public
 
   def index_listable
-    cond = { listable_state: "public" }
-    render_items(cond)
+    render_items({ listable_state: "public" })
   end
 
   def index_slideable
-    cond = { slideable_state: "public" }
-    render_items(cond)
+    render_items({ slideable_state: "public" })
   end
 end

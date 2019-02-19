@@ -45,6 +45,10 @@ SS::Application.routes.draw do
     get :index_closed, on: :collection
   end
 
+  concern :index_state_deletion do
+    delete "index_:state", action: :destroy_all, on: :collection, state: /approve|request|ready|closed/
+  end
+
   concern :contains_urls do
     get :contains_urls, on: :member
   end
@@ -251,7 +255,7 @@ SS::Application.routes.draw do
     resources :max_file_sizes, concerns: :deletion
     resources :nodes, concerns: :deletion
     resources :pages, concerns: [:deletion, :copy, :move, :lock, :command, :contains_urls]
-    resources :import_pages, concerns: [:deletion, :copy, :move, :convert, :index_state]
+    resources :import_pages, concerns: [:deletion, :copy, :move, :convert, :index_state, :index_state_deletion]
     resources :import_nodes, concerns: [:deletion, :copy, :move]
     get "/group_pages" => redirect { |p, req| "#{req.path.sub(/\/group_pages$/, "")}/nodes" }
     resources :parts, concerns: :deletion
