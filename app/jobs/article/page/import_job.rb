@@ -49,8 +49,8 @@ class Article::Page::ImportJob < Cms::ApplicationJob
     row[model.t(key)].try(:strip)
   end
 
-  def ary_value(row, key)
-    row[model.t(key)].to_s.split(/\n/).map(&:strip)
+  def ary_value(row, key, delim: "\n")
+    row[model.t(key)].to_s.split(delim).map(&:strip)
   end
 
   def label_value(item, row, key)
@@ -92,7 +92,7 @@ class Article::Page::ImportJob < Cms::ApplicationJob
 
     # body
     item.html = value(row, :html)
-    item.body_parts = value(row, :body_part).split("\t")
+    item.body_parts = ary_value(row, :body_part, delim: "\t")
 
     # category
     category_name_tree = ary_value(row, :categories)
@@ -139,6 +139,6 @@ class Article::Page::ImportJob < Cms::ApplicationJob
 
     # state
     state = label_value(item, row, :state)
-    item.state = state ? state : "public"
+    item.state = state.presence || "public"
   end
 end
