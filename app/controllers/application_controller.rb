@@ -90,6 +90,14 @@ class ApplicationController < ActionController::Base
     Browser.new(request.user_agent, accept_language: request.accept_language)
   end
 
+  def pc_browser?
+    return @is_pc_browser if !@is_pc_browser.nil?
+
+    platform = browser.platform
+    @is_pc_browser = platform.windows? || platform.mac? || platform.linux?
+  end
+  helper_method :pc_browser?
+
   # Accepts the request for Cross-Origin Resource Sharing.
   # @return boolean
   def accept_cors_request

@@ -25,7 +25,7 @@
 
       <div class="form-group">
         <label><%== t("ss.views.login/login.organization_uid") %></label>
-        <%= text_field :item, :email, class: "alnum", autofocus: true %>
+        <%= text_field :item, :email, class: "alnum", autofocus: pc_browser? %>
       </div>
 
       <div class="form-group">
