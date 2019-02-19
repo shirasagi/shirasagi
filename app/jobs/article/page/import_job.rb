@@ -108,6 +108,7 @@ class Article::Page::ImportJob < Cms::ApplicationJob
     # event
     item.event_name = value(row, :event_name)
     item.event_dates = value(row, :event_dates)
+    item.event_deadline = value(row, :event_deadline)
 
     # related pages
     page_names = ary_value(row, :related_pages)

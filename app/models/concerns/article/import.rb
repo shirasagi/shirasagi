@@ -57,6 +57,7 @@ module Article::Import
         # event
         column :event_name
         column :event_dates
+        column :event_deadline
 
         # related pages
         column :related_pages do
