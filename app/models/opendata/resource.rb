@@ -12,7 +12,7 @@ class Opendata::Resource
   embedded_in :dataset, class_name: "Opendata::Dataset", inverse_of: :resource
   field :order, type: Integer, default: 0
 
-  permit_params :name, :text, :format, :license_id, :source_url
+  permit_params :name, :text, :format, :license_id, :source_url, :order
 
   validates :in_file, presence: true, if: ->{ file_id.blank? && source_url.blank? }
   validates :format, presence: true
@@ -57,6 +57,11 @@ class Opendata::Resource
       dataset_id: dataset.id,
       resource_id: id
     )
+  end
+
+  def order
+    value = self[:order].to_i
+    value < 0 ? 0 : value
   end
 
   private

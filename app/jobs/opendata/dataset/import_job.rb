@@ -172,6 +172,7 @@ class Opendata::Dataset::ImportJob < Cms::ApplicationJob
     item.format = resource_value(row, :format)
     item.license_id = license.id if license
     item.text = resource_value(row, :text)
+    item.order = resource_value(row, :order).to_i
     if resource_value(row, :file_id).present?
       path1 = "#{@import_dir}/#{@dataset_id}/#{resource_value(row, :id)}/#{resource_value(row, :file_id)}"
       path2 = "#{@import_dir}/*/#{@dataset_id}/#{resource_value(row, :id)}/#{resource_value(row, :file_id)}"
