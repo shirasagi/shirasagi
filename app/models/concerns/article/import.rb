@@ -162,10 +162,10 @@ module Article::Import
     end
 
     def draw_column_common(drawer, form, column, value_type)
-      drawer.column "#{form.id}/#{column.id}/order" do
-        drawer.head { "#{form.name}/#{column.name}/#{value_type.t(:order)}" }
-        drawer.body { |item| find_column_value(item, form, column).try(:order) }
-      end
+      # drawer.column "#{form.id}/#{column.id}/order" do
+      #   drawer.head { "#{form.name}/#{column.name}/#{value_type.t(:order)}" }
+      #   drawer.body { |item| find_column_value(item, form, column).try(:order) }
+      # end
       drawer.column "#{form.id}/#{column.id}/alignment" do
         drawer.head { "#{form.name}/#{column.name}/#{value_type.t(:alignment)}" }
         drawer.body do |item|
