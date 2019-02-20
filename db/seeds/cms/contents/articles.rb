@@ -1,3 +1,5 @@
+# rubocop:disable Naming/VariableNumber
+
 puts "# articles"
 
 save_page route: "article/page", filename: "docs/page1.html", name: "インフルエンザによる学級閉鎖状況",
@@ -330,3 +332,4 @@ save_page route: "article/page", filename: "docs/page32.html", name: "インタ�
           ],
           group_ids: [@g_seisaku.id]
 
+# rubocop:enable Naming/VariableNumber
