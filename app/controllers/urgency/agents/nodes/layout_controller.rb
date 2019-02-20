@@ -6,7 +6,7 @@ class Urgency::Agents::Nodes::LayoutController < ApplicationController
     page = @cur_node.find_index_page
 
     raise "404" unless page
-    raise "404" unless controller.class.to_s =~ /Preview/
+    raise "404" unless @preview
 
     @cur_node.layout_id = params[:layout]
     @cur_node.name = page.name
