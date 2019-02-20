@@ -1,7 +1,7 @@
 <%= jquery do %>
 
   SS_SearchUI.modal();
-　$("#ajax-box .select-group").on("click", function (e) {
+  $("#ajax-box .select-group").on("click", function (e) {
     var email, fax, link_name, link_url, tel;
     SS_SearchUI.anchorAjaxBox.closest("dl").find(".ajax-selected tr[data-id]").remove();
     SS_SearchUI.select($(this));

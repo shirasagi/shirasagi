@@ -48,7 +48,7 @@
       },
       setContent: function (content) {
         $('#caption-<%= table_name %>').val(content[0]);
-　　　   $('#<%= id %> .table-editor tbody td,#<%= id %> .table-editor tbody th').not(".controll").each(function (i) {
+        $('#<%= id %> .table-editor tbody td,#<%= id %> .table-editor tbody th').not(".controll").each(function (i) {
           $(this).text(content[i + 1]);
         });
       }
