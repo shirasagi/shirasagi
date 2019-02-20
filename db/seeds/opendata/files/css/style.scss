@@ -969,6 +969,13 @@ textarea {
       @include btn-black;
     }
   }
+  .download-all {
+    float: none;
+    a {
+      color: $white;
+      text-decoration: none;
+    }
+  }
   .categories {
     @include clear;
     float: left;
@@ -1017,6 +1024,9 @@ textarea {
       font-weight: bold;
     }
   }
+  .text {
+    width: 100%;
+  }
   .tabs {
     clear:both;
   }
@@ -1046,7 +1056,10 @@ textarea {
         @include display-flex;
         @include align-items(center);
         @include justify-content(space-between);
+        @include flex-wrap(wrap);
         .name {
+          display: block;
+          width: 500px;
           padding: 7px 0 7px 35px;
         }
         div[class^="name format-"] {
@@ -1102,6 +1115,7 @@ textarea {
         @include display-flex;
         @include align-items(center);
         @include flex-wrap(wrap);
+        @include justify-content(flex-end);
         span, div {
           margin-left: $item-margin;
           &:empty {
@@ -1114,6 +1128,9 @@ textarea {
         div a {
           @include btn-black;
         }
+      }
+      .text {
+        margin-top: 20px;
       }
     }
   }
