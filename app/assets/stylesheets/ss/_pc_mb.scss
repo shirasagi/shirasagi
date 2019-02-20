@@ -1823,6 +1823,11 @@ footer.send {
     padding-top: 15px;
     padding-bottom: 15px;
     @include border-radius(3px);
+  }
+  .upload-drop-area {
+    background: $gray1;
+  }
+  .column-value-upload-drop-area {
     background: $white;
   }
   .upload-drop-notice, .column-value-upload-drop-notice {
@@ -3054,11 +3059,6 @@ body.ss-ajax-in-iframe {
     @include mb {
       margin: 10px 0;
     }
-  }
-}
-button {
-  &.syntax-check, &.mobile-size-check, &.link-check, &.preview, &.btn-add-list {
-    margin-bottom: 5px;
   }
 }
 .column-value-body select,
