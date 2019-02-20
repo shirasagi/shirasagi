@@ -8,12 +8,12 @@ Dir.chdir @root = File.dirname(__FILE__)
 puts "Site not found: #{ENV['site']}" or exit unless @site
 @link_url = "http://#{@site.domains.first}"
 
-require "#{Rails.root}/db/seeds/cms/contents/users"
+load "#{Rails.root}/db/seeds/cms/users.rb"
 
 @g_seisaku = SS::Group.where(name: "シラサギ市/企画政策部/政策課").first
 
-require "#{Rails.root}/db/seeds/cms/contents/workflow"
-require "#{Rails.root}/db/seeds/cms/contents/members"
+load "#{Rails.root}/db/seeds/cms/workflow.rb"
+load "#{Rails.root}/db/seeds/cms/members.rb"
 load "#{Rails.root}/db/seeds/cms/contents/files.rb"
 load "#{Rails.root}/db/seeds/cms/contents/layouts.rb"
 load "#{Rails.root}/db/seeds/cms/contents/parts.rb"
