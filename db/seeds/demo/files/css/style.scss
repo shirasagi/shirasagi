@@ -1275,6 +1275,9 @@ article.body {
       border: $border-hgry;
     }
   }
+  video, p img, iframe {
+    max-width: 100%;
+  }
   .float-left, .ss-alignment-left {
     float: left;
     margin: 0 $item-margin $item-margin 0;
