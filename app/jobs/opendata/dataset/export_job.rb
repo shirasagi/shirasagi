@@ -62,7 +62,7 @@ class Opendata::Dataset::ExportJob < Cms::ApplicationJob
 
   def resources_to_csv(resources)
     CSV.generate do |data|
-      headers = %w(id name format license_id text file_id source_url tsv_id).map { |k| Opendata::Resource.t(k) }
+      headers = %w(id name format license_id text order file_id source_url tsv_id).map { |k| Opendata::Resource.t(k) }
 
       data << headers
       resources.each do |item|
@@ -72,6 +72,7 @@ class Opendata::Dataset::ExportJob < Cms::ApplicationJob
         line << item.format
         line << item.license.try(:name)
         line << item.text
+        line << item.order
         line << item.file.try(:name)
         line << item.source_url
         line << item.tsv.try(:name)

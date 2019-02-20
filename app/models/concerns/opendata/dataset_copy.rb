@@ -28,7 +28,8 @@ module Opendata::DatasetCopy
                       filename: "#{dirname}/",
                       basename: "",
                       release_date: nil,
-                      close_date: nil)
+                      close_date: nil,
+                      update_plan_mail_state: "disabled")
     item = self.class.new(attributes)
     item.reset_harvest_attributes
     item.instance_variable_set(:@original, self)

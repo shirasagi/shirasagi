@@ -589,6 +589,7 @@ ja:
         license_id: ライセンス
         tsv_id: プレビュー用データ
         content: データの内容
+        order: 並び順
       opendata/url_resource:
         file_id: クローリングファイル
         in_file: クローリングファイル
@@ -822,6 +823,9 @@ ja:
       tsv_id:
         - TSV、CSVファイルを登録しておくとデータセットのページでプレビュー表示ができます。
         - リソースファイルがTSV、CSVファイルの場合は登録する必要はありません。
+      order:
+        - 並び順を入力します。
+        - 数字が小さい順に表示されます。
     opendata/app:
       text:
         - アプリの説明を入力します。
