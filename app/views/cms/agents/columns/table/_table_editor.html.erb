@@ -44,6 +44,7 @@ $(document).on('click', 'button#create-table-<%= table_name %>', function () {
 
   table_editor.html(table);
   addControllTable();
+  $('#table-editor-<%= table_name %> caption').text($('#caption-<%= table_name %>').val());
   updateHidden();
 });
 
@@ -122,7 +123,25 @@ $(document).on('click', '#table-menu-left-<%= table_name %> #append-top', functi
   var newTr = "<tr>";
   for (var i=0; i<columnNum-1; i++) {
     if (parent[0].cells[i].tagName == "TH"){
-      newTr = newTr + "<th></th>";
+      if (!parent[0].cells[i+1]){
+        alert("<%= I18n.t("cms.column_table.cant_append_top") %>");
+        addControllTable();
+        var tableMenu = $('.table-menu');
+        if(tableMenu.hasClass('show')) {
+          tableMenu.removeClass('show');
+        }
+        return false;
+      }
+      if (parent[0].cells[i+1].tagName == "TH"){
+        alert("<%= I18n.t("cms.column_table.cant_append_top") %>");
+        addControllTable();
+        var tableMenu = $('.table-menu');
+        if(tableMenu.hasClass('show')) {
+          tableMenu.removeClass('show');
+        }
+        return false;
+      }
+      newTr = newTr + "<th scope='"+ parent[0].cells[i].scope +"'></th>";
     } else {
       newTr = newTr + "<td></td>";
     }
@@ -136,11 +155,24 @@ $(document).on('click', '#table-menu-left-<%= table_name %> #append-bottom', fun
   var table = tableDom.parent().parent();
   var columnNum = table[0].rows[0].cells.length;
   var parent = tableDom.parent();
+  var index = parent[0].rowIndex;
   removeControllTable();
   var newTr = "<tr>";
   for (var i=0; i<columnNum-1; i++) {
     if (parent[0].cells[i].tagName == "TH"){
-      newTr = newTr + "<th></th>";
+      if (!parent[0].cells[i+1]){
+        newTr = newTr + "<td></td>";
+      } else if (parent[0].cells[i+1].tagName == "TH"){
+        if (!table[0].rows[index+1]) {
+          newTr = newTr + "<th scope='"+ parent[0].cells[i].scope +"'></th>";
+        } else if (table[0].rows[index+1].cells[i].tagName == "TH") {
+          newTr = newTr + "<th scope='"+ parent[0].cells[i].scope +"'></th>";
+        } else {
+          newTr = newTr + "<td></td>";
+        }
+      } else {
+        newTr = newTr + "<th scope='"+ parent[0].cells[i].scope +"'></th>";
+      }
     } else {
       newTr = newTr + "<td></td>";
     }
@@ -156,7 +188,19 @@ $(document).on('click', '#table-menu-top-<%= table_name %> #append-right', funct
   removeControllTable();
   for (var i=1; i<table[0].rows.length; i++){
     if (table[0].rows[i].cells[cellIndex].tagName == "TH") {
-      $(table[0].rows[i].cells[cellIndex]).after("<th scope='"+ table[0].rows[i].cells[cellIndex].scope +"'></th>");
+      if (!table[0].rows[i+1]){
+        $(table[0].rows[i].cells[cellIndex]).after("<td></td>");
+      } else if (table[0].rows[i+1].cells[cellIndex].tagName == "TH"){
+        if (!table[0].rows[i].cells[cellIndex+1]) {
+          $(table[0].rows[i].cells[cellIndex]).after("<th scope='"+ table[0].rows[i].cells[cellIndex].scope +"'></th>");
+        } else if (table[0].rows[i].cells[cellIndex+1].tagName == "TH") {
+          $(table[0].rows[i].cells[cellIndex]).after("<th scope='"+ table[0].rows[i].cells[cellIndex].scope +"'></th>");
+        } else {
+          $(table[0].rows[i].cells[cellIndex]).after("<td></td>");
+        }
+      } else {
+        $(table[0].rows[i].cells[cellIndex]).after("<th scope='"+ table[0].rows[i].cells[cellIndex].scope +"'></th>");
+      }
     }else{
       $(table[0].rows[i].cells[cellIndex]).after("<td></td>");
     }
@@ -170,6 +214,24 @@ $(document).on('click', '#table-menu-top-<%= table_name %> #append-left', functi
   removeControllTable();
   for (var i=1; i<table[0].rows.length; i++){
     if (table[0].rows[i].cells[cellIndex].tagName == "TH") {
+      if (!table[0].rows[i+1]){
+        alert("<%= I18n.t("cms.column_table.cant_append_left") %>");
+        addControllTable();
+        var tableMenu = $('.table-menu');
+        if(tableMenu.hasClass('show')) {
+          tableMenu.removeClass('show');
+        }
+        return false;
+      }
+      if (table[0].rows[i+1].cells[cellIndex].tagName == "TH"){
+        alert("<%= I18n.t("cms.column_table.cant_append_left") %>");
+        addControllTable();
+        var tableMenu = $('.table-menu');
+        if(tableMenu.hasClass('show')) {
+          tableMenu.removeClass('show');
+        }
+        return false;
+      }
       $(table[0].rows[i].cells[cellIndex]).before("<th scope='"+ table[0].rows[i].cells[cellIndex].scope +"'></th>");
     }else{
       $(table[0].rows[i].cells[cellIndex]).before("<td></td>");
