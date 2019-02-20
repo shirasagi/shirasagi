@@ -1,6 +1,6 @@
 <%= jquery do %>
   $('input.alnum').on({
-    focus: function() { $(this).attr('type', 'email').css('width', '100%'); },
+    focus: function() { $(this).attr('type', 'email'); },
     blur: function() { $(this).attr('type', 'text'); },
     keypress: function(ev) { if (ev.which == 13) { $('#item_password').focus(); return false; } }
   });
