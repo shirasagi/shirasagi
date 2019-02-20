@@ -30,6 +30,9 @@
     height: auto;
     min-height: 2.6em;
     box-sizing: border-box;
+    @include mb {
+      padding: 6px 8px;
+    }
   }
   .ss-preview-dropdown {
     float: left;
@@ -51,6 +54,7 @@
       border: 1px solid #bbb;
       border-left: none;
       border-right: none;
+      font-size: 100%;
       box-sizing: border-box;
       text-decoration: none;
     }
@@ -97,6 +101,7 @@
       margin-right: auto;
       .ss-preview-wrap-row {
         @include display-flex;
+        @include flex-wrap(wrap);
         @include mb {
           display: block;
         }
@@ -121,6 +126,8 @@
     border-radius: 3px 0 0 3px;
     border-right: none;
     @include mb {
+      width: 100px;
+      padding: 6px 3px;
       box-sizing: border-box;
     }
   }
@@ -136,6 +143,9 @@
   .ss-preview-wrap-column ~ .ss-preview-wrap-column {
     padding-left: 10px;
     border-left: 1px solid $gray2;
+    .ss-preview-wrap-row:nth-child(2) .ss-preview-btn-group:nth-child(3) {
+      margin-right: 0;
+    }
   }
   #ss-preview-messages .ss-preview-branch-notice {
     padding-right: 5px;
@@ -146,11 +156,14 @@
       margin-bottom: 10px;
     }
     &.ss-preview-wrap-row {
-      float: right;
       @include display-flex;
+      @include justify-content(flex-end);
       @include align-items(center);
       @include flex-wrap(wrap);
       padding-bottom: 10px;
+      @include mb {
+        @include justify-content(flex-start);
+      }
       label {
         margin: 0 10px 9px 0;
         @include mb {
@@ -160,7 +173,7 @@
     }
   }
   .ss-preview-btn-group ~ .ss-preview-btn-group {
-    margin-left: 8px;
+    margin-right: 8px;
     @include mb {
       margin-left: 0;
     }
@@ -191,12 +204,13 @@
 #ss-preview-overlay {
   position: absolute;
   border: 6px solid rgba(0, 0, 0, 0.8);
+  border-top: none;
   box-sizing: border-box;
   @include transition(0.18s);
   pointer-events: none;
   .ss-preview-overlay-tool {
     position: absolute;
-    top: -59px;
+    top: -57px;
     right: -6px;
     width: calc(100% + 12px);
     margin: 0;
@@ -206,6 +220,7 @@
     @include align-items(center);
     background-color: rgba(0, 0, 0, 0.8);
     pointer-events: none;
+    overflow: hidden;
     @include mb {
       display: block;
     }
@@ -226,6 +241,19 @@
       padding: 12px 5px 12px 0;
       font-size: 0.8rem;
       pointer-events: auto;
+      z-index: 101;
+    }
+    .ss-preview-overlay-btn-group-edit {
+      &:after {
+        content: "";
+        position: absolute;
+        top: 16px;
+        left: 0;
+        width: 100%;
+        height: 50px;
+        @include transform(skew(-7deg,-2deg));
+        z-index: -1;
+      }
     }
   }
   * {
@@ -268,8 +296,19 @@
   margin-top: 8px;
   margin-bottom: 8px;
   width: 100%;
-};
-
+}
+div.ss-preview-dialog {
+  padding: 10px;
+  box-sizing: border-box;
+  #ss-preview-dialog-frame {
+    margin-top: 10px;
+    padding: 10px;
+    background: #f2f2f2;
+    body {
+      background: none;
+    }
+  }
+}
 .ss-preview-dialog {
   &.ui-dialog {
     .ui-dialog-title {
@@ -357,6 +396,8 @@ table.index {
       background: #f2f2f2;
       color: #999999;
     }
+  }
+  tbody {
     tr {
       background: $white;
       &:nth-child(2n) {
