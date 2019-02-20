@@ -1,14 +1,14 @@
 class Cms::Column::Value::UrlField2 < Cms::Column::Value::Base
   field :html_tag, type: String
   field :html_additional_attr, type: String, default: ''
-  field :link, type: String
-  field :label, type: String
+  field :link_url, type: String
+  field :link_label, type: String
 
-  permit_values :link, :label
+  permit_values :link_url, :link_label
 
   liquidize do
-    export :link
-    export :label
+    export :link_url
+    export :link_label
   end
 
   def html_additional_attr_to_h
@@ -23,19 +23,19 @@ class Cms::Column::Value::UrlField2 < Cms::Column::Value::Base
   def validate_value
     return if column.blank?
 
-    if column.required? && link.blank?
-      self.errors.add(:link, :blank)
+    if column.required? && link_url.blank?
+      self.errors.add(:link_url, :blank)
     end
 
-    if label.present? && column.label_max_length.present? && column.label_max_length > 0
-      if label.length > column.label_max_length
-        self.errors.add(:label, :too_long, count: column.label_max_length)
+    if link_label.present? && column.label_max_length.present? && column.label_max_length > 0
+      if link_label.length > column.label_max_length
+        self.errors.add(:link_label, :too_long, count: column.label_max_length)
       end
     end
 
-    if link.present? && column.link_max_length.present? && column.link_max_length > 0
-      if link.length > column.link_max_length
-        self.errors.add(:link, :too_long, count: column.link_max_length)
+    if link_url.present? && column.link_max_length.present? && column.link_max_length > 0
+      if link_url.length > column.link_max_length
+        self.errors.add(:link_url, :too_long, count: column.link_max_length)
       end
     end
   end
@@ -50,14 +50,14 @@ class Cms::Column::Value::UrlField2 < Cms::Column::Value::Base
   end
 
   def to_default_html
-    return '' if link.blank?
+    return '' if link_url.blank?
 
     options = html_additional_attr_to_h
     case html_tag
     when 'a'
-      ApplicationController.helpers.link_to(label.presence || link, link, options)
+      ApplicationController.helpers.link_to(link_label.presence || link_url, link_url, options)
     else
-      link
+      link_url
     end
   end
 end

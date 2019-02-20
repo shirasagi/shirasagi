@@ -2,21 +2,22 @@ class Cms::Column::Value::FileUpload < Cms::Column::Value::Base
   field :html_tag, type: String
   field :html_additional_attr, type: String, default: ''
   belongs_to :file, class_name: 'SS::File'
-  field :label, type: String
+  field :file_label, type: String
   field :text, type: String
   field :image_html_type, type: String
-  field :link, type: String
+  field :link_url, type: String
 
-  permit_values :file_id, :label, :text, :image_html_type, :link
+  permit_values :file_id, :file_label, :text, :image_html_type, :link_url
 
   before_save :before_save_file
   after_destroy :destroy_file
 
   liquidize do
     export :file
+    export :file_label
     export :text
     export :image_html_type
-    export :link
+    export :link_url
   end
 
   def value
@@ -53,8 +54,8 @@ class Cms::Column::Value::FileUpload < Cms::Column::Value::Base
       self.errors.add(:file_id, :blank)
     end
 
-    if column.required? && column.file_type == 'banner' && link.blank?
-      self.errors.add(:link, :blank)
+    if column.required? && column.file_type == 'banner' && link_url.blank?
+      self.errors.add(:link_url, :blank)
     end
 
     return if file.blank?
@@ -128,10 +129,10 @@ class Cms::Column::Value::FileUpload < Cms::Column::Value::Base
     when 'image'
       if image_html_type == "thumb"
         ApplicationController.helpers.link_to(file.url) do
-          ApplicationController.helpers.image_tag(file.thumb_url, alt: label.presence || file.humanized_name)
+          ApplicationController.helpers.image_tag(file.thumb_url, alt: file_label.presence || file.humanized_name)
         end
       elsif image_html_type == "image"
-        ApplicationController.helpers.image_tag(file.url, alt: label.presence || file.humanized_name)
+        ApplicationController.helpers.image_tag(file.url, alt: file_label.presence || file.humanized_name)
       end
     when 'video'
       div_content = []
@@ -141,15 +142,15 @@ class Cms::Column::Value::FileUpload < Cms::Column::Value::Base
         div_content.join.html_safe
       end
     when 'attachment'
-      ApplicationController.helpers.link_to(label.presence || file.humanized_name, file.url)
+      ApplicationController.helpers.link_to(file_label.presence || file.humanized_name, file.url)
     when 'banner'
-      if link.present?
-        ApplicationController.helpers.link_to(link) do
-          ApplicationController.helpers.image_tag(file.url, alt: label.presence || file.humanized_name)
+      html = ApplicationController.helpers.image_tag(file.url, alt: file_label.presence || file.humanized_name)
+      if link_url.present?
+        html = ApplicationController.helpers.link_to(link_url) do
+          html
         end
-      else
-        ApplicationController.helpers.image_tag(file.url, alt: label.presence || file.humanized_name)
       end
+      html
     end
   end
 end

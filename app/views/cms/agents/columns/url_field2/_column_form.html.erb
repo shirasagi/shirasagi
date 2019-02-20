@@ -1,10 +1,10 @@
 <% value ||= nil %>
 <% controller ||= false %>
-<% name = "#{f.object_name}[][in_wrap][label]" %>
+<% name = "#{f.object_name}[][in_wrap][link_label]" %>
 
 <%= render 'cms/agents/columns/main/base', f: f, column: column, value: value, controller: controller do |id| %>
-  <%= text_field_tag(name, value.try(:label), column.form_options(:label).merge(id: nil, style: "width: 30%;")) %>
-  <%= url_field_tag("#{f.object_name}[][in_wrap][link]", value.try(:link), column.form_options(:link).merge(id: nil, style: "width: 50%;")) %>
+  <%= text_field_tag(name, value.try(:link_label), column.form_options(:link_label).merge(id: nil, style: "width: 30%;")) %>
+  <%= url_field_tag("#{f.object_name}[][in_wrap][link_url]", value.try(:link_url), column.form_options(:link_url).merge(id: nil, style: "width: 50%;")) %>
 
   <%= jquery do %>
     Cms_Form.addSyntaxCheck("<%= id %>", {

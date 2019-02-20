@@ -24,12 +24,12 @@ class Cms::Column::UrlField2 < Cms::Column::Base
   end
 
   def form_options(type = nil)
-    if type == :label
+    if type == :link_label
       options = {}
       options['maxlength'] = label_max_length if label_max_length.present?
       options['placeholder'] = label_place_holder if label_place_holder.present?
       options
-    elsif type == :link
+    elsif type == :link_url
       options = {}
       options['maxlength'] = link_max_length if link_max_length.present?
       options['placeholder'] = link_place_holder if link_place_holder.present?
