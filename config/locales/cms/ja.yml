@@ -83,6 +83,8 @@ ja:
       header: ヘッダ
       create: 表を作成する
       caption: キャプション
+      cant_append_left: ヘッダーの左側に列を追加することはできません。
+      cant_append_top: ヘッダーの上部に列を追加することはできません。
     column_youtube_auto_width:
       enabled: 画面幅に合わせる
       disabled: 画面幅に合わせない
