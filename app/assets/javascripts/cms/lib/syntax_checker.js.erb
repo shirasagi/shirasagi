@@ -581,7 +581,7 @@ this.Syntax_Checker = (function () {
         var d;
         d = this.textContent.match(/\d{4}[\.\-\/]\d{1,2}[\.\-\/]\d{1,2}/g);
         if (d) {
-          return dates.push(d);
+          dates = $.merge(dates, d);
         }
       });
       if ($.isEmptyObject(dates)) {
