@@ -177,7 +177,7 @@ module Service::Quota
     sites.each do |site|
       dir = site.root_path
       next unless ::File.exists?(dir)
-      size += `du -bs #{dir}`.sub(/\s.*/m, '').to_i
+      size += `du -bs #{Shellwords.escape(dir)}`.sub(/\s.*/m, '').to_i
     end
     size
   end
