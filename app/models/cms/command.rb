@@ -25,7 +25,7 @@ class Cms::Command
   end
 
   def commands_path
-    SS.config.cms.command['path'].collect do |path|
+    SS.config.cms.command['path'].to_a.collect do |path|
       [Rails.root, path].join('/')
     end
   end
@@ -35,10 +35,9 @@ class Cms::Command
   end
 
   def run(target, path)
-    data = []
-    data << "PATH=#{commands_path.join(':') rescue nil}"
-    data << Shellwords.join(['/bin/bash', '-rc', escaped_command(target, path)])
-    self.output = Open3.capture2e(data.join(';'))[0]
+    env = { 'PATH' => commands_path.join(':') }
+    data = Shellwords.join(['/bin/bash', '-rc', escaped_command(target, path)])
+    self.output = Open3.capture2e(env, data, {})[0]
     self.update
   end
 

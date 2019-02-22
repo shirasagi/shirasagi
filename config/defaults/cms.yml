@@ -123,7 +123,7 @@ production: &production
   max_term_form: 10
 
   command:
-    disable: true
+    disable: false
     path:
       - '/config/commands'
 
