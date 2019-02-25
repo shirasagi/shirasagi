@@ -34,6 +34,10 @@ class Cms::Column::Value::Free < Cms::Column::Value::Base
     end
   end
 
+  def to_default_html
+    value
+  end
+
   def before_save_files
     if @new_clone
       cloned_file_ids = []
