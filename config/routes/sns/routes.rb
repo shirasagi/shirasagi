@@ -25,6 +25,11 @@ SS::Application.routes.draw do
     namespace "addons", module: "agents/addons" do
       post "markdown" => "markdown#preview"
     end
+
+    resources :notifications, concerns: :deletion, only: [:index, :show, :destroy] do
+      get :recent, on: :collection
+      get :latest, on: :collection
+    end
   end
 
   namespace "sns", path: ".u:user", user: /\d+/ do

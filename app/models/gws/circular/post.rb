@@ -206,7 +206,7 @@ class Gws::Circular::Post
   def create_memo_notice(added_member_ids, removed_member_ids)
     url_helper = Rails.application.routes.url_helpers
     if added_member_ids.present?
-      message = Gws::Memo::Notice.new
+      message = SS::Notification.new
       message.cur_site = site
       message.cur_user = @cur_user || user
       message.member_ids = added_member_ids
@@ -222,7 +222,7 @@ class Gws::Circular::Post
     end
 
     if removed_member_ids.present?
-      message = Gws::Memo::Notice.new
+      message = SS::Notification.new
       message.cur_site = site
       message.cur_user = @cur_user || user
       message.member_ids = removed_member_ids

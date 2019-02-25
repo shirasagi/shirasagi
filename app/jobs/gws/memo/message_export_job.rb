@@ -64,7 +64,7 @@ class Gws::Memo::MessageExportJob < Gws::ApplicationJob
   end
 
   def create_notify_message
-    item = Gws::Memo::Notice.new
+    item = SS::Notification.new
     item.cur_site = site
     item.cur_user = user
     item.member_ids = [user.id]
