@@ -277,7 +277,7 @@ categories = [
             <dd><%= @cur_page.contact_group.name.sub(/.*\//, "") %><br /></dd>
           <% elsif @cur_page.groups.present? %>
             <dt><%= @cur_page.t :user_id %></dt>
-            <dd><%= @cur_page.groups.first.name %><br /></dd>
+            <dd><%= @cur_page.groups.first.name.sub(/.*\//, "") %><br /></dd>
           <% end %>
 
           <dt><%= @cur_page.t :downloaded %></dt>
