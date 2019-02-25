@@ -180,7 +180,7 @@ end
   save_column(:file_upload, form: @form_4, name: 'イメージ', order: 50, required: 'optional', file_type: 'image', layout: '6.layout.html'),
   save_column(:file_upload, form: @form_4, name: '添付ファイル', order: 60, required: 'optional', file_type: 'attachment', layout: '7.layout.html'),
   save_column(:list, form: @form_4, name: '番号付きリスト', order: 70, required: 'optional', list_type: 'ol'),
-  save_column(:list, form: @form_4, name: '番号なしリスト', order: 80, required: 'optional', list_type: 'ol'),
+  save_column(:list, form: @form_4, name: '番号なしリスト', order: 80, required: 'optional', list_type: 'ul'),
   save_column(:table, form: @form_4, name: '表', order: 90, required: 'optional'),
   save_column(:youtube, form: @form_4, name: 'YouTube埋め込み', order: 100, required: 'optional'),
   save_column(:file_upload, form: @form_4, name: '動画埋め込み', order: 110, required: 'optional', file_type: 'video'),

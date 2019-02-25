@@ -3024,10 +3024,19 @@ body.ss-ajax-in-iframe {
     padding-left: 18px;
     li {
       margin-bottom: 15px;
-      list-style: disc;
     }
     &+.inplace-checkers {
       padding-left: 18px;
+    }
+  }
+  .list-ol {
+    li {
+      list-style-type: decimal;
+    }
+  }
+  .list-ul {
+    li {
+      list-style-type: disc;
     }
   }
 }
