@@ -1,4 +1,6 @@
 <%
+return if @item.categories.blank?
+
 def name_hier(category)
   names = []
   names << category.name

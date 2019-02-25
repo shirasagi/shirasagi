@@ -12,6 +12,8 @@ end
   end
   cate.allowed?(:read, @cur_user, site: @cur_site, node: @cur_node)
 end
+return if @categories.blank?
+
 @disallowed_categories = @item.categories.select { |category| !category.allowed?(:read, @cur_user, site: @cur_site) }
 
 def cate_form(item)
