@@ -251,8 +251,12 @@ Cms_TemplateForm.prototype.movePosition = function($evSource) {
   }
 
   Cms_TemplateForm.insertElement($source, $moveTo, function() {
+    $source.trigger("column:beforeMove");
+
     moveToMethod($source);
     self.resetOrder();
+
+    $source.trigger("column:afterMove");
   });
 };
 
@@ -269,8 +273,12 @@ Cms_TemplateForm.prototype.moveUp = function($evTarget) {
 
   var self = this;
   Cms_TemplateForm.swapElement($prev, $columnValue, function() {
+    $columnValue.trigger("column:beforeMove");
+
     $prev.before($columnValue);
     self.resetOrder();
+
+    $columnValue.trigger("column:afterMove");
   });
 };
 
@@ -287,8 +295,12 @@ Cms_TemplateForm.prototype.moveDown = function($evTarget) {
 
   var self = this;
   Cms_TemplateForm.swapElement($columnValue, $next, function() {
+    $columnValue.trigger("column:beforeMove");
+
     $next.after($columnValue);
     self.resetOrder();
+
+    $columnValue.trigger("column:afterMove");
   });
 };
 
