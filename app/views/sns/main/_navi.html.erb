@@ -9,6 +9,12 @@
     <% end %>
   </h2>
 
+  <h2>
+    <%= link_to job_sns_logs_path do %>
+      <i class="material-icons">&#xE853;</i><%= t("job.task_manager") %>
+    <% end %>
+  </h2>
+
   <% if @cur_setting.menu_file_visible? %>
     <h2>
       <%= link_to sns_cur_user_files_path do %>
