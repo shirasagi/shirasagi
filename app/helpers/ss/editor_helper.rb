@@ -4,11 +4,11 @@ module SS::EditorHelper
     html: :htmlmixed,
     scss: :css,
     js: :javascript,
-    coffee: :coffeescript,
+    coffee: :coffeescript
   }.freeze
 
   CODE_MODE_FILES = {
-    htmlmixed: %w(xml javascript css vbscript htmlmixed),
+    htmlmixed: %w(xml javascript css vbscript htmlmixed).freeze
   }.freeze
 
   def code_editor(elem, opts = {})
@@ -180,11 +180,11 @@ module SS::EditorHelper
     end
 
     if color_button == 'enabled'
-      opts[:extraPlugins] ||= ['colorbutton']
+      opts[:extraPlugins] ||= %w(colorbutton)
       opts[:removePlugins] ||= []
-      opts[:removePlugins] -= ['colorbutton']
+      opts[:removePlugins] -= %w(colorbutton)
     end
-    opts[:removePlugins] ||= ['colorbutton'] if color_button == 'disabled'
+    opts[:removePlugins] ||= %w(colorbutton) if color_button == 'disabled'
 
     opts[:contentsCss] ||= []
     if editor_css_path.present?
