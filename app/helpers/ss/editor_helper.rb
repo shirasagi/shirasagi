@@ -4,11 +4,11 @@ module SS::EditorHelper
     html: :htmlmixed,
     scss: :css,
     js: :javascript,
-    coffee: :coffeescript,
+    coffee: :coffeescript
   }.freeze
 
   CODE_MODE_FILES = {
-    htmlmixed: %w(xml javascript css vbscript htmlmixed),
+    htmlmixed: %w(xml javascript css vbscript htmlmixed).freeze
   }.freeze
 
   def code_editor(elem, opts = {})
@@ -48,6 +48,17 @@ module SS::EditorHelper
       html_editor_tinymce(elem, opts)
     when "markdown"
       html_editor_markdown(elem, opts)
+    end
+  end
+
+  def html_editor_js(elem, opts = {})
+    case SS.config.cms.html_editor
+    when "ckeditor"
+      html_editor_ckeditor_js(elem, opts)
+    when "tinymce"
+      html_editor_tinymce_js(elem, opts)
+    when "markdown"
+      html_editor_markdown_js(elem, opts)
     end
   end
 
@@ -101,6 +112,12 @@ module SS::EditorHelper
   end
 
   def html_editor_ckeditor(elem, opts = {})
+    jquery do
+      html_editor_ckeditor_js(elem, opts)
+    end
+  end
+
+  def html_editor_ckeditor_js(elem, opts = {})
     SS.config.cms.ckeditor.fetch('stylesheets', []).each do |ss|
       controller.stylesheet ss
     end
@@ -108,9 +125,8 @@ module SS::EditorHelper
       controller.javascript js
     end
     opts = ckeditor_editor_options(opts)
-    jquery do
-      "Cms_Editor_CKEditor.render('#{elem}', #{opts.to_json});".html_safe
-    end
+
+    "Cms_Editor_CKEditor.render('#{elem}', #{opts.to_json});".html_safe
   end
 
   def tinymce_editor_options(opts = {})
@@ -137,15 +153,21 @@ module SS::EditorHelper
   end
 
   def html_editor_tinymce(elem, opts = {})
+    jquery do
+      html_editor_tinymce_js(elem, opts)
+    end
+  end
+
+  def html_editor_tinymce_js(elem, opts = {})
     controller.javascript "/assets/js/tinymce/tinymce.min.js"
     editor_opts = tinymce_editor_options(opts)
-    jquery do
-      "Cms_Editor_TinyMCE.render('#{elem}', #{editor_opts.to_json});".html_safe
-    end
+
+    "Cms_Editor_TinyMCE.render('#{elem}', #{editor_opts.to_json});".html_safe
   end
 
   def html_editor_markdown(elem, opts = {})
   end
+  alias html_editor_markdown_js html_editor_markdown
 
   def site_ckeditor_editor_options(opts = {})
     return opts if @cur_site.nil?
@@ -158,11 +180,11 @@ module SS::EditorHelper
     end
 
     if color_button == 'enabled'
-      opts[:extraPlugins] ||= ['colorbutton']
+      opts[:extraPlugins] ||= %w(colorbutton)
       opts[:removePlugins] ||= []
-      opts[:removePlugins] -= ['colorbutton']
+      opts[:removePlugins] -= %w(colorbutton)
     end
-    opts[:removePlugins] ||= ['colorbutton'] if color_button == 'disabled'
+    opts[:removePlugins] ||= %w(colorbutton) if color_button == 'disabled'
 
     opts[:contentsCss] ||= []
     if editor_css_path.present?

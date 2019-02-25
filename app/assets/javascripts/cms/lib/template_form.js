@@ -181,11 +181,14 @@ Cms_TemplateForm.prototype.bindOne = function(el, options) {
       handle: '.sortable-handle',
       items: "> .column-value",
       // start: function (ev, ui) {
-      //   ui.item.addClass("column-value-dragging");
+      //   console.log("start");
       // },
-      // stop: function (ev, ui) {
-      //   ui.item.removeClass("column-value-dragging");
-      // },
+      beforeStop: function(ev, ui) {
+        ui.item.trigger("column:beforeMove");
+      },
+      stop: function (ev, ui) {
+        ui.item.trigger("column:afterMove");
+      },
       update: function (ev, ui) {
         self.resetOrder();
       }
@@ -251,8 +254,12 @@ Cms_TemplateForm.prototype.movePosition = function($evSource) {
   }
 
   Cms_TemplateForm.insertElement($source, $moveTo, function() {
+    $source.trigger("column:beforeMove");
+
     moveToMethod($source);
     self.resetOrder();
+
+    $source.trigger("column:afterMove");
   });
 };
 
@@ -269,8 +276,12 @@ Cms_TemplateForm.prototype.moveUp = function($evTarget) {
 
   var self = this;
   Cms_TemplateForm.swapElement($prev, $columnValue, function() {
+    $columnValue.trigger("column:beforeMove");
+
     $prev.before($columnValue);
     self.resetOrder();
+
+    $columnValue.trigger("column:afterMove");
   });
 };
 
@@ -287,8 +298,12 @@ Cms_TemplateForm.prototype.moveDown = function($evTarget) {
 
   var self = this;
   Cms_TemplateForm.swapElement($columnValue, $next, function() {
+    $columnValue.trigger("column:beforeMove");
+
     $next.after($columnValue);
     self.resetOrder();
+
+    $columnValue.trigger("column:afterMove");
   });
 };
 
