@@ -7,6 +7,6 @@ class Cms::Column::Base
   store_in collection: 'cms_columns'
 
   def alignment_options
-    %w(flow left center right).map { |v| [ I18n.t("cms.options.alignment.#{v}"), v ] }
+    %w(flow center).map { |v| [ I18n.t("cms.options.alignment.#{v}"), v ] }
   end
 end
