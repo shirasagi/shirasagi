@@ -181,11 +181,14 @@ Cms_TemplateForm.prototype.bindOne = function(el, options) {
       handle: '.sortable-handle',
       items: "> .column-value",
       // start: function (ev, ui) {
-      //   ui.item.addClass("column-value-dragging");
+      //   console.log("start");
       // },
-      // stop: function (ev, ui) {
-      //   ui.item.removeClass("column-value-dragging");
-      // },
+      beforeStop: function(ev, ui) {
+        ui.item.trigger("column:beforeMove");
+      },
+      stop: function (ev, ui) {
+        ui.item.trigger("column:afterMove");
+      },
       update: function (ev, ui) {
         self.resetOrder();
       }
