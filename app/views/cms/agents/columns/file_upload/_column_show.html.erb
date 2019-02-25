@@ -21,7 +21,7 @@
           <% case column.file_type %>
           <% when "image" %>
             <label><%= t("cms.column_file_upload.image.file_label") %>: <%= value.try(:file_label) %></label><br />
-            <label><%= I18n.t("cms.options.column_image_html_type.#{value.try(:image_html_type)}") %></label>
+            <label><% if value.try(:image_html_type) %><%= I18n.t("cms.options.column_image_html_type.#{value.try(:image_html_type)}") %><% end %></label>
           <% when "attachment" %>
             <label><%= t("cms.column_file_upload.attachment.file_label") %>: <%= value.try(:file_label) %></label>
           <% when "video" %>
