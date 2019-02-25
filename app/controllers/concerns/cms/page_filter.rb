@@ -17,12 +17,23 @@ module Cms::PageFilter
   end
 
   def pre_params
+    params = {}
+
     if @cur_node
-      layout_id = @cur_node.page_layout_id || @cur_node.layout_id
-      { layout_id: layout_id }
-    else
-      {}
+      n = @cur_node.class == Cms::Node ? @cur_node.becomes_with_route : @cur_node
+
+      layout_id = n.page_layout_id || n.layout_id
+      params[:layout_id] = layout_id if layout_id.present?
+
+      if n.respond_to?(:st_forms) && n.st_form_ids.include?(n.st_form_default_id)
+        default_form = n.st_form_default
+        if default_form.present?
+          params[:form_id] = default_form.id
+        end
+      end
     end
+
+    params
   end
 
   def set_items

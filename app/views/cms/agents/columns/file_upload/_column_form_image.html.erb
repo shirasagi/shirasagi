@@ -1,4 +1,4 @@
-<% name = "#{f.object_name}[][in_wrap][image_text]" %>
+<% name = "#{f.object_name}[][in_wrap][file_label]" %>
 
 <%= jquery do %>
 Cms_Form.addSyntaxCheck("<%= id %>", {
@@ -9,5 +9,5 @@ Cms_Form.addSyntaxCheck("<%= id %>", {
 });
 <% end %>
 
-<%= text_field_tag(name, value.try(:image_text), column.form_options(:image_text).merge(id: nil, "data-check-presence": Cms::Column::FileUpload.t("image_text"))) %>
+<%= text_field_tag(name, value.try(:file_label), id: nil, "data-check-presence": t("cms.column_file_upload.image.file_label"), placeholder: t("cms.column_file_upload.image.file_label_place_holder")) %>
 <%= select_tag("#{f.object_name}[][in_wrap][image_html_type]", options_for_select(column.image_html_type_options, value.try(:image_html_type)), style: "width: 10%;") %>
