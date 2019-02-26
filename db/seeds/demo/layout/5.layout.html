@@ -1,7 +1,3 @@
-{% if value.link %}
-{% if value.label %}
-<p><a href="{{ value.link }}">{{ value.label }}</a></p>
-{% else %}
-<p><a href="{{ value.link }}">{{ value.link }}</a></p>
-{% endif %}
+{% if value.link_url %}
+  <p><a href="{{ value.link_url }}" target="{{ value.link_target | default: "_self" }}">{{ value.link_label | default: value.link_url }}</a></p>
 {% endif %}

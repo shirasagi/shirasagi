@@ -17,6 +17,12 @@ class Cms::Column::UrlField2 < Cms::Column::Base
   validates :label_max_length, numericality: { only_integer: true, greater_than_or_equal_to: 0, allow_blank: true }
   validates :link_max_length, numericality: { only_integer: true, greater_than_or_equal_to: 0, allow_blank: true }
 
+  def link_target_options
+    %w(_blank _parent _self _top).map do |v|
+      [ v, v ]
+    end
+  end
+
   def html_tag_options
     %w(a).map do |v|
       [ I18n.t("cms.options.html_tag.#{v}", default: v), v ]

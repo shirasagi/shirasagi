@@ -3,19 +3,30 @@ class Cms::Column::Value::UrlField2 < Cms::Column::Value::Base
   field :html_additional_attr, type: String, default: ''
   field :link_url, type: String
   field :link_label, type: String
+  field :link_target, type: String
 
-  permit_values :link_url, :link_label
+  permit_values :link_url, :link_label, :link_target
 
   liquidize do
     export :link_url
     export :link_label
+    export :link_target
   end
 
   def html_additional_attr_to_h
-    return {} if html_additional_attr.blank?
-    html_additional_attr.scan(/\S+?=".+?"/m).
-      map { |s| s.split(/=/).size == 2 ? s.delete('"').split(/=/) : nil }.
-      compact.to_h
+    attrs = {}
+
+    if html_additional_attr.present?
+      attrs = html_additional_attr.scan(/\S+?=".+?"/m).
+        map { |s| s.split(/=/).size == 2 ? s.delete('"').split(/=/) : nil }.
+        compact.to_h
+    end
+
+    if link_target.present?
+      attrs[:target] = link_target
+    end
+
+    attrs
   end
 
   private
