@@ -1,49 +1,55 @@
 <% if @cur_year %>
-<div class="list-search">
-  <h2 class="title">
-    <%= @cur_year.name %> <%= t 'gws/staff_record.staff_records' %>
-  </h2>
-  <%= render partial: 'search' %>
-</div>
+  <div class="list-search">
+    <h2 class="title">
+      <%= @cur_year.name %> <%= t 'gws/staff_record.staff_records' %>
+    </h2>
+    <%= render partial: 'search' %>
+  </div>
 <% end %>
 
 <div class="main-box">
   <div class="wrap-table">
     <table class="index data-table">
       <thead>
-        <tr>
-          <th style="width: 5%"><%= @model.t :section_name %></th>
-          <th style="width: 18%"><%= @model.t :charge_name %></th>
-          <th style="width: 15%"><%= @model.t :title_name %></th>
-          <th style="width: 12%"><%= @model.t :name %></th>
-          <th style="width: 15%"><%= @model.t :kana %></th>
-          <th style="width: 10%"><%= @model.t :tel_ext %></th>
-          <th><%= @model.t :remark %></th>
-        </tr>
+      <tr>
+        <th style="width: 5%"><%= @model.t :section_name %></th>
+        <th style="width: 18%"><%= @model.t :charge_name %></th>
+        <th style="width: 15%"><%= @model.t :title_ids %></th>
+        <th style="width: 12%"><%= @model.t :name %></th>
+        <th style="width: 15%"><%= @model.t :kana %></th>
+        <th style="width: 10%"><%= @model.t :tel_ext %></th>
+        <th><%= @model.t :remark %></th>
+      </tr>
       </thead>
       <tbody>
-        <% last_section = nil %>
-        <% @items.each do |item| %>
-          <% if item.section_name != last_section %>
-            <% last_section = item.section_name  %>
-            <tr>
-              <th colspan="7"><%= item.send :section_name %></th>
-            </tr>
-          <% end %>
+      <% last_section = nil %>
+      <% @items.each do |item| %>
+        <% if item.section_name != last_section %>
+          <% last_section = item.section_name %>
           <tr>
-            <td></td>
-            <td><%= link_to item.charge_name.presence || t('gws/staff_record.no_charge_name'), { action: :show, id: item.id } %></td>
-            <td><%= item.send :title_name %></td>
-            <td><%= link_to item.name, gws_staff_record_public_user_histories_path(user: item.id) %></td>
-            <td><%= item.send :kana %></td>
-            <td><%= item.send :tel_ext %></td>
-            <td><%= item.send :remark %></td>
+            <th colspan="7"><%= item.send :section_name %></th>
           </tr>
         <% end %>
+        <tr>
+          <td></td>
+          <td><%= link_to item.charge_name.presence || t('gws/staff_record.no_charge_name'), { action: :show, id: item.id } %></td>
+          <% if item.titles.present? %>
+            <td><%= tryb { item.title(@cur_site).name } %></td>
+          <% else %>
+            <td><%= tryb { @item.title.name_with_code } %></td>
+          <% end %>
+          <td><%= link_to item.name, gws_staff_record_public_user_histories_path(user: item.id) %></td>
+          <td><%= item.send :kana %></td>
+          <td><%= item.send :tel_ext %></td>
+          <td><%= item.send :remark %></td>
+        </tr>
+      <% end %>
 
-        <% if @items.blank? %>
-          <tr><td colspan="10"><%= I18n.t('gws/staff_record.errors.no_data') %></td></tr>
-        <% end %>
+      <% if @items.blank? %>
+        <tr>
+          <td colspan="10"><%= I18n.t('gws/staff_record.errors.no_data') %></td>
+        </tr>
+      <% end %>
       </tbody>
     </table>
   </div>

@@ -16,6 +16,7 @@ class Gws::StaffRecord::Year
   has_many :yearly_groups, class_name: 'Gws::StaffRecord::Group', dependent: :destroy
   has_many :yearly_users, class_name: 'Gws::StaffRecord::User', dependent: :destroy
   has_many :yearly_seatings, class_name: 'Gws::StaffRecord::Seating', dependent: :destroy
+  has_many :yearly_user_titles, class_name: 'Gws::StaffRecord::UserTitle', dependent: :destroy
 
   permit_params :code, :name, :start_date, :close_date
 

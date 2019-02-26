@@ -8,6 +8,7 @@ class Gws::StaffRecord::User
   include Gws::Addon::GroupPermission
   include Gws::Addon::History
   include Gws::Export
+  include SS::Model::Reference::UserTitles
 
   seqid :id
   field :name, type: String
@@ -17,7 +18,6 @@ class Gws::StaffRecord::User
   field :multi_section, type: String, default: 'regular'
   field :section_name, type: String
   field :section_order, type: Integer
-  field :title_name, type: String
   field :tel_ext, type: String
   field :charge_name, type: String
   field :charge_address, type: String
@@ -27,19 +27,25 @@ class Gws::StaffRecord::User
   field :staff_records_view, type: String, default: 'show'
   field :divide_duties_view, type: String, default: 'show'
 
+  embeds_ids :titles, class_name: "Gws::StaffRecord::UserTitle"
+
+  attr_accessor :in_title_id
+
   permit_params :name, :code, :order, :kana, :multi_section, :section_name,
-                :title_name, :tel_ext, :charge_name, :charge_address, :charge_tel,
-                :divide_duties, :remark, :staff_records_view, :divide_duties_view
+                :tel_ext, :charge_name, :charge_address, :charge_tel,
+                :divide_duties, :remark, :staff_records_view, :divide_duties_view,
+                :in_title_id
 
   validates :name, presence: true
   validates :code, presence: true
   validates :multi_section, inclusion: { in: %w(regular plural) }
   validates :section_name, presence: true
-  validates :charge_name, presence: true, unless: ->{ %i[copy_situation].include?(validation_context) }
+  validates :charge_name, presence: true, unless: -> { %i[copy_situation].include?(validation_context) }
   validates :staff_records_view, inclusion: { in: %w(show hide) }
   validates :divide_duties_view, inclusion: { in: %w(show hide) }
 
   before_validation :set_section_order, if: -> { section_name.present? }
+  before_validation :set_title_ids, if: -> { in_title_id }
 
   default_scope -> { order_by section_order: 1, section_name: 1, order: 1 }
 
@@ -57,8 +63,8 @@ class Gws::StaffRecord::User
 
     if params[:keyword].present?
       criteria = criteria.keyword_in params[:keyword], :name, :code, :kana,
-        :section_name, :title_name, :charge_name, :charge_address, :charge_tel,
-        :tel_ext, :divide_duties, :remark
+                                     :section_name, :charge_name, :charge_address, :charge_tel,
+                                     :tel_ext, :divide_duties, :remark
     end
     criteria
   }
@@ -72,20 +78,16 @@ class Gws::StaffRecord::User
       map { |c| [c.name, c.name] }
   end
 
+  def title_id_options
+    Gws::StaffRecord::UserTitle.site(cur_site).where(year_id: year_id).active.map { |m| [m.name_with_code, m.id] }
+  end
+
   def staff_records_view_options
     %w(show hide).map { |v| [I18n.t("ss.options.state.#{v}"), v] }
   end
 
   def divide_duties_view_options
     staff_records_view_options
-  end
-
-  def name_with_code
-    if code.present?
-      "[#{code}] #{name}"
-    else
-      name
-    end
   end
 
   def editable_charge?(user)
@@ -99,6 +101,19 @@ class Gws::StaffRecord::User
     false
   end
 
+  def update_all_title_orders(title)
+    self.where(title_ids: title.id).each do |item|
+      item.send(:set_title_order, title.group_id, title.order)
+      item.save
+    end
+  end
+
+  def set_title_ids
+    title_ids = titles.reject { |m| m.group_id == cur_site.id }.map(&:id)
+    title_ids << in_title_id.to_i if in_title_id.present?
+    self.title_ids = title_ids
+  end
+
   private
 
   def set_section_order
@@ -108,7 +123,7 @@ class Gws::StaffRecord::User
 
   def export_fields
     %w(
-      id name code order kana multi_section section_name title_name tel_ext
+      id name code order kana multi_section section_name tel_ext
       charge_name charge_address charge_tel divide_duties remark staff_records_view divide_duties_view
       group_ids user_ids permission_level
     )

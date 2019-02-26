@@ -17,8 +17,8 @@
   <dt><%= @model.t :section_name %></dt>
   <dd><%= @item.send :section_name %></dd>
 
-  <dt><%= @model.t :title_name %></dt>
-  <dd><%= @item.send :title_name %></dd>
+  <dt><%= @model.t :title_ids %></dt>
+  <dd><%= tryb { @item.title.name_with_code } %></dd>
 
   <dt><%= @model.t :tel_ext %></dt>
   <dd><%= @item.send :tel_ext %></dd>

@@ -64,6 +64,7 @@ ja:
       gws/staff_record/group: 所属
       gws/staff_record/user: 職員
       gws/staff_record/seating: 座席表
+      gws/staff_record/title_ids: 役職
     attributes:
       gws/addon/staff_record/group_setting:
         staff_records_limit: 電子職員録/表示件数
@@ -87,7 +88,7 @@ ja:
         kana: 職員氏名（カナ）
         multi_section: 本務・兼務
         section_name: 所属
-        title_name: 役職
+        title_ids: 役職
         tel_ext: 個人内線
         charge_name: 担当名
         charge_tel: 担当電話
@@ -134,7 +135,7 @@ ja:
       kana: 職員氏名（カナ）を入力します。
       multi_section: 本務・兼務を選択します。
       section_name: 所属を選択します。
-      title_name: 役職を入力します。
+      title_ids: 役職を選択します。
       tel_ext: 個人内線を入力します。
       charge_name: 担当を入力します。
       charge_tel: 担当電話を入力します。

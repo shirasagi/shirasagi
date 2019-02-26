@@ -9,6 +9,10 @@ class Gws::StaffRecord::PublicDutiesController < ApplicationController
 
   private
 
+  def fix_params
+    { cur_site: @cur_site }
+  end
+
   def set_crumbs
     @crumbs << [t("gws/staff_record.divide_duties"), action: :index]
   end
@@ -31,6 +35,7 @@ class Gws::StaffRecord::PublicDutiesController < ApplicationController
       readable(@cur_user, site: @cur_site).
       search(params[:s]).
       page(params[:page]).
+      order_by_title(@cur_site).
       per(@limit)
   end
 

@@ -1,15 +1,17 @@
-class Gws::UserTitle
+class Gws::StaffRecord::UserTitle
   include SS::Model::UserTitle
   include Gws::Referenceable
   include Gws::SitePermission
-  include Gws::Addon::Presence::DelegatorSetting
   include Gws::Addon::History
+  include Gws::Reference::User
+  include Gws::Reference::Site
+  include Gws::StaffRecord::Yearly
 
+  store_in collection: "gws_staff_record_user_titles"
   set_permission_name "gws_user_titles", :edit
 
   attr_accessor :cur_user, :cur_site
 
-  validates :code, uniqueness: { scope: :group_id }
   before_validation :set_group_id, if: -> { cur_site.present? }
   after_save :update_users_title_order
 
@@ -29,5 +31,16 @@ class Gws::UserTitle
   def update_users_title_order
     return if self.order_was.nil?
     Gws::User.update_all_title_orders(self)
+  end
+
+  def import_find_item(data)
+    self.class.site(@cur_site).
+      where(year_id: year_id, id: data[:id]).
+      allow(:read, @cur_user, site: @cur_site).
+      first
+  end
+
+  def import_new_item(data)
+    self.class.new(data.merge(year_id: year_id))
   end
 end
