@@ -46,7 +46,8 @@ module Cms::Model::Member
 
     validates :name, presence: true, length: { maximum: 40 }, if: ->{ enabled? || in_check_name }
     validates :email, email: true, length: { maximum: 80 }
-    validates :email, uniqueness: { scope: :site_id }, presence: true, if: ->{ oauth_type.blank? }
+    validates :email, presence: true, if: ->{ oauth_type.blank? }
+    validates :email, uniqueness: { scope: :site_id }, if: ->{ oauth_type.blank? || email.present? }
     validate :validate_email_again, if: ->{ in_check_email_again }
     validates :email_type, inclusion: { in: %w(text html) }, if: ->{ email_type.present? }
     validates :password, presence: true, if: ->{ oauth_type.blank? && enabled? }
