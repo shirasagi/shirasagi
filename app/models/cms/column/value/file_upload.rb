@@ -126,14 +126,6 @@ class Cms::Column::Value::FileUpload < Cms::Column::Value::Base
     return '' if file.blank?
 
     case column.file_type
-    when 'image'
-      if image_html_type == "thumb"
-        ApplicationController.helpers.link_to(file.url) do
-          ApplicationController.helpers.image_tag(file.thumb_url, alt: file_label.presence || file.humanized_name)
-        end
-      elsif image_html_type == "image"
-        ApplicationController.helpers.image_tag(file.url, alt: file_label.presence || file.humanized_name)
-      end
     when 'video'
       div_content = []
       div_content << ApplicationController.helpers.video_tag(file.url, controls: 'controls')
@@ -151,6 +143,14 @@ class Cms::Column::Value::FileUpload < Cms::Column::Value::Base
         end
       end
       html
+    else # 'image'
+      if image_html_type == "thumb"
+        ApplicationController.helpers.link_to(file.url) do
+          ApplicationController.helpers.image_tag(file.thumb_url, alt: file_label.presence || file.humanized_name)
+        end
+      elsif image_html_type == "image"
+        ApplicationController.helpers.image_tag(file.url, alt: file_label.presence || file.humanized_name)
+      end
     end
   end
 end
