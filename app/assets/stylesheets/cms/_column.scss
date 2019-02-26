@@ -23,6 +23,17 @@
 
 .column-value-body {
   padding-bottom: 5px;
+
+  .link-fields {
+    width: 100%;
+  }
+
+  .link-label {
+    width: 30%;
+  }
+  .link-url {
+    width: 50%;
+  }
 }
 
 .column-value-files {

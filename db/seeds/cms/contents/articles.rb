@@ -231,7 +231,7 @@ save_page route: "article/page", filename: "docs/page29.html", name: "シラサ�
             @form_columns[6].value_type.new(column: @form_columns[6], value: "大人600円、中高生500円、小学生300円"),
             @form_columns[7].value_type.new(column: @form_columns[7], value: "00-0000-0000"),
             @form_columns[8].value_type.new(column: @form_columns[8], value: "shirasagi@example.jp"),
-            @form_columns[9].value_type.new(column: @form_columns[9], link_url: "http://demo.ss-proj.org/"),
+            @form_columns[9].value_type.new(column: @form_columns[9], in_link_url: "http://demo.ss-proj.org/", link_target: "_blank"),
             @form_columns[10].value_type.new(column: @form_columns[10], file_id: file_10.id, file_label: "写真1",
                                              image_html_type: "image"),
             @form_columns[11].value_type.new(column: @form_columns[11], file_id: file_10.id, file_label: "写真2",

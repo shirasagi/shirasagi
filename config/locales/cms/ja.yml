@@ -889,6 +889,9 @@ ja:
         html_additional_attr: HTML追加属性
         link_label: リンクテキスト
         link_url: リンクURL
+        link_target: リンクターゲット
+        link_item_type: リンク先アイテム型
+        link_item_id: リンク先アイテムID
       cms/column/value/headline:
         head: 見出し
         text: テキスト
