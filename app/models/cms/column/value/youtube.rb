@@ -9,7 +9,7 @@ class Cms::Column::Value::Youtube < Cms::Column::Value::Base
 
   permit_values :url, :width, :height, :auto_width, :iframe, :youtube_id
 
-  before_validation :set_youtube_id
+  before_validation :set_youtube_id, unless: ->{ @new_clone }
 
   liquidize do
     export :youtube_id
@@ -65,6 +65,12 @@ class Cms::Column::Value::Youtube < Cms::Column::Value::Base
     end
 
     ApplicationController.helpers.content_tag(:iframe, nil, options)
+  end
+
+  def new_clone
+    ret = super
+    ret.url = youtube_url
+    ret
   end
 
   private
