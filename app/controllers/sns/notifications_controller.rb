@@ -2,12 +2,9 @@ class Sns::NotificationsController < ApplicationController
   include Sns::BaseFilter
   include Sns::CrudFilter
 
-  before_action :fix_params
-
   model SS::Notification
 
   def fix_params
-    @cur_site ||= Cms::Site.find id: params[:site] if params[:site].present?
     { cur_user: @cur_user, cur_site: @cur_site }
   end
 
@@ -21,18 +18,10 @@ class Sns::NotificationsController < ApplicationController
   public
 
   def index
-    if @cur_site.present?
-      @items = @model.site(@cur_site).
-        member(@cur_user).
-        undeleted(@cur_user).
-        search(params[:s]).
-        page(params[:page]).per(50)
-    else
-      @items = @model.member(@cur_user).
-        undeleted(@cur_user).
-        search(params[:s]).
-        page(params[:page]).per(50)
-    end
+    @items = @model.member(@cur_user).
+      undeleted(@cur_user).
+      search(params[:s]).
+      page(params[:page]).per(50)
   end
 
   def delete
@@ -59,18 +48,10 @@ class Sns::NotificationsController < ApplicationController
   end
 
   def recent
-    if @cur_site.present?
-      @items = @model.site(@cur_site).
-        member(@cur_user).
-        undeleted(@cur_user).
-        search(params[:s]).
-        limit(5)
-    else
-      @items = @model.member(@cur_user).
-        undeleted(@cur_user).
-        search(params[:s]).
-        limit(5)
-    end
+    @items = @model.member(@cur_user).
+      undeleted(@cur_user).
+      search(params[:s]).
+      limit(5)
 
     render :recent, layout: false
   end
@@ -94,27 +75,14 @@ class Sns::NotificationsController < ApplicationController
   def latest
     from = params[:from].present? ? Time.zone.parse(params[:from]) : Time.zone.now - 12.hours
 
-    if @cur_site.present?
-      @unseen = @model.site(@cur_site).
-        member(@cur_user).
-        undeleted(@cur_user).
-        unseen(@cur_user)
+    @unseen = @model.member(@cur_user).
+      undeleted(@cur_user).
+      unseen(@cur_user)
 
-      @items = @model.site(@cur_site).
-        member(@cur_user).
-        undeleted(@cur_user).
-        limit(10).
-        entries
-    else
-      @unseen = @model.member(@cur_user).
-        undeleted(@cur_user).
-        unseen(@cur_user)
-
-      @items = @model.member(@cur_user).
-        undeleted(@cur_user).
-        limit(10).
-        entries
-    end
+    @items = @model.member(@cur_user).
+      undeleted(@cur_user).
+      limit(10).
+      entries
 
     resp = {
       recent: @unseen.where(:created.gte => from).size,

@@ -2,7 +2,7 @@ class Gws::Memo::NoticesController < ApplicationController
   include Gws::BaseFilter
   include Gws::CrudFilter
 
-  model Gws::Memo::Notice
+  model SS::Notification
 
   def fix_params
     { cur_user: @cur_user, cur_site: @cur_site }
@@ -18,8 +18,7 @@ class Gws::Memo::NoticesController < ApplicationController
   public
 
   def index
-    @items = @model.site(@cur_site).
-      member(@cur_user).
+    @items = @model.member(@cur_user).
       undeleted(@cur_user).
       search(params[:s]).
       page(params[:page]).per(50)
@@ -49,8 +48,7 @@ class Gws::Memo::NoticesController < ApplicationController
   end
 
   def recent
-    @items = @model.site(@cur_site).
-      member(@cur_user).
+    @items = @model.member(@cur_user).
       undeleted(@cur_user).
       search(params[:s]).
       limit(5)
@@ -77,13 +75,11 @@ class Gws::Memo::NoticesController < ApplicationController
   def latest
     from = params[:from].present? ? Time.zone.parse(params[:from]) : Time.zone.now - 12.hours
 
-    @unseen = @model.site(@cur_site).
-      member(@cur_user).
+    @unseen = @model.member(@cur_user).
       undeleted(@cur_user).
       unseen(@cur_user)
 
-    @items = @model.site(@cur_site).
-      member(@cur_user).
+    @items = @model.member(@cur_user).
       undeleted(@cur_user).
       limit(10).
       entries

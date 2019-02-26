@@ -69,8 +69,8 @@ describe Gws::Notice::NotificationJob, dbscope: :example do
       notice.reload
       expect(notice.notification_noticed).to eq now
 
-      expect(Gws::Memo::Notice.count).to eq 1
-      Gws::Memo::Notice.first.tap do |message|
+      expect(SS::Notification.count).to eq 1
+      SS::Notification.first.tap do |message|
         expect(message.member_ids).to include(recipient1.id, recipient2.id, recipient3.id)
         expect(message.subject).to eq I18n.t('gws_notification.gws/notice/post.subject', name: notice.name)
         expect(message.url).to include("/.g#{site.id}/notice/-/-/readables/#{notice.id}")
@@ -113,8 +113,8 @@ describe Gws::Notice::NotificationJob, dbscope: :example do
       notice.reload
       expect(notice.notification_noticed).to eq now
 
-      expect(Gws::Memo::Notice.count).to eq 1
-      Gws::Memo::Notice.first.tap do |message|
+      expect(SS::Notification.count).to eq 1
+      SS::Notification.first.tap do |message|
         expect(message.member_ids).to include(recipient1.id, recipient2.id, recipient3.id)
         expect(message.subject).to eq I18n.t('gws_notification.gws/notice/post.subject', name: notice.name)
         expect(message.url).to include("/.g#{site.id}/notice/-/-/readables/#{notice.id}")
@@ -181,8 +181,8 @@ describe Gws::Notice::NotificationJob, dbscope: :example do
         expect(log.logs).to include(include('INFO -- : Completed Job'))
       end
 
-      expect(Gws::Memo::Notice.count).to be > 0
-      Gws::Memo::Notice.first.tap do |message|
+      expect(SS::Notification.count).to be > 0
+      SS::Notification.first.tap do |message|
         expect(message.member_ids).to include(recipient1.id, recipient2.id, recipient3.id)
         expect(message.subject).to eq I18n.t('gws_notification.gws/notice/post.subject', name: notice.name)
         expect(message.url).to include("/.g#{site.id}/notice/-/-/readables/#{notice.id}")
@@ -218,7 +218,7 @@ describe Gws::Notice::NotificationJob, dbscope: :example do
         expect(log.logs).to include(include('INFO -- : Completed Job'))
       end
 
-      expect(Gws::Memo::Notice.count).to eq 0
+      expect(SS::Notification.count).to eq 0
       expect(ActionMailer::Base.deliveries.length).to eq 0
     end
   end

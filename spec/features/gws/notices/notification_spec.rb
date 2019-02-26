@@ -71,8 +71,8 @@ describe "gws_notices", type: :feature, dbscope: :example, js: true do
         # record notification_noticed
         expect(notice.notification_noticed).not_to be_nil
 
-        expect(Gws::Memo::Notice.count).to eq 1
-        Gws::Memo::Notice.first.tap do |message|
+        expect(SS::Notification.count).to eq 1
+        SS::Notification.first.tap do |message|
           expect(message.subject).to eq I18n.t('gws_notification.gws/notice/post.subject', name: notice.name)
           expect(message.url).to eq "/.g#{site.id}/notice/-/-/readables/#{notice.id}"
         end

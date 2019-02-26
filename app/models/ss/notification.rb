@@ -72,9 +72,6 @@ class SS::Notification
   end
 
   def readable?(user, site)
-    if site.present?
-      return false if self.site_id != site.id
-    end
     return false if deleted?(user)
     member?(user)
   end
@@ -92,11 +89,7 @@ class SS::Notification
 
   class << self
     def unseens(user, site)
-      if site.present?
-        criteria.site(site).member(user).unseen(user)
-      else
-        criteria.member(user).unseen(user)
-      end
+      criteria.member(user).unseen(user)
     end
 
     def search(params = {})

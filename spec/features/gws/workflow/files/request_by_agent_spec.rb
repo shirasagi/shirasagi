@@ -92,8 +92,8 @@ describe Gws::Workflow::FilesController, type: :feature, dbscope: :example, tmpd
           include({level: 1, user_id: user3.id, state: 'pending', comment: ''})
       end
 
-      expect(Gws::Memo::Notice.count).to eq 1
-      Gws::Memo::Notice.order_by(id: -1).first.tap do |memo|
+      expect(SS::Notification.count).to eq 1
+      SS::Notification.order_by(id: -1).first.tap do |memo|
         expect(memo.subject).to eq I18n.t("gws_notification.gws/workflow/file.request", name: file_name)
         expect(memo.user_id).to eq admin.id
         expect(memo.member_ids).to eq [user2.id]
@@ -127,14 +127,14 @@ describe Gws::Workflow::FilesController, type: :feature, dbscope: :example, tmpd
           include({level: 1, user_id: user3.id, state: 'unseen', comment: ''})
       end
 
-      expect(Gws::Memo::Notice.count).to eq 3
-      Gws::Memo::Notice.order_by(id: -1).second.tap do |memo|
+      expect(SS::Notification.count).to eq 3
+      SS::Notification.order_by(id: -1).second.tap do |memo|
         expect(memo.subject).to eq I18n.t("gws_notification.gws/workflow/file.approve", name: file_name)
         expect(memo.user_id).to eq user2.id
         expect(memo.member_ids).to include(admin.id, user1.id)
         expect(memo.text).to eq ""
       end
-      Gws::Memo::Notice.order_by(id: -1).first.tap do |memo|
+      SS::Notification.order_by(id: -1).first.tap do |memo|
         expect(memo.subject).to eq I18n.t("gws_notification.gws/workflow/file.circular", name: file_name)
         expect(memo.user_id).to eq user2.id
         expect(memo.member_ids).to eq [user3.id]
@@ -168,8 +168,8 @@ describe Gws::Workflow::FilesController, type: :feature, dbscope: :example, tmpd
           include({level: 1, user_id: user3.id, state: 'seen', comment: circulation_comment2})
       end
 
-      expect(Gws::Memo::Notice.count).to eq 4
-      Gws::Memo::Notice.order_by(id: -1).first.tap do |memo|
+      expect(SS::Notification.count).to eq 4
+      SS::Notification.order_by(id: -1).first.tap do |memo|
         expect(memo.subject).to eq I18n.t("gws_notification.gws/workflow/file.comment", name: file_name)
         expect(memo.user_id).to eq user3.id
         expect(memo.member_ids).to include(admin.id, user1.id)
