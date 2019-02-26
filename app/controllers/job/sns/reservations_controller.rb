@@ -4,7 +4,7 @@ class Job::Sns::ReservationsController < ApplicationController
   include Job::TasksFilter
 
   model Job::Task
-  navi_view 'sns/main/navi'
+  navi_view "job/sns/main/navi"
 
   private
 

@@ -3,7 +3,7 @@ class Job::Sns::LogsController < ApplicationController
   include Sns::CrudFilter
   include Job::LogsFilter
 
-  navi_view "sns/main/navi"
+  navi_view "job/sns/main/navi"
 
   private
 

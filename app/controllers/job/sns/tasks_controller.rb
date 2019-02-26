@@ -4,7 +4,7 @@ class Job::Sns::TasksController < ApplicationController
   include Job::TasksFilter
 
   model SS::Task
-  navi_view "sns/main/navi"
+  navi_view "job/sns/main/navi"
 
   private
 
