@@ -14,6 +14,7 @@ end
 end
 return if @estat_categories.blank?
 
+@estat_categories = @estat_categories.sort_by { |cate| cate.order }
 @disallowed_categories = @item.estat_categories.select { |category| !category.allowed?(:read, @cur_user, site: @cur_site) }
 
 def cate_form(item)
