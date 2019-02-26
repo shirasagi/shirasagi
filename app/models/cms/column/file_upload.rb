@@ -11,7 +11,9 @@ class Cms::Column::FileUpload < Cms::Column::Base
   permit_params :file_type
 
   def alignment_options
-    return %w(flow left center right).map { |v| [ I18n.t("cms.options.alignment.#{v}"), v ] } if file_type == "image"
+    if file_type.blank? || file_type == "image"
+      return %w(flow left center right).map { |v| [ I18n.t("cms.options.alignment.#{v}"), v ] }
+    end
 
     super
   end
