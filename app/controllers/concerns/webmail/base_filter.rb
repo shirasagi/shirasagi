@@ -66,6 +66,7 @@ module Webmail::BaseFilter
 
     @imap_setting = @imap.setting
     @webmail_redirect_path = [ :render, "app/views/webmail/main/login_failed" ]
+    response.status = 403
   end
 
   def imap_disconnect
