@@ -11,7 +11,7 @@ class Cms::Column::Value::UrlField2 < Cms::Column::Value::Base
 
   permit_values :in_link_url, :link_label, :link_target
 
-  before_validation :set_link_url
+  before_validation :set_link_url, unless: ->{ @new_clone }
 
   liquidize do
     export :effective_link_url, as: :link_url
@@ -41,6 +41,12 @@ class Cms::Column::Value::UrlField2 < Cms::Column::Value::Base
 
   def effective_link_label
     link_label.presence || link_item.try(:name)
+  end
+
+  def new_clone
+    ret = super
+    ret.in_link_url = effective_link_url
+    ret
   end
 
   private
