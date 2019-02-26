@@ -41,11 +41,19 @@ class Cms::Column::Value::Youtube < Cms::Column::Value::Base
     end
   end
 
+  def youtube_url
+    youtube_id.present? ? "https://youtu.be/#{youtube_id}" : nil
+  end
+
+  def youtube_embed_url
+    youtube_id.present? ? "https://www.youtube.com/embed/#{youtube_id}" : nil
+  end
+
   def iframe
     return if youtube_id.blank?
 
     options = {
-      src: "https://www.youtube.com/embed/#{youtube_id}",
+      src: youtube_embed_url,
       frameborder: "0",
       allow: "accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture",
       allowfullscreen: "allowfullscreen"
