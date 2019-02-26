@@ -227,12 +227,8 @@ categories = [
         </div>
 
         <%
-           pref, city = @cur_page.pref_codes
-           if city.present?
-             code = city.first
-           elsif pref.present?
-             code = pref.first
-           end
+           prefs, cities = @cur_page.pref_codes
+           codes = cities.presence || prefs
         %>
         <dl class="cio-format author">
           <dt><%= @cur_page.t :no %></dt>
@@ -244,19 +240,19 @@ categories = [
             <span class="api-uuid"><%= @cur_page.uuid %></span>
           </dd>
 
-          <% if code && code.prefecture.present?  %>
-          <dt><%= code.t :prefecture %></dt>
-          <dd><%= code.prefecture %></dd>
+          <% if prefs.present?  %>
+          <dt><%= SS::PrefectureCode.t :prefecture %></dt>
+          <dd><%= prefs.map { |code| code.prefecture }.join(",") %></dd>
           <% end %>
 
-          <% if code && code.city.present?  %>
-          <dt><%= code.t :city %></dt>
-          <dd><%= code.city %></dd>
+          <% if cities.present?  %>
+          <dt><%= SS::PrefectureCode.t :city %></dt>
+          <dd><%= cities.map { |code| code.city }.join(",") %></dd>
           <% end %>
 
-          <% if code %>
-          <dt><%= code.t :code %></dt>
-          <dd><%= code.code %></dd>
+          <% if codes.present? %>
+          <dt><%= SS::PrefectureCode.t :code %></dt>
+          <dd><%= codes.map { |code| code.code }.join(",") %></dd>
           <% end %>
 
           <% if @cur_page.update_plan.present? %>
