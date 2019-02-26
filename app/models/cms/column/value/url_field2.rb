@@ -64,11 +64,6 @@ class Cms::Column::Value::UrlField2 < Cms::Column::Value::Base
     return '' if link_url.blank?
 
     options = html_additional_attr_to_h
-    case html_tag
-    when 'a'
-      ApplicationController.helpers.link_to(link_label.presence || link_url, link_url, options)
-    else
-      link_url
-    end
+    ApplicationController.helpers.link_to(link_label.presence || link_url, link_url, options)
   end
 end
