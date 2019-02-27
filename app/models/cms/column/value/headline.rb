@@ -35,6 +35,7 @@ class Cms::Column::Value::Headline < Cms::Column::Value::Base
     return '' if text.blank?
     return '' if head.blank?
 
-    ApplicationController.helpers.content_tag(head.to_sym, text)
+    escaped = ApplicationController.helpers.sanitize(text)
+    ApplicationController.helpers.content_tag(head.to_sym, escaped)
   end
 end
