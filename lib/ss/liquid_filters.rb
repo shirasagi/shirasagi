@@ -127,4 +127,8 @@ module SS::LiquidFilters
     return input if input.blank?
     ::File.expand_path(input.to_s, path.to_s)
   end
+
+  def sanitize(input)
+    ApplicationController.helpers.sanitize(input.to_s)
+  end
 end
