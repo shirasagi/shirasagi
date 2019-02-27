@@ -96,7 +96,7 @@ class Cms::Column::Value::Base
   end
 
   def new_clone
-    ret = self.class.new self.attributes.to_h.except('_type')
+    ret = self.class.new self.attributes.to_h.except('_type').slice(*self.class.fields.keys.map(&:to_s))
     ret.instance_variable_set(:@new_clone, true)
     ret.instance_variable_set(:@origin_id, ret.id)
     ret.id = BSON::ObjectId.new
