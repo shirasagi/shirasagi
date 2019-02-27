@@ -1,13 +1,11 @@
 class Cms::Column::Value::Youtube < Cms::Column::Value::Base
-  # field :url, type: String
-  attr_accessor :url
+  field :url, type: String
   field :youtube_id, type: String
   field :width, type: Integer
   field :height, type: Integer
   field :auto_width, type: String, default: -> { "disabled" }
-  # field :iframe, type: String
 
-  permit_values :url, :width, :height, :auto_width, :iframe, :youtube_id
+  permit_values :url, :youtube_id, :width, :height, :auto_width
 
   before_validation :set_youtube_id, unless: ->{ @new_clone }
 
@@ -30,10 +28,14 @@ class Cms::Column::Value::Youtube < Cms::Column::Value::Base
       end
 
       if uri.host.end_with?(".youtube.com")
-        return if uri.query.blank?
+        if uri.query.present?
+          value = URI::decode_www_form(uri.query).find { |k, _| k == "v" }
+          return value ? value[1] : nil
+        end
 
-        value = URI::decode_www_form(uri.query).find { |k, _| k == "v" }
-        return value ? value[1] : nil
+        if uri.path.start_with?("/embed/")
+          return uri.path[7..-1].sub(/\/.*$/, "")
+        end
       end
 
       # other
@@ -49,7 +51,7 @@ class Cms::Column::Value::Youtube < Cms::Column::Value::Base
     youtube_id.present? ? "https://www.youtube.com/embed/#{youtube_id}" : nil
   end
 
-  def iframe
+  def youtube_iframe
     return if youtube_id.blank?
 
     options = {
@@ -65,12 +67,6 @@ class Cms::Column::Value::Youtube < Cms::Column::Value::Base
     end
 
     ApplicationController.helpers.content_tag(:iframe, nil, options)
-  end
-
-  def new_clone
-    ret = super
-    ret.url = youtube_url
-    ret
   end
 
   private
@@ -96,10 +92,10 @@ class Cms::Column::Value::Youtube < Cms::Column::Value::Base
 
     if auto_width == "enabled"
       ApplicationController.helpers.content_tag(:div, class: "youtube-auto-width youtube-embed-wrapper") do
-        iframe.try(:html_safe)
+        youtube_iframe
       end
     else
-      iframe.try(:html_safe)
+      youtube_iframe
     end
   end
 end
