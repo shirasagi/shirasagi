@@ -18,6 +18,9 @@ class Cms::Column::Value::FileUpload < Cms::Column::Value::Base
     export :text
     export :image_html_type
     export :link_url
+    export as: :file_type do
+      column.try(:file_type)
+    end
   end
 
   def value
