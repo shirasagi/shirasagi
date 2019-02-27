@@ -1,7 +1,7 @@
 class SS::Csv
   UTF8_BOM = "\uFEFF".freeze
 
-  class Base
+  class BaseExporter
     include Enumerable
 
     def initialize(criteria, options)
@@ -63,14 +63,14 @@ class SS::Csv
         when :time
           value = item.try(column[:id])
           if value && value.respond_to?(:strftime)
-            next I18n.l(value, format: :short)
+            next I18n.l(value, format: :picker)
           else
             next nil
           end
         when :date
           value = item.try(column[:id])
           if value && value.respond_to?(:to_date)
-            next I18n.l(value.to_date, format: :short)
+            next I18n.l(value.to_date, format: :picker)
           else
             next nil
           end
@@ -86,14 +86,14 @@ class SS::Csv
       return nil if value.blank?
 
       if value.respond_to?(:strftime)
-        I18n.l(value, format: :short)
+        I18n.l(value, format: :picker)
       else
         value.to_s
       end
     end
   end
 
-  class ShiftJis < Base
+  class ShiftJisExporter < BaseExporter
     def draw_header
       encode_sjis(_draw_header)
     end
@@ -108,7 +108,7 @@ class SS::Csv
     end
   end
 
-  class UTF8 < Base
+  class UTF8Exporter < BaseExporter
     def draw_header
       UTF8_BOM + _draw_header
     end
@@ -116,57 +116,178 @@ class SS::Csv
     alias draw_data _draw_data
   end
 
-  def initialize(options)
-    @context = options[:context] || self
-    @columns = []
-  end
+  class DSLExporter
+    def initialize(options)
+      @context = options[:context] || self
+      @columns = []
+    end
 
-  attr_reader :context
+    attr_reader :context
 
-  class << self
-    def draw(options = {}, &block)
-      ret = new(options)
-      ret.draw(&block) if block_given?
+    def draw(&block)
+      @context.instance_exec(self, &block)
+    end
+
+    def column(id, options = {}, &block)
+      id = id.to_s.to_sym
+      @column = @columns.find { |c| c[:id] == id }
+      if @column.present?
+        @column.merge!(options)
+      else
+        @column = { id: id }.merge(options)
+        @columns << @column
+      end
+      instance_exec(&block) if block_given?
+      @column = nil
+    end
+
+    def head(&block)
+      @column[:head] = block
+    end
+
+    def body(&block)
+      @column[:body] = block
+    end
+
+    def enum(criteria, options = {})
+      encoding = options[:encoding]
+      if encoding && encoding.casecmp("UTF-8") == 0
+        klass = UTF8Exporter
+      else
+        klass = ShiftJisExporter
+      end
+
+      ret = klass.new(criteria, options)
+      ret.instance_variable_set(:@context, @context)
+      ret.instance_variable_set(:@columns, @columns)
       ret
     end
   end
 
-  def draw(&block)
-    @context.instance_exec(self, &block)
-  end
-
-  def column(id, options = {}, &block)
-    id = id.to_s.to_sym
-    @column = @columns.find { |c| c[:id] == id }
-    if @column.present?
-      @column.merge!(options)
-    else
-      @column = { id: id }.merge(options)
-      @columns << @column
-    end
-    instance_exec(&block) if block_given?
-    @column = nil
-  end
-
-  def head(&block)
-    @column[:head] = block
-  end
-
-  def body(&block)
-    @column[:body] = block
-  end
-
-  def enum(criteria, options = {})
-    encoding = options[:encoding]
-    if encoding && encoding.casecmp("UTF-8") == 0
-      klass = UTF8
-    else
-      klass = ShiftJis
+  class DSLImporter
+    def initialize(options)
+      @context = options[:context] || self
+      @model = options[:model] || self
+      @columns = []
     end
 
-    ret = klass.new(criteria, options)
-    ret.instance_variable_set(:@context, @context)
-    ret.instance_variable_set(:@columns, @columns)
-    ret
+    attr_reader :context, :model, :columns
+
+    def draw(&block)
+      @context.instance_exec(self, &block)
+    end
+
+    def simple_column(key, options = {}, &block)
+      options = options.dup
+      options[:key] = key.to_s
+      options[:name] ||= @model.t(key) if key.is_a?(Symbol)
+      options[:callback] = block if block_given?
+
+      @columns << options
+    end
+
+    def form(name, options = {})
+      options = options.dup
+      options[:name] = name
+      options[:columns] = []
+
+      @form = options
+      @columns << @form
+
+      yield self
+    ensure
+      @form = nil
+    end
+
+    def column(name, options = {}, &block)
+      options = options.dup
+      options[:name] = name
+      options[:callback] = block if block_given?
+
+      @form[:columns] << options
+    end
+
+    def create
+      CsvImporter.new(self)
+    end
+  end
+
+  class CsvImporter
+    def initialize(dsl)
+      @dsl = dsl
+    end
+
+    def import_row(row, item)
+      @row = row
+      @item = item
+
+      head_value_array = row.headers.map { |h| [ h.split("/"), row[h].try(:strip) ] }
+
+      head_value_array.slice_when { |lhs, rhs| lhs.first.first != rhs.first.first }.each do |chunk|
+        heads, value = chunk.first
+
+        if chunk.length == 1
+          import_simple_column(row, item, heads.first, value)
+          next
+        end
+
+        column_values = import_form(heads.first) do
+          chunk.slice_when { |lhs, rhs| lhs.first.second != rhs.first.second }.map do |columns|
+            _form_name, column_name, _value_name = columns.first.first
+            column = item.form.columns.where(name: column_name).first
+            next if column.blank?
+
+            column_config = @form_config[:columns].find { |column_config| column_config[:name] == column_name }
+            next if column_config.blank?
+
+            values = columns.map { |heads, value| [ heads[2], value ] }
+            @dsl.context.instance_exec(row, item, @form, column, values, &column_config[:callback])
+          end
+        end
+
+        item.column_values = column_values
+      end
+    end
+
+    private
+
+    def import_simple_column(row, item, head, value)
+      config = @dsl.columns.find { |config| config[:name] == head }
+      return if config.blank?
+
+      if config[:callback]
+        @dsl.context.instance_exec(row, item, head, value, &config[:callback])
+      else
+        item.send("#{config[:key]}=", value)
+      end
+    end
+
+    def import_form(form_name)
+      return if @item.form.blank?
+      return if @item.form.name != form_name
+
+      form_config = @dsl.columns.find { |config| config[:name] == form_name }
+      return if form_config.blank?
+
+      @form = @item.form
+      @form_config = form_config
+
+      yield
+    ensure
+      @form = nil
+      @form_config = nil
+    end
+  end
+
+  class << self
+    def draw(type, options = {}, &block)
+      if type == :export
+        ret = DSLExporter.new(options)
+      else
+        ret = DSLImporter.new(options)
+      end
+      ret.draw(&block) if block_given?
+      ret
+    end
   end
 end

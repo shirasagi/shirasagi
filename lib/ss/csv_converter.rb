@@ -4,7 +4,7 @@ class SS::CsvConverter
       criteria = criteria.all unless criteria.is_a?(Mongoid::Criteria)
       field_names ||= extract_field_names(criteria)
 
-      drawer = SS::Csv.draw do |d|
+      drawer = SS::Csv.draw(:export) do |d|
         field_names.each do |field_name|
           d.column field_name
         end

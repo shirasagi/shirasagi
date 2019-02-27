@@ -89,7 +89,7 @@ class Article::Page::ImportJob < Cms::ApplicationJob
   end
 
   def create_importer
-    @importer ||= CSV.import(context: self, model: model) do |importer|
+    @importer ||= SS::Csv.draw(:import, context: self, model: model) do |importer|
       define_importer_basic(importer)
       define_importer_meta(importer)
       define_importer_body(importer)
@@ -102,7 +102,7 @@ class Article::Page::ImportJob < Cms::ApplicationJob
       define_importer_groups(importer)
       define_importer_state(importer)
       define_importer_forms(importer)
-    end
+    end.create
   end
 
   def define_importer_basic(importer)

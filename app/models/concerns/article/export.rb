@@ -1,6 +1,6 @@
 require "csv"
 
-module Article::Import
+module Article::Export
   extend ActiveSupport::Concern
 
   def category_name_tree
@@ -24,7 +24,7 @@ module Article::Import
   module ClassMethods
     def enum_csv(options = {})
       has_form = options[:form].present?
-      drawer = SS::Csv.draw(context: self) do |drawer|
+      drawer = SS::Csv.draw(:export, context: self) do |drawer|
         draw_basic(drawer)
         draw_meta(drawer)
         if has_form
@@ -166,7 +166,7 @@ module Article::Import
         drawer.head { "#{form.name}/#{column.name}/#{value_type.t(:alignment)}" }
         drawer.body do |item|
           find_column_value(item, form, column).try do |v|
-            v.alignment ? I18n.t("cms.options.alignment.#{v.alignment}") : nil
+            I18n.t("cms.options.alignment.#{v.alignment.presence || "flow"}")
           end
         end
       end
@@ -188,7 +188,26 @@ module Article::Import
 
     def draw_column_file_upload(drawer, form, column, value_type)
       case column.file_type
-      when 'image'
+      when 'attachment'
+        drawer.column "#{form.id}/#{column.id}/file_label" do
+          drawer.head { "#{form.name}/#{column.name}/#{I18n.t("cms.column_file_upload.attachment.file_label")}" }
+          drawer.body { |item| find_column_value(item, form, column).try(:file_label) }
+        end
+      when 'video'
+        drawer.column "#{form.id}/#{column.id}/text" do
+          drawer.head { "#{form.name}/#{column.name}/#{I18n.t("cms.column_file_upload.video.text")}" }
+          drawer.body { |item| find_column_value(item, form, column).try(:text) }
+        end
+      when 'banner'
+        drawer.column "#{form.id}/#{column.id}/link_url" do
+          drawer.head { "#{form.name}/#{column.name}/#{I18n.t("cms.column_file_upload.banner.link_url")}" }
+          drawer.body { |item| find_column_value(item, form, column).try(:link_url) }
+        end
+        drawer.column "#{form.id}/#{column.id}/file_label" do
+          drawer.head { "#{form.name}/#{column.name}/#{I18n.t("cms.column_file_upload.banner.file_label")}" }
+          drawer.body { |item| find_column_value(item, form, column).try(:file_label) }
+        end
+      else # 'image'
         drawer.column "#{form.id}/#{column.id}/file_label" do
           drawer.head { "#{form.name}/#{column.name}/#{I18n.t("cms.column_file_upload.image.file_label")}" }
           drawer.body { |item| find_column_value(item, form, column).try(:file_label) }
@@ -200,25 +219,6 @@ module Article::Import
               v.image_html_type ? I18n.t("cms.options.column_image_html_type.#{v.image_html_type}") : nil
             end
           end
-        end
-      when 'video'
-        drawer.column "#{form.id}/#{column.id}/text" do
-          drawer.head { "#{form.name}/#{column.name}/#{I18n.t("cms.column_file_upload.video.text")}" }
-          drawer.body { |item| find_column_value(item, form, column).try(:text) }
-        end
-      when 'attachment'
-        drawer.column "#{form.id}/#{column.id}/file_label" do
-          drawer.head { "#{form.name}/#{column.name}/#{I18n.t("cms.column_file_upload.attachment.file_label")}" }
-          drawer.body { |item| find_column_value(item, form, column).try(:file_label) }
-        end
-      when 'banner'
-        drawer.column "#{form.id}/#{column.id}/link_url" do
-          drawer.head { "#{form.name}/#{column.name}/#{I18n.t("cms.column_file_upload.banner.link_url")}" }
-          drawer.body { |item| find_column_value(item, form, column).try(:link_url) }
-        end
-        drawer.column "#{form.id}/#{column.id}/file_label" do
-          drawer.head { "#{form.name}/#{column.name}/#{I18n.t("cms.column_file_upload.banner.file_label")}" }
-          drawer.body { |item| find_column_value(item, form, column).try(:file_label) }
         end
       end
     end
@@ -272,9 +272,9 @@ module Article::Import
     end
 
     def draw_column_youtube(drawer, form, column, value_type)
-      drawer.column "#{form.id}/#{column.id}/youtube_id" do
-        drawer.head { "#{form.name}/#{column.name}/#{value_type.t(:youtube_id)}" }
-        drawer.body { |item| find_column_value(item, form, column).try(:youtube_id) }
+      drawer.column "#{form.id}/#{column.id}/url" do
+        drawer.head { "#{form.name}/#{column.name}/#{value_type.t(:url)}" }
+        drawer.body { |item| find_column_value(item, form, column).try(:url) }
       end
       drawer.column "#{form.id}/#{column.id}/width" do
         drawer.head { "#{form.name}/#{column.name}/#{value_type.t(:width)}" }
