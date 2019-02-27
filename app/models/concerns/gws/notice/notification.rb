@@ -1,6 +1,5 @@
-module Gws::Addon::Notice::Notification
+module Gws::Notice::Notification
   extend ActiveSupport::Concern
-  extend SS::Addon
 
   included do
     field :notification_noticed, type: DateTime
