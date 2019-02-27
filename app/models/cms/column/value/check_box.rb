@@ -12,6 +12,17 @@ class Cms::Column::Value::CheckBox < Cms::Column::Value::Base
     values.join(', ')
   end
 
+  def import_csv(values)
+    super
+
+    values.map do |name, value|
+      case name
+      when self.class.t(:values)
+        self.values = value.to_s.split(",").map(&:strip)
+      end
+    end
+  end
+
   private
 
   def validate_value

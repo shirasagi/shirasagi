@@ -63,5 +63,9 @@ module Fs::File
     def glob(path)
       Dir.glob(path)
     end
+
+    def to_io(path)
+      ::File.open(path, "rb")
+    end
   end
 end

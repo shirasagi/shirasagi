@@ -1,6 +1,10 @@
 require "csv"
 
 class Article::Page::ImportJob < Cms::ApplicationJob
+  include Cms::CsvImportBase
+
+  self.required_headers = [ Article::Page.t(:filename) ]
+
   def put_log(message)
     Rails.logger.info(message)
   end
@@ -14,16 +18,19 @@ class Article::Page::ImportJob < Cms::ApplicationJob
     file.destroy
   end
 
+  private
+
   def model
     Article::Page
   end
 
   def import_csv(file)
-    table = CSV.read(file.path, headers: true, encoding: 'SJIS:UTF-8')
-    table.each_with_index do |row, i|
+    i = 0
+    self.class.each_csv(file) do |row|
       begin
+        i += 1
         item = update_row(row)
-        put_log("update #{i + 1}: #{item.name}")
+        put_log("update #{i + 1}: #{item.name}") if item.present?
       rescue => e
         put_log("error  #{i + 1}: #{e}")
       end
@@ -31,7 +38,7 @@ class Article::Page::ImportJob < Cms::ApplicationJob
   end
 
   def update_row(row)
-    filename = "#{node.filename}/#{row[model.t(:filename)]}"
+    filename = "#{node.filename}/#{value(row, :filename)}"
     item = model.find_or_initialize_by(site_id: site.id, filename: filename)
     raise I18n.t('errors.messages.auth_error') unless item.allowed?(:import, user, site: site, node: node)
     item.site = site
@@ -46,15 +53,16 @@ class Article::Page::ImportJob < Cms::ApplicationJob
   end
 
   def value(row, key)
-    row[model.t(key)].try(:strip)
+    key = model.t(key) if key.is_a?(Symbol)
+    row[key].try(:strip)
   end
 
-  def ary_value(row, key, delim: "\n")
-    row[model.t(key)].to_s.split(delim).map(&:strip)
+  def to_array(value, delim: "\n")
+    value.to_s.split(delim).map(&:strip)
   end
 
-  def label_value(item, row, key)
-    item.send("#{key}_options").to_h[value(row, key)]
+  def from_label(value, options)
+    options.to_h[value].to_s.presence
   end
 
   def category_name_tree_to_ids(name_trees)
@@ -76,69 +84,150 @@ class Article::Page::ImportJob < Cms::ApplicationJob
   end
 
   def set_page_attributes(row, item)
-    # basic
-    layout = Cms::Layout.site(site).where(name: value(row, :layout)).first
-    body_layout_id = Cms::BodyLayout.site(site).where(name: value(row, :body_layout_id)).pluck(:_id).first
-    item.name = value(row, :name)
-    item.index_name = value(row, :index_name)
-    item.layout = layout
-    item.body_layout_id = body_layout_id
-    item.order = value(row, :order)
+    create_importer
+    @importer.import_row(row, item)
+  end
 
-    # meta
-    item.keywords = value(row, :keywords)
-    item.description = value(row, :description)
-    item.summary_html = value(row, :summary_html)
+  def create_importer
+    @importer ||= SS::Csv.draw(:import, context: self, model: model) do |importer|
+      define_importer_basic(importer)
+      define_importer_meta(importer)
+      define_importer_body(importer)
+      define_importer_category(importer)
+      define_importer_event(importer)
+      define_importer_related_pages(importer)
+      define_importer_crumb(importer)
+      define_importer_contact(importer)
+      define_importer_released(importer)
+      define_importer_groups(importer)
+      define_importer_state(importer)
+      define_importer_forms(importer)
+    end.create
+  end
 
-    # body
-    item.html = value(row, :html)
-    item.body_parts = ary_value(row, :body_part, delim: "\t")
+  def define_importer_basic(importer)
+    importer.simple_column :name
+    importer.simple_column :index_name
+    importer.simple_column :layout do |row, item, head, value|
+      item.layout = value.present? ? Cms::Layout.site(site).where(name: value).first : nil
+    end
+    importer.simple_column :body_layout_id do |row, item, head, value|
+      item.body_layout = value.present? ? Cms::BodyLayout.site(site).where(name: value).first : nil
+    end
+    importer.simple_column :order
+    importer.simple_column :form_id do |row, item, head, value|
+      item.form = form = value.present? ? node.st_forms.where(name: value).first : nil
+      if form.present? && form.sub_type_entry?
+        raise I18n.t("errors.messages.import_with_entry_form_is_not_supported")
+      end
+    end
+  end
 
-    # category
-    category_name_tree = ary_value(row, :categories)
-    category_ids = category_name_tree_to_ids(category_name_tree)
-    categories = Category::Node::Base.site(site).in(id: category_ids)
-    #if node.st_categories.present?
-    #  filenames = node.st_categories.pluck(:filename)
-    #  filenames += node.st_categories.map { |c| /^#{c.filename}\// }
-    #  categories = categories.in(filename: filenames)
-    #end
-    item.category_ids = categories.pluck(:id)
+  def define_importer_meta(importer)
+    importer.simple_column :keywords
+    importer.simple_column :description
+    importer.simple_column :summary_html
+  end
 
-    # event
-    item.event_name = value(row, :event_name)
-    item.event_dates = value(row, :event_dates)
+  def define_importer_body(importer)
+    importer.simple_column :html
+    importer.simple_column :body_parts do |row, item, head, value|
+      item.body_parts = to_array(value, delim: "\t")
+    end
+  end
 
-    # related pages
-    page_names = ary_value(row, :related_pages)
-    item.related_page_ids = Cms::Page.site(site).in(filename: page_names).pluck(:id)
+  def define_importer_category(importer)
+    importer.simple_column :categories do |row, item, head, value|
+      category_ids = category_name_tree_to_ids(to_array(value))
+      categories = Category::Node::Base.site(site).in(id: category_ids)
+      #if node.st_categories.present?
+      #  filenames = node.st_categories.pluck(:filename)
+      #  filenames += node.st_categories.map { |c| /^#{c.filename}\// }
+      #  categories = categories.in(filename: filenames)
+      #end
+      item.category_ids = categories.pluck(:id)
+    end
+  end
 
-    # crumb
-    item.parent_crumb_urls = value(row, :parent_crumb)
+  def define_importer_event(importer)
+    importer.simple_column :event_name
+    importer.simple_column :event_dates
+    importer.simple_column :event_deadline
+  end
 
-    # contact
-    group_name = value(row, :contact_group)
-    item.contact_state = label_value(item, row, :contact_state)
-    item.contact_group_id = SS::Group.where(name: group_name).first.try(:id)
-    item.contact_charge = value(row, :contact_charge)
-    item.contact_tel = value(row, :contact_tel)
-    item.contact_fax = value(row, :contact_fax)
-    item.contact_email = value(row, :contact_email)
-    item.contact_link_url = value(row, :contact_link_url)
-    item.contact_link_name = value(row, :contact_link_name)
+  def define_importer_related_pages(importer)
+    importer.simple_column :related_pages do |row, item, head, value|
+      page_names = to_array(value)
+      item.related_page_ids = Cms::Page.site(site).in(filename: page_names).pluck(:id)
+    end
+    column_name = "#{model.t(:related_pages)}#{model.t(:related_page_sort)}"
+    importer.simple_column :related_page_sort, name: column_name do |row, item, head, value|
+      item.related_page_sort = from_label(value, item.related_page_sort_options)
+    end
+  end
 
-    # released
-    item.released = value(row, :released)
-    item.release_date = value(row, :release_date)
-    item.close_date = value(row, :close_date)
+  def define_importer_crumb(importer)
+    importer.simple_column :parent_crumb_urls, name: model.t(:parent_crumb)
+  end
 
-    # groups
-    group_names = ary_value(row, :groups)
-    item.group_ids = SS::Group.in(name: group_names).pluck(:id)
-    item.permission_level = value(row, :permission_level)
+  def define_importer_contact(importer)
+    importer.simple_column :contact_state do |row, item, head, value|
+      item.contact_state = from_label(value, item.contact_state_options)
+    end
+    importer.simple_column :contact_group do |row, item, head, value|
+      item.contact_group = SS::Group.where(name: value).first
+    end
+    importer.simple_column :contact_charge
+    importer.simple_column :contact_tel
+    importer.simple_column :contact_fax
+    importer.simple_column :contact_email
+    importer.simple_column :contact_link_url
+    importer.simple_column :contact_link_name
+  end
 
-    # state
-    state = label_value(item, row, :state)
-    item.state = state.presence || "public"
+  def define_importer_released(importer)
+    importer.simple_column :released
+    importer.simple_column :release_date
+    importer.simple_column :close_date
+  end
+
+  def define_importer_groups(importer)
+    importer.simple_column :groups do |row, item, head, value|
+      group_names = to_array(value)
+      item.group_ids = SS::Group.in(name: group_names).pluck(:id)
+    end
+    importer.simple_column :permission_level
+  end
+
+  def define_importer_state(importer)
+    importer.simple_column :groups do |row, item, head, value|
+      state = from_label(value, item.state_options)
+      item.state = state.presence || "public"
+    end
+  end
+
+  def define_importer_forms(importer)
+    return if !node.respond_to?(:st_forms)
+
+    node.st_forms.each do |form|
+      importer.form form.name do
+        form.columns.each do |column|
+          importer.column column.name do |row, item, _form, _column, values|
+            import_column(row, item, form, column, values)
+          end
+        end
+      end
+    end
+  end
+
+  def import_column(_row, item, _form, column, values)
+    column_value = item.column_values.where(column_id: column.id).first
+    if column_value.blank?
+      column_value = item.column_values.build(
+        _type: column.value_type.name, column: column, name: column.name, order: column.order
+      )
+    end
+    column_value.import_csv(values)
+    column_value
   end
 end

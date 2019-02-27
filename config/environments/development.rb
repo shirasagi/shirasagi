@@ -34,5 +34,5 @@ Rails.application.configure do
   # config.log_level = :debug
 
   # ActiveJob Queue Adapter
-  config.active_job.queue_adapter = :shirasagi
+  config.active_job.queue_adapter = :inline
 end
