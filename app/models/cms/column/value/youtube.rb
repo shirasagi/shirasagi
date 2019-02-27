@@ -69,6 +69,25 @@ class Cms::Column::Value::Youtube < Cms::Column::Value::Base
     ApplicationController.helpers.content_tag(:iframe, nil, options)
   end
 
+  def import_csv(values)
+    super
+
+    values.map do |name, value|
+      case name
+      when self.class.t(:url)
+        self.url = value
+      when self.class.t(:youtube_id)
+        self.youtube_id = value
+      when self.class.t(:width)
+        self.width = value
+      when self.class.t(:height)
+        self.height = value
+      when self.class.t(:auto_width)
+        self.auto_width = value.present? ? I18n.t("cms.column_youtube_auto_width").invert[value] : nil
+      end
+    end
+  end
+
   private
 
   def set_youtube_id

@@ -41,6 +41,19 @@ class Cms::Column::Value::UrlField2 < Cms::Column::Value::Base
     link_label.presence || link_item.try(:name)
   end
 
+  def import_csv(values)
+    super
+
+    values.map do |name, value|
+      case name
+      when self.class.t(:link_url)
+        self.link_url = value
+      when self.class.t(:link_label)
+        self.link_label = value
+      end
+    end
+  end
+
   private
 
   def set_link_item

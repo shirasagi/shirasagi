@@ -48,6 +48,21 @@ class Cms::Column::Value::FileUpload < Cms::Column::Value::Base
     file.remove_public_file
   end
 
+  def import_csv(values)
+    super
+
+    case column.file_type
+    when 'attachment'
+      import_csv_attachment(values)
+    when 'video'
+      import_csv_video(values)
+    when 'banner'
+      import_csv_banner(values)
+    else
+      import_csv_image(values)
+    end
+  end
+
   private
 
   def validate_value
@@ -172,5 +187,45 @@ class Cms::Column::Value::FileUpload < Cms::Column::Value::Base
       end
     end
     html
+  end
+
+  def import_csv_image(values)
+    values.map do |name, value|
+      case name
+      when I18n.t("cms.column_file_upload.image.file_label")
+        self.file_label = value
+      when self.class.t(:image_html_type)
+        self.image_html_type = value.present? ? I18n.t("cms.options.column_image_html_type").invert[value] : nil
+      end
+    end
+  end
+
+  def import_csv_attachment(values)
+    values.map do |name, value|
+      case name
+      when I18n.t("cms.column_file_upload.attachment.file_label")
+        self.file_label = value
+      end
+    end
+  end
+
+  def import_csv_video(values)
+    values.map do |name, value|
+      case name
+      when I18n.t("cms.column_file_upload.video.text")
+        self.text = value
+      end
+    end
+  end
+
+  def import_csv_banner(values)
+    values.map do |name, value|
+      case name
+      when I18n.t("cms.column_file_upload.banner.link_url")
+        self.link_url = value
+      when I18n.t("cms.column_file_upload.banner.file_label")
+        self.file_label = value
+      end
+    end
   end
 end

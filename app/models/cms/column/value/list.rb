@@ -10,6 +10,17 @@ class Cms::Column::Value::List < Cms::Column::Value::Base
     export :lists
   end
 
+  def import_csv(values)
+    super
+
+    values.map do |name, value|
+      case name
+      when self.class.t(:lists)
+        self.lists = value
+      end
+    end
+  end
+
   private
 
   def text_blank?

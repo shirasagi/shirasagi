@@ -115,6 +115,17 @@ class Cms::Column::Value::Base
     self.attributes = @in_wrap = ActionController::Parameters.new(Hash(value)).permit(self.class._permit_values)
   end
 
+  def import_csv(values)
+    values.map do |name, value|
+      case name
+      when self.class.t(:alignment)
+        self.alignment = value.present? ? I18n.t("cms.options.alignment").invert[value] : nil
+      when self.class.t(:value)
+        self.value = value
+      end
+    end
+  end
+
   private
 
   def _to_html(options = {})
