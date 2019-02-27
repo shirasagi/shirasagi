@@ -94,6 +94,16 @@ class Member::Agents::Nodes::RegistrationController < ApplicationController
     @item.set_required @cur_node
     @item.state = 'enabled'
 
+    if @item.in_password_again.blank?
+      @item.errors.add :in_password_again, :not_input
+      render action: :verify
+      return
+    elsif @item.in_password != @item.in_password_again
+      @item.errors.add :password, :mismatch
+      render action: :verify
+      return
+    end
+
     unless @item.update
       render action: :verify
       return
