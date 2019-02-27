@@ -35,7 +35,9 @@ class Cms::Column::Value::List < Cms::Column::Value::Base
   def to_default_html
     return '' if text_blank?
 
-    li = lists.map { |list| ApplicationController.helpers.content_tag(:li, list) }.join("\n")
+    li = lists.map { |list| ApplicationController.helpers.sanitize(list) }.
+      map { |list| ApplicationController.helpers.content_tag(:li, list) }.
+      join("\n")
     ApplicationController.helpers.content_tag(column.list_type.to_sym, li.html_safe)
   end
 end
