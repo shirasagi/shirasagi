@@ -18,6 +18,9 @@ class Cms::Column::Value::FileUpload < Cms::Column::Value::Base
     export :text
     export :image_html_type
     export :link_url
+    export as: :file_type do
+      column.try(:file_type)
+    end
   end
 
   def value
@@ -126,31 +129,48 @@ class Cms::Column::Value::FileUpload < Cms::Column::Value::Base
     return '' if file.blank?
 
     case column.file_type
-    when 'video'
-      div_content = []
-      div_content << ApplicationController.helpers.video_tag(file.url, controls: 'controls')
-      div_content << ApplicationController.helpers.content_tag(:div, text)
-      ApplicationController.helpers.content_tag(:div) do
-        div_content.join.html_safe
-      end
     when 'attachment'
-      ApplicationController.helpers.link_to(file_label.presence || file.humanized_name, file.url)
+      to_default_html_attachment
+    when 'video'
+      to_default_html_video
     when 'banner'
-      html = ApplicationController.helpers.image_tag(file.url, alt: file_label.presence || file.humanized_name)
-      if link_url.present?
-        html = ApplicationController.helpers.link_to(link_url) do
-          html
-        end
-      end
-      html
+      to_default_html_banner
     else # 'image'
-      if image_html_type == "thumb"
-        ApplicationController.helpers.link_to(file.url) do
-          ApplicationController.helpers.image_tag(file.thumb_url, alt: file_label.presence || file.humanized_name)
-        end
-      elsif image_html_type == "image"
-        ApplicationController.helpers.image_tag(file.url, alt: file_label.presence || file.humanized_name)
+      to_default_html_image
+    end
+  end
+
+  def to_default_html_image
+    if image_html_type == "thumb"
+      ApplicationController.helpers.link_to(file.url) do
+        ApplicationController.helpers.image_tag(file.thumb_url, alt: file_label.presence || file.humanized_name)
+      end
+    elsif image_html_type == "image"
+      ApplicationController.helpers.image_tag(file.url, alt: file_label.presence || file.humanized_name)
+    end
+  end
+
+  def to_default_html_attachment
+    label = "#{file_label.presence || file.name.sub(/\.[^\.]+$/, '')} (#{file.extname.upcase} #{file.size.to_s(:human_size)})"
+    ApplicationController.helpers.link_to(label, file.url)
+  end
+
+  def to_default_html_video
+    div_content = []
+    div_content << ApplicationController.helpers.video_tag(file.url, controls: 'controls')
+    div_content << ApplicationController.helpers.content_tag(:div, text)
+    ApplicationController.helpers.content_tag(:div) do
+      div_content.join.html_safe
+    end
+  end
+
+  def to_default_html_banner
+    html = ApplicationController.helpers.image_tag(file.url, alt: file_label.presence || file.humanized_name)
+    if link_url.present?
+      html = ApplicationController.helpers.link_to(link_url) do
+        html
       end
     end
+    html
   end
 end
