@@ -18,7 +18,7 @@ class Cms::Column::Value::DateField < Cms::Column::Value::Base
   end
 
   def value
-    I18n.l(self.date.to_date) rescue nil
+    I18n.l(self.date.to_date, format: :long) rescue nil
   end
 
   private
