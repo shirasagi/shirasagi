@@ -134,7 +134,8 @@ class Cms::Column::Value::FileUpload < Cms::Column::Value::Base
         div_content.join.html_safe
       end
     when 'attachment'
-      ApplicationController.helpers.link_to(file_label.presence || file.humanized_name, file.url)
+      label = "#{file_label.presence || file.name.sub(/\.[^\.]+$/, '')} (#{file.extname.upcase} #{file.size.to_s(:human_size)})"
+      ApplicationController.helpers.link_to(label, file.url)
     when 'banner'
       html = ApplicationController.helpers.image_tag(file.url, alt: file_label.presence || file.humanized_name)
       if link_url.present?
