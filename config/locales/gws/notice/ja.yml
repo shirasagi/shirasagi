@@ -53,7 +53,6 @@ ja:
   modules:
     gws/notice: お知らせ
     addons:
-      gws/notice/notification: 通知
       gws/notice/comment_setting: コメント設定
       gws/notice/comment_post: コメント
       gws/notice/category: カテゴリー
@@ -94,7 +93,7 @@ ja:
         member_ids: 投稿ユーザー
         member_group_ids: 投稿グループ
         member_custom_group_ids: 投稿カスタムグループ
-      gws/addon/notice/notification:
+      gws/notice/notification:
         notification_noticed: 通知日時
       gws/addon/notice/comment_setting:
         comment_state: コメント投稿
@@ -125,12 +124,6 @@ ja:
         - 種別を選択します。
         - 「重要なお知らせ」の場合、チェックをつけます。
         - 「重要なお知らせ」にチェックをつけた場合、コンテンツ内の先頭に目立つ色で表示されます。
-
-    gws/addon/notice/notification:
-      notification_noticed:
-        - 通知した日時を表示しています。
-        - 通知日時をクリアすることで、再度、通知が送信されるようになります。
-        - お知らせを編集後、再度、通知を送りたい場合、クリアしてください。
 
     gws/addon/notice/comment_setting:
       comment_state:
