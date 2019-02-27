@@ -18,7 +18,7 @@ class Cms::Column::UrlField2 < Cms::Column::Base
   validates :link_max_length, numericality: { only_integer: true, greater_than_or_equal_to: 0, allow_blank: true }
 
   def link_target_options
-    %w(_blank _parent _self _top).map do |v|
+    %w(_blank).map do |v|
       [ v, v ]
     end
   end
