@@ -7,11 +7,9 @@ class Cms::Column::Value::UrlField2 < Cms::Column::Value::Base
   field :link_item_type, type: String
   field :link_item_id, type: Object
 
-  attr_accessor :in_link_url
+  permit_values :link_url, :link_label, :link_target
 
-  permit_values :in_link_url, :link_label, :link_target
-
-  before_validation :set_link_url, unless: ->{ @new_clone }
+  before_validation :set_link_item, unless: ->{ @new_clone }
 
   liquidize do
     export :effective_link_url, as: :link_url
@@ -43,17 +41,10 @@ class Cms::Column::Value::UrlField2 < Cms::Column::Value::Base
     link_label.presence || link_item.try(:name)
   end
 
-  def new_clone
-    ret = super
-    ret.in_link_url = effective_link_url
-    ret
-  end
-
   private
 
-  def set_link_url
-    if in_link_url.blank?
-      self.link_url = nil
+  def set_link_item
+    if link_url.blank?
       self.link_item_type = nil
       self.link_item_id = nil
       remove_instance_variable :@link_item if defined? @link_item
@@ -62,19 +53,16 @@ class Cms::Column::Value::UrlField2 < Cms::Column::Value::Base
 
     site = _parent.site || _parent.instance_variable_get(:@cur_site)
 
-    u = URI.parse(in_link_url)
+    u = URI.parse(link_url)
     if u.relative?
       node = _parent.parent
       base_url = node ? node.full_url : site.full_url
-      u = URI.join(base_url, in_link_url)
+      u = URI.join(base_url, link_url)
     end
 
-    searches = []
+    searches = [ "#{u.host}:#{u.port}" ]
     if u.port == 80 || u.port == 443
       searches << u.host
-      searches << "#{u.host}:#{u.port}"
-    else
-      searches << "#{u.host}:#{u.port}"
     end
 
     if site.domains.any? { |domain| searches.include?(domain) }
@@ -83,7 +71,6 @@ class Cms::Column::Value::UrlField2 < Cms::Column::Value::Base
       content = Cms::Page.site(site).where(filename: filename).first
       content ||= Cms::Node.site(site).where(filename: filename).first
       if content.present?
-        self.link_url = nil
         self.link_item_type = content.collection_name.to_s
         self.link_item_id = content.id
         remove_instance_variable :@link_item if defined? @link_item
@@ -92,7 +79,6 @@ class Cms::Column::Value::UrlField2 < Cms::Column::Value::Base
     end
 
     # external link
-    self.link_url = in_link_url
     self.link_item_type = nil
     self.link_item_id = nil
     remove_instance_variable :@link_item if defined? @link_item
