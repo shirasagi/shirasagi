@@ -23,16 +23,15 @@ module Article::Import
 
   module ClassMethods
     def enum_csv(options = {})
-      cur_node = options[:cur_node]
-      if cur_node.present?
-        cur_node = cur_node.becomes_with_route if cur_node.class == Cms::Node
-        forms = cur_node.st_forms.order_by(order: 1, name: 1)
-      end
-
+      has_form = options[:form].present?
       drawer = SS::Csv.draw(context: self) do |drawer|
         draw_basic(drawer)
         draw_meta(drawer)
-        draw_body(drawer)
+        if has_form
+          draw_form(drawer, options[:form])
+        else
+          draw_body(drawer)
+        end
         draw_category(drawer)
         draw_event(drawer)
         draw_related_pages(drawer)
@@ -41,7 +40,6 @@ module Article::Import
         draw_released(drawer)
         draw_groups(drawer)
         draw_state(drawer)
-        draw_forms(drawer, forms)
       end
 
       drawer.enum(self, options)
@@ -137,16 +135,14 @@ module Article::Import
       drawer.column :state, type: :label
     end
 
-    def draw_forms(drawer, forms)
-      return if forms.blank?
+    def draw_form(drawer, form)
+      return if form.blank?
 
-      forms.order_by(order: 1, name: 1).each do |form|
-        # currently entry type form is not supported
-        next if !form.sub_type_static?
+      # currently entry type form is not supported
+      return if !form.sub_type_static?
 
-        form.columns.order_by(order: 1, name: 1).each do |column|
-          draw_column(drawer, form, column)
-        end
+      form.columns.order_by(order: 1, name: 1).each do |column|
+        draw_column(drawer, form, column)
       end
     end
 

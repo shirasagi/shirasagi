@@ -132,6 +132,8 @@ ja:
       contains_urls_exists: このページへのリンク、関連記事、添付ファイルが以下のページに含まれています。
       contains_urls_not_found: このページへのリンク、関連記事、添付ファイルが含まれているページは見つかりませんでした。
       check_accessibility_manually: "セマンティックなマークアップであるか確認してください。\nコントラスト比に問題がないか確認してください。"
+    notices:
+      import_with_entry_form_is_not_supported: 次のフォームは現在のところサポートしていません。
     apis:
       categories:
         index: カテゴリーを選択する

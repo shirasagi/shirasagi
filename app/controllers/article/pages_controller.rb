@@ -21,12 +21,27 @@ class Article::PagesController < ApplicationController
       return
     end
 
-    csv_params = params.require(:item).permit(:encoding)
+    csv_params = params.require(:item).permit(:encoding, :form_id)
     csv_params.merge!(fix_params)
+
+    form = nil
+    if csv_params[:form_id].present?
+      @cur_node = @cur_node.becomes_with_route if @cur_node.class == Cms::Node
+      if @cur_node.respond_to?(:st_forms)
+        form = @cur_node.st_forms.where(id: csv_params.delete(:form_id)).first
+        csv_params[:form] = form
+      end
+    end
 
     ctiteria = @model.site(@cur_site).
       node(@cur_node).
       allow(:read, @cur_user, site: @cur_site, node: @cur_node)
+
+    if form.present?
+      ctiteria = ctiteria.where(form_id: form)
+    else
+      ctiteria = ctiteria.exists(form_id: false)
+    end
 
     enumerable = ctiteria.enum_csv(csv_params)
 
