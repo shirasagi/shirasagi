@@ -242,19 +242,19 @@
       font-size: 0.8rem;
       pointer-events: auto;
       z-index: 101;
-      &:first-child :before {
-        content: "";
-        position: absolute;
-        top: 0;
-        right: 0;
-        bottom: 0;
-        left: 0;
-        z-index: 0;
-      }
       button, select, input {
         position: relative;
         z-index: 10;
       }
+    }
+    .ss-preview-overlay-btn-group-edit:before {
+      content: "";
+      position: absolute;
+      top: 0;
+      right: 0;
+      bottom: 0;
+      left: 0;
+      z-index: 0;
     }
   }
   * {
