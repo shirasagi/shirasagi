@@ -133,7 +133,7 @@ ja:
       contains_urls_not_found: このページへのリンク、関連記事、添付ファイルが含まれているページは見つかりませんでした。
       check_accessibility_manually: "セマンティックなマークアップであるか確認してください。\nコントラスト比に問題がないか確認してください。"
     notices:
-      import_with_entry_form_is_not_supported: 次のフォームは現在のところサポートしていません。
+      import_with_entry_form_is_not_supported: 次のフォームでは本文ブロックは出力されません。
     apis:
       categories:
         index: カテゴリーを選択する
@@ -955,7 +955,6 @@ ja:
       check_embedded_media: 動画や音声を含む場合、説明があるか確認してください。
       replace_word: 使用が好ましくない単語が含まれています。
       replace_word_validation: に使用が好ましくない単語が含まれています。
-      import_with_entry_form_is_not_supported: "ブロック入力のインポートには、現在未対応です。"
       syntax_check_detail:
         set_img_alt:
           - 画像の内容を示す代替テキストを設定してください。
