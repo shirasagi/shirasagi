@@ -148,7 +148,7 @@ this.Mobile_Size_Checker = (function () {
     if (mobile_size < size) {
       err_str = "<p class=\"error\">";
       err_str += Mobile_Size_Checker.message["SizeCheckError"];
-      err_str += "(本文サイズ：" + (parseInt(size / 1024)) + "KB";
+      err_str += "(本文サイズ：" + (parseInt(size / 1024)) + "KB)";
       err_str += "</p>";
       Mobile_Size_Checker.error = [err_str];
       complete();
@@ -204,27 +204,14 @@ this.Mobile_Size_Checker = (function () {
 
   Mobile_Size_Checker.checkHtmlSize = function (html) {
     Mobile_Size_Checker.reset();
-    if (Mobile_Size_Checker.enabled) {
-      return Mobile_Size_Checker.check(html, false, function () {
-        var err, errors, j, len, ref, result;
-        if (Mobile_Size_Checker.error.length > 0) {
-          result = Mobile_Size_Checker.result_open();
-          errors = [];
-          ref = Mobile_Size_Checker.error;
-          for (j = 0, len = ref.length; j < len; j++) {
-            err = ref[j];
-            errors.push({
-              code: "",
-              msg: err,
-              detail: err
-            });
-            result.append('<p class="error">' + err + '</p>');
-          }
-          Syntax_Checker.pushError(errors);
-          return Mobile_Size_Checker.result_close(result);
-        }
-      });
+    if (!Mobile_Size_Checker.enabled) {
+      return;
     }
+
+    Mobile_Size_Checker.resultBox.showChecking();
+    Mobile_Size_Checker.check(html, false, function () {
+      Mobile_Size_Checker.resultBox.showResult();
+    });
   };
 
   Mobile_Size_Checker.validateHtml = function (form, submit, opts) {
