@@ -27,20 +27,10 @@ class Cms::Column::Value::Base
     export :name
     export :alignment
     export as: :html do |context|
-      if @liquid_context
-        to_default_html
-      else
-        @liquid_context = context
-        to_html(preview: context.registers[:preview])
-      end
+      render_html_for_liquid(context)
     end
     export as: :to_s do |context|
-      if @liquid_context
-        to_default_html
-      else
-        @liquid_context = context
-        to_html(preview: context.registers[:preview])
-      end
+      render_html_for_liquid(context)
     end
     export as: :type do
       self.class.name
@@ -127,6 +117,17 @@ class Cms::Column::Value::Base
   end
 
   private
+
+  def render_html_for_liquid(context)
+    return to_default_html if @liquid_context
+
+    @liquid_context = context
+    begin
+      to_html(preview: context.registers[:preview])
+    ensure
+      @liquid_context = nil
+    end
+  end
 
   def _to_html(options = {})
     if column.blank?
