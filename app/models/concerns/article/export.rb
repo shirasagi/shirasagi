@@ -74,7 +74,7 @@ module Article::Export
     def draw_body(drawer)
       drawer.column :html
       drawer.column :body_part do
-        drawer.body { |item| item.body_parts.map{ |body| body.gsub("\t", '    ') }.join("\t") }
+        drawer.body { |item| item.body_parts.map { |body| body.gsub("\t", '    ') }.join("\t") }
       end
     end
 

@@ -61,8 +61,8 @@ class Article::Page::ImportJob < Cms::ApplicationJob
     value.to_s.split(delim).map(&:strip)
   end
 
-  def from_label(value, options)
-    options.to_h[value].to_s.presence
+  def from_label(value, options, private_options = {})
+    options.to_h[value].to_s.presence || private_options.to_h[value].to_s
   end
 
   def category_name_tree_to_ids(name_trees)
@@ -116,10 +116,7 @@ class Article::Page::ImportJob < Cms::ApplicationJob
     end
     importer.simple_column :order
     importer.simple_column :form_id do |row, item, head, value|
-      item.form = form = value.present? ? node.st_forms.where(name: value).first : nil
-      if form.present? && form.sub_type_entry?
-        raise I18n.t("errors.messages.import_with_entry_form_is_not_supported")
-      end
+      item.form = value.present? ? node.st_forms.where(name: value).first : nil
     end
   end
 
@@ -200,8 +197,8 @@ class Article::Page::ImportJob < Cms::ApplicationJob
   end
 
   def define_importer_state(importer)
-    importer.simple_column :groups do |row, item, head, value|
-      state = from_label(value, item.state_options)
+    importer.simple_column :state do |row, item, head, value|
+      state = from_label(value, item.state_options, item.state_private_options)
       item.state = state.presence || "public"
     end
   end
@@ -210,6 +207,9 @@ class Article::Page::ImportJob < Cms::ApplicationJob
     return if !node.respond_to?(:st_forms)
 
     node.st_forms.each do |form|
+      # currently entry type form is not supported
+      next if !form.sub_type_static?
+
       importer.form form.name do
         form.columns.each do |column|
           importer.column column.name do |row, item, _form, _column, values|
