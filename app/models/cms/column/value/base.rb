@@ -85,13 +85,12 @@ class Cms::Column::Value::Base
     []
   end
 
-  def new_clone
-    ret = self.class.new self.attributes.to_h.except('_type').slice(*self.class.fields.keys.map(&:to_s))
+  def clone_to(to_item)
+    attrs = self.attributes.to_h.except('_id').slice(*self.class.fields.keys.map(&:to_s))
+    ret = to_item.column_values.build(attrs)
     ret.instance_variable_set(:@new_clone, true)
-    ret.instance_variable_set(:@origin_id, ret.id)
-    ret.id = BSON::ObjectId.new
-    ret.created = Time.zone.now
-    ret.updated = Time.zone.now
+    ret.instance_variable_set(:@origin_id, self.id)
+    ret.created = ret.updated = Time.zone.now
     ret
   end
 

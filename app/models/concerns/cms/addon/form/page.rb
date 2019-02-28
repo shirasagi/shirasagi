@@ -32,8 +32,8 @@ module Cms::Addon::Form::Page
 
   # for creating branch page
   def copy_column_values(from_item)
-    self.column_values = from_item.column_values.map do |column_value|
-      column_value.new_clone
+    from_item.column_values.each do |column_value|
+      column_value.clone_to(self)
     end
   end
 
@@ -80,6 +80,7 @@ module Cms::Addon::Form::Page
   end
 
   def merge_column_values
+    self.column_values = []
     copy_column_values(in_branch)
   end
 
