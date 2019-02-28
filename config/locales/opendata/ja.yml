@@ -108,6 +108,8 @@ ja:
         invalid_type: タイプが不正です。
         invalid_operator: 操作が不正です。
         invalid_regexp: 正規表現が不正です。
+        too_many_categories: "分野の設定数が多すぎます（末端分野の制限数: %{limit}）"
+        too_many_estat_categories: "eStat分野の設定数が多すぎます（末端eStat分野の制限数: %{limit}）"
     crawl_state:
       same:
       updated: 更新
@@ -533,8 +535,10 @@ ja:
         area_ids: 地域
       opendata/addon/category_setting:
         st_category_ids: 分野
+        categories_limit: 分野数の上限
       opendata/addon/estat_category_setting:
         st_estat_category_ids: eStat分野
+        estat_categories_limit: eStat分野数の上限
       opendata/addon/rdf_store:
         rdf_iri: グラフ名
         rdf_error: RDF登録エラー
@@ -942,6 +946,17 @@ ja:
     opendata/addon/harvest/importer_area_setting:
       default_area_ids:
         - 既定の地域を設定します。
+    opendata/addon/category_setting:
+      categories_limit:
+        - データセットに設定できる末端の分野数の上限を設定します。
+        - 空欄 および 0 は無制限です。
+    opendata/addon/estat_category_setting:
+      st_estat_categories:
+        - フォルダー下で使用するカテゴリーを設定します。
+        - 設定されていない場合は全カテゴリーが対象となります。
+      estat_categories_limit:
+        - データセットに設定できる末端のeStat分野数の上限を設定します。
+        - 空欄 および 0 は無制限です。
     opendata/harvest/exporter:
       name:
         - 名前を設定します。
