@@ -65,7 +65,9 @@ SS_Preview = (function () {
   SS_Preview.instance = null;
 
   SS_Preview.minFrameSize = { width: 320, height: 150 };
-  SS_Preview.initialFrameSize = { width: 780, height: 180 };
+  SS_Preview.initialFrameSize = { width: 960, height: 240 };
+
+  SS_Preview.jqueryDialogMargin = { height: 60 };
 
   SS_Preview.pageTitle = "<%= I18n.t("modules.addons.cms/body") %>";
 
@@ -370,6 +372,10 @@ SS_Preview = (function () {
     var width = frame.contentWindow.document.body.scrollWidth;
     var height = frame.contentWindow.document.body.scrollHeight;
 
+    if ($(frame).closest(".ui-dialog")[0]) {
+      height += SS_Preview.jqueryDialogMargin.height;
+    }
+
     if (width < SS_Preview.initialFrameSize.width) {
       width = SS_Preview.initialFrameSize.width;
     }
@@ -392,7 +398,10 @@ SS_Preview = (function () {
     }
 
     if ($(frame).closest(".ui-dialog")[0]) {
-      $(frame).dialog("option", "width", width).dialog("option", "height", height).css("display", "").css("width", "");
+      $(frame).dialog("option", "width", width)
+        .dialog("option", "height", height)
+        .css("display", "")
+        .css("width", "");
     }
   };
 
