@@ -412,13 +412,9 @@ table.index {
 }
 .mod-workflow-request, .search-ui-form {
   font-size: $px12;
-  dl.see > dt:before, dl.see > dd:before, dl.see > dt:after, dl.see > dd:after {
-    content: "";
-    @include clear;
-    clear: both;
-  }
   dl.see > dt ~ dt, dl.see > dd ~ dd {
     margin-top: 15px;
+    @include clear;
   }
   dt {
     zoom: 1;
@@ -427,10 +423,10 @@ table.index {
     padding: 5px 0;
     color: #a0522d;
     font-weight: bold;
-    line-height: 1.4em;
   }
   dd {
     margin: 0 0 0 180px;
+    padding: 5px 0;
     input[type=text] {
       @include box-sizing(border-box);
       border: 1px solid #d0d0d0;
