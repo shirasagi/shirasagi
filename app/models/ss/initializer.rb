@@ -8,5 +8,9 @@ module SS
     SS::File.model "ss/user_file", SS::UserFile
 
     Liquid::Template.register_filter(SS::LiquidFilters)
+    Liquid::Template.default_exception_renderer = lambda do |e|
+      Rails.logger.warn("#{e.class} (#{e.message}):\n  #{e.backtrace.join("\n  ")}")
+      raise e if !Rails.env.production?
+    end
   end
 end
