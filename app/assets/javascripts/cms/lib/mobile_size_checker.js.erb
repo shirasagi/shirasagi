@@ -215,27 +215,17 @@ this.Mobile_Size_Checker = (function () {
   };
 
   Mobile_Size_Checker.validateHtml = function (form, submit, opts) {
-    var count = Syntax_Checker.errorCount;
     if (Mobile_Size_Checker.checkHtmlSize(opts.html)) {
       return;
     }
-    if (!Syntax_Checker.errors[count]) {
+    if (Mobile_Size_Checker.error.length === 0) {
       return;
     }
 
-    var error, i, j, len, ref, results;
-    ref = Syntax_Checker.errors[count];
-    results = [];
-    for (i = j = 0, len = ref.length; j < len; i = ++j) {
-      error = ref[i];
-      if (error["correct"] && Syntax_Checker.autoCorrect) {
-        results.push(Form_Alert.add("<%= I18n.t('cms.auto_correct.notice') %>", this, error["msg"]));
-      } else {
-        results.push(Form_Alert.add("<%= I18n.t('cms.mobile_size_check') %>", this, error["msg"]));
-      }
+    for (var j = 0, len = Mobile_Size_Checker.error.length; j < len; j++) {
+      var err = Mobile_Size_Checker.error[j];
+      Form_Alert.add("<%= I18n.t('cms.mobile_size_check') %>", this, err);
     }
-
-    return results;
   };
 
   return Mobile_Size_Checker;
