@@ -10,6 +10,7 @@ module Gws::Addon
 
       before_save :clone_files, if: ->{ in_clone_file }
       before_save :save_files
+      around_save :update_file_owners
       after_destroy :destroy_files
 
       define_model_callbacks :save_files, :clone_files, :destroy_files
@@ -117,6 +118,17 @@ module Gws::Addon
         add_ids << ss_file.id
       end
       add_ids
+    end
+
+    def update_file_owners
+      is_new = new_record?
+      yield
+
+      return if !is_new
+
+      files.each do |file|
+        file.update(owner_item: self)
+      end
     end
   end
 end
