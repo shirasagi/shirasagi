@@ -21,6 +21,8 @@ module Cms::Addon::Form::Page
 
     before_save :delete_unlinked_files
 
+    around_save :update_file_owner_in_column_values
+
     after_generate_file :generate_public_files, if: ->{ serve_static_relation_files? } if respond_to?(:after_generate_file)
     after_remove_file :remove_public_files if respond_to?(:after_remove_file)
     after_merge_branch :merge_column_values rescue nil
@@ -120,6 +122,25 @@ module Cms::Addon::Form::Page
     unlinked_file_ids = file_ids_was - file_ids_is
     unlinked_file_ids.each_slice(20) do |file_ids|
       SS::File.in(id: file_ids).destroy_all
+    end
+  end
+
+  def update_file_owner_in_column_values
+    is_new = new_record?
+    yield
+
+    if is_new && form.present?
+      file_ids_is = []
+      self.column_values.each do |column_value|
+        file_ids_is += column_value.all_file_ids
+      end
+      file_ids_is.compact!
+      file_ids_is.uniq!
+
+      SS::File.in(id: file_ids_is).each do |file|
+        file.owner_item = self
+        file.save
+      end
     end
   end
 end
