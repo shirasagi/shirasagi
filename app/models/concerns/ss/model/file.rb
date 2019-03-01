@@ -23,6 +23,8 @@ module SS::Model::File
 
     belongs_to :site, class_name: "SS::Site"
 
+    belongs_to :owner_item, class_name: "Object", polymorphic: true
+
     attr_accessor :in_data_url
 
     permit_params :in_file, :state, :name, :filename, :resizing, :in_data_url
@@ -114,8 +116,26 @@ module SS::Model::File
       return true if SS.config.env.remote_preview
     end
 
+    # be careful: cur_user and item may be nil
     cur_user = opts[:user]
-    cur_user.present?
+    item = effective_owner_item
+    if cur_user && item
+      if item.is_a?(Cms::Addon::ReadableSetting)
+        return true if item.readable?(cur_user, site: item.try(:site))
+      end
+      if item.is_a?(Gws::Addon::ReadableSetting)
+        return true if item.readable?(cur_user, site: item.try(:site))
+      end
+      if item.respond_to?(:allowed?)
+        return true if item.allowed?(:read, cur_user, site: item.try(:site))
+      end
+    end
+
+    if cur_user && respond_to?(:user_id)
+      return true if user_id == cur_user.id
+    end
+
+    false
   end
 
   def state_options
@@ -209,6 +229,16 @@ module SS::Model::File
   end
 
   private
+
+  def effective_owner_item
+    return owner_item if owner_item.present?
+
+    type = @item.model.camelize.constantize rescue nil
+    return if type.blank?
+
+    conds = (type.fields.keys & %w(file_id file_ids)).map { |f| { f => id} }
+    type.where("$and" => [{ "$or" => conds }]).first
+  end
 
   def set_filename
     self.name         = in_file.original_filename if self[:name].blank?
