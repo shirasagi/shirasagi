@@ -7,12 +7,22 @@ def create_gws_users
 
   role = Gws::Role.create name: I18n.t('gws.roles.admin'), site_id: g00.id,
     permissions: Gws::Role.permission_names, permission_level: 3
+  role_2 = Gws::Role.create name: I18n.t('gws.roles.user'), site_id: g00.id,
+    permissions: load_gws_permissions('gws/roles/user_permissions.txt'), permission_level: 1
 
   sys = Gws::User.create name: "gws-sys", uid: "sys", email: "sys@example.jp", in_password: "pass",
     group_ids: [g11.id], gws_role_ids: [role.id]
   adm = Gws::User.create name: "gw-admin", uid: "admin", email: "admin@example.jp", in_password: "pass",
     group_ids: [g11.id], gws_role_ids: [role.id],
     organization_id: g00.id, organization_uid: "org-admin"
+  user1 = Gws::User.create name: "gws-user1", uid: "user1", email: "user1@example.jp", in_password: "pass",
+    group_ids: [g11.id], gws_role_ids: [role_2.id]
+  user2 = Gws::User.create name: "gws-user2", uid: "user2", email: "user2@example.jp", in_password: "pass",
+    group_ids: [g11.id], gws_role_ids: [role_2.id]
+end
+
+def load_gws_permissions(path)
+  File.read("#{Rails.root}/db/seeds/#{path}").split(/\r?\n/).map(&:strip) & Gws::Role.permission_names
 end
 
 def gws_site
