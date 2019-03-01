@@ -101,4 +101,6 @@ use_gws_staff_record
 use_gws_survey
 use_gws_user_presences
 use_gws_workflow
+use_private_gws_schedule_todos
+use_private_gws_schedule_plans
 write_private_gws_share_files
