@@ -11,7 +11,6 @@ class SS::Migration20190301000000
         next if !file.respond_to?(:owner_item)
         next if file.owner_item_id
 
-        puts "#{file.id}: #{file.name}"
         file.owner_item = find_owner_item(file)
         file.model = file.owner_item_type if file.owner_item_type.present?
         file.save!
