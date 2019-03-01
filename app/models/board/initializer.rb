@@ -11,6 +11,6 @@ module Board
     Cms::Role.permission :edit_board_anpi_posts
     Cms::Role.permission :delete_board_anpi_posts
 
-    SS::File.model "board/post", Board::File
+    SS::File.model "board/post", Board::File, cms: true
   end
 end

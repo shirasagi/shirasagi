@@ -7,6 +7,6 @@ module Facility
     Cms::Node.plugin "facility/location"
     Cms::Node.plugin "facility/search"
 
-    SS::File.model "facility/file", SS::File
+    SS::File.model "facility/file", SS::File, cms: true
   end
 end

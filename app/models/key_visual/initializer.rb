@@ -10,6 +10,6 @@ module KeyVisual
     Cms::Role.permission :delete_other_key_visual_images, module_name: "key_visual"
     Cms::Role.permission :delete_private_key_visual_images, module_name: "key_visual"
 
-    SS::File.model "key_visual/image", SS::File
+    SS::File.model "key_visual/image", SS::File, cms: true
   end
 end
