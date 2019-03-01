@@ -5,14 +5,14 @@ class Sns::NotificationsController < ApplicationController
   model SS::Notification
 
   def fix_params
-    { cur_user: @cur_user, cur_site: @cur_site }
+    { cur_user: @cur_user, cur_group: @cur_group }
   end
 
   private
 
   def set_item
     super
-    raise "404" unless @item.readable?(@cur_user, @cur_site)
+    raise "404" unless @item.readable?(@cur_user, @cur_group)
   end
 
   public

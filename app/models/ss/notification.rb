@@ -1,7 +1,7 @@
 class SS::Notification
   include SS::Document
   include SS::Reference::User
-  include SS::Reference::Site
+  include SS::Reference::Group
   include SS::UserPermission
   include SS::Addon::Notification::Body
   include SS::Addon::Notification::Reply
@@ -71,7 +71,7 @@ class SS::Notification
     files.present?
   end
 
-  def readable?(user, site)
+  def readable?(user, group)
     return false if deleted?(user)
     member?(user)
   end
@@ -87,8 +87,13 @@ class SS::Notification
     end
   end
 
+  def subject_with_group
+    return self.subject if self.group.blank?
+    return "[#{self.group.name}] #{self.subject}"
+  end
+
   class << self
-    def unseens(user, site)
+    def unseens(user, group)
       criteria.member(user).unseen(user)
     end
 
