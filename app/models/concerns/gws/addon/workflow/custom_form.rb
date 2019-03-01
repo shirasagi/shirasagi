@@ -1,3 +1,8 @@
+Dir.foreach("#{Rails.root}/app/models/gws/column/value") do |path|
+  next if path == '.' or path == '..'
+  require_dependency "#{Rails.root}/app/models/gws/column/value/#{path}"
+end
+
 module Gws::Addon::Workflow::CustomForm
   extend ActiveSupport::Concern
   extend SS::Addon
