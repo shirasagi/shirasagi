@@ -283,7 +283,13 @@ module SS::Model::User
   end
 
   # Cast
+  def cms_user
+    return self if is_a?(Cms::User)
+    @cms_user ||= is_a?(Cms::User) ? self : Cms::User.find(id)
+  end
+
   def gws_user
+    return self if is_a?(Gws::User)
     @gws_user ||= is_a?(Gws::User) ? self : Gws::User.find(id)
   end
 
