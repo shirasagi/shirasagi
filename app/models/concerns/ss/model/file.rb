@@ -110,8 +110,8 @@ module SS::Model::File
   end
 
   def previewable?(opts = {})
-    meta = SS::File.find_model_metadata(model)
-    if meta && meta[:cms]
+    meta = SS::File.find_model_metadata(model) || {}
+    if meta[:cms]
       return true if public?
       return true if SS.config.env.remote_preview
     end
@@ -120,13 +120,14 @@ module SS::Model::File
     cur_user = opts[:user]
     item = effective_owner_item
     if cur_user && item
-      if item.is_a?(Cms::Addon::ReadableSetting)
+      permit = meta[:permit] || %i(role readable member)
+      if permit.include?(:readable) && item.respond_to?(:readable?)
         return true if item.readable?(cur_user, site: item.try(:site))
       end
-      if item.is_a?(Gws::Addon::ReadableSetting)
-        return true if item.readable?(cur_user, site: item.try(:site))
+      if permit.include?(:member) && item.respond_to?(:member?)
+        return true if item.member?(cur_user)
       end
-      if item.respond_to?(:allowed?)
+      if permit.include?(:role) && item.respond_to?(:allowed?)
         return true if item.allowed?(:read, cur_user, site: item.try(:site))
       end
     end

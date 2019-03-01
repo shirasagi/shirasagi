@@ -39,6 +39,7 @@ module Gws
     Gws::Role.permission :edit_gws_personal_addresses
 
     SS::File.model "gws/file", Gws::File
+    SS::File.model "gws/memo/message", Gws::File, permit: [:readable]
     SS::File.model "share/file", Gws::Share::File
 
     Gws.module_usable :bookmark do |site, user|
