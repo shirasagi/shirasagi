@@ -98,6 +98,7 @@ class Cms::Notice
         file.id = nil
         file.in_file = f.uploaded_file
         file.user_id = @cur_user.id if @cur_user
+        file.owner_item = self if file.respond_to?(:owner_item=)
 
         file.save validate: false
         ids[f.id] = file.id

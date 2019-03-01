@@ -15,6 +15,7 @@ module Cms::Addon
 
       after_generate_file :generate_public_files, if: ->{ serve_static_relation_files? } if respond_to?(:after_generate_file)
       after_remove_file :remove_public_files if respond_to?(:after_remove_file)
+      after_merge_branch :update_owner_item_of_files rescue nil
     end
 
     def allow_other_user_files
@@ -31,11 +32,11 @@ module Cms::Addon
       ids = []
       files.each do |file|
         if !add_ids.include?(file.id)
-          file.update_attributes(state: state) if state_changed?
+          file.update_attributes(owner_item: self, state: state) if state_changed?
         elsif !allowed_other_user_files? && @cur_user && @cur_user.id != file.user_id
           next
         else
-          file.update_attributes(site_id: site_id, model: model_name.i18n_key, state: state)
+          file.update_attributes(site: site, model: model_name.i18n_key, owner_item: self, state: state)
         end
         ids << file.id
       end
@@ -61,6 +62,14 @@ module Cms::Addon
     def remove_public_files
       files.each do |file|
         file.remove_public_file
+      end
+    end
+
+    private
+
+    def update_owner_item_of_files
+      files.each do |file|
+        file.update_attributes(owner_item: self)
       end
     end
   end
