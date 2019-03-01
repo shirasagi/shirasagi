@@ -72,7 +72,7 @@ class Cms::Notice
   end
 
   def new_clone(attributes = {})
-    attributes = self.attributes.merge(attributes).select{ |k| self.fields.keys.include?(k) }
+    attributes = self.attributes.merge(attributes).select{ |k| self.fields.key?(k) }
 
     item = self.class.new(attributes)
     item.id = nil
@@ -92,7 +92,7 @@ class Cms::Notice
       ids = {}
       files.each do |f|
         attributes = Hash[f.attributes]
-        attributes.select!{ |k| f.fields.keys.include?(k) }
+        attributes.select!{ |k| f.fields.key?(k) }
 
         file = SS::File.new(attributes)
         file.id = nil

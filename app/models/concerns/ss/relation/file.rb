@@ -49,7 +49,7 @@ module SS::Relation::File
         return unless respond_to?(:state)
         file = send(name)
         file_state = send("#{name}_file_state")
-        file.update_attributes(state: file_state) if file.state != file_state
+        file.update(state: file_state) if file.state != file_state
       end
 
       define_method("generate_relation_public_#{name}") do
