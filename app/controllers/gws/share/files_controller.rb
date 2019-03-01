@@ -16,6 +16,11 @@ class Gws::Share::FilesController < ApplicationController
 
   private
 
+  def set_item
+    super
+    raise "404" unless @item.readable?(@cur_user) || @item.allowed?(:read, @cur_user, site: @cur_site)
+  end
+
   def set_crumbs
     set_folder
     @crumbs << [@cur_site.menu_share_label || t("mongoid.models.gws/share"), gws_share_files_path(category: params[:category])]
