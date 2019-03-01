@@ -4,6 +4,7 @@ module Gws::Board::Postable
   include SS::Document
   include Gws::Reference::User
   include Gws::Reference::Site
+  include Gws::ReadableSetting
   include Gws::GroupPermission
 
   included do
@@ -130,6 +131,14 @@ module Gws::Board::Postable
     end
 
     becomes_with(Gws::Board::Topic)
+  end
+
+  def readable?(user, opts = {})
+    if topic.present? && topic.id != id
+      return topic.readable?(user, opts)
+    end
+
+    super
   end
 
   private
