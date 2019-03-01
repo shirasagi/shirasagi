@@ -108,8 +108,11 @@ module SS::Model::File
   end
 
   def previewable?(opts = {})
-    return true if public?
-    return true if SS.config.env.remote_preview
+    meta = SS::File.find_model_metadata(model)
+    if meta && meta[:cms]
+      return true if public?
+      return true if SS.config.env.remote_preview
+    end
 
     cur_user = opts[:user]
     cur_user.present?
