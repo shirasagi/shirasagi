@@ -50,6 +50,8 @@ class Cms::Column::Value::Free < Cms::Column::Value::Base
           clone_file.id = nil
           clone_file.in_file = source_file.uploaded_file
           clone_file.user_id = @cur_user.id if @cur_user
+          clone_file.model = _parent.class.name
+          clone_file.owner_item = _parent
           clone_file.state = _parent.state
           result = clone_file.save(validate: false)
 
@@ -74,7 +76,7 @@ class Cms::Column::Value::Free < Cms::Column::Value::Base
       add_ids = _parent.state_changed? ? file_ids : file_ids - file_ids_was.to_a
       add_ids.each_slice(20) do |ids|
         SS::File.in(id: ids).to_a.each do |file|
-          file.update(site_id: _parent.site_id, model: "cms/column", state: _parent.state)
+          file.update(site_id: _parent.site_id, model: _parent.class.name, owner_item: _parent, state: _parent.state)
         end
       end
     end

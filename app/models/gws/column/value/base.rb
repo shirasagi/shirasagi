@@ -27,6 +27,9 @@ class Gws::Column::Value::Base
     self.text_index = new_value.value
   end
 
+  def update_file_owner(_)
+  end
+
   def to_es
     value
   end
