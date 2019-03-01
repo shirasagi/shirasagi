@@ -19,6 +19,11 @@ class Fs::FilesController < ApplicationController
   end
 
   def deny
+    @cur_site = @item.try(:site)
+    # TODO: validate site
+
+    return deny_gws if @item.model.to_s.start_with?('gws/')
+
     return if @item.public?
     return if SS.config.env.remote_preview
 
@@ -26,6 +31,26 @@ class Fs::FilesController < ApplicationController
     member = get_member_by_session
     item   = @item.becomes_with_model
     raise "404" unless item.previewable?(user: user, member: member)
+
+    set_last_logged_in
+  end
+
+  def deny_gws
+    user = get_user_by_session
+    raise "404" unless user
+
+    @cur_user = user.gws_user
+
+    doc = @item.model.camelize.constantize
+    keys = doc.fields.keys & ['file_id', 'file_ids']
+    raise "404" if keys.blank?
+
+    docs = doc.site(@cur_site).or([{ file_id: @item.id }, { file_ids: @item.id }])
+    docs = docs.select do |d|
+      d.cur_site = @cur_site
+      d.readable?(@cur_user, site: @cur_site) || d.try(:member?, @cur_user)
+    end
+    raise "404" if docs.size == 0
 
     set_last_logged_in
   end
