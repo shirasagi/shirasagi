@@ -108,6 +108,9 @@ module SS::Model::File
   end
 
   def previewable?(opts = {})
+    return true if public?
+    return true if SS.config.env.remote_preview
+
     cur_user = opts[:user]
     cur_user.present?
   end
