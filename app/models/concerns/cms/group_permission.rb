@@ -22,6 +22,7 @@ module Cms::GroupPermission
   end
 
   def owned?(user)
+    user = user.cms_user
     (self.group_ids & user.group_ids).present?
   end
 
@@ -30,6 +31,7 @@ module Cms::GroupPermission
   end
 
   def allowed?(action, user, opts = {})
+    user = user.cms_user
     site = opts[:site] || @cur_site
     node = opts[:node] || @cur_node
 
@@ -53,6 +55,7 @@ module Cms::GroupPermission
     # @param [String] action
     # @param [Cms::User] user
     def allow(action, user, opts = {})
+      user = user.cms_user
       site_id = opts[:site] ? opts[:site].id : criteria.selector["site_id"]
 
       action = permission_action || action

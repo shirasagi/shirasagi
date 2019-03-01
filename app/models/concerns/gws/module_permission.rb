@@ -13,6 +13,7 @@ module Gws::ModulePermission
   end
 
   def allowed?(action, user, opts = {})
+    user    = user.gws_user
     site    = opts[:site]
     action  = self.permission_action || action
 
