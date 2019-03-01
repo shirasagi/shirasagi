@@ -71,8 +71,8 @@ class Gws::Memo::Notice
     files.present?
   end
 
-  def readable?(user, site)
-    return false if self.site_id != site.id
+  def readable?(user, opts = {})
+    return false if self.site_id != opts[:site].id
     return false if deleted?(user)
     member?(user)
   end

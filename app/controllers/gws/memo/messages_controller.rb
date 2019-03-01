@@ -23,7 +23,7 @@ class Gws::Memo::MessagesController < ApplicationController
 
   def set_item
     super
-    raise "404" unless @item.readable?(@cur_user, @cur_site)
+    raise "404" unless @item.readable?(@cur_user, site: @cur_site)
   end
 
   def fix_params
@@ -262,7 +262,7 @@ class Gws::Memo::MessagesController < ApplicationController
 
   def trash_all
     @items.each do |item|
-      raise "404" unless item.readable?(@cur_user, @cur_site)
+      raise "404" unless item.readable?(@cur_user, site: @cur_site)
       item.move(@cur_user, 'INBOX.Trash').update
     end
     render_destroy_all(false)
@@ -270,7 +270,7 @@ class Gws::Memo::MessagesController < ApplicationController
 
   def move_all
     @items.each do |item|
-      raise "404" unless item.readable?(@cur_user, @cur_site)
+      raise "404" unless item.readable?(@cur_user, site: @cur_site)
       item.move(@cur_user, params[:path]).update
     end
     render_destroy_all(false)
@@ -278,7 +278,7 @@ class Gws::Memo::MessagesController < ApplicationController
 
   def set_seen_all
     @items.each do |item|
-      raise "404" unless item.readable?(@cur_user, @cur_site)
+      raise "404" unless item.readable?(@cur_user, site: @cur_site)
       item.set_seen(@cur_user).update
     end
     render_destroy_all(false)
@@ -286,7 +286,7 @@ class Gws::Memo::MessagesController < ApplicationController
 
   def unset_seen_all
     @items.each do |item|
-      raise "404" unless item.readable?(@cur_user, @cur_site)
+      raise "404" unless item.readable?(@cur_user, site: @cur_site)
       item.unset_seen(@cur_user).update
     end
     render_destroy_all(false)
@@ -298,7 +298,7 @@ class Gws::Memo::MessagesController < ApplicationController
 
   def set_star_all
     @items.each do |item|
-      raise "404" unless item.readable?(@cur_user, @cur_site)
+      raise "404" unless item.readable?(@cur_user, site: @cur_site)
       item.set_star(@cur_user).update
     end
     render_destroy_all(false)
@@ -306,7 +306,7 @@ class Gws::Memo::MessagesController < ApplicationController
 
   def unset_star_all
     @items.each do |item|
-      raise "404" unless item.readable?(@cur_user, @cur_site)
+      raise "404" unless item.readable?(@cur_user, site: @cur_site)
       item.unset_star(@cur_user).update
     end
     render_destroy_all(false)
