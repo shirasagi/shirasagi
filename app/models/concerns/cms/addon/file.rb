@@ -11,6 +11,7 @@ module Cms::Addon
 
       before_save :clone_files, if: ->{ try(:new_clone?) }
       before_save :save_files
+      around_save :update_file_owners
       after_destroy :destroy_files
 
       after_generate_file :generate_public_files, if: ->{ serve_static_relation_files? } if respond_to?(:after_generate_file)
@@ -66,6 +67,15 @@ module Cms::Addon
     end
 
     private
+
+    def update_file_owners
+      is_new = new_record?
+      yield
+
+      return if !is_new
+
+      update_owner_item_of_files
+    end
 
     def update_owner_item_of_files
       files.each do |file|
