@@ -32,11 +32,11 @@ module Cms::Addon
       ids = []
       files.each do |file|
         if !add_ids.include?(file.id)
-          file.update_attributes(owner_item: self, state: state) if state_changed?
+          file.update(owner_item: self, state: state) if state_changed?
         elsif !allowed_other_user_files? && @cur_user && @cur_user.id != file.user_id
           next
         else
-          file.update_attributes(site: site, model: model_name.i18n_key, owner_item: self, state: state)
+          file.update(site: site, model: model_name.i18n_key, owner_item: self, state: state)
         end
         ids << file.id
       end
@@ -69,7 +69,7 @@ module Cms::Addon
 
     def update_owner_item_of_files
       files.each do |file|
-        file.update_attributes(owner_item: self)
+        file.update(owner_item: self)
       end
     end
   end
