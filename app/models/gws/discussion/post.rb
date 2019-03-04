@@ -23,10 +23,11 @@ class Gws::Discussion::Post
     return unless f.notify_enabled?
 
     notify_member_ids = f.discussion_member_ids - [user.id]
-    notify_member_ids.select!{|user_id| Gws::User.find(user_id).use_notice?(self)}
+    notify_member_ids.select! { |user_id| Gws::User.find(user_id).use_notice?(self) }
     return if notify_member_ids.blank?
 
-    url = Rails.application.routes.url_helpers.gws_discussion_forum_topic_comments_path(forum_id: forum.id, topic_id: topic.id, site: @cur_site.id, category: '-', mode: '-')
+    url = Rails.application.routes.url_helpers.gws_discussion_forum_topic_comments_path(
+      forum_id: forum.id, topic_id: topic.id, site: @cur_site.id, category: '-', mode: '-')
 
     item = Gws::Memo::Notice.new
     item.cur_site = site
@@ -43,7 +44,7 @@ class Gws::Discussion::Post
     item.reply_module = "discussion"
     item.save!
 
-    to_users = notify_member_ids.map{|user_id| Gws::User.find(user_id)}
+    to_users = notify_member_ids.map { |user_id| Gws::User.find(user_id) }
     mail = Gws::Memo::Mailer.notice_mail(item, to_users, self)
     mail.deliver_now if mail
   end
