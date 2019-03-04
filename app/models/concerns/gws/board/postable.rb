@@ -6,6 +6,7 @@ module Gws::Board::Postable
   include Gws::Reference::Site
   include Gws::ReadableSetting
   include Gws::GroupPermission
+  include Fs::FilePreviewable
 
   included do
     store_in collection: "gws_board_posts"
@@ -139,6 +140,16 @@ module Gws::Board::Postable
     end
 
     super
+  end
+
+  def file_previewable?(user, file)
+    return false if !file_ids.include?(file.id)
+
+    if topic.present? && topic.id != id
+      return true if topic.allowed?(:read, user, site: site)
+    end
+
+    false
   end
 
   private
