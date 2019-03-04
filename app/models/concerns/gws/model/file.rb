@@ -125,7 +125,7 @@ module Gws::Model::File
   end
 
   def download_filename
-    name =~ /\./ ? name : name.sub(/\..*/, '') + '.' + extname
+    name.include?('.') ? name : "#{name}.#{extname}"
   end
 
   def basename
@@ -133,6 +133,7 @@ module Gws::Model::File
   end
 
   def extname
+    return nil unless filename.to_s.include?('.')
     filename.to_s.sub(/.*\W/, "")
   end
 
