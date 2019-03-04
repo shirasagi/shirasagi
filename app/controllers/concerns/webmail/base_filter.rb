@@ -65,8 +65,7 @@ module Webmail::BaseFilter
     return if @imap.blank?
 
     @imap_setting = @imap.setting
-    @webmail_redirect_path = [ :render, "app/views/webmail/main/login_failed" ]
-    response.status = 403
+    @webmail_redirect_path = [ :render, "app/views/webmail/main/login_failed", 403 ]
   end
 
   def imap_disconnect
@@ -77,10 +76,10 @@ module Webmail::BaseFilter
     @webmail_imap_login = @imap.login
     return if @webmail_imap_login
 
-    method, path = @webmail_redirect_path
+    method, path, status = @webmail_redirect_path
     case method
     when :render
-      render file: path
+      render file: path, status: status
     else
       redirect_to path
     end
