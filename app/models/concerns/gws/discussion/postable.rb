@@ -5,6 +5,7 @@ module Gws::Discussion::Postable
   include Gws::Referenceable
   include Gws::Reference::User
   include Gws::Reference::Site
+  include Gws::Member
   include Gws::GroupPermission
 
   included do
@@ -24,8 +25,8 @@ module Gws::Discussion::Postable
     field :topic_quota, type: Integer, default: nil
     field :order, type: Integer, default: 0
 
-    belongs_to :forum, class_name: "Gws::Discussion::Post", inverse_of: :forum_descendants
-    belongs_to :topic, class_name: "Gws::Discussion::Post", inverse_of: :descendants
+    belongs_to :forum, class_name: "Gws::Discussion::Forum", inverse_of: :forum_descendants
+    belongs_to :topic, class_name: "Gws::Discussion::Topic", inverse_of: :descendants
     belongs_to :parent, class_name: "Gws::Discussion::Post", inverse_of: :children
 
     has_many :forum_descendants, class_name: "Gws::Discussion::Post", dependent: :destroy, inverse_of: :forum,
@@ -140,6 +141,14 @@ module Gws::Discussion::Postable
 
     children.order(id: 1).each { |c| c.save_clone(post) }
     post
+  end
+
+  def member?(*args)
+    if forum.present? && forum_id != id
+      forum.member?(*args)
+    end
+
+    super
   end
 
   private
