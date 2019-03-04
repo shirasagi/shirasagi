@@ -16,7 +16,7 @@ class Fs::FilesController < ApplicationController
 
     @item = SS::File.find_by id: id, filename: path
     @item = @item.becomes_with_model
-    raise "404" if @item.thumb?
+    raise "404" if @item.try(:thumb?)
   end
 
   def deny
@@ -66,7 +66,7 @@ class Fs::FilesController < ApplicationController
     size   = params[:size]
     width  = params[:width]
     height = params[:height]
-    thumb  = @item.thumb(size)
+    thumb  = @item.try(:thumb, size)
 
     if width.present? && height.present?
       set_last_modified
