@@ -7,6 +7,7 @@ module Gws::Discussion::Postable
   include Gws::Reference::Site
   include Gws::Member
   include Gws::GroupPermission
+  include Fs::FilePreviewable
 
   included do
     store_in collection: "gws_discussion_posts"
@@ -149,6 +150,20 @@ module Gws::Discussion::Postable
     end
 
     super
+  end
+
+  def file_previewable?(user, file)
+    return false if !file_ids.include?(file.id)
+
+    if forum.present? && forum_id != id
+      return true if forum.allowed?(:read, user, site: @cur_site || site)
+      return true if forum.member?(:read, user, site: @cur_site || site)
+    else
+      return true if self.allowed?(:read, user, site: @cur_site || site)
+      return true if self.member?(:read, user, site: @cur_site || site)
+    end
+
+    false
   end
 
   private
