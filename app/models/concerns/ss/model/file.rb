@@ -130,6 +130,11 @@ module SS::Model::File
       if permit.include?(:role) && item.respond_to?(:allowed?)
         return true if item.allowed?(:read, cur_user, site: item.try(:site))
       end
+
+      if item.is_a?(Fs::FilePreviewable)
+        # special delegation if item implements previewable?
+        return true if item.file_previewable?(cur_user, self)
+      end
     end
 
     if cur_user && respond_to?(:user_id)
