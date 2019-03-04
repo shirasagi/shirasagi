@@ -224,7 +224,7 @@ module Gws::Model
       return false if self.site_id != opts[:site].id
       return true if member?(user)
 
-      if self.user_id == user.id
+      if self.respond_to?(:user_id) && self.user_id == user.id
         if deleted["sent"]
           return false
         else
