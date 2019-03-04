@@ -61,6 +61,11 @@ class Gws::Share::FilesController < ApplicationController
     p
   end
 
+  def set_item
+    super
+    raise "404" unless @item.readable?(@cur_user) || @item.allowed?(:read, @cur_user, site: @cur_site)
+  end
+
   def update_folder_file_info
     @folder.update_folder_descendants_file_info if @folder
     @item.folder.update_folder_descendants_file_info if @item.is_a?(Gws::Share::File) && @item.folder != @folder
@@ -101,8 +106,6 @@ class Gws::Share::FilesController < ApplicationController
   end
 
   def show
-    raise "404" unless @item.readable?(@cur_user) || @item.allowed?(:read, @cur_user, site: @cur_site)
-
     if params[:folder].present?
       raise "404" unless @item.folder_id.to_s == params[:folder]
     end
