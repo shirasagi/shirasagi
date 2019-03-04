@@ -3,16 +3,18 @@ class SS::Migration20190301000000
     # load all models
     ::Rails.application.eager_load!
 
-    all_ids = SS::File.all.exists(owner_item_id: false).pluck(:id).sort
+    conds = [{ :owner_item_id.exists => false }, { owner_item_id: 0 }]
+    all_ids = SS::File.unscoped.where("$and" => [{ "$or" =>  conds}]).pluck(:id).sort
     all_ids.each_slice(20) do |ids|
-      SS::File.all.in(id: ids).to_a.each do |file|
+      SS::File.unscoped.in(id: ids).to_a.each do |file|
         file = file.becomes_with_model
         next if file.is_a?(SS::ThumbFile) || file.try(:thumb?)
         next if !file.respond_to?(:owner_item)
-        next if file.owner_item_id
+        owner_item = file.owner_item rescue nil
+        next if owner_item.present?
 
         file.owner_item = find_owner_item(file)
-        file.model = file.owner_item_type if file.owner_item_type.present?
+        file.model = file.owner_item.model_name.i18n_key.to_s if file.owner_item.present?
         file.save!
       end
     end
