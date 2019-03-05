@@ -11,6 +11,7 @@ class Gws::Discussion::Post
   include Gws::Addon::History
 
   set_permission_name "gws_discussion_posts"
+  member_ids_optional
 
   validates :text, presence: true
 
