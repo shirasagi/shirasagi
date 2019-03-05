@@ -67,6 +67,9 @@
   }
   table.data-table {
     table-layout: fixed;
+    tr {
+      background: $white;
+    }
     th.name {
       width: 18%;
     }
@@ -80,6 +83,7 @@
       width: 10%;
     }
     td {
+      background: none;
       .group-name {
         display: inline-block;
         vertical-align: middle;
@@ -109,6 +113,9 @@
       &.presence-state-toggle {
         position: relative;
       }
+    }
+    .select-presence-state {
+      width: calc(100% - 3em);
     }
     .editable .presence-state {
       cursor: pointer;
