@@ -45,7 +45,7 @@ class Gws::StaffRecord::CopySituationJob < Gws::ApplicationJob
     sr_user = Gws::StaffRecord::User.new(
       cur_site: site, cur_user: user,
       year_id: @cur_year.id, code: user.organization_uid.presence || user.uid, name: user.name, kana: user.kana,
-      section_name: default_group.try(:name), title_name: user.title.try(:name), tel_ext: user.tel_ext,
+      section_name: default_group.try(:trailing_name), title_name: user.title.try(:name), tel_ext: user.tel_ext,
       charge_name: user.charge_name, charge_address: user.charge_address, charge_tel: user.charge_tel,
       divide_duties: user.divide_duties,
       readable_setting_range: @cur_year.readable_setting_range, readable_group_ids: @cur_year.readable_group_ids,
