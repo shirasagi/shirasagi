@@ -89,6 +89,7 @@ class Gws::Board::TopicsController < ApplicationController
 
   def print
     set_item
+    raise '403' unless readable?
     render file: "print_#{@item.mode}", layout: 'ss/print'
   end
 
