@@ -57,7 +57,7 @@ class Webmail::GwsMessagesController < ApplicationController
         mail: @mail, part: part
       )
     end
-    @item.singleton_class.define_method(:ref_files) do
+    @item.singleton_class.send(:define_method, :ref_files) do
       ref_files
     end
   end
@@ -74,7 +74,7 @@ class Webmail::GwsMessagesController < ApplicationController
           mail: @mail, part: part
         )
       end
-    @item.singleton_class.define_method(:ref_files) do
+    @item.singleton_class.send(:define_method, :ref_files) do
       ref_files
     end
 
