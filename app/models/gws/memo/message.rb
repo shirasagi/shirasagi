@@ -18,6 +18,8 @@ class Gws::Memo::Message
 
   before_save :apply_filters, if: -> { public? && send_date_was.blank? }
 
+  after_save_files :set_size
+
   alias name subject
   alias reminder_user_ids member_ids
 
