@@ -152,12 +152,13 @@ class Gws::Discussion::TopicsController < ApplicationController
     @comment.forum_id = @forum.id
     @comment.name = @topic.name
     result = @comment.save
-    @item = @comment
 
     if result
+      @item = @comment
       @comment.save_notify_message(@cur_site, @cur_user)
       render_create true, location: { action: :index }, render: { file: :index }
     else
+      @item = @topic
       render_create false, location: { action: :index }, render: { file: :index }
     end
   end
