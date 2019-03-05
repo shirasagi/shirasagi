@@ -104,9 +104,9 @@ class Gws::Discussion::ForumsController < ApplicationController
   # end
 
   def copy
-    raise "403" unless @model.allowed?(:edit, @cur_user, site: @cur_site)
-
     set_item
+    raise "403" unless @item.allowed?(:edit, @cur_user, site: @cur_site)
+
     if request.get?
       prefix = I18n.t("workflow.cloned_name_prefix")
       @item.name = "[#{prefix}] #{@item.name}"
