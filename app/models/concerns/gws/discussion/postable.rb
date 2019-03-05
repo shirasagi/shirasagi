@@ -157,10 +157,10 @@ module Gws::Discussion::Postable
 
     if forum.present? && forum_id != id
       return true if forum.allowed?(:read, user, site: @cur_site || site)
-      return true if forum.member?(:read, user, site: @cur_site || site)
+      return true if forum.member?(user)
     else
       return true if self.allowed?(:read, user, site: @cur_site || site)
-      return true if self.member?(:read, user, site: @cur_site || site)
+      return true if self.member?(user)
     end
 
     false
