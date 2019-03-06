@@ -1,4 +1,22 @@
 <dl class="see mod-ss-body">
-  <dt><%= @model.t :time %></dt>
-  <dd><%= @item.time %> 秒</dd>
+  <dt><%= @model.t :ad_width %></dt>
+  <dd>
+    <% if @item.ad_width %>
+      <%= @item.ad_width.to_s(:delimited) %> px
+    <% end %>
+  </dd>
+
+  <dt><%= @model.t :ad_speed %></dt>
+  <dd>
+    <% if @item.ad_speed %>
+      <%= @item.ad_speed.to_s(:delimited) %> <%= t("datetime.prompts.milli_second") %>
+    <% end %>
+  </dd>
+
+  <dt><%= @model.t :ad_pause %></dt>
+  <dd>
+    <% if @item.ad_pause %>
+      <%= @item.ad_pause.to_s(:delimited) %> <%= t("datetime.prompts.milli_second") %>
+    <% end %>
+  </dd>
 </dl>

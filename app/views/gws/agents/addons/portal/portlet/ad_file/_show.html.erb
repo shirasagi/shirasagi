@@ -1,8 +1,9 @@
-<% return "" if @item.files.blank? %>
+<% return "" if @item.ad_files.blank? %>
 
 <div class="see">
   <div id="selected-files">
-    <% @item.files.each do |file| %>
+    <% @item.ad_files.each do |file| %>
+      <% file = file.becomes_with(SS::LinkFile) %>
       <div id="file-<%= file.id %>" class="file-view">
         <%= link_to file.url, class: :thumb, target: "_blank" do %>
           <% if file.image? %>
@@ -16,9 +17,11 @@
           <label>
             <%= file.name %>
           </label><br />
-          <label>
-            <%= link_to(file.link_url, file.link_url) if file.link_url %>
-          </label><br />
+          <% if file.link_url %>
+            <label>
+              <%= link_to(file.link_url, file.link_url) %>
+            </label><br />
+          <% end %>
         </div>
       </div>
     <% end %>
