@@ -30,6 +30,7 @@ ja:
     root_portal: 全庁ポータル
     create_portlets_for_reset: 作成されるポートレット
     delete_portlets_for_reset: 削除されるポートレット
+    other_config: 他者・他部課設定
     tabs:
       user_portal: 個人
       root_portal: 全庁

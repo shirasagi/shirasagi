@@ -10,7 +10,7 @@ class Gws::Portal::Setting::UsersController < ApplicationController
   private
 
   def set_crumbs
-    @crumbs << [t("mongoid.models.gws/user"), gws_users_path]
+    @crumbs << [t('gws/portal.user_portal'), { action: :index }]
   end
 
   def fix_params
@@ -28,7 +28,7 @@ class Gws::Portal::Setting::UsersController < ApplicationController
   public
 
   def index
-    raise "403" unless Gws::Portal::UserSetting.allowed?(:read, @cur_user, site: @cur_site, node: @cur_node)
+    raise "403" unless Gws::Portal::UserSetting.allowed?(:read, @cur_user, site: @cur_site, only: :other)
 
     @groups = @cur_site.descendants.active.tree_sort(root_name: @cur_site.name)
 
