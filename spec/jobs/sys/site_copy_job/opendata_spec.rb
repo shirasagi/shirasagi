@@ -69,6 +69,7 @@ describe Sys::SiteCopyJob, dbscope: :example do
 
         expect(page.resources.count).to eq 1
         resource = page.resources.first
+        license = resource.license
         Cms::Page.site(dest_site).find_by(filename: page.filename).tap do |dest_page|
           dest_page = dest_page.becomes_with_route
           expect(dest_page.name).to eq page.name
@@ -89,12 +90,23 @@ describe Sys::SiteCopyJob, dbscope: :example do
             expect(dest_resource.format).to eq resource.format
             expect(dest_resource.rdf_iri).to eq resource.rdf_iri
             expect(dest_resource.rdf_error).to eq resource.rdf_error
-            expect(dest_resource.license_id).not_to eq resource.license_id
+            dest_resource.license.tap do |dest_license|
+              expect(dest_license.id).not_to eq license.id
+              expect(dest_license.name).to eq license.name
+              expect(dest_license.file_id).not_to eq license.file_id
+              expect(dest_license.file.name).to eq license.file.name
+              expect(dest_license.file.size).to eq license.file.size
+              expect(dest_license.file.content_type).to eq license.file.content_type
+              expect(dest_license.file.owner_item_id).to eq dest_license.id
+              expect(dest_license.file.owner_item_type).to eq dest_license.class.name
+            end
             expect(dest_resource.license.name).to eq resource.license.name
             expect(dest_resource.file_id).not_to eq resource.file_id
             expect(dest_resource.file.name).to eq resource.file.name
             expect(dest_resource.file.size).to eq resource.file.size
             expect(dest_resource.file.content_type).to eq resource.file.content_type
+            expect(dest_resource.file.owner_item_id).to eq dest_page.id
+            expect(dest_resource.file.owner_item_type).to eq dest_page.class.name
           end
         end
       end
