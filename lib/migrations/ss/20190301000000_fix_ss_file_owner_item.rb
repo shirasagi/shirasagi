@@ -13,9 +13,18 @@ class SS::Migration20190301000000
         owner_item = file.owner_item rescue nil
         next if owner_item.present?
 
-        file.owner_item = find_owner_item(file)
-        file.model = file.owner_item.model_name.i18n_key.to_s if file.owner_item.present?
-        file.save!
+        owner_item = file.owner_item = find_owner_item(file)
+        next if owner_item.blank?
+
+        file.model = owner_item.model_name.i18n_key.to_s
+        if file.model == "gws/memo/message" && file.site.blank?
+          file.site = owner_item.site
+        end
+
+        unless file.save
+          STDERR.puts "ファイル #{file.name}(#{file.id};#{file.model}) でエラーが発生しました。"
+          STDERR.puts file.errors.full_messages.join("\n")
+        end
       end
     end
   end
