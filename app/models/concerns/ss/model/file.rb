@@ -165,7 +165,7 @@ module SS::Model::File
   end
 
   def extname
-    return nil unless filename.to_s.include?('.')
+    return "" unless filename.to_s.include?('.')
     filename.to_s.sub(/.*\W/, "")
   end
 
