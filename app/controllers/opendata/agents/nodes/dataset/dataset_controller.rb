@@ -61,7 +61,7 @@ class Opendata::Agents::Nodes::Dataset::DatasetController < ApplicationControlle
     @node_url       = @cur_node.url
     @dataset_path   = @cur_node.url
     @search_path    = view_context.method(:search_datasets_path)
-    @rss_path       = ->(options = {}) { view_context.build_path("#{view_context.search_datasets_path}rss.xml?", options) }
+    @rss_path       = ->(options = {}) { view_context.build_path("#{view_context.search_datasets_path}rss.xml", options) }
     @tabs = []
     Opendata::Dataset.sort_options.each do |options|
       @tabs << { name: options[0],
