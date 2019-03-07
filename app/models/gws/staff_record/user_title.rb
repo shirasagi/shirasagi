@@ -1,14 +1,13 @@
 class Gws::StaffRecord::UserTitle
   include SS::Model::UserTitle
   include Gws::Referenceable
-  include Gws::SitePermission
+  include Gws::Addon::GroupPermission
   include Gws::Addon::History
   include Gws::Reference::User
   include Gws::Reference::Site
   include Gws::StaffRecord::Yearly
 
   store_in collection: "gws_staff_record_user_titles"
-  set_permission_name "gws_user_titles", :edit
 
   attr_accessor :cur_user, :cur_site
 
