@@ -28,6 +28,8 @@ ja:
     encoding: 文字コード
     text_zoom: 文字サイズ
     default_here_label: "詳細はこちら⇒"
+    errors: エラー
+    wave_dash: ～
 
     views:
       login/login:
@@ -176,6 +178,9 @@ ja:
       published: 公開しました。
       depublished: 非公開にしました。
       moved: 移動しました。
+      hit: 件ヒットしました。
+      first_to_last: 件を表示しています。
+
     info:
       soft_delete: データの実削除ではなく無効状態として保存されます。
     warning:

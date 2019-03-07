@@ -23,6 +23,22 @@ categories = Opendata::Node::Category.site(@cur_site).sort(order: 1).map { |m| [
   </div>
 <% end %>
 
+<% if @items.count > 0 %>
+  <section class="result">
+    <h2>
+      <span class="number"><%= @items.count %></span>
+      <%= t("ss.notice.hit") %>
+      <span class="first"><%= @items.offset_value + 1 %></span>
+      <%= t("ss.wave_dash") %>
+      <span class="last">
+        <% limit = @cur_node.limit || 20 %>
+        <%= (@items.current_page * limit) > @items.count ? @items.count : (@items.current_page * limit) %>
+      </span>
+      <%= t("ss.notice.first_to_last") %>
+    </h2>
+  </section>
+<% end %>
+
 <%= paginate @items %>
 
 <div class="opendata-search-groups nodes">
