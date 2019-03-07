@@ -10,32 +10,31 @@ this.Chart = (function() {
 
 Chart.drawBar = function(selector, data) {
   var array, chart, k, options, v;
-array = [
-  [
-    "", "", {
-    type: "string",
-    role: "tooltip"
+
+  array = [ ["", "", { type: "string", role: "tooltip" }] ];
+
+  for (k in data) {
+    v = data[k];
+    array.push([k, v, v + "%"]);
   }
-  ]
-];
-for (k in data) {
-  v = data[k];
-array.push([k, v, v + "%"]);
-}
-array = google.visualization.arrayToDataTable(array);
-chart = new google.visualization.BarChart($(selector).get(0));
-options = {
-  hAxis: {
-    viewWindow: {
-      min: 0,
-      max: 100
+  array = google.visualization.arrayToDataTable(array);
+  chart = new google.visualization.BarChart($(selector).get(0));
+  options = {
+    hAxis: {
+      viewWindow: {
+        min: 0,
+        max: 100
+      }
+    },
+    chartArea: {
+      width: 500,
+    },
+    width: 800,
+    legend: {
+      position: "none",
     }
-  },
-  legend: {
-    position: "none"
-  }
-};
-return chart.draw(array, options);
+  };
+  return chart.draw(array, options);
 };
 
 return Chart;
