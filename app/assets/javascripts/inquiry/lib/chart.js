@@ -1,42 +1,48 @@
-this.Chart = (function() {
-    function Chart() {}
+//= require chart.js/dist/Chart.min.js
 
-  Chart.load = function(callback) {
-    google.load('visualization', '1.0', {
-    'packages': ['corechart']
-  });
-  return google.setOnLoadCallback(callback);
-};
+this.Inquiry_Chart = (function() {
+  function Inquiry_Chart() {}
 
-Chart.drawBar = function(selector, data) {
-  var array, chart, k, options, v;
+  Inquiry_Chart.drawBar = function(selector) {
+    $(selector).each(function(){
+      var dataColumns = $.parseJSON($(this).attr("data-columns"));
+      var labels = [];
+      var data = [];
+      var backgroundColor = [];
+      var borderColor = [];
 
-  array = [ ["", "", { type: "string", role: "tooltip" }] ];
+      $.each(dataColumns, function(k,v) {
+        labels.push(k);
+        data.push(v);
+        backgroundColor.push('rgba(54, 162, 235, 0.2)');
+        borderColor.push('rgba(54, 162, 235, 1)');
+      });
 
-  for (k in data) {
-    v = data[k];
-    array.push([k, v, v + "%"]);
-  }
-  array = google.visualization.arrayToDataTable(array);
-  chart = new google.visualization.BarChart($(selector).get(0));
-  options = {
-    hAxis: {
-      viewWindow: {
-        min: 0,
-        max: 100
-      }
-    },
-    chartArea: {
-      width: 500,
-    },
-    width: 800,
-    legend: {
-      position: "none",
-    }
+      new Chart(this, {
+        type: 'horizontalBar',
+        data: {
+          labels: labels,
+          datasets: [{
+            data: data,
+            backgroundColor: backgroundColor,
+            borderColor: borderColor,
+            borderWidth: 1
+          }],
+        },
+        options: {
+          scales: {
+            xAxes: [{
+              ticks: { min: 0, max: 100, stepSize: 10 }
+            }],
+          },
+          legend: {
+            display: false
+          }
+        }
+      });
+    });
   };
-  return chart.draw(array, options);
-};
 
-return Chart;
+  return Inquiry_Chart;
 
 })();
