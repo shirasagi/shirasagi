@@ -675,3 +675,11 @@ save_word_dictionary name: "機種依存文字", body_file: "#{Rails.root}/db/se
 
 @site.editor_css_path = '/css/ckeditor_contents.css'
 @site.update!
+
+if @site.subdir.present?
+  # rake cms:set_subdir_url site=@site.host
+  require 'rake'
+  Rails.application.load_tasks
+  ENV["site"]=@site.host
+  Rake::Task['cms:set_subdir_url'].invoke
+end
