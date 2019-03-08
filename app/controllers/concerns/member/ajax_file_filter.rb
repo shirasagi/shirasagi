@@ -16,7 +16,7 @@ module Member::AjaxFileFilter
   end
 
   def logged_in?
-    member = get_member_by_session(@cur_site)
+    member = get_member_by_session
 
     ## required self
     raise "403" unless member
