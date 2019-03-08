@@ -1,4 +1,4 @@
-<%= render_member_photo_form_map "#map-canvas", site: @cur_site, map: { zoom: @item.map_zoom_level } %>
+<%= render_member_photo_form_map "#map-canvas", site: @cur_site, map: { zoom: @item.map_zoom_level }, preview: @preview %>
 
 <div class="mod-map">
   <%= f.hidden_field :map_zoom_level %>

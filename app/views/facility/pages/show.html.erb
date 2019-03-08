@@ -73,7 +73,7 @@
   </div>
   <% end %>
 
-  <% if @merged_map.present? %>
+  <% if @merged_map.present? && default_map_api(site: @cur_site).present? %>
     <% @cur_page = @merged_map %>
     <%= render file: "map/agents/addons/page/view/index" %>
     <% @cur_page.map_points.each do |map_point| %>

@@ -1,10 +1,18 @@
 module Map::MapHelper
+  def map_enabled?(opts = {})
+    return true if !SS.config.map.disable_mypage
+    return false if opts[:mypage]
+    opts[:preview] ? false : true
+  end
+
   def default_map_api(opts = {})
     map_setting = opts[:site].map_setting rescue {}
     opts[:api] || map_setting[:api] || SS.config.map.api
   end
 
   def include_map_api(opts = {})
+    return "" unless map_enabled?(opts)
+
     api = default_map_api(opts)
 
     if api == "openlayers"
@@ -34,7 +42,10 @@ module Map::MapHelper
   end
 
   def render_map(selector, opts = {})
+    return "" unless map_enabled?(opts)
+
     api = default_map_api(opts)
+
     markers = opts[:markers]
     map_options = opts[:map] || {}
 
@@ -62,7 +73,10 @@ module Map::MapHelper
   end
 
   def render_map_form(selector, opts = {})
+    return "" unless map_enabled?(opts)
+
     api = default_map_api(opts)
+
     center = opts[:center] || SS.config.map.map_center
     max_point_form = opts[:max_point_form] || SS.config.map.map_max_point_form
     map_options = opts[:map] || {}
@@ -102,7 +116,10 @@ module Map::MapHelper
   end
 
   def render_facility_search_map(selector, opts = {})
+    return "" unless map_enabled?(opts)
+
     api = default_map_api(opts)
+
     center = opts[:center] || SS.config.map.map_center
     markers = opts[:markers]
 
@@ -131,7 +148,10 @@ module Map::MapHelper
   end
 
   def render_member_photo_form_map(selector, opts = {})
+    return "" unless map_enabled?(opts)
+
     api = default_map_api(opts)
+
     center = opts[:center] || SS.config.map.map_center
     map_options = opts[:map] || {}
 

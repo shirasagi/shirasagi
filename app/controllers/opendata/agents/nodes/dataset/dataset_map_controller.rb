@@ -32,7 +32,7 @@ class Opendata::Agents::Nodes::Dataset::DatasetMapController < ApplicationContro
   public
 
   def index
-    view_context.include_map_api(site: @cur_site, api: "openlayers")
+    view_context.include_map_api(site: @cur_site, api: "openlayers", preview: @preview)
   end
 
   def search
