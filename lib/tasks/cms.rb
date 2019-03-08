@@ -104,6 +104,13 @@ module Tasks
 
           puts "# nodes"
           gsub_attrs(::Cms::Node.site(site), site)
+
+          puts "# member/login"
+          each_items(::Member::Node::Login.site(site)) do |item|
+            if item.redirect_url.start_with?("/")
+              item.set(:redirect_url, "#{site.url}#{item.redirect_url[1..-1]}")
+            end
+          end
         end
       end
 
@@ -151,6 +158,15 @@ module Tasks
 
         node = node.becomes_with_route rescue node
         yield node
+      end
+
+      def each_items(criteria)
+        all_ids = criteria.pluck(:id).sort
+        all_ids.each_slice(20) do |ids|
+          criteria.in(id: ids).to_a.each do |item|
+            yield item
+          end
+        end
       end
 
       def perform_job(job_class, opts = {})
