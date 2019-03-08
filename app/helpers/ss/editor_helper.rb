@@ -188,7 +188,11 @@ module SS::EditorHelper
 
     opts[:contentsCss] ||= []
     if editor_css_path.present?
-      opts[:contentsCss] << ::File.join(@cur_site.full_url, editor_css_path)
+      if @cur_site
+        opts[:contentsCss] << cms_preview_path(path: editor_css_path.sub(/^\//, ""))
+      else
+        opts[:contentsCss] << editor_css_path
+      end
     end
 
     opts
@@ -222,7 +226,11 @@ module SS::EditorHelper
 
     opts[:content_css] ||= []
     if editor_css_path.present?
-      opts[:contents_css] << ::File.join(@cur_site.full_url, editor_css_path)
+      if @cur_site
+        opts[:contentsCss] << cms_preview_path(path: editor_css_path.sub(/^\//, ""))
+      else
+        opts[:contentsCss] << editor_css_path
+      end
     end
 
     opts
