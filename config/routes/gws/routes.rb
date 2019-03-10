@@ -63,6 +63,7 @@ SS::Application.routes.draw do
       post "reminders/notifications" => "reminders#notification"
       get "custom_groups" => "custom_groups#index"
       get "contrasts" => "contrasts#index"
+      get "desktop_settings" => "desktop_settings#index"
 
       resources :files, concerns: :deletion do
         get :select, on: :member
