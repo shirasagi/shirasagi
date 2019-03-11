@@ -21,8 +21,8 @@ module Gws::Addon::System::DesktopSetting
 
   def desktop_settings
     {
-      desktop_mailstore: desktop_mailstore || 'enabled',
-      desktop_chat: desktop_chat || 'enabled'
+      mailstore: desktop_mailstore || 'enabled',
+      chat: desktop_chat || 'enabled'
     }
   end
 end
