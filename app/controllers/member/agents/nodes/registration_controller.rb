@@ -36,6 +36,22 @@ class Member::Agents::Nodes::RegistrationController < ApplicationController
     group.accept(@item)
   end
 
+  def set_item_for_interim(extra_attrs = {})
+    @item = item = @model.new get_params.merge(extra_attrs)
+    if item.email.present?
+      item = @model.site(@cur_site).where(email: item.email, state: 'temporary').first
+    end
+    if item
+      @item = item
+      @item.attributes = get_params
+    end
+
+    @item.in_check_name = true
+    @item.set_required @cur_node
+    @item.state = 'temporary'
+    @item
+  end
+
   public
 
   # 新規登録
@@ -45,21 +61,13 @@ class Member::Agents::Nodes::RegistrationController < ApplicationController
 
   # 入力確認
   def confirm
-    @item = @model.new get_params
-    @item.in_check_name = true
-    @item.in_check_email_again = true
-    @item.set_required @cur_node
-    @item.state = 'temporary'
-
+    set_item_for_interim(in_check_email_again: true)
     render action: :new unless @item.valid?
   end
 
   # 仮登録完了
   def interim
-    @item = @model.new get_params
-    @item.in_check_name = true
-    @item.set_required @cur_node
-    @item.state = 'temporary'
+    set_item_for_interim
 
     # 戻るボタンのクリック
     unless params[:submit]
