@@ -147,6 +147,7 @@ ja:
       gws/system/menu_setting: メニュー設定
       gws/system/notice_setting: 通知設定
       gws/system/log_setting: ログ設定
+      gws/system/desktop_setting: デスクトップアプリ設定
       gws/user/custom_form: 拡張情報
       gws/user/public_duty: 事務分掌
       gws/link: リンク
@@ -393,6 +394,9 @@ ja:
         log_workflow_severity: ワークフローのログ
         log_chorg_severity: 組織変更のログ
         log_discussion_severity: 電子会議室のログ
+      gws/addon/system/desktop_setting:
+        desktop_mailstore: メールストア機能
+        desktop_chat: チャット機能
       gws/addon/subscription_setting:
         subscribed_group_ids: 購読グループ
         subscribed_groups_hash: 購読グループ(ハッシュ)
