@@ -12,6 +12,6 @@ class Job::Sys::LogsController < ApplicationController
   end
 
   def log_criteria
-    @model.all
+    @criteria ||= @model.all.search(@s)
   end
 end

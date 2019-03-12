@@ -5,7 +5,9 @@ module Job::LogsFilter
   included do
     model Job::Log
     before_action :filter_permission
+    before_action :set_ymd
     before_action :set_item, only: [:show]
+    helper_method :min_updated
   end
 
   private
@@ -14,13 +16,28 @@ module Job::LogsFilter
     @crumbs << [t("job.log"), action: :index]
   end
 
+  def set_ymd
+    if params[:ymd].blank?
+      redirect_to({ action: :index, ymd: Time.zone.now.strftime('%Y%m%d') })
+      return
+    end
+
+    @s = OpenStruct.new(params[:s])
+    @s.ymd = params[:ymd]
+  end
+
   def log_criteria
-    @model.site(@cur_site)
+    @criteria ||= @model.site(@cur_site).search(@s)
   end
 
   def set_item
     @item = log_criteria.find(params[:id])
     raise "404" unless @item
+  end
+
+  def min_updated
+    keep_logs = SS.config.job.keep_logs
+    Time.zone.now - keep_logs
   end
 
   public

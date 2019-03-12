@@ -38,6 +38,34 @@ module SS::Model::JobLog
     scope :term, ->(from) { where(:created.lt => from) }
   end
 
+  module ClassMethods
+    def search(params)
+      criteria = all
+      return criteria if params.blank?
+
+      criteria = criteria.search_keyword(params)
+      criteria = criteria.search_ymd(params)
+      criteria
+    end
+
+    def search_keyword(params)
+      return all if params[:keyword].blank?
+      all.keyword_in(params[:keyword], :class_name, :logs)
+    end
+
+    def search_ymd(params)
+      return all if params[:ymd].blank?
+
+      ymd = params[:ymd]
+      return all if ymd.length != 8
+
+      started_at = Time.zone.local(ymd[0..3].to_i, ymd[4..5].to_i, ymd[6..7].to_i)
+      end_at = started_at.end_of_day
+
+      all.gte(updated: started_at).lte(updated: end_at)
+    end
+  end
+
   def save_term_options
     %w(day month year all_save).map do |v|
       [ I18n.t("history.save_term.#{v}"), v ]
