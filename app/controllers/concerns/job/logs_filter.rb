@@ -6,8 +6,10 @@ module Job::LogsFilter
     model Job::Log
     before_action :filter_permission
     before_action :set_ymd
+    before_action :set_search_params
     before_action :set_item, only: [:show]
     helper_method :min_updated
+    helper_method :class_name_options
   end
 
   private
@@ -21,13 +23,18 @@ module Job::LogsFilter
       redirect_to({ action: :index, ymd: Time.zone.now.strftime('%Y%m%d') })
       return
     end
+  end
 
-    @s = OpenStruct.new(params[:s])
-    @s.ymd = params[:ymd]
+  def set_search_params
+    @s ||= OpenStruct.new(params[:s])
   end
 
   def log_criteria
-    @criteria ||= @model.site(@cur_site).search(@s)
+    @log_criteria ||= begin
+      criteria = @model.all
+      criteria = criteria.site(@cur_site) if @cur_site
+      criteria.search_ymd(ymd: params[:ymd])
+    end
   end
 
   def set_item
@@ -40,10 +47,30 @@ module Job::LogsFilter
     Time.zone.now - keep_logs
   end
 
+  def class_name_options
+    @class_name_options ||= begin
+      pipes = []
+      pipes << { "$match" => log_criteria.selector }
+      pipes << { "$group" => {
+        _id: "$class_name",
+        count: { "$sum" => 1 }
+      } }
+      pipes << { "$sort" => { "count" => -1, "_id" => 1 } }
+
+      data = @model.collection.aggregate(pipes)
+      data.map do |d|
+        id = d["_id"]
+        count = d["count"]
+        humanized_id = I18n.t("job.models.#{id.underscore}", default: id)
+        [ "#{humanized_id} (#{count.to_s(:delimited)})", id ]
+      end
+    end
+  end
+
   public
 
   def index
-    @items = log_criteria.order_by(updated: -1).page(params[:page]).per(50)
+    @items = log_criteria.search(@s).order_by(updated: -1).page(params[:page]).per(50)
   end
 
   def show

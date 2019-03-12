@@ -45,6 +45,7 @@ module SS::Model::JobLog
 
       criteria = criteria.search_keyword(params)
       criteria = criteria.search_ymd(params)
+      criteria = criteria.search_class_name(params)
       criteria
     end
 
@@ -63,6 +64,11 @@ module SS::Model::JobLog
       end_at = started_at.end_of_day
 
       all.gte(updated: started_at).lte(updated: end_at)
+    end
+
+    def search_class_name(params)
+      return all if params[:class_name].blank?
+      all.where(class_name: params[:class_name])
     end
   end
 
