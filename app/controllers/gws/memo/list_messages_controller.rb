@@ -46,7 +46,7 @@ class Gws::Memo::ListMessagesController < ApplicationController
       member_ids: valid_members.map(&:id),
       in_validate_presence_member: true,
       in_append_signature: true,
-      in_skip_validates_sender_quota: true,
+      in_skip_validates_sender_quota: true
     }
   end
 
@@ -92,9 +92,7 @@ class Gws::Memo::ListMessagesController < ApplicationController
 
   def destroy
     raise '403' unless @item.allowed?(:delete, @cur_user, site: @cur_site)
-
-    fake_folder = OpenStruct.new({ :draft_box? => @item.draft?, :sent_box? => @item.public? })
-    render_destroy @item.destroy_from_folder(@cur_user, fake_folder)
+    render_destroy @item.destroy
   end
 
   def publish
