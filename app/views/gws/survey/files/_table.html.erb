@@ -53,8 +53,13 @@
               </td>
             <% end %>
             <% if !cur_form.anonymous? %>
-              <td><div><%= item.user_long_name %></div></td>
-              <td><div><%= I18n.l(item.updated) %></div></td>
+              <% if item.anonymous? %>
+                <td></td>
+                <td></td>
+              <% else %>
+                <td><div><%= item.user_long_name %></div></td>
+                <td><div><%= I18n.l(item.updated) %></div></td>
+              <% end %>
             <% end %>
           </tr>
         <% end %>
