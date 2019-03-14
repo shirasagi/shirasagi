@@ -111,9 +111,6 @@ module SS::Model::File
 
   def previewable?(opts = {})
     meta = SS::File.find_model_metadata(model) || {}
-    if meta[:cms]
-      return true if public?
-    end
 
     # be careful: cur_user and item may be nil
     cur_user = opts[:user]

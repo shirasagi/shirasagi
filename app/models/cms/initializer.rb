@@ -108,8 +108,8 @@ module Cms
     Cms::Role.permission :import_other_cms_nodes
     Cms::Role.permission :unlock_other_cms_pages
 
-    SS::File.model "cms/editor_template", SS::File, cms: true
-    SS::File.model "cms/file", Cms::File, cms: true
-    SS::File.model "cms/page", SS::File, cms: true
+    SS::File.model "cms/editor_template", SS::File
+    SS::File.model "cms/file", Cms::File
+    SS::File.model "cms/page", SS::File
   end
 end
