@@ -69,7 +69,8 @@ class Gws::Survey::File
     anonymous_state == 'enabled'
   end
 
-  def file_previewable?(user, file)
+  def file_previewable?(file, user:)
+    return false if user.blank?
     return false if column_values.where(file_ids: file.id).blank?
 
     form = self.form

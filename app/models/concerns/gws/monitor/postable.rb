@@ -122,7 +122,8 @@ module Gws::Monitor::Postable
     becomes_with(Gws::Monitor::Topic)
   end
 
-  def file_previewable?(user, file)
+  def file_previewable?(file, user:)
+    return false if user.blank?
     return false if !file_ids.include?(file.id)
 
     if topic.blank? || topic.id == id

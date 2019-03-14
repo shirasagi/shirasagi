@@ -152,7 +152,8 @@ module Gws::Discussion::Postable
     super
   end
 
-  def file_previewable?(user, file)
+  def file_previewable?(file, user:)
+    return false if user.blank?
     return false if !file_ids.include?(file.id)
 
     if forum.present? && forum_id != id

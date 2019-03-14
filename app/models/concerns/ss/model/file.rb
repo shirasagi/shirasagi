@@ -114,6 +114,7 @@ module SS::Model::File
 
     # be careful: cur_user and item may be nil
     cur_user = opts[:user]
+    cur_member = opts[:member]
     item = effective_owner_item
     if cur_user && item
       permit = meta[:permit] || %i(role readable member)
@@ -126,11 +127,11 @@ module SS::Model::File
       if permit.include?(:role) && item.respond_to?(:allowed?)
         return true if item.allowed?(:read, cur_user, site: item.try(:site))
       end
+    end
 
-      if item.is_a?(Fs::FilePreviewable)
-        # special delegation if item implements previewable?
-        return true if item.file_previewable?(cur_user, self)
-      end
+    if item && item.is_a?(Fs::FilePreviewable)
+      # special delegation if item implements previewable?
+      return true if item.file_previewable?(self, user: cur_user, member: cur_member)
     end
 
     if cur_user && respond_to?(:user_id)
