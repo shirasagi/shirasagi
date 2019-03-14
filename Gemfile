@@ -65,7 +65,7 @@ gem 'oauth2', git: 'https://github.com/oauth-xx/oauth2.git' #'~> 1.5.0'
 gem 'omniauth'
 gem 'omniauth-facebook'
 gem 'omniauth-github'
-gem 'omniauth-google-oauth2'
+gem 'omniauth-google-oauth2', git: 'https://github.com/zquestz/omniauth-google-oauth2.git'
 gem 'omniauth-twitter'
 gem 'omniauth-yahoojp'
 
@@ -76,6 +76,7 @@ gem 'twitter'
 gem 'ruby-saml'
 
 # JWT/JWS
+gem 'jwt', '>= 2.0'
 gem 'json-jwt'
 
 # SPARQL/RDF
