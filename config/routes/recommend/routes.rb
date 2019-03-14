@@ -28,7 +28,7 @@ SS::Application.routes.draw do
   end
 
   node "recommend" do
-    get "receiver/.json" => "public#index", cell: "nodes/receiver"
+    get "receiver/index.json" => "public#index", cell: "nodes/receiver"
   end
 
 end
