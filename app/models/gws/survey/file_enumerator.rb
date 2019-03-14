@@ -59,8 +59,13 @@ class Gws::Survey::FileEnumerator < Enumerator
     end
 
     if !@cur_form.anonymous?
-      terms << item.user_long_name
-      terms << I18n.l(item.updated)
+      if item.anonymous?
+        terms << nil
+        terms << nil
+      else
+        terms << item.user_long_name
+        terms << I18n.l(item.updated)
+      end
     end
 
     yielder << encode(terms.to_csv)

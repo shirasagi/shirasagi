@@ -14,10 +14,12 @@ class Gws::Survey::File
 
   seqid :id
   field :name, type: String
+  field :anonymous_state, type: String, default: 'disabled'
 
   permit_params :name
 
   validates :name, presence: true, length: { maximum: 80 }
+  validates :anonymous_state, inclusion: { in: %w(disabled enabled), allow_blank: true }
 
   class << self
     def search(params)
@@ -60,5 +62,9 @@ class Gws::Survey::File
 
       self.collection.aggregate(pipes).to_a
     end
+  end
+
+  def anonymous?
+    anonymous_state == 'enabled'
   end
 end

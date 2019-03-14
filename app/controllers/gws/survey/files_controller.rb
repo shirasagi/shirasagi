@@ -51,7 +51,7 @@ class Gws::Survey::FilesController < ApplicationController
   end
 
   def pre_params
-    { name: t("gws/survey.file_name", form: @cur_form.name) }
+    { name: t("gws/survey.file_name", form: @cur_form.name), anonymous_state: @cur_form.anonymous_state }
   end
 
   def set_items
