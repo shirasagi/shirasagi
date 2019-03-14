@@ -454,19 +454,7 @@ this.Webmail_Mail_Detail = (function () {
   }
 
   Webmail_Mail_Detail.render = function () {
-    var body;
-    body = $('.webmail-mail .body--html');
-    if (body.find('img[data-url]').length) {
-      body.find('img[data-url][height]').each(function () {
-        return $(this).css('height', $(this).attr('height') + 'px');
-      });
-      body.before('<a class="show-image" href="#"><%= I18n.t("webmail.links.show_image") %></a>');
-      $('.show-image').click(function () {
-        $(this).hide();
-        Webmail_Mail_Detail.loadImages();
-        return false;
-      });
-    }
+    Webmail_Mail_Detail.htmlMessage = new SS_HtmlMessage('.webmail-mail .body--html');
     $(".update-mail").on("click", function () {
       $('.dropdown-menu').removeClass('active');
       $.ajax({
