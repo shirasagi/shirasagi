@@ -108,9 +108,6 @@ production: &production
 
   editor_template_thumb: "/assets/img/editor-template.png"
 
-  # Skip login for preview
-  remote_preview: false
-
   # Session Lifetime in seconds
   session_lifetime: 1800
 

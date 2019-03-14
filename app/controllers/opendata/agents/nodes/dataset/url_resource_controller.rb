@@ -18,7 +18,6 @@ class Opendata::Agents::Nodes::Dataset::UrlResourceController < ApplicationContr
 
   def deny
     return if @dataset.public?
-    return if SS.config.env.remote_preview
 
     user = get_user_by_session
     raise "404" unless user

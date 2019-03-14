@@ -113,7 +113,6 @@ module SS::Model::File
     meta = SS::File.find_model_metadata(model) || {}
     if meta[:cms]
       return true if public?
-      return true if SS.config.env.remote_preview
     end
 
     # be careful: cur_user and item may be nil
