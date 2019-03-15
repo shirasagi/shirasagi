@@ -140,6 +140,14 @@ module Member::Node
     def pages
       Member::BlogPage.site(site).where(filename: /^#{filename}\//, depth: depth + 1).and_public
     end
+
+    def file_previewable?(file, user:, member:)
+      return true if super
+
+      return true if member.present? && member_id == member.id
+
+      false
+    end
   end
 
   class BlogPageLocation
