@@ -1,6 +1,7 @@
 class History::Log
   include SS::Document
   include SS::Reference::User
+  include History::Searchable
   # include SS::Reference::Site
 
   store_in_repl_master
