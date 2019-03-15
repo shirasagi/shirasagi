@@ -31,7 +31,7 @@ class Cms::Apis::NodeTreeController < ApplicationController
     @item.parents.map do |item|
       next unless item.allowed?(:read, @cur_user, site: @cur_site)
       item.children.allow(:read, @cur_user, site: @cur_site).limit(@limit)
-    end.flatten
+    end.flatten.compact
   end
 
   def child_items
