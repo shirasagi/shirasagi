@@ -430,6 +430,25 @@ describe Article::Page, dbscope: :example, tmpdir: true do
       end
     end
 
+    context "when node of page is turned to closed" do
+      subject { create :article_page, cur_node: node, state: "public", html: body, file_ids: [ file.id ] }
+
+      it do
+        expect(file.site_id).to eq cms_site.id
+        expect(file.user_id).to eq cms_user.id
+        expect(subject.file_ids).to include(file.id)
+
+        expect(::File.exists?(subject.path)).to be_truthy
+        expect(::File.exists?(file.public_path)).to be_truthy
+
+        node.state = "closed"
+        node.save!
+
+        expect(::File.exists?(subject.path)).to be_falsey
+        expect(::File.exists?(file.public_path)).to be_falsey
+      end
+    end
+
     context "when node of page is turned to for member" do
       subject { create :article_page, cur_node: node, state: "public", html: body, file_ids: [ file.id ] }
 
