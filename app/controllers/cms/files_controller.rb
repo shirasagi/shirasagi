@@ -17,6 +17,12 @@ class Cms::FilesController < ApplicationController
     { cur_user: @cur_user, cur_site: @cur_site }
   end
 
+  def set_item
+    super
+
+    raise "403" if !@item.allowed?(:read, @cur_user, site: @cur_site)
+  end
+
   public
 
   def index
