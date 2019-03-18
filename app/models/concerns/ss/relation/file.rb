@@ -17,6 +17,7 @@ module SS::Relation::File
       before_save "save_relation_#{name}".to_sym, if: ->{ send("in_#{name}").present? }
       before_save "remove_relation_#{name}".to_sym, if: ->{ send("rm_#{name}").to_s == "1" }
       after_save "update_relation_#{name}_state".to_sym, if: ->{ send(name).present? }
+      after_save "update_relation_#{name}_owner_item".to_sym, if: ->{ send(name).present? }
 
       define_method("validate_relation_#{name}") do
         file = relation_file(name, opts)
@@ -50,6 +51,13 @@ module SS::Relation::File
         file = send(name)
         file_state = send("#{name}_file_state")
         file.update(state: file_state) if file.state != file_state
+      end
+
+      define_method("update_relation_#{name}_owner_item") do
+        file = send(name)
+        if file.owner_item.blank? || file.owner_item_type != self.class.name || file.owner_item_id != self.id
+          file.update(owner_item: self)
+        end
       end
 
       define_method("generate_relation_public_#{name}") do
