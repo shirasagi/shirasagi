@@ -7,6 +7,7 @@ class Cms::Notice
   include Cms::Addon::Release
   include Cms::Addon::ReleasePlan
   include Cms::Addon::GroupPermission
+  include Fs::FilePreviewable
 
   NOTICE_SEVERITY_NORMAL = "normal".freeze
   NOTICE_SEVERITY_HIGH ="high".freeze
@@ -111,6 +112,15 @@ class Cms::Notice
       self.file_ids = ids.values
       ids
     end
+  end
+
+  def file_previewable?(file, user:, member:)
+    return false if !file_ids.include?(file.id)
+    return false if user.blank?
+
+    return true if state == "public" && notice_target == NOTICE_TARGET_ALL
+
+    allowed?(:read, user, site: @cur_site || site)
   end
 
   private
