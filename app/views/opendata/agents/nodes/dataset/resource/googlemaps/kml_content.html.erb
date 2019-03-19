@@ -4,7 +4,7 @@
   selector = "map-canvas-#{SecureRandom.uuid}"
 %>
 
-<%= render_map "##{selector}", site: @cur_site %>
+<%= render_map "##{selector}", site: @cur_site, preview: @preview %>
 
 <script type="text/javascript" charset="utf-8">
 window.colorbox_onComplete = function() {

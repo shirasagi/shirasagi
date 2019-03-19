@@ -78,7 +78,7 @@ $(".resource-content .tab.map a").on("click", function() {
   </div>
 
   <div class="resource-map" style="display: none;">
-    <%= render_map "##{selector}", site: @cur_site, markers: @map_markers %>
+    <%= render_map "##{selector}", site: @cur_site, markers: @map_markers, preview: @preview %>
     <div class="resource-content resource-map">
       <div id="<%= selector %>" class="map-canvas" style="width: 100%; height: 400px;"></div>
     </div>
