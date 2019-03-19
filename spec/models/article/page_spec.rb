@@ -444,6 +444,8 @@ describe Article::Page, dbscope: :example, tmpdir: true do
         node.state = "closed"
         node.save!
 
+        SS::PublicFileRemoverJob.bind(site_id: cms_site.id).perform_now
+
         expect(::File.exists?(subject.path)).to be_falsey
         expect(::File.exists?(file.public_path)).to be_falsey
       end
@@ -462,6 +464,8 @@ describe Article::Page, dbscope: :example, tmpdir: true do
 
         node.for_member_state = "enabled"
         node.save!
+
+        SS::PublicFileRemoverJob.bind(site_id: cms_site.id).perform_now
 
         expect(::File.exists?(subject.path)).to be_falsey
         expect(::File.exists?(file.public_path)).to be_falsey
