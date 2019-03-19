@@ -222,18 +222,10 @@ module Cms::Content
   end
 
   def file_previewable?(file, user:, member:)
-    if state == "public"
-      if parent = self.parent
-        parent = parent.becomes_with_route
-        if parent.try(:for_member_enabled?)
-          return false if member.blank?
-        end
-      end
-
-      return true
-    end
-
-    false
+    return false unless public?
+    return false unless public_node?
+    return false if try(:for_member_enabled?) && member.blank?
+    true
   end
 
   private
