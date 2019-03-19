@@ -335,12 +335,6 @@ ja:
     delete_private_member_photos: メンバーフォトの削除（所有）
     release_other_member_photos: メンバーフォトの公開（全て）
     release_private_member_photos: メンバーフォトの公開（所有）
-    approve_other_member_photos: メンバーフォトの承認（全て）
-    approve_private_member_photos: メンバーフォトの承認（所有）
-    reroute_other_member_photos: メンバーフォトの承認申請取消（全て）
-    reroute_private_member_photos: メンバーフォトの承認申請取消（所有）
-    revoke_other_member_photos: メンバーフォトの承認経路変更（全て）
-    revoke_private_member_photos: メンバーフォトの承認経路変更（所有）
 
   views:
     registration:
