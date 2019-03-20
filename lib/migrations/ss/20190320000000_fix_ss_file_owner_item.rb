@@ -1,4 +1,4 @@
-class SS::Migration20190301000000
+class SS::Migration20190320000000
   def change
     # load all models
     ::Rails.application.eager_load!
