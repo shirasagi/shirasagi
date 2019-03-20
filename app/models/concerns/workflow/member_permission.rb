@@ -2,6 +2,7 @@ module Workflow::MemberPermission
   extend ActiveSupport::Concern
 
   def allowed?(action, user, opts = {})
+    user = user.cms_user
     site = opts[:site] || @cur_site
     node = opts[:node] || @cur_node
 
