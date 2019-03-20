@@ -87,7 +87,7 @@ module Webmail::Imap
     def apply_recent_filters
       return 0 if inbox.status.recent == 0
 
-      imap.examine('INBOX')
+      imap.select('INBOX')
       filters = Webmail::Filter.and_imap(imap).enabled.entries
 
       filters.each do |filter|
