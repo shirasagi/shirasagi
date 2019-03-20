@@ -55,8 +55,9 @@ module SS::Relation::File
 
       define_method("update_relation_#{name}_owner_item") do
         file = send(name)
-        if file.owner_item.blank? || file.owner_item_type != self.class.name || file.owner_item_id != self.id
-          file.update(owner_item: self)
+        owner_item = self.embedded? ? self._parent : self
+        if file.owner_item.blank? || file.owner_item_type != owner_item.class.name || file.owner_item_id != owner_item.id
+          file.update(owner_item: owner_item)
         end
       end
 
