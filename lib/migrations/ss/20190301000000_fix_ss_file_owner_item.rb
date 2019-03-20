@@ -13,7 +13,7 @@ class SS::Migration20190301000000
         owner_item = file.owner_item rescue nil
         next if owner_item.present?
 
-        owner_item = file.owner_item = find_owner_item(file)
+        owner_item = file.owner_item = normalize_item(find_owner_item(file))
         next if owner_item.blank?
 
         file.model = owner_item.model_name.i18n_key.to_s
@@ -35,18 +35,18 @@ class SS::Migration20190301000000
       next if model.ancestors.include?(SS::Model::File)
       next if !model.ancestors.include?(SS::Document)
 
-      item = find_owner_item_in(file, model)
+      item = find_owner_item_in(file, model, model.all, [])
       return item if item
     end
 
     nil
   end
 
-  def find_owner_item_in(file, model)
+  def find_owner_item_in(file, model, criteria, prefixes)
     # puts model
     model.fields.each do |field_name, field_config|
       if field_config.type.ancestors.include?(SS::Model::File)
-        item = find_owner_item_in_scalar_field(file, model, field_name)
+        item = find_owner_item_in_scalar_field(file, criteria, prefixes, field_name)
         return item if item
         next
       end
@@ -54,7 +54,7 @@ class SS::Migration20190301000000
       if field_config.association && field_config.association.class_name
         type = field_config.association.class_name.constantize rescue nil
         if type && type.ancestors.include?(SS::Model::File)
-          item = find_owner_item_in_association_field(file, model, field_name)
+          item = find_owner_item_in_association_field(file, criteria, prefixes, field_name)
           return item if item
           next
         end
@@ -63,7 +63,7 @@ class SS::Migration20190301000000
       if field_config.options && field_config.options.dig(:metadata, :elem_class)
         type = field_config.options.dig(:metadata, :elem_class).constantize rescue nil
         if type && type.ancestors.include?(SS::Model::File)
-          item = find_owner_item_in_array_field(file, model, field_name)
+          item = find_owner_item_in_array_field(file, criteria, prefixes, field_name)
           return item if item
           next
         end
@@ -71,30 +71,49 @@ class SS::Migration20190301000000
     end
 
     model.embedded_relations.each do |relation_name, relation_config|
-      if relation_name == "column_values"
-        item = find_owner_item_in_column_values(file, model, relation_name)
+      if relation_name == "column_values" || relation_name == "facility_column_values"
+        item = find_owner_item_in_column_values(file, model, prefixes, relation_name)
         return item if item
-        next
+      else
+        item = find_owner_item_in(file, relation_config.klass, criteria, prefixes + [relation_name])
+        return item if item
       end
     end
 
     nil
   end
 
-  def find_owner_item_in_scalar_field(file, model, field_name)
-    model.all.where(field_name => file.id).first
+  def find_owner_item_in_scalar_field(file, criteria, prefixes, field_name)
+    criteria.where(build_criteria_key(prefixes, field_name) => file.id).first
   end
 
-  def find_owner_item_in_association_field(file, model, field_name)
-    model.all.where(field_name => file.id).first
+  def find_owner_item_in_association_field(file, criteria, prefixes, field_name)
+    criteria.where(build_criteria_key(prefixes, field_name) => file.id).first
   end
 
-  def find_owner_item_in_array_field(file, model, field_name)
-    model.all.in(field_name => file.id).first
+  def find_owner_item_in_array_field(file, criteria, prefixes, field_name)
+    criteria.in(build_criteria_key(prefixes, field_name) => file.id).first
   end
 
-  def find_owner_item_in_column_values(file, model, relation_name)
-    conds = [{ "column_values.file_ids" => file.id }, { "column_values.file_id" => file.id }]
+  def build_criteria_key(*keys)
+    keys.flatten.join(".")
+  end
+
+  def find_owner_item_in_column_values(file, model, prefixes, field_name)
+    conds = [
+      { build_criteria_key(prefixes, field_name, "file_ids") => file.id },
+      { build_criteria_key(prefixes, field_name, "file_id") => file.id }
+    ]
     model.all.where("$and" => [{ "$or" => conds }]).first
+  end
+
+  def normalize_item(item)
+    return if item.blank?
+
+    if item.respond_to?(:becomes_with_route)
+      item = item.becomes_with_route rescue item
+    end
+
+    item
   end
 end
