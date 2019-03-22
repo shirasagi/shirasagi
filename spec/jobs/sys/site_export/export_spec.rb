@@ -325,4 +325,120 @@ describe Sys::SiteExportJob, dbscope: :example, tmpdir: true do
       end
     end
   end
+
+  context 'with inquiry' do
+    let!(:node) { create :inquiry_node_form, cur_site: site }
+    let!(:column_name) { node.columns.create! attributes_for(:inquiry_column_name).reverse_merge({cur_site: site}) }
+    let!(:column_optional) { node.columns.create! attributes_for(:inquiry_column_optional).reverse_merge({cur_site: site}) }
+    let!(:column_transfers) { node.columns.create! attributes_for(:inquiry_column_transfers).reverse_merge({cur_site: site}) }
+    let!(:column_email) { node.columns.create! attributes_for(:inquiry_column_email).reverse_merge({cur_site: site}) }
+    let!(:column_radio) { node.columns.create! attributes_for(:inquiry_column_radio).reverse_merge({cur_site: site}) }
+    let!(:column_select) { node.columns.create! attributes_for(:inquiry_column_select).reverse_merge({cur_site: site}) }
+    let!(:column_check) { node.columns.create! attributes_for(:inquiry_column_check).reverse_merge({cur_site: site}) }
+    let!(:column_upload_file) { node.columns.create! attributes_for(:inquiry_column_upload_file).reverse_merge({cur_site: site}) }
+
+    before do
+      node.reload
+    end
+
+    it do
+      zip_path = execute
+      # ::FileUtils.cp(zip_path, "#{Rails.root}/spec/fixtures/sys/site-exports-2.zip")
+      Zip::File.open(zip_path) do |zip|
+        JSON.parse(zip.read(zip.get_entry("cms_nodes.json"))).tap do |cms_nodes|
+          expect(cms_nodes).to be_a(Array)
+          expect(cms_nodes.length).to eq 1
+
+          cms_nodes[0].tap do |cms_node|
+            expect(cms_node["name"]).to eq node.name
+            expect(cms_node["filename"]).to eq node.filename
+          end
+        end
+
+        JSON.parse(zip.read(zip.get_entry("inquiry_columns.json"))).tap do |inquiry_columns|
+          expect(inquiry_columns).to be_a(Array)
+          expect(inquiry_columns.length).to eq 8
+
+          inquiry_columns[0].tap do |inquiry_column|
+            expect(inquiry_column["node_id"]).to eq column_name.node.id
+            expect(inquiry_column["name"]).to eq column_name.name
+            expect(inquiry_column["input_type"]).to eq column_name.input_type
+            expect(inquiry_column["required"]).to eq column_name.required
+            expect(inquiry_column["html"]).to eq column_name.html
+            expect(inquiry_column["order"]).to eq column_name.order
+          end
+
+          inquiry_columns[1].tap do |inquiry_column|
+            expect(inquiry_column["node_id"]).to eq column_optional.node.id
+            expect(inquiry_column["name"]).to eq column_optional.name
+            expect(inquiry_column["input_type"]).to eq column_optional.input_type
+            expect(inquiry_column["required"]).to eq column_optional.required
+            expect(inquiry_column["html"]).to eq column_optional.html
+            expect(inquiry_column["order"]).to eq column_optional.order
+          end
+
+          inquiry_columns[2].tap do |inquiry_column|
+            expect(inquiry_column["node_id"]).to eq column_transfers.node.id
+            expect(inquiry_column["name"]).to eq column_transfers.name
+            expect(inquiry_column["input_type"]).to eq column_transfers.input_type
+            expect(inquiry_column["required"]).to eq column_transfers.required
+            expect(inquiry_column["html"]).to eq column_transfers.html
+            expect(inquiry_column["transfers"][0]["keyword"]).to eq column_transfers.transfers[0][:keyword]
+            expect(inquiry_column["transfers"][0]["email"]).to eq column_transfers.transfers[0][:email]
+            expect(inquiry_column["order"]).to eq column_transfers.order
+          end
+
+          inquiry_columns[3].tap do |inquiry_column|
+            expect(inquiry_column["node_id"]).to eq column_email.node.id
+            expect(inquiry_column["name"]).to eq column_email.name
+            expect(inquiry_column["input_type"]).to eq column_email.input_type
+            expect(inquiry_column["required"]).to eq column_email.required
+            expect(inquiry_column["input_confirm"]).to eq column_email.input_confirm
+            expect(inquiry_column["html"]).to eq column_email.html
+            expect(inquiry_column["order"]).to eq column_email.order
+          end
+
+          inquiry_columns[4].tap do |inquiry_column|
+            expect(inquiry_column["node_id"]).to eq column_radio.node.id
+            expect(inquiry_column["name"]).to eq column_radio.name
+            expect(inquiry_column["input_type"]).to eq column_radio.input_type
+            expect(inquiry_column["required"]).to eq column_radio.required
+            expect(inquiry_column["html"]).to eq column_radio.html
+            expect(inquiry_column["select_options"]).to eq column_radio.select_options
+            expect(inquiry_column["order"]).to eq column_radio.order
+          end
+
+          inquiry_columns[5].tap do |inquiry_column|
+            expect(inquiry_column["node_id"]).to eq column_select.node.id
+            expect(inquiry_column["name"]).to eq column_select.name
+            expect(inquiry_column["input_type"]).to eq column_select.input_type
+            expect(inquiry_column["required"]).to eq column_select.required
+            expect(inquiry_column["html"]).to eq column_select.html
+            expect(inquiry_column["select_options"]).to eq column_select.select_options
+            expect(inquiry_column["order"]).to eq column_select.order
+          end
+
+          inquiry_columns[6].tap do |inquiry_column|
+            expect(inquiry_column["node_id"]).to eq column_check.node.id
+            expect(inquiry_column["name"]).to eq column_check.name
+            expect(inquiry_column["input_type"]).to eq column_check.input_type
+            expect(inquiry_column["required"]).to eq column_check.required
+            expect(inquiry_column["html"]).to eq column_check.html
+            expect(inquiry_column["select_options"]).to eq column_check.select_options
+            expect(inquiry_column["order"]).to eq column_check.order
+          end
+
+          inquiry_columns[7].tap do |inquiry_column|
+            expect(inquiry_column["node_id"]).to eq column_upload_file.node.id
+            expect(inquiry_column["name"]).to eq column_upload_file.name
+            expect(inquiry_column["input_type"]).to eq column_upload_file.input_type
+            expect(inquiry_column["required"]).to eq column_upload_file.required
+            expect(inquiry_column["html"]).to eq column_upload_file.html
+            expect(inquiry_column["max_upload_file_size"]).to eq column_upload_file.max_upload_file_size
+            expect(inquiry_column["order"]).to eq column_upload_file.order
+          end
+        end
+      end
+    end
+  end
 end

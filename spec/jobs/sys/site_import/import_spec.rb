@@ -169,4 +169,102 @@ describe Sys::SiteImportJob, dbscope: :example, tmpdir: true do
       end
     end
   end
+
+  context 'with inquiry' do
+    let(:file_path) { "#{Rails.root}/spec/fixtures/sys/site-exports-2.zip" }
+
+    it do
+      expect(Cms::Group.unscoped).to be_present
+      expect(Cms::User.unscoped).to be_present
+
+      expect(Cms::Node.unscoped.site(destination_site)).to have(1).items
+      expect(Inquiry::Node::Form.unscoped.site(destination_site)).to have(1).items
+      Inquiry::Node::Form.unscoped.site(destination_site).pluck(:id).sort.tap do |ids|
+        Inquiry::Node::Form.find(ids[0]).tap do |node|
+          expect(node.columns).to have(8).items
+
+          node.columns.unscoped.pluck(:id).sort.tap do |ids|
+            node.columns.find(ids[0]).tap do |column|
+              expect(column.node.id).to eq node.id
+              expect(column.name).to eq "お名前"
+              expect(column.input_type).to eq "text_field"
+              expect(column.required).to eq "required"
+              expect(column.html).to be_present
+              expect(column.order).to eq 10
+            end
+
+            node.columns.find(ids[1]).tap do |column|
+              expect(column.node.id).to eq node.id
+              expect(column.name).to eq "企業・団体名"
+              expect(column.input_type).to eq "text_field"
+              expect(column.required).to eq "optional"
+              expect(column.html).to be_present
+              expect(column.order).to eq 20
+            end
+
+            node.columns.find(ids[2]).tap do |column|
+              expect(column.node.id).to eq node.id
+              expect(column.name).to eq "要件"
+              expect(column.input_type).to eq "text_field"
+              expect(column.required).to eq "optional"
+              expect(column.html).to be_present
+              expect(column.transfers[0][:keyword]).to be_present
+              expect(column.transfers[0][:email]).to be_present
+              expect(column.order).to eq 30
+            end
+
+            node.columns.find(ids[3]).tap do |column|
+              expect(column.node.id).to eq node.id
+              expect(column.name).to eq "メールアドレス"
+              expect(column.input_type).to eq "email_field"
+              expect(column.required).to eq "required"
+              expect(column.input_confirm).to eq "enabled"
+              expect(column.html).to be_present
+              expect(column.order).to eq 40
+            end
+
+            node.columns.find(ids[4]).tap do |column|
+              expect(column.node.id).to eq node.id
+              expect(column.name).to eq "性別"
+              expect(column.input_type).to eq "radio_button"
+              expect(column.required).to eq "optional"
+              expect(column.html).to be_present
+              expect(column.select_options).to eq %w(男性 女性)
+              expect(column.order).to eq 50
+            end
+
+            node.columns.find(ids[5]).tap do |column|
+              expect(column.node.id).to eq node.id
+              expect(column.name).to eq "年齢"
+              expect(column.input_type).to eq "select"
+              expect(column.required).to eq "optional"
+              expect(column.html).to be_present
+              expect(column.select_options).to eq %w(10代 20代 30代 40代 50代 60代 70代 80代)
+              expect(column.order).to eq 60
+            end
+
+            node.columns.find(ids[6]).tap do |column|
+              expect(column.node.id).to eq node.id
+              expect(column.name).to eq "お問い合わせ区分"
+              expect(column.input_type).to eq "check_box"
+              expect(column.required).to eq "optional"
+              expect(column.html).to be_present
+              expect(column.select_options).to eq %w(市政について ご意見・ご要望 申請について その他)
+              expect(column.order).to eq 70
+            end
+
+            node.columns.find(ids[7]).tap do |column|
+              expect(column.node.id).to eq node.id
+              expect(column.name).to eq "添付ファイル"
+              expect(column.input_type).to eq "upload_file"
+              expect(column.required).to eq "optional"
+              expect(column.html).to be_blank
+              expect(column.max_upload_file_size).to eq 2
+              expect(column.order).to eq 80
+            end
+          end
+        end
+      end
+    end
+  end
 end
