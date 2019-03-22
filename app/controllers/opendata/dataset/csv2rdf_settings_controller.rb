@@ -3,6 +3,7 @@ class Opendata::Dataset::Csv2rdfSettingsController < ApplicationController
   helper Opendata::Csv2rdfSettingsHelper
 
   ACTION_SEQUENCE = [:header_size, :rdf_class, :column_types, :confirmation].freeze
+  VALIDATE_ACTION_SEQUENCE = %w(header_size rdf_class column_types).freeze
 
   model Opendata::Csv2rdfSetting
 
@@ -76,7 +77,9 @@ class Opendata::Dataset::Csv2rdfSettingsController < ApplicationController
     end
 
     @item.attributes = get_params
-    @item.send("validate_#{params[:action]}")
+    action = VALIDATE_ACTION_SEQUENCE.dup.delete(params[:action])
+    raise '404' if action.blank?
+    @item.send("validate_#{action}")
     if @item.errors.blank? && @item.update
       respond_to do |format|
         format.html { redirect_to action: opts[:action] }
