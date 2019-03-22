@@ -76,8 +76,8 @@ SS.renderClipboardCopy();
 <%
 max = 3
 categories = [
-  { items: @cur_page.categories, type: :category, name: :name, key: :category_id, val: :id },
-  { items: @cur_page.estat_categories, type: "estat-category", name: :name, key: :estat_category_id, val: :id },
+  { items: @cur_page.categories.sort(order: 1), type: :category, name: :name, key: :category_id, val: :id },
+  { items: @cur_page.estat_categories.sort(order: 1), type: "estat-category", name: :name, key: :estat_category_id, val: :id },
   { items: @cur_page.areas.sort(order: 1), type: :area, name: :name, key: :area_id, val: :id },
   { items: @cur_page.tags, type: :tag, name: :to_s, key: :tag, val: :to_s },
 ]
