@@ -143,9 +143,7 @@ class Sys::SiteExportJob < SS::ApplicationJob
   end
 
   def export_cms_columns
-    export_documents "cms_columns", Cms::Column::Base do |item|
-      item.class_name = item._type
-    end
+    export_documents "cms_columns", Cms::Column::Base
   end
 
   def export_cms_layouts
@@ -170,12 +168,6 @@ class Sys::SiteExportJob < SS::ApplicationJob
       @ss_file_ids += item[:resources].map { |m| m[:file_id] } if item[:resources].present?
       @ss_file_ids += item[:url_resources].map { |m| m[:file_id] } if item[:url_resources].present?
       @ss_file_ids += item[:appfiles].map { |m| m[:file_id] } if item[:appfiles].present?
-
-      if item[:column_values].present?
-        item.column_values.each do |column_value|
-          column_value.class_name = column_value._type
-        end
-      end
     end
   end
 
