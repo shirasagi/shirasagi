@@ -249,7 +249,7 @@ class Sys::SiteExportJob < SS::ApplicationJob
 
   def copy_file(item)
     return nil unless File.exist?(item.path)
-    file = item.path.sub(/.*\/(files\/)/, '\\1')
+    file = item.path.sub("#{item.class.root}/", 'files/')
     path = "#{@output_dir}/#{file}"
     FileUtils.mkdir_p(File.dirname(path))
     FileUtils.cp(item.path, path)
