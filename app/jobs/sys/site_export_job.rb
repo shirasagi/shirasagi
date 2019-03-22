@@ -101,8 +101,7 @@ class Sys::SiteExportJob < SS::ApplicationJob
     @ss_file_ids << item[:icon_id] if item[:icon_id].present?
     if item[:column_values].present?
       item.column_values.each do |column_value|
-        next if column_value.class_name != 'Cms::Column::Value::FileUpload'
-        @ss_file_ids << column_value.file_id
+        @ss_file_ids += column_value.all_file_ids
       end
     end
   end
