@@ -1,10 +1,13 @@
 class Sys::SiteExportJob < SS::ApplicationJob
   include Job::SS::TaskFilter
 
+  cattr_accessor :export_root
+  self.export_root = "#{Rails.root}/private/export"
+
   def perform
     @src_site = Cms::Site.find(@task.source_site_id)
 
-    @output_dir = "#{Rails.root}/private/export/site-#{@src_site.host}"
+    @output_dir = "#{self.class.export_root}/site-#{@src_site.host}"
     @output_zip = "#{@output_dir}.zip"
 
     FileUtils.rm_rf(@output_dir)
