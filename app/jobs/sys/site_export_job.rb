@@ -86,7 +86,7 @@ class Sys::SiteExportJob < SS::ApplicationJob
       item = model.unscoped.find(id)
       item = item.becomes_with_route || item rescue item
       yield(item) if block_given?
-      json.write(item.to_json)
+      json.write(item.to_json(methods: "_type"))
       store_file_ids(item)
     end
     json.close
