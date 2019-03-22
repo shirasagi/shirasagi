@@ -39,6 +39,9 @@ module Sys::SiteImport::Contents
             column_value['file_ids'] = column_value['file_ids'].map do |file_id|
               @ss_files_map[file_id]
             end
+            @ss_files_url.each do |src, dst|
+              column_value.value = column_value.value.gsub(src, dst)
+            end
           end
         end
       end

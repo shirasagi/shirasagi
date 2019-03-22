@@ -4,6 +4,33 @@ require 'rake'
 describe Sys::SiteExportJob, dbscope: :example, tmpdir: true do
   let(:site) { cms_site }
 
+  before do
+    SS::Sequence.create(_id: "cms_body_layouts_id", value: rand(0..999) * 1_000_000)
+    SS::Sequence.create(_id: "cms_editor_templates_id", value: rand(0..999) * 1_000_000)
+    SS::Sequence.create(_id: "cms_forms_id", value: rand(0..999) * 1_000_000)
+    SS::Sequence.create(_id: "cms_layouts_id", value: rand(0..999) * 1_000_000)
+    SS::Sequence.create(_id: "cms_loop_settings_id", value: rand(0..999) * 1_000_000)
+    SS::Sequence.create(_id: "cms_members_id", value: rand(0..999) * 1_000_000)
+    SS::Sequence.create(_id: "cms_nodes_id", value: rand(0..999) * 1_000_000)
+    SS::Sequence.create(_id: "cms_page_searches_id", value: rand(0..999) * 1_000_000)
+    SS::Sequence.create(_id: "cms_pages_id", value: rand(0..999) * 1_000_000)
+    SS::Sequence.create(_id: "cms_parts_id", value: rand(0..999) * 1_000_000)
+    SS::Sequence.create(_id: "cms_roles_id", value: rand(0..999) * 1_000_000)
+    SS::Sequence.create(_id: "cms_source_cleaner_templates_id", value: rand(0..999) * 1_000_000)
+    SS::Sequence.create(_id: "cms_theme_templates_id", value: rand(0..999) * 1_000_000)
+    SS::Sequence.create(_id: "cms_word_dictionaries_id", value: rand(0..999) * 1_000_000)
+    SS::Sequence.create(_id: "ezine_columns_id", value: rand(0..999) * 1_000_000)
+    SS::Sequence.create(_id: "inquiry_answers_id", value: rand(0..999) * 1_000_000)
+    SS::Sequence.create(_id: "inquiry_columns_id", value: rand(0..999) * 1_000_000)
+    SS::Sequence.create(_id: "ss_files_id", value: rand(0..999) * 1_000_000)
+    SS::Sequence.create(_id: "ss_groups_id", value: rand(0..999) * 1_000_000)
+    SS::Sequence.create(_id: "ss_max_file_sizes_id", value: rand(0..999) * 1_000_000)
+    SS::Sequence.create(_id: "ss_sites_id", value: rand(0..999) * 1_000_000)
+    SS::Sequence.create(_id: "ss_users_id", value: rand(0..999) * 1_000_000)
+    SS::Sequence.create(_id: "sys_roles_id", value: rand(0..999) * 1_000_000)
+    SS::Sequence.create(_id: "workflow_routes_id", value: rand(0..999) * 1_000_000)
+  end
+
   around do |example|
     tmpdir = ::Dir.mktmpdir(unique_id, "#{Rails.root}/tmp")
     ::Dir.mkdir_p(tmpdir) if !::Dir.exists?(tmpdir)
@@ -133,10 +160,11 @@ describe Sys::SiteExportJob, dbscope: :example, tmpdir: true do
     let(:page1_file1) do
       tmp_ss_file(contents: "#{Rails.root}/spec/fixtures/ss/logo.png", site: site, user: cms_user, model: 'ss/temp_file')
     end
+    let(:page1_file1_img_tag) { "<img src=\"#{page1_file1.url}\">" }
     let!(:page1) do
       create(
         :article_page, cur_site: site, cur_node: node, basename: "#{unique_id}.html",
-        html: unique_id * 5, file_ids: [ page1_file1.id ]
+        html: unique_id * 5 + "\n" + page1_file1_img_tag, file_ids: [ page1_file1.id ]
       )
     end
 
@@ -146,13 +174,17 @@ describe Sys::SiteExportJob, dbscope: :example, tmpdir: true do
     let(:page2_file2) do
       tmp_ss_file(contents: "#{Rails.root}/spec/fixtures/ss/logo.png", site: site, user: cms_user, model: 'ss/temp_file')
     end
+    let(:page2_file1_img_tag) { "<img src=\"#{page2_file1.url}\">" }
+    let(:page2_file2_img_tag) { "<img src=\"#{page2_file2.url}\">" }
     let!(:page2) do
       create(
         :article_page, cur_site: site, cur_node: node, basename: "#{unique_id}.html",
         form: form1, column_values: [
           form1_column1.value_type.new(column: form1_column1, value: unique_id * 6),
           form1_column2.value_type.new(column: form1_column2, file_id: page2_file1.id),
-          form1_column3.value_type.new(column: form1_column3, value: unique_id * 5, file_ids: [ page2_file2.id ])
+          form1_column3.value_type.new(
+            column: form1_column3, value: unique_id * 5 + "\n" + page2_file2_img_tag, file_ids: [ page2_file2.id ]
+          )
         ]
       )
     end
@@ -169,6 +201,10 @@ describe Sys::SiteExportJob, dbscope: :example, tmpdir: true do
     let(:page3_file4) do
       tmp_ss_file(contents: "#{Rails.root}/spec/fixtures/ss/logo.png", site: site, user: cms_user, model: 'ss/temp_file')
     end
+    let(:page3_file1_img_tag) { "<img src=\"#{page3_file1.url}\">" }
+    let(:page3_file2_img_tag) { "<img src=\"#{page3_file2.url}\">" }
+    let(:page3_file3_img_tag) { "<img src=\"#{page3_file3.url}\">" }
+    let(:page3_file4_img_tag) { "<img src=\"#{page3_file4.url}\">" }
     let!(:page3) do
       create(
         :article_page, cur_site: site, cur_node: node, basename: "#{unique_id}.html",
@@ -178,8 +214,12 @@ describe Sys::SiteExportJob, dbscope: :example, tmpdir: true do
           form2_column1.value_type.new(column: form2_column1, order: 1, value: unique_id * 6),
           form2_column2.value_type.new(column: form2_column2, order: 2, file_id: page3_file1.id),
           form2_column2.value_type.new(column: form2_column2, order: 3, file_id: page3_file2.id),
-          form2_column3.value_type.new(column: form2_column3, order: 4, value: unique_id * 5, file_ids: [ page3_file3.id ]),
-          form2_column3.value_type.new(column: form2_column3, order: 5, value: unique_id * 5, file_ids: [ page3_file4.id ])
+          form2_column3.value_type.new(
+            column: form2_column3, order: 4, value: unique_id * 5 + "\n" + page3_file3_img_tag, file_ids: [ page3_file3.id ]
+          ),
+          form2_column3.value_type.new(
+            column: form2_column3, order: 5, value: unique_id * 5 + "\n" + page3_file4_img_tag, file_ids: [ page3_file4.id ]
+          )
         ]
       )
     end
@@ -196,7 +236,7 @@ describe Sys::SiteExportJob, dbscope: :example, tmpdir: true do
 
     it do
       zip_path = execute
-      # ::FileUtils.cp(zip_path, "#{Rails.root}/spec/fixtures/sys/site-exports-1.zip")
+      ::FileUtils.cp(zip_path, "#{Rails.root}/spec/fixtures/sys/site-exports-1.zip")
       Zip::File.open(zip_path) do |zip|
         JSON.parse(zip.read(zip.get_entry("cms_pages.json"))).tap do |cms_pages|
           expect(cms_pages).to be_a(Array)
@@ -343,7 +383,7 @@ describe Sys::SiteExportJob, dbscope: :example, tmpdir: true do
 
     it do
       zip_path = execute
-      # ::FileUtils.cp(zip_path, "#{Rails.root}/spec/fixtures/sys/site-exports-2.zip")
+      ::FileUtils.cp(zip_path, "#{Rails.root}/spec/fixtures/sys/site-exports-2.zip")
       Zip::File.open(zip_path) do |zip|
         JSON.parse(zip.read(zip.get_entry("cms_nodes.json"))).tap do |cms_nodes|
           expect(cms_nodes).to be_a(Array)

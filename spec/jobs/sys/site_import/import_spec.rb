@@ -80,6 +80,7 @@ describe Sys::SiteImportJob, dbscope: :example, tmpdir: true do
           expect(page.form).to be_blank
           expect(page.html).to be_present
           expect(page.files).to have(1).items
+          expect(page.html).to include(page.files.first.url)
         end
 
         Article::Page.find(ids[1]).tap do |page|
@@ -106,8 +107,9 @@ describe Sys::SiteImportJob, dbscope: :example, tmpdir: true do
               expect(column_value).to be_a(Cms::Column::Value::Free)
               expect(column_value.column).to be_present
               expect(page.form.columns.find(column_value.column_id)).to be_present
-              expect(column_value.value).to be_present
               expect(column_value.files).to have(1).items
+              expect(column_value.value).to be_present
+              expect(column_value.value).to include(column_value.files.first.url)
             end
           end
         end
@@ -153,16 +155,18 @@ describe Sys::SiteImportJob, dbscope: :example, tmpdir: true do
               expect(column_value).to be_a(Cms::Column::Value::Free)
               expect(column_value.column).to be_present
               expect(page.form.columns.find(column_value.column_id)).to be_present
-              expect(column_value.value).to be_present
               expect(column_value.files).to have(1).items
+              expect(column_value.value).to be_present
+              expect(column_value.value).to include(column_value.files.first.url)
             end
 
             column_values[5].tap do |column_value|
               expect(column_value).to be_a(Cms::Column::Value::Free)
               expect(column_value.column).to be_present
               expect(page.form.columns.find(column_value.column_id)).to be_present
-              expect(column_value.value).to be_present
               expect(column_value.files).to have(1).items
+              expect(column_value.value).to be_present
+              expect(column_value.value).to include(column_value.files.first.url)
             end
           end
         end
