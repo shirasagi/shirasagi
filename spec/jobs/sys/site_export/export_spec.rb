@@ -236,7 +236,7 @@ describe Sys::SiteExportJob, dbscope: :example, tmpdir: true do
 
     it do
       zip_path = execute
-      ::FileUtils.cp(zip_path, "#{Rails.root}/spec/fixtures/sys/site-exports-1.zip")
+      # ::FileUtils.cp(zip_path, "#{Rails.root}/spec/fixtures/sys/site-exports-1.zip")
       Zip::File.open(zip_path) do |zip|
         JSON.parse(zip.read(zip.get_entry("cms_pages.json"))).tap do |cms_pages|
           expect(cms_pages).to be_a(Array)
@@ -383,7 +383,7 @@ describe Sys::SiteExportJob, dbscope: :example, tmpdir: true do
 
     it do
       zip_path = execute
-      ::FileUtils.cp(zip_path, "#{Rails.root}/spec/fixtures/sys/site-exports-2.zip")
+      # ::FileUtils.cp(zip_path, "#{Rails.root}/spec/fixtures/sys/site-exports-2.zip")
       Zip::File.open(zip_path) do |zip|
         JSON.parse(zip.read(zip.get_entry("cms_nodes.json"))).tap do |cms_nodes|
           expect(cms_nodes).to be_a(Array)
