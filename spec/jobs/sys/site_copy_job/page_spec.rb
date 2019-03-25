@@ -159,6 +159,9 @@ describe Sys::SiteCopyJob, dbscope: :example do
         dest_page = Cms::Page.site(dest_site).find_by(filename: page.filename)
         dest_page = dest_page.becomes_with_route
         expect(dest_page.html).to eq page.html.sub(page.files.first.url, dest_page.files.first.url)
+        expect(dest_page.files).to have(1).items
+        expect(dest_page.files.first.owner_item_id).to eq dest_page.id
+        expect(dest_page.files.first.owner_item_type).to eq dest_page.class.name
       end
     end
 

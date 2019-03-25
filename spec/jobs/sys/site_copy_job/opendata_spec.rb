@@ -202,6 +202,8 @@ describe Sys::SiteCopyJob, dbscope: :example do
             expect(dest_appfile.file.name).to eq appfile.file.name
             expect(dest_appfile.file.size).to eq appfile.file.size
             expect(dest_appfile.file.content_type).to eq appfile.file.content_type
+            expect(dest_appfile.file.owner_item_id).to eq dest_app.id
+            expect(dest_appfile.file.owner_item_type).to eq dest_app.class.name
           end
         end
 
