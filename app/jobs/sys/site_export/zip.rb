@@ -8,12 +8,18 @@ class Sys::SiteExport::Zip
   end
 
   def compress
+    save_write_zip64_support = Zip.write_zip64_support
+    save_unicode_names = Zip.unicode_names
     Zip.write_zip64_support = true
+    Zip.unicode_names = true
     Zip::File.open(@path, Zip::File::CREATE) do |zip|
       add_json(zip)
       add_private_files(zip)
       add_public_files(zip) if FileTest.directory?(@site_dir)
     end
+  ensure
+    Zip.write_zip64_support = save_write_zip64_support
+    Zip.unicode_names = save_unicode_names
   end
 
   def add_json(zip)
