@@ -94,6 +94,8 @@ module Sys::SiteCopy::CmsContents
       :column
     elsif klass == Cms::LoopSetting
       :loop_setting
+    elsif klass == Cms::EditorTemplate
+      :editor_template
     elsif klass == Opendata::DatasetGroup
       :opendata_dataset_group
     elsif klass == Opendata::License
@@ -192,6 +194,8 @@ module Sys::SiteCopy::CmsContents
       resolve_column_reference(id_or_ids)
     when :loop_setting
       resolve_loop_setting_reference(id_or_ids)
+    when :editor_template
+      resolve_editor_template_reference(id_or_ids)
     when :opendata_dataset_group
       resolve_opendata_dataset_group_reference(id_or_ids)
     when :opendata_license
