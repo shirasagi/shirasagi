@@ -80,6 +80,9 @@ describe Sys::SiteImportJob, dbscope: :example, tmpdir: true do
           expect(page.form).to be_blank
           expect(page.html).to be_present
           expect(page.files).to have(1).items
+          page.files.first.tap do |file|
+            expect(file.owner_item_id).to eq page.id
+          end
           expect(page.html).to include(page.files.first.url)
         end
 
@@ -101,6 +104,7 @@ describe Sys::SiteImportJob, dbscope: :example, tmpdir: true do
               expect(column_value.column).to be_present
               expect(page.form.columns.find(column_value.column_id)).to be_present
               expect(column_value.file).to be_present
+              expect(column_value.file.owner_item_id).to eq page.id
             end
 
             column_values[2].tap do |column_value|
@@ -108,6 +112,7 @@ describe Sys::SiteImportJob, dbscope: :example, tmpdir: true do
               expect(column_value.column).to be_present
               expect(page.form.columns.find(column_value.column_id)).to be_present
               expect(column_value.files).to have(1).items
+              expect(column_value.files.first.owner_item_id).to eq page.id
               expect(column_value.value).to be_present
               expect(column_value.value).to include(column_value.files.first.url)
             end
@@ -141,6 +146,7 @@ describe Sys::SiteImportJob, dbscope: :example, tmpdir: true do
               expect(page.form.columns.find(column_value.column_id)).to be_present
               expect(column_value.value).to be_present
               expect(column_value.file).to be_present
+              expect(column_value.file.owner_item_id).to eq page.id
             end
 
             column_values[3].tap do |column_value|
@@ -149,6 +155,7 @@ describe Sys::SiteImportJob, dbscope: :example, tmpdir: true do
               expect(page.form.columns.find(column_value.column_id)).to be_present
               expect(column_value.value).to be_present
               expect(column_value.file).to be_present
+              expect(column_value.file.owner_item_id).to eq page.id
             end
 
             column_values[4].tap do |column_value|
@@ -158,6 +165,7 @@ describe Sys::SiteImportJob, dbscope: :example, tmpdir: true do
               expect(column_value.files).to have(1).items
               expect(column_value.value).to be_present
               expect(column_value.value).to include(column_value.files.first.url)
+              expect(column_value.files.first.owner_item_id).to eq page.id
             end
 
             column_values[5].tap do |column_value|
@@ -167,6 +175,7 @@ describe Sys::SiteImportJob, dbscope: :example, tmpdir: true do
               expect(column_value.files).to have(1).items
               expect(column_value.value).to be_present
               expect(column_value.value).to include(column_value.files.first.url)
+              expect(column_value.files.first.owner_item_id).to eq page.id
             end
           end
         end
