@@ -14,7 +14,6 @@ class Cms::Column::Value::Base
   belongs_to :column, class_name: 'Cms::Column::Base'
   field :name, type: String
   field :order, type: Integer
-  field :class_name, type: String
   field :alignment, type: String
 
   after_initialize :copy_column_settings, if: ->{ new_record? }

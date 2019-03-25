@@ -167,11 +167,17 @@ class Sys::SiteImportJob < SS::ApplicationJob
       id   = data.delete('_id')
       data = convert_data(data)
 
+      if data.key?("_type")
+        effective_model = data["_type"].constantize rescue model
+      else
+        effective_model = model
+      end
+
       if fields
         cond = data.select { |k, v| fields.include?(k) }
-        item = model.unscoped.find_or_initialize_by(cond)
+        item = effective_model.unscoped.find_or_initialize_by(cond)
       else
-        item = model.new
+        item = effective_model.new
       end
 
       data.each { |k, v| item[k] = v }
