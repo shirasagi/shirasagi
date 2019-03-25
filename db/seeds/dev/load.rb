@@ -148,3 +148,11 @@ def save_word_dictionary(data)
 end
 
 save_word_dictionary name: "機種依存文字", body_file: "#{Rails.root}/db/seeds/cms/word_dictionary/dependent_characters.txt"
+
+if @site.subdir.present?
+  # rake cms:set_subdir_url site=@site.host
+  require 'rake'
+  Rails.application.load_tasks
+  ENV["site"]=@site.host
+  Rake::Task['cms:set_subdir_url'].invoke
+end
