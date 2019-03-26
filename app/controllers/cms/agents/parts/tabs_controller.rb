@@ -18,7 +18,7 @@ class Cms::Agents::Parts::TabsController < ApplicationController
       next unless spec
 
       node_class = node.route.sub(/\/.*/, "/agents/#{spec[:cell]}")
-      node_class = "#{node_class}_controller".camelize.constantize
+      node_class = new_agent(node_class).controller.class
 
       pages = nil
 
