@@ -121,6 +121,20 @@ module SS::Model::User
       nil
     end
 
+    def site_authenticate(site, id, password)
+      org_ids = site.root_groups.map { |c| c.id }
+
+      users = self.where(
+        :organization_id.in => org_ids,
+        '$or' => [{ uid: id }, { email: id }, { organization_uid: id }]
+      )
+      return nil if users.size != 1
+
+      user = users.first
+      return user if user.send(:dbpasswd_authenticate, password)
+      nil
+    end
+
     def organization_authenticate(organization, id, password)
       user = self.where(
         organization_id: organization.id,
