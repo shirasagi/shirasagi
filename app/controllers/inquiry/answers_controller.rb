@@ -19,7 +19,7 @@ class Inquiry::AnswersController < ApplicationController
     columns = @cur_node.becomes_with_route("inquiry/form").columns.pluck(:name)
     headers = %w(id)
     headers += columns
-    headers += %w(created source_url source_name)
+    headers += %w(source_url source_name created).map { |key| @model.t(key) }
     csv = CSV.generate do |data|
       data << headers
       items.each do |item|
@@ -36,9 +36,9 @@ class Inquiry::AnswersController < ApplicationController
         columns.each do |col|
           row << values[col]
         end
-        row << item.updated.strftime("%Y/%m/%d %H:%M")
         row << item.source_full_url
         row << item.source_name
+        row << item.updated.strftime("%Y/%m/%d %H:%M")
 
         data << row
       end
