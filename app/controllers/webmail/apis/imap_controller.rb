@@ -53,10 +53,18 @@ class Webmail::Apis::ImapController < ApplicationController
       unseen: inbox.unseen,
       latest: @items.first.try(:internal_date),
       items: @items.map do |item|
+        if SS.config.webmail.store_mails
+          item = @imap.mails.find_and_store item.uid, :body
+        else
+          item = @imap.mails.find item.uid, :body
+        end
         {
           date: item.internal_date,
           from: item.display_sender.name,
+          to: item.display_to.map { |addr| addr.name }.presence,
+          cc: item.display_cc.map { |addr| addr.name }.presence,
           subject: item.display_subject,
+          text: item.text.presence,
           url: webmail_mail_url(webmail_mode: @webmail_mode || :account, account: params[:account], mailbox: 'INBOX', id: item.uid),
           unseen: item.unseen?
         }
