@@ -33,7 +33,7 @@ describe "cms_login", type: :feature, dbscope: :example do
     it "with organization_uid" do
       visit login_path
       within "form" do
-        fill_in "item[email]", with: user.uid
+        fill_in "item[email]", with: user.organization_uid
         fill_in "item[password]", with: "pass"
         click_button I18n.t("ss.login")
       end
