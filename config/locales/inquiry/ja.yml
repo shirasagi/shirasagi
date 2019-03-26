@@ -130,6 +130,7 @@ ja:
         captcha: 画像の数字
         source_url: ページURL
         source_name: ページタイトル
+        created: 作成日時
 
       inquiry/addon/feedback_setting:
         upper_html: 上部HTML
