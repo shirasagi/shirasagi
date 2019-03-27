@@ -2,6 +2,8 @@ class Gws::Column::Value::CheckBox < Gws::Column::Value::Base
   field :values, type: SS::Extensions::Words
 
   def validate_value(record, attribute)
+    self.values = values.select(&:present?)
+
     return if column.blank?
 
     if column.required? && values.blank?
