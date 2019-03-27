@@ -10,7 +10,9 @@ SS::Application.routes.draw do
   sys "job" do
     get "/" => redirect { |p, req| "#{req.path}/logs" }, as: :main
 
-    resources :logs, only: [:index, :show] do
+    get "/logs" => "logs#index", as: :logs
+
+    resources :logs, only: [:index, :show], path: 'logs/:ymd', as: :daily_logs do
       get :batch_destroy, on: :collection
       post :batch_destroy, on: :collection
       match :download_all, on: :collection, via: %i[get post]
@@ -28,7 +30,9 @@ SS::Application.routes.draw do
   cms "job" do
     get "/" => redirect { |p, req| "#{req.path}/logs" }, as: :main
 
-    resources :logs, only: [:index, :show] do
+    get "/logs" => "logs#index", as: :logs
+
+    resources :logs, only: [:index, :show], path: 'logs/:ymd', as: :daily_logs do
       get :batch_destroy, on: :collection
       post :batch_destroy, on: :collection
       match :download_all, on: :collection, via: %i[get post]
