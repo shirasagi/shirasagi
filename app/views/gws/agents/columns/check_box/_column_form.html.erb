@@ -1,10 +1,11 @@
 <% value ||= [] %>
 <%= render file: 'gws/agents/columns/main/_common_label', locals: { column: column } %>
 <dd>
+  <%= hidden_field_tag("#{object_name}[#{column.id}][]", nil, id: nil) %>
   <span class="prefix"><%= column.prefix_label %></span>
   <% column.select_options.each do |val| %>
     <label>
-      <%= check_box_tag("#{object_name}[#{column.id}][]", val, value.try(:values).try(:include?, val), column.form_options) %>
+      <%= check_box_tag("#{object_name}[#{column.id}][]", val, value.try(:values).try(:include?, val), column.form_options.reverse_merge(id: nil)) %>
       <%= val %>
     </label>
   <% end %>
