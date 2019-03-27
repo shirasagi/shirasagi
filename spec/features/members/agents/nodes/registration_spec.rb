@@ -388,4 +388,36 @@ describe 'members/agents/nodes/registration', type: :feature, dbscope: :example 
       expect(member.password).to eq SS::Crypt.crypt(new_password)
     end
   end
+
+  describe "overwrite existing temporal member" do
+    let(:member) { create(:cms_member, state: "temporary") }
+
+    it do
+      visit node_registration.full_url
+
+      within "form" do
+        fill_in "item[name]", with: member.name
+        fill_in "item[email]", with: member.email
+        fill_in "item[email_again]", with: member.email
+
+        click_button "確認画面へ"
+      end
+
+      within "form" do
+        click_button "登録"
+      end
+
+      expect(page).to have_content("メールに記載の案内を読み、登録を完了してください。")
+
+      expect(ActionMailer::Base.deliveries.length).to eq 1
+      mail = ActionMailer::Base.deliveries.first
+      expect(mail.from.first).to eq "admin@example.jp"
+      expect(mail.to.first).to eq member.email
+      expect(mail.subject).to eq '登録確認'
+      expect(mail.body.multipart?).to be_falsey
+      expect(mail.body.raw_source).to include(node_registration.reply_upper_text)
+      expect(mail.body.raw_source).to include(node_registration.reply_lower_text)
+      expect(mail.body.raw_source).to include(node_registration.reply_signature)
+    end
+  end
 end

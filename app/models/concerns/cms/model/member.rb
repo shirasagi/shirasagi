@@ -56,8 +56,8 @@ module Cms::Model::Member
     before_validation :encrypt_password, if: ->{ in_password.present? }
     before_validation :set_site_email, if: ->{ email.present? }
 
-    after_create :send_notify_mail, if: ->{ oauth_type.blank? }
-    after_create :send_verification_mail, if: ->{ oauth_type.blank? }
+    after_save :send_notify_mail, if: ->{ oauth_type.blank? }
+    after_save :send_verification_mail, if: ->{ oauth_type.blank? }
 
     scope :and_enabled, -> { self.or({ state: 'enabled' }, { state: nil }) }
     scope :and_temporary, -> { where(state: 'temporary') }
