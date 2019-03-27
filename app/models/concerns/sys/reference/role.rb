@@ -34,7 +34,7 @@ module Sys::Reference
     def validate_add_general_sys_roles
       add_general_sys_roles.each do |role|
         next if role.general?
-        errors.add(:base, "SYSロール「#{role.name}」は管理用の権限が含まれている為、設定できません。")
+        errors.add :base, I18n.t("errors.messages.include_not_general_sys_roles", name: role.name)
       end
     end
   end
