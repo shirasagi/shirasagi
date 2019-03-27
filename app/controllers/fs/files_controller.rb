@@ -2,6 +2,7 @@ class Fs::FilesController < ApplicationController
   include SS::AuthFilter
   include Member::AuthFilter
   include Fs::FileFilter
+  include Cms::PublicFilter::Site
 
   before_action :set_item
   before_action :deny
