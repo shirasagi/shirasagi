@@ -200,7 +200,7 @@ class Gws::UserCsv::Importer
   end
 
   def set_sys_roles(item)
-    value = row_value('sys_roles')
+    value = row_value('sys_roles').to_s
     role_ids = item.sys_role_ids
     add_sys_roles = Sys::Role.in(name: value.split(/\n/)).to_a
 

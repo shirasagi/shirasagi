@@ -403,7 +403,7 @@ class Webmail::UserExport
     account_index = str(row, 'imap_setting.account_index').to_i - 1
     return if account_index != 0
 
-    value = str(row, 'sys_role_ids')
+    value = str(row, 'sys_role_ids').to_s
 
     role_ids = item.sys_role_ids
     add_sys_roles = Sys::Role.in(name: value.split(/\n/)).to_a
