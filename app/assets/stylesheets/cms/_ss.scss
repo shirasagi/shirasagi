@@ -72,8 +72,8 @@
     font-weight: normal;
 
     &.state-public {
-      background-color: #28a745;
-      color: #000000;
+      background-color: #62d27c;
+      color: #000;
     }
     &.state-closed {
       background-color: #6c757d;
@@ -81,19 +81,19 @@
     }
     &.state-ready {
       background-color: #fdc02f;
-      color: #000000;
+      color: #000;
     }
     &.state-request {
-      background-color: #167FFB;
-      color: #000000;
+      background-color: #6da4f7;
+      color: #000;
     }
     &.state-edit {
-      background-color: #dc3545;
-      color: #000000;
+      background-color: #f78691;
+      color: #000;
     }
     &.state-remand {
-      background-color: #17a2b8;
-      color: #000000;
+      background-color: #895b8a;
+      color: #fff;
     }
   }
 }

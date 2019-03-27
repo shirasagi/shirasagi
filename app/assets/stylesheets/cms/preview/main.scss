@@ -41,6 +41,7 @@
     @include align-items(center);
     label {
       height: 29px;
+      margin: 0;
       padding: 4px 12px;
       background: #d9d9d9;
       border-radius: 3px 0 0 3px;
@@ -220,7 +221,6 @@
     @include flex-wrap(wrap);
     background-color: rgba(0, 0, 0, 0.8);
     pointer-events: none;
-    overflow: hidden;
     @include mb {
       display: block;
     }
@@ -255,6 +255,14 @@
       bottom: 0;
       left: 0;
       z-index: 0;
+    }
+    .ss-preview-overlay-btn-group-edit:after {
+      content: "";
+      position: absolute;
+      left: 0;
+      bottom: -5px;
+      width: 100%;
+      padding: 4px 0;
     }
   }
   * {
