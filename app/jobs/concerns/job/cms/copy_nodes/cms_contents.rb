@@ -38,7 +38,12 @@ module Job::Cms::CopyNodes::CmsContents
     field.type == Array || field.type.ancestors.include?(Array)
   end
 
-  def reference_class(name, field)
+  def reference_class(name, field, content)
+    if field.foreign_key? && field.association.polymorphic?
+      klass = content[field.association.inverse_type]
+      return klass.present? ? klass.constantize : nil
+    end
+
     metadata = field.options[:metadata]
     return nil if metadata.blank?
 
@@ -88,7 +93,7 @@ module Job::Cms::CopyNodes::CmsContents
       next nil if %w(_id id site_id created updated).include?(field_name)
       next nil unless fields.key?(field_name)
 
-      ref_class = reference_class(field_name, fields[field_name])
+      ref_class = reference_class(field_name, fields[field_name], content)
       next [field_name, field_value] if ref_class.blank?
 
       ref_type = reference_type(ref_class)
@@ -110,7 +115,7 @@ module Job::Cms::CopyNodes::CmsContents
       next nil if field_names.present? && !field_names.include?(field_name)
       next [field_name, field_value] if field_value.blank?
 
-      ref_class = reference_class(field_name, fields[field_name])
+      ref_class = reference_class(field_name, fields[field_name], content)
       next nil if ref_class.nil?
 
       ref_type = reference_type(ref_class)

@@ -914,3 +914,7 @@ ja:
         - "未入力の場合、システム設定のメールアドレス（例: noreply@example.jp）が使用されます。"
       mail_signature:
         - システムから送信されるメールの既定の署名を入力します。
+
+  job:
+    models:
+      ss/public_file_remover_job: 公開済みファイル削除ジョブ

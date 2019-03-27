@@ -6,6 +6,7 @@ class Board::PostsController < ApplicationController
 
   navi_view "board/main/navi"
 
+  before_action :check_node_permission
   before_action :set_item, only: [:show, :edit, :update, :delete, :destroy]
   before_action :set_topic, only: [:new_reply, :reply, :edit, :update]
   after_action :generate, only: [:create, :reply, :update, :destroy]
@@ -14,6 +15,10 @@ class Board::PostsController < ApplicationController
 
   def fix_params
     { cur_site: @cur_site, cur_node: @cur_node, cur_user: @cur_user, topic: @topic, parent: @topic }
+  end
+
+  def check_node_permission
+    raise "403" unless @cur_node.allowed?(:read, @cur_user, site: @cur_site, node: @cur_node)
   end
 
   def set_topic

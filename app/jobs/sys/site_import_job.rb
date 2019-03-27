@@ -1,3 +1,5 @@
+require 'nkf'
+
 class Sys::SiteImportJob < SS::ApplicationJob
   include Job::SS::TaskFilter
   include Sys::SiteImport::Contents
@@ -74,10 +76,17 @@ class Sys::SiteImportJob < SS::ApplicationJob
 
     Zip::File.open(@import_zip) do |entries|
       entries.each do |entry|
-        if entry.name.start_with?('public/')
-          path = "#{@dst_site.path}/" + entry.name.encode("UTF-8").tr('\\', '/').sub(/^public\//, '')
+        name = entry.name
+        if entry.gp_flags & Zip::Entry::EFS
+          name.force_encoding("UTF-8")
         else
-          path = "#{@import_dir}/" + entry.name.encode("UTF-8").tr('\\', '/')
+          name = NKF.nkf('-w', name)
+        end
+
+        if name.start_with?('public/')
+          path = "#{@dst_site.path}/" + name.tr('\\', '/').sub(/^public\//, '')
+        else
+          path = "#{@import_dir}/" + name.tr('\\', '/')
         end
 
         if entry.directory?

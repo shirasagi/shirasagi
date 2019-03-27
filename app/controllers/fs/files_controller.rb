@@ -15,18 +15,12 @@ class Fs::FilesController < ApplicationController
     path << ".#{params[:format]}" if params[:format].present?
 
     @item = SS::File.find_by id: id, filename: path
-    raise "404" if @item.thumb?
+    @item = @item.becomes_with_model
+    raise "404" if @item.try(:thumb?)
   end
 
   def deny
-    return if @item.public?
-    return if SS.config.env.remote_preview
-
-    user   = get_user_by_session
-    member = get_member_by_session
-    item   = @item.becomes_with_model
-    raise "404" unless item.previewable?(user: user, member: member)
-
+    raise "404" unless @item.previewable?(user: get_user_by_session, member: get_member_by_session)
     set_last_logged_in
   end
 
@@ -72,7 +66,7 @@ class Fs::FilesController < ApplicationController
     size   = params[:size]
     width  = params[:width]
     height = params[:height]
-    thumb  = @item.thumb(size)
+    thumb  = @item.try(:thumb, size)
 
     if width.present? && height.present?
       set_last_modified

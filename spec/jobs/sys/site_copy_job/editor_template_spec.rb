@@ -75,6 +75,7 @@ describe Sys::SiteCopyJob, dbscope: :example do
         expect(dest_template.thumb_id).not_to be_nil
         expect(dest_template.thumb_id).not_to eq template.thumb_id
         expect(dest_template.thumb.site_id).to eq dest_site.id
+        expect(dest_template.thumb.owner_item_id).to eq dest_template.id
       end
     end
   end

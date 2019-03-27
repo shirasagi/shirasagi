@@ -8,6 +8,7 @@ module Cms::Content
   include Cms::GroupPermission
   include Cms::Addon::CheckLinks
   include SS::Liquidization
+  include Fs::FilePreviewable
 
   attr_accessor :cur_node, :basename
   attr_accessor :serve_static_relation_files
@@ -218,6 +219,13 @@ module Cms::Content
 
   def node_target_options
     %w(current descendant).map { |m| [ I18n.t("cms.options.node_target.#{m}"), m ] }
+  end
+
+  def file_previewable?(file, user:, member:)
+    return false unless public?
+    return false unless public_node?
+    return false if try(:for_member_enabled?) && member.blank?
+    true
   end
 
   private

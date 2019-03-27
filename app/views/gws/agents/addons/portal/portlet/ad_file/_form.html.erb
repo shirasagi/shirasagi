@@ -1,5 +1,3 @@
-<% return if @file_addon_state == 'hide' %>
-
 <%= jquery do %>
 window.insertContent = function(cont) {
   if ((typeof tinymce) != "undefined") {
@@ -23,13 +21,14 @@ var tempFile = new SS_Addon_TempFile(".upload-drop-area", <%= @cur_user.id %>);
 <% end %>
 
 <div class="see gws-addon-file">
-  <%= f.hidden_field "file_ids[]", value: "" %>
+  <%= f.hidden_field "ad_file_ids[]", value: "" %>
   <span class="upload-menu-new">
     <%= link_to t('ss.links.upload'), gws_portal_apis_temp_files_path(@cur_user), class: "ajax-box btn" %>
   </span>
 
   <div id="selected-files">
-    <% @item.files.each do |file| %>
+    <% @item.ad_files.each do |file| %>
+      <% file = file.becomes_with(SS::LinkFile) %>
       <div id="file-<%= file.id %>" class="file-view">
 
         <%= link_to file.url, class: :thumb, target: "_blank" do %>
@@ -42,7 +41,7 @@ var tempFile = new SS_Addon_TempFile(".upload-drop-area", <%= @cur_user.id %>);
 
         <div class="name">
           <label>
-            <input type="hidden" name="item[file_ids][]" value="<%= file.id %>" class="file-id" />
+            <input type="hidden" name="item[ad_file_ids][]" value="<%= file.id %>" class="file-id" />
             <%= file.name %>
           </label><br />
           <label>URL</label>

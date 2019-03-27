@@ -16,6 +16,8 @@ class Gws::Discussion::TodosController < ApplicationController
   def set_forum
     raise "403" unless Gws::Discussion::Forum.allowed?(:read, @cur_user, site: @cur_site)
     @forum = Gws::Discussion::Forum.find(params[:forum_id])
+
+    raise "404" unless @forum.allowed?(:read, @cur_user, site: @cur_site) || @forum.member?(@cur_user)
   end
 
   def set_crumbs
@@ -28,7 +30,7 @@ class Gws::Discussion::TodosController < ApplicationController
     @skip_default_group = true
     {
       start_at: params[:start] || Time.zone.now.strftime('%Y/%m/%d %H:00'),
-      member_ids: params[:member_ids].presence || [@cur_user.id],
+      member_ids: params[:member_ids].presence || [@cur_user.id]
     }
   end
 

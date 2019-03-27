@@ -1,12 +1,6 @@
 class Cms::PreviewController < ApplicationController
   include Cms::BaseFilter
 
-  if SS.config.cms.remote_preview
-    skip_before_action :logged_in?
-    skip_before_action :set_group
-    skip_before_action :check_api_user
-  end
-
   before_action :set_controller
   before_action :set_preview_date
   before_action :set_preview_notice

@@ -6,6 +6,7 @@ class Board::Post
   include Board::Addon::File
   include Board::Addon::PostPermission
   include SimpleCaptcha::ModelHelpers
+  include Fs::FilePreviewable
 
   field :poster, type: String
   field :email, type: String
@@ -60,6 +61,10 @@ class Board::Post
       "<a href=\"#{href}\">#{href}</a>"
     end
     text.gsub(/(\r\n?)|(\n)/, "<br />").html_safe
+  end
+
+  def file_previewable?(file, user:, member:)
+    node.present? && node.public?
   end
 
   class << self

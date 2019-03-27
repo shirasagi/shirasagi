@@ -13,7 +13,7 @@ module Gws::Portal::PortletFilter
   end
 
   def pre_params
-    { group_ids: @portal.group_ids, user_ids: @portal.user_ids }
+    { readable_group_ids: @portal.group_ids, group_ids: @portal.group_ids, user_ids: @portal.user_ids }
   end
 
   def set_portlet_addons
@@ -29,6 +29,18 @@ module Gws::Portal::PortletFilter
 
     @item.name = @item.label(:portlet_model)
     render file: 'gws/portal/common/portlets/select_model' unless @item.portlet_model_enabled?
+
+    if params[:group].present?
+      @default_readable_setting = proc do
+        @item.readable_setting_range = 'select'
+        @item.readable_group_ids = @portal.group_ids + [ @cur_group.id ]
+      end
+    elsif params[:user].present?
+      @default_readable_setting = proc do
+        @item.readable_setting_range = 'select'
+        @item.readable_member_ids = @portal.user_ids + [ @cur_user.id ]
+      end
+    end
   end
 
   public

@@ -23,6 +23,8 @@ module SS::Model::File
 
     belongs_to :site, class_name: "SS::Site"
 
+    belongs_to :owner_item, class_name: "Object", polymorphic: true
+
     attr_accessor :in_data_url
 
     permit_params :in_file, :state, :name, :filename, :resizing, :in_data_url
@@ -108,8 +110,35 @@ module SS::Model::File
   end
 
   def previewable?(opts = {})
+    meta = SS::File.find_model_metadata(model) || {}
+
+    # be careful: cur_user and item may be nil
     cur_user = opts[:user]
-    cur_user.present?
+    cur_member = opts[:member]
+    item = effective_owner_item
+    if cur_user && item
+      permit = meta[:permit] || %i(role readable member)
+      if permit.include?(:readable) && item.respond_to?(:readable?)
+        return true if item.readable?(cur_user, site: item.try(:site))
+      end
+      if permit.include?(:member) && item.respond_to?(:member?)
+        return true if item.member?(cur_user)
+      end
+      if permit.include?(:role) && item.respond_to?(:allowed?)
+        return true if item.allowed?(:read, cur_user, site: item.try(:site))
+      end
+    end
+
+    if item && item.is_a?(Fs::FilePreviewable)
+      # special delegation if item implements previewable?
+      return true if item.file_previewable?(self, user: cur_user, member: cur_member)
+    end
+
+    if cur_user && respond_to?(:user_id)
+      return true if user_id == cur_user.id
+    end
+
+    false
   end
 
   def state_options
@@ -133,6 +162,7 @@ module SS::Model::File
   end
 
   def extname
+    return "" unless filename.to_s.include?('.')
     filename.to_s.sub(/.*\W/, "")
   end
 
@@ -203,6 +233,17 @@ module SS::Model::File
   end
 
   private
+
+  def effective_owner_item
+    item = owner_item rescue nil
+    return item if item.present?
+
+    type = @item.model.camelize.constantize rescue nil
+    return if type.blank?
+
+    conds = (type.fields.keys & %w(file_id file_ids)).map { |f| { f => id} }
+    type.where("$and" => [{ "$or" => conds }]).first
+  end
 
   def set_filename
     self.name         = in_file.original_filename if self[:name].blank?

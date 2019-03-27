@@ -44,7 +44,12 @@ module Sys::SiteCopy::CmsContents
     field.type == Array || field.type.ancestors.include?(Array)
   end
 
-  def reference_class(name, field)
+  def reference_class(name, field, content)
+    if field.foreign_key? && field.association.polymorphic?
+      klass = content[field.association.inverse_type]
+      return klass.present? ? klass.constantize : nil
+    end
+
     metadata = field.options[:metadata]
     association = field.association
     return nil if metadata.blank? && association.blank?
@@ -89,8 +94,12 @@ module Sys::SiteCopy::CmsContents
       :column
     elsif klass == Cms::LoopSetting
       :loop_setting
+    elsif klass == Cms::EditorTemplate
+      :editor_template
     elsif klass == Opendata::DatasetGroup
       :opendata_dataset_group
+    elsif klass == Opendata::License
+      :opendata_license
     elsif ancestors.include?(Jmaxml::QuakeRegion)
       :jmaxml_quake_region
     else
@@ -99,7 +108,7 @@ module Sys::SiteCopy::CmsContents
   end
 
   def safe_reference_type?(type)
-    [:group, :user, :file, :layout].include?(type)
+    [:group, :user, :layout].include?(type)
   end
 
   def unsafe_reference_type?(type)
@@ -123,7 +132,7 @@ module Sys::SiteCopy::CmsContents
         unsafe = false
       end
 
-      ref_class = reference_class(field_name, field_info)
+      ref_class = reference_class(field_name, field_info, content)
       next [field_name, field_value] if ref_class.blank?
 
       ref_type = reference_type(ref_class)
@@ -147,7 +156,7 @@ module Sys::SiteCopy::CmsContents
 
       next nil if on_copy(field_name, fields[field_name])
 
-      ref_class = reference_class(field_name, fields[field_name])
+      ref_class = reference_class(field_name, fields[field_name], content)
       next nil if ref_class.nil?
 
       ref_type = reference_type(ref_class)
@@ -185,6 +194,12 @@ module Sys::SiteCopy::CmsContents
       resolve_column_reference(id_or_ids)
     when :loop_setting
       resolve_loop_setting_reference(id_or_ids)
+    when :editor_template
+      resolve_editor_template_reference(id_or_ids)
+    when :opendata_dataset_group
+      resolve_opendata_dataset_group_reference(id_or_ids)
+    when :opendata_license
+      resolve_opendata_license_reference(id_or_ids)
     end
   end
 

@@ -4,7 +4,9 @@ module Gws::Qna::Postable
   include SS::Document
   include Gws::Reference::User
   include Gws::Reference::Site
+  include Gws::ReadableSetting
   include Gws::GroupPermission
+  include Fs::FilePreviewable
 
   included do
     store_in collection: "gws_qna_posts"
@@ -105,6 +107,25 @@ module Gws::Qna::Postable
     end
 
     becomes_with(Gws::Qna::Topic)
+  end
+
+  def readable?(user, opts = {})
+    if topic.present? && topic.id != id
+      return topic.readable?(user, opts)
+    end
+
+    super
+  end
+
+  def file_previewable?(file, user:)
+    return false if user.blank?
+    return false if !file_ids.include?(file.id)
+
+    if topic.present? && topic.id != id
+      return true if topic.allowed?(:read, user, site: site)
+    end
+
+    false
   end
 
   private

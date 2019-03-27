@@ -4,6 +4,7 @@ module Board::Addon
     extend SS::Addon
 
     def allowed?(action, user, opts = {})
+      user = user.cms_user
       site = opts[:site] || @cur_site
       # node = opts[:node] || @cur_node
 
@@ -18,6 +19,7 @@ module Board::Addon
 
     module ClassMethods
       def allow(action, user, opts = {})
+        user = user.cms_user
         site_id = opts[:site] ? opts[:site].id : criteria.selector["site_id"]
         permit = "#{action}_board_posts"
 

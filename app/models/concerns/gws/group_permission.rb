@@ -23,6 +23,7 @@ module Gws::GroupPermission
   end
 
   def owned?(user)
+    user = user.gws_user
     return true if (self.group_ids & user.group_ids).present?
     return true if user_ids.to_a.include?(user.id)
     return true if custom_groups.any? { |m| m.member_ids.include?(user.id) }
@@ -36,6 +37,7 @@ module Gws::GroupPermission
   # @param [String] action
   # @param [Gws::User] user
   def allowed?(action, user, opts = {})
+    user    = user.gws_user
     site    = opts[:site] || @cur_site
     action  = permission_action || action
     permits = []
@@ -99,6 +101,7 @@ module Gws::GroupPermission
     end
 
     def allow_condition(action, user, opts = {})
+      user = user.gws_user
       site_id = opts[:site] ? opts[:site].id : criteria.selector["site_id"]
       action = permission_action || action
 
@@ -116,6 +119,7 @@ module Gws::GroupPermission
     end
 
     def other_permission?(action, user, opts = {})
+      user   = user.gws_user
       site   = opts[:site]
       action = permission_action || action
       user.gws_role_permissions.include?("#{action}_other_#{permission_name}_#{site.id}")

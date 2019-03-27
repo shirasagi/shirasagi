@@ -27,7 +27,16 @@ class Gws::Schedule::HolidaysController < ApplicationController
     'month'
   end
 
+  def set_item
+    super
+    raise "404" unless @item.allowed?(:read, @cur_user, site: @cur_site)
+  end
+
   public
+
+  def index
+    raise "403" unless @model.allowed?(:read, @cur_user, site: @cur_site)
+  end
 
   def destroy
     raise "403" unless @item.allowed?(:delete, @cur_user, site: @cur_site)

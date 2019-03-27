@@ -7,6 +7,7 @@ class Gws::Survey::File
   include Gws::Addon::ReadableSetting
   include Gws::Addon::GroupPermission
   include Gws::Addon::History
+  include Fs::FilePreviewable
 
   attr_accessor :in_skip_notification_mail
 
@@ -66,5 +67,20 @@ class Gws::Survey::File
 
   def anonymous?
     anonymous_state == 'enabled'
+  end
+
+  def file_previewable?(file, user:)
+    return false if user.blank?
+    return false if column_values.where(file_ids: file.id).blank?
+
+    form = self.form
+    return true if form.allowed?(:read, user, site: self.site)
+
+    if form.readable?(user, self.site)
+      return true if user_id == user.id
+      return true if form.file_public?
+    end
+
+    false
   end
 end

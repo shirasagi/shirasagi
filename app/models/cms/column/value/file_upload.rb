@@ -109,6 +109,7 @@ class Cms::Column::Value::FileUpload < Cms::Column::Value::Base
       clone_file.id = nil
       clone_file.in_file = file.uploaded_file
       clone_file.user_id = @cur_user.id if @cur_user
+      clone_file.owner_item = _parent
 
       clone_file.save(validate: false)
 
@@ -120,8 +121,11 @@ class Cms::Column::Value::FileUpload < Cms::Column::Value::Base
     if file.site_id != _parent.site_id
       attrs[:site_id] = _parent.site_id
     end
-    if file.model != 'cms/column'
-      attrs[:model] = 'cms/column'
+    if file.model != _parent.class.name
+      attrs[:model] = _parent.class.name
+    end
+    if file.owner_item != _parent
+      attrs[:owner_item] = _parent
     end
     if file.state != _parent.state
       attrs[:state] = _parent.state
