@@ -4,17 +4,19 @@ class Gws::UserCsv::Exporter
   attr_accessor :site
   attr_accessor :form
   attr_accessor :criteria
+  attr_accessor :webmail_support
 
   PREFIX = 'A:'.freeze
 
   class << self
-    def csv_basic_headers
+    def csv_basic_headers(opts = {})
       headers = %w(
-      id name kana uid organization_uid email password tel tel_ext title_ids type
-      account_start_date account_expiration_date initial_password_warning session_lifetime
-      organization_id groups gws_main_group_ids switch_user_id remark
-      ldap_dn gws_roles
-    )
+        id name kana uid organization_uid email password tel tel_ext title_ids type
+        account_start_date account_expiration_date initial_password_warning session_lifetime
+        organization_id groups gws_main_group_ids switch_user_id remark
+        ldap_dn gws_roles sys_roles
+      )
+      headers += %w(webmail_roles) if opts[:webmail_support]
       headers.map! { |k| Gws::User.t(k) }
     end
 
@@ -46,7 +48,7 @@ class Gws::UserCsv::Exporter
   end
 
   def csv_headers
-    self.class.csv_basic_headers + csv_extend_headers
+    self.class.csv_basic_headers(webmail_support: @webmail_support) + csv_extend_headers
   end
 
   def enum_csv
@@ -93,6 +95,8 @@ class Gws::UserCsv::Exporter
     terms << item.remark
     terms << item.ldap_dn
     terms << item_roles(item).map(&:name).join("\n")
+    terms << item.sys_roles.and_general.map(&:name).join("\n")
+    terms << item.webmail_roles.map(&:name).join("\n") if @webmail_support
 
     terms += item_column_values(item)
 

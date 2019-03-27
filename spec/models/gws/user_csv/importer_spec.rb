@@ -3,6 +3,7 @@ require 'spec_helper'
 describe Gws::UserCsv::Importer, type: :model, dbscope: :example do
   let(:site) { gws_site }
   let!(:title) { create(:gws_user_title, code: 'E100', name: '社長') }
+  let!(:sys_role1) { create(:sys_role_general, name: "一般ユーザー") }
 
   context 'with no forms' do
     let(:file) { "#{Rails.root}/spec/fixtures/gws/user/gws_users.csv" }
@@ -35,6 +36,7 @@ describe Gws::UserCsv::Importer, type: :model, dbscope: :example do
         expect(user.remark).to eq 'テキスト'
         expect(user.ldap_dn).to eq 'cn=Manager,dc=city,dc=shirasagi,dc=jp'
         expect(user.gws_role_ids).to eq []
+        expect(user.sys_role_ids).to eq [sys_role1.id]
       end
     end
   end

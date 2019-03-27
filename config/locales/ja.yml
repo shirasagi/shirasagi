@@ -157,6 +157,7 @@ ja:
       contact_system_administrator: システム管理者にお問い合わせください。
       try_again_later: 時間を置いてもう一度お試しください。
       malformed_liquid_template: "の形式が正しくありません。%{error}"
+      include_not_general_sys_roles: "SYSロール「%{name}」は管理用の権限が含まれている為、設定できません。"
     template:
       body: 次の項目を確認してください。
       header:

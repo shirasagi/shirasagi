@@ -432,6 +432,10 @@ ja:
         cms_role_ids: CMSロール
         gws_roles: GWSロール
         gws_role_ids: GWSロール
+        sys_roles: SYSロール
+        sys_role_ids: SYSロール
+        webmail_roles: WEBMAILロール
+        webmail_role_ids: WEBMAILロール
         type: ユーザータイプ
         sns: SNSユーザー
         ldap: LDAPユーザー

@@ -16,6 +16,11 @@ SS::Application.routes.draw do
     post :import, on: :collection
   end
 
+  concern :webmail_import do
+    get :webmail_import, on: :collection
+    post :webmail_import, on: :collection
+  end
+
   concern :lock_and_unlock do
     post :lock_all, on: :collection
     post :unlock_all, on: :collection
@@ -34,7 +39,7 @@ SS::Application.routes.draw do
     resource  :site
     resources :groups, concerns: [:deletion, :download, :import]
     resources :custom_groups, concerns: [:deletion]
-    resources :users, concerns: [:deletion, :download, :import, :lock_and_unlock]
+    resources :users, concerns: [:deletion, :download, :import, :webmail_import, :lock_and_unlock]
     resources :user_titles, concerns: [:deletion]
     resources :roles, concerns: [:deletion, :download, :import]
     resources :sys_notices, only: [:index, :show]
