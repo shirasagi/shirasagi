@@ -7,9 +7,10 @@ class Gws::UserCsv::Importer
   attr_accessor :in_file
   attr_accessor :cur_site
   attr_accessor :cur_user
+  attr_accessor :webmail_support
   attr_reader :imported
 
-  permit_params :in_file
+  permit_params :in_file, :webmail_support
 
   validates :in_file, presence: true
   validates :cur_site, presence: true
@@ -65,7 +66,7 @@ class Gws::UserCsv::Importer
       return
     end
 
-    diff = Gws::UserCsv::Exporter.csv_basic_headers - @table.headers
+    diff = Gws::UserCsv::Exporter.csv_basic_headers(webmail_support: @webmail_support) - @table.headers
     if diff.present?
       errors.add :in_file, :invalid_file_type
     end
@@ -96,10 +97,13 @@ class Gws::UserCsv::Importer
       item[k] = row_value(k)
     end
 
-    %i[
+    keys = %i[
       set_password set_title set_type set_initial_password_warning set_organization_id set_group_ids
       set_main_group_ids set_switch_user_id set_gws_roles set_sys_roles
-    ].each do |m|
+    ]
+    keys += %i[set_webmail_roles] if webmail_support
+
+    keys.each do |m|
       send(m, item)
     end
 
@@ -197,6 +201,18 @@ class Gws::UserCsv::Importer
     end
     site_role_ids = Gws::Role.site(cur_site).pluck(:id)
     item.gws_role_ids = item.gws_role_ids - site_role_ids + add_role_ids
+  end
+
+  def set_webmail_roles(item)
+    value = row_value('webmail_roles').to_s
+    role_ids = item.webmail_role_ids
+    add_webmail_roles = Webmail::Role.in(name: value.split(/\n/)).to_a
+
+    if value.present? && add_webmail_roles.present?
+      role_ids = add_webmail_roles.pluck(:id)
+    end
+
+    item.webmail_role_ids = role_ids
   end
 
   def set_sys_roles(item)

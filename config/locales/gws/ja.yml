@@ -79,6 +79,7 @@ ja:
 
     links:
       back_to_portal: ポータルへ戻る
+      webmail_user_import: ウェブメール権限を含むインポート
     buttons:
       unset: 解除
       add_item: 新しい要素を追加
@@ -90,6 +91,7 @@ ja:
         ファイル数が多い、またはファイル容量が大きいためバックグランドでファイルを準備します。
         ダウンロードの準備ができましたらメッセージでお知らせします。
       contrast_changed: 'コントラストを「%{name}」に変更しました。'
+      webmail_user_import: グループウェアの設定に加えて、ウェブメール権限を設定することができます。
     errors:
       allowed_domains_only_root: はルートグループにのみ設定できます。
 
