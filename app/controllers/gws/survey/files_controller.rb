@@ -93,7 +93,7 @@ class Gws::Survey::FilesController < ApplicationController
   def update
     raise '403' if @item.persisted? && !@cur_form.file_editable?
 
-    custom = params.require(:custom)
+    custom = params.require(:custom) rescue {}
     new_column_values = @cur_form.build_column_values(custom)
     @item.update_column_values(new_column_values)
     @item.in_updated = params[:_updated] if @item.respond_to?(:in_updated)
