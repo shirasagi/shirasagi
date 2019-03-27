@@ -98,7 +98,7 @@ class Gws::UserCsv::Importer
 
     %i[
       set_password set_title set_type set_initial_password_warning set_organization_id set_group_ids
-      set_main_group_ids set_switch_user_id set_gws_roles
+      set_main_group_ids set_switch_user_id set_gws_roles set_sys_roles
     ].each do |m|
       send(m, item)
     end
@@ -197,6 +197,21 @@ class Gws::UserCsv::Importer
     end
     site_role_ids = Gws::Role.site(cur_site).pluck(:id)
     item.gws_role_ids = item.gws_role_ids - site_role_ids + add_role_ids
+  end
+
+  def set_sys_roles(item)
+    value = row_value('sys_roles')
+    role_ids = item.sys_role_ids
+    add_sys_roles = Sys::Role.in(name: value.split(/\n/)).to_a
+
+    if value.present? && add_sys_roles.present?
+      item.add_general_sys_roles = add_sys_roles
+
+      role_ids -= Sys::Role.and_general.pluck(:id)
+      role_ids += add_sys_roles.pluck(:id)
+    end
+
+    item.sys_role_ids = role_ids
   end
 
   def save_item(item)
