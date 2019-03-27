@@ -18,6 +18,7 @@ module SS
 
         def tmpfile(options = {}, &block)
           tmpfile = "#{tmpdir}/#{unique_id}"
+          tmpfile = "#{tmpfile}#{options[:extname]}" if options[:extname]
           mode = options[:binary] ? "wb" : "w"
           mode = "#{mode}:#{options[:encoding]}" if options[:encoding]
 
