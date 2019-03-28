@@ -58,19 +58,20 @@ module Webmail::Mail::Parser
     if field.value.include?('=?ISO-2022-JP?')
       value = NKF.nkf("-w", field.value)
     else
-      value = field.value
+      value = decode_jp(field.value)
     end
 
     ::Mail::AddressList.new(value).addresses.map do |addr|
       if addr.display_name.present?
         #charset = field.value.start_with?('=?ISO-2022-JP?') ? 'CP50220' : nil
-        addr.decoded.encode('UTF-8', nil, invalid: :replace, undef: :replace) rescue addr.decoded
+        addr.decoded
       else
         addr.address
       end
     end
   rescue Mail::Field::ParseError, StandardError
-    [field.decoded] rescue [field.value]
+    # this method must return "UTF-8 clean" string
+    [decode_jp(field.decoded)] rescue [value || decode_jp(field.value)]
   end
 
   def parse_references(references)
