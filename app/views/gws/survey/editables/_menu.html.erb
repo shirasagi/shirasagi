@@ -16,10 +16,10 @@
         <%= link_to t('gws/workflow.links.depublish'), action: :depublish, id: @item %>
       <% else %>
         <%= link_to t('gws/workflow.links.publish'), action: :publish, id: @item %>
+        <%= link_to t('ss.links.edit'), action: :edit, id: @item %>
       <% end %>
-      <%= link_to t('ss.links.edit'), action: :edit, id: @item %>
     <% end %>
-    <% if @item.allowed?(:delete, @cur_user, site: @cur_site) %>
+    <% if @item.allowed?(:delete, @cur_user, site: @cur_site) && @item.closed? %>
       <%= link_to t('ss.links.delete'), action: :soft_delete, id: @item %>
     <% end %>
     <%= link_to t('ss.links.back_to_index'), action: :index %>

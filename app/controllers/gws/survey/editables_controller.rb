@@ -7,6 +7,7 @@ class Gws::Survey::EditablesController < ApplicationController
   before_action :set_search_params
   before_action :set_items
   before_action :set_item, only: [:show, :edit, :update, :soft_delete, :move, :publish, :depublish]
+  before_action :respond_404_if_item_is_public, only: [:edit, :update, :soft_delete, :move]
   before_action :set_selected_items, only: [:destroy_all, :soft_delete_all]
 
   model Gws::Survey::Form
@@ -74,6 +75,10 @@ class Gws::Survey::EditablesController < ApplicationController
   rescue Mongoid::Errors::DocumentNotFound => e
     return render_destroy(true) if params[:action] == 'destroy'
     raise e
+  end
+
+  def respond_404_if_item_is_public
+    raise "404" if @item.public?
   end
 
   def set_selected_items
