@@ -111,7 +111,7 @@ $(document).on('click', '#table-menu-top-<%= table_name %> #remove-tds', functio
   var cellIndex = tableDom[0].cellIndex;
   var table = tableDom.parent().parent();
   for (var i=0; i<table[0].rows.length; i++){
-    table[0].rows[i].cells[cellIndex].remove();
+    $(table[0].rows[i].cells[cellIndex]).remove();
   }
 });
 
@@ -273,8 +273,8 @@ function addControllTable(){
 }
 
 function removeControllTable(){
-  $('#table-editor-<%= table_name %> table .controll').each(function(index, element){
-    element.remove();
+  $('#table-editor-<%= table_name %> table .controll').each(function(){
+    $(this).remove();
   });
 }
 
