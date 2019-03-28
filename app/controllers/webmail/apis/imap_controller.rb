@@ -42,10 +42,12 @@ class Webmail::Apis::ImapController < ApplicationController
 
   def latest
     @mailboxes = @imap.mailboxes.load
-    inbox = @mailboxes.inbox.status
+    @mailboxes.apply_recent_filters
+    inbox = @mailboxes.inbox
+    mailbox = params[:mailbox]
 
-    @imap.examine('INBOX')
-    @items = @imap.mails.mailbox('INBOX').per(10).all
+    @imap.examine(mailbox)
+    @items = @imap.mails.mailbox(mailbox).per(10).all
 
     resp = {
       notice: notice_message(inbox),
