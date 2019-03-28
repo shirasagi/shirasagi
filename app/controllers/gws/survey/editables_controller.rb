@@ -22,6 +22,14 @@ class Gws::Survey::EditablesController < ApplicationController
     @crumbs << [t('ss.navi.editable'), action: :index, folder_id: '-', category_id: '-']
   end
 
+  def permit_fields
+    fields = super
+    if params[:action] == "create"
+      fields = fields + [:anonymous_state]
+    end
+    fields
+  end
+
   def pre_params
     { due_date: Time.zone.now.beginning_of_hour + 1.hour + @cur_site.survey_default_due_date.day }
   end
