@@ -3,6 +3,7 @@ class Recommend::History::Log
   include SS::Reference::Site
   include Cms::SitePermission
 
+  store_in_default_post
   index({ created: -1 })
 
   field :token, type: String
