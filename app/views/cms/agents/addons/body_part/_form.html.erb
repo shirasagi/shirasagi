@@ -1,3 +1,5 @@
+<% return if @item.respond_to?(:form) && ancestral_forms.present? %>
+
 <%
   editor_opts = html_editor_options(
     advanced: Cms::EditorExtension.allowed?(:use, @cur_user, site: @cur_site)
