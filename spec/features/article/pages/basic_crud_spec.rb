@@ -88,4 +88,18 @@ describe "article_pages", dbscope: :example, js: true do
       expect(page).to have_css(".list-head", text: I18n.t("cms.confirm.contains_urls_not_found"))
     end
   end
+
+  context "update page without required params" do
+    before { login_cms_user }
+
+    it "#edit" do
+      visit edit_path
+      within "form#item-form" do
+        # set to blank
+        fill_in "item[name]", with: ""
+        click_on I18n.t("ss.buttons.publish_save")
+      end
+      expect(page).to have_css('#errorExplanation', text: I18n.t('errors.messages.blank'))
+    end
+  end
 end
