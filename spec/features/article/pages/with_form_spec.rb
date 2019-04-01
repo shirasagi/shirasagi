@@ -89,7 +89,7 @@ describe 'article_pages', dbscope: :example, js: true do
           first(:field, name: "item[column_values][][in_wrap][values][]", with: column7_value).click
         end
         within ".column-value-cms-column-fileupload" do
-          fill_in "item[column_values][][in_wrap][image_text]", with: column8_image_text
+          fill_in "item[column_values][][in_wrap][file_label]", with: column8_image_text
           click_on I18n.t("ss.links.upload")
         end
       end
@@ -116,7 +116,7 @@ describe 'article_pages', dbscope: :example, js: true do
         expect(item.column_values.find_by(column_id: column6.id).value).to eq column6_value
         expect(item.column_values.find_by(column_id: column7.id).values).to eq [ column7_value ]
         expect(item.column_values.find_by(column_id: column8.id).file.name).to eq 'logo.png'
-        expect(item.column_values.find_by(column_id: column8.id).image_text).to eq column8_image_text
+        expect(item.column_values.find_by(column_id: column8.id).file_label).to eq column8_image_text
         expect(item.backups.count).to eq 1
       end
       expect(SS::File.all.unscoped.count).to eq 2
@@ -151,7 +151,7 @@ describe 'article_pages', dbscope: :example, js: true do
           first(:field, name: "item[column_values][][in_wrap][values][]", with: column7_value2).click
         end
         within ".column-value-cms-column-fileupload" do
-          fill_in "item[column_values][][in_wrap][image_text]", with: column8_image_text2
+          fill_in "item[column_values][][in_wrap][file_label]", with: column8_image_text2
           click_on I18n.t("ss.links.upload")
         end
       end
@@ -177,7 +177,7 @@ describe 'article_pages', dbscope: :example, js: true do
         expect(item.column_values.find_by(column_id: column6.id).value).to eq column6_value2
         expect(item.column_values.find_by(column_id: column7.id).values).to eq [ column7_value2 ]
         expect(item.column_values.find_by(column_id: column8.id).file.name).to eq 'keyvisual.gif'
-        expect(item.column_values.find_by(column_id: column8.id).image_text).to eq column8_image_text2
+        expect(item.column_values.find_by(column_id: column8.id).file_label).to eq column8_image_text2
         expect(item.backups.count).to eq 2
       end
       expect(SS::File.all.unscoped.count).to eq 2

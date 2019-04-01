@@ -57,7 +57,7 @@ describe 'article_pages', dbscope: :example, js: true do
           fill_in "item[column_values][][in_wrap][value]", with: column1_value
           # find("a[data-column-id=\"#{column2.id}\"]").click
           within first(".column-value-cms-column-fileupload") do
-            fill_in "item[column_values][][in_wrap][attachment_text]", with: unique_id
+            fill_in "item[column_values][][in_wrap][file_label]", with: unique_id
             click_on I18n.t("ss.links.upload")
           end
         end
