@@ -16,9 +16,12 @@ class Rss::ImportWeatherXmlJob < Rss::ImportBase
     return unless @cur_file
 
     @items = Rss::Wrappers.parse(@cur_file)
+    @imported_pages = []
   end
 
   def after_import
+    execute_weather_xml_filters
+
     super
 
     gc_rss_tempfile
@@ -44,7 +47,7 @@ class Rss::ImportWeatherXmlJob < Rss::ImportBase
       process_earthquake(page)
     end
 
-    execute_weather_xml_filter(page)
+    @imported_pages << page
     page
   end
 
@@ -56,8 +59,8 @@ class Rss::ImportWeatherXmlJob < Rss::ImportBase
     res = http.request(req)
     return nil if res.code != '200'
     res.body.force_encoding('UTF-8')
-  rescue
-    nil
+  rescue => e
+    Rails.logger.warn("#{e.class} (#{e.message}):\n  #{e.backtrace.join("\n  ")}")
   end
 
   def extract_event_id(xml)
@@ -142,20 +145,20 @@ class Rss::ImportWeatherXmlJob < Rss::ImportBase
     name = renderer.render_template(node.title_mail_text)
     text = renderer.render
 
-    ezine_page = Ezine::Page.new(
-      cur_site: site,
-      cur_node: node.anpi_mail,
-      cur_user: user,
-      name: name,
-      text: text
-    )
-
-    unless ezine_page.save
-      Rails.logger.warn("failed to save ezine/page:\n#{ezine_page.errors.full_messages.join("\n")}")
-      return
+    Ezine::Page.with_repl_master do |model|
+      ezine_page = model.new(
+        cur_site: site,
+        cur_node: node.anpi_mail,
+        cur_user: user,
+        name: name,
+        text: text
+      )
+      if ezine_page.save
+        Ezine::DeliverJob.bind(site_id: site, node_id: node, page_id: ezine_page).perform_now
+      else
+        Rails.logger.warn("failed to save ezine/page:\n#{ezine_page.errors.full_messages.join("\n")}")
+      end
     end
-
-    Ezine::DeliverJob.bind(site_id: site, node_id: node, page_id: ezine_page).perform_now
   end
 
   def compare_intensity(lhs, rhs)
@@ -169,19 +172,16 @@ class Rss::ImportWeatherXmlJob < Rss::ImportBase
     ret
   end
 
-  def execute_weather_xml_filter(page)
-    return if page.blank?
-    return if node.try(:filters).blank?
-    filters = node.filters
-    return if filters.blank?
+  def execute_weather_xml_filters
+    return if @imported_pages.blank?
 
-    filters.and_enabled.each do |filter|
-      context = OpenStruct.new
-      context[:site] = site
-      context[:user] = user
-      context[:node] = node
-
-      filter.execute(page, context) rescue next
+    if node.execute_filters_job?
+      Rss::ExecuteWeatherXmlFiltersJob.bind(site_id: site.id, node_id: node.id).perform_later(@imported_pages.map(&:id))
+    else
+      context = OpenStruct.new(site: site, user: user, node: node)
+      @imported_pages.each do |page|
+        node.execute_weather_xml_filter(page, context)
+      end
     end
   end
 end
