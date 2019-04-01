@@ -13,6 +13,7 @@ class Rss::ImportWeatherXmlJob < Rss::ImportBase
     super
 
     @cur_file = Rss::TempFile.with_repl_master.where(site_id: site.id, id: file).first
+
     return unless @cur_file
 
     @items = Rss::Wrappers.parse(@cur_file)
