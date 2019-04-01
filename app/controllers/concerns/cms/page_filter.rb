@@ -110,6 +110,15 @@ module Cms::PageFilter
       location = { action: :index }
       @item.delete
     end
+
+    # If page is failed to update, page is going to show in edit mode with update errors
+    if !result && @item.is_a?(Cms::Addon::EditLock)
+      # So, edit lock must be held
+      unless @item.acquire_lock
+        location = { action: :lock }
+      end
+    end
+
     render_update result, location: location
   end
 
