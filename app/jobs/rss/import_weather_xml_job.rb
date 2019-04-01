@@ -13,13 +13,15 @@ class Rss::ImportWeatherXmlJob < Rss::ImportBase
     super
 
     @cur_file = Rss::TempFile.with_repl_master.where(site_id: site.id, id: file).first
-
     return unless @cur_file
 
     @items = Rss::Wrappers.parse(@cur_file)
+    @imported_pages = []
   end
 
   def after_import
+    execute_weather_xml_filters
+
     super
 
     gc_rss_tempfile
@@ -45,7 +47,7 @@ class Rss::ImportWeatherXmlJob < Rss::ImportBase
       process_earthquake(page)
     end
 
-    execute_weather_xml_filter(page)
+    @imported_pages << page
     page
   end
 
@@ -176,19 +178,16 @@ class Rss::ImportWeatherXmlJob < Rss::ImportBase
     ret
   end
 
-  def execute_weather_xml_filter(page)
-    return if page.blank?
-    return if node.try(:filters).blank?
-    filters = node.filters
-    return if filters.blank?
+  def execute_weather_xml_filters
+    weather_node = node.becomes_with_route
 
-    filters.and_enabled.each do |filter|
-      context = OpenStruct.new
-      context[:site] = site
-      context[:user] = user
-      context[:node] = node
-
-      filter.execute(page, context) rescue next
+    if weather_node.execute_filters_job?
+      Rss::ExecuteWeatherXmlFiltersJob.bind(site_id: site.id, node_id: node.id).perform_now(@imported_pages.map(&:id))
+    else
+      context = OpenStruct.new(site: site, user: user, node: weather_node)
+      @imported_pages.each do |page|
+        weather_node.execute_weather_xml_filter(page, context)
+      end
     end
   end
 end
