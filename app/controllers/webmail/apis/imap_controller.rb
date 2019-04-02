@@ -32,8 +32,13 @@ class Webmail::Apis::ImapController < ApplicationController
       },
       mailboxes: @mailboxes.all.map do |box|
         {
-          name: box.original_name,
-          unseen: box.unseen
+          name: box.name,
+          basename: box.basename,
+          original_name: box.original_name,
+          depth: box.depth,
+          messages: box.messages,
+          unseen: box.unseen,
+          noselect: box.noselect?
         }
       end
     }

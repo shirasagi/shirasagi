@@ -36,7 +36,7 @@ this.Webmail_Mail_Navi = (function () {
         for (i in ref) {
           mailbox = ref[i];
           h = " <span class='unseen count" + mailbox.unseen + "'>(" + mailbox.unseen + ")</span>";
-          navi.find("a[data-name='" + mailbox.name + "']").append(h);
+          navi.find("a[data-name='" + mailbox.original_name + "']").append(h);
         }
         if (data.notice && opts['notice'] !== -1) {
           SS.notice(data.notice);
