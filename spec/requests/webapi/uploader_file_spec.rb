@@ -30,6 +30,9 @@ describe "webapi", dbscope: :example, type: :request do
   let!(:index_uploaded_file_path) do
     "/.s#{site.id}/uploader#{uploader_node.id}/files/#{uploader_node.filename}?format=json"
   end
+  let!(:invalid_action_uploaded_file_path) do
+    "/.s#{site.id}/uploader#{uploader_node.id}/files/#{uploader_node.filename}/logo.png?do=action&format=json"
+  end
 
   ## request params
   let!(:correct_login_params) do
@@ -185,6 +188,13 @@ describe "webapi", dbscope: :example, type: :request do
 
         get index_uploaded_file_path
         expect(response.status).to eq 200
+      end
+    end
+
+    context "invalid action uploaded file" do
+      it '404' do
+        get invalid_action_uploaded_file_path
+        expect(response.status).to eq 404
       end
     end
   end
