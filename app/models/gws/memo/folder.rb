@@ -97,10 +97,12 @@ class Gws::Memo::Folder
   end
 
   def unseens
+    return messages.none if sent_box? || draft_box?
     messages.site(site).unseen(user)
   end
 
   def unseen?
+    return false if sent_box? || draft_box?
     unseens.count > 0
   end
 

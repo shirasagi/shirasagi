@@ -332,7 +332,8 @@ class Gws::Memo::MessagesController < ApplicationController
     from = params[:from].present? ? Time.zone.parse(params[:from]) : Time.zone.now - 12.hours
     @sort_hash = @cur_user.memo_message_sort_hash(@cur_folder, params[:sort], params[:order])
 
-    @unseen = @model.folder(@cur_folder, @cur_user).
+    inbox = Gws::Memo::Folder.new(path: 'INBOX')
+    @unseen = @model.folder(inbox, @cur_user).
       site(@cur_site).
       unseen(@cur_user).
       reorder(@sort_hash)
@@ -342,6 +343,8 @@ class Gws::Memo::MessagesController < ApplicationController
       reorder(@sort_hash).
       limit(10).
       entries
+
+    fix_seen = @cur_folder.unseen? ? nil : true # Sent or Draft
 
     resp = {
       recent: @unseen.where(:send_date.gte => from).size,
@@ -356,7 +359,7 @@ class Gws::Memo::MessagesController < ApplicationController
           subject: item.subject,
           text: item.text.presence,
           url: gws_memo_message_url(folder: 'INBOX', id: item.id),
-          unseen: item.unseen?(@cur_user)
+          unseen: fix_seen ? false : item.unseen?(@cur_user)
         }
       end
     }
