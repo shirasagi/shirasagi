@@ -12,7 +12,9 @@ module Urgency::Addon
 
     def find_index_page
       index_page_filename = parent ? "#{parent.filename}/index.html" : "index.html"
-      Cms::Page.site(site).where(filename: /^#{index_page_filename}$/, depth: depth).first
+      Cms::Page.with_repl_master do |model|
+        model.site(site).where(filename: /^#{index_page_filename}$/, depth: depth).first
+      end
     end
 
     def switch_layout(layout)
