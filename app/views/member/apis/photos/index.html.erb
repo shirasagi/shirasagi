@@ -31,3 +31,7 @@ SS.ajax("#ajax-box .select", {
     </article>
   <% end %>
 </div>
+
+<div style="clear: both;"></div>
+
+<%= paginate @items if @items.try(:current_page) %>
