@@ -143,20 +143,26 @@ class Rss::ImportWeatherXmlJob < Rss::ImportBase
     name = renderer.render_template(node.title_mail_text)
     text = renderer.render
 
-    ezine_page = Ezine::Page.new(
-      cur_site: site,
-      cur_node: node.anpi_mail,
-      cur_user: user,
-      name: name,
-      text: text
-    )
-
-    unless ezine_page.save
-      Rails.logger.warn("failed to save ezine/page:\n#{ezine_page.errors.full_messages.join("\n")}")
-      return
+    page_id = Ezine::Page.with_repl_master do |model|
+      ezine_page = model.new(
+        cur_site: site,
+        cur_node: node.anpi_mail,
+        cur_user: user,
+        name: name,
+        text: text
+      )
+      if ezine_page.save
+        ezine_page.id
+      else
+        Rails.logger.warn("failed to save ezine/page:\n#{ezine_page.errors.full_messages.join("\n")}")
+        nil
+      end
     end
 
-    Ezine::DeliverJob.bind(site_id: site, node_id: node, page_id: ezine_page).perform_now
+    if page_id
+      ezine_page = Ezine::Page.find(page_id)
+      Ezine::DeliverJob.bind(site_id: site, node_id: node, page_id: ezine_page).perform_now
+    end
   end
 
   def compare_intensity(lhs, rhs)
