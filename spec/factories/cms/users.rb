@@ -26,6 +26,10 @@ FactoryBot.define do
       email { "#{name}@example.jp" }
     end
 
+    trait :cms_user_org_id do
+      organization_id { group_ids.present? ? root_groups.first.id : nil }
+    end
+
     trait :cms_user_org_uid do
       organization_uid { "org-#{name}" }
     end
@@ -35,7 +39,7 @@ FactoryBot.define do
       ldap_dn { "cn=#{name},dc=example,dc=jp" }
     end
 
-    factory :cms_user, traits: [:cms_user_fixed_name, :cms_user_uid, :cms_user_email, :cms_user_org_uid]
+    factory :cms_user, traits: [:cms_user_fixed_name, :cms_user_uid, :cms_user_email, :cms_user_org_id, :cms_user_org_uid]
     factory :cms_test_user, traits: [:cms_user_rand_name, :cms_user_uid, :cms_user_email]
     factory :cms_ldap_user, traits: [:cms_user_rand_name, :cms_user_uid, :cms_user_email, :cms_user_ldap]
   end

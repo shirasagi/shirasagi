@@ -205,8 +205,8 @@ describe "cms_users", type: :feature, dbscope: :example do
     let(:role2) { create(:cms_role, cur_site: site2, name: '管理者2', permissions: Cms::Role.permission_names) }
     let(:header) do
       %w(
-        id name kana uid email password tel tel_ext account_start_date account_expiration_date
-        initial_password_warning groups ldap_dn cms_roles
+        id name kana uid organization_uid email password tel tel_ext account_start_date account_expiration_date
+        initial_password_warning organization_id groups ldap_dn cms_roles
       ).map { |k| Cms::User.new.t(k) }.join(",")
     end
 

@@ -10,7 +10,8 @@ describe "gws_apis_desktop_settings", type: :feature, dbscope: :example do
     it "index" do
       visit path
       expect(status_code).to eq 200
-      expect(page).to have_content('desktop')
+      expect(page).to have_content('mailstore')
+      expect(page).to have_content('chat')
     end
   end
 end
