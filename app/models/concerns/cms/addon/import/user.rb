@@ -13,8 +13,8 @@ module Cms::Addon::Import
     module ClassMethods
       def csv_headers
         %w(
-          id name kana uid email password tel tel_ext account_start_date account_expiration_date
-          initial_password_warning groups ldap_dn cms_roles
+          id name kana uid organization_uid email password tel tel_ext account_start_date account_expiration_date
+          initial_password_warning organization_id groups ldap_dn cms_roles
         )
       end
 
@@ -29,6 +29,7 @@ module Cms::Addon::Import
             line << item.name
             line << item.kana
             line << item.uid
+            line << item.organization_uid
             line << item.email
             line << nil
             line << item.tel
@@ -40,6 +41,7 @@ module Cms::Addon::Import
             else
               line << I18n.t('ss.options.state.disabled')
             end
+            line << (item.organization ? item.organization.name : nil)
             line << item.groups.map(&:name).join("\n")
             line << item.ldap_dn
             line << roles.map(&:name).join("\n")
@@ -98,7 +100,7 @@ module Cms::Addon::Import
       end
 
       %w(
-        name kana uid email tel tel_ext account_start_date account_expiration_date ldap_dn
+        name kana uid organization_uid email tel tel_ext account_start_date account_expiration_date ldap_dn
       ).each do |k|
         item[k] = row[t(k)].to_s.strip
       end
@@ -106,6 +108,11 @@ module Cms::Addon::Import
       # password
       password = row[t("password")].to_s.strip
       item.in_password = password if password.present?
+
+      # organization
+      value = row[t('organization_id')].to_s.strip
+      group = SS::Group.where(name: value).first if value.present?
+      item.organization_id = group ? group.id : nil
 
       # groups
       groups = row[t("groups")].to_s.strip.split(/\n/)
