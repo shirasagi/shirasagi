@@ -5,7 +5,7 @@
   <table class="index gws-memo-folder">
     <% @folders.each do |item| %>
       <% droppable = %W(INBOX.Sent INBOX.Draft #{params[:folder]}).exclude?(item.folder_path) %>
-      <% unseen = item.unseen? && !item.sent_box? && !item.draft_box? %>
+      <% unseen = item.unseen? %>
       <tr class="folder <%= 'droppable' if droppable %> <%= 'current' if item.folder_path == params[:folder] %>">
         <td class="<%= unseen ? 'unseen' : 'seen' %>">
           <%= link_to item.trailing_name,

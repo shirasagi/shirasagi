@@ -343,6 +343,8 @@ class Gws::Memo::MessagesController < ApplicationController
       limit(10).
       entries
 
+    fix_seen = @cur_folder.unseen? ? nil : true # Sent or Draft
+
     resp = {
       recent: @unseen.where(:send_date.gte => from).size,
       unseen: @unseen.size,
@@ -356,7 +358,7 @@ class Gws::Memo::MessagesController < ApplicationController
           subject: item.subject,
           text: item.text.presence,
           url: gws_memo_message_url(folder: 'INBOX', id: item.id),
-          unseen: item.unseen?(@cur_user)
+          unseen: fix_seen ? false : item.unseen?(@cur_user)
         }
       end
     }
