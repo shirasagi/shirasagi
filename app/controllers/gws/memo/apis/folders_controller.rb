@@ -52,7 +52,7 @@ class Gws::Memo::Apis::FoldersController < ApplicationController
       {
         name: item.name,
         basename: item.current_name,
-        original_name: item.path || item.id,
+        original_name: item.folder_path,
         depth: item.depth,
         unseen: item.unseens.count
       }

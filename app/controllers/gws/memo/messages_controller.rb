@@ -332,7 +332,8 @@ class Gws::Memo::MessagesController < ApplicationController
     from = params[:from].present? ? Time.zone.parse(params[:from]) : Time.zone.now - 12.hours
     @sort_hash = @cur_user.memo_message_sort_hash(@cur_folder, params[:sort], params[:order])
 
-    @unseen = @model.folder(@cur_folder, @cur_user).
+    inbox = Gws::Memo::Folder.new(path: 'INBOX')
+    @unseen = @model.folder(inbox, @cur_user).
       site(@cur_site).
       unseen(@cur_user).
       reorder(@sort_hash)
