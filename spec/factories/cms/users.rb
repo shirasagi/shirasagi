@@ -26,12 +26,16 @@ FactoryBot.define do
       email { "#{name}@example.jp" }
     end
 
+    trait :cms_user_org_uid do
+      organization_uid { "org-#{name}" }
+    end
+
     trait :cms_user_ldap do
       login_roles [SS::User::LOGIN_ROLE_DBPASSWD, SS::User::LOGIN_ROLE_LDAP]
       ldap_dn { "cn=#{name},dc=example,dc=jp" }
     end
 
-    factory :cms_user, traits: [:cms_user_fixed_name, :cms_user_uid, :cms_user_email]
+    factory :cms_user, traits: [:cms_user_fixed_name, :cms_user_uid, :cms_user_email, :cms_user_org_uid]
     factory :cms_test_user, traits: [:cms_user_rand_name, :cms_user_uid, :cms_user_email]
     factory :cms_ldap_user, traits: [:cms_user_rand_name, :cms_user_uid, :cms_user_email, :cms_user_ldap]
   end

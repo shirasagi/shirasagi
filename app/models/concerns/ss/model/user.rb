@@ -112,6 +112,8 @@ module SS::Model::User
     end
 
     def authenticate(id, password)
+      return nil if id.blank? || password.blank?
+
       user = uid_or_email(id).first
       return nil unless user
 
@@ -121,7 +123,23 @@ module SS::Model::User
       nil
     end
 
+    def site_authenticate(site, id, password)
+      return nil if id.blank? || password.blank?
+
+      users = self.where(
+        :organization_id.in => site.root_groups.map(&:id),
+        '$or' => [{ uid: id }, { email: id }, { organization_uid: id }]
+      )
+      return nil if users.size != 1
+
+      user = users.first
+      return user if user.send(:dbpasswd_authenticate, password)
+      nil
+    end
+
     def organization_authenticate(organization, id, password)
+      return nil if id.blank? || password.blank?
+
       user = self.where(
         organization_id: organization.id,
         '$or' => [{ uid: id }, { email: id }, { organization_uid: id }]
