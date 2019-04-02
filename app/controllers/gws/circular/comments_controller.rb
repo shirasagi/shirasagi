@@ -102,6 +102,6 @@ class Gws::Circular::CommentsController < ApplicationController
 
   def destroy
     location = { action: :index, category: @category.id } if @category
-    render_destroy @item.destroy, { location: location, notice: t("ss.notice.deleted") }
+    render_destroy @item.destroy, { location: location }
   end
 end
