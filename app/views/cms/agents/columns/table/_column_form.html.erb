@@ -38,19 +38,20 @@
       type: "array",
       name: "<%= column.name %>",
       getContent: function () {
-        var array = [];
         var caption = $('#caption-<%= table_name %>').val();
+        var tableHtml = $('#hidden-value-<%= table_name %>').val();
+        var tablePreviewHtml = $('#table-editor-<%= table_name %>').html();
+
+        var array = [];
         array.push(caption);
-        $('#<%= id %> .table-editor tbody td,#<%= id %> .table-editor tbody th').not(".controll").each(function () {
-          array.push($(this).text());
-        });
+        array.push(tableHtml);
+        array.push(tablePreviewHtml);
         return array;
       },
       setContent: function (content) {
         $('#caption-<%= table_name %>').val(content[0]);
-        $('#<%= id %> .table-editor tbody td,#<%= id %> .table-editor tbody th').not(".controll").each(function (i) {
-          $(this).text(content[i + 1]);
-        });
+        $('#hidden-value-<%= table_name %>').val(content[1]);
+        $('#table-editor-<%= table_name %>').html(content[2]);
       }
     });
   <% end %>
