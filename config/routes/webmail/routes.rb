@@ -118,8 +118,8 @@ SS::Application.routes.draw do
     namespace "apis" do
       get ":webmail_mode-:account/recent" => "imap#recent",
         webmail_mode: /[a-z]+/, account: /\d+/, as: :recent, defaults: { webmail_mode: 'account' }
-      get ":webmail_mode-:account/latest" => "imap#latest",
-        webmail_mode: /[a-z]+/, account: /\d+/, defaults: { webmail_mode: 'account' }
+      get ":webmail_mode-:account/latest/(:mailbox)" => "imap#latest",
+        webmail_mode: /[a-z]+/, account: /\d+/, mailbox: /[^\/]+/, defaults: { webmail_mode: 'account', mailbox: 'INBOX' }
       get ":webmail_mode-:account/quota" => "imap#quota",
         webmail_mode: /[a-z]+/, account: /\d+/, as: :quota, defaults: { webmail_mode: 'account' }
       get ":webmail_mode-:account/mails" => "mails#index",

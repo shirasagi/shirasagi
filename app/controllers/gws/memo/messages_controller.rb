@@ -351,7 +351,10 @@ class Gws::Memo::MessagesController < ApplicationController
         {
           date: item.send_date,
           from: item.user_name,
+          to: item.display_to.presence,
+          cc: item.display_cc.presence,
           subject: item.subject,
+          text: item.text.presence,
           url: gws_memo_message_url(folder: 'INBOX', id: item.id),
           unseen: item.unseen?(@cur_user)
         }
