@@ -72,7 +72,7 @@ class Webmail::Apis::ImapController < ApplicationController
           cc: item.display_cc.map { |addr| addr.name }.presence,
           subject: item.display_subject,
           text: item.text.presence,
-          url: webmail_mail_url(webmail_mode: @webmail_mode || :account, account: params[:account], mailbox: 'INBOX', id: item.uid),
+          url: webmail_mail_url(webmail_mode: @webmail_mode || :account, account: params[:account], mailbox: mailbox, id: item.uid),
           unseen: item.unseen?
         }
       end
