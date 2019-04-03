@@ -3170,7 +3170,7 @@ body.ss-ajax-in-iframe {
   }
   .table-editor {
     overflow-x: scroll;
-    .controll {
+    .control {
       padding: 0;
       background-color: $black;
       border: 1px solid #f2f2f2;
@@ -3204,7 +3204,7 @@ body.ss-ajax-in-iframe {
     th {
       background-color: #777;
     }
-    .controll-top {
+    .control-top {
       height: 25px;
       &:before {
         content: "▼";
@@ -3216,7 +3216,7 @@ body.ss-ajax-in-iframe {
         color: $white;
       }
     }
-    .controll-left {
+    .control-left {
       width: 100px;
       min-width: 100px;
       &:before {

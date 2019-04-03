@@ -38,20 +38,14 @@
       type: "array",
       name: "<%= column.name %>",
       getContent: function () {
-        var caption = $('#<%= id %> .caption').val();
-        var tableHtml = $('#<%= id %> .hidden-value').val();
-        var tablePreviewHtml = $('#<%= id %> .table-editor').html();
-
         var array = [];
-        array.push(caption);
-        array.push(tableHtml);
-        array.push(tablePreviewHtml);
+        array.push(table.caption());
+        array.push(table.tableHtml());
         return array;
       },
       setContent: function (content) {
-        $('#<%= id %> .caption').val(content[0]);
-        $('#<%= id %> .hidden-value').val(content[1]);
-        $('#<%= id %> .table-editor').html(content[2]);
+        table.caption(content[0]);
+        table.tableHtml(content[1]);
       }
     });
   <% end %>
