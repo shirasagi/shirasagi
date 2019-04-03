@@ -108,7 +108,8 @@ module Cms::PageFilter
     location = nil
     if result && @item.try(:branch?) && @item.state == "public"
       location = { action: :index }
-      @item.delete
+      @item.file_ids = nil if @item.respond_to?(:file_ids)
+      @item.destroy
     end
 
     # If page is failed to update, page is going to show in edit mode with update errors

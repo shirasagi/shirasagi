@@ -15,6 +15,8 @@ module Workflow::Addon
 
       permit_params :master_id
 
+      validate :validate_master_lock, if: ->{ branch? }
+
       before_save :seq_clone_filename, if: ->{ new_clone? && basename.blank? }
       after_save :merge_to_master
 
@@ -32,7 +34,7 @@ module Workflow::Addon
     end
 
     def new_clone(attributes = {})
-      attributes = self.attributes.merge(attributes).select { |k| self.fields.keys.include?(k) }
+      attributes = self.attributes.merge(attributes).select { |k| self.fields.key?(k) }
       self.fields.select { |n, v| (v.options.dig(:metadata, :branch) == false) }.each do |n, v|
         attributes.delete(n)
       end
@@ -72,7 +74,7 @@ module Workflow::Addon
         ids = {}
         files.each do |f|
           attributes = Hash[f.attributes]
-          attributes.select!{ |k| f.fields.keys.include?(k) }
+          attributes.select!{ |k| f.fields.key?(k) }
 
           file = SS::File.new(attributes)
           file.id = nil
@@ -121,7 +123,7 @@ module Workflow::Addon
         attributes = Hash[in_branch.attributes]
         attributes.delete("_id")
         attributes.delete("filename")
-        attributes.select! { |k| self.fields.keys.include?(k) }
+        attributes.select! { |k| self.fields.key?(k) }
         self.fields.select { |n, v| (v.options.dig(:metadata, :branch) == false) }.each do |n, v|
           attributes.delete(n)
         end
@@ -165,6 +167,14 @@ module Workflow::Addon
     def seq_clone_filename
       self.filename ||= ""
       self.filename = dirname ? "#{dirname}#{id}.html" : "#{id}.html"
+    end
+
+    def validate_master_lock
+      return if self.state != "public"
+
+      if master.locked? && !master.lock_owned?(@cur_user)
+        errors.add :base, :locked, user: master.lock_owner.long_name
+      end
     end
   end
 end
