@@ -1,3 +1,5 @@
+<% return if @item.respond_to?(:form) && ancestral_forms.present? %>
+
 <%
   editor_opts = html_editor_options(
     advanced: Cms::EditorExtension.allowed?(:use, @cur_user, site: @cur_site)
@@ -6,7 +8,7 @@
 %>
 <%= jquery do %>
 if ($("#item_body_layout_id").length == 0) {
-  $("#addon-cms-agents-addons-body_part").hide();
+  $("#addon-cms-agents-addons-body_part").addClass('hide');
 }
 switch ("<%= SS.config.cms.html_editor %>"){
   case "ckeditor":
@@ -22,8 +24,8 @@ var select_body_layout = function() {
   var site = <%= @cur_site.id %>;
   var id = $(this).val();
   if (id) {
-    $("#addon-cms-agents-addons-body").hide();
-    $("#addon-cms-agents-addons-body_part").show();
+    $("#addon-cms-agents-addons-body").addClass('hide');
+    $("#addon-cms-agents-addons-body_part").removeClass('hide');
     $(".mod-body-part-html .buttons").prevAll().remove();
 
     $(".mod-body-part-html").prepend(SS.loading);
@@ -75,8 +77,8 @@ var select_body_layout = function() {
   else {
     Cms_Form.editorId = "item_html";
     Cms_Form.addonSelector = ".mod-cms-body";
-    $("#addon-cms-agents-addons-body").show();
-    $("#addon-cms-agents-addons-body_part").hide();
+    $("#addon-cms-agents-addons-body").removeClass('hide');
+    $("#addon-cms-agents-addons-body_part").addClass('hide');
   }
 }
 
