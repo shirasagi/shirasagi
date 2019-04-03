@@ -10,4 +10,8 @@
     </label>
   <% end %>
   <span class="postfix"><%= column.postfix_label %></span>
+
+  <% if !column.required? %>
+    <%= button_tag(t("ss.buttons.clear"), name: nil, type: "button", class: "btn", onclick: "$(\"input[name='#{object_name}[#{column.id}]']\").prop('checked', false);") %>
+  <% end %>
 </dd>

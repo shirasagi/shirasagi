@@ -7,4 +7,8 @@
       <%= val %>
     </label>
   <% end %>
+
+  <% if !column.required? %>
+    <%= button_tag(t("ss.buttons.clear"), name: nil, type: "button", class: %w(btn clear-radio), onclick: "$(this).closest('.column-value-body').find('input[type=radio]').prop('checked', false)") %>
+  <% end %>
 <% end %>
