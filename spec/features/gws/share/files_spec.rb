@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe "gws_share_files", type: :feature, dbscope: :example, tmpdir: true do
+describe "gws_share_files", type: :feature, dbscope: :example, tmpdir: true, js: true do
   let(:site) { gws_site }
   let(:item) { create :gws_share_file, folder_id: folder.id, category_ids: [category.id], memo: "test" }
   let(:categorized_item) { create :gws_share_file, name: "categorized", folder_id: folder.id, category_ids: [category.id] }
@@ -19,20 +19,20 @@ describe "gws_share_files", type: :feature, dbscope: :example, tmpdir: true do
   context "with auth" do
     before { login_gws_user }
 
-    it "hide new menu on the top page", js: true do
+    it "hide new menu on the top page" do
       visit top_path
       wait_for_ajax
       expect(page).to have_no_content("新規作成")
     end
 
-    it "appear new menu in writable folder", js: true do
+    it "appear new menu in writable folder" do
       item.folder.user_ids = [gws_user.id]
       visit folder_path
       wait_for_ajax
       expect(page).to have_content("新規作成")
     end
 
-    it "#new", js: true do
+    it "#new" do
       # ensure that SS::TempFile was created
       ss_file
 
@@ -72,7 +72,7 @@ describe "gws_share_files", type: :feature, dbscope: :example, tmpdir: true do
       expect(item.memo).to eq "test"
     end
 
-    it "#edit", js: true do
+    it "#edit" do
       visit edit_path
       wait_for_ajax
       within "form#item-form" do
@@ -86,7 +86,7 @@ describe "gws_share_files", type: :feature, dbscope: :example, tmpdir: true do
       expect(item.reload.memo).to eq "edited"
     end
 
-    it "#delete", js: true do
+    it "#delete" do
       visit delete_path
       within "form" do
         click_button "削除"
@@ -95,7 +95,7 @@ describe "gws_share_files", type: :feature, dbscope: :example, tmpdir: true do
       expect(page).to have_content(folder.name)
     end
 
-    it "index page with :category", js: true do
+    it "index page with :category" do
       categorized_item
       uncategorized_item
 
@@ -116,7 +116,7 @@ describe "gws_share_files", type: :feature, dbscope: :example, tmpdir: true do
       expect(page).to have_no_link uncategorized_item.name
     end
 
-    it "folder page with :category", js: true do
+    it "folder page with :category" do
       categorized_item
       uncategorized_item
 
@@ -137,7 +137,7 @@ describe "gws_share_files", type: :feature, dbscope: :example, tmpdir: true do
       expect(page).to have_no_link uncategorized_item.name
     end
 
-    context "#download_all with auth", js: true do
+    context "#download_all with auth" do
       before { login_gws_user }
 
       it "#download_all" do

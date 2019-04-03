@@ -28,7 +28,8 @@ describe "gws_notices", type: :feature, dbscope: :example, tmpdir: true, js: tru
     end
     within '#cboxLoadedContent' do
       expect(page).to have_content(notice_file.name)
-      click_on notice_file.name
+      # click_on notice_file.name
+      first("a[data-id=\"#{notice_file.id}\"]").click
     end
     within 'form#item-form' do
       click_on I18n.t('ss.buttons.save')
