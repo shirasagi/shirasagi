@@ -135,7 +135,7 @@ module SS::Model::Task
       return ::File.readlines(log_file_path, chomp: true) rescue []
     end
 
-    self[:logs] || []
+    []
   end
 
   def head_logs(n = 1_000)
@@ -148,8 +148,6 @@ module SS::Model::Task
         end
       end
       texts
-    elsif self[:logs].present?
-      self[:logs][0..(n - 1)]
     else
       []
     end
