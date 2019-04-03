@@ -145,7 +145,7 @@ class Rss::ImportWeatherXmlJob < Rss::ImportBase
     name = renderer.render_template(node.title_mail_text)
     text = renderer.render
 
-    page_id = Ezine::Page.with_repl_master do |model|
+    Ezine::Page.with_repl_master do |model|
       ezine_page = model.new(
         cur_site: site,
         cur_node: node.anpi_mail,
@@ -154,16 +154,10 @@ class Rss::ImportWeatherXmlJob < Rss::ImportBase
         text: text
       )
       if ezine_page.save
-        ezine_page.id
+        Ezine::DeliverJob.bind(site_id: site, node_id: node, page_id: ezine_page).perform_now
       else
         Rails.logger.warn("failed to save ezine/page:\n#{ezine_page.errors.full_messages.join("\n")}")
-        nil
       end
-    end
-
-    if page_id
-      ezine_page = Ezine::Page.find(page_id)
-      Ezine::DeliverJob.bind(site_id: site, node_id: node, page_id: ezine_page).perform_now
     end
   end
 
