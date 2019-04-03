@@ -11,6 +11,7 @@ class Ezine::Page
   field :completed, type: Boolean, default: false
   embeds_many :results, class_name: "Ezine::Result"
 
+  store_in_repl_master
   default_scope ->{ where(route: "ezine/page") }
 
   # Get members to deliver this page.
