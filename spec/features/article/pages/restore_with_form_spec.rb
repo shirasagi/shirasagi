@@ -87,7 +87,7 @@ describe 'article_pages', dbscope: :example, js: true do
           first(:field, name: "item[column_values][][in_wrap][values][]", with: column7_value).click
         end
         within ".column-value-cms-column-fileupload" do
-          fill_in "item[column_values][][in_wrap][image_text]", with: column8_image_text
+          fill_in "item[column_values][][in_wrap][file_label]", with: column8_image_text
           click_on I18n.t("ss.links.upload")
         end
       end
@@ -134,7 +134,7 @@ describe 'article_pages', dbscope: :example, js: true do
           first(:field, name: "item[column_values][][in_wrap][values][]", with: column7_value2).click
         end
         within ".column-value-cms-column-fileupload" do
-          fill_in "item[column_values][][in_wrap][image_text]", with: column8_image_text2
+          fill_in "item[column_values][][in_wrap][file_label]", with: column8_image_text2
           click_on I18n.t("ss.links.upload")
         end
       end
