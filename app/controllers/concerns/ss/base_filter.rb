@@ -143,10 +143,15 @@ module SS::BaseFilter
   end
 
   def rescue_action(e)
-    if e.to_s =~ /^\d+$/
-      status = e.to_s.to_i
-      file = error_html_file(status)
-      return ss_send_file(file, status: status, type: Fs.content_type(file), disposition: :inline)
+    begin
+      # below codes may cause "invalid byte sequence in UTF-8" error or other errors in some cases.
+      # So, it is required to wrap around begin, rescue and end.
+      if e.to_s =~ /^\d+$/
+        status = e.to_s.to_i
+        file = error_html_file(status)
+        return ss_send_file(file, status: status, type: Fs.content_type(file), disposition: :inline)
+      end
+    rescue
     end
 
     raise e
