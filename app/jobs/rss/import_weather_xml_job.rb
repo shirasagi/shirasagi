@@ -59,8 +59,8 @@ class Rss::ImportWeatherXmlJob < Rss::ImportBase
     res = http.request(req)
     return nil if res.code != '200'
     res.body.force_encoding('UTF-8')
-  rescue
-    nil
+  rescue => e
+    Rails.logger.warn("#{e.class} (#{e.message}):\n  #{e.backtrace.join("\n  ")}")
   end
 
   def extract_event_id(xml)
