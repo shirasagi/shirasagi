@@ -108,7 +108,7 @@ describe "jmaxml/action/send_mails", dbscope: :example, js: true do
       within 'form' do
         click_on I18n.t('ss.buttons.delete')
       end
-      expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'), wait: 60)
+      expect(page).to have_css('#notice', text: I18n.t('ss.notice.deleted'), wait: 60)
 
       expect(model.count).to eq 0
     end

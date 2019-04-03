@@ -36,6 +36,6 @@ describe "webmail_groups", type: :feature, dbscope: :example do
     within "form" do
       click_button I18n.t("ss.buttons.delete")
     end
-    expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+    expect(page).to have_css('#notice', text: I18n.t('ss.notice.deleted'))
   end
 end

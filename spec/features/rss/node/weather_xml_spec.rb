@@ -51,7 +51,7 @@ describe "Rss::Node::WeatherXml", dbscope: :example, js: true do
       click_on name1
       click_on '削除する'
       click_on '削除'
-      expect(page).to have_css('#notice', text: '保存しました。', wait: 60)
+      expect(page).to have_css('#notice', text: I18n.t('ss.notice.deleted'), wait: 60)
     end
   end
 

@@ -75,7 +75,7 @@ describe "member_my_anpi_posts", dbscope: :example, js: true do
       click_on member.name
       click_on '削除する'
       click_on '削除'
-      expect(page).to have_css('#notice', text: '保存しました。', wait: 60)
+      expect(page).to have_css('#notice', text: I18n.t('ss.notice.deleted'), wait: 60)
     end
   end
 
