@@ -57,7 +57,7 @@ describe Cms::ColumnsController, dbscope: :example, js: true do
       within 'form' do
         click_on I18n.t('ss.buttons.delete')
       end
-      expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+      expect(page).to have_css('#notice', text: I18n.t('ss.notice.deleted'))
       expect(Cms::Column::Base.site(site).where(form_id: form.id).count).to eq 0
     end
   end
@@ -111,7 +111,7 @@ describe Cms::ColumnsController, dbscope: :example, js: true do
       within 'form' do
         click_on I18n.t('ss.buttons.delete')
       end
-      expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+      expect(page).to have_css('#notice', text: I18n.t('ss.notice.deleted'))
       expect(Cms::Column::Base.site(site).where(form_id: form.id).count).to eq 0
     end
   end
@@ -165,7 +165,7 @@ describe Cms::ColumnsController, dbscope: :example, js: true do
       within 'form' do
         click_on I18n.t('ss.buttons.delete')
       end
-      expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+      expect(page).to have_css('#notice', text: I18n.t('ss.notice.deleted'))
       expect(Cms::Column::Base.site(site).where(form_id: form.id).count).to eq 0
     end
   end
@@ -219,7 +219,7 @@ describe Cms::ColumnsController, dbscope: :example, js: true do
       within 'form' do
         click_on I18n.t('ss.buttons.delete')
       end
-      expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+      expect(page).to have_css('#notice', text: I18n.t('ss.notice.deleted'))
       expect(Cms::Column::Base.site(site).where(form_id: form.id).count).to eq 0
     end
   end

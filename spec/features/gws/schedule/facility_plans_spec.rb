@@ -77,7 +77,7 @@ describe "gws_schedule_facility_plans", type: :feature, dbscope: :example, js: t
       end
       wait_for_ajax
       expect(current_path).to eq index_path
-      expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+      expect(page).to have_css('#notice', text: I18n.t('ss.notice.deleted'))
     end
   end
 end

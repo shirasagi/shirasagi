@@ -60,7 +60,7 @@ describe "gws_schedule_user_plans", type: :feature, dbscope: :example do
       end
       wait_for_ajax
       expect(current_path).to eq index_path
-      expect(page).to have_css('#notice', text: '保存しました。')
+      expect(page).to have_css('#notice', text: I18n.t('ss.notice.deleted'))
     end
   end
 end

@@ -153,7 +153,7 @@ describe "uploader_files", dbscope: :example, type: :feature do
         end
       end
 
-      expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+      expect(page).to have_css('#notice', text: I18n.t('ss.notice.deleted'))
       within "div.info" do
         expect(page).to have_css("a.file")
       end

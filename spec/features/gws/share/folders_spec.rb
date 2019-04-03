@@ -49,7 +49,7 @@ describe "gws_share_folders", type: :feature, dbscope: :example, js: true do
         click_button "削除"
       end
       wait_for_ajax
-      expect(page).to have_css('#notice', text: '保存しました。')
+      expect(page).to have_css('#notice', text: I18n.t('ss.notice.deleted'))
       # expect(FileTest.exist?(item.class.zip_path(item._id))).to be_falsey
     end
   end
@@ -115,7 +115,7 @@ describe "gws_share_folders", type: :feature, dbscope: :example, js: true do
         within 'form' do
           click_on I18n.t('ss.buttons.delete')
         end
-        expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+        expect(page).to have_css('#notice', text: I18n.t('ss.notice.deleted'))
         expect(Gws::Share::Folder.site(site).where(name: "#{item.name}/#{subfolder_name1}").count).to eq 0
         expect(Gws::Share::Folder.site(site).where(name: "#{item.name}/#{subfolder_name2}").count).to eq 0
       end

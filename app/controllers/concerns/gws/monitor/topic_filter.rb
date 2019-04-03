@@ -66,7 +66,7 @@ module Gws::Monitor::TopicFilter
 
   def destroy
     raise '403' unless @item.allowed?(:delete, @cur_user, site: @cur_site)
-    render_destroy @item.destroy, {notice: t('ss.notice.deleted')}
+    render_destroy @item.destroy
   end
 
   FORWARD_ATTRIBUTES = %w(name spec_config due_date notice_state notice_start_at mode text_type text category_ids).freeze

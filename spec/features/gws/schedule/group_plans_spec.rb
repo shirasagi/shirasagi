@@ -51,7 +51,7 @@ describe "gws_schedule_group_plans", type: :feature, dbscope: :example, js: true
         click_button "削除"
       end
       wait_for_ajax
-      expect(page).to have_css('#notice', text: '保存しました。')
+      expect(page).to have_css('#notice', text: I18n.t('ss.notice.deleted'))
     end
   end
 end

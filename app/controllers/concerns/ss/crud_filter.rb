@@ -154,7 +154,7 @@ module SS::CrudFilter
   def render_destroy(result, opts = {})
     location = opts[:location].presence || crud_redirect_url || { action: :index }
     render_opts = opts[:render].presence || { file: :delete }
-    notice = opts[:notice].presence || t("ss.notice.saved")
+    notice = opts[:notice].presence || t("ss.notice.deleted")
 
     if result
       respond_to do |format|
