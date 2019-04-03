@@ -20,8 +20,13 @@ class History::Backup
     collection.database[ref_coll]
   end
 
+  def ref_class_constantize
+    models = Mongoid.models.reject { |m| m.to_s.start_with?('Mongoid::') }
+    models.find{ |m| m.to_s == ref_class }
+  end
+
   def get
-    item = ref_class.constantize.find(data["_id"])
+    item = ref_class_constantize.find(data["_id"])
     if item.current_backup
       item.current_backup.data
     else

@@ -18,13 +18,13 @@ class Cms::Agents::Parts::TabsController < ApplicationController
       next unless spec
 
       node_class = node.route.sub(/\/.*/, "/agents/#{spec[:cell]}")
-      node_class = "#{node_class}_controller".camelize.constantize
+      set_agent(node_class)
 
       pages = nil
 
-      if node_class.method_defined?(:index)
+      if @agent.controller.class.method_defined?(:index)
         @cur_node = node
-        pages = call_node_index(node_class)
+        pages = call_node_index
       end
 
       if pages.nil?
@@ -37,7 +37,7 @@ class Cms::Agents::Parts::TabsController < ApplicationController
 
       pages = pages ? pages.order_by(released: -1).limit(@cur_part.limit) : []
       tab[:pages] = pages.map { |item| item.becomes_with_route rescue item }
-      tab[:rss]   = "#{node.url}rss.xml" if node_class.method_defined?(:rss)
+      tab[:rss]   = "#{node.url}rss.xml" if @agent.controller.class.method_defined?(:rss)
     end
 
     render
@@ -45,16 +45,18 @@ class Cms::Agents::Parts::TabsController < ApplicationController
 
   private
 
-  def call_node_index(node_class)
-    cont = new_agent(node_class)
-    cont.controller.params = {}
-    cont.controller.extend(SS::ImplicitRenderFilter)
+  def set_agent(node_class)
+    @agent = new_agent(node_class)
+    @agent.controller.params = {}
+    @agent.controller.extend(SS::ImplicitRenderFilter)
+  end
 
+  def call_node_index
     pages = nil
 
     begin
-      cont.invoke :index
-      pages = cont.instance_variable_get(:@items)
+      @agent.invoke :index
+      pages = @agent.instance_variable_get(:@items)
       pages = nil if pages && !pages.respond_to?(:current_page)
       pages = nil if pages && !pages.klass.include?(Cms::Model::Page)
     rescue => e
