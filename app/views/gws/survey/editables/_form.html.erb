@@ -5,8 +5,13 @@
   <dt><%= @model.t :description %><%= @model.tt :description %></dt>
   <dd><%= f.text_area :description %></dd>
 
-  <dt><%= @model.t :anonymous_state %><%= @model.tt :anonymous_state %></dt>
-  <dd><%= f.select :anonymous_state, @item.anonymous_state_options %></dd>
+  <% if @item.new_record? %>
+    <dt><%= @model.t :anonymous_state %><%= @model.tt :anonymous_state %></dt>
+    <dd><%= f.select :anonymous_state, @item.anonymous_state_options %> <span><%= t("gws/survey.notices.anonymous_state") %></span></dd>
+  <% else %>
+    <dt><%= @model.t :anonymous_state %></dt>
+    <dd><%= @item.label :anonymous_state %></dd>
+  <% end %>
 
   <dt><%= @model.t :file_state %><%= @model.tt :file_state %></dt>
   <dd><%= f.select :file_state, @item.file_state_options, include_blank: true %></dd>

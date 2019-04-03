@@ -30,7 +30,7 @@ class Gws::Survey::Form
   field :file_state, type: String
   field :file_edit_state, type: String, default: 'enabled'
 
-  permit_params :name, :description, :order, :memo, :due_date, :release_date, :close_date, :anonymous_state
+  permit_params :name, :description, :order, :memo, :due_date, :release_date, :close_date
   permit_params :file_state, :file_edit_state
 
   validates :name, presence: true, length: { maximum: 80 }
