@@ -1109,7 +1109,9 @@ SS_Preview = (function () {
       type: "POST",
       dataType: "json",
       cache: false,
-      data: { authenticity_token: token }
+      data: {authenticity_token: token}
+    }).done(function(data, status, xhr) {
+      self.bindBeforeUnloadOnce();
     }).fail(function(xhr, status, error) {
       if (self.container.notice) {
         if (xhr.responseJSON) {
@@ -1163,6 +1165,16 @@ SS_Preview = (function () {
       clearTimeout(this.timerId);
     }
     this.timerId = null;
+  };
+
+  EditLock.prototype.bindBeforeUnloadOnce = function() {
+    var self = this;
+
+    $(window).on("beforeunload", function () {
+      self.release();
+    });
+
+    this.bindBeforeUnloadOnce = function() {};
   };
 
   //
