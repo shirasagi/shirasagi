@@ -1,6 +1,6 @@
 <% value ||= nil %>
 <% controller ||= false %>
-<%= render 'cms/agents/columns/main/base', f: f, column: column, value: value, controller: controller do %>
+<%= render 'cms/agents/columns/main/base', f: f, column: column, value: value, controller: controller do |id| %>
   <% column.select_options.each do |val| %>
     <label>
       <%= radio_button_tag("#{f.object_name}[][in_wrap][value]", val, value.try(:value) == val, column.form_options.merge(id: nil)) %>
@@ -9,6 +9,10 @@
   <% end %>
 
   <% if !column.required? %>
-    <%= button_tag(t("ss.buttons.clear"), name: nil, type: "button", class: %w(btn clear-radio), onclick: "$(this).closest('.column-value-body').find('input[type=radio]').prop('checked', false)") %>
+    <%= button_tag(t("ss.buttons.clear"), name: nil, type: "button", class: %w(btn clear-radio)) %>
+  <% end %>
+
+  <%= jquery do %>
+    var radioButton = Cms_Column_RadioButton.render("#<%= id %>");
   <% end %>
 <% end %>

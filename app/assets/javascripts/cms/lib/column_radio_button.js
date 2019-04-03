@@ -9,4 +9,9 @@ Cms_Column_RadioButton.render = function(el) {
 };
 
 Cms_Column_RadioButton.prototype.render = function() {
+  var self = this;
+
+  this.$el.find(".clear-radio").on("click", function() {
+    self.$el.find('input[type=radio]').prop('checked', false);
+  });
 };
