@@ -67,6 +67,8 @@ module Gws::Attendance::TimeCardFilter
   public
 
   def time
+    @type = %w(enter leave break_enter break_leave).delete(params[:type])
+    raise '404' if @type.blank?
     @model = Gws::Attendance::TimeEdit
     if request.get?
       @cell = @model.new
@@ -78,8 +80,8 @@ module Gws::Attendance::TimeCardFilter
     result = false
     if @cell.valid?
       time = @cell.calc_time(@cur_date)
-      @item.histories.create(date: @cur_date, field_name: params[:type], action: 'modify', time: time, reason: @cell.in_reason)
-      @record.send("#{params[:type]}=", time)
+      @item.histories.create(date: @cur_date, field_name: @type, action: 'modify', time: time, reason: @cell.in_reason)
+      @record.send("#{@type}=", time)
       result = @record.save
     end
 
