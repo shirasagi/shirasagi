@@ -57,6 +57,21 @@ module Sys::SiteCopy::CmsPages
       copy_opendata_app_appfiles(src_page, dest_page)
     end
 
+    if dest_page.respond_to?(:column_values)
+      dest_page.column_values = src_page.column_values.map do |src_column_value|
+        dest_column_value = src_column_value.dup
+        dest_column_value.column_id = resolve_reference(:column, src_column_value.column_id)
+        if dest_column_value.respond_to?(:file_id)
+          dest_column_value.file_id = resolve_reference(:file, src_column_value.file_id)
+        end
+        if dest_column_value.respond_to?(:file_ids)
+          dest_column_value.file_ids = resolve_reference(:file, src_column_value.file_ids)
+        end
+        update_html_links(src_column_value, dest_column_value, names: %w(value))
+        dest_column_value
+      end
+    end
+
     @task.log("#{src_page.filename}(#{src_page.id}): ページをコピーしました。")
   end
 

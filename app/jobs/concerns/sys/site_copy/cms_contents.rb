@@ -13,16 +13,6 @@ module Sys::SiteCopy::CmsContents
       # at first, copy non-reference values and references which have no possibility of circular reference
       dest_content = klass.new(cur_site: @dest_site)
       dest_content.attributes = copy_basic_attributes(src_content, klass)
-      if dest_content.respond_to?(:column_values)
-        dest_content.column_values = src_content.column_values.map do |src_column_value|
-          dest_column_value = src_column_value.dup
-          dest_column_value.column_id = resolve_reference(:column, src_column_value.column_id)
-          if dest_column_value.respond_to?(:file_id)
-            dest_column_value.file_id = resolve_reference(:file, src_column_value.file_id)
-          end
-          dest_column_value
-        end
-      end
       dest_content.save!
       dest_content.id
     end
@@ -203,11 +193,12 @@ module Sys::SiteCopy::CmsContents
     end
   end
 
-  def update_html_links(src_content, dest_content)
+  def update_html_links(src_content, dest_content, options = {})
     file_url_maps = build_file_url_map(src_content, dest_content)
     dest_field_names = dest_content.class.fields.keys
+    names = options[:names].presence || %w(html)
     dest_content.attributes.each do |field_name, field_value|
-      next unless field_name.include?('html')
+      next unless names.any? { |name| field_name.include?(name) }
       next unless dest_field_names.include?(field_name)
       next if field_value.blank?
 
