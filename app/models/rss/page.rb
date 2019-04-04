@@ -11,5 +11,6 @@ class Rss::Page
 
   set_permission_name "article_pages"
 
+  store_in_repl_master
   default_scope ->{ where(route: "rss/page") }
 end

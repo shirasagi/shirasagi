@@ -42,6 +42,18 @@ module Rss::Node
 
     after_save :purge_pages, if: ->{ @db_changes && @db_changes["rss_max_docs"] }
 
+    def execute_weather_xml_filter(page, context)
+      return if page.blank?
+      return if filters.blank?
+
+      context[:site] ||= site
+      context[:user] ||= user
+      context[:node] ||= self
+      filters.and_enabled.each do |filter|
+        filter.execute(page, context) rescue next
+      end
+    end
+
     private
 
     def purge_pages

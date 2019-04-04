@@ -15,9 +15,20 @@ module Mongoid
         end
       end
 
-      def with_repl_master
+      def with_repl_master(&block)
+        client_name = :repl_master
         client = Mongoid::Config.clients[:repl_master]
-        client ? self.with(client: :repl_master, database: client[:database]) : self
+
+        if client.nil?
+          client_name = persistence_context.send(:client_name)
+          client = Mongoid::Config.clients[client_name]
+        end
+
+        if block_given?
+          self.with(client: client_name, database: client[:database], &block)
+        else
+          self.with(client: client_name, database: client[:database]) { |criteria| criteria }
+        end
       end
 
       def mongo_client_options
@@ -33,9 +44,20 @@ module Mongoid
       { client: self.class.storage_options[:client], database: self.class.database_name }.compact
     end
 
-    def with_repl_master
+    def with_repl_master(&block)
+      client_name = :repl_master
       client = Mongoid::Config.clients[:repl_master]
-      client ? self.with(client: :repl_master, database: client[:database]) : self
+
+      if client.nil?
+        client_name = persistence_context.send(:client_name)
+        client = Mongoid::Config.clients[client_name]
+      end
+
+      if block_given?
+        self.with(client: client_name, database: client[:database], &block)
+      else
+        self.with(client: client_name, database: client[:database]) { |criteria| criteria }
+      end
     end
   end
 end
