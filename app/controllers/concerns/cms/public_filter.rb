@@ -40,7 +40,7 @@ module Cms::PublicFilter
   def ensure_site_presence
     return if @cur_site
 
-    if path =='/' && group = SS::Group.where(domains: host).first
+    if request_path =='/' && group = SS::Group.where(domains: host).first
       return redirect_to "//#{host}" + gws_login_path(site: group)
     end
 

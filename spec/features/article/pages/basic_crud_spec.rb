@@ -79,7 +79,7 @@ describe "article_pages", dbscope: :example, js: true do
       within "form" do
         click_on I18n.t("ss.buttons.delete")
       end
-      expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+      expect(page).to have_css('#notice', text: I18n.t('ss.notice.deleted'))
     end
 
     it "#contains_urls" do
