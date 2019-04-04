@@ -119,8 +119,6 @@ ja:
         name: 名前
         training_status: 訓練XML
         test_status: 試験XML
-      jmaxml/addon/filter:
-        execute_filters_job_state: ジョブ実行
       jmaxml/addon/trigger/quake:
         earthquake_intensity: 震度
         target_region_ids: 対象区域
