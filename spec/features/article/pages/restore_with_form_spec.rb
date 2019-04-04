@@ -81,7 +81,7 @@ describe 'article_pages', dbscope: :example, js: true do
           select column5_value, from: "item[column_values][][in_wrap][value]"
         end
         within ".column-value-cms-column-radiobutton" do
-          first(:field, name: "item[column_values][][in_wrap][value]", with: column6_value).click
+          first(:field, type: "radio", with: column6_value).click
         end
         within ".column-value-cms-column-checkbox" do
           first(:field, name: "item[column_values][][in_wrap][values][]", with: column7_value).click
@@ -127,7 +127,7 @@ describe 'article_pages', dbscope: :example, js: true do
           select column5_value2, from: "item[column_values][][in_wrap][value]"
         end
         within ".column-value-cms-column-radiobutton" do
-          first(:field, name: "item[column_values][][in_wrap][value]", with: column6_value2).click
+          first(:field, type: "radio", with: column6_value2).click
         end
         within ".column-value-cms-column-checkbox" do
           first(:field, name: "item[column_values][][in_wrap][values][]", with: column7_value).click
