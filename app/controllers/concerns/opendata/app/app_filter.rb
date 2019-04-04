@@ -21,9 +21,10 @@ module Opendata::App::AppFilter
     Opendata::Node::Area.site(@cur_site).and_public.order_by(order: 1).map do |item|
       next unless counts[item.id]
       item.count = counts[item.id]
+      item.code = item.pref_code ? item.pref_code.code : "999999"
       areas << item
     end
-    areas
+    areas.sort_by { |c| [c.code, c.order] }
   end
 
   def aggregate_tags(limit)

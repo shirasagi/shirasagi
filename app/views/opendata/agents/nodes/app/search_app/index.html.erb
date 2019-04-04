@@ -35,10 +35,10 @@
       </h2>
     </header>
     <div class="categories">
-      <% item.categories.each_with_index do |category, idx| %>
+      <% item.categories.sort(order: 1).each_with_index do |category, idx| %>
         <span class="category"><%= category.name %></span>
       <% end %>
-      <% item.areas.each_with_index do |area, idx| %>
+      <% item.areas.sort(order: 1).each_with_index do |area, idx| %>
         <span class="area"><%= area.name %></span>
       <% end %>
       <% item.tags.each_with_index do |tag, idx| %>
