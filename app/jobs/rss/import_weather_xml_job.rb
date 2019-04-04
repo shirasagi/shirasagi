@@ -174,14 +174,6 @@ class Rss::ImportWeatherXmlJob < Rss::ImportBase
 
   def execute_weather_xml_filters
     return if @imported_pages.blank?
-
-    if node.execute_filters_job?
-      Rss::ExecuteWeatherXmlFiltersJob.bind(site_id: site.id, node_id: node.id).perform_later(@imported_pages.map(&:id))
-    else
-      context = OpenStruct.new(site: site, user: user, node: node)
-      @imported_pages.each do |page|
-        node.execute_weather_xml_filter(page, context)
-      end
-    end
+    Rss::ExecuteWeatherXmlFiltersJob.bind(site_id: site.id, node_id: node.id).perform_later(@imported_pages.map(&:id))
   end
 end
