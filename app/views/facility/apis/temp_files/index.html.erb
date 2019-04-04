@@ -14,6 +14,8 @@
   });
 
   SS.ajaxDelete(".user-files .delete");
+
+  SS_SearchUI.modal();
 <% end %>
 
 <% if @model.allowed?(:edit, @cur_user, site: @cur_site, node: @cur_node) %>

@@ -69,6 +69,8 @@ if (resizing) {
   var option = $('<option>').val(resizing).text(label).prop('selected', true);
   $('select.image-size').append(option);
 }
+
+SS_SearchUI.modal();
 <% end %>
 
 <% if @model.allowed?(:edit, @cur_user, site: @cur_site, node: @cur_node) %>
