@@ -181,10 +181,10 @@
   }
   .ss-preview-btn-toggle-inplace {
     &:after {
-      content: " off";
+      content: " on";
     }
     &.ss-preview-active:after {
-      content: " on";
+      content: " off";
     }
   }
   .ss-preview-notice {
@@ -204,15 +204,17 @@
 
 #ss-preview-overlay {
   position: absolute;
-  border: 3px solid rgba(0, 0, 0, 0.8);
-  box-sizing: border-box;
+  border: 1px solid #000;
+  border-left: 3px solid #000;
+  margin: 0 0 0 -5px;
+  padding: 3px 5px 0 0;
   @include transition(0.18s);
   pointer-events: none;
   .ss-preview-overlay-tool {
     position: absolute;
     left: -3px;
-    bottom: calc(100% + 3px);
-    max-width: calc(100% + 6px);
+    bottom: 100%;
+    max-width: 100%;
     margin: 0;
     padding: 0 5px;
     box-sizing: border-box;
@@ -255,14 +257,6 @@
       bottom: 0;
       left: 0;
       z-index: 0;
-    }
-    .ss-preview-overlay-btn-group-edit:after {
-      content: "";
-      position: absolute;
-      left: 0;
-      bottom: -5px;
-      width: 100%;
-      padding: 4px 0;
     }
   }
   * {

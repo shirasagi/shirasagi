@@ -67,33 +67,26 @@
     display: inline-block;
     padding: 1px 5px;
     @include border-radius(3px);
-    background-image: url(/assets/img/gws/bg-plan.png);
     font-size: 90%;
     font-weight: normal;
-
+    color: #fff;
     &.state-public {
-      background-color: #62d27c;
-      color: #000;
+      background-color: #2f7e42;
     }
     &.state-closed {
       background-color: #6c757d;
-      color: #fff;
     }
     &.state-ready {
-      background-color: #fdc02f;
-      color: #000;
+      background-color: #956c0a;
     }
     &.state-request {
-      background-color: #6da4f7;
-      color: #000;
+      background-color: #426ba9;
     }
     &.state-edit {
-      background-color: #f78691;
-      color: #000;
+      background-color: #c82635;
     }
     &.state-remand {
       background-color: #895b8a;
-      color: #fff;
     }
   }
 }
