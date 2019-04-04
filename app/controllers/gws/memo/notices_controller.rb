@@ -75,23 +75,23 @@ class Gws::Memo::NoticesController < ApplicationController
   end
 
   def latest
-    from = params[:from].present? ? Time.zone.parse(params[:from]) : Time.zone.now - 12.hours
-
     @unseen = @model.site(@cur_site).
       member(@cur_user).
       undeleted(@cur_user).
       unseen(@cur_user)
 
-    @items = @model.site(@cur_site).
+    if params[:filter] == 'unseen'
+      @items = @unseen
+    else
+      @items = @model.site(@cur_site).
       member(@cur_user).
       undeleted(@cur_user).
-      limit(10).
-      entries
+      limit(10)
+    end
 
     resp = {
-      recent: @unseen.where(:created.gte => from).size,
+      latest: @unseen.first.try(:created),
       unseen: @unseen.size,
-      latest: @items.first.try(:created),
       items: @items.map do |item|
         {
           date: item.created,
