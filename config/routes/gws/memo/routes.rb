@@ -39,7 +39,7 @@ SS::Application.routes.draw do
 
     resources :notices, concerns: :deletion, only: [:index, :show, :destroy] do
       get :recent, on: :collection
-      get :latest, on: :collection
+      get 'latest/(:filter)' => :latest, on: :collection, defaults: { filter: :all }
     end
 
     resource :notice_user_settings, only: [:show, :edit, :update]
