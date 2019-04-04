@@ -1361,12 +1361,6 @@ SS_Preview = (function () {
       self.$overlay.trigger(eventType, [ self.$overlay.data(), order ]);
     });
 
-    $(document).on('click', function(e) {
-      if (! $(e.target).closest('#ss-preview-overlay').length) {
-        self.hide();
-      }
-    });
-
     // delegates
     this.on = this.$overlay.on.bind(this.$overlay);
     this.off = this.$overlay.off.bind(this.$overlay);
