@@ -12,7 +12,7 @@ module Facility::Addon::Image
     end
 
     def save_image
-      image.update_attributes(site_id: site_id, model: "facility/file", state: state) if image
+      image.update(site_id: site_id, model: "facility/file", owner_item: self, state: state) if image
 
       if image_id_changed? && image_id_was
         file = SS::File.where(id: image_id_was).first
