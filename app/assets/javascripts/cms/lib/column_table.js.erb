@@ -352,11 +352,16 @@ Cms_Column_Table.prototype.updateHidden = function () {
 };
 
 Cms_Column_Table.prototype.addControlTable = function () {
-  this.$el.find(".table-editor table tr:empty").remove();
   var table = this.$el.find('.table-editor table');
   if (!table[0]) {
     return false;
   }
+  if (table.find(".control").length > 0) {
+    return;
+  }
+
+  this.$el.find(".table-editor table tr:empty").remove();
+
   var tr = $('<tr></tr>')
   for (var i = 0; i < table[0].rows.length; i++) {
     $(table[0].rows[i].cells[0]).before("<th class='control control-left'></th>");
