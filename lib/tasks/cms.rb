@@ -108,7 +108,7 @@ module Tasks
           puts "# member/login"
           each_items(::Member::Node::Login.site(site)) do |item|
             if item.redirect_url.start_with?("/")
-              item.set(:redirect_url, "#{site.url}#{item.redirect_url[1..-1]}")
+              item.set(redirect_url: "#{site.url}#{item.redirect_url[1..-1]}")
             end
           end
 
