@@ -1,4 +1,5 @@
-<% if mode == :preview && desktop_pc %>
+<% if desktop_pc %>
+<% if mode == :preview %>
   <div class="ss-preview-wrap-row">
     <% if inplace_editable? %>
     <div class="ss-preview-btn-group">
@@ -36,7 +37,6 @@
   </div>
 <% end %>
 
-<% if desktop_pc %>
   <div id="ss-preview-messages" class="ss-preview-wrap-row">
     <% if rendered && (page = rendered[:page]) %>
       <% if page.try(:master?) && page.branches.present? %>
