@@ -1,4 +1,7 @@
-<%= jquery do %> SS_AddonTabs.hide(".addon-gws-facility-group-setting"); <% end %>
+<%
+  addon ||= local_assigns.fetch(:addon, {})
+  addon[:display_body] = "hide"
+%>
 
 <dl class="see addon-gws-facility-group-setting">
   <dt><%= @model.t :facility_hours %><%= @model.tt :facility_hours %></dt>

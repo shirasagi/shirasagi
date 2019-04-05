@@ -1,6 +1,7 @@
-<%= jquery do %>
-  SS_AddonTabs.hide(".mod-gws-release");
-<% end %>
+<%
+  addon ||= local_assigns.fetch(:addon, {})
+  addon[:display_body] = "hide"
+%>
 
 <dl class="see mod-gws-release">
   <dt><%= @model.t :state %><%= @model.tt :state %></dt>

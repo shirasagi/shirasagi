@@ -1,4 +1,7 @@
-<%= jquery do %> SS_AddonTabs.hide(".addon-gws-faq-group-setting"); <% end %>
+<%
+  addon ||= local_assigns.fetch(:addon, {})
+  addon[:display_body] = "hide"
+%>
 
 <% @item.in_faq_file_size_per_topic_mb ||= @item.faq_file_size_per_topic / (1_024 * 1_024) if @item.faq_file_size_per_topic %>
 <% @item.in_faq_file_size_per_post_mb ||= @item.faq_file_size_per_post / (1_024 * 1_024) if @item.faq_file_size_per_post %>

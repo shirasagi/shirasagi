@@ -4,20 +4,14 @@
 <%= error_messages_for :item %>
 
 <div class="addon-views">
-  <div class="addon-view" id="addon-basic">
-    <div class="addon-head toggle-head"><h2><%= t "ss.basic_info"%></h2></div>
-    <div class="addon-body toggle-body">
-      <%= render file: '_form', locals: { f: f } %>
-    </div>
-  </div>
+  <%= render "ss/crud/addon", addon: { id: "addon-basic", head: t('ss.basic_info'), toggle: true, display_body: @item.running? || @item.state == 'ready' ? "hide" : "show" } do %>
+    <%= render file: '_form', locals: { f: f } %>
+  <% end %>
   <%= render file: "_addons_form", locals: { f: f, addons: addons } if addons.size > 0 %>
 
-  <div class="addon-view" id="task-form">
-    <div class="addon-head toggle-head"><h2><%= t 'sys.site_copy/task_status' %></h2></div>
-    <div class="addon-body toggle-body">
-      <%= render partial: 'task' %>
-    </div>
-  </div>
+  <%= render "ss/crud/addon", addon: { id: "task-form", head: t('sys.site_copy/task_status'), toggle: true, display_body: @item.running? || @item.state == 'ready' ? "show" : "hide" } do %>
+    <%= render partial: 'task' %>
+  <% end %>
 </div>
 
 <footer class="send">
@@ -27,9 +21,4 @@
 
 <%= jquery do %>
 SS.confirmUnloading();
-  <% if @item.running? || @item.state == 'ready' %>
-  SS_AddonTabs.hide(".sys-site-copy");
-  <% else %>
-  SS_AddonTabs.hide(".mod-ss-task");
-  <% end %>
 <% end %>

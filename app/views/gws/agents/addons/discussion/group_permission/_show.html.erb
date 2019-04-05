@@ -1,4 +1,7 @@
-<%= jquery do %> SS_AddonTabs.hide(".mod-gws-owner_permission"); <% end %>
+<%
+  addon ||= local_assigns.fetch(:addon, {})
+  addon[:display_body] = "hide"
+%>
 
 <dl class="see mod-gws-owner_permission">
   <% if @item.class.permission_included_custom_groups? %>

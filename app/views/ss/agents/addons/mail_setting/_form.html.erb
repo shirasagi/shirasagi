@@ -1,6 +1,7 @@
-<%= jquery do %>
-  SS_AddonTabs.hide(".mod-ss-mail-setting");
-<% end %>
+<%
+  addon ||= local_assigns.fetch(:addon, {})
+  addon[:display_body] = "hide"
+%>
 <dl class="see mod-ss-mail-setting">
   <dt><%= @model.t :sender_name %><%= @model.tt :sender_name %></dt>
   <dd><%= f.text_field :sender_name %></dd>

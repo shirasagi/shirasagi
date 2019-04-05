@@ -1,4 +1,7 @@
-<%= jquery do %> SS_AddonTabs.hide(".addon-gws-share-group-setting"); <% end %>
+<%
+  addon ||= local_assigns.fetch(:addon, {})
+  addon[:display_body] = "hide"
+%>
 
 <dl class="see addon-gws-share-group-setting">
   <dt><%= @model.t :share_max_file_size %></dt>

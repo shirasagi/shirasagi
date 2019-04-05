@@ -1,9 +1,10 @@
 <% return if addons.blank? %>
 
+<% display_body ||= "show" %>
 <% css_classes ||= [] %>
 <% css_classes = Array(css_classes).flatten.compact %>
 <% addons.each do |addon| %>
-  <% addon_options = { id: "addon-#{addon.id}", head: addon.name, class: css_classes.dup, toggle: true } %>
+  <% addon_options = { id: "addon-#{addon.id}", head: addon.name, class: css_classes.dup, toggle: true, display_body: display_body } %>
 
   <% buf = render file: addon.show_file, locals: { addon: addon_options } if addon.show_file %>
   <% next if buf.blank? %>

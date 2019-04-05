@@ -4,7 +4,6 @@ categories = Category::Node::Base.site(@cur_site).readable(@cur_user, site: @cur
 cate_options = { root_and_descendants: true, item_name: "ads_category_ids" }
 
 %>
-<%= jquery do %> SS_AddonTabs.hide(".mod-ads-category-category"); <% end %>
 
 <dl class="see mod-category-category category-form">
   <dt class="wide"><%= @model.t :ads_categories %><%= @model.tt :ads_categories %></dt>

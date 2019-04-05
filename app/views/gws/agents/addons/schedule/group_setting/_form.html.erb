@@ -1,4 +1,7 @@
-<%= jquery do %> SS_AddonTabs.hide(".addon-gws-schedule-group-setting"); <% end %>
+<%
+  addon ||= local_assigns.fetch(:addon, {})
+  addon[:display_body] = "hide"
+%>
 
 <% @item.in_schedule_max_file_size_mb = @item.schedule_max_file_size.to_i / (1_024 * 1_024) %>
 
