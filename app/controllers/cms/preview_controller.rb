@@ -190,9 +190,11 @@ class Cms::PreviewController < ApplicationController
       mobile = true
     end
 
+    desktop_pc = browser.platform.linux? || browser.platform.mac? || browser.platform.windows?
+
     chunks = []
     @contents_body.each do |body|
-      chunks << convert_html_to_preview(body, mode: mode, rendered: @contents_env["ss.rendered"], mobile: mobile)
+      chunks << convert_html_to_preview(body, mode: mode, rendered: @contents_env["ss.rendered"], desktop_pc: desktop_pc)
     end
     render html: chunks.join.html_safe, layout: false
   rescue => exception
