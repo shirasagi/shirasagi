@@ -113,12 +113,18 @@
 <% end %>
 <div id="ss-preview">
   <div class="ss-preview-wrap">
-    <div class="ss-preview-wrap-column">
-      <%= render "tool_left", local_assigns %>
-    </div>
-    <div class="ss-preview-wrap-column">
-      <%= render "tool_right", local_assigns %>
-    </div>
+    <% left = render "tool_left", local_assigns %>
+    <% if left.present? %>
+      <div class="ss-preview-wrap-column">
+        <%= left %>
+      </div>
+    <% end %>
+    <% right = render "tool_right", local_assigns %>
+    <% if right.present? %>
+      <div class="ss-preview-wrap-column">
+        <%= right %>
+      </div>
+    <% end %>
   </div>
   <div class="ss-preview-notice-wrap" style="display: none;"></div>
 </div>
