@@ -41,6 +41,7 @@
     @include align-items(center);
     label {
       height: 29px;
+      margin: 0;
       padding: 4px 12px;
       background: #d9d9d9;
       border-radius: 3px 0 0 3px;
@@ -180,10 +181,10 @@
   }
   .ss-preview-btn-toggle-inplace {
     &:after {
-      content: " off";
+      content: " on";
     }
     &.ss-preview-active:after {
-      content: " on";
+      content: " off";
     }
   }
   .ss-preview-notice {
@@ -203,15 +204,17 @@
 
 #ss-preview-overlay {
   position: absolute;
-  border: 3px solid rgba(0, 0, 0, 0.8);
-  box-sizing: border-box;
+  border: 1px solid #000;
+  border-left: 3px solid #000;
+  margin: 0 0 0 -5px;
+  padding: 3px 5px 0 0;
   @include transition(0.18s);
   pointer-events: none;
   .ss-preview-overlay-tool {
     position: absolute;
     left: -3px;
-    bottom: calc(100% + 3px);
-    max-width: calc(100% + 6px);
+    bottom: 100%;
+    max-width: 100%;
     margin: 0;
     padding: 0 5px;
     box-sizing: border-box;
@@ -220,7 +223,6 @@
     @include flex-wrap(wrap);
     background-color: rgba(0, 0, 0, 0.8);
     pointer-events: none;
-    overflow: hidden;
     @include mb {
       display: block;
     }
