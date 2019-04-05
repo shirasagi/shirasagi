@@ -14,7 +14,7 @@ class Chorg::RevisionsController < ApplicationController
   end
 
   def download_template
-    csv = @model.new.changesets_to_csv
+    csv = @model.new.changesets_template_csv
     filename = "revision_template.csv"
     send_data csv.encode("SJIS", invalid: :replace, undef: :replace), filename: filename
   end
