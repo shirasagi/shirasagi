@@ -6,6 +6,8 @@
   end
 %>
 
+<%= hidden_field_tag "#{f.object_name}[column_values][]", ""  %>
+
 <% if form.sub_type_static? %>
   <%= render 'cms/forms/columns_form_static', local_assigns %>
 <% else %>
