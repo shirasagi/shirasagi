@@ -51,8 +51,7 @@ class Opendata::Agents::Nodes::Dataset::SearchDatasetController < ApplicationCon
   end
 
   def dataset_download
-    @model = Opendata::Dataset
-    item = @model.site(@cur_site).and_public.find_by(id: params[:id])
+    item = Opendata::Dataset.site(@cur_site).and_public.find_by(id: params[:id])
     item.resources.each do |resource|
       if Mongoid::Config.clients[:default_post].blank?
         resource.dataset.inc downloaded: 1
@@ -65,17 +64,22 @@ class Opendata::Agents::Nodes::Dataset::SearchDatasetController < ApplicationCon
   end
 
   def bulk_download
-    @model = Opendata::Dataset
     ids = params[:ids].to_a.map(&:to_i)
-    @items = @model.site(@cur_site).and_public.in(id: ids)
     filename = "opendata-datasets-#{Time.zone.now.to_i}"
+
+    @items = Opendata::Dataset.site(@cur_site).and_public.in(id: ids).select { |item| item.zip_exists? }
+
+    bulk_download_size = @items.map(&:zip_size).sum
+    if bulk_download_size > SS.config.opendata.bulk_download_max_filesize
+      head 422
+      return
+    end
 
     begin
       t = Tempfile.new(filename)
 
       Zip::File.open(t.path, Zip::File::CREATE) do |zip|
         @items.each do |item|
-          next unless item.zip_exists?
           zip.add("#{item.name}-#{item.id}.zip".encode('cp932', invalid: :replace, undef: :replace), item.zip_path)
           item.resources.each do |resource|
             if Mongoid::Config.clients[:default_post].blank?
