@@ -79,6 +79,7 @@ ja:
       integrate: 統合する
       download: ダウンロード
       download_template: 雛形をダウンロード
+      download_sample_csv: サンプルCSVをダウンロード
       export: エクスポート
       resize: リサイズする
       set_tag: タグ設定

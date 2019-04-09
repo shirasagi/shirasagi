@@ -14,7 +14,7 @@ $('#item-form').submit(function(){
 
   <dt><%= @model.t :revision_csv_file_id %><%= @model.tt :revision_csv_file_id %></dt>
   <dd><%= f.file_field :in_revision_csv_file %></dd>
-  <dd><%= link_to t("ss.links.download_template"), { action: :download_template } %></dd>
+  <dd><%= link_to t("ss.links.download_sample_csv"), { action: :download_sample_csv } %></dd>
 
   <dt><%= @model.t :user_csv_file_id %><%= @model.tt :user_csv_file_id %></dt>
   <dd><%= f.file_field :in_user_csv_file %></dd>
