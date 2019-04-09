@@ -53,10 +53,8 @@ class Opendata::Agents::Nodes::Dataset::SearchDatasetController < ApplicationCon
   def dataset_download
     item = Opendata::Dataset.site(@cur_site).and_public.find_by(id: params[:id])
     item.resources.each do |resource|
-      if Mongoid::Config.clients[:default_post].blank?
-        resource.dataset.inc downloaded: 1
-        resource.create_dataset_download_history
-      end
+      resource.dataset.inc downloaded: 1
+      resource.create_dataset_download_history
     end
 
     send_file item.zip_path, type: 'application/zip', filename: "#{item.name}_#{Time.zone.now.to_i}.zip",
