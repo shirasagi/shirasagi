@@ -3,6 +3,10 @@
 production: &production
   options_limit: 100
 
+  # Upload limit size (Bytes)
+  # 104857600 = 100MB(1024*1024*100)
+  bulk_download_max_filesize: 104857600
+
   preview:
     map:
       latitude_header:

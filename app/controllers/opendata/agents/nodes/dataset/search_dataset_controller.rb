@@ -53,7 +53,6 @@ class Opendata::Agents::Nodes::Dataset::SearchDatasetController < ApplicationCon
   def dataset_download
     @model = Opendata::Dataset
     item = @model.site(@cur_site).and_public.find_by(id: params[:id])
-    filepath = "#{item.zip_path}/opendata-datasets-#{item.id}.zip"
     item.resources.each do |resource|
       if Mongoid::Config.clients[:default_post].blank?
         resource.dataset.inc downloaded: 1
@@ -61,7 +60,7 @@ class Opendata::Agents::Nodes::Dataset::SearchDatasetController < ApplicationCon
       end
     end
 
-    send_file filepath, type: 'application/zip', filename: "#{item.name}_#{Time.zone.now.to_i}.zip",
+    send_file item.zip_path, type: 'application/zip', filename: "#{item.name}_#{Time.zone.now.to_i}.zip",
       disposition: :attachment, x_sendfile: true
   end
 
@@ -76,9 +75,8 @@ class Opendata::Agents::Nodes::Dataset::SearchDatasetController < ApplicationCon
 
       Zip::File.open(t.path, Zip::File::CREATE) do |zip|
         @items.each do |item|
-          path = "#{item.zip_path}/opendata-datasets-#{item.id}.zip"
           next unless item.zip_exists?
-          zip.add("#{item.name}-#{item.id}.zip".encode('cp932', invalid: :replace, undef: :replace), path)
+          zip.add("#{item.name}-#{item.id}.zip".encode('cp932', invalid: :replace, undef: :replace), item.zip_path)
           item.resources.each do |resource|
             if Mongoid::Config.clients[:default_post].blank?
               resource.dataset.inc downloaded: 1
