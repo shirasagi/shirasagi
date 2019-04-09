@@ -70,23 +70,29 @@ class Opendata::Agents::Nodes::Dataset::SearchDatasetController < ApplicationCon
     ids = params[:ids].to_a.map(&:to_i)
     @items = @model.site(@cur_site).and_public.in(id: ids)
     filename = "opendata-datasets-#{Time.zone.now.to_i}"
-    t = Tempfile.new(filename)
-    Zip::File.open(t.path, Zip::File::CREATE) do |zip|
-      @items.each do |item|
-        path = "#{item.zip_path}/opendata-datasets-#{item.id}.zip"
-        next unless item.zip_exists?
-        zip.add("#{item.name}-#{item.id}.zip".encode('cp932', invalid: :replace, undef: :replace), path)
-        item.resources.each do |resource|
-          if Mongoid::Config.clients[:default_post].blank?
-            resource.dataset.inc downloaded: 1
-            resource.create_bulk_download_history
+
+    begin
+      t = Tempfile.new(filename)
+
+      Zip::File.open(t.path, Zip::File::CREATE) do |zip|
+        @items.each do |item|
+          path = "#{item.zip_path}/opendata-datasets-#{item.id}.zip"
+          next unless item.zip_exists?
+          zip.add("#{item.name}-#{item.id}.zip".encode('cp932', invalid: :replace, undef: :replace), path)
+          item.resources.each do |resource|
+            if Mongoid::Config.clients[:default_post].blank?
+              resource.dataset.inc downloaded: 1
+              resource.create_bulk_download_history
+            end
           end
         end
       end
+
+      send_data ::Fs.read(t.path), type: 'application/zip', filename: "#{t("opendata.dataset")}_#{Time.zone.now.to_i}.zip",
+        disposition: :attachment, x_sendfile: true
+    ensure
+      t.delete
+      t.close
     end
-    send_data ::Fs.read(t.path), type: 'application/zip', filename: "#{t("opendata.dataset")}_#{Time.zone.now.to_i}.zip",
-      disposition: :attachment, x_sendfile: true
-    t.delete
-    t.close
   end
 end
