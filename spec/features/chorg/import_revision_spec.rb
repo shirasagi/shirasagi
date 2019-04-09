@@ -77,11 +77,11 @@ describe "chorg_import_revision", dbscope: :example do
   context "revision in new path" do
     before { login_cms_user }
 
-    it "#download_template" do
+    it "#download_sample" do
       visit new_path
       expect(current_path).not_to eq sns_login_path
 
-      click_on I18n.t("ss.links.download_template")
+      click_on I18n.t("ss.links.download_sample_csv")
 
       expect(page.response_headers['Content-Type']).to eq("text/csv")
       header = CSV.parse(page.body.encode("UTF-8")).first
