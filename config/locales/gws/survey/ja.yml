@@ -29,6 +29,7 @@ ja:
       notification_job_started: 通知処理を開始しました。
       no_files: "添付ファイルがありません。"
       anonymous_state: 匿名回答はアンケート作成時にのみ設定可能です。後から変更することはできません。
+      file_state: 回答結果はアンケート作成時にのみ設定可能です。後から変更することはできません。
     confirm:
       download: ダウンロードしてよろしいですか？
       notification_to_unanswered_users: 未回答者に通知を送ってよろしいですか？

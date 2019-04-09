@@ -26,7 +26,7 @@ class Gws::Survey::EditablesController < ApplicationController
   def permit_fields
     fields = super
     if params[:action] == "create"
-      fields = fields + [:anonymous_state]
+      fields += %i[anonymous_state file_state]
     end
     fields
   end
