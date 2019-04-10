@@ -1,4 +1,23 @@
-<% file = "#{@cur_node.path}/search.html" %>
+<%
+  bulk_download_items = @items.select{ |item| item.zip_exists? }
+  bulk_download_ids = bulk_download_items.map(&:id)
+  bulk_download_size = bulk_download_items.map(&:zip_size).sum
+
+  exceeded_filesize = bulk_download_size > SS.config.opendata.bulk_download_max_filesize
+  bulk_download_url = exceeded_filesize ? "#" : "#{@cur_node.url}bulk_download?#{{ ids: bulk_download_ids }.to_query}"
+
+  file = "#{@cur_node.path}/search.html"
+%>
+
+<% if exceeded_filesize %>
+<%= jquery do %>
+$(".download-all").on("click", function () {
+  alert("<%= t("opendata.notice.bulk_download_exceeded_filesize") %>");
+  return false;
+});
+<% end %>
+<% end %>
+
 <% if !controller.preview_path? && Fs.exists?(file) %>
   <%== Fs.read(file) %>
 <% else %>
@@ -23,9 +42,8 @@
 
 <%= paginate @items %>
 
-<% bulk_download_ids = @items.select{ |item| item.zip_exists? }.pluck(:id) %>
 <% if bulk_download_ids.present? %>
-  <%= link_to t("opendata.search_datasets.bluk_download"), "#{@cur_node.url}bulk_download?#{{ ids: bulk_download_ids }.to_query}", class: "download-all" %>
+  <%= link_to t("opendata.search_datasets.bluk_download"), bulk_download_url, class: "download-all" %>
 <% end %>
 
 <div class="opendata-search-datasets pages">
