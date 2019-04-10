@@ -8,7 +8,7 @@ class Gws::Survey::FilesController < ApplicationController
   before_action :set_cur_form
   before_action :check_form_permissions
   before_action :set_items
-  before_action :set_item, only: %i[show edit update delete destroy]
+  before_action :set_item, only: %i[show edit update delete destroy others]
 
   navi_view "gws/survey/main/navi"
 
