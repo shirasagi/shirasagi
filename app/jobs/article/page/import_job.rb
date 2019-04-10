@@ -68,16 +68,21 @@ class Article::Page::ImportJob < Cms::ApplicationJob
   def category_name_tree_to_ids(name_trees)
     category_ids = []
     name_trees.each do |cate|
-      ct_list = []
       names = cate.split("/")
-      names.each_with_index do |n, d|
-        ct = Cms::Node.site(site).where(name: n, depth: d + 1).first
-        ct_list << ct if ct
-      end
 
-      if ct_list.present? && ct_list.size == names.size
-        ct = ct_list.last
-        category_ids << ct.id if ct.route =~ /^category\//
+      last_index = names.size - 1
+      last_name = names[last_index]
+
+      parent_names = names.slice(0...(names.size - 1))
+
+      cond = { name: last_name, depth: last_index + 1, route: /^category\// }
+      node_ids = Cms::Node.site(site).where(cond).pluck(:id)
+      node_ids.each do |node_id|
+        cate = Cms::Node.find(node_id)
+
+        if parent_names == cate.parents.pluck(:name)
+          category_ids << cate.id
+        end
       end
     end
     category_ids
