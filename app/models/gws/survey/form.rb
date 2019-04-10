@@ -31,7 +31,7 @@ class Gws::Survey::Form
   field :file_edit_state, type: String, default: 'enabled'
 
   permit_params :name, :description, :order, :memo, :due_date, :release_date, :close_date
-  permit_params :file_state, :file_edit_state
+  permit_params :file_edit_state
 
   validates :name, presence: true, length: { maximum: 80 }
   validates :order, numericality: { greater_than_or_equal_to: 0, less_than_or_equal_to: 999_999, allow_blank: true }
