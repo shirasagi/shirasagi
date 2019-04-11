@@ -619,9 +619,23 @@ ja:
         sender_email: 差出人メールアドレス
         sender_user_id: 差出ユーザー
         mail_signature: 署名
-      ss/notification:
-        name: 件名
-        display_send_date: 送信日時
+      ss/model/notification:
+        group_id: グループ
+        member_ids: 参加者
+        subject: 件名
+        text: 本文TEXT
+        html: 本文HTML
+        format: フォーマット
+        seen: 既読日時
+        send_date: 送信日時
+        export: エクスポート
+        url: URL
+      ss/addon/notification/reply:
+        reply_module: 返信モジュール名
+        reply_model: 返信モデル名
+        reply_item_id: 返信ID
+      ss/addon/file:
+        file_ids: ファイル
 
   tooltip:
     ss/model/user:
