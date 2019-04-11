@@ -612,7 +612,7 @@ DEPENDENCIES
   bxslider-rails
   capybara
   clam_scan
-  coffee-rails (~> 4.2.2)
+  coffee-rails
   coveralls
   diff-lcs
   diffy

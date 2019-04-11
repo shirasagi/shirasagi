@@ -3,7 +3,7 @@ source 'https://rubygems.org'
 gem 'rails', '~> 5.2.0'
 gem 'sassc-rails'
 gem 'uglifier'
-gem 'coffee-rails', '~> 4.2.2'
+gem 'coffee-rails'
 gem 'therubyracer', '~> 0.12.3', platforms: :ruby
 gem 'jbuilder'
 gem 'sdoc', group: :doc
