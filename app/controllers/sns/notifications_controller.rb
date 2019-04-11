@@ -92,7 +92,7 @@ class Sns::NotificationsController < ApplicationController
         {
           date: item.created,
           subject: item.subject,
-          url: gws_memo_notice_url(id: item.id),
+          url: sns_notification_url(id: item.id),
           unseen: item.unseen?(@cur_user)
         }
       end
