@@ -241,7 +241,7 @@ GEM
       concurrent-ruby (~> 1.0)
     icalendar (2.4.1)
     jaro_winkler (1.5.1)
-    jbuilder (2.7.0)
+    jbuilder (2.8.0)
       activesupport (>= 4.2.0)
       multi_json (>= 1.2)
     jquery-form-rails (1.0.1)
@@ -631,7 +631,7 @@ DEPENDENCIES
   guard-rubocop (~> 1.1.0)
   holiday_japan
   icalendar
-  jbuilder (~> 2.0)
+  jbuilder
   jquery-form-rails
   jquery-minicolors-rails
   jquery-rails

@@ -5,7 +5,7 @@ gem 'sassc-rails'
 gem 'uglifier'
 gem 'coffee-rails', '~> 4.2.2'
 gem 'therubyracer', '~> 0.12.3', platforms: :ruby
-gem 'jbuilder', '~> 2.0'
+gem 'jbuilder'
 gem 'sdoc', '~> 0.4.0', group: :doc
 
 # Server
