@@ -21,8 +21,8 @@ class Gws::Reminder::NotificationJob < Gws::ApplicationJob
           mail.deliver_now
         else
           Rails.logger.info("#{item.user.long_name}: リマインダー通知")
-          message = Gws::Memo::Notice.new
-          message.cur_site = item.site
+          message = SS::Notification.new
+          message.cur_group = item.site
           message.cur_user = item.user
           message.member_ids = [item.user_id]
           message.send_date = @now

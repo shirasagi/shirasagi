@@ -619,6 +619,9 @@ ja:
         sender_email: 差出人メールアドレス
         sender_user_id: 差出ユーザー
         mail_signature: 署名
+      ss/notification:
+        name: 件名
+        display_send_date: 送信日時
 
   tooltip:
     ss/model/user:

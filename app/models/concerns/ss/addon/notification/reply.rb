@@ -1,4 +1,4 @@
-module Gws::Addon::Memo::Notice::Reply
+module SS::Addon::Notification::Reply
   extend ActiveSupport::Concern
   extend SS::Addon
 

@@ -17,6 +17,7 @@ module SS::BaseFilter
     before_action :check_api_user
     before_action :set_logout_path_by_session
     rescue_from StandardError, with: :rescue_action
+    rescue_from Job::SizeLimitExceededError, with: :rescue_job_size_limit
     layout "ss/base"
   end
 
@@ -160,5 +161,20 @@ module SS::BaseFilter
   def error_html_file(status)
     file = "#{Rails.public_path}/#{status}.html"
     Fs.exists?(file) ? file : "#{Rails.public_path}/500.html"
+  end
+
+  def rescue_job_size_limit(error)
+    referer_uri = URI.parse(request.referer)
+    begin
+      if @item.present?
+        @item.errors.add(:base, error)
+        flash[:notice] = error
+        render(Rails.application.routes.recognize_path(referer_uri.path))
+      else
+        redirect_to(referer_uri.path, notice: error)
+      end
+    rescue ActionView::MissingTemplate
+      redirect_to(referer_uri.path, notice: error)
+    end
   end
 end

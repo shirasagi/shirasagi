@@ -233,8 +233,8 @@ class Gws::Memo::Notifier
 
     url = item_to_url(item)
 
-    message = Gws::Memo::Notice.new
-    message.cur_site = cur_site
+    message = SS::Notification.new
+    message.cur_group = cur_site
     message.cur_user = cur_user
     message.member_ids = to_users.pluck(:id)
 

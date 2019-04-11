@@ -1,0 +1,22 @@
+<div class="addon-view gws-memo gws-memo-notices" id="message-<%= @item.id %>">
+  <div class="addon-head">
+    <h2 class="subject">
+      <%= @item.subject_with_group %>
+    </h2>
+    <nav class="meta">
+      <span class="user"><%= @item.user&.long_name %></span>
+      <span class="datetime"><%= @item.display_send_date %></span>
+    </nav>
+  </div>
+
+  <div class="addon-body">
+    <% if @item.html? %>
+      <div class="body body--html">
+        <%= html_editor ".body--html .html", readonly: true %>
+        <%= text_area_tag :html, @item.html, class: "html", style: "height: 400px;" %>
+      </div>
+    <% else %>
+      <div class="body body--text"><%= auto_link br @item.text %></div>
+    <% end %>
+  </div>
+</div>

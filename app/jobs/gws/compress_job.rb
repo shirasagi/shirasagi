@@ -10,8 +10,8 @@ class Gws::CompressJob < Gws::ApplicationJob
     subject = item.subject
     subject = NKF.nkf("-w", subject) if subject =~ /ISO-2022-JP/i
 
-    message = Gws::Memo::Notice.new
-    message.cur_site      = site
+    message = SS::Notification.new
+    message.cur_group     = site
     message.cur_user      = user
     message.member_ids    = [user.id]
     message.send_date     = Time.zone.now

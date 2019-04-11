@@ -97,6 +97,13 @@ module SS::Model::Task
       Rails.logger.info "already ready."
       return false
     end
+    if user_id.present?
+      size = Job::Task.where(user_id: user_id).where(state: 'stop').exists(at: true).count
+      if size >= Job::Service.config.size_limit_per_user
+        Rails.logger.info I18n.t('job.notice.size_limit_exceeded')
+        return false
+      end
+    end
 
     change_state("ready")
   end

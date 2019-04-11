@@ -2,24 +2,23 @@ class Gws::Memo::NoticesController < ApplicationController
   include Gws::BaseFilter
   include Gws::CrudFilter
 
-  model Gws::Memo::Notice
+  model SS::Notification
 
   def fix_params
-    { cur_user: @cur_user, cur_site: @cur_site }
+    { cur_user: @cur_user, cur_group: @cur_site }
   end
 
   private
 
   def set_item
     super
-    raise "404" unless @item.readable?(@cur_user, site: @cur_site)
+    raise "404" unless @item.readable?(@cur_user, @cur_site)
   end
 
   public
 
   def index
-    @items = @model.site(@cur_site).
-      member(@cur_user).
+    @items = @model.member(@cur_user).
       undeleted(@cur_user).
       search(params[:s]).
       page(params[:page]).per(50)
@@ -49,8 +48,7 @@ class Gws::Memo::NoticesController < ApplicationController
   end
 
   def recent
-    @items = @model.site(@cur_site).
-      member(@cur_user).
+    @items = @model.member(@cur_user).
       undeleted(@cur_user).
       search(params[:s]).
       limit(5)
@@ -75,18 +73,16 @@ class Gws::Memo::NoticesController < ApplicationController
   end
 
   def latest
-    @unseen = @model.site(@cur_site).
-      member(@cur_user).
+    @unseen = @model.member(@cur_user).
       undeleted(@cur_user).
       unseen(@cur_user)
 
     if params[:filter] == 'unseen'
       @items = @unseen
     else
-      @items = @model.site(@cur_site).
-      member(@cur_user).
-      undeleted(@cur_user).
-      limit(10)
+      @items = @model.member(@cur_user).
+        undeleted(@cur_user).
+        limit(10)
     end
 
     resp = {

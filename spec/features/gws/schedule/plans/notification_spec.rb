@@ -38,7 +38,7 @@ describe "gws_schedule_plans", type: :feature, dbscope: :example do
       wait_for_ajax
       expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
 
-      notice = Gws::Memo::Notice.first
+      notice = SS::Notification.first
       expect(notice.nil?).to be true
 
       mail = ActionMailer::Base.deliveries.first
@@ -55,7 +55,7 @@ describe "gws_schedule_plans", type: :feature, dbscope: :example do
       wait_for_ajax
       expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
 
-      notice = Gws::Memo::Notice.first
+      notice = SS::Notification.first
       expect(notice.url).to include(notice_url)
 
       mail = ActionMailer::Base.deliveries.first
@@ -76,7 +76,7 @@ describe "gws_schedule_plans", type: :feature, dbscope: :example do
       wait_for_ajax
       expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
 
-      notice = Gws::Memo::Notice.first
+      notice = SS::Notification.first
       expect(notice.url).to include(notice_url)
 
       mail = ActionMailer::Base.deliveries.first

@@ -37,8 +37,8 @@ class Gws::Report::NotificationJob < Gws::ApplicationJob
   end
 
   def create_memo_notice(mail, recipient)
-    message = Gws::Memo::Notice.new
-    message.cur_site = site
+    message = SS::Notification.new
+    message.cur_group = site
     message.cur_user = @user
     message.member_ids = [recipient.id]
     message.send_date = Time.zone.now
