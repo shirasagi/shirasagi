@@ -88,7 +88,7 @@ gem 'sparql-client'
 gem 'unf'
 
 # elasticsearch
-gem 'faraday', '~> 0.14.0'
+gem 'faraday'
 gem 'elasticsearch'
 
 group :development, :test do
