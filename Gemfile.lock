@@ -334,7 +334,7 @@ GEM
       nenv (~> 0.1)
       shellany (~> 0.0)
     oauth (0.5.4)
-    oj (3.3.10)
+    oj (3.7.11)
     omniauth (1.9.0)
       hashie (>= 3.4.6, < 3.7.0)
       rack (>= 1.6.2, < 3)
@@ -653,7 +653,7 @@ DEPENDENCIES
   net-ldap
   non-stupid-digest-assets
   oauth2!
-  oj (~> 3.3.5)
+  oj
   omniauth
   omniauth-facebook
   omniauth-github
