@@ -52,7 +52,7 @@ Rails.application.configure do
   # config.action_mailer.raise_delivery_errors = false
 
   # Enable locale fallbacks for I18n
-  config.i18n.fallbacks = true
+  config.i18n.fallbacks = [ :en ]
 
   # Send deprecation notices to registered listeners.
   config.active_support.deprecation = :notify
