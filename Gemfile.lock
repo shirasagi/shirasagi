@@ -689,7 +689,7 @@ DEPENDENCIES
   sparql-client
   spring (~> 2.0.2)
   terminal-notifier-guard
-  therubyracer (~> 0.12.3)
+  therubyracer
   thinreports
   timecop
   twitter
