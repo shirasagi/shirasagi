@@ -56,7 +56,7 @@ gem 'rubyzip'
 gem 'thinreports'
 gem 'bootsnap', require: false
 gem 'addressable', require: 'addressable/uri'
-gem 'roo', git: 'https://github.com/roo-rb/roo.git' #'~> 2.7.0'
+gem 'roo'
 #gem 'roo-xls', git: "https://github.com/roo-rb/roo-xls.git"
 gem 'liquid'
 
