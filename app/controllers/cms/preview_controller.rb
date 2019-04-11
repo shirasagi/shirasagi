@@ -190,7 +190,11 @@ class Cms::PreviewController < ApplicationController
       mobile = true
     end
 
-    desktop_pc = browser.platform.linux? || browser.platform.mac? || browser.platform.windows?
+    if mobile
+      desktop_pc = false
+    else
+      desktop_pc = browser.platform.linux? || browser.platform.mac? || browser.platform.windows?
+    end
 
     chunks = []
     @contents_body.each do |body|
