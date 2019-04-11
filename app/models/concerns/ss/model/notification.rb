@@ -82,7 +82,8 @@ module SS::Model::Notification
     files.present?
   end
 
-  def readable?(user, group)
+  def readable?(user, opts = {})
+    # return false if self.group_id != opts[:group].id
     return false if deleted?(user)
     member?(user)
   end

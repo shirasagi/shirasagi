@@ -12,7 +12,7 @@ class Sns::NotificationsController < ApplicationController
 
   def set_item
     super
-    raise "404" unless @item.readable?(@cur_user, @cur_group)
+    raise "404" unless @item.readable?(@cur_user, group: @cur_group)
   end
 
   public

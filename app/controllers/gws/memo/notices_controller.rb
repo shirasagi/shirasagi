@@ -12,7 +12,7 @@ class Gws::Memo::NoticesController < ApplicationController
 
   def set_item
     super
-    raise "404" unless @item.readable?(@cur_user, @cur_site)
+    raise "404" unless @item.readable?(@cur_user, group: @cur_site)
   end
 
   public
