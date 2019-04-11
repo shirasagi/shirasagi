@@ -76,7 +76,7 @@ gem 'twitter'
 gem 'ruby-saml'
 
 # JWT/JWS
-gem 'jwt', '>= 2.0'
+gem 'jwt'
 gem 'json-jwt'
 
 # SPARQL/RDF

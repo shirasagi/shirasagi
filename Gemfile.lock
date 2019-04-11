@@ -632,7 +632,7 @@ DEPENDENCIES
   jquery-ui-rails
   js_cookie_rails
   json-jwt
-  jwt (>= 2.0)
+  jwt
   kaminari
   kaminari-mongoid
   kramdown
