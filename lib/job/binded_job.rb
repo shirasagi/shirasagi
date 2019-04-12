@@ -10,7 +10,7 @@ class Job::BindedJob < ::ActiveJob::ConfiguredJob
   def perform_now(*args)
     if @bindings[:user_id].present?
       size = Job::Task.where(user_id: @bindings[:user_id]).where(state: 'stop').exists(at: true).count
-      raise Job::SizeLimitExceededError, I18n.t('job.notice.size_limit_exceeded') if size >= Job::Service.config.size_limit_per_user
+      raise Job::SizeLimitPerUserExceededError, I18n.t('job.notice.size_limit_exceeded') if size >= Job::Service.config.size_limit_per_user
     end
     @job_class.new(*args).bind(@bindings).perform_now
   end

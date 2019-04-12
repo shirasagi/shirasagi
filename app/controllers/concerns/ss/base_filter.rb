@@ -152,7 +152,7 @@ module SS::BaseFilter
         return ss_send_file(file, status: status, type: Fs.content_type(file), disposition: :inline)
       end
 
-      return render_job_size_limit(e) if e.is_a?(Job::SizeLimitExceededError)
+      return render_job_size_limit(e) if e.is_a?(Job::SizeLimitPerUserExceededError)
     rescue
     end
 
