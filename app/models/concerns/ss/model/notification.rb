@@ -5,7 +5,6 @@ module SS::Model::Notification
   include SS::Reference::User
   include SS::UserPermission
   include SS::Addon::Notification::Reply
-  include SS::Addon::File
 
   attr_accessor :cur_group
 

@@ -637,8 +637,6 @@ ja:
         reply_module: 返信モジュール名
         reply_model: 返信モデル名
         reply_item_id: 返信ID
-      ss/addon/file:
-        file_ids: ファイル
 
   tooltip:
     ss/model/user:
