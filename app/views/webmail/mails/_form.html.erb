@@ -23,6 +23,7 @@
     <dd><%= text_field_tag field, nil, "class" => "address autocomplete", "data-name" => "item[#{field}][]" %></dd>
     <dd>
       <div class="selected-address">
+        <input type="hidden" name="item[<%= field %>][]" value="">
         <% addresses.each do |address| %>
           <span>
             <%= address %>
