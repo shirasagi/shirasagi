@@ -110,7 +110,7 @@ $(function () {
       var href;
       menu = $(this);
       href = menu.attr('href');
-      if (path.match(new RegExp('^' + href + '(\/|$)')) || crumbs.indexOf(href) !== -1) {
+      if (path.match(new RegExp('^' + href.replace(/([.?*+$\[\]\/\\(){}|\-])/g, '\\$1') + '(\/|$)')) || crumbs.indexOf(href) !== -1) {
         menu.addClass("current").parent().addClass("current");
         added = true;
         return false;
