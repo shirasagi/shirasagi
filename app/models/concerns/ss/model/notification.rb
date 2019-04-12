@@ -4,7 +4,7 @@ module SS::Model::Notification
   include SS::Document
   include SS::Reference::User
   include SS::UserPermission
-  include SS::Addon::Notification::Body
+  include Webmail::Addon::MailBody
   include SS::Addon::Notification::Reply
   include SS::Addon::File
 
