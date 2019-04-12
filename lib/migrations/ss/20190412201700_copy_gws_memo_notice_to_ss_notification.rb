@@ -1,4 +1,4 @@
-class SS::Migration20190221000000
+class SS::Migration20190412201700
   def change
     Mongoid.default_client["gws_memo_notices"].find.each do |item|
       notice = SS::Notification.new
