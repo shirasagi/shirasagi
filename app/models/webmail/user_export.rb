@@ -379,8 +379,11 @@ class Webmail::UserExport
     account_index = str(row, 'imap_setting.account_index').to_i - 1
     return if account_index != 0
 
-    groups = str(row, 'group_ids').split("\n")
-    groups = SS::Group.unscoped.in(name: groups)
+    group_names = str(row, 'group_ids').split("\n")
+    groups = SS::Group.unscoped.in(name: group_names)
+
+    item.imported_group_keys = group_names
+    item.imported_groups = groups.to_a
 
     item.group_ids = groups.pluck(:id)
   end

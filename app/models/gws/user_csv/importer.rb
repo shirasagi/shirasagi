@@ -174,6 +174,10 @@ class Gws::UserCsv::Importer
     else
       groups = SS::Group.none
     end
+
+    item.imported_group_keys = value.to_s.split(/\n/)
+    item.imported_groups = groups.to_a
+
     item.group_ids = groups.pluck(:id)
   end
 
