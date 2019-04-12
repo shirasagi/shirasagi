@@ -17,7 +17,6 @@ module SS::BaseFilter
     before_action :check_api_user
     before_action :set_logout_path_by_session
     rescue_from StandardError, with: :rescue_action
-    rescue_from Job::SizeLimitExceededError, with: :rescue_job_size_limit
     layout "ss/base"
   end
 
@@ -152,6 +151,8 @@ module SS::BaseFilter
         file = error_html_file(status)
         return ss_send_file(file, status: status, type: Fs.content_type(file), disposition: :inline)
       end
+
+      return render_job_size_limit(e) if e.is_a?(Job::SizeLimitExceededError)
     rescue
     end
 
@@ -163,7 +164,7 @@ module SS::BaseFilter
     Fs.exists?(file) ? file : "#{Rails.public_path}/500.html"
   end
 
-  def rescue_job_size_limit(error)
+  def render_job_size_limit(error)
     referer_uri = URI.parse(request.referer)
     begin
       if @item.present?
