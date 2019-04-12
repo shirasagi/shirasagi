@@ -1,4 +1,4 @@
-module Gws::Addon::Memo::Notice::Reply
+module SS::Addon::Notification::Reply
   extend ActiveSupport::Concern
   extend SS::Addon
 
@@ -10,12 +10,12 @@ module Gws::Addon::Memo::Notice::Reply
 
   def reply_addon_name
     return nil if reply_module.blank?
-    I18n.t "modules.addons.gws/memo/notice/reply.#{reply_module}", default: name.titleize
+    I18n.t "modules.addons.ss/notification/reply.#{reply_module}", default: name.titleize
   end
 
   def reply_addon_show_file
     return nil if reply_module.blank?
-    file = "#{Rails.root}/app/views/gws/agents/addons/memo/notice/reply/#{reply_module}/_show.html.erb"
+    file = "#{Rails.root}/app/views/ss/agents/addons/notification/reply/#{reply_module}/_show.html.erb"
     File.exists?(file) ? file : nil
   end
 

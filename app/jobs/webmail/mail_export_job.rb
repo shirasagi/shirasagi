@@ -29,6 +29,8 @@ class Webmail::MailExportJob < SS::ApplicationJob
 
     FileUtils.rm_rf(@output_dir)
 
+    create_notify_message
+
     File.join(@root_url, @output_zip.url)
   end
 
@@ -52,8 +54,7 @@ class Webmail::MailExportJob < SS::ApplicationJob
   end
 
   def create_notify_message
-    item = Webmail::Notice.new
-    item.cur_site = site
+    item = SS::Notification.new
     item.cur_user = user
     item.member_ids = [user.id]
     item.subject = I18n.t("webmail.export.subject")

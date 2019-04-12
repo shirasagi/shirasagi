@@ -1,7 +1,7 @@
 <% render_notice_user_setting = proc do |type| %>
   <dt class="depth-2"><%= @model.t("notice_#{type}_user_setting") %></dt>
   <dd></dd>
-  <dt class="depth-3"><%= t("modules.gws/memo/notice")%></dt>
+  <dt class="depth-3"><%= t("modules.sns/notification")%></dt>
   <dd><%= @item.label("notice_#{type}_user_setting") %></dd>
   <dt class="depth-3"><%= t("gws/memo/notice_user_settings.send_mail_setting") %></dt>
   <dd><%= @item.label("notice_#{type}_email_user_setting") %></dd>

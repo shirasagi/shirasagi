@@ -46,4 +46,19 @@ SS::Application.routes.draw do
 
     resources :reservations, only: [:index, :show, :destroy], concerns: [:deletion]
   end
+
+  sns "job" do
+    get "/" => redirect { |p, req| "#{req.path}/logs" }, as: :main
+
+    get "/logs" => "logs#index", as: :logs
+
+    resources :logs, only: [:index, :show], path: 'logs/:ymd', as: :daily_logs do
+      get :batch_destroy, on: :collection
+      post :batch_destroy, on: :collection
+      match :download_all, on: :collection, via: %i[get post]
+      get :download, on: :member
+    end
+
+    resources :reservations, only: [:index, :show, :destroy], concerns: [:deletion]
+  end
 end

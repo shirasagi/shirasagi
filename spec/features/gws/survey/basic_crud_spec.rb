@@ -63,8 +63,8 @@ describe "gws_survey", type: :feature, dbscope: :example, js: true do
       expect(Gws::Survey::Form.all.count).to eq 1
       form = Gws::Survey::Form.all.site(site).find_by(name: form_name)
 
-      expect(Gws::Memo::Notice.all.count).to eq 1
-      Gws::Memo::Notice.all.first.tap do |notice|
+      expect(SS::Notification.all.count).to eq 1
+      SS::Notification.all.first.tap do |notice|
         subject = I18n.t("gws_notification.#{Gws::Survey::Form.model_name.i18n_key}.subject", name: form.name, default: form.name)
         expect(notice.subject).to eq subject
         expect(notice.member_ids).to include(user1.id, user2.id)

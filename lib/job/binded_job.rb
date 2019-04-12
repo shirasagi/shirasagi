@@ -8,6 +8,7 @@ class Job::BindedJob < ::ActiveJob::ConfiguredJob
   attr_reader :bindings
 
   def perform_now(*args)
+    ApplicationJob.check_size_limit_per_user!(@bindings[:user_id])
     @job_class.new(*args).bind(@bindings).perform_now
   end
 

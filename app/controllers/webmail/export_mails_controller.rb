@@ -60,9 +60,9 @@ class Webmail::ExportMailsController < ApplicationController
     root_url = params.dig(:item, :root_url)
 
     job_class = Webmail::MailExportJob.bind(user_id: @cur_user, user_password: SS::Crypt.encrypt(@cur_user.decrypted_password))
-    link = job_class.perform_now(mail_ids: mail_ids, root_url: root_url, account: params[:account])
+    job_class.perform_later(mail_ids: mail_ids, root_url: root_url, account: params[:account])
     flash.now[:notice] = I18n.t("webmail.export.start_export")
-    redirect_to action: :start_export, link: link
+    redirect_to action: :start_export
   end
 
   def start_export

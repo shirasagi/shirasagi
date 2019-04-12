@@ -29,6 +29,7 @@ module Job::SS::Binding::User
   def bindings
     ret = super
     ret['user_id'] = user_id if user_id.present?
+    ret['user_password'] = user_password if user_password.present?
     ret
   end
 end

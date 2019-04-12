@@ -367,6 +367,8 @@ ja:
       ss/editor_setting: エディタ設定
       ss/mail_setting: メール設定
       ss/link_file: ファイル
+      ss/notification/reply:
+        discussion: 電子会議室
 
   mongoid:
     models:
@@ -386,6 +388,7 @@ ja:
       ss/thumb_file: サムネイルファイル
       ss/migration: DBマイグレーション
       ss/access_token: アクセストークン
+      ss/notification: 通知
     errors:
       models:
         ss/model/group:
@@ -619,6 +622,21 @@ ja:
         sender_email: 差出人メールアドレス
         sender_user_id: 差出ユーザー
         mail_signature: 署名
+      ss/model/notification:
+        group_id: グループ
+        member_ids: 参加者
+        subject: 件名
+        text: 本文TEXT
+        html: 本文HTML
+        format: フォーマット
+        seen: 既読日時
+        send_date: 送信日時
+        export: エクスポート
+        url: URL
+      ss/addon/notification/reply:
+        reply_module: 返信モジュール名
+        reply_model: 返信モデル名
+        reply_item_id: 返信ID
 
   tooltip:
     ss/model/user:

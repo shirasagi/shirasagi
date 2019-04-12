@@ -163,6 +163,9 @@
             </div>
           </div>
         <% end %>
+      <% end %>
+
+      <% if @ss_mode == :gws %>
         <%
           search_condition = SS.config.gws.dig("popup_notice", "search_condition")
           if search_condition == "unseen"
@@ -195,13 +198,13 @@
         <div class="gws-memo-notice popup-notice-container">
           <%= link_to gws_memo_notices_path, "class" => "ajax-popup-notice toggle-popup-notice", "data-url" => default_url, "data-url-switched" => switched_url do %>
             <i class="material-icons">&#xE7F4;</i>
-            <% count = Gws::Memo::Notice.unseens(@cur_user, @cur_site).size %>
+            <% count = SS::Notification.unseens(@cur_user).size %>
             <% if count > 0 %><span class="unseen popup-notice-unseen"><%= count %></span><% end %>
           <% end %>
           <div class="popup-notice" style="display: none;">
             <header class="popup-notice-header">
               <h2>
-                <%= t('modules.gws/memo/notice') %>
+                <%= t('modules.sns/notification') %>
                 <%= link_to default_label, "#",
                   "class" => "ajax-popup-notice unseens",
                   "data-url" => default_url,
@@ -214,7 +217,60 @@
             <%= link_to t("ss.links.more_all"), gws_memo_notices_path, class: "more-all" %>
           </div>
         </div>
+      <% else %>
+        <%
+          search_condition = SS.config.gws.dig("popup_notice", "search_condition")
+          if search_condition == "unseen"
+            default_label  = t("gws/memo/message.links.seens")
+            switched_label = t("gws/memo/message.links.unseens")
+            default_url    = recent_sns_notifications_path(s: { unseen: @cur_user.id })
+            switched_url   = recent_sns_notifications_path
+          else
+            default_label  = t("gws/memo/message.links.unseens")
+            switched_label = t("gws/memo/message.links.seens")
+            default_url    = recent_sns_notifications_path
+            switched_url   = recent_sns_notifications_path(s: { unseen: @cur_user.id })
+          end
+        %>
+        <%= jquery do %>
+          $(".gws-memo-notice .unseens").click(function() {
+            $(".gws-memo-notice.popup-notice-container [data-url]").each(function() {
+              var url = $(this).attr("data-url");
+              var switched = $(this).attr("data-url-switched");
+              $(this).attr("data-url", switched);
+              $(this).attr("data-url-switched", url);
+            });
+            var label = $(this).text();
+            var switched = $(this).attr("data-label-switched");
+            $(this).text(switched);
+            $(this).attr("data-label-switched", label);
+          });
+          (new SS_PopupNotice(".gws-memo-notice.popup-notice-container")).render();
+        <% end %>
+        <div class="gws-memo-notice popup-notice-container">
+          <%= link_to sns_notifications_path, "class" => "ajax-popup-notice toggle-popup-notice", "data-url" => default_url, "data-url-switched" => switched_url do %>
+            <i class="material-icons">&#xE7F4;</i>
+            <% count = SS::Notification.unseens(@cur_user).size %>
+            <% if count > 0 %><span class="unseen popup-notice-unseen"><%= count %></span><% end %>
+          <% end %>
+          <div class="popup-notice" style="display: none;">
+            <header class="popup-notice-header">
+              <h2>
+                <%= t('modules.sns/notification') %>
+                <%= link_to default_label, "#",
+                  "class" => "ajax-popup-notice unseens",
+                  "data-url" => default_url,
+                  "data-url-switched" =>  switched_url,
+                  "data-label-switched" => switched_label
+                %>
+              </h2>
+            </header>
+            <div class="popup-notice-items"></div>
+            <%= link_to t("ss.links.more_all"), sns_notifications_path, class: "more-all" %>
+          </div>
+        </div>
       <% end %>
+
       <div class="dropdown dropdown-toggle" data-ref="#user-main-dropdown">
         <h2>
           <% if @cur_group %>
@@ -232,6 +288,8 @@
           <% else %>
             <li><%= link_to t(:"sns.profile"), sns_cur_user_profile_path %></li>
           <% end %>
+
+            <li><%= link_to t(:"job.task_manager"), job_sns_logs_path %></li>
 
           <li>
             <div class="text-zoom" data-notice="<%= t('ss.notice.text_zoomed', count: ':size') %>">

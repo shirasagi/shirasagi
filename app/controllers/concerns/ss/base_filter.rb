@@ -151,6 +151,8 @@ module SS::BaseFilter
         file = error_html_file(status)
         return ss_send_file(file, status: status, type: Fs.content_type(file), disposition: :inline)
       end
+
+      return render_job_size_limit(e) if e.is_a?(Job::SizeLimitPerUserExceededError)
     rescue
     end
 
@@ -160,5 +162,20 @@ module SS::BaseFilter
   def error_html_file(status)
     file = "#{Rails.public_path}/#{status}.html"
     Fs.exists?(file) ? file : "#{Rails.public_path}/500.html"
+  end
+
+  def render_job_size_limit(error)
+    referer_uri = URI.parse(request.referer)
+    begin
+      if @item.present?
+        @item.errors.add(:base, error.to_s)
+        flash[:notice] = error.to_s
+        render(Rails.application.routes.recognize_path(referer_uri.path))
+      else
+        redirect_to(referer_uri.path, notice: error.to_s)
+      end
+    rescue ActionView::MissingTemplate
+      redirect_to(referer_uri.path, notice: error.to_s)
+    end
   end
 end

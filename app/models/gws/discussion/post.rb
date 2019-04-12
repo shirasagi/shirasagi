@@ -30,8 +30,8 @@ class Gws::Discussion::Post
     url = Rails.application.routes.url_helpers.gws_discussion_forum_topic_comments_path(
       forum_id: forum.id, topic_id: topic.id, site: @cur_site.id, category: '-', mode: '-')
 
-    item = Gws::Memo::Notice.new
-    item.cur_site = site
+    item = SS::Notification.new
+    item.cur_group = site
     item.cur_user = user
     item.member_ids = notify_member_ids
     item.subject = I18n.t("gws/discussion.notify_message.post.subject", forum_name: forum.name, topic_name: topic.name)
