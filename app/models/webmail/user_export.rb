@@ -411,7 +411,7 @@ class Webmail::UserExport
     add_role_names = value.split(/\n/)
     add_sys_roles = Sys::Role.in(name: add_role_names).to_a
 
-    if value.present? && add_sys_roles.present?
+    if value.present?
       item.imported_sys_role_keys = add_role_names
       item.imported_sys_roles = add_sys_roles
 

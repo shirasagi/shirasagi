@@ -190,7 +190,14 @@ class Gws::UserCsv::Importer
 
   def set_main_group_ids(item)
     value = row_value('gws_main_group_ids')
-    group = SS::Group.where(name: value).first if value.present?
+
+    if value.present?
+      group = SS::Group.where(name: value).first
+
+      item.imported_gws_main_group_key = value
+      item.imported_gws_main_group = group
+    end
+
     item.in_gws_main_group_id = group ? group.id : ''
   end
 
