@@ -25,7 +25,6 @@ module SS::Model::Notification
     field :deleted, type: Hash, default: {}
     field :state, type: String, default: 'public' # always public
     field :send_date, type: DateTime
-    field :export, type: Boolean, default: false
     field :url, type: String, default: ''
 
     validates :member_ids, presence: true

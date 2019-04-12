@@ -2,7 +2,6 @@ class SS::Migration20190221000000
   def change
     Mongoid.default_client["gws_memo_notices"].find.each do |item|
       notice = SS::Notification.new
-      notice.file_ids = item['file_ids']
       notice.member_ids = item['member_ids']
       notice.text = item['text']
       notice.html = item['html']
@@ -11,7 +10,6 @@ class SS::Migration20190221000000
       notice.state = item['state']
       notice.created = item['created'].try(:in_time_zone)
       notice.updated = item['updated'].try(:in_time_zone)
-      notice.export = item['export']
       notice.subject = item['subject']
       notice.format = item['format']
       notice.send_date = item['send_date'].try(:in_time_zone)
