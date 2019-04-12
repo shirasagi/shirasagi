@@ -405,7 +405,7 @@ class Webmail::UserExport
     add_sys_roles = Sys::Role.in(name: value.split(/\n/)).to_a
 
     if value.present? && add_sys_roles.present?
-      item.add_general_sys_roles = add_sys_roles
+      item.imported_general_sys_roles = add_sys_roles
 
       role_ids -= Sys::Role.and_general.pluck(:id)
       role_ids += add_sys_roles.pluck(:id)
