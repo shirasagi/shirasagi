@@ -20,13 +20,11 @@ describe "webmail_mails", type: :feature, dbscope: :example, imap: true, js: tru
       ActionMailer::Base.deliveries.clear
     end
 
-    describe "when all addresses within to is removed" do
+    context "within to" do
       it do
         visit index_path
         click_on I18n.t('ss.links.new')
         within "form#item-form" do
-          click_on I18n.t("webmail.links.show_cc_bcc")
-
           fill_in "to", with: user2.email + "\n"
           fill_in "to", with: user3.email + "\n"
           fill_in "to", with: user4.email + "\n"
@@ -72,7 +70,119 @@ describe "webmail_mails", type: :feature, dbscope: :example, imap: true, js: tru
         expect(page).to have_no_css(".address-field", text: user2.email)
         expect(page).to have_no_css(".address-field", text: user3.email)
         expect(page).to have_no_css(".address-field", text: user4.email)
-        expect(page).to have_no_css(".body--text", text: item_texts.first)
+        expect(page).to have_css(".body--text", text: item_texts.first)
+      end
+    end
+
+    context "within cc" do
+      it do
+        visit index_path
+        click_on I18n.t('ss.links.new')
+        within "form#item-form" do
+          click_on I18n.t("webmail.links.show_cc_bcc")
+
+          fill_in "cc", with: user2.email + "\n"
+          fill_in "cc", with: user3.email + "\n"
+          fill_in "cc", with: user4.email + "\n"
+          fill_in "item[subject]", with: item_subject
+          fill_in "item[text]", with: item_texts.join("\n")
+
+          click_on I18n.t('ss.buttons.draft_save')
+        end
+        expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+
+        visit index_path
+        within ".webmail-navi-mailboxes" do
+          click_on I18n.t("webmail.box.draft")
+        end
+        click_on item_subject
+        expect(page).to have_css(".address-field", text: user2.email)
+        expect(page).to have_css(".address-field", text: user3.email)
+        expect(page).to have_css(".address-field", text: user4.email)
+        expect(page).to have_css(".body--text", text: item_texts.first)
+
+        # remove all addresses within to
+        click_on I18n.t("ss.links.edit")
+        within "form#item-form" do
+          within "dl.webmail-mail-form-address.cc" do
+            3.times do
+              first(".deselect").click
+            end
+          end
+
+          expect(page).to have_no_css(".address-field", text: user2.email)
+          expect(page).to have_no_css(".address-field", text: user3.email)
+          expect(page).to have_no_css(".address-field", text: user4.email)
+
+          click_on I18n.t('ss.buttons.draft_save')
+        end
+        expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+
+        visit index_path
+        within ".webmail-navi-mailboxes" do
+          click_on I18n.t("webmail.box.draft")
+        end
+        click_on item_subject
+        expect(page).to have_no_css(".address-field", text: user2.email)
+        expect(page).to have_no_css(".address-field", text: user3.email)
+        expect(page).to have_no_css(".address-field", text: user4.email)
+        expect(page).to have_css(".body--text", text: item_texts.first)
+      end
+    end
+
+    context "within bcc" do
+      it do
+        visit index_path
+        click_on I18n.t('ss.links.new')
+        within "form#item-form" do
+          click_on I18n.t("webmail.links.show_cc_bcc")
+
+          fill_in "bcc", with: user2.email + "\n"
+          fill_in "bcc", with: user3.email + "\n"
+          fill_in "bcc", with: user4.email + "\n"
+          fill_in "item[subject]", with: item_subject
+          fill_in "item[text]", with: item_texts.join("\n")
+
+          click_on I18n.t('ss.buttons.draft_save')
+        end
+        expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+
+        visit index_path
+        within ".webmail-navi-mailboxes" do
+          click_on I18n.t("webmail.box.draft")
+        end
+        click_on item_subject
+        expect(page).to have_css(".address-field", text: user2.email)
+        expect(page).to have_css(".address-field", text: user3.email)
+        expect(page).to have_css(".address-field", text: user4.email)
+        expect(page).to have_css(".body--text", text: item_texts.first)
+
+        # remove all addresses within to
+        click_on I18n.t("ss.links.edit")
+        within "form#item-form" do
+          within "dl.webmail-mail-form-address.bcc" do
+            3.times do
+              first(".deselect").click
+            end
+          end
+
+          expect(page).to have_no_css(".address-field", text: user2.email)
+          expect(page).to have_no_css(".address-field", text: user3.email)
+          expect(page).to have_no_css(".address-field", text: user4.email)
+
+          click_on I18n.t('ss.buttons.draft_save')
+        end
+        expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+
+        visit index_path
+        within ".webmail-navi-mailboxes" do
+          click_on I18n.t("webmail.box.draft")
+        end
+        click_on item_subject
+        expect(page).to have_no_css(".address-field", text: user2.email)
+        expect(page).to have_no_css(".address-field", text: user3.email)
+        expect(page).to have_no_css(".address-field", text: user4.email)
+        expect(page).to have_css(".body--text", text: item_texts.first)
       end
     end
   end
