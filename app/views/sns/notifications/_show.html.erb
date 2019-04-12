@@ -1,12 +1,9 @@
-<div class="addon-view ss-notification" id="message-<%= @item.id %>">
+<div class="addon-view ss-notification ss-notification-notices" id="message-<%= @item.id %>">
   <div class="addon-head">
     <h2 class="subject">
       <%= @item.subject_with_group %>
     </h2>
-    <nav class="meta">
-      <span class="user"><%= @item.user&.long_name %></span>
-      <span class="datetime"><%= @item.display_send_date %></span>
-    </nav>
+    <div class="date"><%= @item.display_send_date %></div>
   </div>
 
   <div class="addon-body">
