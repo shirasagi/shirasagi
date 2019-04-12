@@ -7,8 +7,8 @@ module Job::SS::Limit
 
   module ClassMethods
     def check_size_limit_per_user(user_id)
-      return if user_id.blank?
-      size = Job::Task.where(user_id: user_id).where(state: 'stop').exists(at: true).count
+      return true if user_id.blank?
+      size = Job::Task.where(user_id: user_id).and("$or" => [{ at: { '$exists' => true } }, { state: /ready|running/ }]).count
       size < Job::Service.config.size_limit_per_user
     end
 
