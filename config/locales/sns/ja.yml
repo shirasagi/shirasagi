@@ -2,8 +2,6 @@ ja:
   modules:
     sns: SNS
     sns/notification: 通知
-    sns/notification/reply:
-      discussion: 電子会議室
 
   sns:
     profile: プロフィール
