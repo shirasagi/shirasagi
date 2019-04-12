@@ -32,9 +32,9 @@ class Webmail::UserExport
     # Ldap::Addon::Group
     { key: 'ldap_dn', label: Webmail::User.t('ldap_dn') }.freeze,
     # Webmail::Addon::Role
-    { key: 'webmail_role_ids', label: Gws::User.t('webmail_role_ids') }.freeze,
+    { key: 'webmail_role_ids', label: I18n.t("mongoid.attributes.ss/model/user.webmail_role_ids") }.freeze,
     # Sys::Reference::Role
-    { key: 'sys_role_ids', label: Gws::User.t('sys_role_ids') }.freeze,
+    { key: 'sys_role_ids', label: I18n.t("mongoid.attributes.ss/model/user.sys_role_ids") }.freeze,
     # Webmail::UserExtension
     { key: 'imap_setting.account_index', label: with_imap_prefix(Webmail::User.t('account_index')), setter: :none }.freeze,
     { key: 'imap_setting.name', label: with_imap_prefix(Webmail::ImapSetting.t('name')) }.freeze,
@@ -148,7 +148,7 @@ class Webmail::UserExport
     setting.set_imap_password
     if setting.invalid?
       setting.errors.full_messages.each do |msg|
-        errors.add :base, "setting error #{index + 1}: #{msg}"
+        errors.add :base, "#{index + 1}: #{msg}"
       end
       return
     end
@@ -161,7 +161,7 @@ class Webmail::UserExport
     item.cur_user = @cur_user
     if !item.save
       item.errors.full_messages.each do |msg|
-        errors.add :base, "base error #{index + 1}: #{msg}"
+        errors.add :base, "#{index + 1}: #{msg}"
       end
       return
     end
