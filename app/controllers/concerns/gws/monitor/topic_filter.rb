@@ -80,6 +80,7 @@ module Gws::Monitor::TopicFilter
     @item = @model.new(@source.attributes.slice(*FORWARD_ATTRIBUTES).merge(fix_params))
     @item.group_ids = [@cur_group.id]
     @item.user_ids = [@cur_user.id]
+    @item.ref_file_ids = @source.file_ids
 
     render file: :new
   end
