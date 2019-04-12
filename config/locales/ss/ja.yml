@@ -388,6 +388,7 @@ ja:
       ss/thumb_file: サムネイルファイル
       ss/migration: DBマイグレーション
       ss/access_token: アクセストークン
+      ss/notification: 通知
     errors:
       models:
         ss/model/group:
