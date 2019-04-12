@@ -9,6 +9,10 @@ module SS::UserImportValidator
     # group_ids
     attr_accessor :imported_group_keys, :imported_groups
     validate :validate_imported_groups, if: ->{ imported_group_keys.present? }
+
+    # in_title_id
+    attr_accessor :imported_gws_user_title_keys, :imported_gws_user_title
+    validate :validate_imported_gws_user_title, if: ->{ imported_gws_user_title_keys.present? }
   end
 
   private
@@ -24,7 +28,12 @@ module SS::UserImportValidator
     imported_group_names = imported_groups.pluck(:name)
     imported_group_keys.each_with_index do |key, i|
       next if key == imported_group_names[i]
-      errors.add :base, I18n.t("errors.messages.group_not_found", name: key)
+      errors.add :base, I18n.t("errors.messages.not_found_group", name: key)
     end
+  end
+
+  def validate_imported_gws_user_title
+    return if imported_gws_user_title
+    errors.add :base, I18n.t("errors.messages.not_found_user_title", code: imported_gws_user_title_keys)
   end
 end
