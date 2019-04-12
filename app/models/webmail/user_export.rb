@@ -392,8 +392,11 @@ class Webmail::UserExport
     account_index = str(row, 'imap_setting.account_index').to_i - 1
     return if account_index != 0
 
-    roles = str(row, 'webmail_role_ids').split("\n")
-    roles = Webmail::Role.in(name: roles)
+    role_names = str(row, 'webmail_role_ids').split("\n")
+    roles = Webmail::Role.in(name: role_names)
+
+    item.imported_webmail_role_keys = role_names
+    item.imported_webmail_roles = roles
 
     item.webmail_role_ids = roles.pluck(:id)
   end
@@ -405,10 +408,12 @@ class Webmail::UserExport
     value = str(row, 'sys_role_ids').to_s
 
     role_ids = item.sys_role_ids
-    add_sys_roles = Sys::Role.in(name: value.split(/\n/)).to_a
+    add_role_names = value.split(/\n/)
+    add_sys_roles = Sys::Role.in(name: add_role_names).to_a
 
     if value.present? && add_sys_roles.present?
-      item.imported_general_sys_roles = add_sys_roles
+      item.imported_sys_role_keys = add_role_names
+      item.imported_sys_roles = add_sys_roles
 
       role_ids -= Sys::Role.and_general.pluck(:id)
       role_ids += add_sys_roles.pluck(:id)

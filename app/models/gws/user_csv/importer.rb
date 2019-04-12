@@ -146,7 +146,7 @@ class Gws::UserCsv::Importer
     if value.present?
       title = Gws::UserTitle.site(cur_site).where(code: value).first
 
-      item.imported_gws_user_title_keys = value
+      item.imported_gws_user_title_key = value
       item.imported_gws_user_title = title
     end
 
@@ -206,7 +206,12 @@ class Gws::UserCsv::Importer
   def set_gws_roles(item)
     value = row_value('gws_roles')
     if value.present?
-      add_role_ids = Gws::Role.site(cur_site).in(name: value.split(/\n/)).pluck(:id)
+      add_role_names = value.split(/\n/)
+      add_roles = Gws::Role.site(cur_site).in(name: add_role_names).to_a
+      add_role_ids = add_roles.pluck(:id)
+
+      item.imported_gws_role_keys = add_role_names
+      item.imported_gws_roles = add_roles
     else
       add_role_ids = []
     end
@@ -217,10 +222,15 @@ class Gws::UserCsv::Importer
   def set_webmail_roles(item)
     value = row_value('webmail_roles').to_s
     role_ids = item.webmail_role_ids
-    add_webmail_roles = Webmail::Role.in(name: value.split(/\n/)).to_a
 
-    if value.present? && add_webmail_roles.present?
+    add_role_names = value.split(/\n/)
+    add_webmail_roles = Webmail::Role.in(name: add_role_names).to_a
+
+    if value.present?
       role_ids = add_webmail_roles.pluck(:id)
+
+      item.imported_webmail_role_keys = add_role_names
+      item.imported_webmail_roles = add_webmail_roles
     end
 
     item.webmail_role_ids = role_ids
@@ -228,11 +238,14 @@ class Gws::UserCsv::Importer
 
   def set_sys_roles(item)
     value = row_value('sys_roles').to_s
-    role_ids = item.sys_role_ids
-    add_sys_roles = Sys::Role.in(name: value.split(/\n/)).to_a
+    add_role_names = value.split(/\n/)
 
-    if value.present? && add_sys_roles.present?
-      item.imported_general_sys_roles = add_sys_roles
+    role_ids = item.sys_role_ids
+    add_sys_roles = Sys::Role.in(name: add_role_names).to_a
+
+    if value.present?
+      item.imported_sys_role_keys = add_role_names
+      item.imported_sys_roles = add_sys_roles
 
       role_ids -= Sys::Role.and_general.pluck(:id)
       role_ids += add_sys_roles.pluck(:id)
