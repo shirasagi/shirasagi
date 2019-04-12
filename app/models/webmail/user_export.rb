@@ -148,7 +148,7 @@ class Webmail::UserExport
     setting.set_imap_password
     if setting.invalid?
       setting.errors.full_messages.each do |msg|
-        errors.add :base, "#{index + 1}: #{msg}"
+        errors.add :base, "setting error #{index + 1}: #{msg}"
       end
       return
     end
@@ -161,7 +161,7 @@ class Webmail::UserExport
     item.cur_user = @cur_user
     if !item.save
       item.errors.full_messages.each do |msg|
-        errors.add :base, "#{index + 1}: #{msg}"
+        errors.add :base, "base error #{index + 1}: #{msg}"
       end
       return
     end
@@ -323,11 +323,7 @@ class Webmail::UserExport
     return if account_index != 0
 
     password = str(row, 'password')
-    if password.present?
-      item.in_password = password
-    else
-      item.password = nil
-    end
+    item.in_password = password if password.present?
   end
 
   def set_item_type(row, item, setting)
