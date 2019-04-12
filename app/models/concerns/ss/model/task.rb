@@ -97,7 +97,7 @@ module SS::Model::Task
       Rails.logger.info "already ready."
       return false
     end
-    if ApplicationJob.check_size_limit_per_user(user_id).blank?
+    unless ApplicationJob.check_size_limit_per_user?(user_id)
       Rails.logger.info I18n.t('job.notice.size_limit_exceeded')
       return false
     end
