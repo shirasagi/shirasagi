@@ -168,14 +168,14 @@ module SS::BaseFilter
     referer_uri = URI.parse(request.referer)
     begin
       if @item.present?
-        @item.errors.add(:base, error)
-        flash[:notice] = error
+        @item.errors.add(:base, error.to_s)
+        flash[:notice] = error.to_s
         render(Rails.application.routes.recognize_path(referer_uri.path))
       else
-        redirect_to(referer_uri.path, notice: error)
+        redirect_to(referer_uri.path, notice: error.to_s)
       end
     rescue ActionView::MissingTemplate
-      redirect_to(referer_uri.path, notice: error)
+      redirect_to(referer_uri.path, notice: error.to_s)
     end
   end
 end
