@@ -228,19 +228,17 @@ class Gws::UserCsv::Importer
 
   def set_webmail_roles(item)
     value = row_value('webmail_roles').to_s
-    role_ids = item.webmail_role_ids
-
-    add_role_names = value.split(/\n/)
-    add_webmail_roles = Webmail::Role.in(name: add_role_names).to_a
-
     if value.present?
-      role_ids = add_webmail_roles.pluck(:id)
+      add_role_names = value.split(/\n/)
+      add_roles = Webmail::Role.in(name: add_role_names).to_a
+      add_role_ids = add_roles.pluck(:id)
 
       item.imported_webmail_role_keys = add_role_names
-      item.imported_webmail_roles = add_webmail_roles
+      item.imported_webmail_roles = add_roles
+    else
+      add_role_ids = []
     end
-
-    item.webmail_role_ids = role_ids
+    item.webmail_role_ids = add_role_ids
   end
 
   def set_sys_roles(item)
