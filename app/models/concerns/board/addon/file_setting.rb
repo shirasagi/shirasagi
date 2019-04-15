@@ -30,7 +30,7 @@ module Board::Addon
     def file_limit_options
       %w(none 1n 2n 3n).collect.with_index do |v, i|
         label = I18n.t("board.options.file_limit.#{v}")
-        label += I18n.t("inquiry.cannot_use") if v != "none" && Mongoid::Config.clients[:default_post]
+        label += I18n.t("board.cannot_use") if v != "none" && Mongoid::Config.clients[:default_post]
         [ label, i ]
       end
     end

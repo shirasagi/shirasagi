@@ -3,6 +3,7 @@ ja:
     board: 掲示板
     post: 投稿
     anpi_post: 安否投稿
+    cannot_use: "（公開側使用不可）"
 
     views:
       reply: 返信
