@@ -28,12 +28,11 @@ module Board::Addon
     end
 
     def file_limit_options
-      [
-        [I18n.t('board.options.file_limit.none'), 0],
-        [I18n.t('board.options.file_limit.1n'), 1],
-        [I18n.t('board.options.file_limit.2n'), 2],
-        [I18n.t('board.options.file_limit.3n'), 3],
-      ]
+      %w(none 1n 2n 3n).collect do |v|
+        label = I18n.t("board.options.file_limit.#{v}")
+        label += I18n.t("inquiry.cannot_use") if v != "none" && Mongoid::Config.clients[:default_post]
+        [ label, v ]
+      end
     end
 
     def file_size_limit_options
