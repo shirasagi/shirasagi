@@ -36,6 +36,8 @@
     dataset_ids["#{item["year"]}-#{item["month"]}"] ||= []
     dataset_ids["#{item["year"]}-#{item["month"]}"] << item["dataset_id"]
   end
+  dataset_ids.each { |key, values| values.sort! }
+
   datasets = {}
   @aggregate.datasets.in(id: dataset_ids.values.flatten).each do |dataset|
     datasets[dataset.id] = dataset
@@ -61,6 +63,7 @@
               ym_dataset_ids = dataset_ids[ym].uniq
               ym_dataset_ids.each do |id|
                 dataset = datasets[id]
+                next unless dataset
             %>
               <tr>
                 <td colspan="100%"><%= dataset.name %></td>

@@ -36,10 +36,21 @@ class Opendata::Agents::Nodes::Dataset::ResourceController < ApplicationControll
   end
 
   def download
-    @item = @dataset.resources.find_by id: params[:id], filename: params[:filename].force_encoding("utf-8")
-    if Mongoid::Config.clients[:default_post].blank?
+    @item = @dataset.resources.find_by id: params[:id]
+    raise "404" unless @item
+
+    if @item.source_url.present?
+      download_source_url
+    else
+      raise "404" if @item.filename != params[:filename].force_encoding("utf-8")
+      download_resource
+    end
+  end
+
+  def download_resource
+    if !preview_path?
       @item.dataset.inc downloaded: 1
-      @item.create_download_history
+      @item.create_download_history(request, Time.zone.now)
     end
 
     @cur_node.layout_id = nil
@@ -47,12 +58,21 @@ class Opendata::Agents::Nodes::Dataset::ResourceController < ApplicationControll
       disposition: :attachment, x_sendfile: true
   end
 
+  def download_source_url
+    if !preview_path?
+      @item.dataset.inc downloaded: 1
+      @item.create_download_history(request, Time.zone.now)
+    end
+
+    redirect_to @item.source_url
+  end
+
   def content
     @cur_node.layout_id = nil
 
-    @item = @dataset.resources.find_by id: params[:id]
-    if Mongoid::Config.clients[:default_post].blank?
-      @item.create_preview_history
+    if !preview_path?
+      @item = @dataset.resources.find_by id: params[:id]
+      @item.create_preview_history(request, Time.zone.now)
     end
 
     if @item.tsv_present?

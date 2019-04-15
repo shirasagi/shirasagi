@@ -139,23 +139,12 @@ categories = [
                     <%= link_to I18n.t("opendata.labels.preview"), rs.content_url, class: "content" %>
                   </div>
                 <% end %>
-
                 <div class="download-wrap">
-                  <% if rs.source_url.present? %>
-                    <%= link_to I18n.t("opendata.labels.downloaded"), rs.source_url, class: "download external", "data-url": rs.source_url, target: "_blank" %>
-                  <% elsif controller.preview_path? %>
-                    <%= link_to I18n.t("opendata.labels.downloaded"), rs.file.url, class: "download", "data-url": rs.file.url %>
-                  <% else %>
-                    <%= link_to I18n.t("opendata.labels.downloaded"), rs.url, class: "download", "data-url": rs.file.url %>
-                  <% end %>
+                  <%= link_to I18n.t("opendata.labels.downloaded"), rs.download_url, class: "download" %>
                 </div>
-
                 <div class="clipboard-wrap">
-                  <%= link_to t("opendata.links.copy_url"), rs.url,
-                    "class" => "ss-clipboard-copy",
-                    "data-clip-attr" => "data-full-url",
-                    "data-full-url" => rs.full_url
-                  %>
+                  <% url = rs.source_url.present? ? rs.source_url : rs.download_full_url %>
+                  <%= link_to t("opendata.links.copy_url"), rs.url, class: "ss-clipboard-copy", "data-clip-attr": "data-full-url", "data-full-url": url %>
                 </div>
               </div>
 

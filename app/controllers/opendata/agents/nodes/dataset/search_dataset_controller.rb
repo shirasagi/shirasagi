@@ -51,10 +51,14 @@ class Opendata::Agents::Nodes::Dataset::SearchDatasetController < ApplicationCon
   end
 
   def dataset_download
+    downloaded = Time.zone.now
+
     item = Opendata::Dataset.site(@cur_site).and_public.find_by(id: params[:id])
     item.resources.each do |resource|
-      resource.dataset.inc downloaded: 1
-      resource.create_dataset_download_history
+      if !preview_path?
+        resource.dataset.inc downloaded: 1
+        resource.create_dataset_download_history(request, downloaded)
+      end
     end
 
     send_file item.zip_path, type: 'application/zip', filename: "#{item.name}_#{Time.zone.now.to_i}.zip",
@@ -75,14 +79,15 @@ class Opendata::Agents::Nodes::Dataset::SearchDatasetController < ApplicationCon
 
     begin
       t = Tempfile.new(filename)
+      downloaded = Time.zone.now
 
       Zip::File.open(t.path, Zip::File::CREATE) do |zip|
         @items.each do |item|
           zip.add("#{item.name}-#{item.id}.zip".encode('cp932', invalid: :replace, undef: :replace), item.zip_path)
           item.resources.each do |resource|
-            if Mongoid::Config.clients[:default_post].blank?
+            if !preview_path?
               resource.dataset.inc downloaded: 1
-              resource.create_bulk_download_history
+              resource.create_bulk_download_history(request, downloaded)
             end
           end
         end
