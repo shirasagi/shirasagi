@@ -243,20 +243,20 @@ class Gws::UserCsv::Importer
 
   def set_sys_roles(item)
     value = row_value('sys_roles').to_s
-    add_role_names = value.split(/\n/)
-
-    role_ids = item.sys_role_ids
-    add_sys_roles = Sys::Role.in(name: add_role_names).to_a
+    general_role_ids = Sys::Role.and_general.pluck(:id)
 
     if value.present?
-      item.imported_sys_role_keys = add_role_names
-      item.imported_sys_roles = add_sys_roles
+      add_role_names = value.split(/\n/)
+      add_roles = Sys::Role.in(name: add_role_names).to_a
+      add_role_ids = add_roles.pluck(:id)
 
-      role_ids -= Sys::Role.and_general.pluck(:id)
-      role_ids += add_sys_roles.pluck(:id)
+      item.imported_sys_role_keys = add_role_names
+      item.imported_sys_roles = add_roles
+    else
+      add_role_ids = []
     end
 
-    item.sys_role_ids = role_ids
+    item.sys_role_ids = item.sys_role_ids - general_role_ids + add_role_ids
   end
 
   def save_item(item)
