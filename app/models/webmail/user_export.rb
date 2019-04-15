@@ -383,7 +383,7 @@ class Webmail::UserExport
     groups = SS::Group.unscoped.in(name: group_names)
 
     item.imported_group_keys = group_names
-    item.imported_groups = groups.to_a
+    item.imported_groups = groups
 
     item.group_ids = groups.pluck(:id)
   end

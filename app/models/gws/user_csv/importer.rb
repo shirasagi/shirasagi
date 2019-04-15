@@ -183,7 +183,8 @@ class Gws::UserCsv::Importer
     end
 
     item.imported_group_keys = value.to_s.split(/\n/)
-    item.imported_groups = groups.to_a
+    item.imported_groups = groups
+    item.imported_gws_group = cur_site
 
     item.group_ids = groups.pluck(:id)
   end
@@ -192,8 +193,7 @@ class Gws::UserCsv::Importer
     value = row_value('gws_main_group_ids')
 
     if value.present?
-      group = SS::Group.where(name: value).first
-
+      group = SS::Group.in_group(cur_site).and(name: value).first
       item.imported_gws_main_group_key = value
       item.imported_gws_main_group = group
     end

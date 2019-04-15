@@ -15,6 +15,7 @@ module SS::UserImportValidator
     validate :validate_imported_webmail_roles, if: ->{ imported_webmail_role_keys.present? }
 
     # group_ids
+    attr_accessor :imported_gws_group
     attr_accessor :imported_group_keys, :imported_groups
     validate :validate_imported_groups, if: ->{ imported_group_keys.present? }
 
@@ -60,7 +61,12 @@ module SS::UserImportValidator
   end
 
   def validate_imported_groups
-    imported_group_names = imported_groups.pluck(:name)
+    if imported_gws_group
+      imported_group_names = imported_groups.in_group(imported_gws_group).pluck(:name)
+    else
+      imported_group_names = imported_groups.pluck(:name)
+    end
+
     imported_group_keys.each do |key|
       next if imported_group_names.include?(key)
       errors.add :base, I18n.t("errors.messages.not_found_group", name: key)
@@ -69,7 +75,7 @@ module SS::UserImportValidator
 
   def validate_imported_main_group
     return if imported_gws_main_group
-    errors.add :base, I18n.t("errors.messages.not_found_main_group", name: imported_gws_main_group_key )
+    errors.add :base, I18n.t("errors.messages.not_found_main_group", name: imported_gws_main_group_key)
   end
 
   def validate_imported_gws_user_title
