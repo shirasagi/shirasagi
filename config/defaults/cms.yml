@@ -7,6 +7,9 @@ production: &production
   # Disable navigation
   disable_navi: false
 
+  # enable LGWAN
+  enable_lgwan: false
+
   # StyleSheets on gws pages.
   stylesheets: []
 

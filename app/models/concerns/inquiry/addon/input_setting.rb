@@ -35,7 +35,7 @@ module Inquiry::Addon
     def input_type_options
       %w(text_field text_area email_field radio_button select check_box upload_file form_select).map do |v|
         label = I18n.t("inquiry.options.input_type.#{v}")
-        label += I18n.t("inquiry.cannot_use") if v == "upload_file" && Mongoid::Config.clients[:default_post]
+        label += I18n.t("inquiry.cannot_use") if v == "upload_file" && SS.config.cms.enable_lgwan
         [ label, v ]
       end
     end
@@ -97,7 +97,7 @@ module Inquiry::Addon
     # end
 
     def validate_input_type_upload_file
-      if input_type == "upload_file" && Mongoid::Config.clients[:default_post]
+      if input_type == "upload_file" && SS::Config.enable_lgwan
         errors.add :input_type, :cannot_use_upload_file
       end
     end
