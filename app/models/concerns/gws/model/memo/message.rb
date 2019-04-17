@@ -273,6 +273,7 @@ module Gws::Model
     end
 
     def attachments?
+      return false if file_ids.blank?
       files.present?
     end
 
