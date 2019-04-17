@@ -97,7 +97,7 @@ module Inquiry::Addon
     # end
 
     def validate_input_type_upload_file
-      if input_type == "upload_file" && SS::Config.enable_lgwan
+      if input_type == "upload_file" && SS.config.cms.enable_lgwan
         errors.add :input_type, :cannot_use_upload_file
       end
     end
