@@ -8,6 +8,7 @@ class Board::Post
   include SimpleCaptcha::ModelHelpers
   include Fs::FilePreviewable
 
+  store_in_repl_master
   field :poster, type: String
   field :email, type: String
   field :poster_url, type: String
