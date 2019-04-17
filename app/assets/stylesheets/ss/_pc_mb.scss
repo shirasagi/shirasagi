@@ -2299,6 +2299,9 @@ table.index {
     padding: 6px 18px;
     @include mb { display: inline-block; }
   }
+  td.state {
+    margin: 6px 0;
+  }
   th.checkbox,
   td.checkbox {
     width: 38px;
