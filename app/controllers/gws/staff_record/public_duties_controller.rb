@@ -26,11 +26,15 @@ class Gws::StaffRecord::PublicDutiesController < ApplicationController
 
   def index
     @limit = params.dig(:s, :limit).presence || @cur_site.divide_duties_limit
+    users = @cur_year.yearly_users
 
     @s = OpenStruct.new params[:s]
-    @s[:section_name] ||= @cur_group.trailing_name
+    unless @s[:section_name]
+      user = users.where(user_id: @cur_user.id).first
+      @s[:section_name] = user.try(:section_name).presence || @cur_group.trailing_name
+    end
 
-    @items = @cur_year.yearly_users.show_divide_duties.
+    @items = users.show_divide_duties.
       readable(@cur_user, site: @cur_site).
       search(@s).
       page(params[:page]).
