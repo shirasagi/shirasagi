@@ -16,14 +16,12 @@ class Gws::StaffRecord::PublicRecordsController < ApplicationController
   def index
     @limit = params.dig(:s, :limit).presence || @cur_site.staff_records_limit
 
-    if params[:s].blank? && :code.present?
-      params[:s] ||= {}
-      params[:s][:section_name] = @cur_group.trailing_name
-    end
+    @s = OpenStruct.new params[:s]
+    @s[:section_name] ||= @cur_group.trailing_name
 
     @items = @cur_year.yearly_users.show_staff_records.
       readable(@cur_user, site: @cur_site).
-      search(params[:s]).
+      search(@s).
       page(params[:page]).
       per(@limit)
   end
