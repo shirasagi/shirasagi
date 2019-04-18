@@ -14,6 +14,9 @@ class Gws::Circular::Post
   include Gws::Addon::GroupPermission
   include Gws::Addon::History
 
+  index({ site_id: 1 })
+  index({ category_ids: 1 }, { sparse: true })
+
   member_include_custom_groups
   permission_include_custom_groups
 
