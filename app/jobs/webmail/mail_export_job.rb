@@ -59,7 +59,7 @@ class Webmail::MailExportJob < SS::ApplicationJob
     item.member_ids = [user.id]
     item.subject = I18n.t("webmail.export.subject")
     item.format = "text"
-    item.text = I18n.t("webmail.export.notiry_message", link: ::File.join(@root_url, @output_zip.url))
+    item.text = I18n.t("webmail.export.notify_message", link: ::File.join(@root_url, @output_zip.url))
     item.send_date = @datetime
     item.save!
   end
