@@ -43,10 +43,12 @@ class Webmail::MailImporter
     end
   end
 
-  def import_webmail_mail(mail)
+  def import_webmail_mail(mail, msg)
+    return if mail.blank?
+
     item = Webmail::Mail.new
     item.imap = imap
-    item.import_mail(mail.to_s, date_time: mail.date)
+    item.import_mail(msg, date_time: mail.date)
   end
 
   private
@@ -64,13 +66,19 @@ class Webmail::MailImporter
           next
         end
 
-        msg = ::Mail.read_from_string(entry.get_input_stream.read) rescue nil
+        msg = entry.get_input_stream.read rescue nil
         if msg.nil?
           errors.add :base, in_file.original_filename + I18n.t("errors.messages.invalid_file_type")
           next
         end
 
-        import_webmail_mail(msg)
+        mail = ::Mail.read_from_string(msg) rescue nil
+        if mail.nil?
+          errors.add :base, in_file.original_filename + I18n.t("errors.messages.invalid_file_type")
+          next
+        end
+
+        import_webmail_mail(mail, msg)
       end
     end
   end
@@ -81,13 +89,19 @@ class Webmail::MailImporter
       return
     end
 
-    msg = ::Mail.read_from_string(in_file.read) rescue nil
+    msg = in_file.read rescue nil
     if msg.nil?
       errors.add :base, in_file.original_filename + I18n.t("errors.messages.invalid_file_type")
       return
     end
 
-    import_webmail_mail(msg)
+    mail = ::Mail.read_from_string(msg) rescue nil
+    if msg.nil?
+      errors.add :base, in_file.original_filename + I18n.t("errors.messages.invalid_file_type")
+      return
+    end
+
+    import_webmail_mail(mail, msg)
   end
 
   def add_too_large_file_error(params)
