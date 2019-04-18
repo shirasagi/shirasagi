@@ -27,32 +27,13 @@ describe "opendata_agents_nodes_url_resource", dbscope: :example, http_server: t
     "http://www.esri.cao.go.jp/jp/sna/data/data_list/sokuhou/files/2014/qe143_2/__icsFiles/afieldfile/2014/12/09/gaku-mg1432.csv"
   end
   let!(:url_resource) { create_url_resource(dataset, license, original_url) }
-
-  let(:index_path) { url_resource.url.sub(/#{url_resource.filename}$/, "") }
-  let(:download_path) { url_resource.url }
-  let(:content_path) { url_resource.url.sub(/#{url_resource.filename}$/, "content.html") }
-
-  it "#index" do
-    page.driver.browser.with_session("public") do |session|
-      session.env("HTTP_X_FORWARDED_HOST", site.domain)
-      visit index_path
-      expect(current_path).to eq dataset.url
-    end
-  end
+  let(:download_path) { url_resource.download_url }
 
   it "#download" do
     page.driver.browser.with_session("public") do |session|
       session.env("HTTP_X_FORWARDED_HOST", site.domain)
       visit download_path
       expect(current_path).to eq download_path
-    end
-  end
-
-  it "#content" do
-    page.driver.browser.with_session("public") do |session|
-      session.env("HTTP_X_FORWARDED_HOST", site.domain)
-      visit content_path
-      expect(current_path).to eq content_path
     end
   end
 end
