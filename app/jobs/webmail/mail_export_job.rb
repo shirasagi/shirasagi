@@ -65,15 +65,23 @@ module Webmail
         enum = AllMailEnumerator.new(@imap)
       end
 
+      export_count = 0
       enum.each do |m|
         begin
           @imap.select(m.mailbox)
           mail = @imap.mails.find m.uid, :rfc822
           write_eml(sanitize_filename("#{mail.id}_#{mail.subject}"), mail.rfc822)
+          export_count += 1
         rescue => e
           Rails.logger.warn("#{e.class} (#{e.message}):\n  #{e.backtrace.join("\n  ")}")
           next
         end
+      end
+
+      if export_count == 0
+        FileUtils.rm_rf(@output_dir)
+        create_notify_message(failed: true, failed_message: I18n.t("webmail.export_failed.empty_mails"))
+        return
       end
 
       zip = Webmail::MailExport::Zip.new(@output_zip.path)
@@ -87,14 +95,21 @@ module Webmail
       File.join(@root_url, @output_zip.url)
     end
 
-    def create_notify_message
+    def create_notify_message(opts = {})
       item = SS::Notification.new
       item.cur_user = user
       item.member_ids = [user.id]
-      item.subject = I18n.t("webmail.export.subject")
       item.format = "text"
-      item.text = I18n.t("webmail.export.notify_message", link: ::File.join(@root_url, @output_zip.url))
       item.send_date = @datetime
+
+      if opts[:failed]
+        item.subject = I18n.t("webmail.export_failed.subject")
+        item.text = opts[:failed_message].presence || I18n.t("webmail.export_failed.notify_message")
+      else
+        item.subject = I18n.t("webmail.export.subject")
+        item.text = I18n.t("webmail.export.notify_message", link: ::File.join(@root_url, @output_zip.url))
+      end
+
       item.save!
     end
 
