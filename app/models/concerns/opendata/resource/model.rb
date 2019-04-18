@@ -56,6 +56,12 @@ module Opendata::Resource::Model
     file ? file.size : nil
   end
 
+  def relation_file(name, opts = {})
+    file = super(name, opts)
+    file.site_id = dataset.site.id rescue nil
+    file
+  end
+
   module ClassMethods
     def format_options
       %w(AVI BMP CSV DOC DOCX DOT GIF HTML JPG LZH MOV MP3 MPG ODS
