@@ -175,18 +175,16 @@ class Gws::UserCsv::Importer
   end
 
   def set_group_ids(item)
+    item.group_ids = item.group_ids - rm_group_ids
     value = row_value('groups')
     if value.present?
-      groups = SS::Group.in(name: value.split(/\n/))
-    else
-      groups = SS::Group.none
+      item.group_ids += SS::Group.in(name: value.split(/\n/)).pluck(:id)
     end
 
     item.imported_group_keys = value.to_s.split(/\n/)
-    item.imported_groups = groups
+    item.imported_groups = item.groups
     item.imported_gws_group = cur_site
-
-    item.group_ids = groups.pluck(:id)
+    item.group_ids = item.group_ids.uniq.sort
   end
 
   def set_main_group_ids(item)
@@ -295,5 +293,9 @@ class Gws::UserCsv::Importer
 
     form_data.update_column_values(new_column_values)
     form_data.save
+  end
+
+  def rm_group_ids
+    @rm_group_ids ||= SS::Group.where(name: /\A#{Regexp.escape(cur_site.root.name)}/).pluck(:id)
   end
 end
