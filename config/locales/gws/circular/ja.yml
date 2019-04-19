@@ -56,10 +56,10 @@ ja:
         - 3年
         - 3年6ヶ月
       sort:
-        created_asc:  作成日時(日付順)
-        created_desc: 作成日時(新着順)
-        updated_asc:  更新日時(日付順)
-        updated_desc: 更新日時(新着順)
+        created_asc:  投稿日(日付順)
+        created_desc: 投稿日(新着順)
+        updated_asc:  最終更新日(日付順)
+        updated_desc: 最終更新日(新着順)
         due_date_asc:  回覧期限日時(昇順)
         due_date_desc: 回覧期限日時(降順)
   modules:
