@@ -89,7 +89,7 @@ class Gws::UserCsv::Exporter
     terms << I18n.t("ss.options.state.#{item.initial_password_warning.present? ? 'enabled' : 'disabled'}")
     terms << item.session_lifetime
     terms << (item.organization ? item.organization.name : nil)
-    terms << item.groups.map(&:name).join("\n")
+    terms << item.groups.where(name: /\A#{Regexp.escape(root_group_name)}/).pluck(:name).join("\n")
     terms << main_group.try(:name)
     terms << (switch_user ? "#{switch_user.id},#{switch_user.name}" : nil)
     terms << item.remark
@@ -125,5 +125,9 @@ class Gws::UserCsv::Exporter
 
   def encode_sjis(str)
     str.encode("SJIS", invalid: :replace, undef: :replace)
+  end
+
+  def root_group_name
+    @root_group_name ||= site.root.name
   end
 end

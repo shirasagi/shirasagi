@@ -117,6 +117,14 @@ module Cms::Addon::Import
       # groups
       groups = row[t("groups")].to_s.strip.split(/\n/)
       item.group_ids = SS::Group.in(name: groups).map(&:id)
+      # item.group_ids = item.group_ids - rm_group_ids
+      # if groups.present?
+      #   item.group_ids += SS::Group.in(name: groups).pluck(:id)
+      # end
+      # item.imported_group_keys = groups
+      # item.imported_groups = item.groups
+      # item.imported_cms_groups = @cur_site.groups.collect(&:root)
+      # item.group_ids = item.group_ids.uniq.sort
 
       # cms_roles
       cms_roles = row[t("cms_roles")].to_s.strip.split(/\n/)
@@ -151,5 +159,10 @@ module Cms::Addon::Import
       end
       self.errors.add :base, "#{index}: #{error}"
     end
+
+    # def rm_group_ids
+    #   root_groups = @cur_site.groups.collect(&:root).collect(&:name)
+    #   @rm_group_ids ||= SS::Group.where(name: /\A#{Regexp.union(root_groups)}/).pluck(:id)
+    # end
   end
 end

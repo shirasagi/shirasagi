@@ -32,9 +32,9 @@ class Webmail::UserExport
     # Ldap::Addon::Group
     { key: 'ldap_dn', label: Webmail::User.t('ldap_dn') }.freeze,
     # Webmail::Addon::Role
-    { key: 'webmail_role_ids', label: Gws::User.t('webmail_role_ids') }.freeze,
+    { key: 'webmail_role_ids', label: I18n.t("mongoid.attributes.ss/model/user.webmail_role_ids") }.freeze,
     # Sys::Reference::Role
-    { key: 'sys_role_ids', label: Gws::User.t('sys_role_ids') }.freeze,
+    { key: 'sys_role_ids', label: I18n.t("mongoid.attributes.ss/model/user.sys_role_ids") }.freeze,
     # Webmail::UserExtension
     { key: 'imap_setting.account_index', label: with_imap_prefix(Webmail::User.t('account_index')), setter: :none }.freeze,
     { key: 'imap_setting.name', label: with_imap_prefix(Webmail::ImapSetting.t('name')) }.freeze,
@@ -323,11 +323,7 @@ class Webmail::UserExport
     return if account_index != 0
 
     password = str(row, 'password')
-    if password.present?
-      item.in_password = password
-    else
-      item.password = nil
-    end
+    item.in_password = password if password.present?
   end
 
   def set_item_type(row, item, setting)
@@ -383,8 +379,11 @@ class Webmail::UserExport
     account_index = str(row, 'imap_setting.account_index').to_i - 1
     return if account_index != 0
 
-    groups = str(row, 'group_ids').split("\n")
-    groups = SS::Group.unscoped.in(name: groups)
+    group_names = str(row, 'group_ids').split("\n")
+    groups = SS::Group.unscoped.in(name: group_names)
+
+    item.imported_group_keys = group_names
+    item.imported_groups = groups
 
     item.group_ids = groups.pluck(:id)
   end
@@ -393,8 +392,11 @@ class Webmail::UserExport
     account_index = str(row, 'imap_setting.account_index').to_i - 1
     return if account_index != 0
 
-    roles = str(row, 'webmail_role_ids').split("\n")
-    roles = Webmail::Role.in(name: roles)
+    role_names = str(row, 'webmail_role_ids').split("\n")
+    roles = Webmail::Role.in(name: role_names)
+
+    item.imported_webmail_role_keys = role_names
+    item.imported_webmail_roles = roles
 
     item.webmail_role_ids = roles.pluck(:id)
   end
@@ -404,18 +406,20 @@ class Webmail::UserExport
     return if account_index != 0
 
     value = str(row, 'sys_role_ids').to_s
+    general_role_ids = Sys::Role.and_general.pluck(:id)
 
-    role_ids = item.sys_role_ids
-    add_sys_roles = Sys::Role.in(name: value.split(/\n/)).to_a
+    if value.present?
+      add_role_names = value.split(/\n/)
+      add_roles = Sys::Role.in(name: add_role_names).to_a
+      add_role_ids = add_roles.pluck(:id)
 
-    if value.present? && add_sys_roles.present?
-      item.add_general_sys_roles = add_sys_roles
-
-      role_ids -= Sys::Role.and_general.pluck(:id)
-      role_ids += add_sys_roles.pluck(:id)
+      item.imported_sys_role_keys = add_role_names
+      item.imported_sys_roles = add_roles
+    else
+      add_role_ids = []
     end
 
-    item.sys_role_ids = role_ids
+    item.sys_role_ids = item.sys_role_ids - general_role_ids + add_role_ids
   end
 
   def set_item_imap_setting_name(row, item, setting)

@@ -93,6 +93,7 @@ describe "webmail_users", type: :feature, dbscope: :example do
     let!(:user1) { create(:webmail_user_without_imap, id: 101, email: "#{unique_id}-1@example.jp") }
     let!(:user2) { create(:webmail_user_without_imap, id: 102, email: "#{unique_id}-2@example.jp") }
     let!(:user3) { create(:webmail_user_without_imap, id: 103, email: "#{unique_id}-3@example.jp") }
+    let!(:sys_role1) { create(:sys_role_general, name: "一般ユーザー") }
 
     it do
       expect(user1).to have(0).imap_settings
