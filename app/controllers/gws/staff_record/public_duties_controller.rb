@@ -30,8 +30,8 @@ class Gws::StaffRecord::PublicDutiesController < ApplicationController
 
     @s = OpenStruct.new params[:s]
     unless @s[:section_name]
-      user = users.where(user_id: @cur_user.id).first
-      @s[:section_name] = user.try(:section_name).presence || @cur_group.name
+      user = users.where(code: @cur_user.organization_uid).first
+      @s[:section_name] = user.try(:section_name).presence || @cur_group.trailing_name
     end
 
     @items = users.show_divide_duties.

@@ -34,12 +34,12 @@ end
 ].each do |year|
   sections = [
     create_staff_record_group(year_id: year.id, name: @site.name, order: 10, seating_chart_url: ''),
-    create_staff_record_group(year_id: year.id, name: File.join(@site.name, '企画政策部'), order: 20, seating_chart_url: ''),
-    create_staff_record_group(year_id: year.id, name: File.join(@site.name, '企画政策部', '政策課'), order: 30, seating_chart_url: ''),
-    create_staff_record_group(year_id: year.id, name: File.join(@site.name, '企画政策部', '広報課'), order: 40, seating_chart_url: ''),
-    create_staff_record_group(year_id: year.id, name: File.join(@site.name, '危機管理部'), order: 50, seating_chart_url: ''),
-    create_staff_record_group(year_id: year.id, name: File.join(@site.name, '危機管理部', '管理課'), order: 60, seating_chart_url: ''),
-    create_staff_record_group(year_id: year.id, name: File.join(@site.name, '危機管理部', '防災課'), order: 70, seating_chart_url: '')
+    create_staff_record_group(year_id: year.id, name: '企画政策部', order: 20, seating_chart_url: ''),
+    create_staff_record_group(year_id: year.id, name: '政策課', order: 30, seating_chart_url: ''),
+    create_staff_record_group(year_id: year.id, name: '広報課', order: 40, seating_chart_url: ''),
+    create_staff_record_group(year_id: year.id, name: '危機管理部', order: 50, seating_chart_url: ''),
+    create_staff_record_group(year_id: year.id, name: '管理課', order: 60, seating_chart_url: ''),
+    create_staff_record_group(year_id: year.id, name: '防災課', order: 70, seating_chart_url: '')
   ]
 
   create_staff_record_user(
