@@ -339,7 +339,6 @@ describe Article::Page::ImportJob, dbscope: :example do
         expect(page4.category_ids).to match_array [cate2_2.id, cate1_4.id]
         expect(page5.category_ids).to match_array []
         expect(page6.category_ids).to match_array []
-        p page1.category_ids
       end
     end
   end
