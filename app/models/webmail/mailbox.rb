@@ -24,6 +24,7 @@ class Webmail::Mailbox
   validates :account, presence: true
   validates :original_name, presence: true, uniqueness: { scope: [:host, :account] }
   validates :name, presence: true
+  validates :depth, numericality: { greater_than_or_equal_to: 0 }
 
   before_validation :validate_name, if: ->{ @sync && name_changed? }
   before_create :imap_create, if: ->{ @sync && imap.present? }

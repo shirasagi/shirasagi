@@ -62,7 +62,7 @@ end
     <% @mailboxes.all.each do |box| %>
     <li>
       <a href="#" data-name="<%= box.original_name %>">
-        <%== "<span class='pad'></span>" * box.depth %><%= box.basename %>
+        <%== "<span class='pad'></span>" * box.depth rescue nil %><%= box.basename %>
       </a>
     </li>
     <% end %>
