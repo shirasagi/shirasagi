@@ -35,11 +35,13 @@
         <table class="index">
           <thead>
             <tr>
-              <th colspan="100%"><%= t("opendata.download_reports.dataset_data") %></th>
+              <th colspan="7"><%= t("opendata.download_reports.dataset_data") %></th>
+              <th class="sum-<%= ym %>"></th>
             </tr>
           </thead>
           <tbody>
             <%
+              ym_count = 0
               ym_dataset_ids = dataset_ids[ym].uniq
               ym_dataset_ids.each do |id|
                 dataset = datasets[id]
@@ -47,15 +49,16 @@
             %>
               <tr>
                 <td colspan="7"><%= dataset.name %></td>
-                <% if aggregate_hash[ym] %>
-                  <th><%= aggregate_hash[ym]["#{dataset.id}"].to_i %></th>
-                <% else %>
-                  <th><%= 0 %></th>
-                <% end %>
+                <%
+                  count = aggregate_hash[ym][dataset.id.to_s].to_i rescue 0
+                  ym_count += count
+                %>
+                <th><%= count %></th>
               </tr>
             <% end %>
           </tbody>
         </table>
+        <%= jquery do %>$(".reports-table .sum-<%== ym %>").text("<%== "月合計 #{ym_count}" %>")<% end %>
       </div>
 
     <% else %>
