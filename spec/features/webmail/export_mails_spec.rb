@@ -42,18 +42,32 @@ describe "webmail_export_mails", type: :feature, dbscope: :example, imap: true, 
         visit webmail_export_mails_path(account: 0)
         within "form#item-form" do
           choose "item_all_export_all"
-          click_on I18n.t("ss.export")
+          perform_enqueued_jobs do
+            click_on I18n.t("ss.export")
+          end
         end
 
         within "#addon-basic" do
-          expect(page).to have_content(I18n.t("webmail.export.notiry_message").split("\n").first)
-          expect(page).to have_link(href: /\.zip$/)
+          expect(page).to have_content(I18n.t("gws/memo/message.export.start_message").split("\n").first)
         end
 
         expect(Gws::Job::Log.count).to eq 1
         Job::Log.first.tap do |log|
           expect(log.logs).to include(include('INFO -- : Started Job'))
           expect(log.logs).to include(include('INFO -- : Completed Job'))
+        end
+
+        within "nav.user" do
+          first(".popup-notice-container a").click
+
+          within ".popup-notice-items .list-item.unseen" do
+            click_on I18n.t("webmail.export.subject")
+          end
+        end
+
+        within ".ss-notification" do
+          expect(page).to have_content(I18n.t("webmail.export.notify_message").split("\n").first)
+          expect(page).to have_link(href: /\.zip$/)
         end
       end
     end
@@ -71,18 +85,32 @@ describe "webmail_export_mails", type: :feature, dbscope: :example, imap: true, 
           click_on mail2.subject
         end
         within "form#item-form" do
-          click_on I18n.t("ss.export")
+          perform_enqueued_jobs do
+            click_on I18n.t("ss.export")
+          end
         end
 
         within "#addon-basic" do
-          expect(page).to have_content(I18n.t("webmail.export.notiry_message").split("\n").first)
-          expect(page).to have_link(href: /\.zip$/)
+          expect(page).to have_content(I18n.t("gws/memo/message.export.start_message").split("\n").first)
         end
 
         expect(Gws::Job::Log.count).to eq 1
         Job::Log.first.tap do |log|
           expect(log.logs).to include(include('INFO -- : Started Job'))
           expect(log.logs).to include(include('INFO -- : Completed Job'))
+        end
+
+        within "nav.user" do
+          first(".popup-notice-container a").click
+
+          within ".popup-notice-items .list-item.unseen" do
+            click_on I18n.t("webmail.export.subject")
+          end
+        end
+
+        within ".ss-notification" do
+          expect(page).to have_content(I18n.t("webmail.export.notify_message").split("\n").first)
+          expect(page).to have_link(href: /\.zip$/)
         end
       end
     end
@@ -108,18 +136,75 @@ describe "webmail_export_mails", type: :feature, dbscope: :example, imap: true, 
       visit webmail_export_mails_path(account: 0)
       within "form#item-form" do
         choose "item_all_export_all"
-        click_on I18n.t("ss.export")
+        perform_enqueued_jobs do
+          click_on I18n.t("ss.export")
+        end
       end
 
       within "#addon-basic" do
-        expect(page).to have_content(I18n.t("webmail.export.notiry_message").split("\n").first)
-        expect(page).to have_link(href: /\.zip$/)
+        expect(page).to have_content(I18n.t("gws/memo/message.export.start_message").split("\n").first)
       end
 
       expect(Gws::Job::Log.count).to eq 1
       Job::Log.first.tap do |log|
         expect(log.logs).to include(include('INFO -- : Started Job'))
         expect(log.logs).to include(include('INFO -- : Completed Job'))
+      end
+
+      within "nav.user" do
+        first(".popup-notice-container a").click
+
+        within ".popup-notice-items .list-item.unseen" do
+          click_on I18n.t("webmail.export.subject")
+        end
+      end
+
+      within ".ss-notification" do
+        expect(page).to have_content(I18n.t("webmail.export.notify_message").split("\n").first)
+        expect(page).to have_link(href: /\.zip$/)
+      end
+    end
+  end
+
+  context "when collapsed multipart message is given" do
+    let(:mail) { ::File.read("#{Rails.root}/spec/fixtures/webmail/collapsed-multipart.eml") }
+
+    before do
+      webmail_import_mail(webmail_imap, mail)
+      webmail_reload_mailboxes(webmail_imap)
+      login_webmail_imap
+    end
+
+    it do
+      visit webmail_export_mails_path(account: 0)
+      within "form#item-form" do
+        choose "item_all_export_all"
+        perform_enqueued_jobs do
+          click_on I18n.t("ss.export")
+        end
+      end
+
+      within "#addon-basic" do
+        expect(page).to have_content(I18n.t("gws/memo/message.export.start_message").split("\n").first)
+      end
+
+      expect(Gws::Job::Log.count).to eq 1
+      Job::Log.first.tap do |log|
+        expect(log.logs).to include(include('INFO -- : Started Job'))
+        expect(log.logs).to include(include('INFO -- : Completed Job'))
+      end
+
+      within "nav.user" do
+        first(".popup-notice-container a").click
+
+        within ".popup-notice-items .list-item.unseen" do
+          click_on I18n.t("webmail.export.subject")
+        end
+      end
+
+      within ".ss-notification" do
+        expect(page).to have_content(I18n.t("webmail.export.notify_message").split("\n").first)
+        expect(page).to have_link(href: /\.zip$/)
       end
     end
   end

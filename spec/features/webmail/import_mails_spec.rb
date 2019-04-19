@@ -32,4 +32,19 @@ describe "webmail_import_mails", type: :feature, dbscope: :example, imap: true d
       expect(page).to have_css(".webmail-mails .field.title", text: "rspec-1ikzkezixu")
     end
   end
+
+  context "when collapsed multipart message is given" do
+    it do
+      visit webmail_import_mails_path(account: 0)
+
+      within "form#item-form" do
+        attach_file "item[in_file]", "#{Rails.root}/spec/fixtures/webmail/collapsed-multipart.eml"
+        click_button I18n.t("ss.import")
+      end
+      expect(page).to have_css("#notice", text: I18n.t("webmail.import.start_import"))
+
+      visit webmail_mails_path(account: 0)
+      expect(page).to have_css(".webmail-mails .field.title", text: "rspec-f5ttl71mhn")
+    end
+  end
 end
