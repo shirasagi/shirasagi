@@ -74,10 +74,8 @@ class Opendata::Agents::Nodes::Dataset::ResourceController < ApplicationControll
   def content
     @cur_node.layout_id = nil
 
-    if !preview_path?
-      @item = @dataset.resources.find_by id: params[:id]
-      @item.create_preview_history(request, Time.zone.now)
-    end
+    @item = @dataset.resources.find_by id: params[:id]
+    @item.create_preview_history(request, Time.zone.now) if !preview_path?
 
     if @item.tsv_present?
       tsv_content
