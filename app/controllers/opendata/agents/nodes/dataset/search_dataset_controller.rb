@@ -61,6 +61,10 @@ class Opendata::Agents::Nodes::Dataset::SearchDatasetController < ApplicationCon
       end
     end
 
+    response.headers["Cache-Control"] = "no-cache, no-store, max-age=0, must-revalidate"
+    response.headers["Pragma"] = "no-cache"
+    response.headers["Expires"] = "Fri, 01 Jan 1990 00:00:00 GMT"
+
     send_file item.zip_path, type: 'application/zip', filename: "#{item.name}_#{Time.zone.now.to_i}.zip",
       disposition: :attachment, x_sendfile: true
   end
@@ -92,6 +96,10 @@ class Opendata::Agents::Nodes::Dataset::SearchDatasetController < ApplicationCon
           end
         end
       end
+
+      response.headers["Cache-Control"] = "no-cache, no-store, max-age=0, must-revalidate"
+      response.headers["Pragma"] = "no-cache"
+      response.headers["Expires"] = "Fri, 01 Jan 1990 00:00:00 GMT"
 
       send_data ::Fs.read(t.path), type: 'application/zip', filename: "#{t("opendata.dataset")}_#{Time.zone.now.to_i}.zip",
         disposition: :attachment, x_sendfile: true
