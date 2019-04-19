@@ -220,6 +220,7 @@
     @include flex-wrap(wrap);
     background-color: rgba(0, 0, 0, 0.8);
     pointer-events: none;
+    z-index: 999;
     @include mb {
       display: block;
     }
@@ -300,6 +301,7 @@
 div.ss-preview-dialog {
   padding: 10px;
   box-sizing: border-box;
+  z-index: 1000;
   #ss-preview-dialog-frame {
     margin-top: 10px;
     padding: 10px;
