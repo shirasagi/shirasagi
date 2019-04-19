@@ -21,7 +21,6 @@ module Gws::Model
       field :deleted, type: Hash, default: {}
       field :state, type: String, default: 'public'
       field :path, type: Hash, default: {}
-      field :user_paths, type: Array, default: []
       field :send_date, type: DateTime
 
       field :to_member_name, type: String, default: ''
