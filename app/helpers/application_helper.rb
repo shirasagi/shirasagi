@@ -211,6 +211,7 @@ module ApplicationHelper
     options[:border] ||= 0
     options[:widtth] ||= 16
     options[:height] ||= 11
+    options[:class] ||= %w(ss-base-loading)
 
     # '<img style="vertical-align:middle" src="/assets/img/loading.gif" alt="loading.." border="0" widtth="16" height="11" />'
     image_tag("/assets/img/loading.gif", options)
