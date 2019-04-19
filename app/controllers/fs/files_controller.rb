@@ -35,6 +35,11 @@ class Fs::FilesController < ApplicationController
       file = error_html_file(status)
       return ss_send_file(file, status: status, type: Fs.content_type(file), disposition: :inline)
     end
+    if e.is_a?(Mongoid::Errors::DocumentNotFound)
+      status = 404
+      file = error_html_file(status)
+      return ss_send_file(file, status: status, type: Fs.content_type(file), disposition: :inline)
+    end
     raise e
   end
 
