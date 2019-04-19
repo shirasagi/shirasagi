@@ -38,7 +38,7 @@ module Opendata::Addon::ZipDataset
         files = []
         dataset.resources.each do |resource|
           if resource.source_url.present?
-            name = "#{resource.name}-#{resource.id}.txt"
+            name = "#{resource.name.gsub(/[\¥\/:\*\?\"<>|\.]/, "_")}-#{resource.id}.txt"
             file = Tempfile.open(name)
             file.puts(resource.source_url)
             file.rewind
