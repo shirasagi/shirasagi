@@ -10,21 +10,21 @@ describe 'gws/memo/notices', type: :feature, dbscope: :example, js: true do
       SS::Notification.create!(
         cur_group: site, cur_user: user,
         subject: "subject-#{unique_id}", format: "text", text: "text-#{unique_id}" * 10,
-        member_ids: [user.id], state: "public", export: false
+        member_ids: [user.id], state: "public"
       )
     end
     let!(:item_new) do
       SS::Notification.create!(
         cur_group: site, cur_user: user,
         subject: "subject-#{unique_id}", format: "text", text: "", url: curcular_path,
-        member_ids: [user.id], state: "public", export: false
+        member_ids: [user.id], state: "public"
       )
     end
     let!(:item_no_info) do
       SS::Notification.create!(
         cur_group: site, cur_user: user,
         subject: "subject-#{unique_id}", format: "text", text: "",
-        member_ids: [user.id], state: "public", export: false
+        member_ids: [user.id], state: "public"
       )
     end
 
