@@ -45,14 +45,19 @@
       <% end %>
     </div>
     <div class="menu">
-      <%= button_tag @item.browsed?(@cur_user) ? t('gws/notice.links.unset_seen') : t('gws/notice.links.set_seen'), name: 'toggle-browsed', type: 'button', class: 'btn' %>
+      <%#= button_tag @item.browsed?(@cur_user) ? t('gws/notice.links.unset_seen') : t('gws/notice.links.set_seen'), name: 'toggle-browsed', type: 'button', class: 'btn' %>
+      <% if @item.browsed?(@cur_user) %>
+        <%= button_to(t('gws/notice.links.unset_seen'), url_for(action: :toggle_browsed), 'data-confirm': t('gws/notice.confirm.unset_seen'), class: 'btn') %>
+      <% else %>
+        <%= button_to(t('gws/notice.links.set_seen'), url_for(action: :toggle_browsed), 'data-confirm': t('gws/notice.confirm.set_seen'), class: 'btn') %>
+      <% end %>
     </div>
   </div>
 
-  <%= render file: "_addons_show", locals: {addons: @item.addons.select {|addon| addon.klass == Gws::Addon::Notice::CommentPost}} %>
+  <%= render file: "_addons_show", locals: { addons: @item.addons.select { |addon| [Gws::Addon::Notice::CommentPost, Gws::Addon::Notice::Member].include?(addon.klass) } } %>
 </div>
 
-<%= jquery do %>
+<% jquery do %>
   var url = "<%= url_for(action: :toggle_browsed, format: 'json') %>";
   var browsed = <%== @item.browsed?(@cur_user) ? true.to_json : false.to_json %>;
   var $button = $('button[name=toggle-browsed]');
