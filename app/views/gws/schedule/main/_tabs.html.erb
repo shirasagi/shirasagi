@@ -4,8 +4,10 @@ Gws_Schedule_View.renderTabs('.gws-schedule-tabs');
 
 <% menus = capture do %>
   <% if Gws::Schedule::Plan.allowed?(:use, @cur_user, site: @cur_site) %>
-    <%= link_to gws_schedule_plans_path, class: "personal" do %>
-      <span class="tab-name"><%= t('gws/schedule.tabs.personal') %></span>
+    <% if Gws::Schedule::Plan.personal_plan_enabled?(@cur_user, site: @cur_site) %>
+      <%= link_to gws_schedule_plans_path, class: "personal" do %>
+        <span class="tab-name"><%= t('gws/schedule.tabs.personal') %></span>
+      <% end %>
     <% end %>
 
     <% @cur_user.schedule_tabs_visible_groups(@cur_site).each do |group| %>

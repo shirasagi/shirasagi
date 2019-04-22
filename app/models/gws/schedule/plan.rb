@@ -94,6 +94,13 @@ class Gws::Schedule::Plan
 
   private
 
+  class << self
+    def personal_plan_enabled?(user, opts = {})
+      allowed?(:show, user, opts) || allowed?(:edit, user, opts) ||
+        allowed?(:delete, user, opts) || allowed?(:trash, user, opts)
+    end
+  end
+
   def validate_color
     self.color = nil if color =~ /^#ffffff$/i
   end

@@ -5,6 +5,7 @@ class Gws::Schedule::PlansController < ApplicationController
   include Gws::Memo::NotificationFilter
 
   before_action :set_download_url, only: :index
+  before_action :filter_permission
 
   navi_view "gws/schedule/main/navi"
 
@@ -17,6 +18,10 @@ class Gws::Schedule::PlansController < ApplicationController
 
   def set_download_url
     @download_url = url_for(action: :download)
+  end
+
+  def filter_permission
+    raise '404' unless @model.personal_plan_enabled?(@cur_user, site: @cur_site)
   end
 
   public

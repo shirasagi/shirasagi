@@ -2,7 +2,7 @@ class Gws::Schedule::MainController < ApplicationController
   include Gws::BaseFilter
 
   def index
-    if Gws::Schedule::Plan.allowed?(:use, @cur_user, site: @cur_site)
+    if Gws::Schedule::Plan.allowed?(:use, @cur_user, site: @cur_site) && Gws::Schedule::Plan.personal_plan_enabled?(@cur_user, site: @cur_site)
       redirect_to gws_schedule_plans_path
       return
     end
