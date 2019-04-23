@@ -1,5 +1,5 @@
 <% menus = capture do %>
-  <% if Gws::Schedule::Plan.allowed?(:use, @cur_user, site: @cur_site) && Gws::Schedule::Plan.personal_plan_enabled?(@cur_user, site: @cur_site) %>
+  <% if Gws::Schedule::Plan.allowed?(:use, @cur_user, site: @cur_site) %>
     <h3><%= link_to t('gws/schedule.tabs.personal'), gws_schedule_plans_path %></h3>
   <% end %>
 

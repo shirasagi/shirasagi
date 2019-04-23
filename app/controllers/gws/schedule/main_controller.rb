@@ -3,10 +3,8 @@ class Gws::Schedule::MainController < ApplicationController
 
   def index
     if Gws::Schedule::Plan.allowed?(:use, @cur_user, site: @cur_site)
-      if Gws::Schedule::Plan.personal_plan_enabled?(@cur_user, site: @cur_site)
-        redirect_to gws_schedule_plans_path
-        return
-      end
+      redirect_to gws_schedule_plans_path
+      return
     end
 
     if @cur_user.gws_role_permit_any?(@cur_site, :use_private_gws_facility_plans)
