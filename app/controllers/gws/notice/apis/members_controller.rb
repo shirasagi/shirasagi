@@ -39,7 +39,7 @@ class Gws::Notice::Apis::MembersController < ApplicationController
   public
 
   def index
-    @items = @cur_post.folder.sorted_overall_members.active
+    @items = @cur_post.overall_readers.site(@cur_site).active
     if @custom_group.present?
       @items = @items.in(id: @custom_group.members.pluck(:id))
     end

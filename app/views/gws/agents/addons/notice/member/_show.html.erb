@@ -1,6 +1,6 @@
 <dl class="see">
   <dt><%= t('gws/board.topic.browsed_user_info.title') %></dt>
   <dd>
-    <span><%= t('gws/board.topic.browsed_user_info.format', count: @item.browsed_users.count, total: @item.folder.overall_members.count) %></span>
+    <span><%= t('gws/board.topic.browsed_user_info.format', count: @item.browsed_users.count, total: @item.overall_readers.site(@cur_site).active.count) %></span>
     <%= link_to t('gws/board.topic.browsed_user_info.more'), gws_notice_apis_members_path(notice_id: @item), class: %w(btn ajax-box) %></dd>
 </dl>
