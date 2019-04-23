@@ -70,6 +70,8 @@ ja:
       preview_reports: プレビュー数
       access_reports: アクセス数
       not_exists_reports: 集計結果がありません。
+      total_year: 年合計
+      total_month: 月合計
     public_entity:
       format: データセット一覧
       download: 公開中のデータセットの一覧を推奨データセット「オープンデータ一覧」の形式にてダウンロードできます。
