@@ -43,6 +43,12 @@ class Gws::Notice::Apis::MembersController < ApplicationController
     if @custom_group.present?
       @items = @items.in(id: @custom_group.members.pluck(:id))
     end
+    case params.dig(:s, :browsed_state)
+    when 'read'
+      @items = @items.in(id: @cur_post.browsed_user_ids)
+    when 'unread'
+      @items = @items.nin(id: @cur_post.browsed_user_ids)
+    end
 
     @items = @items.in(group_ids: group_ids).
       search(params[:s]).

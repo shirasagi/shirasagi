@@ -22,6 +22,13 @@
                      { class: "submit-on-change" } %>
       </dd>
 
+      <dt><%= @cur_post.t :state %></dt>
+      <dd>
+        <%= f.select :browsed_state, @cur_post.browsed_state_options,
+                     { selected: params[:s].try(:[], :browsed_state), include_blank: true },
+                     { class: "submit-on-change" } %>
+      </dd>
+
       <dt><%= t "ss.keyword" %></dt>
       <dd>
         <%= f.text_field :keyword, value: params[:s].try(:[], :keyword) %>

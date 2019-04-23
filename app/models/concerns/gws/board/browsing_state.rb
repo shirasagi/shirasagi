@@ -32,9 +32,12 @@ module Gws::Board::BrowsingState
     %w(unread read).map { |m| [I18n.t("gws/board.options.browsed_state.#{m}"), m] }
   end
 
-  def browsed_users
+  def browsed_user_ids
     browsed = self.browsed_users_hash.to_a.select { |user_id, browsed_at| browsed_at.present? }
-    browsed_user_ids = browsed.map { |user_id, browsed_at| user_id }
+    browsed.map { |user_id, browsed_at| user_id }
+  end
+
+  def browsed_users
     Gws::User.in(id: browsed_user_ids)
   end
 end
