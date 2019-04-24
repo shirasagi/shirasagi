@@ -68,8 +68,7 @@ module Webmail::Mail::Parser
   end
 
   def parse_references(references)
-    return [] if references.blank?
-    references.is_a?(Array) ? references : [references]
+    Array[references].flatten.compact.uniq
   end
 
   def parse_subject(mail)
