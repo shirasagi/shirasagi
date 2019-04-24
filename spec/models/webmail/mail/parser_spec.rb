@@ -192,4 +192,26 @@ describe Webmail::Mail::Parser, type: :model, dbscope: :example do
       end
     end
   end
+
+  describe "#parse_references" do
+    context "with nil" do
+      subject { Webmail::Mail.new.parse_references(nil) }
+      it { is_expected.to eq [] }
+    end
+
+    context "with scalar" do
+      subject { Webmail::Mail.new.parse_references("abc") }
+      it { is_expected.to eq %w(abc) }
+    end
+
+    context "with blank array" do
+      subject { Webmail::Mail.new.parse_references([]) }
+      it { is_expected.to eq [] }
+    end
+
+    context "with array of scalar" do
+      subject { Webmail::Mail.new.parse_references(%w(abc)) }
+      it { is_expected.to eq %w(abc) }
+    end
+  end
 end
