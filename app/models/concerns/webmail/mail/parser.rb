@@ -53,25 +53,16 @@ module Webmail::Mail::Parser
   # @param [Mail::Field] field
   # @return [Array]
   def parse_address_field(field)
-    return [] if field.blank?
+    Webmail.activate_cp50221 do
+      break [] if field.blank?
 
-    if field.value.include?('=?ISO-2022-JP?')
-      value = NKF.nkf("-w", field.value)
-    else
-      value = decode_jp(field.value)
-    end
-
-    ::Mail::AddressList.new(value).addresses.map do |addr|
-      if addr.display_name.present?
-        #charset = field.value.start_with?('=?ISO-2022-JP?') ? 'CP50220' : nil
-        addr.decoded
-      else
-        addr.address
+      field.address_list.addresses.map do |addr|
+        decode_jp(addr.decoded)
       end
     end
-  rescue Mail::Field::ParseError, StandardError
+  rescue
     # this method must return "UTF-8 clean" string
-    [decode_jp(field.decoded)] rescue [value || decode_jp(field.value)]
+    [decode_jp(field.decoded)]
   end
 
   def parse_references(references)
