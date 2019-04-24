@@ -5,6 +5,19 @@ module Gws::Addon::Schedule::GroupSetting
   set_addon_type :organization
 
   included do
+    %w(personal group custom_group group_all facility).each do |name|
+      field "schedule_#{name}_tab_state", type: String, default: 'show'
+      permit_params "schedule_#{name}_tab_state"
+      alias_method("schedule_#{name}_tab_state_options", "schedule_tab_state_options")
+      define_method("schedule_#{name}_tab_visible?") do
+        schedule_tab_visible?(name)
+      end
+    end
+    %w(personal group_all facility).each do |name|
+      field "schedule_#{name}_tab_label", type: String, localize: true
+      permit_params "schedule_#{name}_tab_label"
+    end
+
     attr_accessor :in_schedule_max_file_size_mb
 
     field :schedule_max_month, type: Integer
@@ -84,6 +97,26 @@ module Gws::Addon::Schedule::GroupSetting
 
   def schedule_drag_drop_allowed?
     !schedule_drag_drop_denied?
+  end
+
+  def schedule_tab_state_options
+    %w(show hide).map { |k| [I18n.t("ss.options.state.#{k}"), k] }
+  end
+
+  def schedule_tab_visible?(name)
+    send("schedule_#{name}_tab_state") != 'hide'
+  end
+
+  def schedule_personal_tab_placeholder
+    I18n.t("gws/schedule.tabs.personal")
+  end
+
+  def schedule_group_all_tab_placeholder
+    I18n.t("gws/schedule.tabs.group")
+  end
+
+  def schedule_facility_tab_placeholder
+    I18n.t("gws/schedule.tabs.facility")
   end
 
   private
