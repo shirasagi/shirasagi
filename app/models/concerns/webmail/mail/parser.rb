@@ -6,27 +6,29 @@ module Webmail::Mail::Parser
                 :html_part_no, :html_part
 
   def parse(data)
-    self.attributes = {
-      uid: data.attr["UID"],
-      internal_date: data.attr['INTERNALDATE'],
-      flags: data.attr['FLAGS'] || [],
-      size: data.attr['RFC822.SIZE']
-    }
-    self.flags = flags.map(&:to_sym)
+    Webmail.activate_cp50221 do
+      self.attributes = {
+        uid: data.attr["UID"],
+        internal_date: data.attr['INTERNALDATE'],
+        flags: data.attr['FLAGS'] || [],
+        size: data.attr['RFC822.SIZE']
+      }
+      self.flags = flags.map(&:to_sym)
 
-    if data.attr['RFC822']
-      self.rfc822 = data.attr['RFC822']
-      parse_rfc822_body
-    end
+      if data.attr['RFC822']
+        self.rfc822 = data.attr['RFC822']
+        parse_rfc822_body
+      end
 
-    if data.attr['RFC822.HEADER']
-      self.header = data.attr['RFC822.HEADER']
-      parse_header
-    end
+      if data.attr['RFC822.HEADER']
+        self.header = data.attr['RFC822.HEADER']
+        parse_header
+      end
 
-    if data.attr['BODYSTRUCTURE']
-      self.body_structure = data.attr['BODYSTRUCTURE']
-      parse_body_structure
+      if data.attr['BODYSTRUCTURE']
+        self.body_structure = data.attr['BODYSTRUCTURE']
+        parse_body_structure
+      end
     end
   end
 
