@@ -156,5 +156,40 @@ describe Webmail::Mail::Parser, type: :model, dbscope: :example do
 
       it { is_expected.to eq ["\"髙﨑 ①②③\" <aaa@example.jp>"] }
     end
+
+    context "with invalid address: encoding is broken" do
+      let(:address) { "=?ISO-2022-JP?B?GyRCQzRFdiEnOzOUMxsoQg==?= <aaa@example.jp>" }
+      let(:field) { ::Mail::Field.parse("To: #{address}") }
+      subject { Webmail::Mail.new.parse_address_field(field) }
+
+      it { is_expected.to eq ["\"担当：山��\" <aaa@example.jp>"] }
+    end
+
+    context "with invalid address: local part contains multi-byte chars and spaces" do
+      let(:address) { "=?ISO-2022-JP?B?GyRCJCIbKEIgGyRCJCQbKEIg?=@example.jp" }
+      let(:field) { ::Mail::Field.parse("To: #{address}") }
+      subject { Webmail::Mail.new.parse_address_field(field) }
+
+      it { is_expected.to eq ["あ い @example.jp"] }
+    end
+
+    context "with invalid address: multiple invalid address at one field" do
+      let(:address) do
+        %w[
+          =?ISO-2022-JP?B?GyRCJCIbKEIgGyRCJCQbKEIg?=@example.jp
+          =?ISO-2022-JP?B?GyRCfGJ5dRsoQiAbJEItIS0iLSMbKEI=?=@example.jp
+          =?ISO-2022-JP?B?GyRCQzRFdiEnOzOUMxsoQg==?=@example.jp
+        ].join(", ") + ","
+      end
+      let(:field) { ::Mail::Field.parse("To: #{address}") }
+      subject { Webmail::Mail.new.parse_address_field(field) }
+
+      it do
+        is_expected.to have(3).items
+        expect(subject[0]).to eq "あ い @example.jp"
+        expect(subject[1]).to eq "髙﨑 ①②③@example.jp"
+        expect(subject[2]).to eq "担当：山��@example.jp"
+      end
+    end
   end
 end
