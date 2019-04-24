@@ -134,37 +134,39 @@ module Webmail::Mail::Parser
   end
 
   def parse_rfc822_body
-    read_rfc822 if rfc822.blank?
-    return if rfc822.blank?
+    Webmail.activate_cp50221 do
+      read_rfc822 if rfc822.blank?
+      return if rfc822.blank?
 
-    msg = Mail::Message.new(rfc822)
-    if msg.multipart?
-      text_part_pos, text_part = _raw_find_first_mime_type(msg, 'text/plain')
-      if text_part
-        self.format = 'text'
-        self.text = decode_jp(text_part.body.to_s, text_part.charset)
-      end
-      html_part_pos, html_part = _raw_find_first_mime_type(msg, 'text/html')
-      if html_part
-        self.format = 'html'
-        self.html = decode_jp(html_part.body.to_s, html_part.charset)
-      end
+      msg = Mail::Message.new(rfc822)
+      if msg.multipart?
+        text_part_pos, text_part = _raw_find_first_mime_type(msg, 'text/plain')
+        if text_part
+          self.format = 'text'
+          self.text = decode_jp(text_part.body.to_s, text_part.charset)
+        end
+        html_part_pos, html_part = _raw_find_first_mime_type(msg, 'text/html')
+        if html_part
+          self.format = 'html'
+          self.html = decode_jp(html_part.body.to_s, html_part.charset)
+        end
 
-      @_all_parts = {}
-      self.attachments = []
-      msg.all_parts.each_with_index do |part, i|
-        @_all_parts[i + 1] = part
-        next if i == text_part_pos || i == html_part_pos
-        self.attachments << Webmail::StoredMailPart.new(part, i + 1)
-      end
-    else
-      if msg.mime_type == 'text/plain'
-        self.format = 'text'
-        self.text = decode_jp(msg.body.to_s, msg.charset)
-      end
-      if msg.mime_type == 'text/html'
-        self.format = 'html'
-        self.html = decode_jp(msg.body.to_s, msg.charset)
+        @_all_parts = {}
+        self.attachments = []
+        msg.all_parts.each_with_index do |part, i|
+          @_all_parts[i + 1] = part
+          next if i == text_part_pos || i == html_part_pos
+          self.attachments << Webmail::StoredMailPart.new(part, i + 1)
+        end
+      else
+        if msg.mime_type == 'text/plain'
+          self.format = 'text'
+          self.text = decode_jp(msg.body.to_s, msg.charset)
+        end
+        if msg.mime_type == 'text/html'
+          self.format = 'html'
+          self.html = decode_jp(msg.body.to_s, msg.charset)
+        end
       end
     end
   end
