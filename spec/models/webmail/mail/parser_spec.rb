@@ -93,6 +93,12 @@ describe Webmail::Mail::Parser, type: :model, dbscope: :example do
   end
 
   describe "#parse_address_field" do
+    around do |example|
+      Webmail.activate_cp50221 do
+        example.run
+      end
+    end
+
     context "with only address" do
       let(:address) { "aaa@example.jp" }
       let(:field) { ::Mail::Field.parse("To: #{address}") }
@@ -212,6 +218,86 @@ describe Webmail::Mail::Parser, type: :model, dbscope: :example do
     context "with array of scalar" do
       subject { Webmail::Mail.new.parse_references(%w(abc)) }
       it { is_expected.to eq %w(abc) }
+    end
+  end
+
+  describe "#parse_subject" do
+    around do |example|
+      Webmail.activate_cp50221 do
+        example.run
+      end
+    end
+
+    context "with UTF-8 + Base64" do
+      let(:header) do
+        [
+          "Subject: =?UTF-8?B?44K/44Kk44OI44OrIOmhjOWQjQ==?="
+        ].join("\r\n") + "\r\n"
+      end
+      let(:mail) { ::Mail.read_from_string(header) }
+      subject { Webmail::Mail.new.parse_subject(mail) }
+
+      it { is_expected.to eq "タイトル 題名" }
+    end
+
+    context "with UTF-8 + Quoted-Printable" do
+      let(:header) do
+        [
+          "Subject: =?UTF-8?Q?=E3=82=BF=E3=82=A4=E3=83=88=E3=83=AB =E9=A1=8C=E5=90=8D=?="
+        ].join("\r\n") + "\r\n"
+      end
+      let(:mail) { ::Mail.read_from_string(header) }
+      subject { Webmail::Mail.new.parse_subject(mail) }
+
+      it { is_expected.to eq "タイトル 題名" }
+    end
+
+    context "with Basic ISO-2022-JP + Base64" do
+      let(:header) do
+        [
+          "Subject: =?ISO-2022-JP?B?GyRCJT8lJCVIJWsbKEIgGyRCQmpMPhsoQg==?="
+        ].join("\r\n") + "\r\n"
+      end
+      let(:mail) { ::Mail.read_from_string(header) }
+      subject { Webmail::Mail.new.parse_subject(mail) }
+
+      it { is_expected.to eq "タイトル 題名" }
+    end
+
+    # context "with Basic ISO-2022-JP + Quoted-Printable" do
+    #   let(:header) do
+    #     [
+    #       "Subject: =?ISO-2022-JP?Q?=1B$B%?%$%H%k=1B(B =1B$BBjL>=1B(B=?="
+    #     ].join("\r\n") + "\r\n"
+    #   end
+    #   let(:mail) { ::Mail.read_from_string(header) }
+    #   subject { Webmail::Mail.new.parse_subject(mail) }
+    #
+    #   it { is_expected.to eq "タイトル 題名" }
+    # end
+
+    context "with Extended ISO-2022-JP + Base64 encoded address" do
+      let(:header) do
+        [
+          "Subject: =?ISO-2022-JP?B?GyRCfGJ5dRsoQiAbJEItIS0iLSMbKEI=?="
+        ].join("\r\n") + "\r\n"
+      end
+      let(:mail) { ::Mail.read_from_string(header) }
+      subject { Webmail::Mail.new.parse_subject(mail) }
+
+      it { is_expected.to eq "髙﨑 ①②③" }
+    end
+
+    context "with broken encoding" do
+      let(:header) do
+        [
+          "Subject: =?ISO-2022-JP?B?GyRCQzRFdiEnOzOUMxsoQg==?="
+        ].join("\r\n") + "\r\n"
+      end
+      let(:mail) { ::Mail.read_from_string(header) }
+      subject { Webmail::Mail.new.parse_subject(mail) }
+
+      it { is_expected.to eq "担当：山��" }
     end
   end
 end

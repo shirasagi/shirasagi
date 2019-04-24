@@ -54,13 +54,12 @@ module Webmail::Mail::Parser
 
   # @param [Mail::Field] field
   # @return [Array]
+  # Be Carefule: this method must run within Webmail.activate_cp50221 for ISO-2022-JP text
   def parse_address_field(field)
-    Webmail.activate_cp50221 do
-      break [] if field.blank?
+    return [] if field.blank?
 
-      field.address_list.addresses.map do |addr|
-        decode_jp(addr.decoded)
-      end
+    field.address_list.addresses.map do |addr|
+      decode_jp(addr.decoded)
     end
   rescue
     # this method must return "UTF-8 clean" string
@@ -71,15 +70,9 @@ module Webmail::Mail::Parser
     Array[references].flatten.compact.uniq
   end
 
+  # Be Carefule: this method must run within Webmail.activate_cp50221 for ISO-2022-JP text
   def parse_subject(mail)
-    value = mail.header_fields.find { |m| m.name.casecmp('subject') == 0 }.try(:value)
-    return mail.subject unless value
-
-    if value.include?('=?ISO-2022-JP?')
-      NKF.nkf("-w", value)
-    else
-      decode_jp(mail.subject, nil)
-    end
+    decode_jp(mail.subject, nil)
   end
 
   def parse_body_structure
