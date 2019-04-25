@@ -17,12 +17,16 @@ module Webmail
 
   def activate_cp50221
     save = ::Mail::Ruby19.charset_encoder
-    ::Mail::Ruby19.charset_encoder = CP50221Encoder.new if save.class != CP50221Encoder
+    ::Mail::Ruby19.charset_encoder = Webmail.cp50221_encoder
 
     begin
       yield
     ensure
       ::Mail::Ruby19.charset_encoder = save
     end
+  end
+
+  def cp50221_encoder
+    @cp50221_encoder ||= CP50221Encoder.new
   end
 end
