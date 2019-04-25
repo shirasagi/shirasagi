@@ -1,7 +1,15 @@
 class Gws::Schedule::MainController < ApplicationController
   include Gws::BaseFilter
+  include Gws::Schedule::CalendarFilter::Transition
 
   def index
+    if params.dig(:calendar, :path).present?
+      uri = URI(params.dig(:calendar, :path))
+      uri.query = { calendar: redirection_calendar_params }.to_param
+      redirect_to uri.to_s
+      return
+    end
+
     if Gws::Schedule::Plan.allowed?(:use, @cur_user, site: @cur_site)
       if @cur_site.schedule_personal_tab_visible?
         redirect_to gws_schedule_plans_path
