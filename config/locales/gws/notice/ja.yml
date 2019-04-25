@@ -57,7 +57,7 @@ ja:
       gws/notice/comment_post: コメント
       gws/notice/category: カテゴリー
       gws/notice/resource_limitation: 容量制限
-      gws/notice/member: 参加者
+      gws/notice/member: 閲覧者
 
   gws_notification:
     gws/notice/post:
