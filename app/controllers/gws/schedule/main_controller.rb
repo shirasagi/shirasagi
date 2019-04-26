@@ -12,14 +12,14 @@ class Gws::Schedule::MainController < ApplicationController
 
     if Gws::Schedule::Plan.allowed?(:use, @cur_user, site: @cur_site)
       if @cur_site.schedule_personal_tab_visible?
-        redirect_to gws_schedule_plans_path
+        redirect_to gws_schedule_plans_path(calendar: redirection_calendar_params)
         return
       end
 
       if @cur_site.schedule_group_tab_visible?
         groups = @cur_user.schedule_tabs_visible_groups(@cur_site)
         if groups.present?
-          redirect_to gws_schedule_group_plans_path(group: groups.first.id)
+          redirect_to gws_schedule_group_plans_path(group: groups.first.id, calendar: redirection_calendar_params)
           return
         end
       end
@@ -27,19 +27,19 @@ class Gws::Schedule::MainController < ApplicationController
       if @cur_site.schedule_custom_group_tab_visible?
         groups = @cur_user.schedule_tabs_visible_custom_groups(@cur_site)
         if groups.present?
-          redirect_to gws_schedule_custom_group_plans_path(group: groups.first.id)
+          redirect_to gws_schedule_custom_group_plans_path(group: groups.first.id, calendar: redirection_calendar_params)
           return
         end
       end
 
       if @cur_site.schedule_group_all_tab_visible?
-        redirect_to gws_schedule_all_groups_path
+        redirect_to gws_schedule_all_groups_path(calendar: redirection_calendar_params)
         return
       end
     end
 
     if @cur_user.gws_role_permit_any?(@cur_site, :use_private_gws_facility_plans) && @cur_site.schedule_facility_tab_visible?
-      redirect_to gws_schedule_facilities_path
+      redirect_to gws_schedule_facilities_path(calendar: redirection_calendar_params)
       return
     end
 

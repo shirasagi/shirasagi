@@ -60,7 +60,7 @@ module Gws::Schedule::PlanFilter
     path = params.dig(:calendar, :path)
     if path.present?
       uri = URI(path)
-      uri.query = redirection_calendar_params.to_param
+      uri.query = { calendar: redirection_calendar_params }.to_param
       uri.to_s
     else
       url_for(controller: 'gws/schedule/main', action: :index, calendar: redirection_calendar_params)
