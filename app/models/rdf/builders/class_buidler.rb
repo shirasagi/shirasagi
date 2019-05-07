@@ -8,6 +8,9 @@ class Rdf::Builders::ClassBuidler < Rdf::Builders::BaseBuilder
                          dc:hasVersion
                          dc:issued
                          dc:modified
+                         http://purl.org/dc/terms/hasVersion
+                         http://purl.org/dc/terms/issued
+                         http://purl.org/dc/terms/modified
                          vs:term_status
                          owl:disjointWith
                          owl:equivalentClass
@@ -17,7 +20,8 @@ class Rdf::Builders::ClassBuidler < Rdf::Builders::BaseBuilder
     register_handler("rdfs:label", Rdf::Builders::LangLiteralHandler.new(:labels))
 
     register_handler("rdfs:comment", Rdf::Builders::LangLiteralHandler.new(:comments))
-    alias_handler "dc:description", "rdfs:comment"
+    register_handler("dc:description", Rdf::Builders::LangLiteralHandler.new(:comments, overwrites: false))
+    alias_handler "http://purl.org/dc/terms/description", "dc:description"
 
     register_handler("rdfs:subClassOf", Rdf::Builders::SubClassOfHandler.new)
   end

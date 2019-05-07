@@ -1,6 +1,7 @@
 class Rdf::Builders::LangLiteralHandler < Rdf::Builders::BaseHandler
-  def initialize(key)
+  def initialize(key, options = {})
     @key = key
+    @options = options
   end
 
   def call(predicate, objects)
@@ -10,10 +11,21 @@ class Rdf::Builders::LangLiteralHandler < Rdf::Builders::BaseHandler
         lang ||= :invariant
         value = object.object
         @context.attributes[@key] = {} unless @context.attributes.key?(@key)
-        @context.attributes[@key][lang] = value
+        if overwrite? || @context.attributes[@key][lang].blank?
+          @context.attributes[@key][lang] = value
+        end
       elsif object.uri?
-        @context.attributes[@key] = object.to_s
+        if overwrite? || @context.attributes[@key].blank?
+          @context.attributes[@key] = object.to_s
+        end
       end
     end
+  end
+
+  private
+
+  def overwrite?
+    return true if !@options.key?(:overwrites)
+    @options[:overwrites]
   end
 end

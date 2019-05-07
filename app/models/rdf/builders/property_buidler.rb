@@ -6,6 +6,9 @@ class Rdf::Builders::PropertyBuidler < Rdf::Builders::BaseBuilder
                          dc:hasVersion
                          dc:issued
                          dc:modified
+                         http://purl.org/dc/terms/hasVersion
+                         http://purl.org/dc/terms/issued
+                         http://purl.org/dc/terms/modified
                          rdfs:isDefinedBy
                          rdfs:subPropertyOf
                          schema:domainIncludes
@@ -18,8 +21,9 @@ class Rdf::Builders::PropertyBuidler < Rdf::Builders::BaseBuilder
     register_handler("rdfs:label", Rdf::Builders::LangLiteralHandler.new(:labels))
 
     register_handler("rdfs:comment", Rdf::Builders::LangLiteralHandler.new(:comments))
-    alias_handler "dc:description", "rdfs:comment"
-    alias_handler "skos:note", "rdfs:comment"
+    register_handler("dc:description", Rdf::Builders::LangLiteralHandler.new(:comments, overwrites: false))
+    alias_handler "http://purl.org/dc/terms/description", "dc:description"
+    alias_handler "skos:note", "dc:description"
 
     register_handler("rdfs:domain", Rdf::Builders::RangeHandler.new(:domains))
 
