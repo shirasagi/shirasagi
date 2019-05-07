@@ -130,11 +130,11 @@ class Rdf::VocabImportJob < Cms::ApplicationJob
       when "owl:ObjectProperty", "owl:DatatypeProperty", "rdf:Property" then
         # property
         @property_count += 1
-        return [ Rdf::Prop, Rdf::Builders::PropertyBuidler.new ]
+        return [ Rdf::Prop, Rdf::Builders::PropertyBuilder.new ]
       when "owl:Class", "rdfs:Class", "rdfs:Datatype" then
         # class
         @class_count += 1
-        return [ Rdf::Class, Rdf::Builders::ClassBuidler.new ]
+        return [ Rdf::Class, Rdf::Builders::ClassBuilder.new ]
       when "http://purl.org/dc/dcam/VocabularyEncodingScheme" then
         return []
       end
