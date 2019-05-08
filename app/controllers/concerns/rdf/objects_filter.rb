@@ -89,7 +89,10 @@ module Rdf::ObjectsFilter
     set_vocab
     @item = @model.new get_params
     raise "403" unless @vocab.allowed?(:edit, @cur_user, site: @cur_site, node: @cur_node)
-    render_create @item.save
+    result = @item.save
+    # categories are required to show error
+    set_categories unless result
+    render_create result
   end
 
   def edit
@@ -104,7 +107,10 @@ module Rdf::ObjectsFilter
     @item.attributes = get_params
     @item.in_updated = params[:_updated] if @item.respond_to?(:in_updated)
     raise "403" unless @vocab.allowed?(:edit, @cur_user, site: @cur_site, node: @cur_node)
-    render_update @item.update
+    result = @item.save
+    # categories are required to show error
+    set_categories unless result
+    render_update result
   end
 
   def delete
