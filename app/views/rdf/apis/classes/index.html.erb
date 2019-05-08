@@ -11,7 +11,7 @@
     <dd><%= select_tag "s[vocab]",  options_for_select(@vocab_options, params[:s][:vocab]) %></dd>
     <dt><%= t "rdf.apis.search_options.name" %></dt>
     <dd><%= f.text_field :name, value: params[:s].try(:[], :name) %></dd>
-    <dd><%= f.submit  t("rdf.apis.search_options.search") %></dd>
+    <dd><%= f.submit  t("rdf.apis.search_options.search"), class: "btn" %></dd>
   </dl>
 <% end %>
 </div>
