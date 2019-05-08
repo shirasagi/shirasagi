@@ -7,6 +7,7 @@ class Rdf::Builders::VocabBuilder < Rdf::Builders::BaseBuilder
   def initialize
     register_handler("cc:license", Rdf::Builders::LiteralHandler.new(:license))
     alias_handler "http://creativecommons.org/ns#license", "cc:license"
+    alias_handler "http://purl.org/dc/terms/license", "cc:license"
 
     register_handler("owl:versionInfo", Rdf::Builders::LiteralHandler.new(:version))
     register_handler("dc:issued", Rdf::Builders::LiteralHandler.new(:published))
