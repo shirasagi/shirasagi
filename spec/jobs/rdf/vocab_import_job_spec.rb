@@ -132,6 +132,43 @@ describe Rdf::VocabImportJob, dbscope: :example do
     end
   end
 
+  context "when Dublin Core Metadata Element Set ttl is given" do
+    let(:prefix) { "dc11" }
+    let(:file) { Rails.root.join("db", "seeds", "opendata", "rdf", "dcelements.ttl") }
+    let(:order) { rand(999) }
+
+    it do
+      described_class.bind(site_id: site).perform_now(prefix, file.to_s, Rdf::Vocab::OWNER_SYSTEM, order)
+      expect(Rdf::Vocab.count).to eq 1
+      Rdf::Vocab.first.tap do |vocab|
+        expect(vocab.prefix).to eq prefix
+        expect(vocab.uri).to eq "http://purl.org/dc/elements/1.1/"
+        expect(vocab.order).to eq order
+        expect(vocab.labels.preferred_value).to eq "Dublin Core Metadata Element Set, Version 1.1"
+        expect(vocab.comments).to be_nil
+        expect(vocab.creators).to include({ "homepage" => "http://purl.org/dc/aboutdcmi#DCMI" })
+        expect(vocab.license).to be_blank
+        expect(vocab.version).to be_blank
+        expect(vocab.published).to eq "2012-06-14"
+        expect(vocab.owner).to eq Rdf::Vocab::OWNER_SYSTEM
+        expect(Rdf::Class.count).to eq vocab.classes.count
+        expect(Rdf::Prop.count).to eq vocab.props.count
+      end
+      expect(Rdf::Class.count).to eq 0
+      expect(Rdf::Prop.count).to eq 15
+      Rdf::Prop.find_by(name: "contributor").tap do |rdf_prop|
+        expect(rdf_prop.labels.preferred_value).to eq "Contributor"
+        expect(rdf_prop.comments.preferred_value).to include "An entity responsible for making contributions to the resource."
+        expect(rdf_prop.range).to be_blank
+      end
+      Rdf::Prop.find_by(name: "type").tap do |rdf_prop|
+        expect(rdf_prop.labels.preferred_value).to eq "Type"
+        expect(rdf_prop.comments.preferred_value).to eq "The nature or genre of the resource."
+        expect(rdf_prop.range).to be_blank
+      end
+    end
+  end
+
   context "when Dublin Core Term ttl is given" do
     let(:prefix) { "dc" }
     let(:file) { Rails.root.join("db", "seeds", "opendata", "rdf", "dcterms.ttl") }
