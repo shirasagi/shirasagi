@@ -44,6 +44,20 @@ module Rdf::ObjectsFilter
     @categories = [node.becomes_with_route]
   end
 
+  # override Cms::CrudFilter#destroy_items
+  def destroy_items
+    raise "403" if !@vocab.allowed?(:delete, @cur_user, site: @cur_site, node: @cur_node)
+
+    entries = @items.entries
+    @items = []
+
+    entries.each do |item|
+      next if item.destroy
+      @items << item
+    end
+    entries.size != @items.size
+  end
+
   public
 
   def index
