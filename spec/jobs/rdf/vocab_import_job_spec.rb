@@ -7,7 +7,7 @@ describe Rdf::VocabImportJob, dbscope: :example do
 
   context "when IPA Core Vocab ttl is given" do
     let(:prefix) { "ic" }
-    let(:file) { Rails.root.join("db", "seeds", "opendata", "rdf", "ipa-core.ttl") }
+    let(:file) { Rails.root.join("db", "seeds", "opendata", "rdf", "imicore242.ttl") }
     let(:order) { rand(999) }
 
     it "import from IPA Core Vocab ttl" do
@@ -15,14 +15,14 @@ describe Rdf::VocabImportJob, dbscope: :example do
       expect(Rdf::Vocab.count).to eq 1
       vocab = Rdf::Vocab.first
       expect(vocab.prefix).to eq prefix
-      expect(vocab.uri).to eq "http://imi.ipa.go.jp/ns/core/rdf#"
+      expect(vocab.uri).to eq "http://imi.go.jp/ns/core/rdf#"
       expect(vocab.order).to eq order
       expect(vocab.labels.preferred_value).to eq "共通語彙基盤コア語彙"
       expect(vocab.comments.preferred_value).to include "コア語彙は、共通語彙基盤の基礎をなすもので、"
       expect(vocab.creators).to be_blank
-      expect(vocab.license).to eq "http://creativecommons.org/publicdomain/zero/1.0/"
-      expect(vocab.version).to eq "2.2"
-      expect(vocab.published).to eq "2015-02-03"
+      expect(vocab.license).to eq "http://creativecommons.org/publicdomain/zero/1.0/legalcode.ja"
+      expect(vocab.version).to eq "2.4.2"
+      expect(vocab.published).to eq "2019-02-15"
       expect(vocab.owner).to eq Rdf::Vocab::OWNER_SYSTEM
       expect(Rdf::Class.count).to eq vocab.classes.count
       expect(Rdf::Prop.count).to eq vocab.props.count
