@@ -93,6 +93,45 @@ describe Rdf::VocabImportJob, dbscope: :example do
     end
   end
 
+  context "when DCMI Type ttl is given" do
+    let(:prefix) { "dcmitype" }
+    let(:file) { Rails.root.join("db", "seeds", "opendata", "rdf", "dctype.ttl") }
+    let(:order) { rand(999) }
+
+    it "import from XMLSchema ttl" do
+      described_class.bind(site_id: site).perform_now(prefix, file.to_s, Rdf::Vocab::OWNER_SYSTEM, order)
+      expect(Rdf::Vocab.count).to eq 1
+      Rdf::Vocab.first.tap do |vocab|
+        expect(vocab.prefix).to eq prefix
+        expect(vocab.uri).to eq "http://purl.org/dc/dcmitype/"
+        expect(vocab.order).to eq order
+        expect(vocab.labels.preferred_value).to eq "DCMI Type Vocabulary"
+        expect(vocab.comments).to be_nil
+        expect(vocab.creators).to include({ "homepage" => "http://purl.org/dc/aboutdcmi#DCMI" })
+        expect(vocab.license).to be_blank
+        expect(vocab.version).to be_blank
+        expect(vocab.published).to eq "2012-06-14"
+        expect(vocab.owner).to eq Rdf::Vocab::OWNER_SYSTEM
+        expect(Rdf::Class.count).to eq vocab.classes.count
+        expect(Rdf::Prop.count).to eq vocab.props.count
+      end
+      expect(Rdf::Class.count).to eq 12
+      Rdf::Class.find_by(name: "Collection").tap do |rdf_class|
+        expect(rdf_class.labels.preferred_value).to eq "Collection"
+        expect(rdf_class.comments.preferred_value).to eq "An aggregation of resources."
+        expect(rdf_class.categories).to be_blank
+        expect(rdf_class.sub_class).to be_blank
+      end
+      Rdf::Class.find_by(name: "MovingImage").tap do |rdf_class|
+        expect(rdf_class.labels.preferred_value).to eq "Moving Image"
+        expect(rdf_class.comments.preferred_value).to include "visual representations imparting an impression of motion"
+        expect(rdf_class.categories).to be_blank
+        expect(rdf_class.sub_class).to eq Rdf::Class.find_by(name: "Image")
+      end
+      expect(Rdf::Prop.count).to eq 0
+    end
+  end
+
   context "when Dublin Core Term ttl is given" do
     let(:prefix) { "dc" }
     let(:file) { Rails.root.join("db", "seeds", "opendata", "rdf", "dcterms.ttl") }
