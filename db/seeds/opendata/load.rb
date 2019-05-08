@@ -632,7 +632,7 @@ import_vocab prefix: "xsd", file: "rdf/xsd.ttl", order: 2000
 import_vocab prefix: "dcmitype", file: "rdf/dctype.ttl", order: 2000
 import_vocab prefix: "dc11", file: "rdf/dcelements.ttl", order: 2000
 import_vocab prefix: "dc", file: "rdf/dcterms.ttl", order: 2000
-import_vocab prefix: "ic", file: "rdf/ipa-core.ttl", order: 1000
+import_vocab prefix: "ic", file: "rdf/imicore242.ttl", order: 1000
 
 ## -------------------------------------
 puts "# max file size"
