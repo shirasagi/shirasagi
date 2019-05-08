@@ -74,7 +74,7 @@ describe Rdf::VocabImportJob, dbscope: :example do
         expect(vocab.order).to eq order
         expect(vocab.labels.preferred_value).to eq "XSD Namespace Document"
         expect(vocab.comments.preferred_value).to include "the XML Schema datatypes used in RDF/OWL"
-        expect(vocab.creators).to be_blank
+        expect(vocab.creators).to include({ "homepage" => "http://sebastian.tramp.name" })
         expect(vocab.license).to be_blank
         expect(vocab.version).to be_blank
         expect(vocab.published).to be_blank
