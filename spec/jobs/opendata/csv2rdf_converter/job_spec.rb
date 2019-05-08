@@ -40,6 +40,11 @@ describe Opendata::Csv2rdfConverter::Job, dbscope: :example do
         change { Opendata::Dataset.find(dataset.id).resources.size }.from(1).to(2)
       dataset.reload
       expect(dataset.resources.where(format: "TTL").size).to eq 1
+      ttl_resource = dataset.resources.where(format: "TTL").first
+
+      expect(File.exist?(dataset.path)).to be_truthy
+      html = ::File.read(dataset.path)
+      expect(html).to include("#{ttl_resource.name} (#{ttl_resource.format} #{ttl_resource.size.to_s(:human_size)})")
     end
   end
 
@@ -78,6 +83,11 @@ describe Opendata::Csv2rdfConverter::Job, dbscope: :example do
           change { Opendata::Dataset.find(dataset.id).resources.size }.from(1).to(2)
         dataset.reload
         expect(dataset.resources.where(format: "TTL").size).to eq 1
+        ttl_resource = dataset.resources.where(format: "TTL").first
+
+        expect(File.exist?(dataset.path)).to be_truthy
+        html = ::File.read(dataset.path)
+        expect(html).to include("#{ttl_resource.name} (#{ttl_resource.format} #{ttl_resource.size.to_s(:human_size)})")
       end
     end
 
@@ -89,6 +99,11 @@ describe Opendata::Csv2rdfConverter::Job, dbscope: :example do
           change { Opendata::Dataset.find(dataset.id).resources.size }.from(1).to(2)
         dataset.reload
         expect(dataset.resources.where(format: "TTL").size).to eq 1
+        ttl_resource = dataset.resources.where(format: "TTL").first
+
+        expect(File.exist?(dataset.path)).to be_truthy
+        html = ::File.read(dataset.path)
+        expect(html).to include("#{ttl_resource.name} (#{ttl_resource.format} #{ttl_resource.size.to_s(:human_size)})")
       end
     end
   end
