@@ -3,7 +3,7 @@ require 'spec_helper'
 describe "gws_schedule_facility_plans", type: :feature, dbscope: :example, js: true do
   let(:site) { gws_site }
   let(:facility) { create :gws_facility_item }
-  let(:item) { create :gws_schedule_facility_plan, facility_ids: [facility.id] }
+  let!(:item) { create :gws_schedule_facility_plan, facility_ids: [facility.id] }
   let(:index_path) { gws_schedule_facility_plans_path site, facility }
   let(:new_path) { new_gws_schedule_facility_plan_path site, facility }
   let(:show_path) { gws_schedule_facility_plan_path site, facility, item }
@@ -14,7 +14,6 @@ describe "gws_schedule_facility_plans", type: :feature, dbscope: :example, js: t
     before { login_gws_user }
 
     it "#index" do
-      item
       visit index_path
       wait_for_ajax
       expect(current_path).not_to eq sns_login_path
@@ -22,7 +21,6 @@ describe "gws_schedule_facility_plans", type: :feature, dbscope: :example, js: t
     end
 
     it "#events" do
-      item
       today = Time.zone.today
       sdate = today - today.day + 1.day
       edate = sdate + 1.month
@@ -70,8 +68,9 @@ describe "gws_schedule_facility_plans", type: :feature, dbscope: :example, js: t
     end
 
     it "#delete" do
-      item
-      visit delete_path
+      visit index_path
+      first('span.fc-title', text: item.name).click
+      click_link I18n.t('ss.links.delete')
       within "form" do
         click_button "削除"
       end
