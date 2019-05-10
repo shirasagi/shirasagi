@@ -189,6 +189,7 @@ ja:
       gws/schedule/approval: 承認
       gws/schedule/reports: レポート
       gws/schedule/group_setting: スケジュール
+      gws/schedule/todo/member: 担当者
 
   gws_role:
     edit_gws_schedule_holidays: 休日の管理
@@ -315,6 +316,10 @@ ja:
       gws/addon/schedule/facility_column_values:
         main_facility_id: 主設備
         facility_column_values: 設備追加情報
+      gws/addon/schedule/todo/member:
+        member_ids: 担当ユーザー
+        member_group_ids: 担当グループ
+        member_custom_group_ids: 担当カスタムグループ
 
   tooltip:
     gws/schedule/planable:

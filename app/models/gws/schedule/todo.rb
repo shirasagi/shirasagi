@@ -14,7 +14,7 @@ class Gws::Schedule::Todo
   include Gws::Addon::Discussion::Todo
   include SS::Addon::Markdown
   include Gws::Addon::File
-  include Gws::Addon::Member
+  include Gws::Addon::Schedule::Todo::Member
   include Gws::Addon::ReadableSetting
   include Gws::Addon::GroupPermission
   include Gws::Addon::History
