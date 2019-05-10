@@ -70,6 +70,12 @@ SS::Application.routes.draw do
         match :undo_delete, on: :member, via: %i[get post]
         post :undo_delete_all, on: :collection
       end
+
+      namespace "apis" do
+        scope path: ':todo_id' do
+          resources :comments, concerns: [:deletion], except: [:index, :new, :show, :destroy_all]
+        end
+      end
     end
 
     resources :categories, concerns: :deletion

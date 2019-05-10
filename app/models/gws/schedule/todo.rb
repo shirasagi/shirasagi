@@ -11,6 +11,7 @@ class Gws::Schedule::Todo
   include Gws::Addon::Reminder
   include Gws::Addon::Schedule::Repeat
   include Gws::Addon::Memo::NotifySetting
+  include Gws::Addon::Schedule::Todo::CommentPost
   include Gws::Addon::Discussion::Todo
   include SS::Addon::Markdown
   include Gws::Addon::File
