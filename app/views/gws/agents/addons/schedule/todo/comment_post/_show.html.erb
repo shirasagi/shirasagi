@@ -3,19 +3,17 @@
     <table class="index">
       <thead>
       <tr>
-        <th class="html"><%= Gws::Schedule::TodoComment.t :html %></th>
-        <th class="group-name"><%= Gws::Schedule::TodoComment.t :user_group_name %></th>
+        <th class="achievement-rate"><%= Gws::Schedule::TodoComment.t :achievement_rate %> / <%= Gws::Schedule::TodoComment.t :html %></th>
         <th class="user-name"><%= Gws::Schedule::TodoComment.t :user_name %></th>
         <th class="updated"><%= Gws::Schedule::TodoComment.t :updated %></th>
         <th class="operations"></th>
       </tr>
       </thead>
       <tbody>
-      <% @item.comments.order_by(updated: -1).each do |comment| %>
+      <% @item.comments.order_by(created: 1).each do |comment| %>
       <tr>
-        <td class="html"><%== comment.html %></td>
-        <td class="group-name"><%= comment.user_group_name.try(:split, '/').try(:last) %></td>
-        <td class="user-name"><%= comment.user_name %></td>
+        <td class="achievement-rate"><% if comment.achievement_rate.present? %><%= t("gws/schedule/todo.achievement_rate", count: comment.achievement_rate) %><% end %></td>
+        <td class="user-name"><%= comment.user_long_name %></td>
         <td class="updated"><%= I18n.l(comment.updated) %></td>
         <td class="operations">
           <% if comment.user_id == @cur_user.id || @item.allowed?(:edit, @cur_user, site: @cur_site) %>
@@ -23,6 +21,9 @@
             <%= link_to(t('ss.buttons.delete'), delete_gws_schedule_todo_apis_comment_path(todo_id: @item, id: comment, redirect_to: request.fullpath), class: 'btn ajax-box') %>
           <% end %>
         </td>
+      </tr>
+      <tr>
+        <td class="html" colspan="4"><%== comment.html %></td>
       </tr>
       <% end %>
       </tbody>
@@ -33,7 +34,7 @@
 
   <%= form_tag(gws_schedule_todo_apis_comments_path(todo_id: @item), id: 'comment-form', method: :post) do %>
     <div>
-      <label for="item_achievement_rate"><%= Gws::Schedule::TodoComment.t :achievement_rate %></label>: <%= number_field_tag 'item[achievement_rate]', @item.achievement_rate %>
+      <label for="item_achievement_rate"><%= Gws::Schedule::TodoComment.t :achievement_rate %></label>: <%= number_field_tag 'item[achievement_rate]' %> <%= t("gws/schedule/todo.achievement_rate_unit") %>
     </div>
     <div><%= text_area_tag 'item[text]' %></div>
     <div>
