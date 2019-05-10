@@ -59,6 +59,13 @@ SS::Application.routes.draw do
         post :revert_all, on: :collection
         post :soft_delete_all, on: :collection
       end
+      resources :manageables, concerns: :plans do
+        # match :finish, on: :member, via: %i[get post]
+        # match :revert, on: :member, via: %i[get post]
+        # post :finish_all, on: :collection
+        # post :revert_all, on: :collection
+        # post :soft_delete_all, on: :collection
+      end
       resources :trashes, concerns: :deletion do
         match :undo_delete, on: :member, via: %i[get post]
         post :undo_delete_all, on: :collection

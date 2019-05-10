@@ -10,17 +10,18 @@ ja:
     navi:
       holiday: 休日設定
       category: 種別設定
-      todo: ToDo設定
+      todo: ToDo一覧
+      trash: ゴミ箱
     tabs:
       personal: 個人
       personal_list: 予定リスト
       group: 全体
       facility: 設備予約
-      todo: ToDo
       search: 検索
       search/users: ユーザー検索
       search/times: 空き時間検索
-      trash: ゴミ箱
+      my_todo: 担当ToDo
+      manageable_todo: 他ユーザーのToDo
     calendar:
       buttonText:
         listMonth: リスト
