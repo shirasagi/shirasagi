@@ -138,10 +138,9 @@ class Gws::Schedule::Todo
       criteria
     end
 
-    def member_or_readable(user, opts = {})
-      or_cond = Array[member_conditions(user)].flatten.compact
-      or_cond += Array[readable_conditions(user, opts)].flatten.compact
-      or_cond << allow_condition(:read, user, site: opts[:site]) if opts[:include_role]
+    def readable_or_manageable(user, opts = {})
+      or_cond = Array[readable_conditions(user, opts)].flatten.compact
+      or_cond << allow_condition(:read, user, site: opts[:site])
       where("$and" => [{ "$or" => or_cond }])
     end
   end

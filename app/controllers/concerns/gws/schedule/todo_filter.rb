@@ -3,9 +3,12 @@ module Gws::Schedule::TodoFilter
   include Gws::Schedule::CalendarFilter::Transition
 
   included do
-    prepend_view_path 'app/views/gws/schedule/todo/main'
+    append_view_path 'app/views/gws/schedule/todo/main'
     helper Gws::Schedule::TodoHelper
     model Gws::Schedule::Todo
+
+    navi_view "gws/schedule/todo/main/navi"
+    menu_view "gws/schedule/todo/main/menu"
 
     before_action :set_item, only: %i[show edit update delete destroy disable popup finish revert recover active soft_delete]
     before_action :set_selected_items, only: [:destroy_all, :disable_all, :finish_all, :revert_all, :active_all]
