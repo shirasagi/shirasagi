@@ -1,0 +1,39 @@
+<%= jquery do %>
+  (new Gws_Schedule_CalendarTransition(<%== params[:calendar].to_json %>)).renderLinks('.nav-menu a')
+<% end %>
+
+<nav class="nav-menu">
+  <% if params[:action] =~ /index/ %>
+    <% if @model.allowed?(:edit, @cur_user, site: @cur_site) %>
+      <%= link_to t('ss.links.new'), action: :new %>
+    <% end %>
+  <% elsif params[:action] =~ /new|create|lock|copy/ %>
+    <%= link_to t('ss.links.back_to_index'), action: :index %>
+    <%= link_to t('gws/schedule.links.back_to_calendar'), params.dig(:calendar, :path) if params.dig(:calendar, :path) %>
+  <% elsif params[:action] =~ /edit|update|delete|move|finish|revert|disable/ %>
+    <% if @item.allowed?(:read, @cur_user, site: @cur_site) || @item.member?(@cur_user) || @item.readable?(@cur_user) %>
+      <%= link_to t('ss.links.back_to_show'), action: :show, id: @item %>
+    <% end %>
+    <%= link_to t('ss.links.back_to_index'), action: :index %>
+    <%= link_to t('gws/schedule.links.back_to_calendar'), params.dig(:calendar, :path) if params.dig(:calendar, :path) %>
+  <% else %>
+    <% if @item.allowed?(:edit, @cur_user, site: @cur_site) %>
+      <%= link_to t('ss.links.edit'), action: :edit, id: @item %>
+    <% end %>
+    <% if @item.allowed?(:read, @cur_user, site: @cur_site) || @item.member?(@cur_user) || @item.readable?(@cur_user) %>
+      <%= link_to t('ss.links.copy'), action: :copy, id: @item %>
+    <% end %>
+    <% if @item.allowed?(:delete, @cur_user, site: @cur_site) %>
+      <%= link_to t('ss.links.delete'), action: :soft_delete, id: @item %>
+    <% end %>
+    <% if @item.allowed?(:edit, @cur_user, site: @cur_site) || @item.member?(@cur_user) %>
+      <% if @item.finished? %>
+        <%= link_to t('gws/schedule/todo.links.revert'), action: :revert, id: @item %>
+      <% else %>
+        <%= link_to t('gws/schedule/todo.links.finish'), action: :finish, id: @item %>
+      <% end %>
+    <% end %>
+    <%= link_to t('ss.links.back_to_index'), action: :index %>
+    <%= link_to t('gws/schedule.links.back_to_calendar'), params.dig(:calendar, :path) if params.dig(:calendar, :path) %>
+  <% end %>
+</nav>

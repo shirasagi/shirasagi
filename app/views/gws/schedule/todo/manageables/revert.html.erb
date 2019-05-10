@@ -1,0 +1,17 @@
+<%= form_for :item, url: { action: :revert }, html: { method: :post } do |f| %>
+<%= error_messages_for :item %>
+
+<div class="addon-views">
+  <div class="addon-view" id="addon-basic">
+    <div class="addon-head"><h2><%= t('gws/schedule/todo.confirm.revert') %></h2></div>
+    <div class="addon-body">
+      <%= render file: '_delete' %>
+    </div>
+  </div>
+</div>
+
+<footer class="send">
+  <%= f.submit t('gws/schedule/todo.buttons.revert'), class: 'btn-danger delete' %>
+  <%= f.button t('ss.buttons.cancel'), class: 'btn-default', type: :reset, onclick: "location.href='#{url_for(action: :show)}'; return false;" %>
+</footer>
+<% end %>

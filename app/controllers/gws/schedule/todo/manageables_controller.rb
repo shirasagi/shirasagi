@@ -1,4 +1,4 @@
-class Gws::Schedule::Todo::ReadablesController < ApplicationController
+class Gws::Schedule::Todo::ManageablesController < ApplicationController
   include Gws::BaseFilter
   include Gws::CrudFilter
   include Gws::Schedule::TodoFilter
@@ -10,7 +10,7 @@ class Gws::Schedule::Todo::ReadablesController < ApplicationController
 
   def set_crumbs
     @crumbs << [@cur_site.menu_todo_label || t('modules.addons.gws/schedule/todo'), gws_schedule_todo_main_path]
-    @crumbs << [t('gws/schedule.tabs.my_todo'), gws_schedule_todo_readables_path]
+    @crumbs << [t('gws/schedule.tabs.manageable_todo'), gws_schedule_todo_manageables_path]
   end
 
   def set_items
