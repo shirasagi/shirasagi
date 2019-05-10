@@ -102,6 +102,7 @@ module Gws::Schedule::TodoFilter
   def finish
     @item.attributes = fix_params
     raise '403' if !@item.allowed?(:edit, @cur_user, site: @cur_site) && !@item.member?(@cur_user)
+    @item.errors.clear
     return if request.get?
     @item.edit_range = params.dig(:item, :edit_range)
     @item.todo_action = params[:action]
@@ -112,6 +113,7 @@ module Gws::Schedule::TodoFilter
   def revert
     @item.attributes = fix_params
     raise '403' if !@item.allowed?(:edit, @cur_user, site: @cur_site) && !@item.member?(@cur_user)
+    @item.errors.clear
     return if request.get?
     @item.edit_range = params.dig(:item, :edit_range)
     @item.todo_action = params[:action]
