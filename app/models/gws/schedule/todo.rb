@@ -32,7 +32,7 @@ class Gws::Schedule::Todo
 
   before_validation :set_todo_state
 
-  validates :todo_state, inclusion: { in: %w(unfinished finished progressing), allow_blank: true }
+  validates :todo_state, inclusion: { in: %w(unfinished progressing finished), allow_blank: true }
   validates :achievement_rate, numericality: { greater_than_or_equal_to: 0, less_than_or_equal_to: 100, allow_blank: true }
 
   def finished?
@@ -90,7 +90,7 @@ class Gws::Schedule::Todo
   end
 
   def todo_state_options
-    %w(unfinished finished progressing).map { |v| [I18n.t("gws/schedule/todo.options.todo_state.#{v}"), v] }
+    %w(unfinished progressing finished).map { |v| [I18n.t("gws/schedule/todo.options.todo_state.#{v}"), v] }
   end
 
   def sort_options
@@ -133,10 +133,11 @@ class Gws::Schedule::Todo
 
     def search_todo_state(params)
       todo_state = params[:todo_state].presence rescue nil
-      todo_state ||= 'unfinished'
 
-      if todo_state == 'both'
+      if todo_state.blank? || todo_state == 'all'
         all
+      elsif todo_state == "except_finished"
+        all.not_in(todo_state: %w(finished))
       else
         all.where(todo_state: todo_state)
       end
@@ -159,6 +160,12 @@ class Gws::Schedule::Todo
       or_cond = Array[readable_conditions(user, opts)].flatten.compact
       or_cond << allow_condition(:read, user, site: opts[:site])
       where("$and" => [{ "$or" => or_cond }])
+    end
+
+    def todo_state_filter_options
+      %w(unfinished progressing finished except_finished all).map do |v|
+        [ I18n.t("gws/schedule/todo.options.todo_state_filter.#{v}"), v ]
+      end
     end
   end
 end

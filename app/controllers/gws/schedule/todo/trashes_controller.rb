@@ -4,8 +4,6 @@ class Gws::Schedule::Todo::TrashesController < ApplicationController
   include Gws::Schedule::TodoFilter
   include Gws::Schedule::Todo::NotificationFilter
 
-  navi_view "gws/schedule/todo/main/navi"
-
   private
 
   def set_crumbs

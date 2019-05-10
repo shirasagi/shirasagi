@@ -4,6 +4,8 @@ class Gws::Schedule::Todo::ManageablesController < ApplicationController
   include Gws::Schedule::TodoFilter
   include Gws::Schedule::Todo::NotificationFilter
 
+  self.default_todo_state = "except_finished"
+
   private
 
   def set_crumbs
@@ -15,7 +17,7 @@ class Gws::Schedule::Todo::ManageablesController < ApplicationController
     @items ||= @model.site(@cur_site).
       readable_or_manageable(@cur_user, site: @cur_site).
       without_deleted.
-      search(params[:s]).
+      search(@s).
       custom_order(params.dig(:s, :sort) || 'end_at_asc')
   end
 end

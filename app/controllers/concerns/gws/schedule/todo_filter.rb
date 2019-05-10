@@ -3,6 +3,7 @@ module Gws::Schedule::TodoFilter
   include Gws::Schedule::CalendarFilter::Transition
 
   included do
+    cattr_accessor :default_todo_state
     append_view_path 'app/views/gws/schedule/todo/main'
     helper Gws::Schedule::TodoHelper
     model Gws::Schedule::Todo
@@ -10,12 +11,18 @@ module Gws::Schedule::TodoFilter
     navi_view "gws/schedule/todo/main/navi"
     menu_view "gws/schedule/todo/main/menu"
 
+    before_action :set_search_params
     before_action :set_item, only: %i[show edit update delete destroy disable popup finish revert recover active soft_delete]
     before_action :set_selected_items, only: [:destroy_all, :disable_all, :finish_all, :revert_all, :active_all]
     before_action :set_skip_default_group
   end
 
   private
+
+  def set_search_params
+    @s ||= OpenStruct.new(params[:s])
+    @s.todo_state ||= self.class.default_todo_state
+  end
 
   def pre_params
     super.keep_if { |key| %i[facility_ids].exclude?(key) }.merge(

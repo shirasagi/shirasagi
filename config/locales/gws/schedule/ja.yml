@@ -155,10 +155,15 @@ ja:
       revert: 未完了に戻す
     options:
       todo_state:
-        both: 両方
         finished: 完了
-        unfinished: 未完了
         progressing: 作業中
+        unfinished: 未着手
+      todo_state_filter:
+        finished: 完了
+        progressing: 作業中
+        unfinished: 未着手
+        except_finished: 完了を除く
+        all: すべて
       sort:
         created_asc:  作成日時(日付順)
         created_desc: 作成日時(新着順)
