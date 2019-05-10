@@ -25,8 +25,14 @@ class Gws::Schedule::Todo
 
   field :color, type: String
   field :todo_state, type: String, default: 'unfinished'
+  field :achievement_rate, type: Integer
 
-  permit_params :color, :todo_state, :deleted
+  permit_params :color, :deleted, :achievement_rate
+
+  before_validation :set_todo_state
+
+  validates :todo_state, inclusion: { in: %w(unfinished finished progressing), allow_blank: true }
+  validates :achievement_rate, numericality: { greater_than_or_equal_to: 0, less_than_or_equal_to: 100, allow_blank: true }
 
   def finished?
     todo_state == 'finished'
@@ -83,7 +89,7 @@ class Gws::Schedule::Todo
   end
 
   def todo_state_options
-    %w(unfinished finished both).map { |v| [I18n.t("gws/schedule/todo.options.todo_state.#{v}"), v] }
+    %w(unfinished finished progressing).map { |v| [I18n.t("gws/schedule/todo.options.todo_state.#{v}"), v] }
   end
 
   def sort_options
@@ -99,6 +105,16 @@ class Gws::Schedule::Todo
     ids += Gws::CustomGroup.in(id: member_custom_group_ids).pluck(:member_ids).flatten
     ids.uniq!
     Gws::User.in(id: ids)
+  end
+
+  def set_todo_state
+    if achievement_rate.blank? || achievement_rate <= 0
+      self.todo_state = "unfinished"
+    elsif achievement_rate >= 100
+      self.todo_state = "finished"
+    else
+      self.todo_state = "progressing"
+    end
   end
 
   class << self

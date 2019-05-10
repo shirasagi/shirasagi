@@ -136,6 +136,7 @@ ja:
     disabled_items: 削除済み
     finish_mark: "[完] "
     todo_over: 期限超過
+    achievement_rate: "%{count}%"
     buttons:
       finish: 完了する
       revert: 未完了に戻す
@@ -156,6 +157,7 @@ ja:
         both: 両方
         finished: 完了
         unfinished: 未完了
+        progressing: 作業中
       sort:
         created_asc:  作成日時(日付順)
         created_desc: 作成日時(新着順)
@@ -298,6 +300,7 @@ ja:
         todo_state: 状態
         deleted: 削除日時
         discussion_forum_id: 電子会議室
+        achievement_rate: 進捗率
       gws/addon/schedule/attendance:
         attendance_check_state: 出欠確認
         attendances: 出欠情報

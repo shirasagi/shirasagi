@@ -105,7 +105,7 @@ module Gws::Schedule::TodoFilter
     return if request.get?
     @item.edit_range = params.dig(:item, :edit_range)
     @item.todo_action = params[:action]
-    render_update @item.update(todo_state: 'finished')
+    render_update @item.update(achievement_rate: 100)
   end
 
   # 未完了にする
@@ -115,7 +115,7 @@ module Gws::Schedule::TodoFilter
     return if request.get?
     @item.edit_range = params.dig(:item, :edit_range)
     @item.todo_action = params[:action]
-    render_update @item.update(todo_state: 'unfinished')
+    render_update @item.update(achievement_rate: 0)
   end
 
   # # 削除を取り消す
@@ -132,7 +132,7 @@ module Gws::Schedule::TodoFilter
     @items.each do |item|
       if item.allowed?(:edit, @cur_user, site: @cur_site) || item.member?(@cur_user)
         item.attributes = fix_params
-        next if item.update(todo_state: 'finished')
+        next if item.update(achievement_rate: 100)
       else
         item.errors.add :base, :auth_error
       end
@@ -148,7 +148,7 @@ module Gws::Schedule::TodoFilter
     @items.each do |item|
       if item.allowed?(:edit, @cur_user, site: @cur_site) || item.member?(@cur_user)
         item.attributes = fix_params
-        next if item.update(todo_state: 'unfinished')
+        next if item.update(achievement_rate: 0)
       else
         item.errors.add :base, :auth_error
       end

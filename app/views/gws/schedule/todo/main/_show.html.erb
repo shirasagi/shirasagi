@@ -20,12 +20,6 @@
   <dd><%= content_tag :span, @item.name, style: "background-color: #{@item.color}; color: #{@item.text_color}" %></dd>
   <% end %>
 
-  <dt><%= @model.t :todo_state %></dt>
-  <dd><%= @item.label(:todo_state) %></dd>
-
-  <dt><%= @model.t :created %></dt>
-  <dd><%= tryb { @item.created.strftime('%Y/%m/%d %H:%M') } %></dd>
-
-  <dt><%= @model.t :updated %></dt>
-  <dd><%= tryb { @item.updated.strftime('%Y/%m/%d %H:%M') } %></dd>
+  <dt><%= @model.t :achievement_rate %></dt>
+  <dd><%= t("gws/schedule/todo.achievement_rate", count: @item.achievement_rate || 0) %></dd>
 </dl>
