@@ -9,7 +9,9 @@
     <div class="label"><%= t("gws/schedule/todo.achievement_rate", count: item.achievement_rate || 0) %></div>
     <div class="usage " style="width: <%= item.achievement_rate || 0 %>%"></div>
   </span>
-  </span>
+  <% if params[:controller].end_with?("/manageables") %>
+    <span class="members"><%= truncate(item.sorted_overall_members.limit(3).map(&:long_name).join(", ")) %></span>
+  <% end %>
   <span class="datetime">
     <%= @model.t(:term) %>: <%= item.end_at.strftime('%Y/%m/%d %H:%M') %>
     <% if item.todo_state == 'unfinished' && item.end_at < Time.zone.now %>
