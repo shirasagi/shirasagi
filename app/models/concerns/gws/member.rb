@@ -21,6 +21,10 @@ module Gws::Member
       or_conds = member_conditions(user)
       self.and([{ '$or' => or_conds }])
     }
+    scope :not_member, ->(user) {
+      and_conds = member_conditions(user, negate: true)
+      self.and(and_conds)
+    }
     scope :any_members, ->(users) {
       or_conds = []
       users.each do |user|
@@ -113,13 +117,17 @@ module Gws::Member
       class_variable_get(:@@_member_ids_required)
     end
 
-    def member_conditions(user)
-      or_conds = [{ member_ids: user.id }]
-      or_conds << { :member_group_ids.in => user.group_ids }
+    def member_conditions(user, options = {})
+      or_conds = [{ member_ids: options[:negate] ? { "$ne" => user.id } : user.id }]
+
+      in_criteria = { "$in" => user.group_ids }
+      or_conds << { member_group_ids: options[:negate] ? { "$not" => in_criteria } : in_criteria }
+
       if member_include_custom_groups?
         custom_group_ids = Gws::CustomGroup.member(user).pluck(:id)
         if custom_group_ids.present?
-          or_conds << { :member_custom_group_ids.in => custom_group_ids }
+          in_criteria = { "$in" => custom_group_ids }
+          or_conds << { member_custom_group_ids: options[:negate] ? { "$not" => in_criteria } : in_criteria }
         end
       end
       or_conds
