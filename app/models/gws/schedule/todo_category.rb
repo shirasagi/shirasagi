@@ -17,6 +17,15 @@ class Gws::Schedule::TodoCategory
   #   end
   # end
 
+  def root?
+    !name.include?("/")
+  end
+
+  def root
+    return self if root?
+    self.class.all.where(site_id: self.site_id, name: name.split("/").first).first
+  end
+
   private
 
   def color_required?

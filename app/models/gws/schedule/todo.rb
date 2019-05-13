@@ -125,6 +125,7 @@ class Gws::Schedule::Todo
       criteria = criteria.search_todo_state(params)
       criteria = criteria.search_start_end(params)
       criteria = criteria.search_member_ids(params)
+      criteria = criteria.search_category(params)
       criteria
     end
 
@@ -184,6 +185,20 @@ class Gws::Schedule::Todo
       end
 
       where("$and" => [{ "$or" => or_cond }])
+    end
+
+    def search_category(params)
+      return all if params.blank? || params[:category_id].blank?
+
+      cur_site = params[:cur_site]
+      cur_user = params[:cur_user]
+
+      category = Gws::Schedule::TodoCategory.site(cur_site).readable(cur_user, site: cur_site).where(id: params[:category_id]).first.root
+      return none if category.blank?
+
+      children = Gws::Schedule::TodoCategory.site(cur_site).readable(cur_user, site: cur_site).where(name: /^#{::Regexp.escape(category.name)}\//)
+
+      where(:category_ids.in => children.pluck(:id) + [ category.id ])
     end
 
     def readable_or_manageable(user, opts = {})

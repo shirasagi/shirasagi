@@ -51,15 +51,15 @@ SS::Application.routes.draw do
     resource :approval, path: ':plan_id/:user_id/approval', only: [:edit, :update]
 
     namespace 'todo' do
-      get '/' => redirect { |p, req| "#{req.path}/readables" }, as: :main
-      resources :readables, concerns: :plans do
+      get '/' => redirect { |p, req| "#{req.path}/-/readables" }, as: :main
+      resources :readables, path: ':category/readables', concerns: :plans do
         match :finish, on: :member, via: %i[get post]
         match :revert, on: :member, via: %i[get post]
         post :finish_all, on: :collection
         post :revert_all, on: :collection
         post :soft_delete_all, on: :collection
       end
-      resources :manageables, concerns: :plans do
+      resources :manageables, path: ':category/manageables', concerns: :plans do
         # match :finish, on: :member, via: %i[get post]
         # match :revert, on: :member, via: %i[get post]
         # post :finish_all, on: :collection

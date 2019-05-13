@@ -11,6 +11,7 @@ module Gws::Schedule::TodoFilter
     navi_view "gws/schedule/todo/main/navi"
     menu_view "gws/schedule/todo/main/menu"
 
+    before_action :set_category
     before_action :set_search_params
     before_action :set_item, only: %i[show edit update delete destroy disable popup finish revert recover active soft_delete]
     before_action :set_selected_items, only: [:destroy_all, :disable_all, :finish_all, :revert_all, :active_all]
@@ -19,11 +20,20 @@ module Gws::Schedule::TodoFilter
 
   private
 
+  def set_category
+    if params[:category].present? && params[:category].to_s != "-"
+      @cur_category = Gws::Schedule::TodoCategory.site(@cur_site).find(params[:category]).root
+    end
+  end
+
   def set_search_params
     @s ||= OpenStruct.new(params[:s])
     @s.cur_site ||= @cur_site
     @s.cur_user ||= @cur_user
     @s.todo_state ||= self.class.default_todo_state
+    if @cur_category.present?
+      @s.category_id ||= @cur_category.id
+    end
   end
 
   def pre_params
