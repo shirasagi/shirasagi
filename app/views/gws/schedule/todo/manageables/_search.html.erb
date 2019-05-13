@@ -1,6 +1,60 @@
-<%= form_for :s, url: '', html: { method: :get, class: :search } do |f| %>
+<% render_selected_member = proc do |id, name| %>
+  <span class="schedule-todo-selected-member" data-id="<%= id %>">
+      <input name="s[member_ids][]" type="hidden" value="<%= id %>">
+      <label><%= name %></label>
+      <button class="dismiss" type="reset">x</button>
+    </span>
+<% end %>
+
+<%= form_for :s, url: '', html: { method: :get, class: %w(search schedule-todo-search) } do |f| %>
+  <%= button_tag "担当者", name: "担当者", type: "button", class: "btn schedule-todo-member-select-btn" %>
+  <% selected_members = Gws::User.active.in(id: Array[@s.member_ids].flatten.compact.map(&:to_i)) %>
+  <span class="schedule-todo-selected-members <% if selected_members.blank? %>hide<% end %>" style="font-weight: normal">
+    <% selected_members.each do |user| %>
+      <% render_selected_member.call(user.id, user.long_name) %>
+    <% end %>
+  </span>
   <%= f.select :sort, @model.new.sort_options %>
   <%= f.text_field :keyword, style: 'width: 140px;', placeholder: t('gws/schedule/todo.search_todos') %>
   <%= f.select :todo_state, @model.todo_state_filter_options %>
   <input type="submit" value="<%= t('ss.buttons.search') %>" class="btn" />
+
+  <script type="text/html" id="schedule-todo-selected-member-template">
+    <% render_selected_member.call("#id", "#name") %>
+  </script>
+<% end %>
+
+<%= jquery do %>
+  var $el = $(".schedule-todo-search");
+
+  $el.find(".schedule-todo-member-select-btn")
+    .colorbox({
+      href: <%== gws_apis_users_path.to_json %>,
+      width: "90%", height: "90%"
+    })
+    .data("on-select", function($item) {
+      var $x = $item.closest("[data-id]");
+      if ($x.length === 0) {
+        return;
+      }
+
+      var id = $x.data("id");
+      var name = $x.data("long-name");
+
+      if ($el.find(".schedule-todo-selected-member[data-id=" + id + "]").length > 0) {
+        return;
+      }
+
+      var html = $("#schedule-todo-selected-member-template").html();
+      html = html.replace(/#id/g, id).replace(/#name/g, name);
+
+      $el.find(".schedule-todo-selected-members").append(html).removeClass("hide");
+
+      $el.submit();
+    });
+
+  $el.on("click", ".schedule-todo-selected-member .dismiss", function() {
+    $(this).closest(".schedule-todo-selected-member").remove();
+    $el.submit();
+  });
 <% end %>

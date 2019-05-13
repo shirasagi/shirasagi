@@ -123,6 +123,7 @@ class Gws::Schedule::Todo
       criteria = all.search_keyword(params)
       criteria = criteria.search_todo_state(params)
       criteria = criteria.search_start_end(params)
+      criteria = criteria.search_member_ids(params)
       criteria
     end
 
@@ -154,6 +155,34 @@ class Gws::Schedule::Todo
         criteria = criteria.lte(start_at: params[:end])
       end
       criteria
+    end
+
+    def search_member_ids(params)
+      return all if params.blank? || params[:member_ids].blank?
+
+      cur_site = params[:cur_site]
+      or_cond = []
+
+      member_ids = Array[params[:member_ids]].flatten.compact.map(&:to_i).uniq
+      members = Gws::User.active.site(cur_site).in(id: member_ids)
+      return all if members.blank?
+
+      or_cond << { member_ids: members.pluck(:id) }
+
+      group_ids = members.pluck(:group_ids).flatten.compact.uniq
+      groups = Gws::Group.active.site(cur_site).in(id: group_ids)
+      if groups.present?
+        or_cond << { member_group_ids: groups.pluck(:id) }
+      end
+
+      if member_include_custom_groups?
+        custom_groups = Gws::CustomGroup.site(cur_site).any_members(members)
+        if custom_groups.present?
+          or_cond << { member_custom_group_ids: custom_groups.pluck(:id) }
+        end
+      end
+
+      where("$and" => [{ "$or" => or_cond }])
     end
 
     def readable_or_manageable(user, opts = {})

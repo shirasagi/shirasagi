@@ -21,6 +21,8 @@ module Gws::Schedule::TodoFilter
 
   def set_search_params
     @s ||= OpenStruct.new(params[:s])
+    @s.cur_site ||= @cur_site
+    @s.cur_user ||= @cur_user
     @s.todo_state ||= self.class.default_todo_state
   end
 
