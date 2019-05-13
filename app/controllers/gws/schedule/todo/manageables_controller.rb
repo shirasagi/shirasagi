@@ -16,6 +16,7 @@ class Gws::Schedule::Todo::ManageablesController < ApplicationController
   def set_items
     @items ||= @model.site(@cur_site).
       readable_or_manageable(@cur_user, site: @cur_site).
+      not_member(@cur_user).
       without_deleted.
       search(@s).
       custom_order(params.dig(:s, :sort) || 'end_at_asc')
