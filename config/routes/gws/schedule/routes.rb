@@ -76,6 +76,7 @@ SS::Application.routes.draw do
         scope path: ':todo_id' do
           resources :comments, concerns: [:deletion], except: [:index, :new, :show, :destroy_all]
         end
+        get "categories" => "categories#index"
       end
     end
 
