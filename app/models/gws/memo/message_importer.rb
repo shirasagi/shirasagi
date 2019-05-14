@@ -116,12 +116,8 @@ class Gws::Memo::MessageImporter
     item.filtered = {}
     item.filtered[@cur_user.id.to_s] = @datetime
 
-    # seen
-    item.seen = {}
-    #item.seen[@cur_user.id.to_s] = @datetime
-
-    # path
-    item.path = {}
+    # user_settings
+    item.user_settings = []
 
     # files
     item.file_ids = []

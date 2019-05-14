@@ -14,6 +14,9 @@ class Gws::Memo::Message
   #include Gws::Addon::Memo::Comments
   #include Gws::Addon::Reminder
 
+  index({ site_id: 1, state: 1, 'user_settings.user_id': 1, 'user_settings.seen_at': 1 })
+  index({ site_id: 1, state: 1, 'user_settings.user_id': 1, 'user_settings.path': 1, 'user_settings.seen_at': 1 })
+
   #after_save :save_reminders, if: ->{ !draft? && unseen?(@cur_user) }
 
   before_save :apply_filters, if: -> { public? && send_date_was.blank? }
@@ -43,7 +46,10 @@ class Gws::Memo::Message
     member_ids.each do |member_id|
       next if filtered[member_id.to_s]
       matched_filter = Gws::Memo::Filter.site(@cur_site).where(user_id: member_id).enabled.detect{ |f| f.match?(self) }
-      self.path[member_id.to_s] = matched_filter.path if matched_filter
+      self.user_settings = user_settings.collect do |user_setting|
+        user_setting[:path] = matched_filter.path if matched_filter && user_setting[:user_id] == member_id
+        user_setting
+      end
       self.filtered[member_id.to_s] = Time.zone.now
     end
   end

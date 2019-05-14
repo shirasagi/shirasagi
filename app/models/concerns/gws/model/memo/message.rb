@@ -15,13 +15,12 @@ module Gws::Model
       field :html, type: String, default: ''
       field :format, type: String
       field :size, type: Integer, default: 0
-      field :seen, type: Hash, default: {}
       field :star, type: Hash, default: {}
       field :filtered, type: Hash, default: {}
       field :deleted, type: Hash, default: {}
       field :state, type: String, default: 'public'
-      field :path, type: Hash, default: {}
       field :send_date, type: DateTime
+      field :user_settings, type: Array, default: []
 
       field :to_member_name, type: String, default: ''
       field :from_member_name, type: String, default: ''
@@ -80,11 +79,11 @@ module Gws::Model
         elsif folder.draft_box?
           user(user).and_closed
         else
-          where("path.#{user.id}" => folder.folder_path).and_public
+          self.and(user_settings: { "$elemMatch" => { user_id: user.id, path: folder.folder_path } }).and_public
         end
       }
       scope :unseen, ->(user) {
-        where("seen.#{user.id}" => { '$exists' => false })
+        self.and(user_settings: { "$elemMatch" => { user_id: user.id, seen_at: { "$exists" => false } } })
       }
       scope :unfiltered, ->(user) {
         where(:"filtered.#{user.id}".exists => false)
@@ -94,20 +93,13 @@ module Gws::Model
     private
 
     def set_path
-      self.path = {}
-
-      member_ids.each do |member_id|
-        if path_was && path_was[member_id.to_s]
-          self.path[member_id.to_s] = path_was[member_id.to_s]
-        else
-          self.path[member_id.to_s] = "INBOX"
-        end
-      end
-
-      if in_path.present?
-        in_path.each do |member_id, path|
-          self.path[member_id.to_s] = path
-        end
+      self.user_settings = member_ids.collect do |member_id|
+        user_setting_was = (user_settings_was.presence || []).find{ |setting| setting[:user_id] == member_id }
+        path = in_path.try(:[], member_id.to_s).presence || user_setting_was.try(:[], :path).presence || 'INBOX'
+        seen_at = user_settings.find{ |setting| setting[:user_id] == member_id }.try(:[], :seen_at)
+        user_setting = { user_id: member_id, path: path }
+        user_setting[:seen_at] = seen_at if seen_at.present?
+        user_setting
       end
     end
 
@@ -279,7 +271,7 @@ module Gws::Model
 
     def unseen?(user)
       return false unless user
-      seen.exclude?(user.id.to_s)
+      user_settings.find{ |setting| setting[:user_id] == user.id && setting[:seen_at].present? }.blank?
     end
 
     def star?(user)
@@ -343,12 +335,18 @@ module Gws::Model
     end
 
     def set_seen(user)
-      self.seen[user.id.to_s] = Time.zone.now.utc
+      self.user_settings = user_settings.collect do |setting|
+        setting[:seen_at] = Time.zone.now.utc if user.id == setting[:user_id]
+        setting
+      end
       self
     end
 
     def unset_seen(user)
-      self.seen.delete(user.id.to_s)
+      self.user_settings = user_settings.collect do |setting|
+        setting[:seen_at] = nil if user.id == setting[:user_id]
+        setting
+      end
       self
     end
 
@@ -456,7 +454,7 @@ module Gws::Model
       def search_unseen(params = {})
         return all if params.blank? || params[:unseen].blank?
         user_id = params[:unseen]
-        where("seen.#{user_id}" => { '$exists' => false })
+        self.and(user_settings: { "$elemMatch" => { user_id: user_id, seen: false } })
       end
 
       def search_text_or_html(params = {})
@@ -475,7 +473,7 @@ module Gws::Model
       end
 
       def unseens(user, site)
-        self.member(user).site(site).unseen(user).and_public
+        self.site(site).unseen(user).and_public
         #self.where('$and' => [
         #  { "to.#{user.id}".to_sym.exists => true },
         #  { "seen.#{user.id}".to_sym.exists => false },
