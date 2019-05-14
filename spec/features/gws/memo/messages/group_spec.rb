@@ -47,7 +47,8 @@ describe 'gws_memo_messages', type: :feature, dbscope: :example, js: true do
         Gws::Memo::Message.all.first.tap do |message|
           expect(message.subject).to eq subject
           expect(message.text).to eq text
-          expect(message.path).to include({ gws_user.id.to_s => 'INBOX' })
+          # expect(message.path).to include({ gws_user.id.to_s => 'INBOX' })
+          expect(message.user_settings).to include([{ user_id: gws_user.id, path: 'INBOX' }])
           expect(message.to_member_name).to eq group.name
           expect(message.from_member_name).to eq gws_user.long_name
           expect(message.to_shared_address_group_ids).to eq [ group.id ]
@@ -94,7 +95,8 @@ describe 'gws_memo_messages', type: :feature, dbscope: :example, js: true do
         Gws::Memo::Message.all.first.tap do |message|
           expect(message.subject).to eq subject
           expect(message.text).to eq text
-          expect(message.path).to include({ gws_user.id.to_s => 'INBOX' })
+          # expect(message.path).to include({ gws_user.id.to_s => 'INBOX' })
+          expect(message.user_settings).to include([{ user_id: gws_user.id, path: 'INBOX' }])
           expect(message.to_member_name).to eq group.name
           expect(message.from_member_name).to eq gws_user.long_name
           expect(message.to_webmail_address_group_ids).to eq [ group.id ]
