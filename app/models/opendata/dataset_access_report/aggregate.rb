@@ -106,7 +106,7 @@ module Opendata::DatasetAccessReport::Aggregate
       dataset_ids = @counts.keys.sort
 
       Enumerator.new do |data|
-        data << encode_sjis_csv(first_line_header(ymd_header))
+        data << encode_sjis_csv(first_line_header(ymd_header.map { |y| "#{y}#{I18n.t("datetime.prompts.year")}" }))
 
         dataset_ids.each do |dataset_id|
           dataset = Opendata::Dataset.find(dataset_id) rescue nil
@@ -148,7 +148,7 @@ module Opendata::DatasetAccessReport::Aggregate
             months << date.strftime("%Y年")
             prev_year = date.year
           end
-          months << date.month
+          months << "#{date.month}#{I18n.t("datetime.prompts.month")}"
         end
         data << encode_sjis_csv(first_line_header(months))
 
@@ -199,7 +199,7 @@ module Opendata::DatasetAccessReport::Aggregate
             days << date.strftime("%Y年%-m月")
             prev_month = date.month
           end
-          days << date.day
+          days << "#{date.day}#{I18n.t("datetime.prompts.day")}"
         end
         data << encode_sjis_csv(first_line_header(days))
 
