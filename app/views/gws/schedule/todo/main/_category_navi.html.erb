@@ -1,0 +1,27 @@
+<div class="gws-schedule-todo-categoy-navi">
+  <h2 class="title"><%= t("mongoid.models.gws/schedule/todo_category") %></h2>
+
+  <% render_tree_item = proc do |id, filename, label| %>
+    <% url = url_for(category: id) %>
+    <% css_class = %w(tree-item is-open) %>
+    <% css_class << "is-current" if request.path.start_with?(url) %>
+    <%= content_tag("div", class: css_class, data: { id: id, filename: filename }) do %>
+      <%= link_to label, url, class: "item-name" %>
+    <% end %>
+  <% end %>
+
+  <div class="tree-navi">
+    <% render_tree_item.call("-", "all", t("ss.all")) %>
+    <% render_tree_item.call("na", "category-not-assigined", t("gws/schedule/todo.category_not_assigined")) %>
+  </div>
+
+  <hr>
+
+  <div class="tree-navi">
+    <% Gws::Schedule::TodoCategory.site(@cur_site).readable(@cur_user, site: @cur_site).tree_sort.each do |cate| %>
+      <% next if cate.depth != 0 %>
+
+      <% render_tree_item.call(cate.id, cate.name, cate.trailing_name) %>
+    <% end %>
+  </div>
+</div>

@@ -3,10 +3,10 @@ Gws_Tab.renderTabs('.gws-schedule-todo-tabs');
 <% end %>
 
 <div class="gws-tabs gws-schedule-todo-tabs">
-  <%= link_to gws_schedule_todo_readables_path(category: "-"), class: "post" do %>
+  <%= link_to gws_schedule_todo_readables_path, class: "readables" do %>
     <span class="tab-name"><%= t('gws/schedule.tabs.my_todo') %></span>
   <% end %>
-  <%= link_to gws_schedule_todo_manageables_path(category: "-"), class: "admin" do %>
+  <%= link_to gws_schedule_todo_manageables_path, class: "manageables" do %>
     <span class="tab-name"><%= t('gws/schedule.tabs.manageable_todo') %></span>
   <% end %>
 </div>

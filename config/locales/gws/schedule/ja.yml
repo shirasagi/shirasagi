@@ -138,6 +138,7 @@ ja:
     todo_over: 期限超過
     achievement_rate: "%{count}%"
     achievement_rate_unit: "%"
+    category_not_assigined: カテゴリーなし
     buttons:
       finish: 完了する
       revert: 未完了に戻す
