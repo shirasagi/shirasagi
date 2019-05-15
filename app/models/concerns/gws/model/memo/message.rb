@@ -454,7 +454,7 @@ module Gws::Model
       def search_unseen(params = {})
         return all if params.blank? || params[:unseen].blank?
         user_id = params[:unseen]
-        self.and(user_settings: { "$elemMatch" => { user_id: user_id, seen: false } })
+        self.and(user_settings: { "$elemMatch" => { user_id: user_id.to_i, seen_at: { "$exists" => false } } })
       end
 
       def search_text_or_html(params = {})
