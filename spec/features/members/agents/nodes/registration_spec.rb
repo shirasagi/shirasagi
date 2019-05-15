@@ -203,6 +203,58 @@ describe 'members/agents/nodes/registration', type: :feature, dbscope: :example 
 
       expect(page). to have_css("div#mypage")
     end
+
+    it do
+      visit index_path
+
+      node_registration.notice_state = "enabled"
+      node_registration.notice_email = "sys@example.jp"
+      node_registration.update!
+
+      within "form" do
+        fill_in "item[name]", with: name
+        fill_in "item[email]", with: email
+        fill_in "item[email_again]", with: email
+        fill_in "item[kana]", with: kana
+        fill_in "item[organization_name]", with: organization_name
+        fill_in "item[job]", with: job
+        fill_in "item[tel]", with: tel
+        fill_in "item[postal_code]", with: postal_code
+        fill_in "item[addr]", with: addr
+        choose "item_sex_#{sex}"
+        select era, from: "item[in_birth][era]"
+        fill_in "item[in_birth][year]", with: birthday.year
+        select birthday.month, from: "item[in_birth][month]"
+        select birthday.day, from: "item[in_birth][day]"
+
+        click_button "確認画面へ"
+      end
+
+      within "form" do
+        expect(page.find("input[name='item[name]']", visible: false).value).to eq name
+        expect(page.find("input[name='item[email]']", visible: false).value).to eq email
+        expect(page.find("input[name='item[kana]']", visible: false).value).to eq kana
+        expect(page.find("input[name='item[organization_name]']", visible: false).value).to eq organization_name
+        expect(page.find("input[name='item[job]']", visible: false).value).to eq job
+        expect(page.find("input[name='item[tel]']", visible: false).value).to eq tel
+        expect(page.find("input[name='item[postal_code]']", visible: false).value).to eq postal_code
+        expect(page.find("input[name='item[addr]']", visible: false).value).to eq addr
+        expect(page.find("input[name='item[sex]']", visible: false).value).to eq sex
+        expect(page.find("input[name='item[in_birth][era]']", visible: false).value).to eq "seireki"
+        expect(page.find("input[name='item[in_birth][year]']", visible: false).value).to eq birthday.year.to_s
+        expect(page.find("input[name='item[in_birth][month]']", visible: false).value).to eq birthday.month.to_s
+        expect(page.find("input[name='item[in_birth][day]']", visible: false).value).to eq birthday.day.to_s
+
+        click_button "登録"
+      end
+
+      expect(ActionMailer::Base.deliveries.length).to eq 1
+      mail = ActionMailer::Base.deliveries.first
+
+      expect(mail.to.first).to eq "sys@example.jp"
+      expect(mail.subject).to start_with '[会員登録申請]'
+      expect(mail.body.multipart?).to be_falsey
+    end
   end
 
   describe "only fill requried fields" do
