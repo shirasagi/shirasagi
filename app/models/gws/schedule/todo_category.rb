@@ -26,6 +26,28 @@ class Gws::Schedule::TodoCategory
     self.class.all.where(site_id: self.site_id, name: name.split("/").first).first
   end
 
+  def parent
+    return nil if root?
+
+    parent_name = name.split("/")[0..-2].join("/")
+    self.class.all.where(site_id: self.site_id, name: parent_name).first
+  end
+
+  def hierarical_orders
+    names = name.split("/")
+
+    hierarical_name = nil
+    names.map do |n|
+      if hierarical_name.nil?
+        hierarical_name = n
+      else
+        hierarical_name += "/#{n}"
+      end
+
+      self.class.where(site_id: site_id, name: hierarical_name).first.try(:order) || 0
+    end
+  end
+
   private
 
   def color_required?

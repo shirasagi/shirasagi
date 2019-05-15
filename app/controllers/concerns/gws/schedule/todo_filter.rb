@@ -4,6 +4,8 @@ module Gws::Schedule::TodoFilter
 
   included do
     cattr_accessor :default_todo_state
+    cattr_accessor :default_groupings
+    self.default_groupings = "none"
     append_view_path 'app/views/gws/schedule/todo/main'
     helper Gws::Schedule::TodoHelper
     model Gws::Schedule::Todo
@@ -34,6 +36,7 @@ module Gws::Schedule::TodoFilter
     if @cur_category.present?
       @s.category_id ||= @cur_category.id
     end
+    @s.grouping ||= self.class.default_groupings
   end
 
   def pre_params

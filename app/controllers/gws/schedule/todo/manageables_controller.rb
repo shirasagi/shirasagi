@@ -9,8 +9,13 @@ class Gws::Schedule::Todo::ManageablesController < ApplicationController
   private
 
   def set_crumbs
+    set_category
+
     @crumbs << [@cur_site.menu_todo_label || t('modules.addons.gws/schedule/todo'), gws_schedule_todo_main_path]
-    @crumbs << [t('gws/schedule.tabs.manageable_todo'), gws_schedule_todo_manageables_path]
+    @crumbs << [t('gws/schedule.tabs.manageable_todo'), { category: "-"}]
+    if @cur_category
+      @crumbs << [@cur_category.name, { category: @cur_category }]
+    end
   end
 
   def set_items

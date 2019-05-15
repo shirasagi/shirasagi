@@ -156,6 +156,11 @@ ja:
       revert: 未完了に戻す
     navi:
       category: プロジェクト・工程
+    header:
+      out_dated: 期限超過
+      today: 今日
+      tomorrow: 明日
+      day_after_tomorrow: 明日以降
     options:
       todo_state:
         finished: 完了
@@ -174,6 +179,11 @@ ja:
         updated_desc: 更新日時(新着順)
         end_at_asc:  期限日(昇順)
         end_at_desc: 期限日(降順)
+      grouping:
+        none: グループ化なし
+        category: プロジェクト・工程
+        user: 担当者
+        end_at: 期限
   gws/schedule/group_setting:
     options:
       todo_delete_threshold:

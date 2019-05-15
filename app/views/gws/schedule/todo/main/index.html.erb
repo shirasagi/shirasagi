@@ -34,6 +34,15 @@
   </div>
   <div class="main">
     <%= render "gws/schedule/todo/main/tabs" %>
-    <%= render file: 'gws/crud/index' %>
+    <% case @s.grouping %>
+    <% when "category" %>
+      <%= render file: "gws/schedule/todo/main/index_category" %>
+    <% when "user" %>
+      <%= render file: "gws/schedule/todo/main/index_user" %>
+    <% when "end_at" %>
+      <%= render file: "gws/schedule/todo/main/index_end_at" %>
+    <% else %>
+      <%= render file: "gws/schedule/todo/main/index_default" %>
+    <% end %>
   </div>
 </div>

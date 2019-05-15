@@ -17,6 +17,7 @@
   <%= f.select :sort, @model.new.sort_options, {}, class: "schedule-todo-auto-submit" %>
   <%= f.text_field :keyword, style: 'width: 140px;', placeholder: t('gws/schedule/todo.search_todos') %>
   <%= f.select :todo_state, @model.todo_state_filter_options, {}, class: "schedule-todo-auto-submit" %>
+  <%= f.select :grouping, @model.todo_grouping_options, {}, class: "schedule-todo-auto-submit" %>
   <input type="submit" value="<%= t('ss.buttons.search') %>" class="btn" />
 
   <script type="text/html" id="schedule-todo-selected-member-template">

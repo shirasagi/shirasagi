@@ -193,10 +193,15 @@ class Gws::Schedule::Todo
       cur_site = params[:cur_site]
       cur_user = params[:cur_user]
 
-      category = Gws::Schedule::TodoCategory.site(cur_site).readable(cur_user, site: cur_site).where(id: params[:category_id]).first.root
+      category = Gws::Schedule::TodoCategory.site(cur_site).
+        readable(cur_user, site: cur_site).
+        where(id: params[:category_id]).
+        first.root
       return none if category.blank?
 
-      children = Gws::Schedule::TodoCategory.site(cur_site).readable(cur_user, site: cur_site).where(name: /^#{::Regexp.escape(category.name)}\//)
+      children = Gws::Schedule::TodoCategory.site(cur_site).
+        readable(cur_user, site: cur_site).
+        where(name: /^#{::Regexp.escape(category.name)}\//)
 
       where(:category_ids.in => children.pluck(:id) + [ category.id ])
     end
@@ -210,6 +215,145 @@ class Gws::Schedule::Todo
     def todo_state_filter_options
       %w(unfinished progressing finished except_finished all).map do |v|
         [ I18n.t("gws/schedule/todo.options.todo_state_filter.#{v}"), v ]
+      end
+    end
+
+    def todo_grouping_options
+      %w(none category user end_at).map do |v|
+        [ I18n.t("gws/schedule/todo.options.grouping.#{v}"), v ]
+      end
+    end
+
+    def group_by_user(site: )
+      # load all items
+      items = self.all.to_a
+
+      expanded = []
+      items.each do |item|
+        expanded += item.overall_members.map do |user|
+          title_order =  user.title_orders.present? ? user.title_orders[site.id.to_s] || 0 : 0
+          [ title_order, user.organization_uid.presence || '', user.uid.presence || '', user, item ]
+        end
+      end
+
+      expanded.sort! do |lhs, rhs|
+        # 0: title's order, this field is descending order
+        cmp = rhs[0] <=> lhs[0]
+        # 1: organization uid, this field is ascending order
+        cmp = lhs[1] <=> rhs[1] if cmp == 0
+        # 2: uid, this field is ascending order
+        cmp = lhs[2] <=> rhs[2] if cmp == 0
+        # final result
+        cmp
+      end
+
+      last_header = nil
+      users_items = []
+      expanded.each do |_title_order, _organization_uid, _uid, user, item|
+        if last_header.nil?
+          last_header = user.long_name
+          users_items << item
+          next
+        end
+
+        if last_header != user.long_name
+          yield last_header, users_items
+
+          last_header = user.long_name
+          users_items.clear
+          users_items << item
+          next
+        end
+
+        users_items << item
+      end
+
+      if users_items.present?
+        yield last_header, users_items
+      end
+    end
+
+    def group_by_end_at(today: nil)
+      # load all items
+      items = self.all.to_a
+
+      today ||= Time.zone.now
+      today = today.beginning_of_day
+      tomorrow = today + 1.day
+      day_after_tomorrow = tomorrow + 1.day
+
+      out_dated_items = items.select { |item| item.end_at < today }
+      if out_dated_items.present?
+        yield I18n.t("gws/schedule/todo.header.out_dated"), out_dated_items
+      end
+
+      today_items = items.select { |item| today <= item.end_at && item.end_at < tomorrow }
+      if today_items.present?
+        yield "#{I18n.t("gws/schedule/todo.header.today")} - #{I18n.l(today.to_date)}", today_items
+      end
+
+      tomorrow_items = items.select { |item| tomorrow <= item.end_at && item.end_at < day_after_tomorrow }
+      if tomorrow_items.present?
+        yield "#{I18n.t("gws/schedule/todo.header.tomorrow")} - #{I18n.l(tomorrow.to_date)}", tomorrow_items
+      end
+
+      day_after_tomorrow_items = items.select { |item| day_after_tomorrow <= item.end_at }
+      if day_after_tomorrow_items.present?
+        yield I18n.t("gws/schedule/todo.header.day_after_tomorrow"), day_after_tomorrow_items
+      end
+    end
+
+    def group_by_category(site: , user: )
+      # load all items
+      items = self.all.to_a
+
+      expanded = []
+      items.each do |item|
+        cates = item.categories.readable(user, site: site)
+        if cates.present?
+          expanded += cates.map do |cate|
+            [ cate.present? ? cate.hierarical_orders : nil, cate, item ]
+          end
+        else
+          expanded << [ nil, nil, item ]
+        end
+      end
+
+      expanded.sort! do |lhs, rhs|
+        # 0: title's order, this field is descending order
+        cmp = (lhs[0] || []) <=> (rhs[0] || [])
+        # final result
+        cmp
+      end
+
+      last_header = nil
+      last_cate = nil
+      cate_items = []
+      expanded.each do |_hierarical_orders, cate, item|
+        cate_name = cate.try(:name) || ""
+
+        if last_header.nil?
+          last_header = cate_name
+          last_cate = cate
+          cate_items << item
+          next
+        end
+
+        if last_header != cate_name
+          yield last_header, cate_items, last_cate
+
+          last_header = cate_name
+          last_cate = cate
+          cate_items.clear
+          cate_items << item
+          next
+        end
+
+        cate_items << item
+      end
+
+      if cate_items.present?
+        yield last_header, cate_items, last_cate
       end
     end
   end
