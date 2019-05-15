@@ -14,7 +14,7 @@ class Uploader::File
 
   def save
     return false unless valid?
-    @binary = self.class.remove_exif(binary) if binary.present? && image?
+    @binary = self.class.remove_exif(binary) if binary.present? && exif_image?
     begin
       if saved_path && path != saved_path # persisted AND path chenged
         Fs.binwrite(saved_path, binary) unless directory?
@@ -75,6 +75,10 @@ class Uploader::File
 
   def image?
     self.content_type.to_s.start_with?('image/')
+  end
+
+  def exif_image?
+    image? && ext =~ /^(jpe?g|tiff)$/i
   end
 
   def link
