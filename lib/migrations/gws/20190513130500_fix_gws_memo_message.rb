@@ -1,5 +1,6 @@
 class SS::Migration20190513130500
   def change
+    Gws::Memo::Message.create_indexes
     Gws::Memo::Message.each do |message|
       message.in_path = {}
       message.user_settings = message.member_ids.collect do |member_id|

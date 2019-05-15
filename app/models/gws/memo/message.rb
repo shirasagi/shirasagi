@@ -16,6 +16,16 @@ class Gws::Memo::Message
 
   index({ site_id: 1, state: 1, 'user_settings.user_id': 1, 'user_settings.seen_at': 1 })
   index({ site_id: 1, state: 1, 'user_settings.user_id': 1, 'user_settings.path': 1, 'user_settings.seen_at': 1 })
+  index({ from_member_name: 1, updated: -1 })
+  index({ from_member_name: -1, updated: -1 })
+  index({ subject: 1, updated: -1 })
+  index({ subject: -1, updated: -1 })
+  index({ priority: 1, updated: -1 })
+  index({ priority: -1, updated: -1 })
+  index({ send_date: 1, updated: -1 })
+  index({ send_date: -1, updated: -1 })
+  index({ size: 1, updated: -1 })
+  index({ size: -1, updated: -1 })
 
   #after_save :save_reminders, if: ->{ !draft? && unseen?(@cur_user) }
 
