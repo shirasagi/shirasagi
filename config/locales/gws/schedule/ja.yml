@@ -138,7 +138,7 @@ ja:
     todo_over: 期限超過
     achievement_rate: "%{count}%"
     achievement_rate_unit: "%"
-    category_not_assigined: カテゴリーなし
+    category_not_assigined: プロジェクト・工程なし
     buttons:
       finish: 完了する
       revert: 未完了に戻す
@@ -154,6 +154,8 @@ ja:
     links:
       finish: 完了する
       revert: 未完了に戻す
+    navi:
+      category: プロジェクト・工程
     options:
       todo_state:
         finished: 完了
@@ -198,7 +200,7 @@ ja:
       gws/schedule/group_setting: スケジュール
       gws/schedule/todo/member: 担当者
       gws/schedule/todo/comment_post: コメント
-      gws/schedule/todo/category: カテゴリー
+      gws/schedule/todo/category: プロジェクト・工程
 
   gws_role:
     edit_gws_schedule_holidays: 休日の管理
@@ -226,12 +228,12 @@ ja:
     delete_private_gws_schedule_todos: ToDoの削除（所有）
     trash_other_gws_schedule_todos: ToDoゴミ箱の管理（全て）
     trash_private_gws_schedule_todos: ToDoゴミ箱の管理（所有）
-    read_other_gws_schedule_todo_categories: 種別の閲覧（全て）
-    read_private_gws_schedule_todo_categories: 種別の閲覧（所有）
-    edit_other_gws_schedule_todo_categories: 種別の編集（全て）
-    edit_private_gws_schedule_todo_categories: 種別の編集（所有）
-    delete_other_gws_schedule_todo_categories: 種別の削除（全て）
-    delete_private_gws_schedule_todo_categories: 種別の削除（所有）
+    read_other_gws_schedule_todo_categories: プロジェクト・工程の閲覧（全て）
+    read_private_gws_schedule_todo_categories: プロジェクト・工程の閲覧（所有）
+    edit_other_gws_schedule_todo_categories: プロジェクト・工程の編集（全て）
+    edit_private_gws_schedule_todo_categories: プロジェクト・工程の編集（所有）
+    delete_other_gws_schedule_todo_categories: プロジェクト・工程の削除（全て）
+    delete_private_gws_schedule_todo_categories: プロジェクト・工程の削除（所有）
 
   mongoid:
     models:
@@ -243,7 +245,7 @@ ja:
       gws/schedule/attendance: 出欠
       gws/schedule/approval: 承認
       gws/schedule/todo_comment: ToDoコメント
-      gws/schedule/todo_category: カテゴリー
+      gws/schedule/todo_category: プロジェクト・工程
     errors:
       models:
         gws/schedule/plan:
@@ -343,7 +345,9 @@ ja:
         todo_id: ToDo
         achievement_rate: 進捗率
       gws/addon/schedule/todo/category:
-        category_ids: カテゴリー
+        category_ids: プロジェクト・工程
+      gws/schedule/todo_category:
+        name: プロジェクト・工程名
 
   tooltip:
     gws/schedule/planable:

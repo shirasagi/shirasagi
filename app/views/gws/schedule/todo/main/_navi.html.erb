@@ -5,7 +5,7 @@
     <h3><%= link_to t('gws/schedule.navi.trash'), gws_schedule_todo_trashes_path, class: 'trash' %></h3>
   <% end %>
   <% if Gws::Schedule::TodoCategory.allowed?(:read, @cur_user, site: @cur_site) %>
-    <h3><%= link_to t('mongoid.models.gws/schedule/todo_category'), gws_schedule_todo_categories_path, class: "management" %></h3>
+    <h3><%= link_to t('gws/schedule/todo.navi.category'), gws_schedule_todo_categories_path, class: "management" %></h3>
   <% end %>
 </nav>
 
