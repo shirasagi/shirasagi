@@ -70,7 +70,7 @@ class Uploader::File
   end
 
   def text?
-    self.ext =~ /txt|css|scss|coffee|js|htm|html|php/
+    self.ext =~ /^(txt|css|scss|coffee|js|htm|html|php)$/
   end
 
   def image?
