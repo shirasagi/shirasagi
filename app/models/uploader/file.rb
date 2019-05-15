@@ -70,11 +70,11 @@ class Uploader::File
   end
 
   def text?
-    self.ext =~ /^(txt|css|scss|coffee|js|htm|html|php)$/
+    ext =~ /^(txt|css|scss|coffee|js|htm|html|php)$/
   end
 
   def image?
-    self.content_type.to_s.start_with?('image/')
+    content_type.to_s.start_with?('image/')
   end
 
   def exif_image?
