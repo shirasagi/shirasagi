@@ -190,20 +190,27 @@ class Gws::Schedule::Todo
     def search_category(params)
       return all if params.blank? || params[:category_id].blank?
 
-      cur_site = params[:cur_site]
-      cur_user = params[:cur_user]
+      case params[:category_id]
+      when "-"
+        all
+      when "na"
+        exists(category_ids: false)
+      else
+        cur_site = params[:cur_site]
+        cur_user = params[:cur_user]
 
-      category = Gws::Schedule::TodoCategory.site(cur_site).
-        readable(cur_user, site: cur_site).
-        where(id: params[:category_id]).
-        first.root
-      return none if category.blank?
+        category = Gws::Schedule::TodoCategory.site(cur_site).
+          readable(cur_user, site: cur_site).
+          where(id: params[:category_id]).
+          first.root
+        return none if category.blank?
 
-      children = Gws::Schedule::TodoCategory.site(cur_site).
-        readable(cur_user, site: cur_site).
-        where(name: /^#{::Regexp.escape(category.name)}\//)
+        children = Gws::Schedule::TodoCategory.site(cur_site).
+          readable(cur_user, site: cur_site).
+          where(name: /^#{::Regexp.escape(category.name)}\//)
 
-      where(:category_ids.in => children.pluck(:id) + [ category.id ])
+        where(:category_ids.in => children.pluck(:id) + [ category.id ])
+      end
     end
 
     def readable_or_manageable(user, opts = {})
@@ -224,7 +231,7 @@ class Gws::Schedule::Todo
       end
     end
 
-    def group_by_user(site: )
+    def group_by_user(site:)
       # load all items
       items = self.all.to_a
 
@@ -303,7 +310,7 @@ class Gws::Schedule::Todo
       end
     end
 
-    def group_by_category(site: , user: )
+    def group_by_category(site:, user:)
       # load all items
       items = self.all.to_a
 
@@ -312,10 +319,12 @@ class Gws::Schedule::Todo
         cates = item.categories.readable(user, site: site)
         if cates.present?
           expanded += cates.map do |cate|
-            [ cate.present? ? cate.hierarical_orders : nil, cate, item ]
+            cate = Gws::Schedule::TodoCategory::NONE if cate.blank?
+            [ cate.hierarical_orders, cate, item ]
           end
         else
-          expanded << [ nil, nil, item ]
+          cate = Gws::Schedule::TodoCategory::NONE
+          expanded << [ cate.hierarical_orders, cate, item ]
         end
       end
 
@@ -330,7 +339,7 @@ class Gws::Schedule::Todo
       last_cate = nil
       cate_items = []
       expanded.each do |_hierarical_orders, cate, item|
-        cate_name = cate.try(:name) || ""
+        cate_name = cate.name
 
         if last_header.nil?
           last_header = cate_name

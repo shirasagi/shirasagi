@@ -23,8 +23,15 @@ module Gws::Schedule::TodoFilter
   private
 
   def set_category
-    if params[:category].present? && params[:category].to_s != "-"
-      @cur_category = Gws::Schedule::TodoCategory.site(@cur_site).find(params[:category]).root
+    if params.key?(:category)
+      case params[:category].to_s
+      when Gws::Schedule::TodoCategory::ALL.id
+        @cur_category = Gws::Schedule::TodoCategory::ALL
+      when Gws::Schedule::TodoCategory::NONE.id
+        @cur_category = Gws::Schedule::TodoCategory::NONE
+      else
+        @cur_category = Gws::Schedule::TodoCategory.site(@cur_site).find(params[:category]).root
+      end
     end
   end
 

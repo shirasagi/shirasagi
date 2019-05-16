@@ -11,11 +11,46 @@ class Gws::Schedule::TodoCategory
     where(model: "gws/schedule/todo_category")
   }
 
+  Pseudo = Struct.new(:id, :name) do
+    def real?
+      false
+    end
+
+    def pseudo?
+      true
+    end
+
+    def root?
+      true
+    end
+
+    def hierarical_orders
+      nil
+    end
+
+    def depth
+      0
+    end
+
+    alias_method :trailing_name, :name
+  end
+
+  ALL = Pseudo.new("-", I18n.t("ss.all"))
+  NONE = Pseudo.new("na", I18n.t("gws/schedule/todo.category_not_assigined"))
+
   # class << self
   #   def to_options
   #     self.all.map { |c| [c.name, c.id] }
   #   end
   # end
+
+  def real?
+    true
+  end
+
+  def pseudo?
+    false
+  end
 
   def root?
     !name.include?("/")

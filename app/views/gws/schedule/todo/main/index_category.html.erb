@@ -24,21 +24,10 @@
 
   <ul class="list-items">
     <% @items.group_by_category(user: @cur_user, site: @cur_site) do |header, items, cate| %>
-      <% if cate.present? %>
-        <% render_cate_hierarichy.call(cate) %>
-      <% else %>
-        <li class="list-item gws-schedule-todo-list-item-header" data-depth="0" data-group="na">
-          <span class="list-item-indent"></span>
-          <span class="material-icons md-18 list-item-switch">expand_less</span>
-          <label class="check"><input type="checkbox" /></label>
-          <div class="info">
-            <span><%= t("gws/schedule/todo.category_not_assigined") %></span>
-          </div>
-        </li>
-      <% end %>
+      <% render_cate_hierarichy.call(cate) %>
 
       <% items.each do |item| %>
-        <li class="list-item" data-depth="<%= cate.present? ? cate.depth : 0 %>" data-group="<%= cate.present? ? "cate-#{cate.id}" : "na" %>">
+        <li class="list-item" data-depth="<%= cate.depth %>" data-group="cate-<%= cate.id %>">
           <nav class="tap-menu">
             <% @tap_menu.call(item) %>
           </nav>

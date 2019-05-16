@@ -12,7 +12,7 @@ class Gws::Schedule::Todo::ReadablesController < ApplicationController
     set_category
 
     @crumbs << [@cur_site.menu_todo_label || t('modules.addons.gws/schedule/todo'), gws_schedule_todo_main_path]
-    @crumbs << [t('gws/schedule.tabs.my_todo'), { category: "-" }]
+    @crumbs << [t('gws/schedule.tabs.my_todo'), { category: Gws::Schedule::TodoCategory::ALL.id }]
     if @cur_category
       @crumbs << [@cur_category.name, { category: @cur_category }]
     end
