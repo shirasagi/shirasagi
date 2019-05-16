@@ -388,7 +388,18 @@
 .fc-event-point {
   cursor: pointer;
   background-color: transparent;
+  color: #f25a38;
+  &:hover {
+    color: #f25a38;
+    text-decoration: underline;
+  }
+}
+.fc-time-grid-event {
+  background-color: #2eb0f2;
   color: $black;
+  &:hover {
+    color: $black;
+  }
 }
 .fc-time-grid-event {
   background-color: #2eb0f2;
@@ -550,6 +561,7 @@
   }
   .fc-timeline-event {
     background: #2eb0f2;
+    color: $black;
   }
 }
 // View: basicHour
