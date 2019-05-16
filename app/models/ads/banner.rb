@@ -26,7 +26,9 @@ class Ads::Banner
   default_scope ->{ where(route: "ads/banner") }
 
   def url
-    super + "?redirect=#{link_url}"
+    uri = URI.parse(super)
+    uri.query = { redirect: link_url }.to_param
+    uri.to_s
   end
 
   def count_url
