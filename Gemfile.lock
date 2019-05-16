@@ -223,7 +223,7 @@ GEM
       concurrent-ruby (~> 1.0)
     hashdiff (0.3.7)
     hashie (3.6.0)
-    holiday_japan (1.4.1)
+    holiday_japan (1.4.3)
     htmlentities (4.3.4)
     http (3.3.0)
       addressable (~> 2.3)
@@ -694,4 +694,4 @@ DEPENDENCIES
   yard
 
 BUNDLED WITH
-   1.16.4
+   2.0.1
