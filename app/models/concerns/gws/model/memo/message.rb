@@ -79,11 +79,13 @@ module Gws::Model
         elsif folder.draft_box?
           user(user).and_closed
         else
-          self.and(user_settings: { "$elemMatch" => { user_id: user.id, path: folder.folder_path } }).and_public
+          where(user_settings: { "$elemMatch" => { user_id: user.id, path: folder.folder_path } }).and_public
         end
       }
-      scope :unseen, ->(user) {
-        self.and(user_settings: { "$elemMatch" => { user_id: user.id, seen_at: { "$exists" => false } } })
+      scope :unseen, ->(user, opts = {}) {
+        conditions = { user_id: user.id, seen_at: { "$exists" => false } }
+        conditions[:path] = opts[:path] if opts[:path].present?
+        where(user_settings: { "$elemMatch" => conditions })
       }
       scope :unfiltered, ->(user) {
         where(:"filtered.#{user.id}".exists => false)
@@ -454,7 +456,7 @@ module Gws::Model
       def search_unseen(params = {})
         return all if params.blank? || params[:unseen].blank?
         user_id = params[:unseen]
-        self.and(user_settings: { "$elemMatch" => { user_id: user_id.to_i, seen_at: { "$exists" => false } } })
+        where(user_settings: { "$elemMatch" => { user_id: user_id.to_i, seen_at: { "$exists" => false } } })
       end
 
       def search_text_or_html(params = {})
