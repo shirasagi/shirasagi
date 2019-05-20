@@ -1,0 +1,47 @@
+ja:
+  chat:
+    bot: チャットボット
+
+  modules:
+    chat: チャット
+    addons:
+      chat/text: 文章
+
+  cms:
+    parts:
+      chat/bot: チャットボット
+
+  cms_role:
+    edit_chat_bots: チャットボットの編集
+
+  mongoid:
+    models:
+      chat/intent: チャット目的
+      chat/part/bot: チャットボット
+
+    attributes:
+      chat/intent:
+        name: 名前
+        phrase: フレーズ
+        response: 返答
+      chat/addon/text:
+        first_text: 開始時文章
+        exception_text: 例外文章
+
+  tooltip:
+    chat/intent:
+      name:
+        - 名前を設定します。
+      phrase:
+        - フレーズを設定します。
+        - 改行でフレーズを複数設定できます。
+        - チャットボットで指定のフレーズが使用されていると返答をどれか一つ返します。
+      response:
+        - 返答を設定します。
+        - 改行で返答を複数設定できます。
+        - チャットボットで指定のフレーズが使用されていると返答をどれか一つ返します。
+    chat/addon/text:
+      first_text:
+        - チャットボットの開始時に表示される文章を設定できます。
+      exception_text:
+        - 対応するフレーズが見つからない場合に返答する文章を設定できます。
