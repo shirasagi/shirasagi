@@ -78,7 +78,7 @@ td {
 
 // -------------------------------------------------------------------------------------------------
 
-.hide { display: none; }
+.hide { display: none !important; }
 
 .material-icons {
   vertical-align: middle;
