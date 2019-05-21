@@ -7,28 +7,39 @@ this.Chat_Bot = (function () {
 
   Chat_Bot.prototype.render = function () {
     const _this = this;
-    $(_this.id).find('.chat-button').click(function() {
-      const text = $(this).prev('.chat-text').val();
-      if(!text){
-        return false;
+    $(_this.id).find('.chat-text').keypress(function (ev) {
+      if ((ev.which && ev.which === 13) || (ev.keyCode && ev.keyCode === 13)) {
+        _this.sendText($(this));
       }
-      $(_this.id).find('.chat-items').append($('<div class="chat-item user"></div>').append(text));
-      $(this).prev('.chat-text').val('');
-      $.ajax({
-        type: "GET",
-        url: _this.url,
-        data: {
-          text: text
-        },
-        success: function (res, status) {
-          const result = $.parseJSON(res);
-          if(result.text){
-            $(_this.id).find('.chat-items').append($('<div class="chat-item sys"></div>').append(result.text));
-          }
-        },
-        error: function (xhr, status, error) {
+    });
+    $(_this.id).find('.chat-button').click(function() {
+      _this.sendText($(this));
+    });
+  };
+
+  Chat_Bot.prototype.sendText = function (el) {
+    const text = el.parents('.chat-part').find('.chat-text').val();
+    if(!text){
+      return false;
+    }
+    el.parents('.chat-part').find('.chat-text').blur();
+    $(this.id).find('.chat-items').append($('<div class="chat-item user"></div>').append(text));
+    el.parents('.chat-part').find('.chat-text').val('');
+    $.ajax({
+      type: "GET",
+      url: this.url,
+      data: {
+        text: text
+      },
+      success: function (res, status) {
+        const result = $.parseJSON(res);
+        if(result.text){
+          el.parents('.chat-part').find('.chat-items').append($('<div class="chat-item sys"></div>').append(result.text));
         }
-      });
+        el.parents('.chat-part').find('.chat-text').focus();
+      },
+      error: function (xhr, status, error) {
+      }
     });
   };
 
