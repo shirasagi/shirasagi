@@ -3,7 +3,7 @@ class Chat::Agents::Parts::BotController < ApplicationController
 
   def index
     if params[:text].present?
-      @result = Chat::Intent.response(params[:text]).presence || @cur_part.exception_text
+      @result = Chat::Intent.site(@cur_site).response(params[:text]).presence || @cur_part.exception_text
     else
       @result = @cur_part.first_text
     end
