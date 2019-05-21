@@ -98,7 +98,7 @@ class Gws::Memo::Folder
 
   def unseens
     return messages.none if sent_box? || draft_box?
-    messages.site(site).unseen(user)
+    messages.site(site).unseen(user, path: folder_path)
   end
 
   def unseen?
