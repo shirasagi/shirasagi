@@ -4,6 +4,11 @@
   <% end %>
   <div class="chat-items">
     <%= content_tag :div, @result, class: 'chat-item sys' if @result.present? %>
+    <% @cur_part.first_suggest.each do |suggest| %>
+      <%= content_tag :div, class: 'chat-item suggest' do %>
+        <%= link_to suggest, @cur_part.url.sub('.html', '.json'), class: 'chat-suggest' %>
+      <% end %>
+    <% end %>
   </div>
   <div class="chat-form">
     <%= text_field_tag 'chat[text]', '', class: 'chat-text' %>

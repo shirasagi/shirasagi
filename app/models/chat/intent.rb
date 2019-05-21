@@ -10,9 +10,10 @@ class Chat::Intent
 
   field :name, type: String
   field :phrase, type: SS::Extensions::Words
+  field :suggest, type: SS::Extensions::Words
   field :response, type: SS::Extensions::Words
 
-  permit_params :name, :phrase, :response
+  permit_params :name, :phrase, :suggest, :response
 
   validates :name, presence: true
 
@@ -30,11 +31,17 @@ class Chat::Intent
       criteria
     end
 
-    def response(string)
+    def find_intent(string)
       return if string.blank?
       item = all.select do |intent|
         string =~ /#{intent.phrase.collect { |phrase| Regexp.escape(phrase) }.join('|') }/
       end.first
+      return if item.blank?
+      item
+    end
+
+    def response(string)
+      item = find_intent(string)
       return if item.blank?
       item.response.sample
     end

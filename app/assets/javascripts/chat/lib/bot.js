@@ -15,9 +15,17 @@ this.Chat_Bot = (function () {
     $(_this.id).find('.chat-button').click(function() {
       _this.sendText($(this));
     });
+    $(_this.id).find('.chat-items').click(function(e) {
+      if ($(e.target).hasClass('chat-suggest')) {
+        $(_this.id).find('.chat-text').val($(e.target).text());
+        _this.sendText($(this));
+        return false;
+      }
+    });
   };
 
   Chat_Bot.prototype.sendText = function (el) {
+    const _this = this;
     const text = el.parents('.chat-part').find('.chat-text').val();
     if(!text){
       return false;
@@ -35,6 +43,10 @@ this.Chat_Bot = (function () {
         const result = $.parseJSON(res);
         if(result.text){
           el.parents('.chat-part').find('.chat-items').append($('<div class="chat-item sys"></div>').append(result.text));
+          result.suggest.forEach(function(suggest) {
+            const chatSuggest = $('<a class="chat-suggest"></a>').attr('href', _this.url).append(suggest);
+            el.parents('.chat-part').find('.chat-items').append($('<div class="chat-item suggest"></div>').append(chatSuggest));
+          });
         }
         el.parents('.chat-part').find('.chat-text').focus();
       },
