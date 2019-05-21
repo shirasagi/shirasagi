@@ -6,7 +6,7 @@ this.Chat_Bot = (function () {
   }
 
   Chat_Bot.prototype.render = function () {
-    const _this = this;
+    var _this = this;
     $(_this.id).find('.chat-text').keypress(function (ev) {
       if ((ev.which && ev.which === 13) || (ev.keyCode && ev.keyCode === 13)) {
         _this.sendText($(this));
@@ -25,8 +25,8 @@ this.Chat_Bot = (function () {
   };
 
   Chat_Bot.prototype.sendText = function (el) {
-    const _this = this;
-    const text = el.parents('.chat-part').find('.chat-text').val();
+    var _this = this;
+    var text = el.parents('.chat-part').find('.chat-text').val();
     if(!text){
       return false;
     }
@@ -40,11 +40,11 @@ this.Chat_Bot = (function () {
         text: text
       },
       success: function (res, status) {
-        const result = $.parseJSON(res);
+        var result = $.parseJSON(res);
         if(result.text){
           el.parents('.chat-part').find('.chat-items').append($('<div class="chat-item sys"></div>').append(result.text));
           result.suggest.forEach(function(suggest) {
-            const chatSuggest = $('<a class="chat-suggest"></a>').attr('href', _this.url).append(suggest);
+            var chatSuggest = $('<a class="chat-suggest"></a>').attr('href', _this.url).append(suggest);
             el.parents('.chat-part').find('.chat-items').append($('<div class="chat-item suggest"></div>').append(chatSuggest));
           });
         }
