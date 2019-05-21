@@ -4,6 +4,8 @@ class Chat::Intent
   include SS::Reference::Site
   include Cms::SitePermission
 
+  index({ updated: -1 })
+
   set_permission_name "chat_bots", :edit
 
   field :name, type: String
