@@ -11,6 +11,11 @@ class Gws::Schedule::TodoCategory
     where(model: "gws/schedule/todo_category")
   }
 
+  field :depth_level, type: Integer
+
+  before_validation :set_depth_level
+  validates :depth_level, presence: true
+
   Pseudo = Struct.new(:id, :name) do
     def real?
       false
@@ -33,6 +38,7 @@ class Gws::Schedule::TodoCategory
     end
 
     alias_method :trailing_name, :name
+    alias_method :depth_level, :depth
   end
 
   ALL = Pseudo.new("-", I18n.t("ss.all"))
@@ -91,5 +97,9 @@ class Gws::Schedule::TodoCategory
 
   def default_color
     nil
+  end
+
+  def set_depth_level
+    self.depth_level = depth
   end
 end

@@ -358,6 +358,7 @@ ja:
         category_ids: プロジェクト・工程
       gws/schedule/todo_category:
         name: プロジェクト・工程名
+        depth_level: 深さ
 
   tooltip:
     gws/schedule/planable:

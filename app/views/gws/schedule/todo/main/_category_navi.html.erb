@@ -18,9 +18,7 @@
   <hr>
 
   <div class="tree-navi">
-    <% Gws::Schedule::TodoCategory.site(@cur_site).readable(@cur_user, site: @cur_site).tree_sort.each do |cate| %>
-      <% next if cate.depth != 0 %>
-
+    <% Gws::Schedule::TodoCategory.site(@cur_site).readable(@cur_user, site: @cur_site).where(depth_level: 0).order_by(order: 1, name: 1).each do |cate| %>
       <% render_tree_item.call(cate) %>
     <% end %>
   </div>
