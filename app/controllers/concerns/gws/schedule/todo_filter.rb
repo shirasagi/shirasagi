@@ -159,14 +159,18 @@ module Gws::Schedule::TodoFilter
 
   # すべて完了にする
   def finish_all
+    @processed_items = []
     error_items = []
     @items.each do |item|
       if item.allowed?(:edit, @cur_user, site: @cur_site) || item.member?(@cur_user)
         item.attributes = fix_params
-        next if item.update(achievement_rate: 100)
-      else
-        item.errors.add :base, :auth_error
+        if item.update(achievement_rate: 100)
+          @processed_items << item
+          next
+        end
       end
+
+      item.errors.add :base, :auth_error
       error_items << item
     end
     @items = error_items
@@ -175,14 +179,17 @@ module Gws::Schedule::TodoFilter
 
   # すべて未完了にする
   def revert_all
+    @processed_items = []
     error_items = []
     @items.each do |item|
       if item.allowed?(:edit, @cur_user, site: @cur_site) || item.member?(@cur_user)
         item.attributes = fix_params
-        next if item.update(achievement_rate: 0)
-      else
-        item.errors.add :base, :auth_error
+        if item.update(achievement_rate: 0)
+          @processed_items << item
+          next
+        end
       end
+      item.errors.add :base, :auth_error
       error_items << item
     end
     @items = error_items
