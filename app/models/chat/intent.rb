@@ -4,11 +4,13 @@ class Chat::Intent
   include SS::Reference::Site
   include Cms::SitePermission
   include Chat::Addon::Category
+  include History::Addon::Backup
 
   index({ updated: -1 })
 
   set_permission_name "chat_bots", :edit
 
+  seqid :id
   field :name, type: String
   field :phrase, type: SS::Extensions::Words
   field :suggest, type: SS::Extensions::Words

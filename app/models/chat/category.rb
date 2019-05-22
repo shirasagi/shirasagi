@@ -3,11 +3,13 @@ class Chat::Category
   include SS::Document
   include SS::Reference::Site
   include Cms::SitePermission
+  include History::Addon::Backup
 
   index({ updated: -1 })
 
   set_permission_name "chat_bots", :edit
 
+  seqid :id
   field :name, type: String
 
   permit_params :name
