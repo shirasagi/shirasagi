@@ -464,6 +464,14 @@ ja:
 
         %{text}
 
+    gws/schedule/todo_comment:
+      subject: "[ToDo] 「%{name}」にコメントがありました。"
+      text: "%{text}"
+      mail_text: |
+        %{subject}
+
+        %{text}
+
     gws/schedule/attendance:
       subject: "[スケジュール] 「%{name}」の出欠確認に回答がありました。"
       text: "%{text}"
@@ -483,6 +491,10 @@ ja:
     gws/schedule/todo/destroy:
       subject: "[ToDo] 「%{name}」が削除されました。"
       text: ""
+
+    gws/schedule/todo_comment/destroy:
+      subject: "[ToDo] 「%{name}」のコメントが削除されました。"
+      text: "%{text}"
 
     gws/schedule/todo/finish:
       subject: "[ToDo] 「%{name}」が完了になりました。"

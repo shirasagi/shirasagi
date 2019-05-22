@@ -210,6 +210,7 @@ class Gws::Memo::Notifier
     @item_title ||= begin
       title = item.try(:topic).try(:name)
       title ||= item.try(:schedule).try(:name)
+      title ||= item.try(:todo).try(:name)
       title ||= item.try(:_parent).try(:name)
       title ||= item.try(:name)
       title
@@ -262,6 +263,8 @@ class Gws::Memo::Notifier
       id = item.parent.id
     elsif item.try(:schedule).present?
       id = item.schedule.id
+    elsif item.try(:todo).present?
+      id = item.todo.id
     else
       id = item.id
     end

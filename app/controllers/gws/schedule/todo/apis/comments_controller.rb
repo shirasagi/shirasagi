@@ -1,5 +1,6 @@
 class Gws::Schedule::Todo::Apis::CommentsController < ApplicationController
   include Gws::ApiFilter
+  include Gws::Memo::NotificationFilter
 
   model Gws::Schedule::TodoComment
 

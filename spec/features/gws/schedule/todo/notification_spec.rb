@@ -8,6 +8,10 @@ describe "gws_schedule_todo_readables", type: :feature, dbscope: :example, js: t
   let(:text) { unique_id }
   let(:name2) { unique_id }
   let(:text2) { unique_id }
+  let(:achievement_rate) { rand(10..99) }
+  let(:comment_text) { unique_id }
+  let(:achievement_rate2) { rand(10..99) }
+  let(:comment_text2) { unique_id }
 
   context "notification" do
     before { login_user user1 }
@@ -125,6 +129,78 @@ describe "gws_schedule_todo_readables", type: :feature, dbscope: :example, js: t
       end
 
       #
+      # Create Comment
+      #
+      visit gws_schedule_todo_readables_path gws_site, "-"
+      click_on name2
+      within "form#comment-form" do
+        fill_in "item[achievement_rate]", with: achievement_rate
+        fill_in "item[text]", with: comment_text
+        click_on I18n.t('gws/schedule.buttons.comment')
+      end
+      expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+
+      todo.reload
+      expect(todo.achievement_rate).to eq achievement_rate
+
+      expect(SS::Notification.count).to eq 5
+      SS::Notification.order_by(created: -1).first.tap do |message|
+        expect(message.subject).to eq I18n.t('gws_notification.gws/schedule/todo_comment.subject', name: todo.name)
+        expect(message.url).to eq "/.g#{site.id}/schedule/todo/-/readables/#{todo.id}"
+        expect(message.member_ids).to eq [ user2.id ]
+      end
+
+      #
+      # Edit Comment
+      #
+      visit gws_schedule_todo_readables_path gws_site, "-"
+      click_on name2
+      within "#addon-gws-agents-addons-schedule-todo-comment_post" do
+        click_on I18n.t("ss.buttons.edit")
+      end
+      within '#cboxLoadedContent' do
+        expect(page).to have_content(comment_text)
+
+        fill_in "item[achievement_rate]", with: achievement_rate2
+        fill_in "item[text]", with: comment_text2
+
+        click_on I18n.t('ss.buttons.save')
+      end
+      expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+
+      todo.reload
+      expect(todo.achievement_rate).to eq achievement_rate2
+
+      expect(SS::Notification.count).to eq 6
+      SS::Notification.order_by(created: -1).first.tap do |message|
+        expect(message.subject).to eq I18n.t('gws_notification.gws/schedule/todo_comment.subject', name: todo.name)
+        expect(message.url).to eq "/.g#{site.id}/schedule/todo/-/readables/#{todo.id}"
+        expect(message.member_ids).to eq [ user2.id ]
+      end
+
+      #
+      # Delete Comment
+      #
+      visit gws_schedule_todo_readables_path gws_site, "-"
+      click_on name2
+      within "#addon-gws-agents-addons-schedule-todo-comment_post" do
+        click_on I18n.t("ss.buttons.delete")
+      end
+      within '#cboxLoadedContent' do
+        expect(page).to have_content(comment_text2)
+        click_on I18n.t("ss.buttons.delete")
+      end
+      expect(page).to have_css('#notice', text: I18n.t('ss.notice.deleted'))
+
+      # confirm that no notifications are sent
+      expect(SS::Notification.count).to eq 7
+      SS::Notification.order_by(created: -1).first.tap do |message|
+        expect(message.subject).to eq I18n.t('gws_notification.gws/schedule/todo_comment/destroy.subject', name: todo.name)
+        expect(message.url).to eq "/.g#{site.id}/schedule/todo/-/readables/#{todo.id}"
+        expect(message.member_ids).to eq [ user2.id ]
+      end
+
+      #
       # Delete (soft delete)
       #
       visit gws_schedule_todo_readables_path gws_site, "-"
@@ -140,7 +216,7 @@ describe "gws_schedule_todo_readables", type: :feature, dbscope: :example, js: t
       todo.reload
       expect(todo.deleted).to be_present
 
-      expect(SS::Notification.count).to eq 5
+      expect(SS::Notification.count).to eq 8
       SS::Notification.order_by(created: -1).first.tap do |message|
         expect(message.subject).to eq I18n.t('gws_notification.gws/schedule/todo/destroy.subject', name: todo.name)
         expect(message.url).to eq ""
@@ -163,7 +239,7 @@ describe "gws_schedule_todo_readables", type: :feature, dbscope: :example, js: t
       expect(Gws::Schedule::Todo.only_deleted.count).to eq 0
 
       # confirm that no notifications are sent
-      expect(SS::Notification.count).to eq 5
+      expect(SS::Notification.count).to eq 8
     end
 
     it "operates to batch of todos" do

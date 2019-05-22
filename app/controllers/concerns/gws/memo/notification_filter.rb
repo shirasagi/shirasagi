@@ -32,7 +32,7 @@ module Gws::Memo::NotificationFilter
     else
       users = @item.subscribed_users
       users = users.nin(id: @cur_user.id) if @cur_user
-      users = users.select{|user| user.use_notice?(@item)}
+      users = users.select { |user| user.use_notice?(@item) }
 
       return if users.blank?
     end
@@ -58,7 +58,7 @@ module Gws::Memo::NotificationFilter
 
       if !item.class.name.include?("Gws::Monitor")
         users = users.nin(id: @cur_user.id) if @cur_user
-        users = users.select{|user| user.use_notice?(item)}
+        users = users.select { |user| user.use_notice?(item) }
         next if users.blank?
       end
 
@@ -70,6 +70,8 @@ module Gws::Memo::NotificationFilter
         name = item.parent.name
       elsif item.try(:schedule).try(:name).present?
         name = item.schedule.name
+      elsif item.try(:todo).try(:name).present?
+        name = item.todo.name
       elsif item.try(:name).present?
         name = item.name
       else
@@ -77,7 +79,7 @@ module Gws::Memo::NotificationFilter
       end
 
       subject = I18n.t("gws_notification.#{i18n_key}/destroy.subject", name: name)
-      if !item.try(:_parent).present? && !item.try(:parent).present? && !item.try(:schedule).present?
+      if !item.try(:_parent).present? && !item.try(:parent).present? && !item.try(:schedule).present? && !item.try(:todo).present?
         text = I18n.t("gws_notification.#{i18n_key}/destroy.text", name: name)
       end
 

@@ -19,6 +19,8 @@ class Gws::Schedule::TodoComment
 
   scope :and_todo, ->(todo) { where( todo_id: todo.id ) }
 
+  delegate :subscribed_users, to: :todo
+
   private
 
   def set_todo_id
