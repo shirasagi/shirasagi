@@ -10,6 +10,10 @@ SS::Application.routes.draw do
   namespace "chat", path: ".s:site/chat" do
     get "/" => "main#index"
     resources :intents, concerns: [:deletion]
+    resources :categories, concerns: [:deletion]
+    namespace 'apis' do
+      get 'categories' => 'categories#index'
+    end
   end
 
   part "chat" do

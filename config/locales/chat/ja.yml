@@ -6,6 +6,7 @@ ja:
     chat: チャット
     addons:
       chat/text: 文章
+      chat/category: カテゴリー
 
   cms:
     parts:
@@ -16,7 +17,8 @@ ja:
 
   mongoid:
     models:
-      chat/intent: チャット目的
+      chat/intent: シナリオ
+      chat/category: カテゴリー
       chat/part/bot: チャットボット
 
     attributes:
@@ -25,10 +27,14 @@ ja:
         phrase: フレーズ
         suggest: サジェスト
         response: 返答
+      chat/category:
+        name: 名前
       chat/addon/text:
         first_text: 開始時文章
         first_suggest: 開始時サジェスト
         exception_text: 例外文章
+      chat/addon/category:
+        category_ids: カテゴリー
 
   tooltip:
     chat/intent:
@@ -45,6 +51,9 @@ ja:
       response:
         - 返答を設定します。
         - チャットボットで指定のフレーズが使用されていると返答します。
+    chat/category:
+      name:
+        - 名前を設定します。
     chat/addon/text:
       first_text:
         - チャットボットの開始時に表示される文章を設定できます。
@@ -53,3 +62,6 @@ ja:
         - 改行でサジェストを複数設定できます。
       exception_text:
         - 対応するフレーズが見つからない場合に返答する文章を設定できます。
+    chat/addon/category:
+      category_ids:
+        - カテゴリーを設定します。

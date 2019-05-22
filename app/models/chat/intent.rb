@@ -3,6 +3,7 @@ class Chat::Intent
   include SS::Document
   include SS::Reference::Site
   include Cms::SitePermission
+  include Chat::Addon::Category
 
   index({ updated: -1 })
 

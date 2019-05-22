@@ -1,8 +1,8 @@
-class Chat::IntentsController < ApplicationController
+class Chat::CategoriesController < ApplicationController
   include Cms::BaseFilter
   include Cms::CrudFilter
 
-  model Chat::Intent
+  model Chat::Category
 
   navi_view "chat/main/navi"
 
@@ -21,7 +21,6 @@ class Chat::IntentsController < ApplicationController
   def index
     raise "403" unless @model.allowed?(:read, @cur_user, site: @cur_site, node: @cur_node)
     set_items
-    @items = @items.in(category_ids: params.dig(:s, :category_id)) if params.dig(:s, :category_id).present?
     @items = @items.search(params[:s]).
       order_by(updated: -1).
       page(params[:page]).
