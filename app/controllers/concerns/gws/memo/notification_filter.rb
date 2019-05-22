@@ -2,14 +2,22 @@ module Gws::Memo::NotificationFilter
   extend ActiveSupport::Concern
 
   included do
-    before_action :set_destroyed_item, only: [:destroy, :soft_delete]
-    before_action :set_destroyed_items, only: [:destroy_all, :soft_delete_all]
+    cattr_accessor :destroy_notification_actions
+    self.destroy_notification_actions = [:destroy, :destroy_all, :soft_delete, :soft_delete_all]
+
+    before_action :set_destroyed_item, if: :check_destroy_notification_action
+    before_action :set_destroyed_items, if: :check_destroy_notification_action
 
     after_action :send_update_notification, only: [:create, :update, :publish]
-    after_action :send_destroy_notification, only: [:destroy, :destroy_all, :soft_delete, :soft_delete_all]
+    after_action :send_destroy_notification, if: :check_destroy_notification_action
   end
 
   private
+
+  def check_destroy_notification_action(*args)
+    actions = self.class.destroy_notification_actions.map(&:to_s)
+    actions.include?(params[:action])
+  end
 
   def send_update_notification(subject = nil, text = nil)
     return if request.get?

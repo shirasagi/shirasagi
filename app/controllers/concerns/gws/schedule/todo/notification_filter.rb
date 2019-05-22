@@ -3,6 +3,7 @@ module Gws::Schedule::Todo::NotificationFilter
   include Gws::Memo::NotificationFilter
 
   included do
+    self.destroy_notification_actions = [:soft_delete, :soft_delete_all]
     after_action :send_finish_notification, only: [:finish]
     after_action :send_revert_notification, only: [:revert]
     after_action :send_finish_all_notification, only: [:finish_all]
