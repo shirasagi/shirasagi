@@ -123,7 +123,7 @@ module Gws::Memo::NotificationFilter
       return item.topic.notify_enabled?
     when :"gws/schedule/comment"
       return item.schedule.notify_enabled?
-    when  :"gws/schedule/attendance"
+    when :"gws/schedule/attendance"
       return item._parent.notify_enabled?
     else
       if item.respond_to?(:notify_enabled?)
