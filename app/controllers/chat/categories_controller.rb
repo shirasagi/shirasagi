@@ -22,7 +22,7 @@ class Chat::CategoriesController < ApplicationController
     raise "403" unless @model.allowed?(:read, @cur_user, site: @cur_site, node: @cur_node)
     set_items
     @items = @items.search(params[:s]).
-      order_by(updated: -1).
+      order_by(order: 1).
       page(params[:page]).
       per(50)
   end

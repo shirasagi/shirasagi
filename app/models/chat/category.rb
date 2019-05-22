@@ -5,16 +5,18 @@ class Chat::Category
   include Cms::SitePermission
   include History::Addon::Backup
 
-  index({ updated: -1 })
+  index({ order: 1, site_id: 1 }, { sparse: true } )
 
   set_permission_name "chat_bots", :edit
 
   seqid :id
   field :name, type: String
+  field :order, type: Integer
 
-  permit_params :name
+  permit_params :name, :order
 
-  validates :name, presence: true
+  validates :name, presence: true, length: { maximum: 80 }
+  validates :order, numericality: { greater_than_or_equal_to: 0, less_than_or_equal_to: 999_999, allow_blank: true }
 
   class << self
     def search(params)

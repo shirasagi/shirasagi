@@ -23,7 +23,7 @@ class Chat::IntentsController < ApplicationController
     set_items
     @items = @items.in(category_ids: params.dig(:s, :category_id)) if params.dig(:s, :category_id).present?
     @items = @items.search(params[:s]).
-      order_by(updated: -1).
+      order_by(order: 1).
       page(params[:page]).
       per(50)
   end

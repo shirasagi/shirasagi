@@ -13,4 +13,7 @@
     <%= html_editor "#mod-chat-intent-response", height: "400px", readonly: true %>
     <%= text_area_tag "mod-chat-intent-response", @item.response, style: "height: 400px;" %>
   </dd>
+
+  <dt><%= @model.t :order %></dt>
+  <dd><%= @item.order %></dd>
 </dl>

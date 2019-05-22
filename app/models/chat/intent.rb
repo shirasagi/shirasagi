@@ -6,7 +6,7 @@ class Chat::Intent
   include Chat::Addon::Category
   include History::Addon::Backup
 
-  index({ updated: -1 })
+  index({ order: 1, site_id: 1 })
 
   set_permission_name "chat_bots", :edit
 
@@ -15,10 +15,12 @@ class Chat::Intent
   field :phrase, type: SS::Extensions::Words
   field :suggest, type: SS::Extensions::Words
   field :response, type: String
+  field :order, type: Integer
 
-  permit_params :name, :phrase, :suggest, :response
+  permit_params :name, :phrase, :suggest, :response, :order
 
-  validates :name, presence: true
+  validates :name, presence: true, length: { maximum: 80 }
+  validates :order, numericality: { greater_than_or_equal_to: 0, less_than_or_equal_to: 999_999, allow_blank: true }
 
   class << self
     def search(params)
