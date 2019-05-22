@@ -16,7 +16,7 @@ module Gws::Schedule::TodoFilter
     before_action :set_category
     before_action :set_search_params
     before_action :set_item, only: %i[show edit update delete destroy disable popup finish revert recover active soft_delete]
-    before_action :set_selected_items, only: [:destroy_all, :disable_all, :finish_all, :revert_all, :active_all]
+    before_action :set_selected_items, only: [:destroy_all, :soft_delete_all, :finish_all, :revert_all, :active_all]
     before_action :set_skip_default_group
   end
 
