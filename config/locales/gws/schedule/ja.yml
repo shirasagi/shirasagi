@@ -267,6 +267,8 @@ ja:
           attributes:
             base:
               not_found: "%{line_no}: Id %{id} の休日は存在しません。"
+        gws/schedule/todo_category:
+          invalid_chars_as_name: "には次の文字は使えません: \\ / : * ? \" < > |"
     attributes:
       gws/schedule/planable:
         name: タイトル
@@ -362,6 +364,8 @@ ja:
       gws/schedule/todo_category:
         name: プロジェクト・工程名
         depth_level: 深さ
+        in_basename: プロジェクト・工程名
+        in_parent_id: 親プロジェクト・工程名
 
   tooltip:
     gws/schedule/planable:

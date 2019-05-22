@@ -11,10 +11,16 @@ class Gws::Schedule::TodoCategory
     where(model: "gws/schedule/todo_category")
   }
 
+  attr_accessor :in_basename, :in_parent_id
+
   field :depth_level, type: Integer
 
+  before_validation :set_name, if: ->{ in_basename.present? }
   before_validation :set_depth_level
   validates :depth_level, presence: true
+  validate :validate_basename, if: ->{ in_basename.present? }
+
+  permit_params :in_basename, :in_parent_id
 
   Pseudo = Struct.new(:id, :name) do
     def real?
@@ -63,15 +69,20 @@ class Gws::Schedule::TodoCategory
   end
 
   def root
-    return self if root?
+    return self if new_record? || root?
     self.class.all.where(site_id: self.site_id, name: name.split("/").first).first
   end
 
   def parent
-    return nil if root?
+    return nil if new_record? || root?
 
     parent_name = name.split("/")[0..-2].join("/")
     self.class.all.where(site_id: self.site_id, name: parent_name).first
+  end
+
+  def basename
+    return nil if new_record?
+    ::File.basename(name)
   end
 
   def hierarical_orders
@@ -89,6 +100,11 @@ class Gws::Schedule::TodoCategory
     end
   end
 
+  def in_parent
+    return if in_parent_id.blank?
+    self.class.where(id: in_parent_id).first
+  end
+
   private
 
   def color_required?
@@ -99,7 +115,25 @@ class Gws::Schedule::TodoCategory
     nil
   end
 
+  def set_name
+    parts = []
+    if in_parent_id.present?
+      parent = self.class.where(id: in_parent_id).first
+      parts << parent.name
+    end
+    parts << in_basename
+    self.name = parts.map(&:presence).compact.join("/")
+  end
+
   def set_depth_level
     self.depth_level = depth
+  end
+
+  def validate_basename
+    return if in_basename.blank?
+
+    if in_basename =~ /[\\\/:*?"<>|]/
+      errors.add :in_basename, :invalid_chars_as_name
+    end
   end
 end
