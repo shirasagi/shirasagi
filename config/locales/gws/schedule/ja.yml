@@ -161,6 +161,9 @@ ja:
       today: 今日
       tomorrow: 明日
       day_after_tomorrow: 明日以降
+    apis:
+      categories:
+        index: プロジェクト・工程を選択する
     options:
       todo_state:
         finished: 完了

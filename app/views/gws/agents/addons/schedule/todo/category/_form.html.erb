@@ -1,10 +1,10 @@
 <dl class="see mod-gws-schedule-todo-category gws-category-tree">
-  <dt><%= @model.t :category_ids %><%= @model.tt :category_ids %></dt>
-  <dd>
+  <dt class="wide"><%= @model.tt :category_ids %></dt>
+  <dd class="wide">
     <%= f.hidden_field "category_ids[]", value: "", class: "hidden-ids" %>
-    <%= link_to t("gws.apis.categories.index"), gws_schedule_todo_apis_categories_path, class: "ajax-box" %>
+    <%= link_to t("gws/schedule/todo.apis.categories.index"), gws_schedule_todo_apis_categories_path(single: 1), class: "ajax-box" %>
   </dd>
-  <dd>
+  <dd class="wide">
     <table class="index ajax-selected">
       <thead><tr><th class="name"><%= Gws::Schedule::TodoCategory.t :name %></th><th class="deselect"></th></tr></thead>
       <tbody>
