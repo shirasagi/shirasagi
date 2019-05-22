@@ -9,5 +9,8 @@
   <dd><%= @item.suggest %></dd>
 
   <dt><%= @model.t :response %></dt>
-  <dd><%= @item.response %></dd>
+  <dd>
+    <%= html_editor "#mod-chat-intent-response", height: "400px", readonly: true %>
+    <%= text_area_tag "mod-chat-intent-response", @item.response, style: "height: 400px;" %>
+  </dd>
 </dl>

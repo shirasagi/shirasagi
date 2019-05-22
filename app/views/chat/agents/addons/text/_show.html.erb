@@ -1,10 +1,11 @@
-<dl class="see">
+<%= html_editor ".mod-chat-text .html", height: "400px", readonly: true %>
+<dl class="see mod-chat-text">
   <dt><%= @model.t(:first_text) %></dt>
-  <dd><%= @item.first_text %></dd>
+  <dd><%= text_area_tag "mod-chat-text-first-text", @item.first_text, class: 'html', style: "height: 400px;" %></dd>
 
   <dt><%= @model.t(:first_suggest) %></dt>
   <dd><%= @item.first_suggest %></dd>
 
   <dt><%= @model.t(:exception_text) %></dt>
-  <dd><%= @item.exception_text %></dd>
+  <dd><%= text_area_tag "mod-chat-text-exception-text", @item.exception_text, class: 'html', style: "height: 400px;" %></dd>
 </dl>

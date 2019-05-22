@@ -11,7 +11,7 @@ class Chat::Intent
   field :name, type: String
   field :phrase, type: SS::Extensions::Words
   field :suggest, type: SS::Extensions::Words
-  field :response, type: SS::Extensions::Words
+  field :response, type: String
 
   permit_params :name, :phrase, :suggest, :response
 
@@ -43,7 +43,7 @@ class Chat::Intent
     def response(string)
       item = find_intent(string)
       return if item.blank?
-      item.response.sample
+      item.response
     end
   end
 end

@@ -4,7 +4,7 @@ class Chat::Agents::Parts::BotController < ApplicationController
   def index
     @intent = Chat::Intent.site(@cur_site).find_intent(params[:text])
     @result = if params[:text].present?
-      @intent.try(:response).try(:sample).presence || @cur_part.exception_text
+      @intent.try(:response).presence || @cur_part.exception_text
     else
       @cur_part.first_text
     end

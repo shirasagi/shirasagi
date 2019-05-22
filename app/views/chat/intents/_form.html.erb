@@ -1,4 +1,5 @@
-<dl class="see">
+<%= html_editor ".mod-chat-intent .html", advanced: Cms::EditorExtension.allowed?(:use, @cur_user, site: @cur_site) %>
+<dl class="see mod-chat-intent">
   <dt><%= @model.t :name %><%= @model.tt :name %></dt>
   <dd><%= f.text_field :name %></dd>
 
@@ -9,5 +10,5 @@
   <dd><%= f.text_area :suggest %></dd>
 
   <dt><%= @model.t :response %><%= @model.tt :response %></dt>
-  <dd><%= f.text_area :response %></dd>
+  <dd><%= f.text_area :response, class: 'html' %></dd>
 </dl>
