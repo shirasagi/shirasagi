@@ -49,6 +49,7 @@ class Opendata::Dataset
   set_permission_name "opendata_datasets"
 
   field :text, type: String
+  field :creator_name, type: String
   field :point, type: Integer, default: "0"
   field :tags, type: SS::Extensions::Words
   field :downloaded, type: Integer
@@ -60,7 +61,7 @@ class Opendata::Dataset
 
   #validates :text, presence: true
 
-  permit_params :text, :tags, tags: []
+  permit_params :text, :creator_name, :tags, tags: []
 
   before_save :seq_filename, if: ->{ basename.blank? }
   after_save :on_state_changed, if: ->{ state_changed? }

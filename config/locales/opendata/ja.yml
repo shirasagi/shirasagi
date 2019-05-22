@@ -564,6 +564,7 @@ ja:
       opendata/dataset:
         name: データセット名
         text: 説明
+        creator_name: データ作成者
         site_id: サイト
         user_id: データ作成者
         group_id: 所属グループ
@@ -817,6 +818,8 @@ ja:
       tags:
         - 関連する単語を登録します。
         - カンマ、スペースで区切ることにより複数の単語を設定することができます。
+      creator_name:
+        - データ作成者を入力します。
     opendata/resource:
       source_url:
         - リソースが外部サイトに存在する場合、リソースのURLを入力します。

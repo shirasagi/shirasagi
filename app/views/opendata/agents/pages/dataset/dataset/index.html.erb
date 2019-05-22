@@ -249,7 +249,10 @@ categories = [
           <dd><%= @cur_page.update_plan %></dd>
           <% end %>
 
-          <% if @cur_page.member_id.present? %>
+          <% if @cur_page.creator_name.present? %>
+            <dt><%= @cur_page.t :user_id %></dt>
+            <dd><%= @cur_page.creator_name %><br /></dd>
+          <% elsif @cur_page.member_id.present? %>
             <dt><%= @cur_page.t :user_id %></dt>
             <dd>
               <% if @cur_page.member %>
