@@ -32,6 +32,7 @@ this.Chat_Bot = (function () {
     }
     el.parents('.chat-part').find('.chat-text').blur();
     $(this.id).find('.chat-items').append($('<div class="chat-item user"></div>').append(text));
+    el.parents('.chat-part').find('.chat-items').animate({ scrollTop: el.parents('.chat-part').find('.chat-items')[0].scrollHeight });
     el.parents('.chat-part').find('.chat-text').val('');
     $.ajax({
       type: "GET",
@@ -43,10 +44,13 @@ this.Chat_Bot = (function () {
         var result = $.parseJSON(res);
         if(result.text){
           el.parents('.chat-part').find('.chat-items').append($('<div class="chat-item sys"></div>').append(result.text));
-          result.suggest.forEach(function(suggest) {
-            var chatSuggest = $('<a class="chat-suggest"></a>').attr('href', _this.url).append(suggest);
-            el.parents('.chat-part').find('.chat-items').append($('<div class="chat-item suggest"></div>').append(chatSuggest));
-          });
+          if(result.suggest){
+            result.suggest.forEach(function(suggest) {
+              var chatSuggest = $('<a class="chat-suggest"></a>').attr('href', _this.url).append(suggest);
+              el.parents('.chat-part').find('.chat-items').append($('<div class="chat-item suggest"></div>').append(chatSuggest));
+            });
+          }
+          el.parents('.chat-part').find('.chat-items').animate({ scrollTop: el.parents('.chat-part').find('.chat-items')[0].scrollHeight });
         }
         el.parents('.chat-part').find('.chat-text').focus();
       },
