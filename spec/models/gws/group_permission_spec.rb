@@ -14,7 +14,7 @@ describe Gws::GroupPermission, type: :model, dbscope: :example do
   context 'full permissions' do
     it do
       # blank
-      item.update_attributes(init)
+      item.update(init)
       expect(item.user_ids.blank?).to be_truthy
       expect(item.group_ids.blank?).to be_truthy
       expect(item.custom_group_ids.blank?).to be_truthy
@@ -32,12 +32,12 @@ describe Gws::GroupPermission, type: :model, dbscope: :example do
     before do
       user.gws_roles.each do |role|
         permissions = role.permissions.reject { |p| p =~ /_other_/ }
-        role.update_attributes(permissions: permissions)
+        role.update(permissions: permissions)
       end
     end
 
     it do
-      item.update_attributes(init)
+      item.update(init)
       expect(item.allowed?(:read, user, site: site)).to be_falsey
       expect(item.allowed?(:edit, user, site: site)).to be_falsey
       expect(item.allowed?(:delete, user, site: site)).to be_falsey
@@ -45,7 +45,7 @@ describe Gws::GroupPermission, type: :model, dbscope: :example do
       expect(item.class.allow(:edit, user, site: site).present?).to be_falsey
       expect(item.class.allow(:delete, user, site: site).present?).to be_falsey
 
-      item.update_attributes(init.merge(user_ids: [user.id]))
+      item.update(init.merge(user_ids: [user.id]))
       expect(item.allowed?(:read, user, site: site)).to be_truthy
       expect(item.allowed?(:edit, user, site: site)).to be_truthy
       expect(item.allowed?(:delete, user, site: site)).to be_truthy
@@ -53,7 +53,7 @@ describe Gws::GroupPermission, type: :model, dbscope: :example do
       expect(item.class.allow(:edit, user, site: site).present?).to be_truthy
       expect(item.class.allow(:delete, user, site: site).present?).to be_truthy
 
-      item.update_attributes(init.merge(group_ids: user.group_ids))
+      item.update(init.merge(group_ids: user.group_ids))
       expect(item.allowed?(:read, user, site: site)).to be_truthy
       expect(item.allowed?(:edit, user, site: site)).to be_truthy
       expect(item.allowed?(:delete, user, site: site)).to be_truthy
@@ -61,11 +61,11 @@ describe Gws::GroupPermission, type: :model, dbscope: :example do
       expect(item.class.allow(:edit, user, site: site).present?).to be_truthy
       expect(item.class.allow(:delete, user, site: site).present?).to be_truthy
 
-      item.update_attributes(init.merge(custom_group_ids: [custom_group.id]))
+      item.update(init.merge(custom_group_ids: [custom_group.id]))
       expect(item.allowed?(:read, user, site: site)).to be_truthy
       expect(item.allowed?(:edit, user, site: site)).to be_truthy
       expect(item.allowed?(:delete, user, site: site)).to be_truthy
-      expect(item.class.allow(:read, user, site: site).present?).to be_truthy #
+      expect(item.class.allow(:read, user, site: site).present?).to be_truthy
       expect(item.class.allow(:edit, user, site: site).present?).to be_truthy
       expect(item.class.allow(:delete, user, site: site).present?).to be_truthy
     end
@@ -85,7 +85,7 @@ describe Gws::GroupPermission, type: :model, dbscope: :example do
 
   context 'no permissions' do
     it do
-      item.update_attributes(init.merge(group_ids: user2.group_ids, custom_group_ids: [custom_group.id]))
+      item.update(init.merge(group_ids: user2.group_ids, custom_group_ids: [custom_group.id]))
       expect(item.allowed?(:read, user2, site: site)).to be_falsey
       expect(item.allowed?(:edit, user2, site: site)).to be_falsey
       expect(item.allowed?(:delete, user2, site: site)).to be_falsey
