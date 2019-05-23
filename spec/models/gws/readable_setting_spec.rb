@@ -17,7 +17,7 @@ describe Gws::Addon::ReadableSetting, type: :model, dbscope: :example do
 
   context "range" do
     it "public" do
-      item.update_attributes(init.merge(readable_setting_range: 'public'))
+      item.update(init.merge(readable_setting_range: 'public'))
       expect(item.readable_setting_present?).to be_falsey
 
       expect(item.readable?(user, site: site)).to be_truthy
@@ -27,7 +27,7 @@ describe Gws::Addon::ReadableSetting, type: :model, dbscope: :example do
     end
 
     it "private" do
-      item.update_attributes(init.merge(readable_setting_range: 'private'))
+      item.update(init.merge(readable_setting_range: 'private'))
       expect(item.readable_group_ids.present?).to be_falsey
       expect(item.readable_member_ids.present?).to be_truthy
       expect(item.readable_custom_group_ids.present?).to be_falsey
@@ -40,25 +40,25 @@ describe Gws::Addon::ReadableSetting, type: :model, dbscope: :example do
 
     it "select" do
       # blank (public)
-      item.update_attributes(init)
+      item.update(init)
       expect(item.readable_setting_present?).to be_falsey
       expect(item.readable?(user, site: site)).to be_truthy
       expect(item.class.readable(user, site: site).present?).to be_truthy
 
       # group
-      item.update_attributes(init.merge(readable_group_ids: user.group_ids))
+      item.update(init.merge(readable_group_ids: user.group_ids))
       expect(item.readable_group_ids.present?).to be_truthy
       expect(item.readable?(user, site: site)).to be_truthy
       expect(item.class.readable(user, site: site).present?).to be_truthy
 
       # member
-      item.update_attributes(init.merge(readable_member_ids: [user.id]))
+      item.update(init.merge(readable_member_ids: [user.id]))
       expect(item.readable_member_ids.present?).to be_truthy
       expect(item.readable?(user, site: site)).to be_truthy
       expect(item.class.readable(user, site: site).present?).to be_truthy
 
       # custom group
-      item.update_attributes(init.merge(readable_custom_group_ids: [custom_group.id]))
+      item.update(init.merge(readable_custom_group_ids: [custom_group.id]))
       expect(item.readable_custom_group_ids.present?).to be_truthy
       expect(item.readable?(user, site: site)).to be_truthy
       expect(item.class.readable(user, site: site).present?).to be_truthy
