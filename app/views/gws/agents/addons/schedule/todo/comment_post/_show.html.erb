@@ -1,45 +1,39 @@
-<div class="see mod-gws-schedule-todo-comment-post">
-  <% if @item.comments.present? %>
-    <table class="index">
-      <thead>
-      <tr>
-        <th class="achievement-rate"><%= Gws::Schedule::TodoComment.t :achievement_rate %> / <%= Gws::Schedule::TodoComment.t :html %></th>
-        <th class="user-name"><%= Gws::Schedule::TodoComment.t :user_name %></th>
-        <th class="updated"><%= Gws::Schedule::TodoComment.t :updated %></th>
-        <th class="operations"></th>
-      </tr>
-      </thead>
-      <tbody>
-      <% @item.comments.order_by(created: 1).each do |comment| %>
-      <tr>
-        <td class="achievement-rate"><% if comment.achievement_rate.present? %><%= t("gws/schedule/todo.achievement_rate", count: comment.achievement_rate) %><% end %></td>
-        <td class="user-name"><%= comment.user_long_name %></td>
-        <td class="updated"><%= I18n.l(comment.updated) %></td>
-        <td class="operations">
-          <% if comment.user_id == @cur_user.id || @item.allowed?(:edit, @cur_user, site: @cur_site) %>
+<% if @item.comments.present? %>
+  <div class="comments">
+    <% @item.comments.order_by(created: 1).each do |comment| %>
+      <div class="comment" id="comment-<%= comment.id %>">
+        <div class="row user">
+          <%= comment.user_long_name %>
+        </div>
+        <div class="row meta">
+          <% if comment.achievement_rate.present? %>
+            <span class="achievement-rate">
+              <label><%= Gws::Schedule::TodoComment.t :achievement_rate %></label>: <%= t("gws/schedule/todo.achievement_rate", count: comment.achievement_rate) %>
+            </span>
+          <% end %>
+          <time class="updated" datetime="<%= comment.updated.utc.iso8601 %>"><%= I18n.l(comment.updated) %></time>
+        </div>
+        <div class="row text">
+          <%== comment.html %>
+        </div>
+        <% if comment.user_id == @cur_user.id || @item.allowed?(:edit, @cur_user, site: @cur_site) %>
+          <div class="row toolbar">
             <%= link_to(t('ss.buttons.edit'), edit_gws_schedule_todo_apis_comment_path(todo_id: @item, id: comment, redirect_to: request.fullpath), class: 'btn ajax-box') %>
             <%= link_to(t('ss.buttons.delete'), delete_gws_schedule_todo_apis_comment_path(todo_id: @item, id: comment, redirect_to: request.fullpath), class: 'btn ajax-box') %>
-          <% end %>
-        </td>
-      </tr>
-      <tr>
-        <td class="html" colspan="4"><%== comment.html %></td>
-      </tr>
-      <% end %>
-      </tbody>
-    </table>
+          </div>
+        <% end %>
+      </div>
+    <% end %>
+  </div>
+<% end %>
 
-    <hr>
-  <% end %>
-
-  <%= form_tag(gws_schedule_todo_apis_comments_path(todo_id: @item), id: 'comment-form', method: :post) do %>
-    <div>
-      <label for="item_achievement_rate"><%= Gws::Schedule::TodoComment.t :achievement_rate %></label>: <%= number_field_tag 'item[achievement_rate]' %> <%= t("gws/schedule/todo.achievement_rate_unit") %>
-    </div>
-    <div><%= text_area_tag 'item[text]' %></div>
-    <div>
-      <%= hidden_field_tag('redirect_to', request.fullpath) %>
-      <%= submit_tag(I18n.t('gws/schedule.buttons.comment'), class: :btn) %>
-    </div>
-  <% end %>
-</div>
+<%= form_tag(gws_schedule_todo_apis_comments_path(todo_id: @item), id: 'comment-form', method: :post) do %>
+  <div class="row">
+    <label for="item_achievement_rate"><%= Gws::Schedule::TodoComment.t :achievement_rate %></label>: <%= number_field_tag 'item[achievement_rate]' %> <span class="achievement-rate-unit"><%= t("gws/schedule/todo.achievement_rate_unit") %></span>
+  </div>
+  <div class="row"><%= text_area_tag 'item[text]' %></div>
+  <div class="row">
+    <%= hidden_field_tag('redirect_to', request.fullpath) %>
+    <%= submit_tag(I18n.t('gws/schedule.buttons.comment'), class: :btn) %>
+  </div>
+<% end %>

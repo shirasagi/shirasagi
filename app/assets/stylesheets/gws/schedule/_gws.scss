@@ -843,3 +843,40 @@ dl.gws-schedule-repeat {
     text-align: center;
   }
 }
+
+#addon-gws-agents-addons-schedule-todo-comment_post {
+  .comment {
+    margin: 5px 0;
+    padding: 0 5px;
+    border-bottom: $border-gray1;
+  }
+
+  .row {
+    width: 100%;
+    padding: 5px 0;
+  }
+
+  .user {
+    color: $orange3;
+    font-weight: bold;
+  }
+
+  .achievement-rate {
+    margin-right: 10px;
+  }
+
+  .toolbar {
+    @include display-flex(flex);
+    @include justify-content(flex-end);
+
+    .btn {
+      margin-left: 5px;
+    }
+  }
+
+  @include mb {
+    .achievement-rate-unit {
+      display: none;
+    }
+  }
+}
