@@ -18,6 +18,5 @@ class Gws::Circular::TrashesController < ApplicationController
       allow(:trash, @cur_user, site: @cur_site).
       search(params[:s]).
       page(params[:page]).per(50)
-    raise @items.inspect
   end
 end
