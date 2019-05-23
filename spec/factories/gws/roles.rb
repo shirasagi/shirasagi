@@ -42,4 +42,17 @@ FactoryBot.define do
     end
     permission_level 1
   end
+
+  factory :gws_role_schedule_todo_editor, class: Gws::Role, traits: [:gws_role] do
+    permissions do
+      %w(
+        use_private_gws_schedule_todos
+        read_private_gws_schedule_todos
+        edit_private_gws_schedule_todos
+        delete_private_gws_schedule_todos
+        read_private_gws_schedule_todo_categories
+      )
+    end
+    permission_level 1
+  end
 end

@@ -91,6 +91,10 @@ module Gws::Schedule::TodoFilter
     end
   end
 
+  def item_readable?
+    @item.member?(@cur_user) || @item.readable?(@cur_user, site: @cur_site) || @item.allowed?(:read, @cur_user, site: @cur_site)
+  end
+
   public
 
   def index
@@ -99,12 +103,12 @@ module Gws::Schedule::TodoFilter
   end
 
   def show
-    raise '403' if !@item.allowed?(:read, @cur_user, site: @cur_site) && !@item.member?(@cur_user) && !@item.readable?(@cur_user)
+    raise '403' if !item_readable?
     render
   end
 
   def popup
-    if @item.member?(@cur_user) || @item.readable?(@cur_user)
+    if item_readable?
       render file: 'popup', layout: false
     else
       render file: 'app/views/gws/schedule/plans/popup_hidden', layout: false

@@ -65,6 +65,13 @@ class Gws::Schedule::Todo
 
   def calendar_format(user, site)
     result = super
+    return result if result.empty?
+
+    if result[:editable] || member?(user)
+      result[:title] = name
+      result[:readable] = true
+    end
+
     result[:title] = I18n.t('gws/schedule/todo.finish_mark') + result[:title] if finished?
     result[:className] = [result[:className], 'fc-event-todo'].flatten
     result
