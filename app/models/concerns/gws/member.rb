@@ -27,7 +27,7 @@ module Gws::Member
     return true if member_ids.include?(user.id)
     return true if user.group_ids.any? { |group_id| member_group_ids.include?(group_id) }
     if self.class.member_include_custom_groups?
-      return true if (member_custom_group_ids & Gws::CustomGroup.member(user).map(&:id)).present?
+      return true if (member_custom_group_ids & Gws::CustomGroup.member(user).pluck(:id)).present?
     end
     false
   end
