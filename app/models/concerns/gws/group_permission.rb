@@ -111,7 +111,7 @@ module Gws::GroupPermission
         { permission_level: { "$lte" => level }, "$or" => [
           { user_ids: user.id },
           { :group_ids.in => user.group_ids },
-          { :custom_group_ids.in => Gws::CustomGroup.member(user).map(&:id) }
+          { :custom_group_ids.in => Gws::CustomGroup.member(user).pluck(:id) }
         ] }
       else
         { _id: -1 }
