@@ -97,6 +97,7 @@ describe "gws_schedule_todo_readables", type: :feature, dbscope: :example, js: t
       expect(Gws::Schedule::Todo.without_deleted.count).to eq 1
       todo.reload
       expect(todo.todo_state).to eq "finished"
+      expect(todo.comments.count).to eq 1
 
       expect(SS::Notification.count).to eq 3
       SS::Notification.order_by(created: -1).first.tap do |message|
@@ -120,6 +121,7 @@ describe "gws_schedule_todo_readables", type: :feature, dbscope: :example, js: t
       expect(Gws::Schedule::Todo.without_deleted.count).to eq 1
       todo.reload
       expect(todo.todo_state).to eq "unfinished"
+      expect(todo.comments.count).to eq 2
 
       expect(SS::Notification.count).to eq 4
       SS::Notification.order_by(created: -1).first.tap do |message|
@@ -142,6 +144,7 @@ describe "gws_schedule_todo_readables", type: :feature, dbscope: :example, js: t
 
       todo.reload
       expect(todo.achievement_rate).to eq achievement_rate
+      expect(todo.comments.count).to eq 3
 
       expect(SS::Notification.count).to eq 5
       SS::Notification.order_by(created: -1).first.tap do |message|
@@ -156,7 +159,10 @@ describe "gws_schedule_todo_readables", type: :feature, dbscope: :example, js: t
       visit gws_schedule_todo_readables_path gws_site, "-"
       click_on name2
       within "#addon-gws-agents-addons-schedule-todo-comment_post" do
-        click_on I18n.t("ss.buttons.edit")
+        within "#comment-#{todo.comments.order_by(created: -1).first.id}" do
+          expect(page).to have_content(comment_text)
+          click_on I18n.t("ss.buttons.edit")
+        end
       end
       within '#cboxLoadedContent' do
         expect(page).to have_content(comment_text)
@@ -184,7 +190,10 @@ describe "gws_schedule_todo_readables", type: :feature, dbscope: :example, js: t
       visit gws_schedule_todo_readables_path gws_site, "-"
       click_on name2
       within "#addon-gws-agents-addons-schedule-todo-comment_post" do
-        click_on I18n.t("ss.buttons.delete")
+        within "#comment-#{todo.comments.order_by(created: -1).first.id}" do
+          expect(page).to have_content(comment_text2)
+          click_on I18n.t("ss.buttons.delete")
+        end
       end
       within '#cboxLoadedContent' do
         expect(page).to have_content(comment_text2)

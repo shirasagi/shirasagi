@@ -133,9 +133,18 @@ module Gws::Schedule::TodoFilter
     raise '403' if !@item.allowed?(:edit, @cur_user, site: @cur_site) && !@item.member?(@cur_user)
     @item.errors.clear
     return if request.get?
-    @item.edit_range = params.dig(:item, :edit_range)
-    @item.todo_action = params[:action]
-    render_update @item.update(achievement_rate: 100)
+
+    comment = Gws::Schedule::TodoComment.new(cur_site: @cur_site, cur_user: @cur_user, cur_todo: @item)
+    comment.achievement_rate = 100
+    result = comment.save
+
+    if result
+      @item.edit_range = params.dig(:item, :edit_range)
+      @item.todo_action = params[:action]
+      result = @item.update(achievement_rate: 100)
+    end
+
+    render_update result
   end
 
   # 未完了にする
@@ -144,9 +153,18 @@ module Gws::Schedule::TodoFilter
     raise '403' if !@item.allowed?(:edit, @cur_user, site: @cur_site) && !@item.member?(@cur_user)
     @item.errors.clear
     return if request.get?
-    @item.edit_range = params.dig(:item, :edit_range)
-    @item.todo_action = params[:action]
-    render_update @item.update(achievement_rate: 0)
+
+    comment = Gws::Schedule::TodoComment.new(cur_site: @cur_site, cur_user: @cur_user, cur_todo: @item)
+    comment.achievement_rate = 0
+    result = comment.save
+
+    if result
+      @item.edit_range = params.dig(:item, :edit_range)
+      @item.todo_action = params[:action]
+      result = @item.update(achievement_rate: 0)
+    end
+
+    render_update result
   end
 
   # # 削除を取り消す
@@ -162,15 +180,22 @@ module Gws::Schedule::TodoFilter
     @processed_items = []
     error_items = []
     @items.each do |item|
+      item.attributes = fix_params
       if item.allowed?(:edit, @cur_user, site: @cur_site) || item.member?(@cur_user)
-        item.attributes = fix_params
-        if item.update(achievement_rate: 100)
+        comment = Gws::Schedule::TodoComment.new(cur_site: @cur_site, cur_user: @cur_user, cur_todo: item)
+        comment.achievement_rate = 100
+        result = comment.save
+
+        result = item.update(achievement_rate: 100) if result
+
+        if result
           @processed_items << item
           next
         end
+      else
+        item.errors.add :base, :auth_error
       end
 
-      item.errors.add :base, :auth_error
       error_items << item
     end
     @items = error_items
@@ -182,14 +207,22 @@ module Gws::Schedule::TodoFilter
     @processed_items = []
     error_items = []
     @items.each do |item|
+      item.attributes = fix_params
       if item.allowed?(:edit, @cur_user, site: @cur_site) || item.member?(@cur_user)
-        item.attributes = fix_params
-        if item.update(achievement_rate: 0)
+        comment = Gws::Schedule::TodoComment.new(cur_site: @cur_site, cur_user: @cur_user, cur_todo: item)
+        comment.achievement_rate = 0
+        result = comment.save
+
+        result = item.update(achievement_rate: 0) if result
+
+        if result
           @processed_items << item
           next
         end
+      else
+        item.errors.add :base, :auth_error
       end
-      item.errors.add :base, :auth_error
+
       error_items << item
     end
     @items = error_items

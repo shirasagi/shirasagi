@@ -21,6 +21,12 @@ describe "gws_schedule_todo_readables", type: :feature, dbscope: :example, js: t
       item.reload
       expect(item.todo_state).to eq "finished"
       expect(item.achievement_rate).to eq 100
+
+      expect(Gws::Schedule::TodoComment.count).to eq 1
+      Gws::Schedule::TodoComment.first.tap do |comment|
+        expect(comment.text).to be_blank
+        expect(comment.achievement_rate).to eq 100
+      end
     end
   end
 
@@ -46,6 +52,12 @@ describe "gws_schedule_todo_readables", type: :feature, dbscope: :example, js: t
       item.reload
       expect(item.todo_state).to eq "unfinished"
       expect(item.achievement_rate).to eq 0
+
+      expect(Gws::Schedule::TodoComment.count).to eq 1
+      Gws::Schedule::TodoComment.first.tap do |comment|
+        expect(comment.text).to be_blank
+        expect(comment.achievement_rate).to eq 0
+      end
     end
   end
 
@@ -61,6 +73,12 @@ describe "gws_schedule_todo_readables", type: :feature, dbscope: :example, js: t
       item.reload
       expect(item.todo_state).to eq "finished"
       expect(item.achievement_rate).to eq 100
+
+      expect(Gws::Schedule::TodoComment.count).to eq 1
+      Gws::Schedule::TodoComment.first.tap do |comment|
+        expect(comment.text).to be_blank
+        expect(comment.achievement_rate).to eq 100
+      end
     end
   end
 
@@ -84,6 +102,12 @@ describe "gws_schedule_todo_readables", type: :feature, dbscope: :example, js: t
       item.reload
       expect(item.todo_state).to eq "unfinished"
       expect(item.achievement_rate).to eq 0
+
+      expect(Gws::Schedule::TodoComment.count).to eq 1
+      Gws::Schedule::TodoComment.first.tap do |comment|
+        expect(comment.text).to be_blank
+        expect(comment.achievement_rate).to eq 0
+      end
     end
   end
 end
