@@ -25,17 +25,9 @@ class Gws::StaffRecord::PublicDutiesController < ApplicationController
   public
 
   def index
-    @limit = params.dig(:s, :limit).presence || @cur_site.divide_duties_limit
-    users = @cur_year.yearly_users
-
-    @s = OpenStruct.new params[:s]
-    unless @s[:section_name]
-      user = users.where(code: @cur_user.organization_uid).first
-      @s[:section_name] = user.try(:section_name) if @cur_year.yearly_groups.where(name: user.try(:section_name)).present?
-      @s[:section_name] ||= @cur_group.trailing_name if @cur_year.yearly_groups.where(name: @cur_group.trailing_name).present?
-    end
-
-    @items = users.show_divide_duties.
+    set_search_params
+    @limit = @s[:limit].presence || @cur_site.divide_duties_limit
+    @items = @cur_year.yearly_users.show_divide_duties.
       readable(@cur_user, site: @cur_site).
       search(@s).
       page(params[:page]).
@@ -62,7 +54,7 @@ class Gws::StaffRecord::PublicDutiesController < ApplicationController
     @item.attributes = get_params
     @item.in_updated = params[:_updated] if @item.respond_to?(:in_updated)
 
-    result = @cur_year.yearly_users.show_divide_duties.
+    @cur_year.yearly_users.show_divide_duties.
       readable(@cur_user, site: @cur_site).
       where(section_name: @item.section_name).
       where(charge_name: @item.charge_name).
