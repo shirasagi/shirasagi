@@ -60,13 +60,7 @@ module Gws::Member
   end
 
   def sorted_overall_members
-    members = overall_members
-
-    return members.order_by_title(site || cur_site) unless self.class.keep_members_order?
-    return @sorted_members if @sorted_members
-
-    hash = members.map { |m| [m.id, m] }.to_h
-    @sorted_members = member_ids.map { |id| hash[id] }.compact
+    overall_members.active.order_by_title(site || cur_site)
   end
 
   def sorted_overall_members_was
