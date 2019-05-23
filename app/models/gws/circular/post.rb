@@ -14,8 +14,10 @@ class Gws::Circular::Post
   include Gws::Addon::GroupPermission
   include Gws::Addon::History
 
-  index({ site_id: 1 })
-  index({ category_ids: 1 }, { sparse: true })
+  index({ site_id: 1, post_id: 1, deleted: 1 })
+  index({ due_date: 1, site_id: 1, post_id: 1, deleted: 1 })
+  index({ updated: 1, site_id: 1, post_id: 1, deleted: 1 })
+  index({ created: 1, site_id: 1, post_id: 1, deleted: 1 })
 
   member_include_custom_groups
   permission_include_custom_groups
