@@ -109,11 +109,7 @@ class Gws::Schedule::Todo
 
   def subscribed_users
     return Gws::User.none if new_record?
-
-    ids = member_ids
-    ids += Gws::CustomGroup.in(id: member_custom_group_ids).pluck(:member_ids).flatten
-    ids.uniq!
-    Gws::User.in(id: ids)
+    overall_members
   end
 
   def set_todo_state
