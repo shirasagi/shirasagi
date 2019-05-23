@@ -138,11 +138,7 @@ module Gws::Schedule::TodoFilter
     comment.achievement_rate = 100
     result = comment.save
 
-    if result
-      @item.edit_range = params.dig(:item, :edit_range)
-      @item.todo_action = params[:action]
-      result = @item.update(achievement_rate: 100)
-    end
+    result = @item.update(achievement_rate: 100) if result
 
     render_update result
   end
@@ -158,11 +154,7 @@ module Gws::Schedule::TodoFilter
     comment.achievement_rate = 0
     result = comment.save
 
-    if result
-      @item.edit_range = params.dig(:item, :edit_range)
-      @item.todo_action = params[:action]
-      result = @item.update(achievement_rate: 0)
-    end
+    result = @item.update(achievement_rate: 0) if result
 
     render_update result
   end
