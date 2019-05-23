@@ -94,4 +94,91 @@ describe Gws::GroupPermission, type: :model, dbscope: :example do
       expect(item.class.allow(:delete, user2, site: site).present?).to be_falsey
     end
   end
+
+  describe "#owned?" do
+    let(:role) { create :gws_role_schedule_plan_editor }
+    let(:group) { user.groups.first }
+    let!(:group1) { create :gws_group, name: "#{group.name}/group-#{unique_id}" }
+    let!(:group2) { create :gws_group, name: "#{group.name}/group-#{unique_id}" }
+    let!(:user1) { create :gws_user, group_ids: [ group1.id ], gws_role_ids: [ role.id ] }
+    let!(:user2) { create :gws_user, group_ids: [ group2.id ], gws_role_ids: [ role.id ] }
+    let!(:cg_by_user) { create :gws_custom_group, member_ids: [ user1.id ], member_group_ids: [] }
+    let!(:cg_by_group) { create :gws_custom_group, member_ids: [], member_group_ids: [ group1.id ] }
+
+    context "with user" do
+      before do
+        item.user_ids = [ user1.id ]
+        item.group_ids = []
+        item.custom_group_ids = []
+        item.save!
+      end
+
+      it do
+        expect(item.owned?(user1)).to be_truthy
+        expect(item.owned?(user2)).to be_falsey
+
+        expect(item.allowed?(:read, user1, site: site)).to be_truthy
+        expect(item.allowed?(:read, user2, site: site)).to be_falsey
+        expect(item.class.allow(:read, user1, site: site)).to be_present
+        expect(item.class.allow(:read, user2, site: site)).to be_blank
+      end
+    end
+
+    context "with group" do
+      before do
+        item.user_ids = []
+        item.group_ids = [ group1.id ]
+        item.custom_group_ids = []
+        item.save!
+      end
+
+      it do
+        expect(item.owned?(user1)).to be_truthy
+        expect(item.owned?(user2)).to be_falsey
+
+        expect(item.allowed?(:read, user1, site: site)).to be_truthy
+        expect(item.allowed?(:read, user2, site: site)).to be_falsey
+        expect(item.class.allow(:read, user1, site: site)).to be_present
+        expect(item.class.allow(:read, user2, site: site)).to be_blank
+      end
+    end
+
+    context "with custom_group contains user1" do
+      before do
+        item.user_ids = []
+        item.group_ids = []
+        item.custom_group_ids = [ cg_by_user.id ]
+        item.save!
+      end
+
+      it do
+        expect(item.owned?(user1)).to be_truthy
+        expect(item.owned?(user2)).to be_falsey
+
+        expect(item.allowed?(:read, user1, site: site)).to be_truthy
+        expect(item.allowed?(:read, user2, site: site)).to be_falsey
+        expect(item.class.allow(:read, user1, site: site)).to be_present
+        expect(item.class.allow(:read, user2, site: site)).to be_blank
+      end
+    end
+
+    context "with custom_group contains group1" do
+      before do
+        item.user_ids = []
+        item.group_ids = []
+        item.custom_group_ids = [ cg_by_group.id ]
+        item.save!
+      end
+
+      it do
+        expect(item.owned?(user1)).to be_truthy
+        expect(item.owned?(user2)).to be_falsey
+
+        expect(item.allowed?(:read, user1, site: site)).to be_truthy
+        expect(item.allowed?(:read, user2, site: site)).to be_falsey
+        expect(item.class.allow(:read, user1, site: site)).to be_present
+        expect(item.class.allow(:read, user2, site: site)).to be_blank
+      end
+    end
+  end
 end
