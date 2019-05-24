@@ -22,5 +22,8 @@ describe "gws_portal_portlet", type: :feature, dbscope: :example, js: true do
 
     visit gws_portal_user_path(site: site, user: user)
     expect(page).to have_css('.portlets .gws-notices', text: notice_post.name)
+    # wait for ajax completion
+    expect(page).to have_no_css('.fc-loading')
+    expect(page).to have_no_css('.ss-base-loading')
   end
 end

@@ -18,7 +18,7 @@ module Cms::LockFilter
     else
       respond_to do |format|
         format.html { render }
-        format.json { render json: [ t("errors.messages.locked", user: @item.lock_owner.long_name) ], status: :locked }
+        format.json { render json: [ t("errors.messages.locked", user: @item.lock_owner.try(:long_name)) ], status: :locked }
       end
     end
   end
