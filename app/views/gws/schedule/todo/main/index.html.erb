@@ -20,7 +20,7 @@
     <% end %>
   </span>
   <span class="datetime">
-    <%= @model.t(:term) %>: <%= item.end_at.strftime('%Y/%m/%d %H:%M') %>
+    <%= @model.t(:term) %>: <%= term(item) %>
     <% if item.todo_state == 'unfinished' && item.end_at < Time.zone.now %>
     <span class="todo-over"><%= t('gws/schedule/todo.todo_over') %></span>
     <% end %>
