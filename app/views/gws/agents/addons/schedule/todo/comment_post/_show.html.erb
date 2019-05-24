@@ -27,13 +27,15 @@
   </div>
 <% end %>
 
-<%= form_tag(gws_schedule_todo_apis_comments_path(todo_id: @item), id: 'comment-form', method: :post) do %>
-  <div class="row">
-    <label for="item_achievement_rate"><%= Gws::Schedule::TodoComment.t :achievement_rate %></label>: <%= number_field_tag 'item[achievement_rate]' %> <span class="achievement-rate-unit"><%= t("gws/schedule/todo.achievement_rate_unit") %></span>
-  </div>
-  <div class="row"><%= text_area_tag 'item[text]' %></div>
-  <div class="row">
-    <%= hidden_field_tag('redirect_to', request.fullpath) %>
-    <%= submit_tag(I18n.t('gws/schedule.buttons.comment'), class: :btn) %>
-  </div>
+<% if !@item.deleted? %>
+  <%= form_tag(gws_schedule_todo_apis_comments_path(todo_id: @item), id: 'comment-form', method: :post) do %>
+    <div class="row">
+      <label for="item_achievement_rate"><%= Gws::Schedule::TodoComment.t :achievement_rate %></label>: <%= number_field_tag 'item[achievement_rate]' %> <span class="achievement-rate-unit"><%= t("gws/schedule/todo.achievement_rate_unit") %></span>
+    </div>
+    <div class="row"><%= text_area_tag 'item[text]' %></div>
+    <div class="row">
+      <%= hidden_field_tag('redirect_to', request.fullpath) %>
+      <%= submit_tag(I18n.t('gws/schedule.buttons.comment'), class: :btn) %>
+    </div>
+  <% end %>
 <% end %>
