@@ -7,7 +7,7 @@ describe Rdf::VocabImportJob, dbscope: :example do
 
   context "when IPA Core Vocab ttl is given" do
     let(:prefix) { "ic" }
-    let(:file) { Rails.root.join("db", "seeds", "opendata", "rdf", "ipa-core.ttl") }
+    let(:file) { Rails.root.join("db", "seeds", "opendata", "rdf", "imicore242.ttl") }
     let(:order) { rand(999) }
 
     it "import from IPA Core Vocab ttl" do
@@ -15,14 +15,14 @@ describe Rdf::VocabImportJob, dbscope: :example do
       expect(Rdf::Vocab.count).to eq 1
       vocab = Rdf::Vocab.first
       expect(vocab.prefix).to eq prefix
-      expect(vocab.uri).to eq "http://imi.ipa.go.jp/ns/core/rdf#"
+      expect(vocab.uri).to eq "http://imi.go.jp/ns/core/rdf#"
       expect(vocab.order).to eq order
       expect(vocab.labels.preferred_value).to eq "共通語彙基盤コア語彙"
       expect(vocab.comments.preferred_value).to include "コア語彙は、共通語彙基盤の基礎をなすもので、"
       expect(vocab.creators).to be_blank
-      expect(vocab.license).to eq "http://creativecommons.org/publicdomain/zero/1.0/"
-      expect(vocab.version).to eq "2.2"
-      expect(vocab.published).to eq "2015-02-03"
+      expect(vocab.license).to eq "http://creativecommons.org/publicdomain/zero/1.0/legalcode.ja"
+      expect(vocab.version).to eq "2.4.2"
+      expect(vocab.published).to eq "2019-02-15"
       expect(vocab.owner).to eq Rdf::Vocab::OWNER_SYSTEM
       expect(Rdf::Class.count).to eq vocab.classes.count
       expect(Rdf::Prop.count).to eq vocab.props.count
@@ -275,6 +275,54 @@ describe Rdf::VocabImportJob, dbscope: :example do
       puts "== dump =="
       graph.each do |statement|
         puts statement.inspect
+      end
+    end
+  end
+
+  context "when IMI Core Vocabulary 2.2 is given" do
+    let(:prefix) { "ic" }
+    let(:file) { Rails.root.join("spec/fixtures/rdf/ipa-core22.ttl") }
+    let(:order) { rand(999) }
+
+    xit "import from IPA Core Vocab ttl" do
+      described_class.bind(site_id: site).perform_now(prefix, file.to_s, Rdf::Vocab::OWNER_SYSTEM, order)
+      expect(Rdf::Vocab.count).to eq 1
+      vocab = Rdf::Vocab.first
+      expect(vocab.prefix).to eq prefix
+      expect(vocab.uri).to eq "http://imi.ipa.go.jp/ns/core/rdf#"
+      expect(vocab.order).to eq order
+      expect(vocab.labels.preferred_value).to eq "共通語彙基盤コア語彙"
+      expect(vocab.comments.preferred_value).to include "コア語彙は、共通語彙基盤の基礎をなすもので、"
+      expect(vocab.creators).to be_blank
+      expect(vocab.license).to eq "http://creativecommons.org/publicdomain/zero/1.0/"
+      expect(vocab.version).to eq "2.2"
+      expect(vocab.published).to eq "2015-02-03"
+      expect(vocab.owner).to eq Rdf::Vocab::OWNER_SYSTEM
+      expect(Rdf::Class.count).to eq vocab.classes.count
+      expect(Rdf::Prop.count).to eq vocab.props.count
+      expect(Rdf::Class.count).to eq 49
+      Rdf::Class.find_by(name: "事物型").tap do |rdf_class|
+        expect(rdf_class.labels.preferred_value).to eq "事物型"
+        expect(rdf_class.comments.preferred_value).to eq "全ての型のベースとなる基本型。"
+        expect(rdf_class.categories).to be_blank
+        expect(rdf_class.sub_class).to be_blank
+      end
+      Rdf::Class.find_by(name: "ID型").tap do |rdf_class|
+        expect(rdf_class.labels.preferred_value).to eq "ID型"
+        expect(rdf_class.comments.preferred_value).to eq "識別子を表現するためのクラス"
+        expect(rdf_class.categories).to be_blank
+        expect(rdf_class.sub_class).to eq Rdf::Class.find_by(name: "事物型")
+      end
+      expect(Rdf::Prop.count).to eq 205
+      Rdf::Prop.find_by(name: "Eメールアドレス").tap do |rdf_prop|
+        expect(rdf_prop.labels.preferred_value).to eq "Eメールアドレス"
+        expect(rdf_prop.comments.preferred_value).to eq "電子メールのメールアドレス"
+        expect(rdf_prop.range).to be_blank
+      end
+      Rdf::Prop.find_by(name: "アクセス区間").tap do |rdf_prop|
+        expect(rdf_prop.labels.preferred_value).to eq "アクセス区間"
+        expect(rdf_prop.comments.preferred_value).to eq "アクセス方法の各区間の一覧"
+        expect(rdf_prop.range).to eq Rdf::Class.find_by(name: "アクセス区間型")
       end
     end
   end
