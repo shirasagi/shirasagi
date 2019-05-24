@@ -2,7 +2,7 @@ language: ruby
 dist: trusty
 sudo: false
 rvm:
-  - 2.4.6
+  - 2.6.3
 
 cache:
   apt: true
