@@ -1,8 +1,10 @@
-<% return "" unless @cur_site.twitter_token_enabled? %>
-<% return "" if @item.try(:branch?)%>
-
-<%= jquery do %> SS_AddonTabs.hide(".mod-cms-sns_poster"); <% end %>
 <%
+  return "" unless @cur_site.twitter_token_enabled?
+  return "" if @item.try(:branch?)
+
+  addon ||= local_assigns.fetch(:addon, {})
+  addon[:display_body] = "hide"
+
   twitter_auto_post = @item.twitter_auto_post.presence || @cur_node.try(:node_twitter_auto_post).presence || @cur_site.try(:site_twitter_auto_post).presence
   sns_auto_delete = @item.sns_auto_delete.presence || @cur_node.try(:node_sns_auto_delete).presence || @cur_site.try(:site_sns_auto_delete).presence
   edit_auto_post = @item.edit_auto_post.presence || @cur_node.try(:node_edit_auto_post).presence || @cur_site.try(:site_edit_auto_post).presence

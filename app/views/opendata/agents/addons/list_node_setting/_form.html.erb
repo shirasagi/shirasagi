@@ -1,10 +1,11 @@
-<%= jquery do %> SS_AddonTabs.hide(".mod-opendata-list-node-setting"); <% end %>
 <%
+  addon ||= local_assigns.fetch(:addon, {})
+  addon[:display_body] = "hide"
 
-view_route = params[:route] ? params[:route] : @item.route
-view_route = @item.view_route if @item.view_route.present?
-
-%><dl class="see mod-opendata-list-node-setting">
+  view_route = params[:route] ? params[:route] : @item.route
+  view_route = @item.view_route if @item.view_route.present?
+%>
+<dl class="see mod-opendata-list-node-setting">
   <dt><%= @model.t :page_layout_id %><%= @model.tt :page_layout_id %></dt>
   <dd><%= f.select :page_layout_id, ancestral_layouts(@item), include_blank: " " %></dd>
 

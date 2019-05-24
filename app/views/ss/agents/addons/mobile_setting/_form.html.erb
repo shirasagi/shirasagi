@@ -1,7 +1,7 @@
-<%= jquery do %>
-  SS_AddonTabs.hide(".mod-ss-mobile-setting");
-<% end %>
 <%
+  addon ||= local_assigns.fetch(:addon, {})
+  addon[:display_body] = "hide"
+
   @item.in_mobile_size ||= @item.mobile_size / 1_024
 %>
 <dl class="see mod-ss-mobile-setting">

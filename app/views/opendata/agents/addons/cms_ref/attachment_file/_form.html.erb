@@ -1,5 +1,9 @@
-<% return "" if @item.assoc_site_id.blank? %>
-<%= jquery do %> SS_AddonTabs.hide(".mod-opendata-site-association"); <% end %>
+<%
+  return "" if @item.assoc_site_id.blank?
+
+  addon ||= local_assigns.fetch(:addon, {})
+  addon[:display_body] = "hide"
+%>
 
 <dl class="see mod-opendata-site-association">
   <%= render partial: 'opendata/agents/addons/cms_ref/attachment_file/common' %>

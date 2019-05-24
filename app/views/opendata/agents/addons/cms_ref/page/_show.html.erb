@@ -1,6 +1,10 @@
-<% return "" if @item.assoc_site_id.blank? %>
+<%
+  return "" if @item.assoc_site_id.blank?
+
+  addon ||= local_assigns.fetch(:addon, {})
+  addon[:display_body] = "hide"
+%>
 <%= jquery do %>
-  SS_AddonTabs.hide(".mod-opendata-site-association");
   $(".mod-opendata-site-association .check-for-update").colorbox();
 <% end %>
 

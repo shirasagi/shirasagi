@@ -1,6 +1,7 @@
-<%= jquery do %>
-  SS_AddonTabs.hide(".mod-inquiry-faq");
-<% end %>
+<%
+  addon ||= local_assigns.fetch(:addon, {})
+  addon[:display_body] = "hide"
+%>
 
 <dl class="see mod-inquiry-faq">
   <dt><%= @model.t :faq_id %><%= @model.tt :faq_id %></dt>

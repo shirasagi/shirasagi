@@ -1,10 +1,9 @@
 <%
+  addon ||= local_assigns.fetch(:addon, {})
+  addon[:display_body] = "hide"
+
   routes_options = Workflow::Route.site(@cur_site).map { |item| [ item.name, item.id ] }
 %>
-
-<%= jquery do %>
-  SS_AddonTabs.hide(".mod-opendata-site-setting");
-<% end %>
 <dl class="see mod-opendata-site-setting">
   <dt><%= @model.t :dataset_workflow_route %><%= @model.tt :dataset_workflow_route %></dt>
   <dd><%= f.select :dataset_workflow_route_id, routes_options, include_blank: true %></dd>

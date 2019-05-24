@@ -1,8 +1,11 @@
 <% unless @item.new_record? %>
   <% has_action_lock = url_for(action: :lock) rescue nil %>
   <% if has_action_lock %>
+    <%
+      addon ||= local_assigns.fetch(:addon, {})
+      addon[:display_body] = "hide"
+    %>
     <%= jquery do %>
-      SS_AddonTabs.hide(".mod-gws-edit_lock");
       var editLock = new Gws_EditLock(".mod-gws-edit_lock", "<%= url_for action: :lock %>", "<%= url_for action: :unlock %>");
     <% end %>
 

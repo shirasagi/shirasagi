@@ -1,14 +1,10 @@
 <% addons = @item ? @item.class.addons : [] %>
 
 <div class="addon-views">
-  <%= render "ss/crud/addon", addon: { id: "addon-basic", head: t("ss.basic_info"), toggle: true } do %>
+  <%= render "ss/crud/addon", addon: { id: "addon-basic", head: t("ss.basic_info"), toggle: true, display_body: "hide" } do %>
     <%= render file: "_show" %>
   <% end %>
-  <%= render file: "_addons_show", locals: { addons: addons } if addons.size > 0 %>
+  <%= render file: "_addons_show", locals: { addons: addons, display_body: "hide" } if addons.size > 0 %>
 </div>
-
-<%= jquery do %>
-  SS_AddonTabs.hide(".addon-body dl.see");
-<% end %>
 
 <%= render file: "cms/page_search_contents/show" %>

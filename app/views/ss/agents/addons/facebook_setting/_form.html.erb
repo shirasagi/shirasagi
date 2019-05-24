@@ -1,6 +1,7 @@
-<%= jquery do %>
-  SS_AddonTabs.hide(".mod-ss-facebook-setting");
-<% end %>
+<%
+  addon ||= local_assigns.fetch(:addon, {})
+  addon[:display_body] = "hide"
+%>
 <dl class="see mod-ss-facebook-setting">
   <dt><%= @model.t :facebook_app_id %><%= @model.tt :facebook_app_id %></dt>
   <dd><%= f.text_field :facebook_app_id %></dd>

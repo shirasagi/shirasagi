@@ -1,4 +1,7 @@
-<%= jquery do %> SS_AddonTabs.hide(".mod-cms-owner_permission"); <% end %>
+<%
+  addon ||= local_assigns.fetch(:addon, {})
+  addon[:display_body] = "hide"
+%>
 
 <dl class="see mod-cms-owner_permission">
   <dt><%= @model.t :group_ids %><%= @model.tt :group_ids %></dt>

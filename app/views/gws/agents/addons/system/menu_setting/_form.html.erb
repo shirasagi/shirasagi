@@ -1,4 +1,7 @@
-<%= jquery do %> SS_AddonTabs.hide(".addon-gws-system-menu-setting"); <% end %>
+<%
+  addon ||= local_assigns.fetch(:addon, {})
+  addon[:display_body] = "hide"
+%>
 
 <% render_menu_setting = proc do |type, fallback_label| %>
   <dl class="see addon-gws-system-menu-setting">

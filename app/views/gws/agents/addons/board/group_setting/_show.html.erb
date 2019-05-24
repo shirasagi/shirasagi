@@ -1,4 +1,7 @@
-<%= jquery do %> SS_AddonTabs.hide(".addon-gws-board-group-setting"); <% end %>
+<%
+  addon ||= local_assigns.fetch(:addon, {})
+  addon[:display_body] = "hide"
+%>
 
 <dl class="see addon-gws-board-group-setting">
   <dt><%= @model.t :board_new_days %></dt>
