@@ -228,8 +228,9 @@ class Gws::Schedule::Todo
       end
     end
 
-    def todo_grouping_options
-      %w(none category user end_at).map do |v|
+    def todo_grouping_options(opts = {})
+      exceptions = Array[opts[:except]].flatten.compact.map(&:to_s)
+      %w(none category user end_at).reject { |v| exceptions.include?(v) }.map do |v|
         [ I18n.t("gws/schedule/todo.options.grouping.#{v}"), v ]
       end
     end
