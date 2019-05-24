@@ -4,17 +4,8 @@ module Board::Addon
     extend SS::Addon
 
     def allowed?(action, user, opts = {})
-      user = user.cms_user
       site = opts[:site] || @cur_site
-      # node = opts[:node] || @cur_node
-
-      permit = "#{action}_board_posts"
-
-      if user.cms_role_permissions["#{permit}_#{site.id}"].to_i > 0
-        return true
-      else
-        return false
-      end
+      user.cms_role_permit_any?(site, "#{action}_board_posts")
     end
 
     module ClassMethods

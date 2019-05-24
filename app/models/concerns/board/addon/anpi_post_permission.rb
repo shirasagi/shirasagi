@@ -5,15 +5,7 @@ module Board::Addon
 
     def allowed?(action, user, opts = {})
       site = opts[:site] || @cur_site
-      #node = opts[:node] || @cur_node
-
-      permit = "#{action}_board_anpi_posts"
-
-      if user.cms_role_permissions["#{permit}_#{site.id}"].to_i > 0
-        return true
-      else
-        return false
-      end
+      user.cms_role_permit_any?(site, "#{action}_board_anpi_posts")
     end
 
     module ClassMethods
