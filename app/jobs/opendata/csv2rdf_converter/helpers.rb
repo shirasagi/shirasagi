@@ -11,7 +11,7 @@ module Opendata::Csv2rdfConverter::Helpers
       @cur_resource = @cur_dataset.resources.find(resource)
       @item = Opendata::Csv2rdfSetting.site(@cur_site).resource(@cur_resource).first
       @csv = @cur_resource.parse_tsv
-      @uri = "#{UNF::Normalizer.normalize(@cur_resource.full_url, :nfkc)}#"
+      @uri = "#{UNF::Normalizer.normalize(@cur_resource.full_url.presence || @cur_resource.url, :nfkc)}#"
       @tmp_dir = nil
       @tmp_file = nil
     end
