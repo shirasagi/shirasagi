@@ -2,11 +2,12 @@
 
 <% render_cate_hierarichy = proc do |cate| %>
   <% if !cate.root? %>
-    <% render_cate_hierarichy.call(cate.parent) %>
+    <% parent = cate.parent %>
+    <% render_cate_hierarichy.call(parent) %>
   <% end %>
 
   <% if !cate_rendered.key?(cate.id) %>
-    <li class="list-item gws-schedule-todo-list-item-header" data-depth="<%= cate.depth %>" data-group="cate-<%= cate.id %>">
+    <li class="list-item gws-schedule-todo-list-item-header" id="cate-<%= cate.id %>" data-depth="<%= cate.depth %>" data-group="cate-<%= cate.id %>"<% if parent.present? %> data-parent="cate-<%= parent.id %>"<% end %>>
       <span class="list-item-indent"></span>
       <span class="material-icons md-18 list-item-switch">expand_less</span>
       <label class="check"><input type="checkbox" /></label>
@@ -27,7 +28,7 @@
       <% render_cate_hierarichy.call(cate) %>
 
       <% items.each do |item| %>
-        <li class="list-item" data-depth="<%= cate.depth %>" data-group="cate-<%= cate.id %>">
+        <li class="list-item" id="item-<%= item.id %>" data-depth="<%= cate.depth %>" data-group="cate-<%= cate.id %>">
           <nav class="tap-menu">
             <% @tap_menu.call(item) %>
           </nav>

@@ -2,18 +2,18 @@
   <%= render file: "_list_head" %>
 
   <ul class="list-items">
-    <% @items.group_by_end_at do |header, items| %>
-      <li class="list-item gws-schedule-todo-list-item-header" data-depth="0" data-group="<%= header %>">
+    <% @items.group_by_end_at do |limit, items| %>
+      <li class="list-item gws-schedule-todo-list-item-header" id="limit-<%= limit.id %>" data-depth="0" data-group="limit-<%= limit.id %>">
         <span class="list-item-indent"></span>
         <span class="material-icons md-18 list-item-switch">expand_less</span>
         <label class="check"></label>
         <div class="info">
-          <span><%= header %></span>
+          <span><%= limit.name %></span>
         </div>
       </li>
 
       <% items.each do |item| %>
-        <li class="list-item" data-depth="0" data-group="<%= header %>">
+        <li class="list-item" id="item-<%= item.id %>" data-depth="0" data-group="limit-<%= limit.id %>">
           <nav class="tap-menu">
             <% @tap_menu.call(item) %>
           </nav>

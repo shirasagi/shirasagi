@@ -43,16 +43,41 @@ this.Gws_Schedule_Todo_Index = (function () {
   Gws_Schedule_Todo_Index.prototype.expandListItems = function($listItemHeader) {
     $listItemHeader.find(".list-item-switch").html("expand_less");
 
+    var self = this;
     this.eachListItem($listItemHeader, function() {
+      console.log(this);
       var $this = $(this);
-      if ($this.hasClass("gws-schedule-todo-list-item-header")) {
+      if (self.examineToShow($this)) {
+        console.log(true);
         showEl($(this));
       } else {
-        if (isExpanded($this.prev(".gws-schedule-todo-list-item-header"))) {
-          showEl($(this));
-        }
+        console.log(false);
       }
     });
+  };
+
+  Gws_Schedule_Todo_Index.prototype.examineToShow = function($listItem) {
+    if ($listItem.hasClass("gws-schedule-todo-list-item-header")) {
+      var parentGroup = $listItem.data("parent");
+      if (parentGroup) {
+        return this.examineToShow(this.$el.find("#" + parentGroup));
+      }
+
+      return true;
+    }
+
+    var listItemGroup = $listItem.data("group");
+    var $listItemHeader = this.$el.find("#" + listItemGroup);
+    if (!isExpanded($listItemHeader)) {
+      return false;
+    }
+
+    var parentGroup = $listItemHeader.data("parent");
+    if (parentGroup) {
+      return this.examineToShow(this.$el.find("#" + parentGroup));
+    }
+
+    return true;
   };
 
   Gws_Schedule_Todo_Index.prototype.eachListItem = function($listItemHeader, callback) {

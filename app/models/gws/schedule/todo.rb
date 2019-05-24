@@ -258,19 +258,19 @@ class Gws::Schedule::Todo
         cmp
       end
 
-      last_header = nil
+      last_user = nil
       users_items = []
       expanded.each do |_title_order, _organization_uid, _uid, user, item|
-        if last_header.nil?
-          last_header = user.long_name
+        if last_user.nil?
+          last_user = user
           users_items << item
           next
         end
 
-        if last_header != user.long_name
-          yield last_header, users_items
+        if last_user.id != user.id
+          yield last_user, users_items
 
-          last_header = user.long_name
+          last_user = user
           users_items.clear
           users_items << item
           next
@@ -280,37 +280,23 @@ class Gws::Schedule::Todo
       end
 
       if users_items.present?
-        yield last_header, users_items
+        yield last_user, users_items
       end
     end
 
     def group_by_end_at(today: nil)
-      # load all items
-      items = self.all.to_a
+      # load all items for repeated use
+      all_items = self.all.to_a
 
       today ||= Time.zone.now
       today = today.beginning_of_day
-      tomorrow = today + 1.day
-      day_after_tomorrow = tomorrow + 1.day
 
-      out_dated_items = items.select { |item| item.end_at < today }
-      if out_dated_items.present?
-        yield I18n.t("gws/schedule/todo.header.out_dated"), out_dated_items
-      end
-
-      today_items = items.select { |item| today <= item.end_at && item.end_at < tomorrow }
-      if today_items.present?
-        yield "#{I18n.t("gws/schedule/todo.header.today")} - #{I18n.l(today.to_date)}", today_items
-      end
-
-      tomorrow_items = items.select { |item| tomorrow <= item.end_at && item.end_at < day_after_tomorrow }
-      if tomorrow_items.present?
-        yield "#{I18n.t("gws/schedule/todo.header.tomorrow")} - #{I18n.l(tomorrow.to_date)}", tomorrow_items
-      end
-
-      day_after_tomorrow_items = items.select { |item| day_after_tomorrow <= item.end_at }
-      if day_after_tomorrow_items.present?
-        yield I18n.t("gws/schedule/todo.header.day_after_tomorrow"), day_after_tomorrow_items
+      %i[out_dated today tomorrow day_after_tomorrow].each do |limit_type|
+        limit = Gws::Schedule::TodoLimit.get(limit_type, today)
+        items = limit.collect(all_items)
+        if items.present?
+          yield limit, items
+        end
       end
     end
 
