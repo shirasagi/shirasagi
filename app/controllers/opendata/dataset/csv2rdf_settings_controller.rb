@@ -49,7 +49,7 @@ class Opendata::Dataset::Csv2rdfSettingsController < ApplicationController
     @item.attributes = fix_params
 
     params[:s] ||= {}
-    params[:s][:category_ids] ||= [ "false" ]
+    params[:s][:category_ids] ||= %w(false)
   end
 
   def set_rdf_class
@@ -113,6 +113,9 @@ class Opendata::Dataset::Csv2rdfSettingsController < ApplicationController
   end
 
   public
+
+  def guidance
+  end
 
   def header_size
     render_with(file: "wizards", action: :rdf_class)
