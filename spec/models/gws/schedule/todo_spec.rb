@@ -336,4 +336,124 @@ RSpec.describe Gws::Schedule::Todo, type: :model, dbscope: :example do
       end
     end
   end
+
+  describe ".group_by_user" do
+    let(:site) { gws_site }
+    let!(:user1) { create(:gws_user, cur_site: site, uid: "T0001", gws_role_ids: gws_user.gws_role_ids) }
+    let!(:user2) { create(:gws_user, cur_site: site, uid: "T0002", gws_role_ids: gws_user.gws_role_ids) }
+    let!(:item1) { create :gws_schedule_todo, cur_site: site, cur_user: user1, member_ids: [user1.id], user_ids: [user1.id] }
+    let!(:item2) { create :gws_schedule_todo, cur_site: site, cur_user: user1, member_ids: [user2.id], user_ids: [user1.id] }
+
+    subject do
+      result = []
+      described_class.all.order_by(end_at: 1).group_by_user(site: site) do |user, items|
+        result << [ user, items.dup ]
+      end
+      result
+    end
+
+    it do
+      expect(subject).to have(2).items
+
+      subject[0].tap do |user, items|
+        expect(user.id).to eq user1.id
+        expect(items).to have(1).items
+        expect(items[0].id.to_s).to eq item1.id.to_s
+      end
+
+      subject[1].tap do |user, items|
+        expect(user.id).to eq user2.id
+        expect(items).to have(1).items
+        expect(items[0].id.to_s).to eq item2.id.to_s
+      end
+    end
+  end
+
+  describe ".group_by_end_at" do
+    let(:site) { gws_site }
+    let(:user) { gws_user }
+    let(:now) { Time.zone.now.beginning_of_minute }
+    let!(:item1) { create :gws_schedule_todo, cur_site: site, cur_user: user, start_at: now - 1.day, end_at: now - 1.day }
+    let!(:item2) { create :gws_schedule_todo, cur_site: site, cur_user: user, start_at: now, end_at: now }
+    let!(:item3) { create :gws_schedule_todo, cur_site: site, cur_user: user, start_at: now + 1.day, end_at: now + 1.day }
+    let!(:item4) { create :gws_schedule_todo, cur_site: site, cur_user: user, start_at: now + 2.days, end_at: now + 2.days }
+    let!(:item5) { create :gws_schedule_todo, cur_site: site, cur_user: user, start_at: now + 3.days, end_at: now + 3.days }
+
+    subject do
+      result = []
+      described_class.all.order_by(end_at: 1).group_by_end_at do |limit, items|
+        result << [ limit, items.dup ]
+      end
+      result
+    end
+
+    it do
+      expect(subject).to have(4).items
+
+      subject[0].tap do |limit, items|
+        expect(limit.id).to eq "out_dated"
+        expect(items).to have(1).items
+        expect(items[0].id.to_s).to eq item1.id.to_s
+      end
+
+      subject[1].tap do |limit, items|
+        expect(limit.id).to eq "today"
+        expect(items).to have(1).items
+        expect(items[0].id.to_s).to eq item2.id.to_s
+      end
+
+      subject[2].tap do |limit, items|
+        expect(limit.id).to eq "tomorrow"
+        expect(items).to have(1).items
+        expect(items[0].id.to_s).to eq item3.id.to_s
+      end
+
+      subject[3].tap do |limit, items|
+        expect(limit.id).to eq "day_after_tomorrow"
+        expect(items).to have(2).items
+        expect(items[0].id.to_s).to eq item4.id.to_s
+        expect(items[1].id.to_s).to eq item5.id.to_s
+      end
+    end
+  end
+
+  describe ".group_by_category" do
+    let(:site) { gws_site }
+    let(:user) { gws_user }
+    let(:cate1) { Gws::Schedule::TodoCategory.create!(cur_site: site, cur_user: user, name: unique_id, order: 10) }
+    let(:cate2) { Gws::Schedule::TodoCategory.create!(cur_site: site, cur_user: user, name: unique_id, order: 20) }
+    let!(:item1) { create :gws_schedule_todo, cur_site: site, cur_user: user }
+    let!(:item2) { create :gws_schedule_todo, cur_site: site, cur_user: user, category_ids: [ cate1.id ] }
+    let!(:item3) { create :gws_schedule_todo, cur_site: site, cur_user: user, category_ids: [ cate2.id ] }
+
+    subject do
+      result = []
+      described_class.all.order_by(end_at: 1).group_by_category(user: user, site: site) do |_header, items, cate|
+        result << [ cate, items.dup ]
+      end
+      result
+    end
+
+    it do
+      expect(subject).to have(3).items
+
+      subject[0].tap do |cate, items|
+        expect(cate.id).to eq "na"
+        expect(items).to have(1).items
+        expect(items[0].id.to_s).to eq item1.id.to_s
+      end
+
+      subject[1].tap do |cate, items|
+        expect(cate.id).to eq cate1.id
+        expect(items).to have(1).items
+        expect(items[0].id.to_s).to eq item2.id.to_s
+      end
+
+      subject[2].tap do |cate, items|
+        expect(cate.id).to eq cate2.id
+        expect(items).to have(1).items
+        expect(items[0].id.to_s).to eq item3.id.to_s
+      end
+    end
+  end
 end
