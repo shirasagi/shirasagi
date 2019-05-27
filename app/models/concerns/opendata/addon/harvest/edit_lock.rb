@@ -12,7 +12,7 @@ module Opendata::Addon::Harvest::EditLock
     end
 
     site = opts[:site] || @cur_site
-    foribity_edit = user.cms_role_permitany?(site, "edit_other_opendata_harvested")
+    foribity_edit = user.cms_role_permit_any?(site, "edit_other_opendata_harvested")
 
     if harvest_locked? && !foribity_edit
       return false
