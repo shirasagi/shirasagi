@@ -139,6 +139,7 @@ class Opendata::UrlResource
           ss_file.in_file = ActionDispatch::Http::UploadedFile.new(tempfile: temp_file,
                                                                    filename: self.filename,
                                                                    type: 'application/octet-stream')
+          ss_file.site_id = dataset.site_id
           ss_file.model = self.class.to_s.underscore
 
           ss_file.content_type = self.format = self.filename.sub(/.*\./, "").upcase
