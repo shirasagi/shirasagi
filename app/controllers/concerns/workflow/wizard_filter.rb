@@ -4,6 +4,7 @@ module Workflow::WizardFilter
   private
 
   def validate_domain(user_id)
+    return true unless @cur_site.respond_to?(:email_domain_allowed?)
     email = SS::User.find(user_id).email
     @cur_site.email_domain_allowed?(email)
   end
