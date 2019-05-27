@@ -50,7 +50,8 @@ class Opendata::UrlResource
     puts self.original_url
 
     last_modified = Timeout.timeout(time_out) do
-      open(self.original_url, proxy: true) { |url_file| url_file.last_modified }
+      uri = URI.parse(self.original_url)
+      uri.open(proxy: true) { |url_file| url_file.last_modified }
     end
 
     if last_modified.blank?
@@ -167,7 +168,8 @@ class Opendata::UrlResource
 
     temp_file.binmode
     Timeout.timeout(time_out) do
-      open(original_url, proxy: true) do |data|
+      uri = URI.parse(original_url)
+      uri.open(proxy: true) do |data|
 
         data.binmode
         temp_file.write(data.read)
