@@ -8,6 +8,7 @@ class Gws::Discussion::TodosController < ApplicationController
 
   before_action :set_forum
   before_action :set_crumbs
+  before_action :set_addons
 
   navi_view "gws/discussion/main/navi"
 
@@ -39,10 +40,32 @@ class Gws::Discussion::TodosController < ApplicationController
     { cur_user: @cur_user, cur_site: @cur_site, discussion_forum_id: @forum.id }
   end
 
+  def set_addons
+    @addons ||= begin
+      addons = @model.addons
+      addons = addons.reject do |addon|
+        [ Gws::Addon::Schedule::Todo::Category, Gws::Addon::Discussion::Todo ].include?(addon.klass)
+      end
+      addons
+    end
+  end
+
+  def set_items
+    or_conds = @model.member_conditions(@cur_user)
+    or_conds += @model.readable_conditions(@cur_user, site: @cur_site)
+    or_conds << @model.allow_condition(:read, @cur_user, site: @cur_site)
+
+    @items = @model.site(@cur_site).
+      discussion_forum(@forum).
+      where("$and" =>[ "$or" => or_conds ]).
+      without_deleted.
+      search(params[:s])
+  end
+
   public
 
   def index
-    @items = []
+    @items = @model.none
   end
 
   def new
@@ -56,12 +79,7 @@ class Gws::Discussion::TodosController < ApplicationController
   end
 
   def print
-    @items = @model.site(@cur_site).
-      discussion_forum(@forum).
-      member_or_readable(@cur_user, site: @cur_site, include_role: true).
-      without_deleted.
-      search(params[:s])
-
+    set_items
     render layout: 'ss/print'
   end
 
@@ -69,16 +87,12 @@ class Gws::Discussion::TodosController < ApplicationController
     @start_at = params[:s][:start].to_date
     @end_at = params[:s][:end].to_date
 
-    @todos = @model.site(@cur_site).
-      discussion_forum(@forum).
-      member_or_readable(@cur_user, site: @cur_site, include_role: true).
-      without_deleted.
-      search(params[:s]).
-      map do |todo|
-        result = todo.calendar_format(@cur_user, @cur_site)
-        result[:restUrl] = gws_discussion_forum_todos_path(site: @cur_site.id)
-        result
-      end
+    set_items
+    @todos = @items.map do |todo|
+      result = todo.calendar_format(@cur_user, @cur_site)
+      result[:restUrl] = gws_discussion_forum_todos_path(site: @cur_site.id)
+      result
+    end
 
     @holidays = HolidayJapan.between(@start_at, @end_at).map do |date, name|
       { className: 'fc-holiday', title: "  #{name}", start: date, allDay: true, editable: false, noPopup: true }
