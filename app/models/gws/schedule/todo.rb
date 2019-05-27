@@ -229,8 +229,13 @@ class Gws::Schedule::Todo
     end
 
     def todo_grouping_options(opts = {})
+      user = opts[:user]
+      site = opts[:site]
       exceptions = Array[opts[:except]].flatten.compact.map(&:to_s)
-      %w(none category user end_at).reject { |v| exceptions.include?(v) }.map do |v|
+      if !Gws::Discussion.allowed?(:use, user, site: site)
+        exceptions << "discussion_forum"
+      end
+      %w(none category user end_at discussion_forum).reject { |v| exceptions.include?(v) }.map do |v|
         [ I18n.t("gws/schedule/todo.options.grouping.#{v}"), v ]
       end
     end
@@ -353,6 +358,75 @@ class Gws::Schedule::Todo
 
       if cate_items.present?
         yield last_header, cate_items, last_cate
+      end
+    end
+
+    def discussion_forum_none
+      @discussion_forum_none ||= begin
+        forum = OpenStruct.new
+        forum.id = "none"
+        forum.name = I18n.t("gws/schedule/todo.discussion_forum_not_assigined")
+        # -(2**(0.size * 8 -2)) == Integer::MIN
+        forum.order = -(2**(0.size * 8 -2))
+        forum
+      end
+    end
+
+    def group_by_discussion_forum(site:, user:)
+      # load all items
+      items = self.all.to_a
+
+      discussion_forum_ids = items.map(&:discussion_forum_id).compact.uniq
+      discussion_forums = Gws::Discussion::Forum.
+        site(site).
+        forum.
+        without_deleted.
+        and_public.
+        member(user).
+        in(id: discussion_forum_ids)
+
+      # load all forums
+      discussion_forums = discussion_forums.to_a
+
+      expanded = []
+      items.each do |item|
+        forum = discussion_forums.find { |f| f.id == item.discussion_forum_id } if item.discussion_forum_id.present?
+        forum = discussion_forum_none if forum.blank?
+
+        expanded << [ forum, item ]
+      end
+
+      expanded.sort! do |lhs, rhs|
+        cmp = lhs[0].order <=> rhs[0].order
+        cmp = lhs[0].name <=> rhs[0].name if cmp == 0
+        cmp = lhs[0].id <=> rhs[0].id if cmp == 0
+        # final result
+        cmp
+      end
+
+      last_forum = nil
+      forum_items = []
+      expanded.each do |forum, item|
+        if last_forum.nil?
+          last_forum = forum
+          forum_items << item
+          next
+        end
+
+        if last_forum.id != forum.id
+          yield last_forum, forum_items
+
+          last_forum = forum
+          forum_items.clear
+          forum_items << item
+          next
+        end
+
+        forum_items << item
+      end
+
+      if forum_items.present?
+        yield last_forum, forum_items
       end
     end
   end

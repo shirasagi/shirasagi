@@ -456,4 +456,44 @@ RSpec.describe Gws::Schedule::Todo, type: :model, dbscope: :example do
       end
     end
   end
+
+  describe ".group_by_discussion_forum" do
+    let(:site) { gws_site }
+    let(:user) { gws_user }
+    let(:forum1) { create :gws_discussion_forum, order: 10 }
+    let(:forum2) { create :gws_discussion_forum, order: 20 }
+    let!(:item1) { create :gws_schedule_todo, cur_site: site, cur_user: user }
+    let!(:item2) { create :gws_schedule_todo, cur_site: site, cur_user: user, discussion_forum_id: forum1.id }
+    let!(:item3) { create :gws_schedule_todo, cur_site: site, cur_user: user, discussion_forum_id: forum2.id }
+
+    subject do
+      result = []
+      described_class.all.order_by(end_at: 1).group_by_discussion_forum(user: user, site: site) do |forum, items|
+        result << [ forum, items.dup ]
+      end
+      result
+    end
+
+    it do
+      expect(subject).to have(3).items
+
+      subject[0].tap do |forum, items|
+        expect(forum.id).to eq "none"
+        expect(items).to have(1).items
+        expect(items[0].id.to_s).to eq item1.id.to_s
+      end
+
+      subject[1].tap do |forum, items|
+        expect(forum.id).to eq forum1.id
+        expect(items).to have(1).items
+        expect(items[0].id.to_s).to eq item2.id.to_s
+      end
+
+      subject[2].tap do |forum, items|
+        expect(forum.id).to eq forum2.id
+        expect(items).to have(1).items
+        expect(items[0].id.to_s).to eq item3.id.to_s
+      end
+    end
+  end
 end

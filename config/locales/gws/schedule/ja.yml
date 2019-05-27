@@ -139,6 +139,7 @@ ja:
     achievement_rate: "%{count}%"
     achievement_rate_unit: "%"
     category_not_assigined: プロジェクト・工程なし
+    discussion_forum_not_assigined: 電子会議室なし
     buttons:
       finish: 完了する
       revert: 未完了に戻す
@@ -187,6 +188,7 @@ ja:
         category: プロジェクト・工程
         user: 担当者
         end_at: 期限
+        discussion_forum: 電子会議室
   gws/schedule/group_setting:
     options:
       todo_delete_threshold:
