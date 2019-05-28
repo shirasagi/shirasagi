@@ -70,6 +70,10 @@ def save_layout(data)
 
   item = Cms::Layout.find_or_create_by(cond)
   item.attributes = data.merge html: html
+  if SS.config.cms.enable_lgwan
+    html.gsub!('{{ part "mypage-login" }}', '')
+    html.gsub!('{{ part "mypage-tabs" }}', '')
+  end
   item.update
   item.add_to_set group_ids: @site.group_ids
 
@@ -345,9 +349,15 @@ def save_part(data)
   item = Cms::Part.unscoped.find_or_create_by(cond).becomes_with_route(data[:route])
   if html
     if SS.config.cms.enable_lgwan
-      html.gsub!('"/mypage/app/"', '"#"')
-      html.gsub!('"/mypage/dataset/"', '"#"')
-      html.gsub!('"/mypage/idea/"', '"#"')
+      # html.gsub!('"/mypage/app/"', '"#"')
+      # html.gsub!('"/mypage/dataset/"', '"#"')
+      # html.gsub!('"/mypage/idea/"', '"#"')
+      html.gsub!('<li><a class="entry" href="/mypage/app/">アプリ登録</a></li>', '')
+      html.gsub!('<li><a class="entry" href="/mypage/app/">アプリを登録する</a></li>', '')
+      html.gsub!('<li><a class="entry" href="/mypage/dataset/">データセット登録</a></li>', '')
+      html.gsub!('<li><a class="entry" href="/mypage/dataset/">データセットを登録する</a></li>', '')
+      html.gsub!('<li><a class="entry" href="/mypage/idea/">アイデア登録</a></li>', '')
+      html.gsub!('<li><a class="entry" href="/mypage/idea/">アイデアを登録する</a></li>', '')
     end
     item.html = html
   end

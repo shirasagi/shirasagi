@@ -13,8 +13,8 @@ def save_part(data)
   item = Cms::Part.unscoped.find_or_create_by(cond).becomes_with_route(data[:route])
   if html
     if SS.config.cms.enable_lgwan
-      html.gsub!('"/kanko-info/"', '"#"')
-      html.gsub!('"/mypage/"', '"#"')
+      html.gsub!('<li class="sight"><a href="/kanko-info/">観光情報</a></li>', '')
+      html.gsub!('<li><a href="/mypage/">安否確認</a></li>', '')
     end
     item.html = html
   end
