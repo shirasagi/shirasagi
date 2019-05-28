@@ -24,7 +24,6 @@ class Webmail::Mailbox
   validates :account, presence: true
   validates :original_name, presence: true, uniqueness: { scope: [:host, :account] }
   validates :name, presence: true
-  validates :depth, numericality: { greater_than_or_equal_to: 0 }
 
   before_validation :validate_name, if: ->{ @sync && name_changed? }
   before_create :imap_create, if: ->{ @sync && imap.present? }
@@ -114,7 +113,8 @@ class Webmail::Mailbox
     self.original_name = box.name
     self.delim = box.delim
     self.attr = box.attr.map(&:to_s) || []
-    self.depth = original_name.split(box.delim).size - 1
+    self.depth = original_name.split(box.delim).size
+    self.depth = self.depth - 1 if self.depth.nonzero?
   end
 
   private
@@ -125,7 +125,8 @@ class Webmail::Mailbox
     self.original_name = Net::IMAP.encode_utf7(name)
     self.delim = '.'
     self.attr = []
-    self.depth = self.name.split('.').size - 1
+    self.depth = self.name.split('.').size
+    self.depth = self.depth - 1 if self.depth.nonzero?
   end
 
   def imap_create
