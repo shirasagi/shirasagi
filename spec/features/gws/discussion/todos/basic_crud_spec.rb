@@ -85,7 +85,7 @@ describe "gws_discussion_todos", type: :feature, dbscope: :example, js: true do
       expect(page).to have_css('#notice', text: I18n.t('ss.notice.deleted'))
 
       expect(Gws::Schedule::Todo.without_deleted.count).to eq 0
-      expect(Gws::Schedule::Todo.only_deleted.count).to eq 0
+      expect(Gws::Schedule::Todo.only_deleted.count).to eq 1
     end
   end
 end
