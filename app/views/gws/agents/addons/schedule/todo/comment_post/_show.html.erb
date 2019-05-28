@@ -1,3 +1,14 @@
+<%
+  if @forum && params[:controller].to_s.include?("gws/discussion/")
+    create_path = proc { |todo| gws_discussion_apis_forum_todo_comments_path(forum_id: @forum, todo_id: todo) }
+    edit_path = proc { |todo, comment| edit_gws_discussion_apis_forum_todo_comment_path(forum_id: @forum, todo_id: todo, id: comment, redirect_to: request.fullpath) }
+    delete_path = proc { |todo, comment| delete_gws_discussion_apis_forum_todo_comment_path(forum_id: @forum, todo_id: todo, id: comment, redirect_to: request.fullpath) }
+  else
+    create_path = proc { |todo| gws_schedule_todo_apis_comments_path(todo_id: todo) }
+    edit_path = proc { |todo, comment| edit_gws_schedule_todo_apis_comment_path(todo_id: todo, id: comment, redirect_to: request.fullpath) }
+    delete_path = proc { |todo, comment| delete_gws_schedule_todo_apis_comment_path(todo_id: todo, id: comment, redirect_to: request.fullpath) }
+  end
+%>
 <% if @item.comments.present? %>
   <div class="comments">
     <% @item.comments.order_by(created: 1).each do |comment| %>
@@ -18,8 +29,8 @@
         </div>
         <% if comment.user_id == @cur_user.id || @item.allowed?(:edit, @cur_user, site: @cur_site) %>
           <div class="row toolbar">
-            <%= link_to(t('ss.buttons.edit'), edit_gws_schedule_todo_apis_comment_path(todo_id: @item, id: comment, redirect_to: request.fullpath), class: 'btn ajax-box') %>
-            <%= link_to(t('ss.buttons.delete'), delete_gws_schedule_todo_apis_comment_path(todo_id: @item, id: comment, redirect_to: request.fullpath), class: 'btn ajax-box') %>
+            <%= link_to(t('ss.buttons.edit'), edit_path.call(@item, comment), class: 'btn ajax-box') %>
+            <%= link_to(t('ss.buttons.delete'), delete_path.call(@item, comment), class: 'btn ajax-box') %>
           </div>
         <% end %>
       </div>
@@ -28,7 +39,7 @@
 <% end %>
 
 <% if !@item.deleted? %>
-  <%= form_tag(gws_schedule_todo_apis_comments_path(todo_id: @item), id: 'comment-form', method: :post) do %>
+  <%= form_tag(create_path.call(@item), id: 'comment-form', method: :post) do %>
     <div class="row">
       <label for="item_achievement_rate"><%= Gws::Schedule::TodoComment.t :achievement_rate %></label>: <%= number_field_tag 'item[achievement_rate]' %> <span class="achievement-rate-unit"><%= t("gws/schedule/todo.achievement_rate_unit") %></span>
     </div>

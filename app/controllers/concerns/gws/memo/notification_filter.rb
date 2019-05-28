@@ -97,6 +97,8 @@ module Gws::Memo::NotificationFilter
 
     if @item && @item.class.name.include?("Gws::Monitor")
       @destroyed_item = [@item.dup, []]
+    elsif @item && @item.class.name.include?("Gws::Schedule::Todo")
+      @destroyed_item = [@item, @item.subscribed_users]
     elsif @item
       @destroyed_item = [@item.dup, @item.subscribed_users]
     end
@@ -110,6 +112,8 @@ module Gws::Memo::NotificationFilter
       @items.each do |item|
         if item.class.name.include?("Gws::Monitor")
           @destroyed_items << [item.dup, []]
+        elsif item.class.name.include?("Gws::Schedule::Todo")
+          @destroyed_items << [item, item.subscribed_users]
         else
           @destroyed_items << [item.dup, item.subscribed_users]
         end

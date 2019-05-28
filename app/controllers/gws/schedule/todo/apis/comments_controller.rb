@@ -6,13 +6,29 @@ class Gws::Schedule::Todo::Apis::CommentsController < ApplicationController
 
   private
 
+  def set_discussion_forum
+    if params[:forum_id].present?
+      @cur_discussion_forum ||= Gws::Discussion::Forum.site(@cur_site).find(params[:forum_id])
+    end
+  end
+
   def set_cur_todo
-    @cur_todo ||= Gws::Schedule::Todo.site(@cur_site).find(params[:todo_id])
+    @cur_todo ||= begin
+      set_discussion_forum
+      criteria = Gws::Schedule::Todo.site(@cur_site)
+      criteria = criteria.discussion_forum(@cur_discussion_forum) if @cur_discussion_forum
+      todo = criteria.find(params[:todo_id])
+      if @cur_discussion_forum
+        todo.in_discussion_forum = true
+        todo.discussion_forum = @cur_discussion_forum
+      end
+      todo
+    end
   end
 
   def fix_params
     set_cur_todo
-    { cur_site: @cur_site, cur_user: @cur_user, cur_todo: @cur_todo }
+    { cur_site: @cur_site, cur_user: @cur_user, cur_todo: @cur_todo, todo: @cur_todo }
   end
 
   def set_item
