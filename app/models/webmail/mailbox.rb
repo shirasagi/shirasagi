@@ -110,7 +110,8 @@ class Webmail::Mailbox
     self.original_name = box.name
     self.delim = box.delim
     self.attr = box.attr.map(&:to_s) || []
-    self.depth = original_name.split(box.delim).size - 1
+    self.depth = original_name.split(box.delim).size
+    self.depth = self.depth - 1 if self.depth.nonzero?
   end
 
   def imap_create
@@ -148,7 +149,8 @@ class Webmail::Mailbox
     self.original_name = Net::IMAP.encode_utf7(name)
     self.delim = '.'
     self.attr = []
-    self.depth = self.name.split('.').size - 1
+    self.depth = self.name.split('.').size
+    self.depth = self.depth - 1 if self.depth.nonzero?
   end
 
   def rescue_imap_error(exception)
