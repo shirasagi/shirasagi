@@ -1,6 +1,7 @@
 puts "# nodes"
 
 def save_node(data)
+  return if SS.config.cms.enable_lgwan && data[:route].start_with?('member/')
   puts data[:name]
   cond = { site_id: @site._id, filename: data[:filename], route: data[:route] }
 
@@ -294,14 +295,14 @@ save_ezine_column node_id: ezine_page_node.id, name: "性別", order: 0, input_t
                   select_options: %w(男性 女性), required: "required", site_id: @site._id
 
 # ezine anpi
-save_node route: "ezine/category_node", filename: "anpi-ezine", name: "安否メールマガジン", layout_id: @layouts["kanko-info"].id
+save_node route: "ezine/category_node", filename: "anpi-ezine", name: "安否メールマガジン", layout_id: @layouts["ezine"].id
 @ezine_anpi = save_node route: "ezine/member_page", filename: "anpi-ezine/anpi", name: "安否確認",
-                        layout_id: @layouts["kanko-info"].id,
+                        layout_id: @layouts["ezine"].id,
                         sender_name: "シラサギサンプルサイト", sender_email: "admin@example.jp",
                         signature_html: ezine_signature_html, signature_text: ezine_signature_text,
                         subscription_constraint: "required"
 ezine_event = save_node route: "ezine/member_page", filename: "anpi-ezine/event", name: "イベント情報",
-                        layout_id: @layouts["kanko-info"].id,
+                        layout_id: @layouts["ezine"].id,
                         sender_name: "シラサギサンプルサイト", sender_email: "admin@example.jp",
                         signature_html: ezine_signature_html, signature_text: ezine_signature_text
 @member_1.subscription_ids = [@ezine_anpi.id, ezine_event.id]

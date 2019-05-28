@@ -14,7 +14,7 @@ Jmaxml::WaterLevelStationImportJob.import_from_zip("weather_xml_regions/water_le
 
 weather_xml_node = save_node route: "rss/weather_xml", filename: "weather",
                              name: "気象庁防災XML", layout_id: @layouts["one"].id, page_state: "closed",
-                             earthquake_intensity: "5+", anpi_mail_id: @ezine_anpi.id, my_anpi_post_id: @anpi_node.id,
+                             earthquake_intensity: "5+", anpi_mail_id: @ezine_anpi.try(:id), my_anpi_post_id: @anpi_node.try(:id),
                              target_region_ids: %w(350 351 352).map { |code| Jmaxml::QuakeRegion.site(@site).find_by(code: code).id }
 
 trigger1 = Jmaxml::Trigger::QuakeIntensityFlash.site(@site).where(name: '震度5強').first_or_create(
