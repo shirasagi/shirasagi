@@ -21,7 +21,7 @@ class Gws::StaffRecord::CopySituationJob < Gws::ApplicationJob
   def copy_group(group)
     sr_group = Gws::StaffRecord::Group.new(
       cur_site: site, cur_user: user,
-      year_id: @cur_year.id, name: group.name, order: group.order,
+      year_id: @cur_year.id, name: group.trailing_name, order: group.order,
       readable_setting_range: @cur_year.readable_setting_range, readable_group_ids: @cur_year.readable_group_ids,
       readable_custom_group_ids: @cur_year.readable_custom_group_ids, readable_member_ids: @cur_year.readable_member_ids,
       group_ids: @cur_year.group_ids, custom_group_ids: @cur_year.custom_group_ids, user_ids: @cur_year.user_ids,
@@ -45,7 +45,7 @@ class Gws::StaffRecord::CopySituationJob < Gws::ApplicationJob
     sr_user = Gws::StaffRecord::User.new(
       cur_site: site, cur_user: user,
       year_id: @cur_year.id, code: user.organization_uid.presence || user.uid, name: user.name, kana: user.kana,
-      section_name: default_group.try(:name), title_name: user.title.try(:name), tel_ext: user.tel_ext,
+      section_name: default_group.try(:trailing_name), title_name: user.title.try(:name), tel_ext: user.tel_ext,
       charge_name: user.charge_name, charge_address: user.charge_address, charge_tel: user.charge_tel,
       divide_duties: user.divide_duties,
       readable_setting_range: @cur_year.readable_setting_range, readable_group_ids: @cur_year.readable_group_ids,

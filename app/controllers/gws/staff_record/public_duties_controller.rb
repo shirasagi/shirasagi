@@ -25,11 +25,11 @@ class Gws::StaffRecord::PublicDutiesController < ApplicationController
   public
 
   def index
-    @limit = params.dig(:s, :limit).presence || @cur_site.divide_duties_limit
-
+    set_search_params
+    @limit = @s[:limit].presence || @cur_site.divide_duties_limit
     @items = @cur_year.yearly_users.show_divide_duties.
       readable(@cur_user, site: @cur_site).
-      search(params[:s]).
+      search(@s).
       page(params[:page]).
       per(@limit)
   end
@@ -54,7 +54,7 @@ class Gws::StaffRecord::PublicDutiesController < ApplicationController
     @item.attributes = get_params
     @item.in_updated = params[:_updated] if @item.respond_to?(:in_updated)
 
-    result = @cur_year.yearly_users.show_divide_duties.
+    @cur_year.yearly_users.show_divide_duties.
       readable(@cur_user, site: @cur_site).
       where(section_name: @item.section_name).
       where(charge_name: @item.charge_name).
