@@ -1,5 +1,3 @@
-<% return if !Gws::Schedule::Todo.allowed?(:read, @cur_user, site: @cur_site) %>
-
 <% addon_options = { head: head, class: css_class, toggle: true } %>
 <%= render "ss/crud/addon", addon: addon_options do %>
   <ul class="list-items">
