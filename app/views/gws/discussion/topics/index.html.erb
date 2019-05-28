@@ -39,8 +39,8 @@ Gws_Discussion_Unseen.renderUnseen(
 
 <div class="gws-discussion-navi">
   <% if Gws::Schedule::Todo.allowed?(:read, @cur_user, site: @cur_site) %>
-    <%= render "todo", head: t("gws/schedule.tabs.my_todo"), todos: @todos %>
-    <%= render "todo", head: t("gws/schedule.tabs.manageable_todo"), todos: @manageable_todos %>
+    <%= render "todo", head: t("gws/schedule.tabs.my_todo"), css_class: "my-todo", todos: @todos %>
+    <%= render "todo", head: t("gws/schedule.tabs.manageable_todo"), css_class: "manageable-todo", todos: @manageable_todos %>
   <% end %>
 
   <div class="addon-view">

@@ -1,23 +1,25 @@
 <% return if !Gws::Schedule::Todo.allowed?(:read, @cur_user, site: @cur_site) %>
 
-<div class="addon-view">
-  <div class="addon-head"><h2><%= head %></h2></div>
-  <% todos.each do |todo| %>
-    <div class="addon-body">
-      <%= link_to todo.name, gws_discussion_forum_todo_path(id: todo.id) %><br />
-      <span class="ss-quota-bar gws-schedule-todo-achievement-bar">
-        <div class="label"><%= t("gws/schedule/todo.achievement_rate", count: todo.achievement_rate || 0) %></div>
-        <div class="usage " style="width: <%= todo.achievement_rate || 0 %>%"></div>
-      </span>
-      <%= term(todo) %>
-    </div>
-  <% end %>
-  <% if todos.blank? %>
-    <div class="addon-body">
-      <%= t("gws/discussion.notice.no_todos") %>
-    </div>
-  <% end %>
-  <div class="addon-body">
-    <%= link_to t("gws/discussion.links.todo.index"), gws_discussion_forum_todos_path %>
-  </div>
-</div>
+<% addon_options = { head: head, class: css_class, toggle: true } %>
+<%= render "ss/crud/addon", addon: addon_options do %>
+  <ul class="list-items">
+    <% todos.each do |todo| %>
+      <li class="list-item">
+        <div class="info">
+          <%= link_to todo.name, gws_discussion_forum_todo_path(id: todo.id), class: "title" %><br />
+          <div class="meta">
+            <span class="ss-quota-bar gws-schedule-todo-achievement-bar">
+              <div class="label"><%= t("gws/schedule/todo.achievement_rate", count: todo.achievement_rate || 0) %></div>
+              <div class="usage " style="width: <%= todo.achievement_rate || 0 %>%"></div>
+            </span>
+            <span class="term"><%= term(todo) %></span>
+          </div>
+        </div>
+      </li>
+    <% end %>
+    <% if todos.blank? %>
+      <li class="list-item"><%= t("gws/discussion.notice.no_todos") %></li>
+    <% end %>
+    <li class="list-item"><%= link_to t("gws/discussion.links.todo.index"), gws_discussion_forum_todos_path %></li>
+  </ul>
+<% end %>
