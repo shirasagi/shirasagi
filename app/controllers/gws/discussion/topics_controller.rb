@@ -47,7 +47,7 @@ class Gws::Discussion::TopicsController < ApplicationController
     common_todo_criteria = Gws::Schedule::Todo.
       site(@cur_site).
       discussion_forum(@forum).
-      where(todo_state: 'unfinished').
+      where(:todo_state.ne => 'finished').
       without_deleted.
       limit(@cur_site.discussion_todo_limit)
 
