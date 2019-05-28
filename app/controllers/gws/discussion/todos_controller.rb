@@ -37,7 +37,7 @@ class Gws::Discussion::TodosController < ApplicationController
 
   def fix_params
     set_forum
-    { cur_user: @cur_user, cur_site: @cur_site, discussion_forum_id: @forum.id }
+    { cur_user: @cur_user, cur_site: @cur_site, in_discussion_forum: true, discussion_forum: @forum }
   end
 
   def set_addons

@@ -13,7 +13,11 @@ module Gws::Schedule::Todo::NotificationFilter
   private
 
   def send_finish_notification
-    url = url_for(action: 'show', category: Gws::Schedule::TodoCategory::ALL.id, id: @item, only_path: true)
+    if @item.in_discussion_forum
+      url = url_for(action: 'show', id: @item, only_path: true)
+    else
+      url = url_for(action: 'show', category: Gws::Schedule::TodoCategory::ALL.id, id: @item, only_path: true)
+    end
     i18n_key = @item.class.model_name.i18n_key
     subject = I18n.t("gws_notification.#{i18n_key}/finish.subject", name: @item.name)
     text = I18n.t("gws_notification.#{i18n_key}/finish.text", text: url)
@@ -21,7 +25,11 @@ module Gws::Schedule::Todo::NotificationFilter
   end
 
   def send_revert_notification
-    url = url_for(action: 'show', category: Gws::Schedule::TodoCategory::ALL.id, id: @item, only_path: true)
+    if @item.in_discussion_forum
+      url = url_for(action: 'show', id: @item, only_path: true)
+    else
+      url = url_for(action: 'show', category: Gws::Schedule::TodoCategory::ALL.id, id: @item, only_path: true)
+    end
     i18n_key = @item.class.model_name.i18n_key
     subject = I18n.t("gws_notification.#{i18n_key}/revert.subject", name: @item.name)
     text = I18n.t("gws_notification.#{i18n_key}/revert.text", text: url)

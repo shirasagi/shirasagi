@@ -276,7 +276,11 @@ class Gws::Memo::Notifier
     elsif class_name.include?("Gws::Qna")
       url = url_helper.gws_qna_topic_path(id: id, site: cur_site.id, category: '-', mode: '-')
     elsif class_name.include?("Gws::Schedule::Todo")
-      url = url_helper.gws_schedule_todo_readable_path(id: id, site: cur_site.id, category: Gws::Schedule::TodoCategory::ALL.id)
+      if item.try(:in_discussion_forum) && item.try(:discussion_forum)
+        url = url_helper.gws_discussion_forum_todo_path(id: id, site: cur_site.id, mode: "-", forum_id: item.discussion_forum)
+      else
+        url = url_helper.gws_schedule_todo_readable_path(id: id, site: cur_site.id, category: Gws::Schedule::TodoCategory::ALL.id)
+      end
     elsif class_name.include?("Gws::Schedule")
       url = url_helper.gws_schedule_plan_path(id: id, site: cur_site.id, category: '-', mode: '-')
     elsif class_name.include?("Gws::Monitor")
