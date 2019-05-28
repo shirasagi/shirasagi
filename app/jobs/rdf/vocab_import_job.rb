@@ -54,7 +54,11 @@ class Rdf::VocabImportJob < Cms::ApplicationJob
   end
 
   def load_and_create_vocab
-    ontology_subject = @graph.each.first.try(:subject)
+    ontology_statement = nil
+    RDF::Reader.open(@filename, { base_uri: @filename, format: @format }) do |reader|
+      ontology_statement = reader.each_statement.first
+    end
+    ontology_subject = ontology_statement.try(:subject)
     raise Rdf::VocabImportJobError, I18n.t("rdf.errors.unable_to_load_graph") if ontology_subject.blank?
     ontology_subject_hash = convert_to_hash(ontology_subject)
 
@@ -94,45 +98,51 @@ class Rdf::VocabImportJob < Cms::ApplicationJob
     rdf_objects.each do |object|
       hash = convert_to_hash(object)
 
+      object_name = object.fragment.presence || ::File.basename(object.path)
+      raise Rdf::VocabImportJobError, "object name is blank" if object_name.blank?
+
       klass, builder = create_builder(hash)
-      next if builder.blank?
+      if builder.blank?
+        next
+      end
 
       builder.graph = @graph
       builder.vocab = vocab
       builder.build(hash)
-      next if builder.attributes.blank?
+      if builder.attributes.blank?
+        next
+      end
 
-      # puts "builder.attributes=#{builder.attributes}"
       if klass == Rdf::Prop
-        create_prop(vocab, object.fragment, builder.attributes)
+        create_prop(vocab, object_name, builder.attributes)
       else
         attributes = builder.attributes.dup
         attributes[:vocab_id] = vocab.id
-        attributes[:name] = object.fragment
+        attributes[:name] = object_name
         @pending_classes << [klass, attributes]
       end
     end
   end
 
   def create_builder(hash)
-    klass, builder = nil
-    case hash["rdf:type"].first.pname
-    when "owl:ObjectProperty", "owl:DatatypeProperty", "rdf:Property" then
-      # property
-      klass = Rdf::Prop
-      builder = Rdf::Builders::PropertyBuidler.new
-      @property_count += 1
-    when "owl:Class", "rdfs:Datatype", "dc:AgentClass", "rdfs:Class" then
-      # class
-      klass = Rdf::Class
-      builder = Rdf::Builders::ClassBuidler.new
-      @class_count += 1
-    when "http://purl.org/dc/dcam/VocabularyEncodingScheme" then
-    else
-      Rails.logger.debug "unknown type: #{hash["rdf:type"].first.pname}"
+    hash["rdf:type"].each do |rdf_type|
+      case rdf_type.pname
+      when "owl:ObjectProperty", "owl:DatatypeProperty", "rdf:Property" then
+        # property
+        @property_count += 1
+        return [ Rdf::Prop, Rdf::Builders::PropertyBuilder.new ]
+      when "owl:Class", "rdfs:Class", "rdfs:Datatype" then
+        # class
+        @class_count += 1
+        return [ Rdf::Class, Rdf::Builders::ClassBuilder.new ]
+      when "http://purl.org/dc/dcam/VocabularyEncodingScheme" then
+        return []
+      end
     end
 
-    [ klass, builder ]
+    Rails.logger.debug "unknown type: #{hash["rdf:type"].first.pname}"
+
+    []
   end
 
   def create_prop(vocab, name, attributes)

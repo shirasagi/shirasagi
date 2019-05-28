@@ -1,4 +1,7 @@
-<%= jquery do %> SS_AddonTabs.hide(".addon-gws-system-desktop-setting"); <% end %>
+<%
+  addon ||= local_assigns.fetch(:addon, {})
+  addon[:display_body] = "hide"
+%>
 
 <dl class="see addon-gws-system-desktop-setting">
   <dt><%= @model.t :desktop_mailstore %><%= @model.tt :desktop_mailstore %></dt>

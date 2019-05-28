@@ -1,4 +1,7 @@
-<%= jquery do %> SS_AddonTabs.hide(".mod-cms-tag-setting"); <% end %>
+<%
+  addon ||= local_assigns.fetch(:addon, {})
+  addon[:display_body] = "hide"
+%>
 
 <dl class="see mod-cms-tag-setting">
   <dt><%= @model.t :st_tags %><%= @model.tt :st_tags %></dt>

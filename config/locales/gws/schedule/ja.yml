@@ -220,7 +220,6 @@ ja:
       gws/schedule/todo: ToDo
       gws/schedule/category: 種別
       gws/schedule/holiday: 休日
-      gws/schedule/todo: ToDo
       gws/schedule/comment: コメント
       gws/schedule/attendance: 出欠
       gws/schedule/approval: 承認
@@ -277,6 +276,14 @@ ja:
         todo_delete_threshold: ToDo復旧可能期間
         schedule_attachment_state: ファイル添付
         schedule_drag_drop_state: ドラッグ＆ドロップ
+        schedule_personal_tab_state: 個人タブの表示
+        schedule_personal_tab_label: 個人タブの表示
+        schedule_group_tab_state: グループタブの表示
+        schedule_custom_group_tab_state: カスタムグループタブの表示
+        schedule_group_all_tab_state: 全体タブの表示
+        schedule_group_all_tab_label: 全体タブの表示
+        schedule_facility_tab_state: 設備予約タブの表示
+        schedule_facility_tab_label: 設備予約タブの表示
       gws/schedule/user_setting:
         schedule_tabs: タブ表示
         schedule_tabs_group_ids: タブ表示/グループ

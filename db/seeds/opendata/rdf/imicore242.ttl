@@ -1,0 +1,3960 @@
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix schema: <http://schema.org/> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+@prefix ic: <http://imi.go.jp/ns/core/rdf#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix uncefactISO4217: <urn:un:unece:uncefact:codelist:standard:ISO:ISO3AlphaCurrencyCode:2012-08-31#> .
+@prefix uncefactCode: <urn:un:unece:uncefact:codelist:standard:UNECE:MeasurementUnitCommonCode:9#> .
+@prefix uncefactDuration: <urn:un:unece:uncefact:codelist:standard:UNECE:MeasurementUnitCommonCodeDuration:4#> .
+@prefix uncefactLinear: <urn:un:unece:uncefact:codelist:standard:UNECE:MeasurementUnitCommonCodeLinear:4#> .
+@prefix uncefactVolume: <urn:un:unece:uncefact:codelist:standard:UNECE:MeasurementUnitCommonCodeVolume:4#> .
+@prefix uncefactWeight: <urn:un:unece:uncefact:codelist:standard:UNECE:MeasurementUnitCommonCodeWeight:4#> .
+
+<http://imi.go.jp/ns/core/rdf>
+  a owl:Ontology ;
+  rdfs:label "共通語彙基盤コア語彙"@ja, "IMI Core Vocabulary"@en ;
+  dct:creator [
+    foaf:homepage <http://www.meti.go.jp/> ;
+    foaf:name "経済産業省"@ja, "Ministry of Economy, Trade and Industry"@en
+  ] ;  dct:creator [
+    foaf:homepage <https://www.ipa.go.jp/> ;
+    foaf:name "IPA 独立行政法人情報処理推進機構"@ja, "Information-technology Promotion Agency, Japan."@en
+  ] ;
+  dct:issued "2019-02-15" ;
+  dct:license <http://creativecommons.org/publicdomain/zero/1.0/legalcode.ja> ;
+  rdfs:comment "コア語彙は、共通語彙基盤の基礎をなすもので、氏名、住所、組織等、あらゆる社会活動で使用される中核的な用語の集合です。多くのシステム間で情報交換のための基礎となる語彙で、データ交換、オープンデータの二次利用等の効率化に役立つものです。"@ja, "IMI Core Vocabulary"@en ;
+  owl:versionInfo "2.4.2" .
+
+ic:人型  a owl:Class ;
+  rdfs:label "人型"@ja, "Person"@en ;
+  rdfs:comment "人の情報を表現するためのクラス用語"@ja, "A class term to express information of a person."@en ;
+  rdfs:subClassOf ic:実体型
+.
+ic:名称型  a owl:Class ;
+  rdfs:label "名称型"@ja, "Name"@en ;
+  rdfs:comment "組織や地物等の名称を表現するためのクラス用語"@ja, "A class term to express names of an organization or feature."@en ;
+  rdfs:subClassOf ic:事物型
+.
+ic:氏名型  a owl:Class ;
+  rdfs:label "氏名型"@ja, "Name of person"@en ;
+  rdfs:comment "人の氏名を表現するためのクラス用語"@ja, "A class term to express the name of a person."@en ;
+  rdfs:subClassOf ic:事物型
+.
+ic:住所型  a owl:Class ;
+  rdfs:label "住所型"@ja, "Address"@en ;
+  rdfs:comment "住所を表現するためのクラス用語"@ja, "A class term to express an address."@en ;
+  rdfs:subClassOf ic:事物型
+.
+ic:連絡先型  a owl:Class ;
+  rdfs:label "連絡先型"@ja, "Contact"@en ;
+  rdfs:comment "連絡先を表現するためのクラス用語"@ja, "A class term to express a contact."@en ;
+  rdfs:subClassOf ic:事物型
+.
+ic:電話番号型 a rdfs:Datatype ;
+  rdfs:label "電話番号型"@ja, "Telephone number"@en ;
+  rdfs:comment "電話番号を表現するためのクラス用語 ※0-9 の数字及び + - ( ) , の文字のみを使用"@ja, "A class term to express a telephone number. Note: Use '0 to 9' numeric characters and 'plus '+', minus '-', opening parenthesis '(', closing parenthesis ')', and comma ',' 'characters only."@en ;
+  owl:equivalentClass [ owl:onDatatype xsd:string]
+.
+ic:組織型  a owl:Class ;
+  rdfs:label "組織型"@ja, "Organization"@en ;
+  rdfs:comment "組織を表現するためのクラス用語"@ja, "A class term to express an organization."@en ;
+  rdfs:subClassOf ic:実体型
+.
+ic:業務組織型  a owl:Class ;
+  rdfs:label "業務組織型"@ja, "Business organization "@en ;
+  rdfs:comment "業務組織を表現するためのクラス用語"@ja, "A class term to express a business organization."@en ;
+  rdfs:subClassOf ic:組織型
+.
+ic:法人型  a owl:Class ;
+  rdfs:label "法人型"@ja, "Corporation"@en ;
+  rdfs:comment "法人を表現するためのクラス用語"@ja, "A class term to express a corporation."@en ;
+  rdfs:subClassOf ic:業務組織型
+.
+ic:人数型  a owl:Class ;
+  rdfs:label "人数型"@ja, "Head count"@en ;
+  rdfs:comment "人数を表現するためのクラス用語"@ja, "A class term to express the number of people involved."@en ;
+  rdfs:subClassOf ic:概念型
+.
+ic:構成員型  a owl:Class ;
+  rdfs:label "構成員型"@ja, "Member"@en ;
+  rdfs:comment "組織等を構成する人を表現するクラス用語"@ja, "A class term to express members comprising an organization."@en ;
+  rdfs:subClassOf ic:概念型
+.
+ic:組織関連型  a owl:Class ;
+  rdfs:label "組織関連型"@ja, "Organization association"@en ;
+  rdfs:comment "組織の関連を表現するためのクラス用語"@ja, "A class term to express an association with another organization."@en ;
+  rdfs:subClassOf ic:概念型
+.
+ic:場所型  a owl:Class ;
+  rdfs:label "場所型"@ja, "Location"@en ;
+  rdfs:comment "場所を表現するためのクラス用語"@ja, "A class term to express a location."@en ;
+  rdfs:subClassOf ic:事物型
+.
+ic:座標型  a owl:Class ;
+  rdfs:label "座標型"@ja, "Geometry"@en ;
+  rdfs:comment "座標を表現するためのクラス用語"@ja, "A class term to express latitude-longitude coordinates."@en ;
+  rdfs:subClassOf ic:事物型
+.
+ic:ID型  a owl:Class ;
+  rdfs:label "ID型"@ja, "Identifier"@en ;
+  rdfs:comment "IDを表現するためのクラス用語"@ja, "A class term to express an identifier."@en ;
+  rdfs:subClassOf ic:概念型
+.
+ic:ID体系型  a owl:Class ;
+  rdfs:label "ID体系型"@ja, "Identifier reference system"@en ;
+  rdfs:comment "IDの体系を表現するためのクラス用語"@ja, "A class term to express a system for specifying identifiers."@en ;
+  rdfs:subClassOf ic:事物型
+.
+ic:製品型  a owl:Class ;
+  rdfs:label "製品型"@ja, "Product"@en ;
+  rdfs:comment "製品を表現するためのクラス用語"@ja, "A class term to express a product."@en ;
+  rdfs:subClassOf ic:事物型
+.
+ic:製品個品型  a owl:Class ;
+  rdfs:label "製品個品型"@ja, "Product instance"@en ;
+  rdfs:comment "製品を個別に表現するためのクラス用語"@ja, "A class term to express an individual product."@en ;
+  rdfs:subClassOf ic:製品型
+.
+ic:地物型  a owl:Class ;
+  rdfs:label "地物型"@ja, "Feature"@en ;
+  rdfs:comment "参照対象となる地物（施設や建物など）を表すためのクラス用語"@ja, "A class term to express a feature (such as a facility or building) to be referenced."@en ;
+  rdfs:subClassOf ic:場所型
+.
+ic:土地型  a owl:Class ;
+  rdfs:label "土地型"@ja, "Land"@en ;
+  rdfs:comment "特定の用途に用いられる土地を表現するためのクラス用語"@ja, "A class term to express a plot of land used for a specific purpose."@en ;
+  rdfs:subClassOf ic:地物型
+.
+ic:施設型  a owl:Class ;
+  rdfs:label "施設型"@ja, "Facility"@en ;
+  rdfs:comment "施設を表現するためのクラス用語"@ja, "A class term to express a facility."@en ;
+  rdfs:subClassOf ic:地物型
+.
+ic:施設関連型  a owl:Class ;
+  rdfs:label "施設関連型"@ja, "Facility association"@en ;
+  rdfs:comment "施設の関連を表現するためのクラス用語"@ja, "A class term to express an associated facility."@en ;
+  rdfs:subClassOf ic:概念型
+.
+ic:建物型  a owl:Class ;
+  rdfs:label "建物型"@ja, "Building"@en ;
+  rdfs:comment "建物を表現するためのクラス用語"@ja, "A class term to express a building."@en ;
+  rdfs:subClassOf ic:地物型
+.
+ic:駐車場型  a owl:Class ;
+  rdfs:label "駐車場型"@ja, "Parking"@en ;
+  rdfs:comment "駐車場を表現するためのクラス用語"@ja, "A class term to express a parking area."@en ;
+  rdfs:subClassOf ic:施設型
+.
+ic:設備型  a owl:Class ;
+  rdfs:label "設備型"@ja, "Equipment"@en ;
+  rdfs:comment "施設や建物等に備わっている設備を表現するためのクラス用語"@ja, "A class term to express an equipment installed in a facility or building."@en ;
+  rdfs:subClassOf ic:事物型
+.
+ic:イベント型  a owl:Class ;
+  rdfs:label "イベント型"@ja, "Exhibition / Festival / Event"@en ;
+  rdfs:comment "時間と場所を指定して行われるイベント（ビジネス、スポーツ、教育、娯楽などの催し）を表現するためのクラス用語"@ja, "A class term to express an event (such as a business, sport, educational, or entertaining activity) which is held at the specified time and location."@en ;
+  rdfs:subClassOf ic:事物型
+.
+ic:活動型  a owl:Class ;
+  rdfs:label "活動型"@ja, "Activity"@en ;
+  rdfs:comment "活動を表現するためのクラス用語"@ja, "A class term to express an activity."@en ;
+  rdfs:subClassOf ic:事物型
+.
+ic:関与型  a owl:Class ;
+  rdfs:label "関与型"@ja, "Participation"@en ;
+  rdfs:comment "関連する組織や人を表現するためのクラス用語"@ja, "A class term to express an associated organization or person."@en ;
+  rdfs:subClassOf ic:概念型
+.
+ic:測定値型
+  a owl:DeprecatedClass ;
+  rdfs:label "測定値型"@ja, "Measured value"@en ;
+  rdfs:comment "測定単位及び方法を表現するためのクラス用語"@ja, "A class term to express a unit of measurement and its method."@en ;
+  rdfs:subClassOf ic:事物型
+.
+ic:数量型  a owl:Class ;
+  rdfs:label "数量型"@ja, "Quantity"@en ;
+  rdfs:comment "数量を表現するためのクラス用語"@ja, "A class term to express quantity."@en ;
+  rdfs:subClassOf ic:概念型
+.
+ic:容量型  a owl:Class ;
+  rdfs:label "容量型"@ja, "Volume / Capacity"@en ;
+  rdfs:comment "容量を表現するためのクラス用語"@ja, "A class term to express volume."@en ;
+  rdfs:subClassOf ic:概念型
+.
+ic:面積型  a owl:Class ;
+  rdfs:label "面積型"@ja, "Square measure"@en ;
+  rdfs:comment "面積を表現するためのクラス用語"@ja, "A class term to express area."@en ;
+  rdfs:subClassOf ic:概念型
+.
+ic:重量型  a owl:Class ;
+  rdfs:label "重量型"@ja, "Weight"@en ;
+  rdfs:comment "重量を表現するためのクラス用語"@ja, "A class term to express weight."@en ;
+  rdfs:subClassOf ic:概念型
+.
+ic:長さ型  a owl:Class ;
+  rdfs:label "長さ型"@ja, "Length"@en ;
+  rdfs:comment "長さを表現するためのクラス用語"@ja, "A class term to express length."@en ;
+  rdfs:subClassOf ic:概念型
+.
+ic:時間型
+  a owl:DeprecatedClass ;
+  rdfs:label "時間型"@ja, "Duration"@en ;
+  rdfs:comment "時間の長さを表現するためのクラス用語"@ja, "A class term to express time length."@en ;
+  rdfs:subClassOf ic:事物型
+.
+ic:金額型  a owl:Class ;
+  rdfs:label "金額型"@ja, "Amount of money"@en ;
+  rdfs:comment "金額を表現するためのクラス用語"@ja, "A class term to express amount of money."@en ;
+  rdfs:subClassOf ic:概念型
+.
+ic:価格型  a owl:Class ;
+  rdfs:label "価格型"@ja, "Charge / Price"@en ;
+  rdfs:comment "価格を表現するためのクラス用語"@ja, "A class term to express a price."@en ;
+  rdfs:subClassOf ic:事物型
+.
+ic:実体型  a owl:Class ;
+  rdfs:label "実体型"@ja, "Entity"@en ;
+  rdfs:comment "実体を表現するためのクラス用語"@ja, "A class term to express an entity."@en ;
+  rdfs:subClassOf ic:事物型
+.
+ic:状況型  a owl:Class ;
+  rdfs:label "状況型"@ja, "Status"@en ;
+  rdfs:comment "状況を表現するためのクラス用語"@ja, "A class term to express state of affairs."@en ;
+  rdfs:subClassOf ic:概念型
+.
+ic:日時型  a owl:Class ;
+  rdfs:label "日時型"@ja, "Date and time"@en ;
+  rdfs:comment "日時を表現するためのクラス用語"@ja, "A class term to express date and time."@en ;
+  rdfs:subClassOf ic:概念型
+.
+ic:日付型  a owl:Class ;
+  rdfs:label "日付型"@ja, "Date"@en ;
+  rdfs:comment "日付を表現するためのクラス用語"@ja, "A class term to express date."@en ;
+  rdfs:subClassOf ic:概念型
+.
+ic:期間型  a owl:Class ;
+  rdfs:label "期間型"@ja, "Period"@en ;
+  rdfs:comment "期間を表現するためのクラス用語"@ja, "A class term to express a period."@en ;
+  rdfs:subClassOf ic:期間スケジュール型
+.
+ic:期間スケジュール型  a owl:Class ;
+  rdfs:label "期間スケジュール型"@ja, "Period or schedule"@en ;
+  rdfs:comment "期間やスケジュールを表現するためのクラス用語"@ja, "A class term to express a period or schedule."@en ;
+  rdfs:subClassOf ic:概念型
+.
+ic:イベントスケジュール型  a owl:Class ;
+  rdfs:label "イベントスケジュール型"@ja, "Schedule for event"@en ;
+  rdfs:comment "イベントスケジュールを表現するためのクラス用語"@ja, "A class term to express an event schedule."@en ;
+  rdfs:subClassOf ic:期間スケジュール型
+.
+ic:定期スケジュール型  a owl:Class ;
+  rdfs:label "定期スケジュール型"@ja, "Periodic schedule"@en ;
+  rdfs:comment "定期的に繰り返されるスケジュールを表現するクラス用語"@ja, "A class term to express a schedule that is repeatedly held on a regular basis."@en ;
+  rdfs:subClassOf ic:期間スケジュール型
+.
+ic:詳細スケジュール型  a owl:Class ;
+  rdfs:label "詳細スケジュール型"@ja, "Detailed schedule "@en ;
+  rdfs:comment "（将来的に整備する予定）施設等のオープン日とオープン時間を表現するためのクラス用語。複数のスケジュールが列挙された場合はそれらの和を取るものとする"@ja, "(To be defined in the future)A class term to express opening time and day of a facility. When multiple schedules are listed, enumerate them."@en ;
+  rdfs:subClassOf ic:期間スケジュール型
+.
+ic:詳細スケジュール規則型  a owl:Class ;
+  rdfs:label "詳細スケジュール規則型"@ja, "Repeating rule for detailed schedule"@en ;
+  rdfs:comment "（将来的に整備する予定）繰り返し型のスケジュールを定義するためのクラス用語"@ja, "(To be defined in the future) class term to define a repetitive schedule."@en ;
+  rdfs:subClassOf ic:期間スケジュール型
+.
+ic:コード型  a owl:Class ;
+  rdfs:label "コード型"@ja, "Code"@en ;
+  rdfs:comment "コードを表現するためのクラス用語"@ja, "A class term to express a code."@en ;
+  rdfs:subClassOf ic:概念型
+.
+ic:単位コード型  a owl:Class ;
+  rdfs:label "単位コード型"@ja, "Unit code"@en ;
+  rdfs:comment "単位コードを表現するためのクラス用語"@ja, "A class term to express a unit code."@en ;
+  rdfs:subClassOf ic:コード型
+.
+ic:コードリスト型  a owl:Class ;
+  rdfs:label "コードリスト型"@ja, "Code list"@en ;
+  rdfs:comment "コードリストを表現するためのクラス用語"@ja, "A class term to express a code list."@en ;
+  rdfs:subClassOf ic:事物型
+.
+ic:アクセス型  a owl:Class ;
+  rdfs:label "アクセス型"@ja, "Route"@en ;
+  rdfs:comment "地物等へのアクセスを表現するためのクラス用語"@ja, "A class term to express a route to a feature, etc."@en ;
+  rdfs:subClassOf ic:概念型
+.
+ic:アクセス区間型  a owl:Class ;
+  rdfs:label "アクセス区間型"@ja, "Section of route"@en ;
+  rdfs:comment "アクセスに含まれる各区間を表現するためのクラス用語"@ja, "A class term to express each section of a route."@en ;
+  rdfs:subClassOf ic:概念型
+.
+ic:概念型  a owl:Class ;
+  rdfs:label "概念型"@ja, "Concept"@en ;
+  rdfs:comment "全ての型のベースとなる基本型としてのクラス用語"@ja, "A class term that serves as the base type for all types."@en ;
+.
+ic:事物型  a owl:Class ;
+  rdfs:label "事物型"@ja, "Thing"@en ;
+  rdfs:comment "識別可能なことやものを表すためのクラス用語"@ja, "A class term to represent an identifiable thing."@en ;
+  rdfs:subClassOf ic:概念型
+.
+ic:参照型  a owl:Class ;
+  rdfs:label "参照型"@ja, "Reference"@en ;
+  rdfs:comment "追加情報等を参照するためのクラス用語"@ja, "A class term to refer to additional information."@en ;
+  rdfs:subClassOf ic:概念型
+.
+ic:記述型  a owl:Class ;
+  rdfs:label "記述型"@ja, "Explanation"@en ;
+  rdfs:comment "種別付きの説明文を表現するためのクラス用語"@ja, "A class term to express an explanation in text with a category."@en ;
+  rdfs:subClassOf ic:概念型
+.
+ic:サービス型  a owl:Class ;
+  rdfs:label "サービス型"@ja, "Service"@en ;
+  rdfs:comment "サービスの情報を表現するためのクラス用語"@ja, "A class term to express a service."@en ;
+  rdfs:subClassOf ic:事物型
+.
+ic:文書型  a owl:Class ;
+  rdfs:label "文書型"@ja, "Document"@en ;
+  rdfs:comment "文書の情報を表すクラス用語（Dublin Core Metadata Element Setに準拠）"@ja, "A class term to express information of a document (that complies with Dublin Core Metadata Element Set)."@en ;
+  rdfs:subClassOf ic:事物型
+.
+ic:対象型  a owl:Class ;
+  rdfs:label "対象型"@ja, "Target"@en ;
+  rdfs:comment "イベントや制度等の対象となる事物を表すクラス用語"@ja, "A class term to express a thing to be targeted for an event or system."@en ;
+  rdfs:subClassOf ic:事物型
+.
+ic:制約型  a owl:Class ;
+  rdfs:label "制約型"@ja, "Restriction"@en ;
+  rdfs:comment "対象となる事物の制約条件を表すクラス用語"@ja, "A class term to express a restriction on a thing to be targeted."@en ;
+  rdfs:subClassOf ic:概念型
+.
+ic:コード制約型  a owl:Class ;
+  rdfs:label "コード制約型"@ja, "Restriction by code"@en ;
+  rdfs:comment "対象となる事物の制約条件をコードによって指定するためのクラス用語"@ja, "A class term to express a restriction on a targeted thing as a code."@en ;
+  rdfs:subClassOf ic:制約型
+.
+ic:範囲制約型  a owl:Class ;
+  rdfs:label "範囲制約型"@ja, "Range restriction"@en ;
+  rdfs:comment "対象となる事物の制約条件を数量の範囲によって指定するためのクラス用語"@ja, "A class term to express a restriction on a targeted thing by means of a numerical range."@en ;
+  rdfs:subClassOf ic:制約型
+.
+ic:期間制約型  a owl:Class ;
+  rdfs:label "期間制約型"@ja, "Period restriction"@en ;
+  rdfs:comment "対象となる事物の制約条件を期間によって指定するためのクラス用語"@ja, "A class term to express a restriction on a targeted thing by means of a period."@en ;
+  rdfs:subClassOf ic:制約型
+.
+ic:体系
+  a owl:ObjectProperty ;
+  rdfs:label "体系"@ja, "Reference system"@en ;
+  rdfs:comment "IDの体系を記述するためのプロパティ用語"@ja, "The system for specifying identifiers."@en ;
+  schema:domainIncludes ic:ID型 ;
+  rdfs:range ic:ID体系型
+ .
+ic:ID
+  a owl:ObjectProperty ;
+  rdfs:label "ID"@ja, "Identification"@en ;
+  rdfs:comment "事物に割り振られたID（識別子)を記述するためのプロパティ用語"@ja, "The identifier assigned to a thing."@en ;
+  schema:domainIncludes ic:アクセス型,ic:事物型 ;
+  rdfs:range ic:ID型
+ .
+ic:座標参照系
+  a owl:ObjectProperty ;
+  rdfs:label "座標参照系"@ja, "Coordinate reference system"@en ;
+  rdfs:comment "座標の参照系を記述するためのプロパティ用語"@ja, "The reference system of latitude-longitude coordinates."@en ;
+  schema:domainIncludes ic:座標型 ;
+  rdfs:range ic:ID型
+ .
+ic:シリアル番号
+  a owl:ObjectProperty ;
+  rdfs:label "シリアル番号"@ja, "Serial number"@en ;
+  rdfs:comment "シリアル番号を記述するためのプロパティ用語"@ja, "The serial number."@en ;
+  schema:domainIncludes ic:製品個品型 ;
+  rdfs:range ic:ID型
+ .
+ic:製造者ID
+  a owl:ObjectProperty ;
+  rdfs:label "製造者ID"@ja, "Manufacturer identification"@en ;
+  rdfs:comment "製造者によって割り当てられたIDを記述するためのプロパティ用語"@ja, "The identifier assigned by a manufacturer."@en ;
+  schema:domainIncludes ic:製品型 ;
+  rdfs:range ic:ID型
+ .
+ic:地理識別子
+  a owl:ObjectProperty ;
+  rdfs:label "地理識別子"@ja, "Geographic identification"@en ;
+  rdfs:comment "場所の地理識別子を記述するためのプロパティ用語"@ja, "The geographical identifier of a location."@en ;
+  schema:domainIncludes ic:場所型 ;
+  rdfs:range ic:ID型
+ .
+ic:販売業者ID
+  a owl:ObjectProperty ;
+  rdfs:label "販売業者ID"@ja, "Dealer identification"@en ;
+  rdfs:comment "販売業者によって割り当てられたIDを記述するためのプロパティ用語"@ja, "The identifier assigned by a distributor."@en ;
+  schema:domainIncludes ic:製品型 ;
+  rdfs:range ic:ID型
+ .
+ic:アクセス区間
+  a owl:ObjectProperty ;
+  rdfs:label "アクセス区間"@ja, "Section of route"@en ;
+  rdfs:comment "アクセス方法の各区間の一覧を記述するためのプロパティ用語"@ja, "The list of sections of a route."@en ;
+  schema:domainIncludes ic:アクセス型 ;
+  rdfs:range ic:アクセス区間型
+ .
+ic:アクセス
+  a owl:ObjectProperty ;
+  rdfs:label "アクセス"@ja, "Route"@en ;
+  rdfs:comment "アクセス方法を記述するためのプロパティ用語"@ja, "The route."@en ;
+  schema:domainIncludes ic:地物型 ;
+  rdfs:range ic:アクセス型
+ .
+ic:関連イベント
+  a owl:ObjectProperty ;
+  rdfs:label "関連イベント"@ja, "Related event"@en ;
+  rdfs:comment "関連するイベントを記述するためのプロパティ用語"@ja, "The related event."@en ;
+  schema:domainIncludes ic:イベント型 ;
+  rdfs:range ic:イベント型
+ .
+ic:料金
+  a owl:ObjectProperty ;
+  rdfs:label "料金"@ja, "Fee"@en ;
+  rdfs:comment "料金（施設、設備の利用料金やイベントの参加費など）を記述するためのプロパティ用語"@ja, "The fee (such as a usage fee of a facility or equipment, and a participation fee of an event)."@en ;
+  schema:domainIncludes ic:施設型,ic:設備型,ic:イベント型 ;
+  rdfs:range ic:価格型
+ .
+ic:価格
+  a owl:ObjectProperty ;
+  rdfs:label "価格"@ja, "Price"@en ;
+  rdfs:comment "価格（製品の価格など）を記述するためのプロパティ用語"@ja, "The price (such as a product price)."@en ;
+  schema:domainIncludes ic:製品型 ;
+  rdfs:range ic:価格型
+ .
+ic:金額
+  a owl:ObjectProperty ;
+  rdfs:label "金額"@ja, "Amount"@en ;
+  rdfs:comment "金額を記述するためのプロパティ用語"@ja, "The amount of money."@en ;
+  schema:domainIncludes ic:価格型 ;
+  rdfs:range ic:金額型
+ .
+ic:資本金
+  a owl:ObjectProperty ;
+  rdfs:label "資本金"@ja, "Capital"@en ;
+  rdfs:comment "法人などの資本金を記述するためのプロパティ用語"@ja, "The capital of a corporation."@en ;
+  schema:domainIncludes ic:法人型 ;
+  rdfs:range ic:金額型
+ .
+ic:購入価格
+  a owl:ObjectProperty ;
+  rdfs:label "購入価格"@ja, "Purchased price"@en ;
+  rdfs:comment "購入価格を記述するためのプロパティ用語"@ja, "The purchase price."@en ;
+  schema:domainIncludes ic:製品個品型 ;
+  rdfs:range ic:金額型
+ .
+ic:代表者
+  a owl:ObjectProperty ;
+  rdfs:label "代表者"@ja, "Principal"@en ;
+  rdfs:comment "組織の代表者を記述するためのプロパティ用語"@ja, "The representative of an organization."@en ;
+  schema:domainIncludes ic:組織型 ;
+  rdfs:range ic:構成員型
+ .
+ic:座標データ書式
+  a owl:ObjectProperty ;
+  rdfs:label "座標データ書式"@ja, "Geometry encoding code"@en ;
+  rdfs:comment "点、線、面などを表現するデータ文字列の書式を表すコードを記述するためのプロパティ用語"@ja, "The code specifying a format of a data string to express points, lines, and planes."@en ;
+  schema:domainIncludes ic:座標型 ;
+  rdfs:range ic:コード型
+ .
+ic:数量単位
+  a owl:DeprecatedProperty ;
+  rdfs:label "数量単位"@ja, "Number unit code"@en ;
+  rdfs:comment "数量の単位を表すコードを記述するためのプロパティ用語"@ja, "The code specifying a unit of quantity."@en ;
+.
+ic:カレンダー
+  a owl:ObjectProperty ;
+  rdfs:label "カレンダー"@ja, "Calendar"@en ;
+  rdfs:comment "カレンダーの種類を表すコードを記述するためのプロパティ用語"@ja, "The code specifying a type of calendar."@en ;
+  schema:domainIncludes ic:日時型,ic:日付型 ;
+  rdfs:range ic:コード型
+ .
+ic:国コード
+  a owl:ObjectProperty ;
+  rdfs:label "国コード"@ja, "Country code"@en ;
+  rdfs:comment "国のコードを記述するためのプロパティ用語"@ja, "The code specifying a country."@en ;
+  schema:domainIncludes ic:住所型 ;
+  rdfs:range ic:コード型
+ .
+ic:市区町村コード
+  a owl:ObjectProperty ;
+  rdfs:label "市区町村コード"@ja, "City code"@en ;
+  rdfs:comment "市区町村のコードを記述するためのプロパティ用語"@ja, "The code specifying a municipality."@en ;
+  schema:domainIncludes ic:住所型 ;
+  rdfs:range ic:コード型
+ .
+ic:住所コード
+  a owl:ObjectProperty ;
+  rdfs:label "住所コード"@ja, "Address code"@en ;
+  rdfs:comment "住所のコードを記述するためのプロパティ用語　※地方公共団体情報システム機構の地方公共団体コード住所など"@ja, "The code specifying an address. Note: Such as Local Government Code Address by Japan Agency for Local Authority Information Systems."@en ;
+  schema:domainIncludes ic:住所型 ;
+  rdfs:range ic:コード型
+ .
+ic:都道府県コード
+  a owl:ObjectProperty ;
+  rdfs:label "都道府県コード"@ja, "Prefecture code"@en ;
+  rdfs:comment "都道府県のコードを記述するためのプロパティ用語"@ja, "The code specifying a prefecture."@en ;
+  schema:domainIncludes ic:住所型 ;
+  rdfs:range ic:コード型
+ .
+ic:コード種別
+  a owl:ObjectProperty ;
+  rdfs:label "コード種別"@ja, "Code list"@en ;
+  rdfs:comment "コードの種別を記述するためのプロパティ用語"@ja, "The type of a code."@en ;
+  schema:domainIncludes ic:コード型 ;
+  rdfs:range ic:コードリスト型
+ .
+ic:量種別
+  a owl:DatatypeProperty ;
+  rdfs:label "量種別"@ja, "Quantity kind"@en ;
+  rdfs:comment "量の種別の表記を記述するためのプロパティ用語"@ja, "The category of a quantity expressed as text."@en ;
+  schema:domainIncludes ic:単位コード型 ;
+  rdfs:range xsd:string
+ .
+ic:乗数
+  a owl:DatatypeProperty ;
+  rdfs:label "乗数"@ja, "Multiplier"@en ;
+  rdfs:comment "基本単位に対する変換乗数を記述するためのプロパティ用語"@ja, "The conversion multiplier to be applied to the base unit."@en ;
+  schema:domainIncludes ic:金額型,ic:単位コード型 ;
+  rdfs:range xsd:double
+ .
+ic:原産国コード
+  a owl:ObjectProperty ;
+  rdfs:label "原産国コード"@ja, "Origin country code"@en ;
+  rdfs:comment "原産国を表すコードを記述するためのプロパティ用語"@ja, "The code specifying a country of origin."@en ;
+  schema:domainIncludes ic:製品型 ;
+  rdfs:range ic:コード型
+ .
+ic:国籍コード
+  a owl:ObjectProperty ;
+  rdfs:label "国籍コード"@ja, "Nationality code"@en ;
+  rdfs:comment "国籍コードを記述するためのプロパティ用語　※住民基本台帳で利用されているものを使用"@ja, "The code specifying a nationality. Note: Use the code in Basic Resident Registration."@en ;
+  schema:domainIncludes ic:人型 ;
+  rdfs:range ic:コード型
+ .
+ic:種別コード
+  a owl:ObjectProperty ;
+  rdfs:label "種別コード"@ja, "Category code"@en ;
+  rdfs:comment "種別コードを記述するためのプロパティ用語"@ja, "The code specifying a category."@en ;
+  schema:domainIncludes ic:概念型 ;
+  rdfs:range ic:コード型
+ .
+ic:性別コード
+  a owl:ObjectProperty ;
+  rdfs:label "性別コード"@ja, "Gender code"@en ;
+  rdfs:comment "性別コードを記述するためのプロパティ用語"@ja, "The code specifying gender."@en ;
+  schema:domainIncludes ic:人型 ;
+  rdfs:range ic:コード型
+ .
+ic:出生国コード
+  a owl:ObjectProperty ;
+  rdfs:label "出生国コード"@ja, "Birth country code"@en ;
+  rdfs:comment "生まれた国のコードを記述するためのプロパティ用語"@ja, "The code specifying a country of birth."@en ;
+  schema:domainIncludes ic:人型 ;
+  rdfs:range ic:コード型
+ .
+ic:組織種別
+  a owl:ObjectProperty ;
+  rdfs:label "組織種別"@ja, "Category of organization"@en ;
+  rdfs:comment "組織の種別コード（株式会社など）を記述するためのプロパティ用語"@ja, "The code specifying the category of an organization (such as a limited corporation)."@en ;
+  schema:domainIncludes ic:法人型 ;
+  rdfs:range ic:コード型
+ .
+ic:施設
+  a owl:ObjectProperty ;
+  rdfs:label "施設"@ja, "Facility"@en ;
+  rdfs:comment "施設を記述するためのプロパティ用語"@ja, "The facility."@en ;
+  schema:domainIncludes ic:施設関連型,ic:建物型 ;
+  rdfs:range ic:施設型
+ .
+ic:関連施設
+  a owl:ObjectProperty ;
+  rdfs:label "関連施設"@ja, "Associated facility"@en ;
+  rdfs:comment "関連する施設（上位施設、下位施設など）を記述するためのプロパティ用語"@ja, "The associated facility (such as a parent or affiliated facility)."@en ;
+  schema:domainIncludes ic:施設型 ;
+  rdfs:range ic:施設関連型
+ .
+ic:管理者
+  a owl:ObjectProperty ;
+  rdfs:label "管理者"@ja, "Administrator"@en ;
+  rdfs:comment "管理している組織や人を記述するためのプロパティ用語"@ja, "The organization or person in charge of maintenance."@en ;
+  schema:domainIncludes ic:設備型 ;
+  rdfs:range ic:実体型
+ .
+ic:入数
+  a owl:ObjectProperty ;
+  rdfs:label "入数"@ja, "Quantity per carton"@en ;
+  rdfs:comment "箱などに含まれる物の数量を記述するためのプロパティ用語"@ja, "The quantity of items contained in a box, etc."@en ;
+  schema:domainIncludes ic:製品型 ;
+  rdfs:range ic:数量型
+ .
+ic:収容人数
+  a owl:ObjectProperty ;
+  rdfs:label "収容人数"@ja, "Max occupancy capacity"@en ;
+  rdfs:comment "収容人数を記述するためのプロパティ用語"@ja, "The maximum number of people that a facility can accommodate."@en ;
+  schema:domainIncludes ic:施設型 ;
+  rdfs:range ic:数量型
+ .
+ic:期間
+  a owl:ObjectProperty ;
+  rdfs:label "期間"@ja, "Period"@en ;
+  rdfs:comment "開始から終了までの時間範囲を記述するためのプロパティ用語"@ja, "The time range from start to end."@en ;
+  schema:domainIncludes ic:イベント型,ic:活動型,ic:状況型,ic:期間制約型 ;
+  rdfs:range ic:期間スケジュール型
+ .
+ic:利用可能時間
+  a owl:ObjectProperty ;
+  rdfs:label "利用可能時間"@ja, "Business hours"@en ;
+  rdfs:comment "利用可能日と利用可能時間を記述するためのプロパティ用語"@ja, "The available date (or day) and opening hours."@en ;
+  schema:domainIncludes ic:施設型,ic:設備型 ;
+  rdfs:range ic:期間スケジュール型
+ .
+ic:設備
+  a owl:ObjectProperty ;
+  rdfs:label "設備"@ja, "Equipment"@en ;
+  rdfs:comment "設備を記述するためのプロパティ用語"@ja, "The equipment."@en ;
+  schema:domainIncludes ic:地物型 ;
+  rdfs:range ic:設備型
+ .
+ic:時間
+  a owl:ObjectProperty ;
+  rdfs:label "時間"@ja, "Duration / Required time"@en ;
+  rdfs:comment "所要時間を記述するためのプロパティ用語"@ja, "The amount of time required."@en ;
+  schema:domainIncludes ic:アクセス型,ic:アクセス区間型 ;
+  rdfs:range ic:数量型
+ .
+ic:設置者
+  a owl:ObjectProperty ;
+  rdfs:label "設置者"@ja, "Establisher"@en ;
+  rdfs:comment "設備などを設置した組織を記述するためのプロパティ用語"@ja, "The organization that installed an equipment, etc."@en ;
+  schema:domainIncludes ic:設備型 ;
+  rdfs:range ic:組織型
+ .
+ic:組織
+  a owl:ObjectProperty ;
+  rdfs:label "組織"@ja, "Organization"@en ;
+  rdfs:comment "組織を記述するためのプロパティ用語"@ja, "The organization."@en ;
+  schema:domainIncludes ic:連絡先型,ic:組織関連型 ;
+  rdfs:range ic:組織型
+ .
+ic:関連組織
+  a owl:ObjectProperty ;
+  rdfs:label "関連組織"@ja, "Associated organization"@en ;
+  rdfs:comment "関連する組織を記述するためのプロパティ用語"@ja, "The associated organization."@en ;
+  schema:domainIncludes ic:組織型,ic:イベント型 ;
+  rdfs:range ic:組織関連型
+ .
+ic:代理人
+  a owl:ObjectProperty ;
+  rdfs:label "代理人"@ja, "Agent"@en ;
+  rdfs:comment "法定手続きなどの代理人となる組織を記述するためのプロパティ用語"@ja, "The organization that acts as agent for legal procedures."@en ;
+  schema:domainIncludes ic:業務組織型 ;
+  rdfs:range ic:組織関連型
+ .
+ic:建物
+  a owl:ObjectProperty ;
+  rdfs:label "建物"@ja, "Building"@en ;
+  rdfs:comment "建物を記述するためのプロパティ用語"@ja, "The building."@en ;
+  schema:domainIncludes ic:施設型 ;
+  rdfs:range ic:建物型
+ .
+ic:駐車場
+  a owl:ObjectProperty ;
+  rdfs:label "駐車場"@ja, "Parking"@en ;
+  rdfs:comment "駐車場を記述するためのプロパティ用語"@ja, "The parking area."@en ;
+  schema:domainIncludes ic:施設型 ;
+  rdfs:range ic:駐車場型
+ .
+ic:FAX番号
+  a owl:DatatypeProperty ;
+  rdfs:label "FAX番号"@ja, "Fax number"@en ;
+  rdfs:comment "FAX番号を記述するためのプロパティ用語　※0-9 の数字及び + - ( ) , の文字のみを使用"@ja, "The facsimile number. Note: Use '0 to 9' numeric characters and 'plus '+', minus '-', opening parenthesis '(', closing parenthesis ')', and comma ',' 'characters only."@en ;
+  schema:domainIncludes ic:連絡先型 ;
+  rdfs:range ic:電話番号型
+ .
+ic:携帯電話番号
+  a owl:DatatypeProperty ;
+  rdfs:label "携帯電話番号"@ja, "Mobile telephone number"@en ;
+  rdfs:comment "携帯電話番号を記述するためのプロパティ用語　※0-9 の数字及び + - ( ) , の文字のみを使用"@ja, "The cellular phone number. Note: Use '0 to 9' numeric characters and 'plus '+', minus '-', opening parenthesis '(', closing parenthesis ')', and comma ',' 'characters only."@en ;
+  schema:domainIncludes ic:連絡先型 ;
+  rdfs:range ic:電話番号型
+ .
+ic:電話番号
+  a owl:DatatypeProperty ;
+  rdfs:label "電話番号"@ja, "Telephone number"@en ;
+  rdfs:comment "電話番号を記述するためのプロパティ用語　※0-9 の数字及び + - ( ) , の文字のみを使用"@ja, "The telephone number. Note: Use '0 to 9' numeric characters and 'plus '+', minus '-', opening parenthesis '(', closing parenthesis ')', and comma ',' 'characters only."@en ;
+  schema:domainIncludes ic:連絡先型 ;
+  rdfs:range ic:電話番号型
+ .
+ic:有効開始日時
+  a owl:ObjectProperty ;
+  rdfs:label "有効開始日時"@ja, "Valid from"@en ;
+  rdfs:comment "スケジュールが有効になる日時を記述するためのプロパティ用語"@ja, "The date and time when a schedule becomes effective."@en ;
+  schema:domainIncludes ic:定期スケジュール型 ;
+  rdfs:range ic:日時型
+ .
+ic:有効終了日時
+  a owl:ObjectProperty ;
+  rdfs:label "有効終了日時"@ja, "Valid through"@en ;
+  rdfs:comment "スケジュールが無効になる日時を記述するためのプロパティ用語"@ja, "The date and time when a schedule becomes ineffective."@en ;
+  schema:domainIncludes ic:定期スケジュール型 ;
+  rdfs:range ic:日時型
+ .
+ic:開始日時
+  a owl:ObjectProperty ;
+  rdfs:label "開始日時"@ja, "Start date and time"@en ;
+  rdfs:comment "期間の開始日時を記述するためのプロパティ用語"@ja, "The start date and time of a period."@en ;
+  schema:domainIncludes ic:期間型 ;
+  rdfs:range ic:日時型
+ .
+ic:終了日時
+  a owl:ObjectProperty ;
+  rdfs:label "終了日時"@ja, "End date and time"@en ;
+  rdfs:comment "期間の終了日時を記述するためのプロパティ用語"@ja, "The end date and time of a period."@en ;
+  schema:domainIncludes ic:期間型 ;
+  rdfs:range ic:日時型
+ .
+ic:従業員数
+  a owl:DeprecatedProperty ;
+  rdfs:label "従業員数"@ja, "Number of employee"@en ;
+  rdfs:comment "法人などの従業員数を記述するためのプロパティ用語"@ja, "The number of employees of the corporation, etc."@en ;
+.
+ic:消費期限
+  a owl:ObjectProperty ;
+  rdfs:label "消費期限"@ja, "Expiry date"@en ;
+  rdfs:comment "消費期限を記述するためのプロパティ用語"@ja, "The expiration date by which a product should be consumed."@en ;
+  schema:domainIncludes ic:製品個品型 ;
+  rdfs:range ic:日付型
+ .
+ic:製造日
+  a owl:ObjectProperty ;
+  rdfs:label "製造日"@ja, "Manufactured date"@en ;
+  rdfs:comment "製造日を記述するためのプロパティ用語"@ja, "The date of manufacture."@en ;
+  schema:domainIncludes ic:製品個品型 ;
+  rdfs:range ic:日付型
+ .
+ic:死亡年月日
+  a owl:ObjectProperty ;
+  rdfs:label "死亡年月日"@ja, "Death date"@en ;
+  rdfs:comment "死亡年月日を記述するためのプロパティ用語"@ja, "The date of death."@en ;
+  schema:domainIncludes ic:人型 ;
+  rdfs:range ic:日付型
+ .
+ic:竣工日
+  a owl:ObjectProperty ;
+  rdfs:label "竣工日"@ja, "Completion date"@en ;
+  rdfs:comment "建物の竣工日を記述するためのプロパティ用語"@ja, "The completion date of a building."@en ;
+  schema:domainIncludes ic:建物型 ;
+  rdfs:range ic:日付型
+ .
+ic:生年月日
+  a owl:ObjectProperty ;
+  rdfs:label "生年月日"@ja, "Birth date"@en ;
+  rdfs:comment "生年月日を記述するためのプロパティ用語"@ja, "The date of birth."@en ;
+  schema:domainIncludes ic:人型 ;
+  rdfs:range ic:日付型
+ .
+ic:構成員
+  a owl:ObjectProperty ;
+  rdfs:label "構成員"@ja, "Member"@en ;
+  rdfs:comment "構成員を記述するためのプロパティ用語"@ja, "The member."@en ;
+  schema:domainIncludes ic:構成員型 ;
+  rdfs:range ic:人型
+ .
+ic:名称
+  a owl:ObjectProperty ;
+  rdfs:label "名称"@ja, "Name"@en ;
+  rdfs:comment "名称を記述するためのプロパティ用語"@ja, "The name."@en ;
+  schema:domainIncludes ic:連絡先型,ic:組織型,ic:場所型,ic:ID体系型,ic:製品型,ic:設備型,ic:イベント型,ic:活動型,ic:状況型,ic:コードリスト型,ic:サービス型 ;
+  rdfs:range ic:名称型
+ .
+ic:延べ面積
+  a owl:ObjectProperty ;
+  rdfs:label "延べ面積"@ja, "Total floor area "@en ;
+  rdfs:comment "建物の延べ床面積を記述するためのプロパティ用語"@ja, "The total floor area of a building."@en ;
+  schema:domainIncludes ic:建物型 ;
+  rdfs:range ic:面積型
+ .
+ic:建築面積
+  a owl:ObjectProperty ;
+  rdfs:label "建築面積"@ja, "Building area"@en ;
+  rdfs:comment "建築面積を記述するためのプロパティ用語"@ja, "The building area."@en ;
+  schema:domainIncludes ic:建物型 ;
+  rdfs:range ic:面積型
+ .
+ic:敷地面積
+  a owl:ObjectProperty ;
+  rdfs:label "敷地面積"@ja, "Site area"@en ;
+  rdfs:comment "敷地面積を記述するためのプロパティ用語"@ja, "The ground area."@en ;
+  schema:domainIncludes ic:建物型 ;
+  rdfs:range ic:面積型
+ .
+ic:連絡先
+  a owl:ObjectProperty ;
+  rdfs:label "連絡先"@ja, "Contact"@en ;
+  rdfs:comment "連絡先を記述するためのプロパティ用語"@ja, "The contact."@en ;
+  schema:domainIncludes ic:人型,ic:組織型,ic:地物型,ic:設備型,ic:イベント型 ;
+  rdfs:range ic:連絡先型
+ .
+ic:地理座標
+  a owl:ObjectProperty ;
+  rdfs:label "地理座標"@ja, "Associated geometry"@en ;
+  rdfs:comment "場所の経緯度座標を記述するためのプロパティ用語"@ja, "The latitude-longitude coordinates of a location."@en ;
+  schema:domainIncludes ic:場所型 ;
+  rdfs:range ic:座標型
+ .
+ic:氏名
+  a owl:ObjectProperty ;
+  rdfs:label "氏名"@ja, "Name of person"@en ;
+  rdfs:comment "人の氏名を記述するためのプロパティ用語"@ja, "The name of a person."@en ;
+  schema:domainIncludes ic:人型 ;
+  rdfs:range ic:氏名型
+ .
+ic:担当者名
+  a owl:ObjectProperty ;
+  rdfs:label "担当者名"@ja, "Name of contact person"@en ;
+  rdfs:comment "担当者の氏名を記述するためのプロパティ用語"@ja, "The name of a contact person."@en ;
+  schema:domainIncludes ic:連絡先型 ;
+  rdfs:range ic:氏名型
+ .
+ic:関係者
+  a owl:DeprecatedProperty ;
+  rdfs:label "関係者"@ja, "Issuer"@en ;
+  rdfs:comment "関係する組織や人を記述するためのプロパティ用語"@ja, "The involved organization or person."@en ;
+.
+ic:関与
+  a owl:ObjectProperty ;
+  rdfs:label "関与"@ja, "Participation"@en ;
+  rdfs:comment "関連する組織や人（関連性の記述を含む）を記述するためのプロパティ用語"@ja, "The associated organization or person (including a description of the relationship)."@en ;
+  schema:domainIncludes ic:地物型,ic:活動型,ic:実体型,ic:状況型 ;
+  rdfs:range ic:関与型
+ .
+ic:所有者
+  a owl:ObjectProperty ;
+  rdfs:label "所有者"@ja, "Owner"@en ;
+  rdfs:comment "所有者を記述するためのプロパティ用語"@ja, "The owner."@en ;
+  schema:domainIncludes ic:製品個品型 ;
+  rdfs:range ic:実体型
+ .
+ic:住所
+  a owl:ObjectProperty ;
+  rdfs:label "住所"@ja, "Address"@en ;
+  rdfs:comment "住所を記述するためのプロパティ用語"@ja, "The address."@en ;
+  schema:domainIncludes ic:人型,ic:連絡先型,ic:組織型,ic:場所型 ;
+  rdfs:range ic:住所型
+ .
+ic:本籍
+  a owl:ObjectProperty ;
+  rdfs:label "本籍"@ja, "Domicile of origin"@en ;
+  rdfs:comment "本籍を記述するためのプロパティ用語"@ja, "The registered domicile by birth."@en ;
+  schema:domainIncludes ic:人型 ;
+  rdfs:range ic:住所型
+ .
+ic:重量
+  a owl:ObjectProperty ;
+  rdfs:label "重量"@ja, "Weight"@en ;
+  rdfs:comment "重量を記述するためのプロパティ用語"@ja, "The weight."@en ;
+  schema:domainIncludes ic:製品型 ;
+  rdfs:range ic:重量型
+ .
+ic:場所
+  a owl:ObjectProperty ;
+  rdfs:label "場所"@ja, "Location"@en ;
+  rdfs:comment "場所を記述するためのプロパティ用語"@ja, "The location."@en ;
+  schema:domainIncludes ic:活動型 ;
+  rdfs:range ic:場所型
+ .
+ic:出生地
+  a owl:ObjectProperty ;
+  rdfs:label "出生地"@ja, "Birth place"@en ;
+  rdfs:comment "生まれた場所を記述するためのプロパティ用語"@ja, "The birth place."@en ;
+  schema:domainIncludes ic:人型 ;
+  rdfs:range ic:住所型
+ .
+ic:活動状況
+  a owl:ObjectProperty ;
+  rdfs:label "活動状況"@ja, "Status"@en ;
+  rdfs:comment "組織などの活動状況を記述するためのプロパティ用語"@ja, "The activity status of an organization, etc."@en ;
+  schema:domainIncludes ic:組織型 ;
+  rdfs:range ic:状況型
+ .
+ic:開催場所
+  a owl:ObjectProperty ;
+  rdfs:label "開催場所"@ja, "Location"@en ;
+  rdfs:comment "イベントなどの開催場所を記述するためのプロパティ用語"@ja, "The venue of a event, etc."@en ;
+  schema:domainIncludes ic:イベント型 ;
+  rdfs:range ic:地物型
+ .
+ic:地物
+  a owl:ObjectProperty ;
+  rdfs:label "地物"@ja, "Feature"@en ;
+  rdfs:comment "関連する地物（施設、建物、土地など）を記述するためのプロパティ用語"@ja, "The associated feature (such as a facility, building, or land)."@en ;
+  schema:domainIncludes ic:組織型 ;
+  rdfs:range ic:地物型
+ .
+ic:始点
+  a owl:ObjectProperty ;
+  rdfs:label "始点"@ja, "Origin"@en ;
+  rdfs:comment "始点となる地物を記述するためのプロパティ用語"@ja, "The feature that serves as an origin."@en ;
+  schema:domainIncludes ic:アクセス型,ic:アクセス区間型 ;
+  rdfs:range ic:地物型
+ .
+ic:終点
+  a owl:ObjectProperty ;
+  rdfs:label "終点"@ja, "Destination"@en ;
+  rdfs:comment "終点となる地物を記述するためのプロパティ用語"@ja, "The feature that serves as a destination."@en ;
+  schema:domainIncludes ic:アクセス型,ic:アクセス区間型 ;
+  rdfs:range ic:地物型
+ .
+ic:設置地点
+  a owl:ObjectProperty ;
+  rdfs:label "設置地点"@ja, "Location of installation"@en ;
+  rdfs:comment "設備などが設置されている地物（施設や建物など）を記述するためのプロパティ用語"@ja, "The feature in which an equipment is installed. (Such as a facility or building.)"@en ;
+  schema:domainIncludes ic:設備型 ;
+  rdfs:range ic:地物型
+ .
+ic:測地高度
+  a owl:ObjectProperty ;
+  rdfs:label "測地高度"@ja, "Altitude"@en ;
+  rdfs:comment "測地高度を記述するためのプロパティ用語"@ja, "The geodetic height."@en ;
+  schema:domainIncludes ic:座標型 ;
+  rdfs:range ic:長さ型
+ .
+ic:高さ
+  a owl:ObjectProperty ;
+  rdfs:label "高さ"@ja, "Height"@en ;
+  rdfs:comment "形状の高さを記述するためのプロパティ用語"@ja, "The height of the shape."@en ;
+  schema:domainIncludes ic:製品型 ;
+  rdfs:range ic:長さ型
+ .
+ic:長さ
+  a owl:ObjectProperty ;
+  rdfs:label "長さ"@ja, "Length"@en ;
+  rdfs:comment "形状の長さを記述するためのプロパティ用語"@ja, "The length of the shape."@en ;
+  schema:domainIncludes ic:製品型 ;
+  rdfs:range ic:長さ型
+ .
+ic:幅
+  a owl:ObjectProperty ;
+  rdfs:label "幅"@ja, "Width"@en ;
+  rdfs:comment "形状の幅を記述するためのプロパティ用語"@ja, "The width of the shape."@en ;
+  schema:domainIncludes ic:製品型 ;
+  rdfs:range ic:長さ型
+ .
+ic:最高の高さ
+  a owl:ObjectProperty ;
+  rdfs:label "最高の高さ"@ja, "Maximum height"@en ;
+  rdfs:comment "最高点の高さを記述するためのプロパティ用語"@ja, "The height at the highest point."@en ;
+  schema:domainIncludes ic:建物型 ;
+  rdfs:range ic:長さ型
+ .
+ic:発生日
+  a owl:ObjectProperty ;
+  rdfs:label "発生日"@ja, "Issued date"@en ;
+  rdfs:comment "状況などの発生日時を記述するためのプロパティ用語"@ja, "The date and time of occurrence of state of affairs, etc."@en ;
+  schema:domainIncludes ic:状況型 ;
+  rdfs:range ic:日時型
+ .
+ic:開催日
+  a owl:ObjectProperty ;
+  rdfs:label "開催日"@ja, "Date for event"@en ;
+  rdfs:comment "イベントなどが開催される日付を記述するためのプロパティ用語"@ja, "The date on which an event, etc. is held."@en ;
+  schema:domainIncludes ic:イベントスケジュール型 ;
+  rdfs:range ic:日付型
+ .
+ic:開始日
+  a owl:ObjectProperty ;
+  rdfs:label "開始日"@ja, "Start date"@en ;
+  rdfs:comment "イベントなどの開始日を記述するためのプロパティ用語"@ja, "The starting date of an event, etc."@en ;
+  schema:domainIncludes ic:イベントスケジュール型 ;
+  rdfs:range ic:日付型
+ .
+ic:事業年度開始日
+  a owl:ObjectProperty ;
+  rdfs:label "事業年度開始日"@ja, "Fiscal year start day"@en ;
+  rdfs:comment "事業年度の開始日を記述するためのプロパティ用語"@ja, "The start date of the business year."@en ;
+  schema:domainIncludes ic:業務組織型 ;
+  rdfs:range ic:日付型
+ .
+ic:終了日
+  a owl:ObjectProperty ;
+  rdfs:label "終了日"@ja, "End date"@en ;
+  rdfs:comment "イベントなどの終了日を記述するためのプロパティ用語"@ja, "The closing date of the event, etc."@en ;
+  schema:domainIncludes ic:イベントスケジュール型 ;
+  rdfs:range ic:日付型
+ .
+ic:使用期限
+  a owl:ObjectProperty ;
+  rdfs:label "使用期限"@ja, "Use-by date"@en ;
+  rdfs:comment "使用期限を記述するためのプロパティ用語"@ja, "The expiration date by which a product should be used."@en ;
+  schema:domainIncludes ic:製品個品型 ;
+  rdfs:range ic:日付型
+ .
+ic:賞味期限
+  a owl:ObjectProperty ;
+  rdfs:label "賞味期限"@ja, "Best before date"@en ;
+  rdfs:comment "賞味期限を記述するためのプロパティ用語"@ja, "The best-before-date of a product."@en ;
+  schema:domainIncludes ic:製品個品型 ;
+  rdfs:range ic:日付型
+ .
+ic:設置日
+  a owl:ObjectProperty ;
+  rdfs:label "設置日"@ja, "Installation date"@en ;
+  rdfs:comment "設備などの設置日を記述するためのプロパティ用語"@ja, "The installation date of an equipment, etc."@en ;
+  schema:domainIncludes ic:設備型 ;
+  rdfs:range ic:日付型
+ .
+ic:設立日
+  a owl:ObjectProperty ;
+  rdfs:label "設立日"@ja, "Established date"@en ;
+  rdfs:comment "組織などの設立日を記述するためのプロパティ用語"@ja, "The date of establishment of an organization, etc."@en ;
+  schema:domainIncludes ic:組織型 ;
+  rdfs:range ic:日付型
+ .
+ic:面積単位
+  a owl:DeprecatedProperty ;
+  rdfs:label "面積単位"@ja, "Area unit code"@en ;
+  rdfs:comment "面積の単位を表すコードを記述するためのプロパティ用語"@ja, "The code specifying a unit of area."@en ;
+.
+ic:時間単位
+  a owl:DeprecatedProperty ;
+  rdfs:label "時間単位"@ja, "Time unit code"@en ;
+  rdfs:comment "時間の単位を表すコードを記述するためのプロパティ用語"@ja, "The code specifying a unit of time length."@en ;
+.
+ic:通貨コード
+  a owl:DatatypeProperty ;
+  rdfs:label "通貨コード"@ja, "Currency code"@en ;
+  rdfs:comment "通貨コードを記述するためのプロパティ用語"@ja, "The code specifying a currency."@en ;
+  schema:domainIncludes ic:金額型 ;
+  rdfs:range uncefactISO4217:ISO3AlphaCurrencyCodeContentType
+ .
+ic:長さ単位
+  a owl:DeprecatedProperty ;
+  rdfs:label "長さ単位"@ja, "Length unit code"@en ;
+  rdfs:comment "長さの単位を表すコードを記述するためのプロパティ用語"@ja, "The code specifying a unit of length."@en ;
+.
+ic:容量単位
+  a owl:DeprecatedProperty ;
+  rdfs:label "容量単位"@ja, "Volume unit code"@en ;
+  rdfs:comment "容量の単位を表すコードを記述するためのプロパティ用語"@ja, "The code specifying a unit of volume."@en ;
+.
+ic:重量単位
+  a owl:DeprecatedProperty ;
+  rdfs:label "重量単位"@ja, "Weight unit code"@en ;
+  rdfs:comment "重量の単位を表すコードを記述するためのプロパティ用語"@ja, "The code specifying a unit of weight."@en ;
+.
+ic:単位
+  a owl:ObjectProperty ;
+  rdfs:label "単位"@ja, "Unit"@en ;
+  rdfs:comment "計測値の単位を表すコードを記述するためのプロパティ用語"@ja, "The code specifying a unit of measured values."@en ;
+  schema:domainIncludes ic:数量型,ic:容量型,ic:面積型,ic:重量型,ic:長さ型 ;
+  rdfs:range ic:単位コード型
+ .
+ic:単位表記
+  a owl:DatatypeProperty ;
+  rdfs:label "単位表記"@ja, "Unit text"@en ;
+  rdfs:comment "単位の文字列による表現を記述するためのプロパティ用語"@ja, "The unit expressed as a string."@en ;
+  schema:domainIncludes ic:数量型,ic:容量型,ic:面積型,ic:重量型,ic:長さ型 ;
+  rdfs:range xsd:string
+ .
+ic:URI
+  a owl:DeprecatedProperty ;
+  rdfs:label "URI"@ja, "URI"@en ;
+  rdfs:comment "参照のためのURIを記述するためのプロパティ用語"@ja, "The URL for references."@en ;
+.
+ic:Webサイト
+  a owl:ObjectProperty ;
+  rdfs:label "Webサイト"@ja, "Web site"@en ;
+  rdfs:comment "Webサイトを参照するURLを記述するためのプロパティ用語"@ja, "The URL that references a Web site."@en ;
+  schema:domainIncludes ic:連絡先型,ic:設備型 ;
+  rdfs:range owl:Thing
+ .
+ic:画像
+  a owl:ObjectProperty ;
+  rdfs:label "画像"@ja, "Picture"@en ;
+  rdfs:comment "画像を参照するURLを記述するためのプロパティ用語"@ja, "The URL that references an image."@en ;
+  schema:domainIncludes ic:事物型 ;
+  rdfs:range owl:Thing
+ .
+ic:参照
+  a owl:ObjectProperty ;
+  rdfs:label "参照"@ja, "Reference"@en ;
+  rdfs:comment "追加情報などを参照するURLを記述するためのプロパティ用語"@ja, "The URL that references additional information."@en ;
+  schema:domainIncludes ic:ID型,ic:コード型,ic:事物型 ;
+  rdfs:range ic:参照型
+ .
+ic:自動認識ID
+  a owl:ObjectProperty ;
+  rdfs:label "自動認識ID"@ja, "Barcode identification"@en ;
+  rdfs:comment "自動認識ID（バーコードや二次元コードの画像など）が表すURLを記述するためのプロパティ用語"@ja, "The URL expressed by the automatic recognition identifier (such as an image of bar code and two-dimensional code)."@en ;
+  schema:domainIncludes ic:製品型 ;
+  rdfs:range owl:Thing
+ .
+ic:地図
+  a owl:ObjectProperty ;
+  rdfs:label "地図"@ja, "Map"@en ;
+  rdfs:comment "地図を参照するURLを記述するためのプロパティ用語"@ja, "The URL that references a map."@en ;
+  schema:domainIncludes ic:アクセス型 ;
+  rdfs:range owl:Thing
+ .
+ic:標準型日付
+  a owl:DatatypeProperty ;
+  rdfs:label "標準型日付"@ja, "Date"@en ;
+  rdfs:comment "日付を記述するためのプロパティ用語　※XMLのxsd:date型に準拠したもの"@ja, "The date. Note: This shall comply with xsd:date type of XML."@en ;
+  schema:domainIncludes ic:日付型 ;
+  rdfs:range xsd:date
+ .
+ic:標準型日時
+  a owl:DatatypeProperty ;
+  rdfs:label "標準型日時"@ja, "Date and time"@en ;
+  rdfs:comment "日時を記述するためのプロパティ用語　※XMLのxsd:dateTime型に準拠したもの"@ja, "The date and time. Note: This shall comply with xsd:date type of XML."@en ;
+  schema:domainIncludes ic:日時型 ;
+  rdfs:range xsd:dateTime
+ .
+ic:数値
+  a owl:DatatypeProperty ;
+  rdfs:label "数値"@ja, "Value"@en ;
+  rdfs:comment "数値を記述するためのプロパティ用語"@ja, "The numerical value."@en ;
+  schema:domainIncludes ic:数量型,ic:容量型,ic:面積型,ic:重量型,ic:長さ型,ic:金額型 ;
+  rdfs:range xsd:decimal
+ .
+ic:地下階数
+  a owl:DatatypeProperty ;
+  rdfs:label "地下階数"@ja, "Number of under ground floors"@en ;
+  rdfs:comment "建物の地下階数を記述するためのプロパティ用語"@ja, "The number of underground floors of a building."@en ;
+  schema:domainIncludes ic:建物型 ;
+  rdfs:range xsd:decimal
+ .
+ic:地上階数
+  a owl:DatatypeProperty ;
+  rdfs:label "地上階数"@ja, "Number of above ground floors"@en ;
+  rdfs:comment "建物の地上階数を記述するためのプロパティ用語"@ja, "The number of aboveground floors of a building."@en ;
+  schema:domainIncludes ic:建物型 ;
+  rdfs:range xsd:decimal
+ .
+ic:秒
+  a owl:DatatypeProperty ;
+  rdfs:label "秒"@ja, "Second"@en ;
+  rdfs:comment "日時などの秒の値を記述するためのプロパティ用語"@ja, "The value of second in date and time."@en ;
+  schema:domainIncludes ic:日時型 ;
+  rdfs:range xsd:decimal
+ .
+ic:月
+  a owl:DatatypeProperty ;
+  rdfs:label "月"@ja, "Month"@en ;
+  rdfs:comment "日付や日時などの月の値を記述するためのプロパティ用語"@ja, "The value of month in date, and date and time."@en ;
+  schema:domainIncludes ic:日時型,ic:日付型 ;
+  rdfs:range xsd:integer
+ .
+ic:時
+  a owl:DatatypeProperty ;
+  rdfs:label "時"@ja, "Hour"@en ;
+  rdfs:comment "日時などの時の値を記述するためのプロパティ用語"@ja, "The value of time in date and time."@en ;
+  schema:domainIncludes ic:日時型 ;
+  rdfs:range xsd:integer
+ .
+ic:収容台数
+  a owl:DatatypeProperty ;
+  rdfs:label "収容台数"@ja, "Parking capacity"@en ;
+  rdfs:comment "駐車場の収容可能台数を記述するためのプロパティ用語"@ja, "The maximum number of vehicles that a parking area can accommodate."@en ;
+  schema:domainIncludes ic:駐車場型 ;
+  rdfs:range xsd:integer
+ .
+ic:年
+  a owl:DatatypeProperty ;
+  rdfs:label "年"@ja, "Year"@en ;
+  rdfs:comment "日付や日時などの年の値を記述するためのプロパティ用語"@ja, "The value of year in date, and date and time."@en ;
+  schema:domainIncludes ic:日時型,ic:日付型 ;
+  rdfs:range xsd:integer
+ .
+ic:日
+  a owl:DatatypeProperty ;
+  rdfs:label "日"@ja, "Day"@en ;
+  rdfs:comment "日付や日時などの日の値を記述するためのプロパティ用語"@ja, "The value of day in date, and date and time."@en ;
+  schema:domainIncludes ic:日時型,ic:日付型 ;
+  rdfs:range xsd:integer
+ .
+ic:分
+  a owl:DatatypeProperty ;
+  rdfs:label "分"@ja, "Minute"@en ;
+  rdfs:comment "日時などの分の値を記述するためのプロパティ用語"@ja, "The value of minute in date and time."@en ;
+  schema:domainIncludes ic:日時型 ;
+  rdfs:range xsd:integer
+ .
+ic:構成員数
+  a owl:DeprecatedProperty ;
+  rdfs:label "構成員数"@ja, "Number of members"@en ;
+  rdfs:comment "構成員の数を記述するためのプロパティ用語"@ja, "The number of members."@en ;
+.
+ic:人数
+  a owl:DatatypeProperty ;
+  rdfs:label "人数"@ja, "Head count"@en ;
+  rdfs:comment "人数を記述するためのプロパティ用語"@ja, "The number of people."@en ;
+  schema:domainIncludes ic:人数型,ic:イベント型 ;
+  rdfs:range xsd:nonNegativeInteger
+ .
+ic:Eメールアドレス
+  a owl:DatatypeProperty ;
+  rdfs:label "Eメールアドレス"@ja, "Email address"@en ;
+  rdfs:comment "電子メールアドレスを記述するためのプロパティ用語"@ja, "The electronic mail address."@en ;
+  schema:domainIncludes ic:連絡先型 ;
+  rdfs:range xsd:string
+ .
+ic:緯度
+  a owl:DatatypeProperty ;
+  rdfs:label "緯度"@ja, "Latitude"@en ;
+  rdfs:comment "緯度を記述するためのプロパティ用語　※-90から+90で記載"@ja, "The latitude. Note: Specify a value between -90 and +90."@en ;
+  schema:domainIncludes ic:座標型 ;
+  rdfs:range xsd:string
+ .
+ic:緯度経度書式
+  a owl:DatatypeProperty ;
+  rdfs:label "緯度経度書式"@ja, "Latitude and longitude format"@en ;
+  rdfs:comment "度、分、秒の書式を記述するためのプロパティ用語　※書式はiso6709に準拠する"@ja, "The format to express degree, minutes and seconds. Note: The format shall comply with ISO 6709 standard."@en ;
+  schema:domainIncludes ic:座標型 ;
+  rdfs:range xsd:string
+ .
+ic:色
+  a owl:DatatypeProperty ;
+  rdfs:label "色"@ja, "Color"@en ;
+  rdfs:comment "色の表記を記述するためのプロパティ用語"@ja, "The color expressed as text."@en ;
+  schema:domainIncludes ic:製品型 ;
+  rdfs:range xsd:string
+ .
+ic:開催期日
+  a owl:DatatypeProperty ;
+  rdfs:label "開催期日"@ja, "Schedule day"@en ;
+  rdfs:comment "スケジュールが有効となる日を記述するためのプロパティ用語　※スケジュールの種別が「週間」の場合は曜日、「月間」の場合は月の中の日、「年間」の場合は年の中の月日を指定する。"@ja, "The day on which the schedule becomes effective. Note: If the schedule category is 'weekly', then select a day of the week. If it is 'monthly' or 'yearly', then select a date in the month or the year respectively."@en ;
+  schema:domainIncludes ic:定期スケジュール型 ;
+  rdfs:range xsd:string
+ .
+ic:外部利用可否
+  a owl:DatatypeProperty ;
+  rdfs:label "外部利用可否"@ja, "Limitation of use"@en ;
+  rdfs:comment "施設や設備などの外部利用可否の記述のためのプロパティ用語"@ja, "The textual description of whether or not a facility or equipment is available for use by outsiders."@en ;
+  schema:domainIncludes ic:設備型 ;
+  rdfs:range xsd:string
+ .
+ic:概要
+  a owl:DatatypeProperty ;
+  rdfs:label "概要"@ja, "Summary"@en ;
+  rdfs:comment "概要説明を記述するためのプロパティ用語"@ja, "The overview description."@en ;
+  schema:domainIncludes ic:組織型 ;
+  rdfs:range xsd:string
+ .
+ic:カナ表記
+  a owl:DatatypeProperty ;
+  rdfs:label "カナ表記"@ja, "Full name in kana"@en ;
+  rdfs:comment "カタカナ表記を記述するためのプロパティ用語"@ja, "The textual expression in Katakana."@en ;
+  schema:domainIncludes ic:名称型 ;
+  rdfs:range xsd:string
+ .
+ic:キーワード
+  a owl:DatatypeProperty ;
+  rdfs:label "キーワード"@ja, "Keyword"@en ;
+  rdfs:comment "キーワードの記述のためのプロパティ用語"@ja, "The description of keywords."@en ;
+  schema:domainIncludes ic:イベント型,ic:文書型 ;
+  rdfs:range xsd:string
+ .
+ic:規制情報
+  a owl:DatatypeProperty ;
+  rdfs:label "規制情報"@ja, "Regulation"@en ;
+  rdfs:comment "規制に関する情報（取り扱い上の注意など）を記述するためのプロパティ用語"@ja, "The regulatory information (including handling precautions)."@en ;
+  schema:domainIncludes ic:製品型 ;
+  rdfs:range xsd:string
+ .
+ic:区
+  a owl:DatatypeProperty ;
+  rdfs:label "区"@ja, "Ward"@en ;
+  rdfs:comment "政令指定都市の区の名前を記述するためのプロパティ用語"@ja, "The name of a ward in a ordinance-designated city."@en ;
+  schema:domainIncludes ic:住所型 ;
+  rdfs:range xsd:string
+ .
+ic:国
+  a owl:DatatypeProperty ;
+  rdfs:label "国"@ja, "Country"@en ;
+  rdfs:comment "国名を記述するためのプロパティ用語"@ja, "The country name."@en ;
+  schema:domainIncludes ic:住所型 ;
+  rdfs:range xsd:string
+ .
+ic:形態
+  a owl:DatatypeProperty ;
+  rdfs:label "形態"@ja, "Form of delivery"@en ;
+  rdfs:comment "製品などの形態の説明を記述するためのプロパティ用語"@ja, "The description of the form of a product, etc."@en ;
+  schema:domainIncludes ic:製品型 ;
+  rdfs:range xsd:string
+ .
+ic:経度
+  a owl:DatatypeProperty ;
+  rdfs:label "経度"@ja, "Longitude"@en ;
+  rdfs:comment "経度を記述するためのプロパティ用語　※-180から+180で記載"@ja, "The longitude. Note: Specify a value between -180 and +180."@en ;
+  schema:domainIncludes ic:座標型 ;
+  rdfs:range xsd:string
+ .
+ic:原産国
+  a owl:DatatypeProperty ;
+  rdfs:label "原産国"@ja, "Origin country"@en ;
+  rdfs:comment "原産国名を記述するためのプロパティ用語"@ja, "The name of a country of origin."@en ;
+  schema:domainIncludes ic:製品型 ;
+  rdfs:range xsd:string
+ .
+ic:号
+  a owl:DatatypeProperty ;
+  rdfs:label "号"@ja, "Go"@en ;
+  rdfs:comment "号、住居番号の表記を記述するためのプロパティ用語"@ja, "The building number or house number expressed as text."@en ;
+  schema:domainIncludes ic:住所型 ;
+  rdfs:range xsd:string
+ .
+ic:国籍
+  a owl:DatatypeProperty ;
+  rdfs:label "国籍"@ja, "Nationality"@en ;
+  rdfs:comment "国籍の表記を記述するためのプロパティ用語"@ja, "The nationality expressed as text."@en ;
+  schema:domainIncludes ic:人型 ;
+  rdfs:range xsd:string
+ .
+ic:サイズ
+  a owl:DatatypeProperty ;
+  rdfs:label "サイズ"@ja, "Size"@en ;
+  rdfs:comment "サイズの表記を記述するためのプロパティ用語"@ja, "The size expressed as text."@en ;
+  schema:domainIncludes ic:製品型 ;
+  rdfs:range xsd:string
+ .
+ic:座標データ
+  a owl:DatatypeProperty ;
+  rdfs:label "座標データ"@ja, "Coordinate value"@en ;
+  rdfs:comment "点、線、面などを表現するデータ文字列の書式を記述するためのプロパティ用語"@ja, "The format of a data string to express points, lines, and planes."@en ;
+  schema:domainIncludes ic:座標型 ;
+  rdfs:range xsd:string
+ .
+ic:参加方法
+  a owl:DatatypeProperty ;
+  rdfs:label "参加方法"@ja, "Application for participation"@en ;
+  rdfs:comment "イベントなどへの参加方法の説明を記述するためのプロパティ用語"@ja, "The explanation on how to join an event, etc."@en ;
+  schema:domainIncludes ic:イベント型 ;
+  rdfs:range xsd:string
+ .
+ic:時間帯
+  a owl:DatatypeProperty ;
+  rdfs:label "時間帯"@ja, "Time zone"@en ;
+  rdfs:comment "時間帯を記述するためのプロパティ用語　※協定世界時からの時間差"@ja, "The time zone. Note: The time difference from the Coordinated Universal Time."@en ;
+  schema:domainIncludes ic:日時型,ic:日付型 ;
+  rdfs:range xsd:string
+ .
+ic:識別値
+  a owl:DatatypeProperty ;
+  rdfs:label "識別値"@ja, "Identification value"@en ;
+  rdfs:comment "IDやコードの値を記述するためのプロパティ用語"@ja, "The value of an identifier or code."@en ;
+  schema:domainIncludes ic:ID型,ic:コード型 ;
+  rdfs:range xsd:string
+ .
+ic:事業種目
+  a owl:DatatypeProperty ;
+  rdfs:label "事業種目"@ja, "Business category"@en ;
+  rdfs:comment "事業の種類の表記（販売業など）を記述するためのプロパティ用語"@ja, "The category of a business (such as a distributor) expressed as text."@en ;
+  schema:domainIncludes ic:業務組織型 ;
+  rdfs:range xsd:string
+ .
+ic:市区町村
+  a owl:DatatypeProperty ;
+  rdfs:label "市区町村"@ja, "City"@en ;
+  rdfs:comment "市区町村名を記述するためのプロパティ用語"@ja, "The name of a municipality."@en ;
+  schema:domainIncludes ic:住所型 ;
+  rdfs:range xsd:string
+ .
+ic:始点備考
+  a owl:DatatypeProperty ;
+  rdfs:label "始点備考"@ja, "Note for origin"@en ;
+  rdfs:comment "始点についての備考を記述するためのプロパティ用語"@ja, "The remarks on the origin."@en ;
+  schema:domainIncludes ic:アクセス型,ic:アクセス区間型 ;
+  rdfs:range xsd:string
+ .
+ic:終点備考
+  a owl:DatatypeProperty ;
+  rdfs:label "終点備考"@ja, "Note for destination"@en ;
+  rdfs:comment "終点についての備考を記述するためのプロパティ用語"@ja, "The remarks on the destination."@en ;
+  schema:domainIncludes ic:アクセス型,ic:アクセス区間型 ;
+  rdfs:range xsd:string
+ .
+ic:種別
+  a owl:DatatypeProperty ;
+  rdfs:label "種別"@ja, "Category"@en ;
+  rdfs:comment "様々な事物の種別の表記を記述するためのプロパティ用語"@ja, "The category of various things expressed as text."@en ;
+  schema:domainIncludes ic:概念型 ;
+  rdfs:range xsd:string
+ .
+ic:詳細
+  a owl:DeprecatedProperty ;
+  rdfs:label "詳細"@ja, "Detail description"@en ;
+  rdfs:comment "状況などの詳細説明を記述するためのプロパティ用語"@ja, "The detailed description of state of affairs, etc."@en ;
+.
+ic:状態
+  a owl:DatatypeProperty ;
+  rdfs:label "状態"@ja, "Condition"@en ;
+  rdfs:comment "状態を記述するためのプロパティ用語"@ja, "The state."@en ;
+  schema:domainIncludes ic:製品個品型 ;
+  rdfs:range xsd:string
+ .
+ic:使用方法
+  a owl:DatatypeProperty ;
+  rdfs:label "使用方法"@ja, "Usage"@en ;
+  rdfs:comment "使用方法の説明を記述するためのプロパティ用語"@ja, "The explanation of usage instructions."@en ;
+  schema:domainIncludes ic:製品型 ;
+  rdfs:range xsd:string
+ .
+ic:姓
+  a owl:DatatypeProperty ;
+  rdfs:label "姓"@ja, "Family name"@en ;
+  rdfs:comment "氏名の姓の表記を記述するためのプロパティ用語"@ja, "The family name expressed as text."@en ;
+  schema:domainIncludes ic:氏名型 ;
+  rdfs:range xsd:string
+ .
+ic:姓カナ表記
+  a owl:DatatypeProperty ;
+  rdfs:label "姓カナ表記"@ja, "Family name in kana"@en ;
+  rdfs:comment "氏名の姓のカタカナ表記を記述するためのプロパティ用語"@ja, "The textual expression of a family name in Katakana."@en ;
+  schema:domainIncludes ic:氏名型 ;
+  rdfs:range xsd:string
+ .
+ic:製造者
+  a owl:DatatypeProperty ;
+  rdfs:label "製造者"@ja, "Manufacturer"@en ;
+  rdfs:comment "製造者名を記述するためのプロパティ用語"@ja, "The name of a manufacturer."@en ;
+  schema:domainIncludes ic:製品型 ;
+  rdfs:range xsd:string
+ .
+ic:姓名
+  a owl:DatatypeProperty ;
+  rdfs:label "姓名"@ja, "Full name"@en ;
+  rdfs:comment "氏名（姓、名）の表記を記述するためのプロパティ用語"@ja, "The full name (family and given name) expressed as text."@en ;
+  schema:domainIncludes ic:氏名型 ;
+  rdfs:range xsd:string
+ .
+ic:性別
+  a owl:DatatypeProperty ;
+  rdfs:label "性別"@ja, "Gender"@en ;
+  rdfs:comment "性別の表記を記述するためのプロパティ用語"@ja, "The gender expressed as text."@en ;
+  schema:domainIncludes ic:人型 ;
+  rdfs:range xsd:string
+ .
+ic:姓名カナ表記
+  a owl:DatatypeProperty ;
+  rdfs:label "姓名カナ表記"@ja, "Full name in kana"@en ;
+  rdfs:comment "氏名（姓、名）のカタカナ表記を記述するためのプロパティ用語"@ja, "The textual expression of a full name (family and given name) in Katakana."@en ;
+  schema:domainIncludes ic:氏名型 ;
+  rdfs:range xsd:string
+ .
+ic:姓名ローマ字表記
+  a owl:DatatypeProperty ;
+  rdfs:label "姓名ローマ字表記"@ja, "Full name in Romaji (Romanization of Japanese/Romanized Japanese)"@en ;
+  rdfs:comment "氏名（姓、名）のローマ字表記を記述するためのプロパティ用語"@ja, "The textual expression of a full name (family and given name) in the Roman alphabet."@en ;
+  schema:domainIncludes ic:氏名型 ;
+  rdfs:range xsd:string
+ .
+ic:姓ローマ字表記
+  a owl:DatatypeProperty ;
+  rdfs:label "姓ローマ字表記"@ja, "Family name in Romaji (Romanization of Japanese/Romanized Japanese)"@en ;
+  rdfs:comment "氏名の姓のローマ字表記を記述するためのプロパティ用語"@ja, "The textual expression of a family name in the Roman alphabet."@en ;
+  schema:domainIncludes ic:氏名型 ;
+  rdfs:range xsd:string
+ .
+ic:設置位置
+  a owl:DatatypeProperty ;
+  rdfs:label "設置位置"@ja, "Place of installation"@en ;
+  rdfs:comment "設備などの設置場所の表記（受付横など）を記述するためのプロパティ用語"@ja, "The location of an equipment, etc. installed (such as beside a reception desk) expressed as text."@en ;
+  schema:domainIncludes ic:設備型 ;
+  rdfs:range xsd:string
+ .
+ic:説明
+  a owl:DatatypeProperty ;
+  rdfs:label "説明"@ja, "Description"@en ;
+  rdfs:comment "説明を記述するためのプロパティ用語"@ja, "The description."@en ;
+  schema:domainIncludes ic:状況型,ic:期間型,ic:イベントスケジュール型,ic:定期スケジュール型,ic:コード型,ic:事物型,ic:記述型,ic:制約型 ;
+  rdfs:range xsd:string
+ .
+ic:送付先
+  a owl:DatatypeProperty ;
+  rdfs:label "送付先"@ja, "Mailing address"@en ;
+  rdfs:comment "郵便物送付先の住所（私書箱など）を記述するためのプロパティ用語"@ja, "The mailing address (such as a private mail box)."@en ;
+  schema:domainIncludes ic:連絡先型 ;
+  rdfs:range xsd:string
+ .
+ic:測定単位
+  a owl:DeprecatedProperty ;
+  rdfs:label "測定単位"@ja, "Unit of measurement"@en ;
+  rdfs:comment "測定の単位を記述するためのプロパティ用語"@ja, "The unit of measurement."@en ;
+.
+ic:測定名称
+  a owl:DeprecatedProperty ;
+  rdfs:label "測定名称"@ja, "Name of measurement"@en ;
+  rdfs:comment "測定方法の名称を記述するためのプロパティ用語"@ja, "The name of a measurement method."@en ;
+.
+ic:組織種別位置
+  a owl:DatatypeProperty ;
+  rdfs:label "組織種別位置"@ja, "Position of organization category in name"@en ;
+  rdfs:comment "組織名称中の組織種別の記載位置の表記（前、後、など）を記述するためのプロパティ用語"@ja, "The position of the organization type description within an organization name (as a prefix or suffix, etc.) expressed as text."@en ;
+  schema:domainIncludes ic:法人型 ;
+  rdfs:range xsd:string
+ .
+ic:対応言語
+  a owl:DatatypeProperty ;
+  rdfs:label "対応言語"@ja, "Available language"@en ;
+  rdfs:comment "連絡の際に利用可能な言語名を記述するためのプロパティ用語"@ja, "The language available when contacting."@en ;
+  schema:domainIncludes ic:連絡先型 ;
+  rdfs:range xsd:string
+ .
+ic:対象者
+  a owl:DeprecatedProperty ;
+  rdfs:label "対象者"@ja, "Target persons"@en ;
+  rdfs:comment "対象となる人に関する説明を記述するためのプロパティ用語"@ja, "The explanation on an eligible participant."@en ;
+.
+ic:関与者
+  a owl:ObjectProperty ;
+  rdfs:label "関与者"@ja, "Participator"@en ;
+  rdfs:comment "関連する組織や人を記述するためのプロパティ用語"@ja, "The associated organization or person."@en ;
+  schema:domainIncludes ic:関与型 ;
+  rdfs:range ic:実体型
+ .
+ic:担当者役職
+  a owl:DatatypeProperty ;
+  rdfs:label "担当者役職"@ja, "Title of contact person"@en ;
+  rdfs:comment "担当者の役職の表記を記述するためのプロパティ用語"@ja, "The title of a person in charge expressed as text."@en ;
+  schema:domainIncludes ic:連絡先型 ;
+  rdfs:range xsd:string
+ .
+ic:駐車場種別
+  a owl:DatatypeProperty ;
+  rdfs:label "駐車場種別"@ja, "Category of parking"@en ;
+  rdfs:comment "駐車場の種別の表記を記述するためのプロパティ用語"@ja, "The category of a parking area expressed as text."@en ;
+  schema:domainIncludes ic:駐車場型 ;
+  rdfs:range xsd:string
+ .
+ic:丁目
+  a owl:DatatypeProperty ;
+  rdfs:label "丁目"@ja, "Chome"@en ;
+  rdfs:comment "丁目の表記を記述するためのプロパティ用語"@ja, "The city district number expressed as text."@en ;
+  schema:domainIncludes ic:住所型 ;
+  rdfs:range xsd:string
+ .
+ic:通称
+  a owl:DatatypeProperty ;
+  rdfs:label "通称"@ja, "Alternative name"@en ;
+  rdfs:comment "正式な名称以外に一般的に使用されている名称を記述するためのプロパティ用語"@ja, "The generally used name apart from its official name."@en ;
+  schema:domainIncludes ic:組織型,ic:場所型 ;
+  rdfs:range xsd:string
+ .
+ic:都道府県
+  a owl:DatatypeProperty ;
+  rdfs:label "都道府県"@ja, "Prefecture"@en ;
+  rdfs:comment "都道府県名を記述するためのプロパティ用語"@ja, "The name of a prefecture."@en ;
+  schema:domainIncludes ic:住所型 ;
+  rdfs:range xsd:string
+ .
+ic:名
+  a owl:DatatypeProperty ;
+  rdfs:label "名"@ja, "Given name"@en ;
+  rdfs:comment "氏名の名の表記を記述するためのプロパティ用語"@ja, "The given name expressed as text."@en ;
+  schema:domainIncludes ic:氏名型 ;
+  rdfs:range xsd:string
+ .
+ic:内線番号
+  a owl:DatatypeProperty ;
+  rdfs:label "内線番号"@ja, "Extension number"@en ;
+  rdfs:comment "電話の内線番号を記述するためのプロパティ用語"@ja, "The extension number of a telephone number."@en ;
+  schema:domainIncludes ic:連絡先型 ;
+  rdfs:range xsd:string
+ .
+ic:名カナ表記
+  a owl:DatatypeProperty ;
+  rdfs:label "名カナ表記"@ja, "Given name in kana"@en ;
+  rdfs:comment "氏名の名のカタカナ表記を記述するためのプロパティ用語"@ja, "The textual expression of a given name in Katakana."@en ;
+  schema:domainIncludes ic:氏名型 ;
+  rdfs:range xsd:string
+ .
+ic:名ローマ字表記
+  a owl:DatatypeProperty ;
+  rdfs:label "名ローマ字表記"@ja, "Given name in Romaji (Romanization of Japanese/Romanized Japanese)"@en ;
+  rdfs:comment "氏名の名のローマ字表記を記述するためのプロパティ用語"@ja, "The textual expression of a given name in the Roman alphabet."@en ;
+  schema:domainIncludes ic:氏名型 ;
+  rdfs:range xsd:string
+ .
+ic:年号
+  a owl:DatatypeProperty ;
+  rdfs:label "年号"@ja, "Era"@en ;
+  rdfs:comment "日付や日時などの元号を記述するためのプロパティ用語"@ja, "The Japanese era in date, and date and time."@en ;
+  schema:domainIncludes ic:日時型,ic:日付型 ;
+  rdfs:range xsd:string
+ .
+ic:バージョン
+  a owl:DatatypeProperty ;
+  rdfs:label "バージョン"@ja, "Version"@en ;
+  rdfs:comment "バージョン情報を記述するためのプロパティ用語"@ja, "The version information."@en ;
+  schema:domainIncludes ic:ID体系型,ic:コードリスト型 ;
+  rdfs:range xsd:string
+ .
+ic:バリアフリー
+  a owl:DatatypeProperty ;
+  rdfs:label "バリアフリー"@ja, "Barrier free"@en ;
+  rdfs:comment "設備などのバリアフリーに関する情報の記述のためのプロパティ用語"@ja, "The description of information regarding accessibility to an equipment, etc."@en ;
+  schema:domainIncludes ic:設備型 ;
+  rdfs:range xsd:string
+ .
+ic:番地
+  a owl:DatatypeProperty ;
+  rdfs:label "番地"@ja, "Banchi"@en ;
+  rdfs:comment "番、街区の表記を記述するためのプロパティ用語"@ja, "The block number or town block number expressed as text."@en ;
+  schema:domainIncludes ic:住所型 ;
+  rdfs:range xsd:string
+ .
+ic:番地補足
+  a owl:DatatypeProperty ;
+  rdfs:label "番地補足"@ja, "Note for banchi"@en ;
+  rdfs:comment "番地の前の、「東」「北」「浜」「甲」「イ」などの文字を記述するためのプロパティ用語"@ja, "The prefix string such as '東 (East)' , '北 (North)',  '浜 (Coast)', '甲' and 'イ' (characters representing item number) specified prior to a block number."@en ;
+  schema:domainIncludes ic:住所型 ;
+  rdfs:range xsd:string
+ .
+ic:販売業者
+  a owl:DatatypeProperty ;
+  rdfs:label "販売業者"@ja, "Dealer"@en ;
+  rdfs:comment "販売業者名を記述するためのプロパティ用語"@ja, "The name of a distributor."@en ;
+  schema:domainIncludes ic:製品型 ;
+  rdfs:range xsd:string
+ .
+ic:備考
+  a owl:DatatypeProperty ;
+  rdfs:label "備考"@ja, "Note"@en ;
+  rdfs:comment "備考を記述するためのプロパティ用語　※補足情報などがある場合に記述"@ja, "The remarks. Note: Specify when there is any additional information."@en ;
+  schema:domainIncludes ic:組織型,ic:施設型,ic:設備型,ic:アクセス型 ;
+  rdfs:range xsd:string
+ .
+ic:表記
+  a owl:DatatypeProperty ;
+  rdfs:label "表記"@ja, "Textual expression"@en ;
+  rdfs:comment "文字列による表記を記述するためのプロパティ用語"@ja, "The textual expression using a text string."@en ;
+  schema:domainIncludes ic:日時型,ic:日付型,ic:コード型,ic:事物型 ;
+  rdfs:range xsd:string
+ .
+ic:ビル番号
+  a owl:DatatypeProperty ;
+  rdfs:label "ビル番号"@ja, "Building number"@en ;
+  rdfs:comment "ビルの番号の表記（号棟など）を記述するためのプロパティ用語"@ja, "The building number (such as unit number) expressed as text."@en ;
+  schema:domainIncludes ic:住所型 ;
+  rdfs:range xsd:string
+ .
+ic:ビル名
+  a owl:DatatypeProperty ;
+  rdfs:label "ビル名"@ja, "Building name"@en ;
+  rdfs:comment "ビル名を記述するためのプロパティ用語"@ja, "The building name."@en ;
+  schema:domainIncludes ic:住所型 ;
+  rdfs:range xsd:string
+ .
+ic:ミドルネーム
+  a owl:DatatypeProperty ;
+  rdfs:label "ミドルネーム"@ja, "Middle name"@en ;
+  rdfs:comment "ミドルネームの表記を記述するためのプロパティ用語"@ja, "The middle name expressed as text."@en ;
+  schema:domainIncludes ic:氏名型 ;
+  rdfs:range xsd:string
+ .
+ic:ミドルネームカナ表記
+  a owl:DatatypeProperty ;
+  rdfs:label "ミドルネームカナ表記"@ja, "Middle name in kana"@en ;
+  rdfs:comment "ミドルネームのカタカナ表記を記述するためのプロパティ用語"@ja, "The textual expression of a middle name in Katakana."@en ;
+  schema:domainIncludes ic:氏名型 ;
+  rdfs:range xsd:string
+ .
+ic:ミドルネームローマ字表記
+  a owl:DatatypeProperty ;
+  rdfs:label "ミドルネームローマ字表記"@ja, "Middle name in Romaji (Romanization of Japanese/Romanized Japanese)"@en ;
+  rdfs:comment "ミドルネームのローマ字表記を記述するためのプロパティ用語"@ja, "The textual expression of a middle name in the Roman alphabet."@en ;
+  schema:domainIncludes ic:氏名型 ;
+  rdfs:range xsd:string
+ .
+ic:役割
+  a owl:DatatypeProperty ;
+  rdfs:label "役割"@ja, "Role of member"@en ;
+  rdfs:comment "人、組織、施設などの役割の表記を記述するためのプロパティ用語"@ja, "The role of a person, organization, or facility, etc. expressed as text."@en ;
+  schema:domainIncludes ic:構成員型,ic:組織関連型,ic:施設関連型,ic:関与型 ;
+  rdfs:range xsd:string
+ .
+ic:役割コード
+  a owl:ObjectProperty ;
+  rdfs:label "役割コード"@ja, "Code for role of member"@en ;
+  rdfs:comment "人、組織、施設などの役割を表すコードを記述するためのプロパティ用語"@ja, "The code specifying a role of a person, organization, or facility, etc."@en ;
+  schema:domainIncludes ic:関与型 ;
+  rdfs:range ic:コード型
+ .
+ic:郵便番号
+  a owl:DatatypeProperty ;
+  rdfs:label "郵便番号"@ja, "Post code"@en ;
+  rdfs:comment "郵便番号を記述するためのプロパティ用語　※0-9の数字7桁"@ja, "The postal code. Note: A string consisting of seven numeric characters of '0 to 9'."@en ;
+  schema:domainIncludes ic:住所型 ;
+  rdfs:range xsd:string
+ .
+ic:要約
+  a owl:DatatypeProperty ;
+  rdfs:label "要約"@ja, "Abstract of description"@en ;
+  rdfs:comment "説明の要約を記述するためのプロパティ用語"@ja, "The abstract of description."@en ;
+  schema:domainIncludes ic:地物型,ic:イベント型 ;
+  rdfs:range xsd:string
+ .
+ic:略称アルファベット
+  a owl:DatatypeProperty ;
+  rdfs:label "略称アルファベット"@ja, "Alphabetical abbreviation"@en ;
+  rdfs:comment "頭文字などを使った略称表記を記述するためのプロパティ用語"@ja, "The abbreviated expression using initial letters, etc."@en ;
+  schema:domainIncludes ic:組織型 ;
+  rdfs:range xsd:string
+ .
+ic:利用者
+  a owl:DatatypeProperty ;
+  rdfs:label "利用者"@ja, "User"@en ;
+  rdfs:comment "利用者の条件を記述するためのプロパティ用語　※利用者に限定条件がある場合"@ja, "The condition of eligible users. Note: When limiting conditions are specified for users."@en ;
+  schema:domainIncludes ic:設備型 ;
+  rdfs:range xsd:string
+ .
+ic:ローマ字表記
+  a owl:DatatypeProperty ;
+  rdfs:label "ローマ字表記"@ja, "Full name in Romaji (Romanization of Japanese/Romanized Japanese)"@en ;
+  rdfs:comment "ローマ字表記を記述するためのプロパティ用語"@ja, "The textual expression in the Roman alphabet."@en ;
+  schema:domainIncludes ic:名称型 ;
+  rdfs:range xsd:string
+ .
+ic:路線
+  a owl:DatatypeProperty ;
+  rdfs:label "路線"@ja, "Route / Line"@en ;
+  rdfs:comment "アクセス区間に用いる交通の路線（事業者及び路線名、バス系統など）を記述するためのプロパティ用語"@ja, "The line of transportation used in an section of the route (such as a transport service provider, line name, and bus route)."@en ;
+  schema:domainIncludes ic:アクセス区間型 ;
+  rdfs:range xsd:string
+ .
+ic:ロット番号
+  a owl:DatatypeProperty ;
+  rdfs:label "ロット番号"@ja, "Lot number"@en ;
+  rdfs:comment "製造ロットの番号を記述するためのプロパティ用語"@ja, "The manufacturing lot number."@en ;
+  schema:domainIncludes ic:製品個品型 ;
+  rdfs:range xsd:string
+ .
+ic:構造
+  a owl:DatatypeProperty ;
+  rdfs:label "構造"@ja, "Structure"@en ;
+  rdfs:comment "建物などの構造の表記を記述するためのプロパティ用語"@ja, "The structure of a building, etc. expressed as text."@en ;
+  schema:domainIncludes ic:建物型 ;
+  rdfs:range xsd:string
+ .
+ic:主要用途
+  a owl:DatatypeProperty ;
+  rdfs:label "主要用途"@ja, "Main purpose"@en ;
+  rdfs:comment "建物などの主要用途の表記を記述するためのプロパティ用語"@ja, "The major use of a building, etc. expressed as text."@en ;
+  schema:domainIncludes ic:建物型 ;
+  rdfs:range xsd:string
+ .
+ic:出生国
+  a owl:DatatypeProperty ;
+  rdfs:label "出生国"@ja, "Birth country"@en ;
+  rdfs:comment "生まれた国名を記述するためのプロパティ用語"@ja, "The name of a country of birth."@en ;
+  schema:domainIncludes ic:人型 ;
+  rdfs:range xsd:string
+ .
+ic:町名
+  a owl:DatatypeProperty ;
+  rdfs:label "町名"@ja, "Chomei"@en ;
+  rdfs:comment "町域、または市区町村の下の行政区分の表記を記述するためのプロパティ用語"@ja, "The town area or administrative division under municipality expressed as text."@en ;
+  schema:domainIncludes ic:住所型 ;
+  rdfs:range xsd:string
+ .
+ic:通貨
+  a owl:DatatypeProperty ;
+  rdfs:label "通貨"@ja, "Currency"@en ;
+  rdfs:comment "通貨名を記述するためのプロパティ用語"@ja, "The name of a currency."@en ;
+  schema:domainIncludes ic:金額型 ;
+  rdfs:range xsd:string
+ .
+ic:発行者
+  a owl:ObjectProperty ;
+  rdfs:label "発行者"@ja, "Issuer name"@en ;
+  rdfs:comment "IDやコードリストなどの発行主体を記述するためのプロパティ用語"@ja, "The issuing entity of an ID system or code list, etc."@en ;
+  schema:domainIncludes ic:ID体系型,ic:コードリスト型,ic:文書型 ;
+  rdfs:range ic:実体型
+ .
+ic:部屋番号
+  a owl:DatatypeProperty ;
+  rdfs:label "部屋番号"@ja, "Room number"@en ;
+  rdfs:comment "部屋番号の表記（階数、号室など）を記述するためのプロパティ用語"@ja, "The room number (such as floor and room number) expressed as text."@en ;
+  schema:domainIncludes ic:住所型 ;
+  rdfs:range xsd:string
+ .
+ic:方書
+  a owl:DatatypeProperty ;
+  rdfs:label "方書"@ja, "Katagaki"@en ;
+  rdfs:comment "方書 (私書箱も含む)を記述するためのプロパティ用語"@ja, "The C/O specification (including a private mail box)."@en ;
+  schema:domainIncludes ic:住所型 ;
+  rdfs:range xsd:string
+ .
+ic:開始時間
+  a owl:DatatypeProperty ;
+  rdfs:label "開始時間"@ja, "Start time"@en ;
+  rdfs:comment "場所やサービスなどの開始時間を記述するためのプロパティ用語"@ja, "The starting time of a place or service, etc."@en ;
+  schema:domainIncludes ic:イベントスケジュール型,ic:定期スケジュール型 ;
+  rdfs:range xsd:time
+ .
+ic:終了時間
+  a owl:DatatypeProperty ;
+  rdfs:label "終了時間"@ja, "End time"@en ;
+  rdfs:comment "場所やサービスなどの終了時間を記述するためのプロパティ用語"@ja, "The closing time of a place or service, etc."@en ;
+  schema:domainIncludes ic:イベントスケジュール型,ic:定期スケジュール型 ;
+  rdfs:range xsd:time
+ .
+ic:上位コード
+  a owl:ObjectProperty ;
+  rdfs:label "上位コード"@ja, "Superior code"@en ;
+  rdfs:comment "当該コードの上位に位置するコードを記述するためのプロパティ用語"@ja, "The upper-level code of the code concerned."@en ;
+  schema:domainIncludes ic:コード型 ;
+  rdfs:range ic:コード型
+ .
+ic:下位コード
+  a owl:ObjectProperty ;
+  rdfs:label "下位コード"@ja, "Inferior code"@en ;
+  rdfs:comment "当該コードの下位に位置するコードを記述するためのプロパティ用語"@ja, "The lower-level code of the code concerned."@en ;
+  schema:domainIncludes ic:コード型 ;
+  rdfs:range ic:コード型
+ .
+ic:関連コード
+  a owl:ObjectProperty ;
+  rdfs:label "関連コード"@ja, "Related code"@en ;
+  rdfs:comment "当該コードに関連するコードを記述するためのプロパティ用語"@ja, "The code related to the code concerned."@en ;
+  schema:domainIncludes ic:コード型 ;
+  rdfs:range ic:コード型
+ .
+ic:日時
+  a owl:ObjectProperty ;
+  rdfs:label "日時"@ja, "Date and time"@en ;
+  rdfs:comment "活動などが行われる日時を記述するためのプロパティ用語"@ja, "The date and time when an activity, etc. are held."@en ;
+  schema:domainIncludes ic:活動型,ic:文書型 ;
+  rdfs:range ic:日時型
+ .
+ic:関連人員
+  a owl:ObjectProperty ;
+  rdfs:label "関連人員"@ja, "Number of associated person"@en ;
+  rdfs:comment "関連する人員の人数（従業員数など）を記述するためのプロパティ用語"@ja, "The number of personnel involved (such as the number of employees)."@en ;
+  schema:domainIncludes ic:組織型 ;
+  rdfs:range ic:人数型
+ .
+ic:面積
+  a owl:ObjectProperty ;
+  rdfs:label "面積"@ja, "Areasquare"@en ;
+  rdfs:comment "土地などの面積を記述するためのプロパティ用語"@ja, "The area of a land, etc."@en ;
+  schema:domainIncludes ic:土地型 ;
+  rdfs:range ic:面積型
+ .
+ic:活動
+  a owl:ObjectProperty ;
+  rdfs:label "活動"@ja, "Activity"@en ;
+  rdfs:comment "組織などの活動を記述するためのプロパティ用語"@ja, "The activity of an organization, etc."@en ;
+  schema:domainIncludes ic:組織型 ;
+  rdfs:range ic:活動型
+ .
+ic:提供者
+  a owl:ObjectProperty ;
+  rdfs:label "提供者"@ja, "Provider"@en ;
+  rdfs:comment "サービス等を提供する組織や人を記述するためのプロパティ用語"@ja, "The entity such as an organization or person that provide a service, etc."@en ;
+  schema:domainIncludes ic:サービス型 ;
+  rdfs:range ic:実体型
+ .
+ic:参照先
+  a owl:ObjectProperty ;
+  rdfs:label "参照先"@ja, "Referenced object"@en ;
+  rdfs:comment "追加情報などを参照するURLを記述するためのプロパティ用語"@ja, "The URL that refers to additional information."@en ;
+  schema:domainIncludes ic:参照型 ;
+  rdfs:range owl:Thing
+ .
+ic:表題
+  a owl:DatatypeProperty ;
+  rdfs:label "表題"@ja, "Title of document"@en ;
+  rdfs:comment "文書に与えられた名前を記述するためのプロパティ用語"@ja, "The name given to a document."@en ;
+  schema:domainIncludes ic:文書型 ;
+  rdfs:range xsd:string
+ .
+ic:作成者
+  a owl:ObjectProperty ;
+  rdfs:label "作成者"@ja, "Creator"@en ;
+  rdfs:comment "文書の内容の作成に主たる責任をもつ実体を記述するためのプロパティ用語"@ja, "The entity primarily responsible for making a document."@en ;
+  schema:domainIncludes ic:文書型 ;
+  rdfs:range ic:実体型
+ .
+ic:寄与者
+  a owl:ObjectProperty ;
+  rdfs:label "寄与者"@ja, "Contributor"@en ;
+  rdfs:comment "文書の内容になんらかの寄与、貢献をした実体を記述するためのプロパティ用語"@ja, "The entity responsible for making contributions to a document."@en ;
+  schema:domainIncludes ic:文書型 ;
+  rdfs:range ic:実体型
+ .
+ic:日付
+  a owl:ObjectProperty ;
+  rdfs:label "日付"@ja, "Date"@en ;
+  rdfs:comment "文書のライフサイクルにおけるなんらかの事象に関するある時点又は時間的区間を記述するためのプロパティ用語"@ja, "The point or period of time associated with an event in the lifecycle of a document."@en ;
+  schema:domainIncludes ic:文書型 ;
+  rdfs:range ic:日付型
+ .
+ic:資源タイプ
+  a owl:ObjectProperty ;
+  rdfs:label "資源タイプ"@ja, "Type"@en ;
+  rdfs:comment "文書の性質又はジャンルを記述するためのプロパティ用語"@ja, "The nature or genre of a document."@en ;
+  schema:domainIncludes ic:文書型 ;
+  rdfs:range owl:Thing
+ .
+ic:記録形式
+  a owl:DatatypeProperty ;
+  rdfs:label "記録形式"@ja, "Format"@en ;
+  rdfs:comment "文書のファイルの記録形式、物理媒体又は次元を記述するためのプロパティ用語"@ja, "The file format, physical medium, or dimensions of a document."@en ;
+  schema:domainIncludes ic:文書型 ;
+  rdfs:range xsd:string
+ .
+ic:記録形式コード
+  a owl:ObjectProperty ;
+  rdfs:label "記録形式コード"@ja, "Format code"@en ;
+  rdfs:comment "文書のファイルの記録形式、物理媒体又は次元のコードを記述するためのプロパティ用語"@ja, "The code specifying a file format, physical medium, or dimensions of a document."@en ;
+  schema:domainIncludes ic:文書型 ;
+  rdfs:range ic:コード型
+ .
+ic:出処
+  a owl:DatatypeProperty ;
+  rdfs:label "出処"@ja, "Source"@en ;
+  rdfs:comment "当該文書の由来となるような関係の文書源を記述するためのプロパティ用語"@ja, "The related document from which a described document is derived."@en ;
+  schema:domainIncludes ic:文書型 ;
+  rdfs:range xsd:string
+ .
+ic:言語
+  a owl:ObjectProperty ;
+  rdfs:label "言語"@ja, "Language"@en ;
+  rdfs:comment "文書の言語を記述するためのプロパティ用語"@ja, "The language of a document."@en ;
+  schema:domainIncludes ic:文書型 ;
+  rdfs:range ic:コード型
+ .
+ic:権利管理
+  a owl:ObjectProperty ;
+  rdfs:label "権利管理"@ja, "Rights"@en ;
+  rdfs:comment "文書に含まれる、又はかかわる権利管理に関する情報を記述するためのプロパティ用語"@ja, "The information about rights held in and over a document."@en ;
+  schema:domainIncludes ic:文書型 ;
+  rdfs:range ic:文書型
+ .
+ic:利用対象
+  a owl:ObjectProperty ;
+  rdfs:label "利用対象"@ja, "Thing to be targeted"@en ;
+  rdfs:comment "利用対象となる事物を記述するためのプロパティ用語"@ja, "The thing to be targeted for a service, etc."@en ;
+  schema:domainIncludes ic:イベント型,ic:サービス型 ;
+  rdfs:range ic:対象型
+ .
+ic:利用方法
+  a owl:DatatypeProperty ;
+  rdfs:label "利用方法"@ja, "Procedure for use"@en ;
+  rdfs:comment "利用方法を記述するためのプロパティ用語"@ja, "The procedure to use a service, etc."@en ;
+  schema:domainIncludes ic:サービス型 ;
+  rdfs:range xsd:string
+ .
+ic:制約
+  a owl:ObjectProperty ;
+  rdfs:label "制約"@ja, "Restriction"@en ;
+  rdfs:comment "対象となる事物の制約を記述するためのプロパティ用語"@ja, "The restriction on a thing to be targeted."@en ;
+  schema:domainIncludes ic:対象型 ;
+  rdfs:range ic:制約型
+ .
+ic:制約コード
+  a owl:ObjectProperty ;
+  rdfs:label "制約コード"@ja, "Restriction code"@en ;
+  rdfs:comment "制約コードを記述するためのプロパティ用語"@ja, "The code specifying a restriction."@en ;
+  schema:domainIncludes ic:コード制約型 ;
+  rdfs:range ic:コード型
+ .
+ic:制約対象
+  a owl:DatatypeProperty ;
+  rdfs:label "制約対象"@ja, "Thing to be restricted"@en ;
+  rdfs:comment "制約対象を記述するためのプロパティ用語"@ja, "The targeted thing to be restricted."@en ;
+  schema:domainIncludes ic:制約型 ;
+  rdfs:range xsd:string
+ .
+ic:上限値
+  a owl:ObjectProperty ;
+  rdfs:label "上限値"@ja, "Upper limit"@en ;
+  rdfs:comment "範囲制約の上限値を記述するためのプロパティ用語"@ja, "The upper limit of the range of a restriction."@en ;
+  schema:domainIncludes ic:範囲制約型 ;
+  rdfs:range ic:数量型
+ .
+ic:境界を含まない上限値
+  a owl:ObjectProperty ;
+  rdfs:label "境界を含まない上限値"@ja, "Upper limit not including boundary"@en ;
+  rdfs:comment "範囲制約の境界を含まない上限値を記述するためのプロパティ用語"@ja, "The upper limit of the range of s restriction, which excludes the boundary."@en ;
+  schema:domainIncludes ic:範囲制約型 ;
+  rdfs:range ic:数量型
+ .
+ic:下限値
+  a owl:ObjectProperty ;
+  rdfs:label "下限値"@ja, "Lower limit"@en ;
+  rdfs:comment "範囲制約の下限値を記述するためのプロパティ用語"@ja, "The lower limit of the range of a restriction."@en ;
+  schema:domainIncludes ic:範囲制約型 ;
+  rdfs:range ic:数量型
+ .
+ic:境界を含まない下限値
+  a owl:ObjectProperty ;
+  rdfs:label "境界を含まない下限値"@ja, "Lower limit not including boundary"@en ;
+  rdfs:comment "範囲制約の境界を含まない下限値を記述するためのプロパティ用語"@ja, "The lower limit of the range of a restriction, which excludes the boundary."@en ;
+  schema:domainIncludes ic:範囲制約型 ;
+  rdfs:range ic:数量型
+ .
+ic:年齢
+  a owl:ObjectProperty ;
+  rdfs:label "年齢"@ja, "Age"@en ;
+  rdfs:comment "人の年齢を記述するためのプロパティ用語"@ja, "An age of the person."@en ;
+  schema:domainIncludes ic:人型 ;
+  rdfs:range ic:数量型
+ .
+ic:身長
+  a owl:ObjectProperty ;
+  rdfs:label "身長"@ja, "Height of perseon"@en ;
+  rdfs:comment "人の身長を記述するためのプロパティ用語"@ja, "A height of the person."@en ;
+  schema:domainIncludes ic:人型 ;
+  rdfs:range ic:数量型
+ .
+ic:体重
+  a owl:ObjectProperty ;
+  rdfs:label "体重"@ja, "Weight of person"@en ;
+  rdfs:comment "人の体重を記述するためのプロパティ用語"@ja, "A weight of the person."@en ;
+  schema:domainIncludes ic:人型 ;
+  rdfs:range ic:数量型
+ .
+ic:メタデータ
+  a owl:ObjectProperty ;
+  rdfs:label "メタデータ"@ja, "Metadata"@en ;
+  rdfs:comment "データのメタデータを記述するためのプロパティ用語"@ja, "A document specifying the metadata of a data."@en ;
+  schema:domainIncludes ic:概念型 ;
+  rdfs:range ic:文書型
+ .
+ic:記述
+  a owl:ObjectProperty ;
+  rdfs:label "記述"@ja, "Explanation"@en ;
+  rdfs:comment "種別付きの説明文を記述するためのプロパティ用語"@ja, "A explanation for the thing."@en ;
+  schema:domainIncludes ic:事物型 ;
+  rdfs:range ic:記述型
+ .
+ic:人型  a owl:Class ;
+  rdfs:subClassOf [
+    a owl:Restriction ;
+    owl:onProperty ic:氏名 ;
+    owl:allValuesFrom ic:氏名型  ;
+    rdfs:comment "氏名を記述するためのプロパティ用語"@ja, "A name of the person."@en ;
+    ] , [
+    a owl:Restriction ;
+    owl:onProperty ic:性別 ;
+    owl:onDataRange xsd:string  ;
+    owl:maxQualifiedCardinality 1  ;
+    rdfs:comment "性別の表記を記述するためのプロパティ用語"@ja, "The gender expressed as text."@en ;
+    ] , [
+    a owl:Restriction ;
+    owl:onProperty ic:性別コード ;
+    owl:onClass ic:コード型  ;
+    owl:maxQualifiedCardinality  1  ;
+    rdfs:comment "性別コードを記述するためのプロパティ用語"@ja, "The code specifying gender."@en ;
+    ] , [
+    a owl:Restriction ;
+    owl:onProperty ic:生年月日 ;
+    owl:onClass ic:日付型  ;
+    owl:maxQualifiedCardinality  1  ;
+    rdfs:comment "生年月日を記述するためのプロパティ用語"@ja, "The date of birth."@en ;
+    ] , [
+    a owl:Restriction ;
+    owl:onProperty ic:死亡年月日 ;
+    owl:onClass ic:日付型  ;
+    owl:maxQualifiedCardinality  1  ;
+    rdfs:comment "死亡年月日を記述するためのプロパティ用語"@ja, "The date of death."@en ;
+    ] , [
+    a owl:Restriction ;
+    owl:onProperty ic:住所 ;
+    owl:allValuesFrom ic:住所型  ;
+    rdfs:comment "現住所を記述するためのプロパティ用語"@ja, "A present address."@en ;
+    ] , [
+    a owl:Restriction ;
+    owl:onProperty ic:本籍 ;
+    owl:onClass ic:住所型  ;
+    owl:maxQualifiedCardinality  1  ;
+    rdfs:comment "本籍を記述するためのプロパティ用語"@ja, "The registered domicile by birth."@en ;
+    ] , [
+    a owl:Restriction ;
+    owl:onProperty ic:連絡先 ;
+    owl:allValuesFrom ic:連絡先型  ;
+    rdfs:comment "連絡先を記述するためのプロパティ用語"@ja, "A contact."@en ;
+    ] , [
+    a owl:Restriction ;
+    owl:onProperty ic:国籍 ;
+    owl:allValuesFrom xsd:string  ;
+    rdfs:comment "国籍の表記を記述するためのプロパティ用語"@ja, "A nationality expressed as text."@en ;
+    ] , [
+    a owl:Restriction ;
+    owl:onProperty ic:国籍コード ;
+    owl:allValuesFrom ic:コード型  ;
+    rdfs:comment "国籍コードを記述するためのプロパティ用語　※住民基本台帳で利用されているものを使用"@ja, "A code specifying the nationality. Note: Use the code in Basic Resident Registration."@en ;
+    ] , [
+    a owl:Restriction ;
+    owl:onProperty ic:出生国 ;
+    owl:onDataRange xsd:string  ;
+    owl:maxQualifiedCardinality 1  ;
+    rdfs:comment "生まれた国名を記述するためのプロパティ用語"@ja, "The name of the country of birth."@en ;
+    ] , [
+    a owl:Restriction ;
+    owl:onProperty ic:出生国コード ;
+    owl:onClass ic:コード型  ;
+    owl:maxQualifiedCardinality  1  ;
+    rdfs:comment "生まれた国のコードを記述するためのプロパティ用語"@ja, "The code specifying the country of birth."@en ;
+    ] , [
+    a owl:Restriction ;
+    owl:onProperty ic:出生地 ;
+    owl:onClass ic:住所型  ;
+    owl:maxQualifiedCardinality  1  ;
+    rdfs:comment "生まれた場所を記述するためのプロパティ用語"@ja, "The place of birth."@en ;
+    ] , [
+    a owl:Restriction ;
+    owl:onProperty ic:年齢 ;
+    owl:onClass ic:数量型  ;
+    owl:maxQualifiedCardinality  1  ;
+    rdfs:comment "人の年齢を記述するためのプロパティ用語"@ja, "An age of the person."@en ;
+    ] , [
+    a owl:Restriction ;
+    owl:onProperty ic:身長 ;
+    owl:onClass ic:数量型  ;
+    owl:maxQualifiedCardinality  1  ;
+    rdfs:comment "人の身長を記述するためのプロパティ用語"@ja, "A height of the person."@en ;
+    ] , [
+    a owl:Restriction ;
+    owl:onProperty ic:体重 ;
+    owl:onClass ic:数量型  ;
+    owl:maxQualifiedCardinality  1  ;
+    rdfs:comment "人の体重を記述するためのプロパティ用語"@ja, "A weight of the person."@en ;
+    ]
+.
+ic:名称型  a owl:Class ;
+  rdfs:subClassOf [
+    a owl:Restriction ;
+    owl:onProperty ic:カナ表記 ;
+    owl:onDataRange xsd:string  ;
+    owl:maxQualifiedCardinality 1  ;
+    rdfs:comment "カタカナ表記を記述するためのプロパティ用語"@ja, "The textual expression of the name in Katakana."@en ;
+    ] , [
+    a owl:Restriction ;
+    owl:onProperty ic:ローマ字表記 ;
+    owl:onDataRange xsd:string  ;
+    owl:maxQualifiedCardinality 1  ;
+    rdfs:comment "ローマ字表記を記述するためのプロパティ用語"@ja, "The textual expression of the name in the Roman alphabet."@en ;
+    ]
+.
+ic:氏名型  a owl:Class ;
+  rdfs:subClassOf [
+    a owl:Restriction ;
+    owl:onProperty ic:姓名 ;
+    owl:onDataRange xsd:string  ;
+    owl:maxQualifiedCardinality 1  ;
+    rdfs:comment "氏名（姓、名）の表記を記述するためのプロパティ用語"@ja, "The full name (family and given name) expressed as text."@en ;
+    ] , [
+    a owl:Restriction ;
+    owl:onProperty ic:姓名カナ表記 ;
+    owl:onDataRange xsd:string  ;
+    owl:maxQualifiedCardinality 1  ;
+    rdfs:comment "氏名（姓、名）のカタカナ表記を記述するためのプロパティ用語"@ja, "The textual expression of the full name (family and given name) in Katakana."@en ;
+    ] , [
+    a owl:Restriction ;
+    owl:onProperty ic:姓名ローマ字表記 ;
+    owl:onDataRange xsd:string  ;
+    owl:maxQualifiedCardinality 1  ;
+    rdfs:comment "氏名（姓、名）のローマ字表記を記述するためのプロパティ用語"@ja, "The textual expression of the full name (family and given name) in the Roman alphabet."@en ;
+    ] , [
+    a owl:Restriction ;
+    owl:onProperty ic:姓 ;
+    owl:onDataRange xsd:string  ;
+    owl:maxQualifiedCardinality 1  ;
+    rdfs:comment "姓の表記を記述するためのプロパティ用語"@ja, "The family name expressed as text."@en ;
+    ] , [
+    a owl:Restriction ;
+    owl:onProperty ic:姓カナ表記 ;
+    owl:onDataRange xsd:string  ;
+    owl:maxQualifiedCardinality 1  ;
+    rdfs:comment "姓のカタカナ表記を記述するためのプロパティ用語"@ja, "The textual expression of the family name in Katakana."@en ;
+    ] , [
+    a owl:Restriction ;
+    owl:onProperty ic:姓ローマ字表記 ;
+    owl:onDataRange xsd:string  ;
+    owl:maxQualifiedCardinality 1  ;
+    rdfs:comment "姓のローマ字表記を記述するためのプロパティ用語"@ja, "The textual expression of the family name in the Roman alphabet."@en ;
+    ] , [
+    a owl:Restriction ;
+    owl:onProperty ic:名 ;
+    owl:onDataRange xsd:string  ;
+    owl:maxQualifiedCardinality 1  ;
+    rdfs:comment "名の表記を記述するためのプロパティ用語"@ja, "The given name expressed as text."@en ;
+    ] , [
+    a owl:Restriction ;
+    owl:onProperty ic:名カナ表記 ;
+    owl:onDataRange xsd:string  ;
+    owl:maxQualifiedCardinality 1  ;
+    rdfs:comment "名のカタカナ表記を記述するためのプロパティ用語"@ja, "The textual expression of the given name in Katakana."@en ;
+    ] , [
+    a owl:Restriction ;
+    owl:onProperty ic:名ローマ字表記 ;
+    owl:onDataRange xsd:string  ;
+    owl:maxQualifiedCardinality 1  ;
+    rdfs:comment "名のローマ字表記を記述するためのプロパティ用語"@ja, "The textual expression of the given name in the Roman alphabet."@en ;
+    ] , [
+    a owl:Restriction ;
+    owl:onProperty ic:ミドルネーム ;
+    owl:onDataRange xsd:string  ;
+    owl:maxQualifiedCardinality 1  ;
+    rdfs:comment "ミドルネームの表記を記述するためのプロパティ用語"@ja, "The middle name expressed as text."@en ;
+    ] , [
+    a owl:Restriction ;
+    owl:onProperty ic:ミドルネームカナ表記 ;
+    owl:onDataRange xsd:string  ;
+    owl:maxQualifiedCardinality 1  ;
+    rdfs:comment "ミドルネームのカタカナ表記を記述するためのプロパティ用語"@ja, "The textual expression of the middle name in Katakana."@en ;
+    ] , [
+    a owl:Restriction ;
+    owl:onProperty ic:ミドルネームローマ字表記 ;
+    owl:onDataRange xsd:string  ;
+    owl:maxQualifiedCardinality 1  ;
+    rdfs:comment "ミドルネームのローマ字表記を記述するためのプロパティ用語"@ja, "The textual expression of the middle name in the Roman alphabet."@en ;
+    ]
+.
+ic:住所型  a owl:Class ;
+  rdfs:subClassOf [
+    a owl:Restriction ;
+    owl:onProperty ic:郵便番号 ;
+    owl:onDataRange xsd:string  ;
+    owl:maxQualifiedCardinality 1  ;
+    rdfs:comment "郵便番号を記述するためのプロパティ用語　※0-9の数字7桁"@ja, "The postal code. Note: A string consisting of seven numeric characters of '0 to 9'."@en ;
+    ] , [
+    a owl:Restriction ;
+    owl:onProperty ic:住所コード ;
+    owl:allValuesFrom ic:コード型  ;
+    rdfs:comment "住所のコードを記述するためのプロパティ用語　※地方公共団体情報システム機構の地方公共団体コード住所など"@ja, "A code specifying the address. Note: Such as Local Government Code Address by Japan Agency for Local Authority Information Systems."@en ;
+    ] , [
+    a owl:Restriction ;
+    owl:onProperty ic:国 ;
+    owl:onDataRange xsd:string  ;
+    owl:maxQualifiedCardinality 1  ;
+    rdfs:comment "国名を記述するためのプロパティ用語"@ja, "The country name."@en ;
+    ] , [
+    a owl:Restriction ;
+    owl:onProperty ic:国コード ;
+    owl:onClass ic:コード型  ;
+    owl:maxQualifiedCardinality  1  ;
+    rdfs:comment "国のコードを記述するためのプロパティ用語"@ja, "The code specifying the country."@en ;
+    ] , [
+    a owl:Restriction ;
+    owl:onProperty ic:都道府県 ;
+    owl:onDataRange xsd:string  ;
+    owl:maxQualifiedCardinality 1  ;
+    rdfs:comment "都道府県名を記述するためのプロパティ用語"@ja, "The prefecture name."@en ;
+    ] , [
+    a owl:Restriction ;
+    owl:onProperty ic:都道府県コード ;
+    owl:onClass ic:コード型  ;
+    owl:maxQualifiedCardinality  1  ;
+    rdfs:comment "都道府県のコードを記述するためのプロパティ用語"@ja, "The code specifying the prefecture."@en ;
+    ] , [
+    a owl:Restriction ;
+    owl:onProperty ic:市区町村 ;
+    owl:onDataRange xsd:string  ;
+    owl:maxQualifiedCardinality 1  ;
+    rdfs:comment "市区町村名を記述するためのプロパティ用語"@ja, "The municipality name."@en ;
+    ] , [
+    a owl:Restriction ;
+    owl:onProperty ic:区 ;
+    owl:onDataRange xsd:string  ;
+    owl:maxQualifiedCardinality 1  ;
+    rdfs:comment "政令指定都市の区の名前を記述するためのプロパティ用語"@ja, "The name of the ward in the ordinance-designated city."@en ;
+    ] , [
+    a owl:Restriction ;
+    owl:onProperty ic:市区町村コード ;
+    owl:onClass ic:コード型  ;
+    owl:maxQualifiedCardinality  1  ;
+    rdfs:comment "市区町村のコードを記述するためのプロパティ用語"@ja, "The code specifying the municipality."@en ;
+    ] , [
+    a owl:Restriction ;
+    owl:onProperty ic:町名 ;
+    owl:onDataRange xsd:string  ;
+    owl:maxQualifiedCardinality 1  ;
+    rdfs:comment "町域、または市区町村の下の行政区分の表記を記述するためのプロパティ用語"@ja, "The town area or administrative division under municipality expressed as text."@en ;
+    ] , [
+    a owl:Restriction ;
+    owl:onProperty ic:丁目 ;
+    owl:onDataRange xsd:string  ;
+    owl:maxQualifiedCardinality 1  ;
+    rdfs:comment "丁目の表記を記述するためのプロパティ用語"@ja, "The city district number expressed as text."@en ;
+    ] , [
+    a owl:Restriction ;
+    owl:onProperty ic:番地補足 ;
+    owl:onDataRange xsd:string  ;
+    owl:maxQualifiedCardinality 1  ;
+    rdfs:comment "番地の前の、「東」「北」「浜」「甲」「イ」などの文字を記述するためのプロパティ用語"@ja, "The prefix string such as '東 (East)' , '北 (North)',  '浜 (Coast)', '甲' and 'イ' (characters representing item number) specified prior to a block number."@en ;
+    ] , [
+    a owl:Restriction ;
+    owl:onProperty ic:番地 ;
+    owl:onDataRange xsd:string  ;
+    owl:maxQualifiedCardinality 1  ;
+    rdfs:comment "番、街区の表記を記述するためのプロパティ用語"@ja, "The block number or town block number expressed as text."@en ;
+    ] , [
+    a owl:Restriction ;
+    owl:onProperty ic:号 ;
+    owl:onDataRange xsd:string  ;
+    owl:maxQualifiedCardinality 1  ;
+    rdfs:comment "号、住居番号の表記を記述するためのプロパティ用語"@ja, "The building number or house number expressed as text."@en ;
+    ] , [
+    a owl:Restriction ;
+    owl:onProperty ic:ビル名 ;
+    owl:onDataRange xsd:string  ;
+    owl:maxQualifiedCardinality 1  ;
+    rdfs:comment "ビル名を記述するためのプロパティ用語"@ja, "The building name."@en ;
+    ] , [
+    a owl:Restriction ;
+    owl:onProperty ic:ビル番号 ;
+    owl:onDataRange xsd:string  ;
+    owl:maxQualifiedCardinality 1  ;
+    rdfs:comment "ビルの番号の表記（号棟など）を記述するためのプロパティ用語"@ja, "The building number (such as unit number) expressed as text."@en ;
+    ] , [
+    a owl:Restriction ;
+    owl:onProperty ic:部屋番号 ;
+    owl:onDataRange xsd:string  ;
+    owl:maxQualifiedCardinality 1  ;
+    rdfs:comment "部屋番号の表記（階数、号室など）を記述するためのプロパティ用語"@ja, "The room number (such as floor and room number) expressed as text."@en ;
+    ] , [
+    a owl:Restriction ;
+    owl:onProperty ic:方書 ;
+    owl:onDataRange xsd:string  ;
+    owl:maxQualifiedCardinality 1  ;
+    rdfs:comment "方書 (私書箱も含む)を記述するためのプロパティ用語"@ja, "The C/O specification (including private mail box)."@en ;
+    ]
+.
+ic:連絡先型  a owl:Class ;
+  rdfs:subClassOf [
+    a owl:Restriction ;
+    owl:onProperty ic:名称 ;
+    owl:allValuesFrom ic:名称型  ;
+    rdfs:comment "連絡先の名称を記述するためのプロパティ用語"@ja, "A name of the contact."@en ;
+    ] , [
+    a owl:Restriction ;
+    owl:onProperty ic:組織 ;
+    owl:allValuesFrom ic:組織型  ;
+    rdfs:comment "連絡先の組織を記述するためのプロパティ用語　※連絡先が他組織に委任されているときなどに記載"@ja, "A name of the organization that receives contacts. Note: Specify when another organization is in charge of receiving contacts."@en ;
+    ] , [
+    a owl:Restriction ;
+    owl:onProperty ic:担当者役職 ;
+    owl:allValuesFrom xsd:string  ;
+    rdfs:comment "連絡先の担当者の役職の表記を記述するためのプロパティ用語"@ja, "A title of the contact person expressed as text."@en ;
+    ] , [
+    a owl:Restriction ;
+    owl:onProperty ic:担当者名 ;
+    owl:allValuesFrom ic:氏名型  ;
+    rdfs:comment "連絡先の担当者の氏名を記述するためのプロパティ用語"@ja, "A name of the contact person."@en ;
+    ] , [
+    a owl:Restriction ;
+    owl:onProperty ic:Eメールアドレス ;
+    owl:allValuesFrom xsd:string  ;
+    rdfs:comment "連絡先の電子メールアドレスを記述するためのプロパティ用語"@ja, "An electronic mail address to receive contacts."@en ;
+    ] , [
+    a owl:Restriction ;
+    owl:onProperty ic:住所 ;
+    owl:allValuesFrom ic:住所型  ;
+    rdfs:comment "連絡先の住所を記述するためのプロパティ用語"@ja, "A contact address."@en ;
+    ] , [
+    a owl:Restriction ;
+    owl:onProperty ic:送付先 ;
+    owl:allValuesFrom xsd:string  ;
+    rdfs:comment "郵便物送付先の住所（私書箱など）を記述するためのプロパティ用語"@ja, "A mailing address (such as a private mail box)."@en ;
+    ] , [
+    a owl:Restriction ;
+    owl:onProperty ic:電話番号 ;
+    owl:allValuesFrom ic:電話番号型  ;
+    rdfs:comment "連絡先の電話番号を記述するためのプロパティ用語　※0-9 の数字及び + - ( ) , の文字のみを使用"@ja, "A telephone number to receive contacts. Note: Use '0 to 9' numeric characters and 'plus '+', minus '-', opening parenthesis '(', closing parenthesis ')', and comma ',' 'characters only."@en ;
+    ] , [
+    a owl:Restriction ;
+    owl:onProperty ic:内線番号 ;
+    owl:allValuesFrom xsd:string  ;
+    rdfs:comment "連絡先の内線番号を記述するためのプロパティ用語"@ja, "An extension number of the contact telephone number to receive contacts."@en ;
+    ] , [
+    a owl:Restriction ;
+    owl:onProperty ic:FAX番号 ;
+    owl:allValuesFrom ic:電話番号型  ;
+    rdfs:comment "連絡先のFAX番号を記述するためのプロパティ用語　※0-9 の数字及び + - ( ) , の文字のみを使用"@ja, "A facsimile number to receive contacts. Note: Use '0 to 9' numeric characters and 'plus '+', minus '-', opening parenthesis '(', closing parenthesis ')', and comma ',' 'characters only."@en ;
+    ] , [
+    a owl:Restriction ;
+    owl:onProperty ic:携帯電話番号 ;
+    owl:allValuesFrom ic:電話番号型  ;
+    rdfs:comment "連絡先の携帯電話番号を記述するためのプロパティ用語　※0-9 の数字及び + - ( ) , の文字のみを使用"@ja, "A cellular phone number to receive contacts. Note: Use '0 to 9' numeric characters and 'plus '+', minus '-', opening parenthesis '(', closing parenthesis ')', and comma ',' 'characters only."@en ;
+    ] , [
+    a owl:Restriction ;
+    owl:onProperty ic:Webサイト ;
+    owl:allValuesFrom owl:Thing ;
+    rdfs:comment "連絡先のWebサイトを参照するURLを記述するためのプロパティ用語"@ja, "An URL that references the Web site of the contact."@en ;
+    ] , [
+    a owl:Restriction ;
+    owl:onProperty ic:対応言語 ;
+    owl:allValuesFrom xsd:string  ;
+    rdfs:comment "連絡先との連絡の際に利用可能な言語名を記述するためのプロパティ用語"@ja, "A language available when communicating with the contact."@en ;
+    ]
+.
+ic:組織型  a owl:Class ;
+  rdfs:subClassOf [
+    a owl:Restriction ;
+    owl:onProperty ic:名称 ;
+    owl:allValuesFrom ic:名称型  ;
+    rdfs:comment "組織の名称を記述するためのプロパティ用語　※組合以外は、組織種別を省略して記載"@ja, "A name of the organization. Note: Except for unions, specify without an organization category."@en ;
+    ] , [
+    a owl:Restriction ;
+    owl:onProperty ic:略称アルファベット ;
+    owl:allValuesFrom xsd:string  ;
+    rdfs:comment "頭文字などを使った組織の略称表記を記述するためのプロパティ用語"@ja, "An abbreviated name of the organization using  initial letters, etc."@en ;
+    ] , [
+    a owl:Restriction ;
+    owl:onProperty ic:通称 ;
+    owl:allValuesFrom xsd:string  ;
+    rdfs:comment "組織の正式な名称以外に一般的に使用されている名称を記述するためのプロパティ用語"@ja, "A generally used name of the organization apart from its official name."@en ;
+    ] , [
+    a owl:Restriction ;
+    owl:onProperty ic:活動状況 ;
+    owl:allValuesFrom ic:状況型  ;
+    rdfs:comment "組織の状況（倒産、破産など）を記述するためのプロパティ用語"@ja, "An activity status of the organization (such as bankruptcy)."@en ;
+    ] , [
+    a owl:Restriction ;
+    owl:onProperty ic:活動 ;
+    owl:allValuesFrom ic:活動型  ;
+    rdfs:comment "組織の活動を記述するためのプロパティ用語"@ja, "An activity of the organization."@en ;
+    ] , [
+    a owl:Restriction ;
+    owl:onProperty ic:概要 ;
+    owl:allValuesFrom xsd:string  ;
+    rdfs:comment "組織の概要説明を記述するためのプロパティ用語"@ja, "An overview description of the organization."@en ;
+    ] , [
+    a owl:Restriction ;
+    owl:onProperty ic:連絡先 ;
+    owl:allValuesFrom ic:連絡先型  ;
+    rdfs:comment "組織の連絡先（本社、コールセンターなど）を記述するためのプロパティ用語"@ja, "A contact of the organization (such as its headquarters and call centers)."@en ;
+    ] , [
+    a owl:Restriction ;
+    owl:onProperty ic:関連組織 ;
+    owl:allValuesFrom ic:組織関連型  ;
+    rdfs:comment "関連する組織（支店など）を記述するためのプロパティ用語"@ja, "An associated organization (such as an branch office)."@en ;
+    ] , [
+    a owl:Restriction ;
+    owl:onProperty ic:関連人員 ;
+    owl:allValuesFrom ic:人数型  ;
+    rdfs:comment "関連する人員の人数（従業員数など）を記述するためのプロパティ用語"@ja, "The number of personnel involved in the organization (such as the number of employees)."@en ;
+    ] , [
+    a owl:Restriction ;
+    owl:onProperty ic:地物 ;
+    owl:allValuesFrom ic:地物型  ;
+    rdfs:comment "組織に関連する地物や施設、建物を記述するためのプロパティ用語"@ja, "A feature, facility, or building associated with the organization."@en ;
+    ] , [
+    a owl:Restriction ;
+    owl:onProperty ic:住所 ;
+    owl:allValuesFrom ic:住所型  ;
+    rdfs:comment "組織に関係する住所（登記上の住所など）を記述するためのプロパティ用語"@ja, "An address of the organization (such as its registered address)."@en ;
+    ] , [
+    a owl:Restriction ;
+    owl:onProperty ic:代表者 ;
+    owl:allValuesFrom ic:構成員型  ;
+    rdfs:comment "組織の代表者を記述するためのプロパティ用語"@ja, "A representative of the organization."@en ;
+    ] , [
+    a owl:Restriction ;
+    owl:onProperty ic:設立日 ;
+    owl:onClass ic:日付型  ;
+    owl:maxQualifiedCardinality  1  ;
+    rdfs:comment "設立日を記述するためのプロパティ用語　※支店や事業所の場合は設置日"@ja, "The date of establishment of the organization. Note: For the branch or business office, its date of first opening."@en ;
+    ] , [
+    a owl:Restriction ;
+    owl:onProperty ic:備考 ;
+    owl:onDataRange xsd:string  ;
+    owl:maxQualifiedCardinality 1  ;
+    rdfs:comment "備考を記述するためのプロパティ用語　※補足情報などがある場合に記述"@ja, "The remarks. Note: Specify when there is any additional information."@en ;
+    ]
+.
+ic:業務組織型  a owl:Class ;
+  rdfs:subClassOf [
+    a owl:Restriction ;
+    owl:onProperty ic:事業種目 ;
+    owl:allValuesFrom xsd:string  ;
+    rdfs:comment "事業の種類の表記（販売業など）を記述するためのプロパティ用語"@ja, "A category of the business (such as a distributor) expressed as text."@en ;
+    ] , [
+    a owl:Restriction ;
+    owl:onProperty ic:事業年度開始日 ;
+    owl:onClass ic:日付型  ;
+    owl:maxQualifiedCardinality  1  ;
+    rdfs:comment "事業年度の開始日を記述するためのプロパティ用語"@ja, "The starting date of its business year."@en ;
+    ] , [
+    a owl:Restriction ;
+    owl:onProperty ic:代理人 ;
+    owl:allValuesFrom ic:組織関連型  ;
+    rdfs:comment "法定手続きなどの代理人となる組織を記述するためのプロパティ用語"@ja, "An organization that acts as agent for legal procedures."@en ;
+    ]
+.
+ic:法人型  a owl:Class ;
+  rdfs:subClassOf [
+    a owl:Restriction ;
+    owl:onProperty ic:組織種別位置 ;
+    owl:onDataRange xsd:string  ;
+    owl:maxQualifiedCardinality 1  ;
+    rdfs:comment "組織名称中の組織種別の記載位置の表記（前、後、など）を記述するためのプロパティ用語"@ja, "The position of the organization type description within the organization name (as a prefix or suffix etc.) expressed as text."@en ;
+    ] , [
+    a owl:Restriction ;
+    owl:onProperty ic:組織種別 ;
+    owl:onClass ic:コード型  ;
+    owl:maxQualifiedCardinality  1  ;
+    rdfs:comment "組織の種別コード（株式会社など）を記述するためのプロパティ用語"@ja, "The code specifying the category of the organization (such as a limited corporation)."@en ;
+    ] , [
+    a owl:Restriction ;
+    owl:onProperty ic:資本金 ;
+    owl:onClass ic:金額型  ;
+    owl:maxQualifiedCardinality  1  ;
+    rdfs:comment "資本金を記述するためのプロパティ用語　※前決算時のもの"@ja, "The capital of the organization. Note: The capital in the previous fiscal year."@en ;
+    ]
+.
+ic:人数型  a owl:Class ;
+  rdfs:subClassOf [
+    a owl:Restriction ;
+    owl:onProperty ic:人数 ;
+    owl:onDataRange xsd:nonNegativeInteger  ;
+    owl:maxQualifiedCardinality 1  ;
+    rdfs:comment "人数を記述するためのプロパティ用語"@ja, "The number of people."@en ;
+    ]
+.
+ic:構成員型  a owl:Class ;
+  rdfs:subClassOf [
+    a owl:Restriction ;
+    owl:onProperty ic:役割 ;
+    owl:onDataRange xsd:string  ;
+    owl:maxQualifiedCardinality 1  ;
+    rdfs:comment "構成員の役割の表記を記述するためのプロパティ用語"@ja, "The role of the member expressed as text."@en ;
+    ] , [
+    a owl:Restriction ;
+    owl:onProperty ic:構成員 ;
+    owl:onClass ic:人型  ;
+    owl:maxQualifiedCardinality  1  ;
+    rdfs:comment "構成員を記述するためのプロパティ用語"@ja, "The member."@en ;
+    ]
+.
+ic:組織関連型  a owl:Class ;
+  rdfs:subClassOf [
+    a owl:Restriction ;
+    owl:onProperty ic:役割 ;
+    owl:onDataRange xsd:string  ;
+    owl:maxQualifiedCardinality 1  ;
+    rdfs:comment "組織の役割の表記を記述するためのプロパティ用語"@ja, "The role of the organization expressed as text."@en ;
+    ] , [
+    a owl:Restriction ;
+    owl:onProperty ic:組織 ;
+    owl:onClass ic:組織型  ;
+    owl:maxQualifiedCardinality  1  ;
+    rdfs:comment "関連組織を記述するためのプロパティ用語"@ja, "The associated organization."@en ;
+    ]
+.
+ic:場所型  a owl:Class ;
+  rdfs:subClassOf [
+    a owl:Restriction ;
+    owl:onProperty ic:名称 ;
+    owl:allValuesFrom ic:名称型  ;
+    rdfs:comment "場所を特定する名称（地名など）を記述するためのプロパティ用語"@ja, "A name to identify the location (such as a name of place)."@en ;
+    ] , [
+    a owl:Restriction ;
+    owl:onProperty ic:通称 ;
+    owl:allValuesFrom xsd:string  ;
+    rdfs:comment "場所の正式な名称以外に一般的に使用されている名称を記述するためのプロパティ用語"@ja, "A generally used name of the location apart from its official name."@en ;
+    ] , [
+    a owl:Restriction ;
+    owl:onProperty ic:地理識別子 ;
+    owl:onClass ic:ID型  ;
+    owl:maxQualifiedCardinality  1  ;
+    rdfs:comment "場所の地理識別子を記述するためのプロパティ用語"@ja, "The geographical identifier of the location."@en ;
+    ] , [
+    a owl:Restriction ;
+    owl:onProperty ic:住所 ;
+    owl:onClass ic:住所型  ;
+    owl:maxQualifiedCardinality  1  ;
+    rdfs:comment "場所を表す住所を記述するためのプロパティ用語"@ja, "The address that indicates the location."@en ;
+    ] , [
+    a owl:Restriction ;
+    owl:onProperty ic:地理座標 ;
+    owl:onClass ic:座標型  ;
+    owl:maxQualifiedCardinality  1  ;
+    rdfs:comment "場所の経緯度座標を記述するためのプロパティ用語"@ja, "The latitude-longitude coordinates of the location."@en ;
+    ]
+.
+ic:座標型  a owl:Class ;
+  rdfs:subClassOf [
+    a owl:Restriction ;
+    owl:onProperty ic:座標参照系 ;
+    owl:onClass ic:ID型  ;
+    owl:maxQualifiedCardinality  1  ;
+    rdfs:comment "座標の参照系に割り振られたIDを記述するためのプロパティ用語"@ja, "The identifier assigned to the reference system for coordinates."@en ;
+    ] , [
+    a owl:Restriction ;
+    owl:onProperty ic:緯度経度書式 ;
+    owl:onDataRange xsd:string  ;
+    owl:maxQualifiedCardinality 1  ;
+    rdfs:comment "度、分、秒の書式を記述するためのプロパティ用語　※書式はiso6709に準拠する"@ja, "The format to express degree, minute and second. Note: The format shall comply with ISO 6709 standard."@en ;
+    ] , [
+    a owl:Restriction ;
+    owl:onProperty ic:緯度 ;
+    owl:onDataRange xsd:string  ;
+    owl:maxQualifiedCardinality 1  ;
+    rdfs:comment "緯度を記述するためのプロパティ用語　※-90から+90で記載"@ja, "The latitude. Note: Specify a value between -90 and +90."@en ;
+    ] , [
+    a owl:Restriction ;
+    owl:onProperty ic:経度 ;
+    owl:onDataRange xsd:string  ;
+    owl:maxQualifiedCardinality 1  ;
+    rdfs:comment "経度を記述するためのプロパティ用語　※-180から+180で記載"@ja, "The longitude. Note: Specify a value between -180 and +180."@en ;
+    ] , [
+    a owl:Restriction ;
+    owl:onProperty ic:座標データ書式 ;
+    owl:onClass ic:コード型  ;
+    owl:maxQualifiedCardinality  1  ;
+    rdfs:comment "点、線、面などを表現するデータ文字列の書式を表すコードを記述するためのプロパティ用語"@ja, "The code specifying the format of a data string expressing points, lines, and planes."@en ;
+    ] , [
+    a owl:Restriction ;
+    owl:onProperty ic:座標データ ;
+    owl:onDataRange xsd:string  ;
+    owl:maxQualifiedCardinality 1  ;
+    rdfs:comment "点、線、面などを表現するデータ文字列を記述するためのプロパティ用語"@ja, "The data string specifying points, lines, and planes."@en ;
+    ] , [
+    a owl:Restriction ;
+    owl:onProperty ic:測地高度 ;
+    owl:onClass ic:長さ型  ;
+    owl:maxQualifiedCardinality  1  ;
+    rdfs:comment "測地高度を記述するためのプロパティ用語"@ja, "The geodetic height."@en ;
+    ]
+.
+ic:ID型  a owl:Class ;
+  rdfs:subClassOf [
+    a owl:Restriction ;
+    owl:onProperty ic:体系 ;
+    owl:onClass ic:ID体系型  ;
+    owl:maxQualifiedCardinality  1  ;
+    rdfs:comment "IDの体系を記述するためのプロパティ用語"@ja, "The system for specifying identifiers."@en ;
+    ] , [
+    a owl:Restriction ;
+    owl:onProperty ic:識別値 ;
+    owl:onDataRange xsd:string  ;
+    owl:maxQualifiedCardinality 1  ;
+    rdfs:comment "IDの値を記述するためのプロパティ用語"@ja, "The identifier value."@en ;
+    ] , [
+    a owl:Restriction ;
+    owl:onProperty ic:参照 ;
+    owl:allValuesFrom ic:参照型  ;
+    rdfs:comment "追加情報などを参照するURLを記述するためのプロパティ用語"@ja, "An URL that refers to additional information."@en ;
+    ]
+.
+ic:ID体系型  a owl:Class ;
+  rdfs:subClassOf [
+    a owl:Restriction ;
+    owl:onProperty ic:名称 ;
+    owl:onClass ic:名称型  ;
+    owl:maxQualifiedCardinality  1  ;
+    rdfs:comment "ID体系の名称を記述するためのプロパティ用語"@ja, "The name of the system for specifying identifiers."@en ;
+    ] , [
+    a owl:Restriction ;
+    owl:onProperty ic:発行者 ;
+    owl:allValuesFrom ic:実体型  ;
+    rdfs:comment "ID体系の発行主体を記述するためのプロパティ用語"@ja, "The name of the issuing entity of the system for specifying identifiers."@en ;
+    ] , [
+    a owl:Restriction ;
+    owl:onProperty ic:バージョン ;
+    owl:onDataRange xsd:string  ;
+    owl:maxQualifiedCardinality 1  ;
+    rdfs:comment "ID体系のバージョンを記述するためのプロパティ用語"@ja, "The version of the system for specifying identifiers."@en ;
+    ]
+.
+ic:製品型  a owl:Class ;
+  rdfs:subClassOf [
+    a owl:Restriction ;
+    owl:onProperty ic:名称 ;
+    owl:allValuesFrom ic:名称型  ;
+    rdfs:comment "製品の名称を記述するためのプロパティ用語"@ja, "A name of the product."@en ;
+    ] , [
+    a owl:Restriction ;
+    owl:onProperty ic:自動認識ID ;
+    owl:allValuesFrom owl:Thing ;
+    rdfs:comment "製品の自動認識ID（バーコードや二次元コードの画像など）が表すURLを記述するためのプロパティ用語"@ja, "An URL expressed by the automatic recognition identifier (such as an image of bar code and two-dimensional code) of the product."@en ;
+    ] , [
+    a owl:Restriction ;
+    owl:onProperty ic:価格 ;
+    owl:allValuesFrom ic:価格型  ;
+    rdfs:comment "製品の価格を記述するためのプロパティ用語"@ja, "A price of the product."@en ;
+    ] , [
+    a owl:Restriction ;
+    owl:onProperty ic:使用方法 ;
+    owl:allValuesFrom xsd:string  ;
+    rdfs:comment "使用方法の説明を記述するためのプロパティ用語"@ja, "An explanation of the usage instructions."@en ;
+    ] , [
+    a owl:Restriction ;
+    owl:onProperty ic:製造者 ;
+    owl:allValuesFrom xsd:string  ;
+    rdfs:comment "製造者名を記述するためのプロパティ用語"@ja, "A name of the manufacturer of the product."@en ;
+    ] , [
+    a owl:Restriction ;
+    owl:onProperty ic:製造者ID ;
+    owl:allValuesFrom ic:ID型  ;
+    rdfs:comment "製造者によって割り当てられたIDを記述するためのプロパティ用語"@ja, "An identifier of the product assigned by a manufacturer."@en ;
+    ] , [
+    a owl:Restriction ;
+    owl:onProperty ic:販売業者 ;
+    owl:allValuesFrom xsd:string  ;
+    rdfs:comment "販売業者名を記述するためのプロパティ用語"@ja, "A name of the distributor of the product."@en ;
+    ] , [
+    a owl:Restriction ;
+    owl:onProperty ic:販売業者ID ;
+    owl:allValuesFrom ic:ID型  ;
+    rdfs:comment "販売業者によって割り当てられたIDを記述するためのプロパティ用語"@ja, "An identifier of the product assigned by a distributor."@en ;
+    ] , [
+    a owl:Restriction ;
+    owl:onProperty ic:入数 ;
+    owl:allValuesFrom ic:数量型  ;
+    rdfs:comment "製品が箱などに含まれる数量を記述するためのプロパティ用語"@ja, "A quantity of products contained in a box, etc."@en ;
+    ] , [
+    a owl:Restriction ;
+    owl:onProperty ic:形態 ;
+    owl:allValuesFrom xsd:string  ;
+    rdfs:comment "製品の形態の説明を記述するためのプロパティ用語"@ja, "An explanation of the form of the product."@en ;
+    ] , [
+    a owl:Restriction ;
+    owl:onProperty ic:重量 ;
+    owl:allValuesFrom ic:重量型  ;
+    rdfs:comment "製品の重量を記述するためのプロパティ用語"@ja, "A weight of the product."@en ;
+    ] , [
+    a owl:Restriction ;
+    owl:onProperty ic:サイズ ;
+    owl:allValuesFrom xsd:string  ;
+    rdfs:comment "製品のサイズの表記を記述するためのプロパティ用語"@ja, "A size of the product expressed as text."@en ;
+    ] , [
+    a owl:Restriction ;
+    owl:onProperty ic:幅 ;
+    owl:allValuesFrom ic:長さ型  ;
+    rdfs:comment "製品の幅を記述するためのプロパティ用語"@ja, "A width of the product."@en ;
+    ] , [
+    a owl:Restriction ;
+    owl:onProperty ic:高さ ;
+    owl:allValuesFrom ic:長さ型  ;
+    rdfs:comment "製品の高さを記述するためのプロパティ用語"@ja, "A height of the product."@en ;
+    ] , [
+    a owl:Restriction ;
+    owl:onProperty ic:長さ ;
+    owl:allValuesFrom ic:長さ型  ;
+    rdfs:comment "製品の長さを記述するためのプロパティ用語"@ja, "A length of a product."@en ;
+    ] , [
+    a owl:Restriction ;
+    owl:onProperty ic:色 ;
+    owl:allValuesFrom xsd:string  ;
+    rdfs:comment "製品の色の表記を記述するためのプロパティ用語"@ja, "A color of the product expressed as text."@en ;
+    ] , [
+    a owl:Restriction ;
+    owl:onProperty ic:原産国 ;
+    owl:allValuesFrom xsd:string  ;
+    rdfs:comment "製品の原産国名を記述するためのプロパティ用語"@ja, "A name of the product's country of origin."@en ;
+    ] , [
+    a owl:Restriction ;
+    owl:onProperty ic:原産国コード ;
+    owl:allValuesFrom ic:コード型  ;
+    rdfs:comment "製品の原産国を表すコードを記述するためのプロパティ用語"@ja, "A code specifying the product's country of origin."@en ;
+    ] , [
+    a owl:Restriction ;
+    owl:onProperty ic:規制情報 ;
+    owl:allValuesFrom xsd:string  ;
+    rdfs:comment "規制に関する情報（取り扱い上の注意など）を記述するためのプロパティ用語"@ja, "Regulatory information (including handling precautions of the product)."@en ;
+    ]
+.
+ic:製品個品型  a owl:Class ;
+  rdfs:subClassOf [
+    a owl:Restriction ;
+    owl:onProperty ic:製造日 ;
+    owl:allValuesFrom ic:日付型  ;
+    rdfs:comment "製造日を記述するためのプロパティ用語"@ja, "A date of manufacture."@en ;
+    ] , [
+    a owl:Restriction ;
+    owl:onProperty ic:ロット番号 ;
+    owl:onDataRange xsd:string  ;
+    owl:maxQualifiedCardinality 1  ;
+    rdfs:comment "製造ロットの番号を記述するためのプロパティ用語"@ja, "The manufacturing lot number."@en ;
+    ] , [
+    a owl:Restriction ;
+    owl:onProperty ic:消費期限 ;
+    owl:allValuesFrom ic:日付型  ;
+    rdfs:comment "消費期限を記述するためのプロパティ用語"@ja, "An expiration date by which the product should be consumed."@en ;
+    ] , [
+    a owl:Restriction ;
+    owl:onProperty ic:使用期限 ;
+    owl:allValuesFrom ic:日付型  ;
+    rdfs:comment "使用期限を記述するためのプロパティ用語"@ja, "An expiration date by which the product should be used."@en ;
+    ] , [
+    a owl:Restriction ;
+    owl:onProperty ic:賞味期限 ;
+    owl:allValuesFrom ic:日付型  ;
+    rdfs:comment "賞味期限を記述するためのプロパティ用語"@ja, "A best-before-date of the product."@en ;
+    ] , [
+    a owl:Restriction ;
+    owl:onProperty ic:シリアル番号 ;
+    owl:onClass ic:ID型  ;
+    owl:maxQualifiedCardinality  1  ;
+    rdfs:comment "シリアル番号を記述するためのプロパティ用語"@ja, "The serial number."@en ;
+    ] , [
+    a owl:Restriction ;
+    owl:onProperty ic:状態 ;
+    owl:allValuesFrom xsd:string  ;
+    rdfs:comment "製品の状態の表記（新品、中古など）を記述するためのプロパティ用語"@ja, "A state of the product expressed as text (such as new or secondhand)."@en ;
+    ] , [
+    a owl:Restriction ;
+    owl:onProperty ic:所有者 ;
+    owl:allValuesFrom ic:実体型  ;
+    rdfs:comment "所有者を記述するためのプロパティ用語"@ja, "An owner of the product."@en ;
+    ] , [
+    a owl:Restriction ;
+    owl:onProperty ic:購入価格 ;
+    owl:allValuesFrom ic:金額型  ;
+    rdfs:comment "購入価格を記述するためのプロパティ用語"@ja, "A purchase price of the product."@en ;
+    ]
+.
+ic:地物型  a owl:Class ;
+  rdfs:subClassOf [
+    a owl:Restriction ;
+    owl:onProperty ic:要約 ;
+    owl:allValuesFrom xsd:string  ;
+    rdfs:comment "地物の説明の要約を記述するためのプロパティ用語"@ja, "An abstract of description on the feature."@en ;
+    ] , [
+    a owl:Restriction ;
+    owl:onProperty ic:アクセス ;
+    owl:allValuesFrom ic:アクセス型  ;
+    rdfs:comment "地物へのアクセス方法を記述するためのプロパティ用語"@ja, "A description of the route to the feature."@en ;
+    ] , [
+    a owl:Restriction ;
+    owl:onProperty ic:連絡先 ;
+    owl:allValuesFrom ic:連絡先型  ;
+    rdfs:comment "地物の連絡先を記述するためのプロパティ用語"@ja, "A contact of the feature."@en ;
+    ] , [
+    a owl:Restriction ;
+    owl:onProperty ic:設備 ;
+    owl:allValuesFrom ic:設備型  ;
+    rdfs:comment "地物に定常的に備わっている設備を記述するためのプロパティ用語"@ja, "A facility equipped permanently in the feature."@en ;
+    ] , [
+    a owl:Restriction ;
+    owl:onProperty ic:関与 ;
+    owl:allValuesFrom ic:関与型  ;
+    rdfs:comment "地物に関連する組織や人を記述するためのプロパティ用語"@ja, "An organization or person associated with the feature."@en ;
+    ]
+.
+ic:土地型  a owl:Class ;
+  rdfs:subClassOf [
+    a owl:Restriction ;
+    owl:onProperty ic:面積 ;
+    owl:allValuesFrom ic:面積型  ;
+    rdfs:comment "土地の面積を記述するためのプロパティ用語"@ja, "An area of the land."@en ;
+    ]
+.
+ic:施設型  a owl:Class ;
+  rdfs:subClassOf [
+    a owl:Restriction ;
+    owl:onProperty ic:利用可能時間 ;
+    owl:allValuesFrom ic:期間スケジュール型  ;
+    rdfs:comment "施設の利用可能日と利用可能時間を記述するためのプロパティ用語"@ja, "An available date (or day) and opening hours of the facility."@en ;
+    ] , [
+    a owl:Restriction ;
+    owl:onProperty ic:料金 ;
+    owl:allValuesFrom ic:価格型  ;
+    rdfs:comment "施設の利用料金を記述するためのプロパティ用語"@ja, "A usage fee of the facility."@en ;
+    ] , [
+    a owl:Restriction ;
+    owl:onProperty ic:収容人数 ;
+    owl:allValuesFrom ic:数量型  ;
+    rdfs:comment "施設の収容人数を記述するためのプロパティ用語"@ja, "A maximum number of people that the facility can accommodate."@en ;
+    ] , [
+    a owl:Restriction ;
+    owl:onProperty ic:駐車場 ;
+    owl:allValuesFrom ic:駐車場型  ;
+    rdfs:comment "施設にある駐車場を記述するためのプロパティ用語"@ja, "A parking area in the facility."@en ;
+    ] , [
+    a owl:Restriction ;
+    owl:onProperty ic:建物 ;
+    owl:allValuesFrom ic:建物型  ;
+    rdfs:comment "施設のある建物を記述するためのプロパティ用語"@ja, "A building in which the facility is located."@en ;
+    ] , [
+    a owl:Restriction ;
+    owl:onProperty ic:関連施設 ;
+    owl:allValuesFrom ic:施設関連型  ;
+    rdfs:comment "関連する施設（上位施設、下位施設など）を記述するためのプロパティ用語"@ja, "An associated facility (such as a parent or affiliate facility)."@en ;
+    ] , [
+    a owl:Restriction ;
+    owl:onProperty ic:備考 ;
+    owl:onDataRange xsd:string  ;
+    owl:maxQualifiedCardinality 1  ;
+    rdfs:comment "備考を記述するためのプロパティ用語　※補足情報などがある場合に記述"@ja, "The remarks. Note: Specify when there is any additional information."@en ;
+    ]
+.
+ic:施設関連型  a owl:Class ;
+  rdfs:subClassOf [
+    a owl:Restriction ;
+    owl:onProperty ic:役割 ;
+    owl:onDataRange xsd:string  ;
+    owl:maxQualifiedCardinality 1  ;
+    rdfs:comment "関連する施設の役割の表記を記述するためのプロパティ用語"@ja, "The role of the associated facility expressed as text."@en ;
+    ] , [
+    a owl:Restriction ;
+    owl:onProperty ic:施設 ;
+    owl:onClass ic:施設型  ;
+    owl:maxQualifiedCardinality  1  ;
+    rdfs:comment "関連する施設を記述するためのプロパティ用語"@ja, "The associated facility."@en ;
+    ]
+.
+ic:建物型  a owl:Class ;
+  rdfs:subClassOf [
+    a owl:Restriction ;
+    owl:onProperty ic:敷地面積 ;
+    owl:allValuesFrom ic:面積型  ;
+    rdfs:comment "建物の敷地面積を記述するためのプロパティ用語"@ja, "A ground area of the building."@en ;
+    ] , [
+    a owl:Restriction ;
+    owl:onProperty ic:主要用途 ;
+    owl:allValuesFrom xsd:string  ;
+    rdfs:comment "建物の主要用途の表記を記述するためのプロパティ用語"@ja, "A major use of the building expressed as text."@en ;
+    ] , [
+    a owl:Restriction ;
+    owl:onProperty ic:建築面積 ;
+    owl:allValuesFrom ic:面積型  ;
+    rdfs:comment "建物の建築面積を記述するためのプロパティ用語"@ja, "A building area of the building."@en ;
+    ] , [
+    a owl:Restriction ;
+    owl:onProperty ic:延べ面積 ;
+    owl:allValuesFrom ic:面積型  ;
+    rdfs:comment "建物の延べ床面積を記述するためのプロパティ用語"@ja, "A total floor area of the building."@en ;
+    ] , [
+    a owl:Restriction ;
+    owl:onProperty ic:最高の高さ ;
+    owl:allValuesFrom ic:長さ型  ;
+    rdfs:comment "建物の最高点の高さを記述するためのプロパティ用語"@ja, "A height of the building's highest point."@en ;
+    ] , [
+    a owl:Restriction ;
+    owl:onProperty ic:地上階数 ;
+    owl:allValuesFrom xsd:decimal  ;
+    rdfs:comment "建物の地上階数を記述するためのプロパティ用語"@ja, "The number of aboveground floors of the building."@en ;
+    ] , [
+    a owl:Restriction ;
+    owl:onProperty ic:地下階数 ;
+    owl:allValuesFrom xsd:decimal  ;
+    rdfs:comment "建物の地下階数を記述するためのプロパティ用語"@ja, "The number of underground floors of the building."@en ;
+    ] , [
+    a owl:Restriction ;
+    owl:onProperty ic:構造 ;
+    owl:allValuesFrom xsd:string  ;
+    rdfs:comment "建物の構造の表記を記述するためのプロパティ用語"@ja, "A structure of the building expressed as text."@en ;
+    ] , [
+    a owl:Restriction ;
+    owl:onProperty ic:竣工日 ;
+    owl:allValuesFrom ic:日付型  ;
+    rdfs:comment "建物の竣工日を記述するためのプロパティ用語"@ja, "A completion date of the building."@en ;
+    ] , [
+    a owl:Restriction ;
+    owl:onProperty ic:施設 ;
+    owl:allValuesFrom ic:施設型  ;
+    rdfs:comment "建物を利用する施設を記述するためのプロパティ用語"@ja, "A facility that uses the building."@en ;
+    ]
+.
+ic:駐車場型  a owl:Class ;
+  rdfs:subClassOf [
+    a owl:Restriction ;
+    owl:onProperty ic:駐車場種別 ;
+    owl:onDataRange xsd:string  ;
+    owl:maxQualifiedCardinality 1  ;
+    rdfs:comment "駐車場の種別の表記を記述するためのプロパティ用語"@ja, "The category of the parking area expressed as text."@en ;
+    ] , [
+    a owl:Restriction ;
+    owl:onProperty ic:収容台数 ;
+    owl:onDataRange xsd:integer  ;
+    owl:maxQualifiedCardinality 1  ;
+    rdfs:comment "駐車場の収容可能台数を記述するためのプロパティ用語"@ja, "The maximum number of vehicles that the parking area can accommodate."@en ;
+    ]
+.
+ic:設備型  a owl:Class ;
+  rdfs:subClassOf [
+    a owl:Restriction ;
+    owl:onProperty ic:名称 ;
+    owl:onClass ic:名称型  ;
+    owl:maxQualifiedCardinality  1  ;
+    rdfs:comment "設備の名称を記述するためのプロパティ用語"@ja, "The name of the equipment."@en ;
+    ] , [
+    a owl:Restriction ;
+    owl:onProperty ic:設置地点 ;
+    owl:onClass ic:地物型  ;
+    owl:maxQualifiedCardinality  1  ;
+    rdfs:comment "設備が設置されている施設や建物などの地物を記述するためのプロパティ用語"@ja, "The feature such as a facility or building in which the equipment is installed."@en ;
+    ] , [
+    a owl:Restriction ;
+    owl:onProperty ic:設置位置 ;
+    owl:onDataRange xsd:string  ;
+    owl:maxQualifiedCardinality 1  ;
+    rdfs:comment "設備の設置場所の表記（受付横など）を記述するためのプロパティ用語"@ja, "The location of the equipment installed (such as beside a reception desk) expressed as text."@en ;
+    ] , [
+    a owl:Restriction ;
+    owl:onProperty ic:利用可能時間 ;
+    owl:allValuesFrom ic:期間スケジュール型  ;
+    rdfs:comment "設備の利用可能日と利用可能時間を記述するためのプロパティ用語"@ja, "An available date (or day) and hours of the equipment."@en ;
+    ] , [
+    a owl:Restriction ;
+    owl:onProperty ic:料金 ;
+    owl:allValuesFrom ic:価格型  ;
+    rdfs:comment "設備の利用料金を記述するためのプロパティ用語"@ja, "A usage fee of the equipment."@en ;
+    ] , [
+    a owl:Restriction ;
+    owl:onProperty ic:外部利用可否 ;
+    owl:onDataRange xsd:string  ;
+    owl:maxQualifiedCardinality 1  ;
+    rdfs:comment "設備の外部利用可否の記述のためのプロパティ用語"@ja, "The textual description of whether or not the equipment is available for use by outsiders."@en ;
+    ] , [
+    a owl:Restriction ;
+    owl:onProperty ic:利用者 ;
+    owl:onDataRange xsd:string  ;
+    owl:maxQualifiedCardinality 1  ;
+    rdfs:comment "設備の利用者の条件を記述するためのプロパティ用語　※利用者に限定条件がある場合"@ja, "The condition of eligible users of the equipment. Note: When limiting conditions are specified for users."@en ;
+    ] , [
+    a owl:Restriction ;
+    owl:onProperty ic:設置日 ;
+    owl:onClass ic:日付型  ;
+    owl:maxQualifiedCardinality  1  ;
+    rdfs:comment "設備の設置日を記述するためのプロパティ用語"@ja, "The installation date of the equipment."@en ;
+    ] , [
+    a owl:Restriction ;
+    owl:onProperty ic:Webサイト ;
+    owl:maxCardinality 1  ;
+    rdfs:comment "設備の関連ホームページを参照するURLを記述するためのプロパティ用語"@ja, "The URL that references related web sites of the equipment."@en ;
+    ] , [
+    a owl:Restriction ;
+    owl:onProperty ic:設置者 ;
+    owl:onClass ic:組織型  ;
+    owl:maxQualifiedCardinality  1  ;
+    rdfs:comment "設備を設置した組織（自治体など）を記述するためのプロパティ用語"@ja, "The organization (such as a local government) that installed the equipment."@en ;
+    ] , [
+    a owl:Restriction ;
+    owl:onProperty ic:管理者 ;
+    owl:onClass ic:実体型  ;
+    owl:maxQualifiedCardinality  1  ;
+    rdfs:comment "設備を管理している組織や人を記述するためのプロパティ用語"@ja, "The organization or person in charge of the maintenance of the equipment."@en ;
+    ] , [
+    a owl:Restriction ;
+    owl:onProperty ic:連絡先 ;
+    owl:onClass ic:連絡先型  ;
+    owl:maxQualifiedCardinality  1  ;
+    rdfs:comment "設備の連絡先を記述するためのプロパティ用語"@ja, "The contact regarding the equipment."@en ;
+    ] , [
+    a owl:Restriction ;
+    owl:onProperty ic:バリアフリー ;
+    owl:onDataRange xsd:string  ;
+    owl:maxQualifiedCardinality 1  ;
+    rdfs:comment "設備のバリアフリーに関する情報の記述のためのプロパティ用語"@ja, "The description of information regarding accessibility to the equipment."@en ;
+    ] , [
+    a owl:Restriction ;
+    owl:onProperty ic:備考 ;
+    owl:onDataRange xsd:string  ;
+    owl:maxQualifiedCardinality 1  ;
+    rdfs:comment "備考を記述するためのプロパティ用語　※補足情報などがある場合に記述"@ja, "The remarks. Note: Specify when there is any additional information."@en ;
+    ]
+.
+ic:イベント型  a owl:Class ;
+  rdfs:subClassOf [
+    a owl:Restriction ;
+    owl:onProperty ic:名称 ;
+    owl:allValuesFrom ic:名称型  ;
+    rdfs:comment "イベントの名称を記述するためのプロパティ用語"@ja, "A name of the event."@en ;
+    ] , [
+    a owl:Restriction ;
+    owl:onProperty ic:関連組織 ;
+    owl:allValuesFrom ic:組織関連型  ;
+    rdfs:comment "イベントに関連する組織を記述するためのプロパティ用語"@ja, "An organization associated with the event."@en ;
+    ] , [
+    a owl:Restriction ;
+    owl:onProperty ic:開催場所 ;
+    owl:allValuesFrom ic:地物型  ;
+    rdfs:comment "イベントの開催場所を記述するためのプロパティ用語"@ja, "A venue of the event."@en ;
+    ] , [
+    a owl:Restriction ;
+    owl:onProperty ic:期間 ;
+    owl:allValuesFrom ic:期間スケジュール型  ;
+    rdfs:comment "イベントの期間を記述するためのプロパティ用語"@ja, "A date or period of the event."@en ;
+    ] , [
+    a owl:Restriction ;
+    owl:onProperty ic:参加方法 ;
+    owl:allValuesFrom xsd:string  ;
+    rdfs:comment "イベントの参加方法の説明を記述するためのプロパティ用語"@ja, "An explanation on how to join the event."@en ;
+    ] , [
+    a owl:Restriction ;
+    owl:onProperty ic:連絡先 ;
+    owl:allValuesFrom ic:連絡先型  ;
+    rdfs:comment "イベントに関する連絡先を記述するためのプロパティ用語"@ja, "A contact regarding the event."@en ;
+    ] , [
+    a owl:Restriction ;
+    owl:onProperty ic:要約 ;
+    owl:allValuesFrom xsd:string  ;
+    rdfs:comment "イベントの説明の要約を記述するためのプロパティ用語"@ja, "An abstract of description on the event."@en ;
+    ] , [
+    a owl:Restriction ;
+    owl:onProperty ic:関連イベント ;
+    owl:allValuesFrom ic:イベント型  ;
+    rdfs:comment "関連する他のイベントを記述するためのプロパティ用語"@ja, "An event associated with the event."@en ;
+    ] , [
+    a owl:Restriction ;
+    owl:onProperty ic:人数 ;
+    owl:allValuesFrom xsd:nonNegativeInteger  ;
+    rdfs:comment "イベントの定員を記述するためのプロパティ用語"@ja, "A maximum enrollment for the event."@en ;
+    ] , [
+    a owl:Restriction ;
+    owl:onProperty ic:キーワード ;
+    owl:allValuesFrom xsd:string  ;
+    rdfs:comment "イベントのキーワードの記述のためのプロパティ用語"@ja, "A description of keywords of the event."@en ;
+    ] , [
+    a owl:Restriction ;
+    owl:onProperty ic:料金 ;
+    owl:allValuesFrom ic:価格型  ;
+    rdfs:comment "イベントの料金を記述するためのプロパティ用語"@ja, "A participation fee for the event."@en ;
+    ] , [
+    a owl:Restriction ;
+    owl:onProperty ic:利用対象 ;
+    owl:allValuesFrom ic:対象型  ;
+    rdfs:comment "イベントや制度等の対象となる事物を記述するためのプロパティ用語"@ja, "An thing to be targeted for the event or system."@en ;
+    ]
+.
+ic:活動型  a owl:Class ;
+  rdfs:subClassOf [
+    a owl:Restriction ;
+    owl:onProperty ic:名称 ;
+    owl:allValuesFrom ic:名称型  ;
+    rdfs:comment "活動の名称を記述するためのプロパティ用語"@ja, "A name of the activity."@en ;
+    ] , [
+    a owl:Restriction ;
+    owl:onProperty ic:関与 ;
+    owl:allValuesFrom ic:関与型  ;
+    rdfs:comment "活動に関連する組織や人を記述するためのプロパティ用語"@ja, "An organization or person associated with the activity."@en ;
+    ] , [
+    a owl:Restriction ;
+    owl:onProperty ic:場所 ;
+    owl:allValuesFrom ic:場所型  ;
+    rdfs:comment "活動の場所を記述するためのプロパティ用語"@ja, "A location of the activity."@en ;
+    ] , [
+    a owl:Restriction ;
+    owl:onProperty ic:日時 ;
+    owl:allValuesFrom ic:日時型  ;
+    rdfs:comment "活動の日時を記述するためのプロパティ用語"@ja, "A date and time of the activity."@en ;
+    ] , [
+    a owl:Restriction ;
+    owl:onProperty ic:期間 ;
+    owl:allValuesFrom ic:期間スケジュール型  ;
+    rdfs:comment "活動の期間を記述するためのプロパティ用語"@ja, "A period of the activity."@en ;
+    ]
+.
+ic:関与型  a owl:Class ;
+  rdfs:subClassOf [
+    a owl:Restriction ;
+    owl:onProperty ic:役割 ;
+    owl:onDataRange xsd:string  ;
+    owl:maxQualifiedCardinality 1  ;
+    rdfs:comment "組織や人の位置付けや役割の表記を記述するためのプロパティ用語"@ja, "The position or role of the organization or person expressed as text."@en ;
+    ] , [
+    a owl:Restriction ;
+    owl:onProperty ic:役割コード ;
+    owl:onClass ic:コード型  ;
+    owl:maxQualifiedCardinality  1  ;
+    rdfs:comment "組織や人の位置付けや役割を表すコードを記述するためのプロパティ用語"@ja, "The code specifying the position or role of the organization or person."@en ;
+    ] , [
+    a owl:Restriction ;
+    owl:onProperty ic:関与者 ;
+    owl:allValuesFrom ic:実体型  ;
+    rdfs:comment "関連する組織や人を記述するためのプロパティ用語"@ja, "An associated organization or person."@en ;
+    ]
+.
+ic:数量型  a owl:Class ;
+  rdfs:subClassOf [
+    a owl:Restriction ;
+    owl:onProperty ic:数値 ;
+    owl:onDataRange xsd:decimal  ;
+    owl:maxQualifiedCardinality 1  ;
+    rdfs:comment "測定数値を記述するためのプロパティ用語"@ja, "The measured value."@en ;
+    ] , [
+    a owl:Restriction ;
+    owl:onProperty ic:単位 ;
+    owl:onClass ic:単位コード型  ;
+    owl:maxQualifiedCardinality  1  ;
+    rdfs:comment "単位を表すコードを記述するためのプロパティ用語"@ja, "The code specifying the unit."@en ;
+    ] , [
+    a owl:Restriction ;
+    owl:onProperty ic:単位表記 ;
+    owl:onDataRange xsd:string  ;
+    owl:maxQualifiedCardinality 1  ;
+    rdfs:comment "単位の文字列による表現（助数詞など）を記述するためのプロパティ用語"@ja, "The unit expressed as a string (such as a counter suffix)."@en ;
+    ]
+.
+ic:容量型  a owl:Class ;
+  rdfs:subClassOf [
+    a owl:Restriction ;
+    owl:onProperty ic:数値 ;
+    owl:onDataRange xsd:decimal  ;
+    owl:maxQualifiedCardinality 1  ;
+    rdfs:comment "測定数値を記述するためのプロパティ用語"@ja, "The measured value."@en ;
+    ] , [
+    a owl:Restriction ;
+    owl:onProperty ic:単位 ;
+    owl:onClass ic:単位コード型  ;
+    owl:maxQualifiedCardinality  1  ;
+    rdfs:comment "単位を表すコードを記述するためのプロパティ用語"@ja, "The code specifying the unit."@en ;
+    ] , [
+    a owl:Restriction ;
+    owl:onProperty ic:単位表記 ;
+    owl:onDataRange xsd:string  ;
+    owl:maxQualifiedCardinality 1  ;
+    rdfs:comment "単位の文字列による表現を記述するためのプロパティ用語"@ja, "The unit expressed as a string."@en ;
+    ]
+.
+ic:面積型  a owl:Class ;
+  rdfs:subClassOf [
+    a owl:Restriction ;
+    owl:onProperty ic:数値 ;
+    owl:onDataRange xsd:decimal  ;
+    owl:maxQualifiedCardinality 1  ;
+    rdfs:comment "測定数値を記述するためのプロパティ用語"@ja, "The measured value."@en ;
+    ] , [
+    a owl:Restriction ;
+    owl:onProperty ic:単位 ;
+    owl:onClass ic:単位コード型  ;
+    owl:maxQualifiedCardinality  1  ;
+    rdfs:comment "単位を表すコードを記述するためのプロパティ用語"@ja, "The code specifying the unit."@en ;
+    ] , [
+    a owl:Restriction ;
+    owl:onProperty ic:単位表記 ;
+    owl:onDataRange xsd:string  ;
+    owl:maxQualifiedCardinality 1  ;
+    rdfs:comment "単位の文字列による表現を記述するためのプロパティ用語"@ja, "The unit expressed as a string."@en ;
+    ]
+.
+ic:重量型  a owl:Class ;
+  rdfs:subClassOf [
+    a owl:Restriction ;
+    owl:onProperty ic:数値 ;
+    owl:onDataRange xsd:decimal  ;
+    owl:maxQualifiedCardinality 1  ;
+    rdfs:comment "測定数値を記述するためのプロパティ用語"@ja, "The measured value."@en ;
+    ] , [
+    a owl:Restriction ;
+    owl:onProperty ic:単位 ;
+    owl:onClass ic:単位コード型  ;
+    owl:maxQualifiedCardinality  1  ;
+    rdfs:comment "単位を表すコードを記述するためのプロパティ用語"@ja, "The code specifying the unit."@en ;
+    ] , [
+    a owl:Restriction ;
+    owl:onProperty ic:単位表記 ;
+    owl:onDataRange xsd:string  ;
+    owl:maxQualifiedCardinality 1  ;
+    rdfs:comment "単位の文字列による表現を記述するためのプロパティ用語"@ja, "The unit expressed as a string."@en ;
+    ]
+.
+ic:長さ型  a owl:Class ;
+  rdfs:subClassOf [
+    a owl:Restriction ;
+    owl:onProperty ic:数値 ;
+    owl:onDataRange xsd:decimal  ;
+    owl:maxQualifiedCardinality 1  ;
+    rdfs:comment "測定数値を記述するためのプロパティ用語"@ja, "The measured value."@en ;
+    ] , [
+    a owl:Restriction ;
+    owl:onProperty ic:単位 ;
+    owl:onClass ic:単位コード型  ;
+    owl:maxQualifiedCardinality  1  ;
+    rdfs:comment "単位を表すコードを記述するためのプロパティ用語"@ja, "The code specifying the unit."@en ;
+    ] , [
+    a owl:Restriction ;
+    owl:onProperty ic:単位表記 ;
+    owl:onDataRange xsd:string  ;
+    owl:maxQualifiedCardinality 1  ;
+    rdfs:comment "単位の文字列による表現を記述するためのプロパティ用語"@ja, "The unit expressed as a string."@en ;
+    ]
+.
+ic:金額型  a owl:Class ;
+  rdfs:subClassOf [
+    a owl:Restriction ;
+    owl:onProperty ic:数値 ;
+    owl:onDataRange xsd:decimal  ;
+    owl:maxQualifiedCardinality 1  ;
+    rdfs:comment "金額の値を記述するためのプロパティ用語"@ja, "The value of the amount of money."@en ;
+    ] , [
+    a owl:Restriction ;
+    owl:onProperty ic:通貨 ;
+    owl:onDataRange xsd:string  ;
+    owl:maxQualifiedCardinality 1  ;
+    rdfs:comment "通貨名を記述するためのプロパティ用語"@ja, "The name of the currency."@en ;
+    ] , [
+    a owl:Restriction ;
+    owl:onProperty ic:通貨コード ;
+    owl:onDataRange uncefactISO4217:ISO3AlphaCurrencyCodeContentType  ;
+    owl:maxQualifiedCardinality 1  ;
+    rdfs:comment "通貨コードを記述するためのプロパティ用語"@ja, "The code specifying the currency."@en ;
+    ] , [
+    a owl:Restriction ;
+    owl:onProperty ic:乗数 ;
+    owl:onDataRange xsd:double  ;
+    owl:maxQualifiedCardinality 1  ;
+    rdfs:comment "金額の値に対する変換乗数を記述するためのプロパティ用語"@ja, "The conversion multiplier to be applied to the value of the amount of money."@en ;
+    ]
+.
+ic:価格型  a owl:Class ;
+  rdfs:subClassOf [
+    a owl:Restriction ;
+    owl:onProperty ic:金額 ;
+    owl:onClass ic:金額型  ;
+    owl:maxQualifiedCardinality  1  ;
+    rdfs:comment "価格の金額を記述するためのプロパティ用語"@ja, "The amount of money of the price."@en ;
+    ]
+.
+ic:実体型  a owl:Class ;
+  rdfs:subClassOf [
+    a owl:Restriction ;
+    owl:onProperty ic:関与 ;
+    owl:allValuesFrom ic:関与型  ;
+    rdfs:comment "実体に関連する組織や人（関連性の記述を含む）を記述するためのプロパティ用語"@ja, "The associated organization or person (including a description of the relationship)."@en ;
+    ]
+.
+ic:状況型  a owl:Class ;
+  rdfs:subClassOf [
+    a owl:Restriction ;
+    owl:onProperty ic:名称 ;
+    owl:allValuesFrom ic:名称型  ;
+    rdfs:comment "状況の名称を記述するためのプロパティ用語"@ja, "A name of the state of affairs."@en ;
+    ] , [
+    a owl:Restriction ;
+    owl:onProperty ic:発生日 ;
+    owl:allValuesFrom ic:日時型  ;
+    rdfs:comment "状況の発生日時を記述するためのプロパティ用語"@ja, "A date and time of the occurrence of the state of affairs."@en ;
+    ] , [
+    a owl:Restriction ;
+    owl:onProperty ic:関与 ;
+    owl:allValuesFrom ic:関与型  ;
+    rdfs:comment "状況に関連する組織や人を記述するためのプロパティ用語"@ja, "An organization or person associated with the state of affairs."@en ;
+    ] , [
+    a owl:Restriction ;
+    owl:onProperty ic:説明 ;
+    owl:onDataRange xsd:string  ;
+    owl:maxQualifiedCardinality 1  ;
+    rdfs:comment "状況の説明を記述するためのプロパティ用語"@ja, "The description of the state of affairs."@en ;
+    ] , [
+    a owl:Restriction ;
+    owl:onProperty ic:期間 ;
+    owl:allValuesFrom ic:期間スケジュール型  ;
+    rdfs:comment "状況の期間を記述するためのプロパティ用語"@ja, "A period of the state of affairs."@en ;
+    ]
+.
+ic:日時型  a owl:Class ;
+  rdfs:subClassOf [
+    a owl:Restriction ;
+    owl:onProperty ic:標準型日時 ;
+    owl:onDataRange xsd:dateTime  ;
+    owl:maxQualifiedCardinality 1  ;
+    rdfs:comment "日時を記述するためのプロパティ用語"@ja, "The date and time."@en ;
+    ] , [
+    a owl:Restriction ;
+    owl:onProperty ic:年号 ;
+    owl:onDataRange xsd:string  ;
+    owl:maxQualifiedCardinality 1  ;
+    rdfs:comment "元号を記述するためのプロパティ用語"@ja, "The Japanese era."@en ;
+    ] , [
+    a owl:Restriction ;
+    owl:onProperty ic:年 ;
+    owl:onDataRange xsd:integer  ;
+    owl:maxQualifiedCardinality 1  ;
+    rdfs:comment "年の値を記述するためのプロパティ用語"@ja, "The year value."@en ;
+    ] , [
+    a owl:Restriction ;
+    owl:onProperty ic:月 ;
+    owl:onDataRange xsd:integer  ;
+    owl:maxQualifiedCardinality 1  ;
+    rdfs:comment "月の値を記述するためのプロパティ用語"@ja, "The month value."@en ;
+    ] , [
+    a owl:Restriction ;
+    owl:onProperty ic:日 ;
+    owl:onDataRange xsd:integer  ;
+    owl:maxQualifiedCardinality 1  ;
+    rdfs:comment "日の値を記述するためのプロパティ用語"@ja, "The day value."@en ;
+    ] , [
+    a owl:Restriction ;
+    owl:onProperty ic:時 ;
+    owl:onDataRange xsd:integer  ;
+    owl:maxQualifiedCardinality 1  ;
+    rdfs:comment "時の値を記述するためのプロパティ用語"@ja, "The hour value."@en ;
+    ] , [
+    a owl:Restriction ;
+    owl:onProperty ic:分 ;
+    owl:onDataRange xsd:integer  ;
+    owl:maxQualifiedCardinality 1  ;
+    rdfs:comment "分の値を記述するためのプロパティ用語"@ja, "The minute value."@en ;
+    ] , [
+    a owl:Restriction ;
+    owl:onProperty ic:秒 ;
+    owl:onDataRange xsd:decimal  ;
+    owl:maxQualifiedCardinality 1  ;
+    rdfs:comment "秒の値を記述するためのプロパティ用語"@ja, "The second value."@en ;
+    ] , [
+    a owl:Restriction ;
+    owl:onProperty ic:時間帯 ;
+    owl:onDataRange xsd:string  ;
+    owl:maxQualifiedCardinality 1  ;
+    rdfs:comment "時間帯を記述するためのプロパティ用語　※協定世界時からの時間差"@ja, "The time zone. Note: The time difference from the Coordinated Universal Time."@en ;
+    ] , [
+    a owl:Restriction ;
+    owl:onProperty ic:カレンダー ;
+    owl:onClass ic:コード型  ;
+    owl:maxQualifiedCardinality  1  ;
+    rdfs:comment "カレンダーの種類を表すコードを記述するためのプロパティ用語"@ja, "The code specifying the type of calendar."@en ;
+    ] , [
+    a owl:Restriction ;
+    owl:onProperty ic:表記 ;
+    owl:onDataRange xsd:string  ;
+    owl:maxQualifiedCardinality 1  ;
+    rdfs:comment "日時の任意の表記を記述するためのプロパティ用語"@ja, "The date and time expressed in an arbitrary format."@en ;
+    ]
+.
+ic:日付型  a owl:Class ;
+  rdfs:subClassOf [
+    a owl:Restriction ;
+    owl:onProperty ic:標準型日付 ;
+    owl:onDataRange xsd:date  ;
+    owl:maxQualifiedCardinality 1  ;
+    rdfs:comment "日付を記述するためのプロパティ用語"@ja, "The date."@en ;
+    ] , [
+    a owl:Restriction ;
+    owl:onProperty ic:年号 ;
+    owl:onDataRange xsd:string  ;
+    owl:maxQualifiedCardinality 1  ;
+    rdfs:comment "元号を記述するためのプロパティ用語"@ja, "The Japanese era."@en ;
+    ] , [
+    a owl:Restriction ;
+    owl:onProperty ic:年 ;
+    owl:onDataRange xsd:integer  ;
+    owl:maxQualifiedCardinality 1  ;
+    rdfs:comment "年の値を記述するためのプロパティ用語"@ja, "The year value."@en ;
+    ] , [
+    a owl:Restriction ;
+    owl:onProperty ic:月 ;
+    owl:onDataRange xsd:integer  ;
+    owl:maxQualifiedCardinality 1  ;
+    rdfs:comment "月の値を記述するためのプロパティ用語"@ja, "The month value."@en ;
+    ] , [
+    a owl:Restriction ;
+    owl:onProperty ic:日 ;
+    owl:onDataRange xsd:integer  ;
+    owl:maxQualifiedCardinality 1  ;
+    rdfs:comment "日の値を記述するためのプロパティ用語"@ja, "The day value."@en ;
+    ] , [
+    a owl:Restriction ;
+    owl:onProperty ic:時間帯 ;
+    owl:onDataRange xsd:string  ;
+    owl:maxQualifiedCardinality 1  ;
+    rdfs:comment "時間帯を記述するためのプロパティ用語　※協定世界時からの時間差"@ja, "The time zone. Note: The time difference from the Coordinated Universal Time."@en ;
+    ] , [
+    a owl:Restriction ;
+    owl:onProperty ic:カレンダー ;
+    owl:onClass ic:コード型  ;
+    owl:maxQualifiedCardinality  1  ;
+    rdfs:comment "カレンダーの種類を表すコードを記述するためのプロパティ用語"@ja, "The code specifying the type of calendar."@en ;
+    ] , [
+    a owl:Restriction ;
+    owl:onProperty ic:表記 ;
+    owl:onDataRange xsd:string  ;
+    owl:maxQualifiedCardinality 1  ;
+    rdfs:comment "日付の任意の表記を記述するためのプロパティ用語"@ja, "The textual expression of the date in an arbitrary format."@en ;
+    ]
+.
+ic:期間型  a owl:Class ;
+  rdfs:subClassOf [
+    a owl:Restriction ;
+    owl:onProperty ic:開始日時 ;
+    owl:onClass ic:日時型  ;
+    owl:maxQualifiedCardinality  1  ;
+    rdfs:comment "期間の開始日時を記述するためのプロパティ用語"@ja, "The starting date and time of the period."@en ;
+    ] , [
+    a owl:Restriction ;
+    owl:onProperty ic:終了日時 ;
+    owl:onClass ic:日時型  ;
+    owl:maxQualifiedCardinality  1  ;
+    rdfs:comment "期間の終了日時を記述するためのプロパティ用語"@ja, "The closing date and time of the period."@en ;
+    ] , [
+    a owl:Restriction ;
+    owl:onProperty ic:説明 ;
+    owl:onDataRange xsd:string  ;
+    owl:maxQualifiedCardinality 1  ;
+    rdfs:comment "期間の説明（例外など）を記述するためのプロパティ用語"@ja, "The description of the period (such as exceptions)."@en ;
+    ]
+.
+ic:イベントスケジュール型  a owl:Class ;
+  rdfs:subClassOf [
+    a owl:Restriction ;
+    owl:onProperty ic:開催日 ;
+    owl:allValuesFrom ic:日付型  ;
+    rdfs:comment "イベントが開催される日付を記述するためのプロパティ用語　※一日だけの開催の場合。列挙可"@ja, "A date on which the event is held. Note: When the event is hold only for a day. A list of days is allowed as well."@en ;
+    ] , [
+    a owl:Restriction ;
+    owl:onProperty ic:開始日 ;
+    owl:onClass ic:日付型  ;
+    owl:maxQualifiedCardinality  1  ;
+    rdfs:comment "イベントの開始日を記述するためのプロパティ用語"@ja, "The starting date of the event."@en ;
+    ] , [
+    a owl:Restriction ;
+    owl:onProperty ic:終了日 ;
+    owl:onClass ic:日付型  ;
+    owl:maxQualifiedCardinality  1  ;
+    rdfs:comment "イベントの終了日を記述するためのプロパティ用語"@ja, "The closing date of the event."@en ;
+    ] , [
+    a owl:Restriction ;
+    owl:onProperty ic:開始時間 ;
+    owl:onDataRange xsd:time  ;
+    owl:maxQualifiedCardinality 1  ;
+    rdfs:comment "イベントの場所やサービスの開始時間を記述するためのプロパティ用語"@ja, "The starting time of the place or service of the event."@en ;
+    ] , [
+    a owl:Restriction ;
+    owl:onProperty ic:終了時間 ;
+    owl:onDataRange xsd:time  ;
+    owl:maxQualifiedCardinality 1  ;
+    rdfs:comment "イベントの場所やサービスの終了時間を記述するためのプロパティ用語"@ja, "The closing time of the place or service of the event."@en ;
+    ] , [
+    a owl:Restriction ;
+    owl:onProperty ic:説明 ;
+    owl:onDataRange xsd:string  ;
+    owl:maxQualifiedCardinality 1  ;
+    rdfs:comment "スケジュールの説明（例外など）を記述するためのプロパティ用語"@ja, "The description of the schedule (such as exceptions)."@en ;
+    ]
+.
+ic:定期スケジュール型  a owl:Class ;
+  rdfs:subClassOf [
+    a owl:Restriction ;
+    owl:onProperty ic:開催期日 ;
+    owl:allValuesFrom xsd:string  ;
+    rdfs:comment "スケジュールが有効となる日を記述するためのプロパティ用語　※スケジュールの種別が「週間」の場合は曜日、「月間」の場合は月の中の日、「年間」の場合は年の中の月日を指定する。"@ja, "A day on which the schedule becomes effective. Note: If the schedule category is 'weekly', then select a day of the week. If it is 'monthly' or 'yearly', then select a date in the month or the year respectively."@en ;
+    ] , [
+    a owl:Restriction ;
+    owl:onProperty ic:有効開始日時 ;
+    owl:onClass ic:日時型  ;
+    owl:maxQualifiedCardinality  1  ;
+    rdfs:comment "スケジュールが有効になる日時を記述するためのプロパティ用語"@ja, "The date and time when the schedule becomes effective."@en ;
+    ] , [
+    a owl:Restriction ;
+    owl:onProperty ic:有効終了日時 ;
+    owl:onClass ic:日時型  ;
+    owl:maxQualifiedCardinality  1  ;
+    rdfs:comment "スケジュールが無効になる日時を記述するためのプロパティ用語"@ja, "The date and time when the schedule becomes ineffective."@en ;
+    ] , [
+    a owl:Restriction ;
+    owl:onProperty ic:開始時間 ;
+    owl:onDataRange xsd:time  ;
+    owl:maxQualifiedCardinality 1  ;
+    rdfs:comment "指定された曜日の場所やサービスの開始時間を記述するためのプロパティ用語"@ja, "The venue and the starting time of services on the specified day of the week."@en ;
+    ] , [
+    a owl:Restriction ;
+    owl:onProperty ic:終了時間 ;
+    owl:onDataRange xsd:time  ;
+    owl:maxQualifiedCardinality 1  ;
+    rdfs:comment "指定された曜日の場所やサービスの終了時間を記述するためのプロパティ用語"@ja, "The venue and the closing time of services on the specified day of the week."@en ;
+    ] , [
+    a owl:Restriction ;
+    owl:onProperty ic:説明 ;
+    owl:onDataRange xsd:string  ;
+    owl:maxQualifiedCardinality 1  ;
+    rdfs:comment "スケジュールの説明（例外など）を記述するためのプロパティ用語"@ja, "The description of the schedule (such as exceptions)."@en ;
+    ]
+.
+ic:コード型  a owl:Class ;
+  rdfs:subClassOf [
+    a owl:Restriction ;
+    owl:onProperty ic:説明 ;
+    owl:allValuesFrom xsd:string  ;
+    rdfs:comment "説明を記述するためのプロパティ用語"@ja, "A description of the thing."@en ;
+    ] , [
+    a owl:Restriction ;
+    owl:onProperty ic:コード種別 ;
+    owl:onClass ic:コードリスト型  ;
+    owl:maxQualifiedCardinality  1  ;
+    rdfs:comment "コードの種別を記述するためのプロパティ用語"@ja, "The type of the code."@en ;
+    ] , [
+    a owl:Restriction ;
+    owl:onProperty ic:識別値 ;
+    owl:onDataRange xsd:string  ;
+    owl:maxQualifiedCardinality 1  ;
+    rdfs:comment "コードの値を記述するためのプロパティ用語"@ja, "The code value."@en ;
+    ] , [
+    a owl:Restriction ;
+    owl:onProperty ic:表記 ;
+    owl:allValuesFrom xsd:string  ;
+    rdfs:comment "コードの値に対応する概念の表記を記述するためのプロパティ用語"@ja, "A textual expression of the concept corresponding to the set of code values."@en ;
+    ] , [
+    a owl:Restriction ;
+    owl:onProperty ic:上位コード ;
+    owl:allValuesFrom ic:コード型  ;
+    rdfs:comment "当該コードの上位に位置するコードを記述するためのプロパティ用語"@ja, "An upper-level code of the code concerned."@en ;
+    ] , [
+    a owl:Restriction ;
+    owl:onProperty ic:下位コード ;
+    owl:allValuesFrom ic:コード型  ;
+    rdfs:comment "当該コードの下位に位置するコードを記述するためのプロパティ用語"@ja, "A lower-level code of the code concerned."@en ;
+    ] , [
+    a owl:Restriction ;
+    owl:onProperty ic:関連コード ;
+    owl:allValuesFrom ic:コード型  ;
+    rdfs:comment "当該コードに関連するコードを記述するためのプロパティ用語"@ja, "A code related to the code concerned."@en ;
+    ] , [
+    a owl:Restriction ;
+    owl:onProperty ic:参照 ;
+    owl:allValuesFrom ic:参照型  ;
+    rdfs:comment "追加情報などを参照するURLを記述するためのプロパティ用語"@ja, "An URL that refers to additional information."@en ;
+    ]
+.
+ic:単位コード型  a owl:Class ;
+  rdfs:subClassOf [
+    a owl:Restriction ;
+    owl:onProperty ic:量種別 ;
+    owl:onDataRange xsd:string  ;
+    owl:maxQualifiedCardinality 1  ;
+    rdfs:comment "量の種別の表記を記述するためのプロパティ用語"@ja, "The category of the quantity expressed as text."@en ;
+    ] , [
+    a owl:Restriction ;
+    owl:onProperty ic:乗数 ;
+    owl:onDataRange xsd:double  ;
+    owl:maxQualifiedCardinality 1  ;
+    rdfs:comment "基本単位に対する変換乗数を記述するためのプロパティ用語"@ja, "The conversion multiplier to be applied to the base unit."@en ;
+    ]
+.
+ic:コードリスト型  a owl:Class ;
+  rdfs:subClassOf [
+    a owl:Restriction ;
+    owl:onProperty ic:名称 ;
+    owl:onClass ic:名称型  ;
+    owl:maxQualifiedCardinality  1  ;
+    rdfs:comment "コードリストの名称を記述するためのプロパティ用語"@ja, "The name of the code list."@en ;
+    ] , [
+    a owl:Restriction ;
+    owl:onProperty ic:発行者 ;
+    owl:allValuesFrom ic:実体型  ;
+    rdfs:comment "コードリストの発行主体を記述するためのプロパティ用語"@ja, "The issuing entity of the code list."@en ;
+    ] , [
+    a owl:Restriction ;
+    owl:onProperty ic:バージョン ;
+    owl:onDataRange xsd:string  ;
+    owl:maxQualifiedCardinality 1  ;
+    rdfs:comment "コードリストのバージョンを記述するためのプロパティ用語"@ja, "The version of the code list."@en ;
+    ]
+.
+ic:アクセス型  a owl:Class ;
+  rdfs:subClassOf [
+    a owl:Restriction ;
+    owl:onProperty ic:ID ;
+    owl:onClass ic:ID型  ;
+    owl:maxQualifiedCardinality  1  ;
+    rdfs:comment "アクセス方法に割り振られたIDを記述するためのプロパティ用語"@ja, "An identifier assigned to the route."@en ;
+    ] , [
+    a owl:Restriction ;
+    owl:onProperty ic:始点 ;
+    owl:onClass ic:地物型  ;
+    owl:maxQualifiedCardinality  1  ;
+    rdfs:comment "アクセス方法の始点（出発地点）を記述するためのプロパティ用語"@ja, "The origin of the route (point of departure)."@en ;
+    ] , [
+    a owl:Restriction ;
+    owl:onProperty ic:始点備考 ;
+    owl:onDataRange xsd:string  ;
+    owl:maxQualifiedCardinality 1  ;
+    rdfs:comment "アクセス方法の始点についての備考を記述するためのプロパティ用語"@ja, "The remarks on the origin of the route."@en ;
+    ] , [
+    a owl:Restriction ;
+    owl:onProperty ic:終点 ;
+    owl:onClass ic:地物型  ;
+    owl:maxQualifiedCardinality  1  ;
+    rdfs:comment "アクセス方法の終点（目的地点）を記述するためのプロパティ用語"@ja, "The destination of the route (point of arrival)."@en ;
+    ] , [
+    a owl:Restriction ;
+    owl:onProperty ic:終点備考 ;
+    owl:onDataRange xsd:string  ;
+    owl:maxQualifiedCardinality 1  ;
+    rdfs:comment "アクセス方法の終点についての備考を記述するためのプロパティ用語"@ja, "The remarks on the destination of the route."@en ;
+    ] , [
+    a owl:Restriction ;
+    owl:onProperty ic:アクセス区間 ;
+    owl:allValuesFrom ic:アクセス区間型  ;
+    rdfs:comment "アクセス方法の各区間の一覧を記述するためのプロパティ用語"@ja, "A list of sections of the route."@en ;
+    ] , [
+    a owl:Restriction ;
+    owl:onProperty ic:時間 ;
+    owl:onClass ic:数量型  ;
+    owl:maxQualifiedCardinality  1  ;
+    rdfs:comment "始点から終点までのアクセス時間を記述するためのプロパティ用語"@ja, "The amount of time required for taking the route from the origin to the destination."@en ;
+    ] , [
+    a owl:Restriction ;
+    owl:onProperty ic:地図 ;
+    owl:maxCardinality 1  ;
+    rdfs:comment "アクセス方法を示す地図を参照するURLを記述するためのプロパティ用語"@ja, "The URL that references a map indicating the route."@en ;
+    ] , [
+    a owl:Restriction ;
+    owl:onProperty ic:備考 ;
+    owl:onDataRange xsd:string  ;
+    owl:maxQualifiedCardinality 1  ;
+    rdfs:comment "備考を記述するためのプロパティ用語　※補足情報などがある場合に記述"@ja, "The remarks. Note: Specify when there is any additional information."@en ;
+    ]
+.
+ic:アクセス区間型  a owl:Class ;
+  rdfs:subClassOf [
+    a owl:Restriction ;
+    owl:onProperty ic:始点 ;
+    owl:onClass ic:地物型  ;
+    owl:maxQualifiedCardinality  1  ;
+    rdfs:comment "アクセス区間の始点（出発地点）を記述するためのプロパティ用語"@ja, "The origin (point of departure) of the section of the route."@en ;
+    ] , [
+    a owl:Restriction ;
+    owl:onProperty ic:始点備考 ;
+    owl:onDataRange xsd:string  ;
+    owl:maxQualifiedCardinality 1  ;
+    rdfs:comment "アクセス区間の始点についての備考を記述するためのプロパティ用語"@ja, "The remarks on the origin of the section of the route."@en ;
+    ] , [
+    a owl:Restriction ;
+    owl:onProperty ic:路線 ;
+    owl:onDataRange xsd:string  ;
+    owl:maxQualifiedCardinality 1  ;
+    rdfs:comment "アクセス区間に用いる交通の路線（事業者及び路線名、バス系統など）を記述するためのプロパティ用語"@ja, "The line of transportation used in the section of the route (such as a transport service provider, line name, and bus route)."@en ;
+    ] , [
+    a owl:Restriction ;
+    owl:onProperty ic:終点 ;
+    owl:onClass ic:地物型  ;
+    owl:maxQualifiedCardinality  1  ;
+    rdfs:comment "アクセス区間の終点（目的地点）を記述するためのプロパティ用語"@ja, "The destination (point of arrival) of the section of the route."@en ;
+    ] , [
+    a owl:Restriction ;
+    owl:onProperty ic:終点備考 ;
+    owl:onDataRange xsd:string  ;
+    owl:maxQualifiedCardinality 1  ;
+    rdfs:comment "アクセス区間の終点についての備考を記述するためのプロパティ用語"@ja, "The remarks on the destination of the section of the route."@en ;
+    ] , [
+    a owl:Restriction ;
+    owl:onProperty ic:時間 ;
+    owl:onClass ic:数量型  ;
+    owl:maxQualifiedCardinality  1  ;
+    rdfs:comment "始点から終点までのアクセス時間を記述するためのプロパティ用語"@ja, "The amount of time required for taking the section of the route from the origin to the destination."@en ;
+    ]
+.
+ic:概念型  a owl:Class ;
+  rdfs:subClassOf [
+    a owl:Restriction ;
+    owl:onProperty ic:種別 ;
+    owl:allValuesFrom xsd:string  ;
+    rdfs:comment "種別の表記を記述するためのプロパティ用語"@ja, "A category of a concept expressed as text."@en ;
+    ] , [
+    a owl:Restriction ;
+    owl:onProperty ic:種別コード ;
+    owl:allValuesFrom ic:コード型  ;
+    rdfs:comment "種別コードを記述するためのプロパティ用語"@ja, "A code specifying the category of a concept."@en ;
+    ] , [
+    a owl:Restriction ;
+    owl:onProperty ic:メタデータ ;
+    owl:allValuesFrom ic:文書型  ;
+    rdfs:comment "データのメタデータを記述するためのプロパティ用語"@ja, "A document specifying the metadata of a data."@en ;
+    ]
+.
+ic:事物型  a owl:Class ;
+  rdfs:subClassOf [
+    a owl:Restriction ;
+    owl:onProperty ic:ID ;
+    owl:allValuesFrom ic:ID型  ;
+    rdfs:comment "事物に割り振られたID（識別子)を記述するためのプロパティ用語"@ja, "An identifier assigned to the thing."@en ;
+    ] , [
+    a owl:Restriction ;
+    owl:onProperty ic:表記 ;
+    owl:allValuesFrom xsd:string  ;
+    rdfs:comment "文字列による表記を記述するためのプロパティ用語"@ja, "A representation of the thing expressed as text."@en ;
+    ] , [
+    a owl:Restriction ;
+    owl:onProperty ic:参照 ;
+    owl:allValuesFrom ic:参照型  ;
+    rdfs:comment "追加情報などを参照するURLを記述するためのプロパティ用語"@ja, "An URL that refers to additional information."@en ;
+    ] , [
+    a owl:Restriction ;
+    owl:onProperty ic:画像 ;
+    owl:allValuesFrom owl:Thing ;
+    rdfs:comment "画像を参照するURLを記述するためのプロパティ用語"@ja, "An URL that refers to an image of the thing."@en ;
+    ] , [
+    a owl:Restriction ;
+    owl:onProperty ic:説明 ;
+    owl:allValuesFrom xsd:string  ;
+    rdfs:comment "説明を記述するためのプロパティ用語"@ja, "A description of the thing."@en ;
+    ] , [
+    a owl:Restriction ;
+    owl:onProperty ic:記述 ;
+    owl:allValuesFrom ic:記述型  ;
+    rdfs:comment "種別付きの説明文を記述するためのプロパティ用語"@ja, "An explanation for the thing."@en ;
+    ]
+.
+ic:参照型  a owl:Class ;
+  rdfs:subClassOf [
+    a owl:Restriction ;
+    owl:onProperty ic:参照先 ;
+    owl:allValuesFrom owl:Thing ;
+    rdfs:comment "追加情報などを参照するURLを記述するためのプロパティ用語"@ja, "An URL that refers to the additional information."@en ;
+    ]
+.
+ic:記述型  a owl:Class ;
+  rdfs:subClassOf [
+    a owl:Restriction ;
+    owl:onProperty ic:説明 ;
+    owl:allValuesFrom xsd:string  ;
+    rdfs:comment "説明のテキストを記述するためのプロパティ用語"@ja, "The description of the thing."@en ;
+    ]
+.
+ic:サービス型  a owl:Class ;
+  rdfs:subClassOf [
+    a owl:Restriction ;
+    owl:onProperty ic:名称 ;
+    owl:allValuesFrom ic:名称型  ;
+    rdfs:comment "名称を記述するためのプロパティ用語"@ja, "A name of the service."@en ;
+    ] , [
+    a owl:Restriction ;
+    owl:onProperty ic:利用対象 ;
+    owl:allValuesFrom ic:対象型  ;
+    rdfs:comment "利用対象となる事物を記述するためのプロパティ用語"@ja, "A thing to be targeted for the service."@en ;
+    ] , [
+    a owl:Restriction ;
+    owl:onProperty ic:提供者 ;
+    owl:allValuesFrom ic:実体型  ;
+    rdfs:comment "サービスを提供する実体もしくは組織や人を記述するためのプロパティ用語"@ja, "An entity such as an organization or person that provides the service."@en ;
+    ] , [
+    a owl:Restriction ;
+    owl:onProperty ic:利用方法 ;
+    owl:allValuesFrom xsd:string  ;
+    rdfs:comment "利用方法を記述するためのプロパティ用語"@ja, "A procedure to use the service."@en ;
+    ]
+.
+ic:文書型  a owl:Class ;
+  rdfs:subClassOf [
+    a owl:Restriction ;
+    owl:onProperty ic:表題 ;
+    owl:allValuesFrom xsd:string  ;
+    rdfs:comment "文書に与えられた名前を記述するためのプロパティ用語"@ja, "A name given to the document."@en ;
+    ] , [
+    a owl:Restriction ;
+    owl:onProperty ic:作成者 ;
+    owl:allValuesFrom ic:実体型  ;
+    rdfs:comment "文書の内容の作成に主たる責任をもつ実体を記述するためのプロパティ用語"@ja, "An entity primarily responsible for making the document."@en ;
+    ] , [
+    a owl:Restriction ;
+    owl:onProperty ic:キーワード ;
+    owl:allValuesFrom xsd:string  ;
+    rdfs:comment "文書のトピックを記述するためのプロパティ用語"@ja, "A topic of the document."@en ;
+    ] , [
+    a owl:Restriction ;
+    owl:onProperty ic:発行者 ;
+    owl:allValuesFrom ic:実体型  ;
+    rdfs:comment "文書を公開することに対して責任をもつ実体を記述するためのプロパティ用語"@ja, "An entity responsible for making the document available."@en ;
+    ] , [
+    a owl:Restriction ;
+    owl:onProperty ic:寄与者 ;
+    owl:allValuesFrom ic:実体型  ;
+    rdfs:comment "文書の内容になんらかの寄与、貢献をした実体を記述するためのプロパティ用語"@ja, "An entity responsible for making contributions to the document."@en ;
+    ] , [
+    a owl:Restriction ;
+    owl:onProperty ic:日付 ;
+    owl:allValuesFrom ic:日付型  ;
+    rdfs:comment "文書のライフサイクルにおけるなんらかの事象に関するある日付を記述するためのプロパティ用語"@ja, "A date associated with an event in the lifecycle of the document."@en ;
+    ] , [
+    a owl:Restriction ;
+    owl:onProperty ic:日時 ;
+    owl:allValuesFrom ic:日時型  ;
+    rdfs:comment "文書のライフサイクルにおける何らかの時点の日時を記述するためのプロパティ用語"@ja, "A point or period of time associated with an event in the lifecycle of the document."@en ;
+    ] , [
+    a owl:Restriction ;
+    owl:onProperty ic:資源タイプ ;
+    owl:allValuesFrom owl:Thing ;
+    rdfs:comment "文書の性質又はジャンルを記述するためのプロパティ用語"@ja, "A nature or genre of the document."@en ;
+    ] , [
+    a owl:Restriction ;
+    owl:onProperty ic:記録形式 ;
+    owl:allValuesFrom xsd:string  ;
+    rdfs:comment "文書のファイルの記録形式、物理媒体又は次元を記述するためのプロパティ用語"@ja, "A file format, physical medium, or dimensions of the document."@en ;
+    ] , [
+    a owl:Restriction ;
+    owl:onProperty ic:記録形式コード ;
+    owl:allValuesFrom ic:コード型  ;
+    rdfs:comment "文書のファイルの記録形式、物理媒体又は次元のコードを記述するためのプロパティ用語"@ja, "A code specifying a file format, physical medium, or dimensions of the document."@en ;
+    ] , [
+    a owl:Restriction ;
+    owl:onProperty ic:出処 ;
+    owl:allValuesFrom xsd:string  ;
+    rdfs:comment "当該文書の由来となるような関係の文書源を記述するためのプロパティ用語"@ja, "A related document from which the described document is derived."@en ;
+    ] , [
+    a owl:Restriction ;
+    owl:onProperty ic:言語 ;
+    owl:allValuesFrom ic:コード型  ;
+    rdfs:comment "文書の言語を記述するためのプロパティ用語"@ja, "A language of the document."@en ;
+    ] , [
+    a owl:Restriction ;
+    owl:onProperty ic:権利管理 ;
+    owl:allValuesFrom ic:文書型  ;
+    rdfs:comment "文書に含まれる、又はかかわる権利管理に関する情報を記述するためのプロパティ用語"@ja, "An information about rights held in and over the document."@en ;
+    ]
+.
+ic:対象型  a owl:Class ;
+  rdfs:subClassOf [
+    a owl:Restriction ;
+    owl:onProperty ic:制約 ;
+    owl:allValuesFrom ic:制約型  ;
+    rdfs:comment "対象となる事物の制約を記述するためのプロパティ用語"@ja, "A restriction on the thing to be targeted."@en ;
+    ]
+.
+ic:制約型  a owl:Class ;
+  rdfs:subClassOf [
+    a owl:Restriction ;
+    owl:onProperty ic:制約対象 ;
+    owl:allValuesFrom xsd:string  ;
+    rdfs:comment "制約対象を記述するためのプロパティ用語"@ja, "A targeted thing to be restricted."@en ;
+    ] , [
+    a owl:Restriction ;
+    owl:onProperty ic:説明 ;
+    owl:allValuesFrom xsd:string  ;
+    rdfs:comment "説明を記述するためのプロパティ用語"@ja, "A description of the restriction."@en ;
+    ]
+.
+ic:コード制約型  a owl:Class ;
+  rdfs:subClassOf [
+    a owl:Restriction ;
+    owl:onProperty ic:制約コード ;
+    owl:allValuesFrom ic:コード型  ;
+    rdfs:comment "制約コードを記述するためのプロパティ用語"@ja, "A code specifying the restriction."@en ;
+    ]
+.
+ic:範囲制約型  a owl:Class ;
+  rdfs:subClassOf [
+    a owl:Restriction ;
+    owl:onProperty ic:上限値 ;
+    owl:allValuesFrom ic:数量型  ;
+    rdfs:comment "範囲制約の上限値を記述するためのプロパティ用語"@ja, "An upper limit of the range of the restriction."@en ;
+    ] , [
+    a owl:Restriction ;
+    owl:onProperty ic:境界を含まない上限値 ;
+    owl:allValuesFrom ic:数量型  ;
+    rdfs:comment "範囲制約の境界を含まない上限値を記述するためのプロパティ用語"@ja, "An upper limit of the range of the restriction, which excludes the boundary."@en ;
+    ] , [
+    a owl:Restriction ;
+    owl:onProperty ic:下限値 ;
+    owl:allValuesFrom ic:数量型  ;
+    rdfs:comment "範囲制約の下限値を記述するためのプロパティ用語"@ja, "An lower limit of the range of the restriction."@en ;
+    ] , [
+    a owl:Restriction ;
+    owl:onProperty ic:境界を含まない下限値 ;
+    owl:allValuesFrom ic:数量型  ;
+    rdfs:comment "範囲制約の境界を含まない下限値を記述するためのプロパティ用語"@ja, "An lower limit of the range of the restriction, which excludes the boundary."@en ;
+    ]
+.
+ic:期間制約型  a owl:Class ;
+  rdfs:subClassOf [
+    a owl:Restriction ;
+    owl:onProperty ic:期間 ;
+    owl:allValuesFrom ic:期間スケジュール型  ;
+    rdfs:comment "制約期間を記述するためのプロパティ用語"@ja, "A period to be restricted."@en ;
+    ]
+.

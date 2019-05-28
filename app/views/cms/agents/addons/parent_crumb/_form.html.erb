@@ -1,6 +1,8 @@
+<%
+  addon ||= local_assigns.fetch(:addon, {})
+  addon[:display_body] = "hide"
+%>
 <%= jquery do %>
-  SS_AddonTabs.hide(".mod-cms-parent_crumbs");
-
   var blank = $(".parent-crumbs").first().text();
   $(".parent-crumbs").mousedown(function(){
     $(this).toggleClass("pulled");

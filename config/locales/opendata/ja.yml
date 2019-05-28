@@ -56,6 +56,7 @@ ja:
       source_url: "リンクを登録する際にURLを入力してください。ファイルを設定した場合は入力の必要はありません。"
       resource_preview_error: リソースをプレビューできませんでした。
       bulk_download_exceeded_filesize: "検索結果の一括ダウンロードサイズが大きすぎます。\\n一括ダウンロードのサイズは、%{size}までを想定しています。\\n申し訳ありませんが、個別にダウンロードしていただくか、検索条件を変更してください。"
+      recreate_rdf: "次のリソースに関連する RDF が作成されています。"
     export:
       subject: '[オープンデータ/データセット] エクスポートが完了しました。'
       notify_message: "ダウンロードの準備が完了しました。\n下記のURLからダウンロードしてください。\n\n%{link}"
@@ -70,6 +71,8 @@ ja:
       preview_reports: プレビュー数
       access_reports: アクセス数
       not_exists_reports: 集計結果がありません。
+      total_year: 年合計
+      total_month: 月合計
     public_entity:
       format: データセット一覧
       download: 公開中のデータセットの一覧を推奨データセット「オープンデータ一覧」の形式にてダウンロードできます。
@@ -124,6 +127,7 @@ ja:
 
     confirm:
       build_csv2rdf: "RDF 変換処理を開始します。よろしいですか？"
+      recreate_rdf: "RDF を再作成しますか？"
     labels:
       auto_assing: "自動割付結果"
       auto_mis_assing: "自動割付ミス"

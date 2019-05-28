@@ -165,9 +165,12 @@ table.opendata-harvest-report {
 }
 
 .reports-table {
+  table.index td[colspan="7"] {
+    padding-left: 16px;
+  }
   overflow: auto;
   th, td {
-    width: calc(100% / 30);
+    min-width: 30px;
   }
   th[colspan="7"], td[colspan="7"] {
     width: calc(100% / 30 * 7);
@@ -179,8 +182,5 @@ table.opendata-harvest-report {
   }
   .not-exists {
     padding: 10px 18px 10px;
-  }
-  .resource-name {
-    margin-left: 16px;
   }
 }

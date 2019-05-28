@@ -1,4 +1,7 @@
-<%= jquery do %> SS_AddonTabs.hide(".mod-cms-for-member-node"); <% end %>
+<%
+  addon ||= local_assigns.fetch(:addon, {})
+  addon[:display_body] = "hide"
+%>
 
 <dl class="see mod-cms-for-member-node">
   <dt><%= @model.t :for_member_state %><%= @model.tt :for_member_state %></dt>

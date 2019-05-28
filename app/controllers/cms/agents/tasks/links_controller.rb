@@ -140,6 +140,7 @@ class Cms::Agents::Tasks::LinksController < ApplicationController
 
     begin
       html = NKF.nkf "-w", html
+      html = html.gsub(/<!--.*?-->/m, "")
       html.scan(/\shref="([^"]+)"/i) do |m|
         next_url = m[0]
         next_url = next_url.sub(/^#{@base_url}/, "/")

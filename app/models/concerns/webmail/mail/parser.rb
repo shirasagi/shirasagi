@@ -6,27 +6,29 @@ module Webmail::Mail::Parser
                 :html_part_no, :html_part
 
   def parse(data)
-    self.attributes = {
-      uid: data.attr["UID"],
-      internal_date: data.attr['INTERNALDATE'],
-      flags: data.attr['FLAGS'] || [],
-      size: data.attr['RFC822.SIZE']
-    }
-    self.flags = flags.map(&:to_sym)
+    Webmail.activate_cp50221 do
+      self.attributes = {
+        uid: data.attr["UID"],
+        internal_date: data.attr['INTERNALDATE'],
+        flags: data.attr['FLAGS'] || [],
+        size: data.attr['RFC822.SIZE']
+      }
+      self.flags = flags.map(&:to_sym)
 
-    if data.attr['RFC822']
-      self.rfc822 = data.attr['RFC822']
-      parse_rfc822_body
-    end
+      if data.attr['RFC822']
+        self.rfc822 = data.attr['RFC822']
+        parse_rfc822_body
+      end
 
-    if data.attr['RFC822.HEADER']
-      self.header = data.attr['RFC822.HEADER']
-      parse_header
-    end
+      if data.attr['RFC822.HEADER']
+        self.header = data.attr['RFC822.HEADER']
+        parse_header
+      end
 
-    if data.attr['BODYSTRUCTURE']
-      self.body_structure = data.attr['BODYSTRUCTURE']
-      parse_body_structure
+      if data.attr['BODYSTRUCTURE']
+        self.body_structure = data.attr['BODYSTRUCTURE']
+        parse_body_structure
+      end
     end
   end
 
@@ -52,42 +54,25 @@ module Webmail::Mail::Parser
 
   # @param [Mail::Field] field
   # @return [Array]
+  # Be Carefule: this method must run within Webmail.activate_cp50221 for ISO-2022-JP text
   def parse_address_field(field)
     return [] if field.blank?
 
-    if field.value.include?('=?ISO-2022-JP?')
-      value = NKF.nkf("-w", field.value)
-    else
-      value = decode_jp(field.value)
+    field.address_list.addresses.map do |addr|
+      decode_jp(addr.decoded)
     end
-
-    ::Mail::AddressList.new(value).addresses.map do |addr|
-      if addr.display_name.present?
-        #charset = field.value.start_with?('=?ISO-2022-JP?') ? 'CP50220' : nil
-        addr.decoded
-      else
-        addr.address
-      end
-    end
-  rescue Mail::Field::ParseError, StandardError
+  rescue
     # this method must return "UTF-8 clean" string
-    [decode_jp(field.decoded)] rescue [value || decode_jp(field.value)]
+    [decode_jp(field.decoded)]
   end
 
   def parse_references(references)
-    return [] if references.blank?
-    references.is_a?(Array) ? references : [references]
+    Array[references].flatten.compact.uniq
   end
 
+  # Be Carefule: this method must run within Webmail.activate_cp50221 for ISO-2022-JP text
   def parse_subject(mail)
-    value = mail.header_fields.find { |m| m.name.casecmp('subject') == 0 }.try(:value)
-    return mail.subject unless value
-
-    if value.include?('=?ISO-2022-JP?')
-      NKF.nkf("-w", value)
-    else
-      decode_jp(mail.subject, nil)
-    end
+    decode_jp(mail.subject, nil)
   end
 
   def parse_body_structure
@@ -149,37 +134,39 @@ module Webmail::Mail::Parser
   end
 
   def parse_rfc822_body
-    read_rfc822 if rfc822.blank?
-    return if rfc822.blank?
+    Webmail.activate_cp50221 do
+      read_rfc822 if rfc822.blank?
+      return if rfc822.blank?
 
-    msg = Mail::Message.new(rfc822)
-    if msg.multipart?
-      text_part_pos, text_part = _raw_find_first_mime_type(msg, 'text/plain')
-      if text_part
-        self.format = 'text'
-        self.text = decode_jp(text_part.body.to_s, text_part.charset)
-      end
-      html_part_pos, html_part = _raw_find_first_mime_type(msg, 'text/html')
-      if html_part
-        self.format = 'html'
-        self.html = decode_jp(html_part.body.to_s, html_part.charset)
-      end
+      msg = Mail::Message.new(rfc822)
+      if msg.multipart?
+        text_part_pos, text_part = _raw_find_first_mime_type(msg, 'text/plain')
+        if text_part
+          self.format = 'text'
+          self.text = decode_jp(text_part.body.to_s, text_part.charset)
+        end
+        html_part_pos, html_part = _raw_find_first_mime_type(msg, 'text/html')
+        if html_part
+          self.format = 'html'
+          self.html = decode_jp(html_part.body.to_s, html_part.charset)
+        end
 
-      @_all_parts = {}
-      self.attachments = []
-      msg.all_parts.each_with_index do |part, i|
-        @_all_parts[i + 1] = part
-        next if i == text_part_pos || i == html_part_pos
-        self.attachments << Webmail::StoredMailPart.new(part, i + 1)
-      end
-    else
-      if msg.mime_type == 'text/plain'
-        self.format = 'text'
-        self.text = decode_jp(msg.body.to_s, msg.charset)
-      end
-      if msg.mime_type == 'text/html'
-        self.format = 'html'
-        self.html = decode_jp(msg.body.to_s, msg.charset)
+        @_all_parts = {}
+        self.attachments = []
+        msg.all_parts.each_with_index do |part, i|
+          @_all_parts[i + 1] = part
+          next if i == text_part_pos || i == html_part_pos
+          self.attachments << Webmail::StoredMailPart.new(part, i + 1)
+        end
+      else
+        if msg.mime_type == 'text/plain'
+          self.format = 'text'
+          self.text = decode_jp(msg.body.to_s, msg.charset)
+        end
+        if msg.mime_type == 'text/html'
+          self.format = 'html'
+          self.html = decode_jp(msg.body.to_s, msg.charset)
+        end
       end
     end
   end

@@ -1,4 +1,7 @@
-<%= jquery do %> SS_AddonTabs.hide(".mod-cms-related_pages"); <% end %>
+<%
+  addon ||= local_assigns.fetch(:addon, {})
+  addon[:display_body] = "hide"
+%>
 
 <dl class="see mod-cms-related_pages">
   <dt><%= @model.t :related_page_ids %><%= @model.tt :related_page_ids %></dt>

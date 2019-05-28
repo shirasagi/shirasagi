@@ -1,7 +1,3 @@
-<%= jquery do %>
-  //SS_AddonTabs.hide(".gws-schedule-facility");
-<% end %>
-
 <dl class="see gws-schedule-facility" data-plan-id="<%= @item.persisted? ? @item.id : "" %>">
   <dt><%= @model.t :facility_ids %><%= @model.tt :facility_ids %></dt>
   <dd>
