@@ -50,12 +50,14 @@ module Cms::Model::Page
     return false unless public_node?
     run_callbacks :generate_file do
       Cms::Agents::Tasks::PagesController.new.generate_page(self)
+      Cms::PageRelease.release(self)
     end
   end
 
   def remove_file
     run_callbacks :remove_file do
       Fs.rm_rf path
+      Cms::PageRelease.close(self)
     end
   end
 
@@ -70,6 +72,7 @@ module Cms::Model::Page
     run_callbacks :rename_file do
       Fs.mkdir_p dst_dir unless Fs.exists?(dst_dir)
       Fs.mv src, dst if Fs.exists?(src)
+      Cms::PageRelease.close(self, @db_changes['filename'][0])
     end
   end
 
