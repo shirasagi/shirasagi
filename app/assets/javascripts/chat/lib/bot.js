@@ -7,6 +7,7 @@ this.Chat_Bot = (function () {
 
   Chat_Bot.prototype.render = function () {
     var _this = this;
+    _this.getAuthenticityToken();
     $(_this.id).find('.chat-text').keypress(function (ev) {
       if ((ev.which && ev.which === 13) || (ev.keyCode && ev.keyCode === 13)) {
         _this.sendText($(this));
@@ -20,6 +21,17 @@ this.Chat_Bot = (function () {
         $(_this.id).find('.chat-text').val($(e.target).text());
         _this.sendText($(this));
         return false;
+      }
+    });
+  };
+
+  Chat_Bot.prototype.getAuthenticityToken = function () {
+    var _this = this;
+    $.ajax({
+      url: '/.mypage/auth_token.json',
+      method: 'GET',
+      success: function(data) {
+        _this.authenticityToken = data.auth_token;
       }
     });
   };
@@ -38,10 +50,14 @@ this.Chat_Bot = (function () {
       type: "GET",
       url: this.url,
       data: {
+        authenticity_token: this.authenticityToken,
         text: text
       },
       success: function (res, status) {
-        var result = $.parseJSON(res);
+        var result = res;
+        if (typeof res === 'string' || res instanceof String) {
+          result = $.parseJSON(res);
+        }
         if(result.text){
           el.parents('.chat-part').find('.chat-items').append($('<div class="chat-item sys"></div>').append(result.text));
           if(result.suggest){

@@ -1,10 +1,6 @@
-<nav class="mod-navi">
-  <h2><%= t "chat.bot" %></h2>
-
-  <% if Chat::Intent.allowed?(:read, @cur_user, site: @cur_site) %>
+<%= node_navi :chat do %>
+  <% if Chat::Intent.allowed?(:read, @cur_user, site: @cur_site, node: @cur_node) %>
     <h3><%= link_to Chat::Intent.model_name.human, chat_intents_path %></h3>
     <h3><%= link_to Chat::Category.model_name.human, chat_categories_path %></h3>
   <% end %>
-</nav>
-
-<%= render partial: "cms/main/conf_navi" %>
+<% end %>

@@ -3,7 +3,7 @@
   <dd>
     <%= f.hidden_field 'category_ids[]', value: '', class: 'hidden-ids' %>
     <%= link_to t('cms.apis.categories.index'),
-                chat_apis_categories_path, class: 'ajax-box' %>
+                chat_apis_categories_path(cid: @cur_node.id), class: 'ajax-box' %>
   </dd>
   <dd>
     <table class="index ajax-selected">

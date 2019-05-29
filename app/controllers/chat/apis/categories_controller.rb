@@ -7,6 +7,7 @@ class Chat::Apis::CategoriesController < ApplicationController
     @multi = params[:single].blank?
 
     @items = @model.site(@cur_site).
+      where(node_id: @cur_node.id).
       search(params[:s]).
       order_by(updated: -1).
       page(params[:page]).per(50)

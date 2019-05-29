@@ -13,7 +13,7 @@ class Chat::CategoriesController < ApplicationController
   end
 
   def fix_params
-    { cur_site: @cur_site }
+    { cur_site: @cur_site, cur_user: @cur_user, node_id: @cur_node.id }
   end
 
   public
@@ -21,7 +21,9 @@ class Chat::CategoriesController < ApplicationController
   def index
     raise "403" unless @model.allowed?(:read, @cur_user, site: @cur_site, node: @cur_node)
     set_items
-    @items = @items.search(params[:s]).
+    @items = @items.allow(:read, @cur_user, site: @cur_site).
+      where(node_id: @cur_node.id).
+      search(params[:s]).
       order_by(order: 1).
       page(params[:page]).
       per(50)

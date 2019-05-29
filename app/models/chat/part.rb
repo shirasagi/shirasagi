@@ -14,7 +14,7 @@ class Chat::Part
 
   class Bot
     include Cms::Model::Part
-    include Chat::Addon::Text
+    include Chat::Addon::Path
     include Cms::Addon::Release
     include Cms::Addon::GroupPermission
     include History::Addon::Backup

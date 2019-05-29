@@ -2,13 +2,14 @@ class Chat::Intent
   extend SS::Translation
   include SS::Document
   include SS::Reference::Site
-  include Cms::SitePermission
+  include SS::Reference::User
   include Chat::Addon::Category
+  include Cms::Addon::GroupPermission
   include History::Addon::Backup
 
   index({ order: 1, site_id: 1 })
 
-  set_permission_name "chat_bots", :edit
+  set_permission_name "chat_bots"
 
   seqid :id
   field :name, type: String
@@ -16,6 +17,8 @@ class Chat::Intent
   field :suggest, type: SS::Extensions::Words
   field :response, type: String
   field :order, type: Integer
+
+  belongs_to :node, class_name: "Chat::Node::Bot", inverse_of: :intents
 
   permit_params :name, :phrase, :suggest, :response, :order
 

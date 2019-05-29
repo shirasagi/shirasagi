@@ -5,20 +5,29 @@ ja:
   modules:
     chat: チャット
     addons:
-      chat/text: 文章
       chat/category: カテゴリー
+      chat/path: フォルダー
+      chat/text: 文章
 
   cms:
+    nodes:
+      chat/bot: チャットボット
     parts:
       chat/bot: チャットボット
 
   cms_role:
-    edit_chat_bots: チャットボットの編集
+    delete_other_chat_bots: チャットボットの削除(全て)
+    delete_private_chat_bots: チャットボットの削除(所有)
+    edit_other_chat_bots: チャットボットの編集(全て)
+    edit_private_chat_bots: チャットボットの編集(所有)
+    read_other_chat_bots: チャットボットの閲覧(全て)
+    read_private_chat_bots: チャットボットの閲覧(所有)
 
   mongoid:
     models:
-      chat/intent: シナリオ
       chat/category: カテゴリー
+      chat/intent: シナリオ
+      chat/node/bot: チャットボット
       chat/part/bot: チャットボット
 
     attributes:
@@ -27,14 +36,22 @@ ja:
         phrase: フレーズ
         suggest: サジェスト
         response: 返答
+        order: 並び順
+        node_id: フォルダー
       chat/category:
         name: 名前
+        order: 並び順
+        node_id: フォルダー
+      chat/addon/category:
+        category_ids: カテゴリー
+      chat/addon/path:
+        chat_path: フォルダーパス
       chat/addon/text:
         first_text: 開始時文章
         first_suggest: 開始時サジェスト
         exception_text: 例外文章
-      chat/addon/category:
-        category_ids: カテゴリー
+        intent_ids: シナリオ
+        chat_category_ids: シナリオカテゴリー
 
   tooltip:
     chat/intent:
@@ -51,9 +68,20 @@ ja:
       response:
         - 返答を設定します。
         - チャットボットで指定のフレーズが使用されていると返答します。
+      order:
+        - 並び順を設定します。
     chat/category:
       name:
         - 名前を設定します。
+      order:
+        - 並び順を設定します。
+    chat/addon/category:
+      category_ids:
+        - カテゴリーを設定します。
+    chat/addon/path:
+      chat_path:
+        - フォルダーのパスを設定します。
+        - デフォルトでは親フォルダーを使用します。
     chat/addon/text:
       first_text:
         - チャットボットの開始時に表示される文章を設定できます。
@@ -62,6 +90,3 @@ ja:
         - 改行でサジェストを複数設定できます。
       exception_text:
         - 対応するフレーズが見つからない場合に返答する文章を設定できます。
-    chat/addon/category:
-      category_ids:
-        - カテゴリーを設定します。

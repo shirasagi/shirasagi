@@ -2,16 +2,19 @@ class Chat::Category
   extend SS::Translation
   include SS::Document
   include SS::Reference::Site
-  include Cms::SitePermission
+  include SS::Reference::User
+  include Cms::Addon::GroupPermission
   include History::Addon::Backup
 
   index({ order: 1, site_id: 1 }, { sparse: true } )
 
-  set_permission_name "chat_bots", :edit
+  set_permission_name "chat_bots"
 
   seqid :id
   field :name, type: String
   field :order, type: Integer
+
+  belongs_to :node, class_name: "Chat::Node::Bot", inverse_of: :chat_categories
 
   permit_params :name, :order
 
