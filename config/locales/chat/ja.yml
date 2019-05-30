@@ -26,20 +26,29 @@ ja:
   mongoid:
     models:
       chat/category: カテゴリー
+      chat/history: 履歴
       chat/intent: シナリオ
       chat/node/bot: チャットボット
       chat/part/bot: チャットボット
 
     attributes:
+      chat/category:
+        name: 名前
+        order: 並び順
+        node_id: フォルダー
+      chat/history:
+        session_id: セッションID
+        request_id: リクエストID
+        text: 文章
+        result: 返答
+        suggest: サジェスト
+        node_id: フォルダー
+        intent_id: シナリオ
       chat/intent:
         name: 名前
         phrase: フレーズ
         suggest: サジェスト
         response: 返答
-        order: 並び順
-        node_id: フォルダー
-      chat/category:
-        name: 名前
         order: 並び順
         node_id: フォルダー
       chat/addon/category:

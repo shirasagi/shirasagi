@@ -1,0 +1,38 @@
+<div class="index">
+  <div class="list-head">
+    <%= render partial: "search" %>
+  </div>
+
+  <ul class="list-items">
+    <% @items.each do |item| %>
+      <li class="list-item">
+        <div class="info">
+          <h3 class="text"><%= item.text %></h3>
+          <div class="meta">
+            <span class="id">#<%= item.id %></span>
+            <span class="datetime"><%= I18n.l(item.created) %></span>
+            <% if item.try(:intent) %>
+              <span class="intent"><%= link_to item.intent.name, chat_intent_path(id: item.intent_id) %></span>
+            <% end %>
+            <% if item.try(:result) %>
+              <span class="result"><%= item.result %></span>
+            <% end %>
+            <% if item.try(:suggest) %>
+              <span class="suggest"><%= item.suggest %></span>
+            <% end %>
+            <% if item.try(:session_id) %>
+              <span class="label"><%= @model.t :session_id %></span>
+              <span class="session-id"><%= item.session_id %></span>
+            <% end %>
+            <% if item.try(:request_id) %>
+              <span class="label"><%= @model.t :request_id %></span>
+              <span class="request-id"><%= item.request_id %></span>
+            <% end %>
+          </div>
+        </div>
+      </li>
+    <% end %>
+  </ul>
+</div>
+
+<%= paginate @items if @items.try(:current_page) %>

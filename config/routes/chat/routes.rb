@@ -18,6 +18,7 @@ SS::Application.routes.draw do
     get "/bots" => redirect { |p, req| "#{req.path}/../intents" }
     resources :intents, concerns: :deletion
     resources :categories, concerns: :deletion
+    get 'history' => 'history#index'
   end
 
   node "chat" do

@@ -19,7 +19,6 @@ class Chat::Node
     include Cms::Addon::NodeSetting
     include Cms::Addon::Meta
     include Chat::Addon::Text
-    include Cms::Addon::EditorSetting
     include Cms::Addon::ForMemberNode
     include Cms::Addon::Release
     include Cms::Addon::GroupPermission
