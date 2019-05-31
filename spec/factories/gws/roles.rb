@@ -29,4 +29,17 @@ FactoryBot.define do
     permissions { %w(read_private_gws_notices) }
     permission_level 1
   end
+
+  factory :gws_role_schedule_plan_editor, class: Gws::Role, traits: [:gws_role] do
+    permissions do
+      %w(
+        use_private_gws_schedule_plans
+        read_private_gws_schedule_plans
+        edit_private_gws_schedule_plans
+        delete_private_gws_schedule_plans
+        read_private_gws_schedule_categories
+      )
+    end
+    permission_level 1
+  end
 end

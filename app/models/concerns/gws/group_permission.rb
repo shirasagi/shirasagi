@@ -26,7 +26,7 @@ module Gws::GroupPermission
     user = user.gws_user
     return true if (self.group_ids & user.group_ids).present?
     return true if user_ids.to_a.include?(user.id)
-    return true if custom_groups.any? { |m| m.member_ids.include?(user.id) }
+    return true if custom_groups.any? { |m| m.member?(user) }
     false
   end
 
@@ -111,7 +111,7 @@ module Gws::GroupPermission
         { permission_level: { "$lte" => level }, "$or" => [
           { user_ids: user.id },
           { :group_ids.in => user.group_ids },
-          { :custom_group_ids.in => Gws::CustomGroup.member(user).map(&:id) }
+          { :custom_group_ids.in => Gws::CustomGroup.member(user).pluck(:id) }
         ] }
       else
         { _id: -1 }
