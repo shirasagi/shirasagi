@@ -73,35 +73,47 @@ module Workflow::Addon
       run_callbacks(:clone_files) do
         ids = {}
         files.each do |f|
-          attributes = Hash[f.attributes]
-          attributes.select!{ |k| f.fields.key?(k) }
-
-          file = SS::File.new(attributes)
-          file.id = nil
-          file.in_file = f.uploaded_file
-          file.user_id = @cur_user.id if @cur_user
-
-          file.save validate: false
-          ids[f.id] = file.id
-
-          if respond_to?(:html) && html.present?
-            html = self.html
-            html.gsub!("=\"#{f.url}\"", "=\"#{file.url}\"")
-            html.gsub!("=\"#{f.thumb_url}\"", "=\"#{file.thumb_url}\"")
-            self.html = html
-          end
-
-          if respond_to?(:body_parts) && body_parts.present?
-            self.body_parts = body_parts.map do |html|
-              html = html.to_s
-              html = html.gsub("=\"#{f.url}\"", "=\"#{file.url}\"")
-              html = html.gsub("=\"#{f.thumb_url}\"", "=\"#{file.thumb_url}\"")
-              html
-            end
-          end
+          ids[f.id] = clone_file(f).id
         end
         self.file_ids = ids.values
         ids
+      end
+    end
+
+    def clone_file(f)
+      attributes = Hash[f.attributes]
+      attributes.select!{ |k| f.fields.key?(k) }
+
+      file = SS::File.new(attributes)
+      file.id = nil
+      file.in_file = f.uploaded_file
+      file.user_id = @cur_user.id if @cur_user
+
+      file.save validate: false
+
+      if respond_to?(:html) && html.present?
+        html = self.html
+        html.gsub!("=\"#{f.url}\"", "=\"#{file.url}\"")
+        html.gsub!("=\"#{f.thumb_url}\"", "=\"#{file.thumb_url}\"")
+        self.html = html
+      end
+
+      if respond_to?(:body_parts) && body_parts.present?
+        self.body_parts = body_parts.map do |html|
+          html = html.to_s
+          html = html.gsub("=\"#{f.url}\"", "=\"#{file.url}\"")
+          html = html.gsub("=\"#{f.thumb_url}\"", "=\"#{file.thumb_url}\"")
+          html
+        end
+      end
+
+      file
+    end
+
+    def clone_thumb
+      run_callbacks(:clone_thumb) do
+        self.thumb = clone_file(thumb)
+        thumb
       end
     end
 
