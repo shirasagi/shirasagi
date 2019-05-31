@@ -34,7 +34,7 @@ class Chat::Intent
         criteria = criteria.search_text params[:name]
       end
       if params[:keyword].present?
-        criteria = criteria.keyword_in params[:keyword], :name
+        criteria = criteria.keyword_in params[:keyword], :name, :phrase, :suggest, :response
       end
       criteria
     end

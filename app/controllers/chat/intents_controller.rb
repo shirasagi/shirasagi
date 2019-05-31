@@ -16,12 +16,16 @@ class Chat::IntentsController < ApplicationController
     { cur_site: @cur_site, cur_user: @cur_user, node_id: @cur_node.id }
   end
 
+  def pre_params
+    { name: params[:name], phrase: params[:name] }
+  end
+
   public
 
   def index
     raise "403" unless @model.allowed?(:read, @cur_user, site: @cur_site, node: @cur_node)
     set_items
-    @items = @items.in(category_ids: params.dig(:s, :category_id)) if params.dig(:s, :category_id).present?
+    @items = @items.in(category_ids: params.dig(:s, :category_id).try(:to_i)) if params.dig(:s, :category_id).present?
     @items = @items.allow(:read, @cur_user, site: @cur_site).
       where(node_id: @cur_node.id).
       search(params[:s]).

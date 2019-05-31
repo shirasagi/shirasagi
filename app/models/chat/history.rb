@@ -7,7 +7,7 @@ class Chat::History
 
   set_permission_name 'chat_bots'
 
-  index({ updated: -1 })
+  index({ created: -1, id: -1 })
 
   seqid :id
   field :session_id, type: String
@@ -30,7 +30,7 @@ class Chat::History
         criteria = criteria.search_text params[:name]
       end
       if params[:keyword].present?
-        criteria = criteria.keyword_in params[:keyword], :name
+        criteria = criteria.keyword_in params[:keyword], :session_id, :request_id, :text, :result, :suggest
       end
       criteria
     end
