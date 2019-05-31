@@ -50,7 +50,8 @@ class Opendata::UrlResource
     puts self.original_url
 
     last_modified = Timeout.timeout(time_out) do
-      open(self.original_url, proxy: true) { |url_file| url_file.last_modified }
+      uri = URI.parse(self.original_url)
+      uri.open(proxy: true) { |url_file| url_file.last_modified }
     end
 
     if last_modified.blank?
@@ -139,6 +140,7 @@ class Opendata::UrlResource
           ss_file.in_file = ActionDispatch::Http::UploadedFile.new(tempfile: temp_file,
                                                                    filename: self.filename,
                                                                    type: 'application/octet-stream')
+          ss_file.site_id = dataset.site_id
           ss_file.model = self.class.to_s.underscore
 
           ss_file.content_type = self.format = self.filename.sub(/.*\./, "").upcase
@@ -166,7 +168,8 @@ class Opendata::UrlResource
 
     temp_file.binmode
     Timeout.timeout(time_out) do
-      open(original_url, proxy: true) do |data|
+      uri = URI.parse(original_url)
+      uri.open(proxy: true) do |data|
 
         data.binmode
         temp_file.write(data.read)
