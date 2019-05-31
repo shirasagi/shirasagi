@@ -43,7 +43,7 @@ module Gws::ReadableSetting
     return true if !readable_setting_present?
     return true if readable_group_ids.any? { |m| user.group_ids.include?(m) }
     return true if readable_member_ids.include?(user.id)
-    return true if readable_custom_groups.any? { |m| m.member_ids.include?(user.id) }
+    return true if readable_custom_groups.any? { |m| m.member?(user) }
     false
   end
 
@@ -141,7 +141,7 @@ module Gws::ReadableSetting
         { readable_member_ids: user.id },
       ]
       if readable_setting_included_custom_groups?
-        or_conds << { :readable_custom_group_ids.in => Gws::CustomGroup.member(user).map(&:id) }
+        or_conds << { :readable_custom_group_ids.in => Gws::CustomGroup.member(user).pluck(:id) }
       end
       or_conds
     end
