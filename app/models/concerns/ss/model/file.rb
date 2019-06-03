@@ -172,7 +172,7 @@ module SS::Model::File
   end
 
   def exif_image?
-    image? && filename =~ /\.(jpe?g|tiff)$/i
+    image? && filename =~ /\.(jpe?g|tiff?)$/i
   end
 
   def viewable?
