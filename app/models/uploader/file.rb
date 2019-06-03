@@ -70,7 +70,7 @@ class Uploader::File
   end
 
   def text?
-    ext =~ /^(txt|css|scss|coffee|js|htm|html|php)$/
+    ext =~ /^\.?(txt|css|scss|coffee|js|htm|html|php)$/
   end
 
   def image?

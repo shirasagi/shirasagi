@@ -112,6 +112,7 @@ module Workflow::Addon
 
     def clone_thumb
       run_callbacks(:clone_thumb) do
+        return if thumb.blank?
         self.thumb = clone_file(thumb)
         thumb
       end
