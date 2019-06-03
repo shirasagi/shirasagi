@@ -1,6 +1,7 @@
 ja:
   chat:
     bot: チャットボット
+    report: レポート
 
   modules:
     chat: チャット

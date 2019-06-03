@@ -19,6 +19,7 @@ SS::Application.routes.draw do
     resources :intents, concerns: :deletion
     resources :categories, concerns: :deletion
     get 'history' => 'history#index'
+    get 'report' => 'report#index'
   end
 
   node "chat" do

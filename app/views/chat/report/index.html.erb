@@ -1,0 +1,46 @@
+<%
+  suggests = @items.pluck(:suggest).flatten.uniq.compact
+  suggests = suggests.collect do |suggest|
+    [suggest, @items.where(suggest: suggest).count]
+  end
+%>
+<%= jquery do %>Chat_Chart.drawBar(".graph-canvas");<% end %>
+<div class="index">
+  <ul class="list-items">
+    <% if @items.size > 0 %>
+      <dd class="graph">
+        <canvas class="graph-canvas" data-name='<%= @cur_node.name %>' data-columns='<%= suggests.to_json %>'></canvas>
+      </dd>
+    <% end %>
+    <% @items.each do |item| %>
+      <li class="list-item">
+        <div class="info">
+          <h3 class="text"><%= item.text %></h3>
+          <div class="meta">
+            <span class="id">#<%= item.id %></span>
+            <span class="datetime"><%= I18n.l(item.created) %></span>
+            <% if item.try(:intent) %>
+              <span class="intent"><%= link_to item.intent.name, chat_intent_path(id: item.intent_id) %></span>
+            <% end %>
+            <% if item.try(:result) %>
+              <span class="result"><%= item.result %></span>
+            <% end %>
+            <% if item.try(:suggest) %>
+              <span class="suggest"><%= item.suggest %></span>
+            <% end %>
+            <% if item.try(:session_id) %>
+              <span class="label"><%= @model.t :session_id %></span>
+              <span class="session-id"><%= item.session_id %></span>
+            <% end %>
+            <% if item.try(:request_id) %>
+              <span class="label"><%= @model.t :request_id %></span>
+              <span class="request-id"><%= item.request_id %></span>
+            <% end %>
+          </div>
+        </div>
+      </li>
+    <% end %>
+  </ul>
+</div>
+
+<%= paginate @items if @items.try(:current_page) %>
