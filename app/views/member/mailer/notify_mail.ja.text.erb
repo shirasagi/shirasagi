@@ -6,4 +6,4 @@
   <%= @member.name %>
 
 - URL
-  <%= "#{@node.site.mypage_full_url.chop}#{cms_member_path(site: @node.site.id, id: @member.id)}" %>
+  <%= "#{@node.site.mypage_full_url.chop}#{Rails.application.routes.url_helpers.cms_member_path(site: @node.site.id, id: @member.id)}" %>

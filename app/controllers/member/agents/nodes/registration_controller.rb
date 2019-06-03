@@ -182,15 +182,15 @@ class Member::Agents::Nodes::RegistrationController < ApplicationController
     return if request.get?
 
     if params[:item][:new_password].blank?
-      @item.errors.add I18n.t("member.view.new_password"), :not_input
+      @item.errors.add :base, "#{I18n.t("member.view.new_password")}#{I18n.t("errors.messages.not_input")}"
       render action: :change_password
       return
     elsif params[:item][:new_password_again].blank?
-      @item.errors.add I18n.t("member.view.new_password_again"), :not_input
+      @item.errors.add :base, "#{I18n.t("member.view.new_password_again")}#{I18n.t("errors.messages.not_input")}"
       render action: :change_password
       return
     elsif params[:item][:new_password] != params[:item][:new_password_again]
-      @item.errors.add I18n.t("member.view.new_password"), :mismatch
+      @item.errors.add :base, "#{I18n.t("member.view.new_password")}#{I18n.t("errors.messages.mismatch")}"
       render action: :change_password
       return
     end
