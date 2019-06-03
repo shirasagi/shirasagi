@@ -189,6 +189,9 @@ ja:
         html: 本文HTML
         seen: 既読日時
         star: フラグ
+        flags: フラグ
+        unseen: 未読
+        flagged: スター付き
         filtered: フィルター適用
         deleted: 削除状態
         format: フォーマット
