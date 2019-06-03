@@ -434,7 +434,8 @@ module Gws::Model
           search_date(params).
           search_state(params).
           search_unseen(params).
-          search_flagged(params)
+          search_flagged(params).
+          search_priorities(params)
       end
 
       def search_keyword(params = {})
@@ -493,6 +494,11 @@ module Gws::Model
         return all if params.blank? || params[:flagged].blank?
         user_id = params[:flagged]
         all.and("star.#{user_id}" => { "$exists" => true })
+      end
+
+      def search_priorities(params = {})
+        return all if params.blank? || params[:priorities].blank?
+        all.and([priority: { "$in" => params[:priorities].to_a }])
       end
 
       def unseens(user, site)

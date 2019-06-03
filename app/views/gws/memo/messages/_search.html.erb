@@ -3,6 +3,12 @@
   style = @s.to_h.values.select(&:present?).present? ? '' : 'style="display:none;"'
 %>
 
+<%= jquery do %>
+$('[name="s[priorities][]"]').on("click", function () {
+  $('[name="s[priorities][]"][value!="' + $(this).val() + '"]').prop('checked', false);
+});
+<% end %>
+
 <div class="gws-memo-search" <%== style %>>
   <%= form_for :s, url: '', html: { method: :get } do |f| %>
     <dl class="see">
@@ -21,8 +27,23 @@
       </dd>
       <dt><%= @model.t :flags %></dt>
       <dd>
-        <label class="flag"><%= f.check_box_tag "s[unseen]", @cur_user.id, params.dig(:s, :unseen).present? %><%= @model.t :unseen %></label>
-        <label class="flag"><%= f.check_box_tag "s[flagged]", @cur_user.id, params.dig(:s, :flagged).present? %><%= @model.t :flagged %></label>
+        <label class="flag">
+          <%= f.check_box_tag "s[unseen]", @cur_user.id, params.dig(:s, :unseen).present? %>
+          <%= @model.t :unseen %>
+        </label>
+        <label class="flag">
+          <%= f.check_box_tag "s[flagged]", @cur_user.id, params.dig(:s, :flagged).present? %>
+          <%= @model.t :flagged %>
+        </label>
+      </dd>
+      <dt><%= @model.t :priority %></dt>
+      <dd>
+        <% @model.new.priority_options.each do |k, v| %>
+          <label class="flag">
+            <%= f.check_box_tag "s[priorities][]", v, params.dig(:s, :priorities).to_a.include?(v) %>
+            <%= k %>
+          </label>
+        <% end %>
       </dd>
 
       <dt></dt>
