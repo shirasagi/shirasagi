@@ -92,6 +92,7 @@ module SS::Relation::File
     file.site_id  = site_id if respond_to?(:site_id)
     file.user_id  = @cur_user.id if @cur_user
     file.state    = send("#{name}_file_state")
+    file.content_type = ::Fs.content_type(file.filename)
     file.resizing = send("in_#{name}_resizing").presence || opts[:resizing]
     file.owner_item = self.embedded? ? self._parent : self if file.respond_to?(:owner_item=)
     file
