@@ -33,6 +33,7 @@ module Gws::Model::File
     validates :model, presence: true
     validates :state, presence: true
     validates :filename, presence: true, if: ->{ in_file.blank? && in_files.blank? }
+    validates :content_type, presence: true
     validate :validate_filename, if: -> { filename.present? }
     validates_with SS::FileSizeValidator, if: ->{ size.present? }
 
@@ -138,7 +139,11 @@ module Gws::Model::File
   end
 
   def image?
-    filename =~ /\.(bmp|gif|jpe?g|png)$/i
+    content_type.to_s.start_with?('image/')
+  end
+
+  def exif_image?
+    image? && filename =~ /\.(jpe?g|tiff?)$/i
   end
 
   def viewable?

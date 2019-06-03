@@ -78,7 +78,7 @@ class Uploader::File
   end
 
   def exif_image?
-    image? && ext =~ /^(jpe?g|tiff)$/i
+    image? && ext =~ /^(jpe?g|tiff?)$/i
   end
 
   def link
