@@ -6,9 +6,13 @@ class Chat::Agents::Nodes::BotController < ApplicationController
   private
 
   def create_chat_history
+    return if params[:text].blank?
     history = Chat::History.new(params.permit(Chat::History.permitted_fields))
     history.session_id = request.session.id
     history.request_id = request.uuid
+    history.prev_intent_id = Chat::History.site(@cur_site).
+      where(node_id: @cur_node.id, session_id: history.session_id).
+      order_by(created: -1).first.try(:intent).try(:id)
     history.intent_id = @intent.try(:id)
     history.result = @result
     history.suggest = @intent.try(:suggest)

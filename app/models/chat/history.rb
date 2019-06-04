@@ -17,6 +17,7 @@ class Chat::History
   field :suggest, type: SS::Extensions::Words
 
   belongs_to :node, class_name: "Chat::Node::Bot", inverse_of: :histories
+  belongs_to :prev_intent, class_name: "Chat::Intent"
   belongs_to :intent, class_name: "Chat::Intent"
 
   permit_params :text
