@@ -2,6 +2,7 @@ this.Chat_Bot = (function () {
   function Chat_Bot(id, url) {
     this.id = '#' + id;
     this.url = url;
+    this.clickSuggest = false;
     this.render();
   }
 
@@ -18,6 +19,7 @@ this.Chat_Bot = (function () {
     });
     $(_this.id).find('.chat-items').click(function(e) {
       if ($(e.target).hasClass('chat-suggest')) {
+        _this.clickSuggest = true;
         $(_this.id).find('.chat-text').val($(e.target).text());
         _this.sendText($(this));
         return false;
@@ -51,7 +53,8 @@ this.Chat_Bot = (function () {
       url: this.url,
       data: {
         authenticity_token: this.authenticityToken,
-        text: text
+        text: text,
+        click_suggest: this.clickSuggest
       },
       success: function (res, status) {
         var result = res;

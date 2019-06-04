@@ -43,7 +43,9 @@ ja:
         text: 文章
         result: 返答
         suggest: サジェスト
+        click_suggest: 使用したサジェスト
         node_id: フォルダー
+        prev_intent_id: 前回のシナリオ
         intent_id: シナリオ
       chat/intent:
         name: 名前

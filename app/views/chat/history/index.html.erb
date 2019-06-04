@@ -20,6 +20,9 @@
             <% if item.try(:suggest) %>
               <span class="suggest"><%= item.suggest %></span>
             <% end %>
+            <% if item.try(:click_suggest) %>
+              <span class="click-suggest"><%= item.click_suggest %></span>
+            <% end %>
             <% if item.try(:session_id) %>
               <span class="label"><%= @model.t :session_id %></span>
               <span class="session-id"><%= item.session_id %></span>

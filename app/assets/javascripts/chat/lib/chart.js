@@ -7,14 +7,12 @@ this.Chat_Chart = (function() {
       var labels = [];
       var data = [];
       var backgroundColor = [];
-      var borderColor = [];
 
       $.each(dataColumns, function(i,column) {
         console.log(column);
         labels.push(column[0]);
         data.push(column[1]);
-        backgroundColor.push('rgba(54, 162, 235, 0.2)');
-        borderColor.push('rgba(54, 162, 235, 1)');
+        backgroundColor.push(column[2]);
       });
 
       new Chart(this, {
@@ -24,11 +22,11 @@ this.Chat_Chart = (function() {
           datasets: [{
             data: data,
             backgroundColor: backgroundColor,
-            borderColor: borderColor,
             borderWidth: 1
           }],
         },
         options: {
+          responsive: true
         }
       });
     });

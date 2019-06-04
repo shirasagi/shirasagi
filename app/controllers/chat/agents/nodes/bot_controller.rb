@@ -16,6 +16,7 @@ class Chat::Agents::Nodes::BotController < ApplicationController
     history.intent_id = @intent.try(:id)
     history.result = @result
     history.suggest = @intent.try(:suggest)
+    history.click_suggest = params[:text] if params[:click_suggest].present?
     history.site_id = @cur_site.id
     history.node_id = @cur_node.id
     history.save
