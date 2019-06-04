@@ -2,6 +2,7 @@ ja:
   chat:
     bot: チャットボット
     report: レポート
+    session_count: セッション数
 
   modules:
     chat: チャット
