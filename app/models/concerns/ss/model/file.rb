@@ -35,7 +35,7 @@ module SS::Model::File
     validates :model, presence: true
     validates :state, presence: true
     validates :filename, presence: true, if: ->{ in_file.blank? && in_files.blank? }
-    validates :content_type, presence: true
+    validates :content_type, presence: true, if: ->{ in_file.blank? && in_files.blank? }
     validate :validate_filename, if: ->{ filename.present? }
     validates_with SS::FileSizeValidator, if: ->{ size.present? }
 
