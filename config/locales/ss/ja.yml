@@ -370,6 +370,7 @@ ja:
       ss/link_file: ファイル
       ss/notification/reply:
         discussion: 電子会議室
+      ss/elasticsearch/site_setting: サイト内検索設定
 
   mongoid:
     models:
@@ -638,6 +639,8 @@ ja:
         reply_module: 返信モジュール名
         reply_model: 返信モデル名
         reply_item_id: 返信ID
+      ss/addon/elasticsearch/site_setting:
+        elasticsearch_hosts: 全文検索サーバー
 
   tooltip:
     ss/model/user:

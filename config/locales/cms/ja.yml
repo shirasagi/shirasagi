@@ -317,6 +317,7 @@ ja:
       cms/archive: アーカイブ
       cms/photo_album: 写真一覧
       cms/group_page: グループ別ページリスト
+      cms/site_search: サイト内検索
     parts:
       cms/free: HTML記述
       cms/node: フォルダーリスト

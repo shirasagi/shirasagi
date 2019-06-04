@@ -4,22 +4,29 @@ class Cms::PageRelease
   include SS::Reference::User
   include SS::Reference::Site
 
-  # index({ site_id: 1, filename: 1 })
+  index({ created: 1 }, { expire_after_seconds: 3.months })
+  index({ site_id: 1, filename: 1 })
 
   field :state, type: String, default: "active"
+  field :es_state, type: String
   field :filename, type: String
   field :action, type: String, default: "release"
+
+  belongs_to :page, class_name: "Cms::Page"
 
   validates :state, presence: true
   validates :filename, presence: true
   validates :action, presence: true
+  validates :page_id, presence: true
 
   scope :active, ->{ where(state: 'active') }
+  scope :unindexed, -> { where(es_state: nil) }
 
   def set_page(page)
     self.cur_user = page.user
     self.cur_site = page.site
     self.filename = page.filename
+    self.page_id = page.id
     self
   end
 
