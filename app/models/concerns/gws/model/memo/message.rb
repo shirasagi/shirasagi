@@ -497,8 +497,11 @@ module Gws::Model
       end
 
       def search_priorities(params = {})
-        return all if params.blank? || params[:priorities].blank?
-        all.and([priority: { "$in" => params[:priorities].to_a }])
+        return all if params.blank?
+        priorities = params[:priorities].to_a.select(&:present?)
+
+        return all if priorities.blank?
+        all.and([priority: { "$in" => priorities }])
       end
 
       def unseens(user, site)

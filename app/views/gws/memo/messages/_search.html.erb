@@ -1,6 +1,6 @@
 <%
   @s = OpenStruct.new params[:s]
-  style = @s.to_h.values.select(&:present?).present? ? '' : 'style="display:none;"'
+  style = @s.to_h.values.flatten.select(&:present?).present? ? '' : 'style="display:none;"'
 %>
 
 <%= jquery do %>
