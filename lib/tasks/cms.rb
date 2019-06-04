@@ -1,5 +1,5 @@
 module Tasks
-  class Cms
+  module Cms
     class << self
       def generate_nodes
         each_sites do |site|

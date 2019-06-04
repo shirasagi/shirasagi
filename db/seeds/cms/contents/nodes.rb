@@ -186,6 +186,9 @@ save_node route: "cms/archive", filename: "docs/archive", name: "アーカイブ
 ## photo album
 save_node route: "cms/photo_album", filename: "docs/photo", name: "写真一覧", layout_id: @layouts["pages"].id, conditions: %w(docs)
 
+## site search
+save_node route: "cms/site_search", filename: "search", name: "サイト内検索"
+
 ## sitemap
 save_node route: "sitemap/page", filename: "sitemap", name: "サイトマップ"
 

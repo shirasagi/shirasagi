@@ -264,6 +264,7 @@ SS::Application.routes.draw do
     resources :layouts, concerns: :deletion
     resources :archives, only: [:index]
     resources :photo_albums, only: [:index]
+    resources :site_searches, only: [:index]
     get "search_contents/:id" => "page_search_contents#show", as: "page_search_contents"
     get "search_contents/:id/download" => "page_search_contents#download", as: "download_page_search_contents"
   end
@@ -279,6 +280,7 @@ SS::Application.routes.draw do
     get "archive/:ymd/(index.:format)" => "public#index", cell: "nodes/archive", ymd: /\d+/
     get "archive" => "public#redirect_to_archive_index", cell: "nodes/archive"
     get "photo_album" => "public#index", cell: "nodes/photo_album"
+    get "site_search/(index.:format)" => "public#index", cell: "nodes/site_search"
   end
 
   part "cms" do

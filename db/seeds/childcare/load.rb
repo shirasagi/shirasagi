@@ -350,6 +350,9 @@ save_node route: "ads/banner", filename: "ads", name: "広告バナー"
 save_node route: "ads/banner", filename: "relation", name: "関連サイト"
 save_node route: "ads/banner", filename: "sub-menu", name: "サブメニュー"
 
+## site search
+save_node route: "cms/site_search", filename: "search", name: "サイト内検索"
+
 ## sitemap
 save_node route: "sitemap/page", filename: "sitemap", name: "サイトマップ",
   layout_id: layouts["folder"].id, order: 1000
