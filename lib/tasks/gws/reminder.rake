@@ -4,7 +4,7 @@ namespace :gws do
       # this rake task is intended for backward compatibility
       # use `gws:notification:deliver` task
       task deliver: :environment do
-        ::Tasks::SS::Notification.deliver_reminder
+        ::Tasks::Gws::Notification.deliver_reminder
       end
     end
   end
