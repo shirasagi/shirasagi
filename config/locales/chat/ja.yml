@@ -63,6 +63,7 @@ ja:
         first_text: 開始時文章
         first_suggest: 開始時サジェスト
         exception_text: 例外文章
+        question: 質問
         intent_ids: シナリオ
         chat_category_ids: シナリオカテゴリー
 
@@ -103,3 +104,5 @@ ja:
         - 改行でサジェストを複数設定できます。
       exception_text:
         - 対応するフレーズが見つからない場合に返答する文章を設定できます。
+      question:
+        - シナリオにサジェストがない場合に表示される質問文を設定できます。
