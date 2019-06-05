@@ -15,6 +15,7 @@ class SS::StreamingFile
     basename = ::File.basename(::Addressable::URI.unescape(in_remote_url))
     self.name = basename if name.blank?
     self.filename = basename if filename.blank?
+    self.content_type = ::SS::MimeType.find(filename, "application/octet-stream")
   end
 
   # not implemented save_file for grid-fs mode

@@ -52,7 +52,7 @@ class Cms::Member
 
     def to_csv
       CSV.generate do |data|
-        data << %w(id state name email kana organization_name job tel postal_code addr sex birthday updated created)
+        data << %w(id state name email kana organization_name job tel postal_code addr sex birthday updated created).map { |k| t(k) }
         criteria.each do |item|
           line = []
           line << item.id
