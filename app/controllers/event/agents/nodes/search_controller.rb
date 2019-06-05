@@ -31,7 +31,9 @@ class Event::Agents::Nodes::SearchController < ApplicationController
     @start_date = Date.parse(@start_date) if @start_date.present?
     @close_date = Date.parse(@close_date) if @close_date.present?
     @facility_name = safe_params[:facility_name].presence
-    @facility_ids = Facility::Node::Page.site(@cur_site).where(name: /#{@facility_name}/).pluck(:id) if @facility_name.present?
+    if @facility_name.present?
+      @facility_ids = Facility::Node::Page.site(@cur_site).where(name: /#{::Regexp.escape(@facility_name)}/).and_public.pluck(:id)
+    end
   end
 
   def list_events
