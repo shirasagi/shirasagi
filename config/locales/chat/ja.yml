@@ -3,6 +3,8 @@ ja:
     bot: チャットボット
     report: レポート
     session_count: セッション数
+    links:
+      add_suggest: サジェストを追加する
 
   modules:
     chat: チャット
