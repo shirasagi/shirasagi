@@ -7,25 +7,13 @@
     <% @items.each do |item| %>
       <li class="list-item">
         <div class="info">
-          <h3 class="text"><%= item.text %></h3>
+          <h3 class="text"><%= link_to item.text, chat_history_path(id: item.id) %></h3>
           <div class="meta">
             <span class="id">#<%= item.id %></span>
             <span class="datetime"><%= I18n.l(item.created) %></span>
-            <% if item.try(:intent) %>
-              <span class="intent"><%= link_to item.intent.name, chat_intent_path(id: item.intent_id) %></span>
-            <% end %>
-            <% if item.try(:result) %>
-              <span class="result"><%= item.result %></span>
-            <% end %>
-            <% if item.try(:suggest) %>
-              <span class="suggest"><%= item.suggest %></span>
-            <% end %>
-            <% if item.try(:click_suggest) %>
-              <span class="click-suggest"><%= item.click_suggest %></span>
-            <% end %>
             <% if item.try(:session_id) %>
               <span class="label"><%= @model.t :session_id %></span>
-              <span class="session-id"><%= item.session_id %></span>
+              <span class="session-id"><%= link_to item.session_id, chat_histories_path(s: @s.to_h.merge(session_id: item.session_id)) %></span>
             <% end %>
             <% if item.try(:request_id) %>
               <span class="label"><%= @model.t :request_id %></span>

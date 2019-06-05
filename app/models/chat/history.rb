@@ -3,9 +3,6 @@ class Chat::History
   include SS::Document
   include SS::Reference::Site
   include SS::Reference::User
-  include Cms::Addon::GroupPermission
-
-  set_permission_name 'chat_bots'
 
   index({ created: -1, id: -1 })
 
@@ -32,7 +29,22 @@ class Chat::History
         criteria = criteria.search_text params[:name]
       end
       if params[:keyword].present?
-        criteria = criteria.keyword_in params[:keyword], :session_id, :request_id, :text, :result, :suggest
+        criteria = criteria.keyword_in params[:keyword], :session_id, :request_id, :text, :result, :suggest, :click_suggest
+      end
+      if params[:year].present?
+        year = params[:year].to_i
+        if params[:month].present?
+          month = params[:month].to_i
+          sdate = Date.new year, month, 1
+          edate = sdate + 1.month
+        else
+          sdate = Date.new year, 1, 1
+          edate = sdate + 1.year
+        end
+        criteria = criteria.where("updated" => { "$gte" => sdate, "$lt" => edate })
+      end
+      if params[:session_id].present?
+        criteria = criteria.where(session_id: params[:session_id])
       end
       criteria
     end

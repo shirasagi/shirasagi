@@ -1,6 +1,6 @@
-class Chat::HistoryController < ApplicationController
+class Chat::HistoriesController < ApplicationController
   include Cms::BaseFilter
-  include History::LogFilter::View
+  include SS::CrudFilter
 
   model Chat::History
 
@@ -43,6 +43,29 @@ class Chat::HistoryController < ApplicationController
   end
 
   public
+
+  def index
+    raise "403" unless @cur_node.allowed?(:read, @cur_user, site: @cur_site)
+    @items = @model.where(cond).
+      search(params[:s]).
+      order_by(updated: -1).
+      page(params[:page]).per(50)
+  end
+
+  def show
+    raise "403" unless @cur_node.allowed?(:read, @cur_user, site: @cur_site)
+    render
+  end
+
+  def delete
+    raise "403" unless @cur_node.allowed?(:edit, @cur_user, site: @cur_site)
+    render
+  end
+
+  def destroy
+    raise "403" unless @cur_node.allowed?(:edit, @cur_user, site: @cur_site)
+    render_destroy @item.destroy
+  end
 
   def download
     raise "403" unless @cur_node.allowed?(:read, @cur_user, site: @cur_site)

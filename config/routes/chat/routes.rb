@@ -7,6 +7,10 @@ SS::Application.routes.draw do
     delete :destroy_all, on: :collection, path: ''
   end
 
+  concern :download do
+    get :download, on: :collection
+  end
+
   namespace "chat", path: ".s:site/chat" do
     namespace 'apis' do
       get 'categories' => 'categories#index'
@@ -18,8 +22,7 @@ SS::Application.routes.draw do
     get "/bots" => redirect { |p, req| "#{req.path}/../intents" }
     resources :intents, concerns: :deletion
     resources :categories, concerns: :deletion
-    get 'history' => 'history#index'
-    get 'history/download' => 'history#download'
+    resources :histories, concerns: [:deletion, :download], only: [:index, :show, :destroy]
     get 'report' => 'report#index'
   end
 
