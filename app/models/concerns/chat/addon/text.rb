@@ -7,12 +7,13 @@ module Chat::Addon
       field :first_text, type: String
       field :first_suggest, type: SS::Extensions::Words
       field :exception_text, type: String
+      field :response_template, type: String
       field :question, type: String
 
       has_many :intents, class_name: "Chat::Intent", order: :order.asc, dependent: :destroy
       has_many :chat_categories, class_name: "Chat::Category", order: :order.asc, dependent: :destroy
 
-      permit_params :first_text, :first_suggest, :exception_text, :question
+      permit_params :first_text, :first_suggest, :exception_text, :response_template, :question
 
       before_destroy :destroy_intents
     end

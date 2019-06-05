@@ -9,6 +9,9 @@
   <dt><%= @model.t(:exception_text) %></dt>
   <dd><%= text_area_tag "mod-chat-text-exception-text", @item.exception_text, class: 'html', style: "height: 400px;" %></dd>
 
+  <dt><%= @model.t(:response_template) %></dt>
+  <dd><%= text_area_tag "mod-chat-text-response_template", @item.response_template, class: 'html', style: "height: 400px;" %></dd>
+
   <dt><%= @model.t(:question) %></dt>
   <dd><%= @item.question %></dd>
 </dl>
