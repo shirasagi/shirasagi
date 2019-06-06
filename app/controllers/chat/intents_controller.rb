@@ -17,7 +17,7 @@ class Chat::IntentsController < ApplicationController
   end
 
   def pre_params
-    { name: params[:name], phrase: params[:name], response: @cur_node.becomes_with_route.response_template }
+    { name: params[:name], phrase: params[:name] }
   end
 
   public
