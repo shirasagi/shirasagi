@@ -4,7 +4,7 @@ ja:
     report: レポート
     session_count: セッション数
     links:
-      add_suggest: サジェストを追加する
+      add_or_edit_suggest: サジェストを追加または編集する
 
   modules:
     chat: チャット
