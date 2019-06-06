@@ -1,10 +1,13 @@
 ja:
   chat:
     bot: チャットボット
+    first_suggest: 最初のサジェスト
+    loop_intent: 循環参照されているシナリオです。
+    not_found_intent: シナリオが作成されていません。
     report: レポート
     session_count: セッション数
     links:
-      add_or_edit_suggest: サジェストを追加または編集する
+      add_or_edit: 追加または編集する
 
   modules:
     chat: チャット
@@ -57,6 +60,7 @@ ja:
         response: 返答
         order: 並び順
         node_id: フォルダー
+        error: エラー
       chat/addon/category:
         category_ids: カテゴリー
       chat/addon/path:
