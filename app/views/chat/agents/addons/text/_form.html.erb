@@ -14,4 +14,10 @@
 
   <dt><%= @model.t :question %><%= @model.tt :question %></dt>
   <dd><%= f.text_area :question %></dd>
+
+  <dt><%= @model.t :chat_success %><%= @model.tt :chat_success %></dt>
+  <dd><%= f.text_area :chat_success, class: 'html' %></dd>
+
+  <dt><%= @model.t :chat_retry %><%= @model.tt :chat_retry %></dt>
+  <dd><%= f.text_area :chat_retry, class: 'html' %></dd>
 </dl>

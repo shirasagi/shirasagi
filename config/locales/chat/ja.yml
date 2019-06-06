@@ -67,6 +67,8 @@ ja:
         exception_text: 例外文章
         response_template: 返答テンプレート
         question: 質問
+        chat_success: 質問返答(はい)
+        chat_retry: 質問返答(いいえ)
         intent_ids: シナリオ
         chat_category_ids: シナリオカテゴリー
 
@@ -111,3 +113,7 @@ ja:
         - シナリオ作成時の初期値を設定します。
       question:
         - シナリオにサジェストがない場合に表示される質問文を設定できます。
+      chat_success:
+        - 質問に対して"はい"を押された場合に表示される文章を設定できます。
+      chat_retry:
+        - 質問に対して"いいえ"を押された場合に表示される文章を設定できます。

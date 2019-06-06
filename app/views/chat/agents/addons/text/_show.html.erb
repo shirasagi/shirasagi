@@ -10,8 +10,14 @@
   <dd><%= text_area_tag "mod-chat-text-exception-text", @item.exception_text, class: 'html', style: "height: 400px;" %></dd>
 
   <dt><%= @model.t(:response_template) %></dt>
-  <dd><%= text_area_tag "mod-chat-text-response_template", @item.response_template, class: 'html', style: "height: 400px;" %></dd>
+  <dd><%= text_area_tag "mod-chat-text-response-template", @item.response_template, class: 'html', style: "height: 400px;" %></dd>
 
   <dt><%= @model.t(:question) %></dt>
   <dd><%= @item.question %></dd>
+
+  <dt><%= @model.t(:chat_success) %></dt>
+  <dd><%= text_area_tag "mod-chat-text-chat-success", @item.chat_success, class: 'html', style: "height: 400px;" %></dd>
+
+  <dt><%= @model.t(:chat_retry) %></dt>
+  <dd><%= text_area_tag "mod-chat-text-chat-retry", @item.chat_retry, class: 'html', style: "height: 400px;" %></dd>
 </dl>

@@ -6,7 +6,7 @@ class Chat::Agents::Nodes::BotController < ApplicationController
   private
 
   def create_chat_history
-    return if params[:text].blank?
+    return if @result == @cur_node.becomes_with_route.first_text
     history = Chat::History.new(params.permit(Chat::History.permitted_fields))
     history.session_id = request.session.id
     history.request_id = request.uuid
@@ -26,10 +26,16 @@ class Chat::Agents::Nodes::BotController < ApplicationController
 
   def index
     @intent = Chat::Intent.site(@cur_site).where(node_id: @cur_node.id).find_intent(params[:text])
-    @result = if params[:text].present?
-                @intent.try(:response).presence || @cur_node.becomes_with_route.exception_text
-              else
-                @cur_node.becomes_with_route.first_text
-              end
+    if params[:question] == 'success'
+      @result = @cur_node.becomes_with_route.chat_success
+    elsif params[:question] == 'retry'
+      @result = @cur_node.becomes_with_route.chat_retry
+    elsif params[:text].present?
+      @suggest = @intent.try(:suggest)
+      @result = @intent.try(:response).presence || @cur_node.becomes_with_route.exception_text
+    else
+      @suggest = @cur_node.becomes_with_route.first_suggest
+      @result = @cur_node.becomes_with_route.first_text
+    end
   end
 end
