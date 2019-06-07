@@ -15,6 +15,7 @@ class Event::Page
   include Cms::Addon::AdditionalInfo
   include Event::Addon::Date
   include Map::Addon::Page
+  include Event::Addon::Facility
   include Cms::Addon::Tag
   include Cms::Addon::RelatedPage
   include Cms::Addon::Release

@@ -21,6 +21,8 @@ ja:
       setting: カテゴリー
     search:
       no-result: 検索結果が見つかりませんでした。
+    facility:
+      setting: 施設
 
     links:
       ical_refresh: iCal配信取込
@@ -68,6 +70,8 @@ ja:
         start_blank: 開始日を入力してください。
         end_blank: 終了日を入力してください。
         not_found_dates: 該当する日付が見つかりませんでした。
+      facilities:
+        index: 施設を選択する
 
     tooltips:
       file_import:
@@ -82,6 +86,7 @@ ja:
       event/body: イベント情報
       event/ical_import: ical取り込み
       event/ical_link: iCal情報
+      event/facility: 施設
 
   cms:
     nodes:
@@ -152,6 +157,9 @@ ja:
       event/addon/ical_link:
         ical_uid: ソースID
         ical_link: ソースURL
+      event/addon/facility:
+        facilities: 施設
+        facility_ids: 施設
 
   datetime:
     prompts:
@@ -292,3 +300,6 @@ ja:
     event/page:
       file_import:
         - "CSV形式またはiCal形式のファイルをインポートすることができます。"
+    event/addon/facility:
+      facility_ids:
+        - イベントに関係する施設を設定します。
