@@ -17,7 +17,7 @@ class Chat::HistoriesController < ApplicationController
   end
 
   def send_csv(items)
-    headers = %w(id session_id request_id text result suggest click_suggest node_id prev_intent_id intent_id)
+    headers = %w(id session_id request_id text question result suggest click_suggest node_id prev_intent_id intent_id)
     headers.map! { |key| @model.t(key) }
     csv = CSV.generate do |data|
       data << headers
@@ -27,6 +27,7 @@ class Chat::HistoriesController < ApplicationController
         row << item.session_id
         row << item.request_id
         row << item.text
+        row << item.question
         row << item.result
         row << item.suggest
         row << item.click_suggest
