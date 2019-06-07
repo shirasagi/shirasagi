@@ -1,4 +1,4 @@
-<nav class="nav-menu">
+<nav class="nav-menu gws-survey">
   <% if params[:action] =~ /index/ %>
     <% if @model.allowed?(:edit, @cur_user, site: @cur_site) %>
       <%= link_to t('ss.links.new'), action: :new %>
@@ -11,6 +11,11 @@
       <%= link_to t('ss.links.delete'), action: :delete, id: @item %>
     <% end %>
     <%= link_to t('ss.links.back_to_index'), gws_survey_readables_path %>
+    <div class="print">
+      <%= button_tag t('ss.buttons.print'), type: 'button', class: %w(btn btn-print),
+       onclick: "location.href='#{url_for(action: :print, id: @item)}'; return false;"
+      %>
+    </div>
   <% else %>
     <% if @item.allowed?(:edit, @cur_user, site: @cur_site) %>
       <%= link_to t('ss.links.edit'), action: :edit, id: @item %>

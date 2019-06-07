@@ -1,0 +1,19 @@
+<% link = params[:source] == 'editable' ?  gws_survey_editable_path(id: @cur_form.id) : { action: :edit } %>
+<%= render 'ss/crud/print_preview_head', links: [[ I18n.t('ss.links.back'), link ]] %>
+
+<section class="main-box" style="background: transparent; border: transparent;">
+  <%= form_for :item, url: {action: :update}, html: {id: "item-form", method: :put, multipart: true, autocomplete: :off} do |f| %>
+    <%= error_messages_for :item %>
+
+    <div class="addon-views gws-survey">
+      <%= render file: '_basic_info' %>
+      <%= render file: '_tabs', locals: { cur_tab: 'personal' } %>
+
+      <div class="addon-view">
+        <div class="addon-body" style="border-top: none">
+          <%= render file: '_form', locals: { f: f } %>
+        </div>
+      </div>
+    </div>
+  <% end %>
+</section>

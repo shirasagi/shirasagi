@@ -8,7 +8,7 @@ class Gws::Survey::FilesController < ApplicationController
   before_action :set_cur_form
   before_action :check_form_permissions
   before_action :set_items
-  before_action :set_item, only: %i[show edit update delete destroy others]
+  before_action :set_item, only: %i[show edit update delete destroy others print]
 
   navi_view "gws/survey/main/navi"
 
@@ -132,5 +132,10 @@ class Gws::Survey::FilesController < ApplicationController
   def others
     raise '404' if @cur_form.file_closed?
     @items = @items.ne(user_id: @cur_user.id).order_by(updated: -1).page(params[:page]).per(50)
+  end
+
+  def print
+    @portrait = 'horizontal'
+    render layout: 'ss/print'
   end
 end
