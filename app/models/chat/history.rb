@@ -10,6 +10,7 @@ class Chat::History
   field :session_id, type: String
   field :request_id, type: String
   field :text, type: String
+  field :question, type: String
   field :result, type: String
   field :suggest, type: SS::Extensions::Words
   field :click_suggest, type: String
@@ -18,7 +19,11 @@ class Chat::History
   belongs_to :prev_intent, class_name: "Chat::Intent"
   belongs_to :intent, class_name: "Chat::Intent"
 
-  permit_params :text
+  permit_params :text, :question
+
+  def question_options
+    self.class.question_options
+  end
 
   class << self
     def search(params)
@@ -47,6 +52,12 @@ class Chat::History
         criteria = criteria.where(session_id: params[:session_id])
       end
       criteria
+    end
+
+    def question_options
+      %w(success retry).collect do |m|
+        [I18n.t("chat.options.question.#{m}"), m]
+      end
     end
   end
 end

@@ -8,6 +8,10 @@ ja:
     session_count: セッション数
     links:
       add_or_edit: 追加または編集する
+    options:
+      question:
+        success: はい
+        retry: いいえ
 
   modules:
     chat: チャット
@@ -47,6 +51,7 @@ ja:
         session_id: セッションID
         request_id: リクエストID
         text: 文章
+        question: 質問
         result: 返答
         suggest: サジェスト
         click_suggest: 使用したサジェスト

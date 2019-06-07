@@ -7,7 +7,15 @@
     <% @items.each do |item| %>
       <li class="list-item">
         <div class="info">
-          <h3 class="text"><%= link_to item.text, chat_history_path(id: item.id) %></h3>
+          <h3 class="text">
+            <%= link_to chat_history_path(id: item.id) do %>
+              <% if item.question.present? %>
+                <%= @cur_node.becomes_with_route.question %> → <%= item.label(:question) %>
+              <% else %>
+                <%= item.text %>
+              <% end %>
+            <% end %>
+          </h3>
           <div class="meta">
             <span class="id">#<%= item.id %></span>
             <span class="datetime"><%= I18n.l(item.created) %></span>
