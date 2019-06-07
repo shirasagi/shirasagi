@@ -144,4 +144,50 @@ class Gws::Survey::Form
 
     true
   end
+
+  def new_clone(opts = {})
+    dest_site = opts[:site] || site
+    dest_user = opts[:user] || user
+    dest_name = opts[:name] || name
+
+    dest = self.class.new
+    dest.site = dest_site
+    dest.user = dest_user
+    dest.name = dest_name
+    dest.description = description
+    dest.anonymous_state = anonymous_state
+    dest.file_state = file_state
+    dest.file_edit_state = file_edit_state
+    dest.due_date = due_date
+    dest.release_date = release_date
+    dest.close_date = close_date
+    dest.memo = memo
+    dest.category_ids = category_ids
+    dest.contributor_model = dest_user.class.to_s
+    dest.contributor_id = dest_user.id
+    dest.contributor_name = dest_user.long_name
+    dest.readable_setting_range = readable_setting_range
+    dest.readable_custom_group_ids = readable_custom_group_ids
+    dest.readable_group_ids = readable_group_ids
+    dest.readable_member_ids = readable_member_ids
+    dest.custom_group_ids = custom_group_ids
+    dest.group_ids = group_ids
+    dest.user_ids = user_ids
+    dest.permission_level = permission_level
+    dest.state = "closed"
+
+    return dest unless dest.valid?
+
+    dest_columns = self.columns.map do |column|
+      attr = column.attributes.except("_id", "_type", "form_id", "site_id", "created", "updated")
+      dest_column = column.class.new attr
+      dest_column.site = dest_site
+      dest_column.form = dest
+      dest_column.save
+      dest_column
+    end
+    dest.columns = dest_columns
+
+    dest
+  end
 end

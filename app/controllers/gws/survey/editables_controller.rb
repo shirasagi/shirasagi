@@ -6,7 +6,7 @@ class Gws::Survey::EditablesController < ApplicationController
   before_action :set_category
   before_action :set_search_params
   before_action :set_items
-  before_action :set_item, only: [:show, :edit, :update, :soft_delete, :move, :publish, :depublish]
+  before_action :set_item, only: [:show, :edit, :update, :soft_delete, :move, :publish, :depublish, :copy]
   before_action :respond_404_if_item_is_public, only: [:edit, :update, :soft_delete, :move]
   before_action :set_selected_items, only: [:destroy_all, :soft_delete_all]
 
@@ -119,5 +119,21 @@ class Gws::Survey::EditablesController < ApplicationController
     @item.state = 'closed'
     render_opts = { render: { file: :depublish }, notice: t('ss.notice.depublished') }
     render_update @item.save, render_opts
+  end
+
+  def copy
+    @copy = @model.new
+
+    if @copy.name.nil?
+      prefix = I18n.t("workflow.cloned_name_prefix")
+      @copy.name = "[#{prefix}] #{@item.name}"
+    end
+    return if request.get?
+
+    name = params.dig(:copy, :name)
+    @copy = @item.new_clone(site: @cur_site, user: @cur_user, name: name)
+
+    render_opts = { location: { action: :index },  render: { file: :copy }, notice: t('ss.notice.copied') }
+    render_create @copy.save, render_opts
   end
 end
