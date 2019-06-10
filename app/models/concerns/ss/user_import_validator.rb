@@ -75,7 +75,7 @@ module SS::UserImportValidator
       errors.add :base, I18n.t("errors.messages.not_found_group", name: key)
     end
 
-    if imported_group_keys.find { |key| key.start_with?(imported_gws_group.name) }.blank?
+    if imported_gws_group && imported_group_keys.find { |key| key.start_with?(imported_gws_group.name) }.blank?
       errors.add :group_ids, :blank
     end
   end
