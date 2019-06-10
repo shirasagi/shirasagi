@@ -150,7 +150,9 @@ module Gws::Monitor::TopicFilter
     @item.attend_groups.each do |group|
       if @item.comment(group.id).present?
         download_file_ids = @item.comment(group.id)[0]
-        @download_file_group_ssfile_ids << [File.basename(download_file_ids.user_group_name), download_file_ids.file_ids]
+        order = group.order || 0
+        filename = "#{order}_#{File.basename(download_file_ids.user_group_name)}"
+        @download_file_group_ssfile_ids << [filename, download_file_ids.file_ids]
       end
     end
 
@@ -164,7 +166,9 @@ module Gws::Monitor::TopicFilter
 
     @owner_ssfile = []
     @item.file_ids.each do |fileids|
-      @owner_ssfile.push([ File.basename(@cur_group.name), SS::File.find_by(id: fileids)])
+      order = @cur_group.order || 0
+      filename = "#{order}_#{File.basename(@cur_group.name)}"
+      @owner_ssfile.push([filename, SS::File.find_by(id: fileids)])
     end
 
     zipfile = @item.name + ".zip"
