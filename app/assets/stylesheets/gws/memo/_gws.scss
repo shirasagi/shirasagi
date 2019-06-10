@@ -214,13 +214,20 @@ table.index.gws-memo-folder {
 }
 
 .gws-memo-search {
-  display: none;
   margin: 0 10px;
   padding: 10px 20px;
   border-bottom: 1px solid #eee;
 
   input[type="text"] {
     width: 300px;
+  }
+  input.date {
+    width: 9em;
+    text-align: center;
+  }
+  label.flag {
+    width: auto;
+    padding: 0 15px 0 15px;
   }
 }
 

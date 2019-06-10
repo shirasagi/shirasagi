@@ -57,20 +57,6 @@ module Gws::Model
 
       validates :subject, presence: true
 
-      # scope :search, ->(params) {
-      #   criteria = where({})
-      #   return criteria if params.blank?
-      #
-      #   if params[:subject].present?
-      #     criteria = criteria.keyword_in params[:subject], :subject
-      #   end
-      #
-      #   params.values_at(:text, :html).reject(&:blank?).each do |value|
-      #     criteria = criteria.keyword_in value, :text, :html
-      #   end
-      #
-      #   criteria
-      # }
       scope :and_public, -> { where(state: "public") }
       scope :and_closed, -> { self.and('$or' => [ { :state.ne => "public" }, { :state.exists => false } ]) }
       scope :folder, ->(folder, user) {
@@ -440,7 +426,16 @@ module Gws::Model
 
     module ClassMethods
       def search(params)
-        all.search_keyword(params).search_subject(params).search_text_or_html(params).search_state(params).search_unseen(params)
+        all.search_keyword(params).
+          search_from_member_name(params).
+          search_to_member_name(params).
+          search_subject(params).
+          search_text_or_html(params).
+          search_date(params).
+          search_state(params).
+          search_unseen(params).
+          search_flagged(params).
+          search_priorities(params)
       end
 
       def search_keyword(params = {})
@@ -448,15 +443,19 @@ module Gws::Model
         all.keyword_in(params[:keyword], :subject, :text, :html)
       end
 
+      def search_from_member_name(params = {})
+        return all if params.blank? || params[:from_member_name].blank?
+        all.keyword_in params[:from_member_name], :from_member_name
+      end
+
+      def search_to_member_name(params = {})
+        return all if params.blank? || params[:to_member_name].blank?
+        all.keyword_in params[:to_member_name], :to_member_name
+      end
+
       def search_subject(params = {})
         return all if params.blank? || params[:subject].blank?
         all.keyword_in params[:subject], :subject
-      end
-
-      def search_unseen(params = {})
-        return all if params.blank? || params[:unseen].blank?
-        user_id = params[:unseen]
-        where(user_settings: { "$elemMatch" => { user_id: user_id.to_i, seen_at: { "$exists" => false } } })
       end
 
       def search_text_or_html(params = {})
@@ -472,6 +471,37 @@ module Gws::Model
       def search_state(params = {})
         return all if params.blank? || params[:state].blank?
         all.where(state: params[:state])
+      end
+
+      def search_date(params)
+        return all if params.blank?
+
+        cond = []
+        cond << [ send_date: { "$gte" => params[:since] } ] if params[:since].present?
+        cond << [ send_date: { "$lte" => params[:before] } ] if params[:before].present?
+
+        return all if cond.blank?
+        all.and(cond)
+      end
+
+      def search_unseen(params = {})
+        return all if params.blank? || params[:unseen].blank?
+        user_id = params[:unseen]
+        all.and(user_settings: { "$elemMatch" => { user_id: user_id.to_i, seen_at: { "$exists" => false } } })
+      end
+
+      def search_flagged(params = {})
+        return all if params.blank? || params[:flagged].blank?
+        user_id = params[:flagged]
+        all.and("star.#{user_id}" => { "$exists" => true })
+      end
+
+      def search_priorities(params = {})
+        return all if params.blank?
+        priorities = params[:priorities].to_a.select(&:present?)
+
+        return all if priorities.blank?
+        all.and([priority: { "$in" => priorities }])
       end
 
       def unseens(user, site)
