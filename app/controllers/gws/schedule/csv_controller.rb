@@ -1,7 +1,9 @@
 class Gws::Schedule::CsvController < ApplicationController
   include Gws::BaseFilter
-  #include Gws::CrudFilter
+  include Gws::CrudFilter
   include Gws::Schedule::PlanFilter
+
+  model Gws::Schedule::PlanCsv::Importer
 
   navi_view "gws/schedule/main/navi"
 
@@ -15,11 +17,11 @@ class Gws::Schedule::CsvController < ApplicationController
   public
 
   def index
-    @item = Gws::Schedule::PlanCsv::Importer.new #get_params
+    @item = @model.new
   end
 
   def import
-    @item = Gws::Schedule::PlanCsv::Importer.new params[:item]
+    @item = @model.new get_params
     @item.cur_user = @cur_user
     @item.cur_site = @cur_site
 

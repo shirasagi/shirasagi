@@ -23,6 +23,7 @@ describe "gws_schedule_csv", type: :feature, dbscope: :example, js: true do
         end
       end
       expect(current_path).to eq csv_path
+      expect(page).to have_css("div.mb-1", text: I18n.t('ss.errors.import.blank_file'))
     end
   end
 end
