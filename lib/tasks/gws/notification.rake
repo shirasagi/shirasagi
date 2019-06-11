@@ -1,7 +1,7 @@
 namespace :gws do
   namespace :notification do
     task deliver: :environment do
-      ::Tasks::SS::Notification.deliver
+      ::Tasks::Gws::Notification.deliver
     end
   end
- end
+end
