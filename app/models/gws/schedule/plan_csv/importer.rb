@@ -13,7 +13,6 @@ class Gws::Schedule::PlanCsv::Importer
 
   permit_params :in_file
 
-  #validates :in_file, presence: true
   validates :cur_site, presence: true
   validate :validate_import
 
