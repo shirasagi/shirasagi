@@ -100,7 +100,6 @@ group :development, :test do
   gem 'guard'
   gem 'guard-rspec', '~> 4.3.1'
   gem 'guard-rubocop', '~> 1.1.0'
-  gem 'poltergeist', require: false
   gem 'selenium-webdriver', require: false
   gem 'webdrivers'
   gem 'pry-rails'

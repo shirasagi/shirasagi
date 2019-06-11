@@ -128,7 +128,6 @@ GEM
     childprocess (1.0.1)
       rake (< 13.0)
     clam_scan (0.0.2)
-    cliver (0.3.2)
     coderay (1.1.2)
     coffee-rails (4.2.2)
       coffee-script (>= 2.2.0)
@@ -353,10 +352,6 @@ GEM
     parser (2.5.1.0)
       ast (~> 2.4.0)
     pdf-core (0.7.0)
-    poltergeist (1.18.1)
-      capybara (>= 2.1, < 4)
-      cliver (~> 0.3.1)
-      websocket-driver (>= 0.2.0)
     powerpack (0.1.1)
     prawn (2.2.2)
       pdf-core (~> 0.7.0)
@@ -656,7 +651,6 @@ DEPENDENCIES
   omniauth-twitter
   omniauth-yahoojp
   open_uri_redirections
-  poltergeist
   pry-byebug
   pry-doc
   pry-rails
