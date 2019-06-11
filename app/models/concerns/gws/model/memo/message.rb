@@ -55,7 +55,7 @@ module Gws::Model
       before_validation :set_size
       before_validation :set_member_name
 
-      validates :subject, presence: true
+      validates :subject, presence: true, length: { maximum: 200 }
 
       scope :and_public, -> { where(state: "public") }
       scope :and_closed, -> { self.and('$or' => [ { :state.ne => "public" }, { :state.exists => false } ]) }
