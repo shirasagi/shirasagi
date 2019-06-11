@@ -6,8 +6,6 @@ module SS::Addon::Elasticsearch::SiteSetting
     field :elasticsearch_hosts, type: SS::Extensions::Words
 
     permit_params :elasticsearch_hosts
-
-    validates :elasticsearch_hosts, presence: true
   end
 
   def menu_elasticsearch_visible?
