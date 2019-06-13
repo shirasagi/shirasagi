@@ -128,6 +128,7 @@ class Webmail::Mail
       field.include_in_headers = true if field.respond_to?(:include_in_headers)
     end
 
+    imap.examine(imap.draft_box)
     imap.conn.append(imap.draft_box, msg.to_s, [:Draft, :Seen], Time.zone.now)
     if draft?
       imap.select(imap.draft_box)
@@ -154,6 +155,7 @@ class Webmail::Mail
       field.include_in_headers = true if field.respond_to?(:include_in_headers)
     end
 
+    imap.examine(imap.sent_box)
     imap.conn.append(imap.sent_box, msg.to_s, [:Seen], Time.zone.now)
     if draft?
       imap.select(imap.draft_box)

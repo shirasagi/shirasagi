@@ -253,6 +253,9 @@ class Webmail::MailsController < ApplicationController
 
     @item.destroy_files if resp
     render_create resp, notice: notice
+  rescue Net::IMAP::NoResponseError => e
+    @item.errors.add :base, e.to_s
+    render_create false
   end
 
   def destroy
