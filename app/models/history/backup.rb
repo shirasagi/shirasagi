@@ -48,7 +48,10 @@ class History::Backup
 
     begin
       query.update_many('$set' => data)
+
       item = ref_class.constantize.find(self.data["_id"])
+      item.after_restore if item.respond_to?(:after_restore)
+
       current = item.current_backup
       before = item.before_backup
 

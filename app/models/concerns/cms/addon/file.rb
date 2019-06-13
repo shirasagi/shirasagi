@@ -66,6 +66,11 @@ module Cms::Addon
       end
     end
 
+    # support for History::Backup
+    def after_restore
+      files.each{ |file| file.update_attributes(state: state) }
+    end
+
     private
 
     def update_file_owners
