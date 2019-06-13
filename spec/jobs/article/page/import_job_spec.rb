@@ -63,7 +63,7 @@ describe Article::Page::ImportJob, dbscope: :example do
       before do
         source_page
 
-        csv_file = SS::TempFile.create_empty!(name: "#{unique_id}.csv", filename: "#{unique_id}.csv") do |file|
+        csv_file = SS::TempFile.create_empty!(name: "#{unique_id}.csv", filename: "#{unique_id}.csv", content_type: 'text/csv') do |file|
           ::File.open(file.path, "wb") do |f|
             Article::Page.site(site).node(source_node).enum_csv(encoding: "UTF-8").each do |csv_row|
               f.write(csv_row)
