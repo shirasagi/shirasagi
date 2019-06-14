@@ -26,7 +26,7 @@ class Gws::Notice::EditablesController < ApplicationController
 
   def pre_params
     {
-      folder: @folder,
+      folder: @folder
     }
   end
 
