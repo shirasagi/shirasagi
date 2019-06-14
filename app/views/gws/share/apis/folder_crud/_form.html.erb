@@ -1,0 +1,14 @@
+<dl class="see">
+  <dt><%= @model.t :name %><%= @model.tt :name %></dt>
+  <dd>
+    <% if @parent %>
+    <span><%= @parent.name %>/</span>
+    <% end %>
+    <%= f.text_field :in_basename %>
+  </dd>
+</dl>
+
+<% @crud_buttons = proc do |f| %>
+  <%= f.submit t("ss.buttons.save"), class: 'btn-primary save' %>
+  <%= f.button t("ss.buttons.cancel"), class: 'btn-default', type: :reset, onclick: "$.colorbox.close(); return false;" %>
+<% end %>

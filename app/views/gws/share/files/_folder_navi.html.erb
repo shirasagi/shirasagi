@@ -1,9 +1,61 @@
 <div class="addon-views gws-share-file-folder-navi">
-  <%= jquery do %>
-    (new SS_TreeNavi('#gws-share-file-folder-list .tree-navi')).render("<%= @tree_navi %>");
-  <% end %>
-
   <%= render "ss/crud/addon", addon: { id: "gws-share-file-folder-list", head: t("gws/share.folder"), toggle: true } do %>
+    <% tools = [] %>
+    <% if @folder && @folder.allowed?(:edit, @cur_user, site: @cur_site) %>
+      <% tools << button_tag(type: "button", class: "btn btn-create-folder", data: { folder: @folder.id, href: gws_share_apis_new_sub_folder_path(parent_id: @folder) }) do %>
+        <i class="material-icons">
+          create_new_folder
+        </i>
+      <% end %>
+    <% elsif Gws::Share::Folder.allowed?(:edit, @cur_user, site: @cur_site) %>
+      <% tools << button_tag(type: "button", class: "btn btn-create-folder", data: { folder: '-', href: gws_share_apis_new_root_folder_path }) do %>
+        <i class="material-icons">
+          create_new_folder
+        </i>
+      <% end %>
+    <% end %>
+    <% if @folder && @folder.allowed?(:edit, @cur_user, site: @cur_site) %>
+      <% tools << button_tag(type: "button", class: "btn btn-rename-folder", data: { folder: @folder.id, href: gws_share_apis_rename_folder_path(id: @folder) }) do %>
+        <i class="material-icons">
+          edit
+        </i>
+      <% end %>
+    <% end %>
+    <% if @folder && @folder.allowed?(:delete, @cur_user, site: @cur_site) %>
+      <% tools << button_tag(type: "button", class: "btn btn-delete-folder", data: { folder: @folder.id, href: gws_share_apis_delete_folder_path(id: @folder) }) do %>
+        <i class="material-icons">
+          delete
+        </i>
+      <% end %>
+    <% end %>
+    <% if @folder && @folder.allowed?(:edit, @cur_user, site: @cur_site) %>
+      <% tools << content_tag("i", nil, class: "separator") %>
+      <% tools << button_tag(type: "button", class: "btn btn-edit-folder", data: { href: gws_share_folder_path(category: '-', id: @folder) }) do %>
+        <i class="material-icons">
+          settings
+        </i>
+      <% end %>
+    <% end %>
+    <% tools << content_tag("i", nil, class: "separator") %>
+    <% tools << button_tag(type: "button", class: "btn btn-refresh-folder") do %>
+      <i class="material-icons">
+        refresh
+      </i>
+    <% end %>
+    <% if tools.present? %>
+      <div class="toolbar">
+        <% tools.each do |tool| %>
+          <%= tool %>
+        <% end %>
+      </div>
+      <%= jquery do %>
+        var treeNavi = new SS_TreeNavi('#gws-share-file-folder-list .tree-navi');
+        treeNavi.render("<%= @tree_navi %>");
+        <% if tools.present? %>
+          new Gws_Share_FolderToolbar('#gws-share-file-folder-list', { treeNavi: treeNavi });
+        <% end %>
+      <% end %>
+    <% end %>
     <div class="mb-2 tree-item<%= ' is-current' if @folder.blank? %>">
       <%= link_to t('gws/share.all'), gws_share_files_path(category: params[:category]) %>
     </div>

@@ -12,3 +12,17 @@
     flex: 1;
   }
 }
+
+#gws-share-file-folder-list {
+  .toolbar {
+    .material-icons {
+      font-size: 18px;
+    }
+
+    .separator {
+      display: inline-block;
+    }
+
+    margin-bottom: 10px;
+  }
+}

@@ -1,0 +1,6 @@
+<%= render file: "ss/crud/_delete" %>
+
+<% @crud_buttons = proc do |f| %>
+  <%= f.submit t("ss.buttons.delete"), class: 'btn-danger delete' %>
+  <%= f.button t("ss.buttons.cancel"), class: 'btn-default', type: :reset, onclick: "$.colorbox.close(); return false;" %>
+<% end %>
