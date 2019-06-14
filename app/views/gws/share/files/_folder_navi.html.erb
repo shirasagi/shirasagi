@@ -1,0 +1,27 @@
+<div class="addon-views gws-share-file-folder-navi">
+  <%= jquery do %>
+    (new SS_TreeNavi('#gws-share-file-folder-list .tree-navi')).render("<%= @tree_navi %>");
+  <% end %>
+
+  <%= render "ss/crud/addon", addon: { id: "gws-share-file-folder-list", head: t("gws/share.folder"), toggle: true } do %>
+    <div class="mb-2 tree-item<%= ' is-current' if @folder.blank? %>">
+      <%= link_to t('gws/share.all'), gws_share_files_path(category: params[:category]) %>
+    </div>
+    <div class="tree-navi"></div>
+  <% end %>
+
+  <% if @folder %>
+    <%= render "ss/crud/addon", addon: { id: "gws-share-file-folder-property", head: t('gws/share.folder_info', folder: @folder.name), toggle: true } do %>
+      <div class="ss-quota-bar">
+        <div class="label"><%= @folder.quota_label %></div>
+        <div class="usage <%= @folder.quota_over? ? 'over-threshold' : '' %>" style="width: <%= @folder.quota_percentage %>%"></div>
+      </div>
+      <div class="total-usage" style="margin-top: 5px;">
+        <%= t("gws/share.quota.total_usage", usage: number_to_human_size(@folder.descendants_total_file_size)) %>
+      </div>
+      <div class="total-usage" style="margin-top: 5px;">
+        <%= t("gws/share.quota.total_count", usage: number_with_delimiter(@folder.descendants_files_count)) %>
+      </div>
+    <% end %>
+  <% end %>
+</div>

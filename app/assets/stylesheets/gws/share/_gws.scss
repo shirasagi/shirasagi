@@ -1,0 +1,14 @@
+.gws-schedule-file-index {
+  @include display-flex;
+
+  .gws-share-file-folder-navi {
+    width: 30%;
+    margin-right: 10px;
+    //border: $border-gray4;
+    //@include box;
+  }
+
+  .gws-schedule-file-main {
+    flex: 1;
+  }
+}

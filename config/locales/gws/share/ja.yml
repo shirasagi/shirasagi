@@ -5,6 +5,7 @@ ja:
     all: 全てのファイル
     url_copy: クリップボードにコピー
     folder: フォルダー一覧
+    folder_info: "%{folder} の情報"
     child_folder: 子フォルダー
     folder_download: フォルダー内のファイル一括ダウンロード
     files:
@@ -25,6 +26,7 @@ ja:
         index: フォルダーを選択する
     quota:
       total_usage: "総使用量 : %{usage}"
+      total_count: "総ファイル数 : %{usage}"
 
   modules:
     gws/share: 共有ファイル
