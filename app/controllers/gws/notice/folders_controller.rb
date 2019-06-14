@@ -9,7 +9,7 @@ class Gws::Notice::FoldersController < ApplicationController
   private
 
   def set_crumbs
-    @crumbs << [t('modules.gws/notice'), gws_notice_main_path]
+    @crumbs << [@cur_site.menu_notice_label || t('modules.gws/notice'), gws_notice_main_path]
     @crumbs << [Gws::Notice::Folder.model_name.human, gws_notice_folders_path]
   end
 

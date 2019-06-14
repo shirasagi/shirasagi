@@ -314,6 +314,8 @@ ja:
       gws/addon/system/menu_setting:
         menu_portal_label: ポータルの表示
         menu_portal_state: ポータルの表示
+        menu_notice_label: お知らせの表示
+        menu_notice_state: お知らせの表示
         menu_schedule_label: スケジュールの表示
         menu_schedule_state: スケジュールの表示
         menu_todo_label: ToDoの表示
