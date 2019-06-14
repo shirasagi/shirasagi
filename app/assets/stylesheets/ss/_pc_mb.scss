@@ -78,7 +78,7 @@ td {
 
 // -------------------------------------------------------------------------------------------------
 
-.hide { display: none; }
+.hide { display: none !important; }
 
 .material-icons {
   vertical-align: middle;
@@ -2267,6 +2267,25 @@ div.index {
       display: inline-block;
       img {
         margin-right: 2px;
+      }
+    }
+    .list-item-indent {
+      display: inline-block;
+      width: 0;
+    }
+    &[data-depth="0"] {
+      .list-item-indent {
+        padding-left: 0;
+      }
+    }
+    &[data-depth="1"] {
+      .list-item-indent {
+        padding-left: 25px;
+      }
+    }
+    &[data-depth="2"] {
+      .list-item-indent {
+        padding-left: 50px;
       }
     }
   }

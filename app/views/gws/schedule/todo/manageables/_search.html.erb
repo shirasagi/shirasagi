@@ -1,0 +1,30 @@
+<% render_selected_member = proc do |id, name| %>
+  <span class="schedule-todo-selected-member" data-id="<%= id %>">
+      <input name="s[member_ids][]" type="hidden" value="<%= id %>">
+      <label><%= name %></label>
+      <button class="dismiss" type="reset">x</button>
+    </span>
+<% end %>
+
+<%= form_for :s, url: '', html: { method: :get, class: %w(search schedule-todo-search) } do |f| %>
+  <%= button_tag "担当者", name: "担当者", type: "button", class: "btn schedule-todo-member-select-btn", data: { href: gws_apis_users_path } %>
+  <% selected_members = Gws::User.active.in(id: Array[@s.member_ids].flatten.compact.map(&:to_i)) %>
+  <span class="schedule-todo-selected-members <% if selected_members.blank? %>hide<% end %>" style="font-weight: normal">
+    <% selected_members.each do |user| %>
+      <% render_selected_member.call(user.id, user.long_name) %>
+    <% end %>
+  </span>
+  <%= f.select :sort, @model.new.sort_options, {}, class: "schedule-todo-auto-submit" %>
+  <%= f.text_field :keyword, style: 'width: 140px;', placeholder: t('gws/schedule/todo.search_todos') %>
+  <%= f.select :todo_state, @model.todo_state_filter_options, {}, class: "schedule-todo-auto-submit" %>
+  <%= f.select :grouping, @model.todo_grouping_options(user: @cur_user, site: @cur_site), {}, class: "schedule-todo-auto-submit" %>
+  <input type="submit" value="<%= t('ss.buttons.search') %>" class="btn" />
+
+  <script type="text/html" id="schedule-todo-selected-member-template">
+    <% render_selected_member.call("#id", "#name") %>
+  </script>
+<% end %>
+
+<%= jquery do %>
+  new Gws_Schedule_Todo_Search(".schedule-todo-search");
+<% end %>

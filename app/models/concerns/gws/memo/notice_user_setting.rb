@@ -27,7 +27,7 @@ module Gws::Memo::NoticeUserSetting
   end
 
   def notice_user_setting_default_value
-   I18n.t("ss.options.state.notify")
+    I18n.t("ss.options.state.notify")
   end
 
   def notice_email_user_setting_default_value
@@ -37,31 +37,32 @@ module Gws::Memo::NoticeUserSetting
   def use_notice?(model)
     function = model_convert_to_i18n_key(model)
     return false unless function
-    try("notice_#{function}_user_setting") == "silence" ? false : true
+    try("notice_#{function}_user_setting") != "silence"
   end
 
   def use_notice_email?(model)
     function = model_convert_to_i18n_key(model)
     return false unless function
-    try("notice_#{function}_email_user_setting") == "notify" ? true : false
+    try("notice_#{function}_email_user_setting") == "notify"
   end
 
   private
 
   def model_convert_to_i18n_key(model)
     case model.model_name.i18n_key
-      when :"gws/board/topic", :"gws/board/post" then 'board'
-      when :"gws/circular/post" then 'circular'
-      when :"gws/faq/topic", :"gws/faq/post" then 'faq'
-      when :"gws/qna/topic", :"gws/qna/post" then 'qna'
-      when :"gws/schedule/todo" then 'todo'
-      when :"gws/schedule/plan", :"gws/schedule/comment", :"gws/schedule/attendance", :"gws/schedule/approval" then 'schedule'
-      when :"gws/discussion/topic", :"gws/discussion/post" then 'discussion'
-      when :"gws/workflow/file"  then 'workflow'
-      when :"gws/report/file" then 'report'
-      when :"gws/notice/post" then 'announcement'
-      when :"gws/survey/form", :"gws/survey/file" then 'survey'
-      when :"gws/monitor/topic", :"gws/monitor/post" then 'monitor'
+    when :"gws/board/topic", :"gws/board/post" then 'board'
+    when :"gws/circular/post" then 'circular'
+    when :"gws/faq/topic", :"gws/faq/post" then 'faq'
+    when :"gws/qna/topic", :"gws/qna/post" then 'qna'
+    when :"gws/schedule/todo" then 'todo'
+    when :"gws/schedule/todo_comment" then 'todo'
+    when :"gws/schedule/plan", :"gws/schedule/comment", :"gws/schedule/attendance", :"gws/schedule/approval" then 'schedule'
+    when :"gws/discussion/topic", :"gws/discussion/post" then 'discussion'
+    when :"gws/workflow/file" then 'workflow'
+    when :"gws/report/file" then 'report'
+    when :"gws/notice/post" then 'announcement'
+    when :"gws/survey/form", :"gws/survey/file" then 'survey'
+    when :"gws/monitor/topic", :"gws/monitor/post" then 'monitor'
     end
   end
 end

@@ -4,13 +4,11 @@ class Gws::Schedule::Todo::TrashesController < ApplicationController
   include Gws::Schedule::TodoFilter
   include Gws::Schedule::Todo::NotificationFilter
 
-  navi_view "gws/schedule/todo/main/navi"
-
   private
 
   def set_crumbs
     @crumbs << [@cur_site.menu_todo_label || t('modules.addons.gws/schedule/todo'), gws_schedule_todo_main_path]
-    @crumbs << [t('gws/schedule.tabs.trash'), action: :index]
+    @crumbs << [t('gws/schedule.navi.trash'), action: :index]
   end
 
   def set_items

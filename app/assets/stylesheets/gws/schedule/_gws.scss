@@ -798,3 +798,85 @@ dl.gws-schedule-repeat {
     vertical-align: -3px;
   }
 }
+
+.gws-schedule-todo-achievement-bar {
+  display: inline-block;
+  width: 6em;
+}
+
+.gws-schedule-todo-index {
+  @include display-flex;
+
+  .navi {
+    width: 30%;
+    margin-right: 10px;
+    border: $border-gray4;
+    @include box;
+  }
+
+  .main {
+    flex: 1;
+  }
+}
+
+.gws-schedule-todo-categoy-navi {
+  padding: 10px;
+
+  .title {
+    margin: -10px -10px 10px;
+    padding: 10px 12px;
+    border-bottom: 1px solid #f2f2f2;
+    font-weight: bold;
+    &:before {
+      margin-right: 6px;
+      padding-left: 3px;
+      background: #f25a38;
+      content: ' ';
+    }
+  }
+}
+
+.gws-schedule-todo-index {
+  .list-item-switch {
+    display: inline-block;
+    width: 26px;
+    text-align: center;
+  }
+}
+
+#addon-gws-agents-addons-schedule-todo-comment_post {
+  .comment {
+    margin: 5px 0;
+    padding: 0 5px;
+    border-bottom: $border-gray1;
+  }
+
+  .row {
+    width: 100%;
+    padding: 5px 0;
+  }
+
+  .user {
+    color: $orange3;
+    font-weight: bold;
+  }
+
+  .achievement-rate {
+    margin-right: 10px;
+  }
+
+  .toolbar {
+    @include display-flex(flex);
+    @include justify-content(flex-end);
+
+    .btn {
+      margin-left: 5px;
+    }
+  }
+
+  @include mb {
+    .achievement-rate-unit {
+      display: none;
+    }
+  }
+}

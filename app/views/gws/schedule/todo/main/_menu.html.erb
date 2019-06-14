@@ -28,9 +28,9 @@
     <% end %>
     <% if @item.allowed?(:edit, @cur_user, site: @cur_site) || @item.member?(@cur_user) %>
       <% if @item.finished? %>
-        <%= link_to t('gws/schedule/todo.links.revert'), action: :revert, id: @item %>
+        <%= link_to t('gws/schedule/todo.links.revert'), action: :revert, id: @item rescue nil %>
       <% else %>
-        <%= link_to t('gws/schedule/todo.links.finish'), action: :finish, id: @item %>
+        <%= link_to t('gws/schedule/todo.links.finish'), action: :finish, id: @item rescue nil %>
       <% end %>
     <% end %>
     <%= link_to t('ss.links.back_to_index'), action: :index %>

@@ -210,6 +210,7 @@ class Gws::Memo::Notifier
     @item_title ||= begin
       title = item.try(:topic).try(:name)
       title ||= item.try(:schedule).try(:name)
+      title ||= item.try(:todo).try(:name)
       title ||= item.try(:_parent).try(:name)
       title ||= item.try(:name)
       title
@@ -262,6 +263,8 @@ class Gws::Memo::Notifier
       id = item.parent.id
     elsif item.try(:schedule).present?
       id = item.schedule.id
+    elsif item.try(:todo).present?
+      todo = item.todo
     else
       id = item.id
     end
@@ -273,7 +276,14 @@ class Gws::Memo::Notifier
     elsif class_name.include?("Gws::Qna")
       url = url_helper.gws_qna_topic_path(id: id, site: cur_site.id, category: '-', mode: '-')
     elsif class_name.include?("Gws::Schedule::Todo")
-      url = url_helper.gws_schedule_todo_readable_path(id: id, site: cur_site.id, category: '-', mode: '-')
+      todo ||= item
+      if todo.try(:in_discussion_forum) && todo.try(:discussion_forum)
+        url = url_helper.gws_discussion_forum_todo_path(
+          id: todo.id, site: cur_site.id, mode: "-", forum_id: todo.discussion_forum)
+      else
+        url = url_helper.gws_schedule_todo_readable_path(
+          id: todo.id, site: cur_site.id, category: Gws::Schedule::TodoCategory::ALL.id)
+      end
     elsif class_name.include?("Gws::Schedule")
       url = url_helper.gws_schedule_plan_path(id: id, site: cur_site.id, category: '-', mode: '-')
     elsif class_name.include?("Gws::Monitor")
