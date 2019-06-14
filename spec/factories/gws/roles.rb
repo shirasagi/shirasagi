@@ -21,12 +21,12 @@ FactoryBot.define do
   end
 
   factory :gws_role_notice_editor, class: Gws::Role, traits: [:gws_role] do
-    permissions { %w(delete_private_gws_notices edit_private_gws_notices read_private_gws_notices) }
+    permissions { %w(use_gws_notice delete_private_gws_notices edit_private_gws_notices read_private_gws_notices) }
     permission_level 1
   end
 
   factory :gws_role_notice_reader, class: Gws::Role, traits: [:gws_role] do
-    permissions { %w(read_private_gws_notices) }
+    permissions { %w(use_gws_notice read_private_gws_notices) }
     permission_level 1
   end
 
