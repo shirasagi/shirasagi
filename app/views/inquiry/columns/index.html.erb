@@ -2,7 +2,12 @@
   <table class="index">
     <thead class="list-head">
       <tr>
-        <th class="checkbox"><input type="checkbox" /></th>
+        <th class="checkbox" style="width: 120px;">
+          <input type="checkbox" />
+          <% if @cur_node.allowed?(:edit, @cur_user, site: @cur_site) %>
+            <button class="destroy-all btn"><%= t :"ss.links.delete" %></button>
+          <% end %>
+        </th>
         <th><%= @model.t :name %></th>
         <th><%= @model.t :order %></th>
         <th class="datetime"><%= @model.t :updated %></th>
