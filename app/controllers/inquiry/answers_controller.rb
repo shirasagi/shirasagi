@@ -16,7 +16,7 @@ class Inquiry::AnswersController < ApplicationController
   def send_csv(items)
     require "csv"
 
-    columns = @cur_node.becomes_with_route("inquiry/form").columns.pluck(:name)
+    columns = @cur_node.becomes_with_route("inquiry/form").columns.order_by(order: 1).pluck(:name)
     headers = %w(id)
     headers += columns
     headers += %w(source_url source_name created).map { |key| @model.t(key) }
