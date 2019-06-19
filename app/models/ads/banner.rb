@@ -11,6 +11,7 @@ class Ads::Banner
   set_permission_name "ads_banners"
 
   field :link_url, type: String
+  field :additional_attr, type: Cms::Extensions::HtmlAttributes, default: ""
 
   belongs_to_file :file
 
@@ -18,7 +19,7 @@ class Ads::Banner
   validate :validate_link_url
   #validates :file_id, presence: true
 
-  permit_params :link_url
+  permit_params :link_url, :additional_attr
 
   after_generate_file :generate_relation_public_file, if: ->{ public? }
   after_remove_file :remove_relation_public_file
