@@ -160,7 +160,7 @@ module Gws::Monitor::TopicFilter
     @group_ssfile = []
     download_file_group_ssfile_ids_hash.each do |group_fileids|
       group_fileids[1].each do |fileids|
-        @group_ssfile.push([group_fileids[0], SS::File.find_by(id: fileids)])
+        @group_ssfile << [group_fileids[0], SS::File.find_by(id: fileids)]
       end
     end
 
@@ -168,7 +168,7 @@ module Gws::Monitor::TopicFilter
     @item.file_ids.each do |fileids|
       order = @cur_group.order || 0
       filename = "#{order}_#{File.basename(@cur_group.name)}"
-      @owner_ssfile.push([filename, SS::File.find_by(id: fileids)])
+      @owner_ssfile << [filename, SS::File.find_by(id: fileids)]
     end
 
     zipfile = @item.name + ".zip"
