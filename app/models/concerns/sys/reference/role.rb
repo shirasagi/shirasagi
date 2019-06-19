@@ -4,7 +4,7 @@ module Sys::Reference
 
     included do
       embeds_ids :sys_roles, class_name: "Sys::Role"
-      permit_params cms_role_ids: []
+      permit_params sys_role_ids: []
     end
 
     def sys_role_permissions
@@ -17,6 +17,12 @@ module Sys::Reference
         end
       end
       @sys_role_permissions
+    end
+
+    def sys_role_permit_any?(*permissions, level: 0)
+      Array(permissions).flatten.any? do |permission|
+        sys_role_permissions[permission.to_s].to_i > level
+      end
     end
   end
 end

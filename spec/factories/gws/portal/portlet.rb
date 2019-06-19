@@ -1,4 +1,4 @@
-FactoryGirl.define do
+FactoryBot.define do
   trait :gws_portal_portlet_base do
     cur_site { gws_site }
     cur_user { gws_user }

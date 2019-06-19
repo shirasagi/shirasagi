@@ -38,6 +38,41 @@ module Cms::Model::Node
     }
 
     template_variable_handler('pages.count', :template_variable_handler_pages_count)
+
+    liquidize do
+      export :nodes do |context|
+        site = context.registers[:cur_site]
+        date = context.registers[:cur_date]
+
+        criteria = Cms::Node.site(site).and_public(date)
+        if self.respond_to?(:condition_hash)
+          criteria = criteria.where(self.condition_hash)
+        else
+          criteria = criteria.where({ filename: /^#{self.filename}\//, depth: self.depth + 1 })
+        end
+        criteria = criteria.reorder(self.sort_hash) if self.respond_to?(:sort_hash)
+        criteria.to_a.map(&:becomes_with_route)
+      end
+      export :pages do |context|
+        site = context.registers[:cur_site]
+        date = context.registers[:cur_date]
+
+        criteria = Cms::Page.site(site).and_public(date)
+        if self.respond_to?(:condition_hash)
+          criteria = criteria.where(self.condition_hash)
+        else
+          criteria = criteria.where({ filename: /^#{self.filename}\//, depth: self.depth + 1 })
+        end
+        criteria = criteria.reorder(self.sort_hash) if self.respond_to?(:sort_hash)
+        criteria.to_a.map(&:becomes_with_route)
+      end
+    end
+  end
+
+  module ClassMethods
+    def tree_sort(options = {})
+      Cms::NodeTreeList.build self, options
+    end
   end
 
   def becomes_with_route(name = nil)
@@ -105,7 +140,7 @@ module Cms::Model::Node
     dst_dir = ::File.dirname(dst).sub(/^\.$/, "")
 
     return errors.add :filename, :empty if dst.blank?
-    return errors.add :filename, :invalid if dst !~ /^([\w\-]+\/)*[\w\-]+(#{Regexp.escape(fix_extname || "")})?$/
+    return errors.add :filename, :invalid if dst !~ /^([\w\-]+\/)*[\w\-]+(#{::Regexp.escape(fix_extname || "")})?$/
 
     return errors.add :base, :same_filename if filename == dst
     return errors.add :filename, :taken if Cms::Node.site(site).where(filename: dst).first

@@ -15,7 +15,11 @@ module Webmail::AddressExport
     super
     return false unless errors.empty?
 
-    headers = CSV.read(in_file.path, headers: true, encoding: 'SJIS:UTF-8').headers
+    headers = nil
+    each_csv do |row|
+      headers = row.headers
+      break
+    end
     in_file.rewind
 
     case import_format

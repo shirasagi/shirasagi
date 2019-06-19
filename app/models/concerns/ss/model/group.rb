@@ -32,7 +32,7 @@ module SS::Model::Group
     validate :validate_domains, if: ->{ domains.present? }
 
     scope :in_group, ->(group) {
-      where(name: /^#{group.name}(\/|$)/)
+      where(name: /^#{::Regexp.escape(group.name)}(\/|$)/)
     }
     scope :organizations, ->{
       where(:name.not => /\//)
@@ -55,6 +55,10 @@ module SS::Model::Group
 
     def tree_sort(options = {})
       SS::TreeList.build self, options
+    end
+
+    def roots
+      self.not(name: /\//)
     end
   end
 
@@ -87,7 +91,20 @@ module SS::Model::Group
   end
 
   def descendants
-    self.class.where(name: /^#{name}\//)
+    self.class.where(name: /^#{::Regexp.escape(name)}\//)
+  end
+
+  def descendants_and_self
+    self.class.in_group(self)
+  end
+
+  def parents
+    return self.class.none unless name.include?("/")
+
+    n = nil
+    parent_names = name.sub("/#{trailing_name}", "").split(/\//)
+    parent_names = parent_names.map { |name| n = (n ? "#{n}/#{name}" : name) }
+    self.class.in(name: parent_names)
   end
 
   # Soft delete
@@ -126,6 +143,10 @@ module SS::Model::Group
   # Cast
   def gws_group
     is_a?(Gws::Group) ? self : Gws::Group.find(id)
+  end
+
+  def webmail_group
+    is_a?(Webmail::Group) ? self : Webmail::Group.find(id)
   end
 
   private

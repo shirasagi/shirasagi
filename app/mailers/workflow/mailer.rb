@@ -2,6 +2,7 @@ class Workflow::Mailer < ActionMailer::Base
   def request_mail(args)
     @from_user = SS::User.find(args[:f_uid]) rescue nil
     @to_user   = SS::User.find(args[:t_uid]) rescue nil
+    @agent_user = SS::User.find(args[:agent_uid]) rescue nil
     @subject   = "[#{I18n.t('workflow.mail.subject.request')}]#{args[:page].name} - #{args[:site].name}"
     @page      = args[:page]
     @url       = args[:url]
@@ -87,13 +88,8 @@ class Workflow::Mailer < ActionMailer::Base
   end
 
   def site_sender(site)
-    return if site.blank? || site.sender_email.blank?
-
-    if site.sender_name.present?
-      "#{site.sender_name} <#{site.sender_email}>"
-    else
-      site.sender_email
-    end
+    return if site.blank?
+    site.sender_address
   end
 
   def system_sender

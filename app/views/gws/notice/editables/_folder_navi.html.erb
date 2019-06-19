@@ -1,0 +1,40 @@
+<%= jquery do %>
+  var treeNavi = new SS_TreeNavi('#content-navi .tree-navi');
+  treeNavi.render(<%== gws_notice_apis_folder_list_path(mode: 'editable', folder_id: '-', id: @folder, format: 'json').to_json %>);
+<% end %>
+
+<div id="content-navi">
+  <h2 class="content-navi-title">
+    <%= t('mongoid.models.gws/notice/folder') %>
+    <% if !@my_folder_exists && Gws::Notice::Folder.allowed?(:my_folder, @cur_user, site: @cur_site) %>
+      <%= link_to t('gws/notice.links.create_my_folder'), { action: :create_my_folder }, class: 'btn' %>
+    <% end %>
+    <% if @my_folder && (@folder.blank? || @my_folder != @folder) %>
+      <%= link_to t('gws/notice.links.move_to_my_folder'), { action: :index, folder_id: @my_folder }, class: 'btn' %>
+    <% end %>
+  </h2>
+
+  <div class="mb-2 tree-item<%= ' is-current' if @folder.blank? %>">
+    <%= link_to t('gws/notice.all'), gws_notice_editables_path(folder_id: '-') %>
+  </div>
+
+  <div class="tree-navi"></div>
+
+  <% if @folder && @folder.member?(@cur_user) %>
+    <div class="content-navi-title" style="margin-top: 10px; border-top: 1px solid #f2f2f2;"><%= t('ss.quota') %></div>
+    <div class="body-quota-bar">
+      <span><%= t('gws/notice.body_size') %></span>
+      <div class="ss-quota-bar">
+        <div class="label"><%= number_to_human_size(@folder.notice_total_body_size) %></div>
+        <div class="usage <%= @folder.notice_total_body_size_over? ? 'over-threshold' : '' %>" style="width: <%= @folder.notice_total_body_size_percentage %>%"></div>
+      </div>
+    </div>
+    <div class="body-quota-bar">
+      <span><%= t('gws/notice.file_size') %></span>
+      <div class="ss-quota-bar">
+        <div class="label"><%= number_to_human_size(@folder.notice_total_file_size) %></div>
+        <div class="usage <%= @folder.notice_total_file_size_over? ? 'over-threshold' : '' %>" style="width: <%= @folder.notice_total_file_size_percentage %>%"></div>
+      </div>
+    </div>
+  <% end %>
+</div>

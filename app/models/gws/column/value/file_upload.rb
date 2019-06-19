@@ -45,6 +45,13 @@ class Gws::Column::Value::FileUpload < Gws::Column::Value::Base
     self.text_index = new_value.value
   end
 
+  def update_file_owner(parent)
+    files.each do |file|
+      file.owner_item = parent
+      file.save
+    end
+  end
+
   def value
     files.pluck(:name).join(', ')
   end
@@ -60,11 +67,13 @@ class Gws::Column::Value::FileUpload < Gws::Column::Value::Base
       end
     end
 
+    model_name = _parent.class.name
     files.each do |file|
       next if file.blank?
-      next if file.model == 'gws/column_value'
+      next if file.model == model_name
 
-      file.model = 'gws/column_value'
+      file.model = model_name
+      file.owner_item = _parent
       file.save!
     end
   end
@@ -79,6 +88,7 @@ class Gws::Column::Value::FileUpload < Gws::Column::Value::Base
       file.id = nil
       file.in_file = f.uploaded_file
       file.user_id = @cur_user.id if @cur_user
+      file.owner_item = _parent
 
       file.save validate: false
       ids[f.id] = file.id

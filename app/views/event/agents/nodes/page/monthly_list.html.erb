@@ -1,0 +1,69 @@
+<%= jquery do %> Event_Monthly.render(); <% end %>
+
+<%== @cur_node.upper_html %>
+
+<% if @cur_node.st_categories.present? %>
+  <nav class="event-pages-filter">
+    <ul>
+      <li class="all">
+        <%= link_to t("event.filter_all"), "#", class: "clicked", "data-id" => "all" %>
+      </li>
+      <% @cur_node.st_categories.order_by(order: 1).each do |cate| %>
+        <li class="<%= cate.basename %>">
+          <%= link_to cate.name, "#", "data-id" => cate.id %>
+        </li>
+      <% end %>
+    </ul>
+  </nav>
+<% end %>
+
+<nav class="event-date">
+  <h2 class="<%= event_h1_class @month %>"><%= "#{@year}#{t_date('year')}#{@month}#{t_date('month')}" %></h2>
+  <% unless @cur_node.event_display.to_s.end_with?('only') %>
+    <span class="list current"><%= link_to_monthly Date.new(@year, @month, 1), name: I18n.t("event.options.event_display.list"), display: 'list' %></span>
+    <span class="table"><%= link_to_monthly Date.new(@year, @month, 1), name: I18n.t("event.options.event_display.table"), display: 'table' %></span>
+  <% end %>
+  <ul>
+    <li class="prev"><%= link_to_monthly Date.new(@year, @month, 1).advance(days: -1), display: params[:display] %></li>
+    <li class="next"><%= link_to_monthly Date.new(@year, @month, 1).advance(months: 1), display: params[:display] %></li>
+  </ul>
+</nav>
+
+<div id="event-list">
+  <% @events.each do |date, pages| %>
+  <dl class="<%= event_dl_class date %>">
+    <dt>
+      <%= time_tag(date) do %>
+      <%= link_to_daily date, name: "#{date.month}#{t_date('month')}#{date.day}#{t_date('day')}" %>
+      <span class="wday">(<abbr title="<%= t_wday(date) %><%= t_date('wday') %>"><%= t_wday(date) %></abbr><span class="unit"><%= t_date('wday') %></span>)</span>
+      <% end %>
+    </dt>
+
+    <% if date.national_holiday? %>
+    <dd class="holiday"><%= HolidayJapan.name date %></dd>
+    <% end %>
+
+    <% if pages.blank? %>
+    <dd class="no-event"><%= t("event.no_event") %></dd>
+    <% end %>
+    <% pages.each do |page, categories| %>
+    <% page = page.becomes_with_route %>
+    <dd class="page" data-id="<%= categories.pluck(:id).join(" ") %>">
+      <article class="<%= @cur_node.render_loop_html(page, html: '#{new}') %>">
+        <% if categories.present? %>
+          <% cate = categories.entries.sort_by{ |c| c.order }.first %>
+          <div class="<%= cate.basename %>">
+            <%= link_to cate.name, cate.url %>
+          </div>
+        <% end %>
+        <header>
+          <h2><%= link_to (page.event_name.present? ? page.event_name : page.name), page.url %></h2>
+        </header>
+      </article>
+    </dd>
+    <% end %>
+  </dl>
+  <% end %>
+</div>
+
+<%== @cur_node.lower_html %>

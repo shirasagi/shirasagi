@@ -41,6 +41,7 @@ ja:
       month: ! '%Y/%1m'
       iso_month: ! '%Y-%m'
       long_month: ! '%Y年%1m月'
+      picker: ! '%Y/%m/%d'
     month_names:
     -
     - 1月
@@ -122,7 +123,10 @@ ja:
       invalid_file_type: は不正なファイル形式です。
       invalid_filename: は半角英数、アンダースコア、ハイフンのみ使用可能です。
       invalid_csv: CSV形式のファイルを選択してください。
+      malformed_csv: CSVの形式が正しくありません。正しい形式のCSVファイルを選択してください。
       invalid_email_included: に不正なメールアドレスが含まれています。
+      too_large_mail_size: "メールの添付ファイルサイズが大きすぎます。合計: %{size}（制限値: %{limit}）"
+      smtp_delivery_error: "メールを送信できませんでした。STMPエラーメッセージ： %{message}"
       duplicate: の重複が存在します。
       less_than: は%{count}より小さい値にしてください。
       less_than_or_equal_to: は%{count}以下の値にしてください。
@@ -149,10 +153,17 @@ ja:
       not_exist: は存在しません。
       not_found_parent_nodes: に親フォルダー「%{name}」がありません。
       root_node_save_error: ルートフォルダーを作成できませんでした。
-      imap_setting_validation_error: "必須項目が入力されていません。"
       request_entity_too_large: データのサイズが大きすぎます。
       contact_system_administrator: システム管理者にお問い合わせください。
       try_again_later: 時間を置いてもう一度お試しください。
+      malformed_liquid_template: "の形式が正しくありません。%{error}"
+      include_not_general_sys_roles: "SYSロール「%{name}」は管理用の権限が含まれている為、設定できません。"
+      not_found_group: "グループ「%{name}」が見つかりません。"
+      not_found_sys_role: "システム権限「%{name}」が見つかりません。"
+      not_found_gws_role: "グループウェア権限「%{name}」が見つかりません。"
+      not_found_webmail_role: "ウェブメール権限「%{name}」が見つかりません。"
+      not_found_main_group: "グループ（主）「%{name}」が見つかりません。"
+      not_found_user_title: "役職コード「%{code}」が見つかりません。"
     template:
       body: 次の項目を確認してください。
       header:
@@ -226,6 +237,7 @@ ja:
       iso: ! '%Y-%m-%d %H:%M'
       long: ! '%Y年%1m月%1d日 %H時%M分'
       short: ! '%y/%m/%d %H:%M'
+      picker: ! '%Y/%m/%d %H:%M'
     pm: 午後
   # remove these aliases after 'activemodel' and 'activerecord' namespaces are removed from Rails repository
   activemodel:
@@ -241,15 +253,3 @@ ja:
       next: 次のページ # "Next &rsaquo;"
       last: "&raquo;"
       truncate: "..."
-  dependent_character:
-    - ①②③④⑤⑥⑦⑧⑨⑩⑪⑫⑬⑭⑮⑯⑰⑱⑲⑳
-    - ⅠⅡⅢⅣⅤⅥⅦⅧⅨⅩ㍉㌔㌢㍍㌘㌧㌃㌶㍑㍗
-    - ㌍㌦㌣㌫㍊㌻㎜㎝㎞㎎㎏㏄㎡㍻〝〟№㏍℡㊤
-    - ㊥㊦㊧㊨㈱㈲㈹㍾㍽㍼㍻©®㈷㈰㈪㈫㈬㈭㈮㈯
-    - ㊗㊐㊊㊋㊌㊍㊎㊏㋀㋁㋂㋃㋄㋅㋆㋇㋈㋉㋊㋋
-    - ㏠㏡㏢㏣㏤㏥㏦㏧㏨㏩㏪㏫㏬㏭㏮㏯㏰㏱㏲㏳
-    - ㏴㏵㏶㏷㏸㏹㏺㏻㏼㏽㏾↔↕↖↗↘↙⇒⇔⇐⇑⇓⇕⇖⇗⇘⇙
-    - ㋐㋑㋒㋓㋔㋕㋖㋗㋘㋙㊑㊒㊓㊔㊕㊟㊚㊛㊜㊣
-    - ㊡㊢㊫㊬㊭㊮㊯㊰㊞㊖㊩㊝㊘㊙㊪㈳㈴㈵㈶㈸
-    - ㈺㈻㈼㈽㈾㈿►☺◄☻‼㎀㎁㎂㎃㎄㎈㎉㎊㎋㎌㎍
-    - ㎑㎒㎓ⅰⅱⅲⅳⅴⅵⅶⅷⅸⅹ〠♠♣♥♤♧♡￤＇

@@ -40,16 +40,19 @@ describe "my_group", dbscope: :example, js: true do
         within ".mod-workflow-request" do
           select I18n.t("mongoid.attributes.workflow/model/route.my_group"), from: "workflow_route"
           click_on I18n.t("workflow.buttons.select")
-
-          within ".ms-container" do
-            find("li.ms-elem-selectable", text: /#{Regexp.escape(user1.uid)}/).click
-            find("li.ms-elem-selectable", text: /#{Regexp.escape(user2.uid)}/).click
-          end
-
+          click_on I18n.t("workflow.search_approvers.index")
+        end
+        within "#cboxLoadedContent" do
+          expect(page).to have_content(user1.long_name)
+          find("tr[data-id='1,#{user1.id}'] input[type=checkbox]").click
+          find("tr[data-id='1,#{user2.id}'] input[type=checkbox]").click
+          click_on I18n.t("workflow.search_approvers.select")
+        end
+        within ".mod-workflow-request" do
           fill_in "workflow[comment]", with: workflow_comment
           click_on I18n.t("workflow.buttons.request")
         end
-        expect(page).to have_css(".mod-workflow-view dd", text: /#{Regexp.escape(user1.uid)}/)
+        expect(page).to have_css(".mod-workflow-view dd", text: /#{::Regexp.escape(user1.uid)}/)
 
         item.reload
         expect(item.workflow_user_id).to eq cms_user.id
@@ -94,13 +97,13 @@ describe "my_group", dbscope: :example, js: true do
           click_on I18n.t("workflow.buttons.approve")
         end
 
-        expect(page).to have_css(".mod-workflow-view dd", text: /#{Regexp.escape(approve_comment1)}/)
+        expect(page).to have_css(".mod-workflow-view dd", text: /#{::Regexp.escape(approve_comment1)}/)
 
         item.reload
         expect(item.workflow_state).to eq "request"
         expect(item.state).to eq "closed"
         expect(item.workflow_approvers).to \
-          include({level: 1, user_id: user1.id, editable: '', state: 'approve', comment: approve_comment1})
+          include({level: 1, user_id: user1.id, editable: '', state: 'approve', comment: approve_comment1, file_ids: nil})
         expect(item.workflow_approvers).to include({level: 1, user_id: user2.id, editable: '', state: 'request', comment: ''})
         # no backups are created while requesting approve
         expect(item.backups.count).to eq 1
@@ -118,15 +121,15 @@ describe "my_group", dbscope: :example, js: true do
           click_on I18n.t("workflow.buttons.approve")
         end
 
-        expect(page).to have_css(".mod-workflow-view dd", text: /#{Regexp.escape(approve_comment2)}/)
+        expect(page).to have_css(".mod-workflow-view dd", text: /#{::Regexp.escape(approve_comment2)}/)
 
         item.reload
         expect(item.workflow_state).to eq "approve"
         expect(item.state).to eq "public"
         expect(item.workflow_approvers).to \
-          include({level: 1, user_id: user1.id, editable: '', state: 'approve', comment: approve_comment1})
+          include({level: 1, user_id: user1.id, editable: '', state: 'approve', comment: approve_comment1, file_ids: nil})
         expect(item.workflow_approvers).to \
-          include({level: 1, user_id: user2.id, editable: '', state: 'approve', comment: approve_comment2})
+          include({level: 1, user_id: user2.id, editable: '', state: 'approve', comment: approve_comment2, file_ids: nil})
         # backup is created because page is in public
         expect(item.backups.count).to eq 2
 
@@ -154,16 +157,19 @@ describe "my_group", dbscope: :example, js: true do
         within ".mod-workflow-request" do
           select I18n.t("mongoid.attributes.workflow/model/route.my_group"), from: "workflow_route"
           click_on I18n.t("workflow.buttons.select")
-
-          within ".ms-container" do
-            find("li.ms-elem-selectable", text: /#{Regexp.escape(user1.uid)}/).click
-            find("li.ms-elem-selectable", text: /#{Regexp.escape(user2.uid)}/).click
-          end
-
+          click_on I18n.t("workflow.search_approvers.index")
+        end
+        within "#cboxLoadedContent" do
+          expect(page).to have_content(user1.long_name)
+          find("tr[data-id='1,#{user1.id}'] input[type=checkbox]").click
+          find("tr[data-id='1,#{user2.id}'] input[type=checkbox]").click
+          click_on I18n.t("workflow.search_approvers.select")
+        end
+        within ".mod-workflow-request" do
           fill_in "workflow[comment]", with: workflow_comment
           click_on I18n.t("workflow.buttons.request")
         end
-        expect(page).to have_css(".mod-workflow-view dd", text: /#{Regexp.escape(user1.uid)}/)
+        expect(page).to have_css(".mod-workflow-view dd", text: /#{::Regexp.escape(user1.uid)}/)
 
         item.reload
         expect(item.workflow_user_id).to eq cms_user.id
@@ -208,7 +214,7 @@ describe "my_group", dbscope: :example, js: true do
           click_on I18n.t("workflow.buttons.remand")
         end
 
-        expect(page).to have_css(".mod-workflow-view dd", text: /#{Regexp.escape(remand_comment1)}/)
+        expect(page).to have_css(".mod-workflow-view dd", text: /#{::Regexp.escape(remand_comment1)}/)
 
         item.reload
         expect(item.workflow_state).to eq "remand"
@@ -246,16 +252,19 @@ describe "my_group", dbscope: :example, js: true do
         within ".mod-workflow-request" do
           select I18n.t("mongoid.attributes.workflow/model/route.my_group"), from: "workflow_route"
           click_on I18n.t("workflow.buttons.select")
-
-          within ".ms-container" do
-            find("li.ms-elem-selectable", text: /#{Regexp.escape(user1.uid)}/).click
-            find("li.ms-elem-selectable", text: /#{Regexp.escape(user2.uid)}/).click
-          end
-
+          click_on I18n.t("workflow.search_approvers.index")
+        end
+        within "#cboxLoadedContent" do
+          expect(page).to have_content(user1.long_name)
+          find("tr[data-id='1,#{user1.id}'] input[type=checkbox]").click
+          find("tr[data-id='1,#{user2.id}'] input[type=checkbox]").click
+          click_on I18n.t("workflow.search_approvers.select")
+        end
+        within ".mod-workflow-request" do
           fill_in "workflow[comment]", with: workflow_comment
           click_on I18n.t("workflow.buttons.request")
         end
-        expect(page).to have_css(".mod-workflow-view dd", text: /#{Regexp.escape(user1.uid)}/)
+        expect(page).to have_css(".mod-workflow-view dd", text: /#{::Regexp.escape(user1.uid)}/)
 
         item.reload
         expect(item.workflow_user_id).to eq cms_user.id
@@ -281,13 +290,13 @@ describe "my_group", dbscope: :example, js: true do
           click_on I18n.t("workflow.buttons.approve")
         end
 
-        expect(page).to have_css(".mod-workflow-view dd", text: /#{Regexp.escape(approve_comment1)}/)
+        expect(page).to have_css(".mod-workflow-view dd", text: /#{::Regexp.escape(approve_comment1)}/)
 
         item.reload
         expect(item.workflow_state).to eq "request"
         expect(item.state).to eq "closed"
         expect(item.workflow_approvers).to \
-          include({level: 1, user_id: user1.id, editable: '', state: 'approve', comment: approve_comment1})
+          include({level: 1, user_id: user1.id, editable: '', state: 'approve', comment: approve_comment1, file_ids: nil})
         expect(item.workflow_approvers).to include({level: 1, user_id: user2.id, editable: '', state: 'request', comment: ''})
         # no backups are created while requesting approve
         expect(item.backups.count).to eq 1
@@ -305,13 +314,13 @@ describe "my_group", dbscope: :example, js: true do
           click_on I18n.t("workflow.buttons.remand")
         end
 
-        expect(page).to have_css(".mod-workflow-view dd", text: /#{Regexp.escape(remand_comment2)}/)
+        expect(page).to have_css(".mod-workflow-view dd", text: /#{::Regexp.escape(remand_comment2)}/)
 
         item.reload
         expect(item.workflow_state).to eq "remand"
         expect(item.state).to eq "closed"
         expect(item.workflow_approvers).to \
-          include({level: 1, user_id: user1.id, editable: '', state: 'approve', comment: approve_comment1})
+          include({level: 1, user_id: user1.id, editable: '', state: 'approve', comment: approve_comment1, file_ids: nil})
         expect(item.workflow_approvers).to \
           include({level: 1, user_id: user2.id, editable: '', state: 'remand', comment: remand_comment2})
         # no backups are created
@@ -342,16 +351,19 @@ describe "my_group", dbscope: :example, js: true do
         within ".mod-workflow-request" do
           select I18n.t("mongoid.attributes.workflow/model/route.my_group"), from: "workflow_route"
           click_on I18n.t("workflow.buttons.select")
-
-          within ".ms-container" do
-            find("li.ms-elem-selectable", text: /#{Regexp.escape(user1.uid)}/).click
-            find("li.ms-elem-selectable", text: /#{Regexp.escape(user2.uid)}/).click
-          end
-
+          click_on I18n.t("workflow.search_approvers.index")
+        end
+        within "#cboxLoadedContent" do
+          expect(page).to have_content(user1.long_name)
+          find("tr[data-id='1,#{user1.id}'] input[type=checkbox]").click
+          find("tr[data-id='1,#{user2.id}'] input[type=checkbox]").click
+          click_on I18n.t("workflow.search_approvers.select")
+        end
+        within ".mod-workflow-request" do
           fill_in "workflow[comment]", with: workflow_comment
           click_on I18n.t("workflow.buttons.request")
         end
-        expect(page).to have_css(".mod-workflow-view dd", text: /#{Regexp.escape(user1.uid)}/)
+        expect(page).to have_css(".mod-workflow-view dd", text: /#{::Regexp.escape(user1.uid)}/)
 
         item.reload
         expect(item.workflow_user_id).to eq cms_user.id
@@ -378,7 +390,7 @@ describe "my_group", dbscope: :example, js: true do
           end
         end
 
-        expect(page).to have_css(".mod-workflow-view dd", text: /#{Regexp.escape(I18n.t("workflow.state.cancelled"))}/)
+        expect(page).to have_css(".mod-workflow-view dd", text: /#{::Regexp.escape(I18n.t("workflow.state.cancelled"))}/)
 
         item.reload
         expect(item.workflow_state).to eq "cancelled"

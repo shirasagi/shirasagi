@@ -1,5 +1,6 @@
 module Gws::GroupPermission
   extend ActiveSupport::Concern
+  extend SS::Translation
   include SS::Permission
 
   included do
@@ -22,9 +23,10 @@ module Gws::GroupPermission
   end
 
   def owned?(user)
+    user = user.gws_user
     return true if (self.group_ids & user.group_ids).present?
     return true if user_ids.to_a.include?(user.id)
-    return true if custom_groups.any? { |m| m.member_ids.include?(user.id) }
+    return true if custom_groups.any? { |m| m.member?(user) }
     false
   end
 
@@ -35,6 +37,7 @@ module Gws::GroupPermission
   # @param [String] action
   # @param [Gws::User] user
   def allowed?(action, user, opts = {})
+    user    = user.gws_user
     site    = opts[:site] || @cur_site
     action  = permission_action || action
     permits = []
@@ -46,9 +49,7 @@ module Gws::GroupPermission
       permits << "#{action}_private_#{self.class.permission_name}" if owned?(user) || (!opts[:strict] && new_record?)
     end
 
-    permits.each do |permit|
-      return true if user.gws_role_permissions["#{permit}_#{site.id}"].to_i > 0
-    end
+    return true if user.gws_role_permit_any?(site, *permits)
 
     errors.add :base, :auth_error
     false
@@ -100,6 +101,7 @@ module Gws::GroupPermission
     end
 
     def allow_condition(action, user, opts = {})
+      user = user.gws_user
       site_id = opts[:site] ? opts[:site].id : criteria.selector["site_id"]
       action = permission_action || action
 
@@ -109,7 +111,7 @@ module Gws::GroupPermission
         { permission_level: { "$lte" => level }, "$or" => [
           { user_ids: user.id },
           { :group_ids.in => user.group_ids },
-          { :custom_group_ids.in => Gws::CustomGroup.member(user).map(&:id) }
+          { :custom_group_ids.in => Gws::CustomGroup.member(user).pluck(:id) }
         ] }
       else
         { _id: -1 }
@@ -117,6 +119,7 @@ module Gws::GroupPermission
     end
 
     def other_permission?(action, user, opts = {})
+      user   = user.gws_user
       site   = opts[:site]
       action = permission_action || action
       user.gws_role_permissions.include?("#{action}_other_#{permission_name}_#{site.id}")

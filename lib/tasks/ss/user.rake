@@ -1,5 +1,5 @@
 namespace :ss do
-  task :create_user => :environment do
+  task create_user: :environment do
     cond = { name: "システム管理", permissions: Sys::Role.permission_names }
     role = Sys::Role.find_or_create_by cond
 

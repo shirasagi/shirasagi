@@ -1,4 +1,4 @@
-FactoryGirl.define do
+FactoryBot.define do
   factory :ezine_page, class: Ezine::Page do
     cur_site { cms_site }
     cur_user { cms_user }

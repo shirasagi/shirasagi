@@ -12,6 +12,9 @@ end
   end
   cate.allowed?(:read, @cur_user, site: @cur_site, node: @cur_node)
 end
+return if @categories.blank?
+
+@categories = @categories.sort_by { |cate| cate.order }
 @disallowed_categories = @item.categories.select { |category| !category.allowed?(:read, @cur_user, site: @cur_site) }
 
 def cate_form(item)
@@ -52,6 +55,7 @@ end
 %>
 <dl class="see category-form mod-opendata-category">
   <dd class="wide allowed-categories">
+    <% if @item.class.required_categories %><%= required_label %><% end %>
     <%= f.hidden_field "category_ids[]", value: "" %>
 
     <% @categories.each do |cate| %>

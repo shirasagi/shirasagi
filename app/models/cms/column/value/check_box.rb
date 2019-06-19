@@ -1,30 +1,42 @@
 class Cms::Column::Value::CheckBox < Cms::Column::Value::Base
   field :values, type: SS::Extensions::Words
 
-  def validate_value(record, attribute)
+  permit_values values: []
+
+  liquidize do
+    export :value
+    export :values
+  end
+
+  def value
+    values.join(', ')
+  end
+
+  def import_csv(values)
+    super
+
+    values.map do |name, value|
+      case name
+      when self.class.t(:values)
+        self.values = value.to_s.split(",").map(&:strip)
+      end
+    end
+  end
+
+  private
+
+  def validate_value
     return if column.blank?
 
     if column.required? && values.blank?
-      record.errors.add(:base, name + I18n.t('errors.messages.blank'))
+      self.errors.add(:values, :blank)
     end
 
     return if values.blank?
 
     diff = values - column.select_options
     if diff.present?
-      record.errors.add(:base, name + I18n.t('errors.messages.inclusion', value: diff.join(', ')))
+      self.errors.add(:values, :inclusion, value: diff.join(', '))
     end
-  end
-
-  def update_value(new_value)
-    self.name = new_value.name
-    self.order = new_value.order
-    return false if values == new_value.values
-    self.values = new_value.values.dup
-    true
-  end
-
-  def value
-    values.join(', ')
   end
 end

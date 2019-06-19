@@ -1,7 +1,7 @@
-<%= jquery do %>
-  SS_AddonTabs.hide(".mod-ss-mobile-setting");
-<% end %>
 <%
+  addon ||= local_assigns.fetch(:addon, {})
+  addon[:display_body] = "hide"
+
   @item.in_mobile_size ||= @item.mobile_size / 1_024
 %>
 <dl class="see mod-ss-mobile-setting">
@@ -9,7 +9,7 @@
   <dd><%= f.select :mobile_state, @item.mobile_state_options %></dd>
 
   <dt><%= @model.t :mobile_size %><%= @model.tt :mobile_size %></dt>
-  <dd class="short"><%= f.number_field :in_mobile_size, value: @item.in_mobile_size %>　<span class="postfix"><%= t("ss.units.mobile_size") %></span></dd>
+  <dd class="short"><%= f.number_field :in_mobile_size, value: @item.in_mobile_size %><span class="postfix"><%= t("ss.units.mobile_size") %></span></dd>
 
   <dt><%= @model.t :mobile_location %><%= @model.tt :mobile_location %></dt>
   <dd><%= f.text_field :mobile_location %></dd>

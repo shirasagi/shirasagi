@@ -1,0 +1,383 @@
+Cms_Column_Table = function (el) {
+  this.$el = $(el);
+  this.$el.data("instance", self);
+};
+
+Cms_Column_Table.initialized = false
+Cms_Column_Table.instances = [];
+
+Cms_Column_Table.render = function (el) {
+  var instance = new Cms_Column_Table(el);
+  instance.render();
+
+  Cms_Column_Table.instances.push(instance);
+
+  if (!Cms_Column_Table.initialized) {
+    $(document).click(function (event) {
+      if (!$(event.target).closest('.control').length) {
+        Cms_Column_Table.hideAllTableMenus();
+      }
+    });
+
+    Cms_Column_Table.initialized = true;
+  }
+
+  return instance;
+};
+
+Cms_Column_Table.hideAllTableMenus = function () {
+  var tableMenu = $(document).find('.table-menu');
+  tableMenu.removeClass('show');
+};
+
+Cms_Column_Table.prototype.render = function () {
+  var self = this;
+
+  this.$el.on('click', 'button.create-table', function () {
+    self.createTable();
+  });
+  this.$el.on('click', '.table-editor td, .table-editor th', function (ev) {
+    self.editCell(ev, $(this));
+  });
+  this.$el.on('click', '.table-menu .change-th', function () {
+    self.changeTh();
+  });
+  this.$el.on('click', '.table-menu .change-td', function () {
+    self.changeTd();
+  });
+  this.$el.on('click', '.table-menu .remove-tr', function () {
+    self.removeTr();
+  });
+  this.$el.on('click', '.table-menu .remove-tds', function () {
+    self.removeTds();
+  });
+  this.$el.on('click', '.table-menu .append-top', function () {
+    self.appendTop();
+  });
+  this.$el.on('click', '.table-menu .append-bottom', function () {
+    self.appendBottom();
+  });
+  this.$el.on('click', '.table-menu .append-right', function () {
+    self.appendRight();
+  });
+  this.$el.on('click', '.table-menu .append-left', function () {
+    self.appendLeft();
+  });
+  this.$el.on('change', '.caption', function () {
+    self.setCaptionToTableCaption();
+  });
+
+  this.setTableCaptionToCaption();
+  this.addControlTable();
+};
+
+Cms_Column_Table.prototype.createTable = function () {
+  var table_editor = this.$el.find('.table-editor');
+  var width = parseInt(this.$el.find('.width').val());
+  var height = parseInt(this.$el.find('.height').val());
+  var header = this.$el.find('.header').val();
+  var table = $('<table></table>')
+  var caption = $("<caption></caption>")
+  var tbody = $("<tbody></tbody>")
+  var tr = "";
+  for (var i = 0; i < height; i++) {
+    tr = tr + "<tr>";
+    for (var j = 0; j < width; j++) {
+      if (header == "top") {
+        if (i == 0) {
+          tr = tr + "<th scope='col'></th>";
+        } else {
+          tr = tr + "<td></td>";
+        }
+      } else if (header == "left") {
+        if (j == 0) {
+          tr = tr + "<th scope='row'></th>";
+        } else {
+          tr = tr + "<td></td>";
+        }
+      } else if (header == "top-left") {
+        if (i == 0) {
+          tr = tr + "<th scope='col'></th>";
+        } else if (j == 0) {
+          tr = tr + "<th scope='row'></th>";
+        } else {
+          tr = tr + "<td></td>";
+        }
+      } else {
+        tr = tr + "<td></td>";
+      }
+    }
+    tr = tr + "</tr>";
+  }
+
+  tbody.append(tr);
+  table.append(caption);
+  table.append(tbody);
+
+  table_editor.html(table);
+  this.addControlTable();
+  this.$el.find('.table-editor caption').text(this.caption());
+  this.updateHidden();
+}
+
+Cms_Column_Table.prototype.editCell = function (ev, editable) {
+  var tableMenu;
+  if (editable.hasClass("control")) {
+    if (editable.hasClass("control-top")) {
+      tableMenu = this.$el.find('.table-menu-top');
+    } else if (editable.hasClass("control-left")) {
+      tableMenu = this.$el.find('.table-menu-left');
+    } else {
+      return false;
+    }
+//    var tableEditor = this.$el.find('.table-editor');
+    $('.table-menu').removeClass('show');
+    tableMenu.addClass('show');
+    tableMenu.offset({
+      top: ev.pageY,
+      left: ev.pageX
+    })
+    this.tableDom = editable;
+  } else {
+    editable.addClass("edited");
+
+    var self = this;
+
+    // セルをクリックしたら取得したセルの値をtextareaに追加してセル内にtextareaを挿入
+    editable.html('<textarea style="width:100px;">' + editable.html() + '</textarea>').find('textarea')
+    .focus()
+    .on('blur', function () {
+      // フォーカスが外れた時、セルに値を追加して不要なtextareaを削除
+      editable.append($(this).val());
+      editable.find('textarea').remove();
+      editable.removeClass("edited");
+      self.updateHidden();
+    })
+    .on('click', function (e) {
+      e.stopPropagation();
+    });
+  }
+};
+
+Cms_Column_Table.prototype.changeTh = function () {
+  this.tableDom.replaceWith("<th>" + this.tableDom.html() + "</th>");
+};
+
+Cms_Column_Table.prototype.changeTd = function () {
+  this.tableDom.replaceWith("<td>" + this.tableDom.html() + "</td>");
+};
+
+Cms_Column_Table.prototype.removeTr = function () {
+  this.tableDom.parent().remove();
+};
+
+Cms_Column_Table.prototype.removeTds = function () {
+  var cellIndex = this.tableDom[0].cellIndex;
+  var table = this.tableDom.parent().parent();
+  for (var i = 0; i < table[0].rows.length; i++) {
+    $(table[0].rows[i].cells[cellIndex]).remove();
+  }
+};
+
+Cms_Column_Table.prototype.appendTop = function () {
+  var table = this.tableDom.parent().parent();
+  var columnNum = table[0].rows[0].cells.length;
+  var parent = this.tableDom.parent();
+  this.removeControlTable();
+  var newTr = "<tr>";
+  for (var i = 0; i < columnNum - 1; i++) {
+    if (parent[0].cells[i].tagName == "TH") {
+      if (!parent[0].cells[i + 1]) {
+        alert("<%= I18n.t("cms.column_table.cant_append_top") %>");
+        this.addControlTable();
+        var tableMenu = $('.table-menu');
+        if (tableMenu.hasClass('show')) {
+          tableMenu.removeClass('show');
+        }
+        return false;
+      }
+      if (parent[0].cells[i + 1].tagName == "TH") {
+        alert("<%= I18n.t("cms.column_table.cant_append_top") %>");
+        this.addControlTable();
+        var tableMenu = $('.table-menu');
+        if (tableMenu.hasClass('show')) {
+          tableMenu.removeClass('show');
+        }
+        return false;
+      }
+      newTr = newTr + "<th scope='" + parent[0].cells[i].scope + "'></th>";
+    } else {
+      newTr = newTr + "<td></td>";
+    }
+  }
+  newTr = newTr + "</tr>";
+  parent.before(newTr);
+  this.addControlTable();
+};
+
+Cms_Column_Table.prototype.appendBottom = function () {
+  var table = this.tableDom.parent().parent();
+  var columnNum = table[0].rows[0].cells.length;
+  var parent = this.tableDom.parent();
+  var index = parent[0].rowIndex;
+  this.removeControlTable();
+  var newTr = "<tr>";
+  for (var i = 0; i < columnNum - 1; i++) {
+    if (parent[0].cells[i].tagName == "TH") {
+      if (!parent[0].cells[i + 1]) {
+        newTr = newTr + "<td></td>";
+      } else if (parent[0].cells[i + 1].tagName == "TH") {
+        if (!table[0].rows[index + 1]) {
+          newTr = newTr + "<th scope='" + parent[0].cells[i].scope + "'></th>";
+        } else if (table[0].rows[index + 1].cells[i].tagName == "TH") {
+          newTr = newTr + "<th scope='" + parent[0].cells[i].scope + "'></th>";
+        } else {
+          newTr = newTr + "<td></td>";
+        }
+      } else {
+        newTr = newTr + "<th scope='" + parent[0].cells[i].scope + "'></th>";
+      }
+    } else {
+      newTr = newTr + "<td></td>";
+    }
+  }
+  newTr = newTr + "</tr>";
+  parent.after(newTr);
+  this.addControlTable();
+};
+
+Cms_Column_Table.prototype.appendRight = function () {
+  var cellIndex = this.tableDom[0].cellIndex - 1;
+  var table = this.tableDom.parent().parent();
+  this.removeControlTable();
+  for (var i = 1; i < table[0].rows.length; i++) {
+    if (table[0].rows[i].cells[cellIndex].tagName == "TH") {
+      if (!table[0].rows[i + 1]) {
+        $(table[0].rows[i].cells[cellIndex]).after("<td></td>");
+      } else if (table[0].rows[i + 1].cells[cellIndex].tagName == "TH") {
+        if (!table[0].rows[i].cells[cellIndex + 1]) {
+          $(table[0].rows[i].cells[cellIndex]).after("<th scope='" + table[0].rows[i].cells[cellIndex].scope + "'></th>");
+        } else if (table[0].rows[i].cells[cellIndex + 1].tagName == "TH") {
+          $(table[0].rows[i].cells[cellIndex]).after("<th scope='" + table[0].rows[i].cells[cellIndex].scope + "'></th>");
+        } else {
+          $(table[0].rows[i].cells[cellIndex]).after("<td></td>");
+        }
+      } else {
+        $(table[0].rows[i].cells[cellIndex]).after("<th scope='" + table[0].rows[i].cells[cellIndex].scope + "'></th>");
+      }
+    } else {
+      $(table[0].rows[i].cells[cellIndex]).after("<td></td>");
+    }
+  }
+  this.addControlTable();
+};
+
+Cms_Column_Table.prototype.appendLeft = function () {
+  var cellIndex = this.tableDom[0].cellIndex - 1;
+  var table = this.tableDom.parent().parent();
+  this.removeControlTable();
+  for (var i = 1; i < table[0].rows.length; i++) {
+    if (table[0].rows[i].cells[cellIndex].tagName == "TH") {
+      if (!table[0].rows[i + 1]) {
+        alert("<%= I18n.t("cms.column_table.cant_append_left") %>");
+        this.addControlTable();
+        var tableMenu = $('.table-menu');
+        if (tableMenu.hasClass('show')) {
+          tableMenu.removeClass('show');
+        }
+        return false;
+      }
+      if (table[0].rows[i + 1].cells[cellIndex].tagName == "TH") {
+        alert("<%= I18n.t("cms.column_table.cant_append_left") %>");
+        this.addControlTable();
+        var tableMenu = $('.table-menu');
+        if (tableMenu.hasClass('show')) {
+          tableMenu.removeClass('show');
+        }
+        return false;
+      }
+      $(table[0].rows[i].cells[cellIndex]).before("<th scope='" + table[0].rows[i].cells[cellIndex].scope + "'></th>");
+    } else {
+      $(table[0].rows[i].cells[cellIndex]).before("<td></td>");
+    }
+  }
+  this.addControlTable();
+};
+
+Cms_Column_Table.prototype.caption = function () {
+  if (arguments.length === 0) {
+    // getter
+    return this.$el.find('.caption').val();
+  }
+
+  // setter
+  this.$el.find('.caption').val(arguments[0]);
+  this.setCaptionToTableCaption();
+  return this;
+}
+
+Cms_Column_Table.prototype.tableHtml = function () {
+  if (arguments.length === 0) {
+    // getter
+    this.updateHidden();
+    return this.$el.find('.hidden-value').val();
+  }
+
+  // setter
+  var html = arguments[0];
+  this.$el.find('.hidden-value').val(html);
+  this.$el.find('.table-editor').html(html);
+  this.addControlTable();
+
+  return this;
+}
+
+Cms_Column_Table.prototype.setCaptionToTableCaption = function () {
+  var $captionInTable = this.$el.find('.table-editor caption');
+  $captionInTable.text(this.caption());
+  this.updateHidden();
+};
+
+Cms_Column_Table.prototype.setTableCaptionToCaption = function () {
+  var $captionInTable = this.$el.find('.table-editor caption');
+  if ($captionInTable[0]) {
+    this.caption($captionInTable.text());
+  }
+};
+
+Cms_Column_Table.prototype.updateHidden = function () {
+  this.removeControlTable();
+  this.$el.find('.hidden-value').val(this.$el.find('.table-editor').html());
+  this.addControlTable();
+};
+
+Cms_Column_Table.prototype.addControlTable = function () {
+  var table = this.$el.find('.table-editor table');
+  if (!table[0]) {
+    return false;
+  }
+  if (table.find(".control").length > 0) {
+    return;
+  }
+
+  this.$el.find(".table-editor table tr:empty").remove();
+
+  var tr = $('<tr></tr>')
+  for (var i = 0; i < table[0].rows.length; i++) {
+    $(table[0].rows[i].cells[0]).before("<th class='control control-left'></th>");
+  }
+  for (var j = 0; j < table[0].rows[0].cells.length; j++) {
+    if (j == 0) {
+      tr.append("<th class='control'></th>");
+    } else {
+      tr.append("<th class='control control-top'></th>");
+    }
+  }
+  this.$el.find('.table-editor tbody').prepend(tr);
+};
+
+Cms_Column_Table.prototype.removeControlTable = function () {
+  this.$el.find('.table-editor table .control').each(function () {
+    $(this).remove();
+  });
+};

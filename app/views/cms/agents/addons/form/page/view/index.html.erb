@@ -1,1 +1,19 @@
-<%== @cur_page.form_html %>
+<%
+  return "" if @cur_page.form.blank?
+  html = @cur_page.form.render_html(@cur_page, liquid_registers)
+%>
+<%= content_tag_if("article", class: "body", if: @cur_page.form.sub_type_entry?) do %>
+  <% if @preview %>
+    <% render_preview_form = proc do |id| %>
+      <%= content_tag("div", "", id: id, class: "ss-preview-hide", data: { "form-id" => @cur_page.form.id, "form-sub-type" => @cur_page.form.sub_type }) %>
+    <% end %>
+
+    <% render_preview_form.call("ss-preview-form-start") %>
+  <% end %>
+
+  <%== html %>
+
+  <% if @preview %>
+    <% render_preview_form.call("ss-preview-form-end") %>
+  <% end %>
+<% end %>

@@ -16,7 +16,7 @@ class Gws::Memo::TemplatesController < ApplicationController
   end
 
   def deny_with_auth
-    raise "403" unless @model.allowed?(:edit, @cur_user, site: @cur_site)
+    raise "403" unless @model.allowed?(:read, @cur_user, site: @cur_site)
   end
 
   def set_crumbs

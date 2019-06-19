@@ -1,0 +1,12 @@
+<%
+  addon ||= local_assigns.fetch(:addon, {})
+  addon[:display_body] = "hide"
+%>
+
+<dl class="see addon-gws-system-desktop-setting">
+  <dt><%= @model.t :desktop_mailstore %><%= @model.tt :desktop_mailstore %></dt>
+  <dd><%= f.select :desktop_mailstore, @item.desktop_mailstore_options, include_blank: true %></dd>
+
+  <dt><%= @model.t :desktop_chat %><%= @model.tt :desktop_chat %></dt>
+  <dd><%= f.select :desktop_chat, @item.desktop_chat_options, include_blank: true %></dd>
+</dl>

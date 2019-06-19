@@ -2,31 +2,44 @@ require 'spec_helper'
 
 describe "fs_files", dbscope: :example do
   let(:site) { cms_site }
+  let(:user) { cms_user }
   let(:file) do
-    src = Fs::UploadedFile.create_from_file(filename, basename: "spec")
-    src.content_type = "image/png"
-
-    file = SS::File.new
-    file.in_file = src
-    file.site_id = site.id
-    file.model   = 'article/page'
-    file.state   = 'public'
-    file.save
-    file.in_file.delete
-    file
+    basename = ::File.basename(filename)
+    SS::File.create_empty!(
+      site_id: site.id, cur_user: cms_user, name: basename, filename: basename,
+      content_type: "image/png", model: 'article/page'
+    ) do |file|
+      ::FileUtils.cp(filename, file.path)
+    end
   end
 
   context "[logo.png]" do
     let(:filename) { "#{Rails.root}/spec/fixtures/ss/logo.png" }
 
-    it "#index" do
-      visit file.url
-      expect(status_code).to eq 200
+    context "without auth" do
+      it "#index" do
+        visit file.url
+        expect(status_code).to eq 404
+      end
+
+      it "#thumb" do
+        visit file.thumb_url
+        expect(status_code).to eq 404
+      end
     end
 
-    it "#thumb" do
-      visit file.thumb_url
-      expect(status_code).to eq 200
+    context "with auth" do
+      before { login_cms_user }
+
+      it "#index" do
+        visit file.url
+        expect(status_code).to eq 200
+      end
+
+      it "#thumb" do
+        visit file.thumb_url
+        expect(status_code).to eq 200
+      end
     end
   end
 
@@ -34,14 +47,30 @@ describe "fs_files", dbscope: :example do
   context "[logo.png.png]" do
     let(:filename) { "#{Rails.root}/spec/fixtures/fs/logo.png.png" }
 
-    it "#index" do
-      visit file.url
-      expect(status_code).to eq 200
+    context "without auth" do
+      it "#index" do
+        visit file.url
+        expect(status_code).to eq 404
+      end
+
+      it "#thumb" do
+        visit file.thumb_url
+        expect(status_code).to eq 404
+      end
     end
 
-    it "#thumb" do
-      visit file.thumb_url
-      expect(status_code).to eq 200
+    context "with auth" do
+      before { login_cms_user }
+
+      it "#index" do
+        visit file.url
+        expect(status_code).to eq 200
+      end
+
+      it "#thumb" do
+        visit file.thumb_url
+        expect(status_code).to eq 200
+      end
     end
   end
 

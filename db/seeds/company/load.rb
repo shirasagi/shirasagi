@@ -103,6 +103,7 @@ save_node route: "uploader/file", name: "画像", filename: "img", shortcut: "sh
 save_node route: "uploader/file", name: "JavaScript", filename: "js", shortcut: "show"
 save_node route: "article/page", name: "ニュース", filename: "news", shortcut: "show", layout_id: layouts["news"].id, new_days: 1,
   conditions: %w(product/solution product/software product/office product/marketing recruit)
+save_node route: "cms/site_search", filename: "search", name: "サイト内検索"
 save_node route: "category/page", name: "お知らせ", filename: "oshirase", shortcut: "show", layout_id: layouts["news"].id
 save_node route: "category/page", name: "製品・サービス", filename: "product", shortcut: "show", layout_id: layouts["product"].id,
   sort: "order", new_days: 1, conditions: %w(product/solution product/software product/office product/marketing)
@@ -334,5 +335,30 @@ save_max_file_size name: 'Microsoft Office', extensions: %w(doc docx ppt pptx xl
 save_max_file_size name: 'PDF', extensions: %w(pdf), order: 5, state: 'enabled'
 save_max_file_size name: 'その他', extensions: %w(*), order: 9999, state: 'enabled'
 
+## -------------------------------------
+puts "# word dictionary"
+
+def save_word_dictionary(data)
+  puts data[:name]
+  cond = { site_id: @site.id, name: data[:name] }
+
+  body_file = data.delete(:body_file)
+  data[:body] = ::File.read(body_file)
+
+  item = Cms::WordDictionary.find_or_initialize_by cond
+  puts item.errors.full_messages unless item.update data
+  item
+end
+
+save_word_dictionary name: "機種依存文字", body_file: "#{Rails.root}/db/seeds/cms/word_dictionary/dependent_characters.txt"
+
 @site.editor_css_path = '/css/ckeditor_contents.css'
 @site.update!
+
+if @site.subdir.present?
+  # rake cms:set_subdir_url site=@site.host
+  require 'rake'
+  Rails.application.load_tasks
+  ENV["site"]=@site.host
+  Rake::Task['cms:set_subdir_url'].invoke
+end

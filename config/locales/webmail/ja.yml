@@ -1,12 +1,20 @@
 ja:
   modules:
     webmail: ウェブメール
+    webmail/group_imap: グループ代表メール
     addons:
+      webmail/role: 権限/ロール
+      webmail/history: 変更履歴
       webmail/mail_body: 内容
       webmail/mail_file: 添付ファイル
       webmail/apply_filter: フィルター適用
+      webmail/user_extension: アカウント
+      webmail/group_extension: 代表メール
 
   webmail:
+    account_config: アカウント設定
+    personal_config: 個人設定
+    system_config: システム設定
     mail: メール
     message: メッセージ
     mailbox: フォルダー
@@ -17,6 +25,22 @@ ja:
     delete_mailbox_for_reload: 削除されるフォルダー
     account_setting: アカウント設定
     personal: 個人
+    imap_default_index: 既定アカウント
+    no_subjects: 'No title'
+    no_senders: '差出人不明'
+    export:
+      all_mail: 全てのメール
+      select_mail: 選択したメール
+      start_export: エクスポートを開始しました。
+      subject: "[メール] エクスポートが完了しました。"
+      notify_message: "ダウンロードの準備が完了しました。\n下記のURLからダウンロードしてください。\n\n%{link}"
+      start_message: "エクスポート処理を開始しました。\nエクスポート処理が完了次第、ダウンロードリンクが通知されます。"
+    export_failed:
+      subject: '[メッセージ] エクスポートが失敗しました。'
+      notify_message: "エクスポートが失敗しました。失敗の原因はタスク・マネージャーから確認することができます。"
+      empty_mails: エクスポート対象のメールが見つかりませんでした。
+    import:
+      start_import: インポートしました。
     box:
       inbox: 受信トレイ
       sent: 送信済み
@@ -26,6 +50,11 @@ ja:
       cache: キャッシュ
       account: アカウント
       special_mailbox: 特別なフォルダー
+      import_mails: インポート
+      export_mails: エクスポート
+    roles:
+      admin: 管理者
+      user: 一般ユーザー
     search:
       columns:
         text: キーワード
@@ -33,6 +62,12 @@ ja:
         to: 宛先
         subject: 件名
         body: 本文
+    history:
+      mode:
+        create: 登録
+        update: 変更
+        delete: 削除
+        login: ログイン
     buttons:
       test_connection: 接続確認
       clear_cache: キャッシュ削除
@@ -41,6 +76,7 @@ ja:
       add_account: アカウントを追加する
       send_mdn: 開封確認を送付する
       ignore_mdn: 要求を無視する
+      batch_download: 一括ダウンロード
     options:
       action:
         copy: コピーする
@@ -62,6 +98,9 @@ ja:
       filter_operator:
         include: に次を含む
         exclude: に次を含まない
+      imap_ssl_use:
+        disabled: 使用しない
+        enabled: 使用する
 
     links:
       back_to_contents: 受信トレイへ戻る
@@ -74,18 +113,20 @@ ja:
       set_star: スターをつける
       unset_star: スターをはずす
       reply: 返信する
+      reply_without_body: 返信する（引用なし）
       reply_all: 全員に返信
+      reply_all_without_body: 全員に返信（引用なし）
       forward: 転送する
+      edit_as_new: 新規メールとして編集
       move: 移動する
       copy: コピーする
-      print: 印刷する
       apply: 適用する
       show_cc_bcc: CC , BCC の表示
       show_image: 画像の表示
       reload_mailboxes: メールサーバと同期する
       empty_mailbox: 空にする
       select_account: アカウント
-      forward_gws_message: 連絡メモに転送する
+      forward_gws_message: メッセージに転送する
       address:
         send:  メッセージを作成する
         entry: アドレス帳に登録する
@@ -111,7 +152,7 @@ ja:
       ignore_mdn: 開封確認を無視しました。
       reloaded_mailboxes: 同期しました。
       over_threshold: "メールボックスの容量が残り %{size} です。"
-      imap_login_failed: "IMAP ログインに失敗しました。%{account_settings} を確認してください。"
+      imap_login_failed: "IMAP ログインに失敗しました。"
       multiple:
         copy: "%{count} 件のメールをコピーしました。"
         move: "%{count} 件のメールを移動しました。"
@@ -125,8 +166,26 @@ ja:
       blank_conditions: 条件を入力してください。
       blank_apply_mailbox: 適用するフォルダーを選択してください。
 
+  webmail_role:
+    read_webmail_accounts: アカウントの閲覧
+    edit_webmail_accounts: アカウントの編集
+    edit_webmail_groups: グループの管理
+    edit_webmail_users: ユーザーの管理
+    edit_webmail_roles: 権限/ロールの管理
+    read_webmail_histories: 操作履歴の閲覧
+    use_webmail_group_imap_setting: グループ代表メールの使用
+    edit_webmail_group_imap_mailboxes: グループ代表メールのフォルダーの管理
+    edit_webmail_group_imap_signatures: グループ代表メールの署名の管理
+    edit_webmail_group_imap_filters: グループ代表メールのフィルターの管理
+    edit_webmail_group_imap_caches: グループ代表メールのキャッシュの管理
+
   mongoid:
     models:
+      webmail/group: グループ
+      webmail/user: ユーザー
+      webmail/role: 権限/ロール
+      webmail/history: 操作履歴
+      webmail/history/archive_file: アーカイブ
       webmail/mail: メール
       webmail/mailbox: フォルダー
       webmail/quota: 容量
@@ -137,8 +196,11 @@ ja:
     attributes:
       ss/model/user:
         imap_setting_name: アカウント名
+        from: 名前
         address: メールアドレス
         imap_host: IMAP/ホスト
+        imap_port: IMAP/ポート
+        imap_ssl_use: IMAP/SSL
         imap_auth_type: IMAP/認証方式
         imap_account: IMAP/ユーザー名
         imap_password: IMAP/パスワード
@@ -147,10 +209,51 @@ ja:
         imap_draft_box: 下書きフォルダー
         imap_trash_box: ゴミ箱フォルダー
         threshold_mb: 警告表示
-        imap_default_index: 既定のアカウント
+        imap_alias: 転送先メールアドレス
+      webmail/user_extension:
+        imap_default_index: IMAP/既定アカウント
+        imap_settings: IMAP/ユーザー設定
+      webmail/reference/role:
+        webmail_role_ids: ロール
+      webmail/addon/group_extension:
+        imap_setting_name: アカウント名
+        from: 名前
+        address: メールアドレス
+        imap_host: IMAP/ホスト
+        imap_port: IMAP/ポート
+        imap_ssl_use: IMAP/SSL
+        imap_auth_type: IMAP/認証方式
+        imap_account: IMAP/ユーザー名
+        imap_password: IMAP/パスワード
+        in_imap_password: IMAP/パスワード
+        imap_sent_box: 送信済みフォルダー
+        imap_draft_box: 下書きフォルダー
+        imap_trash_box: ゴミ箱フォルダー
+        threshold_mb: 警告表示
       webmail/user:
         in_file: ファイル
         account_index: アカウント番号
+      webmail/history:
+        session_id: セッションID
+        request_id: リクエストID
+        severity: 重要度
+        name: 名称
+        mode: 区分
+        model: モデル
+        controller: コントローラー
+        job: ジョブ
+        mode_name: 区分名
+        model_name: モデル名
+        controller_name: コントローラー名
+        job_name: ジョブ名
+        item_id: 項目ID
+        path: URL
+        action: アクション
+        message: メッセージ
+        updated_fields: 変更箇所
+        updated_field_names: 変更箇所
+        user_name: ユーザー
+        created: 変更日時
       webmail/mail:
         size: サイズ
         date: 日付
@@ -168,6 +271,8 @@ ja:
         unseen: 未読
         flagged: スター付き
         internal_date: 送信日時
+        all_export: 対象
+        mail_ids: メール
       webmail/mailbox:
         original_name: フォルダー名(UTF-7)
         name: フォルダー名
@@ -192,13 +297,19 @@ ja:
         conditions/value: 値
         action: アクション
         mailbox: フォルダー
+        filter_error_at: エラー日時
+        filter_errors: エラー内容
 
   activemodel:
     attributes:
       webmail/imap_setting:
         name: アカウント名
+        from: 名前
         address: メールアドレス
+        imap_alias: 転送先メールアドレス
         imap_host: IMAP/ホスト
+        imap_port: IMAP/ポート
+        imap_ssl_use: IMAP/SSL
         imap_auth_type: IMAP/認証方式
         imap_account: IMAP/ユーザー名
         imap_password: IMAP/パスワード
@@ -207,8 +318,17 @@ ja:
         imap_draft_box: 下書きフォルダー
         imap_trash_box: ゴミ箱フォルダー
         threshold_mb: 警告表示
+        default: 既定のアカウント
+      webmail/mail_importer:
+        in_file: ファイル
+    models:
+      webmail/mail_importer: インポート
 
   tooltip:
+    webmail/reference/role:
+      webmail_role_ids:
+        - ユーザーの権限/ロールを選択します。
+
     webmail/mailbox:
       name:
         - フォルダー名を入力します。
@@ -230,3 +350,45 @@ ja:
     webmail/filter:
       in_file:
         - CSVファイルを指定しフィルターのインポートを行います。
+    ss/model/user:
+      imap_setting_name:
+        - アカウントの名称を入力します。
+      from:
+        - ユーザーの名称を入力します。
+        - 入力された名称は、メールの差出人として表示されます。
+      address:
+        - メールアドレスを入力します。
+      imap_alias:
+        - 転送先メールアドレスを入力します。
+      imap_host:
+        - IMAPサーバーのホストを設定します。
+      imap_port:
+        - IMAPサーバーの待受ポートを設定します。
+      imap_ssl_use:
+        - IMAPサーバーとの通信にSSLを使用するか選択します。
+      imap_auth_type:
+        - IMAPサーバーの認証方式を選択します。
+      imap_account:
+        - IMAPサーバーのユーザーアカウントを設定します。
+      in_imap_password:
+        - IMAPサーバーのユーザーアカウントのパスワードを設定します。
+      imap_sent_box:
+        - 送信済みフォルダーとして利用するフォルダーの名前を設定します。
+      imap_draft_box:
+        - 下書きフォルダーとして利用するフォルダーの名前を設定します。
+      imap_trash_box:
+        - ゴミ箱フォルダーとして利用するフォルダーの名前を設定します。
+      threshold_mb: |-
+        メールボックスの容量の警告を設定します。
+        メールボックスの容量がここで設定したサイズを上回った時に容量の警告が表示されます。
+
+        メールボックスの容量が1GBの時に、900MBを設定した場合、メールボックスの使用容量が900MB以上（残り100MB以下）の時に警告が表示されます。
+
+        何も設定しない場合、警告は表示されません。
+      imap_default_index:
+        - このアカウントを既定のアカウントにするか選択します。
+
+  job:
+    models:
+      webmail/history_archive_job: 操作履歴アーカイブ作成
+      webmail/role_import_job: ロール/権限インポート

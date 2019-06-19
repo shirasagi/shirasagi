@@ -4,7 +4,7 @@ SS::Application.routes.draw do
 
   concern :deletion do
     get :delete, on: :member
-    delete action: :destroy_all, on: :collection
+    delete :destroy_all, on: :collection, path: ''
   end
 
   concern :copy do
@@ -20,18 +20,33 @@ SS::Application.routes.draw do
   content "opendata" do
     get "dataset_download_reports" => "dataset/download_reports#index", as: :dataset_download_reports
     get "dataset_download_reports/download" => "dataset/download_reports#download", as: :dataset_download_reports_download
+    get "dataset_preview_reports" => "dataset/preview_reports#index", as: :dataset_preview_reports
+    get "dataset_preview_reports/download" => "dataset/preview_reports#download", as: :dataset_preview_reports_download
+    get "dataset_access_reports" => "dataset/access_reports#index", as: :dataset_access_reports
+    get "dataset_access_reports/download" => "dataset/access_reports#download", as: :dataset_access_reports_download
+    get "dataset_public_entity" => "dataset/public_entity#index", as: :dataset_public_entity
+    get "dataset_public_entity_download" => "dataset/public_entity#download", as: :dataset_public_entity_download
     resources :crawls, concerns: :deletion, module: :dataset
     resources :dataset_categories, concerns: :deletion, module: :dataset
+    resources :dataset_estat_categories, concerns: :deletion, module: :dataset
+    resources :dataset_areas, concerns: :deletion, module: :dataset
     resources :dataset_groups, concerns: :deletion, module: :dataset do
       get "search" => "dataset_groups/search#index", on: :collection
     end
+    get 'export_datasets' => 'dataset/export_datasets#index'
+    put 'export_datasets' => 'dataset/export_datasets#export'
+    get 'start_export_datasets' => 'dataset/export_datasets#start_export'
+    get 'import_datasets' => 'dataset/import_datasets#index'
+    put 'import_datasets' => 'dataset/import_datasets#import'
     resources :datasets, concerns: [:deletion, :copy, :command], module: :dataset do
+
       get "search" => "datasets/search#index", on: :collection
       get :check_for_update, on: :member
       resources :resources, concerns: :deletion do
         get "file" => "resources#download"
         get "tsv" => "resources#download_tsv"
         get "content" => "resources#content"
+        get "guidance" => "csv2rdf_settings#guidance"
         get "header_size" => "csv2rdf_settings#header_size"
         post "header_size" => "csv2rdf_settings#header_size"
         get "rdf_class" => "csv2rdf_settings#rdf_class"
@@ -51,10 +66,46 @@ SS::Application.routes.draw do
         get "file" => "url_resources#download"
         get "content" => "url_resources#content"
       end
-
+      get :public_entity_download, on: :collection
     end
     resources :search_datasets, concerns: :deletion, module: :dataset
     resources :search_dataset_groups, concerns: :deletion, module: :dataset
+    resources :dataset_maps, concerns: :deletion, module: :dataset
+
+    scope module: :dataset do
+      namespace :harvest do
+        resources :importers, concerns: :deletion do
+          get :import, on: :member
+          put :import, on: :member
+          get :destroy_datasets, on: :member
+          put :destroy_datasets, on: :member
+          scope module: :importer do
+            resources :category_settings, concerns: :deletion, path: 'c:category_id', defaults: { category_id: '-' } do
+              get :download, on: :collection
+              get :import, on: :collection
+              put :import, on: :collection
+            end
+            resources :estat_category_settings, concerns: :deletion, path: 'estat:category_id', defaults: { category_id: '-' } do
+              get :download, on: :collection
+              get :import, on: :collection
+              put :import, on: :collection
+            end
+            resources :reports, only: [:show, :destroy], concerns: :deletion do
+              get :dataset, on: :member
+              get :download, on: :member
+            end
+          end
+        end
+        resources :exporters, concerns: :deletion do
+          get :export, on: :member
+          put :export, on: :member
+          scope module: :exporter do
+            resources :group_settings, concerns: :deletion
+            resources :owner_org_settings, concerns: :deletion
+          end
+        end
+      end
+    end
   end
 
   node "opendata" do
@@ -67,8 +118,22 @@ SS::Application.routes.draw do
     # get "dataset_category/:name/formats" => "public#index_formats", cell: "nodes/dataset/dataset_category"
     # get "dataset_category/:name/licenses" => "public#index_licenses", cell: "nodes/dataset/dataset_category"
 
+    get "dataset_estat_category/" => "public#index", cell: "nodes/dataset/dataset_estat_category"
+    get "dataset_estat_category/rss.xml" => "public#rss", cell: "nodes/dataset/dataset_estat_category"
+    get "dataset_estat_category/:name/" => "public#index", cell: "nodes/dataset/dataset_estat_category"
+    get "dataset_estat_category/:name/rss.xml" => "public#rss", cell: "nodes/dataset/dataset_estat_category"
+
+    get "dataset_area/" => "public#index", cell: "nodes/dataset/dataset_area"
+    get "dataset_area/rss.xml" => "public#rss", cell: "nodes/dataset/dataset_area"
+    get "dataset_area/*name/rss.xml" => "public#rss", cell: "nodes/dataset/dataset_area", name: /[^\.]+/
+    get "dataset_area/*name/" => "public#index", cell: "nodes/dataset/dataset_area", name: /[^\.]+/
+    get "dataset_map/" => "public#index", cell: "nodes/dataset/dataset_map"
+    get "dataset_map/search.html" => "public#search", cell: "nodes/dataset/dataset_map"
+
     get "dataset/(index.:format)" => "public#index", cell: "nodes/dataset/dataset"
     get "dataset/rss.xml" => "public#rss", cell: "nodes/dataset/dataset"
+    get "dataset/categories" => "public#index_categories", cell: "nodes/dataset/dataset"
+    get "dataset/estat_categories" => "public#index_estat_categories", cell: "nodes/dataset/dataset"
     get "dataset/areas" => "public#index_areas", cell: "nodes/dataset/dataset"
     get "dataset/tags" => "public#index_tags", cell: "nodes/dataset/dataset"
     get "dataset/formats" => "public#index_formats", cell: "nodes/dataset/dataset"
@@ -96,11 +161,14 @@ SS::Application.routes.draw do
     get "search_dataset/tags" => "public#index_tags", cell: "nodes/dataset/search_dataset"
     get "search_dataset/search" => "public#search", cell: "nodes/dataset/search_dataset"
     get "search_dataset/rss.xml" => "public#rss", cell: "nodes/dataset/search_dataset"
+    get "search_dataset/bulk_download" => "public#bulk_download", cell: "nodes/dataset/search_dataset"
+    get "search_dataset/dataset_download/:id" => "public#dataset_download", cell: "nodes/dataset/search_dataset"
   end
 
   part "opendata" do
     get "dataset" => "public#index", cell: "parts/dataset/dataset"
     get "dataset_group" => "public#index", cell: "parts/dataset/dataset_group"
+    get "dataset_counter" => "public#index", cell: "parts/dataset/dataset_counter"
   end
 
   page "opendata" do

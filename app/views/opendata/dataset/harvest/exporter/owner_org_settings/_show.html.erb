@@ -1,0 +1,13 @@
+<dl class="see">
+  <dt><%= @model.t :name %></dt>
+  <dd><%= @item.name %></dd>
+
+  <dt><%= @model.t :ckan_id %></dt>
+  <dd><%= @item.ckan_id %></dd>
+
+  <dt><%= @model.t :order %></dt>
+  <dd><%= @item.order %></dd>
+
+  <dt><%= @model.t :group_ids %></dt>
+  <dd><%=br @item.groups.pluck(:name).join("\n") %></dd>
+</dl>

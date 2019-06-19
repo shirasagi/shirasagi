@@ -1,4 +1,4 @@
-FactoryGirl.define do
+FactoryBot.define do
   trait :cms_page do
     cur_site { cms_site }
     cur_user { cms_user }
@@ -12,6 +12,18 @@ FactoryGirl.define do
 
     factory :cms_page_basename_invalid do
       basename "pa/ge.html"
+    end
+
+    factory :cms_page_10_characters_name do
+      name "a" * 10
+    end
+
+    factory :cms_page_100_characters_name do
+      name "b" * 100
+    end
+
+    factory :cms_page_1000_characters_name do
+      name "c" * 1000
     end
   end
 

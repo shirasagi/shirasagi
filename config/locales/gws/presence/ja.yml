@@ -1,0 +1,54 @@
+ja:
+  gws/presence:
+    group: グループ
+    sync_state: ステータス自動更新
+    buttons:
+      register_reminder: リマインダーを登録
+    links:
+      all_groups: 全てのユーザー
+
+  modules:
+    gws/presence: 在席管理
+    gws/presence/users: 在席状況
+    gws/presence/management/users: 管理
+    addons:
+      gws/presence/delegator_setting: 在席管理
+
+  gws_role:
+    use_gws_user_presences: 在席状況の利用
+    manage_private_gws_user_presences: 在席状況の管理（自所属）
+    manage_all_gws_user_presences: 在席状況の管理（全て）
+    manage_custom_group_gws_user_presences: 在席状況の管理（所属カスタムグループ）
+
+  mongoid:
+    models:
+      gws/presence: 在席管理
+    attributes:
+      gws/user_presence:
+        state: ステータス
+        plan: 状況
+        memo: 備考
+        send_message: メッセージ
+        sync_available_state: 在席
+        sync_unavailable_state: 離席
+      gws/addon/presence/delegator_setting:
+        presence_editable_title_ids: 編集可能な役職
+
+  tooltip:
+    gws/user_presence:
+      state:
+        - ステータスを入力します。
+      plan:
+        - 状況を入力します。
+      memo:
+        - 備考を入力します。
+      sync_available_state:
+        - 設定を有効にすることで、ログイン時にステータスが離席の場合、在席に更新します。
+      sync_unavailable_state:
+        - 設定を有効にすることで、ログアウト時にステータスが在席の場合、離席に更新します。
+    gws/addon/presence/group_setting:
+      presence_notification_state:
+        - 在席状況の確認通知を設定します。
+    gws/addon/presence/delegator_setting:
+      presence_editable_title_ids:
+        - 別の役職を設定することで、その役職に該当するユーザーの在席状況を更新できます。

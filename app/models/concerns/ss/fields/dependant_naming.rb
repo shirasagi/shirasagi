@@ -31,9 +31,9 @@ module SS::Fields::DependantNaming
     dst = changes[1]
     return unless dst
 
-    dependant_scope.ne(_id: _id).where(self.class.name_field => /^#{Regexp.escape(src)}\//).each do |item|
+    dependant_scope.ne(_id: _id).where(self.class.name_field => /^#{::Regexp.escape(src)}\//).each do |item|
       val = item[self.class.name_field]
-      val = val.sub(/^#{Regexp.escape(src)}\//, "#{dst}/")
+      val = val.sub(/^#{::Regexp.escape(src)}\//, "#{dst}/")
       item[self.class.name_field] = val
       item.skip_rename_children = true
       item.save(validate: false)

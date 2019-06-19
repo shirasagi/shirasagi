@@ -3,7 +3,7 @@ require 'spec_helper'
 describe 'article_pages', dbscope: :example, js: true do
   let(:site) { cms_site }
   let(:node) { create :article_node_page, cur_site: site }
-  let!(:form) { create(:cms_form, cur_site: site, state: 'public') }
+  let!(:form) { create(:cms_form, cur_site: site, state: 'public', sub_type: 'static') }
   let!(:column1) do
     create(:cms_column_text_field, cur_site: site, cur_form: form, input_type: 'text')
   end
@@ -24,7 +24,7 @@ describe 'article_pages', dbscope: :example, js: true do
 
         within 'form#item-form' do
           fill_in 'item[name]', with: name
-          fill_in "item[column_values][#{column1.id}]", with: column1_value
+          fill_in "item[column_values][][in_wrap][value]", with: column1_value
           click_on I18n.t('ss.buttons.publish_save')
         end
         expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
@@ -47,15 +47,19 @@ describe 'article_pages', dbscope: :example, js: true do
     end
 
     context 'with file upload' do
-      let!(:column2) { create(:cms_column_file_upload, cur_site: site, cur_form: form) }
+      let!(:column2) { create(:cms_column_file_upload, cur_site: site, cur_form: form, file_type: "attachment") }
 
       it do
         visit new_article_page_path(site: site, cid: node, form_id: form.id)
 
         within 'form#item-form' do
           fill_in 'item[name]', with: name
-          fill_in "item[column_values][#{column1.id}]", with: column1_value
-          find("a[data-column-id=\"#{column2.id}\"]").click
+          fill_in "item[column_values][][in_wrap][value]", with: column1_value
+          # find("a[data-column-id=\"#{column2.id}\"]").click
+          within first(".column-value-cms-column-fileupload") do
+            fill_in "item[column_values][][in_wrap][file_label]", with: unique_id
+            click_on I18n.t("ss.links.upload")
+          end
         end
 
         within 'div#cboxLoadedContent form.user-file' do

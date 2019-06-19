@@ -14,14 +14,26 @@ class Cms::Apis::NodesController < ApplicationController
   end
 
   def set_model_from_param
-    model = params[:model].presence
-    return if model.blank?
-    return unless model.include?('::Node')
-
-    model = model.constantize rescue nil
-    return if model.blank?
-    return unless model.ancestors.include?(Cms::Model::Node)
+    models = Mongoid.models.select { |m| m.ancestors.include?(Cms::Model::Node) }
+    model = models.find{ |m| m.to_s == params[:model] }
+    return unless model
 
     @model = model
+  end
+
+  public
+
+  def index
+    @single = params[:single].present?
+    @multi = !@single
+
+    @items = @model.site(@cur_site).
+      search(params[:s]).
+      order_by(_id: -1).
+      page(params[:page]).per(50)
+
+    if params[:layout] == "iframe"
+      render layout: "ss/ajax_in_iframe"
+    end
   end
 end

@@ -36,10 +36,10 @@ def save_ss_files(path, data)
   file = Fs::UploadedFile.create_from_file(path)
   file.original_filename = data[:filename] if data[:filename].present?
 
-  item = SS::File.find_or_create_by(cond)
+  item = SS::File.new(cond)
   item.in_file = file
   item.name = data[:name] if data[:name].present?
-  item.update
+  item.save
 
   item
 end
@@ -310,6 +310,31 @@ save_editor_template name: "回り込み解除",
   description: "回り込みを解除します",
   html: editor_template_html, order: 30, site_id: @site.id
 
+## -------------------------------------
+puts "# word dictionary"
+
+def save_word_dictionary(data)
+  puts data[:name]
+  cond = { site_id: @site.id, name: data[:name] }
+
+  body_file = data.delete(:body_file)
+  data[:body] = ::File.read(body_file)
+
+  item = Cms::WordDictionary.find_or_initialize_by cond
+  puts item.errors.full_messages unless item.update data
+  item
+end
+
+save_word_dictionary name: "機種依存文字", body_file: "#{Rails.root}/db/seeds/cms/word_dictionary/dependent_characters.txt"
+
 ## editor css path
 @site.editor_css_path = '/css/ckeditor_contents.css'
 @site.update
+
+if @site.subdir.present?
+  # rake cms:set_subdir_url site=@site.host
+  require 'rake'
+  Rails.application.load_tasks
+  ENV["site"]=@site.host
+  Rake::Task['cms:set_subdir_url'].invoke
+end

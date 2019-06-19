@@ -4,14 +4,14 @@ module Sys::SiteCopy::CmsColumns
   include Sys::SiteCopy::CmsContents
 
   def copy_cms_column(src_item)
-    model = Cms::Column::Base
+    model = src_item.class
     dest_item = nil
     options = copy_cms_column_options
-    id = cache(:forms, src_item.id) do
+    id = cache(:columns, src_item.id) do
       options[:before].call(src_item) if options[:before]
       dest_item = model.new(cur_site: @dest_site)
       dest_item.attributes = copy_basic_attributes(src_item, model)
-      dest_item.form_id = resolve_reference(:form, src_item.form_id)
+      dest_item.form_id = resolve_form_reference(src_item.form_id)
       dest_item.save!
       dest_item.id
     end

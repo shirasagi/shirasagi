@@ -1,6 +1,2 @@
-<% message.subject = "[#{Gws::Report::File.model_name.human}] #{@item.name}" %>
-
-<%= @item.user_name %>さんより「<%= @item.name %>」が送信されました。
-次の URL にアクセスし確認してください。
-
-<%= gws_report_file_url(protocol: @item.site.canonical_scheme.presence || 'http', host: @item.site.canonical_domain.presence || 'example.jp', site: @item.site, state: 'inbox', id: @item) %>
+<% message.subject = "[#{Gws::Report::File.model_name.human}] 「#{@item.name}」が届きました。" %>
+<%= Rails.application.routes.url_helpers.gws_report_file_path(site: @item.site, state: 'inbox', id: @item) %>

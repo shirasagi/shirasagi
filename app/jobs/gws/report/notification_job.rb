@@ -1,18 +1,22 @@
 class Gws::Report::NotificationJob < Gws::ApplicationJob
   def perform(item_id, added_member_ids, removed_member_ids)
-    item = Gws::Report::File.site(site).find(item_id)
-    @user = item.user
+    @item = Gws::Report::File.site(site).find(item_id)
+    @user = @item.user
 
-    Gws::User.in(id: added_member_ids).each do |recipient|
-      mail = Gws::Report::Mailer.publish_mail(item)
-      next if mail.blank?
-      create_memo_notice(mail, recipient)
+    if added_member_ids.present?
+      Gws::User.in(id: added_member_ids).each do |recipient|
+        mail = Gws::Report::Mailer.publish_mail(@item)
+        next if mail.blank?
+        create_memo_notice(mail, recipient)
+      end
     end
 
-    Gws::User.in(id: removed_member_ids).each do |recipient|
-      mail = Gws::Report::Mailer.depublish_mail(item)
-      next if mail.blank?
-      create_memo_notice(mail, recipient)
+    if removed_member_ids.present?
+      Gws::User.in(id: removed_member_ids).each do |recipient|
+        mail = Gws::Report::Mailer.depublish_mail(@item)
+        next if mail.blank?
+        create_memo_notice(mail, recipient)
+      end
     end
   end
 
@@ -33,14 +37,17 @@ class Gws::Report::NotificationJob < Gws::ApplicationJob
   end
 
   def create_memo_notice(mail, recipient)
-    message = Gws::Memo::Notice.new
-    message.cur_site = site
+    message = SS::Notification.new
+    message.cur_group = site
     message.cur_user = @user
     message.member_ids = [recipient.id]
     message.send_date = Time.zone.now
     message.subject = mail.subject
     message.format = 'text'
-    message.text = mail.decoded
+    message.url = mail.decoded
     message.save!
+
+    mail =  Gws::Memo::Mailer.notice_mail(message, [recipient], @item)
+    mail.deliver_now if mail
   end
 end

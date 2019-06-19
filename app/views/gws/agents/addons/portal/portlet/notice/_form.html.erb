@@ -1,0 +1,60 @@
+<dl class="see">
+  <dt><%= @model.t :notice_severity %><%= @model.tt :notice_severity %></dt>
+  <dd><%= f.select :notice_severity, @item.notice_severity_options, include_blank: true %></dd>
+
+  <dt><%= @model.t :notice_browsed_state %><%= @model.tt :notice_browsed_state %></dt>
+  <dd><%= f.select :notice_browsed_state, @item.notice_browsed_state_options, include_blank: t("gws/board.options.browsed_state.both") %></dd>
+
+  <dt><%= @model.t :notice_category_ids %><%= @model.tt :notice_category_ids %></dt>
+  <dd>
+    <%= f.hidden_field "notice_category_ids[]", value: "", class: "hidden-ids" %>
+    <%= link_to t("gws.apis.categories.index"), gws_notice_apis_categories_path(single: true), class: "ajax-box" %>
+  </dd>
+  <dd>
+    <table class="index ajax-selected">
+      <thead>
+      <tr>
+        <th class="name"><%= Gws::Notice::Category.t :name %></th>
+        <th class="deselect"></th>
+      </tr>
+      </thead>
+      <tbody>
+      <% @item.notice_categories.readable(@cur_user, site: @cur_site).each do |cate| %>
+        <tr data-id="<%= cate.id %>">
+          <td><%= f.hidden_field "notice_category_ids[]", value: cate.id, id: nil %> <%= cate.name %></td>
+          <td><%= link_to t("ss.buttons.delete"), "#", class: "deselect btn" %></td>
+        </tr>
+      <% end %>
+      </tbody>
+    </table>
+  </dd>
+</dl>
+
+<dl class="see">
+  <dt><%= @model.t :notice_folder_ids %><%= @model.tt :notice_folder_ids %></dt>
+  <dd>
+    <%= f.hidden_field "notice_folder_ids[]", value: "", class: "hidden-ids" %>
+    <%= link_to t("gws/share.apis.folders.index"), gws_notice_apis_folders_path(mode: 'readable', single: true), class: "ajax-box" %>
+  </dd>
+  <dd>
+    <table class="index ajax-selected">
+      <thead>
+      <tr>
+        <th class="name"><%= Gws::Notice::Folder.t :name %></th>
+        <th class="deselect"></th>
+      </tr>
+      </thead>
+      <tbody>
+      <% @item.notice_folders.for_post_reader(@cur_site, @cur_user).each do |folder| %>
+        <tr data-id="<%= folder.id %>">
+          <td><%= f.hidden_field "notice_folder_ids[]", value: folder.id, id: nil %> <%= folder.name %></td>
+          <td><%= link_to t("ss.buttons.delete"), "#", class: "deselect btn" %></td>
+        </tr>
+      <% end %>
+      </tbody>
+    </table>
+  </dd>
+
+  <dt><%= @item.t :limit %><%= @item.tt :limit %></dt>
+  <dd><%= f.number_field :limit %></dd>
+</dl>

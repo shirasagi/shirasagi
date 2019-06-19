@@ -107,7 +107,7 @@ module Service::Quota
       Gws::CustomGroup.any_in(site_id: org_ids),
       Gws::History.any_in(site_id: org_ids),
       Gws::Link.any_in(site_id: org_ids),
-      Gws::Notice.any_in(site_id: org_ids),
+      Gws::Notice::Post.any_in(site_id: org_ids),
       Gws::Reminder.any_in(site_id: org_ids),
       Gws::Role.any_in(site_id: org_ids),
     ].sum { |c| c.total_bsonsize }
@@ -177,7 +177,7 @@ module Service::Quota
     sites.each do |site|
       dir = site.root_path
       next unless ::File.exists?(dir)
-      size += `du -bs #{dir}`.sub(/\s.*/m, '').to_i
+      size += `du -bs #{Shellwords.escape(dir)}`.sub(/\s.*/m, '').to_i
     end
     size
   end

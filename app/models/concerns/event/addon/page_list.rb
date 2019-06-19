@@ -17,6 +17,7 @@ module Event::Addon
         [I18n.t('event.options.sort.event_dates_today'), 'event_dates_today'],
         [I18n.t('event.options.sort.event_dates_tomorrow'), 'event_dates_tomorrow'],
         [I18n.t('event.options.sort.event_dates_week'), 'event_dates_week'],
+        [I18n.t('event.options.sort.event_deadline'), 'event_deadline']
       ]
     end
 
@@ -34,6 +35,8 @@ module Event::Addon
         { "$and" => [ h, { "event_dates" => { "$eq" => 1.day.since(today) } } ] }
       when "event_dates_week"
         { "$and" => [ h, { "event_dates" => { "$elemMatch" => { "$gte" => today, "$lte" => 1.week.since(today) } } } ] }
+      when "event_deadline"
+        { "$and" => [ h, { "event_deadline" => { "$gte" => today } } ] }
       else h
       end
     end

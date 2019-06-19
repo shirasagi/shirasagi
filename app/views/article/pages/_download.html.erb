@@ -1,0 +1,47 @@
+<dl class="see">
+  <dt><%= t('ss.encoding') %></dt>
+  <dd>
+    <% %w(Shift_JIS UTF-8).each do |encoding| %>
+      <label>
+        <%= radio_button_tag "#{f.object_name}[encoding]", encoding, encoding == 'Shift_JIS', { id: nil } %>
+        <%= t("ss.options.csv_encoding.#{encoding}") %>
+      </label>
+    <% end %>
+  </dd>
+
+  <% @cur_node = @cur_node.becomes_with_route %>
+  <% if @cur_node.respond_to?(:st_forms) %>
+    <% unsupported_forms = [] %>
+    <dt><%= t('mongoid.models.cms/form') %></dt>
+    <dd>
+      <label>
+        <%= radio_button_tag "#{f.object_name}[form_id]", -1, @cur_node.st_form_default.blank?, { id: nil } %>
+        <%= t("cms.default_form") %>
+      </label>
+
+      <% @cur_node.st_forms.each do |form| %>
+        <%
+          if form.sub_type_entry?
+            unsupported_forms << form
+            next
+          end
+        %>
+        <label>
+          <%= radio_button_tag "#{f.object_name}[form_id]", form.id, form.id == @cur_node.st_form_default.try(:id), { id: nil } %>
+          <%= form.name %>
+        </label>
+      <% end %>
+    </dd>
+    <% if unsupported_forms.present? %>
+      <dd><%= t("cms.notices.import_with_entry_form_is_not_supported") %></dd>
+      <dd>
+        <% unsupported_forms.each do |form| %>
+          <label>
+            <%= radio_button_tag "#{f.object_name}[form_id]", form.id, form.id == @cur_node.st_form_default.try(:id), { id: nil } %>
+            <%= form.name %>
+          </label>
+        <% end %>
+      </dd>
+    <% end %>
+  <% end %>
+</dl>

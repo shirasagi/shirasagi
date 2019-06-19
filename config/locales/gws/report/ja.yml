@@ -24,6 +24,13 @@ ja:
       user: 作成者
       form: 帳票
 
+  gws_notification:
+    gws/report/file:
+      mail_text: |
+        %{subject}
+
+        %{text}
+
   modules:
     gws/report: レポート
     addons:
@@ -32,6 +39,7 @@ ja:
       gws/report/category: カテゴリー
 
   gws_role:
+    use_gws_report: レポートの利用
     read_other_gws_report_files:  レポートの閲覧（全て）
     read_private_gws_report_files:  レポートの閲覧（所有）
     edit_other_gws_report_files:  レポートの編集（全て）
@@ -78,6 +86,8 @@ ja:
         columns: 入力設定
       gws/addon/report/category:
         category_ids: カテゴリー
+      gws/reference/report/form:
+        form_id: テンプレート
 
   tooltip:
     gws/report/file:

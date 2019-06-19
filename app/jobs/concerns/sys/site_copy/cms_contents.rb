@@ -13,16 +13,6 @@ module Sys::SiteCopy::CmsContents
       # at first, copy non-reference values and references which have no possibility of circular reference
       dest_content = klass.new(cur_site: @dest_site)
       dest_content.attributes = copy_basic_attributes(src_content, klass)
-      if dest_content.respond_to?(:column_values)
-        dest_content.column_values = src_content.column_values.map do |src_column_value|
-          dest_column_value = src_column_value.dup
-          dest_column_value.column_id = resolve_reference(:column, src_column_value.column_id)
-          if dest_column_value.respond_to?(:file_id)
-            dest_column_value.file_id = resolve_reference(:file, src_column_value.file_id)
-          end
-          dest_column_value
-        end
-      end
       dest_content.save!
       dest_content.id
     end
@@ -44,21 +34,27 @@ module Sys::SiteCopy::CmsContents
     field.type == Array || field.type.ancestors.include?(Array)
   end
 
-  def reference_class(name, field)
-    metadata = field.metadata
-    return nil if metadata.blank?
+  def reference_class(name, field, content)
+    if field.foreign_key? && field.association.polymorphic?
+      klass = content[field.association.inverse_type]
+      return klass.present? ? klass.constantize : nil
+    end
+
+    metadata = field.options[:metadata]
+    association = field.association
+    return nil if metadata.blank? && association.blank?
 
     if array_field?(name, field)
       klass = metadata[:elem_class]
     else
-      klass = metadata.try(:class_name)
+      klass = association.try(:class_name)
     end
     klass = klass.constantize if klass.is_a?(String)
     klass
   end
 
   def on_copy(name, field)
-    metadata = field.metadata
+    metadata = field.options[:metadata]
     return nil if metadata.blank?
 
     metadata[:on_copy]
@@ -88,8 +84,12 @@ module Sys::SiteCopy::CmsContents
       :column
     elsif klass == Cms::LoopSetting
       :loop_setting
+    elsif klass == Cms::EditorTemplate
+      :editor_template
     elsif klass == Opendata::DatasetGroup
       :opendata_dataset_group
+    elsif klass == Opendata::License
+      :opendata_license
     elsif ancestors.include?(Jmaxml::QuakeRegion)
       :jmaxml_quake_region
     else
@@ -98,7 +98,7 @@ module Sys::SiteCopy::CmsContents
   end
 
   def safe_reference_type?(type)
-    [:group, :user, :file, :layout].include?(type)
+    [:group, :user, :layout].include?(type)
   end
 
   def unsafe_reference_type?(type)
@@ -122,7 +122,7 @@ module Sys::SiteCopy::CmsContents
         unsafe = false
       end
 
-      ref_class = reference_class(field_name, field_info)
+      ref_class = reference_class(field_name, field_info, content)
       next [field_name, field_value] if ref_class.blank?
 
       ref_type = reference_type(ref_class)
@@ -146,7 +146,7 @@ module Sys::SiteCopy::CmsContents
 
       next nil if on_copy(field_name, fields[field_name])
 
-      ref_class = reference_class(field_name, fields[field_name])
+      ref_class = reference_class(field_name, fields[field_name], content)
       next nil if ref_class.nil?
 
       ref_type = reference_type(ref_class)
@@ -184,14 +184,21 @@ module Sys::SiteCopy::CmsContents
       resolve_column_reference(id_or_ids)
     when :loop_setting
       resolve_loop_setting_reference(id_or_ids)
+    when :editor_template
+      resolve_editor_template_reference(id_or_ids)
+    when :opendata_dataset_group
+      resolve_opendata_dataset_group_reference(id_or_ids)
+    when :opendata_license
+      resolve_opendata_license_reference(id_or_ids)
     end
   end
 
-  def update_html_links(src_content, dest_content)
+  def update_html_links(src_content, dest_content, options = {})
     file_url_maps = build_file_url_map(src_content, dest_content)
     dest_field_names = dest_content.class.fields.keys
+    names = options[:names].presence || %w(html)
     dest_content.attributes.each do |field_name, field_value|
-      next unless field_name.include?('html')
+      next unless names.any? { |name| field_name.include?(name) }
       next unless dest_field_names.include?(field_name)
       next if field_value.blank?
 

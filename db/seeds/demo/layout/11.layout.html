@@ -1,0 +1,3 @@
+{% if value.file %}
+  <p class="float-left"><img src="{{ value.file.url }}" alt="{{ value.file_label | default: value.file.humanized_name }}" /></p>
+{% endif %}

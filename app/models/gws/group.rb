@@ -8,6 +8,7 @@ class Gws::Group
   include Gws::Addon::Memo::GroupSetting
   include Gws::Addon::Circular::GroupSetting
   include Gws::Addon::Monitor::GroupSetting
+  include Gws::Addon::Survey::GroupSetting
   include Gws::Addon::Board::GroupSetting
   include Gws::Addon::Faq::GroupSetting
   include Gws::Addon::Qna::GroupSetting
@@ -17,8 +18,10 @@ class Gws::Group
   include Gws::Addon::Elasticsearch::GroupSetting
   include Gws::Addon::System::FileSetting
   include Gws::Addon::System::MenuSetting
+  include Gws::Addon::System::NoticeSetting
   include Gws::Addon::System::LogSetting
   include Gws::Addon::System::GroupSetting
+  include Gws::Addon::System::DesktopSetting
   include Gws::Addon::History
   include Gws::Addon::Import::Group
 
@@ -30,14 +33,14 @@ class Gws::Group
 
   validate :validate_parent_name, if: ->{ cur_site.present? }
 
-  scope :site, ->(site) { where name: /^#{Regexp.escape(site.name)}(\/|$)/ }
+  scope :site, ->(site) { self.and name: /^#{::Regexp.escape(site.name)}(\/|$)/ }
 
   private
 
   def validate_parent_name
     return if cur_site.id == id
 
-    if name !~ /^#{Regexp.escape(cur_site.name)}\//
+    if !name.start_with?("#{cur_site.name}/")
       errors.add :name, :not_a_child_group
     elsif name.scan('/').size > 1
       errors.add :base, :not_found_parent_group unless self.class.where(name: File.dirname(name)).exists?

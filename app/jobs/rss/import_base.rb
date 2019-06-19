@@ -18,8 +18,6 @@ class Rss::ImportBase < Cms::ApplicationJob
       Rails.logger.info("couldn't parse rss items")
     end
 
-    switch_urgency_layout
-
     after_import
 
     Rails.logger.info("finish importing rss")
@@ -125,7 +123,7 @@ class Rss::ImportBase < Cms::ApplicationJob
     return if @rss_links.blank? || @min_released.blank? || @max_released.blank?
 
     criteria = model.site(site).node(node)
-    criteria = criteria.between(released: @min_released..@max_released)
+    #criteria = criteria.between(released: @min_released..@max_released)
     criteria = criteria.nin(rss_link: @rss_links)
     criteria.each do |item|
       item.destroy
@@ -149,21 +147,5 @@ class Rss::ImportBase < Cms::ApplicationJob
     end
 
     log.save
-  end
-
-  def switch_urgency_layout
-    return unless node.try(:urgency_enabled?)
-
-    if @items.present? && @items.rss.items.present?
-      node.switch_to_urgency_layout
-    else
-      node.switch_to_default_layout
-
-      ## destroy all pages when switch to default layout
-      model.site(site).node(node).each do |item|
-        item.destroy
-        put_history_log(item, :destroy)
-      end
-    end
   end
 end

@@ -1,8 +1,4 @@
-<%= jquery do %>
-  //SS_AddonTabs.hide(".gws-schedule-facility");
-<% end %>
-
-<dl class="see gws-schedule-facility">
+<dl class="see gws-schedule-facility" data-plan-id="<%= @item.persisted? ? @item.id : "" %>">
   <dt><%= @model.t :facility_ids %><%= @model.tt :facility_ids %></dt>
   <dd>
     <%= f.hidden_field('facility_ids[]', value: '', class: 'hidden-ids') %>
@@ -140,7 +136,18 @@
       d.max_hour = maxHour;
     }
 
-    return($.param({ s: s, d: d }));
+    var item = {};
+    var plan_id = $(".gws-schedule-facility").attr("data-plan-id");
+    $.each($('form#item-form').serializeArray(), function(i, input) {
+      if (input["name"].match(/item\[/)) {
+        item[input["name"]] = input["value"];
+      }
+    });
+    if (plan_id) {
+      item["item[id]"] = plan_id;
+    }
+
+    return $.param(Object.assign({ s: s, d: d }, item));
   };
 
   var confirmFacilityReservation = function() {
@@ -218,14 +225,12 @@
     $.ajax({
       url: href,
       success: function(data) {
-        html_facility_reservation = $('<div></div>').html(data)
-        if ($(html_facility_reservation).find('.reservation.exist').length) {
-          confirmFacilityReservation();
-        } else if (!$(html_facility_reservation).find('.date').length) {
-          confirmFacilityReservation();
-        } else {
+        html_facility_reservation = $('<div></div>').html(data);
+        if($(html_facility_reservation).find(".reservation-valid.free").length) {
           proceed();
           $('form#item-form').submit();
+        } else {
+          confirmFacilityReservation();
         }
       }
     });

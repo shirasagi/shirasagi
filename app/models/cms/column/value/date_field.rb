@@ -3,24 +3,11 @@ class Cms::Column::Value::DateField < Cms::Column::Value::Base
   field :html_additional_attr, type: String, default: ''
   field :date, type: DateTime
 
-  def validate_value(record, attribute)
-    return if column.blank?
+  permit_values :date
 
-    if column.required? && date.blank?
-      record.errors.add(:base, name + I18n.t('errors.messages.blank'))
-    end
-
-    return if date.blank?
-  end
-
-  def update_value(new_value)
-    self.name = new_value.name
-    self.order = new_value.order
-    self.html_tag = new_value.html_tag
-    self.html_additional_attr = new_value.html_additional_attr
-    return false if date == new_value.date
-    self.date = new_value.date
-    true
+  liquidize do
+    export :value
+    export :date
   end
 
   def html_additional_attr_to_h
@@ -30,7 +17,44 @@ class Cms::Column::Value::DateField < Cms::Column::Value::Base
       compact.to_h
   end
 
-  def to_html
+  def value
+    I18n.l(self.date.to_date, format: :long) rescue nil
+  end
+
+  def import_csv(values)
+    super
+
+    values.map do |name, value|
+      case name
+      when self.class.t(:date)
+        self.date = value
+      end
+    end
+  end
+
+  private
+
+  def validate_value
+    return if column.blank?
+
+    if column.required? && date.blank?
+      self.errors.add(:date, :blank)
+    end
+
+    return if date.blank?
+  end
+
+  def copy_column_settings
+    super
+
+    return if column.blank?
+
+    self.html_tag = column.html_tag
+    self.html_additional_attr = column.html_additional_attr
+  end
+
+  # override Cms::Column::Value::Base#to_default_html
+  def to_default_html
     return '' if date.blank?
 
     text = I18n.l(date.to_date, format: :long) rescue nil
@@ -46,9 +70,5 @@ class Cms::Column::Value::DateField < Cms::Column::Value::Base
     else
       text
     end
-  end
-
-  def value
-    I18n.l(self.date.to_date) rescue nil
   end
 end

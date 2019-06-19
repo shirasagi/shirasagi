@@ -4,12 +4,17 @@ SS::Application.routes.draw do
 
   concern :deletion do
     get :delete, on: :member
-    delete action: :destroy_all, on: :collection
+    delete :destroy_all, on: :collection, path: ''
+  end
+
+  concern :download do
+    get :download, on: :member
+    get :download_sample_csv, on: :collection
   end
 
   namespace('chorg', as: 'chorg', path: '.s:site/chorg', module: 'chorg') do
     get '/' => redirect { |p, req| "#{req.path}/revisions" }, as: :main
-    resources :revisions, concerns: [:deletion]
+    resources :revisions, concerns: [:deletion, :download]
     resources :changesets, path: 'revisions/:rid/:type/changesets', concerns: [:deletion]
     resource :result, path: 'revisions/:rid/:type/result', only: [:show] do
       post :interrupt, on: :member

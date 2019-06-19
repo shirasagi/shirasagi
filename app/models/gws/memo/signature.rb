@@ -40,7 +40,7 @@ class Gws::Memo::Signature
   private
 
   def check_default
-    self.class.user(user).
+    self.class.site(@cur_site || site).user(user).
       where(default: 'enabled').
       where(:id.ne => id).
       update_all(default: 'disabled')

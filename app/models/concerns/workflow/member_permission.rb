@@ -2,6 +2,7 @@ module Workflow::MemberPermission
   extend ActiveSupport::Concern
 
   def allowed?(action, user, opts = {})
+    user = user.cms_user
     site = opts[:site] || @cur_site
     node = opts[:node] || @cur_node
 
@@ -16,10 +17,7 @@ module Workflow::MemberPermission
     permits << "#{action}_private_#{self.class.permission_name}" if is_owned
     permits << "#{action}_member_#{self.class.permission_name}" if workflow_member_id.present?
 
-    permits.each do |permit|
-      return true if user.cms_role_permissions["#{permit}_#{site.id}"].to_i > 0
-    end
-    false
+    user.cms_role_permit_any?(site, permits)
   end
 
   module ClassMethods

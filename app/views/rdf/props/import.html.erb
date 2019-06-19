@@ -1,5 +1,3 @@
-<%= stylesheet_link_tag "opendata/private", media: "all" %>
-
 <% @s = OpenStruct.new params[:s] %>
 <div class="rdf-prop-search-form">
   <%= form_for :s, url: "", html: { class: "index-search", method: :get } do |f| %>
@@ -45,7 +43,7 @@ table.rdf-props {
   <%= paginate @items if @items.try(:current_page) %>
 
   <footer class="send">
-    <%= f.submit t("rdf.buttons.import"), class: :save %>
-    <%= f.button t("ss.buttons.cancel"), type: :reset, onclick: "location.href='#{url_for(action: :index)}'; return false;" %>
+    <%= f.submit t("rdf.buttons.import"), class: "save" %>
+    <%= f.button t("ss.buttons.cancel"), class: "btn-default", type: :reset, onclick: "location.href='#{url_for(action: :index)}'; return false;" %>
   </footer>
 <% end %>

@@ -1,9 +1,9 @@
 module Event
   class Initializer
     Cms::Node.plugin "event/page"
+    Cms::Node.plugin "event/search"
     Cms::Part.plugin "event/calendar"
     Cms::Part.plugin "event/search"
-    Cms::Node.plugin "event/search"
 
     Cms::Role.permission :read_other_event_pages
     Cms::Role.permission :read_private_event_pages
@@ -21,5 +21,7 @@ module Event
     Cms::Role.permission :revoke_private_event_pages
     Cms::Role.permission :move_private_event_pages
     Cms::Role.permission :move_other_event_pages
+    Cms::Role.permission :import_private_event_pages
+    Cms::Role.permission :import_other_event_pages
   end
 end

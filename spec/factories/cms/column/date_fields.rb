@@ -1,4 +1,4 @@
-FactoryGirl.define do
+FactoryBot.define do
   factory :cms_column_date_field, class: Cms::Column::DateField do
     cur_site { cms_site }
 

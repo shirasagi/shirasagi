@@ -1,0 +1,9 @@
+<dl class="see mod-gws-schedule-todo-category">
+  <dt class="wide"></dt>
+  <dd class="wide">
+    <% @item.categories.each do |category| %>
+      <% next unless category %>
+      <span><%= category.name %></span>
+    <% end %>
+  </dd>
+</dl>

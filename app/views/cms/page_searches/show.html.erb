@@ -1,12 +1,9 @@
 <% addons = @item ? @item.class.addons : [] %>
 
 <div class="addon-views">
-  <div class="addon-view" id="addon-basic">
-    <% if addons.size > 0 %><div class="addon-head"><h2><%= t "ss.basic_info"%></h2></div><% end %>
-    <div class="addon-body">
-      <%= render file: "_show" %>
-    </div>
-  </div>
+  <%= render "ss/crud/addon", addon: { id: "addon-basic", head: t("ss.basic_info") } do %>
+    <%= render file: "_show" %>
+  <% end %>
   <%= render file: "_addons_show", locals: { addons: addons } if addons.size > 0 %>
 </div>
 

@@ -35,7 +35,7 @@ class Opendata::Agents::Nodes::App::AppfileController < ApplicationController
 
     @item = @app.appfiles.find_by id: params[:id], format: "CSV"
 
-    render nothing: true unless @data = @item.parse_csv
+    head :ok unless @data = @item.parse_csv
   end
 
   def json

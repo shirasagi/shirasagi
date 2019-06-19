@@ -1,0 +1,28 @@
+<dl class="see mod-estat_category">
+  <dt><%= t("category.setting") %><%= @model.tt :st_estat_categories %></dt>
+  <dd class="wide" style="line-height: 2.5">
+    <%= f.hidden_field "st_estat_category_ids[]", value: "", class: "hidden-ids" %>
+    <%= link_to t("cms.apis.categories.index"), cms_apis_nodes_path(model: "Opendata::Node::EstatCategory"), class: "ajax-box" %>
+  </dd>
+  <dd>
+    <table class="index ajax-selected">
+      <thead>
+        <tr>
+          <th class="name"><%= t("category.name") %></th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        <% @item.st_estat_categories.each do |cate| %>
+        <tr data-id="<%= cate.id %>">
+          <td><%= f.hidden_field "st_estat_category_ids[]", value: cate.id %> <%= cate.name %></td>
+          <td><%= link_to t("ss.buttons.delete"), "#", class: "btn deselect" %></td>
+        </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </dd>
+
+  <dt><%= @item.t :estat_categories_limit %><%= @model.tt :estat_categories_limit %></dt>
+  <dd><%= f.number_field :estat_categories_limit, min: 0 %></dd>
+</dl>

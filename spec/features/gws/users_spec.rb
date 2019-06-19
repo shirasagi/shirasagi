@@ -10,6 +10,8 @@ describe "gws_users", type: :feature, dbscope: :example, js: true do
   let(:edit_path) { "#{index_path}/#{item.id}/edit" }
   let(:delete_path) { "#{index_path}/#{item.id}/delete" }
   let(:name) { unique_id }
+  let(:sys_role1) { create(:sys_role_general, name: "一般ユーザー") }
+  let(:title1) { create(:gws_user_title, code: "E100") }
 
   context "with auth" do
     before { login_gws_user }
@@ -30,7 +32,7 @@ describe "gws_users", type: :feature, dbscope: :example, js: true do
         fill_in "item[in_password]", with: "pass"
         click_button I18n.t('ss.buttons.save')
       end
-      expect(page).not_to have_css('#item-form')
+      expect(page).to have_no_css('#item-form')
 
       #show
       visit show_path
@@ -42,7 +44,7 @@ describe "gws_users", type: :feature, dbscope: :example, js: true do
         fill_in "item[name]", with: "name"
         click_button I18n.t('ss.buttons.save')
       end
-      expect(page).not_to have_css('#item-form')
+      expect(page).to have_no_css('#item-form')
 
       #delete
       visit delete_path
@@ -57,6 +59,9 @@ describe "gws_users", type: :feature, dbscope: :example, js: true do
       visit "#{index_path}/download_template"
 
       #import
+      sys_role1
+      title1
+
       visit index_path
       click_link I18n.t('ss.links.import')
       within "form" do
@@ -73,7 +78,7 @@ describe "gws_users", type: :feature, dbscope: :example, js: true do
     let(:form) do
       Gws::UserForm.create!(cur_site: site, state: 'public')
     end
-    let!(:column1) { create(:gws_column_text_field, cur_site: site, cur_form: form) }
+    let!(:column1) { create(:gws_column_text_field, cur_site: site, cur_form: form, input_type: "text") }
     let(:name) { unique_id }
     let(:new_name) { unique_id }
 
@@ -120,7 +125,7 @@ describe "gws_users", type: :feature, dbscope: :example, js: true do
       within 'form' do
         click_button I18n.t('ss.buttons.delete')
       end
-      expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+      expect(page).to have_css('#notice', text: I18n.t('ss.notice.deleted'))
 
       expect { Gws::User.all.active.find_by(name: new_name) }.to raise_error Mongoid::Errors::DocumentNotFound
     end

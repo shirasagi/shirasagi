@@ -1,6 +1,6 @@
 class Gws::Reminder::NotificationJob < Gws::ApplicationJob
   def now
-    @now ||= round_down_seconds(Time.zone.now)
+    @now ||= Time.zone.now.beginning_of_minute
   end
 
   def perform(opts = {})
@@ -10,7 +10,7 @@ class Gws::Reminder::NotificationJob < Gws::ApplicationJob
     reminder_ids = Gws::Reminder.site(site).notify_between(from, to).pluck(:id)
     reminder_ids.each do |reminder_id|
       item = Gws::Reminder.find(reminder_id)
-      mail = Gws::Reminder::Mailer.notify_mail(item)
+      mail = Gws::Reminder::Mailer.notify_mail(site, item)
       next if mail.blank?
 
       item.notifications.each do |notification|
@@ -21,8 +21,8 @@ class Gws::Reminder::NotificationJob < Gws::ApplicationJob
           mail.deliver_now
         else
           Rails.logger.info("#{item.user.long_name}: リマインダー通知")
-          message = Gws::Memo::Notice.new
-          message.cur_site = item.site
+          message = SS::Notification.new
+          message.cur_group = item.site
           message.cur_user = item.user
           message.member_ids = [item.user_id]
           message.send_date = @now
@@ -43,11 +43,5 @@ class Gws::Reminder::NotificationJob < Gws::ApplicationJob
     end
     Rails.logger.info("#{send_count} 件の通知を送りました")
     puts_history(:info, "#{send_count} 件の通知を送りました")
-  end
-
-  private
-
-  def round_down_seconds(time)
-    Time.zone.at((time.to_i / 60) * 60)
   end
 end

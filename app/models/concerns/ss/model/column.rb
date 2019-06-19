@@ -13,7 +13,6 @@ module SS::Model::Column
     field :tooltips, type: SS::Extensions::Lines
     field :prefix_label, type: String
     field :postfix_label, type: String
-    field :class_name, type: String
 
     permit_params :name, :order, :required, :tooltips, :prefix_label, :postfix_label
 
@@ -25,6 +24,8 @@ module SS::Model::Column
     validates :required, inclusion: { in: %w(required optional), allow_blank: true }
     validates :prefix_label, length: { maximum: 80 }
     validates :postfix_label, length: { maximum: 80 }
+
+    scope :form, ->(form) { where(form_id: form.id, form_type: form.class.name) }
   end
 
   module ClassMethods
@@ -48,12 +49,17 @@ module SS::Model::Column
     end
 
     def build_column_values(hash)
+      hash = hash.to_unsafe_h if hash.respond_to?(:to_unsafe_h)
       hash.map do |key, value|
         column = all.find(key) rescue nil
         next nil if column.blank?
 
         column.serialize_value(value)
       end
+    end
+
+    def value_type
+      @value_type ||= name.insert(name.rindex("::"), "::Value").constantize
     end
   end
 
@@ -95,8 +101,22 @@ module SS::Model::Column
     File.exists?(file) ? file : nil
   end
 
+  delegate :value_type, to: :class
+
   def serialize_value(*args)
     raise NotImplementedError
+  end
+
+  def syntax_check_enabled?
+    false
+  end
+
+  def link_check_enabled?
+    false
+  end
+
+  def form_check_enabled?
+    required?
   end
 
   private

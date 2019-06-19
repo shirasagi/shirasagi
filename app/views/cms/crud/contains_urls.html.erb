@@ -1,17 +1,14 @@
 <div class="addon-views">
-  <div class="addon-view" id="addon-basic">
-    <div class="addon-head"><h2><%= t "ss.basic_info"%></h2></div>
-    <div class="addon-body">
-      <dl class="see">
-        <dt><%= @model.t :name %></dt>
-        <dd><%= @item.send :name %></dd>
+  <%= render "ss/crud/addon", addon: { id: "addon-basic", head: t("ss.basic_info") } do %>
+    <dl class="see">
+      <dt><%= @model.t :name %></dt>
+      <dd><%= @item.send :name %></dd>
 
-        <dt><%= @model.t :basename %></dt>
-        <dd><%= @item.send :basename %></dd>
-        <dd><%= @item.public? ? link_to(@item.full_url, @item.full_url, target: "_blank") : @item.full_url %></dd>
-      </dl>
-    </div>
-  </div>
+      <dt><%= @model.t :basename %></dt>
+      <dd><%= @item.send :basename %></dd>
+      <dd><%= @item.public? ? link_to(@item.full_url, @item.full_url, target: "_blank") : @item.full_url %></dd>
+    </dl>
+  <% end %>
 </div>
 
 <div class="index">

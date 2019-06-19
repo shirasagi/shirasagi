@@ -4,7 +4,7 @@ SS::Application.routes.draw do
 
   concern :deletion do
     get :delete, :on => :member
-    delete action: :destroy_all, on: :collection
+    delete :destroy_all, on: :collection, path: ''
   end
 
   concern :export do
@@ -14,8 +14,8 @@ SS::Application.routes.draw do
   end
 
   concern :role do
-    get "role/edit" => "groups#role_edit", :on => :member
-    put "role" => "groups#role_update", :on => :member
+    get "role/edit" => "groups#role_edit", on: :member
+    put "role" => "groups#role_update", on: :member
   end
 
   concern :lock_and_unlock do
@@ -35,6 +35,8 @@ SS::Application.routes.draw do
     post "test/mail" => "test/mail#create", as: :send_test_mail
 
     resource :menu_settings, only: [:show, :edit, :update]
+    resource :password_policy, only: [:show, :edit, :update]
+    resource :ad, only: [:show, :edit, :update]
 
     resources :users, concerns: [:deletion, :lock_and_unlock]
     resources :notice, concerns: :deletion
@@ -43,20 +45,21 @@ SS::Application.routes.draw do
     resources :roles, concerns: :deletion
     resources :max_file_sizes, concerns: :deletion
     resources :postal_codes, concerns: [:deletion, :export]
+    resources :prefecture_codes, concerns: [:deletion, :export]
     resources :mail_logs, concerns: :deletion, only: [ :index, :show, :delete, :destroy ] do
       get :decode, on: :member
       put :decode, on: :member, action: :commit_decode
     end
 
-    namespace "webmail" do
-      resources :accounts, only: [:index], concerns: [:export] do
-        get :download_template, :on => :collection
-      end
-    end
-
     namespace "apis" do
       get "groups" => "groups#index"
       get "sites" => "sites#index"
+      resources :temp_files, concerns: :deletion do
+        get :select, on: :member
+        get :view, on: :member
+        get :thumb, on: :member
+        get :download, on: :member
+      end
     end
 
     namespace "db" do

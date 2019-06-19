@@ -31,7 +31,7 @@ class Cms::Apis::NodeTreeController < ApplicationController
     @item.parents.map do |item|
       next unless item.allowed?(:read, @cur_user, site: @cur_site)
       item.children.allow(:read, @cur_user, site: @cur_site).limit(@limit)
-    end.flatten
+    end.flatten.compact
   end
 
   def child_items
@@ -41,6 +41,7 @@ class Cms::Apis::NodeTreeController < ApplicationController
   def items_hash(items)
     items = items.map do |item|
       {
+        id: item.id,
         name: item.name,
         filename: item.filename,
         depth: item.depth,

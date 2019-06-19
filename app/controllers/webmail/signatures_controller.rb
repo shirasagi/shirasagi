@@ -1,8 +1,10 @@
 class Webmail::SignaturesController < ApplicationController
   include Webmail::BaseFilter
-  include Sns::CrudFilter
+  include Webmail::ImapCrudFilter
 
   model Webmail::Signature
+
+  before_action :check_group_imap_permissions, if: ->{ @webmail_mode == :group }
 
   private
 
@@ -12,14 +14,20 @@ class Webmail::SignaturesController < ApplicationController
   end
 
   def fix_params
-    { cur_user: @cur_user }
+    @imap.account_scope.merge(cur_user: @cur_user)
+  end
+
+  def check_group_imap_permissions
+    unless @cur_user.webmail_permitted_any?(:edit_webmail_group_imap_signatures)
+      redirect_to webmail_mails_path(webmail_mode: @webmail_mode, account: params[:account])
+    end
   end
 
   public
 
   def index
     @items = @model.
-      user(@cur_user).
+      and_imap(@imap).
       search(params[:s]).
       page(params[:page]).
       per(50)

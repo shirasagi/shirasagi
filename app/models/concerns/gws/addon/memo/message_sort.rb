@@ -16,9 +16,14 @@ module Gws::Addon::Memo::MessageSort
       @sort_hash = gws_memo_message_sort.dig(folder.site_id.to_s, folder.folder_path.tr(".", "_"))
       @sort_hash ||= { "send_date" => -1, "updated" => -1 }
     end
-    self.gws_memo_message_sort[folder.site_id.to_s] ||= {}
-    self.gws_memo_message_sort[folder.site_id.to_s][folder.folder_path.tr(".", "_")] = @sort_hash
-    update
+
+    k1 = folder.site_id.to_s
+    k2 = folder.folder_path.tr(".", "_")
+    self.gws_memo_message_sort[k1] ||= {}
+    if self.gws_memo_message_sort[k1][k2] != @sort_hash
+      self.gws_memo_message_sort[k1][k2] = @sort_hash
+      save
+    end
 
     @sort_hash
   end

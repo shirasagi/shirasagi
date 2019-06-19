@@ -4,25 +4,36 @@ class Webmail::AddressesController < ApplicationController
 
   model Webmail::Address
 
+  before_action :redirect_to_index_all, if: ->{ params[:group].blank? }
   before_action :set_address_group
+  before_action :set_crumbs
   before_action :set_group_navi, only: [:index]
+  before_action :set_selected_items, only: [:destroy_all, :move]
 
   private
 
   def set_crumbs
-    set_address_group
-    account = params[:account] || @cur_user.imap_default_index
-    @crumbs << [t("mongoid.models.webmail/address"), webmail_addresses_path(account: account)]
-    @crumbs << [@address_group.name, action: :index] if @address_group
-    @webmail_other_account_path = :webmail_addresses_path
+    @crumbs << [t("mongoid.models.webmail/address"), webmail_addresses_path(group: "-")]
+    @crumbs << [@address_group.name, webmail_addresses_path(group: @address_group.id)] if @address_group
+  end
+
+  def pre_params
+    params = super
+    params[:address_group_id] = @address_group.id if @address_group
+    params
   end
 
   def fix_params
     { cur_user: @cur_user }
   end
 
+  def redirect_to_index_all
+    return if params[:group].present?
+    redirect_to webmail_addresses_path(group: "-")
+  end
+
   def set_address_group
-    return if params[:group].blank?
+    return if params[:group].to_s == "-"
     @address_group ||= Webmail::AddressGroup.user(@cur_user).find(params[:group])
   end
 
@@ -81,7 +92,22 @@ class Webmail::AddressesController < ApplicationController
     if item = @model.user(@cur_user).where(email: email).first
       redirect_to action: :edit, id: item.id
     else
-      redirect_to action: :new, item: params[:item]
+      redirect_to action: :new, item: params[:item].to_unsafe_h
     end
+  end
+
+  def move
+    group = Webmail::AddressGroup.find(params[:group_id]) rescue nil
+    return if group.nil? || @items.nil?
+
+    data = []
+    @items.each do |item|
+      item.address_group = group
+      if item.update
+        data << { id: item.id.to_s, name: group.name }
+      end
+    end
+
+    render json: data.to_json
   end
 end

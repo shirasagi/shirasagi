@@ -19,7 +19,7 @@ class Urgency::Apis::LayoutsController < ApplicationController
     node_filenames, default_layout_ids = criteria.pluck(:filename, :urgency_default_layout_id).transpose
 
     @items = @model.site(@cur_site).
-      where("$or" => node_filenames.map { |f| { filename: /^#{Regexp.escape(f)}/ } }).
+      where("$or" => node_filenames.map { |f| { filename: /^#{::Regexp.escape(f)}/ } }).
       nin(id: default_layout_ids).
       search(params[:s]).
       order_by(name: 1).

@@ -23,22 +23,12 @@ describe "job_cms_logs", dbscope: :example do
     before { login_cms_user }
 
     it "#index" do
-      # ensure that log is existed
-      logs.each do |log|
-        expect(log).not_to be_nil
-      end
-
       visit index_path
       expect(status_code).to eq 200
-      expect(current_path).to eq index_path
+      expect(current_path).to eq "#{index_path}/#{Time.zone.now.strftime("%Y%m%d")}"
     end
 
     it "#download" do
-      # ensure that log is existed
-      logs.each do |log|
-        expect(log).not_to be_nil
-      end
-
       visit index_path
       click_on 'ダウンロード'
       expect(status_code).to eq 200
@@ -65,10 +55,6 @@ describe "job_cms_logs", dbscope: :example do
     end
 
     it "#batch_destroy" do
-      # ensure that log is existed
-      logs.each do |log|
-        expect(log).not_to be_nil
-      end
       expect(Job::Log.count).to be > 0
 
       visit index_path

@@ -1,0 +1,102 @@
+<dl class="see">
+  <dt class="depth-1"><%= t("sys.password_effective_period") %></dt>
+  <dd class="depth-1"></dd>
+
+  <dt class="depth-2"><%= @model.t :password_limit_days %></dt>
+  <dd class="depth-2">
+    <% if @item.password_limit_use == "enabled" %>
+    <%= @item.password_limit_days %>
+    <span><%= t("datetime.prompts.day") %></span>
+    <% else %>
+    <%= @item.label :password_limit_use %>
+    <% end %>
+  </dd>
+
+  <dt class="depth-2"><%= @model.t :password_warning_days %></dt>
+  <dd class="depth-2">
+    <% if @item.password_warning_use == "enabled" %>
+    <%= @item.password_warning_days %>
+    <span><%= t("datetime.prompts.day") %></span>
+    <% else %>
+    <%= @item.label :password_warning_use %>
+    <% end %>
+  </dd>
+
+  <dt class="depth-1"><%= t("sys.password_constraint") %></dt>
+  <dd class="depth-1"></dd>
+
+  <dt class="depth-2"><%= @model.t :password_min_length %></dt>
+  <dd class="depth-2">
+    <% if @item.password_min_use == "enabled" %>
+    <%= @item.password_min_length %>
+    <span><%= t("sys.prompts.char") %></span>
+    <% else %>
+    <%= @item.label :password_min_use %>
+    <% end %>
+  </dd>
+
+  <dt class="depth-2"><%= t("sys.password_constraint_detail") %></dt>
+  <dd class="depth-2"></dd>
+
+  <dt class="depth-3"><%= @model.t :password_min_upcase_length %></dt>
+  <dd class="depth-3">
+    <% if @item.password_min_upcase_use == "enabled" %>
+    <%= @item.password_min_upcase_length %>
+    <span><%= t("sys.prompts.char") %></span>
+    <% else %>
+    <%= @item.label :password_min_upcase_use %>
+    <% end %>
+  </dd>
+
+  <dt class="depth-3"><%= @model.t :password_min_downcase_length %></dt>
+  <dd class="depth-3">
+    <% if @item.password_min_downcase_use == "enabled" %>
+    <%= @item.password_min_downcase_length %>
+    <span><%= t("sys.prompts.char") %></span>
+    <% else %>
+    <%= @item.label :password_min_downcase_use %>
+    <% end %>
+  </dd>
+
+  <dt class="depth-3"><%= @model.t :password_min_digit_length %></dt>
+  <dd class="depth-3">
+    <% if @item.password_min_digit_use == "enabled" %>
+    <%= @item.password_min_digit_length %>
+    <span><%= t("sys.prompts.char") %></span>
+    <% else %>
+    <%= @item.label :password_min_digit_use %>
+    <% end %>
+  </dd>
+
+  <dt class="depth-3"><%= @model.t :password_min_symbol_length %></dt>
+  <dd class="depth-3">
+    <% if @item.password_min_symbol_use == "enabled" %>
+    <%= @item.password_min_symbol_length %>
+    <span><%= t("sys.prompts.char") %></span>
+    <% else %>
+    <%= @item.label :password_min_symbol_use %>
+    <% end %>
+  </dd>
+
+  <dt class="depth-2"><%= @model.t :password_prohibited_char %></dt>
+  <dd class="depth-2">
+    <% if @item.password_prohibited_char_use == "enabled" %>
+    <%= @item.password_prohibited_char %>
+    <% else %>
+    <%= @item.label :password_prohibited_char_use %>
+    <% end %>
+  </dd>
+
+  <dt class="depth-1"><%= t("sys.password_change_constraint") %></dt>
+  <dd class="depth-1"></dd>
+
+  <dt class="depth-2"><%= @model.t :password_min_change_char_count %></dt>
+  <dd class="depth-2">
+    <% if @item.password_min_change_char_use == "enabled" %>
+    <%= @item.password_min_change_char_count %>
+    <span><%= t("sys.prompts.char") %></span>
+    <% else %>
+    <%= @item.label :password_min_change_char_use %>
+    <% end %>
+  </dd>
+</dl>

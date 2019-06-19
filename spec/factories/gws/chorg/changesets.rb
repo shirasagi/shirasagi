@@ -1,4 +1,4 @@
-FactoryGirl.define do
+FactoryBot.define do
   factory :gws_add_changeset, class: Gws::Chorg::Changeset do
     type Chorg::Model::Changeset::TYPE_ADD
     destinations { [ { name: "組織変更/新設グループ_#{unique_id}" }.stringify_keys ] }

@@ -46,7 +46,8 @@ module Cms::Model::Member
 
     validates :name, presence: true, length: { maximum: 40 }, if: ->{ enabled? || in_check_name }
     validates :email, email: true, length: { maximum: 80 }
-    validates :email, uniqueness: { scope: :site_id }, presence: true, if: ->{ oauth_type.blank? }
+    validates :email, presence: true, if: ->{ oauth_type.blank? }
+    validates :email, uniqueness: { scope: :site_id }, if: ->{ oauth_type.blank? || email.present? }
     validate :validate_email_again, if: ->{ in_check_email_again }
     validates :email_type, inclusion: { in: %w(text html) }, if: ->{ email_type.present? }
     validates :password, presence: true, if: ->{ oauth_type.blank? && enabled? }
@@ -55,8 +56,8 @@ module Cms::Model::Member
     before_validation :encrypt_password, if: ->{ in_password.present? }
     before_validation :set_site_email, if: ->{ email.present? }
 
-    after_create :send_notify_mail, if: ->{ oauth_type.blank? }
-    after_create :send_verification_mail, if: ->{ oauth_type.blank? }
+    after_save :send_notify_mail, if: ->{ oauth_type.blank? }
+    after_save :send_verification_mail, if: ->{ oauth_type.blank? }
 
     scope :and_enabled, -> { self.or({ state: 'enabled' }, { state: nil }) }
     scope :and_temporary, -> { where(state: 'temporary') }
@@ -130,12 +131,12 @@ module Cms::Model::Member
   def validate_password
     return if self.in_password.blank?
 
-    errors.add :in_password, :password_short if self.in_password.length < 6
+    errors.add :in_password, :password_short, count: 6 if self.in_password.length < 6
     errors.add :in_password, :password_alphabet_only if self.in_password =~ /[A-Z]/i && self.in_password !~ /[^A-Z]/i
     errors.add :in_password, :password_numeric_only if self.in_password =~ /[0-9]/ && self.in_password !~ /[^0-9]/
     errors.add :in_password, :password_include_email \
-      if self.email.present? && self.in_password =~ /#{Regexp.escape(self.email)}/
+      if self.email.present? && self.in_password =~ /#{::Regexp.escape(self.email)}/
     errors.add :in_password, :password_include_name \
-      if self.name.present? && self.in_password =~ /#{Regexp.escape(self.name)}/
+      if self.name.present? && self.in_password =~ /#{::Regexp.escape(self.name)}/
   end
 end

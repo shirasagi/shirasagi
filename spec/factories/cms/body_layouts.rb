@@ -1,4 +1,4 @@
-FactoryGirl.define do
+FactoryBot.define do
   factory :cms_body_layout, class: Cms::BodyLayout do
     cur_site { cms_site }
     cur_user { cms_user }

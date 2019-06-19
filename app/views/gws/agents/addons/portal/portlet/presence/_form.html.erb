@@ -1,0 +1,48 @@
+<%= jquery do %>
+$('a.ajax-box').data('on-select', function(item) {
+  $('a.deselect').trigger("click");
+  SS_SearchUI.defaultSelector(item);
+});
+<% end %>
+
+<dl class="see">
+  <dt><%= @model.t :custom_group_id %><%= @model.tt :custom_group_id %></dt>
+  <dd>
+    <%= f.hidden_field "custom_group_id", value: "", class: "hidden-ids" %>
+    <%= link_to t("gws.apis.custom_groups.index"), gws_apis_custom_groups_path(single: 1), class: "ajax-box" %>
+  </dd>
+  <dd>
+    <table class="index ajax-selected">
+      <thead><tr><th class="name"><%= Gws::CustomGroup.t :name %></th><th class="deselect"></th></tr></thead>
+      <tbody>
+      <% if @item.custom_group.present? %>
+        <tr data-id="<%= @item.custom_group_id %>">
+          <td><%= f.hidden_field "custom_group_id", value: @item.custom_group_id, id: nil %> <%= @item.custom_group.name %></td>
+          <td><%= link_to t("ss.buttons.delete"), "#", class: "deselect btn" %></td>
+        </tr>
+      <% end %>
+      </tbody>
+    </table>
+  </dd>
+</dl>
+
+<dl class="see">
+  <dt><%= @model.t :group_id %><%= @model.tt :group_id %></dt>
+  <dd>
+    <%= f.hidden_field "group_id", value: "", class: "hidden-ids" %>
+    <%= link_to t("ss.apis.groups.index"), gws_apis_groups_path(single: 1), class: "btn ajax-box" %>
+  </dd>
+  <dd>
+    <table class="index ajax-selected">
+      <thead><tr><th class="name"><%= Gws::Group.t :name %></th><th class="deselect"></th></tr></thead>
+      <tbody>
+      <% if @item.group.present? %>
+        <tr data-id="<%= @item.group_id %>">
+          <td><%= f.hidden_field "group_id", value: @item.group_id, id: nil %> <%= @item.group.name %></td>
+          <td><%= link_to t("ss.buttons.delete"), "#", class: "deselect btn" %></td>
+        </tr>
+      <% end %>
+      </tbody>
+    </table>
+  </dd>
+</dl>

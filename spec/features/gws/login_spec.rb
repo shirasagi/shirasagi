@@ -11,7 +11,7 @@ describe "gws_login", type: :feature, dbscope: :example do
     it "with uid" do
       visit login_path
       within "form" do
-        fill_in "item[email]", with: user.uid
+        fill_in "item[email]", with: unique_id
         fill_in "item[password]", with: "pass"
         click_button I18n.t("ss.login")
       end

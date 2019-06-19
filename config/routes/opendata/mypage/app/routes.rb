@@ -8,13 +8,14 @@ SS::Application.routes.draw do
 
   concern :deletion_all do
     get :delete, on: :member
-    delete action: :destroy_all, on: :collection
+    delete :destroy_all, on: :collection, path: ''
   end
 
   content "opendata" do
     get "apps_approve" => "app/apps#index_approve"
     get "apps_request" => "app/apps#index_request"
     get "apps_closed" => "app/apps#index_closed"
+    delete "apps_:state" => "app/apps#destroy_all", state: /approve|request|closed/
     resources :my_apps, concerns: :deletion_all, module: "mypage/app"
   end
 

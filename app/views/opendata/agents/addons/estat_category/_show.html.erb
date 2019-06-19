@@ -1,0 +1,16 @@
+<%
+return if @item.estat_categories.blank?
+
+def name_hier(category)
+  names = []
+  names << category.name
+  while category.parent.present?
+    category = category.parent
+    names << category.name
+  end
+  names.reverse.join('/')
+end
+%>
+<dl class="see">
+  <dd class="wide"><%=br @item.estat_categories.map { |cate| name_hier(cate) }.join("\n") %></dd>
+</dl>

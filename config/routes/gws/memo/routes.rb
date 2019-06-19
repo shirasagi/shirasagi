@@ -3,7 +3,7 @@ SS::Application.routes.draw do
 
   concern :deletion do
     get :delete, :on => :member
-    delete action: :destroy_all, on: :collection
+    delete :destroy_all, on: :collection, path: ''
   end
 
   gws 'memo' do
@@ -20,6 +20,7 @@ SS::Application.routes.draw do
         post :move_all
         put :move
         get :recent
+        get :latest
       end
       member do
         get :trash
@@ -38,7 +39,10 @@ SS::Application.routes.draw do
 
     resources :notices, concerns: :deletion, only: [:index, :show, :destroy] do
       get :recent, on: :collection
+      get 'latest/(:filter)' => :latest, on: :collection, defaults: { filter: :all }
     end
+
+    resource :notice_user_settings, only: [:show, :edit, :update]
 
     resources :comments, path: ':message_id/comments', only: [:create, :destroy]
 
@@ -47,6 +51,7 @@ SS::Application.routes.draw do
       get "personal_addresses" => "personal_addresses#index"
       get "messages" => "messages#index"
       get "categories" => "categories#index"
+      get "folders/:mode" => "folders#index", as: 'folders'
     end
 
     scope '/management' do

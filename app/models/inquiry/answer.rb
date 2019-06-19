@@ -53,7 +53,7 @@ class Inquiry::Answer
       end
 
       if params[:url].present?
-        criteria = criteria.where(source_url: /^#{Regexp.escape(params[:url])}/)
+        criteria = criteria.where(source_url: /^#{::Regexp.escape(params[:url])}/)
       elsif params[:feedback]
         criteria = criteria.where(source_url: { "$exists" => true, "$ne" => nil })
       end
@@ -66,7 +66,7 @@ class Inquiry::Answer
       path = source_url
       path = path[1..-1] if path.start_with?("/")
 
-      Cms::Node.site(site).in_path(path).sort(depth: -1).first
+      Cms::Node.site(site).in_path(path).order_by(depth: -1).first
     end
 
     def find_page(site, source_url)
@@ -90,12 +90,16 @@ class Inquiry::Answer
         values = value.values
         value  = value.map { |k, v| v }.join("\n")
       elsif value.kind_of? ActionDispatch::Http::UploadedFile
-        ss_file = SS::File.new.with(client: Inquiry::Answer.client_name)
-        ss_file.in_file = value
-        ss_file.site_id = cur_site.id
-        ss_file.state = "closed"
-        ss_file.model = "inquiry/temp_file"
-        ss_file.save
+        client_name = Inquiry::Answer.persistence_context.send(:client_name)
+        ss_file = SS::File.with(client: client_name) do |model|
+          ss_file = model.new
+          ss_file.in_file = value
+          ss_file.site_id = cur_site.id
+          ss_file.state = "closed"
+          ss_file.model = "inquiry/temp_file"
+          ss_file.save
+          ss_file
+        end
         values = [ ss_file._id, ss_file.filename, ss_file.size ]
         value = ss_file._id
       elsif value.kind_of? SS::File

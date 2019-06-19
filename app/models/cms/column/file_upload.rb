@@ -1,21 +1,44 @@
 class Cms::Column::FileUpload < Cms::Column::Base
-
+  # backward compatibility fields
   field :html_tag, type: String
   field :html_additional_attr, type: String, default: ''
+  field :label_max_length, type: Integer
+  field :label_place_holder, type: String
 
-  validates :html_tag, inclusion: { in: %w(a+img a img), allow_blank: true }
-  permit_params :html_tag, :html_additional_attr
+  # regal fields
+  field :file_type, type: String
+  validates :file_type, inclusion: { in: %w(image video attachment banner), allow_blank: true }
+  permit_params :file_type
 
-  def html_tag_options
-    %w(a+img a img).map do |v|
-      [ I18n.t("cms.options.html_tag.#{v}", default: v), v ]
+  def alignment_options
+    if file_type.blank? || file_type == "image"
+      return %w(flow left center right).map { |v| [ I18n.t("cms.options.alignment.#{v}"), v ] }
+    end
+
+    super
+  end
+
+  def file_type_options
+    %w(image video attachment banner).map do |v|
+      [ I18n.t("cms.options.column_file_type.#{v}", default: v), v ]
     end
   end
 
-  def serialize_value(value)
-    Cms::Column::Value::FileUpload.new(
-      column_id: self.id, name: self.name, order: self.order, html_tag: self.html_tag,
-      html_additional_attr: self.html_additional_attr, file_id: value
-    )
+  def image_html_type_options
+    %w(image thumb).map do |v|
+      [ I18n.t("cms.options.column_image_html_type.#{v}", default: v), v ]
+    end
+  end
+
+  def syntax_check_enabled?
+    true
+  end
+
+  def link_check_enabled?
+    true
+  end
+
+  def form_check_enabled?
+    super || (label_max_length.present? && label_max_length > 0) || (file_type == 'banner')
   end
 end

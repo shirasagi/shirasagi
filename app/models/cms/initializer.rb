@@ -6,6 +6,7 @@ module Cms
     Cms::Node.plugin "cms/archive"
     Cms::Node.plugin "cms/photo_album"
     Cms::Node.plugin "cms/group_page"
+    Cms::Node.plugin "cms/site_search"
     Cms::Part.plugin "cms/free"
     Cms::Part.plugin "cms/node"
     Cms::Part.plugin "cms/page"
@@ -16,12 +17,17 @@ module Cms
     Cms::Part.plugin "cms/monthly_nav"
     Cms::Column.plugin 'cms/text_field'
     Cms::Column.plugin 'cms/date_field'
-    Cms::Column.plugin 'cms/url_field'
+    Cms::Column.plugin 'cms/url_field2'
     Cms::Column.plugin 'cms/text_area'
     Cms::Column.plugin 'cms/select'
     Cms::Column.plugin 'cms/radio_button'
     Cms::Column.plugin 'cms/check_box'
     Cms::Column.plugin 'cms/file_upload'
+    Cms::Column.plugin 'cms/headline'
+    Cms::Column.plugin 'cms/list'
+    Cms::Column.plugin 'cms/youtube'
+    Cms::Column.plugin 'cms/free'
+    Cms::Column.plugin 'cms/table'
 
     Cms::Role.permission :edit_cms_sites
     Cms::Role.permission :edit_cms_groups
@@ -99,6 +105,8 @@ module Cms
     Cms::Role.permission :move_private_cms_pages
     Cms::Role.permission :move_other_cms_nodes
     Cms::Role.permission :move_other_cms_pages
+    Cms::Role.permission :import_private_cms_nodes
+    Cms::Role.permission :import_other_cms_nodes
     Cms::Role.permission :unlock_other_cms_pages
 
     SS::File.model "cms/editor_template", SS::File

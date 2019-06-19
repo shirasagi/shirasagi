@@ -121,9 +121,9 @@ module Opendata::Api::ResourceSearchFilter
     @result_list = @result_list[0, @limit.to_i] if @limit
 
     if @result_list.count > 0
-      res = {help: @help, success: true, result: convert_resources(@result_list)}
+      res = { help: @help, success: true, result: @result_list.map { |resource| convert_resource(resource) } }
     else
-      res = {help: @help, success: false}
+      res = { help: @help, success: false }
       res[:error] = {message: "Not found", __type: "Not Found Error"}
     end
 

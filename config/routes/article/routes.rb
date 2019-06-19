@@ -4,7 +4,7 @@ SS::Application.routes.draw do
 
   concern :deletion do
     get :delete, on: :member
-    delete action: :destroy_all, on: :collection
+    delete :destroy_all, on: :collection, path: ''
   end
 
   concern :copy do
@@ -22,13 +22,12 @@ SS::Application.routes.draw do
     delete :lock, action: :unlock, on: :member
   end
 
-  concern :download do
-    get :download, on: :collection
+  concern :download_all do
+    match :download_all, on: :collection, via: %i[get post]
   end
 
   concern :import do
-    get :import, on: :collection
-    post :import, on: :collection
+    match :import, on: :collection, via: %i[get post]
   end
 
   concern :command do
@@ -54,7 +53,7 @@ SS::Application.routes.draw do
     get "generate" => "generate#index"
     post "generate" => "generate#run"
     resources :pages, concerns: [
-      :deletion, :copy, :move, :lock, :download, :import, :command, :opendata_ref, :contains_urls, :tag
+      :deletion, :copy, :move, :lock, :download_all, :import, :command, :opendata_ref, :contains_urls, :tag
     ]
   end
 
@@ -64,6 +63,7 @@ SS::Application.routes.draw do
     get "index_ready" => "pages#index_ready"
     get "index_closed" => "pages#index_closed"
     get 'index_wait_close' => 'pages#index_wait_close'
+    delete "index_:state" => "pages#destroy_all", state: /approve|request|ready|closed|wait_close/
   end
 
   node "article" do

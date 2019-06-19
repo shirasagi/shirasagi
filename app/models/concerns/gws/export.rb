@@ -2,9 +2,11 @@ module Gws::Export
   extend ActiveSupport::Concern
   extend SS::Translation
 
+  UTF8_BOM = "\uFEFF".freeze
+
   included do
-    attr_accessor :in_file
-    permit_params :in_file
+    attr_accessor :in_file, :in_csv_encoding
+    permit_params :in_file, :in_csv_encoding
   end
 
   def export_csv(items)
@@ -18,7 +20,13 @@ module Gws::Export
       end
     end
 
-    csv.encode("SJIS", invalid: :replace, undef: :replace)
+    if in_csv_encoding.present? && in_csv_encoding.casecmp("UTF-8") == 0
+      csv = UTF8_BOM + csv
+    else
+      csv = csv.encode("SJIS", invalid: :replace, undef: :replace)
+    end
+
+    csv
   end
 
   def import_csv
@@ -28,29 +36,48 @@ module Gws::Export
     field_keys = export_fields
     field_vals = export_field_names
 
-    rows = []
-    CSV.read(in_file.path, headers: true, encoding: 'SJIS:UTF-8').each do |row|
+    no = 0
+    each_csv do |row|
+      no += 1
       data = {}
       row.each do |k, v|
         idx = field_vals.index(k)
         data[field_keys[idx]] = v if idx
       end
-      rows << data
-    end
 
-    import_array(rows)
-  end
-
-  def import_array(rows)
-    rows.each_with_index do |data, no|
       next if data.blank?
       item = import_data(data.with_indifferent_access)
       errors.add :base, "##{no} " + item.errors.full_messages.join("\n") if item.errors.present?
     end
-    return errors.empty?
+
+    errors.empty?
   end
 
   private
+
+  def utf8_file?
+    in_file.rewind
+    bom = in_file.read(3)
+    in_file.rewind
+
+    bom.force_encoding("UTF-8")
+    UTF8_BOM == bom
+  end
+
+  def each_csv(&block)
+    io = in_file.to_io
+    if utf8_file?
+      io.seek(3)
+      io.set_encoding('UTF-8')
+    else
+      io.set_encoding('SJIS:UTF-8')
+    end
+
+    csv = CSV.new(io, { headers: true })
+    csv.each(&block)
+  ensure
+    io.set_encoding("ASCII-8BIT")
+  end
 
   def export_fields
     fields = self.class.fields.keys
@@ -74,7 +101,12 @@ module Gws::Export
     return errors.add :in_file, :invalid_file_type if ::File.extname(fname) !~ /^\.csv$/i
 
     begin
-      CSV.read(in_file.path, headers: true, encoding: 'SJIS:UTF-8')
+      no = 0
+      each_csv do |row|
+        no += 1
+        # check csv record up to 100
+        break if no >= 100
+      end
       in_file.rewind
     rescue => e
       errors.add :in_file, :invalid_file_type
@@ -101,11 +133,12 @@ module Gws::Export
     else
       data.delete(:id)
       item = import_new_item(data)
-      item.user_ids = [@cur_user.id] if item.respond_to?(:user_ids)
     end
 
     item.cur_user = @cur_user
     item.cur_site = @cur_site if @cur_site
+    # cur_user must be contained because some permission errors may occur if it absents.
+    item.user_ids = (Array(item.user_ids) + [@cur_user.id]).uniq if item.respond_to?(:user_ids)
     item.save
     item
   end

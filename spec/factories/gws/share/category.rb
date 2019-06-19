@@ -1,4 +1,4 @@
-FactoryGirl.define do
+FactoryBot.define do
   factory :gws_share_category, class: Gws::Share::Category do
     cur_site { gws_site }
     cur_user { gws_user }

@@ -49,17 +49,21 @@ module Chorg::MongoidSupport
     update_attributes(group, attributes)
   end
 
-  def group_field?(_, v)
-    type = v.options[:type]
+  def group_field?(_key, val)
+    type = val.options[:type]
     if self.class.group_classes.include?(type)
       return true
     end
 
-    metadata = v.options[:metadata]
-    return false if metadata.blank?
+    if val.class == Mongoid::Fields::ForeignKey
+      options = val.association ? val.association.options : {}
+    else
+      options = val.options[:metadata] || {}
+    end
+    return false if options.blank?
 
     classes = [:class_name, :elem_class].map do |k|
-      v = metadata[k]
+      v = options[k]
       v = v.constantize if v.present?
       v
     end.compact
@@ -67,17 +71,17 @@ module Chorg::MongoidSupport
   end
 
   def build_exclude_fields(defs)
-    @exclude_fields = defs.map { |e| e.start_with?("/") && e.end_with?("/") ? /#{Regexp.escape(e[1..-2])}/ : e }.freeze
+    @exclude_fields = defs.map { |e| e.start_with?("/") && e.end_with?("/") ? /#{::Regexp.escape(e[1..-2])}/ : e }.freeze
   end
 
-  def updatable_field?(k, v)
-    field_type = v.options[:type]
+  def updatable_field?(key, val)
+    field_type = val.options[:type]
     return false unless String == field_type
 
     @exclude_fields.each do |filter|
-      if filter.is_a?(Regexp)
-        return false if filter =~ k
-      elsif k == filter
+      if filter.is_a?(::Regexp)
+        return false if filter =~ key
+      elsif key == filter
         return false
       end
     end

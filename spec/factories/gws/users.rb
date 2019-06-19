@@ -1,4 +1,4 @@
-FactoryGirl.define do
+FactoryBot.define do
   trait :gws_user_base do
     transient do
       cur_group { gws_site }

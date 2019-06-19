@@ -16,7 +16,7 @@ class Gws::Monitor::Apis::CategoriesController < ApplicationController
 
   def parent_name
     return // unless @category
-    /^#{Regexp.escape(@category.name)}\//
+    /^#{::Regexp.escape(@category.name)}\//
   end
 
   public

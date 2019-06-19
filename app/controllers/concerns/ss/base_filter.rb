@@ -11,6 +11,7 @@ module SS::BaseFilter
     helper SS::EditorHelper
     helper SS::JbuilderHelper
     before_action :set_model
+    before_action :set_setting
     before_action :set_ss_assets
     before_action :logged_in?
     before_action :check_api_user
@@ -51,6 +52,10 @@ module SS::BaseFilter
     @model = self.class.model_class
   end
 
+  def set_setting
+    @cur_setting ||= Sys::Setting.first || Sys::Setting.new
+  end
+
   def set_ss_assets
     SS.config.ss.stylesheets.each { |m| stylesheet(m) } if SS.config.ss.stylesheets.present?
     SS.config.ss.javascripts.each { |m| javascript(m) } if SS.config.ss.javascripts.present?
@@ -58,13 +63,20 @@ module SS::BaseFilter
   end
 
   def login_path_by_cookie
-    cookies[:login_path] || sns_login_path
+    cookies[:login_path].presence || sns_login_path
   end
 
   def logged_in?
     if @cur_user
       set_last_logged_in
       return @cur_user
+    end
+
+    @cur_user = get_user_by_access_token
+    if @cur_user
+      redirct = request.fullpath.sub(/(\?|&)access_token=.*/, '')
+      set_user(@cur_user, session: true, login_path: @login_path, logout_path: @logout_path)
+      return redirect_to(redirct)
     end
 
     @cur_user = get_user_by_session
@@ -104,7 +116,8 @@ module SS::BaseFilter
       }
       session[:user]["password"] = SS::Crypt.encrypt(opts[:password]) if opts[:password].present?
     end
-    cookies[:login_path] = { :value => request_path, :expires => 7.days.from_now }
+    login_path = opts[:login_path] || request_path
+    cookies[:login_path] = { :value => login_path, :expires => 7.days.from_now }
     session[:logout_path] = opts[:logout_path]
     redirect_to sns_mypage_path if opts[:redirect]
     @cur_user = user
@@ -130,10 +143,17 @@ module SS::BaseFilter
   end
 
   def rescue_action(e)
-    if e.to_s =~ /^\d+$/
-      status = e.to_s.to_i
-      file = error_html_file(status)
-      return ss_send_file(file, status: status, type: Fs.content_type(file), disposition: :inline)
+    begin
+      # below codes may cause "invalid byte sequence in UTF-8" error or other errors in some cases.
+      # So, it is required to wrap around begin, rescue and end.
+      if e.to_s =~ /^\d+$/
+        status = e.to_s.to_i
+        file = error_html_file(status)
+        return ss_send_file(file, status: status, type: Fs.content_type(file), disposition: :inline)
+      end
+
+      return render_job_size_limit(e) if e.is_a?(Job::SizeLimitPerUserExceededError)
+    rescue
     end
 
     raise e
@@ -142,5 +162,20 @@ module SS::BaseFilter
   def error_html_file(status)
     file = "#{Rails.public_path}/#{status}.html"
     Fs.exists?(file) ? file : "#{Rails.public_path}/500.html"
+  end
+
+  def render_job_size_limit(error)
+    referer_uri = URI.parse(request.referer)
+    begin
+      if @item.present?
+        @item.errors.add(:base, error.to_s)
+        flash[:notice] = error.to_s
+        render(Rails.application.routes.recognize_path(referer_uri.path))
+      else
+        redirect_to(referer_uri.path, notice: error.to_s)
+      end
+    rescue ActionView::MissingTemplate
+      redirect_to(referer_uri.path, notice: error.to_s)
+    end
   end
 end

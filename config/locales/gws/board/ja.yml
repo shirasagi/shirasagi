@@ -69,6 +69,7 @@ ja:
       gws/board/notify_setting: 通知
 
   gws_role:
+    use_gws_board: 掲示板の利用
     read_other_gws_board_posts: 投稿の閲覧（全て）
     read_private_gws_board_posts: 投稿の閲覧（所有）
     edit_other_gws_board_posts: 投稿の編集（全て）
@@ -86,28 +87,28 @@ ja:
 
   gws_notification:
     gws/board/topic:
-      subject: "[更新通知][掲示板] %{name}"
-      text: |
-        「%{name}」が作成または更新されました。
+      subject: "[掲示板] 「%{name}」が登録または更新されました。"
+      text: "%{text}"
+      mail_text: |
+         %{subject}
 
-        %{text}
+         %{text}
 
     gws/board/post:
-      subject: "[更新通知][掲示板] %{name}"
-      text: |
-        「%{name}」に投稿がありました。
+      subject: "[掲示板] 「%{name}」に新しい投稿がありました。"
+      text: "%{text}"
+      mail_text: |
+        %{subject}
 
         %{text}
 
     gws/board/topic/destroy:
-      subject: "[削除通知][掲示板] %{name}"
-      text: |
-        「%{name}」が削除されました。
+      subject: "[掲示板] 「%{name}」が削除されました。"
+      text: ""
 
     gws/board/post/destroy:
-      subject: "[削除通知][掲示板] %{name}"
-      text: |
-        「%{name}」の投稿が削除されました。
+      subject: "[掲示板] 「%{name}」の投稿が削除されました。"
+      text: "%{text}"
 
   mongoid:
     models:
@@ -133,7 +134,6 @@ ja:
         severity: 重要度
         topic_id: トピック
         parent_id: 親投稿
-        browsed_users_hash: 既読ユーザー
         descendants_updated: トピック内更新日時
         descendants_files_count: トピック内添付ファイル数
         descendants_total_file_size: トピック内添付ファイル容量
@@ -152,6 +152,8 @@ ja:
       gws/addon/board/notify_setting:
         notify_state: 通知設定
         subscribed_users_readable_state: 通知先表示
+      gws/board/browsing_state:
+        browsed_users_hash: 既読ユーザー
 
   tooltip:
     gws/board/postable:

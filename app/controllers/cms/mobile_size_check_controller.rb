@@ -1,6 +1,6 @@
 class Cms::MobileSizeCheckController < ApplicationController
   protect_from_forgery except: :check
-  skip_before_action :verify_authenticity_token unless SS.config.env.csrf_protect
+  skip_before_action :verify_authenticity_token, raise: false unless SS.config.env.csrf_protect
   before_action :accept_cors_request
 
   def check

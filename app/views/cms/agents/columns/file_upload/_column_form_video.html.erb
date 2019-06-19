@@ -1,0 +1,12 @@
+<% name = "#{f.object_name}[][in_wrap][text]" %>
+
+<%= jquery do %>
+Cms_Form.addSyntaxCheck("<%= id %>", {
+  resolve: "text",
+  name: "<%= column.name %>",
+  getContent: function () { return $('#<%= id %> [name="<%= name %>"]').val(); },
+  setContent: function (content) { return $('#<%= id %> [name="<%= name %>"]').val(content); },
+});
+<% end %>
+
+<%= text_area_tag(name, value.try(:text), id: nil, "data-check-presence": t("cms.column_file_upload.video.text"), placeholder: t("cms.column_file_upload.video.text_place_holder")) %>

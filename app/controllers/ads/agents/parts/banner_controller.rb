@@ -3,7 +3,7 @@ class Ads::Agents::Parts::BannerController < ApplicationController
 
   def index
     @node = @cur_part.parent
-    return render nothing: true unless @node
+    return head :ok unless @node
 
     cond = {}
 

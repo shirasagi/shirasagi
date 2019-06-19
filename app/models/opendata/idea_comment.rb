@@ -49,6 +49,10 @@ class Opendata::IdeaComment
     end
   end
 
+  def deleted?
+    comment_deleted.present? && comment_deleted <= Time.zone.now
+  end
+
   def state_options
     [
       [I18n.t('ss.options.state.public'), 'public'],

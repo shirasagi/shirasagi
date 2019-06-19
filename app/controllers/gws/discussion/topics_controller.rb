@@ -44,13 +44,18 @@ class Gws::Discussion::TopicsController < ApplicationController
     @items = @forum.children.reorder(order: 1, created: -1).
       page(params[:page]).per(5)
 
-    @todos = Gws::Schedule::Todo.
+    common_todo_criteria = Gws::Schedule::Todo.
       site(@cur_site).
       discussion_forum(@forum).
-      member(@cur_user).
-      where(todo_state: 'unfinished').
+      where(:todo_state.ne => 'finished').
       without_deleted.
       limit(@cur_site.discussion_todo_limit)
+
+    @todos = common_todo_criteria.member(@cur_user)
+
+    @manageable_todos = common_todo_criteria.
+      readable_or_manageable(@cur_user, site: @cur_site).
+      not_member(@cur_user)
 
     @recent_items = @forum.children.
       where(:descendants_updated.gt => (Time.zone.now - @cur_site.discussion_new_days.day)).
@@ -152,12 +157,13 @@ class Gws::Discussion::TopicsController < ApplicationController
     @comment.forum_id = @forum.id
     @comment.name = @topic.name
     result = @comment.save
-    @item = @comment
 
     if result
+      @item = @comment
       @comment.save_notify_message(@cur_site, @cur_user)
       render_create true, location: { action: :index }, render: { file: :index }
     else
+      @item = @topic
       render_create false, location: { action: :index }, render: { file: :index }
     end
   end

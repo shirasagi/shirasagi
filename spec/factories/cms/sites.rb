@@ -1,4 +1,4 @@
-FactoryGirl.define do
+FactoryBot.define do
   factory :cms_site, class: Cms::Site do
     name "Site"
     host "test"
@@ -15,5 +15,11 @@ FactoryGirl.define do
     auto_keywords "disabled"
     auto_description "disabled"
     subdir { unique_id }
+  end
+
+  factory :cms_site_unique, class: Cms::Site do
+    name { unique_id }
+    host { unique_id }
+    domains { "#{unique_id}.example.jp" }
   end
 end

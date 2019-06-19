@@ -1,0 +1,48 @@
+<%= jquery do %> SS_SearchUI.modal(); <% end %>
+
+<div class="search-ui-form">
+  <%= form_for :s, url: { action: :index }, html: { method: "GET", class: :search } do |f| %>
+    <%= hidden_field_tag :single, params[:single] %>
+    <dl class="see">
+      <% if browser.ie?(["<10"]) %>
+        <%= render partial: 'workflow/search_approvers/group_dropdown_normal' %>
+      <% else %>
+        <%= render partial: 'workflow/search_approvers/group_dropdown_tree' %>
+      <% end %>
+      <dt><%= t "cms.user" %></dt>
+      <dd><%= f.text_field :keyword %>
+      <%= f.submit t("workflow.search_approvers.search"), class: "btn" %></dd>
+    </dl>
+  <% end %>
+</div>
+
+<table class="index">
+  <thead class="list-head">
+    <tr>
+      <% if @multi %>
+      <th class="checkbox"><input type="checkbox" /></th>
+      <% end %>
+      <th class="name"><%= @model.t :name %></th>
+    </tr>
+  </thead>
+  <tbody class="items">
+    <% @items.each do |item| %>
+      <tr data-id="<%= "#{item.id}" %>" class="list-item">
+        <% if @multi %>
+        <td class="checkbox">
+          <input type="checkbox" name="ids[]" value="<%= item.id %>" />
+        </td>
+        <% end %>
+        <td class="name"><%= link_to item.long_name, "#", class: "select-item" %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<% if @multi %>
+<div class="search-ui-select">
+  <%= button_tag t("gws/workflow.search_delegatees.select"), { type: :button, class: "select-items btn" } %>
+</div>
+<% end %>
+
+<%= paginate @items if @items.try(:current_page) %>

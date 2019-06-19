@@ -1,0 +1,12 @@
+<% value ||= nil %>
+<% controller ||= false %>
+<%= render 'cms/agents/columns/main/base', f: f, column: column, value: value, controller: controller do %>
+  <%= Cms::Column::Value::Youtube.t("url") %><%= text_field_tag("#{f.object_name}[][in_wrap][url]", value.try(:url) || (value.try(:youtube_id) ? "https://youtu.be/#{value.youtube_id}" : ""), column.form_options(:url).merge(id: nil, style: "width: 70%;")) %><br />
+  <div class="column-youtube-left">
+    <%= check_box_tag("#{f.object_name}[][in_wrap][auto_width]", "enabled", value.try(:auto_width) == "enabled", column.form_options(:auto_width).merge(id: "auto-width")) %><label for="auto-width"><%= Cms::Column::Value::Youtube.t("auto_width") %></label>
+  </div>
+  <div class="column-youtube-right">
+    <%= Cms::Column::Value::Youtube.t("width") %><%= text_field_tag("#{f.object_name}[][in_wrap][width]", (value.try(:width) || 640), column.form_options.merge(id: nil, style: "width: 10%;")) %>
+    <%= Cms::Column::Value::Youtube.t("height") %><%= text_field_tag("#{f.object_name}[][in_wrap][height]", (value.try(:height) || 360), column.form_options.merge(id: nil, style: "width: 10%;")) %>
+  </div>
+<% end %>

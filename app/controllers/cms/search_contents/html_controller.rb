@@ -101,7 +101,7 @@ class Cms::SearchContents::HtmlController < ApplicationController
   end
 
   def replace_html_with_regexp(string, replacement)
-    regexp = Regexp.new(string, Regexp::MULTILINE)
+    regexp = ::Regexp.new(string, ::Regexp::MULTILINE)
 
     @pages = @pages.select do |item|
       update_html_fields(item) { |html| html.gsub(regexp, replacement) }

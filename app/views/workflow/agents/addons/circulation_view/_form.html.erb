@@ -1,0 +1,75 @@
+<%
+  return if @ss_mode != :gws
+
+  if params[:controller] =~ /^gws/
+    def approvers_path(*args); gws_workflow_search_approvers_path(*args); end
+  else
+    def approvers_path(*args); workflow_search_approvers_path(*args); end
+  end
+%>
+
+<% 1.upto(@model::MAX_CIRCULATIONS) do |level| %>
+  <h1 class="workflow-level-header workflow-circulation-level-<%= level %>"><%= t("workflow.circulation_step") %> <%= @model.t :level, level: level %></h1>
+  <dl class="see workflow-circulations workflow-circulation-level-<%= level %>">
+    <dt><%= @model.t :circulation_attachment_uses %><%= @model.tt :circulation_attachment_uses %></dt>
+    <dd><%= select_tag "item[circulation_attachment_uses][]", options_for_select(@item.circulation_attachment_use_options, @item.circulation_attachment_use_at(level)), id: nil, include_blank: true %></dd>
+    <dt><%= @model.t :circulations %><%= @model.tt :circulations %></dt>
+    <dd>
+      <%# f.hidden_field("item[circulation_required_counts][]", value: "1", class: "hidden-ids", id: nil) %>
+      <%= link_to t("workflow.search_circulations.index"), approvers_path(level: "circulation#{level}"), class: "ajax-box circulations" %>
+    </dd>
+    <dd>
+      <table class="index ajax-selected">
+        <thead>
+          <tr>
+            <th class="name"><%= @model.t :name %></th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          <% @item.circulation_users_at(level).active.each do |user| %>
+            <tr data-id="<%= "circulation#{level},#{user.id}" %>">
+              <td>
+                <%= hidden_field_tag("#{f.object_name}[circulations][][level]", level, id: nil) %>
+                <%= hidden_field_tag("#{f.object_name}[circulations][][user_id]", user.id, id: nil) %>
+                <%= user.long_name %>
+              </td>
+              <td><%= link_to t("ss.buttons.delete"), "#", class: "deselect btn" %></td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    </dd>
+  </dl>
+<% end %>
+
+<%= jquery do %>
+  var circulationSelector = function($item) {
+    var $dl = SS_SearchUI.anchorAjaxBox.closest("dl");
+
+    var data = $item.closest("[data-id]");
+    var levelAndId = data.data("id").split(',');
+    var level = levelAndId[0].replace("circulation", "");
+    var id = levelAndId[1];
+    var name = data.data("name") || data.find(".select-item").text() || $item.text() || data.text();
+
+    var $level = $('<input type="hidden" name="item[circulations][][level]">');
+    $level.val(level);
+
+    var $userId = $('<input type="hidden" name="item[circulations][][user_id]">');
+    $userId.val(id);
+
+    var $a = $('<a class="deselect btn" href="#"><%= I18n.t "ss.buttons.delete" %></a>');
+    $a.on("click", SS_SearchUI.deselect);
+
+    var $tr = $("<tr />").attr("data-id", levelAndId.join(','));
+    $tr.append($('<td />').append($level).append($userId).append(name));
+    $tr.append($('<td />').append($a));
+    SS_SearchUI.anchorAjaxBox.closest("dl").find(".ajax-selected tbody").prepend($tr);
+    SS_SearchUI.anchorAjaxBox.closest("dl").find(".ajax-selected").trigger("change");
+  };
+
+  $('a.ajax-box.circulations').data('on-select', function($item) {
+    circulationSelector($item);
+  });
+<% end %>

@@ -1,10 +1,10 @@
 require 'spec_helper'
 
 describe "webmail_login", type: :feature, dbscope: :example, imap: true do
-  let(:user) { create :webmail_user }
+  let(:user) { create :webmail_user, imap_settings: [] }
   let(:login_path) { webmail_login_path }
   let(:logout_path) { webmail_logout_path }
-  let(:main_path) { webmail_account_setting_path }
+  let(:main_path) { webmail_mails_path(account: 0) }
 
   context "invalid login" do
     it "with uid" do

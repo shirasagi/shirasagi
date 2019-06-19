@@ -1,0 +1,9 @@
+<%
+  addon ||= local_assigns.fetch(:addon, {})
+  addon[:display_body] = "hide"
+%>
+
+<dl class="see addon-cms-elasticsearch-site-setting">
+  <dt><%= @model.t :elasticsearch_hosts %><%= @model.tt :elasticsearch_hosts %></dt>
+  <dd><%= f.text_field :elasticsearch_hosts %></dd>
+</dl>

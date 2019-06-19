@@ -1,4 +1,4 @@
-FactoryGirl.define do
+FactoryBot.define do
   factory :ss_site, class: SS::Site do
     name "ss"
     host "test-ss"

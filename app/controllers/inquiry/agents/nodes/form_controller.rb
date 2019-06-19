@@ -30,7 +30,7 @@ class Inquiry::Agents::Nodes::FormController < ApplicationController
 
   def set_columns
     disable_upload_file = {}
-    disable_upload_file = { :input_type.ne => 'upload_file' } if Mongoid::Config.clients[:default_post]
+    disable_upload_file = { :input_type.ne => 'upload_file' } if SS.config.cms.enable_lgwan
 
     @columns = Inquiry::Column.site(@cur_site).
       where(node_id: @cur_node.id, state: "public").
@@ -43,16 +43,21 @@ class Inquiry::Agents::Nodes::FormController < ApplicationController
     @data = {}
     @to = [@cur_node.notice_email]
     @columns.each do |column|
-      param = params[:item].try(:[], column.id.to_s)
+      param = params.to_unsafe_h[:item].try(:[], column.id.to_s)
       if column.input_type == "upload_file" &&
          !param.blank? &&
          !param.kind_of?(ActionDispatch::Http::UploadedFile)
-        param = SS::File.with(client: Inquiry::Answer.client_name).find(param)
+
+        client_name = Inquiry::Answer.persistence_context.send(:client_name)
+        param = SS::File.with(client: client_name) do |model|
+          model.find(param)
+        end
       end
       @items << [column, param]
       @data[column.id] = [param]
       if (column.input_type == 'text_field' || column.input_type == 'text_area') && column.transfers.present? && param.present?
         column.transfers.each do |transfer|
+          next if transfer[:email].blank? || transfer[:keyword].blank?
           @to.push(transfer[:email]) if param.include?(transfer[:keyword])
         end
       end
@@ -72,7 +77,6 @@ class Inquiry::Agents::Nodes::FormController < ApplicationController
   public
 
   def new
-    #
   end
 
   def confirm
@@ -110,7 +114,7 @@ class Inquiry::Agents::Nodes::FormController < ApplicationController
     query = {}
     if @answer.source_url.present?
       if params[:preview]
-        query[:ref] = view_context.cms_preview_path(site: @cur_site, path: @answer.source_content.filename)
+        query[:ref] = view_context.cms_preview_path(site: @cur_site, path: @answer.source_content.url[1..-1])
       else
         query[:ref] = @answer.source_url
       end

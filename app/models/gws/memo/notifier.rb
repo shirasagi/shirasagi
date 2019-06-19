@@ -10,6 +10,8 @@ class Gws::Memo::Notifier
     end
 
     def deliver_workflow_request!(opts)
+      return unless opts[:cur_site].notify_model?(opts[:item].class)
+
       opts = opts.dup
 
       url = opts.delete(:url)
@@ -18,54 +20,74 @@ class Gws::Memo::Notifier
       cur_user = opts[:cur_user]
       item = opts[:item]
       from = item.try(:workflow_user) || cur_user
+      agent = item.try(:workflow_agent)
 
-      title = "[#{I18n.t('workflow.mail.subject.request')}]#{item.name} - #{cur_site.name}"
+      title = I18n.t("gws_notification.gws/workflow/file.request", name: item.name)
 
       text = []
-      text << "#{from.name}さんより次の記事について承認依頼が届きました。"
-      text << "承認作業を行ってください。\n"
-
+      text << "#{from.name}さん#{agent ? "（代理: #{agent.name}さん）" : ""}より次の記事について承認依頼が届きました。"
+      text << "承認作業を行ってください。"
+      text << ""
       text << "- タイトル"
-      text << "  #{item.name}\n"
-
-      text << "- 申請者コメント" if comment.present?
-      text << "  #{comment}\n" if comment.present?
-
-      text << "- 記事URL"
-      text << "  #{url}\n"
+      text << "  #{item.name}"
+      text << ""
+      text << "- 申請者"
+      text << "  #{from.name}"
+      if agent
+        text << "  （代理: #{agent.name}）"
+      end
+      text << ""
+      if comment.present?
+        text << "- 申請者コメント"
+        text << "  #{comment}"
+        text << ""
+      end
+      text << "- URL"
+      text << "  #{url}"
 
       opts[:item_title] = title
-      opts[:item_text] = text.join("\n")
+      opts[:item_text] = url
 
       new(opts).deliver!
     end
 
     def deliver_workflow_approve!(opts)
+      return unless opts[:cur_site].notify_model?(opts[:item].class)
+
       opts = opts.dup
 
       url = opts.delete(:url)
       comment = opts.delete(:comment)
       cur_site = opts[:cur_site]
       item = opts[:item]
+      from = item.try(:workflow_user)
+      agent = item.try(:workflow_agent)
 
-      title = "[#{I18n.t('workflow.mail.subject.approve')}]#{item.name} - #{cur_site.name}"
-      text = <<-TEXT
-      次の申請が承認されました。
+      title = I18n.t("gws_notification.gws/workflow/file.approve", name: item.name)
 
-      - タイトル
-        #{item.name}
-
-      - 記事URL
-        #{url}
-      TEXT
+      text = []
+      text << "次の申請が承認されました。"
+      text << ""
+      text << "- タイトル"
+      text << "  #{item.name}"
+      text << ""
+      text << "- 申請者"
+      text << "  #{from.name}"
+      if agent
+        text << "  （代理: #{agent.name}）"
+      end
+      text << ""
+      text << "- URL"
+      text << "  #{url}"
 
       opts[:item_title] = title
-      opts[:item_text] = text
-
+      opts[:item_text] = url
       new(opts).deliver!
     end
 
     def deliver_workflow_remand!(opts)
+      return unless opts[:cur_site].notify_model?(opts[:item].class)
+
       opts = opts.dup
 
       url = opts.delete(:url)
@@ -73,29 +95,114 @@ class Gws::Memo::Notifier
       cur_site = opts[:cur_site]
       cur_user = opts[:cur_user]
       item = opts[:item]
+      from = item.try(:workflow_user)
+      agent = item.try(:workflow_agent)
 
-      title = "[#{I18n.t('workflow.mail.subject.remand')}]#{item.name} - #{cur_site.name}"
-      text = <<-TEXT
-      #{cur_user.name}さんより次の申請について承認依頼が差し戻されました。
-      適宜修正を行い、再度承認依頼を行ってください。
+      title = I18n.t("gws_notification.gws/workflow/file.remand", name: item.name)
 
-      - タイトル
-        #{item.name}
-
-      - 差し戻しコメント
-        #{comment}
-
-      - 記事URL
-        #{url}
-      TEXT
+      text = []
+      text << "#{cur_user.name}さんより次の申請について承認依頼が差し戻されました。"
+      text << "適宜修正を行い、再度承認依頼を行ってください。"
+      text << ""
+      text << "- タイトル"
+      text << "  #{item.name}"
+      text << ""
+      text << "- 申請者"
+      text << "  #{from.name}"
+      if agent
+        text << "  （代理: #{agent.name}）"
+      end
+      text << ""
+      if comment.present?
+        text << "- 差し戻しコメント"
+        text << "  #{comment}"
+        text << ""
+      end
+      text << "- URL"
+      text << "  #{url}"
 
       opts[:item_title] = title
-      opts[:item_text] = text
+      opts[:item_text] = url
 
       new(opts).deliver!
     rescue => e
       Rails.logger.warn("#{e.class} (#{e.message}):\n  #{e.backtrace.join("\n  ")}")
       raise
+    end
+
+    def deliver_workflow_circulations!(opts)
+      return unless opts[:cur_site].notify_model?(opts[:item].class)
+
+      opts = opts.dup
+
+      url = opts.delete(:url)
+      comment = opts.delete(:comment)
+      cur_site = opts[:cur_site]
+      item = opts[:item]
+      from = item.try(:workflow_user)
+      agent = item.try(:workflow_agent)
+
+      title = I18n.t("gws_notification.gws/workflow/file.circular", name: item.name)
+
+      text = []
+      text << "次の申請が承認されました。"
+      text << "申請内容を確認してください。"
+      text << ""
+      text << "- タイトル"
+      text << "  #{item.name}"
+      text << ""
+      text << "- 申請者"
+      text << "  #{from.name}"
+      if agent
+        text << "  （代理: #{agent.name}）"
+      end
+      text << ""
+      text << "- URL"
+      text << "  #{url}"
+
+      opts[:item_title] = title
+      opts[:item_text] = url
+
+      new(opts).deliver!
+    end
+
+    def deliver_workflow_comment!(opts)
+      return unless opts[:cur_site].notify_model?(opts[:item].class)
+
+      opts = opts.dup
+
+      url = opts.delete(:url)
+      comment = opts.delete(:comment)
+      cur_site = opts[:cur_site]
+      item = opts[:item]
+      from = item.try(:workflow_user)
+      agent = item.try(:workflow_agent)
+
+      title = I18n.t("gws_notification.gws/workflow/file.comment", name: item.name)
+
+      text = []
+      text << "次の申請にコメントがありました。"
+      text << "コメントの内容を確認してください。"
+      text << ""
+      text << "- タイトル"
+      text << "  #{item.name}"
+      text << ""
+      text << "- 申請者"
+      text << "  #{from.name}"
+      if agent
+        text << "  （代理: #{agent.name}）"
+      end
+      text << ""
+      text << "- コメント"
+      text << "  #{comment}"
+      text << ""
+      text << "- URL"
+      text << "  #{url}"
+
+      opts[:item_title] = title
+      opts[:item_text] = url
+
+      new(opts).deliver!
     end
   end
 
@@ -103,6 +210,7 @@ class Gws::Memo::Notifier
     @item_title ||= begin
       title = item.try(:topic).try(:name)
       title ||= item.try(:schedule).try(:name)
+      title ||= item.try(:todo).try(:name)
       title ||= item.try(:_parent).try(:name)
       title ||= item.try(:name)
       title
@@ -124,8 +232,10 @@ class Gws::Memo::Notifier
   def deliver!
     cur_user.cur_site ||= cur_group
 
-    message = Gws::Memo::Notice.new
-    message.cur_site = cur_site
+    url = item_to_url(item)
+
+    message = SS::Notification.new
+    message.cur_group = cur_site
     message.cur_user = cur_user
     message.member_ids = to_users.pluck(:id)
 
@@ -133,19 +243,67 @@ class Gws::Memo::Notifier
 
     message.subject = subject || I18n.t("gws_notification.#{i18n_key}.subject", name: item_title, default: item_title)
     message.format = 'text'
-    message.text = text || I18n.t("gws_notification.#{i18n_key}.text", name: item_title, text: item_text, default: item_text)
+    message.url = text || I18n.t("gws_notification.#{i18n_key}.text", name: item_title, text: url, default: item_text)
 
     message.save!
+
+    mail = Gws::Memo::Mailer.notice_mail(message, to_users, item)
+    mail.deliver_now if mail
   end
 
   private
 
-  def from_user
-    @from_user ||= begin
-      user = cur_site.sender_user
-      user ||= cur_user
-      user
+  def item_to_url(item)
+    class_name = item.class.name
+
+    url_helper = Rails.application.routes.url_helpers
+    if item.try(:_parent).present?
+      id = item._parent.id
+    elsif item.try(:parent).present?
+      id = item.parent.id
+    elsif item.try(:schedule).present?
+      id = item.schedule.id
+    elsif item.try(:todo).present?
+      todo = item.todo
+    else
+      id = item.id
     end
+
+    if class_name.include?("Gws::Board")
+      url = url_helper.gws_board_topic_path(id: id, site: cur_site.id, category: '-', mode: '-')
+    elsif class_name.include?("Gws::Faq")
+      url = url_helper.gws_faq_topic_path(id: id, site: cur_site.id, category: '-', mode: '-')
+    elsif class_name.include?("Gws::Qna")
+      url = url_helper.gws_qna_topic_path(id: id, site: cur_site.id, category: '-', mode: '-')
+    elsif class_name.include?("Gws::Schedule::Todo")
+      todo ||= item
+      if todo.try(:in_discussion_forum) && todo.try(:discussion_forum)
+        url = url_helper.gws_discussion_forum_todo_path(
+          id: todo.id, site: cur_site.id, mode: "-", forum_id: todo.discussion_forum)
+      else
+        url = url_helper.gws_schedule_todo_readable_path(
+          id: todo.id, site: cur_site.id, category: Gws::Schedule::TodoCategory::ALL.id)
+      end
+    elsif class_name.include?("Gws::Schedule")
+      url = url_helper.gws_schedule_plan_path(id: id, site: cur_site.id, category: '-', mode: '-')
+    elsif class_name.include?("Gws::Monitor")
+      return unless item.state == "public"
+      url = url_helper.gws_monitor_topic_path(id: id, site: cur_site.id, category: '-', mode: '-')
+      deliver_monitor(id)
+    else
+      url = ''
+    end
+
+    url
+  end
+
+  def deliver_monitor(monitor_id)
+    topic = Gws::Monitor::Topic.find(monitor_id)
+    to_members = Gws::User.in(group_ids: Gws::Group.in(id: topic.attend_group_ids).pluck(:id)).pluck(:id)
+    to_members -= [cur_user.id]
+    to_members.select! { |user_id| Gws::User.find(user_id).use_notice?(item) }
+    return if to_members.blank?
+    self.to_users = to_members.map { |user_id| Gws::User.find(user_id) }
   end
 
   def i18n_key

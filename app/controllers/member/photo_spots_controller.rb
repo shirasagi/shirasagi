@@ -6,7 +6,6 @@ class Member::PhotoSpotsController < ApplicationController
   model Member::PhotoSpot
 
   append_view_path "app/views/cms/pages"
-  navi_view "cms/node/main/navi"
 
   private
 

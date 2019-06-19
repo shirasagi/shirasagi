@@ -23,7 +23,7 @@ describe Workflow::PagesController, type: :request, dbscope: :example do
 
   before do
     Workflow::PagesController.allow_forgery_protection = false
-    post login_path, correct_login_params
+    post login_path, params: correct_login_params
     SS.config.replace_value_at(:env, :json_datetime_format, "%Y/%m/%d %H:%M:%S")
   end
 
@@ -36,12 +36,15 @@ describe Workflow::PagesController, type: :request, dbscope: :example do
       workflow_approvers = Workflow::Extensions::WorkflowApprovers.new
       workflow_approvers.push("1,#{user2._id},,pending,")
       workflow_required_counts = Workflow::Extensions::Route::RequiredCounts.new([false])
-      post request_update_workflow_page_path( site: site.id, cid: node.id, id: item.id),
-           workflow_comment: "WorkflowComment#{unique_id}",
-           workflow_approvers: workflow_approvers,
-           workflow_required_counts: workflow_required_counts,
-           url: item.url + show_path,
-           forced_update_option: "false"
+
+      params = {
+        workflow_comment: "WorkflowComment#{unique_id}",
+        workflow_approvers: workflow_approvers,
+        workflow_required_counts: workflow_required_counts,
+        url: item.url + show_path,
+        forced_update_option: "false"
+      }
+      post request_update_workflow_page_path( site: site.id, cid: node.id, id: item.id), params: params
       @json = JSON.parse(response.body)
       @item = assigns[:item]
     end
@@ -57,12 +60,15 @@ describe Workflow::PagesController, type: :request, dbscope: :example do
       workflow_approvers = Workflow::Extensions::WorkflowApprovers.new
       workflow_approvers.push("1,#{user2._id},,pending,")
       workflow_required_counts = Workflow::Extensions::Route::RequiredCounts.new([false])
-      post request_update_workflow_page_path( site: site.id, cid: node.id, id: item.id),
-           workflow_comment: "WorkflowComment#{unique_id}",
-           workflow_approvers: workflow_approvers,
-           workflow_required_counts: workflow_required_counts,
-           url: item.url + show_path,
-           forced_update_option: "true"
+
+      params = {
+        workflow_comment: "WorkflowComment#{unique_id}",
+        workflow_approvers: workflow_approvers,
+        workflow_required_counts: workflow_required_counts,
+        url: item.url + show_path,
+        forced_update_option: "true"
+      }
+      post request_update_workflow_page_path( site: site.id, cid: node.id, id: item.id), params: params
       @json = JSON.parse(response.body)
       @item = assigns[:item]
     end
@@ -79,16 +85,23 @@ describe Workflow::PagesController, type: :request, dbscope: :example do
       workflow_approvers = Workflow::Extensions::WorkflowApprovers.new
       workflow_approvers.push("1,#{user1._id},,pending,")
       workflow_required_counts = Workflow::Extensions::Route::RequiredCounts.new([false])
-      post request_update_workflow_page_path( site: site.id, cid: node.id, id: item.id),
-           workflow_comment: "WorkflowComment#{unique_id}",
-           workflow_approvers: workflow_approvers,
-           workflow_required_counts: workflow_required_counts,
-           url: item.url + show_path,
-           forced_update_option: "false"
-      post approve_update_workflow_page_path( site: site.id, cid: node.id, id: item.id),
-           remand_comment: "RemandComment#{unique_id}",
-           url: item.url + show_path,
-           forced_update_option: "false"
+
+      params = {
+        workflow_comment: "WorkflowComment#{unique_id}",
+        workflow_approvers: workflow_approvers,
+        workflow_required_counts: workflow_required_counts,
+        url: item.url + show_path,
+        forced_update_option: "false"
+      }
+      post request_update_workflow_page_path( site: site.id, cid: node.id, id: item.id), params: params
+
+
+      params = {
+        remand_comment: "RemandComment#{unique_id}",
+        url: item.url + show_path,
+        forced_update_option: "false"
+      }
+      post approve_update_workflow_page_path( site: site.id, cid: node.id, id: item.id), params: params
       @json = JSON.parse(response.body)
       @item = assigns[:item]
     end
@@ -107,16 +120,22 @@ describe Workflow::PagesController, type: :request, dbscope: :example do
       workflow_approvers = Workflow::Extensions::WorkflowApprovers.new
       workflow_approvers.push("1,#{user1._id},,pending,")
       workflow_required_counts = Workflow::Extensions::Route::RequiredCounts.new([false])
-      post request_update_workflow_page_path( site: site.id, cid: node.id, id: item.id),
-           workflow_comment: "WorkflowComment#{unique_id}",
-           workflow_approvers: workflow_approvers,
-           workflow_required_counts: workflow_required_counts,
-           url: item.url + show_path,
-           forced_update_option: "false"
-      post remand_update_workflow_page_path( site: site.id, cid: node.id, id: item.id),
-           remand_comment: "RemandComment#{unique_id}",
-           url: item.url + show_path,
-           forced_update_option: "false"
+
+      params = {
+        workflow_comment: "WorkflowComment#{unique_id}",
+        workflow_approvers: workflow_approvers,
+        workflow_required_counts: workflow_required_counts,
+        url: item.url + show_path,
+        forced_update_option: "false"
+      }
+      post request_update_workflow_page_path( site: site.id, cid: node.id, id: item.id), params: params
+
+      params = {
+        remand_comment: "RemandComment#{unique_id}",
+        url: item.url + show_path,
+        forced_update_option: "false"
+      }
+      post remand_update_workflow_page_path( site: site.id, cid: node.id, id: item.id), params: params
       @json = JSON.parse(response.body)
       @item = assigns[:item]
     end

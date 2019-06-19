@@ -36,11 +36,13 @@ class Sys::SiteCopyTask
 
   def validate_target_host_host
     return if target_host_host.blank?
+    return if closed.present?
     errors.add :target_host_host, :duplicate if SS::Site.ne(id: id).where(host: target_host_host).exists?
   end
 
   def validate_target_host_domains
     return if target_host_domains.blank?
+    return if closed.present?
     errors.add :target_host_domains, :duplicate if SS::Site.ne(id: id).any_in(domains: target_host_domains).exists?
   end
 end

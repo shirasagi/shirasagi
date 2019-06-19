@@ -26,15 +26,11 @@ class Webmail::Mailbox
   validates :name, presence: true
 
   before_validation :validate_name, if: ->{ @sync && name_changed? }
-  before_create :imap_create, if: ->{ @sync && imap.present? }
-  before_update :imap_update, if: ->{ @sync && imap.present? }
-  before_destroy :imap_delete, if: ->{ @sync && imap.present? }
 
   default_scope -> { order_by order: 1, downcase_name: 1 }
 
-  scope :imap_setting, ->(user, setting) {
-    conf = setting.imap_settings(user.imap_default_settings)
-    where host: conf[:host], account: conf[:account]
+  scope :and_imap, ->(imap) {
+    where imap.account_scope
   }
 
   def sync(sync = true)
@@ -61,7 +57,7 @@ class Webmail::Mailbox
     list.each do |src, dst|
       next unless name =~ /^#{src}(\.|$)/
       dir = src.include?('.') ? src.sub(/[^.]+$/, '') : ''
-      name = dir + name.sub(/^#{Regexp.escape(src)}(\.|$)/, dst + '\\1')
+      name = dir + name.sub(/^#{::Regexp.escape(src)}(\.|$)/, dst + '\\1')
     end
     name
   end
@@ -109,12 +105,40 @@ class Webmail::Mailbox
   end
 
   # @param [Net::IMAP::MailboxList] ml
-  def parse_mailbox_list(ml)
-    self.name = Net::IMAP.decode_utf7(ml.name)
-    self.original_name = ml.name
-    self.delim = ml.delim
-    self.attr = ml.attr.map(&:to_s) || []
-    self.depth = original_name.split(ml.delim).size - 1
+  def parse_mailbox_list(box)
+    self.name = Net::IMAP.decode_utf7(box.name)
+    self.original_name = box.name
+    self.delim = box.delim
+    self.attr = box.attr.map(&:to_s) || []
+    self.depth = original_name.split(box.delim).size
+    self.depth = self.depth - 1 if self.depth.nonzero?
+  end
+
+  def imap_create
+    return false if imap.blank?
+    imap.conn.create original_name
+  rescue Net::IMAP::NoResponseError => e
+    rescue_imap_error(e)
+  end
+
+  def imap_update
+    return false if imap.blank?
+    imap.conn.rename original_name_was, original_name
+    items = Webmail::Mail.where(imap.account_scope).where(mailbox: name_was)
+    items.each(&:destroy_rfc822)
+    items.delete_all
+  rescue Net::IMAP::NoResponseError => e
+    rescue_imap_error(e)
+  end
+
+  def imap_delete
+    return false if imap.blank?
+    imap.conn.delete original_name
+    items = mails
+    items.each(&:destroy_rfc822)
+    items.delete_all
+  rescue Net::IMAP::NoResponseError => e
+    rescue_imap_error(e)
   end
 
   private
@@ -125,35 +149,12 @@ class Webmail::Mailbox
     self.original_name = Net::IMAP.encode_utf7(name)
     self.delim = '.'
     self.attr = []
-    self.depth = self.name.split('.').size - 1
+    self.depth = self.name.split('.').size
+    self.depth = self.depth - 1 if self.depth.nonzero?
   end
 
-  def imap_create
-    imap.conn.create original_name
-  rescue Net::IMAP::NoResponseError => e
-    rescue_imap_error(e)
-  end
-
-  def imap_update
-    imap.conn.rename original_name_was, original_name
-    items = Webmail::Mail.where(imap.account_scope).where(mailbox: name_was)
-    items.each(&:destroy_rfc822)
-    items.delete_all
-  rescue Net::IMAP::NoResponseError => e
-    rescue_imap_error(e)
-  end
-
-  def imap_delete
-    imap.conn.delete original_name
-    items = mails
-    items.each(&:destroy_rfc822)
-    items.delete_all
-  rescue Net::IMAP::NoResponseError => e
-    rescue_imap_error(e)
-  end
-
-  def rescue_imap_error(e)
-    errors.add :base, e.to_s
+  def rescue_imap_error(exception)
+    errors.add :base, exception.to_s
     return false
   end
 end

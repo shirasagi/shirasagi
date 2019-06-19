@@ -59,6 +59,7 @@ ja:
       gws/faq/category: カテゴリー
 
   gws_role:
+    use_gws_faq: よくある質問の利用
     read_other_gws_faq_posts: 投稿の閲覧（全て）
     read_private_gws_faq_posts: 投稿の閲覧（所有）
     edit_other_gws_faq_posts: 投稿の編集（全て）
@@ -76,28 +77,28 @@ ja:
 
   gws_notification:
     gws/faq/topic:
-      subject: "[更新通知][よくある質問] %{name}"
-      text: |
-        「%{name}」が作成または更新されました。
+      subject: "[よくある質問] 「%{name}」が登録または更新されました。"
+      text: "%{text}"
+      mail_text: |
+        %{subject}
 
         %{text}
 
     gws/faq/post:
-      subject: "[更新通知][よくある質問] %{name}"
-      text: |
-        「%{name}」に投稿がありました。
+      subject: "[よくある質問] 「%{name}」に新しい投稿がありました。"
+      text: "%{text}"
+      mail_text: |
+        %{subject}
 
         %{text}
 
     gws/faq/topic/destroy:
-      subject: "[削除通知][よくある質問] %{name}"
-      text: |
-        「%{name}」が削除されました。
+      subject: "[よくある質問] 「%{name}」が削除されました。"
+      text: ""
 
     gws/faq/post/destroy:
-      subject: "[削除通知][よくある質問] %{name}"
-      text: |
-        「%{name}」の投稿が削除されました。
+      subject: "[よくある質問] 「%{name}」の投稿が削除されました。"
+      text: ""
 
   mongoid:
     models:

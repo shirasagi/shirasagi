@@ -31,7 +31,7 @@ sudo yum -y install \
 
 for i in $(seq 1 3)
 do
-  curl -sSL https://rvm.io/mpapis.asc | gpg2 --import -
+  gpg2 --keyserver hkp://pool.sks-keyservers.net --recv-keys 409B6B1796C275462A1703113804BB82D39DC0E3 7D2BAF1CF37B13E2069D6956105BD0E739499BDB
   if [ $? -eq 0 ]; then
     break
   fi
@@ -46,8 +46,8 @@ else
 fi
 export PATH="$PATH:$RVM_HOME/bin"
 source $RVM_HOME/scripts/rvm
-rvm install 2.4.2
-rvm use 2.4.2 --default
+rvm install 2.4.6
+rvm use 2.4.6 --default
 gem install bundler
 
 if [ ! `which ruby` ]; then exit 1; fi
@@ -232,6 +232,7 @@ cat <<EOF | sudo tee /etc/nginx/conf.d/header.conf
 proxy_set_header Host \$host;
 proxy_set_header X-Real-IP \$remote_addr;
 proxy_set_header Remote-Addr \$remote_addr;
+proxy_set_header X-Forwarded-Proto \$scheme;
 proxy_set_header X-Forwarded-Host \$http_host;
 proxy_set_header X-Forwarded-Server \$host;
 proxy_set_header X-Forwarded-For \$proxy_add_x_forwarded_for;
@@ -371,7 +372,7 @@ PIDFile=${SS_DIR}/tmp/pids/unicorn.pid
 Type=forking
 TimeoutSec=300
 
-ExecStart=${RVM_HOME}/wrappers/default/bundle exec rake unicorn:start
+ExecStart=${RVM_HOME}/wrappers/default/bundle exec unicorn_rails -c config/unicorn.rb -D
 ExecStop=${RVM_HOME}/wrappers/default/bundle exec rake unicorn:stop
 ExecReload=${RVM_HOME}/wrappers/default/bundle exec rake unicorn:restart
 

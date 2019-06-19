@@ -39,7 +39,7 @@ class Gws::Memo::MessageImporter
 
     item = Gws::Memo::Message.new
     data.each do |k, v|
-      next if %w(user members to_members cc_members bcc_members files).include?(k)
+      next if %w(user members to_members cc_members bcc_members files list_id).include?(k)
       item[k] = v
     end
 
@@ -116,12 +116,8 @@ class Gws::Memo::MessageImporter
     item.filtered = {}
     item.filtered[@cur_user.id.to_s] = @datetime
 
-    # seen
-    item.seen = {}
-    #item.seen[@cur_user.id.to_s] = @datetime
-
-    # path
-    item.path = {}
+    # user_settings
+    item.user_settings = []
 
     # files
     item.file_ids = []

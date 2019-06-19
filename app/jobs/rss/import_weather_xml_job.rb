@@ -16,9 +16,12 @@ class Rss::ImportWeatherXmlJob < Rss::ImportBase
     return unless @cur_file
 
     @items = Rss::Wrappers.parse(@cur_file)
+    @imported_pages = []
   end
 
   def after_import
+    execute_weather_xml_filters
+
     super
 
     gc_rss_tempfile
@@ -44,7 +47,7 @@ class Rss::ImportWeatherXmlJob < Rss::ImportBase
       process_earthquake(page)
     end
 
-    execute_weather_xml_filter(page)
+    @imported_pages << page
     page
   end
 
@@ -56,8 +59,8 @@ class Rss::ImportWeatherXmlJob < Rss::ImportBase
     res = http.request(req)
     return nil if res.code != '200'
     res.body.force_encoding('UTF-8')
-  rescue
-    nil
+  rescue => e
+    Rails.logger.warn("#{e.class} (#{e.message}):\n  #{e.backtrace.join("\n  ")}")
   end
 
   def extract_event_id(xml)
@@ -169,19 +172,8 @@ class Rss::ImportWeatherXmlJob < Rss::ImportBase
     ret
   end
 
-  def execute_weather_xml_filter(page)
-    return if page.blank?
-    return if node.try(:filters).blank?
-    filters = node.filters
-    return if filters.blank?
-
-    filters.and_enabled.each do |filter|
-      context = OpenStruct.new
-      context[:site] = site
-      context[:user] = user
-      context[:node] = node
-
-      filter.execute(page, context) rescue next
-    end
+  def execute_weather_xml_filters
+    return if @imported_pages.blank?
+    Rss::ExecuteWeatherXmlFiltersJob.bind(site_id: site.id, node_id: node.id).perform_later(@imported_pages.map(&:id))
   end
 end

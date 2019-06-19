@@ -3,9 +3,10 @@ module Member::AjaxFileFilter
   include Member::AuthFilter
 
   included do
+    layout "member/ajax"
     before_action :set_member
     before_action :logged_in?
-    layout "member/ajax"
+    before_action :set_items
   end
 
   private
@@ -16,11 +17,11 @@ module Member::AjaxFileFilter
   end
 
   def logged_in?
-    member = get_member_by_session(@cur_site)
+    member = get_member_by_session
 
     ## required self
-    raise "403" unless member
-    raise "403" if @cur_member.id != member.id
+    raise "404" unless member
+    raise "404" if @cur_member.id != member.id
   end
 
   def set_last_modified
@@ -32,12 +33,29 @@ module Member::AjaxFileFilter
     super
   end
 
+  def fix_params
+    { cur_member: @cur_member }
+  end
+
+  def set_items
+    @items = @model.allow(:read, @cur_member)
+  end
+
+  def set_item
+    @item ||= begin
+      item = @items.find(params[:id])
+      item.attributes = fix_params
+      item
+    end
+  rescue Mongoid::Errors::DocumentNotFound => e
+    return render_destroy(true) if params[:action] == 'destroy'
+    raise e
+  end
+
   public
 
   def index
-    @items = @model
-    # @items = @items.site(@cur_site) if @cur_site
-    @items = @items.allow(:read, @cur_member).
+    @items = @items.
       order_by(filename: 1).
       page(params[:page]).per(20)
   end

@@ -1,0 +1,31 @@
+<% return if @ss_mode != :gws %>
+
+<% 1.upto(@model::MAX_CIRCULATIONS) do |level| %>
+  <% users = @item.circulation_users_at(level) %>
+  <% if users.active.present? %>
+    <h1 class="workflow-level-header workflow-circulation-level-<%= level %>"><%= t("workflow.circulation_step") %> <%= @model.t :level, level: level %></h1>
+    <dl class="see workflow-circulations workflow-circulation-level-<%= level %>">
+      <dt><%= @model.t :circulation_attachment_uses %></dt>
+      <dd><%= @item.circulation_attachment_enabled_at?(level) ? t("ss.options.state.enabled") : t("ss.options.state.disabled") %></dd>
+      <dt><%= @model.t :circulations %></dt>
+      <dd>
+        <table class="index">
+          <thead>
+            <tr>
+              <th class="name"><%= @model.approver_user_class.t :name %></th>
+              <th class="email"><%= @model.approver_user_class.t :email %></th>
+            </tr>
+          </thead>
+          <tbody>
+          <% users.active.each do |user| %>
+            <tr>
+              <td><%= user.long_name %></td>
+              <td><%= user.email %></td>
+            </tr>
+          <% end %>
+          </tbody>
+        </table>
+      </dd>
+    </dl>
+  <% end %>
+<% end %>

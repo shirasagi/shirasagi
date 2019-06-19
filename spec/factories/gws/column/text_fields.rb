@@ -1,4 +1,4 @@
-FactoryGirl.define do
+FactoryBot.define do
   factory :gws_column_text_field, class: Gws::Column::TextField do
     cur_site { gws_site }
 

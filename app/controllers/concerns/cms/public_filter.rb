@@ -1,17 +1,19 @@
 module Cms::PublicFilter
   extend ActiveSupport::Concern
+  include Cms::PublicFilter::Site
   include Cms::PublicFilter::Node
   include Cms::PublicFilter::Page
 
   included do
     rescue_from StandardError, with: :rescue_action
-    before_action :set_site
+    before_action :ensure_site_presence
     before_action :set_request_path
     #before_action :redirect_slash, if: ->{ request.env["REQUEST_PATH"] =~ /\/[^\.]+[^\/]$/ }
     before_action :deny_path
     before_action :parse_path
+    before_action :set_preview_params
     before_action :compile_scss
-    before_action :x_sendfile, unless: ->{ filters.include?(:mobile) || filters.include?(:kana) }
+    before_action :x_sendfile, unless: ->{ filter_include?(:mobile) || filter_include?(:kana) || @preview }
   end
 
   def index
@@ -22,42 +24,23 @@ module Cms::PublicFilter
       @cur_main_path.sub!(/\.p\d+\.html$/, ".html")
     end
 
-    if @html =~ /\.part\.html$/
-      part = find_part(@html)
-      raise "404" unless part
-      @cur_path = params[:ref] || "/"
-      set_main_path
-      if resp = render_part(part)
-        return send_part(resp)
-      end
-    elsif page = find_page(@cur_main_path)
-      if resp = render_page(page)
-        self.response = resp
-        return send_page(page)
-      end
-    elsif node = find_node(@cur_main_path)
-      if resp = render_node(node)
-        self.response = resp
-        return send_page(node)
+    sends = false
+    enum_contents.each do |renderer|
+      if instance_exec(&renderer)
+        sends = true
+        break
       end
     end
 
-    page_not_found if response.body.blank?
+    page_not_found if !sends
   end
 
   private
 
-  def set_site
-    host = request_host
-    path = request_path
-
-    @cur_site ||= begin
-      site = SS::Site.find_by_domain(host, path)
-      request.env["ss.site"] = site
-    end
+  def ensure_site_presence
     return if @cur_site
 
-    if path =='/' && group = SS::Group.where(domains: host).first
+    if request_path =='/' && group = SS::Group.where(domains: host).first
       return redirect_to "//#{host}" + gws_login_path(site: group)
     end
 
@@ -100,6 +83,16 @@ module Cms::PublicFilter
     @file = File.join(@cur_site.root_path, @cur_path)
   end
 
+  def set_preview_params
+    options = filter_options(:preview)
+    if options
+      @preview = true
+      @cur_user = options[:user]
+      @cur_date = options[:date]
+      @preview_page = options[:page]
+    end
+  end
+
   def compile_scss
     return if @cur_path !~ /\.css$/
     return if @cur_path =~ /\/_[^\/]*$/
@@ -134,10 +127,71 @@ module Cms::PublicFilter
 
   def x_sendfile(file = @file)
     return unless Fs.file?(file)
-    response.headers["Expires"] = 1.day.from_now.httpdate if file =~ /\.(css|js|gif|jpg|png)$/
+    response.headers["Expires"] = 1.day.from_now.httpdate if file.to_s.downcase.end_with?(*%w(.css .js .gif .jpg .jpeg .png))
     response.headers["Last-Modified"] = CGI::rfc1123_date(Fs.stat(file).mtime)
 
     ss_send_file(file, type: Fs.content_type(file), disposition: :inline)
+  end
+
+  def enum_contents
+    Enumerator.new do |y|
+      if @preview_page
+        y << proc { render_and_send_page(@preview_page) }
+      else
+        if @html =~ /\.part\.html$/ && part = find_part(@html)
+          y << proc { render_and_send_part(part) }
+          next
+        end
+
+        if page = find_page(@cur_main_path)
+          y << proc { render_and_send_page(page) }
+        end
+
+        if !@cur_main_path.include?('.') && !@cur_main_path.end_with?('/') && page = find_page("#{@cur_main_path}/index.html")
+          y << proc { render_and_send_page(page) }
+        end
+
+        if node = find_node(@cur_main_path)
+          y << proc { render_and_send_node(node) }
+        end
+      end
+    end
+  end
+
+  def render_and_send_part(part)
+    @cur_path = params[:ref] || "/"
+    set_main_path
+    resp = render_part(part)
+    return false if !resp
+
+    send_part(resp)
+    request.env["ss.rendered"] = { type: :part, part: part }
+    true
+  end
+
+  def render_and_send_page(page)
+    resp = render_page(page)
+    return false if !resp
+
+    self.response = resp
+    send_page(page)
+    request.env["ss.rendered"] = { type: :page, page: page, layout: @cur_layout }
+    true
+  end
+
+  def render_and_send_node(node)
+    if node.route == 'uploader/file' && Fs.file?(@file)
+      x_sendfile
+      return true
+    end
+
+    resp = render_node(node)
+    return false if !resp
+
+    self.response = resp
+    send_page(node)
+    request.env["ss.rendered"] = { type: :node, node: node, layout: @cur_layout }
+    true
   end
 
   def send_part(body)
@@ -159,18 +213,18 @@ module Cms::PublicFilter
     raise "404"
   end
 
-  def rescue_action(e = nil)
-    return render_error(e, status: e.to_s.to_i) if e.to_s =~ /^\d+$/
-    return render_error(e, status: 404) if e.is_a? Mongoid::Errors::DocumentNotFound
-    return render_error(e, status: 404) if e.is_a? ActionController::RoutingError
-    raise e
+  def rescue_action(exception = nil)
+    return render_error(exception, status: exception.to_s.to_i) if exception.to_s.numeric?
+    return render_error(exception, status: 404) if exception.is_a? Mongoid::Errors::DocumentNotFound
+    return render_error(exception, status: 404) if exception.is_a? ActionController::RoutingError
+    raise exception
   end
 
-  def render_error(e, opts = {})
+  def render_error(exception, opts = {})
     # for development
     if Rails.application.config.consider_all_requests_local
       logger.error "404 #{@cur_path}"
-      raise e
+      raise exception
     end
 
     self.response = ActionDispatch::Response.new

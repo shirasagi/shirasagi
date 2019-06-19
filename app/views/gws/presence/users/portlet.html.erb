@@ -1,0 +1,105 @@
+<%= jquery do %>Gws_Presence_User.render();<% end %>
+<%
+  time = Time.zone.now
+  send_message = Gws::Memo::Message.allowed?(:edit, @cur_user, site: @cur_site)
+%>
+<time datetime="<%= time %>>" style="display: none;"><%=l time, format: :long %></time>
+<div class="wrap-table">
+  <table class="index data-table">
+    <thead>
+    <tr>
+      <th class="name"><%= Gws::User.t :name %></th>
+      <th class="presence-plan"><%= Gws::UserPresence.t :plan %></th>
+      <th class="presence-memo"><%= Gws::UserPresence.t :memo %></th>
+      <% if send_message %>
+        <th class="presence-send-message"><%= t("gws/memo/message.message") %></th>
+      <% end %>
+    </tr>
+    </thead>
+    <tbody>
+
+    <% @manageable_users.each do |item| %>
+      <% user_presence = item.user_presence(@cur_site) || Gws::UserPresence.new %>
+      <tr data-id="<%= item.id %>" class="editable">
+        <td class="presence-state-toggle">
+          <div class="no-overflow">
+            <span class="presence-state <%= user_presence.state_style %>">
+              <%= user_presence.label :state %>
+            </span>
+            <%= link_to item.name, "", class: "select-presence-state" %>
+          </div>
+          <%== user_presence_state_selector(item) %>
+        </td>
+        <td class="no-overflow">
+          <%= ajax_text_field_tag :presence_plan, user_presence.plan, item.id, (gws_presence_apis_user_path(id: item.id) + ".json") %>
+          <i class="material-icons editicon" style="font-size: inherit">&#xE254;</i>
+        </td>
+        <td class="no-overflow">
+          <%= ajax_text_field_tag :presence_memo, user_presence.memo, item.id, (gws_presence_apis_user_path(id: item.id) + ".json") %>
+          <i class="material-icons editicon" style="font-size: inherit">&#xE254;</i>
+        </td>
+        <% if send_message %>
+          <td class="no-overflow">
+            <%= link_to t("ss.links.new"), new_gws_memo_message_path(to: item.id) %>
+          </td>
+        <% end %>
+      </tr>
+    <% end %>
+
+    <% if @manageable %>
+      <% @group_users.each do |item| %>
+        <% user_presence = item.user_presence(@cur_site) || Gws::UserPresence.new %>
+        <tr data-id="<%= item.id %>" class="editable">
+          <td class="presence-state-toggle">
+            <div class="no-overflow">
+              <span class="presence-state <%= user_presence.state_style %>">
+                <%= user_presence.label :state %>
+              </span>
+              <%= link_to item.name, "", class: "select-presence-state" %>
+            </div>
+            <%== user_presence_state_selector(item) %>
+          </td>
+          <td class="no-overflow">
+            <%= ajax_text_field_tag :presence_plan, user_presence.plan, item.id, (gws_presence_apis_user_path(id: item.id) + ".json") %>
+            <i class="material-icons editicon" style="font-size: inherit">&#xE254;</i>
+          </td>
+          <td class="no-overflow">
+            <%= ajax_text_field_tag :presence_memo, user_presence.memo, item.id, (gws_presence_apis_user_path(id: item.id) + ".json") %>
+            <i class="material-icons editicon" style="font-size: inherit">&#xE254;</i>
+          </td>
+          <% if send_message %>
+            <td class="no-overflow">
+              <%= link_to t("ss.links.new"), new_gws_memo_message_path(to: item.id) %>
+            </td>
+          <% end %>
+        </tr>
+      <% end %>
+    <% else %>
+      <% @group_users.each do |item| %>
+        <% user_presence = item.user_presence(@cur_site) || Gws::UserPresence.new %>
+        <tr data-id="<%= item.id %>">
+          <td class="no-overflow">
+            <span class="presence-state <%= user_presence.state_style %>">
+              <%= user_presence.label :state %>
+            </span>
+            <%= item.name %>
+          </td>
+          <td class="no-overflow">
+            <%= user_presence.plan %>
+          </td>
+          <td class="no-overflow">
+            <%= user_presence.memo %>
+          </td>
+          <% if send_message %>
+            <td class="no-overflow">
+              <%= link_to t("ss.links.new"), new_gws_memo_message_path(to: item.id) %>
+            </td>
+          <% end %>
+        </tr>
+      <% end %>
+    <% end %>
+
+    </tbody>
+  </table>
+</div>
+<div class="list-more"><%= link_to t("gws/presence.links.all_groups"), gws_presence_users_path %></div>

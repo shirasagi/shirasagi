@@ -1,5 +1,5 @@
 namespace :sys do
-  task :set_admin_role => :environment do
+  task set_admin_role: :environment do
     puts "Please input user name: user=[user_name]" or exit if ENV['user'].blank?
 
     user = SS::User.flex_find ENV['user']

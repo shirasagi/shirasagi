@@ -9,18 +9,18 @@ module Cms::ApiFilter::Contents
   private
 
   def search_html_with_string(string)
-    cond = { "$or" => HTML_FIELDS.map { |field| { field => /#{Regexp.escape(string)}/ } } }
+    cond = { "$or" => HTML_FIELDS.map { |field| { field => /#{::Regexp.escape(string)}/ } } }
     search_html_with_condition(cond)
   end
 
   def search_html_with_url(url)
-    path = "=\"#{Regexp.escape(url)}"
+    path = "=\"#{::Regexp.escape(url)}"
     cond = { "$or" => HTML_FIELDS.map { |field| { field => /#{path}/ } } }
     search_html_with_condition(cond)
   end
 
   def search_html_with_regexp(string)
-    regexp = Regexp.new(string, Regexp::MULTILINE)
+    regexp = ::Regexp.new(string, ::Regexp::MULTILINE)
     cond = { "$or" => HTML_FIELDS.map { |field| { field => regexp } } }
     search_html_with_condition(cond)
   end

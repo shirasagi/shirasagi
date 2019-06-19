@@ -34,10 +34,12 @@ class Gws::Portal::Group::LayoutsController < ApplicationController
   public
 
   def show
+    raise "403" unless @item.allowed?(:edit, @cur_user, site: @cur_site)
     show_layout
   end
 
   def update
+    raise "403" unless @item.allowed?(:edit, @cur_user, site: @cur_site)
     update_layout
   end
 end

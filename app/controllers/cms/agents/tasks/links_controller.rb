@@ -53,7 +53,7 @@ class Cms::Agents::Tasks::LinksController < ApplicationController
 
     @base_url = @site.full_url.sub(/^(https?:\/\/.*?\/).*/, '\\1')
 
-    @urls    = { @site.url => "Site" }
+    @urls    = { @site.url => ["Site"] }
     @results = {}
     @errors  = {}
 
@@ -62,9 +62,9 @@ class Cms::Agents::Tasks::LinksController < ApplicationController
 
     (10*1000*1000).times do |i|
       break if @urls.blank?
-      url, ref = @urls.shift
+      url, refs = @urls.shift
       # @task.log url
-      check_url(url, ref)
+      check_url(url, refs)
       @task.count
     end
 
@@ -95,47 +95,52 @@ class Cms::Agents::Tasks::LinksController < ApplicationController
       urls = urls.map { |url| (url[0] == "/") ? File.join(@base_url, url) : url }
       set_errors_in_contents(ref, urls)
     end
+    head :ok
   end
 
   # Checks the url.
-  def check_url(url, ref)
-    Rails.logger.info("#{url}: check by referer: #{ref}")
+  def check_url(url, refs)
+    Rails.logger.info("#{url}: check by referer: #{refs.join(", ")}")
     if url =~ /(\/|\.html?)$/
-      check_html(url, ref)
+      check_html(url, refs)
     else
-      check_file(url, ref)
+      check_file(url, refs)
     end
   end
 
   private
 
   # Adds the log with valid url
-  def add_valid_url(url, ref)
+  def add_valid_url(url, refs)
     @results[url] = 1
   end
 
   # Add the log with invalid url
-  def add_invalid_url(url, ref)
+  def add_invalid_url(url, refs)
     @results[url]  = 0
-    @errors[ref] ||= []
-    @errors[ref] << url
+
+    refs.each do |ref|
+      @errors[ref] ||= []
+      @errors[ref] << url
+    end
   end
 
   # Checks the html url.
-  def check_html(url, ref)
+  def check_html(url, refs)
     file = get_internal_file(url)
     html = file ? Fs.read(file) : get_http(url)
 
     if html.nil?
-      add_invalid_url(url, ref)
+      add_invalid_url(url, refs)
       return
     end
 
-    add_valid_url(url, ref)
+    add_valid_url(url, refs)
     return if url[0] != "/"
 
     begin
       html = NKF.nkf "-w", html
+      html = html.gsub(/<!--.*?-->/m, "")
       html.scan(/\shref="([^"]+)"/i) do |m|
         next_url = m[0]
         next_url = next_url.sub(/^#{@base_url}/, "/")
@@ -148,10 +153,11 @@ class Cms::Agents::Tasks::LinksController < ApplicationController
         next_url = URI.encode(next_url) if next_url =~ /[^-_.!~*'()\w;\/\?:@&=+$,%#]/
         next if @results[next_url]
 
-        @urls[next_url] = url
+        @urls[next_url] ||= []
+        @urls[next_url] << url
       end
     rescue
-      add_invalid_url(url, ref)
+      add_invalid_url(url, refs)
     end
   end
 
@@ -166,13 +172,13 @@ class Cms::Agents::Tasks::LinksController < ApplicationController
   end
 
   # Checks the file url.
-  def check_file(url, ref)
+  def check_file(url, refs)
     if get_internal_file(url)
-      add_valid_url(url, ref)
+      add_valid_url(url, refs)
     elsif check_head(url) == false
-      add_invalid_url(url, ref)
+      add_invalid_url(url, refs)
     else
-      add_valid_url(url, ref)
+      add_valid_url(url, refs)
     end
   end
 

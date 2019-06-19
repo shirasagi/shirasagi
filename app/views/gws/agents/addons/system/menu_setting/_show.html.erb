@@ -1,4 +1,7 @@
-<%= jquery do %> SS_AddonTabs.hide(".addon-gws-system-menu-setting"); <% end %>
+<%
+  addon ||= local_assigns.fetch(:addon, {})
+  addon[:display_body] = "hide"
+%>
 
 <% render_menu_setting = proc do |type, fallback_label| %>
   <dl class="see addon-gws-system-menu-setting">
@@ -14,8 +17,10 @@
 <% end %>
 
 <% render_menu_setting.call(:portal, t('modules.gws/portal')) %>
-<% render_menu_setting.call(:reminder, t('mongoid.models.gws/reminder')) %>
 <% render_menu_setting.call(:schedule) %>
+<% render_menu_setting.call(:todo, t('mongoid.models.gws/schedule/todo')) %>
+<% render_menu_setting.call(:reminder, t('mongoid.models.gws/reminder')) %>
+<% render_menu_setting.call(:presence, t('mongoid.models.gws/presence')) %>
 <% render_menu_setting.call(:attendance) %>
 <% render_menu_setting.call(:bookmark) %>
 <% render_menu_setting.call(:memo) %>
@@ -23,14 +28,15 @@
 <% render_menu_setting.call(:workflow) %>
 <% render_menu_setting.call(:circular) %>
 <% render_menu_setting.call(:monitor) %>
+<% render_menu_setting.call(:survey) %>
 <% render_menu_setting.call(:board) %>
 <% render_menu_setting.call(:faq) %>
 <% render_menu_setting.call(:qna) %>
-<% render_menu_setting.call(:share) %>
 <% render_menu_setting.call(:discussion) %>
+<% render_menu_setting.call(:share) %>
 <% render_menu_setting.call(:shared_address) %>
 <% render_menu_setting.call(:personal_address) %>
 <% render_menu_setting.call(:staff_record, t('gws/staff_record.staff_records')) %>
 <% render_menu_setting.call(:links, t('mongoid.models.gws/link')) %>
-<% render_menu_setting.call(:contrast) %>
+<% render_menu_setting.call(:contrast, t('mongoid.models.gws/contrast')) %>
 <% render_menu_setting.call(:elasticsearch) %>

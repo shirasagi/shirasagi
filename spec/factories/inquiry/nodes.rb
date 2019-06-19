@@ -1,4 +1,4 @@
-FactoryGirl.define do
+FactoryBot.define do
   factory :inquiry_node_base, class: Inquiry::Node::Base, traits: [:cms_node] do
     cur_site { cms_site }
     route "inquiry/base"

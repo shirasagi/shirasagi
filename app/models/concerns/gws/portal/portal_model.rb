@@ -37,6 +37,7 @@ module Gws::Portal::PortalModel
       item.cur_site   = @cur_site
       item.setting_id = id
       item.user_ids   = user_ids
+      item.group_ids  = [portal_group_id] if try(:portal_group_id)
 
       if !item.save
         Rails.logger.warn("#{__FILE__}:#{__LINE__} - " + item.errors.full_messages.join(' '))

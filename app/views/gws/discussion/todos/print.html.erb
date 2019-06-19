@@ -15,9 +15,7 @@
   Gws_Schedule_Calendar.render('#calendar', <%== calendar_options.to_json %>, <%== init_options.to_json %>);
 <% end %>
 
-<div class="no-print">
-  <%= link_to(I18n.t('ss.links.back'), { action: :index }.merge(request.query_parameters)) %>
-</div>
+<%= render 'ss/crud/print_preview_head', links: [[ I18n.t('ss.links.back'), { action: :index }.merge(request.query_parameters) ]] %>
 
 <section class="main-box gws-schedule-box sheet">
   <header>

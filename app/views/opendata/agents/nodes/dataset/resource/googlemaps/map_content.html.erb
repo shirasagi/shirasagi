@@ -1,0 +1,86 @@
+<% selector = "map-canvas-#{SecureRandom.uuid}" %>
+<%= jquery do %>
+$(".resource-content .tab.list a").on("click", function() {
+  $(".resource-content .tab.list").addClass("current");
+  $(".resource-content .tab.map").removeClass("current");
+
+  $(".resource-content .resource-list").show();
+  $(".resource-content .resource-map").hide();
+  return false;
+});
+$(".resource-content .tab.map a").on("click", function() {
+  $(".resource-content .tab.list").removeClass("current");
+  $(".resource-content .tab.map").addClass("current");
+
+  $(".resource-content .resource-list").hide();
+  $(".resource-content .resource-map").show();
+
+  var markerBounds = new google.maps.LatLngBounds();
+  $.each(Googlemaps_Map.markers, function (id, value) {
+    markerBounds.extend(new google.maps.LatLng(value["loc"][0], value["loc"][1]));
+  });
+  Googlemaps_Map.map.fitBounds(markerBounds);
+  google.maps.event.addListenerOnce(Googlemaps_Map.map, "idle", function() {
+    if (Googlemaps_Map.map.getZoom() > Googlemaps_Map.zoom) {
+      Googlemaps_Map.map.setZoom(Googlemaps_Map.zoom);
+    }
+  });
+  return false;
+});
+<% end %>
+
+<% limit = 100 %>
+
+<div class="resource-content">
+  <div class="resource-name"><%= @item.name %></div>
+  <% if @sheets.present? %>
+    <div class="resource-sheets">
+      <nav class="pagination">
+        <% current_page = params[:page] ? params[:page].to_i : 1 %>
+        <% @sheets.each_with_index do |name, idx|%>
+          <% if current_page == (idx + 1) %>
+            <span class="page current"><%= name %></span>
+          <% else %>
+            <span class="page"><%= link_to name, "#{@cur_path}?page=#{idx + 1}" %></a></span>
+          <% end %>
+        <% end %>
+      </nav>
+    </div>
+  <% end %>
+
+  <nav class="tabs">
+    <ul>
+      <li class="tab list current">
+        <a href="#"><%= t("opendata.labels.list_view") %></a>
+      </li>
+      <li class="tab map">
+        <a href="#"><%= t("opendata.labels.map_view") %></a>
+      </li>
+    </ul>
+  </nav>
+
+  <div class="resource-list">
+    <table class="cells" summary="<%= @item.name %>">
+      <tbody>
+      <% @data.slice(0, limit).each do |line| %>
+        <tr>
+          <% line.each do |col| %>
+            <td><%= col %></td>
+          <% end %>
+        </tr>
+      <% end %>
+      </tbody>
+    </table>
+
+    <% if @data.size > limit %>
+      <div><%= limit %><%= I18n.t("opendata.labels.count_display") %></div>
+    <% end %>
+  </div>
+
+  <div class="resource-map" style="display: none;">
+    <%= render_map "##{selector}", site: @cur_site, markers: @map_markers, preview: @preview %>
+    <div class="resource-content resource-map">
+      <div id="<%= selector %>" class="map-canvas" style="width: 100%; height: 400px;"></div>
+    </div>
+  </div>
+</div>

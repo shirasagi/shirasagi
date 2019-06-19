@@ -23,6 +23,11 @@ class Gws::Share::FoldersController < ApplicationController
     p
   end
 
+  def set_item
+    super
+    raise "403" unless @item.allowed?(:read, @cur_user, site: @cur_site)
+  end
+
   public
 
   def index
@@ -62,7 +67,6 @@ class Gws::Share::FoldersController < ApplicationController
   end
 
   def show
-    raise "403" unless @item.allowed?(:read, @cur_user, site: @cur_site)
     if @item.name.include?("/")
       parent_share_max_file_size = @model.where(site_id: @cur_site.id, name: @item.name.split("/").first)
                                          .first.share_max_file_size
@@ -93,11 +97,11 @@ class Gws::Share::FoldersController < ApplicationController
     set_item
     @items = SS::File.where(folder_id: params[:id].to_i, deleted: nil)
 
-    zip = Gws::Share::Compressor.new(@cur_user, items: @items, name: "#{@item.trailing_name}.zip")
+    zip = Gws::Compressor.new(@cur_user, items: @items, name: "#{@item.trailing_name}.zip")
     zip.url = sns_download_job_files_url(user: zip.user, filename: zip.filename, name: zip.name)
 
     if zip.deley_download?
-      job = Gws::Share::CompressJob.bind(site_id: @cur_site, user_id: @cur_user)
+      job = Gws::CompressJob.bind(site_id: @cur_site, user_id: @cur_user)
       job.perform_later(zip.serialize)
 
       flash[:notice_options] = { timeout: 0 }

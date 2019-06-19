@@ -6,7 +6,7 @@ module Gws::Addon::Portal::Portlet
     set_addon_type :gws_portlet
 
     included do
-      field :monitor_answerable_article, type: String
+      field :monitor_answerable_article, type: String, default: "unanswer"
       embeds_ids :monitor_categories, class_name: "Gws::Monitor::Category"
       permit_params :monitor_answerable_article, monitor_category_ids: []
     end

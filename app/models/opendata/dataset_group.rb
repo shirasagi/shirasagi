@@ -3,9 +3,9 @@ class Opendata::DatasetGroup
   include SS::Reference::User
   include SS::Reference::Site
   include Cms::TemplateVariable
+  include Opendata::Addon::Category
   include Cms::Addon::Release
   include Cms::Addon::GroupPermission
-  include Opendata::Addon::Category
 
   set_permission_name :opendata_datasets
 
@@ -52,7 +52,7 @@ class Opendata::DatasetGroup
       return criteria if params.blank?
 
       if params[:name].present?
-        words = params[:name].split(/[\s　]+/).uniq.compact.map { |w| /\Q#{Regexp.escape(w)}\E/ }
+        words = params[:name].split(/[\s　]+/).uniq.compact.map { |w| /\Q#{::Regexp.escape(w)}\E/ }
         criteria = criteria.all_in name: words
       end
       if params[:category_id].present?

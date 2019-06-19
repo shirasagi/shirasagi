@@ -53,9 +53,9 @@ def save_ss_files(path, data)
   file = Fs::UploadedFile.create_from_file(path)
   file.original_filename = data[:filename] if data[:filename].present?
 
-  item = SS::File.find_or_create_by(cond)
+  item = SS::File.new(cond)
   item.in_file = file
-  item.update
+  item.save
 
   item
 end
@@ -70,6 +70,10 @@ def save_layout(data)
 
   item = Cms::Layout.find_or_create_by(cond)
   item.attributes = data.merge html: html
+  if SS.config.cms.enable_lgwan
+    html.gsub!('{{ part "mypage-login" }}', '')
+    html.gsub!('{{ part "mypage-tabs" }}', '')
+  end
   item.update
   item.add_to_set group_ids: @site.group_ids
 
@@ -80,12 +84,16 @@ save_layout filename: "app-bunya.layout.html", name: "アプリ：分野、ア�
 save_layout filename: "app-page.layout.html", name: "アプリ：詳細ページ"
 save_layout filename: "app-top.layout.html", name: "アプリ：トップ"
 save_layout filename: "dataset-bunya.layout.html", name: "データ：分野、データ検索、グループ検索"
+save_layout filename: "dataset-map.layout.html", name: "地図"
+save_layout filename: "chiiki.layout.html", name: "地域"
 save_layout filename: "dataset-page.layout.html", name: "データ：詳細ページ"
 save_layout filename: "dataset-top.layout.html", name: "データ：トップ"
 save_layout filename: "idea-bunya.layout.html", name: "アイデア：分野、アイデア検索"
 save_layout filename: "idea-page.layout.html", name: "アイデア：詳細ページ"
 save_layout filename: "idea-top.layout.html", name: "アイデア：トップ"
-save_layout filename: "mypage-page.layout.html", name: "マイページ：詳細"
+if SS.config.cms.enable_lgwan.blank?
+  save_layout filename: "mypage-page.layout.html", name: "マイページ：詳細"
+end
 save_layout filename: "mypage-top.layout.html", name: "マイページ：トップ、メンバー、SPARQL"
 save_layout filename: "portal-event.layout.html", name: "ポータル：イベント"
 save_layout filename: "portal-general.layout.html", name: "ポータル：汎用"
@@ -98,6 +106,7 @@ layouts = Hash[*array.flatten]
 puts "# nodes"
 
 def save_node(data)
+  return if SS.config.cms.enable_lgwan && data[:route].start_with?('member/')
   puts data[:name]
   cond = { site_id: @site._id, filename: data[:filename], route: data[:route] }
 
@@ -135,6 +144,20 @@ save_node filename: "dataset", name: "データカタログ", route: "opendata/d
   page_layout_id: layouts["dataset-page"].id
 save_node filename: "dataset/bunya", name: "分野", route: "opendata/dataset_category",
   layout_id: layouts["dataset-bunya"].id
+save_node filename: "dataset/chiiki", name: "地域", route: "opendata/dataset_area",
+  layout_id: layouts["chiiki"].id
+save_node filename: "dataset/chiiki/shirasagi", name: "シラサギ市", route: "opendata/dataset_area",
+  layout_id: layouts["chiiki"].id
+save_node filename: "dataset/chiiki/shirasagi/higashi", name: "東区", route: "opendata/dataset_area",
+  layout_id: layouts["chiiki"].id
+save_node filename: "dataset/chiiki/shirasagi/kita", name: "北区", route: "opendata/dataset_area",
+  layout_id: layouts["chiiki"].id
+save_node filename: "dataset/chiiki/shirasagi/minami", name: "南区", route: "opendata/dataset_area",
+  layout_id: layouts["chiiki"].id
+save_node filename: "dataset/chiiki/shirasagi/nishi", name: "西区", route: "opendata/dataset_area",
+  layout_id: layouts["chiiki"].id
+save_node filename: "dataset/map", name: "地図", route: "opendata/dataset_map",
+  layout_id: layouts["dataset-map"].id
 save_node filename: "dataset/search_group", name: "データセットグループ検索", route: "opendata/search_dataset_group",
   layout_id: layouts["dataset-bunya"].id
 save_node filename: "dataset/search", name: "データセット検索", route: "opendata/search_dataset",
@@ -161,23 +184,25 @@ save_node filename: "sparql", name: "SPARQL", route: "opendata/sparql",
 save_node filename: "api", name: "API", route: "opendata/api"
 
 save_node filename: "member", name: "ユーザー", route: "opendata/member",
-  layout_id: layouts["mypage-top"].id
+          layout_id: layouts["mypage-top"].id
 
-save_node filename: "auth", name: "ログイン", route: "member/login",
-  layout_id: layouts["mypage-top"].id, redirect_url: "/mypage/", form_auth: "enabled",
-  twitter_oauth: "enabled", facebook_oauth: "enabled", yahoojp_oauth: "enabled",
-  google_oauth2_oauth: "enabled", github_oauth: "enabled"
+if SS.config.cms.enable_lgwan.blank?
+  save_node filename: "auth", name: "ログイン", route: "member/login",
+            layout_id: layouts["mypage-top"].id, redirect_url: "/mypage/", form_auth: "enabled",
+            twitter_oauth: "enabled", facebook_oauth: "enabled", yahoojp_oauth: "enabled",
+            google_oauth2_oauth: "enabled", github_oauth: "enabled"
 
-save_node filename: "mypage", name: "マイページ", route: "opendata/mypage",
-  layout_id: layouts["mypage-top"].id
-save_node filename: "mypage/profile", name: "プロフィール", route: "opendata/my_profile",
-  layout_id: layouts["mypage-page"].id
-save_node filename: "mypage/dataset", name: "データカタログ", route: "opendata/my_dataset",
-  layout_id: layouts["mypage-page"].id
-save_node filename: "mypage/app", name: "アプリマーケット", route: "opendata/my_app",
-  layout_id: layouts["mypage-page"].id
-save_node filename: "mypage/idea", name: "アイデアボックス", route: "opendata/my_idea",
-  layout_id: layouts["mypage-page"].id
+  save_node filename: "mypage", name: "マイページ", route: "opendata/mypage",
+            layout_id: layouts["mypage-top"].id
+  save_node filename: "mypage/profile", name: "プロフィール", route: "opendata/my_profile",
+            layout_id: layouts["mypage-page"].id
+  save_node filename: "mypage/dataset", name: "データカタログ", route: "opendata/my_dataset",
+            layout_id: layouts["mypage-page"].id
+  save_node filename: "mypage/app", name: "アプリマーケット", route: "opendata/my_app",
+            layout_id: layouts["mypage-page"].id
+  save_node filename: "mypage/idea", name: "アイデアボックス", route: "opendata/my_idea",
+            layout_id: layouts["mypage-page"].id
+end
 
 save_node filename: "bunya", name: "分野", route: "cms/node"
 save_node filename: "bunya/kanko", name: "観光・文化・スポーツ", route: "opendata/category", order: 1
@@ -186,6 +211,85 @@ save_node filename: "bunya/kosodate", name: "子育て・教育", route: "openda
 save_node filename: "bunya/kurashi", name: "くらし・手続き", route: "opendata/category", order: 4
 save_node filename: "bunya/sangyo", name: "産業・仕事", route: "opendata/category", order: 5
 save_node filename: "bunya/shisei", name: "市政情報", route: "opendata/category", order: 6
+
+save_node filename: "estat-bunya", name: "eStat分野", route: "cms/node"
+save_node filename: "estat-bunya/estat1", name: "国土・気象", route: "opendata/estat_category", order: 1
+save_node filename: "estat-bunya/estat2", name: "人口・世帯", route: "opendata/estat_category", order: 2
+save_node filename: "estat-bunya/estat3", name: "労働・賃金", route: "opendata/estat_category", order: 3
+save_node filename: "estat-bunya/estat4", name: "農林水産業", route: "opendata/estat_category", order: 4
+save_node filename: "estat-bunya/estat5", name: "鉱工業", route: "opendata/estat_category", order: 5
+save_node filename: "estat-bunya/estat6", name: "商業・サービス業", route: "opendata/estat_category", order: 6
+save_node filename: "estat-bunya/estat7", name: "企業・家計・経済", route: "opendata/estat_category", order: 7
+save_node filename: "estat-bunya/estat8", name: "住宅・土地・建設", route: "opendata/estat_category", order: 8
+save_node filename: "estat-bunya/estat9", name: "エネルギー・水", route: "opendata/estat_category", order: 9
+save_node filename: "estat-bunya/estat10", name: "運輸・観光", route: "opendata/estat_category", order: 10
+save_node filename: "estat-bunya/estat11", name: "情報通信・科学技術", route: "opendata/estat_category", order: 11
+save_node filename: "estat-bunya/estat12", name: "教育・文化・スポーツ・生活", route: "opendata/estat_category", order: 12
+save_node filename: "estat-bunya/estat13", name: "行財政", route: "opendata/estat_category", order: 13
+save_node filename: "estat-bunya/estat14", name: "司法・安全・環境", route: "opendata/estat_category", order: 14
+save_node filename: "estat-bunya/estat15", name: "社会保障・衛生", route: "opendata/estat_category", order: 15
+save_node filename: "estat-bunya/estat16", name: "国際", route: "opendata/estat_category", order: 16
+save_node filename: "estat-bunya/estat99", name: "その他", route: "opendata/estat_category", order: 17
+
+save_node filename: "estat-bunya/estat1/estat101", name: "国土", route: "opendata/estat_category", order: 101
+save_node filename: "estat-bunya/estat1/estat102", name: "気象", route: "opendata/estat_category", order: 102
+save_node filename: "estat-bunya/estat2/estat201", name: "人口", route: "opendata/estat_category", order: 201
+save_node filename: "estat-bunya/estat2/estat202", name: "世帯", route: "opendata/estat_category", order: 202
+save_node filename: "estat-bunya/estat2/estat203", name: "人口動態", route: "opendata/estat_category", order: 203
+save_node filename: "estat-bunya/estat2/estat204", name: "人口移動", route: "opendata/estat_category", order: 204
+save_node filename: "estat-bunya/estat3/estat301", name: "労働力", route: "opendata/estat_category", order: 301
+save_node filename: "estat-bunya/estat3/estat302", name: "賃金・労働条件", route: "opendata/estat_category", order: 302
+save_node filename: "estat-bunya/estat3/estat303", name: "雇用", route: "opendata/estat_category", order: 303
+save_node filename: "estat-bunya/estat3/estat304", name: "労使関係", route: "opendata/estat_category", order: 304
+save_node filename: "estat-bunya/estat3/estat305", name: "労働災害", route: "opendata/estat_category", order: 305
+save_node filename: "estat-bunya/estat4/estat401", name: "農業", route: "opendata/estat_category", order: 401
+save_node filename: "estat-bunya/estat4/estat402", name: "畜産業", route: "opendata/estat_category", order: 402
+save_node filename: "estat-bunya/estat4/estat403", name: "林業", route: "opendata/estat_category", order: 403
+save_node filename: "estat-bunya/estat4/estat404", name: "水産業", route: "opendata/estat_category", order: 404
+save_node filename: "estat-bunya/estat5/estat501", name: "鉱業", route: "opendata/estat_category", order: 501
+save_node filename: "estat-bunya/estat5/estat502", name: "製造業", route: "opendata/estat_category", order: 502
+save_node filename: "estat-bunya/estat6/estat601", name: "商業", route: "opendata/estat_category", order: 601
+save_node filename: "estat-bunya/estat6/estat602", name: "需給流通", route: "opendata/estat_category", order: 602
+save_node filename: "estat-bunya/estat6/estat603", name: "サービス業", route: "opendata/estat_category", order: 603
+save_node filename: "estat-bunya/estat7/estat701", name: "企業活動", route: "opendata/estat_category", order: 701
+save_node filename: "estat-bunya/estat7/estat702", name: "金融・保険・通貨", route: "opendata/estat_category", order: 702
+save_node filename: "estat-bunya/estat7/estat703", name: "物価", route: "opendata/estat_category", order: 703
+save_node filename: "estat-bunya/estat7/estat704", name: "家計", route: "opendata/estat_category", order: 704
+save_node filename: "estat-bunya/estat7/estat705", name: "国民経済計算", route: "opendata/estat_category", order: 705
+save_node filename: "estat-bunya/estat7/estat706", name: "景気", route: "opendata/estat_category", order: 706
+save_node filename: "estat-bunya/estat8/estat801", name: "住宅・土地", route: "opendata/estat_category", order: 801
+save_node filename: "estat-bunya/estat8/estat802", name: "建設", route: "opendata/estat_category", order: 802
+save_node filename: "estat-bunya/estat9/estat901", name: "電気", route: "opendata/estat_category", order: 901
+save_node filename: "estat-bunya/estat9/estat902", name: "ガス", route: "opendata/estat_category", order: 902
+save_node filename: "estat-bunya/estat9/estat903", name: "エネルギー需給", route: "opendata/estat_category", order: 903
+save_node filename: "estat-bunya/estat9/estat904", name: "水", route: "opendata/estat_category", order: 904
+save_node filename: "estat-bunya/estat10/estat1001", name: "運輸", route: "opendata/estat_category", order: 1001
+save_node filename: "estat-bunya/estat10/estat1002", name: "倉庫", route: "opendata/estat_category", order: 1002
+save_node filename: "estat-bunya/estat10/estat1003", name: "観光", route: "opendata/estat_category", order: 1003
+save_node filename: "estat-bunya/estat11/estat1101", name: "情報通信・放送", route: "opendata/estat_category", order: 1101
+save_node filename: "estat-bunya/estat11/estat1102", name: "科学技術", route: "opendata/estat_category", order: 1102
+save_node filename: "estat-bunya/estat11/estat1103", name: "知的財産", route: "opendata/estat_category", order: 1103
+save_node filename: "estat-bunya/estat12/estat1201", name: "学校教育", route: "opendata/estat_category", order: 1201
+save_node filename: "estat-bunya/estat12/estat1202", name: "社会教育", route: "opendata/estat_category", order: 1202
+save_node filename: "estat-bunya/estat12/estat1203", name: "文化・スポーツ・生活", route: "opendata/estat_category", order: 1203
+save_node filename: "estat-bunya/estat13/estat1301", name: "行政", route: "opendata/estat_category", order: 1301
+save_node filename: "estat-bunya/estat13/estat1302", name: "財政", route: "opendata/estat_category", order: 1302
+save_node filename: "estat-bunya/estat13/estat1303", name: "公務員", route: "opendata/estat_category", order: 1303
+save_node filename: "estat-bunya/estat13/estat1304", name: "選挙", route: "opendata/estat_category", order: 1304
+save_node filename: "estat-bunya/estat14/estat1401", name: "司法", route: "opendata/estat_category", order: 1401
+save_node filename: "estat-bunya/estat14/estat1402", name: "犯罪", route: "opendata/estat_category", order: 1402
+save_node filename: "estat-bunya/estat14/estat1403", name: "災害", route: "opendata/estat_category", order: 1403
+save_node filename: "estat-bunya/estat14/estat1404", name: "事故", route: "opendata/estat_category", order: 1404
+save_node filename: "estat-bunya/estat14/estat1405", name: "環境", route: "opendata/estat_category", order: 1405
+save_node filename: "estat-bunya/estat15/estat1501", name: "社会保障", route: "opendata/estat_category", order: 1501
+save_node filename: "estat-bunya/estat15/estat1502", name: "社会保険", route: "opendata/estat_category", order: 1502
+save_node filename: "estat-bunya/estat15/estat1503", name: "社会福祉", route: "opendata/estat_category", order: 1503
+save_node filename: "estat-bunya/estat15/estat1504", name: "保険衛生", route: "opendata/estat_category", order: 1504
+save_node filename: "estat-bunya/estat15/estat1505", name: "医療", route: "opendata/estat_category", order: 1505
+save_node filename: "estat-bunya/estat16/estat1601", name: "貿易・国際収支", route: "opendata/estat_category", order: 1601
+save_node filename: "estat-bunya/estat16/estat1602", name: "国際協力", route: "opendata/estat_category", order: 1602
+save_node filename: "estat-bunya/estat99/estat9999", name: "その他", route: "opendata/estat_category", order: 9999
+estat_categories = Opendata::Node::EstatCategory.site(@site).map { |m| [m.filename, m] }.to_h
 
 save_node filename: "chiiki", name: "地域", route: "cms/node"
 save_node filename: "chiiki/shirasagi", name: "シラサギ市", route: "opendata/area", order: 1
@@ -233,6 +337,7 @@ save_inquiry_column node_id: inquiry_node.id, name: "お問い合わせ内容", 
 puts "# parts"
 
 def save_part(data)
+  return if SS.config.cms.enable_lgwan && data[:route].start_with?('member/')
   puts data[:name]
   cond = { site_id: @site._id, filename: data[:filename] }
 
@@ -242,7 +347,20 @@ def save_part(data)
   lower_html = File.read("parts/" + data[:filename].sub(/\.html$/, ".lower_html")) rescue nil
 
   item = Cms::Part.unscoped.find_or_create_by(cond).becomes_with_route(data[:route])
-  item.html = html if html
+  if html
+    if SS.config.cms.enable_lgwan
+      # html.gsub!('"/mypage/app/"', '"#"')
+      # html.gsub!('"/mypage/dataset/"', '"#"')
+      # html.gsub!('"/mypage/idea/"', '"#"')
+      html.gsub!('<li><a class="entry" href="/mypage/app/">アプリ登録</a></li>', '')
+      html.gsub!('<li><a class="entry" href="/mypage/app/">アプリを登録する</a></li>', '')
+      html.gsub!('<li><a class="entry" href="/mypage/dataset/">データセット登録</a></li>', '')
+      html.gsub!('<li><a class="entry" href="/mypage/dataset/">データセットを登録する</a></li>', '')
+      html.gsub!('<li><a class="entry" href="/mypage/idea/">アイデア登録</a></li>', '')
+      html.gsub!('<li><a class="entry" href="/mypage/idea/">アイデアを登録する</a></li>', '')
+    end
+    item.html = html
+  end
   item.upper_html = upper_html if upper_html
   item.loop_html = loop_html if loop_html
   item.lower_html = lower_html if lower_html
@@ -271,9 +389,11 @@ save_part filename: "idea-attention.part.html", name: "アイデア：注目順"
   route: "opendata/idea", limit: 10, sort: "attention"
 save_part filename: "idea-head.part.html", name: "アイデア：ヘッダー", route: "cms/free"
 save_part filename: "idea-kv.part.html", name: "アイデア：キービジュアル", route: "cms/free"
-save_part filename: "mypage-login.part.html", name: "ログイン", \
-  route: "opendata/mypage_login", ajax_view: "enabled"
-save_part filename: "mypage-tabs.part.html", name: "マイページ：タブ", route: "cms/free"
+if SS.config.cms.enable_lgwan.blank?
+  save_part filename: "mypage-login.part.html", name: "ログイン", \
+    route: "opendata/mypage_login", ajax_view: "enabled"
+  save_part filename: "mypage-tabs.part.html", name: "マイページ：タブ", route: "cms/free"
+end
 save_part filename: "portal-about.part.html", name: "ポータル：Our Open Dateとは", route: "cms/free"
 save_part filename: "portal-app.part.html", name: "ポータル：オープンアプリマーケット", \
   route: "opendata/app", limit: 5, sort: "released"
@@ -286,6 +406,8 @@ save_part filename: "portal-tab.part.html", name: "ポータル：新着タブ",
   route: "cms/tabs", conditions: %w(docs event), limit: 5
 save_part filename: "sns-share.part.html", name: "SNSシェアボタン", route: "cms/sns_share"
 save_part filename: "tab.part.html", name: "サイト切り替えタブ", route: "cms/free"
+save_part filename: "opendatamap.part.html", name: "ポータル：オープンデータマップ", route: "cms/free"
+save_part filename: "portal-area.part.html", name: "ポータル：地域", route: "cms/free"
 
 ## -------------------------------------
 puts "# pages"
@@ -391,13 +513,13 @@ def save_license(data)
   item
 end
 
-license_cc_by = save_license name: "表示（CC BY）", in_file: license_file("cc-by.png"), order: 1, default_state: 'default'
-save_license name: "表示-継承（CC BY-SA）", in_file: license_file("cc-by-sa.png"), order: 2
-save_license name: "表示-改変禁止（CC BY-ND）", in_file: license_file("cc-by-nd.png"), order: 3
-save_license name: "表示-非営利（CC BY-NC）", in_file: license_file("cc-by-nc.png"), order: 4
-save_license name: "表示-非営利-継承（CC BY-NC-SA）", in_file: license_file("cc-by-nc-sa.png"), order: 5
-save_license name: "表示-非営利-改変禁止（CC BY-NC-ND）", in_file: license_file("cc-by-nc-nd.png"), order: 6
-save_license name: "いかなる権利も保有しない（CC 0）", in_file: license_file("cc-zero.png"), order: 7
+license_cc_by = save_license name: "表示（CC BY）", in_file: license_file("cc-by.png"), order: 1, default_state: 'default', uid: "cc-by"
+save_license name: "表示-継承（CC BY-SA）", in_file: license_file("cc-by-sa.png"), order: 2, uid: "cc-by-sa"
+save_license name: "表示-改変禁止（CC BY-ND）", in_file: license_file("cc-by-nd.png"), order: 3, uid: "cc-by-nd"
+save_license name: "表示-非営利（CC BY-NC）", in_file: license_file("cc-by-nc.png"), order: 4, uid: "cc-by-nc"
+save_license name: "表示-非営利-継承（CC BY-NC-SA）", in_file: license_file("cc-by-nc-sa.png"), order: 5, uid: "cc-by-nc-sa"
+save_license name: "表示-非営利-改変禁止（CC BY-NC-ND）", in_file: license_file("cc-by-nc-nd.png"), order: 6, uid: "cc-by-nc-nd"
+save_license name: "いかなる権利も保有しない（CC 0）", in_file: license_file("cc-zero.png"), order: 7, uid: "cc-zero"
 
 ## -------------------------------------
 puts "# opendata dataset_groups"
@@ -440,6 +562,7 @@ def save_resource(dataset, data)
   end
 end
 
+datasets = []
 1.step(5) do |i|
   dataset = save_data filename: "dataset/#{i}.html", name: "サンプルデータ【#{i}】", route: "opendata/dataset",
     layout_id: layouts["dataset-page"].id, text: "サンプルデータ【#{i}】", member_id: @member_1.id, tags: %w(タグ),
@@ -448,8 +571,19 @@ end
     area_ids: Opendata::Node::Area.site(@site).pluck(:_id).sample(1)
   if i == 1
     save_resource(dataset, name: "サンプルリソース", filename: "sample.txt", license_id: license_cc_by.id)
+  elsif i == 5
+    save_resource(dataset, name: "sample.csv", filename: "sample.csv", license_id: license_cc_by.id)
+    save_resource(dataset, name: "sample2.xlsx", filename: "sample2.xlsx", license_id: license_cc_by.id)
   end
+  datasets << dataset
 end
+
+dataset5 = datasets[4]
+dataset5.add_to_set(
+  estat_category_ids: [
+    estat_categories["estat-bunya/estat1/estat101"].id, estat_categories["estat-bunya/estat5/estat501"].id
+  ]
+)
 
 ## -------------------------------------
 puts "# opendata apps"
@@ -523,7 +657,7 @@ import_vocab prefix: "xsd", file: "rdf/xsd.ttl", order: 2000
 import_vocab prefix: "dcmitype", file: "rdf/dctype.ttl", order: 2000
 import_vocab prefix: "dc11", file: "rdf/dcelements.ttl", order: 2000
 import_vocab prefix: "dc", file: "rdf/dcterms.ttl", order: 2000
-import_vocab prefix: "ic", file: "rdf/ipa-core.ttl", order: 1000
+import_vocab prefix: "ic", file: "rdf/imicore242.ttl", order: 1000
 
 ## -------------------------------------
 puts "# max file size"
@@ -547,5 +681,30 @@ save_max_file_size name: 'マクロソフト・オフィース', extensions: %w(
 save_max_file_size name: 'PDF', extensions: %w(pdf), order: 5, state: 'enabled'
 save_max_file_size name: 'その他', extensions: %w(*), order: 9999, state: 'enabled'
 
+## -------------------------------------
+puts "# word dictionary"
+
+def save_word_dictionary(data)
+  puts data[:name]
+  cond = { site_id: @site.id, name: data[:name] }
+
+  body_file = data.delete(:body_file)
+  data[:body] = ::File.read(body_file)
+
+  item = Cms::WordDictionary.find_or_initialize_by cond
+  puts item.errors.full_messages unless item.update data
+  item
+end
+
+save_word_dictionary name: "機種依存文字", body_file: "#{Rails.root}/db/seeds/cms/word_dictionary/dependent_characters.txt"
+
 @site.editor_css_path = '/css/ckeditor_contents.css'
 @site.update!
+
+if @site.subdir.present?
+  # rake cms:set_subdir_url site=@site.host
+  require 'rake'
+  Rails.application.load_tasks
+  ENV["site"]=@site.host
+  Rake::Task['cms:set_subdir_url'].invoke
+end

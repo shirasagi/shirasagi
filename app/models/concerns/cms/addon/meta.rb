@@ -16,6 +16,12 @@ module Cms::Addon
         template_variable_handler :summary, :template_variable_handler_name
         template_variable_handler :description, :template_variable_handler_name
       end
+      if respond_to? :liquidize
+        liquidize do
+          export :summary
+          export :description
+        end
+      end
     end
 
     def summary

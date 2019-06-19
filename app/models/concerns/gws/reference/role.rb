@@ -42,6 +42,12 @@ module Gws::Reference
       @gws_role_permissions = nil
     end
 
+    def gws_role_permit_any?(site, *permissions, level: 0)
+      Array(permissions).flatten.any? do |permission|
+        gws_role_permissions["#{permission}_#{site.id}"].to_i > level
+      end
+    end
+
     # @return [Integer] ???
     def gws_role_level(site)
       3

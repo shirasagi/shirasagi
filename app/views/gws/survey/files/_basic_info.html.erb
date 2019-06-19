@@ -1,0 +1,29 @@
+<% if @cur_form.anonymous? %>
+  <div class="anonymous-notice">
+    <h2><%= t("gws/survey.notices.anonymous.head") %></h2>
+    <p><%= t("gws/survey.notices.anonymous.body") %></p>
+  </div>
+<% end %>
+
+<div class="addon-view" id="addon-basic">
+  <div class="addon-body">
+    <div class="header">
+      <% if @item.new_record? %>
+        <span class="limit">
+          <%= @cur_form.class.t(:due_date) %>:
+          <%= tryb { I18n.l(@cur_form.due_date) } %>
+          (<%= Time.zone.now >= @cur_form.due_date ? t("gws/survey.over_limit") : time_ago_in_words(@cur_form.due_date) %>)
+        </span>
+      <% else %>
+        <span class="answered"><%= @model.t :updated %>: <%= I18n.l(@item.updated) %></span>
+      <% end %>
+      <span class="name"><%= @cur_form.contributor_name %></span>
+    </div>
+
+    <h2 class="title">
+      <%= @cur_form.name %>
+    </h2>
+
+    <div class="description"><%= br auto_link(@cur_form.description) %></div>
+  </div>
+</div>

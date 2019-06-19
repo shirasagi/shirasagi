@@ -1,0 +1,43 @@
+<%
+  group = @group || @custom_group
+  opts = group ? { expand_all: true } : { expand_all: true }
+%>
+<%= jquery do %>SS_TreeUI.render(".tree-groups .index.groups", <%== opts.to_json %>);<% end %>
+
+<div id="content-navi" class="presence-groups">
+  <h2 class="content-navi-title">
+    <%= t('gws/presence.group') %>
+  </h2>
+
+  <div class="tree-navi">
+    <div class="all-groups list-item <%= group ?  "" : "current" %>">
+      <%= link_to t('gws/presence.links.all_groups'), gws_presence_users_path %>
+    </div>
+
+    <div class="tree-groups">
+      <table class="index groups">
+        <tbody class="items">
+        <% @groups.each do |item| %>
+          <tr data-id="<%= item.id %>" class="list-item <%= (item.id == group.try(:id)) ? "current" : "" %>" data-depth="<%= item.depth %>">
+            <td class="expandable"><%= link_to item.trailing_name, gws_presence_group_users_path(group: item.id) %></td>
+          </tr>
+        <% end %>
+        </tbody>
+      </table>
+    </div>
+
+    <% if @custom_groups.present? %>
+      <div class="custom-groups">
+        <table class="index groups">
+          <tbody class="items">
+          <% @custom_groups.each do |item| %>
+            <tr class="list-item <%= (item.id == group.try(:id)) ? "current" : "" %>">
+              <td><%= link_to item.name, gws_presence_custom_group_users_path(group: item.id) %></td>
+            </tr>
+          <% end %>
+          </tbody>
+        </table>
+      </div>
+    <% end %>
+  </div>
+</div>

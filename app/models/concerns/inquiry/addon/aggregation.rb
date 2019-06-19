@@ -75,7 +75,7 @@ module Inquiry::Addon
 
       match["node_id"] = params[:node].id if params[:node].present?
 
-      match["source_url"] = /^#{Regexp.escape(params[:url])}/ if params[:url].present?
+      match["source_url"] = /^#{::Regexp.escape(params[:url])}/ if params[:url].present?
       match["source_url"] ||= { "$exists" => true, "$ne" => nil } if params[:feedback]
 
       if params[:year].present?

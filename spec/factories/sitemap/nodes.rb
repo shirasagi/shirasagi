@@ -1,4 +1,4 @@
-FactoryGirl.define do
+FactoryBot.define do
   factory :sitemap_node_base, class: Sitemap::Node::Base, traits: [:cms_node] do
     route "sitemap/base"
   end

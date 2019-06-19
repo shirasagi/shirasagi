@@ -1,5 +1,3 @@
-<%= jquery do %> //SS_AddonTabs.hide(".mod-gws-owner_permission"); <% end %>
-
 <div class="mod-gws-owner_permission">
   <% if @item.class.permission_included_custom_groups? %>
   <dl class="see mod-gws-owner_permission-custom-groups">
@@ -36,7 +34,7 @@
       <table class="index ajax-selected">
         <thead><tr><th class="name"><%= Gws::Group.t :name %></th><th class="deselect"></th></tr></thead>
         <tbody>
-          <% if params[:action] =~ /new/ && !@skip_default_group %>
+          <% if params[:action] =~ /new/ && !@skip_default_group && !@item.group_ids.include?(@cur_group.id) %>
           <tr data-id="<%= @cur_group.id %>">
             <td><%= f.hidden_field "group_ids[]", value: @cur_group.id, id: nil %> <%= @cur_group.name %></td>
             <td><%= link_to t("ss.buttons.delete"), "#", class: "deselect btn" %></td>

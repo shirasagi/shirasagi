@@ -1,10 +1,12 @@
 class Cms::User
   include SS::Model::User
+  include SS::Reference::UserTitles
   include Cms::Addon::Role
   include Cms::Reference::Role
   include Cms::SitePermission
   include Cms::Addon::Import::User
   include SS::Addon::UserGroupHistory
+  include Sys::Reference::Role
 
   set_permission_name "cms_users", :edit
 

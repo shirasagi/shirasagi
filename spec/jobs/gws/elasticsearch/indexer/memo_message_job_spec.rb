@@ -18,7 +18,7 @@
 #   end
 #
 #   before do
-#     stub_request(:any, /#{Regexp.escape(es_host)}/).
+#     stub_request(:any, /#{::Regexp.escape(es_host)}/).
 #       to_return(body: '{}', status: 200, headers: { 'Content-Type' => 'application/json; charset=UTF-8' })
 #   end
 #

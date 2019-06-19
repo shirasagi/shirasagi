@@ -1,4 +1,4 @@
-<div class="file-view" data-file-id="<%= @item.id %>" data-humanized-name="<%= @item.humanized_name %>">
+<div class="file-view" data-file-id="<%= @item.id %>" data-name="<%= @item.name %>" data-humanized-name="<%= @item.humanized_name %>" data-url="<%= @item.url %>" data-thumb-url="<%= @item.thumb_url %>" data-extname="<%= @item.extname %>">
   <a class="thumb" href="<%= view_sns_apis_temp_file_path(user: @cur_user.id, id: @item) %>" target="_blank">
     <% if @item.image? %>
     <img src="<%= thumb_sns_apis_temp_file_path(user: @cur_user.id, id: @item, _: @item.updated.to_i) %>" alt="<%= @item.basename %>" />
@@ -8,10 +8,12 @@
   </a>
   <div class="name">
     <label>
-      <!-- <input type="checkbox" name="item[file_ids][]" value="<%= @item.id %>" checked="checked" /> -->
       <input type="hidden" name="item[file_ids][]" value="<%= @item.id %>" class="file-id" />
       <%= @item.name %>
     </label><br />
+    <% if params[:file_size] %>
+    <span class="file-size"><%= "( #{number_to_human_size(@item.size)} )" %></span>
+    <% end %>
   </div>
   <div class="action">
     <% content = link_to "#{@item.name} (#{@item.extname.upcase} #{number_to_human_size(@item.size)})", @item.url, class: "icon-#{@item.extname}" %>

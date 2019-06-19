@@ -228,7 +228,8 @@ describe "opendata_search_ideas", dbscope: :example, js: true do
       node_idea.save!
 
       Opendata::Idea.all.each do |page_idea|
-        page_idea.touch
+        # https://jira.mongodb.org/browse/MONGOID-4544
+        # page_idea.touch
         page_idea.save!
       end
     end

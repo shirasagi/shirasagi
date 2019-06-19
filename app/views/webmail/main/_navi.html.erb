@@ -14,12 +14,12 @@ end
 <% end %>
 
 <nav class="main-navi main-navi-md webmail-navi webmail-navi-mailboxes">
-  <%= link_to webmail_apis_recent_path(account: params[:account] || @cur_user.imap_default_index), class: "reload" do %>
+  <%= link_to webmail_apis_recent_path(account: params[:account] || @cur_user.imap_default_index, webmail_mode: @webmail_mode), class: "reload" do %>
     <i class="material-icons md-dark">&#xE5D5;</i>
   <% end if @mailboxes  %>
 
   <h2>
-    <%= link_to webmail_mails_path(account: params[:account] || @cur_user.imap_default_index), 'data-name' => 'INBOX', 'class' => 'mail-droppable mailbox-droppable' do %>
+    <%= link_to webmail_mails_path(account: params[:account] || @cur_user.imap_default_index, webmail_mode: @webmail_mode), data: { name: 'INBOX', uidnext: @mailboxes ? @mailboxes.inbox.uidnext : nil }, class: 'mail-droppable mailbox-droppable' do %>
       <i class="material-icons">&#xE0E1;</i><%= t('webmail.box.inbox') %>
       <% if @mailboxes && inbox = @mailboxes.inbox %>
         <span class="unseen count<%= inbox.unseen %>">(<%= inbox.unseen %>)</span>
@@ -41,14 +41,14 @@ end
         end
         names << box.name
       %>
-      <a class="<%= box.css_class %> mailbox-droppable depth-<%= box.depth %>" data-name="<%= box.original_name %>" data-basename="<%= box.original_name.sub(/.*\./, '') %>"
+      <a class="<%= box.css_class %> mailbox-droppable depth-<%= box.depth %>" data-name="<%= box.original_name %>" data-basename="<%= box.original_name.sub(/.*\./, '') %>" title="<%= name %>"
         <% if !box.noselect? %>
-          href="<%= webmail_mails_path(mailbox: box.original_name) %>"
+          href="<%= webmail_mails_path(webmail_mode: @webmail_mode, mailbox: box.original_name) %>"
         <% end %>
       >
         <%== "<span class='pad'></span>" * padd %>
         <i class="material-icons md-18"><%== box.icon %></i>
-        <span class="mailbox-name"><%= name %></span>
+        <span class="mailbox-name"><%= name.truncate(12) %></span>
         <span class="unseen count<%= box.unseen %>">(<%= box.unseen %>)</span>
       </a>
     <% end %>
@@ -62,24 +62,12 @@ end
     <% @mailboxes.all.each do |box| %>
     <li>
       <a href="#" data-name="<%= box.original_name %>">
-        <%== "<span class='pad'></span>" * box.depth %><%= box.basename %>
+        <%== "<span class='pad'></span>" * box.depth rescue nil %><%= box.basename %>
       </a>
     </li>
     <% end %>
   </ul>
 </div>
-<% end %>
-
-<nav class="mod-navi">
-  <h2><%= t("ss.config") %></h2>
-  <h3><%= link_to t('mongoid.models.webmail/mailbox'), webmail_mailboxes_path(account: params[:account] || @cur_user.imap_default_index) %></h3>
-  <h3><%= link_to t('mongoid.models.webmail/address'), webmail_addresses_path(account: params[:account] || @cur_user.imap_default_index) %></h3>
-  <h4><%= link_to t('mongoid.models.webmail/address_group').sub(/.*\//, ''), webmail_address_groups_path(account: params[:account] || @cur_user.imap_default_index) %></h4>
-  <h3><%= link_to t('mongoid.models.webmail/signature'), webmail_signatures_path(account: params[:account] || @cur_user.imap_default_index) %></h3>
-  <h3><%= link_to t('mongoid.models.webmail/filter'), webmail_filters_path(account: params[:account] || @cur_user.imap_default_index) %></h3>
-  <h3><%= link_to t('webmail.settings.cache'), webmail_cache_setting_path(account: params[:account] || @cur_user.imap_default_index) %></h3>
-  <h3><%= link_to t('webmail.settings.account'), webmail_account_setting_path %></h3>
-</nav>
 
 <% if @quota %>
 <nav class="mod-navi webmail-navi webmail-navi-quota">
@@ -94,4 +82,59 @@ end
     <div class="usage <%= @quota.over_threshold? ? 'over-threshold' : '' %>" style="width: <%= @quota.percentage %>%"></div>
   </div>
 </nav>
+<% end %>
+<% end %>
+
+<% account_config_links = [] %>
+<% if @webmail_mode == :account && @cur_user.webmail_permitted_any?(:read_webmail_accounts) %>
+<% account_config_links << link_to(t('webmail.settings.account'), webmail_account_path(account: params[:account].presence || @cur_user.imap_default_index)) %>
+<% end %>
+<% account_config_links << link_to_webmail_mailboxes_path(group_imap_permission: :edit_webmail_group_imap_mailboxes) %>
+<% account_config_links << link_to_webmail_signatures_path(group_imap_permission: :edit_webmail_group_imap_signatures) %>
+<% account_config_links << link_to_webmail_filters_path(group_imap_permission: :edit_webmail_group_imap_filters) %>
+<% account_config_links << link_to_webmail_cache_setting_path(group_imap_permission: :edit_webmail_group_imap_caches) %>
+<% if @webmail_mode == :account %>
+<% account_config_links << link_to(t('webmail.settings.import_mails'), webmail_import_mails_path(account: params[:account] || @cur_user.imap_default_index)) %>
+<% account_config_links << link_to(t('webmail.settings.export_mails'), webmail_export_mails_path(account: params[:account] || @cur_user.imap_default_index)) %>
+<% end %>
+
+<% account_config_links.compact! %>
+
+<% if account_config_links.present? %>
+  <nav class="mod-navi">
+    <h2><%= t("webmail.account_config") %></h2>
+    <% account_config_links.each do |account_config_link| %>
+      <h3><%= account_config_link %></h3>
+    <% end %>
+  </nav>
+<% end %>
+
+<nav class="mod-navi">
+  <h2><%= t("webmail.personal_config") %></h2>
+  <h3><%= link_to t('mongoid.models.webmail/address'), webmail_addresses_main_path %></h3>
+  <h4><%= link_to t('mongoid.models.webmail/address_group').sub(/.*\//, ''), webmail_address_groups_path %></h4>
+</nav>
+
+<%
+  system_config_links = []
+  if Webmail::Group.allowed?(:read, @cur_user)
+    system_config_links << link_to(t('mongoid.models.webmail/group'), webmail_groups_path)
+  end
+  if Webmail::User.allowed?(:read, @cur_user)
+    system_config_links << link_to(t('mongoid.models.webmail/user'), webmail_users_path)
+  end
+  if Webmail::Role.allowed?(:read, @cur_user)
+    system_config_links << link_to(t('mongoid.models.webmail/role'), webmail_roles_path)
+  end
+  if Webmail::History.allowed?(:read, @cur_user)
+    system_config_links << link_to(t('mongoid.models.webmail/history'), webmail_histories_path)
+  end
+%>
+<% if system_config_links.present? %>
+  <nav class="mod-navi">
+    <h2><%= t("webmail.system_config") %></h2>
+    <% system_config_links.each do |system_config_link| %>
+      <h3><%= system_config_link %></h3>
+    <% end %>
+  </nav>
 <% end %>

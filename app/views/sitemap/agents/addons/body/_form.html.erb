@@ -1,20 +1,26 @@
 <%= code_editor ".mod-sitemap-body .text" %>
-<%= coffee do %>
-$ ->
-  $("#export-urls").click ->
-    $("#item_sitemap_urls").data("editor").setValue("loading..")
-    $.ajax
+<%= jquery do %>
+
+  $("#export-urls").click(function () {
+    $("#item_sitemap_urls").data("editor").setValue("loading..");
+    $.ajax({
       type: "GET",
-      data:
-        item:
-          sitemap_page_state: $("#item_sitemap_page_state").val()
-          sitemap_depth: $("#item_sitemap_depth").val()
+      data: {
+        item: {
+          sitemap_page_state: $("#item_sitemap_page_state").val(),
+          sitemap_depth: $("#item_sitemap_depth").val(),
           sitemap_deny_urls: $("#item_sitemap_deny_urls").data("editor").getValue()
-      url: "<%= export_urls_sitemap_pages_path %>"
-      success: (data)->
-        $("#item_sitemap_urls").data("editor").setValue(data)
-      error: (data, status) ->
-        alert(["== Error =="].concat(data.responseJSON).join("\n"))
+        }
+      },
+      url: "<%= export_urls_sitemap_pages_path %>",
+      success: function (data) {
+        $("#item_sitemap_urls").data("editor").setValue(data);
+      },
+      error: function (data, status) {
+        alert(["== Error =="].concat(data.responseJSON).join("\n"));
+      }
+    });
+  });
 <% end %>
 
 <dl class="see mod-sitemap-body">

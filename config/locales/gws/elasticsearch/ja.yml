@@ -14,6 +14,9 @@ ja:
     addons:
       gws/elasticsearch/group_setting: 全文検索
 
+  gws_role:
+    use_gws_elasticsearch: 全文検索の利用
+
   mongoid:
     attributes:
       gws/addon/elasticsearch/group_setting:

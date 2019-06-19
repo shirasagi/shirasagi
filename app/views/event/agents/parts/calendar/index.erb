@@ -38,16 +38,17 @@
       </tr>
     </thead>
     <tbody>
-      <tr>
-        <% @dates.each_with_index do |(date, events), i| %>
-          <% if i != 0 && (i % 7) == 0 %>
-            </tr><tr>
-          <% end %>
-          <td class="<%= event_td_class(date, @current_month_date) %>">
-            <%= link_to_daily date, name: date.day, path: @cur_part.parent.try(:url).to_s, enable: events.present? %>
-          </td>
+      <% @dates.each_with_index do |(date, events), i| %>
+        <% if (i % 7) == 0 %>
+          <tr>
         <% end %>
-      </tr>
+        <td class="<%= event_td_class(date, @current_month_date) %>">
+        <%= link_to_daily date, name: date.day, path: @cur_part.parent.try(:url).to_s, enable: events.present? %>
+        </td>
+        <% if (i % 7) == 6 %>
+          </tr>
+        <% end %>
+      <% end %>
     </tbody>
   </table>
 </div>

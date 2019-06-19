@@ -1,4 +1,4 @@
-FactoryGirl.define do
+FactoryBot.define do
   factory :service_account, class: Service::Account do
     account { "text-#{unique_id}" }
     in_password { "text-#{unique_id}" }

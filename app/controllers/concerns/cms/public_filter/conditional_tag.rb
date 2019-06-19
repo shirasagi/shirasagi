@@ -1,85 +1,71 @@
 module Cms::PublicFilter::ConditionalTag
   extend ActiveSupport::Concern
 
+  def render_conditional_tag(html)
+    html.gsub!(conditional_tag_template) do
+      interpret_conditional_tag(Regexp.last_match)
+    end
+    html
+  end
+
+  private
+
   def conditional_tag_template(cond = 'if')
     template = [
       '(?<template>\#\{ ?',
       cond,
       " (?<cond>[^(]*)\\('?\\/?(?<path>[^')]*)'?\\) ?\\}",
-      "(?<data>[^#]*(\\#\\{ ?else?if[^#]*|\\#\\{ ?else ?\\}[^#]*)*)\\#\\{ ?end(|if)? ?\\})"
+      "(?<data>.*?(\\#\\{ ?else?if.*?|\\#\\{ ?else ?\\}.*?)*)\\#\\{ ?end(|if)? ?\\})"
     ].join
-    Regexp.compile(template)
+    ::Regexp.compile(template, Regexp::MULTILINE)
   end
 
-  def render_conditional_tag(matchdata)
-    return @data if render_condition_if(matchdata)
-    return @data if render_condition_elsif(matchdata)
-    render_condition_else(matchdata)
-    @data
+  def interpret_conditional_tag(matchdata)
+    interpret_condition_if(matchdata).presence || interpret_condition_elsif(matchdata).presence || interpret_condition_else(matchdata)
   end
-
-  private
 
   def conditional_tag_data(cond = 'if')
     template = [
       '\#\{ ?',
       cond,
       " (?<cond>[^(]*)\\('?\\/?(?<path>[^')]*)'?\\) ?\\}",
-      "(?<data>[^#]*)(\\#\\{ ?else?if[^}]*\\}|\\#\\{ ?else ?\\})"
+      "(?<data>.*?)(\\#\\{ ?else?if[^}]*\\}|\\#\\{ ?else ?\\})"
     ].join
-    Regexp.compile(template)
+    ::Regexp.compile(template, Regexp::MULTILINE)
   end
 
-  def render_condition_if(matchdata)
-    if matchdata[:template] =~ conditional_tag_data
-      data = Regexp.last_match[:data]
-    else
-      data = matchdata[:data]
-    end
+  def interpret_condition_if(matchdata)
+    data = (conditional_tag_data.match(matchdata[:template]).presence || matchdata)[:data]
     conditional_tag_handler(matchdata, data)
   end
 
-  def render_condition_elsif(parent_matchdata)
-    if parent_matchdata[:template] =~ conditional_tag_template('elsif') ||
-       parent_matchdata[:template] =~ conditional_tag_template('elseif')
-      matchdata = Regexp.last_match
-      if matchdata[:template] =~ conditional_tag_data('elsif') ||
-         matchdata[:template] =~ conditional_tag_data('elseif')
-        data = Regexp.last_match[:data]
-      else
-        data = matchdata[:data]
-      end
-      conditional_tag_handler(matchdata, data)
-      return @data if @data
-      if "#{matchdata[:data]}\#\{end(|if)?\}" =~ conditional_tag_template('elsif') ||
-         "#{matchdata[:data]}\#\{end(|if)?\}" =~ conditional_tag_template('elseif')
-        render_condition_elsif(Regexp.last_match)
-        return @data if @data
-      end
-    end
-    false
+  def interpret_condition_elsif(parent_matchdata)
+    return false if parent_matchdata.blank?
+    matchdata = conditional_tag_template('else?if').match(parent_matchdata[:template])
+    return false if matchdata.blank?
+    data = (conditional_tag_data('else?if').match(matchdata[:template]).presence || matchdata)[:data]
+    return @data if conditional_tag_handler(matchdata, data)
+    template = conditional_tag_template('else?if').match("#{matchdata[:data]}\#\{end\}")
+    interpret_condition_elsif(template).presence || false
   end
 
-  def render_condition_else(matchdata)
-    if matchdata[:template] =~ /\#\{ ?else ?\}(?<data>[^#]*)\#\{ ?end(|if)? ?\}/
-      @data = Regexp.last_match[:data]
-    else
-      @data = ''
-    end
+  def interpret_condition_else(matchdata)
+    @data = /\#\{ ?else ?\}(?<data>.*?)\#\{ ?end(|if)? ?\}/m.match(matchdata[:template]).try(:[], :data).to_s
   end
 
   def conditional_tag_handler(matchdata, data)
     case matchdata[:cond]
-    when 'is_page' then return @data = data if @cur_page && @cur_page.filename.start_with?(matchdata[:path])
-    when 'is_node' then return @data = data if !@cur_page && @cur_node.filename.start_with?(matchdata[:path])
+    when 'is_page' then condition = @cur_page && @cur_page.filename.to_s.start_with?(matchdata[:path])
+    when 'is_node' then condition = !@cur_page && @cur_node.filename.to_s.start_with?(matchdata[:path])
     when 'in_node'
       @cur_item = @cur_page || @cur_node
-      return @data = data if @cur_item.filename.start_with?(matchdata[:path])
+      condition = @cur_item.filename.to_s.start_with?(matchdata[:path])
     when 'has_pages'
       return false if @cur_page
-      return @data = data if Cms::Page.where({ filename: /^#{@cur_node.filename}\// }).first.present?
-      return @data = data if Cms::Page.in({ category_ids: @cur_node._id }).first.present?
-    else false
+      condition = Cms::Page.where({ filename: /^#{@cur_node.to_s.filename}\// }).first.present?
+      condition ||= Cms::Page.in({ category_ids: @cur_node.try(:id) }).first.present?
+    else return false
     end
+    @data = condition ? data : false
   end
 end

@@ -1,4 +1,4 @@
-FactoryGirl.define do
+FactoryBot.define do
   factory :facility_node_base, class: Facility::Node::Base, traits: [:cms_node] do
     route "facility/base"
   end

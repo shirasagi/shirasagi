@@ -23,32 +23,40 @@ class Gws::Apis::BookmarksController < ApplicationController
   public
 
   def create
-    item = @model.new(get_params)
+    @item = @model.new(get_params)
+    return render_create(false) unless @item.allowed?(:edit, @cur_user, site: @cur_site, strict: true)
     model = params.dig(:item, :model).sub(/gws\/(?<model>[^\/]*)\/?.*/) do
-      Regexp.last_match[:model]
+      ::Regexp.last_match[:model]
     end
     if @model::BOOKMARK_MODEL_TYPES.include?(model)
-      item.bookmark_model = model
+      @item.bookmark_model = model
     else
-      item.bookmark_model = 'other'
+      @item.bookmark_model = 'other'
     end
 
-    item.save
-    render json: { bookmark_id: item.id, notice: I18n.t('gws/bookmark.notice.save') }
+    @item.save
+    render json: { bookmark_id: @item.id, notice: I18n.t('gws/bookmark.notice.save') }
   end
 
   def update
-    item = find_item
-    item.attributes = get_params
+    @item = find_item
+    @item.attributes = get_params
 
-    item.update
-    render json: { bookmark_id: item.id, notice: I18n.t('gws/bookmark.notice.save') }
+    return render_update(false) unless @item.allowed?(:edit, @cur_user, site: @cur_site)
+    @item.update
+    render json: { bookmark_id: @item.id, notice: I18n.t('gws/bookmark.notice.save') }
   end
 
   def destroy
-    item = find_item
+    @item = find_item
+    if @item.blank?
+      head :ok
+      return
+    end
 
-    item.try(:destroy)
-    render nothing: true
+    raise "403" unless @item.allowed?(:delete, @cur_user, site: @cur_site)
+
+    @item.destroy
+    head :ok
   end
 end

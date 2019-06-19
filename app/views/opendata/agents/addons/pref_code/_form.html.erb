@@ -1,0 +1,4 @@
+<dl class="see category-form mod-opendata-pref_code">
+  <dt><%= @model.t :pref_code %><%= @model.tt :pref_code %></dt>
+  <dd><%= f.select :pref_code_id, @item.pref_code_options, include_blank: true %></dd>
+</dl>

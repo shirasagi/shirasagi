@@ -1,6 +1,7 @@
 module Cms::CrudFilter
   extend ActiveSupport::Concern
   include SS::CrudFilter
+  include Cms::LockFilter
 
   included do
     menu_view "cms/crud/menu"
@@ -25,6 +26,22 @@ module Cms::CrudFilter
   rescue Mongoid::Errors::DocumentNotFound => e
     return render_destroy(true) if params[:action] == 'destroy'
     raise e
+  end
+
+  def destroy_items
+    entries = @items.entries
+    @items = []
+
+    entries.each do |item|
+      if item.allowed?(:delete, @cur_user, site: @cur_site, node: @cur_node)
+        item.cur_user = @cur_user if item.respond_to?(:cur_user)
+        next if item.destroy
+      else
+        item.errors.add :base, :auth_error
+      end
+      @items << item
+    end
+    entries.size != @items.size
   end
 
   public
@@ -82,19 +99,7 @@ module Cms::CrudFilter
   end
 
   def destroy_all
-    entries = @items.entries
-    @items = []
-
-    entries.each do |item|
-      if item.allowed?(:delete, @cur_user, site: @cur_site, node: @cur_node)
-        item.cur_user = @cur_user if item.respond_to?(:cur_user)
-        next if item.destroy
-      else
-        item.errors.add :base, :auth_error
-      end
-      @items << item
-    end
-    render_destroy_all(entries.size != @items.size)
+    render_destroy_all(destroy_items, location: request.path)
   end
 
   def disable_all
@@ -110,60 +115,5 @@ module Cms::CrudFilter
       @items << item
     end
     render_destroy_all(entries.size != @items.size)
-  end
-
-  def lock
-    set_item rescue nil
-    if @item.blank?
-      head :no_content
-      return
-    end
-
-    if @item.acquire_lock(force: params[:force].present?)
-      render
-    else
-      respond_to do |format|
-        format.html { render }
-        format.json { render json: [ t("views.errors.locked", user: @item.lock_owner.long_name) ], status: :locked }
-      end
-    end
-  end
-
-  def unlock
-    set_item rescue nil
-    if @item.blank?
-      head :no_content
-      return
-    end
-
-    unless @item.locked?
-      respond_to do |format|
-        format.html { redirect_to(action: :edit) }
-        format.json { head :no_content }
-      end
-      return
-    end
-
-    raise "403" if !@item.lock_owned? && !@item.allowed?(:unlock, @cur_user, site: @cur_site, node: @cur_node)
-
-    unless @item.locked?
-      respond_to do |format|
-        format.html { redirect_to(action: :edit) }
-        format.json { head :no_content }
-      end
-      return
-    end
-
-    if @item.release_lock(force: params[:force].present?)
-      respond_to do |format|
-        format.html { redirect_to(action: :edit) }
-        format.json { head :no_content }
-      end
-    else
-      respond_to do |format|
-        format.html { render file: :show }
-        format.json { render json: [ t("views.errors.locked", user: @item.lock_owner.long_name) ], status: :locked }
-      end
-    end
   end
 end

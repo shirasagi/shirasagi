@@ -1,9 +1,8 @@
 require 'spec_helper'
 
 describe Cms::PublicFilter::ConditionalTag, type: :feature, dbscope: :example do
-  let(:site)   { cms_site }
-  let(:layout) { create_cms_layout [part] }
-  let(:node)   { create :cms_node, layout_id: layout.id }
+  let(:site) { cms_site }
+  let(:node) { create :cms_node, layout_id: layout.id }
   let(:item) { create(:article_page, cur_site: site, cur_node: node, layout_id: layout.id) }
 
   context 'When upper_html have condition tags' do
@@ -17,7 +16,13 @@ describe Cms::PublicFilter::ConditionalTag, type: :feature, dbscope: :example do
     html << '<time>#{page_released.long}</time>'
     html << '#{end}'
     html << '</div>'
+    html << '<div class="condition">'
+    html << '#{if is_page(\'dummy\')}'
+    html << '#{parent_name}'
+    html << '#{end}'
+    html << '</div>'
     let(:part) { create :cms_part_page, upper_html: html }
+    let(:layout) { create_cms_layout [part] }
 
     before do
       Capybara.app_host = "http://#{site.domain}"
@@ -27,16 +32,60 @@ describe Cms::PublicFilter::ConditionalTag, type: :feature, dbscope: :example do
       visit item.url
       expect(status_code).to eq 200
       expect(page).to have_css('div.condition', text: item.name)
-      expect(page).not_to have_css('div.condition', text: node.name)
-      expect(page).not_to have_css('div.condition time')
+      expect(page).to have_no_css('div.condition', text: node.name)
+      expect(page).to have_no_css('div.condition time')
     end
 
     it do
       visit node.url
       expect(status_code).to eq 200
-      expect(page).not_to have_css('div.condition', text: item.name)
+      expect(page).to have_no_css('div.condition', text: item.name)
       expect(page).to have_css('div.condition', text: node.name)
-      expect(page).not_to have_css('div.condition time')
+      expect(page).to have_no_css('div.condition time')
+    end
+  end
+
+  context 'When content has apostrophes' do
+    let(:layout) { create_cms_layout }
+
+    before do
+      html = []
+      html << '<html><body><br><br><br>'
+      html << '<div class="condition">'
+      html << '#{if is_page()}'
+      html << ' foo&#39;s manual'
+      html << '#{elsif is_node()}'
+      html << ' bar&#39;s manual'
+      html << '#{else}'
+      html << ' baz&#39;s manual'
+      html << '#{end}'
+      html << '</div>'
+      html << '</body></html>'
+
+      layout.html = html.join("\n")
+      layout.save!
+    end
+
+    it do
+      visit item.full_url
+      expect(status_code).to eq 200
+      expect(page).to have_css('div.condition', text: "foo's manual")
+      expect(page).to have_no_content("\#{if is_page()}")
+      expect(page).to have_no_content("\#{elsif is_node()}")
+      expect(page).to have_no_content("\#{end}")
+      expect(page).to have_no_content("bar's manual")
+      expect(page).to have_no_content("baz's manual")
+    end
+
+    it do
+      visit node.full_url
+      expect(status_code).to eq 200
+      expect(page).to have_css('div.condition', text: "bar's manual")
+      expect(page).to have_no_content("\#{if is_page()}")
+      expect(page).to have_no_content("\#{elsif is_node()}")
+      expect(page).to have_no_content("\#{end}")
+      expect(page).to have_no_content("foo's manual")
+      expect(page).to have_no_content("baz's manual")
     end
   end
 end

@@ -141,3 +141,46 @@ div.opendata-csv2rdf-settings-class-search {
     background-color: #eee;
   }
 }
+
+.list-items .list-item .meta .opendata-harvest {
+  background: #f25a38;
+  color: white;
+  padding: 2px;
+  @include border-radius(3px);
+}
+
+table.opendata-harvest-report {
+  th {
+    white-space: nowrap;
+  }
+  td.category {
+    white-space: nowrap;
+  }
+  td.estat-category {
+    white-space: nowrap;
+  }
+  td.area {
+    white-space: nowrap;
+  }
+}
+
+.reports-table {
+  table.index td[colspan="7"] {
+    padding-left: 16px;
+  }
+  overflow: auto;
+  th, td {
+    min-width: 30px;
+  }
+  th[colspan="7"], td[colspan="7"] {
+    width: calc(100% / 30 * 7);
+  }
+  .index {
+    th, td {
+      padding: 6px 6px;
+    }
+  }
+  .not-exists {
+    padding: 10px 18px 10px;
+  }
+}

@@ -6,12 +6,16 @@
 <%= hidden_field_tag :_updated, params[:_updated] || @item.updated if @item.respond_to?(:updated) %>
 
 <div class="addon-views">
-  <div class="addon-view" id="addon-basic">
-    <% if addons.size > 0 %><div class="addon-head"><h2><%= @addon_basic_name || t("ss.basic_info") %></h2></div><% end %>
-    <div class="addon-body">
-      <%= render file: '_form', locals: { f: f } %>
-    </div>
-  </div>
+  <%
+    addon_options = {}
+    addon_options[:id] = "addon-basic"
+    addon_options[:head] = @addon_basic_name || t("ss.basic_info") if addons.size > 0
+  %>
+  <% buf = render file: "_form", locals: { f: f, addon: addon_options } %>
+  <%= render "ss/crud/addon", addon: addon_options do %>
+    <%= buf %>
+  <% end %>
+
   <%= render file: "_column_form", locals: { f: f } %>
   <%= render file: "_addons_form", locals: { f: f, addons: addons } if addons.size > 0 %>
 </div>

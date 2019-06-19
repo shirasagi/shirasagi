@@ -16,7 +16,7 @@ class Gws::Memo::Category
   class << self
     def and_name_prefix(name_prefix)
       name_prefix = name_prefix[1..-1] if name_prefix.starts_with?('/')
-      self.or({ name: name_prefix }, { name: /^#{Regexp.escape(name_prefix)}\// })
+      self.or({ name: name_prefix }, { name: /^#{::Regexp.escape(name_prefix)}\// })
     end
   end
 
@@ -43,7 +43,7 @@ class Gws::Memo::Category
   end
 
   def validate_children
-    if name.present? && self.class.where(name: /^#{Regexp.escape(name)}\//).exists?
+    if name.present? && self.class.where(name: /^#{::Regexp.escape(name)}\//).exists?
       errors.add :base, :found_children
       return false
     end

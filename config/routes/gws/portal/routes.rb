@@ -3,7 +3,7 @@ SS::Application.routes.draw do
 
   concern :deletion do
     get :delete, on: :member
-    delete action: :destroy_all, on: :collection
+    delete :destroy_all, on: :collection, path: ''
   end
 
   concern :portlet do
@@ -29,6 +29,15 @@ SS::Application.routes.draw do
     namespace :setting do
       resources :users, only: [:index]
       resources :groups, only: [:index]
+    end
+
+    namespace "apis" do
+      resources :temp_files, concerns: :deletion do
+        get :select, on: :member
+        get :view, on: :member
+        get :thumb, on: :member
+        get :download, on: :member
+      end
     end
   end
 end

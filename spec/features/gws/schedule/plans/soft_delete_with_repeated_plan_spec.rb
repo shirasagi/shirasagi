@@ -69,7 +69,7 @@ describe "gws_schedule_plans", type: :feature, dbscope: :example, js: true do
         within '.gws-schedule-repeat-submit' do
           click_on I18n.t('gws/schedule.buttons.delete_all')
         end
-        expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+        expect(page).to have_css('#notice', text: I18n.t('ss.notice.deleted'))
 
         expect(Gws::Schedule::Plan.site(site).without_deleted.member(gws_user).count).to eq 0
         expect(Gws::Schedule::Plan.site(site).only_deleted.member(gws_user).count).to eq 4
@@ -117,7 +117,7 @@ describe "gws_schedule_plans", type: :feature, dbscope: :example, js: true do
         within '.gws-schedule-repeat-submit' do
           click_on I18n.t('gws/schedule.buttons.delete_later')
         end
-        expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+        expect(page).to have_css('#notice', text: I18n.t('ss.notice.deleted'))
 
         expect(Gws::Schedule::Plan.site(site).without_deleted.member(gws_user).count).to eq 1
         expect(Gws::Schedule::Plan.site(site).only_deleted.member(gws_user).count).to eq 3
@@ -165,7 +165,7 @@ describe "gws_schedule_plans", type: :feature, dbscope: :example, js: true do
         within '.gws-schedule-repeat-submit' do
           click_on I18n.t('gws/schedule.buttons.delete_one')
         end
-        expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+        expect(page).to have_css('#notice', text: I18n.t('ss.notice.deleted'))
 
         expect(Gws::Schedule::Plan.site(site).without_deleted.member(gws_user).count).to eq 3
         expect(Gws::Schedule::Plan.site(site).only_deleted.member(gws_user).count).to eq 1

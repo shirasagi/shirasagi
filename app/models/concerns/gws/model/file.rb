@@ -33,6 +33,7 @@ module Gws::Model::File
     validates :model, presence: true
     validates :state, presence: true
     validates :filename, presence: true, if: ->{ in_file.blank? && in_files.blank? }
+    validates :content_type, presence: true
     validate :validate_filename, if: -> { filename.present? }
     validates_with SS::FileSizeValidator, if: ->{ size.present? }
 
@@ -125,7 +126,7 @@ module Gws::Model::File
   end
 
   def download_filename
-    name =~ /\./ ? name : name.sub(/\..*/, '') + '.' + extname
+    name.include?('.') ? name : "#{name}.#{extname}"
   end
 
   def basename
@@ -133,11 +134,16 @@ module Gws::Model::File
   end
 
   def extname
+    return "" unless filename.to_s.include?('.')
     filename.to_s.sub(/.*\W/, "")
   end
 
   def image?
-    filename =~ /\.(bmp|gif|jpe?g|png)$/i
+    content_type.to_s.start_with?('image/')
+  end
+
+  def exif_image?
+    image? && filename =~ /\.(jpe?g|tiff?)$/i
   end
 
   def viewable?
@@ -211,13 +217,15 @@ module Gws::Model::File
     if image?
       list = Magick::ImageList.new
       list.from_blob(in_file.read)
-      extract_geo_location(list)
+      extract_geo_location(list) if exif_image?
       list.each do |image|
-        case SS.config.env.image_exif_option
-        when "auto_orient"
-          image.auto_orient!
-        when "strip"
-          image.strip!
+        if exif_image?
+          case SS.config.env.image_exif_option
+          when "auto_orient"
+            image.auto_orient!
+          when "strip"
+            image.strip!
+          end
         end
 
         next unless resizing

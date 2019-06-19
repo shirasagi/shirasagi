@@ -39,15 +39,17 @@ describe "my_group", dbscope: :example, js: true do
         within ".mod-workflow-request" do
           select I18n.t("mongoid.attributes.workflow/model/route.my_group"), from: "workflow_route"
           click_on I18n.t("workflow.buttons.select")
-
-          within ".ms-container" do
-            find("li.ms-elem-selectable", text: /#{Regexp.escape(user1.uid)}/).click
-          end
-
+          click_on I18n.t("workflow.search_approvers.index")
+        end
+        within "#cboxLoadedContent" do
+          expect(page).to have_content(user1.long_name)
+          click_on user1.long_name
+        end
+        within ".mod-workflow-request" do
           fill_in "workflow[comment]", with: workflow_comment
           click_on I18n.t("workflow.buttons.request")
         end
-        expect(page).to have_css(".mod-workflow-view dd", text: /#{Regexp.escape(user1.uid)}/)
+        expect(page).to have_css(".mod-workflow-view dd", text: /#{::Regexp.escape(user1.uid)}/)
 
         item.reload
         expect(item.workflow_user_id).to eq cms_user.id
@@ -83,14 +85,14 @@ describe "my_group", dbscope: :example, js: true do
           click_on I18n.t("workflow.buttons.approve")
         end
 
-        expect(page).to have_css(".mod-workflow-view dd", text: /#{Regexp.escape(approve_comment1)}/)
+        expect(page).to have_css(".mod-workflow-view dd", text: /#{::Regexp.escape(approve_comment1)}/)
 
         item.reload
         expect(item.workflow_state).to eq "approve"
         expect(item.state).to eq "ready"
         expect(item.release_date).to eq release_date
         expect(item.workflow_approvers).to \
-          include({level: 1, user_id: user1.id, editable: '', state: 'approve', comment: approve_comment1})
+          include({level: 1, user_id: user1.id, editable: '', state: 'approve', comment: approve_comment1, file_ids: nil})
         # backup is created
         expect(item.backups.count).to eq 2
 
@@ -120,15 +122,17 @@ describe "my_group", dbscope: :example, js: true do
           within ".mod-workflow-request" do
             select I18n.t("mongoid.attributes.workflow/model/route.my_group"), from: "workflow_route"
             click_on I18n.t("workflow.buttons.select")
-
-            within ".ms-container" do
-              find("li.ms-elem-selectable", text: /#{Regexp.escape(user1.uid)}/).click
-            end
-
+            click_on I18n.t("workflow.search_approvers.index")
+          end
+          within "#cboxLoadedContent" do
+            expect(page).to have_content(user1.long_name)
+            click_on user1.long_name
+          end
+          within ".mod-workflow-request" do
             fill_in "workflow[comment]", with: workflow_comment
             click_on I18n.t("workflow.buttons.request")
           end
-          expect(page).to have_css(".mod-workflow-view dd", text: /#{Regexp.escape(user1.uid)}/)
+          expect(page).to have_css(".mod-workflow-view dd", text: /#{::Regexp.escape(user1.uid)}/)
 
           item.reload
           expect(item.workflow_user_id).to eq cms_user.id
@@ -164,14 +168,14 @@ describe "my_group", dbscope: :example, js: true do
             click_on I18n.t("workflow.buttons.approve")
           end
 
-          expect(page).to have_css(".mod-workflow-view dd", text: /#{Regexp.escape(approve_comment1)}/)
+          expect(page).to have_css(".mod-workflow-view dd", text: /#{::Regexp.escape(approve_comment1)}/)
 
           item.reload
           expect(item.workflow_state).to eq "approve"
           expect(item.state).to eq "ready"
           expect(item.release_date).to eq release_date
           expect(item.workflow_approvers).to \
-            include({level: 1, user_id: user1.id, editable: '', state: 'approve', comment: approve_comment1})
+            include({level: 1, user_id: user1.id, editable: '', state: 'approve', comment: approve_comment1, file_ids: nil})
           # backup is created
           expect(item.backups.count).to eq 2
 

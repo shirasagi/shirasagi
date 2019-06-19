@@ -1,7 +1,7 @@
 namespace :service do
   # @usage
   #   rake service:create_account data='{ name: "Test", account: "account", password: "pass" }'
-  task :create_account => :environment do
+  task create_account: :environment do
     data = eval(ENV["data"])
     data[:in_password] = data.delete(:password)
 
@@ -11,7 +11,7 @@ namespace :service do
 
   # @usage
   #   rake service:update_account data='{ account: "account", add_role: "administrator" }'
-  task :update_account => :environment do
+  task update_account: :environment do
     data = eval(ENV["data"])
     data[:in_password] = data.delete(:password)
 
@@ -28,7 +28,7 @@ namespace :service do
 
   # @usage
   #   rake service:reload_quota
-  task :reload_quota => :environment do
+  task reload_quota: :environment do
     Service::Account.each do |item|
       puts item.name
       item.reload_quota_used.save

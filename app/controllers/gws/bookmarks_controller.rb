@@ -14,9 +14,16 @@ class Gws::BookmarksController < ApplicationController
     @crumbs << [@cur_site.menu_bookmark_label || t("mongoid.models.gws/bookmark"), action: :index]
   end
 
+  def set_item
+    super
+    raise "404" unless @item.user_id == @cur_user.id
+    raise "404" unless @item.allowed?(:read, @cur_user, site: @cur_site)
+  end
+
   public
 
   def index
+    raise "403" unless @model.allowed?(:read, @cur_user, site: @cur_site)
     @items = @model.site(@cur_site).
       user(@cur_user).
       search(params[:s]).

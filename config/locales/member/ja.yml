@@ -3,6 +3,7 @@ ja:
     my_blog: ブログ
     blog_layout: ブログレイアウト
     photo: フォト
+    photo_spot: フォトスポット
     group: グループ
     group_member: グループメンバー
     login_by:
@@ -145,6 +146,7 @@ ja:
       member/group_invitation_setting: グループ招待メール設定
       member/member_invitation_setting: 会員招待メール
       member/login_link: ログイン
+      member/editor_setting: エディタ設定
 
   cms:
     nodes:
@@ -254,6 +256,8 @@ ja:
       member/addon/photo/license_setting:
         license_free: 誰でも利用可
         license_not_free: 許可が必要
+      member/addon/photo/slide:
+        node_url: フォトフォルダーURL
       member/addon/registration/sender_address:
         sender_name: 送信者名
         sender_email: 送信メールアドレス
@@ -337,6 +341,12 @@ ja:
     delete_private_member_photos: メンバーフォトの削除（所有）
     release_other_member_photos: メンバーフォトの公開（全て）
     release_private_member_photos: メンバーフォトの公開（所有）
+    approve_other_member_photos: メンバーフォトの承認（全て）
+    approve_private_member_photos: メンバーフォトの承認（所有）
+    reroute_other_member_photos: メンバーフォトの承認申請取消（全て）
+    reroute_private_member_photos: メンバーフォトの承認申請取消（所有）
+    revoke_other_member_photos: メンバーフォトの承認経路変更（全て）
+    revoke_private_member_photos: メンバーフォトの承認経路変更（所有）
 
   views:
     registration:
@@ -377,7 +387,13 @@ ja:
       mismatch: が一致しません。
       not_registerd: は登録されていません。
       already_registerd: は、確認済みです。
-      password_short: は6文字以上にしてください。
+      password_short: "は%{count}文字以上にしてください。"
+      password_short_upcase: "は英大文字（A-Z）を%{count}文字以上含むようにしてください。"
+      password_short_downcase: "は英小文字（a-z）を%{count}文字以上含むようにしてください。"
+      password_short_digit: "は数字（0-9）を%{count}文字以上含むようにしてください。"
+      password_short_symbol: "は記号を%{count}文字以上含むようにしてください。"
+      password_contains_prohibited_chars: "は使用禁止文字が含まれています。"
+      password_min_change_chars: "は以前のものから%{count}文字以上違う文字を含むようにしてください。"
       password_alphabet_only: に英字のみの文字は使用できません。
       password_numeric_only: に数字のみの文字は使用できません。
       password_include_email: にメールアドレスが含まれています。
@@ -491,6 +507,10 @@ ja:
       license_name:
         - ライセンスを設定します。
         - フォルダーに設定したテキストが表示されます。
+    member/addon/photo/slide:
+      node_url:
+        - フォトフォルダーのURLを設定します。
+        - マルチテナントの場合、他サイトのURLを設定することでスライド表示が可能です。
     member/addon/blog/blog_setting:
       page_limit:
         - ページ表示件数を設定します。

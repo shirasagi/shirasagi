@@ -1,0 +1,94 @@
+<dl class="see">
+  <dt><%= @model.t :imap_setting_name %><%= @model.tt :imap_setting_name %></dt>
+  <dd><%= f.text_field :name, class: :name, required: true %></dd>
+
+  <dt><%= @model.t :from %><%= @model.tt :from %></dt>
+  <dd><%= f.text_field :from, placeholder: @defaults[:from], class: :from %></dd>
+
+  <dt><%= @model.t :address %><%= @model.tt :address %></dt>
+  <dd><%= f.text_field :address, placeholder: @defaults[:address], class: :address %></dd>
+
+  <% if !SS.config.webmail.disable_alias %>
+  <dt><%= @model.t :imap_alias %><%= @model.tt :imap_alias %></dt>
+  <dd><%= f.text_field :imap_alias %></dd>
+  <% end %>
+
+  <dt><%= @model.t :imap_host %><%= @model.tt :imap_host %></dt>
+  <dd><%= f.text_field :imap_host, placeholder: @defaults[:host], class: :imap_host %></dd>
+
+  <dt><%= @model.t :imap_port %><%= @model.tt :imap_port %></dt>
+  <dd><%= f.number_field :imap_port, min: 0, placeholder: @defaults[:port], class: :imap_port %></dd>
+
+  <dt><%= @model.t :imap_ssl_use %><%= @model.tt :imap_ssl_use %></dt>
+  <dd><%= f.select :imap_ssl_use, @user.imap_ssl_use_options, include_blank: @defaults[:ssl_use], class: :imap_ssl_use %></dd>
+
+  <dt><%= @model.t :imap_auth_type %><%= @model.tt :imap_auth_type %></dt>
+  <dd><%= f.select :imap_auth_type, @user.imap_auth_type_options, include_blank: @defaults[:auth_type], class: :imap_auth_type %></dd>
+
+  <dt><%= @model.t :imap_account %><%= @model.tt :imap_account %></dt>
+  <dd><%= f.text_field :imap_account, placeholder: @defaults[:account], class: :imap_account %></dd>
+
+  <dt><%= @model.t :in_imap_password %><%= @model.tt :in_imap_password %></dt>
+  <dd><%= f.password_field :in_imap_password, placeholder: @defaults[:password], class: :in_imap_password %></dd>
+
+  <dt><%= @model.t :imap_sent_box %><%= @model.tt :imap_sent_box %></dt>
+  <dd><%= f.text_field :imap_sent_box %></dd>
+
+  <dt><%= @model.t :imap_draft_box %><%= @model.tt :imap_draft_box %></dt>
+  <dd><%= f.text_field :imap_draft_box %></dd>
+
+  <dt><%= @model.t :imap_trash_box %><%= @model.tt :imap_trash_box %></dt>
+  <dd><%= f.text_field :imap_trash_box %></dd>
+
+  <dt><%= @model.t :threshold_mb %><%= @model.tt :threshold_mb %></dt>
+  <dd><%= f.number_field :threshold_mb, min: 0 %> <%= t "ss.units.mega_byte" %></dd>
+
+  <dt><%= @model.t :imap_default_index %><%= @model.tt :imap_default_index %></dt>
+  <dd><%= f.check_box :default, { checked: (@user.imap_default_index == @index), class: "default-index" }, "1", nil %></dd>
+
+  <dt></dt>
+  <dd>
+    <%= button_tag t('webmail.buttons.test_connection'), class: 'btn btn-imap-test', type: :button %>
+    <span class="imap-test-resp" style="margin-left: 10px; margin-right: 10px;"></span>
+  </dd>
+</dl>
+
+<%= jquery do %>
+  $('.btn-imap-test').on("click", function() {
+    var btn = $(this);
+    var dl = btn.closest('dl');
+    var imap_host = dl.find('.imap_host').val();
+    var imap_port = dl.find('.imap_port').val();
+    var imap_ssl_use = dl.find('.imap_ssl_use').val();
+    var imap_auth_type = dl.find('.imap_auth_type').val();
+    var imap_account = dl.find('.imap_account').val();
+    var in_imap_password = dl.find('.in_imap_password').val();
+
+    $.ajax({
+      url: '<%= url_for action: :test_connection %>',
+      method: 'POST',
+      data: {
+        item: {
+          imap_host: imap_host,
+          imap_port: imap_port,
+          imap_ssl_use: imap_ssl_use,
+          imap_auth_type: imap_auth_type,
+          imap_account: imap_account,
+          in_imap_password: in_imap_password,
+        }
+      },
+      beforeSend: function(data) {
+        btn.attr("disabled", true);
+        dl.find('.imap-test-resp').html('Connecting ...');
+      },
+      success: function(data) {
+        btn.attr("disabled", false);
+        dl.find('.imap-test-resp').html(data);
+      },
+      error: function(data) {
+        btn.attr("disabled", false);
+        dl.find('.imap-test-resp').html('Error');
+      }
+    });
+  });
+<% end %>

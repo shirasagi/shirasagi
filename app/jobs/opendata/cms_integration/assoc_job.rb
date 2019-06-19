@@ -149,7 +149,10 @@ class Opendata::CmsIntegration::AssocJob < Cms::ApplicationJob
     dataset.assoc_site_id = @cms_site.id
     dataset.assoc_node_id = @cms_node.id
     dataset.assoc_page_id = @cur_page.id
-    dataset.touch
+
+    # https://jira.mongodb.org/browse/MONGOID-4544
+    # dataset.touch
+
     dataset.save!
   end
 

@@ -87,7 +87,8 @@ module SS::FileFilter
 
       send_data image.to_blob, type: @item.content_type, filename: @item.filename, disposition: :inline
     end
-  rescue
+  rescue => e
+    raise if e.to_s.numeric?
     raise "500"
   end
 

@@ -1,4 +1,4 @@
-FactoryGirl.define do
+FactoryBot.define do
   factory :cms_column_url_field, class: Cms::Column::UrlField do
     cur_site { cms_site }
 

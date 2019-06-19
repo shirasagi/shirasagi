@@ -1,11 +1,10 @@
 class Gws::Memo::Apis::PersonalAddressesController < ApplicationController
-  include Sns::BaseFilter
-  include SS::AjaxFilter
+  include Gws::ApiFilter
 
   model Webmail::Address
 
   before_action :set_fragment
-  before_action :set_group
+  before_action :set_webmail_address_group
   before_action :set_multi
   before_action :set_inherit_params
 
@@ -15,7 +14,7 @@ class Gws::Memo::Apis::PersonalAddressesController < ApplicationController
     @fragment = params[:fragment].to_s
   end
 
-  def set_group
+  def set_webmail_address_group
     if params[:s].present? && params[:s][:group].present?
       @address_group = Webmail::AddressGroup.user(@cur_user).find(params[:s][:group]) rescue nil
     end
@@ -34,6 +33,8 @@ class Gws::Memo::Apis::PersonalAddressesController < ApplicationController
   public
 
   def index
+    raise "403" unless @cur_user.gws_user.gws_role_permit_any?(@cur_site, :edit_gws_personal_addresses)
+
     s_params = params[:s] || {}
     s_params[:address_group_id] = @address_group.id if @address_group.present?
 

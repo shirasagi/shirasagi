@@ -3,7 +3,7 @@
 
   <%= hidden_field_tag 'ref', params[:ref] %>
 
-  <% val = @record.send(params[:type]) %>
+  <% val = @record.send(@type) %>
   <div class="addon-views">
     <div class="addon-view" id="addon-basic">
       <div class="addon-body">

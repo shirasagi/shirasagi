@@ -3,7 +3,7 @@ require 'spec_helper'
 describe Webmail::Imap::UidsCommand, dbscope: :example do
   let(:user) { create :webmail_user }
   let(:setting) { user.imap_settings.first }
-  let(:item) { Webmail::Imap::Base.new(user, setting) }
+  let(:item) { Webmail::Imap::Base.new_by_user(user, setting) }
 
   describe "#uids_size" do
     it do

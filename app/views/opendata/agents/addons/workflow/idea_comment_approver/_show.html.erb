@@ -1,79 +1,96 @@
-<%= coffee do %>
-$ ->
-  $(document).on "click", ".update-item", (e) ->
-    approvers = []
-    $(".workflow-multi-select").each (e) ->
-      approvers = approvers.concat($(this).val())
-    $("input[name='workflow_approvers']").each (e) ->
-      approvers.push($(this).prop("value"))
-    if approvers.length == 0 && $(this).attr("type") == "request"
-      alert "<%= @model.t :workflow_approvers %><%= t("errors.messages.not_select") %>"
-      return
-    required_counts = []
-    $("input[name='workflow_required_counts']").each (e) ->
-      required_counts.push($(this).prop("value"))
+<%= jquery do %>
 
-    uri = []
-    uri[0] = location.pathname.split("/")[0]
-    uri[1] = location.pathname.split("/")[1]
-    uri[2] = "opendata" + "<%= @cur_node? @cur_node.id : "" %>"
-    uri[3] = "workflow"
-    uri[4] = "idea_comments"
-    uri[5] = "<%= @item.id %>"
-    uri[6] = $(this).attr("updatetype") + "_update"
-    uri = uri.join("/")
+  $(document).on("click", ".update-item", function (e) {
+    var approvers, redirect_location, required_counts, uri;
+    approvers = [];
+    $(".workflow-multi-select").each(function (e) {
+      approvers = approvers.concat($(this).val());
+    });
+    $("input[name='workflow_approvers']").each(function (e) {
+      approvers.push($(this).prop("value"));
+    });
+    if (approvers.length === 0 && $(this).attr("type") === "request") {
+      alert('<%= @model.t :workflow_approvers %><%= t("errors.messages.not_select") %>');
+      return;
+    }
+    required_counts = [];
+    $("input[name='workflow_required_counts']").each(function (e) {
+      required_counts.push($(this).prop("value"));
 
+    });
+    uri = [];
+    uri[0] = location.pathname.split("/")[0];
+    uri[1] = location.pathname.split("/")[1];
+    uri[2] = "opendata" + '<%= @cur_node? @cur_node.id : "" %>';
+    uri[3] = "workflow";
+    uri[4] = "idea_comments";
+    uri[5] = "<%= @item.id %>";
+    uri[6] = $(this).attr("updatetype") + "_update";
+    uri = uri.join("/");
 
-    redirect_location = "<%= opendata_idea_comments_path(cid: @cur_node.id, idea_id: params[:idea_id]) %>"
-    $.ajax
-      type: "post"
-      url: uri
-      async: false
-      data:
-        workflow_comment: $("#workflow_comment").prop("value")
-        workflow_approvers: approvers
-        workflow_required_counts: required_counts
-        remand_comment: $("#remand_comment").prop("value")
-        url: "<%= request.url %>"
+    redirect_location = "<%= opendata_idea_comments_path(cid: @cur_node.id, idea_id: params[:idea_id]) %>";
+    $.ajax({
+      type: "post",
+      url: uri,
+      async: false,
+      data: {
+        workflow_comment: $("#workflow_comment").prop("value"),
+        workflow_approvers: approvers,
+        workflow_required_counts: required_counts,
+        remand_comment: $("#remand_comment").prop("value"),
+        url: "<%= request.url %>",
         model: "<%= @model %>"
-      success: (data) ->
-        if data["workflow_state"] == "approve" && redirect_location != ""
-          location.href = redirect_location
-        else
-          location.reload()
-        end
-      error: (xhr, status) ->
-        try
-          errors = $.parseJSON(xhr.responseText)
+      },
+      success: function (data) {
+        if (data["workflow_state"] === "approve" && redirect_location !== "") {
+          location.href = redirect_location;
+        } else {
+          location.reload();
+        }
+        return end;
+      },
+      error: function (xhr, status) {
+        var errors;
+        try {
+          errors = $.parseJSON(xhr.responseText);
           alert(["== Error =="].concat(errors).join("\n"));
-        catch
+        } catch (_error) {
           alert(["== Error =="].concat(xhr["statusText"]).join("\n"));
 
-  $(".mod-workflow-approve").insertBefore("#addon-basic")
+        }
+      }
+    });
+  });
+  $(".mod-workflow-approve").insertBefore("#addon-basic");
 
-  $(".mod-workflow .toggle-label").on "click", (e) ->
-    $(".mod-workflow .request-setting").slideToggle()
-    return false
-
-  $(".workflow-partial-section").each ->
-    uri = []
-    uri[0] = location.pathname.split("/")[0]
-    uri[1] = location.pathname.split("/")[1]
-    uri[2] = "opendata" + "<%= @cur_node? @cur_node.id : "" %>"
-    uri[3] = "workflow"
-    uri[4] = "idea_comments"
-    uri[5] = "<%= @item.id %>"
-    uri[6] = "wizard"
-    uri = uri.join("/")
-    $.ajax
-      type: "get"
-      url: uri
-      async: false
-      success: (html, status) ->
-        $(html).find("#xxxxxx").html()
-        $(".workflow-partial-section").html(html)
-      error: (msg, status) ->
-        alert(["== Error =="].concat(msg["statusText"]).join("\n"));
+$(".mod-workflow .toggle-label").on("click", function (e) {
+  $(".mod-workflow .request-setting").slideToggle();
+  return false;
+});
+$(".workflow-partial-section").each(function () {
+  var uri;
+  uri = [];
+  uri[0] = location.pathname.split("/")[0];
+  uri[1] = location.pathname.split("/")[1];
+  uri[2] = "opendata" + '<%= @cur_node? @cur_node.id : "" %>';
+  uri[3] = "workflow";
+  uri[4] = "idea_comments";
+  uri[5] = "<%= @item.id %>";
+  uri[6] = "wizard";
+  uri = uri.join("/");
+  $.ajax({
+    type: "get",
+    url: uri,
+    async: false,
+    success: function (html, status) {
+      $(html).find("#xxxxxx").html();
+      $(".workflow-partial-section").html(html);
+    },
+    error: function (msg, status) {
+      alert(["== Error =="].concat(msg["statusText"]).join("\n"));
+    }
+  });
+});
 
 <% end %>
 
@@ -84,18 +101,13 @@ $ ->
       <% @item.workflow_approvers_at(@item.workflow_current_level).each do |workflow_approver| %>
         <% next if @cur_user._id != workflow_approver[:user_id] || workflow_approver[:state] != "request" %>
         <section class="mod-workflow-approve">
-          <div class="addon-view">
-            <div class="addon-head">
-              <h2><%= t("workflow.state.approve") %>/<%= t("workflow.state.remand") %><%= @model.tt :approve_remand %></h2>
+          <%= render "ss/crud/addon", addon: { head: "#{t("workflow.state.approve")}/#{t("workflow.state.remand")}#{@model.tt :approve_remand}" } do %>
+            <%= text_area :remand, :comment, value: "", style: "display: none;" %>
+            <div class="buttons">
+              <%= button_tag t("workflow.state.approve"), { updatetype: :approve, class: "update-item btn-primary" } %>
+              <%= button_tag t("workflow.state.remand"), { updatetype: :remand, class: "update-item btn-default" } %>
             </div>
-            <div class="addon-body">
-              <%= text_area :remand, :comment, value: "", style: "display: none;" %>
-              <div class="buttons">
-                <%= button_tag t("workflow.state.approve"), { updatetype: :approve, class: "update-item btn-primary" } %>
-                <%= button_tag t("workflow.state.remand"), { updatetype: :remand, class: "update-item btn-default" } %>
-              </div>
-            </div>
-          </div>
+          <% end %>
         </section>
       <% end %>
     <% end %>

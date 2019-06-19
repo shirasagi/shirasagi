@@ -44,6 +44,6 @@ class Faq::Agents::Nodes::SearchController < ApplicationController
   private
 
   def make_query(q)
-    { name: /#{Regexp.escape(q)}/ }
+    { name: /#{::Regexp.escape(q)}/ }
   end
 end

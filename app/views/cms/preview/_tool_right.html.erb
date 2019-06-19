@@ -1,0 +1,33 @@
+<%
+  show_path ||= nil
+%>
+
+<div class="ss-preview-wrap-row ss-preview-btn-group">
+  <label for="ss-preview-date"><%= t("cms.preview_date") %></label>
+  <input type="text" id="ss-preview-date" class="ss-preview-date" value="<%= I18n.l(@cur_date, format: :picker)  %>" />
+  <% if @cur_site.mobile_enabled? %>
+    <input type="button" class="ss-preview-btn ss-preview-btn-outline ss-preview-btn-pc" value="<%= t("ss.links.pc") %>">
+    <input type="button" class="ss-preview-btn ss-preview-btn-outline ss-preview-btn-mobile" value="<%= t("ss.links.mobile") %>">
+  <% else %>
+    <input type="button" class="ss-preview-btn ss-preview-btn-outline ss-preview-btn-pc" value="<%= t("cms.preview_page") %>">
+  <% end %>
+</div>
+
+<div class="ss-preview-wrap-row">
+  <% if desktop_pc %>
+    <div class="ss-preview-btn-group ss-preview-part-group ss-preview-hide">
+      <select class="ss-preview-part-list">
+        <option value=""><%= t("cms.part") %></option>
+      </select>
+      <button type="button" class="ss-preview-btn ss-preview-btn-outline ss-preview-btn-edit-part"><%= t("ss.buttons.edit") %></button>
+    </div>
+    <div class="ss-preview-btn-group ss-preview-hide">
+      <button type="button" class="ss-preview-btn ss-preview-btn-outline ss-preview-btn-edit-layout"><%= t("cms.layout") %></button>
+    </div>
+  <% end %>
+  <% if show_path %>
+    <div class="ss-preview-btn-group">
+      <button type="button" class="ss-preview-btn ss-preview-btn-outline ss-preview-btn-open-path" data-path="<%= show_path %>"><%= t("ss.links.back_to_administration") %></button>
+    </div>
+  <% end %>
+</div>

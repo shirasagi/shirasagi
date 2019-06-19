@@ -8,6 +8,7 @@ module Gws::BaseFilter
     self.log_class = Gws::History
 
     helper Gws::LayoutHelper
+    helper Gws::Presence::UserHelper
 
     before_action :validate_gws
     before_action :set_gws_assets
@@ -106,6 +107,6 @@ module Gws::BaseFilter
   end
 
   def set_tree_navi
-    @tree_navi = gws_share_apis_folder_list_path(id: params[:folder], type: params[:controller])
+    @tree_navi = gws_share_apis_folder_list_path(id: params[:folder], type: params[:controller], category: params[:category])
   end
 end

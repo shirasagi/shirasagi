@@ -1,49 +1,62 @@
-<%= coffee do %>
-$ ->
-  result = $(".result")
-  $(".search").on "click", (e)->
-    path    = "<%= cms_apis_contents_html_path %>"
-    keyword = $(".keyword").val()
-    option  = $(".option:checked").val();
-    data    = { s: { keyword: keyword, option: option } }
-
-    if keyword != ""
-      $.ajax
+<%= jquery do %>
+  var result;
+  result = $(".result");
+  $(".search").on("click", function (e) {
+    var data, keyword, option, path;
+    path = "<%= cms_apis_contents_html_path %>";
+    keyword = $(".keyword").val();
+    option = $(".option:checked").val();
+    data = {
+      s: {
+        keyword: keyword,
+        option: option
+      }
+    };
+    if (keyword !== "") {
+      $.ajax({
         type: "GET",
-        data: data
-        url: path + "?" + $.param(data)
-        beforeSend: ->
-          result.html(SS.loading)
-        success: (data)->
-          result.html(data)
-          result.find("input:enabled").prop("checked", true)
-        error: (data, status) ->
-          alert(data)
-          alert(["== Error =="].concat(data.responseJSON).join("\n"))
+        data: data,
+        url: path + "?" + $.param(data),
+        beforeSend: function () {
+          result.html(SS.loading);
+        },
+        success: function (data) {
+          result.html(data);
+          result.find("input:enabled").prop("checked", true);
+        },
+        error: function (data, status) {
+          alert(data);
+          alert(["== Error =="].concat(data.responseJSON).join("\n"));
+        }
+      });
+    }
+    e.preventDefault();
+    return false;
+  });
 
-    e.preventDefault()
-    return false
+  $(".replace").on("click", function (e) {
+    var keyword, layout_ids, page_ids, part_ids;
+    keyword = $(".keyword").val();
+    page_ids = $("input[name='page_ids[]']:checked:enabled");
+    part_ids = $("input[name='part_ids[]']:checked:enabled");
+    layout_ids = $("input[name='layout_ids[]']:checked:enabled");
+    if (keyword !== "" && (page_ids.length || part_ids.length || layout_ids.length)) {
+      if (confirm("<%= t('cms.apis.contents.confirm_message') %>")) {
+        return true;
+      }
+    }
+    e.preventDefault();
+    return false;
+  });
 
-  $(".replace").on "click", (e)->
-    keyword    = $(".keyword").val()
-    page_ids   = $("input[name='page_ids[]']:checked:enabled")
-    part_ids   = $("input[name='part_ids[]']:checked:enabled")
-    layout_ids = $("input[name='layout_ids[]']:checked:enabled")
+  $(".option").on("click", function (e) {
+    $("[value!='" + $(this).attr("value") + "'].option").prop("checked", false);
+  });
 
-    if keyword != "" && (page_ids.length || part_ids.length || layout_ids.length)
-      if confirm("<%= t("cms.apis.contents.confirm_message") %>")
-        return true
-
-    e.preventDefault()
-    return false
-
-  $(".option").on "click", (e)->
-    $("[value!='" + $(this).attr("value") + "'].option").prop("checked", false)
-
-  $("th input").remove()
-  $("input[name='page_ids[]']").remove()
-  $("input[name='part_ids[]']").remove()
-  $("input[name='layout_ids[]']").remove()
+  $("th input").remove();
+  $("input[name='page_ids[]']").remove();
+  $("input[name='part_ids[]']").remove();
+  $("input[name='layout_ids[]']").remove();
 <% end %>
 
 <%= form_for :item, url: { action: :update }, html: { class: "index-search", multipart: true } do |f| %>

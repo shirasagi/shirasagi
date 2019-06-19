@@ -33,12 +33,11 @@ class Opendata::Idea
   belongs_to :member, class_name: "Opendata::Member"
 
   has_many :points, foreign_key: :idea_id, class_name: "Opendata::IdeaPoint",
-    dependent: :delete
+    dependent: :delete_all
   has_many :comments, foreign_key: :idea_id, class_name: "Opendata::IdeaComment",
-    dependent: :delete
+    dependent: :delete_all
 
   validates :text, presence: true, length: { maximum: 400 }
-  validates :category_ids, presence: true
   validates :state, presence: true
 
   permit_params :text, :point, :commented, :total_comment, :tags, :dataset_ids, :app_ids, tags: [], dataset_ids: [], app_ids: []

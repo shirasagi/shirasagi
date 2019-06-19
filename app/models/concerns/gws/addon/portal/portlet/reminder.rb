@@ -6,7 +6,7 @@ module Gws::Addon::Portal::Portlet
     set_addon_type :gws_portlet
 
     included do
-      field :reminder_filter, type: String
+      field :reminder_filter, type: String, default: "future"
       permit_params :reminder_filter
     end
 

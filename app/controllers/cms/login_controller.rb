@@ -34,7 +34,7 @@ class Cms::LoginController < ApplicationController
       password = SS::Crypt.decrypt(password, type: encryption_type) rescue nil
     end
 
-    @item = SS::User.authenticate(email_or_uid, password) rescue false
+    @item = SS::User.site_authenticate(@cur_site, email_or_uid, password) rescue false
     @item = nil if @item && !@item.enabled?
     @item = @item.try_switch_user || @item if @item
 

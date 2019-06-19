@@ -1,11 +1,16 @@
 # user class for webmail account export
 class Webmail::User
   include SS::Model::User
-  include Sys::Addon::Role
+  include SS::Reference::UserTitles
+  include Webmail::Addon::UserExtension
+  include Webmail::Addon::Role
+  include Webmail::Permission
   include Sys::Reference::Role
-  include Sys::Permission
-  include Webmail::UserExtension
-  include Webmail::AccountExport
 
-  set_permission_name "sys_users", :edit
+  set_permission_name "webmail_users", :edit
+
+  # override SS::Model::User#groups
+  def groups
+    Webmail::Group.where("$and" => [{ :_id.in => group_ids }])
+  end
 end

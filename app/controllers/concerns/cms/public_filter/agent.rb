@@ -1,5 +1,6 @@
 module Cms::PublicFilter::Agent
   extend ActiveSupport::Concern
+  include SS::ImplicitRenderFilter
 
   private
 

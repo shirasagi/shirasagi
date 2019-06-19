@@ -2,7 +2,7 @@ class ApplicationController < ActionController::Base
   # Prevent CSRF attacks by raising an exception.
   # For APIs, you may want to use :null_session instead.
   protect_from_forgery with: :exception
-  skip_before_action :verify_authenticity_token, if: ->{ !protect_csrf? }
+  skip_before_action :verify_authenticity_token, raise: false, if: ->{ !protect_csrf? }
 
   # before_action -> { FileUtils.touch "#{Rails.root}/Gemfile" } if Rails.env.to_s == "development"
   before_action :set_cache_buster
@@ -44,6 +44,20 @@ class ApplicationController < ActionController::Base
     self.response_body = Rack::Chunked::Body.new(enum)
   end
 
+  def send_file_headers!(options)
+    super(options)
+
+    disposition = headers['Content-Disposition']
+    return if disposition.blank?
+    return unless /(.+); filename="(.+)"/ =~ disposition
+
+    name = ::Regexp.last_match[1]
+    filename = ::Regexp.last_match[2]
+
+    encoded = ERB::Util.url_encode(filename)
+    headers['Content-Disposition'] = "#{name}; filename*=UTF-8''#{encoded}" if encoded != filename
+  end
+
   def ss_send_file(file, opts = {})
     if Fs.mode == :file
       opts[:x_sendfile] = true unless opts.key?(:x_sendfile)
@@ -71,10 +85,13 @@ class ApplicationController < ActionController::Base
     request.env["HTTP_X_REAL_IP"] || request.remote_addr
   end
 
-  def browser
-    require "browser"
-    Browser.new(request.user_agent, accept_language: request.accept_language)
+  def pc_browser?
+    return @is_pc_browser if !@is_pc_browser.nil?
+
+    platform = browser.platform
+    @is_pc_browser = platform.windows? || platform.mac? || platform.linux?
   end
+  helper_method :pc_browser?
 
   # Accepts the request for Cross-Origin Resource Sharing.
   # @return boolean

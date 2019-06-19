@@ -1,0 +1,20 @@
+<%= jquery do %>
+  $('.portlet-id-<%= @portlet.id.to_s %> .bxslider').bxSlider(<%== @portlet.ad_options.to_json %>);
+<% end %>
+
+<div class="main-box">
+  <div class="portlet-title"><%= @portlet.name %></div>
+  <ul class="bxslider">
+    <% @portlet.ad_files.shuffle.each do |file| %>
+      <% file = file.becomes_with(SS::LinkFile) %>
+      <li>
+        <% inner_html = image_tag(file.url, width: @portlet.effective_ad_width) %>
+        <% if file.link_url %>
+          <%= link_to inner_html, file.link_url %>
+        <% else %>
+          <%= inner_html %>
+        <% end %>
+      </li>
+    <% end %>
+  </ul>
+</div>

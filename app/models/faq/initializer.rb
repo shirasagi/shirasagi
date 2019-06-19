@@ -20,6 +20,8 @@ module Faq
     Cms::Role.permission :revoke_private_faq_pages
     Cms::Role.permission :move_private_faq_pages
     Cms::Role.permission :move_other_faq_pages
+    Cms::Role.permission :import_private_faq_pages
+    Cms::Role.permission :import_other_faq_pages
     Cms::Role.permission :unlock_other_faq_pages
   end
 end

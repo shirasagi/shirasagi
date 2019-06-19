@@ -10,6 +10,7 @@ ja:
     import: インポート
     import_log: インポートログ
     export: エクスポート
+    export_log: エクスポートログ
     login: ログイン
     logout: ログアウト
     module: モジュール
@@ -27,6 +28,8 @@ ja:
     encoding: 文字コード
     text_zoom: 文字サイズ
     default_here_label: "詳細はこちら⇒"
+    errors: エラー
+    wave_dash: ～
 
     views:
       login/login:
@@ -57,6 +60,7 @@ ja:
       back: 戻る
       back_to_show: 詳細へ戻る
       back_to_index: 一覧へ戻る
+      back_to_administration: 管理画面へ戻る
       parent_directory: 上の階層へ
       preview: プレビュー
       pc_preview: PCプレビュー
@@ -75,6 +79,8 @@ ja:
       integrate: 統合する
       download: ダウンロード
       download_template: 雛形をダウンロード
+      download_sample_csv: サンプルCSVをダウンロード
+      export: エクスポート
       resize: リサイズする
       set_tag: タグ設定
       reset_tags: タグ解除
@@ -86,11 +92,15 @@ ja:
       unlock_user: 利用停止を解除する
       trash: ゴミ箱
       restore: 元に戻す
+      send_email: メールを作成する
+      send_message: メッセージを作成する
+      copy_email_address: メールアドレスをコピー
     buttons:
       save: 保存
       new: 新規作成
       draft_save: 下書き保存
       closed_save: 非公開保存
+      publish: 公開
       publish_save: 公開保存
       ignore_alert: 警告を無視する
       cancel: キャンセル
@@ -127,6 +137,8 @@ ja:
       initialize: 初期化
       restore: 元に戻す
       close: 閉じる
+      csv: CSV
+      ignore_alerts_and_save: 警告を無視して保存する
     confirm:
       delete: 削除してよろしいですか？
       soft_delete: 削除してよろしいですか？
@@ -135,6 +147,7 @@ ja:
       unload: 入力したデータは保存されません。
       clone: 複製してよろしいですか？
       redirect: 下記のページにアクセスしようとしています。
+      export: エクスポートを開始してよろしいですか？
       import: インポートを開始してよろしいですか？
       download: ダウンロードしてよろしいですか？
       set_tag: タグを設定してよろしいですか？
@@ -144,6 +157,8 @@ ja:
       restore: 元に戻してよろしいですか？
       move: 移動してよろしいですか？
       send: 送信してよろしいですか？
+      publish: 公開してよろしいですか？
+      depublish: 非公開にしてよろしいですか？
     notice:
       saved: 保存しました。
       deleted: 削除しました。
@@ -158,11 +173,22 @@ ja:
       text_zoomed: "文字サイズを %{count} に設定しました。"
       restored: 元に戻しました。
       run: 実行しました。
+      already_job_started: 実行準備中であるか、実行中です。
+      clipboard_copied: コピーしました。
+      clipboard_copy_failed: コピーできませんでした。クリップボードがサポートされていません。
+      published: 公開しました。
+      depublished: 非公開にしました。
+      moved: 移動しました。
+      hit: 件ヒットしました。
+      first_to_last: 件を表示しています。
+
     info:
       soft_delete: データの実削除ではなく無効状態として保存されます。
     warning:
       initial_password: 初期パスワードを変更してください。
       session_timeout: セッションの有効期限が切れました。
+      password_expired: パスワードの有効期限が切れました。パスワードを変更してください。
+      password_neary_expired: もうすぐパスワードの有効期限が切れます。パスワードを変更してください。
     errors:
       import:
         blank_file: ファイルを入力してください。
@@ -201,10 +227,15 @@ ja:
       heisei:
         name: 平成
         min: 1989/1/8
+        max: 2019/5/1
+      reiwa:
+        name: 令和
+        min: 2019/5/1
         max: 2100/1/1
     state:
       public: 公開中
       closed: 非公開
+      edit: 編集中
       draft: 下書き
       ready: 公開待ち
       request: 申請中
@@ -234,6 +265,10 @@ ja:
         deny: 許可しない
         required: 必須
         optional: 任意
+        notify: 通知する
+        silence: 通知しない
+        force_silence: 通知しない（全体管理）
+        deleted: 削除済み
       resizing:
         320x240: 320x240 (QVGA横)
         240x320: 240x320 (QVGA縦)
@@ -254,6 +289,7 @@ ja:
         taisho: 大正
         showa: 昭和
         heisei: 平成
+        reiwa: 令和
       map_api:
         googlemaps: Googleマップ
         openlayers: OpenLayers
@@ -292,9 +328,9 @@ ja:
       multibyte_filename_state:
         enabled: アップロード可
         disabled: アップロード不可
-      encoding:
-        Shift_JIS: シフトJIS
-        UTF-8: UTF-8
+      csv_encoding:
+        Shift_JIS: シフトJIS（Excel 2016 より前）
+        UTF-8: UTF-8（Excel 2016 以降）
       user_lock_state:
         unlocked: 利用可
         locked: 利用停止
@@ -302,17 +338,11 @@ ja:
         zoom_in: '+'
         zoom_out: '-'
         reset: 標準
-      facebook_max_text_length:
-        '0': テキストなし
-        '50': 50文字
-        '100': 100文字
-        '150': 150文字
-        '200': 200文字
-        '250': 250文字
 
     tasks:
       started: 開始しました。
       interrupted: 中断命令を送信しました。
+      confirm_start: 処理を開始しますか？
       confirm_reset: 処理が終わっていない場合、複数回実行されてしまいます。\nタスクを削除してよろしいですか？
     units:
       count: 件
@@ -337,6 +367,10 @@ ja:
       ss/approve_setting: 承認設定
       ss/editor_setting: エディタ設定
       ss/mail_setting: メール設定
+      ss/link_file: ファイル
+      ss/notification/reply:
+        discussion: 電子会議室
+      ss/elasticsearch/site_setting: サイト内検索設定
 
   mongoid:
     models:
@@ -355,6 +389,8 @@ ja:
       ss/max_file_size: 最大ファイルサイズ
       ss/thumb_file: サムネイルファイル
       ss/migration: DBマイグレーション
+      ss/access_token: アクセストークン
+      ss/notification: 通知
     errors:
       models:
         ss/model/group:
@@ -368,6 +404,7 @@ ja:
         id: id
         created: 作成日時
         updated: 更新日時
+        deleted: 削除日時
         state: ステータス
         filepath: ファイルパス
         filename: ファイル名
@@ -399,7 +436,6 @@ ja:
         tel: 電話番号
         tel_ext: 内線番号
         tel_ext_short: 内線
-        title_ids: 役職
         in_title_id: 役職
         group_ids: グループ
         groups: グループ
@@ -407,6 +443,10 @@ ja:
         cms_role_ids: CMSロール
         gws_roles: GWSロール
         gws_role_ids: GWSロール
+        sys_roles: SYSロール
+        sys_role_ids: SYSロール
+        webmail_roles: WEBMAILロール
+        webmail_role_ids: WEBMAILロール
         type: ユーザータイプ
         sns: SNSユーザー
         ldap: LDAPユーザー
@@ -420,6 +460,8 @@ ja:
         organization_id: 所属組織
         organization_uid: 職員番号
         switch_user_id: 切り替えユーザー
+        login_roles: ログイン種別
+        last_loggedin: 最終ログイン日時
       ss/model/user_title:
         code: 役職コード
         name: 役職名
@@ -428,6 +470,9 @@ ja:
         group_id: グループ
         activation_date: 有効期限（開始）
         expiration_date: 有効期限（終了）
+      ss/model/reference/user_titles:
+        title_ids: 役職
+        title_orders: 役職並び順
       ss/model/group:
         name: グループ名
         order: 表示順
@@ -513,10 +558,6 @@ ja:
         facebook_page_url: ページURL
         opengraph_type: OpenGraph
         opengraph_defaul_image_url: 既定の画像URL
-        facebook_access_token: アクセストークン
-        facebook_max_text_length: 最大テキスト長
-        facebook_appends_here_state: 詳細はこちらの表示
-        facebook_appends_here_label: 詳細はこちらのラベル
       ss/addon/twitter_setting:
         twitter_card: カード形式
         twitter_username: ユーザー名
@@ -526,7 +567,6 @@ ja:
         twitter_access_token: アクセストークン
         twitter_access_token_secret: トークンシークレット
       ss/addon/site_auto_post_setting:
-        site_facebook_auto_post: Facebook自動投稿
         site_twitter_auto_post: Twitter自動投稿
         site_sns_auto_delete: 非公開時に投稿を削除
         site_edit_auto_post: 編集時に自動投稿
@@ -554,6 +594,12 @@ ja:
         city_kana: 区市町村（カナ）
         town: 町名
         town_kana: 町名（カナ）
+      ss/model/prefecture_code:
+        code: 都道府県又は市区町村コード
+        prefecture: 都道府県名
+        prefecture_kana: 都道府県名（カナ）
+        city: 市区町村名
+        city_kana: 市区町村名（カナ）
       ss/thumb_file:
         original_id: 元画像ID
         image_size: 画像サイズ
@@ -576,7 +622,25 @@ ja:
       ss/model/mail_setting:
         sender_name: 差出人名
         sender_email: 差出人メールアドレス
+        sender_user_id: 差出ユーザー
         mail_signature: 署名
+      ss/model/notification:
+        group_id: グループ
+        member_ids: 参加者
+        subject: 件名
+        text: 本文TEXT
+        html: 本文HTML
+        format: フォーマット
+        seen: 既読日時
+        send_date: 送信日時
+        export: エクスポート
+        url: URL
+      ss/addon/notification/reply:
+        reply_module: 返信モジュール名
+        reply_model: 返信モデル名
+        reply_item_id: 返信ID
+      ss/addon/elasticsearch/site_setting:
+        elasticsearch_hosts: 全文検索サーバー
 
   tooltip:
     ss/model/user:
@@ -626,7 +690,7 @@ ja:
       organization_id: 所属する組織を選択します。
       organization_uid:
         - 職員番号を入力します。
-        - グループ専用ログイン画面で使用します。
+        - サイト、グループ専用ログイン画面で使用します。
       switch_user_id:
         - 切り替えユーザーを選択します。
         - ログイン後にユーザーが切り替わります。
@@ -808,14 +872,6 @@ ja:
         - 既定の画像のURL を設定します。
         - ページに画像が含まれていない場合、ここで設定した URL が og:image として使用されます。
         - ページに画像が含まれている場合、ここで設定した URL は使用されません。
-      facebook_access_token:
-        - アクセストークンを設定します。
-        - 設定するとFacebookへの自動投稿が可能になります。
-      facebook_max_text_length:
-        - Facebookへ投稿する際のテキストの最大長を選択します。
-      facebook_appends_here_state:
-        - Facebookへ投稿する際、テキストの末尾に「詳細はこちらへ」を表示するかどうかを選択します。
-        - 後続の入力欄に表示するラベルを入力します。
     ss/addon/twitter_setting:
       twitter_card:
         - Twitter のカード形式を選択します。
@@ -840,8 +896,6 @@ ja:
         - アクセストークンシークレット(Access Token Secret)を設定します。
         - Twitterへの自動投稿に必須です。
     ss/addon/site_auto_post_setting:
-      site_facebook_auto_post:
-        - Facebookへの自動投稿の設定を行います。
       site_twitter_auto_post:
         - Twitterへの自動投稿の設定を行います。
       site_sns_auto_delete:
@@ -892,3 +946,7 @@ ja:
         - "未入力の場合、システム設定のメールアドレス（例: noreply@example.jp）が使用されます。"
       mail_signature:
         - システムから送信されるメールの既定の署名を入力します。
+
+  job:
+    models:
+      ss/public_file_remover_job: 公開済みファイル削除ジョブ

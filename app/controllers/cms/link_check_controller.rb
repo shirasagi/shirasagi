@@ -3,7 +3,7 @@ require "open-uri"
 
 class Cms::LinkCheckController < ApplicationController
   protect_from_forgery except: :check
-  skip_before_action :verify_authenticity_token unless SS.config.env.csrf_protect
+  skip_before_action :verify_authenticity_token, raise: false unless SS.config.env.csrf_protect
   before_action :accept_cors_request
 
   def check
@@ -35,15 +35,14 @@ class Cms::LinkCheckController < ApplicationController
       end
     }
 
-    begin
-      timeout(2) do
-        open(url, opts) { |f| return f.status[0].to_i }
-      end
-    rescue Timeout::Error
-      return 0
-    rescue => e
-      return 200 if progress_data_size
+    Timeout.timeout(2) do
+      open(url, opts) { |_f| }
     end
-    return 0
+
+    200
+  rescue Timeout::Error
+    0
+  rescue => _e
+    progress_data_size ? 200 : 0
   end
 end

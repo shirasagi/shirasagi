@@ -4,6 +4,15 @@ production: &production
   # Max Number of Event Term
   max_term_form: 10
 
+  # Use Basic Authentication when import ics
+  basic_authentication: false
+
+  # Event term that import ics
+  ical_import_date_ago: 30
+  ical_import_date_after: 365
+  ical_export_date_ago: 30
+  ical_export_date_after: 365
+
 test:
   <<: *production
 

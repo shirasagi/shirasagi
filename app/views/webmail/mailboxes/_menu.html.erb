@@ -1,3 +1,5 @@
+<% return unless @webmail_imap_login %>
+
 <nav class="nav-menu">
   <% if params[:action] =~ /index/ %>
     <%= link_to(t('ss.links.new'), { action: :new }, class: :new) if @model.allowed?(:edit, @cur_user) %>

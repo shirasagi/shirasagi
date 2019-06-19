@@ -1,0 +1,556 @@
+//= require jquery
+//= require jquery_ujs
+//= require js.cookie
+//= require jquery.form
+//= require jquery.datetimepicker
+//= require_self
+//= require ss/lib/base
+//= require ss/lib/font
+//= require ss/lib/module
+//= require ss/lib/mobile
+//= require ss/lib/clipboard
+//= require cms/lib/editor
+//= require ads/lib/banner
+//= require event/lib/monthly
+//= require event/lib/calendar
+//= require inquiry/lib/form
+//= require inquiry/lib/chart
+//= require key_visual/lib/slide
+//= require map/googlemaps/map
+//= require map/googlemaps/facility/search
+//= require map/googlemaps/member/photo/form
+//= require map/openlayers/map
+//= require map/openlayers/facility/search
+//= require map/openlayers/member/photo/form
+//= require map/openlayers/opendata/dataset_map
+//= require jplayer/jquery.jplayer
+
+$(function () {
+  SS_Kana.render();
+  SS_Font.render();
+  SS_AdobeReader.render();
+  SS_Mobile.render();
+  SS_Voice.render();
+  SS_Theme.render();
+  SS.renderAjaxBox();
+  SS.part = $(".ss-part").length;
+  if (SS.part === 0) {
+    SS_Recommend.render();
+  }
+  $(".ss-part").each(function () {
+    return SS.renderPart($(this));
+  });
+  return SS.renderDateTimePicker();
+});
+
+this.SS_Kana = (function () {
+  function SS_Kana() {
+  }
+
+  SS_Kana.dir = "<%= SS.config.kana.location %>";
+
+  SS_Kana.siteUrl = "/";
+
+  SS_Kana.kanaUrl = "<%= SS.config.kana.location %>" + "/";
+
+  SS_Kana.render = function () {
+    var bind, url;
+    if (SS.config["site_url"] && SS.config["kana_url"]) {
+      SS_Kana.siteUrl = SS.config["site_url"];
+      SS_Kana.kanaUrl = SS.config["kana_url"];
+    }
+    if ($("body").data("kana")) {
+      url = SS_Kana.url(location.pathname, false);
+      bind = 'onclick="location.href=\'' + url + '\'; return false"';
+      return $("#ss-kana").html("<a class=\"off\" href=\"#" + url + "\" " + bind + "><%= I18n.t 'cms.links.ruby_off' %></a>");
+    } else {
+      url = SS_Kana.url(location.pathname, true);
+      bind = 'onclick="location.href=\'' + url + '\'; return false"';
+      return $("#ss-kana").html("<a class=\"on\" href=\"#" + url + "\" " + bind + "><%= I18n.t 'cms.links.ruby_on' %></a>");
+    }
+  };
+
+  SS_Kana.url = function (url, bool) {
+    if (bool == null) {
+      bool = null;
+    }
+    if (bool === null) {
+      bool = $("body").data("kana");
+    }
+    if (bool) {
+      url = url.replace(RegExp("^(\\/\\.s\\d+?\\/preview\\d*)?" + this.siteUrl), "$1" + this.kanaUrl);
+    } else {
+      url = url.replace(RegExp("^(\\/\\.s\\d+?\\/preview\\d*)?" + this.kanaUrl), "$1" + this.siteUrl);
+    }
+    return url;
+  };
+
+  SS_Kana.loadPage = function (elem) {
+    $.ajax({
+      type: "GET",
+      url: elem.attr("href"),
+      dataType: "html",
+      success: function (data) {
+        var body;
+        body = $("body");
+        body.data("kana", elem.hasClass("on"));
+        return body.html(data.replace(/[\s\S]*<body.*?>([\s\S]*)<\/body>[\s\S]*/, "$1"));
+      }
+    });
+    return false;
+  };
+
+  return SS_Kana;
+
+})();
+
+this.SS_Theme = (function () {
+  function SS_Theme() {
+  }
+
+  SS_Theme.render = function () {
+    var a, cls, css, style, theme, v;
+    if (!($("#ss-theme").length > 0)) {
+      return;
+    }
+    theme = SS.config["theme"];
+    $("#ss-theme").html("");
+    css = "";
+    for (cls in theme) {
+      v = theme[cls];
+      a = $('<a href="#" class="' + cls + '">' + v["name"] + '</a>');
+      if (v["css_path"]) {
+        $('head').append('<link rel="alternate stylesheet" type="text/css" title="' + v["name"] + '" href="' + v["css_path"] + '" class="ss-theme ' + cls + '" disabled />');
+      }
+      if (v["font_color"] && v["background_color"]) {
+        css += SS_Theme.cssTemplate(cls, v["font_color"], v["background_color"]) + "\n";
+      }
+      a.on("click", function (e) {
+        cls = $(this).attr("class");
+        Cookies.set("ss-theme", cls, {
+          expires: 7,
+          path: '/'
+        });
+        SS_Theme.switchTheme(cls);
+        return false;
+      });
+      $("#ss-theme").append(a);
+    }
+    style = $('<style type="text/css" class="ss-theme">' + css + '</style>');
+    $("head").append(style);
+    cls = Cookies.get("ss-theme");
+    if (cls) {
+      return SS_Theme.switchTheme(cls);
+    }
+  };
+
+  SS_Theme.cssTemplate = function (cls, color, backgroundColor) {
+    return "body[data-ss-theme=\"" + cls + "\"] * {\n  border-color: " + color + " !important;\n  background: " + backgroundColor + " !important;\n  color: " + color + " !important;\n}";
+  };
+
+  SS_Theme.switchTheme = function (cls) {
+    $('head link.ss-theme').prop("disabled", true);
+    $('head link.ss-theme.' + cls).prop("disabled", false);
+    $("body").attr("data-ss-theme", "");
+    return $("body").attr("data-ss-theme", cls);
+  };
+
+  return SS_Theme;
+
+})();
+
+this.SS_AdobeReader = (function () {
+  function SS_AdobeReader() {
+  }
+
+  SS_AdobeReader.render = function () {
+    if ($("a[href$='.pdf']").length) {
+      return $("#ss-adobe-reader, .ss-adobe-reader").each(function () {
+        return $(this).html('<%= I18n.t("cms.adobe_reader.remark").join %>').show();
+      });
+    }
+  };
+
+  return SS_AdobeReader;
+
+})();
+
+this.SS_Tabs = (function () {
+  function SS_Tabs() {
+  }
+
+  SS_Tabs.render = function (elem) {
+    var box, tabs;
+    box = $(elem);
+    tabs = "";
+    box.find(".tab").each(function (i) {
+      var alt_class, base_id, bind, body_css, disp, html, name, name_id, nav, tab, tab_cls, url, view_id;
+      tab = $(this);
+      name = tab.find('header > h2').html();
+      nav = tab.find('nav');
+      url = nav.find(".more").attr("href");
+      alt_class = tab.attr('data-class');
+      base_id = tab.attr("id");
+      name_id = base_id + "-name";
+      view_id = base_id + "-view";
+      if (!url) {
+        url = "#" + view_id;
+      }
+      tab_cls = "name";
+      if (i === 0) {
+        tab_cls = "name current";
+      }
+      if (alt_class) {
+        tab_cls = tab_cls + " " + alt_class;
+      }
+      bind = 'return SS_Tabs.select("' + elem + '", "#' + name_id + '", "#' + view_id + '")';
+      tabs += "<a id='" + name_id + "' onclick='" + bind + "' class='" + tab_cls + "' href='" + url + "'>" + name + "</a>";
+      disp = "";
+      if (i !== 0) {
+        disp = "style='display: none;'";
+      }
+      body_css = 'view';
+      if (alt_class) {
+        body_css = body_css + " " + alt_class;
+      }
+      html = "<article id='" + view_id + "' class='" + body_css + "' " + disp + ">";
+      html += "<h2 style='display: none'>" + name + "</h2>";
+      html += "<div class='pages'>" + tab.find(".pages").html() + "</div>";
+      html += "<nav>" + tab.find('nav').html() + "</nav>";
+      html += "</article>";
+      box.append(html);
+      return tab.remove();
+    });
+    return box.prepend("<nav class='names'>" + tabs + "</nav>");
+  };
+
+  SS_Tabs.select = function (box, name, view) {
+    $(box).find(".name").each(function () {
+      return $(this).removeClass("current");
+    });
+    $(box).find(".view").each(function () {
+      return $(this).hide();
+    });
+    $(name).addClass("current");
+    $(view).show();
+    return false;
+  };
+
+  return SS_Tabs;
+
+})();
+
+this.SS_Voice = (function () {
+  function SS_Voice() {
+  }
+
+  SS_Voice.voice_config = {
+    'location': "<%= SS.config.voice.controller['location'] %>",
+    'loading-resource': "<%= SS.config.voice.resource['loading'] %>",
+    'disabled-resource': "<%= SS.config.voice.resource['disabled'] %>",
+    'overload-resource': "<%= SS.config.voice.resource['overload'] %>"
+  };
+
+  SS_Voice.url = null;
+
+  SS_Voice.voice_tag = null;
+
+  SS_Voice.voice_controller = null;
+
+  SS_Voice.state = null;
+
+  SS_Voice.cancel_loading = null;
+
+  SS_Voice.timer_id = null;
+
+  SS_Voice.render = function () {
+    var anchor, voice_controller, voice_tag;
+    SS_Voice.url = SS_Voice.requestUrl();
+    voice_tag = $('#ss-voice');
+    if (voice_tag.size() === 0) {
+      return;
+    }
+    if (voice_tag.size() > 1) {
+      voice_tag = voice_tag.first();
+    }
+    anchor = $('<a rel="nofollow"/>').attr('href', SS_Voice.url).html(voice_tag.html());
+    voice_tag.html('');
+    anchor.appendTo(voice_tag);
+    SS_Voice.voice_tag = anchor;
+    voice_controller = $('#ss-voice-controller');
+    if (voice_controller.size() === 0) {
+      voice_tag.after('<div id="ss-voice-controller" style="display: none;"/>');
+      voice_controller = $('#ss-voice-controller');
+    }
+    SS_Voice.voice_controller = new SS_VoiceController(voice_controller[0]);
+    SS_Voice.state = null;
+    SS_Voice.cancel_loading = false;
+    SS_Voice.timer_id = null;
+    SS_Voice.init();
+    return voice_controller.find('.ss-jp-close').bind('click', SS_Voice.cancel);
+  };
+
+  SS_Voice.init = function () {
+    SS_Voice.state = 'init';
+    SS_Voice.voice_controller.stop();
+    SS_Voice.setAction(SS_Voice.load);
+    SS_Voice.cancel_loading = false;
+    return false;
+  };
+
+  SS_Voice.setAction = function (action) {
+    SS_Voice.voice_tag.unbind('click');
+    return SS_Voice.voice_tag.bind('click', action);
+  };
+
+  SS_Voice.load = function () {
+    if (SS_Voice.cancel_loading) {
+      return false;
+    }
+    $.ajax({
+      type: 'HEAD',
+      url: SS_Voice.url,
+      cache: false,
+      statusCode: {
+        200: (function (_this) {
+          return function () {
+            return SS_Voice.playAudio();
+          };
+        })(this),
+        202: (function (_this) {
+          return function (data, status, xhr) {
+            var retry_after;
+            SS_Voice.renderLoading();
+            retry_after = xhr.getResponseHeader('Retry-After');
+            if (!retry_after) {
+              retry_after = 5;
+            }
+            return SS_Voice.timer_id = setTimeout(SS_Voice.load, retry_after * 1000);
+          };
+        })(this)
+      },
+      error: function (xhr, status, error) {
+        return SS_Voice.renderError(xhr.status);
+      }
+    });
+    return false;
+  };
+
+  SS_Voice.renderLoading = function () {
+    var url;
+    if (SS_Voice.state === 'loading') {
+      return false;
+    }
+    url = SS_Voice.voice_config['loading-resource'];
+    SS_Voice.state = 'loading';
+    SS_Voice.setAction(SS_Voice.cancel);
+    SS_Voice.voice_controller.play(url);
+    return false;
+  };
+
+  SS_Voice.renderError = function (status) {
+    var url;
+    if (SS_Voice.state === 'error') {
+      return false;
+    }
+    if (SS_Voice.timer_id >= 0) {
+      clearTimeout(SS_Voice.timer_id);
+    }
+    SS_Voice.timer_id = -1;
+    if (status === 429) {
+      url = SS_Voice.voice_config['overload-resource'];
+    } else {
+      url = SS_Voice.voice_config['disabled-resource'];
+    }
+    SS_Voice.state = 'error';
+    SS_Voice.setAction(SS_Voice.cancel);
+    SS_Voice.voice_controller.play(url);
+    return false;
+  };
+
+  SS_Voice.cancel = function () {
+    SS_Voice.cancel_loading = true;
+    if (SS_Voice.timer_id !== null) {
+      clearTimeout(SS_Voice.timer_id);
+    }
+    SS_Voice.timer_id = null;
+    SS_Voice.init();
+    return false;
+  };
+
+  SS_Voice.playAudio = function () {
+    SS_Voice.state = 'playing';
+    SS_Voice.voice_controller.play(SS_Voice.url);
+    SS_Voice.setAction(SS_Voice.cancel);
+    return false;
+  };
+
+  SS_Voice.requestUrl = function () {
+    var path, url;
+    path = SS_Voice.trimKanaDir(location.pathname);
+    if (path === "/") {
+      path = "/index.html";
+    }
+    url = encodeURIComponent(SS_Voice.normalizeProtocol(location.protocol) + '://' + location.host + path);
+    url = SS_Voice.normalizeLocation(SS_Voice.voice_config['location']) + '/' + url;
+    return url;
+  };
+
+  SS_Voice.trimKanaDir = function (path, kana_dir) {
+    if (kana_dir == null) {
+      kana_dir = SS_Kana.dir;
+    }
+    return path.replace(new RegExp('^' + kana_dir.replace('/', '\/') + '\/'), '/');
+  };
+
+  SS_Voice.normalizeProtocol = function (protocol) {
+    return protocol.replace(new RegExp(':$'), '');
+  };
+
+  SS_Voice.normalizeLocation = function (location) {
+    return location.replace(new RegExp('/$'), '');
+  };
+
+  return SS_Voice;
+
+})();
+
+this.SS_VoiceController = (function () {
+  function SS_VoiceController(container) {
+    this.status = 'stopped';
+    this.container = $(container);
+    this.initialized = false;
+    this.container.html(this.template());
+    this.player = this.container.children('.jp-jplayer');
+    this.controller = this.container.children('.jp-audio');
+  }
+
+  SS_VoiceController.prototype.play = function (source) {
+    this.stop();
+    this.status = 'playing';
+    this.container.show();
+    if (this.initialized) {
+      this.player.jPlayer("setMedia", {
+        title: document.title,
+        mp3: source
+      });
+      return this.player.jPlayer("play");
+    } else {
+      return this.player.jPlayer({
+        ready: (function (_this) {
+          return function () {
+            _this.player.jPlayer("setMedia", {
+              title: document.title,
+              mp3: source
+            });
+            if (_this.status === 'playing') {
+              _this.player.jPlayer("play");
+            }
+            return _this.initialized = true;
+          };
+        })(this),
+        autoBlur: false,
+        cssSelectorAncestor: "#" + this.controller[0].id,
+        keyEnabled: false,
+        loop: true,
+        remainingDuration: true,
+        smoothPlayBar: true,
+        supplied: "mp3",
+        swfPath: "<%= SS.config.voice.resource['jplayer_path'] %>",
+        toggleDuration: true,
+        useStateClassSkin: true
+      });
+    }
+  };
+
+  SS_VoiceController.prototype.stop = function () {
+    if (!this.initialized) {
+      return;
+    }
+    if (this.status === 'stopped') {
+      return;
+    }
+    this.player.jPlayer("stop");
+    this.container.hide();
+    return this.status = 'stopped';
+  };
+
+  SS_VoiceController.prototype.template = function () {
+    var template = "<div id=\"jquery_jplayer_:TIMESTAMP:\" class=\"jp-jplayer\"></div>\n" +
+      "<div id=\"jp_container_:TIMESTAMP:\" class=\"jp-audio\" role=\"application\" aria-label=\"media player\">\n" +
+      "  <div class=\"jp-type-single\">\n" +
+      "    <div class=\"jp-gui jp-interface\">\n" +
+      "      <div class=\"jp-controls\">\n" +
+      "        <button class=\"jp-play\" role=\"button\" tabindex=\"0\">play</button>\n" +
+      "        <button class=\"jp-stop\" role=\"button\" tabindex=\"0\">stop</button>\n" +
+      "      </div>\n" +
+      "      <div class=\"jp-progress\">\n" +
+      "        <div class=\"jp-seek-bar\">\n" +
+      "          <div class=\"jp-play-bar\"></div>\n" +
+      "        </div>\n" +
+      "      </div>\n" +
+      "      <div class=\"jp-volume-controls\">\n" +
+      "        <button class=\"jp-mute\" role=\"button\" tabindex=\"0\">mute</button>\n" +
+      "        <button class=\"jp-volume-max\" role=\"button\" tabindex=\"0\">max volume</button>\n" +
+      "        <div class=\"jp-volume-bar\">\n" +
+      "          <div class=\"jp-volume-bar-value\"></div>\n" +
+      "        </div>\n" +
+      "      </div>\n" +
+      "      <div class=\"jp-time-holder\">\n" +
+      "        <div class=\"jp-current-time\" role=\"timer\" aria-label=\"time\">&nbsp;</div>\n" +
+      "        <div class=\"jp-toggles\">\n" +
+      "          <button class=\"jp-repeat\" role=\"button\" tabindex=\"0\">repeat</button>\n" +
+      "        </div>\n" +
+      "      </div>\n" +
+      "      <div class=\"ss-jp-dismiss\">\n" +
+      "        <button class=\"ss-jp-close\" role=\"button\" tabindex=\"0\">&times;</button>\n" +
+      "      </div>\n" +
+      "    </div>\n" +
+      "    <div class=\"jp-no-solution\">\n" +
+      "      :URL:\n" +
+      "    </div>\n" +
+      "  </div>\n" +
+      "</div>";
+    var timestamp = (new Date).getTime();
+    var url = '<%= I18n.t("voice.messages.no_audio_solution") %>';
+
+    template = template.replace(new RegExp(":TIMESTAMP:", 'g'), timestamp);
+    template = template.replace(new RegExp(":URL:", 'g'), url);
+    return template;
+  };
+
+  return SS_VoiceController;
+
+})();
+
+this.SS_Recommend = (function () {
+  function SS_Recommend() {
+  }
+
+  SS_Recommend.render = function () {
+    var params, receiver_url, recommend;
+    recommend = SS.config["recommend"];
+    if (!recommend) {
+      return;
+    }
+    receiver_url = recommend["receiver_url"];
+    params = recommend["params"];
+    if (!(receiver_url && params)) {
+      return;
+    }
+    params["access_url"] = location.href;
+    return $.ajax({
+      type: 'GET',
+      url: receiver_url,
+      cache: false,
+      dataType: 'json',
+      data: params,
+      error: function (req, status, error) {
+      }
+    });
+  };
+
+  return SS_Recommend;
+
+})();
+

@@ -918,6 +918,9 @@ $aboutlist: about, event, mayor, assembly, institution, sight, consultation, qa;
   font-size: $px18;
   font-weight: bold;
   color: $t-white;
+  @include mb {
+    margin: $item-margin 0;
+  }
 }
 
 // -----------------------------------------------------------------------------
@@ -992,7 +995,7 @@ $aboutlist: about, event, mayor, assembly, institution, sight, consultation, qa;
 
 // -----------------------------------------------------------------------------
 // links-life, side-menu, #month
-#links-life, #side-menu, #recent-photo, #side-blog, #month {
+#links-life, #side-menu, #recent-photo, #side-blog, #month, #calendar {
   margin-bottom: $box-margin;
   h2 {
     padding: 3px 6px 0;
@@ -1050,7 +1053,8 @@ $aboutlist: about, event, mayor, assembly, institution, sight, consultation, qa;
 .page .category-pages article,
 .page .article-pages article,
 .page .cms-pages article,
-.page .cms-group-pages article {
+.page .cms-group-pages article,
+.page .event-pages.pages article {
   padding: 12px 0 9px;
   border-bottom: $border-hgry;
   time {
@@ -1123,6 +1127,7 @@ $aboutlist: about, event, mayor, assembly, institution, sight, consultation, qa;
   margin-bottom: $box-margin;
   border-top: $border-hgry;
   text-align: right;
+  clear: both;
   header {
     @include inline-block;
     margin: 5px 0;
@@ -1173,6 +1178,9 @@ $aboutlist: about, event, mayor, assembly, institution, sight, consultation, qa;
 }
 .map-page {
   margin-bottom: $box-margin;
+}
+article.body {
+  clear: both;
 }
 .page article, .one article.body,
 .page .related-pages, .page footer.contact,
@@ -1267,34 +1275,76 @@ $aboutlist: about, event, mayor, assembly, institution, sight, consultation, qa;
       border: $border-hgry;
     }
   }
-  .float-left {
+  video, p img, iframe {
+    max-width: 100%;
+  }
+  .float-left, .ss-alignment-left {
     float: left;
     margin: 0 $item-margin $item-margin 0;
+    @include mb {
+      margin: 0;
+      float: none;
+    }
   }
-  .float-right {
+  .float-right, .ss-alignment-right {
     float: right;
     margin: 0 0 $item-margin $item-margin;
+    @include mb {
+      margin: 0;
+      float: none;
+    }
   }
-  .clear {
+  .clear, .ss-alignment-center {
     clear: both;
+  }
+  .two-photo {
+    @include display-flex;
+    margin: 0 -6px 12px;
+    li {
+      margin: 0 6px;
+      padding: 0;
+      background: none;
+    }
+    img {
+      max-width: 100%;
+      height: auto;
+    }
+  }
+  .magazine {
+    @include display-flex;
+    @include justify-content(space-between);
+    margin-bottom: 2em;
+    @include mb {
+      @include flex-wrap(wrap);
+      @include justify-content(center);
+    }
+    .img {
+      width: 320px;
+      margin-bottom: 1em;
+      img {
+        max-width: 100%;
+        height: auto;
+      }
+    }
+    .files {
+      width: calc(100% - 335px);
+      margin-bottom: 1em;
+      @include mb {
+        width: 100%;
+      }
+    }
   }
 }
 .tourist-spot {
-  .img {
-    float: left;
-    margin-right: 15px;
-    @include mb {
-      float: none;
-      margin-right: 0;
-    }
-  }
   .photos {
     @include display-flex;
     @include flex-wrap(wrap);
-    margin: 0 -7px;
+    @include justify-content(center);
+    margin: 0 -10px 30px;
     a {
-      margin: 0 7px 15px;
+      margin: 0 10px 20px;
     }
+    &:before, &:after { display: none; }
   }
 }
 #sitemap ul {
@@ -1558,6 +1608,20 @@ $aboutlist: about, event, mayor, assembly, institution, sight, consultation, qa;
       }
     }
   }
+  abbr {
+    border: none;
+    text-decoration: none;
+  }
+}
+#event-list, #event-table {
+  .sat {
+    background: #e1ebf1;
+    color: #039;
+  }
+  .sun, .holiday {
+    background: #ffeeee;
+    color: $red;
+  }
 }
 .event .see {
   @include clear;
@@ -1579,26 +1643,29 @@ $aboutlist: about, event, mayor, assembly, institution, sight, consultation, qa;
   }
 }
 #calendar {
-  margin-bottom: $box-margin;
-  border: $border-hgry;
-  .title h2 {
-    margin-bottom: 6px;
-    padding: 5px $item-margin;
-    @include grd-blue;
-    color: $t-white;
+  header.title {
+  color: $blue;
+  border-top: 2px solid $blue;
   }
   .calendar-nav {
     text-align: center;
     li {
       display: inline-block;
       font-size: $px12;
+      a {
+        padding: 0;
+        background: none;
+      }
     }
     .current {
       margin: 0 5px;
     }
   }
   .calendar {
-    margin: 0 auto $item-margin;
+    margin: 0 auto;
+    tbody {
+      background: $t-white;
+    }
     caption {
       font-size: $px16;
     }
@@ -1608,7 +1675,8 @@ $aboutlist: about, event, mayor, assembly, institution, sight, consultation, qa;
       text-align: center;
     }
     th {
-      background: $hblue;
+      background: $blue;
+      color: $t-white;
     }
     .unit {
       display: none;
@@ -1629,14 +1697,170 @@ $aboutlist: about, event, mayor, assembly, institution, sight, consultation, qa;
       }
     }
   }
+  .content-body {
+    background: #f8f8f8;
+  }
+}
+.event-date {
+  @include clear;
+  margin-bottom: 10px;
+  span.list, span.table {
+    float: right;
+    margin-left: 10px;
+    a {
+      display: inline-block;
+      color: #000;
+      text-decoration: none;
+      @include btn-gry;
+      @include mb {
+        margin-left: 0;
+        margin-right: 10px;
+      }
+    }
+    &.current a {
+      @include btn-org;
+    }
+  }
 }
 #calendar-search {
   margin-bottom: $box-margin;
-  .title h2 {
-    margin-bottom: 6px;
-    padding: 5px $item-margin;
-    @include grd-blue;
-    color: $t-white;
+}
+.one #calendar-search form {
+  h2 {
+    border: 0;
+    min-width: 160px;
+    font-size: $px14;
+    color: $text;
+    @include mb {
+      width: 100%;
+    }
+  }
+  input#search_keyword {
+    width: 469px;
+    @include mb {
+      display: block;
+      width: 100%;
+    }
+  }
+  input[type="checkbox"], .dates.location input {
+    @include mb {
+      display: inline-block;
+    }
+  }
+  fieldset {
+    border: none;
+    label, input, legend {
+      @include clear;
+      display: inline-block;
+      @include mb {
+        float: none;
+      }
+    }
+    label, legend {
+      width: auto;
+      min-width: 160px;
+      border: none;
+      font-size: $px14;
+      font-weight: normal;
+      color: $text;
+    }
+    &.keyword input {
+      margin-top: 5px;
+    }
+  }
+  label, legend {
+    float: left;
+  }
+  .dates.location {
+    input {
+      float: none;
+      line-height: 1;
+      @include mb { width: 47%; }
+    }
+  }
+  .send {
+    clear: both;
+  }
+}
+.content-box .content-body.search {
+  border: none;
+  padding: 0;
+  form {
+    padding: 10px;
+    border: 1px solid #cdcdcd;
+    margin-bottom: 24px;
+  }
+  .event-pages {
+    float: none;
+  }
+  footer.send a {
+    vertical-align: middle;
+  }
+  .event-pages {
+    article header {
+      @include display-flex;
+      @include flex-wrap(wrap);
+      h2 a {
+        background: none;
+      }
+    }
+  }
+}
+#event-table {
+  @include mb {
+    margin-bottom: 24px;
+    overflow-x: scroll;
+  }
+  .calendar {
+    width: 100%;
+    @include mb {
+      width: 1080px;
+    }
+  }
+  th, td {
+    border: solid 1px #cdcdcd;
+  }
+  th {
+    background: #f8f8f8;
+    &:first-child {
+      background: #ffeeee;
+    }
+    &:last-child {
+      background: #e1ebf1;
+    }
+  }
+  .date {
+    padding: 5px;
+    .page {
+      margin-bottom: 1rem;
+      line-height: 1.5;
+    }
+    .data, .event {
+      display: inline-block;
+      vertical-align: middle;
+    }
+    .data {
+      width: 1rem;
+      height: 1rem;
+      padding: 2px;
+      line-height: 1;
+      overflow: hidden;
+      border: 1px solid #cdcdcd;
+      background: $hblue;
+      text-align: center;
+      white-space: nowrap;
+      a {
+        display: block;
+        width: 0.9rem;
+        height: 1rem;
+        overflow: hidden;
+        color: $text;
+        text-decoration: none;
+      }
+    }
+    .event {
+      display: inline;
+    }
   }
 }
 #ss-mb {
@@ -1656,10 +1880,6 @@ $aboutlist: about, event, mayor, assembly, institution, sight, consultation, qa;
 }
 .body--calendar-search form, #calendar-search form {
   @include clear;
-  margin-bottom: $box-margin;
-  @include mb {
-    padding: 0 15px;
-  }
   h2, legend, .keyword label {
     clear: both;
     display: block;
@@ -1688,7 +1908,6 @@ $aboutlist: about, event, mayor, assembly, institution, sight, consultation, qa;
   }
   .categories { text-align: left; }
   .send {
-    margin-bottom: $box-margin;
     text-align: center;
     input {
       @include btn-org;
@@ -1702,9 +1921,60 @@ $aboutlist: about, event, mayor, assembly, institution, sight, consultation, qa;
   }
 }
 .body--calendar-search #main form .keyword input {
-  width: 469px;
   @include mb { width: auto; }
 }
+
+// -----------------------------------------------------------------------------
+// content-box
+.content-box {
+  margin-bottom: 20px;
+  .content-head {
+    position: relative;
+    padding: 3px 10px;
+    color: $blue;
+    font-size: $px17;
+    border: 1px solid #cdcdcd;
+    border-top: solid 2px $blue;
+    border-bottom: none;
+    &:after {
+      content: "";
+      position: absolute;
+      bottom: 0;
+      right: 0;
+      left: 0;
+      width: calc(100% - 14px);
+      margin: auto;
+      border-bottom: 1px solid #cdcdcd;
+      color: $blue;
+    }
+    h2 {
+      font-weight: bold;
+    }
+  }
+  .content-body {
+    padding: 10px;
+    border: 1px solid #cdcdcd;
+    border-top: none;
+    ul {
+      list-style: none;
+      &.li-icon {
+        li {
+          a {
+            @include r-arrow;
+          }
+        }
+      }
+    }
+    .content-foot {
+      @include clear;
+      padding: 4px 0 0;
+      @include mb {
+        padding: 0;
+      }
+    }
+  }
+}
+
 // -----------------------------------------------------------------------------
 // inquiry login
 .inquiry-form, .columns, .form-login {
@@ -3265,11 +3535,6 @@ table.mypage-index, .member-my-group .index, table.member-invited-group {
       background-position: center center;
       text-indent: -9999px;
     }
-  }
-  // -----------------------------------------------------------------------------
-  //  ss-page-name
-  #ss-page-name {
-    margin: $smart-margin 0 0 0;
   }
   // -----------------------------------------------------------------------------
   //  category-nodes

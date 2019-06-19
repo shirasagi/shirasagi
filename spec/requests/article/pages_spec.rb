@@ -9,7 +9,7 @@ describe "Article::PagesController", type: :request, dbscope: :example do
   let(:index_path) { article_pages_path(site.id, node, format: :json) }
   let!(:admin_user) { cms_user }
 
-  let(:download_pages_path) { download_article_pages_path(site: site.id, cid: node.id) }
+  let(:download_pages_path) { download_all_article_pages_path(site: site.id, cid: node.id) }
 
   context "admin user" do
     before do
@@ -23,7 +23,7 @@ describe "Article::PagesController", type: :request, dbscope: :example do
         'item[email]' => admin_user.email,
         'item[password]' => admin_user.in_password
       }
-      post sns_login_path(format: :json), params
+      post sns_login_path(format: :json), params: params
     end
 
     describe "GET /pages.json" do
@@ -45,7 +45,7 @@ describe "Article::PagesController", type: :request, dbscope: :example do
         params = { 'authenticity_token' => @auth_token,
                    'item[name]' => '記事タイトル',
                    'item[basename]' => "filename#{rand(0xffffffff).to_s(36)}" }
-        post index_path, params
+        post index_path, params: params
         expect(response.status).to eq 201
         page = JSON.parse(response.body)
         expect(page["_id"]).to eq 1
@@ -176,16 +176,24 @@ describe "Article::PagesController", type: :request, dbscope: :example do
           permission_level: 1)
       end
 
-      describe "GET /.s{site}/article{cid}/pages/download_all" do
+      describe "POST /.s{site}/article{cid}/pages/download_all" do
         it do
-          get download_pages_path
+          get auth_token_path
+          @auth_token = JSON.parse(response.body)["auth_token"]
+
+          params = {
+            'authenticity_token' => @auth_token,
+            'item[encoding]' => 'Shift_JIS'
+          }
+          post download_pages_path, params: params
           expect(response.status).to eq 200
-          body = response.body.encode("utf-8")
+          body = ::SS::ChunkReader.new(response.body).to_a.join
+          body = body.encode("UTF-8", "SJIS")
 
           expect(body).to include "test1_article"
           expect(body).to include "test1_filename.html"
           expect(body).to include "記事レイアウト"
-          expect(body).to include "記事レイアウト,,0"
+          expect(body).to include "記事レイアウト,,,0"
           expect(body).to include "test1_keywords"
           expect(body).to include "test1_description"
           expect(body).to include "test1_summary_html"
@@ -229,7 +237,7 @@ describe "Article::PagesController", type: :request, dbscope: :example do
 
       # login
       params = { 'authenticity_token' => @auth_token, 'item[email]' => user.email, 'item[password]' => user.in_password }
-      post sns_login_path(format: :json), params
+      post sns_login_path(format: :json), params: params
     end
 
     describe "GET /page/:id/lock.json" do

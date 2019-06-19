@@ -1,0 +1,38 @@
+<% @item.levels.each do |level| %>
+<h1 class="workflow-level-header"><%= @model.t :level, level: level %></h1>
+<dl class="see workflow-approvers">
+  <dt><%= @model.t :required_counts %></dt>
+  <dd><%= @item.required_count_label_at(level) %></dd>
+  <dt><%= @model.t :approver_attachment_uses %></dt>
+  <dd><%= @item.approver_attachment_enabled_at?(level) ? t("ss.options.state.enabled") : t("ss.options.state.disabled") %></dd>
+  <dt><%= @model.t :approvers %></dt>
+  <dd>
+    <table class="index">
+      <thead>
+        <tr>
+          <th class="name"><%= @model.approver_user_class.t :name %></th>
+          <th class="email"><%= @model.approver_user_class.t :email %></th>
+          <th><%= t('ss.buttons.edit') %></th>
+        </tr>
+      </thead>
+      <tbody>
+      <% @item.approver_users_at(level).each do |user| %>
+        <tr>
+          <% if user.present? %>
+          <td><%= user.long_name %></td>
+          <td><%= user.email %></td>
+          <td>
+            <% if @item.approver_user_editable?(level, user) %>
+            <i class="material-icons" style="font-size: 100%;">&#xE5CA;</i>
+            <% end %>
+          </td>
+          <% else %>
+          <td colspan="3"><%= t("workflow.user_deleted") %></td>
+          <% end %>
+        </tr>
+      <% end %>
+      </tbody>
+    </table>
+  </dd>
+</dl>
+<% end %>

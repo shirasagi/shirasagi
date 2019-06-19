@@ -22,13 +22,13 @@ module Cms::GeneratorFilter::Rss
 
     begin
       @exists = true
-      response.body = render_node node
+      response.body = render_node(node) || ''
       response.content_type ||= "application/rss+xml"
     rescue StandardError => e
       @exists = false
       return if e.to_s == "404"
       return if e.is_a? Mongoid::Errors::DocumentNotFound
-      raise e unless Rails.env.producton?
+      raise e
     end
 
     if response.content_type == "text/html" && node.layout

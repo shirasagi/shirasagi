@@ -62,6 +62,10 @@ class Gws::Workflow::FilesController < ApplicationController
     @cur_form ||= @item.form if @item.present?
   rescue Mongoid::Errors::DocumentNotFound => e
     return render_destroy(true) if params[:action] == 'destroy'
+    if params[:action] == 'show' && params[:state] != "all"
+      redirect_to gws_workflow_file_path(state: "all")
+      return
+    end
     raise e
   end
 
@@ -195,10 +199,18 @@ class Gws::Workflow::FilesController < ApplicationController
     @new_item.attributes = get_params
     @new_item.in_clone_file = true
     @new_item.workflow_user_id = nil
+    @new_item.workflow_agent_id = nil
     @new_item.workflow_state = nil
     @new_item.workflow_comment = nil
+    @new_item.workflow_pull_up = nil
+    @new_item.workflow_on_remand = nil
     @new_item.workflow_approvers = nil
     @new_item.workflow_required_counts = nil
+    @new_item.workflow_approver_attachment_uses = nil
+    @new_item.workflow_current_circulation_level = nil
+    @new_item.workflow_circulations = nil
+    @new_item.workflow_circulation_attachment_uses = nil
+    @new_item.approved = nil
     @new_item.user_id = nil
     @new_item.user_uid = nil
     @new_item.user_name = nil
@@ -222,5 +234,71 @@ class Gws::Workflow::FilesController < ApplicationController
       render_opts[:location] = gws_workflow_file_path(state: 'all', id: @new_item)
     end
     render_update result, render_opts
+  end
+
+  def download_comment
+    set_item
+
+    filename = "workflow_#{Time.zone.now.strftime('%Y%m%d_%H%M%S')}.csv"
+    encoding = "Shift_JIS"
+    send_enum(@item.enum_csv(encoding: encoding), type: "text/csv; charset=#{encoding}", filename: filename)
+  end
+
+  def download_all_comments
+    set_selected_items
+
+    filename = "workflow_#{Time.zone.now.strftime('%Y%m%d_%H%M%S')}.csv"
+    encoding = "Shift_JIS"
+    send_enum(@items.enum_csv(site: @cur_site, encoding: encoding), type: "text/csv; charset=#{encoding}", filename: filename)
+  end
+
+  def download_attachment
+    set_item
+
+    files = @item.collect_attachments
+    if files.blank?
+      redirect_to({ action: :show }, { notice: t("gws/workflow.notice.no_files") })
+      return
+    end
+
+    filename = "workflow_#{Time.zone.now.strftime('%Y%m%d_%H%M%S')}.zip"
+    zip = Gws::Compressor.new(@cur_user, items: files, filename: filename)
+    zip.url = sns_download_job_files_url(user: zip.user, filename: zip.filename)
+
+    if zip.deley_download?
+      job = Gws::CompressJob.bind(site_id: @cur_site, user_id: @cur_user)
+      job.perform_later(zip.serialize)
+
+      flash[:notice_options] = { timeout: 0 }
+      redirect_to({ action: :show }, { notice: zip.delay_message })
+    else
+      raise '500' unless zip.save
+      send_file(zip.path, type: zip.type, filename: zip.name, disposition: 'attachment', x_sendfile: true)
+    end
+  end
+
+  def download_all_attachments
+    set_selected_items
+
+    files = @items.collect_attachments
+    if files.blank?
+      redirect_to({ action: :index }, { notice: t("gws/workflow.notice.no_files") })
+      return
+    end
+
+    filename = "workflow_#{Time.zone.now.strftime('%Y%m%d_%H%M%S')}.zip"
+    zip = Gws::Compressor.new(@cur_user, items: files, filename: filename)
+    zip.url = sns_download_job_files_url(user: zip.user, filename: zip.filename)
+
+    if zip.deley_download?
+      job = Gws::CompressJob.bind(site_id: @cur_site, user_id: @cur_user)
+      job.perform_later(zip.serialize)
+
+      flash[:notice_options] = { timeout: 0 }
+      redirect_to({ action: :index }, { notice: zip.delay_message })
+    else
+      raise '500' unless zip.save
+      send_file(zip.path, type: zip.type, filename: zip.name, disposition: 'attachment', x_sendfile: true)
+    end
   end
 end

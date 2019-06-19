@@ -18,7 +18,7 @@ describe Gws::Elasticsearch::Indexer::ShareFileJob, dbscope: :example, tmpdir: t
   end
 
   before do
-    stub_request(:any, /#{Regexp.escape(es_host)}/).to_return do |request|
+    stub_request(:any, /#{::Regexp.escape(es_host)}/).to_return do |request|
       # examine request later
       requests << request.as_json.dup
       { body: '{}', status: 200, headers: { 'Content-Type' => 'application/json; charset=UTF-8' } }
@@ -51,7 +51,7 @@ describe Gws::Elasticsearch::Indexer::ShareFileJob, dbscope: :example, tmpdir: t
           expect(request['method']).to eq 'put'
           expect(request['uri']['path']).to end_with("/file-#{file.id}")
           body = JSON.parse(request['body'])
-          expect(body['url']).to eq "/.g#{site.id}/share/folder-#{file.folder_id}/files/#{file.id}"
+          expect(body['url']).to eq "/.g#{site.id}/share/-/folder-#{file.folder_id}/files/#{file.id}"
         end
       end
     end
@@ -81,7 +81,7 @@ describe Gws::Elasticsearch::Indexer::ShareFileJob, dbscope: :example, tmpdir: t
           expect(request['method']).to eq 'put'
           expect(request['uri']['path']).to end_with("/file-#{file.id}")
           body = JSON.parse(request['body'])
-          expect(body['url']).to eq "/.g#{site.id}/share/folder-#{file.folder_id}/files/#{file.id}"
+          expect(body['url']).to eq "/.g#{site.id}/share/-/folder-#{file.folder_id}/files/#{file.id}"
         end
       end
     end

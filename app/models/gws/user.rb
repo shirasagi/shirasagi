@@ -1,14 +1,18 @@
 class Gws::User
   include SS::Model::User
+  include Gws::Reference::UserTitles
   include Gws::Referenceable
   include Gws::SitePermission
   include Gws::Addon::User::PublicDuty
   include Gws::Addon::User::CustomForm
+  include Gws::Addon::User::Presence
   include Gws::Addon::Memo::MessageSort
   include Gws::Addon::Role
   include Gws::Addon::ReadableSetting
   include SS::Addon::UserGroupHistory
   include Gws::Addon::History
+  include Sys::Reference::Role
+  include Webmail::Reference::Role
 
   set_permission_name "gws_users", :edit
 

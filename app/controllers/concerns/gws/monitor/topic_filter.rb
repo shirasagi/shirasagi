@@ -1,5 +1,6 @@
 module Gws::Monitor::TopicFilter
   extend ActiveSupport::Concern
+  include Gws::Memo::NotificationFilter
 
   included do
     model Gws::Monitor::Topic
@@ -65,7 +66,7 @@ module Gws::Monitor::TopicFilter
 
   def destroy
     raise '403' unless @item.allowed?(:delete, @cur_user, site: @cur_site)
-    render_destroy @item.destroy, {notice: t('ss.notice.deleted')}
+    render_destroy @item.destroy
   end
 
   FORWARD_ATTRIBUTES = %w(name spec_config due_date notice_state notice_start_at mode text_type text category_ids).freeze
@@ -79,6 +80,7 @@ module Gws::Monitor::TopicFilter
     @item = @model.new(@source.attributes.slice(*FORWARD_ATTRIBUTES).merge(fix_params))
     @item.group_ids = [@cur_group.id]
     @item.user_ids = [@cur_user.id]
+    @item.ref_file_ids = @source.file_ids
 
     render file: :new
   end
@@ -146,23 +148,26 @@ module Gws::Monitor::TopicFilter
     raise '403' unless @item.allowed?(:edit, @cur_user, site: @cur_site)
     @download_file_group_ssfile_ids = []
     @item.attend_groups.each do |group|
-      if @item.comment(group.id).present?
-        download_file_ids = @item.comment(group.id)[0]
-        @download_file_group_ssfile_ids << [File.basename(download_file_ids.user_group_name), download_file_ids.file_ids]
-      end
+      next if @item.comment(group.id).blank?
+      download_file_ids = @item.comment(group.id)[0]
+      order = group.order || 0
+      filename = "#{order}_#{File.basename(download_file_ids.user_group_name)}"
+      @download_file_group_ssfile_ids << [filename, download_file_ids.file_ids]
     end
 
     download_file_group_ssfile_ids_hash = @download_file_group_ssfile_ids.to_h
     @group_ssfile = []
     download_file_group_ssfile_ids_hash.each do |group_fileids|
       group_fileids[1].each do |fileids|
-        @group_ssfile.push([group_fileids[0], SS::File.find_by(id: fileids)])
+        @group_ssfile << [group_fileids[0], SS::File.find_by(id: fileids)]
       end
     end
 
     @owner_ssfile = []
     @item.file_ids.each do |fileids|
-      @owner_ssfile.push([ File.basename(@cur_group.name), SS::File.find_by(id: fileids)])
+      order = @cur_group.order || 0
+      filename = "#{order}_#{File.basename(@cur_group.name)}"
+      @owner_ssfile << [filename, SS::File.find_by(id: fileids)]
     end
 
     zipfile = @item.name + ".zip"

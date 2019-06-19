@@ -22,7 +22,6 @@ class Cms::Node
     include Cms::Addon::EditorSetting
     include Cms::Addon::NodeAutoPostSetting
     include Cms::Addon::NodeList
-    include Cms::Addon::Form::Node
     include Cms::Addon::ChildList
     include Cms::Addon::ForMemberNode
     include Cms::Addon::Release
@@ -108,5 +107,16 @@ class Cms::Node
 
       { '$or' => cond }
     end
+  end
+
+  class SiteSearch
+    include Cms::Model::Node
+    include Cms::Addon::NodeSetting
+    include Cms::Addon::Meta
+    include Cms::Addon::Release
+    include Cms::Addon::GroupPermission
+    include History::Addon::Backup
+
+    default_scope ->{ where(route: "cms/site_search") }
   end
 end

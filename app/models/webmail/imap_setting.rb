@@ -1,8 +1,27 @@
 class Webmail::ImapSetting < Hash
   include ActiveModel::Model
 
+  validates :name, presence: true
+  validates :imap_port, numericality: { only_integer: true, greater_than: 0, allow_blank: true }
+  validates :threshold_mb, numericality: { only_integer: true, greater_than: 0, allow_blank: true }
+  validates :imap_auth_type, inclusion: { in: %w(LOGIN PLAIN CRAM-MD5 DIGEST-MD5), allow_blank: true }
+  validates :imap_account, presence: true, on: :group
+  validates :imap_password, presence: true, on: :group
+
+  class << self
+    def default
+      ret = new
+      ret[:name] = I18n.t('webmail.default_settings')
+      ret
+    end
+  end
+
   def name
     self[:name]
+  end
+
+  def from
+    self[:from]
   end
 
   def address
@@ -11,6 +30,14 @@ class Webmail::ImapSetting < Hash
 
   def imap_host
     self[:imap_host]
+  end
+
+  def imap_port
+    self[:imap_port].numeric? ? self[:imap_port].to_i : nil
+  end
+
+  def imap_ssl_use
+    self[:imap_ssl_use]
   end
 
   def imap_auth_type
@@ -45,13 +72,12 @@ class Webmail::ImapSetting < Hash
     self[:imap_trash_box].presence || "INBOX.Trash"
   end
 
-  def threshold_mb
-    self[:threshold_mb]
+  def imap_alias
+    self[:imap_alias]
   end
 
-  def valid?
-    errors.add :name, :blank if name.blank?
-    errors.empty?
+  def threshold_mb
+    self[:threshold_mb]
   end
 
   def set_imap_password
@@ -61,19 +87,25 @@ class Webmail::ImapSetting < Hash
   end
 
   def imap_settings(default_conf = {})
-    user_conf = {
-      address: address,
-      host: imap_host,
-      auth_type: imap_auth_type,
-      account: imap_account,
-      password: decrypt_imap_password,
-      threshold_mb: threshold_mb,
-      imap_sent_box: imap_sent_box,
-      imap_draft_box: imap_draft_box,
-      imap_trash_box: imap_trash_box
-    }
-    user_conf.each { |k, v| default_conf[k] = v if v.present? }
-    default_conf
+    use_ssl = imap_ssl_use == "enabled"
+    conf = default_conf.dup
+    conf[:from] = from if from.present?
+    conf[:address] = address if address.present?
+    conf[:host] = imap_host if imap_host.present?
+    conf[:options] ||= {}
+    conf[:options][:port] = imap_port if imap_port
+    if use_ssl
+      conf[:options][:ssl] = { verify_mode: OpenSSL::SSL::VERIFY_PEER }
+    end
+    conf[:auth_type] = imap_auth_type if imap_auth_type.present?
+    conf[:account] = imap_account if imap_account.present?
+    conf[:password] = decrypt_imap_password if decrypt_imap_password.present?
+    conf[:threshold_mb] = threshold_mb if threshold_mb.present?
+    conf[:imap_sent_box] = imap_sent_box if imap_sent_box.present?
+    conf[:imap_draft_box] = imap_draft_box if imap_draft_box.present?
+    conf[:imap_trash_box] = imap_trash_box if imap_trash_box.present?
+    conf[:imap_alias] = imap_alias if imap_alias.present?
+    conf
   end
 
   def t(name, opts = {})

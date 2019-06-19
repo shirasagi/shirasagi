@@ -33,7 +33,7 @@ describe "cms_users", type: :feature, dbscope: :example do
         check "item[cms_role_ids][]"
         click_button "保存"
       end
-      expect(page).not_to have_css('#item-form')
+      expect(page).to have_no_css('#item-form')
 
       #show
       visit show_path
@@ -45,7 +45,7 @@ describe "cms_users", type: :feature, dbscope: :example do
         fill_in "item[name]", with: "modify"
         click_button "保存"
       end
-      expect(page).not_to have_css('#item-form')
+      expect(page).to have_no_css('#item-form')
 
       #delete
       visit delete_path
@@ -73,7 +73,7 @@ describe "cms_users", type: :feature, dbscope: :example do
         check "item[cms_role_ids][]"
         click_button "保存"
       end
-      expect(page).not_to have_css('#item-form')
+      expect(page).to have_no_css('#item-form')
     end
 
     it "#show" do
@@ -98,7 +98,7 @@ describe "cms_users", type: :feature, dbscope: :example do
       within "form" do
         click_button "削除"
       end
-      expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+      expect(page).to have_css('#notice', text: I18n.t('ss.notice.deleted'))
     end
   end
 
@@ -205,8 +205,8 @@ describe "cms_users", type: :feature, dbscope: :example do
     let(:role2) { create(:cms_role, cur_site: site2, name: '管理者2', permissions: Cms::Role.permission_names) }
     let(:header) do
       %w(
-        id name kana uid email password tel tel_ext account_start_date account_expiration_date
-        initial_password_warning groups ldap_dn cms_roles
+        id name kana uid organization_uid email password tel tel_ext account_start_date account_expiration_date
+        initial_password_warning organization_id groups ldap_dn cms_roles
       ).map { |k| Cms::User.new.t(k) }.join(",")
     end
 

@@ -8,8 +8,10 @@
   <dt><%= @model.t :order %></dt>
   <dd><%= @item.order %></dd>
 
-  <dt><%= @model.t :required %></dt>
-  <dd><%= @item.label :required %></dd>
+  <% if @cur_form.sub_type_static? %>
+    <dt><%= @model.t :required %></dt>
+    <dd><%= @item.label :required %></dd>
+  <% end %>
 
   <dt><%= @model.t :tooltips %></dt>
   <dd><%= br @item.tooltips %></dd>

@@ -11,6 +11,9 @@ ja:
       set_seen_all: 選択した項目を全て既読にしますか？
       unset_seen_all: 選択した項目を全て未読に戻しますか？
       download: 選択した項目を全てCSVに出力しますか？
+    notice:
+      set_seen: 既読にしました。
+      unset_seen: 未読にしました。
     post:
       disabled: 削除済み
       seen: 既読
@@ -24,6 +27,7 @@ ja:
       update_at: 変更日時
       user: ユーザー
       replay: 返信内容
+
     csv:
       - 回覧id
       - タイトル
@@ -41,8 +45,8 @@ ja:
         normal: 通常回覧
         simple: 簡易回覧
       article_state:
-        both: 両方
-        unseen: 未読のみ
+        both: 全表示
+        unseen: 未読
       circular_delete_threshold:
         - 6ヶ月
         - 1年
@@ -51,12 +55,20 @@ ja:
         - 2年6ヶ月
         - 3年
         - 3年6ヶ月
+      sort:
+        created_asc:  投稿日(日付順)
+        created_desc: 投稿日(新着順)
+        updated_asc:  最終更新日(日付順)
+        updated_desc: 最終更新日(新着順)
+        due_date_asc:  回覧期限日時(昇順)
+        due_date_desc: 回覧期限日時(降順)
   modules:
     gws/circular: 回覧板
     addons:
       gws/circular/group_setting: 回覧板
       gws/circular/category: カテゴリー
   gws_role:
+    use_gws_circular: 回覧板の利用
     read_other_gws_circular_posts: 回覧板の閲覧（全て）
     read_private_gws_circular_posts: 回覧板の閲覧（所有）
     edit_other_gws_circular_posts: 回覧板の編集（全て）
@@ -74,16 +86,18 @@ ja:
 
   gws_notification:
     gws/circular/post:
-      subject: "[更新通知][回覧板] %{name}"
-      text: |
-        「%{name}」が公開されました。
+      subject: "[回覧板] 「%{name}」が届きました。"
+      text: "%{text}"
+      mail_text: |
+        %{subject}
 
         %{text}
 
     gws/circular/post/remove:
-      subject: "[更新通知][回覧板] %{name}"
-      text: |
-        「%{name}」が取り下げられました。
+      subject: "[回覧板] 「%{name}」が取り下げられました。"
+      text: ""
+      mail_text: |
+        %{subject}
 
   mongoid:
     models:
@@ -131,7 +145,7 @@ ja:
     gws/addon/circular/group_setting:
       circular_default_due_date:
         - 回覧期限日時の初期値を、今日から数えて何日後かで入力します。
-        - 初期値は 7日 後です。
+        - 初期値は 7 日後です。
       circular_max_member:
         - 参加者の人数の上限を入力します。
         - 未指定である場合、制限されません。

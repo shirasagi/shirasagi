@@ -1,20 +1,37 @@
 <% value ||= nil %>
 <% file = value.try(:file) %>
-<%= render file: 'cms/agents/columns/main/_common_label', locals: { column: column, show: true } %>
-<dd>
+<%= render 'cms/agents/columns/main/base', show: true, column: column, value: value do %>
   <% if file.present? %>
-  <div class="fileview" style="display: table">
-    <span class="icon" style="display: table-cell; vertical-align: middle; padding: 4px">
-      <% if file.image? %>
-      <%= image_tag(file.thumb_url, alt: file.name, style: 'max-width: 40px; max-height: 40px') %>
-      <% else %>
-      <i class="material-icons">&#xE24D;</i><br>
-      <span class="ext icon-<%= file.extname %>"><%= file.extname %></span>
-      <% end %>
-    </span>
-    <span class="filename" style="display: table-cell; vertical-align: middle; padding: 4px">
-      <%= link_to(file.humanized_name, file.url, file.image? ? {} : { download: true }) %>
-    </span>
-  </div>
+    <div id="selected-files">
+      <div class="file-view">
+        <%= link_to file.url, class: :thumb, target: "_blank" do %>
+          <% if file.image? %>
+            <%= image_tag file.thumb_url, alt: file.name %>
+          <% else %>
+            <span class="ext icon-<%= file.extname %>"><%= file.extname %></span>
+          <% end %>
+        <% end %>
+
+        <div class="name">
+          <label>
+            <%= file.name %>
+          </label><br />
+        </div>
+        <div>
+          <% case column.file_type %>
+          <% when "attachment" %>
+            <label><%= t("cms.column_file_upload.attachment.file_label") %>: <%= value.try(:file_label) %></label>
+          <% when "video" %>
+            <label><%= t("cms.column_file_upload.video.text") %>: <%= value.try(:text) %></label>
+          <% when "banner" %>
+            <label><%= t("cms.column_file_upload.banner.link_url") %>: <%= value.try(:link_url) %></label>
+            <label><%= t("cms.column_file_upload.banner.file_label") %>: <%= value.try(:file_label) %></label>
+          <% else # "image" %>
+            <label><%= t("cms.column_file_upload.image.file_label") %>: <%= value.try(:file_label) %></label><br />
+            <label><% if value.try(:image_html_type) %><%= I18n.t("cms.options.column_image_html_type.#{value.try(:image_html_type)}") %><% end %></label>
+          <% end %>
+        </div>
+      </div>
+    </div>
   <% end %>
-</dd>
+<% end %>

@@ -16,10 +16,10 @@ class Inquiry::AnswersController < ApplicationController
   def send_csv(items)
     require "csv"
 
-    columns = @cur_node.becomes_with_route("inquiry/form").columns.pluck(:name)
+    columns = @cur_node.becomes_with_route("inquiry/form").columns.order_by(order: 1).pluck(:name)
     headers = %w(id)
     headers += columns
-    headers += %w(created source_url source_name)
+    headers += %w(source_url source_name created).map { |key| @model.t(key) }
     csv = CSV.generate do |data|
       data << headers
       items.each do |item|
@@ -36,9 +36,9 @@ class Inquiry::AnswersController < ApplicationController
         columns.each do |col|
           row << values[col]
         end
-        row << item.updated.strftime("%Y/%m/%d %H:%M")
         row << item.source_full_url
         row << item.source_name
+        row << item.updated.strftime("%Y/%m/%d %H:%M")
 
         data << row
       end
@@ -97,7 +97,11 @@ class Inquiry::AnswersController < ApplicationController
   def download_afile
     raise "403" unless @cur_node.allowed?(:read, @cur_user, site: @cur_site)
     if params[:id]
-      file = ::SS::File.with(client: Inquiry::Answer.client_name).find(params[:fid].to_i) rescue nil
+
+      client_name = Inquiry::Answer.persistence_context.send(:client_name)
+      file = SS::File.with(client: client_name) do |model|
+        model.where(id: params[:fid].to_i).first
+      end
       unless file.blank?
         send_afile file
       end

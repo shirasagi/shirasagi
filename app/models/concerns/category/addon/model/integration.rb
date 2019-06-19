@@ -14,7 +14,7 @@ module Category::Addon::Model
           next false unless v.type == SS::Extensions::ObjectIds
 
           begin
-            elem_class = v.metadata[:elem_class]
+            elem_class = v.options.dig(:metadata, :elem_class)
             elem_class.constantize.include?(Cms::Model::Node)
           rescue
             false

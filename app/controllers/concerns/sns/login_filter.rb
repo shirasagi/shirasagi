@@ -3,7 +3,9 @@ module Sns::LoginFilter
 
   included do
     protect_from_forgery except: :remote_login
-    skip_before_action :verify_authenticity_token unless SS.config.env.protect_csrf
+    after_action :user_logged_in, only: [:login]
+    after_action :user_logged_out, only: [:logout]
+    skip_before_action :verify_authenticity_token, raise: false unless SS.config.env.protect_csrf
     prepend_view_path "app/views/sns/login"
     layout "ss/login"
     navi_view nil
@@ -23,7 +25,7 @@ module Sns::LoginFilter
     if params[:ref].blank?
       redirect_to default_logged_in_path
     elsif params[:ref] =~ /^\/[^\/]/
-      redirect_to params[:ref]
+      redirect_to URI.parse(params[:ref].to_s).path
     else
       render "sns/login/redirect"
     end
@@ -49,6 +51,14 @@ module Sns::LoginFilter
         format.json { render json: alert, status: :unprocessable_entity }
       end
     end
+  end
+
+  def user_logged_in
+    @cur_user.logged_in if @cur_user
+  end
+
+  def user_logged_out
+    @cur_user.logged_out if @cur_user
   end
 
   public

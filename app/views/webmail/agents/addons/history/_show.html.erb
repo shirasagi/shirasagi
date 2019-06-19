@@ -1,0 +1,31 @@
+<%
+  addon ||= local_assigns.fetch(:addon, {})
+  addon[:display_body] = "hide"
+%>
+
+<div class="webmail-addon-history">
+  <table class="index">
+    <thead>
+      <tr>
+        <th style="width: 80px"><%= Webmail::History.t :mode %></th>
+        <th style="width: 140px"><%= Webmail::History.t :created %></th>
+        <th><%= Webmail::History.t :user_name %></th>
+        <th><%= Webmail::History.t :updated_fields %></th>
+      </tr>
+    </thead>
+    <tbody>
+      <% @item.histories.each do |item| %>
+      <tr>
+        <td><%= item.mode_name %></td>
+        <td><%= tryb { item.created.strftime("%Y/%m/%d %H:%M") } %></td>
+        <td><%= item.user_long_name %></td>
+        <td>
+          <% if (names = item.updated_field_names).present? %>
+          <%= truncate names.join(', '), length: 30 %>
+          <% end %>
+        </td>
+      </tr>
+      <% end %>
+    </tbody>
+  </table>
+</div>

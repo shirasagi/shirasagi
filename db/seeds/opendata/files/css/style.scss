@@ -491,7 +491,7 @@ textarea {
   padding: $item-margin;
   background: $gray1;
   h2 {
-    margin-bottm: $item-margin;
+    margin-bottom: $item-margin;
     font-size: $px16;
   }
   .banners {
@@ -503,6 +503,222 @@ textarea {
     span:last-child a {
       margin-bottom: 0;
     }
+  }
+}
+
+// -----------------------------------------------------------------------------
+// resource-preview
+.resource-pdf img {
+  width: 100%;
+}
+
+.resource-content {
+  .resource-name {
+    padding: 10px;
+    color: $visited;
+    font-weight: bold;
+  }
+  .pagination {
+    border-radius: 6px;
+    text-align: left;
+  }
+  .tabs {
+    li {
+      display: inline-block;
+      min-width: 100px;
+      margin-right: 10px;
+      padding: 10px;
+      text-align: center;
+      background-color: $gray3;
+      border-radius: 6px 6px 0 0;
+      text-decoration: none;
+      &.current {
+        background-color: $sky;
+      }
+      a {
+        display: block;
+        text-decoration: none;
+        color: $black2;
+      }
+    }
+  }
+  tr {
+    border-bottom: 1px solid #b3b3b3;
+    &:first-child {
+      border-top: 1px solid #b3b3b3;
+    }
+    td {
+      min-width: 100px;
+    }
+  }
+  .cells+div {
+    padding: 10px;
+  }
+  #map-canvas {
+    height: 350px !important;
+  }
+}
+
+// -----------------------------------------------------------------------------
+// opendata-map
+.opendatamap a {
+  @include btn-black;
+  width: 100%;
+  text-align: center;
+;box-sizing: border-box;
+}
+.body--dataset-map #wrap {
+  width: 100%;
+  min-width: 1080px;
+  padding: 0;
+}
+.crumb {
+  width: 1000px;
+  margin: $item-margin auto;
+}
+.body--dataset-map #main {
+  float: none;
+  @include display-flex;
+  width: 100%;
+  .dataset-search {
+    width: 300px;
+    height: 600px;
+    overflow-y: scroll;
+    padding: 10px;
+    border: 1px solid $gray2;
+    border-right: none;
+    box-sizing: border-box;
+    #ajax-search {
+      @include btn-black;
+      width: 100%;
+      box-sizing: border-box;
+    }
+    .settings {
+      margin-bottom: 20px;
+    }
+  }
+  .selected-dataset {
+    article {
+      margin-bottom: 10px;
+      border-bottom: 1px solid $gray2;
+      header {
+        position: relative;
+        margin-bottom: 10px;
+      }
+      .dataset-no {
+        display: block;
+      }
+      .dataset-no, .dataset-name {
+        font-weight: bold;
+      }
+      .dataset-name {
+        box-sizing: border-box;
+      }
+      button {
+        position: absolute;
+        top: -3px;
+        right: 0;
+        border: none;
+        box-sizing: border-box;
+      }
+      label {
+        @include display-flex;
+      }
+    }
+    ul {
+      list-style: none;
+      li {
+        margin-bottom: 12px;
+      }
+    }
+    .deselect {
+      padding: 1px 5px;
+      border-radius: 6px;
+      background: $green;
+      color: $white;
+      &:hover {
+        opacity: 0.8;
+      }
+    }
+  }
+  .dataset-map {
+    width: calc(100% - 300px);
+  }
+  #map-canvas {
+    width: 100%;
+    border: 1px solid $gray2;
+    box-sizing: border-box;
+  }
+}
+.body--dataset-map {
+  #ajax-box {
+    .submitters {
+      text-align: center;
+    }
+    .submitters {
+      text-align: center;
+      margin: 20px 0 0;
+    }
+    .btn {
+      @include btn-black;
+      vertical-align: top;
+      margin-bottom: 10px;
+      border: none;
+    }
+    .search-ui-form {
+      margin: 10px;
+    }
+    table {
+      width: 100%;
+      tr {
+        border-bottom: 1px solid #d5d5d5;
+        &:last-child {
+          margin-bottom: 30px;
+        }
+      }
+    }
+    .search-ui-select {
+      margin-top: 20px;
+    }
+    .pagination {
+      margin-top: 20px;
+    }
+  }
+}
+.search-ui-form .submitters {
+  margin-top: $item-margin;
+  .btn {
+    text-decoration: none;
+  }
+}
+#ajax-box, .resource-content {
+  font-size: 87.5%;
+  input[type="text"] {
+    height: 1em;
+    padding: 2px;
+  }
+  input {
+    font-weight: $px14;
+  }
+  table {
+    width: 100%;
+  }
+  thead {
+    border-bottom: $border-gray2;
+  }
+  tr:hover {
+    background: $gray1;
+  }
+  th {
+    font-weight: normal;
+    text-align: left;
+    white-space: nowrap;
+  }
+  th, td {
+    padding: 5px 10px;
+  }
+  .checkbox {
+    width: 20px;
   }
 }
 // -----------------------------------------------------------------------------
@@ -563,11 +779,14 @@ textarea {
 }
 // -----------------------------------------------------------------------------
 // .areas, .tags, .formats, .licenses
-.areas, .tags, .formats, .licenses {
+.categories, .estat-categories ,.areas, .tags, .formats, .licenses {
   clear: both;
   div {
     @include clear;
     margin-bottom: $box-margin;
+    div {
+      padding: 10px 10px 0;
+    }
   }
   article {
     float: left;
@@ -586,6 +805,18 @@ textarea {
     a {
       @include btn-black;
     }
+  }
+}
+.categories article a {
+  background: $sky;
+  &:hover {
+    background: #cef3ff;
+  }
+}
+.estat-categories article a {
+  background: $hpurple;
+  &:hover {
+    background: #f1dcfc;
   }
 }
 .areas article a {
@@ -642,18 +873,17 @@ textarea {
 .opendata-search-apps-form,
 .opendata-search-ideas-form {
   @include clear;
+  clear: both;
+  @include display-flex;
+  @include flex-wrap(wrap);
   margin: $box-margin 0;
   padding: 12px;
   border: 2px solid $sky;
   dl {
-    float: left;
     width: 249px;
     margin-right: $item-margin;
-    &:nth-child(4n), &:nth-child(7n) {
+    &:nth-child(3n+1) {
       margin-right: 0;
-    }
-    &:nth-child(5n), &:nth-child(8n) {
-      clear: both;
     }
     &.group {
       margin-right: $item-margin;
@@ -674,15 +904,41 @@ textarea {
   }
   .send input {
     float: right;
-    margin-top : 10px;
+    margin-top : 20px;
     @include btn-black;
   }
 }
-.opendata-search-apps-form {
+.opendata-search-datasets, .opendata-search-groups,
+.opendata-search-apps,
+.opendata-search-ideas {
+  clear: both;
+  article {
+    position: relative;
+  }
+  .categories {
+    margin-top: 15px;
+  }
+  .download {
+    position: absolute;
+    bottom: 10px;
+    right: 15px;
+  }
+}
+.opendata-search-apps {
   border: 2px solid $green;
 }
 .opendata-search-ideas-form {
   border: 2px solid $yellow;
+}
+.download-all {
+  float: right;
+  margin-right: 15px;
+}
+.download-all, .download a {
+  @include btn-black;
+  &:hover {
+    color: $white;
+  }
 }
 // -----------------------------------------------------------------------------
 // one
@@ -713,6 +969,13 @@ textarea {
       @include btn-black;
     }
   }
+  .download-all {
+    float: none;
+    a {
+      color: $white;
+      text-decoration: none;
+    }
+  }
   .categories {
     @include clear;
     float: left;
@@ -726,6 +989,12 @@ textarea {
       @include border-radius(3px);
       color: $black1;
       text-decoration: none;
+    }
+    .estat-category {
+      background: $hpurple;
+      &:hover {
+        background: #f1dcfc;
+      }
     }
     .category {
       background: #ffcf38;
@@ -755,6 +1024,9 @@ textarea {
       font-weight: bold;
     }
   }
+  .text {
+    width: 100%;
+  }
   .tabs {
     clear:both;
   }
@@ -781,8 +1053,13 @@ textarea {
       padding: 12px;
       border-bottom: $border-gray2;
       .info {
-        float: left;
-        div {
+        @include display-flex;
+        @include align-items(center);
+        @include justify-content(space-between);
+        @include flex-wrap(wrap);
+        .name {
+          display: block;
+          width: 500px;
           padding: 7px 0 7px 35px;
         }
         div[class^="name format-"] {
@@ -835,10 +1112,11 @@ textarea {
         }
       }
       .icons {
-        @include clear;
-        float: right;
+        @include display-flex;
+        @include align-items(center);
+        @include flex-wrap(wrap);
+        @include justify-content(flex-end);
         span, div {
-          float: left;
           margin-left: $item-margin;
           &:empty {
             display: none;
@@ -850,6 +1128,9 @@ textarea {
         div a {
           @include btn-black;
         }
+      }
+      .text {
+        margin-top: 20px;
       }
     }
   }
@@ -1006,6 +1287,12 @@ textarea {
     }
   }
 }
+.api {
+  margin-bottom: $box-margin;
+  a {
+    @include btn-black;
+  }
+}
 .app .one {
   h1.name {
     color: #025931;
@@ -1091,6 +1378,37 @@ textarea {
 #portal-idea header h1 {
   @include midashi-idea;
 }
+#portal-area header h1 {
+  @include midashi-area;
+}
+#portal-area {
+  margin-bottom: $box-margin;
+  header {
+    margin-bottom: $item-margin;
+  }
+  ul {
+    @include display-flex;
+    @include justify-content(space-between);
+    @include flex-wrap(wrap);
+    list-style: none;
+    li {
+      width: calc(20% - 10px);
+      a {
+        display: block;
+        background: $hgreen;
+        padding: 10px 20px;
+        text-align: center;
+        box-sizing: border-box;
+        color: $black2;
+        text-decoration: none;
+        &:hover {
+          background: #e9f7cb;
+        }
+      }
+    }
+  }
+}
+
 // -----------------------------------------------------------------------------
 // doc
 .portal {
@@ -1511,7 +1829,7 @@ textarea {
 // -----------------------------------------------------------------------------
 // .areas, .tags, .formats, .licenses
 .dataset {
-  .areas, .tags, .formats, .licenses {
+  .areas, .tags, .formats, .licenses, .categories, .estat-categories {
     h1 {
       @include midashi-dataset;
     }
@@ -2092,4 +2410,12 @@ textarea {
     padding: 4px 10px;
     background: $gray3;
   }
+}
+// -----------------------------------------------------------------------------
+// block input style
+.ss-alignment-left {
+  float: left;
+}
+.ss-alignment-right {
+  float: right;
 }

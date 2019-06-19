@@ -4,7 +4,7 @@ SS::Application.routes.draw do
 
   concern :deletion do
     get :delete, on: :member
-    delete action: :destroy_all, on: :collection
+    delete :destroy_all, on: :collection, path: ''
   end
 
   concern :download do
@@ -14,10 +14,11 @@ SS::Application.routes.draw do
   content "inquiry" do
     get "/" => redirect { |p, req| "#{req.path}/columns" }, as: :main
     resources :nodes, concerns: :deletion
-    resources :forms, concerns: :deletion
+    resources :forms, only: [:index]
     resources :columns, concerns: :deletion
     resources :answers, concerns: [:deletion, :download], only: [:index, :show, :destroy]
     get "results" => "results#index", as: :results
+    get "results/download" => "results#download", as: :results_download
     resources :feedbacks, only: [:index, :show]
     get "answers/:id/fileid/:fid/download" => "answers#download_afile"
   end

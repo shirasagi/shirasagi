@@ -1,9 +1,9 @@
 source 'https://rubygems.org'
 
-gem 'rails', '4.2.9'
+gem 'rails', '~> 5.1.0'
 gem 'sassc-rails'
 gem 'uglifier', '>= 1.3.0'
-gem 'coffee-rails', '~> 4.1.0'
+gem 'coffee-rails', '~> 4.2.2'
 gem 'therubyracer', '~> 0.12.3', platforms: :ruby
 gem 'jbuilder', '~> 2.0'
 gem 'sdoc', '~> 0.4.0', group: :doc
@@ -13,10 +13,10 @@ gem 'unicorn'
 gem 'unicorn-worker-killer'
 
 # Database
-gem 'mongo_session_store-rails4'
-gem 'mongoid', '~> 5.1.0' #, git: 'https://github.com/mongodb/mongoid.git'
-gem 'mongoid-rspec'
-gem 'mongoid-grid_fs'
+gem 'mongoid', git: 'https://github.com/mongodb/mongoid.git' #'~> 7.1.0'
+gem 'mongo_session_store', git: 'https://github.com/mongoid/mongo_session_store.git'
+gem 'mongoid-rspec', git: 'https://github.com/mongoid/mongoid-rspec.git'
+gem 'mongoid-grid_fs', git: 'https://github.com/mongoid/mongoid-grid_fs.git'
 
 # Assets
 gem 'autosize-rails'
@@ -37,8 +37,10 @@ gem 'diffy'
 gem 'dynamic_form'
 gem 'fast_blank'
 gem 'fullcalendar.io-rails', '~> 2.6.0'
-gem 'holiday_japan', '~> 1.2.5'
+gem 'holiday_japan'
+gem 'icalendar'
 gem 'kaminari'
+gem 'kaminari-mongoid'
 gem 'kramdown'
 gem 'mail-iso-2022-jp'
 gem 'net-ldap'
@@ -52,23 +54,29 @@ gem 'simple_captcha2', require: 'simple_captcha'
 gem 'ungarbled'
 gem 'rubyzip'
 gem 'thinreports'
+gem 'bootsnap', require: false
+gem 'addressable', require: 'addressable/uri'
+gem 'roo', git: 'https://github.com/roo-rb/roo.git' #'~> 2.7.0'
+#gem 'roo-xls', git: "https://github.com/roo-rb/roo-xls.git"
+gem 'liquid'
 
 # OAuth
+gem 'oauth2', git: 'https://github.com/oauth-xx/oauth2.git' #'~> 1.5.0'
 gem 'omniauth'
 gem 'omniauth-facebook'
 gem 'omniauth-github'
-gem 'omniauth-google-oauth2'
+gem 'omniauth-google-oauth2', git: 'https://github.com/zquestz/omniauth-google-oauth2.git'
 gem 'omniauth-twitter'
 gem 'omniauth-yahoojp'
 
 # SNS
-gem 'koala'
 gem 'twitter'
 
 # SAML
 gem 'ruby-saml'
 
 # JWT/JWS
+gem 'jwt', '>= 2.0'
 gem 'json-jwt'
 
 # SPARQL/RDF
@@ -80,19 +88,21 @@ gem 'sparql-client'
 gem 'unf'
 
 # elasticsearch
+gem 'faraday', '~> 0.14.0'
 gem 'elasticsearch'
 
 group :development, :test do
   gem 'capybara'
   gem 'coveralls', require: false
   gem 'dotenv-rails'
-  gem 'factory_girl_rails'
+  gem 'factory_bot_rails'
   gem 'fuubar'
   gem 'guard'
   gem 'guard-rspec', '~> 4.3.1'
   gem 'guard-rubocop', '~> 1.1.0'
   gem 'poltergeist', require: false
   gem 'selenium-webdriver', require: false
+  gem 'webdrivers'
   gem 'pry-rails'
   gem 'pry-doc'
   gem 'pry-byebug'
@@ -101,8 +111,9 @@ group :development, :test do
   gem 'rspec-collection_matchers'
   gem 'rspec-its'
   gem 'rspec-rails'
+  gem 'rails-controller-testing'
   gem 'rubocop', require: false
-  gem 'spring', '~> 1.1.3'
+  gem 'spring', '~> 2.0.2'
   gem 'timecop'
 end
 
@@ -110,6 +121,7 @@ group :development do
   gem 'brakeman', require: false
   gem 'guard-brakeman', require: false
   gem 'yard', require: false
+  gem 'terminal-notifier-guard', require: false
 end
 
 group :test do

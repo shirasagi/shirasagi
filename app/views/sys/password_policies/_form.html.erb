@@ -1,0 +1,75 @@
+<dl class="see">
+  <dt class="depth-1"><%= t("sys.password_effective_period") %></dt>
+  <dd class="depth-1"></dd>
+
+  <dt class="depth-2"><%= @model.t :password_limit_days %><%= @model.tt :password_limit_days %></dt>
+  <dd class="depth-2">
+    <%= f.select :password_limit_use, @item.password_limit_use_options %>
+    <%= f.number_field :password_limit_days %>
+    <span><%= t("datetime.prompts.day") %></span>
+  </dd>
+
+  <dt class="depth-2"><%= @model.t :password_warning_days %><%= @model.tt :password_warning_days %></dt>
+  <dd class="depth-2">
+    <%= f.select :password_warning_use, @item.password_warning_use_options %>
+    <%= f.number_field :password_warning_days %>
+    <span><%= t("datetime.prompts.day") %></span>
+  </dd>
+
+  <dt class="depth-1"><%= t("sys.password_constraint") %></dt>
+  <dd class="depth-1"></dd>
+
+  <dt class="depth-2"><%= @model.t :password_min_length %><%= @model.tt :password_min_length %></dt>
+  <dd class="depth-2">
+    <%= f.select :password_min_use, @item.password_min_use_options %>
+    <%= f.number_field :password_min_length %>
+    <span><%= t("sys.prompts.char") %></span>
+  </dd>
+
+  <dt class="depth-2"><%= t("sys.password_constraint_detail") %></dt>
+  <dd class="depth-2"></dd>
+
+  <dt class="depth-3"><%= @model.t :password_min_upcase_length %><%= @model.tt :password_min_upcase_length %></dt>
+  <dd class="depth-3">
+    <%= f.select :password_min_upcase_use, @item.password_min_upcase_use_options %>
+    <%= f.number_field :password_min_upcase_length %>
+    <span><%= t("sys.prompts.char") %></span>
+  </dd>
+
+  <dt class="depth-3"><%= @model.t :password_min_downcase_length %><%= @model.tt :password_min_downcase_length %></dt>
+  <dd class="depth-3">
+    <%= f.select :password_min_downcase_use, @item.password_min_downcase_use_options %>
+    <%= f.number_field :password_min_downcase_length %>
+    <span><%= t("sys.prompts.char") %></span>
+  </dd>
+
+  <dt class="depth-3"><%= @model.t :password_min_digit_length %><%= @model.tt :password_min_digit_length %></dt>
+  <dd class="depth-3">
+    <%= f.select :password_min_digit_use, @item.password_min_digit_use_options %>
+    <%= f.number_field :password_min_digit_length %>
+    <span><%= t("sys.prompts.char") %></span>
+  </dd>
+
+  <dt class="depth-3"><%= @model.t :password_min_symbol_length %><%= @model.tt :password_min_symbol_length %></dt>
+  <dd class="depth-3">
+    <%= f.select :password_min_symbol_use, @item.password_min_symbol_use_options %>
+    <%= f.number_field :password_min_symbol_length %>
+    <span><%= t("sys.prompts.char") %></span>
+  </dd>
+
+  <dt class="depth-2"><%= @model.t :password_prohibited_char %><%= @model.tt :password_prohibited_char %></dt>
+  <dd class="depth-2">
+    <%= f.select :password_prohibited_char_use, @item.password_prohibited_char_use_options %>
+    <%= f.text_field :password_prohibited_char %>
+  </dd>
+
+  <dt class="depth-1"><%= t("sys.password_change_constraint") %></dt>
+  <dd class="depth-1"></dd>
+
+  <dt class="depth-2"><%= @model.t :password_min_change_char_count %><%= @model.tt :password_min_change_char_count %></dt>
+  <dd class="depth-2">
+    <%= f.select :password_min_change_char_use, @item.password_min_change_char_use_options %>
+    <%= f.number_field :password_min_change_char_count %>
+    <span><%= t("sys.prompts.char") %></span>
+  </dd>
+</dl>

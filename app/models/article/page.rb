@@ -7,6 +7,7 @@ class Article::Page
   include Cms::Addon::Meta
   include Cms::Addon::SnsPoster
   include Gravatar::Addon::Gravatar
+  include Cms::Addon::Thumb
   include Cms::Addon::Body
   include Cms::Addon::BodyPart
   include Cms::Addon::File
@@ -28,7 +29,7 @@ class Article::Page
   include Cms::Addon::ReleasePlan
   include Cms::Addon::GroupPermission
   include History::Addon::Backup
-  include Article::Addon::Import
+  include Article::Export
   include Cms::Addon::ForMemberPage
 
   set_permission_name "article_pages"

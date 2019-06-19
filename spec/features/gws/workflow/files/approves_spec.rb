@@ -31,28 +31,33 @@ describe Gws::Workflow::FilesController, type: :feature, dbscope: :example, tmpd
       # admin: 申請する
       #
       within ".mod-workflow-request" do
-        click_on "選択"
-
-        within ".ms-container" do
-          find("li.ms-elem-selectable", text: /#{Regexp.escape(user1.uid)}/).click
-          find("li.ms-elem-selectable", text: /#{Regexp.escape(user2.uid)}/).click
-        end
-
-        fill_in "workflow[comment]", with: workflow_comment
-        click_on "申請"
+        select I18n.t("mongoid.attributes.workflow/model/route.my_group"), from: "workflow_route"
+        click_on I18n.t("workflow.buttons.select")
+        click_on I18n.t("workflow.search_approvers.index")
       end
-      expect(page).to have_css(".mod-workflow-view dd", text: /#{Regexp.escape(user1.uid)}/)
+      within "#cboxLoadedContent" do
+        expect(page).to have_content(user1.long_name)
+        find("tr[data-id=\"1,#{user1.id}\"] input[type=checkbox]").click
+        find("tr[data-id=\"1,#{user2.id}\"] input[type=checkbox]").click
+        click_on I18n.t("workflow.search_approvers.select")
+      end
+      within ".mod-workflow-request" do
+        fill_in "workflow[comment]", with: workflow_comment
+        click_on I18n.t("workflow.buttons.request")
+      end
+      expect(page).to have_css(".mod-workflow-view dd", text: /#{::Regexp.escape(user1.uid)}/)
 
       item.reload
       expect(item.workflow_user_id).to eq admin.id
       expect(item.workflow_state).to eq 'request'
       expect(item.workflow_comment).to eq workflow_comment
       expect(item.workflow_approvers.count).to eq 2
-      expect(item.workflow_approvers[0]).to eq({level: 1, user_id: user1.id, editable: '', state: 'request', comment: ''})
-      expect(item.workflow_approvers[1]).to eq({level: 1, user_id: user2.id, editable: '', state: 'request', comment: ''})
+      expect(item.workflow_approvers).to \
+        include({level: 1, user_id: user1.id, editable: '', state: 'request', comment: ''})
+      expect(item.workflow_approvers).to \
+        include({level: 1, user_id: user2.id, editable: '', state: 'request', comment: ''})
 
-      expect(Sys::MailLog.count).to eq 2
-      expect(Gws::Memo::Notice.count).to eq 2
+      expect(SS::Notification.count).to eq 2
 
       #
       # user1: 申請を承認する
@@ -62,23 +67,22 @@ describe Gws::Workflow::FilesController, type: :feature, dbscope: :example, tmpd
 
       within ".mod-workflow-approve" do
         fill_in "remand[comment]", with: remand_comment1
-        click_on "承認"
+        click_on I18n.t("workflow.buttons.approve")
       end
 
-      expect(page).to have_css(".mod-workflow-view dd", text: /#{Regexp.escape(remand_comment1)}/)
+      expect(page).to have_css(".mod-workflow-view dd", text: /#{::Regexp.escape(remand_comment1)}/)
 
       item.reload
       expect(item.workflow_user_id).to eq admin.id
       expect(item.workflow_state).to eq 'request'
       expect(item.workflow_comment).to eq workflow_comment
       expect(item.workflow_approvers.count).to eq 2
-      expect(item.workflow_approvers[0]).to \
-        eq({level: 1, user_id: user1.id, editable: '', state: 'approve', comment: remand_comment1})
-      expect(item.workflow_approvers[1]).to \
-        eq({level: 1, user_id: user2.id, editable: '', state: 'request', comment: ''})
+      expect(item.workflow_approvers).to \
+        include({level: 1, user_id: user1.id, editable: '', state: 'approve', comment: remand_comment1, file_ids: nil})
+      expect(item.workflow_approvers).to \
+        include({level: 1, user_id: user2.id, editable: '', state: 'request', comment: ''})
 
-      expect(Sys::MailLog.count).to eq 2
-      expect(Gws::Memo::Notice.count).to eq 2
+      expect(SS::Notification.count).to eq 2
 
       #
       # user2: 申請を承認する
@@ -88,23 +92,22 @@ describe Gws::Workflow::FilesController, type: :feature, dbscope: :example, tmpd
 
       within ".mod-workflow-approve" do
         fill_in "remand[comment]", with: remand_comment2
-        click_on "承認"
+        click_on I18n.t("workflow.buttons.approve")
       end
 
-      expect(page).to have_css(".mod-workflow-view dd", text: /#{Regexp.escape(remand_comment2)}/)
+      expect(page).to have_css(".mod-workflow-view dd", text: /#{::Regexp.escape(remand_comment2)}/)
 
       item.reload
       expect(item.workflow_user_id).to eq admin.id
       expect(item.workflow_state).to eq 'approve'
       expect(item.workflow_comment).to eq workflow_comment
       expect(item.workflow_approvers.count).to eq 2
-      expect(item.workflow_approvers[0]).to \
-        eq({level: 1, user_id: user1.id, editable: '', state: 'approve', comment: remand_comment1})
-      expect(item.workflow_approvers[1]).to \
-        eq({level: 1, user_id: user2.id, editable: '', state: 'approve', comment: remand_comment2})
+      expect(item.workflow_approvers).to \
+        include({level: 1, user_id: user1.id, editable: '', state: 'approve', comment: remand_comment1, file_ids: nil})
+      expect(item.workflow_approvers).to \
+        include({level: 1, user_id: user2.id, editable: '', state: 'approve', comment: remand_comment2, file_ids: nil})
 
-      expect(Sys::MailLog.count).to eq 3
-      expect(Gws::Memo::Notice.count).to eq 3
+      expect(SS::Notification.count).to eq 3
     end
   end
 end

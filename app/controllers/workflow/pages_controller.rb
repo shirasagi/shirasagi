@@ -72,6 +72,17 @@ class Workflow::PagesController < ApplicationController
     message
   end
 
+  def create_success_response
+    json = { workflow_state: @item.workflow_state }
+
+    redirect = json[:redirect] = {}
+    redirect[:reload] = params[:id].to_i == @item.id
+    redirect[:show] = @item.private_show_path
+    redirect[:url] = @item.url
+
+    json
+  end
+
   public
 
   def request_update
@@ -93,10 +104,12 @@ class Workflow::PagesController < ApplicationController
     @item.workflow_on_remand = params[:workflow_on_remand]
     @item.workflow_approvers = params[:workflow_approvers]
     @item.workflow_required_counts = params[:workflow_required_counts]
+    @item.workflow_current_circulation_level = 0
+    @item.workflow_circulations = params[:workflow_circulations]
 
     if @item.save
       request_approval
-      render json: { workflow_state: @item.workflow_state }
+      render json: create_success_response
     else
       render json: @item.errors.full_messages, status: :unprocessable_entity
     end
@@ -116,10 +129,17 @@ class Workflow::PagesController < ApplicationController
       approver[:comment] = ''
     end
     @item.workflow_approvers = Workflow::Extensions::WorkflowApprovers.new(copy)
+    @item.workflow_current_circulation_level = 0
+    copy = @item.workflow_circulations.to_a
+    copy.each do |circulation|
+      circulation[:state] = @model::WORKFLOW_STATE_PENDING
+      circulation[:comment] = ''
+    end
+    @item.workflow_circulations = Workflow::Extensions::WorkflowCirculations.new(copy)
 
     if @item.save
       request_approval
-      render json: { workflow_state: @item.workflow_state }
+      render json: create_success_response
     else
       render json: @item.errors.full_messages, status: :unprocessable_entity
     end
@@ -137,9 +157,9 @@ class Workflow::PagesController < ApplicationController
 
     save_level = @item.workflow_current_level
     if params[:action] == 'pull_up_update'
-      @item.pull_up_workflow_approver_state(@cur_user, params[:remand_comment])
+      @item.pull_up_workflow_approver_state(@cur_user, comment: params[:remand_comment])
     else
-      @item.approve_workflow_approver_state(@cur_user, params[:remand_comment])
+      @item.approve_workflow_approver_state(@cur_user, comment: params[:remand_comment])
     end
 
     @item.skip_history_backup = true if @item.respond_to?(:skip_history_backup)
@@ -163,6 +183,15 @@ class Workflow::PagesController < ApplicationController
       return
     end
 
+    merged = false
+    if @item.workflow_state == @model::WORKFLOW_STATE_APPROVE && @item.try(:branch?) && @item.state == "public"
+      save = @item.master
+      @item.file_ids = nil if @item.respond_to?(:file_ids)
+      @item.destroy
+      @item = save
+      merged = true
+    end
+
     current_level = @item.workflow_current_level
     if save_level != current_level
       # escalate workflow
@@ -171,18 +200,15 @@ class Workflow::PagesController < ApplicationController
 
     if @item.workflow_state == @model::WORKFLOW_STATE_APPROVE
       # finished workflow
-      url = params[:url].to_s
-      url.sub!(/#{@item.id}$/, @item.master.id.to_s) if @item.try(:branch?) && @item.state == "public"
+      url = merged ? @item.private_show_path : params[:url].to_s
       Workflow::Mailer.send_approve_mails(
         f_uid: @cur_user._id, t_uids: [ @item.workflow_user_id ],
         site: @cur_site, page: @item,
         url: url, comment: params[:remand_comment]
       )
-
-      @item.delete if @item.try(:branch?) && @item.state == "public"
     end
 
-    render json: { workflow_state: @item.workflow_state }
+    render json: create_success_response
   end
 
   alias pull_up_update approve_update
@@ -219,7 +245,7 @@ class Workflow::PagesController < ApplicationController
         url: params[:url], comment: params[:remand_comment]
       )
     end
-    render json: { workflow_state: @item.workflow_state }
+    render json: create_success_response
   end
 
   def request_cancel
@@ -229,7 +255,7 @@ class Workflow::PagesController < ApplicationController
     return if request.get?
 
     @item.approved = nil
-    @item.workflow_user_id = nil
+    # @item.workflow_user_id = nil
     @item.workflow_state = @model::WORKFLOW_STATE_CANCELLED
 
     @item.skip_history_backup = true if @item.respond_to?(:skip_history_backup)
@@ -248,6 +274,7 @@ class Workflow::PagesController < ApplicationController
       copy = @item.new_clone
       copy.master = @item
       copy.save
+      @item.reload
     end
 
     @items = @item.branches

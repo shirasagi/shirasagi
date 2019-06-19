@@ -9,11 +9,13 @@ module Chorg::Model::Revision
     seqid :id
     field :name, type: String
     field :job_ids, type: Array
+    field :delete_method, type: String
     belongs_to_file :user_csv_file
 
-    permit_params :name, :changesets
+    permit_params :name, :changesets, :delete_method
 
     validates :name, presence: true, length: { maximum: 80 }, uniqueness: { scope: :site_id }
+    validates :delete_method, inclusion: { in: %w(disable_if_possible always_delete), allow_blank: true }
 
     scope :search, ->(params) {
       criteria = where({})
@@ -22,6 +24,20 @@ module Chorg::Model::Revision
       criteria = criteria.keyword_in params[:keyword], :name if params[:keyword].present?
       criteria
     }
+  end
+
+  def delete_method_options
+    %w(disable_if_possible always_delete).map do |v|
+      [ I18n.t("chorg.options.delete_method.#{v}"), v ]
+    end
+  end
+
+  def always_delete?
+    delete_method == "always_delete"
+  end
+
+  def disable_if_possible?
+    !always_delete?
   end
 
   def add_changesets

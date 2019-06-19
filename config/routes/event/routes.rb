@@ -4,7 +4,7 @@ SS::Application.routes.draw do
 
   concern :deletion do
     get :delete, on: :member
-    delete action: :destroy_all, on: :collection
+    delete :destroy_all, on: :collection, path: ''
   end
 
   concern :crud do
@@ -23,6 +23,11 @@ SS::Application.routes.draw do
     post :import, on: :collection
   end
 
+  concern :ical_refresh do
+    get :ical_refresh, on: :collection
+    post :ical_refresh, on: :collection
+  end
+
   concern :command do
     get :command, on: :member
     post :command, on: :member
@@ -39,15 +44,16 @@ SS::Application.routes.draw do
 
   content "event" do
     get "/" => redirect { |p, req| "#{req.path}/pages" }, as: :main
-    resources :pages, concerns: [:deletion, :crud, :download, :import, :command, :contains_urls, :tag]
+    resources :pages, concerns: [:deletion, :crud, :download, :import, :ical_refresh, :command, :contains_urls, :tag]
     resources :searches, only: [:index]
   end
 
   node "event" do
     get "page/(index.:format)" => "public#index", cell: "nodes/page"
-    get "page/:year:month.:format" => "public#monthly", cell: "nodes/page",
-      year: /\d{4}/, month: /\d{2}/
-    get "page/:year:month:day.:format" => "public#daily", cell: "nodes/page",
+    get "page/(:display.:format)" => "public#index", cell: "nodes/page", display: /[a-z]*/
+    get "page/:year:month/(:display.:format)" => "public#index", cell: "nodes/page",
+      year: /\d{4}/, month: /\d{2}/, display: /[a-z]*/
+    get "page/:year:month:day/(index.:format)" => "public#daily", cell: "nodes/page",
       year: /\d{4}/, month: /\d{2}/, day: /\d{2}/
     get "search/(index.:format)" => "public#index", cell: "nodes/search"
   end

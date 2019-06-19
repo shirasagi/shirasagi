@@ -1,4 +1,4 @@
-FactoryGirl.define do
+FactoryBot.define do
   factory :gws_board_category, class: Gws::Board::Category do
     cur_site { gws_site }
     cur_user { gws_user }

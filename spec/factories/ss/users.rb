@@ -1,4 +1,4 @@
-FactoryGirl.define do
+FactoryBot.define do
   factory :ss_user, class: SS::User do
     name "ss_user"
     email "ss@example.jp"

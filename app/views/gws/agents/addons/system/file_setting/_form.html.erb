@@ -1,4 +1,7 @@
-<%= jquery do %> SS_AddonTabs.hide(".addon-gws-system-file-setting"); <% end %>
+<%
+  addon ||= local_assigns.fetch(:addon, {})
+  addon[:display_body] = "hide"
+%>
 
 <dl class="see addon-gws-system-file-setting">
   <dt><%= @model.t :multibyte_filename_state %><%= @model.tt :multibyte_filename_state %></dt>

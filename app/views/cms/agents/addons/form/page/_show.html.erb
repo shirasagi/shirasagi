@@ -1,17 +1,8 @@
 <% return if @item.form.blank? %>
 
-<dl class="see mod-cms-form-page">
-  <% @item.column_values.order_by(order: 1).each do |column_value| %>
-    <% column = @item.form.columns.find(column_value.column_id) rescue nil %>
-    <% if column && column.column_show_path %>
-      <%= render file: column.column_show_path, locals: { column: column, value: column_value } %>
-    <% else %>
-      <dt><%= column_value.name %></dt>
-      <dd><%= br [ column_value.value.presence ].compact.flatten.join(', ') %></dd>
-    <% end %>
-  <% end %>
-</dl>
+<%
+  addon ||= local_assigns.fetch(:addon, {})
+  addon[:head] = @item.form.name
+%>
 
-<%= jquery do %>
-  $('#addon-cms-agents-addons-form-page .addon-head h2').text(<%== @item.form.name.to_json %>);
-<% end %>
+<%= render "cms/forms/columns_show", form: @item.form, column_values: @item.column_values %>

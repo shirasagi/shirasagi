@@ -4,5 +4,13 @@
 - タイトル
   <%= @page.name %>
 
+<% if @page.workflow_user.present? %>
+- 申請者
+  <%= @page.workflow_user.name %>
+  <% if @page.workflow_agent %>
+  （代理: <%= @page.workflow_agent.name %>）
+  <% end %>
+<% end %>
+
 - 記事URL
   <%= @url %>

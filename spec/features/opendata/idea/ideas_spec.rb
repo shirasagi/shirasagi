@@ -77,24 +77,47 @@ describe "opendata_ideas", type: :feature, dbscope: :example do
         it do
           visit show_path
 
-          click_link "コメントを管理する"
+          click_link I18n.t('opendata.manage_comments')
 
-          click_link "新規作成"
+          click_link I18n.t('ss.links.new')
 
           fill_in "item_text", with: comment_text
-          click_button "保存"
+          click_button I18n.t('ss.buttons.save')
+          expect(status_code).to eq 200
+          expect(page).to have_no_css("form#item-form")
 
-          click_link "一覧へ戻る"
+          click_link I18n.t('ss.links.back_to_index')
 
           fill_in "s_keyword", with: comment_text
-          click_button "検索"
+          click_button I18n.t('ss.buttons.search')
+          expect(status_code).to eq 200
+          expect(page).to have_css("a", text: comment_text)
 
           click_link comment_text
 
-          click_link "削除する"
+          click_link I18n.t('ss.links.delete')
 
-          click_button "削除"
+          click_button I18n.t('ss.buttons.delete')
+          expect(status_code).to eq 200
 
+          click_link comment_text
+
+          click_link I18n.t('ss.links.restore')
+
+          click_button I18n.t('ss.buttons.restore')
+          expect(status_code).to eq 200
+
+          click_link I18n.t('ss.links.delete')
+
+          click_button I18n.t('ss.buttons.delete')
+
+          click_link comment_text
+
+          click_link I18n.t('ss.links.delete')
+
+          click_button I18n.t('ss.buttons.delete')
+          expect(status_code).to eq 200
+          expect(page).to have_no_css("a", text: comment_text)
         end
       end
 

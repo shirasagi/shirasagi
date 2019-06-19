@@ -21,6 +21,8 @@ ja:
         staff_record_state: 電子職員録
         staff_record_name: 電子職員録年度名
         staff_record_code: 電子職員録西暦
+      gws/chorg/changeset:
+        revision_id: リビジョン
 
   tooltip:
     gws/chorg/run_params:

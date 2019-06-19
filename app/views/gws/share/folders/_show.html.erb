@@ -10,12 +10,6 @@
   <dt><%= @model.t :order %></dt>
   <dd><%= @item.order %></dd>
 
-  <dt><%= @model.t :share_max_file_size %></dt>
-  <dd><%= number_to_human_size(@item.share_max_file_size) %></dd>
-
-  <dt><%= @model.t :share_max_folder_size %></dt>
-  <dd><%= number_to_human_size(@item.quota_bytes) %></dd>
-
   <% if SS::File.where(folder_id: @item._id, deleted: nil).present? %>
     <dt><%= t('gws/share.links.file_download') %></dt>
     <dd>

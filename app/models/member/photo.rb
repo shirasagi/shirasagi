@@ -1,7 +1,7 @@
 class Member::Photo
   include Cms::Model::Page
   include Cms::Reference::Member
-  include Workflow::Addon::Approver
+  # include Workflow::Addon::Approver
   include Member::Addon::Photo::Body
   include Member::Addon::Photo::Category
   include Member::Addon::Photo::Location
@@ -40,6 +40,14 @@ class Member::Photo
   def slide_order
     value = self[:slide_order].to_i
     value < 0 ? 0 : value
+  end
+
+  def file_previewable?(file, user:, member:)
+    return true if super
+
+    return true if member.present? && member_id == member.id
+
+    false
   end
 
   private

@@ -2,7 +2,7 @@ SS::Application.routes.draw do
 
   concern :deletion do
     get :delete, :on => :member
-    delete action: :destroy_all, on: :collection
+    delete :destroy_all, on: :collection, path: ''
   end
 
   namespace "sns", path: ".u" do
@@ -24,6 +24,11 @@ SS::Application.routes.draw do
 
     namespace "addons", module: "agents/addons" do
       post "markdown" => "markdown#preview"
+    end
+
+    resources :notifications, concerns: :deletion, only: [:index, :show, :destroy] do
+      get :recent, on: :collection
+      get :latest, on: :collection
     end
   end
 

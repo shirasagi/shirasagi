@@ -43,21 +43,21 @@ module SS::JbuilderHelper
   private
 
   def file_field?(field_def)
-    metadata = field_def.metadata
+    metadata = field_def.options[:metadata]
     return false if metadata.blank?
 
     file_class?(metadata.try(:class_name))
   end
 
   def files_field?(field_def)
-    metadata = field_def.metadata
+    metadata = field_def.options[:metadata]
     return false if metadata.blank?
 
     file_class?(metadata.try(:[], :elem_class))
   end
 
   def nodes_field?(field_def)
-    metadata = field_def.metadata
+    metadata = field_def.options[:metadata]
     return false if metadata.blank?
 
     node_class?(metadata.try(:[], :elem_class))

@@ -14,7 +14,7 @@ module Cms::PublicFilter::Node
   end
 
   def find_node(path)
-    node = Cms::Node.site(@cur_site).in_path(path).sort(depth: -1).to_a.first
+    node = Cms::Node.site(@cur_site).in_path(path).order_by(depth: -1).to_a.first
     return unless node
     @preview || node.public? ? node.becomes_with_route : nil
   end
@@ -29,6 +29,7 @@ module Cms::PublicFilter::Node
     controller = node.route.sub(/\/.*/, "/agents/#{spec[:cell]}")
 
     agent = new_agent controller
+    agent.controller.request.path_parameters.merge! spec
     agent.controller.params.merge! spec
     agent.render spec[:action]
   end
@@ -55,7 +56,7 @@ module Cms::PublicFilter::Node
       @exists = false
       return if e.to_s == "404"
       return if e.is_a? Mongoid::Errors::DocumentNotFound
-      raise e unless Rails.env.producton?
+      raise e
     end
 
     if response.content_type == "text/html" && node.layout

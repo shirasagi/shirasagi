@@ -29,6 +29,7 @@ describe 'gws_memo_lists', type: :feature, dbscope: :example, js: true do
 
       wait_for_ajax
       within '#cboxLoadedContent' do
+        expect(page).to have_content(gws_user.name)
         click_on gws_user.name
       end
 
@@ -68,7 +69,7 @@ describe 'gws_memo_lists', type: :feature, dbscope: :example, js: true do
       within 'form' do
         click_on I18n.t('ss.buttons.delete')
       end
-      expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+      expect(page).to have_css('#notice', text: I18n.t('ss.notice.deleted'))
 
       expect(Gws::Memo::List.all.count).to eq 0
     end

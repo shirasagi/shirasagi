@@ -1,40 +1,84 @@
 require 'spec_helper'
 
-describe "webmail_gws_messages", type: :feature, dbscope: :example, imap: true do
-  let(:user) { create :webmail_user }
+describe "webmail_gws_messages", type: :feature, dbscope: :example, imap: true, js: true do
+  let(:user) { webmail_imap }
+  let(:site) { user.root_groups.first }
+  let(:role) { create :gws_role_admin, cur_site: site, cur_user: user }
   let(:item_title) { "rspec-#{unique_id}" }
-  let(:index_path) { webmail_mails_path(account: 0) }
-  let(:role) { create :gws_role_admin }
+  let(:item_texts) { [ "message-#{unique_id}", "message-#{unique_id}" ] }
+  let(:messages_path) { gws_memo_messages_path(site: site.id) }
 
-  context "with auth" do
-    before { login_user(user) }
-    before do
-      gws_user = Gws::User.find(user.id)
-      gws_user.add_to_set(gws_role_ids: role.id)
-    end
+  shared_examples "webmail gws messages flow" do
+    context "with auth" do
+      before do
+        ActionMailer::Base.deliveries.clear
 
-    it "#show", js: true do
-      # new/create
-      visit index_path
-      click_link I18n.t('ss.links.new')
-      within "form#item-form" do
-        fill_in "to", with: user.email + "\n"
-        fill_in "item[subject]", with: item_title
-        fill_in "item[text]", with: "message\n" * 2
+        gws_user = user.gws_user
+        gws_user.add_to_set(gws_role_ids: [ role.id ])
+
+        login_user(user)
       end
-      click_button I18n.t('ss.buttons.send')
-      sleep 1
-      expect(current_path).to eq index_path
 
-      # gws_message
-      click_link item_title
-      click_link I18n.t('webmail.links.forward_gws_message')
+      after do
+        ActionMailer::Base.deliveries.clear
+      end
 
-      first('.gws-addon-member .ajax-box').click
-      wait_for_cbox
+      it "#show" do
+        # new/create
+        visit index_path
+        click_link I18n.t('ss.links.new')
+        within "form#item-form" do
+          fill_in "to", with: user.email + "\n"
+          fill_in "item[subject]", with: item_title
+          fill_in "item[text]", with: item_texts.join("\n")
+        end
+        click_button I18n.t('ss.buttons.send')
+        sleep 1
+        expect(current_path).to eq index_path
 
-      click_on user.name
-      click_button I18n.t('ss.buttons.send')
+        expect(ActionMailer::Base.deliveries).to have(1).items
+        ActionMailer::Base.deliveries.first.tap do |mail|
+          expect(mail.to.first).to eq user.email
+          expect(mail.subject).to eq item_title
+          expect(mail.body.multipart?).to be_falsey
+          expect(mail.body.raw_source).to include(item_texts.join("\r\n"))
+        end
+        webmail_import_mail(user, ActionMailer::Base.deliveries.first)
+
+        # reload mails
+        visit index_path
+
+        click_link item_title
+
+        # gws_message
+        click_link I18n.t('webmail.links.forward_gws_message')
+
+        first('.gws-addon-memo-member .ajax-box').click
+        wait_for_cbox
+
+        click_on user.name
+        page.accept_alert do
+          click_button I18n.t('ss.buttons.send')
+        end
+
+        expect(current_path).to eq messages_path
+        click_link item_title
+      end
     end
+  end
+
+  describe "webmail_mode is account" do
+    let(:index_path) { webmail_mails_path(account: 0) }
+
+    it_behaves_like 'webmail gws messages flow'
+  end
+
+  describe "webmail_mode is group" do
+    let(:group) { create :webmail_group }
+    let(:index_path) { webmail_mails_path(account: group.id, webmail_mode: :group) }
+
+    before { user.add_to_set(group_ids: [ group.id ]) }
+
+    it_behaves_like 'webmail gws messages flow'
   end
 end

@@ -28,6 +28,12 @@ module Cms::Model::Page
     after_destroy :remove_file
 
     template_variable_handler(:categories, :template_variable_handler_categories)
+
+    liquidize do
+      export as: :categories do
+        categories.and_public.order_by(order: 1, name: 1)
+      end
+    end
   end
 
   def date
@@ -44,12 +50,14 @@ module Cms::Model::Page
     return false unless public_node?
     run_callbacks :generate_file do
       Cms::Agents::Tasks::PagesController.new.generate_page(self)
+      Cms::PageRelease.release(self)
     end
   end
 
   def remove_file
     run_callbacks :remove_file do
       Fs.rm_rf path
+      Cms::PageRelease.close(self)
     end
   end
 
@@ -64,6 +72,7 @@ module Cms::Model::Page
     run_callbacks :rename_file do
       Fs.mkdir_p dst_dir unless Fs.exists?(dst_dir)
       Fs.mv src, dst if Fs.exists?(src)
+      Cms::PageRelease.close(self, @db_changes['filename'][0])
     end
   end
 
@@ -71,7 +80,7 @@ module Cms::Model::Page
     dst_dir = ::File.dirname(dst).sub(/^\.$/, "")
 
     return errors.add :filename, :empty if dst.blank?
-    return errors.add :filename, :invalid if dst !~ /^([\w\-]+\/)*[\w\-]+(#{Regexp.escape(fix_extname)})?$/
+    return errors.add :filename, :invalid if dst !~ /^([\w\-]+\/)*[\w\-]+(#{::Regexp.escape(fix_extname)})?$/
     return errors.add :base, :branch_page_can_not_move if self.try(:branch?)
 
     return errors.add :base, :same_filename if filename == dst

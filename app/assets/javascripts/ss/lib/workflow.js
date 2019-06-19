@@ -4,7 +4,7 @@ SS_Workflow = function (el, options) {
 
   var pThis = this;
 
-  $(document).on("click", el + " .update-item", function (e) {
+  this.$el.on("click", ".update-item", function (e) {
     pThis.updateItem($(this));
     e.preventDefault();
     return false;
@@ -34,20 +34,20 @@ SS_Workflow = function (el, options) {
     pThis.loadRouteList();
   });
 
-  $(document).on("click", el + " .workflow-route-start", function (e) {
+  this.$el.on("click", ".workflow-route-start", function (e) {
     var routeId = $(this).siblings('#workflow_route:first').val();
     pThis.loadRoute(routeId);
     e.preventDefault();
     return false;
   });
 
-  $(document).on("click", el + " .workflow-route-cacnel", function (e) {
+  this.$el.on("click", ".workflow-route-cancel", function (e) {
     pThis.loadRouteList();
     e.preventDefault();
     return false;
   });
 
-  $(document).on("click", el + " .workflow-reroute", function (e) {
+  this.$el.on("click", ".workflow-reroute", function (e) {
     var $this = $(this);
     var level = $this.data('level');
     var userId = $this.data('user-id');
@@ -56,6 +56,16 @@ SS_Workflow = function (el, options) {
     e.preventDefault();
     return false;
   });
+
+  $('.mod-workflow-approve .btn-file-upload').data('on-select', function($item) {
+    $.colorbox.close();
+    pThis.onUploadFileSelected($item);
+  });
+
+  this.tempFile = new SS_Addon_TempFile(
+    ".mod-workflow-approve .upload-drop-area", this.options.user_id,
+    { select: function(files, dropArea) { pThis.onDropFile(files, dropArea); } }
+  );
 };
 
 SS_Workflow.prototype = {
@@ -71,10 +81,66 @@ SS_Workflow.prototype = {
 
     return approvers;
   },
-  composeWorkflowUrl: function(type) {
+  collectApproverAttachmentUses: function() {
+    var uses = [];
+
+    this.$el.find("input[name='workflow_approver_attachment_uses']").each(function() {
+      uses.push($(this).prop("value"));
+    });
+
+    return uses;
+  },
+  collectCirculations: function() {
+    var circulations = [];
+
+    this.$el.find("input[name='workflow_circulations']").each(function() {
+      circulations.push($(this).prop("value"));
+    });
+
+    return circulations;
+  },
+  agentType: function() {
+    return this.$el.find('input[name=agent_type]:checked').val();
+  },
+  collectDelegatees: function() {
+    var delegatees = [];
+
+    if (this.agentType() !== "agent") {
+      return delegatees;
+    }
+
+    this.$el.find("input[name='workflow_delegatees']").each(function() {
+      delegatees.push($(this).prop("value"));
+    });
+
+    return delegatees;
+  },
+  collectCirculationAttachmentUses: function() {
+    var uses = [];
+
+    this.$el.find("input[name='workflow_circulation_attachment_uses']").each(function() {
+      uses.push($(this).prop("value"));
+    });
+
+    return uses;
+  },
+  collectFileIds: function() {
+    var fileIds = [];
+
+    $("input[name='workflow_file_ids[]']").each(function() {
+      fileIds.push($(this).prop("value"));
+    });
+
+    return fileIds;
+  },
+  composeWorkflowUrl: function(controller) {
+    if (this.options && this.options.paths && this.options.paths[controller]) {
+      return this.options.paths[controller];
+    }
+
     var uri = location.pathname.split("/");
     uri[2] = this.options.workflow_node;
-    uri[3] = type;
+    uri[3] = controller;
     if (uri.length > 5) {
       uri.splice(4, 1);
     }
@@ -82,8 +148,10 @@ SS_Workflow.prototype = {
     return uri.join("/");
   },
   updateItem: function($this) {
+    var pThis = this;
+    var updatetype = $this.attr("updatetype");
     var approvers = this.collectApprovers();
-    if ($.isEmptyObject(approvers) && $this.attr("type") === "request") {
+    if ($.isEmptyObject(approvers) && updatetype === "request") {
       alert(this.options.errors.not_select);
       return;
     }
@@ -94,12 +162,10 @@ SS_Workflow.prototype = {
     });
 
     var uri = this.composeWorkflowUrl('pages');
-    var updatetype = $this.attr("updatetype");
     uri += "/" + updatetype + "_update";
     var workflow_comment = $("#workflow_comment").prop("value");
     var workflow_pull_up = $("#workflow_pull_up").prop("value");
     var workflow_on_remand = $("#workflow_on_remand").prop("value");
-    var redirect_location = this.options.redirect_location;
     var remand_comment = $("#remand_comment").prop("value");
     var forced_update_option;
     if (updatetype == "request") {
@@ -107,6 +173,8 @@ SS_Workflow.prototype = {
     } else {
       forced_update_option = $("#forced-update").prop("checked");
     }
+    var circulations = this.collectCirculations();
+    var workflow_file_ids = this.collectFileIds();
     $.ajax({
       type: "POST",
       url: uri,
@@ -117,20 +185,38 @@ SS_Workflow.prototype = {
         workflow_on_remand: workflow_on_remand,
         workflow_approvers: approvers,
         workflow_required_counts: required_counts,
+        workflow_approver_attachment_uses: this.collectApproverAttachmentUses(),
         remand_comment: remand_comment,
         url: this.options.request_url,
-        forced_update_option: forced_update_option
+        forced_update_option: forced_update_option,
+        workflow_circulations: circulations,
+        workflow_circulation_attachment_uses: this.collectCirculationAttachmentUses(),
+        workflow_file_ids: workflow_file_ids,
+        workflow_agent_type: this.agentType(),
+        workflow_users: this.collectDelegatees()
       },
       success: function (data) {
-        if (data["workflow_alert"]) {
-          alert(data["workflow_alert"]);
+        if (data.workflow_alert) {
+          alert(data.workflow_alert);
           return;
         }
-        if (data["workflow_state"] === "approve" && redirect_location !== "") {
-          location.href = redirect_location;
-        } else {
+
+        if (data.redirect && data.redirect.reload) {
           location.reload();
+          return;
         }
+
+        if (data.redirect && data.redirect.show) {
+          location.href = data.redirect.show;
+          return;
+        }
+
+        if (data["workflow_state"] === "approve" && pThis.options.redirect_location) {
+          location.href = pThis.options.redirect_location;
+          return;
+        }
+
+        location.reload();
       },
       error: function(xhr, status) {
         try {
@@ -269,6 +355,56 @@ SS_Workflow.prototype = {
         });
       }
     });
+  },
+  fileSelectViewUrl: function(id) {
+    var template = "/.u:user/apis/temp_files/:id/select.html";
+    return template.replace(/:user/g, this.options.user_id).replace(/:id/g, id);
+  },
+  onUploadFileSelected: function($item) {
+    var pThis = this;
+    $.ajax({
+      url: this.fileSelectViewUrl($item.data("id")),
+      success: function(data, status, xhr) {
+        pThis.renderFileHtml(data);
+      },
+      error: function (xhr, status, error) {
+        alert("== Error ==");
+      }
+    });
+  },
+  renderFileHtml: function(data) {
+    var pThis = this;
+    var $html = $(data);
+    $html.find("input[name='item[file_ids][]']").attr("name", "workflow_file_ids[]");
+    $html.find(".action .action-delete").removeAttr("onclick", "").on("click", function(e) {
+      e.preventDefault();
+      pThis.deleteUploadedFile($(this));
+      return false;
+    });
+    $html.find(".action .action-attach").remove();
+    $html.find(".action .action-paste").remove();
+    $html.find(".action .action-thumb").remove();
+    $("#selected-files").append($html);
+  },
+  deleteUploadedFile: function($a) {
+    $a.closest("div[data-file-id]").remove();
+  },
+  onDropFile: function(files, dropArea) {
+    var pThis = this;
+    for (var j = 0, len = files.length; j < len; j++) {
+      var file = files[j];
+      var id = file["_id"];
+      var url = pThis.fileSelectViewUrl(id);
+      $.ajax({
+        url: url,
+        success: function(data, status, xhr) {
+          pThis.renderFileHtml(data);
+        },
+        error: function (xhr, status, error) {
+          alert("== Error ==");
+        }
+      });
+    }
   }
 };
 

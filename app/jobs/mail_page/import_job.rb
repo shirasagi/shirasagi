@@ -7,11 +7,12 @@ class MailPage::ImportJob < Cms::ApplicationJob
     mail = ::Mail.new(Fs::binread(file))
     from = mail.from[0]
     to = mail.to[0]
+    body = mail.text_part ? mail.text_part.decoded : mail.decoded
 
     put_log("from: " + from)
     put_log("to: " + to)
     put_log("subject: " + mail.subject)
-    put_log("body: \n" + mail.decoded)
+    put_log("body: \n" + body)
 
     from_domain = from.sub(/^.+@/, "")
     to_domain = to.sub(/^.+@/, "")
@@ -22,6 +23,11 @@ class MailPage::ImportJob < Cms::ApplicationJob
     nodes.each do |node|
       node.create_page_from_mail(mail)
       put_log("imported: #{node.name}(#{node.filename})")
+
+      if node.urgency_enabled?
+        node.urgency_switch_layout
+        put_log("switch layout")
+      end
     end
 
     Fs.rm_rf file

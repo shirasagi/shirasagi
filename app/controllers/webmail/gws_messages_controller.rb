@@ -5,7 +5,7 @@ class Webmail::GwsMessagesController < ApplicationController
   include Sns::CrudFilter
   helper Webmail::MailHelper
 
-  model Webmail::GwsMessage
+  model Gws::Memo::Message
 
   skip_before_action :set_selected_items
   before_action :imap_login
@@ -15,7 +15,7 @@ class Webmail::GwsMessagesController < ApplicationController
   private
 
   def set_crumbs
-    @crumbs << [t("webmail.mail"), webmail_mails_path ]
+    @crumbs << [t("webmail.mail"), webmail_mails_path(webmail_mode: @webmail_mode) ]
   end
 
   def fix_params
@@ -46,19 +46,38 @@ class Webmail::GwsMessagesController < ApplicationController
 
   def new
     @item = @model.new fix_params
-    @item.subject = @mail.subject
+    @item.subject = @mail.display_subject
     @item.text = @mail.text
     @item.html = @mail.html
     @item.format = @mail.format
-    @item.set_ref_files(@mail.attachments)
-    @item.imap = @imap
+
+    ref_files = @mail.attachments.map do |part|
+      Webmail::PartFile.new(
+        webmail_mode: @webmail_mode, account: params[:account] || @cur_user.imap_default_index,
+        mail: @mail, part: part
+      )
+    end
+    @item.singleton_class.send(:define_method, :ref_files) do
+      ref_files
+    end
   end
 
   def create
     @item = @model.new get_params
-    @item.imap = @imap
     @item.in_validate_presence_member = true
-    @item.set_ref_files(@mail.attachments)
-    render_create @item.save, location: gws_memo_messages_path(folder: 'INBOX')
+
+    ref_files = @mail.attachments.
+      select { |part| @item.ref_file_ids.present? && @item.ref_file_ids.include?("ref-#{part.section}") }.
+      map do |part|
+        Webmail::PartFile.new(
+          webmail_mode: @webmail_mode, account: params[:account] || @cur_user.imap_default_index,
+          mail: @mail, part: part
+        )
+      end
+    @item.singleton_class.send(:define_method, :ref_files) do
+      ref_files
+    end
+
+    render_create @item.save, location: gws_memo_messages_path(folder: 'INBOX.Sent')
   end
 end

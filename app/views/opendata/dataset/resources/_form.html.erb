@@ -36,6 +36,9 @@ $(".publish_save").on("click", function(e){
   <dt><%= @model.t :file_id %><%= required_label %></dt>
   <dd><%= f.file_field :in_file %></dd>
 
+  <dt><%= @model.t :source_url %><%= @model.tt :source_url %></dt>
+  <dd><%= f.url_field :source_url, placeholder: t("opendata.notice.source_url") %></dd>
+
   <dt><%= @model.t :name %><%= required_label %></dt>
   <dd><%= f.text_field :name %></dd>
 
@@ -44,6 +47,9 @@ $(".publish_save").on("click", function(e){
 
   <dt><%= @model.t :license_id %><%= required_label %></dt>
   <dd><%= f.select :license_id, licenses, include_blank: "" %></dd>
+
+  <dt><%= @model.t :order %><%= @model.tt :order %></dt>
+  <dd><%= f.number_field :order, min: 0 %></dd>
 
   <dt><%= @model.t :text %><%= @model.tt :text %></dt>
   <dd><%= f.text_area :text %></dd>

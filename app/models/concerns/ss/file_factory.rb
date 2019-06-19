@@ -6,6 +6,42 @@ module SS::FileFactory
     permit_params :in_files, in_files: []
   end
 
+  module ClassMethods
+    def create_empty!(attributes)
+      item = new(attributes)
+      if item.respond_to?(:disable_thumb=)
+        item.disable_thumb = true # サムネイル作成時にエラーになるので、無効にする
+      end
+      item.name = ::File.basename(item.filename) if item.name.blank? && item.filename.present?
+      item.size = 0
+      item.save!
+
+      # `in_file` を指定していないので before_save でエラーが発生するが、
+      # 空のファイルを作成するのが目的なので、そのエラーは無視して安全。
+      item.errors.clear
+
+      # フラグを元に戻す
+      if item.respond_to?(:disable_thumb=)
+        item.disable_thumb = nil
+      end
+
+      # ファイルが存在しない場合、空のファイルを作成する。
+      path = item.path
+      if !::File.exists?(path)
+        dirname = ::File.dirname(path)
+        ::FileUtils.mkdir_p(dirname) if !::Dir.exists?(dirname)
+        ::FileUtils.touch(path)
+      end
+
+      if block_given?
+        yield item
+        item.sync_stats
+      end
+
+      item
+    end
+  end
+
   def save_files
     return false unless valid?
 
@@ -18,6 +54,7 @@ module SS::FileFactory
       item.cur_node = cur_node if respond_to?(:cur_node)
       item.in_file = file
       item.resizing = resizing
+      item.unnormalize = unnormalize
       if item.save
         self.saved_files << item
         next
@@ -27,5 +64,9 @@ module SS::FileFactory
       return false
     end
     true
+  end
+
+  def sync_stats
+    self.set(size: ::File.size(self.path))
   end
 end

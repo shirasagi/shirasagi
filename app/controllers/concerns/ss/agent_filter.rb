@@ -50,12 +50,23 @@ module SS::AgentFilter
     end
   end
 
+  def filter_include?(key)
+    filters.any? { |f| f == key || f.is_a?(Hash) && f.key?(key) }
+  end
+
+  def filter_options(key)
+    found = filters.find { |f| f == key || f.is_a?(Hash) && f.key?(key) }
+    return if found.nil?
+    return found[key] if found.is_a?(Hash)
+    true
+  end
+
   def mobile_path?
-    filters.include?(:mobile)
+    filter_include?(:mobile)
   end
 
   def preview_path?
-    filters.include?(:preview)
+    filter_include?(:preview)
   end
 
   def javascript_configs

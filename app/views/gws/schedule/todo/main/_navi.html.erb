@@ -1,8 +1,11 @@
 <nav class="mod-navi current-navi">
   <h2><%= link_to @cur_site.menu_todo_label || t('modules.gws/schedule/todo'), gws_schedule_todo_main_path, class: "navi-icon icon-todo" %></h2>
-  <h3><%= link_to t('ss.navi.readable'), gws_schedule_todo_main_path %></h3>
+  <h3><%= link_to t('gws/schedule.navi.todo'), gws_schedule_todo_main_path %></h3>
   <% if Gws::Schedule::Todo.allowed?(:trash, @cur_user, site: @cur_site) %>
-    <h3><%= link_to t('gws/schedule.tabs.trash'), gws_schedule_todo_trashes_path, class: 'trash' %></h3>
+    <h3><%= link_to t('gws/schedule.navi.trash'), gws_schedule_todo_trashes_path, class: 'trash' %></h3>
+  <% end %>
+  <% if Gws::Schedule::TodoCategory.allowed?(:read, @cur_user, site: @cur_site) %>
+    <h3><%= link_to t('gws/schedule/todo.navi.category'), gws_schedule_todo_categories_path, class: "management" %></h3>
   <% end %>
 </nav>
 

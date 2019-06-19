@@ -60,10 +60,10 @@ module Gws::Schedule::PlanFilter
     path = params.dig(:calendar, :path)
     if path.present?
       uri = URI(path)
-      uri.query = redirection_calendar_params.to_param
+      uri.query = { calendar: redirection_calendar_params }.to_param
       uri.to_s
     else
-      url_for(action: :index, calendar: redirection_calendar_params)
+      url_for(controller: 'gws/schedule/main', action: :index, calendar: redirection_calendar_params)
     end
   end
 
@@ -74,7 +74,7 @@ module Gws::Schedule::PlanFilter
   def send_approval_mail
     Gws::Schedule::Notifier::Approval.deliver_request!(
       cur_site: @cur_site, cur_group: @cur_group, cur_user: @cur_user,
-      to_users: @item.all_approvers, item: @item,
+      to_users: @item.all_approvers.nin(id: @cur_user.id), item: @item,
       url: url_for(action: :show, id: @item)
     ) rescue nil
   end

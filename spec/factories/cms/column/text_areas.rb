@@ -1,4 +1,4 @@
-FactoryGirl.define do
+FactoryBot.define do
   factory :cms_column_text_area, class: Cms::Column::TextArea do
     cur_site { cms_site }
 

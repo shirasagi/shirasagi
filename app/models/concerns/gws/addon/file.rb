@@ -10,6 +10,7 @@ module Gws::Addon
 
       before_save :clone_files, if: ->{ in_clone_file }
       before_save :save_files
+      around_save :update_file_owners
       after_destroy :destroy_files
 
       define_model_callbacks :save_files, :clone_files, :destroy_files
@@ -30,13 +31,13 @@ module Gws::Addon
         ids = []
         files.each do |file|
           if !add_ids.include?(file.id)
-            file.update_attributes(state: state) if state_changed?
+            file.update(state: state) if state_changed?
           elsif !allowed_other_user_files? && @cur_user && @cur_user.id != file.user_id
             next
           elsif file.model == "share/file"
-            file.update_attributes(site_id: site_id, state: state)
+            file.update(site: site, owner_item: self, state: state)
           else
-            file.update_attributes(site_id: site_id, model: model_name.i18n_key, state: state)
+            file.update(site: site, model: model_name.i18n_key, owner_item: self, state: state)
           end
           ids << file.id
         end
@@ -64,6 +65,7 @@ module Gws::Addon
           file.id = nil
           file.in_file = f.uploaded_file
           file.user_id = @cur_user.id if @cur_user
+          file.owner_item = self if file.respond_to?(:owner_item=)
 
           file.save validate: false
           ids[f.id] = file.id
@@ -110,12 +112,24 @@ module Gws::Addon
         ss_file.model = model_name.i18n_key
         ss_file.user_id = @cur_user.try(:id) || try(:user_id)
         ss_file.site_id = @cur_site.try(:id) || try(:site_id)
+        ss_file.owner_item = self
         ss_file.in_file = file
         ss_file.save
 
         add_ids << ss_file.id
       end
       add_ids
+    end
+
+    def update_file_owners
+      is_new = new_record?
+      yield
+
+      return if !is_new
+
+      files.each do |file|
+        file.update(owner_item: self)
+      end
     end
   end
 end

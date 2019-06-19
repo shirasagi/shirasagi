@@ -4,7 +4,7 @@ SS::Application.routes.draw do
 
   concern :deletion do
     get :delete, on: :member
-    delete action: :destroy_all, on: :collection
+    delete :destroy_all, on: :collection, path: ''
   end
 
   concern :copy do
@@ -56,6 +56,8 @@ SS::Application.routes.draw do
     get "index_request" => "pages#index_request"
     get "index_ready" => "pages#index_ready"
     get "index_closed" => "pages#index_closed"
+    get "index_wait_close" => "pages#index_wait_close"
+    delete "index_:state" => "pages#destroy_all", state: /approve|request|ready|closed|wait_close/
   end
 
   node "faq" do

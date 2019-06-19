@@ -4,6 +4,7 @@ class Uploader::FilesController < ApplicationController
 
   model Uploader::File
 
+  before_action :set_format
   before_action :create_folder
   before_action :redirect_from_index
   before_action :set_item
@@ -11,6 +12,10 @@ class Uploader::FilesController < ApplicationController
   navi_view "uploader/main/navi"
 
   private
+
+  def set_format
+    request.formats = [params[:format] || :html]
+  end
 
   def create_folder
     return if @model.file(@cur_node.path)
@@ -26,7 +31,7 @@ class Uploader::FilesController < ApplicationController
 
   def set_item
     filename = ::CGI.unescape params[:filename]
-    raise "404" if filename != @cur_node.filename && filename !~ /^#{@cur_node.filename}\//
+    raise "404" if filename != @cur_node.filename && !filename.start_with?("#{@cur_node.filename}/")
     @item = @model.file "#{@cur_node.site.path}/#{filename}"
     raise "404" unless @item
     @item.site = @cur_site
@@ -49,7 +54,12 @@ class Uploader::FilesController < ApplicationController
 
       if !item.save
         item.errors.each do |n, e|
-          @item.errors.add :base, "#{item.name} - #{@model.t(n)}#{e}"
+          if n == :base
+            attr = nil
+          else
+            attr = @model.t(n)
+          end
+          @item.errors.add :base, "#{item.name} - #{attr}#{e}"
         end
       end
     end
@@ -80,9 +90,9 @@ class Uploader::FilesController < ApplicationController
   public
 
   def file
-    action = params[:do] || "index"
     raise "404" unless @item
-    raise "404" unless %w(index new_directory new_files show edit delete check).index(action)
+    action = %w(index new_directory new_files show edit delete check).delete(params[:do].presence || "index")
+    raise "404" if action.blank?
     send action
   end
 
@@ -142,8 +152,16 @@ class Uploader::FilesController < ApplicationController
     if !@item.directory?
       @text ? (@item.text = @text) : @item.read
     end
-    @item.filename = @filename if @filename && @filename =~ /^#{@cur_node.filename}/
+    ext = @item.ext
+    filename = @item.filename
+    @item.filename = @filename if @filename && @filename.start_with?(@cur_node.filename)
     @item.site = @cur_site
+    if ext != @item.ext
+      @item.errors.add :base, "#{filename}#{I18n.t("errors.messages.invalid_file_type")}"
+      @item.filename = filename
+      render_update false
+      return
+    end
     result = @item.save
     @item.path = @item.saved_path unless result
 
@@ -154,7 +172,9 @@ class Uploader::FilesController < ApplicationController
         @item.errors.add :base, "#{file.original_filename}#{I18n.t("errors.messages.invalid_file_type")}"
         result = false
       else
-        Fs.binwrite @item.saved_path, file.read
+        binary = file.read
+        binary = Uploader::File.remove_exif(binary) if file.content_type.start_with?('image/')
+        Fs.binwrite @item.saved_path, binary
       end
     end
 

@@ -1,0 +1,10 @@
+<% if @cur_form.file_public? %>
+  <div class="gws-tabs">
+    <%= link_to(url_for(action: :edit), class: ["personal", cur_tab == "personal" ? "current" : nil].compact) do %>
+      <span class="tab-name"><%= t("gws/survey.tabs.personal") %></span>
+    <% end %>
+    <%= link_to(url_for(action: :others), class: ["others", cur_tab == "others" ? "current" : nil].compact) do %>
+      <span class="tab-name"><%= t("gws/survey.tabs.others") %></span>
+    <% end %>
+  </div>
+<% end %>

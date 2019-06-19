@@ -37,6 +37,13 @@ module Gws::ColumnFilter
     raise e
   end
 
+  def pre_params
+    last_column = Gws::Column::Base.site(@cur_site).form(@cur_form).order_by(created: -1).first
+    last_order = last_column.try(:order) || 0
+    last_required = last_column.try(:required) || 'required'
+    { order: last_order + 10, required: last_required }
+  end
+
   def fix_params
     set_form
     { cur_site: @cur_site, cur_form: @cur_form }
@@ -58,10 +65,11 @@ module Gws::ColumnFilter
     model = self.class.model_class
 
     if params[:type].present?
-      type = params[:type]
-      type = type.sub('/', '/column/')
-      type = type.classify
-      model = type.constantize
+      models = Gws::Column.route_options.collect do |k, v|
+        v.sub('/', '/column/').classify.constantize
+      end
+      model = models.find { |m| m.to_s == params[:type].sub('/', '/column/').classify }
+      raise '404' unless model
     end
 
     @model = model

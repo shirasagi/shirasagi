@@ -38,7 +38,7 @@
     </div>
 
     <div class="application-menu">
-      <% if SS.config.cms.disable.blank? && SS.config.cms.disable_navi.blank? %>
+      <% if SS.config.cms.disable.blank? && SS.config.cms.disable_navi.blank? && Cms.allowed?(:use, @cur_user) %>
       <div class="cms">
         <% if @ss_mode == :cms %>
         <h2><%= link_to t('ss.links.cms'), cms_contents_path(@cur_site), class: "current" %></h2>
@@ -48,7 +48,7 @@
       </div>
       <% end %>
 
-      <% if SS.config.gws.disable.blank? && SS.config.gws.disable_navi.blank? %>
+      <% if SS.config.gws.disable.blank? && SS.config.gws.disable_navi.blank? && Gws.allowed?(:use, @cur_user) %>
       <div class="gws">
         <% if @ss_mode == :gws %>
         <h2><%= link_to t('ss.links.gws'), gws_portal_path(@cur_site), class: "current" %></h2>
@@ -58,13 +58,14 @@
       </div>
       <% end %>
 
-      <% if SS.config.webmail.disable.blank? && SS.config.webmail.disable_navi.blank? %>
+      <% if SS.config.webmail.disable.blank? && SS.config.webmail.disable_navi.blank? && Webmail.allowed?(:use, @cur_user) %>
       <div class="webmail">
-        <% if @ss_mode == :webmail %>
-        <h2><%= link_to t('webmail.mail'), webmail_mails_path(account: params[:account] || @cur_user.imap_default_index), class: "current" %></h2>
-        <% else %>
-        <h2><%= link_to t('webmail.mail'), webmail_mails_path(account: params[:account] || @cur_user.imap_default_index) %></h2>
-        <% end %>
+        <%
+          webmail_mode =  params[:webmail_mode] || :account
+          account = params[:account] || @cur_user.imap_default_index
+          opts = (@ss_mode == :webmail) ? { class: "current" } : {}
+        %>
+        <h2><%= link_to t('webmail.mail'), webmail_mails_path(webmail_mode: webmail_mode, account: account), opts %></h2>
       </div>
       <% end %>
     </div>
@@ -76,17 +77,24 @@
     <% if @cur_user %>
     <nav class="user">
       <% if @ss_mode == :webmail %>
-        <% gws_user = @cur_user.gws_user %>
-        <% gws_role = gws_user.gws_roles.in(permissions: "edit_private_gws_memo_messages").reorder(site_id: 1).first %>
-        <% gws_group = gws_role.site if gws_role %>
-        <% if SS.config.gws.disable.blank? && gws_group %>
-          <%= link_to gws_memo_messages_path(site: gws_group.id), class: "user-message" do %>
-            <% count = Gws::Memo::Message.unseens(@cur_user, gws_group).size %>
-            <% if count > 0 %><span class="unseen"><%= count %></span><% end %>
-          <% end %>
-        <% end %>
+        <%
+          if SS.config.gws.disable.blank?
+            gws_user = @cur_user.gws_user
+            sites = gws_user.root_groups.select do |site|
+              Gws::Memo::Message.allowed?(:edit, gws_user, site: site)
+            end
+            if sites.present?
+              site = sites.sort_by { |site| site.id }.first
+              count = Gws::Memo::Message.unseens(@cur_user, site).size
+              span_unseen = content_tag("span", count, class: "unseen") if count > 0
+              @output_buffer << link_to(gws_memo_messages_path(site: site), class: "user-message") do
+                span_unseen
+              end
+            end
+          end
+        %>
       <% elsif @ss_mode == :gws %>
-        <% if @cur_site.menu_bookmark_visible? %>
+        <% if @cur_site.menu_bookmark_visible? && Gws::Bookmark.allowed?(:read, @cur_user, site: @cur_site) %>
           <div class="gws-bookmark dropdown dropdown-toggle">
             <% bookmark = Gws::Bookmark.find_by(user: @cur_user, site: @cur_site, url: request.fullpath) rescue nil %>
             <%= jquery do %>
@@ -155,6 +163,9 @@
             </div>
           </div>
         <% end %>
+      <% end %>
+
+      <% if @ss_mode == :gws %>
         <%
           search_condition = SS.config.gws.dig("popup_notice", "search_condition")
           if search_condition == "unseen"
@@ -187,13 +198,13 @@
         <div class="gws-memo-notice popup-notice-container">
           <%= link_to gws_memo_notices_path, "class" => "ajax-popup-notice toggle-popup-notice", "data-url" => default_url, "data-url-switched" => switched_url do %>
             <i class="material-icons">&#xE7F4;</i>
-            <% count = Gws::Memo::Notice.unseens(@cur_user, @cur_site).size %>
+            <% count = SS::Notification.unseens(@cur_user).size %>
             <% if count > 0 %><span class="unseen popup-notice-unseen"><%= count %></span><% end %>
           <% end %>
           <div class="popup-notice" style="display: none;">
             <header class="popup-notice-header">
               <h2>
-                <%= t('modules.gws/memo/notice') %>
+                <%= t('modules.sns/notification') %>
                 <%= link_to default_label, "#",
                   "class" => "ajax-popup-notice unseens",
                   "data-url" => default_url,
@@ -206,7 +217,60 @@
             <%= link_to t("ss.links.more_all"), gws_memo_notices_path, class: "more-all" %>
           </div>
         </div>
+      <% else %>
+        <%
+          search_condition = SS.config.gws.dig("popup_notice", "search_condition")
+          if search_condition == "unseen"
+            default_label  = t("gws/memo/message.links.seens")
+            switched_label = t("gws/memo/message.links.unseens")
+            default_url    = recent_sns_notifications_path(s: { unseen: @cur_user.id })
+            switched_url   = recent_sns_notifications_path
+          else
+            default_label  = t("gws/memo/message.links.unseens")
+            switched_label = t("gws/memo/message.links.seens")
+            default_url    = recent_sns_notifications_path
+            switched_url   = recent_sns_notifications_path(s: { unseen: @cur_user.id })
+          end
+        %>
+        <%= jquery do %>
+          $(".gws-memo-notice .unseens").click(function() {
+            $(".gws-memo-notice.popup-notice-container [data-url]").each(function() {
+              var url = $(this).attr("data-url");
+              var switched = $(this).attr("data-url-switched");
+              $(this).attr("data-url", switched);
+              $(this).attr("data-url-switched", url);
+            });
+            var label = $(this).text();
+            var switched = $(this).attr("data-label-switched");
+            $(this).text(switched);
+            $(this).attr("data-label-switched", label);
+          });
+          (new SS_PopupNotice(".gws-memo-notice.popup-notice-container")).render();
+        <% end %>
+        <div class="gws-memo-notice popup-notice-container">
+          <%= link_to sns_notifications_path, "class" => "ajax-popup-notice toggle-popup-notice", "data-url" => default_url, "data-url-switched" => switched_url do %>
+            <i class="material-icons">&#xE7F4;</i>
+            <% count = SS::Notification.unseens(@cur_user).size %>
+            <% if count > 0 %><span class="unseen popup-notice-unseen"><%= count %></span><% end %>
+          <% end %>
+          <div class="popup-notice" style="display: none;">
+            <header class="popup-notice-header">
+              <h2>
+                <%= t('modules.sns/notification') %>
+                <%= link_to default_label, "#",
+                  "class" => "ajax-popup-notice unseens",
+                  "data-url" => default_url,
+                  "data-url-switched" =>  switched_url,
+                  "data-label-switched" => switched_label
+                %>
+              </h2>
+            </header>
+            <div class="popup-notice-items"></div>
+            <%= link_to t("ss.links.more_all"), sns_notifications_path, class: "more-all" %>
+          </div>
+        </div>
       <% end %>
+
       <div class="dropdown dropdown-toggle" data-ref="#user-main-dropdown">
         <h2>
           <% if @cur_group %>
@@ -218,7 +282,15 @@
           <% @account_menu.to_a.each do |link_params| %>
             <li><%= link_to *link_params %></li>
           <% end %>
-          <li><%= link_to t(:"sns.profile"), sns_cur_user_profile_path %></li>
+
+          <% if @ss_mode == :gws %>
+            <li><%= link_to t(:"sns.profile"), gws_user_profile_path %></li>
+          <% else %>
+            <li><%= link_to t(:"sns.profile"), sns_cur_user_profile_path %></li>
+          <% end %>
+
+            <li><%= link_to t(:"job.task_manager"), job_sns_logs_path %></li>
+
           <li>
             <div class="text-zoom" data-notice="<%= t('ss.notice.text_zoomed', count: ':size') %>">
               <label><%= t('ss.text_zoom') %></label>
@@ -246,7 +318,7 @@
             </li>
             <li>
               <div class="gws-contrast-loading">
-                <img style="vertical-align:middle" src="/assets/img/loading.gif" alt="loading.." border="0" widtth="16" height="11" />
+                <%= ApplicationController.helpers.loading %>
               </div>
             </li>
           </ul>
@@ -307,6 +379,20 @@
         <div class="warning">
           <%= link_to t("ss.warning.initial_password"), sns_cur_user_account_path %>
         </div>
+        <% elsif @cur_setting.present? %>
+          <%
+            message = case @cur_setting.password_expired(@cur_user)
+            when :expired
+              t("ss.warning.password_expired")
+            when :nearly_expired
+              t("ss.warning.password_neary_expired")
+            end
+          %>
+          <% if message %>
+          <div class="warning">
+            <%= link_to(message, sns_cur_user_account_path) %>
+          </div>
+          <% end %>
         <% end %>
       <% end %>
 
@@ -316,12 +402,10 @@
           <li <%== %(class="active") if @crumbs.size == idx + 1 %>><%= link_to *item %></li>
         <% end %>
 
-        <% if @webmail_other_account_path && @cur_user.imap_settings.size > 1 %>
+        <% if @webmail_other_account_path && webmail_other_account?(@webmail_other_account_path) %>
           <li class="webmail-accounts">
             <span><%= t('webmail.links.select_account') %></span>
-            <%= select_tag :select_account,
-              options_for_select(account_options(@webmail_other_account_path), send(@webmail_other_account_path, params[:account])), class: "webmail-select-account"
-            %>
+            <%= webmail_other_account_select(@webmail_other_account_path) %>
           </li>
         <% end %>
       </ol>

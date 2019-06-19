@@ -5,6 +5,7 @@ class Cms::EditorTemplate
   include Cms::SitePermission
   include Cms::Addon::Html
   include Cms::Addon::Thumb
+  include Fs::FilePreviewable
 
   set_permission_name "cms_editor_templates", :edit
 
@@ -51,12 +52,17 @@ class Cms::EditorTemplate
   end
 
   def thumb_path
-    if thumb.present?
-      # you must set relative path from root.
-      "fs/#{thumb.id}/#{thumb.filename}"
-    else
-      # trim leading slash.
-      SS.config.cms.editor_template_thumb.gsub(/^\//, '')
-    end
+    url = thumb.present? ? thumb.url : SS.config.cms.editor_template_thumb
+
+    # trim leading slash because it is required relative path from root.
+    url = url[1..-1] if url.start_with?("/")
+    url
+  end
+
+  def file_previewable?(file, user:, member:)
+    return false if thumb_id != file.id
+    return false if user.blank?
+
+    true
   end
 end

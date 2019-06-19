@@ -1,4 +1,4 @@
-FactoryGirl.define do
+FactoryBot.define do
   factory :ezine_entry, class: Ezine::Entry do
     cur_site { cms_site }
     email "entry@example.jp"

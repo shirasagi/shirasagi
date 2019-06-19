@@ -7,6 +7,8 @@ module Cms::Content
   include SS::Reference::Site
   include Cms::GroupPermission
   include Cms::Addon::CheckLinks
+  include SS::Liquidization
+  include Fs::FilePreviewable
 
   attr_accessor :cur_node, :basename
   attr_accessor :serve_static_relation_files
@@ -26,15 +28,16 @@ module Cms::Content
     permit_params :state, :name, :index_name, :filename, :basename, :order, :released, :route
 
     validates :state, presence: true
-    validates :name, presence: true, length: { maximum: 80 }
+    validates :name, presence: true
     validates :filename, uniqueness: { scope: :site_id }, length: { maximum: 200 }
     validates :released, datetime: true
-
     after_validation :set_released, if: -> { public? }
     before_validation :set_filename
     before_validation :validate_filename
     after_validation :set_depth, if: ->{ filename.present? }
     before_destroy :create_history_trash
+
+    validate :validate_name, if: ->{ name.present? }
 
     scope :filename, ->(name) { where filename: name.sub(/^\//, "") }
     scope :node, ->(node, target = nil) {
@@ -55,6 +58,41 @@ module Cms::Content
         ])
       end
     }
+
+    liquidize do
+      export :id
+      export :name
+      export :index_name
+      export :url
+      export :full_url
+      export :basename
+      export :filename
+      export :order
+      export :date
+      export :released
+      export :updated
+      export :created
+      export :parent do
+        p = self.parent
+        p == false ? nil : p
+      end
+      export :css_class do |context|
+        issuer = context.registers[:cur_part] || context.registers[:cur_node]
+        template_variable_handler_class("class", issuer)
+      end
+      export :new? do |context|
+        issuer = context.registers[:cur_part] || context.registers[:cur_node]
+        issuer.respond_to?(:in_new_days?) && issuer.in_new_days?(self.date)
+      end
+      export :current? do |context|
+        # ApplicationHelper#current_url?
+        current = context.registers[:cur_path].sub(/\?.*/, "")
+        break false if current.delete("/").blank?
+        break true if self.url.sub(/\/index\.html$/, "/") == current.sub(/\/index\.html$/, "/")
+        break true if current =~ /^#{::Regexp.escape(url)}(\/|\?|$)/
+        false
+      end
+    end
   end
 
   module ClassMethods
@@ -154,8 +192,10 @@ module Cms::Content
     return @parent unless @parent.nil?
     return @parent = false if depth == 1 || filename !~ /\//
 
-    path = File.dirname(filename)
-    @parent = Cms::Node.where(site_id: site_id).in_path(path).sort(depth: -1).first
+    @parent ||= begin
+      path = File.dirname(filename)
+      Cms::Node.where(site_id: site_id).in_path(path).order_by(depth: -1).to_a.first
+    end
   end
 
   def becomes_with_route(name = nil)
@@ -180,6 +220,13 @@ module Cms::Content
 
   def node_target_options
     %w(current descendant).map { |m| [ I18n.t("cms.options.node_target.#{m}"), m ] }
+  end
+
+  def file_previewable?(file, user:, member:)
+    return false unless public?
+    return false unless public_node?
+    return false if try(:for_member_enabled?) && member.blank?
+    true
   end
 
   private
@@ -233,5 +280,14 @@ module Cms::Content
     backup.site = self.site
     backup.user = @cur_user
     backup.save
+  end
+
+  def validate_name
+    max_name_length = @cur_site.try(:max_name_length).to_i
+
+    return if max_name_length <= 0
+    if name.length > max_name_length
+      errors.add :name, :too_long, { count: max_name_length }
+    end
   end
 end

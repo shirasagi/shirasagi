@@ -7,9 +7,10 @@ class Gws::UserCsv::Importer
   attr_accessor :in_file
   attr_accessor :cur_site
   attr_accessor :cur_user
+  attr_accessor :webmail_support
   attr_reader :imported
 
-  permit_params :in_file
+  permit_params :in_file, :webmail_support
 
   validates :in_file, presence: true
   validates :cur_site, presence: true
@@ -31,6 +32,8 @@ class Gws::UserCsv::Importer
       @row = row
 
       item = build_item
+      next if item.blank?
+
       save_item(item)
       save_form_data(item)
     end
@@ -63,7 +66,7 @@ class Gws::UserCsv::Importer
       return
     end
 
-    diff = Gws::UserCsv::Exporter.csv_basic_headers - @table.headers
+    diff = Gws::UserCsv::Exporter.csv_basic_headers(webmail_support: @webmail_support) - @table.headers
     if diff.present?
       errors.add :in_file, :invalid_file_type
     end
@@ -81,16 +84,9 @@ class Gws::UserCsv::Importer
   end
 
   def build_item
-    id = row_value('id')
-    if id.present?
-      item = Gws::User.unscoped.where(id: id).first
-      if item.blank?
-        errors.add(:base, :not_found, line_no: @row_index, id: id)
-        return nil
-      end
-    else
-      item = Gws::User.new
-    end
+    item, fatal_error = find_item
+    return if fatal_error
+    item ||= Gws::User.new
     item.cur_site = cur_site
     item.cur_user = cur_user
 
@@ -101,14 +97,42 @@ class Gws::UserCsv::Importer
       item[k] = row_value(k)
     end
 
-    %i[
+    keys = %i[
       set_password set_title set_type set_initial_password_warning set_organization_id set_group_ids
-      set_main_group_ids set_switch_user_id set_gws_roles
-    ].each do |m|
+      set_main_group_ids set_switch_user_id set_gws_roles set_sys_roles
+    ]
+    keys += %i[set_webmail_roles] if webmail_support
+
+    keys.each do |m|
       send(m, item)
     end
 
     item
+  end
+
+  def find_item
+    id = row_value('id')
+    if id.present?
+      item = Gws::User.unscoped.site(cur_site).where(id: id).first
+      if item.blank?
+        errors.add(:base, :not_found, line_no: @row_index, id: id)
+        return [ nil, true ]
+      end
+
+      return [ item, false ]
+    end
+
+    %w(uid email).each do |key|
+      val = row_value(key)
+      next if val.blank?
+
+      item = Gws::User.unscoped.site(cur_site).where(key => val).first
+      next if item.blank?
+
+      return [ item, false ]
+    end
+
+    [ nil, false ]
   end
 
   def set_password(item)
@@ -118,7 +142,14 @@ class Gws::UserCsv::Importer
 
   def set_title(item)
     value = row_value('title_ids')
-    title = Gws::UserTitle.site(cur_site).where(code: value).first if value.present?
+
+    if value.present?
+      title = Gws::UserTitle.site(cur_site).where(code: value).first
+
+      item.imported_gws_user_title_key = value
+      item.imported_gws_user_title = title
+    end
+
     item.in_title_id = title ? title.id : ''
   end
 
@@ -144,18 +175,27 @@ class Gws::UserCsv::Importer
   end
 
   def set_group_ids(item)
+    item.group_ids = item.group_ids - rm_group_ids
     value = row_value('groups')
     if value.present?
-      groups = SS::Group.in(name: value.split(/\n/))
-    else
-      groups = SS::Group.none
+      item.group_ids += SS::Group.in(name: value.split(/\n/)).pluck(:id)
     end
-    item.group_ids = groups.pluck(:id)
+
+    item.imported_group_keys = value.to_s.split(/\n/)
+    item.imported_groups = item.groups
+    item.imported_gws_group = cur_site
+    item.group_ids = item.group_ids.uniq.sort
   end
 
   def set_main_group_ids(item)
     value = row_value('gws_main_group_ids')
-    group = SS::Group.where(name: value).first if value.present?
+
+    if value.present?
+      group = SS::Group.in_group(cur_site).and(name: value).first
+      item.imported_gws_main_group_key = value
+      item.imported_gws_main_group = group
+    end
+
     item.in_gws_main_group_id = group ? group.id : ''
   end
 
@@ -171,12 +211,50 @@ class Gws::UserCsv::Importer
   def set_gws_roles(item)
     value = row_value('gws_roles')
     if value.present?
-      add_role_ids = Gws::Role.site(cur_site).in(name: value.split(/\n/)).pluck(:id)
+      add_role_names = value.split(/\n/)
+      add_roles = Gws::Role.site(cur_site).in(name: add_role_names).to_a
+      add_role_ids = add_roles.pluck(:id)
+
+      item.imported_gws_role_keys = add_role_names
+      item.imported_gws_roles = add_roles
     else
       add_role_ids = []
     end
     site_role_ids = Gws::Role.site(cur_site).pluck(:id)
     item.gws_role_ids = item.gws_role_ids - site_role_ids + add_role_ids
+  end
+
+  def set_webmail_roles(item)
+    value = row_value('webmail_roles').to_s
+    if value.present?
+      add_role_names = value.split(/\n/)
+      add_roles = Webmail::Role.in(name: add_role_names).to_a
+      add_role_ids = add_roles.pluck(:id)
+
+      item.imported_webmail_role_keys = add_role_names
+      item.imported_webmail_roles = add_roles
+    else
+      add_role_ids = []
+    end
+    item.webmail_role_ids = add_role_ids
+  end
+
+  def set_sys_roles(item)
+    value = row_value('sys_roles').to_s
+    general_role_ids = Sys::Role.and_general.pluck(:id)
+
+    if value.present?
+      add_role_names = value.split(/\n/)
+      add_roles = Sys::Role.in(name: add_role_names).to_a
+      add_role_ids = add_roles.pluck(:id)
+
+      item.imported_sys_role_keys = add_role_names
+      item.imported_sys_roles = add_roles
+    else
+      add_role_ids = []
+    end
+
+    item.sys_role_ids = item.sys_role_ids - general_role_ids + add_role_ids
   end
 
   def save_item(item)
@@ -188,8 +266,11 @@ class Gws::UserCsv::Importer
   end
 
   def set_errors(item)
+    sig = "#{Gws::User.t(:uid)}: #{item.uid}の" if item.uid.present?
+    sig ||= "#{Gws::User.t(:email)}: #{item.email}の" if item.email.present?
+    sig ||= "#{Gws::User.t(:id)}: #{item.id}の" if item.persisted?
     item.errors.full_messages.each do |error|
-      errors.add(:base, "#{@row_index}: #{error}")
+      errors.add(:base, "#{@row_index}行目: #{sig}#{error}")
     end
   end
 
@@ -212,5 +293,9 @@ class Gws::UserCsv::Importer
 
     form_data.update_column_values(new_column_values)
     form_data.save
+  end
+
+  def rm_group_ids
+    @rm_group_ids ||= SS::Group.where(name: /\A#{Regexp.escape(cur_site.root.name)}/).pluck(:id)
   end
 end

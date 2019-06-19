@@ -30,6 +30,9 @@ production: &production
       # この設定は、mode が service の場合のみ有効です。
       interval: 5
 
+    # ユーザーが同時に実行できるジョブ数です。
+    size_limit_per_user: 1
+
   # プールの設定です。
   pool:
     # 音声読み上げプールの設定です。

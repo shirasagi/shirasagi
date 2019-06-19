@@ -17,8 +17,10 @@ module SS::Fields::Normalizer
   end
 
   def normalize_string_field(name, field_def)
+    metadata = field_def.options[:metadata]
+
     normalize = true
-    normalize = field_def.metadata.fetch(:normalize, true) if field_def.metadata
+    normalize = metadata.fetch(:normalize, true) if metadata.present?
     return unless normalize
 
     if field_def.options[:localize]

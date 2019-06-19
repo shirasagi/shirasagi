@@ -1,4 +1,6 @@
 module ApplicationHelper
+  include Category::CategoryHelper
+
   def tryb(&block)
     begin
       yield
@@ -9,6 +11,10 @@ module ApplicationHelper
 
   def br(str)
     h(str.to_s).gsub(/(\r\n?)|(\n)/, "<br />").html_safe
+  end
+
+  def br_not_h(str)
+    str.to_s.gsub(/(\r\n?)|(\n)/, "<br />").html_safe
   end
 
   def paragraph(str)
@@ -33,7 +39,7 @@ module ApplicationHelper
     current = @cur_path.sub(/\?.*/, "")
     return nil if current.delete("/").blank?
     return :current if url.sub(/\/index\.html$/, "/") == current.sub(/\/index\.html$/, "/")
-    return :current if current =~ /^#{Regexp.escape(url)}(\/|\?|$)/
+    return :current if current =~ /^#{::Regexp.escape(url)}(\/|\?|$)/
     nil
   end
 
@@ -156,5 +162,58 @@ module ApplicationHelper
         inner
       end
     end
+  end
+
+  def content_tag_if(name, content_or_options_with_block = nil, options = nil, escape = true, &block)
+    # content_tag(*args, &block)
+    if block_given?
+      options = content_or_options_with_block if content_or_options_with_block.is_a?(Hash)
+    end
+
+    if_condition = options ? options.delete(:if) : nil
+    if if_condition.respond_to?(:call)
+      if_condition = if_condition.call
+    end
+
+    if if_condition
+      return content_tag(name, content_or_options_with_block, options, escape, &block)
+    end
+
+    if block_given?
+      return capture { yield }
+    end
+
+    content_or_options_with_block
+  end
+
+  def liquid_registers
+    registers = {
+      cur_site: @cur_site,
+      preview: @preview,
+      cur_path: @cur_path,
+      cur_main_path: @cur_main_path,
+      mobile: false
+    }
+
+    registers[:mobile] = controller.filters.include?(:mobile) if controller.respond_to?(:filters)
+    registers[:cur_part] = @cur_part if @cur_part
+    registers[:cur_node] = @cur_node if @cur_node
+    registers[:cur_page] = @cur_page if @cur_page
+    registers[:cur_date] = @cur_date if @cur_date
+
+    registers
+  end
+
+  def loading(options = {})
+    options = options.dup
+    options[:style] ||= "vertical-align:middle"
+    options[:alt] ||= "loading.."
+    options[:border] ||= 0
+    options[:widtth] ||= 16
+    options[:height] ||= 11
+    options[:class] ||= %w(ss-base-loading)
+
+    # '<img style="vertical-align:middle" src="/assets/img/loading.gif" alt="loading.." border="0" widtth="16" height="11" />'
+    image_tag("/assets/img/loading.gif", options)
   end
 end

@@ -42,6 +42,7 @@ production: &production
           row: 1
           size_x: 4
           size_y: 2
+      - model: presence
       - model: reminder
         reminder_filter: future
       - model: monitor
@@ -57,6 +58,10 @@ production: &production
       - model: board
       - model: faq
       - model: qna
+
+    portlet_settings:
+      ad:
+        image_limit: 5
 
   chorg:
     models:
@@ -76,7 +81,8 @@ production: &production
       - "Gws::Memo::Message"
       - "Gws::Monitor::Category"
       - "Gws::Monitor::Post"
-      - "Gws::Notice"
+      - "Gws::Notice::Category"
+      - "Gws::Notice::Post"
       - "Gws::Portal::GroupPortlet"
       - "Gws::Portal::GroupSetting"
       - "Gws::Portal::UserPortlet"
@@ -134,6 +140,28 @@ production: &production
   popup_notice:
     # Default search condition in popup / unseen, seen
     search_condition: unseen
+
+  notice:
+    default_notice_individual_body_size_limit: 1_048_576
+    default_notice_total_body_size_limit: 31_457_280
+    default_notice_individual_file_size_limit: 10_485_760
+    default_notice_total_file_size_limit: 31_457_280
+    portal_browsed_state: unread
+
+  # Default state and style label in user presence
+  presence:
+    state:
+      - available: 在席
+      - unavailable: 離席
+      - leave: 退社
+      - dayoff: 休み
+      - '': 未設定
+    style:
+      available: active
+      unavailable: inactive
+      leave: none
+      dayoff: none
+      '': none
 
 test:
   <<: *production

@@ -59,8 +59,9 @@ class Opendata::Agents::Nodes::Dataset::DatasetController < ApplicationControlle
   def index
     @count          = pages.size
     @node_url       = @cur_node.url
+    @dataset_path   = @cur_node.url
     @search_path    = view_context.method(:search_datasets_path)
-    @rss_path       = ->(options = {}) { view_context.build_path("#{view_context.search_datasets_path}rss.xml?", options) }
+    @rss_path       = ->(options = {}) { view_context.build_path("#{view_context.search_datasets_path}rss.xml", options) }
     @tabs = []
     Opendata::Dataset.sort_options.each do |options|
       @tabs << { name: options[0],
@@ -69,11 +70,15 @@ class Opendata::Agents::Nodes::Dataset::DatasetController < ApplicationControlle
                  rss: @rss_path.call("sort" => options[1]) }
     end
 
+    @show_categories = false
+    @show_estat_categories = true
+
     max = 50
-    @areas    = aggregate_areas(max)
-    @tags     = aggregate_tags(max)
-    @formats  = aggregate_formats(max)
-    @licenses = aggregate_licenses(max)
+    @areas            = aggregate_areas(max)
+    @estat_categories = aggregate_estat_categories(max)
+    @tags             = aggregate_tags(max)
+    @formats          = aggregate_formats(max)
+    @licenses         = aggregate_licenses(max)
   end
 
   def rss

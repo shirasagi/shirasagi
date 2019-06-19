@@ -1,0 +1,39 @@
+<% return if !@item.comment_state_enabled? %>
+
+<div class="see mod-gws-notice-comment-post">
+  <%= form_tag(gws_notice_apis_comments_path(notice_id: @item), id: 'comment-form', method: :post) do %>
+    <%= text_field_tag 'item[text]' %>
+    <%= hidden_field_tag('redirect_to', request.fullpath) %>
+    <%= submit_tag(I18n.t('gws/schedule.buttons.comment'), class: :btn) %>
+  <% end %>
+
+  <% if @item.comments.present? %>
+    <table class="index">
+      <thead>
+      <tr>
+        <th class="html"><%= Gws::Notice::Comment.t :html %></th>
+        <th class="group-name"><%= Gws::Notice::Comment.t :user_group_name %></th>
+        <th class="user-name"><%= Gws::Notice::Comment.t :user_name %></th>
+        <th class="updated"><%= Gws::Notice::Comment.t :updated %></th>
+        <th class="operations"></th>
+      </tr>
+      </thead>
+      <tbody>
+      <% @item.comments.order_by(updated: -1).each do |comment| %>
+      <tr>
+        <td class="html"><%== comment.html %></td>
+        <td class="group-name"><%= comment.user_group_name.try(:split, '/').try(:last) %></td>
+        <td class="user-name"><%= comment.user_name %></td>
+        <td class="updated"><%= I18n.l(comment.updated) %></td>
+        <td class="operations">
+          <% if comment.user_id == @cur_user.id || @item.allowed?(:edit, @cur_user, site: @cur_site) %>
+            <%= link_to(t('ss.buttons.edit'), edit_gws_notice_apis_comment_path(notice_id: @item, id: comment, redirect_to: request.fullpath), class: 'btn ajax-box') %>
+            <%= link_to(t('ss.buttons.delete'), delete_gws_notice_apis_comment_path(notice_id: @item, id: comment, redirect_to: request.fullpath), class: 'btn ajax-box') %>
+          <% end %>
+        </td>
+      </tr>
+      <% end %>
+      </tbody>
+    </table>
+  <% end %>
+</div>

@@ -1,6 +1,11 @@
 <%= code_editor ".mod-event-calendarlist .html", mode: :html, readonly: true %>
 
 <dl class="see mod-event-calendarlist">
+  <% if @item.event_display.present? %>
+    <dt><%= @model.t :event_display %></dt>
+    <dd><%= @item.label :event_display %></dd>
+  <% end %>
+
   <dt><%= @model.t :conditions %></dt>
   <dd><%=br @item.conditions.join("\n") %></dd>
 

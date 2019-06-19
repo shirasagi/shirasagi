@@ -1,11 +1,19 @@
-<%= render_map_form "#map-canvas", site: @cur_site %>
+<%
+  addon ||= local_assigns.fetch(:addon, {})
+  addon[:display_body] = "hide"
+%>
+
+<% if map_enabled?(mypage: true) %>
+
+<%= render_map_form "##{addon[:id]} .map-canvas", site: @cur_site, map: { zoom: @item.map_zoom_level } %>
 
 <div class="mod-map">
   <div class="location-search">
     <%= text_field_tag :keyword, nil, class: "keyword", placeholder: t("map.search") %>
     <%= button_tag t("ss.buttons.search"), { type: :button, class: "btn" } %>
   </div>
-  <div id="map-canvas" style="width: 100%; height: 320px"></div>
+  <%= f.hidden_field :map_zoom_level %>
+  <div class="map-canvas" style="width: 100%; height: 320px"></div>
   <dl class="marker-setting">
     <dt>
       <%= t("map.markers") %><%= @item.tt :map_points %>
@@ -52,3 +60,9 @@
     </dd>
   </dl>
 </div>
+
+<% else %>
+
+<%== render file: "app/views/map/agents/addons/page/_form_no_api", locals: { f: f } %>
+
+<% end %>

@@ -6,6 +6,7 @@ class Board::PostsController < ApplicationController
 
   navi_view "board/main/navi"
 
+  before_action :check_node_permission
   before_action :set_item, only: [:show, :edit, :update, :delete, :destroy]
   before_action :set_topic, only: [:new_reply, :reply, :edit, :update]
   after_action :generate, only: [:create, :reply, :update, :destroy]
@@ -14,6 +15,10 @@ class Board::PostsController < ApplicationController
 
   def fix_params
     { cur_site: @cur_site, cur_node: @cur_node, cur_user: @cur_user, topic: @topic, parent: @topic }
+  end
+
+  def check_node_permission
+    raise "403" unless @cur_node.allowed?(:read, @cur_user, site: @cur_site, node: @cur_node)
   end
 
   def set_topic
@@ -62,7 +67,7 @@ class Board::PostsController < ApplicationController
   def download
     raise "403" unless @model.allowed?(:read, @cur_user, site: @cur_site, node: @cur_node)
 
-    csv = @model.site(@cur_site).node(@cur_node).order(updated: -1).to_csv
+    csv = @model.site(@cur_site).node(@cur_node).allow(:read, @cur_user, site: @cur_site, node: @cur_node).order(updated: -1).to_csv
     send_data csv.encode("SJIS", invalid: :replace, undef: :replace), filename: "board_posts_#{Time.zone.now.to_i}.csv"
   end
 end

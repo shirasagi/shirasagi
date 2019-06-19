@@ -2,24 +2,23 @@ class Gws::Memo::NoticesController < ApplicationController
   include Gws::BaseFilter
   include Gws::CrudFilter
 
-  model Gws::Memo::Notice
+  model SS::Notification
 
   def fix_params
-    { cur_user: @cur_user, cur_site: @cur_site }
+    { cur_user: @cur_user, cur_group: @cur_site }
   end
 
   private
 
   def set_item
     super
-    raise "404" unless @item.readable?(@cur_user, @cur_site)
+    raise "404" unless @item.readable?(@cur_user, group: @cur_site)
   end
 
   public
 
   def index
-    @items = @model.site(@cur_site).
-      member(@cur_user).
+    @items = @model.member(@cur_user).
       undeleted(@cur_user).
       search(params[:s]).
       page(params[:page]).per(50)
@@ -49,8 +48,7 @@ class Gws::Memo::NoticesController < ApplicationController
   end
 
   def recent
-    @items = @model.site(@cur_site).
-      member(@cur_user).
+    @items = @model.member(@cur_user).
       undeleted(@cur_user).
       search(params[:s]).
       limit(5)
@@ -60,5 +58,45 @@ class Gws::Memo::NoticesController < ApplicationController
 
   def show
     @item.set_seen(@cur_user).update if @item.state == "public"
+
+    if @item.url.present?
+      redirect_to @item.url
+      return
+    end
+
+    if @item.text.present? || @item.html.present?
+      render
+      return
+    end
+
+    redirect_to request.referer, notice: I18n.t("gws/circular.notice.set_seen")
+  end
+
+  def latest
+    @unseen = @model.member(@cur_user).
+      undeleted(@cur_user).
+      unseen(@cur_user)
+
+    if params[:filter] == 'unseen'
+      @items = @unseen
+    else
+      @items = @model.member(@cur_user).
+        undeleted(@cur_user).
+        limit(10)
+    end
+
+    resp = {
+      latest: @unseen.first.try(:created),
+      unseen: @unseen.size,
+      items: @items.map do |item|
+        {
+          date: item.created,
+          subject: item.subject,
+          url: gws_memo_notice_url(id: item.id),
+          unseen: item.unseen?(@cur_user)
+        }
+      end
+    }
+    render json: resp.to_json
   end
 end

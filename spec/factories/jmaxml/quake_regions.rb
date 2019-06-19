@@ -1,4 +1,4 @@
-FactoryGirl.define do
+FactoryBot.define do
   factory :jmaxml_region_base, class: Jmaxml::QuakeRegion do
     transient do
       site nil

@@ -7,12 +7,21 @@ class Member::BlogPage
   include Member::Addon::Blog::Genre
   include Member::Addon::Blog::Location
   include Cms::Addon::GroupPermission
+  include Cms::Addon::Release
 
   set_permission_name "member_blogs"
 
   before_save :seq_filename, if: ->{ basename.blank? }
 
   default_scope ->{ where(route: "member/blog_page") }
+
+  def file_previewable?(file, user:, member:)
+    return true if super
+
+    return true if member.present? && member_id == member.id
+
+    false
+  end
 
   private
 

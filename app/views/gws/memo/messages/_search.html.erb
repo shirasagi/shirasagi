@@ -1,11 +1,51 @@
-<% @s = OpenStruct.new params[:s] %>
-<div class="gws-memo-search">
+<%
+  @s = OpenStruct.new params[:s]
+  style = @s.to_h.values.flatten.select(&:present?).present? ? '' : 'style="display:none;"'
+%>
+
+<%= jquery do %>
+$('[name="s[priorities][]"]').on("click", function () {
+  $('[name="s[priorities][]"][value!="' + $(this).val() + '"]').prop('checked', false);
+});
+<% end %>
+
+<div class="gws-memo-search" <%== style %>>
   <%= form_for :s, url: '', html: { method: :get } do |f| %>
     <dl class="see">
+      <dt><%= @model.t :from_member_name %></dt>
+      <dd><%= f.text_field :from_member_name %></dd>
+      <dt><%= @model.t :to_member_name %></dt>
+      <dd><%= f.text_field :to_member_name %></dd>
       <dt><%= @model.t :subject %></dt>
       <dd><%= f.text_field :subject %></dd>
       <dt><%= t 'gws/memo/message.message' %></dt>
       <dd><%= f.text_field :text %></dd>
+      <dt><%= @model.t :send_date %></dt>
+      <dd>
+        <%= f.text_field :since, class: "date js-date" %>
+        - <%= f.text_field :before, class: "date js-date" %>
+      </dd>
+      <dt><%= @model.t :flags %></dt>
+      <dd>
+        <label class="flag">
+          <%= f.check_box_tag "s[unseen]", @cur_user.id, params.dig(:s, :unseen).present? %>
+          <%= @model.t :unseen %>
+        </label>
+        <label class="flag">
+          <%= f.check_box_tag "s[flagged]", @cur_user.id, params.dig(:s, :flagged).present? %>
+          <%= @model.t :flagged %>
+        </label>
+      </dd>
+      <dt><%= @model.t :priority %></dt>
+      <dd>
+        <% @model.new.priority_options.each do |k, v| %>
+          <label class="flag">
+            <%= f.check_box_tag "s[priorities][]", v, params.dig(:s, :priorities).to_a.include?(v) %>
+            <%= k %>
+          </label>
+        <% end %>
+      </dd>
+
       <dt></dt>
       <dd>
         <input type="submit" value="<%= t 'ss.buttons.search' %>" class="btn search" />

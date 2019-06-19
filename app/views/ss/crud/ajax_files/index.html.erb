@@ -8,8 +8,11 @@ if ($element) {
 
 SS.ajaxForm("form.user-file", {
   success: function(data) {
-    $("#cboxLoadedContent").load("<%= url_for(action: :index) %>", function() {
+    $("#cboxLoadedContent").load("<%= url_for(action: :index, file_size: params[:file_size]) %>", function() {
       if (!Array.isArray(data) || data.length == 0) return;
+
+      var sorted_name_and_datas = [];
+      var file_views = [];
 
       $.each(data, function(index, file) {
         var item = $(".user-files .select[data-id='" + file._id + "']");
@@ -18,12 +21,22 @@ SS.ajaxForm("form.user-file", {
         if (onSelect) {
           onSelect(item);
         } else {
-          $.ajax({
+          file_views.push($.ajax({
             url: url,
             success: function(data) {
-              $("#selected-files").append(data);
+              sorted_name_and_datas.push({name: file.filename, data: data});
             }
-          });
+          }));
+        }
+      });
+      $.when.apply($,file_views).done(function () {
+        sorted_name_and_datas.sort(function(a,b) {
+          if(a.name < b.name) return 1;
+          if(a.name > b.name) return -1;
+          return 0;
+        });
+        for (var i = 0; i < sorted_name_and_datas.length; i++) {
+          $("#selected-files").prepend(sorted_name_and_datas[i].data);
         }
       });
       $.colorbox.close();
@@ -33,7 +46,11 @@ SS.ajaxForm("form.user-file", {
     if (xhr.status == 413) {
       alert(["== Error =="].concat("<%= I18n.t('errors.messages.request_entity_too_large') %>").join("\n"));
     } else {
-      alert(["== Error =="].concat(xhr.statusText).join("\n"));
+      try {
+        alert(["== Error =="].concat(xhr.responseJSON).join("\n"));
+      } catch(_error) {
+        alert(["== Error =="].concat(xhr.statusText).join("\n"));
+      }
     }
   }
 });
@@ -47,7 +64,11 @@ if (onSelect) {
 } else {
   SS.ajax(".user-files .select", {
     success: function(data) {
-      $("#selected-files").append(data);
+      var dataFileId = $('<div>' + data + '</div>').find("[data-file-id]").attr("data-file-id");
+      if (dataFileId) {
+        $("#selected-files .file-view[data-file-id='" + dataFileId + "']").remove();
+      }
+      $("#selected-files").prepend(data);
       $.colorbox.close();
     }
   });
@@ -61,6 +82,8 @@ if (resizing) {
   var option = $('<option>').val(resizing).text(label).prop('selected', true);
   $('select.image-size').append(option);
 }
+
+SS_SearchUI.modal();
 <% end %>
 
 <% if @model.allowed?(:edit, @cur_user, site: @cur_site, node: @cur_node) %>
@@ -70,6 +93,7 @@ if (resizing) {
     <div class="search-ui-form">
       <%= f.file_field :in_files, multiple: :multiple, required: :required %>
       <%= f.select :resizing, @model.resizing_options, { include_blank: t("ss.resize_image") }, { class: "image-size" } %>
+      <%= hidden_field_tag :unnormalize, params[:unnormalize] if params[:unnormalize].present? %>
       <%= f.submit t("ss.buttons.save"), class: "save btn", style: "margin-left: 10px;" %>
     </div>
 
@@ -79,7 +103,12 @@ if (resizing) {
 <div class="index user-files">
   <% @items.each do |item| %>
   <article class="file-view" id="user-file<%= item.id %>">
-    <a class="thumb select" href="<%= url_for action: :select, id: item %>" data-id="<%= item.id %>" data-humanized-name="<%= item.humanized_name %>">
+    <%
+      opts = { action: :select, id: item }
+      opts[:unnormalize] = true if params[:unnormalize].present?
+      opts[:file_size] = true if params[:file_size].present?
+    %>
+    <a class="thumb select" href="<%= url_for opts %>" data-id="<%= item.id %>" data-humanized-name="<%= item.humanized_name %>">
       <% if item.image? %>
       <img src="<%= url_for(action: :thumb, id: item, _: item.updated.to_i) %>" alt="<%= item.basename %>" />
       <% else %>
@@ -88,10 +117,14 @@ if (resizing) {
     </a>
     <div class="name">
       <%= item.name %>
+      <% if params[:file_size] %>
+      <br />
+      <span class="file-size"><%= "( #{number_to_human_size(item.size)} )" %></span>
+      <% end %>
     </div>
     <nav class="menu">
       <% if item.allowed?(:edit, @cur_user, site: @cur_site) %>
-        <%= link_to t("ss.buttons.edit"), { action: :edit, id: item }, class: "edit" %>
+        <%= link_to t("ss.buttons.edit"), { action: :edit, id: item, file_size: params[:file_size] }, class: %w(edit ajax-box) %>
       <% end %>
       <% if item.allowed?(:delete, @cur_user, site: @cur_site) %>
         <%= link_to t("ss.buttons.delete"), { action: :destroy, id: item }, class: "delete", "data-remove" => "#user-file#{item.id}" %>

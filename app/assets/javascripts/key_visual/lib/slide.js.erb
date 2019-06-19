@@ -1,0 +1,38 @@
+//= require bxslider
+//= require_self
+
+this.KeyVisual_Image = (function () {
+  function KeyVisual_Image() {
+  }
+
+  KeyVisual_Image.slide = function (selector, opts) {
+    var defaultOpts, slider;
+    if (opts == null) {
+      opts = {};
+    }
+    defaultOpts = {
+      auto: true,
+      autoControls: true,
+      startText: "<%= I18n.t 'key_visual.controls.start' %>",
+      stopText: "<%= I18n.t 'key_visual.controls.stop' %>",
+      controls: false,
+      pagerCustom: selector + " .bx-thumbs"
+    };
+    return slider = $(selector + " .images").bxSlider($.extend(defaultOpts, opts));
+  };
+
+  KeyVisual_Image.randomize = function (selector) {
+    var list, wrap;
+    wrap = $(selector);
+    list = wrap.find("li");
+    list = list.sort(function () {
+      return Math.random() - .5;
+    });
+    return list.each(function () {
+      return wrap.append($(this));
+    });
+  };
+
+  return KeyVisual_Image;
+
+})();

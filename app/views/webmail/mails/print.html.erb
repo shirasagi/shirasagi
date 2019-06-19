@@ -1,0 +1,11 @@
+<%= render 'ss/crud/print_preview_head', links: [[ I18n.t('ss.links.back'), { action: :show, id: @item.uid } ]] %>
+
+<div class="sheet webmail-mail-preview">
+  <div class="main">
+    <%= render file: 'show' %>
+  </div>
+</div>
+
+<%= jquery do %>
+  $('body').addClass('webmail-print');
+<% end %>

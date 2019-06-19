@@ -1,4 +1,4 @@
-FactoryGirl.define do
+FactoryBot.define do
   factory :jmaxml_tsunami_region_base, class: Jmaxml::TsunamiRegion do
     cur_site { cms_site }
 

@@ -3,6 +3,41 @@
 production: &production
   options_limit: 100
 
+  # Upload limit size (Bytes)
+  # 104857600 = 100MB(1024*1024*100)
+  bulk_download_max_filesize: 104857600
+
+  preview:
+    map:
+      latitude_header:
+        - 緯度
+        - 北緯
+        - 緯度(北緯)
+        - 緯度（北緯）
+      longitude_header:
+        - 経度
+        - 東経
+        - 経度(東経)
+        - 経度（東経）
+      name_header:
+        - 名称
+        - 施設
+        - 施設名
+        - 設備
+        - 設備名
+        - 地区
+        - 地区名
+        - スポット
+        - スポット名
+    pdf:
+      page_limit: 3
+
+  harvest:
+    importer_api:
+      - ckan
+      - shirasagi_api
+      #- shirasagi_scraper
+
   # SPARQL Endpoint
   fuseki:
     disable: true

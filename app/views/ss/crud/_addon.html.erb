@@ -1,0 +1,23 @@
+<% addon ||= local_assigns.fetch(:addon, {}) %>
+<% addon_id = addon.fetch(:id, "addon-#{Time.zone.now.to_i}") %>
+<% addon_head ||= addon.fetch(:head, nil) %>
+<% addon_classes ||= Array(addon.fetch(:class, nil)).flatten.compact %>
+<% addon_toggle ||= addon.fetch(:toggle, false) %>
+
+<%
+  addon_view_classes = %w(addon-view) + addon_classes
+  if addon[:display_body] == "hide"
+    addon_view_classes << "body-closed"
+  end
+%>
+<% addon_head_classes = %w(addon-head) + (addon_toggle ? %w(toggle-head) : []) %>
+<% addon_body_classes = %w(addon-body) + (addon_toggle ? %w(toggle-body) : []) %>
+
+<div class="<%= addon_view_classes.join(' ') %>" <% if addon_id %>id="<%= addon_id %>"<% end %>>
+  <% if addon_head %>
+    <div class="<%= addon_head_classes.join(' ') %>"><h2><%= addon_head %></h2></div>
+  <% end %>
+  <div class="<%= addon_body_classes.join(' ') %>" <% if addon[:display_body] == "hide" %>style="display: none;"<% end %>>
+    <%= yield %>
+  </div>
+</div>

@@ -61,7 +61,7 @@ describe "gws_schedule_plans", type: :feature, dbscope: :example do
         click_button "削除"
       end
       wait_for_ajax
-      expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+      expect(page).to have_css('#notice', text: I18n.t('ss.notice.deleted'))
     end
   end
 end

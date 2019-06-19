@@ -15,7 +15,7 @@
     <% @crud_buttons.call f %>
   <% else %>
     <%= f.submit t("ss.buttons.save"), class: 'btn-primary save' %>
-    <%= link_to(t("ss.buttons.cancel"), params[:redirect_to], class: 'btn-default') %>
+    <%= link_to(t("ss.buttons.cancel"), URI.parse(params[:redirect_to].to_s).path, class: 'btn-default') %>
   <% end %>
 </footer>
 

@@ -1,0 +1,199 @@
+this.SS_SearchUI = (function () {
+  function SS_SearchUI() {
+  }
+
+  SS_SearchUI.anchorAjaxBox;
+
+  SS_SearchUI.defaultSelector = function (item) {
+    var a, data, id, input, name, self, tr;
+    self = this;
+    data = item.closest("[data-id]");
+    id = data.data("id");
+    name = data.data("name") || data.find(".select-item").text() || item.text() || data.text();
+    tr = $("<tr />").attr("data-id", id);//attr
+    input = self.anchorAjaxBox.closest("dl").find(".hidden-ids").clone(false);
+    input = input.val(id).removeClass("hidden-ids");
+    a = $('<a class="deselect btn" href="#"><%= I18n.t "ss.buttons.delete" %></a>').on("click", self.deselect);
+    tr.append($('<td />').append(input).append(name));
+    tr.append($('<td />').append(a));
+    self.anchorAjaxBox.closest("dl").find(".ajax-selected tbody").prepend(tr);
+    return self.anchorAjaxBox.closest("dl").find(".ajax-selected").trigger("change");
+  };
+
+  SS_SearchUI.select = function (item) {
+    var selector;
+    selector = this.anchorAjaxBox.data('on-select');
+    if (selector) {
+      return selector(item);
+    } else {
+      return this.defaultSelector(item);
+    }
+  };
+
+  SS_SearchUI.selectItems = function ($el) {
+    if (! $el) {
+      $el = $("#ajax-box");
+    }
+    var self = this;
+    $el.find(".items input:checkbox").filter(":checked").each(function () {
+      return self.select($(this));
+    });
+    return self.anchorAjaxBox.closest("dl").find(".ajax-selected").show();
+  };
+
+  SS_SearchUI.deselect = function (e) {
+    var table;
+    table = $(this).parents(".ajax-selected:first");
+    $(this).parents("tr:first").remove();
+    if (table.find("tbody tr").size() === 0) {
+      table.hide();
+    }
+    table.trigger("change");
+    return e.preventDefault();
+  };
+
+  SS_SearchUI.toggleSelectButton = function ($el) {
+    if (! $el) {
+      $el = $("#ajax-box");
+    }
+
+    if ($el.find(".items input:checkbox").filter(":checked").size() > 0) {
+      return $el.find(".select-items").parent("div").show();
+    } else {
+      return $el.find(".select-items").parent("div").hide();
+    }
+  };
+
+  SS_SearchUI.render = function () {
+    var self;
+    self = this;
+    return $(".ajax-selected").each(function () {
+      $(this).find("a.deselect").on("click", self.deselect);
+      if ($(this).find("a.deselect").size() === 0) {
+        return $(this).hide();
+      }
+    });
+  };
+
+  SS_SearchUI.modal = function (options) {
+    if (!options) {
+      options = {};
+    }
+
+    var self = this;
+
+    var colorbox = options.colorbox || $.colorbox;
+    self.anchorAjaxBox = options.anchor || colorbox.element();
+
+    var $el = options.$el || $("#ajax-box");
+
+    var isSameWindow = (window == $el[0].ownerDocument.defaultView)
+    if (isSameWindow) {
+      $el.find("form.search").on("submit", function (ev) {
+        var $div = $("<span />", { class: "loading" }).html(SS.loading);
+        $el.find("[type=submit]").after($div);
+
+        $(this).ajaxSubmit({
+          url: $(this).attr("action"),
+          success: function (data) {
+            $el.closest("#cboxLoadedContent").html(data);
+          },
+          error: function (data, status) {
+            $div.html("== Error ==");
+          }
+        });
+        ev.preventDefault();
+        return false;
+      });
+    }
+    $el.find(".pagination a").on("click", function (ev) {
+      self.selectItems($el);
+
+      if (isSameWindow) {
+        $el.find(".pagination").html(SS.loading);
+
+        $.ajax({
+          url: $(this).attr("href"),
+          type: "GET",
+          success: function (data) {
+            $el.closest("#cboxLoadedContent").html(data);
+          },
+          error: function (data, status) {
+            $el.find(".pagination").html("== Error ==");
+          }
+        });
+
+        ev.preventDefault();
+        return false;
+      } else {
+        return true;
+      }
+    });
+    $.each(options.submit_on_changes || ["#s_group"], function() {
+      $el.find(this).on("change", function (ev) {
+        self.selectItems($el);
+        return $el.find("form.search").submit();
+      });
+    });
+    $el.find(".submit-on-change").on("change", function (ev) {
+      self.selectItems($el);
+      return $el.find("form.search").submit();
+    });
+    self.anchorAjaxBox.closest("dl").find(".ajax-selected tr[data-id]").each(function () {
+      var id, item, tr;
+      id = $(this).data("id");
+      tr = $("#colorbox .items [data-id='" + id + "']");
+      tr.find("input[type=checkbox]").remove();
+      item = tr.find(".select-item,.select-single-item").html();
+      return tr.find(".select-item,.select-single-item").replaceWith("<span class='select-item' style='color: #888'>" + item + "</span>");
+    });
+    $el.find("table.index").each(function() {
+      SS_ListUI.render(this);
+    });
+    $el.find("a.select-item").on("click", function (ev) {
+      if (!SS.disableClick($(this))) {
+        return false;
+      }
+      //append newly selected item
+      self.select($(this));
+      self.anchorAjaxBox.closest("dl").find(".ajax-selected").show();
+      ev.preventDefault();
+      colorbox.close();
+      return false;
+    });
+    //remove old items
+    $el.find(".select-single-item").on("click", function (ev) {
+      if (!SS.disableClick($(this))) {
+        return false;
+      }
+      self.anchorAjaxBox.closest("dl").find(".ajax-selected tr[data-id]").each(function () {
+        if ($(this).find("input[value]").length) {
+          return $(this).remove();
+        }
+      });
+      //append newly selected item
+      self.select($(this));
+      self.anchorAjaxBox.closest("dl").find(".ajax-selected").show();
+      ev.preventDefault();
+      colorbox.close();
+      return false;
+    });
+    $el.find(".select-items").on("click", function (ev) {
+      if (!SS.disableClick($(this))) {
+        return false;
+      }
+      self.selectItems($el);
+      ev.preventDefault();
+      colorbox.close();
+      return false;
+    });
+    $el.find(".index").on("change", function (ev) {
+      return self.toggleSelectButton($el);
+    });
+    return self.toggleSelectButton($el);
+  };
+
+  return SS_SearchUI;
+
+})();
+

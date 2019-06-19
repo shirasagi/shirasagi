@@ -1,27 +1,27 @@
-<%= coffee do %>
+<%= jquery do %>
 
-$ ->
-  SS_SearchUI.modal()
-  $("#ajax-box .select-group").on "click", (e) ->
-    SS_SearchUI.anchorAjaxBox.closest("dl").find(".ajax-selected tr[data-id]").remove()
-    SS_SearchUI.select($(this))
-    SS_SearchUI.anchorAjaxBox.closest("dl").find(".ajax-selected").show()
+  SS_SearchUI.modal();
+  $("#ajax-box .select-group").on("click", function (e) {
+    var email, fax, link_name, link_url, tel;
+    SS_SearchUI.anchorAjaxBox.closest("dl").find(".ajax-selected tr[data-id]").remove();
+    SS_SearchUI.select($(this));
+    SS_SearchUI.anchorAjaxBox.closest("dl").find(".ajax-selected").show();
 
-    tel = $(this).parents("tr:first").find(".contact-tel").text()
-    fax = $(this).parents("tr:first").find(".contact-fax").text()
-    email = $(this).parents("tr:first").find(".contact-email").text()
-    link_url = $(this).parents("tr:first").find(".contact-link-url").text()
-    link_name = $(this).parents("tr:first").find(".contact-link-name").text()
+    tel = $(this).parents("tr:first").find(".contact-tel").text();
+    fax = $(this).parents("tr:first").find(".contact-fax").text();
+    email = $(this).parents("tr:first").find(".contact-email").text();
+    link_url = $(this).parents("tr:first").find(".contact-link-url").text();
+    link_name = $(this).parents("tr:first").find(".contact-link-name").text();
 
-    $("#item_contact_tel").val(tel)
-    $("#item_contact_fax").val(fax)
-    $("#item_contact_email").val(email)
-    $("#item_contact_link_url").val(link_url)
-    $("#item_contact_link_name").val(link_name)
+    $("#item_contact_tel").val(tel);
+    $("#item_contact_fax").val(fax);
+    $("#item_contact_email").val(email);
+    $("#item_contact_link_url").val(link_url);
+    $("#item_contact_link_name").val(link_name);
 
-    e.preventDefault()
-    $.colorbox.close()
-
+    e.preventDefault();
+    $.colorbox.close();
+  });
 <% end %>
 
 <div class="search-ui-form">

@@ -237,6 +237,10 @@ ja:
         - 試験XMLを対象とするかどうかを選択します。
         - 有効を選択した場合、試験XMLを受信した場合にも受信時の動作が実行されます。
 
+    jmaxml/addon/filter:
+      execute_filters_job_state:
+        - フィルター処理を別のジョブとして実行する場合、有効にします。
+
     jmaxml/addon/trigger/quake:
       earthquake_intensity:
         - 震度を選択します。

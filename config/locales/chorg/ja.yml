@@ -27,7 +27,7 @@ ja:
           header: 本番実行しますが、よろしいですか？
           run_button: 本番実行
         run_options: 実行オプション
-      add_changesets:  &group_props
+      add_changesets: &group_props
         name: グループ名
         order: 表示順
         contact_tel: 電話番号
@@ -83,6 +83,30 @@ ja:
       job_started: 組織変更処理を開始しました。
       job_reserved: 組織変更処理を予約しました。
       test_run: テスト実行
+      import_revision_file_confirmation: 組織変更操作をCSVからインポートします。\n既に操作が登録されている場合は削除されます。\n実行してよろしいですか？
+    options:
+      changeset_type:
+        add: 新設
+        move: 移動
+        unify: 統合
+        division: 分割
+        delete: 廃止
+      delete_method:
+        disable_if_possible: 無効にし、後で回復できるようにする
+        always_delete: 常に物理削除する
+    import:
+      changeset:
+        id: ID
+        type: 操作
+        source: 操作元グループ名
+        destination: 操作先グループ名
+        order: 表示順
+        contact_tel: 電話番号
+        contact_fax: ファックス番号
+        contact_email: メールアドレス
+        contact_link_url: リンクURL
+        contact_link_name: リンク名
+        ldap_dn: DN
 
   modules:
     chorg: 組織変更
@@ -111,11 +135,17 @@ ja:
         name: 名前
         job_ids: ジョブ
         user_csv_file_id: ユーザーCSVファイル
+        revision_csv_file_id: 組織変更操作CSV
+        delete_method: 削除方法
       chorg/model/changeset:
         type: 種別
+        sources: 移動元
+        destinations: 移動先
       chorg/run_params:
         add_newly_created_group_to_site: 新規作成グループをサイトに追加
         reservation: 予約実行
+      chorg/revision:
+        content_csv_file_id: コンテンツCSVファイル
 
   tooltip:
     chorg/model/revision:
@@ -126,6 +156,20 @@ ja:
         - ユーザーCSVには異動後のグループ名や役職を設定してください。
         -
         - ファイルを選択しない場合、組織変更実行後にユーザーは異動しませんので手動でユーザーを異動させてください。
+      revision_csv_file_id:
+        - 組織変更操作（新設、移動、統合、分割、廃止）を登録する為のCSVファイルを選択します。
+        - CSVファイルから登録を行う場合、既に登録されている操作は削除されます。
+        - ""
+        - 「サンプルCSVをダウンロード」より、自治体サンプルサイトの組織変更操作例をダウンロードできます。
+        - 内容を修正してインポートしてください。
+      delete_method:
+        - ユーザーとグループの削除方法を選択します。
+        - 「無効にし、後で回復できるようにする」を選択すると、ユーザーとグループは無効状態になって残ります。
+        - 「常に物理削除する」を選択すると、ユーザーとグループは完全に削除されます。
+    chorg/revision:
+      content_csv_file_id:
+        - 組織変更実行後にパーツ、レイアウト、ページ、フォルダーの異動を行うためのコンテンツCSVファイルを選択します。
+        - コンテンツCSVには異動後のグループ名などを設定してください。
     chorg/run_params:
       reservation:
         - 実行する時間を予約できます。

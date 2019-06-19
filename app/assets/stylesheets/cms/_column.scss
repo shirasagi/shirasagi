@@ -1,0 +1,43 @@
+.column-value ~ .column-value {
+  margin-top: 15px;
+}
+
+.column-value-body {
+  padding-bottom: 5px;
+
+  .link-fields {
+    width: 100%;
+  }
+
+  .link-label {
+    width: 30%;
+  }
+  .link-url {
+    width: 50%;
+  }
+}
+
+.column-value-files {
+  -js-display: flex;
+  @include display-flex;
+  @include flex-wrap(wrap);
+  margin-top: 10px;
+  @include clear;
+  @include mb {
+    margin-top: 10px;
+  }
+}
+
+.column-youtube-right {
+  text-align: right;
+}
+
+.column-youtube-left {
+  text-align: left;
+  float: left;
+}
+
+.column-value.ui-sortable-helper {
+  @include box-shadow(0px 1px 5px #666);
+  @include opacity(0.8);
+}

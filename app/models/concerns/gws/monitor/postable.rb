@@ -5,6 +5,7 @@ module Gws::Monitor::Postable
   include Gws::Reference::User
   include Gws::Reference::Site
   include Gws::GroupPermission
+  include Fs::FilePreviewable
 
   included do
     store_in collection: "gws_monitor_posts"
@@ -119,6 +120,26 @@ module Gws::Monitor::Postable
     end
 
     becomes_with(Gws::Monitor::Topic)
+  end
+
+  def file_previewable?(file, user:, member:)
+    return false if user.blank?
+    return false if !file_ids.include?(file.id)
+
+    if topic.blank? || topic.id == id
+      # cur_group is wanted, but currently unable to obtain it.
+      # so all groups which user has are checked.
+      ret = user.groups.in_group(site).active.any? do |group|
+        attended?(group)
+      end
+      return ret if ret
+
+      return topic.allowed?(:read, user, site: site)
+    end
+
+    user.groups.in_group(site).active.any? do |group|
+      showable_comment?(user, group)
+    end
   end
 
   private

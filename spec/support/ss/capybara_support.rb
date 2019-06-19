@@ -35,6 +35,7 @@ module SS::CapybaraSupport
 
   def activate_chrome(config)
     require 'selenium-webdriver'
+    Capybara.server = :webrick
     Capybara.register_driver :chrome do |app|
       options = Selenium::WebDriver::Chrome::Options.new
       options.add_preference('download.prompt_for_download', false)
@@ -61,10 +62,6 @@ module SS::CapybaraSupport
     Capybara.javascript_driver = :chrome
     Capybara.default_max_wait_time = 15
 
-    config.before( :each ) do
-      SS::DownloadHelpers::clear_downloads
-    end
-
     config.filter_run_excluding(driver: :poltergeist)
     puts '[Capybara] with Google Chrome'
     true
@@ -72,6 +69,7 @@ module SS::CapybaraSupport
 
   def activate_poltergeist(config)
     require 'capybara/poltergeist'
+    Capybara.server = :webrick
     Capybara.register_driver :poltergeist do |app|
       Capybara::Poltergeist::Driver.new(app, inspector: true)
     end

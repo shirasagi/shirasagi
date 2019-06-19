@@ -42,7 +42,7 @@ describe "gws_discussion_topics", type: :feature, dbscope: :example do
         click_button "削除"
       end
 
-      expect(page).not_to have_text(text)
+      expect(page).to have_no_text(text)
     end
   end
 end

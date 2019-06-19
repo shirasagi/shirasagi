@@ -20,4 +20,20 @@ class Opendata::Mailer < ActionMailer::Base
 
     mail from: @to_user.email, to: @to_user.email
   end
+
+  def export_datasets_mail(args)
+    @to_user = SS::User.find(args[:t_uid])
+    @subject = "#{I18n.t('opendata.export.subject')} - #{args[:site].name}"
+    @link    = args[:link]
+
+    mail from: @to_user.email, to: @to_user.email
+  end
+
+  def notify_dataset_update_plan(site, datasets)
+    @subject = I18n.t("opendata.notify_update_plan.subject")
+    @datasets = datasets
+    @site = site
+
+    mail from: site.sender_address, to: site.sender_address
+  end
 end

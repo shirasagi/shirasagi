@@ -23,7 +23,7 @@ class Gws::Memo::MessagesController < ApplicationController
 
   def set_item
     super
-    raise "404" unless @item.readable?(@cur_user, @cur_site)
+    raise "404" unless @item.readable?(@cur_user, site: @cur_site)
   end
 
   def fix_params
@@ -43,19 +43,24 @@ class Gws::Memo::MessagesController < ApplicationController
   end
 
   def set_cur_folder
-    if params[:folder] =~ /^(INBOX|INBOX\.Trash|INBOX\.Draft|INBOX\.Sent)$/
-      @cur_folder = Gws::Memo::Folder.static_items(@cur_user, @cur_site).find{ |dir| dir.folder_path == params[:folder] }
-    else
-      @cur_folder = Gws::Memo::Folder.user(@cur_user).site(@cur_site).find_by(_id: params[:folder])
+    @cur_folder ||= begin
+      if Gws::Memo::Folder::STATIC_FOLDER_NAMES.include?(params[:folder])
+        Gws::Memo::Folder.static_items(@cur_user, @cur_site).find { |dir| dir.folder_path == params[:folder] }
+      else
+        Gws::Memo::Folder.user(@cur_user).site(@cur_site).find_by(id: params[:folder])
+      end
     end
   end
 
   def set_folders
-    @folders = Gws::Memo::Folder.static_items(@cur_user, @cur_site) + Gws::Memo::Folder.user(@cur_user).site(@cur_site)
+    @folders = Gws::Memo::Folder.static_items(@cur_user, @cur_site) +
+               Gws::Memo::Folder.user(@cur_user).site(@cur_site).tree_sort.map.to_a
     @folders.each { |folder| folder.site = @cur_site }
   end
 
   def send_forward_mails
+    return if @item.draft?
+
     forward_emails = Gws::Memo::Forward.site(@cur_site).
       in(user_id: @item.member_ids).
       where(default: "enabled").
@@ -98,7 +103,7 @@ class Gws::Memo::MessagesController < ApplicationController
 
   def new
     @item = @model.new pre_params.merge(fix_params)
-    @item.new_memo
+    @item.new_memo(to: params[:to])
   end
 
   def create
@@ -157,7 +162,7 @@ class Gws::Memo::MessagesController < ApplicationController
   end
 
   def destroy
-    render_destroy @item.destroy_from_folder(@cur_user, @cur_folder, unsend: params[:unsend]), notice: t("ss.notice.deleted")
+    render_destroy @item.destroy_from_folder(@cur_user, @cur_folder, unsend: params[:unsend])
   end
 
   def destroy_all
@@ -216,7 +221,7 @@ class Gws::Memo::MessagesController < ApplicationController
     @item = @model.new pre_params.merge(fix_params)
     @ref = @model.site(@cur_site).find(params[:id]) rescue nil
 
-    @item.new_memo(@ref)
+    @item.new_memo(ref: @ref)
     @item.ref_file_ids = @ref.file_ids
     render :new
   end
@@ -257,7 +262,7 @@ class Gws::Memo::MessagesController < ApplicationController
 
   def trash_all
     @items.each do |item|
-      raise "404" unless item.readable?(@cur_user, @cur_site)
+      raise "404" unless item.readable?(@cur_user, site: @cur_site)
       item.move(@cur_user, 'INBOX.Trash').update
     end
     render_destroy_all(false)
@@ -265,7 +270,7 @@ class Gws::Memo::MessagesController < ApplicationController
 
   def move_all
     @items.each do |item|
-      raise "404" unless item.readable?(@cur_user, @cur_site)
+      raise "404" unless item.readable?(@cur_user, site: @cur_site)
       item.move(@cur_user, params[:path]).update
     end
     render_destroy_all(false)
@@ -273,7 +278,7 @@ class Gws::Memo::MessagesController < ApplicationController
 
   def set_seen_all
     @items.each do |item|
-      raise "404" unless item.readable?(@cur_user, @cur_site)
+      raise "404" unless item.readable?(@cur_user, site: @cur_site)
       item.set_seen(@cur_user).update
     end
     render_destroy_all(false)
@@ -281,7 +286,7 @@ class Gws::Memo::MessagesController < ApplicationController
 
   def unset_seen_all
     @items.each do |item|
-      raise "404" unless item.readable?(@cur_user, @cur_site)
+      raise "404" unless item.readable?(@cur_user, site: @cur_site)
       item.unset_seen(@cur_user).update
     end
     render_destroy_all(false)
@@ -293,7 +298,7 @@ class Gws::Memo::MessagesController < ApplicationController
 
   def set_star_all
     @items.each do |item|
-      raise "404" unless item.readable?(@cur_user, @cur_site)
+      raise "404" unless item.readable?(@cur_user, site: @cur_site)
       item.set_star(@cur_user).update
     end
     render_destroy_all(false)
@@ -301,7 +306,7 @@ class Gws::Memo::MessagesController < ApplicationController
 
   def unset_star_all
     @items.each do |item|
-      raise "404" unless item.readable?(@cur_user, @cur_site)
+      raise "404" unless item.readable?(@cur_user, site: @cur_site)
       item.unset_star(@cur_user).update
     end
     render_destroy_all(false)
@@ -321,5 +326,40 @@ class Gws::Memo::MessagesController < ApplicationController
         format.json { render json: @item.errors.full_messages, status: :unprocessable_entity, content_type: json_content_type }
       end
     end
+  end
+
+  def latest
+    @sort_hash = @cur_user.memo_message_sort_hash(@cur_folder, params[:sort], params[:order])
+
+    inbox = Gws::Memo::Folder.new(path: 'INBOX')
+    @unseen = @model.folder(inbox, @cur_user).
+      site(@cur_site).
+      unseen(@cur_user).
+      reorder(@sort_hash)
+
+    @items = @model.folder(@cur_folder, @cur_user).
+      site(@cur_site).
+      reorder(@sort_hash).
+      limit(10)
+
+    fix_seen = @cur_folder.unseen? ? nil : true # Sent or Draft
+
+    resp = {
+      latest: @unseen.first.try(:send_date),
+      unseen: @unseen.size,
+      items: @items.map do |item|
+        {
+          date: item.send_date,
+          from: item.user_name,
+          to: item.display_to.presence,
+          cc: item.display_cc.presence,
+          subject: item.subject,
+          text: item.text.presence,
+          url: gws_memo_message_url(folder: 'INBOX', id: item.id),
+          unseen: fix_seen ? false : item.unseen?(@cur_user)
+        }
+      end
+    }
+    render json: resp.to_json
   end
 end

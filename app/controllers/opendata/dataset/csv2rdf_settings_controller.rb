@@ -49,7 +49,7 @@ class Opendata::Dataset::Csv2rdfSettingsController < ApplicationController
     @item.attributes = fix_params
 
     params[:s] ||= {}
-    params[:s][:category_ids] ||= [ "false" ]
+    params[:s][:category_ids] ||= %w(false)
   end
 
   def set_rdf_class
@@ -76,7 +76,9 @@ class Opendata::Dataset::Csv2rdfSettingsController < ApplicationController
     end
 
     @item.attributes = get_params
-    @item.send("validate_#{params[:action]}")
+    action = %w(header_size rdf_class column_types).delete(params[:action])
+    raise '404' if action.blank?
+    @item.send("validate_#{action}")
     if @item.errors.blank? && @item.update
       respond_to do |format|
         format.html { redirect_to action: opts[:action] }
@@ -111,6 +113,9 @@ class Opendata::Dataset::Csv2rdfSettingsController < ApplicationController
   end
 
   public
+
+  def guidance
+  end
 
   def header_size
     render_with(file: "wizards", action: :rdf_class)

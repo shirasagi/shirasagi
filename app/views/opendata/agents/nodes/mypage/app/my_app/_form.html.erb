@@ -1,10 +1,13 @@
 <%= javascript_include_tag "opendata/opendata" %>
 <link href="/assets/css/colorbox/colorbox.css" media="all" rel="stylesheet" />
 <script src="/assets/js/jquery.colorbox.js"></script>
-<%= coffee do %>
-$ ->
+<%= jquery do %>
 
-  $("a.ajax-box").colorbox({ fixed: true, width: "90%", height: "90%" })
+  $("a.ajax-box").colorbox({
+    fixed: true,
+    width: "90%",
+    height: "90%"
+  });
 
 <% end %>
 

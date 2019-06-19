@@ -11,12 +11,17 @@ ja:
       gws/portal/portlet/board: 掲示板設定
       gws/portal/portlet/faq: よくある質問設定
       gws/portal/portlet/qna: Ｑ＆Ａ設定
-      gws/portal/portlet/circular: 掲示板設定
+      gws/portal/portlet/circular: 回覧板設定
       gws/portal/portlet/monitor: 照会・回答設定
       gws/portal/portlet/share: 共有ファイル設定
       gws/portal/portlet/report: レポート設定
       gws/portal/portlet/workflow: ワークフロー設定
       gws/portal/portlet/attendance: 出退勤設定
+      gws/portal/portlet/notice: お知らせ設定
+      gws/portal/portlet/presence: 在席管理設定
+      gws/portal/portlet/survey: アンケート
+      gws/portal/portlet/ad: 広告
+      gws/portal/portlet/ad_file: 広告画像
 
   gws/portal:
     self_portal: 個人
@@ -25,6 +30,7 @@ ja:
     root_portal: 全庁ポータル
     create_portlets_for_reset: 作成されるポートレット
     delete_portlets_for_reset: 削除されるポートレット
+    other_config: 他者・他部課設定
     tabs:
       user_portal: 個人
       root_portal: 全庁
@@ -77,6 +83,18 @@ ja:
       attendance:
         name: 出退勤
         text: 本日の出退勤を表示および打刻します。
+      notice:
+        name: お知らせ
+        text: 新着のお知らせを表示します。
+      presence:
+        name: 在席管理
+        text: グループに所属するユーザーの在席状況を表示します。
+      survey:
+        name: アンケート
+        text: 新着または期限間近のアンケートを表示します。
+      ad:
+        name: 広告
+        text: 広告を表示します。
     links:
       manage_portlets: ポートレットの管理
       arrange_portlets: ポートレットの配置
@@ -147,6 +165,7 @@ ja:
         qna_category_ids: カテゴリー
       gws/addon/portal/portlet/circular:
         circular_category_ids: カテゴリー
+        circular_article_state: 表示種別
       gws/addon/portal/portlet/monitor:
         monitor_category_ids: カテゴリー
         monitor_answerable_article: 表示範囲
@@ -155,9 +174,37 @@ ja:
         share_folder_id: フォルダー
       gws/addon/portal/portlet/workflow:
         workflow_state: 表示範囲
+      gws/addon/portal/portlet/notice:
+        notice_severity: 重要度
+        notice_browsed_state: 既読・未読
+        notice_category_ids: カテゴリー
+        notice_folder_ids: フォルダー
+      gws/addon/portal/portlet/presence:
+        group_id: グループ
+        custom_group_id: カスタムグループ
+      gws/addon/portal/portlet/survey:
+        survey_answered_state: 回答・未回答
+        survey_sort: 並び順
+        survey_category_ids: カテゴリー
+      gws/addon/portal/portlet/ad:
+        ad_width: 横幅
+        ad_speed: スライド時間
+        ad_pause: 静止時間
+      gws/addon/portal/portlet/ad_file:
+        ad_files: 広告画像
+        ad_file_ids: 広告画像
+    errors:
+      models:
+        gws/addon/portal/portlet/ad_file:
+          attributes:
+            ad_files:
+              too_many_files: "は%{limit}つまで添付することができます。"
 
   tooltip:
     gws/portal/user_setting:
     gws/portal/group_setting:
     gws/portal/portlet_model:
       name: ポートレット名を入力します。
+      circular_article_state:
+        - <b>未読</b> - 未読のみをポータルに表示する。
+        - <b>全表示</b> - 既読・未読すべてをポータルに表示する。

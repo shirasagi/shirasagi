@@ -1,0 +1,73 @@
+<% select_like_columns = [Gws::Column::CheckBox, Gws::Column::RadioButton, Gws::Column::Select] %>
+
+<%
+  def find_aggregation_count(column_id, option)
+    ret = @aggregation.find { |aggr| aggr["_id"]["column_id"] == column_id && aggr["_id"]["value"] == option }
+    ret ? ret["count"] : 0
+  end
+%>
+
+<%= javascript_include_tag 'ss/chart' %>
+
+<div class="summary">
+  <dl class="see">
+    <dt><%= t "inquiry.total_count" %></dt>
+    <dd>
+      <%= @items.count.to_s(:delimited) %>
+      <%= t "ss.units.count" %>
+    </dd>
+  </dl>
+</div>
+
+<% @cur_form.columns.order_by(order: 1, name: 1).each do |column| %>
+  <% next if !select_like_columns.any? { |t| column.is_a?(t) } %>
+
+  <% gen = SS::HslGenerator.new(column.id).to_enum %>
+  <% labels = [] %>
+  <% values = [] %>
+  <% bg_colors = [] %>
+
+  <div class="summary" id="summary-<%= column.id %>">
+    <h2><%= column.name %></h2>
+
+    <div class="chart">
+      <canvas id="canvas-<%= column.id %>"></canvas>
+    </div>
+
+    <table class="index">
+      <tbody>
+        <% column.select_options.each do |option| %>
+          <tr>
+            <td><%= option %></td>
+            <td class="count">
+              <% value = find_aggregation_count(column.id, option) %>
+              <%= value.to_s(:delimited) %>
+              <%= t "ss.units.count" %>
+            </td>
+          </tr>
+
+          <% labels << option %>
+          <% values << value %>
+          <% bg_colors << gen.next %>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+
+  <%= jquery do %>
+    var config = {
+      type: 'pie',
+      data: {
+        datasets: [{
+          data: <%== values.to_json %>,
+          backgroundColor: <%== bg_colors.to_json %>
+        }],
+        labels: <%== labels.to_json %>
+      },
+      options: { responsive: true }
+    };
+
+    var ctx = $("#canvas-<%= column.id %>")[0].getContext("2d");
+    var chart = new Chart(ctx, config);
+  <% end %>
+<% end %>

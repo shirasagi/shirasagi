@@ -1,0 +1,52 @@
+<% value ||= nil %>
+<% controller ||= false %>
+<%= render 'cms/agents/columns/main/base', f: f, column: column, value: value, controller: controller do |id| %>
+  <%= hidden_field_tag("#{f.object_name}[][in_wrap][value]", value.try(:value), id: nil, class: "hidden-value") %>
+  <label class="column-table-height"><%= I18n.t("cms.column_table.height") %><input type="text" class="height" style="width:50px" /></label>
+  <label class="column-table-width"><%= I18n.t("cms.column_table.width") %><input type="text" class="width" style="width:50px" /></label>
+  <label class="column-table-header"><%= I18n.t("cms.column_table.header") %><%= select_tag :hedaer, options_for_select(column.header_type_options), class: "header" %></label>
+  <label class="column-table-caption"><%= I18n.t("cms.column_table.caption") %><input type="text" class="caption" style="width:50%;" data-check-presence="<%= I18n.t("cms.column_table.caption") %>" /></label>
+  <button type="button" class="create-table"><%= I18n.t("cms.column_table.create") %></button><br />
+
+  <div class="table-editor">
+    <% if value.try(:value).present? %>
+      <%= value.value.html_safe %>
+    <% end %>
+  </div>
+
+  <div class="table-menu table-menu-top">
+    <ul>
+      <li class="remove-tds">列を削除する</li>
+      <li class="append-right">右に列を挿入する</li>
+      <li class="append-left">左に列を挿入する</li>
+    </ul>
+  </div>
+
+  <div class="table-menu table-menu-left">
+    <ul>
+      <li class="remove-tr">行を削除する</li>
+      <li class="append-top">上に行を挿入する</li>
+      <li class="append-bottom">下に行を挿入する</li>
+    </ul>
+  </div>
+
+  <%= jquery do %>
+    var table = Cms_Column_Table.render("#<%= id %>");
+
+    Cms_Form.addSyntaxCheck("<%= id %>", {
+      resolve: "text",
+      type: "array",
+      name: "<%= column.name %>",
+      getContent: function () {
+        var array = [];
+        array.push(table.caption());
+        array.push(table.tableHtml());
+        return array;
+      },
+      setContent: function (content) {
+        table.caption(content[0]);
+        table.tableHtml(content[1]);
+      }
+    });
+  <% end %>
+<% end %>

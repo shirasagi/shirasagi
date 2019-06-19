@@ -19,9 +19,9 @@ end
       <dl class="see rdf-search-classes-search-options">
         <dt><%= t "opendata.labels.category_ids" %></dt>
         <dd>
-          <span style="inline-block"><label style="margin-right: 10px;"><%= check_box_tag("s[category_ids][]", false, params[:s].try(:[], :category_ids).try(:include?, "false")) %>すべて</label></span>
+          <span style="display: inline-block"><label style="margin-right: 10px;"><%= check_box_tag("s[category_ids][]", false, params[:s].try(:[], :category_ids).try(:include?, "false")) %>すべて</label></span>
           <% categories.each do |cate| %>
-            <span style="inline-block"><label style="margin-right: 10px;"><%= check_box_tag("s[category_ids][]", cate._id, params[:s].try(:[], :category_ids).try(:include?, cate._id.to_s)) %><%= cate.name %></label></span>
+            <span style="display: inline-block"><label style="margin-right: 10px;"><%= check_box_tag("s[category_ids][]", cate._id, params[:s].try(:[], :category_ids).try(:include?, cate._id.to_s)) %><%= cate.name %></label></span>
           <% end %>
         </dd>
         <dt><%= t "rdf.apis.search_options.vocab" %></dt>
@@ -45,7 +45,7 @@ end
         <% classes.each do |item| %>
           <tr data-id="<%= item.id %>" data-uri="<%= "#{item.vocab.uri}#{item.name}" %>">
             <td class="checkbox"><%= f.radio_button(:class_id, item.id, checked: @item.class_id == item.id) %></td>
-            <td class="name"><%= link_to "#{item.vocab.prefix}:#{item.name}", action: :rdf_class_preview, rdf_cid: item.id, s: params[:s] %></td>
+            <td class="name"><%= link_to "#{item.vocab.prefix}:#{item.name}", action: :rdf_class_preview, rdf_cid: item.id, s: params.to_unsafe_h[:s] %></td>
             <td><%= item.comments.try(:preferred_value) %></td>
           </tr>
         <% end %>
@@ -55,8 +55,8 @@ end
       <%= paginate classes if classes.try(:current_page) %>
 
       <footer class="send">
-        <%= f.submit t("opendata.buttons.next"), class: :save %>
-        <%= f.button t("opendata.buttons.back"), type: :reset, onclick: "location.href='#{prev_url}'; return false;" %>
+        <%= f.submit t("opendata.buttons.next"), class: "save btn-primary" %>
+        <%= f.button t("opendata.buttons.back"), type: :reset, class: "btn-default", onclick: "location.href='#{prev_url}'; return false;" %>
       </footer>
 
       <%= f.hidden_field "xxxxx", value: "" %>
@@ -65,25 +65,32 @@ end
 </div>
 
 
-<%= coffee do %>
-$ ->
-  $(".opendata-csv2rdf-settings-class-search__search").on "click", (e) ->
-    params = []
-    $("input[name='s[category_ids][]'").each (i, e) ->
-      if $(e).prop("checked")
-        params.push("s[category_ids][]=#{$(e).val()}")
-    vocab = $("select[name='s[vocab]'").val()
-    if vocab
-      params.push("s[vocab]=#{vocab}")
-    name = $("input[name='s[name]'").val()
-    if name
-      params.push("s[name]=#{name}")
-    href = $(this).attr('href')
-    params = params.join("&")
-    if params
-      href = "#{href}?#{params}"
-    location.href = href
+<%= jquery do %>
+
+  $(".opendata-csv2rdf-settings-class-search__search").on("click", function (e) {
+    var href, name, params, vocab;
+    params = [];
+    $("input[name='s[category_ids][]'").each(function (i, e) {
+      if ($(e).prop("checked")) {
+        params.push("s[category_ids][]=" + ($(e).val()));
+      }
+    });
+    vocab = $("select[name='s[vocab]'").val();
+    if (vocab) {
+      params.push("s[vocab]=" + vocab);
+    }
+    name = $("input[name='s[name]'").val();
+    if (name) {
+      params.push("s[name]=" + name);
+    }
+    href = $(this).attr('href');
+    params = params.join("&");
+    if (params) {
+      href = href + "?" + params;
+    }
+    location.href = href;
     e.preventDefault();
-    false
+    return false;
+  });
 
 <% end %>

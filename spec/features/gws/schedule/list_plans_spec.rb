@@ -50,7 +50,7 @@ describe "gws_schedule_list_plans", type: :feature, dbscope: :example do
       within "form" do
         click_button "削除"
       end
-      expect(current_path).to eq index_path
+      expect(current_path).not_to eq delete_path
     end
   end
 end

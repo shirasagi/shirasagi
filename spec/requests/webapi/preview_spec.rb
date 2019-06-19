@@ -30,7 +30,7 @@ describe "webapi", dbscope: :example, type: :request do
   end
 
   context "with login" do
-    before { post login_path, correct_login_params }
+    before { post login_path, params: correct_login_params }
 
     context "preview" do
       describe "GET /.s{site}/preview/{path}" do
@@ -43,9 +43,15 @@ describe "webapi", dbscope: :example, type: :request do
 
     context "form preview" do
       describe "POST /.s{site}/preview/{path}" do
+        let(:pc) do
+          '<input type="button" class="ss-preview-btn ss-preview-btn-outline ss-preview-btn-pc" value="PC">'
+        end
+        let(:mobile) do
+          '<input type="button" class="ss-preview-btn ss-preview-btn-outline ss-preview-btn-mobile" value="携帯">'
+        end
         it "200" do
           params = { preview_item: { id: item.id } }
-          post form_preview_path, params
+          post form_preview_path, params: params
           expect(response.status).to eq 200
         end
 
@@ -54,23 +60,23 @@ describe "webapi", dbscope: :example, type: :request do
             id: item.id,
             layout_id: layout.id,
             body_layout_id: body_layout.id,
-            body_parts: %w(パーツ１ パーツ２ パーツ３),
+            body_parts: %w(パーツ１ パーツ２ パーツ３)
           } }
 
-          post form_preview_path, params
+          post form_preview_path, params: params
           expect(response.status).to eq 200
 
           expect(response.body.include?('パーツ１')).to be_truthy
           expect(response.body.include?('パーツ２')).to be_truthy
           expect(response.body.include?('パーツ３')).to be_truthy
           expect(response.body.include?('<div id="ss-preview">')).to be_truthy
-          expect(response.body.include?('<input type="button" class="preview" value="PC">')).to be_truthy
-          expect(response.body.include?('<input type="button" class="mobile" value="携帯">')).to be_truthy
+          expect(response.body.include?(pc)).to be_truthy
+          expect(response.body.include?(mobile)).to be_truthy
         end
 
         #it "400" do
         #  params = {}
-        #  post form_preview_path, params
+        #  post form_preview_path, params: params
         #  expect(response.status).to eq 400
         #end
       end

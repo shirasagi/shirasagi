@@ -2,7 +2,7 @@ module Gws::Schedule::PlanHelper
   extend ActiveSupport::Concern
 
   def search_query
-    params.select { |k, v| k == 's' }.to_query
+    params.to_unsafe_h.select { |k, v| k == 's' }.to_query
   end
 
   def term(item)
@@ -26,7 +26,7 @@ module Gws::Schedule::PlanHelper
 
     events += calendar_holidays opts[:holiday][0], opts[:holiday][1]
     events += group_holidays opts[:holiday][0], opts[:holiday][1]
-    events += calender_todos(opts[:holiday][0], opts[:holiday][1])
+    events += calendar_todos(opts[:holiday][0], opts[:holiday][1])
     events
   end
 
@@ -42,12 +42,12 @@ module Gws::Schedule::PlanHelper
     end
   end
 
-  def calender_todos(start_at, end_at)
+  def calendar_todos(start_at, end_at)
     return [] if @todos.blank?
 
     @todos.map do |todo|
       result = todo.calendar_format(@cur_user, @cur_site)
-      result[:restUrl] = gws_schedule_todo_readables_path
+      result[:restUrl] = gws_schedule_todo_readables_path(category: Gws::Schedule::TodoCategory::ALL.id)
       result
     end
   end

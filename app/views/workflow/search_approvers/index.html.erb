@@ -1,7 +1,7 @@
 <%= jquery do %> SS_SearchUI.modal(); <% end %>
 
 <div class="search-ui-form">
-  <%= form_for :s, url: { action: :index, level: @level }, html: { method: "GET", class: :search } do |f| %>
+  <%= form_for :s, url: { action: :index, level: @level, approver_ids: @approver_ids }, html: { method: "GET", class: :search } do |f| %>
     <dl class="see">
       <% if browser.ie?(["<10"]) %>
         <%= render partial: 'workflow/search_approvers/group_dropdown_normal' %>
@@ -35,7 +35,8 @@
 </table>
 
 <div class="search-ui-select">
-  <%= button_tag t("workflow.search_approvers.select"), { type: :button, class: "select-items btn" } %>
+  <% btn_label = @level.start_with?("circulation") ? t("workflow.search_circulations.select") : t("workflow.search_approvers.select") %>
+  <%= button_tag btn_label, { type: :button, class: "select-items btn" } %>
 </div>
 
 <%= paginate @items if @items.try(:current_page) %>

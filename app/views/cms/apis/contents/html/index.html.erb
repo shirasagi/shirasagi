@@ -1,23 +1,36 @@
-<%= coffee do %>
-$ ->
-  SS_ListUI.render("table.index")
-  $("table.index").each ->
-    table = $(this)
-    thead = table.find("thead")
-    tbody = table.find("tbody")
+<%= jquery do %>
+  SS_ListUI.render("table.index");
+    $("table.index").each(function () {
+    var table, tbody, thead;
+    table = $(this);
+    thead = table.find("thead");
+    tbody = table.find("tbody");
 
-    tbody.find("tr").each ->
-      tr = $(this)
-      tr.find("input[type=checkbox]:enabled").off()
-      tr.find("input[type=checkbox]:enabled").change ->
-        if tbody.find("input[type=checkbox]:enabled").length == tbody.find("input[type=checkbox]:checked:enabled").length
-          $(thead).find("input[type=checkbox]:enabled").prop("checked", true)
-        else
-          $(thead).find("input[type=checkbox]:enabled").prop("checked", false)
-    thead.find("input[type=checkbox]:enabled").off()
-    thead.find("input[type=checkbox]:enabled").change ->
-      for chkbox in tbody.find("input[type=checkbox]:enabled")
-        chkbox.checked = @checked
+    tbody.find("tr").each(function () {
+      var tr;
+      tr = $(this);
+      tr.find("input[type=checkbox]:enabled").off();
+      tr.find("input[type=checkbox]:enabled").change(function () {
+        if (tbody.find("input[type=checkbox]:enabled").length === tbody.find("input[type=checkbox]:checked:enabled").length) {
+          $(thead).find("input[type=checkbox]:enabled").prop("checked", true);
+        } else {
+          $(thead).find("input[type=checkbox]:enabled").prop("checked", false);
+        }
+      });
+    });
+
+    thead.find("input[type=checkbox]:enabled").off();
+    thead.find("input[type=checkbox]:enabled").change(function () {
+      var chkbox, i, len, ref, results;
+      ref = tbody.find("input[type=checkbox]:enabled");
+      results = [];
+      for (i = 0, len = ref.length; i < len; i++) {
+        chkbox = ref[i];
+        results.push(chkbox.checked = this.checked);
+      }
+      return results;
+    });
+  });
 <% end %>
 
 <dl class="see">
@@ -28,13 +41,13 @@ $ ->
   <dd style="margin: 0px 0px 0px 40px; padding: 10px 0px;">
     <table class="index">
       <thead>
-        <tr>
-          <th class="checkbox">
-            <input type="checkbox" />
-          </th>
-          <th><%= t("cms.apis.contents.title") %></th>
-          <th><%= t("ss.url") %></th>
-        </tr>
+      <tr>
+        <th class="checkbox">
+          <input type="checkbox"/>
+        </th>
+        <th><%= t("cms.apis.contents.title") %></th>
+        <th><%= t("ss.url") %></th>
+      </tr>
       </thead>
       <tbody>
       <% @pages.each do |item| %>
@@ -42,7 +55,7 @@ $ ->
         <% editable = item.becomes_with_route.allowed?(:edit, @cur_user, site: @cur_site) %>
         <tr>
           <td class="checkbox">
-            <%= check_box_tag("page_ids[]", item.id, false, (editable ? {} : { disabled: true })) %>
+            <%= check_box_tag("page_ids[]", item.id, false, (editable ? {} : {disabled: true})) %>
           </td>
           <% if readable %>
             <td><%= link_to item.name, item.private_show_path, target: "_blank" %></td>
@@ -63,11 +76,11 @@ $ ->
   <dd style="margin: 0px 0px 0px 40px; padding: 10px 0px;">
     <table class="index">
       <thead>
-        <tr>
-          <th class="checkbox"><input type="checkbox" /></th>
-          <th><%= t("cms.apis.contents.title") %></th>
-          <th><%= t("ss.url") %></th>
-        </tr>
+      <tr>
+        <th class="checkbox"><input type="checkbox"/></th>
+        <th><%= t("cms.apis.contents.title") %></th>
+        <th><%= t("ss.url") %></th>
+      </tr>
       </thead>
       <tbody>
       <% @parts.each do |item| %>
@@ -75,7 +88,7 @@ $ ->
         <% editable = item.allowed?(:edit, @cur_user, site: @cur_site) %>
         <tr>
           <td class="checkbox">
-            <%= check_box_tag("part_ids[]", item.id, false, (editable ? {} : { disabled: true })) %>
+            <%= check_box_tag("part_ids[]", item.id, false, (editable ? {} : {disabled: true})) %>
           </td>
           <% if readable %>
             <td><%= link_to item.name, item.private_show_path, target: "_blank" %></td>
@@ -96,11 +109,11 @@ $ ->
   <dd style="margin: 0px 0px 0px 40px; padding: 10px 0px;">
     <table class="index">
       <thead>
-        <tr>
-          <th class="checkbox"><input type="checkbox" /></th>
-          <th><%= t("cms.apis.contents.title") %></th>
-          <th><%= t("ss.url") %></th>
-        </tr>
+      <tr>
+        <th class="checkbox"><input type="checkbox"/></th>
+        <th><%= t("cms.apis.contents.title") %></th>
+        <th><%= t("ss.url") %></th>
+      </tr>
       </thead>
       <tbody>
       <% @layouts.each do |item| %>
@@ -108,7 +121,7 @@ $ ->
         <% editable = item.allowed?(:edit, @cur_user, site: @cur_site) %>
         <tr>
           <td class="checkbox">
-            <%= check_box_tag("layout_ids[]", item.id, false, (editable ? {} : { disabled: true })) %>
+            <%= check_box_tag("layout_ids[]", item.id, false, (editable ? {} : {disabled: true})) %>
           </td>
           <% if readable %>
             <td><%= link_to item.name, item.private_show_path, target: "_blank" %></td>

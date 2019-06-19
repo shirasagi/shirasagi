@@ -22,13 +22,13 @@ describe 'gws_portal_user_portal', type: :feature, dbscope: :example do
       expect(current_path).to eq index_path
 
       # not have permissions
-      expect(page).not_to have_css('.nav-management-menu a')
+      expect(page).to have_no_css('.nav-management-menu a')
 
       visit gws_portal_user_portlets_path(site: site, user: user)
-      expect(page).not_to have_css('.gws')
+      expect(page).to have_no_css('.gws')
 
       visit gws_portal_user_settings_path(site: site, user: user)
-      expect(page).not_to have_css('.gws')
+      expect(page).to have_no_css('.gws')
     end
   end
 

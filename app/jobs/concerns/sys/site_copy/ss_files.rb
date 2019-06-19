@@ -22,6 +22,13 @@ module Sys::SiteCopy::SsFiles
       dest_file.id
     end
     dest_file ||= klass.where(site_id: @dest_site.id).find(id) if id
+
+    if dest_file
+      dest_file.in_file = nil
+      dest_file.attributes = resolve_unsafe_references(src_file, klass)
+      dest_file.save!
+    end
+
     dest_file
   rescue => e
     @task.log("#{src_file.filename}(#{src_file.id}): ファイルのコピーに失敗しました。")

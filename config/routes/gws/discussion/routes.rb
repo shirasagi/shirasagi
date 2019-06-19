@@ -3,7 +3,7 @@ SS::Application.routes.draw do
 
   concern :deletion do
     get :delete, on: :member
-    delete action: :destroy_all, on: :collection
+    delete :destroy_all, on: :collection, path: ''
   end
 
   concern :soft_deletion do
@@ -21,7 +21,7 @@ SS::Application.routes.draw do
     get :print, on: :collection
     get :popup, on: :member
     get :delete, on: :member
-    delete action: :destroy_all, on: :collection
+    delete :destroy_all, on: :collection, path: ''
   end
 
   concern :todos do
@@ -57,6 +57,10 @@ SS::Application.routes.draw do
 
     namespace "apis" do
       get 'unseen/:id' => "unseen#index", id: /\d+/, as: :unseen
+      scope path: 'forums/:forum_id/todos/:todo_id', as: :forum_todo do
+        resources :comments, controller: "/gws/schedule/todo/apis/comments",
+                  concerns: [:deletion], except: [:index, :new, :show, :destroy_all]
+      end
     end
   end
 end

@@ -1,4 +1,4 @@
-FactoryGirl.define do
+FactoryBot.define do
   factory :cms_notice, class: Cms::Notice do
     transient do
       site nil

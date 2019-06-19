@@ -3,13 +3,12 @@ SS::Application.routes.draw do
 
   concern :deletion do
     get :delete, on: :member
-    delete action: :destroy_all, on: :collection
+    delete :destroy_all, on: :collection, path: ''
   end
 
   concern :export do
-    get :download, on: :collection
-    get :import, on: :collection
-    post :import, on: :collection
+    match :download, on: :collection, via: %i[get post]
+    match :import, on: :collection, via: %i[get post]
   end
 
   gws "staff_record" do

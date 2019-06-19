@@ -24,14 +24,14 @@ describe Gws::StaffRecord::CopySituationJob, dbscope: :example do
       end
 
       expect(Gws::StaffRecord::Group.count).to eq 3
-      Gws::StaffRecord::Group.find_by(name: site.name).tap do |g|
-        expect(g.name).to eq site.name
+      Gws::StaffRecord::Group.find_by(name: site.trailing_name).tap do |g|
+        expect(g.name).to eq site.trailing_name
       end
-      Gws::StaffRecord::Group.find_by(name: group1.name).tap do |g|
-        expect(g.name).to eq group1.name
+      Gws::StaffRecord::Group.find_by(name: group1.trailing_name).tap do |g|
+        expect(g.name).to eq group1.trailing_name
       end
-      Gws::StaffRecord::Group.find_by(name: group2.name).tap do |g|
-        expect(g.name).to eq group2.name
+      Gws::StaffRecord::Group.find_by(name: group2.trailing_name).tap do |g|
+        expect(g.name).to eq group2.trailing_name
       end
       expect(Gws::StaffRecord::User.count).to eq 6
       Gws::StaffRecord::User.find_by(name: user.name).tap do |u|

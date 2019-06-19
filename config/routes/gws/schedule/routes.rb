@@ -13,9 +13,14 @@ SS::Application.routes.draw do
     get :download, on: :collection
   end
 
+  concern :import do
+    get :import, on: :collection
+    post :import, on: :collection
+  end
+
   concern :deletion do
     get :delete, on: :member
-    delete action: :destroy_all, on: :collection
+    delete :destroy_all, on: :collection, path: ''
   end
 
   gws "schedule" do
@@ -29,7 +34,8 @@ SS::Application.routes.draw do
     get 'csv' => 'csv#index', as: :csv
     post 'import_csv' => 'csv#import', as: :import_csv
 
-    get '/' => redirect { |p, req| "#{req.path}/plans" }, as: :main
+    # get '/' => redirect { |p, req| "#{req.path}/plans" }, as: :main
+    get '/', to: "main#index", as: :main
     resources :plans, concerns: [:plans, :export], except: [:destroy]
     resources :list_plans, concerns: :plans
     resources :user_plans, path: 'users/:user/plans', concerns: :plans
@@ -39,23 +45,38 @@ SS::Application.routes.draw do
     resources :trashes, concerns: [:deletion], except: [:new, :create, :edit, :update] do
       match :undo_delete, on: :member, via: [:get, :post]
     end
-    resources :holidays, concerns: [:plans, :deletion]
+    resources :holidays, concerns: [:plans, :deletion, :export, :import]
     resources :comments, path: ':plan_id/comments', only: [:create, :edit, :update, :destroy], concerns: :deletion
     resource :attendance, path: ':plan_id/:user_id/attendance', only: [:edit, :update]
     resource :approval, path: ':plan_id/:user_id/approval', only: [:edit, :update]
 
     namespace 'todo' do
-      get '/' => redirect { |p, req| "#{req.path}/readables" }, as: :main
-      resources :readables, concerns: :plans do
+      get '/' => redirect { |p, req| "#{req.path}/-/readables" }, as: :main
+      resources :readables, path: ':category/readables', concerns: :plans do
         match :finish, on: :member, via: %i[get post]
         match :revert, on: :member, via: %i[get post]
         post :finish_all, on: :collection
         post :revert_all, on: :collection
         post :soft_delete_all, on: :collection
       end
+      resources :manageables, path: ':category/manageables', concerns: :plans do
+        # match :finish, on: :member, via: %i[get post]
+        # match :revert, on: :member, via: %i[get post]
+        # post :finish_all, on: :collection
+        # post :revert_all, on: :collection
+        # post :soft_delete_all, on: :collection
+      end
       resources :trashes, concerns: :deletion do
         match :undo_delete, on: :member, via: %i[get post]
         post :undo_delete_all, on: :collection
+      end
+      resources :categories, concerns: :deletion
+
+      namespace "apis" do
+        scope path: ':todo_id' do
+          resources :comments, concerns: [:deletion], except: [:index, :new, :show, :destroy_all]
+        end
+        get "categories" => "categories#index"
       end
     end
 

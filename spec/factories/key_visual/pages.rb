@@ -1,4 +1,4 @@
-FactoryGirl.define do
+FactoryBot.define do
   factory :key_visual_image, class: KeyVisual::Image, traits: [:cms_page] do
     cur_site { cms_site }
     filename { unique_id }

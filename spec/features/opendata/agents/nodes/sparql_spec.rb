@@ -179,7 +179,7 @@ describe "opendata_agents_nodes_sparql", dbscope: :example do
           select "TSV", from: "format"
           click_button search_label
 
-          expect(page).to have_content("A\tB\tC")
+          expect(page.body).to eq("A\tB\tC")
         end
       end
     end

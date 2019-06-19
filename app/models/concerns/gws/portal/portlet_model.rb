@@ -16,6 +16,11 @@ module Gws::Portal::PortletModel
   include Gws::Addon::Portal::Portlet::Report
   include Gws::Addon::Portal::Portlet::Workflow
   include Gws::Addon::Portal::Portlet::Attendance
+  include Gws::Addon::Portal::Portlet::Notice
+  include Gws::Addon::Portal::Portlet::Presence
+  include Gws::Addon::Portal::Portlet::Survey
+  include Gws::Addon::Portal::Portlet::Ad
+  include Gws::Addon::Portal::Portlet::AdFile
 
   PORTLETS = {
     free:       { size_x: 2, size_y: 2, addons: [Gws::Addon::Portal::Portlet::Free] },
@@ -33,6 +38,10 @@ module Gws::Portal::PortletModel
     report:     { size_x: 2, size_y: 3, addons: [Gws::Addon::Portal::Portlet::Report] },
     workflow:   { size_x: 2, size_y: 3, addons: [Gws::Addon::Portal::Portlet::Workflow] },
     attendance: { size_x: 2, size_y: 2, addons: [Gws::Addon::Portal::Portlet::Attendance] },
+    notice:     { size_x: 2, size_y: 3, addons: [Gws::Addon::Portal::Portlet::Notice] },
+    presence:   { size_x: 4, size_y: 2, addons: [Gws::Addon::Portal::Portlet::Presence] },
+    survey:     { size_x: 2, size_y: 3, addons: [Gws::Addon::Portal::Portlet::Survey] },
+    ad:         { size_x: 2, size_y: 3, addons: [Gws::Addon::Portal::Portlet::Ad, Gws::Addon::Portal::Portlet::AdFile] }
   }.freeze
 
   included do
@@ -71,6 +80,7 @@ module Gws::Portal::PortletModel
   end
 
   def view_file
+    return nil unless PORTLETS.key?(portlet_model.to_sym)
     "gws/portal/portlets/#{portlet_model}/index.html.erb"
   end
 
@@ -103,7 +113,7 @@ module Gws::Portal::PortletModel
       {
         type: type,
         name: I18n.t("gws/portal.portlets.#{type}.name"),
-        text: I18n.t("gws/portal.portlets.#{type}.text"),
+        text: I18n.t("gws/portal.portlets.#{type}.text")
       }
     end
 
@@ -130,9 +140,10 @@ module Gws::Portal::PortletModel
     end
 
     def portlet_addons(type)
-      portlets = PORTLETS[type.to_sym][:addons] || []
+      portlet = PORTLETS[type.to_sym] || {}
+      addons = portlet[:addons] || []
       self.addons.select do |addon|
-        addon.type.nil? || portlets.include?(addon.klass)
+        addon.type.nil? || addons.include?(addon.klass)
       end
     end
   end

@@ -3,99 +3,146 @@ module Cms::Addon::Form::Page
   extend SS::Addon
 
   included do
+    attr_reader :column_link_errors
+
     belongs_to :form, class_name: 'Cms::Form'
-    embeds_many :column_values, class_name: 'Cms::Column::Value::Base', cascade_callbacks: true
+    embeds_many :column_values, class_name: 'Cms::Column::Value::Base', cascade_callbacks: true, validate: false,
+                after_add: :update_column_values_updated, after_remove: :update_column_values_updated,
+                extend: Cms::Extensions::ColumnValuesRelation
     field :column_values_updated, type: DateTime
 
-    permit_params :form_id
+    permit_params :form_id, column_values: [ :_type, :column_id, :order, :alignment, in_wrap: {} ]
+    accepts_nested_attributes_for :column_values
 
-    delegate :build_column_values, to: :form
-
+    # default validation `validates_associated :column_values` is not suitable for column_values.
+    # So, specific validation should be defined.
     validate :validate_column_values
+    validate :validate_column_links, on: :link
 
-    after_generate_file :generate_public_files, if: ->{ serve_static_relation_files? } if respond_to?(:after_generate_file)
-    after_remove_file :remove_public_files if respond_to?(:after_remove_file)
-    after_merge_branch :merge_column_values rescue nil
-  end
+    before_save :cms_form_page_delete_unlinked_files
 
-  def form_html
-    return '' if form.blank?
-    html = form.html
-    html.gsub!(/\{\{(.+)\}\}/) do
-      name_or_id = $1.strip
-      column_value = column_values.
-          where('$or' => [ { id: name_or_id }, { name: name_or_id } ]).
-          order_by(order: 1, created: 1).
-          first
-      if column_value
-        column_value.to_html
-      end
+    around_save :update_file_owner_in_column_values
+
+    if respond_to?(:after_generate_file)
+      after_generate_file :cms_form_page_generate_public_files, if: ->{ serve_static_relation_files? }
     end
-    html
-  end
+    after_remove_file :cms_form_page_remove_public_files if respond_to?(:after_remove_file)
+    after_merge_branch :cms_form_page_merge_column_values rescue nil
 
-  def update_column_values(new_values)
-    column_values = self.column_values.to_a.dup
-
-    changes = false
-    new_values.each do |new_value|
-      old = column_values.find { |column_value| column_value.column_id == new_value.column_id }
-      if old.present?
-        if old.class == new_value.class
-          if old.update_value(new_value)
-            changes = true
-          end
-        else
-          column_values.delete_if { |column_value| column_value.column_id == new_value.column_id }
-          column_values << new_value
-          changes = true
-        end
-      else
-        column_values << new_value
-        changes = true
-      end
-    end
-
-    column_ids = new_values.map(&:column_id)
-    column_values = column_values.delete_if do |column_value|
-      unincludes = !column_ids.include?(column_value.column_id)
-      changes = true if unincludes
-      unincludes
-    end
-
-    self.column_values = column_values
-    # to create history record, timestamp field must be updated
-    self.column_values_updated = Time.zone.now if changes
-  end
-
-  def validate_column_values
-    column_values.each do |column_value|
-      column_value.validate_value(self, :column_values)
+    liquidize do
+      export :column_values, as: :values
     end
   end
 
+  # for creating branch page
   def copy_column_values(from_item)
-    self.column_values = from_item.column_values.map do |column_value|
-      column_value.new_clone
+    from_item.column_values.each do |column_value|
+      column_value.clone_to(self)
     end
   end
 
   private
 
-  def generate_public_files
+  def validate_column_values
+    column_values.each do |column_value|
+      next if column_value.validated?
+      next if column_value.valid?
+
+      self.errors.messages[:base] += column_value.errors.map do |attribute, error|
+        if %i[value values].include?(attribute.to_sym)
+          column_value.name + error
+        else
+          I18n.t(
+            "cms.column_value_error_template", name: column_value.name,
+            error: column_value.errors.full_message(attribute, error))
+        end
+      end
+    end
+  end
+
+  def validate_column_links
+    @column_link_errors = []
+
+    column_values.each do |column_value|
+      column_value.valid?(:link)
+      if column_value.link_errors.present?
+        @column_link_errors += column_value.link_errors
+      end
+    end
+  end
+
+  def cms_form_page_generate_public_files
     column_values.each do |column_value|
       column_value.generate_public_files
     end
   end
 
-  def remove_public_files
+  def cms_form_page_remove_public_files
     column_values.each do |column_value|
       column_value.remove_public_files
     end
   end
 
-  def merge_column_values
-    update_column_values(in_branch.column_values.presence || [])
-    in_branch.column_values = []
+  def cms_form_page_merge_column_values
+    self.column_values = []
+    copy_column_values(in_branch)
+  end
+
+  def update_column_values_updated(*_args)
+    self.column_values_updated = Time.zone.now
+  end
+
+  def column_values_was
+    docs = attribute_was("column_values")
+
+    if docs.present?
+      docs = docs.map do |doc|
+        type = doc["_type"] || doc[:_type]
+        effective_kass = type.camelize.constantize rescue Cms::Column::Value::Base
+        Mongoid::Factory.build(Cms::Column::Value::Base, doc.slice(*effective_kass.fields.keys.map(&:to_s)))
+      end
+    end
+
+    docs || []
+  end
+
+  def cms_form_page_delete_unlinked_files
+    file_ids_is = []
+    self.column_values.each do |column_value|
+      file_ids_is += column_value.all_file_ids
+    end
+    file_ids_is.compact!
+    file_ids_is.uniq!
+
+    file_ids_was = []
+    column_values_was.each do |column_value|
+      file_ids_was += column_value.all_file_ids
+    end
+    file_ids_was.compact!
+    file_ids_was.uniq!
+
+    unlinked_file_ids = file_ids_was - file_ids_is
+    unlinked_file_ids.each_slice(20) do |file_ids|
+      SS::File.in(id: file_ids).destroy_all
+    end
+  end
+
+  def update_file_owner_in_column_values
+    is_new = new_record?
+    yield
+
+    if is_new && form.present?
+      file_ids_is = []
+      self.column_values.each do |column_value|
+        file_ids_is += column_value.all_file_ids
+      end
+      file_ids_is.compact!
+      file_ids_is.uniq!
+
+      SS::File.in(id: file_ids_is).each do |file|
+        file.owner_item = self
+        file.save
+      end
+    end
   end
 end

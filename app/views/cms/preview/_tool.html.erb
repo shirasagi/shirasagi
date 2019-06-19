@@ -1,0 +1,130 @@
+<%
+  cms_form = nil
+%>
+<% head_for(self) do %>
+  <%= stylesheet_link_tag("cms/preview/main") %>
+  <%= javascript_include_tag("cms/preview/main") %>
+  <script>
+    <% if rendered %>
+      Form_Preview.form_id = "ss-preview-inplace-item-form";
+      Form_Preview.page_route = <%== (rendered[:page] || rendered[:node]).route.to_json %>;
+
+      Cms_TemplateForm.userId = <%= @cur_user.id %>;
+      Cms_TemplateForm.confirms.delete = <%== t("ss.confirm.delete").to_json %>;
+      Cms_TemplateForm.paths.formColumn = <%== cms_apis_form_column_new_path(id: ":formId", column_id: ":columnId").to_json %>;
+      Cms_TemplateForm.paths.formUrlTemplate = <%== cms_apis_form_path(id: ':id', item_id: (rendered[:page] || rendered[:node]).new_record? ? nil : (rendered[:page] || rendered[:node]).id).to_json %>;
+    <% end %>
+
+    SS_Preview.libs.jquery.js = <%== javascript_path("cms/preview/jquery").to_json %>;
+    SS_Preview.libs.jquery.css = <%== stylesheet_path("cms/preview/jquery").to_json %>;
+    SS_Preview.libs.datetimePicker.js = <%== javascript_path("cms/preview/datetimepicker").to_json %>;
+    SS_Preview.libs.datetimePicker.css = <%== stylesheet_path("cms/preview/datetimepicker").to_json %>;
+    SS_Preview.libs.colorbox.js = <%== javascript_path("/assets/js/jquery.colorbox-min.js").to_json %>;
+    SS_Preview.libs.colorbox.css = <%== "/assets/css/colorbox/colorbox.css".to_json %>;
+    SS_Preview.libs.dialog.js = <%== javascript_path("cms/preview/jquery-ui").to_json %>;
+    SS_Preview.libs.dialog.css = <%== stylesheet_path("cms/preview/jquery-ui").to_json %>;
+    SS_Preview.confirms.delete = <%== t("ss.confirm.delete").to_json %>;
+    SS_Preview.confirms.publish = <%== t("ss.confirm.publish").to_json %>;
+    SS_Preview.notices.deleted = <%== t("ss.notice.deleted").to_json %>;
+    SS_Preview.notices.published = <%== t("ss.notice.published").to_json %>;
+    SS_Preview.notices.moved = <%== t("ss.notice.moved").to_json %>;
+
+    <% if rendered %>
+      SS_Preview.item.type = <%== rendered[:type].to_json %>;
+      <% if rendered[:layout] %>
+        SS_Preview.item.layoutId = <%== rendered[:layout].id.to_json %>;
+      <% end %>
+      <% if rendered[:node] %>
+        SS_Preview.item.nodeId = <%== rendered[:node].id.to_json %>;
+      <% end %>
+      <% if rendered[:page] %>
+        SS_Preview.item.pageId = <%== rendered[:page].id.to_json %>;
+        <% if rendered[:page].respond_to?(:form) %>
+          <% cms_form = rendered[:page].form %>
+          <% if cms_form %>
+            SS_Preview.item.formId = <%== cms_form.id.to_json %>;
+            SS_Preview.item.formSubType = <%== cms_form.sub_type.to_json %>;
+          <% end %>
+        <% end %>
+      <% end %>
+    <% end %>
+
+    <% if @cur_site.subdir.present? %>
+      SS_Preview.preview_path = <%== @cur_site.subdir.to_json %>;
+    <% end %>
+    SS_Preview.mobile_path = <%== @cur_site.mobile_path.to_json %>;
+    <% if @preview_page %>
+      SS_Preview.request_path = <%== request.path.to_json %>;
+      SS_Preview.form_item = <%== @preview_item.to_json %>;
+    <% end %>
+    <% if mode == :preview && rendered %>
+      <% if %i[page].include?(rendered[:type]) %>
+        SS_Preview.inplaceFormPath.page = <%== edit_cms_apis_preview_inplace_edit_page_path(site: @cur_site, preview_date: params[:preview_date], id: ":id").to_json %>;
+        SS_Preview.inplaceFormPath.columnValue.new = <%== "#{new_cms_apis_preview_inplace_edit_page_column_value_path(site: @cur_site, preview_date: params[:preview_date], page_id: ":pageId")}?column_id=:columnId".to_json %>;
+        SS_Preview.inplaceFormPath.columnValue.edit = <%== edit_cms_apis_preview_inplace_edit_page_column_value_path(site: @cur_site, preview_date: params[:preview_date], page_id: ":pageId", id: ":id").to_json %>;
+        SS_Preview.inplaceFormPath.columnValue.destroy = <%== cms_apis_preview_inplace_edit_page_column_value_path(site: @cur_site, preview_date: params[:preview_date], page_id: ":pageId", id: ":id").to_json %>;
+        SS_Preview.inplaceFormPath.columnValue.moveUp = <%== move_up_cms_apis_preview_inplace_edit_page_column_value_path(site: @cur_site, preview_date: params[:preview_date], page_id: ":pageId", id: ":id").to_json %>;
+        SS_Preview.inplaceFormPath.columnValue.moveDown = <%== move_down_cms_apis_preview_inplace_edit_page_column_value_path(site: @cur_site, preview_date: params[:preview_date], page_id: ":pageId", id: ":id").to_json %>;
+        SS_Preview.inplaceFormPath.columnValue.moveAt = <%== move_at_cms_apis_preview_inplace_edit_page_column_value_path(site: @cur_site, preview_date: params[:preview_date], page_id: ":pageId", id: ":id").to_json %>;
+        SS_Preview.inplaceFormPath.palette = <%== palette_cms_apis_preview_inplace_edit_form_path(site: @cur_site, preview_date: params[:preview_date], id: ":id").to_json %>;
+        SS_Preview.publishPath = <%== publish_cms_apis_preview_page_path(site: @cur_site, preview_date: params[:preview_date], id: rendered[:page]).to_json %>;
+        SS_Preview.lockPath = <%== lock_cms_apis_preview_page_path(site: @cur_site, preview_date: params[:preview_date], id: rendered[:page]).to_json %>;
+      <% elsif %i[node].include?(rendered[:type]) %>
+        SS_Preview.publishPath = <%== publish_cms_apis_preview_node_path(site: @cur_site, preview_date: params[:preview_date], cid: rendered[:node]).to_json %>;
+      <% end %>
+
+      SS_Preview.workflowPath.wizard = <%== cms_apis_preview_workflow_wizard_path(site: @cur_site, preview_date: params[:preview_date], id: ":id").to_json %>;
+      SS_Preview.workflowPath.pages = <%== "/.s#{@cur_site.id}/workflow/pages/:id".to_json %>;
+      SS_Preview.previewPath = <%== cms_preview_path(path: ":path").to_json %>;
+      SS_Preview.redirectorPath.newPage = <%== new_page_cms_apis_preview_node_path(site: @cur_site, cid: ":nodeId").to_json %>;
+
+      SS_Preview.userInplaceEdit = <%== inplace_editable?.to_json %>;
+    <% end %>
+  </script>
+<% end %>
+<% foot_for(self) do %>
+  <div id="ss-preview-overlay" class="ss-preview-hide">
+    <div class="ss-preview-overlay-tool">
+      <span class="ss-preview-overlay-name"><%= t("ss.links.edit") %></span>
+      <div class="ss-preview-btn-group ss-preview-overlay-btn-group-edit">
+        <button type="button" class="ss-preview-overlay-btn-edit"><%= t("ss.links.edit") %></button>
+      </div>
+
+      <% if cms_form && cms_form.sub_type_entry? %>
+      <div class="ss-preview-btn-group ss-preview-overlay-btn-group-move">
+        <button type="button" class="ss-preview-overlay-btn-move-up"><i class="material-icons md-14">keyboard_arrow_up</i></button>
+        <select class="ss-preview-overlay-btn-move-position"></select>
+        <button type="button" class="ss-preview-overlay-btn-move-down"><i class="material-icons md-14">keyboard_arrow_down</i></button>
+      </div>
+
+      <div class="ss-preview-btn-group ss-preview-overlay-btn-group-delete">
+        <button type="button" class="ss-preview-overlay-btn-delete"><%= t("ss.links.delete") %></button>
+      </div>
+      <% end %>
+    </div>
+  </div>
+  <script>
+    var opts = {};
+    <% if @preview_notice %>
+      opts.notice = <%== @preview_notice.to_json %>;
+    <% end %>
+    SS_Preview.render(opts);
+  </script>
+<% end %>
+<div id="ss-preview">
+  <div class="ss-preview-wrap">
+    <% left = render "tool_left", local_assigns %>
+    <% if left.present? %>
+      <div class="ss-preview-wrap-column ss-preview-wrap-column-edit-mode">
+        <%= left %>
+      </div>
+    <% end %>
+    <% right = render "tool_right", local_assigns %>
+    <% if right.present? %>
+      <div class="ss-preview-wrap-column ss-preview-wrap-column-mode-change">
+        <%= right %>
+      </div>
+    <% end %>
+  </div>
+  <div class="ss-preview-notice-wrap" style="display: none;"></div>
+</div>

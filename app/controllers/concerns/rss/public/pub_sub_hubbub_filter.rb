@@ -23,7 +23,7 @@ module Rss::Public::PubSubHubbubFilter
 
   def set_verification_param
     @item ||= begin
-      p = params.permit('hub.mode', 'hub.topic', 'hub.challenge', 'hub.lease_seconds')
+      p = params.permit('hub.mode', 'hub.topic', 'hub.challenge', 'hub.lease_seconds').to_h
       p = Hash[p.to_a.map { |key, value| [key.sub('hub.', ''), value] }]
       p[:cur_node] = @cur_node
       Rss::PubSubHubbub::VerificationParam.new(p)

@@ -1,13 +1,18 @@
-<%= jquery do %>
-  $(".workflow-multi-select").multiSelect({
-    selectionHeader: "<div class='selectionHeader'><%= t "workflow.request_to" %></div>",
-    selectableHeader: "<div class='selectableHeader'><%= t "workflow.selectable_users" %></div>"
-  });
+<% use_agent = @ss_mode == :gws && @item.agent_enabled? && @cur_user.gws_role_permit_any?(@cur_site, :agent_all_gws_workflow_files, :agent_private_gws_workflow_files) %>
 
-  $(".ms-container").each(function() {
-    $(this).find(".selectableHeader").css("background-color", "#f0f3f3");
-    $(this).find(".selectionHeader").css("background-color", "#f0f3f3");
-  });
+<% if use_agent %>
+  <%= jquery do %>
+    $('input[name=agent_type]').on('change', function() {
+      var val = $(this).val();
+      if (val === "myself") {
+        $("dd.agent-type-agent").hide();
+      } else {
+        $("dd.agent-type-agent").show();
+      }
+    });
+
+    SS.renderAjaxBox();
+  <% end %>
 <% end %>
 
 <dl class="see request-setting">
@@ -17,6 +22,24 @@
   <dd><%= @route.label :pull_up %><%= hidden_field :workflow, :pull_up, value: @route.pull_up %></dd>
   <dt><%= @model.t :workflow_on_remand %></dt>
   <dd><%= @route.label :on_remand %><%= hidden_field :workflow, :on_remand, value: @route.on_remand %></dd>
+  <% if use_agent %>
+    <dt><%= @model.t :workflow_user_id %><%= @model.tt :workflow_user_id %></dt>
+    <dd>
+      <label><%= radio_button_tag("agent_type", "myself", true) %> <%= t("gws/workflow.agent_type.myself") %></label>
+      <label><%= radio_button_tag("agent_type", "agent", false) %> <%= t("gws/workflow.agent_type.agent") %></label>
+    </dd>
+    <dd class="agent-type-agent" style="display: none;">
+      <%= hidden_field_tag "workflow_delegatees", "", class: "hidden-ids", id: nil %>
+      <%= link_to t("gws/workflow.search_delegatees.index"), gws_workflow_apis_delegatees_path(single: 1), class: "btn ajax-box" %>
+    </dd>
+    <dd class="agent-type-agent" style="display: none;">
+      <table class="index ajax-selected" style="display: none;">
+        <thead><tr><th class="name"><%= Gws::User.t :name %></th><th class="deselect"></th></tr></thead>
+        <tbody>
+        </tbody>
+      </table>
+    </dd>
+  <% end %>
   <dt><%= @model.t :workflow_comment %><%= @model.tt :workflow_comment %></dt>
   <dd><%= text_area :workflow, :comment, value: @item.workflow_comment %></dd>
 </dl>
@@ -26,6 +49,7 @@
     <dd>
       <%= hidden_field_tag "workflow_required_counts", @route.required_count_at(level) %>
       <%= @route.required_count_label_at(level) %>
+      <%= hidden_field_tag "workflow_approver_attachment_uses", @route.approver_attachment_use_at(level) %>
     </dd>
     <dd>
       <%
@@ -41,11 +65,32 @@
     </dd>
   </dl>
 <% end %>
+<% if @ss_mode == :gws && @route.circulations.present? %>
+  <% 1.upto(@route.class::MAX_CIRCULATIONS).each do |level| %>
+    <% users = @route.circulation_users_at(level).active.to_a %>
+    <% if users.present? %>
+      <%= hidden_field_tag "workflow_circulation_attachment_uses", @route.circulation_attachment_use_at(level) %>
+      <dl class="see request-setting">
+        <dt><%= t("workflow.circulation_step") %> <%= @route.class.t :level, level: level %></dt>
+        <dd>
+          <%
+            names = users.map(&:long_name)
+            emails = users.map(&:email)
+          %>
+          <% users.each do |user| %>
+            <%= hidden_field_tag "workflow_circulations", "#{level},#{user.id},pending," %>
+          <% end %>
+          <%= br names.zip(emails).join("\n") %>
+        </dd>
+      </dl>
+    <% end %>
+  <% end %>
+<% end %>
 <dl class="see request-setting">
   <dd>
     <div class="buttons">
       <%= button_tag t("workflow.buttons.request"), { updatetype: :request, class: "update-item btn-primary" } %>
-      <%= button_tag t("workflow.buttons.cancel"), { class: "workflow-route-cacnel btn-default" } %>
+      <%= button_tag t("workflow.buttons.cancel"), { class: "workflow-route-cancel btn-default" } %>
     </div>
     <div class="checkbox">
       <label>

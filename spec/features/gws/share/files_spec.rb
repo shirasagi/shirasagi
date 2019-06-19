@@ -1,8 +1,10 @@
 require 'spec_helper'
 
-describe "gws_share_files", type: :feature, dbscope: :example, tmpdir: true do
+describe "gws_share_files", type: :feature, dbscope: :example, tmpdir: true, js: true do
   let(:site) { gws_site }
-  let(:item) { create :gws_share_file, folder_id: folder.id, category_ids: [category.id] }
+  let(:item) { create :gws_share_file, folder_id: folder.id, category_ids: [category.id], memo: "test" }
+  let(:categorized_item) { create :gws_share_file, name: "categorized", folder_id: folder.id, category_ids: [category.id] }
+  let(:uncategorized_item) { create :gws_share_file, name: "uncategorized", folder_id: folder.id, category_ids: [] }
   let!(:folder) { create :gws_share_folder }
   let!(:category) { create :gws_share_category }
   let(:top_path) { gws_share_files_path site }
@@ -17,27 +19,25 @@ describe "gws_share_files", type: :feature, dbscope: :example, tmpdir: true do
   context "with auth" do
     before { login_gws_user }
 
-    it "hide new menu on the top page", js: true do
+    it "hide new menu on the top page" do
       visit top_path
       wait_for_ajax
       expect(page).to have_no_content("新規作成")
     end
 
-    it "appear new menu in writable folder", js: true do
+    it "appear new menu in writable folder" do
       item.folder.user_ids = [gws_user.id]
       visit folder_path
       wait_for_ajax
       expect(page).to have_content("新規作成")
     end
 
-    it "#new", js: true do
+    it "#new" do
       # ensure that SS::TempFile was created
       ss_file
 
       visit new_path
-      first('#addon-gws-agents-addons-share-category .toggle-head').click
-      click_on "カテゴリーを選択する"
-      wait_for_cbox
+      click_on I18n.t("gws.apis.categories.index")
       within "tbody.items" do
         click_on category.name
       end
@@ -50,10 +50,14 @@ describe "gws_share_files", type: :feature, dbscope: :example, tmpdir: true do
         click_on ss_file.name
       end
       within "form#item-form" do
+        fill_in "item[memo]", with: "new test"
         find('input[type=submit]').click
       end
       expect(current_path).not_to eq new_path
-      expect(page).to have_content(folder.name)
+      expect(Gws::Share::File.find_by(memo: "new test")).to be_present
+      within ".tree-navi" do
+        expect(page).to have_content(folder.name)
+      end
     end
 
     it "#show" do
@@ -65,21 +69,24 @@ describe "gws_share_files", type: :feature, dbscope: :example, tmpdir: true do
       expect(item.state).to eq "closed"
       expect(item.content_type).to eq "image/png"
       expect(item.category_ids).to eq [category.id]
+      expect(item.memo).to eq "test"
     end
 
-    it "#edit", js: true do
+    it "#edit" do
       visit edit_path
       wait_for_ajax
       within "form#item-form" do
         fill_in "item[name]", with: "modify"
+        fill_in "item[memo]", with: "edited"
         click_button "保存"
       end
       expect(current_path).not_to eq sns_login_path
       expect(page).to have_no_css("form#item-form")
       expect(page).to have_content(folder.name)
+      expect(item.reload.memo).to eq "edited"
     end
 
-    it "#delete", js: true do
+    it "#delete" do
       visit delete_path
       within "form" do
         click_button "削除"
@@ -88,18 +95,50 @@ describe "gws_share_files", type: :feature, dbscope: :example, tmpdir: true do
       expect(page).to have_content(folder.name)
     end
 
-    context "#download_all with auth", js: true do
-      before { login_gws_user }
+    it "index page with :category" do
+      categorized_item
+      uncategorized_item
 
-      # after do
-      #   temporary = SecureRandom.hex(4).to_s
-      #   item.class.create_download_directory(gws_user._id,
-      #                                        item.class.download_root_path,
-      #                                        item.class.zip_path(gws_user._id, temporary))
-      #   File.open(item.class.zip_path(gws_user._id, temporary), "w").close
-      #   expect(FileTest.exist?(item.class.zip_path(gws_user._id, @created_zip_tmp_dir))).to be_falsey
-      #   expect(FileTest.exist?(item.class.zip_path(gws_user._id, temporary))).to be_truthy
-      # end
+      visit index_path
+      expect(page).to have_link categorized_item.name
+      expect(page).to have_link uncategorized_item.name
+
+      first('.gws-category-navi.dropdown a', text: I18n.t("gws.category")).click
+      first('.gws-category-navi.dropdown a', text: category.name).click
+
+      expect(page).to have_link categorized_item.name
+      expect(page).to have_no_link uncategorized_item.name
+
+      click_on categorized_item.name
+      click_on I18n.t('ss.links.back_to_index')
+
+      expect(page).to have_link categorized_item.name
+      expect(page).to have_no_link uncategorized_item.name
+    end
+
+    it "folder page with :category" do
+      categorized_item
+      uncategorized_item
+
+      visit folder_path
+      expect(page).to have_link categorized_item.name
+      expect(page).to have_link uncategorized_item.name
+
+      first('.gws-category-navi.dropdown a', text: I18n.t("gws.category")).click
+      first('.gws-category-navi.dropdown a', text: category.name).click
+
+      expect(page).to have_link categorized_item.name
+      expect(page).to have_no_link uncategorized_item.name
+
+      click_on categorized_item.name
+      click_on I18n.t('ss.links.back_to_index')
+
+      expect(page).to have_link categorized_item.name
+      expect(page).to have_no_link uncategorized_item.name
+    end
+
+    context "#download_all with auth" do
+      before { login_gws_user }
 
       it "#download_all" do
         item
@@ -108,10 +147,13 @@ describe "gws_share_files", type: :feature, dbscope: :example, tmpdir: true do
         page.accept_confirm do
           find('.download-all').click
         end
-        wait_for_ajax
-        # @created_zip_tmp_dir = Dir.entries(item.class.download_root_path)
-        #                            .find{ |elem| elem.include?(gws_user._id.to_s + "_") }.split("_").last
-        # expect(FileTest.exist?(item.class.zip_path(gws_user._id, @created_zip_tmp_dir))).to be_truthy
+
+        wait_for_download
+
+        entry_names = ::Zip::File.open(downloads.first) do |entries|
+          entries.map { |entry| entry.name }
+        end
+        expect(entry_names).to include(item.name)
       end
     end
   end

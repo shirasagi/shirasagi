@@ -15,6 +15,8 @@ module Opendata::Part
     include Cms::Addon::GroupPermission
     include History::Addon::Backup
 
+    self.use_liquid = false
+
     default_scope ->{ where(route: "opendata/dataset") }
 
     def condition_hash
@@ -68,6 +70,8 @@ module Opendata::Part
     include Cms::Addon::GroupPermission
     include History::Addon::Backup
 
+    self.use_liquid = false
+
     default_scope ->{ where(route: "opendata/app") }
 
     def condition_hash
@@ -98,6 +102,8 @@ module Opendata::Part
     include Cms::Addon::GroupPermission
     include History::Addon::Backup
 
+    self.use_liquid = false
+
     default_scope ->{ where(route: "opendata/idea") }
 
     def condition_hash
@@ -123,5 +129,15 @@ module Opendata::Part
         super
       end
     end
+  end
+
+  class DatasetCounter
+    include Cms::Model::Part
+    include Opendata::Addon::CounterHtml
+    include Cms::Addon::Release
+    include Cms::Addon::GroupPermission
+    include History::Addon::Backup
+
+    default_scope ->{ where(route: "opendata/dataset_counter") }
   end
 end

@@ -2,7 +2,7 @@ class Sns::Login::EnvironmentController < ApplicationController
   include Sns::BaseFilter
   include Sns::LoginFilter
 
-  skip_before_action :verify_authenticity_token, only: :consume
+  skip_before_action :verify_authenticity_token, raise: false, only: :consume
   skip_before_action :logged_in?
   before_action :set_item
 
@@ -33,6 +33,6 @@ class Sns::Login::EnvironmentController < ApplicationController
       return
     end
 
-    render_login user, nil, session: true
+    render_login user, nil, session: true, login_path: sns_login_path
   end
 end

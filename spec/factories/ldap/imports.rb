@@ -1,4 +1,4 @@
-FactoryGirl.define do
+FactoryBot.define do
   factory :ldap_import, class: Ldap::Import do
     cur_site { ss_site }
     group_count 3

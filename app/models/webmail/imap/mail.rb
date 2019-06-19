@@ -4,7 +4,7 @@ module Webmail::Imap
 
     def initialize(imap)
       @imap = imap
-      @mailbox = 'INBOX'
+      @mailbox = imap.mailbox ? imap.mailbox : 'INBOX'
       @search = %w(UNDELETED)
       @sort = %w(REVERSE ARRIVAL)
       @limit = 50

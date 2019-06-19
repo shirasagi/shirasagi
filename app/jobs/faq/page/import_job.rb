@@ -33,8 +33,10 @@ class Faq::Page::ImportJob < Cms::ApplicationJob
   def update_row(row)
     filename = "#{node.filename}/#{row[model.t(:filename)]}"
     item = model.find_or_initialize_by(site_id: site.id, filename: filename)
+    raise I18n.t('errors.messages.auth_error') unless item.allowed?(:import, user, site: site, node: node)
     item.site = site
     set_page_attributes(row, item)
+    raise I18n.t('errors.messages.auth_error') unless item.allowed?(:import, user, site: site, node: node)
 
     if item.save
       item
@@ -58,16 +60,21 @@ class Faq::Page::ImportJob < Cms::ApplicationJob
   def category_name_tree_to_ids(name_trees)
     category_ids = []
     name_trees.each do |cate|
-      ct_list = []
       names = cate.split("/")
-      names.each_with_index do |n, d|
-        ct = Cms::Node.site(site).where(name: n, depth: d + 1).first
-        ct_list << ct if ct
-      end
 
-      if ct_list.present? && ct_list.size == names.size
-        ct = ct_list.last
-        category_ids << ct.id if ct.route =~ /^category\//
+      last_index = names.size - 1
+      last_name = names[last_index]
+
+      parent_names = names.slice(0...(names.size - 1))
+
+      cond = { name: last_name, depth: last_index + 1, route: /^category\// }
+      node_ids = Cms::Node.site(site).where(cond).pluck(:id)
+      node_ids.each do |node_id|
+        cate = Cms::Node.find(node_id)
+
+        if parent_names == cate.parents.pluck(:name)
+          category_ids << cate.id
+        end
       end
     end
     category_ids

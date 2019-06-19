@@ -101,6 +101,7 @@ describe Opendata::DatasetDownloadReport::Aggregate, dbscope: :example do
       file = Rails.root.join("spec", "fixtures", "opendata", "dataset_download_report", "resourceA.txt")
       resource = dataset1.resources.new(attributes_for(:opendata_resource))
       resource.in_file = upload_file(file, "text/plain")
+      resource.name = "resourceA.txt"
       resource.license_id = license.id
       resource.save!
       resource.in_file.close
@@ -110,6 +111,7 @@ describe Opendata::DatasetDownloadReport::Aggregate, dbscope: :example do
       file = Rails.root.join("spec", "fixtures", "opendata", "dataset_download_report", "resourceB.txt")
       resource = dataset1.resources.new(attributes_for(:opendata_resource))
       resource.in_file = upload_file(file, "text/plain")
+      resource.name = "resourceB.txt"
       resource.license_id = license.id
       resource.save!
       resource.in_file.close
@@ -119,6 +121,7 @@ describe Opendata::DatasetDownloadReport::Aggregate, dbscope: :example do
       file = Rails.root.join("spec", "fixtures", "opendata", "dataset_download_report", "resourceC.txt")
       resource = dataset2.resources.new(attributes_for(:opendata_resource))
       resource.in_file = upload_file(file, "text/plain")
+      resource.name = "resourceC.txt"
       resource.license_id = license.id
       resource.save!
       resource.in_file.close
@@ -151,6 +154,10 @@ describe Opendata::DatasetDownloadReport::Aggregate, dbscope: :example do
           dataset_id: dataset1.id,
           resource_id: dataset1_resource_b.id
         }
+        resource_c_history_params = {
+          dataset_id: dataset2.id,
+          resource_id: dataset2_resource_c.id
+        }
         create(:resource_download_history,
           resource_a_history_params.merge(downloaded: Time.zone.local(2015, 12, 31, 23, 59, 59)))
         create(:resource_download_history,
@@ -160,14 +167,15 @@ describe Opendata::DatasetDownloadReport::Aggregate, dbscope: :example do
         create(:resource_download_history,
           resource_b_history_params.merge(downloaded: Time.zone.local(2017, 12, 31, 23, 59, 59)))
         create(:resource_download_history,
-          resource_a_history_params.merge(downloaded: Time.zone.local(2018, 11, 30, 23, 59, 59)))
+          resource_c_history_params.merge(downloaded: Time.zone.local(2018, 11, 30, 23, 59, 59)))
         create(:resource_download_history,
-          resource_a_history_params.merge(downloaded: Time.zone.local(2018, 12, 1)))
+          resource_c_history_params.merge(downloaded: Time.zone.local(2018, 12, 1)))
       end
 
       it do
         file_path = "#{Rails.root}/spec/fixtures/opendata/dataset_download_report/year.csv"
-        expected_csv = File.read(file_path)
+        expected_csv = File.binread(file_path)
+        expected_csv.force_encoding("SJIS")
         is_expected.to eq expected_csv
       end
     end
@@ -195,6 +203,10 @@ describe Opendata::DatasetDownloadReport::Aggregate, dbscope: :example do
           dataset_id: dataset1.id,
           resource_id: dataset1_resource_b.id
         }
+        resource_c_history_params = {
+          dataset_id: dataset2.id,
+          resource_id: dataset2_resource_c.id
+        }
         create(:resource_download_history,
           resource_a_history_params.merge(downloaded: Time.zone.local(2017, 11, 30, 23, 59, 59)))
         create(:resource_download_history,
@@ -206,14 +218,15 @@ describe Opendata::DatasetDownloadReport::Aggregate, dbscope: :example do
         create(:resource_download_history,
           resource_b_history_params.merge(downloaded: Time.zone.local(2018, 1, 31, 23, 59, 59)))
         create(:resource_download_history,
-          resource_a_history_params.merge(downloaded: Time.zone.local(2018, 2, 28, 23, 59, 59)))
+          resource_c_history_params.merge(downloaded: Time.zone.local(2018, 2, 28, 23, 59, 59)))
         create(:resource_download_history,
-          resource_a_history_params.merge(downloaded: Time.zone.local(2018, 3, 1)))
+          resource_c_history_params.merge(downloaded: Time.zone.local(2018, 3, 1)))
       end
 
       it do
         file_path = "#{Rails.root}/spec/fixtures/opendata/dataset_download_report/month.csv"
-        expected_csv = File.read(file_path)
+        expected_csv = File.binread(file_path)
+        expected_csv.force_encoding("SJIS")
         is_expected.to eq expected_csv
       end
     end
@@ -241,6 +254,10 @@ describe Opendata::DatasetDownloadReport::Aggregate, dbscope: :example do
           dataset_id: dataset1.id,
           resource_id: dataset1_resource_b.id
         }
+        resource_c_history_params = {
+          dataset_id: dataset2.id,
+          resource_id: dataset2_resource_c.id
+        }
         create(:resource_download_history,
           resource_a_history_params.merge(downloaded: Time.zone.local(2017, 11, 30, 23, 59, 59)))
         create(:resource_download_history,
@@ -254,14 +271,15 @@ describe Opendata::DatasetDownloadReport::Aggregate, dbscope: :example do
         create(:resource_download_history,
           resource_b_history_params.merge(downloaded: Time.zone.local(2018, 1, 31, 23, 59, 59)))
         create(:resource_download_history,
-          resource_a_history_params.merge(downloaded: Time.zone.local(2018, 2, 28, 23, 59, 59)))
+          resource_c_history_params.merge(downloaded: Time.zone.local(2018, 2, 28, 23, 59, 59)))
         create(:resource_download_history,
-          resource_a_history_params.merge(downloaded: Time.zone.local(2018, 3, 1)))
+          resource_c_history_params.merge(downloaded: Time.zone.local(2018, 3, 1)))
       end
 
       it do
         file_path = "#{Rails.root}/spec/fixtures/opendata/dataset_download_report/day.csv"
-        expected_csv = File.read(file_path)
+        expected_csv = File.binread(file_path)
+        expected_csv.force_encoding("SJIS")
         is_expected.to eq expected_csv
       end
     end

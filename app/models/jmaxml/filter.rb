@@ -51,12 +51,14 @@ class Jmaxml::Filter
   def execute(page, context)
     trigger = triggers.first
     return if trigger.blank?
+    trigger = trigger["_type"].constantize.find(trigger.id)
 
     xmldoc = REXML::Document.new(page.xml)
     context[:xmldoc] = xmldoc
 
     trigger.verify(page, context) do
       actions.each do |action|
+        action = action["_type"].constantize.find(action.id)
         action.execute(page, context)
       end
     end

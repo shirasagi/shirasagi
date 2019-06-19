@@ -15,27 +15,49 @@ module Mongoid
         end
       end
 
-      def with_repl_master
+      def with_repl_master(&block)
+        client_name = :repl_master
         client = Mongoid::Config.clients[:repl_master]
-        client ? self.with(client: :repl_master, database: client[:database]) : self
+
+        if client.nil?
+          client_name = persistence_context.send(:client_name)
+          client = Mongoid::Config.clients[client_name]
+        end
+
+        if block_given?
+          self.with(client: client_name, database: client[:database], &block)
+        else
+          self.with(client: client_name, database: client[:database]) { |criteria| criteria }
+        end
       end
 
       def mongo_client_options
-        options = persistence_options
-        return { client: options[:client], database: options[:database] }.compact if options
+        options = persistence_context.options
+        return { client: options[:client], database: options[:database] }.compact if options.present?
         { client: self.storage_options[:client], database: self.database_name }.compact
       end
     end
 
     def mongo_client_options
-      options = persistence_options
-      return { client: options[:client], database: options[:database] }.compact if options
+      options = persistence_context.options
+      return { client: options[:client], database: options[:database] }.compact if options.present?
       { client: self.class.storage_options[:client], database: self.class.database_name }.compact
     end
 
-    def with_repl_master
+    def with_repl_master(&block)
+      client_name = :repl_master
       client = Mongoid::Config.clients[:repl_master]
-      client ? self.with(client: :repl_master, database: client[:database]) : self
+
+      if client.nil?
+        client_name = persistence_context.send(:client_name)
+        client = Mongoid::Config.clients[client_name]
+      end
+
+      if block_given?
+        self.with(client: client_name, database: client[:database], &block)
+      else
+        self.with(client: client_name, database: client[:database]) { |criteria| criteria }
+      end
     end
   end
 end

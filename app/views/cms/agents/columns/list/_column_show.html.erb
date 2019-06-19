@@ -1,0 +1,9 @@
+<%= render 'cms/agents/columns/main/base', show: true, column: column, value: value do %>
+  <%= content_tag column.list_type.to_sym do %>
+    <% value.lists.each do |list| %>
+      <li>
+        <%= list %>
+      </li>
+    <% end %>
+  <% end %>
+<% end %>

@@ -178,9 +178,9 @@ describe "inquiry_answers", dbscope: :example do
         expect(csv_lines[0][4]).to eq radio_column.name
         expect(csv_lines[0][5]).to eq select_column.name
         expect(csv_lines[0][6]).to eq check_column.name
-        expect(csv_lines[0][7]).to eq 'created'
-        expect(csv_lines[0][8]).to eq 'source_url'
-        expect(csv_lines[0][9]).to eq 'source_name'
+        expect(csv_lines[0][7]).to eq Inquiry::Answer.t('source_url')
+        expect(csv_lines[0][8]).to eq Inquiry::Answer.t('source_name')
+        expect(csv_lines[0][9]).to eq Inquiry::Answer.t('created')
         expect(csv_lines[1][0]).to eq answer.id.to_s
         expect(csv_lines[1][1]).to eq name
         expect(csv_lines[1][2]).to be_nil
@@ -188,9 +188,9 @@ describe "inquiry_answers", dbscope: :example do
         expect(csv_lines[1][4]).to eq radio
         expect(csv_lines[1][5]).to eq select
         expect(csv_lines[1][6]).to eq check.values.join("\n")
-        expect(csv_lines[1][7]).to eq answer.created.strftime('%Y/%m/%d %H:%M')
+        expect(csv_lines[1][7]).to be_nil
         expect(csv_lines[1][8]).to be_nil
-        expect(csv_lines[1][9]).to be_nil
+        expect(csv_lines[1][9]).to eq answer.created.strftime('%Y/%m/%d %H:%M')
       end
     end
 
@@ -211,18 +211,18 @@ describe "inquiry_answers", dbscope: :example do
         expect(csv_lines[0][3]).to eq radio_column.name
         expect(csv_lines[0][4]).to eq select_column.name
         expect(csv_lines[0][5]).to eq check_column.name
-        expect(csv_lines[0][6]).to eq 'created'
-        expect(csv_lines[0][7]).to eq 'source_url'
-        expect(csv_lines[0][8]).to eq 'source_name'
+        expect(csv_lines[0][6]).to eq Inquiry::Answer.t('source_url')
+        expect(csv_lines[0][7]).to eq Inquiry::Answer.t('source_name')
+        expect(csv_lines[0][8]).to eq Inquiry::Answer.t('created')
         expect(csv_lines[1][0]).to eq answer.id.to_s
         expect(csv_lines[1][1]).to eq name
         expect(csv_lines[1][2]).to be_nil
         expect(csv_lines[1][3]).to eq radio
         expect(csv_lines[1][4]).to eq select
         expect(csv_lines[1][5]).to eq check.values.join("\n")
-        expect(csv_lines[1][6]).to eq answer.created.strftime('%Y/%m/%d %H:%M')
+        expect(csv_lines[1][6]).to be_nil
         expect(csv_lines[1][7]).to be_nil
-        expect(csv_lines[1][8]).to be_nil
+        expect(csv_lines[1][8]).to eq answer.created.strftime('%Y/%m/%d %H:%M')
       end
     end
   end

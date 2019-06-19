@@ -1,4 +1,4 @@
-FactoryGirl.define do
+FactoryBot.define do
   factory :garbage_node_base, class: Garbage::Node::Base, traits: [:cms_node] do
     route "garbage/base"
   end

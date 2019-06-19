@@ -1,5 +1,5 @@
 namespace :opendata do
-  task :export_resources => :environment do
+  task export_resources: :environment do
     Opendata::Dataset.each do |dataset|
       next if dataset.resources.blank?
       puts dataset.name
@@ -15,7 +15,14 @@ namespace :opendata do
     end
   end
 
-  task :fuseki_import => :environment do
+  task update_resource_histories: :environment do
+    Opendata::ResourceDownloadHistory.update_histories
+    Opendata::ResourceDatasetDownloadHistory.update_histories
+    Opendata::ResourceBulkDownloadHistory.update_histories
+    Opendata::ResourcePreviewHistory.update_histories
+  end
+
+  task fuseki_import: :environment do
     Opendata::Dataset.each do |dataset|
       next if dataset.resources.blank?
       puts dataset.name
@@ -31,11 +38,11 @@ namespace :opendata do
     end
   end
 
-  task :fuseki_clear => :environment do
+  task fuseki_clear: :environment do
     Opendata::Sparql.clear_all
   end
 
-  task :crawl => :environment do
+  task crawl: :environment do
     site = SS::Site.where(host: ENV["site"]).first
     datasets = Opendata::Dataset.site(site)
     datasets.each do |ds|

@@ -18,7 +18,8 @@ class Gws::Portal::UserSetting
   validates :portal_user_id, presence: true, uniqueness: { scope: :site_id }
 
   def portlet_models
-    %w(free links reminder schedule todo bookmark report workflow circular monitor board faq qna share attendance).map do |key|
+    %w(free links reminder schedule todo bookmark report workflow circular monitor board faq qna share
+       attendance notice presence survey ad).map do |key|
       Gws::Portal::UserPortlet.portlet_model(key)
     end
   end

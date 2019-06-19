@@ -1,5 +1,6 @@
 /**
  *= require gridster/jquery.gridster.min.css
+ *= require bxslider
  */
 @import "ss/init";
 @import "board/gws";
@@ -12,6 +13,9 @@
 @import "monitor/gws";
 @import "attendance/gws";
 @import "reminder/gws";
+@import "presence/gws";
+@import "survey/gws";
+@import "workflow/gws";
 
 // File
 .gws-addon-file {
@@ -65,6 +69,7 @@
   }
 }
 .gws-category-label {
+  display: inline-block;
   padding: 1px 5px;
   @include border-radius(3px);
   background-color: #e8e8e8;

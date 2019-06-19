@@ -9,7 +9,7 @@ describe "gws_portal_setting_users", type: :feature, dbscope: :example do
 
     it "#index" do
       visit gws_portal_path(site: site)
-      expect(page).not_to have_content(I18n.t('gws/portal.user_portal'))
+      expect(page).to have_no_content(I18n.t('gws/portal.user_portal'))
 
       visit gws_portal_user_path(site: site, user: user)
       expect(page).to have_content(I18n.t('gws/portal.user_portal'))
@@ -23,10 +23,10 @@ describe "gws_portal_setting_users", type: :feature, dbscope: :example do
       user.clear_gws_role_permissions
 
       visit gws_site_path(site: site)
-      expect(page).not_to have_content(I18n.t('gws/portal.user_portal'))
+      expect(page).to have_no_content(I18n.t('gws/portal.user_portal'))
 
       visit gws_portal_setting_users_path(site: site)
-      expect(page).not_to have_content(user.name)
+      expect(page).to have_no_content(user.name)
     end
   end
 end

@@ -1,10 +1,10 @@
 namespace :voice do
-  task :setup_logger => [:environment] do
+  task setup_logger: [:environment] do
     Rails.logger = Logger.new(STDOUT)
     Rails.logger.level = Logger::DEBUG
   end
 
-  task :synthesis => [:environment, :setup_logger] do
+  task synthesis: [:environment, :setup_logger] do
     id_or_url = ENV["id"] || ENV["url"]
     force = ENV["force"] ||  "false"
     force = force =~ /^(false|0)$/i ? false : true

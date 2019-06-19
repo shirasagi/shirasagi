@@ -1,7 +1,12 @@
-FactoryGirl.define do
+FactoryBot.define do
   factory :opendata_node_category, class: Opendata::Node::Category, traits: [:cms_node] do
     route "opendata/category"
     filename { "category-#{unique_id}" }
+  end
+
+  factory :opendata_node_estat_category, class: Opendata::Node::EstatCategory, traits: [:cms_node] do
+    route "opendata/estat_category"
+    filename { "estat-category-#{unique_id}" }
   end
 
   factory :opendata_node_area, class: Opendata::Node::Area, traits: [:cms_node] do

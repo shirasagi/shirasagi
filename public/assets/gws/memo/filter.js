@@ -1,1 +1,1 @@
-(function(){this.Gws_Memo_Filter=function(){function t(){}return t.render=function(){return $("#addon-gws-agents-addons-group_permission").hide()},t}()}).call(this);
+function Gws_Memo_Filter(){}Gws_Memo_Filter.render=function(){return $("#addon-gws-agents-addons-group_permission").hide()};

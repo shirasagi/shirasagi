@@ -1,0 +1,144 @@
+ja:
+  gws/notice:
+    all: すべてのお知らせ
+    body_size: 本文
+    individual_body_size: 個別容量制限
+    total_body_size: 総容量制限
+    file_size: 添付ファイル
+    individual_file_size: 個別容量制限
+    total_file_size: 総容量制限
+    total_body_size_current_stats: 現在%{size}使用中です。使用率は%{percentage}です。
+    total_file_size_current_stats: 現在%{size}使用中です。使用率は%{percentage}です。
+    gws_addon_member_head: 投稿者
+    links:
+      set_seen: 既読にする
+      unset_seen: 未読にする
+      reclaim_total_size: 使用量を再計算する
+      create_my_folder: 自所属を作成する
+      move_to_my_folder: 自所属フォルダーを開く
+    confirm:
+      set_seen: 既読にしてもよろしいですか？
+      unset_seen: 未読にしてもよろしいですか？
+      create_my_folder: 自所属を作成してよろしいですか？
+    notice:
+      set_seen: 既読にしました。
+      unset_seen: 未読にしました。
+      not_a_member_in_this_folder: このフォルダーへお知らせを掲示する権限がありません。
+
+  gws_role:
+    read_other_gws_notices: お知らせの閲覧（全て）
+    read_private_gws_notices: お知らせの閲覧（所有）
+    edit_other_gws_notices: お知らせの編集（全て）
+    edit_private_gws_notices: お知らせの編集（所有）
+    delete_other_gws_notices: お知らせの削除（全て）
+    delete_private_gws_notices: お知らせの削除（所有）
+    trash_other_gws_notices: お知らせゴミ箱の管理（全て）
+    trash_private_gws_notices: お知らせゴミ箱の管理（所有）
+
+    read_other_gws_notice_folders: フォルダーの閲覧（全て）
+    read_private_gws_notice_folders: フォルダーの閲覧（所有）
+    edit_other_gws_notice_folders: フォルダーの編集（全て）
+    edit_private_gws_notice_folders: フォルダーの編集（所有）
+    delete_other_gws_notice_folders: フォルダーの削除（全て）
+    delete_private_gws_notice_folders: フォルダーの削除（所有）
+    my_folder_private_gws_notice_folders: 自所属フォルダーの作成
+
+    read_other_gws_notice_categories: カテゴリーの閲覧（全て）
+    read_private_gws_notice_categories: カテゴリーの閲覧（所有）
+    edit_other_gws_notice_categories: カテゴリーの編集（全て）
+    edit_private_gws_notice_categories: カテゴリーの編集（所有）
+    delete_other_gws_notice_categories: カテゴリーの削除（全て）
+    delete_private_gws_notice_categories: カテゴリーの削除（所有）
+
+  modules:
+    gws/notice: お知らせ
+    addons:
+      gws/notice/comment_setting: コメント設定
+      gws/notice/comment_post: コメント
+      gws/notice/category: カテゴリー
+      gws/notice/resource_limitation: 容量制限
+      gws/notice/member: 閲覧者
+
+  gws_notification:
+    gws/notice/post:
+      subject: "[お知らせ] 「%{name}」が掲載されました。"
+      text: "%{path}"
+      mail_text: |
+        %{subject}
+
+        %{text}
+
+  mongoid:
+    models:
+      gws/notice/post: お知らせ
+      gws/notice/folder: フォルダー
+      gws/notice/category: カテゴリー
+      gws/notice/comment: コメント
+    errors:
+      models:
+        gws/notice/category:
+          too_deep: は%{max}階層以下にしてください。
+          not_found_parent: 親カテゴリーが存在しません。
+          found_children: 子カテゴリーが存在します。
+        gws/notice/post:
+          exceeded_individual_body_size_limit: 本文（%{size}）が個別容量制限（%{limit}）を超えました。本文を短くしてください。
+          exceeded_total_body_size_limit: 本文総容量（%{size}）が総容量制限（%{limit}）を超えました。不要なお知らせを削除してください。
+          exceeded_individual_file_size_limit: 添付ファイルサイズ（%{size}）が個別容量制限（%{limit}）を超えました。添付ファイルの容量を小さくしてください。
+          exceeded_total_file_size_limit: 添付ファイル総容量（%{size}）が総容量制限（%{limit}）を超えました。不要なお知らせを削除してください。
+    attributes:
+      gws/notice/post:
+        name: タイトル
+        severity: 種別
+        total_file_size: 総添付ファイルサイズ
+      gws/notice/folder:
+        member_ids: 投稿ユーザー
+        member_group_ids: 投稿グループ
+        member_custom_group_ids: 投稿カスタムグループ
+      gws/notice/notification:
+        notification_noticed: 通知日時
+      gws/addon/notice/comment_setting:
+        comment_state: コメント投稿
+      gws/addon/notice/comment_post:
+        notice_id: お知らせ
+        text: コメント
+      gws/addon/notice/category:
+        category_ids: カテゴリー
+      gws/addon/notice/resource_limitation:
+        notice_individual_body_size_limit: 本文個別容量制限
+        notice_total_body_size_limit: 本文総容量制限
+        notice_individual_file_size_limit: 添付ファイル個別容量制限
+        notice_total_file_size_limit: 添付ファイル総容量制限
+        notice_total_body_size: 総本文サイズ
+        notice_total_file_size: 総添付ファイルサイズ
+      gws/reference/notice/folder:
+        folder_id: フォルダー
+      gws/notice/comment:
+        user_group_name: グループ
+        user_name: 作成者
+        notice_id: お知らせ
+
+  tooltip:
+    gws/notice/post:
+      name:
+        - タイトルを入力します。
+      severity:
+        - 種別を選択します。
+        - 「重要なお知らせ」の場合、チェックをつけます。
+        - 「重要なお知らせ」にチェックをつけた場合、コンテンツ内の先頭に目立つ色で表示されます。
+
+    gws/addon/notice/comment_setting:
+      comment_state:
+        - コメント投稿を有効にするかどうかを選択します。
+
+    gws/addon/notice/resource_limitation:
+      notice_total_body_size_limit:
+        - フォルダーの総本文制限を入力します。
+      notice_individual_file_size_limit:
+        - 最大ファイルサイズを入力します。
+      notice_total_file_size_limit:
+        - フォルダーの総容量制限を入力します。
+
+  job:
+    models:
+      gws/notice/notification_job: お知らせ通知
+      gws/notice/trash_purge_job: お知らせゴミ箱の掃除

@@ -26,9 +26,34 @@ describe Article::Page, dbscope: :example, tmpdir: true do
   end
 
   describe "validation" do
+    let(:site_limit0) { create :cms_site_unique, max_name_length: 0 }
+    let(:site_limit80) { create :cms_site_unique, max_name_length: 80 }
+
     it "basename" do
       item = build(:article_page_basename_invalid)
       expect(item.invalid?).to be_truthy
+    end
+
+    it "name with limit 0" do
+      item = build(:article_page_10_characters_name, cur_site: site_limit0)
+      expect(item.valid?).to be_truthy
+
+      item = build(:article_page_100_characters_name, cur_site: site_limit0)
+      expect(item.valid?).to be_truthy
+
+      item = build(:article_page_1000_characters_name, cur_site: site_limit0)
+      expect(item.valid?).to be_truthy
+    end
+
+    it "name with limit 80" do
+      item = build(:article_page_10_characters_name, cur_site: site_limit80)
+      expect(item.valid?).to be_truthy
+
+      item = build(:article_page_100_characters_name, cur_site: site_limit80)
+      expect(item.valid?).to be_falsey
+
+      item = build(:article_page_1000_characters_name, cur_site: site_limit80)
+      expect(item.valid?).to be_falsey
     end
   end
 
@@ -371,6 +396,79 @@ describe Article::Page, dbscope: :example, tmpdir: true do
         written.scan(/<meta property="og:url" .+?\/>/).first.tap do |meta|
           expect(meta.include?(item.full_url)).to be_truthy
         end
+      end
+    end
+  end
+
+  describe "what published page is" do
+    let(:path) { "#{Rails.root}/spec/fixtures/ss/logo.png" }
+    let(:file) do
+      SS::TempFile.create_empty!(
+        cur_user: cms_user, site_id: cms_site.id, filename: "logo.png", content_type: 'image/png'
+      ) do |file|
+        ::FileUtils.cp(path, file.path)
+      end
+    end
+    let(:body) { Array.new(rand(5..10)) { unique_id }.join("\n") + file.url }
+
+    context "when closed page is published" do
+      subject { create :article_page, cur_node: node, state: "closed", html: body, file_ids: [ file.id ] }
+
+      it do
+        expect(file.site_id).to eq cms_site.id
+        expect(file.user_id).to eq cms_user.id
+        expect(subject.file_ids).to include(file.id)
+
+        expect(::File.exists?(file.public_path)).to be_falsey
+        expect(::File.exists?(subject.path)).to be_falsey
+
+        subject.state = "public"
+        subject.save!
+
+        expect(::File.exists?(file.public_path)).to be_truthy
+        expect(::File.exists?(subject.path)).to be_truthy
+      end
+    end
+
+    context "when node of page is turned to closed" do
+      subject { create :article_page, cur_node: node, state: "public", html: body, file_ids: [ file.id ] }
+
+      it do
+        expect(file.site_id).to eq cms_site.id
+        expect(file.user_id).to eq cms_user.id
+        expect(subject.file_ids).to include(file.id)
+
+        expect(::File.exists?(subject.path)).to be_truthy
+        expect(::File.exists?(file.public_path)).to be_truthy
+
+        node.state = "closed"
+        node.save!
+
+        SS::PublicFileRemoverJob.bind(site_id: cms_site.id).perform_now
+
+        expect(::File.exists?(subject.path)).to be_falsey
+        expect(::File.exists?(file.public_path)).to be_falsey
+      end
+    end
+
+    context "when node of page is turned to for member" do
+      subject { create :article_page, cur_node: node, state: "public", html: body, file_ids: [ file.id ] }
+
+      it do
+        expect(file.site_id).to eq cms_site.id
+        expect(file.user_id).to eq cms_user.id
+        expect(subject.file_ids).to include(file.id)
+
+        expect(::File.exists?(subject.path)).to be_truthy
+        expect(::File.exists?(file.public_path)).to be_truthy
+
+        node.for_member_state = "enabled"
+        node.save!
+
+        SS::PublicFileRemoverJob.bind(site_id: cms_site.id).perform_now
+
+        expect(::File.exists?(subject.path)).to be_falsey
+        expect(::File.exists?(file.public_path)).to be_falsey
       end
     end
   end

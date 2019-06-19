@@ -101,6 +101,44 @@ describe 'members/agents/nodes/registration', type: :feature, dbscope: :example 
         expect(page.find("input[name='item[in_birth][month]']", visible: false).value).to eq birthday.month.to_s
         expect(page.find("input[name='item[in_birth][day]']", visible: false).value).to eq birthday.day.to_s
 
+        click_button I18n.t("member.buttons.back")
+      end
+
+      within "form" do
+        expect(page.find("input[name='item[name]']").value).to eq name
+        expect(page.find("input[name='item[email]']").value).to eq email
+        expect(page.find("input[name='item[email_again]']").value).to eq nil
+        fill_in "item[email_again]", with: email
+        expect(page.find("input[name='item[kana]']").value).to eq kana
+        expect(page.find("input[name='item[organization_name]']").value).to eq organization_name
+        expect(page.find("input[name='item[job]']").value).to eq job
+        expect(page.find("input[name='item[tel]']").value).to eq tel
+        expect(page.find("input[name='item[postal_code]']").value).to eq postal_code
+        expect(page.find("input[name='item[addr]']").value).to eq addr
+        expect(page).to have_checked_field(I18n.t("member.options.sex.#{sex}"))
+        expect(page).to have_select('item[in_birth][era]', selected: I18n.t('ss.options.wareki.seireki'))
+        expect(page.find("input[name='item[in_birth][year]']").value).to eq birthday.year.to_s
+        expect(page).to have_select('item[in_birth][month]', selected: birthday.month.to_s)
+        expect(page).to have_select('item[in_birth][day]', selected: birthday.day.to_s)
+
+        click_button "確認画面へ"
+      end
+
+      within "form" do
+        expect(page.find("input[name='item[name]']", visible: false).value).to eq name
+        expect(page.find("input[name='item[email]']", visible: false).value).to eq email
+        expect(page.find("input[name='item[kana]']", visible: false).value).to eq kana
+        expect(page.find("input[name='item[organization_name]']", visible: false).value).to eq organization_name
+        expect(page.find("input[name='item[job]']", visible: false).value).to eq job
+        expect(page.find("input[name='item[tel]']", visible: false).value).to eq tel
+        expect(page.find("input[name='item[postal_code]']", visible: false).value).to eq postal_code
+        expect(page.find("input[name='item[addr]']", visible: false).value).to eq addr
+        expect(page.find("input[name='item[sex]']", visible: false).value).to eq sex
+        expect(page.find("input[name='item[in_birth][era]']", visible: false).value).to eq "seireki"
+        expect(page.find("input[name='item[in_birth][year]']", visible: false).value).to eq birthday.year.to_s
+        expect(page.find("input[name='item[in_birth][month]']", visible: false).value).to eq birthday.month.to_s
+        expect(page.find("input[name='item[in_birth][day]']", visible: false).value).to eq birthday.day.to_s
+
         click_button "登録"
       end
 
@@ -127,7 +165,7 @@ describe 'members/agents/nodes/registration', type: :feature, dbscope: :example 
       expect(member.sex).to eq sex
       expect(member.birthday).to eq birthday
 
-      mail.body.raw_source =~ /(#{Regexp.escape(node_registration.full_url)}[^ \t\r\n]+)/
+      mail.body.raw_source =~ /(#{::Regexp.escape(node_registration.full_url)}[^ \t\r\n]+)/
       url = $1
       expect(url).not_to be_nil
       visit url
@@ -164,6 +202,58 @@ describe 'members/agents/nodes/registration', type: :feature, dbscope: :example 
       end
 
       expect(page). to have_css("div#mypage")
+    end
+
+    it do
+      visit index_path
+
+      node_registration.notice_state = "enabled"
+      node_registration.notice_email = "sys@example.jp"
+      node_registration.update!
+
+      within "form" do
+        fill_in "item[name]", with: name
+        fill_in "item[email]", with: email
+        fill_in "item[email_again]", with: email
+        fill_in "item[kana]", with: kana
+        fill_in "item[organization_name]", with: organization_name
+        fill_in "item[job]", with: job
+        fill_in "item[tel]", with: tel
+        fill_in "item[postal_code]", with: postal_code
+        fill_in "item[addr]", with: addr
+        choose "item_sex_#{sex}"
+        select era, from: "item[in_birth][era]"
+        fill_in "item[in_birth][year]", with: birthday.year
+        select birthday.month, from: "item[in_birth][month]"
+        select birthday.day, from: "item[in_birth][day]"
+
+        click_button "確認画面へ"
+      end
+
+      within "form" do
+        expect(page.find("input[name='item[name]']", visible: false).value).to eq name
+        expect(page.find("input[name='item[email]']", visible: false).value).to eq email
+        expect(page.find("input[name='item[kana]']", visible: false).value).to eq kana
+        expect(page.find("input[name='item[organization_name]']", visible: false).value).to eq organization_name
+        expect(page.find("input[name='item[job]']", visible: false).value).to eq job
+        expect(page.find("input[name='item[tel]']", visible: false).value).to eq tel
+        expect(page.find("input[name='item[postal_code]']", visible: false).value).to eq postal_code
+        expect(page.find("input[name='item[addr]']", visible: false).value).to eq addr
+        expect(page.find("input[name='item[sex]']", visible: false).value).to eq sex
+        expect(page.find("input[name='item[in_birth][era]']", visible: false).value).to eq "seireki"
+        expect(page.find("input[name='item[in_birth][year]']", visible: false).value).to eq birthday.year.to_s
+        expect(page.find("input[name='item[in_birth][month]']", visible: false).value).to eq birthday.month.to_s
+        expect(page.find("input[name='item[in_birth][day]']", visible: false).value).to eq birthday.day.to_s
+
+        click_button "登録"
+      end
+
+      expect(ActionMailer::Base.deliveries.length).to eq 1
+      mail = ActionMailer::Base.deliveries.first
+
+      expect(mail.to.first).to eq "sys@example.jp"
+      expect(mail.subject).to start_with '[会員登録申請]'
+      expect(mail.body.multipart?).to be_falsey
     end
   end
 
@@ -331,7 +421,7 @@ describe 'members/agents/nodes/registration', type: :feature, dbscope: :example 
       expect(mail.body.raw_source).to include(node_registration.reset_password_lower_text)
       expect(mail.body.raw_source).to include(node_registration.reset_password_signature)
 
-      mail.body.raw_source =~ /(#{Regexp.escape(node_registration.full_url)}[^ \t\r\n]+)/
+      mail.body.raw_source =~ /(#{::Regexp.escape(node_registration.full_url)}[^ \t\r\n]+)/
       url = $1
       expect(url).not_to be_nil
       visit url
@@ -348,6 +438,38 @@ describe 'members/agents/nodes/registration', type: :feature, dbscope: :example 
 
       member.reload
       expect(member.password).to eq SS::Crypt.crypt(new_password)
+    end
+  end
+
+  describe "overwrite existing temporal member" do
+    let(:member) { create(:cms_member, state: "temporary") }
+
+    it do
+      visit node_registration.full_url
+
+      within "form" do
+        fill_in "item[name]", with: member.name
+        fill_in "item[email]", with: member.email
+        fill_in "item[email_again]", with: member.email
+
+        click_button "確認画面へ"
+      end
+
+      within "form" do
+        click_button "登録"
+      end
+
+      expect(page).to have_content("メールに記載の案内を読み、登録を完了してください。")
+
+      expect(ActionMailer::Base.deliveries.length).to eq 1
+      mail = ActionMailer::Base.deliveries.first
+      expect(mail.from.first).to eq "admin@example.jp"
+      expect(mail.to.first).to eq member.email
+      expect(mail.subject).to eq '登録確認'
+      expect(mail.body.multipart?).to be_falsey
+      expect(mail.body.raw_source).to include(node_registration.reply_upper_text)
+      expect(mail.body.raw_source).to include(node_registration.reply_lower_text)
+      expect(mail.body.raw_source).to include(node_registration.reply_signature)
     end
   end
 end

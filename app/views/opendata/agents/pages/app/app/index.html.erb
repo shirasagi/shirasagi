@@ -2,8 +2,8 @@
 <script src="/assets/js/jquery.colorbox.js"></script>
 <%
   path_prefix = nil
-  if controller.filters.include?(:preview)
-    path_prefix = cms_preview_path(preview_date: params[:preview_date])
+  if controller.filter_include?(:preview)
+    path_prefix = cms_preview_path(site: @cur_site, preview_date: params[:preview_date])
   end
 
   if path_prefix.present? && path_prefix.end_with?('/')
@@ -11,41 +11,59 @@
   end
 %>
 <%= javascript_include_tag "opendata/public" %>
-<%= coffee do %>
-$ ->
+<%= jquery do %>
+
   <% if @cur_node.show_point? %>
-  # show point
-  Opendata_Point.render("<%= path_prefix %><%= @cur_page.point_url %>");
+    Opendata_Point.render("<%= path_prefix %><%= @cur_page.point_url %>");
+
   <% end %>
 
   <% if @tab_display == "tab_html" %>
-  # show executed
-  $.ajax
-    url: "<%= path_prefix %><%= @cur_page.executed_show_url %>"
-    data: { tab_display: "<%= @tab_display %>" }
-    type: "GET"
-    success: (data)->
-      $("#executed").html data
+    //show executed
+    $.ajax({
+    url: "<%= path_prefix %><%= @cur_page.executed_show_url %>",
+    data: {
+    tab_display: "<%= @tab_display %>"
+    },
+    type: "GET",
+    success: function(data) {
+    return $("#executed").html(data);
+    }
+    });
   <% end %>
 
   <% if idea_enabled? %>
-  # show ideas
-  $.ajax
-    url: "<%= path_prefix %><%= @cur_page.app_ideas_url %>"
-    success: (data)->
-      $(".app-ideas").html data
+   //show ideas
+    $.ajax({
+    url: "<%= path_prefix %><%= @cur_page.app_ideas_url %>",
+    success: function(data) {
+    return $(".app-ideas").html(data);
+    }
+    });
   <% end %>
 
-  # hide categories
-  $(".categories a[data-class=other]").click ->
-    type = $(this).attr("class")
-    $(".categories a." + type).show()
-    $(this).remove()
-    return false
+  // hide categories
+  $(".categories a[data-class=other]").click(function() {
+  var type;
+  type = $(this).attr("class");
+  $(".categories a." + type).show();
+  $(this).remove();
+  return false;
+  });
 
-  # preview
-  $("a.content").colorbox({ fixed: true, width: "90%", height: "90%" })
-  $("a.json").colorbox({ fixed: true, width: "90%", height: "90%" })
+  //preview
+  $("a.content").colorbox({
+  fixed: true,
+  width: "90%",
+  height: "90%"
+  });
+
+  $("a.json").colorbox({
+  fixed: true,
+  width: "90%",
+  height: "90%"
+  });
+
 <% end %>
 
 <header>
@@ -71,7 +89,7 @@ $ ->
 <%
 max = 3
 categories = [
-  { items: @cur_page.categories, type: :category, name: :name, key: :category_id, val: :id },
+  { items: @cur_page.categories.sort(order: 1), type: :category, name: :name, key: :category_id, val: :id },
   { items: @cur_page.areas.sort(order: 1), type: :area, name: :name, key: :area_id, val: :id },
   { items: @cur_page.tags, type: :tag, name: :to_s, key: :tag, val: :to_s },
 ]

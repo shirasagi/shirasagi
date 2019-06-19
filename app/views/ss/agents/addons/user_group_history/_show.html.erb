@@ -1,4 +1,7 @@
-<%= jquery do %> SS_AddonTabs.hide(".ss-addon-user-group-history"); <% end %>
+<%
+  addon ||= local_assigns.fetch(:addon, {})
+  addon[:display_body] = "hide"
+%>
 
 <div class="ss-addon-user-group-history">
   <table class="index">

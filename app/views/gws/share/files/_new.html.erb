@@ -21,9 +21,12 @@
   </div>
 </div>
 
-<%= jquery do %>
-  SS_Addon_TempFile.renderDrop($("#item-form .upload-drop-area"), <%== @cur_user.id.to_json %>);
+<dl class="see">
+  <dt><%= Gws::Share::File.t :memo %><%= Gws::Share::File.tt :memo %></dt>
+  <dd><%= f.text_area :memo %></dd>
+</dl>
 
+<%= jquery do %>
   window.deleteContent = function (id) {
     $("#item-form .file-view").each(function() {
       if (id == $(this).find(".file-id").attr("value")) {
@@ -31,4 +34,6 @@
       }
     });
   };
+
+  var tempFile = new SS_Addon_TempFile("#item-form .upload-drop-area", <%== @cur_user.id.to_json %>);
 <% end %>

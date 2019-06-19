@@ -66,7 +66,8 @@ describe "opendata_agents_pages_app", dbscope: :example, js: true do
         node.show_point = 'hide'
         node.save!
 
-        app.touch
+        # https://jira.mongodb.org/browse/MONGOID-4544
+        # app.touch
         app.save!
       end
 
@@ -84,7 +85,8 @@ describe "opendata_agents_pages_app", dbscope: :example, js: true do
         site.dataset_state = 'disabled'
         site.save!
 
-        app.touch
+        # https://jira.mongodb.org/browse/MONGOID-4544
+        # app.touch
         app.save!
       end
 
@@ -106,7 +108,8 @@ describe "opendata_agents_pages_app", dbscope: :example, js: true do
         site.idea_state = 'disabled'
         site.save!
 
-        app.touch
+        # https://jira.mongodb.org/browse/MONGOID-4544
+        # app.touch
         app.save!
       end
 
@@ -129,7 +132,8 @@ describe "opendata_agents_pages_app", dbscope: :example, js: true do
         site.idea_state = 'disabled'
         site.save!
 
-        app.touch
+        # https://jira.mongodb.org/browse/MONGOID-4544
+        # app.touch
         app.save!
       end
 
@@ -196,7 +200,8 @@ describe "opendata_agents_pages_app", dbscope: :example, js: true do
         node.show_point = 'hide'
         node.save!
 
-        app.touch
+        # https://jira.mongodb.org/browse/MONGOID-4544
+        # app.touch
         app.save!
       end
 
@@ -214,7 +219,8 @@ describe "opendata_agents_pages_app", dbscope: :example, js: true do
         site.dataset_state = 'disabled'
         site.save!
 
-        app.touch
+        # https://jira.mongodb.org/browse/MONGOID-4544
+        # app.touch
         app.save!
       end
 
@@ -234,7 +240,8 @@ describe "opendata_agents_pages_app", dbscope: :example, js: true do
         site.idea_state = 'disabled'
         site.save!
 
-        app.touch
+        # https://jira.mongodb.org/browse/MONGOID-4544
+        # app.touch
         app.save!
       end
 
@@ -255,7 +262,8 @@ describe "opendata_agents_pages_app", dbscope: :example, js: true do
         site.idea_state = 'disabled'
         site.save!
 
-        app.touch
+        # https://jira.mongodb.org/browse/MONGOID-4544
+        # app.touch
         app.save!
       end
 

@@ -2,6 +2,7 @@ class Gws::UserTitle
   include SS::Model::UserTitle
   include Gws::Referenceable
   include Gws::SitePermission
+  include Gws::Addon::Presence::DelegatorSetting
   include Gws::Addon::History
 
   set_permission_name "gws_user_titles", :edit
@@ -13,6 +14,10 @@ class Gws::UserTitle
 
   default_scope -> { order_by(order: -1) }
   scope :site, ->(site) { where group_id: site.id }
+
+  def users
+    Gws::User.in(title_ids: self.id)
+  end
 
   private
 
