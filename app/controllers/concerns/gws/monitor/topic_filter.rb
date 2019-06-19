@@ -148,12 +148,11 @@ module Gws::Monitor::TopicFilter
     raise '403' unless @item.allowed?(:edit, @cur_user, site: @cur_site)
     @download_file_group_ssfile_ids = []
     @item.attend_groups.each do |group|
-      if @item.comment(group.id).present?
-        download_file_ids = @item.comment(group.id)[0]
-        order = group.order || 0
-        filename = "#{order}_#{File.basename(download_file_ids.user_group_name)}"
-        @download_file_group_ssfile_ids << [filename, download_file_ids.file_ids]
-      end
+      next if @item.comment(group.id).blank?
+      download_file_ids = @item.comment(group.id)[0]
+      order = group.order || 0
+      filename = "#{order}_#{File.basename(download_file_ids.user_group_name)}"
+      @download_file_group_ssfile_ids << [filename, download_file_ids.file_ids]
     end
 
     download_file_group_ssfile_ids_hash = @download_file_group_ssfile_ids.to_h

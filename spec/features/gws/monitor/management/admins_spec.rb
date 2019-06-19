@@ -13,7 +13,8 @@ describe "gws_monitor_management_admins", type: :feature, dbscope: :example do
 
   let(:topic1) do
     create(
-      :gws_monitor_topic, user: user, attend_group_ids: [g1.id, g2.id], state: 'public', article_state: 'open', spec_config: 'my_group',
+      :gws_monitor_topic, user: user, attend_group_ids: [g1.id, g2.id],
+      state: 'public', article_state: 'open', spec_config: 'my_group',
       answer_state_hash: { g1.id.to_s => "answered", g2.id.to_s => "preparation" },
       file_ids: [own_ss_file.id]
     )
@@ -33,8 +34,9 @@ describe "gws_monitor_management_admins", type: :feature, dbscope: :example do
 
   let(:topic2) do
     create(
-      :gws_monitor_topic, user: user, attend_group_ids: [g1.id, g2.id], state: 'public', article_state: 'open', spec_config: 'my_group',
-      answer_state_hash: { g1.id.to_s => "answered", g2.id.to_s => "preparation" },
+      :gws_monitor_topic, user: user, attend_group_ids: [g1.id, g2.id], state: 'public',
+      article_state: 'open', spec_config: 'my_group',
+      answer_state_hash: { g1.id.to_s => "answered", g2.id.to_s => "preparation" }
     )
   end
 
@@ -71,7 +73,7 @@ describe "gws_monitor_management_admins", type: :feature, dbscope: :example do
         file.write page.source
 
         entry_names = []
-        Zip::File.open(file.path)do |entries|
+        Zip::File.open(file.path) do |entries|
           entries.each do |entry|
             entry_names << entry.name.encode("utf-8", "cp932")
           end
