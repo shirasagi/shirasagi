@@ -149,14 +149,14 @@ class Gws::Survey::Form
     dest_site = opts[:site] || site
     dest_user = opts[:user] || user
     dest_name = opts[:name] || name
+    dest_anonymous_state = opts[:anonymous_state]
+    dest_file_state = opts[:file_state]
 
     dest = self.class.new
     dest.site = dest_site
     dest.user = dest_user
     dest.name = dest_name
     dest.description = description
-    dest.anonymous_state = anonymous_state
-    dest.file_state = file_state
     dest.file_edit_state = file_edit_state
     dest.due_date = due_date
     dest.release_date = release_date
@@ -175,6 +175,9 @@ class Gws::Survey::Form
     dest.user_ids = user_ids
     dest.permission_level = permission_level
     dest.state = "closed"
+
+    dest.anonymous_state = dest_anonymous_state if dest_anonymous_state.present?
+    dest.file_state = dest_file_state if dest_file_state.present?
 
     return dest unless dest.valid?
 

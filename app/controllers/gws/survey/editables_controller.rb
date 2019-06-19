@@ -130,10 +130,15 @@ class Gws::Survey::EditablesController < ApplicationController
     end
     return if request.get?
 
-    name = params.dig(:copy, :name)
-    @copy = @item.new_clone(site: @cur_site, user: @cur_user, name: name)
-
-    render_opts = { location: { action: :index },  render: { file: :copy }, notice: t('ss.notice.copied') }
+    copy = params.require(:copy).permit(:name, :anonymous_state, :file_state)
+    @copy = @item.new_clone(
+      site: @cur_site,
+      user: @cur_user,
+      name: copy["name"],
+      anonymous_state: copy["anonymous_state"],
+      file_state: copy["file_state"]
+    )
+    render_opts = { location: { action: :index }, render: { file: :copy }, notice: t('ss.notice.copied') }
     render_create @copy.save, render_opts
   end
 
