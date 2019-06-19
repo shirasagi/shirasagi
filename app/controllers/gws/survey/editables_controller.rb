@@ -6,7 +6,7 @@ class Gws::Survey::EditablesController < ApplicationController
   before_action :set_category
   before_action :set_search_params
   before_action :set_items
-  before_action :set_item, only: [:show, :edit, :update, :soft_delete, :move, :publish, :depublish, :copy]
+  before_action :set_item, only: [:show, :edit, :update, :soft_delete, :move, :publish, :depublish, :copy, :print]
   before_action :respond_404_if_item_is_public, only: [:edit, :update, :soft_delete, :move]
   before_action :set_selected_items, only: [:destroy_all, :soft_delete_all]
 
@@ -135,5 +135,17 @@ class Gws::Survey::EditablesController < ApplicationController
 
     render_opts = { location: { action: :index },  render: { file: :copy }, notice: t('ss.notice.copied') }
     render_create @copy.save, render_opts
+  end
+
+  def print
+    @cur_form = @item
+    @item = Gws::Survey::File.new
+    @item.cur_site = @cur_site
+    @item.cur_user = @cur_user
+    @item.cur_form = @cur_form
+    @item.name = t("gws/survey.file_name", form: @cur_form.name)
+
+    @back = { action: :show }
+    render layout: 'ss/print'
   end
 end

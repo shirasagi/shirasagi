@@ -135,7 +135,6 @@ class Gws::Survey::FilesController < ApplicationController
   end
 
   def print
-    @portrait = 'horizontal'
     render layout: 'ss/print'
   end
 end
