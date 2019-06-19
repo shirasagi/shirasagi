@@ -31,6 +31,13 @@ describe "gws_monitor_management_admins", type: :feature, dbscope: :example do
     ]
   end
 
+  let(:topic2) do
+    create(
+      :gws_monitor_topic, user: user, attend_group_ids: [g1.id, g2.id], state: 'public', article_state: 'open', spec_config: 'my_group',
+      answer_state_hash: { g1.id.to_s => "answered", g2.id.to_s => "preparation" },
+    )
+  end
+
   context "with auth" do
     before { login_gws_user }
 
@@ -71,6 +78,14 @@ describe "gws_monitor_management_admins", type: :feature, dbscope: :example do
         end
         expect(entry_names).to match_array(download_filenames)
       end
+    end
+
+    it "#file_download when file not stored " do
+      topic2
+
+      visit gws_monitor_management_admin_path(site, topic2)
+      expect(page).to have_content(topic2.name)
+      expect(page).not_to have_link(I18n.t("gws/monitor.links.file_download"))
     end
   end
 end
