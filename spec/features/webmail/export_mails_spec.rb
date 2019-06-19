@@ -114,6 +114,37 @@ describe "webmail_export_mails", type: :feature, dbscope: :example, imap: true, 
         end
       end
     end
+
+    context "export mails only are only allowed at once per user" do
+      before do
+        args = [{"mail_ids"=>[], "root_url"=>"http://www.example.jp/", "account"=>"0"}]
+        Job::Task.create!(
+          user_id: webmail_imap.id, name: SecureRandom.uuid, class_name: "Webmail::MailExportJob", app_type: "sys",
+          pool: "default", args: args, active_job: {
+            "job_class" => "Webmail::MailExportJob", "job_id" => SecureRandom.uuid, "provider_job_id" => nil,
+            "queue_name" => "default", "priority" => nil, "arguments" => args
+          }
+        )
+      end
+
+      it do
+        visit webmail_export_mails_path(account: 0)
+        within "form#item-form" do
+          choose "item_all_export_all"
+          click_on I18n.t("ss.export")
+        end
+
+        expect(page).to have_css("#errorExplanation", text: I18n.t("job.notice.size_limit_exceeded"))
+
+        # export again
+        within "form#item-form" do
+          choose "item_all_export_all"
+          click_on I18n.t("ss.export")
+        end
+
+        expect(page).to have_css("#errorExplanation", text: I18n.t("job.notice.size_limit_exceeded"))
+      end
+    end
   end
 
   context "when a subject that contains undef characters is given" do
