@@ -25,4 +25,17 @@
 
     margin-bottom: 10px;
   }
+
+  .folder-name {
+    word-break: break-all;
+  }
+}
+
+.gws-share-apis-folder_crud {
+  #item_in_basename {
+    min-width: 30em;
+    @include mb {
+      min-width: unset;
+    }
+  }
 }

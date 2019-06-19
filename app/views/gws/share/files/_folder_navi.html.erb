@@ -1,24 +1,24 @@
 <div class="addon-views gws-share-file-folder-navi">
   <% tools_presented = false %>
   <% if @folder %>
-    <%= render "ss/crud/addon", addon: { id: "gws-share-file-folder-property", head: t('gws/share.folder_info', folder: @folder.name), toggle: true } do %>
+    <%= render "ss/crud/addon", addon: { id: "gws-share-file-folder-property", head: t('gws/share.folder_info', folder: '<span class="folder-name">' + @folder.name + '</span>').html_safe, toggle: true } do %>
       <% tools = [] %>
       <% if @folder.allowed?(:edit, @cur_user, site: @cur_site) %>
-        <% tools << button_tag(type: "button", class: "btn btn-create-folder", data: { folder: @folder.id, href: gws_share_apis_new_sub_folder_path(parent_id: @folder) }) do %>
+        <% tools << button_tag(type: "button", class: "btn btn-create-folder", data: { folder: @folder.id, api: gws_share_apis_new_sub_folder_path(parent_id: @folder), success: { redirect_to: gws_share_folder_files_path(category: params[:category], folder: ":id") } }) do %>
           <i class="material-icons">
             create_new_folder
           </i>
         <% end %>
       <% end %>
       <% if @folder.allowed?(:edit, @cur_user, site: @cur_site) %>
-        <% tools << button_tag(type: "button", class: "btn btn-rename-folder", data: { folder: @folder.id, href: gws_share_apis_rename_folder_path(id: @folder) }) do %>
+        <% tools << button_tag(type: "button", class: "btn btn-rename-folder", data: { folder: @folder.id, api: gws_share_apis_rename_folder_path(id: @folder) }) do %>
           <i class="material-icons">
             edit
           </i>
         <% end %>
       <% end %>
       <% if @folder.allowed?(:delete, @cur_user, site: @cur_site) %>
-        <% tools << button_tag(type: "button", class: "btn btn-delete-folder", data: { folder: @folder.id, href: gws_share_apis_delete_folder_path(id: @folder) }) do %>
+        <% tools << button_tag(type: "button", class: "btn btn-delete-folder", data: { folder: @folder.id, api: gws_share_apis_delete_folder_path(id: @folder), success: { redirect_to: @folder.parent.try { |parent| gws_share_folder_files_path(category: params[:category], folder: parent) } || gws_share_files_path(category: params[:category]) } }) do %>
           <i class="material-icons">
             delete
           </i>
@@ -57,7 +57,7 @@
   <%= render "ss/crud/addon", addon: { id: "gws-share-file-folder-list", head: t("gws/share.folder"), toggle: true } do %>
     <% tools = [] %>
     <% if Gws::Share::Folder.allowed?(:edit, @cur_user, site: @cur_site) %>
-      <% tools << button_tag(type: "button", class: "btn btn-create-folder", data: { folder: '-', href: gws_share_apis_new_root_folder_path }) do %>
+      <% tools << button_tag(type: "button", class: "btn btn-create-root-folder", data: { folder: '-', api: gws_share_apis_new_root_folder_path, success: { redirect_to: gws_share_folder_files_path(category: params[:category], folder: ":id") } }) do %>
         <i class="material-icons">
           create_new_folder
         </i>

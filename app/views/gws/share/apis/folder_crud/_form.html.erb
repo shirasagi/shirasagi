@@ -1,11 +1,9 @@
-<dl class="see">
+<dl class="see gws-share-apis-folder_crud">
   <dt><%= @model.t :name %><%= @model.tt :name %></dt>
-  <dd>
-    <% if @parent %>
-    <span><%= @parent.name %>/</span>
-    <% end %>
-    <%= f.text_field :in_basename %>
-  </dd>
+  <% if @parent %>
+  <dd><%= @parent.name %>/</dd>
+  <% end %>
+  <dd><%= f.text_field :in_basename %></dd>
 </dl>
 
 <% @crud_buttons = proc do |f| %>
