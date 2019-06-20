@@ -1,12 +1,12 @@
 source 'https://rubygems.org'
 
-gem 'rails', '~> 5.1.0'
+gem 'rails', '~> 5.2.0'
 gem 'sassc-rails'
-gem 'uglifier', '>= 1.3.0'
-gem 'coffee-rails', '~> 4.2.2'
-gem 'therubyracer', '~> 0.12.3', platforms: :ruby
-gem 'jbuilder', '~> 2.0'
-gem 'sdoc', '~> 0.4.0', group: :doc
+gem 'uglifier'
+gem 'coffee-rails'
+gem 'therubyracer', platforms: :ruby
+gem 'jbuilder'
+gem 'sdoc', group: :doc
 
 # Server
 gem 'unicorn'
@@ -45,7 +45,7 @@ gem 'kramdown'
 gem 'mail-iso-2022-jp'
 gem 'net-ldap'
 gem 'non-stupid-digest-assets'
-gem 'oj', '~> 3.3.5'
+gem 'oj'
 gem 'open_uri_redirections'
 gem 'rails_autolink'
 gem 'rmagick'
@@ -56,7 +56,7 @@ gem 'rubyzip'
 gem 'thinreports'
 gem 'bootsnap', require: false
 gem 'addressable', require: 'addressable/uri'
-gem 'roo', git: 'https://github.com/roo-rb/roo.git' #'~> 2.7.0'
+gem 'roo'
 #gem 'roo-xls', git: "https://github.com/roo-rb/roo-xls.git"
 gem 'liquid'
 
@@ -76,7 +76,7 @@ gem 'twitter'
 gem 'ruby-saml'
 
 # JWT/JWS
-gem 'jwt', '>= 2.0'
+gem 'jwt'
 gem 'json-jwt'
 
 # SPARQL/RDF
@@ -88,7 +88,7 @@ gem 'sparql-client'
 gem 'unf'
 
 # elasticsearch
-gem 'faraday', '~> 0.14.0'
+gem 'faraday'
 gem 'elasticsearch'
 
 group :development, :test do
@@ -100,7 +100,6 @@ group :development, :test do
   gem 'guard'
   gem 'guard-rspec', '~> 4.3.1'
   gem 'guard-rubocop', '~> 1.1.0'
-  gem 'poltergeist', require: false
   gem 'selenium-webdriver', require: false
   gem 'webdrivers'
   gem 'pry-rails'
@@ -125,5 +124,5 @@ group :development do
 end
 
 group :test do
-  gem 'webmock', '~> 3.0.1'
+  gem 'webmock'
 end

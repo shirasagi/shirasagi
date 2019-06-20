@@ -46,7 +46,7 @@ class ActionDispatch::Routing::Mapper
   end
 end
 
-SS::Application.routes.draw do
+Rails.application.routes.draw do
   SS::Initializer
 
   namespace "sns", path: ".mypage" do
