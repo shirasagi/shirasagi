@@ -6,7 +6,8 @@ class Gws::Memo::MessagesController < ApplicationController
 
   before_action :deny_with_auth
 
-  before_action :set_item, only: [:show, :edit, :update, :send_mdn, :ignore_mdn, :print, :trash, :delete, :destroy, :set_star, :unset_star]
+  before_action :set_item, only: [:show, :edit, :update, :send_mdn, :ignore_mdn, :print, :trash, :delete, :destroy,
+                                  :set_star, :unset_star]
   before_action :redirect_to_appropriate_folder, only: [:show], if: -> { params[:folder] == 'REDIRECT' }
   before_action :set_selected_items, only: [:trash_all, :destroy_all, :set_seen_all, :unset_seen_all,
                                             :set_star_all, :unset_star_all, :move_all]
@@ -66,8 +67,8 @@ class Gws::Memo::MessagesController < ApplicationController
       where(default: "enabled").
       pluck(:email).
       select(&:present?)
-
     return if forward_emails.blank?
+
     Gws::Memo::Mailer.forward_mail(@item, forward_emails).deliver_now
   end
 
@@ -132,6 +133,7 @@ class Gws::Memo::MessagesController < ApplicationController
 
   def edit
     raise "404" unless @item.editable?(@cur_user, @cur_site)
+
     render
   end
 
@@ -263,6 +265,7 @@ class Gws::Memo::MessagesController < ApplicationController
   def trash_all
     @items.each do |item|
       raise "404" unless item.readable?(@cur_user, site: @cur_site)
+
       item.move(@cur_user, 'INBOX.Trash').update
     end
     render_destroy_all(true)
@@ -271,6 +274,7 @@ class Gws::Memo::MessagesController < ApplicationController
   def move_all
     @items.each do |item|
       raise "404" unless item.readable?(@cur_user, site: @cur_site)
+
       item.move(@cur_user, params[:path]).update
     end
     render_change_all
@@ -279,6 +283,7 @@ class Gws::Memo::MessagesController < ApplicationController
   def set_seen_all
     @items.each do |item|
       raise "404" unless item.readable?(@cur_user, site: @cur_site)
+
       item.set_seen(@cur_user).update
     end
     render_change_all
@@ -287,6 +292,7 @@ class Gws::Memo::MessagesController < ApplicationController
   def unset_seen_all
     @items.each do |item|
       raise "404" unless item.readable?(@cur_user, site: @cur_site)
+
       item.unset_seen(@cur_user).update
     end
     render_change_all
@@ -303,6 +309,7 @@ class Gws::Memo::MessagesController < ApplicationController
   def set_star_all
     @items.each do |item|
       raise "404" unless item.readable?(@cur_user, site: @cur_site)
+
       item.set_star(@cur_user).update
     end
     render_change_all
@@ -311,6 +318,7 @@ class Gws::Memo::MessagesController < ApplicationController
   def unset_star_all
     @items.each do |item|
       raise "404" unless item.readable?(@cur_user, site: @cur_site)
+
       item.unset_star(@cur_user).update
     end
     render_change_all
