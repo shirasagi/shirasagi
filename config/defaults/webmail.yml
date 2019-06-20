@@ -11,6 +11,9 @@ production: &production
   # Disable alias
   disable_alias: true
 
+  # Disable IMAP debug
+  disable_imap_debug: true
+
   # Default settings
   clients:
     default:
