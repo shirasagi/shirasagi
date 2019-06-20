@@ -26,6 +26,7 @@ ja:
       not_a_member_in_this_folder: このフォルダーへお知らせを掲示する権限がありません。
 
   gws_role:
+    use_gws_notice: お知らせの利用
     read_other_gws_notices: お知らせの閲覧（全て）
     read_private_gws_notices: お知らせの閲覧（所有）
     edit_other_gws_notices: お知らせの編集（全て）

@@ -19,9 +19,9 @@
 </div>
 <% end %>
 
+<% if @notices.present? || @monitors.present? %>
 <div class="index">
-  <div class="list-head"><%= t "mongoid.models.gws/notice/post" %></div>
-  <% if @notices.present? || @monitors.present? %>
+  <div class="list-head"><%= @cur_site.menu_notice_label || t('modules.gws/notice') %></div>
   <ul class="list-items">
     <% if @monitors.present? %>
       <li class="list-item">
@@ -47,6 +47,6 @@
     </li>
     <% end %>
   </ul>
-  <% end %>
   <div class="more"><%= link_to I18n.t("ss.links.more"), gws_notice_readables_path(folder_id: '-', category_id: '-') %></div>
 </div>
+<% end %>

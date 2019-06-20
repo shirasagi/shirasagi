@@ -1,4 +1,4 @@
-<div class="index">
+<div class="<%= @index_list_class ? Array[@index_list_class].flatten.compact.join(' ') : 'index' %>">
   <%= render file: "_list_head" %>
 
   <ul class="list-items">
