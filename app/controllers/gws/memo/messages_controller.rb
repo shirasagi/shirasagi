@@ -320,8 +320,12 @@ class Gws::Memo::MessagesController < ApplicationController
     location = params[:redirect].presence || opts[:redirect] || { action: :index }
 
     if result
+      notice = opts[:notice].presence
+      notice ||= t("gws/memo/message.notice.#{action}", default: nil)
+      notice ||= t("ss.notice.#{action}", default: nil)
+      notice ||= t("ss.notice.saved")
+
       respond_to do |format|
-        notice = t("gws/memo/message.notice.#{action}", default: nil) || t("ss.notice.#{action}", default: nil) || t("ss.notice.saved")
         format.html { redirect_to location, notice: notice }
         format.json { render json: { action: action, notice: notice } }
       end
@@ -336,7 +340,10 @@ class Gws::Memo::MessagesController < ApplicationController
   def render_change_all(opts = {})
     location = params[:redirect].presence || opts[:redirect] || { action: :index }
     action = opts[:action] || params[:action]
-    notice = opts[:notice] || t("gws/memo/message.notice.#{action}", default: nil) || t("ss.notice.#{action}", default: nil) || t("ss.notice.saved")
+    notice = opts[:notice].presence
+    notice ||= t("gws/memo/message.notice.#{action}", default: nil)
+    notice ||= t("ss.notice.#{action}", default: nil)
+    notice ||= t("ss.notice.saved")
     errors = @items.select { |item| item.errors.present? }.map { |item| [ item.id.to_s, item.errors.full_messages ] }
 
     respond_to do |format|
