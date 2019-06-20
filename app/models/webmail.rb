@@ -3,7 +3,7 @@ module Webmail
 
   class CP50221Encoder < Mail::Ruby19::BestEffortCharsetEncoder
     def encode(string, charset)
-      if charset.casecmp("iso-2022-jp") == 0
+      if charset.present? && charset.to_s.casecmp("iso-2022-jp") == 0
         # treated string as CP50221 (Microsoft Extended Encoding of ISO-2022-JP)
         # NKF.nkf("-w", string)
         string.force_encoding(Encoding::CP50221)
