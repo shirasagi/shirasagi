@@ -273,7 +273,7 @@ class Gws::Memo::MessagesController < ApplicationController
       raise "404" unless item.readable?(@cur_user, site: @cur_site)
       item.move(@cur_user, params[:path]).update
     end
-    render_destroy_all(false)
+    render_change_all
   end
 
   def set_seen_all
@@ -281,7 +281,7 @@ class Gws::Memo::MessagesController < ApplicationController
       raise "404" unless item.readable?(@cur_user, site: @cur_site)
       item.set_seen(@cur_user).update
     end
-    render_destroy_all(false)
+    render_change_all
   end
 
   def unset_seen_all
@@ -289,7 +289,7 @@ class Gws::Memo::MessagesController < ApplicationController
       raise "404" unless item.readable?(@cur_user, site: @cur_site)
       item.unset_seen(@cur_user).update
     end
-    render_destroy_all(false)
+    render_change_all
   end
 
   def set_star
@@ -305,7 +305,7 @@ class Gws::Memo::MessagesController < ApplicationController
       raise "404" unless item.readable?(@cur_user, site: @cur_site)
       item.set_star(@cur_user).update
     end
-    render_destroy_all(false)
+    render_change_all
   end
 
   def unset_star_all
@@ -313,7 +313,7 @@ class Gws::Memo::MessagesController < ApplicationController
       raise "404" unless item.readable?(@cur_user, site: @cur_site)
       item.unset_star(@cur_user).update
     end
-    render_destroy_all(false)
+    render_change_all
   end
 
   def render_change(result, action, opts = {})
@@ -330,6 +330,18 @@ class Gws::Memo::MessagesController < ApplicationController
         format.html { redirect_to location, notice: @item.errors.full_messages.join("\n") }
         format.json { render json: @item.errors.full_messages, status: :unprocessable_entity, content_type: json_content_type }
       end
+    end
+  end
+
+  def render_change_all(opts = {})
+    location = params[:redirect].presence || opts[:redirect] || { action: :index }
+    action = opts[:action] || params[:action]
+    notice = opts[:notice] || t("gws/memo/message.notice.#{action}", default: nil) || t("ss.notice.#{action}", default: nil) || t("ss.notice.saved")
+    errors = @items.select { |item| item.errors.present? }.map { |item| [ item.id.to_s, item.errors.full_messages ] }
+
+    respond_to do |format|
+      format.html { redirect_to location, notice: notice }
+      format.json { render json: { action: action, notice: notice, errors: errors } }
     end
   end
 

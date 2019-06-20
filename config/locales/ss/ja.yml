@@ -186,6 +186,11 @@ ja:
       unset_seen: 未読にしました。
       set_star: スターをつけました。
       unset_star: スターをはずしました。
+      move_all: 移動しました。
+      set_seen_all: 既読にしました。
+      unset_seen_all: 未読にしました。
+      set_star_all: スターをつけました。
+      unset_star_all: スターをはずしました。
 
     info:
       soft_delete: データの実削除ではなく無効状態として保存されます。
