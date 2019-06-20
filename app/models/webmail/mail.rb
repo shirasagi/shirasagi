@@ -13,6 +13,8 @@ class Webmail::Mail
   include Webmail::Addon::MailFile
 
   #index({ host: 1, account: 1, mailbox: 1, uid: 1 }, { unique: true })
+  index(internal_date: -1)
+  index(host: 1, account: 1, mailbox: 1, uid: 1, internal_date: -1)
 
   attr_accessor :flags, :text, :html, :attachments, :format,
                 :reply_uid, :forward_uid, :edit_as_new_uid, :signature,
