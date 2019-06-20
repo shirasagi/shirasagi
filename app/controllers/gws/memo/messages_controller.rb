@@ -6,7 +6,7 @@ class Gws::Memo::MessagesController < ApplicationController
 
   before_action :deny_with_auth
 
-  before_action :set_item, only: [:show, :edit, :update, :send_mdn, :ignore_mdn, :print, :trash, :delete, :destroy, :toggle_star]
+  before_action :set_item, only: [:show, :edit, :update, :send_mdn, :ignore_mdn, :print, :trash, :delete, :destroy, :set_star, :unset_star]
   before_action :redirect_to_appropriate_folder, only: [:show], if: -> { params[:folder] == 'REDIRECT' }
   before_action :set_selected_items, only: [:trash_all, :destroy_all, :set_seen_all, :unset_seen_all,
                                             :set_star_all, :unset_star_all, :move_all]
@@ -292,8 +292,12 @@ class Gws::Memo::MessagesController < ApplicationController
     render_destroy_all(false)
   end
 
-  def toggle_star
-    render_destroy @item.toggle_star(@cur_user).update, location: { action: params[:location] }
+  def set_star
+    render_change @item.set_star(@cur_user).save, params[:action], location: { action: params[:location] }
+  end
+
+  def unset_star
+    render_change @item.unset_star(@cur_user).save, params[:action], location: { action: params[:location] }
   end
 
   def set_star_all
@@ -317,8 +321,9 @@ class Gws::Memo::MessagesController < ApplicationController
 
     if result
       respond_to do |format|
-        format.html { redirect_to location, notice: t("gws/memo/message.notice.#{action}") }
-        format.json { render json: { action: params[:action], notice: t("gws/memo/message.notice.#{action}") } }
+        notice = t("gws/memo/message.notice.#{action}", default: nil) || t("ss.notice.#{action}", default: nil) || t("ss.notice.saved")
+        format.html { redirect_to location, notice: notice }
+        format.json { render json: { action: action, notice: notice } }
       end
     else
       respond_to do |format|

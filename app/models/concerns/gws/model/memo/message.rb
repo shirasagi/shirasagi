@@ -348,9 +348,9 @@ module Gws::Model
       self
     end
 
-    def toggle_star(user)
-      star?(user) ? unset_star(user) : set_star(user)
-    end
+    # def toggle_star(user)
+    #   star?(user) ? unset_star(user) : set_star(user)
+    # end
 
     def move(user, path)
       self.in_path = { user.id.to_s => path }
