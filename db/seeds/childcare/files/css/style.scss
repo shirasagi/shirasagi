@@ -1672,3 +1672,60 @@ article.post {
     display: inline-block;
   }
 }
+// -----------------------------------------------------------------------------
+// search
+.cms-site-search {
+  padding: 0 15px;
+  .search-form {
+    @include display-flex;
+    @include justify-content(space-between);
+    margin-bottom: 30px;
+    border: 2px solid $gray2;
+    background: $gray4;
+    @include mb {
+      border-radius: 0px;
+    }
+  }
+  #s_keyword {
+    width: 20em;
+    padding: 0.4em 1em 0;
+    border: none;
+    background: none;
+    @include mb {
+      width: 70%;
+      @include border-radius(0px);
+    }
+    &:focus {
+      @include box-shadow(none);
+    }
+  }
+  input[type="submit"] {
+    @include btn-primary-s;
+    padding: 5px 10px;
+    border: none;
+    @include border-radius(0);
+    @include mb {
+      border-radius: 0;
+      -webkit-appearance: none;
+    }
+  }
+  .search-result {
+    margin-bottom: 30px;
+    .search-stats {
+      margin-bottom: 20px;
+      padding-bottom: 10px;
+      border-bottom: 1px solid $gray3;
+    }
+    .cms-site-search-pages {
+      .item {
+        margin-bottom: 20px;
+        h2 {
+          font-size: $px16;
+        }
+      }
+      .meta .url {
+        display: block;
+      }
+    }
+  }
+}

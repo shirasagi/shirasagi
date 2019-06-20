@@ -351,7 +351,8 @@ save_node route: "ads/banner", filename: "relation", name: "関連サイト"
 save_node route: "ads/banner", filename: "sub-menu", name: "サブメニュー"
 
 ## site search
-save_node route: "cms/site_search", filename: "search", name: "サイト内検索"
+save_node route: "cms/site_search", filename: "search", name: "サイト内検索",
+  layout_id: layouts["general"].id
 
 ## sitemap
 save_node route: "sitemap/page", filename: "sitemap", name: "サイトマップ",

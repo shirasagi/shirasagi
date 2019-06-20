@@ -103,7 +103,7 @@ save_node route: "uploader/file", name: "画像", filename: "img", shortcut: "sh
 save_node route: "uploader/file", name: "JavaScript", filename: "js", shortcut: "show"
 save_node route: "article/page", name: "ニュース", filename: "news", shortcut: "show", layout_id: layouts["news"].id, new_days: 1,
   conditions: %w(product/solution product/software product/office product/marketing recruit)
-save_node route: "cms/site_search", filename: "search", name: "サイト内検索"
+save_node route: "cms/site_search", name: "サイト内検索", filename: "search", layout_id: layouts["one"].id
 save_node route: "category/page", name: "お知らせ", filename: "oshirase", shortcut: "show", layout_id: layouts["news"].id
 save_node route: "category/page", name: "製品・サービス", filename: "product", shortcut: "show", layout_id: layouts["product"].id,
   sort: "order", new_days: 1, conditions: %w(product/solution product/software product/office product/marketing)
