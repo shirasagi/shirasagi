@@ -69,7 +69,7 @@ class Gws::Memo::NoticesController < ApplicationController
       return
     end
 
-    redirect_to request.referer, notice: I18n.t("gws/circular.notice.set_seen")
+    redirect_to request.referer, notice: I18n.t("ss.notice.set_seen")
   end
 
   def latest

@@ -336,8 +336,9 @@ class Webmail::MailsController < ApplicationController
     location = params[:redirect].presence || opts[:redirect] || { action: :index }
 
     respond_to do |format|
-      format.html { redirect_to location, notice: t("webmail.notice.#{action}") }
-      format.json { render json: { action: params[:action], notice: t("webmail.notice.#{action}") } }
+      notice = t("webmail.notice.#{action}", default: nil) || t("ss.notice.#{action}")
+      format.html { redirect_to location, notice: notice }
+      format.json { render json: { action: params[:action], notice: notice } }
     end
   end
 

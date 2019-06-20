@@ -182,6 +182,10 @@ ja:
       moved: 移動しました。
       hit: 件ヒットしました。
       first_to_last: 件を表示しています。
+      set_seen: 既読にしました。
+      unset_seen: 未読にしました。
+      set_star: スターをつけました。
+      unset_star: スターをはずしました。
 
     info:
       soft_delete: データの実削除ではなく無効状態として保存されます。
