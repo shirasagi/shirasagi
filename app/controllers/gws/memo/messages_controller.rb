@@ -265,7 +265,7 @@ class Gws::Memo::MessagesController < ApplicationController
       raise "404" unless item.readable?(@cur_user, site: @cur_site)
       item.move(@cur_user, 'INBOX.Trash').update
     end
-    render_destroy_all(false)
+    render_destroy_all(true)
   end
 
   def move_all
