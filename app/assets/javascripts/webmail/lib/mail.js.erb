@@ -267,7 +267,9 @@ this.Webmail_Mail_List = (function () {
           } else {
             wrap.removeClass('on').addClass('off');
           }
-          SS.notice(data.notice);
+          if (data.notice) {
+            SS.notice(data.notice);
+          }
         }
       });
       return false;
