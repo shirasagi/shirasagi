@@ -4,11 +4,16 @@ class Webmail::AccountsController < ApplicationController
 
   model Webmail::User
 
+  before_action :check_group_imap_permissions, if: ->{ @webmail_mode == :group }
   before_action :set_items
   before_action :set_item, only: [:show, :edit, :update, :delete, :destroy]
   before_action :set_default_settings, only: [:new, :create, :edit, :update]
 
   private
+
+  def check_group_imap_permissions
+    redirect_to webmail_mails_path(webmail_mode: @webmail_mode, account: params[:account])
+  end
 
   def set_crumbs
     @crumbs << [t('webmail.settings.account'), { action: :show } ]
