@@ -101,7 +101,7 @@ this.Mobile_Size_Checker = (function () {
       Mobile_Size_Checker.reset();
 
       var resolved = function(html) {
-        Mobile_Size_Checker.check(html, true, function () {
+        Mobile_Size_Checker.check(html, function () {
           Mobile_Size_Checker.resultBox.showResult();
           button.disabled = false;
         });
@@ -141,7 +141,7 @@ this.Mobile_Size_Checker = (function () {
     return size;
   };
 
-  Mobile_Size_Checker.check = function (html, async, complete) {
+  Mobile_Size_Checker.check = function (html, complete) {
     var err_str, imgs, isThumb, j, len, mobile_size, numOfImage, ref, size, src, str_id, str_src;
     mobile_size = Mobile_Size_Checker.mobile_size;
     size = Mobile_Size_Checker.get_str_byte(html);
@@ -183,7 +183,6 @@ this.Mobile_Size_Checker = (function () {
       contentType: 'application/json',
       dataType: "json",
       crossDomain: true,
-      async: async,
       success: function (res, status) {
         if (res["errors"].length > 0) {
           return Mobile_Size_Checker.error = res["errors"];
@@ -212,7 +211,7 @@ this.Mobile_Size_Checker = (function () {
     }
 
     Mobile_Size_Checker.resultBox.showChecking();
-    Mobile_Size_Checker.check(html, true, function () {
+    Mobile_Size_Checker.check(html, function () {
       Mobile_Size_Checker.resultBox.showResult();
       defer.resolve();
     });
