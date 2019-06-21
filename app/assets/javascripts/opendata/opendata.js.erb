@@ -315,7 +315,6 @@ this.Opendata_ListUI = (function () {
     return $.ajax({
       type: "post",
       url: location.pathname + "/" + id,
-      async: false,
       data: "_method=delete",
       success: function (msg) {
       },

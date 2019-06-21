@@ -114,11 +114,9 @@ this.Form_Alert = (function () {
   };
 
   Form_Alert.clonedName = function (form, submit) {
-    var addonName, fieldName, name;
-    name = $(form).find("#addon-basic #item_name");
+    var name = $(form).find("#addon-basic #item_name");
     if ($(submit).hasClass("publish_save") && /^\[<%= I18n.t('workflow.cloned_name_prefix') %>\]/.test($(name).val())) {
-      addonName = $(name).closest(".addon-view").find("header").text();
-      fieldName = Form_Alert.justText($(name).closest("dd").prev("dt"));
+      var addonName = $(name).closest(".addon-view").find("header").text();
       return Form_Alert.add(addonName, name, "<%= I18n.t('errors.messages.cloned_name') %>");
     }
   };
