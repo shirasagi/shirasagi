@@ -126,4 +126,5 @@ end
 
 group :test do
   gem 'webmock'
+  gem 'docker-api'
 end
