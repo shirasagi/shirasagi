@@ -99,7 +99,7 @@ group :development, :test do
   gem 'fuubar'
   gem 'guard'
   gem 'guard-rspec', '~> 4.3.1'
-  gem 'guard-rubocop', '~> 1.1.0'
+  gem 'guard-rubocop'
   gem 'selenium-webdriver', require: false
   gem 'webdrivers'
   gem 'pry-rails'
@@ -112,6 +112,7 @@ group :development, :test do
   gem 'rspec-rails'
   gem 'rails-controller-testing'
   gem 'rubocop', require: false
+  gem 'rubocop-performance', require: false
   gem 'spring', '~> 2.0.2'
   gem 'timecop'
 end

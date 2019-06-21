@@ -81,7 +81,7 @@ Layout/EndOfLine:
 # Cop supports --auto-correct.
 # Configuration parameters: EnforcedStyle, IndentationWidth.
 # SupportedStyles: special_inside_parentheses, consistent, align_brackets
-Layout/IndentArray:
+Layout/IndentFirstArrayElement:
   Enabled: false
 
 # Offense count: 197
