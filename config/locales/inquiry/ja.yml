@@ -43,7 +43,18 @@ ja:
       input_confirm:
         disabled: しない
         enabled: する
-
+      answer_state:
+        open: 未対応
+        processing: 処理中
+        processed: 処理済み
+        closed: 完了
+      search_answer_state:
+        unclosed: 完了以外
+        open: 未対応
+        processing: 処理中
+        processed: 処理済み
+        closed: 完了
+        all: すべて
     links:
       back_to_page: 元のページに戻る
       faq: FAQを新規作成
@@ -61,6 +72,7 @@ ja:
       inquiry/aggregation: 集計
       inquiry/feedback_setting: フィードバック設定
       inquiry/faq: FAQ
+      inquiry/answer/body: 回答
 
   cms:
     nodes:
@@ -124,6 +136,7 @@ ja:
         transfers: キーワード
 
       inquiry/answer:
+        id: id
         remote_addr: IPアドレス
         user_agent: ユーザーエージェント
         data_summary: 回答内容
@@ -131,6 +144,8 @@ ja:
         source_url: ページURL
         source_name: ページタイトル
         created: 作成日時
+        state: 状態
+        comment: コメント
 
       inquiry/addon/feedback_setting:
         upper_html: 上部HTML
@@ -191,6 +206,11 @@ ja:
       order:
         - 質問項目の並び順を指定します。
         - 数字が小さいほど上位に表示されます。
+    inquiry/answer:
+      state:
+        - 状態を選択します。
+      comment:
+        - コメントを入力します。
     inquiry/addon/input_setting:
       input_type:
         - 回答欄の入力形式を選択します。

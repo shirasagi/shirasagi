@@ -17,7 +17,7 @@ class Inquiry::AnswersController < ApplicationController
     require "csv"
 
     columns = @cur_node.becomes_with_route("inquiry/form").columns.order_by(order: 1).pluck(:name)
-    headers = %w(id)
+    headers = %w(id state comment).map { |key| @model.t(key) }
     headers += columns
     headers += %w(source_url source_name created).map { |key| @model.t(key) }
     csv = CSV.generate do |data|
@@ -33,6 +33,8 @@ class Inquiry::AnswersController < ApplicationController
 
         row = []
         row << item.id
+        row << (item.label :state)
+        row << item.comment
         columns.each do |col|
           row << values[col]
         end
@@ -63,9 +65,12 @@ class Inquiry::AnswersController < ApplicationController
 
   def index
     raise "403" unless @cur_node.allowed?(:read, @cur_user, site: @cur_site)
+
+    @state = params.dig(:s, :state).presence || "unclosed"
     @items = @model.site(@cur_site).
       where(node_id: @cur_node.id).
       search(params[:s]).
+      state(@state).
       order_by(updated: -1).
       page(params[:page]).per(50)
   end

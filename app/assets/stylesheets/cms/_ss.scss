@@ -92,6 +92,27 @@
     }
   }
 }
+.list-item, .see {
+  .answer-state {
+    display: inline-block;
+    padding: 1px 5px;
+    @include border-radius(3px);
+    font-size: 90%;
+    font-weight: normal;
+    &.state-open {
+      background-color: rgba(237, 128, 119, .4);
+    }
+    &.state-processing {
+      background-color: rgba(68, 136, 197, .4);
+    }
+    &.state-processed {
+      background-color: rgba(94, 181, 166, .4);
+    }
+    &.state-closed {
+      background-color: rgba(176, 190, 60, .4);
+    }
+  }
+}
 
 .cms-tabs {
   @include clear;
