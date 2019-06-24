@@ -18,15 +18,14 @@
   </div>
 
   <% if @item.ref_coll == 'cms_pages' %>
-    <% html = @item.data[:form_id].present? ? @item.restore.form_html : @item.data[:html] %>
-    <% if html.present? %>
+    <% if @item.data[:html].present? %>
       <div class="addon-view" id="addon-basic">
         <div class="addon-head"><h2><%= t('modules.addons.cms/body') %></h2></div>
         <div class="addon-body">
           <dl class="see mod-history-trashes">
             <dd class="wide">
               <%= html_editor "#mod-cms-html", height: "400px", readonly: true %>
-              <%= text_area_tag "mod-cms-html", html, style: "height: 400px" %>
+              <%= text_area_tag "mod-cms-html", @item.data[:html], style: "height: 400px" %>
             </dd>
           </dl>
         </div>
@@ -77,7 +76,7 @@
               <% items = [] %>
               <% v.each do |id| %>
                 <% item = elem_class.where(_id: id).first %>
-                <% items << (item.present? ? item.name : v) %>
+                <% items << (item.present? ? item.name : id) %>
               <% end %>
               <%= items.present? ? items.join(',') : "" %>
             <% else %>
@@ -86,7 +85,7 @@
             <% items.present? ? items.join(',') : "" %>
           <% when Integer %>
             <% if @item.model.fields[k].present? && @item.model.fields[k].class == Mongoid::Fields::ForeignKey %>
-              <% item = @item.model.fields[k].options[:metadata][:class_name].constantize.where(_id: v).first %>
+              <% item = @item.model.fields[k].association.class_name.constantize.where(_id: v).first %>
               <%= item.present? ? item.name : v %>
             <% else %>
               <%= v %>

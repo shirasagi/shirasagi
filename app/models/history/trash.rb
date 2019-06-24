@@ -30,8 +30,8 @@ class History::Trash
     attributes[:state] = 'closed'
     if attributes[:column_values].present?
       attributes[:column_values] = attributes[:column_values].collect do |column_value|
-        next column_value if column_value['class_name'].blank?
-        column_value = column_value['class_name'].constantize.new(column_value)
+        next column_value if column_value['_type'].blank?
+        column_value = column_value['_type'].constantize.new(column_value)
         next column_value unless column_value.respond_to?(:file_id)
         file = self.class.where(ref_coll: 'ss_files', 'data._id' => column_value.file_id).first
         if file.present?
@@ -48,23 +48,22 @@ class History::Trash
         column_value
       end
     end
-    if attributes[:file_ids].present?
-      attributes[:file_ids] = attributes[:file_ids].collect do |file_id|
-        file = self.class.where(ref_coll: 'ss_files', 'data._id' => file_id).first
-        if file.present?
-          file = save ? file.restore! : file.restore
+    attributes.each do |k, v|
+      next if model.fields[k].blank?
+      if model.fields[k].type == SS::Extensions::ObjectIds
+        klass = model.fields[k].options[:metadata][:elem_class].constantize
+        next unless klass.include?(SS::Model::File)
+        attributes[k] = attributes[k].collect do |file_id|
+          restore_file(file_id)
         end
-        next if file.blank?
-        next unless save
-        path = "#{Rails.root}/private/trash/#{file.path.sub(/.*\/(ss_files\/)/, '\\1')}"
-        next unless File.exist?(path)
-        FileUtils.mkdir_p(File.dirname(file.path))
-        FileUtils.cp(path, file.path)
-        FileUtils.rm_rf(File.dirname(path))
-        file._id
+      else
+        klass = model.fields[k].association.class_name.constantize rescue nil
+        next if klass.blank?
+        next unless klass.include?(SS::Model::File)
+        attributes[k] = restore_file(v)
       end
     end
-    item = model.find_or_initialize_by(_id: data[:_id])
+    item = model.find_or_initialize_by(_id: data[:_id], site_id: data[:site_id])
     item = item.becomes_with_route(data[:route]) if data[:route].present?
     attributes.each do |k, v|
       item[k] = v
@@ -80,8 +79,12 @@ class History::Trash
       item.in_file = file
     end
     if save
-      return false unless item.save
-      self.destroy
+      if item.save
+        self.destroy
+      else
+        errors.add :base, item.errors.full_messages
+        return false
+      end
     end
     item
   end
@@ -103,5 +106,22 @@ class History::Trash
       end
       criteria
     end
+  end
+
+  private
+
+  def restore_file(file_id)
+    file = self.class.where(ref_coll: 'ss_files', 'data._id' => file_id).first
+    if file.present?
+      file = save ? file.restore! : file.restore
+    end
+    return if file.blank?
+    return unless save
+    path = "#{Rails.root}/private/trash/#{file.path.sub(/.*\/(ss_files\/)/, '\\1')}"
+    return unless File.exist?(path)
+    FileUtils.mkdir_p(File.dirname(file.path))
+    FileUtils.cp(path, file.path)
+    FileUtils.rm_rf(File.dirname(path))
+    file._id
   end
 end

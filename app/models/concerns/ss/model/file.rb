@@ -314,6 +314,15 @@ module SS::Model::File
   end
 
   def remove_file
+    backup = History::Trash.new
+    backup.ref_coll = collection_name
+    backup.ref_class = self.class.to_s
+    backup.data = attributes
+    backup.site = self.site
+    backup.save
+    trash_path = "#{Rails.root}/private/trash/#{path.sub(/.*\/(ss_files\/)/, '\\1')}"
+    FileUtils.mkdir_p(File.dirname(trash_path))
+    FileUtils.cp(path, trash_path)
     Fs.rm_rf(path)
     remove_public_file
   end
