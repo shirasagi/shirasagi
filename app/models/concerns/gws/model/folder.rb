@@ -41,7 +41,7 @@ module Gws::Model::Folder
       if key.start_with?('root_folder')
         where("$and" => [ {name: /^(?!.*\/).*$/} ] )
       else
-        where("$and" => [ {name: /^#{folder}\/(?!.*\/).*$/} ] )
+        where("$and" => [ {name: /^#{::Regexp.escape(folder)}\/(?!.*\/).*$/} ] )
       end
     }
   end
@@ -87,7 +87,7 @@ module Gws::Model::Folder
   end
 
   def folders
-    self.class.where(site_id: site_id, name: /^#{name}\//)
+    self.class.where(site_id: site_id, name: /^#{::Regexp.escape(name)}\//)
   end
 
   def children(cond = {})
@@ -179,12 +179,12 @@ module Gws::Model::Folder
     src = @db_changes["name"][0]
     dst = @db_changes["name"][1]
 
-    folder_ids = self.class.where(site_id: site_id, name: /^#{src}\//).pluck(:id)
+    folder_ids = self.class.where(site_id: site_id, name: /^#{::Regexp.escape(src)}\//).pluck(:id)
     folder_ids.each do |id|
       folder = self.class.where(id: id).first
       next unless folder
 
-      folder.name = folder.name.sub(/^#{src}\//, "#{dst}/")
+      folder.name = folder.name.sub(/^#{::Regexp.escape(src)}\//, "#{dst}/")
       folder.save(validate: false)
     end
   end
