@@ -45,6 +45,12 @@ module SS::WebmailSupport
     SS::WebmailSupport.docker_conf["container_id"].presence || "test_mail"
   end
 
+  def docker_conf_host
+    @docker_conf_host ||= begin
+      SS::WebmailSupport.docker_conf["host"].presence || "localhost"
+    end
+  end
+
   def docker_conf_auth_type
     @docker_conf_imap_auth_type ||= begin
       SS::WebmailSupport.docker_conf["auth_type"].presence || "CRAM-MD5"
@@ -128,6 +134,7 @@ module SS::WebmailSupport
 
   def docker_test_conf
     {
+      'host' => SS::WebmailSupport.docker_conf_host,
       'imap_port' => SS::WebmailSupport.docker_imap_port,
       'imap_auth_type' => SS::WebmailSupport.docker_conf_auth_type,
       'account' => SS::WebmailSupport.docker_conf_account

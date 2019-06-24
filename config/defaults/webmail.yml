@@ -148,6 +148,7 @@ test:
   # test_docker:
   #   api_url: unix:///var/run/docker.sock
   #   container_id: test_mail
+  #   host: localhost
   #   auth_type: CRAM-MD5
   #   account: user5@example.jp
 
