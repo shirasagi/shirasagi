@@ -58,11 +58,20 @@ describe "gws_share_folders", type: :feature, dbscope: :example, js: true do
     let(:subfolder_name1) { unique_id }
     let(:subfolder_name2) { unique_id }
     let(:item2) { create :gws_share_folder }
+    let(:group1) { create :gws_group, name: "#{gws_site.name}/#{unique_id}" }
+    let(:group2) { create :gws_group, name: "#{gws_site.name}/#{unique_id}" }
+    let(:user1) { create :gws_user, group_ids: [ group1.id ] }
+    let(:user2) { create :gws_user, group_ids: [ group2.id ] }
 
     before { login_gws_user }
 
     before do
-      item
+      item.readable_group_ids += [ group1.id ]
+      item.readable_member_ids += [ user1.id ]
+      item.group_ids += [ group2.id ]
+      item.user_ids += [ user2.id ]
+      item.save!
+
       item2
     end
 
@@ -89,6 +98,13 @@ describe "gws_share_folders", type: :feature, dbscope: :example, js: true do
         end
         expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
         expect(Gws::Share::Folder.site(site).where(name: "#{item.name}/#{subfolder_name1}").count).to eq 1
+        Gws::Share::Folder.site(site).where(name: "#{item.name}/#{subfolder_name1}").first.tap do |folder|
+          # these fields inherit from its parent
+          expect(folder.readable_group_ids).to include(group1.id)
+          expect(folder.readable_member_ids).to include(user1.id)
+          expect(folder.group_ids).to include(group2.id)
+          expect(folder.user_ids).to include(user2.id)
+        end
 
         #
         # Update
