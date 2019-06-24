@@ -138,6 +138,7 @@ module SS::WebmailSupport
     case SS::WebmailSupport.test_by
     when "docker"
       docker_ensure_container_started
+      docker_ensure_system_folders_created
     end
   end
 
@@ -163,6 +164,19 @@ module SS::WebmailSupport
       container.start
       sleep(5)
       puts "done"
+    end
+  end
+
+  def docker_ensure_system_folders_created
+    container = SS::WebmailSupport.docker_container
+    user = SS::WebmailSupport.docker_conf_account
+    return if container.blank? || user.blank?
+
+    @docker_ensure_system_folders_created ||= begin
+      container.exec(["doveadm", "mailbox", "create", "INBOX.Draft", "-u", user])
+      container.exec(["doveadm", "mailbox", "create", "INBOX.Sent", "-u", user])
+      container.exec(["doveadm", "mailbox", "create", "INBOX.Trash", "-u", user])
+      true
     end
   end
 
