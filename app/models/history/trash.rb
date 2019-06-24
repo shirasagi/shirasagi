@@ -28,39 +28,41 @@ class History::Trash
     parent.restore! if parent.present?
     attributes = data.dup
     attributes[:state] = 'closed'
-    if attributes[:column_values].present?
-      attributes[:column_values] = attributes[:column_values].collect do |column_value|
-        next column_value if column_value['_type'].blank?
-        column_value = column_value['_type'].constantize.new(column_value)
-        next column_value unless column_value.respond_to?(:file_id)
-        file = self.class.where(ref_coll: 'ss_files', 'data._id' => column_value.file_id).first
-        if file.present?
-          file = save ? file.restore! : file.restore
-        end
-        next column_value if file.blank?
-        column_value.file = file
-        next column_value unless save
-        path = "#{Rails.root}/private/trash/#{file.path.sub(/.*\/(ss_files\/)/, '\\1')}"
-        next column_value unless File.exist?(path)
-        FileUtils.mkdir_p(File.dirname(file.path))
-        FileUtils.cp(path, file.path)
-        FileUtils.rm_rf(File.dirname(path))
-        column_value
-      end
-    end
     attributes.each do |k, v|
-      next if model.fields[k].blank?
-      if model.fields[k].type == SS::Extensions::ObjectIds
-        klass = model.fields[k].options[:metadata][:elem_class].constantize
-        next unless klass.include?(SS::Model::File)
-        attributes[k] = attributes[k].collect do |file_id|
-          restore_file(file_id)
+      if model.relations[k].present?
+        if model.relations[k].class == Mongoid::Association::Embedded::EmbedsMany
+          attributes[k] = attributes[k].collect do |column_value|
+            next column_value if column_value['_type'].blank?
+            column_value = column_value['_type'].constantize.new(column_value)
+            next column_value unless column_value.respond_to?(:file_id)
+            file = self.class.where(ref_coll: 'ss_files', 'data._id' => column_value.file_id).first
+            if file.present?
+              file = save ? file.restore! : file.restore
+            end
+            next column_value if file.blank?
+            column_value.file = file
+            next column_value unless save
+            path = "#{Rails.root}/private/trash/#{file.path.sub(/.*\/(ss_files\/)/, '\\1')}"
+            next column_value unless File.exist?(path)
+            FileUtils.mkdir_p(File.dirname(file.path))
+            FileUtils.cp(path, file.path)
+            FileUtils.rm_rf(File.dirname(path))
+            column_value
+          end
         end
-      else
-        klass = model.fields[k].association.class_name.constantize rescue nil
-        next if klass.blank?
-        next unless klass.include?(SS::Model::File)
-        attributes[k] = restore_file(v)
+      elsif model.fields[k].present?
+        if model.fields[k].type == SS::Extensions::ObjectIds
+          klass = model.fields[k].options[:metadata][:elem_class].constantize
+          next unless klass.include?(SS::Model::File)
+          attributes[k] = attributes[k].collect do |file_id|
+            restore_file(file_id)
+          end
+        else
+          klass = model.fields[k].association.class_name.constantize rescue nil
+          next if klass.blank?
+          next unless klass.include?(SS::Model::File)
+          attributes[k] = restore_file(v)
+        end
       end
     end
     item = model.find_or_initialize_by(_id: data[:_id], site_id: data[:site_id])
