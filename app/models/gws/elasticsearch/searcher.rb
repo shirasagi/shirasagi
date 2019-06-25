@@ -52,6 +52,12 @@ class Gws::Elasticsearch::Searcher
     search_params = { index: index, from: from, size: size, body: { query: query } }
     #search_params[:type] = type if type.present?
 
-    client.search(search_params)
+    begin
+      client.search(search_params)
+    rescue Elasticsearch::Transport::Transport::Errors::BadRequest
+      query[:bool][:must] = { simple_query_string: { query: keyword, fields: [field_name], default_operator: 'AND' } }
+      search_params = { index: index, from: from, size: size, body: { query: query } }
+      client.search(search_params)
+    end
   end
 end
