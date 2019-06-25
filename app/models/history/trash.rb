@@ -25,7 +25,6 @@ class History::Trash
   end
 
   def restore(save = false)
-    parent.restore! if parent.present?
     attributes = data.dup
     attributes[:state] = 'closed'
     attributes.each do |k, v|
@@ -71,6 +70,11 @@ class History::Trash
     end
     item = model.find_or_initialize_by(_id: data[:_id], site_id: data[:site_id])
     item = item.becomes_with_route(data[:route]) if data[:route].present?
+    if model.include?(Cms::Content) && data[:depth] > 1
+      dir = ::File.dirname(data[:filename]).sub(/^\.$/, "")
+      item_parent = Cms::Node.where(site_id: data[:site_id], filename: dir).first
+      item.errors.add :base, :not_found_parent_node if item_parent.blank?
+    end
     attributes.each do |k, v|
       item[k] = v
     end
@@ -85,7 +89,7 @@ class History::Trash
       item.in_file = file
     end
     if save
-      if item.save
+      if item.errors.blank? && item.save
         self.destroy
       else
         errors.add :base, item.errors.full_messages
