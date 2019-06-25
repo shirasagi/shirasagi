@@ -651,6 +651,7 @@ ja:
         reply_item_id: 返信ID
       ss/addon/elasticsearch/site_setting:
         elasticsearch_hosts: 全文検索サーバー
+        elasticsearch_deny: 除外パス
 
   tooltip:
     ss/model/user:
@@ -956,6 +957,11 @@ ja:
         - "未入力の場合、システム設定のメールアドレス（例: noreply@example.jp）が使用されます。"
       mail_signature:
         - システムから送信されるメールの既定の署名を入力します。
+
+    ss/addon/elasticsearch/site_setting:
+      elasticsearch_deny:
+        - 検索対象から除外するページのパスを入力します。
+        - 改行区切りで入力します。
 
   job:
     models:
