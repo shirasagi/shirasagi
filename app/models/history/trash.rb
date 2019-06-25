@@ -31,23 +31,24 @@ class History::Trash
     attributes.each do |k, v|
       if model.relations[k].present?
         if model.relations[k].class == Mongoid::Association::Embedded::EmbedsMany
-          attributes[k] = attributes[k].collect do |column_value|
-            next column_value if column_value['_type'].blank?
-            column_value = column_value['_type'].constantize.new(column_value)
-            next column_value unless column_value.respond_to?(:file_id)
-            file = self.class.where(ref_coll: 'ss_files', 'data._id' => column_value.file_id).first
-            if file.present?
-              file = save ? file.restore! : file.restore
+          attributes[k] = attributes[k].collect do |relation|
+            next relation if relation['_type'].blank?
+            relation = relation['_type'].constantize.new(relation)
+            relation.fields.each do |key, field|
+              if field.type == SS::Extensions::ObjectIds
+                klass = field.options[:metadata][:elem_class].constantize
+                next unless klass.include?(SS::Model::File)
+                relation[key].each_with_index do |file_id, i|
+                  relation[key][i] = restore_file(file_id)
+                end
+              else
+                klass = field.association.class_name.constantize rescue nil
+                next if klass.blank?
+                next unless klass.include?(SS::Model::File)
+                relation.send("#{key}=", restore_file(relation.send(key)))
+              end
             end
-            next column_value if file.blank?
-            column_value.file = file
-            next column_value unless save
-            path = "#{Rails.root}/private/trash/#{file.path.sub(/.*\/(ss_files\/)/, '\\1')}"
-            next column_value unless File.exist?(path)
-            FileUtils.mkdir_p(File.dirname(file.path))
-            FileUtils.cp(path, file.path)
-            FileUtils.rm_rf(File.dirname(path))
-            column_value
+            relation
           end
         end
       elsif model.fields[k].present?
