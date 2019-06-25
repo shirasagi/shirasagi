@@ -49,6 +49,14 @@ namespace :cms do
         settings = ::File.read(Rails.root.join('vendor', 'elasticsearch', 'settings.json'))
         settings = JSON.parse(settings)
 
+        if ENV['synonym']
+          settings["analysis"]["analyzer"]["my_ja_analyzer"]["filter"].push("synonym")
+          settings["analysis"]["filter"]["synonym"] = {
+            "type": "synonym",
+            "synonyms_path": "/etc/elasticsearch/synonym.txt"
+          }
+        end
+
         mappings = ::File.read(Rails.root.join('vendor', 'elasticsearch', 'mappings.json'))
         mappings = JSON.parse(mappings)
 
