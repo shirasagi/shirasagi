@@ -15,6 +15,7 @@ namespace :cms do
         pages = Cms::Page.site(site).and_public
         pages.each do |page|
           puts "- #{page.filename}"
+          next if site.elasticsearch_deny.include?(page.filename)
           job = ::Cms::Elasticsearch::Indexer::PageReleaseJob.bind(site_id: site)
           job.perform_now(action: 'index', id: page.id.to_s)
         end
@@ -28,6 +29,7 @@ namespace :cms do
         items = Cms::PageRelease.site(site).active.unindexed.order_by(created: 1)
         items.each do |item|
           puts "- #{item.filename}"
+          next if site.elasticsearch_deny.include?(item.filename)
           job = ::Cms::Elasticsearch::Indexer::PageReleaseJob.bind(site_id: site)
           job.perform_now(action: 'index', id: item.page_id.to_s, release_id: item.id.to_s)
         end
