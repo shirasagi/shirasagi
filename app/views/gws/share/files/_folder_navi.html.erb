@@ -1,0 +1,93 @@
+<div class="addon-views gws-share-file-folder-navi">
+  <% tools_presented = false %>
+  <% if @folder %>
+    <%= render "ss/crud/addon", addon: { id: "gws-share-file-folder-property", head: t('gws/share.folder_info', folder: '<span class="folder-name">' + @folder.name + '</span>').html_safe, toggle: true } do %>
+      <% tools = [] %>
+      <% if @folder.allowed?(:edit, @cur_user, site: @cur_site) %>
+        <% tools << button_tag(type: "button", class: "btn btn-create-folder", data: { folder: @folder.id, api: gws_share_apis_new_sub_folder_path(parent_id: @folder), success: { redirect_to: gws_share_folder_files_path(category: params[:category], folder: ":id") } }) do %>
+          <i class="material-icons">
+            create_new_folder
+          </i>
+        <% end %>
+      <% end %>
+      <% if @folder.allowed?(:edit, @cur_user, site: @cur_site) %>
+        <% tools << button_tag(type: "button", class: "btn btn-rename-folder", data: { folder: @folder.id, api: gws_share_apis_rename_folder_path(id: @folder) }) do %>
+          <i class="material-icons">
+            edit
+          </i>
+        <% end %>
+      <% end %>
+      <% if @folder.allowed?(:delete, @cur_user, site: @cur_site) %>
+        <% tools << button_tag(type: "button", class: "btn btn-delete-folder", data: { folder: @folder.id, api: gws_share_apis_delete_folder_path(id: @folder), success: { redirect_to: @folder.parent.try { |parent| gws_share_folder_files_path(category: params[:category], folder: parent) } || gws_share_files_path(category: params[:category]) } }) do %>
+          <i class="material-icons">
+            delete
+          </i>
+        <% end %>
+      <% end %>
+      <% if @folder.allowed?(:edit, @cur_user, site: @cur_site) %>
+        <% tools << content_tag("i", nil, class: "separator") %>
+        <% tools << button_tag(type: "button", class: "btn btn-edit-folder", data: { href: gws_share_folder_path(category: '-', id: @folder) }) do %>
+          <i class="material-icons">
+            settings
+          </i>
+        <% end %>
+      <% end %>
+      <% tools_presented ||= tools.present? %>
+      <% if tools.present? %>
+        <div class="toolbar">
+          <% tools.each do |tool| %>
+            <%= tool %>
+          <% end %>
+        </div>
+      <% end %>
+
+      <div class="ss-quota-bar">
+        <div class="label"><%= @folder.quota_label %></div>
+        <div class="usage <%= @folder.quota_over? ? 'over-threshold' : '' %>" style="width: <%= @folder.quota_percentage %>%"></div>
+      </div>
+      <div class="total-usage" style="margin-top: 5px;">
+        <%= t("gws/share.quota.total_usage", usage: number_to_human_size(@folder.descendants_total_file_size)) %>
+      </div>
+      <div class="total-usage" style="margin-top: 5px;">
+        <%= t("gws/share.quota.total_count", usage: number_with_delimiter(@folder.descendants_files_count)) %>
+      </div>
+    <% end %>
+  <% end %>
+
+  <%= render "ss/crud/addon", addon: { id: "gws-share-file-folder-list", head: t("gws/share.folder"), toggle: true } do %>
+    <% tools = [] %>
+    <% if Gws::Share::Folder.allowed?(:edit, @cur_user, site: @cur_site) %>
+      <% tools << button_tag(type: "button", class: "btn btn-create-root-folder", data: { folder: '-', api: gws_share_apis_new_root_folder_path, success: { redirect_to: gws_share_folder_files_path(category: params[:category], folder: ":id") } }) do %>
+        <i class="material-icons">
+          create_new_folder
+        </i>
+      <% end %>
+    <% end %>
+    <% tools << content_tag("i", nil, class: "separator") %>
+    <% tools << button_tag(type: "button", class: "btn btn-refresh-folder") do %>
+      <i class="material-icons">
+        refresh
+      </i>
+    <% end %>
+    <% tools_presented ||= tools.present? %>
+    <% if tools.present? %>
+      <div class="toolbar">
+        <% tools.each do |tool| %>
+          <%= tool %>
+        <% end %>
+      </div>
+    <% end %>
+    <div class="mb-2 tree-item<%= ' is-current' if @folder.blank? %>">
+      <%= link_to t('gws/share.all'), gws_share_files_path(category: params[:category]) %>
+    </div>
+    <div class="tree-navi"></div>
+  <% end %>
+
+  <%= jquery do %>
+    var treeNavi = new SS_TreeNavi('#gws-share-file-folder-list .tree-navi');
+    treeNavi.render("<%= @tree_navi %>");
+    <% if tools_presented %>
+      new Gws_Share_FolderToolbar('.gws-share-file-folder-navi', { treeNavi: treeNavi });
+    <% end %>
+  <% end %>
+</div>

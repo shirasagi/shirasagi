@@ -5,18 +5,26 @@ function SS_TreeNavi(selector) {
 }
 
 SS_TreeNavi.prototype.render = function(url) {
+  this.url = url;
+  this.registerEvents();
+  this.refresh();
+};
+
+SS_TreeNavi.prototype.refresh = function() {
   var _this = this;
   var loading = $(SS.loading);
 
-  this.registerEvents();
+  if (! this.url) {
+    return;
+  }
 
   $.ajax({
-    url: url,
+    url: _this.url,
     beforeSend: function() {
       if (_this.errorEl) {
         _this.errorEl.hide();
       }
-      _this.el.append(loading);
+      _this.el.html(loading);
     },
     success: function(data) {
       _this.el.append(_this.renderItems(data.items));

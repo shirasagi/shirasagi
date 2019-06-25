@@ -52,7 +52,7 @@ class Gws::Share::FoldersController < ApplicationController
     @item = @model.new get_params
     @item.attributes["action"] = params["action"]
     if @item.in_parent.present?
-      parent_folder = @model.where(site_id: @cur_site.id, id: File.dirname(@item.in_parent)).first
+      parent_folder = @model.where(site_id: @cur_site.id, id: @item.in_parent).first
     end
 
     if parent_folder.present?
