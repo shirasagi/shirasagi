@@ -125,7 +125,7 @@ module Gws::Circular::PostFilter
     raise '403' unless @item.member?(@cur_user)
 
     result = @item.toggle_seen(@cur_user).update
-    notice = @item.seen?(@cur_user) ? t("gws/circular.notice.set_seen") : t("gws/circular.notice.unset_seen")
+    notice = @item.seen?(@cur_user) ? t("ss.notice.set_seen") : t("ss.notice.unset_seen")
     render_update result, notice: notice
   end
 
@@ -136,7 +136,7 @@ module Gws::Circular::PostFilter
         item.set_seen(@cur_user).save
       end
     end
-    render_destroy_all(true, notice: t("gws/circular.notice.set_seen"))
+    render_destroy_all(true, notice: t("ss.notice.set_seen"))
   end
 
   def unset_seen_all
@@ -146,6 +146,6 @@ module Gws::Circular::PostFilter
         item.unset_seen(@cur_user).save
       end
     end
-    render_destroy_all(true, notice: t("gws/circular.notice.unset_seen"))
+    render_destroy_all(true, notice: t("ss.notice.unset_seen"))
   end
 end

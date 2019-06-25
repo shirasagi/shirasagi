@@ -143,10 +143,6 @@ ja:
       move: 移動しました。
       delete: 削除しました。
       empty: 空にしました。
-      set_seen: 既読にしました。
-      unset_seen: 未読にしました。
-      set_star: スターをつけました。
-      unset_star: スターをはずしました。
       requested_mdn: メッセージ送信者は開封確認を要求しています。
       send_mdn: 開封確認メールを送信しました。
       ignore_mdn: 開封確認を無視しました。

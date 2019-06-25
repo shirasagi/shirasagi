@@ -263,9 +263,12 @@ this.Webmail_Mail_List = (function () {
         },
         success: function (data) {
           if (data.action === 'set_star') {
-            return wrap.removeClass('off').addClass('on');
+            wrap.removeClass('off').addClass('on');
           } else {
-            return wrap.removeClass('on').addClass('off');
+            wrap.removeClass('on').addClass('off');
+          }
+          if (data.notice) {
+            SS.notice(data.notice);
           }
         }
       });

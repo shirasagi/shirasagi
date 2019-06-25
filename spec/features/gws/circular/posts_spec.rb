@@ -27,7 +27,7 @@ describe "gws_circular_posts", type: :feature, dbscope: :example, js: true do
           click_on I18n.t("gws/circular.post.set_seen")
         end
       end
-      expect(page).to have_css('#notice', text: I18n.t("gws/circular.notice.set_seen"))
+      expect(page).to have_css('#notice', text: I18n.t("ss.notice.set_seen"))
 
       item.reload
       expect(item.seen?(gws_user)).to be_truthy
@@ -48,7 +48,7 @@ describe "gws_circular_posts", type: :feature, dbscope: :example, js: true do
           click_on I18n.t("gws/circular.post.unset_seen")
         end
       end
-      expect(page).to have_css('#notice', text: I18n.t("gws/circular.notice.unset_seen"))
+      expect(page).to have_css('#notice', text: I18n.t("ss.notice.unset_seen"))
 
       item2.reload
       expect(item2.unseen?(gws_user)).to be_truthy
