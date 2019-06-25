@@ -32,8 +32,11 @@ class History::Trash
       if model.relations[k].present?
         if model.relations[k].class == Mongoid::Association::Embedded::EmbedsMany
           attributes[k] = attributes[k].collect do |relation|
-            next relation if relation['_type'].blank?
-            relation = relation['_type'].constantize.new(relation)
+            if relation['_type'].present?
+              relation = relation['_type'].constantize.new(relation)
+            else
+              relation = model.relations[k].class_name.constantize.new(relation)
+            end
             relation.fields.each do |key, field|
               if field.type == SS::Extensions::ObjectIds
                 klass = field.options[:metadata][:elem_class].constantize
@@ -45,7 +48,7 @@ class History::Trash
                 klass = field.association.class_name.constantize rescue nil
                 next if klass.blank?
                 next unless klass.include?(SS::Model::File)
-                relation.send("#{key}=", restore_file(relation.send(key)))
+                relation[key] = restore_file(relation[key])
               end
             end
             relation
