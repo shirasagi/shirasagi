@@ -46,6 +46,13 @@ class Webmail::ExportMailsController < ApplicationController
       render action: :index
       return
     end
+
+    unless Webmail::MailExportJob.check_size_limit_per_user?(@cur_user.id)
+      @item.errors.add(:base, t('job.notice.size_limit_exceeded'))
+      render action: :index
+      return
+    end
+
     if params.dig(:item, :all_export).to_s == "select"
       mail_ids = params.dig(:item, :mail_ids)
       mail_ids = mail_ids.select(&:present?) if mail_ids
