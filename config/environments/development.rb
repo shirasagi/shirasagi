@@ -60,7 +60,7 @@ Rails.application.configure do
   config.file_watcher = ActiveSupport::EventedFileUpdateChecker
 
   # Logger
-  config.logger = Logger.new("#{Rails.root}/log/development.log")
+  config.logger = ActiveSupport::Logger.new("#{Rails.root}/log/development.log")
   config.log_level = ENV['DEVELOPMENT_LOG_LEVEL'] || :warn
 
   # ActiveJob Queue Adapter
