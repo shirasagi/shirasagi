@@ -14,7 +14,7 @@ class Uploader::File
 
   def save
     return false unless valid?
-    @binary = self.class.remove_exif(binary) if binary.present? && exif_image?
+    @binary = self.class.remove_exif(binary) if binary && exif_image?
     begin
       if saved_path && path != saved_path # persisted AND path chenged
         Fs.binwrite(saved_path, binary) unless directory?
