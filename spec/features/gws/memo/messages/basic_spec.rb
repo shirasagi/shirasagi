@@ -5,6 +5,7 @@ describe 'gws_memo_messages', type: :feature, dbscope: :example do
   let(:user) { gws_user }
   let!(:memo) { create(:gws_memo_message, user: user, site: site) }
   let!(:draft_memo) { create(:gws_memo_message, :with_draft, user: user, site: site) }
+  let!(:folder) { create(:gws_memo_folder, user: user, site: site) }
 
   context 'with auth', js: true do
     before { login_gws_user }
@@ -99,7 +100,9 @@ describe 'gws_memo_messages', type: :feature, dbscope: :example do
       find('.list-head label.check input').set(true)
       page.accept_confirm do
         click_button "移動する"
-        find('.move-menu li a').click
+        within ".move-menu" do
+          click_link folder.name
+        end
       end
       wait_for_ajax
       expect(page).to have_content('受信トレイ')
