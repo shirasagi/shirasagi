@@ -272,6 +272,8 @@ module Cms::Content
     backup.ref_coll = collection_name
     backup.ref_class = self.becomes_with_route.class.to_s
     backup.data = attributes
+    backup.data.delete(:lock_until)
+    backup.data.delete(:lock_owner_id)
     backup.site = self.site
     backup.user = @cur_user
     backup.save
