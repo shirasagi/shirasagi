@@ -8,12 +8,14 @@ class History::Cms::TrashesController < ApplicationController
 
   def index
     raise "403" unless @model.allowed?(:read, @cur_user, site: @cur_site, node: @cur_node)
-    @ref_coll_options = [Cms::Page, Cms::Part, Cms::Layout, Cms::Node].collect do |model|
+    @ref_coll_options = [Cms::Node, Cms::Page, Cms::Part, Cms::Layout].collect do |model|
       [model.model_name.human, model.collection_name]
     end
+    @ref_coll_options.unshift([I18n.t('ss.all'), 'all'])
     set_items
-    @items = @items.where(ref_coll: params[:coll].to_s)
-      .search(params[:s])
+    @s = OpenStruct.new params[:s]
+    @s[:ref_coll] ||= 'all'
+    @items = @items.search(@s)
       .order_by(created: -1)
       .page(params[:page])
       .per(50)

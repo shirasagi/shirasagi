@@ -114,6 +114,11 @@ class History::Trash
       if params[:keyword].present?
         criteria = criteria.keyword_in params[:keyword], 'data.name', 'data.filename', 'data.html'
       end
+      if params[:ref_coll] == 'all'
+        criteria = criteria.nin(ref_coll: 'ss_files')
+      elsif params[:ref_coll].present?
+        criteria = criteria.where(ref_coll: params[:ref_coll])
+      end
       criteria
     end
   end

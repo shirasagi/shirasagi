@@ -29,7 +29,7 @@ SS::Application.routes.draw do
     get "backups/:source/:id/restore" => "backups#restore", as: :restore, source: /[^\/]+/
     get "backups/:source/:id/change" => "backups#change", as: :change, source: /[^\/]+/
 
-    resources :trashes, path: 'trashes/:coll', only: [:index, :show, :destroy], concerns: :deletion do
+    resources :trashes, only: [:index, :show, :destroy], concerns: :deletion do
       match :undo_delete, on: :member, via: [:get, :delete]
       post :undo_delete_all, on: :collection
     end

@@ -4,7 +4,7 @@ describe "history_cms_trashes", dbscope: :example, js: true do
   let(:site) { cms_site }
   let(:node) { create_once :article_node_page, filename: "docs", name: "article" }
   let(:page_item) { create(:article_page, cur_node: node) }
-  let(:index_path) { history_cms_trashes_path(site: site.id, coll: 'cms_pages') }
+  let(:index_path) { history_cms_trashes_path(site: site.id) }
   let(:node_path) { article_pages_path(site: site.id, cid: node.id) }
   let(:page_path) { article_page_path(site: site.id, cid: node.id, id: page_item.id) }
 
