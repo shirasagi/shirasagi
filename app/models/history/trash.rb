@@ -24,7 +24,7 @@ class History::Trash
     History::Trash.where('data.filename' => path, 'data.site_id' => data[:site_id]).first
   end
 
-  def restore(save = false)
+  def restore(create_by_trash = false)
     attributes = data.dup
     attributes[:state] = 'closed'
     attributes.each do |k, v|
@@ -41,13 +41,13 @@ class History::Trash
                 klass = field.options[:metadata][:elem_class].constantize
                 next unless klass.include?(SS::Model::File)
                 relation[key].each_with_index do |file_id, i|
-                  relation[key][i] = restore_file(file_id)
+                  relation[key][i] = restore_file(file_id, create_by_trash)
                 end
               else
                 klass = field.association.class_name.constantize rescue nil
                 next if klass.blank?
                 next unless klass.include?(SS::Model::File)
-                relation[key] = restore_file(relation[key])
+                relation[key] = restore_file(relation[key], create_by_trash)
               end
             end
             relation
@@ -58,13 +58,13 @@ class History::Trash
           klass = model.fields[k].options[:metadata][:elem_class].constantize
           next unless klass.include?(SS::Model::File)
           attributes[k] = attributes[k].collect do |file_id|
-            restore_file(file_id)
+            restore_file(file_id, create_by_trash)
           end
         else
           klass = model.fields[k].association.class_name.constantize rescue nil
           next if klass.blank?
           next unless klass.include?(SS::Model::File)
-          attributes[k] = restore_file(v)
+          attributes[k] = restore_file(v, create_by_trash)
         end
       end
     end
@@ -88,7 +88,7 @@ class History::Trash
       end
       item.in_file = file
     end
-    if save
+    if create_by_trash
       if item.errors.blank? && item.save
         self.destroy
       else
@@ -125,13 +125,15 @@ class History::Trash
 
   private
 
-  def restore_file(file_id)
+  def restore_file(file_id, create_by_trash = false)
+    file = SS::File.where(id: file_id).first
+    return file.id if file.present?
     file = self.class.where(ref_coll: 'ss_files', 'data._id' => file_id).first
     if file.present?
-      file = save ? file.restore! : file.restore
+      file = create_by_trash ? file.restore! : file.restore
     end
     return if file.blank?
-    return unless save
+    return unless create_by_trash
     path = "#{Rails.root}/private/trash/#{file.path.sub(/.*\/(ss_files\/)/, '\\1')}"
     return unless File.exist?(path)
     FileUtils.mkdir_p(File.dirname(file.path))
