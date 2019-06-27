@@ -11,28 +11,31 @@ describe "history_cms_trashes", dbscope: :example, js: true do
   context "with auth" do
     before { login_cms_user }
 
-    it "#undo_delete" do
+    it "#destroy" do
       visit page_path
-      click_link '削除する'
-      click_button '削除'
+      click_link I18n.t('ss.links.delete')
+      click_button I18n.t('ss.buttons.delete')
       expect(page).to have_no_css('a.title', text: page_item.name)
 
       visit index_path
       expect(page).to have_css('a.title', text: page_item.name)
 
       click_link page_item.name
-      click_link '元に戻す'
-      click_button '元に戻す'
+      expect(page).to have_css('dd', text: page_item.name)
+
+      click_link I18n.t('ss.links.delete')
+      click_button I18n.t('ss.buttons.delete')
       expect(current_path).to eq index_path
+      expect(page).to have_no_css('a.title', text: page_item.name)
 
       visit node_path
-      expect(page).to have_css('a.title', text: page_item.name)
+      expect(page).to have_no_css('a.title', text: page_item.name)
     end
 
-    it "#undo_delete_all" do
+    it "#destroy_all" do
       visit page_path
-      click_link '削除する'
-      click_button '削除'
+      click_link I18n.t('ss.links.delete')
+      click_button I18n.t('ss.buttons.delete')
       expect(page).to have_no_css('a.title', text: page_item.name)
 
       visit index_path
@@ -41,10 +44,54 @@ describe "history_cms_trashes", dbscope: :example, js: true do
       within '.list-head' do
         check(nil)
         page.accept_confirm do
-          click_button '元に戻す'
+          click_button I18n.t('ss.links.delete')
         end
       end
       expect(current_path).to eq index_path
+      expect(page).to have_no_css('a.title', text: page_item.name)
+
+      visit node_path
+      expect(page).to have_no_css('a.title', text: page_item.name)
+    end
+
+    it "#undo_delete" do
+      visit page_path
+      click_link I18n.t('ss.links.delete')
+      click_button I18n.t('ss.buttons.delete')
+      expect(page).to have_no_css('a.title', text: page_item.name)
+
+      visit index_path
+      expect(page).to have_css('a.title', text: page_item.name)
+
+      click_link page_item.name
+      expect(page).to have_css('dd', text: page_item.name)
+
+      click_link I18n.t('ss.buttons.restore')
+      click_button I18n.t('ss.buttons.restore')
+      expect(current_path).to eq index_path
+      expect(page).to have_no_css('a.title', text: page_item.name)
+
+      visit node_path
+      expect(page).to have_css('a.title', text: page_item.name)
+    end
+
+    it "#undo_delete_all" do
+      visit page_path
+      click_link I18n.t('ss.links.delete')
+      click_button I18n.t('ss.buttons.delete')
+      expect(page).to have_no_css('a.title', text: page_item.name)
+
+      visit index_path
+      expect(page).to have_css('a.title', text: page_item.name)
+
+      within '.list-head' do
+        check(nil)
+        page.accept_confirm do
+          click_button I18n.t('ss.buttons.restore')
+        end
+      end
+      expect(current_path).to eq index_path
+      expect(page).to have_no_css('a.title', text: page_item.name)
 
       visit node_path
       expect(page).to have_css('a.title', text: page_item.name)
