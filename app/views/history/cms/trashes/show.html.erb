@@ -24,7 +24,7 @@
         <div class="addon-body">
           <dl class="see mod-history-trashes">
             <dd class="wide">
-              <%= html_editor "#mod-cms-html", height: "400px", readonly: true %>
+              <%= code_editor ".mod-history-trashes textarea", mode: :html, readonly: true %>
               <%= text_area_tag "mod-cms-html", @item.data[:html], style: "height: 400px" %>
             </dd>
           </dl>
@@ -36,7 +36,7 @@
       <div class="addon-head"><h2><%= t('modules.addons.cms/html') %></h2></div>
       <div class="addon-body">
         <dl class="see mod-history-trashes">
-          <%= code_editor ".mod-history-trashes textarea", mode: :html %>
+          <%= code_editor ".mod-history-trashes textarea", mode: :html, readonly: true %>
           <% @item.data.each do |k, v| %>
             <% next unless k.include?('html') %>
             <dt><%= @item.model.t(k) %></dt>
@@ -54,7 +54,7 @@
       <div class="addon-body">
         <dl class="see mod-history-trashes">
           <dd class="wide">
-            <%= code_editor "#mod-cms-html", mode: :html %>
+            <%= code_editor "#mod-cms-html", mode: :html, readonly: true %>
             <%= text_area_tag "mod-cms-html", @item.data[:html], style: "height: 400px" %>
           </dd>
         </dl>

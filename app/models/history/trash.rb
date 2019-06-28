@@ -80,12 +80,7 @@ class History::Trash
     end
     if item.respond_to?(:in_file)
       path = "#{Rails.root}/private/trash/#{item.path.sub(/.*\/(ss_files\/)/, '\\1')}"
-      if File.exist?(path)
-        file = Fs::UploadedFile.create_from_file(path, content_type: item.content_type)
-      else
-        file = Fs::UploadedFile.new("ss_trash")
-        file.original_filename = 'dummy'
-      end
+      file = Fs::UploadedFile.create_from_file(path, content_type: item.content_type) if File.exist?(path)
       item.in_file = file
     end
     if create_by_trash
