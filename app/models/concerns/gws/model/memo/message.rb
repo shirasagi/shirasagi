@@ -82,11 +82,11 @@ module Gws::Model
 
     def set_path
       self.user_settings = member_ids.collect do |member_id|
-        user_setting_was = (user_settings_was.presence || []).find{ |setting| setting[:user_id] == member_id }
-        path = in_path.try(:[], member_id.to_s).presence || user_setting_was.try(:[], :path).presence || 'INBOX'
-        seen_at = user_settings.find{ |setting| setting[:user_id] == member_id }.try(:[], :seen_at)
+        user_setting_was = (user_settings_was.presence || []).find{ |setting| setting['user_id'] == member_id }
+        path = in_path.try(:[], member_id.to_s).presence || user_setting_was.try(:[], 'path').presence || 'INBOX'
+        seen_at = user_settings.find{ |setting| setting['user_id'] == member_id }.try(:[], :seen_at)
         user_setting = { user_id: member_id, path: path }
-        user_setting[:seen_at] = seen_at if seen_at.present?
+        user_setting['seen_at'] = seen_at if seen_at.present?
         user_setting
       end
     end
@@ -324,7 +324,7 @@ module Gws::Model
 
     def set_seen(user)
       self.user_settings = user_settings.collect do |setting|
-        setting[:seen_at] = Time.zone.now.utc if user.id == setting[:user_id]
+        setting['seen_at'] = Time.zone.now.utc if user.id == setting['user_id']
         setting
       end
       self
@@ -332,7 +332,7 @@ module Gws::Model
 
     def unset_seen(user)
       self.user_settings = user_settings.collect do |setting|
-        setting[:seen_at] = nil if user.id == setting[:user_id]
+        setting['seen_at'] = nil if user.id == setting['user_id']
         setting
       end
       self
