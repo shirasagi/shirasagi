@@ -10,8 +10,8 @@
     </thead>
     <tbody>
     <% @items.each do |item| %>
-    <% seen_at = @item.seen[item.id.to_s] %>
-    <tr>
+    <% seen_at = @item.seen_at(item) %>
+    <tr data-id="<%= item.id %>">
       <td><%= item.long_name %></td>
       <td>
         <% if seen_at %>

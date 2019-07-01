@@ -262,6 +262,15 @@ module Gws::Model
       user_settings.find{ |setting| setting[:user_id] == user.id && setting[:seen_at].present? }.blank?
     end
 
+    def seen_at(user)
+      return if user.blank?
+
+      found = user_settings.find { |setting| setting[:user_id] == user.id && setting[:seen_at].present? }
+      return if found.blank?
+
+      found[:seen_at]
+    end
+
     def star?(user)
       return false unless user
       star.include?(user.id.to_s)
