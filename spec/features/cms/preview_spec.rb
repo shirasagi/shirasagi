@@ -108,4 +108,27 @@ describe "cms_preview", type: :feature, dbscope: :example, js: true do
       end
     end
   end
+
+  context "with cms page" do
+    let(:html) { '<p>お探しのページは見つかりませんでした。<br />一時的にアクセスできない状態になっているか、URLが変更・削除されたのかもしれません。</p>' }
+    let(:item) { create(:cms_page, filename: '404.html', cur_site: site, html: html) }
+    let(:pc_preview_path) { cms_preview_path(site: site, path: item.url[1..-1]) }
+    let(:mobile_preview_path) { cms_preview_path(site: site, path: "#{site.mobile_location}#{item.url}"[1..-1]) }
+
+    before { login_cms_user }
+
+    context "pc preview" do
+      it do
+        visit pc_preview_path
+        expect(page).to have_css('article.body')
+      end
+    end
+
+    context "mobile preview" do
+      it do
+        visit mobile_preview_path
+        expect(page).to have_css('div.tag-article')
+      end
+    end
+  end
 end

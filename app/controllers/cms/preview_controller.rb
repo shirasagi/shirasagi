@@ -74,13 +74,17 @@ class Cms::PreviewController < ApplicationController
     @cur_body_layout = Cms::BodyLayout.site(@cur_site).where(id: page.body_layout_id).first
     page.layout_id = nil if @cur_layout.nil?
     page.body_layout_id = nil if @cur_body_layout.nil?
-    @cur_node = page.cur_node = Cms::Node.site(@cur_site).where(filename: /^#{path.sub(/\/$/, "")}/).first
+    @cur_node = page.cur_node = Cms::Node.site(@cur_site).where(filename: /^#{path.sub(/\/$/, "")}/).first if path.present?
     page.valid?
     @cur_page = page
     @preview_page = page
     @preview_item = preview_item
 
-    @cur_path = "/#{path}#{page.basename}"
+    if @cur_node.present?
+      @cur_path = "/#{path}#{page.basename}"
+    else
+      @cur_path = page.basename
+    end
   end
 
   def render_contents
@@ -95,7 +99,7 @@ class Cms::PreviewController < ApplicationController
       end
     end
     @contents_env["REQUEST_URI"] = "#{@cur_site.full_url}#{@cur_path[1..-1]}"
-    @contents_env[::Rack::PATH_INFO] = @cur_path
+    @contents_env[::Rack::PATH_INFO] = Rails.application.routes.recognize_path(@cur_path)
     @contents_env[::Rack::REQUEST_METHOD] = ::Rack::GET
     @contents_env[::Rack::REQUEST_PATH] = @cur_path
     @contents_env[::Rack::Request::HTTP_X_FORWARDED_HOST] = @cur_site.domain
