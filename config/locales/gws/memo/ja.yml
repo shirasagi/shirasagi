@@ -14,6 +14,9 @@ ja:
       state:
         closed: 下書き
         public: 送信済み
+      export_filter:
+        all: 全てのメッセージ
+        selected: 選択したメッセージ
     links:
       show_messages: メッセージを見る
       publish: 送信する
@@ -34,6 +37,7 @@ ja:
     export_messages: エクスポート
     import_messages: インポート
     unsend: 送信先のメッセージも削除する（送信取り消し）
+    export_filter: 対象
     links:
       move: 移動する
       etc: その他
@@ -73,6 +77,10 @@ ja:
       subject: '[メッセージ] エクスポートが完了しました。'
       notify_message: "ダウンロードの準備が完了しました。\n下記のURLからダウンロードしてください。\n\n%{link}"
       start_message: "エクスポート処理を開始しました。\nエクスポート処理が完了次第、ダウンロードリンクが通知されます。"
+    export_failed:
+      subject: '[メッセージ] エクスポートが失敗しました。'
+      notify_message: "エクスポートが失敗しました。失敗の原因はタスク・マネージャーから確認することができます。"
+      empty_messages: エクスポート対象のメッセージが見つかりませんでした。
     import:
       caution: "※差出人や送信者等のユーザー情報は、エクスポートしたデータとID及び氏名が一致している場合のみ復元されます。"
     mdn:
