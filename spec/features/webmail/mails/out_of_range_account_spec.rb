@@ -11,6 +11,7 @@ describe "webmail_mails", type: :feature, dbscope: :example, imap: true do
   it do
     visit webmail_mails_path(webmail_mode: 'account', account: user.imap_settings.length, mailbox: "INBOX")
     expect(page).to have_content(I18n.t("webmail.notice.imap_login_failed"))
+    expect(find_field("select_account").value).to be_blank
   end
 
   it do
