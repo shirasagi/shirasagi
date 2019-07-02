@@ -104,6 +104,7 @@ class Gws::Memo::MessageExportJob < Gws::ApplicationJob
       if s_status.present?
         f.puts Mail::Field.new("X-Shirasagi-Status", s_status, "utf-8").encoded
       end
+      f.puts Mail::Field.new("X-Shirasagi-Version", SS.version, "utf-8").encoded
       if data["files"].present?
         boundary = "--==_mimepart_#{SecureRandom.hex(16)}"
         f.puts "Content-Type: multipart/mixed;"

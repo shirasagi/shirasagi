@@ -92,6 +92,7 @@ describe 'gws_memo_messages', type: :feature, dbscope: :example, js: true do
           expect(mail[:bcc]).to be_nil
           expect(mail[:reply_to]).to be_nil
           expect(mail["X-Shirasagi-Status"].decoded).to eq "未読"
+          expect(mail["X-Shirasagi-Version"].decoded).to eq SS.version
           expect(mail.in_reply_to).to be_nil
           expect(mail.references).to be_nil
           expect(mail.subject).to eq memo.subject
@@ -131,6 +132,7 @@ describe 'gws_memo_messages', type: :feature, dbscope: :example, js: true do
           expect(mail[:bcc]).to be_nil
           expect(mail[:reply_to]).to be_nil
           expect(mail["X-Shirasagi-Status"].decoded).to eq "既読"
+          expect(mail["X-Shirasagi-Version"].decoded).to eq SS.version
           expect(mail.in_reply_to).to be_nil
           expect(mail.references).to be_nil
           expect(mail.subject).to eq memo.subject
@@ -170,6 +172,7 @@ describe 'gws_memo_messages', type: :feature, dbscope: :example, js: true do
           expect(mail[:bcc]).to be_nil
           expect(mail[:reply_to]).to be_nil
           expect(mail["X-Shirasagi-Status"].decoded).to eq "未読, スター"
+          expect(mail["X-Shirasagi-Version"].decoded).to eq SS.version
           expect(mail.in_reply_to).to be_nil
           expect(mail.references).to be_nil
           expect(mail.subject).to eq memo.subject
@@ -205,6 +208,7 @@ describe 'gws_memo_messages', type: :feature, dbscope: :example, js: true do
           expect(mail[:bcc]).to be_nil
           expect(mail[:reply_to]).to be_nil
           expect(mail["X-Shirasagi-Status"].decoded).to eq "未読"
+          expect(mail["X-Shirasagi-Version"].decoded).to eq SS.version
           expect(mail.in_reply_to).to be_nil
           expect(mail.references).to be_nil
           expect(mail.subject).to eq memo.subject
