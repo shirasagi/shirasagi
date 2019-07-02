@@ -118,7 +118,7 @@ module Webmail
     end
 
     def sanitize_filename(filename)
-      filename.gsub(/[\<\>\:\"\/\\\|\?\*]/, '_').slice(0...250)
+      filename.gsub(/[\<\>\:\"\/\\\|\?\*]/, '_').slice(0..60)
     end
   end
 end
