@@ -157,13 +157,16 @@ class Gws::Memo::MessageExportJob < Gws::ApplicationJob
 
   def write_body_to_eml(file, data)
     if data["format"] == "html"
-      file.puts "Content-Type: text/html; charset=UTF-8"
-      file.puts ""
-      file.puts data["html"]
+      content_type = "text/html"
+      base64 = Mail::Encodings::Base64.encode(data["html"].to_s)
     else
-      file.puts "Content-Type: text/plain; charset=UTF-8"
-      file.puts ""
-      file.puts data["text"]
+      content_type = "text/plain"
+      base64 = Mail::Encodings::Base64.encode(data["text"].to_s)
     end
+
+    file.puts "Content-Type: #{content_type}; charset=UTF-8"
+    file.puts "Content-Transfer-Encoding: base64"
+    file.puts ""
+    file.puts base64
   end
 end

@@ -71,13 +71,17 @@ describe 'gws_memo_messages', type: :feature, dbscope: :example, js: true do
     before { login_gws_user }
 
     context "with unseen message" do
-      let!(:memo) { create(:gws_memo_message, user: user, site: site) }
+      let!(:memo) do
+        create(:gws_memo_message, user: user, site: site, subject: ss_japanese_text, text: ss_japanese_text)
+      end
 
       it do
         exported = export_memo(memo)
 
         expect(exported).to have(1).items
-        expect(exported.keys).to include(include(memo.subject))
+        filename = memo.subject.encode('cp932', invalid: :replace, undef: :replace, replace: "_")
+        filename = filename.encode("UTF-8")
+        expect(exported.keys).to include(include(filename))
         exported.values.first.tap do |mail|
           expect(mail.message_id.to_s).to eq "#{memo.id}@#{site.canonical_domain}"
           expect(mail.sender).to be_nil
@@ -94,13 +98,17 @@ describe 'gws_memo_messages', type: :feature, dbscope: :example, js: true do
           expect(mail.mime_type).to eq "text/plain"
           expect(mail.multipart?).to be_falsey
           expect(mail.parts).to be_blank
-          expect(mail.body.decoded).to include(memo.text)
+          body = mail.body.decoded
+          body.force_encoding("UTF-8")
+          expect(body).to include(memo.text)
         end
       end
     end
 
     context "with seen message" do
-      let!(:memo) { create(:gws_memo_message, user: user, site: site) }
+      let!(:memo) do
+        create(:gws_memo_message, user: user, site: site, subject: ss_japanese_text, text: ss_japanese_text)
+      end
 
       before do
         memo.set_seen(gws_user).save!
@@ -110,7 +118,9 @@ describe 'gws_memo_messages', type: :feature, dbscope: :example, js: true do
         exported = export_memo(memo)
 
         expect(exported).to have(1).items
-        expect(exported.keys).to include(include(memo.subject))
+        filename = memo.subject.encode('cp932', invalid: :replace, undef: :replace, replace: "_")
+        filename = filename.encode("UTF-8")
+        expect(exported.keys).to include(include(filename))
         exported.values.first.tap do |mail|
           expect(mail.message_id.to_s).to eq "#{memo.id}@#{site.canonical_domain}"
           expect(mail.sender).to be_nil
@@ -127,13 +137,17 @@ describe 'gws_memo_messages', type: :feature, dbscope: :example, js: true do
           expect(mail.mime_type).to eq "text/plain"
           expect(mail.multipart?).to be_falsey
           expect(mail.parts).to be_blank
-          expect(mail.body.decoded).to include(memo.text)
+          body = mail.body.decoded
+          body.force_encoding("UTF-8")
+          expect(body).to include(memo.text)
         end
       end
     end
 
     context "with message which has star" do
-      let!(:memo) { create(:gws_memo_message, user: user, site: site) }
+      let!(:memo) do
+        create(:gws_memo_message, user: user, site: site, subject: ss_japanese_text, text: ss_japanese_text)
+      end
 
       before do
         memo.set_star(gws_user).save!
@@ -143,7 +157,9 @@ describe 'gws_memo_messages', type: :feature, dbscope: :example, js: true do
         exported = export_memo(memo)
 
         expect(exported).to have(1).items
-        expect(exported.keys).to include(include(memo.subject))
+        filename = memo.subject.encode('cp932', invalid: :replace, undef: :replace, replace: "_")
+        filename = filename.encode("UTF-8")
+        expect(exported.keys).to include(include(filename))
         exported.values.first.tap do |mail|
           expect(mail.message_id.to_s).to eq "#{memo.id}@#{site.canonical_domain}"
           expect(mail.sender).to be_nil
@@ -160,19 +176,25 @@ describe 'gws_memo_messages', type: :feature, dbscope: :example, js: true do
           expect(mail.mime_type).to eq "text/plain"
           expect(mail.multipart?).to be_falsey
           expect(mail.parts).to be_blank
-          expect(mail.body.decoded).to include(memo.text)
+          body = mail.body.decoded
+          body.force_encoding("UTF-8")
+          expect(body).to include(memo.text)
         end
       end
     end
 
     context "with html message" do
-      let!(:memo) { create(:gws_memo_message, user: user, site: site, format: "html", html: "<p>#{unique_id}</p>") }
+      let!(:memo) do
+        create(:gws_memo_message, user: user, site: site, format: "html", subject: ss_japanese_text, html: "<p>#{ss_japanese_text}</p>")
+      end
 
       it do
         exported = export_memo(memo)
 
         expect(exported).to have(1).items
-        expect(exported.keys).to include(include(memo.subject))
+        filename = memo.subject.encode('cp932', invalid: :replace, undef: :replace, replace: "_")
+        filename = filename.encode("UTF-8")
+        expect(exported.keys).to include(include(filename))
         exported.values.first.tap do |mail|
           expect(mail.message_id.to_s).to eq "#{memo.id}@#{site.canonical_domain}"
           expect(mail.sender).to be_nil
@@ -189,7 +211,9 @@ describe 'gws_memo_messages', type: :feature, dbscope: :example, js: true do
           expect(mail.mime_type).to eq "text/html"
           expect(mail.multipart?).to be_falsey
           expect(mail.parts).to be_blank
-          expect(mail.body.decoded).to include(memo.html)
+          body = mail.body.decoded
+          body.force_encoding("UTF-8")
+          expect(body).to include(memo.html)
         end
       end
     end
