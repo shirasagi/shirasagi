@@ -81,6 +81,7 @@ class Gws::Memo::MessageExportJob < Gws::ApplicationJob
 
   def write_eml(name, data)
     File.open("#{@output_dir}/#{name}.eml", "w") do |f|
+      f.puts Mail::Field.new("Date", data["created"].in_time_zone.rfc822, "utf-8").encoded
       f.puts Mail::Field.new("Subject", data["subject"], "utf-8").encoded
       f.puts Mail::Field.new("From", data['from_name_email'], "utf-8").encoded
       f.puts Mail::Field.new("To", data['to_members_name_email'], "utf-8").encoded

@@ -74,6 +74,7 @@ describe 'gws_memo_messages', type: :feature, dbscope: :example, js: true do
         exported.values.first.tap do |mail|
           expect(mail.message_id).to be_nil
           expect(mail.sender).to be_nil
+          expect(mail.date.to_s).to eq memo.created.to_s
           expect(mail[:from].to_s).to eq "#{memo.from.name} <#{memo.from.email}>"
           expect(mail[:to].to_s).to eq memo.to_members.map { |u| "#{u.name} <#{u.email}>" }.join(", ")
           expect(mail[:cc]).to be_nil
@@ -106,6 +107,7 @@ describe 'gws_memo_messages', type: :feature, dbscope: :example, js: true do
         exported.values.first.tap do |mail|
           expect(mail.message_id).to be_nil
           expect(mail.sender).to be_nil
+          expect(mail.date.to_s).to eq memo.created.to_s
           expect(mail[:from].to_s).to eq "#{memo.from.name} <#{memo.from.email}>"
           expect(mail[:to].to_s).to eq memo.to_members.map { |u| "#{u.name} <#{u.email}>" }.join(", ")
           expect(mail[:cc]).to be_nil
@@ -138,6 +140,7 @@ describe 'gws_memo_messages', type: :feature, dbscope: :example, js: true do
         exported.values.first.tap do |mail|
           expect(mail.message_id).to be_nil
           expect(mail.sender).to be_nil
+          expect(mail.date.to_s).to eq memo.created.to_s
           expect(mail[:from].to_s).to eq "#{memo.from.name} <#{memo.from.email}>"
           expect(mail[:to].to_s).to eq memo.to_members.map { |u| "#{u.name} <#{u.email}>" }.join(", ")
           expect(mail[:cc]).to be_nil
