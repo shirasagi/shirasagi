@@ -194,4 +194,53 @@ describe 'gws_memo_messages', type: :feature, dbscope: :example, js: true do
       end
     end
   end
+
+  context "export messages are only allowed at once per user" do
+    let!(:memo) { create(:gws_memo_message, user: user, site: site) }
+
+    before do
+      args = [{}]
+      Job::Task.create!(
+        user_id: gws_user.id, name: SecureRandom.uuid, class_name: "Gws::Memo::MessageExportJob", app_type: "sys",
+        pool: "default", args: args, active_job: {
+          "job_class" => "Gws::Memo::MessageExportJob", "job_id" => SecureRandom.uuid, "provider_job_id" => nil,
+          "queue_name" => "default", "priority" => nil, "arguments" => args
+        }
+      )
+
+      login_gws_user
+    end
+
+    it do
+      visit gws_memo_export_messages_path(site)
+      within "form#item-form" do
+        select 'eml', from: 'item_format'
+        click_on I18n.t("ss.links.select")
+      end
+      within "#cboxLoadedContent" do
+        expect(page).to have_css(".list-item", text: memo.subject)
+        click_on memo.subject
+      end
+      within "form#item-form" do
+        click_on I18n.t("ss.export")
+      end
+
+      expect(page).to have_css("#errorExplanation", text: I18n.t("job.notice.size_limit_exceeded"))
+
+      # export again
+      within "form#item-form" do
+        select 'eml', from: 'item_format'
+        click_on I18n.t("ss.links.select")
+      end
+      within "#cboxLoadedContent" do
+        expect(page).to have_css(".list-item", text: memo.subject)
+        click_on memo.subject
+      end
+      within "form#item-form" do
+        click_on I18n.t("ss.export")
+      end
+
+      expect(page).to have_css("#errorExplanation", text: I18n.t("job.notice.size_limit_exceeded"))
+    end
+  end
 end

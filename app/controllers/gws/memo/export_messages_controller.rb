@@ -43,6 +43,7 @@ class Gws::Memo::ExportMessagesController < ApplicationController
     end
 
     unless Gws::Memo::MessageExportJob.check_size_limit_per_user?(@cur_user.id)
+      @item = @model.new
       @item.errors.add(:base, t('job.notice.size_limit_exceeded'))
       render file: :index
       return
