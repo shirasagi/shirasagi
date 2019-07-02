@@ -12,6 +12,9 @@ Rails.application.configure do
   # Don't include all helpers
   config.action_controller.include_all_helpers = false
 
+  # CSRF
+  config.action_controller.forgery_protection_origin_check = false
+
   # Show full error reports.
   config.consider_all_requests_local = true
 
