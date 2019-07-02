@@ -20,7 +20,9 @@ describe 'gws_memo_messages', type: :feature, dbscope: :example, js: true do
       click_on memo.subject
     end
     within "form#item-form" do
-      click_on I18n.t("ss.export")
+      perform_enqueued_jobs do
+        click_on I18n.t("ss.export")
+      end
     end
 
     expect(page).to have_css("#notice", text: I18n.t("gws/memo/message.notice.start_export"))
