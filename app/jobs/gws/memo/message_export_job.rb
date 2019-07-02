@@ -1,4 +1,6 @@
 class Gws::Memo::MessageExportJob < Gws::ApplicationJob
+  include SS::ExportHelper
+
   def perform(opts = {})
     @datetime = Time.zone.now
     @message_ids = opts[:message_ids]
@@ -132,10 +134,6 @@ class Gws::Memo::MessageExportJob < Gws::ApplicationJob
         f.puts data["text"]
       end
     end
-  end
-
-  def sanitize_filename(filename)
-    filename.gsub(/[\<\>\:\"\/\\\|\?\*]/, '_').slice(0...250)
   end
 
   def file_attributes(file)
