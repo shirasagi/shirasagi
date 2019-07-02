@@ -111,9 +111,7 @@ class Gws::Memo::MessageExportJob < Gws::ApplicationJob
         f.puts ""
         f.puts ""
         f.puts "--#{boundary}"
-        f.puts "Content-Type: text/plain; charset=UTF-8"
-        f.puts ""
-        f.puts data["text"]
+        write_body_to_eml(f, data)
         f.puts ""
         f.puts "--#{boundary}"
         data["files"].each do |file|
@@ -129,9 +127,7 @@ class Gws::Memo::MessageExportJob < Gws::ApplicationJob
           f.puts "--#{boundary}--"
         end
       else
-        f.puts "Content-Type: text/plain; charset=UTF-8"
-        f.puts ""
-        f.puts data["text"]
+        write_body_to_eml(f, data)
       end
     end
   end
@@ -157,5 +153,17 @@ class Gws::Memo::MessageExportJob < Gws::ApplicationJob
   def gen_message_id(data)
     @domain_for_message_id ||= site.canonical_domain.presence || SS.config.mail.domain.presence || "localhost.local"
     "<#{data["id"].to_s.presence || data["_id"].to_s.presence || SecureRandom.uuid}@#{@domain_for_message_id}>"
+  end
+
+  def write_body_to_eml(file, data)
+    if data["format"] == "html"
+      file.puts "Content-Type: text/html; charset=UTF-8"
+      file.puts ""
+      file.puts data["html"]
+    else
+      file.puts "Content-Type: text/plain; charset=UTF-8"
+      file.puts ""
+      file.puts data["text"]
+    end
   end
 end

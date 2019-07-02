@@ -162,5 +162,34 @@ describe 'gws_memo_messages', type: :feature, dbscope: :example, js: true do
         end
       end
     end
+
+    context "with html message" do
+      let!(:memo) { create(:gws_memo_message, user: user, site: site, format: "html", html: "<p>#{unique_id}</p>") }
+
+      it do
+        exported = export_memo(memo)
+
+        expect(exported).to have(1).items
+        expect(exported.keys).to include(include(memo.subject))
+        exported.values.first.tap do |mail|
+          expect(mail.message_id.to_s).to eq "#{memo.id}@#{site.canonical_domain}"
+          expect(mail.sender).to be_nil
+          expect(mail.date.to_s).to eq memo.created.to_s
+          expect(mail[:from].to_s).to eq "#{memo.from.name} <#{memo.from.email}>"
+          expect(mail[:to].to_s).to eq memo.to_members.map { |u| "#{u.name} <#{u.email}>" }.join(", ")
+          expect(mail[:cc]).to be_nil
+          expect(mail[:bcc]).to be_nil
+          expect(mail[:reply_to]).to be_nil
+          expect(mail["X-Shirasagi-Status"].decoded).to eq "未読"
+          expect(mail.in_reply_to).to be_nil
+          expect(mail.references).to be_nil
+          expect(mail.subject).to eq memo.subject
+          expect(mail.mime_type).to eq "text/html"
+          expect(mail.multipart?).to be_falsey
+          expect(mail.parts).to be_blank
+          expect(mail.body.decoded).to include(memo.html)
+        end
+      end
+    end
   end
 end
