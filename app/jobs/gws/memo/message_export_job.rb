@@ -82,6 +82,7 @@ class Gws::Memo::MessageExportJob < Gws::ApplicationJob
   def write_eml(name, data)
     File.open("#{@output_dir}/#{name}.eml", "w") do |f|
       f.puts Mail::Field.new("Date", data["created"].in_time_zone.rfc822, "utf-8").encoded
+      f.puts Mail::Field.new("Message-ID", gen_message_id(data), "utf-8").encoded
       f.puts Mail::Field.new("Subject", data["subject"], "utf-8").encoded
       f.puts Mail::Field.new("From", data['from_name_email'], "utf-8").encoded
       f.puts Mail::Field.new("To", data['to_members_name_email'], "utf-8").encoded
@@ -153,5 +154,10 @@ class Gws::Memo::MessageExportJob < Gws::ApplicationJob
     else
       user.name
     end
+  end
+
+  def gen_message_id(data)
+    @domain_for_message_id ||= site.canonical_domain.presence || SS.config.mail.domain.presence || "localhost.local"
+    "<#{data["id"].to_s.presence || data["_id"].to_s.presence || SecureRandom.uuid}@#{@domain_for_message_id}>"
   end
 end

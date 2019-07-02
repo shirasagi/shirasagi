@@ -4,6 +4,11 @@ describe 'gws_memo_messages', type: :feature, dbscope: :example, js: true do
   let(:site) { gws_site }
   let(:user) { gws_user }
 
+  before do
+    site.canonical_domain = "#{unique_id}.example.jp"
+    site.save!
+  end
+
   def export_memo(memo)
     visit gws_memo_export_messages_path(site)
     within "form#item-form" do
@@ -72,7 +77,7 @@ describe 'gws_memo_messages', type: :feature, dbscope: :example, js: true do
         expect(exported).to have(1).items
         expect(exported.keys).to include(include(memo.subject))
         exported.values.first.tap do |mail|
-          expect(mail.message_id).to be_nil
+          expect(mail.message_id.to_s).to eq "#{memo.id}@#{site.canonical_domain}"
           expect(mail.sender).to be_nil
           expect(mail.date.to_s).to eq memo.created.to_s
           expect(mail[:from].to_s).to eq "#{memo.from.name} <#{memo.from.email}>"
@@ -105,7 +110,7 @@ describe 'gws_memo_messages', type: :feature, dbscope: :example, js: true do
         expect(exported).to have(1).items
         expect(exported.keys).to include(include(memo.subject))
         exported.values.first.tap do |mail|
-          expect(mail.message_id).to be_nil
+          expect(mail.message_id.to_s).to eq "#{memo.id}@#{site.canonical_domain}"
           expect(mail.sender).to be_nil
           expect(mail.date.to_s).to eq memo.created.to_s
           expect(mail[:from].to_s).to eq "#{memo.from.name} <#{memo.from.email}>"
@@ -138,7 +143,7 @@ describe 'gws_memo_messages', type: :feature, dbscope: :example, js: true do
         expect(exported).to have(1).items
         expect(exported.keys).to include(include(memo.subject))
         exported.values.first.tap do |mail|
-          expect(mail.message_id).to be_nil
+          expect(mail.message_id.to_s).to eq "#{memo.id}@#{site.canonical_domain}"
           expect(mail.sender).to be_nil
           expect(mail.date.to_s).to eq memo.created.to_s
           expect(mail[:from].to_s).to eq "#{memo.from.name} <#{memo.from.email}>"
