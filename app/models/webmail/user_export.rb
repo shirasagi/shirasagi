@@ -95,7 +95,11 @@ class Webmail::UserExport
       update_row(row, index)
       index += 1
     end
-    errors.empty?
+    result = errors.empty?
+
+    purge_webmail_caches
+
+    result
   end
 
   private
@@ -492,5 +496,11 @@ class Webmail::UserExport
   def set_item_imap_setting_default(row, item, setting)
     return if str(row, 'imap_setting.default').blank?
     item.imap_default_index = str(row, 'imap_setting.account_index').to_i - 1
+  end
+
+  def purge_webmail_caches
+    Webmail::Mail.all.each(&:destroy_rfc822)
+    Webmail::Mail.all.delete_all
+    Webmail::Mailbox.all.delete_all
   end
 end
