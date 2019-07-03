@@ -65,12 +65,12 @@ module Gws::Model
         elsif folder.draft_box?
           user(user).and_closed
         else
-          where(user_settings: { "$elemMatch" => { user_id: user.id, path: folder.folder_path } }).and_public
+          where(user_settings: { "$elemMatch" => { 'user_id' => user.id, 'path' => folder.folder_path } }).and_public
         end
       }
       scope :unseen, ->(user, opts = {}) {
-        conditions = { user_id: user.id, seen_at: { "$exists" => false } }
-        conditions[:path] = opts[:path] if opts[:path].present?
+        conditions = { 'user_id' => user.id, 'seen_at' => { "$exists" => false } }
+        conditions['path'] = opts[:path] if opts[:path].present?
         where(user_settings: { "$elemMatch" => conditions })
       }
       scope :unfiltered, ->(user) {
@@ -260,6 +260,24 @@ module Gws::Model
     def unseen?(user)
       return false unless user
       user_settings.find{ |setting| setting['user_id'] == user.id && setting['seen_at'].present? }.blank?
+    end
+
+    def seen_at(user)
+      return if user.blank?
+
+      found = user_settings.find { |setting| setting['user_id'] == user.id && setting['seen_at'].present? }
+      return if found.blank?
+
+      found['seen_at']
+    end
+
+    def path(user)
+      return if user.blank?
+
+      found = user_settings.find { |setting| setting['user_id'] == user.id }
+      return if found.blank?
+
+      found['path']
     end
 
     def star?(user)

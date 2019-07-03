@@ -57,7 +57,7 @@ class Gws::Memo::Message
       next if filtered[member_id.to_s]
       matched_filter = Gws::Memo::Filter.site(@cur_site).where(user_id: member_id).enabled.detect{ |f| f.match?(self) }
       self.user_settings = user_settings.collect do |user_setting|
-        user_setting[:path] = matched_filter.path if matched_filter && user_setting[:user_id] == member_id
+        user_setting['path'] = matched_filter.path if matched_filter && user_setting['user_id'] == member_id
         user_setting
       end
       self.filtered[member_id.to_s] = Time.zone.now
