@@ -7,10 +7,10 @@
     </div>
     <% end %>
     <%
-      if rendered[:page] && rendered[:page].parent
+      if rendered && rendered[:page] && rendered[:page].parent
         node = rendered[:page].parent
       end
-      if rendered[:node]
+      if rendered && rendered[:node]
         node = rendered[:node]
       end
     %>
@@ -24,11 +24,11 @@
     <div class="ss-preview-btn-group">
       <%
         page_params = { layout: "iframe", single: true, s: { statuses: %w(ready request remand draft) } }
-        if rendered[:page] && rendered[:page].parent
+        if rendered && rendered[:page] && rendered[:page].parent
           page_params[:s] ||= {}
           page_params[:s][:node] = rendered[:page].parent
         end
-        if rendered[:node]
+        if rendered && rendered[:node]
           page_params[:s][:node] = rendered[:node]
         end
       %>

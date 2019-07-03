@@ -113,13 +113,13 @@
 <% end %>
 <div id="ss-preview">
   <div class="ss-preview-wrap">
-    <% left = render "tool_left", local_assigns %>
+    <% left = render "cms/preview/tool_left", local_assigns %>
     <% if left.present? %>
       <div class="ss-preview-wrap-column ss-preview-wrap-column-edit-mode">
         <%= left %>
       </div>
     <% end %>
-    <% right = render "tool_right", local_assigns %>
+    <% right = render "cms/preview/tool_right", local_assigns %>
     <% if right.present? %>
       <div class="ss-preview-wrap-column ss-preview-wrap-column-mode-change">
         <%= right %>
