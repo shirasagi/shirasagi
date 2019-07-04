@@ -41,6 +41,8 @@ class Cms::Column::Value::Base
   end
 
   def to_html(options = {})
+    return "" if column.blank?
+
     html = _to_html(options)
 
     wrap_data = []
@@ -128,10 +130,6 @@ class Cms::Column::Value::Base
   end
 
   def _to_html(options = {})
-    if column.blank?
-      return to_default_html
-    end
-
     layout = column.layout
     if layout.blank?
       return to_default_html
