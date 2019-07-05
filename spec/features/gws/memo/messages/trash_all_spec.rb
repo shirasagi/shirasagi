@@ -22,7 +22,7 @@ describe 'gws_memo_messages', type: :feature, dbscope: :example, js: true do
       end
 
       memo.reload
-      expect(memo.user_settings.find { |setting| setting[:user_id] == gws_user.id }[:path]).to eq "INBOX.Trash"
+      expect(memo.path(gws_user)).to eq "INBOX.Trash"
 
       within ".gws-memo-folder" do
         click_on I18n.t('gws/memo/folder.inbox_trash')
@@ -43,7 +43,7 @@ describe 'gws_memo_messages', type: :feature, dbscope: :example, js: true do
 
       expect(Gws::Memo::Message.site(site).member(gws_user).where(id: memo.id)).to be_blank
       memo.reload
-      expect(memo.user_settings.find { |setting| setting[:user_id] == gws_user.id }).to be_nil
+      expect(memo.user_settings.find { |setting| setting['user_id'] == gws_user.id }).to be_nil
     end
   end
 end

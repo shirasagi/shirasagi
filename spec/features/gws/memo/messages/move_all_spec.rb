@@ -26,7 +26,7 @@ describe 'gws_memo_messages', type: :feature, dbscope: :example, js: true do
       end
 
       memo.reload
-      expect(memo.user_settings.find { |setting| setting[:user_id] == gws_user.id }[:path]).to eq folder.id.to_s
+      expect(memo.path(gws_user)).to eq folder.id.to_s
 
       within ".gws-memo-folder" do
         click_on folder.name

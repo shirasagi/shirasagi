@@ -16,6 +16,18 @@ describe 'gws_memo_messages', type: :feature, dbscope: :example do
       expect(page).to have_content('受信トレイ')
     end
 
+    it '#show' do
+      visit gws_memo_messages_path(site)
+      expect(page).to have_no_css(".list-item.seen")
+      expect(page).to have_css(".list-item.unseen")
+      click_link memo.name
+      expect(page).to have_content(memo.subject)
+      expect(page).to have_no_content(draft_memo.subject)
+      click_link I18n.t('ss.links.back_to_index')
+      expect(page).to have_css(".list-item.seen")
+      expect(page).to have_no_css(".list-item.unseen")
+    end
+
     it '#new' do
       visit new_gws_memo_message_path(site)
       wait_for_ajax
