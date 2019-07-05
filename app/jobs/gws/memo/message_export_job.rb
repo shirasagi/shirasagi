@@ -60,6 +60,11 @@ class Gws::Memo::MessageExportJob < Gws::ApplicationJob
       data['export_info'] = { 'version' => SS.version, 'exported' => @datetime }
 
       basename = sanitize_filename("#{item.id}_#{item.display_subject}")
+      folder_name = item_folder_name(item)
+      if folder_name.present?
+        folder_name = folder_name.split("/").map { |path| sanitize_filename(path) }.join("/")
+        basename = "#{folder_name}/#{basename}"
+      end
       if @output_format == "eml"
         write_eml(basename, data)
       else
@@ -88,6 +93,20 @@ class Gws::Memo::MessageExportJob < Gws::ApplicationJob
         end
       end
     end
+  end
+
+  def item_folder_name(item)
+    path = item.path(user)
+    return if path.blank?
+
+    if !path.numeric?
+      return I18n.t("gws/memo/folder.#{path.downcase.tr(".", "_")}", default: path)
+    end
+
+    folder = Gws::Memo::Folder.site(site).user(user).where(id: path.to_i).first
+    return if folder.blank?
+
+    folder.name
   end
 
   def create_notify_message(opts = {})

@@ -9,6 +9,7 @@ module Webmail
     def each
       @imap.mailboxes.all.each do |mailbox|
         begin
+          @cur_mailbox = mailbox
           @imap.select(mailbox.original_name)
         rescue => e
           Rails.logger.warn("#{e.class} (#{e.message}):\n  #{e.backtrace.join("\n  ")}")
@@ -19,6 +20,10 @@ module Webmail
           yield m
         end
       end
+    end
+
+    def mailbox_locale_name(_mailbox)
+      @cur_mailbox.locale_name
     end
   end
 
@@ -35,6 +40,14 @@ module Webmail
         m = Webmail::Mail.find_by(id: id)
         yield m
       end
+    end
+
+    def mailbox_locale_name(mailbox)
+      @all_mailboxes = @imap.mailboxes.all
+      found = @all_mailboxes.find { |mb| mb.original_name == mailbox }
+      return if found.blank?
+
+      found.locale_name
     end
   end
 
@@ -70,8 +83,16 @@ module Webmail
       enum.each do |m|
         begin
           @imap.select(m.mailbox)
-          mail = @imap.mails.find m.uid, :rfc822
-          write_eml(sanitize_filename("#{mail.id}_#{mail.subject}"), mail.rfc822)
+          mail = @imap.mails.find(m.uid, :rfc822)
+
+          basename = sanitize_filename("#{mail.id}_#{mail.subject}")
+          mailbox = enum.mailbox_locale_name(m.mailbox)
+          if mailbox.present?
+            mailbox = sanitize_filename(mailbox)
+            mailbox = mailbox.tr(".", "/")
+            basename = "#{mailbox}/#{basename}"
+          end
+          write_eml(basename, mail.rfc822)
           export_count += 1
         rescue => e
           Rails.logger.warn("#{e.class} (#{e.message}):\n  #{e.backtrace.join("\n  ")}")
