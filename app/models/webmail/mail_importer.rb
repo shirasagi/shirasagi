@@ -62,7 +62,7 @@ class Webmail::MailImporter
         entry_type = SS::MimeType.find(entry.name, nil)
         next if entry_type != "message/rfc822"
         if entry.size > MAX_MAIL_SIZE
-          add_too_large_file_error(filename: entry.name.encode("utf-8", "cp932"), size: entry.size, limit: MAX_MAIL_SIZE)
+          add_too_large_file_error(filename: decode_entry_name(entry), size: entry.size, limit: MAX_MAIL_SIZE)
           next
         end
 
@@ -110,5 +110,19 @@ class Webmail::MailImporter
     params[:limit] = params[:limit].to_s(:human_size) if params[:limit].is_a?(Numeric)
     errmsg = I18n.t("errors.messages.too_large_file", params)
     errors.add :base, errmsg
+  end
+
+  def unicode_names?(entry)
+    (entry.gp_flags & Zip::Entry::EFS) == Zip::Entry::EFS
+  end
+
+  def decode_entry_name(entry)
+    if unicode_names?(entry)
+      name = entry.name
+      name.force_encoding("UTF-8")
+      name
+    else
+      entry.name.encode("utf-8", "cp932")
+    end
   end
 end

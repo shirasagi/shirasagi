@@ -15,7 +15,7 @@ class Gws::Memo::MessageImporter
 
     Zip::File.open(in_file.path) do |entries|
       entries.each do |entry|
-        path = "#{@import_dir}/" + entry.name.encode("utf-8", "cp932").tr('\\', '/')
+        path = "#{@import_dir}/" + decode_entry_name(entry).tr('\\', '/')
 
         if entry.directory?
           FileUtils.mkdir_p(path)
@@ -170,6 +170,20 @@ class Gws::Memo::MessageImporter
     return [] unless File.file?(path)
     file = File.read(path)
     JSON.parse(file)
+  end
+
+  def unicode_names?(entry)
+    (entry.gp_flags & Zip::Entry::EFS) == Zip::Entry::EFS
+  end
+
+  def decode_entry_name(entry)
+    if unicode_names?(entry)
+      name = entry.name
+      name.force_encoding("UTF-8")
+      name
+    else
+      entry.name.encode("utf-8", "cp932")
+    end
   end
 
   class << self
