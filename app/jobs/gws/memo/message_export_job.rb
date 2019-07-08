@@ -85,12 +85,12 @@ class Gws::Memo::MessageExportJob < Gws::ApplicationJob
       f.puts Mail::Field.new("From", data['from_name_email'], "utf-8").encoded
       f.puts Mail::Field.new("To", data['to_members_name_email'], "utf-8").encoded
       f.puts Mail::Field.new("Cc", data['cc_members_name_email'], "utf-8").encoded if data['cc_members_name_email'].present?
-      if data["seen"].any?{|key, value| key == user.id.to_s}
+      if data["user_settings"].find { |setting| setting['user_id'] == user.id && setting['seen_at'].present? }
         s_status = ["既読"]
       else
         s_status = ["未読"]
       end
-      if data["star"].any?{|key, value| key == user.id.to_s}
+      if data["star"].any?{ |key, value| key == user.id.to_s }
         s_status << "スター"
       end
       f.puts Mail::Field.new("X-Shirasagi-Status", s_status, "utf-8").encoded
