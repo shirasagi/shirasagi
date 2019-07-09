@@ -10,6 +10,7 @@ class Cms::PreviewController < ApplicationController
   before_action :set_preview_notice
   before_action :set_cur_path, only: %i[index]
   before_action :set_form_data, only: %i[form_preview]
+  before_action :compile_scss
   after_action :render_preview
 
   skip_before_action :set_site
@@ -181,6 +182,7 @@ class Cms::PreviewController < ApplicationController
         String.new(@foot_html) + ::Regexp.last_match[0]
       end
     end
+  rescue
     body
   end
 
@@ -207,6 +209,11 @@ class Cms::PreviewController < ApplicationController
     # options[:move_path] = "#{show_path}/move"
     # options[:copy_path] = "#{show_path}/copy_nodes"
     options[:delete_path] = "#{show_path}/delete"
+  end
+
+  def rescue_action(exception = nil)
+    super
+    render_preview
   end
 
   def render_preview
@@ -243,13 +250,6 @@ class Cms::PreviewController < ApplicationController
     end
 
     page_not_found if !sends
-  rescue => exception
-    if exception.to_s.numeric?
-      status = exception.to_s.to_i
-      file = error_html_file(status)
-      return ss_send_file(file, status: status, type: Fs.content_type(file), disposition: :inline)
-    end
-    raise
   end
 
   def form_preview
@@ -267,12 +267,5 @@ class Cms::PreviewController < ApplicationController
     else
       @_response_body = response.body
     end
-  rescue => exception
-    if exception.to_s.numeric?
-      status = exception.to_s.to_i
-      file = error_html_file(status)
-      return ss_send_file(file, status: status, type: Fs.content_type(file), disposition: :inline)
-    end
-    raise
   end
 end
