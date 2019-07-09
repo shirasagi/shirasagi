@@ -103,13 +103,12 @@ this.SS = (function () {
     body = $("body");
     SS.head = head.html();
     SS.page = $("#page").html();
-    body.html("");
+    body.html(SS.loading);
     return $.ajax({
       type: "GET",
       url: SS_Kana.url(url),
       dataType: "json",
       cache: true,
-      async: false,
       success: function (data) {
         var cache;
         body.append(data.body.replace("</ yield />", SS.page));
