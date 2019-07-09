@@ -43,8 +43,13 @@ $('a.ajax-box').data('on-select', function($item) {
           <dd>
             <%= f.select :format, ["json", "eml"] %>
           </dd>
-        </dl>
-        <dl class="see" style="margin-top: 20px;">
+
+          <dt><%= t("gws/memo/message.export_filter") %></dt>
+          <dd>
+            <label><%= radio_button_tag "#{f.object_name}[export_filter]", 'all', true %> <%= t("gws/memo.options.export_filter.all") %></label>
+            <label><%= radio_button_tag "#{f.object_name}[export_filter]", 'selected' %> <%= t("gws/memo.options.export_filter.selected") %></label>
+          </dd>
+
           <dt><%= t "gws/memo/message.message" %><%= @model.tt :from_member_ids %></dt>
           <dd>
             <%= f.hidden_field "message_ids[]", value: "", class: "hidden-ids" %>

@@ -1,35 +1,42 @@
 class Gws::Memo::MessageExportJob < Gws::ApplicationJob
   include SS::ExportHelper
 
-  def perform(opts = {})
+  def perform(*args)
+    opts = args.extract_options!
     @datetime = Time.zone.now
-    @message_ids = opts[:message_ids]
+    @message_ids = args
     @root_url = opts[:root_url].to_s
     @output_zip = SS::DownloadJobFile.new(user, "gws-memo-messages-#{@datetime.strftime('%Y%m%d%H%M%S')}.zip")
     @output_dir = @output_zip.path.sub(::File.extname(@output_zip.path), "")
     @output_format = opts[:format].to_s.presence || "json"
-
-    return if @message_ids.blank?
+    @export_filter = opts[:export_filter].to_s.presence || "selected"
+    @exported_items = 0
 
     FileUtils.rm_rf(@output_dir)
     FileUtils.rm_rf(@output_zip.path)
     FileUtils.mkdir_p(@output_dir)
 
     export_gws_memo_messages
+    if @exported_items == 0
+      create_notify_message(failed: true, failed_message: I18n.t("gws/memo/message.export_failed.empty_messages"))
+      return
+    end
 
     zip = Gws::Memo::MessageExport::Zip.new(@output_zip.path)
     zip.output_dir = @output_dir
     zip.output_format = @output_format
     zip.compress
 
-    FileUtils.rm_rf(@output_dir)
-
     create_notify_message
+    Rails.logger.info("#{@exported_items.to_s(:delimied)} 件のメッセージをエクスポートしました。")
+  ensure
+    FileUtils.rm_rf(@output_dir)
   end
 
+  private
+
   def export_gws_memo_messages
-    @message_ids.each do |id|
-      item = Gws::Memo::Message.unscoped.find(id)
+    each_message_with_rescue do |item|
       data = item.attributes
 
       if item.user
@@ -62,18 +69,47 @@ class Gws::Memo::MessageExportJob < Gws::ApplicationJob
       elsif @output_format == "eml"
         write_eml(sanitize_filename("#{item.id}_#{item.display_subject}"), data)
       end
+
+      @exported_items += 1
     end
   end
 
-  def create_notify_message
+  def each_message_with_rescue
+    criteria = Gws::Memo::Message.unscoped.site(site).where("user_settings.user_id" => user.id)
+    if @export_filter == "all"
+      all_ids = criteria.pluck(:id).map(&:to_s)
+    else
+      all_ids = @message_ids
+    end
+
+    all_ids.each_slice(100) do |ids|
+      criteria.in(id: ids).to_a.each do |item|
+        begin
+          yield item
+        rescue => e
+          Rails.logger.warn("#{item.name}(#{item.id}) をエクスポート中に例外が発生しました。")
+          Rails.logger.warn("#{e.class} (#{e.message}):\n  #{e.backtrace.join("\n  ")}")
+        end
+      end
+    end
+  end
+
+  def create_notify_message(opts = {})
     item = SS::Notification.new
     item.cur_group = site
     item.cur_user = user
     item.member_ids = [user.id]
-    item.subject = I18n.t("gws/memo/message.export.subject")
     item.format = "text"
-    item.text = I18n.t("gws/memo/message.export.notify_message", link: ::File.join(@root_url, @output_zip.url))
     item.send_date = @datetime
+
+    if opts[:failed]
+      item.subject = I18n.t("gws/memo/message.export_failed.subject")
+      item.text = opts[:failed_message].presence || I18n.t("gws/memo/message.export_failed.notify_message")
+    else
+      item.subject = I18n.t("gws/memo/message.export.subject")
+      item.text = I18n.t("gws/memo/message.export.notify_message", link: ::File.join(@root_url, @output_zip.url))
+    end
+
     item.save!
   end
 
