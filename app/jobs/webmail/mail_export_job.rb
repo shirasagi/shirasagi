@@ -37,8 +37,15 @@ module Webmail
 
     def each
       @mail_ids.each do |id|
-        m = Webmail::Mail.find_by(id: id)
-        yield m
+        begin
+          m = Webmail::Mail.find_by(id: id)
+          yield m
+        rescue Mongoid::Errors::DocumentNotFound => e
+          Rails.logger.error("#{id}: メールの取得に失敗しました。キャッシュが不整合を起こしている可能性があるので、キャッシュを削除後、もう一度、エクスポートしてみてください。")
+          Rails.logger.warn("#{e.class} (#{e.message}):\n  #{e.backtrace.join("\n  ")}")
+        rescue => e
+          Rails.logger.warn("#{e.class} (#{e.message}):\n  #{e.backtrace.join("\n  ")}")
+        end
       end
     end
 
