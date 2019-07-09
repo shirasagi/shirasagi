@@ -25,12 +25,27 @@ class History::Backup
     models.find{ |m| m.to_s == ref_class }
   end
 
+  def ref_item
+    @_ref_item ||= ref_class_constantize.find(data["_id"])
+  end
+
   def get
-    item = ref_class_constantize.find(data["_id"])
+    item = ref_item
     if item.current_backup
       item.current_backup.data
     else
       item.backups.first.data
+    end
+  end
+
+  def restorable?
+    return false if get == data
+
+    item = ref_item
+    if item.respond_to?(:state)
+      item.state != "public"
+    else
+      true
     end
   end
 
@@ -45,6 +60,7 @@ class History::Backup
     data.delete("_id")
     data.delete("file_id")
     data.delete("file_ids") # TODO: for attachment files
+    data.delete("state")
 
     begin
       query.update_many('$set' => data)
