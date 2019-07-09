@@ -230,6 +230,8 @@ describe 'gws_memo_messages', type: :feature, dbscope: :example, js: true do
 
   describe 'export all message' do
     let(:user1) { create :gws_user, gws_role_ids: gws_user.gws_role_ids }
+    let!(:folder1) { create(:gws_memo_folder, user: user, site: site, name: "#{ss_japanese_text}") }
+    let!(:folder2) { create(:gws_memo_folder, user: user, site: site, name: "#{folder1.name}/#{ss_japanese_text}") }
     let!(:memo1) do
       create(:gws_memo_message, user: user, site: site, subject: ss_japanese_text, text: ss_japanese_text)
     end
@@ -237,12 +239,14 @@ describe 'gws_memo_messages', type: :feature, dbscope: :example, js: true do
       create(:gws_memo_message, user: user, site: site, subject: ss_japanese_text, text: ss_japanese_text)
     end
     let!(:memo3) do
-      create(:gws_memo_message, user: user, site: site, subject: ss_japanese_text, text: ss_japanese_text)
+      create(
+        :gws_memo_message, user: user, site: site, subject: ss_japanese_text, text: ss_japanese_text,
+        in_path: { user.id.to_s => folder2.folder_path },
+      )
     end
     let!(:memo4) do
       create(
         :gws_memo_message, user: user, site: site, subject: ss_japanese_text, text: ss_japanese_text,
-        user_settings: [{ "user_id" => user1.id, "path" => 'INBOX.Sent' }],
         in_to_members: [user1.id.to_s]
       )
     end
@@ -299,6 +303,7 @@ describe 'gws_memo_messages', type: :feature, dbscope: :example, js: true do
       end
 
       expect(exported.keys).to have(3).items
+      expect(exported.keys).to include(include("#{folder2.name}/"))
       memo1.subject.tap do |subject|
         filename = subject.encode('cp932', invalid: :replace, undef: :replace, replace: "_")
         filename = filename.encode("UTF-8")

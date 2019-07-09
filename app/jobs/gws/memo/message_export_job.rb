@@ -7,30 +7,25 @@ class Gws::Memo::MessageExportJob < Gws::ApplicationJob
     @message_ids = args
     @root_url = opts[:root_url].to_s
     @output_zip = SS::DownloadJobFile.new(user, "gws-memo-messages-#{@datetime.strftime('%Y%m%d%H%M%S')}.zip")
-    @output_dir = @output_zip.path.sub(::File.extname(@output_zip.path), "")
     @output_format = opts[:format].to_s.presence || "json"
     @export_filter = opts[:export_filter].to_s.presence || "selected"
     @exported_items = 0
 
-    FileUtils.rm_rf(@output_dir)
     FileUtils.rm_rf(@output_zip.path)
-    FileUtils.mkdir_p(@output_dir)
+    @zip_creator = Gws::Memo::MessageExport::Zip.new(@output_zip.path)
 
     export_gws_memo_messages
+    @zip_creator.close
+
     if @exported_items == 0
       create_notify_message(failed: true, failed_message: I18n.t("gws/memo/message.export_failed.empty_messages"))
       return
     end
 
-    zip = Gws::Memo::MessageExport::Zip.new(@output_zip.path)
-    zip.output_dir = @output_dir
-    zip.output_format = @output_format
-    zip.compress
-
     create_notify_message
     Rails.logger.info("#{@exported_items.to_s(:delimied)} 件のメッセージをエクスポートしました。")
   ensure
-    FileUtils.rm_rf(@output_dir)
+    @zip_creator.close if @zip_creator
   end
 
   private
@@ -64,10 +59,16 @@ class Gws::Memo::MessageExportJob < Gws::ApplicationJob
       end
       data['export_info'] = { 'version' => SS.version, 'exported' => @datetime }
 
-      if @output_format == "json"
-        write_json(sanitize_filename("#{item.id}_#{item.display_subject}"), data.to_json)
-      elsif @output_format == "eml"
-        write_eml(sanitize_filename("#{item.id}_#{item.display_subject}"), data)
+      basename = sanitize_filename("#{item.id}_#{item.display_subject}")
+      folder_name = item_folder_name(item)
+      if folder_name.present?
+        folder_name = folder_name.split("/").map { |path| sanitize_filename(path) }.join("/")
+        basename = "#{folder_name}/#{basename}"
+      end
+      if @output_format == "eml"
+        write_eml(basename, data)
+      else
+        write_json(basename, data.to_json)
       end
 
       @exported_items += 1
@@ -94,6 +95,20 @@ class Gws::Memo::MessageExportJob < Gws::ApplicationJob
     end
   end
 
+  def item_folder_name(item)
+    path = item.path(user)
+    return if path.blank?
+
+    if !path.numeric?
+      return I18n.t("gws/memo/folder.#{path.downcase.tr(".", "_")}", default: path)
+    end
+
+    folder = Gws::Memo::Folder.site(site).user(user).where(id: path.to_i).first
+    return if folder.blank?
+
+    folder.name
+  end
+
   def create_notify_message(opts = {})
     item = SS::Notification.new
     item.cur_group = site
@@ -114,11 +129,13 @@ class Gws::Memo::MessageExportJob < Gws::ApplicationJob
   end
 
   def write_json(name, data)
-    File.write("#{@output_dir}/#{name}.json", data)
+    @zip_creator.create_entry("#{name}.json") do |f|
+      f.write(data)
+    end
   end
 
   def write_eml(name, data)
-    File.open("#{@output_dir}/#{name}.eml", "w") do |f|
+    @zip_creator.create_entry("#{name}.eml") do |f|
       f.puts Mail::Field.new("Date", data["created"].in_time_zone.rfc822, "utf-8").encoded
       f.puts Mail::Field.new("Message-ID", gen_message_id(data), "utf-8").encoded
       f.puts Mail::Field.new("Subject", data["subject"], "utf-8").encoded

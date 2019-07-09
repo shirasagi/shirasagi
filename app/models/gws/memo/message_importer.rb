@@ -4,37 +4,29 @@ class Gws::Memo::MessageImporter
 
   attr_accessor :cur_site, :cur_user, :in_file
 
+  class << self
+    def t(*args)
+      human_attribute_name(*args)
+    end
+  end
+
   def import_messages
     @datetime = Time.zone.now
-    @import_dir = "#{Rails.root}/private/import/gws-memo-messages-#{@datetime.strftime('%Y%m%d%H%M%S')}"
     @ss_files_map = {}
     @gws_users_map = {}
 
-    FileUtils.rm_rf(@import_dir)
-    FileUtils.mkdir_p(@import_dir)
-
     Zip::File.open(in_file.path) do |entries|
       entries.each do |entry|
-        path = "#{@import_dir}/" + entry.name.encode("utf-8", "cp932").tr('\\', '/')
-
-        if entry.directory?
-          FileUtils.mkdir_p(path)
-        else
-          File.binwrite(path, entry.get_input_stream.read)
-        end
+        next if entry.directory?
+        import_gws_memo_message(entry)
       end
     end
-
-    names = Dir.glob("#{@import_dir}/*.json").each.map { |path| File.basename(path).sub(".json", "") }
-    names.each do |name|
-      import_gws_memo_message(name)
-    end
-
-    FileUtils.rm_rf(@import_dir)
   end
 
-  def import_gws_memo_message(name)
-    data = read_json(name)
+  private
+
+  def import_gws_memo_message(entry)
+    data = read_json(entry)
     data.delete('_id')
 
     item = Gws::Memo::Message.new
@@ -165,16 +157,9 @@ class Gws::Memo::MessageImporter
     item
   end
 
-  def read_json(name)
-    path = "#{@import_dir}/#{name}.json"
-    return [] unless File.file?(path)
-    file = File.read(path)
-    JSON.parse(file)
-  end
-
-  class << self
-    def t(*args)
-      human_attribute_name(*args)
+  def read_json(entry)
+    entry.get_input_stream do |f|
+      JSON.load(f)
     end
   end
 end
