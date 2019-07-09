@@ -39,6 +39,8 @@ module Webmail
   end
 
   class MailExportJob < SS::ApplicationJob
+    include SS::ExportHelper
+
     def perform(opts = {})
       @datetime = Time.zone.now
       @mail_ids = opts[:mail_ids]
@@ -115,10 +117,6 @@ module Webmail
 
     def write_eml(name, data)
       File.binwrite("#{@output_dir}/#{name}.eml", data)
-    end
-
-    def sanitize_filename(filename)
-      filename.gsub(/[\<\>\:\"\/\\\|\?\*]/, '_').slice(0..60)
     end
   end
 end

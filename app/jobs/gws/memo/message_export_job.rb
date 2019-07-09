@@ -1,4 +1,6 @@
 class Gws::Memo::MessageExportJob < Gws::ApplicationJob
+  include SS::ExportHelper
+
   def perform(opts = {})
     @datetime = Time.zone.now
     @message_ids = opts[:message_ids]
@@ -81,19 +83,29 @@ class Gws::Memo::MessageExportJob < Gws::ApplicationJob
 
   def write_eml(name, data)
     File.open("#{@output_dir}/#{name}.eml", "w") do |f|
+      f.puts Mail::Field.new("Date", data["created"].in_time_zone.rfc822, "utf-8").encoded
+      f.puts Mail::Field.new("Message-ID", gen_message_id(data), "utf-8").encoded
       f.puts Mail::Field.new("Subject", data["subject"], "utf-8").encoded
       f.puts Mail::Field.new("From", data['from_name_email'], "utf-8").encoded
       f.puts Mail::Field.new("To", data['to_members_name_email'], "utf-8").encoded
       f.puts Mail::Field.new("Cc", data['cc_members_name_email'], "utf-8").encoded if data['cc_members_name_email'].present?
-      if data["seen"].any?{|key, value| key == user.id.to_s}
-        s_status = ["既読"]
-      else
-        s_status = ["未読"]
+      user_settings = data["user_settings"]
+      s_status = []
+      if user_settings.present?
+        if user_settings.any? { |user_setting| user_setting["user_id"] == user.id && user_setting["seen_at"].present? }
+          s_status << "既読"
+        else
+          s_status << "未読"
+        end
       end
-      if data["star"].any?{|key, value| key == user.id.to_s}
+      if data["star"].any? { |key, value| key == user.id.to_s }
         s_status << "スター"
       end
-      f.puts Mail::Field.new("X-Shirasagi-Status", s_status, "utf-8").encoded
+      if s_status.present?
+        f.puts Mail::Field.new("X-Shirasagi-Status", s_status, "utf-8").encoded
+      end
+      f.puts Mail::Field.new("X-Shirasagi-Version", SS.version, "utf-8").encoded
+      f.puts Mail::Field.new("X-Shirasagi-Exported", @datetime.rfc822, "utf-8").encoded
       if data["files"].present?
         boundary = "--==_mimepart_#{SecureRandom.hex(16)}"
         f.puts "Content-Type: multipart/mixed;"
@@ -101,9 +113,7 @@ class Gws::Memo::MessageExportJob < Gws::ApplicationJob
         f.puts ""
         f.puts ""
         f.puts "--#{boundary}"
-        f.puts "Content-Type: text/plain; charset=UTF-8"
-        f.puts ""
-        f.puts data["text"]
+        write_body_to_eml(f, data)
         f.puts ""
         f.puts "--#{boundary}"
         data["files"].each do |file|
@@ -119,15 +129,9 @@ class Gws::Memo::MessageExportJob < Gws::ApplicationJob
           f.puts "--#{boundary}--"
         end
       else
-        f.puts "Content-Type: text/plain; charset=UTF-8"
-        f.puts ""
-        f.puts data["text"]
+        write_body_to_eml(f, data)
       end
     end
-  end
-
-  def sanitize_filename(filename)
-    filename.gsub(/[\<\>\:\"\/\\\|\?\*]/, '_').slice(0...250)
   end
 
   def file_attributes(file)
@@ -146,5 +150,25 @@ class Gws::Memo::MessageExportJob < Gws::ApplicationJob
     else
       user.name
     end
+  end
+
+  def gen_message_id(data)
+    @domain_for_message_id ||= site.canonical_domain.presence || SS.config.mail.domain.presence || "localhost.local"
+    "<#{data["id"].to_s.presence || data["_id"].to_s.presence || SecureRandom.uuid}@#{@domain_for_message_id}>"
+  end
+
+  def write_body_to_eml(file, data)
+    if data["format"] == "html"
+      content_type = "text/html"
+      base64 = Mail::Encodings::Base64.encode(data["html"].to_s)
+    else
+      content_type = "text/plain"
+      base64 = Mail::Encodings::Base64.encode(data["text"].to_s)
+    end
+
+    file.puts "Content-Type: #{content_type}; charset=UTF-8"
+    file.puts "Content-Transfer-Encoding: base64"
+    file.puts ""
+    file.puts base64
   end
 end

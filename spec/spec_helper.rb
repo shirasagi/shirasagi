@@ -115,6 +115,22 @@ def unique_id
   num.to_s(36)
 end
 
+def ss_japanese_text(length: 10, separator: '')
+  @japanese_chars ||= begin
+    hiragana = ('あ'..'ん').to_a
+    katakana = ('ア'..'ン').to_a
+    sjis_1st_level_start = "亜".encode("cp932")
+    sjis_1st_level_end = "腕".encode("cp932")
+    sjis_1st_level = (sjis_1st_level_start..sjis_1st_level_end).to_a
+    sjis_1st_level.map! { |k| k.encode("UTF-8", invalid: :replace, undef: :replace, replace: '') }
+    sjis_1st_level.reject! { |k| k.blank? }
+
+    hiragana + katakana + sjis_1st_level
+  end
+
+  @japanese_chars.sample(length).join(separator)
+end
+
 # ref.
 #   https://www.relishapp.com/rspec/rspec-expectations/v/2-5/docs/built-in-matchers/be-within-matcher
 #   http://qiita.com/kozy4324/items/9a6530736be7e92954bc

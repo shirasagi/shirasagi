@@ -37,12 +37,20 @@ class Gws::Memo::ExportMessagesController < ApplicationController
 
     if message_ids.blank?
       @item = @model.new
-      @item.errors.add :base, I18n.t("gws/memo/message.errors.blank_message")
+      @item.errors.add(:base, I18n.t("gws/memo/message.errors.blank_message"))
       render file: :index
       return
     end
 
-    Gws::Memo::MessageExportJob.bind(site_id: @cur_site.id, user_id: @cur_user).perform_now(message_ids: message_ids, root_url: root_url, format: params.dig(:item, :format))
+    unless Gws::Memo::MessageExportJob.check_size_limit_per_user?(@cur_user.id)
+      @item = @model.new
+      @item.errors.add(:base, t('job.notice.size_limit_exceeded'))
+      render file: :index
+      return
+    end
+
+    job_class = Gws::Memo::MessageExportJob.bind(site_id: @cur_site.id, user_id: @cur_user)
+    job_class.perform_later(message_ids: message_ids, root_url: root_url, format: params.dig(:item, :format))
     render_create true, location: { action: :start_export }, notice: I18n.t("gws/memo/message.notice.start_export")
   end
 
