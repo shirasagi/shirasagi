@@ -12,6 +12,7 @@ class Gws::Memo::MessageExportJob < Gws::ApplicationJob
     @exported_items = 0
 
     FileUtils.rm_rf(@output_zip.path)
+    FileUtils.mkdir_p(File.dirname(@output_zip.path))
     @zip_creator = Gws::Memo::MessageExport::Zip.new(@output_zip.path)
 
     export_gws_memo_messages
