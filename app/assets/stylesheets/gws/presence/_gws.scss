@@ -1,4 +1,18 @@
+.presence-wrap {
+  @include display-flex;
+  @include mb {
+    display: block;
+  }
+}
+.presence-main {
+  flex: 1;
+}
 .presence-groups {
+  width: 30%;
+  @include mb {
+    width: 100%;
+  }
+  margin-right: 10px;
   .all-groups {
     border: 1px solid #dcdcdc;
     margin-bottom: 5px;
@@ -61,9 +75,6 @@
   .editicon {
     cursor: pointer;
     color: #f25a38;
-  }
-  .data-table-wrap {
-    padding: 0px 10px 10px 10px
   }
   table.data-table {
     table-layout: fixed;
@@ -132,13 +143,14 @@
         display: flex;
         float: left;
       }
-      nav {
-        float: right;
-        @include mb {
-          float: none;
-          input[type="text"] {
-            width: auto !important;
-          }
+    }
+    nav.search {
+      float: right;
+      margin: 5px 15px 0 0;
+      @include mb {
+        float: none;
+        input[type="text"] {
+          width: auto !important;
         }
       }
     }
