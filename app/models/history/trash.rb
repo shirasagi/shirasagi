@@ -15,6 +15,8 @@ class History::Trash
   validates :ref_coll, presence: true
   validates :data, presence: true
 
+  after_destroy :remove_all
+
   def model
     ref_class.constantize
   end
@@ -26,7 +28,7 @@ class History::Trash
 
   def restore(create_by_trash = false)
     attributes = data.dup
-    attributes[:state] = 'closed'
+    attributes[:state] = 'closed' if ref_class != 'Uploader::Node::File'
     attributes.each do |k, v|
       if model.relations[k].present?
         if model.relations[k].class == Mongoid::Association::Embedded::EmbedsMany
@@ -85,6 +87,11 @@ class History::Trash
     end
     if create_by_trash
       if item.errors.blank? && item.save
+        if model.include?(Cms::Content)
+          src = item.path.sub("#{Rails.root}/public", "#{Rails.root}/private/trash")
+          Fs.mkdir_p(File.dirname(item.path))
+          Fs.mv(src, item.path) if Fs.exists?(src)
+        end
         self.destroy
       else
         errors.add :base, item.errors.full_messages
@@ -119,6 +126,11 @@ class History::Trash
   end
 
   private
+
+  def remove_all
+    item = restore
+    Fs.rm_rf(item.path.sub("#{Rails.root}/public", "#{Rails.root}/private/trash"))
+  end
 
   def restore_file(file_id, create_by_trash = false)
     file = SS::File.where(id: file_id).first
