@@ -1,6 +1,6 @@
 .presence-wrap {
   @include display-flex;
-  @include mb {
+  @include mb(800px) {
     display: block;
   }
 }
@@ -9,7 +9,7 @@
 }
 .presence-groups {
   width: 30%;
-  @include mb {
+  @include mb(800px) {
     width: 100%;
   }
   margin-right: 10px;
@@ -82,16 +82,21 @@
       background: $white;
     }
     th.name {
-      width: 18%;
+      //width: 18%;
+      width: 15em;
+      @include mb(1000px) {
+        width: auto;
+      }
     }
-    th.presence-plan {
-      width: 32%;
-    }
-    th.presence-memo {
-      width: 40%;
-    }
-    th.presence-send_message {
-      width: 10%;
+    //th.presence-plan {
+    //  width: 32%;
+    //}
+    //th.presence-memo {
+    //  width: 40%;
+    //}
+    th.presence-send-message {
+      //width: 10%;
+      width: 6.5em;
     }
     td {
       background: none;
@@ -125,9 +130,9 @@
         position: relative;
       }
     }
-    .select-presence-state {
-      width: calc(100% - 3em);
-    }
+    //.select-presence-state {
+    //  width: calc(100% - 3em);
+    //}
     .editable .presence-state {
       cursor: pointer;
     }
