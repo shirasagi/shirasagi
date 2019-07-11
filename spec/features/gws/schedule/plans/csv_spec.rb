@@ -22,7 +22,7 @@ describe "gws_schedule_csv", type: :feature, dbscope: :example, js: true do
     )
   end
   let(:expected_basic_headers) do
-    %i[id name start_on end_on start_at end_at allday category_id priority color].map do |key|
+    %i[id name start_at end_at allday category_id priority color].map do |key|
       Gws::Schedule::Plan.t(key)
     end
   end

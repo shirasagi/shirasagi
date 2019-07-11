@@ -47,10 +47,24 @@ class Gws::Schedule::PlanCsv::Exporter
   def draw_basic(drawer)
     drawer.column :id
     drawer.column :name
-    drawer.column :start_on
-    drawer.column :end_on
-    drawer.column :start_at
-    drawer.column :end_at
+    drawer.column :start_at do
+      drawer.body do |item|
+        if item.allday?
+          I18n.l(item.start_on)
+        else
+          I18n.l(item.start_at)
+        end
+      end
+    end
+    drawer.column :end_at do
+      drawer.body do |item|
+        if item.allday?
+          I18n.l(item.end_on)
+        else
+          I18n.l(item.end_at)
+        end
+      end
+    end
     drawer.column :allday, type: :label
     drawer.column :category_id do
       drawer.body { |item| Gws::Schedule::Category.where(id: item.category_id).pluck(:name).first }
