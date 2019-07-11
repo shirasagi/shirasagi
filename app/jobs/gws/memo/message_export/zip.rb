@@ -4,6 +4,7 @@ class Gws::Memo::MessageExport::Zip
   def initialize(path)
     @path = path
     @tmp_path = "#{path}.$$"
+    FileUtils.mkdir_p(File.dirname(@path))
   end
 
   def create_entry(entry_name, &block)
