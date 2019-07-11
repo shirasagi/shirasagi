@@ -47,6 +47,7 @@ class SS::ZipCreator
       ::Zip.unicode_names = true
 
       ::FileUtils.mkdir_p(File.dirname(@tmp_path))
+      ::FileUtils.rm_rf(@tmp_path)
       ::Zip::File.open(@tmp_path, Zip::File::CREATE)
     end
   end

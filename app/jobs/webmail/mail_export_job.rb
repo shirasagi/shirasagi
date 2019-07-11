@@ -72,9 +72,7 @@ module Webmail
       @imap.select("INBOX")
 
       @root_url = opts[:root_url].to_s
-      @output_zip = SS::DownloadJobFile.new(user, "webmail-mails-#{@datetime.strftime('%Y%m%d%H%M%S')}.zip")
-
-      FileUtils.rm_rf(@output_zip.path)
+      @output_zip = SS::ZipCreator.new("webmail-mails.zip", user, site: site)
 
       if @mail_ids.present?
         # export_webmail_mails
@@ -83,8 +81,6 @@ module Webmail
         # export_webmail_all_mails
         enum = AllMailEnumerator.new(@imap)
       end
-
-      @zip_creator = Webmail::MailExport::Zip.new(@output_zip.path)
 
       export_count = 0
       enum.each do |m|
@@ -107,7 +103,7 @@ module Webmail
         end
       end
 
-      @zip_creator.close
+      @output_zip.close
 
       if export_count == 0
         create_notify_message(failed: true, failed_message: I18n.t("webmail.export_failed.empty_mails"))
@@ -115,10 +111,8 @@ module Webmail
       end
 
       create_notify_message
-
-      File.join(@root_url, @output_zip.url)
     ensure
-      @zip_creator.close if @zip_creator
+      @output_zip.close if @output_zip
     end
 
     def create_notify_message(opts = {})
@@ -133,14 +127,15 @@ module Webmail
         item.text = opts[:failed_message].presence || I18n.t("webmail.export_failed.notify_message")
       else
         item.subject = I18n.t("webmail.export.subject")
-        item.text = I18n.t("webmail.export.notify_message", link: ::File.join(@root_url, @output_zip.url))
+        link = ::File.join(@root_url, @output_zip.url(name: "webmail-mails-#{@datetime.strftime('%Y%m%d%H%M%S')}.zip"))
+        item.text = I18n.t("webmail.export.notify_message", link: link)
       end
 
       item.save!
     end
 
     def write_eml(name, data)
-      @zip_creator.create_entry("#{name}.eml") do |f|
+      @output_zip.create_entry("#{name}.eml") do |f|
         f.binmode
         f.write(data)
       end
