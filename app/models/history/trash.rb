@@ -23,52 +23,58 @@ class History::Trash
 
   def parent
     path = File.dirname(data[:filename])
-    History::Trash.where('data.filename' => path, 'data.site_id' => data[:site_id]).first
+    self.class.where('data.filename' => path, 'data.site_id' => data[:site_id]).first
   end
 
   def restore(create_by_trash = false)
     attributes = data.dup
     attributes[:state] = 'closed' if ref_class != 'Uploader::Node::File'
     attributes[:master_id] = nil if model.include?(Workflow::Addon::Branch)
-    attributes.each do |k, v|
-      if model.relations[k].present?
-        if model.relations[k].class == Mongoid::Association::Embedded::EmbedsMany
-          attributes[k] = attributes[k].collect do |relation|
-            if relation['_type'].present?
-              relation = relation['_type'].constantize.new(relation)
-            else
-              relation = model.relations[k].class_name.constantize.new(relation)
-            end
-            relation.fields.each do |key, field|
-              if field.type == SS::Extensions::ObjectIds
-                klass = field.options[:metadata][:elem_class].constantize
-                next unless klass.include?(SS::Model::File)
-                relation[key].each_with_index do |file_id, i|
-                  relation[key][i] = restore_file(file_id, create_by_trash)
-                end
-              else
-                klass = field.association.class_name.constantize rescue nil
-                next if klass.blank?
-                next unless klass.include?(SS::Model::File)
-                relation[key] = restore_file(relation[key], create_by_trash)
+    model.relations.each do |k, relation|
+      case relation.class.to_s
+      when Mongoid::Association::Referenced::HasMany.to_s
+        if relation.dependent.present?
+          self.class.where(ref_class: relation.class_name, "data.#{relation.foreign_key}" => attributes['_id']).restore!
+        end
+      when Mongoid::Association::Embedded::EmbedsMany.to_s
+        next if attributes[k].blank?
+        attributes[k] = attributes[k].collect do |relation|
+          if relation['_type'].present?
+            relation = relation['_type'].constantize.new(relation)
+          else
+            relation = model.relations[k].class_name.constantize.new(relation)
+          end
+          relation.fields.each do |key, field|
+            if field.type == SS::Extensions::ObjectIds
+              klass = field.options[:metadata][:elem_class].constantize
+              next unless klass.include?(SS::Model::File)
+              relation[key].each_with_index do |file_id, i|
+                relation[key][i] = restore_file(file_id, create_by_trash)
               end
+            else
+              klass = field.association.class_name.constantize rescue nil
+              next if klass.blank?
+              next unless klass.include?(SS::Model::File)
+              relation[key] = restore_file(relation[key], create_by_trash)
             end
-            relation
           end
+          relation
         end
-      elsif model.fields[k].present?
-        if model.fields[k].type == SS::Extensions::ObjectIds
-          klass = model.fields[k].options[:metadata][:elem_class].constantize
-          next unless klass.include?(SS::Model::File)
-          attributes[k] = attributes[k].collect do |file_id|
-            restore_file(file_id, create_by_trash)
-          end
-        else
-          klass = model.fields[k].association.class_name.constantize rescue nil
-          next if klass.blank?
-          next unless klass.include?(SS::Model::File)
-          attributes[k] = restore_file(v, create_by_trash)
+      end
+    end
+    model.fields.each do |k, field|
+      next if attributes[k].blank?
+      if field.type == SS::Extensions::ObjectIds
+        klass = field.options[:metadata][:elem_class].constantize
+        next unless klass.include?(SS::Model::File)
+        attributes[k] = attributes[k].collect do |file_id|
+          restore_file(file_id, create_by_trash)
         end
+      else
+        klass = field.association.class_name.constantize rescue nil
+        next if klass.blank?
+        next unless klass.include?(SS::Model::File)
+        attributes[k] = restore_file(attributes[k], create_by_trash)
       end
     end
     item = model.find_or_initialize_by(_id: data[:_id], site_id: data[:site_id])
@@ -119,17 +125,24 @@ class History::Trash
         criteria = criteria.keyword_in params[:keyword], 'data.name', 'data.filename', 'data.html'
       end
       if params[:ref_coll] == 'all'
-        criteria = criteria.nin(ref_coll: 'ss_files')
+        criteria = criteria.where(ref_coll: /cms_nodes|cms_pages|cms_parts|cms_layouts/)
       elsif params[:ref_coll].present?
         criteria = criteria.where(ref_coll: params[:ref_coll])
       end
       criteria
+    end
+
+    def restore!
+      criteria.each do |item|
+        item.restore!
+      end
     end
   end
 
   private
 
   def remove_all
+    return unless model.include?(Cms::Content)
     item = restore
     Fs.rm_rf(item.path.sub("#{Rails.root}/public", "#{Rails.root}/private/trash"))
   end

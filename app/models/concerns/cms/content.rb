@@ -9,6 +9,7 @@ module Cms::Content
   include Cms::Addon::CheckLinks
   include SS::Liquidization
   include Fs::FilePreviewable
+  include History::Addon::Trash
 
   attr_accessor :cur_node, :basename
   attr_accessor :serve_static_relation_files
@@ -35,7 +36,6 @@ module Cms::Content
     before_validation :set_filename
     before_validation :validate_filename
     after_validation :set_depth, if: ->{ filename.present? }
-    before_destroy :create_history_trash
 
     validate :validate_name, if: ->{ name.present? }
 
