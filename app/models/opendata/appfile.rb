@@ -23,6 +23,7 @@ class Opendata::Appfile
 
   before_validation :set_filename, if: ->{ in_file.present? }
 
+  before_save :before_save_file
   after_save :save_app
   after_destroy -> { app.save(validate: false) }
 
@@ -66,6 +67,49 @@ class Opendata::Appfile
       errors.clear
       errors.add :file_id, I18n.t("opendata.errors.messages.validate_appfile")
       return
+    end
+  end
+
+  def before_save_file
+    if file_id_was.present? && file_id_was != file_id
+      old_file = SS::File.find(file_id_was) rescue nil
+      old_file.destroy if old_file
+    end
+
+    return if file.blank?
+
+    if @new_clone
+      attributes = Hash[file.attributes]
+      attributes.select!{ |k| file.fields.key?(k) }
+
+      clone_file = SS::File.new(attributes)
+      clone_file.id = nil
+      clone_file.in_file = file.uploaded_file
+      clone_file.user_id = @cur_user.id if @cur_user
+      clone_file.owner_item = _parent
+
+      clone_file.save(validate: false)
+
+      self.file = clone_file
+    end
+
+    attrs = {}
+
+    if file.site_id != _parent.site_id
+      attrs[:site_id] = _parent.site_id
+    end
+    if file.model != _parent.class.name
+      attrs[:model] = _parent.class.name
+    end
+    if file.owner_item != _parent
+      attrs[:owner_item] = _parent
+    end
+    if file.state != _parent.state
+      attrs[:state] = _parent.state
+    end
+
+    if attrs.present?
+      file.update(attrs)
     end
   end
 
