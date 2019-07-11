@@ -7,7 +7,7 @@ module Gws::Monitor::TopicFilter
 
     before_action :set_item, only: %i[
       show edit update delete destroy public preparation question_not_applicable answered disable active publish
-      close open download file_download
+      close open download file_download all_topic_files
     ]
 
     before_action :set_selected_items, only: %i[
@@ -175,6 +175,20 @@ module Gws::Monitor::TopicFilter
     @item.create_download_directory(File.dirname(@item.zip_path))
     @item.create_zip(@item.zip_path, @group_ssfile, @owner_ssfile)
     send_file(@item.zip_path, type: 'application/zip', filename: zipfile, disposition: 'attachment', x_sendfile: true)
+  end
+
+  # ファイル一括ダンロード（トピック）
+  def all_topic_files
+    zip_creator = SS::ZipCreator.new("gws_monitor_topic_files.zip", @cur_user, cur_site: @cur_site)
+    @item.files.each do |file|
+      zip_creator.add_file(file)
+    end
+    zip_creator.close
+
+    filename = "gws_monitor_topic_files_#{Time.zone.now.to_i}.zip"
+    send_file(zip_creator.path, type: 'application/zip', filename: filename, disposition: 'attachment', x_sendfile: true)
+  ensure
+    zip_creator.close if zip_creator.present?
   end
 
   # 全て受け取りにする
