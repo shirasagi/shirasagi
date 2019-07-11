@@ -15,7 +15,7 @@ FactoryBot.define do
     name { "name-#{unique_id}" }
     text { "text-#{unique_id}" }
     member_ids { [gws_user.id] }
-    start_at { Time.zone.today.strftime('Y-m-d') + '10:00' }
-    end_at { Time.zone.today.strftime('Y-m-d') + '11:00' }
+    start_at { Time.zone.now.change(hour: 10, minute: 0, second: 0) }
+    end_at { start_at + 1.hour }
   end
 end
