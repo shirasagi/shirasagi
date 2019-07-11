@@ -29,6 +29,7 @@ class History::Trash
   def restore(create_by_trash = false)
     attributes = data.dup
     attributes[:state] = 'closed' if ref_class != 'Uploader::Node::File'
+    attributes[:master_id] = nil if model.include?(Workflow::Addon::Branch)
     attributes.each do |k, v|
       if model.relations[k].present?
         if model.relations[k].class == Mongoid::Association::Embedded::EmbedsMany
@@ -80,6 +81,7 @@ class History::Trash
     attributes.each do |k, v|
       item[k] = v
     end
+    item.apply_status('closed', workflow_reset: true) if model.include?(Workflow::Addon::Approver)
     if item.respond_to?(:in_file)
       path = "#{Rails.root}/private/trash/#{item.path.sub(/.*\/(ss_files\/)/, '\\1')}"
       file = Fs::UploadedFile.create_from_file(path, content_type: item.content_type) if File.exist?(path)
