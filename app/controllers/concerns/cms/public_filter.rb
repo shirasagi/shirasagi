@@ -172,6 +172,9 @@ module Cms::PublicFilter
   end
 
   def render_and_send_page(page)
+
+    dump(page)
+
     resp = render_page(page)
     return false if !resp
 
@@ -216,6 +219,8 @@ module Cms::PublicFilter
   end
 
   def rescue_action(exception = nil)
+    dump("rescue_action")
+
     return render_error(exception, status: exception.to_s.to_i) if exception.to_s.numeric?
     return render_error(exception, status: 404) if exception.is_a? Mongoid::Errors::DocumentNotFound
     return render_error(exception, status: 404) if exception.is_a? ActionController::RoutingError
@@ -238,11 +243,11 @@ module Cms::PublicFilter
 
   def error_html_file(status)
     if @cur_site
-      file = "#{@cur_site.path}/#{status}.html"
+      file = "#{@cur_site.path}/.error_pages/#{status}.html"
       return file if Fs.exists?(file)
     end
 
-    file = "#{Rails.public_path}/#{status}.html"
-    Fs.exists?(file) ? file : "#{Rails.public_path}/500.html"
+    file = "#{Rails.public_path}/.error_pages/#{status}.html"
+    Fs.exists?(file) ? file : "#{Rails.public_path}/.error_pages/500.html"
   end
 end

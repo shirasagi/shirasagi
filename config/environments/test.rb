@@ -47,6 +47,9 @@ Rails.application.configure do
   # ActiveJob Queue Adapter
   config.active_job.queue_adapter = :test
 
+  # mypage error page setting
+  config.exceptions_app = ActionDispatch::PublicExceptions.new(::File.join(Rails.public_path, ".error_pages"))
+
   config.cache_store = ActiveSupport::Cache.lookup_store(:memory_store)
   config.assets.cache_store = ActiveSupport::Cache.lookup_store(:memory_store)
   config.assets.configure do |env|
