@@ -238,7 +238,7 @@ module Cms::PublicFilter
 
   def error_html_file(status)
     if @cur_site
-      file = "#{@cur_site.path}/.error_pages/#{status}.html"
+      file = "#{@cur_site.path}/#{status}.html"
       return file if Fs.exists?(file)
     end
 
