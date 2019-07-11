@@ -61,11 +61,13 @@ module Gws::Monitor::TopicFilter
 
   def show
     raise "403" unless @item.attended?(@cur_group) || @item.allowed?(:read, @cur_user, site: @cur_site)
+
     render file: "show_#{@item.mode}"
   end
 
   def destroy
     raise '403' unless @item.allowed?(:delete, @cur_user, site: @cur_site)
+
     render_destroy @item.destroy
   end
 
@@ -89,6 +91,7 @@ module Gws::Monitor::TopicFilter
   def public
     @item.attributes = fix_params
     raise '403' unless @item.attended?(@cur_group)
+
     @item.answer_state_hash.update(@cur_group.id.to_s => "public")
     @item.save
     render_update @item.update
@@ -98,6 +101,7 @@ module Gws::Monitor::TopicFilter
   def preparation
     @item.attributes = fix_params
     raise '403' unless @item.attended?(@cur_group)
+
     @item.answer_state_hash.update(@cur_group.id.to_s => "preparation")
     @item.save
     render_update @item.update
@@ -107,6 +111,7 @@ module Gws::Monitor::TopicFilter
   def question_not_applicable
     @item.attributes = fix_params
     raise '403' unless @item.attended?(@cur_group)
+
     @item.answer_state_hash.update(@cur_group.id.to_s => "question_not_applicable")
     @item.save
     render_update @item.update
@@ -118,6 +123,7 @@ module Gws::Monitor::TopicFilter
     @item.state = 'public'
     raise '403' unless @item.allowed?(:delete, @cur_user, site: @cur_site)
     return if request.get?
+
     @item.attributes = get_params
     render_update @item.save, {notice: t('gws/monitor.notice.published')}
   end
@@ -126,29 +132,33 @@ module Gws::Monitor::TopicFilter
   def close
     @item.attributes = fix_params
     raise '403' unless @item.allowed?(:edit, @cur_user, site: @cur_site)
+
     render_update @item.update(state: 'closed'), {notice: t('gws/monitor.notice.close')}
   end
 
   # 再募集
   def open
     raise '403' unless @item.allowed?(:edit, @cur_user, site: @cur_site)
+
     render_update @item.update(state: 'public'), {notice: t('gws/monitor.notice.open')}
   end
 
   # 回答一覧CSV
   def download
     raise '403' unless @item.allowed?(:edit, @cur_user, site: @cur_site)
-    csv = @item.to_csv.encode('SJIS', invalid: :replace, undef: :replace)
 
+    csv = @item.to_csv.encode('SJIS', invalid: :replace, undef: :replace)
     send_data csv, filename: "monitor_#{Time.zone.now.to_i}.csv"
   end
 
   # 添付ファイル一括ダウンロード
   def file_download
     raise '403' unless @item.allowed?(:edit, @cur_user, site: @cur_site)
+
     @download_file_group_ssfile_ids = []
     @item.attend_groups.each do |group|
       next if @item.comment(group.id).blank?
+
       download_file_ids = @item.comment(group.id)[0]
       order = group.order || 0
       filename = "#{order}_#{File.basename(download_file_ids.user_group_name)}"
