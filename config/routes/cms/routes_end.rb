@@ -68,7 +68,7 @@ Rails.application.routes.draw do
     match "logout" => "login#logout", as: :logout, via: [:get]
     match "login" => "login#login", as: :login, via: [:get, :post]
     get "preview(:preview_date)/(*path)" => "preview#index", as: :preview
-    post "preview(:preview_date)/(*path)" => "preview#form_preview", as: :form_preview
+    post "preview(:preview_date)/(*path)" => "preview#form_preview", as: :form_preview, format: false
   end
 
   namespace "cms", path: ".s:site/cms" do
