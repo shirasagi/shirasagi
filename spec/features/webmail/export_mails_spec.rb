@@ -115,7 +115,7 @@ describe "webmail_export_mails", type: :feature, dbscope: :example, imap: true, 
       end
     end
 
-    context "export mails only are only allowed at once per user" do
+    context "export mails are only allowed at once per user" do
       before do
         args = [{"mail_ids"=>[], "root_url"=>"http://www.example.jp/", "account"=>"0"}]
         Job::Task.create!(

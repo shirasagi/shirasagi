@@ -9,6 +9,7 @@ module Webmail
     def each
       @imap.mailboxes.all.each do |mailbox|
         begin
+          @cur_mailbox = mailbox
           @imap.select(mailbox.original_name)
         rescue => e
           Rails.logger.warn("#{e.class} (#{e.message}):\n  #{e.backtrace.join("\n  ")}")
@@ -19,6 +20,10 @@ module Webmail
           yield m
         end
       end
+    end
+
+    def mailbox_locale_name(_mailbox)
+      @cur_mailbox.locale_name
     end
   end
 
@@ -32,13 +37,30 @@ module Webmail
 
     def each
       @mail_ids.each do |id|
-        m = Webmail::Mail.find_by(id: id)
-        yield m
+        begin
+          m = Webmail::Mail.find_by(id: id)
+          yield m
+        rescue Mongoid::Errors::DocumentNotFound => e
+          Rails.logger.error("#{id}: メールの取得に失敗しました。キャッシュが不整合を起こしている可能性があるので、キャッシュを削除後、もう一度、エクスポートしてみてください。")
+          Rails.logger.warn("#{e.class} (#{e.message}):\n  #{e.backtrace.join("\n  ")}")
+        rescue => e
+          Rails.logger.warn("#{e.class} (#{e.message}):\n  #{e.backtrace.join("\n  ")}")
+        end
       end
+    end
+
+    def mailbox_locale_name(mailbox)
+      @all_mailboxes = @imap.mailboxes.all
+      found = @all_mailboxes.find { |mb| mb.original_name == mailbox }
+      return if found.blank?
+
+      found.locale_name
     end
   end
 
   class MailExportJob < SS::ApplicationJob
+    include SS::ExportHelper
+
     def perform(opts = {})
       @datetime = Time.zone.now
       @mail_ids = opts[:mail_ids]
@@ -51,11 +73,8 @@ module Webmail
 
       @root_url = opts[:root_url].to_s
       @output_zip = SS::DownloadJobFile.new(user, "webmail-mails-#{@datetime.strftime('%Y%m%d%H%M%S')}.zip")
-      @output_dir = @output_zip.path.sub(::File.extname(@output_zip.path), "")
 
-      FileUtils.rm_rf(@output_dir)
       FileUtils.rm_rf(@output_zip.path)
-      FileUtils.mkdir_p(@output_dir)
 
       if @mail_ids.present?
         # export_webmail_mails
@@ -65,12 +84,22 @@ module Webmail
         enum = AllMailEnumerator.new(@imap)
       end
 
+      @zip_creator = Webmail::MailExport::Zip.new(@output_zip.path)
+
       export_count = 0
       enum.each do |m|
         begin
           @imap.select(m.mailbox)
-          mail = @imap.mails.find m.uid, :rfc822
-          write_eml(sanitize_filename("#{mail.id}_#{mail.subject}"), mail.rfc822)
+          mail = @imap.mails.find(m.uid, :rfc822)
+
+          basename = sanitize_filename("#{mail.id}_#{mail.subject}")
+          mailbox = enum.mailbox_locale_name(m.mailbox)
+          if mailbox.present?
+            mailbox = sanitize_filename(mailbox)
+            mailbox = mailbox.tr(".", "/")
+            basename = "#{mailbox}/#{basename}"
+          end
+          write_eml(basename, mail.rfc822)
           export_count += 1
         rescue => e
           Rails.logger.warn("#{e.class} (#{e.message}):\n  #{e.backtrace.join("\n  ")}")
@@ -78,21 +107,18 @@ module Webmail
         end
       end
 
+      @zip_creator.close
+
       if export_count == 0
-        FileUtils.rm_rf(@output_dir)
         create_notify_message(failed: true, failed_message: I18n.t("webmail.export_failed.empty_mails"))
         return
       end
 
-      zip = Webmail::MailExport::Zip.new(@output_zip.path)
-      zip.output_dir = @output_dir
-      zip.compress
-
-      FileUtils.rm_rf(@output_dir)
-
       create_notify_message
 
       File.join(@root_url, @output_zip.url)
+    ensure
+      @zip_creator.close if @zip_creator
     end
 
     def create_notify_message(opts = {})
@@ -114,11 +140,10 @@ module Webmail
     end
 
     def write_eml(name, data)
-      File.binwrite("#{@output_dir}/#{name}.eml", data)
-    end
-
-    def sanitize_filename(filename)
-      filename.gsub(/[\<\>\:\"\/\\\|\?\*]/, '_').slice(0..60)
+      @zip_creator.create_entry("#{name}.eml") do |f|
+        f.binmode
+        f.write(data)
+      end
     end
   end
 end

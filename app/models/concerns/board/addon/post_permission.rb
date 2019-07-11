@@ -5,7 +5,7 @@ module Board::Addon
 
     def allowed?(action, user, opts = {})
       site = opts[:site] || @cur_site
-      user.cms_role_permit_any?(site, "#{action}_board_posts")
+      user.cms_user.cms_role_permit_any?(site, "#{action}_board_posts")
     end
 
     module ClassMethods

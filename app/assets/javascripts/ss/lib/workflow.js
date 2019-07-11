@@ -30,9 +30,9 @@ SS_Workflow = function (el, options) {
     return false;
   });
 
-  this.$el.find(".workflow-partial-section").each(function() {
+  if (this.$el.find(".workflow-partial-section")[0]) {
     pThis.loadRouteList();
-  });
+  }
 
   this.$el.on("click", ".workflow-route-start", function (e) {
     var routeId = $(this).siblings('#workflow_route:first').val();
@@ -178,7 +178,6 @@ SS_Workflow.prototype = {
     $.ajax({
       type: "POST",
       url: uri,
-      async: false,
       data: {
         workflow_comment: workflow_comment,
         workflow_pull_up: workflow_pull_up,
@@ -241,10 +240,14 @@ SS_Workflow.prototype = {
     var action = $this.attr('href');
     var csrfToken = $('meta[name="csrf-token"]').attr('content');
 
+    var saveHtml = $this.html();
+
+    $this.prop("disabled", true);
+    $this.html(SS.loading);
+
     $.ajax({
       type: method,
       url: action,
-      async: false,
       data: {
         authenticity_token: csrfToken
       },
@@ -260,33 +263,41 @@ SS_Workflow.prototype = {
         }
       },
       error: function(xhr, status) {
+        var msg;
         try {
           var errors = $.parseJSON(xhr.responseText);
-          alert(["== Error =="].concat(errors).join("\n"));
+          msg = ["== Error =="].concat(errors).join("\n");
+        } catch (ex) {
+          msg = ["== Error =="].concat(xhr["statusText"]).join("\n");
         }
-        catch (ex) {
-          alert(["== Error =="].concat(xhr["statusText"]).join("\n"));
-        }
+        alert(msg);
+      },
+      complete: function() {
+        $this.html(saveHtml);
+        $this.prop("disabled", false);
       }
     });
   },
   loadRouteList: function() {
     var pThis = this;
     var uri = this.composeWorkflowUrl('wizard');
+    pThis.$el.find(".workflow-partial-section").html(SS.loading);
     $.ajax({
       type: "GET",
       url: uri,
-      async: false,
       success: function(html, status) {
         pThis.$el.find(".workflow-partial-section").html(html);
       },
       error: function(xhr, status) {
+        var msg;
         try {
           var errors = $.parseJSON(xhr.responseText);
-          alert(["== Error =="].concat(errors).join("\n"));
+          msg = ["== Error =="].concat(errors).join("\n");
         } catch(ex) {
-          alert(["== Error =="].concat(xhr["statusText"]).join("\n"));
+          msg = ["== Error =="].concat(xhr["statusText"]).join("\n");
         }
+        pThis.$el.find(".workflow-partial-section").html('<div class="error">' + msg + '</div>');
+        alert(msg);
       }
     });
   },
@@ -295,21 +306,24 @@ SS_Workflow.prototype = {
     var uri = this.composeWorkflowUrl('wizard');
     uri += "/approver_setting";
     var data = { route_id: routeId };
+    pThis.$el.find(".workflow-partial-section").html(SS.loading);
     $.ajax({
       type: "POST",
       url: uri,
-      async: false,
       data: data,
       success: function(html, status) {
         pThis.$el.find(".workflow-partial-section").html(html);
       },
       error: function(xhr, status) {
+        var msg;
         try {
           var errors = $.parseJSON(xhr.responseText);
-          alert(errors.join("\n"));
+          msg = errors.join("\n");
         } catch (ex) {
-          alert(["== Error =="].concat(xhr["statusText"]).join("\n"));
+          msg = ["== Error =="].concat(xhr["statusText"]).join("\n");
         }
+        pThis.$el.find(".workflow-partial-section").html(msg);
+        alert(msg);
       }
     });
   },

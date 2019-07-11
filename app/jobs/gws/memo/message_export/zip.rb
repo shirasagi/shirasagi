@@ -1,34 +1,44 @@
 class Gws::Memo::MessageExport::Zip
   extend ActiveSupport::Concern
 
-  attr_accessor :output_dir, :output_format
-
   def initialize(path)
     @path = path
+    @tmp_path = "#{path}.$$"
+    FileUtils.mkdir_p(File.dirname(@path))
   end
 
-  def compress
-    FileUtils.rm(@path) if File.exist?(@path)
-    Zip::File.open(@path, Zip::File::CREATE) do |zip|
-      if @output_format == "json"
-        add_json(zip)
-      elsif @output_format == "eml"
-        add_eml(zip)
-      end
+  def create_entry(entry_name, &block)
+    zip.get_output_stream(sjis_clean(entry_name), &block)
+  end
+
+  def close
+    return if @zip.nil?
+
+    @zip.close
+    @zip = nil
+
+    ::FileUtils.rm_f(@path)
+    ::FileUtils.mv(@tmp_path, @path)
+
+    ::Zip.write_zip64_support = @save_write_zip64_support if !@save_write_zip64_support.nil?
+    ::Zip.unicode_names = @save_unicode_names if !@save_unicode_names.nil?
+  end
+
+  private
+
+  def zip
+    @zip ||= begin
+      @save_write_zip64_support = Zip.write_zip64_support
+      @save_unicode_names = Zip.unicode_names
+      ::Zip.write_zip64_support = true
+      ::Zip.unicode_names = true
+
+      ::Zip::File.open(@tmp_path, Zip::File::CREATE)
     end
   end
 
-  def add_json(zip)
-    Dir.glob("#{@output_dir}/*.json").each do |file|
-      name = ::File.basename(file)
-      zip.add(name.encode('cp932', invalid: :replace, undef: :replace, replace: "_"), file)
-    end
-  end
-
-  def add_eml(zip)
-    Dir.glob("#{@output_dir}/*.eml").each do |file|
-      name = ::File.basename(file)
-      zip.add(name.encode('cp932', invalid: :replace, undef: :replace, replace: "_"), file)
-    end
+  def sjis_clean(name)
+    return name if name.blank?
+    name.encode('cp932', invalid: :replace, undef: :replace, replace: "_").encode("UTF-8")
   end
 end

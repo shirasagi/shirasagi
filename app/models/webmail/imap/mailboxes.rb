@@ -128,7 +128,12 @@ module Webmail::Imap
         item = Webmail::Mailbox.new(imap.account_scope)
         item.imap = imap
         item.name = name
-        item.sync.save || item.sync(false).save
+        if item.sync.valid?
+          item.imap_create
+          item.save if item.errors.blank?
+        else
+          item.sync(false).save
+        end
         #status
         item
       end
