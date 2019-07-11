@@ -172,9 +172,6 @@ module Cms::PublicFilter
   end
 
   def render_and_send_page(page)
-
-    dump(page)
-
     resp = render_page(page)
     return false if !resp
 
@@ -219,8 +216,6 @@ module Cms::PublicFilter
   end
 
   def rescue_action(exception = nil)
-    dump("rescue_action")
-
     return render_error(exception, status: exception.to_s.to_i) if exception.to_s.numeric?
     return render_error(exception, status: 404) if exception.is_a? Mongoid::Errors::DocumentNotFound
     return render_error(exception, status: 404) if exception.is_a? ActionController::RoutingError
