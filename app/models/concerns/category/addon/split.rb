@@ -11,7 +11,7 @@ module Category::Addon
 
     def category_split
       partial = self.class.new
-      partial.attributes = self.attributes
+      partial.attributes = self.attributes.select!{ |k| self.fields.key?(k) }
 
       partial.id = nil
       partial.cur_user = @cur_user
