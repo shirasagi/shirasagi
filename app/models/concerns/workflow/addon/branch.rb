@@ -183,6 +183,7 @@ module Workflow::Addon
     end
 
     def validate_master_lock
+      return if !master.respond_to?("locked?")
       return if self.state != "public"
 
       if master.locked? && !master.lock_owned?(@cur_user)
