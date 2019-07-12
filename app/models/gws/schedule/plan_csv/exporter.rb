@@ -1,7 +1,7 @@
 class Gws::Schedule::PlanCsv::Exporter
   include ActiveModel::Model
 
-  attr_accessor :site, :user
+  attr_accessor :site, :user, :model
   attr_accessor :criteria
 
   class << self
@@ -39,7 +39,7 @@ class Gws::Schedule::PlanCsv::Exporter
       draw_group_permission(drawer)
     end
 
-    drawer.enum(self.criteria)
+    drawer.enum(self.criteria, cur_site: site, cur_user: user, model: model)
   end
 
   private

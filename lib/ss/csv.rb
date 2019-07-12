@@ -5,11 +5,12 @@ class SS::Csv
     include Enumerable
 
     def initialize(criteria, options)
-      @criteria = criteria.is_a?(Mongoid::Criteria) ? criteria.dup : criteria.all.dup
+      @criteria = criteria.is_a?(Mongoid::Criteria) ? criteria.all.dup : criteria.dup
       @encoding = options[:encoding].presence || "Shift_JIS"
       @cur_site = options[:cur_site]
       @cur_user = options[:cur_user]
       @cur_node = options[:cur_node]
+      @model_class = options[:model] || @criteria.klass
       @columns = []
       @context = self
     end
@@ -35,12 +36,10 @@ class SS::Csv
     private
 
     def _draw_header
-      klass = @criteria.klass
-
       terms = @columns.map do |column|
         head_proc = column[:head]
         if head_proc.blank?
-          klass.t column[:id]
+          @model_class.t column[:id]
         else
           @context.instance_exec(&head_proc)
         end
