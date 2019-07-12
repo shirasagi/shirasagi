@@ -152,13 +152,25 @@ class Gws::Schedule::PlanCsv::Exporter
   def draw_readable_setting(drawer)
     drawer.column :readable_setting_range, type: :label
     drawer.column :readable_custom_group_ids do
-      drawer.body { |item| item.readable_custom_groups.pluck(:name).join("\n") }
+      drawer.body do |item|
+        if item.readable_setting_range == 'select'
+          item.readable_custom_groups.pluck(:name).join("\n")
+        end
+      end
     end
     drawer.column :readable_group_ids do
-      drawer.body { |item| item.readable_groups.pluck(:name).join("\n") }
+      drawer.body do |item|
+        if item.readable_setting_range == 'select'
+          item.readable_groups.pluck(:name).join("\n")
+        end
+      end
     end
     drawer.column :readable_member_ids do
-      drawer.body { |item| item.readable_members.map(&:long_name).join("\n") }
+      drawer.body do |item|
+        if item.readable_setting_range == 'select'
+          item.readable_members.map(&:long_name).join("\n")
+        end
+      end
     end
   end
 
