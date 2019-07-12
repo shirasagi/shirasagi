@@ -143,8 +143,11 @@ class Gws::Schedule::PlanCsv::Importer
     end
     drawer.simple_column :member_ids do |row, item, head, value|
       site = cur_site
-      uids = to_uid_array(value)
-      item.member_ids = Gws::User.all.site(site).where("$and" => [{ uid: { "$in" => uids } }]).pluck(:id)
+      uid_or_emails = to_array(value)
+      conds = []
+      conds << { uid: { "$in" => uid_or_emails } }
+      conds << { email: { "$in" => uid_or_emails } }
+      item.member_ids = Gws::User.all.site(site).where("$and" => [{ "$or" => conds }]).pluck(:id)
     end
   end
 
@@ -189,8 +192,11 @@ class Gws::Schedule::PlanCsv::Importer
   def define_importer_schedule_approval(drawer)
     drawer.simple_column :approval_member_ids do |row, item, head, value|
       site = cur_site
-      uids = to_uid_array(value)
-      item.approval_member_ids = Gws::User.all.site(site).where("$and" => [{ uid: { "$in" => uids } }]).pluck(:id)
+      uid_or_emails = to_array(value)
+      conds = []
+      conds << { uid: { "$in" => uid_or_emails } }
+      conds << { email: { "$in" => uid_or_emails } }
+      item.approval_member_ids = Gws::User.all.site(site).where("$and" => [{ "$or" => conds }]).pluck(:id)
     end
   end
 
@@ -208,8 +214,11 @@ class Gws::Schedule::PlanCsv::Importer
     end
     drawer.simple_column :readable_member_ids do |row, item, head, value|
       site = cur_site
-      uids = to_uid_array(value)
-      item.readable_member_ids = Gws::User.all.site(site).where("$and" => [{ uid: { "$in" => uids } }]).pluck(:id)
+      uid_or_emails = to_array(value)
+      conds = []
+      conds << { uid: { "$in" => uid_or_emails } }
+      conds << { email: { "$in" => uid_or_emails } }
+      item.readable_member_ids = Gws::User.all.site(site).where("$and" => [{ "$or" => conds }]).pluck(:id)
     end
   end
 
@@ -226,24 +235,16 @@ class Gws::Schedule::PlanCsv::Importer
     end
     drawer.simple_column :user_ids do |row, item, head, value|
       site = cur_site
-      uids = to_uid_array(value)
-      item.user_ids = Gws::User.all.site(site).where("$and" => [{ uid: { "$in" => uids } }]).pluck(:id)
+      uid_or_emails = to_array(value)
+      conds = []
+      conds << { uid: { "$in" => uid_or_emails } }
+      conds << { email: { "$in" => uid_or_emails } }
+      item.user_ids = Gws::User.all.site(site).where("$and" => [{ "$or" => conds }]).pluck(:id)
     end
     drawer.simple_column :permission_level
   end
 
   delegate :to_array, to: SS::Csv::CsvImporter
-
-  def to_uid_array(value)
-    to_array(value).map do |str|
-      if str.include?("(") && str.end_with?(")")
-        str =~ /\((\S+?)\)$/
-        $1
-      else
-        str
-      end
-    end
-  end
 
   def row_value(key)
     v = @row[Gws::Schedule::Plan.t(key)].presence

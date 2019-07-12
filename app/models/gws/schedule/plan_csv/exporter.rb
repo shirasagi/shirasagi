@@ -99,13 +99,13 @@ class Gws::Schedule::PlanCsv::Exporter
 
   def draw_member(drawer)
     drawer.column :member_custom_group_ids do
-      drawer.body { |item| item.custom_groups.pluck(:name).join("\n") }
+      drawer.body { |item| item.member_custom_groups.pluck(:name).join("\n") }
     end
     drawer.column :member_group_ids do
       drawer.body { |item| item.member_groups.pluck(:name).join("\n") }
     end
     drawer.column :member_ids do
-      drawer.body { |item| item.members.map(&:long_name).join("\n") }
+      drawer.body { |item| item.members.pluck(:uid, :email).map { |array| array.compact.first }.join("\n") }
     end
   end
 
@@ -148,7 +148,7 @@ class Gws::Schedule::PlanCsv::Exporter
 
   def draw_schedule_approval(drawer)
     drawer.column :approval_member_ids do
-      drawer.body { |item| item.approval_members.map(&:long_name).join("\n") }
+      drawer.body { |item| item.approval_members.pluck(:uid, :email).map { |array| array.compact.first }.join("\n") }
     end
   end
 
@@ -156,23 +156,17 @@ class Gws::Schedule::PlanCsv::Exporter
     drawer.column :readable_setting_range, type: :label
     drawer.column :readable_custom_group_ids do
       drawer.body do |item|
-        if item.readable_setting_range == 'select'
-          item.readable_custom_groups.pluck(:name).join("\n")
-        end
+        item.readable_custom_groups.pluck(:name).join("\n")
       end
     end
     drawer.column :readable_group_ids do
       drawer.body do |item|
-        if item.readable_setting_range == 'select'
-          item.readable_groups.pluck(:name).join("\n")
-        end
+        item.readable_groups.pluck(:name).join("\n")
       end
     end
     drawer.column :readable_member_ids do
       drawer.body do |item|
-        if item.readable_setting_range == 'select'
-          item.readable_members.map(&:long_name).join("\n")
-        end
+        item.readable_members.pluck(:uid, :email).map { |array| array.compact.first }.join("\n")
       end
     end
   end
@@ -185,7 +179,7 @@ class Gws::Schedule::PlanCsv::Exporter
       drawer.body { |item| item.groups.pluck(:name).join("\n") }
     end
     drawer.column :user_ids do
-      drawer.body { |item| item.users.map(&:long_name).join("\n") }
+      drawer.body { |item| item.users.pluck(:uid, :email).map { |array| array.compact.first }.join("\n") }
     end
     drawer.column :permission_level
   end
