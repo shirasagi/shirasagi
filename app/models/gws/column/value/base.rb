@@ -33,4 +33,12 @@ class Gws::Column::Value::Base
   def to_es
     value
   end
+
+  def import_csv(values)
+    values.each do |sub_key, value|
+      if sub_key.blank? && self.respond_to?("value=")
+        self.value = value
+      end
+    end
+  end
 end

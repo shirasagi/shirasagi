@@ -129,6 +129,9 @@ class Gws::Schedule::PlanCsv::Exporter
       next if facility.columns.blank?
 
       facility.columns.order_by(order: 1, name: 1).each do |column|
+        # Currently, Gws::Column::FileUpload is not supported to export to csv
+        next if column.is_a?(Gws::Column::FileUpload)
+
         drawer.column "#{facility.name}/#{column.name}" do
           drawer.head do
             "#{facility.name}/#{column.name}"

@@ -4,6 +4,7 @@ class Gws::Schedule::PlanCsv::Importer
   # import `t` and `tt`
   extend SS::Document::ClassMethods
   extend SS::Translation
+  include Cms::CsvImportBase
 
   attr_accessor :in_file
   attr_accessor :cur_site
@@ -16,6 +17,14 @@ class Gws::Schedule::PlanCsv::Importer
   validates :cur_site, presence: true
   validate :validate_import
 
+  class << self
+    def required_headers
+      %w(id name start_at end_at).map do |k|
+        Gws::Schedule::Plan.t(k)
+      end
+    end
+  end
+
   def initialize(*args, &block)
     super
     @imported = 0
@@ -26,20 +35,16 @@ class Gws::Schedule::PlanCsv::Importer
 
     @imported = 0
     @items = []
-
-    @table ||= load_csv_table
-    @table.each_with_index do |row, i|
-      @row_index = i + 2
+    @row_index = 1
+    create_importer
+    self.class.each_csv(in_file) do |row|
+      @row_index += 1
       @row = row
-
       item = build_item
-
       save_item(item, confirm: opts[:confirm])
     end
-
     errors.empty?
   ensure
-    @table = nil
     @row_index = nil
     @row = nil
   end
@@ -52,65 +57,209 @@ class Gws::Schedule::PlanCsv::Importer
       return
     end
 
-    fname = in_file.original_filename
-    if ::File.extname(fname) !~ /^\.csv$/i
+    if ::File.extname(in_file.original_filename).casecmp(".csv") != 0
       errors.add(:base, I18n.t('ss.errors.import.invalid_file_type'))
       return
     end
 
-    begin
-      @table = load_csv_table
-    rescue => e
+    unless self.class.valid_csv?(in_file, max_read_lines: 1)
       errors.add(:base, I18n.t('ss.errors.import.invalid_file_type'))
       return
     end
 
-    diff = Gws::Schedule::PlanCsv::Exporter.csv_basic_headers - @table.headers
-    if diff.present?
-      errors.add(:base, I18n.t('ss.errors.import.invalid_file_type'))
-    end
-    in_file.rewind
+    true
   end
 
-  def load_csv_table
-    CSV.read(in_file.path, headers: true, encoding: 'SJIS:UTF-8')
+  def create_importer
+    @importer ||= begin
+      drawer = SS::Csv.draw(:import, context: self, model: Gws::Schedule::Plan) do |drawer|
+        define_importer_basic(drawer)
+        # define_importer_reminder(drawer)
+        # define_importer_schedule_repeat(drawer)
+        define_importer_notify_setting(drawer)
+        define_importer_markdown(drawer)
+        # define_importer_file(drawer)
+        define_importer_schedule_reports(drawer)
+        define_importer_member(drawer)
+        define_importer_schedule_attendance(drawer)
+        define_importer_schedule_facility(drawer)
+        define_importer_schedule_facility_column_values(drawer)
+        define_importer_schedule_approval(drawer)
+        define_importer_readable_setting(drawer)
+        define_importer_group_permission(drawer)
+      end
+      drawer.create(fields: { form: "main_facility", column_values: "facility_column_values" })
+    end
+  end
+
+  def define_importer_basic(drawer)
+    drawer.simple_column :name
+    drawer.label_column :allday
+    drawer.simple_column :start_at do |row, item, head, value|
+      if item.allday?
+        item.start_on = value
+      else
+        item.start_at = value
+      end
+    end
+    drawer.simple_column :end_at do |row, item, head, value|
+      if item.allday?
+        item.end_on = value
+      else
+        item.end_at = value
+      end
+    end
+    drawer.simple_column :category_id do |row, item, head, value|
+      site = cur_site
+      item.category = value.try { Gws::Schedule::Category.site(site).where(name: value).order_by(order: 1, name: 1).first }
+    end
+    drawer.label_column :priority
+    drawer.simple_column :color
+  end
+
+  def define_importer_notify_setting(drawer)
+    drawer.label_column :notify_state
+  end
+
+  def define_importer_markdown(drawer)
+    drawer.label_column :text_type
+    drawer.simple_column :text
+  end
+
+  def define_importer_schedule_reports(drawer)
+  end
+
+  def define_importer_member(drawer)
+    @all_facilities ||= Gws::Facility::Item.site(cur_site).allow(:read, cur_user, site: cur_site).order_by(order: 1, name: 1)
+    drawer.simple_column :member_custom_group_ids do |row, item, head, value|
+      site = cur_site
+      names = to_array(value)
+      item.member_custom_group_ids = Gws::CustomGroup.all.site(site).where("$and" => [{ name: { "$in" => names } }]).pluck(:id)
+    end
+    drawer.simple_column :member_group_ids do |row, item, head, value|
+      site = cur_site
+      names = to_array(value)
+      item.member_group_ids = Gws::Group.all.site(site).where("$and" => [{ name: { "$in" => names } }]).pluck(:id)
+    end
+    drawer.simple_column :member_ids do |row, item, head, value|
+      site = cur_site
+      uids = to_uid_array(value)
+      item.member_ids = Gws::User.all.site(site).where("$and" => [{ uid: { "$in" => uids } }]).pluck(:id)
+    end
+  end
+
+  def define_importer_schedule_attendance(drawer)
+    drawer.label_column :attendance_check_state
+  end
+
+  def define_importer_schedule_facility(drawer)
+    drawer.simple_column :facility_ids do |row, item, head, value|
+      names = to_array(value)
+      item.facility_ids = @all_facilities.where("$and" => [{ name: { "$in" => names } }]).pluck(:id)
+    end
+    drawer.simple_column :main_facility_id do |row, item, head, value|
+      all_facilities = @all_facilities
+      item.main_facility = value.try { all_facilities.where(name: value).order_by(order: 1, name: 1).first }
+    end
+  end
+
+  def define_importer_schedule_facility_column_values(drawer)
+    @all_facilities.each do |facility|
+      drawer.form facility.name do
+        facility.columns.each do |column|
+          drawer.column column.name do |row, item, _facility, _column, values|
+            import_column(row, item, facility, column, values)
+          end
+        end
+      end
+    end
+  end
+
+  def import_column(_row, item, _facility, column, values)
+    column_value = item.facility_column_values.where(column_id: column.id).first
+    if column_value.blank?
+      column_value = item.facility_column_values.build(
+        _type: column.value_type.name, column: column, name: column.name, order: column.order
+      )
+    end
+    column_value.import_csv(values)
+    column_value
+  end
+
+  def define_importer_schedule_approval(drawer)
+    drawer.simple_column :approval_member_ids do |row, item, head, value|
+      site = cur_site
+      uids = to_uid_array(value)
+      item.approval_member_ids = Gws::User.all.site(site).where("$and" => [{ uid: { "$in" => uids } }]).pluck(:id)
+    end
+  end
+
+  def define_importer_readable_setting(drawer)
+    drawer.label_column :readable_setting_range
+    drawer.simple_column :readable_custom_group_ids do |row, item, head, value|
+      site = cur_site
+      names = to_array(value)
+      item.readable_custom_group_ids = Gws::CustomGroup.all.site(site).where("$and" => [{ name: { "$in" => names } }]).pluck(:id)
+    end
+    drawer.simple_column :readable_group_ids do |row, item, head, value|
+      site = cur_site
+      names = to_array(value)
+      item.readable_group_ids = Gws::Group.all.site(site).where("$and" => [{ name: { "$in" => names } }]).pluck(:id)
+    end
+    drawer.simple_column :readable_member_ids do |row, item, head, value|
+      site = cur_site
+      uids = to_uid_array(value)
+      item.readable_member_ids = Gws::User.all.site(site).where("$and" => [{ uid: { "$in" => uids } }]).pluck(:id)
+    end
+  end
+
+  def define_importer_group_permission(drawer)
+    drawer.simple_column :custom_group_ids do |row, item, head, value|
+      site = cur_site
+      names = to_array(value)
+      item.custom_group_ids = Gws::CustomGroup.all.site(site).where("$and" => [{ name: { "$in" => names } }]).pluck(:id)
+    end
+    drawer.simple_column :group_ids do |row, item, head, value|
+      site = cur_site
+      names = to_array(value)
+      item.group_ids = Gws::Group.all.site(site).where("$and" => [{ name: { "$in" => names } }]).pluck(:id)
+    end
+    drawer.simple_column :user_ids do |row, item, head, value|
+      site = cur_site
+      uids = to_uid_array(value)
+      item.user_ids = Gws::User.all.site(site).where("$and" => [{ uid: { "$in" => uids } }]).pluck(:id)
+    end
+    drawer.simple_column :permission_level
+  end
+
+  delegate :to_array, to: SS::Csv::CsvImporter
+
+  def to_uid_array(value)
+    to_array(value).map do |str|
+      if str.include?("(") && str.end_with?(")")
+        str =~ /\((\S+?)\)$/
+        $1
+      else
+        str
+      end
+    end
   end
 
   def row_value(key)
     v = @row[Gws::Schedule::Plan.t(key)].presence
     return v if v.blank?
+
     v.strip.presence
   end
 
   def build_item
     id = row_value('id')
-
-    item = nil
-    item = Gws::Schedule::Plan.unscoped.where(id: id).first if id.present?
+    item = Gws::Schedule::Plan.unscoped.site(cur_site).where(id: id).first if id.present?
     item ||= Gws::Schedule::Plan.new
-
     item.cur_site = cur_site
     item.cur_user = cur_user
 
-    %w(
-      state name start_on end_on start_at end_at allday
-      category_id priority color text_type text
-      attendance_check_state
-      main_facility_id
-      readable_setting_range
-      permission_level
-    ).each do |k|
-      item[k] = row_value(k)
-    end
-
-    %w(
-      member_ids member_custom_group_ids
-      facility_ids facility_column_values
-      readable_member_ids readable_group_ids readable_custom_group_ids
-      custom_group_ids group_ids user_ids
-    ).each do |k|
-      item[k] = JSON.parse(row_value(k))
-    end
+    @importer.import_row(@row, item)
 
     item
   end
@@ -150,11 +299,5 @@ class Gws::Schedule::PlanCsv::Importer
       result: result,
       messages: messages
     }
-  end
-
-  def set_errors(item)
-    item.errors.full_messages.each do |error|
-      errors.add(:base, "#{@row_index}: #{error}")
-    end
   end
 end
