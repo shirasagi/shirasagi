@@ -14,7 +14,7 @@ RSpec.describe Gws::Memo::Message, type: :model do
       it do
         memo.set_seen(gws_user)
         expect(memo.path(gws_user)).to eq 'INBOX.Trash'
-        expect(memo.seen_at(gws_user)).not_to be_falsey
+        expect(memo.seen_at(gws_user)).to be_truthy
       end
     end
   end

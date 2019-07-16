@@ -280,15 +280,6 @@ module Gws::Model
       found['path']
     end
 
-    def seen_at(user)
-      return if user.blank?
-
-      found = user_settings.find { |setting| setting[:user_id] == user.id && setting[:seen_at].present? }
-      return if found.blank?
-
-      found[:seen_at]
-    end
-
     def star?(user)
       return false unless user
       star.include?(user.id.to_s)
@@ -351,7 +342,7 @@ module Gws::Model
 
     def set_seen(user)
       self.user_settings = user_settings.collect do |setting|
-        setting['seen_at'] = Time.zone.now.utc if user.id == setting['user_id']
+        setting['seen_at'] = Time.zone.now.utc if user.id.to_s == setting['user_id'].to_s
         setting
       end
       self
@@ -359,7 +350,7 @@ module Gws::Model
 
     def unset_seen(user)
       self.user_settings = user_settings.collect do |setting|
-        setting['seen_at'] = nil if user.id == setting['user_id']
+        setting['seen_at'] = nil if user.id.to_s == setting['user_id'].to_s
         setting
       end
       self
