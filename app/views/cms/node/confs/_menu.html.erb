@@ -8,9 +8,9 @@
     <%= link_to t('ss.links.copy'), :node_copy if @item.allowed?(:edit, @cur_user)  %>
 
     <% if @item.route == "category/node"|| @item.route == "category/page" %>
-      <% if @item.allowed?(:edit, @cur_user) %>
-        <%= link_to t('ss.links.split'), split_category_nodes_path %>
-        <%= link_to t('ss.links.integrate'), integrate_category_nodes_path %>
+      <% if @item.allowed?(:edit, @cur_user, site: @cur_site) %>
+        <%= link_to t('ss.links.split'), category_conf_split_path %>
+        <%= link_to t('ss.links.integrate'), category_conf_integrate_path %>
       <% end %>
     <% end %>
 
