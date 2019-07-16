@@ -9,6 +9,8 @@ describe "category_nodes", type: :feature, dbscope: :example do
   let(:show_path)   { "#{index_path}/#{item.id}" }
   let(:edit_path)   { "#{index_path}/#{item.id}/edit" }
   let(:delete_path) { "#{index_path}/#{item.id}/delete" }
+  let(:split_path) { "#{index_path}/#{item.id}/split" }
+  let(:integrate_path) { "#{index_path}/#{item.id}/integrate" }
 
   context "with auth" do
     before { login_cms_user }
@@ -52,6 +54,22 @@ describe "category_nodes", type: :feature, dbscope: :example do
         click_button "削除"
       end
       expect(current_path).to eq index_path
+    end
+
+    it "split" do
+      visit split_path
+
+      within "form" do
+        fill_in "item[in_partial_name]", with: "modified"
+        fill_in "item[in_partial_basename]", with: "basename"
+        click_button I18n.t('ss.buttons.split')
+      end
+
+      expect(current_path).to eq show_path
+    end
+
+    it "#integrate" do
+      visit integrate_path
     end
   end
 end
