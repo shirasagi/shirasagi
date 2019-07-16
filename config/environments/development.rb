@@ -68,7 +68,4 @@ Rails.application.configure do
 
   # ActiveJob Queue Adapter
   config.active_job.queue_adapter = :shirasagi
-
-  # mypage error page setting
-  config.exceptions_app = ActionDispatch::PublicExceptions.new(::File.join(Rails.public_path, ".error_pages"))
 end
