@@ -280,7 +280,7 @@ class Gws::Schedule::PlanCsv::Importer
       messages = [I18n.t('gws/schedule.import.entry')]
     end
 
-    if !opts[:confirm] && result == 'entry'
+    if !opts[:confirm] && %w(entry exist).include?(result)
       if item.save
         @imported += 1
         result   = 'saved'
