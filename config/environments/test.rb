@@ -44,6 +44,10 @@ Rails.application.configure do
   # Raises error for missing translations
   # config.action_view.raise_on_missing_translations = true
 
+  # Logger
+  config.log_formatter = ::Logger::Formatter.new
+  config.log_level = ENV['TEST_LOG_LEVEL'] || :warn
+
   # ActiveJob Queue Adapter
   config.active_job.queue_adapter = :test
 
