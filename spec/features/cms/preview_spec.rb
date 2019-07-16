@@ -108,4 +108,32 @@ describe "cms_preview", type: :feature, dbscope: :example, js: true do
       end
     end
   end
+
+  context "with root cms page" do
+    let(:item) { create(:cms_page, filename: "404.html", cur_site: site, html: html) }
+    let(:html) { '<h2>見出し2</h2><p>内容が入ります。</p><h3>見出し3</h3><p>内容が入ります。内容が入ります。</p>' }
+
+    let(:pc_preview_path) { cms_preview_path(site: site, path: item.url[1..-1]) }
+    let(:mobile_preview_path) { cms_preview_path(site: site, path: "#{site.mobile_location}#{item.url}"[1..-1]) }
+
+    before { login_cms_user }
+
+    context "pc preview" do
+      it do
+        visit pc_preview_path
+        expect(page).to have_css('article.body')
+        expect(page).to have_text('見出し2')
+        expect(page).to have_text('内容が入ります。')
+      end
+    end
+
+    context "mobile preview" do
+      it do
+        visit mobile_preview_path
+        expect(page).to have_css('div.tag-article')
+        expect(page).to have_text('見出し2')
+        expect(page).to have_text('内容が入ります。')
+      end
+    end
+  end
 end

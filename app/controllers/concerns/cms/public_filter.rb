@@ -242,7 +242,7 @@ module Cms::PublicFilter
       return file if Fs.exists?(file)
     end
 
-    file = "#{Rails.public_path}/#{status}.html"
-    Fs.exists?(file) ? file : "#{Rails.public_path}/500.html"
+    file = "#{Rails.public_path}/.error_pages/#{status}.html"
+    Fs.exists?(file) ? file : "#{Rails.public_path}/.error_pages/500.html"
   end
 end

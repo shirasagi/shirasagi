@@ -55,6 +55,9 @@ class Cms::PreviewController < ApplicationController
 
   def set_form_data
     path = params[:path]
+    path = path.sub(/\..*?$/, "")
+    path = path.sub(/\/$/, "")
+
     preview_item = params.require(:preview_item).permit!
     id = preview_item[:id]
     route = preview_item[:route]
@@ -74,13 +77,14 @@ class Cms::PreviewController < ApplicationController
     @cur_body_layout = Cms::BodyLayout.site(@cur_site).where(id: page.body_layout_id).first
     page.layout_id = nil if @cur_layout.nil?
     page.body_layout_id = nil if @cur_body_layout.nil?
-    @cur_node = page.cur_node = Cms::Node.site(@cur_site).where(filename: /^#{path.sub(/\/$/, "")}/).first
+
+    @cur_node = page.cur_node = Cms::Node.site(@cur_site).where(filename: path).first
     page.valid?
     @cur_page = page
     @preview_page = page
     @preview_item = preview_item
 
-    @cur_path = "/#{path}#{page.basename}"
+    @cur_path = ::File.join("/", path, page.basename)
   end
 
   def render_contents
