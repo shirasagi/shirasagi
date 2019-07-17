@@ -8,7 +8,7 @@ ja:
     group_users: 所属ユーザー
     image: 画像
     import: インポート
-    import_log: インポートログ
+    log: ログ
     export: エクスポート
     export_log: エクスポートログ
     login: ログイン
