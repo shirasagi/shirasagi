@@ -15,8 +15,11 @@
     <dl class="see">
       <dt><%= t "cms.copy_nodes.target_node_name" %><%= tt "cms/model/node.foldername" %></dt>
       <dd><%= f.text_field :target_node_name, class: :filename %></dd>
-      <dt><%= t "cms.copy_nodes.job_history" %></dt>
-      <dd><%= link_to t("cms.copy_nodes.link_to_job_history"), job_cms_logs_path %></dd>
+
+      <% if Cms::Tool.allowed?(:edit, @cur_user, site: @cur_site) %>
+        <dt><%= t "cms.copy_nodes.job_history" %></dt>
+        <dd><%= link_to t("cms.copy_nodes.link_to_job_history"), job_cms_logs_path %></dd>
+      <% end %>
     </dl>
   <% end %>
 </div>
