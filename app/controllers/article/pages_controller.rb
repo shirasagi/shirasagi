@@ -33,17 +33,17 @@ class Article::PagesController < ApplicationController
       end
     end
 
-    ctiteria = @model.site(@cur_site).
+    criteria = @model.site(@cur_site).
       node(@cur_node).
       allow(:read, @cur_user, site: @cur_site, node: @cur_node)
 
     if form.present?
-      ctiteria = ctiteria.where(form_id: form)
+      criteria = criteria.where(form_id: form)
     else
-      ctiteria = ctiteria.exists(form_id: false)
+      criteria = criteria.exists(form_id: false)
     end
 
-    enumerable = ctiteria.enum_csv(csv_params)
+    enumerable = criteria.enum_csv(csv_params)
 
     filename = @model.to_s.tableize.gsub(/\//, "_")
     filename = "#{filename}_#{Time.zone.now.to_i}.csv"
