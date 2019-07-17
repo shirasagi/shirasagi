@@ -152,7 +152,7 @@ module Gws::Schedule::Planable
     return unless site
     return unless site.schedule_max_at
 
-    max  = (site.schedule_max_at + 1.day).to_datetime
+    max  = site.schedule_max_at.in_time_zone + 1.day
     disp = I18n.l(site.schedule_max_at, format: :long)
 
     if start_at >= max
