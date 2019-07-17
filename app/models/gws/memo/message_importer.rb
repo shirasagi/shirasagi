@@ -18,6 +18,7 @@ class Gws::Memo::MessageImporter
     Zip::File.open(in_file.path) do |entries|
       entries.each do |entry|
         next if entry.directory?
+
         import_gws_memo_message(entry)
       end
     end
@@ -32,6 +33,7 @@ class Gws::Memo::MessageImporter
     item = Gws::Memo::Message.new
     data.each do |k, v|
       next if %w(user members to_members cc_members bcc_members files list_id).include?(k)
+
       item[k] = v
     end
 
@@ -77,25 +79,19 @@ class Gws::Memo::MessageImporter
     end
 
     # check member_ids
-    if item.draft?
-      #
-    else
+    unless item.draft?
       if item.to_member_ids.blank?
         item.to_member_ids = [@cur_user.id]
       end
-      member_ids = (item.to_member_ids + item.cc_member_ids + item.bcc_member_ids).uniq
-      if !member_ids.include?(@cur_user.id)
+      if !member_ids(item).include?(@cur_user.id)
         item.to_member_ids += [@cur_user.id]
       end
     end
 
     # deleted
     item.deleted = {}
-    if item.draft?
-      #
-    else
-      member_ids = (item.to_member_ids + item.cc_member_ids + item.bcc_member_ids).uniq
-      member_ids.each do |id|
+    unless item.draft?
+      member_ids(item).each do |id|
         item.deleted[id.to_s] = @datetime if id != @cur_user.id
       end
       item.deleted["sent"] = @datetime unless @sent_by_cur_user
@@ -128,12 +124,12 @@ class Gws::Memo::MessageImporter
     name = data['name']
 
     return nil if id.nil? || name.nil?
+
     user = Gws::User.unscoped.find(id) rescue nil
-    if user && user.name == name
-      user
-    else
-      nil
-    end
+
+    return nil if user.try(:name) != name
+
+    user
   end
 
   def member_ids(item)
