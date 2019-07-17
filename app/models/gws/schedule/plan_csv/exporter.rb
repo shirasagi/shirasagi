@@ -1,7 +1,7 @@
 class Gws::Schedule::PlanCsv::Exporter
   include ActiveModel::Model
 
-  attr_accessor :site, :user, :model
+  attr_accessor :site, :user, :model, :template
   attr_accessor :criteria
 
   class << self
@@ -14,14 +14,16 @@ class Gws::Schedule::PlanCsv::Exporter
     def to_csv(criteria, opts = {})
       enum_csv(criteria, opts).to_a.to_csv
     end
+
+    def enum_template_csv(opts = {})
+      opts = opts.dup
+      opts[:criteria] = Gws::Schedule::Plan.none
+      opts[:template] = true
+      new(opts).enum_csv
+    end
   end
 
   def enum_csv
-    facility_ids = self.criteria.pluck(:main_facility_id)
-    facility_ids.uniq!
-    facility_ids.compact!
-    facilities = Gws::Facility::Item.site(site).in(id: facility_ids).order_by(order: 1, id: 1)
-
     drawer = SS::Csv.draw(:export, context: self) do |drawer|
       draw_basic(drawer)
       draw_reminder(drawer)
@@ -33,7 +35,7 @@ class Gws::Schedule::PlanCsv::Exporter
       draw_member(drawer)
       draw_schedule_attendance(drawer)
       draw_schedule_facility(drawer)
-      draw_schedule_facility_column_values(drawer, facilities)
+      draw_schedule_facility_column_values(drawer, select_facilities)
       draw_schedule_approval(drawer)
       draw_readable_setting(drawer)
       draw_group_permission(drawer)
@@ -43,6 +45,24 @@ class Gws::Schedule::PlanCsv::Exporter
   end
 
   private
+
+  def select_facilities
+    facilities = Gws::Facility::Item.site(site).active
+
+    conds1 = Gws::Facility::Item.readable_conditions(user, site: site)
+    cond2 = Gws::Facility::Item.allow_condition(:read, user, site: site)
+    conds = conds1 + [ cond2 ]
+    facilities = facilities.where("$and" => [{ "$or" => conds }])
+
+    if !template
+      facility_ids = self.criteria.pluck(:main_facility_id)
+      facility_ids.uniq!
+      facility_ids.compact!
+      facilities = facilities.in(id: facility_ids)
+    end
+
+    facilities.order_by(order: 1, name: 1)
+  end
 
   def draw_basic(drawer)
     drawer.column :id

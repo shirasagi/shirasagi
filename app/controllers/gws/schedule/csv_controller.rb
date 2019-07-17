@@ -35,4 +35,13 @@ class Gws::Schedule::CsvController < ApplicationController
       render json: { items: @item.items }.to_json
     end
   end
+
+  def download_template
+    filename = "gws_schedule_plans_template.csv"
+    response.status = 200
+    send_enum(
+      Gws::Schedule::PlanCsv::Exporter.enum_template_csv(site: @cur_site, user: @cur_user),
+      type: 'text/csv; charset=Shift_JIS', filename: filename
+    )
+  end
 end

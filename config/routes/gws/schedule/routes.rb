@@ -32,7 +32,8 @@ Rails.application.routes.draw do
     get 'search/times' => 'search/times#index', as: :search_times
     get 'search/reservations' => 'search/reservations#index', as: :search_reservations
     get 'csv' => 'csv#index', as: :csv
-    post 'import_csv' => 'csv#import', as: :import_csv
+    post 'csv/import' => 'csv#import', as: :import_csv
+    get 'csv/download_template' => 'csv#download_template', as: :download_csv_template
 
     # get '/' => redirect { |p, req| "#{req.path}/plans" }, as: :main
     get '/', to: "main#index", as: :main

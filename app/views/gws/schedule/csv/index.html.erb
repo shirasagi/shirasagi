@@ -69,8 +69,15 @@
   <%= form_for :item, url: gws_schedule_import_csv_path, html: { method: :post, id: :import_form } do |f| %>
     <%= error_messages_for :item %>
 
-    <%= f.hidden_field_tag "import_mode", "save" %>
-    <%= f.file_field :in_file %>
+    <dl class="see">
+      <dd class="wide">
+        <%= f.hidden_field_tag "import_mode", "save" %>
+        <%= f.file_field :in_file %>
+      </dd>
+      <dd class="wide">
+        <%= link_to t('ss.links.download_template'), action: :download_template %>
+      </dd>
+    </dl>
 
     <footer class="send text-left">
       <%= f.button t("ss.buttons.confirm"), class: 'btn-default import-confirm' %>
