@@ -2,29 +2,38 @@
   Gws_Schedule_Csv.render(".gws-schedule-csv");
 <% end %>
 
-<section class="main-box gws-schedule-csv">
-  <header>
-    <h2><%= t("ss.import") %></h2>
-  </header>
+<div class="addon-views gws-schedule-csv">
+  <%= render "ss/crud/addon", addon: { id: "addon-basic", head: t("ss.import") } do %>
+    <%= form_for :item, url: gws_schedule_import_csv_path, html: { method: :post, id: :import_form } do |f| %>
+      <%= error_messages_for :item %>
 
-  <%= form_for :item, url: gws_schedule_import_csv_path, html: { method: :post, id: :import_form } do |f| %>
-    <%= error_messages_for :item %>
+      <dl class="see">
+        <dd class="wide">
+          <%= f.hidden_field_tag "import_mode", "save" %>
+          <%= f.file_field :in_file %>
+        </dd>
+        <dd class="wide">
+          <%= link_to(t('ss.links.download_template'), { action: :download_template }, class: "download-csv-template") %>
+          (
+          <%= link_to("項目の解説", "#csv-description-body", class: "show-csv-description") %>
+          )
+        </dd>
+      </dl>
 
-    <dl class="see">
-      <dd class="wide">
-        <%= f.hidden_field_tag "import_mode", "save" %>
-        <%= f.file_field :in_file %>
-      </dd>
-      <dd class="wide">
-        <%= link_to t('ss.links.download_template'), action: :download_template %>
-      </dd>
-    </dl>
-
-    <footer class="send text-left">
-      <%= f.button t("ss.buttons.confirm"), class: 'btn-default import-confirm' %>
-      <%= f.submit t("ss.import"), class: 'save import-save', data: { confirm: I18n.t("ss.confirm.import") } %>
-    </footer>
+      <footer class="send text-left">
+        <%= f.button t("ss.buttons.confirm"), class: 'btn-default import-confirm' %>
+        <%= f.submit t("ss.import"), class: 'save import-save', data: { confirm: I18n.t("ss.confirm.import") } %>
+      </footer>
+    <% end %>
   <% end %>
 
-  <div class="import-log mt-4"></div>
-</section>
+  <%= render "ss/crud/addon", addon: { id: "import-result", head: t("gws/schedule.import.result"), toggle: true, display_body: "hide" } do %>
+    <div class="import-log"></div>
+  <% end %>
+
+  <%= render "ss/crud/addon", addon: { id: "csv-description", head: t("gws/schedule.import.csv_description"), class: "hide" } do %>
+    <div id="csv-description-body" class="markdown-body">
+      <%= render "csv_description" %>
+    </div>
+  <% end %>
+</div>
