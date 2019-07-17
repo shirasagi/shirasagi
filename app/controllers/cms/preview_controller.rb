@@ -64,7 +64,11 @@ class Cms::PreviewController < ApplicationController
 
     page = Cms::Page.site(@cur_site).find(id) rescue Cms::Page.new(route: route)
     page = page.becomes_with_route
-    page.attributes = preview_item.select { |k, v| k != "id" }
+
+    preview_item.delete("id")
+    column_values = preview_item.delete("column_values")
+
+    page.attributes = preview_item
     page.site = @cur_site
     page.lock_owner_id = nil if page.respond_to?(:lock_owner_id)
     page.lock_until = nil if page.respond_to?(:lock_until)
@@ -72,6 +76,13 @@ class Cms::PreviewController < ApplicationController
     raise page_not_found unless page.name.present?
     raise page_not_found unless page.basename.present?
     page.basename = page.basename.sub(/\..+?$/, "") + ".html"
+
+    # column_values
+    column_values = column_values.to_a.select(&:present?)
+    column_values.each do |column_value|
+      _type = column_value["_type"]
+      page.column_values << _type.constantize.new(column_value)
+    end
 
     @cur_layout = Cms::Layout.site(@cur_site).where(id: page.layout_id).first
     @cur_body_layout = Cms::BodyLayout.site(@cur_site).where(id: page.body_layout_id).first
