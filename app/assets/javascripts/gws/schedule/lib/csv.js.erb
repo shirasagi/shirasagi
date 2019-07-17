@@ -1,0 +1,57 @@
+function Gws_Schedule_Csv() {
+}
+
+Gws_Schedule_Csv.render = function () {
+  $('.import-confirm').click(function(){
+    $('#import_mode').val('confirm');
+  });
+  $('.import-save').click(function(){
+    $('#import_mode').val('save');
+  });
+  $('#import_form').ajaxForm({
+    beforeSubmit: function() {
+      $('.import-log').html('<span class="import-loading"><%= I18n.t("ss.notice.uploading") %></span>');
+    },
+    success: function(data, status) {
+      var log = $('.import-log');
+      log.html('')
+
+      if (data.messages) {
+        log.append('<div class="mb-1">' + data.messages.join('<br />') + '</div>');
+      }
+      if (data.items) {
+        var count = { exist: 0, entry: 0, saved: 0, error: 0 };
+        var html = '<table class="index mt-1"><thead><tr>' +
+          '<th style="width: 150px"><%= Gws::Schedule::Plan.t :start_at %></th>' +
+          '<th style="width: 150px"><%= Gws::Schedule::Plan.t :end_at %></th>' +
+          '<th style="width: 30%"><%= Gws::Schedule::Plan.t :name %></th>' +
+          '<th><%= I18n.t('gws/schedule.import.result') %></th>' +
+          '</tr></thead><tbody>';
+
+        $.each(data.items, function(i, item){
+          if (item.result == 'exist') count.exist += 1;
+          if (item.result == 'entry') count.entry += 1;
+          if (item.result == 'saved') count.saved += 1;
+          if (item.result == 'error') count.error += 1;
+
+          html += '<tr class="import-' + item.result + '">' +
+            '<td>' + moment(item.start_at).format('YYYY-MM-DD h:mm') + '</td>' +
+            '<td>' + moment(item.end_at).format('YYYY-MM-DD h:mm') + '</td>' +
+            '<td>' + item.name + '</td>' +
+            '<td>' + item.messages.join('<br />') + '</td>' +
+            '</tr>'
+        });
+        html += '</tbody></table>';
+
+        var tabs = '<div class="mb-1">';
+        if (count.exist) tabs += '<span class="ml-2 import-exist"><%= I18n.t('gws/schedule.import.exist') %>(' + count.exist + ')</span>';
+        if (count.entry) tabs += '<span class="ml-2 import-entry"><%= I18n.t('gws/schedule.import.entry') %>(' + count.entry + ')</span>';
+        if (count.saved) tabs += '<span class="ml-2 import-saved"><%= I18n.t('gws/schedule.import.saved') %>(' + count.saved + ')</span>';
+        if (count.error) tabs += '<span class="ml-2 import-error"><%= I18n.t('gws/schedule.import.error') %>(' + count.error + ')</span>';
+        tabs += '</div>'
+
+        log.append(tabs + html);
+      }
+    }
+  });
+}
