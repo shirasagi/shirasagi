@@ -47,12 +47,7 @@ class Gws::Schedule::PlanCsv::Exporter
   private
 
   def select_facilities
-    facilities = Gws::Facility::Item.site(site).active
-
-    conds1 = Gws::Facility::Item.readable_conditions(user, site: site)
-    cond2 = Gws::Facility::Item.allow_condition(:read, user, site: site)
-    conds = conds1 + [ cond2 ]
-    facilities = facilities.where("$and" => [{ "$or" => conds }])
+    facilities = readable_facilities(Gws::Facility::Item.all)
 
     if !template
       facility_ids = self.criteria.pluck(:main_facility_id)
@@ -87,13 +82,17 @@ class Gws::Schedule::PlanCsv::Exporter
     end
     drawer.column :allday, type: :label
     drawer.column :category_id do
-      drawer.body { |item| Gws::Schedule::Category.where(id: item.category_id).pluck(:name).first }
+      drawer.body do |item|
+        criteria = Gws::Schedule::Category.all
+        criteria = criteria.site(site)
+        criteria = criteria.readable(user, site: site)
+        criteria = criteria.where(id: item.category_id)
+
+        criteria.pluck(:name).first
+      end
     end
     drawer.column :priority, type: :label
     drawer.column :color
-    # drawer.column :state do
-    #   drawer.body { |item| I18n.t(item.state, scope: "ss.options.state") }
-    # end
   end
 
   def draw_reminder(drawer)
@@ -119,13 +118,22 @@ class Gws::Schedule::PlanCsv::Exporter
 
   def draw_member(drawer)
     drawer.column :member_custom_group_ids do
-      drawer.body { |item| item.member_custom_groups.pluck(:name).join("\n") }
+      drawer.body do |item|
+        criteria = readable_custom_groups(item.member_custom_groups)
+        criteria.pluck(:name).join("\n")
+      end
     end
     drawer.column :member_group_ids do
-      drawer.body { |item| item.member_groups.pluck(:name).join("\n") }
+      drawer.body do |item|
+        criteria = readable_groups(item.member_groups)
+        criteria.pluck(:name).join("\n")
+      end
     end
     drawer.column :member_ids do
-      drawer.body { |item| item.members.pluck(:uid, :email).map { |array| array.compact.first }.join("\n") }
+      drawer.body do |item|
+        criteria = readable_users(item.members)
+        criteria.pluck(:uid, :email).map { |array| array.compact.first }.join("\n")
+      end
     end
   end
 
@@ -135,10 +143,16 @@ class Gws::Schedule::PlanCsv::Exporter
 
   def draw_schedule_facility(drawer)
     drawer.column :facility_ids do
-      drawer.body { |item| item.facilities.pluck(:name).join("\n") }
+      drawer.body do |item|
+        criteria = readable_facilities(item.facilities)
+        criteria.pluck(:name).join("\n")
+      end
     end
     drawer.column :main_facility_id do
-      drawer.body { |item| item.main_facility.try(:name) }
+      drawer.body do |item|
+        criteria = readable_facilities(Gws::Facility::Item.where(id: item.main_facility_id))
+        criteria.pluck(:name).join("\n")
+      end
     end
   end
 
@@ -168,7 +182,14 @@ class Gws::Schedule::PlanCsv::Exporter
 
   def draw_schedule_approval(drawer)
     drawer.column :approval_member_ids do
-      drawer.body { |item| item.approval_members.pluck(:uid, :email).map { |array| array.compact.first }.join("\n") }
+      drawer.body do |item|
+        criteria = item.approval_members
+        criteria = criteria.site(site)
+        criteria = criteria.active
+        criteria = criteria.readable(user, site: site)
+
+        criteria.pluck(:uid, :email).map { |array| array.compact.first }.join("\n")
+      end
     end
   end
 
@@ -176,30 +197,42 @@ class Gws::Schedule::PlanCsv::Exporter
     drawer.column :readable_setting_range, type: :label
     drawer.column :readable_custom_group_ids do
       drawer.body do |item|
-        item.readable_custom_groups.pluck(:name).join("\n")
+        criteria = readable_custom_groups(item.readable_custom_groups)
+        criteria.pluck(:name).join("\n")
       end
     end
     drawer.column :readable_group_ids do
       drawer.body do |item|
-        item.readable_groups.pluck(:name).join("\n")
+        criteria = readable_groups(item.readable_groups)
+        criteria.pluck(:name).join("\n")
       end
     end
     drawer.column :readable_member_ids do
       drawer.body do |item|
-        item.readable_members.pluck(:uid, :email).map { |array| array.compact.first }.join("\n")
+        criteria = readable_users(item.readable_members)
+        criteria.pluck(:uid, :email).map { |array| array.compact.first }.join("\n")
       end
     end
   end
 
   def draw_group_permission(drawer)
     drawer.column :custom_group_ids do
-      drawer.body { |item| item.custom_groups.pluck(:name).join("\n") }
+      drawer.body do |item|
+        criteria = readable_custom_groups(item.custom_groups)
+        criteria.pluck(:name).join("\n")
+      end
     end
     drawer.column :group_ids do
-      drawer.body { |item| item.groups.pluck(:name).join("\n") }
+      drawer.body do |item|
+        criteria = readable_groups(item.groups)
+        criteria.pluck(:name).join("\n")
+      end
     end
     drawer.column :user_ids do
-      drawer.body { |item| item.users.pluck(:uid, :email).map { |array| array.compact.first }.join("\n") }
+      drawer.body do |item|
+        criteria = readable_users(item.users)
+        criteria.pluck(:uid, :email).map { |array| array.compact.first }.join("\n")
+      end
     end
     drawer.column :permission_level
   end
@@ -208,5 +241,31 @@ class Gws::Schedule::PlanCsv::Exporter
     return if item.main_facility_id != facility.id
 
     item.facility_column_values.where(column_id: column.id).first
+  end
+
+  def readable_facilities(base_criteria)
+    criteria = base_criteria.site(site)
+    criteria = criteria.active
+    criteria = criteria.readable(user, site: site)
+    criteria
+  end
+
+  def readable_custom_groups(base_criteria)
+    criteria = base_criteria.site(site)
+    criteria = criteria.readable(user, site: site)
+    criteria
+  end
+
+  def readable_groups(base_criteria)
+    criteria = base_criteria.site(site)
+    # criteria = criteria.allow(:read, user, site: site)
+    criteria
+  end
+
+  def readable_users(base_criteria)
+    criteria = base_criteria.site(site)
+    criteria = criteria.active
+    criteria = criteria.readable(user, site: site)
+    criteria
   end
 end

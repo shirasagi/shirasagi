@@ -111,7 +111,15 @@ class Gws::Schedule::PlanCsv::Importer
     end
     drawer.simple_column :category_id do |row, item, head, value|
       site = cur_site
-      item.category = value.try { Gws::Schedule::Category.site(site).where(name: value).order_by(order: 1, name: 1).first }
+      user = cur_user
+      item.category = value.try do
+        criteria = Gws::Schedule::Category.all
+        criteria = criteria.site(site)
+        criteria = criteria.readable(user, site: site)
+        criteria = criteria.where(name: value)
+
+        criteria.reorder(order: 1, name: 1).first
+      end
     end
     drawer.label_column :priority
     drawer.simple_column :color
@@ -130,24 +138,25 @@ class Gws::Schedule::PlanCsv::Importer
   end
 
   def define_importer_member(drawer)
-    @all_facilities ||= Gws::Facility::Item.site(cur_site).allow(:read, cur_user, site: cur_site).order_by(order: 1, name: 1)
     drawer.simple_column :member_custom_group_ids do |row, item, head, value|
-      site = cur_site
       names = to_array(value)
-      item.member_custom_group_ids = Gws::CustomGroup.all.site(site).where("$and" => [{ name: { "$in" => names } }]).pluck(:id)
+      criteria = readable_custom_groups.where("$and" => [{ name: { "$in" => names } }])
+      item.member_custom_group_ids = criteria.pluck(:id)
     end
     drawer.simple_column :member_group_ids do |row, item, head, value|
-      site = cur_site
       names = to_array(value)
-      item.member_group_ids = Gws::Group.all.site(site).where("$and" => [{ name: { "$in" => names } }]).pluck(:id)
+      criteria = readable_groups.where("$and" => [{ name: { "$in" => names } }])
+      item.member_group_ids = criteria.pluck(:id)
     end
     drawer.simple_column :member_ids do |row, item, head, value|
-      site = cur_site
       uid_or_emails = to_array(value)
+
       conds = []
       conds << { uid: { "$in" => uid_or_emails } }
       conds << { email: { "$in" => uid_or_emails } }
-      item.member_ids = Gws::User.all.site(site).where("$and" => [{ "$or" => conds }]).pluck(:id)
+      criteria = readable_users.where("$and" => [{ "$or" => conds }])
+
+      item.member_ids = criteria.pluck(:id)
     end
   end
 
@@ -158,16 +167,16 @@ class Gws::Schedule::PlanCsv::Importer
   def define_importer_schedule_facility(drawer)
     drawer.simple_column :facility_ids do |row, item, head, value|
       names = to_array(value)
-      item.facility_ids = @all_facilities.where("$and" => [{ name: { "$in" => names } }]).pluck(:id)
+      item.facility_ids = readable_facilities.where("$and" => [{ name: { "$in" => names } }]).pluck(:id)
     end
     drawer.simple_column :main_facility_id do |row, item, head, value|
-      all_facilities = @all_facilities
-      item.main_facility = value.try { all_facilities.where(name: value).order_by(order: 1, name: 1).first }
+      all_facilities = readable_facilities
+      item.main_facility = value.try { all_facilities.where(name: value).reorder(order: 1, name: 1).first }
     end
   end
 
   def define_importer_schedule_facility_column_values(drawer)
-    @all_facilities.each do |facility|
+    readable_facilities.reorder(order: 1, name: 1).each do |facility|
       drawer.form facility.name do
         facility.columns.each do |column|
           drawer.column column.name do |row, item, _facility, _column, values|
@@ -191,57 +200,99 @@ class Gws::Schedule::PlanCsv::Importer
 
   def define_importer_schedule_approval(drawer)
     drawer.simple_column :approval_member_ids do |row, item, head, value|
-      site = cur_site
       uid_or_emails = to_array(value)
+
       conds = []
       conds << { uid: { "$in" => uid_or_emails } }
       conds << { email: { "$in" => uid_or_emails } }
-      item.approval_member_ids = Gws::User.all.site(site).where("$and" => [{ "$or" => conds }]).pluck(:id)
+      criteria = readable_users.where("$and" => [{ "$or" => conds }])
+
+      item.approval_member_ids = criteria.pluck(:id)
     end
   end
 
   def define_importer_readable_setting(drawer)
     drawer.label_column :readable_setting_range
     drawer.simple_column :readable_custom_group_ids do |row, item, head, value|
-      site = cur_site
       names = to_array(value)
-      item.readable_custom_group_ids = Gws::CustomGroup.all.site(site).where("$and" => [{ name: { "$in" => names } }]).pluck(:id)
+      criteria = readable_custom_groups.where("$and" => [{ name: { "$in" => names } }])
+      item.readable_custom_group_ids = criteria.pluck(:id)
     end
     drawer.simple_column :readable_group_ids do |row, item, head, value|
-      site = cur_site
       names = to_array(value)
-      item.readable_group_ids = Gws::Group.all.site(site).where("$and" => [{ name: { "$in" => names } }]).pluck(:id)
+      criteria = readable_groups.where("$and" => [{ name: { "$in" => names } }])
+      item.readable_group_ids = criteria.pluck(:id)
     end
     drawer.simple_column :readable_member_ids do |row, item, head, value|
-      site = cur_site
       uid_or_emails = to_array(value)
+
       conds = []
       conds << { uid: { "$in" => uid_or_emails } }
       conds << { email: { "$in" => uid_or_emails } }
-      item.readable_member_ids = Gws::User.all.site(site).where("$and" => [{ "$or" => conds }]).pluck(:id)
+      criteria = readable_users.where("$and" => [{ "$or" => conds }])
+
+      item.readable_member_ids = criteria.pluck(:id)
     end
   end
 
   def define_importer_group_permission(drawer)
     drawer.simple_column :custom_group_ids do |row, item, head, value|
-      site = cur_site
       names = to_array(value)
-      item.custom_group_ids = Gws::CustomGroup.all.site(site).where("$and" => [{ name: { "$in" => names } }]).pluck(:id)
+      criteria = readable_custom_groups.where("$and" => [{ name: { "$in" => names } }])
+      item.custom_group_ids = criteria.pluck(:id)
     end
     drawer.simple_column :group_ids do |row, item, head, value|
-      site = cur_site
       names = to_array(value)
-      item.group_ids = Gws::Group.all.site(site).where("$and" => [{ name: { "$in" => names } }]).pluck(:id)
+      criteria = readable_groups.where("$and" => [{ name: { "$in" => names } }])
+      item.group_ids = criteria.pluck(:id)
     end
     drawer.simple_column :user_ids do |row, item, head, value|
-      site = cur_site
       uid_or_emails = to_array(value)
+
       conds = []
       conds << { uid: { "$in" => uid_or_emails } }
       conds << { email: { "$in" => uid_or_emails } }
-      item.user_ids = Gws::User.all.site(site).where("$and" => [{ "$or" => conds }]).pluck(:id)
+      criteria = readable_users.where("$and" => [{ "$or" => conds }])
+
+      item.user_ids = criteria.pluck(:id)
     end
     drawer.simple_column :permission_level
+  end
+
+  def readable_facilities
+    @readable_facilities ||= begin
+      criteria = Gws::Facility::Item.site(cur_site)
+      criteria = criteria.active
+      criteria = criteria.readable(cur_user, site: cur_site)
+      criteria
+    end
+  end
+
+  def readable_custom_groups
+    @readable_custom_groups ||= begin
+      criteria = Gws::CustomGroup.all
+      criteria = criteria.site(cur_site)
+      criteria = criteria.readable(cur_user, site: cur_site)
+      criteria
+    end
+  end
+
+  def readable_groups
+    @readable_groups ||= begin
+      criteria = Gws::Group.all
+      criteria = criteria.site(cur_site)
+      criteria
+    end
+  end
+
+  def readable_users
+    @readable_users ||= begin
+      criteria = Gws::User.all
+      criteria = criteria.site(cur_site)
+      criteria = criteria.active
+      criteria = criteria.readable(cur_user, site: cur_site)
+      criteria
+    end
   end
 
   delegate :to_array, to: SS::Csv::CsvImporter
