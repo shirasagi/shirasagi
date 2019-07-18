@@ -4,6 +4,6 @@ class Webmail::ApplicationJob < SS::ApplicationJob
   private
 
   def imap_disconnect
-    Webmail.disconnect_all_imap
+    Webmail.imap_pool.disconnect_all
   end
 end

@@ -72,7 +72,7 @@ module Webmail::Imap
     def borrow_imap(&block)
       host = conf[:host]
       options = conf[:options].symbolize_keys
-      Webmail.borrow_imap(host: host, port: options[:port], account: conf[:account], &block)
+      Webmail.imap_pool.borrow(host: host, port: options[:port], account: conf[:account], &block)
     end
 
     def conn

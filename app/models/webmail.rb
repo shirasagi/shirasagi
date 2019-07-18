@@ -13,6 +13,35 @@ module Webmail
     end
   end
 
+  class ImapPool
+    include MonitorMixin
+
+    attr_reader :pool
+
+    def initialize
+      super()
+      @pool = {}
+    end
+
+    def borrow(host:, port:, account:)
+      key = "#{host}:#{port || Net::IMAP.default_port}:#{account}"
+      conn = synchronize { pool[key] ||= Net::IMAP.new(host, port: port) }
+
+      Timeout.timeout(10) do
+        yield conn
+      end
+    end
+
+    def disconnect_all
+      synchronize do
+        pool.values.each do |conn|
+          conn.disconnect
+        end
+        pool.clear
+      end
+    end
+  end
+
   module_function
 
   def activate_cp50221
@@ -31,22 +60,6 @@ module Webmail
   end
 
   def imap_pool
-    @imap_pool ||= {}
-  end
-
-  def borrow_imap(host:, port:, account:)
-    key = "#{host}:#{port || Net::IMAP.default_port}:#{account}"
-    conn = Webmail.imap_pool[key] ||= Net::IMAP.new(host, port: port)
-
-    Timeout.timeout(10) do
-      yield conn
-    end
-  end
-
-  def disconnect_all_imap
-    imap_pool.values.each do |conn|
-      conn.disconnect
-    end
-    imap_pool.clear
+    @imap_pool ||= ImapPool.new
   end
 end
