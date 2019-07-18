@@ -23,6 +23,8 @@ describe 'gws_memo_folders', type: :feature, dbscope: :example do
       visit new_path
 
       name = "name-#{unique_id}"
+      click_link I18n.t('gws/share.apis.folders.index')
+      click_link item.name
       within "form#item-form" do
         fill_in "item[in_basename]", with: name
         click_button "保存"
