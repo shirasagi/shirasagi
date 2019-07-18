@@ -71,7 +71,7 @@ module Webmail::BaseFilter
   end
 
   def imap_disconnect
-    @imap.disconnect if @imap
+    Webmail.disconnect_all_imap
   end
 
   def imap_login
