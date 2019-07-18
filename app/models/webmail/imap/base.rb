@@ -1,9 +1,23 @@
 require "net/imap"
 module Webmail::Imap
+  class Proxy
+    def initialize(imap)
+      @imap = imap
+    end
+
+    def method_missing(method, *args, &block)
+      @imap.borrow_imap { |conn| conn.send(method, *args, &block) }
+    end
+
+    def respond_to_missing?(symbol, include_private)
+      @imap.borrow_imap { |conn| conn.respond_to?(symbol, include_private) }
+    end
+  end
+
   class Base
     include Webmail::Imap::UidsCommand
 
-    attr_accessor :conf, :setting, :conn, :error, :address, :email_address
+    attr_accessor :conf, :setting, :error, :address, :email_address
     attr_accessor :sent_box, :draft_box, :trash_box
 
     private_class_method :new
@@ -46,12 +60,21 @@ module Webmail::Imap
       end
     end
 
-    def login
+    def borrow_imap(&block)
       host = conf[:host]
       options = conf[:options].symbolize_keys
-      self.conn = Net::IMAP.new host, options
-      conn.authenticate conf[:auth_type], conf[:account], conf[:password]
-      return true
+      Webmail.borrow_imap(host: host, port: options[:port], account: conf[:account], &block)
+    end
+
+    def conn
+      @conn ||= Proxy.new(self)
+    end
+
+    def login
+      borrow_imap do |conn|
+        conn.authenticate conf[:auth_type], conf[:account], conf[:password]
+      end
+      true
     rescue => e
       Rails.logger.info("#{e.class} (#{e.message}):\n  #{e.backtrace.join("\n  ")}")
       self.error = e.to_s
@@ -59,10 +82,6 @@ module Webmail::Imap
     end
 
     def disconnect
-      if conn
-        conn.disconnect rescue nil
-      end
-      self.conn = nil
       self.error = nil
     end
 

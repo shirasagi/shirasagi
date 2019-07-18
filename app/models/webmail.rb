@@ -29,4 +29,24 @@ module Webmail
   def cp50221_encoder
     @cp50221_encoder ||= CP50221Encoder.new
   end
+
+  def imap_pool
+    @imap_pool ||= {}
+  end
+
+  def borrow_imap(host:, port:, account:)
+    key = "#{host}:#{port || Net::IMAP.default_port}:#{account}"
+    conn = Webmail.imap_pool[key] ||= Net::IMAP.new(host, port: port)
+
+    Timeout.timeout(10) do
+      yield conn
+    end
+  end
+
+  def disconnect_all_imap
+    imap_pool.values.each do |conn|
+      conn.disconnect
+    end
+    imap_pool.clear
+  end
 end
