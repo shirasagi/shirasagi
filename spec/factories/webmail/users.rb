@@ -5,6 +5,7 @@ FactoryBot.define do
       conf = SS::WebmailSupport.test_conf
       conf['email'] || 'webmail@example.jp'
     end
+    uid { email.split("@")[0] }
     in_password 'pass'
     group_ids { [ ss_group.id ] }
     imap_settings do

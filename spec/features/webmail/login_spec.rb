@@ -29,7 +29,7 @@ describe "webmail_login", type: :feature, dbscope: :example, imap: true do
       expect(current_path).to eq main_path
     end
 
-    it "with organization_uid" do
+    it "with uid" do
       visit login_path
       within "form" do
         fill_in "item[email]", with: user.uid
