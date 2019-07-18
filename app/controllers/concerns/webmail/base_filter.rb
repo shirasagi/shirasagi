@@ -30,6 +30,7 @@ module Webmail::BaseFilter
     return unless @cur_org = @cur_user.organization
     return unless @account = Service::Account.where(organization_ids: @cur_org.id).first
     return if @account.webmail_enabled?
+
     msg = [I18n.t("service.messages.disabled_app", name: I18n.t("modules.webmail"))]
     msg << I18n.t("service.messages.over_quota") if @account.webmail_quota_over?
     render html: msg.join("<br />").html_safe
@@ -60,6 +61,7 @@ module Webmail::BaseFilter
     @imap_setting ||= begin
       if @webmail_mode == :group
         raise "403" if !@cur_user.webmail_user.webmail_permitted_all?(:use_webmail_group_imap_setting)
+
         group = @cur_user.groups.find_by(id: params[:account])
         @imap = group.webmail_group.initialize_imap
       elsif params.key?(:account)
@@ -89,6 +91,7 @@ module Webmail::BaseFilter
 
   def rescue_imap_no_response_error(exception)
     raise exception if Rails.env.development?
+
     render plain: exception.to_s, layout: true
   end
 end

@@ -7,15 +7,21 @@ module Webmail::Imap
 
     # pre-define well known imap commands for performance
     %i[append create delete examine expunge getquotaroot list rename select uid_copy uid_fetch uid_sort uid_store].each do |m|
-      class_eval <<-EOS
+      class_eval <<-METHOD_BODY, __FILE__, __LINE__ + 1
         def #{m}(*args, &block)
           @imap.borrow_imap { |conn| conn.#{m}(*args, &block) }
         end
-      EOS
+      METHOD_BODY
     end
 
     def method_missing(method, *args, &block)
-      @imap.borrow_imap { |conn| conn.send(method, *args, &block) }
+      @imap.borrow_imap do |conn|
+        if conn.respond_to?(method)
+          conn.send(method, *args, &block)
+        else
+          super
+        end
+      end
     end
 
     def respond_to_missing?(symbol, include_private)

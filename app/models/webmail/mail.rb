@@ -200,6 +200,7 @@ class Webmail::Mail
 
   def save_rfc822
     return if rfc822.blank?
+
     dir = ::File.dirname(rfc822_path)
     Fs.mkdir_p(dir) unless Fs.exists?(dir)
     Fs.binwrite(rfc822_path, rfc822)

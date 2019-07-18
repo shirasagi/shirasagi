@@ -119,6 +119,7 @@ module Webmail::Mail::Parser
 
   def all_parts
     return @_all_parts if @_all_parts
+
     @_all_parts = flatten_all_parts(body_structure)
   end
 
@@ -126,6 +127,7 @@ module Webmail::Mail::Parser
     all_parts.each do |pos, part|
       next if "#{part.media_type}/#{part.subtype}" != mime.upcase
       next if part.disposition && part.disposition.dsp_type == 'ATTACHMENT'
+
       return [pos, part]
     end
     return nil
@@ -165,6 +167,7 @@ module Webmail::Mail::Parser
         msg.all_parts.each_with_index do |part, i|
           @_all_parts[i + 1] = part
           next if i == text_part_pos || i == html_part_pos
+
           self.attachments << Webmail::StoredMailPart.new(part, i + 1)
         end
       else
