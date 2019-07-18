@@ -23,11 +23,11 @@ module Webmail
       @pool = {}
     end
 
-    def borrow(host:, port:, account:)
+    def borrow(host:, account:, port: nil, timeout: nil)
       key = "#{host}:#{port || Net::IMAP.default_port}:#{account}"
       conn = synchronize { pool[key] ||= Net::IMAP.new(host, port: port) }
 
-      Timeout.timeout(10) do
+      Timeout.timeout(timeout || SS.config.webmail.imap_timeout) do
         yield conn
       end
     end
