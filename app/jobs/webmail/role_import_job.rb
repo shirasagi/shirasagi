@@ -1,4 +1,4 @@
-class Webmail::RoleImportJob < SS::ApplicationJob
+class Webmail::RoleImportJob < Webmail::ApplicationJob
   include Job::SS::TaskFilter
   include SS::ZipFileImport
 
