@@ -1,29 +1,8 @@
 require 'docker'
 require 'net/imap'
 
-if Rails.env.test?
-  module Net
-    class IMAP
-      alias initialize_without_shirasagi initialize
-
-      def initialize(*args)
-        initialize_without_shirasagi(*args)
-        SS::WebmailSupport.add_imap_connection(self)
-      end
-    end
-  end
-end
-
 module SS::WebmailSupport
   module_function
-
-  def add_imap_connection(conn)
-    imap_connections << conn
-  end
-
-  def imap_connections
-    @imap_connections ||= []
-  end
 
   def test_by
     @test_by
@@ -150,11 +129,6 @@ module SS::WebmailSupport
   end
 
   def after_example
-    imap_connections.each do |conn|
-      conn.disconnect rescue nil
-    end
-    imap_connections.clear
-
     case SS::WebmailSupport.test_by
     when "docker"
       docker_clean_mails
