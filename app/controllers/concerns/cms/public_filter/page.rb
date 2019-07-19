@@ -7,7 +7,7 @@ module Cms::PublicFilter::Page
   def find_page(path)
     page = Cms::Page.site(@cur_site).filename(path).first
     return unless page
-    @preview || page.public? ? page.becomes_with_route : nil
+    @preview || (page.public? && page.public_node?) ? page.becomes_with_route : nil
   end
 
   def render_page(page, env = {})

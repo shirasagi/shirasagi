@@ -1,0 +1,39 @@
+<%= jquery do %>
+$(".btn-file-upload").on("click", function(){ return false; });
+$(".btn-file-delete").remove();
+<% end %>
+
+<%= render 'ss/crud/print_preview_head', links: [[ I18n.t('ss.links.back'), @back || { action: :edit } ]] %>
+
+<section class="main-box" style="background: transparent; border: transparent;">
+  <%= form_for :item, url: { action: :update }, html: {id: "item-form", method: :put, multipart: true, autocomplete: :off} do |f| %>
+    <%= error_messages_for :item %>
+
+    <div class="addon-views gws-survey sheet" id="addon-basic">
+      <div class="addon-head print">
+        <div class="addon-body">
+          <div class="header">
+            <% if @item.new_record? %>
+            <span class="limit">
+              <%= @cur_form.class.t(:due_date) %>:
+              <%= tryb { I18n.l(@cur_form.due_date) } %>
+              (<%= Time.zone.now >= @cur_form.due_date ? t("gws/survey.over_limit") : time_ago_in_words(@cur_form.due_date) %>)
+            </span>
+            <% else %>
+              <span class="answered"><%= @model.t :updated %>: <%= I18n.l(@item.updated) %></span>
+            <% end %>
+            <span class="name"><%= @cur_form.contributor_name %></span>
+          </div>
+          <h2 class="title"><%= @cur_form.name %></h2>
+          <div class="description"><%= br auto_link(@cur_form.description) %></div>
+        </div>
+      </div>
+
+      <div class="addon-view print">
+        <div class="addon-body" style="border-top: none">
+          <%= render file: "app/views/gws/survey/files/_form", locals: { f: f } %>
+        </div>
+      </div>
+    </div>
+  <% end %>
+</section>

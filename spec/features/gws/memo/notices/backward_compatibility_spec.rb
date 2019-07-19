@@ -89,7 +89,7 @@ describe 'gws/memo/notices', type: :feature, dbscope: :example, js: true do
           end
         end
 
-        expect(page).to have_css('#notice', text: I18n.t('gws/circular.notice.set_seen'))
+        expect(page).to have_css('#notice', text: I18n.t('ss.notice.set_seen'))
 
         item_no_info.reload
         expect(item_no_info.seen).to be_present

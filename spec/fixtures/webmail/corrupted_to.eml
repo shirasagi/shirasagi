@@ -1,0 +1,16 @@
+From: <user-49250512@example.jp>
+To: =?ISO-2022-JP?B?MDEbJEIkIiQiJCIbKEI=?= <user-f4bd3901@example.jp>,
+	<"20E”°EEŽé¤¨EE‘ã€E"@example.jp>
+Date: Mon, 13 May 2019 12:00:00 +0900
+Subject: rspec-7c482a7f
+Message-ID: <29ee46c9-c9c7-4bc4-b51a-4483daa219c0@example.jp>
+Content-Type: multipart/mixed;
+ boundary="c458b594-a257-4918-ad4d-0244bbdd33a6"
+
+This is a multi-part message in MIME format.
+
+--c458b594-a257-4918-ad4d-0244bbdd33a6
+Content-Type: text/plain; charset=ISO-2022-JP
+Content-Transfer-Encoding: 7bit
+
+test

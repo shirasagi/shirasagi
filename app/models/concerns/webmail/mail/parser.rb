@@ -58,12 +58,21 @@ module Webmail::Mail::Parser
   def parse_address_field(field)
     return [] if field.blank?
 
-    field.address_list.addresses.map do |addr|
-      decode_jp(addr.decoded)
+    # !!!Be Careful!!!
+    # Usually, field contains inner "field"
+    # and `address_list` method is private method of inner "field"
+    # So it needs to supply "true" to second arguments.
+    if field.respond_to?(:address_list, true)
+      # private `address_list` method is able to call as public method via outer "field"
+      field.address_list.addresses.map do |addr|
+        decode_jp(addr.decoded)
+      end
+    else
+      [decode_jp(field.decoded)]
     end
   rescue
     # this method must return "UTF-8 clean" string
-    [decode_jp(field.decoded)]
+    [decode_jp(field.value)]
   end
 
   def parse_references(references)

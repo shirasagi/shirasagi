@@ -14,7 +14,6 @@ $(".workflow-route-cancel").on("click", function (e) {
   $.ajax({
     type: "get",
     url: uri,
-    async: false,
     success: function (html, status) {
       $(".workflow-partial-section").html(html);
     },

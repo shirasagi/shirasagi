@@ -51,6 +51,12 @@ describe "gws_survey", type: :feature, dbscope: :example, js: true do
       end
       expect(page).to have_css("#notice", text: I18n.t("ss.notice.saved"))
 
+      # click print
+      click_on(form_name)
+      click_on(I18n.t("ss.buttons.print"))
+      expect(page).to have_text(column_name)
+      click_on(I18n.t("ss.links.back"))
+
       visit gws_survey_main_path(site: site)
       click_on I18n.t("ss.navi.editable")
       click_on form_name
@@ -59,6 +65,11 @@ describe "gws_survey", type: :feature, dbscope: :example, js: true do
       within "form" do
         click_on(I18n.t("ss.buttons.save"))
       end
+
+      # click print
+      click_on(I18n.t("ss.buttons.print"))
+      expect(page).to have_text(column_name)
+      click_on(I18n.t("ss.links.back"))
 
       expect(Gws::Survey::Form.all.count).to eq 1
       form = Gws::Survey::Form.all.site(site).find_by(name: form_name)
@@ -76,6 +87,12 @@ describe "gws_survey", type: :feature, dbscope: :example, js: true do
       login_user user1
       visit gws_survey_main_path(site: site)
       click_on form_name
+
+      # click print
+      click_on(I18n.t("ss.links.print"))
+      expect(page).to have_text(column_name)
+      click_on(I18n.t("ss.links.back"))
+
       within "form#item-form" do
         within ".mod-gws-survey-custom_form" do
           choose column_options.sample
@@ -90,6 +107,12 @@ describe "gws_survey", type: :feature, dbscope: :example, js: true do
       login_user user2
       visit gws_survey_main_path(site: site)
       click_on form_name
+
+      # click print
+      click_on(I18n.t("ss.links.print"))
+      expect(page).to have_text(column_name)
+      click_on(I18n.t("ss.links.back"))
+
       within "form#item-form" do
         within ".mod-gws-survey-custom_form" do
           choose column_options.sample

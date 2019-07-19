@@ -7,6 +7,9 @@
   ey = Time.zone.today.year
   @years = (sy..ey).to_a.reverse.map { |d| ["#{d}#{t('datetime.prompts.year')}", d] }
   @months = (1..12).to_a.map { |d| ["#{d}#{t('datetime.prompts.month')}", d] }
+
+  @s[:state] = @state
+  @state_options = @model.new.search_state_options
 %>
 <div class="list-head-search">
   <%= form_for :s, url: "", html: { class: "index-search", method: :get } do |f| %>
@@ -15,6 +18,7 @@
       <%= f.select :month, @months, include_blank: t("ads.yearly") %>
     </span>
     <%= f.text_field :keyword, style: "width: 200px;" %>
+    <%= f.select :state, @state_options %>
     <input type="submit" value="<%= t('ss.buttons.search') %>" class="btn" />
     <input type="button" value="<%= t('ss.buttons.reset') %>" onclick="location.href='?'" class="btn", type: :reset />
   <% end %>

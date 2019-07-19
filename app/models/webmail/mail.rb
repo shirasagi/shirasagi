@@ -13,6 +13,8 @@ class Webmail::Mail
   include Webmail::Addon::MailFile
 
   #index({ host: 1, account: 1, mailbox: 1, uid: 1 }, { unique: true })
+  index(internal_date: -1)
+  index(host: 1, account: 1, mailbox: 1, uid: 1, internal_date: -1)
 
   attr_accessor :flags, :text, :html, :attachments, :format,
                 :reply_uid, :forward_uid, :edit_as_new_uid, :signature,
@@ -128,6 +130,7 @@ class Webmail::Mail
       field.include_in_headers = true if field.respond_to?(:include_in_headers)
     end
 
+    imap.examine(imap.draft_box)
     imap.conn.append(imap.draft_box, msg.to_s, [:Draft, :Seen], Time.zone.now)
     if draft?
       imap.select(imap.draft_box)
@@ -154,6 +157,7 @@ class Webmail::Mail
       field.include_in_headers = true if field.respond_to?(:include_in_headers)
     end
 
+    imap.examine(imap.sent_box)
     imap.conn.append(imap.sent_box, msg.to_s, [:Seen], Time.zone.now)
     if draft?
       imap.select(imap.draft_box)

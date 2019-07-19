@@ -1,16 +1,18 @@
 require 'spec_helper'
 
-describe "history_cms_backups", dbscope: :example do
+describe "history_cms_backups restore", dbscope: :example do
   let(:site) { cms_site }
   let(:node) { create_once :article_node_page, filename: "docs", name: "article" }
   let(:page_item) do
     page_item = create(:article_page, cur_node: node)
     Timecop.travel(1.day.from_now) do
       page_item.name = "first update"
+      page_item.state = "public"
       page_item.update
     end
     Timecop.travel(2.days.from_now) do
       page_item.name = "second update"
+      page_item.state = "closed"
       page_item.update
     end
     page_item

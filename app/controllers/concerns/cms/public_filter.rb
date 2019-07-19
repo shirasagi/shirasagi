@@ -40,7 +40,9 @@ module Cms::PublicFilter
   def ensure_site_presence
     return if @cur_site
 
-    if request_path =='/' && group = SS::Group.where(domains: host).first
+    host = request_host
+    path = request_path
+    if path =='/' && group = SS::Group.where(domains: host).first
       return redirect_to "//#{host}" + gws_login_path(site: group)
     end
 
@@ -240,7 +242,7 @@ module Cms::PublicFilter
       return file if Fs.exists?(file)
     end
 
-    file = "#{Rails.public_path}/#{status}.html"
-    Fs.exists?(file) ? file : "#{Rails.public_path}/500.html"
+    file = "#{Rails.public_path}/.error_pages/#{status}.html"
+    Fs.exists?(file) ? file : "#{Rails.public_path}/.error_pages/500.html"
   end
 end

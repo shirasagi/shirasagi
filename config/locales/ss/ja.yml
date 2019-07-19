@@ -162,6 +162,7 @@ ja:
     notice:
       saved: 保存しました。
       deleted: 削除しました。
+      copied: 複製しました。
       started_import: インポートを開始しました。
       sent: 送信しました。
       posted: 投稿しました。
@@ -181,6 +182,15 @@ ja:
       moved: 移動しました。
       hit: 件ヒットしました。
       first_to_last: 件を表示しています。
+      set_seen: 既読にしました。
+      unset_seen: 未読にしました。
+      set_star: スターをつけました。
+      unset_star: スターをはずしました。
+      move_all: 移動しました。
+      set_seen_all: 既読にしました。
+      unset_seen_all: 未読にしました。
+      set_star_all: スターをつけました。
+      unset_star_all: スターをはずしました。
 
     info:
       soft_delete: データの実削除ではなく無効状態として保存されます。
@@ -641,6 +651,7 @@ ja:
         reply_item_id: 返信ID
       ss/addon/elasticsearch/site_setting:
         elasticsearch_hosts: 全文検索サーバー
+        elasticsearch_deny: 除外パス
 
   tooltip:
     ss/model/user:
@@ -946,6 +957,11 @@ ja:
         - "未入力の場合、システム設定のメールアドレス（例: noreply@example.jp）が使用されます。"
       mail_signature:
         - システムから送信されるメールの既定の署名を入力します。
+
+    ss/addon/elasticsearch/site_setting:
+      elasticsearch_deny:
+        - 検索対象から除外するページのパスを入力します。
+        - 改行区切りで入力します。
 
   job:
     models:

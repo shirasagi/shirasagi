@@ -30,9 +30,9 @@ this.Cms_Form = (function () {
     Form_Alert.addValidation(Form_Alert.clonedName);
     Form_Alert.addValidation(Form_Alert.closeConfirmation);
     if(Cms_Form.options.check.syntax) {
-      Form_Alert.addValidation(Form_Alert.validateSyntaxCheck);
+      Form_Alert.addAsyncValidation(Form_Alert.asyncValidateSyntaxCheck);
     }
-    Form_Alert.addValidation(Mobile_Size_Checker.validateHtml);
+    Form_Alert.addAsyncValidation(Mobile_Size_Checker.asyncValidateHtml);
     Form_Alert.render();
 
     // handle Form_Preview

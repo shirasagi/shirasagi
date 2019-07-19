@@ -11,6 +11,9 @@ production: &production
   # Disable alias
   disable_alias: true
 
+  # Disable IMAP debug
+  disable_imap_debug: true
+
   # Default settings
   clients:
     default:
@@ -130,6 +133,24 @@ test:
   <<: *production
   disable: false
   disable_alias: false
+
+  # test method: user or docker
+  # test_by: user
+
+  # test account setting when test_by is "user"
+  # test_user:
+  #   host: localhost
+  #   account: email
+  #   password: pass
+
+  # test docker setting when test_by is "docker"
+  # build docker image by downloading "https://github.com/sunny4381/docker-mail" and run it.
+  # test_docker:
+  #   api_url: unix:///var/run/docker.sock
+  #   container_id: test_mail
+  #   host: localhost
+  #   auth_type: CRAM-MD5
+  #   account: user5@example.jp
 
 development:
   <<: *production

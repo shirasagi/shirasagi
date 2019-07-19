@@ -1,8 +1,8 @@
 require 'spec_helper'
 
 describe Webmail::UserExtension, type: :model, dbscope: :example do
-  subject(:user) { create :webmail_user }
-  subject(:setting) { user.imap_settings.first }
+  let(:user) { create :webmail_user }
+  let(:setting) { user.imap_settings.first }
 
   context "blank settings" do
     it do
@@ -27,6 +27,29 @@ describe Webmail::UserExtension, type: :model, dbscope: :example do
       expect(setting.imap_sent_box).to eq 'INBOX.Sent2'
       expect(setting.imap_draft_box).to eq 'INBOX.Draft2'
       expect(setting.imap_trash_box).to eq 'INBOX.Trash2'
+    end
+  end
+
+  describe "#initialize_imap" do
+    context "with account 0" do
+      subject { user.initialize_imap(0) }
+
+      it do
+        expect(subject).to be_present
+        expect(subject.address).to eq user.imap_default_settings[:address]
+        expect(subject.email_address).to eq "#{user.name} <#{user.imap_default_settings[:address]}>"
+        expect(subject.sent_box).to eq "INBOX.Sent"
+        expect(subject.draft_box).to eq "INBOX.Draft"
+        expect(subject.trash_box).to eq "INBOX.Trash"
+      end
+    end
+
+    context "with account 1" do
+      subject { user.initialize_imap(user.imap_settings.length) }
+
+      it do
+        expect(subject).to be_blank
+      end
     end
   end
 end

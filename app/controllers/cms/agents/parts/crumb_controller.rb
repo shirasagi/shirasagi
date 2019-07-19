@@ -24,7 +24,6 @@ class Cms::Agents::Parts::CrumbController < ApplicationController
       item << [@cur_part.home_label, @root_node.url]
       find_node(item, url.sub(/^#{@cur_site.url}/, ""))
 
-      item << [@preview_page.name, @preview_page.url] if @preview_page
       if page
         last_item = item.last
         unless last_item[0] == page.name && page.url.end_with?("/index.html")

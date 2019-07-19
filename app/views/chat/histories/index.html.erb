@@ -1,0 +1,37 @@
+<div class="index">
+  <div class="list-head">
+    <%= render partial: "search" %>
+  </div>
+
+  <ul class="list-items">
+    <% @items.each do |item| %>
+      <li class="list-item">
+        <div class="info">
+          <h3 class="text">
+            <%= link_to chat_history_path(id: item.id) do %>
+              <% if item.question.present? %>
+                <%= @cur_node.becomes_with_route.question %> → <%= item.label(:question) %>
+              <% else %>
+                <%= item.text %>
+              <% end %>
+            <% end %>
+          </h3>
+          <div class="meta">
+            <span class="id">#<%= item.id %></span>
+            <span class="datetime"><%= I18n.l(item.created) %></span>
+            <% if item.try(:session_id) %>
+              <span class="label"><%= @model.t :session_id %></span>
+              <span class="session-id"><%= link_to item.session_id, chat_histories_path(s: @s.to_h.merge(session_id: item.session_id)) %></span>
+            <% end %>
+            <% if item.try(:request_id) %>
+              <span class="label"><%= @model.t :request_id %></span>
+              <span class="request-id"><%= item.request_id %></span>
+            <% end %>
+          </div>
+        </div>
+      </li>
+    <% end %>
+  </ul>
+</div>
+
+<%= paginate @items if @items.try(:current_page) %>

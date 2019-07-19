@@ -101,7 +101,7 @@ this.Mobile_Size_Checker = (function () {
       Mobile_Size_Checker.reset();
 
       var resolved = function(html) {
-        Mobile_Size_Checker.check(html, true, function () {
+        Mobile_Size_Checker.check(html, function () {
           Mobile_Size_Checker.resultBox.showResult();
           button.disabled = false;
         });
@@ -141,7 +141,7 @@ this.Mobile_Size_Checker = (function () {
     return size;
   };
 
-  Mobile_Size_Checker.check = function (html, async, complete) {
+  Mobile_Size_Checker.check = function (html, complete) {
     var err_str, imgs, isThumb, j, len, mobile_size, numOfImage, ref, size, src, str_id, str_src;
     mobile_size = Mobile_Size_Checker.mobile_size;
     size = Mobile_Size_Checker.get_str_byte(html);
@@ -183,7 +183,6 @@ this.Mobile_Size_Checker = (function () {
       contentType: 'application/json',
       dataType: "json",
       crossDomain: true,
-      async: async,
       success: function (res, status) {
         if (res["errors"].length > 0) {
           return Mobile_Size_Checker.error = res["errors"];
@@ -202,30 +201,38 @@ this.Mobile_Size_Checker = (function () {
     });
   };
 
-  Mobile_Size_Checker.checkHtmlSize = function (html) {
+  Mobile_Size_Checker.asyncCheckHtmlSize = function (html) {
+    var defer = $.Deferred();
+
     Mobile_Size_Checker.reset();
     if (!Mobile_Size_Checker.enabled) {
-      return;
+      defer.resolve();
+      return defer.promise();
     }
 
     Mobile_Size_Checker.resultBox.showChecking();
-    Mobile_Size_Checker.check(html, false, function () {
+    Mobile_Size_Checker.check(html, function () {
       Mobile_Size_Checker.resultBox.showResult();
+      defer.resolve();
     });
+
+    return defer.promise();
   };
 
-  Mobile_Size_Checker.validateHtml = function (form, submit, opts) {
-    if (Mobile_Size_Checker.checkHtmlSize(opts.html)) {
-      return;
-    }
-    if (Mobile_Size_Checker.error.length === 0) {
-      return;
-    }
+  Mobile_Size_Checker.asyncValidateHtml = function (form, submit, opts) {
+    var promise = Mobile_Size_Checker.asyncCheckHtmlSize(opts.html);
+    promise.done(function() {
+      if (Mobile_Size_Checker.error.length === 0) {
+        return;
+      }
 
-    for (var j = 0, len = Mobile_Size_Checker.error.length; j < len; j++) {
-      var err = Mobile_Size_Checker.error[j];
-      Form_Alert.add("<%= I18n.t('cms.mobile_size_check') %>", this, err);
-    }
+      for (var j = 0, len = Mobile_Size_Checker.error.length; j < len; j++) {
+        var err = Mobile_Size_Checker.error[j];
+        Form_Alert.add("<%= I18n.t('cms.mobile_size_check') %>", this, err);
+      }
+    });
+
+    return promise;
   };
 
   return Mobile_Size_Checker;

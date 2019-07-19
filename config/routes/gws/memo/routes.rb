@@ -1,4 +1,4 @@
-SS::Application.routes.draw do
+Rails.application.routes.draw do
   Gws::Memo::Initializer
 
   concern :deletion do
@@ -24,7 +24,8 @@ SS::Application.routes.draw do
       end
       member do
         get :trash
-        post :toggle_star
+        put :set_star
+        put :unset_star
         get :download
         get :parts, path: 'parts/:section', format: false, section: /[^\/]+/
         get :reply

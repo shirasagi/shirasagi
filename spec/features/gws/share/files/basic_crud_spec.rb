@@ -3,8 +3,6 @@ require 'spec_helper'
 describe "gws_share_files", type: :feature, dbscope: :example, tmpdir: true, js: true do
   let(:site) { gws_site }
   let(:item) { create :gws_share_file, folder_id: folder.id, category_ids: [category.id], memo: "test" }
-  let(:categorized_item) { create :gws_share_file, name: "categorized", folder_id: folder.id, category_ids: [category.id] }
-  let(:uncategorized_item) { create :gws_share_file, name: "uncategorized", folder_id: folder.id, category_ids: [] }
   let!(:folder) { create :gws_share_folder }
   let!(:category) { create :gws_share_category }
   let(:top_path) { gws_share_files_path site }
@@ -93,68 +91,6 @@ describe "gws_share_files", type: :feature, dbscope: :example, tmpdir: true, js:
       end
       expect(page).to have_no_content(item.name)
       expect(page).to have_content(folder.name)
-    end
-
-    it "index page with :category" do
-      categorized_item
-      uncategorized_item
-
-      visit index_path
-      expect(page).to have_link categorized_item.name
-      expect(page).to have_link uncategorized_item.name
-
-      first('.gws-category-navi.dropdown a', text: I18n.t("gws.category")).click
-      first('.gws-category-navi.dropdown a', text: category.name).click
-
-      expect(page).to have_link categorized_item.name
-      expect(page).to have_no_link uncategorized_item.name
-
-      click_on categorized_item.name
-      click_on I18n.t('ss.links.back_to_index')
-
-      expect(page).to have_link categorized_item.name
-      expect(page).to have_no_link uncategorized_item.name
-    end
-
-    it "folder page with :category" do
-      categorized_item
-      uncategorized_item
-
-      visit folder_path
-      expect(page).to have_link categorized_item.name
-      expect(page).to have_link uncategorized_item.name
-
-      first('.gws-category-navi.dropdown a', text: I18n.t("gws.category")).click
-      first('.gws-category-navi.dropdown a', text: category.name).click
-
-      expect(page).to have_link categorized_item.name
-      expect(page).to have_no_link uncategorized_item.name
-
-      click_on categorized_item.name
-      click_on I18n.t('ss.links.back_to_index')
-
-      expect(page).to have_link categorized_item.name
-      expect(page).to have_no_link uncategorized_item.name
-    end
-
-    context "#download_all with auth" do
-      before { login_gws_user }
-
-      it "#download_all" do
-        item
-        visit index_path
-        find('.list-head label.check input').set(true)
-        page.accept_confirm do
-          find('.download-all').click
-        end
-
-        wait_for_download
-
-        entry_names = ::Zip::File.open(downloads.first) do |entries|
-          entries.map { |entry| entry.name }
-        end
-        expect(entry_names).to include(item.name)
-      end
     end
   end
 end

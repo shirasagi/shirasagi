@@ -58,7 +58,7 @@
 <%= paginate @items if @items.try(:current_page) %>
 
 <%= jquery do %>
-  $('.list-head input[name="s[ymd]"]').datetimepicker({
+  $('.list-head input[name="ymd"]').datetimepicker({
     onChangeDateTime: function(dp, $input) {
       var ymd = $input.val();
       ymd = ymd.replace(/\//g, '');

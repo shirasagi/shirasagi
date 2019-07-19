@@ -11,9 +11,6 @@ ja:
       set_seen_all: 選択した項目を全て既読にしますか？
       unset_seen_all: 選択した項目を全て未読に戻しますか？
       download: 選択した項目を全てCSVに出力しますか？
-    notice:
-      set_seen: 既読にしました。
-      unset_seen: 未読にしました。
     post:
       disabled: 削除済み
       seen: 既読

@@ -31,6 +31,22 @@ describe 'gws_memo_list_messages', type: :feature, dbscope: :example, js: true d
       end
       expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
 
+      expect(Gws::Memo::ListMessage.all.and_list_message.count).to eq 1
+      Gws::Memo::ListMessage.all.and_list_message.first.tap do |message|
+        expect(message.list).to eq list
+        expect(message.subject).to eq subject1
+        expect(message.text).to eq text1
+        expect(message.format).to eq "text"
+        expect(message.state).to eq "closed"
+        expect(message.size).to eq 1024
+        expect(message.from_member_name).to eq gws_user.long_name
+        expect(message.member_ids).to be_blank
+        expect(message.to_member_ids).to be_blank
+        expect(message.cc_member_ids).to be_blank
+        expect(message.bcc_member_ids).to be_blank
+        expect(message.user_settings).to be_blank
+      end
+
       # update
       visit gws_memo_list_messages_path(site: site, list_id: list)
       click_on subject1
@@ -52,6 +68,23 @@ describe 'gws_memo_list_messages', type: :feature, dbscope: :example, js: true d
       end
       expect(page).to have_css('#notice', text: I18n.t('ss.notice.sent'))
 
+      expect(Gws::Memo::ListMessage.all.and_list_message.count).to eq 1
+      Gws::Memo::ListMessage.all.and_list_message.first.tap do |message|
+        expect(message.list).to eq list
+        expect(message.subject).to eq subject2
+        expect(message.text).to eq text2
+        expect(message.format).to eq "text"
+        expect(message.state).to eq "public"
+        expect(message.size).to eq 1024
+        expect(message.from_member_name).to eq list.name
+        expect(message.member_ids).to eq list.overall_members.pluck(:id)
+        expect(message.to_member_ids).to be_blank
+        expect(message.cc_member_ids).to be_blank
+        expect(message.bcc_member_ids).to be_blank
+        user_settings = list.overall_members.pluck(:id).map { |id| { "user_id" => id, "path" => "INBOX" } }
+        expect(message.user_settings).to include(*user_settings)
+      end
+
       # delete
       visit gws_memo_list_messages_path(site: site, list_id: list)
       click_on subject2
@@ -60,6 +93,8 @@ describe 'gws_memo_list_messages', type: :feature, dbscope: :example, js: true d
         click_on I18n.t('ss.buttons.delete')
       end
       expect(page).to have_css('#notice', text: I18n.t('ss.notice.deleted'))
+
+      expect(Gws::Memo::ListMessage.all.and_list_message.count).to eq 0
     end
   end
 end
