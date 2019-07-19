@@ -19,10 +19,7 @@ module Job::LogsFilter
   end
 
   def set_ymd
-    if params[:ymd].blank?
-      redirect_to({ action: :index, ymd: Time.zone.now.strftime('%Y%m%d') })
-      return
-    end
+    @ymd = params[:ymd]
   end
 
   def set_search_params
@@ -33,7 +30,8 @@ module Job::LogsFilter
     @log_criteria ||= begin
       criteria = @model.all
       criteria = criteria.site(@cur_site) if @cur_site
-      criteria.search_ymd(ymd: params[:ymd])
+      criteria = criteria.search_ymd(ymd: @ymd) if @ymd.present?
+      criteria
     end
   end
 
