@@ -27,7 +27,7 @@ class History::Trash
   end
 
   def children
-    self.class.where('data.filename' => /\A#{::Regexp.escape(data[:filename])}/, 'data.site_id' => data[:site_id])
+    self.class.where('data.filename' => /\A#{::Regexp.escape(data[:filename] + '/')}/, 'data.site_id' => data[:site_id])
   end
 
   def target_options
