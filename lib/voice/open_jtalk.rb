@@ -35,14 +35,13 @@ class Voice::OpenJtalk
 
   def synthesize(tmpdir, site_id, text)
     tmp_source = build_source(tmpdir, site_id, text)
-    tmp_output = ::File.join(tmpdir, ::Dir::Tmpname.make_tmpname(["voice", ".wav"], nil))
-
+    tmp_output = ::File.join(tmpdir, SS::FilenameUtils.make_tmpname("voice", ".wav"))
     run_openjtalk(tmp_source, tmp_output)
     tmp_output
   end
 
   def build_source(tmpdir, site_id, text)
-    tmp_source = ::File.join(tmpdir, ::Dir::Tmpname.make_tmpname(["voice", ".txt"], nil))
+    tmp_source = ::File.join(tmpdir, SS::FilenameUtils.make_tmpname("voice", ".txt"))
     File.open(tmp_source, "w", encoding: Encoding::UTF_8) do |source|
       Voice::MecabParser.new(site_id, text).each do |start_pos, end_pos, hyoki, yomi|
         yomi = yomi.nil? ? hyoki : yomi
@@ -81,7 +80,7 @@ class Voice::OpenJtalk
     end
 
     # run sox
-    tmp_output = ::File.join(tmpdir, ::Dir::Tmpname.make_tmpname(["voice", ".wav"], nil))
+    tmp_output = ::File.join(tmpdir, SS::FilenameUtils.make_tmpname("voice", ".wav"))
     source_list = sources.map{ |i| %("#{i}") }.join(" ")
     cmd = %("#{@sox_path}" #{source_list} "#{tmp_output}")
 

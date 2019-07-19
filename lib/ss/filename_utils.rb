@@ -1,4 +1,4 @@
-class SS::FilenameConvertor
+class SS::FilenameUtils
   class << self
     def convert(filename, opts = {})
       id = opts[:id]
@@ -14,6 +14,11 @@ class SS::FilenameConvertor
       else
         filename
       end
+    end
+
+    def make_tmpname(prefix = nil, suffix = nil)
+      # blow code come from Tmpname::make_tmpname
+      "#{prefix}#{Time.now.strftime("%Y%m%d")}-#{$PID}-#{rand(0x100000000).to_s(36)}#{suffix}"
     end
   end
 end
