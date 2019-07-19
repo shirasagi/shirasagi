@@ -33,8 +33,17 @@ module Gws::Addon::Schedule::Facility
       end
     end
 
+    if cur_user
+      max_days_limits = facilities.map do |facility|
+        next if facility.allowed?(:edit, cur_user, site: cur_site || site)
+        facility.max_days_limit
+      end
+    else
+      max_days_limits = facilities.pluck(:max_days_limit)
+    end
+
     now = Time.zone.now
-    max_days_limit = facilities.pluck(:max_days_limit).compact.min
+    max_days_limit = max_days_limits.compact.min
     if max_days_limit && end_at > now + max_days_limit.days
       errors.add :base, I18n.t("gws/schedule.errors.faciliy_day_lte", count: max_days_limit)
     end
