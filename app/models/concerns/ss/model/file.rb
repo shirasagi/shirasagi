@@ -5,6 +5,7 @@ module SS::Model::File
   include SS::Reference::User
   include SS::FileFactory
   include SS::ExifGeoLocation
+  include History::Addon::Trash
   include ActiveSupport::NumberHelper
 
   attr_accessor :in_file, :resizing, :unnormalize
@@ -311,6 +312,18 @@ module SS::Model::File
     Fs.mkdir_p(dir) unless Fs.exists?(dir)
     Fs.binwrite(path, binary)
     self.size = binary.length
+  end
+
+  def create_history_trash
+    backup = History::Trash.new
+    backup.ref_coll = collection_name
+    backup.ref_class = self.class.to_s
+    backup.data = attributes
+    backup.site = self.site
+    backup.save
+    trash_path = "#{Rails.root}/private/trash/#{path.sub(/.*\/(ss_files\/)/, '\\1')}"
+    FileUtils.mkdir_p(File.dirname(trash_path))
+    FileUtils.cp(path, trash_path)
   end
 
   def remove_file

@@ -9,6 +9,7 @@ module Cms::Content
   include Cms::Addon::CheckLinks
   include SS::Liquidization
   include Fs::FilePreviewable
+  include History::Addon::Trash
 
   attr_accessor :cur_node, :basename
   attr_accessor :serve_static_relation_files
@@ -264,6 +265,18 @@ module Cms::Content
 
     self.filename = filename.sub(/\..*$/, "") + fix_extname if fix_extname && basename.present?
     @basename = filename.sub(/.*\//, "") if @basename
+  end
+
+  def create_history_trash
+    backup = History::Trash.new
+    backup.ref_coll = collection_name
+    backup.ref_class = self.becomes_with_route.class.to_s
+    backup.data = attributes
+    backup.data.delete(:lock_until)
+    backup.data.delete(:lock_owner_id)
+    backup.site = self.site
+    backup.user = @cur_user
+    backup.save
   end
 
   def validate_name

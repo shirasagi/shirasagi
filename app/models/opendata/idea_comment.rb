@@ -7,6 +7,7 @@ class Opendata::IdeaComment
   include Opendata::Reference::Member
   include Opendata::AllowableAny
   include Workflow::MemberPermission
+  include History::Addon::Trash
 
   field :idea_id, type: Integer
   field :name, type: String
@@ -14,7 +15,7 @@ class Opendata::IdeaComment
   field :comment_deleted, type: DateTime
   field :state, type: String
 
-  belongs_to :idea, class_name: "Opendata::Idea"
+  belongs_to :idea, class_name: "Opendata::Idea", inverse_of: :comments
 
   permit_params :name, :text, :comment_deleted, :state
 

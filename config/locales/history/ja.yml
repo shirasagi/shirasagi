@@ -31,6 +31,11 @@ ja:
     buttons:
       restore: 復元
 
+  cms_role:
+    read_history_trashes: ゴミ箱の閲覧
+    edit_history_trashes: ゴミ箱の復元
+    delete_history_trashes: ゴミ箱の完全削除
+
   modules:
     history: 履歴
     addons:
@@ -39,6 +44,7 @@ ja:
   mongoid:
     models:
       history/log: 操作履歴
+      history/trash: ゴミ箱
     attributes:
       history/log:
         session_id: セッションID
@@ -53,4 +59,9 @@ ja:
       history/backup:
         version: バージョン
         ref_coll: 保存コレクション
+        data: 保存データ
+      history/trash:
+        version: バージョン
+        ref_coll: 保存コレクション
+        ref_class: 保存クラス
         data: 保存データ
