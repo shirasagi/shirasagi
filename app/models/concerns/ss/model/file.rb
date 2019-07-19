@@ -275,7 +275,7 @@ module SS::Model::File
 
   def mangle_filename
     set_sequence
-    self.filename = SS::FilenameConvertor.convert(filename, id: id)
+    self.filename = SS::FilenameUtils.convert(filename, id: id)
   end
 
   def save_file
