@@ -62,8 +62,8 @@ Gws_Schedule_Csv.prototype.renderResult = function(data) {
       if (item.result == 'error') count.error += 1;
 
       html += '<tr class="import-' + item.result + '">' +
-        '<td>' + moment(item.start_at).format('YYYY-MM-DD h:mm') + '</td>' +
-        '<td>' + moment(item.end_at).format('YYYY-MM-DD h:mm') + '</td>' +
+        '<td>' + SS.formatTime(item.start_at) + '</td>' +
+        '<td>' + SS.formatTime(item.end_at) + '</td>' +
         '<td>' + item.name + '</td>' +
         '<td>' + item.messages.join('<br />') + '</td>' +
         '</tr>'
