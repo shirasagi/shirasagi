@@ -187,6 +187,10 @@ ja:
           attributes:
             in_basename:
               invalid_chars_as_name: "には次の文字は使えません: \\ / : * ? \" < > |"
+        gws/memo/category:
+          too_deep: は%{max}階層以下にしてください。
+          not_found_parent: 親カテゴリーが存在しません。
+          found_children: 子カテゴリーが存在します。
     attributes:
       gws/model/memo/message:
         type: 型名

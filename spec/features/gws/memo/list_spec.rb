@@ -4,6 +4,7 @@ describe 'gws_memo_lists', type: :feature, dbscope: :example, js: true do
   let(:site) { gws_site }
   let(:name1) { "name-#{unique_id}" }
   let(:name2) { "name-#{unique_id}" }
+  let!(:category) { create(:gws_memo_category) }
 
   context 'without login' do
     it do
@@ -31,6 +32,18 @@ describe 'gws_memo_lists', type: :feature, dbscope: :example, js: true do
       within '#cboxLoadedContent' do
         expect(page).to have_content(gws_user.name)
         click_on gws_user.name
+      end
+
+      within 'form#item-form' do
+        click_on I18n.t('gws.apis.categories.index')
+      end
+
+      wait_for_ajax
+      within '#cboxLoadedContent' do
+        expect(page).to have_content(category.name)
+        select category.name
+        click_on I18n.t('ss.buttons.search')
+        click_on category.name
       end
 
       within 'form#item-form' do
