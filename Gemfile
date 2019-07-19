@@ -93,6 +93,9 @@ gem 'elasticsearch'
 
 group :development, :test do
   gem 'capybara'
+  gem 'simplecov'
+  gem 'simplecov-html'
+  gem 'simplecov-csv'
   gem 'coveralls', require: false
   gem 'dotenv-rails'
   gem 'factory_bot_rails'
