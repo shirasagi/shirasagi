@@ -35,7 +35,8 @@ module Webmail
     def disconnect_all
       synchronize do
         pool.values.each do |conn|
-          conn.disconnect
+          conn.logout rescue nil
+          conn.disconnect rescue nil
         end
         pool.clear
       end
