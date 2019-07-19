@@ -30,6 +30,10 @@ ja:
       restored: 復元しました。
     buttons:
       restore: 復元
+    options:
+      target:
+        none: このフォルダーのみ復元
+        children: 配下のコンテンツを復元
 
   cms_role:
     read_history_trashes: ゴミ箱の閲覧
@@ -65,3 +69,4 @@ ja:
         ref_coll: 保存コレクション
         ref_class: 保存クラス
         data: 保存データ
+        target: 対象

@@ -26,6 +26,14 @@ class History::Trash
     self.class.where('data.filename' => path, 'data.site_id' => data[:site_id]).first
   end
 
+  def children
+    self.class.where('data.filename' => /\A#{::Regexp.escape(data[:filename])}/, 'data.site_id' => data[:site_id])
+  end
+
+  def target_options
+    %w(none children).map { |v| [I18n.t("history.options.target.#{v}"), v] }
+  end
+
   def restore(create_by_trash = false)
     attributes = data.dup
     attributes[:state] = 'closed' if ref_class != 'Uploader::Node::File'
