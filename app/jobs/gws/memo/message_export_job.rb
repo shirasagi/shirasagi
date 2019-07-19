@@ -6,16 +6,13 @@ class Gws::Memo::MessageExportJob < Gws::ApplicationJob
     @datetime = Time.zone.now
     @message_ids = args
     @root_url = opts[:root_url].to_s
-    @output_zip = SS::DownloadJobFile.new(user, "gws-memo-messages-#{@datetime.strftime('%Y%m%d%H%M%S')}.zip")
+    @output_zip = SS::ZipCreator.new("gws-memo-messages.zip", user, site: site)
     @output_format = opts[:format].to_s.presence || "json"
     @export_filter = opts[:export_filter].to_s.presence || "selected"
     @exported_items = 0
 
-    FileUtils.rm_rf(@output_zip.path)
-    @zip_creator = Gws::Memo::MessageExport::Zip.new(@output_zip.path)
-
     export_gws_memo_messages
-    @zip_creator.close
+    @output_zip.close
 
     if @exported_items == 0
       create_notify_message(failed: true, failed_message: I18n.t("gws/memo/message.export_failed.empty_messages"))
@@ -25,7 +22,7 @@ class Gws::Memo::MessageExportJob < Gws::ApplicationJob
     create_notify_message
     Rails.logger.info("#{@exported_items.to_s(:delimied)} 件のメッセージをエクスポートしました。")
   ensure
-    @zip_creator.close if @zip_creator
+    @output_zip.close if @output_zip
   end
 
   private
@@ -122,20 +119,20 @@ class Gws::Memo::MessageExportJob < Gws::ApplicationJob
       item.text = opts[:failed_message].presence || I18n.t("gws/memo/message.export_failed.notify_message")
     else
       item.subject = I18n.t("gws/memo/message.export.subject")
-      item.text = I18n.t("gws/memo/message.export.notify_message", link: ::File.join(@root_url, @output_zip.url))
+      item.text = I18n.t("gws/memo/message.export.notify_message", link: ::File.join(@root_url, @output_zip.url(name: "gws-memo-messages-#{@datetime.strftime('%Y%m%d%H%M%S')}.zip")))
     end
 
     item.save!
   end
 
   def write_json(name, data)
-    @zip_creator.create_entry("#{name}.json") do |f|
+    @output_zip.create_entry("#{name}.json") do |f|
       f.write(data)
     end
   end
 
   def write_eml(name, data)
-    @zip_creator.create_entry("#{name}.eml") do |f|
+    @output_zip.create_entry("#{name}.eml") do |f|
       f.puts Mail::Field.new("Date", data["created"].in_time_zone.rfc822, "utf-8").encoded
       f.puts Mail::Field.new("Message-ID", gen_message_id(data), "utf-8").encoded
       f.puts Mail::Field.new("Subject", data["subject"], "utf-8").encoded
