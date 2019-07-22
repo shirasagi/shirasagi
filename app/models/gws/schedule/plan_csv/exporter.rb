@@ -265,7 +265,7 @@ class Gws::Schedule::PlanCsv::Exporter
   def readable_users(base_criteria)
     criteria = base_criteria.site(site)
     criteria = criteria.active
-    criteria = criteria.readable(user, site: site)
+    criteria = criteria.readable_users(user, site: site)
     criteria
   end
 end

@@ -290,7 +290,7 @@ class Gws::Schedule::PlanCsv::Importer
       criteria = Gws::User.all
       criteria = criteria.site(cur_site)
       criteria = criteria.active
-      criteria = criteria.readable(cur_user, site: cur_site)
+      criteria = criteria.readable_users(cur_user, site: cur_site)
       criteria
     end
   end
