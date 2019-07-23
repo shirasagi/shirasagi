@@ -11,12 +11,17 @@
 
           <% if @item.ref_coll =~ /cms_nodes|cms_pages|cms_parts|cms_layouts/ %>
             <dt><%= @model.t(:parent) %></dt>
-            <dd><%= f.select :parent, @item.target_options %></dd>
+            <dd><%= select_tag "#{f.object_name}[parent]", options_for_select(@item.target_options) %></dd>
           <% end %>
 
           <% if @item.ref_coll == 'cms_nodes' %>
             <dt><%= @model.t(:children) %></dt>
-            <dd><%= f.select :children, @item.target_options %></dd>
+            <dd><%= select_tag "#{f.object_name}[children]", options_for_select(@item.target_options) %></dd>
+          <% end %>
+
+          <% if @item.data[:state].present? %>
+            <dt><%= @model.t(:state) %></dt>
+            <dd><%= select_tag "#{f.object_name}[state]", options_for_select(@item.state_options) %></dd>
           <% end %>
         </dl>
       </div>

@@ -12,7 +12,7 @@ class History::Trash
   field :ref_class, type: String
   field :data, type: Hash
 
-  permit_params :parent, :children
+  permit_params :parent, :children, :state
 
   validates :ref_coll, presence: true
   validates :data, presence: true
@@ -36,10 +36,16 @@ class History::Trash
     %w(unrestore restore).map { |v| [I18n.t("history.options.target.#{v}"), v] }
   end
 
+  def state_options
+    %w(closed public).map { |v| [I18n.t("ss.options.state.#{v}"), v] }
+  end
+
   def restore(opts = {})
     parent.restore(opts) if opts[:parent] == 'restore' && opts[:create_by_trash].present? && parent.present?
     attributes = data.dup
-    attributes[:state] = 'closed' if ref_class != 'Uploader::Node::File'
+    attributes[:state] = opts[:state] if opts[:state].present?
+    attributes[:state] = 'public' if ref_class == 'Uploader::Node::File'
+    attributes[:state] = 'closed' if ref_class == 'Urgency::Node::Layout'
     attributes[:master_id] = nil if model.include?(Workflow::Addon::Branch)
     model.relations.each do |k, relation|
       case relation.class.to_s

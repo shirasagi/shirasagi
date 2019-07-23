@@ -71,3 +71,4 @@ ja:
         data: 保存データ
         parent: 親フォルダー
         children: 配下のコンテンツ
+        state: ステータス
