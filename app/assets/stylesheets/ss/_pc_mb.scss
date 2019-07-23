@@ -1778,6 +1778,15 @@ dl.mod-cms-parent_crumbs {
     }
   }
 }
+#cboxLoadedContent .tooltip ul {
+  left: -80px;
+  &:before {
+    left: 75px;
+  }
+  &:after {
+    left: 75px;
+  }
+}
 footer.send {
   padding: 28px 0 0;
   text-align: center;
