@@ -12,6 +12,8 @@ class History::Trash
   field :ref_class, type: String
   field :data, type: Hash
 
+  permit_params :parent, :children, :state
+
   validates :ref_coll, presence: true
   validates :data, presence: true
 
@@ -31,18 +33,25 @@ class History::Trash
   end
 
   def target_options
-    %w(none children).map { |v| [I18n.t("history.options.target.#{v}"), v] }
+    %w(unrestore restore).map { |v| [I18n.t("history.options.target.#{v}"), v] }
   end
 
-  def restore(create_by_trash = false)
+  def state_options
+    %w(closed public).map { |v| [I18n.t("ss.options.state.#{v}"), v] }
+  end
+
+  def restore(opts = {})
+    parent.restore(opts) if opts[:parent] == 'restore' && opts[:create_by_trash].present? && parent.present?
     attributes = data.dup
-    attributes[:state] = 'closed' if ref_class != 'Uploader::Node::File'
+    attributes[:state] = opts[:state] if opts[:state].present?
+    attributes[:state] = 'public' if ref_class == 'Uploader::Node::File'
+    attributes[:state] = 'closed' if ref_class == 'Urgency::Node::Layout'
     attributes[:master_id] = nil if model.include?(Workflow::Addon::Branch)
     model.relations.each do |k, relation|
       case relation.class.to_s
       when Mongoid::Association::Referenced::HasMany.to_s
-        if relation.dependent.present?
-          self.class.where(ref_class: relation.class_name, "data.#{relation.foreign_key}" => attributes['_id']).restore!
+        if relation.dependent.present? && opts[:create_by_trash].present?
+          self.class.where(ref_class: relation.class_name, "data.#{relation.foreign_key}" => attributes['_id']).restore!(opts)
         end
       when Mongoid::Association::Embedded::EmbedsMany.to_s
         next if attributes[k].blank?
@@ -57,13 +66,13 @@ class History::Trash
               klass = field.options[:metadata][:elem_class].constantize
               next unless klass.include?(SS::Model::File)
               relation[key].each_with_index do |file_id, i|
-                relation[key][i] = restore_file(file_id, create_by_trash)
+                relation[key][i] = restore_file(file_id, opts)
               end
             else
               klass = field.association.class_name.constantize rescue nil
               next if klass.blank?
               next unless klass.include?(SS::Model::File)
-              relation[key] = restore_file(relation[key], create_by_trash)
+              relation[key] = restore_file(relation[key], opts)
             end
           end
           relation
@@ -76,13 +85,13 @@ class History::Trash
         klass = field.options[:metadata][:elem_class].constantize
         next unless klass.include?(SS::Model::File)
         attributes[k] = attributes[k].collect do |file_id|
-          restore_file(file_id, create_by_trash)
+          restore_file(file_id, opts)
         end
       else
         klass = field.association.class_name.constantize rescue nil
         next if klass.blank?
         next unless klass.include?(SS::Model::File)
-        attributes[k] = restore_file(attributes[k], create_by_trash)
+        attributes[k] = restore_file(attributes[k], opts)
       end
     end
     item = model.find_or_initialize_by(_id: data[:_id], site_id: data[:site_id])
@@ -101,7 +110,7 @@ class History::Trash
       file = Fs::UploadedFile.create_from_file(path, content_type: item.content_type) if File.exist?(path)
       item.in_file = file
     end
-    if create_by_trash
+    if opts[:create_by_trash]
       if item.errors.blank? && item.save
         if model.include?(Cms::Content)
           src = item.path.sub("#{Rails.root}/public", "#{Rails.root}/private/trash")
@@ -117,8 +126,9 @@ class History::Trash
     item
   end
 
-  def restore!
-    self.restore(true)
+  def restore!(opts = {})
+    opts[:create_by_trash] = true
+    self.restore(opts)
   end
 
   class << self
@@ -140,9 +150,9 @@ class History::Trash
       criteria
     end
 
-    def restore!
+    def restore!(opts = {})
       criteria.each do |item|
-        item.restore!
+        item.restore!(opts)
       end
     end
   end
@@ -155,15 +165,15 @@ class History::Trash
     Fs.rm_rf(item.path.sub("#{Rails.root}/public", "#{Rails.root}/private/trash"))
   end
 
-  def restore_file(file_id, create_by_trash = false)
+  def restore_file(file_id, opts = {})
     file = SS::File.where(id: file_id).first
     return file.id if file.present?
     file = self.class.where(ref_coll: 'ss_files', 'data._id' => file_id).first
     if file.present?
-      file = create_by_trash ? file.restore! : file.restore
+      file = opts[:create_by_trash] ? file.restore! : file.restore
     end
     return if file.blank?
-    return unless create_by_trash
+    return unless opts[:create_by_trash]
     path = "#{Rails.root}/private/trash/#{file.path.sub(/.*\/(ss_files\/)/, '\\1')}"
     return unless File.exist?(path)
     FileUtils.mkdir_p(File.dirname(file.path))

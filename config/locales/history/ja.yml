@@ -32,8 +32,8 @@ ja:
       restore: 復元
     options:
       target:
-        none: このフォルダーのみ復元
-        children: 配下のコンテンツを復元
+        restore: 復元する
+        unrestore: 復元しない
 
   cms_role:
     read_history_trashes: ゴミ箱の閲覧
@@ -69,4 +69,6 @@ ja:
         ref_coll: 保存コレクション
         ref_class: 保存クラス
         data: 保存データ
-        target: 対象
+        parent: 親フォルダー
+        children: 配下のコンテンツ
+        state: ステータス

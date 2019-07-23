@@ -9,12 +9,19 @@
           <dt><%= @item.model.t(:name) %></dt>
           <dd><%= @item.data[:name] %></dd>
 
+          <% if @item.ref_coll =~ /cms_nodes|cms_pages|cms_parts|cms_layouts/ %>
+            <dt><%= @model.t(:parent) %></dt>
+            <dd><%= select_tag "#{f.object_name}[parent]", options_for_select(@item.target_options) %></dd>
+          <% end %>
+
           <% if @item.ref_coll == 'cms_nodes' %>
-            <dt><%= @model.t(:target) %></dt>
-            <dd>
-              <label><%= radio_button_tag "#{f.object_name}[target]", 'none', true %> <%= t("history.options.target.none") %></label>
-              <label><%= radio_button_tag "#{f.object_name}[target]", 'children' %> <%= t("history.options.target.children") %></label>
-            </dd>
+            <dt><%= @model.t(:children) %></dt>
+            <dd><%= select_tag "#{f.object_name}[children]", options_for_select(@item.target_options) %></dd>
+          <% end %>
+
+          <% if @item.data[:state].present? %>
+            <dt><%= @model.t(:state) %></dt>
+            <dd><%= select_tag "#{f.object_name}[state]", options_for_select(@item.state_options) %></dd>
           <% end %>
         </dl>
       </div>
