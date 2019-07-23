@@ -41,7 +41,7 @@ class History::Trash
   end
 
   def restore(opts = {})
-    parent.restore(opts) if opts[:parent] == 'restore' && opts[:create_by_trash].present? && parent.present?
+    parent.restore(opts) if opts[:parent].present? && opts[:create_by_trash].present? && parent.present?
     attributes = data.dup
     attributes[:state] = opts[:state] if opts[:state].present?
     attributes[:state] = 'public' if ref_class == 'Uploader::Node::File'
