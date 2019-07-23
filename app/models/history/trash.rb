@@ -57,11 +57,11 @@ class History::Trash
         next if attributes[k].blank?
         attributes[k] = attributes[k].collect do |relation|
           if relation['_type'].present?
-            relation = relation['_type'].constantize.new(relation)
+            klass = relation['_type'].constantize.new(relation)
           else
-            relation = model.relations[k].class_name.constantize.new(relation)
+            klass = model.relations[k].class_name.constantize.new(relation)
           end
-          relation.fields.each do |key, field|
+          klass.fields.each do |key, field|
             if field.type == SS::Extensions::ObjectIds
               klass = field.options[:metadata][:elem_class].constantize
               next unless klass.include?(SS::Model::File)

@@ -58,21 +58,19 @@ class History::Backup
     end
 
     data.delete("_id")
-    # data.delete("file_id")
-    # data.delete("file_ids") # TODO: for attachment files
     data.delete("state")
 
-    ref_class.constantize.relations.each do |k, relation|
+    ref_class_constantize.relations.each do |k, relation|
       case relation.class.to_s
       when Mongoid::Association::Embedded::EmbedsMany.to_s
         next if data[k].blank?
         data[k] = data[k].collect do |relation|
           if relation['_type'].present?
-            relation = relation['_type'].constantize.new(relation)
+            klass = relation['_type'].constantize.new(relation)
           else
-            relation = model.relations[k].class_name.constantize.new(relation)
+            klass = ref_class_constantize.relations[k].class_name.constantize.new(relation)
           end
-          relation.fields.each do |key, field|
+          klass.fields.each do |key, field|
             if field.type == SS::Extensions::ObjectIds
               klass = field.options[:metadata][:elem_class].constantize
               next unless klass.include?(SS::Model::File)
@@ -90,7 +88,7 @@ class History::Backup
         end
       end
     end
-    ref_class.constantize.fields.each do |k, field|
+    ref_class_constantize.fields.each do |k, field|
       next if data[k].blank?
       if field.type == SS::Extensions::ObjectIds
         klass = field.options[:metadata][:elem_class].constantize
