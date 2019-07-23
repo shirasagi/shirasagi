@@ -25,7 +25,7 @@ describe "job_cms_logs", dbscope: :example do
     it "#index" do
       visit index_path
       expect(status_code).to eq 200
-      expect(current_path).to eq "#{index_path}/#{Time.zone.now.strftime("%Y%m%d")}"
+      expect(current_path).to eq index_path
     end
 
     it "#download" do
