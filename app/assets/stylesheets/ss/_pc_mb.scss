@@ -1782,6 +1782,16 @@ dl.mod-cms-parent_crumbs {
         left: 65px;
       }
     }
+    &.tooltip-bottom:before {
+      top: -13px;
+      border-top: none;
+      border-bottom: 12px solid $gray4;
+    }
+    &.tooltip-bottom:after {
+      top: -12px;
+      border-top: none;
+      border-bottom: 12px solid $white;
+    }
   }
 }
 #cboxLoadedContent .tooltip ul {
