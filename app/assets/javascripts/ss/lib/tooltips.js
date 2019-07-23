@@ -18,11 +18,15 @@ this.SS_Tooltips = (function () {
         top = top - cbox.top;
       }
 
+      cur.find("ul").removeClass("tooltip-top");
+      cur.find("ul").removeClass("tooltip-bottom");
       if (top - hgt < 0) {
         cur.find("ul").css("bottom", (hgt * (-1) - 15) + "px");
+        cur.find("ul").addClass("tooltip-bottom");
         css = "ul:after {border: 8px solid transparent; border-bottom-color:#fff; bottom:" + (hgt - 5) + "px;}";
       } else {
         cur.find("ul").css("bottom", "18px");
+        cur.find("ul").addClass("tooltip-top");
         css = "ul:after {border: 8px solid transparent; border-top-color:#fff; bottom:-13px;}";
       }
       style = $("<style>").append(document.createTextNode(css));
