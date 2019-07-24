@@ -9,7 +9,7 @@ describe SS::File, dbscope: :example do
   context "with valid item" do
     subject { create :ss_file }
     its(:valid?) { is_expected.to be_truthy }
-    its(:path) { is_expected.to eq "#{Rails.root}/tmp/ss_files/ss_files/#{subject.id}/_/#{subject.id}" }
+    its(:path) { is_expected.to eq "#{SS::File.root}/ss_files/#{subject.id}/_/#{subject.id}" }
     its(:url) { is_expected.to eq "/fs/#{subject.id}/_/#{subject.name}" }
     its(:thumb_url) { is_expected.to eq "/fs/#{subject.id}/_/thumb/#{subject.name}" }
     its(:public?) { is_expected.to be_falsey }
@@ -27,7 +27,7 @@ describe SS::File, dbscope: :example do
     let(:site) { ss_site }
     subject { create :ss_file, site_id: site.id }
     its(:valid?) { is_expected.to be_truthy }
-    its(:path) { is_expected.to eq "#{Rails.root}/tmp/ss_files/ss_files/#{subject.id}/_/#{subject.id}" }
+    its(:path) { is_expected.to eq "#{SS::File.root}/ss_files/#{subject.id}/_/#{subject.id}" }
     its(:url) { is_expected.to eq "/fs/#{subject.id}/_/#{subject.name}" }
     its(:thumb_url) { is_expected.to eq "/fs/#{subject.id}/_/thumb/#{subject.name}" }
     its(:public?) { is_expected.to be_falsey }
@@ -46,7 +46,7 @@ describe SS::File, dbscope: :example do
     let(:site1) { create(:ss_site_subdir, domains: site0.domains, parent_id: site0.id) }
     subject { create :ss_file, site_id: site1.id }
     its(:valid?) { is_expected.to be_truthy }
-    its(:path) { is_expected.to eq "#{Rails.root}/tmp/ss_files/ss_files/#{subject.id}/_/#{subject.id}" }
+    its(:path) { is_expected.to eq "#{SS::File.root}/ss_files/#{subject.id}/_/#{subject.id}" }
     its(:url) { is_expected.to eq "/fs/#{subject.id}/_/#{subject.name}" }
     its(:thumb_url) { is_expected.to eq "/fs/#{subject.id}/_/thumb/#{subject.name}" }
     its(:public?) { is_expected.to be_falsey }
