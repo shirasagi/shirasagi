@@ -8,6 +8,7 @@ class History::Cms::TrashesController < ApplicationController
 
   def index
     raise "403" unless @model.allowed?(:read, @cur_user, site: @cur_site, node: @cur_node)
+
     @ref_coll_options = [Cms::Node, Cms::Page, Cms::Part, Cms::Layout].collect do |model|
       [model.model_name.human, model.collection_name]
     end

@@ -3,16 +3,19 @@ require 'spec_helper'
 describe "history_cms_backups restore", dbscope: :example do
   let(:site) { cms_site }
   let(:node) { create_once :article_node_page, filename: "docs", name: "article" }
+  let(:file) { create :ss_file, user_id: cms_user.id }
   let(:page_item) do
     page_item = create(:article_page, cur_node: node)
     Timecop.travel(1.day.from_now) do
       page_item.name = "first update"
       page_item.state = "public"
+      page_item.file_ids = [file.id]
       page_item.update
     end
     Timecop.travel(2.days.from_now) do
       page_item.name = "second update"
       page_item.state = "closed"
+      page_item.file_ids = []
       page_item.update
     end
     page_item
@@ -44,6 +47,7 @@ describe "history_cms_backups restore", dbscope: :example do
 
       basic_values = page.all("#addon-basic dd").map(&:text)
       expect(basic_values.index("second update")).to be_truthy
+      expect(page).to have_no_css('div.file-view', text: file.name)
 
       click_link I18n.l(backup_item.created)
       expect(current_path).not_to eq sns_login_path
@@ -59,6 +63,7 @@ describe "history_cms_backups restore", dbscope: :example do
 
       basic_values = page.all("#addon-basic dd").map(&:text)
       expect(basic_values.index("first update")).to be_truthy
+      expect(page).to have_css('div.file-view', text: file.name)
     end
   end
 end

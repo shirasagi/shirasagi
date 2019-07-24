@@ -1,27 +1,11 @@
 class History::Trash
-  include SS::Document
-  include SS::Reference::User
+  include History::Model::Data
   include SS::Reference::Site
   include Cms::SitePermission
 
-  store_in_repl_master
-  index({ created: -1 })
-
-  field :version, type: String, default: SS.version
-  field :ref_coll, type: String
-  field :ref_class, type: String
-  field :data, type: Hash
-
   permit_params :parent, :children, :state
 
-  validates :ref_coll, presence: true
-  validates :data, presence: true
-
   after_destroy :remove_all
-
-  def model
-    ref_class.constantize
-  end
 
   def parent
     path = File.dirname(data[:filename])
@@ -42,58 +26,12 @@ class History::Trash
 
   def restore(opts = {})
     parent.restore(opts) if opts[:parent].present? && opts[:create_by_trash].present? && parent.present?
-    attributes = data.dup
-    attributes[:state] = opts[:state] if opts[:state].present?
-    attributes[:state] = 'public' if ref_class == 'Uploader::Node::File'
-    attributes[:state] = 'closed' if ref_class == 'Urgency::Node::Layout'
-    attributes[:master_id] = nil if model.include?(Workflow::Addon::Branch)
-    model.relations.each do |k, relation|
-      case relation.class.to_s
-      when Mongoid::Association::Referenced::HasMany.to_s
-        if relation.dependent.present? && opts[:create_by_trash].present?
-          self.class.where(ref_class: relation.class_name, "data.#{relation.foreign_key}" => attributes['_id']).restore!(opts)
-        end
-      when Mongoid::Association::Embedded::EmbedsMany.to_s
-        next if attributes[k].blank?
-        attributes[k] = attributes[k].collect do |relation|
-          if relation['_type'].present?
-            relation = relation['_type'].constantize.new(relation)
-          else
-            relation = model.relations[k].class_name.constantize.new(relation)
-          end
-          relation.fields.each do |key, field|
-            if field.type == SS::Extensions::ObjectIds
-              klass = field.options[:metadata][:elem_class].constantize
-              next unless klass.include?(SS::Model::File)
-              relation[key].each_with_index do |file_id, i|
-                relation[key][i] = restore_file(file_id, opts)
-              end
-            else
-              klass = field.association.class_name.constantize rescue nil
-              next if klass.blank?
-              next unless klass.include?(SS::Model::File)
-              relation[key] = restore_file(relation[key], opts)
-            end
-          end
-          relation
-        end
-      end
-    end
-    model.fields.each do |k, field|
-      next if attributes[k].blank?
-      if field.type == SS::Extensions::ObjectIds
-        klass = field.options[:metadata][:elem_class].constantize
-        next unless klass.include?(SS::Model::File)
-        attributes[k] = attributes[k].collect do |file_id|
-          restore_file(file_id, opts)
-        end
-      else
-        klass = field.association.class_name.constantize rescue nil
-        next if klass.blank?
-        next unless klass.include?(SS::Model::File)
-        attributes[k] = restore_file(attributes[k], opts)
-      end
-    end
+    data = self.data.dup
+    data[:state] = opts[:state] if opts[:state].present?
+    data[:state] = 'public' if ref_class == 'Uploader::Node::File'
+    data[:state] = 'closed' if ref_class == 'Urgency::Node::Layout'
+    data[:master_id] = nil if model.include?(Workflow::Addon::Branch)
+    data = restore_data(data, opts)
     item = model.find_or_initialize_by(_id: data[:_id], site_id: data[:site_id])
     item = item.becomes_with_route(data[:route]) if data[:route].present?
     if model.include?(Cms::Content) && data[:depth] > 1
@@ -101,7 +39,7 @@ class History::Trash
       item_parent = Cms::Node.where(site_id: data[:site_id], filename: dir).first
       item.errors.add :base, :not_found_parent_node if item_parent.blank?
     end
-    attributes.each do |k, v|
+    data.each do |k, v|
       item[k] = v
     end
     item.apply_status('closed', workflow_reset: true) if model.include?(Workflow::Addon::Approver)
@@ -161,24 +99,8 @@ class History::Trash
 
   def remove_all
     return unless model.include?(Cms::Content)
+
     item = restore
     Fs.rm_rf(item.path.sub("#{Rails.root}/public", "#{Rails.root}/private/trash"))
-  end
-
-  def restore_file(file_id, opts = {})
-    file = SS::File.where(id: file_id).first
-    return file.id if file.present?
-    file = self.class.where(ref_coll: 'ss_files', 'data._id' => file_id).first
-    if file.present?
-      file = opts[:create_by_trash] ? file.restore! : file.restore
-    end
-    return if file.blank?
-    return unless opts[:create_by_trash]
-    path = "#{Rails.root}/private/trash/#{file.path.sub(/.*\/(ss_files\/)/, '\\1')}"
-    return unless File.exist?(path)
-    FileUtils.mkdir_p(File.dirname(file.path))
-    FileUtils.cp(path, file.path)
-    FileUtils.rm_rf(File.dirname(path))
-    file._id
   end
 end
