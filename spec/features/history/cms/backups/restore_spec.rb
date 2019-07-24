@@ -47,6 +47,7 @@ describe "history_cms_backups restore", dbscope: :example do
 
       basic_values = page.all("#addon-basic dd").map(&:text)
       expect(basic_values.index("second update")).to be_truthy
+      expect(page).to have_no_css('div.file-view', text: file.name)
 
       click_link I18n.l(backup_item.created)
       expect(current_path).not_to eq sns_login_path
