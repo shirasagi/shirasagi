@@ -3,12 +3,16 @@
   <% @reject_items.push(item.id) if first_suggest %>
   <tr data-depth="<%= depth %>">
     <td class="expandable">
-      <%= link_to item.name, action: :show, id: item %>
+      <% if @rendered_items.find { |id| id == item.id } %>
+        <%= item.name %>
+      <% else %>
+        <%= link_to item.name, action: :show, id: item %>
+      <% end %>
     </td>
     <td><%= item.suggest.present? ? @model.t(:suggest) : @model.t(:response) %> <%= I18n.t('chat.first_suggest') if first_suggest %></td>
     <td><%= I18n.t('chat.loop_intent') if @rendered_items.find { |id| id == item.id } %></td>
     <td><%= I18n.l(item.updated) %></td>
-    <td><%= link_to t('chat.links.add_or_edit'), { action: :edit, id: item }, class: :btn %></td>
+    <td><%= link_to t('chat.links.add_or_edit'), { action: :edit, id: item }, class: :btn unless @rendered_items.find { |id| id == item.id } %></td>
   </tr>
   <% if !@rendered_items.find { |id| id == item.id } %>
     <% @rendered_items.push(item.id) %>
