@@ -1,4 +1,4 @@
-<% item = @model.site(@cur_site).where(node_id: @cur_node.id).find_intent(suggest) %>
+<% item = @model.site(@cur_site).where(node_id: @cur_node.id).order_by(order: 1, updated: -1).find_intent(suggest) %>
 <% if item.present? %>
   <% @reject_items.push(item.id) if first_suggest %>
   <tr data-depth="<%= depth %>">
@@ -9,7 +9,7 @@
         <%= link_to item.name, action: :show, id: item %>
       <% end %>
     </td>
-    <td><%= item.categories.pluck(:name).join(', ') %></td>
+    <td><%= item.categories.order_by(order: 1, updated: -1).pluck(:name).join(', ') %></td>
     <td><%= item.phrase.join(', ') %></td>
     <td><%= item.suggest.present? ? @model.t(:suggest) : @model.t(:response) %> <%= I18n.t('chat.first_suggest') if first_suggest %></td>
     <td><%= I18n.t('chat.loop_intent') if @rendered_items.find { |id| id == item.id } %></td>

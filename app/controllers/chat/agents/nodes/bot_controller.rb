@@ -25,7 +25,10 @@ class Chat::Agents::Nodes::BotController < ApplicationController
   public
 
   def index
-    @intent = Chat::Intent.site(@cur_site).where(node_id: @cur_node.id).find_intent(params[:text])
+    @intent = Chat::Intent.site(@cur_site).
+      where(node_id: @cur_node.id).
+      order_by(order: 1, updated: -1).
+      find_intent(params[:text])
     if params[:question] == 'success'
       @result = @cur_node.becomes_with_route.chat_success
     elsif params[:question] == 'retry'

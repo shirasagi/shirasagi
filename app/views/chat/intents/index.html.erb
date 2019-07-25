@@ -34,7 +34,7 @@ SS_TreeUI.render(".index.items", { collapse_all: true });
           <td class="expandable">
             <%= link_to item.name, action: :show, id: item %>
           </td>
-          <td><%= item.categories.pluck(:name).join(', ') %></td>
+          <td><%= item.categories.order_by(order: 1, updated: -1).pluck(:name).join(', ') %></td>
           <td><%= item.phrase.join(', ') %></td>
           <td><%= item.suggest.present? ? @model.t(:suggest) : @model.t(:response) %></td>
           <td></td>
