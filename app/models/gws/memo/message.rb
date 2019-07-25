@@ -11,7 +11,6 @@ class Gws::Memo::Message
   include Gws::Addon::Memo::Priority
   include Gws::Addon::File
   include Gws::Addon::Memo::Quota
-  #include Gws::Addon::Memo::Comments
   #include Gws::Addon::Reminder
 
   index({ site_id: 1, state: 1, 'user_settings.user_id': 1, 'user_settings.seen_at': 1 })

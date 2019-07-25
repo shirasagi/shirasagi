@@ -45,8 +45,6 @@ Rails.application.routes.draw do
 
     resource :notice_user_settings, only: [:show, :edit, :update]
 
-    resources :comments, path: ':message_id/comments', only: [:create, :destroy]
-
     namespace "apis" do
       get "shared_addresses" => "shared_addresses#index"
       get "personal_addresses" => "personal_addresses#index"
