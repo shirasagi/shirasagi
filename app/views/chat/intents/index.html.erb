@@ -12,6 +12,8 @@ SS_TreeUI.render(".index.items", { collapse_all: true });
     <thead>
       <tr>
         <th><%= @model.t :name %></th>
+        <th><%= @model.t :category_ids %></th>
+        <th><%= @model.t :phrase %></th>
         <th><%= @model.t :state %></th>
         <th><%= @model.t :error %></th>
         <th class="datetime"><%= @model.t :updated %></th>
@@ -32,6 +34,8 @@ SS_TreeUI.render(".index.items", { collapse_all: true });
           <td class="expandable">
             <%= link_to item.name, action: :show, id: item %>
           </td>
+          <td><%= item.categories.pluck(:name).join(', ') %></td>
+          <td><%= item.phrase.join(', ') %></td>
           <td><%= item.suggest.present? ? @model.t(:suggest) : @model.t(:response) %></td>
           <td></td>
           <td><%= I18n.l(item.updated) %></td>

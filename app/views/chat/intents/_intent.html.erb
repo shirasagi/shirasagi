@@ -9,6 +9,8 @@
         <%= link_to item.name, action: :show, id: item %>
       <% end %>
     </td>
+    <td><%= item.categories.pluck(:name).join(', ') %></td>
+    <td><%= item.phrase.join(', ') %></td>
     <td><%= item.suggest.present? ? @model.t(:suggest) : @model.t(:response) %> <%= I18n.t('chat.first_suggest') if first_suggest %></td>
     <td><%= I18n.t('chat.loop_intent') if @rendered_items.find { |id| id == item.id } %></td>
     <td><%= I18n.l(item.updated) %></td>
@@ -27,6 +29,8 @@
     <td class="expandable">
       <%= suggest %>
     </td>
+    <td></td>
+    <td></td>
     <td><%= I18n.t('chat.first_suggest') if first_suggest %></td>
     <td><%= I18n.t('chat.not_found_intent') %></td>
     <td></td>
