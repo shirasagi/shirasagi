@@ -34,4 +34,4 @@ addons:
 bundler_args: "--without development"
 install: bash .travis.d/install.sh
 before_script: bash .travis.d/before_script.sh
-script: bash .travis.d/script.sh
+script: travis_wait 60 bash .travis.d/script.sh

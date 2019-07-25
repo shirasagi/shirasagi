@@ -538,6 +538,7 @@ GEM
     term-ansicolor (1.6.0)
       tins (~> 1.0)
     terminal-notifier-guard (1.7.0)
+    test-queue (0.4.2)
     therubyracer (0.12.3)
       libv8 (~> 3.16.14.15)
       ref
@@ -682,6 +683,7 @@ DEPENDENCIES
   sparql-client
   spring (~> 2.0.2)
   terminal-notifier-guard
+  test-queue
   therubyracer
   thinreports
   timecop
