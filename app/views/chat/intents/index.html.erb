@@ -23,9 +23,20 @@ SS_TreeUI.render(".index.items", { collapse_all: true });
 
     <tbody>
       <% if params[:page].blank? && params[:s].blank? %>
+        <tr data-depth="<%= depth %>">
+          <td class="expandable">
+            <%= I18n.t('chat.first_suggest') %>
+          </td>
+          <td></td>
+          <td></td>
+          <td><%= I18n.t('chat.first_suggest') %></td>
+          <td></td>
+          <td><%= I18n.l(@cur_node.updated) %></td>
+          <td></td>
+        </tr>
         <% @cur_node.becomes_with_route.first_suggest.each do |suggest| %>
           <% @rendered_items = [] %>
-          <%= render partial: 'intent', locals: { suggest: suggest, depth: depth, first_suggest: true } %>
+          <%= render partial: 'intent', locals: { suggest: suggest, depth: depth + 1, first_suggest: true } %>
         <% end %>
       <% end %>
       <% @items.nin(id: @reject_items).each do |item| %>
