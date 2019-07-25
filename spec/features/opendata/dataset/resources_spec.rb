@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe "opendata_datasets", type: :feature, dbscope: :example do
+describe "opendata_dataset_resources", type: :feature, dbscope: :example do
   let(:site) { cms_site }
   let(:node) { create_once :opendata_node_dataset, name: "opendata_dataset" }
   let!(:node_search) { create_once :opendata_node_search_dataset }
