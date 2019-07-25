@@ -23,6 +23,7 @@ class Chat::Intent
   permit_params :name, :phrase, :suggest, :response, :order
 
   validates :name, presence: true, length: { maximum: 80 }
+  validates :phrase, presence: true
   validates :order, numericality: { greater_than_or_equal_to: 0, less_than_or_equal_to: 999_999, allow_blank: true }
 
   class << self
