@@ -35,7 +35,9 @@ describe "gws_workflow_files", type: :feature, dbscope: :example, tmpdir: true d
         click_on "保存"
       end
 
-      expect(page).to have_css("div.addon-body dd", text: item_name)
+      within "#addon-basic" do
+        expect(page).to have_content(item_name)
+      end
 
       expect(Gws::Workflow::File.site(site).count).to eq 1
       item = Gws::Workflow::File.site(site).first

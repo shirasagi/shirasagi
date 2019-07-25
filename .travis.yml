@@ -44,7 +44,7 @@ jobs:
     - script: bash .travis.d/set_env.sh && allow_open_jtalk=1 bundle exec rspec -p 10 spec/ --pattern "spec/features/{g}*/**/*.rb" --exclude "**/gws/schedule/**/*.rb"
       name: "Features_G"
     - script: bash .travis.d/set_env.sh && allow_open_jtalk=1 bundle exec rspec -p 10 spec/ --pattern "spec/features/gws/schedule/**/*.rb"
-      name: "Features_G/schedule"
+      name: "Features_G (Schedule)"
     - script: bash .travis.d/set_env.sh && allow_open_jtalk=1 bundle exec rspec -p 10 spec/ --pattern "spec/features/{h,i,j,k,l,m,o}*/**/*.rb"
       name: "Features_H"
     - script: bash .travis.d/set_env.sh && allow_open_jtalk=1 bundle exec rspec -p 10 spec/ --pattern "spec/features/{p,q,r,s,u,v,w}*/**/*.rb"

@@ -26,7 +26,10 @@ describe "member_blogs", dbscope: :example, js: true do
         fill_in "item[name]", with: "sample"
         click_on I18n.t("ss.buttons.draft_save")
       end
-      expect(page.html).to include("本文を入力してください。")
+
+      within ".errorExplanation" do
+        expect(page).to have_content("本文を入力してください。")
+      end
     end
 
     it "#show" do

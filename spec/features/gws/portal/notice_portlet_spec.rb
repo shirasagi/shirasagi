@@ -14,7 +14,9 @@ describe "gws_portal_portlet", type: :feature, dbscope: :example, js: true do
     visit gws_portal_user_path(site: site, user: user)
     click_on I18n.t('gws/portal.links.manage_portlets')
     click_on I18n.t('ss.links.new')
-    click_on I18n.t('gws/portal.portlets.notice.name')
+    within '.main-box' do
+      click_on I18n.t('gws/portal.portlets.notice.name')
+    end
     within 'form#item-form' do
       click_on I18n.t('ss.buttons.save')
     end
