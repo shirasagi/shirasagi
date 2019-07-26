@@ -40,6 +40,29 @@ class Chat::Intent
       criteria
     end
 
+    def csv_headers
+      %w(
+          id name phrase suggest response order category_ids
+        )
+    end
+
+    def csv(opts = {})
+      CSV.generate do |data|
+        data << csv_headers.map { |k| t k }
+        criteria.each do |item|
+          data << [
+            item.id,
+            item.name,
+            item.phrase.join("\n"),
+            item.suggest.join("\n"),
+            item.response,
+            item.order,
+            item.categories.pluck(:name).join("\n")
+          ]
+        end
+      end
+    end
+
     def find_intent(string)
       return if string.blank?
       item = all.select do |intent|

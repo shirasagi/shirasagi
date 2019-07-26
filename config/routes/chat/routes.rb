@@ -11,6 +11,10 @@ SS::Application.routes.draw do
     get :download, on: :collection
   end
 
+  concern :import do
+    match :import, on: :collection, via: %i[get post]
+  end
+
   namespace "chat", path: ".s:site/chat" do
     namespace 'apis' do
       get 'categories' => 'categories#index'
@@ -20,7 +24,7 @@ SS::Application.routes.draw do
   content "chat" do
     get "/" => redirect { |p, req| "#{req.path}/intents" }, as: :main
     get "/bots" => redirect { |p, req| "#{req.path}/../intents" }
-    resources :intents, concerns: :deletion
+    resources :intents, concerns: [:deletion, :download, :import]
     resources :categories, concerns: :deletion
     resources :histories, concerns: [:deletion, :download], only: [:index, :show, :destroy]
     get 'report' => 'report#index'

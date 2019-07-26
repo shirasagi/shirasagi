@@ -33,6 +33,8 @@ ja:
     edit_private_chat_bots: チャットボットの編集(所有)
     read_other_chat_bots: チャットボットの閲覧(全て)
     read_private_chat_bots: チャットボットの閲覧(所有)
+    import_other_chat_bots: チャットボットのインポート(全て)
+    import_private_chat_bots: チャットボットのインポート(所有)
 
   mongoid:
     models:
@@ -41,7 +43,10 @@ ja:
       chat/intent: シナリオ
       chat/node/bot: チャットボット
       chat/part/bot: チャットボット
-
+    errors:
+      models:
+        chat/intent:
+          not_found: "%{line_no} 行目: Id %{id} のシナリオは存在しません。"
     attributes:
       chat/category:
         name: 名前
@@ -128,3 +133,7 @@ ja:
         - 質問に対して"はい"を押された場合に表示される文章を設定できます。
       chat_retry:
         - 質問に対して"いいえ"を押された場合に表示される文章を設定できます。
+
+  job:
+    models:
+      chat/intent/import_job: シナリオインポート
