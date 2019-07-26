@@ -17,8 +17,9 @@ describe "gws_custom_groups", type: :feature, dbscope: :example do
     it "#new" do
       visit "#{path}/new"
       first('#addon-gws-agents-addons-member').click_on "ユーザーを選択する"
-      wait_for_cbox
-      click_on gws_user.long_name
+      wait_for_cbox do
+        click_on gws_user.long_name
+      end
 
       within "form#item-form" do
         fill_in "item[name]", with: "name"

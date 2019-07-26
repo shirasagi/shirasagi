@@ -20,7 +20,7 @@ describe "sys_ad", type: :feature, dbscope: :example, tmpdir: true, js: true do
         find('a.btn', text: I18n.t('ss.buttons.upload')).click
       end
 
-      within '#cboxLoadedContent' do
+      wait_for_cbox do
         expect(page).to have_content(ss_file.name)
         find("a[data-id='#{ss_file.id}']").click
       end

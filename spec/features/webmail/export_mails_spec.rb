@@ -79,7 +79,7 @@ describe "webmail_export_mails", type: :feature, dbscope: :example, imap: true, 
           choose "item_all_export_select"
           click_on I18n.t("ss.links.select")
         end
-        within "#cboxLoadedContent" do
+        wait_for_cbox do
           expect(page).to have_content(mail1.subject)
           expect(page).to have_content(mail3.subject)
           click_on mail2.subject

@@ -43,7 +43,7 @@ describe "gws_share_files", type: :feature, dbscope: :example, tmpdir: true, js:
         # click_on I18n.t('ss.buttons.upload')
         find('a.btn', text: I18n.t('ss.buttons.upload')).click
       end
-      within '#cboxLoadedContent' do
+      wait_for_cbox do
         expect(page).to have_content(ss_file.name)
         click_on ss_file.name
       end

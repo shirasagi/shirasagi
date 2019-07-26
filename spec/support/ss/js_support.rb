@@ -39,8 +39,18 @@ module SS
       opacity.to_f == 0
     end
 
-    def wait_for_cbox
+    def wait_for_cbox(&block)
       wait_for_selector("div#ajax-box table.index")
+      within "#cboxLoadedContent" do
+        yield if block_given?
+      end
+    end
+
+    def wait_for_page(&block)
+      sleep 0.1
+      wait_for_selector("#page")
+      wait_for_ajax
+      yield if block_given?
     end
 
     def wait_for_cbox_close

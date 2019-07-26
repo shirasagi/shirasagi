@@ -21,8 +21,7 @@ describe "gws_schedule_plans", type: :feature, dbscope: :example do
       within ".gws-addon-schedule-approval" do
         click_on I18n.t('ss.apis.users.index')
       end
-      wait_for_cbox
-      within '#cboxLoadedContent' do
+      wait_for_cbox do
         expect(page).to have_content(gws_user.name)
         click_on gws_user.name
       end
@@ -41,8 +40,7 @@ describe "gws_schedule_plans", type: :feature, dbscope: :example do
       within "#addon-gws-agents-addons-schedule-approval" do
         choose "item_approvals_2_state_approve"
       end
-      wait_for_cbox
-      within '#cboxLoadedContent' do
+      wait_for_cbox do
         fill_in "comment[text]", with: "comment"
         click_button I18n.t("ss.buttons.save")
       end
@@ -58,8 +56,7 @@ describe "gws_schedule_plans", type: :feature, dbscope: :example do
       within "#addon-gws-agents-addons-schedule-approval" do
         choose "item_approvals_2_state_deny"
       end
-      wait_for_cbox
-      within '#cboxLoadedContent' do
+      wait_for_cbox do
         fill_in "comment[text]", with: "comment"
         click_button I18n.t("ss.buttons.save")
       end

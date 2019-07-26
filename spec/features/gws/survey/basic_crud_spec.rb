@@ -29,7 +29,7 @@ describe "gws_survey", type: :feature, dbscope: :example, js: true do
         choose I18n.t("gws.options.readable_setting_range.public")
         click_on I18n.t("gws.apis.categories.index")
       end
-      within "#cboxLoadedContent" do
+      wait_for_cbox do
         expect(page).to have_content(cate.name)
         click_on cate.name
       end

@@ -35,7 +35,7 @@ describe "gws_schedule_todo_readables", type: :feature, dbscope: :example, js: t
           click_on I18n.t('ss.apis.users.index')
         end
       end
-      within '#cboxLoadedContent' do
+      wait_for_cbox do
         expect(page).to have_content(user2.long_name)
         click_on user2.long_name
       end
@@ -164,7 +164,7 @@ describe "gws_schedule_todo_readables", type: :feature, dbscope: :example, js: t
           click_on I18n.t("ss.buttons.edit")
         end
       end
-      within '#cboxLoadedContent' do
+      wait_for_cbox do
         expect(page).to have_content(comment_text)
 
         fill_in "item[achievement_rate]", with: achievement_rate2
@@ -195,7 +195,7 @@ describe "gws_schedule_todo_readables", type: :feature, dbscope: :example, js: t
           click_on I18n.t("ss.buttons.delete")
         end
       end
-      within '#cboxLoadedContent' do
+      wait_for_cbox do
         expect(page).to have_content(comment_text2)
         click_on I18n.t("ss.buttons.delete")
       end
@@ -270,7 +270,7 @@ describe "gws_schedule_todo_readables", type: :feature, dbscope: :example, js: t
           click_on I18n.t('ss.apis.users.index')
         end
       end
-      within '#cboxLoadedContent' do
+      wait_for_cbox do
         expect(page).to have_content(user2.long_name)
         click_on user2.long_name
       end

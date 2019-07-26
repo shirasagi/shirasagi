@@ -38,7 +38,7 @@ describe 'gws_memo_messages', type: :feature, dbscope: :example, js: true do
           end
         end
 
-        within '#cboxLoadedContent' do
+        wait_for_cbox do
           expect(page).to have_content(recipient.name)
           click_on recipient.name
         end

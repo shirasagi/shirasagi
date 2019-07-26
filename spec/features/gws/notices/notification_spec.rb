@@ -39,7 +39,7 @@ describe "gws_notices", type: :feature, dbscope: :example, js: true do
           click_on I18n.t('ss.apis.users.index')
         end
       end
-      within '#cboxLoadedContent' do
+      wait_for_cbox do
         expect(page).to have_content(recipient1.name)
         click_on recipient1.name
       end

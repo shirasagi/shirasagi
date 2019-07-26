@@ -88,7 +88,7 @@ describe "gws_share_folders", type: :feature, dbscope: :example, js: true do
           click_on I18n.t('gws/share.apis.folders.index')
         end
 
-        within '#cboxLoadedContent' do
+        wait_for_cbox do
           expect(page).to have_content(item.name)
           click_on item.name
         end
@@ -148,7 +148,7 @@ describe "gws_share_folders", type: :feature, dbscope: :example, js: true do
         within 'form#item-form' do
           click_on I18n.t('gws/share.apis.folders.index')
         end
-        within '#cboxLoadedContent' do
+        wait_for_cbox do
           expect(page).to have_content(item2.name)
           click_on item2.name
         end
@@ -173,7 +173,7 @@ describe "gws_share_folders", type: :feature, dbscope: :example, js: true do
         within 'form#item-form' do
           click_on I18n.t('gws/share.apis.folders.index')
         end
-        within '#cboxLoadedContent' do
+        wait_for_cbox do
           expect(page).to have_content(item2.name)
           click_on item2.name
         end

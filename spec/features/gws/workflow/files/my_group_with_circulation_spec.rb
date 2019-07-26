@@ -34,7 +34,7 @@ describe Gws::Workflow::FilesController, type: :feature, dbscope: :example, tmpd
         click_on I18n.t("workflow.buttons.select")
         click_on I18n.t("workflow.search_approvers.index")
       end
-      within "#cboxLoadedContent" do
+      wait_for_cbox do
         expect(page).to have_content(user1.long_name)
         click_on user1.long_name
       end
@@ -42,7 +42,7 @@ describe Gws::Workflow::FilesController, type: :feature, dbscope: :example, tmpd
       within ".mod-workflow-request" do
         click_on I18n.t("workflow.search_circulations.index")
       end
-      within "#cboxLoadedContent" do
+      wait_for_cbox do
         expect(page).to have_content(user2.long_name)
         click_on user2.long_name
       end
@@ -51,7 +51,8 @@ describe Gws::Workflow::FilesController, type: :feature, dbscope: :example, tmpd
         fill_in "workflow[comment]", with: workflow_comment
         click_on I18n.t("workflow.buttons.request")
       end
-      expect(page).to have_css(".mod-workflow-view dd", text: /#{::Regexp.escape(user1.uid)}/)
+
+      expect(page).to have_css(".mod-workflow-view dd", text: I18n.t("workflow.state.request"))
 
       item.reload
       expect(item.workflow_user_id).to eq admin.id

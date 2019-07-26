@@ -52,21 +52,21 @@ describe Gws::Workflow::FilesController, type: :feature, dbscope: :example, tmpd
         choose "agent_type_agent"
         click_on I18n.t("gws/workflow.search_delegatees.index")
       end
-      within "#cboxLoadedContent" do
+      wait_for_cbox do
         expect(page).to have_content(user1.long_name)
         click_on user1.long_name
       end
       within ".mod-workflow-request" do
         click_on I18n.t("workflow.search_approvers.index")
       end
-      within "#cboxLoadedContent" do
+      wait_for_cbox do
         expect(page).to have_content(user2.long_name)
         click_on user2.long_name
       end
       within ".mod-workflow-request" do
         click_on I18n.t("workflow.search_circulations.index")
       end
-      within "#cboxLoadedContent" do
+      wait_for_cbox do
         expect(page).to have_content(user3.long_name)
         click_on user3.long_name
       end
@@ -74,6 +74,7 @@ describe Gws::Workflow::FilesController, type: :feature, dbscope: :example, tmpd
         fill_in "workflow[comment]", with: workflow_comment
         click_on I18n.t("workflow.buttons.request")
       end
+      expect(page).to have_css(".mod-workflow-view dd", text: I18n.t("workflow.state.request"))
       expect(page).to have_css(".mod-workflow-view dd", text: /#{::Regexp.escape(user1.uid)}/)
       expect(page).to have_css(".mod-workflow-view dd", text: /#{::Regexp.escape(user2.uid)}/)
       expect(page).to have_css(".mod-workflow-view dd", text: /#{::Regexp.escape(user3.uid)}/)

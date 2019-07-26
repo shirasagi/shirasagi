@@ -22,8 +22,9 @@ describe "cms_users", type: :feature, dbscope: :example do
       #new
       visit new_path
       click_on "グループを選択する"
-      wait_for_cbox
-      click_on group.name
+      wait_for_cbox do
+        click_on group.name
+      end
 
       within "form#item-form" do
         name = unique_id
@@ -62,8 +63,9 @@ describe "cms_users", type: :feature, dbscope: :example do
 
       visit new_path
       click_on "グループを選択する"
-      wait_for_cbox
-      click_on group.name
+      wait_for_cbox do
+        click_on group.name
+      end
 
       within "form#item-form" do
         name = unique_id
