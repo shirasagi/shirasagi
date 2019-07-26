@@ -109,7 +109,8 @@ def save_page(data)
   puts data[:name]
   cond = { site_id: @site._id, filename: data[:filename] }
 
-  item = data[:route].camelize.constantize.find_or_create_by(cond).becomes_with_route(data[:route])
+  route = data[:route].presence || 'cms/page'
+  item = route.camelize.constantize.find_or_create_by(cond)
   item.update data
 end
 

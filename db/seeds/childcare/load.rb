@@ -516,7 +516,8 @@ def save_page(data)
   html ||= File.read("pages/" + data[:filename]) rescue nil
   summary_html ||= File.read("pages/" + data[:filename].sub(/\.html$/, "") + ".summary_html") rescue nil
 
-  item = data[:route].camelize.constantize.unscoped.find_or_create_by(cond)
+  route = data[:route].presence || 'cms/page'
+  item = route.camelize.constantize.unscoped.find_or_create_by(cond)
   item.html = html if html
   item.summary_html = summary_html if summary_html
 
