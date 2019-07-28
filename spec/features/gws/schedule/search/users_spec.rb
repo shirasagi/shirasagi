@@ -15,7 +15,8 @@ describe "gws_schedule_search_users", type: :feature, dbscope: :example do
         click_button I18n.t('ss.buttons.search')
       end
 
-      within ".main-box" do
+      wait_for_ajax
+      within ".calendar-multiple-header" do
         expect(page).to have_content(user.name)
       end
     end
