@@ -127,7 +127,7 @@ describe "workflow_branch", dbscope: :example, js: true do
 
         click_link("編集する")
         within "form#item-form" do
-          click_button "公開保存"
+          submit_on "公開保存"
         end
         expect(page).to have_css("#notice", text: "保存しました。", wait: 60)
 

@@ -15,6 +15,8 @@ describe "article_pages", dbscope: :example do
       visit new_path
 
       first('#addon-contact-agents-addons-page').click
+      sleep 0.1
+
       first('#addon-contact-agents-addons-page .ajax-box').click
       wait_for_cbox
 

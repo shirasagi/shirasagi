@@ -80,8 +80,8 @@ describe 'members/agents/nodes/registration', type: :feature, dbscope: :example 
         choose "item_sex_#{sex}"
         select era, from: "item[in_birth][era]"
         fill_in "item[in_birth][year]", with: birthday.year
-        select birthday.month, from: "item[in_birth][month]"
-        select birthday.day, from: "item[in_birth][day]"
+        select birthday.month.to_s, from: "item[in_birth][month]"
+        select birthday.day.to_s, from: "item[in_birth][day]"
 
         click_button "確認画面へ"
       end
@@ -224,8 +224,8 @@ describe 'members/agents/nodes/registration', type: :feature, dbscope: :example 
         choose "item_sex_#{sex}"
         select era, from: "item[in_birth][era]"
         fill_in "item[in_birth][year]", with: birthday.year
-        select birthday.month, from: "item[in_birth][month]"
-        select birthday.day, from: "item[in_birth][day]"
+        select birthday.month.to_s, from: "item[in_birth][month]"
+        select birthday.day.to_s, from: "item[in_birth][day]"
 
         click_button "確認画面へ"
       end
@@ -280,8 +280,8 @@ describe 'members/agents/nodes/registration', type: :feature, dbscope: :example 
         choose "item_sex_#{sex}"
         select era, from: "item[in_birth][era]"
         fill_in "item[in_birth][year]", with: birthday.year
-        select birthday.month, from: "item[in_birth][month]"
-        select birthday.day, from: "item[in_birth][day]"
+        select birthday.month.to_s, from: "item[in_birth][month]"
+        select birthday.day.to_s, from: "item[in_birth][day]"
 
         click_button "確認画面へ"
       end

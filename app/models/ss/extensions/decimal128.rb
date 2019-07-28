@@ -8,7 +8,7 @@ class SS::Extensions::Decimal128
     elsif val.is_a?(BSON::Decimal128)
       @value = val.to_big_decimal
     elsif val.numeric?
-      @value = ::BigDecimal.new(val.to_s)
+      @value = BigDecimal(val.to_s)
     else
       raise ArgumentError, "invalid value for SS::Extensions::Decimal128(): \"#{val}\""
     end

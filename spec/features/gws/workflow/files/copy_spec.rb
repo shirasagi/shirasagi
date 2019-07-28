@@ -27,7 +27,7 @@ describe Gws::Workflow::FilesController, type: :feature, dbscope: :example, tmpd
         end
         within "form#item-form" do
           expect(page).to have_content("logo.png")
-          click_on I18n.t("ss.buttons.save")
+          submit_on I18n.t("ss.buttons.save")
         end
 
         expect(Gws::Workflow::File.site(site).count).to eq 1
@@ -36,7 +36,7 @@ describe Gws::Workflow::FilesController, type: :feature, dbscope: :example, tmpd
         click_on name
         click_on I18n.t("ss.links.copy")
         within "form" do
-          click_on I18n.t("ss.buttons.save")
+          submit_on I18n.t("ss.buttons.save")
         end
 
         expect(Gws::Workflow::File.site(site).count).to eq 2
@@ -62,18 +62,20 @@ describe Gws::Workflow::FilesController, type: :feature, dbscope: :example, tmpd
             expect(page).to have_content(::File.basename(file_path))
             expect(SS::TempFile.count).to eq 1
             fill_in "item[text]", with: test_url
-            click_on I18n.t("ss.buttons.save")
+            submit_on I18n.t("ss.buttons.save")
           end
 
+          expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
           expect(Gws::Workflow::File.site(site).count).to eq 1
 
           visit gws_workflow_files_path(site: site, state: "all")
           click_on name
           click_on I18n.t("ss.links.copy")
           within "form" do
-            click_on I18n.t("ss.buttons.save")
+            submit_on I18n.t("ss.buttons.save")
           end
 
+          expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
           expect(Gws::Workflow::File.site(site).count).to eq 2
           expect(Gws::Workflow::File.site(site).where(name: name_with_prefix)).to be_present
           Gws::Workflow::File.site(site).where(name: name_with_prefix).first.tap do |item|

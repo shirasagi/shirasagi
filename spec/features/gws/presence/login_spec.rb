@@ -21,9 +21,7 @@ describe 'gws_presence_users', type: :feature, dbscope: :example do
       end
       expect(Gws::User.find(gws_user.id).user_presence(site).state).to eq ""
 
-      find("#head .user .name", text: gws_user.name).click
-      expect(page).to have_content(I18n.t("ss.logout"))
-      click_link I18n.t("ss.logout")
+      visit sns_logout_path
       expect(current_path).to eq sns_login_path
       expect(Gws::User.find(gws_user.id).user_presence(site).state).to eq ""
 
@@ -43,8 +41,7 @@ describe 'gws_presence_users', type: :feature, dbscope: :example do
       end
       expect(Gws::User.find(gws_user.id).user_presence(site).state).to eq "available"
 
-      find("#head .user .name", text: gws_user.name).click
-      click_link I18n.t("ss.logout")
+      visit sns_logout_path
       expect(current_path).to eq sns_login_path
       expect(Gws::User.find(gws_user.id).user_presence(site).state).to eq "unavailable"
 
@@ -64,8 +61,7 @@ describe 'gws_presence_users', type: :feature, dbscope: :example do
       end
       expect(Gws::User.find(gws_user.id).user_presence(site).state).to eq "available"
 
-      find("#head .user .name", text: gws_user.name).click
-      click_link I18n.t("ss.logout")
+      visit sns_logout_path
       expect(current_path).to eq sns_login_path
       expect(Gws::User.find(gws_user.id).user_presence(site).state).to eq "available"
 
@@ -92,8 +88,7 @@ describe 'gws_presence_users', type: :feature, dbscope: :example do
 
       expect(Gws::User.find(gws_user.id).user_presence(site).state).to eq "available"
 
-      find("#head .user .name", text: gws_user.name).click
-      click_link I18n.t("ss.logout")
+      visit sns_logout_path
       expect(current_path).to eq sns_login_path
       expect(Gws::User.find(gws_user.id).user_presence(site).state).to eq "unavailable"
 

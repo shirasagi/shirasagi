@@ -39,3 +39,6 @@ ehthumbs.db
 
 # Dotenv
 /.env
+
+# test-queue
+.test_queue_stats

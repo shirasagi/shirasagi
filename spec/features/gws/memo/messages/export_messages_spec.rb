@@ -19,7 +19,7 @@ describe 'gws_memo_messages', type: :feature, dbscope: :example, js: true do
         choose "item_export_filter_selected"
         click_on I18n.t("ss.links.select")
       end
-      within "#cboxLoadedContent" do
+      wait_for_cbox do
         expect(page).to have_css(".list-item", text: memo.subject)
         click_on memo.subject
       end
@@ -344,7 +344,7 @@ describe 'gws_memo_messages', type: :feature, dbscope: :example, js: true do
         select 'eml', from: 'item_format'
         click_on I18n.t("ss.links.select")
       end
-      within "#cboxLoadedContent" do
+      wait_for_cbox do
         expect(page).to have_css(".list-item", text: memo.subject)
         click_on memo.subject
       end
@@ -359,7 +359,7 @@ describe 'gws_memo_messages', type: :feature, dbscope: :example, js: true do
         select 'eml', from: 'item_format'
         click_on I18n.t("ss.links.select")
       end
-      within "#cboxLoadedContent" do
+      wait_for_cbox do
         expect(page).to have_css(".list-item", text: memo.subject)
         click_on memo.subject
       end

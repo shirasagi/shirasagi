@@ -115,6 +115,7 @@ group :development, :test do
   gem 'rubocop-performance', require: false
   gem 'spring', '~> 2.0.2'
   gem 'timecop'
+  gem 'test-queue'
 end
 
 group :development do

@@ -48,7 +48,7 @@ describe "gws_notices", type: :feature, dbscope: :example, js: true do
           click_on I18n.t('ss.apis.users.index')
         end
       end
-      within '#cboxLoadedContent' do
+      wait_for_cbox do
         expect(page).to have_content(site.name)
         find('button.dropdown.btn').click
         within '.dropdown-container' do
@@ -63,7 +63,7 @@ describe "gws_notices", type: :feature, dbscope: :example, js: true do
           click_on I18n.t('ss.apis.users.index')
         end
       end
-      within '#cboxLoadedContent' do
+      wait_for_cbox do
         expect(page).to have_content(site.name)
         find('button.dropdown.btn').click
         within '.dropdown-container' do

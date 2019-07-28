@@ -21,6 +21,9 @@ module Opendata::TsvParseable
       data = NKF.nkf("-wd", src.read)
       src.try(:rewind)
       CSV.parse(data)
+    rescue CSV::MalformedCSVError => e
+      logger.warn("#{e.class} (#{e.message}):\n  #{e.backtrace.join("\n  ")}")
+      nil
     rescue => e
       logger.warn("#{e.class} (#{e.message}):\n  #{e.backtrace.join("\n  ")}")
       puts("#{e.class} (#{e.message}):\n  #{e.backtrace.join("\n  ")}")
