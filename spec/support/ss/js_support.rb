@@ -46,13 +46,6 @@ module SS
       end
     end
 
-    def wait_for_page(&block)
-      sleep 0.1
-      wait_for_selector("#page")
-      wait_for_ajax
-      yield if block_given?
-    end
-
     def wait_for_cbox_close
       Timeout.timeout(ajax_timeout) do
         loop do
@@ -61,6 +54,13 @@ module SS
           sleep 1
         end
       end
+    end
+
+    def submit_on(*args)
+      sleep 0.5
+      click_on(*args)
+      sleep 0.5
+      #wait_for_ajax
     end
 
     def save_full_screenshot(opts = {})

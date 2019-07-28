@@ -49,10 +49,12 @@ describe "gws_share_files", type: :feature, dbscope: :example, tmpdir: true, js:
       end
       within "form#item-form" do
         fill_in "item[memo]", with: "new test"
-        find('input[type=submit]').click
       end
-      expect(current_path).not_to eq new_path
-      expect(Gws::Share::File.find_by(memo: "new test")).to be_present
+      within "footer.send" do
+        submit_on I18n.t('ss.buttons.upload')
+      end
+      expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+
       within ".tree-navi" do
         expect(page).to have_content(folder.name)
       end

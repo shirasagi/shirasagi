@@ -30,7 +30,7 @@ describe "gws_board_topics", type: :feature, dbscope: :example do
         within "form#item-form" do
           fill_in "item[name]", with: "name"
           fill_in "item[text]", with: "text"
-          click_button I18n.t("ss.buttons.save")
+          submit_on I18n.t("ss.buttons.save")
         end
         expect(page).to have_css("#notice", text: I18n.t("ss.notice.saved"))
       end
@@ -58,7 +58,7 @@ describe "gws_board_topics", type: :feature, dbscope: :example do
       end
       within "form#item-form" do
         fill_in "item[name]", with: "modify"
-        click_button I18n.t("ss.buttons.save")
+        submit_on I18n.t("ss.buttons.save")
       end
       expect(page).to have_css("#notice", text: I18n.t("ss.notice.saved"))
     end

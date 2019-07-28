@@ -99,9 +99,8 @@ describe "gws_users", type: :feature, dbscope: :example, js: true do
         fill_in 'item[email]', with: "#{name}@example.jp"
         fill_in 'item[in_password]', with: 'pass'
         fill_in "custom[#{column1.id}]", with: unique_id
-        click_button I18n.t('ss.buttons.save')
+        submit_on I18n.t('ss.buttons.save')
       end
-      wait_for_ajax
       expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
 
       expect { Gws::User.all.active.find_by(name: name) }.not_to raise_error

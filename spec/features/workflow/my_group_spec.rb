@@ -50,10 +50,9 @@ describe "my_group", dbscope: :example, js: true do
         end
         within ".mod-workflow-request" do
           fill_in "workflow[comment]", with: workflow_comment
-          click_on I18n.t("workflow.buttons.request")
+          submit_on I18n.t("workflow.buttons.request")
         end
 
-        wait_for_page
         expect(page).to have_css(".mod-workflow-view dd", text: I18n.t("workflow.state.request"))
 
         item.reload
@@ -269,12 +268,12 @@ describe "my_group", dbscope: :example, js: true do
         end
 
         expect(page).to have_css(".mod-workflow-view dd", text: I18n.t("workflow.state.request"))
+        expect(page).to have_css(".mod-workflow-view dd", text: workflow_comment)
 
         item.reload
         expect(item.workflow_user_id).to eq cms_user.id
         expect(item.workflow_state).to eq "request"
         expect(item.state).to eq "closed"
-        expect(item.workflow_comment).to eq workflow_comment
         expect(item.workflow_approvers.count).to eq 2
         expect(item.workflow_approvers).to include({level: 1, user_id: user1.id, editable: '', state: 'request', comment: ''})
         expect(item.workflow_approvers).to include({level: 1, user_id: user2.id, editable: '', state: 'request', comment: ''})
@@ -365,7 +364,7 @@ describe "my_group", dbscope: :example, js: true do
         end
         within ".mod-workflow-request" do
           fill_in "workflow[comment]", with: workflow_comment
-          click_on I18n.t("workflow.buttons.request")
+          submit_on I18n.t("workflow.buttons.request")
         end
 
         expect(page).to have_css(".mod-workflow-view dd", text: I18n.t("workflow.state.request"))

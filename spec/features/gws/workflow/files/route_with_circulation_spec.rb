@@ -58,7 +58,7 @@ describe Gws::Workflow::FilesController, type: :feature, dbscope: :example, tmpd
         click_on I18n.t("workflow.buttons.select")
 
         fill_in "workflow[comment]", with: workflow_comment1
-        click_on I18n.t("workflow.buttons.request")
+        submit_on I18n.t("workflow.buttons.request")
       end
       expect(page).to have_css(".mod-workflow-view dd", text: /#{::Regexp.escape(user1.uid)}/)
 

@@ -32,7 +32,7 @@ describe "gws_workflow_files", type: :feature, dbscope: :example, tmpdir: true d
       end
 
       within "form#item-form" do
-        click_on "保存"
+        submit_on "保存"
       end
 
       within "#addon-basic" do

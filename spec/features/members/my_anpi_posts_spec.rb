@@ -44,8 +44,8 @@ describe "member_my_anpi_posts", dbscope: :example, js: true do
       within '#ajax-box' do
         click_link member.name
       end
+      submit_on '保存'
 
-      click_on '保存'
       expect(page).to have_css('#notice', text: '保存しました。', wait: 60)
       expect(Board::AnpiPost.count).to eq 1
       Board::AnpiPost.first.tap do |anpi|
@@ -61,8 +61,8 @@ describe "member_my_anpi_posts", dbscope: :example, js: true do
       click_on member.name
       click_on '編集する'
       fill_in 'item[text]', with: text1
+      submit_on '保存'
 
-      click_on '保存'
       expect(page).to have_css('#notice', text: '保存しました。', wait: 60)
       expect(Board::AnpiPost.count).to eq 1
       Board::AnpiPost.first.tap do |anpi|
@@ -74,7 +74,8 @@ describe "member_my_anpi_posts", dbscope: :example, js: true do
       visit index_path
       click_on member.name
       click_on '削除する'
-      click_on '削除'
+      submit_on '削除'
+
       expect(page).to have_css('#notice', text: I18n.t('ss.notice.deleted'), wait: 60)
     end
   end

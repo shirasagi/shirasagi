@@ -24,7 +24,7 @@ describe "member_blogs", dbscope: :example, js: true do
       visit new_path
       within "form#item-form" do
         fill_in "item[name]", with: "sample"
-        click_on I18n.t("ss.buttons.draft_save")
+        submit_on I18n.t("ss.buttons.draft_save")
       end
 
       within ".errorExplanation" do

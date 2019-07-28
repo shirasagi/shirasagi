@@ -32,7 +32,7 @@ describe "gws_notices", type: :feature, dbscope: :example, tmpdir: true, js: tru
       first("a[data-id=\"#{notice_file.id}\"]").click
     end
     within 'form#item-form' do
-      click_on I18n.t('ss.buttons.save')
+      submit_on I18n.t('ss.buttons.save')
     end
   end
 

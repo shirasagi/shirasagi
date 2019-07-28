@@ -32,7 +32,7 @@ describe "cms_users", type: :feature, dbscope: :example do
         fill_in "item[email]", with: "#{name}@example.jp"
         fill_in "item[in_password]", with: "pass"
         check "item[cms_role_ids][]"
-        click_button "保存"
+        submit_on "保存"
       end
       expect(page).to have_no_css('#item-form')
 
@@ -44,7 +44,7 @@ describe "cms_users", type: :feature, dbscope: :example do
       visit edit_path
       within "form#item-form" do
         fill_in "item[name]", with: "modify"
-        click_button "保存"
+        submit_on "保存"
       end
       expect(page).to have_no_css('#item-form')
 
@@ -73,7 +73,7 @@ describe "cms_users", type: :feature, dbscope: :example do
         fill_in "item[uid]", with: name
         fill_in "item[ldap_dn]", with: "dc=#{name},dc=city,dc=example,dc=jp"
         check "item[cms_role_ids][]"
-        click_button "保存"
+        submit_on "保存"
       end
       expect(page).to have_no_css('#item-form')
     end
@@ -89,7 +89,7 @@ describe "cms_users", type: :feature, dbscope: :example do
       visit edit_path
       within "form#item-form" do
         fill_in "item[name]", with: "modify"
-        click_button "保存"
+        submit_on "保存"
       end
       expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
     end

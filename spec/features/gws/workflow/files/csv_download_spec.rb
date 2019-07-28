@@ -152,7 +152,7 @@ describe Gws::Workflow::FilesController, type: :feature, dbscope: :example, tmpd
         visit gws_workflow_files_path(site: site, state: "all")
         click_on item1.name
         accept_confirm do
-          click_on I18n.t("gws/workflow.links.download_attachment")
+          submit_on I18n.t("gws/workflow.links.download_attachment")
         end
 
         expect(page).to have_css('#notice', text: I18n.t('gws.notice.delay_download_with_message').sub(/\n.*$/, ''))
