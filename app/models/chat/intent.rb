@@ -85,6 +85,6 @@ class Chat::Intent
   end
 
   def duplicate?
-    self.class.intents(phrase.join).count > 1
+    self.class.site(site).where(node_id: node_id).intents(phrase.join).count > 1
   end
 end
