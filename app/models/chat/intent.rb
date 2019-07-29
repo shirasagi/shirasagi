@@ -63,11 +63,16 @@ class Chat::Intent
       end
     end
 
+    def intents(string)
+      return if string.blank?
+      all.select do |intent|
+        string =~ /#{intent.phrase.collect { |phrase| Regexp.escape(phrase) }.join('|') }/
+      end
+    end
+
     def find_intent(string)
       return if string.blank?
-      item = all.select do |intent|
-        string =~ /#{intent.phrase.collect { |phrase| Regexp.escape(phrase) }.join('|') }/
-      end.first
+      item = intents(string).first
       return if item.blank?
       item
     end
@@ -77,5 +82,9 @@ class Chat::Intent
       return if item.blank?
       item.response
     end
+  end
+
+  def duplicate?
+    self.class.intents(phrase.join).count > 1
   end
 end
