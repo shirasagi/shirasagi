@@ -8,8 +8,8 @@ RSpec.describe Gws::Schedule::Plan, type: :model, dbscope: :example, tmpdir: tru
     let(:item) { build :gws_schedule_plan, name: 'test', facility_ids: [facility.id] }
 
     before do
-      gws_site.facility_min_hour = 8
-      gws_site.facility_min_hour = 22
+      site.facility_min_hour = 8
+      site.facility_max_hour = 22
     end
 
     context 'valid hours' do
