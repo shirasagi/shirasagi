@@ -73,7 +73,7 @@ class Gws::Memo::MessagesController < ApplicationController
   end
 
   def redirect_to_appropriate_folder
-    path = @item.path[@cur_user.id.to_s]
+    path = @item.path(@cur_user)
     if path.present?
       redirect_to({ folder: path })
     elsif (@cur_user.id == @item.user_id) && @item.deleted["sent"].nil?
