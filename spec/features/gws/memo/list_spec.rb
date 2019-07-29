@@ -29,7 +29,6 @@ describe 'gws_memo_lists', type: :feature, dbscope: :example, js: true do
       end
 
       wait_for_cbox do
-        expect(page).to have_content(gws_user.name)
         click_on gws_user.name
       end
 
@@ -38,8 +37,7 @@ describe 'gws_memo_lists', type: :feature, dbscope: :example, js: true do
       end
 
       wait_for_cbox do
-        expect(page).to have_content(category.name)
-        select category.name
+        fill_in 's[keyword]', with: category.name
         click_on I18n.t('ss.buttons.search')
         wait_for_ajax
         click_on category.name
