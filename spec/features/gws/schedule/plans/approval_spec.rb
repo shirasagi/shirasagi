@@ -38,7 +38,7 @@ describe "gws_schedule_plans", type: :feature, dbscope: :example do
       visit show_path
 
       within "#addon-gws-agents-addons-schedule-approval" do
-        choose "item_approvals_2_state_approve"
+        choose "item_approvals_#{gws_user.id}_state_approve"
       end
       wait_for_cbox do
         fill_in "comment[text]", with: "comment"
@@ -54,7 +54,7 @@ describe "gws_schedule_plans", type: :feature, dbscope: :example do
       visit show_path
 
       within "#addon-gws-agents-addons-schedule-approval" do
-        choose "item_approvals_2_state_deny"
+        choose "item_approvals_#{gws_user.id}_state_deny"
       end
       wait_for_cbox do
         fill_in "comment[text]", with: "comment"
