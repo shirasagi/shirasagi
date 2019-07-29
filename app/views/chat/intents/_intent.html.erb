@@ -3,9 +3,9 @@
   <tr data-depth="<%= depth %>">
     <td class="expandable">
       <% if @rendered_items.find { |id| id == item.id } || @reject_items.find { |id| id == item.id } %>
-        <%= item.name %>
+        <%= suggest %>
       <% else %>
-        <%= link_to item.name, action: :show, id: item %>
+        <%= link_to suggest, action: :show, id: item %>
       <% end %>
     </td>
     <td><%= item.categories.order_by(order: 1, updated: -1).pluck(:name).join(', ') %></td>
