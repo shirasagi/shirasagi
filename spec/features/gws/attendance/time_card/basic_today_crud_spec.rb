@@ -25,7 +25,7 @@ describe "gws_attendance_time_card", type: :feature, dbscope: :example, js: true
         Timecop.freeze(now) do
           within '.today .action .enter' do
             page.accept_confirm do
-              click_on I18n.t('gws/attendance.buttons.punch')
+              submit_on I18n.t('gws/attendance.buttons.punch')
             end
           end
           expect(page).to have_css('.today .info .enter', text: format('%d:%02d', now.hour, now.min))
@@ -69,7 +69,7 @@ describe "gws_attendance_time_card", type: :feature, dbscope: :example, js: true
         Timecop.freeze(now) do
           within '.today .action .enter' do
             page.accept_confirm do
-              click_on I18n.t('gws/attendance.buttons.punch')
+              submit_on I18n.t('gws/attendance.buttons.punch')
             end
           end
           expect(page).to have_css('.today .info .enter', text: format('%d:%02d', now.hour, now.min))

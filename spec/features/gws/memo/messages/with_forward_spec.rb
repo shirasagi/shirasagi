@@ -57,13 +57,13 @@ describe 'gws_memo_messages', type: :feature, dbscope: :example, js: true do
         # send message
         visit gws_memo_messages_path(site)
         within ".gws-memo-folder" do
-          click_on I18n.t("gws/memo/folder.inbox_draft")
+          submit_on I18n.t("gws/memo/folder.inbox_draft")
         end
         click_on subject
         click_on I18n.t("ss.links.edit")
         within 'form#item-form' do
           page.accept_confirm do
-            click_on I18n.t("ss.buttons.send")
+            submit_on I18n.t("ss.buttons.send")
           end
         end
         expect(page).to have_css('#notice', text: I18n.t("ss.notice.sent"))

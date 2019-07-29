@@ -33,7 +33,7 @@ describe "gws_workflow_files", type: :feature, dbscope: :example, tmpdir: true, 
       end
 
       within "form#item-form" do
-        click_on I18n.t("ss.buttons.save")
+        submit_on I18n.t("ss.buttons.save")
       end
 
       within "#addon-basic" do

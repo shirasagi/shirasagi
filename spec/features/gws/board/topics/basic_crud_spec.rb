@@ -23,7 +23,7 @@ describe "gws_board_topics", type: :feature, dbscope: :example do
       Timecop.freeze(now) do
         visit new_path
         click_on I18n.t("gws.apis.categories.index")
-        within "tbody.items" do
+        wait_for_cbox do
           click_on category.name
         end
 
@@ -53,7 +53,7 @@ describe "gws_board_topics", type: :feature, dbscope: :example do
     it "#edit" do
       visit edit_path
       click_on I18n.t("gws.apis.categories.index")
-      within "tbody.items" do
+      wait_for_cbox do
         click_on category.name
       end
       within "form#item-form" do
