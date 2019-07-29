@@ -40,8 +40,8 @@ module SS
     end
 
     def wait_for_cbox(&block)
-      wait_for_selector("div#ajax-box table.index")
-      within "#cboxLoadedContent" do
+      wait_for_selector("div#ajax-box")
+      within "div#ajax-box" do
         yield if block_given?
       end
     end
