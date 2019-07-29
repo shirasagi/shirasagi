@@ -30,9 +30,9 @@ describe "gws_users", type: :feature, dbscope: :example, js: true do
         fill_in "item[name]", with: name
         fill_in "item[email]", with: "#{name}@example.jp"
         fill_in "item[in_password]", with: "pass"
-        click_button I18n.t('ss.buttons.save')
+        submit_on I18n.t('ss.buttons.save')
       end
-      expect(page).to have_no_css('#item-form')
+      expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
 
       #show
       visit show_path
@@ -44,7 +44,7 @@ describe "gws_users", type: :feature, dbscope: :example, js: true do
         fill_in "item[name]", with: "name"
         click_button I18n.t('ss.buttons.save')
       end
-      expect(page).to have_no_css('#item-form')
+      expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
 
       #delete
       visit delete_path

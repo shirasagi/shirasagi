@@ -29,7 +29,6 @@ describe 'gws_memo_lists', type: :feature, dbscope: :example, js: true do
       end
 
       wait_for_cbox do
-        expect(page).to have_content(gws_user.name)
         click_on gws_user.name
       end
 
@@ -38,14 +37,14 @@ describe 'gws_memo_lists', type: :feature, dbscope: :example, js: true do
       end
 
       wait_for_cbox do
-        expect(page).to have_content(category.name)
-        select category.name
+        fill_in 's[keyword]', with: category.name
         click_on I18n.t('ss.buttons.search')
+        wait_for_ajax
         click_on category.name
       end
 
       within 'form#item-form' do
-        click_on I18n.t('ss.buttons.save')
+        submit_on I18n.t('ss.buttons.save')
       end
       expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
 
@@ -61,7 +60,7 @@ describe 'gws_memo_lists', type: :feature, dbscope: :example, js: true do
       click_on I18n.t('ss.links.edit')
       within 'form#item-form' do
         fill_in 'item[name]', with: name2
-        click_on I18n.t('ss.buttons.save')
+        submit_on I18n.t('ss.buttons.save')
       end
       expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
 

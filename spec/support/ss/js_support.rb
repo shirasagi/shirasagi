@@ -40,8 +40,8 @@ module SS
     end
 
     def wait_for_cbox(&block)
-      wait_for_selector("div#ajax-box table.index")
-      within "#cboxLoadedContent" do
+      wait_for_selector("div#ajax-box")
+      within "div#ajax-box" do
         yield if block_given?
       end
     end
@@ -60,7 +60,12 @@ module SS
       sleep 0.5
       click_on(*args)
       sleep 0.5
-      #wait_for_ajax
+    end
+
+    def fill_in(selector, options)
+      el = super(selector, with: '').click
+      options[:with].to_s.split('').each { |c| el.native.send_keys(c) }
+      el
     end
 
     def save_full_screenshot(opts = {})

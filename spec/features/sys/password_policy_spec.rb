@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe "sys_password_policies", type: :feature, dbscope: :example do
+describe "sys_password_policies", type: :feature, dbscope: :example, js: true do
   context "basic crud" do
     let(:password_limit_days) { rand(1..100) }
     let(:password_warning_days) { rand(1..password_limit_days) }
@@ -182,7 +182,7 @@ describe "sys_password_policies", type: :feature, dbscope: :example do
 
       within "form#item-form" do
         fill_in "item[in_password]", with: password
-        click_on I18n.t("ss.buttons.save")
+        submit_on I18n.t("ss.buttons.save")
       end
     end
 

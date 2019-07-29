@@ -36,7 +36,7 @@ describe "gws_share_files", type: :feature, dbscope: :example, tmpdir: true, js:
 
       visit new_path
       click_on I18n.t("gws.apis.categories.index")
-      within "tbody.items" do
+      wait_for_cbox do
         click_on category.name
       end
       within "form#item-form" do

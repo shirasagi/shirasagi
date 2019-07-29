@@ -14,14 +14,17 @@ describe "article_pages", dbscope: :example do
     it "#new" do
       visit new_path
 
-      first('#addon-contact-agents-addons-page').click
-      sleep 0.1
+      within '#addon-contact-agents-addons-page' do
+        first('.toggle-head').click
 
-      first('#addon-contact-agents-addons-page .ajax-box').click
-      wait_for_cbox
+        within '.toggle-body' do
+          first('.ajax-box').click
+        end
+      end
 
-      click_on "contact_group"
-      #sleep 1
+      wait_for_cbox do
+        click_on "contact_group"
+      end
 
       within "form#item-form" do
         fill_in "item[name]", with: "sample"
