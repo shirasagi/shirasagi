@@ -3,7 +3,7 @@ ja:
     bot: チャットボット
     first_suggest: 最初のサジェスト
     loop_intent: 循環参照されているシナリオです。
-    not_found_intent: シナリオが作成されていません。
+    not_found_intent: 返答またはサジェストを作成してください。
     report: レポート
     session_count: セッション数
     links:
