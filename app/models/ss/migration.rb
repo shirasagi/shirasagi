@@ -8,13 +8,24 @@ class SS::Migration
   class << self
     # Do migration.
     def migrate
-      filepaths_to_apply.each do |filepath|
-        timestamp = take_timestamp filepath
-        require filepath
-        "SS::Migration#{timestamp}".constantize.new.change
-        create version: timestamp
-        puts "Applied SS::Migration#{timestamp}"
+      apply_all(filepaths_to_apply)
+    end
+
+    def up
+      version = ENV["VERSION"]
+      if version.blank?
+        puts "VERSION is missing"
+        puts "rake ss:migrate:up VERSION=<VERSION TO APPLY>"
+        return
       end
+
+      filepath_list = filepaths_to_apply.select { |filepath| take_timestamp(filepath) == version }
+      if filepath_list.blank?
+        puts "VERSION '#{version}' was already applied or is not found"
+        return
+      end
+
+      apply_all(filepath_list)
     end
 
     # Return the all filepaths in *RAILS_ROOT/lib/migrations/**.
@@ -76,6 +87,20 @@ class SS::Migration
     # @return [Array<String>] An array of filepath of migrations to apply.
     def filepaths_to_apply
       filepaths.select { |e| take_timestamp(e) > latest_version }
+    end
+
+    private
+
+    def apply_all(filepath_list)
+      filepath_list.each { |filepath| apply(filepath) }
+    end
+
+    def apply(filepath)
+      timestamp = take_timestamp filepath
+      require filepath
+      "SS::Migration#{timestamp}".constantize.new.change
+      create version: timestamp
+      puts "Applied SS::Migration#{timestamp}"
     end
   end
 end
