@@ -24,10 +24,4 @@ class Gws::Attendance::Record
     criteria = time_card.histories.where(date: date.in_time_zone('UTC'), field_name: field_name)
     criteria.order_by(created: -1).first
   end
-
-  def calc_working_time
-    return if enter.blank? || leave.blank?
-    duration = (leave - enter).to_i
-    Time::EPOCH + duration
-  end
 end
