@@ -1,6 +1,6 @@
 class SS::Migration20190705000000
   def change
-    ids = Cms::Node.all.pluck(:id)
+    ids = Cms::Node.and_public.pluck(:id)
     ids.each do |id|
       node = Cms::Node.find(id) rescue nil
       next unless node
