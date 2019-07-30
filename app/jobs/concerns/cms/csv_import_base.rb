@@ -6,7 +6,7 @@ module Cms::CsvImportBase
   end
 
   module ClassMethods
-    def valid_csv?(file)
+    def valid_csv?(file, max_read_lines: 100)
       no = 0
       each_csv(file) do |row|
         no += 1
@@ -16,7 +16,7 @@ module Cms::CsvImportBase
         end
 
         # check csv record up to 100
-        break if no >= 100
+        break if no >= max_read_lines
       end
 
       true

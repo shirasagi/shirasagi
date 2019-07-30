@@ -880,3 +880,11 @@ dl.gws-schedule-repeat {
     }
   }
 }
+
+.gws-schedule-csv {
+  .import-log { min-height: 2em; }
+  .import-loading { color: #bbb; }
+  .import-exist { color: #bbb; }
+  .import-saved { color: #06d; }
+  .import-error { color: #e00; }
+}

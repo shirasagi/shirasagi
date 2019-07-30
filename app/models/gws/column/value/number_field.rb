@@ -63,4 +63,12 @@ class Gws::Column::Value::NumberField < Gws::Column::Value::Base
 
     str
   end
+
+  def import_csv(values)
+    values.each do |sub_key, value|
+      if sub_key.blank?
+        self.decimal = value
+      end
+    end
+  end
 end

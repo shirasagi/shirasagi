@@ -20,6 +20,10 @@ this.SS = (function () {
 
   SS.siteName = null;
 
+  SS.timeFormatter = {
+    default: "YYYY/M/D HH:mm"
+  };
+
   SS.disableClick = function (el) {
     if (el.data('clicked')) {
       return false;
@@ -431,6 +435,24 @@ this.SS = (function () {
       });
     }
   };
+
+  // SS.formatTime("2019-07-09T14:33:38+0900") = "2019/7/9 14:33"
+  // SS.formatTime("2019-07-09T14:33:38+0900", "default") = "2019/7/9 14:33"
+  //
+  // You can pass a Date or moment instance to 1st argument
+  //
+  // SS.formatTime(new Date())
+  // SS.formatTime(moment())
+  SS.formatTime = function(time, format) {
+    if (!format) {
+      format = "default"
+    }
+    if (SS.timeFormatter[format]) {
+      format = SS.timeFormatter[format];
+    }
+
+    return moment(time).format(format);
+  }
 
   return SS;
 

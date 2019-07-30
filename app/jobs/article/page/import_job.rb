@@ -41,6 +41,7 @@ class Article::Page::ImportJob < Cms::ApplicationJob
     filename = "#{node.filename}/#{value(row, :filename)}"
     item = model.find_or_initialize_by(site_id: site.id, filename: filename)
     raise I18n.t('errors.messages.auth_error') unless item.allowed?(:import, user, site: site, node: node)
+
     item.site = site
     set_page_attributes(row, item)
     raise I18n.t('errors.messages.auth_error') unless item.allowed?(:import, user, site: site, node: node)
@@ -57,13 +58,7 @@ class Article::Page::ImportJob < Cms::ApplicationJob
     row[key].try(:strip)
   end
 
-  def to_array(value, delim: "\n")
-    value.to_s.split(delim).map(&:strip)
-  end
-
-  def from_label(value, options, private_options = {})
-    options.to_h[value].to_s.presence || private_options.to_h[value].to_s
-  end
+  delegate :to_array, :from_label, to: SS::Csv::CsvImporter
 
   def category_name_tree_to_ids(name_trees)
     category_ids = []

@@ -28,4 +28,12 @@ class Gws::Column::Value::CheckBox < Gws::Column::Value::Base
   def value
     values.join(', ')
   end
+
+  def import_csv(values)
+    values.each do |sub_key, value|
+      if sub_key.blank?
+        self.values = value
+      end
+    end
+  end
 end

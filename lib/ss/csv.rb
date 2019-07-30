@@ -5,11 +5,12 @@ class SS::Csv
     include Enumerable
 
     def initialize(criteria, options)
-      @criteria = criteria.is_a?(Mongoid::Criteria) ? criteria.dup : criteria.all.dup
+      @criteria = criteria.is_a?(Mongoid::Criteria) ? criteria.all.dup : criteria.dup
       @encoding = options[:encoding].presence || "Shift_JIS"
       @cur_site = options[:cur_site]
       @cur_user = options[:cur_user]
       @cur_node = options[:cur_node]
+      @model_class = options[:model] || @criteria.klass
       @columns = []
       @context = self
     end
@@ -35,12 +36,10 @@ class SS::Csv
     private
 
     def _draw_header
-      klass = @criteria.klass
-
       terms = @columns.map do |column|
         head_proc = column[:head]
         if head_proc.blank?
-          klass.t column[:id]
+          @model_class.t column[:id]
         else
           @context.instance_exec(&head_proc)
         end
@@ -104,6 +103,7 @@ class SS::Csv
 
     def encode_sjis(str)
       return str if str.blank?
+
       str.encode("SJIS", invalid: :replace, undef: :replace)
     end
   end
@@ -186,6 +186,14 @@ class SS::Csv
       @columns << options
     end
 
+    def label_column(key, options = {}, &block)
+      simple_column key do |row, item, head, value|
+        options = item.send("#{key}_options")
+        private_options = item.send("#{key}_private_options") if item.respond_to?("#{key}_private_options")
+        item.send("#{key}=", CsvImporter.from_label(value, options, private_options || {}))
+      end
+    end
+
     def form(name, options = {})
       options = options.dup
       options[:name] = name
@@ -207,14 +215,25 @@ class SS::Csv
       @form[:columns] << options
     end
 
-    def create
-      CsvImporter.new(self)
+    def create(options = {})
+      CsvImporter.new(self, options)
     end
   end
 
   class CsvImporter
-    def initialize(dsl)
+    class << self
+      def from_label(value, options, private_options = {})
+        options.to_h[value].to_s.presence || private_options.to_h[value].to_s
+      end
+
+      def to_array(value, delim: "\n")
+        value.to_s.split(delim).map(&:strip)
+      end
+    end
+
+    def initialize(dsl, options)
       @dsl = dsl
+      @options = options
     end
 
     def import_row(row, item)
@@ -234,7 +253,7 @@ class SS::Csv
         column_values = import_form(heads.first) do
           chunk.slice_when { |lhs, rhs| lhs.first.second != rhs.first.second }.map do |columns|
             _form_name, column_name, _value_name = columns.first.first
-            column = item.form.columns.where(name: column_name).first
+            column = @form.columns.where(name: column_name).first
             next if column.blank?
 
             column_config = @form_config[:columns].find { |column_config| column_config[:name] == column_name }
@@ -245,7 +264,7 @@ class SS::Csv
           end
         end
 
-        item.column_values = column_values
+        item.send("#{@options.dig(:fields, :column_values) || "column_values"}=", column_values)
       end
     end
 
@@ -263,13 +282,14 @@ class SS::Csv
     end
 
     def import_form(form_name)
-      return if @item.form.blank?
-      return if @item.form.name != form_name
+      form = @item.send(@options.dig(:fields, :form) || "form")
+      return if form.blank?
+      return if form.name != form_name
 
       form_config = @dsl.columns.find { |config| config[:name] == form_name }
       return if form_config.blank?
 
-      @form = @item.form
+      @form = form
       @form_config = form_config
 
       yield
