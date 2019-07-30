@@ -41,6 +41,9 @@ production: &production
   # Upper limit of user's imap account
   imap_account_limit: 5
 
+  # Timeout (secs)
+  imap_timeout: 60
+
   # Upper limit of mail's attachments file size(byte). 0 is unlimited
   send_mail_size_limit: 0
 

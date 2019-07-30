@@ -1,9 +1,38 @@
 require "net/imap"
 module Webmail::Imap
+  class Proxy
+    def initialize(imap)
+      @imap = imap
+    end
+
+    # pre-define well known imap commands for performance
+    %i[append create delete examine expunge getquotaroot list rename select uid_copy uid_fetch uid_sort uid_store].each do |m|
+      class_eval <<-METHOD_BODY, __FILE__, __LINE__ + 1
+        def #{m}(*args, &block)
+          @imap.borrow_imap { |conn| conn.#{m}(*args, &block) }
+        end
+      METHOD_BODY
+    end
+
+    def method_missing(method, *args, &block)
+      @imap.borrow_imap do |conn|
+        if conn.respond_to?(method)
+          conn.send(method, *args, &block)
+        else
+          super
+        end
+      end
+    end
+
+    def respond_to_missing?(symbol, include_private)
+      @imap.borrow_imap { |conn| conn.respond_to?(symbol, include_private) }
+    end
+  end
+
   class Base
     include Webmail::Imap::UidsCommand
 
-    attr_accessor :conf, :setting, :conn, :error, :address, :email_address
+    attr_accessor :conf, :setting, :error, :address, :email_address
     attr_accessor :sent_box, :draft_box, :trash_box
 
     private_class_method :new
@@ -46,12 +75,21 @@ module Webmail::Imap
       end
     end
 
-    def login
+    def borrow_imap(&block)
       host = conf[:host]
       options = conf[:options].symbolize_keys
-      self.conn = Net::IMAP.new host, options
-      conn.authenticate conf[:auth_type], conf[:account], conf[:password]
-      return true
+      Webmail.imap_pool.borrow(host: host, port: options[:port], account: conf[:account], &block)
+    end
+
+    def conn
+      @conn ||= Proxy.new(self)
+    end
+
+    def login
+      borrow_imap do |conn|
+        conn.authenticate conf[:auth_type], conf[:account], conf[:password]
+      end
+      true
     rescue => e
       Rails.logger.info("#{e.class} (#{e.message}):\n  #{e.backtrace.join("\n  ")}")
       self.error = e.to_s
@@ -59,10 +97,6 @@ module Webmail::Imap
     end
 
     def disconnect
-      if conn
-        conn.disconnect rescue nil
-      end
-      self.conn = nil
       self.error = nil
     end
 

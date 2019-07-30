@@ -58,7 +58,7 @@ module Webmail
     end
   end
 
-  class MailExportJob < SS::ApplicationJob
+  class MailExportJob < Webmail::ApplicationJob
     include SS::ExportHelper
 
     def perform(opts = {})

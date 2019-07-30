@@ -13,6 +13,36 @@ module Webmail
     end
   end
 
+  class ImapPool
+    include MonitorMixin
+
+    attr_reader :pool
+
+    def initialize
+      super()
+      @pool = {}
+    end
+
+    def borrow(host:, account:, port: nil, timeout: nil)
+      key = "#{host}:#{port || Net::IMAP.default_port}:#{account}"
+      conn = synchronize { pool[key] ||= Net::IMAP.new(host, port: port) }
+
+      Timeout.timeout(timeout || SS.config.webmail.imap_timeout) do
+        yield conn
+      end
+    end
+
+    def disconnect_all
+      synchronize do
+        pool.values.each do |conn|
+          conn.logout rescue nil
+          conn.disconnect rescue nil
+        end
+        pool.clear
+      end
+    end
+  end
+
   module_function
 
   def activate_cp50221
@@ -28,5 +58,9 @@ module Webmail
 
   def cp50221_encoder
     @cp50221_encoder ||= CP50221Encoder.new
+  end
+
+  def imap_pool
+    @imap_pool ||= ImapPool.new
   end
 end

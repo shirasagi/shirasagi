@@ -6,7 +6,7 @@ describe "webmail_gws_messages", type: :feature, dbscope: :example, imap: true, 
   let(:role) { create :gws_role_admin, cur_site: site, cur_user: user }
   let(:item_title) { "rspec-#{unique_id}" }
   let(:item_texts) { [ "message-#{unique_id}", "message-#{unique_id}" ] }
-  let(:messages_path) { gws_memo_messages_path(site: site.id) }
+  let(:messages_path) { gws_memo_messages_path(site: site.id, folder: "INBOX.Sent") }
 
   shared_examples "webmail gws messages flow" do
     context "with auth" do
