@@ -20,6 +20,7 @@ require 'rspec/rails'
 require 'capybara/rspec'
 require 'capybara/rails'
 require 'support/ss/capybara_support'
+require 'simplecov-csv'
 
 # Checks for pending migrations before tests are run.
 # If you are not using ActiveRecord, you can remove this line.
@@ -28,6 +29,7 @@ ActiveRecord::Migration.check_pending! if defined?(ActiveRecord::Migration)
 if analyze_coverage?
   SimpleCov.formatters = [
     SimpleCov::Formatter::HTMLFormatter,
+    SimpleCov::Formatter::CSVFormatter,
     Coveralls::SimpleCov::Formatter
   ]
   SimpleCov.start do
