@@ -44,7 +44,7 @@ class Gws::Attendance::DownloadParam
 
   def validate_user_ids
     if user_ids.present?
-      self.user_ids = user_ids.select(&:present?).map(&:to_i)
+      self.user_ids = user_ids.select(&:numeric?).map(&:to_i)
     end
 
     if user_ids.blank?
@@ -59,7 +59,7 @@ class Gws::Attendance::DownloadParam
     end
 
     self.from_date = Time.zone.parse(self.from_date.to_s)
-    if self.from_date == ::Date::EPOCH || self.from_date == ::Time::EPOCH
+    if self.from_date.nil?
       errors.add :from_date, :invalid
     end
   end
@@ -71,8 +71,13 @@ class Gws::Attendance::DownloadParam
     end
 
     self.to_date = Time.zone.parse(self.to_date.to_s)
-    if self.to_date == ::Date::EPOCH || self.to_date == ::Time::EPOCH
+    if self.to_date.nil?
       errors.add :to_date, :invalid
+      return
+    end
+
+    if self.from_date.present? && self.from_date > self.to_date
+      errors.add :to_date, :greater_than_or_equal_to, count: I18n.l(self.from_date.to_date)
     end
   end
 end
