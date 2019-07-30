@@ -57,7 +57,7 @@ class SS::Migration
     #   #  '/foo/bar/lib/migrations/mod1/20150324000002_a.rb',
     #   #  '/foo/bar/lib/migrations/mod2/20150324000003_a.rb',]
     def filepaths
-      ::Dir.glob(DIR.join('*/*')).sort_by { |i| File.basename i }
+      ::Dir.glob(DIR.join('*/*.rb')).sort_by { |i| File.basename i }
     end
 
     # Returns the latest applied migration version string.
