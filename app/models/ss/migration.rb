@@ -8,7 +8,12 @@ class SS::Migration
   class << self
     # Do migration.
     def migrate
-      apply_all(filepaths_to_apply)
+      filepath_list = filepaths_to_apply
+      if version = ENV["VERSION"]
+        filepath_list = filepath_list.select { |filepath| take_timestamp(filepath) <= version }
+      end
+
+      apply_all(filepath_list)
     end
 
     def up
