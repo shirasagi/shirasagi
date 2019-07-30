@@ -86,20 +86,6 @@ class Gws::Attendance::TimeCard
     end
   end
 
-  def year_options
-    cur_year = Time.zone.now.year
-
-    ((cur_year - 5)..(cur_year + 5)).map do |year|
-      ["#{year}年", year]
-    end
-  end
-
-  def month_options
-    (1..12).map do |month|
-      ["#{month}月", month]
-    end
-  end
-
   def punch(field_name, now = Time.zone.now)
     raise "unable to punch: #{field_name}" if !Gws::Attendance::Record.punchable_field_names.include?(field_name)
 
