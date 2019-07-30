@@ -27,6 +27,7 @@ class Gws::Attendance::DownloadParam
         break if msg.present?
       end
       return msg if msg.blank? || !html_wrap
+
       msg = [msg] if msg.class.to_s == "String"
       list = msg.map { |d| "<li>" + d.to_s.gsub(/\r\n|\n/, "<br />") + "<br /></li>" }
 

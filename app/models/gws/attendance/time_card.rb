@@ -23,16 +23,19 @@ class Gws::Attendance::TimeCard
 
     def search_name(params = {})
       return all if params.blank? || params[:name].blank?
+
       all.search_text(params[:name])
     end
 
     def search_keyword(params)
       return all if params.blank? || params[:keyword].blank?
+
       all.keyword_in(params[:keyword], :name)
     end
 
     def search_group(params)
       return all if params.blank? || params[:group].blank?
+
       group_ids = Gws::Group.active.in_group(params[:group]).pluck(:id)
       user_ids = Gws::User.active.in(group_ids: group_ids).pluck(:id)
       all.in(user_id: user_ids)
@@ -120,6 +123,7 @@ class Gws::Attendance::TimeCard
 
   def normalize_date
     return if self.date.blank?
+
     if self.date.day != 1
       self.date = date.beginning_of_month
     end
