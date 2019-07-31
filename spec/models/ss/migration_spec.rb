@@ -1,22 +1,15 @@
 require 'spec_helper'
 require 'fileutils'
 
-RSpec.describe SS::Migration, type: :model, dbscope: :example do
+RSpec.describe SS::Migration, type: :model, dbscope: :example, tmpdir: true do
   def mkdir(dirname)
     FileUtils.mkdir_p dirname
   end
 
   def touch(filepath)
-    File.open Rails.root.join(filepath), 'w'
+    File.open(filepath, 'w') {}
+    filepath
   end
-
-  def rm_rf(dirpath)
-    FileUtils.rm_rf Rails.root.join(dirpath)
-  end
-
-  before(:all) { mkdir 'tmp/lib/migrations' }
-
-  after(:all)  { rm_rf 'tmp/lib' }
 
   describe 'DIR constant' do
     it { expect(described_class::DIR.to_s).to match(/.*\/lib\/migrations$/) }
@@ -24,22 +17,17 @@ RSpec.describe SS::Migration, type: :model, dbscope: :example do
 
   describe '.filepaths' do
     before do
-      mkdir 'tmp/lib/migrations/mod1'
-      mkdir 'tmp/lib/migrations/mod2'
-      touch 'tmp/lib/migrations/mod2/20150324000000_a.rb'
-      touch 'tmp/lib/migrations/mod1/20150324000001_a.rb'
-      touch 'tmp/lib/migrations/mod1/20150324000002_a.rb'
-      touch 'tmp/lib/migrations/mod2/20150324000003_a.rb'
+      mkdir "#{tmpdir}/migrations/mod1"
+      mkdir "#{tmpdir}/migrations/mod2"
+      touch "#{tmpdir}/migrations/mod2/20150324000000_a.rb"
+      touch "#{tmpdir}/migrations/mod1/20150324000001_a.rb"
+      touch "#{tmpdir}/migrations/mod1/20150324000002_a.rb"
+      touch "#{tmpdir}/migrations/mod2/20150324000003_a.rb"
       # ref.
       #   http://docs.ruby-lang.org/ja/2.2.0/method/Module/i/remove_const.html
       #   http://docs.ruby-lang.org/ja/2.2.0/class/Module.html#I_CLASS_EVAL
       SS::Migration.class_eval { remove_const :DIR }
-      SS::Migration::DIR = Rails.root.join 'tmp/lib/migrations'
-    end
-
-    after do
-      rm_rf 'tmp/lib/migrations/mod1'
-      rm_rf 'tmp/lib/migrations/mod2'
+      SS::Migration::DIR = Rails.root.join "#{tmpdir}/migrations"
     end
 
     it do
@@ -92,15 +80,11 @@ RSpec.describe SS::Migration, type: :model, dbscope: :example do
 
   describe '.filepaths_to_apply' do
     before do
-      mkdir 'tmp/lib/migrations/mod1'
-      touch 'tmp/lib/migrations/mod1/20150330000000_a.rb'
-      touch 'tmp/lib/migrations/mod1/20150330000001_a.rb'
+      mkdir "#{tmpdir}/migrations/mod1"
+      touch "#{tmpdir}/migrations/mod1/20150330000000_a.rb"
+      touch "#{tmpdir}/migrations/mod1/20150330000001_a.rb"
       SS::Migration.class_eval { remove_const :DIR }
-      SS::Migration::DIR = Rails.root.join 'tmp/lib/migrations'
-    end
-
-    after do
-      rm_rf 'tmp/lib/migrations/mod1'
+      SS::Migration::DIR = Rails.root.join "#{tmpdir}/migrations"
     end
 
     subject { described_class.filepaths_to_apply }
