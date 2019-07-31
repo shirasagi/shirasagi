@@ -49,6 +49,7 @@ this.Chat_Bot = (function () {
     $.ajax({
       type: "GET",
       url: this.url,
+      cache: false,
       data: {
         authenticity_token: this.authenticityToken,
         click_suggest: this.clickSuggest
@@ -90,6 +91,7 @@ this.Chat_Bot = (function () {
     $.ajax({
       type: "GET",
       url: this.url,
+      cache: false,
       data: {
         authenticity_token: this.authenticityToken,
         text: text,
@@ -129,6 +131,7 @@ this.Chat_Bot = (function () {
     $.ajax({
       type: "GET",
       url: this.url,
+      cache: false,
       data: {
         authenticity_token: this.authenticityToken,
         intent_id: el.attr('data-id'),
@@ -155,6 +158,7 @@ this.Chat_Bot = (function () {
     $.ajax({
       type: "GET",
       url: this.url,
+      cache: false,
       data: {
         authenticity_token: this.authenticityToken,
         intent_id: el.attr('data-id'),
