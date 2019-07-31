@@ -21,6 +21,11 @@ describe 'gws_memo_filters', type: :feature, dbscope: :example do
     it "#new" do
       visit new_path
 
+      within "form#item-form" do
+        click_button "保存"
+      end
+      expect(page).to have_selector("div#errorExplanation ul li", count: 3)
+
       name = "name-#{unique_id}"
       within "form#item-form" do
         fill_in "item[name]", with: name
