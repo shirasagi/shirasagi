@@ -6,8 +6,15 @@ RSpec.describe SS::Migration, type: :model, dbscope: :example, tmpdir: true do
     FileUtils.mkdir_p dirname
   end
 
-  def touch(filepath)
-    File.open(filepath, 'w') {}
+  def migration_file(filepath)
+    version, _name = described_class.parse_migration_filename(filepath)
+    File.open(filepath, 'w') do |f|
+      f.puts "class SS::Migration#{version}"
+      f.puts "  def change"
+      f.puts "  end"
+      f.puts "end"
+    end
+
     filepath
   end
 
@@ -15,14 +22,15 @@ RSpec.describe SS::Migration, type: :model, dbscope: :example, tmpdir: true do
     it { expect(described_class::DIR.to_s).to match(/.*\/lib\/migrations$/) }
   end
 
-  describe '.filepaths' do
+  context 'with migrations' do
     before do
       mkdir "#{tmpdir}/migrations/mod1"
       mkdir "#{tmpdir}/migrations/mod2"
-      touch "#{tmpdir}/migrations/mod2/20150324000000_a.rb"
-      touch "#{tmpdir}/migrations/mod1/20150324000001_a.rb"
-      touch "#{tmpdir}/migrations/mod1/20150324000002_a.rb"
-      touch "#{tmpdir}/migrations/mod2/20150324000003_a.rb"
+      migration_file "#{tmpdir}/migrations/mod2/20150324000000_a.rb"
+      migration_file "#{tmpdir}/migrations/mod1/20150324000001_a.rb"
+      migration_file "#{tmpdir}/migrations/mod1/20150324000002_a.rb"
+      migration_file "#{tmpdir}/migrations/mod2/20150324000002_b.rb"
+      migration_file "#{tmpdir}/migrations/mod2/20150324000003_a.rb"
       # ref.
       #   http://docs.ruby-lang.org/ja/2.2.0/method/Module/i/remove_const.html
       #   http://docs.ruby-lang.org/ja/2.2.0/class/Module.html#I_CLASS_EVAL
@@ -30,15 +38,82 @@ RSpec.describe SS::Migration, type: :model, dbscope: :example, tmpdir: true do
       SS::Migration::DIR = Rails.root.join "#{tmpdir}/migrations"
     end
 
-    it do
-      expect(described_class.filepaths).to match(
+    describe '.filepaths' do
+      it do
+        expect(described_class.filepaths).to match(
+          [
+            /.*\/mod2\/20150324000000_a\.rb$/,
+            /.*\/mod1\/20150324000001_a\.rb$/,
+            /.*\/mod1\/20150324000002_a\.rb$/,
+            /.*\/mod2\/20150324000002_b\.rb$/,
+            /.*\/mod2\/20150324000003_a\.rb$/,
+          ]
+        )
+      end
+    end
+
+    describe '.migrate' do
+      context "without VERSION env" do
+        it do
+          expect { described_class.migrate }.to output(include("Applied SS::Migration20150324000002")).to_stdout
+
+          expect(described_class.all).to have(5).items
+          expect(described_class.where(version: "20150324000000")).to be_present
+          expect(described_class.where(version: "20150324000001")).to be_present
+          expect(described_class.where(version: "20150324000002")).to be_present
+          expect(described_class.where(version: "20150324000003")).to be_present
+          expect(described_class.where(version: "20150324000004")).to be_blank
+        end
+      end
+
+      context "with VERSION env" do
+        it do
+          with_env("VERSION" => "20150324000002") do
+            expect { described_class.migrate }.to output(include("Applied SS::Migration20150324000002")).to_stdout
+
+            expect(described_class.all).to have(4).items
+            expect(described_class.where(version: "20150324000000")).to be_present
+            expect(described_class.where(version: "20150324000001")).to be_present
+            expect(described_class.where(version: "20150324000002")).to be_present
+            expect(described_class.where(version: "20150324000003")).to be_blank
+            expect(described_class.where(version: "20150324000004")).to be_blank
+          end
+        end
+      end
+    end
+
+    describe '.up' do
+      it do
+        with_env("VERSION" => "20150324000002") do
+          expect { described_class.up }.to output(include("Applied SS::Migration20150324000002")).to_stdout
+
+          expect(described_class.all).to have(2).items
+          expect(described_class.where(version: "20150324000000")).to be_blank
+          expect(described_class.where(version: "20150324000001")).to be_blank
+          expect(described_class.where(version: "20150324000002")).to be_present
+          expect(described_class.where(version: "20150324000003")).to be_blank
+          expect(described_class.where(version: "20150324000004")).to be_blank
+        end
+      end
+    end
+
+    describe '.status' do
+      let(:outs) do
         [
-          /.*\/mod2\/20150324000000_a\.rb$/,
-          /.*\/mod1\/20150324000001_a\.rb$/,
-          /.*\/mod1\/20150324000002_a\.rb$/,
-          /.*\/mod2\/20150324000003_a\.rb$/,
+          "#{"down".center(8)}  #{"20150324000000".ljust(14)}  a",
+          "#{"up".center(8)}  #{"20150324000001".ljust(14)}  a",
+          "#{"down".center(8)}  #{"20150324000002".ljust(14)}  a, b",
+          "#{"down".center(8)}  #{"20150324000003".ljust(14)}  a",
+          "#{"up".center(8)}  #{"20150324000004".ljust(14)}  ********** NO FILE **********"
         ]
-      )
+      end
+
+      before { create :ss_migration, version: '20150324000001' }
+      before { create :ss_migration, version: '20150324000004' }
+
+      it do
+        expect { described_class.status }.to output(include(*outs)).to_stdout
+      end
     end
   end
 
@@ -81,8 +156,8 @@ RSpec.describe SS::Migration, type: :model, dbscope: :example, tmpdir: true do
   describe '.filepaths_to_apply' do
     before do
       mkdir "#{tmpdir}/migrations/mod1"
-      touch "#{tmpdir}/migrations/mod1/20150330000000_a.rb"
-      touch "#{tmpdir}/migrations/mod1/20150330000001_a.rb"
+      migration_file "#{tmpdir}/migrations/mod1/20150330000000_a.rb"
+      migration_file "#{tmpdir}/migrations/mod1/20150330000001_a.rb"
       SS::Migration.class_eval { remove_const :DIR }
       SS::Migration::DIR = Rails.root.join "#{tmpdir}/migrations"
     end

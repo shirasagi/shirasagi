@@ -133,6 +133,26 @@ def ss_japanese_text(length: 10, separator: '')
   @japanese_chars.sample(length).join(separator)
 end
 
+def with_env(hash)
+  save = {}
+  hash.each do |k, v|
+    save[k] = ENV[k] if ENV.key?(k)
+    ENV[k] = v
+  end
+
+  ret = yield
+
+  hash.each do |k, _|
+    if save.key?(k)
+      ENV[k] = save[k]
+    else
+      ENV.delete(k)
+    end
+  end
+
+  ret
+end
+
 # ref.
 #   https://www.relishapp.com/rspec/rspec-expectations/v/2-5/docs/built-in-matchers/be-within-matcher
 #   http://qiita.com/kozy4324/items/9a6530736be7e92954bc
