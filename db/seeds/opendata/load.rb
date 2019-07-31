@@ -115,7 +115,7 @@ def save_node(data)
   lower_html ||= File.read("nodes/" + data[:filename] + ".lower_html") rescue nil
   summary_html ||= File.read("nodes/" + data[:filename] + ".summary_html") rescue nil
 
-  item = Cms::Node.unscoped.find_or_create_by(cond).becomes_with_route
+  item = data[:route].sub("/", "/node/").camelize.constantize.unscoped.find_or_create_by(cond)
   item.upper_html = upper_html if upper_html
   item.loop_html = loop_html if loop_html
   item.lower_html = lower_html if lower_html
@@ -346,12 +346,9 @@ def save_part(data)
   loop_html  = File.read("parts/" + data[:filename].sub(/\.html$/, ".loop_html")) rescue nil
   lower_html = File.read("parts/" + data[:filename].sub(/\.html$/, ".lower_html")) rescue nil
 
-  item = Cms::Part.unscoped.find_or_create_by(cond).becomes_with_route(data[:route])
+  item = data[:route].sub("/", "/part/").camelize.constantize.unscoped.find_or_create_by(cond)
   if html
     if SS.config.cms.enable_lgwan
-      # html.gsub!('"/mypage/app/"', '"#"')
-      # html.gsub!('"/mypage/dataset/"', '"#"')
-      # html.gsub!('"/mypage/idea/"', '"#"')
       html.gsub!('<li><a class="entry" href="/mypage/app/">アプリ登録</a></li>', '')
       html.gsub!('<li><a class="entry" href="/mypage/app/">アプリを登録する</a></li>', '')
       html.gsub!('<li><a class="entry" href="/mypage/dataset/">データセット登録</a></li>', '')
@@ -419,7 +416,8 @@ def save_page(data)
   html ||= File.read("pages/" + data[:filename]) rescue nil
   summary_html ||= File.read("pages/" + data[:filename].sub(/\.html$/, "") + ".summary_html") rescue nil
 
-  item = Cms::Page.find_or_create_by(cond).becomes_with_route(data[:route])
+  route = data[:route].presence || 'cms/page'
+  item = route.camelize.constantize.find_or_create_by(cond)
   item.html = html if html
   item.summary_html = summary_html if summary_html
 

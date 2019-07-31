@@ -47,7 +47,7 @@ def save_node(data)
   puts data[:name]
   cond = { site_id: @site._id, filename: data[:filename] }
 
-  item = Cms::Node.unscoped.find_or_create_by(cond).becomes_with_route(data[:route])
+  item = data[:route].sub("/", "/node/").camelize.constantize.unscoped.find_or_create_by(cond)
   item.update data
 end
 
@@ -81,7 +81,7 @@ def save_part(data)
   cond = { site_id: @site._id, filename: data[:filename] }
   html = File.read("parts/" + data[:filename]) rescue nil
 
-  item = Cms::Part.unscoped.find_or_create_by(cond).becomes_with_route(data[:route])
+  item = data[:route].sub("/", "/part/").camelize.constantize.unscoped.find_or_create_by(cond)
   item.html = html if html
   item.update data
 end
@@ -109,7 +109,8 @@ def save_page(data)
   puts data[:name]
   cond = { site_id: @site._id, filename: data[:filename] }
 
-  item = Cms::Page.find_or_create_by(cond).becomes_with_route(data[:route])
+  route = data[:route].presence || 'cms/page'
+  item = route.camelize.constantize.find_or_create_by(cond)
   item.update data
 end
 
