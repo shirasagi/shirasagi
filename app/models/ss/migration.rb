@@ -82,7 +82,7 @@ class SS::Migration
     #   SS::Migration.take_timestamp '/foo/bar/lib/migrations/mod1/20150330000000_a.rb'
     #   #=> '20150330000000'
     def take_timestamp(filepath)
-      File.basename(filepath).split('_')[0]
+      File.basename(filepath).split('_', 2).first
     end
 
     # Return the all filepath of migrations to apply.
