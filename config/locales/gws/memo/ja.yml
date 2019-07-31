@@ -125,7 +125,6 @@ ja:
     gws/memo/message: メッセージ
     gws/memo/notice_mail: メール通知
     addons:
-      gws/memo/comments: コメント
       gws/memo/group_setting: メッセージ
       gws/memo/body: 内容
       gws/memo/member: 宛先
@@ -227,8 +226,6 @@ ja:
         send_date: 送信日時
         display_send_date: 送信日時
         request_mdn_ids: 開封確認
-      gws/memo/comment:
-        name: タイトル
       gws/memo/folder:
         name: フォルダー名
         path: パス

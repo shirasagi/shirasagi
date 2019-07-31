@@ -75,7 +75,6 @@ production: &production
       - "Gws::Faq::Category"
       - "Gws::Faq::Post"
       - "Gws::Link"
-      - "Gws::Memo::Comment"
       - "Gws::Memo::Filter"
       - "Gws::Memo::Folder"
       - "Gws::Memo::Message"
