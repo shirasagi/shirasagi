@@ -4,6 +4,10 @@ namespace :ss do
   end
 
   namespace :migrate do
+    task status: :environment do
+      SS::Migration.status
+    end
+
     task up: :environment do
       SS::Migration.up
     end

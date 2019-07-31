@@ -33,6 +33,28 @@ class SS::Migration
       apply_all(filepath_list)
     end
 
+    def status
+      db_list = order(version: 1).pluck(:version).uniq.select(&:present?)
+
+      file_list = filepaths.map { |filepath| parse_migration_filename(filepath) }.group_by { |version, _| version }
+      file_list = file_list.map do |version, version_name_pairs|
+        status = db_list.delete(version) ? "up" : "down"
+        names = version_name_pairs.map { |_version, name| name }
+        names.flatten!
+        [ status, version, names ]
+      end
+
+      db_list.map! { |version| [ 'up', version, [ "********** NO FILE **********" ] ] }
+
+      puts
+      puts "#{'Status'.center(8)}  #{'Migration ID'.ljust(14)}  Migration Name"
+      puts "-" * 50
+      (db_list + file_list).sort_by { |_, version, _| version }.each do |status, version, names|
+        puts "#{status.center(8)}  #{version.ljust(14)}  #{names.join(", ")}"
+      end
+      puts
+    end
+
     # Return the all filepaths in *RAILS_ROOT/lib/migrations/**.
     #
     # Returned array is sorted ascending by the filename.
@@ -57,7 +79,7 @@ class SS::Migration
     #   #  '/foo/bar/lib/migrations/mod1/20150324000002_a.rb',
     #   #  '/foo/bar/lib/migrations/mod2/20150324000003_a.rb',]
     def filepaths
-      ::Dir.glob(DIR.join('*/*.rb')).sort_by { |i| File.basename i }
+      ::Dir.glob(DIR.join('*/*.rb')).sort_by { |i| parse_migration_filename(i) }
     end
 
     # Returns the latest applied migration version string.
@@ -72,6 +94,10 @@ class SS::Migration
       x.nil? ? '00000000000000' : x.version
     end
 
+    def parse_migration_filename(filepath)
+      File.basename(filepath, ".*").split('_', 2)
+    end
+
     # Take a timestamp from a filepath.
     #
     # @param [String] filepath
@@ -82,7 +108,8 @@ class SS::Migration
     #   SS::Migration.take_timestamp '/foo/bar/lib/migrations/mod1/20150330000000_a.rb'
     #   #=> '20150330000000'
     def take_timestamp(filepath)
-      File.basename(filepath).split('_', 2).first
+      version, _name = parse_migration_filename(filepath)
+      version
     end
 
     # Return the all filepath of migrations to apply.
