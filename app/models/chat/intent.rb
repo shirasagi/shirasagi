@@ -66,7 +66,7 @@ class Chat::Intent
     def intents(string)
       return if string.blank?
       all.select do |intent|
-        string =~ /#{intent.phrase.collect { |phrase| Regexp.escape(phrase) }.join('|') }/
+        string =~ /#{intent.phrase.collect { |phrase| Regexp.escape(phrase) }.push(intent.name).join('|') }/
       end
     end
 
