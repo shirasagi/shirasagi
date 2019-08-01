@@ -83,6 +83,15 @@ RSpec.describe SS::Migration, type: :model, dbscope: :example, tmpdir: true do
           end
         end
       end
+
+      context "with CHECK_DEPENDENCY env" do
+        it do
+          with_env("CHECK_DEPENDENCY" => "1") do
+            expect { described_class.migrate }.to output(include("Applied SS::Migration20150324000002")).to_stdout
+            expect(described_class.all).to have(0).items
+          end
+        end
+      end
     end
 
     describe '.up' do
@@ -97,6 +106,23 @@ RSpec.describe SS::Migration, type: :model, dbscope: :example, tmpdir: true do
             expect(described_class.where(version: "20150324000000")).to be_blank
             expect(described_class.where(version: "20150324000001")).to be_present
             expect(described_class.where(version: "20150324000002")).to be_present
+            expect(described_class.where(version: "20150324000003")).to be_blank
+            expect(described_class.where(version: "20150324000004")).to be_blank
+          end
+        end
+      end
+
+      context "with CHECK_DEPENDENCY env" do
+        before { create :ss_migration, version: '20150324000001' }
+
+        it do
+          with_env("VERSION" => "20150324000002", "CHECK_DEPENDENCY" => "1") do
+            expect { described_class.up }.to output(include("Applied SS::Migration20150324000002")).to_stdout
+
+            expect(described_class.all).to have(1).items
+            expect(described_class.where(version: "20150324000000")).to be_blank
+            expect(described_class.where(version: "20150324000001")).to be_present
+            expect(described_class.where(version: "20150324000002")).to be_blank
             expect(described_class.where(version: "20150324000003")).to be_blank
             expect(described_class.where(version: "20150324000004")).to be_blank
           end

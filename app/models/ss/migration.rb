@@ -13,7 +13,7 @@ class SS::Migration
         filepath_list = filepath_list.select { |filepath| take_timestamp(filepath) <= version }
       end
 
-      apply_all(filepath_list)
+      apply_all(filepath_list, check_dependency: ENV["CHECK_DEPENDENCY"])
     end
 
     def up
@@ -30,7 +30,7 @@ class SS::Migration
         return
       end
 
-      apply_all(filepath_list)
+      apply_all(filepath_list, check_dependency: ENV["CHECK_DEPENDENCY"])
     end
 
     def status
@@ -123,17 +123,25 @@ class SS::Migration
 
     private
 
-    def apply_all(filepath_list)
-      filepath_list.each { |filepath| apply(filepath) }
+    def apply_all(filepath_list, context)
+      filepath_list.each { |filepath| apply(filepath, context) }
     end
 
-    def apply(filepath)
+    def apply(filepath, context)
+      context[:versions_have_been_run] ||= []
+
       timestamp = take_timestamp filepath
       require filepath
       klass = "SS::Migration#{timestamp}".constantize
-      missing_versions = non_applied_dependent_versions(klass)
+      missing_versions = non_applied_dependent_versions(klass, context)
       if missing_versions.present?
         raise "Error SS::Migration#{timestamp} is required #{missing_versions.join(", ")}"
+      end
+
+      if context[:check_dependency]
+        context[:versions_have_been_run] << timestamp
+        puts "Applied SS::Migration#{timestamp}"
+        return
       end
 
       klass.new.change
@@ -141,11 +149,16 @@ class SS::Migration
       puts "Applied SS::Migration#{timestamp}"
     end
 
-    def non_applied_dependent_versions(klass)
+    def non_applied_dependent_versions(klass, context)
       return [] if !klass.respond_to?(:depends)
       return [] if klass.depends.blank?
 
-      klass.depends.select { |version| unscoped.where(version: version).blank? }
+      klass.depends.select do |version|
+        next false if context[:versions_have_been_run].include?(version)
+        next false if unscoped.where(version: version).present?
+
+        true
+      end
     end
   end
 end
