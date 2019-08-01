@@ -66,22 +66,23 @@ class Chat::Intent
 
     def intents(string)
       return if string.blank?
+
       all.select do |intent|
-        string =~ /#{intent.phrase.collect { |phrase| Regexp.escape(phrase) }.push(intent.name).join('|') }/
+        intent.phrase.any? { |phrase| string.include?(phrase) }
       end
     end
 
     def find_intent(string)
       return if string.blank?
-      item = intents(string).first
-      return if item.blank?
-      item
+
+      all.entries.find do |intent|
+        intent.phrase.any? { |phrase| string.include?(phrase) }
+      end
     end
 
     def response(string)
       item = find_intent(string)
-      return if item.blank?
-      item.response
+      item.try(:response)
     end
   end
 
