@@ -91,8 +91,12 @@ describe "gws_share_files", type: :feature, dbscope: :example, tmpdir: true, js:
       within "form" do
         click_button I18n.t('ss.buttons.delete')
       end
+      expect(page).to have_css('#notice', text: I18n.t('ss.notice.deleted'))
       expect(page).to have_no_content(item.name)
       expect(page).to have_content(folder.name)
+
+      item.reload
+      expect(item.deleted).to be_present
     end
   end
 end
