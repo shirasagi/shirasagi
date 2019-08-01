@@ -1,4 +1,8 @@
 class SS::Migration20181015000000
+  include SS::Migration::Base
+
+  depends_on "20181009202100"
+
   def change
     Opendata::Dataset.each do |item|
       item.resources.each do |resource|

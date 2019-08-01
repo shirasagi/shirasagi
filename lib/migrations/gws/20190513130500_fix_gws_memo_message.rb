@@ -1,4 +1,8 @@
 class SS::Migration20190513130500
+  include SS::Migration::Base
+
+  depends_on "20190510000000"
+
   def change
     Gws::Memo::Message.create_indexes
     Gws::Memo::Message.each do |message|

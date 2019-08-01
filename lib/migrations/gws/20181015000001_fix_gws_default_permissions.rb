@@ -1,4 +1,8 @@
 class SS::Migration20181015000001
+  include SS::Migration::Base
+
+  depends_on "20181015000000"
+
   DEFAULT_PERMISSIONS = %w(
     use_private_gws_schedule_plans use_private_gws_schedule_todos use_private_gws_facility_plans
     edit_gws_bookmarks edit_gws_personal_addresses use_gws_report use_gws_circular use_gws_survey

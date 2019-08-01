@@ -1,4 +1,8 @@
 class SS::Migration20181126000000
+  include SS::Migration::Base
+
+  depends_on "20181015000001"
+
   def change
     dataset_ids = Opendata::Dataset.pluck(:id)
     dataset_ids.each do |id|

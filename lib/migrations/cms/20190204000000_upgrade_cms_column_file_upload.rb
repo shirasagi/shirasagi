@@ -1,4 +1,8 @@
 class SS::Migration20190204000000
+  include SS::Migration::Base
+
+  depends_on "20190116000000"
+
   def change
     all_ids = Cms::Form.pluck(:id)
     all_ids.each_slice(20) do |ids|
