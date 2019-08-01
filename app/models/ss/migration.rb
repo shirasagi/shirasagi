@@ -121,6 +121,29 @@ class SS::Migration
       filepaths.select { |e| take_timestamp(e) > latest_version }
     end
 
+    def latest_migration_file_version
+      latest = filepaths.map { |e| take_timestamp(e) }.max
+      latest || '00000000000000'
+    end
+
+    def new_version
+      latest = latest_migration_file_version
+      latest_ymd_part = latest[0..7]
+      latest_seq_part = latest[8..-1]
+
+      current_ymd_part = Time.zone.now.strftime("%Y%m%d")
+
+      if current_ymd_part > latest_ymd_part
+        ymd_part = current_ymd_part
+        seq = 0
+      else
+        ymd_part = latest_ymd_part
+        seq = latest_seq_part.to_i + 1
+      end
+
+      "#{ymd_part}#{seq.to_s.rjust(6, "0")}"
+    end
+
     private
 
     def apply_all(filepath_list, context)

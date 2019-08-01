@@ -3,11 +3,10 @@ require 'fileutils'
 require "ss/migration/base"
 
 RSpec.describe SS::Migration, type: :model, dbscope: :example, tmpdir: true do
-  def mkdir(dirname)
-    FileUtils.mkdir_p dirname
-  end
-
   def migration_file(filepath, depend_on: nil)
+    dirpath = ::File.dirname(filepath)
+    ::FileUtils.mkdir_p(dirpath) if !Dir.exists?(dirpath)
+
     version, _name = described_class.parse_migration_filename(filepath)
     File.open(filepath, 'w') do |f|
       f.puts "class SS::Migration#{version}"
@@ -27,8 +26,6 @@ RSpec.describe SS::Migration, type: :model, dbscope: :example, tmpdir: true do
 
   context 'with migrations' do
     before do
-      mkdir "#{tmpdir}/migrations/mod1"
-      mkdir "#{tmpdir}/migrations/mod2"
       migration_file "#{tmpdir}/migrations/mod2/20150324000000_a.rb"
       migration_file "#{tmpdir}/migrations/mod1/20150324000001_a.rb", depend_on: "20150324000000"
       migration_file "#{tmpdir}/migrations/mod1/20150324000002_a.rb", depend_on: "20150324000001"
@@ -197,7 +194,6 @@ RSpec.describe SS::Migration, type: :model, dbscope: :example, tmpdir: true do
 
   describe '.filepaths_to_apply' do
     before do
-      mkdir "#{tmpdir}/migrations/mod1"
       migration_file "#{tmpdir}/migrations/mod1/20150330000000_a.rb"
       migration_file "#{tmpdir}/migrations/mod1/20150330000001_a.rb"
       SS::Migration.class_eval { remove_const :DIR }
@@ -227,6 +223,53 @@ RSpec.describe SS::Migration, type: :model, dbscope: :example, tmpdir: true do
       end
 
       it { is_expected.to eq [] }
+    end
+  end
+
+  describe '.new_version' do
+    let(:now) { Time.zone.now }
+    let(:past_date) { now - 1.day }
+    let(:future_date) { now + 1.day }
+
+    before do
+      SS::Migration.class_eval { remove_const :DIR }
+      SS::Migration::DIR = Rails.root.join "#{tmpdir}/migrations"
+    end
+
+    context 'without existing migration files' do
+      it do
+        expect(described_class.new_version).to eq "#{now.strftime("%Y%m%d")}000000"
+      end
+    end
+
+    context 'with past date migration files' do
+      before do
+        migration_file "#{tmpdir}/migrations/#{unique_id}/#{past_date.strftime("%Y%m%d")}000000_a.rb"
+      end
+
+      it do
+        expect(described_class.new_version).to eq "#{now.strftime("%Y%m%d")}000000"
+      end
+    end
+
+    context 'with current date migration files' do
+      before do
+        migration_file "#{tmpdir}/migrations/#{unique_id}/#{now.strftime("%Y%m%d")}000000_a.rb"
+      end
+
+      it do
+        expect(described_class.new_version).to eq "#{now.strftime("%Y%m%d")}000001"
+      end
+    end
+
+    context 'with future date migration files' do
+      before do
+        migration_file "#{tmpdir}/migrations/#{unique_id}/#{future_date.strftime("%Y%m%d")}000000_a.rb"
+      end
+
+      it do
+        expect(described_class.new_version).to eq "#{future_date.strftime("%Y%m%d")}000001"
+      end
     end
   end
 end

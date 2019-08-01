@@ -1,0 +1,9 @@
+class SS::Migration<%= @version %>
+  include SS::Migration::Base
+
+  depends_on "<%= @latest_version %>"
+
+  def change
+    # put your migration code here
+  end
+end
