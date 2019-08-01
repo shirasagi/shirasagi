@@ -80,6 +80,7 @@ ja:
           not_found_parent: 親カテゴリーが存在しません。
         gws/share/folder:
           found_files: フォルダー内、または削除済みのフォルダー内にファイルが存在しています。
+          file_size_exceeds_folder_limit: 削除済みファイルを含むフォルダーサイズ（%{size}）がフォルダー総容量制限（%{limit}）を超えました。
     attributes:
       gws/addon/share/category:
         category_ids: カテゴリー
