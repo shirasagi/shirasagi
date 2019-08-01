@@ -129,7 +129,7 @@ this.Form_Alert = (function () {
     return function (form, submit) {
       var d = $.Deferred();
       try {
-        validate();
+        validate(form, submit);
         d.resolve();
       } catch (ex) {
         d.reject(ex);
