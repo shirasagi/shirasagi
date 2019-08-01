@@ -29,6 +29,7 @@ class Gws::Compressor
     sizes = items.map(&:size)
     return true if sizes.inject(:+) >= SS.config.env.deley_download['min_filesize'].to_i
     return true if sizes.size >= SS.config.env.deley_download['min_count'].to_i
+
     false
   end
 
