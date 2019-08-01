@@ -43,11 +43,11 @@ class Chat::Intent
 
     def csv_headers
       %w(
-          id name phrase suggest response order category_ids
+          id name phrase suggest response site_search order category_ids
         )
     end
 
-    def csv(opts = {})
+    def csv
       CSV.generate do |data|
         data << csv_headers.map { |k| t k }
         criteria.each do |item|
@@ -57,6 +57,7 @@ class Chat::Intent
             item.phrase.join("\n"),
             item.suggest.join("\n"),
             item.response,
+            item.site_search,
             item.order,
             item.categories.pluck(:name).join("\n")
           ]

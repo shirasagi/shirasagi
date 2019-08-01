@@ -61,6 +61,7 @@ class Chat::Intent::ImportJob < Cms::ApplicationJob
     item.phrase = to_array(value(row, :phrase))
     item.suggest = to_array(value(row, :suggest))
     item.response = value(row, :response)
+    item.site_search = value(row, :site_search)
     item.order = value(row, :order)
     item.category_ids = Chat::Category.site(site).where(node_id: node.id).in(name: to_array(value(row, :category_ids))).pluck(:id)
   end
