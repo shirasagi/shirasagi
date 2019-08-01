@@ -79,7 +79,19 @@ class Cms::Node
     include Cms::Model::Node
     include Cms::Addon::NodeSetting
     include Cms::Addon::PageGroupList
+    include ::Cms::ChildList
     include History::Addon::Backup
+
+    def child_items
+      child_pages
+    end
+
+    def child_pages
+      Cms::Page.site(site).and_public.
+        where(self.condition_hash).
+        order_by(self.sort_hash).
+        limit(child_limit)
+    end
 
     default_scope ->{ where(route: "cms/group_page") }
   end
