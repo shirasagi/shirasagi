@@ -8,6 +8,7 @@ ja:
     session_count: セッション数
     links:
       add_or_edit: 追加または編集する
+      open_site_search: サイト内検索の結果を開く
     options:
       question:
         success: はい
@@ -68,6 +69,7 @@ ja:
         phrase: フレーズ
         suggest: サジェスト
         response: 返答
+        site_search: サイト内検索のリンク
         order: 並び順
         node_id: フォルダー
         error: エラー
@@ -102,6 +104,8 @@ ja:
         - 返答を設定します。
         - チャットボットで指定のフレーズが使用されていると返答します。
         - 設定しない場合、親フォルダーの返答テンプレートを使用します。
+      site_search:
+        - サイト内検索のリンクを表示するか設定します。
       order:
         - 並び順を設定します。
     chat/category:

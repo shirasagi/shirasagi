@@ -3,8 +3,6 @@ this.Chat_Bot = (function () {
     this.id = '#' + id;
     this.url = url;
     this.clickSuggest = false;
-    this.chatSuccess = 'はい';
-    this.chatRetry = 'いいえ';
     this.render();
   }
 
@@ -55,7 +53,7 @@ this.Chat_Bot = (function () {
         click_suggest: this.clickSuggest
       },
       success: function (res, status) {
-        var result = res;1
+        var result = res;
         if (typeof res === 'string' || res instanceof String) {
           result = $.parseJSON(res);
         }
@@ -103,19 +101,23 @@ this.Chat_Bot = (function () {
           result = $.parseJSON(res);
         }
         if(result.html){
+          if(result.siteSearchUrl){
+            var siteSearchLink = $('<a href="' + result.siteSearchUrl + '" target="_blank"></a>').append(result.siteSearchText);
+            var siteSearchParagraph = $('<p class="search-result-btn"></p>').append(siteSearchLink);
+          }
           if(result.suggests){
-            el.parents('.chat-part').find('.chat-items').append($('<div class="chat-item sys"></div>').append(result.html));
+            el.parents('.chat-part').find('.chat-items').append($('<div class="chat-item sys"></div>').append(result.html).append(siteSearchParagraph));
             result.suggests.forEach(function(suggest) {
               var chatSuggest = $('<a class="chat-suggest"></a>').attr('href', _this.url).append(suggest);
               el.parents('.chat-part').find('.chat-items').append($('<div class="chat-item suggest"></div>').append(chatSuggest));
             });
           } else if(result.question) {
-            var chatSuccess = $('<button name="button" type="button" class="chat-success" data-id="' + result.intent_id + '"></button>').append(_this.chatSuccess);
-            var chatRetry = $('<button name="button" type="button" class="chat-retry" data-id="' + result.intent_id + '"></button>').append(_this.chatRetry);
+            var chatSuccess = $('<button name="button" type="button" class="chat-success" data-id="' + result.intentId + '"></button>').append(result.chatSuccess);
+            var chatRetry = $('<button name="button" type="button" class="chat-retry" data-id="' + result.intentId + '"></button>').append(result.chatRetry);
             var chatFinish = $('<div class="chat-finish"></div>').append(result.question).append(chatSuccess).append(chatRetry);
-            el.parents('.chat-part').find('.chat-items').append($('<div class="chat-item sys"></div>').append(result.html).append(chatFinish));
+            el.parents('.chat-part').find('.chat-items').append($('<div class="chat-item sys"></div>').append(result.html).append(siteSearchParagraph).append(chatFinish));
           } else {
-            el.parents('.chat-part').find('.chat-items').append($('<div class="chat-item sys"></div>').append(result.html));
+            el.parents('.chat-part').find('.chat-items').append($('<div class="chat-item sys"></div>').append(result.html).append(siteSearchParagraph));
           }
           el.parents('.chat-part').find('.chat-items').animate({ scrollTop: el.parents('.chat-part').find('.chat-items')[0].scrollHeight });
         }

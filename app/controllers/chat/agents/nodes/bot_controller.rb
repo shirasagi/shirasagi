@@ -40,6 +40,9 @@ class Chat::Agents::Nodes::BotController < ApplicationController
       else
         @result = @cur_node.becomes_with_route.exception_text
       end
+      if @intent.blank? || @intent.present? && @intent.site_search == 'enabled'
+        @site_search_node = Cms::Node::SiteSearch.site(@cur_site).and_public(@cur_date).first
+      end
     else
       @suggest = @cur_node.becomes_with_route.first_suggest
       @result = @cur_node.becomes_with_route.first_text
