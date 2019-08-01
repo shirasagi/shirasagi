@@ -24,7 +24,7 @@ module Cms::Addon::Form::Page
     around_save :update_file_owner_in_column_values
 
     if respond_to?(:after_generate_file)
-      after_generate_file :cms_form_page_generate_public_files, if: ->{ serve_static_relation_files? }
+      after_generate_file :cms_form_page_generate_public_files
     end
     after_remove_file :cms_form_page_remove_public_files if respond_to?(:after_remove_file)
     after_merge_branch :cms_form_page_merge_column_values rescue nil
