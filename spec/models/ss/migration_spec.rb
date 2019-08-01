@@ -1,15 +1,18 @@
 require 'spec_helper'
 require 'fileutils'
+require "ss/migration/base"
 
 RSpec.describe SS::Migration, type: :model, dbscope: :example, tmpdir: true do
   def mkdir(dirname)
     FileUtils.mkdir_p dirname
   end
 
-  def migration_file(filepath)
+  def migration_file(filepath, depend_on: nil)
     version, _name = described_class.parse_migration_filename(filepath)
     File.open(filepath, 'w') do |f|
       f.puts "class SS::Migration#{version}"
+      f.puts "  include SS::Migration::Base"
+      f.puts "  depends_on \"#{depend_on}\"" if depend_on.present?
       f.puts "  def change"
       f.puts "  end"
       f.puts "end"
@@ -27,10 +30,10 @@ RSpec.describe SS::Migration, type: :model, dbscope: :example, tmpdir: true do
       mkdir "#{tmpdir}/migrations/mod1"
       mkdir "#{tmpdir}/migrations/mod2"
       migration_file "#{tmpdir}/migrations/mod2/20150324000000_a.rb"
-      migration_file "#{tmpdir}/migrations/mod1/20150324000001_a.rb"
-      migration_file "#{tmpdir}/migrations/mod1/20150324000002_a.rb"
+      migration_file "#{tmpdir}/migrations/mod1/20150324000001_a.rb", depend_on: "20150324000000"
+      migration_file "#{tmpdir}/migrations/mod1/20150324000002_a.rb", depend_on: "20150324000001"
       migration_file "#{tmpdir}/migrations/mod2/20150324000002_b.rb"
-      migration_file "#{tmpdir}/migrations/mod2/20150324000003_a.rb"
+      migration_file "#{tmpdir}/migrations/mod2/20150324000003_a.rb", depend_on: "20150324000002"
       # ref.
       #   http://docs.ruby-lang.org/ja/2.2.0/method/Module/i/remove_const.html
       #   http://docs.ruby-lang.org/ja/2.2.0/class/Module.html#I_CLASS_EVAL
@@ -83,16 +86,29 @@ RSpec.describe SS::Migration, type: :model, dbscope: :example, tmpdir: true do
     end
 
     describe '.up' do
-      it do
-        with_env("VERSION" => "20150324000002") do
-          expect { described_class.up }.to output(include("Applied SS::Migration20150324000002")).to_stdout
+      context "with dependent version" do
+        before { create :ss_migration, version: '20150324000001' }
 
-          expect(described_class.all).to have(2).items
-          expect(described_class.where(version: "20150324000000")).to be_blank
-          expect(described_class.where(version: "20150324000001")).to be_blank
-          expect(described_class.where(version: "20150324000002")).to be_present
-          expect(described_class.where(version: "20150324000003")).to be_blank
-          expect(described_class.where(version: "20150324000004")).to be_blank
+        it do
+          with_env("VERSION" => "20150324000002") do
+            expect { described_class.up }.to output(include("Applied SS::Migration20150324000002")).to_stdout
+
+            expect(described_class.all).to have(3).items
+            expect(described_class.where(version: "20150324000000")).to be_blank
+            expect(described_class.where(version: "20150324000001")).to be_present
+            expect(described_class.where(version: "20150324000002")).to be_present
+            expect(described_class.where(version: "20150324000003")).to be_blank
+            expect(described_class.where(version: "20150324000004")).to be_blank
+          end
+        end
+      end
+
+      context "without dependent version" do
+        it do
+          with_env("VERSION" => "20150324000003") do
+            expect { described_class.up }.to raise_error "Error SS::Migration20150324000003 is required 20150324000002"
+            expect(described_class.all).to have(0).items
+          end
         end
       end
     end

@@ -130,9 +130,22 @@ class SS::Migration
     def apply(filepath)
       timestamp = take_timestamp filepath
       require filepath
-      "SS::Migration#{timestamp}".constantize.new.change
+      klass = "SS::Migration#{timestamp}".constantize
+      missing_versions = non_applied_dependent_versions(klass)
+      if missing_versions.present?
+        raise "Error SS::Migration#{timestamp} is required #{missing_versions.join(", ")}"
+      end
+
+      klass.new.change
       create version: timestamp
       puts "Applied SS::Migration#{timestamp}"
+    end
+
+    def non_applied_dependent_versions(klass)
+      return [] if !klass.respond_to?(:depends)
+      return [] if klass.depends.blank?
+
+      klass.depends.select { |version| unscoped.where(version: version).blank? }
     end
   end
 end
