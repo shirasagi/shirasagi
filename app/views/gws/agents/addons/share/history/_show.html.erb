@@ -26,7 +26,7 @@
         <td><%= item.user_tel %></td>
         <td><%= item.uploadfile_name %></td>
         <td><%= item.uploadfile_size %></td>
-        <td><%= link_to t('ss.links.download'), download_history_gws_share_file_path(history_id: item._id), { class: "btn" } %></td>
+        <td><%= link_to t('ss.links.download'), { action: :download_history, history_id: item._id }, { class: "btn" } %></td>
         <td>
           <% if (names = item.updated_field_names).present? %>
           <%= truncate names.join(', '), length: 30 %>
