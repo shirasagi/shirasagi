@@ -1,5 +1,10 @@
 <%= jquery do %>
 
+var submitted = null;
+$(".search-ui-form .save").on("click", function() {
+  submitted = $(this).attr("data-submitted");
+});
+
 var onSelect;
 var $element = $.colorbox.element();
 if ($element) {
@@ -9,37 +14,41 @@ if ($element) {
 SS.ajaxForm("form.user-file", {
   success: function(data) {
     $("#cboxLoadedContent").load("<%= url_for(action: :index, file_size: params[:file_size]) %>", function() {
-      if (!Array.isArray(data) || data.length == 0) return;
+      if (!Array.isArray(data) || data.length == 0) {
+        return;
+      }
 
-      var sorted_name_and_datas = [];
-      var file_views = [];
+      if(submitted == "attache") {
+        var sorted_name_and_datas = [];
+        var file_views = [];
 
-      $.each(data, function(index, file) {
-        var item = $(".user-files .select[data-id='" + file._id + "']");
-        var url = item.attr('href');
-        if (!url) return true;
-        if (onSelect) {
-          onSelect(item);
-        } else {
-          file_views.push($.ajax({
-            url: url,
-            success: function(data) {
-              sorted_name_and_datas.push({name: file.filename, data: data});
-            }
-          }));
-        }
-      });
-      $.when.apply($,file_views).done(function () {
-        sorted_name_and_datas.sort(function(a,b) {
-          if(a.name < b.name) return 1;
-          if(a.name > b.name) return -1;
-          return 0;
+        $.each(data, function(index, file) {
+          var item = $(".user-files .select[data-id='" + file._id + "']");
+          var url = item.attr('href');
+          if (!url) return true;
+          if (onSelect) {
+            onSelect(item);
+          } else {
+            file_views.push($.ajax({
+              url: url,
+              success: function(data) {
+                sorted_name_and_datas.push({name: file.filename, data: data});
+              }
+            }));
+          }
         });
-        for (var i = 0; i < sorted_name_and_datas.length; i++) {
-          $("#selected-files").prepend(sorted_name_and_datas[i].data);
-        }
-      });
-      $.colorbox.close();
+        $.when.apply($,file_views).done(function () {
+          sorted_name_and_datas.sort(function(a,b) {
+            if(a.name < b.name) return 1;
+            if(a.name > b.name) return -1;
+            return 0;
+          });
+          for (var i = 0; i < sorted_name_and_datas.length; i++) {
+            $("#selected-files").prepend(sorted_name_and_datas[i].data);
+          }
+        });
+        $.colorbox.close();
+      }
     });
   },
   error: function(xhr) {
@@ -94,7 +103,8 @@ SS_SearchUI.modal();
       <%= f.file_field :in_files, multiple: :multiple, required: :required %>
       <%= f.select :resizing, @model.resizing_options, { include_blank: t("ss.resize_image") }, { class: "image-size" } %>
       <%= hidden_field_tag :unnormalize, params[:unnormalize] if params[:unnormalize].present? %>
-      <%= f.submit t("ss.buttons.save"), class: "save btn", style: "margin-left: 10px;" %>
+      <%= f.submit t("ss.buttons.attache"), class: "save btn", style: "margin-left: 10px;", "data-submitted": "attache" %>
+      <%= f.submit t("ss.buttons.save"), class: "save btn", style: "margin-left: 10px;", "data-submitted": "save" %>
     </div>
 
   <% end %>
