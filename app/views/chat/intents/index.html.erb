@@ -35,7 +35,7 @@ SS_TreeUI.render(".index.items", { collapse_all: true });
           <%= render partial: 'intent', locals: { suggest: suggest, depth: depth + 1, first_suggest: true } %>
         <% end %>
       <% end %>
-      <% @items.nin(id: @reject_items).order_by(order: 1, updated: -1).each do |item| %>
+      <% @items.nin(id: @reject_items).each do |item| %>
         <% @rendered_items = [] %>
         <tr data-depth="<%= depth %>">
           <td class="expandable">
