@@ -1,10 +1,14 @@
 class Cms::Node::CopyNodesJob < Cms::ApplicationJob
   include Job::SS::TaskFilter
   include Job::Cms::CopyNodes::SsFiles
+  include Job::Cms::CopyNodes::CmsForms
+  include Job::Cms::CopyNodes::CmsColumns
   include Job::Cms::CopyNodes::CmsLayouts
   include Job::Cms::CopyNodes::CmsNodes
   include Job::Cms::CopyNodes::CmsParts
   include Job::Cms::CopyNodes::CmsPages
+  include Job::Cms::CopyNodes::OpendataDatasetGroups
+  include Job::Cms::CopyNodes::OpendataLicenses
 
   self.task_name = "cms:copy_nodes"
 

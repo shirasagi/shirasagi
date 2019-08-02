@@ -7,7 +7,7 @@ describe Cms::Node::CopyNodesJob, dbscope: :example do
     let(:task) { create :copy_nodes_task, target_node_name: target_node_name, site_id: site.id, node_id: node.id }
     let!(:node1) { create :cms_node, cur_site: site, layout_id: layout.id }
     let!(:node2) { create :cms_node, cur_site: site, layout_id: layout.id, filename: "#{node1.filename}/node2" }
-    let!(:node3) { create :cms_node, cur_site: site, layout_id: layout.id, filename: "#{node1.filename}/node2/node3" }
+    let!(:node3) { create :article_node_page, cur_site: site, layout_id: layout.id, filename: "#{node1.filename}/node2/node3" }
     let!(:other_node) { create :cms_node, cur_site: site }
 
     describe "copy nodes on top level" do
@@ -20,6 +20,13 @@ describe Cms::Node::CopyNodesJob, dbscope: :example do
       end
 
       it "coped nodes and it refer original layout id ,and also child nodes" do
+        expect(Job::Log.count).to eq 1
+        Job::Log.first.tap do |log|
+          expect(log.logs).to include(include('INFO -- : Started Job'))
+          expect(log.logs).not_to include(include('コピーに失敗しました'))
+          expect(log.logs).to include(include('INFO -- : Completed Job'))
+        end
+
         copied_node = Cms::Node.site(site).where(filename: /^#{target_node_name}\//, depth: 3).first
         expect(copied_node.filename).to eq "#{target_node_name}/node2/node3"
         expect(copied_node.layout_id).to eq layout.id
@@ -36,6 +43,13 @@ describe Cms::Node::CopyNodesJob, dbscope: :example do
       end
 
       it "copied" do
+        expect(Job::Log.count).to eq 1
+        Job::Log.first.tap do |log|
+          expect(log.logs).to include(include('INFO -- : Started Job'))
+          expect(log.logs).not_to include(include('コピーに失敗しました'))
+          expect(log.logs).to include(include('INFO -- : Completed Job'))
+        end
+
         copied_node = Cms::Node.site(site).where(filename: /^#{target_node_name}\//, depth: 4).first
         expect(copied_node.filename).to eq "#{target_node_name}/node2/node3"
       end
