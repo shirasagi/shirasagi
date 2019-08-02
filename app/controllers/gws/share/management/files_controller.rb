@@ -48,13 +48,13 @@ class Gws::Share::Management::FilesController < ApplicationController
     { cur_user: @cur_user, cur_site: @cur_site }
   end
 
-  def pre_params
-    p = super
-    if @category.present?
-      p[:category_ids] = [ @category.id ]
-    end
-    p
-  end
+  # def pre_params
+  #   p = super
+  #   if @category.present?
+  #     p[:category_ids] = [ @category.id ]
+  #   end
+  #   p
+  # end
 
   def set_item
     super
@@ -132,20 +132,20 @@ class Gws::Share::Management::FilesController < ApplicationController
     render_destroy @item.active, { location: location }
   end
 
-  def active_all
-    entries = @items.entries
-    @items = []
-
-    entries.each do |item|
-      if item.allowed?(:edit, @cur_user, site: @cur_site)
-        next if item.active
-      else
-        item.errors.add :base, :auth_error
-      end
-      @items << item
-    end
-    render_destroy_all(entries.size != @items.size)
-  end
+  # def active_all
+  #   entries = @items.entries
+  #   @items = []
+  #
+  #   entries.each do |item|
+  #     if item.allowed?(:edit, @cur_user, site: @cur_site)
+  #       next if item.active
+  #     else
+  #       item.errors.add :base, :auth_error
+  #     end
+  #     @items << item
+  #   end
+  #   render_destroy_all(entries.size != @items.size)
+  # end
 
   def destroy_all
     entries = @items.entries

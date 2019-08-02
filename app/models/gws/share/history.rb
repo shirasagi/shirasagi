@@ -28,15 +28,15 @@ class Gws::Share::History
   default_scope -> {
     order_by created: -1
   }
-  scope :search, ->(params) {
-    criteria = where({})
-    return criteria if params.blank?
-
-    if params[:keyword].present?
-      criteria = criteria.keyword_in params[:keyword], :name, :model_name, :user_name, :user_group_name
-    end
-    criteria
-  }
+  # scope :search, ->(params) {
+  #   criteria = where({})
+  #   return criteria if params.blank?
+  #
+  #   if params[:keyword].present?
+  #     criteria = criteria.keyword_in params[:keyword], :name, :model_name, :user_name, :user_group_name
+  #   end
+  #   criteria
+  # }
 
   def model_name
     self[:model_name] || I18n.t("mongoid.models.#{model}")
@@ -63,9 +63,9 @@ class Gws::Share::History
     self.updated_field_names = updated_field_names unless self[:updated_field_names]
   end
 
-  class << self
-    def updated?
-      where(mode: 'update').exists?
-    end
-  end
+  # class << self
+  #   def updated?
+  #     where(mode: 'update').exists?
+  #   end
+  # end
 end
