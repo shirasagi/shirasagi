@@ -1,5 +1,6 @@
 class SS::Migration
-  include Mongoid::Document
+  extend SS::Translation
+  include SS::Document
 
   field :version, type: String
 
