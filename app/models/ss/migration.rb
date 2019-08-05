@@ -175,7 +175,9 @@ class SS::Migration
       end
 
       klass.new.change
-      create version: timestamp
+      item = where(version: timestamp).first_or_initialize
+      item.updated = Time.zone.now
+      item.save!
       puts "Applied SS::Migration#{timestamp}"
     end
 
