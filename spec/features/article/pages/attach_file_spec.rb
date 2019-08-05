@@ -6,7 +6,7 @@ describe "article_pages", dbscope: :example, js: true do
   let(:item) { create(:article_page, cur_node: node) }
   let(:edit_path) { edit_article_page_path site.id, node, item }
 
-  context "attache file" do
+  context "attach file" do
     before { login_cms_user }
 
     it "#edit" do
@@ -21,7 +21,7 @@ describe "article_pages", dbscope: :example, js: true do
         click_button I18n.t("ss.buttons.save")
 
         attach_file "item[in_files][]", "#{Rails.root}/spec/fixtures/ss/file/keyvisual.gif"
-        click_button I18n.t("ss.buttons.attache")
+        click_button I18n.t("ss.buttons.attach")
       end
 
       sleep 1
