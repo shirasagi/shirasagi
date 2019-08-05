@@ -25,10 +25,12 @@ class SS::Migration
         return
       end
 
-      db_list = order(version: 1).pluck(:version).uniq.select(&:present?)
-      if db_list.include?(version)
-        puts "VERSION '#{version}' was already applied"
-        return
+      unless ENV["FORCE"]
+        db_list = order(version: 1).pluck(:version).uniq.select(&:present?)
+        if db_list.include?(version)
+          puts "VERSION '#{version}' was already applied"
+          return
+        end
       end
 
       filepath_list = filepaths.select { |filepath| take_timestamp(filepath) == version }
@@ -37,7 +39,7 @@ class SS::Migration
         return
       end
 
-      apply_all(filepath_list, check_dependency: ENV["CHECK_DEPENDENCY"])
+      apply_all(filepath_list, check_dependency: ENV["CHECK_DEPENDENCY"], force: ENV["FORCE"])
     end
 
     def status

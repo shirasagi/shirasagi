@@ -57,7 +57,7 @@ RSpec.describe SS::Migration, type: :model, dbscope: :example, tmpdir: true do
         it do
           expect { described_class.migrate }.to output(include("Applied SS::Migration20150324000002")).to_stdout
 
-          expect(described_class.all).to have(5).items
+          expect(described_class.all).to have(4).items
           expect(described_class.where(version: "20150324000000")).to be_present
           expect(described_class.where(version: "20150324000001")).to be_present
           expect(described_class.where(version: "20150324000002")).to be_present
@@ -71,7 +71,7 @@ RSpec.describe SS::Migration, type: :model, dbscope: :example, tmpdir: true do
           with_env("VERSION" => "20150324000002") do
             expect { described_class.migrate }.to output(include("Applied SS::Migration20150324000002")).to_stdout
 
-            expect(described_class.all).to have(4).items
+            expect(described_class.all).to have(3).items
             expect(described_class.where(version: "20150324000000")).to be_present
             expect(described_class.where(version: "20150324000001")).to be_present
             expect(described_class.where(version: "20150324000002")).to be_present
@@ -95,55 +95,80 @@ RSpec.describe SS::Migration, type: :model, dbscope: :example, tmpdir: true do
       context "with dependent version" do
         before { create :ss_migration, version: '20150324000001' }
 
-        it do
-          with_env("VERSION" => "20150324000000") do
-            expect { described_class.up }.to output(include("Applied SS::Migration20150324000000")).to_stdout
+        context "when skipped migration ups" do
+          it do
+            with_env("VERSION" => "20150324000000") do
+              expect { described_class.up }.to output(include("Applied SS::Migration20150324000000")).to_stdout
 
-            expect(described_class.all).to have(2).items
-            expect(described_class.where(version: "20150324000000")).to be_present
-            expect(described_class.where(version: "20150324000001")).to be_present
-            expect(described_class.where(version: "20150324000002")).to be_blank
-            expect(described_class.where(version: "20150324000003")).to be_blank
-            expect(described_class.where(version: "20150324000004")).to be_blank
+              expect(described_class.all).to have(2).items
+              expect(described_class.where(version: "20150324000000")).to be_present
+              expect(described_class.where(version: "20150324000001")).to be_present
+              expect(described_class.where(version: "20150324000002")).to be_blank
+              expect(described_class.where(version: "20150324000003")).to be_blank
+              expect(described_class.where(version: "20150324000004")).to be_blank
+            end
           end
         end
 
-        it do
-          with_env("VERSION" => "20150324000001") do
-            expect { described_class.up }.to output(include("VERSION '20150324000001' was already applied")).to_stdout
+        context "when already applied migration ups" do
+          it do
+            with_env("VERSION" => "20150324000001") do
+              expect { described_class.up }.to output(include("VERSION '20150324000001' was already applied")).to_stdout
 
-            expect(described_class.all).to have(1).items
-            expect(described_class.where(version: "20150324000000")).to be_blank
-            expect(described_class.where(version: "20150324000001")).to be_present
-            expect(described_class.where(version: "20150324000002")).to be_blank
-            expect(described_class.where(version: "20150324000003")).to be_blank
-            expect(described_class.where(version: "20150324000004")).to be_blank
+              expect(described_class.all).to have(1).items
+              expect(described_class.where(version: "20150324000000")).to be_blank
+              expect(described_class.where(version: "20150324000001")).to be_present
+              expect(described_class.where(version: "20150324000002")).to be_blank
+              expect(described_class.where(version: "20150324000003")).to be_blank
+              expect(described_class.where(version: "20150324000004")).to be_blank
+            end
           end
         end
 
-        it do
-          with_env("VERSION" => "20150324000002") do
-            expect { described_class.up }.to output(include("Applied SS::Migration20150324000002")).to_stdout
+        context "when already applied migration ups forcibly" do
+          before { create :ss_migration, version: '20150324000000' }
 
-            expect(described_class.all).to have(3).items
-            expect(described_class.where(version: "20150324000000")).to be_blank
-            expect(described_class.where(version: "20150324000001")).to be_present
-            expect(described_class.where(version: "20150324000002")).to be_present
-            expect(described_class.where(version: "20150324000003")).to be_blank
-            expect(described_class.where(version: "20150324000004")).to be_blank
+          it do
+            with_env("VERSION" => "20150324000001", "FORCE" => "1") do
+              expect { described_class.up }.to output(include("Applied SS::Migration20150324000001")).to_stdout
+
+              expect(described_class.all).to have(2).items
+              expect(described_class.where(version: "20150324000000")).to be_present
+              expect(described_class.where(version: "20150324000001")).to be_present
+              expect(described_class.where(version: "20150324000002")).to be_blank
+              expect(described_class.where(version: "20150324000003")).to be_blank
+              expect(described_class.where(version: "20150324000004")).to be_blank
+            end
           end
         end
 
-        it do
-          with_env("VERSION" => "99999999000000") do
-            expect { described_class.up }.to output(include("VERSION '99999999000000' is not found")).to_stdout
+        context "when only next migration ups" do
+          it do
+            with_env("VERSION" => "20150324000002") do
+              expect { described_class.up }.to output(include("Applied SS::Migration20150324000002")).to_stdout
 
-            expect(described_class.all).to have(1).items
-            expect(described_class.where(version: "20150324000000")).to be_blank
-            expect(described_class.where(version: "20150324000001")).to be_present
-            expect(described_class.where(version: "20150324000002")).to be_blank
-            expect(described_class.where(version: "20150324000003")).to be_blank
-            expect(described_class.where(version: "20150324000004")).to be_blank
+              expect(described_class.all).to have(2).items
+              expect(described_class.where(version: "20150324000000")).to be_blank
+              expect(described_class.where(version: "20150324000001")).to be_present
+              expect(described_class.where(version: "20150324000002")).to be_present
+              expect(described_class.where(version: "20150324000003")).to be_blank
+              expect(described_class.where(version: "20150324000004")).to be_blank
+            end
+          end
+        end
+
+        context "when non-existing migration ups" do
+          it do
+            with_env("VERSION" => "99999999000000") do
+              expect { described_class.up }.to output(include("VERSION '99999999000000' is not found")).to_stdout
+
+              expect(described_class.all).to have(1).items
+              expect(described_class.where(version: "20150324000000")).to be_blank
+              expect(described_class.where(version: "20150324000001")).to be_present
+              expect(described_class.where(version: "20150324000002")).to be_blank
+              expect(described_class.where(version: "20150324000003")).to be_blank
+              expect(described_class.where(version: "20150324000004")).to be_blank
+            end
           end
         end
       end
