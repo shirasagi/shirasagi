@@ -24,9 +24,15 @@ class SS::Migration
         return
       end
 
-      filepath_list = filepaths_to_apply.select { |filepath| take_timestamp(filepath) == version }
+      db_list = order(version: 1).pluck(:version).uniq.select(&:present?)
+      if db_list.include?(version)
+        puts "VERSION '#{version}' was already applied"
+        return
+      end
+
+      filepath_list = filepaths.select { |filepath| take_timestamp(filepath) == version }
       if filepath_list.blank?
-        puts "VERSION '#{version}' was already applied or is not found"
+        puts "VERSION '#{version}' is not found"
         return
       end
 

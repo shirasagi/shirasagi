@@ -96,6 +96,32 @@ RSpec.describe SS::Migration, type: :model, dbscope: :example, tmpdir: true do
         before { create :ss_migration, version: '20150324000001' }
 
         it do
+          with_env("VERSION" => "20150324000000") do
+            expect { described_class.up }.to output(include("Applied SS::Migration20150324000000")).to_stdout
+
+            expect(described_class.all).to have(2).items
+            expect(described_class.where(version: "20150324000000")).to be_present
+            expect(described_class.where(version: "20150324000001")).to be_present
+            expect(described_class.where(version: "20150324000002")).to be_blank
+            expect(described_class.where(version: "20150324000003")).to be_blank
+            expect(described_class.where(version: "20150324000004")).to be_blank
+          end
+        end
+
+        it do
+          with_env("VERSION" => "20150324000001") do
+            expect { described_class.up }.to output(include("VERSION '20150324000001' was already applied")).to_stdout
+
+            expect(described_class.all).to have(1).items
+            expect(described_class.where(version: "20150324000000")).to be_blank
+            expect(described_class.where(version: "20150324000001")).to be_present
+            expect(described_class.where(version: "20150324000002")).to be_blank
+            expect(described_class.where(version: "20150324000003")).to be_blank
+            expect(described_class.where(version: "20150324000004")).to be_blank
+          end
+        end
+
+        it do
           with_env("VERSION" => "20150324000002") do
             expect { described_class.up }.to output(include("Applied SS::Migration20150324000002")).to_stdout
 
@@ -103,6 +129,19 @@ RSpec.describe SS::Migration, type: :model, dbscope: :example, tmpdir: true do
             expect(described_class.where(version: "20150324000000")).to be_blank
             expect(described_class.where(version: "20150324000001")).to be_present
             expect(described_class.where(version: "20150324000002")).to be_present
+            expect(described_class.where(version: "20150324000003")).to be_blank
+            expect(described_class.where(version: "20150324000004")).to be_blank
+          end
+        end
+
+        it do
+          with_env("VERSION" => "99999999000000") do
+            expect { described_class.up }.to output(include("VERSION '99999999000000' is not found")).to_stdout
+
+            expect(described_class.all).to have(1).items
+            expect(described_class.where(version: "20150324000000")).to be_blank
+            expect(described_class.where(version: "20150324000001")).to be_present
+            expect(described_class.where(version: "20150324000002")).to be_blank
             expect(described_class.where(version: "20150324000003")).to be_blank
             expect(described_class.where(version: "20150324000004")).to be_blank
           end
@@ -196,6 +235,7 @@ RSpec.describe SS::Migration, type: :model, dbscope: :example, tmpdir: true do
     before do
       migration_file "#{tmpdir}/migrations/mod1/20150330000000_a.rb"
       migration_file "#{tmpdir}/migrations/mod1/20150330000001_a.rb"
+      migration_file "#{tmpdir}/migrations/mod1/20150330000002_a.rb"
       SS::Migration.class_eval { remove_const :DIR }
       SS::Migration::DIR = Rails.root.join "#{tmpdir}/migrations"
     end
@@ -207,22 +247,29 @@ RSpec.describe SS::Migration, type: :model, dbscope: :example, tmpdir: true do
         is_expected.to match [
           /.*\/20150330000000_a.rb$/,
           /.*\/20150330000001_a.rb$/,
+          /.*\/20150330000002_a.rb$/,
         ]
       end
     end
 
     context 'after 1st migration is applied' do
       before { create :ss_migration, version: '20150330000000' }
-      it { is_expected.to match [/.*\/20150330000001_a.rb$/] }
+      it { is_expected.to match [/.*\/20150330000001_a.rb$/, /.*\/20150330000002_a.rb$/] }
     end
 
-    context 'when no migration to apply exists' do
+    context 'when all migrations are applied' do
       before do
         create :ss_migration, version: '20150330000000'
         create :ss_migration, version: '20150330000001'
+        create :ss_migration, version: '20150330000002'
       end
 
       it { is_expected.to eq [] }
+    end
+
+    context 'when first one is skipped and second one is applied' do
+      before { create :ss_migration, version: '20150330000001' }
+      it { is_expected.to match [/.*\/20150330000002_a.rb$/] }
     end
   end
 
