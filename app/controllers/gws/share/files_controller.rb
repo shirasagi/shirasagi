@@ -71,6 +71,18 @@ class Gws::Share::FilesController < ApplicationController
     @item.folder.update_folder_descendants_file_info if @item.is_a?(Gws::Share::File) && @item.folder != @folder
   end
 
+  def render_update(result, opts = {})
+    unless result
+      # if result is false, browser goes to edit form which requires to be locked.
+      unless @item.acquire_lock
+        redirect_to action: :lock
+        return
+      end
+    end
+
+    super
+  end
+
   public
 
   def index
@@ -156,12 +168,12 @@ class Gws::Share::FilesController < ApplicationController
 
   def edit
     raise "403" unless @item.allowed?(:edit, @cur_user, site: @cur_site)
-    if @item.is_a?(Gws::Addon::EditLock)
-      unless @item.acquire_lock
-        redirect_to action: :lock
-        return
-      end
+
+    unless @item.acquire_lock
+      redirect_to action: :lock
+      return
     end
+
     render
   end
 
