@@ -49,7 +49,7 @@ class Chat::HistoriesController < ApplicationController
     raise "403" unless @cur_node.allowed?(:read, @cur_user, site: @cur_site)
     @items = @model.where(cond).
       search(params[:s]).
-      order_by(updated: -1).
+      order_by(created: -1).
       page(params[:page]).per(50)
   end
 
@@ -72,7 +72,7 @@ class Chat::HistoriesController < ApplicationController
     raise "403" unless @cur_node.allowed?(:read, @cur_user, site: @cur_site)
     @items = @model.where(cond).
       search(params[:s]).
-      order_by(updated: -1)
+      order_by(created: -1)
     send_csv @items
   end
 end

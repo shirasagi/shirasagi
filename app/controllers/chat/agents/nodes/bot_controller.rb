@@ -25,7 +25,10 @@ class Chat::Agents::Nodes::BotController < ApplicationController
   public
 
   def index
-    @intent = Chat::Intent.site(@cur_site).where(node_id: @cur_node.id).find_intent(params[:text])
+    @intent = Chat::Intent.site(@cur_site).
+      where(node_id: @cur_node.id).
+      order_by(order: 1, updated: -1).
+      find_intent(params[:text])
     if params[:question] == 'success'
       @result = @cur_node.becomes_with_route.chat_success
     elsif params[:question] == 'retry'
@@ -36,6 +39,9 @@ class Chat::Agents::Nodes::BotController < ApplicationController
         @result = @intent.response.presence || @cur_node.becomes_with_route.response_template
       else
         @result = @cur_node.becomes_with_route.exception_text
+      end
+      if @intent.blank? || @intent.present? && @intent.site_search == 'enabled'
+        @site_search_node = Cms::Node::SiteSearch.site(@cur_site).and_public(@cur_date).first
       end
     else
       @suggest = @cur_node.becomes_with_route.first_suggest

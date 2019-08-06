@@ -9,5 +9,7 @@ module Chat
     Cms::Role.permission :edit_private_chat_bots
     Cms::Role.permission :read_other_chat_bots
     Cms::Role.permission :read_private_chat_bots
+    Cms::Role.permission :import_other_chat_bots
+    Cms::Role.permission :import_private_chat_bots
   end
 end

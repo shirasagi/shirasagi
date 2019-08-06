@@ -6,7 +6,7 @@ class Chat::Category
   include Cms::Addon::GroupPermission
   include History::Addon::Backup
 
-  index({ order: 1, site_id: 1 }, { sparse: true } )
+  index({ order: 1, updated: -1, site_id: 1, node_id: 1 }, { sparse: true } )
 
   set_permission_name "chat_bots"
 

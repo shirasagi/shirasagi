@@ -8,5 +8,11 @@ module Chat::Addon
 
       permit_params :chat_path
     end
+
+    def chat_bot_node
+      chat_node = Chat::Node::Bot.site(site).and_public.where(filename: chat_path.sub(/\A\//, '')).first
+      chat_node ||= parent.becomes_with_route
+      chat_node
+    end
   end
 end

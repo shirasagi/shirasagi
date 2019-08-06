@@ -4,7 +4,7 @@ class Chat::History
   include SS::Reference::Site
   include SS::Reference::User
 
-  index({ created: -1, id: -1 })
+  index({ created: -1, id: -1, site_id: 1, node_id: 1 })
 
   seqid :id
   field :session_id, type: String

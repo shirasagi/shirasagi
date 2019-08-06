@@ -7,7 +7,7 @@ class Chat::Intent
   include Cms::Addon::GroupPermission
   include History::Addon::Backup
 
-  index({ order: 1, site_id: 1 })
+  index({ order: 1, updated: -1, site_id: 1, node_id: 1 })
 
   set_permission_name "chat_bots"
 
@@ -16,13 +16,15 @@ class Chat::Intent
   field :phrase, type: SS::Extensions::Words
   field :suggest, type: SS::Extensions::Words
   field :response, type: String
+  field :site_search, type: String
   field :order, type: Integer
 
   belongs_to :node, class_name: "Chat::Node::Bot", inverse_of: :intents
 
-  permit_params :name, :phrase, :suggest, :response, :order
+  permit_params :name, :phrase, :suggest, :response, :site_search, :order
 
   validates :name, presence: true, length: { maximum: 80 }
+  validates :phrase, presence: true
   validates :order, numericality: { greater_than_or_equal_to: 0, less_than_or_equal_to: 999_999, allow_blank: true }
 
   class << self
@@ -39,19 +41,57 @@ class Chat::Intent
       criteria
     end
 
+    def csv_headers
+      %w(
+          id name phrase suggest response site_search order category_ids
+        )
+    end
+
+    def csv
+      CSV.generate do |data|
+        data << csv_headers.map { |k| t k }
+        criteria.each do |item|
+          data << [
+            item.id,
+            item.name,
+            item.phrase.join("\n"),
+            item.suggest.join("\n"),
+            item.response,
+            item.site_search,
+            item.order,
+            item.categories.pluck(:name).join("\n")
+          ]
+        end
+      end
+    end
+
+    def intents(string)
+      return if string.blank?
+
+      all.select do |intent|
+        intent.phrase.any? { |phrase| string.include?(phrase) }
+      end
+    end
+
     def find_intent(string)
       return if string.blank?
-      item = all.select do |intent|
-        string =~ /#{intent.phrase.collect { |phrase| Regexp.escape(phrase) }.join('|') }/
-      end.first
-      return if item.blank?
-      item
+
+      all.entries.find do |intent|
+        intent.phrase.any? { |phrase| string.include?(phrase) }
+      end
     end
 
     def response(string)
       item = find_intent(string)
-      return if item.blank?
-      item.response
+      item.try(:response)
     end
+  end
+
+  def site_search_options
+    %w(disabled enabled).map { |v| [ I18n.t("ss.options.state.#{v}"), v ] }
+  end
+
+  def duplicate?
+    self.class.site(site).where(node_id: node_id).intents(phrase.join).count > 1
   end
 end

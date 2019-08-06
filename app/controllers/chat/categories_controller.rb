@@ -24,7 +24,7 @@ class Chat::CategoriesController < ApplicationController
     @items = @items.allow(:read, @cur_user, site: @cur_site).
       where(node_id: @cur_node.id).
       search(params[:s]).
-      order_by(order: 1).
+      order_by(order: 1, updated: -1).
       page(params[:page]).
       per(50)
   end
