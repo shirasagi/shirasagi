@@ -16,8 +16,9 @@ RSpec.describe Gws::Memo::Message, type: :model do
           user.id.to_s => 'INBOX.Trash'
         })
       end
-      it { expect(memo.errors.size).to eq 0 }
       it do
+        expect(memo.errors.size).to eq 0
+
         memo.set_seen(gws_user)
         expect(memo.path(gws_user)).to eq 'INBOX.Trash'
         expect(memo.path(user)).to eq 'INBOX.Trash'
@@ -41,6 +42,24 @@ RSpec.describe Gws::Memo::Message, type: :model do
         expect(memo.path(user)).to eq 'INBOX'
         expect(memo.seen_at(gws_user)).to be_falsey
         expect(memo.seen_at(user)).to be_truthy
+
+        inbox_trash = Gws::Memo::Folder.static_items(gws_user, gws_site).find { |dir| dir.folder_path == 'INBOX.Trash' }
+        memo.destroy_from_folder(gws_user, inbox_trash)
+        expect(memo.path(gws_user)).to be_falsey
+        expect(memo.path(user)).to eq 'INBOX'
+        expect(memo.seen_at(gws_user)).to be_falsey
+        expect(memo.seen_at(user)).to be_truthy
+
+        inbox = Gws::Memo::Folder.static_items(user, gws_site).find { |dir| dir.folder_path == 'INBOX' }
+        memo.destroy_from_folder(user, inbox)
+        expect(memo.path(gws_user)).to be_falsey
+        expect(memo.path(user)).to be_falsey
+        expect(memo.seen_at(gws_user)).to be_falsey
+        expect(memo.seen_at(user)).to be_falsey
+
+        inbox_sent = Gws::Memo::Folder.static_items(gws_user, gws_site).find { |dir| dir.folder_path == 'INBOX.Sent' }
+        memo.destroy_from_folder(gws_user, inbox_sent)
+        expect(memo.deleted['sent']).to be_truthy
       end
     end
   end
