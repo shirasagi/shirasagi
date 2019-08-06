@@ -42,7 +42,7 @@ module Article::Export
         draw_state(drawer)
       end
 
-      drawer.enum(self, options)
+      drawer.enum(self.all, options)
     end
 
     private
