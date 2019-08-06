@@ -162,12 +162,13 @@ class SS::Migration
     def apply(filepath, context)
       context[:versions_have_been_run] ||= []
 
-      timestamp = take_timestamp filepath
+      timestamp, name = parse_migration_filename filepath
       require filepath
       klass = "SS::Migration#{timestamp}".constantize
       missing_versions = non_applied_dependent_versions(klass, context)
       if missing_versions.present?
-        raise "Error SS::Migration#{timestamp} is required #{missing_versions.join(", ")}"
+        puts "Error SS::Migration#{timestamp} (#{name}) is required #{missing_versions.join(", ")}"
+        return
       end
 
       if context[:check_dependency]

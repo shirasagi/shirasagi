@@ -193,7 +193,8 @@ RSpec.describe SS::Migration, type: :model, dbscope: :example, tmpdir: true do
       context "without dependent version" do
         it do
           with_env("VERSION" => "20150324000003") do
-            expect { described_class.up }.to raise_error "Error SS::Migration20150324000003 is required 20150324000002"
+            expect { described_class.up }.to \
+              output(include("Error SS::Migration20150324000003 (a) is required 20150324000002")).to_stdout
             expect(described_class.all).to have(0).items
           end
         end
