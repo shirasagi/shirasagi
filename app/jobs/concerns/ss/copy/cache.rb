@@ -1,4 +1,4 @@
-module Sys::SiteCopy::Cache
+module SS::Copy::Cache
   extend ActiveSupport::Concern
 
   def cache_store
