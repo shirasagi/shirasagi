@@ -6,8 +6,10 @@ describe Sys::PostalCode::OfficialCsvImportJob, type: :job, dbscope: :example do
       described_class.import_from_zip("#{::Rails.root}/spec/fixtures/sys/postal_code.zip")
       @log = Job::Log.first
     end
-    it { expect(Job::Log.count).to eq 1 }
-    it { expect(@log.logs).to include(include("INFO -- : Started Job")) }
-    it { expect(@log.logs).to include(include("INFO -- : Completed Job")) }
+    it do
+      expect(Job::Log.count).to eq 1
+      expect(@log.logs).to include(include("INFO -- : Started Job"))
+      expect(@log.logs).to include(include("INFO -- : Completed Job"))
+    end
   end
 end
