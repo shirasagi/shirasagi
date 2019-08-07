@@ -183,7 +183,7 @@ describe "cms_form_preview", type: :feature, dbscope: :example do
 
         wait_for_cbox do
           attach_file 'item[in_files][]', "#{Rails.root}/spec/fixtures/ss/file/keyvisual.gif"
-          click_on I18n.t('ss.buttons.save')
+          click_on I18n.t('ss.buttons.attach')
         end
 
         within 'form#item-form' do
