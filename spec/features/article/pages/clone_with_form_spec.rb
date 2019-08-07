@@ -64,7 +64,7 @@ describe 'article_pages', dbscope: :example, js: true do
 
         within 'div#cboxLoadedContent form.user-file' do
           attach_file 'item[in_files][]', "#{Rails.root}/spec/fixtures/ss/logo.png"
-          click_on I18n.t('ss.buttons.save')
+          click_on I18n.t('ss.buttons.attach')
         end
 
         within 'form#item-form' do

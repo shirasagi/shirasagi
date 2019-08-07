@@ -23,7 +23,7 @@ describe Gws::Workflow::FilesController, type: :feature, dbscope: :example, tmpd
         end
         within "#cboxLoadedContent form.user-file" do
           attach_file "item[in_files][]", "#{Rails.root}/spec/fixtures/ss/logo.png"
-          click_on I18n.t("ss.buttons.save")
+          click_on I18n.t("ss.buttons.attach")
         end
         within "form#item-form" do
           expect(page).to have_content("logo.png")
@@ -56,7 +56,7 @@ describe Gws::Workflow::FilesController, type: :feature, dbscope: :example, tmpd
           end
           within "#cboxLoadedContent form.user-file" do
             attach_file "item[in_files][]", file_path
-            click_on I18n.t("ss.buttons.save")
+            click_on I18n.t("ss.buttons.attach")
           end
           within "form#item-form" do
             expect(page).to have_content(::File.basename(file_path))

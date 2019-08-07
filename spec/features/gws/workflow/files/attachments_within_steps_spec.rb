@@ -95,7 +95,7 @@ describe Gws::Workflow::FilesController, type: :feature, dbscope: :example, tmpd
       end
       wait_for_cbox do
         attach_file "item[in_files][]", "#{Rails.root}/spec/fixtures/ss/logo.png"
-        click_on I18n.t("ss.buttons.save")
+        click_on I18n.t("ss.buttons.attach")
       end
       within ".mod-workflow-approve" do
         click_on I18n.t("workflow.buttons.approve")
@@ -146,7 +146,7 @@ describe Gws::Workflow::FilesController, type: :feature, dbscope: :example, tmpd
       end
       wait_for_cbox do
         attach_file "item[in_files][]", "#{Rails.root}/spec/fixtures/ss/logo.png"
-        click_on I18n.t("ss.buttons.save")
+        click_on I18n.t("ss.buttons.attach")
       end
       within ".mod-workflow-approve" do
         click_on I18n.t("workflow.links.set_seen")

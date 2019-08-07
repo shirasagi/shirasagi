@@ -95,7 +95,7 @@ describe 'article_pages', dbscope: :example, js: true do
       end
       within 'div#cboxLoadedContent form.user-file' do
         attach_file 'item[in_files][]', "#{Rails.root}/spec/fixtures/ss/logo.png"
-        click_on I18n.t('ss.buttons.save')
+        click_on I18n.t('ss.buttons.attach')
       end
       within 'form#item-form' do
         within ".column-value-cms-column-fileupload" do
@@ -157,7 +157,7 @@ describe 'article_pages', dbscope: :example, js: true do
       end
       within 'div#cboxLoadedContent form.user-file' do
         attach_file 'item[in_files][]', "#{Rails.root}/spec/fixtures/ss/file/keyvisual.gif"
-        click_on I18n.t('ss.buttons.save')
+        click_on I18n.t('ss.buttons.attach')
       end
       within 'form#item-form' do
         within ".column-value-cms-column-fileupload" do
