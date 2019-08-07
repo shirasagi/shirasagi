@@ -247,6 +247,9 @@ describe "gws_discussion_todos", type: :feature, dbscope: :example, js: true do
         expect(message.url).to eq ""
         expect(message.member_ids).to include(user1.id, user2.id)
       end
+
+      # wait for ajax to stabilize spec
+      expect(page).to have_no_css(".fc-loading", text: I18n.t("gws/schedule.loading"))
     end
   end
 end
