@@ -9,6 +9,11 @@ describe "gws_share_files", type: :feature, dbscope: :example, js: true do
   before { login_gws_user }
 
   it do
+    folder.update_folder_descendants_file_info
+    folder.reload
+    expect(folder.descendants_files_count).to eq 1
+    expect(folder.descendants_total_file_size).to eq item.size
+
     visit gws_share_files_path(site: site)
     click_on I18n.t('ss.navi.trash')
     expect(page).to have_content(item.name)
@@ -25,5 +30,9 @@ describe "gws_share_files", type: :feature, dbscope: :example, js: true do
     end
 
     expect(Gws::Share::File.where(id: item.id)).to be_blank
+
+    folder.reload
+    expect(folder.descendants_files_count).to eq 0
+    expect(folder.descendants_total_file_size).to eq 0
   end
 end

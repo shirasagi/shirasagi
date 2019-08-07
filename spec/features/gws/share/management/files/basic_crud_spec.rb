@@ -6,10 +6,17 @@ describe "gws_share_files", type: :feature, dbscope: :example do
   let!(:category) { create :gws_share_category }
   let!(:item) { create :gws_share_file, folder_id: folder.id, category_ids: [category.id], deleted: Time.zone.now }
 
-  before { login_gws_user }
+  before do
+    folder.update_folder_descendants_file_info
+    login_gws_user
+  end
 
   describe "restore" do
     it do
+      folder.reload
+      expect(folder.descendants_files_count).to eq 1
+      expect(folder.descendants_total_file_size).to eq item.size
+
       visit gws_share_files_path(site: site)
       click_on I18n.t('ss.navi.trash')
       click_on item.name
@@ -26,11 +33,19 @@ describe "gws_share_files", type: :feature, dbscope: :example do
 
       item.reload
       expect(item.deleted).to be_blank
+
+      folder.reload
+      expect(folder.descendants_files_count).to eq 1
+      expect(folder.descendants_total_file_size).to eq item.size
     end
   end
 
   describe "hard delete" do
     it do
+      folder.reload
+      expect(folder.descendants_files_count).to eq 1
+      expect(folder.descendants_total_file_size).to eq item.size
+
       visit gws_share_files_path(site: site)
       click_on I18n.t('ss.navi.trash')
       click_on item.name
@@ -46,6 +61,10 @@ describe "gws_share_files", type: :feature, dbscope: :example do
       # end
 
       expect(Gws::Share::File.where(id: item.id)).to be_blank
+
+      folder.reload
+      expect(folder.descendants_files_count).to eq 0
+      expect(folder.descendants_total_file_size).to eq 0
     end
   end
 end

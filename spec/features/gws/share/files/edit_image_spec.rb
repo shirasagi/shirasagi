@@ -29,6 +29,11 @@ describe "gws_share_files", type: :feature, dbscope: :example, js: true do
       it do
         before_info = extract_image_info(item.path)
 
+        folder.update_folder_descendants_file_info
+        folder.reload
+        expect(folder.descendants_files_count).to eq 1
+        expect(folder.descendants_total_file_size).to eq item.size
+
         visit index_path
         click_on item.name
         click_on I18n.t("ss.links.edit")
@@ -46,6 +51,11 @@ describe "gws_share_files", type: :feature, dbscope: :example, js: true do
 
         after_info = extract_image_info(item.path)
         expect(after_info).not_to eq before_info
+
+        folder.reload
+        item.reload
+        expect(folder.descendants_files_count).to eq 1
+        expect(folder.descendants_total_file_size).to eq item.size
       end
     end
 

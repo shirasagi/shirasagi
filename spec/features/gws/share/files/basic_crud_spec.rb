@@ -2,46 +2,30 @@ require 'spec_helper'
 
 describe "gws_share_files", type: :feature, dbscope: :example, tmpdir: true, js: true do
   let(:site) { gws_site }
-  let(:item) { create :gws_share_file, folder_id: folder.id, category_ids: [category.id], memo: "test" }
   let!(:folder) { create :gws_share_folder }
   let!(:category) { create :gws_share_category }
-  let(:top_path) { gws_share_files_path site }
-  let(:index_path) { gws_share_folder_files_path site, folder }
-  let(:folder_path) { gws_share_folder_files_path site, folder }
-  let(:new_path) { new_gws_share_folder_file_path site, folder }
-  let(:show_path) { gws_share_folder_file_path site, folder, item }
-  let(:edit_path) { edit_gws_share_folder_file_path site, folder, item }
-  let(:delete_path) { delete_gws_share_folder_file_path site, folder, item }
-  let(:ss_file) { tmp_ss_file(contents: "#{Rails.root}/spec/fixtures/ss/logo.png", site: site, user: gws_user) }
+  let!(:filepath) { "#{Rails.root}/spec/fixtures/ss/logo.png" }
+  let!(:ss_file) { tmp_ss_file(contents: filepath, site: site, user: gws_user) }
 
-  context "with auth" do
-    before { login_gws_user }
+  before { login_gws_user }
 
-    it "hide new menu on the top page" do
-      visit top_path
-      wait_for_ajax
-      expect(page).to have_no_content("新規作成")
-    end
+  context "basic crud" do
+    it do
+      visit gws_share_files_path(site)
+      click_on folder.name
 
-    it "appear new menu in writable folder" do
-      item.folder.user_ids = [gws_user.id]
-      visit folder_path
-      wait_for_ajax
-      expect(page).to have_content("新規作成")
-    end
-
-    it "#new" do
-      # ensure that SS::TempFile was created
-      ss_file
-
-      visit new_path
+      #
+      # Create
+      #
+      click_on I18n.t("ss.links.new")
       click_on I18n.t("gws.apis.categories.index")
       wait_for_cbox do
         click_on category.name
       end
       within "form#item-form" do
-        # click_on I18n.t('ss.buttons.upload')
-        find('a.btn', text: I18n.t('ss.buttons.upload')).click
+        within "#addon-basic" do
+          click_on I18n.t('ss.buttons.upload')
+        end
       end
       wait_for_cbox do
         expect(page).to have_content(ss_file.name)
@@ -58,45 +42,67 @@ describe "gws_share_files", type: :feature, dbscope: :example, tmpdir: true, js:
       within ".tree-navi" do
         expect(page).to have_content(folder.name)
       end
-    end
 
-    it "#show" do
-      item
-      visit show_path
-      expect(current_path).not_to eq sns_login_path
-      expect(item.name).to eq "logo.png"
-      expect(item.filename).to eq "logo.png"
-      expect(item.state).to eq "closed"
-      expect(item.content_type).to eq "image/png"
-      expect(item.category_ids).to eq [category.id]
-      expect(item.memo).to eq "test"
-    end
+      expect(Gws::Share::File.all.count).to eq 1
+      file = Gws::Share::File.all.first
+      expect(file.site_id).to eq site.id
+      expect(file.user_id).to eq gws_user.id
+      expect(file.model).to eq "share/file"
+      expect(file.state).to eq "closed"
+      expect(file.name).to eq ::File.basename(filepath)
+      expect(file.filename).to eq ::File.basename(filepath)
+      expect(file.size).to be_present
+      expect(file.content_type).to eq "image/png"
+      expect(file.category_ids).to eq [ category.id ]
+      expect(file.memo).to eq "new test"
+      expect(file.folder_id).to eq folder.id
 
-    it "#edit" do
-      visit edit_path
-      wait_for_ajax
+      folder.reload
+      expect(folder.descendants_files_count).to eq 1
+      expect(folder.descendants_total_file_size).to eq file.size
+
+      #
+      # Update
+      #
+      visit gws_share_files_path(site)
+      click_on folder.name
+      click_on file.name
+      expect(page).to have_content(file.memo)
+      click_on I18n.t("ss.links.edit")
       within "form#item-form" do
         fill_in "item[name]", with: "modify"
         fill_in "item[memo]", with: "edited"
         click_button I18n.t('ss.buttons.save')
       end
-      expect(current_path).not_to eq sns_login_path
-      expect(page).to have_no_css("form#item-form")
-      expect(page).to have_content(folder.name)
-      expect(item.reload.memo).to eq "edited"
-    end
+      expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
 
-    it "#delete" do
-      visit delete_path
+      # within ".tree-navi" do
+      #   expect(page).to have_content(folder.name)
+      # end
+
+      file.reload
+      expect(file.name).to eq "modify"
+      expect(file.memo).to eq "edited"
+
+      visit gws_share_files_path(site)
+      click_on folder.name
+      click_on file.name
+      click_on I18n.t("ss.links.delete")
       within "form" do
-        click_button I18n.t('ss.buttons.delete')
+        click_on I18n.t("ss.buttons.delete")
       end
       expect(page).to have_css('#notice', text: I18n.t('ss.notice.deleted'))
-      expect(page).to have_no_content(item.name)
-      expect(page).to have_content(folder.name)
 
-      item.reload
-      expect(item.deleted).to be_present
+      within ".tree-navi" do
+        expect(page).to have_content(folder.name)
+      end
+
+      file.reload
+      expect(file.deleted).to be_present
+
+      folder.reload
+      expect(folder.descendants_files_count).to eq 1
+      expect(folder.descendants_total_file_size).to eq file.size
     end
   end
 end
