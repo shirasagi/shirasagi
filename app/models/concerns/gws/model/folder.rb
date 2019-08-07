@@ -87,7 +87,7 @@ module Gws::Model::Folder
   end
 
   def folders
-    self.class.where(site_id: site_id, name: /^#{::Regexp.escape(name)}\//)
+    dependant_scope.where(name: /^#{::Regexp.escape(name)}\//)
   end
 
   def children(cond = {})
@@ -179,7 +179,7 @@ module Gws::Model::Folder
     src = @db_changes["name"][0]
     dst = @db_changes["name"][1]
 
-    folder_ids = self.class.where(site_id: site_id, name: /^#{::Regexp.escape(src)}\//).pluck(:id)
+    folder_ids = dependant_scope.where(name: /^#{::Regexp.escape(src)}\//).pluck(:id)
     folder_ids.each do |id|
       folder = self.class.where(id: id).first
       next unless folder
