@@ -231,6 +231,7 @@ describe "cms_form_preview", type: :feature, dbscope: :example do
 
         switch_to_window(windows.first)
         click_on I18n.t('ss.buttons.draft_save')
+        click_on I18n.t("ss.buttons.ignore_alert")
         expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
         expect(Article::Page.all.count).to eq 1
 
