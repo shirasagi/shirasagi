@@ -102,7 +102,7 @@ class Webmail::GroupAccountsController < ApplicationController
 
     result = @group.save
     if !result
-      @item.errors[:base] += @group.errors.full_messages
+      @item.errors.messages[:base] += @group.errors.full_messages
     end
     render_destroy result, location: webmail_group_path(id: @group)
   end

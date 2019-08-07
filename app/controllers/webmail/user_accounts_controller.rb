@@ -150,7 +150,7 @@ class Webmail::UserAccountsController < ApplicationController
 
     result = @user.save
     if !result
-      @item.errors[:base] += @user.errors.full_messages
+      @item.errors.messages[:base] += @user.errors.full_messages
     end
     render_destroy result
   end
