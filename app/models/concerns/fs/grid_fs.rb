@@ -1,3 +1,5 @@
+require "stringio"
+
 module Fs::GridFs
   extend ActiveSupport::Concern
 
@@ -7,9 +9,9 @@ module Fs::GridFs
   class Stat
     attr_reader :size, :atime, :mtime, :ctime
 
-    def initialize(obj)
-      @size  = obj[:length]
-      @atime = obj[:updated] || obj[:uploadDate]
+    def initialize(grid_file)
+      @size  = grid_file[:length]
+      @atime = grid_file[:updated] || grid_file[:uploadDate]
       @mtime = @atime
       @ctime = @ctime
     end
@@ -60,16 +62,8 @@ module Fs::GridFs
     end
 
     def binwrite(path, data)
-      file = Fs::UploadedFile.new("grid_fs")
-      file.binmode
-      file.write(data)
-      # file.content_type = content_type(path)
-
-      if fs = get(path)
-        fs.delete
-      end
-      fs = Mongoid::GridFs.put file, filename: path_filter(path)
-      fs.length
+      io = data ? StringIO.new(data) : StringIO.new
+      upload(path, io)
     end
 
     def stat(path)
@@ -121,8 +115,128 @@ module Fs::GridFs
       Mongoid::GridFs.file_model.where(filename: /^#{path}$/).map { |fs| fs.filename }
     end
 
+    class IoLike
+      def initialize(file)
+        @file = file
+        rewind
+      end
+
+      def gets
+        output_buffer = ''
+        finished = false
+        until finished
+          break unless next_chunk_if_necessary
+
+          @chunk.each_char do |ch|
+            output_buffer << ch
+            if ch == "\n"
+              finished = true
+              break
+            end
+          end
+        end
+
+        output_buffer
+      end
+
+      def read(*args)
+        length, output_buffer = *args
+        output_buffer ||= ''
+
+        output_length = 0
+        loop do
+          required = nil
+          if length.present?
+            required = length - output_length
+            break if required <= 0
+          end
+
+          break unless next_chunk_if_necessary
+
+          remains = @chunk.length - @chunk.pos
+          if required.present? && required < remains
+            output_buffer << @chunk.read(required)
+            output_length += required
+            break
+          end
+
+          output_buffer << @chunk.read
+          output_length += remains
+        end
+
+        return nil if length.to_i != 0 && output_length == 0
+
+        output_buffer
+      end
+
+      def each
+        line = gets
+        until line.nil?
+          yield line
+          line = gets
+        end
+      end
+
+      def rewind
+        @enum = Enumerator.new do |y|
+          @file.each { |chunk| y << chunk }
+        end
+        0
+      end
+
+      def close
+        @chunk = nil
+        rewind
+        nil
+      end
+
+      private
+
+      def next_chunk
+        chunk = @enum.next
+        @chunk = StringIO.new(chunk)
+        true
+      rescue StopIteration => _e
+        @chunk = nil
+        false
+      end
+
+      def next_chunk_if_necessary
+        return next_chunk if @chunk.nil?
+
+        remains = @chunk.length - @chunk.pos
+        return next_chunk if remains <= 0
+
+        true
+      end
+    end
+
+    # returns object which satisfies rack input stream specification
+    # see: https://www.rubydoc.info/github/rack/rack/file/SPEC
     def to_io(path)
-      raise NotImplementedError
+      obj = get(path)
+      raise FileNotFoundError if obj.nil?
+
+      IoLike.new(obj)
+    end
+
+    def download(src, dst)
+      ::IO.copy_stream(to_io(src), dst)
+    end
+
+    def upload(dst, src)
+      fs = get(dst)
+      fs.delete if fs
+
+      if src.respond_to?(:read)
+        fs = Mongoid::GridFs.put(src, filename: path_filter(dst))
+      else
+        fs = ::File.open(src, "rb") do |io|
+          Mongoid::GridFs.put(io, filename: path_filter(dst))
+        end
+      end
+
+      fs.length
     end
 
     def cp(src, dest)

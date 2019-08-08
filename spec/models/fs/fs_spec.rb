@@ -248,4 +248,68 @@ describe Fs do
       expect(grid_fs.glob("#{tmpdir}/spec/**/*")).to eq [ "#{tmpdir}/spec/fs/logo.png"[1..-1] ]
     end
   end
+
+  describe '.upload' do
+    let(:file_path) { "#{Rails.root}/spec/fixtures/ss/logo.png" }
+    let(:name) { "#{Rails.root}/#{unique_id}.png" }
+
+    context "with file path" do
+      it do
+        filesystem.upload(name, file_path)
+        expect(filesystem.size(name)).to eq ::File.size(file_path)
+
+        grid_fs.upload(name, file_path)
+        expect(grid_fs.size(name)).to eq ::File.size(file_path)
+      end
+    end
+
+    context "with IO" do
+      it do
+        ::File.open(file_path, "rb") do |io|
+          filesystem.upload(name, io)
+        end
+        expect(filesystem.size(name)).to eq ::File.size(file_path)
+
+        ::File.open(file_path, "rb") do |io|
+          grid_fs.upload(name, io)
+        end
+        expect(grid_fs.size(name)).to eq ::File.size(file_path)
+      end
+    end
+  end
+
+
+  describe '.download' do
+    let(:file_path) { "#{tmpdir}/#{unique_id}.png" }
+
+    context "with file path" do
+      it do
+        filesystem.download("#{Rails.root}/spec/fixtures/ss/logo.png", file_path)
+        expect(::File.size(file_path)).to eq data.length
+      end
+
+      it do
+        grid_fs.download("#{Rails.root}/spec/fixtures/ss/logo.png", file_path)
+        expect(::File.size(file_path)).to eq data.length
+      end
+    end
+
+    context "with io" do
+      it do
+        ::FileUtils.rm_rf(file_path)
+        ::File.open(file_path, "wb") do |io|
+          filesystem.download("#{Rails.root}/spec/fixtures/ss/logo.png", io)
+        end
+        expect(::File.size(file_path)).to eq data.length
+      end
+
+      it do
+        ::FileUtils.rm_rf(file_path)
+        ::File.open(file_path, "wb") do |io|
+          grid_fs.download("#{Rails.root}/spec/fixtures/ss/logo.png", io)
+        end
+        expect(::File.size(file_path)).to eq data.length
+      end
+    end
+  end
 end
