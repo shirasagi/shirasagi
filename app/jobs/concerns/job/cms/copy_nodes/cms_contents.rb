@@ -57,8 +57,16 @@ module Job::Cms::CopyNodes::CmsContents
       next unless dest_field_names.include?(field_name)
       next if field_value.blank?
 
-      file_url_maps.each do |src_url, dest_url|
-        field_value = field_value.gsub(src_url, dest_url)
+      if field_value.class == Array
+        file_url_maps.each do |src_url, dest_url|
+          field_value = field_value.collect do |value|
+            value.gsub(src_url, dest_url)
+          end
+        end
+      else
+        file_url_maps.each do |src_url, dest_url|
+          field_value = field_value.gsub(src_url, dest_url)
+        end
       end
 
       dest_content[field_name] = field_value
