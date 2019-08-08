@@ -213,46 +213,52 @@ describe "cms_form_preview", type: :feature, dbscope: :example do
 
         page.first("#addon-cms-agents-addons-form-page .preview").click
 
-        switch_to_window(windows.last)
-        expect(page.html.include?(column1_value)).to be_truthy
-        expect(page.html.include?(column2_value)).to be_truthy
-        expect(page.html.include?(column3_value)).to be_truthy
-        expect(page.html.include?(column4_value)).to be_truthy
-        expect(page.html.include?(column5_value)).to be_truthy
-        expect(page.html.include?(column6_value)).to be_truthy
-        expect(page.html.include?(column7_value)).to be_truthy
-        expect(page.html.include?(column8_image_text)).to be_truthy
-        expect(page.html.include?(column9_value)).to be_truthy
-        expect(page.html.include?(column10_head)).to be_truthy
-        expect(page.html.include?(column10_text)).to be_truthy
-        expect(page.html.include?(column11_list)).to be_truthy
-        expect(page.html.include?(column12_caption)).to be_truthy
-        expect(page.html.include?(column13_url)).to be_truthy
+        handle = page.driver.browser.window_handles.last
+        page.driver.switch_to_window(handle) do
+          expect(page.html.include?(column1_value)).to be_truthy
+          expect(page.html.include?(column2_value)).to be_truthy
+          expect(page.html.include?(column3_value)).to be_truthy
+          expect(page.html.include?(column4_value)).to be_truthy
+          expect(page.html.include?(column5_value)).to be_truthy
+          expect(page.html.include?(column6_value)).to be_truthy
+          expect(page.html.include?(column7_value)).to be_truthy
+          expect(page.html.include?(column8_image_text)).to be_truthy
+          expect(page.html.include?(column9_value)).to be_truthy
+          expect(page.html.include?(column10_head)).to be_truthy
+          expect(page.html.include?(column10_text)).to be_truthy
+          expect(page.html.include?(column11_list)).to be_truthy
+          expect(page.html.include?(column12_caption)).to be_truthy
+          expect(page.html.include?(column13_url)).to be_truthy
+        end
 
-        switch_to_window(windows.first)
-        click_on I18n.t('ss.buttons.draft_save')
-        click_on I18n.t("ss.buttons.ignore_alert")
-        expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
-        expect(Article::Page.all.count).to eq 1
+        handle = page.driver.browser.window_handles.first
+        page.driver.switch_to_window(handle) do
+          click_on I18n.t('ss.buttons.draft_save')
+          click_on I18n.t("ss.buttons.ignore_alert")
+          expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+          expect(Article::Page.all.count).to eq 1
 
-        click_on "編集する"
-        page.first("#addon-cms-agents-addons-form-page .preview").click
+          click_on "編集する"
+          page.first("#addon-cms-agents-addons-form-page .preview").click
+        end
 
-        switch_to_window(windows.last)
-        expect(page.html.include?(column1_value)).to be_truthy
-        expect(page.html.include?(column2_value)).to be_truthy
-        expect(page.html.include?(column3_value)).to be_truthy
-        expect(page.html.include?(column4_value)).to be_truthy
-        expect(page.html.include?(column5_value)).to be_truthy
-        expect(page.html.include?(column6_value)).to be_truthy
-        expect(page.html.include?(column7_value)).to be_truthy
-        expect(page.html.include?(column8_image_text)).to be_truthy
-        expect(page.html.include?(column9_value)).to be_truthy
-        expect(page.html.include?(column10_head)).to be_truthy
-        expect(page.html.include?(column10_text)).to be_truthy
-        expect(page.html.include?(column11_list)).to be_truthy
-        expect(page.html.include?(column12_caption)).to be_truthy
-        expect(page.html.include?(column13_url)).to be_truthy
+        handle = page.driver.browser.window_handles.last
+        page.driver.switch_to_window(handle) do
+          expect(page.html.include?(column1_value)).to be_truthy
+          expect(page.html.include?(column2_value)).to be_truthy
+          expect(page.html.include?(column3_value)).to be_truthy
+          expect(page.html.include?(column4_value)).to be_truthy
+          expect(page.html.include?(column5_value)).to be_truthy
+          expect(page.html.include?(column6_value)).to be_truthy
+          expect(page.html.include?(column7_value)).to be_truthy
+          expect(page.html.include?(column8_image_text)).to be_truthy
+          expect(page.html.include?(column9_value)).to be_truthy
+          expect(page.html.include?(column10_head)).to be_truthy
+          expect(page.html.include?(column10_text)).to be_truthy
+          expect(page.html.include?(column11_list)).to be_truthy
+          expect(page.html.include?(column12_caption)).to be_truthy
+          expect(page.html.include?(column13_url)).to be_truthy
+        end
       end
     end
   end
