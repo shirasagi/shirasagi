@@ -11,9 +11,6 @@ RSpec.describe Gws::Schedule::PlanCsv, type: :model, dbscope: :example do
       let(:described_class) { Gws::Schedule::PlanCsv::Exporter }
 
       it do
-        headers = described_class.csv_headers(opts)
-        expect(headers.present?).to be_truthy
-
         criteria = Gws::Schedule::Plan.all
         expect(described_class.to_csv(criteria, opts).present?).to be_truthy
       end
