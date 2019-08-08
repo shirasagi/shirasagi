@@ -21,18 +21,18 @@ describe "cms_form_preview", type: :feature, dbscope: :example do
 
           page.first('#addon-basic a[onclick]').click
           fill_in "item[basename]", with: "sample"
-
-          page.first("#addon-cms-agents-addons-body .preview").click
         end
 
-        handle = page.driver.browser.window_handles.last
-        page.driver.switch_to_window(handle) do
-          expect(page.html.include?('<h2>見出し2</h2>')).to be_truthy
-          expect(page.html.include?('<p>内容が入ります。</p>')).to be_truthy
-          expect(page.html.include?('<h3>見出し3</h3>')).to be_truthy
-          expect(page.html.include?('<p>内容が入ります。内容が入ります。</p>')).to be_truthy
-          expect(page.html.include?('<header><h2>カテゴリー</h2></header>')).to be_truthy
-        end
+        page.first("#addon-cms-agents-addons-body .preview").click
+
+        switch_to_window(windows.last)
+        sleep 0.5
+
+        expect(page.html.include?('<h2>見出し2</h2>')).to be_truthy
+        expect(page.html.include?('<p>内容が入ります。</p>')).to be_truthy
+        expect(page.html.include?('<h3>見出し3</h3>')).to be_truthy
+        expect(page.html.include?('<p>内容が入ります。内容が入ります。</p>')).to be_truthy
+        expect(page.html.include?('<header><h2>カテゴリー</h2></header>')).to be_truthy
       end
     end
   end
@@ -53,17 +53,17 @@ describe "cms_form_preview", type: :feature, dbscope: :example do
         within "form#item-form" do
           fill_in "item[name]", with: "sample"
           fill_in "item[basename]", with: "sample"
-
-          page.first("#addon-cms-agents-addons-body .preview").click
         end
 
-        handle = page.driver.browser.window_handles.last
-        page.driver.switch_to_window(handle) do
-          expect(page.html.include?('<h2>見出し2</h2>')).to be_truthy
-          expect(page.html.include?('<p>内容が入ります。</p>')).to be_truthy
-          expect(page.html.include?('<h3>見出し3</h3>')).to be_truthy
-          expect(page.html.include?('<p>内容が入ります。内容が入ります。</p>')).to be_truthy
-        end
+        page.first("#addon-cms-agents-addons-body .preview").click
+
+        switch_to_window(windows.last)
+        sleep 0.5
+
+        expect(page.html.include?('<h2>見出し2</h2>')).to be_truthy
+        expect(page.html.include?('<p>内容が入ります。</p>')).to be_truthy
+        expect(page.html.include?('<h3>見出し3</h3>')).to be_truthy
+        expect(page.html.include?('<p>内容が入ります。内容が入ります。</p>')).to be_truthy
       end
     end
   end
@@ -71,7 +71,8 @@ describe "cms_form_preview", type: :feature, dbscope: :example do
   context "with article form page" do
     let(:site) { cms_site }
     let(:node) { create :article_node_page, cur_site: site }
-    let!(:form) { create(:cms_form, cur_site: site, state: 'public', sub_type: 'static') }
+    let!(:layout) { create :cms_layout, cur_site: site }
+    let!(:form) { create(:cms_form, cur_site: site, state: 'public', sub_type: 'static', html: nil) }
     let!(:column1) do
       create(:cms_column_text_field, cur_site: site, cur_form: form, required: "optional", order: 1, input_type: 'text')
     end
@@ -115,7 +116,7 @@ describe "cms_form_preview", type: :feature, dbscope: :example do
     let(:column1_value) { unique_id }
     let(:column2_value) { "#{rand(2000..2050)}/01/01" }
     let(:column3_value) { "http://#{unique_id}.example.jp/#{unique_id}/" }
-    let(:column4_value) { "#{unique_id}#{unique_id}\n#{unique_id}#{unique_id}#{unique_id}" }
+    let(:column4_value) { unique_id }
     let(:column5_value) { column5.select_options.sample }
     let(:column6_value) { column6.select_options.sample }
     let(:column7_value) { column7.select_options.sample }
@@ -148,6 +149,8 @@ describe "cms_form_preview", type: :feature, dbscope: :example do
 
           page.first('#addon-basic a[onclick]').click
           fill_in "item[basename]", with: "sample"
+
+          select layout.name, from: 'item[layout_id]'
 
           select form.name, from: 'item[form_id]'
           find('.btn-form-change').click
@@ -207,58 +210,56 @@ describe "cms_form_preview", type: :feature, dbscope: :example do
           within ".column-value-cms-column-youtube" do
             fill_in "item[column_values][][in_wrap][url]", with: column13_url
           end
-
-          click_on I18n.t('ss.buttons.draft_save')
         end
 
         page.first("#addon-cms-agents-addons-form-page .preview").click
 
-        handle = page.driver.browser.window_handles.last
-        page.driver.switch_to_window(handle) do
-          expect(page.html.include?(column1_value)).to be_truthy
-          expect(page.html.include?(column2_value)).to be_truthy
-          expect(page.html.include?(column3_value)).to be_truthy
-          expect(page.html.include?(column4_value)).to be_truthy
-          expect(page.html.include?(column5_value)).to be_truthy
-          expect(page.html.include?(column6_value)).to be_truthy
-          expect(page.html.include?(column7_value)).to be_truthy
-          expect(page.html.include?(column8_image_text)).to be_truthy
-          expect(page.html.include?(column9_value)).to be_truthy
-          expect(page.html.include?(column10_head)).to be_truthy
-          expect(page.html.include?(column10_text)).to be_truthy
-          expect(page.html.include?(column11_list)).to be_truthy
-          expect(page.html.include?(column12_caption)).to be_truthy
-          expect(page.html.include?(column13_url)).to be_truthy
-        end
+        switch_to_window(windows.last)
+        sleep 0.5
 
-        handle = page.driver.browser.window_handles.first
-        page.driver.switch_to_window(handle) do
-          click_on I18n.t('ss.buttons.draft_save')
-          click_on I18n.t("ss.buttons.ignore_alert")
-          expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
-          expect(Article::Page.all.count).to eq 1
+        expect(page.html.include?(column1_value)).to be_truthy
+        expect(page.html.include?(I18n.l(column2_value.to_date, format: :long))).to be_truthy
+        expect(page.html.include?(column3_value)).to be_truthy
+        expect(page.html.include?(column4_value)).to be_truthy
+        expect(page.html.include?(column5_value)).to be_truthy
+        expect(page.html.include?(column6_value)).to be_truthy
+        expect(page.html.include?(column7_value)).to be_truthy
+        expect(page.html.include?(column8_image_text)).to be_truthy
+        expect(page.html.include?(column9_value)).to be_truthy
+        expect(page.html.include?(column10_head)).to be_truthy
+        expect(page.html.include?(column10_text)).to be_truthy
+        expect(page.html.include?(column11_list)).to be_truthy
+        expect(page.html.include?(column12_caption)).to be_truthy
+        expect(page.html.include?(column13_youtube_id)).to be_truthy
 
-          click_on "編集する"
-          page.first("#addon-cms-agents-addons-form-page .preview").click
-        end
+        switch_to_window(windows.first)
+        sleep 0.5
 
-        handle = page.driver.browser.window_handles.last
-        page.driver.switch_to_window(handle) do
-          expect(page.html.include?(column1_value)).to be_truthy
-          expect(page.html.include?(column2_value)).to be_truthy
-          expect(page.html.include?(column3_value)).to be_truthy
-          expect(page.html.include?(column4_value)).to be_truthy
-          expect(page.html.include?(column5_value)).to be_truthy
-          expect(page.html.include?(column6_value)).to be_truthy
-          expect(page.html.include?(column7_value)).to be_truthy
-          expect(page.html.include?(column8_image_text)).to be_truthy
-          expect(page.html.include?(column9_value)).to be_truthy
-          expect(page.html.include?(column10_head)).to be_truthy
-          expect(page.html.include?(column10_text)).to be_truthy
-          expect(page.html.include?(column11_list)).to be_truthy
-          expect(page.html.include?(column12_caption)).to be_truthy
-          expect(page.html.include?(column13_url)).to be_truthy
-        end
+        click_on I18n.t('ss.buttons.draft_save')
+        click_on I18n.t("ss.buttons.ignore_alert")
+        expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+        expect(Article::Page.all.count).to eq 1
+
+        click_on "編集する"
+        page.first("#addon-cms-agents-addons-form-page .preview").click
+
+        switch_to_window(windows.last)
+        sleep 0.5
+
+        expect(page.html.include?(column1_value)).to be_truthy
+        expect(page.html.include?(I18n.l(column2_value.to_date, format: :long))).to be_truthy
+        expect(page.html.include?(column3_value)).to be_truthy
+        expect(page.html.include?(column4_value)).to be_truthy
+        expect(page.html.include?(column5_value)).to be_truthy
+        expect(page.html.include?(column6_value)).to be_truthy
+        expect(page.html.include?(column7_value)).to be_truthy
+        expect(page.html.include?(column8_image_text)).to be_truthy
+        expect(page.html.include?(column9_value)).to be_truthy
+        expect(page.html.include?(column10_head)).to be_truthy
+        expect(page.html.include?(column10_text)).to be_truthy
+        expect(page.html.include?(column11_list)).to be_truthy
+        expect(page.html.include?(column12_caption)).to be_truthy
+        expect(page.html.include?(column13_youtube_id)).to be_truthy
       end
     end
   end
