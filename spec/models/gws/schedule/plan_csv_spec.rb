@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-RSpec.describe Gws::Schedule::PlanCsv::Exporter, type: :model, dbscope: :example do
+RSpec.describe Gws::Schedule::PlanCsv, type: :model, dbscope: :example do
   let!(:item) { create :gws_schedule_plan, allday: 'allday', start_on: start_on, end_on: end_on }
   let(:start_on) { Date.new 2010, 1, 1 }
   let(:end_on) { Date.new 2010, 1, 1 }
@@ -8,6 +8,8 @@ RSpec.describe Gws::Schedule::PlanCsv::Exporter, type: :model, dbscope: :example
 
   describe "plan" do
     context "export" do
+      let(:described_class) { Gws::Schedule::PlanCsv::Exporter }
+
       it do
         headers = described_class.csv_headers(opts)
         expect(headers.present?).to be_truthy
