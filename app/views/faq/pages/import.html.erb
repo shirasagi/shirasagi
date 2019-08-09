@@ -5,7 +5,6 @@ reload = function () {
   $.ajax({
     url: "<%= url_for(action: :import, format: :json) %>",
     success: function (data) {
-      console.log(data);
       var closed, started, state;
       started = data["started"] + "";
       closed = data["closed"] + "";
