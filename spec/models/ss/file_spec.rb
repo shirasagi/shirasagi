@@ -201,9 +201,9 @@ describe SS::File, dbscope: :example do
       end
 
       it "#save_file" do
-        list = Magick::ImageList.new
-        list.from_blob(subject.read)
+        list = Magick::ImageList.new(subject.path)
         expect(list.size).to eq 1
+        list.destroy!
       end
     end
 
@@ -221,9 +221,9 @@ describe SS::File, dbscope: :example do
       end
 
       it "#save_file" do
-        list = Magick::ImageList.new
-        list.from_blob(subject.read)
+        list = Magick::ImageList.new(subject.path)
         expect(list.size).to eq 1
+        list.destroy!
       end
     end
 
@@ -240,9 +240,9 @@ describe SS::File, dbscope: :example do
       end
 
       it "#save_file" do
-        list = Magick::ImageList.new
-        list.from_blob(subject.read)
+        list = Magick::ImageList.new(subject.path)
         expect(list.size).to eq 5
+        list.destroy!
       end
     end
 
@@ -260,9 +260,9 @@ describe SS::File, dbscope: :example do
       end
 
       it "#save_file" do
-        list = Magick::ImageList.new
-        list.from_blob(subject.read)
+        list = Magick::ImageList.new(subject.path)
         expect(list.size).to eq 5
+        list.destroy!
       end
     end
   end

@@ -243,7 +243,6 @@ module Fs::GridFs
     end
 
     def cp(src, dest)
-      # binwrite(dest, binread(src))
       upload(dest, src)
     end
   end

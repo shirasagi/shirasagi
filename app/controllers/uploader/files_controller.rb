@@ -192,7 +192,7 @@ class Uploader::FilesController < ApplicationController
       else
         binary = file.read
         binary = Uploader::File.remove_exif(binary) if file.content_type.start_with?('image/')
-        Fs.binwrite @item.saved_path, binary
+        Fs.upload @item.saved_path, StringIO.new(binary)
       end
     end
 

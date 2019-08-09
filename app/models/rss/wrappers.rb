@@ -202,7 +202,9 @@ module Rss::Wrappers
 
   def self.parse(url_or_file, opts = {})
     require 'open-uri'
-    if url_or_file.respond_to?(:path)
+    if url_or_file.respond_to?(:to_io)
+      rss_source = url_or_file.to_io
+    elsif url_or_file.respond_to?(:read)
       rss_source = url_or_file.read
     elsif url_or_file.to_s.start_with?("http:", "https:")
       rss_source = ::URI.parse(url_or_file).open(opts)
@@ -210,6 +212,10 @@ module Rss::Wrappers
       rss_source = ::File.open(url_or_file, opts)
     end
     parse_from_rss_source(rss_source)
+  ensure
+    if rss_source && rss_source.respond_to?(:close)
+      rss_source.close
+    end
   end
 
   def self.parse_from_rss_source(xml_text)

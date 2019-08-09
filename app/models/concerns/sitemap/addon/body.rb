@@ -144,7 +144,7 @@ module Sitemap::Addon
       file = sitemap_xml_path
       data = sitemap_xml
       return if Fs.exists?(file) && data == Fs.read(file)
-      Fs.write file, data
+      Fs.upload file, StringIO.new(data)
     end
 
     def remove_sitemap_xml

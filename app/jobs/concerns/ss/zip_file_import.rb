@@ -51,7 +51,7 @@ module SS::ZipFileImport
       yield table
     else
       Tempfile.create('csv') do |file|
-        ::File.binwrite(file.path, ::Fs.binread(@cur_file.path))
+        ::Fs.download(@cur_file.path, file)
         table = ::CSV.read(file.path, **opts)
         yield table
       end

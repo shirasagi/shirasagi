@@ -203,9 +203,12 @@ module SS::Model::File
     @resizing = (size.class == String) ? size.split(",") : size
   end
 
-  def read
-    Fs.exists?(path) ? Fs.binread(path) : nil
-  end
+  # to stop reading entire file, method "#read" was removed
+  # use to_io or appropriate methods
+  #
+  # def read
+  #   Fs.exists?(path) ? Fs.binread(path) : nil
+  # end
 
   def to_io
     Fs.exists?(path) ? Fs.to_io(path) : nil
@@ -331,34 +334,15 @@ module SS::Model::File
     return false if errors.present?
     return if in_file.blank?
 
-    if image?
-      list = Magick::ImageList.new
-      list.from_blob(in_file.read)
-      extract_geo_location(list) if exif_image?
-      list.each do |image|
-        if exif_image?
-          case SS.config.env.image_exif_option
-          when "auto_orient"
-            image.auto_orient!
-          when "strip"
-            image.strip!
-          end
-        end
-
-        next unless resizing
-        width, height = resizing
-        image.resize_to_fit! width, height if image.columns > width || image.rows > height
-      end
-      binary = list.to_blob
-    else
-      binary = in_file.read
-    end
-    in_file.rewind
-
     dir = ::File.dirname(path)
     Fs.mkdir_p(dir) unless Fs.exists?(dir)
-    Fs.binwrite(path, binary)
-    self.size = binary.length
+
+    processor = SS::ImageConverter.process(in_file, image: image?, resizing: resizing)
+    Fs.upload(path, processor.to_io)
+    self.size = Fs.size(path)
+    self.geo_location = processor.geo_location
+  ensure
+    processor.close if processor
   end
 
   def create_history_trash
