@@ -1,0 +1,13 @@
+Description:
+    Stubs out a new migration.
+
+Example:
+    `rails generate ss_migration fix_thing --module cms`
+
+    This will create:
+        lib/migrations/cms/${NEXT_MIGRATION_VERSION}_fix_thing.rb
+        spec/lib/migrations/cms/${NEXT_MIGRATION_VERSION}_fix_thing_spec.rb
+
+    Note:
+        ${NEXT_MIGRATION_VERSION} will detect and set automatically.
+        You don't need to specify ${NEXT_MIGRATION_VERSION}.

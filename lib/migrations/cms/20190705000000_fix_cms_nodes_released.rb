@@ -1,4 +1,8 @@
 class SS::Migration20190705000000
+  include SS::Migration::Base
+
+  depends_on "20190619000000"
+
   def change
     ids = Cms::Node.and_public.where(released: nil).pluck(:id)
     ids.each do |id|

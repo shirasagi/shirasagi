@@ -1,4 +1,8 @@
 class SS::Migration20150518040533
+  include SS::Migration::Base
+
+  depends_on "20150423044546"
+
   def change
     unless valid_index?
       remove_all_uid

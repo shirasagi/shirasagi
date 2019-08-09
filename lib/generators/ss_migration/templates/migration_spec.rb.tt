@@ -1,0 +1,12 @@
+require 'spec_helper'
+require Rails.root.join("<%= @migration_relative_path %>")
+
+RSpec.describe SS::Migration<%= @version %>, dbscope: :example do
+  before do
+    described_class.new.change
+  end
+
+  it do
+    # put your specs here
+  end
+end

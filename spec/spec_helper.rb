@@ -13,8 +13,7 @@ end
 
 # This file is copied to spec/ when you run 'rails generate rspec:install'
 ENV["RAILS_ENV"] ||= 'test'
-require File.expand_path("../../config/environment", __FILE__)
-require File.expand_path(__FILE__, "../../app/helpers")
+require File.expand_path("../config/environment", __dir__)
 require 'rspec/rails'
 #require 'rspec/autorun'
 require 'capybara/rspec'
@@ -131,6 +130,26 @@ def ss_japanese_text(length: 10, separator: '')
   end
 
   @japanese_chars.sample(length).join(separator)
+end
+
+def with_env(hash)
+  save = {}
+  hash.each do |k, v|
+    save[k] = ENV[k] if ENV.key?(k)
+    ENV[k] = v
+  end
+
+  ret = yield
+
+  hash.each do |k, _|
+    if save.key?(k)
+      ENV[k] = save[k]
+    else
+      ENV.delete(k)
+    end
+  end
+
+  ret
 end
 
 # ref.

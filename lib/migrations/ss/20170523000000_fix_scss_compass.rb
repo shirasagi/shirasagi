@@ -1,4 +1,8 @@
 class SS::Migration20170523000000
+  include SS::Migration::Base
+
+  depends_on "20170411153100"
+
   def change
     Fs.glob("#{SS::Site.root}/**/*.scss").each do |file|
       text = Fs.read(file)

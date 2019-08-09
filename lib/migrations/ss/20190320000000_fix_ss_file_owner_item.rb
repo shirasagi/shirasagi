@@ -1,4 +1,8 @@
 class SS::Migration20190320000000
+  include SS::Migration::Base
+
+  depends_on "20190314000000"
+
   def change
     # load all models
     ::Rails.application.eager_load!

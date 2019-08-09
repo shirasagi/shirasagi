@@ -1,4 +1,8 @@
 class SS::Migration20181015000000
+  include SS::Migration::Base
+
+  depends_on "20181009202100"
+
   DEFAULT_PERMISSIONS = %w(use_cms use_gws use_webmail).freeze
 
   def change

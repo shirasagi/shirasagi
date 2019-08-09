@@ -1,4 +1,8 @@
 class SS::Migration20150619114301
+  include SS::Migration::Base
+
+  depends_on "20150521192401"
+
   def change
     file_ids = SS::File.pluck(:id)
     file_ids.each do |id|

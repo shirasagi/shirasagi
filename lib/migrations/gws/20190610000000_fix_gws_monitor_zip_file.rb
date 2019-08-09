@@ -1,4 +1,8 @@
 class SS::Migration20190610000000
+  include SS::Migration::Base
+
+  depends_on "20190513130500"
+
   def change
     ids = Gws::Monitor::Topic.all.pluck(:id)
     ids.each do |id|

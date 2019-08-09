@@ -1,4 +1,8 @@
 class SS::Migration20190306000000
+  include SS::Migration::Base
+
+  depends_on "20190305000000"
+
   def change
     [ Gws::Portal::UserPortlet, Gws::Portal::GroupPortlet ].each do |model|
       all_ids = model.where(portlet_model: "ad").pluck(:id).sort
