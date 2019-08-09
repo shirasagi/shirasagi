@@ -1,5 +1,3 @@
-require "csv"
-
 class Article::Page::ImportJob < Cms::ApplicationJob
   include Job::SS::TaskFilter
 
@@ -8,8 +6,8 @@ class Article::Page::ImportJob < Cms::ApplicationJob
   self.controller = Article::Agents::Tasks::Page::PagesController
   self.action = :import
 
-  def perform(opts = {})
-    file = SS::File.find(opts[:file])
+  def perform(ss_file_id)
+    file = SS::File.find(ss_file_id)
     task.process self.class.controller, self.class.action, { site: site, node: node, user: user, file: file }
   end
 

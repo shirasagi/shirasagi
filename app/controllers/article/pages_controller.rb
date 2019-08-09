@@ -70,33 +70,34 @@ class Article::PagesController < ApplicationController
         format.html { render }
         format.json { render json: @task.to_json(methods: :head_logs) }
       end
+      return
+    end
+
+    begin
+      file = params[:item].try(:[], :file)
+      if file.nil? || ::File.extname(file.original_filename) != ".csv"
+        raise I18n.t("errors.messages.invalid_csv")
+      end
+      if !Article::Page::Importer.valid_csv?(file)
+        raise I18n.t("errors.messages.malformed_csv")
+      end
+
+      # save csv to use in job
+      ss_file = SS::File.new
+      ss_file.in_file = file
+      ss_file.model = "article/import"
+      ss_file.save
+
+      # call job
+      Article::Page::ImportJob.bind(site_id: @cur_site, node_id: @cur_node, user_id: @cur_user).perform_later(ss_file.id)
+    rescue => e
+      @item.errors.add :base, e.to_s
+    end
+
+    if @item.errors.present?
+      render
     else
-      begin
-        file = params[:item].try(:[], :file)
-        if file.nil? || ::File.extname(file.original_filename) != ".csv"
-          raise I18n.t("errors.messages.invalid_csv")
-        end
-        if !Article::Page::Importer.valid_csv?(file)
-          raise I18n.t("errors.messages.malformed_csv")
-        end
-
-        # save csv to use in job
-        ss_file = SS::File.new
-        ss_file.in_file = file
-        ss_file.model = "article/import"
-        ss_file.save
-
-        # call job
-        Article::Page::ImportJob.bind(site_id: @cur_site, node_id: @cur_node, user_id: @cur_user).perform_later(file: ss_file.id)
-      rescue => e
-        @item.errors.add :base, e.to_s
-      end
-
-      if @item.errors.present?
-        render
-      else
-        redirect_to({ action: :import }, { notice: I18n.t("ss.notice.started_import") })
-      end
+      redirect_to({ action: :import }, { notice: I18n.t("ss.notice.started_import") })
     end
   end
 end

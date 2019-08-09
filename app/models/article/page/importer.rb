@@ -11,14 +11,6 @@ class Article::Page::Importer
     @user = user
   end
 
-  def put_log(message)
-    if @task
-      @task.log(message)
-    else
-      Rails.logger.info(message)
-    end
-  end
-
   def import(file, opts = {})
     @task = opts[:task]
     put_log("import start " + ::File.basename(file.name))
@@ -29,6 +21,14 @@ class Article::Page::Importer
 
   def model
     Article::Page
+  end
+
+  def put_log(message)
+    if @task
+      @task.log(message)
+    else
+      Rails.logger.info(message)
+    end
   end
 
   def import_csv(file)
