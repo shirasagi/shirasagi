@@ -37,7 +37,7 @@ class Gws::Share::FileUploader
       item.custom_group_ids = custom_group_ids
 
       if item.invalid?
-        errors[:base] += item.errors.full_messages
+        errors.messages[:base] += item.errors.full_messages
         next
       end
 
