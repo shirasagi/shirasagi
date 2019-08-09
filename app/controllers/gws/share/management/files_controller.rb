@@ -108,21 +108,28 @@ class Gws::Share::Management::FilesController < ApplicationController
     set_item
     set_last_modified
 
-    if params[:history_id].present?
-      history_item = Gws::Share::History.where(item_id: @item.id, _id: params[:history_id]).first
-      server_dir = File.dirname(@item.path)
-      uploadfile_path = File.join(server_dir, "#{@item.id}_#{history_item.uploadfile_srcname}")
+    raise "404" if params[:history_id].blank?
+
+    history_item = @item.histories.where(id: params[:history_id].to_s).first
+    raise "404" if history_item.blank?
+
+    if history_item.id == @item.histories.first.id
+      # latest history item
+      path = @item.path
+      type = @item.content_type
+      filename = @item.download_filename
+    else
+      path = history_item.path
+      type = history_item.uploadfile_content_type
+      filename = history_item.uploadfile_name
     end
 
-    if Fs.mode == :file && Fs.file?(uploadfile_path)
-      send_file uploadfile_path, type: history_item.uploadfile_content_type, filename: history_item.uploadfile_name,
-                disposition: :attachment, x_sendfile: true
-    elsif Fs.mode == :file && Fs.file?(@item.path)
-      send_file @item.path, type: @item.content_type, filename: @item.download_filename,
-                disposition: :attachment, x_sendfile: true
+    raise "404" unless Fs.file?(path)
+
+    if Fs.mode == :file
+      send_file path, type: type, filename: filename, disposition: :attachment, x_sendfile: true
     else
-      send_data @item.read, type: @item.content_type, filename: @item.download_filename,
-                disposition: :attachment
+      send_data ::Fs.binread(path), type: type, filename: filename, disposition: :attachment
     end
   end
 

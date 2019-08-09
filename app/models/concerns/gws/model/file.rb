@@ -42,6 +42,8 @@ module Gws::Model::File
     before_save :save_file
     before_destroy :remove_file
 
+    define_model_callbacks :_save_file
+
     default_scope ->{ order_by id: -1 }
   end
 
@@ -241,19 +243,10 @@ module Gws::Model::File
     dir = ::File.dirname(path)
     Fs.mkdir_p(dir) unless Fs.exists?(dir)
 
-    if File.exist?(path)
-      history_file_count = Dir.glob(dir + "/#{id}*_history[0-9]*").count
+    run_callbacks(:_save_file) do
       Fs.binwrite(path, binary)
       self.size = binary.length
-      sleep(1)
-      FileUtils.cp(path, path + "_history#{history_file_count}")
-    else
-      Fs.binwrite(path, binary)
-      self.size = binary.length
-      sleep(1)
-      FileUtils.cp(path, path + "_history0")
     end
-
   end
 
   def remove_file

@@ -62,6 +62,7 @@ module SS
         obj.class_eval do
           delegate :downloads, to: SS::DownloadHelpers
           delegate :wait_for_download, to: SS::DownloadHelpers
+          delegate :clear_downloads, to: SS::DownloadHelpers
         end
       end
     end

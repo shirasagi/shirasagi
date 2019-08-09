@@ -53,7 +53,13 @@ class Gws::Share::History
   def updated_field_names
     return self[:updated_field_names] if self[:updated_field_names]
     return [] if updated_fields.blank?
+
     updated_fields.map { |m| item ? item.t(m, default: '').presence : nil }.compact.uniq
+  end
+
+  def path
+    server_dir = ::File.dirname(item.path)
+    ::File.join(server_dir, "#{item.id}_#{self.uploadfile_srcname}")
   end
 
   private

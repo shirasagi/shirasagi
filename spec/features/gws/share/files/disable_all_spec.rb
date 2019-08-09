@@ -12,6 +12,7 @@ describe "gws_share_files", type: :feature, dbscope: :example, js: true do
   describe "disable(soft delete) all" do
     it do
       expect(item.deleted).to be_blank
+      expect(item.histories.count).to eq 1
 
       visit index_path
       find('.list-head label.check input').set(true)
@@ -29,6 +30,17 @@ describe "gws_share_files", type: :feature, dbscope: :example, js: true do
 
       item.reload
       expect(item.deleted).to be_present
+
+      expect(item.histories.count).to eq 2
+      item.histories.first.tap do |history|
+        expect(history.name).to eq item.name
+        expect(history.mode).to eq "delete"
+        expect(history.model).to eq item.class.model_name.i18n_key.to_s
+        expect(history.model_name).to eq I18n.t("mongoid.models.#{item.class.model_name.i18n_key}")
+        expect(history.item_id).to eq item.id.to_s
+        expect(::Fs.file?(history.path)).to be_truthy
+        expect(history.path).to eq item.histories.last.path
+      end
     end
   end
 end

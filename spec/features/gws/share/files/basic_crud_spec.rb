@@ -57,6 +57,20 @@ describe "gws_share_files", type: :feature, dbscope: :example, tmpdir: true, js:
       expect(file.memo).to eq "new test"
       expect(file.folder_id).to eq folder.id
 
+      expect(file.histories.count).to eq 1
+      file.histories.first.tap do |history|
+        expect(history.uploadfile_name).to eq file.name
+        expect(history.uploadfile_filename).to eq file.filename
+        expect(history.uploadfile_size).to eq file.size
+        expect(history.uploadfile_content_type).to eq file.content_type
+        expect(history.name).to eq file.name
+        expect(history.mode).to eq "create"
+        expect(history.model).to eq file.class.model_name.i18n_key.to_s
+        expect(history.model_name).to eq I18n.t("mongoid.models.#{file.class.model_name.i18n_key}")
+        expect(history.item_id).to eq file.id.to_s
+        expect(::Fs.file?(history.path)).to be_truthy
+      end
+
       folder.reload
       expect(folder.descendants_files_count).to eq 1
       expect(folder.descendants_total_file_size).to eq file.size
@@ -84,6 +98,24 @@ describe "gws_share_files", type: :feature, dbscope: :example, tmpdir: true, js:
       expect(file.name).to eq "modify"
       expect(file.memo).to eq "edited"
 
+      expect(file.histories.count).to eq 2
+      file.histories.first.tap do |history|
+        expect(history.uploadfile_name).to eq file.name
+        expect(history.uploadfile_filename).to eq file.filename
+        expect(history.uploadfile_size).to eq file.size
+        expect(history.uploadfile_content_type).to eq file.content_type
+        expect(history.name).to eq file.name
+        expect(history.mode).to eq "update"
+        expect(history.model).to eq file.class.model_name.i18n_key.to_s
+        expect(history.model_name).to eq I18n.t("mongoid.models.#{file.class.model_name.i18n_key}")
+        expect(history.item_id).to eq file.id.to_s
+        expect(::Fs.file?(history.path)).to be_truthy
+        expect(history.path).to eq file.histories.last.path
+      end
+
+      #
+      # Soft Delete
+      #
       visit gws_share_files_path(site)
       click_on folder.name
       click_on file.name
@@ -100,9 +132,47 @@ describe "gws_share_files", type: :feature, dbscope: :example, tmpdir: true, js:
       file.reload
       expect(file.deleted).to be_present
 
+      expect(file.histories.count).to eq 3
+      file.histories.first.tap do |history|
+        expect(history.name).to eq file.name
+        expect(history.mode).to eq "delete"
+        expect(history.model).to eq file.class.model_name.i18n_key.to_s
+        expect(history.model_name).to eq I18n.t("mongoid.models.#{file.class.model_name.i18n_key}")
+        expect(history.item_id).to eq file.id.to_s
+        expect(::Fs.file?(history.path)).to be_truthy
+        expect(history.path).to eq file.histories.last.path
+      end
+
       folder.reload
       expect(folder.descendants_files_count).to eq 1
       expect(folder.descendants_total_file_size).to eq file.size
+
+      #
+      # Hard Delete
+      #
+      history_paths = file.histories.map(&:path)
+      expect(history_paths.all? { |path| ::Fs.file?(path) }).to be_truthy
+      visit gws_share_files_path(site)
+      click_on I18n.t("ss.links.trash")
+      click_on folder.name
+      click_on file.name
+      click_on I18n.t("ss.links.delete")
+      within "form" do
+        click_on I18n.t("ss.buttons.delete")
+      end
+      expect(page).to have_css('#notice', text: I18n.t('ss.notice.deleted'))
+
+      expect { Gws::Share::File.find(file.id) }.to raise_error Mongoid::Errors::DocumentNotFound
+      expect(file.histories.count).to eq 0
+      expect(history_paths.any? { |path| ::Fs.file?(path) }).to be_falsey
+
+      folder.reload
+      expect(folder.descendants_files_count).to eq 0
+      expect(folder.descendants_total_file_size).to eq 0
+
+      within "#content-navi" do
+        expect(page).to have_css(".tree-item", text: folder.name)
+      end
     end
   end
 end
