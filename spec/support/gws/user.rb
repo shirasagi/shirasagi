@@ -23,6 +23,10 @@ def gws_user
   create_gws_users[:user]
 end
 
+def gws_sys_user
+  create_gws_users[:sys_user]
+end
+
 def login_gws_user
   login_user(gws_user)
 end
@@ -48,6 +52,7 @@ def create_gws_users
 
   return Gws::UserSupport.data = {
     site: g00,
-    user: user
+    user: user,
+    sys_user: sys
   }
 end

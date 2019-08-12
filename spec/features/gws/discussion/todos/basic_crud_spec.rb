@@ -20,11 +20,12 @@ describe "gws_discussion_todos", type: :feature, dbscope: :example, js: true do
       within ".addon-view.my-todo" do
         click_on I18n.t("gws/discussion.links.todo.index")
       end
+      wait_for_ajax
       click_on I18n.t("ss.links.new")
 
       within "form#item-form" do
         fill_in "item[text]", with: text
-        submit_on I18n.t('ss.buttons.save')
+        click_on I18n.t('ss.buttons.save')
       end
       expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
 
@@ -42,6 +43,7 @@ describe "gws_discussion_todos", type: :feature, dbscope: :example, js: true do
       within ".addon-view.my-todo" do
         click_on I18n.t("gws/discussion.links.todo.index")
       end
+      wait_for_ajax
       expect(page).to have_css('.fc-view a.fc-event-todo', text: item.name)
       # click_on item.name
       first('.fc-view a.fc-event-todo').click

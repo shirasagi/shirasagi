@@ -63,9 +63,10 @@ describe 'gws_memo_messages', type: :feature, dbscope: :example, js: true do
         click_on I18n.t("ss.links.edit")
         within 'form#item-form' do
           page.accept_confirm do
-            submit_on I18n.t("ss.buttons.send")
+            click_on I18n.t("ss.buttons.send")
           end
         end
+        wait_for_ajax
         expect(page).to have_css('#notice', text: I18n.t("ss.notice.sent"))
 
         # send forward mail
