@@ -24,9 +24,37 @@ describe "article_pages", dbscope: :example, js: true do
         click_button I18n.t("ss.buttons.attach")
       end
 
-      sleep 1
+      sleep 0.5
 
-      expect(first("#selected-files").text).to include('keyvisual.gif')
+      expect(first("#addon-cms-agents-addons-file #selected-files").text).to include('keyvisual.gif')
+    end
+
+    it "#edit file name" do
+      visit edit_path
+      within "form#item-form" do
+        fill_in "item[name]", with: "modify"
+      end
+
+      click_on I18n.t("ss.buttons.upload")
+      wait_for_cbox do
+        attach_file "item[in_files][]", "#{Rails.root}/spec/fixtures/ss/file/keyvisual.jpg"
+        click_button I18n.t("ss.buttons.save")
+        sleep 0.1
+
+        click_on I18n.t("ss.buttons.edit")
+        within "form#ajax-form" do
+          fill_in "item[name]", with: "modify"
+        end
+
+        click_button I18n.t("ss.buttons.save")
+        sleep 0.1
+
+        first("a.thumb.select").click
+      end
+
+      sleep 0.5
+
+      expect(first("#addon-cms-agents-addons-file #selected-files").text).to include('modify')
     end
   end
 end

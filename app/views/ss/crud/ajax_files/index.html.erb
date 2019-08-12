@@ -7,8 +7,13 @@ $(".search-ui-form .save").on("click", function() {
 
 var onSelect;
 var $element = $.colorbox.element();
+var $cboxContent = $("#cboxContent");
 if ($element) {
   onSelect = $element.data('on-select');
+}
+if ($cboxContent.length) {
+  $cboxContent.data('on-select', onSelect);
+  onSelect = $cboxContent.data('on-select');
 }
 
 SS.ajaxForm("form.user-file", {
