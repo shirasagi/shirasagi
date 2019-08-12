@@ -14,20 +14,24 @@ describe "gws_attendance_time_card", type: :feature, dbscope: :example, js: true
   end
 
   context 'basic today crud' do
-    before { login_gws_user }
+    #before { login_gws_user }
 
     context 'punch and edit' do
-      it do
-        visit gws_attendance_main_path(site)
-        expect(page).to have_css('.today .info .enter', text: '--:--')
+      let(:now) { Time.zone.now.change(hour: 8, minute: 0) }
 
+      it do
         # punch
         Timecop.freeze(now) do
+          login_gws_user
+          visit gws_attendance_main_path(site)
+          expect(page).to have_css('.today .info .enter', text: '--:--')
+
           within '.today .action .enter' do
             page.accept_confirm do
-              submit_on I18n.t('gws/attendance.buttons.punch')
+              click_on I18n.t('gws/attendance.buttons.punch')
             end
           end
+          expect(page).to have_css('#notice', text: I18n.t('gws/attendance.notice.punched'))
           expect(page).to have_css('.today .info .enter', text: format('%d:%02d', now.hour, now.min))
         end
 
@@ -58,24 +62,8 @@ describe "gws_attendance_time_card", type: :feature, dbscope: :example, js: true
             expect(record.enter).to eq now.change(hour: 8, min: 32)
           end
         end
-      end
-    end
 
-    context 'punch and clear' do
-      it do
-        visit gws_attendance_main_path(site)
-
-        # punch
-        Timecop.freeze(now) do
-          within '.today .action .enter' do
-            page.accept_confirm do
-              submit_on I18n.t('gws/attendance.buttons.punch')
-            end
-          end
-          expect(page).to have_css('.today .info .enter', text: format('%d:%02d', now.hour, now.min))
-        end
-
-        # edit
+        # clear
         within '.today .action .enter' do
           click_on I18n.t('ss.buttons.edit')
         end
@@ -96,7 +84,29 @@ describe "gws_attendance_time_card", type: :feature, dbscope: :example, js: true
       end
     end
 
+    context 'punch on midnight' do
+      let(:now) { Time.zone.now.beginning_of_minute.change(hour: 1) }
+
+      it do
+        # punch
+        Timecop.freeze(now) do
+          login_gws_user
+          visit gws_attendance_main_path(site)
+          expect(page).to have_css('.today .info .enter', text: '--:--')
+
+          within '.today .action .enter' do
+            page.accept_confirm do
+              click_on I18n.t('gws/attendance.buttons.punch')
+            end
+          end
+          expect(page).to have_css('.today .info .enter', text: '--:--')
+        end
+      end
+    end
+
     context 'memo' do
+      before { login_gws_user }
+
       it do
         visit gws_attendance_main_path(site)
         within '.today .action .memo' do

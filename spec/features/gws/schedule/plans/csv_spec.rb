@@ -3,11 +3,10 @@ require 'spec_helper'
 describe "gws_schedule_csv", type: :feature, dbscope: :example, js: true do
   let(:site) { gws_site }
   let(:now) { Time.zone.now.beginning_of_minute }
-  let!(:plan0) { create :gws_schedule_plan, start_at: now.since(2.days) }
   let!(:facility) { create :gws_facility_item }
+  let!(:plan0) { create :gws_schedule_plan, start_at: now.since(2.days).change(hour: 9) }
   let!(:plan1) do
-    create(
-      :gws_schedule_facility_plan, start_at: now.since(3.days),
+    create(:gws_schedule_facility_plan, start_at: now.since(3.days).change(hour: 9),
       facility_ids: [ facility.id ], main_facility_id: facility.id
     )
   end

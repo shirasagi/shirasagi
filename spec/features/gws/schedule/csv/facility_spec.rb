@@ -4,7 +4,7 @@ describe "gws_schedule_csv", type: :feature, dbscope: :example, tmpdir: true, js
   let(:site) { gws_site }
   let(:user) { gws_user }
   let!(:facility) { create :gws_facility_item }
-  let!(:now) { Time.zone.now.beginning_of_hour + 1.hour }
+  let!(:now) { Time.zone.now.change(hour: 9) }
   let!(:csv_file) do
     tmpfile(extname: ".csv", binary: true) do |f|
       f.write ''
