@@ -7,32 +7,21 @@ FactoryBot.define do
     permission_level 1
   end
 
-  factory :gws_role, class: Gws::Role, traits: [:gws_role] do
-  end
-
-  factory :gws_role_admin, class: Gws::Role, traits: [:gws_role] do
+  trait :gws_role_admin do
     permissions { Gws::Role.permission_names }
     permission_level 3
   end
 
-  factory :gws_role_notice_admin, class: Gws::Role, traits: [:gws_role] do
-    permissions { Gws::Role.permission_names.select { |name| name.include?('gws_notice') } }
+  trait :gws_role_notice_admin do
     permission_level 3
+    after(:build) do |item|
+      item.permissions += Gws::Role.permission_names.select { |name| name.include?('gws_notice') }
+    end
   end
 
-  factory :gws_role_notice_editor, class: Gws::Role, traits: [:gws_role] do
-    permissions { %w(use_gws_notice delete_private_gws_notices edit_private_gws_notices read_private_gws_notices) }
-    permission_level 1
-  end
-
-  factory :gws_role_notice_reader, class: Gws::Role, traits: [:gws_role] do
-    permissions { %w(use_gws_notice read_private_gws_notices) }
-    permission_level 1
-  end
-
-  factory :gws_role_schedule_plan_editor, class: Gws::Role, traits: [:gws_role] do
-    permissions do
-      %w(
+  trait :gws_role_schedule_plan_editor do
+    after(:build) do |item|
+      item.permissions += %w(
         use_private_gws_schedule_plans
         read_private_gws_schedule_plans
         edit_private_gws_schedule_plans
@@ -40,12 +29,22 @@ FactoryBot.define do
         read_private_gws_schedule_categories
       )
     end
-    permission_level 1
   end
 
-  factory :gws_role_schedule_todo_editor, class: Gws::Role, traits: [:gws_role] do
-    permissions do
-      %w(
+  trait :gws_role_notice_editor do
+    after(:build) do |item|
+      item.permissions += %w(
+        use_gws_notice
+        delete_private_gws_notices
+        edit_private_gws_notices
+        read_private_gws_notices
+      )
+    end
+  end
+
+  trait :gws_role_schedule_todo_editor do
+    after(:build) do |item|
+      item.permissions += %w(
         use_private_gws_schedule_todos
         read_private_gws_schedule_todos
         edit_private_gws_schedule_todos
@@ -53,6 +52,44 @@ FactoryBot.define do
         read_private_gws_schedule_todo_categories
       )
     end
+  end
+
+  trait :gws_role_facility_item_user do
+    after(:build) do |item|
+      item.permissions += %w(
+        use_private_gws_facility_plans
+        read_other_gws_facility_items
+        read_private_gws_facility_items
+      )
+    end
+  end
+
+  trait :gws_role_facility_item_admin do
+    after(:build) do |item|
+      item.permissions += %w(
+        use_private_gws_facility_plans
+        read_other_gws_facility_items
+        read_private_gws_facility_items
+        edit_private_gws_facility_items
+      )
+    end
+  end
+
+  factory :gws_role, class: Gws::Role, traits: [:gws_role] do
+  end
+
+  factory :gws_role_admin, class: Gws::Role, traits: [:gws_role, :gws_role_admin]
+
+  factory :gws_role_notice_admin, class: Gws::Role, traits: [:gws_role, :gws_role_notice_admin]
+
+  factory :gws_role_notice_editor, class: Gws::Role, traits: [:gws_role] do
+    permissions { nil }
     permission_level 1
   end
+
+  factory :gws_role_notice_reader, class: Gws::Role, traits: [:gws_role, :gws_role_notice_editor]
+
+  factory :gws_role_schedule_plan_editor, class: Gws::Role, traits: [:gws_role, :gws_role_schedule_plan_editor]
+
+  factory :gws_role_schedule_todo_editor, class: Gws::Role, traits: [:gws_role, :gws_role_schedule_todo_editor]
 end
