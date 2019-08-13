@@ -23,8 +23,11 @@ module SS
         return wait_for_ajax &method(:finished_all_ajax_requests?)
       end
 
-      start_at = Time.zone.now.to_f
-      sleep 0.1 while !yield && (Time.zone.now.to_f - start_at) < ajax_timeout
+      begin
+        Timeout.timeout(ajax_timeout) do
+          sleep 0.1 while !yield
+        end
+      end
     end
 
     def wait_for_selector(*args)
