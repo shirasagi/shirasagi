@@ -69,19 +69,19 @@ describe "gws_attendance_time_card", type: :feature, dbscope: :example, js: true
       visit gws_attendance_main_path(site)
 
       within ".nav-group" do
-        select I18n.l(next_month.to_date, format: :attendance_year_month), from: "year_month"
-      end
-      within "table.time-card" do
-        expect(page).to have_css(".date", text: I18n.l(next_month.to_date, format: :attendance_month_day))
-        expect(page).to have_css(".date", text: I18n.l(next_month.end_of_month.to_date, format: :attendance_month_day))
-      end
-
-      within ".nav-group" do
         select I18n.l(prev_month.to_date, format: :attendance_year_month), from: "year_month"
       end
       within "table.time-card" do
         expect(page).to have_css(".date", text: I18n.l(prev_month.to_date, format: :attendance_month_day))
         expect(page).to have_css(".date", text: I18n.l(prev_month.end_of_month.to_date, format: :attendance_month_day))
+      end
+
+      within ".nav-group" do
+        select I18n.l(next_month.to_date, format: :attendance_year_month), from: "year_month"
+      end
+      within "table.time-card" do
+        expect(page).to have_css(".date", text: I18n.l(next_month.to_date, format: :attendance_month_day))
+        expect(page).to have_css(".date", text: I18n.l(next_month.end_of_month.to_date, format: :attendance_month_day))
       end
     end
   end

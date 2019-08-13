@@ -1,5 +1,10 @@
 module SS
   module JsSupport
+    def visit(*args)
+      super
+      wait_for_ajax
+    end
+
     def ajax_timeout
       @ajax_timeout ||= 30
     end
@@ -9,7 +14,8 @@ module SS
     end
 
     def finished_all_ajax_requests?
-      page.evaluate_script('jQuery.active').zero?
+      active = page.evaluate_script('jQuery.active') rescue nil
+      active.nil? || active.zero?
     end
 
     def wait_for_ajax(&block)
@@ -57,9 +63,9 @@ module SS
     end
 
     def submit_on(*args)
-      sleep 0.5
       click_on(*args)
-      sleep 0.5
+      sleep 1
+      wait_for_ajax
     end
 
     def fill_in(selector, options)

@@ -24,22 +24,18 @@ describe "gws_workflow_files", type: :feature, dbscope: :example, tmpdir: true, 
       within "form#item-form" do
         fill_in "item[name]", with: item_name
         fill_in "item[text]", with: item_text
-
         click_on I18n.t("ss.buttons.upload")
       end
-
-      within "article.file-view" do
-        find("a.thumb").click
+      wait_for_cbox do
+        within "article.file-view" do
+          find("a.thumb").click
+        end
       end
-
       within "form#item-form" do
         submit_on I18n.t("ss.buttons.save")
       end
 
-      within "#addon-basic" do
-        expect(page).to have_content(item_name)
-      end
-
+      expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
       expect(Gws::Workflow::File.site(site).count).to eq 1
       item = Gws::Workflow::File.site(site).first
       expect(item.name).to eq item_name
@@ -54,13 +50,10 @@ describe "gws_workflow_files", type: :feature, dbscope: :example, tmpdir: true, 
       within "form#item-form" do
         fill_in "item[name]", with: item_name2
         fill_in "item[text]", with: item_text2
-        click_on I18n.t("ss.buttons.save")
+        submit_on I18n.t("ss.buttons.save")
       end
 
-      within "#addon-basic" do
-        expect(page).to have_content(item_name2)
-      end
-
+      expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
       expect(Gws::Workflow::File.site(site).count).to eq 1
       item = Gws::Workflow::File.site(site).first
       expect(item.name).to eq item_name2
@@ -75,6 +68,8 @@ describe "gws_workflow_files", type: :feature, dbscope: :example, tmpdir: true, 
       within "form" do
         click_on I18n.t("ss.buttons.delete")
       end
+
+      expect(page).to have_css('#notice', text: I18n.t('ss.notice.deleted'))
       expect(Gws::Workflow::File.site(site).count).to eq 1
       Gws::Workflow::File.site(site).first.tap do |workflow|
         expect(workflow.deleted).not_to be_nil

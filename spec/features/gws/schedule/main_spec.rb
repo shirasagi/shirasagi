@@ -27,7 +27,7 @@ describe "gws_schedule_main", type: :feature, dbscope: :example do
       site.update_attributes(schedule_facility_tab_state: 'show')
       visit index_path
       wait_for_ajax
-      expect(page).to have_content(item.facilities.first.name)
+      expect(page).to have_css('.calendar-multiple-header', text: item.facilities.first.name)
 
       site.update_attributes(schedule_group_all_tab_state: 'show')
       visit index_path
@@ -37,21 +37,24 @@ describe "gws_schedule_main", type: :feature, dbscope: :example do
       site.update_attributes(schedule_custom_group_tab_state: 'show')
       visit index_path
       wait_for_ajax
-      expect(page).to have_content(item.name)
+      expect(page).to have_css('.calendar.multiple', text: item.name)
 
       site.update_attributes(schedule_group_tab_state: 'show')
       visit index_path
       wait_for_ajax
-      expect(page).to have_content(item.name)
+      expect(page).to have_css('.calendar.multiple', text: item.name)
+
+      sleep 1
 
       site.update_attributes(schedule_personal_tab_state: 'show')
       visit index_path
       wait_for_ajax
-      expect(page).to have_content(item.name)
+      expect(page).to have_css('.calendar', text: item.name)
 
       visit "#{index_path}?calendar[path]=#{index_path}"
-      wait_for_ajax
-      expect(page).to have_content(item.name)
+      wait_for_ajax do
+        expect(page).to have_css('.calendar', text: item.name)
+      end
     end
   end
 end

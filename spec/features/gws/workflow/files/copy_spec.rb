@@ -30,7 +30,8 @@ describe Gws::Workflow::FilesController, type: :feature, dbscope: :example, tmpd
           submit_on I18n.t("ss.buttons.save")
         end
 
-        expect(Gws::Workflow::File.site(site).count).to eq 1
+        expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+        expect(page).to have_css(".file-view .name", text: "logo.png")
 
         visit gws_workflow_files_path(site: site, state: "all")
         click_on name
@@ -38,6 +39,9 @@ describe Gws::Workflow::FilesController, type: :feature, dbscope: :example, tmpd
         within "form" do
           submit_on I18n.t("ss.buttons.save")
         end
+
+        expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+        expect(page).to have_css(".file-view .name", text: "logo.png")
 
         expect(Gws::Workflow::File.site(site).count).to eq 2
         expect(Gws::Workflow::File.site(site).where(name: name_with_prefix)).to be_present

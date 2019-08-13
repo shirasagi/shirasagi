@@ -16,7 +16,9 @@ describe "gws_schedule_group_plans", type: :feature, dbscope: :example, js: true
     it "#index" do
       visit index_path
       wait_for_ajax
-      expect(page).to have_content(item.name)
+      expect(page).to have_css('.calendar-multiple-header', text: gws_user.name)
+      wait_for_ajax
+      expect(page).to have_css('.calendar.multiple', text: item.name)
     end
 
     it "#new" do

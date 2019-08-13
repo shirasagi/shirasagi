@@ -13,48 +13,47 @@ describe "article_pages", dbscope: :example, js: true do
       visit edit_path
       within "form#item-form" do
         fill_in "item[name]", with: "modify"
+        click_on I18n.t("ss.buttons.upload")
       end
 
-      click_on I18n.t("ss.buttons.upload")
       wait_for_cbox do
         attach_file "item[in_files][]", "#{Rails.root}/spec/fixtures/ss/file/keyvisual.jpg"
         click_button I18n.t("ss.buttons.save")
+        wait_for_ajax
 
         attach_file "item[in_files][]", "#{Rails.root}/spec/fixtures/ss/file/keyvisual.gif"
         click_button I18n.t("ss.buttons.attach")
+        wait_for_ajax
       end
 
-      sleep 0.5
-
-      expect(first("#addon-cms-agents-addons-file #selected-files").text).to include('keyvisual.gif')
+      within '#selected-files' do
+        expect(page).to have_css('.name', text: 'keyvisual.gif')
+      end
     end
 
     it "#edit file name" do
       visit edit_path
       within "form#item-form" do
         fill_in "item[name]", with: "modify"
+        click_on I18n.t("ss.buttons.upload")
       end
 
-      click_on I18n.t("ss.buttons.upload")
       wait_for_cbox do
         attach_file "item[in_files][]", "#{Rails.root}/spec/fixtures/ss/file/keyvisual.jpg"
         click_button I18n.t("ss.buttons.save")
-        sleep 0.1
+        wait_for_ajax
 
         click_on I18n.t("ss.buttons.edit")
-        within "form#ajax-form" do
-          fill_in "item[name]", with: "modify"
-        end
-
+        fill_in "item[name]", with: "modify.jpg"
         click_button I18n.t("ss.buttons.save")
-        sleep 0.1
+        wait_for_ajax
 
         first("a.thumb.select").click
       end
 
-      sleep 0.5
-
-      expect(first("#addon-cms-agents-addons-file #selected-files").text).to include('modify')
+      within '#selected-files' do
+        expect(page).to have_css('.name', text: 'modify.jpg')
+      end
     end
   end
 end

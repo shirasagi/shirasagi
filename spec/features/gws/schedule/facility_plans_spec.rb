@@ -82,7 +82,7 @@ describe "gws_schedule_facility_plans", type: :feature, dbscope: :example, js: t
   end
 
   context "with max_days_limit" do
-    let(:now) { Time.zone.now.change(month: 8) }
+    let(:now) { Time.zone.now.change(month: 8, hour: 9) }
     let(:plan_name) { unique_id }
 
     shared_examples "a facility plan reservation" do
