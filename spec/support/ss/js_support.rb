@@ -1,8 +1,22 @@
 module SS
   module JsSupport
+    module Callbacks
+      def self.extended(obj)
+        obj.after do
+          page.reset! # unless finished_all_ajax_requests?
+        end
+      end
+    end
+
     def visit(*args)
       super
       wait_for_ajax
+    end
+
+    def fill_in(selector, options)
+      el = super(selector, with: '').click
+      options[:with].to_s.split('').each { |c| el.native.send_keys(c) }
+      el
     end
 
     def ajax_timeout
@@ -23,10 +37,8 @@ module SS
         return wait_for_ajax &method(:finished_all_ajax_requests?)
       end
 
-      begin
-        Timeout.timeout(ajax_timeout) do
-          sleep 0.1 while !yield
-        end
+      Timeout.timeout(ajax_timeout) do
+        sleep 0.1 while !yield
       end
     end
 
@@ -71,12 +83,6 @@ module SS
       wait_for_ajax
     end
 
-    def fill_in(selector, options)
-      el = super(selector, with: '').click
-      options[:with].to_s.split('').each { |c| el.native.send_keys(c) }
-      el
-    end
-
     def save_full_screenshot(opts = {})
       filename = opts[:filename].presence || "#{Rails.root}/tmp/screenshots-#{Time.zone.now.to_i}"
       page.save_screenshot(filename, full: true)
@@ -86,4 +92,5 @@ module SS
   end
 end
 
+RSpec.configuration.extend(SS::JsSupport::Callbacks, js: true)
 RSpec.configuration.include(SS::JsSupport, js: true)
