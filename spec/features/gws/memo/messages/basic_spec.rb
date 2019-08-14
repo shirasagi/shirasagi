@@ -16,35 +16,42 @@ describe 'gws_memo_messages', type: :feature, dbscope: :example do
     it '#index' do
       visit gws_memo_messages_path(site)
       wait_for_ajax
-      expect(page).to have_content('受信トレイ')
-    end
 
-    it '#recent' do
-      visit gws_memo_messages_path(site)
+      within '.gws-memo-folder' do
+        expect(page).to have_css('.title', text: '受信トレイ')
+      end
+
+      # popup
       within ".gws-memo-message" do
         expect(page).to have_css(".unseen", text: '2')
         first(".toggle-popup-notice").click
 
         within ".popup-notice" do
           expect(page).to have_content(memo.subject)
-
           click_on memo.subject
         end
       end
-      wait_for_ajax
-      expect(current_path).to eq gws_memo_message_path(site, memo.id)
+      within '.gws-memo .addon-head' do
+        expect(page).to have_css('.subject', text: memo.subject)
+      end
     end
 
-    it '#show' do
+    it '#show'  do
       visit gws_memo_messages_path(site)
-      expect(page).to have_no_css(".list-item.seen")
-      expect(page).to have_css(".list-item.unseen")
-      click_link memo.name
-      expect(page).to have_content(memo.subject)
-      expect(page).to have_no_content(draft_memo.subject)
+      within '.list-items' do
+        expect(page).to have_no_css(".list-item.seen")
+        expect(page).to have_css(".list-item.unseen")
+        click_link memo.name
+      end
+      within '.gws-memo .addon-head' do
+        expect(page).to have_content(memo.subject)
+        expect(page).to have_no_content(draft_memo.subject)
+      end
       click_link I18n.t('ss.links.back_to_index')
-      expect(page).to have_css(".list-item.seen")
-      expect(page).to have_no_css(".list-item.unseen")
+      within '.list-items' do
+        expect(page).to have_css(".list-item.seen")
+        expect(page).to have_no_css(".list-item.unseen")
+      end
     end
 
     it '#new' do
@@ -53,26 +60,26 @@ describe 'gws_memo_messages', type: :feature, dbscope: :example do
 
       within 'form#item-form' do
         click_on I18n.t("webmail.links.show_cc_bcc")
-
         within 'dl.see.to' do
           click_on I18n.t('gws.organization_addresses')
         end
       end
-
-      within '#cboxLoadedContent' do
+      wait_for_cbox do
         expect(page).to have_content(user2.name)
         click_on user2.name
       end
-
       within 'form#item-form' do
-        click_on I18n.t('ss.buttons.draft_save')
+        submit_on I18n.t('ss.buttons.draft_save')
       end
-      expect(page).to have_content(Gws::Memo::Message.t(:subject) + I18n.t('errors.messages.blank'))
+
+      within '#errorExplanation' do
+        msg = Gws::Memo::Message.t(:subject) + I18n.t('errors.messages.blank')
+        expect(page).to have_css('li', text: msg)
+      end
 
       within 'form#item-form' do
         fill_in 'item[subject]', with: subject
         fill_in 'item[text]', with: text
-
         accept_confirm do
           click_on I18n.t('gws/memo/message.commit_params_check')
         end
