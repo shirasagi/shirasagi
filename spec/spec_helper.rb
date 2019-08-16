@@ -12,19 +12,15 @@ def analyze_coverage?
 end
 
 if analyze_coverage?
+  require 'coveralls'
   require 'simplecov'
+  require 'simplecov-csv'
 
-  if travis?
-    require 'coveralls'
-    SimpleCov.formatter = Coveralls::SimpleCov::Formatter
-  else
-    require 'simplecov-csv'
-    SimpleCov.formatter = SimpleCov::Formatter::MultiFormatter.new([
-      SimpleCov::Formatter::HTMLFormatter,
-      SimpleCov::Formatter::CSVFormatter
-    ])
-  end
-
+  SimpleCov.formatter = SimpleCov::Formatter::MultiFormatter.new([
+    SimpleCov::Formatter::HTMLFormatter,
+    SimpleCov::Formatter::CSVFormatter,
+    Coveralls::SimpleCov::Formatter
+  ])
   SimpleCov.start do
     add_filter 'spec/'
     add_filter 'vendor/bundle'
