@@ -69,7 +69,7 @@ class Chat::Intent
       return if string.blank?
 
       all.select do |intent|
-        intent.phrase.any? { |phrase| string.include?(phrase) }
+        intent.phrase.push(intent.name).any? { |phrase| string.include?(phrase) }
       end
     end
 
@@ -77,7 +77,7 @@ class Chat::Intent
       return if string.blank?
 
       all.entries.find do |intent|
-        intent.phrase.any? { |phrase| string.include?(phrase) }
+        intent.phrase.push(intent.name).any? { |phrase| string.include?(phrase) }
       end
     end
 
