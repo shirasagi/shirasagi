@@ -7,7 +7,7 @@ describe "gws_schedule_csv", type: :feature, dbscope: :example, tmpdir: true, js
   before { login_gws_user }
 
   context "with plan" do
-    let!(:now) { Time.zone.now.beginning_of_hour + 1.hour }
+    let!(:now) { Time.zone.now.change(hour: 9) }
     let!(:csv_file) do
       tmpfile(extname: ".csv", binary: true) do |f|
         enum = Gws::Schedule::PlanCsv::Exporter.enum_csv([ plan_to_csv ], site: site, user: user, model: Gws::Schedule::Plan)

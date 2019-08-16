@@ -44,11 +44,11 @@ describe "gws_schedule_plans", type: :feature, dbscope: :example do
           # 2 回入力することで、意図した年月日を設定する。
           fill_in "item[repeat_end]", with: repeat_end_text
 
-          click_on "保存"
+          click_on I18n.t('ss.buttons.save')
         end
 
         wait_for_ajax
-        expect(page).to have_css("aside#notice div", text: "保存しました。")
+        expect(page).to have_css("aside#notice div", text: I18n.t('ss.notice.saved'))
 
         # gws_schedule_repeat_plans
         expect(Gws::Schedule::RepeatPlan.count).to eq 1
@@ -113,11 +113,11 @@ describe "gws_schedule_plans", type: :feature, dbscope: :example do
           # 2 回入力することで、意図した年月日を設定する。
           fill_in "item[repeat_end]", with: repeat_end_text
 
-          click_on "保存"
+          click_on I18n.t('ss.buttons.save')
         end
 
         wait_for_ajax
-        expect(page).to have_css("aside#notice div", text: "保存しました。")
+        expect(page).to have_css("aside#notice div", text: I18n.t('ss.notice.saved'))
 
         # gws_schedule_repeat_plans
         expect(Gws::Schedule::RepeatPlan.count).to eq 1

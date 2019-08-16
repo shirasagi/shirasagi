@@ -240,7 +240,7 @@ describe "cms_form_preview", type: :feature, dbscope: :example do
         expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
         expect(Article::Page.all.count).to eq 1
 
-        click_on "編集する"
+        click_on I18n.t('ss.links.edit')
         page.first("#addon-cms-agents-addons-form-page .preview").click
 
         switch_to_window(windows.last)

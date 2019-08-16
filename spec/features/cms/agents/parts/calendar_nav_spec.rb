@@ -15,9 +15,13 @@ describe "cms_agents_parts_calendar_nav", type: :feature, dbscope: :example, js:
       expect(page).to have_css(".event-calendar")
       click_on I18n.t("event.prev_month")
       click_on I18n.t("event.current_month")
-      click_on "#{cur_date.year}#{I18n.t("datetime.prompts.year")}#{cur_date.month}#{I18n.t("datetime.prompts.month")}"
-      expect(page).to have_text(
-        "#{cur_date.year}#{I18n.t("datetime.prompts.year")}#{cur_date.month}#{I18n.t("datetime.prompts.month")}")
+
+      ym = "#{cur_date.year}#{I18n.t("datetime.prompts.year")}#{cur_date.month}#{I18n.t("datetime.prompts.month")}"
+      click_on ym
+
+      within 'table.calendar' do
+        expect(page).to have_css('caption', text: ym)
+      end
     end
   end
 end

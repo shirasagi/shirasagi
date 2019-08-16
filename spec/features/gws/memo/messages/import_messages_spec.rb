@@ -12,7 +12,7 @@ describe "gws_memo_message_import_messages", type: :feature, dbscope: :example, 
 
       within "form#item-form" do
         attach_file "item[in_file]", "#{Rails.root}/spec/fixtures/gws/memo/messages.zip"
-        submit_on I18n.t("ss.import")
+        click_on I18n.t("ss.import")
       end
       expect(page).to have_css("#notice", text: I18n.t("gws/memo/message.notice.start_import"))
 

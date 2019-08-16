@@ -12,7 +12,7 @@ describe "gws_apis_users", type: :feature, dbscope: :example do
       expect(status_code).to eq 200
       expect(page).to have_content(gws_user.name)
 
-      click_on "検索"
+      click_on I18n.t('ss.buttons.search')
       expect(status_code).to eq 200
       expect(page).to have_content(gws_user.name)
     end

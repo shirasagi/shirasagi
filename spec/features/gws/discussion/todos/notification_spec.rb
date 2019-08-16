@@ -29,7 +29,7 @@ describe "gws_discussion_todos", type: :feature, dbscope: :example, js: true do
       within "form#item-form" do
         fill_in "item[text]", with: text
         select I18n.t("ss.options.state.enabled"), from: "item[notify_state]"
-        submit_on I18n.t('ss.buttons.save')
+        click_on I18n.t('ss.buttons.save')
       end
       expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
 
@@ -57,7 +57,7 @@ describe "gws_discussion_todos", type: :feature, dbscope: :example, js: true do
       click_on I18n.t("ss.links.edit")
       within "form#item-form" do
         fill_in "item[text]", with: text2
-        submit_on I18n.t('ss.buttons.save')
+        click_on I18n.t('ss.buttons.save')
       end
       expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
 
@@ -81,7 +81,7 @@ describe "gws_discussion_todos", type: :feature, dbscope: :example, js: true do
       end
       click_on I18n.t('gws/schedule/todo.links.finish')
       within "form" do
-        submit_on I18n.t('gws/schedule/todo.buttons.finish')
+        click_on I18n.t('gws/schedule/todo.buttons.finish')
       end
       expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
 
@@ -114,7 +114,7 @@ describe "gws_discussion_todos", type: :feature, dbscope: :example, js: true do
       end
       click_on I18n.t('gws/schedule/todo.links.revert')
       within "form" do
-        submit_on I18n.t('gws/schedule/todo.buttons.revert')
+        click_on I18n.t('gws/schedule/todo.buttons.revert')
       end
       expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
 
@@ -141,7 +141,7 @@ describe "gws_discussion_todos", type: :feature, dbscope: :example, js: true do
       within "form#comment-form" do
         fill_in "item[achievement_rate]", with: achievement_rate
         fill_in "item[text]", with: comment_text
-        submit_on I18n.t('gws/schedule.buttons.comment')
+        click_on I18n.t('gws/schedule.buttons.comment')
       end
       expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
 
@@ -176,8 +176,7 @@ describe "gws_discussion_todos", type: :feature, dbscope: :example, js: true do
 
         fill_in "item[achievement_rate]", with: achievement_rate2
         fill_in "item[text]", with: comment_text2
-
-        submit_on I18n.t('ss.buttons.save')
+        click_on I18n.t('ss.buttons.save')
       end
       expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
 

@@ -25,7 +25,7 @@ describe "opendata_datasets_release", type: :feature, dbscope: :example do
           fill_in "item[name]", with: "sample"
           fill_in "item[text]", with: "sample"
           fill_in "item[release_date]", with: release_date
-          click_button "保存"
+          click_button I18n.t('ss.buttons.save')
         end
         expect(status_code).to eq 200
         expect(first('#addon-cms-agents-addons-release')).to have_text("公開待ち")
@@ -35,7 +35,7 @@ describe "opendata_datasets_release", type: :feature, dbscope: :example do
         click_link "リソースを管理する"
         expect(status_code).to eq 200
 
-        click_link "新規作成"
+        click_link I18n.t('ss.links.new')
         expect(status_code).to eq 200
 
         within "form#item-form" do
@@ -43,16 +43,16 @@ describe "opendata_datasets_release", type: :feature, dbscope: :example do
           fill_in "item[name]", with: "sample1"
           fill_in "item[format]", with: "png"
           select license.name, from: 'item_license_id'
-          click_button "保存"
+          click_button I18n.t('ss.buttons.save')
         end
 
         expect(status_code).to eq 200
         expect(first('#addon-basic')).to have_text("logo.png")
 
-        click_link "一覧へ戻る"
+        click_link I18n.t('ss.links.back_to_index')
         expect(status_code).to eq 200
 
-        click_link "新規作成"
+        click_link I18n.t('ss.links.new')
         expect(status_code).to eq 200
 
         within "form#item-form" do
@@ -60,7 +60,7 @@ describe "opendata_datasets_release", type: :feature, dbscope: :example do
           fill_in "item[name]", with: "sample1"
           fill_in "item[format]", with: "html"
           select license.name, from: 'item_license_id'
-          click_button "保存"
+          click_button I18n.t('ss.buttons.save')
         end
         expect(status_code).to eq 200
         expect(first('#addon-basic')).to have_text("https://github.com/shirasagi/shirasagi")

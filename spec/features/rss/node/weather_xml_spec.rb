@@ -18,14 +18,14 @@ describe "Rss::Node::WeatherXml", dbscope: :example, js: true do
       visit index_path
       expect(current_path).to eq index_path
 
-      click_on '新規作成'
+      click_on I18n.t('ss.links.new')
       fill_in 'item[name]', with: name0
       fill_in 'item[rss_link]', with: rss_link
       fill_in 'item[html]', with: html
       fill_in 'item[xml]', with: xml
 
-      click_on '保存'
-      expect(page).to have_css('#notice', text: '保存しました。', wait: 60)
+      click_on I18n.t('ss.buttons.save')
+      expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'), wait: 60)
 
       expect(Rss::WeatherXmlPage.count).to eq 1
       Rss::WeatherXmlPage.first.tap do |item|
@@ -37,11 +37,11 @@ describe "Rss::Node::WeatherXml", dbscope: :example, js: true do
 
       visit index_path
       click_on name0
-      click_on '編集する'
+      click_on I18n.t('ss.links.edit')
       fill_in 'item[name]', with: name1
 
-      click_on '保存'
-      expect(page).to have_css('#notice', text: '保存しました。', wait: 60)
+      click_on I18n.t('ss.buttons.save')
+      expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'), wait: 60)
 
       Rss::WeatherXmlPage.first.tap do |item|
         expect(item.name).to eq name1
@@ -49,8 +49,8 @@ describe "Rss::Node::WeatherXml", dbscope: :example, js: true do
 
       visit index_path
       click_on name1
-      click_on '削除する'
-      click_on '削除'
+      click_on I18n.t('ss.links.delete')
+      click_on I18n.t('ss.buttons.delete')
       expect(page).to have_css('#notice', text: I18n.t('ss.notice.deleted'), wait: 60)
     end
   end
@@ -68,7 +68,7 @@ describe "Rss::Node::WeatherXml", dbscope: :example, js: true do
       visit index_path
       click_on 'フォルダー設定'
 
-      click_on '編集する'
+      click_on I18n.t('ss.links.edit')
       fill_in 'item[hub_url]', with: "http://example.jp/#{unique_id}.html"
       fill_in 'item[topic_urls]', with: "http://example.jp/#{unique_id}.html"
       fill_in 'item[lease_seconds]', with: 300
@@ -94,8 +94,8 @@ describe "Rss::Node::WeatherXml", dbscope: :example, js: true do
       expect(page).to have_css("span.select-item", text: ezine_node_member_page.name)
       wait_for_cbox_close { click_on("close") rescue nil }
 
-      click_on '保存'
-      expect(page).to have_css('#notice', text: '保存しました。')
+      click_on I18n.t('ss.buttons.save')
+      expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
     end
   end
 end

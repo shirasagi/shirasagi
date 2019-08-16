@@ -58,7 +58,7 @@ describe "job_cms_logs", dbscope: :example do
       expect(Job::Log.count).to be > 0
 
       visit index_path
-      click_on '削除する'
+      click_on I18n.t('ss.links.delete')
       expect(status_code).to eq 200
 
       within "form" do

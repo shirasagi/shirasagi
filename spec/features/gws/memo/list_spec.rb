@@ -44,7 +44,7 @@ describe 'gws_memo_lists', type: :feature, dbscope: :example, js: true do
       end
 
       within 'form#item-form' do
-        submit_on I18n.t('ss.buttons.save')
+        click_on I18n.t('ss.buttons.save')
       end
       expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
 
@@ -60,7 +60,7 @@ describe 'gws_memo_lists', type: :feature, dbscope: :example, js: true do
       click_on I18n.t('ss.links.edit')
       within 'form#item-form' do
         fill_in 'item[name]', with: name2
-        submit_on I18n.t('ss.buttons.save')
+        click_on I18n.t('ss.buttons.save')
       end
       expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
 

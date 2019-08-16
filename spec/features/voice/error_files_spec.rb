@@ -26,7 +26,7 @@ describe "voice_error_files" do
     it "#delete" do
       visit delete_path
       within "form" do
-        click_button "削除"
+        click_button I18n.t('ss.buttons.delete')
       end
       expect(status_code).to eq 200
       expect(current_path).to eq index_path

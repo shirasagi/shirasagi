@@ -27,7 +27,7 @@ describe 'gws_memo_folders', type: :feature, dbscope: :example do
       click_link item.name
       within "form#item-form" do
         fill_in "item[in_basename]", with: name
-        click_button "保存"
+        click_button I18n.t('ss.buttons.save')
       end
       expect(first('#addon-basic')).to have_text(name)
     end
@@ -43,7 +43,7 @@ describe 'gws_memo_folders', type: :feature, dbscope: :example do
       name = "modify-#{unique_id}"
       within "form#item-form" do
         fill_in "item[in_basename]", with: name
-        click_button "保存"
+        click_button I18n.t('ss.buttons.save')
       end
       expect(first('#addon-basic')).to have_text(name)
     end
@@ -51,7 +51,7 @@ describe 'gws_memo_folders', type: :feature, dbscope: :example do
     it "#delete" do
       visit delete_path
       within "form" do
-        click_button "削除"
+        click_button I18n.t('ss.buttons.delete')
       end
       expect(current_path).to eq index_path
     end
@@ -64,7 +64,7 @@ describe 'gws_memo_folders', type: :feature, dbscope: :example do
           within "form#item-form" do
             fill_in "item[in_basename]", with: "#{item.name}/childs"
             within ""
-            expect{ click_button "保存" }.to change { Gws::Memo::Folder.count }.by(1)
+            expect{ click_button I18n.t('ss.buttons.save') }.to change { Gws::Memo::Folder.count }.by(1)
           end
           expect(current_path).to eq gws_memo_folder_path site, Gws::Memo::Folder
                                     .where(name: "#{item.name}/childs").first
@@ -75,7 +75,7 @@ describe 'gws_memo_folders', type: :feature, dbscope: :example do
         it "does'nt create a child" do
           within "form#item-form" do
             fill_in "item[in_basename]", with: "test/child"
-            expect{ click_button "保存" }.not_to(change { Gws::Memo::Folder.count })
+            expect{ click_button I18n.t('ss.buttons.save') }.not_to(change { Gws::Memo::Folder.count })
           end
           expect(current_path).to eq gws_memo_folders_path site
         end
@@ -88,7 +88,7 @@ describe 'gws_memo_folders', type: :feature, dbscope: :example do
         name = "modify-#{unique_id}"
         within "form#item-form" do
           fill_in "item[in_basename]", with: name
-          click_button "保存"
+          click_button I18n.t('ss.buttons.save')
         end
         expect(first('#addon-basic')).to have_text(name)
       end
@@ -105,7 +105,7 @@ describe 'gws_memo_folders', type: :feature, dbscope: :example do
           within "form#item-form" do
             fill_in "item[in_basename]", with: name
             expect do
-              click_button "保存"
+              click_button I18n.t('ss.buttons.save')
             end.to change { Gws::Memo::Folder.find(id: item.id).name }.from(item.name).to(name)
                .and change { Gws::Memo::Folder.find(id: child_item.id).name }.from(child_item.name).to(modify_child_name)
           end
@@ -122,7 +122,7 @@ describe 'gws_memo_folders', type: :feature, dbscope: :example do
           modify_child_name = "test/child"
           within "form#item-form" do
             fill_in "item[in_basename]", with: modify_child_name
-            expect{ click_button "保存" }.not_to(change { Gws::Memo::Folder.find(id: child_item.id).name })
+            expect{ click_button I18n.t('ss.buttons.save') }.not_to(change { Gws::Memo::Folder.find(id: child_item.id).name })
           end
         end
       end
@@ -137,7 +137,7 @@ describe 'gws_memo_folders', type: :feature, dbscope: :example do
       context "child does'nt have any message" do
         it "has destroyed" do
           within "form" do
-            expect{ click_button "削除" }.to change { Gws::Memo::Folder.count }.by(-2)
+            expect{ click_button I18n.t('ss.buttons.delete') }.to change { Gws::Memo::Folder.count }.by(-2)
           end
           expect(current_path).to eq index_path
           expect(Gws::Memo::Folder.where(name: item.name).first).to be_blank
@@ -153,7 +153,7 @@ describe 'gws_memo_folders', type: :feature, dbscope: :example do
 
         it "both child and parent are not destroyed" do
           within "form" do
-            expect { click_button "削除" }.not_to(change { Gws::Memo::Folder.count })
+            expect { click_button I18n.t('ss.buttons.delete') }.not_to(change { Gws::Memo::Folder.count })
           end
         end
       end
@@ -166,7 +166,7 @@ describe 'gws_memo_folders', type: :feature, dbscope: :example do
 
         it "are not destroyed" do
           within "form" do
-            expect{ click_button "削除" }.not_to(change { Gws::Memo::Folder.count })
+            expect{ click_button I18n.t('ss.buttons.delete') }.not_to(change { Gws::Memo::Folder.count })
           end
         end
       end

@@ -90,12 +90,12 @@ describe "jmaxml/forecast_regions", dbscope: :example do
       expect(page).to have_css('.list-item .title', text: region.name)
 
       fill_in 's[keyword]', with: region.name
-      click_on '検索'
+      click_on I18n.t('ss.buttons.search')
       expect(page).to have_css('.list-item .title', text: region.name)
 
       visit index_path
       fill_in 's[keyword]', with: unique_id
-      click_on '検索'
+      click_on I18n.t('ss.buttons.search')
 
       expect(page).to have_no_css('.list-item .title', text: region.name)
     end

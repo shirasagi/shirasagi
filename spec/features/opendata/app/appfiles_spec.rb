@@ -32,7 +32,7 @@ describe "opendata_appfiles", dbscope: :example do
       within "form#item-form" do
         fill_in "item[text]", with: "sample"
         attach_file "item[in_file]", "#{Rails.root}/spec/fixtures/ss/logo.png"
-        click_button "保存"
+        click_button I18n.t('ss.buttons.save')
       end
       expect(status_code).to eq 200
       expect(current_path).not_to eq new_path

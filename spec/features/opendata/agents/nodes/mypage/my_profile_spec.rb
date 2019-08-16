@@ -39,7 +39,7 @@ describe "opendata_agents_nodes_my_profile", dbscope: :example do
     within "form#item-form" do
       fill_in "item[name]", with: item_name
       fill_in "item[email]", with: item_email
-      click_button '保存'
+      click_button I18n.t('ss.buttons.save')
     end
     expect(status_code).to eq 200
 

@@ -51,7 +51,7 @@ describe "gws_share_files", type: :feature, dbscope: :example, tmpdir: true, js:
         fill_in "item[memo]", with: "new test"
       end
       within "footer.send" do
-        submit_on I18n.t('ss.buttons.upload')
+        click_on I18n.t('ss.buttons.upload')
       end
       expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
 
@@ -78,7 +78,7 @@ describe "gws_share_files", type: :feature, dbscope: :example, tmpdir: true, js:
       within "form#item-form" do
         fill_in "item[name]", with: "modify"
         fill_in "item[memo]", with: "edited"
-        click_button "保存"
+        click_button I18n.t('ss.buttons.save')
       end
       expect(current_path).not_to eq sns_login_path
       expect(page).to have_no_css("form#item-form")
@@ -89,7 +89,7 @@ describe "gws_share_files", type: :feature, dbscope: :example, tmpdir: true, js:
     it "#delete" do
       visit delete_path
       within "form" do
-        click_button "削除"
+        click_button I18n.t('ss.buttons.delete')
       end
       expect(page).to have_no_content(item.name)
       expect(page).to have_content(folder.name)

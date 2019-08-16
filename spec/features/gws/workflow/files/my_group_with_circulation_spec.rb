@@ -49,7 +49,7 @@ describe Gws::Workflow::FilesController, type: :feature, dbscope: :example, tmpd
 
       within ".mod-workflow-request" do
         fill_in "workflow[comment]", with: workflow_comment
-        submit_on I18n.t("workflow.buttons.request")
+        click_on I18n.t("workflow.buttons.request")
       end
 
       expect(page).to have_css(".mod-workflow-view dd", text: I18n.t("workflow.state.request"))

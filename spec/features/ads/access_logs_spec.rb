@@ -45,7 +45,7 @@ describe "ads_access_logs" do
     context "monthly" do
       it do
         visit index_path
-        click_on "検索"
+        click_on I18n.t('ss.buttons.search')
         click_on "ダウンロード"
         expect(status_code).to eq 200
 
@@ -72,7 +72,7 @@ describe "ads_access_logs" do
       it do
         visit index_path
         select "年間", from: "s[month]"
-        click_on "検索"
+        click_on I18n.t('ss.buttons.search')
         click_on "ダウンロード"
         expect(status_code).to eq 200
 

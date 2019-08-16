@@ -2,16 +2,7 @@
 # ref. http://docs.travis-ci.com/user/environment-variables/#Default-Environment-Variables
 require 'dotenv'
 Dotenv.load
-def analyze_coverage?
-  (ENV["CI"] == "true" && ENV["TRAVIS"] == "true") || ENV["ANALYZE_COVERAGE"] != "disabled"
-end
-if analyze_coverage?
-  require 'simplecov'
-  require 'coveralls'
-  Coveralls.wear!
-end
 
-# This file is copied to spec/ when you run 'rails generate rspec:install'
 ENV["RAILS_ENV"] ||= 'test'
 require File.expand_path("../config/environment", __dir__)
 require 'rspec/rails'
@@ -19,18 +10,33 @@ require 'rspec/rails'
 require 'capybara/rspec'
 require 'capybara/rails'
 require 'support/ss/capybara_support'
-require 'simplecov-csv'
 
 # Checks for pending migrations before tests are run.
 # If you are not using ActiveRecord, you can remove this line.
 ActiveRecord::Migration.check_pending! if defined?(ActiveRecord::Migration)
 
+def travis?
+  ENV["CI"] == "true" && ENV["TRAVIS"] == "true"
+end
+
+def analyze_coverage?
+  travis? || ENV["ANALYZE_COVERAGE"] != "disabled"
+end
+
 if analyze_coverage?
-  SimpleCov.formatters = [
-    SimpleCov::Formatter::HTMLFormatter,
-    SimpleCov::Formatter::CSVFormatter,
-    Coveralls::SimpleCov::Formatter
-  ]
+  require 'simplecov'
+
+  if travis?
+    require 'coveralls'
+    SimpleCov.formatter = Coveralls::SimpleCov::Formatter
+  else
+    require 'simplecov-csv'
+    SimpleCov.formatter = SimpleCov::Formatter::MultiFormatter.new([
+      SimpleCov::Formatter::HTMLFormatter,
+      SimpleCov::Formatter::CSVFormatter
+    ])
+  end
+
   SimpleCov.start do
     add_filter 'spec/'
     add_filter 'vendor/bundle'

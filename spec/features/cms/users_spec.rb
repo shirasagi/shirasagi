@@ -26,15 +26,15 @@ describe "cms_users", type: :feature, dbscope: :example do
         click_on group.name
       end
 
-      within "form#item-form" do
+      within "#item-form" do
         name = unique_id
         fill_in "item[name]", with: name
         fill_in "item[email]", with: "#{name}@example.jp"
         fill_in "item[in_password]", with: "pass"
         check "item[cms_role_ids][]"
-        submit_on "保存"
+        click_on I18n.t("ss.buttons.save")
       end
-      expect(page).to have_no_css('#item-form')
+      expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
 
       #show
       visit show_path
@@ -42,18 +42,18 @@ describe "cms_users", type: :feature, dbscope: :example do
 
       #edit
       visit edit_path
-      within "form#item-form" do
+      within "#item-form" do
         fill_in "item[name]", with: "modify"
-        submit_on "保存"
+        click_on I18n.t("ss.buttons.save")
       end
-      expect(page).to have_no_css('#item-form')
+      expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
 
       #delete
       visit delete_path
       within "form" do
-        click_button "削除"
+        click_on I18n.t("ss.buttons.delete")
       end
-      expect(current_path).to eq index_path
+      expect(page).to have_css('#notice', text: I18n.t('ss.notice.deleted'))
     end
   end
 
@@ -73,9 +73,9 @@ describe "cms_users", type: :feature, dbscope: :example do
         fill_in "item[uid]", with: name
         fill_in "item[ldap_dn]", with: "dc=#{name},dc=city,dc=example,dc=jp"
         check "item[cms_role_ids][]"
-        submit_on "保存"
+        click_on I18n.t("ss.buttons.save")
       end
-      expect(page).to have_no_css('#item-form')
+      expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
     end
 
     it "#show" do
@@ -89,7 +89,7 @@ describe "cms_users", type: :feature, dbscope: :example do
       visit edit_path
       within "form#item-form" do
         fill_in "item[name]", with: "modify"
-        submit_on "保存"
+        click_on I18n.t("ss.buttons.save")
       end
       expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
     end
@@ -98,7 +98,7 @@ describe "cms_users", type: :feature, dbscope: :example do
       login_cms_user
       visit delete_path
       within "form" do
-        click_button "削除"
+        click_on I18n.t("ss.buttons.delete")
       end
       expect(page).to have_css('#notice', text: I18n.t('ss.notice.deleted'))
     end
@@ -120,7 +120,7 @@ describe "cms_users", type: :feature, dbscope: :example do
       visit import_path
       within "form" do
         attach_file "item[in_file]", "#{Rails.root}/spec/fixtures/cms/user/cms_users_1.csv"
-        click_button "インポート"
+        click_button I18n.t('ss.buttons.import')
       end
       expect(status_code).to eq 200
       expect(current_path).to eq index_path
@@ -163,7 +163,7 @@ describe "cms_users", type: :feature, dbscope: :example do
       visit import_path
       within "form" do
         attach_file "item[in_file]", "#{Rails.root}/spec/fixtures/cms/user/cms_users_1.csv"
-        click_button "インポート"
+        click_button I18n.t('ss.buttons.import')
       end
       expect(status_code).to eq 200
       expect(current_path).to eq index_path
@@ -171,7 +171,7 @@ describe "cms_users", type: :feature, dbscope: :example do
       visit import_path
       within "form" do
         attach_file "item[in_file]", "#{Rails.root}/spec/fixtures/cms/user/cms_users_2.csv"
-        click_button "インポート"
+        click_button I18n.t('ss.buttons.import')
       end
       expect(status_code).to eq 200
       expect(current_path).to eq index_path

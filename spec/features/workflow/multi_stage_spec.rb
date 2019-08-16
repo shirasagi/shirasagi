@@ -57,9 +57,9 @@ describe "multi_stage", dbscope: :example, js: true do
           click_on I18n.t("workflow.buttons.select")
 
           fill_in "workflow[comment]", with: workflow_comment
-          submit_on I18n.t("workflow.buttons.request")
+          click_on I18n.t("workflow.buttons.request")
         end
-        expect(page).to have_css(".mod-workflow-view dd", text: /#{::Regexp.escape(user1.uid)}/)
+        expect(page).to have_css(".mod-workflow-view dd", text: I18n.t('workflow.state.request'))
 
         item.reload
         expect(item.workflow_user_id).to eq cms_user.id
@@ -218,9 +218,9 @@ describe "multi_stage", dbscope: :example, js: true do
           click_on I18n.t("workflow.buttons.select")
 
           fill_in "workflow[comment]", with: workflow_comment
-          submit_on I18n.t("workflow.buttons.request")
+          click_on I18n.t("workflow.buttons.request")
         end
-        expect(page).to have_css(".mod-workflow-view dd", text: /#{::Regexp.escape(user1.uid)}/)
+        expect(page).to have_css(".mod-workflow-view dd", text: I18n.t('workflow.state.request'))
 
         item.reload
         expect(item.workflow_user_id).to eq cms_user.id
@@ -370,9 +370,9 @@ describe "multi_stage", dbscope: :example, js: true do
           click_on I18n.t("workflow.buttons.select")
 
           fill_in "workflow[comment]", with: workflow_comment
-          submit_on I18n.t("workflow.buttons.request")
+          click_on I18n.t("workflow.buttons.request")
         end
-        expect(page).to have_css(".mod-workflow-view dd", text: /#{::Regexp.escape(user1.uid)}/)
+        expect(page).to have_css(".mod-workflow-view dd", text: I18n.t('workflow.state.request'))
 
         item.reload
         expect(item.workflow_user_id).to eq cms_user.id
@@ -527,9 +527,9 @@ describe "multi_stage", dbscope: :example, js: true do
           click_on I18n.t("workflow.buttons.select")
 
           fill_in "workflow[comment]", with: workflow_comment
-          submit_on I18n.t("workflow.buttons.request")
+          click_on I18n.t("workflow.buttons.request")
         end
-        expect(page).to have_css(".mod-workflow-view dd", text: /#{::Regexp.escape(user1.uid)}/)
+        expect(page).to have_css(".mod-workflow-view dd", text: I18n.t('workflow.state.request'))
 
         item.reload
         expect(item.workflow_user_id).to eq cms_user.id

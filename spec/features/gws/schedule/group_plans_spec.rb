@@ -25,10 +25,10 @@ describe "gws_schedule_group_plans", type: :feature, dbscope: :example, js: true
       visit new_path
       within "form#item-form" do
         fill_in "item[name]", with: "name"
-        click_button "保存"
+        click_button I18n.t('ss.buttons.save')
       end
       wait_for_ajax
-      expect(page).to have_css('#notice', text: '保存しました。')
+      expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
     end
 
     it "#show" do
@@ -41,16 +41,16 @@ describe "gws_schedule_group_plans", type: :feature, dbscope: :example, js: true
       visit edit_path
       within "form#item-form" do
         fill_in "item[name]", with: "modify"
-        click_button "保存"
+        click_button I18n.t('ss.buttons.save')
       end
       wait_for_ajax
-      expect(page).to have_css('#notice', text: '保存しました。')
+      expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
     end
 
     it "#delete" do
       visit delete_path
       within "form" do
-        click_button "削除"
+        click_button I18n.t('ss.buttons.delete')
       end
       wait_for_ajax
       expect(page).to have_css('#notice', text: I18n.t('ss.notice.deleted'))

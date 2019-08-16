@@ -19,7 +19,7 @@ describe "cms_generate_pages", type: :feature, dbscope: :example do
       visit edit_path
       within "form#item-form" do
         fill_in "item[name]", with: "modify"
-        click_button "保存"
+        click_button I18n.t('ss.buttons.save')
       end
 
       expect(current_path).not_to eq sns_login_path
@@ -28,7 +28,7 @@ describe "cms_generate_pages", type: :feature, dbscope: :example do
     it "#destroy" do
       visit delete_path
       within "form" do
-        click_button "削除"
+        click_button I18n.t('ss.buttons.delete')
       end
       expect(status_code).to eq 200
     end

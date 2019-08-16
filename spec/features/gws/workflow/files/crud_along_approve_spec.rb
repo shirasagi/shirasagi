@@ -32,7 +32,7 @@ describe "gws_workflow_files", type: :feature, dbscope: :example, tmpdir: true, 
         end
       end
       within "form#item-form" do
-        submit_on I18n.t("ss.buttons.save")
+        click_on I18n.t("ss.buttons.save")
       end
 
       expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
@@ -50,7 +50,7 @@ describe "gws_workflow_files", type: :feature, dbscope: :example, tmpdir: true, 
       within "form#item-form" do
         fill_in "item[name]", with: item_name2
         fill_in "item[text]", with: item_text2
-        submit_on I18n.t("ss.buttons.save")
+        click_on I18n.t("ss.buttons.save")
       end
 
       expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))

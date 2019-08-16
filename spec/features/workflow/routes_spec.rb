@@ -38,7 +38,7 @@ describe "workflow_routes", type: :feature, dbscope: :example do
         end
 
         within "form#item-form" do
-          click_on "保存"
+          click_on I18n.t('ss.buttons.save')
         end
         expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'), wait: 60)
 

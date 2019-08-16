@@ -32,7 +32,7 @@ describe "member_my_anpi_posts", dbscope: :example, js: true do
       visit index_path
       expect(current_path).to eq index_path
 
-      click_on '新規作成'
+      click_on I18n.t('ss.links.new')
       fill_in 'item[name]', with: member.name
       fill_in 'item[kana]', with: member.kana
       fill_in 'item[addr]', with: member.addr
@@ -44,9 +44,9 @@ describe "member_my_anpi_posts", dbscope: :example, js: true do
       within '#ajax-box' do
         click_link member.name
       end
-      submit_on '保存'
+      click_on I18n.t("ss.buttons.save")
 
-      expect(page).to have_css('#notice', text: '保存しました。', wait: 60)
+      expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
       expect(Board::AnpiPost.count).to eq 1
       Board::AnpiPost.first.tap do |anpi|
         expect(anpi.member_id).to eq member.id
@@ -54,16 +54,16 @@ describe "member_my_anpi_posts", dbscope: :example, js: true do
         expect(anpi.text).to eq text0
       end
 
-      click_on '一覧へ戻る'
+      click_on I18n.t('ss.links.back_to_index')
       expect(current_path).to eq index_path
       expect(page).to have_css('.list-item .title', text: member.name)
 
       click_on member.name
-      click_on '編集する'
+      click_on I18n.t('ss.links.edit')
       fill_in 'item[text]', with: text1
-      submit_on '保存'
+      click_on I18n.t("ss.buttons.save")
 
-      expect(page).to have_css('#notice', text: '保存しました。', wait: 60)
+      expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
       expect(Board::AnpiPost.count).to eq 1
       Board::AnpiPost.first.tap do |anpi|
         expect(anpi.member_id).to eq member.id
@@ -73,10 +73,10 @@ describe "member_my_anpi_posts", dbscope: :example, js: true do
 
       visit index_path
       click_on member.name
-      click_on '削除する'
-      submit_on '削除'
+      click_on I18n.t('ss.links.delete')
+      click_on I18n.t("ss.buttons.delete")
 
-      expect(page).to have_css('#notice', text: I18n.t('ss.notice.deleted'), wait: 60)
+      expect(page).to have_css('#notice', text: I18n.t('ss.notice.deleted'))
     end
   end
 

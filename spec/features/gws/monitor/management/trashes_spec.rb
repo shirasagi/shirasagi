@@ -50,9 +50,9 @@ describe "gws_monitor_management_trashes", type: :feature, dbscope: :example do
       expect(FileTest.exist?(item1.zip_path)).to be_truthy
       visit delete_path
       within "form" do
-        click_button "削除"
+        click_button I18n.t('ss.buttons.delete')
       end
-      expect(page).to have_css('#notice', text: '削除しました。')
+      expect(page).to have_css('#notice', text: I18n.t('ss.notice.deleted'))
       expect(FileTest.exist?(item1.zip_path)).to be_falsey
     end
   end
