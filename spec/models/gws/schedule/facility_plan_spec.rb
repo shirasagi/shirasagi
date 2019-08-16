@@ -92,4 +92,66 @@ RSpec.describe Gws::Schedule::Plan, type: :model, dbscope: :example, tmpdir: tru
       end
     end
   end
+
+  describe "#validate_facility_double_booking" do
+    let(:user) { gws_user }
+    let(:now) { Time.zone.now.change(hour: 16) }
+    let(:tomorrow) { now + 1.day }
+    let!(:facility) { create :gws_facility_item }
+    let!(:item) do
+      create(
+        :gws_schedule_plan,
+        allday: nil, start_at: now.change(hour: 8), end_at: now.change(hour: 22),
+        facility_ids: [facility.id]
+      )
+    end
+
+    context "with duplicated start_at/end_at plan" do
+      subject do
+        build(
+          :gws_schedule_plan, site_id: site.id,
+          allday: nil, start_at: now, end_at: now + 1.hour, start_on: now.beginning_of_day, end_on: now.end_of_day,
+          facility_ids: [facility.id]
+        )
+      end
+
+      it do
+        expect(item).to be_valid
+        subject.send(:validate_facility_double_booking)
+        expect(subject.errors).to be_present
+      end
+    end
+
+    context "with duplicated all-day plan" do
+      subject do
+        build(
+          :gws_schedule_plan, site_id: site.id,
+          allday: "allday", start_at: now, end_at: now + 1.hour, start_on: now.beginning_of_day, end_on: now.end_of_day,
+          facility_ids: [facility.id]
+        )
+      end
+
+      it do
+        expect(item).to be_valid
+        subject.send(:validate_facility_double_booking)
+        expect(subject.errors).to be_present
+      end
+    end
+
+    context "with non-duplicated all-day plan but start_at/end_at is duplicated" do
+      subject do
+        build(
+          :gws_schedule_plan, site_id: site.id,
+          allday: "allday", start_at: now, end_at: now + 1.hour, start_on: tomorrow.beginning_of_day, end_on: tomorrow.end_of_day,
+          facility_ids: [facility.id]
+        )
+      end
+
+      it do
+        expect(item).to be_valid
+        subject.send(:validate_facility_double_booking)
+        expect(subject.errors).to be_blank
+      end
+    end
+  end
 end
