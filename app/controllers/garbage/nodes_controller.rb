@@ -84,7 +84,7 @@ class Garbage::NodesController < ApplicationController
       # save csv to use in job
       ss_file = SS::File.new
       ss_file.in_file = file
-      ss_file.model = "facility/file"
+      ss_file.model = "garbage/file"
       ss_file.save
 
       # call job
