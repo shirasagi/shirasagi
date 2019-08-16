@@ -3,18 +3,6 @@
 require 'dotenv'
 Dotenv.load
 
-ENV["RAILS_ENV"] ||= 'test'
-require File.expand_path("../config/environment", __dir__)
-require 'rspec/rails'
-#require 'rspec/autorun'
-require 'capybara/rspec'
-require 'capybara/rails'
-require 'support/ss/capybara_support'
-
-# Checks for pending migrations before tests are run.
-# If you are not using ActiveRecord, you can remove this line.
-ActiveRecord::Migration.check_pending! if defined?(ActiveRecord::Migration)
-
 def travis?
   ENV["CI"] == "true" && ENV["TRAVIS"] == "true"
 end
@@ -42,6 +30,18 @@ if analyze_coverage?
     add_filter 'vendor/bundle'
   end
 end
+
+ENV["RAILS_ENV"] ||= 'test'
+require File.expand_path("../config/environment", __dir__)
+require 'rspec/rails'
+#require 'rspec/autorun'
+require 'capybara/rspec'
+require 'capybara/rails'
+require 'support/ss/capybara_support'
+
+# Checks for pending migrations before tests are run.
+# If you are not using ActiveRecord, you can remove this line.
+ActiveRecord::Migration.check_pending! if defined?(ActiveRecord::Migration)
 
 if Module.const_defined?(:WebMock)
   require "webmock/rspec"
