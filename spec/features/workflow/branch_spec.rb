@@ -18,9 +18,9 @@ describe "workflow_branch", dbscope: :example, js: true do
         click_link("編集する")
         within "form#item-form" do
           fill_in "item[name]", with: "[TEST] br_replace"
-          submit_on "下書き保存"
+          click_on "下書き保存"
         end
-        expect(page).to have_css("#notice", text: "保存しました。")
+        expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
 
         master = item.class.where(name: "[TEST] br_page").first
         branch = item.class.where(name: "[TEST] br_replace").first
@@ -34,9 +34,9 @@ describe "workflow_branch", dbscope: :example, js: true do
 
         click_link("編集する")
         within "form#item-form" do
-          submit_on "公開保存"
+          click_on "公開保存"
         end
-        expect(page).to have_css("#notice", text: "保存しました。")
+        expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
 
         master = item.class.where(id: master_id).first
         branch = item.class.where(id: branch_id).first
@@ -64,9 +64,9 @@ describe "workflow_branch", dbscope: :example, js: true do
         click_link("編集する")
         within "form#item-form" do
           fill_in "item[name]", with: "[TEST] br_replace"
-          submit_on "下書き保存"
+          click_on "下書き保存"
         end
-        expect(page).to have_css("#notice", text: "保存しました。")
+        expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
 
         master = item.class.where(name: "[TEST] br_page").first
         branch = item.class.where(name: "[TEST] br_replace").first
@@ -80,9 +80,9 @@ describe "workflow_branch", dbscope: :example, js: true do
 
         click_link("編集する")
         within "form#item-form" do
-          submit_on "公開保存"
+          click_on "公開保存"
         end
-        expect(page).to have_css("#notice", text: "保存しました。")
+        expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
 
         master = item.class.where(id: master_id).first
         branch = item.class.where(id: branch_id).first
@@ -111,9 +111,9 @@ describe "workflow_branch", dbscope: :example, js: true do
         click_link("編集する")
         within "form#item-form" do
           fill_in "item[name]", with: "[TEST] br_replace"
-          submit_on "下書き保存"
+          click_on "下書き保存"
         end
-        expect(page).to have_css("#notice", text: "保存しました。")
+        expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
 
         master = item.class.where(name: "[TEST] br_page").first
         branch = item.class.where(name: "[TEST] br_replace").first
@@ -127,9 +127,9 @@ describe "workflow_branch", dbscope: :example, js: true do
 
         click_link("編集する")
         within "form#item-form" do
-          submit_on "公開保存"
+          click_on "公開保存"
         end
-        expect(page).to have_css("#notice", text: "保存しました。")
+        expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
 
         master = item.class.where(id: master_id).first
         branch = item.class.where(id: branch_id).first
@@ -157,9 +157,9 @@ describe "workflow_branch", dbscope: :example, js: true do
         click_link("編集する")
         within "form#item-form" do
           fill_in "item[name]", with: "[TEST] br_replace"
-          submit_on "下書き保存"
+          click_on "下書き保存"
         end
-        expect(page).to have_css("#notice", text: "保存しました。")
+        expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
 
         master = item.class.where(name: "[TEST] br_page").first
         branch = item.class.where(name: "[TEST] br_replace").first
@@ -173,9 +173,9 @@ describe "workflow_branch", dbscope: :example, js: true do
 
         click_link("編集する")
         within "form#item-form" do
-          submit_on "公開保存"
+          click_on "公開保存"
         end
-        expect(page).to have_css("#notice", text: "保存しました。")
+        expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
 
         master = item.class.where(id: master_id).first
         branch = item.class.where(id: branch_id).first
@@ -203,9 +203,9 @@ describe "workflow_branch", dbscope: :example, js: true do
         click_link("編集する")
         within "form#item-form" do
           fill_in "item[name]", with: "[TEST] br_replace"
-          submit_on "下書き保存"
+          click_on "下書き保存"
         end
-        expect(page).to have_css("#notice", text: "保存しました。")
+        expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
 
         master = item.class.where(name: "[TEST] br_page").first
         branch = item.class.where(name: "[TEST] br_replace").first
@@ -219,9 +219,9 @@ describe "workflow_branch", dbscope: :example, js: true do
 
         click_link("編集する")
         within "form#item-form" do
-          submit_on "公開保存"
+          click_on "公開保存"
         end
-        expect(page).to have_css("#notice", text: "保存しました。")
+        expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
 
         master = item.class.where(id: master_id).first
         branch = item.class.where(id: branch_id).first
@@ -249,9 +249,9 @@ describe "workflow_branch", dbscope: :example, js: true do
         click_link("編集する")
         within "form#item-form" do
           fill_in "item[name]", with: "[TEST] br_replace"
-          submit_on "下書き保存"
+          click_on "下書き保存"
         end
-        expect(page).to have_css("#notice", text: "保存しました。")
+        expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
 
         master = item.class.where(name: "[TEST] br_page").first
         branch = item.class.where(name: "[TEST] br_replace").first
@@ -265,9 +265,9 @@ describe "workflow_branch", dbscope: :example, js: true do
 
         click_link("編集する")
         within "form#item-form" do
-          submit_on "公開保存"
+          click_on "公開保存"
         end
-        expect(page).to have_css("#notice", text: "保存しました。")
+        expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
 
         master = item.class.where(id: master_id).first
         branch = item.class.where(id: branch_id).first

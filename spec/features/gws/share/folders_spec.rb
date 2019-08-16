@@ -94,7 +94,7 @@ describe "gws_share_folders", type: :feature, dbscope: :example, js: true do
         end
 
         within 'form#item-form' do
-          submit_on I18n.t('ss.buttons.save')
+          click_on I18n.t('ss.buttons.save')
         end
         expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
         expect(Gws::Share::Folder.site(site).where(name: "#{item.name}/#{subfolder_name1}").count).to eq 1

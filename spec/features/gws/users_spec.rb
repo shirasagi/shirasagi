@@ -30,7 +30,7 @@ describe "gws_users", type: :feature, dbscope: :example, js: true do
         fill_in "item[name]", with: name
         fill_in "item[email]", with: "#{name}@example.jp"
         fill_in "item[in_password]", with: "pass"
-        submit_on I18n.t('ss.buttons.save')
+        click_on I18n.t('ss.buttons.save')
       end
       expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
 
@@ -99,7 +99,7 @@ describe "gws_users", type: :feature, dbscope: :example, js: true do
         fill_in 'item[email]', with: "#{name}@example.jp"
         fill_in 'item[in_password]', with: 'pass'
         fill_in "custom[#{column1.id}]", with: unique_id
-        submit_on I18n.t('ss.buttons.save')
+        click_on I18n.t('ss.buttons.save')
       end
       expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
 

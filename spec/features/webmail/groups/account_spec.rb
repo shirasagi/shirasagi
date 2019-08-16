@@ -45,7 +45,7 @@ describe "webmail_groups", type: :feature, dbscope: :example, js: true do
       fill_in "item[imap_trash_box]", with: imap_trash_box
       fill_in "item[threshold_mb]", with: threshold_mb
 
-      submit_on I18n.t("ss.buttons.save")
+      click_on I18n.t("ss.buttons.save")
     end
     expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
 

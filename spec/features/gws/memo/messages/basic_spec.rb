@@ -69,7 +69,7 @@ describe 'gws_memo_messages', type: :feature, dbscope: :example do
         click_on user2.name
       end
       within 'form#item-form' do
-        submit_on I18n.t('ss.buttons.draft_save')
+        click_on I18n.t('ss.buttons.draft_save')
       end
 
       within '#errorExplanation' do

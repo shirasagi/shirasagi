@@ -182,7 +182,7 @@ describe "sys_password_policies", type: :feature, dbscope: :example, js: true do
 
       within "form#item-form" do
         fill_in "item[in_password]", with: password
-        submit_on I18n.t("ss.buttons.save")
+        click_on I18n.t("ss.buttons.save")
       end
     end
 

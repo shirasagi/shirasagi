@@ -51,7 +51,7 @@ describe "gws_share_files", type: :feature, dbscope: :example, tmpdir: true, js:
         fill_in "item[memo]", with: "new test"
       end
       within "footer.send" do
-        submit_on I18n.t('ss.buttons.upload')
+        click_on I18n.t('ss.buttons.upload')
       end
       expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
 

@@ -27,7 +27,7 @@ describe Gws::Workflow::FilesController, type: :feature, dbscope: :example, tmpd
         end
         within "form#item-form" do
           expect(page).to have_content("logo.png")
-          submit_on I18n.t("ss.buttons.save")
+          click_on I18n.t("ss.buttons.save")
         end
 
         expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
@@ -37,7 +37,7 @@ describe Gws::Workflow::FilesController, type: :feature, dbscope: :example, tmpd
         click_on name
         click_on I18n.t("ss.links.copy")
         within "form" do
-          submit_on I18n.t("ss.buttons.save")
+          click_on I18n.t("ss.buttons.save")
         end
 
         expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
@@ -66,7 +66,7 @@ describe Gws::Workflow::FilesController, type: :feature, dbscope: :example, tmpd
             expect(page).to have_content(::File.basename(file_path))
             expect(SS::TempFile.count).to eq 1
             fill_in "item[text]", with: test_url
-            submit_on I18n.t("ss.buttons.save")
+            click_on I18n.t("ss.buttons.save")
           end
 
           expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
@@ -76,7 +76,7 @@ describe Gws::Workflow::FilesController, type: :feature, dbscope: :example, tmpd
           click_on name
           click_on I18n.t("ss.links.copy")
           within "form" do
-            submit_on I18n.t("ss.buttons.save")
+            click_on I18n.t("ss.buttons.save")
           end
 
           expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))

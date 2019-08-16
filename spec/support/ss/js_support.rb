@@ -77,12 +77,6 @@ module SS
       end
     end
 
-    def submit_on(*args)
-      click_on(*args)
-      sleep 1
-      wait_for_ajax
-    end
-
     def save_full_screenshot(opts = {})
       filename = opts[:filename].presence || "#{Rails.root}/tmp/screenshots-#{Time.zone.now.to_i}"
       page.save_screenshot(filename, full: true)
