@@ -11,10 +11,10 @@ describe "cms_import" do
       visit index_path
       expect(current_path).to eq index_path
 
-      within "form#item-form" do
+      within "form#task-form" do
         attach_file "item[in_file]", "#{Rails.root}/spec/fixtures/cms/import/site.zip"
         page.accept_alert do
-          click_button "取り込み"
+          click_button I18n.t('ss.buttons.import')
         end
       end
       expect(page).to have_css('#notice', text: I18n.t('ss.notice.started_import'))

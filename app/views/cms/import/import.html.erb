@@ -6,7 +6,7 @@ $(".file").on("change", function() {
   $(".name").val(name);
   $(".filename").val(name);
 });
-$('#item-form').submit(function(){
+$('#task-form').submit(function(){
   if($('#item_in_file').val() && $('#item_name').val() && $('#item_basename').val()) {
     alert(`<%= I18n.t('cms.confirm.check_accessibility_manually') %>`);
   }

@@ -116,7 +116,7 @@ ja:
       stop: 停止
       toggle: 折りたたみ表示
       move: 移動
-      import: 取り込み
+      import: インポート
       convert: 変換
       unlock_and_edit_forcibly: 強制的にロックを解除し編集する
       random_password: ランダム生成
