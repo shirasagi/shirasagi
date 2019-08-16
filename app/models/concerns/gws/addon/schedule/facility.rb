@@ -72,10 +72,12 @@ module Gws::Addon::Schedule::Facility
   end
 
   def validate_facility_double_booking
-    plans = self.class.ne(id: id).without_deleted.
-      where(site_id: site_id).
-      where(:end_at.gt => start_at, :start_at.lt => end_at).
-      any_in(facility_ids: facility_ids)
+    plans = self.class.ne(id: id).without_deleted.where(site_id: site_id).any_in(facility_ids: facility_ids)
+    if allday?
+      plans = plans.where(:end_at.gt => start_on.in_time_zone.beginning_of_day, :start_at.lt => end_on.in_time_zone.end_of_day)
+    else
+      plans = plans.where(:end_at.gt => start_at, :start_at.lt => end_at)
+    end
     return if plans.blank?
 
     errors.add :base, I18n.t('gws/schedule.errors.double_booking_facility')
