@@ -312,10 +312,9 @@ _::-webkit-full-page-media, _:future, :root .gws-memo-message .popup-notice:befo
       }
     }
   }
-  .links a {
-    padding-left: 30px;
-    background: url(/assets/img/gws/ic-link.png) no-repeat left;
-    vertical-align: middle;
+  .links span {
+    display: list-item;
+    margin-left: 2em;
   }
   .addon-body {
     clear: both;
