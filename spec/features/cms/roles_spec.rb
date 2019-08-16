@@ -58,7 +58,7 @@ describe "cms_roles" do
       visit import_path
       within "form" do
         attach_file "item[file]", "#{Rails.root}/spec/fixtures/cms/role/cms_roles_1.csv"
-        click_button I18n.t('ss.buttons.import')
+        click_button I18n.t('ss.links.import')
       end
       expect(status_code).to eq 200
     end

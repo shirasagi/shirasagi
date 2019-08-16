@@ -60,7 +60,7 @@ describe "facility_node_pages", type: :feature, dbscope: :example do
       perform_enqueued_jobs do
         within "form" do
           attach_file "item[file]", Rails.root.join("spec", "fixtures", "facility", "facility.csv")
-          click_button I18n.t('ss.buttons.import')
+          click_button I18n.t('ss.links.import')
         end
       end
       expect(current_path).to eq import_path
