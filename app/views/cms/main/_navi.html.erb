@@ -28,7 +28,7 @@
   <h2><%= link_to t("cms.check_links"), cms_check_links_pages_path, class: "icon-conv" %></h2>
 
   <h2><%= link_to t("cms.site_config"), cms_site_path, class: "icon-conf" %></h2>
-  <% if Cms::Node.allowed?(:edit, @cur_user, site: @cur_site, node: @cur_node) %>
+  <% if Cms::Node.allowed?(:import, @cur_user, site: @cur_site, node: @cur_node, owned: true) %>
     <% if @cur_node %>
       <h2><%= link_to t("cms.import_page"), node_import_path, class: "icon-conf" %></h2>
     <% else %>

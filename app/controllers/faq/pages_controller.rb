@@ -36,6 +36,8 @@ class Faq::PagesController < ApplicationController
   end
 
   def import
+    raise "403" unless @model.allowed?(:import, @cur_user, site: @cur_site, node: @cur_node, owned: true)
+
     set_task
 
     @item = @model.new

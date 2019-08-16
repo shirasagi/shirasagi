@@ -24,6 +24,8 @@ class Cms::ImportController < ApplicationController
   public
 
   def import
+    raise "403" unless Cms::Node.allowed?(:import, @cur_user, site: @cur_site, node: @cur_node, owned: true)
+
     set_task
 
     if request.get?
