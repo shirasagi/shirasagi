@@ -12,10 +12,14 @@ RSpec.configuration.before(:suite) do
 
   ::Fs.mkdir_p(root_dir)
 
+  super_classes = [ ::SS::Model::File, ::Gws::Model::File ]
+
   all_models = ::Mongoid.models
-  models = all_models.select { |model| model.ancestors.include?(::SS::Model::File) }
-  models.each do |model|
-    model.root = "#{root_dir}/files"
+  super_classes.each do |super_class|
+    models = all_models.select { |model| model.ancestors.include?(super_class) }
+    models.each do |model|
+      model.root = "#{root_dir}/files"
+    end
   end
 
   SS::DownloadJobFile.root = "#{root_dir}/download"
