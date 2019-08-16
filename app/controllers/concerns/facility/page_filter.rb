@@ -21,7 +21,7 @@ module Facility::PageFilter
   end
 
   def import
-    raise "403" unless @model.allowed?(:import, @cur_user, site: @cur_site, node: @cur_node, owned: true)
+    raise "403" unless @model.allowed?(:import, @cur_user, site: @cur_site, node: @cur_node)
 
     set_task
 

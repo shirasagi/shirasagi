@@ -1,7 +1,7 @@
 class Facility::Node::Importer
   include Cms::CsvImportBase
 
-  self.required_headers = [ Facility::Node::Page.t(:filename) ]
+  self.required_headers = [ ::Facility::Node::Page.t(:filename) ]
 
   attr_reader :site, :node, :user
 
