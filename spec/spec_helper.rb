@@ -110,7 +110,7 @@ RSpec.configure do |config|
   config.add_setting :default_dbscope, default: :context
 
   # fragile specs are ignored when rspec is executing in Travis CI.
-  if ENV["CI"] == "true" && ENV["TRAVIS"] == "true"
+  if travis?
     config.filter_run_excluding(fragile: true)
   end
 end
