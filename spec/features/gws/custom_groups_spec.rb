@@ -23,7 +23,7 @@ describe "gws_custom_groups", type: :feature, dbscope: :example do
 
       within "form#item-form" do
         fill_in "item[name]", with: "name"
-        click_button "保存"
+        click_button I18n.t('ss.buttons.save')
       end
     end
 
@@ -37,7 +37,7 @@ describe "gws_custom_groups", type: :feature, dbscope: :example do
       page.accept_confirm do
         within "form#item-form" do
           fill_in "item[name]", with: "name"
-          click_button "保存"
+          click_button I18n.t('ss.buttons.save')
         end
       end
       expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
@@ -46,7 +46,7 @@ describe "gws_custom_groups", type: :feature, dbscope: :example do
     it "#delete" do
       visit "#{path}/#{item.id}/delete"
       within "form" do
-        click_button "削除"
+        click_button I18n.t('ss.buttons.delete')
       end
       expect(page).to have_css('#notice', text: I18n.t('ss.notice.deleted'))
     end

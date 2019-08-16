@@ -46,7 +46,7 @@ describe "gws_share_folders", type: :feature, dbscope: :example, js: true do
       # expect(FileTest.exist?(item.class.zip_path(item._id))).to be_truthy
       visit delete_path
       within "form" do
-        click_button "削除"
+        click_button I18n.t('ss.buttons.delete')
       end
       wait_for_ajax
       expect(page).to have_css('#notice', text: I18n.t('ss.notice.deleted'))

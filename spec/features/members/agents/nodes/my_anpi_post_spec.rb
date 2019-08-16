@@ -42,7 +42,7 @@ describe 'members/agents/nodes/my_anpi_post', type: :feature, dbscope: :example,
         visit index_url
         expect(current_path).to eq index_url
 
-        click_link '新規作成'
+        click_link I18n.t('ss.links.new')
 
         # check pre-filled field
         within 'form.member-anpi-post-page' do
@@ -51,7 +51,7 @@ describe 'members/agents/nodes/my_anpi_post', type: :feature, dbscope: :example,
 
         within 'form.member-anpi-post-page' do
           fill_in 'item[text]', with: text0
-          click_button '保存'
+          click_button I18n.t('ss.buttons.save')
         end
 
         expect(current_path).to eq index_url
@@ -70,10 +70,10 @@ describe 'members/agents/nodes/my_anpi_post', type: :feature, dbscope: :example,
         end
 
         click_on cms_member.name
-        click_on '編集する'
+        click_on I18n.t('ss.links.edit')
         within 'form.member-anpi-post-page' do
           fill_in 'item[text]', with: text1
-          click_button '保存'
+          click_button I18n.t('ss.buttons.save')
         end
 
         within 'table.member-anpi-post' do
@@ -84,8 +84,8 @@ describe 'members/agents/nodes/my_anpi_post', type: :feature, dbscope: :example,
         end
 
         click_on cms_member.name
-        click_on '削除する'
-        click_on '削除'
+        click_on I18n.t('ss.links.delete')
+        click_on I18n.t('ss.buttons.delete')
         expect(page).to have_no_css('table.member-anpi-post')
 
         expect(Board::AnpiPost.count).to eq 0
@@ -104,7 +104,7 @@ describe 'members/agents/nodes/my_anpi_post', type: :feature, dbscope: :example,
         within 'form.member-anpi-post-page' do
           fill_in 'item[name]', with: name
           fill_in 'item[text]', with: text0
-          click_button '保存'
+          click_button I18n.t('ss.buttons.save')
         end
 
         expect(current_path).to eq index_url
@@ -123,10 +123,10 @@ describe 'members/agents/nodes/my_anpi_post', type: :feature, dbscope: :example,
         end
 
         click_on name
-        click_on '編集する'
+        click_on I18n.t('ss.links.edit')
         within 'form.member-anpi-post-page' do
           fill_in 'item[text]', with: text1
-          click_button '保存'
+          click_button I18n.t('ss.buttons.save')
         end
 
         within 'table.member-anpi-post' do
@@ -137,8 +137,8 @@ describe 'members/agents/nodes/my_anpi_post', type: :feature, dbscope: :example,
         end
 
         click_on name
-        click_on '削除する'
-        click_on '削除'
+        click_on I18n.t('ss.links.delete')
+        click_on I18n.t('ss.buttons.delete')
         expect(page).to have_no_css('table.member-anpi-post')
 
         expect(Board::AnpiPost.count).to eq 0

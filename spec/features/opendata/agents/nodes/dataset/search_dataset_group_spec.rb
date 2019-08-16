@@ -32,7 +32,7 @@ describe "opendata_agents_nodes_dataset", dbscope: :example do
     within "form.opendata-search-groups-form" do
       fill_in "s[name]", with: dataset_resource.name
       select node_category.name, from: 's[category_id]'
-      click_button '検索'
+      click_button I18n.t('ss.buttons.search')
     end
     expect(status_code).to eq 200
   end

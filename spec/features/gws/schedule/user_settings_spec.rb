@@ -19,10 +19,10 @@ describe "gws_schedule_user_settings", type: :feature, dbscope: :example do
       visit "#{path}/edit"
       within "form#item-form" do
         uncheck("tab-g-#{item.id}")
-        click_button "保存"
+        click_button I18n.t('ss.buttons.save')
       end
       wait_for_ajax
-      expect(page).to have_css('#notice', text: '保存しました。')
+      expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
     end
   end
 end

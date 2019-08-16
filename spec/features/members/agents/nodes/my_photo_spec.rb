@@ -48,7 +48,7 @@ describe 'members/agents/nodes/my_photo', type: :feature, dbscope: :example do
           fill_in 'item[name]', with: photo_name
           attach_file 'item[in_image]', photo_image
 
-          click_button '保存'
+          click_button I18n.t('ss.buttons.save')
         end
 
         expect(Member::Photo.site(site).count).to eq 1
@@ -82,12 +82,12 @@ describe 'members/agents/nodes/my_photo', type: :feature, dbscope: :example do
         #
         visit index_url
         click_link photo_name
-        click_link '削除する'
+        click_link I18n.t('ss.links.delete')
 
         within 'form div.member-photo-page' do
           expect(page).to have_css('.column dd', text: photo_name)
 
-          click_button '削除'
+          click_button I18n.t('ss.buttons.delete')
         end
 
         expect(Member::Photo.site(site).count).to eq 0

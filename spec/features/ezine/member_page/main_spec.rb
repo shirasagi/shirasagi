@@ -30,16 +30,16 @@ describe "ezine_member_page_main", type: :feature, dbscope: :example do
 
         visit index_path
         click_on "フォルダー設定"
-        click_on "編集する"
+        click_on I18n.t('ss.links.edit')
 
         fill_in "item[signature_html]", with: "<hr><p>#{unique_id}<p>"
         fill_in "item[signature_text]", with: "----\n#{unique_id}"
         fill_in "item[sender_name]", with: unique_id
         fill_in "item[sender_email]", with: "#{unique_id}@example.jp"
         select "必須", from: "item[subscription_constraint]"
-        click_on "保存"
+        click_on I18n.t('ss.buttons.save')
 
-        expect(page).to have_css("#notice", text: "保存しました。")
+        expect(page).to have_css("#notice", text: I18n.t('ss.notice.saved'))
 
         # after setting subscription_constraint to required, existing member's subscription_ids is chagned.
         member.reload
@@ -60,13 +60,13 @@ describe "ezine_member_page_main", type: :feature, dbscope: :example do
       it do
         visit index_path
 
-        click_link "新規作成"
+        click_link I18n.t('ss.links.new')
 
         within "form#item-form" do
           fill_in "item[name]", with: name
           fill_in "item[html]", with: html
           fill_in "item[text]", with: text
-          click_button "保存"
+          click_button I18n.t('ss.buttons.save')
         end
 
         expect(status_code).to eq 200
@@ -74,7 +74,7 @@ describe "ezine_member_page_main", type: :feature, dbscope: :example do
         expect(page).to have_css("div#addon-basic .addon-body dl.see dd", text: name)
         # expect(page).to have_css("div#addon-ezine-agents-addons-body .addon-body dl.see dd", text: name)
 
-        click_link "一覧へ戻る"
+        click_link I18n.t('ss.links.back_to_index')
         expect(status_code).to eq 200
         expect(current_path).to eq index_path
         expect(page).to have_css(".list-items .list-item .info .up", count: 1)
@@ -91,18 +91,18 @@ describe "ezine_member_page_main", type: :feature, dbscope: :example do
         visit index_path
 
         click_link item.name
-        click_link "編集する"
+        click_link I18n.t('ss.links.edit')
 
         within "form#item-form" do
           fill_in "item[html]", with: html
           fill_in "item[text]", with: text
-          click_button "保存"
+          click_button I18n.t('ss.buttons.save')
         end
 
         expect(page).to have_css("div#addon-basic .addon-body dl.see dd", text: item.name)
         # expect(page).to have_css("div#addon-ezine-agents-addons-body .addon-body dl.see dd", text: name)
 
-        click_link "一覧へ戻る"
+        click_link I18n.t('ss.links.back_to_index')
 
         expect(status_code).to eq 200
         expect(current_path).to eq index_path
@@ -120,11 +120,11 @@ describe "ezine_member_page_main", type: :feature, dbscope: :example do
         visit index_path
 
         click_link item.name
-        click_link "削除する"
+        click_link I18n.t('ss.links.delete')
 
         within "form" do
           expect(page).to have_css("div#addon-basic .addon-body dl.see dd", text: item.name)
-          click_button "削除"
+          click_button I18n.t('ss.buttons.delete')
         end
 
         expect(status_code).to eq 200
@@ -145,12 +145,12 @@ describe "ezine_member_page_main", type: :feature, dbscope: :example do
 
         click_link "フォルダー設定"
         click_link "テスト読者"
-        click_link "新規作成"
+        click_link I18n.t('ss.links.new')
 
         within "form" do
           fill_in "item[email]", with: email
           select I18n.t("ezine.options.email_type.text"), from: "item[email_type]"
-          click_button "保存"
+          click_button I18n.t('ss.buttons.save')
         end
 
         click_link "フォルダー設定"
@@ -158,11 +158,11 @@ describe "ezine_member_page_main", type: :feature, dbscope: :example do
         expect(page).to have_css(".list-item .title", text: email)
 
         fill_in "s[keyword]", with: email
-        click_on "検索"
+        click_on I18n.t('ss.buttons.search')
         expect(page).to have_css(".list-item .title", text: email)
 
         fill_in "s[keyword]", with: unique_id
-        click_on "検索"
+        click_on I18n.t('ss.buttons.search')
         expect(page).to have_no_css(".list-item .title", text: email)
       end
 
@@ -171,12 +171,12 @@ describe "ezine_member_page_main", type: :feature, dbscope: :example do
 
         click_link "フォルダー設定"
         click_link "テスト読者"
-        click_link "新規作成"
+        click_link I18n.t('ss.links.new')
 
         within "form" do
           fill_in "item[email]", with: email
           select I18n.t("ezine.options.email_type.text"), from: "item[email_type]"
-          click_button "保存"
+          click_button I18n.t('ss.buttons.save')
         end
 
         expect(status_code).to eq 200
@@ -218,12 +218,12 @@ describe "ezine_member_page_main", type: :feature, dbscope: :example do
 
         click_link "フォルダー設定"
         click_link "テスト読者"
-        click_link "新規作成"
+        click_link I18n.t('ss.links.new')
 
         within "form" do
           fill_in "item[email]", with: email
           select I18n.t("ezine.options.email_type.html"), from: "item[email_type]"
-          click_button "保存"
+          click_button I18n.t('ss.buttons.save')
         end
 
         expect(status_code).to eq 200

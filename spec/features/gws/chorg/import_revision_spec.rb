@@ -96,7 +96,7 @@ describe "gws_chorg_import_revision", dbscope: :example do
       within "form#item-form" do
         fill_in "item[name]", with: "sample"
         attach_file "item[in_revision_csv_file]", Rails.root.join("spec", "fixtures", "chorg", "add_revision_template.csv").to_s
-        click_button "保存"
+        click_button I18n.t('ss.buttons.save')
       end
 
       expect(current_path).not_to eq new_path
@@ -127,7 +127,7 @@ describe "gws_chorg_import_revision", dbscope: :example do
       within "form#item-form" do
         fill_in "item[name]", with: "sample"
         attach_file "item[in_revision_csv_file]", Rails.root.join("spec", "fixtures", "chorg", "move_revision_template.csv").to_s
-        click_button "保存"
+        click_button I18n.t('ss.buttons.save')
       end
 
       expect(current_path).not_to eq new_path
@@ -166,7 +166,7 @@ describe "gws_chorg_import_revision", dbscope: :example do
       within "form#item-form" do
         fill_in "item[name]", with: "sample"
         attach_file "item[in_revision_csv_file]", Rails.root.join("spec", "fixtures", "chorg", "unify_revision_template.csv").to_s
-        click_button "保存"
+        click_button I18n.t('ss.buttons.save')
       end
 
       expect(current_path).not_to eq new_path
@@ -214,7 +214,7 @@ describe "gws_chorg_import_revision", dbscope: :example do
       within "form#item-form" do
         fill_in "item[name]", with: "sample"
         attach_file "item[in_revision_csv_file]", Rails.root.join("spec", "fixtures", "chorg", "division_revision_template.csv").to_s
-        click_button "保存"
+        click_button I18n.t('ss.buttons.save')
       end
 
       expect(current_path).not_to eq new_path
@@ -255,7 +255,7 @@ describe "gws_chorg_import_revision", dbscope: :example do
       within "form#item-form" do
         fill_in "item[name]", with: "sample"
         attach_file "item[in_revision_csv_file]", Rails.root.join("spec", "fixtures", "chorg", "delete_revision_template.csv").to_s
-        click_button "保存"
+        click_button I18n.t('ss.buttons.save')
       end
 
       expect(current_path).not_to eq new_path

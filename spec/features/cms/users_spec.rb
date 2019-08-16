@@ -120,7 +120,7 @@ describe "cms_users", type: :feature, dbscope: :example do
       visit import_path
       within "form" do
         attach_file "item[in_file]", "#{Rails.root}/spec/fixtures/cms/user/cms_users_1.csv"
-        click_button "インポート"
+        click_button I18n.t('ss.buttons.import')
       end
       expect(status_code).to eq 200
       expect(current_path).to eq index_path
@@ -163,7 +163,7 @@ describe "cms_users", type: :feature, dbscope: :example do
       visit import_path
       within "form" do
         attach_file "item[in_file]", "#{Rails.root}/spec/fixtures/cms/user/cms_users_1.csv"
-        click_button "インポート"
+        click_button I18n.t('ss.buttons.import')
       end
       expect(status_code).to eq 200
       expect(current_path).to eq index_path
@@ -171,7 +171,7 @@ describe "cms_users", type: :feature, dbscope: :example do
       visit import_path
       within "form" do
         attach_file "item[in_file]", "#{Rails.root}/spec/fixtures/cms/user/cms_users_2.csv"
-        click_button "インポート"
+        click_button I18n.t('ss.buttons.import')
       end
       expect(status_code).to eq 200
       expect(current_path).to eq index_path

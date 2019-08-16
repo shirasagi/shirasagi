@@ -17,7 +17,7 @@ describe 'gws_memo_forwards', type: :feature, dbscope: :example do
       email = "sample@example.jp"
       within "form#item-form" do
         fill_in "item[email]", with: email
-        click_button "保存"
+        click_button I18n.t('ss.buttons.save')
       end
 
       expect(first('#addon-basic')).to have_text(email)

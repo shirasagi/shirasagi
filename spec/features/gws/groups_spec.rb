@@ -23,7 +23,7 @@ describe "gws_groups", type: :feature, dbscope: :example do
       visit new_path
       within "form#item-form" do
         fill_in "item[name]", with: "#{gws_user.groups.first.name}/name"
-        click_button "保存"
+        click_button I18n.t('ss.buttons.save')
       end
       expect(status_code).to eq 200
       expect(current_path).not_to eq new_path
@@ -40,7 +40,7 @@ describe "gws_groups", type: :feature, dbscope: :example do
       visit edit_path
       within "form#item-form" do
         fill_in "item[name]", with: "#{gws_user.groups.first.name}/name2"
-        click_button "保存"
+        click_button I18n.t('ss.buttons.save')
       end
       expect(status_code).to eq 200
       expect(current_path).to eq show_path
@@ -50,7 +50,7 @@ describe "gws_groups", type: :feature, dbscope: :example do
     it "#delete" do
       visit delete_path
       within "form" do
-        click_button "削除"
+        click_button I18n.t('ss.buttons.delete')
       end
       expect(status_code).to eq 200
       expect(current_path).to eq index_path

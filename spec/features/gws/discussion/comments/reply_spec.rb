@@ -22,21 +22,21 @@ describe "gws_discussion_comments", type: :feature, dbscope: :example do
       expect(page).to have_text(text)
 
       # edit
-      click_on "編集する"
+      click_on I18n.t('ss.links.edit')
 
       text = "text-#{unique_id}"
       within "form#item-form" do
         fill_in "item[text]", with: text
-        click_button "保存"
+        click_button I18n.t('ss.buttons.save')
       end
       expect(page).to have_text(text)
 
       # delete
-      click_on "削除する"
+      click_on I18n.t('ss.links.delete')
       expect(page).to have_text(text)
 
       within "form" do
-        click_button "削除"
+        click_button I18n.t('ss.buttons.delete')
       end
 
       expect(page).to have_no_text(text)

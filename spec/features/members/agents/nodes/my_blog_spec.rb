@@ -50,16 +50,16 @@ describe 'members/agents/nodes/my_blog', type: :feature, dbscope: :example do
           fill_in 'item[name]', with: blog_name
           fill_in 'item[basename]', with: blog_url
 
-          click_button '保存'
+          click_button I18n.t('ss.buttons.save')
         end
 
-        click_link '新規作成'
+        click_link I18n.t('ss.links.new')
 
         within 'form div.member-blog-page' do
           fill_in 'item[name]', with: blog_page_name
           fill_in 'item[html]', with: blog_page_html
 
-          click_button '保存'
+          click_button I18n.t('ss.buttons.save')
         end
 
         expect(page).to have_css('.member-blog-page tbody .name', text: blog_page_name)
@@ -78,10 +78,10 @@ describe 'members/agents/nodes/my_blog', type: :feature, dbscope: :example do
         expect(page).to have_css('.page header .released')
         expect(page.find('.page .body').native.inner_html).to include(blog_page_html)
 
-        click_link '削除する'
+        click_link I18n.t('ss.links.delete')
 
         expect(page).to have_css('.column dd', text: blog_page_name)
-        click_button '削除'
+        click_button I18n.t('ss.buttons.delete')
 
         expect(page).to have_no_css('.member-blog-page tbody .name', text: blog_page_name)
         expect(Member::BlogPage.site(site).count).to eq 0

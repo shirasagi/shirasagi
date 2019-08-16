@@ -19,7 +19,7 @@ describe "gws_workflow_files", type: :feature, dbscope: :example, tmpdir: true d
       #
       # Create
       #
-      click_link "新規作成"
+      click_link I18n.t('ss.links.new')
       within "form#item-form" do
         fill_in "item[name]", with: item_name
         fill_in "item[text]", with: item_text
@@ -45,7 +45,7 @@ describe "gws_workflow_files", type: :feature, dbscope: :example, tmpdir: true d
       #
       # Update
       #
-      click_on "編集する"
+      click_on I18n.t('ss.links.edit')
       within "form#item-form" do
         fill_in "item[name]", with: item_name2
         fill_in "item[text]", with: item_text2
@@ -63,7 +63,7 @@ describe "gws_workflow_files", type: :feature, dbscope: :example, tmpdir: true d
       #
       # Soft Delete
       #
-      click_on "削除する"
+      click_on I18n.t('ss.links.delete')
       within "form" do
         click_on I18n.t("ss.buttons.delete")
       end

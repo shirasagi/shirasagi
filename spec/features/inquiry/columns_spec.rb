@@ -34,7 +34,7 @@ describe "inquiry_columns" do
         fill_in "item[max_upload_file_size]", with: 0
         fill_in "item[transfers][][keyword]", with: "sample"
         fill_in "item[transfers][][email]", with: "sample@example.jp"
-        click_button "保存"
+        click_button I18n.t('ss.buttons.save')
       end
       expect(status_code).to eq 200
       expect(current_path).not_to eq new_path
@@ -52,7 +52,7 @@ describe "inquiry_columns" do
       visit edit_path
       within "form#item-form" do
         fill_in "item[name]", with: "modify"
-        click_button "保存"
+        click_button I18n.t('ss.buttons.save')
       end
       expect(current_path).not_to eq sns_login_path
       expect(page).to have_no_css("form#item-form")
@@ -61,7 +61,7 @@ describe "inquiry_columns" do
     it "#delete" do
       visit delete_path
       within "form" do
-        click_button "削除"
+        click_button I18n.t('ss.buttons.delete')
       end
       expect(current_path).to eq index_path
     end
@@ -91,7 +91,7 @@ describe "inquiry_columns" do
           fill_in "item[max_upload_file_size]", with: 0
           fill_in "item[transfers][][keyword]", with: "sample"
           fill_in "item[transfers][][email]", with: "sample@example.jp"
-          click_button "保存"
+          click_button I18n.t('ss.buttons.save')
         end
         expect(status_code).to eq 200
         error = [Inquiry::Column.t(:input_type), I18n.t('errors.messages.cannot_use_upload_file')].join.freeze
@@ -120,7 +120,7 @@ describe "inquiry_columns" do
           fill_in "item[max_upload_file_size]", with: 0
           fill_in "item[transfers][][keyword]", with: "sample"
           fill_in "item[transfers][][email]", with: "sample@example.jp"
-          click_button "保存"
+          click_button I18n.t('ss.buttons.save')
         end
         expect(status_code).to eq 200
         error = [Inquiry::Column.t(:input_type), I18n.t('errors.messages.cannot_use_upload_file')].join.freeze
@@ -132,7 +132,7 @@ describe "inquiry_columns" do
       it "#delete" do
         visit delete_path
         within "form" do
-          click_button "削除"
+          click_button I18n.t('ss.buttons.delete')
         end
         expect(current_path).to eq index_path
       end

@@ -28,14 +28,14 @@ describe "history_cms_logs" do
       expect(page).to have_content(',create,/path/to/')
 
       visit index_path
-      click_on '削除する'
-      click_on '削除'
+      click_on I18n.t('ss.links.delete')
+      click_on I18n.t('ss.buttons.delete')
       expect(page).to have_css('.list-item', count: 7)
 
       visit index_path
-      click_on '削除する'
+      click_on I18n.t('ss.links.delete')
       select 'すべて削除', from: 'item[save_term]'
-      click_on '削除'
+      click_on I18n.t('ss.buttons.delete')
       expect(page).to have_css('.list-item', count: 1)
     end
   end
