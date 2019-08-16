@@ -16,6 +16,7 @@ if analyze_coverage?
   require 'simplecov'
   require 'simplecov-csv'
 
+  Coveralls.wear!
   SimpleCov.formatter = SimpleCov::Formatter::MultiFormatter.new([
     SimpleCov::Formatter::HTMLFormatter,
     SimpleCov::Formatter::CSVFormatter,
