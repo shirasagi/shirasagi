@@ -120,5 +120,9 @@ module Fs::GridFs
     def to_io(path)
       raise NotImplementedError
     end
+
+    def cp(src, dest)
+      binwrite(dest, binread(src))
+    end
   end
 end
