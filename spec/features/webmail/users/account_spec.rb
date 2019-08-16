@@ -102,7 +102,7 @@ describe "webmail_users", type: :feature, dbscope: :example do
 
         click_on I18n.t("ss.buttons.save")
       end
-      expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+      expect(page).to have_css('.js-notice', text: I18n.t('ss.notice.saved'))
 
       webmail_user.reload
       expect(webmail_user.imap_default_index).to eq 0

@@ -35,7 +35,7 @@ describe "gws_workflow_files", type: :feature, dbscope: :example, tmpdir: true, 
         click_on I18n.t("ss.buttons.save")
       end
 
-      expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+      expect(page).to have_css('.js-notice', text: I18n.t('ss.notice.saved'))
       expect(Gws::Workflow::File.site(site).count).to eq 1
       item = Gws::Workflow::File.site(site).first
       expect(item.name).to eq item_name
