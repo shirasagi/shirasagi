@@ -62,17 +62,15 @@ jobs:
     - stage: test
       script: bundle exec rspec -p 10 spec/ --pattern "spec/features/{a,b,c,d,e,f}*/**/*.rb"
       name: "Features_A"
-    - script: bundle exec rspec -p 10 spec/ --pattern "spec/features/{g}*/**/*.rb" --exclude "**/gws/schedule/**/*.rb"
+    - script: bundle exec rspec -p 10 spec/ --pattern "spec/features/{g}*/**/*.rb" --exclude "**/gws/memo/**/*.rb"
       name: "Features_G"
-    - script: bundle exec rspec -p 10 spec/ --pattern "spec/features/gws/schedule/**/*.rb"
-      name: "Features_G (Schedule)"
+    - script: bundle exec rspec -p 10 spec/ --pattern "spec/features/gws/memo/**/*.rb"
+      name: "Features_G (Memo)"
     - script: bundle exec rspec -p 10 spec/ --pattern "spec/features/{h,i,j,k,l,m,o}*/**/*.rb"
       name: "Features_H"
     - script: bundle exec rspec -p 10 spec/ --pattern "spec/features/{p,q,r,s,u,v,w}*/**/*.rb"
       name: "Features_P"
     - script: bundle exec rspec -p 10 spec/models/
       name: "Models"
-    - script: bundle exec rspec -p 10 spec/jobs/
-      name: "Jobs"
-    - script: bundle exec rspec -p 10 spec/ --pattern "spec/{helpers,lib,mailers,requests,validators}/**/*.rb"
-      name: "Other (Helpers,Lib,Mailers,Requests,Validators)"
+    - script: bundle exec rspec -p 10 spec/ --pattern "spec/{jobs,helpers,lib,mailers,requests,validators}/**/*.rb"
+      name: "Other (Jobs,Helpers,Lib,Mailers,Requests,Validators)"
