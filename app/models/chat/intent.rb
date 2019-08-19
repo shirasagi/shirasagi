@@ -16,12 +16,13 @@ class Chat::Intent
   field :phrase, type: SS::Extensions::Words
   field :suggest, type: SS::Extensions::Words
   field :response, type: String
+  field :question, type: String
   field :site_search, type: String
   field :order, type: Integer
 
   belongs_to :node, class_name: "Chat::Node::Bot", inverse_of: :intents
 
-  permit_params :name, :phrase, :suggest, :response, :site_search, :order
+  permit_params :name, :phrase, :suggest, :response, :question, :site_search, :order
 
   validates :name, presence: true, length: { maximum: 80 }
   validates :phrase, presence: true
@@ -87,9 +88,10 @@ class Chat::Intent
     end
   end
 
-  def site_search_options
+  def question_options
     %w(disabled enabled).map { |v| [ I18n.t("ss.options.state.#{v}"), v ] }
   end
+  alias site_search_options question_options
 
   def duplicate?
     self.class.site(site).where(node_id: node_id).intents(phrase.join).count > 1

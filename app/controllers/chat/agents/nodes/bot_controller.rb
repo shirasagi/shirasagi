@@ -42,10 +42,11 @@ class Chat::Agents::Nodes::BotController < ApplicationController
       if @intents.present?
         @results = @intents.collect do |intent|
           response = intent.response.presence || @cur_node.becomes_with_route.response_template
+          question = @cur_node.becomes_with_route.question.presence if intent.question == 'enabled'
           url = uri.try(:to_s) if intent.site_search == 'enabled'
           {
             id: intent.id, suggests: intent.suggest.presence, response: response, 'siteSearchUrl' => url,
-            question: @cur_node.becomes_with_route.question.presence
+            question: question
           }
         end
       else
