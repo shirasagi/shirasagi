@@ -1040,6 +1040,10 @@ ja:
       captcha:
         - フォームに画像認証を利用する場合は「使用する」を選択してください。
 
+    cms/role:
+      permission_level:
+        - 権限レベルを設定します。
+
     search_contents:
       html:
         keyword:

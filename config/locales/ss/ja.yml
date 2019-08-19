@@ -856,6 +856,11 @@ ja:
         - メモを入力します。
       address_group_id:
         - グループ名を入力します。
+    ss/model/role:
+      name:
+        - ロール名を入力します。
+      permissions:
+        - 権限を設定します。
     gws/shared_address/group:
       name:
         - グループ名を入力します。
