@@ -18,13 +18,19 @@ module Gws::Addon::Share
     end
 
     def save_history_file
-      Fs.cp(path, path + "_history#{history_file_count}")
+      Fs.cp(path, path + "_history#{next_history_file_id}")
     end
 
     private
 
-    def history_file_count
-      Fs.glob(self.path + "*_history[0-9]*").count
+    def current_history_file_id
+      base = path + "_history"
+      Fs.glob("#{base}[0-9]*").map { |path| path[base.length..-1].to_i }.max
+    end
+
+    def next_history_file_id
+      current = current_history_file_id
+      current.nil? ? 0 : current + 1
     end
 
     def save_history_for_save
@@ -56,9 +62,9 @@ module Gws::Addon::Share
       site_id ||= self.site_id rescue nil
       return unless site_id
 
-      save_history_file if history_file_count <= 0 && overwrite_params[:mode] != "delete"
+      save_history_file if current_history_file_id.nil?
 
-      srcname = "history" + (history_file_count - 1).to_s if history_file_count > 0
+      srcname = "history#{current_history_file_id}" if current_history_file_id
 
       item = Gws::Share::History.new(
         cur_user: @cur_user,
@@ -74,6 +80,11 @@ module Gws::Addon::Share
       )
       item.attributes = overwrite_params
       item.save
+
+      # remove old histories
+      if Gws::Share::History.max_count > 0
+        histories.skip(Gws::Share::History.max_count).destroy_all
+      end
     end
   end
 end
