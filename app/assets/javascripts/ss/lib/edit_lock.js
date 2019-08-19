@@ -1,11 +1,11 @@
-this.Cms_EditLock = (function () {
+this.SS_EditLock = (function () {
   var bind = function (fn, me) {
     return function () {
       return fn.apply(me, arguments);
     };
   };
 
-  function Cms_EditLock(selector, lock_url, unlock_url) {
+  function SS_EditLock(selector, lock_url, unlock_url) {
     this.releaseLockOnCancel = bind(this.releaseLockOnCancel, this);
     this.releaseLock = bind(this.releaseLock, this);
     this.refreshLock = bind(this.refreshLock, this);
@@ -27,7 +27,7 @@ this.Cms_EditLock = (function () {
     this.refreshLock();
   }
 
-  Cms_EditLock.prototype.updateView = function (lock_until) {
+  SS_EditLock.prototype.updateView = function (lock_until) {
     $(this.selector + " .lock_until").text('');
     if (!lock_until) {
       return;
@@ -35,7 +35,7 @@ this.Cms_EditLock = (function () {
     return $(this.selector + " .lock_until").text(lock_until);
   };
 
-  Cms_EditLock.prototype.refreshLock = function () {
+  SS_EditLock.prototype.refreshLock = function () {
     if (this.unloading) {
       return;
     }
@@ -59,7 +59,7 @@ this.Cms_EditLock = (function () {
     return setTimeout(this.refreshLock, this.interval);
   };
 
-  Cms_EditLock.prototype.releaseLock = function () {
+  SS_EditLock.prototype.releaseLock = function () {
     this.unloading = true;
     $.ajax({
       type: "POST",
@@ -72,12 +72,12 @@ this.Cms_EditLock = (function () {
     });
   };
 
-  Cms_EditLock.prototype.releaseLockOnCancel = function () {
+  SS_EditLock.prototype.releaseLockOnCancel = function () {
     this.releaseLock();
     return true;
   };
 
-  return Cms_EditLock;
+  return SS_EditLock;
 
 })();
 
