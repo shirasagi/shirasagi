@@ -24,7 +24,13 @@ this.SS_EditLock = (function () {
       $('a.back-to-index').bind('click', this.releaseLockOnCancel);
       $('a.back-to-show').bind('click', this.releaseLockOnCancel);
     }
-    this.refreshLock();
+
+    var alreadyLocked = ($(this.selector + " .lock_until").text() !== '');
+    if (alreadyLocked) {
+      setTimeout(this.refreshLock, this.interval);
+    } else {
+      this.refreshLock();
+    }
   }
 
   SS_EditLock.prototype.updateView = function (lock_until) {
