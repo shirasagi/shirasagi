@@ -1527,6 +1527,10 @@ _::-webkit-full-page-media, _:future, :root .gws-memo-message .popup-notice:befo
     margin: -15px -10px 15px;
     border-bottom: $border-gray1;
   }
+  .main-body {
+    padding: 15px;
+    margin: -20px 0px;
+  }
 }
 .toggle-head {
   cursor: pointer;

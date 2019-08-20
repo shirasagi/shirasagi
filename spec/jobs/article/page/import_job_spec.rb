@@ -9,7 +9,7 @@ describe Article::Page::ImportJob, dbscope: :example do
 
       it do
         Fs::UploadedFile.create_from_file(path, basename: "spec") do |file|
-          expect(Article::Page::ImportJob.valid_csv?(file)).to be_truthy
+          expect(Article::Page::Importer.valid_csv?(file)).to be_truthy
         end
       end
     end
@@ -19,7 +19,7 @@ describe Article::Page::ImportJob, dbscope: :example do
 
       it do
         Fs::UploadedFile.create_from_file(path, basename: "spec") do |file|
-          expect(Article::Page::ImportJob.valid_csv?(file)).to be_falsey
+          expect(Article::Page::Importer.valid_csv?(file)).to be_falsey
         end
       end
     end
