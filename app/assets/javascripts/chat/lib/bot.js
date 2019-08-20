@@ -57,7 +57,7 @@ this.Chat_Bot = (function () {
         if (typeof res === 'string' || res instanceof String) {
           result = $.parseJSON(res);
         }
-        result.results.forEach(function(r){
+        $.each(result.results, function (i, r) {
           if(r.response){
             if(r.suggests){
               el.parents('.chat-part').find('.chat-items').append($('<div class="chat-item sys"></div>').append(r.response));
@@ -102,7 +102,7 @@ this.Chat_Bot = (function () {
         if (typeof res === 'string' || res instanceof String) {
           result = $.parseJSON(res);
         }
-        result.results.forEach(function(r){
+        $.each(result.results, function (i, r) {
           if(r.response){
             if(r.siteSearchUrl) {
               var siteSearchLink = $('<a href="' + r.siteSearchUrl + '" target="_blank"></a>').append(result.siteSearchText);
@@ -150,7 +150,7 @@ this.Chat_Bot = (function () {
         if (typeof res === 'string' || res instanceof String) {
           result = $.parseJSON(res);
         }
-        result.results.forEach(function(r){
+        $.each(result.results, function (i, r) {
           if(r.response){
             el.parents('.chat-part').find('.chat-items').append($('<div class="chat-item sys"></div>').append(r.response));
             el.parents('.chat-part').find('.chat-items').animate({ scrollTop: el.parents('.chat-part').find('.chat-items')[0].scrollHeight });
@@ -179,7 +179,7 @@ this.Chat_Bot = (function () {
         if (typeof res === 'string' || res instanceof String) {
           result = $.parseJSON(res);
         }
-        result.results.forEach(function(r){
+        $.each(result.results, function (i, r) {
           if(r.response){
             el.parents('.chat-part').find('.chat-items').append($('<div class="chat-item sys"></div>').append(r.response));
             el.parents('.chat-part').find('.chat-items').animate({ scrollTop: el.parents('.chat-part').find('.chat-items')[0].scrollHeight });
