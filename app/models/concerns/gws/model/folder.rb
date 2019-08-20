@@ -83,7 +83,7 @@ module Gws::Model::Folder
 
   def split_path(path)
     last = nil
-    dirs = path.split('/').map { |n| last = last ? "#{last}/#{n}" : n }
+    path.split('/').map { |n| last = last ? "#{last}/#{n}" : n }
   end
 
   def folders
@@ -95,8 +95,7 @@ module Gws::Model::Folder
   end
 
   def uploadable?(cur_user)
-    return true if cur_user.gws_role_permissions["edit_other_gws_share_files_#{site.id}"] || owned?(cur_user)
-    false
+    cur_user.gws_role_permissions["edit_other_gws_share_files_#{site.id}"] || owned?(cur_user)
   end
 
   private

@@ -45,6 +45,7 @@ class Gws::Share::FilesController < ApplicationController
 
   def set_folder
     return if params[:folder].blank?
+
     @folder ||= Gws::Share::Folder.site(@cur_site).find(params[:folder])
     raise "403" unless @folder.readable?(@cur_user) || @folder.allowed?(:read, @cur_user, site: @cur_site)
   end
@@ -161,7 +162,9 @@ class Gws::Share::FilesController < ApplicationController
         tmp_file.close
       end
     else
-      location = { action: :show, folder: @item.folder_id, category: params[:category] } if params[:action] == "update" && before_folder_id != @item.folder_id
+      if params[:action] == "update" && before_folder_id != @item.folder_id
+        location = { action: :show, folder: @item.folder_id, category: params[:category] }
+      end
       render_update @item.update, { location: location }
     end
   end
@@ -251,6 +254,7 @@ class Gws::Share::FilesController < ApplicationController
 
   def disable
     raise '403' unless @item.allowed?(:delete, @cur_user, site: @cur_site)
+
     location = { action: :index, folder: params[:folder], category: params[:category] }
     render_destroy @item.disable, { location: location }
   end
@@ -267,6 +271,7 @@ class Gws::Share::FilesController < ApplicationController
       redirect_to({ action: :index }, { notice: zip.delay_message })
     else
       raise '500' unless zip.save
+
       send_file(zip.path, type: zip.type, filename: zip.name, disposition: 'attachment', x_sendfile: true)
     end
   end

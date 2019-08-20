@@ -16,11 +16,13 @@ module Gws::Share::DescendantsFileInfo
 
   def total_file_size
     return @total_file_size if @total_file_size
+
     @total_file_size = files.compact.map(&:size).inject(:+) || 0
   end
 
   def files_count
     return @files_count if @files_count
+
     @files_count = files.active.compact.length || 0
   end
 
@@ -79,6 +81,7 @@ module Gws::Share::DescendantsFileInfo
 
   def validate_attached_file_size
     return if self.attributes["controller"] == "gws/share/folders"
+
     if (limit = (self.share_max_file_size || 0)) > 0
       size = files.compact.map(&:size).max || 0
       if size > limit

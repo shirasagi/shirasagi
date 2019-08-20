@@ -42,12 +42,10 @@ module Gws::Addon::Share
         else
           save_history mode: 'undelete'
         end
+      elsif histories.blank?
+        save_history mode: 'create'
       else
-        if histories.blank?
-          save_history mode: 'create'
-        else
-          save_history mode: 'update', updated_fields: @db_changes.keys.reject { |s| s =~ /_hash$/ }
-        end
+        save_history mode: 'update', updated_fields: @db_changes.keys.reject { |s| s =~ /_hash$/ }
       end
     end
 

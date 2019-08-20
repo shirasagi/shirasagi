@@ -41,6 +41,7 @@ class Gws::Share::Management::FilesController < ApplicationController
 
   def set_folder
     return if params[:folder].blank?
+
     @folder ||= Gws::Share::Folder.site(@cur_site).find(params[:folder])
   end
 
@@ -101,6 +102,7 @@ class Gws::Share::Management::FilesController < ApplicationController
 
   def recover
     raise "403" unless @item.allowed?(:delete, @cur_user, site: @cur_site)
+
     render
   end
 
@@ -135,6 +137,7 @@ class Gws::Share::Management::FilesController < ApplicationController
 
   def active
     raise '403' unless @item.allowed?(:edit, @cur_user, site: @cur_site)
+
     location = { action: :index, folder: params[:folder], category: params[:category] }
     render_destroy @item.active, { location: location }
   end

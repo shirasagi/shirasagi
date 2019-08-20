@@ -81,16 +81,15 @@ class Gws::Share::File
   end
 
   def active?
-    return true unless deleted.present? && deleted < Time.zone.now
-    false
+    deleted.blank? || deleted > Time.zone.now
   end
 
   def active
-    update_attributes(deleted: nil)
+    update(deleted: nil)
   end
 
   def disable
-    update_attributes(deleted: Time.zone.now) if deleted.blank? || deleted > Time.zone.now
+    update(deleted: Time.zone.now) if deleted.blank? || deleted > Time.zone.now
   end
 
   def sort_options
