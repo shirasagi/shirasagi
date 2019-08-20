@@ -574,6 +574,9 @@ ja:
         - 並び順を入力します。
       in_parent:
         - 親フォルダーを選択してください。
+    gws/role:
+      permission_level:
+        - 権限レベルを設定します。
 
   activemodel:
     models:
