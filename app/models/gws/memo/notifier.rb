@@ -285,9 +285,10 @@ class Gws::Memo::Notifier
           id: todo.id, site: cur_site.id, category: Gws::Schedule::TodoCategory::ALL.id)
       end
     elsif class_name.include?("Gws::Schedule")
-      url = url_helper.gws_schedule_plan_path(id: id, site: cur_site.id, category: '-', mode: '-')
+      url = url_helper.gws_schedule_plan_path(id: id, site: cur_site.id)
     elsif class_name.include?("Gws::Monitor")
       return unless item.state == "public"
+
       url = url_helper.gws_monitor_topic_path(id: id, site: cur_site.id, category: '-', mode: '-')
       deliver_monitor(id)
     else
@@ -303,6 +304,7 @@ class Gws::Memo::Notifier
     to_members -= [cur_user.id]
     to_members.select! { |user_id| Gws::User.find(user_id).use_notice?(item) }
     return if to_members.blank?
+
     self.to_users = to_members.map { |user_id| Gws::User.find(user_id) }
   end
 

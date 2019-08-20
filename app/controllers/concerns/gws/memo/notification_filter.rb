@@ -54,7 +54,8 @@ module Gws::Memo::NotificationFilter
     return if @destroyed_items.blank?
 
     @destroyed_items.each do |item, users|
-      next unless @cur_site.notify_model?(item) || item_notify_enabled?(item)
+      next unless @cur_site.notify_model?(item.class)
+      next unless item_notify_enabled?(item)
 
       if !item.class.name.include?("Gws::Monitor")
         users = users.nin(id: @cur_user.id) if @cur_user
