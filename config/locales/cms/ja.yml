@@ -1043,6 +1043,7 @@ ja:
     cms/role:
       permission_level:
         - 権限レベルを設定します。
+        - 数字が大きいほど強い権限になります。
 
     search_contents:
       html:
