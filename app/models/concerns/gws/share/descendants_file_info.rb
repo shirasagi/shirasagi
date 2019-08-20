@@ -20,19 +20,19 @@ module Gws::Share::DescendantsFileInfo
     @total_file_size = files.compact.map(&:size).inject(:+) || 0
   end
 
-  def files_count
-    return @files_count if @files_count
+  # def files_count
+  #   return @files_count if @files_count
+  #
+  #   @files_count = files.active.compact.length || 0
+  # end
 
-    @files_count = files.active.compact.length || 0
-  end
+  # def readable_active_files_count(user, site)
+  #   files.readable(user, site: site).active.count
+  # end
 
-  def readable_active_files_count(user, site)
-    files.readable(user, site: site).active.count
-  end
-
-  def readable_deleted_files_count(user, site)
-    files.readable(user, site: site).deleted.count
-  end
+  # def readable_deleted_files_count(user, site)
+  #   files.readable(user, site: site).deleted.count
+  # end
 
   # def update_folder_descendants_file_info
   #   path = nil
@@ -94,17 +94,17 @@ module Gws::Share::DescendantsFileInfo
     end
   end
 
-  def folder_file_info(folder)
-    sizes = folder.files.compact.map(&:size) || []
-    sizes.compact!
+  # def folder_file_info(folder)
+  #   sizes = folder.files.compact.map(&:size) || []
+  #   sizes.compact!
+  #
+  #   [ sizes.length, sizes.inject(:+) || 0 ]
+  # end
 
-    [ sizes.length, sizes.inject(:+) || 0 ]
-  end
-
-  def set_file_info
-    files_count, total_file_size = folder_file_info(self)
-    self.descendants_files_count = files_count
-    self.descendants_total_file_size = total_file_size
-  end
+  # def set_file_info
+  #   files_count, total_file_size = folder_file_info(self)
+  #   self.descendants_files_count = files_count
+  #   self.descendants_total_file_size = total_file_size
+  # end
 end
 
