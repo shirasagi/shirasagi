@@ -53,9 +53,15 @@ module Gws::Memo::NotificationFilter
     @destroyed_items << @destroyed_item if @destroyed_item
     return if @destroyed_items.blank?
 
+    check = []
     @destroyed_items.each do |item, users|
       next unless @cur_site.notify_model?(item.class)
       next unless item_notify_enabled?(item)
+
+      check_key = [ item.class.name, item.id.to_s ].join(":")
+      next if check.include?(check_key)
+
+      check << check_key
 
       if !item.class.name.include?("Gws::Monitor")
         users = users.nin(id: @cur_user.id) if @cur_user
@@ -95,13 +101,17 @@ module Gws::Memo::NotificationFilter
 
   def set_destroyed_item
     return if request.get?
+    return if @item.blank?
 
-    if @item && @item.class.name.include?("Gws::Monitor")
+    if @item.class.name.include?("Gws::Monitor")
       @destroyed_item = [@item.dup, []]
     elsif @item && @item.class.name.include?("Gws::Schedule::Todo")
       @destroyed_item = [@item, @item.subscribed_users]
-    elsif @item
-      @destroyed_item = [@item.dup, @item.subscribed_users]
+    else
+      copy = @item.dup
+      # if id is BSON::ObjectID, it is needed to restore id because id is changed during duplicating object.
+      copy.id = @item.id
+      @destroyed_item = [copy, @item.subscribed_users]
     end
   end
 
@@ -116,7 +126,10 @@ module Gws::Memo::NotificationFilter
         elsif item.class.name.include?("Gws::Schedule::Todo")
           @destroyed_items << [item, item.subscribed_users]
         else
-          @destroyed_items << [item.dup, item.subscribed_users]
+          copy = item.dup
+          # if id is BSON::ObjectID, it is needed to restore id because id is changed during duplicating object.
+          copy.id = item.id
+          @destroyed_items << [copy, item.subscribed_users]
         end
       end
     end
