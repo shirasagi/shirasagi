@@ -2,7 +2,7 @@ class Gws::Memo::Notifier
   include ActiveModel::Model
 
   attr_accessor :cur_site, :cur_group, :cur_user, :to_users, :item, :item_title, :item_text
-  attr_accessor :subject, :text
+  attr_accessor :subject, :text, :action
 
   class << self
     def deliver!(opts)
@@ -241,9 +241,19 @@ class Gws::Memo::Notifier
 
     message.send_date = Time.zone.now
 
-    message.subject = subject || I18n.t("gws_notification.#{i18n_key}.subject", name: item_title, default: item_title)
+    message.subject = subject
+    if action.present?
+      message.subject ||= I18n.t("gws_notification.#{i18n_key}/#{action}.subject", name: item_title, default: nil)
+    end
+    message.subject ||= I18n.t("gws_notification.#{i18n_key}.subject", name: item_title, default: nil)
+    message.subject ||= item_title
     message.format = 'text'
-    message.url = text || I18n.t("gws_notification.#{i18n_key}.text", name: item_title, text: url, default: item_text)
+    message.url = text
+    if action.present?
+      message.url ||= I18n.t("gws_notification.#{i18n_key}/#{action}.text", name: item_title, text: url, default: nil)
+    end
+    message.url ||= I18n.t("gws_notification.#{i18n_key}.text", name: item_title, text: url, default: nil)
+    message.url ||= item_text
 
     message.save!
 

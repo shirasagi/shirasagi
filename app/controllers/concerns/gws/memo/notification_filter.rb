@@ -9,6 +9,7 @@ module Gws::Memo::NotificationFilter
     before_action :set_destroyed_items, if: :check_destroy_notification_action
 
     after_action :send_update_notification, only: [:create, :update, :publish]
+    after_action :send_undo_delete_notification, only: [:undo_delete]
     after_action :send_destroy_notification, if: :check_destroy_notification_action
   end
 
@@ -40,6 +41,30 @@ module Gws::Memo::NotificationFilter
     Gws::Memo::Notifier.deliver!(
       cur_site: @cur_site, cur_group: @cur_group, cur_user: @cur_user,
       to_users: users, item: @item, subject: subject, text: text
+    )
+  rescue => e
+    Rails.logger.warn("#{e.class} (#{e.message}):\n  #{e.backtrace.join("\n  ")}")
+  end
+
+  def send_undo_delete_notification
+    return if request.get?
+    return if @item.errors.present?
+    return unless @cur_site.notify_model?(@item.class)
+    return unless item_notify_enabled?(@item)
+
+    if @item.class.name.include?("Gws::Monitor")
+      users = []
+    else
+      users = @item.subscribed_users
+      users = users.nin(id: @cur_user.id) if @cur_user
+      users = users.select { |user| user.use_notice?(@item) }
+
+      return if users.blank?
+    end
+
+    Gws::Memo::Notifier.deliver!(
+      cur_site: @cur_site, cur_group: @cur_group, cur_user: @cur_user,
+      to_users: users, item: @item, action: "undo_delete"
     )
   rescue => e
     Rails.logger.warn("#{e.class} (#{e.message}):\n  #{e.backtrace.join("\n  ")}")

@@ -452,4 +452,122 @@ describe "gws_schedule_plans", type: :feature, dbscope: :example, js: true do
       end
     end
   end
+
+  context "#undo_delete plan" do
+    def undo_delete_plan
+      visit gws_schedule_main_path(site: site)
+      click_on I18n.t("ss.links.trash")
+      click_on item.name
+      click_on I18n.t("ss.links.restore")
+      within "form" do
+        click_button I18n.t("ss.buttons.restore")
+      end
+
+      expect(page).to have_css('#notice', text: I18n.t('ss.notice.restored'))
+    end
+
+    context "with notify_state disabled" do
+      before do
+        item.notify_state = "disabled"
+        item.deleted = Time.zone.now
+        item.save!
+      end
+
+      it do
+        undo_delete_plan
+
+        notice = SS::Notification.first
+        expect(notice).to be_blank
+
+        mail = ActionMailer::Base.deliveries.first
+        expect(mail).to be_blank
+      end
+    end
+
+    context "with notify_state enabled" do
+      before do
+        item.notify_state = "enabled"
+        item.deleted = Time.zone.now
+        item.save!
+      end
+
+      it do
+        undo_delete_plan
+
+        expect(SS::Notification.count).to eq 1
+        notice = SS::Notification.first
+        expect(notice.group_id).to eq site.id
+        expect(notice.member_ids).to eq [ member_user.id ]
+        expect(notice.user_id).to eq gws_user.id
+        expect(notice.subject).to eq I18n.t("gws_notification.gws/schedule/plan/undo_delete.subject", name: item.name)
+        expect(notice.text).to be_blank
+        expect(notice.html).to be_blank
+        expect(notice.format).to eq "text"
+        expect(notice.seen).to be_blank
+        expect(notice.state).to eq "public"
+        expect(notice.send_date).to be_present
+        expect(notice.url).to eq notice_path
+        expect(notice.reply_module).to be_blank
+        expect(notice.reply_model).to be_blank
+        expect(notice.reply_item_id).to be_blank
+
+        mail = ActionMailer::Base.deliveries.first
+        expect(mail).to be_blank
+      end
+    end
+
+    context "with notify_state enabled and email enabled" do
+      before do
+        member_user.notice_schedule_email_user_setting = "notify"
+        member_user.save!
+
+        item.notify_state = "enabled"
+        item.deleted = Time.zone.now
+        item.save!
+      end
+
+      it do
+        undo_delete_plan
+
+        expect(SS::Notification.count).to eq 1
+        notice = SS::Notification.first
+        expect(notice.member_ids).to eq [ member_user.id ]
+        expect(notice.user_id).to eq gws_user.id
+        expect(notice.subject).to eq I18n.t("gws_notification.gws/schedule/plan/undo_delete.subject", name: item.name)
+        expect(notice.url).to eq notice_path
+
+        expect(ActionMailer::Base.deliveries.length).to eq 1
+        mail = ActionMailer::Base.deliveries.first
+        expect(mail.from.first).to eq site.sender_address
+        expect(mail.bcc.first).to eq member_user.send_notice_mail_address
+        expect(mail.subject).to eq I18n.t("gws_notification.gws/schedule/plan/undo_delete.subject", name: item.name)
+        expect(mail.decoded.to_s).to include(item.name)
+        expect(mail.decoded.to_s).to include(mail_url)
+      end
+    end
+
+    context "with notify_state enabled and email enabled but site's notice_schedule_state is set to force_silence" do
+      before do
+        site.notice_schedule_state = "force_silence"
+        site.save!
+
+        member_user.notice_schedule_email_user_setting = "notify"
+        member_user.save!
+
+        item.notify_state = "enabled"
+        item.deleted = Time.zone.now
+        item.save!
+      end
+
+      it do
+        undo_delete_plan
+
+        notice = SS::Notification.first
+        expect(notice).to be_blank
+
+        mail = ActionMailer::Base.deliveries.first
+        expect(mail).to be_blank
+      end
+    end
+  end
 end

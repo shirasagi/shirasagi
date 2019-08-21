@@ -494,6 +494,10 @@ ja:
       subject: "[スケジュール] 「%{name}」が削除されました。"
       text: ""
 
+    gws/schedule/plan/undo_delete:
+      subject: "[スケジュール] 「%{name}」の削除が取り消されました。"
+      text: "%{text}"
+
     gws/schedule/comment/destroy:
       subject: "[スケジュール] 「%{name}」のコメントが削除されました。"
       text: "%{text}"

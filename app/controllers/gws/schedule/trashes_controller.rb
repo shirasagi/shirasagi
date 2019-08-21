@@ -2,11 +2,13 @@ class Gws::Schedule::TrashesController < ApplicationController
   include Gws::BaseFilter
   include Gws::CrudFilter
   include Gws::Schedule::PlanFilter
-  # include Gws::Memo::NotificationFilter
+  include Gws::Memo::NotificationFilter
 
   navi_view 'gws/schedule/main/navi'
 
   menu_view 'gws/crud/menu'
+
+  self.destroy_notification_actions = []
 
   private
 
