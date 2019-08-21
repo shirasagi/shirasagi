@@ -2,7 +2,7 @@ require 'spec_helper'
 
 describe 'article_pages', dbscope: :example, js: true do
   let(:site) { cms_site }
-  let(:node) { create :article_node_page, cur_site: site }
+  let(:node) { create :article_node_page, cur_site: site, group_ids: [cms_group.id] }
   let!(:form) { create(:cms_form, cur_site: site, state: 'public', sub_type: 'entry') }
   let!(:column1) do
     create(:cms_column_text_field, cur_site: site, cur_form: form, required: "optional", order: 1, input_type: 'text')
@@ -695,6 +695,66 @@ describe 'article_pages', dbscope: :example, js: true do
         expect(page).to have_css('#notice', text: I18n.t('ss.notice.deleted'))
         expect(Article::Page.all.count).to eq 0
         expect(SS::File.all.unscoped.count).to eq 0
+      end
+    end
+
+    context 'create page with not allowed user' do
+      let!(:permissions) { Cms::Role.permission_names.select { |item| item =~ /_private_/ } }
+      let!(:role) { create :cms_role, name: "role", permissions: permissions, permission_level: 3, cur_site: site }
+      let(:user2) { create :cms_user, uid: unique_id, name: unique_id, group_ids: [ cms_group.id ], cms_role_ids: [role.id] }
+
+      it do
+        login_user(user2)
+
+        visit new_article_page_path(site: site, cid: node)
+
+        within '#addon-basic' do
+          expect(page).to have_no_css('select[name="item[form_id]"]')
+        end
+      end
+
+      it do
+        visit new_article_page_path(site: site, cid: node)
+
+        within 'form#item-form' do
+          fill_in 'item[name]', with: name
+          select form.name, from: 'item[form_id]'
+          find('.btn-form-change').click
+
+          expect(page).to have_css("#addon-cms-agents-addons-form-page .addon-head", text: form.name)
+          click_on I18n.t('ss.buttons.draft_save')
+        end
+        click_on I18n.t('ss.buttons.ignore_alert')
+        expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+
+        login_user(user2)
+
+        item = Article::Page.last
+        visit edit_article_page_path(site: site, cid: node, id: item)
+
+        within '#addon-basic' do
+          expect(page).to have_css('select[name="item[form_id]"][disabled]')
+        end
+
+        within 'form#item-form' do
+          within ".column-value-palette" do
+            click_on column1.name
+          end
+          within ".column-value-cms-column-textfield" do
+            fill_in "item[column_values][][in_wrap][value]", with: column1_value1
+          end
+
+          within ".column-value-palette" do
+            click_on column2.name
+          end
+          within ".column-value-cms-column-datefield" do
+            fill_in "item[column_values][][in_wrap][date]", with: column2_value1
+          end
+          click_on I18n.t('ss.buttons.draft_save')
+        end
+
+        # click_on I18n.t('ss.buttons.ignore_alert')
+        expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
       end
     end
   end
