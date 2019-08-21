@@ -87,38 +87,7 @@ module Gws::Memo::NotificationFilter
       next if check.include?(check_key)
 
       check << check_key
-
-      if !item.class.name.include?("Gws::Monitor")
-        users = users.nin(id: @cur_user.id) if @cur_user
-        users = users.select { |user| user.use_notice?(item) }
-        next if users.blank?
-      end
-
-      i18n_key = item.class.model_name.i18n_key
-
-      if item.try(:_parent).try(:name).present?
-        name = item._parent.name
-      elsif item.try(:parent).try(:name).present?
-        name = item.parent.name
-      elsif item.try(:schedule).try(:name).present?
-        name = item.schedule.name
-      elsif item.try(:todo).try(:name).present?
-        name = item.todo.name
-      elsif item.try(:name).present?
-        name = item.name
-      else
-        name = ''
-      end
-
-      subject = I18n.t("gws_notification.#{i18n_key}/destroy.subject", name: name)
-      if !item.try(:_parent).present? && !item.try(:parent).present? && !item.try(:schedule).present? && !item.try(:todo).present?
-        text = I18n.t("gws_notification.#{i18n_key}/destroy.text", name: name)
-      end
-
-      Gws::Memo::Notifier.deliver!(
-        cur_site: @cur_site, cur_group: @cur_group, cur_user: @cur_user,
-        to_users: users, item: item, subject: subject, text: text
-      )
+      send_destroy_notification_one(item, users)
     end
   rescue => e
     Rails.logger.warn("#{e.class} (#{e.message}):\n  #{e.backtrace.join("\n  ")}")
@@ -175,5 +144,39 @@ module Gws::Memo::NotificationFilter
         return true
       end
     end
+  end
+
+  def send_destroy_notification_one(item, users)
+    if !item.class.name.include?("Gws::Monitor")
+      users = users.nin(id: @cur_user.id) if @cur_user
+      users = users.select { |user| user.use_notice?(item) }
+      return if users.blank?
+    end
+
+    i18n_key = item.class.model_name.i18n_key
+
+    if item.try(:_parent).try(:name).present?
+      name = item._parent.name
+    elsif item.try(:parent).try(:name).present?
+      name = item.parent.name
+    elsif item.try(:schedule).try(:name).present?
+      name = item.schedule.name
+    elsif item.try(:todo).try(:name).present?
+      name = item.todo.name
+    elsif item.try(:name).present?
+      name = item.name
+    else
+      name = ''
+    end
+
+    subject = I18n.t("gws_notification.#{i18n_key}/destroy.subject", name: name)
+    if !item.try(:_parent).present? && !item.try(:parent).present? && !item.try(:schedule).present? && !item.try(:todo).present?
+      text = I18n.t("gws_notification.#{i18n_key}/destroy.text", name: name)
+    end
+
+    Gws::Memo::Notifier.deliver!(
+      cur_site: @cur_site, cur_group: @cur_group, cur_user: @cur_user,
+      to_users: users, item: item, subject: subject, text: text
+    )
   end
 end
