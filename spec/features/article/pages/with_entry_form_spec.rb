@@ -3,7 +3,7 @@ require 'spec_helper'
 describe 'article_pages', dbscope: :example, js: true do
   let(:site) { cms_site }
   let(:node) { create :article_node_page, cur_site: site, group_ids: [cms_group.id] }
-  let!(:form) { create(:cms_form, cur_site: site, state: 'public', sub_type: 'entry') }
+  let!(:form) { create :cms_form, cur_site: site, state: 'public', sub_type: 'entry' }
   let!(:column1) do
     create(:cms_column_text_field, cur_site: site, cur_form: form, required: "optional", order: 1, input_type: 'text')
   end
@@ -701,7 +701,8 @@ describe 'article_pages', dbscope: :example, js: true do
     context 'create page with not allowed user' do
       let!(:permissions) { Cms::Role.permission_names.select { |item| item =~ /_private_/ } }
       let!(:role) { create :cms_role, name: "role", permissions: permissions, permission_level: 3, cur_site: site }
-      let(:user2) { create :cms_user, uid: unique_id, name: unique_id, group_ids: [ cms_group.id ], cms_role_ids: [role.id] }
+      let(:user2) { create :cms_user, uid: unique_id, name: unique_id, group_ids: [cms_group.id], cms_role_ids: [role.id] }
+      let(:form2) { create :cms_form, cur_site: site, state: 'public', sub_type: 'entry', group_ids: [cms_group.id] }
 
       it do
         login_user(user2)
@@ -710,6 +711,21 @@ describe 'article_pages', dbscope: :example, js: true do
 
         within '#addon-basic' do
           expect(page).to have_no_css('select[name="item[form_id]"]')
+        end
+      end
+
+      it do
+        node.st_form_ids = [ form.id, form2.id ]
+        node.save!
+
+        login_user(user2)
+
+        visit new_article_page_path(site: site, cid: node)
+
+        within '#addon-basic' do
+          expect(page).to have_css('select[name="item[form_id]"]')
+          expect(page).to have_no_css('select option', text: form.name)
+          expect(page).to have_css('select option', text: form2.name)
         end
       end
 
