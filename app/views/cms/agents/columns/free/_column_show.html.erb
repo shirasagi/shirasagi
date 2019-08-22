@@ -1,4 +1,12 @@
 <%= render 'cms/agents/columns/main/base', show: true, column: column, value: value do |id| %>
   <%= html_editor "##{id} .column-free-html", height: "400px", readonly: true %>
   <%= text_area_tag "mod-cms-body", value.value, id: nil, class: "column-free-html", style: "height: 400px;" %>
+
+  <% if value.files.present? %>
+    <div style="margin-top: 10px;">
+      <% value.files.each do |file| %>
+        <%= link_to file.name, file.url %><br>
+      <% end %>
+    </div>
+  <% end %>
 <% end %>

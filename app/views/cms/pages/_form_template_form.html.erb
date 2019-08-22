@@ -34,7 +34,7 @@
 
       Cms_Column_Free.userId = <%= @cur_user.id %>;
       Cms_Column_Free.fileUploadPath = <%== cms_apis_temp_files_path(format: "json").to_json %>;
-      Cms_Column_Free.fileSelectPath = <%== select_cms_apis_temp_file_path(id: ":fileId").to_json %>;
+      Cms_Column_Free.fileSelectPath = <%== cms_apis_form_temp_file_select_path(id: ":fileId", form: "free").to_json %>;
 
       Cms_TemplateForm.userId = <%= @cur_user.id %>;
       Cms_TemplateForm.confirms.delete = <%== t("ss.confirm.delete").to_json %>;

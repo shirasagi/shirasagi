@@ -57,6 +57,7 @@ class Cms::Apis::FormsController < ApplicationController
   def select_temp_file
     @item = SS::File.find(params[:id])
     @item = @item.copy_if_necessary
+    @form = params[:form].present? ? params[:form] : "upload"
     render layout: false
   end
 
