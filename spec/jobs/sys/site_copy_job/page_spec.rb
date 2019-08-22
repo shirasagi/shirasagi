@@ -226,5 +226,37 @@ describe Sys::SiteCopyJob, dbscope: :example do
         expect(dest_page2.related_page_ids).to eq [dest_page1.id]
       end
     end
+
+    describe "copy article/page node with workflow request" do
+      let(:node) { create :article_node_page, cur_site: site, layout_id: layout.id }
+      let(:user) { create :cms_test_user, group: cms_group }
+      let!(:page) do
+        create :article_page, cur_site: site, cur_node: node, layout_id: layout.id, workflow_state: 'request',
+          workflow_user_id: cms_user.id, workflow_approvers: [{ level: 1, user_id: user.id, state: "request" }],
+          workflow_required_counts: [ false ]
+      end
+
+      before do
+        task.copy_contents = 'pages'
+        task.save!
+
+        perform_enqueued_jobs do
+          Sys::SiteCopyJob.perform_now
+        end
+      end
+
+      it do
+        dest_site = Cms::Site.find_by(host: target_host_host)
+
+        dest_page = Cms::Page.site(dest_site).find_by(filename: page.filename)
+        dest_page = dest_page.becomes_with_route
+
+        expect(dest_page).to be_truthy
+        expect(dest_page.workflow_state).to eq 'request'
+        expect(dest_page.workflow_user_id).to eq cms_user.id
+        expect(dest_page.workflow_approvers).to be_truthy
+        expect(dest_page.workflow_required_counts).to eq [ false ]
+      end
+    end
   end
 end
