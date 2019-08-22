@@ -522,6 +522,12 @@ ja:
       mail_text: |
         %{subject}
 
+    gws/schedule/todo/undo_delete:
+      subject: "[ToDo] 「%{name}」の削除が取り消されました。"
+      text: "%{text}"
+      mail_text: |
+        %{subject}
+
     gws/schedule/attendance/destroy:
       subject: "[スケジュール] 「%{name}」の出欠確認の回答が削除されました。"
       text: "%{text}"
