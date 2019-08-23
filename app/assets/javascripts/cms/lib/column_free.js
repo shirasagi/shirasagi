@@ -146,14 +146,7 @@ Cms_Column_Free.prototype.selectFile = function($item) {
 
 Cms_Column_Free.prototype.addFile = function(html) {
   var $fileView = this.$el.find(".column-value-files");
-
   var $html = $("<div>" + html + "</div>");
-  $html.find("a.action-attach").removeClass("action-attach").addClass("btn-file-attach").removeAttr("onclick");
-  $html.find("a.action-paste").removeClass("action-paste").addClass("btn-file-image-paste").removeAttr("onclick");
-  $html.find("a.action-thumb").removeClass("action-thumb").addClass("btn-file-thumb-paste").removeAttr("onclick");
-  $html.find("a.action-delete").removeClass("action-delete").addClass("btn-file-delete").removeAttr("onclick");
-  $html.find("[name='item[file_ids][]']").removeClass("file-id").attr("name", this.getObjectName() + "[][in_wrap][file_ids][]");
-
   $fileView.append($html.html());
 };
 

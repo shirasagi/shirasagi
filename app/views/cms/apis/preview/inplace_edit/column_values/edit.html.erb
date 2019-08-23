@@ -33,7 +33,7 @@
 
   Cms_Column_Free.userId = <%= @cur_user.id %>;
   Cms_Column_Free.fileUploadPath = <%== cms_apis_temp_files_path(format: "json").to_json %>;
-  Cms_Column_Free.fileSelectPath = <%== select_cms_apis_temp_file_path(id: ":fileId").to_json %>;
+  Cms_Column_Free.fileSelectPath = <%== cms_apis_form_temp_file_select_path(id: ":fileId", form: "free").to_json %>;
 <% end %>
 
 <%= form_for :item, url: { action: :update }, html: { id: "item-form", method: :put, multipart: true, autocomplete: :off } do |f| %>

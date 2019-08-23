@@ -11,6 +11,7 @@ describe "article_pages", dbscope: :example, js: true do
 
   let!(:form) { create(:cms_form, cur_site: site, state: 'public', sub_type: 'entry', group_ids: [cms_group.id]) }
   let!(:column1) { create(:cms_column_file_upload, cur_site: site, cur_form: form, required: "optional", order: 1) }
+  let!(:column2) { create(:cms_column_free, cur_site: site, cur_form: form, required: "optional", order: 2) }
 
   let!(:permissions) { Cms::Role.permission_names.select { |item| item =~ /_private_/ } }
   let!(:role) { create :cms_role, name: "role", permissions: permissions, permission_level: 3, cur_site: site }
@@ -157,7 +158,7 @@ describe "article_pages", dbscope: :example, js: true do
             click_on column1.name
           end
           within ".column-value-cms-column-fileupload" do
-            click_on I18n.t("ss.links.upload")
+            click_on I18n.t("cms.file")
           end
           wait_for_cbox do
             attach_file "item[in_files][]", "#{Rails.root}/spec/fixtures/ss/file/keyvisual.jpg"
@@ -169,6 +170,26 @@ describe "article_pages", dbscope: :example, js: true do
             wait_for_ajax
           end
           within ".column-value-cms-column-fileupload" do
+            expect(page).to have_no_css('.column-value-files', text: 'keyvisual.jpg')
+            expect(page).to have_css('.column-value-files', text: 'keyvisual.gif')
+          end
+
+          within ".column-value-palette" do
+            click_on column2.name
+          end
+          within ".column-value-cms-column-free" do
+            click_on I18n.t("cms.file")
+          end
+          wait_for_cbox do
+            attach_file "item[in_files][]", "#{Rails.root}/spec/fixtures/ss/file/keyvisual.jpg"
+            click_button I18n.t("ss.buttons.save")
+            wait_for_ajax
+
+            attach_file 'item[in_files][]', "#{Rails.root}/spec/fixtures/ss/file/keyvisual.gif"
+            click_on I18n.t('ss.buttons.attach')
+            wait_for_ajax
+          end
+          within ".column-value-cms-column-free" do
             expect(page).to have_no_css('.column-value-files', text: 'keyvisual.jpg')
             expect(page).to have_css('.column-value-files', text: 'keyvisual.gif')
           end

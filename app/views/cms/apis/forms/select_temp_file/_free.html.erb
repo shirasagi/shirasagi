@@ -1,0 +1,36 @@
+<%
+  if item.is_a?(Cms::TempFile)
+    file_path = proc { |item| view_sns_apis_temp_file_path(user: @cur_user.id, id: item) }
+    thumb_path = proc { |item| thumb_sns_apis_temp_file_path(user: @cur_user.id, id: item, _: item.updated.to_i) }
+  else
+    file_path = proc { |item| item.url }
+    thumb_path = proc { |item| item.thumb_url }
+  end
+%>
+<div class="file-view" data-file-id="<%= item.id %>" data-name="<%= item.name %>" data-humanized-name="<%= item.humanized_name %>" data-url="<%= @item.url %>" data-thumb-url="<%= item.thumb_url %>" data-extname="<%= item.extname %>">
+  <%= link_to file_path.call(item), class: :thumb, target: "_blank" do %>
+    <% if item.image? %>
+      <img src="<%= thumb_path.call(item) %>" alt="<%= item.basename %>" />
+    <% else %>
+      <span class="ext icon-<%= item.extname %>"><%= item.extname %></span>
+    <% end %>
+  <% end %>
+  <div class="name">
+    <label>
+      <%= hidden_field_tag("item[column_values][][in_wrap][file_ids][]", item.id, class: "file-id") %>
+      <%= item.name %>
+    </label><br />
+    <% if params[:file_size] %>
+      <span class="file-size"><%= "( #{number_to_human_size(item.size)} )" %></span>
+    <% end %>
+  </div>
+
+  <div class="action">
+    <%= link_to t("sns.file_attach"), "#", class: "btn-file-attach" %>
+    <% if @item.image? %>
+      <%= link_to t("sns.image_paste"), "#", class: "btn-file-image-paste" %>
+      <%= link_to t("sns.thumb_paste"), "#", class: "btn-file-thumb-paste" %>
+    <% end %>
+    <%= link_to t("ss.buttons.delete"), "#", class: "btn-file-delete" %>
+  </div>
+</div>
