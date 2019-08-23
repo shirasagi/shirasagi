@@ -72,8 +72,10 @@ jobs:
       name: "Features_G (Memo)"
     - script: bundle exec rspec -p 10 spec/ --pattern "spec/features/{h,i,j,k,l,m,o}*/**/*.rb"
       name: "Features_H"
-    - script: bundle exec rspec -p 10 spec/ --pattern "spec/features/{p,q,r,s,u,v,w}*/**/*.rb"
+    - script: bundle exec rspec -p 10 spec/ --pattern "spec/features/{p,q,r,s,u,v,w}*/**/*.rb" --exclude "**/webmail/**/*.rb"
       name: "Features_P"
+    - script: bundle exec rspec -p 10 spec/ --pattern "spec/features/webmail/**/*.rb"
+      name: "Features_W (Webmail)"
     - script: bundle exec rspec -p 10 spec/models/
       name: "Models"
     - script: bundle exec rspec -p 10 spec/ --pattern "spec/{jobs,helpers,lib,mailers,requests,validators}/**/*.rb"
