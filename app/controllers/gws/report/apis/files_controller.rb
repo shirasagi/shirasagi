@@ -8,6 +8,7 @@ class Gws::Report::Apis::FilesController < ApplicationController
 
     @items = @model.site(@cur_site).
       without_deleted.
+      and_public.
       readable(@cur_user, site: @cur_site).
       search(params[:s]).
       page(params[:page]).per(50)
