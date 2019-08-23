@@ -28,7 +28,8 @@ class Sys::SiteCopyJob < SS::ApplicationJob
     dest_site_params = {
       name: @task.target_host_name,
       host: @task.target_host_host,
-      domains: @task.target_host_domains
+      domains: @task.target_host_domains,
+      max_name_length: @src_site.max_name_length
     }
     @dest_site = Cms::Site.create(dest_site_params.merge(group_ids: @src_site.group_ids))
     @task.log("サイト #{@dest_site.host} を作成しました。")

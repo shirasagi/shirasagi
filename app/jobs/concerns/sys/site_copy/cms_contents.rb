@@ -32,9 +32,17 @@ module Sys::SiteCopy::CmsContents
 
   def on_copy(name, field)
     metadata = field.options[:metadata]
-    return nil if metadata.blank?
+    return metadata[:on_copy] if metadata.present?
 
-    metadata[:on_copy]
+    if field.association.class == Mongoid::Association::Referenced::BelongsTo
+      if [Member::Photo, KeyVisual::Image].include?(field.options[:klass])
+        if field.association.class_name.constantize.include?(SS::Model::File)
+          return :dummy
+        end
+      end
+    end
+
+    nil
   end
 
   def copy_basic_attributes(content, klass)
@@ -52,6 +60,8 @@ module Sys::SiteCopy::CmsContents
         next [field_name, field_value]
       when :safe
         unsafe = false
+      when :dummy
+        next [field_name, field_value]
       end
 
       ref_class = reference_class(field_name, field_info, content)
@@ -76,7 +86,7 @@ module Sys::SiteCopy::CmsContents
       next nil if field_names.present? && !field_names.include?(field_name)
       next [field_name, field_value] if field_value.blank?
 
-      next nil if on_copy(field_name, fields[field_name])
+      next nil if [:clear, :value, :safe].include?(on_copy(field_name, fields[field_name]))
 
       ref_class = reference_class(field_name, fields[field_name], content)
       next nil if ref_class.nil?
@@ -99,11 +109,22 @@ module Sys::SiteCopy::CmsContents
       next unless dest_field_names.include?(field_name)
       next if field_value.blank?
 
-      file_url_maps.each do |src_url, dest_url|
-        field_value = field_value.gsub(src_url, dest_url)
+      if field_value.class == Array
+        file_url_maps.each do |src_url, dest_url|
+          field_value = field_value.collect do |value|
+            value.gsub(src_url, dest_url)
+          end
+        end
+        field_value = field_value.collect do |value|
+          value.gsub(@src_site.full_url, @dest_site.full_url)
+        end
+      else
+        file_url_maps.each do |src_url, dest_url|
+          field_value = field_value.gsub(src_url, dest_url)
+        end
+        field_value = field_value.gsub(@src_site.full_url, @dest_site.full_url)
       end
 
-      field_value = field_value.gsub(@src_site.full_url, @dest_site.full_url)
       dest_content[field_name] = field_value
     end
   end

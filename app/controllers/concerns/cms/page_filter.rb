@@ -27,7 +27,7 @@ module Cms::PageFilter
 
       if n.respond_to?(:st_forms) && n.st_form_ids.include?(n.st_form_default_id)
         default_form = n.st_form_default
-        if default_form.present?
+        if default_form.present? && default_form.allowed?(:read, @cur_user, site: @cur_site)
           params[:form_id] = default_form.id
         end
       end
