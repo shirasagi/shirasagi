@@ -59,7 +59,11 @@ module SS::WebmailSupport
   end
 
   def init
-    test_by = SS.config.webmail.test_by
+    if travis?
+      test_by = "docker"
+    else
+      test_by = SS.config.webmail.test_by
+    end
 
     case test_by
     when "docker"
