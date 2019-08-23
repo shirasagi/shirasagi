@@ -1,20 +1,31 @@
-<% if @item.respond_to?(:form) && ancestral_forms.present? %>
-  <%
-    if params[:form_id].present?
-      form = ancestral_forms.find(params[:form_id]) rescue nil
-      if form.present?
-        @item.form_id = form.id
-      end
-    elsif params.key?(:form_id)
-      @item.form_id = nil
-    end
+<% return unless @item.respond_to?(:form) %>
 
-    cur_form = @item.form
-  %>
+<%
+  forms = ancestral_forms.to_a
+  forms << @item.form if @item.form
+  forms = forms.uniq(&:id)
+
+  if params[:form_id].present?
+    form = forms.select { |form| form.id == params[:form_id].to_i }.first
+    if form.present?
+      @item.form_id = form.id
+    end
+  elsif params.key?(:form_id)
+    @item.form_id = nil
+  end
+
+  cur_form = @item.form
+%>
+<% if forms.present? %>
   <dt><%= @model.t :form_id %><%= @model.tt :form_id %></dt>
   <dd>
-    <%= f.select(:form_id, options_from_collection_for_select(ancestral_forms, :id, :name, selected: cur_form.try(:id)), include_blank: t("cms.default_form")) %>
-    <%= button_tag(t('ss.buttons.change'), type: :button, class: %w(btn btn-form-change)) %>
+    <% if cur_form && !cur_form.allowed?(:read, @cur_user, site: @cur_site) %>
+      <%= f.hidden_field :form_id, value: cur_form.try(:id) %>
+      <%= f.select(:form_id, options_from_collection_for_select(forms, :id, :name, selected: cur_form.try(:id)), { include_blank: t("cms.default_form") }, { disabled: true }) %>
+    <% else %>
+      <%= f.select(:form_id, options_from_collection_for_select(forms, :id, :name, selected: cur_form.try(:id)), include_blank: t("cms.default_form")) %>
+      <%= button_tag(t('ss.buttons.change'), type: :button, class: %w(btn btn-form-change)) %>
+    <% end %>
 
     <%= jquery do %>
       Cms_Column_FileUpload.userId = <%= @cur_user.id %>;

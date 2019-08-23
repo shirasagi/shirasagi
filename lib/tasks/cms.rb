@@ -62,7 +62,9 @@ module Tasks
       end
 
       def import_files
-        ::Cms::ImportFilesJob.perform_now
+        each_sites do |site|
+          perform_job(::Cms::ImportFilesJob, site: site)
+        end
       end
 
       def export_site

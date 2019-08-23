@@ -8,7 +8,7 @@ ja:
     group_users: 所属ユーザー
     image: 画像
     import: インポート
-    import_log: インポートログ
+    log: ログ
     export: エクスポート
     export_log: エクスポートログ
     login: ログイン
@@ -116,7 +116,7 @@ ja:
       stop: 停止
       toggle: 折りたたみ表示
       move: 移動
-      import: 取り込み
+      import: インポート
       convert: 変換
       unlock_and_edit_forcibly: 強制的にロックを解除し編集する
       random_password: ランダム生成
@@ -862,6 +862,9 @@ ja:
       permissions:
         - 権限を設定します。
         - （全て）はすべてが対象、（所有）はログインアカウントの所属するグループが作成したものが対象となります。
+      in_file:
+        - CSVファイルを指定し権限のインポートを行います。
+        - idが記述されていない行は新規作成になります。
     gws/shared_address/group:
       name:
         - グループ名を入力します。

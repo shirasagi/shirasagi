@@ -5,10 +5,8 @@
   <header><h2><%= t("ss.import") %></h2></header>
 
   <dl class="see">
-    <dt><%= t("ss.file") %></dt>
+    <dt><%= t("ss.file") %><%= @model.tt :in_file %></dt>
     <dd><%= f.file_field :file %></dd>
-    <dt><%= t "ss.import_log" %></dt>
-    <dd><%= link_to t("job.log"), job_cms_logs_path, target: "_blank" %></dd>
   </dl>
 </section>
 

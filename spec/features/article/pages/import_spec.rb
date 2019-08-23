@@ -27,9 +27,11 @@ describe "article_pages", dbscope: :example, js: true do
       click_on I18n.t("ss.links.import")
       expect(current_path).to eq import_path
 
-      attach_file "item[file]", "#{Rails.root}/spec/fixtures/article/article_import_test_1.csv"
-      page.accept_confirm do
-        click_on I18n.t("ss.links.import")
+      within "form#task-form" do
+        attach_file "item[file]", "#{Rails.root}/spec/fixtures/article/article_import_test_1.csv"
+        page.accept_confirm do
+          click_on I18n.t("ss.links.import")
+        end
       end
       expect(page).to have_content I18n.t("ss.notice.started_import")
     end

@@ -101,6 +101,21 @@ module SS::Model::JobLog
     @file_path ||= "#{SS::File.root}/job_logs/" + id.to_s.split(//).join("/") + "/_/#{id}.log"
   end
 
+  def head_logs(n = 1_000)
+    if file_path && ::File.exists?(file_path)
+      texts = []
+      open(file_path) do |f|
+        n.times do
+          line = f.gets || break
+          texts << line
+        end
+      end
+      texts
+    else
+      []
+    end
+  end
+
   def logs
     if ::Fs.mode == :file && ::File.exists?(file_path)
       return ::File.readlines(file_path) rescue []

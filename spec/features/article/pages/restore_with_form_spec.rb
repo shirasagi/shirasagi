@@ -177,11 +177,13 @@ describe 'article_pages', dbscope: :example, js: true do
         expect(item.column_values.find_by(column_id: column5.id).value).to eq column5_value
         expect(item.column_values.find_by(column_id: column6.id).value).to eq column6_value
         expect(item.column_values.find_by(column_id: column7.id).values).to eq [ column7_value ]
-        expect(item.column_values.find_by(column_id: column8.id).file_id).not_to be_nil
-        expect(item.column_values.find_by(column_id: column8.id).file).to be_nil
+        expect(item.column_values.find_by(column_id: column8.id).file_id).to be_truthy
+        expect(item.column_values.find_by(column_id: column8.id).file).to be_truthy
+        expect(item.column_values.find_by(column_id: column8.id).file.name).to eq 'logo.png'
+        expect(item.column_values.find_by(column_id: column8.id).file_label).to eq column8_image_text
         expect(item.backups.count).to eq 2
       end
-      expect(SS::File.all.unscoped.count).to eq 2
+      expect(SS::File.all.unscoped.count).to eq 4
     end
   end
 end

@@ -34,9 +34,13 @@ module Cms::GroupPermission
     user = user.cms_user
     site = opts[:site] || @cur_site
     node = opts[:node] || @cur_node
+    owned = opts[:owned] || false
 
     action = permission_action || action
-    if new_record?
+
+    if owned
+      is_owned = owned
+    elsif new_record?
       is_owned = node ? node.owned?(user) : false
     else
       is_owned = owned?(user)

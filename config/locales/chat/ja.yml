@@ -57,7 +57,7 @@ ja:
         session_id: セッションID
         request_id: リクエストID
         text: 文章
-        question: 質問
+        question: フィードバック
         result: 返答
         suggest: サジェスト
         click_suggest: 使用したサジェスト
@@ -69,6 +69,7 @@ ja:
         phrase: フレーズ
         suggest: サジェスト
         response: 返答
+        question: フィードバック
         site_search: サイト内検索のリンク
         order: 並び順
         node_id: フォルダー
@@ -82,9 +83,9 @@ ja:
         first_suggest: 開始時サジェスト
         exception_text: 例外文章
         response_template: 返答テンプレート
-        question: 質問
-        chat_success: 質問返答(はい)
-        chat_retry: 質問返答(いいえ)
+        question: フィードバック
+        chat_success: フィードバック返答(はい)
+        chat_retry: フィードバック返答(いいえ)
         intent_ids: シナリオ
         chat_category_ids: シナリオカテゴリー
 
@@ -104,6 +105,8 @@ ja:
         - 返答を設定します。
         - チャットボットで指定のフレーズが使用されていると返答します。
         - 設定しない場合、親フォルダーの返答テンプレートを使用します。
+      question:
+        - フィードバックを表示するか設定します。
       site_search:
         - サイト内検索のリンクを表示するか設定します。
       order:
@@ -132,11 +135,11 @@ ja:
         - シナリオの返答を設定します。
         - シナリオ作成時に返答がない場合に使用されます。
       question:
-        - シナリオにサジェストがない場合に表示される質問文を設定できます。
+        - フィードバックの文章を設定できます。
       chat_success:
-        - 質問に対して"はい"を押された場合に表示される文章を設定できます。
+        - フィードバックに対して"はい"を押された場合に表示される文章を設定できます。
       chat_retry:
-        - 質問に対して"いいえ"を押された場合に表示される文章を設定できます。
+        - フィードバックに対して"いいえ"を押された場合に表示される文章を設定できます。
 
   job:
     models:
