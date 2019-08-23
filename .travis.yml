@@ -11,6 +11,7 @@ cache:
     - $HOME/.local
 
 services:
+  - docker
   - mongodb
 
 addons:
