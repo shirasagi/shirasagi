@@ -66,6 +66,7 @@ module SS::Copy::CmsPages
     cache(:opendata_dataset_resources, src_page.id) do
       src_page.resources.each do |resource|
         dest_resource = dest_page.resources.new
+        dest_resource.source_url = resource.source_url
         dest_resource.name = resource.name
         dest_resource.text = resource.text
         dest_resource.filename = resource.filename
