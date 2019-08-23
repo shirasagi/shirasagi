@@ -25,6 +25,12 @@ class Ldap::ServerController < ApplicationController
   public
 
   def index
+    if @cur_site.root_groups.length > 1
+      @errors = [ t("ldap.errors.has_multiple_root_groups", site: @cur_site.name) ]
+      render
+      return
+    end
+
     connection = connect
     if connection.blank?
       @errors = [ t("ldap.errors.connection_setting_not_found") ]
