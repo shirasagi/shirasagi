@@ -75,12 +75,14 @@ module SS::WebmailSupport
     end
 
     RSpec.configuration.extend(SS::WebmailSupport::EventHandler, imap: true)
-  rescue
+  rescue => e
+    puts "#{e.class} (#{e.message})"
     RSpec.configuration.filter_run_excluding(imap: true)
   end
 
   def init_test_by_user
     if SS.config.webmail.test_user.blank?
+      puts "SS.config.webmail.test_user is blank"
       RSpec.configuration.filter_run_excluding(imap: true)
     end
   end
@@ -97,7 +99,8 @@ module SS::WebmailSupport
     imap_port = SS::WebmailSupport.docker_imap_port = bindings["143/tcp"].first["HostPort"].to_i
 
     puts "found docker #{version} and container '#{container_id}' listening on #{imap_port} for imap"
-  rescue
+  rescue => e
+    puts "#{e.class} (#{e.message})"
     puts "docker seems not installed or running or container created"
     RSpec.configuration.filter_run_excluding(imap: true)
   end
