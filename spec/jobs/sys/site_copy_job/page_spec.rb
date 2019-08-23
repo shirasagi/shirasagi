@@ -254,5 +254,30 @@ describe Sys::SiteCopyJob, dbscope: :example do
         expect(dest_page).to be_truthy
       end
     end
+
+    describe "copy key_visual/image node" do
+      let(:node) { create :key_visual_node_image, cur_site: site, layout_id: layout.id }
+      let!(:page) { create :key_visual_image, cur_site: site, cur_node: node }
+
+      before do
+        task.copy_contents = 'pages'
+        task.save!
+
+        perform_enqueued_jobs do
+          Sys::SiteCopyJob.perform_now
+        end
+      end
+
+      it do
+        dest_site = Cms::Site.find_by(host: target_host_host)
+
+        dest_page = Cms::Page.site(dest_site).find_by(filename: page.filename)
+        dest_page = dest_page.becomes_with_route
+
+        expect(dest_page).to be_truthy
+        expect(dest_page.file_id).not_to eq page.file_id
+        expect(dest_page.file.name).to eq page.file.name
+      end
+    end
   end
 end
