@@ -51,6 +51,18 @@ class Rss::ImportWeatherXmlJob < Rss::ImportBase
     page
   end
 
+  def remove_unimported_pages
+    return if @rss_links.blank? || @min_released.blank? || @max_released.blank?
+
+    criteria = model.site(site).node(node)
+    criteria = criteria.between(released: @min_released..@max_released)
+    criteria = criteria.nin(rss_link: @rss_links)
+    criteria.each do |item|
+      item.destroy
+      put_history_log(item, :destroy)
+    end
+  end
+
   def download(url)
     uri = URI.parse(url)
     http = Net::HTTP.new(uri.host, uri.port)
