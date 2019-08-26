@@ -39,7 +39,9 @@ class Cms::ImportJobFile
     end
 
     if save
-      Cms::ImportFilesJob.bind(site_id: site.id).perform_later
+      job = Cms::ImportFilesJob.bind(site_id: site.id)
+      job = job.set(wait_until: self.import_date) if import_date.present?
+      job.perform_later
       return true
     else
       self.import_date = nil
@@ -114,6 +116,8 @@ class Cms::ImportJobFile
   def import_from_zip(file, opts = {})
     Zip::File.open(file.path) do |archive|
       archive.each do |entry|
+        next if entry.name.start_with?('__MACOSX')
+
         fname = entry.name.force_encoding("utf-8").scrub.split(/\//)
         fname.shift # remove root folder
         fname = fname.join('/')
