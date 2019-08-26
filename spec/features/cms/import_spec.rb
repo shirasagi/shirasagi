@@ -13,6 +13,7 @@ describe "cms_import" do
 
       within "form#task-form" do
         attach_file "item[in_file]", "#{Rails.root}/spec/fixtures/cms/import/site.zip"
+        fill_in 'item[import_date]', with: I18n.l(Time.zone.now, format: :long)
         page.accept_alert do
           click_button I18n.t('ss.buttons.import')
         end
