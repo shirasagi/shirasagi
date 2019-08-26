@@ -1,7 +1,7 @@
 <%
   now = Time.zone.now
   ymd = params[:ymd]
-  if ymd
+  if ymd.present?
     origin = Time.zone.local(ymd[0..3].to_i, ymd[4..5].to_i, ymd[6..7].to_i)
     next_day = origin + 1.day
     prev_day = origin - 1.day
