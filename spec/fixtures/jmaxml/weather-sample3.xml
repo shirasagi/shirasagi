@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom" xml:lang="ja">
+  <title>JMAXML publishing feed</title>
+  <subtitle>this feed is published by JMA</subtitle>
+  <updated>2011-09-03T03:00:00Z</updated>
+  <id>urn:uuid:0f3f9fdc-5ea8-44fa-9843-451a4ffcc573</id>
+  <link href="http://www.jma.go.jp/" rel="related"/>
+  <link href="http://xml.kishou.go.jp/feed/extra.xml" rel="self"/>
+  <rights>Published by Japan Meteorological Agency</rights>
+  <entry>
+    <title>奈良県気象警報・注意報</title>
+    <id>urn:uuid:56f95f66-546f-44e9-a678-3787fb4db41a</id>
+    <updated>2011-09-03T03:00:00Z</updated>
+    <author><name>気象庁</name></author>
+    <link href="http://xml.kishou.go.jp/data/56f95f66-546f-44e9-a678-3787fb4db41a.xml" type="application/xml"/>
+    <content type="text">【奈良県気象警報・注意報】</content>
+  </entry>
+</feed>
