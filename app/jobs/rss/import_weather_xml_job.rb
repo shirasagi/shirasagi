@@ -186,6 +186,7 @@ class Rss::ImportWeatherXmlJob < Rss::ImportBase
 
   def execute_weather_xml_filters
     return if @imported_pages.blank?
-    Rss::ExecuteWeatherXmlFiltersJob.bind(site_id: site.id, node_id: node.id).perform_later(@imported_pages.map(&:id))
+    ids = @imported_pages.select { |item| !item.destroyed? }.map(&:id)
+    Rss::ExecuteWeatherXmlFiltersJob.bind(site_id: site.id, node_id: node.id).perform_later(ids)
   end
 end
