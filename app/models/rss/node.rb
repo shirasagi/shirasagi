@@ -50,7 +50,11 @@ module Rss::Node
       context[:user] ||= user
       context[:node] ||= self
       filters.and_enabled.each do |filter|
-        filter.execute(page, context) rescue next
+        begin
+          filter.execute(page, context)
+        rescue => e
+          Rails.logger.error("#{e.class} (#{e.message}):\n  #{e.backtrace.join("\n  ")}")
+        end
       end
     end
 

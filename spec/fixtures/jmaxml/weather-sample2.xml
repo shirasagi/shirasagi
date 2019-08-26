@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom" xml:lang="ja">
+  <title>JMAXML publishing feed</title>
+  <subtitle>this feed is published by JMA</subtitle>
+  <updated>2016-03-08T13:34:00+09:00</updated>
+  <id>urn:uuid:4f2ff52a-b296-43bf-8681-f20a819d86a6</id>
+  <link href="http://www.jma.go.jp/" rel="related"/>
+  <link href="http://xml.kishou.go.jp/feed/extra.xml" rel="self"/>
+  <rights>Published by Japan Meteorological Agency</rights>
+  <entry>
+    <title>震度速報</title>
+    <id>urn:uuid:9b43a982-fecf-3866-95e7-c375226a7c87</id>
+    <updated>2016-03-08T04:34:18Z</updated>
+    <author><name>気象庁</name></author>
+    <link href="http://xml.kishou.go.jp/data/9b43a982-fecf-3866-95e7-c375226a7c87.xml" type="application/xml"/>
+    <content type="text">【震度速報】</content>
+  </entry>
+</feed>
