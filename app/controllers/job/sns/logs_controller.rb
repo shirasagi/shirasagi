@@ -16,6 +16,8 @@ class Job::Sns::LogsController < ApplicationController
   end
 
   def log_criteria
-    @model.where(user_id: @cur_user.id)
+    criteria = @model.where(user_id: @cur_user.id)
+    criteria = criteria.search_ymd(ymd: @ymd) if @ymd.present?
+    criteria
   end
 end
