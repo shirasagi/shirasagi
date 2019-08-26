@@ -26,7 +26,7 @@
 
 <footer class="send">
   <%= f.submit t("ss.buttons.run"), class: "btn-primary" %>
-  <%= f.button t("ss.buttons.cancel"), type: :reset, onclick: "location.href='#{url_for(action: :index)}'; return false;", class: "btn-default" %>
+  <%= f.button t("ss.buttons.cancel"), type: :reset, onclick: "location.href='#{node_conf_path}'; return false;", class: "btn-default" %>
 </footer>
 
 <% end %>
