@@ -291,31 +291,30 @@ _::-webkit-full-page-media, _:future, :root .gws-memo-message .popup-notice:befo
         &[class^="icon-"] {
           background: url(/assets/img/gws/ic-file.png) no-repeat left;
         }
-        &.icon-csv {
-          background: url(/assets/img/gws/ic-csv.gif) no-repeat left;
-        }
-        &.icon-doc {
-          background: url(/assets/img/gws/ic-word.gif) no-repeat left;
-        }
-        &.icon-pptx {
-          background: url(/assets/img/gws/ic-pptx.gif) no-repeat left;
-        }
-        &.icon-pdf {
-          background: url(/assets/img/gws/ic-pdf.gif) no-repeat left;
-        }
-        &.icon-txt {
-          background: url(/assets/img/gws/ic-txt.gif) no-repeat left;
-        }
-        &.icon-xls {
-          background: url(/assets/img/gws/ic-xls.gif) no-repeat left;
-        }
+        //&.icon-csv {
+        //  background: url(/assets/img/gws/ic-csv.gif) no-repeat left;
+        //}
+        //&.icon-doc {
+        //  background: url(/assets/img/gws/ic-word.gif) no-repeat left;
+        //}
+        //&.icon-pptx {
+        //  background: url(/assets/img/gws/ic-pptx.gif) no-repeat left;
+        //}
+        //&.icon-pdf {
+        //  background: url(/assets/img/gws/ic-pdf.gif) no-repeat left;
+        //}
+        //&.icon-txt {
+        //  background: url(/assets/img/gws/ic-txt.gif) no-repeat left;
+        //}
+        //&.icon-xls {
+        //  background: url(/assets/img/gws/ic-xls.gif) no-repeat left;
+        //}
       }
     }
   }
-  .links a {
-    padding-left: 30px;
-    background: url(/assets/img/gws/ic-link.png) no-repeat left;
-    vertical-align: middle;
+  .links span {
+    display: list-item;
+    margin-left: 2em;
   }
   .addon-body {
     clear: both;
