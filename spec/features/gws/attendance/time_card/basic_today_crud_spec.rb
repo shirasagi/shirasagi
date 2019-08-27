@@ -104,27 +104,5 @@ describe "gws_attendance_time_card", type: :feature, dbscope: :example, js: true
         expect(page).to have_css('.today .info .enter', text: '--:--')
       end
     end
-
-    context 'memo' do
-      it do
-        visit gws_attendance_main_path(site)
-        within '.today .action .memo' do
-          click_on I18n.t('ss.buttons.edit')
-        end
-        within '#cboxLoadedContent form' do
-          fill_in 'record[memo]', with: memo
-          click_on I18n.t('ss.buttons.save')
-        end
-        expect(page).to have_css('.today .info .memo', text: memo)
-
-        expect(Gws::Attendance::TimeCard.count).to eq 1
-        Gws::Attendance::TimeCard.first.tap do |time_card|
-          expect(time_card.records.where(date: now.beginning_of_day).count).to eq 1
-          time_card.records.where(date: now.beginning_of_day).first.tap do |record|
-            expect(record.memo).to eq memo
-          end
-        end
-      end
-    end
   end
 end

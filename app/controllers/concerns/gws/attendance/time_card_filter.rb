@@ -58,17 +58,29 @@ module Gws::Attendance::TimeCardFilter
 
   def holiday?(date)
     return true if HolidayJapan.check(date.localtime.to_date)
+
     Gws::Schedule::Holiday.site(@cur_site).
       and_public.
       allow(:read, @cur_user, site: @cur_site).
       search(start: date, end: date).present?
   end
 
+  WELL_KNOWN_TYPES = begin
+    types = %w(enter leave)
+    SS.config.gws.attendance['max_break'].times do |i|
+      types << "break_enter#{i + 1}"
+      types << "break_leave#{i + 1}"
+    end
+    types.freeze
+  end
+
   public
 
   def time
-    @type = %w(enter leave break_enter break_leave).delete(params[:type])
-    raise '404' if @type.blank?
+    index = WELL_KNOWN_TYPES.find_index(params[:type])
+    raise '404' if index.blank?
+
+    @type = WELL_KNOWN_TYPES[index]
     @model = Gws::Attendance::TimeEdit
     if request.get?
       @cell = @model.new
