@@ -62,8 +62,9 @@ module SS::Model::JobLog
 
       started_at = Time.zone.local(ymd[0..3].to_i, ymd[4..5].to_i, ymd[6..7].to_i)
       end_at = started_at.end_of_day
+      from = term_to_date(params[:term] || 'day', end_at)
 
-      all.gte(updated: started_at).lte(updated: end_at)
+      all.gte(updated: from).lte(updated: end_at)
     end
 
     def search_class_name(params)
@@ -125,7 +126,7 @@ module SS::Model::JobLog
   end
 
   module ClassMethods
-    def term_to_date(name)
+    def term_to_date(name, date = Time.zone.now)
       num, unit = name.to_s.split('.')
       if unit.blank?
         unit, num = num, unit
@@ -135,15 +136,15 @@ module SS::Model::JobLog
 
       case unit.singularize
       when "year"
-        Time.zone.now - num.years
+        date - num.years
       when "month"
-        Time.zone.now - num.months
+        date - num.months
       when "week"
-        Time.zone.now - num.weeks
+        date - num.weeks
       when "day"
-        Time.zone.now - num.days
+        date - num.days
       when "all_delete"
-        Time.zone.now
+        date
       when "all_save"
         nil
       else
