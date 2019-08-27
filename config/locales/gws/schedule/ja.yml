@@ -494,6 +494,10 @@ ja:
       subject: "[スケジュール] 「%{name}」が削除されました。"
       text: ""
 
+    gws/schedule/plan/undo_delete:
+      subject: "[スケジュール] 「%{name}」の削除が取り消されました。"
+      text: "%{text}"
+
     gws/schedule/comment/destroy:
       subject: "[スケジュール] 「%{name}」のコメントが削除されました。"
       text: "%{text}"
@@ -514,6 +518,12 @@ ja:
 
     gws/schedule/todo/revert:
       subject: "[ToDo] 「%{name}」が未完了になりました。"
+      text: "%{text}"
+      mail_text: |
+        %{subject}
+
+    gws/schedule/todo/undo_delete:
+      subject: "[ToDo] 「%{name}」の削除が取り消されました。"
       text: "%{text}"
       mail_text: |
         %{subject}

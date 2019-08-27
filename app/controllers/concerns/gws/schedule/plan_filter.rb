@@ -53,6 +53,7 @@ module Gws::Schedule::PlanFilter
     end
   rescue Mongoid::Errors::DocumentNotFound => e
     return render_destroy(true) if params[:action] == 'destroy'
+
     raise e
   end
 
@@ -87,6 +88,7 @@ module Gws::Schedule::PlanFilter
 
   def show
     raise '403' unless @item.readable?(@cur_user, site: @cur_site)
+
     render
   end
 
@@ -124,6 +126,7 @@ module Gws::Schedule::PlanFilter
 
   def destroy
     raise "403" unless @item.allowed?(:delete, @cur_user, site: @cur_site)
+
     @item.edit_range = params.dig(:item, :edit_range)
     render_destroy @item.destroy
   end

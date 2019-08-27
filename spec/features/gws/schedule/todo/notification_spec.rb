@@ -372,4 +372,32 @@ describe "gws_schedule_todo_readables", type: :feature, dbscope: :example, js: t
       expect(SS::Notification.count).to eq 4
     end
   end
+
+  context "undo delete notification" do
+    let!(:todo) do
+      create(
+        :gws_schedule_todo, cur_site: site, cur_user: user1, notify_state: "enabled",
+        member_ids: [ user1.id, user2.id ], deleted: Time.zone.now
+      )
+    end
+
+    before { login_user user1 }
+
+    it do
+      visit gws_schedule_todo_readables_path gws_site, "-"
+      click_on I18n.t('gws/schedule.navi.trash')
+      click_on todo.name
+      click_on I18n.t("ss.links.restore")
+      within "form" do
+        click_on I18n.t("ss.buttons.restore")
+      end
+      expect(page).to have_css('#notice', text: I18n.t('ss.notice.restored'))
+
+      expect(SS::Notification.count).to eq 1
+      message = SS::Notification.first
+      expect(message.subject).to eq I18n.t('gws_notification.gws/schedule/todo/undo_delete.subject', name: todo.name)
+      expect(message.url).to eq "/.g#{site.id}/schedule/todo/-/readables/#{todo.id}"
+      expect(message.member_ids).to eq [ user2.id ]
+    end
+  end
 end
