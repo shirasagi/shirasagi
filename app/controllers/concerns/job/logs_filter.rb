@@ -91,7 +91,7 @@ module Job::LogsFilter
     raise "400" if from == false
 
     cond = {}
-    cond[:updated] = { "$gte" => from } if @ymd.blank?
+    cond[:updated] = { "$gte" => from } if @ymd.blank? && from
 
     @items = log_criteria.where(cond).sort(closed: 1)
     send_csv @items
