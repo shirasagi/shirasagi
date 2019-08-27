@@ -1,7 +1,28 @@
 require 'spec_helper'
 
-describe "ldap_server", ldap: true do
-  context "with ldap site" do
+describe "ldap_server" do
+  context "without ldap site" do
+    let(:site) { cms_site }
+    let(:index_path) { ldap_server_path site.id }
+    let(:group) { create :ss_group, name: 'group' }
+
+    it "#index" do
+      login_cms_user
+      visit index_path
+      expect(page).to have_css ".ldap-server-header"
+    end
+
+    it "#index with multiple root groups" do
+      site.group_ids += [group.id]
+      site.save!
+
+      login_cms_user
+      visit index_path
+      expect(page).to have_css ".ldap-server-header"
+    end
+  end
+
+  context "with ldap site", ldap: true do
     let(:group) do
       create(:cms_group, name: unique_id, ldap_dn: "dc=city,dc=shirasagi,dc=jp")
     end
@@ -61,7 +82,7 @@ describe "ldap_server", ldap: true do
     end
   end
 
-  context "with non-ldap site" do
+  context "with non-ldap site", ldap: true do
     let(:site) { cms_site }
     let(:index_path) { ldap_server_path site.id }
 
