@@ -206,6 +206,7 @@ module Cms::Model::Node
 
   def remove_all
     dst = path.sub("#{Rails.root}/public", "#{Rails.root}/private/trash")
+    Fs.rm_rf(dst) if Fs.exists?(dst)
     Fs.mkdir_p(File.dirname(dst))
     Fs.mv(path, dst) if Fs.exists?(path)
   end
