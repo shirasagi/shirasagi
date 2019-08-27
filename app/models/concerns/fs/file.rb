@@ -67,5 +67,9 @@ module Fs::File
     def to_io(path)
       ::File.open(path, "rb")
     end
+
+    def cp(src, dest)
+      ::FileUtils.cp(src, dest)
+    end
   end
 end

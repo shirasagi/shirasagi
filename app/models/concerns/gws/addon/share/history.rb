@@ -4,8 +4,9 @@ module Gws::Addon::Share
     extend SS::Addon
 
     included do
+      after__save_file :save_history_file if defined?(:after__save_file)
       after_save :save_history_for_save
-      after_destroy :save_history_for_destroy
+      after_destroy :destroy_all_histories
     end
 
     def histories
@@ -16,20 +17,40 @@ module Gws::Addon::Share
       @skip_gws_history = true
     end
 
+    def save_history_file
+      Fs.cp(path, path + "_history#{next_history_file_id}")
+    end
+
     private
+
+    def current_history_file_id
+      base = path + "_history"
+      Fs.glob("#{base}[0-9]*").map { |path| path[base.length..-1].to_i }.max
+    end
+
+    def next_history_file_id
+      current = current_history_file_id
+      current.nil? ? 0 : current + 1
+    end
 
     def save_history_for_save
       return if @db_changes.blank?
 
-      if @db_changes.key?('_id')
+      if @db_changes.key?('deleted')
+        if deleted.present?
+          save_history mode: 'delete'
+        else
+          save_history mode: 'undelete'
+        end
+      elsif histories.blank?
         save_history mode: 'create'
       else
         save_history mode: 'update', updated_fields: @db_changes.keys.reject { |s| s =~ /_hash$/ }
       end
     end
 
-    def save_history_for_destroy
-      save_history mode: 'delete' # @flagged_for_destroy
+    def destroy_all_histories
+      histories.destroy_all
     end
 
     def save_history(overwrite_params = {})
@@ -39,8 +60,9 @@ module Gws::Addon::Share
       site_id ||= self.site_id rescue nil
       return unless site_id
 
-      history_file_count = Dir.glob(self.path + "*_history[0-9]*").count
-      srcname = "history" + (history_file_count - 1).to_s
+      save_history_file if current_history_file_id.nil?
+
+      srcname = "history#{current_history_file_id}" if current_history_file_id
 
       item = Gws::Share::History.new(
         cur_user: @cur_user,
@@ -56,6 +78,11 @@ module Gws::Addon::Share
       )
       item.attributes = overwrite_params
       item.save
+
+      # remove old histories
+      if Gws::Share::History.max_count > 0
+        histories.skip(Gws::Share::History.max_count).destroy_all
+      end
     end
   end
 end

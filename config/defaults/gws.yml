@@ -162,6 +162,9 @@ production: &production
       dayoff: none
       '': none
 
+  share:
+    max_history_count: 20
+
 test:
   <<: *production
   disable: false

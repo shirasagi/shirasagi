@@ -42,6 +42,8 @@ module Gws::Model::File
     before_save :save_file
     before_destroy :remove_file
 
+    define_model_callbacks :_save_file
+
     default_scope ->{ order_by id: -1 }
   end
 
@@ -73,6 +75,7 @@ module Gws::Model::File
 
   def public_path
     return if site.blank? || !site.respond_to?(:root_path)
+
     "#{site.root_path}/fs/" + id.to_s.split(//).join("/") + "/_/#{filename}"
   end
 
@@ -90,6 +93,7 @@ module Gws::Model::File
 
   def full_url
     return if site.blank? || !site.respond_to?(:full_root_url)
+
     "#{site.full_root_url}fs/" + id.to_s.split(//).join("/") + "/_/#{filename}"
   end
 
@@ -135,6 +139,7 @@ module Gws::Model::File
 
   def extname
     return "" unless filename.to_s.include?('.')
+
     filename.to_s.sub(/.*\W/, "")
   end
 
@@ -154,8 +159,8 @@ module Gws::Model::File
     (@resizing && @resizing.size == 2) ? @resizing.map(&:to_i) : nil
   end
 
-  def resizing=(s)
-    @resizing = (s.class == String) ? s.split(",") : s
+  def resizing=(size)
+    @resizing = (size.class == String) ? size.split(",") : size
   end
 
   def read
@@ -172,6 +177,7 @@ module Gws::Model::File
     file = public_path
     data = self.read
     return if Fs.exists?(file) && data == Fs.read(file)
+
     Fs.binwrite file, data
   end
 
@@ -195,6 +201,7 @@ module Gws::Model::File
 
   def multibyte_filename_disabled?
     return if site.blank? || !site.respond_to?(:multibyte_filename_disabled?)
+
     site.multibyte_filename_disabled?
   end
 
@@ -229,6 +236,7 @@ module Gws::Model::File
         end
 
         next unless resizing
+
         width, height = resizing
         image.resize_to_fit! width, height if image.columns > width || image.rows > height
       end
@@ -241,19 +249,10 @@ module Gws::Model::File
     dir = ::File.dirname(path)
     Fs.mkdir_p(dir) unless Fs.exists?(dir)
 
-    if File.exist?(path)
-      history_file_count = Dir.glob(dir + "/#{id}*_history[0-9]*").count
+    run_callbacks(:_save_file) do
       Fs.binwrite(path, binary)
       self.size = binary.length
-      sleep(1)
-      FileUtils.cp(path, path + "_history#{history_file_count}")
-    else
-      Fs.binwrite(path, binary)
-      self.size = binary.length
-      sleep(1)
-      FileUtils.cp(path, path + "_history0")
     end
-
   end
 
   def remove_file
