@@ -11,6 +11,7 @@ cache:
     - $HOME/.local
 
 services:
+  - docker
   - mongodb
 
 addons:
@@ -38,6 +39,9 @@ before_install:
   - export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$HOME/.local/lib
   - export LD_RUN_PATH=$LD_RUN_PATH:$HOME/.local/lib
   - export TZ=Asia/Tokyo
+  - docker pull shirasagi/mail
+  - docker run --name test_mail -d -p 10143:143 -p 10587:587 shirasagi/mail
+  - docker ps -a
 
 install: # bash .travis.d/install.sh
   - bash .travis.d/exec.sh install 20-mecab
@@ -68,8 +72,10 @@ jobs:
       name: "Features_G (Memo)"
     - script: bundle exec rspec -p 10 spec/ --pattern "spec/features/{h,i,j,k,l,m,o}*/**/*.rb"
       name: "Features_H"
-    - script: bundle exec rspec -p 10 spec/ --pattern "spec/features/{p,q,r,s,u,v,w}*/**/*.rb"
+    - script: bundle exec rspec -p 10 spec/ --pattern "spec/features/{p,q,r,s,u,v,w}*/**/*.rb" --exclude "**/webmail/**/*.rb"
       name: "Features_P"
+    - script: bundle exec rspec -p 10 spec/ --pattern "spec/features/webmail/**/*.rb"
+      name: "Features_W (Webmail)"
     - script: bundle exec rspec -p 10 spec/models/
       name: "Models"
     - script: bundle exec rspec -p 10 spec/ --pattern "spec/{jobs,helpers,lib,mailers,requests,validators}/**/*.rb"
