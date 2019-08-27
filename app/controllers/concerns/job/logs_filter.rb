@@ -30,7 +30,7 @@ module Job::LogsFilter
     @log_criteria ||= begin
       criteria = @model.all
       criteria = criteria.site(@cur_site) if @cur_site
-      criteria = criteria.search_ymd(ymd: @ymd) if @ymd.present?
+      criteria = criteria.search_ymd(ymd: @ymd, term: params.dig(:item, :save_term)) if @ymd.present?
       criteria
     end
   end
@@ -91,7 +91,7 @@ module Job::LogsFilter
     raise "400" if from == false
 
     cond = {}
-    cond[:created] = { "$gte" => from } if from
+    cond[:updated] = { "$gte" => from } if @ymd.blank?
 
     @items = log_criteria.where(cond).sort(closed: 1)
     send_csv @items
