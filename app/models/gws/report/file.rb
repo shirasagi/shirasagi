@@ -33,6 +33,13 @@ class Gws::Report::File
   around_destroy ::Gws::Elasticsearch::Indexer::ReportFileJob.callback
 
   class << self
+    def accessible(user, opts)
+      conds = self.readable_conditions(user, opts)
+      conds += self.member_conditions(user, opts)
+      conds << self.allow_condition(:read, user, opts)
+      self.all.where("$and" => [{ "$or" => conds }])
+    end
+
     def search(params)
       criteria = all
       return criteria if params.blank?
