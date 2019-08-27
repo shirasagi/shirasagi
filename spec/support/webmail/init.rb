@@ -129,6 +129,16 @@ module SS::WebmailSupport
     when "docker"
       docker_ensure_container_started
       docker_ensure_system_folders_created
+
+      test_conf = docker_test_conf
+      default_conf = {
+        "host" => test_conf['host'],
+        "options" => { "port" => test_conf['imap_port'] },
+        "auth_type" => test_conf['imap_auth_type'],
+        "account" => "email"
+      }
+      SS.config.webmail.clients ||= {}
+      SS.config.webmail.clients['default'] = default_conf
     end
   end
 
