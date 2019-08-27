@@ -130,11 +130,36 @@ describe "gws_survey", type: :feature, dbscope: :example, js: true do
       click_on form_name
 
       click_on I18n.t("gws/survey.view_files")
-
       expect(page).to have_text(user1.name)
       expect(page).to have_text(user2.name)
 
+      within ".operations" do
+        click_on "CSV"
+      end
+      within "form#item-form" do
+        click_on I18n.t("ss.buttons.download")
+      end
+      wait_for_download
+
+      csv = ::CSV.read(downloads.first, headers: true, encoding: 'SJIS:UTF-8')
+      expect(csv.length).to eq 2
+      expect(csv[0][Gws::User.t(:name)]).to eq user2.long_name
+      expect(csv[0][Gws::Survey::File.t(:updated)].present?).to be_truthy
+
+      # zip
+      click_on I18n.t("ss.links.back_to_index")
+      within ".operations" do
+        click_on I18n.t("gws/survey.buttons.zip_all_files")
+      end
+
+      #
+      # aggregate
+      #
+      #click_on I18n.t("ss.links.back_to_index")
       click_on I18n.t("gws/survey.tabs.summary")
+      within ".gws-survey" do
+        expect(page).to have_css("dd", text: csv.length)
+      end
     end
   end
 end
