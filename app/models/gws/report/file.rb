@@ -51,6 +51,7 @@ class Gws::Report::File
 
     def search_keyword(params)
       return all if params[:keyword].blank?
+
       all.keyword_in(params[:keyword], :name, :text, 'column_values.text_index')
     end
 
@@ -141,10 +142,10 @@ class Gws::Report::File
     end
 
     cur_user_id = @cur_user.try(:id) || user.id
-    added_member_ids   -= [cur_user_id]
-    removed_member_ids -= [cur_user_id]
-    added_member_ids.select!{|user_id| Gws::User.find(user_id).use_notice?(self)}
-    removed_member_ids.select!{|user_id| Gws::User.find(user_id).use_notice?(self)}
+    added_member_ids   -= [ cur_user_id ]
+    removed_member_ids -= [ cur_user_id ]
+    added_member_ids.select!{ |user_id| Gws::User.find(user_id).use_notice?(self) }
+    removed_member_ids.select!{ |user_id| Gws::User.find(user_id).use_notice?(self) }
 
     return if added_member_ids.blank? && removed_member_ids.blank?
 
