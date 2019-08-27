@@ -29,7 +29,6 @@ module SS::CapybaraSupport
     Capybara.javascript_driver = :chrome
     Capybara.default_max_wait_time = 15
 
-    config.filter_run_excluding(driver: :poltergeist)
     puts "[Capybara] with Google Chrome(headless: #{headless != '0' ? 'enabled' : 'disabled'})"
     true
   end
