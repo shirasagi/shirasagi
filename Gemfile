@@ -92,43 +92,43 @@ gem 'faraday'
 gem 'elasticsearch'
 
 group :development, :test do
-  gem 'capybara'
-  gem 'simplecov'
-  gem 'simplecov-html'
-  gem 'simplecov-csv'
-  gem 'coveralls', require: false
   gem 'dotenv-rails'
-  gem 'factory_bot_rails'
-  gem 'fuubar'
-  gem 'guard'
-  gem 'guard-rspec', '~> 4.3.1'
-  gem 'guard-rubocop'
-  gem 'selenium-webdriver', require: false
-  gem 'webdrivers'
-  gem 'pry-rails'
-  gem 'pry-doc'
-  gem 'pry-byebug'
-  gem 'pry-stack_explorer'
-  gem 'rspec'
-  gem 'rspec-collection_matchers'
-  gem 'rspec-its'
-  gem 'rspec-rails'
-  gem 'rails-controller-testing'
+  gem 'capybara', require: false
+  gem 'coveralls', require: false
+  gem 'factory_bot_rails', require: false
+  gem 'fuubar', require: false
+  gem 'guard', require: false
+  gem 'guard-rspec', '~> 4.3.1', require: false
+  gem 'guard-rubocop', require: false
+  gem 'pry-byebug', require: false
+  gem 'pry-doc', require: false
+  gem 'pry-rails', require: false
+  gem 'pry-stack_explorer', require: false
+  gem 'rails-controller-testing', require: false
+  gem 'rspec', require: false
+  gem 'rspec-collection_matchers', require: false
+  gem 'rspec-its', require: false
+  gem 'rspec-rails', require: false
   gem 'rubocop', require: false
   gem 'rubocop-performance', require: false
-  gem 'spring', '~> 2.0.2'
-  gem 'timecop'
-  gem 'test-queue'
+  gem 'selenium-webdriver', require: false
+  gem 'simplecov', require: false
+  gem 'simplecov-csv', require: false
+  gem 'simplecov-html', require: false
+  gem 'spring', '~> 2.0.2', require: false
+  gem 'test-queue', require: false
+  gem 'timecop', require: false
+  gem 'webdrivers', require: false
 end
 
 group :development do
   gem 'brakeman', require: false
   gem 'guard-brakeman', require: false
-  gem 'yard', require: false
   gem 'terminal-notifier-guard', require: false
+  gem 'yard', require: false
 end
 
 group :test do
-  gem 'webmock'
   gem 'docker-api'
+  gem 'webmock'
 end

@@ -5,10 +5,20 @@ Dotenv.load
 
 ENV["RAILS_ENV"] ||= 'test'
 require File.expand_path("../config/environment", __dir__)
+
+require 'webdrivers'
+# Webdrivers.logger.level = :DEBUG
+
+require 'rails-controller-testing'
+
 require 'rspec/rails'
 #require 'rspec/autorun'
+require 'rspec/collection_matchers'
+require 'rspec/its'
 require 'capybara/rspec'
 require 'capybara/rails'
+require 'factory_bot'
+require 'timecop'
 require 'support/ss/capybara_support'
 
 # Checks for pending migrations before tests are run.
