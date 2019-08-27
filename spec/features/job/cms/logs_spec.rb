@@ -76,8 +76,8 @@ describe "job_cms_logs", dbscope: :example do
 
     context 'when ymd is present' do
       before do
-        log2.set(updated: log2.updated - 1.day)
-        log3.set(updated: log3.updated - 2.days)
+        log2.set(updated: log2.updated - 1.day, created: log2.created - 1.day)
+        log3.set(updated: log3.updated - 2.days, created: log3.created - 2.days)
       end
 
       it "#download" do
