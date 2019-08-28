@@ -2346,6 +2346,9 @@ table.index {
     padding: 6px 18px;
     @include mb { display: inline-block; }
   }
+  th:not(.datetime), td:not(.datetime) {
+    word-break: break-all;
+  }
   td.state {
     margin: 6px 0;
   }
