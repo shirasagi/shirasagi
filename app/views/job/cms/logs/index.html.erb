@@ -70,6 +70,7 @@
 
       var url = '<%= url_for(action: :index, ymd: ':ymd') %>';
       url = url.replace(':ymd', ymd);
+      url = url.replace('//', '/')
 
       location.href = url;
     }
