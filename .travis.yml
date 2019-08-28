@@ -80,49 +80,49 @@ jobs:
       script: true
 
     - stage: test
-      name: Features_Webmail
+      name: Features_A
       script:
-        - bundle exec rspec -p 10 spec/ --pattern "spec/features/webmail/**/*.rb"
+        - bundle exec rspec -p 10 spec/ --pattern "spec/features/{a,b,c,d,e,f}*/**/*.rb"
         - ./cc-test-reporter format-coverage -t simplecov -o codeclimate.01.json coverage/.resultset.json
       workspaces:
         create:
           name: codeclimate.01.json
           paths: codeclimate.01.json
-    - name: Features_A
+    - name: Features_G
       script:
-        - bundle exec rspec -p 10 spec/ --pattern "spec/features/{a,b,c,d,e,f}*/**/*.rb"
+        - bundle exec rspec -p 10 spec/ --pattern "spec/features/{g}*/**/*.rb" --exclude "**/gws/memo/**/*.rb"
         - ./cc-test-reporter format-coverage -t simplecov -o codeclimate.02.json coverage/.resultset.json
       workspaces:
         create:
           name: codeclimate.02.json
           paths: codeclimate.02.json
-    - name: Features_G
+    - name: Features_G (Memo)
       script:
-        - bundle exec rspec -p 10 spec/ --pattern "spec/features/{g}*/**/*.rb" --exclude "**/gws/memo/**/*.rb"
+        - bundle exec rspec -p 10 spec/ --pattern "spec/features/gws/memo/**/*.rb"
         - ./cc-test-reporter format-coverage -t simplecov -o codeclimate.03.json coverage/.resultset.json
       workspaces:
         create:
           name: codeclimate.03.json
           paths: codeclimate.03.json
-    - name: Features_G (Memo)
+    - name: Features_H
       script:
-        - bundle exec rspec -p 10 spec/ --pattern "spec/features/gws/memo/**/*.rb"
+        - bundle exec rspec -p 10 spec/ --pattern "spec/features/{h,i,j,k,l,m,o}*/**/*.rb"
         - ./cc-test-reporter format-coverage -t simplecov -o codeclimate.04.json coverage/.resultset.json
       workspaces:
         create:
           name: codeclimate.04.json
           paths: codeclimate.04.json
-    - name: Features_H
+    - name: Features_P
       script:
-        - bundle exec rspec -p 10 spec/ --pattern "spec/features/{h,i,j,k,l,m,o}*/**/*.rb"
+        - bundle exec rspec -p 10 spec/ --pattern "spec/features/{p,q,r,s,u,v,w}*/**/*.rb" --exclude "**/webmail/**/*.rb"
         - ./cc-test-reporter format-coverage -t simplecov -o codeclimate.05.json coverage/.resultset.json
       workspaces:
         create:
           name: codeclimate.05.json
           paths: codeclimate.05.json
-    - name: Features_P
+    - name: Features_Webmail
       script:
-        - bundle exec rspec -p 10 spec/ --pattern "spec/features/{p,q,r,s,u,v,w}*/**/*.rb" --exclude "**/webmail/**/*.rb"
+        - bundle exec rspec -p 10 spec/ --pattern "spec/features/webmail/**/*.rb"
         - ./cc-test-reporter format-coverage -t simplecov -o codeclimate.06.json coverage/.resultset.json
       workspaces:
         create:
