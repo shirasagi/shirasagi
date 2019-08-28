@@ -52,6 +52,7 @@ Gws_Attendance_Portlet.prototype.edit = function($button, fieldName) {
   var url = this.options.editUrl.replace(':TYPE', fieldName);
   $a = $('<a/>', { href: url });
   $a.colorbox({
-    open: true
+    open: true,
+    onClosed: function() { $button.removeAttr('disabled'); }
   });
 };
