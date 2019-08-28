@@ -70,8 +70,7 @@ class Gws::Attendance::TimeCardsController < ApplicationController
   end
 
   def year_month_options
-    @items.pluck(:date).sort { |lhs, rhs| rhs <=> lhs }.map do |date|
-      date = date.getlocal
+    @items.pluck(:date).map(&:in_time_zone).sort { |lhs, rhs| rhs <=> lhs }.map do |date|
       [ I18n.l(date.to_date, format: :attendance_year_month), "#{date.year}#{format('%02d', date.month)}" ]
     end
   end
