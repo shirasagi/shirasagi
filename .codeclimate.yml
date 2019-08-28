@@ -1,6 +1,6 @@
 engines:
   rubocop:
-    enabled: true
+    enabled: false
   brakeman:
     enabled: true
   bundler-audit:
