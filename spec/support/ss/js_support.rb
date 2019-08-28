@@ -20,7 +20,7 @@ module SS
     end
 
     def ajax_timeout
-      @ajax_timeout ||= 30
+      @ajax_timeout ||= (ENV["CAPYBARA_AJAX_WAIT_TIME"] || 20).to_i
     end
 
     def ajax_timeout=(timeout)

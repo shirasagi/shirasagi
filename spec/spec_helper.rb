@@ -35,16 +35,15 @@ end
 
 if analyze_coverage?
   require 'simplecov'
+  require 'simplecov-csv'
 
+  SimpleCov.formatter = SimpleCov::Formatter::MultiFormatter.new([
+    SimpleCov::Formatter::HTMLFormatter,
+    SimpleCov::Formatter::CSVFormatter
+  ])
   if travis?
     require 'coveralls'
-    SimpleCov.formatter = Coveralls::SimpleCov::Formatter
-  else
-    require 'simplecov-csv'
-    SimpleCov.formatter = SimpleCov::Formatter::MultiFormatter.new([
-      SimpleCov::Formatter::HTMLFormatter,
-      SimpleCov::Formatter::CSVFormatter
-    ])
+    Coveralls.wear!
   end
 
   SimpleCov.start do
@@ -103,11 +102,9 @@ RSpec.configure do |config|
     config.filter_run_excluding(js: true)
   end
 
-  # ref.
-  #   http://kakakakakku.hatenablog.com/entry/2015/05/14/124653
-  #   http://qiita.com/upinetree/items/4d4022c90ce32b68c38d
   Capybara.configure do |config|
     config.ignore_hidden_elements = false
+    config.default_max_wait_time = (ENV["CAPYBARA_MAX_WAIT_TIME"] || 10).to_i
   end
 
   config.before(:suite) do

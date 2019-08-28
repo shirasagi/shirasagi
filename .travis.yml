@@ -9,6 +9,8 @@ cache:
   bundler: true
   directories:
     - $HOME/.local
+    - public/assets
+    - tmp/cache/assets
 
 services:
   - docker
@@ -34,14 +36,18 @@ addons:
 
 bundler_args: "--without development"
 
+env:
+  global:
+    - PATH=$PATH:$HOME/.local/bin
+    - LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$HOME/.local/lib
+    - LD_RUN_PATH=$LD_RUN_PATH:$HOME/.local/lib
+    - TZ=Asia/Tokyo
+    - CAPYBARA_MAX_WAIT_TIME=40
+    - CAPYBARA_AJAX_WAIT_TIME=40
+    - COVERALLS_PARALLEL=true
+    - allow_open_jtalk=1
+
 before_install:
-  - export PATH=$PATH:$HOME/.local/bin
-  - export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$HOME/.local/lib
-  - export LD_RUN_PATH=$LD_RUN_PATH:$HOME/.local/lib
-  - export TZ=Asia/Tokyo
-  - docker pull shirasagi/mail
-  - docker run --name test_mail -d -p 10143:143 -p 10587:587 shirasagi/mail
-  - docker ps -a
 
 install: # bash .travis.d/install.sh
   - bash .travis.d/exec.sh install 20-mecab
@@ -50,33 +56,112 @@ install: # bash .travis.d/install.sh
   - bash .travis.d/exec.sh install 30-hts-engine
   - bash .travis.d/exec.sh install 31-open-jtalk
   - bash .travis.d/exec.sh install 90-bundle-install
-  - bash .travis.d/exec.sh install 95-bin-deploy
+  - docker pull shirasagi/mail
+  - docker run --name test_mail -d -p 10143:143 -p 10587:587 shirasagi/mail
+  - docker ps -a
+  - curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
+  - chmod +x ./cc-test-reporter
+  - ./cc-test-reporter before-build
 
 before_script: # bash .travis.d/before_script.sh
+  - bash .travis.d/exec.sh install 95-bin-deploy
   - bash .travis.d/exec.sh before_script 10-copy-config
   - bash .travis.d/exec.sh before_script 20-fix-mecab-path
   - bash .travis.d/exec.sh before_script 30-fix-voice-path
   - bash .travis.d/exec.sh before_script 50-update-gem
-  - export allow_open_jtalk=1
 
 #script: travis_wait 60 bash .travis.d/script.sh
 
+after_script:
+
 jobs:
   include:
+    - stage: prepare cache
+      script: true
+
     - stage: test
-      script: bundle exec rspec -p 10 spec/ --pattern "spec/features/{a,b,c,d,e,f}*/**/*.rb"
-      name: "Features_A"
-    - script: bundle exec rspec -p 10 spec/ --pattern "spec/features/{g}*/**/*.rb" --exclude "**/gws/memo/**/*.rb"
-      name: "Features_G"
-    - script: bundle exec rspec -p 10 spec/ --pattern "spec/features/gws/memo/**/*.rb"
-      name: "Features_G (Memo)"
-    - script: bundle exec rspec -p 10 spec/ --pattern "spec/features/{h,i,j,k,l,m,o}*/**/*.rb"
-      name: "Features_H"
-    - script: bundle exec rspec -p 10 spec/ --pattern "spec/features/{p,q,r,s,u,v,w}*/**/*.rb" --exclude "**/webmail/**/*.rb"
-      name: "Features_P"
-    - script: bundle exec rspec -p 10 spec/ --pattern "spec/features/webmail/**/*.rb"
-      name: "Features_W (Webmail)"
-    - script: bundle exec rspec -p 10 spec/models/
-      name: "Models"
-    - script: bundle exec rspec -p 10 spec/ --pattern "spec/{jobs,helpers,lib,mailers,requests,validators}/**/*.rb"
-      name: "Other (Jobs,Helpers,Lib,Mailers,Requests,Validators)"
+      name: Features_A
+      script:
+        - bundle exec rspec -p 10 spec/ --pattern "spec/features/{a,b,c,d,e,f}*/**/*.rb"
+        - ./cc-test-reporter format-coverage -t simplecov -o codeclimate.01.json coverage/.resultset.json
+      workspaces:
+        create:
+          name: codeclimate.01.json
+          paths: codeclimate.01.json
+    - name: Features_G
+      script:
+        - bundle exec rspec -p 10 spec/ --pattern "spec/features/{g}*/**/*.rb" --exclude "**/gws/memo/**/*.rb"
+        - ./cc-test-reporter format-coverage -t simplecov -o codeclimate.02.json coverage/.resultset.json
+      workspaces:
+        create:
+          name: codeclimate.02.json
+          paths: codeclimate.02.json
+    - name: Features_G (Memo)
+      script:
+        - bundle exec rspec -p 10 spec/ --pattern "spec/features/gws/memo/**/*.rb"
+        - ./cc-test-reporter format-coverage -t simplecov -o codeclimate.03.json coverage/.resultset.json
+      workspaces:
+        create:
+          name: codeclimate.03.json
+          paths: codeclimate.03.json
+    - name: Features_H
+      script:
+        - bundle exec rspec -p 10 spec/ --pattern "spec/features/{h,i,j,k,l,m,o}*/**/*.rb"
+        - ./cc-test-reporter format-coverage -t simplecov -o codeclimate.04.json coverage/.resultset.json
+      workspaces:
+        create:
+          name: codeclimate.04.json
+          paths: codeclimate.04.json
+    - name: Features_P
+      script:
+        - bundle exec rspec -p 10 spec/ --pattern "spec/features/{p,q,r,s,u,v,w}*/**/*.rb" --exclude "**/webmail/**/*.rb"
+        - ./cc-test-reporter format-coverage -t simplecov -o codeclimate.05.json coverage/.resultset.json
+      workspaces:
+        create:
+          name: codeclimate.05.json
+          paths: codeclimate.05.json
+    - name: Features_Webmail
+      script:
+        - bundle exec rspec -p 10 spec/ --pattern "spec/features/webmail/**/*.rb"
+        - ./cc-test-reporter format-coverage -t simplecov -o codeclimate.06.json coverage/.resultset.json
+      workspaces:
+        create:
+          name: codeclimate.06.json
+          paths: codeclimate.06.json
+    - name: Models
+      script:
+        - bundle exec rspec -p 10 spec/models/
+        - ./cc-test-reporter format-coverage -t simplecov -o codeclimate.07.json coverage/.resultset.json
+      workspaces:
+        create:
+          name: codeclimate.07.json
+          paths: codeclimate.07.json
+    - name: Other (Jobs,Helpers,Lib,Mailers,Requests,Validators)
+      script:
+        - bundle exec rspec -p 10 spec/ --pattern "spec/{jobs,helpers,lib,mailers,requests,validators}/**/*.rb"
+        - ./cc-test-reporter format-coverage -t simplecov -o codeclimate.08.json coverage/.resultset.json
+      workspaces:
+        create:
+          name: codeclimate.08.json
+          paths: codeclimate.08.json
+
+    - stage: deploy
+      name: CodeClimate
+      before_script: skip
+      script:
+        - ls -la codeclimate.*
+        - ./cc-test-reporter sum-coverage codeclimate.*.json -p 8
+        - ./cc-test-reporter upload-coverage -r 8447130d9db9efadd8b86604c1976a4595fd3adc290daf45674490ba949da336
+      workspaces:
+        use:
+          - codeclimate.01.json
+          - codeclimate.02.json
+          - codeclimate.03.json
+          - codeclimate.04.json
+          - codeclimate.05.json
+          - codeclimate.06.json
+          - codeclimate.07.json
+          - codeclimate.08.json
+
+notifications:
+  webhooks: https://coveralls.io/webhook

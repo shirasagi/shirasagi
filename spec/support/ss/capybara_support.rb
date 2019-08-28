@@ -27,7 +27,6 @@ module SS::CapybaraSupport
       Capybara::Selenium::Driver.new(app, browser: :chrome, options: options)
     end
     Capybara.javascript_driver = :chrome
-    Capybara.default_max_wait_time = 15
 
     puts "[Capybara] with Google Chrome(headless: #{headless != '0' ? 'enabled' : 'disabled'})"
     true
