@@ -97,6 +97,31 @@ describe "job_cms_logs", dbscope: :example do
         expect(csv_lines[1]).to include(logs[0].start_label)
         expect(csv_lines[1]).to include(I18n.t(logs[0].state, scope: "job.state"))
 
+        visit job_cms_daily_logs_path(site.id, ymd: Time.zone.now.to_date.strftime('%Y%m%d'))
+        click_on 'ダウンロード'
+        expect(status_code).to eq 200
+
+        within "form" do
+          select I18n.t('job.save_term.all_save')
+          click_button I18n.t("ss.download")
+        end
+
+        expect(status_code).to eq 200
+        csv_lines = CSV.parse(page.html.encode("UTF-8"))
+        expect(csv_lines.length).to eq 4
+        expect(csv_lines[0]).to eq %w(ClassName Started Closed State Args Logs)
+        expect(csv_lines[1]).to include(logs[0].class_name)
+        expect(csv_lines[1]).to include(logs[0].start_label)
+        expect(csv_lines[1]).to include(I18n.t(logs[0].state, scope: "job.state"))
+        expect(csv_lines[2]).to include(logs[1].class_name)
+        expect(csv_lines[2]).to include(logs[1].start_label)
+        expect(csv_lines[2]).to include(logs[1].closed_label)
+        expect(csv_lines[2]).to include(I18n.t(logs[1].state, scope: "job.state"))
+        expect(csv_lines[3]).to include(logs[2].class_name)
+        expect(csv_lines[3]).to include(logs[2].start_label)
+        expect(csv_lines[3]).to include(logs[2].closed_label)
+        expect(csv_lines[3]).to include(I18n.t(logs[2].state, scope: "job.state"))
+
         visit job_cms_daily_logs_path(site.id, ymd: Time.zone.now.to_date.yesterday.yesterday.strftime('%Y%m%d'))
         click_on 'ダウンロード'
         expect(status_code).to eq 200
@@ -113,6 +138,31 @@ describe "job_cms_logs", dbscope: :example do
         expect(csv_lines[1]).to include(logs[2].start_label)
         expect(csv_lines[1]).to include(logs[2].closed_label)
         expect(csv_lines[1]).to include(I18n.t(logs[2].state, scope: "job.state"))
+
+        visit job_cms_daily_logs_path(site.id, ymd: Time.zone.now.to_date.yesterday.yesterday.strftime('%Y%m%d'))
+        click_on 'ダウンロード'
+        expect(status_code).to eq 200
+
+        within "form" do
+          select I18n.t('job.save_term.all_save')
+          click_button I18n.t("ss.download")
+        end
+
+        expect(status_code).to eq 200
+        csv_lines = CSV.parse(page.html.encode("UTF-8"))
+        expect(csv_lines.length).to eq 4
+        expect(csv_lines[0]).to eq %w(ClassName Started Closed State Args Logs)
+        expect(csv_lines[1]).to include(logs[0].class_name)
+        expect(csv_lines[1]).to include(logs[0].start_label)
+        expect(csv_lines[1]).to include(I18n.t(logs[0].state, scope: "job.state"))
+        expect(csv_lines[2]).to include(logs[1].class_name)
+        expect(csv_lines[2]).to include(logs[1].start_label)
+        expect(csv_lines[2]).to include(logs[1].closed_label)
+        expect(csv_lines[2]).to include(I18n.t(logs[1].state, scope: "job.state"))
+        expect(csv_lines[3]).to include(logs[2].class_name)
+        expect(csv_lines[3]).to include(logs[2].start_label)
+        expect(csv_lines[3]).to include(logs[2].closed_label)
+        expect(csv_lines[3]).to include(I18n.t(logs[2].state, scope: "job.state"))
       end
     end
   end

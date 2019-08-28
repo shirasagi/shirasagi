@@ -55,6 +55,7 @@ module SS::Model::JobLog
     end
 
     def search_ymd(params)
+      return all if params[:term] == 'all_save'
       return all if params[:ymd].blank?
 
       ymd = params[:ymd]
