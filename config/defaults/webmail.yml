@@ -47,6 +47,9 @@ production: &production
   # Upper limit of mail's attachments file size(byte). 0 is unlimited
   send_mail_size_limit: 0
 
+  # Upper limit of mail size(byte) on importing mails. 0 is unlimited
+  import_mail_size_limit: 0
+
   history:
     save_days: 90
     severity: info
