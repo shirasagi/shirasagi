@@ -50,11 +50,14 @@ class Gws::Attendance::TimeCardsController < ApplicationController
 
   def set_record
     @cur_date = @cur_month.change(day: Integer(params[:day]))
-    @record = @item.records.where(date: @cur_date).first_or_create
+    @record = @item.records.where(date: @cur_date).first
+    @record ||= @item.records.create(date: @cur_date)
   end
 
   def check_time_editable
-    raise '403' if !@model.allowed?(:edit, @cur_user, site: @cur_site) && Time.zone.now.to_date != @record.date.to_date
+    # 時刻の編集には、編集権限が必要。なお、現在日の打刻には編集権限は不要。
+    raise '403' unless @model.allowed?(:edit, @cur_user, site: @cur_site)
+
     if @item.locked?
       redirect_to({ action: :index }, { notice: t('gws/attendance.already_locked') })
       return
@@ -62,7 +65,17 @@ class Gws::Attendance::TimeCardsController < ApplicationController
   end
 
   def check_memo_editable
-    raise '403' if !@model.allowed?(:edit, @cur_user, site: @cur_site) && Time.zone.now.to_date != @record.date.to_date
+    editable = false
+    if @record.date_range.include?(Time.zone.now)
+      # 備考には打刻という概念がないので、備考の編集 = 打刻とみなす。よって、現在日なら何度でも編集可能。
+      editable = true
+    end
+    if @model.allowed?(:edit, @cur_user, site: @cur_site)
+      # 現在日以外の備考の編集には、編集権限が必要。
+      editable = true
+    end
+    raise '403' unless editable
+
     if @item.locked?
       redirect_to({ action: :index }, { notice: t('gws/attendance.already_locked') })
       return
@@ -100,6 +113,7 @@ class Gws::Attendance::TimeCardsController < ApplicationController
 
   def enter
     raise '403' if !@model.allowed?(:use, @cur_user, site: @cur_site)
+
     location = params[:ref].presence || { action: :index }
     if @item.locked?
       redirect_to(location, { notice: t('gws/attendance.already_locked') })

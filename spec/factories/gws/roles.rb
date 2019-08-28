@@ -84,6 +84,23 @@ FactoryBot.define do
     end
   end
 
+  trait :gws_role_attendance_user do
+    after(:build) do |item|
+      item.permissions += %w(
+        use_gws_attendance_time_cards
+      )
+    end
+  end
+
+  trait :gws_role_attendance_editor do
+    after(:build) do |item|
+      item.permissions += %w(
+        use_gws_attendance_time_cards
+        edit_gws_attendance_time_cards
+      )
+    end
+  end
+
   factory :gws_role, class: Gws::Role, traits: [:gws_role]
 
   factory :gws_role_admin, class: Gws::Role, traits: [:gws_role, :gws_role_admin]
@@ -97,4 +114,8 @@ FactoryBot.define do
   factory :gws_role_schedule_plan_editor, class: Gws::Role, traits: [:gws_role, :gws_role_schedule_plan_editor]
 
   factory :gws_role_schedule_todo_editor, class: Gws::Role, traits: [:gws_role, :gws_role_schedule_todo_editor]
+
+  factory :gws_role_attendance_user, class: Gws::Role, traits: [:gws_role, :gws_role_attendance_user]
+
+  factory :gws_role_attendance_editor, class: Gws::Role, traits: [:gws_role, :gws_role_attendance_editor]
 end
