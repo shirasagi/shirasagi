@@ -17,10 +17,10 @@ module Tasks
         each_sites do |site|
           if ENV.key?("node")
             with_node(site, ENV["node"]) do |node|
-              perform_job(::Cms::Page::GenerateJob, site: site, node: node, attachments: ENV["attachments"])
+              perform_job(::Cms::Page::GenerateJob, site: site, node: node)
             end
           else
-            perform_job(::Cms::Page::GenerateJob, site: site, attachments: ENV["attachments"])
+            perform_job(::Cms::Page::GenerateJob, site: site)
           end
         end
       end

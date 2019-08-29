@@ -71,5 +71,9 @@ module Fs::File
     def cp(src, dest)
       ::FileUtils.cp(src, dest)
     end
+
+    def cmp(src, dest)
+      ::FileUtils.cmp(src, dest)
+    end
   end
 end

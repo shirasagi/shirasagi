@@ -47,7 +47,6 @@ shared_examples "cms_part#spec_detail" do
     it { expect(item.parent).not_to eq nil }
     it { expect(item.becomes_with_route).not_to eq nil }
     it { expect(item.serve_static_file?).not_to eq nil }
-    it { expect(item.serve_static_relation_files?).not_to eq nil }
   end
 
   describe "part_methods" do

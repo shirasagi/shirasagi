@@ -14,7 +14,7 @@ module Cms::Addon
       around_save :update_file_owners
       after_destroy :destroy_files
 
-      after_generate_file :generate_public_files, if: ->{ serve_static_relation_files? } if respond_to?(:after_generate_file)
+      after_generate_file :generate_public_files if respond_to?(:after_generate_file)
       after_remove_file :remove_public_files if respond_to?(:after_remove_file)
       after_merge_branch :update_owner_item_of_files rescue nil
     end

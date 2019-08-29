@@ -201,12 +201,12 @@ module SS::Model::File
   end
 
   def generate_public_file
-    return unless site && basename.ascii_only?
+    return if site.blank?
+    return if !basename.ascii_only?
+    return if Fs.exists?(public_path) && Fs.cmp(path, public_path)
 
-    file = public_path
-    data = self.read
-    return if Fs.exists?(file) && data == Fs.read(file)
-    Fs.binwrite file, data
+    Fs.mkdir_p(::File.dirname(public_path))
+    Fs.cp(path, public_path)
   end
 
   def remove_public_file
