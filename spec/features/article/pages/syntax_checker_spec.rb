@@ -29,7 +29,7 @@ describe "syntax_checker", dbscope: :example, js: true do
           fill_in_ckeditor "item[html]", with: html1
           click_button I18n.t("cms.syntax_check")
           wait_for_ajax
-          expect(page).to have_css(".errorExplanationBody", text: "画像の代替テキストを確認してください。")
+          expect(page).to have_css(".errorExplanationBody", text: I18n.t("errors.messages.set_img_alt"))
         end
       end
 
@@ -40,7 +40,7 @@ describe "syntax_checker", dbscope: :example, js: true do
           fill_in_ckeditor "item[html]", with: html2
           click_button I18n.t("cms.syntax_check")
           wait_for_ajax
-          expect(page).to have_css(".errorExplanationBody", text: "画像の代替テキストを確認してください。")
+          expect(page).to have_css(".errorExplanationBody", text: I18n.t("errors.messages.set_img_alt"))
         end
       end
 
@@ -51,7 +51,7 @@ describe "syntax_checker", dbscope: :example, js: true do
           fill_in_ckeditor "item[html]", with: html3
           click_button I18n.t("cms.syntax_check")
           wait_for_ajax
-          expect(page).to have_css(".errorExplanationBody", text: "エラーは見つかりませんでした。")
+          expect(page).to have_css(".errorExplanationBody", text: I18n.t("errors.template.no_errors"))
         end
       end
     end
@@ -74,7 +74,7 @@ describe "syntax_checker", dbscope: :example, js: true do
           click_button I18n.t("cms.syntax_check")
           wait_for_ajax
 
-          expect(page).to have_css(".errorExplanationBody", text: "画像の代替テキストを確認してください。")
+          expect(page).to have_css(".errorExplanationBody", text: I18n.t("errors.messages.set_img_alt"))
         end
       end
 
@@ -90,7 +90,7 @@ describe "syntax_checker", dbscope: :example, js: true do
         within "#addon-cms-agents-addons-form-page" do
           click_button I18n.t("cms.syntax_check")
           wait_for_ajax
-          expect(page).to have_css(".errorExplanationBody", text: "画像の代替テキストを確認してください。")
+          expect(page).to have_css(".errorExplanationBody", text: I18n.t("errors.messages.set_img_alt"))
         end
       end
 
@@ -106,7 +106,7 @@ describe "syntax_checker", dbscope: :example, js: true do
         within "#addon-cms-agents-addons-form-page" do
           click_button I18n.t("cms.syntax_check")
           wait_for_ajax
-          expect(page).to have_css(".errorExplanationBody", text: "エラーは見つかりませんでした。")
+          expect(page).to have_css(".errorExplanationBody", text: I18n.t("errors.template.no_errors"))
         end
       end
     end
