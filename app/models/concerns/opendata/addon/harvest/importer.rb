@@ -13,13 +13,6 @@ module Opendata::Addon::Harvest
       puts message
     end
 
-    def uploaded_sample_file(filename, format)
-      path = "#{Rails.root}/spec/fixtures/opendata/dataset_import/resources/sample.#{format.downcase}"
-      file = ::Fs::UploadedFile.create_from_file(path)
-      file.original_filename = filename
-      file
-    end
-
     def get_license_from_uid(uid)
       @_license_from_uid ||= {}
       return @_license_from_uid[uid] if @_license_from_uid[uid]
