@@ -668,7 +668,7 @@ this.Syntax_Checker = (function () {
       $(html).find('img').each(function () {
         var alt, errors;
         alt = $(this).attr('alt');
-        if (!alt || $.trim(alt) === "" || /^[\w\s\.\-]*$/.test(alt)) {
+        if (!alt) {
           Syntax_Checker.errors.push(
             {
               id: id,
