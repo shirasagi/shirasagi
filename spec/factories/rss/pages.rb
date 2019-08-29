@@ -9,6 +9,10 @@ FactoryBot.define do
     filename { node ? "#{node.filename}/#{name}.html" : "dir/#{name}.html" }
     route "rss/page"
     rss_link { "http://example.com/#{filename}" }
+
+    factory :rss_page_rss_link_blank do
+      rss_link { "" }
+    end
   end
 
   factory :rss_weather_xml_page, class: Rss::WeatherXmlPage, traits: [:cms_page] do
