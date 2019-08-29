@@ -3522,7 +3522,7 @@ table.mypage-index, .member-my-group .index, table.member-invited-group {
   //  pagetop
   .pagetop {
     right: 20px;
-    bottom: 20px;
+    bottom: 50px;
     width: 50px;
     height: 50px;
     @include border-radius(10px);
@@ -3912,6 +3912,186 @@ table.mypage-index, .member-my-group .index, table.member-invited-group {
       }
       .meta .url {
         display: block;
+      }
+    }
+  }
+}
+
+// -----------------------------------------------------------------------------
+// chat
+#chat {
+  position: fixed;
+  right: 0;
+  bottom: 120px;
+  z-index: 9999;
+  @include mb {
+    bottom: 0px;
+  }
+  .chat-close {
+    padding: 10px 15px 10px 55px;
+    background: #333 url(../img/ic-chat.png) no-repeat 10px center;
+    color: #fff;
+    font-size: $px18;
+    @include mb {
+      font-size: $px12;
+    }
+  }
+  .chat-open {
+    position: relative;
+    @include box-sizing(border-box);
+    display: none;
+    width: 375px;
+    height: 480px;
+    border: 3px solid #333;
+    background: #ccc;
+    overflow: hidden;
+    @include mb {
+      width: 100%;
+      height: 100vh;
+    }
+    header {
+      @include display-flex;
+      @include justify-content(space-between);
+      padding: 10px 15px;
+      background: #333;
+      h2 {
+        padding-left: 40px;
+        background: url(../img/ic-chat.png) no-repeat left center;
+        color: #fff;
+        font-size: $px18;
+      }
+    }
+    .chat-items {
+      height: calc(480px - 8.2em);
+      overflow: scroll;
+      padding: 10px;
+      @include mb {
+        height: calc(100vh - 8.2em);
+      }
+    }
+    .chat-item {
+      clear: both;
+      margin-bottom: 15px;
+      padding: 10px;
+      border-radius: 6px;
+    }
+    .chat-item.sys {
+      position: relative;
+      margin-left: 70px;
+      background: #fff;
+      &:before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: -70px;
+        width: 60px;
+        height: 60px;
+        background: url(../img/chat-man.jpg) no-repeat center center;
+      }
+      &:after {
+        content: "";
+        position: absolute;
+        top: 14px;
+        left: -6px;
+        border-top: 6px solid transparent;
+        border-right: 6px solid #fff;
+        border-bottom: 6px solid transparent;
+      }
+    }
+    .chat-item.suggest {
+      margin: 0 0 10px 70px;
+      padding: 0;
+      a {
+        position: relative;
+        display: block;
+        padding: 5px 10px 5px 25px;
+        border-radius: 0;
+        background: #fff;
+        &:before {
+          content: "";
+          position: absolute;
+          top: 12px;
+          left: 12px;
+          border-top: 6px solid transparent;
+          border-bottom: 6px solid transparent;
+          border-left: 6px solid #666;
+        }
+      }
+    }
+    .chat-item.user {
+      display: inline-block;
+      float: right;
+      margin-left: 90px;
+      background: #e9ffff;
+    }
+    .chat-item.sys {
+      ul {
+        padding-left: 1.5em;
+      }
+      p:last-child:not(:first-child), .search-result-btn {
+        margin-top: 10px;
+        padding-top: 10px;
+        border-top: 1px solid #ccc;
+        a {
+          padding: 5px 10px;
+          border-radius: 6px;
+          background: #86e045;
+          color: #000;
+          text-align: center;
+          text-decoration: none;
+          &:hover {
+            opacity: 0.7;
+          }
+        }
+      }
+    }
+    .chat-form {
+      position: absolute;
+      right: 0;
+      bottom: 0;
+      left: 0;
+      @include display-flex;
+      @include justify-content(space-between);
+      padding: 5px;
+      background: #efefef;
+      input[type="text"] {
+        width: 62%;
+        padding: 5px 10px;
+      }
+      button {
+        width: 30%;
+        padding: 5px 0;
+        border: none;
+        background: #333;
+        color: #fff;
+        text-align: center;
+        &:hover {
+          opacity: 0.7;
+        }
+      }
+    }
+    .chat-finish {
+      margin-top: 10px;
+      padding-top: 10px;
+      border-top: 1px solid #ccc;
+      button {
+        width: 40%;
+        margin-right: 0.5em;
+        padding: 5px 0;
+        border: none;
+        border-radius: 6px;
+        background: #333;
+        color: #fff;
+        text-align: center;
+        &:hover {
+          opacity: 0.7;
+        }
+        &.chat-success {
+          background: #155724;
+        }
+        &.chat-retry {
+          background: #721c24;
+        }
       }
     }
   }
