@@ -40,7 +40,7 @@ module SS::Copy::CmsPages
       dest_page.column_values = src_page.column_values.map do |src_column_value|
         dest_column_value = src_column_value.dup
         dest_column_value.column_id = resolve_reference(:column, src_column_value.column_id)
-        if dest_column_value.respond_to?(:file_id)
+        if dest_column_value.respond_to?(:file_id) && dest_column_value.file_id.present?
           dest_column_value.file_id = resolve_reference(:file, src_column_value.file_id)
         end
         if dest_column_value.respond_to?(:file_ids)

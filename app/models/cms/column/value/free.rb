@@ -79,6 +79,8 @@ class Cms::Column::Value::Free < Cms::Column::Value::Base
           file.update(site_id: _parent.site_id, model: _parent.class.name, owner_item: _parent, state: _parent.state)
         end
       end
+
+      self.file_ids = file_ids + add_ids - del_ids
     end
   end
 
