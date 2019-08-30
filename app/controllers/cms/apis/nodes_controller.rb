@@ -14,9 +14,11 @@ class Cms::Apis::NodesController < ApplicationController
   end
 
   def set_model_from_param
-    models = Mongoid.models.select { |m| m.ancestors.include?(Cms::Model::Node) }
-    model = models.find{ |m| m.to_s == params[:model] }
-    return unless model
+    return if params[:model].blank?
+
+    model = params[:model].constantize rescue nil
+    return if model.nil?
+    return if !model.include?(Cms::Model::Node)
 
     @model = model
   end
