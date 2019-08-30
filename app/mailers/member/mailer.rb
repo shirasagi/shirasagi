@@ -32,6 +32,18 @@ class Member::Mailer < ActionMailer::Base
     mail from: sender, to: member.email
   end
 
+  # 登録完了通知メールを配信する。
+  #
+  # @params [Cms::Member] member
+  def registration_completed_mail(member)
+    @member = member
+    @node = Member::Node::Registration.first
+    return if @node.blank?
+    sender = "#{@node.sender_name} <#{@node.sender_email}>"
+
+    mail from: sender, to: member.email
+  end
+
   # グループ招待メールを配信する。
   #
   # @param [Cms::Member] member

@@ -62,6 +62,7 @@ module Member::Node
     include Member::Addon::Registration::Notice
     include Member::Addon::Registration::Confirmation
     include Member::Addon::Registration::Reply
+    include Member::Addon::Registration::RegistrationCompleted
     include Member::Addon::Registration::ResetPasswordMail
     include Member::Addon::Registration::RequiredFields
     include Cms::Addon::GroupPermission

@@ -109,6 +109,7 @@ ja:
     mail:
       subject:
         notify: 会員登録申請
+        registration_completed: 会員登録完了
 
   modules:
     member: メンバー
@@ -140,6 +141,7 @@ ja:
       member/registration/notice: メール通知
       member/registration/confirmation: 登録確認
       member/registration/reply: 登録確認メール
+      member/registration/registration_completed: 登録確認メール
       member/registration/reset_password_mail: パスワード再設定メール
       member/registration/required_fields: 必須入力
       member/additional_attributes: 追加情報
@@ -274,6 +276,10 @@ ja:
         reply_upper_text: 上部確認テキスト
         reply_lower_text: 下部確認テキスト
         reply_signature: 署名
+      member/addon/registration/registration_completed:
+        registration_completed_subject: 件名
+        registration_completed_upper_text: 上部確認テキスト
+        registration_completed_signature: 署名
       member/addon/registration/reset_password_mail:
         reset_password_subject: 件名
         reset_password_upper_text: 上部確認テキスト
