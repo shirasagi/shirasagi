@@ -14,6 +14,8 @@ describe 'members/agents/nodes/registration', type: :feature, dbscope: :example 
       ログインパスワードの再設定用のURLをお送りします。
       次の URL をクリックし、画面の指示にしたがってパスワード再設定を完了させてください。).join("\n")
   end
+  let(:completed_upper_text) { "会員登録が完了しました。" }
+  let(:completed_lower_text) { "上記メールアドレスにてログインください。" }
   let!(:node_registration) do
     create(
       :member_node_registration,
@@ -21,14 +23,17 @@ describe 'members/agents/nodes/registration', type: :feature, dbscope: :example 
       layout_id: layout.id,
       sender_name: '会員登録',
       sender_email: 'admin@example.jp',
-      subject: '登録確認',
+      sender_signature: "----\nシラサギ市",
+      reply_subject: '登録確認',
       reply_upper_text: reply_upper_text,
       reply_lower_text: '本メールに心当たりのない方は、お手数ですがメールを削除してください。',
-      reply_signature: "----\nシラサギ市",
       reset_password_subject: 'パスワード再設定案内',
       reset_password_upper_text: reset_password_upper_text,
       reset_password_lower_text: "本メールに心当たりのない方は、お手数ですがメールを削除してください。",
-      reset_password_signature: "----\nシラサギ市")
+      completed_subject: '登録完了',
+      completed_upper_text: completed_upper_text,
+      completed_lower_text: completed_lower_text,
+    )
   end
   let!(:node_login) do
     create(
@@ -150,7 +155,7 @@ describe 'members/agents/nodes/registration', type: :feature, dbscope: :example 
       expect(mail.body.multipart?).to be_falsey
       expect(mail.body.raw_source).to include(node_registration.reply_upper_text)
       expect(mail.body.raw_source).to include(node_registration.reply_lower_text)
-      expect(mail.body.raw_source).to include(node_registration.reply_signature)
+      expect(mail.body.raw_source).to include(node_registration.sender_signature)
 
       member = Cms::Member.where(email: email).first
       expect(member.name).to eq name
@@ -181,6 +186,18 @@ describe 'members/agents/nodes/registration', type: :feature, dbscope: :example 
 
         click_button "登録"
       end
+
+      expect(ActionMailer::Base.deliveries.length).to eq 2
+      mail = ActionMailer::Base.deliveries.last
+      expect(mail.from.first).to eq "admin@example.jp"
+      expect(mail.to.first).to eq email
+      expect(mail.subject).to eq '登録完了'
+      expect(mail.body.multipart?).to be_falsey
+      expect(mail.body.raw_source).to include(node_registration.completed_upper_text)
+      expect(mail.body.raw_source).to include(node_registration.completed_lower_text)
+      expect(mail.body.raw_source).to include(node_registration.sender_signature)
+      expect(mail.body.raw_source).to include(email)
+      expect(mail.body.raw_source).to include(name)
 
       member = Cms::Member.where(email: email).first
       expect(member.name).to eq name
@@ -313,7 +330,7 @@ describe 'members/agents/nodes/registration', type: :feature, dbscope: :example 
       expect(mail.body.multipart?).to be_falsey
       expect(mail.body.raw_source).to include(node_registration.reply_upper_text)
       expect(mail.body.raw_source).to include(node_registration.reply_lower_text)
-      expect(mail.body.raw_source).to include(node_registration.reply_signature)
+      expect(mail.body.raw_source).to include(node_registration.sender_signature)
 
       member = Cms::Member.where(email: email).first
       expect(member.name).to eq name
@@ -419,7 +436,7 @@ describe 'members/agents/nodes/registration', type: :feature, dbscope: :example 
       expect(mail.body.multipart?).to be_falsey
       expect(mail.body.raw_source).to include(node_registration.reset_password_upper_text)
       expect(mail.body.raw_source).to include(node_registration.reset_password_lower_text)
-      expect(mail.body.raw_source).to include(node_registration.reset_password_signature)
+      expect(mail.body.raw_source).to include(node_registration.sender_signature)
 
       mail.body.raw_source =~ /(#{::Regexp.escape(node_registration.full_url)}[^ \t\r\n]+)/
       url = $1
@@ -469,7 +486,7 @@ describe 'members/agents/nodes/registration', type: :feature, dbscope: :example 
       expect(mail.body.multipart?).to be_falsey
       expect(mail.body.raw_source).to include(node_registration.reply_upper_text)
       expect(mail.body.raw_source).to include(node_registration.reply_lower_text)
-      expect(mail.body.raw_source).to include(node_registration.reply_signature)
+      expect(mail.body.raw_source).to include(node_registration.sender_signature)
     end
   end
 end
