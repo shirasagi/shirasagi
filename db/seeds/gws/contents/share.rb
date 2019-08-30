@@ -168,7 +168,16 @@ sh_upload_file('bosai_seminarreport.pdf', filename: '防災セミナー報告書
   )
 end
 
-@sh_folders.each(&:update_folder_descendants_file_info)
+# 末端のフォルダーからフォルダー内のサイズをキャッシュしていく。
+@sh_folders.sort do |lhs, rhs|
+  cmp = lhs.depth <=> rhs.depth
+  next cmp if cmp != 0
+
+  cmp = lhs.name <=> rhs.name
+  next cmp if cmp != 0
+
+  lhs.id <=> rhs.id
+end.reverse.each(&:update_folder_descendants_file_info)
 
 def sh_file(name)
   @sh_files.find { |file| file.name == name }
