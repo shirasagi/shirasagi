@@ -50,15 +50,13 @@ describe "webmail_import_mails", type: :feature, dbscope: :example, imap: true d
 
   context "when a zip file contains too large eml" do
     before do
-      @save = Webmail::MailImporter::MAX_MAIL_SIZE
-      Webmail::MailImporter.send(:remove_const, "MAX_MAIL_SIZE")
-      Webmail::MailImporter.const_set("MAX_MAIL_SIZE", 1)
+      @save = SS.config.webmail.import_mail_size_limit
+      SS.config.replace_value_at(:webmail, :import_mail_size_limit, 1)
     end
 
     after do
-      Webmail::MailImporter.send(:remove_const, "MAX_MAIL_SIZE")
-      Webmail::MailImporter.const_set("MAX_MAIL_SIZE", @save)
-      expect(Webmail::MailImporter::MAX_MAIL_SIZE).to eq @save
+      SS.config.replace_value_at(:webmail, :import_mail_size_limit, @save)
+      expect(SS.config.webmail.import_mail_size_limit).to eq @save
     end
 
     it do
