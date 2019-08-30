@@ -1,7 +1,7 @@
 class SS::Migration20190809000000
   include SS::Migration::Base
 
-  depends_on "20190806000001"
+  depends_on "20190717000000"
 
   def change
     each_file do |file|
