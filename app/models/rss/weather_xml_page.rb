@@ -4,8 +4,6 @@ class Rss::WeatherXmlPage
   include Rss::Addon::Page::Body
   include Rss::Addon::Page::WeatherXml
   include Category::Addon::Category
-  include Cms::Addon::ParentCrumb
-  include Cms::Addon::RelatedPage
   include Cms::Addon::Release
   include Cms::Addon::GroupPermission
   include History::Addon::Backup

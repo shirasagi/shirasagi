@@ -17,4 +17,11 @@ describe Rss::Page, dbscope: :example do
     its(:json_url) { is_expected.to be_nil }
     its(:serve_static_file?) { is_expected.to be_falsey }
   end
+
+  describe "validation" do
+    it "rss_link" do
+      item = build(:rss_page_rss_link_blank)
+      expect(item.invalid?).to be_truthy
+    end
+  end
 end

@@ -8,6 +8,8 @@ module Rss::Addon::Page
       field :html, type: String
       embeds_many :authors, class_name: "Rss::Author", as: :rss_author
       permit_params :rss_link, :html
+
+      validates :rss_link, presence: true
     end
 
     module ClassMethods
