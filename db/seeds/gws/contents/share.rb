@@ -177,7 +177,9 @@ end
   next cmp if cmp != 0
 
   lhs.id <=> rhs.id
-end.reverse.each(&:update_folder_descendants_file_info)
+end.reverse_each do |sh|
+  sh.reload.update_folder_descendants_file_info
+end
 
 def sh_file(name)
   @sh_files.find { |file| file.name == name }
