@@ -4,8 +4,8 @@ module Gws::Share::DescendantsFileInfo
   include ActiveSupport::NumberHelper
 
   included do
-    field :descendants_files_count, type: Integer
-    field :descendants_total_file_size, type: Integer
+    field :descendants_files_count, type: Integer, default: 0
+    field :descendants_total_file_size, type: Integer, default: 0
 
     validate :validate_attached_file_size
     #after_save_files :set_file_info
