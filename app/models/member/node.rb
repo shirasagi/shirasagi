@@ -58,12 +58,12 @@ module Member::Node
     include Cms::Model::Node
     include Cms::Addon::NodeSetting
     include Cms::Addon::Meta
-    include Member::Addon::Registration::SenderAddress
     include Member::Addon::Registration::Notice
+    include Member::Addon::Registration::SenderAddress
     include Member::Addon::Registration::Confirmation
     include Member::Addon::Registration::Reply
-    include Member::Addon::Registration::RegistrationCompleted
-    include Member::Addon::Registration::ResetPasswordMail
+    include Member::Addon::Registration::Completed
+    include Member::Addon::Registration::ResetPassword
     include Member::Addon::Registration::RequiredFields
     include Cms::Addon::GroupPermission
     include History::Addon::Backup
