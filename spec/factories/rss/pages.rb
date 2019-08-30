@@ -17,5 +17,6 @@ FactoryBot.define do
 
   factory :rss_weather_xml_page, class: Rss::WeatherXmlPage, traits: [:cms_page] do
     route "rss/weather_xml_page"
+    rss_link { "http://weather.example.com/developer/xml/data/#{SecureRandom.uuid}.xml" }
   end
 end
