@@ -4,8 +4,8 @@ module Gws::Share::DescendantsFileInfo
   include ActiveSupport::NumberHelper
 
   included do
-    field :descendants_files_count, type: Integer
-    field :descendants_total_file_size, type: Integer
+    field :descendants_files_count, type: Integer, default: 0
+    field :descendants_total_file_size, type: Integer, default: 0
 
     validate :validate_attached_file_size
     #after_save_files :set_file_info
@@ -57,8 +57,8 @@ module Gws::Share::DescendantsFileInfo
 
     children_info = children.pluck(:descendants_files_count, :descendants_total_file_size)
     files_count, total_file_size = children_info.each_with_object([ files_count, total_file_size ]) do |item, memo|
-      memo[0] += item[0]
-      memo[1] += item[1]
+      memo[0] += item[0] if item[0].present?
+      memo[1] += item[1] if item[1].present?
       memo
     end
 
