@@ -3,13 +3,13 @@ require 'spec_helper'
 describe Opendata::Harvest::ImportDatasetsJob, dbscope: :example, tmpdir: true do
   let!(:site) { cms_site }
   let!(:node) { create(:opendata_node_dataset, name: "datasets") }
-  let!(:importer) { create(:opendata_harvest_importer, cur_node: node) }
+  let!(:importer) { create(:opendata_harvest_importer, cur_node: node, api_type: "shirasagi_api") }
 
   let!(:license_logo_file) { Fs::UploadedFile.create_from_file("spec/fixtures/ss/logo.png", basename: "spec") }
   let!(:license) { create(:opendata_license, cur_site: site, in_file: license_logo_file, uid: "cc-by") }
 
   context "with empty package list" do
-    let(:package_list_json) { File.read("spec/fixtures/opendata/harvest/package_list.json")  }
+    let(:package_list_json) { File.read("spec/fixtures/opendata/harvest/shirasagi_api/empty_list.json")  }
     describe ".perform_later" do
       before do
         stub_request(:get, 'https://source.example.jp/api/package_list').
@@ -29,8 +29,8 @@ describe Opendata::Harvest::ImportDatasetsJob, dbscope: :example, tmpdir: true d
   end
 
   context "with package list" do
-    let(:package_list_json) { File.read("spec/fixtures/opendata/harvest/package_list2.json")  }
-    let(:package_show_json) { File.read("spec/fixtures/opendata/harvest/package_show.json")  }
+    let(:package_list_json) { File.read("spec/fixtures/opendata/harvest/shirasagi_api/package_list.json")  }
+    let(:package_show_json) { File.read("spec/fixtures/opendata/harvest/shirasagi_api/package_show.json")  }
     let(:sample_txt) { File.read("spec/fixtures/opendata/harvest/sample.txt")  }
 
     describe ".perform_later" do
@@ -40,9 +40,9 @@ describe Opendata::Harvest::ImportDatasetsJob, dbscope: :example, tmpdir: true d
         stub_request(:get, 'https://source.example.jp/api/package_show?id=29b8d70d-1070-4e91-ad38-b5c181494fd6').
             to_return(body: package_show_json, status: 200, headers: { 'Content-Type' => 'application/json' })
         stub_request(:get, 'https://source.example.jp/dataset/1/resource/1/sample.txt').
-            to_return(body: sample_txt, status: 200, headers: { 'Content-Type' => 'application/json' })
+            to_return(body: sample_txt, status: 200, headers: { 'Content-Type' => 'application/text' })
         stub_request(:get, 'https://source.example.jp/fs/1/2/3/_/sample.txt').
-            to_return(body: sample_txt, status: 200, headers: { 'Content-Type' => 'application/json' })
+            to_return(body: sample_txt, status: 200, headers: { 'Content-Type' => 'application/text' })
 
         perform_enqueued_jobs do
           described_class.bind(site_id: site).perform_later(importer.id)

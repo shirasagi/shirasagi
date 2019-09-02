@@ -8,6 +8,34 @@ module Opendata::Addon::Harvest
 
     EXTERNAL_RESOUCE_FORMAT = %w(html htm)
 
+    def import
+      if api_type == "ckan"
+        import_from_ckan_api
+      elsif api_type == "shirasagi_api"
+        import_from_shirasagi_api
+      elsif api_type == "shirasagi_scraper"
+        import_from_shirasagi_scraper
+      end
+    end
+
+    def destroy_imported_datasets
+      dataset_ids = ::Opendata::Dataset.site(site).node(node).where("$or" => [
+          { harvest_api_type: api_type, harvest_host: source_host },
+          { harvest_importer_id: id }
+      ]).pluck(:id)
+
+      put_log("datasets #{dataset_ids.size}")
+      dataset_ids.each do |id|
+        dataset = ::Opendata::Dataset.find(id) rescue nil
+        next unless dataset
+
+        put_log("- dataset : destroy #{dataset.name}")
+        dataset.destroy
+      end
+    end
+
+    private
+
     def put_log(message)
       Rails.logger.warn(message)
       puts message
@@ -101,32 +129,6 @@ module Opendata::Addon::Harvest
     rescue => e
       put_log("#{e.class} (#{e.message}):\n  #{e.backtrace.join("\n  ")}")
       false
-    end
-
-    def import
-      if api_type == "ckan"
-        import_from_ckan_api
-      elsif api_type == "shirasagi_api"
-        import_from_shirasagi_api
-      elsif api_type == "shirasagi_scraper"
-        import_from_shirasagi_scraper
-      end
-    end
-
-    def destroy_imported_datasets
-      dataset_ids = ::Opendata::Dataset.site(site).node(node).where("$or" => [
-        { harvest_api_type: api_type, harvest_host: source_host },
-        { harvest_importer_id: id }
-      ]).pluck(:id)
-
-      put_log("datasets #{dataset_ids.size}")
-      dataset_ids.each do |id|
-        dataset = ::Opendata::Dataset.find(id) rescue nil
-        next unless dataset
-
-        put_log("- dataset : destroy #{dataset.name}")
-        dataset.destroy
-      end
     end
   end
 end
