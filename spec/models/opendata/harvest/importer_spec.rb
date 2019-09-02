@@ -35,27 +35,27 @@ describe Opendata::Harvest::Importer, dbscope: :example do
 
   context "addon harvest importer" do
     it "#get_license_from_uid" do
-      expect(item.get_license_from_uid(license1.uid).id).to eq license1.id
-      expect(item.get_license_from_uid(license2.uid).id).to eq license2.id
+      expect(item.send(:get_license_from_uid, license1.uid).id).to eq license1.id
+      expect(item.send(:get_license_from_uid, license2.uid).id).to eq license2.id
     end
 
     it "#get_license_from_name" do
-      expect(item.get_license_from_name(license1.name).id).to eq license1.id
-      expect(item.get_license_from_name(license2.name).id).to eq license2.id
+      expect(item.send(:get_license_from_name, license1.name).id).to eq license1.id
+      expect(item.send(:get_license_from_name, license2.name).id).to eq license2.id
     end
 
     it "#set_relation_ids" do
-      item.set_relation_ids(dataset)
+      item.send(:set_relation_ids, dataset)
       expect(dataset.category_ids).to include cate.id
       expect(dataset.estat_category_ids).to include estat_cate.id
       expect(dataset.area_ids).to include area.id
     end
 
     it "#external_resouce?" do
-      expect(item.external_resouce?(resouce_url1, "html")).to be_truthy
-      expect(item.external_resouce?(resouce_url2, "csv")).to be_falsy
-      expect(item.external_resouce?(resouce_url3, "html")).to be_truthy
-      expect(item.external_resouce?(resouce_url4, "csv")).to be_truthy
+      expect(item.send(:external_resouce?, resouce_url1, "html")).to be_truthy
+      expect(item.send(:external_resouce?, resouce_url2, "csv")).to be_falsy
+      expect(item.send(:external_resouce?, resouce_url3, "html")).to be_truthy
+      expect(item.send(:external_resouce?, resouce_url4, "csv")).to be_truthy
     end
   end
 end
