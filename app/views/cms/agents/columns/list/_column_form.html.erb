@@ -32,14 +32,14 @@
       name: "<%= column.name %>",
       getContent: function () {
         var contents = [];
-        $('<%= "##{id}" %> [name="item[column_values][][in_wrap][lists][]"').each(function () {
+        $('<%= "##{id}" %> [name="item[column_values][][in_wrap][lists][]"]').each(function () {
           contents.push($(this).val());
         });
         return contents;
       },
       setContent: function (content) {
         var selector, ele;
-        selector = $('<%= "##{id}" %> [name="item[column_values][][in_wrap][lists][]"');
+        selector = $('<%= "##{id}" %> [name="item[column_values][][in_wrap][lists][]"]');
         $.each(content, function (idx, value) {
           ele = selector[idx];
           if (ele) {
