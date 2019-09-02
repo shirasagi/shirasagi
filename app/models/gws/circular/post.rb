@@ -224,7 +224,7 @@ class Gws::Circular::Post
       message.send_date = Time.zone.now
       message.subject = I18n.t("gws_notification.gws/circular/post.subject", name: name)
       message.format = 'text'
-      message.url = url_helper.gws_circular_post_path(id: id, site: cur_site.id, category: '-', mode: '-')
+      message.url = url_helper.gws_circular_post_path(id: id, site: cur_site.id, category: '-')
       message.save!
 
       to_users = added_member_ids.map { |user_id| Gws::User.find(user_id) }
