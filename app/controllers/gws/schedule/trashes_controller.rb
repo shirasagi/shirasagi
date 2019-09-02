@@ -9,6 +9,7 @@ class Gws::Schedule::TrashesController < ApplicationController
   menu_view 'gws/crud/menu'
 
   self.destroy_notification_actions = []
+  self.destroy_all_notification_actions = []
 
   private
 
