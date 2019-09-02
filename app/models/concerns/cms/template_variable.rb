@@ -31,7 +31,7 @@ module Cms::TemplateVariable
   end
 
   def template_variable_handler_html(name, issuer)
-    return nil unless respond_to?(:name)
+    return nil unless respond_to?(name)
     self.send(name).present? ? self.send(name).html_safe : nil
   end
 
