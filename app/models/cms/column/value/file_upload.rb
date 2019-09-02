@@ -96,7 +96,10 @@ class Cms::Column::Value::FileUpload < Cms::Column::Value::Base
   def before_save_file
     if file_id_was.present? && file_id_was != file_id
       old_file = SS::File.find(file_id_was) rescue nil
-      old_file.destroy if old_file
+      if old_file
+        old_file.destroy
+        self.file_id = nil
+      end
     end
 
     return if file.blank?
