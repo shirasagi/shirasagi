@@ -80,19 +80,35 @@ describe "Rss::Node::WeatherXml", dbscope: :example, js: true do
       fill_in 'item[loop_mail_text]', with: unique_id
       fill_in 'item[lower_mail_text]', with: unique_id
       select '6弱', from: 'item[earthquake_intensity]'
+
       click_on '区域を選択する'
-      click_on region.name
+      wait_for_cbox do
+        click_on region.name
+        wait_for_ajax
+      end
+
       within '.mod-rss-anpi-mail-setting-my-anpi-post' do
         click_on 'フォルダーを選択する'
       end
-      expect(page).to have_css("span.select-item", text: member_node_my_anpi_post.name)
-      wait_for_cbox_close { click_on("close") rescue nil }
+      wait_for_cbox
+      within "#cboxContent" do
+        expect(page).to have_css("span.select-item", text: member_node_my_anpi_post.name)
+        sleep 1
+
+        first("#cboxClose").click
+        wait_for_ajax
+      end
+
       within '.mod-rss-anpi-mail-setting-anpi-mail' do
         click_on 'フォルダーを選択する'
       end
-      wait_for_cbox
-      expect(page).to have_css("span.select-item", text: ezine_node_member_page.name)
-      wait_for_cbox_close { click_on("close") rescue nil }
+      within "#cboxContent" do
+        expect(page).to have_css("span.select-item", text: ezine_node_member_page.name)
+        sleep 1
+
+        first("#cboxClose").click
+        wait_for_ajax
+      end
 
       click_on I18n.t('ss.buttons.save')
       expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
