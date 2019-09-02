@@ -1,6 +1,8 @@
 module Opendata::Harvest::CkanApiImporter
   extend ActiveSupport::Concern
 
+  private
+
   def import_from_ckan_api
     put_log("import from #{source_url} (Ckan API)")
 

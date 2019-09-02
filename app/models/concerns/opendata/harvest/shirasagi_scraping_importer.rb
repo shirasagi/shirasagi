@@ -1,6 +1,8 @@
 module Opendata::Harvest::ShirasagiScrapingImporter
   extend ActiveSupport::Concern
 
+  private
+
   def import_from_shirasagi_scraper
     put_log("import from #{source_url} (SHIRASAGI scraper)")
 
