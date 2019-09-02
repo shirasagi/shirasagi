@@ -10,9 +10,8 @@ module Cms::ChildList
     template_variable_handler :child_items, :template_variable_handler_child_items
   end
 
-  def child_limit
-    value = parent ? parent[:child_limit].to_i : self[:child_limit].to_i
-    (value < 1 || 1000 < value) ? 5 : value
+  def child_list_limit
+    parent ? parent[:child_limit].to_i : self[:child_limit].to_i
   end
 
   def category_nodes
@@ -20,7 +19,7 @@ module Cms::ChildList
       where({ filename: /^#{self.filename}\//, route: /^category\// }).
       where(self.condition_hash).
       order_by(self.sort_hash).
-      limit(child_limit)
+      limit(child_list_limit)
   end
 
   def category_pages
@@ -28,7 +27,7 @@ module Cms::ChildList
       in({ category_ids: self.id }).
       where(self.condition_hash).
       order_by(self.sort_hash).
-      limit(child_limit)
+      limit(child_list_limit)
   end
 
   def child_pages
@@ -36,7 +35,7 @@ module Cms::ChildList
       where({ filename: /^#{self.filename}\// }).
       where(self.condition_hash).
       order_by(self.sort_hash).
-      limit(child_limit)
+      limit(child_list_limit)
   end
 
   def child_nodes
@@ -44,12 +43,13 @@ module Cms::ChildList
       where({ filename: /^#{self.filename}\// }).
       where(self.condition_hash).
       order_by(self.sort_hash).
-      limit(child_limit)
+      limit(child_list_limit)
   end
 
   def child_items
     return category_nodes if self.route == 'category/node'
     return category_pages if self.route == 'category/page'
+
     child_nodes + child_pages
   end
 
