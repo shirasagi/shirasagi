@@ -21,7 +21,7 @@ describe "gws_report_categories", type: :feature, dbscope: :example do
 
       within "form#item-form" do
         fill_in "item[name]", with: name
-        fill_in "item[color]", with: color
+        fill_in "item[color]", with: color + "\n"
         fill_in "item[order]", with: order
         click_on I18n.t('ss.buttons.save')
       end
