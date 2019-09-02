@@ -90,7 +90,7 @@ class Cms::Node
       Cms::Page.site(site).and_public.
         where(self.condition_hash).
         order_by(self.sort_hash).
-        limit(child_limit)
+        limit(child_list_limit)
     end
 
     default_scope ->{ where(route: "cms/group_page") }

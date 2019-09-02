@@ -40,6 +40,24 @@ describe Category::Node::Node, type: :model, dbscope: :example do
       expect(item.render_loop_html(category, html: '#{pages.count}')).to eq('1')
     end
   end
+
+  context 'when child_limit is 10' do
+    let(:category) { create :category_node_node, cur_node: item, child_limit: 10 }
+
+    it do
+      expect(item.child_limit).to eq(5)
+      expect(category.child_limit).to eq(10)
+    end
+  end
+
+  context 'when child_limit is negative' do
+    let(:category) { create :category_node_node, cur_node: item, child_limit: -1 }
+
+    it do
+      expect(item.child_limit).to eq(5)
+      expect(category.child_limit).to eq(0)
+    end
+  end
 end
 
 describe Category::Node::Page, type: :model, dbscope: :example do
