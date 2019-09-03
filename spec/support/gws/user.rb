@@ -38,6 +38,12 @@ def create_gws_users
   g10 = Gws::Group.create name: "シラサギ市/企画政策部", order: 20
   g11 = Gws::Group.create name: "シラサギ市/企画政策部/政策課", order: 30
 
+  if RSpec.current_example.try(:metadata).to_h[:es]
+    g00.menu_elasticsearch_state = 'show'
+    g00.elasticsearch_hosts = 'http://localhost:9200'
+    g00.save!
+  end
+
   role = Gws::Role.create name: I18n.t('gws.roles.admin'), site_id: g00.id,
     permissions: Gws::Role.permission_names, permission_level: 3
 
