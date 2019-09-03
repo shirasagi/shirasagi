@@ -84,31 +84,23 @@ describe "Rss::Node::WeatherXml", dbscope: :example, js: true do
       click_on '区域を選択する'
       wait_for_cbox do
         click_on region.name
-        wait_for_ajax
       end
 
       within '.mod-rss-anpi-mail-setting-my-anpi-post' do
         click_on 'フォルダーを選択する'
       end
-      wait_for_cbox
-      within "#cboxContent" do
+      wait_for_cbox do
         expect(page).to have_css("span.select-item", text: member_node_my_anpi_post.name)
-        sleep 1
-
-        first("#cboxClose").click
-        wait_for_ajax
       end
+      wait_for_cbox_close
 
       within '.mod-rss-anpi-mail-setting-anpi-mail' do
         click_on 'フォルダーを選択する'
       end
-      within "#cboxContent" do
+      wait_for_cbox do
         expect(page).to have_css("span.select-item", text: ezine_node_member_page.name)
-        sleep 1
-
-        first("#cboxClose").click
-        wait_for_ajax
       end
+      wait_for_cbox_close
 
       click_on I18n.t('ss.buttons.save')
       expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
