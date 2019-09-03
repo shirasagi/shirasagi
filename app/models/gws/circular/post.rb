@@ -121,10 +121,10 @@ class Gws::Circular::Post
     end
   end
 
-  def reminder_url
-    name = reference_model.tr('/', '_') + '_path'
-    [name, category: '-', id: id, site: site_id]
-  end
+  # def reminder_url
+  #   name = reference_model.tr('/', '_') + '_path'
+  #   [name, category: '-', id: id, site: site_id]
+  # end
 
   def draft?
     !public?
@@ -142,13 +142,13 @@ class Gws::Circular::Post
     deleted.present? && deleted <= Time.zone.now
   end
 
-  def custom_group_member?(user)
-    custom_groups.where(member_ids: user.id).exists?
-  end
+  # def custom_group_member?(user)
+  #   custom_groups.where(member_ids: user.id).exists?
+  # end
 
-  def user?(user)
-    self.user.id == user.id
-  end
+  # def user?(user)
+  #   self.user.id == user.id
+  # end
 
   def state_options
     %w(public draft).map do |v|
@@ -249,16 +249,16 @@ class Gws::Circular::Post
     end
   end
 
-  def search_start_end(params)
-    return all if params.blank?
-
-    criteria = all
-    if params[:start].present?
-      criteria = criteria.gte(due_date: params[:start])
-    end
-    if params[:end].present?
-      criteria = criteria.lte(start_at: params[:end])
-    end
-    criteria
-  end
+  # def search_start_end(params)
+  #   return all if params.blank?
+  #
+  #   criteria = all
+  #   if params[:start].present?
+  #     criteria = criteria.gte(due_date: params[:start])
+  #   end
+  #   if params[:end].present?
+  #     criteria = criteria.lte(start_at: params[:end])
+  #   end
+  #   criteria
+  # end
 end

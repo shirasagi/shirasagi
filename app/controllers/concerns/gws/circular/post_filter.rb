@@ -26,16 +26,16 @@ module Gws::Circular::PostFilter
     ret
   end
 
+  # must be overridden by sub-class
   def set_cur_tab
-    @cur_tab = nil
   end
 
   def set_crumbs
     set_category
     @crumbs << [@cur_site.menu_circular_label || I18n.t('modules.gws/circular'), gws_circular_main_path]
-    if @category.present?
-      @crumbs << [@category.name, action: :index]
-    end
+    # if @category.present?
+    #   @crumbs << [@category.name, action: :index]
+    # end
     @crumbs << @cur_tab
   end
 
