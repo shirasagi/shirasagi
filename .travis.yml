@@ -132,17 +132,9 @@ jobs:
         create:
           name: codeclimate.$TRAVIS_JOB_NUMBER.json
           paths: codeclimate.$TRAVIS_JOB_NUMBER.json
-    - name: Models
-      script:
-        - bundle exec rspec -p 10 spec/models/
-        - ./cc-test-reporter format-coverage -t simplecov -o codeclimate.$TRAVIS_JOB_NUMBER.json coverage/.resultset.json
-      workspaces:
-        create:
-          name: codeclimate.$TRAVIS_JOB_NUMBER.json
-          paths: codeclimate.$TRAVIS_JOB_NUMBER.json
     - name: Other
       script:
-        - bundle exec rspec -p 10 spec/ --pattern "spec/{jobs,helpers,lib,mailers,requests,validators}/**/*.rb"
+        - bundle exec rspec -p 10 spec/ --pattern "spec/{models,jobs,helpers,lib,mailers,requests,validators}/**/*.rb"
         - ./cc-test-reporter format-coverage -t simplecov -o codeclimate.$TRAVIS_JOB_NUMBER.json coverage/.resultset.json
       workspaces:
         create:
@@ -154,7 +146,7 @@ jobs:
       before_script: skip
       script:
         - ls -la codeclimate.*
-        - ./cc-test-reporter sum-coverage codeclimate.*.json -p 8
+        - ./cc-test-reporter sum-coverage codeclimate.*.json -p 7
         - ./cc-test-reporter upload-coverage -r 8447130d9db9efadd8b86604c1976a4595fd3adc290daf45674490ba949da336
       workspaces:
         use:
@@ -165,7 +157,6 @@ jobs:
           - codeclimate.$TRAVIS_JOB_ID.6.json
           - codeclimate.$TRAVIS_JOB_ID.7.json
           - codeclimate.$TRAVIS_JOB_ID.8.json
-          - codeclimate.$TRAVIS_JOB_ID.9.json
 
 notifications:
   webhooks: https://coveralls.io/webhook
