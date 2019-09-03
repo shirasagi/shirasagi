@@ -77,22 +77,26 @@ class Gws::Circular::Post
 
     def search_keyword(params)
       return all if params.blank? || params[:keyword].blank?
+
       all.keyword_in(params[:keyword], :name, :text)
     end
 
     def search_category_id(params)
       return all if params.blank? || params[:category_id].blank?
+
       all.in(category_ids: params[:category_id])
     end
 
     def search_state(params)
       return all if params.blank? || params[:state].blank?
+
       all.where(state: params[:state])
     end
 
     def search_article_state(params)
       return all if params.blank? || params[:article_state].blank?
       return all if params[:article_state] == 'both'
+
       case params[:article_state]
       when 'seen'
         exists("seen.#{params[:user].id}" => true)
@@ -168,7 +172,7 @@ class Gws::Circular::Post
     return if site.circular_filesize_limit.blank?
     return if site.circular_filesize_limit <= 0
 
-    limit = site.circular_filesize_limit * 1024 * 1024
+    limit = site.circular_filesize_limit_in_bytes
     size = files.compact.map(&:size).sum
 
     if size > limit
@@ -211,6 +215,7 @@ class Gws::Circular::Post
     removed_member_ids.select! { |user_id| Gws::User.find(user_id).use_notice?(self) }
 
     return if added_member_ids.blank? && removed_member_ids.blank?
+
     create_memo_notice(added_member_ids, removed_member_ids)
   end
 
