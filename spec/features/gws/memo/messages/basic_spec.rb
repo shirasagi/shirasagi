@@ -9,6 +9,8 @@ describe 'gws_memo_messages', type: :feature, dbscope: :example do
   let!(:sent_memo) { create(:gws_memo_message, site: site, in_to_members: [user2.id.to_s]) }
   let!(:trash_memo) { create(:gws_memo_message, user: user2, site: site, in_path: { user1.id.to_s => 'INBOX.Trash' }) }
   let!(:folder) { create(:gws_memo_folder, user: user1, site: site) }
+  let(:subject) { unique_id }
+  let(:text) { Array.new(rand(2..3)) { unique_id }.join("\n") }
 
   context 'with auth', js: true do
     before { login_gws_user }
