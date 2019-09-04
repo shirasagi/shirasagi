@@ -1,10 +1,9 @@
 <nav class="mod-navi current-navi">
-  <% category = params[:category] ? params[:category] : "-" %>
   <h2><%= link_to @cur_site.menu_circular_label || t('modules.gws/circular'), gws_circular_main_path, class: 'icon-circular' %></h2>
-  <h3><%= link_to t('gws/circular.tabs.post'), { controller: 'posts', action: 'index', category: category }, { class: 'post' } %></h3>
-  <h3><%= link_to t('gws/circular.tabs.admin'), { controller: 'admins', action: 'index', category: category }, { class: 'admin' } %></h3>
+  <h3><%= link_to t('gws/circular.tabs.post'), { controller: 'posts', action: 'index', category: '-' }, { class: 'post' } %></h3>
+  <h3><%= link_to t('gws/circular.tabs.admin'), { controller: 'admins', action: 'index', category: '-' }, { class: 'admin' } %></h3>
   <% if Gws::Circular::Post.allowed?(:trash, @cur_user, site: @cur_site) %>
-    <h3><%= link_to t('gws/circular.tabs.trash'), { controller: 'trashes', action: 'index', category: category }, { class: 'trash' } %></h3>
+    <h3><%= link_to t('gws/circular.tabs.trash'), { controller: 'trashes', action: 'index', category: '-' }, { class: 'trash' } %></h3>
   <% end %>
 
   <% if Gws::Circular::Category.allowed?(:read, @cur_user, site: @cur_site) %>

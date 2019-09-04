@@ -33,10 +33,10 @@ module Gws::Circular::PostFilter
   def set_crumbs
     set_category
     @crumbs << [@cur_site.menu_circular_label || I18n.t('modules.gws/circular'), gws_circular_main_path]
-    # if @category.present?
-    #   @crumbs << [@category.name, action: :index]
-    # end
-    @crumbs << @cur_tab
+    @crumbs << @cur_tab if @cur_tab
+    if @category.present?
+      @crumbs << [@category.name, { action: :index, category: @category }]
+    end
   end
 
   def set_category

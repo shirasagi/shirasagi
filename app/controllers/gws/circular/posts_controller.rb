@@ -8,7 +8,7 @@ class Gws::Circular::PostsController < ApplicationController
   private
 
   def set_cur_tab
-    @cur_tab = [I18n.t('gws/circular.tabs.post'), action: :index]
+    @cur_tab = [I18n.t('gws/circular.tabs.post'), { action: :index, category: '-' }]
   end
 
   def set_items

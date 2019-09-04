@@ -33,26 +33,34 @@ class Gws::Circular::CommentsController < ApplicationController
   def set_crumbs
     set_category
     @crumbs << [t("modules.gws/circular"), gws_circular_main_path]
+    if params[:parent] == 'posts'
+      @crumbs << [I18n.t('gws/circular.tabs.post'), gws_circular_posts_path(category: '-')]
+    else
+      @crumbs << [I18n.t('gws/circular.tabs.admin'), gws_circular_admins_path(category: '-')]
+    end
     if @category.present?
       if params[:parent] == 'posts'
-        @crumbs << [@category.name, gws_circular_posts_path]
-        @crumbs << [I18n.t('gws/circular.tabs.post'), action: :index]
+        @crumbs << [@category.name, gws_circular_posts_path(category: @category)]
       else
-        @crumbs << [@category.name, gws_circular_admins_path]
+        @crumbs << [@category.name, gws_circular_admins_path(category: @category)]
       end
     end
+
+    set_post
     if params[:parent] == 'posts'
-      @crumbs << [I18n.t('gws/circular.tabs.post'), gws_circular_posts_path]
+      @crumbs << [@post.name, gws_circular_post_path(category: @category || '-', id: @post)]
     else
-      @crumbs << [I18n.t('gws/circular.tabs.admin'), gws_circular_admins_path]
+      @crumbs << [@post.name, gws_circular_admin_path(category: @category || '-', id: @post)]
     end
   end
 
   def set_post
-    if params[:post_id].present?
-      @post ||= Gws::Circular::Post.find(params[:post_id])
-    elsif params[:admin_id].present?
-      @post ||= Gws::Circular::Post.find(params[:admin_id])
+    @post ||= begin
+      if params[:post_id].present?
+        Gws::Circular::Post.find(params[:post_id])
+      elsif params[:admin_id].present?
+        Gws::Circular::Post.find(params[:admin_id])
+      end
     end
     @post || (raise '404')
   end
