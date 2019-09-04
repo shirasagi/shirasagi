@@ -45,7 +45,7 @@ env:
     - TZ=Asia/Tokyo
     - CAPYBARA_MAX_WAIT_TIME=40
     - CAPYBARA_AJAX_WAIT_TIME=40
-    - COVERALLS_PARALLEL=true
+    #- COVERALLS_PARALLEL=true
     - allow_open_jtalk=1
 
 before_install:
@@ -160,5 +160,5 @@ jobs:
           - codeclimate.7.json
           - codeclimate.8.json
 
-notifications:
-  webhooks: https://coveralls.io/webhook
+#notifications:
+#  webhooks: https://coveralls.io/webhook
