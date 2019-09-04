@@ -305,7 +305,8 @@ describe "gws_circular_admins", type: :feature, dbscope: :example, js: true do
       expect(SS::Notification.all.count).to eq 1
       SS::Notification.all.reorder(id: -1).first.tap do |notice|
         expect(notice.group_id).to eq site.id
-        expect(notice.member_ids).to eq [ user1.id, user2.id ]
+        expect(notice.members.count).to eq 2
+        expect(notice.member_ids).to include(user1.id, user2.id)
         expect(notice.user_id).to eq gws_user.id
         expect(notice.subject).to eq I18n.t("gws_notification.gws/circular/post.subject", name: topic.name)
         expect(notice.text).to be_blank
