@@ -89,59 +89,59 @@ jobs:
       name: Features_A
       script:
         - bundle exec rspec -p 10 spec/ --pattern "spec/features/{a,b,c,d,e,f}*/**/*.rb"
-        - ./cc-test-reporter format-coverage -t simplecov -o codeclimate.$TRAVIS_JOB_NUMBER.json coverage/.resultset.json
+        - ./cc-test-reporter format-coverage -t simplecov -o codeclimate.2.json coverage/.resultset.json
       workspaces:
         create:
-          name: codeclimate.$TRAVIS_JOB_NUMBER.json
-          paths: codeclimate.$TRAVIS_JOB_NUMBER.json
+          name: codeclimate.2.json
+          paths: codeclimate.2.json
     - name: Features_G
       script:
         - bundle exec rspec -p 10 spec/ --pattern "spec/features/{g}*/**/*.rb" --exclude "**/gws/memo/**/*.rb"
-        - ./cc-test-reporter format-coverage -t simplecov -o codeclimate.$TRAVIS_JOB_NUMBER.json coverage/.resultset.json
+        - ./cc-test-reporter format-coverage -t simplecov -o codeclimate.3.json coverage/.resultset.json
       workspaces:
         create:
-          name: codeclimate.$TRAVIS_JOB_NUMBER.json
-          paths: codeclimate.$TRAVIS_JOB_NUMBER.json
+          name: codeclimate.3.json
+          paths: codeclimate.3.json
     - name: Features_G (Memo)
       script:
         - bundle exec rspec -p 10 spec/ --pattern "spec/features/gws/memo/**/*.rb"
-        - ./cc-test-reporter format-coverage -t simplecov -o codeclimate.$TRAVIS_JOB_NUMBER.json coverage/.resultset.json
+        - ./cc-test-reporter format-coverage -t simplecov -o codeclimate.4.json coverage/.resultset.json
       workspaces:
         create:
-          name: codeclimate.$TRAVIS_JOB_NUMBER.json
-          paths: codeclimate.$TRAVIS_JOB_NUMBER.json
+          name: codeclimate.4.json
+          paths: codeclimate.4.json
     - name: Features_H
       script:
         - bundle exec rspec -p 10 spec/ --pattern "spec/features/{h,i,j,k,l,m,o}*/**/*.rb"
-        - ./cc-test-reporter format-coverage -t simplecov -o codeclimate.$TRAVIS_JOB_NUMBER.json coverage/.resultset.json
+        - ./cc-test-reporter format-coverage -t simplecov -o codeclimate.5.json coverage/.resultset.json
       workspaces:
         create:
-          name: codeclimate.$TRAVIS_JOB_NUMBER.json
-          paths: codeclimate.$TRAVIS_JOB_NUMBER.json
+          name: codeclimate.5.json
+          paths: codeclimate.5.json
     - name: Features_P
       script:
         - bundle exec rspec -p 10 spec/ --pattern "spec/features/{p,q,r,s,u,v,w}*/**/*.rb" --exclude "**/webmail/**/*.rb"
-        - ./cc-test-reporter format-coverage -t simplecov -o codeclimate.$TRAVIS_JOB_NUMBER.json coverage/.resultset.json
+        - ./cc-test-reporter format-coverage -t simplecov -o codeclimate.6.json coverage/.resultset.json
       workspaces:
         create:
-          name: codeclimate.$TRAVIS_JOB_NUMBER.json
-          paths: codeclimate.$TRAVIS_JOB_NUMBER.json
+          name: codeclimate.6.json
+          paths: codeclimate.6.json
     - name: Features_W (Webmail)
       script:
         - bundle exec rspec -p 10 spec/ --pattern "spec/features/webmail/**/*.rb"
-        - ./cc-test-reporter format-coverage -t simplecov -o codeclimate.$TRAVIS_JOB_NUMBER.json coverage/.resultset.json
+        - ./cc-test-reporter format-coverage -t simplecov -o codeclimate.7.json coverage/.resultset.json
       workspaces:
         create:
-          name: codeclimate.$TRAVIS_JOB_NUMBER.json
-          paths: codeclimate.$TRAVIS_JOB_NUMBER.json
+          name: codeclimate.7.json
+          paths: codeclimate.7.json
     - name: Other
       script:
         - bundle exec rspec -p 10 spec/ --pattern "spec/{models,jobs,helpers,lib,mailers,requests,validators}/**/*.rb"
-        - ./cc-test-reporter format-coverage -t simplecov -o codeclimate.$TRAVIS_JOB_NUMBER.json coverage/.resultset.json
+        - ./cc-test-reporter format-coverage -t simplecov -o codeclimate.8.json coverage/.resultset.json
       workspaces:
         create:
-          name: codeclimate.$TRAVIS_JOB_NUMBER.json
-          paths: codeclimate.$TRAVIS_JOB_NUMBER.json
+          name: codeclimate.8.json
+          paths: codeclimate.8.json
 
     - stage: deploy
       name: Code Climate
@@ -152,13 +152,13 @@ jobs:
         - ./cc-test-reporter upload-coverage -r 8447130d9db9efadd8b86604c1976a4595fd3adc290daf45674490ba949da336
       workspaces:
         use:
-          - codeclimate.$TRAVIS_BUILD_NUMBER.2.json
-          - codeclimate.$TRAVIS_BUILD_NUMBER.3.json
-          - codeclimate.$TRAVIS_BUILD_NUMBER.4.json
-          - codeclimate.$TRAVIS_BUILD_NUMBER.5.json
-          - codeclimate.$TRAVIS_BUILD_NUMBER.6.json
-          - codeclimate.$TRAVIS_BUILD_NUMBER.7.json
-          - codeclimate.$TRAVIS_BUILD_NUMBER.8.json
+          - codeclimate.2.json
+          - codeclimate.3.json
+          - codeclimate.4.json
+          - codeclimate.5.json
+          - codeclimate.6.json
+          - codeclimate.7.json
+          - codeclimate.8.json
 
 notifications:
   webhooks: https://coveralls.io/webhook
