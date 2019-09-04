@@ -77,22 +77,26 @@ class Gws::Circular::Post
 
     def search_keyword(params)
       return all if params.blank? || params[:keyword].blank?
+
       all.keyword_in(params[:keyword], :name, :text)
     end
 
     def search_category_id(params)
       return all if params.blank? || params[:category_id].blank?
+
       all.in(category_ids: params[:category_id])
     end
 
     def search_state(params)
       return all if params.blank? || params[:state].blank?
+
       all.where(state: params[:state])
     end
 
     def search_article_state(params)
       return all if params.blank? || params[:article_state].blank?
       return all if params[:article_state] == 'both'
+
       case params[:article_state]
       when 'seen'
         exists("seen.#{params[:user].id}" => true)
@@ -121,10 +125,10 @@ class Gws::Circular::Post
     end
   end
 
-  def reminder_url
-    name = reference_model.tr('/', '_') + '_path'
-    [name, category: '-', id: id, site: site_id]
-  end
+  # def reminder_url
+  #   name = reference_model.tr('/', '_') + '_path'
+  #   [name, category: '-', id: id, site: site_id]
+  # end
 
   def draft?
     !public?
@@ -142,13 +146,13 @@ class Gws::Circular::Post
     deleted.present? && deleted <= Time.zone.now
   end
 
-  def custom_group_member?(user)
-    custom_groups.where(member_ids: user.id).exists?
-  end
+  # def custom_group_member?(user)
+  #   custom_groups.where(member_ids: user.id).exists?
+  # end
 
-  def user?(user)
-    self.user.id == user.id
-  end
+  # def user?(user)
+  #   self.user.id == user.id
+  # end
 
   def state_options
     %w(public draft).map do |v|
@@ -168,7 +172,7 @@ class Gws::Circular::Post
     return if site.circular_filesize_limit.blank?
     return if site.circular_filesize_limit <= 0
 
-    limit = site.circular_filesize_limit * 1024 * 1024
+    limit = site.circular_filesize_limit_in_bytes
     size = files.compact.map(&:size).sum
 
     if size > limit
@@ -211,6 +215,7 @@ class Gws::Circular::Post
     removed_member_ids.select! { |user_id| Gws::User.find(user_id).use_notice?(self) }
 
     return if added_member_ids.blank? && removed_member_ids.blank?
+
     create_memo_notice(added_member_ids, removed_member_ids)
   end
 
@@ -224,7 +229,7 @@ class Gws::Circular::Post
       message.send_date = Time.zone.now
       message.subject = I18n.t("gws_notification.gws/circular/post.subject", name: name)
       message.format = 'text'
-      message.url = url_helper.gws_circular_post_path(id: id, site: cur_site.id, category: '-', mode: '-')
+      message.url = url_helper.gws_circular_post_path(id: id, site: cur_site.id, category: '-')
       message.save!
 
       to_users = added_member_ids.map { |user_id| Gws::User.find(user_id) }
@@ -249,16 +254,16 @@ class Gws::Circular::Post
     end
   end
 
-  def search_start_end(params)
-    return all if params.blank?
-
-    criteria = all
-    if params[:start].present?
-      criteria = criteria.gte(due_date: params[:start])
-    end
-    if params[:end].present?
-      criteria = criteria.lte(start_at: params[:end])
-    end
-    criteria
-  end
+  # def search_start_end(params)
+  #   return all if params.blank?
+  #
+  #   criteria = all
+  #   if params[:start].present?
+  #     criteria = criteria.gte(due_date: params[:start])
+  #   end
+  #   if params[:end].present?
+  #     criteria = criteria.lte(start_at: params[:end])
+  #   end
+  #   criteria
+  # end
 end

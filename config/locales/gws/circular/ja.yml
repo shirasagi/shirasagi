@@ -106,6 +106,10 @@ ja:
         gws/circular/post:
           member_length: 参加者は%{max}人以下にしてください。
           file_size_limit: 添付ファイルのサイズ（%{size}）が 最大サイズ（%{limit}）を超えました。
+        gws/circular/category:
+          too_deep: は%{max}階層以下にしてください。
+          not_found_parent: 親カテゴリーが存在しません。
+          found_children: 子カテゴリーが存在します。
     attributes:
       gws/circular/post:
         name: タイトル

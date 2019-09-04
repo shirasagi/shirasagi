@@ -14,12 +14,12 @@ class Gws::Circular::Category
   validate :validate_parent_name
   before_destroy :validate_children
 
-  class << self
-    def and_name_prefix(name_prefix)
-      name_prefix = name_prefix[1..-1] if name_prefix.starts_with?('/')
-      self.or({ name: name_prefix }, { name: /^#{::Regexp.escape(name_prefix)}\// })
-    end
-  end
+  # class << self
+  #   def and_name_prefix(name_prefix)
+  #     name_prefix = name_prefix[1..-1] if name_prefix.starts_with?('/')
+  #     self.or({ name: name_prefix }, { name: /^#{::Regexp.escape(name_prefix)}\// })
+  #   end
+  # end
 
   private
 
@@ -33,6 +33,7 @@ class Gws::Circular::Category
 
   def validate_name_depth
     return if name.blank?
+
     errors.add :name, :too_deep, max: 2 if name.count('/') >= 2
   end
 

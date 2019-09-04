@@ -24,7 +24,7 @@ describe "gws_board_categories", type: :feature, dbscope: :example do
 
       within "form#item-form" do
         fill_in "item[name]", with: name
-        fill_in "item[color]", with: color
+        fill_in "item[color]", with: color + "\n"
         click_button I18n.t('ss.buttons.save')
       end
 

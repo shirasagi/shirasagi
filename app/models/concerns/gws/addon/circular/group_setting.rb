@@ -23,22 +23,6 @@ module Gws::Addon::Circular::GroupSetting
     alias_method :circular_files_break_options, :break_options
   end
 
-  def circular_default_due_date
-    self[:circular_default_due_date]
-  end
-
-  def circular_max_member
-    self[:circular_max_member]
-  end
-
-  def circular_filesize_limit
-    self[:circular_filesize_limit]
-  end
-
-  def circular_delete_threshold
-    self[:circular_delete_threshold]
-  end
-
   def circular_delete_threshold_options
     I18n.t('gws/circular.options.circular_delete_threshold').
       map.
@@ -48,6 +32,12 @@ module Gws::Addon::Circular::GroupSetting
 
   def circular_delete_threshold_name
     I18n.t('gws/circular.options.circular_delete_threshold')[circular_delete_threshold]
+  end
+
+  def circular_filesize_limit_in_bytes
+    return if circular_filesize_limit.blank?
+
+    circular_filesize_limit * 1_024 * 1_024
   end
 end
 
