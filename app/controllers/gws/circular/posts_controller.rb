@@ -27,6 +27,7 @@ class Gws::Circular::PostsController < ApplicationController
   def show
     raise '404' if @item.draft? || @item.deleted?
     raise '403' unless @item.member?(@cur_user)
+
     if @item.see_type == 'simple' && @item.unseen?(@cur_user)
       @item.set_seen(@cur_user).save
     end

@@ -80,6 +80,7 @@ module Gws::Circular::PostFilter
       @item.state = 'public'
     end
     raise '403' unless @item.allowed?(:edit, @cur_user, site: @cur_site)
+
     render_create @item.save
   end
 
@@ -92,6 +93,7 @@ module Gws::Circular::PostFilter
       @item.state = 'public'
     end
     raise '403' unless @item.allowed?(:edit, @cur_user, site: @cur_site)
+
     render_update @item.update
   end
 
@@ -110,6 +112,7 @@ module Gws::Circular::PostFilter
     raise '404' if !@item.public? || @item.active?
     raise '403' unless @item.member?(@cur_user)
     raise '404' if @item.seen?(@cur_user)
+
     render_update @item.set_seen(@cur_user).update
   end
 
@@ -117,6 +120,7 @@ module Gws::Circular::PostFilter
     raise '404' if !@item.public? || @item.active?
     raise '403' unless @item.member?(@cur_user)
     raise '404' if @item.unseen?(@cur_user)
+
     render_update @item.unset_seen(@cur_user).update
   end
 
