@@ -74,6 +74,8 @@ before_script: # bash .travis.d/before_script.sh
 #script: travis_wait 60 bash .travis.d/script.sh
 
 after_script:
+  - echo $TRAVIS_BUILD_ID
+  - echo $TRAVIS_BUILD_NUMBER
   - echo $TRAVIS_JOB_ID
   - echo $TRAVIS_JOB_NUMBER
   - echo $TRAVIS_JOB_NAME
