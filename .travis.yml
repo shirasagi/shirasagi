@@ -152,13 +152,13 @@ jobs:
         - ./cc-test-reporter upload-coverage -r 8447130d9db9efadd8b86604c1976a4595fd3adc290daf45674490ba949da336
       workspaces:
         use:
-          - codeclimate.$TRAVIS_JOB_ID.2.json
-          - codeclimate.$TRAVIS_JOB_ID.3.json
-          - codeclimate.$TRAVIS_JOB_ID.4.json
-          - codeclimate.$TRAVIS_JOB_ID.5.json
-          - codeclimate.$TRAVIS_JOB_ID.6.json
-          - codeclimate.$TRAVIS_JOB_ID.7.json
-          - codeclimate.$TRAVIS_JOB_ID.8.json
+          - codeclimate.$TRAVIS_BUILD_NUMBER.2.json
+          - codeclimate.$TRAVIS_BUILD_NUMBER.3.json
+          - codeclimate.$TRAVIS_BUILD_NUMBER.4.json
+          - codeclimate.$TRAVIS_BUILD_NUMBER.5.json
+          - codeclimate.$TRAVIS_BUILD_NUMBER.6.json
+          - codeclimate.$TRAVIS_BUILD_NUMBER.7.json
+          - codeclimate.$TRAVIS_BUILD_NUMBER.8.json
 
 notifications:
   webhooks: https://coveralls.io/webhook
