@@ -31,10 +31,6 @@ module Gws::Circular::See
     self
   end
 
-  def toggle_seen(user)
-    seen?(user) ? unset_seen(user) : set_seen(user)
-  end
-
   def see_action_label(user)
     key = seen?(user) ? 'unset_seen' : 'set_seen'
     I18n.t(key, scope: 'gws/circular.post')
