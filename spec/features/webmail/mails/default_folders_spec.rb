@@ -5,7 +5,7 @@ describe "webmail_mails", type: :feature, dbscope: :example, imap: true, js: tru
     let(:user) { webmail_imap }
 
     shared_examples "webmail mails flow" do
-      context "with auth" do
+      context do
         before do
           ActionMailer::Base.deliveries.clear
           login_user(user)
@@ -15,14 +15,24 @@ describe "webmail_mails", type: :feature, dbscope: :example, imap: true, js: tru
           ActionMailer::Base.deliveries.clear
         end
 
-        it "#index" do
+        it do
           visit index_path
 
           find(".webmail-navi-mailboxes .inbox-sent").click
+          expect(page).to have_css(".webmail-navi-mailboxes .inbox-sent.current", text: I18n.t("webmail.box.sent"))
+
           find(".webmail-navi-mailboxes .inbox-draft").click
+          expect(page).to have_css(".webmail-navi-mailboxes .inbox-draft.current", text: I18n.t("webmail.box.draft"))
+
           find(".webmail-navi-mailboxes .inbox-trash").click
+          expect(page).to have_css(".webmail-navi-mailboxes .inbox-trash.current", text: I18n.t("webmail.box.trash"))
+
           find(".webmail-navi-mailboxes .reload").click
+          expect(page).to have_css('#notice', text: I18n.t("webmail.notice.no_recent_mail"))
+
           find(".webmail-navi-quota .reload").click
+          quota_label = "#{0.to_s(:human_size)}/#{(10 * 1_024 * 1_024).to_s(:human_size)}"
+          expect(page).to have_css(".webmail-navi-quota .ss-quota-bar .label", text: quota_label)
         end
       end
     end
