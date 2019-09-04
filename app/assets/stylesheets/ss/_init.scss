@@ -62,8 +62,8 @@ $border-white: 1px solid $white;
 @mixin pc {
   @content;
 }
-@mixin mb {
-  @media only screen and (max-width: 768px) { @content; }
+@mixin mb($width: 768px) {
+  @media only screen and (max-width: $width) { @content; }
 }
 @mixin clear {
     zoom:1;

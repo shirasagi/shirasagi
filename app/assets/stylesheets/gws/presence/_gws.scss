@@ -1,4 +1,18 @@
+.presence-wrap {
+  @include display-flex;
+  @include mb(800px) {
+    display: block;
+  }
+}
+.presence-main {
+  flex: 1;
+}
 .presence-groups {
+  width: 30%;
+  @include mb(800px) {
+    width: 100%;
+  }
+  margin-right: 10px;
   .all-groups {
     border: 1px solid #dcdcdc;
     margin-bottom: 5px;
@@ -62,25 +76,27 @@
     cursor: pointer;
     color: #f25a38;
   }
-  .data-table-wrap {
-    padding: 0px 10px 10px 10px
-  }
   table.data-table {
     table-layout: fixed;
     tr {
       background: $white;
     }
     th.name {
-      width: 18%;
+      //width: 18%;
+      width: 15em;
+      @include mb(1000px) {
+        width: auto;
+      }
     }
-    th.presence-plan {
-      width: 32%;
-    }
-    th.presence-memo {
-      width: 40%;
-    }
-    th.presence-send_message {
-      width: 10%;
+    //th.presence-plan {
+    //  width: 32%;
+    //}
+    //th.presence-memo {
+    //  width: 40%;
+    //}
+    th.presence-send-message {
+      //width: 10%;
+      width: 6.5em;
     }
     td {
       background: none;
@@ -114,9 +130,9 @@
         position: relative;
       }
     }
-    .select-presence-state {
-      width: calc(100% - 3em);
-    }
+    //.select-presence-state {
+    //  width: calc(100% - 3em);
+    //}
     .editable .presence-state {
       cursor: pointer;
     }
@@ -132,13 +148,14 @@
         display: flex;
         float: left;
       }
-      nav {
-        float: right;
-        @include mb {
-          float: none;
-          input[type="text"] {
-            width: auto !important;
-          }
+    }
+    nav.search {
+      float: right;
+      margin: 5px 15px 0 0;
+      @include mb {
+        float: none;
+        input[type="text"] {
+          width: auto !important;
         }
       }
     }
