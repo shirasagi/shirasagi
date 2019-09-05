@@ -3,7 +3,7 @@ require 'spec_helper'
 describe "sns_job_logs", dbscope: :example, js: true do
   let(:site) { gws_site }
   let(:user) { gws_user }
-  let(:now) { Time.zone.now.beginning_of_minute }
+  let(:now) { Time.zone.now.change(hour: 9).beginning_of_minute }
   let!(:log1) do
     Timecop.freeze(now.ago(3.days)) do
       job1 = Gws::Schedule::TrashPurgeJob.new.bind("site_id" => site.id, "user_id" => user.id)

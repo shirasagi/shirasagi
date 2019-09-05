@@ -142,7 +142,7 @@ describe 'gws_memo_messages', type: :feature, dbscope: :example do
         end
       end
 
-      within '#cboxLoadedContent' do
+      wait_for_cbox do
         expect(page).to have_content(user2.name)
         click_on user2.name
       end
@@ -165,7 +165,7 @@ describe 'gws_memo_messages', type: :feature, dbscope: :example do
         end
       end
 
-      within '#cboxLoadedContent' do
+      wait_for_cbox do
         expect(page).to have_content(user2.name)
         click_on user2.name
       end

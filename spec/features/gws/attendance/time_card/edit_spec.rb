@@ -2,7 +2,7 @@ require 'spec_helper'
 
 describe "gws_attendance_time_card", type: :feature, dbscope: :example, js: true do
   let(:site) { gws_site }
-  let(:now) { Time.zone.now.beginning_of_minute }
+  let(:now) { Time.zone.now.change(hour: 9).beginning_of_minute }
   let(:reason) { unique_id }
   let(:memo) { unique_id }
 
@@ -48,7 +48,7 @@ describe "gws_attendance_time_card", type: :feature, dbscope: :example, js: true
         within ".today .action .#{cell_type}" do
           click_on I18n.t('ss.buttons.edit')
         end
-        within '#cboxLoadedContent form.cell-edit' do
+        wait_for_cbox do
           select '8時', from: 'cell[in_hour]'
           select '32分', from: 'cell[in_minute]'
           fill_in 'cell[in_reason]', with: reason
@@ -69,7 +69,7 @@ describe "gws_attendance_time_card", type: :feature, dbscope: :example, js: true
         within ".today .action .#{cell_type}" do
           click_on I18n.t('ss.buttons.edit')
         end
-        within '#cboxLoadedContent form.cell-edit' do
+        wait_for_cbox do
           click_on I18n.t('ss.buttons.clear')
           fill_in 'cell[in_reason]', with: reason
           click_on I18n.t('ss.buttons.save')
@@ -98,7 +98,7 @@ describe "gws_attendance_time_card", type: :feature, dbscope: :example, js: true
         within '.cell-toolbar' do
           click_on I18n.t('ss.buttons.edit')
         end
-        within '#cboxLoadedContent form.cell-edit' do
+        wait_for_cbox do
           select '8時', from: 'cell[in_hour]'
           select '32分', from: 'cell[in_minute]'
           fill_in 'cell[in_reason]', with: reason
@@ -124,7 +124,7 @@ describe "gws_attendance_time_card", type: :feature, dbscope: :example, js: true
         within '.cell-toolbar' do
           click_on I18n.t('ss.buttons.edit')
         end
-        within '#cboxLoadedContent form.cell-edit' do
+        wait_for_cbox do
           click_on I18n.t('ss.buttons.clear')
           fill_in 'cell[in_reason]', with: reason
           click_on I18n.t('ss.buttons.save')
@@ -190,7 +190,7 @@ describe "gws_attendance_time_card", type: :feature, dbscope: :example, js: true
         within '.today .action .memo' do
           click_on I18n.t('ss.buttons.edit')
         end
-        within '#cboxLoadedContent form' do
+        wait_for_cbox do
           fill_in 'record[memo]', with: memo
           click_on I18n.t('ss.buttons.save')
         end
@@ -219,7 +219,7 @@ describe "gws_attendance_time_card", type: :feature, dbscope: :example, js: true
         within '.cell-toolbar' do
           click_on I18n.t('ss.buttons.edit')
         end
-        within '#cboxLoadedContent form' do
+        wait_for_cbox do
           fill_in 'record[memo]', with: memo
           click_on I18n.t('ss.buttons.save')
         end

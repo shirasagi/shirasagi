@@ -22,7 +22,11 @@ describe "article_pages", dbscope: :example, js: true do
 
     it "#edit" do
       visit edit_path
-      within "form#item-form" do
+
+      addon = first("#addon-cms-agents-addons-file")
+      addon.find('.toggle-head').click if addon.matches_css?(".body-closed")
+
+      within "#addon-cms-agents-addons-file" do
         click_on I18n.t("ss.buttons.upload")
       end
 

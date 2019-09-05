@@ -115,7 +115,7 @@ describe "gws_chorg", dbscope: :example, js: true do
         click_on I18n.t("mongoid.models.ss/group")
       end
 
-      within "#cboxLoadedContent" do
+      wait_for_cbox do
         expect(page).to have_css(".index", text: changeset0.destinations[0]["name"])
         click_on I18n.t("ss.buttons.close")
       end
