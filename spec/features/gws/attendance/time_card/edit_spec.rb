@@ -2,7 +2,7 @@ require 'spec_helper'
 
 describe "gws_attendance_time_card", type: :feature, dbscope: :example, js: true do
   let(:site) { gws_site }
-  let(:now) { Time.zone.now.beginning_of_minute }
+  let(:now) { Time.zone.now.change(hour: 9).beginning_of_minute }
   let(:reason) { unique_id }
   let(:memo) { unique_id }
 
