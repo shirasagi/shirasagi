@@ -33,14 +33,12 @@ class Gws::Elasticsearch::Indexer::MemoMessageJob < Gws::ApplicationJob
     doc[:user_name] = item.user_long_name
     # doc[:group_ids] = item.groups.pluck(:id)
     # doc[:custom_group_ids] = item.custom_groups.pluck(:id)
-    doc[:user_ids] = [ item.user_id ]
+    doc[:user_ids] = [ item.user_id ] if item.readable?(item.user, site: site)
     # doc[:permission_level] = item.permission_level
 
     # doc[:readable_group_ids] =
     # doc[:readable_custom_group_ids] =
     doc[:readable_member_ids] = item.members.pluck(:id)
-    doc[:path] = item.path
-    doc[:deleted] = item.deleted
 
     doc[:updated] = item.updated.try(:iso8601)
     doc[:created] = item.created.try(:iso8601)
@@ -65,14 +63,12 @@ class Gws::Elasticsearch::Indexer::MemoMessageJob < Gws::ApplicationJob
 
     # doc[:group_ids] = item.groups.pluck(:id)
     # doc[:custom_group_ids] = item.custom_groups.pluck(:id)
-    doc[:user_ids] = [ item.user_id ]
+    doc[:user_ids] = [ item.user_id ] if item.readable?(item.user, site: site)
     # doc[:permission_level] = item.permission_level
 
     # doc[:readable_group_ids] =
     # doc[:readable_custom_group_ids] =
     doc[:readable_member_ids] = item.members.pluck(:id)
-    doc[:path] = item.path
-    doc[:deleted] = item.deleted
 
     doc[:updated] = file.updated.try(:iso8601)
     doc[:created] = file.created.try(:iso8601)
