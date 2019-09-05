@@ -4,6 +4,7 @@ describe Chorg::MainRunner, dbscope: :example do
   let(:root_group) { create(:revision_root_group) }
   let(:site) { create(:cms_site, group_ids: [root_group.id]) }
   let(:task) { Chorg::Task.create!(name: unique_id, site_id: site) }
+  let(:job_opts) { { 'newly_created_group_to_site' => 'add' } }
 
   context "with add" do
     let(:revision) { create(:revision, site_id: site.id) }
@@ -12,7 +13,7 @@ describe Chorg::MainRunner, dbscope: :example do
     it do
       expect(changeset).not_to be_nil
       job = described_class.bind(site_id: site, task_id: task)
-      expect { job.perform_now(revision.name, 'newly_created_group_to_site' => 'add') }.not_to raise_error
+      expect { job.perform_now(revision.name, job_opts) }.to output(include("[新設] 成功: 1, 失敗: 0\n")).to_stdout
 
       # check for job was succeeded
       expect(Job::Log.count).to eq 1
@@ -48,7 +49,7 @@ describe Chorg::MainRunner, dbscope: :example do
         expect(page).not_to be_nil
         # execute
         job = described_class.bind(site_id: site, task_id: task)
-        expect { job.perform_now(revision.name, 'newly_created_group_to_site' => 'add') }.not_to raise_error
+        expect { job.perform_now(revision.name, job_opts) }.to output(include("[移動] 成功: 1, 失敗: 0\n")).to_stdout
 
         # check for job was succeeded
         expect(Job::Log.count).to eq 1
@@ -106,7 +107,7 @@ describe Chorg::MainRunner, dbscope: :example do
           expect(page).not_to be_nil
           # execute
           job = described_class.bind(site_id: site, task_id: task)
-          expect { job.perform_now(revision.name, 'newly_created_group_to_site' => 'add') }.not_to raise_error
+          expect { job.perform_now(revision.name, job_opts) }.to output(include("[移動] 成功: 1, 失敗: 0\n")).to_stdout
 
           # check for job was succeeded
           expect(Job::Log.count).to eq 1
@@ -172,7 +173,7 @@ describe Chorg::MainRunner, dbscope: :example do
         expect(page).not_to be_nil
         # execute
         job = described_class.bind(site_id: site, task_id: task, user_id: user1)
-        expect { job.perform_now(revision.name, 'newly_created_group_to_site' => 'add') }.not_to raise_error
+        expect { job.perform_now(revision.name, job_opts) }.to output(include("[移動] 成功: 1, 失敗: 0\n")).to_stdout
 
         # check for job was succeeded
         expect(Job::Log.count).to eq 1
@@ -220,7 +221,7 @@ describe Chorg::MainRunner, dbscope: :example do
           expect(page).not_to be_nil
           # execute
           job = described_class.bind(site_id: site, task_id: task)
-          expect { job.perform_now(revision.name, 'newly_created_group_to_site' => 'add') }.not_to raise_error
+          expect { job.perform_now(revision.name, job_opts) }.to output(include("[移動] 成功: 1, 失敗: 0\n")).to_stdout
 
           # check for job was succeeded
           expect(Job::Log.count).to eq 1
@@ -284,7 +285,7 @@ describe Chorg::MainRunner, dbscope: :example do
         expect(page).not_to be_nil
         # execute
         job = described_class.bind(site_id: site, task_id: task, user_id: user1)
-        expect { job.perform_now(revision.name, 'newly_created_group_to_site' => 'add') }.not_to raise_error
+        expect { job.perform_now(revision.name, job_opts) }.to output(include("[統合] 成功: 1, 失敗: 0\n")).to_stdout
 
         # check for job was succeeded
         expect(Job::Log.count).to eq 1
@@ -375,7 +376,7 @@ describe Chorg::MainRunner, dbscope: :example do
         expect(page.contact_email).to eq "foobar02@example.jp"
         # execute
         job = described_class.bind(site_id: site, task_id: task, user_id: user1)
-        expect { job.perform_now(revision.name, 'newly_created_group_to_site' => 'add') }.not_to raise_error
+        expect { job.perform_now(revision.name, job_opts) }.to output(include("[統合] 成功: 1, 失敗: 0\n")).to_stdout
 
         # check for job was succeeded
         expect(Job::Log.count).to eq 1
@@ -447,7 +448,7 @@ describe Chorg::MainRunner, dbscope: :example do
         expect(page).not_to be_nil
         # execute
         job = described_class.bind(site_id: site, task_id: task, user_id: user)
-        expect { job.perform_now(revision.name, 'newly_created_group_to_site' => 'add') }.not_to raise_error
+        expect { job.perform_now(revision.name, job_opts) }.to output(include("[分割] 成功: 1, 失敗: 0\n")).to_stdout
 
         # check for job was succeeded
         expect(Job::Log.count).to eq 1
@@ -524,7 +525,7 @@ describe Chorg::MainRunner, dbscope: :example do
         expect(page).not_to be_nil
         # execute
         job = described_class.bind(site_id: site, task_id: task, user_id: user)
-        expect { job.perform_now(revision.name, 'newly_created_group_to_site' => 'add') }.not_to raise_error
+        expect { job.perform_now(revision.name, job_opts) }.to output(include("[分割] 成功: 1, 失敗: 0\n")).to_stdout
 
         # check for job was succeeded
         expect(Job::Log.count).to eq 1
@@ -584,7 +585,7 @@ describe Chorg::MainRunner, dbscope: :example do
         expect(changeset).not_to be_nil
         # execute
         job = described_class.bind(site_id: site, task_id: task)
-        expect { job.perform_now(revision.name, 'newly_created_group_to_site' => 'add') }.not_to raise_error
+        expect { job.perform_now(revision.name, job_opts) }.to output(include("[廃止] 成功: 1, 失敗: 0\n")).to_stdout
 
         # check for job was succeeded
         expect(Job::Log.count).to eq 1
@@ -615,7 +616,7 @@ describe Chorg::MainRunner, dbscope: :example do
         expect(changeset).not_to be_nil
         # execute
         job = described_class.bind(site_id: site, task_id: task)
-        expect { job.perform_now(revision.name, 'newly_created_group_to_site' => 'add') }.not_to raise_error
+        expect { job.perform_now(revision.name, job_opts) }.to output(include("[廃止] 成功: 1, 失敗: 0\n")).to_stdout
 
         # check for job was succeeded
         expect(Job::Log.count).to eq 1
@@ -664,7 +665,7 @@ describe Chorg::MainRunner, dbscope: :example do
       expect { Cms::User.find_by(uid: 'import_user2') }.to raise_error Mongoid::Errors::DocumentNotFound
 
       job = described_class.bind(site_id: site, task_id: task)
-      expect { job.perform_now(revision.name, 'newly_created_group_to_site' => 'add') }.not_to raise_error
+      expect { job.perform_now(revision.name, job_opts) }.to output(include("[新設] 成功: 2, 失敗: 0\n")).to_stdout
 
       # check for job was succeeded
       expect(Job::Log.count).to eq 1
@@ -749,7 +750,7 @@ describe Chorg::MainRunner, dbscope: :example do
       expect { Cms::User.find_by(uid: 'import_user2') }.to raise_error Mongoid::Errors::DocumentNotFound
 
       job = described_class.bind(site_id: site, task_id: task)
-      expect { job.perform_now(revision.name, 'newly_created_group_to_site' => 'add') }.not_to raise_error
+      expect { job.perform_now(revision.name, job_opts) }.to output(include("[新設] 成功: 2, 失敗: 0\n")).to_stdout
 
       # check for job was succeeded
       expect(Job::Log.count).to eq 2
