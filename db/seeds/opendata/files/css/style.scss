@@ -916,17 +916,25 @@ textarea {
     position: relative;
   }
   .categories {
-    margin-top: 15px;
+    margin-top: 0;
   }
   .download {
     position: absolute;
-    bottom: 10px;
+    bottom: 20px;
     right: 15px;
   }
 }
-.opendata-search-apps {
-  border: 2px solid $green;
+.opendata-search-datasets,
+.opendata-search-apps,
+.opendata-search-ideas {
+  article {
+    padding: 7px 14px 20px;
+    time, h2 {
+      font-size: $px16;
+    }
+  }
 }
+
 .opendata-search-ideas-form {
   border: 2px solid $yellow;
 }
@@ -938,6 +946,46 @@ textarea {
   @include btn-black;
   &:hover {
     color: $white;
+  }
+}
+// -----------------------------------------------------------------------------
+// categories
+.categories {
+  margin-top: 15px;
+  @include display-flex;
+  @include flex-wrap(wrap);
+  width: calc(100% - 187px);
+  span, a {
+    display: block;
+    margin: 7px 7px 0 0;
+    padding: 3px 10px;
+    @include border-radius(3px);
+    color: $black1;
+    text-decoration: none;
+  }
+  .estat-category {
+    background: $hpurple;
+    &:hover {
+      background: #f1dcfc;
+    }
+  }
+  .category {
+    background: #ffcf38;
+    &:hover {
+      background: #ffe593;
+    }
+  }
+  .area {
+    background: $hgreen;
+    &:hover {
+      background: #e9f7cb;
+    }
+  }
+  .tag {
+    background: $hblue;
+    &:hover {
+      background: #e4f5ff;
+    }
   }
 }
 // -----------------------------------------------------------------------------
@@ -981,39 +1029,6 @@ textarea {
     float: left;
     width: 803px;
     margin-bottom: $item-margin;
-    a {
-      float: left;
-      display: block;
-      margin: 0 7px 7px 0;
-      padding: 3px 10px;
-      @include border-radius(3px);
-      color: $black1;
-      text-decoration: none;
-    }
-    .estat-category {
-      background: $hpurple;
-      &:hover {
-        background: #f1dcfc;
-      }
-    }
-    .category {
-      background: #ffcf38;
-      &:hover {
-        background: #ffe593;
-      }
-    }
-    .area {
-      background: $hgreen;
-      &:hover {
-        background: #e9f7cb;
-      }
-    }
-    .tag {
-      background: $hblue;
-      &:hover {
-        background: #e4f5ff;
-      }
-    }
   }
   .text, div.idea {
     float: left;
