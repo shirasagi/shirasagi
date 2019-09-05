@@ -57,7 +57,7 @@ describe "gws_report_files", type: :feature, dbscope: :example, js: true do
           click_on I18n.t("gws/report.apis.files.index")
         end
 
-        within "#ajax-box" do
+        wait_for_cbox do
           within ".index .items" do
             # file1 is unable to view because file1 is closed
             expect(page).to have_no_css(".list-item", text: file1.name)

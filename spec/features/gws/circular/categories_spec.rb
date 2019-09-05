@@ -94,7 +94,7 @@ describe "gws_circular_categories", type: :feature, dbscope: :example, js: true 
           click_on I18n.t("ss.apis.groups.index")
         end
       end
-      within "#ajax-box" do
+      wait_for_cbox do
         click_on group1.trailing_name
       end
       within "form#item-form" do
@@ -102,7 +102,7 @@ describe "gws_circular_categories", type: :feature, dbscope: :example, js: true 
           click_on I18n.t("ss.apis.users.index")
         end
       end
-      within "#ajax-box" do
+      wait_for_cbox do
         click_on user1.name
       end
       within "form#item-form" do
