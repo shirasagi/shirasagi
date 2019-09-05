@@ -80,8 +80,6 @@ module SS
 
     def wait_for_cbox_close(&block)
       wait_for_ajax
-      find("#cboxClose").click if has_css?("#cboxClose")
-
       Timeout.timeout(ajax_timeout) do
         sleep 1 while !colorbox_closed?
       end

@@ -46,6 +46,7 @@ describe "workflow_branch", dbscope: :example, js: true do
       click_on I18n.t('ss.buttons.publish_save')
     end
     wait_for_ajax
+
     expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
 
     # master was replaced
@@ -53,6 +54,7 @@ describe "workflow_branch", dbscope: :example, js: true do
       expect(pub.name).to eq new_name
       expect(pub.state).to eq "public"
     end
+    expect(item.class.all.size).to eq 1
   end
 
   context "cms page" do

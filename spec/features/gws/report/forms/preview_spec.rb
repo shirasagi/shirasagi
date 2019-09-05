@@ -15,11 +15,8 @@ describe "gws_report_forms", type: :feature, dbscope: :example, js: true do
         click_on I18n.t("ss.links.preview")
       end
 
-      within "#cboxContent" do
-        within "#cboxLoadedContent #item-form" do
-          expect(page).to have_css("#addon-gws-agents-addons-report-custom_form .addon-head h2", text: form.name)
-        end
-        first("#cboxClose").click
+      wait_for_cbox do
+        expect(page).to have_css("#addon-gws-agents-addons-report-custom_form .addon-head h2", text: form.name)
       end
     end
   end
@@ -42,20 +39,17 @@ describe "gws_report_forms", type: :feature, dbscope: :example, js: true do
         click_on I18n.t("ss.links.preview")
       end
 
-      within "#cboxContent" do
-        within "#cboxLoadedContent #item-form" do
-          expect(page).to have_css("#addon-gws-agents-addons-report-custom_form .addon-head h2", text: form.name)
-          expect(page).to have_css(".mod-gws-report-custom_form dt", text: column1.name)
-          expect(page).to have_css(".mod-gws-report-custom_form dt", text: column2.name)
-          expect(page).to have_css(".mod-gws-report-custom_form dt", text: column3.name)
-          expect(page).to have_css(".mod-gws-report-custom_form dt", text: column4.name)
-          expect(page).to have_css(".mod-gws-report-custom_form dt", text: column5.name)
-          expect(page).to have_css(".mod-gws-report-custom_form dt", text: column6.name)
-          expect(page).to have_css(".mod-gws-report-custom_form dt", text: column7.name)
-          expect(page).to have_css(".mod-gws-report-custom_form dt", text: column8.name)
-          expect(page).to have_css(".mod-gws-report-custom_form dt", text: column9.name)
-        end
-        first("#cboxClose").click
+      wait_for_cbox do
+        expect(page).to have_css("#addon-gws-agents-addons-report-custom_form .addon-head h2", text: form.name)
+        expect(page).to have_css(".mod-gws-report-custom_form dt", text: column1.name)
+        expect(page).to have_css(".mod-gws-report-custom_form dt", text: column2.name)
+        expect(page).to have_css(".mod-gws-report-custom_form dt", text: column3.name)
+        expect(page).to have_css(".mod-gws-report-custom_form dt", text: column4.name)
+        expect(page).to have_css(".mod-gws-report-custom_form dt", text: column5.name)
+        expect(page).to have_css(".mod-gws-report-custom_form dt", text: column6.name)
+        expect(page).to have_css(".mod-gws-report-custom_form dt", text: column7.name)
+        expect(page).to have_css(".mod-gws-report-custom_form dt", text: column8.name)
+        expect(page).to have_css(".mod-gws-report-custom_form dt", text: column9.name)
       end
     end
   end

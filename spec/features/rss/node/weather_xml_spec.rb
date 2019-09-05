@@ -91,6 +91,7 @@ describe "Rss::Node::WeatherXml", dbscope: :example, js: true do
       end
       wait_for_cbox do
         expect(page).to have_css("span.select-item", text: member_node_my_anpi_post.name)
+        find("#cboxClose").click
       end
       wait_for_cbox_close
 
@@ -99,6 +100,7 @@ describe "Rss::Node::WeatherXml", dbscope: :example, js: true do
       end
       wait_for_cbox do
         expect(page).to have_css("span.select-item", text: ezine_node_member_page.name)
+        find("#cboxClose").click
       end
       wait_for_cbox_close
 

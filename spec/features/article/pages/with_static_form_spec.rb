@@ -93,7 +93,7 @@ describe 'article_pages', dbscope: :example, js: true do
           click_on I18n.t("ss.links.upload")
         end
       end
-      within 'div#cboxLoadedContent form.user-file' do
+      wait_for_cbox do
         attach_file 'item[in_files][]', "#{Rails.root}/spec/fixtures/ss/logo.png"
         click_on I18n.t('ss.buttons.attach')
       end
@@ -155,7 +155,7 @@ describe 'article_pages', dbscope: :example, js: true do
           click_on I18n.t("ss.links.upload")
         end
       end
-      within 'div#cboxLoadedContent form.user-file' do
+      wait_for_cbox do
         attach_file 'item[in_files][]', "#{Rails.root}/spec/fixtures/ss/file/keyvisual.gif"
         click_on I18n.t('ss.buttons.attach')
       end

@@ -28,7 +28,7 @@ describe "gws_attendance_time_card", type: :feature, dbscope: :example, js: true
         within '.cell-toolbar' do
           click_on I18n.t('ss.links.edit')
         end
-        within '#cboxLoadedContent form.cell-edit' do
+        wait_for_cbox do
           select '25時', from: 'cell[in_hour]'
           select '48分', from: 'cell[in_minute]'
           fill_in 'cell[in_reason]', with: reason
@@ -49,7 +49,7 @@ describe "gws_attendance_time_card", type: :feature, dbscope: :example, js: true
         within '.cell-toolbar' do
           click_on I18n.t('ss.links.edit')
         end
-        within '#cboxLoadedContent form.cell-edit' do
+        wait_for_cbox do
           click_on I18n.t('ss.buttons.clear')
           fill_in 'cell[in_reason]', with: reason
           click_on I18n.t('ss.buttons.save')
@@ -77,7 +77,7 @@ describe "gws_attendance_time_card", type: :feature, dbscope: :example, js: true
         within '.cell-toolbar' do
           click_on I18n.t('ss.links.edit')
         end
-        within '#cboxLoadedContent form' do
+        wait_for_cbox do
           fill_in 'record[memo]', with: memo
           click_on I18n.t('ss.buttons.save')
         end

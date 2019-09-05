@@ -21,7 +21,7 @@ describe Gws::Workflow::FilesController, type: :feature, dbscope: :example, tmpd
           fill_in "item[name]", with: name
           click_on I18n.t("ss.buttons.upload")
         end
-        within "#cboxLoadedContent form.user-file" do
+        wait_for_cbox do
           attach_file "item[in_files][]", "#{Rails.root}/spec/fixtures/ss/logo.png"
           click_on I18n.t("ss.buttons.attach")
         end
@@ -58,7 +58,7 @@ describe Gws::Workflow::FilesController, type: :feature, dbscope: :example, tmpd
             fill_in "item[name]", with: name
             click_on I18n.t("ss.buttons.upload")
           end
-          within "#cboxLoadedContent form.user-file" do
+          wait_for_cbox do
             attach_file "item[in_files][]", file_path
             click_on I18n.t("ss.buttons.attach")
           end

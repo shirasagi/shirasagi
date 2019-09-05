@@ -74,7 +74,7 @@ describe "gws_attendance_time_card", type: :feature, dbscope: :example, js: true
         within "form#item-form" do
           click_on I18n.t("ss.apis.users.index")
         end
-        within "#cboxLoadedContent" do
+        wait_for_cbox do
           click_on user1.long_name
         end
         within "form#item-form" do
@@ -111,7 +111,7 @@ describe "gws_attendance_time_card", type: :feature, dbscope: :example, js: true
         within "form#item-form" do
           click_on I18n.t("ss.apis.users.index")
         end
-        within "#cboxLoadedContent" do
+        wait_for_cbox do
           click_on user1.long_name
         end
         within "form#item-form" do
@@ -147,7 +147,7 @@ describe "gws_attendance_time_card", type: :feature, dbscope: :example, js: true
         within "form#item-form" do
           click_on I18n.t("ss.apis.users.index")
         end
-        within "#cboxLoadedContent" do
+        wait_for_cbox do
           click_on user2.long_name
         end
         within "form#item-form" do
