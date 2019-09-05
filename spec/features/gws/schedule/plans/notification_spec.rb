@@ -41,10 +41,7 @@ describe "gws_schedule_plans", type: :feature, dbscope: :example, js: true do
     end
 
     def create_plan(notify_state)
-      visit gws_schedule_main_path(site: site)
-      within ".gws-schedule-box" do
-        click_on I18n.t("gws/schedule.links.add_plan")
-      end
+      visit new_gws_schedule_plan_path(site: site)
 
       within "form#item-form" do
         fill_in "item[name]", with: plan_name
@@ -53,7 +50,7 @@ describe "gws_schedule_plans", type: :feature, dbscope: :example, js: true do
           click_on I18n.t("ss.apis.users.index")
         end
       end
-      within "#ajax-box" do
+      wait_for_cbox do
         click_on member_user.long_name
       end
       within "form#item-form" do
@@ -62,10 +59,8 @@ describe "gws_schedule_plans", type: :feature, dbscope: :example, js: true do
         end
         click_on I18n.t("ss.buttons.save")
       end
-      # expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
-      within ".fc-day-grid" do
-        expect(page).to have_css(".fc-day-grid-event", text: plan_name)
-      end
+
+      expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
     end
 
     context "with notify_state disabled" do
@@ -160,10 +155,8 @@ describe "gws_schedule_plans", type: :feature, dbscope: :example, js: true do
         fill_in "item[name]", with: plan_name
         click_button I18n.t("ss.buttons.save")
       end
-      # expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
-      within ".fc-day-grid" do
-        expect(page).to have_css(".fc-day-grid-event", text: plan_name)
-      end
+
+      expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
     end
 
     context "with notify_state disabled" do
