@@ -41,7 +41,7 @@ describe "member_my_anpi_posts", dbscope: :example, js: true do
       fill_in 'item[email]', with: member.email
       fill_in 'item[text]', with: text0
       click_on 'メンバーを選択する'
-      within '#ajax-box' do
+      wait_for_cbox do
         click_link member.name
       end
       click_on I18n.t("ss.buttons.save")

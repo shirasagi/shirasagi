@@ -34,7 +34,7 @@ describe "gws_circular_admins", type: :feature, dbscope: :example, tmpdir: true,
           click_on I18n.t("ss.buttons.upload")
         end
       end
-      within "#ajax-box" do
+      wait_for_cbox do
         attach_file "item[in_files][]", file_path
         click_on I18n.t("ss.buttons.attach")
       end
@@ -45,7 +45,7 @@ describe "gws_circular_admins", type: :feature, dbscope: :example, tmpdir: true,
           click_on I18n.t("ss.apis.users.index")
         end
       end
-      within "#ajax-box" do
+      wait_for_cbox do
         click_on user1.name
       end
 
@@ -81,7 +81,7 @@ describe "gws_circular_admins", type: :feature, dbscope: :example, tmpdir: true,
           click_on I18n.t("ss.buttons.upload")
         end
       end
-      within "#ajax-box" do
+      wait_for_cbox do
         attach_file "item[in_files][]", file_path
         click_on I18n.t("ss.buttons.attach")
       end
@@ -92,7 +92,7 @@ describe "gws_circular_admins", type: :feature, dbscope: :example, tmpdir: true,
           click_on I18n.t("ss.apis.users.index")
         end
       end
-      within "#ajax-box" do
+      wait_for_cbox do
         click_on user1.name
       end
 

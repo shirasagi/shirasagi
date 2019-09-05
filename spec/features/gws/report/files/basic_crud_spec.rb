@@ -71,7 +71,7 @@ describe "gws_report_files", type: :feature, dbscope: :example, js: true do
         find("input[name='custom[#{column8.id}][]'][value='#{column_value8}']").click
         first(".btn-file-upload").click
       end
-      within "form.user-file" do
+      wait_for_cbox do
         attach_file "item[in_files][]", "#{Rails.root}/spec/fixtures/ss/logo.png"
         click_on I18n.t("ss.buttons.attach")
       end

@@ -26,8 +26,7 @@ describe "gws_report_forms", type: :feature, dbscope: :example, js: true do
 
         click_on I18n.t("gws.apis.categories.index")
       end
-      within "#ajax-box" do
-        expect(page).to have_css(".list-item", text: category.name)
+      wait_for_cbox do
         click_on category.name
       end
       within "form#item-form" do
