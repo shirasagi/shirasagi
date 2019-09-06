@@ -6,6 +6,16 @@ class Gws::Elasticsearch::Indexer::MemoMessageJob < Gws::ApplicationJob
 
   private
 
+  def item
+    @item ||= begin
+      item = Gws::Memo::Message.find(@id)
+      if item.list_message?
+        item = item.to_list_message
+      end
+      item
+    end
+  end
+
   def index_item_id
     "message-#{@id}"
   end
@@ -30,11 +40,19 @@ class Gws::Elasticsearch::Indexer::MemoMessageJob < Gws::ApplicationJob
     doc[:released] = item.send_date.try(:iso8601)
     doc[:state] = item.state
 
-    doc[:user_name] = item.user_long_name
-    # doc[:group_ids] = item.groups.pluck(:id)
-    # doc[:custom_group_ids] = item.custom_groups.pluck(:id)
-    doc[:user_ids] = [ item.user_id ] if item.readable?(item.user, site: site)
-    # doc[:permission_level] = item.permission_level
+    if item.is_a?(Gws::Memo::ListMessage)
+      doc[:user_name] = item.from_member_name
+      doc[:group_ids] = item.list.groups.pluck(:id)
+      doc[:custom_group_ids] = item.list.custom_groups.pluck(:id)
+      doc[:user_ids] = item.list.users.pluck(:id)
+      doc[:permission_level] = item.list.permission_level
+    else
+      doc[:user_name] = item.user_long_name
+      # doc[:group_ids] = item.groups.pluck(:id)
+      # doc[:custom_group_ids] = item.custom_groups.pluck(:id)
+      doc[:user_ids] = [ item.user_id ] if item.readable?(item.user, site: site)
+      # doc[:permission_level] = item.permission_level
+    end
 
     # doc[:readable_group_ids] =
     # doc[:readable_custom_group_ids] =
@@ -61,10 +79,18 @@ class Gws::Elasticsearch::Indexer::MemoMessageJob < Gws::ApplicationJob
     doc[:released] = item.send_date.try(:iso8601)
     doc[:state] = item.state
 
-    # doc[:group_ids] = item.groups.pluck(:id)
-    # doc[:custom_group_ids] = item.custom_groups.pluck(:id)
-    doc[:user_ids] = [ item.user_id ] if item.readable?(item.user, site: site)
-    # doc[:permission_level] = item.permission_level
+    if item.is_a?(Gws::Memo::ListMessage)
+      doc[:user_name] = item.from_member_name
+      doc[:group_ids] = item.list.groups.pluck(:id)
+      doc[:custom_group_ids] = item.list.custom_groups.pluck(:id)
+      doc[:user_ids] = item.list.users.pluck(:id)
+      doc[:permission_level] = item.list.permission_level
+    else
+      # doc[:group_ids] = item.groups.pluck(:id)
+      # doc[:custom_group_ids] = item.custom_groups.pluck(:id)
+      doc[:user_ids] = [ item.user_id ] if item.readable?(item.user, site: site)
+      # doc[:permission_level] = item.permission_level
+    end
 
     # doc[:readable_group_ids] =
     # doc[:readable_custom_group_ids] =

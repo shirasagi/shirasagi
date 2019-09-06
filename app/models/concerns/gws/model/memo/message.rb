@@ -108,6 +108,7 @@ module Gws::Model
       return true if Array(in_to_members).flatten.compact.uniq.select(&:present?).present?
       return true if Array(in_cc_members).flatten.compact.uniq.select(&:present?).present?
       return true if Array(in_bcc_members).flatten.compact.uniq.select(&:present?).present?
+
       false
     end
 
@@ -189,6 +190,7 @@ module Gws::Model
       return if in_request_mdn != "1"
       return if send_date.present?
       return unless @cur_user
+
       self.request_mdn_ids = self.member_ids - [@cur_user.id]
     end
 
@@ -212,11 +214,12 @@ module Gws::Model
         end
       end
 
-      return false
+      false
     end
 
     def editable?(user, site)
       return false if self.site_id != site.id
+
       (self.user_id == user.id && draft?)
     end
 
@@ -254,11 +257,13 @@ module Gws::Model
 
     def attachments?
       return false if file_ids.blank?
+
       files.present?
     end
 
     def unseen?(user)
       return false unless user
+
       user_settings.find{ |setting| setting['user_id'] == user.id && setting['seen_at'].present? }.blank?
     end
 
@@ -282,6 +287,7 @@ module Gws::Model
 
     def star?(user)
       return false unless user
+
       star.include?(user.id.to_s)
     end
 
@@ -442,6 +448,14 @@ module Gws::Model
       ERB::Util.h(str)
     end
 
+    def list_message?
+      self[:list_id].present?
+    end
+
+    def to_list_message
+      Gws::Memo::ListMessage.find(self.id)
+    end
+
     module ClassMethods
       def search(params)
         all.search_keyword(params).
@@ -458,21 +472,25 @@ module Gws::Model
 
       def search_keyword(params = {})
         return all if params.blank? || params[:keyword].blank?
+
         all.keyword_in(params[:keyword], :subject, :text, :html)
       end
 
       def search_from_member_name(params = {})
         return all if params.blank? || params[:from_member_name].blank?
+
         all.keyword_in params[:from_member_name], :from_member_name
       end
 
       def search_to_member_name(params = {})
         return all if params.blank? || params[:to_member_name].blank?
+
         all.keyword_in params[:to_member_name], :to_member_name
       end
 
       def search_subject(params = {})
         return all if params.blank? || params[:subject].blank?
+
         all.keyword_in params[:subject], :subject
       end
 
@@ -488,6 +506,7 @@ module Gws::Model
 
       def search_state(params = {})
         return all if params.blank? || params[:state].blank?
+
         all.where(state: params[:state])
       end
 
@@ -497,28 +516,31 @@ module Gws::Model
         cond = []
         cond << [ send_date: { "$gte" => params[:since] } ] if params[:since].present?
         cond << [ send_date: { "$lte" => params[:before] } ] if params[:before].present?
-
         return all if cond.blank?
+
         all.and(cond)
       end
 
       def search_unseen(params = {})
         return all if params.blank? || params[:unseen].blank?
+
         user_id = params[:unseen]
         all.and(user_settings: { "$elemMatch" => { 'user_id' => user_id.to_i, 'seen_at' => { "$exists" => false } } })
       end
 
       def search_flagged(params = {})
         return all if params.blank? || params[:flagged].blank?
+
         user_id = params[:flagged]
         all.and("star.#{user_id}" => { "$exists" => true })
       end
 
       def search_priorities(params = {})
         return all if params.blank?
-        priorities = params[:priorities].to_a.select(&:present?)
 
+        priorities = params[:priorities].to_a.select(&:present?)
         return all if priorities.blank?
+
         all.and([priority: { "$in" => priorities }])
       end
 
