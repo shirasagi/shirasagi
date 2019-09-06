@@ -3,6 +3,6 @@ FactoryBot.define do
     cur_site { cms_site }
     name { unique_id }
     filename { cur_node ? "#{cur_node.url}#{unique_id}.layout.html" : "#{unique_id}.layout.html" }
-    html { "<html><body><div>{{ yield }}</div></body></html>" }
+    html { '<html><body><div>#{thumb}</div><div>#{genres}</div><div>{{ yield }}</div></body></html>' }
   end
 end
