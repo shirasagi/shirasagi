@@ -28,6 +28,7 @@ describe "webmail_users", type: :feature, dbscope: :example do
         expect(item.name).to eq name
         expect(item.email).to eq email
         expect(item.webmail_role_ids).to include(webmail_user_role.id)
+        expect(item.active?).to be_truthy
       end
 
       visit webmail_users_path
@@ -45,6 +46,7 @@ describe "webmail_users", type: :feature, dbscope: :example do
         expect(item.name).to eq name
         expect(item.email).to eq email2
         expect(item.webmail_role_ids).to include(webmail_user_role.id)
+        expect(item.active?).to be_truthy
       end
 
       visit webmail_users_path
@@ -56,7 +58,12 @@ describe "webmail_users", type: :feature, dbscope: :example do
       expect(page).to have_css("#notice", text: I18n.t("ss.notice.deleted"))
 
       expect { Webmail::User.all.find_by(uid: uid) }.to raise_error(Mongoid::Errors::DocumentNotFound)
-      expect { Webmail::User.all.find_by(uid: uid2) }.to raise_error(Mongoid::Errors::DocumentNotFound)
+      Webmail::User.all.find_by(uid: uid2).tap do |item|
+        expect(item.name).to eq name
+        expect(item.email).to eq email2
+        expect(item.webmail_role_ids).to include(webmail_user_role.id)
+        expect(item.active?).to be_falsey
+      end
     end
   end
 end

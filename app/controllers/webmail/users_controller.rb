@@ -8,6 +8,7 @@ class Webmail::UsersController < ApplicationController
 
   before_action :set_items
   before_action :set_item, only: [:show, :edit, :update, :delete, :destroy]
+  before_action :set_selected_items, only: [:destroy_all, :lock_all, :unlock_all]
 
   private
 
@@ -24,7 +25,7 @@ class Webmail::UsersController < ApplicationController
   end
 
   def set_item
-    @item = @items.find(params[:id])
+    @item = @model.all.allow(:read, @cur_user).find(params[:id])
   end
 
   public
@@ -34,6 +35,15 @@ class Webmail::UsersController < ApplicationController
 
     @items = @items.order_by(_id: -1).
       page(params[:page]).per(50)
+  end
+
+  def destroy
+    raise "403" unless @item.allowed?(:delete, @cur_user)
+    render_destroy @item.disable
+  end
+
+  def destroy_all
+    disable_all
   end
 
   def import
