@@ -20,7 +20,7 @@ SS_TreeUI.render(".index.items", { collapse_all: true });
     </thead>
 
     <tbody>
-      <% if params[:page].blank? && params[:s].blank? && @cur_node.becomes_with_route.first_suggest.present? %>
+      <% if params[:page].blank? && params[:s].blank? && @cur_node.becomes_with_route.try(:first_suggest).present? %>
         <tr data-depth="<%= depth %>">
           <td class="expandable">
             <%= I18n.t('chat.first_suggest') %>
