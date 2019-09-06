@@ -11,6 +11,7 @@ module Gws::Board::BrowsingState
 
   def browsed_at(user)
     return if browsed_users_hash.blank?
+
     browsed_users_hash[user.id.to_s].try(:in_time_zone)
   end
 
@@ -26,6 +27,12 @@ module Gws::Board::BrowsingState
     # to update hash partially, use `#persist_atomic_operations` method.
     # be careful, you must not use `#set` method. this method update hash totally.
     persist_atomic_operations('$unset' => { "browsed_users_hash.#{user.id}" => '' })
+  end
+
+  def unset_browsed_except!(user)
+    save = browsed_users_hash.try { |hash| hash[user.id.to_s] }
+    unset(:browsed_users_hash)
+    persist_atomic_operations('$set' => { "browsed_users_hash.#{user.id}" => save }) if save
   end
 
   def browsed_state_options
