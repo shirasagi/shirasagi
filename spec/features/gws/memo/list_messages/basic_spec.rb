@@ -2,7 +2,7 @@ require 'spec_helper'
 
 describe 'gws_memo_list_messages', type: :feature, dbscope: :example, js: true do
   let(:site) { gws_site }
-  let(:list) { create(:gws_memo_list, cur_site: site) }
+  let(:list) { create(:gws_memo_list, cur_site: site, sender_name: "sender-#{unique_id}") }
   let(:subject1) { "subject-#{unique_id}" }
   let(:subject2) { "subject-#{unique_id}" }
   let(:text1) { "text-#{unique_id}\r\ntext-#{unique_id}\r\ntext-#{unique_id}" }
@@ -39,7 +39,7 @@ describe 'gws_memo_list_messages', type: :feature, dbscope: :example, js: true d
         expect(message.format).to eq "text"
         expect(message.state).to eq "closed"
         expect(message.size).to eq 1024
-        expect(message.from_member_name).to eq gws_user.long_name
+        expect(message.from_member_name).to eq list.sender_name
         expect(message.member_ids).to be_blank
         expect(message.to_member_ids).to be_blank
         expect(message.cc_member_ids).to be_blank
@@ -76,7 +76,7 @@ describe 'gws_memo_list_messages', type: :feature, dbscope: :example, js: true d
         expect(message.format).to eq "text"
         expect(message.state).to eq "public"
         expect(message.size).to eq 1024
-        expect(message.from_member_name).to eq list.name
+        expect(message.from_member_name).to eq list.sender_name
         expect(message.member_ids).to eq list.overall_members.pluck(:id)
         expect(message.to_member_ids).to be_blank
         expect(message.cc_member_ids).to be_blank

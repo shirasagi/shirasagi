@@ -35,13 +35,24 @@ class Gws::Memo::ListMessage
   alias to_ids to_member_ids
 
   # # indexing to elasticsearch via companion object
-  # around_save ::Gws::Elasticsearch::Indexer::MemoMessageJob.callback
-  # around_destroy ::Gws::Elasticsearch::Indexer::MemoMessageJob.callback
+  around_save ::Gws::Elasticsearch::Indexer::MemoMessageJob.callback
+  around_destroy ::Gws::Elasticsearch::Indexer::MemoMessageJob.callback
+
+  # override Gws::Model::Memo::Message#list_message?
+  def list_message?
+    true
+  end
+
+  # override Gws::Model::Memo::Message#to_list_message
+  def to_list_message
+    self
+  end
 
   private
 
   def set_list
     return if @cur_list.blank?
+
     self.list = @cur_list
   end
 
