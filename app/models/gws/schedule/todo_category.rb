@@ -22,7 +22,11 @@ class Gws::Schedule::TodoCategory
 
   permit_params :in_basename, :in_parent_id
 
-  Pseudo = Struct.new(:id, :name) do
+  class Pseudo
+    include ActiveModel::Model
+
+    attr_accessor :id, :name
+
     def real?
       false
     end
@@ -43,12 +47,16 @@ class Gws::Schedule::TodoCategory
       0
     end
 
+    def persisted?
+      true
+    end
+
     alias_method :trailing_name, :name
     alias_method :depth_level, :depth
   end
 
-  ALL = Pseudo.new("-", I18n.t("ss.all"))
-  NONE = Pseudo.new("na", I18n.t("gws/schedule/todo.category_not_assigined"))
+  ALL = Pseudo.new(id: "-", name: I18n.t("ss.all"))
+  NONE = Pseudo.new(id: "na", name: I18n.t("gws/schedule/todo.category_not_assigined"))
 
   # class << self
   #   def to_options
