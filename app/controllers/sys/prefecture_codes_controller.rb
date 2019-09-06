@@ -30,15 +30,20 @@ class Sys::PrefectureCodesController < ApplicationController
   end
 
   def import
+    @item = SS::TempFile.new
+
     return if request.get?
 
     safe_params = params.require(:item).permit(:in_file)
+    @item.in_file = safe_params[:in_file]
 
-    temp_file = SS::TempFile.new
-    temp_file.in_file = safe_params[:in_file]
-    temp_file.save!
+    if safe_params[:in_file].blank?
+      @item.errors.add :in_file, :blank
+      return
+    end
 
-    Sys::PrefectureCode::ImportJob.bind(user_id: @cur_user).perform_later(temp_file.id)
+    @item.save!
+    Sys::PrefectureCode::ImportJob.bind(user_id: @cur_user).perform_later(@item.id)
 
     redirect_to({ action: :index }, { notice: I18n.t('ss.notice.started_import') })
   end
