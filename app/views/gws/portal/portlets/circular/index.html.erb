@@ -9,6 +9,7 @@
       <li class="list-item <%= item.seen?(@cur_user) ? 'read' : 'unread' %>">
         <div class="info">
           <%= link_to item.name, gws_circular_post_path(category: '-', id: item), class: 'title' %>
+          <% if item.new_flag? %><span class="gws-board-flag-new"></span><% end %>
 
           <div class="meta">
             <span class="datetime"><%= item.updated.strftime("%Y/%m/%d %H:%M") %></span>

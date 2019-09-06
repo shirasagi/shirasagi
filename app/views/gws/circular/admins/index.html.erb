@@ -33,6 +33,7 @@
         <div class="info">
           <% title = item.try(:name) || item.try(:title) || item.try(:filename) || "##{item.id}" %>
           <%= link_to title, {action: :show, id: item}, class: "title" %>
+          <% if item.new_flag? %><span class="gws-board-flag-new"></span><% end %>
 
           <div class="meta">
             <span class="id">#<%= item.id %></span>
