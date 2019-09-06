@@ -73,11 +73,7 @@ describe 'gws_memo_messages', type: :feature, dbscope: :example do
       within 'form#item-form' do
         click_on I18n.t('ss.buttons.draft_save')
       end
-
-      within '#errorExplanation' do
-        msg = Gws::Memo::Message.t(:subject) + I18n.t('errors.messages.blank')
-        expect(page).to have_css('li', text: msg)
-      end
+      expect(page).to have_css('#errorExplanation', text: Gws::Memo::Message.t(:subject) + I18n.t('errors.messages.blank'))
 
       within 'form#item-form' do
         fill_in 'item[subject]', with: subject
@@ -93,10 +89,9 @@ describe 'gws_memo_messages', type: :feature, dbscope: :example do
       visit edit_gws_memo_message_path(site: site, folder: 'INBOX.Draft', id: draft_memo.id)
       within 'form#item-form' do
         fill_in 'item[subject]', with: ''
-
         click_on I18n.t('ss.buttons.draft_save')
       end
-      expect(page).to have_content(Gws::Memo::Message.t(:subject) + I18n.t('errors.messages.blank'))
+      expect(page).to have_css('#errorExplanation', text: Gws::Memo::Message.t(:subject) + I18n.t('errors.messages.blank'))
 
       within 'form#item-form' do
         fill_in 'item[subject]', with: subject

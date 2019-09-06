@@ -45,8 +45,6 @@ describe "workflow_branch", dbscope: :example, js: true do
     within "#item-form" do
       click_on I18n.t('ss.buttons.publish_save')
     end
-    wait_for_ajax
-
     expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
 
     # master was replaced

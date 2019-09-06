@@ -1,6 +1,6 @@
 module SS
   module EsSupport
-    module Callbacks
+    module Hooks
       def self.extended(obj)
         obj.after do
           WebMock.reset!
@@ -10,5 +10,4 @@ module SS
   end
 end
 
-RSpec.configuration.extend(SS::EsSupport::Callbacks, es: true)
-RSpec.configuration.include(SS::EsSupport, es: true)
+RSpec.configuration.extend(SS::EsSupport::Hooks, es: true)

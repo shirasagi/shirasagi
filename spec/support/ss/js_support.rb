@@ -1,8 +1,9 @@
 module SS
   module JsSupport
-    module Callbacks
+    module Hooks
       def self.extended(obj)
         obj.after do
+          wait_for_page_load
           page.reset! # unless finished_all_ajax_requests?
         end
       end
@@ -22,6 +23,7 @@ module SS
 
     def visit(*args)
       super
+      wait_for_page_load
       wait_for_ajax
     end
 
@@ -98,6 +100,13 @@ module SS
       opacity.to_f == 0
     end
 
+    def wait_for_page_load
+      page.document.synchronize do
+        current_path
+        true
+      end
+    end
+
     def save_full_screenshot(opts = {})
       filename = opts[:filename].presence || "#{Rails.root}/tmp/screenshots-#{Time.zone.now.to_i}"
       page.save_screenshot(filename, full: true)
@@ -107,5 +116,5 @@ module SS
   end
 end
 
-RSpec.configuration.extend(SS::JsSupport::Callbacks, js: true)
+RSpec.configuration.extend(SS::JsSupport::Hooks, js: true)
 RSpec.configuration.include(SS::JsSupport, js: true)

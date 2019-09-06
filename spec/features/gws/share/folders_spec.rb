@@ -111,8 +111,8 @@ describe "gws_share_folders", type: :feature, dbscope: :example, js: true do
         within 'form#item-form' do
           click_on I18n.t('ss.buttons.save')
         end
-
         expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+
         expect(Gws::Share::Folder.site(site).where(name: "#{item.name}/#{subfolder_name1}").count).to eq 1
         Gws::Share::Folder.site(site).where(name: "#{item.name}/#{subfolder_name1}").first.tap do |folder|
           # these fields inherit from its parent
@@ -134,6 +134,7 @@ describe "gws_share_folders", type: :feature, dbscope: :example, js: true do
           click_on I18n.t('ss.buttons.save')
         end
         expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+
         expect(Gws::Share::Folder.site(site).where(name: "#{item.name}/#{subfolder_name1}").count).to eq 0
         expect(Gws::Share::Folder.site(site).where(name: "#{item.name}/#{subfolder_name2}").count).to eq 1
 
@@ -148,6 +149,7 @@ describe "gws_share_folders", type: :feature, dbscope: :example, js: true do
           click_on I18n.t('ss.buttons.delete')
         end
         expect(page).to have_css('#notice', text: I18n.t('ss.notice.deleted'))
+
         expect(Gws::Share::Folder.site(site).where(name: "#{item.name}/#{subfolder_name1}").count).to eq 0
         expect(Gws::Share::Folder.site(site).where(name: "#{item.name}/#{subfolder_name2}").count).to eq 0
       end
@@ -250,7 +252,6 @@ describe "gws_share_folders", type: :feature, dbscope: :example, js: true do
             click_on I18n.t("ss.buttons.download")
           end
         end
-
         expect(page).to have_css("#notice", text: I18n.t('gws.notice.delay_download_with_message').split("\n").first)
 
         expect(enqueued_jobs.size).to eq 1

@@ -31,10 +31,9 @@ describe "webmail_gws_messages", type: :feature, dbscope: :example, imap: true, 
           fill_in "to", with: user.email + "\n"
           fill_in "item[subject]", with: item_title
           fill_in "item[text]", with: item_texts.join("\n")
+          click_on I18n.t('ss.buttons.send')
         end
-        click_button I18n.t('ss.buttons.send')
-        sleep 1
-        expect(current_path).to eq index_path
+        expect(page).to have_css('#notice', text: I18n.t('ss.notice.sent'))
 
         expect(ActionMailer::Base.deliveries).to have(1).items
         ActionMailer::Base.deliveries.first.tap do |mail|
@@ -47,22 +46,19 @@ describe "webmail_gws_messages", type: :feature, dbscope: :example, imap: true, 
 
         # reload mails
         visit index_path
-
         click_link item_title
 
-        # gws_message
+        # forward
         click_link I18n.t('webmail.links.forward_gws_message')
-
         first('.gws-addon-memo-member .ajax-box').click
         wait_for_cbox do
           click_on user.name
         end
         page.accept_alert do
-          click_button I18n.t('ss.buttons.send')
+          click_on I18n.t('ss.buttons.send')
         end
-
-        expect(current_path).to eq messages_path
-        click_link item_title
+        expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+        expect(has_link?(item_title)).to be_truthy
       end
     end
   end
