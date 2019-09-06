@@ -139,7 +139,7 @@ module Map::MapHelper
 
       s << 'Googlemaps_Map.center = ' + center.to_json + ';' if center.present?
       s << 'var opts = {'
-      s << '  markers: ' + markers.to_json + ',' if markers.present?
+      s << '  markers: ' + (markers.try(:to_json) || '[]') + ','
       s << '};'
       s << 'Facility_Search.render("' + selector + '", opts);'
     end
