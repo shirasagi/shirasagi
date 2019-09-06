@@ -164,8 +164,36 @@ describe "gws_report_files", type: :feature, dbscope: :example, js: true do
       expect(file.deleted).to be_present
 
       #
+      # Undo Delete
+      #
+      visit gws_report_files_main_path(site: site)
+      click_on I18n.t('ss.links.trash')
+      click_on name2
+      click_on I18n.t("ss.links.restore")
+
+      within "form" do
+        click_on I18n.t("ss.buttons.restore")
+      end
+      expect(page).to have_css('#notice', text: I18n.t('ss.notice.restored'))
+
+      file.reload
+      expect(file.name).to eq name2
+      expect(file.column_values.count).to eq form.columns.count
+      expect(file.state).to eq "closed"
+      expect(file.deleted).to be_blank
+
+      #
       # Hard Delete
       #
+      visit gws_report_files_main_path(site: site)
+      click_on I18n.t('gws/report.options.file_state.closed')
+      click_on name2
+      click_on I18n.t("ss.links.delete")
+
+      within "form" do
+        click_on I18n.t("ss.buttons.delete")
+      end
+
       visit gws_report_files_main_path(site: site)
       click_on I18n.t('ss.links.trash')
       click_on name2
