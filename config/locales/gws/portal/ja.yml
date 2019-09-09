@@ -52,7 +52,7 @@ ja:
         text: 今週のスケジュールを表示します。
       todo:
         name: ToDo
-        text: 未完了のToDoを表示します。
+        text: 担当ToDoを表示します。
       bookmark:
         name: お気に入り
         text: お気に入りを表示します。
