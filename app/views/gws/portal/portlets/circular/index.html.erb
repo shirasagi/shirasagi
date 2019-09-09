@@ -12,7 +12,7 @@
           <% if item.new_flag? %><span class="gws-board-flag-new"></span><% end %>
 
           <div class="meta">
-            <span class="datetime"><%= item.updated.strftime("%Y/%m/%d %H:%M") %></span>
+            <span class="datetime"><%= Gws::Circular::Post.t(:due_date) %>: <%= tryb { I18n.l(item.due_date.to_date) } %></span>
             <span class="seen"><%= item.seen?(@cur_user) ? t('gws/circular.post.seen') : t('gws/circular.post.unseen') %>
               <% if item.member?(@cur_user) %>
               <% end %>
