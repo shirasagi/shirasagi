@@ -34,7 +34,6 @@ class Facility::Agents::Nodes::SearchController < ApplicationController
   def set_markers
     @items = []
     @markers = []
-    images = SS::File.all.map { |image| [image.id, image.url] }.to_h
 
     Facility::Map.site(@cur_site).and_public.each do |map|
       parent_path = ::File.dirname(map.filename)
@@ -53,7 +52,7 @@ class Facility::Agents::Nodes::SearchController < ApplicationController
       category_ids = categories.map(&:id)
       image_id     = categories.map(&:image_id).first
 
-      image_url = images[image_id]
+      image_url = SS::File.where(id: image_id).first.try(:url) if image_id.present?
       marker_info = view_context.render_marker_info(item)
 
       map.map_points.each do |point|
