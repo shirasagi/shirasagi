@@ -1,0 +1,9 @@
+<%
+  addon ||= local_assigns.fetch(:addon, {})
+  addon[:display_body] = "hide"
+%>
+
+<dl class="see addon-gws-workflow-group-setting">
+  <dt><%= @model.t :workflow_new_days %></dt>
+  <dd><%= @item.workflow_new_days %> <%= t("datetime.prompts.day") %></dd>
+</dl>
