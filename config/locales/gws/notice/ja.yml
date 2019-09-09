@@ -57,6 +57,7 @@ ja:
       gws/notice/category: カテゴリー
       gws/notice/resource_limitation: 容量制限
       gws/notice/member: 閲覧者
+      gws/notice/group_setting: お知らせ
 
   gws_notification:
     gws/notice/post:
@@ -115,6 +116,8 @@ ja:
         user_group_name: グループ
         user_name: 作成者
         notice_id: お知らせ
+      gws/addon/notice/group_setting:
+        notice_new_days: 新着表示期間
 
   tooltip:
     gws/notice/post:
@@ -136,6 +139,10 @@ ja:
         - 最大ファイルサイズを入力します。
       notice_total_file_size_limit:
         - フォルダーの総容量制限を入力します。
+
+    gws/addon/notice/group_setting:
+      notice_new_days:
+        - 新着表示期間を入力します。
 
   job:
     models:

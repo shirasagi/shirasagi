@@ -2,6 +2,7 @@ class Gws::Group
   include SS::Model::Group
   include Gws::Referenceable
   include Gws::SitePermission
+  include Gws::Addon::Notice::GroupSetting
   include Gws::Addon::Schedule::GroupSetting
   include Gws::Addon::Facility::GroupSetting
   include Gws::Addon::Attendance::GroupSetting
