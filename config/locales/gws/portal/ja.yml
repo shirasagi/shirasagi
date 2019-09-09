@@ -152,7 +152,6 @@ ja:
         schedule_member_ids: 表示ユーザー
       gws/addon/portal/portlet/todo:
         todo_state: 表示状態
-        todo_member_ids: 表示ユーザー
       gws/addon/portal/portlet/bookmark:
         bookmark_model: 機能表示範囲
       gws/addon/portal/portlet/board:

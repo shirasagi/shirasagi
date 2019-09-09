@@ -7,24 +7,11 @@ module Gws::Addon::Portal::Portlet
 
     included do
       field :todo_state, type: String, default: "unfinished"
-      embeds_ids :todo_members, class_name: "Gws::User"
-      permit_params :todo_state, todo_member_ids: []
+      permit_params :todo_state
     end
 
     def todo_state_options
       %w(unfinished finished both).map { |v| [I18n.t("gws/schedule/todo.options.todo_state.#{v}"), v] }
-    end
-
-    def find_todo_members(portal)
-      if todo_members.present?
-        todo_members.active.order_by_title(portal.site).compact
-      elsif portal.try(:portal_user).present?
-        [portal.portal_user]
-      elsif portal.try(:portal_group).present?
-        portal.portal_group.users.active.order_by_title(portal.site).compact
-      else
-        []
-      end
     end
 
     def find_todo_items(portal, user)
