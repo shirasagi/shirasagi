@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe "history_cms_trashes", dbscope: :example, js: true do
+describe "history_cms_trashes", type: :feature, dbscope: :example, js: true do
   let(:site) { cms_site }
   let(:node) { create_once :article_node_page, filename: "docs", name: "article" }
   let(:page_item) { create(:article_page, cur_node: node) }

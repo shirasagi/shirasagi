@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe "urgency_layouts" do
+describe "urgency_layouts", type: :feature, dbscope: :example do
   let!(:site) { cms_site }
 
   let!(:node) { create_once :urgency_node_layout, filename: "urgency", urgency_default_layout_id: layout1.id }

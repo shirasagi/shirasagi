@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe "opendata_agents_nodes_member", dbscope: :example, js: true do
+describe "opendata_agents_nodes_member", type: :feature, dbscope: :example, js: true do
   let(:site) { cms_site }
   let(:layout) { create_cms_layout }
   let(:node_member) { create :opendata_node_member, layout_id: layout.id }

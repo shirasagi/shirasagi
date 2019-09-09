@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe 'board_agents_nodes_anpi_post', dbscope: :example, js: true do
+describe 'board_agents_nodes_anpi_post', type: :feature, dbscope: :example, js: true do
   let(:site) { cms_site }
   let(:layout) { create_cms_layout }
   let(:node) { create :board_node_anpi_post, cur_site: site, layout_id: layout.id }

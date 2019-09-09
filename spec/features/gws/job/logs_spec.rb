@@ -1,7 +1,7 @@
 require 'spec_helper'
 require "csv"
 
-describe "gws_job_logs", dbscope: :example, js: true do
+describe "gws_job_logs", type: :feature, dbscope: :example, js: true do
   let(:site) { gws_site }
   let(:user) { gws_user }
   let(:now) { Time.zone.now.beginning_of_minute }

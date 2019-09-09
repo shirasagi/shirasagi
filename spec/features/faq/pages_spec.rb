@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe "faq_pages", js: true do
+describe "faq_pages", type: :feature, js: true do
   subject(:site) { cms_site }
   subject(:node) { create_once :faq_node_page, filename: "docs", name: "faq" }
   subject(:item) { Faq::Page.last }

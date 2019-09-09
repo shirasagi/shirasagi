@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe "cms_import" do
+describe "cms_import", type: :feature, dbscope: :example do
   subject(:site) { cms_site }
   subject(:index_path) { cms_import_path site.id }
 

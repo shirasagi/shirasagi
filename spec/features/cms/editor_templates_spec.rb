@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe "cms_editor_templates", dbscope: :example, type: :feature do
+describe "cms_editor_templates", type: :feature, dbscope: :example do
   let(:site) { cms_site }
   let(:item) { create(:cms_editor_template, site: site) }
   let(:index_path) { cms_editor_templates_path site.id }

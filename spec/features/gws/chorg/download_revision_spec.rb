@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe "gws_chorg_download_revision", dbscope: :example do
+describe "gws_chorg_download_revision", type: :feature, dbscope: :example do
   let!(:site) { gws_site }
 
   let!(:group0) { create(:gws_revision_new_group) }

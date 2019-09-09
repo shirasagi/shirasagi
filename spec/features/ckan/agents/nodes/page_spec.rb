@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe Ckan::Agents::Nodes::PageController, dbscope: :example do
+describe Ckan::Agents::Nodes::PageController, type: :feature, dbscope: :example do
   let(:site)   { cms_site }
   let(:layout) { create_cms_layout }
   let(:status) { 200 }

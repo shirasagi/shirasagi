@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe "my_group", dbscope: :example, js: true do
+describe "my_group", type: :feature, dbscope: :example, js: true do
   let(:site) { cms_site }
   let!(:group) { cms_group }
   let!(:role_ids) { cms_user.cms_role_ids }

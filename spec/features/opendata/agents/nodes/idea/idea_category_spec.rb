@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe "opendata_agents_nodes_idea_category", dbscope: :example, js: true do
+describe "opendata_agents_nodes_idea_category", type: :feature, dbscope: :example, js: true do
   let(:site) { cms_site }
   let(:layout) { create_cms_layout }
   let(:node_category_folder) { create :cms_node_node, cur_site: site, layout_id: layout.id, basename: "category" }

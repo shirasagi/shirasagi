@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe "ezine_node_category_nodes", dbscope: :example do
+describe "ezine_node_category_nodes", type: :feature, dbscope: :example do
   let(:site) { cms_site }
   let(:node) { create :ezine_node_category_node, cur_site: site }
   let(:index_path) { ezine_category_nodes_path site.id, node }

@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe "voice_error_files" do
+describe "voice_error_files", type: :feature, dbscope: :example do
   subject(:site) { cms_site }
   subject(:index_path) { voice_error_files_path site.id }
   subject(:download_path) { download_voice_error_files_path site.id }

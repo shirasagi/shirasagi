@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe "opendata_agents_nodes_my_dataset_resources", dbscope: :example do
+describe "opendata_agents_nodes_my_dataset_resources", type: :feature, dbscope: :example do
   let(:site) { cms_site }
   let(:member) { opendata_member(site: site) }
   let!(:node_member) { create :opendata_node_member }

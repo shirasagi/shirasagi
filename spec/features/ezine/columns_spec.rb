@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe "ezine_columns" do
+describe "ezine_columns", type: :feature do
   subject(:site) { cms_site }
   subject(:node) { create_once :ezine_node_page }
   subject(:item) { Ezine::Column.last }

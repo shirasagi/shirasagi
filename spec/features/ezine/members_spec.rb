@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe "ezine_members" do
+describe "ezine_members", type: :feature do
   subject(:site) { cms_site }
   subject(:node) { create_once :ezine_node_page }
   subject(:item) { Ezine::Member.last }

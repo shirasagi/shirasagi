@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe "member_blogs", dbscope: :example, js: true do
+describe "member_blogs", type: :feature, dbscope: :example, js: true do
   let(:site) { cms_site }
   let!(:layout) { create(:cms_layout, site: site, name: "blog") }
   let!(:blogs_node) { create_once :member_node_blog, filename: "blogs", name: "blogs", layout: layout }

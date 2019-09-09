@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe "sns_job_logs", dbscope: :example, js: true do
+describe "sns_job_logs", type: :feature, dbscope: :example, js: true do
   let(:site) { gws_site }
   let(:user) { gws_user }
   let(:now) { Time.zone.now.change(hour: 9).beginning_of_minute }

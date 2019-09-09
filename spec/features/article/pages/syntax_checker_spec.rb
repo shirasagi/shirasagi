@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe "syntax_checker", dbscope: :example, js: true do
+describe "syntax_checker", type: :feature, dbscope: :example, js: true do
   let!(:site) { cms_site }
   let!(:node) do
     create_once :article_node_page, filename: "docs", name: "article",

@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe "sitemap_pages" do
+describe "sitemap_pages", type: :feature do
   subject(:site) { cms_site }
   subject(:node) { create_once :sitemap_node_page, filename: "docs", name: "sitemap" }
   subject(:item) { Sitemap::Page.last }

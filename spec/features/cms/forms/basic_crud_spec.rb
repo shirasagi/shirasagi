@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe Cms::FormsController, dbscope: :example, js: true do
+describe Cms::FormsController, type: :feature, dbscope: :example, js: true do
   let!(:site) { cms_site }
   let(:name) { unique_id }
   let(:html) { unique_id }

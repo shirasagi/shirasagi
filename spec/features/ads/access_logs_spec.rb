@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe "ads_access_logs" do
+describe "ads_access_logs", type: :feature, dbscope: :example do
   subject(:site) { cms_site }
   subject(:node) { create_once :ads_node_banner, name: "ads" }
   subject(:index_path) { ads_access_logs_path site.id, node }

@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe "inquiry_columns" do
+describe "inquiry_columns", type: :feature do
   subject(:site) { cms_site }
   subject(:node) { create_once :article_node_page, name: "article" }
   subject(:item) { Inquiry::Column.last }

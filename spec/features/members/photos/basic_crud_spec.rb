@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe "member_photos", dbscope: :example do
+describe "member_photos", type: :feature, dbscope: :example do
   let(:site) { cms_site }
   let(:node) { create_once :member_node_photo, filename: "photos", name: "photos" }
   let(:item) { create(:member_photo, cur_node: node) }

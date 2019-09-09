@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe "ads_banners" do
+describe "ads_banners", type: :feature do
   let(:site) { cms_site }
   let(:node) { create_once :ads_node_banner, name: "ads" }
   let(:item) { Ads::Banner.last }

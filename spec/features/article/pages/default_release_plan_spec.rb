@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe "article_pages", dbscope: :example, js: true do
+describe "article_pages", type: :feature, dbscope: :example, js: true do
   context "default release plan" do
     let(:site) { cms_site }
     let(:node) { create :article_node_page, filename: "docs", name: "article" }

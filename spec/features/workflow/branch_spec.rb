@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe "workflow_branch", dbscope: :example, js: true do
+describe "workflow_branch", type: :feature, dbscope: :example, js: true do
   let(:site) { cms_site }
   let(:old_name) { "[TEST] br_page" }
   let(:new_name) { "[TEST] br_replace" }

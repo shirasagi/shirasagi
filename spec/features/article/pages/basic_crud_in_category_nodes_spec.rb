@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe "article_pages", dbscope: :example do
+describe "article_pages", type: :feature, dbscope: :example do
   let(:site) { cms_site }
   let(:item) { create(:article_page, cur_node: node) }
   let(:index_path) { article_pages_path site.id, node }
