@@ -37,6 +37,7 @@ ja:
       gws/report/column_setting: 入力設定
       gws/report/custom_form: 入力内容
       gws/report/category: カテゴリー
+      gws/report/group_setting: レポート
 
   gws_role:
     use_gws_report: レポートの利用
@@ -88,6 +89,8 @@ ja:
         category_ids: カテゴリー
       gws/reference/report/form:
         form_id: テンプレート
+      gws/addon/report/group_setting:
+        report_new_days: 新着表示期間
 
   tooltip:
     gws/report/file:
@@ -109,6 +112,10 @@ ja:
     gws/report/category:
       name:
         - カテゴリー名を入力します。
+
+    gws/addon/report/group_setting:
+      report_new_days:
+        - 新着表示期間を入力します。
 
   job:
     models:
