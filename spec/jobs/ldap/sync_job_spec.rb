@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 describe Ldap::SyncJob, dbscope: :example do
-  let(:group) { create(:cms_group, name: unique_id, ldap_dn: "dc=city,dc=shirasagi,dc=jp") }
+  let(:group) { create(:cms_group, name: unique_id, ldap_dn: "dc=example,dc=jp") }
   let(:item) { create(:ldap_import) }
   subject { Ldap::SyncJob.bind(site_id: cms_site) }
 

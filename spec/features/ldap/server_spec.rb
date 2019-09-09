@@ -24,7 +24,7 @@ describe "ldap_server", type: :feature, dbscope: :example do
 
   context "with ldap site", ldap: true do
     let(:group) do
-      create(:cms_group, name: unique_id, ldap_dn: "dc=city,dc=shirasagi,dc=jp")
+      create(:cms_group, name: unique_id, ldap_dn: "dc=example,dc=jp")
     end
     let(:site) do
       create(:cms_site, name: unique_id, host: unique_id, domains: ["#{unique_id}.example.jp"],
@@ -34,22 +34,16 @@ describe "ldap_server", type: :feature, dbscope: :example do
       create(:cms_role_admin, name: "ldap_user_role_#{unique_id}", site_id: site.id)
     end
     let(:user) do
-      create(:cms_user, name: unique_id, email: "#{unique_id}@example.jp", in_password: "pass",
+      create(:cms_user, name: unique_id, email: "#{unique_id}@example.jp", in_password: "admin",
+             ldap_dn: "cn=admin,dc=example,dc=jp",
              group_ids: [group.id], cms_role_ids: [role.id])
     end
     let(:index_path) { ldap_server_path site.id }
-    let(:group_dn) { "ou=001002秘書広報課,ou=001企画部, dc=city, dc=shirasagi, dc=jp" }
-    let(:user_dn) { "uid=user1,ou=001002秘書広報課,ou=001企画部, dc=city, dc=shirasagi, dc=jp" }
+    let(:group_dn) { "ou=001001政策課,ou=001企画政策部,dc=example,dc=jp" }
+    let(:user_dn) { "uid=user1,ou=001001政策課,ou=001企画政策部,dc=example,dc=jp" }
     let(:index2_path) { "/.s#{site.id}/ldap/server/#{URI.escape(group_dn)}" }
     let(:group_path) { "/.s#{site.id}/ldap/server/#{URI.escape(group_dn)}/group" }
     let(:user_path) { "/.s#{site.id}/ldap/server/#{URI.escape(user_dn)}/user" }
-
-    around(:each) do |example|
-      save_auth_method = SS.config.ldap.auth_method
-      SS.config.replace_value_at(:ldap, :auth_method, "anonymous")
-      example.run
-      SS.config.replace_value_at(:ldap, :auth_method, save_auth_method)
-    end
 
     context "with auth" do
       it "#index" do
