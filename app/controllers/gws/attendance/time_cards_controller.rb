@@ -49,7 +49,10 @@ class Gws::Attendance::TimeCardsController < ApplicationController
   end
 
   def set_record
-    @cur_date = @cur_month.change(day: Integer(params[:day]))
+    day = params[:day].to_s
+    raise "404" if !day.numeric?
+
+    @cur_date = @cur_month.change(day: day.to_i)
     @record = @item.records.where(date: @cur_date).first
     @record ||= @item.records.create(date: @cur_date)
   end
