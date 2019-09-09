@@ -2,9 +2,9 @@ module SS
   module JsSupport
     module Hooks
       def self.extended(obj)
-        obj.after do
+        obj.after(:example) do
           wait_for_page_load
-          page.reset! # unless finished_all_ajax_requests?
+          wait_for_ajax
         end
       end
     end
@@ -72,6 +72,7 @@ module SS
       wait_for_ajax
       has_css?("#cboxLoadedContent")
       has_css?("#cboxClose")
+      sleep 1
       if block_given?
         within "#cboxContent" do
           yield
@@ -108,7 +109,7 @@ module SS
     end
 
     def save_full_screenshot(opts = {})
-      filename = opts[:filename].presence || "#{Rails.root}/tmp/screenshots-#{Time.zone.now.to_i}"
+      filename = opts[:filename].presence || "#{Rails.root}/tmp/screenshots-#{Time.zone.now.to_f}.png"
       page.save_screenshot(filename, full: true)
       puts "screenshot: #{filename}"
     rescue

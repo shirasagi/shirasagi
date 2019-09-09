@@ -8,11 +8,9 @@ require File.expand_path("../config/environment", __dir__)
 
 require 'webdrivers'
 # Webdrivers.logger.level = :DEBUG
-
 require 'rails-controller-testing'
-
 require 'rspec/rails'
-#require 'rspec/autorun'
+# require 'rspec/autorun'
 require 'rspec/collection_matchers'
 require 'rspec/its'
 require 'capybara/rspec'
@@ -90,21 +88,18 @@ RSpec.configure do |config|
   config.include Capybara::DSL
   config.include ActiveJob::TestHelper
   config.include ActiveSupport::Testing::TimeHelpers
-
   config.include FactoryBot::Syntax::Methods
-  config.before(:all) do
-    FactoryBot.reload
-    Capybara.app_host = nil
-  end
+
+  config.add_setting :default_dbscope, default: :context
 
   driver = ENV['driver'].presence || 'auto'
   if !SS::CapybaraSupport.activate_driver(driver, config)
     config.filter_run_excluding(js: true)
   end
 
-  Capybara.configure do |config|
-    config.ignore_hidden_elements = false
-    config.default_max_wait_time = (ENV["CAPYBARA_MAX_WAIT_TIME"] || 10).to_i
+  # fragile specs are ignored when rspec is executing in Travis CI.
+  if ENV["CI"] == "true" && ENV["TRAVIS"] == "true"
+    config.filter_run_excluding(fragile: true)
   end
 
   config.before(:suite) do
@@ -114,11 +109,18 @@ RSpec.configure do |config|
     ::Mongoid::Clients.default.database.drop
   end
 
-  config.add_setting :default_dbscope, default: :context
+  config.before(:context) do
+    FactoryBot.reload
+    Capybara.app_host = nil
+  end
 
-  # fragile specs are ignored when rspec is executing in Travis CI.
-  if ENV["CI"] == "true" && ENV["TRAVIS"] == "true"
-    config.filter_run_excluding(fragile: true)
+  config.after(:example, type: :feature) do
+    page.reset!
+  end
+
+  Capybara.configure do |config|
+    config.ignore_hidden_elements = false
+    config.default_max_wait_time = (ENV["CAPYBARA_MAX_WAIT_TIME"] || 10).to_i
   end
 end
 
