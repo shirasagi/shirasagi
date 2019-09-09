@@ -20,7 +20,6 @@
 
           <div class="meta">
             <span class="datetime"><%= item.descendants_updated.strftime("%Y/%m/%d %H:%M") %></span>
-            <span class="mode"><%= item.updated? ? t('gws.history.mode.update') : t('gws.history.mode.create') %></span>
             <span>
               <% item.categories.compact.each do |category| %>
                 <%= link_to category.trailing_name, gws_board_topics_path(mode: '-', category: category.id),

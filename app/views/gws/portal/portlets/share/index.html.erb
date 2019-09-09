@@ -11,7 +11,6 @@
           <%= link_to item.name, gws_share_file_path(id: item.id), class: 'title' %>
           <div class="meta">
             <span class="datetime"><%= item.updated.strftime("%Y/%m/%d %H:%M") %></span>
-            <span class="mode"><%= item.updated? ? t('gws.history.mode.update') : t('gws.history.mode.create') %></span>
             <span>
               <% item.categories.compact.each do |category| %>
                 <%= link_to category.trailing_name, gws_share_files_path(category: category.id),
