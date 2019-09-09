@@ -6,7 +6,7 @@ describe Ldap::Connection, ldap: true do
     let(:base_dn) { "dc=city,dc=shirasagi,dc=jp" }
     let(:auth_method) { "simple" }
     let(:username) { "cn=Manager,dc=city,dc=shirasagi,dc=jp" }
-    let(:password) { "ldappass" }
+    let(:password) { SS::Crypt.encrypt("ldappass") }
 
     describe ".connect" do
       context "when valid config is given" do
@@ -46,6 +46,15 @@ describe Ldap::Connection, ldap: true do
             Ldap::Connection.connect(host: host, base_dn: base_dn, auth_method: auth_method,
                                      username: username, password: password)
           end.to raise_error Ldap::BindError
+        end
+      end
+
+      context "when encrypted password is given" do
+        let(:username) { "uid=user1,ou=001002秘書広報課,ou=001企画部, dc=city, dc=shirasagi, dc=jp" }
+        let(:password) { SS::Crypt.encrypt("user1") }
+        it do
+          expect(Ldap::Connection.connect(host: host, base_dn: base_dn, auth_method: auth_method,
+                                          username: username, password: password)).not_to be_nil
         end
       end
     end
