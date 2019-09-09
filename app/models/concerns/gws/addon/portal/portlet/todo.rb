@@ -6,16 +6,16 @@ module Gws::Addon::Portal::Portlet
     set_addon_type :gws_portlet
 
     included do
-      field :todo_state, type: String, default: "unfinished"
+      field :todo_state, type: String
       permit_params :todo_state
     end
 
     def todo_state_options
-      %w(unfinished finished both).map { |v| [I18n.t("gws/schedule/todo.options.todo_state.#{v}"), v] }
+      Gws::Schedule::Todo.todo_state_filter_options
     end
 
     def find_todo_items(portal, user)
-      search = { site: portal.site, todo_state: todo_state.presence || 'unfinished' }
+      search = { site: portal.site, todo_state: todo_state.presence || 'except_finished' }
 
       Gws::Schedule::Todo.site(portal.site).
         member(user).
