@@ -31,7 +31,7 @@ module Gws::Addon::Portal::Portlet
       search = { site: portal.site, todo_state: todo_state.presence || 'unfinished' }
 
       Gws::Schedule::Todo.site(portal.site).
-        member_or_readable(user, site: portal.site).
+        member(user).
         without_deleted.
         search(search).
         order_by(end_at: 1).

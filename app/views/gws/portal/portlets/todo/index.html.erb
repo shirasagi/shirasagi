@@ -9,7 +9,7 @@
     <% items.each do |item| %>
       <li class="list-item">
         <div class="info">
-          <%= link_to item.name, gws_schedule_todo_readable_path(id: item), class: 'title' %>
+          <%= link_to item.name, gws_schedule_todo_readable_path(category: '-', id: item), class: 'title' %>
 
           <div class="meta">
             <span><%= item.label(:todo_state) %></span>
