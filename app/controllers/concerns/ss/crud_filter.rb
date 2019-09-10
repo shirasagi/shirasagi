@@ -43,7 +43,7 @@ module SS::CrudFilter
     ids = params[:ids]
     raise "400" unless ids
     ids = ids.split(",") if ids.is_a?(String)
-    @items = @model.in(id: ids)
+    @selected_items = @items = @model.in(id: ids)
     raise "400" unless @items.present?
   end
 
@@ -109,7 +109,9 @@ module SS::CrudFilter
   end
 
   def destroy_all
-    @items.destroy_all
+    raise "400" if @selected_items.blank?
+
+    @selected_items.destroy_all
     render_destroy_all true
   end
 

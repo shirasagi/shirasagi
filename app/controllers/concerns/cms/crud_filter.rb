@@ -29,7 +29,9 @@ module Cms::CrudFilter
   end
 
   def destroy_items
-    entries = @items.entries
+    raise "400" if @selected_items.blank?
+
+    entries = @selected_items.entries
     @items = []
 
     entries.each do |item|
@@ -103,7 +105,9 @@ module Cms::CrudFilter
   end
 
   def disable_all
-    entries = @items.entries
+    raise "400" if @selected_items.blank?
+
+    entries = @selected_items.entries
     @items = []
 
     entries.each do |item|

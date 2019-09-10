@@ -4,6 +4,7 @@ module Sns::CrudFilter
 
   included do
     menu_view "ss/crud/menu"
+    before_action :set_selected_items, only: [:destroy_all, :disable_all]
   end
 
   private
@@ -69,7 +70,9 @@ module Sns::CrudFilter
   end
 
   def destroy_all
-    entries = @items.entries
+    raise "400" if @selected_items.blank?
+
+    entries = @selected_items.entries
     @items = []
 
     entries.each do |item|
@@ -84,7 +87,9 @@ module Sns::CrudFilter
   end
 
   def disable_all
-    entries = @items.entries
+    raise "400" if @selected_items.blank?
+
+    entries = @selected_items.entries
     @items = []
 
     entries.each do |item|
