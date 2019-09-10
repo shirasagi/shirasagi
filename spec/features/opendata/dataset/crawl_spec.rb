@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe "opendata_crawl", type: :feature, dbscope: :example, http_server: true do
+describe "opendata_crawl", dbscope: :example, http_server: true do
   # http.default port: 33_190
   http.default doc_root: Rails.root.join("spec", "fixtures", "opendata")
 
