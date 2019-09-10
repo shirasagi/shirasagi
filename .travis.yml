@@ -134,21 +134,29 @@ jobs:
         create:
           name: codeclimate.7.json
           paths: codeclimate.7.json
-    - name: Other
+    - name: Models
       script:
-        - bundle exec rspec -p 10 spec/ --pattern "spec/{models,jobs,helpers,lib,mailers,requests,validators}/**/*.rb"
+        - bundle exec rspec -p 10 spec/ --pattern "spec/models/**/*.rb"
         - ./cc-test-reporter format-coverage -t simplecov -o codeclimate.8.json coverage/.resultset.json
       workspaces:
         create:
           name: codeclimate.8.json
           paths: codeclimate.8.json
+    - name: Other
+      script:
+        - bundle exec rspec -p 10 spec/ --pattern "spec/{jobs,helpers,lib,mailers,requests,validators}/**/*.rb"
+        - ./cc-test-reporter format-coverage -t simplecov -o codeclimate.9.json coverage/.resultset.json
+      workspaces:
+        create:
+          name: codeclimate.9.json
+          paths: codeclimate.9.json
 
     - stage: deploy
       name: Code Climate
       before_script: skip
       script:
         - ls -la codeclimate.*
-        - ./cc-test-reporter sum-coverage codeclimate.*.json -p 7
+        - ./cc-test-reporter sum-coverage codeclimate.*.json -p 8
         - ./cc-test-reporter upload-coverage -r 8447130d9db9efadd8b86604c1976a4595fd3adc290daf45674490ba949da336
       workspaces:
         use:
@@ -159,6 +167,7 @@ jobs:
           - codeclimate.6.json
           - codeclimate.7.json
           - codeclimate.8.json
+          - codeclimate.9.json
 
 #notifications:
 #  webhooks: https://coveralls.io/webhook
