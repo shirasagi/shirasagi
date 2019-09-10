@@ -52,7 +52,7 @@ ja:
         text: 今週のスケジュールを表示します。
       todo:
         name: ToDo
-        text: 未完了のToDoを表示します。
+        text: 担当ToDoを表示します。
       bookmark:
         name: お気に入り
         text: お気に入りを表示します。
@@ -152,7 +152,6 @@ ja:
         schedule_member_ids: 表示ユーザー
       gws/addon/portal/portlet/todo:
         todo_state: 表示状態
-        todo_member_ids: 表示ユーザー
       gws/addon/portal/portlet/bookmark:
         bookmark_model: 機能表示範囲
       gws/addon/portal/portlet/board:
