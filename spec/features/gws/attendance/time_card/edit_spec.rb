@@ -2,7 +2,7 @@ require 'spec_helper'
 
 describe "gws_attendance_time_card", type: :feature, dbscope: :example, js: true do
   let(:site) { gws_site }
-  let(:now) { Time.zone.now.change(hour: 9).beginning_of_minute }
+  let(:now) { Time.zone.now.change(day: 9, hour: 9).beginning_of_minute }
   let(:reason) { unique_id }
   let(:memo) { unique_id }
 
@@ -184,6 +184,10 @@ describe "gws_attendance_time_card", type: :feature, dbscope: :example, js: true
   end
 
   context 'edit memo' do
+    around do |example|
+      travel_to(now) { example.run }
+    end
+
     context "edit cell in today row" do
       it do
         visit gws_attendance_main_path(site)
