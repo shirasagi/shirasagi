@@ -1,0 +1,15 @@
+<%
+  message.subject = "[#{I18n.t('member.mail.subject.completed')}]#{@member.name} - #{@node.site.name}"
+  message.subject = @node.completed_subject if @node.completed_subject.present?
+%>
+<%= @node.completed_upper_text %>
+
+- <%= @member.t :name %>
+  <%= @member.name %>
+
+- <%= @member.t :email %>
+  <%= @member.email %>
+
+<%= @node.completed_lower_text %>
+
+<%= @node.sender_signature %>
