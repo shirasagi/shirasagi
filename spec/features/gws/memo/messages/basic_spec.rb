@@ -73,7 +73,7 @@ describe 'gws_memo_messages', type: :feature, dbscope: :example do
       within 'form#item-form' do
         click_on I18n.t('ss.buttons.draft_save')
       end
-      expect(page).to have_css('#errorExplanation', text: Gws::Memo::Message.t(:subject) + I18n.t('errors.messages.blank'))
+      wait_for_error Gws::Memo::Message.t(:subject) + I18n.t('errors.messages.blank')
 
       within 'form#item-form' do
         fill_in 'item[subject]', with: subject
@@ -91,7 +91,7 @@ describe 'gws_memo_messages', type: :feature, dbscope: :example do
         fill_in 'item[subject]', with: ''
         click_on I18n.t('ss.buttons.draft_save')
       end
-      expect(page).to have_css('#errorExplanation', text: Gws::Memo::Message.t(:subject) + I18n.t('errors.messages.blank'))
+      wait_for_error Gws::Memo::Message.t(:subject) + I18n.t('errors.messages.blank')
 
       within 'form#item-form' do
         fill_in 'item[subject]', with: subject

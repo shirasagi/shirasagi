@@ -111,7 +111,7 @@ describe "gws_share_folders", type: :feature, dbscope: :example, js: true do
         within 'form#item-form' do
           click_on I18n.t('ss.buttons.save')
         end
-        expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+        wait_for_notice I18n.t('ss.notice.saved')
 
         expect(Gws::Share::Folder.site(site).where(name: "#{item.name}/#{subfolder_name1}").count).to eq 1
         Gws::Share::Folder.site(site).where(name: "#{item.name}/#{subfolder_name1}").first.tap do |folder|
@@ -133,7 +133,7 @@ describe "gws_share_folders", type: :feature, dbscope: :example, js: true do
           fill_in 'item[in_basename]', with: subfolder_name2
           click_on I18n.t('ss.buttons.save')
         end
-        expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+        wait_for_notice I18n.t('ss.notice.saved')
 
         expect(Gws::Share::Folder.site(site).where(name: "#{item.name}/#{subfolder_name1}").count).to eq 0
         expect(Gws::Share::Folder.site(site).where(name: "#{item.name}/#{subfolder_name2}").count).to eq 1

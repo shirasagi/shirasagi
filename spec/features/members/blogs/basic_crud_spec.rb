@@ -26,10 +26,7 @@ describe "member_blogs", type: :feature, dbscope: :example, js: true do
         fill_in "item[name]", with: "sample"
         click_on I18n.t("ss.buttons.draft_save")
       end
-
-      within ".errorExplanation" do
-        expect(page).to have_content("本文を入力してください。")
-      end
+      wait_for_error "本文を入力してください。"
     end
 
     it "#show" do

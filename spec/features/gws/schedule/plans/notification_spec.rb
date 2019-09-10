@@ -59,7 +59,7 @@ describe "gws_schedule_plans", type: :feature, dbscope: :example, js: true do
         end
         click_on I18n.t("ss.buttons.save")
       end
-      expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+      wait_for_notice I18n.t('ss.notice.saved')
     end
 
     context "with notify_state disabled" do

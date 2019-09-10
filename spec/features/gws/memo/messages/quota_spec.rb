@@ -49,9 +49,7 @@ describe 'gws_memo_messages', type: :feature, dbscope: :example, js: true do
           click_on I18n.t('ss.buttons.send')
         end
       end
-
-      error_msg = I18n.t('mongoid.errors.models.gws/memo/message.member_quota_over', member: recipient.long_name)
-      expect(page).to have_css('.errorExplanation', text: error_msg)
+      wait_for_error I18n.t('mongoid.errors.models.gws/memo/message.member_quota_over', member: recipient.long_name)
     end
   end
 

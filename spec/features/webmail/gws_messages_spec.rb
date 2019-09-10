@@ -33,7 +33,7 @@ describe "webmail_gws_messages", type: :feature, dbscope: :example, imap: true, 
           fill_in "item[text]", with: item_texts.join("\n")
           click_on I18n.t('ss.buttons.send')
         end
-        expect(page).to have_css('#notice', text: I18n.t('ss.notice.sent'))
+        wait_for_notice I18n.t('ss.notice.sent')
 
         expect(ActionMailer::Base.deliveries).to have(1).items
         ActionMailer::Base.deliveries.first.tap do |mail|
@@ -57,7 +57,7 @@ describe "webmail_gws_messages", type: :feature, dbscope: :example, imap: true, 
         page.accept_alert do
           click_on I18n.t('ss.buttons.send')
         end
-        expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+        wait_for_notice I18n.t('ss.notice.saved')
         expect(has_link?(item_title)).to be_truthy
       end
     end
