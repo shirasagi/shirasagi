@@ -2,13 +2,14 @@ require 'spec_helper'
 
 describe 'gws_memo_messages', type: :feature, dbscope: :example, js: true do
   let(:site) { gws_site }
-  let(:quota_size) { rand(10) }
+  let(:quota_size) { rand(1..10) }
   let!(:sender) { create(:gws_user, cur_site: site, gws_role_ids: gws_user.gws_role_ids) }
   let!(:recipient) { create(:gws_user, cur_site: site, gws_role_ids: gws_user.gws_role_ids) }
   let(:subject) { "subject-#{unique_id}" }
-  let(:text) { "text-#{unique_id}\r\ntext-#{unique_id}\r\ntext-#{unique_id}" }
+  let(:text) { ("text-#{unique_id}\r\n" * 3).strip }
 
   before do
+    login_user(sender)
     site.memo_quota = quota_size
     site.save!
   end
@@ -20,11 +21,8 @@ describe 'gws_memo_messages', type: :feature, dbscope: :example, js: true do
       msg.filtered[sender.id.to_s] = Time.zone.now
       msg.filtered[recipient.id.to_s] = Time.zone.now
       msg.save
-
       msg.set(size: quota_size * 1024 * 1024)
     end
-
-    before { login_user sender }
 
     it do
       visit gws_memo_messages_path(site)
@@ -35,7 +33,6 @@ describe 'gws_memo_messages', type: :feature, dbscope: :example, js: true do
           click_on I18n.t('gws.organization_addresses')
         end
       end
-
       wait_for_cbox do
         expect(page).to have_content(recipient.name)
         click_on recipient.name
@@ -60,11 +57,8 @@ describe 'gws_memo_messages', type: :feature, dbscope: :example, js: true do
       msg.filtered[sender.id.to_s] = Time.zone.now
       msg.filtered[recipient.id.to_s] = Time.zone.now
       msg.save
-
       msg.set(size: quota_size * 1024 * 1024 - 1)
     end
-
-    before { login_user sender }
 
     it do
       visit gws_memo_messages_path(site)
@@ -75,7 +69,6 @@ describe 'gws_memo_messages', type: :feature, dbscope: :example, js: true do
           click_on I18n.t('gws.organization_addresses')
         end
       end
-
       wait_for_cbox do
         expect(page).to have_content(recipient.name)
         click_on recipient.name
@@ -89,7 +82,6 @@ describe 'gws_memo_messages', type: :feature, dbscope: :example, js: true do
           click_on I18n.t('ss.buttons.send')
         end
       end
-
       expect(page).to have_css('#notice', text: I18n.t('ss.notice.sent'))
     end
   end
