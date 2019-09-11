@@ -16,6 +16,7 @@ class Ldap::Connection
 
       ldap = Net::LDAP.new(config)
       raise Ldap::BindError unless do_bind(ldap, auth_method, username, password)
+
       new(config)
     end
 
@@ -30,16 +31,15 @@ class Ldap::Connection
       config[:base] = username
 
       ldap = Net::LDAP.new(config)
-      return false unless do_bind(ldap, :simple, username, password)
-      true
+      do_bind(ldap, :simple, username, password) ? true : false
     end
 
-    def split_dn(dn)
-      index = dn.index(",")
+    def split_dn(ldap_dn)
+      index = ldap_dn.index(",")
       return nil if index.nil?
 
-      first = dn[0..index - 1].strip
-      remains = dn[index + 1..-1].strip
+      first = ldap_dn[0..index - 1].strip
+      remains = ldap_dn[index + 1..-1].strip
 
       key, value = first.split("=", 2)
       filter = Net::LDAP::Filter.eq(key.strip, value.strip)
@@ -95,11 +95,12 @@ class Ldap::Connection
     end.compact
   end
 
-  def find(dn, klass)
-    filter, base = Ldap::Connection.split_dn(dn)
+  def find(ldap_dn, klass)
+    filter, base = Ldap::Connection.split_dn(ldap_dn)
     filter = Net::LDAP::Filter.join(klass::DEFAULT_FILTER, filter)
     entries = search(filter, base: base)
     return nil if entries.nil?
+
     entries = entries.map do |e|
       klass.create(self, e)
     end

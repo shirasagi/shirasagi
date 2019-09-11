@@ -8,8 +8,8 @@ class Ldap::Entry
   end
 
   class << self
-    def find(connection, dn)
-      connection.find(dn, self)
+    def find(connection, ldap_dn)
+      connection.find(ldap_dn, self)
     end
   end
 
@@ -38,15 +38,15 @@ class Ldap::Entry
     Ldap::Group.find(@connection, parent_dn)
   end
 
-  def self.normalize(e)
-    if e.kind_of?(String)
-      e.force_encoding("UTF-8")
-    elsif e.kind_of?(Array)
-      e.map do |v|
+  def self.normalize(value)
+    if value.kind_of?(String)
+      value.force_encoding("UTF-8")
+    elsif value.kind_of?(Array)
+      value.map do |v|
         normalize(v)
       end
     else
-      e
+      value
     end
   end
 
