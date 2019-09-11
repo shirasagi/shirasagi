@@ -5,8 +5,8 @@ describe 'gws_memo_list_messages', type: :feature, dbscope: :example, js: true d
   let(:list) { create(:gws_memo_list, cur_site: site, sender_name: "sender-#{unique_id}") }
   let(:subject1) { "subject-#{unique_id}" }
   let(:subject2) { "subject-#{unique_id}" }
-  let(:text1) { "text-#{unique_id}\r\ntext-#{unique_id}\r\ntext-#{unique_id}" }
-  let(:text2) { "text-#{unique_id}\r\ntext-#{unique_id}\r\ntext-#{unique_id}" }
+  let(:text1) { ("text-#{unique_id}\r\n" * 3).strip }
+  let(:text2) { ("text-#{unique_id}\r\n" * 3).strip }
 
   context 'without login' do
     it do

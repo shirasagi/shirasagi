@@ -6,7 +6,7 @@ describe 'gws_memo_messages', type: :feature, dbscope: :example, js: true do
   let!(:sender) { create(:gws_user, cur_site: site, gws_role_ids: gws_user.gws_role_ids) }
   let!(:recipient) { create(:gws_user, cur_site: site, gws_role_ids: gws_user.gws_role_ids) }
   let(:subject) { "subject-#{unique_id}" }
-  let(:text) { "text-#{unique_id}\r\n" * 3 }
+  let(:text) { ("text-#{unique_id}\r\n" * 3).strip }
 
   before do
     login_user(sender)
