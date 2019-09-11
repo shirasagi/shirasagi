@@ -2,7 +2,7 @@ require 'spec_helper'
 
 describe 'gws_memo_list_messages', type: :feature, dbscope: :example, js: true do
   let(:site) { gws_site }
-  let(:quota_size) { rand(10) }
+  let(:quota_size) { rand(1..10) }
   let!(:sender) { create(:gws_user, cur_site: site, gws_role_ids: gws_user.gws_role_ids) }
   let!(:recipient) { create(:gws_user, cur_site: site, gws_role_ids: gws_user.gws_role_ids) }
   let!(:list) { create(:gws_memo_list, cur_site: site, member_ids: [sender.id, recipient.id]) }
@@ -11,7 +11,6 @@ describe 'gws_memo_list_messages', type: :feature, dbscope: :example, js: true d
 
   before do
     login_user(sender)
-
     site.memo_quota = quota_size
     site.save!
   end
@@ -23,7 +22,6 @@ describe 'gws_memo_list_messages', type: :feature, dbscope: :example, js: true d
       msg.filtered[sender.id.to_s] = Time.zone.now
       msg.filtered[recipient.id.to_s] = Time.zone.now
       msg.save
-
       msg.set(size: quota_size * 1024 * 1024)
     end
 
@@ -36,13 +34,12 @@ describe 'gws_memo_list_messages', type: :feature, dbscope: :example, js: true d
         fill_in 'item[text]', with: text
         click_on I18n.t('ss.buttons.draft_save')
       end
-      wait_for_notice I18n.t('ss.notice.saved')
+      expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
 
       visit gws_memo_list_messages_path(site: site, list_id: list)
       click_on subject
 
       click_on I18n.t('gws/memo.links.publish')
-      wait_for_page_load
       within '#item-form #addon-basic' do
         expect(page).to have_css('dd', text: I18n.t('gws/memo.notice.capacity_over_members'))
         expect(page).to have_css('dd', text: recipient.long_name)
@@ -51,7 +48,7 @@ describe 'gws_memo_list_messages', type: :feature, dbscope: :example, js: true d
       within '#item-form' do
         click_on I18n.t('ss.buttons.send')
       end
-      wait_for_notice I18n.t('ss.notice.sent')
+      expect(page).to have_css('#notice', text: I18n.t('ss.notice.sent'))
 
       expect(Gws::Memo::ListMessage.all.and_list_message.count).to eq 1
       Gws::Memo::ListMessage.all.and_list_message.first do |message|
