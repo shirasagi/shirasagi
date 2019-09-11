@@ -114,6 +114,10 @@ RSpec.configure do |config|
     Capybara.app_host = nil
   end
 
+  config.before(:example, type: :feature) do
+    page.reset!
+  end
+
   config.after(:example, type: :feature) do
     page.reset!
   end
