@@ -53,7 +53,10 @@ module SS
       Timeout.timeout(ajax_timeout) do
         sleep 1 until finished_all_ajax_requests?
       end
-      yield if block_given?
+      if block_given?
+        sleep 1
+        yield
+      end
     end
 
     def wait_for_selector(*args)
