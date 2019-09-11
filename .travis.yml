@@ -97,7 +97,7 @@ jobs:
           paths: codeclimate.2.json
     - name: Features_G (1)
       script:
-        - bundle exec rspec -p 10 spec/ --pattern "spec/features/{g}*/**/*.rb" --exclude "**/*_*_spec.rb"
+        - bundle exec rspec -p 10 spec/ --pattern "spec/features/{g}*/**/*_*_spec.rb"
         - ./cc-test-reporter format-coverage -t simplecov -o codeclimate.3.json coverage/.resultset.json
       workspaces:
         create:
@@ -105,7 +105,7 @@ jobs:
           paths: codeclimate.3.json
     - name: Features_G (2)
       script:
-        - bundle exec rspec -p 10 spec/ --pattern "spec/features/{g}*/**/*_*_spec.rb"
+        - bundle exec rspec -p 10 spec/ --pattern "spec/features/{g}*/**/*.rb" --exclude "**/*_*_spec.rb"
         - ./cc-test-reporter format-coverage -t simplecov -o codeclimate.4.json coverage/.resultset.json
       workspaces:
         create:
