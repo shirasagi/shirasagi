@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe "sys/auth/saml", dbscope: :example do
+describe "sys/auth/saml", type: :feature, dbscope: :example do
   let(:name) { unique_id }
   let(:filename) { unique_id }
   let(:metadata_file) { "#{Rails.root}/spec/fixtures/sys/auth/metadata-1.xml" }

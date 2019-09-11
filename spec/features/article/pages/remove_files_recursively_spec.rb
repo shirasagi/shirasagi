@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe "article_pages remove_files_recursively", dbscope: :example do
+describe "article_pages remove_files_recursively", type: :feature, dbscope: :example do
   let(:site) { cms_site }
   let(:node) {
     create_once :article_node_page, filename: "docs", name: "article", state: "public", for_member_state: "disabled"

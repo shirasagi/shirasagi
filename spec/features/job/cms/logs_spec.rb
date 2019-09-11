@@ -1,7 +1,7 @@
 require 'spec_helper'
 require "csv"
 
-describe "job_cms_logs", dbscope: :example do
+describe "job_cms_logs", type: :feature, dbscope: :example do
   let(:site) { cms_site }
   let(:index_path) { job_cms_logs_path site.id }
   let(:job) { create(:job_model, cur_site: site) }

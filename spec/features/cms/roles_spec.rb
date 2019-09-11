@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe "cms_roles" do
+describe "cms_roles", type: :feature, dbscope: :example do
   subject(:site) { cms_site }
   subject(:item) { Cms::Role.last }
   subject(:index_path) { cms_roles_path site.id }

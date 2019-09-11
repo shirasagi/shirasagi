@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe "history_cms_logs" do
+describe "history_cms_logs", type: :feature, dbscope: :example do
   subject(:site) { cms_site }
   subject(:index_path) { history_cms_logs_path site.id }
 

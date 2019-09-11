@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe "jmaxml/quake_regions", dbscope: :example do
+describe "jmaxml/quake_regions", type: :feature, dbscope: :example do
   let(:site) { cms_site }
   let(:node) { create :rss_node_weather_xml, cur_site: site }
   let(:index_path) { jmaxml_quake_regions_path(site, node) }

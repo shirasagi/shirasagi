@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe "member_my_anpi_posts", dbscope: :example, js: true do
+describe "member_my_anpi_posts", type: :feature, dbscope: :example, js: true do
   let(:site) { cms_site }
   let(:member) do
     create(:cms_member,

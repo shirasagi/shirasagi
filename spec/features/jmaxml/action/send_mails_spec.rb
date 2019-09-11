@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe "jmaxml/action/send_mails", dbscope: :example, js: true do
+describe "jmaxml/action/send_mails", type: :feature, dbscope: :example, js: true do
   let(:site) { cms_site }
   let(:group) { cms_group }
   let(:node) { create :rss_node_weather_xml, cur_site: site }

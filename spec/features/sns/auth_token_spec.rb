@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe "auth_token", dbscope: :example do
+describe "auth_token", type: :feature, dbscope: :example do
   feature "fetch auth token" do
     scenario "access to html page" do
       visit sns_auth_token_path

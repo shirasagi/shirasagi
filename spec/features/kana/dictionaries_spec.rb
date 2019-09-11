@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe "kana_dictionaries" do
+describe "kana_dictionaries", type: :feature do
   subject(:site) { cms_site }
   subject(:index_path) { kana_dictionaries_path site.id }
   subject(:new_path) { new_kana_dictionary_path site.id }

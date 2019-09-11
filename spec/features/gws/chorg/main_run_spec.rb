@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe "gws_chorg", dbscope: :example, js: true do
+describe "gws_chorg", type: :feature, dbscope: :example, js: true do
   let!(:site) { gws_site }
   let!(:revision) { create(:gws_revision, site_id: site.id) }
 

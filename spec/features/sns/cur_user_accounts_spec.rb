@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe "sns_cur_user_accounts", dbscope: :example do
+describe "sns_cur_user_accounts", type: :feature, dbscope: :example do
   let!(:show_path) { sns_cur_user_account_path }
   let!(:edit_path) { edit_sns_cur_user_account_path }
 

@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe "cms/pages", dbscope: :example, js: true do
+describe "cms/pages", type: :feature, dbscope: :example, js: true do
   let(:site) { cms_site }
 
   # check_mobile_html_size at addon body

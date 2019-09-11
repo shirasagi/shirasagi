@@ -1,9 +1,10 @@
 module SS
   module JsSupport
-    module Callbacks
+    module Hooks
       def self.extended(obj)
-        obj.after do
-          page.reset! # unless finished_all_ajax_requests?
+        obj.after(:example) do
+          wait_for_page_load
+          wait_for_ajax
         end
       end
     end
@@ -22,23 +23,19 @@ module SS
 
     def visit(*args)
       super
+      wait_for_page_load
       wait_for_ajax
     end
 
-    def fill_in(selector, options)
-      with = options[:with]
-
-      if options[:native] # original option
-        el = super(selector, with: '')
-        return native_fill_in(el, with)
-      end
-      el = super(selector, with: with)
-      return native_fill_in(el, with) if el.value.to_s.strip != with.to_s.strip
-      el
+    # fill_in(locator = nil, with:, currently_with: nil, fill_options: {}, **find_options)
+    def fill_in(locator = nil, with:, currently_with: nil, fill_options: {}, **find_options)
+      el = super
+      return el if el.value.to_s.strip == with.to_s.strip
+      native_fill_in(locator, with: with)
     end
 
-    def native_fill_in(el, with)
-      el.set('').click
+    def native_fill_in(locator = nil, with:)
+      el = find(:fillable_field, locator).set('').click
       with.to_s.split('').each { |c| el.native.send_keys(c) }
       el
     rescue Selenium::WebDriver::Error::StaleElementReferenceError
@@ -54,14 +51,17 @@ module SS
 
     def wait_for_ajax(&block)
       Timeout.timeout(ajax_timeout) do
-        sleep 1 while !finished_all_ajax_requests?
+        sleep 1 until finished_all_ajax_requests?
       end
-      yield if block_given?
+      if block_given?
+        sleep 1
+        yield
+      end
     end
 
     def wait_for_selector(*args)
       Timeout.timeout(wait_timeout) do
-        sleep 1 while !page.has_selector?(*args)
+        sleep 1 until page.has_selector?(*args)
       end
       yield if block_given?
     end
@@ -70,18 +70,22 @@ module SS
       wait_for_ajax
       has_css?("#cboxLoadedContent")
       has_css?("#cboxClose")
+      Timeout.timeout(ajax_timeout) do
+        sleep 1 until colorbox_opened?
+      end
       if block_given?
         within "#cboxContent" do
           yield
         end
         wait_for_ajax
+        sleep 1
       end
     end
 
     def wait_for_cbox_close(&block)
       wait_for_ajax
       Timeout.timeout(ajax_timeout) do
-        sleep 1 while !colorbox_closed?
+        sleep 1 until colorbox_closed?
       end
       yield if block_given?
     end
@@ -98,8 +102,27 @@ module SS
       opacity.to_f == 0
     end
 
+    def wait_for_page_load
+      page.document.synchronize do
+        current_path
+        true
+      end
+    end
+
+    def wait_for_notice(text)
+      wait_for_page_load
+      wait_for_ajax
+      expect(page).to have_css('#notice', text: text)
+    end
+
+    def wait_for_error(text)
+      wait_for_page_load
+      wait_for_ajax
+      expect(page).to have_css('#errorExplanation', text: text)
+    end
+
     def save_full_screenshot(opts = {})
-      filename = opts[:filename].presence || "#{Rails.root}/tmp/screenshots-#{Time.zone.now.to_i}"
+      filename = opts[:filename].presence || "#{Rails.root}/tmp/screenshots-#{Time.zone.now.to_f}.png"
       page.save_screenshot(filename, full: true)
       puts "screenshot: #{filename}"
     rescue
@@ -107,5 +130,5 @@ module SS
   end
 end
 
-RSpec.configuration.extend(SS::JsSupport::Callbacks, js: true)
+RSpec.configuration.extend(SS::JsSupport::Hooks, js: true)
 RSpec.configuration.include(SS::JsSupport, js: true)

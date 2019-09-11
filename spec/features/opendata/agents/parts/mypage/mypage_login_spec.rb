@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe "opendata_agents_parts_mypage_login", dbscope: :example do
+describe "opendata_agents_parts_mypage_login", type: :feature, dbscope: :example do
   let(:site) { cms_site }
   let!(:node_mypage) { create_once :opendata_node_mypage, filename: "mypage" }
   let!(:parts) { create(:opendata_part_mypage_login) }

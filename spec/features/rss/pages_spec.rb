@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe "rss_pages", dbscope: :example do
+describe "rss_pages", type: :feature, dbscope: :example do
   let(:site) { cms_site }
   let(:node) { create :rss_node_page, site: site }
   let(:index_path) { rss_pages_path site.id, node.id }

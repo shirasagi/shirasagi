@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe "history_sys_logs", dbscope: :example do
+describe "history_sys_logs", type: :feature, dbscope: :example do
   subject(:index_path) { history_sys_logs_path }
 
   context "with auth" do

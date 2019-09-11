@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe "cms_search", dbscope: :example, js: true do
+describe "cms_search", type: :feature, dbscope: :example, js: true do
   let(:site) { cms_site }
   let(:pages_index_path) { cms_search_contents_pages_path site.id }
   let(:html_index_path) { cms_search_contents_html_path site.id }

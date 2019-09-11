@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe "jmaxml/water_level_stations", dbscope: :example do
+describe "jmaxml/water_level_stations", type: :feature, dbscope: :example do
   let(:site) { cms_site }
   let(:node) { create :rss_node_weather_xml, cur_site: site }
   let(:index_path) { jmaxml_water_level_stations_path(site, node) }

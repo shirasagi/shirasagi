@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe "event_pages", js: true do
+describe "event_pages", type: :feature, js: true do
   subject(:site) { cms_site }
   subject(:node) { create_once :event_node_page, filename: "docs", name: "event" }
   subject(:item) { Event::Page.last }

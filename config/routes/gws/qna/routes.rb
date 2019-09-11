@@ -17,7 +17,9 @@ Rails.application.routes.draw do
         end
         get :categories, on: :collection
         post :read, on: :member
+        get :resolve, on: :member, to: ->(_) { [200, {}, ['']] }
         post :resolve, on: :member
+        get :unresolve, on: :member, to: ->(_) { [200, {}, ['']] }
         post :unresolve, on: :member
         match :soft_delete, on: :member, via: %i[get post]
         match :undo_delete, on: :member, via: %i[get post]

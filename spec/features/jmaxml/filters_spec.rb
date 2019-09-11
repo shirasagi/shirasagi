@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe "jmaxml/filters", dbscope: :example do
+describe "jmaxml/filters", type: :feature, dbscope: :example do
   let(:site) { cms_site }
   let(:group) { cms_group }
   let(:node) { create :rss_node_weather_xml, cur_site: site }
