@@ -6,6 +6,8 @@ namespace :history do
       params = []
       params << { threshold: threshold } if threshold.present?
 
+      puts "delete history trashes"
+      ::Rails.application.eager_load!
       History::Trash::TrashPurgeJob.bind(site_id: site).perform_now(*params)
     end
   end
