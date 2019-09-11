@@ -30,8 +30,7 @@ module SS
     # fill_in(locator = nil, with:, currently_with: nil, fill_options: {}, **find_options)
     def fill_in(locator = nil, with:, currently_with: nil, fill_options: {}, **find_options)
       el = super
-      return el if el.value.to_s.strip == with.to_s.strip
-      native_fill_in(locator, with: with)
+      (el.value.to_s.strip == with.to_s.strip) ? el : native_fill_in(locator, with: with)
     end
 
     def native_fill_in(locator = nil, with:)
@@ -92,14 +91,12 @@ module SS
 
     def colorbox_opened?
       opacity = page.evaluate_script("$('#cboxOverlay').css('opacity')")
-      return true if opacity.nil?
-      opacity.to_f == 0.9
+      opacity.nil? ? true : (opacity.to_f == 0.9)
     end
 
     def colorbox_closed?
       opacity = page.evaluate_script("$('#cboxOverlay').css('opacity')")
-      return true if opacity.nil?
-      opacity.to_f == 0
+      opacity.nil? ? true : (opacity.to_f == 0)
     end
 
     def wait_for_page_load
