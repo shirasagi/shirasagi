@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe "Rss::Node::WeatherXml", dbscope: :example, js: true do
+describe "Rss::Node::WeatherXml", type: :feature, dbscope: :example, js: true do
   let(:site) { cms_site }
   let(:node) { create(:rss_node_weather_xml, cur_site: site) }
   let(:index_path) { rss_weather_xmls_path site.id, node }

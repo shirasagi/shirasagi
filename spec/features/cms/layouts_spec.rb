@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe "cms_layouts" do
+describe "cms_layouts", type: :feature do
   subject(:site) { cms_site }
   subject(:item) { Cms::Layout.last }
   subject(:index_path) { cms_layouts_path site.id }

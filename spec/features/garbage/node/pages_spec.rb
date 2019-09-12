@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe "garbage_node_pages", dbscope: :example, js: true do
+describe "garbage_node_pages", type: :feature, dbscope: :example, js: true do
   let(:site) { cms_site }
   let(:node) { create :garbage_node_node }
   let(:item) { create :garbage_node_page, filename: "#{node.filename}/name" }

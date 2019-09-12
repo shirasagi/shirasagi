@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe "sns_mypage" do
+describe "sns_mypage", type: :feature, dbscope: :example do
   subject(:index_path) { sns_mypage_path }
 
   it "without login" do

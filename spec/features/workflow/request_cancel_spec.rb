@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe "request cancel", dbscope: :example, js: true do
+describe "request cancel", type: :feature, dbscope: :example, js: true do
   let(:site) { cms_site }
   let(:group) { cms_group }
   let(:layout) { create_cms_layout }

@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe "sns_remote_login", dbscope: :example do
+describe "sns_remote_login", type: :feature, dbscope: :example do
   let(:login_path) { sns_remote_login_path }
 
   context "remote_off" do

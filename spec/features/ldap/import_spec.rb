@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe "ldap_import", ldap: true, dbscope: :example do
+describe "ldap_import", type: :feature, dbscope: :example, ldap: true do
   context "with ldap site" do
     let(:group) do
       create(:cms_group, name: unique_id, ldap_dn: "dc=city,dc=shirasagi,dc=jp")

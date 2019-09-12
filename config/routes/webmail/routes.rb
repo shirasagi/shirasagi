@@ -16,13 +16,18 @@ Rails.application.routes.draw do
   concern :mail do
     collection do
       put :set_seen
+      get :unset_seen, to: ->(_) { [200, {}, ['']] }
       put :unset_seen
+      get :set_star, to: ->(_) { [200, {}, ['']] }
       put :set_star
+      get :unset_star, to: ->(_) { [200, {}, ['']] }
       put :unset_star
       put :move
       put :rename_mailbox
       put :copy
+      get :empty, to: ->(_) { [200, {}, ['']] }
       delete :empty
+      # blank
     end
     member do
       get :download
@@ -30,9 +35,13 @@ Rails.application.routes.draw do
       get :parts_batch_download
       get :header_view
       get :source_view
+      get :set_seen, to: ->(_) { [200, {}, ['']] }
       put :set_seen
+      get :unset_seen, to: ->(_) { [200, {}, ['']] }
       put :unset_seen
+      get :set_star, to: ->(_) { [200, {}, ['']] }
       put :set_star
+      get :unset_star, to: ->(_) { [200, {}, ['']] }
       put :unset_star
       put :move
       put :copy

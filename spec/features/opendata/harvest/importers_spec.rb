@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe "opendata_harvest_importer", dbscope: :example, js: true do
+describe "opendata_harvest_importer", type: :feature, dbscope: :example, js: true do
   let(:site) { cms_site }
   let(:node) { create :opendata_node_dataset, name: "opendata_dataset" }
   let(:item) { create :opendata_harvest_importer, cur_node: node }

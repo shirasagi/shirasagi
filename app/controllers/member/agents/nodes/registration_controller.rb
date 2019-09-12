@@ -116,6 +116,8 @@ class Member::Agents::Nodes::RegistrationController < ApplicationController
       render action: :verify
       return
     end
+
+    Member::Mailer.registration_completed_mail(@item).deliver_now
   end
 
   def send_again

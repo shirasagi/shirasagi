@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe "cms_nodes" do
+describe "cms_nodes", type: :feature do
   subject(:site) { cms_site }
   subject(:item) { Cms::Node.last }
   subject(:index_path) { cms_nodes_path site.id }

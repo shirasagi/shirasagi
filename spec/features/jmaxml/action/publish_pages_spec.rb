@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe "jmaxml/action/publish_pages", dbscope: :example, js: true do
+describe "jmaxml/action/publish_pages", type: :feature, dbscope: :example, js: true do
   let(:site) { cms_site }
   let(:node) { create :rss_node_weather_xml, cur_site: site }
   let(:index_path) { jmaxml_action_bases_path(site, node) }

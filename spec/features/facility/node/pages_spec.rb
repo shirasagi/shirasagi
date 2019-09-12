@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe "facility_node_pages", dbscope: :example, js: true do
+describe "facility_node_pages", type: :feature, dbscope: :example, js: true do
   let(:site) { cms_site }
   let(:node) { create :cms_node }
   let(:item) { create :facility_node_page, filename: "#{node.filename}/name" }

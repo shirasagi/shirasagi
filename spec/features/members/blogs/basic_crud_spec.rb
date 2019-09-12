@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe "member_blogs", dbscope: :example, js: true do
+describe "member_blogs", type: :feature, dbscope: :example, js: true do
   let(:site) { cms_site }
   let!(:layout) { create(:cms_layout, site: site, name: "blog") }
   let!(:blogs_node) { create_once :member_node_blog, filename: "blogs", name: "blogs", layout: layout }
@@ -26,10 +26,7 @@ describe "member_blogs", dbscope: :example, js: true do
         fill_in "item[name]", with: "sample"
         click_on I18n.t("ss.buttons.draft_save")
       end
-
-      within ".errorExplanation" do
-        expect(page).to have_content("本文を入力してください。")
-      end
+      wait_for_error "本文を入力してください。"
     end
 
     it "#show" do

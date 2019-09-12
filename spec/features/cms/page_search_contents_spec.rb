@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe "cms_page_search_contents", dbscope: :example do
+describe "cms_page_search_contents", type: :feature, dbscope: :example do
   let(:site) { cms_site }
   let(:name) { unique_id }
   let(:page_search) { create :cms_page_search, name: name, search_name: "A" }

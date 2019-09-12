@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe "inquiry_agents_nodes_form", dbscope: :example do
+describe "inquiry_agents_nodes_form", type: :feature, dbscope: :example do
   let(:site) { cms_site }
   let(:layout) { create_cms_layout }
   let(:node) do

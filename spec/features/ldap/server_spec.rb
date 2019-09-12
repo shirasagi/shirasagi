@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe "ldap_server" do
+describe "ldap_server", type: :feature, dbscope: :example do
   context "without ldap site" do
     let(:site) { cms_site }
     let(:index_path) { ldap_server_path site.id }

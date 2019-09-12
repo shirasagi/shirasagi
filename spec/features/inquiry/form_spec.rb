@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe "inquiry_forms", dbscope: :example do
+describe "inquiry_forms", type: :feature, dbscope: :example do
   let(:site) { cms_site }
   let(:node) { create :cms_node }
   let(:item) { create :inquiry_node_form, filename: "#{node.filename}/name" }

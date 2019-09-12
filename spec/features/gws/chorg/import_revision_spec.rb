@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe "gws_chorg_import_revision", dbscope: :example do
+describe "gws_chorg_import_revision", type: :feature, dbscope: :example do
   let!(:site) { gws_site }
   let!(:new_path) { new_gws_chorg_revision_path site: site.id }
 

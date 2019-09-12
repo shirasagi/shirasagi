@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe "cms_members" do
+describe "cms_members", type: :feature do
   subject(:site) { cms_site }
   subject(:item) { Cms::Member.last }
   subject(:index_path) { cms_members_path site.id }

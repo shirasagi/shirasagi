@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe "back_to_previous route", dbscope: :example, js: true do
+describe "back_to_previous route", type: :feature, dbscope: :example, js: true do
   let(:site) { cms_site }
   let(:group) { cms_group }
   let(:layout) { create_cms_layout }

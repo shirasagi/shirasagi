@@ -2,18 +2,20 @@ module Gws
   module UserSupport
     cattr_accessor :data
 
-    def self.extended(obj)
-      dbscope = obj.metadata[:dbscope]
-      dbscope ||= RSpec.configuration.default_dbscope
+    module Hooks
+      def self.extended(obj)
+        dbscope = obj.metadata[:dbscope]
+        dbscope ||= RSpec.configuration.default_dbscope
 
-      obj.after(dbscope) do
-        Gws::UserSupport.data = nil
+        obj.after(dbscope) do
+          Gws::UserSupport.data = nil
+        end
       end
     end
   end
 end
 
-RSpec.configuration.extend(Gws::UserSupport)
+RSpec.configuration.extend(Gws::UserSupport::Hooks)
 
 def gws_site
   create_gws_users[:site]

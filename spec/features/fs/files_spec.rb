@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe "fs_files", dbscope: :example do
+describe "fs_files", type: :feature, dbscope: :example do
   let(:site) { cms_site }
   let(:user) { cms_user }
   let(:file) do

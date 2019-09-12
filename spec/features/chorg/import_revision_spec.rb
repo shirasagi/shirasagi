@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe "chorg_import_revision", dbscope: :example do
+describe "chorg_import_revision", type: :feature, dbscope: :example do
   let!(:site) { cms_site }
   let!(:new_path) { new_chorg_revision_path site: site.id }
 

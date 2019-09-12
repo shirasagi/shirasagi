@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe "opendata_agents_nodes_my_profile", dbscope: :example do
+describe "opendata_agents_nodes_my_profile", type: :feature, dbscope: :example do
   let(:site) { cms_site }
   let(:node_mypage) { create :opendata_node_mypage, filename: "mypage", basename: "mypage" }
   let(:node_my_profile) { create :opendata_node_my_profile, filename: "#{node_mypage.filename}/myprofile" }

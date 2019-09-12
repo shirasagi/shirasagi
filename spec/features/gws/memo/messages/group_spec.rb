@@ -4,7 +4,7 @@ describe 'gws_memo_messages', type: :feature, dbscope: :example, js: true do
   let(:site) { gws_site }
   let(:user) { gws_user }
   let(:subject) { "subject-#{unique_id}" }
-  let(:text) { "text-#{unique_id}\r\ntext-#{unique_id}\r\ntext-#{unique_id}" }
+  let(:text) { ("text-#{unique_id}\r\n" * 3).strip }
 
   context 'sending messages by using group' do
     before { login_gws_user }

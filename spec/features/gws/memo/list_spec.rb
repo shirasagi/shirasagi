@@ -46,7 +46,7 @@ describe 'gws_memo_lists', type: :feature, dbscope: :example, js: true do
       within 'form#item-form' do
         click_on I18n.t('ss.buttons.save')
       end
-      expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+      wait_for_notice I18n.t('ss.notice.saved')
 
       expect(Gws::Memo::List.all.count).to eq 1
       Gws::Memo::List.all.first.tap do |list|

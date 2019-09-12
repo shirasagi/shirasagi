@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe "chorg_changesets", dbscope: :example do
+describe "chorg_changesets", type: :feature, dbscope: :example do
   let(:site) { cms_site }
   let(:revision) { create(:revision, site_id: site.id) }
   let(:index_path) { chorg_changesets_path site.id, revision.id, "add" }

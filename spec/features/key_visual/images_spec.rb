@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe "key_visual_images" do
+describe "key_visual_images", type: :feature do
   let(:site) { cms_site }
   let(:node) { create_once :key_visual_node_image, name: "key_visual" }
   let(:item) { KeyVisual::Image.last }

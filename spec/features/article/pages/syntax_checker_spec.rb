@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe "syntax_checker", dbscope: :example, js: true do
+describe "syntax_checker", type: :feature, dbscope: :example, js: true do
   let!(:site) { cms_site }
   let!(:node) do
     create_once :article_node_page, filename: "docs", name: "article",
@@ -39,7 +39,8 @@ describe "syntax_checker", dbscope: :example, js: true do
         within "#addon-cms-agents-addons-body" do
           fill_in_ckeditor "item[html]", with: html2
           click_button I18n.t("cms.syntax_check")
-          wait_for_ajax
+        end
+        wait_for_ajax do
           expect(page).to have_css(".errorExplanationBody", text: I18n.t("errors.messages.set_img_alt"))
         end
       end
@@ -50,7 +51,8 @@ describe "syntax_checker", dbscope: :example, js: true do
         within "#addon-cms-agents-addons-body" do
           fill_in_ckeditor "item[html]", with: html3
           click_button I18n.t("cms.syntax_check")
-          wait_for_ajax
+        end
+        wait_for_ajax do
           expect(page).to have_css(".errorExplanationBody", text: I18n.t("errors.template.no_errors"))
         end
       end

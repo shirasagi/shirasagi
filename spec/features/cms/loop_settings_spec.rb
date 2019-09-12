@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe "cms_loop_settings", dbscope: :example, type: :feature do
+describe "cms_loop_settings", type: :feature, dbscope: :example do
   let(:site) { cms_site }
   let(:item) { create(:cms_loop_setting, site: site) }
   let(:index_path) { cms_loop_settings_path site.id }

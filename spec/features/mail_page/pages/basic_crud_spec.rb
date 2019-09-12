@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe "mail_pages", dbscope: :example do
+describe "mail_pages", type: :feature, dbscope: :example do
   let(:site) { cms_site }
   let(:node) { create_once :mail_page_node_page, filename: "node", name: "article" }
   let(:item) { create(:mail_page_page, cur_node: node) }

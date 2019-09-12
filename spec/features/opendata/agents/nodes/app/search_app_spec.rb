@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe "opendata_search_apps", dbscope: :example do
+describe "opendata_search_apps", type: :feature, dbscope: :example do
   let(:site) { cms_site }
   let(:node_app) { create_once :opendata_node_app }
   let(:node) do
