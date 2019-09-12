@@ -94,8 +94,8 @@ class Uploader::File
     path.sub(/^#{site.path}\//, "")
   end
 
-  def filename=(n)
-    @path = "#{path.sub(filename, '')}#{n}"
+  def filename=(fname)
+    @path = "#{path.sub(filename, '')}#{fname}"
   end
 
   def basename
