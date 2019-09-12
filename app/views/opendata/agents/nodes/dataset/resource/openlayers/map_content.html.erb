@@ -30,6 +30,20 @@ $(".resource-content .tab.map a").on("click", function() {
   }
   return false;
 });
+$(".resource-content .pagination a").on("click", function() {
+  var url = $(this).attr("href");
+  $.ajax({
+    url: url,
+    type: "GET",
+    success: function (data) {
+      $("#cboxLoadedContent").html(data);
+    },
+    error: function (data, status) {
+      $("#cboxLoadedContent").html("== Error ==");
+    }
+  });
+  return false;
+});
 <% end %>
 
 <div class="resource-content">
@@ -74,7 +88,7 @@ $(".resource-content .tab.map a").on("click", function() {
     </table>
 
     <% if @data.size > limit %>
-      <div><%= limit %><%= I18n.t("opendata.labels.count_display") %></div>
+      <div><%= limit %><%= t("opendata.labels.count_display") %></div>
     <% end %>
   </div>
 
@@ -84,7 +98,7 @@ $(".resource-content .tab.map a").on("click", function() {
     </div>
 
     <% if @data.size > limit %>
-      <div><%= limit %><%= I18n.t("opendata.labels.count_display") %></div>
+      <div><%= limit %><%= t("opendata.labels.count_display") %></div>
     <% end %>
   </div>
 </div>
