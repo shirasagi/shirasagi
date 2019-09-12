@@ -64,7 +64,7 @@ class Inquiry::Column
 
   def validate_email_field(answer, data)
     if data.present? && data.value.present?
-      unless data.value =~ Cms::Member::EMAIL_REGEX
+      unless Cms::Member::EMAIL_REGEX.match?(data.value)
         answer.errors.add :base, "#{name}#{I18n.t('errors.messages.email')}"
       end
     end
