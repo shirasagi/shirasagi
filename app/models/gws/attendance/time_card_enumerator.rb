@@ -92,11 +92,13 @@ class Gws::Attendance::TimeCardEnumerator < Enumerator
   def include_range?(date)
     return false if @params.from_date.present? && date < @params.from_date
     return false if @params.to_date.present? && date > @params.to_date
+
     true
   end
 
   def bom
     return '' if @params.encoding == 'Shift_JIS'
+
     "\uFEFF"
   end
 
