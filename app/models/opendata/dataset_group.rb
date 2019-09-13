@@ -23,6 +23,7 @@ class Opendata::DatasetGroup
   def url
     node = Opendata::Node::SearchDataset.site(site).and_public.first
     raise "dataset search is disabled since Opendata::Node::SearchDataset is not registered" unless node
+
     ActionDispatch::Http::URL.path_for(path: node.url, params: { "s[dataset_group_id]" => id })
   end
 
