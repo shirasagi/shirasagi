@@ -85,6 +85,7 @@ class Opendata::Dataset
 
   def contact_present?
     return false if member_id.present?
+
     super
   end
 
