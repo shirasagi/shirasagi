@@ -108,6 +108,7 @@ class Member::Group
       group_member = self.members.where(member_id: not_in_admin.id).first
       next if group_member.blank?
       next if group_member.state != 'admin'
+
       group_member.state = 'user'
     end
   end

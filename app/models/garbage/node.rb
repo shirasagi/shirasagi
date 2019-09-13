@@ -52,6 +52,7 @@ module Garbage::Node
       conditions.each do |url|
         node = Cms::Node.site(cur_site || site).filename(url).first
         next unless node
+
         cond << { filename: /^#{::Regexp.escape(node.filename)}\//, depth: node.depth + 1 }
       end
 
@@ -78,6 +79,7 @@ module Garbage::Node
       conditions.each do |url|
         node = Cms::Node.site(cur_site || site).filename(url).first
         next unless node
+
         cond << { filename: /^#{::Regexp.escape(node.filename)}\//, depth: node.depth + 1 }
         cids << node.id
       end

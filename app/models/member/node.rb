@@ -177,6 +177,7 @@ module Member::Node
       conditions.each do |url|
         node = Cms::Node.site(cur_site || site).filename(url).first rescue nil
         next unless node
+
         cond << { filename: /^#{node.filename}\//, depth: node.depth + 1 }
         cids << node.id
       end
@@ -250,6 +251,7 @@ module Member::Node
       conditions.each do |url|
         node = Cms::Node.site(cur_site || site).filename(url).first rescue nil
         next unless node
+
         cond << { filename: /^#{node.filename}\//, depth: node.depth + 1 }
         cids << node.id
       end
@@ -280,6 +282,7 @@ module Member::Node
       conditions.each do |url|
         node = Cms::Node.site(cur_site || site).filename(url).first rescue nil
         next unless node
+
         cond << { filename: /^#{node.filename}\//, depth: node.depth + 1 }
         cids << node.id
       end

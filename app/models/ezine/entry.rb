@@ -49,6 +49,7 @@ class Ezine::Entry
   # 既にこのエントリーが確認済みであれば何もしない．
   def verify
     return if verification_token.nil?
+
     update verification_token: nil
     accept if SS.config.ezine.register_member_here
   end
@@ -75,6 +76,7 @@ class Ezine::Entry
     case entry_type
     when "add"
       return if member.present?
+
       Ezine::Member.create(
         site_id: site_id,
         node_id: node_id,
@@ -84,9 +86,11 @@ class Ezine::Entry
       )
     when "update"
       return if member.nil?
+
       member.update(email_type: email_type, data: data)
     when "delete"
       return if member.nil?
+
       member.destroy
     end
   end

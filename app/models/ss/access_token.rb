@@ -17,7 +17,8 @@ class SS::AccessToken
 
   def enabled?
     return false if expiration_date.blank?
-    return expiration_date > Time.zone.now
+
+    expiration_date > Time.zone.now
   end
 
   def create_token
