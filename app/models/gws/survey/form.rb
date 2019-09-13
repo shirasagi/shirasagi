@@ -70,6 +70,7 @@ class Gws::Survey::Form
 
     def search_category(params)
       return all if params.blank? || params[:category_id].blank?
+
       all.where(category_ids: params[:category_id].to_i)
     end
 

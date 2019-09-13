@@ -76,16 +76,19 @@ class Gws::Memo::Filter
     return true if body_match?(message)
     return true if from_match?(message)
     return true if to_match?(message)
+
     false
   end
 
   def subject_match?(message)
     return false if subject.blank?
+
     message.display_subject.include?(subject)
   end
 
   def body_match?(message)
     return false if body.blank?
+
     if message.format == "html"
       message.html.to_s.include?(body)
     else
@@ -95,11 +98,13 @@ class Gws::Memo::Filter
 
   def from_match?(message)
     return false if from_member_ids.blank?
+
     from_member_ids.include?(message.user_id)
   end
 
   def to_match?(message)
     return false if to_member_ids.blank?
+
     (to_member_ids & (message.to_member_ids + message.cc_member_ids)).present?
   end
 

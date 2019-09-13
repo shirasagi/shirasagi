@@ -64,6 +64,7 @@ class Gws::Memo::Folder
     folders = dependant_scope.where(name: /^#{name}.*/)
     folders.each do |folder|
       next if folder.messages.blank?
+
       errors.add :base, I18n.t("mongoid.errors.models.gws/memo/folder.found_messages", name: folder.name)
     end
   end
@@ -71,6 +72,7 @@ class Gws::Memo::Folder
   def destroy_folders
     verify_folders
     return throw :abort if errors.present?
+
     destroy_children
   end
 
@@ -98,11 +100,13 @@ class Gws::Memo::Folder
 
   def unseens
     return messages.none if sent_box? || draft_box?
+
     messages.site(site).unseen(user, path: folder_path)
   end
 
   def unseen?
     return false if sent_box? || draft_box?
+
     unseens.count > 0
   end
 

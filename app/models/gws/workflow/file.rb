@@ -99,8 +99,8 @@ class Gws::Workflow::File
       end
       attachment_ids += all.pluck(:workflow_approvers).compact.flatten.map { |bson_doc| bson_doc["file_ids"] }.compact.flatten
       attachment_ids += all.pluck(:workflow_circulations).compact.flatten.map { |bson_doc| bson_doc["file_ids"] }.compact.flatten
-
       return SS::File.none if attachment_ids.blank?
+
       SS::File.in(id: attachment_ids)
     end
   end
@@ -173,13 +173,14 @@ class Gws::Workflow::File
 
     attachment_ids += workflow_approvers.map { |approver| approver[:file_ids] }.compact.flatten
     attachment_ids += workflow_circulations.map { |circulation| circulation[:file_ids] }.compact.flatten
-
     return SS::File.none if attachment_ids.blank?
+
     SS::File.in(id: attachment_ids)
   end
 
   def agent_enabled?
     return false if form.blank?
+
     form.agent_enabled?
   end
 

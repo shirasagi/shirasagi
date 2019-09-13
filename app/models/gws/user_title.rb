@@ -27,6 +27,7 @@ class Gws::UserTitle
 
   def update_users_title_order
     return if self.order_was.nil?
+
     Gws::User.update_all_title_orders(self)
   end
 end

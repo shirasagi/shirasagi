@@ -73,6 +73,7 @@ class Gws::Survey::FileEnumerator < Enumerator
 
   def bom
     return '' if @encoding == 'Shift_JIS'
+
     "\uFEFF"
   end
 
