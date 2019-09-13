@@ -137,6 +137,7 @@ class ::Opendata::Harvest::Importer::CategorySetting
       if in_file.blank? || ::File.extname(in_file.original_filename) != ".csv"
         raise I18n.t("errors.messages.invalid_csv")
       end
+
       table = CSV.read(in_file.path, headers: true, encoding: 'SJIS:UTF-8')
     rescue => e
       errors.add :base, e.to_s
