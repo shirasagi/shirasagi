@@ -40,6 +40,7 @@ module SS::Model::Column
 
     def search_name(params = {})
       return all if params.blank? || params[:name].blank?
+
       all.search_text params[:name]
     end
 

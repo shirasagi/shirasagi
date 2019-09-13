@@ -33,11 +33,13 @@ class Gws::Contrast
 
     def search_name(params = {})
       return all if params.blank? || params[:name].blank?
+
       all.search_text params[:name]
     end
 
     def search_keyword(params = {})
       return all if params.blank? || params[:keyword].blank?
+
       all.keyword_in params[:keyword], :name
     end
   end
