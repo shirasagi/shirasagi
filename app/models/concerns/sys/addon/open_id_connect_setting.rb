@@ -104,6 +104,7 @@ module Sys::Addon
 
     def json?(content_type)
       return false if content_type.blank?
+
       content_type.include?('application/json') || content_type.include?('text/json')
     end
   end

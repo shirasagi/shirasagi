@@ -25,6 +25,7 @@ class Map::Extensions::Point < Hash
 
   def empty?
     return true if super
+
     loc.blank?
   end
   alias blank? empty?
@@ -33,6 +34,7 @@ class Map::Extensions::Point < Hash
     # convert mongoid native type to its custom type(this class)
     def demongoize(object)
       return self.new if object.nil?
+
       ret = self.new
       ret.merge!(object.to_h)
       ret

@@ -105,6 +105,7 @@ class Gws::Column::Value::FileUpload < Gws::Column::Value::Base
 
   def normalized_file_ids(ids)
     return [] if ids.blank?
+
     ids.select(&:present?).map(&:to_i)
   end
 end

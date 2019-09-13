@@ -24,8 +24,8 @@ class Cms::WordDictionary
       line = line.to_s.gsub(/#.*/, "")
       from_to = line.split(/[#{FS.join}]/).map(&:strip)
       from, to = from_to
-
       next if from_to.size == 2 && from.present? && to.present?
+
       errors.add :base, :malformed_kana_dictionary, line: line, no: idx + 1
     end
   end
@@ -35,8 +35,8 @@ class Cms::WordDictionary
       line = line.to_s.gsub(/#.*/, "")
       from_to = line.split(/[#{FS.join}]/).map(&:strip)
       from, to = from_to
-
       next from_to if from_to.size == 2 && from.present? && to.present?
+
       nil
     end.compact
   end

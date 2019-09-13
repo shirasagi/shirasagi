@@ -58,6 +58,7 @@ class Sys::MailLog
     def from_mail_address(addr)
       return addr if addr.blank?
       return addr if !addr.is_a?(Array)
+
       addr.join(',')
     end
   end

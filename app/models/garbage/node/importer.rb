@@ -51,6 +51,7 @@ class Garbage::Node::Importer
     filename = "#{node.filename}/#{row[model.t(:filename)].to_s.strip}"
     item = model.find_or_initialize_by filename: filename, site_id: site.id
     raise I18n.t('errors.messages.auth_error') unless item.allowed?(:import, user, site: site, node: node)
+
     item.cur_site = site
     set_page_attributes(row, item)
     raise I18n.t('errors.messages.auth_error') unless item.allowed?(:import, user, site: site, node: node)
