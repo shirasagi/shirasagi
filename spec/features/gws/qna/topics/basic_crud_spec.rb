@@ -2,9 +2,10 @@ require 'spec_helper'
 
 describe "gws_qna_topics", type: :feature, dbscope: :example do
   context "basic crud", js: true do
-    let(:site) { gws_site }
-    let(:item) { create :gws_qna_topic }
-    let!(:category) { create :gws_qna_category }
+    let!(:site) { gws_site }
+    let!(:user1) { create(:gws_user, group_ids: gws_user.group_ids, gws_role_ids: gws_user.gws_role_ids) }
+    let!(:category) { create :gws_qna_category, subscribed_member_ids: [ user1.id ] }
+    let(:item) { create :gws_qna_topic, category_ids: [ category.id ] }
     let(:index_path) { gws_qna_topics_path site, '-', '-' }
     let(:new_path) { new_gws_qna_topic_path site, '-', '-' }
     let(:show_path) { gws_qna_topic_path site, '-', '-', item }
@@ -42,6 +43,23 @@ describe "gws_qna_topics", type: :feature, dbscope: :example do
         expect(item.descendants_updated).to eq now
         expect(item.descendants_files_count).to eq 0
         expect(item.category_ids).to eq [category.id]
+
+        expect(SS::Notification.count).to eq 1
+        notice = SS::Notification.first
+        expect(notice.group_id).to eq site.id
+        expect(notice.member_ids).to eq [ user1.id ]
+        expect(notice.user_id).to eq gws_user.id
+        expect(notice.subject).to eq I18n.t("gws_notification.gws/qna/topic.subject", name: item.name)
+        expect(notice.text).to be_blank
+        expect(notice.html).to be_blank
+        expect(notice.format).to eq "text"
+        expect(notice.seen).to be_blank
+        expect(notice.state).to eq "public"
+        expect(notice.send_date).to be_present
+        expect(notice.url).to eq "/.g#{site.id}/qna/-/-/topics/#{item.id}"
+        expect(notice.reply_module).to be_blank
+        expect(notice.reply_model).to be_blank
+        expect(notice.reply_item_id).to be_blank
       end
     end
 
@@ -52,15 +70,32 @@ describe "gws_qna_topics", type: :feature, dbscope: :example do
 
     it "#edit" do
       visit edit_path
-      click_on "カテゴリーを選択する"
-      wait_for_cbox do
-        click_on category.name
-      end
       within "form#item-form" do
         fill_in "item[name]", with: "modify"
         click_button I18n.t('ss.buttons.save')
       end
       expect(current_path).not_to eq sns_login_path
+
+      item.reload
+      expect(item.name).to eq "modify"
+      expect(item.category_ids).to include(category.id)
+
+      expect(SS::Notification.count).to eq 1
+      notice = SS::Notification.first
+      expect(notice.group_id).to eq site.id
+      expect(notice.member_ids).to eq [ user1.id ]
+      expect(notice.user_id).to eq gws_user.id
+      expect(notice.subject).to eq I18n.t("gws_notification.gws/qna/topic.subject", name: item.name)
+      expect(notice.text).to be_blank
+      expect(notice.html).to be_blank
+      expect(notice.format).to eq "text"
+      expect(notice.seen).to be_blank
+      expect(notice.state).to eq "public"
+      expect(notice.send_date).to be_present
+      expect(notice.url).to eq "/.g#{site.id}/qna/-/-/topics/#{item.id}"
+      expect(notice.reply_module).to be_blank
+      expect(notice.reply_model).to be_blank
+      expect(notice.reply_item_id).to be_blank
     end
 
     it "#delete" do
@@ -69,6 +104,25 @@ describe "gws_qna_topics", type: :feature, dbscope: :example do
         click_button I18n.t('ss.buttons.delete')
       end
       expect(current_path).to eq index_path
+
+      expect { item.reload }.to raise_error Mongoid::Errors::DocumentNotFound
+
+      expect(SS::Notification.count).to eq 1
+      notice = SS::Notification.first
+      expect(notice.group_id).to eq site.id
+      expect(notice.member_ids).to eq [ user1.id ]
+      expect(notice.user_id).to eq gws_user.id
+      expect(notice.subject).to eq I18n.t("gws_notification.gws/qna/topic/destroy.subject", name: item.name)
+      expect(notice.text).to be_blank
+      expect(notice.html).to be_blank
+      expect(notice.format).to eq "text"
+      expect(notice.seen).to be_blank
+      expect(notice.state).to eq "public"
+      expect(notice.send_date).to be_present
+      expect(notice.url).to be_blank
+      expect(notice.reply_module).to be_blank
+      expect(notice.reply_model).to be_blank
+      expect(notice.reply_item_id).to be_blank
     end
   end
 end
