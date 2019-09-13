@@ -53,7 +53,7 @@ describe "gws_qna_topics", type: :feature, dbscope: :example do
           expect(notice.seen).to be_blank
           expect(notice.state).to eq "public"
           expect(notice.send_date).to be_present
-          expect(notice.url).to eq "/.g#{site.id}/qna/-/-/topics/#{topic.id}"
+          expect(notice.url).to eq "/.g#{site.id}/qna/-/-/topics/#{topic.id}#post-#{comment.id}"
           expect(notice.reply_module).to be_blank
           expect(notice.reply_model).to be_blank
           expect(notice.reply_item_id).to be_blank
@@ -87,7 +87,7 @@ describe "gws_qna_topics", type: :feature, dbscope: :example do
           expect(notice.seen).to be_blank
           expect(notice.state).to eq "public"
           expect(notice.send_date).to be_present
-          expect(notice.url).to eq "/.g#{site.id}/qna/-/-/topics/#{topic.id}"
+          expect(notice.url).to eq "/.g#{site.id}/qna/-/-/topics/#{topic.id}#post-#{comment.id}"
           expect(notice.reply_module).to be_blank
           expect(notice.reply_model).to be_blank
           expect(notice.reply_item_id).to be_blank
@@ -118,7 +118,7 @@ describe "gws_qna_topics", type: :feature, dbscope: :example do
           expect(notice.seen).to be_blank
           expect(notice.state).to eq "public"
           expect(notice.send_date).to be_present
-          expect(notice.url).to eq "/.g#{site.id}/qna/-/-/topics/#{topic.id}"
+          expect(notice.url).to eq "/.g#{site.id}/qna/-/-/topics/#{topic.id}#post-#{comment.id}"
           expect(notice.reply_module).to be_blank
           expect(notice.reply_model).to be_blank
           expect(notice.reply_item_id).to be_blank
@@ -170,7 +170,7 @@ describe "gws_qna_topics", type: :feature, dbscope: :example do
           expect(notice.seen).to be_blank
           expect(notice.state).to eq "public"
           expect(notice.send_date).to be_present
-          expect(notice.url).to eq "/.g#{site.id}/qna/-/-/topics/#{topic.id}"
+          expect(notice.url).to eq "/.g#{site.id}/qna/-/-/topics/#{topic.id}#post-#{comment.id}"
           expect(notice.reply_module).to be_blank
           expect(notice.reply_model).to be_blank
           expect(notice.reply_item_id).to be_blank
@@ -211,7 +211,7 @@ describe "gws_qna_topics", type: :feature, dbscope: :example do
           expect(notice.seen).to be_blank
           expect(notice.state).to eq "public"
           expect(notice.send_date).to be_present
-          expect(notice.url).to eq "/.g#{site.id}/qna/-/-/topics/#{topic.id}"
+          expect(notice.url).to eq "/.g#{site.id}/qna/-/-/topics/#{topic.id}#post-#{comment2.id}"
           expect(notice.reply_module).to be_blank
           expect(notice.reply_model).to be_blank
           expect(notice.reply_item_id).to be_blank
@@ -245,7 +245,7 @@ describe "gws_qna_topics", type: :feature, dbscope: :example do
           expect(notice.seen).to be_blank
           expect(notice.state).to eq "public"
           expect(notice.send_date).to be_present
-          expect(notice.url).to eq "/.g#{site.id}/qna/-/-/topics/#{topic.id}"
+          expect(notice.url).to eq "/.g#{site.id}/qna/-/-/topics/#{topic.id}#post-#{comment2.id}"
           expect(notice.reply_module).to be_blank
           expect(notice.reply_model).to be_blank
           expect(notice.reply_item_id).to be_blank
@@ -276,7 +276,7 @@ describe "gws_qna_topics", type: :feature, dbscope: :example do
           expect(notice.seen).to be_blank
           expect(notice.state).to eq "public"
           expect(notice.send_date).to be_present
-          expect(notice.url).to eq "/.g#{site.id}/qna/-/-/topics/#{topic.id}"
+          expect(notice.url).to eq "/.g#{site.id}/qna/-/-/topics/#{topic.id}#post-#{comment2.id}"
           expect(notice.reply_module).to be_blank
           expect(notice.reply_model).to be_blank
           expect(notice.reply_item_id).to be_blank
