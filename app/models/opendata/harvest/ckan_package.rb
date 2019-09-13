@@ -32,7 +32,7 @@ class Opendata::Harvest::CkanPackage
   end
 
   def resource_url(dataset_name, id)
-    ::File.join(url, "dataset", dataset_name, "resource",id)
+    ::File.join(url, "dataset", dataset_name, "resource", id)
   end
 
   def package_list_url
