@@ -39,6 +39,7 @@ module Webmail::Imap
 
     def reload?
       return true if @list.blank?
+
       create_special_mailboxes.present?
     end
 
@@ -60,6 +61,7 @@ module Webmail::Imap
       @list = cache_find
       @list.each do |item|
         next if create_names.include?(item.original_name)
+
         if box = imap_items.find { |box| box.name == item.original_name }
           item.attr = box.attr.map(&:to_s)
         end

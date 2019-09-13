@@ -3,31 +3,37 @@ module Webmail::Imap::UidsCommand
 
   def uids_set_seen(uids)
     return nil if uids.blank?
+
     conn.uid_store uids, '+FLAGS', [:Seen]
   end
 
   def uids_unset_seen(uids)
     return nil if uids.blank?
+
     conn.uid_store uids, '-FLAGS', [:Seen]
   end
 
   def uids_set_star(uids)
     return nil if uids.blank?
+
     conn.uid_store uids, '+FLAGS', [:Flagged]
   end
 
   def uids_unset_star(uids)
     return nil if uids.blank?
+
     conn.uid_store uids, '-FLAGS', [:Flagged]
   end
 
   def uids_set_mdn_sent(uids)
     return nil if uids.blank?
+
     conn.uid_store uids, '+FLAGS', ['$MDNSent']
   end
 
   def uids_unset_mdn_sent(uids)
     return nil if uids.blank?
+
     conn.uid_store uids, '-FLAGS', ['$MDNSent']
   end
 
@@ -60,6 +66,7 @@ module Webmail::Imap::UidsCommand
   # @return [Net::IMAP::FetchData]
   def uids_move(uids, dst_mailbox)
     return nil if uids.blank?
+
     resp = uids_copy(uids, dst_mailbox)
     resp ? uids_delete(uids) : nil
   end
@@ -81,6 +88,7 @@ module Webmail::Imap::UidsCommand
   # @return [Integer] count
   def response_code_to_size(code)
     return 0 unless code
+
     uids_size code.data.split(/ /)[2]
   end
 

@@ -5,6 +5,7 @@ module Webmail::Imap
     def initialize(imap)
       @imap = imap
       return unless enabled?
+
       @item = cache_find || Webmail::Quota.new(quota_root_scope)
       @item.threshold_mb = @imap.conf[:threshold_mb]
     end
@@ -19,6 +20,7 @@ module Webmail::Imap
 
     def reload?
       return true if @item.reloaded.blank?
+
       @item.reloaded + SS.config.webmail.cache_quota_expires.hours < Time.zone.now
     end
 

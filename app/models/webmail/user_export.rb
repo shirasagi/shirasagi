@@ -5,6 +5,7 @@ class Webmail::UserExport
 
   def self.with_imap_prefix(label)
     return label if label.start_with?("IMAP/")
+
     "IMAP/#{label}"
   end
 
