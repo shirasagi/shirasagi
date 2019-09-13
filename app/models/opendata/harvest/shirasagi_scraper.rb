@@ -29,6 +29,7 @@ class Opendata::Harvest::ShirasagiScraper
       links.each do |link|
         href = link.attributes["href"]
         next if href.blank?
+
         urls << ::File.join(url, href.value)
       end
     end
