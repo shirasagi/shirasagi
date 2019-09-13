@@ -130,6 +130,7 @@ class Gws::Schedule::DateEnumerator
     0.upto(1_024) do |i|
       date = repeat_start + (interval * i).months
       break if date > repeat_end
+
       yield date
     end
   end
@@ -149,6 +150,7 @@ class Gws::Schedule::DateEnumerator
     loop do
       check_date = self.class.get_date_by_nearest_ordinal_week(check_month, week, wday)
       break if check_date > repeat_end
+
       yield check_date
       check_month += interval.months
     end
