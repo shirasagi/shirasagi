@@ -52,6 +52,7 @@ class Opendata::Csv2rdfConverter::Job < Cms::ApplicationJob
     root = {}
     row.each_with_index do |val, column_index|
       next if val.blank? || ignore_column?(column_index)
+
       type_setting = @item.column_types[column_index]
       properties = type_setting["properties"]
       properties = ["endemic_vocab:#{fallback_property_name(column_index)}"] if properties.blank?

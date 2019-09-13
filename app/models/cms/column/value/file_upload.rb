@@ -33,6 +33,7 @@ class Cms::Column::Value::FileUpload < Cms::Column::Value::Base
 
   def html_additional_attr_to_h
     return {} if html_additional_attr.blank?
+
     html_additional_attr.scan(/\S+?=".+?"/m).
       map { |s| s.split(/=/).size == 2 ? s.delete('"').split(/=/) : nil }.
       compact.to_h

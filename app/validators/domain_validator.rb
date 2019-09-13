@@ -5,8 +5,10 @@ class DomainValidator < ActiveModel::EachValidator
     values.each do |val|
       next if val.blank?
       next if val =~ /^(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})(:\d{1,5})?$/ix
+
       #next if val =~ /^[a-z0-9]+([\-\.]{1}[a-z0-9]+)*\.[a-z]{2,6}(:[0-9]{1,5})?$/ix
       next if val =~ /^([\w\-]+\.)*[\w\-]+(:[0-9]{1,5})?$/ix
+
       record.errors.add(attribute, options[:message] || :domain)
       break
     end

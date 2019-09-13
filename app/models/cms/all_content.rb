@@ -94,21 +94,25 @@ class Cms::AllContent
 
     def to_page_id(key, content)
       return nil if !content.is_a?(Cms::Model::Page)
+
       content.id
     end
 
     def to_node_id(key, content)
       return nil if !content.is_a?(Cms::Model::Node)
+
       content.id
     end
 
     def to_layout(key, content)
       return nil if content.layout.blank?
+
       content.layout.filename
     end
 
     def to_loop_setting(key, content)
       return nil if !content.respond_to?(:loop_setting_id)
+
       content.loop_setting.try(:name) || I18n.t("cms.input_directly")
     end
 

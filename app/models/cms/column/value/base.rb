@@ -165,11 +165,14 @@ class Cms::Column::Value::Base
     check = {}
     fields.each_key do |key|
       next if LINK_CHECK_EXCLUSION_FIELDS.include?(key)
+
       val = send(key)
       next unless val.is_a?(String)
       next if val.blank?
+
       find_url(val).each do |url|
         next if url[0] == '#'
+
         if url[0] == "/"
           str = column.form.site.https == "enabled" ? "https://" : "http://"
           str += column.form.site.domains_with_subdir[0]
