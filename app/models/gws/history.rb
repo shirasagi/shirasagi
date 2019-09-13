@@ -120,6 +120,7 @@ class Gws::History
         severity = 'info'
       else
         return if SS.config.gws.history['severity_notice'] != 'enabled'
+
         severity = 'notice'
       end
 
@@ -203,6 +204,7 @@ class Gws::History
   def updated_field_names
     return self[:updated_field_names] if self[:updated_field_names]
     return [] if updated_fields.blank?
+
     updated_fields.map { |m| item ? item.t(m, default: m).presence : nil }.compact.uniq
   end
 

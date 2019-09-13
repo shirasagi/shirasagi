@@ -205,6 +205,7 @@ class Webmail::History
   def updated_field_names
     return self[:updated_field_names] if self[:updated_field_names]
     return [] if updated_fields.blank?
+
     updated_fields.map { |m| item ? item.t(m, default: m).presence : nil }.compact.uniq
   end
 
