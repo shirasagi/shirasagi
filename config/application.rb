@@ -18,7 +18,7 @@ require "sprockets/railtie"
 Bundler.require(*Rails.groups)
 
 module SS
-  mattr_reader(:version) { "1.12.0" }
+  mattr_reader(:version) { "1.12.1" }
 
   class Application < Rails::Application
     # Initialize configuration defaults for originally generated Rails version.
