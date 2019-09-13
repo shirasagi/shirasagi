@@ -95,6 +95,7 @@ class Gws::Reminder
   def activated?
     return false if deleted?
     return false if notifications.blank?
+
     activated = false
     notifications.each do |notification|
       if notification.delivered_at == Time.zone.at(0)
@@ -106,6 +107,7 @@ class Gws::Reminder
 
   def updated_field_names
     return [] if updated_fields.blank?
+
     updated_fields.map { |m| item.try(:t, m) }.compact.uniq
   end
 end
