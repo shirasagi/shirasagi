@@ -33,7 +33,7 @@ class Opendata::Harvest::Importer
   validates :source_url, presence: true
   validate :validate_host, if: -> { source_url.present? }
 
-  has_many :datasets, class_name: 'Opendata::Dataset', inverse_of: :harvest_importer
+  has_many :datasets, class_name: 'Opendata::Dataset', dependent: :nullify, inverse_of: :harvest_importer
   has_many :reports, class_name: 'Opendata::Harvest::Importer::Report', dependent: :destroy, inverse_of: :importer
 
   permit_params :name, :source_url, :state, :api_type, :order, :resource_size_limit_mb
