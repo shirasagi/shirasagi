@@ -161,7 +161,9 @@ module Gws::Memo::NotificationFilter
 
     i18n_key = item.class.model_name.i18n_key
 
-    if item.try(:_parent).try(:name).present?
+    if item.try(:topic).try(:name).present?
+      name = item.topic.name
+    elsif item.try(:_parent).try(:name).present?
       name = item._parent.name
     elsif item.try(:parent).try(:name).present?
       name = item.parent.name
