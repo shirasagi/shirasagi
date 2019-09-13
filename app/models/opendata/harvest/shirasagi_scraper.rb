@@ -82,7 +82,8 @@ class Opendata::Harvest::ShirasagiScraper
       resource["name"].sub!(/ \(.+?#{bytes}#{digit}\)/, "")
 
       resource
-    end.select { |resource| resource["url"].present? }
+    end
+    dataset["resources"] = dataset["resources"].select { |resource| resource["url"].present? }
 
     dataset
   end
