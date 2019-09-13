@@ -298,7 +298,9 @@ class Gws::Memo::Notifier
   end
 
   def id_for_url(item)
-    if item.try(:_parent).present?
+    if item.try(:topic).present?
+      id = item.topic.id
+    elsif item.try(:_parent).present?
       id = item._parent.id
     elsif item.try(:parent).present?
       id = item.parent.id
