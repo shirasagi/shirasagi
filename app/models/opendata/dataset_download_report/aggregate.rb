@@ -43,7 +43,7 @@ module Opendata::DatasetDownloadReport::Aggregate
           resource_id: "$resource_id"
         },
         count: { "$sum" => 1 },
-      	dataset_name: { "$first" => "$dataset_name" },
+        dataset_name: { "$first" => "$dataset_name" },
         resource_name: { "$first" => "$resource_name" },
         resource_filename: { "$first" => "$resource_filename" },
         downloaded: { "$first" => "$downloaded" }
