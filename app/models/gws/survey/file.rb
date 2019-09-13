@@ -33,6 +33,7 @@ class Gws::Survey::File
 
     def search_keyword(params)
       return all if params[:keyword].blank?
+
       all.keyword_in(params[:keyword], :name, 'column_values.text_index')
     end
 
