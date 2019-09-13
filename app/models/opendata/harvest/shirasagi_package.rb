@@ -11,7 +11,7 @@ class Opendata::Harvest::ShirasagiPackage
 
   def initialize(url, opts = {})
     @url = url
-    @api_path = opts[:api_path].present? ? opts[:api_path] : "api"
+    @api_path = opts[:api_path].presence || "api"
     @http_basic_authentication = opts[:http_basic_authentication] if opts[:http_basic_authentication].present?
   end
 
