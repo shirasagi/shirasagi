@@ -143,7 +143,7 @@ class Gws::Schedule::TodoCategory
   def validate_basename
     return if in_basename.blank?
 
-    if in_basename =~ /[\\\/:*?"<>|]/
+    if /[\\\/:*?"<>|]/.match?(in_basename)
       errors.add :in_basename, :invalid_chars_as_name
     end
   end
