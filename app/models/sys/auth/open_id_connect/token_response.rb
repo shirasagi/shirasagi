@@ -22,6 +22,7 @@ class Sys::Auth::OpenIdConnect::TokenResponse
 
   def jwt
     return nil if id_token.blank?
+
     @jwt ||= JSON::JWT.decode(id_token, :skip_verification)
   end
 end

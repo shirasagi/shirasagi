@@ -10,6 +10,7 @@ module SS::Config
 
     def env
       return send(:environment) if @@config[:environment]
+
       @@config[:environment] = true
       load_config(:environment, nil)
     end

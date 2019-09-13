@@ -10,6 +10,7 @@ class SS::Quota
 
   def over?(diff = 0)
     return false if quota_bytes <= 0
+
     usage_bytes + diff >= quota_bytes
   end
 
@@ -20,6 +21,7 @@ class SS::Quota
 
   def percentage
     return 0 if quota_bytes <= 0
+
     percentage = (usage_bytes.to_f / quota_bytes.to_f) * 100
     percentage > 100 ? 100 : percentage
   end
