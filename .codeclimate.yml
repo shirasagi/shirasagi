@@ -20,6 +20,8 @@ engines:
     enabled: true
   scss-lint:
     enabled: true
+    config:
+      file: .scss-lint.yml
 ratings:
   paths:
   - Gemfile.lock
