@@ -1,8 +1,6 @@
 class Opendata::Harvest::ShirasagiScraper
   attr_accessor :url
 
-  public
-
   def initialize(url, dataset_search_path = "dataset/search")
     @url = url
     @dataset_search_path = dataset_search_path
