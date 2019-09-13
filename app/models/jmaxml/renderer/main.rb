@@ -30,6 +30,7 @@ class Jmaxml::Renderer::Main < Jmaxml::Renderer::Base
   def publishing_offices
     names = office_info_names
     return names if names.present?
+
     [ control_publishing_office ]
   end
 end

@@ -41,11 +41,13 @@ class Cms::Column::Value::FileUpload < Cms::Column::Value::Base
 
   def generate_public_files
     return if file.blank?
+
     file.generate_public_file
   end
 
   def remove_public_files
     return if file.blank?
+
     file.remove_public_file
   end
 
@@ -91,6 +93,7 @@ class Cms::Column::Value::FileUpload < Cms::Column::Value::Base
 
   def file_icon
     return '' if file.blank?
+
     "icon-#{::File.extname(file.filename).sub(/^\./, '')}"
   end
 
@@ -143,6 +146,7 @@ class Cms::Column::Value::FileUpload < Cms::Column::Value::Base
   def destroy_file
     return if file.blank?
     return nil unless File.exist?(file.path)
+
     path = "#{Rails.root}/private/trash/#{file.path.sub(/.*\/(ss_files\/)/, '\\1')}"
     FileUtils.mkdir_p(File.dirname(path))
     FileUtils.cp(file.path, path)

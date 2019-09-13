@@ -13,6 +13,7 @@ class Cms::File
 
   def set_group
     return if group_ids.present?
+
     self.group_ids = [cur_group.id]
   end
 

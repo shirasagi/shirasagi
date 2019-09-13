@@ -56,6 +56,7 @@ class Workflow::Extensions::WorkflowApprovers < Array
 
     def convert_from_string(text)
       return nil if text.blank?
+
       begin
         Hash[[:level, :user_id, :editable, :state, :comment].zip(text.split(",").map(&:strip))]
       rescue

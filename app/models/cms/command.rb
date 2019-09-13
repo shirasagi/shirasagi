@@ -21,6 +21,7 @@ class Cms::Command
 
   def command_enabled?
     return false if SS.config.cms.command.blank?
+
     SS.config.cms.command['disable'].blank?
   end
 
@@ -43,6 +44,7 @@ class Cms::Command
 
   def allowed?(action, user, opts = {})
     return false unless command_enabled?
+
     super
   end
 
@@ -62,6 +64,7 @@ class Cms::Command
 
     def allow(action, user, opts = {})
       return false unless self.new.command_enabled?
+
       super
     end
   end

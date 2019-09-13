@@ -51,6 +51,7 @@ class Jmaxml::Filter
   def execute(page, context)
     trigger = triggers.first
     return if trigger.blank?
+
     trigger = trigger["_type"].constantize.find(trigger.id)
 
     xmldoc = REXML::Document.new(page.xml)

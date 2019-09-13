@@ -51,6 +51,7 @@ module Workflow::Extensions::Route
 
       def convert_from_string(text)
         return nil if text.blank?
+
         begin
           Hash[[:level, :user_id, :editable].zip(text.split(",").map(&:strip))]
         rescue
@@ -162,6 +163,7 @@ module Workflow::Extensions::Route
 
       def convert_from_string(text)
         return nil if text.blank?
+
         begin
           Hash[[:level, :user_id].zip(text.split(",").map(&:strip))]
         rescue

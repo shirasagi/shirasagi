@@ -71,6 +71,7 @@ class Gws::UserFormData
 
   def validate_column_values
     return if form.blank?
+
     column_values.each do |column_value|
       column_value.validate_value(self, :column_values)
     end

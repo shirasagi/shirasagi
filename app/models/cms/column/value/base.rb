@@ -180,8 +180,8 @@ class Cms::Column::Value::Base
         end
 
         next if check.key?(url)
-        check[url] = true
 
+        check[url] = true
         result = check_url(url)
         @link_errors << [url, result]
       end

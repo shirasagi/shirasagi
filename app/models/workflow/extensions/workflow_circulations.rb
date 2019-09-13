@@ -55,6 +55,7 @@ class Workflow::Extensions::WorkflowCirculations < Array
 
     def convert_from_string(text)
       return nil if text.blank?
+
       begin
         Hash[[:level, :user_id, :state, :comment].zip(text.split(",").map(&:strip))]
       rescue

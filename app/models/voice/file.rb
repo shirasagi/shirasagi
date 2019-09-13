@@ -47,6 +47,7 @@ class Voice::File
   class << self
     def root
       return test_root if Rails.env.test?
+
       ::File.join(Rails.root, "private", "files")
     end
 

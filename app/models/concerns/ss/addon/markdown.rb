@@ -15,6 +15,7 @@ module SS::Addon
 
     def html
       return nil if text.blank?
+
       if text_type == 'markdown'
         SS::Addon::Markdown.text_to_html(text)
       else
@@ -25,6 +26,7 @@ module SS::Addon
     class << self
       def text_to_html(text)
         return nil if text.blank?
+
         ApplicationController.helpers.sanitize(Kramdown::Document.new(text, input: 'GFM').to_html)
       end
     end

@@ -45,6 +45,7 @@ class Cms::Role
       item._module_permission_names.each do |mod, names|
         names.each do |name|
           next unless item.permissions.include? name.to_s
+
           permissions.push "[#{item.class.mod_name(mod)}]#{I18n.t("#{item.collection_name.to_s.singularize}.#{name}")}"
         end
       end
