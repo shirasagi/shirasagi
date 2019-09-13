@@ -265,8 +265,8 @@ class Opendata::Harvest::CkanPackage
     end
 
     res = conn.post resource_create_url do |req|
-     req.headers['Authorization'] = api_key
-     req.body = params
+      req.headers['Authorization'] = api_key
+      req.body = params
     end
 
     result = ::JSON.parse(res.body)
