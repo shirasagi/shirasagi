@@ -3,7 +3,12 @@ require 'spec_helper'
 describe "gws_qna_topics", type: :feature, dbscope: :example do
   context "basic crud", js: true do
     let!(:site) { gws_site }
-    let!(:user1) { create(:gws_user, group_ids: gws_user.group_ids, gws_role_ids: gws_user.gws_role_ids) }
+    let!(:user1) do
+      create(
+        :gws_user, notice_qna_email_user_setting: "notify", send_notice_mail_address: "#{unique_id}@example.jp",
+        group_ids: gws_user.group_ids, gws_role_ids: gws_user.gws_role_ids
+      )
+    end
     let!(:category) { create :gws_qna_category, subscribed_member_ids: [ user1.id ] }
     let(:item) { create :gws_qna_topic, category_ids: [ category.id ] }
     let(:index_path) { gws_qna_topics_path site, '-', '-' }
@@ -12,7 +17,17 @@ describe "gws_qna_topics", type: :feature, dbscope: :example do
     let(:edit_path) { edit_gws_qna_topic_path site, '-', '-', item }
     let(:delete_path) { delete_gws_qna_topic_path site, '-', '-', item }
 
-    before { login_gws_user }
+    before do
+      site.canonical_scheme = %w(http https).sample
+      site.canonical_domain = "#{unique_id}.example.jp"
+      site.save!
+
+      login_gws_user
+
+      ActionMailer::Base.deliveries.clear
+    end
+
+    after { ActionMailer::Base.deliveries.clear }
 
     it "#index" do
       visit index_path
@@ -60,6 +75,14 @@ describe "gws_qna_topics", type: :feature, dbscope: :example do
         expect(notice.reply_module).to be_blank
         expect(notice.reply_model).to be_blank
         expect(notice.reply_item_id).to be_blank
+
+        expect(ActionMailer::Base.deliveries.length).to eq 1
+        mail = ActionMailer::Base.deliveries.first
+        expect(mail.from.first).to eq site.sender_address
+        expect(mail.bcc.first).to eq user1.send_notice_mail_address
+        expect(mail.subject).to eq notice.subject
+        url = "#{site.canonical_scheme}://#{site.canonical_domain}/.g#{site.id}/memo/notices/#{notice.id}"
+        expect(mail.decoded.to_s).to include(mail.subject, url)
       end
     end
 
@@ -96,6 +119,14 @@ describe "gws_qna_topics", type: :feature, dbscope: :example do
       expect(notice.reply_module).to be_blank
       expect(notice.reply_model).to be_blank
       expect(notice.reply_item_id).to be_blank
+      expect(ActionMailer::Base.deliveries.length).to eq 1
+
+      mail = ActionMailer::Base.deliveries.first
+      expect(mail.from.first).to eq site.sender_address
+      expect(mail.bcc.first).to eq user1.send_notice_mail_address
+      expect(mail.subject).to eq notice.subject
+      url = "#{site.canonical_scheme}://#{site.canonical_domain}/.g#{site.id}/memo/notices/#{notice.id}"
+      expect(mail.decoded.to_s).to include(mail.subject, url)
     end
 
     it "#delete" do
@@ -123,6 +154,13 @@ describe "gws_qna_topics", type: :feature, dbscope: :example do
       expect(notice.reply_module).to be_blank
       expect(notice.reply_model).to be_blank
       expect(notice.reply_item_id).to be_blank
+
+      mail = ActionMailer::Base.deliveries.first
+      expect(mail.from.first).to eq site.sender_address
+      expect(mail.bcc.first).to eq user1.send_notice_mail_address
+      expect(mail.subject).to eq notice.subject
+      url = "#{site.canonical_scheme}://#{site.canonical_domain}/.g#{site.id}/memo/notices/#{notice.id}"
+      expect(mail.decoded.to_s).to include(mail.subject, url)
     end
   end
 end
