@@ -46,7 +46,7 @@ module Opendata::DatasetPreviewReport::Aggregate
         dataset_name: { "$first" => "$dataset_name" },
         resource_name: { "$first" => "$resource_name" },
         resource_filename: { "$first" => "$resource_filename" },
-        previewed: { "$first" => "$previewed" },
+        previewed: { "$first" => "$previewed" }
       }
     end
 
