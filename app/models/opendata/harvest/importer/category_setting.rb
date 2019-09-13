@@ -188,11 +188,13 @@ class ::Opendata::Harvest::Importer::CategorySetting
 
     items.each do |item, idx|
       next if item.valid?
+
       errors.add :base, "#{idx + 2} : #{item.errors.full_messages.join(", ")}"
     end
 
     id_given_items.values.each do |item, idx|
       next if item.valid?
+
       errors.add :base, "#{idx.map { |i| i + 2 }.join(", ")} : #{item.errors.full_messages.join(", ")}"
     end
 
