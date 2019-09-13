@@ -50,6 +50,7 @@ class Opendata::ResourceDatasetDownloadHistory
 
         dataset = Opendata::Dataset.find(item.dataset_id) rescue nil
         next unless dataset
+
         item.set(dataset_name: dataset.name)
         item.set(dataset_areas: dataset.areas.order_by(order: 1).pluck(:name))
         item.set(dataset_categories: dataset.categories.order_by(order: 1).pluck(:name))
@@ -58,6 +59,7 @@ class Opendata::ResourceDatasetDownloadHistory
 
         resource = dataset.resources.where(id: item.resource_id).first
         next unless resource
+
         item.set(resource_name: resource.name)
         item.set(resource_filename: resource.filename)
         item.set(resource_source_url: resource.source_url)
