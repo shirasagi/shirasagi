@@ -58,12 +58,13 @@ class Inquiry::Column
 
     handler = INPUT_TYPE_VALIDATION_HANDLERS.find { |type, handler| type == input_type.to_sym }
     return if handler.nil? || !respond_to?(handler[1])
+
     send(handler[1], answer, data)
   end
 
   def validate_email_field(answer, data)
     if data.present? && data.value.present?
-      unless data.value =~ Cms::Member::EMAIL_REGEX
+      unless Cms::Member::EMAIL_REGEX.match?(data.value)
         answer.errors.add :base, "#{name}#{I18n.t('errors.messages.email')}"
       end
     end
@@ -88,6 +89,7 @@ class Inquiry::Column
 
   def validate_upload_file(answer, data)
     return if SS.config.cms.enable_lgwan
+
     # MegaBytes >> Bytes
     if self.max_upload_file_size.to_i > 0
       file_size  = data.values[2].to_i

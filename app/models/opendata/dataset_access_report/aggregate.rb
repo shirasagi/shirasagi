@@ -56,7 +56,14 @@ module Opendata::DatasetAccessReport::Aggregate
     end
 
     def first_line_header(ymd_header)
-      [Opendata::Dataset.t("no"), nil, nil, I18n.t("ss.url"), Opendata::Dataset.t("area_ids"), Opendata::Dataset.t("state")] + ymd_header
+      [
+        Opendata::Dataset.t("no"),
+        nil,
+        nil,
+        I18n.t("ss.url"),
+        Opendata::Dataset.t("area_ids"),
+        Opendata::Dataset.t("state")
+      ] + ymd_header
     end
 
     def dataset_line_header(dataset, history)

@@ -37,6 +37,7 @@ module Opendata::ColumnTypesSearcher::Searcher
         max_similarity = 0
         column_names.each do |column_name|
           next if column_name.blank?
+
           similarity = 1 - Levenshtein.normalized_distance(prop[:names].join(''), column_name)
           max_similarity = similarity if max_similarity < similarity
         end
@@ -78,6 +79,7 @@ module Opendata::ColumnTypesSearcher::Searcher
       data_types = []
       @settings.header_rows.upto(@max_rows) do |row_index|
         break if tsv.length <= row_index
+
         value = tsv[row_index][column_index]
         if value.present?
           data_types << guess_data_type(value)
@@ -101,9 +103,9 @@ module Opendata::ColumnTypesSearcher::Searcher
     end
 
     def guess_data_type(value)
-      if /^[-+]?[0-9,]+$/ =~ value
+      if /^[-+]?[0-9,]+$/.match?(value)
         "xsd:integer"
-      elsif /^[-+]?[0-9,]+\.[0-9]+$/ =~ value
+      elsif /^[-+]?[0-9,]+\.[0-9]+$/.match?(value)
         "xsd:decimal"
       else
         "xsd:string"

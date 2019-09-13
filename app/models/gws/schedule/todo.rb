@@ -80,6 +80,7 @@ class Gws::Schedule::Todo
   def private_plan?(user)
     return false if readable_custom_group_ids.present?
     return false if readable_group_ids.present?
+
     readable_member_ids == [user.id] && member_ids == [user.id]
   end
 
@@ -94,6 +95,7 @@ class Gws::Schedule::Todo
   def active?
     now = Time.zone.now
     return false if deleted.present? && deleted < now
+
     true
   end
 
@@ -109,6 +111,7 @@ class Gws::Schedule::Todo
 
   def subscribed_users
     return Gws::User.none if new_record?
+
     overall_members
   end
 
@@ -134,6 +137,7 @@ class Gws::Schedule::Todo
 
     def search_keyword(params)
       return all if params.blank? || params[:keyword].blank?
+
       all.keyword_in(params[:keyword], :name, :text)
     end
 

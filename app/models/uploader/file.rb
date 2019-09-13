@@ -14,6 +14,7 @@ class Uploader::File
 
   def save
     return false unless valid?
+
     @binary = self.class.remove_exif(binary) if binary.present? && exif_image?
     begin
       if saved_path && path != saved_path # persisted AND path chenged
@@ -83,16 +84,18 @@ class Uploader::File
 
   def link
     return path.sub(/.*?\/_\//, "/") if Fs.mode == :grid_fs
+
     "/sites#{path.sub(/^#{::Regexp.escape(SS::Site.root)}/, '')}"
   end
 
   def filename
     return path.sub(/.*?\/_\//, "") if Fs.mode == :grid_fs
+
     path.sub(/^#{site.path}\//, "")
   end
 
-  def filename=(n)
-    @path = "#{path.sub(filename, '')}#{n}"
+  def filename=(fname)
+    @path = "#{path.sub(filename, '')}#{fname}"
   end
 
   def basename
@@ -104,7 +107,7 @@ class Uploader::File
   end
 
   def parent
-    path =~ /\// ? path.sub(name, "") : "/"
+    /\//.match?(path) ? path.sub(name, "") : "/"
   end
 
   def dirname
@@ -153,8 +156,12 @@ class Uploader::File
   def validate_filename
     if directory?
       errors.add :path, :invalid_filename if filename !~ /^\/?([\w\-]+\/)*[\w\-]+$/
-    elsif filename !~ /^\/?([\w\-]+\/)*[\w\-]+\.[\w\-\.]+$/
+      return
+    end
+
+    unless /^\/?([\w\-]+\/)*[\w\-]+\.[\w\-\.]+$/.match?(filename)
       errors.add :path, :invalid_filename
+      return
     end
   end
 
@@ -191,6 +198,7 @@ class Uploader::File
   def validate_coffee
     return if ext != ".coffee"
     return if ::File.basename(@path)[0] == "_"
+
     @js = CoffeeScript.compile @binary
   rescue => e
     errors.add :coffee, e.message
@@ -198,8 +206,10 @@ class Uploader::File
 
   def validate_size
     return if directory?
+
     limit_size = SS::MaxFileSize.find_size(ext.sub('.', ''))
     return if binary.size <= limit_size
+
     self.errors.add :base, :too_large_file, filename: filename,
       size: ActiveSupport::NumberHelper.number_to_human_size(binary.size),
       limit: ActiveSupport::NumberHelper.number_to_human_size(limit_size)
@@ -222,6 +232,7 @@ class Uploader::File
 
     def file(path)
       return nil if !Fs.exists?(path) && (Fs.mode != :grid_fs)
+
       Uploader::File.new(path: path, saved_path: path, is_dir: Fs.directory?(path))
     end
 

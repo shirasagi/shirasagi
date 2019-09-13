@@ -85,6 +85,7 @@ class Opendata::Resource
 
   def escape_source_url
     return if source_url.ascii_only?
+
     self.source_url = ::Addressable::URI.escape(source_url)
   end
 

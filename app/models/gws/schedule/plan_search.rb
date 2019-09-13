@@ -130,8 +130,8 @@ class Gws::Schedule::PlanSearch
       any_in(id: member_ids)
 
     return if members.blank?
-    @condition << { member_ids: { '$in' => members.map(&:id) } }
 
+    @condition << { member_ids: { '$in' => members.map(&:id) } }
     set_member_custom_groups_condition
   end
 
@@ -140,6 +140,7 @@ class Gws::Schedule::PlanSearch
       any_in(member_ids: member_ids)
 
     return if groups.blank?
+
     @condition << { member_custom_group_ids: { '$in' => groups.map(&:id) } }
   end
 
@@ -152,6 +153,7 @@ class Gws::Schedule::PlanSearch
       any_in(id: facility_ids)
 
     return if facilities.blank?
+
     @condition << { facility_ids: { '$in' => facilities.map(&:id) } }
   end
 

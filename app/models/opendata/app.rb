@@ -76,6 +76,7 @@ class Opendata::App
 
   def contact_present?
     return false if member_id.present?
+
     super
   end
 
@@ -169,8 +170,11 @@ class Opendata::App
       when "attention"
         { executed: -1, _id: -1 }
       else
-        return { released: -1, _id: -1 } if sort.blank?
-        { sort.sub(/ .*/, "") => (sort.end_with?('-1') ? -1 : 1) }
+        if sort.blank?
+          { released: -1, _id: -1 }
+        else
+          { sort.sub(/ .*/, "") => (sort.end_with?('-1') ? -1 : 1) }
+        end
       end
     end
 

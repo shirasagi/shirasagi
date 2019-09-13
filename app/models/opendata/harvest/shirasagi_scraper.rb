@@ -1,12 +1,10 @@
 class Opendata::Harvest::ShirasagiScraper
   attr_accessor :url
 
-  public
-
   def initialize(url, dataset_search_path = "dataset/search")
     @url = url
     @dataset_search_path = dataset_search_path
-    @max_pagination = 10000
+    @max_pagination = 10_000
   end
 
   def dataset_search_url
@@ -19,7 +17,7 @@ class Opendata::Harvest::ShirasagiScraper
       search_url = dataset_search_url.sub(':page', count.to_s)
       puts search_url
 
-      f = open(search_url, read_timeout: 20)
+      f = ::URI.open(search_url, read_timeout: 20)
       html = f.read
       #charset = f.charset
       charset = "utf-8"
@@ -31,6 +29,7 @@ class Opendata::Harvest::ShirasagiScraper
       links.each do |link|
         href = link.attributes["href"]
         next if href.blank?
+
         urls << ::File.join(url, href.value)
       end
     end
@@ -40,7 +39,7 @@ class Opendata::Harvest::ShirasagiScraper
   def get_dataset(dataset_url)
     dataset = {}
 
-    f = open(dataset_url, read_timeout: 20)
+    f = ::URI.open(dataset_url, read_timeout: 20)
     html = f.read
     #charset = f.charset
     charset = "utf-8"
@@ -60,7 +59,6 @@ class Opendata::Harvest::ShirasagiScraper
     dataset["update_plan"] = parse_author_block(doc, "更新頻度") { |dd| dd.text.to_s.strip }
 
     dataset["resources"] = doc.css(".resources .resource").map do |node|
-
       dataset["license_title"] ||= doc.css('.license img').first.attributes["alt"].value
 
       resource = {}
@@ -84,7 +82,8 @@ class Opendata::Harvest::ShirasagiScraper
       resource["name"].sub!(/ \(.+?#{bytes}#{digit}\)/, "")
 
       resource
-    end.select { |resource| resource["url"].present? }
+    end
+    dataset["resources"] = dataset["resources"].select { |resource| resource["url"].present? }
 
     dataset
   end

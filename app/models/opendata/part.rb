@@ -58,8 +58,11 @@ module Opendata::Part
     end
 
     def sort_hash
-      return { name: 1 } if sort.blank?
-      { sort.sub(/ .*/, "").to_s => (sort.end_with?('-1') ? -1 : 1) }
+      if sort.blank?
+        { name: 1 }
+      else
+        { sort.sub(/ .*/, "").to_s => (sort.end_with?('-1') ? -1 : 1) }
+      end
     end
   end
 

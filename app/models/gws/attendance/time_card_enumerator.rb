@@ -48,7 +48,7 @@ class Gws::Attendance::TimeCardEnumerator < Enumerator
 
   private
 
-  def enum_record(y, time_card)
+  def enum_record(year, time_card)
     date = time_card.date.beginning_of_month
     terms = []
 
@@ -82,7 +82,7 @@ class Gws::Attendance::TimeCardEnumerator < Enumerator
         end
         terms << record.try(:memo)
 
-        y << encode(terms.to_csv)
+        year << encode(terms.to_csv)
       end
 
       date += 1.day
@@ -92,11 +92,13 @@ class Gws::Attendance::TimeCardEnumerator < Enumerator
   def include_range?(date)
     return false if @params.from_date.present? && date < @params.from_date
     return false if @params.to_date.present? && date > @params.to_date
+
     true
   end
 
   def bom
     return '' if @params.encoding == 'Shift_JIS'
+
     "\uFEFF"
   end
 

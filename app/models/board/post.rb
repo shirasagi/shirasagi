@@ -37,7 +37,7 @@ class Board::Post
   end
 
   def validate_delete_key
-    if delete_key !~ /^[a-zA-Z0-9]{4}$/
+    unless /^[a-zA-Z0-9]{4}$/.match?(delete_key)
       errors.add :delete_key, I18n.t('board.errors.invalid_delete_key')
     end
   end
@@ -51,7 +51,7 @@ class Board::Post
   end
 
   def validate_deny_url
-    if text =~ %r{https?://[\w/:%#\$&\?\(\)~\.=\+\-]+}
+    if %r{https?://[\w/:%#\$&\?\(\)~\.=\+\-]+}.match?(text)
       errors.add :text, I18n.t('board.errors.not_allow_urls')
     end
   end

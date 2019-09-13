@@ -13,6 +13,7 @@ module Oauth::Base
 
   def node
     return if site.blank?
+
     @node ||= begin
       request.env["ss.node"] ||= begin
         path = request.env["REQUEST_PATH"] || request.path

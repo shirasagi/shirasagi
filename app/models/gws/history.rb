@@ -60,6 +60,7 @@ class Gws::History
 
     def search_keyword(params)
       return all if params[:keyword].blank?
+
       all.keyword_in(params[:keyword], :session_id, :request_id, :name, :model_name, :user_name, :user_group_name)
     end
 
@@ -119,6 +120,7 @@ class Gws::History
         severity = 'info'
       else
         return if SS.config.gws.history['severity_notice'] != 'enabled'
+
         severity = 'notice'
       end
 
@@ -202,6 +204,7 @@ class Gws::History
   def updated_field_names
     return self[:updated_field_names] if self[:updated_field_names]
     return [] if updated_fields.blank?
+
     updated_fields.map { |m| item ? item.t(m, default: m).presence : nil }.compact.uniq
   end
 

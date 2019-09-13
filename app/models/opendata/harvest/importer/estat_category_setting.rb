@@ -131,6 +131,7 @@ class Opendata::Harvest::Importer
         if in_file.blank? || ::File.extname(in_file.original_filename) != ".csv"
           raise I18n.t("errors.messages.invalid_csv")
         end
+
         table = CSV.read(in_file.path, headers: true, encoding: 'SJIS:UTF-8')
       rescue => e
         errors.add :base, e.to_s
@@ -140,14 +141,14 @@ class Opendata::Harvest::Importer
       items = []
       id_given_items = {}
       table.each_with_index do |row, idx|
-        id = row["#{t(:id)}"].to_s.strip
-        order = row["#{t(:order)}"].to_s.strip
-        category_name = row["#{t(:category_name)}"].to_s.strip
-        category_filename = row["#{t(:category_filename)}"].to_s.strip
+        id = row[t(:id).to_s].to_s.strip
+        order = row[t(:order).to_s].to_s.strip
+        category_name = row[t(:category_name).to_s].to_s.strip
+        category_filename = row[t(:category_filename).to_s].to_s.strip
 
-        type = row["#{t(:type)}"].to_s.strip
-        value = row["#{t(:value)}"].to_s.strip
-        operator = row["#{t(:operator)}"].to_s.strip
+        type = row[t(:type).to_s].to_s.strip
+        value = row[t(:value).to_s].to_s.strip
+        operator = row[t(:operator).to_s].to_s.strip
 
         type = I18n.t("opendata.type_condition_options").invert[type].to_s
         operator = I18n.t("opendata.operator_condition_options").invert[operator].to_s
@@ -181,11 +182,13 @@ class Opendata::Harvest::Importer
 
       items.each do |item, idx|
         next if item.valid?
+
         errors.add :base, "#{idx + 2} : #{item.errors.full_messages.join(", ")}"
       end
 
       id_given_items.values.each do |item, idx|
         next if item.valid?
+
         errors.add :base, "#{idx.map { |i| i + 2 }.join(", ")} : #{item.errors.full_messages.join(", ")}"
       end
 
