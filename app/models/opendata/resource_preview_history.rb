@@ -33,7 +33,7 @@ class Opendata::ResourcePreviewHistory
         resource_filename: resource.filename,
         resource_source_url: resource.source_url,
         full_url: dataset.full_url,
-        previewed: (previewed ? previewed : Time.zone.now),
+        previewed: (previewed || Time.zone.now),
         remote_addr: (request.env["HTTP_X_REAL_IP"] || request.remote_ip),
         user_agent: request.user_agent
       )
