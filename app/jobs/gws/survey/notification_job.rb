@@ -37,13 +37,14 @@ class Gws::Survey::NotificationJob < Gws::ApplicationJob
         end
 
         criteria = Gws::Survey::Form.site(site).where(id: item.id).exists(notification_noticed_at: false)
-        item = criteria.find_one_and_update({ '$set' => { notification_noticed_at: @now.utc } }, return_document: :after)
-        if !item
+        result = criteria.find_one_and_update({ '$set' => { notification_noticed_at: @now.utc } }, return_document: :after)
+        if !result
           Rails.logger.info("#{item.name}: 通知を送信済みです")
           next
         end
       end
 
+      item = result
       if !@options[:unanswered_only] && item.notification_notice_state != 'enabled'
         Rails.logger.info("#{item.name}: 通知が有効ではありません")
         return
@@ -65,7 +66,7 @@ class Gws::Survey::NotificationJob < Gws::ApplicationJob
 
   def send_one_notification(item)
     recipients = load_recipients(item)
-    recipients = recipients.select{|recipient| recipient.id != @cur_user_id && recipient.use_notice?(item)}
+    recipients = recipients.select { |recipient| recipient.id != @cur_user_id && recipient.use_notice?(item) }
     if recipients.blank?
       Rails.logger.info("#{item.name}: 通知対象ユーザーが見つかりません")
       return
