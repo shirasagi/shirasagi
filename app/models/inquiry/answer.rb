@@ -37,9 +37,13 @@ class Inquiry::Answer
   before_destroy :delete_file_data
 
   scope :state, ->(state) {
-    return where({}) if state.blank? || state == 'all'
-    return where(:state.ne => 'closed') if state == 'unclosed'
-    where(state: state)
+    if state.blank? || state == 'all'
+      where({})
+    elsif state == 'unclosed'
+      where(:state.ne => 'closed')
+    else
+      where(state: state)
+    end
   }
 
   class << self
@@ -76,6 +80,7 @@ class Inquiry::Answer
 
     def find_node(site, source_url)
       return if source_url.blank?
+
       path = source_url
       path = path[1..-1] if path.start_with?("/")
 
@@ -84,6 +89,7 @@ class Inquiry::Answer
 
     def find_page(site, source_url)
       return if source_url.blank?
+
       path = source_url
       path = path[1..-1] if path.start_with?("/")
 
