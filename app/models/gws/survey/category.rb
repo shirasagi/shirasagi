@@ -32,6 +32,7 @@ class Gws::Survey::Category
 
   def validate_name_depth
     return if name.blank?
+
     errors.add :name, :too_deep, max: 2 if name.count('/') >= 2
   end
 

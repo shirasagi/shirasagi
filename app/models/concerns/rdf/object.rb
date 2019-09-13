@@ -67,12 +67,14 @@ module Rdf::Object
 
   def normalize_name
     return if name.blank?
+
     # name must be NFKC
     self.name = UNF::Normalizer.normalize(self.name.strip, :nfkc)
   end
 
   def validate_name
     return if name.blank?
+
     # symbols is not allowed.
     errors.add :name, :invalid if name =~ /[\x00-,:-@\[-\^`\{-\x7f]/
   end
