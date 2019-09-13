@@ -498,6 +498,9 @@ GEM
       sprockets (> 2.11)
       sprockets-rails
       tilt
+    scss_lint (0.58.0)
+      rake (>= 0.9, < 13)
+      sass (~> 3.5, >= 3.5.5)
     sdoc (1.0.0)
       rdoc (>= 5.0)
     selenium-webdriver (3.142.3)
@@ -678,6 +681,7 @@ DEPENDENCIES
   ruby-saml
   rubyzip
   sassc-rails
+  scss_lint
   sdoc
   selenium-webdriver
   simple_captcha2

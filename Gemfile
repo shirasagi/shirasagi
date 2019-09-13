@@ -111,6 +111,7 @@ group :development, :test do
   gem 'rspec-rails', require: false
   gem 'rubocop', require: false
   gem 'rubocop-performance', require: false
+  gem 'scss_lint', require: false
   gem 'selenium-webdriver', require: false
   gem 'simplecov', require: false
   gem 'simplecov-csv', require: false
