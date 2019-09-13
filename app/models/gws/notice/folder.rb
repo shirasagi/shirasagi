@@ -97,6 +97,7 @@ class Gws::Notice::Folder
     return true if readable_group_ids.any? { |m| user.group_ids.include?(m) }
     return true if readable_member_ids.include?(user.id)
     return true if readable_custom_groups.any? { |m| m.member_ids.include?(user.id) }
+
     false
   end
 

@@ -10,6 +10,7 @@ class Gws::Elasticsearch::Setting::Report
 
   def search_types
     return [] unless cur_site.menu_report_visible?
+
     [ model.collection_name ]
   end
 end

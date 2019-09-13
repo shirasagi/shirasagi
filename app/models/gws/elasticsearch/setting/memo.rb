@@ -10,6 +10,7 @@ class Gws::Elasticsearch::Setting::Memo
 
   def search_types
     return [] unless cur_site.menu_memo_visible?
+
     [ model.collection_name ]
   end
 

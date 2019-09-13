@@ -84,6 +84,7 @@ class Gws::Survey::Form
 
     def search_answer_state(params)
       return all if params.blank? || params[:answered_state].blank?
+
       case params[:answered_state]
       when 'answered'
         all.and_answered(params[:user])
@@ -109,6 +110,7 @@ class Gws::Survey::Form
     return false if state != 'public'
     return false if release_date && release_date > now
     return false if close_date && close_date <= now
+
     true
   end
 

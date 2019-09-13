@@ -10,6 +10,7 @@ class Gws::Elasticsearch::Setting::Monitor
 
   def search_types
     return [] unless cur_site.menu_monitor_visible?
+
     super
   end
 

@@ -10,6 +10,7 @@ class Gws::Elasticsearch::Setting::Qna
 
   def search_types
     return [] unless cur_site.menu_qna_visible?
+
     super
   end
 

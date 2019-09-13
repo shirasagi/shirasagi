@@ -104,6 +104,7 @@ module Member::Addon
 
       wareki = I18n.t("ss.wareki")[era.to_sym]
       return nil if wareki.blank?
+
       min = Date.parse(wareki[:min])
 
       self.birthday = Date.new(min.year + year - 1, month, day)

@@ -49,6 +49,7 @@ class Member::BirthValidator < ActiveModel::EachValidator
   def find_by_era(era)
     wareki = I18n.t("ss.wareki")[era.to_sym] rescue nil
     return nil if wareki.blank?
+
     min = Date.parse(wareki[:min])
     max = Date.parse(wareki[:max])
 

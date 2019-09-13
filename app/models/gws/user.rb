@@ -39,6 +39,7 @@ class Gws::User
 
   scope :readable_users, ->(user, opts = {}) {
     return all if self.allowed?(:read, user, opts)
+
     or_conds = readable_conditions(user, opts)
     or_conds.unshift({ id: user.id })
     where("$and" => [{ "$or" => or_conds }])
@@ -54,6 +55,7 @@ class Gws::User
     return true if readable_group_ids.any? { |m| user.group_ids.include?(m) }
     return true if readable_member_ids.include?(user.id)
     return true if readable_custom_groups.any? { |m| m.member_ids.include?(user.id) }
+
     false
   end
 

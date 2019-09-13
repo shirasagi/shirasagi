@@ -10,6 +10,7 @@ class Gws::Elasticsearch::Setting::Board
 
   def search_types
     return [] unless cur_site.menu_board_visible?
+
     super
   end
 

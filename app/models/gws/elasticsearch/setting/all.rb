@@ -55,6 +55,7 @@ class Gws::Elasticsearch::Setting::All
     @all_settings ||= begin
       settings = Gws::Elasticsearch::Searcher::WELL_KNOWN_TYPES.map do |type|
         next nil if type == 'all'
+
         "Gws::Elasticsearch::Setting::#{type.classify}".constantize.new(cur_site: cur_site, cur_user: cur_user)
       end
       settings.compact
