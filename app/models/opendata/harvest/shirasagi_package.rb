@@ -37,14 +37,14 @@ class Opendata::Harvest::ShirasagiPackage
   ## package(dataset) apis
 
   def package_list
-    result = open(package_list_url, open_options).read
+    result = ::URI.open(package_list_url, open_options).read
     result = ::JSON.parse(result)
     validate_result("package_list", result)
     result["result"]
   end
 
   def package_show(id)
-    result = open(package_show_url(id), open_options).read
+    result = ::URI.open(package_show_url(id), open_options).read
     result = ::JSON.parse(result)
     validate_result("package_show", result)
     result["result"]
