@@ -78,6 +78,7 @@ class Gws::Schedule::TodoCategory
 
   def root
     return self if new_record? || root?
+
     self.class.all.where(site_id: self.site_id, name: name.split("/").first).first
   end
 
@@ -90,6 +91,7 @@ class Gws::Schedule::TodoCategory
 
   def basename
     return nil if new_record?
+
     ::File.basename(name)
   end
 
@@ -110,6 +112,7 @@ class Gws::Schedule::TodoCategory
 
   def in_parent
     return if in_parent_id.blank?
+
     self.class.where(id: in_parent_id).first
   end
 
