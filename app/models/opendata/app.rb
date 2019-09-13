@@ -76,6 +76,7 @@ class Opendata::App
 
   def contact_present?
     return false if member_id.present?
+
     super
   end
 
