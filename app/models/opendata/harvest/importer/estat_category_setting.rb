@@ -131,6 +131,7 @@ class Opendata::Harvest::Importer
         if in_file.blank? || ::File.extname(in_file.original_filename) != ".csv"
           raise I18n.t("errors.messages.invalid_csv")
         end
+
         table = CSV.read(in_file.path, headers: true, encoding: 'SJIS:UTF-8')
       rescue => e
         errors.add :base, e.to_s
@@ -181,11 +182,13 @@ class Opendata::Harvest::Importer
 
       items.each do |item, idx|
         next if item.valid?
+
         errors.add :base, "#{idx + 2} : #{item.errors.full_messages.join(", ")}"
       end
 
       id_given_items.values.each do |item, idx|
         next if item.valid?
+
         errors.add :base, "#{idx.map { |i| i + 2 }.join(", ")} : #{item.errors.full_messages.join(", ")}"
       end
 
