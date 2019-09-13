@@ -83,10 +83,10 @@
       time {
         margin: 0 4px;
         &:before {
-          content: '('
+          content: "(";
         }
         &:after {
-          content: ')'
+          content: ")";
         }
       }
     }

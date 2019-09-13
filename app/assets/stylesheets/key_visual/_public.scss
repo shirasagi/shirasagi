@@ -10,8 +10,6 @@
     li {
       a {
         display: inline-block;
-        img {
-        }
       }
     }
   }
@@ -37,9 +35,9 @@
     border-style: none;
   }
   a {
-    opacity: 0.5;
+    opacity: .5;
   }
   a.active {
-    opacity: 1.0;
+    opacity: 1;
   }
 }

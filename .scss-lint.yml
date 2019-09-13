@@ -1,0 +1,66 @@
+#
+# [command] scss-lint --config .scss-lint.yml
+#
+scss_files: "app/assets/stylesheets/**/*.scss"
+
+linters:
+  ColorVariable:
+    enabled: false
+
+  Comment:
+    enabled: false
+
+  DeclarationOrder:
+    enabled: false
+
+  DuplicateProperty:
+    enabled: false
+
+  EmptyLineBetweenBlocks:
+    enabled: false
+
+  IdSelector:
+    enabled: false
+
+  ImportantRule:
+    enabled: false
+
+  MergeableSelector:
+    enabled: false
+
+  NameFormat:
+    enabled: false
+
+  NestingDepth:
+    max_depth: 5
+
+  PseudoElement:
+    enabled: false
+
+  PropertySortOrder:
+    enabled: false
+
+  QualifyingElement:
+    allow_element_with_attribute: true
+    allow_element_with_class: true
+
+  SelectorDepth:
+    max_depth: 5
+
+  SelectorFormat:
+    enabled: false
+
+  SingleLinePerProperty:
+    enabled: false
+
+  SingleLinePerSelector:
+    enabled: false
+
+  StringQuotes:
+    style: double_quotes
+
+  UrlQuotes:
+    enabled: false
+
+  VendorPrefix:
+    enabled: false

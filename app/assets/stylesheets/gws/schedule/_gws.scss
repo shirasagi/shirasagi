@@ -13,7 +13,7 @@
   .xdsoft_datetimepicker {
     margin: 0 1px 2px;
     padding: 0;
-    border: none;
+    border: 0;
     box-shadow: none;
     vertical-align: top;
     .xdsoft_month {
@@ -201,7 +201,7 @@
   }
   .reservation.free {
     background-color: transparent;
-    color: $black3
+    color: $black3;
   }
   .reservation.exist {
     color: $orange;
@@ -215,7 +215,7 @@
     overflow: auto;
     z-index: 10000;
     color: #000;
-    background: #ffffff;
+    background: #fff;
   }
 }
 #cboxLoadedContent .gws-schedule-box .user-tooltip {
@@ -228,7 +228,7 @@
   font-weight: 800;
   .reservation-valid.free {
     padding-left: 10px;
-    color: $black3
+    color: $black3;
   }
   .reservation-valid.exist {
     padding-left: 10px;
@@ -276,9 +276,6 @@
     margin: 10px 0 !important;
   }
 }
-.fc-view {
-  //min-height: 28px;
-}
 .fc-view table {
   box-sizing: border-box;
 }
@@ -309,14 +306,14 @@
 .print-preview {
   .fc-unthemed {
     th, td {
-      border-color: black;
+      border-color: #000;
       border-style: solid;
     }
   }
 }
 @include mb {
   .fc-right {
-    margin: 0 0 10px 0;
+    margin: 0 0 10px;
     .fc-button {
       margin: 5px 5px 5px 0;
     }
@@ -352,7 +349,7 @@
 
 // events
 .fc-event {
-  border: none;
+  border: 0;
   border-radius: 0;
   font-size: 90%;
   &:hover {
@@ -434,12 +431,12 @@
 .fc-event-private .fc-content:before {
   @include fc_event_prefix;
   background-color: #f2b;
-  content: '秘';
+  content: "秘";
 }
 .fc-event-unknown-attendance .fc-content:before {
   @include fc_event_prefix;
   background-color: $orange;
-  content: '未';
+  content: "未";
 }
 .fc-event-user-attendance-absence {
   display: none;
@@ -447,17 +444,17 @@
 .fc-event-approval-request .fc-content:before {
   @include fc_event_prefix;
   background-color: #84e;
-  content: '申';
+  content: "申";
 }
 .fc-event-approval-approve .fc-content:before {
   @include fc_event_prefix;
   background-color: #84e;
-  content: '認';
+  content: "認";
 }
 .fc-event-approval-deny .fc-content:before {
   @include fc_event_prefix;
   background-color: #84e;
-  content: '否';
+  content: "否";
 }
 
 .fc-holiday {
@@ -595,7 +592,7 @@
 .print-preview {
   .fc-listMonth-view-table {
     .tr {
-      border-bottom: 1px solid black;
+      border-bottom: 1px solid #000;
     }
   }
   .fc-event {
@@ -790,9 +787,9 @@ dl.gws-schedule-repeat {
   margin-left: 5px;
   color: #e00;
   &:before {
-    font-family: 'Material Icons';
+    font-family: "Material Icons";
     font-size: 108%;
-    content: '\E002';
+    content: "\E002";
 
     display: inline;
     vertical-align: -3px;
@@ -831,7 +828,7 @@ dl.gws-schedule-repeat {
       margin-right: 6px;
       padding-left: 3px;
       background: #f25a38;
-      content: ' ';
+      content: " ";
     }
   }
 }

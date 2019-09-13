@@ -1,5 +1,5 @@
 .markdown-body { padding: 0 7px; }
-.markdown-body ul li { list-style: disc outside none }
+.markdown-body ul li { list-style: disc outside none; }
 
 /**
  * github-markdown-css
@@ -8,13 +8,7 @@
  */
 
 .markdown-body {
-  //-webkit-text-size-adjust: 100%;
-  //text-size-adjust: 100%;
-  //color: #333;
   overflow: hidden;
-  //font-family: "Helvetica Neue", Helvetica, "Segoe UI", Arial, freesans, sans-serif;
-  //font-size: 16px;
-  //line-height: 1.6;
   word-wrap: break-word;
 }
 
@@ -33,7 +27,7 @@
 
 .markdown-body h1 {
   font-size: 2em;
-  margin: 0.67em 0;
+  margin: .67em 0;
 }
 
 .markdown-body img {
@@ -214,7 +208,7 @@
 }
 
 .markdown-body .octicon-link:before {
-  content: '\f05c';
+  content: "\f05c";
 }
 
 .markdown-body>*:first-child {
@@ -289,7 +283,7 @@
 }
 
 .markdown-body h1 {
-  padding-bottom: 0.3em;
+  padding-bottom: .3em;
   font-size: 2.25em;
   line-height: 1.2;
   border-bottom: 1px solid #eee;
@@ -300,7 +294,7 @@
 }
 
 .markdown-body h2 {
-  padding-bottom: 0.3em;
+  padding-bottom: .3em;
   font-size: 1.75em;
   line-height: 1.225;
   border-bottom: 1px solid #eee;
@@ -445,17 +439,17 @@
 
 .markdown-body code {
   padding: 0;
-  padding-top: 0.2em;
-  padding-bottom: 0.2em;
+  padding-top: .2em;
+  padding-bottom: .2em;
   margin: 0;
   font-size: 85%;
-  background-color: rgba(0,0,0,0.04);
+  background-color: rgba(0, 0, 0, .04);
   border-radius: 3px;
 }
 
 .markdown-body code:before,
 .markdown-body code:after {
-  letter-spacing: -0.2em;
+  letter-spacing: -.2em;
   content: "\00a0";
 }
 
@@ -645,7 +639,7 @@
 }
 
 .markdown-body .task-list-item input {
-  margin: 0 0.35em 0.25em -1.6em;
+  margin: 0 .35em .25em -1.6em;
   vertical-align: middle;
 }
 
