@@ -16,7 +16,7 @@ class Opendata::Harvest::CkanPackage
   end
 
   def format_upload_filename(filename)
-    filename.gsub("_", "0")
+    filename.tr("_", "0")
   end
 
   public
