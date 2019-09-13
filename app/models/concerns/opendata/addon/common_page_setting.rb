@@ -27,6 +27,7 @@ module Opendata::Addon::CommonPageSetting
 
   def show_tab?(option)
     return true if show_tabs.blank?
+
     show_tabs.include?(option)
   end
 
