@@ -76,6 +76,7 @@ module SS::Model::File
 
   def public_path
     return if site.blank? || !site.respond_to?(:root_path)
+
     "#{site.root_path}/fs/" + id.to_s.split(//).join("/") + "/_/#{filename}"
   end
 

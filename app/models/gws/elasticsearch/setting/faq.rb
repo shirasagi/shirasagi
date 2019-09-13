@@ -10,6 +10,7 @@ class Gws::Elasticsearch::Setting::Faq
 
   def search_types
     return [] unless cur_site.menu_faq_visible?
+
     super
   end
 

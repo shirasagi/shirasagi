@@ -73,6 +73,7 @@ class Gws::User
   def gws_default_group
     return @gws_default_group if @gws_default_group
     return nil unless @cur_site
+
     @gws_default_group = find_gws_default_group(@cur_site)
     @gws_default_group ||= find_gws_main_group(@cur_site)
   end
@@ -125,6 +126,7 @@ class Gws::User
     group_id = gws_main_group_ids[@cur_site.id.to_s]
     return true if group_id.blank?
     return true if group_ids.include?(group_id)
+
     errors.add :gws_main_group_ids, :invalid
   end
 end

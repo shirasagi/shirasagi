@@ -114,6 +114,7 @@ module Member::Node
 
     def sort_hash
       return { created: -1 } if sort.blank?
+
       super
     end
 
@@ -166,6 +167,7 @@ module Member::Node
 
     def sort_hash
       return { created: -1 } if sort.blank?
+
       super
     end
 

@@ -133,6 +133,7 @@ module Chorg::Substituter
       end
       @substituters.reduce(value) do |a, e|
         break e.to_value if e.overwrite_field?(key, value, group_id)
+
         e.call(key, a, group_id)
       end
     end
