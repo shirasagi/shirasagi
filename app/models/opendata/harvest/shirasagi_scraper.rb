@@ -4,7 +4,7 @@ class Opendata::Harvest::ShirasagiScraper
   def initialize(url, dataset_search_path = "dataset/search")
     @url = url
     @dataset_search_path = dataset_search_path
-    @max_pagination = 10000
+    @max_pagination = 10_000
   end
 
   def dataset_search_url
