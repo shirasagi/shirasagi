@@ -44,11 +44,9 @@ class Opendata::Harvest::Importer
   private
 
   def validate_host
-    begin
-      self.source_host = ::URI.parse(source_url).host
-    rescue => e
-      errors.add :source_host, :invalid
-    end
+    self.source_host = ::URI.parse(source_url).host
+  rescue => e
+    errors.add :source_host, :invalid
   end
 
   public
