@@ -80,12 +80,14 @@ class Gws::UserCsv::Importer
   def row_value(key)
     v = @row[Gws::User.t(key)].presence
     return v if v.blank?
+
     v.strip.presence
   end
 
   def build_item
     item, fatal_error = find_item
     return if fatal_error
+
     item ||= Gws::User.new
     item.cur_site = cur_site
     item.cur_user = cur_user

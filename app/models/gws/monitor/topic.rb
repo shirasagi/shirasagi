@@ -174,6 +174,7 @@ class Gws::Monitor::Topic
   def create_zip(zipfile, group_items, owner_items)
     if File.exist?(zipfile)
       return if self.updated < File.stat(zipfile).mtime
+
       File.unlink(zipfile) if self.updated > File.stat(zipfile).mtime
     end
 
@@ -200,6 +201,7 @@ class Gws::Monitor::Topic
     answered_state = answer_state_hash[group.id.to_s]
     return if %w(answered question_not_applicable).include?(answered_state)
     return if due_date.blank?
+
     due_date < now
   end
 

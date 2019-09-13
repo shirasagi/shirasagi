@@ -125,6 +125,7 @@ module SS::Model::Column
 
   def set_form_id
     return unless @cur_form
+
     self.form = @cur_form
   end
 end

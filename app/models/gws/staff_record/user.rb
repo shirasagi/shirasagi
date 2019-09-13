@@ -94,9 +94,14 @@ class Gws::StaffRecord::User
     if permissions["edit_other_gws_staff_record_charges_#{site_id}"].to_i >= permission_level
       return true
     elsif permissions["edit_private_gws_staff_record_charges_#{site_id}"].to_i >= permission_level
-      return true if owned?(user)
+      if owned?(user)
+        return true
+      else
+        return false
+      end
+    else
+      return false
     end
-    false
   end
 
   private

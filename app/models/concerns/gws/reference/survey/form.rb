@@ -20,6 +20,7 @@ module Gws::Reference::Survey::Form
 
   def set_form_id
     return unless @cur_form
+
     self.form_id = @cur_form.id
   end
 end
