@@ -138,17 +138,16 @@ module Gws::Memo::NotificationFilter
   def item_notify_enabled?(item)
     case item.model_name.i18n_key
     when :"gws/board/post"
-      return item.topic.notify_enabled?
+      return item.topic.notify_enabled? && item.topic.public?
     when :"gws/schedule/comment"
       return item.schedule.notify_enabled?
     when :"gws/schedule/attendance"
       return item._parent.notify_enabled?
     else
-      if item.respond_to?(:notify_enabled?)
-        return item.notify_enabled?
-      else
-        return true
-      end
+      notifiable = item.respond_to?(:notify_enabled?) ? item.notify_enabled? : true
+      public = item.respond_to?(:public?) ? item.public? : true
+
+      notifiable && public
     end
   end
 
