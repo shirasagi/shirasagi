@@ -73,7 +73,7 @@
   .selected-files {
     margin-top: 10px;
     span {
-      margin: 0 1em 0.5em 0;
+      margin: 0 1em .5em 0;
     }
   }
   .deselect {
@@ -99,7 +99,7 @@
   float: left;
   width: calc(100% - 350px);
   min-height: 400px;
-  @include mb  {
+  @include mb {
     float: none;
     width: 100%;
   }

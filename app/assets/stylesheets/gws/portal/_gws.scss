@@ -36,7 +36,7 @@
     margin: -15px -10px 15px;
     padding: 8px 10px;
     border-bottom: $border-gray1;
-    background: rgba(0,0,0,.02);
+    background: rgba(0, 0, 0, .02);
     font-weight: bold;
   }
   .portlet-model-schedule .main-box.with-tabs {
@@ -61,19 +61,19 @@
 }
 .gws-portlets-layouts {
   .portlet-item {
-    background-color: rgba(0,0,0,.01);
+    background-color: rgba(0, 0, 0, .01);
     background-image: url(/assets/img/gws/bg-plan.png);
     cursor: move;
     &:hover {
-      box-shadow: 0px 1px 5px #bbb;
-      background-color: rgba(0,0,0,.05);
+      box-shadow: 0 1px 5px #bbb;
+      background-color: rgba(0, 0, 0, .05);
     }
   }
   .portlet-item.dragging {
-    box-shadow: 0px 1px 10px #bbb;
+    box-shadow: 0 1px 10px #bbb;
   }
   .preview-holder {
-    background-color: rgba(0,0,0,.3);
+    background-color: rgba(0, 0, 0, .3);
     background-image: url(/assets/img/gws/bg-plan.png);
   }
   .gs-resize-handle-both {

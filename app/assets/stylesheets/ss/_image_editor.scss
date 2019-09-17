@@ -6,7 +6,7 @@
     display: block;
     position: absolute;
     top: -45px;
-    left: 0px;
+    left: 0;
     background: $black3;
     height: 40px;
     min-width: 40px;
@@ -17,7 +17,7 @@
     color: $white;
 
     &:before {
-      content: '';
+      content: "";
       position: absolute;
       bottom: -7px;
       left: 20px;
@@ -54,27 +54,15 @@
   .btn {
     box-sizing: border-box;
     background: transparent;
-    border: none;
+    border: 0;
     outline: none;
-    padding: 2px 0 0 0;
+    padding: 2px 0 0;
     width: 40px;
     height: 40px;
     color: $white;
   }
 
-  //.btn-group ~ .btn-group {
-  //  &:before {
-  //    content: '';
-  //    position: absolute;
-  //    top: 2px;
-  //    width: 0px;
-  //    height: 35px;
-  //    border-left: 1px solid $gray2;
-  //    border-right: 1px solid $gray1;
-  //  }
-  //}
   .btn-group ~ .btn-group {
     border-left: 1px solid $gray2;
-    //border-right: 1px solid $gray1;
   }
 }
