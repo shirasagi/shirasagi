@@ -13,7 +13,7 @@ class Recommend::SimilarityScoresController < ApplicationController
     cond = []
     cond << { :site_id => @cur_site.id }
     cond << { :created => { "$gte" => Time.zone.now.advance(days: -7) } }
-    cond << { :key => /#{keyword}/ } if keyword.present?
+    cond << { :key => /#{::Regexp.escape(keyword)}/ } if keyword.present?
     match = { "$and" => cond }
 
     @prefs = Recommend::SimilarityScore.to_key_axis_aggregation(match)
