@@ -272,7 +272,8 @@ class Gws::Memo::Notifier
     elsif class_name.include?("Gws::Faq")
       url = url_helper.gws_faq_topic_path(id: id_for_url(item), site: cur_site.id, category: '-', mode: '-')
     elsif class_name.include?("Gws::Qna")
-      url = url_helper.gws_qna_topic_path(id: id_for_url(item), site: cur_site.id, category: '-', mode: '-')
+      anchor = item.topic_id ? "post-#{item.id}" : nil
+      url = url_helper.gws_qna_topic_path(id: id_for_url(item), site: cur_site.id, category: '-', mode: '-', anchor: anchor)
     elsif class_name.include?("Gws::Schedule::Todo")
       todo = item.try(:todo) || item
       if todo.try(:in_discussion_forum) && todo.try(:discussion_forum)
@@ -298,7 +299,9 @@ class Gws::Memo::Notifier
   end
 
   def id_for_url(item)
-    if item.try(:_parent).present?
+    if item.try(:topic).present?
+      id = item.topic.id
+    elsif item.try(:_parent).present?
       id = item._parent.id
     elsif item.try(:parent).present?
       id = item.parent.id
