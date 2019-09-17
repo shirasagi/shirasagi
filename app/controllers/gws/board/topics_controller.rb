@@ -8,6 +8,9 @@ class Gws::Board::TopicsController < ApplicationController
 
   navi_view "gws/board/main/navi"
 
+  self.destroy_notification_actions = [:soft_delete]
+  self.destroy_all_notification_actions = [:soft_delete_all]
+
   private
 
   def fix_params
@@ -60,6 +63,7 @@ class Gws::Board::TopicsController < ApplicationController
 
   def show
     raise '403' unless readable?
+
     render file: "show_#{@item.mode}"
   end
 
@@ -90,6 +94,7 @@ class Gws::Board::TopicsController < ApplicationController
   def print
     set_item
     raise '403' unless readable?
+
     render file: "print_#{@item.mode}", layout: 'ss/print'
   end
 
