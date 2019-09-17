@@ -26,17 +26,20 @@ module Gws::Addon::Schedule::GroupSetting
     field :todo_delete_threshold, type: Integer, default: 3
     field :schedule_attachment_state, type: String, default: 'allow'
     field :schedule_drag_drop_state, type: String, default: 'allow'
+    field :schedule_custom_group_extra_state, type: String
 
     permit_params :schedule_max_month, :schedule_max_years
     permit_params :schedule_max_file_size, :in_schedule_max_file_size_mb
     permit_params :todo_delete_threshold
     permit_params :schedule_attachment_state, :schedule_drag_drop_state
+    permit_params :schedule_custom_group_extra_state
 
     before_validation :set_schedule_max_file_size
 
     validates :schedule_max_file_size, numericality: { only_integer: true, greater_than_or_equal_to: 0, allow_blank: true }
     validates :schedule_attachment_state, inclusion: { in: %w(allow deny), allow_blank: true }
     validates :schedule_drag_drop_state, inclusion: { in: %w(allow deny), allow_blank: true }
+    validates :schedule_custom_group_extra_state, inclusion: { in: %w(creator_name), allow_blank: true }
   end
 
   def schedule_max_month
@@ -117,6 +120,12 @@ module Gws::Addon::Schedule::GroupSetting
 
   def schedule_facility_tab_placeholder
     I18n.t("gws/schedule.tabs.facility")
+  end
+
+  def schedule_custom_group_extra_state_options
+    %w(creator_name).map do |v|
+      [ I18n.t("gws/schedule.options.schedule_custom_group_extra_state.#{v}"), v ]
+    end
   end
 
   private
