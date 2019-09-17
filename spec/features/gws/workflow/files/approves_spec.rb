@@ -23,6 +23,24 @@ describe Gws::Workflow::FilesController, type: :feature, dbscope: :example, tmpd
     let(:remand_comment1) { unique_id }
     let(:remand_comment2) { unique_id }
 
+    before do
+      site.canonical_scheme = %w(http https).sample
+      site.canonical_domain = "#{unique_id}.example.jp"
+      site.save!
+
+      gws_user.notice_workflow_email_user_setting = "notify"
+      gws_user.send_notice_mail_address = "#{unique_id}@example.jp"
+      gws_user.save!
+
+      user1.notice_workflow_email_user_setting = "notify"
+      user1.send_notice_mail_address = "#{unique_id}@example.jp"
+      user1.save!
+
+      ActionMailer::Base.deliveries.clear
+    end
+
+    after { ActionMailer::Base.deliveries.clear }
+
     it do
       login_gws_user
       visit show_path
@@ -58,6 +76,46 @@ describe Gws::Workflow::FilesController, type: :feature, dbscope: :example, tmpd
         include({level: 1, user_id: user2.id, editable: '', state: 'request', comment: ''})
 
       expect(SS::Notification.count).to eq 2
+      notice1 = SS::Notification.all.reorder(created: -1).first
+      expect(notice1.group_id).to eq site.id
+      expect(notice1.member_ids).to eq [ user1.id ]
+      expect(notice1.user_id).to eq gws_user.id
+      expect(notice1.subject).to eq I18n.t("gws_notification.gws/workflow/file.request", name: item.name)
+      expect(notice1.text).to be_blank
+      expect(notice1.html).to be_blank
+      expect(notice1.format).to eq "text"
+      expect(notice1.seen).to be_blank
+      expect(notice1.state).to eq "public"
+      expect(notice1.send_date).to be_present
+      expect(notice1.url).to eq "/.g#{site.id}/workflow/files/all/#{item.id}"
+      expect(notice1.reply_module).to be_blank
+      expect(notice1.reply_model).to be_blank
+      expect(notice1.reply_item_id).to be_blank
+      SS::Notification.all.reorder(created: -1).second.tap do |notice|
+        expect(notice.group_id).to eq site.id
+        expect(notice.member_ids).to eq [ user2.id ]
+        expect(notice.user_id).to eq gws_user.id
+        expect(notice.subject).to eq I18n.t("gws_notification.gws/workflow/file.request", name: item.name)
+        expect(notice.text).to be_blank
+        expect(notice.html).to be_blank
+        expect(notice.format).to eq "text"
+        expect(notice.seen).to be_blank
+        expect(notice.state).to eq "public"
+        expect(notice.send_date).to be_present
+        expect(notice.url).to eq "/.g#{site.id}/workflow/files/all/#{item.id}"
+        expect(notice.reply_module).to be_blank
+        expect(notice.reply_model).to be_blank
+        expect(notice.reply_item_id).to be_blank
+      end
+
+      expect(ActionMailer::Base.deliveries.length).to eq 1
+      ActionMailer::Base.deliveries.last.tap do |mail|
+        expect(mail.from.first).to eq site.sender_address
+        expect(mail.bcc.first).to eq user1.send_notice_mail_address
+        expect(mail.subject).to eq I18n.t("gws_notification.gws/workflow/file.request", name: item.name)
+        url = "#{site.canonical_scheme}://#{site.canonical_domain}/.g#{site.id}/memo/notices/#{notice1.id}"
+        expect(mail.decoded.to_s).to include(mail.subject, url)
+      end
 
       #
       # user1: 申請を承認する
@@ -83,6 +141,7 @@ describe Gws::Workflow::FilesController, type: :feature, dbscope: :example, tmpd
         include({level: 1, user_id: user2.id, editable: '', state: 'request', comment: ''})
 
       expect(SS::Notification.count).to eq 2
+      expect(ActionMailer::Base.deliveries.length).to eq 1
 
       #
       # user2: 申請を承認する
@@ -108,6 +167,30 @@ describe Gws::Workflow::FilesController, type: :feature, dbscope: :example, tmpd
         include({level: 1, user_id: user2.id, editable: '', state: 'approve', comment: remand_comment2, file_ids: nil})
 
       expect(SS::Notification.count).to eq 3
+      notice3 = SS::Notification.all.reorder(created: -1).first
+      expect(notice3.group_id).to eq site.id
+      expect(notice3.member_ids).to eq [ gws_user.id ]
+      expect(notice3.user_id).to eq user2.id
+      expect(notice3.subject).to eq I18n.t("gws_notification.gws/workflow/file.approve", name: item.name)
+      expect(notice3.text).to be_blank
+      expect(notice3.html).to be_blank
+      expect(notice3.format).to eq "text"
+      expect(notice3.seen).to be_blank
+      expect(notice3.state).to eq "public"
+      expect(notice3.send_date).to be_present
+      expect(notice3.url).to eq "/.g#{site.id}/workflow/files/all/#{item.id}"
+      expect(notice3.reply_module).to be_blank
+      expect(notice3.reply_model).to be_blank
+      expect(notice3.reply_item_id).to be_blank
+
+      expect(ActionMailer::Base.deliveries.length).to eq 2
+      ActionMailer::Base.deliveries.last.tap do |mail|
+        expect(mail.from.first).to eq site.sender_address
+        expect(mail.bcc.first).to eq gws_user.send_notice_mail_address
+        expect(mail.subject).to eq I18n.t("gws_notification.gws/workflow/file.approve", name: item.name)
+        url = "#{site.canonical_scheme}://#{site.canonical_domain}/.g#{site.id}/memo/notices/#{notice3.id}"
+        expect(mail.decoded.to_s).to include(mail.subject, url)
+      end
     end
   end
 end
