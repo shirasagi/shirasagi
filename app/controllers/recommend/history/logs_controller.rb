@@ -14,7 +14,7 @@ class Recommend::History::LogsController < ApplicationController
     cond = []
     cond << { :site_id => @cur_site.id }
     cond << { :created => { "$gte" => Time.zone.now.advance(days: -7) } }
-    cond << { :token => /#{keyword}/ } if keyword.present?
+    cond << { :token => /#{::Regexp.escape(keyword)}/ } if keyword.present?
     match = { "$and" => cond }
 
     @prefs = Recommend::History::Log.to_token_axis_aggregation(match)
@@ -30,7 +30,7 @@ class Recommend::History::LogsController < ApplicationController
     cond = []
     cond << { :site_id => @cur_site.id }
     cond << { :created => { "$gte" => Time.zone.now.advance(days: -7) } }
-    cond << { :path => /#{keyword}/ } if keyword.present?
+    cond << { :path => /#{::Regexp.escape(keyword)}/ } if keyword.present?
     match = { "$and" => cond }
 
     @prefs = Recommend::History::Log.to_path_axis_aggregation(match)

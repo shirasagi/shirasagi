@@ -15,7 +15,7 @@ module Opendata::Api::TagListFilter
     tag_list = []
     tags.each do |tag|
       tag_name = tag["name"]
-      tag_list << tag["name"] if query.nil? || (query.present? && tag_name =~ /^.*#{query}.*$/i)
+      tag_list << tag["name"] if query.nil? || (query.present? && tag_name =~ /^.*#{::Regexp.escape(query)}.*$/i)
     end
 
     res = {help: help, success: true, result: tag_list}
