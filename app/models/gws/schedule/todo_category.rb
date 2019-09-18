@@ -51,8 +51,8 @@ class Gws::Schedule::TodoCategory
       true
     end
 
-    alias :trailing_name :name
-    alias :depth_level :depth
+    alias trailing_name name
+    alias depth_level depth
   end
 
   ALL = Pseudo.new(id: "-", name: I18n.t("ss.all"))
