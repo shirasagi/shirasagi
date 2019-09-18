@@ -68,13 +68,6 @@ describe "workflow_branch", type: :feature, dbscope: :example, js: true do
     it { create_branch }
   end
 
-  context "faq page" do
-    let(:item) { create_once :faq_page, filename: "faq/page.html", name: old_name }
-    let(:node) { create_once :faq_node_page, filename: "faq", name: "faq" }
-    let(:show_path) { faq_page_path site, node, item }
-    it { create_branch }
-  end
-
   context "event page" do
     let(:item) { create_once :event_page, filename: "event/page.html", name: old_name }
     let(:node) { create_once :event_node_page, filename: "event", name: "event" }
@@ -82,10 +75,10 @@ describe "workflow_branch", type: :feature, dbscope: :example, js: true do
     it { create_branch }
   end
 
-  context "sitemap page" do
-    let(:item) { create_once :sitemap_page, filename: "sitemap/page.html", name: old_name }
-    let(:node) { create_once :sitemap_node_page, filename: "sitemap", name: "sitemap" }
-    let(:show_path) { sitemap_page_path site, node, item }
+  context "faq page" do
+    let(:item) { create_once :faq_page, filename: "faq/page.html", name: old_name }
+    let(:node) { create_once :faq_node_page, filename: "faq", name: "faq" }
+    let(:show_path) { faq_page_path site, node, item }
     it { create_branch }
   end
 
@@ -93,6 +86,13 @@ describe "workflow_branch", type: :feature, dbscope: :example, js: true do
     let(:item) { create_once :mail_page_page, filename: "mail/page.html", name: old_name }
     let(:node) { create_once :mail_page_node_page, filename: "mail", name: "mail" }
     let(:show_path) { mail_page_page_path site, node, item }
+    it { create_branch }
+  end
+
+  context "sitemap page" do
+    let(:item) { create_once :sitemap_page, filename: "sitemap/page.html", name: old_name }
+    let(:node) { create_once :sitemap_node_page, filename: "sitemap", name: "sitemap" }
+    let(:show_path) { sitemap_page_path site, node, item }
     it { create_branch }
   end
 end
