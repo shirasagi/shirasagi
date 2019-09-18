@@ -111,14 +111,13 @@ class Gws::Notice::Post
 
     files.each do |file|
       self.total_file_size += file.size
+      next if file.size <= folder.notice_individual_file_size_limit
 
-      if file.size > folder.notice_individual_file_size_limit
-        options = {
-          size: file.size.to_s(:human_size),
-          limit: folder.notice_individual_file_size_limit.to_s(:human_size)
-        }
-        errors.add :base, :exceeded_individual_file_size_limit, options
-      end
+      options = {
+        size: file.size.to_s(:human_size),
+        limit: folder.notice_individual_file_size_limit.to_s(:human_size)
+      }
+      errors.add :base, :exceeded_individual_file_size_limit, options
     end
 
     if self.total_file_size + folder.notice_total_file_size > folder.notice_total_file_size_limit
