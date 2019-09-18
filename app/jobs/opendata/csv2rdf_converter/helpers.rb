@@ -56,13 +56,13 @@ module Opendata::Csv2rdfConverter::Helpers
       classes = type_setting["classes"]
       last_class = classes.last
       if last_class == "xsd:integer"
-        if /^[-+]?[0-9,]+$/ =~ value
+        if /^[-+]?[0-9,]+$/.match?(value)
           "\"#{value.delete(",")}\"^^#{last_class}"
         else
           "\"#{value.delete(",")}\""
         end
       elsif last_class == "xsd:decimal"
-        if /^[-+]?[0-9,]+\.[0-9]+$/ =~ value
+        if /^[-+]?[0-9,]+\.[0-9]+$/.match?(value)
           "\"#{value.delete(",")}\"^^#{last_class}"
         else
           "\"#{value.delete(",")}\""

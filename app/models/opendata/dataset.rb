@@ -117,7 +117,7 @@ class Opendata::Dataset
   end
 
   def no
-    sprintf("%010d", id.to_i)
+    format("%010d", id.to_i)
   end
 
   private

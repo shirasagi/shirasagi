@@ -91,8 +91,8 @@ class Uploader::File
     path.sub(/^#{site.path}\//, "")
   end
 
-  def filename=(n)
-    @path = "#{path.sub(filename, '')}#{n}"
+  def filename=(fname)
+    @path = "#{path.sub(filename, '')}#{fname}"
   end
 
   def basename
@@ -104,7 +104,7 @@ class Uploader::File
   end
 
   def parent
-    path =~ /\// ? path.sub(name, "") : "/"
+    /\//.match?(path) ? path.sub(name, "") : "/"
   end
 
   def dirname
@@ -153,8 +153,12 @@ class Uploader::File
   def validate_filename
     if directory?
       errors.add :path, :invalid_filename if filename !~ /^\/?([\w\-]+\/)*[\w\-]+$/
-    elsif filename !~ /^\/?([\w\-]+\/)*[\w\-]+\.[\w\-\.]+$/
+      return
+    end
+
+    unless /^\/?([\w\-]+\/)*[\w\-]+\.[\w\-\.]+$/.match?(filename)
       errors.add :path, :invalid_filename
+      return
     end
   end
 

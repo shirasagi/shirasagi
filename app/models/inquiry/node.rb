@@ -55,7 +55,7 @@ module Inquiry::Node
 
       conditions.each do |url|
         # regex
-        if url =~ /\/\*$/
+        if /\/\*$/.match?(url)
           filename = url.sub(/\/\*$/, "")
           cond << { filename: /^#{filename}\// }
           next

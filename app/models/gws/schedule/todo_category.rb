@@ -51,8 +51,8 @@ class Gws::Schedule::TodoCategory
       true
     end
 
-    alias_method :trailing_name, :name
-    alias_method :depth_level, :depth
+    alias :trailing_name :name
+    alias :depth_level :depth
   end
 
   ALL = Pseudo.new(id: "-", name: I18n.t("ss.all"))
@@ -140,7 +140,7 @@ class Gws::Schedule::TodoCategory
   def validate_basename
     return if in_basename.blank?
 
-    if in_basename =~ /[\\\/:*?"<>|]/
+    if /[\\\/:*?"<>|]/.match?(in_basename)
       errors.add :in_basename, :invalid_chars_as_name
     end
   end

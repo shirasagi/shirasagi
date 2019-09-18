@@ -101,9 +101,9 @@ module Opendata::ColumnTypesSearcher::Searcher
     end
 
     def guess_data_type(value)
-      if /^[-+]?[0-9,]+$/ =~ value
+      if /^[-+]?[0-9,]+$/.match?(value)
         "xsd:integer"
-      elsif /^[-+]?[0-9,]+\.[0-9]+$/ =~ value
+      elsif /^[-+]?[0-9,]+\.[0-9]+$/.match?(value)
         "xsd:decimal"
       else
         "xsd:string"

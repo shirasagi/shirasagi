@@ -155,6 +155,6 @@ class Faq::Page::Importer
 
     # state
     state = label_value(item, row, :state)
-    item.state = state ? state : "public"
+    item.state = state || "public"
   end
 end
