@@ -103,7 +103,9 @@ module Gws::CrudFilter
   end
 
   def destroy_all
-    entries = @items.entries
+    raise "400" if @selected_items.blank?
+
+    entries = @selected_items.entries
     @items = []
 
     entries.each do |item|
@@ -118,7 +120,9 @@ module Gws::CrudFilter
   end
 
   def disable_all
-    entries = @items.entries
+    raise "400" if @selected_items.blank?
+
+    entries = @selected_items.entries
     @items = []
 
     entries.each do |item|
@@ -134,9 +138,11 @@ module Gws::CrudFilter
   end
 
   def soft_delete_all
-    set_selected_items unless @items
+    set_selected_items unless @selected_items
 
-    entries = @items.entries
+    raise "400" if @selected_items.blank?
+
+    entries = @selected_items.entries
     @items = []
 
     entries.each do |item|
