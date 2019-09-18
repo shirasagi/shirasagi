@@ -1,8 +1,13 @@
-class History::Trash::TrashPurgeJob < SS::ApplicationJob
-  def perform(*_)
-    criteria = History::Trash.all
-    criteria = criteria.site(site) if site.present?
-    count = criteria.destroy_all
-    Rails.logger.info "#{I18n.l(@threshold.to_date)}以前の#{model.model_name.human}を#{count}件削除しました。"
+class History::Trash::TrashPurgeJob < Cms::ApplicationJob
+  include SS::TrashPurge::BaseJob
+
+  self.model = History::Trash
+
+  private
+
+  def set_items
+    @items = model.lt(created: @threshold)
+    @items = @items.site(site) if site.present?
+    @items
   end
 end
