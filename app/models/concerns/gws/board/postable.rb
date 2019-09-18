@@ -10,7 +10,7 @@ module Gws::Board::Postable
 
   included do
     store_in collection: "gws_board_posts"
-    set_permission_name "gws_board_posts"
+    set_permission_name "gws_board_topics"
 
     attr_accessor :cur_site
 
