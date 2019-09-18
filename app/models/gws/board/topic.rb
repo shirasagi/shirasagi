@@ -10,11 +10,14 @@ class Gws::Board::Topic
   include Gws::Addon::Board::Category
   include Gws::Addon::Board::NotifySetting
   include Gws::Addon::Release
+  include Gws::Addon::Member
   include Gws::Addon::ReadableSetting
   include Gws::Addon::GroupPermission
   include Gws::Addon::History
   include Gws::Board::BrowsingState
 
+  member_include_custom_groups
+  member_ids_optional
   readable_setting_include_custom_groups
   permission_include_custom_groups
   hide_released_field
