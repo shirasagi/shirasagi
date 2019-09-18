@@ -136,7 +136,10 @@ class Webmail::GroupExport
     return errors.add :in_file, :blank if in_file.blank?
 
     fname = in_file.original_filename
-    return errors.add :in_file, :invalid_file_type if ::File.extname(fname) !~ /^\.csv$/i
+    unless /^\.csv$/i.match?(::File.extname(fname))
+      errors.add :in_file, :invalid_file_type
+      return
+    end
 
     unmatched = 0
     CSV.foreach(in_file.path, headers: true, encoding: 'SJIS:UTF-8') do |row|

@@ -98,7 +98,10 @@ module Gws::Export
     return errors.add :in_file, :blank if in_file.blank?
 
     fname = in_file.original_filename
-    return errors.add :in_file, :invalid_file_type if ::File.extname(fname) !~ /^\.csv$/i
+    unless /^\.csv$/i.match?(::File.extname(fname))
+      errors.add :in_file, :invalid_file_type
+      return
+    end
 
     begin
       no = 0

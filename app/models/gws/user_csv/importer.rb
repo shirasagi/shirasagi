@@ -54,7 +54,7 @@ class Gws::UserCsv::Importer
     end
 
     fname = in_file.original_filename
-    if ::File.extname(fname) !~ /^\.csv$/i
+    unless /^\.csv$/i.match?(::File.extname(fname))
       errors.add(:in_file, :invalid_file_type)
       return
     end
