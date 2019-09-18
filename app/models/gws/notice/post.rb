@@ -48,25 +48,21 @@ class Gws::Notice::Post
 
     def search_keyword(params)
       return all if params.blank? || params[:keyword].blank?
-
       all.keyword_in(params[:keyword], :name, :html)
     end
 
     def search_folders(params)
       return all if params.blank? || params[:folder_ids].blank?
-
       all.in(folder_id: params[:folder_ids].select(&:numeric?).map(&:to_i))
     end
 
     def search_category(params)
       return all if params.blank? || params[:category_id].blank?
-
       all.where(category_ids: params[:category_id].to_i)
     end
 
     def search_browsed_state(params)
       return all if params.blank? || params[:browsed_state].blank?
-
       case params[:browsed_state]
       when 'read'
         all.exists("browsed_users_hash.#{params[:user].id}" => 1)

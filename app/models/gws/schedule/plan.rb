@@ -56,7 +56,6 @@ class Gws::Schedule::Plan
   def private_plan?(user)
     return false if readable_custom_group_ids.present?
     return false if readable_group_ids.present?
-
     readable_member_ids == [user.id] && member_ids == [user.id]
   end
 
@@ -72,7 +71,6 @@ class Gws::Schedule::Plan
 
   def allowed?(action, user, opts = {})
     return true if allowed_for_managers?(action, user, opts)
-
     member?(user) || custom_group_member?(user) if action =~ /edit|delete/
     false
   end
@@ -91,7 +89,6 @@ class Gws::Schedule::Plan
     return true if allowed?(:read, user, opts)
     return true if member?(user)
     return true if approval_member?(user)
-
     super
   end
 

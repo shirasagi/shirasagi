@@ -3,8 +3,8 @@ class Member::Mailer < ActionMailer::Base
     @member = member
     @node = Member::Node::Registration.site(member.site).and_public.first
     return if @node.blank?
-
     sender = "#{@node.sender_name} <#{@node.sender_email}>"
+
     mail from: sender, to: @node.notice_email
   end
 
@@ -15,8 +15,8 @@ class Member::Mailer < ActionMailer::Base
     @member = member
     @node = Member::Node::Registration.site(member.site).and_public.first
     return if @node.blank?
-
     sender = "#{@node.sender_name} <#{@node.sender_email}>"
+
     mail from: sender, to: member.email
   end
 
@@ -27,8 +27,8 @@ class Member::Mailer < ActionMailer::Base
     @member = member
     @node = Member::Node::Registration.site(member.site).and_public.first
     return if @node.blank?
-
     sender = "#{@node.sender_name} <#{@node.sender_email}>"
+
     mail from: sender, to: member.email
   end
 
@@ -39,8 +39,8 @@ class Member::Mailer < ActionMailer::Base
     @member = member
     @node = Member::Node::Registration.site(member.site).and_public.first
     return if @node.blank?
-
     sender = "#{@node.sender_name} <#{@node.sender_email}>"
+
     mail from: sender, to: member.email
   end
 
@@ -58,7 +58,6 @@ class Member::Mailer < ActionMailer::Base
       sender: sender,
       recipent: recipent)
     return if body.blank?
-
     if node.group_invitation_signature.present?
       body << "\n"
       body << node.group_invitation_signature
@@ -81,7 +80,6 @@ class Member::Mailer < ActionMailer::Base
       sender: sender,
       recipent: recipent)
     return if body.blank?
-
     if node.member_invitation_signature.present?
       body << "\n"
       body << node.member_invitation_signature

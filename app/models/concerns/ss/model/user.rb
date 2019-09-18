@@ -183,13 +183,11 @@ module SS::Model::User
 
     def search_name(params)
       return all if params.blank? || params[:name].blank?
-
       all.search_text(params[:name])
     end
 
     def search_title_ids(params)
       return all if params.blank? || params[:title_ids].blank?
-
       all.where(title_ids: params[:title_ids].to_i)
     end
 

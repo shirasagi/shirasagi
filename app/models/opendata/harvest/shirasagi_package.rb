@@ -11,7 +11,7 @@ class Opendata::Harvest::ShirasagiPackage
 
   def initialize(url, opts = {})
     @url = url
-    @api_path = opts[:api_path].presence || "api"
+    @api_path = opts[:api_path].present? ? opts[:api_path] : "api"
     @http_basic_authentication = opts[:http_basic_authentication] if opts[:http_basic_authentication].present?
   end
 
@@ -37,14 +37,14 @@ class Opendata::Harvest::ShirasagiPackage
   ## package(dataset) apis
 
   def package_list
-    result = ::URI.open(package_list_url, open_options).read
+    result = open(package_list_url, open_options).read
     result = ::JSON.parse(result)
     validate_result("package_list", result)
     result["result"]
   end
 
   def package_show(id)
-    result = ::URI.open(package_show_url(id), open_options).read
+    result = open(package_show_url(id), open_options).read
     result = ::JSON.parse(result)
     validate_result("package_show", result)
     result["result"]

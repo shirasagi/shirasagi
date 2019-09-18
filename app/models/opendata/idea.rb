@@ -83,7 +83,6 @@ class Opendata::Idea
 
   def contact_present?
     return false if member_id.present?
-
     super
   end
 
@@ -102,7 +101,6 @@ class Opendata::Idea
       suffix = %w(/point.html /point/members.html /comment/show.html /comment/add.html /comment/delete.html
                   /dataset/show.html /app/show.html).find { |suffix| path.end_with? suffix }
       return path if suffix.blank?
-
       path[0..(path.length - suffix.length - 1)] + '.html'
     end
 
@@ -138,11 +136,8 @@ class Opendata::Idea
       when "attention"
         { commented: -1, _id: -1 }
       else
-        if sort.blank?
-          { released: -1 }
-        else
-          { sort.sub(/ .*/, "") => (sort.end_with?('-1') ? -1 : 1) }
-        end
+        return { released: -1 } if sort.blank?
+        { sort.sub(/ .*/, "") => (sort.end_with?('-1') ? -1 : 1) }
       end
     end
 

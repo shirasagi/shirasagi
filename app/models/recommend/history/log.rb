@@ -24,7 +24,6 @@ class Recommend::History::Log
 
   def set_token
     return if token
-
     self.token = SecureRandom.hex(16)
   end
 

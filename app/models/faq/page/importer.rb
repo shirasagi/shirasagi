@@ -47,7 +47,6 @@ class Faq::Page::Importer
     filename = "#{node.filename}/#{row[model.t(:filename)]}"
     item = model.find_or_initialize_by(site_id: site.id, filename: filename)
     raise I18n.t('errors.messages.auth_error') unless item.allowed?(:import, user, site: site, node: node)
-
     item.site = site
     set_page_attributes(row, item)
     raise I18n.t('errors.messages.auth_error') unless item.allowed?(:import, user, site: site, node: node)
@@ -156,6 +155,6 @@ class Faq::Page::Importer
 
     # state
     state = label_value(item, row, :state)
-    item.state = state || "public"
+    item.state = state ? state : "public"
   end
 end

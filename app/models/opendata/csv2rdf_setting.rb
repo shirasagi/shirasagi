@@ -36,7 +36,6 @@ class Opendata::Csv2rdfSetting
 
   def header_cols
     return 0 unless header_labels.present?
-
     header_labels.length
   end
 
@@ -54,7 +53,6 @@ class Opendata::Csv2rdfSetting
 
   def update_header_labels
     return if header_rows.blank?
-
     if header_labels.blank? || resource_id_changed?
       self.header_labels = fetch_header_labels
     end

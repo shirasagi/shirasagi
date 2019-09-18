@@ -46,7 +46,6 @@ class Gws::Workflow::File
 
     def search_keyword(params)
       return all if params[:keyword].blank?
-
       all.keyword_in(params[:keyword], :name, :text, 'column_values.text_index')
     end
 
