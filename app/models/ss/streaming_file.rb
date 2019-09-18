@@ -36,7 +36,7 @@ class SS::StreamingFile
         raise SS::StreamingFile::SizeError, "file size limit exceeded"
       end
 
-      open(path, "wb") do |f|
+      ::File.open(path, "wb") do |f|
         response.read_body do |chunk|
           if size_limit > 0 && overall_received_bytes > size_limit
             raise SS::StreamingFile::SizeError, "file size limit exceeded"
