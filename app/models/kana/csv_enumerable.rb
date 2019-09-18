@@ -2,7 +2,7 @@ class Kana::CsvEnumerable
   include Enumerable
 
   FIELD_SEPARATORS = %w(, 、 ，).freeze
-  KATAKANA_REGEX = /^[ァ-ンーヴ]+$/
+  KATAKANA_REGEX = /^[ァ-ンーヴ]+$/.freeze
 
   def initialize(model, separators = FIELD_SEPARATORS)
     @model = model
