@@ -128,7 +128,11 @@ class Kana::Dictionary
       mecab_indexer = SS.config.kana.mecab_indexer
       mecab_dicdir = SS.config.kana.mecab_dicdir
 
-      cmd = "#{Shellwords.escape(mecab_indexer)} -d #{Shellwords.escape(mecab_dicdir)} -u #{output_file} -f UTF-8 -t UTF-8 #{input_file}"
+      cmd = Shellwords.escape(mecab_indexer)
+      cmd << " -d #{Shellwords.escape(mecab_dicdir)}"
+      cmd << " -u #{Shellwords.escape(output_file)}"
+      cmd << " -f UTF-8 -t UTF-8"
+      cmd << " #{Shellwords.escape(input_file)}"
       logger.info("system(#{cmd})")
       system(cmd)
       raise I18n.t("kana.build_fail.index") if $CHILD_STATUS.exitstatus != 0

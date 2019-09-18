@@ -115,7 +115,7 @@ module SS::Model::Notification
       end
 
       if params[:unseen].present?
-        user_id = params[:unseen]
+        user_id = params[:unseen].to_s.gsub(/\D/, '')
         criteria = criteria.where("seen.#{user_id}" => { '$exists' => false })
       end
 

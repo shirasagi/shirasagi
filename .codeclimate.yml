@@ -7,6 +7,8 @@ engines:
       file: .rubocop.yml
   brakeman:
     enabled: true
+    config:
+      file: .brakeman.yml
   bundler-audit:
     enabled: true
   csslint:

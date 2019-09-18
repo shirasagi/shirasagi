@@ -74,6 +74,7 @@ class Gws::Share::File
 
   def folder_options
     library = Gws::Share::Folder.find(folder_id).name.split('/')[0].to_s
+    library = ::Regexp.escape(library)
     Gws::Share::Folder.site(@cur_site)
       .allow(:read, @cur_user, site: @cur_site)
       .where(name: /\A#{library}\z|\A#{library}\// )
