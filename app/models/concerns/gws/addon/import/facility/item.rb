@@ -86,7 +86,7 @@ module Gws::Addon::Import::Facility
       end
 
       def columns_max
-        criteria.map(&:columns).map(&:size).max
+        criteria.map(&:columns).map(&:size).max.to_i
       end
 
       def columns_headers
