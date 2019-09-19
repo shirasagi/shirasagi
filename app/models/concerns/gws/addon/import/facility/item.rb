@@ -492,7 +492,7 @@ module Gws::Addon::Import::Facility
     end
 
     def columns_set_errors(item, errors)
-      item.errors.add :base, "#{errors.join(" ")}"
+      item.errors.add :base, errors.join(" ").to_s
     end
   end
 end
