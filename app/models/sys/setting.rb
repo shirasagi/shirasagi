@@ -9,8 +9,7 @@ class Sys::Setting
   field :menu_file_state, type: String, default: 'show'
   field :menu_connection_state, type: String, default: 'show'
 
-  permit_params :menu_file_state,
-    :menu_connection_state
+  permit_params :menu_file_state, :menu_connection_state
 
   def menu_state_options
     %w(show hide).map { |k| [I18n.t("ss.options.state.#{k}"), k] }
