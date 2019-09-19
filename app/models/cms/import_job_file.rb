@@ -52,7 +52,7 @@ class Cms::ImportJobFile
   def import
     @import_logs = []
     files.each do |file|
-      if ::File.extname(file.filename) =~ /^\.zip$/i
+      if /^\.zip$/i.match?(::File.extname(file.filename))
         import_from_zip(file)
       else
         import_from_file(file)
@@ -130,7 +130,7 @@ class Cms::ImportJobFile
           if save_import_node(entry.get_input_stream, import_filename)
             @import_logs << "import: #{import_filename}"
           end
-        elsif ::File.extname(import_filename) =~ /^\.(html|htm)$/i
+        elsif /^\.(html|htm)$/i.match?(::File.extname(import_filename))
           if save_import_page(entry.get_input_stream, import_filename)
             @import_logs << "import: #{import_filename}"
           end
@@ -146,7 +146,7 @@ class Cms::ImportJobFile
   def import_from_file(file, opts = {})
     import_filename = "#{node.filename}/#{file.filename}"
 
-    if ::File.extname(import_filename) =~ /^\.(html|htm)$/i
+    if /^\.(html|htm)$/i.match?(::File.extname(import_filename))
       if save_import_page(file, import_filename)
         @import_logs << "import: #{import_filename}"
       end
