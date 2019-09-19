@@ -148,26 +148,6 @@ module Gws::Addon::Import::Facility
         I18n.l(time)
       end
 
-      def input_type_data_to_text(item)
-        return if item.blank?
-        I18n.t("gws/facility/item.csv.item.#{item}")
-      end
-
-      def input_type_data_to_text(column)
-        return if column.blank?
-        I18n.t("gws/facility/item.csv.columns.input_type_datas.#{column}")
-      end
-
-      def required_data_to_text(column)
-        return if column.blank?
-        I18n.t("gws/facility/item.csv.columns.required_datas.#{column}")
-      end
-
-      def minus_type_data_to_text(column)
-        return if column.blank?
-        I18n.t("gws/facility/item.csv.columns.minus_type_datas.#{column}")
-      end
-
       def header_value_to_text(header, options = {})
         I18n.t("gws/facility/item.csv.#{header}", options)
       end
