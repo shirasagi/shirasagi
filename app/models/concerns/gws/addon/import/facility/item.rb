@@ -14,7 +14,7 @@ module Gws::Addon::Import::Facility
     module ClassMethods
       def to_csv
         CSV.generate do |data|
-          data << csv_headers.map { |k| header_value_to_text *k }
+          data << csv_headers.map { |k| header_value_to_text(k) }
           criteria.each do |item|
             line = []
             line << item.id
