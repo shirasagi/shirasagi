@@ -3,7 +3,7 @@ module Gws::Schedule::Cloneable
   extend SS::Translation
 
   def new_clone(attributes = {})
-    attributes = self.attributes.merge(attributes).select { |k| self.fields.keys.include?(k) }
+    attributes = self.attributes.merge(attributes).select { |k| self.fields.key?(k) }
 
     item = self.class.new(attributes)
     item.id = nil

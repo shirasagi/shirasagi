@@ -11,7 +11,7 @@ module Opendata::DatasetCopy
   end
 
   def new_clone(attributes = {})
-    attributes = self.attributes.merge(attributes).select { |k| self.fields.keys.include?(k) }
+    attributes = self.attributes.merge(attributes).select { |k| self.fields.key?(k) }
     attributes.merge!(id: nil,
                       uuid: nil,
                       cur_user: @cur_user,
