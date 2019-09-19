@@ -1317,6 +1317,24 @@ ja:
           #{part_name} 現在のパーツの名前が表示されます。
           #{part_parent_name} 現在のパーツの親フォルダー名が表示されます。
           #{part_parent.parent_name} 現在のパーツの親フォルダーの親フォルダー名が表示されます。
+
+          #{if 条件分岐タグA}内容A#{end} 条件分岐タグAがtrueのとき、内容Aを表示します。
+          #{if 条件分岐タグA}内容A#{elsif 条件分岐タグB}内容B#{end} 条件分岐タグAがtrueの場合は内容A、条件分岐タグAがfalseかつ条件分岐タグBがtrueの場合は内容Bを表示します。
+          #{if 条件分岐タグA}内容A#{else}内容B#{end} 条件分岐タグAがtrueの場合は内容A、falseの場合は内容Bを表示します。
+
+          条件分岐タグ:
+          - is_page() ページならばtrue, それ以外はfalseを返します。
+          - is_node() フォルダーならばtrue, それ以外はfalseを返します。
+          - in_node('/docs') ファイル名がdocsから始まるならばtrue, それ以外はfalseを返します。
+          - has_pages() 現在のフォルダーにページがある、または現在のフォルダーのカテゴリーに所属しているならばtrue, それ以外はfalseを返します。
+
+          使用例：
+          &lt;article class="#{class}">
+            &lt;header>
+              &lt;h2>&lt;a href="#{url}">#{name}&lt;/a>&lt;/h2>
+            &lt;/header>
+            &lt;p>#{summary}&lt;/p>
+          &lt;/article>
       loop_html:
         - 自動生成されたリスト表示部分のHTMLを指定することが可能です。
         - ループHTMLを選択または直接記入することが可能です。
@@ -1352,24 +1370,6 @@ ja:
           #{category_pages} カテゴリーが設定されたページが子リストで表示されます。
           #{child_nodes} フォルダー内のフォルダーが子リストで表示されます。
           #{child_pages} フォルダー内のページが子リストで表示されます。
-
-          #{if 条件分岐タグA}内容A#{end} 条件分岐タグAがtrueのとき、内容Aを表示します。
-          #{if 条件分岐タグA}内容A#{elsif 条件分岐タグB}内容B#{end} 条件分岐タグAがtrueの場合は内容A、条件分岐タグAがfalseかつ条件分岐タグBがtrueの場合は内容Bを表示します。
-          #{if 条件分岐タグA}内容A#{else}内容B#{end} 条件分岐タグAがtrueの場合は内容A、falseの場合は内容Bを表示します。
-
-          条件分岐タグ:
-          - is_page() ページならばtrue, それ以外はfalseを返します。
-          - is_node() フォルダーならばtrue, それ以外はfalseを返します。
-          - in_node('/docs') ファイル名がdocsから始まるならばtrue, それ以外はfalseを返します。
-          - has_pages() 現在のフォルダーにページがある、または現在のフォルダーのカテゴリーに所属しているならばtrue, それ以外はfalseを返します。
-
-          使用例：
-          &lt;article class="#{class}">
-            &lt;header>
-              &lt;h2>&lt;a href="#{url}">#{name}&lt;/a>&lt;/h2>
-            &lt;/header>
-            &lt;p>#{summary}&lt;/p>
-          &lt;/article>
       lower_html:
         - リスト部分の下部に任意の内容のHTMLを記述することが可能です。
         - 上部HTMLと同じテンプレートが使用できます。
