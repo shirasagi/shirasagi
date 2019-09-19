@@ -21,11 +21,10 @@ module Gws::Addon::Portal::Portlet
 
       if circular_article_state == 'unseen'
         search[:article_state] = "unseen"
-        search[:user] = user
       else
         search[:article_state] = "both"
-        search[:user] = user
       end
+      search[:user] = user
 
       Gws::Circular::Post.site(portal.site).
         topic.
