@@ -104,9 +104,8 @@ module Opendata::Harvest::CkanApiExporter
         attributes = {
           uuid: resource.uuid,
           revision_id: resource.revision_id,
-
           rel_id: resource_relation.rel_id,
-          rel_revision_id: resource.revision_id,
+          rel_revision_id: resource.revision_id
         }
         resource_relation.attributes = attributes
         resource_relation.update!
