@@ -189,8 +189,11 @@ module Opendata::Harvest::CkanApiImporter
     resource.license = license
 
     def resource.set_updated; end
+
     def resource.set_revision_id; end
+
     def resource.compression_dataset; end
+
     resource.updated = dataset.updated
     resource.created = dataset.created
 
