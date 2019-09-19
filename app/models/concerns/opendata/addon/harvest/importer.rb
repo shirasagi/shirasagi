@@ -6,7 +6,7 @@ module Opendata::Addon::Harvest
     include Opendata::Harvest::ShirasagiApiImporter
     include Opendata::Harvest::ShirasagiScrapingImporter
 
-    EXTERNAL_RESOUCE_FORMAT = %w(html htm)
+    EXTERNAL_RESOUCE_FORMAT = %w(html htm).freeze
 
     def import
       if api_type == "ckan"
