@@ -78,7 +78,7 @@ module Opendata::Harvest::ShirasagiScrapingImporter
     # destroy unimported datasets
     dataset_ids = ::Opendata::Dataset.site(site).node(node).where(
       "harvest_api_type" => api_type,
-      "harvest_host" => source_host,
+      "harvest_host" => source_host
     ).pluck(:id)
     dataset_ids = dataset_ids - imported_dataset_ids
     dataset_ids.each do |id|
