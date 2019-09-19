@@ -183,7 +183,9 @@ module Opendata::Harvest::ShirasagiScrapingImporter
     resource.license = license
 
     def resource.set_updated; end
+
     def resource.compression_dataset; end
+
     resource.created = dataset.created
     resource.updated = dataset.updated
 
