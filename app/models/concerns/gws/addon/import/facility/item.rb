@@ -75,13 +75,13 @@ module Gws::Addon::Import::Facility
         %w(
           id name category_id order min_minutes_limit max_minutes_limit
           max_days_limit reservation_start_date reservation_end_date
-          activation_date expiration_date approval_check_state
-          type html)               +
-        columns_headers            +
-        %w(reservable_group_names
-          reservable_member_names readable_setting_range
-          readable_group_names readable_member_names
-          group_names user_names permission_level)
+          activation_date expiration_date approval_check_state type html
+        ) +
+        columns_headers +
+        %w(
+          reservable_group_names reservable_member_names readable_setting_range
+          readable_group_names readable_member_names group_names user_names permission_level
+        )
       end
 
       def columns_max
