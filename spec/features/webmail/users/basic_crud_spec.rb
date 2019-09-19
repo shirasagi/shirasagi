@@ -102,9 +102,7 @@ describe "webmail_users", type: :feature, dbscope: :example, js: true do
       end
 
       visit webmail_users_path
-      within first(".list-item") do
-        check(nil)
-      end
+      find("input[value='#{Webmail::User.all.find_by(uid: uid).id}']").check
       within '.list-head' do
         page.accept_confirm do
           click_button I18n.t('ss.links.delete')
