@@ -2,8 +2,8 @@ require 'spec_helper'
 
 describe Cms::PublicFilter::ConditionalTag, type: :feature, dbscope: :example do
   let(:site) { cms_site }
-  let(:node) { create :cms_node, layout_id: layout.id }
-  let(:item) { create(:article_page, cur_site: site, cur_node: node, layout_id: layout.id) }
+  let(:node) { create :cms_node, filename: 'node', layout_id: layout.id }
+  let!(:item) { create(:article_page, cur_site: site, cur_node: node, layout_id: layout.id) }
 
   context 'When upper_html have condition tags' do
     html = ''
@@ -20,6 +20,12 @@ describe Cms::PublicFilter::ConditionalTag, type: :feature, dbscope: :example do
     html << '#{if is_page(\'dummy\')}'
     html << '#{parent_name}'
     html << '#{end}'
+    html << "\#{if in_node('node')}"
+    html << '<p>in_node</p>'
+    html << '#{end}'
+    html << "\#{if has_pages()}"
+    html << '<p>has_pages</p>'
+    html << '#{end}'
     html << '</div>'
     let(:part) { create :cms_part_page, upper_html: html }
     let(:layout) { create_cms_layout [part] }
@@ -34,6 +40,8 @@ describe Cms::PublicFilter::ConditionalTag, type: :feature, dbscope: :example do
       expect(page).to have_css('div.condition', text: item.name)
       expect(page).to have_no_css('div.condition', text: node.name)
       expect(page).to have_no_css('div.condition time')
+      expect(page).to have_css('p', text: 'in_node')
+      expect(page).to have_no_css('p', text: 'has_pages')
     end
 
     it do
@@ -42,6 +50,8 @@ describe Cms::PublicFilter::ConditionalTag, type: :feature, dbscope: :example do
       expect(page).to have_no_css('div.condition', text: item.name)
       expect(page).to have_css('div.condition', text: node.name)
       expect(page).to have_no_css('div.condition time')
+      expect(page).to have_css('p', text: 'in_node')
+      expect(page).to have_css('p', text: 'has_pages')
     end
   end
 
@@ -64,6 +74,7 @@ describe Cms::PublicFilter::ConditionalTag, type: :feature, dbscope: :example do
 
       layout.html = html.join("\n")
       layout.save!
+      item.reload.save!
     end
 
     it do
