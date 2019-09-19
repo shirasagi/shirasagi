@@ -61,7 +61,7 @@ module Opendata::Addon::ExportPublicEntityFormat
           next unless dataset
 
           row = []
-          no = sprintf("%010d", dataset.id)
+          no = format("%010d", dataset.id)
 
           pref, city = dataset.pref_codes
           code = nil
