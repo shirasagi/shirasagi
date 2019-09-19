@@ -4,7 +4,7 @@ class Cms::Member
   include ::Member::Addon::AdditionalAttributes
   include Ezine::Addon::Subscription
 
-  EMAIL_REGEX = /\A([^@\s]+)@((?:[-a-z0-9]+\.)+[a-z]{2,})\z/i
+  EMAIL_REGEX = /\A([^@\s]+)@((?:[-a-z0-9]+\.)+[a-z]{2,})\z/i.freeze
 
   index({ site_email: 1 }, { unique: true, sparse: true })
 
