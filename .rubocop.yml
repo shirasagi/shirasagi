@@ -25,6 +25,9 @@ Layout/AccessModifierIndentation:
   # But it can be overridden by setting this parameter
   IndentationWidth: ~
 
+Layout/EmptyLineAfterGuardClause:
+  Enabled: false
+
 Layout/DefEndAlignment:
   AutoCorrect: false
 

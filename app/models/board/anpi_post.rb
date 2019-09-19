@@ -86,7 +86,6 @@ class Board::AnpiPost
   def validate_text
     return if text.blank?
     return unless limit = text_size_limit
-
     errors.add :text, :too_long, count: limit if text.size > limit
   end
 

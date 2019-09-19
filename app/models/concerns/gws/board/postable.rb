@@ -62,7 +62,6 @@ module Gws::Board::Postable
 
     def search_keyword(params)
       return all if params.blank? || params[:keyword].blank?
-
       all.keyword_in(params[:keyword], :name, :text, :contributor_name)
     end
 

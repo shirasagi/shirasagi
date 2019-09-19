@@ -46,7 +46,6 @@ class Gws::Workflow::File
 
     def search_keyword(params)
       return all if params[:keyword].blank?
-
       all.keyword_in(params[:keyword], :name, :text, 'column_values.text_index')
     end
 
@@ -194,8 +193,8 @@ class Gws::Workflow::File
       new_file = SS::File.find(new_id) rescue nil
       next if old_file.blank? || new_file.blank?
 
-      text.gsub!("#{old_file.url}", "#{new_file.url}")
-      text.gsub!("#{old_file.thumb_url}", "#{new_file.thumb_url}") if old_file.thumb.present? && new_file.thumb.present?
+      text.gsub!(old_file.url.to_s, new_file.url.to_s)
+      text.gsub!(old_file.thumb_url.to_s, new_file.thumb_url.to_s) if old_file.thumb.present? && new_file.thumb.present?
     end
 
     self.text = text

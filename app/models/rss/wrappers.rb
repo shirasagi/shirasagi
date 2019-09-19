@@ -193,7 +193,7 @@ module Rss::Wrappers
     if url_or_file.respond_to?(:path)
       rss_source = url_or_file.read
     else
-      rss_source = open(url_or_file, opts)
+      rss_source = ::URI.open(url_or_file, opts)
     end
     rss = ::RSS::Parser.parse(rss_source, false)
 

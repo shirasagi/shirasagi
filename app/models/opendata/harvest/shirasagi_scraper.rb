@@ -29,7 +29,6 @@ class Opendata::Harvest::ShirasagiScraper
       links.each do |link|
         href = link.attributes["href"]
         next if href.blank?
-
         urls << ::File.join(url, href.value)
       end
     end
@@ -59,6 +58,7 @@ class Opendata::Harvest::ShirasagiScraper
     dataset["update_plan"] = parse_author_block(doc, "更新頻度") { |dd| dd.text.to_s.strip }
 
     dataset["resources"] = doc.css(".resources .resource").map do |node|
+
       dataset["license_title"] ||= doc.css('.license img').first.attributes["alt"].value
 
       resource = {}

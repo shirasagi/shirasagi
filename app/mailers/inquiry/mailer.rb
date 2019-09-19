@@ -43,7 +43,6 @@ class Inquiry::Mailer < ActionMailer::Base
       end
     end
     return nil if reply_email_address.blank?
-
     mail(from: from, to: reply_email_address)
   end
 end

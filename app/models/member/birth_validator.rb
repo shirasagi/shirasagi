@@ -7,19 +7,19 @@ class Member::BirthValidator < ActiveModel::EachValidator
     end
 
     year = value[:year]
-    unless year =~ /\A[+-]?\d+\z/
+    unless /\A[+-]?\d+\z/.match?(year)
       record.errors.add(:in_birth, :invalid, options.merge(value: value[:year]))
       return
     end
 
     month = value[:month]
-    unless month =~ /\A[+-]?\d+\z/
+    unless /\A[+-]?\d+\z/.match?(month)
       record.errors.add(:in_birth, :invalid, options.merge(value: value[:month]))
       return
     end
 
     day = value[:day]
-    unless day =~ /\A[+-]?\d+\z/
+    unless /\A[+-]?\d+\z/.match?(day)
       record.errors.add(:in_birth, :invalid, options.merge(value: value[:day]))
       return
     end

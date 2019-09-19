@@ -92,7 +92,6 @@ class Workflow::Mailer < ActionMailer::Base
 
   def site_sender(site)
     return if site.blank?
-
     site.sender_address
   end
 

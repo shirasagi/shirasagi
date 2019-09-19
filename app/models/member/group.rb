@@ -122,7 +122,7 @@ class Member::Group
     return if in_invitees.blank?
 
     in_invitees.split(/\r\n|\n/).each do |email|
-      unless Cms::Member::EMAIL_REGEX =~ email
+      unless Cms::Member::EMAIL_REGEX.match?(email)
         errors.add :base, :malformed_email, email: email
         next
       end

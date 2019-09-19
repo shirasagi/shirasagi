@@ -85,7 +85,6 @@ class Opendata::Dataset
 
   def contact_present?
     return false if member_id.present?
-
     super
   end
 
@@ -144,7 +143,6 @@ class Opendata::Dataset
     def to_dataset_path(path)
       suffix = %w(/point.html /point/members.html /apps/show.html /ideas/show.html).find { |suffix| path.end_with? suffix }
       return path if suffix.blank?
-
       path[0..(path.length - suffix.length - 1)] + '.html'
     end
 
@@ -165,11 +163,8 @@ class Opendata::Dataset
       when "attention"
         { downloaded: -1, _id: -1 }
       else
-        if sort.blank?
-          { released: -1 }
-        else
-          { sort.sub(/ .*/, "") => (sort.end_with?('-1') ? -1 : 1) }
-        end
+        return { released: -1 } if sort.blank?
+        { sort.sub(/ .*/, "") => (sort.end_with?('-1') ? -1 : 1) }
       end
     end
 
@@ -230,7 +225,6 @@ class Opendata::Dataset
         item = Opendata::DatasetGroup.where(_id: data['_id']).first
         next if item.blank?
         next if item.state != 'public'
-
         ["#{item.name}(#{data['count']})", data['_id']]
       end
       options.compact

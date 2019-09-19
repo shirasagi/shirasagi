@@ -26,6 +26,7 @@ module SS::AttachmentSupport
       # So, attachment is encoded manually
       #
       encoded = ::Mail::Encodings.decode_encode(file.name, :encode)
+
       part[:mime_type] = "#{content_type}; filename=\"#{encoded}\""
     end
     part[:transfer_encoding] = "base64"
