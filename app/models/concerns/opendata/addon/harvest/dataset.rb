@@ -76,7 +76,7 @@ module Opendata::Addon::Harvest::Dataset
       texts << text
     end
 
-    if harvest_api_type =~ /^ckan/
+    if /^ckan/.match?(harvest_api_type)
       texts += harvest_ckan_groups
       texts += harvest_ckan_tags
     end
