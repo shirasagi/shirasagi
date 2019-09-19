@@ -29,7 +29,7 @@ class Cms::Member
       name = info.email if name.blank? && info.email?
       name = "(no name)" if name.blank?
 
-      if name =~ EMAIL_REGEX
+      if EMAIL_REGEX.match?(name)
         authname = name.split(EMAIL_REGEX)
         name = name.gsub("@#{authname.last}", "")
       end
