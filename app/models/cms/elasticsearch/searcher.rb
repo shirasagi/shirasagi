@@ -4,9 +4,8 @@ class Cms::Elasticsearch::Searcher
 
   DEFAULT_FIELD_NAME = 'text_index'.freeze
 
-  attr_accessor :setting
-  attr_accessor :index, :type, :field_name
-  attr_accessor :keyword, :from, :size
+  attr_accessor :setting, :keyword
+  attr_writer :index, :type, :field_name, :from, :size
 
   permit_params :keyword
 

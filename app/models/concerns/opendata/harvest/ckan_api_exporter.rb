@@ -61,8 +61,7 @@ module Opendata::Harvest::CkanApiExporter
         exporter: self,
         dataset: dataset,
         uuid: dataset.uuid,
-
-        rel_id: result["id"],
+        rel_id: result["id"]
       }
       dataset_relation.attributes = attributes
       dataset_relation.update!
@@ -81,8 +80,7 @@ module Opendata::Harvest::CkanApiExporter
         exporter: self,
         dataset: dataset,
         uuid: dataset.uuid,
-
-        rel_id: result["id"],
+        rel_id: result["id"]
       }
       dataset_relation.attributes = attributes
       dataset_relation.save!
@@ -106,13 +104,9 @@ module Opendata::Harvest::CkanApiExporter
         attributes = {
           uuid: resource.uuid,
           revision_id: resource.revision_id,
-
           rel_id: resource_relation.rel_id,
-          rel_revision_id: resource.revision_id,
+          rel_revision_id: resource.revision_id
         }
-        resource_relation.attributes = attributes
-        resource_relation.update!
-
       else
         put_log "#{d_idx}-#{r_idx} : update resource #{resource.name} #{resource.uuid}"
 
@@ -127,13 +121,12 @@ module Opendata::Harvest::CkanApiExporter
         attributes = {
           uuid: resource.uuid,
           revision_id: resource.revision_id,
-
           rel_id: result["id"],
-          rel_revision_id: result["revision_id"],
+          rel_revision_id: result["revision_id"]
         }
-        resource_relation.attributes = attributes
-        resource_relation.update!
       end
+      resource_relation.attributes = attributes
+      resource_relation.update!
 
     else
       put_log "#{d_idx}-#{r_idx} : create resource #{resource.name} #{resource.uuid}"
@@ -151,9 +144,8 @@ module Opendata::Harvest::CkanApiExporter
         rel_dataset: dataset_relation,
         uuid: resource.uuid,
         revision_id: resource.revision_id,
-
         rel_id: result["id"],
-        rel_revision_id: result["revision_id"],
+        rel_revision_id: result["revision_id"]
       }
       resource_relation.attributes = attributes
       resource_relation.save!
@@ -250,7 +242,7 @@ module Opendata::Harvest::CkanApiExporter
       title: dataset.name,
       notes: dataset.text,
       metadata_created: dataset.created.utc.strftime('%Y-%m-%d %H:%M:%S'), # not accepted
-      metadata_modified: dataset.updated.utc.strftime('%Y-%m-%d %H:%M:%S'), # not accepted
+      metadata_modified: dataset.updated.utc.strftime('%Y-%m-%d %H:%M:%S') # not accepted
     }
     owner_org = dataset_owner_org(dataset)
     groups = dataset_groups(dataset)
@@ -270,7 +262,7 @@ module Opendata::Harvest::CkanApiExporter
       title: dataset.name,
       notes: dataset.text,
       metadata_created: dataset.created.utc.strftime('%Y-%m-%d %H:%M:%S'), # not accepted
-      metadata_modified: dataset.updated.utc.strftime('%Y-%m-%d %H:%M:%S'), # not accepted
+      metadata_modified: dataset.updated.utc.strftime('%Y-%m-%d %H:%M:%S') # not accepted
     }
     owner_org = dataset_owner_org(dataset)
     groups = dataset_groups(dataset)
@@ -286,12 +278,9 @@ module Opendata::Harvest::CkanApiExporter
   def resource_create_params(resource)
     params = {
       name: resource.name,
-      url: (resource.source_url.present? ? resource.source_url : resource.file.filename),
+      url: (resource.source_url.presence || resource.file.filename),
       description: resource.text,
-      format: resource.format,
-      #created: resource.created.utc.strftime('%Y-%m-%d %H:%M:%S'), # not accepted
-      #last_modified: resource.updated.utc.strftime('%Y-%m-%d %H:%M:%S'), # not accepted
-      #revision_id: resource.revision_id, # not accepted
+      format: resource.format
     }
     params
   end
@@ -299,12 +288,9 @@ module Opendata::Harvest::CkanApiExporter
   def resource_update_params(resource)
     params = {
       name: resource.name,
-      url: (resource.source_url.present? ? resource.source_url : resource.file.filename),
+      url: (resource.source_url.presence || resource.file.filename),
       description: resource.text,
-      format: resource.format,
-      #created: resource.created.utc.strftime('%Y-%m-%d %H:%M:%S'), # not accepted
-      #last_modified: resource.updated.utc.strftime('%Y-%m-%d %H:%M:%S'), # not accepted
-      #revision_id: resource.revision_id, # not accepted
+      format: resource.format
     }
     params
   end

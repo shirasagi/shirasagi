@@ -47,7 +47,8 @@ module Member::Addon::Photo
 
     def update_relation_image_member
       return unless member
-      image.update_attributes(member_id: member.id)
+      image.member_id = member.id
+      image.update
     end
   end
 end

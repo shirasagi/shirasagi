@@ -49,17 +49,22 @@ class History::Trash
       item.in_file = file
     end
     if opts[:create_by_trash]
-      if item.errors.blank? && item.save
-        if model.include?(Cms::Content)
-          src = item.path.sub("#{Rails.root}/public", "#{Rails.root}/private/trash")
-          Fs.mkdir_p(File.dirname(item.path))
-          Fs.mv(src, item.path) if Fs.exists?(src)
-        end
-        self.destroy
-      else
+      if item.errors.present?
         errors.add :base, item.errors.full_messages
         return false
       end
+
+      unless item.save
+        errors.add :base, item.errors.full_messages
+        return false
+      end
+
+      if model.include?(Cms::Content)
+        src = item.path.sub("#{Rails.root}/public", "#{Rails.root}/private/trash")
+        Fs.mkdir_p(File.dirname(item.path))
+        Fs.mv(src, item.path) if Fs.exists?(src)
+      end
+      self.destroy
     end
     item
   end

@@ -48,20 +48,16 @@ module Opendata::Addon::Harvest::Dataset
   end
 
   def harvest_shirasagi_categories
-    if harvest_api_type == "shirasagi_scraper"
-      shirasagi_categories = harvest_imported_attributes.dig("categories").to_a
-    else
-      shirasagi_categories = harvest_imported_attributes.dig("categories").to_a
+    shirasagi_categories = harvest_imported_attributes.dig("categories").to_a
+    if harvest_api_type != "shirasagi_scraper"
       shirasagi_categories = shirasagi_categories.map { |c| c["name"] }
     end
     shirasagi_categories
   end
 
   def harvest_shirasagi_areas
-    if harvest_api_type == "shirasagi_scraper"
-      shirasagi_areas = harvest_imported_attributes.dig("areas").to_a
-    else
-      shirasagi_areas = harvest_imported_attributes.dig("areas").to_a
+    shirasagi_areas = harvest_imported_attributes.dig("areas").to_a
+    if harvest_api_type != "shirasagi_scraper"
       shirasagi_areas = shirasagi_areas.map { |c| c["name"] }
     end
     shirasagi_areas
@@ -80,7 +76,7 @@ module Opendata::Addon::Harvest::Dataset
       texts << text
     end
 
-    if harvest_api_type =~ /^ckan/
+    if /^ckan/.match?(harvest_api_type)
       texts += harvest_ckan_groups
       texts += harvest_ckan_tags
     end

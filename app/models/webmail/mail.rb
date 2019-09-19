@@ -117,8 +117,8 @@ class Webmail::Mail
     return if limit.to_i <= 0
 
     if limit.to_i < size.to_i
-      errors.add :base,
-        I18n.t("errors.messages.too_large_mail_size", size: size.to_s(:human_size), limit: limit.to_s(:human_size))
+      message = I18n.t("errors.messages.too_large_mail_size", size: size.to_s(:human_size), limit: limit.to_s(:human_size))
+      errors.add :base, message
     end
   end
 

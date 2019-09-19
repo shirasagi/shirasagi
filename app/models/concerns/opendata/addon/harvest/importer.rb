@@ -6,7 +6,7 @@ module Opendata::Addon::Harvest
     include Opendata::Harvest::ShirasagiApiImporter
     include Opendata::Harvest::ShirasagiScrapingImporter
 
-    EXTERNAL_RESOUCE_FORMAT = %w(html htm)
+    EXTERNAL_RESOUCE_FORMAT = %w(html htm).freeze
 
     def import
       if api_type == "ckan"
@@ -108,7 +108,12 @@ module Opendata::Addon::Harvest
 
       # area
       dataset.area_ids = self.default_area_ids
-      put_log("- set category_ids #{dataset.category_ids.join(", ")} estat_category_ids #{dataset.estat_category_ids.join(", ")} area_ids #{dataset.area_ids.join(", ")}")
+
+      message = "- "
+      message += "set category_ids #{dataset.category_ids.join(", ")} "
+      message += "estat_category_ids #{dataset.estat_category_ids.join(", ")} "
+      message += "area_ids #{dataset.area_ids.join(", ")}"
+      put_log(message)
 
       def dataset.set_updated; end
       dataset.save!

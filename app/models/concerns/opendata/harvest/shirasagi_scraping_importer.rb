@@ -78,9 +78,9 @@ module Opendata::Harvest::ShirasagiScrapingImporter
     # destroy unimported datasets
     dataset_ids = ::Opendata::Dataset.site(site).node(node).where(
       "harvest_api_type" => api_type,
-      "harvest_host" => source_host,
+      "harvest_host" => source_host
     ).pluck(:id)
-    dataset_ids = dataset_ids - imported_dataset_ids
+    dataset_ids -= imported_dataset_ids
     dataset_ids.each do |id|
       dataset = ::Opendata::Dataset.find(id) rescue nil
       next unless dataset
@@ -183,7 +183,9 @@ module Opendata::Harvest::ShirasagiScrapingImporter
     resource.license = license
 
     def resource.set_updated; end
+
     def resource.compression_dataset; end
+
     resource.created = dataset.created
     resource.updated = dataset.updated
 

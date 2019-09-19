@@ -55,14 +55,14 @@ class Cms::Column::Value::Free < Cms::Column::Value::Base
           clone_file.state = _parent.state
           result = clone_file.save(validate: false)
 
-          if result
-            cloned_file_ids << clone_file.id
+          next unless result
 
-            cloned_value = self.value
-            cloned_value.gsub!("=\"#{source_file.url}\"", "=\"#{clone_file.url}\"")
-            cloned_value.gsub!("=\"#{source_file.thumb_url}\"", "=\"#{clone_file.thumb_url}\"")
-            self.value = cloned_value
-          end
+          cloned_file_ids << clone_file.id
+
+          cloned_value = self.value
+          cloned_value.gsub!("=\"#{source_file.url}\"", "=\"#{clone_file.url}\"")
+          cloned_value.gsub!("=\"#{source_file.thumb_url}\"", "=\"#{clone_file.thumb_url}\"")
+          self.value = cloned_value
         end
       end
 

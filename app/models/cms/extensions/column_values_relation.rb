@@ -14,7 +14,7 @@ module Cms::Extensions::ColumnValuesRelation
       if id_or_name.is_a?(Integer)
         @delegatee[id_or_name]
       else
-        @delegatee.find { |val| val.id.to_s == id_or_name || val.name == id_or_name }
+        @delegatee.find { |val| [val.id.to_s, val.name].include?(id_or_name) }
       end
     end
 

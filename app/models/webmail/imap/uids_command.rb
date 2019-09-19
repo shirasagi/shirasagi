@@ -113,7 +113,7 @@ module Webmail::Imap::UidsCommand
   def uids_size(uids)
     size = 0
     uids.split(/,/).each do |uid|
-      if uid =~ /:/
+      if /:/.match?(uid)
         arr = uid.split(/:/)
         size += arr[1].to_i - arr[0].to_i + 1
       else

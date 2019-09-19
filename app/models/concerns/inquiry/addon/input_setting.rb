@@ -79,13 +79,13 @@ module Inquiry::Addon
     private
 
     def validate_select_options
-      if input_type =~ /(select|radio_button|check_box|form_select)/
+      if /(select|radio_button|check_box|form_select)/.match?(input_type)
         errors.add :select_options, :blank if select_options.blank?
       end
     end
 
     def validate_input_confirm_options
-      if input_type =~ /(select|radio_button|check_box|text_area|upload_file)/ && input_confirm == 'enabled'
+      if /(select|radio_button|check_box|text_area|upload_file)/.match?(input_type) && input_confirm == 'enabled'
         errors.add :input_confirm, :invalid_input_type_for_input_confirm, input_type: label(:input_type)
       end
     end

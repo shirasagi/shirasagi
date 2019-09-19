@@ -502,7 +502,7 @@ class Webmail::UserExport
   end
 
   def purge_webmail_caches
-    Webmail::Mail.all.each(&:destroy_rfc822)
+    Webmail::Mail.all.find_each(&:destroy_rfc822)
     Webmail::Mail.all.delete_all
     Webmail::Mailbox.all.delete_all
   end

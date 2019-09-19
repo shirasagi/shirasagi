@@ -39,8 +39,15 @@ module Opendata::AppSearchable
 
       option = params[:option].presence || 'all_keywords'
       method = option == 'all_keywords' ? 'and' : 'any'
-      all.keyword_in params[:keyword],
-        :name, :text, "appfiles.name", "appfiles.filename", "appfiles.text", method: method
+      all.keyword_in(
+        params[:keyword],
+        :name,
+        :text,
+        "appfiles.name",
+        "appfiles.filename",
+        "appfiles.text",
+        method: method
+      )
     end
 
     def search_name(params)
