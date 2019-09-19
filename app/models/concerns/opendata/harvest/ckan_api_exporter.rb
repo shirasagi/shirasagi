@@ -107,9 +107,6 @@ module Opendata::Harvest::CkanApiExporter
           rel_id: resource_relation.rel_id,
           rel_revision_id: resource.revision_id
         }
-        resource_relation.attributes = attributes
-        resource_relation.update!
-
       else
         put_log "#{d_idx}-#{r_idx} : update resource #{resource.name} #{resource.uuid}"
 
@@ -127,9 +124,9 @@ module Opendata::Harvest::CkanApiExporter
           rel_id: result["id"],
           rel_revision_id: result["revision_id"]
         }
-        resource_relation.attributes = attributes
-        resource_relation.update!
       end
+      resource_relation.attributes = attributes
+      resource_relation.update!
 
     else
       put_log "#{d_idx}-#{r_idx} : create resource #{resource.name} #{resource.uuid}"
