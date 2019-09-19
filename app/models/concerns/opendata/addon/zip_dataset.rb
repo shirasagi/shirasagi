@@ -44,7 +44,7 @@ module Opendata::Addon::ZipDataset
             file.rewind
             files << [name, file]
           else
-            name = "#{resource.file.name.split(".").join("-#{resource.id}.")}"
+            name = resource.file.name.split(".").join("-#{resource.id}.").to_s
             files << [name, resource.file]
           end
         end
