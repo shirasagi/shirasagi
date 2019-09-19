@@ -103,7 +103,7 @@ module Opendata::Resource::Previewable
       next if lat < -90.0 || lat > 90.0
       next if lon < -180.0 || lat > 180.0
 
-      map_points <<  { "name" => name, "loc" => [ lat, lon ] }
+      map_points << { "name" => name, "loc" => [ lat, lon ] }
     end
     map_points
   end
