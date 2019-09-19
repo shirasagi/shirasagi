@@ -273,7 +273,7 @@ module Gws::Addon::Import::Facility
       item.reservable_group_ids = group_names_to_ids(reservable_group_names)
       item.reservable_member_ids = user_names_to_ids(reservable_member_names)
 
-      item.readable_setting_range =  readable_setting_range_datas_text_to_value(readable_setting_range)
+      item.readable_setting_range = readable_setting_range_datas_text_to_value(readable_setting_range)
 
       item.text_type = type_datas_text_to_value(text_type)
       item.text = text
@@ -376,9 +376,9 @@ module Gws::Addon::Import::Facility
         column.additional_attr = value[:additional_attr].to_s.strip
         column.place_holder = value[:place_holder].to_s.strip
       when Gws::Column::NumberField
-        column.min_decimal =  value[:min_decimal].to_s.strip
-        column.max_decimal =  value[:max_decimal].to_s.strip
-        column.initial_decimal =  value[:initial_decimal].to_s.strip
+        column.min_decimal = value[:min_decimal].to_s.strip
+        column.max_decimal = value[:max_decimal].to_s.strip
+        column.initial_decimal = value[:initial_decimal].to_s.strip
         column.scale = value[:scale].to_s.strip
         column.minus_type = minus_type_datas_text_to_value(value[:minus_type].to_s.strip)
         column.max_length = value[:max_length].to_s.strip
