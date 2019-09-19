@@ -28,7 +28,7 @@ module SS::Relation::Thumb
   def thumb(key = nil)
     if key.nil?
       normal = thumbs.where(image_size_name: :normal).first
-      normal ? normal : thumbs.first
+      normal || thumbs.first
     elsif key.kind_of?(Array)
       thumbs.where(image_size: key).first
     else
