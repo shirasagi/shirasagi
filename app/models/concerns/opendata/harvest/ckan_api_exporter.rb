@@ -61,8 +61,7 @@ module Opendata::Harvest::CkanApiExporter
         exporter: self,
         dataset: dataset,
         uuid: dataset.uuid,
-
-        rel_id: result["id"],
+        rel_id: result["id"]
       }
       dataset_relation.attributes = attributes
       dataset_relation.update!
@@ -81,8 +80,7 @@ module Opendata::Harvest::CkanApiExporter
         exporter: self,
         dataset: dataset,
         uuid: dataset.uuid,
-
-        rel_id: result["id"],
+        rel_id: result["id"]
       }
       dataset_relation.attributes = attributes
       dataset_relation.save!
@@ -127,9 +125,8 @@ module Opendata::Harvest::CkanApiExporter
         attributes = {
           uuid: resource.uuid,
           revision_id: resource.revision_id,
-
           rel_id: result["id"],
-          rel_revision_id: result["revision_id"],
+          rel_revision_id: result["revision_id"]
         }
         resource_relation.attributes = attributes
         resource_relation.update!
@@ -151,9 +148,8 @@ module Opendata::Harvest::CkanApiExporter
         rel_dataset: dataset_relation,
         uuid: resource.uuid,
         revision_id: resource.revision_id,
-
         rel_id: result["id"],
-        rel_revision_id: result["revision_id"],
+        rel_revision_id: result["revision_id"]
       }
       resource_relation.attributes = attributes
       resource_relation.save!
