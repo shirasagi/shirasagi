@@ -242,7 +242,7 @@ module Opendata::Harvest::CkanApiExporter
       title: dataset.name,
       notes: dataset.text,
       metadata_created: dataset.created.utc.strftime('%Y-%m-%d %H:%M:%S'), # not accepted
-      metadata_modified: dataset.updated.utc.strftime('%Y-%m-%d %H:%M:%S'), # not accepted
+      metadata_modified: dataset.updated.utc.strftime('%Y-%m-%d %H:%M:%S') # not accepted
     }
     owner_org = dataset_owner_org(dataset)
     groups = dataset_groups(dataset)
@@ -262,7 +262,7 @@ module Opendata::Harvest::CkanApiExporter
       title: dataset.name,
       notes: dataset.text,
       metadata_created: dataset.created.utc.strftime('%Y-%m-%d %H:%M:%S'), # not accepted
-      metadata_modified: dataset.updated.utc.strftime('%Y-%m-%d %H:%M:%S'), # not accepted
+      metadata_modified: dataset.updated.utc.strftime('%Y-%m-%d %H:%M:%S') # not accepted
     }
     owner_org = dataset_owner_org(dataset)
     groups = dataset_groups(dataset)
@@ -280,10 +280,7 @@ module Opendata::Harvest::CkanApiExporter
       name: resource.name,
       url: (resource.source_url.present? ? resource.source_url : resource.file.filename),
       description: resource.text,
-      format: resource.format,
-      #created: resource.created.utc.strftime('%Y-%m-%d %H:%M:%S'), # not accepted
-      #last_modified: resource.updated.utc.strftime('%Y-%m-%d %H:%M:%S'), # not accepted
-      #revision_id: resource.revision_id, # not accepted
+      format: resource.format
     }
     params
   end
@@ -293,10 +290,7 @@ module Opendata::Harvest::CkanApiExporter
       name: resource.name,
       url: (resource.source_url.present? ? resource.source_url : resource.file.filename),
       description: resource.text,
-      format: resource.format,
-      #created: resource.created.utc.strftime('%Y-%m-%d %H:%M:%S'), # not accepted
-      #last_modified: resource.updated.utc.strftime('%Y-%m-%d %H:%M:%S'), # not accepted
-      #revision_id: resource.revision_id, # not accepted
+      format: resource.format
     }
     params
   end
