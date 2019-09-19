@@ -54,7 +54,7 @@ class History::Trash
         return false
       end
 
-      if item.save
+      unless item.save
         errors.add :base, item.errors.full_messages
         return false
       end
