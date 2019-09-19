@@ -304,8 +304,13 @@ module Gws::Addon::Import::Facility
 
     def update_columns(row, index, item)
       columns_setting = I18n.t("modules.addons.gws/facility/column_setting")
+
       column_with_index = row.select { |header_key, _v| header_key =~ /\A#{columns_setting}/ }.to_h
-        .group_by { |k, v| k =~ /\A#{columns_setting}([0-9]+)/; $1 }
+      column_with_index = column_with_index.group_by do |k, v|
+        k =~ /\A#{columns_setting}([0-9]+)/
+        $1
+      end
+
       datas = column_with_index.each_with_object({}) do |(key, value), hash|
         hash[key] = value.each_with_object({}) do |(k, v), h|
           text_key, _text_value = I18n.t("gws/facility/item.csv.columns").find do |key, value|
