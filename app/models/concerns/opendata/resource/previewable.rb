@@ -22,7 +22,7 @@ module Opendata::Resource::Previewable
     elsif xls_present?
       sp = parse_xls
       if sp
-        sp.sheets.each_with_index do|sheet, page|
+        sp.sheets.each_with_index do |sheet, page|
           Timeout.timeout(10) do
             csv = CSV.parse(sp.sheet(page).to_csv)
           end
