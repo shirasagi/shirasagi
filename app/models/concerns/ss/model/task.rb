@@ -145,7 +145,7 @@ module SS::Model::Task
   def head_logs(n = 1_000)
     if log_file_path && ::File.exists?(log_file_path)
       texts = []
-      open(log_file_path) do |f|
+      ::File.open(log_file_path) do |f|
         n.times do
           line = f.gets || break
           texts << line.chomp
