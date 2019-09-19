@@ -56,7 +56,7 @@ module Opendata::Addon::ExportPublicEntityFormat
 
       Enumerator.new do |data|
         data << encode_sjis_csv(I18n.t("opendata.public_entity.headers"))
-        dataset_ids.each_with_index do |dataset_id|
+        dataset_ids.each do |dataset_id|
           dataset = Opendata::Dataset.find(dataset_id) rescue nil
           next unless dataset
 
