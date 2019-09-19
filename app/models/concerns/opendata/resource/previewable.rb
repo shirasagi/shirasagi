@@ -33,7 +33,6 @@ module Opendata::Resource::Previewable
         end
       end
     end
-
   rescue => e
     logger.warn("#{e.class} (#{e.message}):\n  #{e.backtrace.join("\n  ")}")
     puts("#{e.class} (#{e.message}):\n  #{e.backtrace.join("\n  ")}")
