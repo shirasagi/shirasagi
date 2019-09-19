@@ -109,7 +109,7 @@ module Opendata::Addon::ExportPublicEntityFormat
           row << resources.map { |r| r.license.name }.uniq.join("\n")
           row << dataset.created.strftime("%Y-%m-%d")
           row << dataset.updated.strftime("%Y-%m-%d")
-          row << resources.map { |r| (r.source_url.present? ? r.source_url : r.name) }.uniq.join("\n")
+          row << resources.map { |r| (r.source_url.presence || r.name) }.uniq.join("\n")
 
           data << encode_sjis_csv(row)
         end
