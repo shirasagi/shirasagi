@@ -118,7 +118,7 @@ module Facility::Node
       conditions.each do |url|
         node = Cms::Node.site(cur_site || site).filename(url).first rescue nil
         next unless node
-        cond << { filename: /^#{node.filename}\//, depth: node.depth + 1 }
+        cond << { filename: /^#{::Regexp.escape(node.filename)}\//, depth: node.depth + 1 }
       end
 
       { '$or' => cond }
@@ -145,7 +145,7 @@ module Facility::Node
       conditions.each do |url|
         node = Cms::Node.site(cur_site || site).filename(url).first rescue nil
         next unless node
-        cond << { filename: /^#{node.filename}\//, depth: node.depth + 1 }
+        cond << { filename: /^#{::Regexp.escape(node.filename)}\//, depth: node.depth + 1 }
         cids << node.id
       end
       cond << { :category_ids.in => cids } if cids.present?
@@ -173,7 +173,7 @@ module Facility::Node
       conditions.each do |url|
         node = Cms::Node.site(cur_site || site).filename(url).first rescue nil
         next unless node
-        cond << { filename: /^#{node.filename}\//, depth: node.depth + 1 }
+        cond << { filename: /^#{::Regexp.escape(node.filename)}\//, depth: node.depth + 1 }
         cids << node.id
       end
       cond << { :service_ids.in => cids } if cids.present?
@@ -203,7 +203,7 @@ module Facility::Node
       conditions.each do |url|
         node = Cms::Node.site(cur_site || site).filename(url).first rescue nil
         next unless node
-        cond << { filename: /^#{node.filename}\//, depth: node.depth + 1 }
+        cond << { filename: /^#{::Regexp.escape(node.filename)}\//, depth: node.depth + 1 }
         cids << node.id
       end
       cond << { :location_ids.in => cids } if cids.present?

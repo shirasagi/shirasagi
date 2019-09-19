@@ -177,7 +177,7 @@ module Member::Node
       conditions.each do |url|
         node = Cms::Node.site(cur_site || site).filename(url).first rescue nil
         next unless node
-        cond << { filename: /^#{node.filename}\//, depth: node.depth + 1 }
+        cond << { filename: /^#{::Regexp.escape(node.filename)}\//, depth: node.depth + 1 }
         cids << node.id
       end
       cond << { :blog_page_location_ids.in => cids } if cids.present?
@@ -250,7 +250,7 @@ module Member::Node
       conditions.each do |url|
         node = Cms::Node.site(cur_site || site).filename(url).first rescue nil
         next unless node
-        cond << { filename: /^#{node.filename}\//, depth: node.depth + 1 }
+        cond << { filename: /^#{::Regexp.escape(node.filename)}\//, depth: node.depth + 1 }
         cids << node.id
       end
       cond << { :photo_category_ids.in => cids } if cids.present?
@@ -280,7 +280,7 @@ module Member::Node
       conditions.each do |url|
         node = Cms::Node.site(cur_site || site).filename(url).first rescue nil
         next unless node
-        cond << { filename: /^#{node.filename}\//, depth: node.depth + 1 }
+        cond << { filename: /^#{::Regexp.escape(node.filename)}\//, depth: node.depth + 1 }
         cids << node.id
       end
       cond << { :photo_location_ids.in => cids } if cids.present?
