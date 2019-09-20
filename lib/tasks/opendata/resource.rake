@@ -7,7 +7,7 @@ namespace :opendata do
         next unless resource.file
         puts "  #{resource.filename}"
         begin
-          Fs.binwrite resource.path, resource.file.data
+          Fs.binwrite resource.path, resource.file.read
         rescue => e
           puts "Error: #{e}"
         end
