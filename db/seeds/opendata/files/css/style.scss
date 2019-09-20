@@ -950,7 +950,7 @@ textarea {
 }
 // -----------------------------------------------------------------------------
 // categories
-.categories {
+div.categories, nav.categories {
   margin-top: 15px;
   @include display-flex;
   @include flex-wrap(wrap);
@@ -1350,6 +1350,45 @@ textarea {
     }
   }
 }
+.body--dataset {
+  .related-pages, .contact {
+    h2 {
+      @include midashi-dataset;
+    }
+  }
+}
+.body--app {
+  .related-pages, .contact {
+    h2 {
+      @include midashi-app;
+    }
+  }
+}
+.body--idea {
+  .related-pages, .contact {
+    h2 {
+      @include midashi-idea;
+    }
+  }
+}
+.body--dataset, .body--app, .body--idea {
+  .related-pages {
+    ul {
+      margin: 0 0 $box-margin 25px;
+    }
+    h2 {
+      margin-bottom: $item-margin;
+    }
+  }
+  .related-pages, .contact {
+    h2 {
+      border-bottom: none;
+    }
+  }
+}
+
+
+
 // -----------------------------------------------------------------------------
 // portal
 // -----------------------------------------------------------------------------
@@ -1498,7 +1537,10 @@ textarea {
       font-weight: bold;
     }
   }
-  .map-page {
+  .related-pages ul {
+    margin: 0 0 $box-margin 25px;
+  }
+  .related-pages, .map-page, .contact{
     margin-bottom: $box-margin;
     h2 {
       margin-bottom: $item-margin;
