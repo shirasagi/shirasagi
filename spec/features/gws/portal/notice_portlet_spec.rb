@@ -4,7 +4,7 @@ describe "gws_portal_portlet", type: :feature, dbscope: :example, js: true do
   let(:site) { gws_site }
   let(:user) { gws_user }
   let!(:notice_folder) { create(:gws_notice_folder) }
-  let!(:notice_post) { create(:gws_notice_post, folder_id: notice_folder) }
+  let!(:notice_post) { create(:gws_notice_post, severity: 'high', folder_id: notice_folder) }
 
   before do
     login_gws_user
@@ -16,6 +16,14 @@ describe "gws_portal_portlet", type: :feature, dbscope: :example, js: true do
     click_on I18n.t('ss.links.new')
     within '.main-box' do
       click_on I18n.t('gws/portal.portlets.notice.name')
+    end
+    within 'form#item-form' do
+      select I18n.t('gws.options.severity.high')
+      select I18n.t('gws/board.options.browsed_state.unread')
+      click_link I18n.t('gws/share.apis.folders.index')
+    end
+    wait_for_cbox do
+      click_link notice_folder.name
     end
     within 'form#item-form' do
       click_on I18n.t('ss.buttons.save')

@@ -43,12 +43,21 @@ class Gws::Notice::Post
 
   class << self
     def search(params)
-      all.search_keyword(params).search_folders(params).search_category(params).search_browsed_state(params)
+      all.search_keyword(params).
+        search_severity(params).
+        search_folders(params).
+        search_category(params).
+        search_browsed_state(params)
     end
 
     def search_keyword(params)
       return all if params.blank? || params[:keyword].blank?
       all.keyword_in(params[:keyword], :name, :html)
+    end
+
+    def search_severity(params)
+      return all if params.blank? || params[:severity].blank?
+      all.where(severity: params[:severity])
     end
 
     def search_folders(params)
