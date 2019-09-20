@@ -5,8 +5,9 @@ class SS::Migration20190830000000
 
   def change
     Member::Node::Registration.each do |node|
-      attr = {}
+      next unless node.site
 
+      attr = {}
       subject = node[:subject]
       if subject.present? && node.reply_subject.blank?
         attr[:reply_subject] = subject
@@ -22,7 +23,7 @@ class SS::Migration20190830000000
 
       next if attr.blank?
       node.attributes = attr
-      node.save!
+      node.save
     end
   end
 end
