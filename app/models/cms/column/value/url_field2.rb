@@ -66,11 +66,12 @@ class Cms::Column::Value::UrlField2 < Cms::Column::Value::Base
 
     site = _parent.site || _parent.instance_variable_get(:@cur_site)
 
-    u = URI.parse(link_url)
+    encoded_link_url = URI.encode(link_url)
+    u = URI.parse(encoded_link_url)
     if u.relative?
       node = _parent.parent
       base_url = node ? node.full_url : site.full_url
-      u = URI.join(base_url, link_url)
+      u = URI.join(base_url, encoded_link_url)
     end
 
     searches = [ "#{u.host}:#{u.port}" ]
