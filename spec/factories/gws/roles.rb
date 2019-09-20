@@ -101,6 +101,29 @@ FactoryBot.define do
     end
   end
 
+  trait :gws_role_board_user do
+    after(:build) do |item|
+      item.permissions += %w(
+        use_gws_board
+      )
+    end
+  end
+
+  trait :gws_role_board_admin do
+    after(:build) do |item|
+      item.permissions += %w(
+        use_gws_board
+        read_private_gws_board_topics
+        edit_private_gws_board_topics
+        delete_private_gws_board_topics
+        trash_private_gws_board_topics
+        read_private_gws_board_categories
+        edit_private_gws_board_categories
+        delete_private_gws_board_categories
+      )
+    end
+  end
+
   factory :gws_role, class: Gws::Role, traits: [:gws_role]
 
   factory :gws_role_admin, class: Gws::Role, traits: [:gws_role, :gws_role_admin]
