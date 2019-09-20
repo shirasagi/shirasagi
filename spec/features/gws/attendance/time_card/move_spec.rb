@@ -85,4 +85,30 @@ describe "gws_attendance_time_card", type: :feature, dbscope: :example, js: true
       end
     end
   end
+
+  describe "https://github.com/shirasagi/shirasagi/issues/3208" do
+    it do
+      visit gws_attendance_main_path(site)
+
+      within ".nav-group" do
+        click_on I18n.t("gws/attendance.next_month")
+      end
+
+      within ".mod-navi.current-navi" do
+        click_on I18n.t('modules.gws/attendance/management/time_card')
+      end
+
+      within ".breadcrumb" do
+        expect(page).to have_link(I18n.t('modules.gws/attendance/management/time_card'))
+      end
+      within "#menu" do
+        expect(page).to have_link(I18n.t('gws/attendance.links.lock'))
+      end
+      within ".list-items" do
+        month = I18n.l(now.to_date, format: :attendance_year_month)
+        title = I18n.t('gws/attendance.formats.time_card_full_name', user_name: user.name, month: month)
+        expect(page).to have_link(title)
+      end
+    end
+  end
 end
