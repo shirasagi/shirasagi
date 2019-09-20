@@ -1,41 +1,9 @@
 namespace :opendata do
-  task export_resources: :environment do
-    Opendata::Dataset.each do |dataset|
-      next if dataset.resources.blank?
-      puts dataset.name
-      dataset.resources.each do |resource|
-        next unless resource.file
-        puts "  #{resource.filename}"
-        begin
-          Fs.binwrite resource.path, resource.file.read
-        rescue => e
-          puts "Error: #{e}"
-        end
-      end
-    end
-  end
-
   task update_resource_histories: :environment do
     Opendata::ResourceDownloadHistory.update_histories
     Opendata::ResourceDatasetDownloadHistory.update_histories
     Opendata::ResourceBulkDownloadHistory.update_histories
     Opendata::ResourcePreviewHistory.update_histories
-  end
-
-  task fuseki_import: :environment do
-    Opendata::Dataset.each do |dataset|
-      next if dataset.resources.blank?
-      puts dataset.name
-      dataset.resources.each do |resource|
-        next unless resource.file
-        puts "  #{resource.filename}"
-        begin
-          resource.save_rdf_store
-        rescue => e
-          puts "Error: #{e}"
-        end
-      end
-    end
   end
 
   task fuseki_clear: :environment do
