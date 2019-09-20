@@ -2122,7 +2122,7 @@ div.index {
 .list-head {
   @include clear;
   margin: 0 0 10px;
-  padding: 18px 10px;
+  padding: 10px 18px;
   border-bottom: $border-gray1;
   font-weight: bold;
   @include mb { padding: 10px 20px; }
