@@ -160,6 +160,25 @@ describe "gws_survey", type: :feature, dbscope: :example, js: true do
       within ".gws-survey" do
         expect(page).to have_css("dd", text: csv.length)
       end
+
+      #
+      # delete_all
+      #
+      within ".current-navi" do
+        click_on "管理一覧"
+      end
+
+      within ".list-items" do
+        expect(page).to have_css(".info", text: form_name)
+        find("input[value]").check
+      end
+
+      within '.list-head' do
+        page.accept_confirm do
+          click_button I18n.t('ss.links.delete')
+        end
+      end
+      expect(page).to have_css("#notice", text: I18n.t("ss.notice.deleted"))
     end
   end
 end
