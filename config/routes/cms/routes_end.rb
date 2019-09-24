@@ -107,8 +107,7 @@ Rails.application.routes.draw do
     resources :word_dictionaries, concerns: [:deletion, :template]
     resources :forms, concerns: [:deletion] do
       resources :init_columns, concerns: [:deletion]
-      resources :columns, concerns: [:deletion], except: [:new, :create]
-      resources :columns, path: 'columns/:type', only: [:new, :create], as: 'columns_type'
+      resources :columns, concerns: [:deletion]
     end
     resources :notices, concerns: [:deletion, :copy]
     resources :public_notices, concerns: [:deletion, :copy]
