@@ -315,12 +315,14 @@ module SS::Model::File
   end
 
   def create_history_trash
+    return if owner_item_type.to_s.start_with?('Gws', 'Sns', 'SS', 'Sys', 'Webmail')
+
     backup = History::Trash.new
     backup.ref_coll = collection_name
     backup.ref_class = self.class.to_s
     backup.data = attributes
     backup.site = self.site
-    backup.save
+    return unless backup.save
     return unless File.exists?(path)
     trash_path = "#{Rails.root}/private/trash/#{path.sub(/.*\/(ss_files\/)/, '\\1')}"
     FileUtils.mkdir_p(File.dirname(trash_path))
