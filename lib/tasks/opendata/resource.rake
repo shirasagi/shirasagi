@@ -6,6 +6,22 @@ namespace :opendata do
     Opendata::ResourcePreviewHistory.update_histories
   end
 
+  task fuseki_import: :environment do
+    Opendata::Dataset.each do |dataset|
+      next if dataset.resources.blank?
+      puts dataset.name
+      dataset.resources.each do |resource|
+        next unless resource.file
+        puts "  #{resource.filename}"
+        begin
+          resource.state_changed
+        rescue => e
+          puts "Error: #{e}"
+        end
+      end
+    end
+  end
+
   task fuseki_clear: :environment do
     Opendata::Sparql.clear_all
   end
