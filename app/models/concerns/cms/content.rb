@@ -85,10 +85,14 @@ module Cms::Content
       end
       export :current? do |context|
         # ApplicationHelper#current_url?
-        current = context.registers[:cur_path].sub(/\?.*/, "")
-        break false if current.delete("/").blank?
-        break true if self.url.sub(/\/index\.html$/, "/") == current.sub(/\/index\.html$/, "/")
-        break true if current =~ /^#{::Regexp.escape(url)}(\/|\?|$)/
+        cur_path = context.registers[:cur_path]
+        next false if cur_path.blank?
+
+        current = cur_path.sub(/\?.*/, "")
+        next false if current.delete("/").blank?
+        next true if self.url.sub(/\/index\.html$/, "/") == current.sub(/\/index\.html$/, "/")
+        next true if current =~ /^#{::Regexp.escape(url)}(\/|\?|$)/
+
         false
       end
     end
