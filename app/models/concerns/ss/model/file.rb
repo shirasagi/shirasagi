@@ -315,6 +315,7 @@ module SS::Model::File
   end
 
   def create_history_trash
+    return if model.to_s.include?('temp_file')
     return if owner_item_type.to_s.start_with?('Gws', 'Sns', 'SS', 'Sys', 'Webmail')
 
     backup = History::Trash.new
