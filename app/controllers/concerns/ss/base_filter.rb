@@ -142,21 +142,22 @@ module SS::BaseFilter
     @logout_path = session[:logout_path].presence
   end
 
-  def rescue_action(e)
+  def rescue_action(exception)
     begin
       # below codes may cause "invalid byte sequence in UTF-8" error or other errors in some cases.
       # So, it is required to wrap around begin, rescue and end.
-      if e.to_s =~ /^\d+$/
+      if exception.to_s.numeric?
         status = e.to_s.to_i
         file = error_html_file(status)
         return ss_send_file(file, status: status, type: Fs.content_type(file), disposition: :inline)
       end
 
-      return render_job_size_limit(e) if e.is_a?(Job::SizeLimitPerUserExceededError)
-    rescue
+      return render_job_size_limit(exception) if exception.is_a?(Job::SizeLimitPerUserExceededError)
+    rescue => e
+      Rails.logger.info("#{e.class} (#{e.message}):\n  #{e.backtrace.join("\n  ")}")
     end
 
-    raise e
+    raise exception
   end
 
   def error_html_file(status)
