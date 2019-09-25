@@ -3,11 +3,11 @@ module Cms::Content
   extend SS::Translation
   include SS::Document
   include Cms::TemplateVariable
+  include SS::Liquidization
   include SS::Reference::User
   include SS::Reference::Site
   include Cms::GroupPermission
   include Cms::Addon::CheckLinks
-  include SS::Liquidization
   include Fs::FilePreviewable
   include History::Addon::Trash
 
