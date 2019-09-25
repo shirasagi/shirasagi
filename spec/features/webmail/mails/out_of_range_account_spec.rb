@@ -15,8 +15,7 @@ describe "webmail_mails", type: :feature, dbscope: :example, imap: true do
   end
 
   it do
-    expect do
-      visit webmail_mails_path(webmail_mode: 'group', account: Webmail::Group.all.max(:id) + 1, mailbox: "INBOX")
-    end.to raise_error Mongoid::Errors::DocumentNotFound
+    visit webmail_mails_path(webmail_mode: 'group', account: Webmail::Group.all.max(:id) + 1, mailbox: "INBOX")
+    expect(page).to have_title("404")
   end
 end

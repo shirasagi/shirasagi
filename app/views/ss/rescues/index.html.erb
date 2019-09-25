@@ -1,0 +1,26 @@
+<div class="addon-views">
+  <% status_symbol = status_code_to_symbol(@ss_rescue[:status]) %>
+  <%= render "ss/crud/addon", addon: { id: "addon-basic", head: I18n.t("ss.rescues.#{status_symbol}.head", default: nil) || I18n.t("ss.rescues.default.head") } do %>
+    <div>
+      <%== I18n.t("ss.rescues.#{status_symbol}.body", default: nil) || I18n.t("ss.rescues.default.body") %>
+    </div>
+  <% end %>
+
+  <% if @wrapper.present? %>
+    <%= render "ss/crud/addon", addon: { id: "addon-diagnostics", head: t("ss.diagnostics"), toggle: true } do %>
+      <%= render "ss/rescues/diagnostics" %>
+    <% end %>
+  <% end %>
+</div>
+
+<footer class="send">
+  <% if @ss_mode == :cms && @cur_site %>
+    <%= link_to t("ss.links.back"), cms_main_path(site: @cur_site), class: 'btn btn-default' %>
+  <% elsif @ss_mode == :gws && @cur_site %>
+    <%= link_to t("ss.links.back"), gws_portal_path(site: @cur_site), class: 'btn btn-default' %>
+  <% elsif @ss_mode == :webmail %>
+    <%= link_to t("ss.links.back"), webmail_main_path, class: 'btn btn-default' %>
+  <% else %>
+    <%= link_to t("ss.links.back"), sns_mypage_path, class: 'btn btn-default' %>
+  <% end %>
+</footer>

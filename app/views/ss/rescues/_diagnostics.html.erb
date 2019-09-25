@@ -1,0 +1,32 @@
+<%
+  traces = @wrapper.traces
+
+  trace_to_show = "Application Trace"
+  trace_to_show = "Full Trace" if traces[trace_to_show].empty?
+  source_to_show = traces[trace_to_show].first
+
+  source_to_show_id = source_to_show[:id] if source_to_show
+
+  source_extracts = @wrapper.source_extracts
+%>
+<dl class="see">
+  <dt>Place</dt>
+  <dd>
+    <%= @wrapper.exception.class.to_s %>
+    <% if request.parameters['controller'] %>
+      in <%= request.parameters['controller'].camelize %>Controller<% if request.parameters['action'] %>#<%= request.parameters['action'] %><% end %>
+    <% end %>
+  </dd>
+
+  <dt>Message</dt>
+  <dd><%= h @wrapper.exception.message %></dd>
+
+  <dt>Source</dt>
+  <dd><%= render "ss/rescues/source", traces: traces, source_to_show_id: source_to_show_id, source_extracts: source_extracts %></dd>
+
+  <dt>Rails.root</dt>
+  <dd><code><%= defined?(Rails) && Rails.respond_to?(:root) ? Rails.root : "unset" %></code></dd>
+
+  <dt>Trace</dt>
+  <dd><%= render "ss/rescues/trace", traces: traces, trace_to_show: trace_to_show %></dd>
+</dl>

@@ -216,4 +216,13 @@ module ApplicationHelper
     # '<img style="vertical-align:middle" src="/assets/img/loading.gif" alt="loading.." border="0" widtth="16" height="11" />'
     image_tag("/assets/img/loading.gif", options)
   end
+
+  def status_code_to_symbol(status_code)
+    return status_code if !status_code.numeric?
+
+    message = ::Rack::Utils::HTTP_STATUS_CODES[status_code.to_i]
+    return status_code if message.blank?
+
+    message.downcase.gsub(/\s|-|'/, '_').to_sym
+  end
 end

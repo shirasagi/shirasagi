@@ -1,10 +1,10 @@
 require 'spec_helper'
 
-describe "gws_portal_setting_users", type: :feature, dbscope: :example do
+describe "gws_portal_setting_users", type: :feature, dbscope: :example, js: true do
   let(:site) { gws_site }
   let(:user) { gws_user }
 
-  context "with auth", js: true do
+  context "with auth" do
     before { login_gws_user }
 
     it "#index" do
@@ -26,7 +26,7 @@ describe "gws_portal_setting_users", type: :feature, dbscope: :example do
       expect(page).to have_no_content(I18n.t('gws/portal.user_portal'))
 
       visit gws_portal_setting_users_path(site: site)
-      expect(page).to have_no_content(user.name)
+      expect(page).to have_title("403")
     end
   end
 end

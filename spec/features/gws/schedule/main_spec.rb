@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe "gws_schedule_main", type: :feature, dbscope: :example do
+describe "gws_schedule_main", type: :feature, dbscope: :example, js: true do
   let(:user) { gws_user }
   let(:site) { gws_site }
   let!(:custom_group) { create :gws_custom_group, member_ids: [user.id] }
@@ -8,7 +8,7 @@ describe "gws_schedule_main", type: :feature, dbscope: :example do
   let!(:item) { create :gws_schedule_facility_plan, facility_ids: [facility.id] }
   let(:index_path) { gws_schedule_main_path site }
 
-  context "with auth", js: true do
+  context "with auth" do
     before { login_gws_user }
 
     it "#index" do
@@ -22,7 +22,7 @@ describe "gws_schedule_main", type: :feature, dbscope: :example do
       # if @cur_user.gws_role_permit_any?(@cur_site, :use_private_gws_facility_plans) && @cur_site.schedule_facility_tab_visible?
 
       visit index_path
-      expect(page).to have_content('404 Not Found')
+      expect(page).to have_title('404 Not Found')
 
       site.update_attributes(schedule_facility_tab_state: 'show')
       visit index_path
