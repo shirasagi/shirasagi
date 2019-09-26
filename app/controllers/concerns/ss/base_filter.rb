@@ -171,11 +171,6 @@ module SS::BaseFilter
     raise exception
   end
 
-  # def error_html_file(status)
-  #   file = "#{Rails.public_path}/.error_pages/#{status}.html"
-  #   Fs.exists?(file) ? file : "#{Rails.public_path}/.error_pages/500.html"
-  # end
-
   def render_job_size_limit(error)
     referer_uri = URI.parse(request.referer)
     begin
