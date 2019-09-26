@@ -5,6 +5,8 @@ module Cms::Model::Page
   include Cms::Reference::Layout
 
   included do
+    class_variable_set(:@@_show_path, nil)
+
     define_model_callbacks :generate_file
     define_model_callbacks :remove_file
     define_model_callbacks :rename_file
@@ -130,6 +132,12 @@ module Cms::Model::Page
         route = self.route
         route = route =~ /cms\// ? "node_page" : route.tr("/", "_")
         methods << "#{route}_path"
+
+        klass = self.route.camelize.constantize rescue nil
+        if klass
+          method = klass.class_variable_get(:@@_show_path)
+          methods << "#{method}_path" if method
+        end
       end
       methods << "node_#{model}_path"
     end
@@ -168,5 +176,13 @@ module Cms::Model::Page
     end
 
     ret.join("\n").html_safe
+  end
+
+  module ClassMethods
+    private
+
+    def set_show_path(show_path)
+      class_variable_set(:@@_show_path, show_path)
+    end
   end
 end
