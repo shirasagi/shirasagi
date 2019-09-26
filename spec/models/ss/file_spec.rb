@@ -373,4 +373,52 @@ describe SS::File, dbscope: :example do
       end
     end
   end
+
+  describe "what ss/file exports to liquid" do
+    let(:assigns) { {} }
+    let(:registers) { {} }
+    subject { file.to_liquid }
+
+    before do
+      subject.context = ::Liquid::Context.new(assigns, {}, registers, true)
+    end
+
+    context "with image file" do
+      let!(:file) { create :ss_file }
+
+      it do
+        expect(subject.name).to eq file.name
+        expect(subject.extname).to eq file.extname
+        expect(subject.size).to eq file.size
+        expect(subject.humanized_name).to eq file.humanized_name
+        expect(subject.filename).to eq file.filename
+        expect(subject.basename).to eq file.basename
+        expect(subject.url).to eq file.url
+        expect(subject.thumb_url).to be_present
+        expect(subject.thumb_url).to eq file.thumb_url
+        expect(subject.image?).to be_truthy
+      end
+    end
+
+    context "with pdf file" do
+      let(:path) { Rails.root.join("spec/fixtures/ss/shirasagi.pdf") }
+      let!(:file) do
+        Fs::UploadedFile.create_from_file(path, content_type: 'application/pdf') do |file|
+          create :ss_file, in_file: file
+        end
+      end
+
+      it do
+        expect(subject.name).to eq file.name
+        expect(subject.extname).to eq file.extname
+        expect(subject.size).to eq file.size
+        expect(subject.humanized_name).to eq file.humanized_name
+        expect(subject.filename).to eq file.filename
+        expect(subject.basename).to eq file.basename
+        expect(subject.url).to eq file.url
+        expect(subject.thumb_url).to be_blank
+        expect(subject.image?).to be_falsey
+      end
+    end
+  end
 end
