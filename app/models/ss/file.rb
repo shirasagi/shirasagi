@@ -13,7 +13,9 @@ class SS::File
     export :filename
     export :basename
     export :url
-    export :thumb_url
+    export as: :thumb_url do
+      thumb ? thumb.url : nil
+    end
     export :image?
   end
 
