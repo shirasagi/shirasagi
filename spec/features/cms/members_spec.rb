@@ -54,4 +54,33 @@ describe "cms_members", type: :feature do
       expect(current_path).to eq index_path
     end
   end
+
+  context "search in index", js: true do
+    before { login_cms_user }
+
+    it do
+      visit new_path
+      within "form#item-form" do
+        fill_in "item[name]", with: "sample"
+        fill_in "item[email]", with: "member_sample@example.jp"
+        fill_in "item[in_password]", with: "abc123"
+        click_button I18n.t('ss.buttons.save')
+      end
+
+      visit index_path
+      expect(page).to have_css(".list-items .info", text: "sample")
+
+      within ".index-search" do
+        fill_in "s[keyword]", with: "abc123"
+        click_button I18n.t("ss.buttons.search")
+      end
+      expect(page).to have_no_css(".list-items .info", text: "sample")
+
+      within ".index-search" do
+        fill_in "s[keyword]", with: "sample"
+        click_button I18n.t("ss.buttons.search")
+      end
+      expect(page).to have_css(".list-items .info", text: "sample")
+    end
+  end
 end
