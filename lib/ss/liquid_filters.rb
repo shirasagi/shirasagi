@@ -22,7 +22,7 @@ module SS::LiquidFilters
     date = Liquid::Utils.to_date(input)
     return input unless date
 
-    date = date.to_time
+    date = date.in_time_zone
 
     if format.blank?
       return I18n.l(date)
@@ -125,7 +125,14 @@ module SS::LiquidFilters
 
   def expand_path(input, path)
     return input if input.blank?
-    ::File.expand_path(input.to_s, path.to_s)
+
+    path = path.to_s
+    input = input.to_s
+    if path.start_with?("http://", "https://")
+      ::URI.join(path, input).to_s
+    else
+      ::File.expand_path(input, path)
+    end
   end
 
   def sanitize(input)
