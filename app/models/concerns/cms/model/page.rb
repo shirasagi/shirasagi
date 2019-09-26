@@ -14,6 +14,8 @@ module Cms::Model::Page
     store_in collection: "cms_pages"
     set_permission_name "cms_pages"
 
+    index({ updated: -1 })
+
     #text_index :name, :html
 
     attr_accessor :window_name
