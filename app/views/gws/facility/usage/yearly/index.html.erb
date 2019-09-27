@@ -25,7 +25,7 @@
               <td class="month month-<%= month[1] %>">
                 <% usage = format_usage_hours(item, @target_time.year, month[1]) %>
                 <% if usage %>
-                <%= link_to usage, gws_facility_usage_monthly_index_path(yyyymm: "#{@target_time.year}#{'%02d' % month[1]}", s: params[:s]) %>
+                <%= link_to usage, gws_facility_usage_monthly_index_path(yyyymm: "#{@target_time.year}#{'%02d' % month[1]}", s: params[:s].try(:to_unsafe_h)) %>
                 <% end %>
               </td>
             <% end %>
@@ -36,7 +36,7 @@
               <td class="month month-<%= month[1] %>">
                 <% usage = format_usage_count(item, @target_time.year, month[1]) %>
                 <% if usage %>
-                <%= link_to usage, gws_facility_usage_monthly_index_path(yyyymm: "#{@target_time.year}#{'%02d' % month[1]}", s: params[:s]) %>
+                <%= link_to usage, gws_facility_usage_monthly_index_path(yyyymm: "#{@target_time.year}#{'%02d' % month[1]}", s: params[:s].try(:to_unsafe_h)) %>
                 <% end %>
               </td>
             <% end %>
