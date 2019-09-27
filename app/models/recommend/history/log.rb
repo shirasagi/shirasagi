@@ -61,7 +61,7 @@ class Recommend::History::Log
       if receiver_node
         receiver_url = receiver_node.full_url + "index.json"
       else
-        receiver_path = Rails.application.routes.url_helpers.recommend_history_receiver_path(site: site.id)
+        receiver_path = Rails.application.routes.url_helpers.recommend_history_receiver_path(site: site.id, format: "json")
         receiver_url = ::File.join(site.full_root_url, receiver_path)
       end
 

@@ -3,7 +3,7 @@ module Cms::Model::Part
   extend SS::Translation
   include Cms::Content
 
-  included do |mod|
+  included do
     store_in collection: "cms_parts"
     set_permission_name "cms_parts"
 

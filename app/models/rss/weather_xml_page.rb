@@ -9,6 +9,7 @@ class Rss::WeatherXmlPage
   include History::Addon::Backup
 
   set_permission_name "article_pages"
+  set_show_path "rss_weather_xml"
 
   index({ released: 1, id: 1 })
 
