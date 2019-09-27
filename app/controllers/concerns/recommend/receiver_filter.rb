@@ -24,8 +24,6 @@ module Recommend::ReceiverFilter
 
     cookies.permanent["_ss_recommend"] = log.token
 
-    respond_to do |format|
-      format.json { render json: log.attributes.to_json }
-    end
+    head :ok
   end
 end
