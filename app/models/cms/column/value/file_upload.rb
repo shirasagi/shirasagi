@@ -165,31 +165,38 @@ class Cms::Column::Value::FileUpload < Cms::Column::Value::Base
   end
 
   def to_default_html_image
+    alt = file_label.presence.try { |l| ApplicationController.helpers.sanitize(l, tags: []) }
+    alt ||= file.humanized_name
     if image_html_type == "thumb"
       ApplicationController.helpers.link_to(file.url) do
-        ApplicationController.helpers.image_tag(file.thumb_url, alt: file_label.presence || file.humanized_name)
+        ApplicationController.helpers.image_tag(file.thumb_url, alt: alt)
       end
     elsif image_html_type == "image"
-      ApplicationController.helpers.image_tag(file.url, alt: file_label.presence || file.humanized_name)
+      ApplicationController.helpers.image_tag(file.url, alt: alt)
     end
   end
 
   def to_default_html_attachment
-    label = "#{file_label.presence || file.name.sub(/\.[^\.]+$/, '')} (#{file.extname.upcase} #{file.size.to_s(:human_size)})"
+    label = file_label.presence.try { |l| ApplicationController.helpers.sanitize(l) }
+    label ||= file.name.sub(/\.[^\.]+$/, '')
+    label = "#{label} (#{file.extname.upcase} #{file.size.to_s(:human_size)})"
     ApplicationController.helpers.link_to(label, file.url)
   end
 
   def to_default_html_video
     div_content = []
     div_content << ApplicationController.helpers.video_tag(file.url, controls: 'controls')
-    div_content << ApplicationController.helpers.content_tag(:div, ApplicationController.helpers.br(text))
+    escaped_text = ApplicationController.helpers.sanitize(ApplicationController.helpers.br_not_h(text))
+    div_content << ApplicationController.helpers.content_tag(:div, escaped_text)
     ApplicationController.helpers.content_tag(:div) do
       div_content.join.html_safe
     end
   end
 
   def to_default_html_banner
-    html = ApplicationController.helpers.image_tag(file.url, alt: file_label.presence || file.humanized_name)
+    alt = file_label.presence.try { |l| ApplicationController.helpers.sanitize(l, tags: []) }
+    alt ||= file.humanized_name
+    html = ApplicationController.helpers.image_tag(file.url, alt: alt)
     if link_url.present?
       html = ApplicationController.helpers.link_to(link_url) do
         html
