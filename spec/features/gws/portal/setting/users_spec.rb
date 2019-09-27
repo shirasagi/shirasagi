@@ -19,7 +19,7 @@ describe "gws_portal_setting_users", type: :feature, dbscope: :example, js: true
 
       # secured
       role = user.gws_roles[0]
-      role.update_attributes(permissions: [])
+      role.update(permissions: [])
       user.clear_gws_role_permissions
 
       visit gws_site_path(site: site)

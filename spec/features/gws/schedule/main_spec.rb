@@ -12,7 +12,7 @@ describe "gws_schedule_main", type: :feature, dbscope: :example, js: true do
     before { login_gws_user }
 
     it "#index" do
-      site.update_attributes(
+      site.update(
         schedule_personal_tab_state: 'hide',
         schedule_group_tab_state: 'hide',
         schedule_group_all_tab_state: 'hide',
@@ -24,29 +24,29 @@ describe "gws_schedule_main", type: :feature, dbscope: :example, js: true do
       visit index_path
       expect(page).to have_title('404 Not Found')
 
-      site.update_attributes(schedule_facility_tab_state: 'show')
+      site.update(schedule_facility_tab_state: 'show')
       visit index_path
       wait_for_ajax
       expect(page).to have_css('.calendar-multiple-header', text: item.facilities.first.name)
 
-      site.update_attributes(schedule_group_all_tab_state: 'show')
+      site.update(schedule_group_all_tab_state: 'show')
       visit index_path
       wait_for_ajax
       expect(current_path).to include gws_schedule_all_groups_path(site: site)
 
-      site.update_attributes(schedule_custom_group_tab_state: 'show')
+      site.update(schedule_custom_group_tab_state: 'show')
       visit index_path
       wait_for_ajax
       expect(page).to have_css('.calendar.multiple', text: item.name)
 
-      site.update_attributes(schedule_group_tab_state: 'show')
+      site.update(schedule_group_tab_state: 'show')
       visit index_path
       wait_for_ajax
       expect(page).to have_css('.calendar.multiple', text: item.name)
 
       sleep 1
 
-      site.update_attributes(schedule_personal_tab_state: 'show')
+      site.update(schedule_personal_tab_state: 'show')
       visit index_path
       wait_for_ajax
       expect(page).to have_css('.calendar', text: item.name)
