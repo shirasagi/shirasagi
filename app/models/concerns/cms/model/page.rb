@@ -132,14 +132,12 @@ module Cms::Model::Page
       options = options.merge(site: site || cur_site, cid: parent, id: self)
       if respond_to?(:route)
         route = self.route
-        route = route =~ /cms\// ? "node_page" : route.tr("/", "_")
+        route = /cms\//.match?(route) ? "node_page" : route.tr("/", "_")
         methods << "#{route}_path"
 
         klass = self.route.camelize.constantize rescue nil
-        if klass
-          method = klass.class_variable_get(:@@_show_path)
-          methods << "#{method}_path" if method
-        end
+        method = klass ? klass.class_variable_get(:@@_show_path) : nil
+        methods << "#{method}_path" if method
       end
       methods << "node_#{model}_path"
     end
