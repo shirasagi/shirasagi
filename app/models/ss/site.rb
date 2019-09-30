@@ -12,5 +12,5 @@ class SS::Site
   include SS::Addon::ApproveSetting
   include SS::Addon::EditorSetting
   include SS::Addon::Elasticsearch::SiteSetting
-  include SS::SiteUsage
+  include SS::Addon::SiteUsage
 end

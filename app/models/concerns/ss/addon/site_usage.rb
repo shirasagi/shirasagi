@@ -1,6 +1,6 @@
-module SS::SiteUsage
+module SS::Addon::SiteUsage
   extend ActiveSupport::Concern
-  extend SS::Translation
+  extend SS::Addon
 
   included do
     field :usage_node_count, type: Integer
