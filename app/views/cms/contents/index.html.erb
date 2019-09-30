@@ -37,7 +37,21 @@
 <% end %>
 
 <div class="index">
-  <div class="list-head"><%= t "cms.content" %></div>
+  <div class="list-head">
+    <%= t "cms.content" %>
+    <% if @cur_user.cms_role_permit_any?(@cur_site, :read_cms_body_usages) %>
+      <span class="cms-usages">
+        <span class="cms-usage-item cms-usage-page-count">ページ数: x</span>,
+        <span class="cms-usage-item cms-usage-file-count">ファイル数: x</span>,
+        <span class="cms-usage-item cms-usage-db-size">使用量: x MB</span>,
+        <span class="cms-usage-item cms-usage-group-count">グループ数: x</span>,
+        <span class="cms-usage-item cms-usage-user-count">ユーザー数: x</span>
+        <% if @cur_user.cms_role_permit_any?(@cur_site, :edit_cms_body_usages) %>
+        <%= button_tag(t("service.buttons.reload"), type: "button", id: nil, name: "reload", class: "btn") %>
+        <% end %>
+      </span>
+    <% end %>
+  </div>
 
   <ul class="list-items">
     <% @items.each do |item| %>
