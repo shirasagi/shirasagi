@@ -63,4 +63,26 @@ module Webmail
   def imap_pool
     @imap_pool ||= ImapPool.new
   end
+
+  def find_webmail_quota_used
+    Webmail.webmail_db_used + Webmail.webmail_files_used
+  end
+
+  def webmail_db_used
+    [
+      Webmail::AddressGroup,
+      Webmail::Address,
+      Webmail::Filter,
+      Webmail::Mail,
+      Webmail::Mailbox,
+      Webmail::Quota,
+      Webmail::Signature,
+    ].sum { |c| c.total_bsonsize }
+  end
+
+  def webmail_files_used
+    dir = "#{Rails.root}/private/files/webmail_files"
+    return 0 unless ::File.exists?(dir)
+    `du -bs #{dir}`.sub(/\s.*/m, '').to_i
+  end
 end
