@@ -108,6 +108,8 @@ module Cms
     Cms::Role.permission :import_private_cms_nodes
     Cms::Role.permission :import_other_cms_nodes
     Cms::Role.permission :unlock_other_cms_pages
+    Cms::Role.permission :read_cms_body_usages
+    Cms::Role.permission :edit_cms_body_usages
 
     SS::File.model "cms/editor_template", SS::File
     SS::File.model "cms/file", Cms::File

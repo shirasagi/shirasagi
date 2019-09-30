@@ -423,6 +423,8 @@ ja:
     edit_other_cms_forms: 定型フォームの管理（全て）
     delete_private_cms_forms: 定型フォームの削除（所有）
     delete_other_cms_forms: 定型フォームの削除（全て）
+    read_cms_body_usages: 使用量の閲覧
+    edit_cms_body_usages: 使用量の更新
 
   modules:
     cms: 標準機能
