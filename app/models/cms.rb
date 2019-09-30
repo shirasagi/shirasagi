@@ -85,7 +85,10 @@ module Cms
     site_criteria.each do |site|
       dir = site.root_path
       next unless ::File.exists?(dir)
-      size += `du -bs #{Shellwords.escape(dir)}`.sub(/\s.*/m, '').to_i
+      # see: https://myokoym.hatenadiary.org/entry/20100606/1275836896
+      ::Dir.glob("#{dir}/**/*") do |path|
+        size += ::File.stat(path).size rescue 0
+      end
     end
     size
   end
