@@ -1,0 +1,9 @@
+<% site ||= @cur_site %>
+<span class="cms-usages">
+  <span class="cms-usage-item cms-usage-page-count">フォルダー数: <%= site.usage_node_count.try { |v| v.to_s(:delimited) } || "--" %></span>,
+  <span class="cms-usage-item cms-usage-page-count">ページ数: <%= site.usage_page_count.try { |v| v.to_s(:delimited) } || "--" %></span>,
+  <span class="cms-usage-item cms-usage-file-count">ファイル数: <%= site.usage_file_count.try { |v| v.to_s(:delimited) } || "--" %></span>,
+  <span class="cms-usage-item cms-usage-db-size">使用量: <%= site.usage_db_size.try { |v| v.to_s(:human_size) } || "--" %></span>,
+  <span class="cms-usage-item cms-usage-group-count">グループ数: <%= site.usage_group_count.try { |v| v.to_s(:delimited) } || "--" %></span>,
+  <span class="cms-usage-item cms-usage-user-count">ユーザー数: <%= site.usage_user_count.try { |v| v.to_s(:delimited) } || "--" %></span>
+</span>

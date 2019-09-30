@@ -40,17 +40,15 @@
   <div class="list-head">
     <%= t "cms.content" %>
     <% if @cur_user.cms_role_permit_any?(@cur_site, :read_cms_body_usages) %>
-      <span class="cms-usages">
-        <span class="cms-usage-item cms-usage-page-count">フォルダー数: <%= @cur_site.usage_node_count.try { |v| v.to_s(:delimited) } || "--" %></span>,
-        <span class="cms-usage-item cms-usage-page-count">ページ数: <%= @cur_site.usage_page_count.try { |v| v.to_s(:delimited) } || "--" %></span>,
-        <span class="cms-usage-item cms-usage-file-count">ファイル数: <%= @cur_site.usage_file_count.try { |v| v.to_s(:delimited) } || "--" %></span>,
-        <span class="cms-usage-item cms-usage-db-size">使用量: <%= @cur_site.usage_db_size.try { |v| v.to_s(:human_size) } || "--" %></span>,
-        <span class="cms-usage-item cms-usage-group-count">グループ数: <%= @cur_site.usage_group_count.try { |v| v.to_s(:delimited) } || "--" %></span>,
-        <span class="cms-usage-item cms-usage-user-count">ユーザー数: <%= @cur_site.usage_user_count.try { |v| v.to_s(:delimited) } || "--" %></span>
+      <div class="cms-usages-wrap">
+        <%= render "cms/apis/site_usages/reload" %>
         <% if @cur_user.cms_role_permit_any?(@cur_site, :edit_cms_body_usages) %>
-        <%= button_tag(t("service.buttons.reload"), type: "button", id: nil, name: "reload", class: "btn") %>
+          <%= button_tag(t("service.buttons.reload"), type: "button", id: nil, name: "reload", class: "btn btn-reload-cms-usages", data: { href: cms_apis_reload_site_usages_path(format: "html") }) %>
         <% end %>
-      </span>
+        <%= jquery do %>
+        new Cms_Usage(".cms-usages-wrap")
+        <% end %>
+      </div>
     <% end %>
   </div>
 

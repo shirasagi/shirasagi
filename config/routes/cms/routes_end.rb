@@ -162,6 +162,7 @@ Rails.application.routes.draw do
       get "contents/html" => "contents/html#index"
       get "members" => "members#index"
       get "sites" => "sites#index"
+      put "reload_site_usages" => "site_usages#reload"
       get "users" => "users#index"
       get "node_tree/:id" => "node_tree#index", as: :node_tree
       get "forms" => "forms#index"
