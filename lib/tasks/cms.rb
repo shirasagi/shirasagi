@@ -203,11 +203,11 @@ module Tasks
       def gsub_path(html, site)
         html.gsub(/(href|src)=".*?"/) do |m|
           url = m.match(/.*?="(.*?)"/)[1]
-          if url =~ /^\/(assets|assets-dev|fs)\//
+          if url.start_with?("/assets/", "/assets-dev/", "/fs/")
             m
-          elsif url =~ /^#{site.url}/
+          elsif url.start_with?(site.url)
             m
-          elsif url =~ /^\/(?!\/)/
+          elsif /^\/(?!\/)/.match?(url)
             m.sub(/="\//, "=\"#{site.url}")
           else
             m
@@ -224,6 +224,7 @@ module Tasks
             attrs.each do |attr|
               next unless item.respond_to?(attr) && item.respond_to?("#{attr}=")
               next unless item.send(attr).present?
+
               item.send("#{attr}=", gsub_path(item.send(attr), site))
             end
             item.save!
