@@ -1,0 +1,36 @@
+<%= jquery do %>
+  $("#addon-gws-agents-addons-affair-approver").remove();
+
+  var state = $("#item_state").parent();
+  state.prev().remove();
+  state.remove();
+
+  <% if @item.try(:public?) && @cur_site.close_confirmation_enabled? %>
+  $(".save").attr("data-close-confirmation", "<%= @item.state %>");
+  <% contains_urls_path = url_for(action: 'contains_urls') rescue nil %>
+  <% if contains_urls_path && @contains_urls.present? %>
+  $(".save").attr("data-contain-links-path", "<%= contains_urls_path %>");
+  <% end %>
+  <% end %>
+
+  <% if @item.state == "closed" && @item.workflow_state == "request" %>
+  $("<input />").attr("type", "hidden")
+    .attr("name", "item[workflow_cancel_request]")
+    .attr("value", true)
+    .appendTo("#item-form");
+  <% end %>
+
+  $(".publish_save").on("click", function(e) {
+    $("<input />").attr("type", "hidden")
+      .attr("name", "item[state]")
+      .attr("value", "public")
+      .appendTo("#item-form");
+    $("<input />").attr("type", "hidden")
+      .attr("name", "item[workflow_reset]")
+      .attr("value", "1")
+      .appendTo("#item-form");
+  });
+
+  Form_Save_Event.render();
+
+<% end %>

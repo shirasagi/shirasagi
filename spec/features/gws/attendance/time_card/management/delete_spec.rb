@@ -35,7 +35,7 @@ describe "gws_attendance_time_card", type: :feature, dbscope: :example, js: true
   before { login_user user }
 
   describe 'delete' do
-    it do
+    xit do
       visit gws_attendance_main_path(site)
       within first(".mod-navi") do
         click_on I18n.t('modules.gws/attendance/management/time_card')
@@ -60,7 +60,7 @@ describe "gws_attendance_time_card", type: :feature, dbscope: :example, js: true
   end
 
   describe 'delete all' do
-    it do
+    xit do
       visit gws_attendance_main_path(site)
       within first(".mod-navi") do
         click_on I18n.t('modules.gws/attendance/management/time_card')

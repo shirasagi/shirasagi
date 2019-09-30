@@ -1,0 +1,13 @@
+<% return "" unless @user %>
+
+<% if @capital %>
+  <div class="caiptal">
+    <%= hidden_field_tag "item[capital_id]", @capital.id %>
+    <%= "#{@capital.name} (申請対象： #{@user.name})" %>
+  </div>
+<% else %>
+  <div class="caiptal-name caiptal-not-found">
+    <%= hidden_field_tag "capital_id", nil %>
+    <%= "原資区分が設定されていません。(申請対象： #{@user.name})" %>
+  </div>
+<% end %>

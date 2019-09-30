@@ -10,8 +10,24 @@
   <dt><%= @model.t :attendance_year_changed_month %></dt>
   <dd><%= @item.attendance_year_changed_month %> <%= t("datetime.prompts.month") %></dd>
 
-  <dt><%= @model.t :attendance_time_changed_minute %></dt>
-  <dd><%= @item.attendance_time_changed_minute / 60 %> <%= t("datetime.prompts.hour") %>
+  <dt><%= @model.t :affair_rounding_time_minute %></dt>
+  <dd><%= @item.label :affair_rounding_time_minute %></dd>
+
+  <dt><%= @model.t :week_out_compensatory_file_limit %></dt>
+  <dd>
+    <span><%= t("ss.before") %></span>
+    <%= number_with_datetime_unit(@item, :week_out_compensatory_file_start_limit) %>
+  </dd>
+  <dd>
+    <span><%= t("ss.after") %></span>
+    <%= number_with_datetime_unit(@item, :week_out_compensatory_file_end_limit) %>
+  </dd>
+
+  <dt><%= @model.t :week_out_compensatory_file_notify_day %></dt>
+  <dd>
+    <% if @item.week_out_compensatory_file_notify_day %>
+      <%= @item.week_out_compensatory_file_notify_day %><%= t("datetime.prompts.day") %>
+    <% end %>
   </dd>
 
   <dt><%= t('gws/attendance.enter_leave') %></dt>
@@ -31,4 +47,6 @@
       <% end %>
     </dd>
   <% end %>
+
+  <%= render "gws/affair/duty_hours/duty_hour_setting_show" %>
 </dl>

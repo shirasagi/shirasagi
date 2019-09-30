@@ -1,0 +1,656 @@
+ja:
+  gws/affair:
+    aggregate: 集計結果
+    capital: 原資区分
+    default_duty_hour: 標準の勤務体系
+    top_holidays_on_year: "%{year}年度の休日を最大%{count}件を表示しています。"
+    year_id: 年度
+    all_year_id: 全年度
+    term: 期間
+    shift_calendar: シフト勤務カレンダー
+    user_setting: ユーザー設定
+    group_setting: グループ設定
+    leave_setting: 休暇設定
+    download_day_count: 日数出力
+    links:
+      set_results: 結果を入力する
+      edit_results: 結果を編集する
+      close_results: 結果を確認済みにする
+      closed_results: 確認済み
+      aggregate: 時間外
+      aggregate_capitals: 原資区分
+      manage_holidays: 休日を管理する
+      manage_shifts: シフト勤務を管理する
+      manage_notices: 注意文を管理する
+      ignore_and_save: 保存する
+      back_to_form: 入力画面に戻る
+      download_member: ユーザー設定をダウンロード
+      download_group: グループ設定をダウンロード
+    options:
+      status:
+        approve: 承認
+        request: 申請
+        draft: 下書き
+        pending: 下位承認待ち
+        remand: 差し戻し
+      overtime_status:
+        approve: 命令
+        request: 申請
+        draft: 下書き
+        pending: 下位承認待ち
+        remand: 差し戻し
+        result_closed: 確認
+      leave_type:
+        annual_leave: 年次有給休暇
+        paidleave: 特別休暇
+        week_out_compensatory_leave: 同一週外の振替
+        week_in_compensatory_leave: 同一週内の振替
+        holiday_compensatory_leave: 代休振替
+      compensatory_minute:
+        0: ""
+        240: "4.0時間"
+        465: "7.75時間"
+      affair_rounding_time_minute:
+        "0": なし
+        "1": 1分単位
+        "5": 5分単位
+        "10": 10分単
+        "15": 15分単位
+      holiday_type:
+        system: 標準の休日カレンダー
+        own: 勤務体系独自
+      wday_type:
+        workday: 勤務日
+        holiday: 休日
+      notice_type:
+        month_time_limit: 月の就業時間の上限
+        week_time_limit: 週の就業時間の上限
+      period_type:
+        month: 月
+        week: 週
+        day: 日
+      target_users:
+        users: グループ所属のユーザー
+        descendants: グループ配下の全ユーザー
+      time_remaining: "(残り%{total_time}時間)"
+    notice:
+      select_target_user: "申請対象のユーザーを選択してください。"
+      select_start_at_date: "申請開始日を入力してください。"
+      not_found_overtime_file: "設定可能な時間外申請がありませんでした。"
+      not_found_leave_setting: "休暇設定がありません。"
+      time_card_unlocked:
+        h2: "%{year}年%{month}月のタイムカードが締められていません。"
+        p: 以下のタイムカードが締められていません。
+      not_found_groups: グループが選択されていません。
+      not_found_users: ユーザーが選択されていません。
+      not_found_leave_files: 申請はありません。
+      not_found_shift_work: シフト勤務カレンダーが登録されていません。
+      not_created_time_card: "%{year}年%{month}月のタイムカードが作成されていません。（%{user}）"
+    caution:
+      leave_setting_import_member:
+        - "%{year} の休暇設定をユーザー毎に一括設定する画面です。"
+        - "ユーザー設定をダウンロードし、有効日数を記入して、インポートしてください。"
+        - "インポート時に宛名番号および有効日数が記入されていない行は無視されます。"
+      leave_setting_import_member_last_year:
+        - ""
+        - ""
+        - "%{year} の有効日数、取得日数、残日数がある場合は、ユーザー設定CSVに参考列として出力されます。"
+        - "この列はインポートには影響しません。"
+      leave_setting_download_yearly:
+        - "%{year} の有効日数（保有日数）と残日数を出力します。"
+      capital_import_group:
+        - "%{year} の原資区分にグループの紐付け（参加グループ）を一括設定する画面です。"
+        - "原資区分を登録し、グループ設定をダウンロードしてください。"
+        - "ダウンロードしたCSVに各グループに対応する、事業コードおよび明細番号を記入して、インポートしてください。"
+        - "インポート時に宛名番号および事業コード、明細番号が記入されていない行は無視されます。"
+      capital_import_member:
+        - "%{year} の原資区分にユーザーの紐付け（参加ユーザー）を一括設定する画面です。"
+        - "原資区分を登録し、ユーザー設定をダウンロードしてください。"
+        - "ダウンロードしたCSVに各ユーザーに対応する、事業コードおよび明細番号を記入して、インポートしてください。"
+        - "インポート時に宛名番号および事業コード、明細番号が記入されていない行は無視されます。"
+    form_alert:
+      title:
+        overtime_compensatory: "週休日・祝日の時間外について"
+      message:
+        not_set_overtime_compensatory:
+          - "週休日の振替又は代休日の設定がされておりません。"
+          - "入力画面に戻るをクリックして、振替日等を設定してから保存をお願いします。"
+          - "なお、特別な理由で時間外勤務又は休日勤務の場合は、このまま保存してください。"
+    confirm:
+      download: ダウンロードしてよろしいですか？
+      create_shift_calendar: "%{user} のシフト勤務カレンダーを作成してよろしいですか？"
+      delete_shift_calendar: "%{user} のシフト勤務カレンダーを削除してよろしいですか？"
+    labels:
+      overtime_file: 時間外申請
+      target_user: 申請対象ユーザー
+      weekly_leave_day: 週休日
+      holiday: 祝日
+      caution: 注意
+      leave_setting_import_member: 休暇設定（ユーザー設定）
+      leave_setting_download_yearly: 休暇設定（日数出力）
+      capital_import_member: 原資区分（ユーザー設定）
+      capital_import_group: 原資区分（グループ設定）
+      leave_files: 申請一覧
+      leave_hours: 取得時間
+      leave_minutes: 取得時間（分）
+      overtime:
+        under_threshold:
+          duty_day_time:
+            name: "時間外（勤務日）"
+            rate: "普通\n125/100"
+          duty_night_time:
+            name: "時間外（勤務日）"
+            rate: "深夜\n150/100"
+          leave_day_time:
+            name: "時間外（週休日・休日）"
+            rate: "普通\n135/100"
+          leave_night_time:
+            name: "時間外（週休日・休日）"
+            rate: "深夜\n160/100"
+          duty_day_in_work_time:
+            rate: "時短\n100/100"
+          week_out_compensatory:
+            name: "同一週外振替"
+            rate: "同一週外振替\n25/100"
+        over_threshold:
+          duty_day_time:
+            name: "時間外（勤務日）"
+            rate: "普通\n150/100"
+          duty_night_time:
+            name: "時間外（勤務日）"
+            rate: "深夜\n175/100"
+          leave_day_time:
+            name: "時間外（週休日・休日）"
+            rate: "普通\n150/100"
+          leave_night_time:
+            name: "時間外（週休日・休日）"
+            rate: "深夜\n175/100"
+          week_out_compensatory:
+            name: "同一週外振替"
+            rate: "同一週外振替\n50/100"
+        total:
+          under: 通常分
+          over: 超過分
+          sum: 月合計
+        capitals:
+          capital: 費目
+          total: 合計
+          total_capitals: 費目合計
+          title: "%{year}年度"
+          title_groups: "費目別（%{year}年度 %{month}月：%{group}）"
+          title_users: "費目別（%{year}年度 %{month}月：%{group}）"
+          title_search: "%{year}年 %{month}月"
+        search:
+          title: "費目別（%{year}年度 %{month}月）"
+    export:
+      capital:
+        article_code: 款コード
+        section_code: 項コード
+        subsection_code: 目コード
+        item_code: 節コード
+        subitem_code: 細節コード
+        project_code: 事業連番
+        detail_code: 歳出明細番号
+        project_name: 事業名称
+        description_name: 説明名称
+        item_name: 節名称
+        subitem_name: 細節名称
+      capital_group:
+        group_name: グループ名
+        group_code: 所属コード
+        project_code: 事業コード
+        detail_code: 歳出明細番号
+      capital_member:
+        name: ユーザー名
+        staff_address_uid: 宛名番号
+        project_code: 事業コード
+        detail_code: 歳出明細番号
+      leave_setting:
+        id: id
+        name: ユーザー名
+        staff_address_uid: 宛名番号
+        start_at: 開始時間
+        end_at: 終了時間
+        count: 有効日数
+        leaved_count: 取得日数
+        effective_count: 残日数
+    apis:
+      duty_hours:
+        index: 勤務体系を選択する
+      holiday_calendars:
+        index: 休日カレンダーを選択する
+      duty_notices:
+        index: タイムカード警告を選択する
+      special_leaves:
+        index: 特別休暇区分を選択する
+      capitals:
+        index: 緊急時はこちら
+    limit: 有効期限
+
+  modules:
+    gws/affair: 庶務事務
+    gws/affair/attendance/time_card: タイムカード
+    gws/affair/attendance/time_card/group: グループ
+    gws/affair/overtime_file: 時間外申請
+    gws/affair/overtime_file/approve: 依頼されたもの
+    gws/affair/overtime_file/all: 全ての管理
+    gws/affair/overtime_file/aggregate: 時間外累計
+    gws/affair/leave_file: 休暇申請
+    gws/affair/leave_file/approve: 依頼されたもの
+    gws/affair/leave_file/all: 全ての管理
+    gws/affair/leave_file/aggregate: 休暇取得累計
+    gws/affair/leave_setting: 休暇設定
+    gws/affair/working_time/management/aggregate: 勤務時間集計
+    gws/affair/overtime_file/management/aggregate: 時間外集計
+    gws/affair/overtime_file/management/aggregate/user: 職員別
+    gws/affair/overtime_file/management/aggregate/capital: 費目別
+    gws/affair/overtime_file/management/aggregate/search_groups: グループ検索
+    gws/affair/overtime_file/management/aggregate/search_users: ユーザー検索
+    gws/affair/overtime_file/management/aggregate/rkk: 会計システム連携
+    gws/affair/attendance/management/time_card: タイムカードの管理
+    gws/affair/duty_hour: 勤務体系
+    gws/affair/duty_calendar: 勤務カレンダー
+    gws/affair/holiday_calendar: 休日カレンダー
+    gws/affair/capital: 原資区分
+    gws/affair/capital_years: 年度設定
+    gws/affair/shift_work: シフト勤務
+    gws/affair/shift_work/calendar: 勤務表
+    gws/affair/shift_work/shift_calendar: 勤務カレンダー
+    gws/affair/duty_notice: タイムカード警告
+    gws/affair/special_leave: 特別休暇区分
+    addons:
+      gws/affair/overtime_file: 時間外申請書
+      gws/affair/overtime_result: 結果
+      gws/affair/approver: 承認
+      gws/affair/leave_file: 休暇申請書
+      gws/affair/duty_hour: 勤務体系
+      gws/affair/holiday: 休日
+      gws/affair/flextime: 自由時間勤務
+      gws/affair/duty_notice: タイムカード警告
+      gws/affair/file_target: 申請対象
+      gws/affair/annual_leave_setting: 年次有給休暇
+      gws/affair/paid_leave_setting: 特別休暇
+
+  mongoid:
+    models:
+      gws/affair/capital: 原資区分
+      gws/affair/duty_calendar: 勤務カレンダー
+      gws/affair/duty_hour: 勤務体系
+      gws/affair/holiday_calendar: 休日カレンダー
+      gws/affair/capital_year: 年度設定
+    attributes:
+      gws/affair/capital:
+        name: 原資区分名
+        article_code: 款
+        section_code: 項
+        subsection_code: 目
+        item_code: 節
+        subitem_code: 細節
+        project_code: 事業連番
+        detail_code: 歳出明細番号
+        project_name: 事業名称
+        description_name: 説明名称
+        item_name: 節名称
+        subitem_name: 細節名称
+        in_file: ファイル
+        year_id: 年度
+        year_code: 西暦
+        year_name: 年度名
+      gws/affair/duty_calendar:
+        name: タイトル
+        code: 職種区分コード
+      gws/affair/shift_record:
+        duty_calendar_id: 勤務カレンダー
+        date: 日付
+        wday: 曜日
+        start_at: 開始時間
+        end_at: 終了時間
+        wday_type: 休日設定
+        in_file: ファイル
+        affair_time: 勤務時間
+      gws/affair/duty_hour:
+        name: 勤務体系名
+        start_at: 開始時間
+        end_at: 終了時間
+        break_enter1_start_at: 休憩1開始時間
+        break_enter1_end_at: 休憩1終了時間
+        break_enter2_start_at: 休憩2開始時間
+        break_enter2_end_at: 休憩2終了時間
+        break_enter3_start_at: 休憩3開始時間
+        break_enter3_end_at: 休憩3終了時間
+      gws/affair/overtime_file:
+        name: タイトル
+        capital_id: 原資区分
+        status: ステータス
+      gws/addon/affair/overtime_file:
+        overtime_name: 業務名
+        start_at: 開始時間
+        end_at: 終了時間
+        week_in_compensatory_minute: 同一週内振替
+        week_out_compensatory_minute: 同一週外振替
+        holiday_compensatory_minute: 代休振替
+        remark: 備考
+        week_in_start_at: 同一週内振替開始時間
+        week_in_end_at: 同一週内振替終了時間
+        week_in_start_at_date: 同一週内振替開始日
+        week_in_end_at_date: 同一週内振替終了日
+        week_out_start_at: 同一週外振替開始時間
+        week_out_end_at: 同一週外振替終了時間
+        week_out_start_at_date: 同一週外振替開始日
+        week_out_end_at_date: 同一週外振替終了日
+        result_closed: 結果確認日時
+        result_updated: 結果編集日時
+        result_created: 結果入力日時
+      gws/affair/leave_file:
+        name: タイトル
+        start_at: 開始時間
+        end_at: 終了時間
+        leave_type: 休暇区分
+        leave_dates: 休暇日時
+        reason: 理由
+        special_leave_id: 特別休暇区分
+        week_in_compensatory_file_id: 振替申請（同一週内）
+        week_out_compensatory_file_id: 振替申請（同一週外）
+        holiday_compensatory_file_id: 振替申請（代休）
+        status: ステータス
+      gws/affair/leave_setting:
+        name: タイトル
+        target_user_id: 対象ユーザー
+        year_id: 年度設定
+        leave_type: 休暇区分
+        count: 有効日数
+        in_file: ファイル
+      gws/affair/overtime_result:
+        start_at: 開始時間
+        end_at: 終了時間
+        break_time_minute: 休憩時間
+      gws/addon/affair/approver:
+        workflow_user_id: 申請者
+        workflow_state: 承認状態
+        workflow_comment: 申請コメント
+        workflow_pull_up: 引き上げ承認
+        workflow_on_remand: 差し戻し時
+        workflow_approvers: 承認者
+        workflow_required_counts: 必要承認数
+        workflow_circulations: 回覧者
+        approved: 承認日時
+        comment: 差し戻しコメント
+        approver_comment: 承認者コメント
+      gws/affair/duty_hour_setting:
+        attendance_time_changed_minute: 日替わり時刻
+        affair_time: 勤務時間
+        affair_on_duty: 休憩時間設定（勤務時間内）
+        affair_overtime: 休憩時間設定（勤務時間外）
+        overtime_in_work: 標準勤務時間内での残業
+      gws/addon/affair/duty_hour:
+        duty_hour_ids: 勤務体系
+      gws/addon/affair/holiday:
+        holiday_type: 休日種別
+        holiday_calendar_ids: 休日カレンダー
+      gws/addon/affair/duty_notice:
+        duty_notice_ids: タイムカード警告
+      gws/affair/holiday_calendar:
+        name: タイトル
+        wday_settings: 休日設定
+        sunday_type: 日曜日
+        monday_type: 月曜日
+        tuesday_type: 火曜日
+        wednesday_type: 水曜日
+        thursday_type: 木曜日
+        friday_type: 金曜日
+        saturday_type: 土曜日
+        national_holiday_type: 勤務日が祝祭日の場合
+        holidays: 他の所定休日
+      gws/addon/affair/flextime:
+        flextime_state: 自由時間勤務
+      gws/affair/duty_notice:
+        name: タイトル
+        notice_type: 種別
+        period_type: 期間
+        threshold_hour: 上限時間
+        body: 警告文
+      gws/addon/affair/file_target:
+        target_group_id:  グループ
+        target_user_id: ユーザー
+        target_group_code: 申請対象ユーザーの所属コード
+        target_user_staff_address_uid: 申請対象ユーザーの宛名番号
+        target_duty_calendar_code: 申請対象ユーザーの職種区分コード
+        target_user_staff_category: 申請対象ユーザーの職員区分
+      gws/affair/overtime_day_result:
+        search_term: 期間
+        search_group: グループ
+        search_user: ユーザー
+      gws/affair/special_leave:
+        code: コード
+        name: 名前
+        order: 並び順
+        staff_category: 職員区分
+        in_file: ファイル
+      gws/affair/capital_year:
+        name: 年度
+        code: 西暦
+        start_date: 開始日
+        close_date: 終了日
+    errors:
+      models:
+        gws/affair/overtime_file:
+          over_one_day: 開始時間〜終了時間が1日を超過しています。
+          over_change_hour: 開始時間〜終了時間が日替わり時刻を超えています。
+          in_duty_hour: 開始時間〜終了時間が勤務時間内です。
+          duplicate_compensatory_minute: 振替申請（同一週内振替、同一週外振替、代休振替）は同時に入力できません。
+          not_match_compensatory_minute_and_hour: は開始時間〜終了時間より長く設定してください。
+          greater_than_end_at: は開始時間の終了日以降にしてください。
+        gws/affair/leave_file:
+          over_one_day: 開始時間〜終了時間が1日を超過しています。
+        gws/affair/shift_record:
+          invalid_affair_start_at: 開始時間が不正です。5分単位での時刻を入力してください。
+          invalid_affair_end_at: 終了時間が不正です。5分単位での時刻を入力してください。
+        gws/affair/special_leave:
+          not_found: "%{line_no}: ID %{id}は存在しません。"
+        gws/affair/capital:
+          not_found: "%{line_no}: ID %{id}は存在しません。"
+        gws/affair/leave_setting:
+          exists_setting: "すでに休暇設定が登録されています。（%{name}：%{term}）"
+
+  activemodel:
+    attributes:
+      gws/affair/capital_year/importer/member:
+        in_file: ファイル
+
+  gws_role:
+    read_gws_affair_duty_hours: 勤務体系の閲覧
+    edit_gws_affair_duty_hours: 勤務体系の編集
+    delete_gws_affair_duty_hours: 勤務体系の削除
+    read_other_gws_affair_overtime_files: 時間外申請の閲覧（全て）
+    read_private_gws_affair_overtime_files: 時間外申請の閲覧（所有）
+    edit_other_gws_affair_overtime_files: 時間外申請の編集（全て）
+    edit_private_gws_affair_overtime_files: 時間外申請の編集（所有）
+    delete_other_gws_affair_overtime_files: 時間外申請の削除（全て）
+    delete_private_gws_affair_overtime_files: 時間外申請の削除（所有）
+    approve_other_gws_affair_overtime_files: 時間外申請の承認（所有）
+    approve_private_gws_affair_overtime_files: 時間外申請の承認（全て）
+    reroute_other_gws_affair_overtime_files: 時間外申請の経路変更（所有）
+    reroute_private_gws_affair_overtime_files: 時間外申請の経路変更（全て）
+    read_other_gws_affair_leave_files: 休暇申請の閲覧（全て）
+    read_private_gws_affair_leave_files: 休暇申請の閲覧（所有）
+    edit_other_gws_affair_leave_files: 休暇申請の編集（全て）
+    edit_private_gws_affair_leave_files: 休暇申請の編集（所有）
+    delete_other_gws_affair_leave_files: 休暇申請の削除（全て）
+    delete_private_gws_affair_leave_files: 休暇申請の削除（所有）
+    approve_other_gws_affair_leave_files: 休暇申請の承認（全て）
+    approve_private_gws_affair_leave_files: 休暇申請の承認（所有）
+    reroute_other_gws_affair_leave_files: 休暇申請の経路変更（全て）
+    reroute_private_gws_affair_leave_files: 休暇申請の経路変更（所有）
+    use_gws_affair_shift_calendars: シフト勤務の利用
+    manage_private_gws_affair_shift_calendars: シフト勤務の管理（自所属）
+    manage_all_gws_affair_shift_calendars: シフト勤務の管理（全て）
+    use_gws_rkk: 会計システム連携機能の利用
+    read_gws_affair_special_leaves: 特別休暇区分の閲覧
+    edit_gws_affair_special_leaves: 特別休暇区分の編集
+    delete_gws_affair_special_leaves: 特別休暇区分の削除
+    read_gws_affair_capitals: 原資区分の閲覧
+    edit_gws_affair_capitals: 原資区分の編集
+    delete_gws_affair_capitals: 原資区分の削除
+    read_gws_affair_capital_years: 年度設定の閲覧
+    edit_gws_affair_capital_years: 年度設定の編集
+    delete_gws_affair_capital_years: 年度設定の削除
+    use_gws_affair_overtime_aggregate: 時間外累計の閲覧（自身）
+    manage_gws_affair_overtime_aggregate: 時間外累計の閲覧（所属下）
+    all_gws_affair_overtime_aggregate: 時間外累計の閲覧（すべて）
+    read_other_gws_affair_leave_settings: 休暇設定の閲覧（全て）
+    read_private_gws_affair_leave_settings: 休暇設定の閲覧（所有）
+    edit_other_gws_affair_leave_settings: 休暇設定の編集（全て）
+    edit_private_gws_affair_leave_settings: 休暇設定の編集（所有）
+    delete_other_gws_affair_leave_settings: 休暇設定の削除（全て）
+    delete_private_gws_affair_leave_settings: 休暇設定の削除（所有）
+    use_gws_affair_leave_aggregate: 休暇取得累計の閲覧（自身）
+    manage_gws_affair_leave_aggregate: 休暇取得累計の閲覧（所属下）
+    all_gws_affair_leave_aggregate: 休暇取得累計の閲覧（すべて）
+
+  gws_notification:
+    gws/affair/overtime_file:
+      request: "[時間外申請]「%{name}」の承認申請が届きました。"
+      approve: "[時間外申請]「%{name}」の最終承認が完了しました。"
+      remand: "[時間外申請]「%{name}」の承認申請が差し戻されました。"
+      circular: "[時間外申請]「%{name}」が届きました。"
+      comment: "[時間外申請]「%{name}」にコメントがありました。"
+    gws/affair/leave_file:
+      request: "[休暇申請]「%{name}」の承認申請が届きました。"
+      approve: "[休暇申請]「%{name}」の最終承認が完了しました。"
+      remand: "[休暇申請]「%{name}」の承認申請が差し戻されました。"
+      circular: "[休暇申請]「%{name}」が届きました。"
+      comment: "[休暇申請]「%{name}」にコメントがありました。"
+    gws/affair/compensatory_file:
+      subject: "[時間外申請] 時間外申請「%{name}」振替の有効期限が迫っています。"
+      text: "%{text}"
+      mail_text: |
+        %{subject}
+
+        %{text}
+
+  tooltip:
+    gws/affair/capital:
+      article_code:
+        - 款を入力します。
+      section_code:
+        - 項を入力します。
+      subsection_code:
+        - 目を入力します。
+      item_code:
+        - 節を入力します。
+      subitem_code:
+        - 細節を入力します。
+      project_code:
+        - 事業コードを入力します。
+      detail_code:
+        - 明細を入力します。
+      project_name:
+        - 事業名称を入力します。
+      description_name:
+        - 説明名称を入力します。
+      item_name:
+        - 節名称を入力します。
+      subitem_name:
+        - 細節名称を入力します。
+    gws/affair/overtime_file:
+      name:
+        - タイトルを入力します。
+        - 空欄の場合、業務名（開始時間〜終了時間）が設定されます。
+      capital_id:
+        - 原資区分を入力します。
+      overtime_name:
+        - 業務名を入力します。
+      start_at:
+        - 開始時間を入力します。
+      end_at:
+        - 終了時間を入力します。
+      week_in_compensatory_minute:
+        - 同一週内振替を入力します。
+        - 振替時間を入力すると日時の入力が必須となります。
+        - 時間外申請が承認されると入力した日時で承認済みの休暇申請が作成されます。
+      week_out_compensatory_minute:
+        - 同一週外振替を入力します。
+        - 休暇申請を同時に作成する場合は日時の入力をしてください。
+        - 時間外申請が承認されると入力した日時で承認済みの休暇申請が作成されます。
+        - 同一週内振替と併用はできません。
+      holiday_compensatory_minute:
+        - 祝日勤務の振替を入力します。
+      remark:
+        - 備考を入力します。
+    gws/affair/leave_file:
+      name:
+        - タイトルを入力します。
+      start_at:
+        - 開始時間を入力します。
+      end_at:
+        - 終了時間を入力します。
+      leave_type:
+        - 休暇区分を入力します。
+      reason:
+        - 備考を入力します。
+      special_leave_id:
+        - 特別休暇区分を入力します。
+      week_in_compensatory_file_id:
+        - 振替申請（同一週内）を設定します。
+      week_out_compensatory_file_id:
+        - 振替申請（同一週外）を設定します。
+      holiday_compensatory_file_id:
+        - 振替申請（同一週外）を設定します。
+    gws/affair/duty_hour_setting:
+      attendance_time_changed_minute:
+        - 日替わり時刻を設定します。日替わり時刻とは、タイムカードの印字を翌日へ切り替える時刻のことです。
+      affair_on_duty:
+        - 勤務時間内で就業時間（分）以上勤務すると、休憩時間（分）を適用します。
+        -
+        - 例えば、6 時間以上勤務した場合に 45 分の休憩を取る場合、就業時間（分）に 360 を、休憩時間（分）に 45 を設定します。
+      affair_overtime:
+        - 勤務時間外で就業時間（分）以上勤務する毎に、休憩時間（分）を適用します。
+        -
+        - 例えば、時間外勤務の時間が 3 時間を超えるたびに 30 分の休憩を取る場合、就業時間（分）に 180 を、休憩時間（分）に 30 を設定します。
+      overtime_in_work:
+        - 標準勤務体系の勤務時間内で残業をした場合、時短（100/100）区分の残業とするかを設定します。
+    gws/affair/duty_calendar:
+      name:
+        - 勤務カレンダー名を入力します。
+      code:
+        - 職種区分コードを入力します。
+    gws/affair/duty_hour:
+      name:
+        - 勤務体系名を入力します。
+    gws/affair/duty_notice:
+      name:
+        - タイトルを入力します。
+      notice_type:
+        - 種別を選択します。
+      threshold_hour:
+        - 上限時間を入力します。
+      body:
+        - 警告文を入力します。
+    gws/addon/affair/file_target:
+      target_group_id: 申請対象のグループを選択します。
+      target_user_id: 申請対象のユーザーを選択します。
+    gws/affair/overtime_day_result:
+      search_term:
+        - 集計対象の期間を設定します。
+      search_group:
+        - 集計対象のグループを選択します。
+        - 配下のグループに所属しているユーザーの時間外を集計します。
+      search_user:
+        - 集計対象のユーザーを選択します。
+    gws/affair/special_leave:
+      code: コードを入力します。
+      name: 名前を入力します。
+      order:
+        - フォルダーの並び順を数字で入力します。
+        - 番号の小さい順にフォルダーが表示されます。
+      staff_category: 職員区分を選択します。
+    gws/affair/capital_year:
+      name: 年度名を入力します。（例：令和00年度）
+      code: 西暦を入力します。（例：2020）
+      start_date: 年度の開始日を入力します。（例：2020/04/01）
+      close_date: 年度の終了日を入力します。（例：2021/03/31）
+
+  job:
+    models:
+      gws/affair/notify_compensatory_file_job: 時間外申請の週外振替期限通知
+      gws/affair/overtime_aggregate_job: 時間外集計（グループ、ユーザーの記録）

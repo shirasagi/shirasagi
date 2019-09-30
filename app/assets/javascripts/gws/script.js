@@ -26,6 +26,7 @@
 //= require gws/attendance/portlet
 //= require gws/presence/user
 //= require gws/share/folder_toolbar
+//= require gws/affair/shift_records
 
 SS.ready(function () {
   // external link

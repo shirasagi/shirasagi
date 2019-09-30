@@ -1,0 +1,50 @@
+<% start_at, end_at = @cur_site.attendance_year_range %>
+
+<dl class="see">
+  <dt><%= @model.t :name %></dt>
+  <dd><%= @item.name %></dd>
+
+  <dt><%= @model.t :wday_settings %></dt>
+  <dd></dd>
+
+  <% %w(sunday monday tuesday wednesday thursday friday saturday national_holiday).each do |wday| %>
+    <dt class="depth-2"><%= @model.t "#{wday}_type" %></dt>
+    <dd class="depth-2">
+      <%= @item.label "#{wday}_type" %>
+    </dd>
+  <% end %>
+
+  <dt><%= @model.t :holidays %></dt>
+  <% if @item.holidays.present? %>
+    <dd>
+      <table class="index">
+        <thead>
+        <tr>
+          <th><%= Gws::Schedule::Holiday.t :name %></th>
+          <th><%= Gws::Schedule::Holiday.t :term %></th>
+        </tr>
+        </thead>
+        <tbody>
+        <% @item.holidays.gte(start_at: start_at).lte(start_at: end_at).order_by(start_at: 1).limit(5).each do |holiday| %>
+          <tr>
+            <td>
+                <span class="gws-schedule-color-block" style="<%= "background-color: #{holiday.color}; color: #{holiday.text_color}" %>">
+                  <%= holiday.name %>
+                </span>
+            </td>
+            <td><%= term(holiday) %></td>
+          </tr>
+        <% end %>
+        </tbody>
+        <tfoot>
+        <tr>
+          <th colspan="2"><%= t("gws/affair.top_holidays_on_year", count: 5, year: start_at.year) %></th>
+        </tr>
+        </tfoot>
+      </table>
+    </dd>
+  <% end %>
+  <dd>
+    <%= link_to(t("gws/affair.links.manage_holidays"), gws_affair_holiday_calendar_holidays_path(holiday_calendar_id: @item, year: start_at.year), class: "btn") %>
+  </dd>
+</dl>

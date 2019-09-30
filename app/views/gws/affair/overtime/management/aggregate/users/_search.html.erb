@@ -1,0 +1,8 @@
+<% group_options = @result_groups.map { |g| [g.name, g.group_id] } %>
+<%= form_for :s, url: "", html: { method: :get } do |f| %>
+  <%= f.select :group_id, group_options %>
+  <%= f.select :basic_code, @capitals.invert, include_blank: "原資区分" %>
+
+  <input type="submit" value="<%= t('ss.buttons.search') %>" class="btn" />
+  <%= link_to t("ss.buttons.reset"), { action: :index }, class: "btn" %>
+<% end %>

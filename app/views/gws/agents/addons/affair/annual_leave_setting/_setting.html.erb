@@ -1,0 +1,13 @@
+<%
+  minutes = @leave_files.map(&:leave_minutes_in_query).sum
+  effective_minutes = (@item.annual_leave_minutes - minutes)
+  effective_minutes = effective_minutes > 0 ? effective_minutes : 0
+%>
+<dt>有効日数</dt>
+<dd class="leave-dates"><%= @item.count %><%= t("ss.options.datetime_unit.day") %></dd>
+
+<dt>有効時間</dt>
+<dd class="leave-minutes"><%= Gws::Affair::Utils.leave_minutes_label(@item.annual_leave_minutes) %></dd>
+
+<dt>有効時間（残り）</dt>
+<dd class="effective-leave-minutes"><%= Gws::Affair::Utils.leave_minutes_label(effective_minutes) %></dd>

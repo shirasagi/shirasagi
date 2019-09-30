@@ -1,0 +1,50 @@
+<div class="gws-attendance">
+  <%= render partial: 'fiscal_year' %>
+
+  <div class="wrap-table" style="overflow-x: auto;">
+    <table class="index aggregate-capitals">
+      <thead>
+      <tr>
+        <th class="capital"><%= t("gws/affair.labels.overtime.capitals.capital") %></th>
+        <% @months.each do |month| %>
+          <th class="time">
+            <%= link_to action: :groups, fiscal_year: @fiscal_year, month: month, group: @group.id do %>
+              <%= month %><%= t("datetime.prompts.month") %>
+            <% end %>
+          </th>
+        <% end %>
+        <th class="time"><%= t("gws/affair.labels.overtime.capitals.total") %></th>
+      </tr>
+      </thead>
+      <tbody>
+      <% @capitals.each do |basic_code, name| %>
+        <tr>
+          <th class="capital"><%= name %></th>
+          <% total = 0 %>
+          <% @months.each do |month| %>
+            <%
+              minute = @items.dig(@fiscal_year, month, basic_code).to_i
+              total += minute
+            %>
+            <td class="time"><%= format_minute(minute) %></td>
+          <% end %>
+          <td class="time"><%= format_minute(total) %></td>
+        </tr>
+      <% end %>
+      <tr>
+        <th><%= t("gws/affair.labels.overtime.capitals.total_capitals") %></th>
+        <% total = 0 %>
+        <% @months.each do |month| %>
+            <%
+              minute = @items.dig(@fiscal_year, month, "total").to_i
+              total += minute
+            %>
+          <td class="time"><%= format_minute(minute) %></td>
+          </td>
+        <% end %>
+        <td class="time"><%=  format_minute(total) %></td>
+      </tr>
+      </tbody>
+    </table>
+  </div>
+</div>

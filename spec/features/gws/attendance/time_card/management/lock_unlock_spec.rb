@@ -26,7 +26,7 @@ describe "gws_attendance_time_card", type: :feature, dbscope: :example, js: true
   before { login_user user }
 
   describe 'lock and unlock' do
-    it do
+    xit do
       expect(user1_this_month_time_card.unlocked?).to be_truthy
       expect(user2_this_month_time_card.unlocked?).to be_truthy
 

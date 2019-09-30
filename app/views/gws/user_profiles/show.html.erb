@@ -1,0 +1,27 @@
+<%
+  duty_calendar = @item.effective_duty_calendar(@cur_site)
+  duty_hour = duty_calendar.default_duty_hour if duty_calendar.present?
+  duty_hour ||= Gws::Affair::DefaultDutyHour.new(cur_site: @cur_site)
+
+  holiday_calendar = duty_calendar.effective_holiday_calendar(Time.zone.now)
+%>
+<div class="main-box">
+  <dl class="see">
+    <dt><%= @model.t :name %></dt>
+    <dd><%= @item.name %></dd>
+
+    <dt><%= @model.t :group_ids %></dt>
+    <dd><%= @item.groups.site(@cur_site).map {|m| m.name }.join(", ") %></dd>
+
+    <dt><%= t("mongoid.models.gws/affair/duty_hour") %></dt>
+    <dd>
+      <%= duty_hour.name %>
+      (<%= duty_hour.label :affair_start_at_hour %><%= duty_hour.label :affair_start_at_minute %>
+      <%= t("ss.wave_dash") %>
+      <%= duty_hour.label :affair_end_at_hour %><%= duty_hour.label :affair_end_at_minute %>)
+    </dd>
+
+    <dt><%= t("mongoid.models.gws/affair/holiday_calendar") %></dt>
+    <dd><%= holiday_calendar.try(:name) %></dd>
+  </dl>
+</div>

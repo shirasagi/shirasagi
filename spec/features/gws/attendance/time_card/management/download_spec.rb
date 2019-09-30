@@ -42,7 +42,7 @@ describe "gws_attendance_time_card", type: :feature, dbscope: :example, js: true
 
   describe 'download' do
     context "with no users" do
-      it do
+      xit do
         visit gws_attendance_main_path(site)
         within first(".mod-navi") do
           click_on I18n.t('modules.gws/attendance/management/time_card')
@@ -61,7 +61,7 @@ describe "gws_attendance_time_card", type: :feature, dbscope: :example, js: true
     end
 
     context "with user1" do
-      it do
+      xit do
         visit gws_attendance_main_path(site)
         within first(".mod-navi") do
           click_on I18n.t('modules.gws/attendance/management/time_card')
@@ -100,7 +100,7 @@ describe "gws_attendance_time_card", type: :feature, dbscope: :example, js: true
       let(:from_time) { prev_month + 14.days }
       let(:to_time) { this_month + 13.days }
 
-      it do
+      xit do
         visit gws_attendance_main_path(site)
         within first(".mod-navi") do
           click_on I18n.t('modules.gws/attendance/management/time_card')
@@ -138,7 +138,7 @@ describe "gws_attendance_time_card", type: :feature, dbscope: :example, js: true
     end
 
     context "with user2 and UTF-8" do
-      it do
+      xit do
         visit gws_attendance_main_path(site)
         within first(".mod-navi") do
           click_on I18n.t('modules.gws/attendance/management/time_card')

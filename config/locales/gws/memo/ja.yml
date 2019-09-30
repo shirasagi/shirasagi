@@ -292,6 +292,7 @@ ja:
         notice_schedule_user_setting: スケジュール
         notice_todo_user_setting: ToDo
         notice_presence_user_setting: 在席状況
+        notice_affair_user_setting: 庶務事務
         notice_workflow_user_setting: ワークフロー
         notice_circular_user_setting: 回覧板
         notice_monitor_user_setting: 照会・回答

@@ -23,7 +23,7 @@ describe "gws_attendance_time_card", type: :feature, dbscope: :example, js: true
         travel_to(now) { example.run }
       end
 
-      it do
+      xit do
         # punch
         visit gws_attendance_main_path(site)
         expect(page).to have_css('.today .info .enter', text: '--:--')
@@ -92,7 +92,7 @@ describe "gws_attendance_time_card", type: :feature, dbscope: :example, js: true
         travel_to(now) { example.run }
       end
 
-      it do
+      xit do
         visit gws_attendance_main_path(site)
         expect(page).to have_css('.today .info .enter', text: '--:--')
 

@@ -1,0 +1,20 @@
+<%= form_for :item, url: { action: :destroy }, html: { method: :delete, multipart: true } do |f| %>
+<%= error_messages_for :item %>
+
+<section class="main-box">
+  <header><h2><%= t("gws/affair.shift_calendar") %></h2></header>
+
+  <dl class="see">
+    <%= t("gws/affair.confirm.delete_shift_calendar", user: @user.long_name) %>
+  </dl>
+</section>
+
+<footer class="send">
+  <% if @crud_buttons %>
+    <% @crud_buttons.call f %>
+  <% else %>
+    <%= f.submit t("ss.buttons.delete"), class: 'btn-danger delete' %>
+    <%= f.button t("ss.buttons.cancel"), class: 'btn-default', type: :reset, onclick: "location.href='#{url_for(action: :index)}'; return false;" %>
+  <% end %>
+</footer>
+<% end %>

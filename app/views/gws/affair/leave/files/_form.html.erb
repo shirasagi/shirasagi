@@ -1,0 +1,246 @@
+<%= jquery do %>
+var toggleSelectCompensatoryFile = function() {
+  var val = $(".select-leave-type").val();
+
+  $(".select-week-in").hide();
+  $(".select-week-out").hide();
+  $(".select-special-leave").hide();
+  $(".select-holiday-compensatory").hide();
+
+  if (val == "week_out_compensatory_leave") {
+    $(".select-week-out").show();
+  } else if (val == "week_in_compensatory_leave") {
+    $(".select-week-in").show();
+  } else if (val == "paidleave") {
+　　$(".select-special-leave").show();
+  } else if (val == "holiday_compensatory_leave") {
+    $(".select-holiday-compensatory").show();
+  }
+};
+$(".select-leave-type").on("change", toggleSelectCompensatoryFile);
+toggleSelectCompensatoryFile();
+
+$('a.select-affair-file').on("click", function () {
+  var href = $(this).attr("data-href");
+  var uid = $('.ajax-selected [name="item[target_user_id]"]').val();
+  var ymd = $('[name="item[start_at_date]"]').val();
+
+  if (uid) {
+    href = href.replace("UID", uid);
+    $(this).attr("href", href);
+  } else {
+    alert("<%= t("gws/affair.notice.select_target_user") %>");
+    return false;
+  }
+
+  if (ymd) {
+    ymd = ymd.replace(/\//g, '');
+    href = href.replace("YMD", ymd);
+    $(this).attr("href", href);
+  } else {
+    alert("<%= t("gws/affair.notice.select_start_at_date") %>");
+    return false;
+  }
+});
+
+$('a.select-special-leaves').on("click", function () {
+  var href = $(this).attr("data-href");
+  var uid = $('.ajax-selected [name="item[target_user_id]"]').val();
+
+  if (uid) {
+    href = href.replace("UID", uid);
+    $(this).attr("href", href);
+  } else {
+    alert("<%= t("gws/affair.notice.select_target_user") %>");
+    return false;
+  }
+});
+
+// 残有給日数
+var showEffectiveAnnualLeaveMinutes = function() {
+  var type = $('[name="item[leave_type]"]').val();
+  var ymd = $('[name="item[start_at_date]"]').val();
+  var uid = $('.ajax-selected [name="item[target_user_id]"]').val();
+  var href = '<%= gws_affair_leave_apis_annual_leaves_path(uid: "UID", year_month_day: "YMD") %>';
+
+  if (type == "annual_leave" && ymd && uid) {
+    ymd = ymd.replace(/\//g, '');
+    href = href.replace("YMD", ymd);
+    href = href.replace("UID", uid);
+    $.get(href, function(html) {
+      $(".annual-leave-count").html(html);
+    });
+  } else {
+    $(".annual-leave-count").html("");
+  }
+};
+$('[name="item[leave_type]"]').on("change", showEffectiveAnnualLeaveMinutes);
+showEffectiveAnnualLeaveMinutes();
+
+<% end %>
+
+<%
+  duty_calendar = @cur_user.effective_duty_calendar(@cur_site)
+  duty_hour = duty_calendar.default_duty_hour
+  now = Time.zone.now
+
+  @item.start_at_date ||= now.strftime("%Y/%m/%d")
+  @item.start_at_hour ||= duty_hour.affair_start_at_hour(now)
+  @item.start_at_minute ||= duty_hour.affair_start_at_minute(now)
+  @item.end_at_date ||= now.strftime("%Y/%m/%d")
+  @item.end_at_hour ||= duty_hour.affair_end_at_hour(now)
+  @item.end_at_minute ||= duty_hour.affair_end_at_minute(now)
+
+  leave_type_options = %w(
+    annual_leave paidleave
+    week_in_compensatory_leave
+    week_out_compensatory_leave
+    holiday_compensatory_leave
+  ).map do
+    |k| [t("gws/affair.options.leave_type.#{k}"), k]
+  end
+%>
+
+<dl class="see">
+  <dt><%= @model.t :start_at %><%= @model.tt :start_at %></dt>
+  <dd>
+    <%= f.text_field :start_at_date, class: "date js-date" %>
+    <%= f.select :start_at_hour, @item.start_at_hour_options, include_blank: true %>
+    <%= f.select :start_at_minute, @item.start_at_minute_options, include_blank: true %>
+    〜
+    <%= f.text_field :end_at_date, class: "date js-date" %>
+    <%= f.select :end_at_hour, @item.end_at_hour_options, include_blank: true %>
+    <%= f.select :end_at_minute, @item.end_at_minute_options, include_blank: true %>
+  </dd>
+
+  <dt><%= @model.t :leave_type %><%= @model.tt :leave_type %></dt>
+  <dd>
+    <% if @item.new_record? %>
+      <%= f.select :leave_type, leave_type_options, { include_blank: true }, { class: "select-leave-type" } %>
+    <% else %>
+      <%= @item.label :leave_type %>
+    <% end %>
+    <span class="annual-leave-count"></span>
+  </dd>
+
+  <% if @item.week_in_compensatory_file %>
+    <dt><%= @model.t :week_in_compensatory_file_id %></dt>
+    <dd><%= link_to @item.week_in_compensatory_file.term_label, gws_affair_overtime_file_path(site: @cur_site.id, id: @item.week_in_compensatory_file) %></dd>
+  <% end %>
+</dl>
+
+<dl class="see select-special-leave" style="display: none; margin-top: 10px;">
+  <dt><%= @model.t :special_leave_id %><%= @model.tt :special_leave_id %></dt>
+  <dd>
+    <%= f.hidden_field "special_leave_id", value: "", class: "hidden-ids" %>
+    <%= link_to t("gws/affair.apis.special_leaves.index"), "", class: "ajax-box select-special-leaves btn", "data-href": gws_affair_leave_apis_special_leaves_path(uid: "UID") %>
+  </dd>
+  <dd>
+    <table class="index ajax-selected">
+      <thead><tr><th class="name"><%= Gws::Affair::SpecialLeave.t :name %></th><th class="deselect"></th></tr></thead>
+      <tbody>
+      <% if @item.special_leave %>
+        <tr data-id="<%= @item.special_leave_id %>">
+          <td>
+            <%= f.hidden_field "special_leave_id", value: @item.special_leave_id, class: "hidden-ids" %>
+            <%= @item.special_leave.name %>
+          </td>
+          <td><%= link_to t("ss.buttons.delete"), "#", class: "deselect btn" %></td>
+        </tr>
+      <% end %>
+      </tbody>
+    </table>
+  </dd>
+</dl>
+
+<dl class="see select-week-in" style="display: none; margin-top: 10px;">
+  <dt><%= @model.t :week_in_compensatory_file_id %></dt>
+  <dd>
+    <%= f.hidden_field "week_in_compensatory_file_id", value: "", class: "hidden-ids" %>
+    <%= link_to t("ss.links.select"), "", class: "ajax-box select-affair-file btn", "data-href": gws_affair_overtime_apis_files_week_in_path(uid: "UID", year_month_day: "YMD") %>
+  </dd>
+  <dd>
+    <table class="index ajax-selected">
+      <thead>
+      <tr>
+        <th class="name"><%= Gws::Affair::OvertimeFile.t :overtime_name %></th>
+        <th></th>
+      </tr>
+      </thead>
+      <tbody>
+      <% if @item.week_in_compensatory_file %>
+        <tr data-id="<%= @item.week_in_compensatory_file_id %>">
+          <td>
+            <%= f.hidden_field "week_in_compensatory_file_id", value: @item.week_in_compensatory_file_id, class: "hidden-ids" %>
+            <%= @item.week_in_compensatory_file.term_label %>
+          </td>
+          <td><%= link_to t("ss.buttons.delete"), "#", class: "deselect btn" %></td>
+        </tr>
+      <% end %>
+      </tbody>
+    </table>
+  </dd>
+</dl>
+
+<dl class="see select-week-out" style="display: none; margin-top: 10px;">
+  <dt><%= @model.t :week_out_compensatory_file_id %></dt>
+  <dd>
+    <%= f.hidden_field "week_out_compensatory_file_id", value: "", class: "hidden-ids" %>
+    <%= link_to t("ss.links.select"), "", class: "ajax-box select-affair-file btn", "data-href": gws_affair_overtime_apis_files_week_out_path(uid: "UID", year_month_day: "YMD") %>
+  </dd>
+  <dd>
+    <table class="index ajax-selected">
+      <thead>
+      <tr>
+        <th class="name"><%= Gws::Affair::OvertimeFile.t :overtime_name %></th>
+        <th></th>
+      </tr>
+      </thead>
+      <tbody>
+        <% if @item.week_out_compensatory_file %>
+          <tr data-id="<%= @item.week_out_compensatory_file_id %>">
+            <td>
+              <%= f.hidden_field "week_out_compensatory_file_id", value: @item.week_out_compensatory_file_id, class: "hidden-ids" %>
+              <%= @item.week_out_compensatory_file.term_label %>
+            </td>
+            <td><%= link_to t("ss.buttons.delete"), "#", class: "deselect btn" %></td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </dd>
+</dl>
+
+<dl class="see select-holiday-compensatory" style="display: none; margin-top: 10px;">
+  <dt><%= @model.t :holiday_compensatory_file_id %></dt>
+  <dd>
+    <%= f.hidden_field "holiday_compensatory_file_id", value: "", class: "hidden-ids" %>
+    <%= link_to t("ss.links.select"), "", class: "ajax-box select-affair-file btn", "data-href": gws_affair_overtime_apis_files_holiday_path(uid: "UID", year_month_day: "YMD") %>
+  </dd>
+  <dd>
+    <table class="index ajax-selected">
+      <thead>
+      <tr>
+        <th class="name"><%= Gws::Affair::OvertimeFile.t :overtime_name %></th>
+        <th></th>
+      </tr>
+      </thead>
+      <tbody>
+      <% if @item.holiday_compensatory_file %>
+        <tr data-id="<%= @item.holiday_compensatory_file_id %>">
+          <td>
+            <%= f.hidden_field "holiday_compensatory_file_id", value: @item.holiday_compensatory_file_id, class: "hidden-ids" %>
+            <%= @item.holiday_compensatory_file.term_label %>
+          </td>
+          <td><%= link_to t("ss.buttons.delete"), "#", class: "deselect btn" %></td>
+        </tr>
+      <% end %>
+      </tbody>
+    </table>
+  </dd>
+</dl>
+
+<dl class="see">
+  <dt><%= @model.t :reason %><%= @model.tt :reason %></dt>
+  <dd><%= f.text_area :reason %></dd>
+</dl>

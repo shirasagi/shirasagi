@@ -55,6 +55,10 @@ ja:
     large_file_upload: 大容量アップロード
     upload_status: アップロード状況
     under_maintenance_mode: 現在メンテナンス中です。
+    time: 時間
+    remark: 備考
+    before: 前
+    after: 後
 
     views:
       login/login:
@@ -251,6 +255,7 @@ ja:
       target_to_delete: 削除対象の確認
       target_to_public: 公開対象の確認
       target_to_closed: 非公開対象の確認
+      approve: 承認してよろしいですか？
     notice:
       saved: 保存しました。
       deleted: 削除しました。

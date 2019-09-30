@@ -1,0 +1,14 @@
+<dl class="see">
+  <dt><%= @model.t :name %></dt>
+  <dd><%= f.text_field :name, autofocus: pc_browser? %></dd>
+
+  <dt><%= @model.t :wday_settings %></dt>
+  <dd></dd>
+
+  <% %w(sunday monday tuesday wednesday thursday friday saturday national_holiday).each do |wday| %>
+    <dt class="depth-2"><%= @model.t "#{wday}_type" %></dt>
+    <dd class="depth-2">
+      <%= f.select("#{wday}_type", @item.wday_type_options) %>
+    </dd>
+  <% end %>
+</dl>

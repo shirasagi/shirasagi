@@ -51,7 +51,7 @@ class Gws::Schedule::HolidaysController < ApplicationController
   end
 
   def events
-    @items = @model.site(@cur_site).
+    @items = @model.site(@cur_site).and_system.
       allow(:read, @cur_user, site: @cur_site).
       search(params[:s])
 
@@ -59,7 +59,7 @@ class Gws::Schedule::HolidaysController < ApplicationController
   end
 
   def download
-    csv = @model.unscoped.site(@cur_site).to_csv
+    csv = @model.unscoped.site(@cur_site).and_system.to_csv
     send_data csv.encode("SJIS", invalid: :replace, undef: :replace), filename: "gws_holidays_#{Time.zone.now.to_i}.csv"
   end
 

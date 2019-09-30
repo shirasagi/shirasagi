@@ -19,7 +19,7 @@ end
 def login_user(user, pass: nil)
   visit sns_login_path
   within "form" do
-    fill_in "item[email]", with: user.email
+    fill_in "item[email]", with: user.email.presence || user.uid
     fill_in "item[password]", with: pass.presence || user.in_password.presence || "pass"
     set_value_to_hidden_input('input#ref', '/robots.txt')
     click_button I18n.t("ss.login", locale: I18n.default_locale)
