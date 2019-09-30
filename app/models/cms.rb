@@ -18,67 +18,120 @@ module Cms
     Cms.cms_db_used(site_criteria) + Cms.cms_files_used(site_criteria)
   end
 
+  MODULES_BOUND_TO_SITE = %w(
+    ::Ads::AccessLog
+    ::Board::AnpiPost
+    ::Board::Post
+    ::Chat::Category
+    ::Chat::History
+    ::Chat::Intent
+    ::Chorg::Changeset
+    ::Chorg::Revision
+    ::Cms::BodyLayout
+    ::Cms::Column::Base
+    ::Cms::Command
+    ::Cms::EditorTemplate
+    ::Cms::Form
+    ::Cms::ImportJobFile
+    ::Cms::InitColumn
+    ::Cms::Layout
+    ::Cms::LoopSetting
+    ::Cms::MaxFileSize
+    ::Cms::Member
+    ::Cms::Node
+    ::Cms::Notice
+    ::Cms::Page
+    ::Cms::PageRelease
+    ::Cms::PageSearch
+    ::Cms::Part
+    ::Cms::Role
+    ::Cms::Role
+    ::Cms::SourceCleanerTemplate
+    ::Cms::ThemeTemplate
+    ::Cms::WordDictionary
+    ::Ezine::Column
+    ::Ezine::Entry
+    ::Ezine::Member
+    ::Ezine::TestMember
+    ::History::Log
+    ::Inquiry::Answer
+    ::Inquiry::Column
+    ::Jmaxml::Action::Base
+    ::Jmaxml::Filter
+    ::Jmaxml::ForecastRegion
+    ::Jmaxml::QuakeRegion
+    ::Jmaxml::Trigger::Base
+    ::Jmaxml::TsunamiRegion
+    ::Jmaxml::WaterLevelStation
+    ::Job::Log
+    ::Kana::Dictionary
+    ::Ldap::Import
+    ::Member::ActivityLog
+    ::Member::Group
+    ::Opendata::AppPoint
+    ::Opendata::Csv2rdfSetting
+    ::Opendata::DatasetGroup
+    ::Opendata::DatasetPoint
+    ::Opendata::Harvest::Exporter
+    ::Opendata::Harvest::Exporter::DatasetRelation
+    ::Opendata::Harvest::Exporter::GroupSetting
+    ::Opendata::Harvest::Exporter::OwnerOrgSetting
+    ::Opendata::Harvest::Importer
+    ::Opendata::Harvest::Importer::CategorySetting
+    ::Opendata::Harvest::Importer::EstatCategorySetting
+    ::Opendata::Harvest::Importer::Report
+    ::Opendata::Harvest::Importer::ReportDataset
+    ::Opendata::IdeaComment
+    ::Opendata::IdeaPoint
+    ::Opendata::License
+    ::Opendata::MemberNotice
+    ::Opendata::ResourceBulkDownloadHistory
+    ::Opendata::ResourceDatasetDownloadHistory
+    ::Opendata::ResourceDownloadHistory
+    ::Opendata::ResourcePreviewHistory
+    ::Rdf::Class
+    ::Rdf::Prop
+    ::Rdf::Vocab
+    ::Recommend::History::Log
+    ::Recommend::SimilarityScore
+    ::Voice::File
+  ).freeze
+
+  MODULES_BOUND_TO_GROUP = %w(
+    ::Cms::User
+    ::Workflow::Route
+  ).freeze
+
   def self.cms_db_used(site_criteria)
     site_ids = site_criteria.pluck(:id)
+    site_group_ids = site_criteria.pluck(:group_ids).flatten.uniq
+    organization_group_ids = Cms::Group.all.unscoped.in(id: site_group_ids).organizations.pluck(:id)
+    organization_group_names = Cms::Group.all.unscoped.in(id: organization_group_ids).pluck(:name)
+    conditions = organization_group_names.map { |name| { name: /^#{::Regexp.escape(name)}(\/|$)/ } }
+    if conditions.present?
+      groups = Cms::Group.all.unscoped.where("$and" => [{ "$or" => conditions }])
+    else
+      groups = Cms::Group.none
+    end
+    group_ids = groups.pluck(:id)
+
     size = [
       site_criteria,
-      ::Chorg::Revision.any_in(site_id: site_ids),
-      Cms::BodyLayout.any_in(site_id: site_ids),
-      Cms::EditorTemplate.any_in(site_id: site_ids),
-      Cms::Layout.any_in(site_id: site_ids),
-      Cms::LoopSetting.any_in(site_id: site_ids),
-      Cms::MaxFileSize.any_in(site_id: site_ids),
-      Cms::Member.any_in(site_id: site_ids),
-      Cms::Node.any_in(site_id: site_ids),
-      Cms::Notice.any_in(site_id: site_ids),
-      Cms::PageSearch.any_in(site_id: site_ids),
-      Cms::Page.any_in(site_id: site_ids),
-      Cms::Part.any_in(site_id: site_ids),
-      Cms::Role.any_in(site_id: site_ids),
-      Cms::SourceCleanerTemplate.any_in(site_id: site_ids),
-      Cms::ThemeTemplate.any_in(site_id: site_ids),
-      Cms::WordDictionary.any_in(site_id: site_ids),
+      groups,
     ].sum { |c| c.total_bsonsize }
 
-    size + Cms.cms_modules_db_used(site_criteria)
-  end
-
-  def self.cms_modules_db_used(site_criteria)
-    site_ids = site_criteria.pluck(:id)
-    [
-      ::Board::AnpiPost.any_in(site_id: site_ids),
-      ::Board::Post.any_in(site_id: site_ids),
-      ::Ezine::Column.any_in(site_id: site_ids),
-      ::Ezine::Entry.any_in(site_id: site_ids),
-      ::Ezine::Member.any_in(site_id: site_ids),
-      ::Ezine::TestMember.any_in(site_id: site_ids),
-      ::History::Log.any_in(site_id: site_ids),
-      ::Inquiry::Answer.any_in(site_id: site_ids),
-      ::Inquiry::Column.any_in(site_id: site_ids),
-      ::Jmaxml::Action::Base.any_in(site_id: site_ids),
-      ::Jmaxml::ForecastRegion.any_in(site_id: site_ids),
-      ::Jmaxml::Trigger::Base.any_in(site_id: site_ids),
-      ::Jmaxml::TsunamiRegion.any_in(site_id: site_ids),
-      ::Jmaxml::WaterLevelStation.any_in(site_id: site_ids),
-      ::Job::Log.any_in(site_id: site_ids),
-      ::Member::Group.any_in(site_id: site_ids),
-      ::Member::ActivityLog.any_in(site_id: site_ids),
-      ::Opendata::AppPoint.any_in(site_id: site_ids),
-      ::Opendata::Csv2rdfSetting.any_in(site_id: site_ids),
-      ::Opendata::DatasetGroup.any_in(site_id: site_ids),
-      ::Opendata::DatasetPoint.any_in(site_id: site_ids),
-      ::Opendata::IdeaComment.any_in(site_id: site_ids),
-      ::Opendata::IdeaPoint.any_in(site_id: site_ids),
-      ::Opendata::License.any_in(site_id: site_ids),
-      ::Opendata::MemberNotice.any_in(site_id: site_ids),
-      ::Rdf::Vocab.any_in(site_id: site_ids),
-      ::Rss::WeatherXmlPage.any_in(site_id: site_ids),
-    ].sum { |c| c.total_bsonsize }
+    size += MODULES_BOUND_TO_SITE.map(&:constantize).sum do |klass|
+      klass.all.unscoped.any_in(site_id: site_ids).total_bsonsize
+    end
+    size += MODULES_BOUND_TO_GROUP.map(&:constantize).sum do |klass|
+      klass.all.unscoped.any_in(group_ids: group_ids).total_bsonsize
+    end
+    size
   end
 
   def self.cms_files_used(site_criteria)
     site_ids = site_criteria.pluck(:id)
-    criteria = SS::File.any_in(site_id: site_ids).where(model: { '$not' => /^(ss|gws)\// })
+    criteria = SS::File.any_in(site_id: site_ids).where(model: { '$not' => /^(ss|gws|webmail)\// })
 
     size = criteria.total_bsonsize + criteria.aggregate_files_used
 
@@ -92,5 +145,4 @@ module Cms
     end
     size
   end
-
 end
