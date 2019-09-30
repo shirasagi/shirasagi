@@ -11,36 +11,6 @@ Cms_Usage.prototype.render = function() {
 };
 
 Cms_Usage.prototype.reload = function($btn) {
-  var url = $btn.data('href');
-
-  if (url.endsWith(".json")) {
-    this.reloadByJson($btn);
-  } else {
-    // HTML
-    this.reloadByHtml($btn);
-  }
-};
-
-Cms_Usage.prototype.reloadByHtml = function($btn) {
-  var _this = this;
-  $.ajax({
-    url: $btn.data('href'),
-    method: 'post',
-    data: {
-      _method: 'PUT'
-    },
-    beforeSend: function() {
-      $btn.prop("disabled", true);
-      _this.$el.find('.cms-usages').html(SS.loading);
-    },
-    success: function(data) {
-      $btn.prop("disabled", false);
-      _this.$el.find('.cms-usages').html($(data).find('.cms-usages').html());
-    }
-  });
-};
-
-Cms_Usage.prototype.reloadByJson = function($btn) {
   var _this = this;
   $.ajax({
     url: $btn.data('href'),

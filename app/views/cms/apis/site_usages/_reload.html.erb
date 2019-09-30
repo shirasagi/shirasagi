@@ -1,9 +1,0 @@
-<% site ||= @cur_site %>
-<span class="cms-usages">
-  <span class="cms-usage-item cms-usage-node-count"><%= Cms::Site.t(:usage_node_count) %>: <%= site.usage_node_count.try { |v| v.to_s(:delimited) } || "-" %></span>,
-  <span class="cms-usage-item cms-usage-page-count"><%= Cms::Site.t(:usage_page_count) %>: <%= site.usage_page_count.try { |v| v.to_s(:delimited) } || "-" %></span>,
-  <span class="cms-usage-item cms-usage-file-count"><%= Cms::Site.t(:usage_file_count) %>: <%= site.usage_file_count.try { |v| v.to_s(:delimited) } || "-" %></span>,
-  <span class="cms-usage-item cms-usage-db-size"><%= Cms::Site.t(:usage_db_size) %>: <%= site.usage_db_size.try { |v| v.to_s(:human_size) } || "-" %></span>,
-  <span class="cms-usage-item cms-usage-group-count"><%= Cms::Site.t(:usage_group_count) %>: <%= site.usage_group_count.try { |v| v.to_s(:delimited) } || "-" %></span>,
-  <span class="cms-usage-item cms-usage-user-count"><%= Cms::Site.t(:usage_user_count) %>: <%= site.usage_user_count.try { |v| v.to_s(:delimited) } || "-" %></span>
-</span>

@@ -6,10 +6,7 @@ class Cms::Apis::SiteUsagesController < ApplicationController
   private
 
   def check_permission
-    return if @cur_user.cms_role_permit_any?(@cur_site, :edit_cms_body_usages)
-    return if Cms::Site.allowed?(:edit, @cur_user, site: @cur_site)
-
-    raise "403"
+    raise "403" unless Cms::Site.allowed?(:edit, @cur_user, site: @cur_site)
   end
 
   public

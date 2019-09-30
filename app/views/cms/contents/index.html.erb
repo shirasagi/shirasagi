@@ -37,20 +37,7 @@
 <% end %>
 
 <div class="index">
-  <div class="list-head">
-    <%= t "cms.content" %>
-    <% if @cur_user.cms_role_permit_any?(@cur_site, :read_cms_body_usages) %>
-      <div class="cms-usages-wrap">
-        <%= render "cms/apis/site_usages/reload" %>
-        <% if @cur_user.cms_role_permit_any?(@cur_site, :edit_cms_body_usages) %>
-          <%= button_tag(t("service.buttons.reload"), type: "button", id: nil, name: "reload", class: "btn btn-reload-cms-usages", data: { href: cms_apis_reload_site_usages_path(format: "html") }) %>
-        <% end %>
-        <%= jquery do %>
-        new Cms_Usage(".cms-usages-wrap")
-        <% end %>
-      </div>
-    <% end %>
-  </div>
+  <div class="list-head"><%= t "cms.content" %></div>
 
   <ul class="list-items">
     <% @items.each do |item| %>

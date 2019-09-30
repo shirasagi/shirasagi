@@ -1,5 +1,5 @@
 <%
-  return if !@item.allowed?(:edit, @cur_user, site: @cur_site) && !@cur_user.cms_role_permit_any?(@cur_site, :read_cms_body_usages)
+  return unless @item.allowed?(:edit, @cur_user, site: @cur_site)
 
   addon ||= local_assigns.fetch(:addon, {})
 %>
@@ -27,9 +27,7 @@
   <dd><span class="cms-usage-calculated-at"><%= @item.usage_calculated_at.try { |v| I18n.l(v) } || '-' %></span></dd>
 </dl>
 
-<% if @item.allowed?(:edit, @cur_user, site: @cur_site) %>
-<%= button_tag(t('service.buttons.reload'), name: "reload", type: "button", class: "btn btn-reload-cms-usages", data: { href: cms_apis_reload_site_usages_path(format: "json") }) %>
-<% end %>
+<%= button_tag(t('service.buttons.reload'), name: "reload", type: "button", class: "btn btn-reload-cms-usages", data: { href: cms_apis_reload_site_usages_path(site: @item, format: "json") }) %>
 
 <%= jquery do %>
   new Cms_Usage("#<%= addon[:id] %>")
