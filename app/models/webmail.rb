@@ -73,21 +73,27 @@ module Webmail
       Webmail::AddressGroup,
       Webmail::Address,
       Webmail::Filter,
+      Webmail::History,
+      Webmail::History::ArchiveFile,
       Webmail::Mail,
       Webmail::Mailbox,
       Webmail::Quota,
+      Webmail::Role,
       Webmail::Signature,
     ].sum { |c| c.total_bsonsize }
   end
 
   def webmail_files_used
+    size = SS::File.where(model: /^webmail\//).aggregate_files_used
+
     dir = "#{Rails.root}/private/files/webmail_files"
-    return 0 unless ::File.exists?(dir)
+    return size unless ::File.exists?(dir)
+
     # see: https://myokoym.hatenadiary.org/entry/20100606/1275836896
-    size = 0
     ::Dir.glob("#{dir}/**/*") do |path|
       size += ::File.stat(path).size rescue 0
     end
+
     size
   end
 end
