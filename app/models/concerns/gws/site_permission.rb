@@ -3,11 +3,12 @@ module Gws::SitePermission
   include SS::Permission
 
   def allowed?(action, user, opts = {})
-    user   = user.gws_user
-    action = permission_action || action
-    permit = "#{action}_#{self.class.permission_name}"
-
+    user = user.gws_user
     site = opts[:site] || @cur_site
+
+    action = opts[:action] || permission_action || action
+    pname = opts[:permission_name] || self.class.permission_name
+    permit = "#{action}_#{pname}"
 
     if !Gws::Role.permission_names.include?(permit)
       return false
@@ -19,11 +20,12 @@ module Gws::SitePermission
 
   module ClassMethods
     def allow(action, user, opts = {})
-      user    = user.gws_user
+      user = user.gws_user
       site_id = opts[:site] ? opts[:site].id : criteria.selector["site_id"]
 
-      action = permission_action || action
-      permit = "#{action}_#{permission_name}"
+      action = opts[:action] || permission_action || action
+      pname = opts[:permission_name] || permission_name
+      permit = "#{action}_#{pname}"
 
       role = user.gws_roles.where(site_id: site_id).in(permissions: permit).first
       role ? where({}) : where({ _id: -1 })

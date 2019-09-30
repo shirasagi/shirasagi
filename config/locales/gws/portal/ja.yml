@@ -25,6 +25,7 @@ ja:
       gws/portal/notice_setting: お知らせ設定
       gws/portal/monitor_setting: 照会・回答設定
       gws/portal/link_setting: リンク集設定
+      gws/portal/attendance_setting: 出退勤設定
 
   gws/portal:
     self_portal: 個人
@@ -192,6 +193,8 @@ ja:
         survey_answered_state: 回答・未回答
         survey_sort: 並び順
         survey_category_ids: カテゴリー
+      gws/addon/portal/portlet/attendance:
+        timecard_module: 打刻先のタイムカード
       gws/addon/portal/portlet/ad:
         ad_width: 横幅
         ad_speed: スライド時間

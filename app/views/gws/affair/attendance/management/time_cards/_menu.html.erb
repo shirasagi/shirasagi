@@ -1,0 +1,17 @@
+<% if %i[manage_private manage_all].find { |priv| Gws::Attendance::TimeCard.allowed?(priv, @cur_user, site: @cur_site) } %>
+<nav class="nav-menu">
+  <% if params[:action] =~ /index/ %>
+    <%= link_to t('ss.links.download'), action: :download, s: params[:s].try(:to_unsafe_h) %>
+    <%= link_to t('gws/attendance.links.lock'), action: :lock, s: params[:s].try(:to_unsafe_h) %>
+    <%= link_to t('gws/attendance.links.unlock'), action: :unlock, s: params[:s].try(:to_unsafe_h) %>
+  <% elsif params[:action] =~ /new|create|lock|unlock|download|destroy_all/ %>
+    <%= link_to t('ss.links.back_to_index'), action: :index %>
+  <% elsif params[:action] =~ /edit|update|delete|move/ %>
+    <%= link_to t('ss.links.back_to_show'), action: :show, id: @item %>
+    <%= link_to t('ss.links.back_to_index'), action: :index %>
+  <% else %>
+    <%= link_to t('ss.links.delete'), action: :delete, id: @item %>
+    <%= link_to t('ss.links.back_to_index'), action: :index %>
+  <% end %>
+</nav>
+<% end %>

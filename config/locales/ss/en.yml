@@ -151,6 +151,7 @@ en:
       copy_email_address: Copy e-mail address
       closed_save: Make private
       edit_password: Change password
+      approve: Approve
     buttons:
       save: Save
       saving: Saving

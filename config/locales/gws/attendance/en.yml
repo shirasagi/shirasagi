@@ -31,6 +31,15 @@ en:
     edit_cell:
       time: Time
       reason: Reason for correction
+    options:
+      in_day:
+        today: today
+        tomorrow: tomorrow
+      reason_type:
+        mistake: mistake
+        trip: trip
+        exemption: exemption
+        other: other
     tooltips:
       encoding:
         - Select a character code.

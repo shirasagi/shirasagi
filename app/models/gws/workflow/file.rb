@@ -12,16 +12,16 @@ class Gws::Workflow::File
   include Gws::Addon::ReadableSetting
   include Gws::Addon::GroupPermission
   include Gws::Addon::History
+  include SS::Release
 
   cattr_reader(:approver_user_class) { Gws::User }
+  self.default_release_state = "closed"
 
   seqid :id
-  field :state, type: String, default: 'closed'
   field :name, type: String
 
-  permit_params :state, :name
+  permit_params :name
 
-  validates :state, presence: true
   validates :name, presence: true, length: { maximum: 80 }
 
   after_clone_files :rewrite_file_ref

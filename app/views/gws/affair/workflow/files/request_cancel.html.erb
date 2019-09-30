@@ -1,0 +1,20 @@
+<%= form_for :item, url: { action: :request_cancel }, html: { method: :post } do |f| %>
+  <%= error_messages_for :item %>
+
+  <div class="addon-views">
+    <div class="addon-view" id="addon-basic">
+      <div class="addon-head"><h2><%= t("workflow.confirm.request_cancel") %></h2></div>
+      <div class="addon-body">
+        <dl class="see">
+          <dt><%= @model.t :name %></dt>
+          <dd><%= @item.name %></dd>
+        </dl>
+      </div>
+    </div>
+  </div>
+
+  <footer class="send">
+    <%= f.submit t("workflow.buttons.cancel"), class: 'btn-primary save' %>
+    <%= f.button t("ss.links.back_to_show"), class: 'btn-default', type: :reset, onclick: "location.href='#{url_for(action: :show)}'; return false;" %>
+  </footer>
+<% end %>

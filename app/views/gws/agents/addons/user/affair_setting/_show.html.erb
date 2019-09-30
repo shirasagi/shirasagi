@@ -1,0 +1,17 @@
+<dl class="see mod-gws-user-affair_setting">
+  <dt><%= @model.t :staff_category %></dt>
+  <dd><%= @item.label :staff_category %></dd>
+
+  <dt><%= @model.t :staff_address_uid %></dt>
+  <dd><%= @item.staff_address_uid %></dd>
+
+  <% if @item.superior_groups.present? %>
+    <dt><%= @model.t :superior_group_ids %></dt>
+    <dd><%=br @item.superior_groups.pluck(:name) %></dd>
+  <% end %>
+
+  <% if @item.superior_users.present? %>
+    <dt><%= @model.t :superior_user_ids %></dt>
+    <dd><%=br @item.superior_users.map { |item| item.long_name } %></dd>
+  <% end %>
+</dl>

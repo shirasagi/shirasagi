@@ -150,6 +150,14 @@ production: &production
   attendance:
     max_break: 3
 
+  affair:
+    overtime:
+      night_time:
+        start_hour: 22
+        end_hour: 29
+      aggregate:
+        threshold_hour: 60
+
   memo:
     disable_unsend: true
     disable_mail_forward: false

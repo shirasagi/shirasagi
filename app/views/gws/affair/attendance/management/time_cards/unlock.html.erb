@@ -1,0 +1,21 @@
+<%= form_for :item, url: { action: :unlock }, html: { id: "item-form", method: :post, multipart: true, autocomplete: :off } do |f| %>
+  <%= error_messages_for :item %>
+
+  <%= hidden_field_tag :_updated, params[:_updated] || @item.updated if @item.respond_to?(:updated) %>
+
+  <div class="addon-views">
+    <div class="addon-view" id="addon-basic">
+      <div class="addon-head"><h2><%= t('gws/attendance.confirm.unlock') %></h2></div>
+      <div class="addon-body">
+        <%= render template: '_lock', locals: { f: f } %>
+      </div>
+    </div>
+  </div>
+
+  <footer class="send">
+    <%= f.submit t('gws/attendance.buttons.unlock'), class: 'btn-primary save' %>
+    <%= f.button t('ss.buttons.cancel'), class: 'btn-default', type: :reset, onclick: "location.href='#{url_for(action: :index)}'; return false;" %>
+  </footer>
+<% end %>
+
+<%= jquery do %> SS.confirmUnloading(); <% end %>
