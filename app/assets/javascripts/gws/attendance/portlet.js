@@ -53,6 +53,7 @@ Gws_Attendance_Portlet.prototype.edit = function($button, fieldName) {
   $a = $('<a/>', { href: url });
   $a.colorbox({
     open: true,
+    width: '90%',
     onClosed: function() { $button.removeAttr('disabled'); }
   });
 };

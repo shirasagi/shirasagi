@@ -150,6 +150,14 @@ production: &production
   attendance:
     max_break: 3
 
+  affair:
+    overtime:
+      night_time:
+        start_hour: 22
+        end_hour: 29
+      aggregate:
+        threshold_hour: 60
+
   memo:
     disable_unsend: true
     disable_mail_forward: false
@@ -212,6 +220,11 @@ production: &production
   readable_setting:
     setting_range: 'select'
     group_ids: [ "cur_group" ]
+
+  user:
+    staff_category:
+      - "正規職員"
+      - "会計年度任用職員"
 
 test:
   <<: *production

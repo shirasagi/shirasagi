@@ -2,11 +2,15 @@ ja:
   gws/attendance:
     prev_month: 前月
     next_month: 翌月
+    prev_day: 前日
+    next_day: 翌日
     enter_leave: 出退勤
     break: 休憩
     no_time_cards: タイムカードはありません。
     no_target_users: 対象者がいません。
     already_locked: タイムカードは締められています。
+    views:
+      total_working_minute: 就業時間合計
     confirm:
       download: タイムカードをダウンロードしてよろしですか？
       lock: タイムカードを締めてよろしですか？
@@ -17,6 +21,7 @@ ja:
     formats:
       time_card_name: '%{month}のタイムカード'
       time_card_full_name: '%{user_name}の%{month}のタイムカード'
+      time_card_daily_name: '%{day}のタイムカード（%{group}）'
       break_enter: '休始%{count}'
       break_leave: '休終%{count}'
     buttons:
@@ -31,11 +36,23 @@ ja:
     edit_cell:
       time: 時刻
       reason: 修正理由
+      working_time: 就業時間
+    options:
+      in_day:
+        today: 当日
+        tomorrow: 翌日
+      reason_type:
+        mistake: 打刻忘れ
+        trip: 出張
+        exemption: 職務免除
+        other: その他
     tooltips:
       encoding:
         - 文字コードを選択してください。
         - 難読人名に対して特殊な漢字を割り当てている場合は「UTF-8」を選択してください。
         - 通常の利用の場合ですと「シフトJIS」を選択して問題ありません。
+      overnight:
+        - 出勤を打刻してから退勤するまでに、日付が変わってしまった場合、こちらを打刻してください。
     hour: '%{count}時'
     minute: '%{count}分'
 
@@ -43,19 +60,22 @@ ja:
     formats:
       attendance_year_month: ! '%Y年%1m月'
       attendance_month_day: ! '%1m月%1d日 (%a)'
+      attendance_day: ! '%Y年%1m月%1d日'
 
   modules:
     gws/attendance: 出退勤
     gws/attendance/time_card: タイムカード
     gws/attendance/management/time_card: 管理
     addons:
-      gws/attendance/group_setting: 出退勤
+      gws/attendance/group_setting: 庶務事務
 
   gws_role:
     use_gws_attendance_time_cards: 出退勤時刻の利用
     edit_gws_attendance_time_cards: 出退勤時刻の変更
     manage_private_gws_attendance_time_cards: 出退勤の管理（自所属）
     manage_all_gws_attendance_time_cards: 出退勤の管理（全て）
+    aggregate_private_gws_attendance_time_cards: グループの利用（自所属）
+    aggregate_all_gws_attendance_time_cards: グループの利用（全て）
 
   mongoid:
     models:
@@ -80,18 +100,19 @@ ja:
         break_enter3: 休始3
         break_leave3: 休終3
         memo: 備考
+        working_time: 就業時間
       gws/attendance/history:
         date: 日付
         field_name: フィールド名
         action: アクション
-        reason: 修正理由
+        reason_type: 修正理由
+        reason: 備考
         created: 修正時刻
       gws/addon/attendance/group_setting:
         attendance_enter_label: 出勤表示
         attendance_leave_label: 退勤表示
         attendance_management_year: 管理年数
         attendance_year_changed_month: 年度替わり月
-        attendance_time_changed_minute: 日替わり時刻
         attendance_break_time1_state: 休憩1表示
         attendance_break_enter1_label: 休憩1開始ラベル
         attendance_break_leave1_label: 休憩1終了ラベル
@@ -101,10 +122,15 @@ ja:
         attendance_break_time3_state: 休憩3表示
         attendance_break_enter3_label: 休憩3開始ラベル
         attendance_break_leave3_label: 休憩3終了ラベル
+        affair_rounding_time_minute: 丸め
+        week_out_compensatory_file_limit: 同一週外振替有効期限
+        week_out_compensatory_file_notify_day: 同一週外振替通知日
     errors:
       models:
         gws/attendance/time_card:
           already_punched: 打刻済みです。
+        gws/attendance/record:
+          working_time: "出勤もしくは退勤が打刻されていません。打刻してから就業時間を入力してください。"
 
   activemodel:
     attributes:
@@ -129,3 +155,14 @@ ja:
         - 文字コードを選択してください。
         - 難読人名に対して特殊な漢字を割り当てている場合は「UTF-8」を選択してください。
         - 通常の利用の場合ですと「シフトJIS」を選択して問題ありません。
+
+    gws/addon/attendance/group_setting:
+      affair_rounding_time_minute:
+        - 出勤の切り上げおよび退勤の切り捨てに関する設定です。
+        - 休憩時間は丸めの対象とはなりません。
+      week_out_compensatory_file_limit:
+        - 同一週外振替の有効期限を設定できます。
+        - 有効期限を過ぎたものは休暇申請で利用できなくなります。
+      week_out_compensatory_file_notify_day:
+        - 同一週外振替の有効期限が切れる前に通知する日数を設定します。
+        - 7日を設定すると、期限が切れる7日前に通知が投稿されます。

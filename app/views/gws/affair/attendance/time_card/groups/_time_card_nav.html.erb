@@ -1,0 +1,22 @@
+<%= jquery do %>
+var baseUrl = <%== url_for({ action: :index, year_month: ':YEAR_MONTH', day: ':DAY', group_id: @group.id }).to_json %>;
+$('.nav-menu select[name="year_month"]').on('change', function() {
+  var ym = $('.nav-menu select[name="year_month"]').val();
+  var d = $('.nav-menu select[name="day"]').val();
+  location.href = baseUrl.replace(':YEAR_MONTH', ym).replace(':DAY', d);
+});
+$('.nav-menu select[name="day"]').on('change', function() {
+  var ym = $('.nav-menu select[name="year_month"]').val();
+  var d = $('.nav-menu select[name="day"]').val();
+  location.href = baseUrl.replace(':YEAR_MONTH', ym).replace(':DAY', d);
+});
+<% end %>
+
+<div class="nav-group" style="padding-bottom: 10px;">
+  <nav class="nav-menu">
+    <%= select_tag(:year_month, options_for_select(year_month_options, @cur_month.strftime('%Y%m'))) %>
+    <%= select_tag(:day, options_for_select(day_options, @cur_day.day)) %>
+    <%= link_to(t('gws/attendance.prev_day'), prev_day, class: :btn) if prev_day %>
+    <%= link_to(t('gws/attendance.next_day'), next_day, class: :btn) if next_day %>
+  </nav>
+</div>

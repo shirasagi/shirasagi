@@ -52,6 +52,10 @@ ja:
     resize_image_auto: 画像リサイズ(自動)
     input_example: 記入例
     csv_file: CSVファイル
+    time: 時間
+    remark: 備考
+    before: 前
+    after: 後
 
     views:
       login/login:
@@ -223,6 +227,7 @@ ja:
       target_to_delete: 削除対象の確認
       target_to_public: 公開対象の確認
       target_to_close: 非公開対象の確認
+      approve: 承認してよろしいですか？
     notice:
       saved: 保存しました。
       deleted: 削除しました。

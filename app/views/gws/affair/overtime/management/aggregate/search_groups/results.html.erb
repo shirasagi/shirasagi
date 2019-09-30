@@ -1,0 +1,45 @@
+<div class="gws-attendance">
+  <div class="attendance-box overtime-aggregate">
+    <div class="attendance-box-main">
+      <div class="title"><%= @title %></div>
+      <% if @download_url.present? %>
+        <%= link_to t("ss.links.download"), @download_url, class: "btn", style: "float: right;" %>
+      <% end %>
+    </div>
+  </div>
+
+  <% if @groups.present? %>
+    <div class="wrap-table" style="overflow-x: auto;">
+      <table class="index aggregate-capitals">
+        <thead>
+          <tr>
+            <th class="capital"><%= t("gws/affair.labels.overtime.capitals.capital") %></th>
+            <% @groups.each do |group| %>
+              <th class="time"><%= group.trailing_name %></th>
+            <% end %>
+          </tr>
+        </thead>
+        <tbody>
+          <% @capitals.each do |basic_code, name| %>
+            <tr>
+              <th class="capital"><%= name %></th>
+              <% @groups.each do |group| %>
+                <% minute = group.overall_group_codes.map { |group_code| @items.dig(group_code, basic_code).to_i }.sum %>
+                <td class="time"><%= format_minute(minute) %></td>
+              <% end %>
+            </tr>
+          <% end %>
+          <tr>
+            <th><%= t("gws/affair.labels.overtime.capitals.total_capitals") %></th>
+            <% @groups.each do |group| %>
+              <% minute = group.overall_group_codes.map { |group_code| @items.dig(group_code, "total").to_i }.sum %>
+              <td class="time"><%= format_minute(minute) %></td>
+            <% end %>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  <% else %>
+    <div><%= t("gws/affair.notice.not_found_groups") %></div>
+  <% end %>
+</div>

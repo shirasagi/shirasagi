@@ -9,7 +9,10 @@ Gws_Category_Navi.prototype.setBaseUrl = function(url) {
   this.baseUrl = url;
 };
 
-Gws_Category_Navi.prototype.render = function(items) {
+Gws_Category_Navi.prototype.render = function(items, opts) {
+  if (opts == null) {
+    opts = {};
+  }
   if (items.length == 0) {
     this.el.hide();
     return;
@@ -20,6 +23,7 @@ Gws_Category_Navi.prototype.render = function(items) {
   var last_depth = -1;
   var path = location.href.replace(/https?:\/\/.*?\//, '/');
   var isCate = null;
+  var hideClose = opts["hideClose"];
 
   $.each(items, function(idx, item) {
     var depth = (item.name.match(/\//g) || []).length;
@@ -45,7 +49,7 @@ Gws_Category_Navi.prototype.render = function(items) {
   this.el.find('.dropdown-menu').append(html.join(''));
 
   var toggle = this.el.find('.dropdown-toggle');
-  if (isCate) {
+  if (!hideClose && isCate) {
     var icon = '<i class="material-icons md-18 md-dark">&#xE14C;</i>';
     toggle.after('<a class="ml-1" href="' + toggle.attr('href') + '">' + icon + '</a>');
   }

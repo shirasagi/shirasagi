@@ -1,0 +1,66 @@
+<%
+  def working_hour_options
+    0.step(23, 1).map { |v| ["#{v}#{t("datetime.prompts.hour")}", v] }
+  end
+
+  def working_minute_options
+    0.step(55, 5).map { |v| ["#{v}#{t("datetime.prompts.minute")}", v] }
+  end
+
+  working_minute = @duty_calendar.working_minute(@cur_date)
+  @record.working_hour ||= working_minute / 60
+  @record.working_minute ||= working_minute % 60
+
+  if @record.enter.blank? || @record.leave.blank?
+    @record.errors.add :base, :working_time
+  end
+%>
+
+<%= form_for :record, url: { action: :working_time }, html: {method: :post, multipart: true, class: 'record-edit' } do |f| %>
+  <%= error_messages_for :record %>
+
+  <%= hidden_field_tag 'ref', params[:ref] %>
+
+  <div class="addon-views">
+    <div class="addon-view" id="addon-basic">
+      <div class="addon-body">
+        <dl class="see">
+          <dt><%= t('gws/attendance.edit_cell.working_time') %></dt>
+          <dd>
+            <%= f.select :working_hour, working_hour_options, include_blank: true %>
+            <%= f.select :working_minute, working_minute_options, include_blank: true %>
+            <%= button_tag(t('ss.buttons.clear'), type: 'reset', name: 'clear', class: 'btn') %>
+          </dd>
+        </dl>
+      </div>
+    </div>
+  </div>
+
+  <footer class="send">
+    <% if @record.errors.blank? %>
+      <%= f.submit t("ss.buttons.save"), class: 'btn-primary save' %>
+    <% end %>
+    <%= f.button t("gws/attendance.buttons.close"), class: 'btn-default', type: :reset, onclick: "$.colorbox.close(); return false;" %>
+  </footer>
+<% end %>
+
+<%= jquery do %>
+  var $el = $('form.record-edit');
+  $el.on('click', 'button[name=clear]', function() {
+    $('form.record-edit select[name="record[working_hour]"] option:selected').removeAttr('selected');
+    $('form.record-edit select[name="record[working_minute]"] option:selected').removeAttr('selected');
+  });
+
+  $el.on('submit', function(e) {
+    e.preventDefault();
+    $(this).ajaxSubmit({
+      success: function (data) {
+        location.href = data.location;
+      },
+      error: function(xhr, status, error) {
+        var $html = $(xhr.responseText);
+        $el.html($html.html());
+      }
+    });
+  });
+<% end %>

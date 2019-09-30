@@ -1,0 +1,40 @@
+<div class="gws-attendance">
+  <div class="attendance-box">
+    <div class="attendance-box-main">
+      <%= render template: "_fiscal_year_month" %>
+    </div>
+  </div>
+  <div class="attendance-box">
+    <div class="attendance-box-main">
+      <%= form_for :s, url: { action: :results }, html: { method: :get } do |f| %>
+        <dl class="see">
+          <dt><%= @model.t(:search_user) %><%= @model.tt(:search_user) %></dt>
+          <dd>
+            <%= hidden_field_tag "s[user_ids][]", nil, class: "hidden-ids" %>
+            <%= link_to t("ss.apis.users.index"), gws_apis_users_path, class: "btn ajax-box" %>
+          </dd>
+          <dd>
+            <table class="index ajax-selected">
+              <thead>
+                <tr>
+                  <th class="name"><%= t("mongoid.models.gws/user") %></th>
+                  <th></th>
+                </tr>
+              </thead>
+              <tbody>
+                <% @users.each do |user| %>
+                  <tr data-id="<%= user.id %>">
+                    <td><%= f.hidden_field "user_ids[]", value: user.id, id: nil %> <%= user.name %></td>
+                    <td><%= link_to t("ss.buttons.delete"), "#", class: "deselect btn" %></td>
+                  </tr>
+                <% end %>
+              </tbody>
+            </table>
+          </dd>
+        </dl>
+        <input type="submit" value="<%= t('ss.buttons.search') %>" class="btn" />
+        <%= link_to t("ss.buttons.reset"), { action: :index }, class: "btn" %>
+      <% end %>
+    </div>
+  </div>
+</div>

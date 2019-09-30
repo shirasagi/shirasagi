@@ -1,0 +1,50 @@
+<dl class="see">
+  <dt><%= @model.t :start_at %></dt>
+  <dd><%= tryb { @item.start_end_term } %></dd>
+
+  <dt><%= @model.t :leave_type %></dt>
+  <dd><%= @item.label :leave_type %></dd>
+
+  <% if @item.leave_type == "paidleave" && @item.special_leave.present? %>
+    <dt><%= @model.t :special_leave_id %></dt>
+    <dd><%= @item.special_leave.name %></dd>
+  <% end %>
+
+  <% if @item.week_in_compensatory_file %>
+    <dt><%= @model.t :week_in_compensatory_file_id %></dt>
+    <dd><%= link_to @item.week_in_compensatory_file.term_label, gws_affair_overtime_file_path(site: @cur_site.id, id: @item.week_in_compensatory_file) %></dd>
+  <% end %>
+
+  <% if @item.week_out_compensatory_file %>
+    <dt><%= @model.t :week_out_compensatory_file_id %></dt>
+    <dd><%= link_to @item.week_out_compensatory_file.term_label, gws_affair_overtime_file_path(site: @cur_site.id, id: @item.week_out_compensatory_file) %></dd>
+  <% end %>
+
+  <% if @item.holiday_compensatory_file %>
+    <dt><%= @model.t :holiday_compensatory_file_id %></dt>
+    <dd><%= link_to @item.holiday_compensatory_file.term_label, gws_affair_overtime_file_path(site: @cur_site.id, id: @item.holiday_compensatory_file) %></dd>
+  <% end %>
+
+  <dt><%= @model.t :reason %></dt>
+  <dd><%=br @item.reason %></dd>
+
+  <dt><%= @model.t :status %></dt>
+  <dd><%= @item.label :status %></dd>
+  <dt class="depth-2"><%= @model.t :created %></dt>
+  <dd class="depth-2"><%= @item.created.strftime("%Y/%m/%d %H:%M") %></dd>
+  <dt class="depth-2"><%= @model.t :updated %></dt>
+  <dd class="depth-2"><%= @item.updated.strftime("%Y/%m/%d %H:%M") %></dd>
+  <% if @item.requested %>
+  <dt class="depth-2"><%= @model.t :requested %></dt>
+  <dd class="depth-2"><%= @item.requested.strftime("%Y/%m/%d %H:%M") %></dd>
+  <% end %>
+  <% if @item.approved %>
+  <dt class="depth-2"><%= @model.t :approved %></dt>
+  <dd class="depth-2"><%= @item.approved.strftime("%Y/%m/%d %H:%M") %></dd>
+  <% end %>
+</dl>
+
+<%= jquery do %>
+  var highlighter = new Gws_Elasticsearch_Highlighter();
+  highlighter.render();
+<% end %>

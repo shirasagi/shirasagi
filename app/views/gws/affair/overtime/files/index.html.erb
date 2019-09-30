@@ -1,0 +1,22 @@
+<% @index_title = proc do |item| %>
+  <% title = "#{item.overtime_name}（#{item.start_end_term}）" %>
+  <%= link_to title, { action: :show, id: item }, class: "title" %>
+<% end %>
+
+<% @tap_menu = proc do |item| %>
+  <%= link_to(t('ss.links.show'), action: :show, id: item) if item.allowed?(:read, @cur_user, site: @cur_site) %>
+  <%= link_to(t('ss.links.edit'), action: :edit, id: item) if item.editable?(@cur_user, site: @cur_site) %>
+  <%= link_to(t('ss.links.delete'), action: :delete, id: item) if item.destroyable?(@cur_user, site: @cur_site) %>
+<% end %>
+
+<% @index_meta = proc do |item| %>
+  <span class="id">#<%= item.id %></span>
+  <span class="datetime"><%= item.start_at.strftime("%Y/%m/%d") %></span>
+  <span class="state"><%= item.label(:status) %></span>
+  <span class="capital"><%= item.capital.try(:name) %></span>
+  <span class="user"><%= "対象者" %>: <%= item.target_user.try(:name) %></span>
+<% end %>
+
+<div class="gws-workflow">
+  <%= render template: 'gws/crud/index' %>
+</div>

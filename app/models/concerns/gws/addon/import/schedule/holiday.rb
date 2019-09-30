@@ -136,6 +136,7 @@ module Gws::Addon::Import::Schedule
       end
       item.site = @cur_site
       item.user = @cur_user
+      item.holiday_calendar = @cur_holiday_calendar
       item.edit_range = edit_range
       item.name = name
       item.start_on = start_on

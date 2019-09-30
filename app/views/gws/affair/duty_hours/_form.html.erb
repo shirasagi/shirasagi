@@ -1,0 +1,11 @@
+<dl class="see">
+  <% if !@item.is_a?(Gws::Affair::DefaultDutyHour) %>
+    <dt><%= @model.t :name %><%= @model.tt :name %></dt>
+    <dd><%= f.text_field :name, autofocus: pc_browser? %></dd>
+  <% else %>
+    <dt><%= @model.t :name %></dt>
+    <dd><%= @item.name %></dd>
+  <% end %>
+
+  <%= render "duty_hour_setting_form", f: f %>
+</dl>

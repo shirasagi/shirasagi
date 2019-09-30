@@ -1,0 +1,42 @@
+<%
+  def fiscal_year_dropdown_items
+    start_year = @cur_fiscal_year - @cur_site.attendance_management_year
+    end_year = @cur_fiscal_year
+    (start_year..end_year).to_a.reverse.map do |y|
+      { _id: y, name: "#{y}#{t("gws/affair.year_id")}", trailing_name: "#{y}#{t("gws/affair.year_id")}" }
+    end
+  end
+
+  def month_dropdown_items
+    ((4..12).to_a + (1..3).to_a).map do |m|
+      { _id: m, name: "#{m}#{t("datetime.prompts.month")}", trailing_name: "#{m}#{t("datetime.prompts.month")}" }
+    end
+  end
+%>
+<%= jquery do %>
+var yearMonthNavi = new Gws_Category_Navi('.year-navi');
+yearMonthNavi.setBaseUrl('<%= url_for(fiscal_year: "ID") %>');
+yearMonthNavi.render(<%== fiscal_year_dropdown_items.to_json %>, { hideClose: true });
+
+var monthNavi = new Gws_Category_Navi('.month-navi');
+monthNavi.setBaseUrl('<%= url_for(month: "ID") %>');
+monthNavi.render(<%== month_dropdown_items.to_json %>, { hideClose: true });
+<% end %>
+
+<div class="year-month-navi">
+  <div class="gws-category-navi year-navi dropdown" style="display: inline-block;">
+    <%= link_to({ fiscal_year: @fiscal_year, month: @month }, { class: 'btn dropdown-toggle' }) do %>
+      <%= "#{@fiscal_year}#{t("gws/affair.year_id")}" %>
+    <% end %>
+    <div class="dropdown-menu dropdown-menu--white"></div>
+  </div>
+  <div class="gws-category-navi month-navi dropdown" style="display: inline-block;">
+    <%= link_to({ fiscal_year: @fiscal_year, month: @month }, { class: 'btn dropdown-toggle' }) do %>
+      <%= "#{@month}#{t("datetime.prompts.month")}" %>
+    <% end %>
+    <div class="dropdown-menu dropdown-menu--white"></div>
+  </div>
+  <% if @download_url.present? %>
+    <%= link_to t("ss.links.download"), @download_url, class: "btn", style: "float: right;" %>
+  <% end %>
+</div>

@@ -1,0 +1,86 @@
+<dl class="see">
+  <dt><%= @model.t :capital_id %></dt>
+  <dd>
+    <% if @item.capital_emergency? %>
+      <div class="capital emergency">
+        <%= tryb { @item.capital.name } %><%= "（緊急）" %>
+      </div>
+    <% else %>
+      <div class="capital">
+        <%= tryb { @item.capital.name } %>
+      </div>
+    <% end %>
+  </dd>
+
+  <dt><%= @model.t :overtime_name %></dt>
+  <dd><%= @item.overtime_name %></dd>
+
+  <dt><%= @model.t :start_at %></dt>
+  <dd><%= @item.start_end_term %></dd>
+
+  <% if @item.week_in_compensatory_minute > 0 %>
+    <dt><%= @model.t :week_in_compensatory_minute %></dt>
+    <dd>
+      <%= @item.label :week_in_compensatory_minute %>
+      <%= @item.week_in_compensatory_term %>
+    </dd>
+
+    <% if @item.week_in_leave_file %>
+      <dt><%= "休暇申請" %></dt>
+      <dd><%= link_to @item.week_in_leave_file.name, gws_affair_leave_file_path(id: @item.week_in_leave_file.id) %></dd>
+    <% end %>
+  <% end %>
+
+  <% if @item.week_out_compensatory_minute > 0 %>
+    <dt><%= @model.t :week_out_compensatory_minute %></dt>
+    <dd>
+      <%= @item.label :week_out_compensatory_minute %>
+      <%= @item.week_out_compensatory_term %>
+    </dd>
+
+    <% if @item.week_out_leave_file %>
+      <dt><%= "休暇申請" %></dt>
+      <dd><%= link_to @item.week_out_leave_file.name, gws_affair_leave_file_path(id: @item.week_out_leave_file.id) %></dd>
+    <% end %>
+  <% end %>
+
+  <% if @item.holiday_compensatory_minute > 0 %>
+    <dt><%= @model.t :holiday_compensatory_minute %></dt>
+    <dd>
+      <%= @item.label :holiday_compensatory_minute %>
+      <%= @item.holiday_compensatory_term %>
+    </dd>
+
+    <% if @item.holiday_compensatory_leave_file %>
+      <dt><%= "休暇申請" %></dt>
+      <dd><%= link_to @item.holiday_compensatory_leave_file.name, gws_affair_leave_file_path(id: @item.holiday_compensatory_leave_file.id) %></dd>
+    <% end %>
+  <% end %>
+
+  <dt><%= @model.t :remark %></dt>
+  <dd><%= br @item.remark %></dd>
+
+  <dt><%= @model.t :status %></dt>
+  <dd><%= @item.label :status %></dd>
+  <dt class="depth-2"><%= @model.t :created %></dt>
+  <dd class="depth-2"><%= @item.created.strftime("%Y/%m/%d %H:%M") %></dd>
+  <dt class="depth-2"><%= @model.t :updated %></dt>
+  <dd class="depth-2"><%= @item.updated.strftime("%Y/%m/%d %H:%M") %></dd>
+  <% if @item.requested %>
+  <dt class="depth-2"><%= @model.t :requested %></dt>
+  <dd class="depth-2"><%= @item.requested.strftime("%Y/%m/%d %H:%M") %></dd>
+  <% end %>
+  <% if @item.approved %>
+  <dt class="depth-2"><%= @model.t :approved %></dt>
+  <dd class="depth-2"><%= @item.approved.strftime("%Y/%m/%d %H:%M") %></dd>
+  <% end %>
+  <% if @item.result_closed %>
+  <dt class="depth-2"><%= @model.t :result_closed %></dt>
+  <dd class="depth-2"><%= @item.result_closed.strftime("%Y/%m/%d %H:%M") %></dd>
+  <% end %>
+</dl>
+
+<%= jquery do %>
+  var highlighter = new Gws_Elasticsearch_Highlighter();
+  highlighter.render();
+<% end %>

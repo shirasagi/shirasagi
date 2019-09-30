@@ -1,0 +1,23 @@
+<dl class="see">
+  <dt><%= @model.t :holiday_type %></dt>
+  <dd><%= f.select :holiday_type, @item.holiday_type_options %></dd>
+
+  <dt><%= @model.t :holiday_calendar_ids %></dt>
+  <dd>
+    <%= f.hidden_field "holiday_calendar_ids[]", value: "", class: "hidden-ids" %>
+    <%= link_to t("gws/affair.apis.holiday_calendars.index"), gws_affair_apis_holiday_calendars_path(single: 1), class: "ajax-box" %>
+  </dd>
+  <dd>
+    <table class="index ajax-selected">
+      <thead><tr><th class="name"><%= Gws::Affair::HolidayCalendar.t :name %></th><th class="deselect"></th></tr></thead>
+      <tbody>
+      <% @item.holiday_calendars.each do |holiday_calendar| %>
+        <tr data-id="<%= holiday_calendar.id %>">
+          <td><%= f.hidden_field "holiday_calendar_ids[]", value: holiday_calendar.id, id: nil %> <%= holiday_calendar.name %></td>
+          <td><%= link_to t("ss.buttons.delete"), "#", class: "deselect btn" %></td>
+        </tr>
+      <% end %>
+      </tbody>
+    </table>
+  </dd>
+</dl>

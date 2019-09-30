@@ -1,9 +1,0 @@
-<nav class="mod-navi current-navi">
-  <h2><%= link_to @cur_site.menu_attendance_label || t('modules.gws/attendance'), gws_attendance_main_path, class: "icon-attendance" %></h2>
-  <h3><%= link_to t('modules.gws/attendance/time_card'), gws_attendance_time_card_main_path %></h3>
-  <% if %i[manage_private manage_all].find { |priv| Gws::Attendance::TimeCard.allowed?(priv, @cur_user, site: @cur_site) } %>
-    <h3><%= link_to t('modules.gws/attendance/management/time_card'), gws_attendance_management_main_path, class: "management" %></h3>
-  <% end %>
-</nav>
-
-<%= render partial: 'gws/main/navi' %>

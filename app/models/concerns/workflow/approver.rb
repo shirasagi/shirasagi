@@ -33,6 +33,7 @@ module Workflow::Approver
     field :workflow_circulations, type: Workflow::Extensions::WorkflowCirculations
     field :workflow_circulation_attachment_uses, type: Array
     field :approved, type: DateTime
+    field :requested, type: DateTime
 
     permit_params :workflow_user_id, :workflow_state, :workflow_comment, :workflow_pull_up, :workflow_on_remand
     permit_params workflow_approvers: []
@@ -42,6 +43,7 @@ module Workflow::Approver
 
     before_validation :reset_workflow, if: -> { workflow_reset }
     validates :approved, datetime: true
+    validates :requested, datetime: true
     validate :validate_workflow_approvers_presence, if: -> { workflow_state == WORKFLOW_STATE_REQUEST }
     validate :validate_workflow_approvers_level_consecutiveness, if: -> { workflow_state == WORKFLOW_STATE_REQUEST }
     validate :validate_workflow_approvers_role, if: -> { workflow_state == WORKFLOW_STATE_REQUEST }
@@ -58,6 +60,10 @@ module Workflow::Approver
     return state if workflow_state == "cancelled"
     return workflow_state if workflow_state.present?
     state
+  end
+
+  def workflow_url
+    nil
   end
 
   def workflow_user
@@ -133,6 +139,7 @@ module Workflow::Approver
 
     # Be careful, partial update is meaningless. We must update entirely.
     self.workflow_approvers = Workflow::Extensions::WorkflowApprovers.new(copy)
+    self.requested = Time.zone.now
     true
   end
 

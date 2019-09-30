@@ -1,0 +1,177 @@
+<%
+  return if @item.workflow_state != "approve"
+  return if @item.day_results.blank? && !@item.allowed?(:edit, @cur_user, site: @cur_site)
+
+  def format_minute(minute)
+    (minute.to_i > 0) ? "#{minute / 60}:#{format("%02d", (minute % 60))}" : "--:--"
+  end
+
+  def render_working_time(week_working)
+    week_minutes = 0
+
+    h = []
+    h << '<div class="tooltip">?'
+    h << '<ul class="tooltip-content">'
+    h << '<li>【執務時間】</li>'
+    week_working.each do |v|
+      week_minutes += v[:working_minutes]
+      wday = I18n.t("date.abbr_day_names")[v[:date].wday]
+      label = "#{v[:date].strftime("%-m/%d")} (#{wday}) #{format_minute(v[:working_minutes])}"
+      label += " (有給) " if v[:annual_leave]
+
+      h << '<li>'
+      h << label
+      h << '</li>'
+    end
+
+    h << '<li>'
+    h << "週合計：#{format_minute(week_minutes)}"
+    h << '</li>'
+    h << '</div>'
+    h.join
+  end
+%>
+
+<%= jquery do %>
+$(".close-results").on("click", function () {
+  if (!confirm("結果を確認済みにしてもよろしいですか？")) {
+    return false;
+  }
+});
+<% end %>
+
+<dl class="see addon-gws-affair-overtime_result">
+  <% if @item.day_results.present? %>
+    <%
+      prefs = @item.aggregate_day_results
+      pref = prefs.dig(@item.target_user_id, @item.id)
+    %>
+    <% if pref %>
+      <%
+        start_at = pref[:start_at]
+        end_at = pref[:end_at]
+        under = pref[:under]
+        over = pref[:over]
+
+        week_in_compensatory = pref[:week_in_compensatory_minute]
+        holiday_compensatory = pref[:holiday_compensatory_minute]
+
+        week_working = pref[:week_working]
+        week_out_compensatory = pref[:week_out_compensatory_minute]
+        unrate_week_out_compensatory = pref[:unrate_week_out_compensatory_minute]
+
+        under_week_out_compensatory = under[:week_out_compensatory_minute]
+        over_week_out_compensatory = over[:week_out_compensatory_minute]
+      %>
+      <dt><%= @item.result.t(:start_at) %></dt>
+      <dd><%= start_at.strftime("%Y/%m/%d %H:%M") %></dd>
+
+      <dt><%= @item.result.t(:end_at) %></dt>
+      <dd><%= end_at.strftime("%Y/%m/%d %H:%M") %></dd>
+
+      <% if over && over.values.sum > 0 %>
+        <dt><%= "時間外（#{SS.config.gws.affair.dig("overtime", "aggregate", "threshold_hour")}時間超分有り）" %></dt>
+      <% else %>
+        <dt><%= "時間外（通常分）" %></dt>
+      <% end %>
+
+      <dd class="wide">
+        <table class="index overtime-results">
+          <tr class="item-head">
+            <th class="time" colspan="3"><%= "時間外（勤務日）" %></th>
+            <th class="time" colspan="2"><%= "時間外（週休日・休日）" %></th>
+            <% if week_in_compensatory > 0 %>
+              <th class="time" rowspan="2"><%= "同一週内振替" %></th>
+            <% elsif unrate_week_out_compensatory > 0 %>
+              <th class="time" rowspan="2">
+                <%= "同一週外振替" %>
+                <%== render_working_time(week_working) %>
+              </th>
+            <% elsif week_out_compensatory > 0 %>
+              <th class="time" rowspan="2">
+                <%=br "同一週外振替\n25/100" %>
+                <%== render_working_time(week_working) %>
+              </th>
+            <% elsif holiday_compensatory > 0 %>
+              <th class="time" rowspan="2"><%= "代休振替" %></th>
+            <% end %>
+            <th class="time" rowspan="2"><%= "休憩" %></th>
+          </tr>
+          <tr class="item-head">
+            <th class="time"><%=br "普通\n125/100" %></th>
+            <th class="time"><%=br "深夜\n150/100" %></th>
+            <th class="time"><%=br "時短\n100/100" %></th>
+            <th class="time"><%=br "普通\n135/100" %></th>
+            <th class="time"><%=br "深夜\n160/100" %></th>
+          </tr>
+          <tr class="item">
+            <td class="time"><%= format_minute(under[:duty_day_time_minute]) %></td>
+            <td class="time"><%= format_minute(under[:duty_night_time_minute]) %></td>
+            <td class="time"><%= format_minute(under[:duty_day_in_work_time_minute]) %></td>
+            <td class="time"><%= format_minute(under[:leave_day_time_minute]) %></td>
+            <td class="time"><%= format_minute(under[:leave_night_time_minute]) %></td>
+            <% if week_in_compensatory > 0 %>
+              <td class="time"><%= format_minute(week_in_compensatory) %></td>
+            <% elsif unrate_week_out_compensatory > 0 %>
+              <td class="time"><%= format_minute(unrate_week_out_compensatory) %></td>
+            <% elsif week_out_compensatory > 0 %>
+              <td class="time"><%= format_minute(under_week_out_compensatory) %></td>
+            <% elsif holiday_compensatory > 0 %>
+              <td class="time"><%= format_minute(holiday_compensatory) %></td>
+            <% end %>
+            <td class="time"><%= format_minute(pref[:break_time_minute]) %></td>
+          </tr>
+          <% if over && over.values.sum > 0 %>
+            <tr class="item-head">
+              <th class="time"><%= "150/100" %></th>
+              <th class="time"><%= "175/100" %></th>
+              <th class="time"></th>
+              <th class="time"><%= "150/100" %></th>
+              <th class="time"><%= "175/100" %></th>
+              <% if week_in_compensatory > 0 %>
+                <th class="time"></th>
+              <% elsif unrate_week_out_compensatory > 0 %>
+                <th class="time"></th>
+              <% elsif week_out_compensatory > 0 %>
+                <th class="time"><%= "50/100" %></th>
+              <% elsif holiday_compensatory > 0 %>
+                <th class="time"></th>
+              <% end %>
+              <th class="time"></th>
+            </tr>
+            <tr class="item">
+              <td class="time"><%= format_minute(over[:duty_day_time_minute]) %></td>
+              <td class="time"><%= format_minute(over[:duty_night_time_minute]) %></td>
+              <td class="time"></td>
+              <td class="time"><%= format_minute(over[:leave_day_time_minute]) %></td>
+              <td class="time"><%= format_minute(over[:leave_night_time_minute]) %></td>
+              <% if week_in_compensatory > 0 %>
+                <td class="time"></td>
+                <% elseif unrate_week_out_compensatory > 0 %>
+                <td class="time"></td>
+              <% elsif week_out_compensatory > 0 %>
+                <td class="time"><%= format_minute(over_week_out_compensatory) %></td>
+              <% elsif holiday_compensatory > 0 %>
+                <td class="time"></td>
+              <% end %>
+              <td class="time"></td>
+            </tr>
+          <% end %>
+        </table>
+      </dd>
+    <% end %>
+
+    <% if @item.result_closed? %>
+      <%= link_to t("gws/affair.links.closed_results"), "", class: "btn", disabled: "disabled", onclick: "return false;" %>
+    <% else %>
+      <% if @item.allowed?(:edit, @cur_user, site: @cur_site) %>
+        <%= link_to t("gws/affair.links.edit_results"), edit_gws_affair_overtime_result_path(id: @item.id, ref: request.path), class: "ajax-box" %>
+      <% end %>
+      <% if @item.result_closeable(@cur_user) %>
+        <%= link_to t("gws/affair.links.close_results"), close_gws_affair_overtime_result_path(id: @item.id, ref: request.path), method: :post, class: "btn close-results" %>
+      <% end %>
+    <% end %>
+  <% else %>
+    <%= link_to t("gws/affair.links.set_results"), edit_gws_affair_overtime_result_path(id: @item.id, ref: request.path), class: "ajax-box" %>
+  <% end %>
+</dl>

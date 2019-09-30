@@ -1,0 +1,23 @@
+<%= jquery do %>
+  Gws_Tab.renderTabs('.gws-special-leaves-tabs');
+  var params = (new URL(document.location)).searchParams;
+  var staff_category = params.get('staff_category');
+  var tabClass = "." + staff_category;
+  $('.gws-tabs a').removeClass('current');
+  if (staff_category == null) {
+    $('.all').addClass('current');
+  } else {
+    $(tabClass).addClass('current');
+  }
+<% end %>
+
+<div class="gws-tabs gws-special-leaves-tabs">
+  <%= link_to gws_affair_special_leaves_path, class: "all" do %>
+    <span class="tab-name readables">すべて</span>
+  <% end %>
+  <% @tabs.each do |tab| %>
+    <%= link_to gws_affair_special_leaves_path(staff_category: tab), class: "#{tab}" do %>
+      <span class="tab-name readables"><%= tab %></span>
+    <% end %>
+  <% end %>
+</div>

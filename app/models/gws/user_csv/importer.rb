@@ -86,7 +86,7 @@ class Gws::UserCsv::Importer
 
     %w(
       name kana uid organization_uid email tel tel_ext
-      account_start_date account_expiration_date session_lifetime remark ldap_dn
+      account_start_date account_expiration_date session_lifetime remark ldap_dn staff_category staff_address_uid
     ).each do |k|
       item[k] = row_value(k)
     end

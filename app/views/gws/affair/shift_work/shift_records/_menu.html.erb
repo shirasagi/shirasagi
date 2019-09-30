@@ -1,0 +1,10 @@
+<nav class="nav-menu">
+  <% if params[:action] =~ /index/ %>
+    <%= link_to t('ss.links.back'), gws_affair_shift_work_shift_calendars_path(group_id: @group.id) %>
+    <%= link_to t("ss.links.download"), action: :download %>
+    <%= link_to t("ss.links.import"), action: :import %>
+    <%= link_to t('ss.links.delete'), delete_gws_affair_shift_work_shift_calendar_path(id: @shift_calendar) %>
+  <% elsif params[:action] =~ /import/ %>
+    <%= link_to t('ss.links.back_to_index'), action: :index %>
+  <% end %>
+</nav>

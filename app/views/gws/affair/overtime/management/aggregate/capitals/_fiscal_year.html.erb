@@ -1,0 +1,25 @@
+<%
+  def year_items
+    start_year = @cur_fiscal_year - @cur_site.attendance_management_year
+    end_year = @cur_fiscal_year
+    (start_year..end_year).to_a.reverse.map { |y| { _id: y, name: "#{y}#{t("gws/affair.year_id")}", trailing_name: "#{y}#{t("gws/affair.year_id")}" } }.to_json
+  end
+%>
+
+<%= jquery do %>
+var yearNavi = new Gws_Category_Navi('.year-navi');
+yearNavi.setBaseUrl('<%= url_for(fiscal_year: "ID") %>');
+yearNavi.render(<%== year_items %>, { hideClose: true });
+<% end %>
+
+<div class="attendance-box overtime-aggregate">
+  <div class="attendance-box-main">
+    <div class="gws-category-navi year-navi dropdown">
+      <%= link_to({ fiscal_year: @fiscal_year, month: @month}, { class: 'btn dropdown-toggle' }) do %>
+        <%= @fiscal_year %><%= t("gws/affair.year_id") %>
+      <% end %>
+      <div class="dropdown-menu dropdown-menu--white"></div>
+      <%= link_to t("ss.links.download"), { action: :download_yearly }, class: "btn", style: "float: right;" %>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,5 @@
+<nav class="nav-menu">
+  <% if params[:action] == "results" %>
+    <%= link_to t('ss.links.back'), { action: :search, s: @s.to_h } %>
+  <% end %>
+</nav>

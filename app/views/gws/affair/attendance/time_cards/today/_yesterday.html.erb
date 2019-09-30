@@ -1,0 +1,101 @@
+<%
+  @yesterday ||= @cur_site.calc_attendance_date(Time.zone.now.advance(days: -1)).beginning_of_day
+  @yesterday_time_card ||= Gws::Attendance::TimeCard.site(@cur_site).user(@cur_user).where(date: @yesterday.beginning_of_month).first
+  return if @yesterday_time_card.nil?
+
+  @yesterday_record ||= @yesterday_time_card ? @yesterday_time_card.records.where(date: @yesterday).first : nil
+  year_month = "#{@yesterday.year}#{format('%02d', @yesterday.month)}"
+  day02 = format('%02d', @yesterday.day)
+
+  field_names = %w(enter leave)
+  @break_times.each do |i|
+    field_names << "break_enter#{i + 1}"
+    field_names << "break_leave#{i + 1}"
+  end
+
+  def punchable_yesterday?(field_name)
+    return false if field_name != "leave"
+    return false if @today_record.try(:find_latest_history, "enter").present?
+    return false if @today_record.try(:find_latest_history, "leave").present?
+    @yesterday_record.try(:find_latest_history, "enter").present?
+  end
+%>
+
+<% render_reason = proc do |history| %>
+  <% if history.present? && history.reason_type.present? %>
+    <div class="reason-tooltip">
+      <i class="material-icons md-13">&#xE0C9;</i>
+      <div class="reason">
+        <div>
+          <%= t("gws/attendance.options.reason_type.#{history.reason_type}") %>
+          <%= history.reason if history.reason.present? %>
+        </div>
+        <time datetime="<%= history.created.iso8601 %>"><%= history.created.strftime('%Y/%m/%d %H:%M') %></time>
+      </div>
+    </div>
+  <% end %>
+<% end %>
+
+<div class="attendance-box yesterday-box">
+  <time class="attendance-date" datetime="<%= I18n.l(@yesterday, format: :iso) %>"></time>
+  <div class="attendance-box-title">
+    <%= "前日：#{I18n.l(@yesterday.to_date, format: '%1m月%1d日 (%a)')}" %>
+    <%= tt(:overnight, scope: 'gws/attendance.tooltips') %>
+  </div>
+
+  <div class="attendance-box-main">
+    <div class="today-wrap">
+      <table class="today">
+        <thead>
+        <tr>
+          <% field_names.each do |field_name| %>
+            <th class="time <%= field_name %>"><%= @cur_site.send("attendance_#{field_name}_label").presence || Gws::Attendance::Record.t(field_name) %></th>
+          <% end %>
+          <th class="memo"><%= Gws::Attendance::Record.t(:memo) %></th>
+        </tr>
+        </thead>
+        <tbody>
+        <% if @yesterday_time_card.unlocked? %>
+        <tr class="action">
+          <% field_names.each do |field_name| %>
+            <td class="time <%= field_name %>">
+              <% if @yesterday_record.try(:find_latest_history, field_name).present? %>
+                <% if @model.allowed?(:edit, @cur_user, site: @cur_site) %>
+                  <%= button_tag(t('ss.buttons.edit'), name: 'edit', type: 'button', class: 'btn', data: { action: time_gws_affair_attendance_time_cards_path(year_month: year_month, day: day02, type: field_name, ref: request.fullpath) }) %>
+                <% else %>
+                  <%= button_tag(t('ss.buttons.edit'), name: 'punch', type: 'button', class: 'btn', disabled: "disabled") %>
+                <% end %>
+              <% else %>
+                <% if @model.allowed?(:use, @cur_user, site: @cur_site) %>
+                  <% if punchable_yesterday?(field_name) %>
+                    <%= button_tag(t('gws/attendance.buttons.punch'), name: 'punch', type: 'button', class: 'btn', data: { confirm: t('gws/attendance.confirm.punch'), action: "#{gws_affair_attendance_time_cards_path(year_month: year_month)}/#{field_name}_yesterday}?#{ { ref: request.fullpath }.to_query }" }) %>
+                  <% else %>
+                    <%= button_tag(t('gws/attendance.buttons.punch'), name: 'punch', type: 'button', class: 'btn', disabled: "disabled") %>
+                  <% end %>
+                <% end %>
+              <% end %>
+            </td>
+          <% end %>
+          <td class="memo">
+            <%= button_tag(t('ss.buttons.edit'), name: 'edit', type: 'button', class: 'btn', data: { action: memo_gws_affair_attendance_time_cards_path(year_month: year_month, day: day02, ref: request.fullpath) }) %>
+          </td>
+        </tr>
+        <% else %>
+          <tr>
+            <td colspan="<%= field_names.length + 1 %>"><%= t('gws/attendance.already_locked') %></td>
+          </tr>
+        <% end %>
+        <tr class="info">
+          <% field_names.each do |field_name| %>
+            <td class="time <%= field_name %>">
+              <%= format_time(@yesterday, @yesterday_record.try(field_name)) %>
+              <% render_reason.call(@yesterday_record.try(:find_latest_history, field_name)) %>
+            </td>
+          <% end %>
+          <td class="memo"><%= @yesterday_record.try(:memo) %></td>
+        </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>

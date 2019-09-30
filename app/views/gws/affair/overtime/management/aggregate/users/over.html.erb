@@ -1,0 +1,48 @@
+<div class="gws-attendance">
+  <div class="attendance-box">
+    <div class="attendance-box-main">
+      <%= render partial: "fiscal_year_month" %>
+      <%= render partial: "search" %>
+    </div>
+  </div>
+  <%= render partial: "tabs" %>
+
+  <table class="index overtime-results">
+    <thead>
+      <tr>
+        <th rowspan="2"><%= Gws::User.t :name %></th>
+        <th rowspan="2"><%= Gws::User.t :organization_uid %></th>
+        <th class="time" colspan="2"><%= t("gws/affair.labels.overtime.over_threshold.duty_day_time.name") %></th>
+        <th class="time" colspan="2"><%= t("gws/affair.labels.overtime.over_threshold.leave_day_time.name") %></th>
+        <th class="time" rowspan="2"><%=br t("gws/affair.labels.overtime.over_threshold.week_out_compensatory.rate") %></th>
+      </tr>
+      <tr>
+        <th class="time"><%=br t("gws/affair.labels.overtime.over_threshold.duty_day_time.rate") %></th>
+        <th class="time"><%=br t("gws/affair.labels.overtime.over_threshold.duty_night_time.rate") %></th>
+        <th class="time"><%=br t("gws/affair.labels.overtime.over_threshold.leave_day_time.rate") %></th>
+        <th class="time"><%=br t("gws/affair.labels.overtime.over_threshold.leave_night_time.rate") %></th>
+      </tr>
+    </thead>
+    <tbody>
+      <% @users.each do |user| %>
+        <%
+          basic_code = @basic_code.present? ? @basic_code : "total"
+          duty_day_time_minute = @items.dig(user.id, basic_code, "over_threshold", "duty_day_time_minute")
+          duty_night_time_minute = @items.dig(user.id, basic_code, "over_threshold", "duty_night_time_minute")
+          leave_day_time_minute = @items.dig(user.id, basic_code, "over_threshold", "leave_day_time_minute")
+          leave_night_time_minute = @items.dig(user.id, basic_code, "over_threshold", "leave_night_time_minute")
+          week_out_compensatory_minute = @items.dig(user.id, basic_code, "over_threshold", "week_out_compensatory_minute")
+        %>
+        <tr>
+          <td><%= user.long_name %></td>
+          <td><%= user.organization_uid %></td>
+          <td class="time"><%= format_minute(duty_day_time_minute) %></td>
+          <td class="time"><%= format_minute(duty_night_time_minute) %></td>
+          <td class="time"><%= format_minute(leave_day_time_minute) %></td>
+          <td class="time"><%= format_minute(leave_night_time_minute) %></td>
+          <td class="time"><%= format_minute(week_out_compensatory_minute) %></td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+</div>

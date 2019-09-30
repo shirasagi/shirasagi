@@ -5,7 +5,7 @@ class Gws::Memo::NoticeUserSettingsController < ApplicationController
 
   def permit_fields
     fields = []
-    %w(schedule todo report workflow circular monitor board faq qna survey discussion announcement).each do |name|
+    %w(schedule todo report workflow circular monitor board faq qna survey discussion announcement affair).each do |name|
       fields << "notice_#{name}_user_setting"
       fields << "notice_#{name}_email_user_setting"
     end

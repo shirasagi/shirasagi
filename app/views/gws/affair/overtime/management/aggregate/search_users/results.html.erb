@@ -1,0 +1,56 @@
+<div class="gws-attendance">
+  <div class="attendance-box overtime-aggregate">
+    <div class="attendance-box-main">
+      <div class="title"><%= @title %></div>
+      <% if @download_url.present? %>
+        <%= link_to t("ss.links.download"), @download_url, class: "btn", style: "float: right;" %>
+      <% end %>
+    </div>
+  </div>
+
+  <% if @users.present? %>
+    <div class="wrap-table" style="overflow-x: auto;">
+      <table class="index aggregate-capitals">
+        <thead>
+          <tr>
+            <th class="capital"><%= t("gws/affair.labels.overtime.capitals.capital") %></th>
+            <% @users.each do |user| %>
+              <th class="time"><%= user.name %></th>
+            <% end %>
+            <th class="time"><%= t("gws/affair.labels.overtime.capitals.total") %></th>
+          </tr>
+        </thead>
+        <tbody>
+          <% @capitals.each do |basic_code, name| %>
+            <tr>
+              <th class="capital"><%= name %></th>
+              <% total = 0 %>
+              <% @users.each do |user| %>
+                <%
+                  minute = @items.dig(user.id, basic_code).to_i
+                  total += minute
+                %>
+                <td class="time"><%= format_minute(minute) %></td>
+              <% end %>
+              <td class="time"><%= format_minute(total) %></td>
+            </tr>
+          <% end %>
+          <tr>
+            <th><%= t("gws/affair.labels.overtime.capitals.total_capitals") %></th>
+            <% total = 0 %>
+            <% @users.each do |user| %>
+              <%
+                minute = @items.dig(user.id, "total").to_i
+                total += minute
+              %>
+              <td class="time"><%= format_minute(minute) %></td>
+            <% end %>
+            <td class="time"><%= format_minute(total) %></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  <% else %>
+    <div><%= t("gws/affair.notice.not_found_users") %></div>
+  <% end %>
+</div>

@@ -31,8 +31,8 @@
     <h2><%= link_to @cur_site.menu_bookmark_label || t('modules.gws/bookmark'), gws_bookmarks_path, class: "icon-bookmark" %></h2>
   <% end %>
 
-  <% if @cur_site.menu_attendance_visible? && Gws.module_usable?(:attendance, @cur_site, @cur_user) %>
-    <h2><%= link_to @cur_site.menu_attendance_label || t('modules.gws/attendance'), gws_attendance_main_path, class: "icon-attendance" %></h2>
+  <% if @cur_site.menu_affair_visible? && Gws.module_usable?(:affair, @cur_site, @cur_user) %>
+    <h2><%= link_to @cur_site.menu_affair_label || t('modules.gws/affair'), gws_affair_main_path, class: "icon-affair" %></h2>
   <% end %>
 
   <% if @cur_site.menu_report_visible? && Gws.module_usable?(:report, @cur_site, @cur_user) %>

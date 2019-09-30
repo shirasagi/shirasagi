@@ -1,0 +1,80 @@
+<%
+  now ||= Time.zone.now
+  start_year = now.year - @cur_site.attendance_management_year
+  end_year = now.year + @cur_site.attendance_management_year
+
+  year_items = (start_year..end_year).to_a.reverse.map { |y| { _id: y, name: "#{y}#{t("gws/affair.year_id")}", trailing_name: "#{y}#{t("gws/affair.year_id")}" } }.to_json
+  month_items = ((4..12).to_a + (1..3).to_a).map { |m| { _id: format('%02d', m), name: "#{m}#{t("datetime.prompts.month")}", trailing_name: "#{m}#{t("datetime.prompts.month")}" } }.to_json
+%>
+
+<%= jquery do %>
+var yearNavi = new Gws_Category_Navi('.year-navi');
+yearNavi.setBaseUrl('<%= url_for(year: "ID", month: format('%02d', @cur_month)) %>');
+yearNavi.render(<%== year_items %>, { hideClose: true });
+
+var monthNavi = new Gws_Category_Navi('.month-navi');
+monthNavi.setBaseUrl('<%= url_for(year: @cur_year, month: "ID") %>');
+monthNavi.render(<%== month_items %>, { hideClose: true });
+<% end %>
+
+<div class="gws-attendance gws-affair-shift-records">
+  <div class="attendance-box monthly">
+
+    <div class="attendance-box-title">
+      <%= "#{@user.long_name} のシフト勤務カレンダー" %>
+    </div>
+    <div class="attendance-box-main main">
+
+      <div class="gws-category-navi year-navi dropdown">
+        <%= link_to({ year: @cur_year, month: format('%02d', @cur_month )}, { class: 'btn dropdown-toggle' }) do %>
+          <%= "#{@cur_year}#{t("gws/affair.year_id")}" %>
+        <% end %>
+        <div class="dropdown-menu dropdown-menu--white"></div>
+      </div>
+
+      <div class="gws-category-navi month-navi dropdown">
+        <%= link_to({ year: @cur_year, month: format('%02d', @cur_month )}, { class: 'btn dropdown-toggle' }) do %>
+          <%= "#{@cur_month}#{t("datetime.prompts.month")}" %>
+        <% end %>
+        <div class="dropdown-menu dropdown-menu--white"></div>
+      </div>
+
+      <div class="time-card-wrap">
+        <table class="time-card shift-records">
+          <tbody>
+            <tr class="header">
+              <th class="date"><%= @model.t(:date) %></th>
+              <th class=""><%= @model.t(:start_at) %></th>
+              <th class=""><%= @model.t(:end_at) %></th>
+              <th class=""><%= @model.t(:wday_type) %></th>
+            </tr>
+
+            <% date = @cur_date %>
+            <% while date <= @cur_date.end_of_month %>
+              <% tr_css_classes = [ "shift-record", "day-#{date.day}" ] %>
+              <% tr_css_classes << 'holiday' if @shift_calendar.holiday?(date) %>
+              <% tr_css_classes << 'sunday' if date.wday == 0 %>
+              <% tr_css_classes << 'saturday' if date.wday == 6 %>
+              <% tr_css_classes << 'shift' if @shift_calendar.shift_record(date).present? %>
+              <tr class="<%= tr_css_classes.compact.join(' ') %>" data-day="<%= date.day %>">
+                <td class="date"><%= I18n.l(date.to_date, format: :attendance_month_day) %></td>
+                <td><%= @shift_calendar.affair_start(date).strftime("%H:%M") %></td>
+                <td><%= @shift_calendar.affair_end(date).strftime("%H:%M") %></td>
+                <td>
+                  <% if @shift_calendar.leave_day?(date) %>
+                    <%= t("gws/affair.options.wday_type.holiday") %>
+                  <% else %>
+                    <%= t("gws/affair.options.wday_type.workday") %>
+                  <% end %>
+                </td>
+              </tr>
+              <% date += 1.day %>
+            <% end %>
+
+          </tbody>
+        </table>
+      </div>
+
+    </div>
+  </div>
+</div>

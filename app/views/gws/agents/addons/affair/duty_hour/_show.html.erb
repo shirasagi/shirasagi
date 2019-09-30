@@ -1,0 +1,10 @@
+<dl class="see">
+  <dt><%= @model.t :duty_hour_ids %></dt>
+  <dd>
+    <% if @item.duty_hours.blank? %>
+      <%= t("gws/affair.default_duty_hour") %>
+    <% else %>
+      <%= br @item.duty_hours.pluck(:name).join("\n") %>
+    <% end %>
+  </dd>
+</dl>

@@ -1,0 +1,30 @@
+<% @break_times = SS.config.gws.attendance['max_break'].times.to_a.select { |i| @cur_site["attendance_break_time#{i + 1}_state"] == 'show' } %>
+
+<div class="gws-attendance <%= "time-card-#{@item.id}" if @item %>">
+  <time class="cur-date" datetime="<%= I18n.l(Time.zone.now, format: :iso) %>"></time>
+  <%= error_messages_for :item %>
+  <% if @duty_calendar.flextime? %>
+    <%= render 'today/flextime' %>
+  <% else %>
+    <div class="attendance-box-container">
+      <%= render 'today/default' %>
+      <%= render 'today/yesterday' %>
+    </div>
+  <% end %>
+  <%= render 'main' %>
+</div>
+
+<%= jquery do %>
+  var attendance = new Gws_Attendance(
+    '.gws-attendance',
+    {
+      now: <%== Time.zone.now.rfc2822.to_json %>,
+      editable: <%== (@model.allowed?(:edit, @cur_user, site: @cur_site) && @item && @item.unlocked?).to_json %>,
+      indexUrl: <%== url_for(action: :index, year_month: ':year_month').to_json %>,
+      punchUrl: <%== "#{url_for(action: :index)}/:type".to_json %>,
+      timeUrl: <%== url_for(action: :time, day: ':day', type: ':type').to_json %>,
+      memoUrl: <%== url_for(action: :memo, day: ':day').to_json %>,
+      workingTimeUrl: <%== url_for(action: :working_time, day: ':day').to_json %>
+    }
+  );
+<% end %>

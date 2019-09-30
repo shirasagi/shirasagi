@@ -1,0 +1,16 @@
+<dl class="see">
+  <dt><%= @item.t :name %></dt>
+  <dd><%= @item.name %></dd>
+
+  <dt><%= @item.t :notice_type %></dt>
+  <dd><%= @item.label :notice_type %></dd>
+
+  <dt><%= @item.t :threshold_hour %></dt>
+  <dd>
+    <%= @item.threshold_hour %>
+    <%= t("ss.time") %>
+  </dd>
+
+  <dt><%= @item.t :body %></dt>
+  <dd><%= @item.body %></dd>
+</dl>

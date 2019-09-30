@@ -1,0 +1,18 @@
+<%= form_for :item, url: { action: :download_yearly }, html: { id: "item-form", method: :post, multipart: true } do |f| %>
+  <%= error_messages_for :item %>
+
+  <section class="main-box">
+    <header><h2><%= t("gws/affair.labels.leave_setting_download_yearly") %></h2></header>
+    <div class="main-body">
+      <dl class="see">
+        <dt><%= t("gws/affair.labels.caution") %></dt>
+        <dd><%=br t("gws/affair.caution.leave_setting_download_yearly", year: @cur_year.name).join("\n") %></dd>
+      </dl>
+    </div>
+  </section>
+
+  <footer class="send">
+    <%= f.submit t("ss.download"), class: :save %>
+    <%= f.button t("ss.buttons.cancel"), onclick: "location.href='#{gws_affair_capital_years_path}'; return false;", class: "btn-default" %>
+  </footer>
+<% end %>

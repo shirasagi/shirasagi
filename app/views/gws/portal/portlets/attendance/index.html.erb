@@ -19,8 +19,9 @@
     <th><%= @cur_site.send("attendance_#{field_name}_label").presence || Gws::Attendance::Record.t(field_name) %></th>
     <td class="time"><%= @portlet.format_attendance_time(date, time) %></td>
     <td class="reason">
-      <% if history.present? && history.reason.present? %>
-        <%= history.reason %>
+      <% if history.present? && history.reason_type.present? %>
+        <%= t("gws/attendance.options.reason_type.#{history.reason_type}") %>
+        <%=br "\n#{history.reason}" if history.reason.present? %>
       <% end %>
     </td>
     <% if time_card.unlocked? %>
@@ -40,7 +41,7 @@
 
   <div class="header">
     <%= I18n.l(Time.zone.now.to_date, format: :full) %>
-    <%= link_to t('ss.buttons.download'), download_gws_attendance_time_cards_path(year_month: "#{date.year}#{format('%02d', date.month)}"), class: 'btn' %>
+    <%= link_to t('ss.buttons.download'), download_gws_affair_attendance_time_cards_path(year_month: "#{date.year}#{format('%02d', date.month)}"), class: 'btn' %>
   </div>
   <% if time_card.locked? %>
     <div><%= t('gws/attendance.already_locked') %></div>
@@ -82,8 +83,8 @@
     '.gws-attendance',
     {
       ref: <%== request.fullpath.to_json %>,
-      punchUrl: <%== "#{gws_attendance_time_cards_path(year_month: "#{date.year}#{format('%02d', date.month)}")}/:TYPE".to_json %>,
-      editUrl: <%== time_gws_attendance_time_cards_path(year_month: "#{date.year}#{format('%02d', date.month)}", day: format('%02d', date.day), type: ':TYPE', ref: request.fullpath).to_json %>,
+      punchUrl: <%== "#{gws_affair_attendance_time_cards_path(year_month: "#{date.year}#{format('%02d', date.month)}")}/:TYPE".to_json %>,
+      editUrl: <%== time_gws_affair_attendance_time_cards_path(year_month: "#{date.year}#{format('%02d', date.month)}", day: format('%02d', date.day), type: ':TYPE', ref: request.fullpath).to_json %>,
       confirmMessage: <%== t('gws/attendance.confirm.punch').to_json %>,
       successMessage: <%== t('gws/attendance.notice.punched').to_json %>
     }

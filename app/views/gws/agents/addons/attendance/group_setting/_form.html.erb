@@ -1,8 +1,6 @@
 <%
   addon ||= local_assigns.fetch(:addon, {})
   addon[:display_body] = "hide"
-
-  @item.in_attendance_time_change_hour = @item.attendance_time_changed_minute / 60
 %>
 
 <dl class="see addon-gws-attendance-group-setting">
@@ -12,8 +10,21 @@
   <dt><%= @model.t :attendance_year_changed_month %><%= @model.tt :attendance_year_changed_month %></dt>
   <dd><%= f.select :attendance_year_changed_month, @item.attendance_year_changed_month_options %></dd>
 
-  <dt><%= @model.t :attendance_time_changed_minute %><%= @model.tt :attendance_time_changed_minute %></dt>
-  <dd><%= f.select :in_attendance_time_change_hour, @item.attendance_time_changed_options %></dd>
+  <dt><%= @model.t :affair_rounding_time_minute %><%= @model.tt :affair_rounding_time_minute %></dt>
+  <dd><%= f.select :affair_rounding_time_minute, @item.affair_rounding_time_minute_options %></dd>
+
+  <dt><%= @model.t :week_out_compensatory_file_limit %><%= @model.tt :week_out_compensatory_file_limit %></dt>
+  <dd style="padding-bottom: 10px;">
+    <span><%= t("ss.before") %></span>
+    <%= number_field_with_datetime_unit(:item, :week_out_compensatory_file_start_limit, @item.week_out_compensatory_file_start_limit_unit_options, min: 1) %>
+  </dd>
+  <dd>
+    <span><%= t("ss.after") %></span>
+    <%= number_field_with_datetime_unit(:item, :week_out_compensatory_file_end_limit, @item.week_out_compensatory_file_end_limit_unit_options, min: 1) %>
+  </dd>
+
+  <dt><%= @model.t :week_out_compensatory_file_notify_day %><%= @model.tt :week_out_compensatory_file_notify_day %></dt>
+  <dd><%= f.number_field :week_out_compensatory_file_notify_day, min: 0 %><%= t("datetime.prompts.day") %></dd>
 
   <dt><%= t('gws/attendance.enter_leave') %></dt>
   <dd>
@@ -29,4 +40,6 @@
       <%= f.text_field "attendance_break_leave#{i + 1}_label", placeholder: t('gws/attendance.formats.break_leave', count: i + 1), style: 'width: 10.5em;' %>
     </dd>
   <% end %>
+
+  <%= render "gws/affair/duty_hours/duty_hour_setting_form", f: f %>
 </dl>

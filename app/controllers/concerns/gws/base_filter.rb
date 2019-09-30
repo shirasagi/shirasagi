@@ -44,6 +44,9 @@ module Gws::BaseFilter
   def set_current_group
     @cur_group = @cur_user.gws_default_group
     raise "403" unless @cur_group
+
+    @cur_superior_users = @cur_user.gws_superior_users
+    @cur_superior_groups = @cur_user.gws_superior_groups
   end
 
   def set_account_menu

@@ -37,6 +37,14 @@ Gws_Attendance.prototype.render = function() {
     $(this).find('.reason').show();
   });
 
+  this.$el.find('.leave-file-tooltip').on('click', function(ev) {
+    ev.preventDefault();
+    ev.stopPropagation();
+
+    var href = $(this).attr("data-href");
+    $.colorbox({ href: href });
+  });
+
   this.$el.find('select[name=year_month]').on('change', function() {
     var val = $(this).val();
     if (! val) {
@@ -46,7 +54,7 @@ Gws_Attendance.prototype.render = function() {
   });
 
   this.$toolbar.find(".punch").on("click", function() {
-    _this.onPunchClicked($(this).attr("href"), $(this).data("confirmation"));
+    _this.onPunchClicked($(this).attr("href"), $(this).data("confirmation"), $(this).data("type"));
     return false;
   });
 
@@ -64,6 +72,13 @@ Gws_Attendance.prototype.render = function() {
     _this.onClickMemo($(this));
   });
 
+  $(document).on('click', this.el + ' .time-card .working-time-edit', function(ev) {
+    ev.preventDefault();
+    ev.stopPropagation();
+
+    _this.onClickWorkingTime($(this));
+  });
+
   $(document).on('click', function() {
     _this.hideToolbar();
     _this.hideTooltip();
@@ -72,7 +87,7 @@ Gws_Attendance.prototype.render = function() {
 
 Gws_Attendance.prototype.onPunchClicked = function(action, message) {
   if (! action) {
-    return
+    return;
   }
 
   if (message) {
@@ -119,10 +134,14 @@ Gws_Attendance.prototype.onClickTime = function($cell) {
 Gws_Attendance.prototype.onClickMemo = function($cell) {
   this.onClickCell($cell, this.options.memoUrl);
 };
+Gws_Attendance.prototype.onClickWorkingTime = function($cell) {
+  this.onClickCell($cell, this.options.workingTimeUrl);
+};
 
 Gws_Attendance.prototype.setFocus = function($cell) {
   this.$el.find('.time-card .time').removeClass('focus');
   this.$el.find('.time-card .memo').removeClass('focus');
+  this.$el.find('.time-card .working_time').removeClass('focus');
   $cell.addClass('focus');
 };
 
@@ -152,6 +171,12 @@ Gws_Attendance.prototype.onClickCell = function($cell, urlTemplate) {
   var editable = this.options.editable;
 
   if (type === "memo") {
+    if (this.isCellToday($cell)) {
+      editable = true;
+    }
+  }
+
+  if (type === "working_time") {
     if (this.isCellToday($cell)) {
       editable = true;
     }

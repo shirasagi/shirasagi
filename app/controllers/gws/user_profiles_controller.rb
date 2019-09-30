@@ -2,6 +2,7 @@ class Gws::UserProfilesController < ApplicationController
   include Gws::BaseFilter
   include Gws::CrudFilter
 
+  navi_view "gws/user_settings/navi"
   menu_view false
 
   model Gws::User
@@ -13,7 +14,7 @@ class Gws::UserProfilesController < ApplicationController
   def show
     respond_to do |format|
       format.html { render }
-      format.json {
+      format.json do
         index = @cur_user.imap_default_index || 0
         user_setting = @cur_user.imap_settings[index]
         base_setting = @cur_user.imap_default_settings
@@ -36,7 +37,7 @@ class Gws::UserProfilesController < ApplicationController
 
         data[:user][:password] = nil
         render json: data.to_json
-      }
+      end
     end
   end
 end

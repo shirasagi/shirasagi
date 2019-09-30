@@ -1,3 +1,18 @@
+<% @default_group_proc = proc do |group| %>
+  <% if !@item.group_ids.include?(group.id) %>
+    <tr data-id="<%= group.id %>">
+      <td><%= f.hidden_field "group_ids[]", value: group.id, id: nil %> <%= group.name %></td>
+      <td><%= link_to t("ss.buttons.delete"), "#", class: "deselect btn" %></td>
+    </tr>
+  <% end %>
+<% end %>
+<% @default_user_proc = proc do |user| %>
+  <tr data-id="<%= user.id %>">
+    <td><%= f.hidden_field "user_ids[]", value: @cur_user.id, id: nil %> <%= gws_public_user_long_name(@cur_user.long_name) %></td>
+    <td><%= link_to t("ss.buttons.delete"), "#", class: "deselect btn" %></td>
+  </tr>
+<% end %>
+
 <div class="mod-gws-owner_permission">
   <% if @item.class.permission_included_custom_groups? %>
   <dl class="see mod-gws-owner_permission-custom-groups">
@@ -34,11 +49,14 @@
       <table class="index ajax-selected">
         <thead><tr><th class="name"><%= Gws::Group.t :name %></th><th class="deselect"></th></tr></thead>
         <tbody>
-          <% if params[:action] =~ /new/ && !@skip_default_group && !@item.group_ids.include?(@cur_group.id) %>
-          <tr data-id="<%= @cur_group.id %>">
-            <td><%= f.hidden_field "group_ids[]", value: @cur_group.id, id: nil %> <%= @cur_group.name %></td>
-            <td><%= link_to t("ss.buttons.delete"), "#", class: "deselect btn" %></td>
-          </tr>
+          <% if params[:action] =~ /new/ && !@skip_default_group %>
+            <% if @set_default_groups.present? %>
+              <% @set_default_groups.each do |group| %>
+                <% @default_group_proc.call(group) %>
+              <% end %>
+            <% else %>
+              <% @default_group_proc.call(@cur_group) %>
+            <% end %>
           <% end %>
 
           <% @item.groups.each do |group| %>
@@ -65,10 +83,13 @@
         <thead><tr><th class="name"><%= Gws::User.t :name %></th><th class="deselect"></th></tr></thead>
         <tbody>
           <% if params[:action] =~ /new/ && @item.user_ids.blank? %>
-          <tr data-id="<%= @cur_user.id %>">
-            <td><%= f.hidden_field "user_ids[]", value: @cur_user.id, id: nil %> <%= gws_public_user_long_name(@cur_user.long_name) %></td>
-            <td><%= link_to t("ss.buttons.delete"), "#", class: "deselect btn" %></td>
-          </tr>
+            <% if @set_default_users.present? %>
+              <% @set_default_users.each do |user| %>
+                <% @default_user_proc.call(user) %>
+              <% end %>
+            <% else %>
+              <% @default_user_proc.call(@cur_user) %>
+            <% end %>
           <% end %>
 
           <% @item.users.order_by_title(@cur_site).each do |user| %>

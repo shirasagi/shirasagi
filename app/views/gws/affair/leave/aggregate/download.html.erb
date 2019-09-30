@@ -1,0 +1,38 @@
+<%
+  @s = OpenStruct.new params[:s]
+%>
+<div class="gws-attendance">
+  <div class="attendance-box">
+    <div class="attendance-box-main">
+      <%
+        current = Time.zone.now
+        year_options = ((current.year - 5)..(current.year)).map { |y| ["#{y}#{t("datetime.prompts.year")}", y] }.reverse
+        month_options = (1..12).map { |m| ["#{m}#{t("datetime.prompts.month")}", m] }
+      %>
+      <%= form_tag({ action: :download, s: @s.to_h }, { method: "GET" }) do %>
+        <%= select_tag :year, options_for_select(year_options, selected: @cur_month.year) %>
+        <%= select_tag :month, options_for_select(month_options, selected: @cur_month.month) %>
+        <input type="submit" value="<%= t('ss.buttons.search') %>" class="btn" />
+        <%= link_to t("ss.buttons.reset"), { action: :download, s: @s.to_h }, class: "btn" %>
+      <% end %>
+    </div>
+  </div>
+</div>
+<%= form_for :s, url: { action: :download }, html: { id: "item-form", method: :post, multipart: true, autocomplete: :off } do |f| %>
+  <div class="addon-views">
+    <div class="addon-view" id="addon-basic">
+      <div class="addon-head"><h2><%= t('gws/affair.confirm.download') %></h2></div>
+      <div class="addon-body">
+        <%= hidden_field_tag :year, @cur_month.year %>
+        <%= hidden_field_tag :month, @cur_month.month %>
+        <%= render partial: 'download', locals: { f: f } %>
+      </div>
+    </div>
+  </div>
+
+  <footer class="send">
+    <%= f.submit t('ss.buttons.download'), class: 'btn-primary save' %>
+  </footer>
+<% end %>
+
+<%= jquery do %> SS.confirmUnloading(); <% end %>

@@ -1,0 +1,9 @@
+<nav class="nav-menu">
+  <% if params[:action] == "groups" || params[:action] == "users" %>
+    <% if @parent %>
+      <%= link_to t('ss.links.back'), { action: :groups, group: @parent.group_id } %>
+    <% else %>
+      <%= link_to t('ss.links.back'), { action: :yearly } %>
+    <% end %>
+  <% end %>
+</nav>
