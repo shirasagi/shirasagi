@@ -15,15 +15,15 @@ module Service::Quota
   end
 
   def find_cms_quota_used
-    Cms.find_cms_quota_used(sites)
+    Cms.find_cms_quota_used(sites, except: "common")
   end
 
   def find_gws_quota_used
-    Gws.find_gws_quota_used(organizations)
+    Gws.find_gws_quota_used(organizations, except: "common")
   end
 
   def find_webmail_quota_used
-    Webmail.find_webmail_quota_used
+    Webmail.find_webmail_quota_used(except: "common")
   end
 
   private
@@ -50,16 +50,4 @@ module Service::Quota
 
     criteria.total_bsonsize + criteria.aggregate_files_used
   end
-
-  # def cms_files_used
-  #   Cms.cms_files_used(sites)
-  # end
-  #
-  # def gws_files_used
-  #   Gws.gws_files_used(organizations)
-  # end
-  #
-  # def webmail_files_used
-  #   Webmail.webmail_files_used
-  # end
 end

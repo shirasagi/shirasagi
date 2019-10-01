@@ -14,8 +14,8 @@ module Cms
     template
   end
 
-  def self.find_cms_quota_used(site_criteria)
-    Cms.cms_db_used(site_criteria) + Cms.cms_files_used(site_criteria)
+  def self.find_cms_quota_used(site_criteria, opts = {})
+    Cms.cms_db_used(site_criteria, opts) + Cms.cms_files_used(site_criteria, opts)
   end
 
   MODULES_BOUND_TO_SITE = %w(
@@ -102,7 +102,11 @@ module Cms
     ::Workflow::Route
   ).freeze
 
-  def self.cms_db_used(site_criteria)
+  MODULES_COMMON = %w(
+    ::Cms::User
+  ).freeze
+
+  def self.cms_db_used(site_criteria, opts = {})
     site_ids = site_criteria.pluck(:id)
     site_group_ids = site_criteria.pluck(:group_ids).flatten.uniq
     organization_group_ids = Cms::Group.all.unscoped.in(id: site_group_ids).organizations.pluck(:id)
@@ -115,21 +119,31 @@ module Cms
     end
     group_ids = groups.pluck(:id)
 
-    size = [
-      site_criteria,
-      groups,
-    ].sum { |c| c.total_bsonsize }
+    size = site_criteria.total_bsonsize
+    size += groups.total_bsonsize if opts[:except] != "common"
 
-    size += MODULES_BOUND_TO_SITE.map(&:constantize).sum do |klass|
+    if opts[:except] == "common"
+      modules = MODULES_BOUND_TO_SITE.reject { |klass| MODULES_COMMON.include?(klass) }
+    else
+      modules = MODULES_BOUND_TO_SITE
+    end
+    size += modules.map(&:constantize).sum do |klass|
       klass.all.unscoped.any_in(site_id: site_ids).total_bsonsize
     end
-    size += MODULES_BOUND_TO_GROUP.map(&:constantize).sum do |klass|
+
+    if opts[:except] == "common"
+      modules = MODULES_BOUND_TO_GROUP.reject { |klass| MODULES_COMMON.include?(klass) }
+    else
+      modules = MODULES_BOUND_TO_GROUP
+    end
+    size += modules.map(&:constantize).sum do |klass|
       klass.all.unscoped.any_in(group_ids: group_ids).total_bsonsize
     end
+
     size
   end
 
-  def self.cms_files_used(site_criteria)
+  def self.cms_files_used(site_criteria, _opts = {})
     site_ids = site_criteria.pluck(:id)
     criteria = SS::File.any_in(site_id: site_ids).where(model: { '$not' => /^(ss|gws|webmail)\// })
 

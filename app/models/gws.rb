@@ -17,7 +17,7 @@ module Gws
     handler.call(site, user)
   end
 
-  def find_gws_quota_used(organizations_criteria)
+  def find_gws_quota_used(organizations_criteria, _opts = {})
     Gws.gws_db_used(organizations_criteria) + Gws.gws_files_used(organizations_criteria)
   end
 
