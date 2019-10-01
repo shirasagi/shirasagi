@@ -17,94 +17,115 @@ module Gws
     handler.call(site, user)
   end
 
-  def find_gws_quota_used(organizations_criteria, _opts = {})
-    Gws.gws_db_used(organizations_criteria) + Gws.gws_files_used(organizations_criteria)
+  def find_gws_quota_used(organizations_criteria, opts = {})
+    Gws.gws_db_used(organizations_criteria, opts) + Gws.gws_files_used(organizations_criteria, opts)
   end
 
-  def gws_db_used(organizations_criteria)
-    org_ids = organizations_criteria.pluck(:id)
-    size = [
-      Gws::CustomGroup.any_in(site_id: org_ids),
-      Gws::History.any_in(site_id: org_ids),
-      Gws::Link.any_in(site_id: org_ids),
-      Gws::Notice::Post.any_in(site_id: org_ids),
-      Gws::Reminder.any_in(site_id: org_ids),
-      Gws::Role.any_in(site_id: org_ids),
-      Gws::Contrast.any_in(site_id: org_ids),
-      Gws::UserTitle.any_in(site_id: org_ids),
-    ].sum { |c| c.total_bsonsize }
+  MODULES_BOUND_TO_SITE = %w(
+    Gws::Attendance::History
+    Gws::Attendance::Record
+    Gws::Attendance::TimeCard
+    Gws::Board::Category
+    Gws::Board::Post
+    Gws::Bookmark
+    Gws::Chorg::Changeset
+    Gws::Chorg::Revision
+    Gws::Circular::Post
+    Gws::Column::Base
+    Gws::Contrast
+    Gws::CustomGroup
+    Gws::Discussion::Base
+    Gws::Facility::Category
+    Gws::Facility::Item
+    Gws::Faq::Post
+    Gws::History
+    Gws::HistoryArchiveFile
+    Gws::Link
+    Gws::Link
+    Gws::Memo::Filter
+    Gws::Memo::Folder
+    Gws::Memo::Forward
+    Gws::Memo::List
+    Gws::Memo::Message
+    Gws::Memo::Signature
+    Gws::Memo::Template
+    Gws::Monitor::Post
+    Gws::Notice::Comment
+    Gws::Notice::Folder
+    Gws::Notice::Post
+    Gws::Portal::GroupPortlet
+    Gws::Portal::GroupSetting
+    Gws::Portal::UserPortlet
+    Gws::Portal::UserSetting
+    Gws::Qna::Post
+    Gws::Reminder
+    Gws::Report::File
+    Gws::Report::Form
+    Gws::Role
+    Gws::Schedule::Comment
+    Gws::Schedule::Holiday
+    Gws::Schedule::Plan
+    Gws::Schedule::Todo
+    Gws::Schedule::TodoComment
+    Gws::Share::Folder
+    Gws::Share::History
+    Gws::SharedAddress::Address
+    Gws::SharedAddress::Group
+    Gws::StaffRecord::Group
+    Gws::StaffRecord::Seating
+    Gws::StaffRecord::User
+    Gws::StaffRecord::Year
+    Gws::Survey::File
+    Gws::Survey::Form
+    Gws::UserForm
+    Gws::UserFormData
+    Gws::UserPresence
+    Gws::UserTitle
+    Gws::Workflow::File
+    Gws::Workflow::Form
+  ).freeze
 
-    size + Gws.gws_modules_db_used(organizations_criteria)
-  end
+  MODULES_BOUND_TO_GROUP = %w(
+    Gws::Job::Log
+    Gws::Chorg::Task
+    Gws::Task
+  ).freeze
 
-  def gws_modules_db_used(organizations_criteria)
+  MODULES_BOUND_TO_GROUPS = %w(
+    Gws::User
+    Gws::Workflow::Route
+  ).freeze
+
+  MODULES_COMMON = %w(
+    Gws::User
+  ).freeze
+
+  def gws_db_used(organizations_criteria, opts = {})
     org_ids, org_names = organizations_criteria.pluck(:id, :name).transpose
     org_ids ||= []
     conditions = org_names.try { org_names.map { |name| { name: /^#{::Regexp.escape(name)}(\/|$)/ } } }
-    group_ids = conditions.try { Gws::Group.all.where("$and" => [{ "$or" => conditions }]).active.pluck(:id) } || []
+    groups = conditions.try { Gws::Group.all.where("$and" => [{ "$or" => conditions }]) } || Gws::Group.none
+    group_ids = groups.pluck(:id)
 
-    [
-      Gws::Attendance::History.any_in(site_id: org_ids),
-      Gws::Attendance::Record.any_in(site_id: org_ids),
-      Gws::Attendance::TimeCard.any_in(site_id: org_ids),
-      Gws::Board::Category.unscoped.any_in(site_id: org_ids),
-      Gws::Board::Post.any_in(site_id: org_ids),
-      Gws::Bookmark.any_in(site_id: org_ids),
-      Gws::Chorg::Changeset.any_in(site_id: org_ids),
-      Gws::Chorg::Revision.any_in(site_id: org_ids),
-      Gws::Chorg::Task.any_in(group_id: org_ids),
-      Gws::Circular::Post.any_in(site_id: org_ids),
-      Gws::Column::Base.any_in(site_id: org_ids),
-      Gws::Discussion::Base.any_in(site_id: org_ids),
-      Gws::Facility::Category.any_in(site_id: org_ids),
-      Gws::Facility::Item.any_in(site_id: org_ids),
-      Gws::Faq::Post.any_in(site_id: org_ids),
-      Gws::HistoryArchiveFile.any_in(site_id: org_ids),
-      Gws::Job::Log.any_in(group_id: org_ids),
-      Gws::Link.any_in(site_id: org_ids),
-      Gws::Memo::Filter.any_in(site_id: org_ids),
-      Gws::Memo::Folder.any_in(site_id: org_ids),
-      Gws::Memo::Forward.any_in(site_id: org_ids),
-      Gws::Memo::List.any_in(site_id: org_ids),
-      Gws::Memo::Message.any_in(site_id: org_ids),
-      Gws::Memo::Signature.any_in(site_id: org_ids),
-      Gws::Memo::Template.any_in(site_id: org_ids),
-      Gws::Monitor::Post.any_in(site_id: org_ids),
-      Gws::Notice::Comment.any_in(site_id: org_ids),
-      Gws::Notice::Folder.any_in(site_id: org_ids),
-      Gws::Portal::GroupPortlet.any_in(site_id: org_ids),
-      Gws::Portal::GroupSetting.any_in(site_id: org_ids),
-      Gws::Portal::UserPortlet.any_in(site_id: org_ids),
-      Gws::Portal::UserSetting.any_in(site_id: org_ids),
-      Gws::Qna::Post.any_in(site_id: org_ids),
-      Gws::Report::Form.any_in(site_id: org_ids),
-      Gws::Report::File.any_in(site_id: org_ids),
-      Gws::Schedule::Comment.any_in(site_id: org_ids),
-      Gws::Schedule::Holiday.any_in(site_id: org_ids),
-      Gws::Schedule::Plan.any_in(site_id: org_ids),
-      Gws::Schedule::Todo.any_in(site_id: org_ids),
-      Gws::Schedule::TodoComment.any_in(site_id: org_ids),
-      Gws::Share::Folder.any_in(site_id: org_ids),
-      Gws::Share::History.any_in(site_id: org_ids),
-      Gws::SharedAddress::Address.any_in(site_id: org_ids),
-      Gws::SharedAddress::Group.any_in(site_id: org_ids),
-      Gws::StaffRecord::Group.any_in(site_id: org_ids),
-      Gws::StaffRecord::Seating.any_in(site_id: org_ids),
-      Gws::StaffRecord::User.any_in(site_id: org_ids),
-      Gws::StaffRecord::Year.any_in(site_id: org_ids),
-      Gws::Survey::File.any_in(site_id: org_ids),
-      Gws::Survey::Form.any_in(site_id: org_ids),
-      Gws::Task.any_in(group_id: org_ids),
-      Gws::UserForm.any_in(site_id: org_ids),
-      Gws::UserFormData.any_in(site_id: org_ids),
-      Gws::UserPresence.any_in(site_id: org_ids),
-      Gws::Workflow::File.any_in(site_id: org_ids),
-      Gws::Workflow::Form.any_in(site_id: org_ids),
-      Gws::Workflow::Route.any_in(group_ids: group_ids),
-    ].sum { |c| c.total_bsonsize }
+    filter = proc { |array| array }
+    if opts[:except] == "common"
+      filter = proc { |array| array.reject { |klass| MODULES_COMMON.include?(klass) } }
+    end
+
+    size = opts[:except] == "common" ? 0 : groups.total_bsonsize
+    size += filter.call(MODULES_BOUND_TO_SITE).map(&:constantize).sum do |klass|
+      klass.all.unscoped.any_in(site_id: org_ids).total_bsonsize
+    end
+    size += filter.call(MODULES_BOUND_TO_GROUP).map(&:constantize).sum do |klass|
+      klass.all.unscoped.any_in(group_id: org_ids).total_bsonsize
+    end
+    size += filter.call(MODULES_BOUND_TO_GROUPS).map(&:constantize).sum do |klass|
+      klass.all.unscoped.any_in(group_ids: group_ids).total_bsonsize
+    end
+    size
   end
 
-  def gws_files_used(organizations_criteria)
+  def gws_files_used(organizations_criteria, _opts = {})
     org_ids = organizations_criteria.pluck(:id)
     criteria = SS::File.any_in(site_id: org_ids).where(model: /^gws\//)
 
