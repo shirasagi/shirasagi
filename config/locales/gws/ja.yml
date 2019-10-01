@@ -153,6 +153,7 @@ ja:
       gws/user/custom_form: 拡張情報
       gws/user/public_duty: 事務分掌
       gws/link: リンク
+      gws/site_usage: 使用量
 
   mongoid:
     models:
@@ -461,6 +462,12 @@ ja:
         in_file: ファイル
       gws/addon/link:
         links: リンク
+      gws/addon/site_usage:
+        usage_file_count: ファイル数
+        usage_db_size: DB使用量
+        usage_group_count: グループ数
+        usage_user_count: ユーザー数
+        usage_calculated_at: 使用量計算日時
 
   tooltip:
     gws/model/category:

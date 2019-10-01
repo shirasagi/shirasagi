@@ -31,6 +31,9 @@ namespace :ss do
     if SS.config.gws.disable.blank?
       # ゴミ箱の掃除
       Rake.application.invoke_task("gws:trash:purge")
+
+      # 各種使用率の更新
+      Rake.application.invoke_task("gws:reload_site_usage")
     end
   end
 end

@@ -24,6 +24,7 @@ class Gws::Group
   include Gws::Addon::System::DesktopSetting
   include Gws::Addon::History
   include Gws::Addon::Import::Group
+  include Gws::Addon::SiteUsage
 
   set_permission_name "gws_groups", :edit
 
