@@ -94,6 +94,7 @@ module Tasks
       end
 
       def reload_site_usage
+        puts "# reload site usage"
         each_sites do |site|
           begin
             puts "#{site.host}: #{site.name}"
