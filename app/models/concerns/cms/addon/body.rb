@@ -20,7 +20,10 @@ module Cms::Addon
 
       if respond_to?(:liquidize)
         liquidize do
-          export :html
+          export as: :html do |context|
+            next html if !respond_to?(:form) || form.blank?
+            form.render_html(self, context.registers)
+          end
         end
       end
     end
