@@ -162,6 +162,13 @@ module SS::BaseFilter
 
     @ss_rescue = { status: status_code }
     @wrapper = wrapper if Rails.env.development?
+
+    if @ss_mode == :cms && !@cur_site
+      @ss_mode = nil
+    elsif @ss_mode == :gws && !@cur_site
+      @ss_mode = nil
+    end
+
     render(
       file: "ss/rescues/index", layout: @cur_user ? "ss/base" : "ss/login", status: status_code,
       type: request.xhr? ? "text/plain" : "text/html", formats: request.xhr? ? :text : :html
