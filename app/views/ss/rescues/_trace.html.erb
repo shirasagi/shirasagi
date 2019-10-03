@@ -51,7 +51,19 @@
     }
 
     var traceFrames = document.getElementsByClassName('trace-frames');
-    var selectedFrame, currentSource = document.getElementById('frame-source-0');
+    var selectedFrame = document.getElementById('frame-source-0');
+    var currentSource = document.querySelector(".source:not(.hide)");
+
+    var changeSourceExtract = function(frame_id) {
+      var el = document.getElementById('frame-source-' + frame_id);
+      if (currentSource) {
+        currentSource.classList.add("hide");
+      }
+      if (el) {
+        el.classList.remove("hide");
+        currentSource = el;
+      }
+    };
 
     // Add click listeners for all stack frames
     for (var i = 0; i < traceFrames.length; i++) {
@@ -61,24 +73,15 @@
         var frame_id = target.dataset.frameId;
 
         if (selectedFrame) {
-          selectedFrame.className = selectedFrame.className.replace("selected", "");
+          selectedFrame.classList.remove("selected");
         }
 
-        target.className += " selected";
+        target.classList.add("selected");
         selectedFrame = target;
 
         // Change the extracted source code
         changeSourceExtract(frame_id);
       });
-
-      function changeSourceExtract(frame_id) {
-        var el = document.getElementById('frame-source-' + frame_id);
-        if (currentSource && el) {
-          currentSource.className += " hidden";
-          el.className = el.className.replace(" hidden", "");
-          currentSource = el;
-        }
-      }
     }
   </script>
 </div>
