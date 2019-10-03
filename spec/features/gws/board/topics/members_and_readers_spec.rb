@@ -187,6 +187,9 @@ describe "gws_board_topics", type: :feature, dbscope: :example, js: true do
       end
       expect(page).to have_no_css("#menu a")
 
+      #
+      # Member can post new comment
+      #
       click_on item.name
       within "#menu" do
         expect(page).to have_no_link(I18n.t('ss.links.edit'))
@@ -222,6 +225,9 @@ describe "gws_board_topics", type: :feature, dbscope: :example, js: true do
       expect(notice.user_id).to eq user1_1.id
       expect(notice.subject).to eq I18n.t("gws_notification.gws/board/post.subject", name: item.name)
 
+      #
+      # Member can edit owned comment
+      #
       visit gws_board_main_path(site: site)
       click_on item.name
       within "#post-#{post.id}" do
@@ -244,6 +250,9 @@ describe "gws_board_topics", type: :feature, dbscope: :example, js: true do
       expect(notice.user_id).to eq user1_1.id
       expect(notice.subject).to eq I18n.t("gws_notification.gws/board/post.subject", name: item.name)
 
+      #
+      # Member can delete owned comment
+      #
       visit gws_board_main_path(site: site)
       click_on item.name
       within "#post-#{post.id}" do
@@ -262,6 +271,31 @@ describe "gws_board_topics", type: :feature, dbscope: :example, js: true do
       expect(notice.member_ids).to eq [ user1_2.id ]
       expect(notice.user_id).to eq user1_1.id
       expect(notice.subject).to eq I18n.t("gws_notification.gws/board/post/destroy.subject", name: item.name)
+
+      #
+      # Change category
+      #
+      visit gws_board_main_path(site: site)
+      within ".gws-category-navi" do
+        click_on I18n.t('gws.category')
+        within ".dropdown-menu" do
+          click_on cate.name
+        end
+      end
+
+      click_on item.name
+      within "#menu" do
+        expect(page).to have_no_link(I18n.t('ss.links.edit'))
+        expect(page).to have_link(I18n.t('ss.links.print'))
+        expect(page).to have_link(I18n.t('ss.links.back_to_index'))
+      end
+      within "#post-#{item.id}" do
+        expect(page).to have_css(".name", text: item.name)
+        expect(page).to have_css(".gws-category-label", text: cate.name)
+        expect(page).to have_css(".body", text: item.text)
+
+        click_on I18n.t("gws/board.links.comment")
+      end
     end
   end
 
@@ -275,6 +309,35 @@ describe "gws_board_topics", type: :feature, dbscope: :example, js: true do
         expect(page).to have_no_link(I18n.t('ss.navi.readable'))
       end
       expect(page).to have_no_css("#menu a")
+
+      click_on item.name
+      within "#menu" do
+        expect(page).to have_no_link(I18n.t('ss.links.edit'))
+        expect(page).to have_link(I18n.t('ss.links.print'))
+        expect(page).to have_link(I18n.t('ss.links.back_to_index'))
+      end
+      within "#post-#{item.id}" do
+        expect(page).to have_css(".name", text: item.name)
+        expect(page).to have_css(".gws-category-label", text: cate.name)
+        expect(page).to have_css(".body", text: item.text)
+        expect(page).to have_no_link(I18n.t("gws/board.links.comment"))
+      end
+      within "#post-#{comment.id}" do
+        expect(page).to have_css("header h2", text: comment.name)
+        expect(page).to have_no_css(".gws-category-label")
+        expect(page).to have_css(".body", text: comment.text)
+        expect(page).to have_no_link(I18n.t("ss.links.edit"))
+        expect(page).to have_no_link(I18n.t("ss.links.delete"))
+      end
+
+      # change category
+      visit gws_board_main_path(site: site)
+      within ".gws-category-navi" do
+        click_on I18n.t('gws.category')
+        within ".dropdown-menu" do
+          click_on cate.name
+        end
+      end
 
       click_on item.name
       within "#menu" do
