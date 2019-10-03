@@ -100,6 +100,7 @@ group :development, :test do
   gem 'guard', require: false
   gem 'guard-rspec', '~> 4.3.1', require: false
   gem 'guard-rubocop', require: false
+  gem 'guard-scss_lint', require: false
   gem 'pry-byebug', require: false
   gem 'pry-doc', require: false
   gem 'pry-rails', require: false
