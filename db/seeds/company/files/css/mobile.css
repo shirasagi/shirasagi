@@ -5,26 +5,26 @@
 body {
   margin: 0;
   line-height: 1.6;
-  color: #333333;
+  color: #333;
   font-size: 12px;
   font-family: sans-serif;
 }
 h1, h2, h3, h4, h5 {
-  margin: 0px;
+  margin: 0;
   font-size: 120%;
 }
 a {
-  color: #006699;
+  color: #069;
 }
 a:hover {
-  color: #ff0000;
+  color: #f00;
   text-decoration: none;
 }
 a:visited {
-  color: #993366;
+  color: #936;
 }
 ul, ol {
-  margin: 0 0 10px 0;
+  margin: 0 0 10px;
   padding: 0 10px 0 20px;
 }
 dt {
@@ -36,7 +36,7 @@ dd {
 
 /* ---------------------------------- */
 #head {
-  background-color: #ffffff;
+  background-color: #fff;
 }
 #head h1 {
   padding: 10px;
@@ -52,7 +52,7 @@ dd {
   display: none;
 }
 #search-box {
-  width:70%;
+  width: 70%;
 }
 #search-button {
   width: 20%;
@@ -60,8 +60,8 @@ dd {
 #gnav {
   margin: 10px 0;
   padding: 10px 0 0;
-  border-top: 1px solid #dd0000;
-  border-bottom: 1px solid #dd0000;
+  border-top: 1px solid #d00;
+  border-bottom: 1px solid #d00;
 }
 #gnav .inquiry {
   display: none;
@@ -97,8 +97,8 @@ dd {
   display: block;
   margin-bottom: 5px;
   padding: 0 10px;
-  background: #dd0000;
-  color: #ffffff;
+  background: #d00;
+  color: #fff;
 }
 #tabs {
   padding: 0;
@@ -106,24 +106,24 @@ dd {
 #tabs .tab {
   margin: 0;
   padding: 0;
-  border-bottom: none;
+  border-bottom: 0;
 }
 #product {
   margin-bottom: 10px;
   padding: 0;
-  border: none;
+  border: 0;
 }
 #product .tag-article {
   margin: 0;
   padding: 0;
-  border: none;
+  border: 0;
 }
 #product h2 {
   margin-bottom: 5px;
   padding: 0 10px 5px;
   border-bottom: 1px solid #ccc;
   font-size: 100%;
-  font-weigth: normal;
+  font-weight: normal;
 }
 #connect ul {
   margin: 0;
@@ -135,14 +135,14 @@ dd {
 #side-menu {
   margin-bottom: 5px;
   padding: 0;
-  border: none;
+  border: 0;
 }
 #side-menu .news, #side-menu .product, #side-menu .recruit {
   display: none;
 }
 .pages div h2 {
-  margin: 0px 0px 5px;
-  padding: 0px 10px 5px;
+  margin: 0 0 5px;
+  padding: 0 10px 5px;
   border-bottom: 1px solid #999;
   font-size: 100%;
   font-weight: normal;
@@ -155,8 +155,8 @@ dd {
   text-align: right;
 }
 .pages .tag-article .tag-time {
-  margin: 0px 0px 5px;
-  color: #444444;
+  margin: 0 0 5px;
+  color: #444;
 }
 
 /* ---------------------------------- */
@@ -180,12 +180,12 @@ dd {
 .tag-article {
   margin-bottom: 10px;
   padding: 0 10px 10px;
-  border-bottom: 1px solid #999999;
+  border-bottom: 1px solid #999;
 }
 .pages .tag-article h2 {
   margin: 0;
   padding: 0;
-  border: none;
+  border: 0;
 }
 .tag-article p {
   margin: 0;
@@ -210,27 +210,27 @@ dd {
 .body h1 {
   margin-top: 10px;
   padding: 0 10px;
-  border-bottom: 1px solid #dd0000;
+  border-bottom: 1px solid #d00;
   background: #ffcfcf;
 }
 .body h2 {
   padding-left: 8px;
-  border-left: 3px solid #dd0000;
+  border-left: 3px solid #d00;
 }
 .body h3 {
-  border-bottom: 1px solid #dd0000;
+  border-bottom: 1px solid #d00;
 }
 .body h4 {
-  font-weight: bold
+  font-weight: bold;
 }
 .body table {
   margin-bottom: 10px;
-  border-collapse:collapse;
-  border-spacing:0;
+  border-collapse: collapse;
+  border-spacing: 0;
 }
 .body th, .body td {
   padding: 5px;
-  border: 1px solid #cccccc;
+  border: 1px solid #ccc;
 }
 .body th {
   background: #ffcfcf;
@@ -240,7 +240,7 @@ dd {
 }
 .categories {
   padding: 0 10px;
-  border-top: 1px solid #cccccc;
+  border-top: 1px solid #ccc;
   text-align: right;
 }
 .categories h2 {
@@ -249,7 +249,7 @@ dd {
 }
 /* ---------------------------------- */
 .inquiry-html {
-  padding:  0 10px;
+  padding: 0 10px;
 }
 .inquiry-form {
   padding: 0 10px;

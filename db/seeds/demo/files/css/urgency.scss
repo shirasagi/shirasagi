@@ -15,7 +15,7 @@ body {
   color: $text;
 }
 h1, h2, h3, h4, h5 {
-  margin: 0px;
+  margin: 0;
   font-size: 100%;
   font-weight: normal;
 }
@@ -36,7 +36,7 @@ rp, rt {
   font-weight: normal;
 }
 rp {
-  margin: 0px;
+  margin: 0;
 }
 img {
   vertical-align: middle;
@@ -88,17 +88,17 @@ img {
       padding-bottom: 10px;
       form {
         float: right;
-        border: $border-hgry
+        border: $border-hgry;
       }
       #search-box {
         margin-right: -10px;
         padding: 5px;
-        border: none;
+        border: 0;
         color: $text;
       }
       #search-button {
         padding: 5px 10px;
-        border: none;
+        border: 0;
         background: #333;
         color: $t-white;
       }
@@ -291,7 +291,7 @@ img {
     margin-bottom: 0;
   }
   article {
-    padding: $item-margin $item-margin 0 $item-margin;
+    padding: $item-margin $item-margin 0;
     border-left: 2px solid #c42c00;
     border-right: 2px solid #c42c00;
     background: #ffffa4;
@@ -379,7 +379,7 @@ img {
   dd {
     float: left;
     width: 90px;
-    margin: 0 0 3px 0;
+    margin: 0 0 3px;
     padding: 0 3px;
     background: #fff;
     &:nth-child(2n) {
@@ -445,7 +445,7 @@ img {
       width: 109px;
       padding: 3px 0 0;
       border-left: 5px solid #ddd;
-      background: #cccccc;
+      background: #ccc;
       color: $text;
       text-align: center;
       text-decoration: none;
@@ -515,7 +515,7 @@ img {
   #head, #navi .wrap, #wrap, #main, #side, #addition, #add,
   #main .left, #addition .left, #main .center, #addition .center, #addition .right,
   #address dl, #address dl dt, #address dl dd, #footer-navi,
-  #main .category-nodes article, #mode p  {
+  #main .category-nodes article, #mode p {
     float: none;
     width: 100%;
     padding: 0;
@@ -558,10 +558,10 @@ img {
     form {
       float: none;
       position: relative;
-      @include border-radius(0px);
+      @include border-radius(0);
       #search-box {
         width: 80%;
-        @include border-radius(0px);
+        @include border-radius(0);
       }
       #search-button {
         position: absolute;
@@ -610,7 +610,7 @@ img {
       width: 50%;
       margin-bottom: $smart-margin;
       padding: 0;
-      border: none;
+      border: 0;
       &:nth-child(2n+1) {
         margin: 0;
       }
@@ -651,7 +651,7 @@ img {
     &:nth-child(2n+1) {
       margin: 0;
       a {
-        border-right: $border-hgry
+        border-right: $border-hgry;
       }
     }
     a {
@@ -747,10 +747,10 @@ img {
     padding: 0;
     background: $hgry;
     .rss {
-    float: left;
-    width: 30%;
-    @include inline-block;
-    padding: 3px 0 3px;
+      float: left;
+      width: 30%;
+      @include inline-block;
+      padding: 3px 0;
     }
     .more {
       float: left;
@@ -766,7 +766,7 @@ img {
     .rss {
       width: 30%;
       @include inline-block;
-      padding: 3px 10px 3px;
+      padding: 3px 10px;
       background: $hblue;
       @include box-sizing(border-box);
     }
@@ -809,12 +809,12 @@ img {
       margin: 0;
       padding-left: 22px;
       border: 1px solid #999;
-      border-top: none;
+      border-top: 0;
       background-color: $hgry;
       color: $text;
       text-decoration: none;
       &:nth-child(2n+1) {
-        border-right: none;
+        border-right: 0;
       }
       &:last-child {
         border-right: 1px solid #999;
