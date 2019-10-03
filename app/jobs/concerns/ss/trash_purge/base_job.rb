@@ -22,6 +22,7 @@ module SS::TrashPurge::BaseJob
   end
 
   def parse_threshold(now, threshold)
+    threshold ||= site.trash_threshold
     return now - DEFAULT_THRESHOLD_DAYS.days if threshold.blank?
 
     case threshold

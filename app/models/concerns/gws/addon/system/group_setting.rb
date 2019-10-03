@@ -10,9 +10,10 @@ module Gws::Addon::System::GroupSetting
     field :sendmail_domains, type: SS::Extensions::Words
     field :canonical_scheme, type: String, default: 'http'
     field :canonical_domain, type: String
+    field :trash_threshold, type: String, default: 14
 
     permit_params :sendmail_domains, allow_email_domains: []
-    permit_params :canonical_scheme, :canonical_domain
+    permit_params :canonical_scheme, :canonical_domain, :trash_threshold
   end
 
   def allow_email_domains

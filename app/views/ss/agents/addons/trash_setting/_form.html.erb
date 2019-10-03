@@ -1,0 +1,8 @@
+<%
+  addon ||= local_assigns.fetch(:addon, {})
+  addon[:display_body] = "hide"
+%>
+<dl class="see mod-ss-trash-setting">
+  <dt><%= @model.t :trash_threshold %><%= @model.tt :trash_threshold %></dt>
+  <dd><%= f.text_field :trash_threshold %></dd>
+</dl>

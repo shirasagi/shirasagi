@@ -378,6 +378,7 @@ ja:
       ss/approve_setting: 承認設定
       ss/editor_setting: エディタ設定
       ss/mail_setting: メール設定
+      ss/trash_setting: ゴミ箱設定
       ss/link_file: ファイル
       ss/notification/reply:
         discussion: 電子会議室
@@ -587,6 +588,8 @@ ja:
         file_resizing_height: 高さ
         file_resizing_label: "%{size}（サイト設定）"
         multibyte_filename_state: 日本語ファイル名
+      ss/addon/trash_setting:
+        trash_threshold: ゴミ箱保持期間
       ss/addon/approve_setting:
         forced_update: メールアドレス注意設定
         close_confirmation: 非公開保存の警告表示設定
@@ -932,6 +935,15 @@ ja:
         -
         - "アップロード可: 日本語ファイルはアップロード可ですが、日本語部分がアンダースコアに置き換わります。既定の動作です。"
         - "アップロード不可: 日本語ファイルをアップロードすることができなくなり、英数字・ハイフン・アンダースコアのみで構成されたファイルのみをアップロードすることができるようになります。"
+    ss/addon/trash_setting:
+      trash_threshold:
+        - |-
+          ゴミ箱の保持期間を設定できます。
+          2.month のように単位を設定できます。
+          単位を省略すると日数指定になります。
+          1.days: 1日
+          1.month: 1カ月
+          1.years: 1年
     ss/addon/approve_setting:
       forced_update:
         - メールアドレスが設定されていない場合の承認について設定します。
