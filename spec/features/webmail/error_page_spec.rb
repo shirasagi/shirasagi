@@ -15,7 +15,6 @@ describe "webmail_users", type: :feature, dbscope: :example do
         expect(page).to have_link(I18n.t("webmail.mailbox"))
         expect(page).to have_link(I18n.t("webmail.signature"))
       end
-      expect(page).to have_no_css("#crumbs")
       within "#addon-basic" do
         expect(page).to have_css(".addon-head", text: I18n.t("ss.rescues.default.head"))
         expect(page).to have_css(".addon-body", text: I18n.t("ss.rescues.default.body").split("<br>").first)

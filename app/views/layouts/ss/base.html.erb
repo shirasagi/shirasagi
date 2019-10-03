@@ -412,21 +412,21 @@
         <% end %>
       <% end %>
 
-      <% if @crumbs.size > 0 && (!@ss_rescue || @ss_rescue && (@ss_mode == :cms || @ss_mode == :gws)) %>
       <ol class="breadcrumb" id="crumbs">
-        <% @crumbs.each_with_index do |item, idx| %>
-          <li <%== %(class="active") if @crumbs.size == idx + 1 %>><%= link_to *item %></li>
-          <% break if @ss_rescue %><%# only one crumb in rescue mode %>
-        <% end %>
+        <% if @crumbs.size > 0 && (!@ss_rescue || @ss_rescue && (@ss_mode == :cms || @ss_mode == :gws)) %>
+          <% @crumbs.each_with_index do |item, idx| %>
+            <li <%== %(class="active") if @crumbs.size == idx + 1 %>><%= link_to *item %></li>
+            <% break if @ss_rescue %><%# only one crumb in rescue mode %>
+          <% end %>
 
-        <% if @webmail_other_account_path && webmail_other_account?(@webmail_other_account_path) && !@ss_rescue %>
-          <li class="webmail-accounts">
-            <span><%= t('webmail.links.select_account') %></span>
-            <%= webmail_other_account_select(@webmail_other_account_path) %>
-          </li>
+          <% if @webmail_other_account_path && webmail_other_account?(@webmail_other_account_path) && !@ss_rescue %>
+            <li class="webmail-accounts">
+              <span><%= t('webmail.links.select_account') %></span>
+              <%= webmail_other_account_select(@webmail_other_account_path) %>
+            </li>
+          <% end %>
         <% end %>
       </ol>
-      <% end %>
 
       <% if !@ss_rescue %>
         <% if ::File.exists?("#{Rails.root}/app/views/#{params[:controller]}/_menu.html.erb") %>
