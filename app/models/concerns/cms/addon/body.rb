@@ -22,7 +22,9 @@ module Cms::Addon
         liquidize do
           export as: :html do |context|
             next html if !respond_to?(:form) || form.blank?
-            form.render_html(self, context.registers)
+            copy = context.registers.dup
+            copy.delete(:preview)
+            form.render_html(self, copy)
           end
         end
       end
