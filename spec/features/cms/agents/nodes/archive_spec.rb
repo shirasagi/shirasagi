@@ -12,7 +12,7 @@ describe 'cms_agents_nodes_archive', type: :feature, dbscope: :example, js: true
 
     it do
       visit index_url
-      expect(page).to have_css('body > div.cms-pages > article')
+      expect(page).to have_css('#main > div.cms-pages > article')
     end
   end
 
@@ -22,7 +22,7 @@ describe 'cms_agents_nodes_archive', type: :feature, dbscope: :example, js: true
 
     it do
       visit index_url
-      expect(page).to have_css('body > div.cms-pages > article')
+      expect(page).to have_css('#main > div.cms-pages > article')
     end
   end
 
