@@ -6,7 +6,8 @@
       auto: true,
       slideWidth: <%= @ad.width.to_i %>,
       pause: <%= @ad.time.to_i * 1000 %>,
-      mode: 'horizontal'
+      mode: 'horizontal',
+      touchEnabled: false
     });
   });
   </script>
