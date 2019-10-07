@@ -21,16 +21,6 @@ module Sns::LoginFilter
     SS.config.sns.logged_in_page
   end
 
-  def login_success
-    if params[:ref].blank?
-      redirect_to default_logged_in_path
-    elsif params[:ref] =~ /^\/[^\/]/
-      redirect_to URI.parse(params[:ref].to_s).path
-    else
-      render "sns/login/redirect"
-    end
-  end
-
   def render_login(user, email_or_uid, opts = {})
     alert = opts.delete(:alert).presence || t("sns.errors.invalid_login")
 
@@ -39,7 +29,7 @@ module Sns::LoginFilter
       set_user user, opts
 
       respond_to do |format|
-        format.html { login_success }
+        format.html { redirect }
         format.json { head :no_content }
       end
     else
@@ -61,6 +51,19 @@ module Sns::LoginFilter
     @cur_user.logged_out if @cur_user
   end
 
+  def normalize_url(url)
+    return unless url.respond_to?(:scheme)
+    return unless %w(http https).include?(url.scheme)
+
+    url.fragment = nil
+    url.query = nil
+    url
+  end
+
+  def trusted_url?
+    @url.scheme == @request_url.scheme && @url.host == @request_url.host && @url.port == @request_url.port
+  end
+
   public
 
   def logout
@@ -71,5 +74,33 @@ module Sns::LoginFilter
       format.html { redirect_to login_path_by_cookie }
       format.json { head :no_content }
     end
+  end
+
+  def redirect
+    ref = params[:ref].to_s
+    if ref.blank?
+      redirect_to default_logged_in_path
+      return
+    end
+
+    @request_url = URI.parse(request.url)
+    @url = URI.join(@request_url, ref) rescue nil
+    if @url.blank?
+      redirect_to default_logged_in_path
+      return
+    end
+
+    @url = normalize_url(@url)
+    if @url.blank?
+      redirect_to default_logged_in_path
+      return
+    end
+
+    if trusted_url?
+      redirect_to @url.to_s
+      return
+    end
+
+    render file: "redirect"
   end
 end

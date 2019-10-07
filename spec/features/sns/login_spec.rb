@@ -105,4 +105,23 @@ describe "sns_login", type: :feature, dbscope: :example do
       expect(status_code).to eq 200
     end
   end
+
+  describe "#redirect" do
+    context "with internal path" do
+      it do
+        visit sns_redirect_path(ref: cms_main_path(site: cms_site))
+        expect(status_code).to eq 200
+        expect(current_path).to eq sns_login_path
+      end
+    end
+
+    context "with external url" do
+      it do
+        visit sns_redirect_path(ref: "https://www.google.com/")
+        expect(status_code).to eq 200
+        expect(current_path).to eq sns_redirect_path
+        expect(page).to have_link("https://www.google.com/", href: "https://www.google.com/")
+      end
+    end
+  end
 end
