@@ -133,19 +133,15 @@ module Workflow::Addon
 
       run_callbacks(:merge_branch) do
         self.reload
-        attributes = Hash[in_branch.attributes]
-        attributes.delete("_id")
-        attributes.delete("filename")
-        attributes.select! { |k| self.fields.key?(k) }
-        self.fields.select { |n, v| (v.options.dig(:metadata, :branch) == false) }.each do |n, v|
-          attributes.delete(n)
-        end
 
-        self.workflow_user_id = nil
-        self.workflow_state = nil
-        self.workflow_comment = nil
-        self.workflow_approvers = nil
-        self.workflow_required_counts = nil
+        attributes = {}
+        in_branch_attributes = in_branch.attributes.to_h
+        self.fields.each do |k, v|
+          next if k == "_id"
+          next if k == "filename"
+          next if v.options.dig(:metadata, :branch) == false
+          attributes[k] = in_branch_attributes[k]
+        end
 
         self.attributes = attributes
         self.master_id = nil
