@@ -44,11 +44,11 @@ module Gws::Addon::Portal::Portlet
       self.ad_file_ids = ids
 
       del_ids = ad_file_ids_was.to_a - ids
-      SS::LinkFile.in(id: del_ids).destroy_all
+      SS::LinkFile.all.unscoped.in(id: del_ids).destroy_all
     end
 
     def destroy_files
-      SS::LinkFile.in(id: ad_file_ids).destroy_all
+      SS::LinkFile.all.unscoped.in(id: ad_file_ids).destroy_all
     end
 
     def validate_files_limit
