@@ -52,7 +52,7 @@ else
   if ENV["GUARD_SCSS_LINT"]
     guard :scss_lint, all_on_start: false do
       watch(%r{^app/assets/stylesheets/(.+)\.s?css$})
-      watch(%r{^spec/(.+)\.s?css$})
+      watch(%r{^spec/fixtures/(.+)\.s?css$})
       watch(%r{^db/seeds/(.+)\.s?css$})
     end
   end
