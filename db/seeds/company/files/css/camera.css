@@ -102,6 +102,7 @@
   text-decoration: none;
 }
 .camera_loader {
+  background: #fff;
   background: rgba(255, 255, 255, .9) url(../img/camera-loader.gif) no-repeat center;
   border: 1px solid #fff;
   -webkit-border-radius: 18px;
