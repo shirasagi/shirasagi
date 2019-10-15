@@ -34,9 +34,9 @@ describe Gws::Share::TrashPurgeJob, dbscope: :example, tmpdir: true do
       end
     end
 
-    context 'when group trash_threshold is 7.days' do
+    context 'when group trash_threshold is 7' do
       before do
-        site.set(trash_threshold: '7.days')
+        site.set(trash_threshold: 7)
       end
 
       it do

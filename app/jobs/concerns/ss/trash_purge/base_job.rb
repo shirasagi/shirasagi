@@ -24,10 +24,11 @@ module SS::TrashPurge::BaseJob
   def parse_threshold(now, threshold)
     threshold ||= site.trash_threshold
     return now - DEFAULT_THRESHOLD_DAYS.days if threshold.blank?
+    unit = site.trash_threshold_unit.presence || 'days'
 
     case threshold
     when Integer
-      return now - threshold.days
+      return now - threshold.send(unit)
     when String
       term, unit = threshold.split('.')
       if unit.blank?
@@ -37,6 +38,8 @@ module SS::TrashPurge::BaseJob
       case unit.singularize.downcase
       when 'day'
         now - Integer(term).days
+      when 'week'
+        now - Integer(term).weeks
       when 'month'
         now - Integer(term).months
       when 'year'

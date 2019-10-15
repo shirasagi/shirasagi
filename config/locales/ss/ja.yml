@@ -349,6 +349,11 @@ ja:
         zoom_in: '+'
         zoom_out: '-'
         reset: 標準
+      datetime_unit:
+        day: 日
+        week: 週
+        month: か月
+        year: 年
 
     tasks:
       started: 開始しました。
@@ -590,6 +595,7 @@ ja:
         multibyte_filename_state: 日本語ファイル名
       ss/addon/trash_setting:
         trash_threshold: ゴミ箱保持期間
+        trash_threshold_unit: ゴミ箱保持期間単位
       ss/addon/approve_setting:
         forced_update: メールアドレス注意設定
         close_confirmation: 非公開保存の警告表示設定
@@ -937,13 +943,7 @@ ja:
         - "アップロード不可: 日本語ファイルをアップロードすることができなくなり、英数字・ハイフン・アンダースコアのみで構成されたファイルのみをアップロードすることができるようになります。"
     ss/addon/trash_setting:
       trash_threshold:
-        - |-
-          ゴミ箱の保持期間を設定できます。
-          2.month のように単位を設定できます。
-          単位を省略すると日数指定になります。
-          1.days: 1日
-          1.month: 1カ月
-          1.years: 1年
+        - ゴミ箱の保持期間を設定できます。
     ss/addon/approve_setting:
       forced_update:
         - メールアドレスが設定されていない場合の承認について設定します。
