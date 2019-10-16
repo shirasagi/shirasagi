@@ -9,7 +9,7 @@ module Gws::Addon::Portal::Portlet
       field :ad_width, type: Integer
       field :ad_speed, type: Integer
       field :ad_pause, type: Integer
-      permit_params :ad_speed, :ad_pause
+      permit_params :ad_width, :ad_speed, :ad_pause
     end
 
     def effective_ad_width
