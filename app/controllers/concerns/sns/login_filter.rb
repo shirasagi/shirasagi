@@ -29,7 +29,7 @@ module Sns::LoginFilter
       set_user user, opts
 
       respond_to do |format|
-        format.html { redirect }
+        format.html { redirect(true) }
         format.json { head :no_content }
       end
     else
@@ -76,7 +76,7 @@ module Sns::LoginFilter
     end
   end
 
-  def redirect
+  def redirect(login = false)
     ref = params[:ref].to_s
     if ref.blank?
       redirect_to default_logged_in_path
@@ -98,6 +98,11 @@ module Sns::LoginFilter
 
     if trusted_url?
       redirect_to @url.to_s
+      return
+    end
+
+    if login
+      redirect_to default_logged_in_path
       return
     end
 
