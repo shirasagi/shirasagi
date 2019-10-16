@@ -61,7 +61,12 @@ module Sns::LoginFilter
   end
 
   def trusted_url?
-    @url.scheme == @request_url.scheme && @url.host == @request_url.host && @url.port == @request_url.port
+    return true if @url.scheme == @request_url.scheme && @url.host == @request_url.host && @url.port == @request_url.port
+
+    trusted_urls = SS.config.sns.trusted_urls
+    return true if trusted_urls.present? && trusted_urls.include?(@url)
+
+    false
   end
 
   public

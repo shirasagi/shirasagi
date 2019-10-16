@@ -11,6 +11,9 @@ production: &production
   # Session Lifetime in seconds
   session_lifetime: 1800
 
+  # trusted_urls are list of external url which can transfer without confirmation
+  trusted_urls: []
+
 test:
   <<: *production
 
