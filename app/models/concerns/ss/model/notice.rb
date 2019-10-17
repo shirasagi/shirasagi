@@ -72,9 +72,6 @@ module SS::Model::Notice
       ])
     }
 
-    scope :and_user, ->(user){
-      where(user_id: user.id)
-    }
     scope :target_to, ->(user) {
       where("$or" => [
         { notice_target: NOTICE_TARGET_LOGIN_VIEW },
@@ -90,63 +87,25 @@ module SS::Model::Notice
       criteria = criteria.keyword_in params[:keyword], :name, :html if params[:keyword].present?
       criteria
     }
+  end
 
-    def notice_severity_options
-      NOTICE_SEVERITIES.map { |v| [ I18n.t("cms.options.notice_severity.#{v}"), v ] }.to_a
-    end
+  def notice_severity_options
+    NOTICE_SEVERITIES.map { |v| [ I18n.t("cms.options.notice_severity.#{v}"), v ] }.to_a
+  end
 
-    def notice_target_options
-      NOTICE_TARGETS.map { |v| [ I18n.t("cms.options.notice_target.#{v}"), v ] }
-    end
+  def notice_target_options
+    NOTICE_TARGETS.map { |v| [ I18n.t("cms.options.notice_target.#{v}"), v ] }
+  end
 
-    def disp_notice_target(target)
-      I18n.t("cms.options.notice_target.#{target}")
-    end
+  def disp_notice_target(target)
+    I18n.t("cms.options.notice_target.#{target}")
+  end
 
-    def state_options
-      [
-        [I18n.t('ss.options.state.public'), 'public'],
-        [I18n.t('ss.options.state.closed'), 'closed'],
-      ]
-    end
-
-    def new_clone(attributes = {})
-      attributes = self.attributes.merge(attributes).select{ |k| self.fields.key?(k) }
-
-      item = self.class.new(attributes)
-      item.id = nil
-      item.cur_site = @cur_site
-      item.state = 'closed'
-      # item.cur_node = @cur_node
-      item.instance_variable_set(:@new_clone, true)
-      item
-    end
-
-    def new_clone?
-      @new_clone == true
-    end
-
-    def clone_files
-      ids = SS::Extensions::Words.new
-      files.each do |f|
-        attributes = Hash[f.attributes]
-        attributes.select!{ |k| f.fields.key?(k) }
-
-        file = SS::File.new(attributes)
-        file.id = nil
-        file.in_file = f.uploaded_file
-        file.user_id = @cur_user.id if @cur_user
-
-        file.save validate: false
-        ids << file.id.mongoize
-
-        html = self.html
-        html.gsub!("=\"#{f.url}\"", "=\"#{file.url}\"")
-        html.gsub!("=\"#{f.thumb_url}\"", "=\"#{file.thumb_url}\"")
-        self.html = html
-      end
-      self.file_ids = ids
-    end
+  def state_options
+    [
+      [I18n.t('ss.options.state.public'), 'public'],
+      [I18n.t('ss.options.state.closed'), 'closed'],
+    ]
   end
 
   private
