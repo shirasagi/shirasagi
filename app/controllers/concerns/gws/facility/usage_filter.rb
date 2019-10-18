@@ -103,34 +103,7 @@ module Gws::Facility::UsageFilter
     criteria = criteria.in(facility_ids: @items.pluck(:id))
     criteria = criteria.gte(start_at: @target_time).lt(start_at: @target_time + target_range)
 
-    pipes = []
-    pipes << { '$match' => criteria.selector }
-    pipes << {
-      '$project' => {
-        'usage_hours' => { '$subtract' => [ '$end_at', '$start_at' ] },
-        'facility_ids' => 1,
-        'local_start_at' => { '$add' => [ '$start_at', Time.zone.utc_offset * 1_000 ] },
-        'local_end_at' => { '$add' => [ '$end_at', Time.zone.utc_offset * 1_000 ] }
-      }
-    }
-    pipes << {
-      '$project' => {
-        'usage_hours' => { '$cond' => [ { '$gte' => [ '$usage_hours', 86_399_000 ] }, 24 * 60 * 60 * 1_000, '$usage_hours' ] },
-        'facility_ids' => 1,
-        'local_start_at' => 1,
-        'local_end_at' => 1
-      }
-    }
-    pipes << { '$unwind' => '$facility_ids' }
-    pipes << {
-      '$group' => {
-        '_id' => aggregation_ids,
-        'count' => { '$sum' => 1 },
-        'total_usage_hours' => { '$sum' => { '$divide' => [ '$usage_hours', 60 * 60 * 1_000 ] } }
-      }
-    }
-
-    @aggregation = Gws::Schedule::Plan.collection.aggregate(pipes).to_a.map(&:to_h)
+    @aggregation = Gws::Facility::UsageAggregator.new(criteria, aggregation_type).aggregate
   end
 
   def encode_sjis(str)
