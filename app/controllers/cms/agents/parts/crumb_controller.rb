@@ -6,7 +6,7 @@ class Cms::Agents::Parts::CrumbController < ApplicationController
     @root_node = @cur_node || @cur_site
 
     @items = []
-    return if @cur_path !~ /^#{@root_node.url}/
+    return unless @cur_path.match?(/^#{@root_node.url}/)
 
     path = @cur_path.sub(/^#{@cur_site.url}/, "")
     parent_crumb_urls = @cur_item.parent_crumb_urls.select(&:present?) rescue nil

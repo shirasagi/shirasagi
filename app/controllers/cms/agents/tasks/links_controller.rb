@@ -33,7 +33,7 @@ class Cms::Agents::Tasks::LinksController < ApplicationController
   def find_content_from_ref(ref)
     filename = ref.sub(/^#{@site.url}/, "")
     filename.sub!(/\?.*$/, "")
-    filename += "index.html" if ref =~ /\/$/
+    filename += "index.html" if ref.match?(/\/$/)
 
     page = Cms::Page.site(@site).where(filename: filename).first
     return page if page
@@ -101,7 +101,7 @@ class Cms::Agents::Tasks::LinksController < ApplicationController
   # Checks the url.
   def check_url(url, refs)
     Rails.logger.info("#{url}: check by referer: #{refs.join(", ")}")
-    if url =~ /(\/|\.html?)$/
+    if url.match?(/(\/|\.html?)$/)
       check_html(url, refs)
     else
       check_file(url, refs)
@@ -150,7 +150,7 @@ class Cms::Agents::Tasks::LinksController < ApplicationController
 
         internal = (next_url[0] != "/" && next_url !~ /^https?:/)
         next_url = File.expand_path next_url, url.sub(/[^\/]*?$/, "") if internal
-        next_url = URI.encode(next_url) if next_url =~ /[^-_.!~*'()\w;\/\?:@&=+$,%#]/
+        next_url = URI.encode(next_url) if next_url.match?(/[^-_.!~*'()\w;\/\?:@&=+$,%#]/)
         next if @results[next_url]
 
         @urls[next_url] ||= []
@@ -163,11 +163,11 @@ class Cms::Agents::Tasks::LinksController < ApplicationController
 
   def valid_url(url)
     return false if url.blank?
-    return false if url =~ /\.(css|js|json)$/
-    return false if url =~ /\.p\d+\.html$/
-    return false if url =~ /\/2\d{7}\.html$/ # calendar
-    return false if url =~ /^\w+:/ && url !~ /^http/ # other scheme
-    return false if url =~ /\/https?:/ # b.hatena
+    return false if url.match?(/\.(css|js|json)$/)
+    return false if url.match?(/\.p\d+\.html$/)
+    return false if url.match?(/\/2\d{7}\.html$/) # calendar
+    return false if url =~ /^\w+:/ && url !~ /^http/(((8))) # other scheme
+    return false if url.match?(/\/https?:/) # b.hatena
     true
   end
 
