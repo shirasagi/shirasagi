@@ -166,7 +166,7 @@ class Cms::Agents::Tasks::LinksController < ApplicationController
     return false if url.match?(/\.(css|js|json)$/)
     return false if url.match?(/\.p\d+\.html$/)
     return false if url.match?(/\/2\d{7}\.html$/) # calendar
-    return false if url =~ /^\w+:/ && url !~ /^http/(((8))) # other scheme
+    return false if url =~ /^\w+:/ && url !~ /^http/ # other scheme
     return false if url.match?(/\/https?:/) # b.hatena
     true
   end
