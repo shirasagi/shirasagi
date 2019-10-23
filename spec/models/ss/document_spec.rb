@@ -25,7 +25,7 @@ RSpec.describe SS::Document, type: :model, dbscope: :example do
   describe ".keyword_in" do
     context "check logical side" do
       let(:words) { "名|前 な(*.?)まえ" }
-      let(:fields) { [ "name" ] }
+      let(:fields) { %w(name) }
       subject { Klass.keyword_in(words, *fields).selector.to_h }
 
       it do
