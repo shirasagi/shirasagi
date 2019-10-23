@@ -19,6 +19,7 @@ describe "gws_notices", type: :feature, dbscope: :example, js: true do
   # By switching these 3 users, we'll confirm gws/notice specs.
   #
   let(:site) { gws_site }
+  let!(:cate) { create :gws_notice_category, cur_site: site }
   let(:manager_group) { create(:gws_group, name: "#{site.name}/#{unique_id}") }
   let(:editor_group) { create(:gws_group, name: "#{site.name}/#{unique_id}") }
   let(:reader_group) { create(:gws_group, name: "#{site.name}/#{unique_id}") }
@@ -102,6 +103,13 @@ describe "gws_notices", type: :feature, dbscope: :example, js: true do
       within 'form#item-form' do
         fill_in 'item[name]', with: notice_name
         fill_in 'item[text]', with: notice_text
+        click_on I18n.t("gws.apis.categories.index")
+      end
+      wait_for_cbox do
+        expect(page).to have_content(cate.name)
+        click_on cate.name
+      end
+      within 'form#item-form' do
         click_on I18n.t('ss.buttons.save')
       end
 
@@ -111,10 +119,12 @@ describe "gws_notices", type: :feature, dbscope: :example, js: true do
       Gws::Notice::Post.all.first.tap do |post|
         expect(post.name).to eq notice_name
         expect(post.text).to eq notice_text
+        expect(post.folder_id).to eq folder.id
         expect(post.readable_member_ids).to eq folder.readable_member_ids
         expect(post.readable_group_ids).to eq folder.readable_group_ids
         expect(post.user_ids).to eq [editor.id]
         expect(post.group_ids).to eq [editor_group.id]
+        expect(post.category_ids).to eq [cate.id]
       end
 
       #

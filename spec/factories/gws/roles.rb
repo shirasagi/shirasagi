@@ -26,6 +26,7 @@ FactoryBot.define do
         delete_private_gws_notices
         edit_private_gws_notices
         read_private_gws_notices
+        read_private_gws_notice_categories
       )
     end
   end

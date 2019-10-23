@@ -3,7 +3,7 @@ require 'spec_helper'
 describe "gws_notices", type: :feature, dbscope: :example, js: true do
   let(:site) { gws_site }
   let(:folder) { create(:gws_notice_folder) }
-  let!(:item) { create :gws_notice_post, folder: folder }
+  let!(:item) { create :gws_notice_post, folder: folder, readable_member_ids: [ gws_user.id ] }
 
   before { login_gws_user }
 
