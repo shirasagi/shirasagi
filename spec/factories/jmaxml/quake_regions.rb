@@ -4,7 +4,7 @@ FactoryBot.define do
       site nil
     end
 
-    cur_site { site ? site : cms_site }
+    cur_site { site || cms_site }
 
     factory :jmaxml_region_135 do
       name "宗谷支庁北部"

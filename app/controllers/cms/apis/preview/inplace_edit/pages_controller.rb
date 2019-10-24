@@ -26,7 +26,7 @@ class Cms::Apis::Preview::InplaceEdit::PagesController < ApplicationController
   def set_cur_node
     @cur_node ||= begin
       parent = @item.parent
-      parent ? parent : nil
+      parent || nil
     end
   end
 
