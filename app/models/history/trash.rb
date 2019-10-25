@@ -103,9 +103,8 @@ class History::Trash
   private
 
   def remove_all
-    return unless model.include?(Cms::Content)
-
     item = restore
-    Fs.rm_rf(item.path.sub("#{Rails.root}/public", "#{Rails.root}/private/trash"))
+    Fs.rm_rf(item.path.sub("#{Rails.root}/public", "#{Rails.root}/private/trash")) rescue nil
+    Fs.rm_rf("#{Rails.root}/private/trash/#{item.path.sub(/.*\/(ss_files\/)/, '\\1')}") rescue nil
   end
 end
