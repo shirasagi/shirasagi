@@ -66,8 +66,6 @@ class Gws::Notice::FoldersController < ApplicationController
     set_item
 
     @item.reclaim!
-    render_update true
-  rescue => e
-    render_update false
+    redirect_to({ action: :show }, { notice: t("gws/notice.notice.reclaimed") })
   end
 end

@@ -243,6 +243,7 @@ describe "gws_notice_folders", type: :feature, dbscope: :example, js: true do
       expect(SS::File.in(id: item.notices.pluck(:file_ids).flatten).sum(:size)).to be > 0
 
       first("button[name='reclaim_total_size']").click
+      expect(page).to have_css("#notice", text: I18n.t("gws/notice.notice.reclaimed"))
 
       usage1 = I18n.t("gws/notice.total_body_size_current_stats", size: post.text.size.to_s(:human_size), percentage: "0.00%")
       expect(page).to have_content(usage1)
