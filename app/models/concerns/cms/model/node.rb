@@ -5,6 +5,7 @@ module Cms::Model::Node
   include Cms::Reference::Layout
   include Cms::Reference::PageLayout
   include Cms::Reference::StCategory
+  include Cms::GenerateKey
   include Facility::Reference::Category
   include Facility::Reference::Service
   include Facility::Reference::Location

@@ -19,6 +19,12 @@ class Cms::Agents::Tasks::NodesController < ApplicationController
 
     nodes = Cms::Node.site(@site).and_public
     nodes = nodes.where(filename: /^#{::Regexp.escape(@node.filename)}(\/|$)/) if @node
+
+    if @generate_key.present?
+      @task.log "# #{@generate_key}"
+      nodes = nodes.where(generate_key: @generate_key)
+    end
+
     ids   = nodes.pluck(:id)
 
     ids.each do |id|

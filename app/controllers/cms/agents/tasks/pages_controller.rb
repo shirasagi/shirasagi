@@ -8,6 +8,12 @@ class Cms::Agents::Tasks::PagesController < ApplicationController
 
     pages = Cms::Page.site(@site).and_public
     pages = pages.node(@node) if @node
+
+    if @generate_key.present?
+      @task.log "# #{@generate_key}"
+      pages = pages.where(generate_key: @generate_key)
+    end
+
     ids   = pages.pluck(:id)
     @task.total_count = ids.size
 
