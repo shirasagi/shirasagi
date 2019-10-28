@@ -34,7 +34,7 @@ class History::Trash
     data = restore_data(data, opts)
     item = model.find_or_initialize_by(_id: data[:_id], site_id: data[:site_id])
     item = item.becomes_with_route(data[:route]) if data[:route].present?
-    if model.include?(Cms::Content) && data[:depth] > 1
+    if model.include?(Cms::Content) && data[:depth].present? && data[:depth] > 1
       dir = ::File.dirname(data[:filename]).sub(/^\.$/, "")
       item_parent = Cms::Node.where(site_id: data[:site_id], filename: dir).first
       item.errors.add :base, :not_found_parent_node if item_parent.blank?
