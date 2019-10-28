@@ -10,7 +10,6 @@ class Cms::Agents::Tasks::LinksController < ApplicationController
   private
 
   def set_params
-    #
   end
 
   def unset_errors_in_contents
@@ -53,7 +52,7 @@ class Cms::Agents::Tasks::LinksController < ApplicationController
 
     @base_url = @site.full_url.sub(/^(https?:\/\/.*?\/).*/, '\\1')
 
-    @urls    = { @site.url => ["Site"] }
+    @urls    = { @site.url => %w(Site) }
     @results = {}
     @errors  = {}
 
@@ -117,7 +116,7 @@ class Cms::Agents::Tasks::LinksController < ApplicationController
 
   # Add the log with invalid url
   def add_invalid_url(url, refs)
-    @results[url]  = 0
+    @results[url] = 0
 
     refs.each do |ref|
       @errors[ref] ||= []
@@ -184,7 +183,7 @@ class Cms::Agents::Tasks::LinksController < ApplicationController
 
   # Returns the internal file.
   def get_internal_file(url)
-    return nil if url =~ /^https?:/
+    return nil if url.match?(/^https?:/)
 
     url  = url.sub(/\?.*/, "")
     url  = URI.decode(url)
@@ -195,7 +194,7 @@ class Cms::Agents::Tasks::LinksController < ApplicationController
 
   # Returns the HTML response with HTTP request.
   def get_http(url)
-    if url =~ /^\/\//
+    if url.match?(/^\/\//)
       url = @base_url.sub(/\/\/.*$/, url)
     elsif url[0] == "/"
       url = File.join(@base_url, url)
@@ -218,7 +217,7 @@ class Cms::Agents::Tasks::LinksController < ApplicationController
 
   # Checks the existence with HEAD request.
   def check_head(url)
-    if url =~ /^\/\//
+    if url.match?(/^\/\//)
       url = @base_url.sub(/\/\/.*$/, url)
     elsif url[0] == "/"
       url = File.join(@base_url, url)
