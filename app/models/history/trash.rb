@@ -34,7 +34,7 @@ class History::Trash
     data = restore_data(data, opts)
     item = model.find_or_initialize_by(_id: data[:_id], site_id: data[:site_id])
     item = item.becomes_with_route(data[:route]) if data[:route].present?
-    if model.include?(Cms::Content) && data[:depth] > 1
+    if model.include?(Cms::Content) && data[:depth].present? && data[:depth] > 1
       dir = ::File.dirname(data[:filename]).sub(/^\.$/, "")
       item_parent = Cms::Node.where(site_id: data[:site_id], filename: dir).first
       item.errors.add :base, :not_found_parent_node if item_parent.blank?
@@ -44,7 +44,7 @@ class History::Trash
     end
     item.apply_status('closed', workflow_reset: true) if model.include?(Workflow::Addon::Approver)
     if item.respond_to?(:in_file)
-      path = "#{Rails.root}/private/trash/#{item.path.sub(/.*\/(ss_files\/)/, '\\1')}"
+      path = "#{self.class.root}/#{item.path.sub(/.*\/(ss_files\/)/, '\\1')}"
       file = Fs::UploadedFile.create_from_file(path, content_type: item.content_type) if File.exist?(path)
       item.in_file = file
     end
@@ -60,11 +60,11 @@ class History::Trash
       end
 
       if model.include?(Cms::Content)
-        src = item.path.sub("#{Rails.root}/public", "#{Rails.root}/private/trash")
+        src = item.path.sub("#{Rails.root}/public", self.class.root)
         Fs.mkdir_p(File.dirname(item.path))
         Fs.mv(src, item.path) if Fs.exists?(src)
       elsif model.include?(SS::Model::File)
-        src = "#{Rails.root}/private/trash/#{item.path.sub(/.*\/(ss_files\/)/, '\\1')}"
+        src = "#{self.class.root}/#{item.path.sub(/.*\/(ss_files\/)/, '\\1')}"
         Fs.mkdir_p(File.dirname(item.path))
         Fs.mv(src, item.path) if Fs.exists?(src)
       end
@@ -108,7 +108,7 @@ class History::Trash
 
   def remove_all
     item = restore
-    Fs.rm_rf(item.path.sub("#{Rails.root}/public", "#{Rails.root}/private/trash")) rescue nil
-    Fs.rm_rf("#{Rails.root}/private/trash/#{item.path.sub(/.*\/(ss_files\/)/, '\\1')}") rescue nil
+    Fs.rm_rf(item.path.sub("#{Rails.root}/public", self.class.root)) rescue nil
+    Fs.rm_rf("#{self.class.root}/#{item.path.sub(/.*\/(ss_files\/)/, '\\1')}") rescue nil
   end
 end

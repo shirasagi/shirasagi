@@ -322,7 +322,7 @@ module SS::Model::File
     backup.site = self.site
     backup.save
     return unless File.exists?(path)
-    trash_path = "#{Rails.root}/private/trash/#{path.sub(/.*\/(ss_files\/)/, '\\1')}"
+    trash_path = "#{History::Trash.root}/#{path.sub(/.*\/(ss_files\/)/, '\\1')}"
     FileUtils.mkdir_p(File.dirname(trash_path))
     FileUtils.cp(path, trash_path)
   end

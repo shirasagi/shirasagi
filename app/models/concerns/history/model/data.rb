@@ -10,6 +10,7 @@ module History::Model::Data
     index({ ref_coll: 1, "data._id" => 1, created: -1 })
 
     cattr_reader(:max_age) { 20 }
+    cattr_accessor(:root, instance_accessor: false) { "#{Rails.root}/private/trash" }
 
     field :version, type: String, default: SS.version
     field :ref_coll, type: String
@@ -102,7 +103,7 @@ module History::Model::Data
 
     return if file.blank?
 
-    path = "#{Rails.root}/private/trash/#{file.path.sub(/.*\/(ss_files\/)/, '\\1')}"
+    path = "#{History::Trash.root}/#{file.path.sub(/.*\/(ss_files\/)/, '\\1')}"
 
     return file.id unless File.exist?(path)
 
