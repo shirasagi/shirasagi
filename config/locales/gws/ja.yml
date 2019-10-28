@@ -311,6 +311,8 @@ ja:
         sendmail_domains: メール送信許可ドメイン
         canonical_scheme: グループウェアスキーム
         canonical_domain: グループウェアドメイン
+        trash_threshold: ゴミ箱保持期間
+        trash_threshold_unit: ゴミ箱保持期間単位
       gws/addon/system/menu_setting:
         menu_portal_label: ポータルの表示
         menu_portal_state: ポータルの表示
@@ -512,6 +514,8 @@ ja:
       canonical_domain:
         - グループウェアドメインを入力します。
         - システムからメールを送信する際、メールに記載される URL がここで設定したドメインになります。
+      trash_threshold:
+        - ゴミ箱の保持期間を設定できます。
     gws/addon/group_permission:
       custom_group_ids:
         - 編集を許可するカスタムグループを選択します。

@@ -33,5 +33,21 @@ describe History::Trash::TrashPurgeJob, dbscope: :example do
         end
       end
     end
+
+    context 'when site trash_threshold is 0' do
+      before do
+        site.set(trash_threshold: 0)
+      end
+
+      it do
+        expect { described_class.bind(site_id: site).perform_now }.to change { History::Trash.count }.by(-1)
+
+        expect(Job::Log.count).to eq 1
+        Job::Log.first.tap do |log|
+          expect(log.logs).to include(include("INFO -- : Started Job"))
+          expect(log.logs).to include(include("INFO -- : Completed Job"))
+        end
+      end
+    end
   end
 end
