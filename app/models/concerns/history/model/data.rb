@@ -104,7 +104,7 @@ module History::Model::Data
 
     path = "#{Rails.root}/private/trash/#{file.path.sub(/.*\/(ss_files\/)/, '\\1')}"
 
-    return unless File.exist?(path)
+    return file.id unless File.exist?(path)
 
     FileUtils.mkdir_p(File.dirname(file.path))
     FileUtils.cp(path, file.path)

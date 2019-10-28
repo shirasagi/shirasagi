@@ -63,6 +63,10 @@ class History::Trash
         src = item.path.sub("#{Rails.root}/public", "#{Rails.root}/private/trash")
         Fs.mkdir_p(File.dirname(item.path))
         Fs.mv(src, item.path) if Fs.exists?(src)
+      elsif model.include?(SS::Model::File)
+        src = "#{Rails.root}/private/trash/#{item.path.sub(/.*\/(ss_files\/)/, '\\1')}"
+        Fs.mkdir_p(File.dirname(item.path))
+        Fs.mv(src, item.path) if Fs.exists?(src)
       end
       self.destroy
     end
