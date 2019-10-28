@@ -382,7 +382,7 @@ describe Opendata::Dataset, dbscope: :example do
         area_ids: [1],
         point: 1,
         text: "text",
-        tags: ["tag"],
+        tags: %w(tag),
         member_id: 1,
         dataset_group_ids: [1],
         contact_state: "hide",

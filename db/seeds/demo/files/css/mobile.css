@@ -10,11 +10,11 @@ body {
   font-family: sans-serif;
 }
 h1, h2, h3, h4, h5 {
-  margin: 0px;
+  margin: 0;
   font-size: 120%;
 }
 a {
-  color: #0066cc;
+  color: #06c;
 }
 a:hover {
   color: #d00000;
@@ -24,7 +24,7 @@ a:visited {
   color: #9000ff;
 }
 ul, ol {
-  margin: 0 0 10px 0;
+  margin: 0 0 10px;
   padding: 0 10px 0 20px;
 }
 dt {
@@ -44,7 +44,7 @@ dd {
 
 /* ---------------------------------- */
 #head {
-  background-color: #ffffff;
+  background-color: #fff;
 }
 #head .logo {
   padding: 10px;
@@ -61,7 +61,7 @@ dd {
   display: none;
 }
 #search-box {
-  width:75%;
+  width: 75%;
 }
 #search-button {
   width: 20%;
@@ -79,7 +79,7 @@ dd {
   padding-left: 10px;
 }
 #navi ul li ul {
-  display:none;
+  display: none;
 }
 /* ---------------------------------- */
 #foot #address {
@@ -116,7 +116,7 @@ dd {
   color: #fff;
 }
 #safety h2, #emergency h2, #announce h2 {
-  background: #e03300
+  background: #e03300;
 }
 #announce p {
   padding: 0 10px;
@@ -131,7 +131,7 @@ dd {
 .pages #emergency div h3 {
   padding: 0;
   margin: 10px 0 5px;
-  border: none;
+  border: 0;
 }
 #emergency .tag-article p {
   margin: 5px 0;
@@ -146,8 +146,8 @@ dd {
   display: none;
 }
 .pages div h3 {
-  margin: 0px 0px 5px;
-  padding: 0px 10px 5px;
+  margin: 0 0 5px;
+  padding: 0 10px 5px;
   border-bottom: 1px solid #ddd;
   font-size: 100%;
   font-weight: normal;
@@ -173,7 +173,7 @@ dd {
   padding: 0 10px;
 }
 .pages .tag-article .tag-time {
-  margin: 0px 0px 5px;
+  margin: 0 0 5px;
   color: #080;
 }
 .contact p, .contact dl {
@@ -204,7 +204,7 @@ dd {
   border-bottom: 1px solid #ddd;
 }
 .nodes .tag-article {
-  margin: 0px 0px 5px;
+  margin: 0 0 5px;
   padding: 5px 10px 0;
   border-top: 1px solid #ddd;
 }
@@ -238,8 +238,8 @@ dd {
 }
 .page .body table {
   margin-bottom: 10px;
-  border-collapse:collapse;
-  border-spacing:0;
+  border-collapse: collapse;
+  border-spacing: 0;
 }
 .page .body th, .page .body td {
   padding: 5px;
@@ -268,5 +268,5 @@ dd {
 }
 /* ---------------------------------- */
 #body--institution-map .tag-nav, #map-sidebar .click-marker, #map-canvas {
-  display:none;
+  display: none;
 }

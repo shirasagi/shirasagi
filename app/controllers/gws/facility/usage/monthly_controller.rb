@@ -11,13 +11,8 @@ class Gws::Facility::Usage::MonthlyController < ApplicationController
     1.month
   end
 
-  def aggregation_ids
-    {
-      'facility_id' => '$facility_ids',
-      'year' => { '$year' => '$local_start_at' },
-      'month' => { '$month' => '$local_start_at' },
-      'day' => { '$dayOfMonth' => '$local_start_at' }
-    }
+  def aggregation_type
+    :month
   end
 
   public

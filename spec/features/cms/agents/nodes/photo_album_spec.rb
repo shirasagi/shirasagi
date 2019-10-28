@@ -10,15 +10,12 @@ describe 'cms_agents_nodes_photo_album', type: :feature, dbscope: :example, js: 
     let!(:file) { create :cms_file, site_id: site.id, filename: "file.jpg" }
     let!(:file2) { create :cms_file, site_id: site.id, filename: "file2.png" }
     let!(:article_page) do
-      create :article_page,
-      cur_site: site,
-      cur_node: node,
-      file_ids: [file.id, file2.id]
+      create(:article_page, cur_site: site, cur_node: node, file_ids: [file.id, file2.id])
     end
 
     before { visit photo_album_node.url }
     it "is displayed" do
-      expect(page).to have_css('body > div.member-photos > div.photo')
+      expect(page).to have_css('#main > div.member-photos > div.photo')
       expect(page).to have_text(article_page.name)
     end
   end
@@ -26,16 +23,13 @@ describe 'cms_agents_nodes_photo_album', type: :feature, dbscope: :example, js: 
   context 'page with disapprove file' do
     let!(:file) { create :cms_file, site_id: site.id, filename: "file.pdf" }
     let!(:article_page) do
-      create :article_page,
-      cur_site: site,
-      cur_node: node,
-      file_ids: [file.id]
+      create(:article_page, cur_site: site, cur_node: node, file_ids: [file.id])
     end
 
     before { visit photo_album_node.url }
     it "is not displayed" do
-      expect(page).to have_css('body > div.member-photos')
-      expect(page).to have_no_css('body > div.member-photos > div.photo')
+      expect(page).to have_css('#main > div.member-photos')
+      expect(page).to have_no_css('#main > div.member-photos > div.photo')
       expect(page).to have_no_text(article_page.name)
     end
   end
