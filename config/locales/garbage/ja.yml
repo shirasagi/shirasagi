@@ -57,4 +57,3 @@ ja:
     garbage/addon/category_setting:
       st_categories:
         - ゴミの分別区分を設定します。
-        - 設定されていない場合は全ての分別区分が対象となります。

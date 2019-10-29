@@ -19,7 +19,7 @@ module Garbage::Addon
     end
 
     def template_variable_handler_garbage_category(name, issuer)
-      ERB::Util.html_escape self.categories.map(&:name).join
+      ERB::Util.html_escape self.categories.map(&:name).join("\n")
     end
 
     def template_variable_handler_garbage_remark(name, issuer)

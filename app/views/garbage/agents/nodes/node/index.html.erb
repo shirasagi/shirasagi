@@ -1,5 +1,29 @@
 <div class="garbage-nodes nodes">
-  <%=render_page_list%>
+  <% if @cur_node.loop_html.present? || @cur_node.loop_setting.present? || @cur_node.loop_liquid.present? %>
+    <%= render_page_list %>
+  <% else %>
+    <%== @cur_node.upper_html %>
+    <table class="garbage-nodes">
+      <caption><%= @cur_node.name %></caption>
+      <thead>
+        <tr>
+          <th><%= t('garbage.item') %></th>
+          <th><%= t('garbage.category.name') %></th>
+          <th><%= t('garbage.remark') %></th>
+        </tr>
+      </thead>
+      <tbody>
+        <% @items.each do |item| %>
+          <tr>
+            <td><%= link_to item.name, item.url %></td>
+            <td><%=br item.categories.map(&:name).join("\n") %></td>
+            <td><%=br item.remark %></td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+    <%== @cur_node.lower_html %>
+  <% end %>
 </div>
 
 <%= paginate @items if @items.try(:current_page) %>
