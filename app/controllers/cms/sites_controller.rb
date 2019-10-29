@@ -1,6 +1,7 @@
 class Cms::SitesController < ApplicationController
   include Cms::BaseFilter
   include SS::CrudFilter
+  helper SS::DatetimeHelper
 
   model Cms::Site
 

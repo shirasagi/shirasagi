@@ -31,7 +31,7 @@ describe "gws_elasticsearch_search", type: :feature, dbscope: :example, js: true
                 name: name,
                 url: "http://example.jp/#{name}",
                 updated: Time.zone.now,
-                categories: ['Category']
+                categories: %w(Category)
               }
             }]
           }

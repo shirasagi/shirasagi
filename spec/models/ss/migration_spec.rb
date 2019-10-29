@@ -24,6 +24,16 @@ RSpec.describe SS::Migration, type: :model, dbscope: :example, tmpdir: true do
     it { expect(described_class::DIR.to_s).to match(/.*\/lib\/migrations$/) }
   end
 
+  context 'unique timestamp' do
+    let(:latest_version) { described_class.latest_version }
+    let(:timestamps) { described_class.filepaths_to_apply.map { |path| described_class.take_timestamp(path) } }
+
+    it do
+      expect(latest_version).to eq "00000000000000"
+      expect(timestamps).to match_array timestamps.uniq
+    end
+  end
+
   context 'with migrations' do
     before do
       migration_file "#{tmpdir}/migrations/mod2/20150324000000_a.rb"
