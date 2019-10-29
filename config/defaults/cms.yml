@@ -10,6 +10,13 @@ production: &production
   # enable LGWAN
   enable_lgwan: false
 
+  ## Generate_key example
+  ## Set key as array when splitting node and page generation
+  #generate_key:
+  #  - "web01"
+  #  - "web02"
+  #  - "web03"
+
   # StyleSheets on gws pages.
   stylesheets: []
 
