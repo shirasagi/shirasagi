@@ -52,3 +52,9 @@ ja:
   job:
     models:
       garbage/import_job: ゴミ品目インポート
+
+  tooltip:
+    garbage/addon/category_setting:
+      st_categories:
+        - ゴミの分別区分を設定します。
+        - 設定されていない場合は全ての分別区分が対象となります。
