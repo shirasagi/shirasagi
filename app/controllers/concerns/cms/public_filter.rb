@@ -17,7 +17,7 @@ module Cms::PublicFilter
   end
 
   def index
-    if @cur_path =~ /\.p[1-9]\d*\.html$/
+    if @cur_path.match?(/\.p[1-9]\d*\.html$/)
       page = @cur_path.sub(/.*\.p(\d+)\.html$/, '\\1')
       params[:page] = page.to_i
       @cur_path.sub!(/\.p\d+\.html$/, ".html")
@@ -75,7 +75,7 @@ module Cms::PublicFilter
   end
 
   def deny_path
-    raise "404" if @cur_path =~ /^\/sites\/.\//
+    raise "404" if @cur_path.match?(/^\/sites\/.\//)
   end
 
   def parse_path
@@ -96,8 +96,8 @@ module Cms::PublicFilter
   end
 
   def compile_scss
-    return if @cur_path !~ /\.css$/
-    return if @cur_path =~ /\/_[^\/]*$/
+    return unless @cur_path.match?(/\.css$/)
+    return if @cur_path.match?(/\/_[^\/]*$/)
     return unless Fs.exists? @scss = @file.sub(/\.css$/, ".scss")
 
     css_mtime = Fs.exists?(@file) ? Fs.stat(@file).mtime : 0
