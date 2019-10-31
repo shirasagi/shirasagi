@@ -52,6 +52,7 @@ Rails.application.routes.draw do
         get :view, on: :member
         get :thumb, on: :member
         get :download, on: :member
+        get :contrast_ratio, on: :collection
       end
 
       resources :user_files, concerns: :deletion do
@@ -59,6 +60,7 @@ Rails.application.routes.draw do
         get :view, on: :member
         get :thumb, on: :member
         get :download, on: :member
+        get :contrast_ratio, on: :collection
       end
     end
   end

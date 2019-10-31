@@ -176,12 +176,14 @@ Rails.application.routes.draw do
         get :view, on: :member
         get :thumb, on: :member
         get :download, on: :member
+        get :contrast_ratio, on: :collection
       end
       resources :temp_files, concerns: :deletion do
         get :select, on: :member
         get :view, on: :member
         get :thumb, on: :member
         get :download, on: :member
+        get :contrast_ratio, on: :collection
       end
       namespace :node, path: "node:cid/cms", cid: /\w+/ do
         resources :temp_files, concerns: :deletion do
@@ -189,6 +191,7 @@ Rails.application.routes.draw do
           get :view, on: :member
           get :thumb, on: :member
           get :download, on: :member
+          get :contrast_ratio, on: :collection
         end
       end
       namespace "opendata_ref" do

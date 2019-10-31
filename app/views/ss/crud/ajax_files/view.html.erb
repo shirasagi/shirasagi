@@ -1,0 +1,100 @@
+<div id="ss-file-view">
+  <div class="toolbar-container" style="margin-bottom: 10px;">
+    <div class="toolbar">
+      <span class="btn-group toolbar-zoom">
+        <span>縮小</span>
+        <input id="toolbar-zoom-slider" type="range">
+        <span>拡大</span>
+      </span>
+
+      <span class="btn-group toolbar-foreground-color">
+        <label>表示色</label>
+        <%= text_field_tag("foreground-color", "#000000", class: 'js-color', style: "width: 100px;") %>
+        <%= button_tag(type: "button", name: "btn-foreground-color-picker", class: "btn btn-color-picker") do %>
+          <i class="material-icons md-18">colorize</i>
+        <% end %>
+      </span>
+
+      <span class="btn-group toolbar-background-color">
+        <label>背景色</label>
+        <%= text_field_tag("background-color", "#ffffff", class: 'js-color', style: "width: 100px;") %>
+        <%= button_tag(type: "button", name: "btn-background-color-picker", class: "btn btn-color-picker") do %>
+          <i class="material-icons md-18">colorize</i>
+        <% end %>
+      </span>
+
+      <span class="btn-group toolbar-contrast-ratio">
+        <label>コントラスト比</label>
+        <span class="contrast-ratio">-.--</span>
+        <%= button_tag("計算", type: "button", name: "btn-contrast-ratio", class: "btn btn-contrast-ratio") %>
+      </span>
+    </div>
+  </div>
+
+  <canvas class="canvas" style="width: 100%; height: calc(100% - 240px);">
+    Your user agent does not support the HTML5 Canvas element.
+  </canvas>
+</div>
+
+<%= jquery do %>
+  var canvas = $("#ajax-box .canvas")[0];
+  var $canvas = $(canvas);
+  var ctx = canvas.getContext("2d");
+  var image = new Image();
+  image.src = "<%= @item.url %>";
+
+  var toHex = function(n) {
+    if (isNaN(n)) return "00";
+    n = Math.max(0, Math.min(n, 255));
+    return "0123456789ABCDEF".charAt((n - n % 16) / 16) + "0123456789ABCDEF".charAt(n % 16);
+  };
+
+  var rgbAt = function(x, y) {
+    var pixels = ctx.getImageData(x, y, 1, 1).data;
+    return "#" + toHex(pixels[0]) + toHex(pixels[1]) + toHex(pixels[2]);
+  };
+
+  $(image).load(function() {
+    canvas.width = image.width;
+    canvas.height = image.height;
+    ctx.drawImage(image, 0, 0);
+    console.log({ rgb0: rgbAt(0, 0), rgbZ: rgbAt(image.width - 1, image.height - 1) });
+  });
+
+  $canvas.click(function(ev) {
+    var canvasOffset = $canvas.offset();
+    var canvasX = Math.floor(ev.pageX - canvasOffset.left);
+    var canvasY = Math.floor(ev.pageY - canvasOffset.top);
+    var rgb = rgbAt(canvasX, canvasY);
+
+    console.log({ canvasX: canvasX, canvasY: canvasY, rgb: rgb });
+  });
+
+  SS_Color.render();
+
+  $(".btn-contrast-ratio").on("click", function() {
+    var foregroundColor = $("#foreground-color").minicolors("value");
+    var backgroundColor = $("#background-color").minicolors("value");
+
+    if (!foregroundColor || !backgroundColor) {
+      return;
+    }
+
+    console.log({ foregroundColor: foregroundColor, backgroundColor: backgroundColor });
+
+    $(".contrast-ratio").html(SS.loading);
+    $.ajax({
+      url: "<%= url_for(action: :contrast_ratio, format: "json") %>",
+      data: { f: foregroundColor, b: backgroundColor, _: Date.now() },
+      type: 'GET',
+      success: function(data) {
+        $(".contrast-ratio").html(data.contrast_ratio_human);
+      },
+      error: function(xhr, status, error) {
+        $(".contrast-ratio").html(error);
+      },
+      complete: function() {
+      }
+    });
+  });
+<% end %>
