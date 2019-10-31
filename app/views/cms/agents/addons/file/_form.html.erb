@@ -134,7 +134,8 @@ var tempFile = new SS_Addon_TempFile(".upload-drop-area", <%= @cur_user.id %>, o
       width: "90%",
       height: "90%",
       fixed: true,
-      open: true
+      open: true,
+      onComplete: function() { $("#ss-file-view").trigger("ss:cboxCompleted"); }
     });
 
     return false;

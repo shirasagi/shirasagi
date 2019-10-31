@@ -5,29 +5,33 @@ function SS_FileView(el, options) {
   this.canvas = this.$el.find(".canvas")[0];
   this.ctx = this.canvas.getContext("2d");
 
-  this.image = new Image();
-  this.image.src = this.options.itemUrl;
+  this.scale = 1;
 
-  var self = this;
-  this.image.onload = function() {
-    self.initImage();
+  this.dragInfo = {
+    isDragging: false,
+    start: { x: 0, y: 0 },
+    diff: { x: 0, y: 0 },
+    canvas: { x: 0, y: 0 }
   };
 
-  this.$el.find(".btn-contrast-ratio").on("click", function() {
-    self.calculateContrastRatio();
-  });
+  this.$el.one("ss:cboxCompleted", this.resizeCanvas.bind(this));
+
+  this.image = new Image();
+  this.image.src = this.options.itemUrl;
+  this.image.onload = this.initImage.bind(this);
+
+  this.$el.find(".btn-contrast-ratio").on("click", this.calculateContrastRatio.bind(this));
 
   this.$slider = this.$el.find("#zoom-slider");
-  this.$slider.prop({ value: 1, min: 0.1, max: 2, step: "any" });
-  this.$slider.on("input", function(ev) {
-    if (self.$sliderTimeoutId) {
-      clearTimeout(self.$sliderTimeoutId);
-    }
+  this.$slider.prop({ value: this.scale, min: 0.1, max: 2, step: "any" });
+  this.$slider.on("input", this.zooming.bind(this));
 
-    self.$sliderTimeoutId = setTimeout(function() {
-      self.zoomImage(ev.target.value);
-    }, 10);
-  });
+  this.canvas.addEventListener("click", this.pickUpColor.bind(this));
+  this.canvas.addEventListener("mousedown", this.dragStart.bind(this));
+  this.canvas.addEventListener("mousemove", this.dragging.bind(this));
+  this.canvas.addEventListener("mouseup", this.dragEnd.bind(this));
+
+  this.$el.find(".btn-color-picker").on("click", this.pickUpColorStart.bind(this));
 
   SS_Color.render();
 }
@@ -44,14 +48,27 @@ SS_FileView.toHex = function(n) {
 };
 
 SS_FileView.prototype.initImage = function() {
-  this.canvas.width = this.image.width;
-  this.canvas.height = this.image.height;
   this.ctx.drawImage(this.image, 0, 0);
 
   this.$el.find("#foreground-color").minicolors("value", this.rgbAt(0, 0));
   this.$el.find("#background-color").minicolors("value", this.rgbAt(this.image.width - 1, this.image.height - 1));
 
   this.calculateContrastRatio();
+};
+
+SS_FileView.prototype.resizeCanvas = function() {
+  var maxWidth = this.$el.width();
+
+  var maxHeight = $("#cboxLoadedContent").height();
+  // minus padding
+  maxHeight -= $("#ajax-box").outerHeight(true) - $("#ajax-box").height();
+  // minus toolbar height
+  maxHeight -= Math.ceil($(this.canvas).offset().top) - Math.floor(this.$el.offset().top);
+  maxHeight -= 10;
+
+  this.canvas.width = maxWidth;
+  this.canvas.height = maxHeight;
+  this.redrawImage();
 };
 
 SS_FileView.prototype.calculateContrastRatio = function() {
@@ -73,17 +90,104 @@ SS_FileView.prototype.calculateContrastRatio = function() {
   });
 };
 
-SS_FileView.prototype.zoomImage = function(scale) {
+SS_FileView.prototype.redrawImage = function() {
   this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+  this.ctx.scale(this.scale, this.scale);
+  this.ctx.drawImage(this.image, this.dragInfo.diff.x, this.dragInfo.diff.y);
+  // reset scale
+  this.ctx.setTransform(1, 0, 0, 1, 0, 0);
+};
 
-  this.ctx.scale(scale, scale);
+SS_FileView.prototype.zooming = function(ev) {
+  this.scale = ev.target.value;
 
-  this.ctx.drawImage(this.image, 0, 0);
+  if (this.$sliderTimeoutId) {
+    clearTimeout(this.$sliderTimeoutId);
+  }
 
-  this.ctx.scale(1 / scale, 1 / scale);
+  this.$sliderTimeoutId = setTimeout(this.zoomCommitted.bind(this), 10);
+};
+
+SS_FileView.prototype.zoomCommitted = function() {
+  this.$sliderTimeoutId = null;
+  this.redrawImage();
+};
+
+SS_FileView.prototype.dragStart = function(ev) {
+  if (this.isPickingUpColor) {
+    return;
+  }
+
+  this.dragInfo.isDragging = true;
+  this.dragInfo.start.x = ev.clientX;
+  this.dragInfo.start.y = ev.clientY;
+
+  this.canvas.style.cursor = "move";
+};
+
+SS_FileView.prototype.dragging = function(ev) {
+  if (!this.dragInfo.isDragging) {
+    return;
+  }
+
+  this.dragInfo.diff.x = this.dragInfo.canvas.x + (ev.clientX - this.dragInfo.start.x) / this.scale;
+  this.dragInfo.diff.y = this.dragInfo.canvas.y + (ev.clientY - this.dragInfo.start.y) / this.scale;
+  this.redrawImage();
+};
+
+SS_FileView.prototype.dragEnd = function(_ev) {
+  if (!this.dragInfo.isDragging) {
+    return;
+  }
+
+  this.canvas.style.cursor = "auto";
+
+  this.dragInfo.isDragging = false;
+  this.dragInfo.canvas.x = this.dragInfo.diff.x;
+  this.dragInfo.canvas.y = this.dragInfo.diff.y;
+};
+
+SS_FileView.prototype.pickUpColorStart = function(ev) {
+  this.isPickingUpColor = true;
+  $(ev.currentTarget).addClass("btn-active");
+  this.canvas.style.cursor = "crosshair";
+};
+
+SS_FileView.prototype.pickUpColor = function(ev) {
+  if (!this.isPickingUpColor) {
+    return;
+  }
+
+  console.log({ clientX: ev.clientX, clientY: ev.clientY });
+
+  var rgb = this.rgbAt(ev.clientX, ev.clientY);
+  console.log({ rgb: rgb });
+  this.$el.find(".btn-color-picker.btn-active").closest(".btn-group").find(".js-color").minicolors("value", rgb);
+
+  this.canvas.style.cursor = "auto";
+  this.$el.find(".btn-color-picker").removeClass("btn-active");
+  this.isPickingUpColor = false;
+
+  this.calculateContrastRatio();
 };
 
 SS_FileView.prototype.rgbAt = function(x, y) {
+  this.ctx.scale(this.scale, this.scale);
   var pixels = this.ctx.getImageData(x, y, 1, 1).data;
-  return "#" + SS_FileView.toHex(pixels[0]) + SS_FileView.toHex(pixels[1]) + SS_FileView.toHex(pixels[2]);
+  // reset scale
+  this.ctx.setTransform(1, 0, 0, 1, 0, 0);
+
+  var red = pixels[0];
+  var green = pixels[1];
+  var blue = pixels[2];
+  var alpha = pixels[3];
+
+  if (alpha === 0) {
+    return "#ffffff";
+  }
+
+  red = SS_FileView.toHex(red);
+  green = SS_FileView.toHex(green);
+  blue = SS_FileView.toHex(blue);
+  return "#" + red + green + blue;
 };
