@@ -3,7 +3,7 @@
     <div class="toolbar">
       <span class="btn-group toolbar-zoom">
         <span>縮小</span>
-        <input id="toolbar-zoom-slider" type="range">
+        <input id="zoom-slider" name="zoom-slider" type="range">
         <span>拡大</span>
       </span>
 
@@ -36,65 +36,7 @@
   </canvas>
 </div>
 
-<%= jquery do %>
-  var canvas = $("#ajax-box .canvas")[0];
-  var $canvas = $(canvas);
-  var ctx = canvas.getContext("2d");
-  var image = new Image();
-  image.src = "<%= @item.url %>";
-
-  var toHex = function(n) {
-    if (isNaN(n)) return "00";
-    n = Math.max(0, Math.min(n, 255));
-    return "0123456789ABCDEF".charAt((n - n % 16) / 16) + "0123456789ABCDEF".charAt(n % 16);
-  };
-
-  var rgbAt = function(x, y) {
-    var pixels = ctx.getImageData(x, y, 1, 1).data;
-    return "#" + toHex(pixels[0]) + toHex(pixels[1]) + toHex(pixels[2]);
-  };
-
-  $(image).load(function() {
-    canvas.width = image.width;
-    canvas.height = image.height;
-    ctx.drawImage(image, 0, 0);
-    console.log({ rgb0: rgbAt(0, 0), rgbZ: rgbAt(image.width - 1, image.height - 1) });
-  });
-
-  $canvas.click(function(ev) {
-    var canvasOffset = $canvas.offset();
-    var canvasX = Math.floor(ev.pageX - canvasOffset.left);
-    var canvasY = Math.floor(ev.pageY - canvasOffset.top);
-    var rgb = rgbAt(canvasX, canvasY);
-
-    console.log({ canvasX: canvasX, canvasY: canvasY, rgb: rgb });
-  });
-
-  SS_Color.render();
-
-  $(".btn-contrast-ratio").on("click", function() {
-    var foregroundColor = $("#foreground-color").minicolors("value");
-    var backgroundColor = $("#background-color").minicolors("value");
-
-    if (!foregroundColor || !backgroundColor) {
-      return;
-    }
-
-    console.log({ foregroundColor: foregroundColor, backgroundColor: backgroundColor });
-
-    $(".contrast-ratio").html(SS.loading);
-    $.ajax({
-      url: "<%= url_for(action: :contrast_ratio, format: "json") %>",
-      data: { f: foregroundColor, b: backgroundColor, _: Date.now() },
-      type: 'GET',
-      success: function(data) {
-        $(".contrast-ratio").html(data.contrast_ratio_human);
-      },
-      error: function(xhr, status, error) {
-        $(".contrast-ratio").html(error);
-      },
-      complete: function() {
-      }
-    });
-  });
+<%= javascript_tag do %>
+  var options = <%== { itemUrl: @item.url, contrastRatioPath: url_for(action: :contrast_ratio, format: "json") }.to_json %>;
+  new SS_FileView("#ss-file-view", options);
 <% end %>
