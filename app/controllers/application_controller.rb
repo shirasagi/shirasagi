@@ -49,7 +49,7 @@ class ApplicationController < ActionController::Base
 
     disposition = headers['Content-Disposition']
     return if disposition.blank?
-    return unless disposition.match?(/(.+); filename="(.+)"/)
+    return unless /(.+); filename="(.+)"/ =~ disposition
 
     name = ::Regexp.last_match[1]
     filename = ::Regexp.last_match[2]
