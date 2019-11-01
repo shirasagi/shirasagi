@@ -50,8 +50,20 @@ SS_FileView.toHex = function(n) {
 SS_FileView.prototype.initImage = function() {
   this.ctx.drawImage(this.image, 0, 0);
 
-  this.$el.find("#foreground-color").minicolors("value", this.rgbAt(0, 0));
-  this.$el.find("#background-color").minicolors("value", this.rgbAt(this.image.width - 1, this.image.height - 1));
+  var width, height;
+  if (this.image.width > this.canvas.width) {
+    width = this.canvas.width;
+  } else {
+    width = this.image.width;
+  }
+  if (this.image.height > this.canvas.height) {
+    height = this.canvas.height;
+  } else {
+    height = this.image.height;
+  }
+
+  this.$el.find("#foreground-color").minicolors("value", this.rgbAt(width / 2, height / 2));
+  this.$el.find("#background-color").minicolors("value", this.rgbAt(0, 0));
 
   this.calculateContrastRatio();
 };
@@ -158,10 +170,22 @@ SS_FileView.prototype.pickUpColor = function(ev) {
     return;
   }
 
-  console.log({ clientX: ev.clientX, clientY: ev.clientY });
+  var x = ev.offsetX;
+  var y = ev.offsetY;
+  if (x < 0) {
+    x = 0;
+  }
+  if (x >= this.canvas.width) {
+    x = this.canvas.width - 1;
+  }
+  if (y < 0) {
+    y = 0;
+  }
+  if (y >= this.canvas.height) {
+    y = this.canvas.height - 1;
+  }
 
-  var rgb = this.rgbAt(ev.clientX, ev.clientY);
-  console.log({ rgb: rgb });
+  var rgb = this.rgbAt(x, y);
   this.$el.find(".btn-color-picker.btn-active").closest(".btn-group").find(".js-color").minicolors("value", rgb);
 
   this.canvas.style.cursor = "auto";
