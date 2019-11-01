@@ -206,9 +206,19 @@ SS_FileView.prototype.dragEnd = function(_ev) {
 };
 
 SS_FileView.prototype.pickUpColorStart = function(ev) {
-  this.isPickingUpColor = true;
-  $(ev.currentTarget).addClass("btn-active");
-  this.canvas.style.cursor = "crosshair";
+  var $target = $(ev.currentTarget);
+  if ($target.hasClass("btn-active")) {
+    // cancel picking
+    $target.removeClass("btn-active");
+    this.isPickingUpColor = false;
+    this.canvas.style.cursor = "auto";
+  } else {
+    this.$el.find(".btn-color-picker.btn-active").removeClass("btn-active");
+
+    this.isPickingUpColor = true;
+    $target.addClass("btn-active");
+    this.canvas.style.cursor = "crosshair";
+  }
 };
 
 SS_FileView.prototype.pickUpColor = function(ev) {
