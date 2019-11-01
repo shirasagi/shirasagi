@@ -9,6 +9,9 @@ function SS_FileView(el, options) {
   this.ctx = this.canvas.getContext("2d");
 
   this.scale = 1;
+  this.$slider = this.$el.find("#zoom-slider");
+  this.$slider.prop({ value: this.scale, min: SS_FileView.MIN_SCALE, max: SS_FileView.MAX_SCALE, step: "any" });
+  this.$slider.on("input", this.zooming.bind(this));
 
   this.dragInfo = {
     isDragging: false,
@@ -46,6 +49,7 @@ SS_FileView.HEX_DECIMAL = "0123456789abcdef";
 SS_FileView.CANVAS_SAFE_MARGIN = 10;
 SS_FileView.MIN_SCALE = 0.1;
 SS_FileView.MAX_SCALE = 2;
+SS_FileView.SCALE_STEPS = [ 0.1, 0.25, 0.5, 0.75, 1, 1.25, 1.5, 1.75, 2.0 ];
 
 SS_FileView.toHex = function(n) {
   if (isNaN(n)) {
@@ -72,6 +76,27 @@ SS_FileView.calcPositionAndScale = function(image, canvas) {
   }
 
   return { position: position, scale: scale };
+};
+
+SS_FileView.findScaleStepIndex = function(scale) {
+  var found = -1;
+  if (scale < SS_FileView.SCALE_STEPS[0]) {
+    found = 0;
+  } else if (scale > SS_FileView.SCALE_STEPS[SS_FileView.SCALE_STEPS.length - 1]) {
+    found = SS_FileView.SCALE_STEPS.length - 1;
+  } else {
+    for (var i = 0; i < SS_FileView.SCALE_STEPS.length - 1; i += 1) {
+      if (SS_FileView.SCALE_STEPS[i] <= scale && scale < SS_FileView.SCALE_STEPS[i + 1]) {
+        found = i;
+        break;
+      }
+      if (found == -1) {
+        found = SS_FileView.SCALE_STEPS.length - 1;
+      }
+    }
+  }
+
+  return found;
 };
 
 SS_FileView.prototype.initializationComplete = function() {
@@ -109,9 +134,10 @@ SS_FileView.prototype.initializationComplete = function() {
   this.dragInfo.canvas.y = this.dragInfo.diff.y;
   this.redrawImage();
 
-  this.$slider = this.$el.find("#zoom-slider");
-  this.$slider.prop({ value: this.scale, min: SS_FileView.MIN_SCALE, max: SS_FileView.MAX_SCALE, step: "any" });
-  this.$slider.on("input", this.zooming.bind(this));
+  this.$slider.prop({ value: this.scale });
+
+  this.$el.find(".btn-zoom-out").on("click", this.prevScale.bind(this));
+  this.$el.find(".btn-zoom-in").on("click", this.nextScale.bind(this));
 
   this.$el.find("#foreground-color").minicolors("value", this.rgbAt(canvasWidth / 2, canvasHeight / 2));
   this.$el.find("#background-color").minicolors("value", "#ffffff");
@@ -168,6 +194,34 @@ SS_FileView.prototype.zooming = function(ev) {
 
 SS_FileView.prototype.zoomCommitted = function() {
   this.$sliderTimeoutId = null;
+  this.redrawImage();
+};
+
+SS_FileView.prototype.nextScale = function(ev) {
+  var current = SS_FileView.findScaleStepIndex(this.scale);
+  var next = current + 1;
+  if (next >= SS_FileView.SCALE_STEPS.length) {
+    next = SS_FileView.SCALE_STEPS.length - 1;
+  }
+
+  this.scale = SS_FileView.SCALE_STEPS[next];
+  this.$slider.prop({ value: this.scale });
+
+  this.redrawImage();
+};
+
+SS_FileView.prototype.prevScale = function(ev) {
+  var prev = SS_FileView.findScaleStepIndex(this.scale);
+  if (SS_FileView.SCALE_STEPS[prev] == this.scale) {
+    prev -= 1;
+  }
+  if (prev < 0) {
+    prev = 0;
+  }
+
+  this.scale = SS_FileView.SCALE_STEPS[prev];
+  this.$slider.prop({ value: this.scale });
+
   this.redrawImage();
 };
 

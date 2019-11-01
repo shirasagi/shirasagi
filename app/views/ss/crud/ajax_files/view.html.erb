@@ -2,9 +2,13 @@
   <div class="toolbar-container" style="margin-bottom: 10px;">
     <div class="toolbar">
       <span class="btn-group toolbar-zoom">
-        <span>縮小</span>
+        <%= button_tag(type: "button", name: "btn-zoom-out", class: "btn btn-zoom-out") do %>
+          <i class="material-icons md-18">zoom_out</i>
+        <% end %>
         <input id="zoom-slider" name="zoom-slider" type="range">
-        <span>拡大</span>
+        <%= button_tag(type: "button", name: "btn-zoom-in", class: "btn btn-zoom-in") do %>
+          <i class="material-icons md-18">zoom_in</i>
+        <% end %>
       </span>
 
       <span class="btn-group toolbar-foreground-color">
