@@ -9,7 +9,7 @@ class Cms::Agents::Tasks::NodesController < ApplicationController
   def filter_by_generate_key(ids)
     return ids if @generate_key.blank?
 
-    keys = SS.config.cms.generate_key
+    keys = SS.config.cms.generate_keys
     return ids if keys.blank?
     return ids if keys.index(@generate_key).nil?
 
@@ -59,7 +59,8 @@ class Cms::Agents::Tasks::NodesController < ApplicationController
 
   def generate_root_pages
     pages = Cms::Page.site(@site).and_public.where(depth: 1)
-    ids   = pages.pluck(:id)
+    ids = pages.pluck(:id)
+    ids = filter_by_generate_key(ids)
 
     ids.each do |id|
       @task.count

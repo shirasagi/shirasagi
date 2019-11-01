@@ -10,9 +10,9 @@ production: &production
   # enable LGWAN
   enable_lgwan: false
 
-  ## Generate_key example
+  ## Generate keys example
   ## Set key as array when splitting node and page generation
-  #generate_key:
+  #generate_keys:
   #  - "web01"
   #  - "web02"
   #  - "web03"

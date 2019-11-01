@@ -8,7 +8,7 @@ class Cms::Agents::Tasks::PagesController < ApplicationController
   def filter_by_generate_key(ids)
     return ids if @generate_key.blank?
 
-    keys = SS.config.cms.generate_key
+    keys = SS.config.cms.generate_keys
     return ids if keys.blank?
     return ids if keys.index(@generate_key).nil?
 
