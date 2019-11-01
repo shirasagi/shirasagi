@@ -2,7 +2,10 @@ function SS_FileView(el, options) {
   this.$el = $(el);
   this.options = options;
 
-  this.canvas = this.$el.find(".canvas")[0];
+  this.$canvasContainer = this.$el.find(".canvas-container");
+  this.$canvasContainer.html(SS.loading);
+
+  this.canvas = document.createElement("canvas");
   this.ctx = this.canvas.getContext("2d");
 
   this.scale = 1;
@@ -14,29 +17,35 @@ function SS_FileView(el, options) {
     canvas: { x: 0, y: 0 }
   };
 
-  this.$el.one("ss:cboxCompleted", this.resizeCanvas.bind(this));
+  var self = this;
 
+  // ダイアログが完全に開かないと、キャンバスサイズを計算できないので、完全に開くまで待つ
+  var d1 = $.Deferred();
+  this.$el.one("ss:cboxCompleted", function() { d1.resolve(); });
+  // // 3 秒以内にダイアログが開かなければ失敗。
+  // setTimeout(function() { d1.rejectWith(self, [ "failed to open dialog" ]); }, 3000);
+  // 3 秒以内にダイアログが開かなければダイアログが開いたとみなす。
+  setTimeout(function() { d1.resolve(); }, 3000);
+
+  // 仕様で画像は非同期で読み込まれるので、画像読み込み完了まで待つ
+  var d2 = $.Deferred();
   this.image = new Image();
   this.image.src = this.options.itemUrl;
-  this.image.onload = this.initImage.bind(this);
+  this.image.onload = function() { d2.resolve(); };
+  this.image.onerror = function() { d2.rejectWith(self, [ "failed to load image" ]); };
 
-  this.$el.find(".btn-contrast-ratio").on("click", this.calculateContrastRatio.bind(this));
-
-  this.$slider = this.$el.find("#zoom-slider");
-  this.$slider.prop({ value: this.scale, min: 0.1, max: 2, step: "any" });
-  this.$slider.on("input", this.zooming.bind(this));
-
-  this.canvas.addEventListener("click", this.pickUpColor.bind(this));
-  this.canvas.addEventListener("mousedown", this.dragStart.bind(this));
-  this.canvas.addEventListener("mousemove", this.dragging.bind(this));
-  this.canvas.addEventListener("mouseup", this.dragEnd.bind(this));
-
-  this.$el.find(".btn-color-picker").on("click", this.pickUpColorStart.bind(this));
+  // ダイアログが完全に開いて、かつ、画像の読み込みが完了したら、残りの初期化が可能となる。
+  $.when(d1.promise(), d2.promise())
+    .done(this.initializationComplete.bind(this))
+    .fail(function(msg) { self.$canvasContainer.html(msg); });
 
   SS_Color.render();
 }
 
 SS_FileView.HEX_DECIMAL = "0123456789abcdef";
+SS_FileView.CANVAS_SAFE_MARGIN = 10;
+SS_FileView.MIN_SCALE = 0.1;
+SS_FileView.MAX_SCALE = 2;
 
 SS_FileView.toHex = function(n) {
   if (isNaN(n)) {
@@ -47,40 +56,77 @@ SS_FileView.toHex = function(n) {
   return SS_FileView.HEX_DECIMAL.charAt((n - n % 16) / 16) + SS_FileView.HEX_DECIMAL.charAt(n % 16);
 };
 
-SS_FileView.prototype.initImage = function() {
-  this.ctx.drawImage(this.image, 0, 0);
+SS_FileView.calcPositionAndScale = function(image, canvas) {
+  var position = 0;
+  var scale = 1;
 
-  var width, height;
-  if (this.image.width > this.canvas.width) {
-    width = this.canvas.width;
+  if (image > canvas) {
+    position = 0;
+    scale = canvas / image;
+    if (scale < SS_FileView.MIN_SCALE) {
+      scale = SS_FileView.MIN_SCALE;
+    }
   } else {
-    width = this.image.width;
-  }
-  if (this.image.height > this.canvas.height) {
-    height = this.canvas.height;
-  } else {
-    height = this.image.height;
+    position = (canvas - image) / 2;
+    scale = 1;
   }
 
-  this.$el.find("#foreground-color").minicolors("value", this.rgbAt(width / 2, height / 2));
-  this.$el.find("#background-color").minicolors("value", this.rgbAt(0, 0));
-
-  this.calculateContrastRatio();
+  return { position: position, scale: scale };
 };
 
-SS_FileView.prototype.resizeCanvas = function() {
-  var maxWidth = this.$el.width();
+SS_FileView.prototype.initializationComplete = function() {
+  var canvasWidth = this.$el.width();
 
-  var maxHeight = $("#cboxLoadedContent").height();
+  var canvasHeight = $("#cboxLoadedContent").height();
   // minus padding
-  maxHeight -= $("#ajax-box").outerHeight(true) - $("#ajax-box").height();
+  canvasHeight -= $("#ajax-box").outerHeight(true) - $("#ajax-box").height();
   // minus toolbar height
-  maxHeight -= Math.ceil($(this.canvas).offset().top) - Math.floor(this.$el.offset().top);
-  maxHeight -= 10;
+  canvasHeight -= Math.ceil(this.$canvasContainer.offset().top) - Math.floor(this.$el.offset().top);
+  canvasHeight -= SS_FileView.CANVAS_SAFE_MARGIN;
 
-  this.canvas.width = maxWidth;
-  this.canvas.height = maxHeight;
+  this.canvas.width = canvasWidth;
+  this.canvas.height = canvasHeight;
+
+  var x = SS_FileView.calcPositionAndScale(this.image.width, canvasWidth);
+  var y = SS_FileView.calcPositionAndScale(this.image.height, canvasHeight);
+
+  if (y.scale > x.scale) {
+    this.scale = x.scale;
+    this.dragInfo.diff.x = x.position;
+    this.dragInfo.diff.y = ((canvasHeight - this.image.height * this.scale) / 2) / this.scale;
+    if (this.dragInfo.diff.y < 0) {
+      this.dragInfo.diff.y = 0;
+    }
+  } else {
+    this.scale = y.scale;
+    this.dragInfo.diff.x = ((canvasWidth - this.image.width * this.scale) / 2) / this.scale;
+    if (this.dragInfo.diff.x < 0) {
+      this.dragInfo.diff.x = 0;
+    }
+    this.dragInfo.diff.y = y.position;
+  }
+  this.dragInfo.canvas.x = this.dragInfo.diff.x;
+  this.dragInfo.canvas.y = this.dragInfo.diff.y;
   this.redrawImage();
+
+  this.$slider = this.$el.find("#zoom-slider");
+  this.$slider.prop({ value: this.scale, min: SS_FileView.MIN_SCALE, max: SS_FileView.MAX_SCALE, step: "any" });
+  this.$slider.on("input", this.zooming.bind(this));
+
+  this.$el.find("#foreground-color").minicolors("value", this.rgbAt(canvasWidth / 2, canvasHeight / 2));
+  this.$el.find("#background-color").minicolors("value", "#ffffff");
+  this.calculateContrastRatio();
+
+  this.$el.find(".btn-contrast-ratio").on("click", this.calculateContrastRatio.bind(this));
+
+  this.canvas.addEventListener("click", this.pickUpColor.bind(this));
+  this.canvas.addEventListener("mousedown", this.dragStart.bind(this));
+  this.canvas.addEventListener("mousemove", this.dragging.bind(this));
+  this.canvas.addEventListener("mouseup", this.dragEnd.bind(this));
+
+  this.$el.find(".btn-color-picker").on("click", this.pickUpColorStart.bind(this));
+
+  this.$el.find(".canvas-container").html(this.canvas);
 };
 
 SS_FileView.prototype.calculateContrastRatio = function() {

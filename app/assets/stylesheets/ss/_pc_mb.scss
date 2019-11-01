@@ -3385,3 +3385,9 @@ body.ss-ajax-in-iframe {
     }
   }
 }
+
+#ss-file-view {
+  canvas {
+    border: $border-gray4;
+  }
+}
