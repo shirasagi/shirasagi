@@ -6,6 +6,16 @@ class Cms::Agents::Tasks::NodesController < ApplicationController
 
   private
 
+  def filter_by_generate_key(ids)
+    return ids if @generate_key.blank?
+
+    keys = SS.config.cms.generate_key
+    return ids if keys.blank?
+    return ids if keys.index(@generate_key).nil?
+
+    ids.select { |id| (id % keys.size) == keys.index(@generate_key) }
+  end
+
   def set_params
     #
   end
@@ -19,13 +29,12 @@ class Cms::Agents::Tasks::NodesController < ApplicationController
 
     nodes = Cms::Node.site(@site).and_public
     nodes = nodes.where(filename: /^#{::Regexp.escape(@node.filename)}(\/|$)/) if @node
+    ids   = nodes.pluck(:id)
 
     if @generate_key.present?
       @task.log "# #{@generate_key}"
-      nodes = nodes.where(generate_key: @generate_key)
+      ids = filter_by_generate_key(ids)
     end
-
-    ids   = nodes.pluck(:id)
 
     ids.each do |id|
       node = Cms::Node.site(@site).and_public.where(id: id).first

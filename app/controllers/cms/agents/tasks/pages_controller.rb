@@ -3,18 +3,32 @@ class Cms::Agents::Tasks::PagesController < ApplicationController
 
   PER_BATCH = 100
 
+  private
+
+  def filter_by_generate_key(ids)
+    return ids if @generate_key.blank?
+
+    keys = SS.config.cms.generate_key
+    return ids if keys.blank?
+    return ids if keys.index(@generate_key).nil?
+
+    ids.select { |id| (id % keys.size) == keys.index(@generate_key) }
+  end
+
+  public
+
   def generate
     @task.log "# #{@site.name}"
 
     pages = Cms::Page.site(@site).and_public
     pages = pages.node(@node) if @node
+    ids   = pages.pluck(:id)
 
     if @generate_key.present?
       @task.log "# #{@generate_key}"
-      pages = pages.where(generate_key: @generate_key)
+      ids = filter_by_generate_key(ids)
     end
 
-    ids   = pages.pluck(:id)
     @task.total_count = ids.size
 
     ids.each do |id|

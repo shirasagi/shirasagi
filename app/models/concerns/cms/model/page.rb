@@ -3,7 +3,6 @@ module Cms::Model::Page
   extend SS::Translation
   include Cms::Content
   include Cms::Reference::Layout
-  include Cms::GenerateKey
 
   included do
     class_variable_set(:@@_show_path, nil)
