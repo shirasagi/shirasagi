@@ -1,3 +1,6 @@
+<%
+  addon ||= local_assigns.fetch(:addon, {})
+%>
 <dl class="see">
   <% if @item.image? %>
     <% img = Magick::ImageList.new(@item.path) %>
@@ -23,3 +26,23 @@
   <dt><%= @model.t :download %></dt>
   <dd><%= link_to t('ss.links.download'), { action: :download }, { class: "btn" } %></dd>
 </dl>
+
+<%= jquery do %>
+  var $el = $("#<%= addon[:id] %>");
+  $el.on("click", ".img a", function(ev) {
+    var $this = $(ev.currentTarget);
+    var path = $this.attr("href");
+
+    $.colorbox({
+      href: path,
+      width: "90%",
+      height: "90%",
+      fixed: true,
+      open: true,
+      onComplete: function() { $("#ss-file-view").trigger("ss:cboxCompleted"); }
+    });
+
+    ev.preventDefault();
+    return false;
+  });
+<% end %>

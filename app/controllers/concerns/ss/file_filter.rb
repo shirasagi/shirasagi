@@ -60,7 +60,7 @@ module SS::FileFilter
     set_last_modified
 
     if @item.image?
-      render
+      render file: "view", layout: "ss/ajax"
       return
     end
 

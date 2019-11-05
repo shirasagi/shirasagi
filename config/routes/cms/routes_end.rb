@@ -120,6 +120,7 @@ Rails.application.routes.draw do
       get :download, on: :member
       get :resize, on: :member
       post :resize, on: :member
+      get :contrast_ratio, on: :collection
     end
 
     resources :page_searches, concerns: :deletion do
