@@ -59,7 +59,18 @@ module SS::FileFilter
     set_item
     set_last_modified
 
-    render
+    if @item.image?
+      render
+      return
+    end
+
+    if Fs.mode == :file && Fs.file?(@item.path)
+      send_file @item.path, type: @item.content_type, filename: @item.filename,
+                disposition: :inline, x_sendfile: true
+    else
+      send_data @item.read, type: @item.content_type, filename: @item.filename,
+                disposition: :inline
+    end
   end
 
   def thumb

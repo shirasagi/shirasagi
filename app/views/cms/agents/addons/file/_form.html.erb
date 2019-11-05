@@ -118,9 +118,12 @@ var tempFile = new SS_Addon_TempFile(".upload-drop-area", <%= @cur_user.id %>, o
 <%= jquery do %>
   var $el = $("#<%= addon[:id] %>");
   $el.on("click", ".file-view a.thumb", function(ev) {
-    ev.preventDefault();
+    var $this = $(ev.currentTarget);
+    if ($this.find("img").length === 0) {
+      return true;
+    }
 
-    var $this = $(this);
+    ev.preventDefault();
     var path = $this.attr("href");
     if (path.startsWith("/fs/")) {
       var $fileView = $(this).closest(".file-view");
