@@ -194,6 +194,10 @@ Rails.application.routes.draw do
           get :contrast_ratio, on: :collection
         end
       end
+      resources :content_files, only: [] do
+        get :view, on: :member
+        get :contrast_ratio, on: :collection
+      end
       namespace "opendata_ref" do
         get "datasets:cid" => "datasets#index", as: 'datasets'
       end

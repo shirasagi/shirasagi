@@ -129,7 +129,7 @@ var tempFile = new SS_Addon_TempFile(".upload-drop-area", <%= @cur_user.id %>, o
       var $fileView = $(this).closest(".file-view");
       var fileId = $fileView.data("file-id");
 
-      path = "<%= view_cms_apis_temp_file_path(id: ":id") %>".replace(":id", fileId);
+      path = "<%= view_cms_apis_content_file_path(id: ":id") %>".replace(":id", fileId);
     }
 
     $.colorbox({
