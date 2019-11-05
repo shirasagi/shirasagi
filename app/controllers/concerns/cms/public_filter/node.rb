@@ -34,6 +34,30 @@ module Cms::PublicFilter::Node
     agent.render spec[:action]
   end
 
+  def render_layout_with_pagination_cache(layout, cache_key)
+    @layout_cache ||= {}
+
+    # no cache
+    if cache_key.nil?
+      return render_to_string html: render_layout(layout).html_safe, layout: "cms/page"
+    end
+
+    # use cache
+    if @layout_cache[cache_key]
+      return @layout_cache[cache_key].sub(/<!-- layout_yield -->/, response.body)
+    end
+
+    # set cache
+    html = render_to_string html: render_layout(layout).html_safe, layout: "cms/page"
+    @layout_cache[cache_key] = html.sub(/(<!-- layout_yield -->).*?(<!-- \/layout_yield -->)/m, '\\1')
+
+    html
+  end
+
+  def delete_layout_cache(cache_key)
+    @layout_cache.delete(cache_key) if @layout_cache
+  end
+
   public
 
   def generate_node(node, opts = {})
@@ -60,7 +84,7 @@ module Cms::PublicFilter::Node
     end
 
     if response.content_type == "text/html" && node.layout
-      html = render_to_string html: render_layout(node.layout).html_safe, layout: "cms/page"
+      html = render_layout_with_pagination_cache(node.layout, opts[:cache])
     else
       html = response.body
     end
@@ -70,7 +94,7 @@ module Cms::PublicFilter::Node
   end
 
   def generate_node_with_pagination(node, opts = {})
-    if generate_node node
+    if generate_node(node, cache: node.filename)
       @task.log "#{node.url}index.html" if @task
     end
 
@@ -80,7 +104,7 @@ module Cms::PublicFilter::Node
     2.upto(max) do |i|
       file = "#{node.path}/index.p#{i}.html"
 
-      if generate_node node, file: file, params: { page: i }
+      if generate_node(node, file: file, params: { page: i }, cache: node.filename)
         @task.log "#{node.url}index.p#{i}.html" if @task
       end
 
@@ -89,6 +113,8 @@ module Cms::PublicFilter::Node
         break
       end
     end
+
+    delete_layout_cache(node.filename)
 
     num.upto(max) do |i|
       file = "#{node.path}/index.p#{i}.html"
