@@ -30,7 +30,10 @@
       </span>
 
       <span class="btn-group toolbar-contrast-ratio">
-        <label><%= t("ss.contrast_ratio") %></label>
+        <label>
+          <%= t("ss.contrast_ratio") %>
+          <%= tt("ss.contrast_ratio")  %>
+        </label>
         <span class="contrast-ratio">-.--</span>
         <%= button_tag(t("ss.buttons.calculate"), type: "button", name: "btn-contrast-ratio", class: "btn btn-contrast-ratio") %>
       </span>
