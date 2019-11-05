@@ -168,7 +168,7 @@ class Webmail::Mail
     date_time = opts[:date_time] || Time.zone.now
 
     imap.select('INBOX')
-    imap.conn.append('INBOX', msg.to_s, [:Seen], date_time.to_time)
+    imap.conn.append('INBOX', msg.to_s, [:Seen], date_time.in_time_zone)
   end
 
   def requested_mdn?
