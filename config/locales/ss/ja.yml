@@ -30,6 +30,9 @@ ja:
     default_here_label: "詳細はこちら⇒"
     errors: エラー
     wave_dash: ～
+    color: 表示色
+    bg_color: 背景色
+    contrast_ratio: コントラスト比
 
     views:
       login/login:
@@ -140,6 +143,9 @@ ja:
       close: 閉じる
       csv: CSV
       ignore_alerts_and_save: 警告を無視して保存する
+      zoom_out: 縮小
+      zoom_in: 拡大
+      calculate: 計算
     confirm:
       delete: 削除してよろしいですか？
       soft_delete: 削除してよろしいですか？
