@@ -3387,6 +3387,14 @@ body.ss-ajax-in-iframe {
 }
 
 #ss-file-view {
+  .toolbar-container {
+    margin-bottom: 10px;
+  }
+  .minicolors-theme-default {
+    .minicolors-swatch {
+      top: 5px;
+    }
+  }
   canvas {
     border: $border-gray4;
   }

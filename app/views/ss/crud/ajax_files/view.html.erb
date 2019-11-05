@@ -1,5 +1,5 @@
 <div id="ss-file-view">
-  <div class="toolbar-container" style="margin-bottom: 10px;">
+  <div class="toolbar-container">
     <div class="toolbar">
       <span class="btn-group toolbar-zoom">
         <%= button_tag(type: "button", name: "btn-zoom-out", class: "btn btn-zoom-out") do %>
@@ -13,7 +13,7 @@
 
       <span class="btn-group toolbar-foreground-color">
         <label>表示色</label>
-        <%= text_field_tag("foreground-color", "#000000", class: 'js-color', style: "width: 100px;") %>
+        <%= text_field_tag("foreground-color", "#000000", class: 'js-color') %>
         <%= button_tag(type: "button", name: "btn-foreground-color-picker", class: "btn btn-color-picker") do %>
           <i class="material-icons md-18">colorize</i>
         <% end %>
@@ -21,7 +21,7 @@
 
       <span class="btn-group toolbar-background-color">
         <label>背景色</label>
-        <%= text_field_tag("background-color", "#ffffff", class: 'js-color', style: "width: 100px;") %>
+        <%= text_field_tag("background-color", "#ffffff", class: 'js-color') %>
         <%= button_tag(type: "button", name: "btn-background-color-picker", class: "btn btn-color-picker") do %>
           <i class="material-icons md-18">colorize</i>
         <% end %>
