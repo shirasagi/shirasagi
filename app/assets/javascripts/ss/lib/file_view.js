@@ -51,6 +51,40 @@ SS_FileView.MIN_SCALE = 0.1;
 SS_FileView.MAX_SCALE = 2;
 SS_FileView.SCALE_STEPS = [ 0.1, 0.25, 0.5, 0.75, 1, 1.25, 1.5, 1.75, 2.0 ];
 
+SS_FileView.listenTo = function(el, options) {
+  $(el).on("click", function(ev) {
+    SS_FileView.open(ev, options);
+  });
+};
+
+SS_FileView.open = function(ev, options) {
+  var $this = $(ev.currentTarget);
+  if ($this.find("img").length === 0) {
+    return true;
+  }
+
+  var path = $this.attr("href");
+  if (path.startsWith("/fs/") && options && options.viewPath) {
+    var $fileView = $this.closest(".file-view");
+    if ($fileView.length > 0) {
+      var fileId = $fileView.data("file-id");
+      path = options.viewPath.replace(":id", fileId);
+    }
+  }
+
+  $.colorbox({
+    href: path,
+    width: "90%",
+    height: "90%",
+    fixed: true,
+    open: true,
+    onComplete: function() { $("#ss-file-view").trigger("ss:cboxCompleted"); }
+  });
+
+  ev.preventDefault();
+  return false;
+};
+
 SS_FileView.toHex = function(n) {
   if (isNaN(n)) {
     return "00";
@@ -90,7 +124,7 @@ SS_FileView.findScaleStepIndex = function(scale) {
         found = i;
         break;
       }
-      if (found == -1) {
+      if (found === -1) {
         found = SS_FileView.SCALE_STEPS.length - 1;
       }
     }
@@ -102,9 +136,10 @@ SS_FileView.findScaleStepIndex = function(scale) {
 SS_FileView.prototype.initializationComplete = function() {
   var canvasWidth = this.$el.width();
 
+  var $ajaxBox = $("#ajax-box");
   var canvasHeight = $("#cboxLoadedContent").height();
   // minus padding
-  canvasHeight -= $("#ajax-box").outerHeight(true) - $("#ajax-box").height();
+  canvasHeight -= $ajaxBox.outerHeight(true) - $ajaxBox.height();
   // minus toolbar height
   canvasHeight -= Math.ceil(this.$canvasContainer.offset().top) - Math.floor(this.$el.offset().top);
   canvasHeight -= SS_FileView.CANVAS_SAFE_MARGIN;
@@ -197,7 +232,7 @@ SS_FileView.prototype.zoomCommitted = function() {
   this.redrawImage();
 };
 
-SS_FileView.prototype.nextScale = function(ev) {
+SS_FileView.prototype.nextScale = function(_ev) {
   var current = SS_FileView.findScaleStepIndex(this.scale);
   var next = current + 1;
   if (next >= SS_FileView.SCALE_STEPS.length) {
@@ -210,9 +245,9 @@ SS_FileView.prototype.nextScale = function(ev) {
   this.redrawImage();
 };
 
-SS_FileView.prototype.prevScale = function(ev) {
+SS_FileView.prototype.prevScale = function(_ev) {
   var prev = SS_FileView.findScaleStepIndex(this.scale);
-  if (SS_FileView.SCALE_STEPS[prev] == this.scale) {
+  if (SS_FileView.SCALE_STEPS[prev] === this.scale) {
     prev -= 1;
   }
   if (prev < 0) {

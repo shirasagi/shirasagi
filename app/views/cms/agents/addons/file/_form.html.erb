@@ -118,29 +118,6 @@ var tempFile = new SS_Addon_TempFile(".upload-drop-area", <%= @cur_user.id %>, o
 <%= jquery do %>
   var $el = $("#<%= addon[:id] %>");
   $el.on("click", ".file-view a.thumb", function(ev) {
-    var $this = $(ev.currentTarget);
-    if ($this.find("img").length === 0) {
-      return true;
-    }
-
-    ev.preventDefault();
-    var path = $this.attr("href");
-    if (path.startsWith("/fs/")) {
-      var $fileView = $(this).closest(".file-view");
-      var fileId = $fileView.data("file-id");
-
-      path = "<%= view_cms_apis_content_file_path(id: ":id") %>".replace(":id", fileId);
-    }
-
-    $.colorbox({
-      href: path,
-      width: "90%",
-      height: "90%",
-      fixed: true,
-      open: true,
-      onComplete: function() { $("#ss-file-view").trigger("ss:cboxCompleted"); }
-    });
-
-    return false;
+    SS_FileView.open(ev, { viewPath: "<%= view_cms_apis_content_file_path(id: ":id") %>" });
   });
 <% end %>

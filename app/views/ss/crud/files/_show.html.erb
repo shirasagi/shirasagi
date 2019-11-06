@@ -28,21 +28,5 @@
 </dl>
 
 <%= jquery do %>
-  var $el = $("#<%= addon[:id] %>");
-  $el.on("click", ".img a", function(ev) {
-    var $this = $(ev.currentTarget);
-    var path = $this.attr("href");
-
-    $.colorbox({
-      href: path,
-      width: "90%",
-      height: "90%",
-      fixed: true,
-      open: true,
-      onComplete: function() { $("#ss-file-view").trigger("ss:cboxCompleted"); }
-    });
-
-    ev.preventDefault();
-    return false;
-  });
+  SS_FileView.listenTo("#<%= addon[:id] %> .img a");
 <% end %>
