@@ -203,7 +203,7 @@ class Cms::Agents::Tasks::LinksController < ApplicationController
     begin
       Timeout.timeout(@html_request_timeout) do
         data = []
-        open(url, proxy: true, allow_redirections: :all) do |f|
+        ::URI.open(url, proxy: true, allow_redirections: :all) do |f|
           f.each_line { |line| data << line }
         end
         return data.join
@@ -225,7 +225,7 @@ class Cms::Agents::Tasks::LinksController < ApplicationController
 
     begin
       Timeout.timeout(@head_request_timeout) do
-        open url, proxy: true, allow_redirections: :all, progress_proc: ->(size) { raise "200" }
+        ::URI.open url, proxy: true, allow_redirections: :all, progress_proc: ->(size) { raise "200" }
       end
       false
     rescue Timeout::Error
