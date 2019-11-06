@@ -11,3 +11,32 @@
     <% end %>
   <% end %>
 </div>
+
+<%= jquery do %>
+  $(".column-value .file-view a.thumb").on("click", function(ev) {
+    var $this = $(ev.currentTarget);
+    if ($this.find("img").length === 0) {
+      return true;
+    }
+
+    var path = $this.attr("href");
+    if (path.startsWith("/fs/")) {
+      var $fileView = $(this).closest(".file-view");
+      var fileId = $fileView.data("file-id");
+
+      path = "<%= view_cms_apis_content_file_path(id: ":id") %>".replace(":id", fileId);
+    }
+
+    $.colorbox({
+      href: path,
+      width: "90%",
+      height: "90%",
+      fixed: true,
+      open: true,
+      onComplete: function() { $("#ss-file-view").trigger("ss:cboxCompleted"); }
+    });
+
+    ev.preventDefault();
+    return false;
+  });
+<% end %>
