@@ -1,8 +1,10 @@
+<% addon ||= local_assigns.fetch(:addon, {}) %>
+
 <dl class="see">
   <dd class="wide">
     <% if @item.image.present? %>
     <div id="selected-files">
-        <div class="file-view">
+        <div class="file-view" data-file-id="<%= @item.image.id %>">
           <%= link_to @item.image.url, class: :thumb, target: "_blank" do %>
             <% if @item.image.image? %>
               <%= image_tag @item.image.thumb_url, alt: @item.image.basename %>
@@ -19,3 +21,7 @@
     <% end %>
   </dd>
 </dl>
+
+<%= jquery do %>
+  SS_FileView.listenTo("#<%= addon[:id] %> .file-view a.thumb", { viewPath: "<%= view_cms_apis_content_file_path(id: ":id") %>" });
+<% end %>

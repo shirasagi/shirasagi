@@ -64,12 +64,19 @@ SS_FileView.open = function(ev, options) {
   }
 
   var path = $this.attr("href");
-  if (path.startsWith("/fs/") && options && options.viewPath) {
-    var $fileView = $this.closest(".file-view");
-    if ($fileView.length > 0) {
-      var fileId = $fileView.data("file-id");
-      path = options.viewPath.replace(":id", fileId);
+  if (path.startsWith("/fs/")) {
+    if (options && options.viewPath) {
+      var $fileView = $this.closest(".file-view");
+      if ($fileView.length > 0) {
+        var fileId = $fileView.data("file-id");
+        if (fileId) {
+          path = options.viewPath.replace(":id", fileId);
+        }
+      }
     }
+  }
+  if (path.startsWith("/fs/")) {
+    return true;
   }
 
   $.colorbox({

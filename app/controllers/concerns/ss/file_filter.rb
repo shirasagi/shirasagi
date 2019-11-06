@@ -59,7 +59,7 @@ module SS::FileFilter
     set_item
     set_last_modified
 
-    if @item.image?
+    if @item.image? && request.xhr?
       render file: "view", layout: "ss/ajax"
       return
     end

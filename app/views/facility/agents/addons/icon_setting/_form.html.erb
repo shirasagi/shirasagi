@@ -11,7 +11,7 @@ window.deleteContent = function() {
     <div id="selected-files">
       <%= f.hidden_field "image_id", value: "", class: "hidden-ids" %>
       <% if @item.image.present? %>
-        <div class="file-view">
+        <div class="file-view" data-file-id="<%= @item.image.id %>">
 
           <%= link_to @item.image.url, class: :thumb, target: "_blank" do %>
             <% if @item.image.image? %>
