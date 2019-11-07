@@ -10,8 +10,8 @@ function SS_FileView(el, options) {
 
   this.scale = 1;
   this.$slider = this.$el.find("#zoom-slider");
-  this.$slider.prop({ value: this.scale, min: SS_FileView.MIN_SCALE, max: SS_FileView.MAX_SCALE, step: "any" });
-  this.$slider.on("input", this.zooming.bind(this));
+  this.$slider.prop({ value: this.scale * 100, min: SS_FileView.MIN_SCALE * 100, max: SS_FileView.MAX_SCALE * 100, step: "any" });
+  this.$slider.on("input", this.zooming.bind(this)).on("change", this.zoomChanged.bind(this));
 
   this.dragInfo = {
     isDragging: false,
@@ -176,7 +176,7 @@ SS_FileView.prototype.initializationComplete = function() {
   this.dragInfo.canvas.y = this.dragInfo.diff.y;
   this.redrawImage();
 
-  this.$slider.prop({ value: this.scale });
+  this.$slider.prop({ value: this.scale * 100 });
 
   this.$el.find(".btn-zoom-out").on("click", this.prevScale.bind(this));
   this.$el.find(".btn-zoom-in").on("click", this.nextScale.bind(this));
@@ -225,13 +225,21 @@ SS_FileView.prototype.redrawImage = function() {
 };
 
 SS_FileView.prototype.zooming = function(ev) {
-  this.scale = ev.target.value;
+  this.scale = ev.target.value / 100.0;
 
   if (this.$sliderTimeoutId) {
     clearTimeout(this.$sliderTimeoutId);
   }
 
   this.$sliderTimeoutId = setTimeout(this.zoomCommitted.bind(this), 10);
+};
+
+SS_FileView.prototype.zoomChanged = function(ev) {
+  this.scale = ev.target.value / 100.0;
+  if (this.$sliderTimeoutId) {
+    clearTimeout(this.$sliderTimeoutId);
+  }
+  this.zoomCommitted();
 };
 
 SS_FileView.prototype.zoomCommitted = function() {
@@ -247,7 +255,7 @@ SS_FileView.prototype.nextScale = function(_ev) {
   }
 
   this.scale = SS_FileView.SCALE_STEPS[next];
-  this.$slider.prop({ value: this.scale });
+  this.$slider.prop({ value: this.scale * 100 });
 
   this.redrawImage();
 };
@@ -262,7 +270,7 @@ SS_FileView.prototype.prevScale = function(_ev) {
   }
 
   this.scale = SS_FileView.SCALE_STEPS[prev];
-  this.$slider.prop({ value: this.scale });
+  this.$slider.prop({ value: this.scale * 100 });
 
   this.redrawImage();
 };
