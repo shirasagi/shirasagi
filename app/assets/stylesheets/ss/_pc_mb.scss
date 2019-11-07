@@ -3398,4 +3398,7 @@ body.ss-ajax-in-iframe {
   canvas {
     border: $border-gray4;
   }
+  .btn-active {
+    @include btn-active
+  }
 }
