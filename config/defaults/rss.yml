@@ -1,0 +1,21 @@
+# rss
+production: &production
+  weather_xml:
+    urls:
+      # 高頻度フィード 定時
+      - http://www.data.jma.go.jp/developer/xml/feed/regular.xml
+      # 高頻度フィード 随時
+      - http://www.data.jma.go.jp/developer/xml/feed/extra.xml
+      # 高頻度フィード 地震火山
+      - http://www.data.jma.go.jp/developer/xml/feed/eqvol.xml
+      # 高頻度フィード その他
+      - http://www.data.jma.go.jp/developer/xml/feed/other.xml
+
+development:
+  <<: *production
+
+test:
+  <<: *production
+  weather_xml:
+    urls:
+      - http://weather.example.jp/developer/xml/feed/other.xml
