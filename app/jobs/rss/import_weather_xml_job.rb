@@ -69,16 +69,20 @@ class Rss::ImportWeatherXmlJob < Rss::ImportBase
 
   def gc_rss_tempfile
     return if rand(100) >= 20
+
     threshold = 2.weeks.ago
     Rss::TempFile.with_repl_master.lt(updated: threshold).destroy_all
+    remove_old_cache(threshold)
+  end
 
+  def remove_old_cache(threshold)
     data_dir = SS.config.rss.weather_xml["data_cache_dir"]
-    if data_dir.present?
-      data_dir = ::File.expand_path(data_dir, Rails.root)
-      ::Dir.glob("*.xml", base: data_dir).each do |file_path|
-        file_path = ::File.expand_path(file_path, data_dir)
-        ::FileUtils.rm_f(file_path) if ::File.mtime(file_path) < threshold
-      end
+    return if data_dir.blank?
+
+    data_dir = ::File.expand_path(data_dir, Rails.root)
+    ::Dir.glob("*.xml", base: data_dir).each do |file_path|
+      file_path = ::File.expand_path(file_path, data_dir)
+      ::FileUtils.rm_f(file_path) if ::File.mtime(file_path) < threshold
     end
   end
 
