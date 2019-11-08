@@ -31,11 +31,11 @@ module Rss::Addon::Page
     end
 
     def url
-      rss_link
+      rss_link.presence || super
     end
 
     def full_url
-      rss_link
+      rss_link.presence || super
     end
 
     def json_path
