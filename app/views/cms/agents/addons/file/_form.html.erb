@@ -8,19 +8,10 @@ window.insertContent = function(cont) {
   }
 };
 window.deleteContent = function(id) {
-  if ((typeof tinymce) != "undefined") {
-    data = tinymce.get(Cms_Form.editorId).getContent();
-  }
-  else if ((typeof CKEDITOR) != "undefined") {
-    data = CKEDITOR.instances[Cms_Form.editorId].getData();
-  }
-  file = 'fs/' + id.split('').join('/') + '/_/';
   $(".file-view").each(function() {
     if (id == $(this).find(".file-id").attr("value")) {
-      if (data.indexOf(file) > 0) {
-        if (!confirm('<%= I18n.t('ss.confirm.in_use') %>')) {
-          return;
-        }
+      if (!confirm('<%= I18n.t('ss.confirm.in_use') %>')) {
+        return;
       }
       $(this).remove();
     }
