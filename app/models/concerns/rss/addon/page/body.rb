@@ -20,7 +20,7 @@ module Rss::Addon::Page
         count = criteria.count
         if count > max
           limit = count - max
-          criteria.order(released: 1, _id: 1).limit(limit).each do |item|
+          criteria.reorder(released: 1, id: 1).limit(limit).each do |item|
             item.with(mongo_client_options) do |model|
               model.destroy
             end
