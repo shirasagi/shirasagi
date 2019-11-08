@@ -20,3 +20,4 @@ test:
   weather_xml:
     urls:
       - http://weather.example.jp/developer/xml/feed/other.xml
+  data_cache_dir: ''
