@@ -28,6 +28,11 @@ describe Rss::Page, dbscope: :example do
     end
   end
 
+  describe "serve_static_file?" do
+    subject { create :rss_page, site: site, node: node }
+    its(:serve_static_file?) { is_expected.to be_falsey }
+  end
+
   describe "url and full_url" do
     context "with rss_link is given" do
       subject { create :rss_page, site: site, node: node }
