@@ -10,6 +10,7 @@ production: &production
       - http://www.data.jma.go.jp/developer/xml/feed/eqvol.xml
       # 高頻度フィード その他
       - http://www.data.jma.go.jp/developer/xml/feed/other.xml
+    data_cache_dir: tmp/cache/weather_xml
 
 development:
   <<: *production

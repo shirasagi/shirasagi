@@ -20,6 +20,7 @@ class Rss::ImportWeatherXmlJob < Rss::ImportBase
         builder.adapter Faraday.default_adapter
       end
       http_client.headers[:user_agent] += " (SHIRASAGI/#{SS.version}; PID/#{Process.pid})"
+
       resp = http_client.get
       return false if resp.status != 200
 
@@ -68,7 +69,17 @@ class Rss::ImportWeatherXmlJob < Rss::ImportBase
 
   def gc_rss_tempfile
     return if rand(100) >= 20
-    Rss::TempFile.with_repl_master.lt(updated: 2.weeks.ago).destroy_all
+    threshold = 2.weeks.ago
+    Rss::TempFile.with_repl_master.lt(updated: threshold).destroy_all
+
+    data_dir = SS.config.rss.weather_xml["data_cache_dir"]
+    if data_dir.present?
+      data_dir = ::File.expand_path(data_dir, Rails.root)
+      ::Dir.glob("*.xml", base: data_dir).each do |file_path|
+        file_path = ::File.expand_path(file_path, data_dir)
+        ::FileUtils.rm_f(file_path) if ::File.mtime(file_path) < threshold
+      end
+    end
   end
 
   def import_rss_item(*args)
@@ -103,15 +114,38 @@ class Rss::ImportWeatherXmlJob < Rss::ImportBase
   end
 
   def download(url)
-    uri = URI.parse(url)
-    http = Net::HTTP.new(uri.host, uri.port)
-    http.use_ssl = true if uri.scheme == 'https'
-    req = Net::HTTP::Get.new(uri.path)
-    res = http.request(req)
-    return nil if res.code != '200'
-    res.body.force_encoding('UTF-8')
+    cache(url) do
+      http_client = Faraday.new(url: url) do |builder|
+        builder.request  :url_encoded
+        builder.response :logger, Rails.logger
+        builder.adapter Faraday.default_adapter
+      end
+      http_client.headers[:user_agent] += " (SHIRASAGI/#{SS.version}; PID/#{Process.pid})"
+
+      resp = http_client.get
+      break if resp.status != 200
+
+      resp.body.force_encoding('UTF-8')
+    end
   rescue => e
     Rails.logger.warn("#{e.class} (#{e.message}):\n  #{e.backtrace.join("\n  ")}")
+  end
+
+  def cache(url)
+    data_dir = SS.config.rss.weather_xml["data_cache_dir"]
+    return yield if data_dir.blank?
+
+    data_dir = ::File.expand_path(data_dir, Rails.root)
+    ::FileUtils.mkdir_p(data_dir) unless ::Dir.exists?(data_dir)
+
+    hash = Digest::MD5.hexdigest(url)
+    file_path = ::File.join(data_dir, "#{hash}.xml")
+    return ::File.read(file_path) if ::File.exists?(file_path)
+
+    data = yield
+    ::File.write(file_path, data)
+
+    data
   end
 
   def extract_event_id(xml)
