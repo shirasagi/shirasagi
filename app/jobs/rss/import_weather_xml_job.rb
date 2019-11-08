@@ -26,7 +26,7 @@ class Rss::ImportWeatherXmlJob < Rss::ImportBase
 
       each_node do |node|
         site = node.site
-        file = Rss::TempFile.create_from_post(site, resp.body, resp.headers['Content-Type'].presence || "text/xml")
+        file = Rss::TempFile.create_from_post(site, resp.body, resp.headers['Content-Type'].presence || "application/xml")
         job = Rss::ImportWeatherXmlJob.bind(site_id: site, node_id: node)
         job.perform_now(file.id)
       end
