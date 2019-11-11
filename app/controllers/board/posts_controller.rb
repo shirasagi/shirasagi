@@ -14,7 +14,7 @@ class Board::PostsController < ApplicationController
   private
 
   def fix_params
-    { cur_site: @cur_site, cur_node: @cur_node.becomes_with_route, cur_user: @cur_user, topic: @topic, parent: @topic }
+    { cur_site: @cur_site, cur_node: @cur_node.becomes_with_route, cur_user: @cur_user}
   end
 
   def check_node_permission
@@ -60,6 +60,8 @@ class Board::PostsController < ApplicationController
 
   def reply
     @item = @model.new get_params
+    @item.topic = @topic
+    @item.parent = @topic
     raise "403" unless @item.allowed?(:edit, @cur_user, site: @cur_site, node: @cur_node)
     render_create @item.save, location: { action: :index }, render: { file: :new_reply }
   end
