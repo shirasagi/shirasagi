@@ -3,8 +3,6 @@ class Cms::Agents::Tasks::PagesController < ApplicationController
 
   PER_BATCH = 100
 
-  public
-
   def generate
     @task.log "# #{@site.name}"
 
@@ -17,7 +15,7 @@ class Cms::Agents::Tasks::PagesController < ApplicationController
       @task.count
       page = Cms::Page.site(@site).and_public.where(id: id).first
       next unless page
-      @task.log page.url if page.becomes_with_route.generate_file
+      @task.log page.url if page.becomes_with_route.generate_file(release: false)
     end
   end
 
