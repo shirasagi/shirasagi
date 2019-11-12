@@ -9,16 +9,20 @@ class Cms::Elasticsearch::Indexer::PageReleaseJob < Cms::ApplicationJob
     item.filename
   end
 
-  def release
-    @release ||= Cms::PageRelease.find(@release_id)
+  def queue
+    @queue ||= Cms::PageIndexQueue.find(@queue_id)
   end
 
   def index(options)
-    @id = options[:id]
-    @release_id = options[:release_id]
+    @queue_id = options[:queue_id]
+    super(options)
+    queue.destroy if queue
+  end
 
-    super(options) if item.present?
-    release.set(es_state: 'indexed') if @release_id
+  def delete(options)
+    @queue_id = options[:queue_id]
+    super(options)
+    queue.destroy if queue
   end
 
   def enum_es_docs

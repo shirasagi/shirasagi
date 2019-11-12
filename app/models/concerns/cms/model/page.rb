@@ -48,13 +48,14 @@ module Cms::Model::Page
     site.subdir ? "#{site.subdir}/#{filename}" : filename
   end
 
-  def generate_file
+  def generate_file(opts = {})
     return false unless serve_static_file?
     return false unless public?
     return false unless public_node?
     run_callbacks :generate_file do
-      Cms::Agents::Tasks::PagesController.new.generate_page(self)
-      Cms::PageRelease.release(self)
+      updated = Cms::Agents::Tasks::PagesController.new.generate_page(self)
+      Cms::PageRelease.release(self) if opts[:release] != false
+      updated
     end
   end
 
