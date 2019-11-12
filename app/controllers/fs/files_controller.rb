@@ -1,6 +1,5 @@
 class Fs::FilesController < ApplicationController
   include SS::AuthFilter
-  include Cms::PublicFilter::Site
   include Member::AuthFilter
   include Fs::FileFilter
   include Cms::PublicFilter::Site
