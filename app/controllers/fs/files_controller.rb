@@ -4,11 +4,16 @@ class Fs::FilesController < ApplicationController
   include Fs::FileFilter
   include Cms::PublicFilter::Site
 
+  before_action :set_user
   before_action :set_item
   before_action :deny
   rescue_from StandardError, with: :rescue_action
 
   private
+
+  def set_user
+    @cur_user = get_user_by_session
+  end
 
   def set_item
     id = params[:id_path].present? ? params[:id_path].gsub(/\//, "") : params[:id]
@@ -21,7 +26,7 @@ class Fs::FilesController < ApplicationController
   end
 
   def deny
-    raise "404" unless @item.previewable?(user: get_user_by_session, member: get_member_by_session)
+    raise "404" unless @item.previewable?(user: @cur_user, member: get_member_by_session)
     set_last_logged_in
   end
 
@@ -44,6 +49,11 @@ class Fs::FilesController < ApplicationController
   end
 
   def error_html_file(status)
+    if @cur_site && @cur_user.nil?
+      file = "#{@cur_site.path}/#{status}.html"
+      return file if Fs.exists?(file)
+    end
+
     file = "#{Rails.public_path}/.error_pages/#{status}.html"
     Fs.exists?(file) ? file : "#{Rails.public_path}/.error_pages/500.html"
   end

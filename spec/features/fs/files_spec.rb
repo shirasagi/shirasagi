@@ -74,6 +74,46 @@ describe "fs_files", type: :feature, dbscope: :example do
     end
   end
 
+  context "error page" do
+    let(:url) { "/fs/1/_/error.png" }
+    let(:item) { create :cms_page, filename: "404.html", name: "404", html: unique_id.to_s }
+
+    before do
+      Capybara.app_host = "http://#{site.domain}"
+    end
+
+    context "without auth" do
+      it "when not created 404.html" do
+        visit url
+        expect(status_code).to eq 404
+        expect(page.html.include?(item.html)).to be_falsey
+      end
+
+      it "when created 404.html" do
+        item
+        visit url
+        expect(status_code).to eq 404
+        expect(page.html.include?(item.html)).to be_truthy
+      end
+    end
+
+    context "with auth" do
+      before { login_cms_user }
+
+      it "when not created 404.html" do
+        visit url
+        expect(status_code).to eq 404
+        expect(page.html.include?(item.html)).to be_falsey
+      end
+
+      it "when created 404.html" do
+        visit url
+        expect(status_code).to eq 404
+        expect(page.html.include?(item.html)).to be_falsey
+      end
+    end
+  end
+
   after(:each) do
     Fs.rm_rf "#{Rails.root}/tmp/ss_files"
   end
