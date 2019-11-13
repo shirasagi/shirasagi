@@ -26,8 +26,8 @@ namespace :opendata do
     Opendata::Sparql.clear_all
   end
 
-  task crawl: :environment do
-    site = SS::Site.where(host: ENV["site"]).first
+  task :crawl, [:site] => :environment do |task, args|
+    site = SS::Site.where(host: args[:site] || ENV["site"]).first
     datasets = Opendata::Dataset.site(site)
     datasets.each do |ds|
       next if ds.url_resources.blank?

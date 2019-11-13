@@ -24,8 +24,8 @@ namespace :cms do
       end
     end
 
-    task feed_releases: :environment do
-      ::Tasks::Cms::Base.with_site(ENV['site']) do |site|
+    task :feed_releases, [:site] => :environment do |task, args|
+      ::Tasks::Cms::Base.with_site(args[:site] || ENV['site']) do |site|
         break unless es_validator.call(site)
 
         ids = Cms::PageIndexQueue.site(site).order_by(created: -1).pluck(:id)
