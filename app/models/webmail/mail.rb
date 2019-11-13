@@ -130,10 +130,9 @@ class Webmail::Mail
       field.include_in_headers = true if field.respond_to?(:include_in_headers)
     end
 
-    imap.examine(imap.draft_box)
+    imap.select(imap.draft_box)
     imap.conn.append(imap.draft_box, msg.to_s, [:Draft, :Seen], Time.zone.now)
     if draft?
-      imap.select(imap.draft_box)
       imap.uids_delete([uid])
     end
     true
@@ -157,10 +156,9 @@ class Webmail::Mail
       field.include_in_headers = true if field.respond_to?(:include_in_headers)
     end
 
-    imap.examine(imap.sent_box)
+    imap.select(imap.sent_box)
     imap.conn.append(imap.sent_box, msg.to_s, [:Seen], Time.zone.now)
     if draft?
-      imap.select(imap.draft_box)
       imap.uids_delete([uid])
     end
     true
@@ -170,7 +168,7 @@ class Webmail::Mail
     date_time = opts[:date_time] || Time.zone.now
 
     imap.select('INBOX')
-    imap.conn.append('INBOX', msg.to_s, [:Seen], date_time.to_time)
+    imap.conn.append('INBOX', msg.to_s, [:Seen], date_time.in_time_zone)
   end
 
   def requested_mdn?
