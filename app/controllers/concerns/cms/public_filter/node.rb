@@ -49,7 +49,7 @@ module Cms::PublicFilter::Node
 
     # set cache
     html = render_to_string html: render_layout(layout).html_safe, layout: "cms/page"
-    @layout_cache[cache_key] = html.sub(/(<!-- layout_yield -->).*?(<!-- \/layout_yield -->)/m, '\\1')
+    @layout_cache[cache_key] = html.sub(/(<!-- layout_yield -->).*?<!-- \/layout_yield -->/m, '\\1')
 
     html
   end
