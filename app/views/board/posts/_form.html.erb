@@ -17,3 +17,13 @@
   <dt><%= @model.t :delete_key %></dt>
   <dd><%= f.text_field :delete_key %></dd>
 </dl>
+
+<%= jquery do %>
+  $('body').addClass('no-wysiwyg');
+<% end %>
+
+<style>
+  body.no-wysiwyg .action-attach{ display: none; }
+  body.no-wysiwyg .action-paste{ display: none; }
+  body.no-wysiwyg .action-thumb{ display: none; }
+</style>
