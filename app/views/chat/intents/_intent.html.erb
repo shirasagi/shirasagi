@@ -1,4 +1,4 @@
-<% item = @model.site(@cur_site).where(node_id: @cur_node.id).order_by(order: 1, updated: -1).find_intent(suggest) %>
+<% item = @model.allow(:read, @cur_user, site: @cur_site).site(@cur_site).where(node_id: @cur_node.id).order_by(order: 1, updated: -1).find_intent(suggest) %>
 <% if item.present? %>
   <tr data-depth="<%= depth %>">
     <td class="expandable">
@@ -32,7 +32,7 @@
     </td>
     <td></td>
     <td></td>
-    <td><%= I18n.t('chat.not_found_intent') %></td>
-    <td><%= link_to t('chat.links.add_or_edit'), { action: :new, name: suggest }, class: :btn %></td>
+    <td><%= I18n.t('chat.not_found_intent') if @model.allowed?(:read, @cur_user, site: @cur_site) %></td>
+    <td><%= link_to t('chat.links.add_or_edit'), { action: :new, name: suggest }, class: :btn if @model.allowed?(:edit, @cur_user, site: @cur_site) %></td>
   </tr>
 <% end %>

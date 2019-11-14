@@ -35,7 +35,7 @@ SS_TreeUI.render(".index.items", { collapse_all: true });
           <%= render partial: 'intent', locals: { suggest: suggest, depth: depth + 1, first_suggest: true } %>
         <% end %>
       <% end %>
-      <% @items.nin(id: @reject_items).each do |item| %>
+      <% @items.and(id: { "$nin" => @reject_items }).each do |item| %>
         <% @rendered_items = [] %>
         <tr data-depth="<%= depth %>">
           <td class="expandable">
@@ -44,7 +44,7 @@ SS_TreeUI.render(".index.items", { collapse_all: true });
           <td><%= item.categories.order_by(order: 1, updated: -1).pluck(:name).join(', ') %></td>
           <td><%= item.phrase.join(', ') %></td>
           <td><%= @model.t(:phrase) + I18n.t('errors.messages.duplicate') if item.duplicate? %></td>
-          <td><%= link_to t('chat.links.add_or_edit'), { action: :edit, id: item }, class: :btn %></td>
+          <td><%= link_to t('chat.links.add_or_edit'), { action: :edit, id: item }, class: :btn if @model.allowed?(:edit, @cur_user, site: @cur_site) %></td>
         </tr>
         <% @reject_items.push(item.id) %>
         <% if !@rendered_items.find { |id| id == item.id } %>

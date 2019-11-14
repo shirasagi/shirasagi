@@ -23,7 +23,6 @@ class Chat::IntentsController < ApplicationController
   public
 
   def index
-    raise "403" unless @model.allowed?(:read, @cur_user, site: @cur_site, node: @cur_node)
     set_items
     @items = @items.in(category_ids: params.dig(:s, :category_id).try(:to_i)) if params.dig(:s, :category_id).present?
     @items = @items.allow(:read, @cur_user, site: @cur_site).
