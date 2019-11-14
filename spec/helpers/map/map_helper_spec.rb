@@ -103,22 +103,18 @@ RSpec.describe Map::MapHelper, type: :helper do
       before { SS.config.replace_value_at(:map, :api, "open_street_map") }
 
       it 'render_map' do
-        expect(map).to include('"layers":[{"source":"OSM"}]')
         expect(map).to include('Openlayers_Map(canvas, opts)')
       end
 
       it 'render_map_form' do
-        expect(map_form).to include('"layers":[{"source":"OSM"}]')
         expect(map_form).to include('Openlayers_Map_Form(canvas, opts)')
       end
 
       it 'render_facility_search_map' do
-        expect(facility_search_map).to include('layers: [{"source":"OSM"}]')
         expect(facility_search_map).to include('Openlayers_Facility_Search.render("#map-canvas", opts)')
       end
 
       it 'render_member_photo_form_map' do
-        expect(member_photo_form_map).to include('"layers":[{"source":"OSM"}]')
         expect(member_photo_form_map).to include('Openlayers_Member_Photo_Form(canvas, opts)')
       end
     end
@@ -127,22 +123,18 @@ RSpec.describe Map::MapHelper, type: :helper do
       before { SS.config.replace_value_at(:map, :api, "googlemaps") }
 
       it 'render_map' do
-        expect(map_osm).to include('"layers":[{"source":"OSM"}]')
         expect(map_osm).to include('Openlayers_Map(canvas, opts)')
       end
 
       it 'render_map_form' do
-        expect(map_form_osm).to include('"layers":[{"source":"OSM"}]')
         expect(map_form_osm).to include('Openlayers_Map_Form(canvas, opts)')
       end
 
       it 'render_facility_search_map' do
-        expect(facility_search_map_osm).to include('layers: [{"source":"OSM"}]')
         expect(facility_search_map_osm).to include('Openlayers_Facility_Search.render("#map-canvas", opts)')
       end
 
       it 'render_member_photo_form_map' do
-        expect(member_photo_form_map_osm).to include('"layers":[{"source":"OSM"}]')
         expect(member_photo_form_map_osm).to include('Openlayers_Member_Photo_Form(canvas, opts)')
       end
     end

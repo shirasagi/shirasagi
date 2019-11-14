@@ -66,7 +66,7 @@ module Map::MapHelper
       # set default values
       map_options[:readonly] = true
       map_options[:markers] = markers if markers.present?
-      map_options[:layers] = [{ source: 'OSM' }]
+      map_options[:layers] = SS.config.map.open_street_map
 
       s << 'var canvas = $("' + selector + '")[0];'
       s << "var opts = #{map_options.to_json};"
@@ -111,7 +111,7 @@ module Map::MapHelper
       # set default values
       map_options[:readonly] = true
       map_options[:center] = center.reverse if center.present?
-      map_options[:layers] = [{ source: 'OSM' }]
+      map_options[:layers] = SS.config.map.open_street_map
       map_options[:max_point_form] = max_point_form if max_point_form.present?
 
       s << 'SS_AddonTabs.findAddonView(".mod-map").one("ss:addonShown", function() {'
@@ -161,7 +161,7 @@ module Map::MapHelper
       s << '  readonly: true,'
       s << '  center:' + center.reverse.to_json + ',' if center.present?
       s << '  markers: ' + markers.to_json + ',' if markers.present?
-      s << '  layers: ' + [{ source: 'OSM' }].to_json + ','
+      s << '  layers: ' + SS.config.map.open_street_map.to_json + ','
       s << '};'
       s << 'Openlayers_Facility_Search.render("' + selector + '", opts);'
     else
@@ -205,7 +205,7 @@ module Map::MapHelper
       # set default values
       map_options[:readonly] = true
       map_options[:center] = center.reverse if center.present?
-      map_options[:layers] = [{ source: 'OSM' }]
+      map_options[:layers] = SS.config.map.open_street_map
 
       s << 'var canvas = $("' + selector + '")[0];'
       s << "var opts = #{map_options.to_json};"
