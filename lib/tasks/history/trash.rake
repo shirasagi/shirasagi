@@ -15,9 +15,12 @@ namespace :history do
     end
 
     task clear: :environment do
-      Dir.glob "#{Rails.root}/private/trash/ss_files/**/_/**" do |file|
-        if History::Trash.where(ref_coll: 'ss_files', 'data._id': File.basename(file).to_i).blank?
-          FileUtils.rm(file)
+      ids = History::Trash.where(ref_coll: 'ss_files').collect do |item|
+        item.data['_id']
+      end
+      Dir.glob("#{Rails.root}/private/trash/ss_files/**/_/**") do |file|
+        if !ids.include?(File.basename(file).to_i)
+          Fs.rm_rf(file)
         end
       end
     end
