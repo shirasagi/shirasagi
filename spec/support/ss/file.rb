@@ -21,6 +21,10 @@ RSpec.configuration.before(:suite) do
       model.root = "#{root_dir}/files"
     end
   end
+  models = all_models.select { |model| model.ancestors.include?(::History::Model::Data) }
+  models.each do |model|
+    model.root = "#{root_dir}/trash"
+  end
 
   SS::DownloadJobFile.root = "#{root_dir}/download"
 end

@@ -108,7 +108,11 @@ class History::Trash
 
   def remove_all
     item = restore
-    Fs.rm_rf(item.path.sub("#{Rails.root}/public", self.class.root)) rescue nil
-    Fs.rm_rf("#{self.class.root}/#{item.path.sub(/.*\/(ss_files\/)/, '\\1')}") rescue nil
+    path = if item.class.include?(::Cms::Content)
+      item.path.sub("#{Rails.root}/public", self.class.root) rescue nil
+    elsif ref_coll == 'ss_files'
+      File.join(self.class.root, item.path.sub(/.*\/(ss_files\/)/, '\\1')) rescue nil
+    end
+    Fs.rm_rf(path) if path.present? && !path.start_with?("#{Rails.root}/public")
   end
 end
