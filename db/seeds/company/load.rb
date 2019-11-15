@@ -313,6 +313,8 @@ save_page route: "cms/page", name: "人材紹介サービス", filename: "produc
   order: 10, layout_id: layouts["product"].id
 save_page route: "cms/page", name: "販売促進支援", filename: "product/solution/sales.html",
   order: 20, layout_id: layouts["product"].id
+save_page route: "cms/page", name: "お探しのページは見つかりません。 404 Not Found", filename: "404.html",
+  layout_id: layouts["one"].id
 
 ## -------------------------------------
 puts "# max file size"
