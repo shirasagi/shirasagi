@@ -278,6 +278,9 @@ service_page.html += "<p>本文を入力してください。本文を入力し�
 service_page.html += "<p class=\"clearfix\">回り込みを解除します。</p>"
 service_page.update
 
+save_page route: "cms/page", name: "お探しのページは見つかりません。 404 Not Found", filename: "404.html",
+  layout_id: layouts["general"].id
+
 ## -------------------------------------
 def save_editor_template(data)
   puts data[:name]

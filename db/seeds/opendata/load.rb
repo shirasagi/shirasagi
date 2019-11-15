@@ -461,6 +461,9 @@ event0 = save_page route: "event/page", filename: "event/4.html", name: "オー�
 page0.related_page_ids = [ page2.id, event0.id ]
 page0.save!
 
+save_page route: "cms/page", name: "お探しのページは見つかりません。 404 Not Found", filename: "404.html",
+  layout_id: layouts["portal-general"].id
+
 ## -------------------------------------
 puts "# ads"
 
