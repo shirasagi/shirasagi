@@ -10,7 +10,7 @@ class Cms::Elasticsearch::Indexer::PageReleaseJob < Cms::ApplicationJob
   end
 
   def queue
-    @queue ||= Cms::PageIndexQueue.find(@queue_id)
+    @queue ||= Cms::PageIndexQueue.find(@queue_id) if @queue_id.present?
   end
 
   def index(options)
