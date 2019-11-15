@@ -304,6 +304,7 @@ ja:
       map_api:
         googlemaps: Googleマップ
         openlayers: OpenLayers
+        open_street_map: OpenStreetMap
       kana_format:
         hiragana: ひらがな
         katakana: カタカナ

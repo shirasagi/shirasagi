@@ -11,10 +11,9 @@ module SS::Addon
     end
 
     def map_api_options
-      [
-        [I18n.t("ss.options.map_api.googlemaps"), "googlemaps"],
-        [I18n.t("ss.options.map_api.openlayers"), "openlayers"],
-      ]
+      %w(googlemaps openlayers open_street_map).collect do |k|
+        [I18n.t("ss.options.map_api.#{k}"), k]
+      end
     end
 
     def map_setting
