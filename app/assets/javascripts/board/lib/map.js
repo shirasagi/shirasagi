@@ -23,7 +23,7 @@ this.Board_Map = (function () {
       layers: [
         new ol.layer.Tile({
           source: new ol.source.XYZ({
-            url: "http://cyberjapandata.gsi.go.jp/xyz/std/{z}/{x}/{y}.png",
+            url: "https://cyberjapandata.gsi.go.jp/xyz/std/{z}/{x}/{y}.png",
             projection: "EPSG:3857"
           })
         })
