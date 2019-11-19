@@ -10,7 +10,7 @@ def save_part(data)
   loop_html ||= File.read("parts/" + data[:filename].sub(/\.html$/, ".loop_html")) rescue nil
   lower_html ||= File.read("parts/" + data[:filename].sub(/\.html$/, ".lower_html")) rescue nil
 
-  item = data[:route].sub("/", "/part/").camelize.constantize.unscoped.find_or_create_by(cond)
+  item = data[:route].sub("/", "/part/").camelize.constantize.unscoped.find_or_initialize_by(cond)
   if html
     if SS.config.cms.enable_lgwan
       html.gsub!('<li class="sight"><a href="/kanko-info/">観光情報</a></li>', '')
@@ -23,7 +23,8 @@ def save_part(data)
   item.lower_html = lower_html if lower_html
 
   item.attributes = data
-  item.update
+  item.cur_user = @user
+  item.save
   item.add_to_set group_ids: @site.group_ids
 
   item

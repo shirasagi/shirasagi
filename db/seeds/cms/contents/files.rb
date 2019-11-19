@@ -12,18 +12,13 @@ def save_ss_files(path, data)
   file = Fs::UploadedFile.create_from_file(path)
   file.original_filename = data[:filename] if data[:filename].present?
 
-  created = false
-  item = SS::File.find_or_create_by(cond) do |item|
-    item.in_file = file
-    item.name = data[:name] if data[:name].present?
-    created = true
-  end
+  item = SS::File.find_or_initialize_by(cond)
+  return item if item.persisted?
 
-  if !created
-    item.in_file = file
-    item.name = data[:name] if data[:name].present?
-    item.update
-  end
+  item.in_file = file
+  item.name = data[:name] if data[:name].present?
+  item.cur_user = @user
+  item.save
 
   item
 end

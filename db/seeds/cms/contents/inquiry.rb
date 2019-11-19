@@ -203,23 +203,3 @@ Cms::Node.where(site_id: @site._id, route: /facility\//).
   update_all(layout_id: @layouts["map"].id)
 Cms::Node.where(site_id: @site._id, route: /ezine\//).
   update_all(layout_id: @layouts["ezine"].id)
-
-## -------------------------------------
-def save_page(data)
-  puts data[:name]
-  cond = { site_id: @site._id, filename: data[:filename] }
-
-  html ||= File.read("pages/" + data[:filename]) rescue nil
-  summary_html ||= File.read("pages/" + data[:filename].sub(/\.html$/, "") + ".summary_html") rescue nil
-
-  route = data[:route].presence || 'cms/page'
-  item = route.camelize.constantize.find_or_create_by(cond) { |page| page.name = data[:name] }
-  item.html = html if html
-  item.summary_html = summary_html if summary_html
-
-  item.attributes = data
-  item.update
-  item.add_to_set group_ids: @site.group_ids
-
-  item
-end
