@@ -8,8 +8,8 @@ namespace :cms do
       true
     end
 
-    task feed_all: :environment do
-      ::Tasks::Cms::Base.with_site(ENV['site']) do |site|
+    task :feed_all, [:site] => :environment do |task, args|
+      ::Tasks::Cms::Base.with_site(args[:site] || ENV['site']) do |site|
         break unless es_validator.call(site)
 
         pages = Cms::Page.site(site).and_public
