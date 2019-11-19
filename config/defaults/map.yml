@@ -9,7 +9,7 @@ production: &production
   region: jp
   layers:
     - source: "XYZ"
-      url: "http://cyberjapandata.gsi.go.jp/xyz/std/{z}/{x}/{y}.png"
+      url: "https://cyberjapandata.gsi.go.jp/xyz/std/{z}/{x}/{y}.png"
       projection: "EPSG:3857"
   open_street_map:
     - source: "OSM"
