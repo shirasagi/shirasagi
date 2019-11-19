@@ -17,6 +17,9 @@ namespace :ss do
         # クローリングリソースの更新
         Rake.application.invoke_task("opendata:crawl[#{site.host}]")
 
+        # スコア計算（リコメンド機能）
+        Rake.application.invoke_task("recommend:create_similarity_scores[#{site.host}]") if SS.config.recommend.disable.blank?
+
         # リンクチェック
         # Rake.application.invoke_task("cms:check_links[#{site.host}, 'admin@example.jp']")
       end
