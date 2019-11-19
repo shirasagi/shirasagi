@@ -16,6 +16,28 @@ describe Cms::Elasticsearch::Indexer::PageReleaseJob, dbscope: :example, tmpdir:
     end
   end
 
+  describe 'feed_all' do
+    it do
+      expect(page.status).to eq 'public'
+
+      # index
+      pages = Cms::Page.site(site).and_public
+      pages.each do |page|
+        job = ::Cms::Elasticsearch::Indexer::PageReleaseJob.bind(site_id: site)
+        job.perform_now(action: 'index', id: page.id.to_s)
+      end
+      expect(Job::Log.first.logs).to include(include("INFO -- : Completed Job"))
+      expect(Job::Log.count).to eq 1
+      expect(Cms::PageRelease.all.size).to eq 1
+      expect(Cms::PageIndexQueue.all.size).to eq 1
+
+      # remove queues
+      Cms::PageIndexQueue.site(site).where(action: 'release').destroy_all
+      expect(Cms::PageRelease.all.size).to eq 1
+      expect(Cms::PageIndexQueue.all.size).to eq 0
+    end
+  end
+
   describe 'feed_releases' do
     it do
       # release

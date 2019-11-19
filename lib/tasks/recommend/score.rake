@@ -1,6 +1,6 @@
 namespace :recommend do
-  task create_similarity_scores: :environment do
-    ::Tasks::Cms.with_site(ENV['site']) do |site|
+  task :create_similarity_scores, [:site] => :environment do |task, args|
+    ::Tasks::Cms.with_site(args[:site] || ENV['site']) do |site|
       job = Recommend::CreateSimilarityScoresJob.bind(site_id: site.id)
       job.perform_now(ENV["days"])
     end
