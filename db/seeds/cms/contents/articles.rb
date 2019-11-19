@@ -2,6 +2,26 @@
 
 puts "# articles"
 
+def save_page(data)
+  puts data[:name]
+  cond = { site_id: @site._id, filename: data[:filename] }
+
+  html ||= File.read("pages/" + data[:filename]) rescue nil
+  summary_html ||= File.read("pages/" + data[:filename].sub(/\.html$/, "") + ".summary_html") rescue nil
+
+  route = data[:route].presence || 'cms/page'
+  item = route.camelize.constantize.find_or_initialize_by(cond)
+  item.html = html if html
+  item.summary_html = summary_html if summary_html
+
+  item.attributes = data
+  item.cur_user = @user
+  item.save
+  item.add_to_set group_ids: @site.group_ids
+
+  item
+end
+
 save_page route: "article/page", filename: "docs/page1.html", name: "インフルエンザによる学級閉鎖状況",
           layout_id: @layouts["pages"].id, category_ids: [@categories["attention"].id],
           contact_group_id: @contact_group_id, contact_email: @contact_email, contact_tel: @contact_tel,

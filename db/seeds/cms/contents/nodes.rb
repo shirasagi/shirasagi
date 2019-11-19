@@ -10,14 +10,15 @@ def save_node(data)
   lower_html ||= File.read("nodes/" + data[:filename] + ".lower_html") rescue nil
   summary_html ||= File.read("nodes/" + data[:filename] + ".summary_html") rescue nil
 
-  item = data[:route].sub("/", "/node/").camelize.constantize.unscoped.find_or_create_by(cond)
+  item = data[:route].sub("/", "/node/").camelize.constantize.unscoped.find_or_initialize_by(cond)
   item.upper_html = upper_html if upper_html
   item.loop_html = loop_html if loop_html
   item.lower_html = lower_html if lower_html
   item.summary_html = summary_html if summary_html
 
   item.attributes = data
-  item.update
+  item.cur_user = @user
+  item.save
   item.add_to_set group_ids: @site.group_ids
 
   item

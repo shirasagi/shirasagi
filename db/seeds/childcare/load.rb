@@ -27,9 +27,13 @@ def save_ss_files(path, data)
   file = Fs::UploadedFile.create_from_file(path)
   file.original_filename = data[:filename] if data[:filename].present?
 
-  item = SS::File.new(cond)
+  item = SS::File.find_or_initialize_by(cond)
+  return item if item.persisted?
+
   item.in_file = file
-  item.save!
+  item.name = data[:name] if data[:name].present?
+  item.cur_user = @user
+  item.save
 
   item
 end
@@ -42,9 +46,10 @@ def save_layout(data)
   cond = { site_id: @site._id, filename: data[:filename] }
   html = File.read("layouts/" + data[:filename]) rescue nil
 
-  item = Cms::Layout.find_or_create_by(cond)
+  item = Cms::Layout.find_or_initialize_by(cond)
   item.attributes = data.merge html: html
-  item.update
+  item.cur_user = @user
+  item.save
   item.add_to_set group_ids: @site.group_ids
 
   item
@@ -172,14 +177,15 @@ def save_part(data)
   loop_html  = File.read("parts/" + data[:filename].sub(/\.html$/, ".loop_html")) rescue nil
   lower_html = File.read("parts/" + data[:filename].sub(/\.html$/, ".lower_html")) rescue nil
 
-  item = data[:route].sub("/", "/part/").camelize.constantize.unscoped.find_or_create_by(cond)
+  item = data[:route].sub("/", "/part/").camelize.constantize.unscoped.find_or_initialize_by(cond)
   item.html = html if html
   item.upper_html = upper_html if upper_html
   item.loop_html = loop_html if loop_html
   item.lower_html = lower_html if lower_html
 
   item.attributes = data
-  item.update
+  item.cur_user = @user
+  item.save
   item.add_to_set group_ids: @site.group_ids
 
   item
@@ -238,14 +244,15 @@ def save_node(data)
   lower_html = File.read("nodes/" + data[:filename] + ".lower_html") rescue nil
   summary_html = File.read("nodes/" + data[:filename] + ".summary_html") rescue nil
 
-  item = data[:route].sub("/", "/node/").camelize.constantize.unscoped.find_or_create_by(cond)
+  item = data[:route].sub("/", "/node/").camelize.constantize.unscoped.find_or_initialize_by(cond)
   item.upper_html = upper_html if upper_html
   item.loop_html = loop_html if loop_html
   item.lower_html = lower_html if lower_html
   item.summary_html = summary_html if summary_html
 
   item.attributes = data
-  item.update
+  item.cur_user = @user
+  item.save
   item.add_to_set group_ids: @site.group_ids
 
   item
@@ -517,12 +524,13 @@ def save_page(data)
   summary_html ||= File.read("pages/" + data[:filename].sub(/\.html$/, "") + ".summary_html") rescue nil
 
   route = data[:route].presence || 'cms/page'
-  item = route.camelize.constantize.unscoped.find_or_create_by(cond)
+  item = route.camelize.constantize.unscoped.find_or_initialize_by(cond)
   item.html = html if html
   item.summary_html = summary_html if summary_html
 
   item.attributes = data
-  item.update
+  item.cur_user = @user
+  item.save
   item.add_to_set group_ids: @site.group_ids
 
   item
