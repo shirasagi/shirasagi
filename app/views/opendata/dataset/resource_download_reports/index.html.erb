@@ -1,0 +1,50 @@
+<div class="cms-tabs">
+  <%= link_to opendata_resource_download_reports_path, class: 'current' do %>
+    <span class="tab-name"><%= t("opendata.reports.download_reports") %></span>
+  <% end %>
+  <%= link_to opendata_dataset_access_reports_path do %>
+    <span class="tab-name"><%= t("opendata.reports.access_reports") %></span>
+  <% end %>
+  <%= link_to opendata_dataset_preview_reports_path do %>
+    <span class="tab-name"><%= t("opendata.reports.preview_reports") %></span>
+  <% end %>
+</div>
+
+<div class="search-form">
+  <%= form_for :s, url: { action: :index }, html: { class: "search", method: :get } do |f| %>
+    <%= error_messages_for :item, header_message: t('activemodel.errors.template.header')  %>
+    <span>
+      <%= I18n.t("activemodel.attributes.opendata/dataset_download_report.period") %>
+      <%= f.select :start_year, @model.start_year_options %>
+      <%= f.select :start_month, @model.start_month_options %>
+    </span>
+    <span style="margin: 0 5px;">~</span>
+    <span style="margin-right: 10px;">
+      <%= f.select :end_year, @model.start_year_options %>
+      <%= f.select :end_month, @model.start_month_options %>
+    </span>
+
+    <span style="margin: 0 5px;">
+      <%= I18n.t("activemodel.attributes.opendata/dataset_download_report.type") %>
+      <%= f.select :type, @model.type_options %>
+    </span>
+
+    <span style="margin: 0 5px;">
+      <%= f.text_field :keyword, style: "width: 150px;" %>
+    </span>
+
+    <span>
+      <input type="submit" value="<%= t('ss.buttons.search') %>" class="btn" />
+      <input type="button" value="<%= t('ss.buttons.reset') %>" onclick="location.href='<%= url_for(action: :index) %>'" class="btn" />
+    </span>
+  <% end %>
+</div>
+
+<% case @s.type %>
+<% when "month" %>
+  <%= render "monthly" %>
+<% when "year" %>
+  <%= render "yearly" %>
+<% else %>
+  <%= render "daily" %>
+<% end %>

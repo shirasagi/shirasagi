@@ -71,6 +71,9 @@ Rails.application.routes.draw do
     resources :search_datasets, concerns: :deletion, module: :dataset
     resources :search_dataset_groups, concerns: :deletion, module: :dataset
     resources :dataset_maps, concerns: :deletion, module: :dataset
+    resources :resource_download_reports, only: %i[index], module: :dataset do
+      get :download, on: :collection
+    end
 
     scope module: :dataset do
       namespace :harvest do
