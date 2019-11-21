@@ -18,8 +18,6 @@ Rails.application.routes.draw do
   end
 
   content "opendata" do
-    get "dataset_download_reports" => "dataset/download_reports#index", as: :dataset_download_reports
-    get "dataset_download_reports/download" => "dataset/download_reports#download", as: :dataset_download_reports_download
     get "dataset_preview_reports" => "dataset/preview_reports#index", as: :dataset_preview_reports
     get "dataset_preview_reports/download" => "dataset/preview_reports#download", as: :dataset_preview_reports_download
     get "dataset_access_reports" => "dataset/access_reports#index", as: :dataset_access_reports

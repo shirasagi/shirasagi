@@ -1,11 +1,4 @@
 namespace :opendata do
-  task update_resource_histories: :environment do
-    Opendata::ResourceDownloadHistory.update_histories
-    Opendata::ResourceDatasetDownloadHistory.update_histories
-    Opendata::ResourceBulkDownloadHistory.update_histories
-    Opendata::ResourcePreviewHistory.update_histories
-  end
-
   task fuseki_import: :environment do
     Opendata::Dataset.each do |dataset|
       next if dataset.resources.blank?
