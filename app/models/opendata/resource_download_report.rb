@@ -9,6 +9,11 @@ class Opendata::ResourceDownloadReport
   field :dataset_id, type: Integer
   field :dataset_name, type: String
 
+  field :dataset_url, type: String
+  field :dataset_areas, type: SS::Extensions::Lines
+  field :dataset_categories, type: SS::Extensions::Lines
+  field :dataset_estat_categories, type: SS::Extensions::Lines
+
   field :resource_id, type: Integer
   field :resource_name, type: String
   field :resource_filename, type: String
@@ -207,8 +212,8 @@ class Opendata::ResourceDownloadReport
         item.dataset_id,
         "[#{item.dataset_id}] #{item.dataset_name}",
         nil, # resource_name is always nil on dataset header
-        deleted ? nil : dataset_url(node, item.dataset_id), # URL
-        nil, # 地域
+        deleted ? nil : item.dataset_url.presence || dataset_url(node, item.dataset_id), # URL
+        item.dataset_areas.present? ? item.dataset_areas.join("\n") : nil, # 地域
         deleted ? I18n.t("ss.options.state.deleted") : nil # ステータス
       ]
     end

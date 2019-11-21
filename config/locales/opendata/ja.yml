@@ -776,6 +776,10 @@ ja:
         year_month: 年月
         dataset_id: データセットID
         dataset_name: データセット名
+        dataset_url: データセットURL
+        dataset_areas: データセット地域
+        dataset_categories: データセット分野
+        dataset_estat_categories: データセットeStat分野
         resource_id: リソースID
         resource_name: リソース名
         resource_filename: リソースファイル名

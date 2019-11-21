@@ -32,7 +32,12 @@ class Opendata::ResourceDownloadReportJob < Cms::ApplicationJob
         resource_id: resource_id, resource_name: resource_name
       }
       r = Opendata::ResourceDownloadReport.site(site).where(conditions).first_or_create
-      r.resource_filename ||= item[:resource_filename].presence
+      r.dataset_url = item[:dataset_url].presence
+      r.dataset_areas = item[:dataset_areas].presence
+      r.dataset_categories = item[:dataset_categories].presence
+      r.dataset_estat_categories = item[:dataset_estat_categories].presence
+      r.resource_filename = item[:resource_filename].presence
+
       31.times do |i|
         count_field = "day#{i}_count".to_sym
         r[count_field] = item[count_field]
@@ -72,6 +77,11 @@ class Opendata::ResourceDownloadReportJob < Cms::ApplicationJob
     resource_name = item.resource_name.presence
     resource_filename = item.resource_filename.presence
 
+    dataset_url = item.full_url.presence
+    dataset_areas = item.dataset_areas.presence
+    dataset_categories = item.dataset_categories.presence
+    dataset_estat_categories = item.dataset_estat_categories.presence
+
     found = @items.find do |item|
       next false unless item[:year] == year
       next false unless item[:month] == month
@@ -86,13 +96,22 @@ class Opendata::ResourceDownloadReportJob < Cms::ApplicationJob
     if found
       found[count_field] ||= 0
       found[count_field] += 1
+
+      if found[:downloaded] < downloaded
+        found[:dataset_url] = dataset_url
+        found[:dataset_areas] = dataset_areas
+        found[:dataset_categories] = dataset_categories
+        found[:dataset_estat_categories] = dataset_estat_categories
+      end
+
       return
     end
 
     @items << {
       downloaded: downloaded, year: year, month: month, dataset_id: dataset_id, dataset_name: dataset_name,
-      resource_id: resource_id, resource_name: resource_name, resource_filename: resource_filename,
-      count_field => 1
+      dataset_url: dataset_url, dataset_areas: dataset_areas, dataset_categories: dataset_categories,
+      dataset_estat_categories: dataset_estat_categories, resource_id: resource_id, resource_name: resource_name,
+      resource_filename: resource_filename, count_field => 1
     }
   end
 end
