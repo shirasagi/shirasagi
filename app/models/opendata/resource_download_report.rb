@@ -148,5 +148,99 @@ class Opendata::ResourceDownloadReport
       pipes << { "$sort" => sort_pipeline }
       self.collection.aggregate(pipes).to_a
     end
+
+    def enum_csv(site, node)
+      criteria = self.all.criteria.dup
+      all_ids = criteria.pluck(:id)
+      prev_year_month = nil
+      prev_dataset_id_name = nil
+
+      Enumerator.new do |yielder|
+        all_ids.each_slice(50) do |ids|
+          items = criteria.in(id: ids).to_a
+          items.each do |item|
+            if prev_year_month != item.year_month
+              target = Time.new(item.year_month / 100, item.year_month % 100, 1).in_time_zone
+              csv_header = csv_header_for(target)
+              yielder << encode_sjis_csv(csv_header)
+            end
+
+            dataset_id_name = [ item.dataset_id, item.dataset_name ].join(":")
+            if prev_dataset_id_name != dataset_id_name
+              dataset_header = dataset_header_for(site, node, item)
+              yielder << encode_sjis_csv(dataset_header)
+            end
+
+            data = resource_csv_for(site, node, item)
+            yielder << encode_sjis_csv(data)
+
+            prev_year_month = item.year_month
+            prev_dataset_id_name = dataset_id_name
+          end
+        end
+      end
+    end
+
+    def csv_header_for(time)
+      header = [
+        Opendata::Dataset.t("no"), # dataset_id
+        nil, # dataset_name
+        nil, # resource_name
+        I18n.t("ss.url"), # URL
+        Opendata::Dataset.t("area_ids"), # 地域
+        Opendata::Dataset.t("state") # ステータス
+      ]
+      header << time.strftime("%Y年%-m月")
+
+      days = time.end_of_month.day
+      days.times do |day|
+        header << "#{day + 1}#{I18n.t("datetime.prompts.day")}"
+      end
+
+      header
+    end
+
+    def dataset_header_for(_site, node, item)
+      deleted = item.dataset_name.blank? || item.dataset_name.include?(I18n.t("ss.options.state.deleted"))
+
+      [
+        item.dataset_id,
+        "[#{item.dataset_id}] #{item.dataset_name}",
+        nil, # resource_name is always nil on dataset header
+        deleted ? nil : dataset_url(node, item.dataset_id), # URL
+        nil, # 地域
+        deleted ? I18n.t("ss.options.state.deleted") : nil # ステータス
+      ]
+    end
+
+    def resource_csv_for(_site, _node, item)
+      deleted = item.resource_name.blank? || item.resource_name.include?(I18n.t("ss.options.state.deleted"))
+
+      data = [
+        nil, # dataset_id
+        nil, # dataset_name
+        "[#{item.resource_id}] #{item.resource_name}",
+        nil, # URL
+        nil, # 地域
+        deleted ? I18n.t("ss.options.state.deleted") : nil, # ステータス
+        nil # YYYY-MM
+      ]
+
+      target = Time.new(item.year_month / 100, item.year_month % 100, 1).in_time_zone
+      days = target.end_of_month.day
+      days.times do |day|
+        data << (item["day#{day}_count"] || 0).to_s(:delimited)
+      end
+
+      data
+    end
+
+    def dataset_url(node, dataset_id)
+      "#{node.full_url}#{dataset_id}.html"
+    end
+
+    def encode_sjis_csv(array)
+      array.to_csv.encode("SJIS", invalid: :replace, undef: :replace)
+    end
   end
 end

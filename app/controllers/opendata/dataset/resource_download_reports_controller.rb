@@ -44,7 +44,7 @@ class Opendata::Dataset::ResourceDownloadReportsController < ApplicationControll
   end
 
   def download
-    send_enum @items.enum_csv, type: 'text/csv; charset=Shift_JIS',
+    send_enum @items.enum_csv(@cur_site, @cur_node), type: 'text/csv; charset=Shift_JIS',
               filename: "dataset_download_report_#{Time.zone.now.to_i}.csv"
   end
 end
