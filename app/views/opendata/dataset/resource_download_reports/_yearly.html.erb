@@ -1,9 +1,7 @@
 <%
-  years = Opendata::ResourceDownloadReport::TARGET_YEAR_RANGE
-
   now = Time.zone.now
   this_year = now.year
-  min_year = this_year - years
+  min_year = this_year - Opendata::ResourceDownloadReport::TARGET_YEAR_RANGE + 1
 %>
 <div class="index">
   <div class="reports-table">

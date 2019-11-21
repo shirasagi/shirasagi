@@ -22,12 +22,12 @@ class Opendata::ResourceDownloadReport
     field "day#{i}_count", type: Integer
   end
 
-  TARGET_YEAR_RANGE = 10
+  TARGET_YEAR_RANGE = 3
 
   class << self
     def start_year_options
       ey = Time.zone.today.year
-      sy = ey - TARGET_YEAR_RANGE
+      sy = ey - TARGET_YEAR_RANGE + 1
       (sy..ey).to_a.reverse.map { |d| [ "#{d}#{I18n.t('datetime.prompts.year')}", d ] }
     end
 
@@ -115,7 +115,7 @@ class Opendata::ResourceDownloadReport
     def aggregate_by_year
       now = Time.zone.now
       this_year = now.year
-      min_year = this_year - TARGET_YEAR_RANGE
+      min_year = this_year - TARGET_YEAR_RANGE + 1
 
       project_pipeline = {
         year: { "$floor" => { "$divide" => [ "$year_month", 100 ] } },
@@ -371,7 +371,7 @@ class Opendata::ResourceDownloadReport
       ]
 
       ey = Time.zone.today.year
-      sy = ey - TARGET_YEAR_RANGE
+      sy = ey - TARGET_YEAR_RANGE + 1
       (sy..ey).each do |year|
         header << "#{year}#{I18n.t("datetime.prompts.year")}"
       end
@@ -397,7 +397,7 @@ class Opendata::ResourceDownloadReport
       ]
 
       ey = Time.zone.today.year
-      sy = ey - TARGET_YEAR_RANGE
+      sy = ey - TARGET_YEAR_RANGE + 1
       (sy..ey).each do |year|
         data << (result["year#{year}_count"] || 0).to_s(:delimited)
       end
