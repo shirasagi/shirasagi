@@ -1,3 +1,5 @@
+# ダウンロード履歴は Opendata::ResourceDownloadHistory へ統合した。
+# 集計のためにしばらく（1年ぐらい）は必要で、互換性のために残している。
 class Opendata::ResourceBulkDownloadHistory
   include SS::Document
   include SS::Reference::Site
