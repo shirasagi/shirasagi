@@ -44,7 +44,18 @@ class Opendata::Dataset::ResourceDownloadReportsController < ApplicationControll
   end
 
   def download
-    send_enum @items.enum_csv(@cur_site, @cur_node), type: 'text/csv; charset=Shift_JIS',
+    enum = begin
+      case @s.type
+      when "month"
+        @model.enum_monthly_csv(@cur_site, @cur_node, @items)
+      when "year"
+        @model.enum_yearly_csv(@cur_site, @cur_node, @items)
+      else
+        @items.enum_csv(@cur_site, @cur_node)
+      end
+    end
+
+    send_enum enum, type: 'text/csv; charset=Shift_JIS',
               filename: "dataset_download_report_#{Time.zone.now.to_i}.csv"
   end
 end

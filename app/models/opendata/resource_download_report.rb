@@ -72,6 +72,8 @@ class Opendata::ResourceDownloadReport
         dataset_name: 1,
         resource_name: 1,
         resource_filename: 1,
+        dataset_url: 1,
+        dataset_areas: 1,
         count: { "$add" => Array.new(31) { |i| { "$ifNull" => [ "$day#{i}_count", 0 ] } } }
       }
 
@@ -84,6 +86,8 @@ class Opendata::ResourceDownloadReport
           resource_name: "$resource_name"
         },
         resource_filename: { "$last" => "$resource_filename" },
+        dataset_url: { "$last" => "$dataset_url" },
+        dataset_areas: { "$last" => "$dataset_areas" },
         count: { "$sum" => "$count" }
       }
       12.times do |i|
@@ -120,6 +124,8 @@ class Opendata::ResourceDownloadReport
         dataset_name: 1,
         resource_name: 1,
         resource_filename: 1,
+        dataset_url: 1,
+        dataset_areas: 1,
         count: { "$add" => Array.new(31) { |i| { "$ifNull" => [ "$day#{i}_count", 0 ] } } }
       }
 
@@ -131,6 +137,8 @@ class Opendata::ResourceDownloadReport
           resource_name: "$resource_name"
         },
         resource_filename: { "$last" => "$resource_filename" },
+        dataset_url: { "$last" => "$dataset_url" },
+        dataset_areas: { "$last" => "$dataset_areas" },
         count: { "$sum" => "$count" }
       }
       (min_year..this_year).each do |i|
@@ -246,6 +254,155 @@ class Opendata::ResourceDownloadReport
 
     def encode_sjis_csv(array)
       array.to_csv.encode("SJIS", invalid: :replace, undef: :replace)
+    end
+
+    def enum_monthly_csv(site, node, aggregation_results)
+      prev_year = nil
+      prev_dataset_id_name = nil
+
+      Enumerator.new do |yielder|
+        aggregation_results.each do |result|
+          year = result["_id"]["year"].to_i
+          if prev_year != year
+            target = Time.new(year, 1, 1).in_time_zone
+            csv_header = monthly_csv_header_for(target)
+            yielder << encode_sjis_csv(csv_header)
+          end
+
+          dataset_id_name = [ result["_id"]["dataset_id"], result["_id"]["dataset_name"] ].join(":")
+          if prev_dataset_id_name != dataset_id_name
+            dataset_header = monthly_dataset_header_for(site, node, result)
+            yielder << encode_sjis_csv(dataset_header)
+          end
+
+          data = monthly_resource_csv_for(site, node, result)
+          yielder << encode_sjis_csv(data)
+
+          prev_year = year
+          prev_dataset_id_name = dataset_id_name
+        end
+      end
+    end
+
+    def monthly_csv_header_for(time)
+      header = [
+        Opendata::Dataset.t("no"), # dataset_id
+        nil, # dataset_name
+        nil, # resource_name
+        I18n.t("ss.url"), # URL
+        Opendata::Dataset.t("area_ids"), # 地域
+        Opendata::Dataset.t("state") # ステータス
+      ]
+      header << time.strftime("%Y年")
+
+      12.times do |month|
+        header << "#{month + 1}#{I18n.t("datetime.prompts.month")}"
+      end
+
+      header
+    end
+
+    def monthly_dataset_header_for(_site, node, result)
+      dataset_name = result["_id"]["dataset_name"]
+      deleted = dataset_name.blank? || dataset_name.include?(I18n.t("ss.options.state.deleted"))
+
+      [
+        result["_id"]["dataset_id"],
+        "[#{result["_id"]["dataset_id"]}] #{dataset_name}",
+        nil, # resource_name is always nil on dataset header
+        deleted ? nil : result["dataset_url"].presence || dataset_url(node, result["_id"]["dataset_id"]), # URL
+        result["dataset_areas"].present? ? result["dataset_areas"].join("\n") : nil, # 地域
+        deleted ? I18n.t("ss.options.state.deleted") : nil # ステータス
+      ]
+    end
+
+    def monthly_resource_csv_for(site, node, result)
+      resource_name = result["_id"]["resource_name"]
+      deleted = resource_name.blank? || resource_name.include?(I18n.t("ss.options.state.deleted"))
+
+      resource_id = result["_id"]["resource_id"]
+
+      data = [
+        nil, # dataset_id
+        nil, # dataset_name
+        "[#{resource_id}] #{resource_name}",
+        nil, # URL
+        nil, # 地域
+        deleted ? I18n.t("ss.options.state.deleted") : nil, # ステータス
+        nil # YYYY
+      ]
+
+      12.times do |month|
+        data << (result["month#{month}_count"] || 0).to_s(:delimited)
+      end
+
+      data
+    end
+
+    def enum_yearly_csv(site, node, aggregation_results)
+      prev_dataset_id_name = nil
+
+      Enumerator.new do |yielder|
+        yielder << encode_sjis_csv(yearly_csv_header_for)
+
+        aggregation_results.each do |result|
+          dataset_id_name = [ result["_id"]["dataset_id"], result["_id"]["dataset_name"] ].join(":")
+          if prev_dataset_id_name != dataset_id_name
+            dataset_header = yearly_dataset_header_for(site, node, result)
+            yielder << encode_sjis_csv(dataset_header)
+          end
+
+          data = yearly_resource_csv_for(site, node, result)
+          yielder << encode_sjis_csv(data)
+
+          prev_dataset_id_name = dataset_id_name
+        end
+      end
+    end
+
+    def yearly_csv_header_for
+      header = [
+        Opendata::Dataset.t("no"), # dataset_id
+        nil, # dataset_name
+        nil, # resource_name
+        I18n.t("ss.url"), # URL
+        Opendata::Dataset.t("area_ids"), # 地域
+        Opendata::Dataset.t("state") # ステータス
+      ]
+
+      ey = Time.zone.today.year
+      sy = ey - TARGET_YEAR_RANGE
+      (sy..ey).each do |year|
+        header << "#{year}#{I18n.t("datetime.prompts.year")}"
+      end
+
+      header
+    end
+
+    alias yearly_dataset_header_for monthly_dataset_header_for
+
+    def yearly_resource_csv_for(site, node, result)
+      resource_name = result["_id"]["resource_name"]
+      deleted = resource_name.blank? || resource_name.include?(I18n.t("ss.options.state.deleted"))
+
+      resource_id = result["_id"]["resource_id"]
+
+      data = [
+        nil, # dataset_id
+        nil, # dataset_name
+        "[#{resource_id}] #{resource_name}",
+        nil, # URL
+        nil, # 地域
+        deleted ? I18n.t("ss.options.state.deleted") : nil, # ステータス
+      ]
+
+      ey = Time.zone.today.year
+      sy = ey - TARGET_YEAR_RANGE
+      (sy..ey).each do |year|
+        data << (result["year#{year}_count"] || 0).to_s(:delimited)
+      end
+
+      data
     end
   end
 end
