@@ -1,11 +1,11 @@
 <div class="cms-tabs">
-  <%= link_to opendata_resource_download_reports_path, class: 'current' do %>
+  <%= link_to opendata_dataset_report_downloads_path, class: 'current' do %>
     <span class="tab-name"><%= t("opendata.reports.download_reports") %></span>
   <% end %>
-  <%= link_to opendata_dataset_access_reports_path do %>
+  <%= link_to opendata_dataset_report_accesses_path do %>
     <span class="tab-name"><%= t("opendata.reports.access_reports") %></span>
   <% end %>
-  <%= link_to opendata_dataset_preview_reports_path do %>
+  <%= link_to opendata_dataset_report_previews_path do %>
     <span class="tab-name"><%= t("opendata.reports.preview_reports") %></span>
   <% end %>
 </div>

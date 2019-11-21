@@ -11,6 +11,11 @@ class Opendata::Dataset::ResourceDownloadReportsController < ApplicationControll
 
   private
 
+  def set_crumbs
+    @crumbs << [t("opendata.reports.report"), opendata_dataset_report_main_path]
+    @crumbs << [t("opendata.reports.download_reports"), { action: :index }]
+  end
+
   def set_search_params
     @s ||= begin
       now = Time.zone.now

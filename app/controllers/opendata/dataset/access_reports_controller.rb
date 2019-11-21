@@ -9,6 +9,11 @@ class Opendata::Dataset::AccessReportsController < ApplicationController
 
   private
 
+  def set_crumbs
+    @crumbs << [t("opendata.reports.report"), opendata_dataset_report_main_path]
+    @crumbs << [t("opendata.reports.access_reports"), { action: :index }]
+  end
+
   def set_item
     if params[:item]
       attributes = params[:item].to_unsafe_h
