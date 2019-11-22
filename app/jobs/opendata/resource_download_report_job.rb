@@ -90,14 +90,15 @@ class Opendata::ResourceDownloadReportJob < Cms::ApplicationJob
 
     all_ids = criteria.pluck(:id)
     all_ids.each_slice(100) do |ids|
-      criteria.in(id: ids).to_a.each do |item|
+      items = criteria.in(id: ids).to_a
+      items.each do |item|
         found = available_dataset_and_resources.find do |dataset_id, resource_id|
           item.dataset_id == dataset_id && item.resource_id == resource_id
         end
         next if found.present?
 
-        Rails.logger.info "report #{item.id}: already deleted"
-        item.update(deleted: @now)
+        Rails.logger.info "report #{item.dataset_name}(#{item.dataset_id})/#{item.resource_name}(#{item.resource_id}): already deleted"
+        Opendata::ResourceDownloadReport.site(site).where(dataset_id: item.dataset_id, resource_id: item.resource_id).set(deleted: @now)
       end
     end
   end
