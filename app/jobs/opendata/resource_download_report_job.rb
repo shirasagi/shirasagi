@@ -61,7 +61,7 @@ class Opendata::ResourceDownloadReportJob < Cms::ApplicationJob
 
       31.times do |i|
         count_field = "day#{i}_count".to_sym
-        r[count_field] = item[count_field]
+        r[count_field] = item[count_field] if item.key?(count_field)
       end
 
       r.save
