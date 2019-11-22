@@ -9,7 +9,7 @@ class Opendata::ResourceDownloadReportJob < Cms::ApplicationJob
     @now = Time.zone.now
 
     start_at = args.shift
-    start_at = start_at ? Time.zone.parse(start_at) : Time.zone.now.yesterday
+    start_at = start_at ? Time.zone.parse(start_at) : @now.yesterday
     @start_at = start_at.beginning_of_day
 
     end_at = args.shift
@@ -24,6 +24,7 @@ class Opendata::ResourceDownloadReportJob < Cms::ApplicationJob
     # それ以外（一括データ作成時など）では、削除日時は更新しない（別の/特注の削除日時設定パッチを実行してセットする）
     if @now.yesterday.to_date == @start_at.to_date
       update_deleted_on_download_report
+      add_datasets_with_no_download_history
     end
 
     true
@@ -67,22 +68,27 @@ class Opendata::ResourceDownloadReportJob < Cms::ApplicationJob
     end
   end
 
+  def available_dataset_and_resources
+    @available_dataset_and_resources ||= begin
+      available_dataset_and_resources = Opendata::Dataset.site(site).pluck(:id, "resources._id")
+      available_dataset_and_resources.map! do |dataset_id, resources|
+        if resources.blank?
+          [ [ dataset_id, -1 ] ]
+        else
+          resources.map { |hash| [ dataset_id, hash["_id"] ] }
+        end
+      end
+      available_dataset_and_resources.flatten!(1)
+      available_dataset_and_resources
+    end
+  end
+
+  # データセット/ リソースが DB に見つからなければ `deleted` をセットする
   def update_deleted_on_download_report
     year_month = @start_at.year * 100 + @start_at.month
     criteria = Opendata::ResourceDownloadReport.site(site).where(year_month: year_month).exists(deleted: false)
-    all_dataset_ids = criteria.pluck(:dataset_id).uniq
 
-    available_dataset_and_resources = Opendata::Dataset.site(site).in(id: all_dataset_ids).pluck(:id, "resources._id")
-    available_dataset_and_resources.map! do |dataset_id, resources|
-      if resources.blank?
-        [ [ dataset_id, -1 ] ]
-      else
-        resources.map { |hash| [ dataset_id, hash["_id"] ] }
-      end
-    end
-    available_dataset_and_resources.flatten!(1)
-
-    all_ids = criteria.pluck(id)
+    all_ids = criteria.pluck(:id)
     all_ids.each_slice(100) do |ids|
       criteria.in(id: ids).to_a.each do |item|
         found = available_dataset_and_resources.find do |dataset_id, resource_id|
@@ -90,8 +96,45 @@ class Opendata::ResourceDownloadReportJob < Cms::ApplicationJob
         end
         next if found.present?
 
+        Rails.logger.info "report #{item.id}: already deleted"
         item.update(deleted: @now)
       end
+    end
+  end
+
+  # ダウンロード実績のないデータセットとリソースを登録
+  def add_datasets_with_no_download_history
+    year_month = @start_at.year * 100 + @start_at.month
+    criteria = Opendata::ResourceDownloadReport.site(site).where(year_month: year_month).exists(deleted: false)
+    not_exist_ids = available_dataset_and_resources - criteria.pluck(:dataset_id, :resource_id)
+    Rails.logger.info "found #{not_exist_ids.length.to_s(:delimited)} datasets/resources with no download history"
+
+    dataset_ids = not_exist_ids.map { |dataset_id, _resource_id| dataset_id }.uniq
+    datasets = Opendata::Dataset.site(site).in(id: dataset_ids).to_a
+
+    not_exist_ids.each do |dataset_id, resource_id|
+      dataset = datasets.find { |dataset| dataset.id == dataset_id }
+      next if dataset.blank?
+
+      resource = dataset.resources.where(id: resource_id).first
+      next if resource.blank?
+
+      conditions = {
+        year_month: year_month, dataset_id: dataset_id, dataset_name: dataset.name,
+        resource_id: resource_id, resource_name: resource.name
+      }
+
+      r = Opendata::ResourceDownloadReport.site(site).where(conditions).first_or_create
+      r.dataset_url = dataset.full_url.presence if r.dataset_url.blank?
+      r.dataset_areas = dataset.areas.and_public.order_by(order: 1).pluck(:name) if r.dataset_areas.blank?
+      r.dataset_categories = dataset.categories.and_public.order_by(order: 1).pluck(:name) if r.dataset_categories.blank?
+      if r.dataset_estat_categories.blank?
+        r.dataset_estat_categories = dataset.estat_categories.and_public.order_by(order: 1).pluck(:name)
+      end
+      r.resource_filename = resource.filename.presence if r.resource_filename.blank?
+
+      r.save
+      Rails.logger.info "report #{r.id}: created without any count"
     end
   end
 
