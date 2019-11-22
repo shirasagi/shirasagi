@@ -197,7 +197,11 @@ class Gws::Schedule::Todo
       when "-"
         all
       when "na"
-        exists(category_ids: false)
+        conditions = [
+          { :category_ids.exists => false },
+          { category_ids: [] }
+        ]
+        where("$and" => [{ "$or" => conditions }])
       else
         cur_site = params[:cur_site]
         cur_user = params[:cur_user]
