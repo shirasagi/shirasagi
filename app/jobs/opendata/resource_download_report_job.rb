@@ -6,6 +6,8 @@ class Opendata::ResourceDownloadReportJob < Cms::ApplicationJob
   ].freeze
 
   def perform(*args)
+    @now = Time.zone.now
+
     start_at = args.shift
     start_at = start_at ? Time.zone.parse(start_at) : Time.zone.now.yesterday
     @start_at = start_at.beginning_of_day
@@ -14,12 +16,30 @@ class Opendata::ResourceDownloadReportJob < Cms::ApplicationJob
     end_at = end_at ? Time.zone.parse(end_at) : @start_at
     @end_at = end_at.tomorrow.beginning_of_day
 
-    @items = []
-    MODELS.each do |model|
-      each_item(model.all, &method(:set_result))
+    build_results
+
+    update_download_reports
+
+    # 通常運用状態なら削除日時を更新する
+    # それ以外（一括データ作成時など）では、削除日時は更新しない（別の/特注の削除日時設定パッチを実行してセットする）
+    if @now.yesterday.to_date == @start_at.to_date
+      update_deleted_on_download_report
     end
 
-    @items.each do |item|
+    true
+  end
+
+  private
+
+  def build_results
+    @results = []
+    MODELS.each do |model|
+      each_item(model.all, &method(:update_result))
+    end
+  end
+
+  def update_download_reports
+    @results.each do |item|
       year = item[:year]
       month = item[:month]
       dataset_id = item[:dataset_id]
@@ -45,11 +65,35 @@ class Opendata::ResourceDownloadReportJob < Cms::ApplicationJob
 
       r.save
     end
-
-    true
   end
 
-  private
+  def update_deleted_on_download_report
+    year_month = @start_at.year * 100 + @start_at.month
+    criteria = Opendata::ResourceDownloadReport.site(site).where(year_month: year_month).exists(deleted: false)
+    all_dataset_ids = criteria.pluck(:dataset_id).uniq
+
+    available_dataset_and_resources = Opendata::Dataset.site(site).in(id: all_dataset_ids).pluck(:id, "resources._id")
+    available_dataset_and_resources.map! do |dataset_id, resources|
+      if resources.blank?
+        [ [ dataset_id, -1 ] ]
+      else
+        resources.map { |hash| [ dataset_id, hash["_id"] ] }
+      end
+    end
+    available_dataset_and_resources.flatten!(1)
+
+    all_ids = criteria.pluck(id)
+    all_ids.each_slice(100) do |ids|
+      criteria.in(id: ids).to_a.each do |item|
+        found = available_dataset_and_resources.find do |dataset_id, resource_id|
+          item.dataset_id == dataset_id && item.resource_id == resource_id
+        end
+        next if found.present?
+
+        item.update(deleted: @now)
+      end
+    end
+  end
 
   def each_item(base_criteria, &block)
     criteria = base_criteria.site(site)
@@ -64,7 +108,7 @@ class Opendata::ResourceDownloadReportJob < Cms::ApplicationJob
     end
   end
 
-  def set_result(item)
+  def update_result(item)
     downloaded = item.downloaded
     year = downloaded.year
     month = downloaded.month
@@ -82,7 +126,7 @@ class Opendata::ResourceDownloadReportJob < Cms::ApplicationJob
     dataset_categories = item.dataset_categories.presence
     dataset_estat_categories = item.dataset_estat_categories.presence
 
-    found = @items.find do |item|
+    found = @results.find do |item|
       next false unless item[:year] == year
       next false unless item[:month] == month
       next false unless item[:dataset_id] == dataset_id
@@ -107,7 +151,7 @@ class Opendata::ResourceDownloadReportJob < Cms::ApplicationJob
       return
     end
 
-    @items << {
+    @results << {
       downloaded: downloaded, year: year, month: month, dataset_id: dataset_id, dataset_name: dataset_name,
       dataset_url: dataset_url, dataset_areas: dataset_areas, dataset_categories: dataset_categories,
       dataset_estat_categories: dataset_estat_categories, resource_id: resource_id, resource_name: resource_name,

@@ -5,6 +5,7 @@ class Opendata::ResourceDownloadReport
   index({ site_id: 1, year_month: 1 })
 
   field :year_month, type: Integer
+  field :deleted, type: DateTime
 
   field :dataset_id, type: Integer
   field :dataset_name, type: String
@@ -23,6 +24,9 @@ class Opendata::ResourceDownloadReport
   end
 
   TARGET_YEAR_RANGE = 3
+
+  # 削除日が不明なレコードの deleted にセットされている日時
+  UNCERTAIN_DELETED_TIME = Time.at(0).in_time_zone
 
   class << self
     def start_year_options
@@ -67,6 +71,7 @@ class Opendata::ResourceDownloadReport
       project_pipeline = {
         year: { "$floor" => { "$divide" => [ "$year_month", 100 ] } },
         month: { "$mod" => [ "$year_month", 100 ] },
+        deleted: 1,
         dataset_id: 1,
         resource_id: 1,
         dataset_name: 1,
@@ -85,6 +90,7 @@ class Opendata::ResourceDownloadReport
           resource_id: "$resource_id",
           resource_name: "$resource_name"
         },
+        deleted: { "$last" => "$deleted" },
         resource_filename: { "$last" => "$resource_filename" },
         dataset_url: { "$last" => "$dataset_url" },
         dataset_areas: { "$last" => "$dataset_areas" },
@@ -119,6 +125,7 @@ class Opendata::ResourceDownloadReport
 
       project_pipeline = {
         year: { "$floor" => { "$divide" => [ "$year_month", 100 ] } },
+        deleted: 1,
         dataset_id: 1,
         resource_id: 1,
         dataset_name: 1,
@@ -136,6 +143,7 @@ class Opendata::ResourceDownloadReport
           resource_id: "$resource_id",
           resource_name: "$resource_name"
         },
+        deleted: { "$last" => "$deleted" },
         resource_filename: { "$last" => "$resource_filename" },
         dataset_url: { "$last" => "$dataset_url" },
         dataset_areas: { "$last" => "$dataset_areas" },
@@ -227,15 +235,13 @@ class Opendata::ResourceDownloadReport
     end
 
     def resource_csv_for(_site, _node, item)
-      deleted = item.resource_name.blank? || item.resource_name.include?(I18n.t("ss.options.state.deleted"))
-
       data = [
         nil, # dataset_id
         nil, # dataset_name
         "[#{item.resource_id}] #{item.resource_name}",
         nil, # URL
         nil, # 地域
-        deleted ? I18n.t("ss.options.state.deleted") : nil, # ステータス
+        delete_status(item.deleted), # ステータス
         nil # YYYY-MM
       ]
 
@@ -250,6 +256,17 @@ class Opendata::ResourceDownloadReport
 
     def dataset_url(node, dataset_id)
       "#{node.full_url}#{dataset_id}.html"
+    end
+
+    def delete_status(time)
+      return if time.blank?
+
+      time = time.in_time_zone
+      if time == UNCERTAIN_DELETED_TIME
+        I18n.t("ss.options.state.deleted")
+      else
+        "削除: #{I18n.l(time.to_date)}"
+      end
     end
 
     def encode_sjis_csv(array)
@@ -318,8 +335,6 @@ class Opendata::ResourceDownloadReport
 
     def monthly_resource_csv_for(site, node, result)
       resource_name = result["_id"]["resource_name"]
-      deleted = resource_name.blank? || resource_name.include?(I18n.t("ss.options.state.deleted"))
-
       resource_id = result["_id"]["resource_id"]
 
       data = [
@@ -328,7 +343,7 @@ class Opendata::ResourceDownloadReport
         "[#{resource_id}] #{resource_name}",
         nil, # URL
         nil, # 地域
-        deleted ? I18n.t("ss.options.state.deleted") : nil, # ステータス
+        delete_status(result["deleted"]), # ステータス
         nil # YYYY
       ]
 
@@ -383,8 +398,6 @@ class Opendata::ResourceDownloadReport
 
     def yearly_resource_csv_for(site, node, result)
       resource_name = result["_id"]["resource_name"]
-      deleted = resource_name.blank? || resource_name.include?(I18n.t("ss.options.state.deleted"))
-
       resource_id = result["_id"]["resource_id"]
 
       data = [
@@ -393,7 +406,7 @@ class Opendata::ResourceDownloadReport
         "[#{resource_id}] #{resource_name}",
         nil, # URL
         nil, # 地域
-        deleted ? I18n.t("ss.options.state.deleted") : nil, # ステータス
+        delete_status(result["deleted"]), # ステータス
       ]
 
       ey = Time.zone.today.year

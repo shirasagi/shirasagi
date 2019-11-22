@@ -26,7 +26,16 @@
           <% dataset_items.each do |item| %>
             <tr data-dataset-id="<%= dataset_id %>" data-resource-id="<%= item.resource_id %>">
               <td colspan="7">
-                <span class="resource-name"><%= item.resource_name %></span>
+                <span class="resource-name">
+                  <%= item.resource_name %>
+                  <% if item.deleted.present? %>
+                    <% if item.deleted == Opendata::ResourceDownloadReport::UNCERTAIN_DELETED_TIME %>
+                    [削]
+                    <% else %>
+                    [削: <%= I18n.l(item.deleted.to_date) %>]
+                    <% end %>
+                  <% end %>
+                </span>
               </td>
               <% days.times do |d| %>
                 <% count = item["day#{d}_count"] || 0 %>
