@@ -228,7 +228,7 @@ class Opendata::ResourceDownloadReport
         item.dataset_id,
         "[#{item.dataset_id}] #{item.dataset_name}",
         nil, # resource_name is always nil on dataset header
-        deleted ? nil : item.dataset_url.presence || dataset_url(node, item.dataset_id), # URL
+        deleted ? nil : item.dataset_url, # URL
         item.dataset_areas.present? ? item.dataset_areas.join("\n") : nil, # 地域
         deleted ? I18n.t("ss.options.state.deleted") : nil # ステータス
       ]
@@ -252,10 +252,6 @@ class Opendata::ResourceDownloadReport
       end
 
       data
-    end
-
-    def dataset_url(node, dataset_id)
-      "#{node.full_url}#{dataset_id}.html"
     end
 
     def delete_status(time)
