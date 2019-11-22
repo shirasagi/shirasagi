@@ -118,6 +118,7 @@ class Opendata::ResourceDownloadReportJob < Cms::ApplicationJob
 
       resource = dataset.resources.where(id: resource_id).first
       next if resource.blank?
+      next if resource.source_url.present?
 
       conditions = {
         year_month: year_month, dataset_id: dataset_id, dataset_name: dataset.name,
