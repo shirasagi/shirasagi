@@ -78,6 +78,10 @@ Rails.application.routes.draw do
         get :download, on: :collection
       end
     end
+    scope "history", as: "dataset_history" do
+      get "/" => redirect { |p, req| "#{req.path}/downloads" }, as: :main
+      resources :downloads, only: %i[index], controller: "dataset/resource_download_histories"
+    end
 
     scope module: :dataset do
       namespace :harvest do

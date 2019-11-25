@@ -1,0 +1,25 @@
+<% @tap_menu = proc do |item| %>
+  <%= link_to(t('opendata.manage_datasets'), opendata_dataset_path(id: item.dataset_id)) %>
+  <%= link_to(t('opendata.manage_resources'), opendata_dataset_resource_path(dataset_id: item.dataset_id, id: item.resource_id)) %>
+<% end %>
+
+<% @index_title = proc do |item| %>
+  <%= item.resource_name %>
+<% end %>
+
+<% @index_meta = proc do |item| %>
+  <span class="datetime"><%= item.downloaded.strftime("%Y/%m/%d %H:%M") %></span>
+  <span class="downloaded-by"><%= item.downloaded_by %></span>
+  <span class="dataset"><%= item.dataset_name %></span>
+  <span class="url"><%= link_to item.full_url, item.full_url, target: "_blank" %></span>
+  <span class="remote-addr"><%= item.remote_addr %></span>
+  <span class="user-agent"><%= render_user_agent(item.user_agent, accept_language: request.accept_language) %></span>
+<% end %>
+
+<style>
+  .list-head .check { display: none; }
+  .list-head .list-head-action { display: none; }
+  .list-item .check { display: none; }
+</style>
+
+<%= render file: "cms/crud/index" %>

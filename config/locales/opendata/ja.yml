@@ -1,6 +1,7 @@
 ja:
   opendata:
     create: 新規登録
+    manage_datasets: データセットを管理する
     manage_resources: リソースを管理する
     manage_url_resources: クローリングを管理する
     manage_appfiles: アプリファイルを管理する
@@ -73,6 +74,9 @@ ja:
       not_exists_reports: 集計結果がありません。
       total_year: 年合計
       total_month: 月合計
+    histories:
+      history: 履歴
+      download_histories: ダウンロード履歴
     public_entity:
       format: データセット一覧
       download: 公開中のデータセットの一覧を推奨データセット「オープンデータ一覧」の形式にてダウンロードできます。

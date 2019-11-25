@@ -2,7 +2,7 @@ class Opendata::ResourceDownloadHistory
   include SS::Document
   include SS::Reference::Site
 
-  index({ site_id: 1, downloaded: 1 })
+  index({ site_id: 1, downloaded: -1 })
 
   field :dataset_id, type: Integer
   field :dataset_name, type: String
@@ -41,6 +41,16 @@ class Opendata::ResourceDownloadHistory
         remote_addr: remote_addr,
         user_agent: user_agent
       )
+    end
+
+    def search(params)
+      all.search_keyword(params)
+    end
+
+    def search_keyword(params)
+      return all if params.blank? || params[:keyword].blank?
+
+      all.keyword_in params[:keyword], :dataset_name, :resource_name
     end
   end
 end

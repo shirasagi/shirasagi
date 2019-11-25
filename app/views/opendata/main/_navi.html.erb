@@ -43,6 +43,7 @@
     <li><%= link_to t("opendata.reports.access_reports"), opendata_dataset_report_accesses_path, class: "icon-node" %></li>
     <li><%= link_to t("opendata.reports.preview_reports"), opendata_dataset_report_previews_path, class: "icon-node" %></li>
   </ul>
+  <h3><%= link_to t("opendata.histories.download_histories"), opendata_dataset_history_downloads_path, class: "icon-node" %></h3>
 
   <% if Opendata::PublicEntityDataset.allowed?(:edit, @cur_user, site: @cur_site, node: @cur_node) %>
     <h3><%= link_to t("opendata.public_entity.format"), opendata_dataset_public_entity_path, class: "icon-node" %></h3>
