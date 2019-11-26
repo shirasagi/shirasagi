@@ -54,3 +54,58 @@ class Opendata::ResourceDownloadHistory
     end
   end
 end
+
+class Opendata::ResourceDownloadHistory::ArchiveFile
+  include SS::Model::File
+  include SS::Reference::Site
+
+  default_scope ->{ where(model: "opendata/resource_download_history/archive_file") }
+end
+
+class Opendata::ResourceDownloadHistory::HistoryCsv
+  include ActiveModel::Model
+
+  attr_accessor :cur_site, :items
+
+  CSV_HEADERS = %i[
+    downloaded downloaded_by dataset_id dataset_name dataset_areas dataset_categories dataset_estat_categories
+    resource_id resource_name resource_filename resource_source_url full_url remote_addr user_agent
+  ].freeze
+
+  class << self
+    def enum_csv(cur_site, items)
+      new(cur_site: cur_site, items: items).enum_csv
+    end
+  end
+
+  def csv_headers
+    CSV_HEADERS.map { |k| Opendata::ResourceDownloadHistory.t(k) }
+  end
+
+  def enum_csv(opts = {})
+    Enumerator.new do |y|
+      y << encode_sjis(csv_headers.to_csv)
+      items.each do |item|
+        y << encode_sjis(to_csv(item))
+      end
+    end
+  end
+
+  def to_csv(item)
+    terms = []
+    CSV_HEADERS.each do |k|
+      if k == :downloaded
+        terms << I18n.l(item.downloaded)
+      else
+        terms << item.send(k)
+      end
+    end
+    terms.to_csv
+  end
+
+  private
+
+  def encode_sjis(str)
+    str.encode("SJIS", invalid: :replace, undef: :replace)
+  end
+end

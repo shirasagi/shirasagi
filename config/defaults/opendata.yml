@@ -45,6 +45,9 @@ production: &production
     port: 3030
     dataset: opendata
 
+  history:
+    save_days: 14
+
 test:
   <<: *production
   fuseki:
