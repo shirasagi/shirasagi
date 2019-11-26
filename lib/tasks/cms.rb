@@ -93,6 +93,19 @@ module Tasks
         end
       end
 
+      def reload_site_usage
+        puts "# reload site usage"
+        each_sites do |site|
+          begin
+            puts "#{site.host}: #{site.name}"
+            site.reload_usage!
+          rescue => e
+            Rails.logger.error("#{e.class} (#{e.message}):\n  #{e.backtrace.join("\n  ")}")
+            puts("Failed to update usage: #{site.host}")
+          end
+        end
+      end
+
       def set_subdir_url
         with_site(ENV['site']) do |site|
           puts "# layouts"
@@ -191,11 +204,11 @@ module Tasks
       def gsub_path(html, site)
         html.gsub(/(href|src)=".*?"/) do |m|
           url = m.match(/.*?="(.*?)"/)[1]
-          if url =~ /^\/(assets|assets-dev|fs)\//
+          if url.start_with?("/assets/", "/assets-dev/", "/fs/")
             m
-          elsif url =~ /^#{site.url}/
+          elsif url.start_with?(site.url)
             m
-          elsif url =~ /^\/(?!\/)/
+          elsif /^\/(?!\/)/.match?(url)
             m.sub(/="\//, "=\"#{site.url}")
           else
             m
@@ -212,6 +225,7 @@ module Tasks
             attrs.each do |attr|
               next unless item.respond_to?(attr) && item.respond_to?("#{attr}=")
               next unless item.send(attr).present?
+
               item.send("#{attr}=", gsub_path(item.send(attr), site))
             end
             item.save!

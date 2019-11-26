@@ -63,4 +63,50 @@ module Webmail
   def imap_pool
     @imap_pool ||= ImapPool.new
   end
+
+  def find_webmail_quota_used(opts = {})
+    Webmail.webmail_db_used(opts) + Webmail.webmail_files_used(opts)
+  end
+
+  MODULES = %w(
+    Webmail::AddressGroup
+    Webmail::Address
+    Webmail::Filter
+    Webmail::Group
+    Webmail::History
+    Webmail::History::ArchiveFile
+    Webmail::Mail
+    Webmail::Mailbox
+    Webmail::Quota
+    Webmail::Role
+    Webmail::Signature
+    Webmail::User
+  ).freeze
+
+  COMMON_MODULES = %w(
+    Webmail::Group
+    Webmail::User
+  ).freeze
+
+  def webmail_db_used(opts = {})
+    classes = MODULES
+    if opts[:except] == "common"
+      classes = classes.reject { |klass| COMMON_MODULES.include?(klass) }
+    end
+    classes.map(&:constantize).sum { |klass| klass.all.unscoped.total_bsonsize }
+  end
+
+  def webmail_files_used(_opts = {})
+    size = SS::File.where(model: /^webmail\//).aggregate_files_used
+
+    dir = "#{Rails.root}/private/files/webmail_files"
+    return size unless ::File.exists?(dir)
+
+    # see: https://myokoym.hatenadiary.org/entry/20100606/1275836896
+    ::Dir.glob("#{dir}/**/*") do |path|
+      size += ::File.stat(path).size rescue 0
+    end
+
+    size
+  end
 end

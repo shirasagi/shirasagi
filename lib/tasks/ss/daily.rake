@@ -23,11 +23,17 @@ namespace :ss do
         # リンクチェック
         # Rake.application.invoke_task("cms:check_links[#{site.host}, 'admin@example.jp']")
       end
+
+      # 各種使用率の更新
+      Rake.application.invoke_task("cms:reload_site_usage")
     end
 
     if SS.config.gws.disable.blank?
       # ゴミ箱の掃除
       Rake.application.invoke_task("gws:trash:purge")
+
+      # 各種使用率の更新
+      Rake.application.invoke_task("gws:reload_site_usage")
     end
   end
 end

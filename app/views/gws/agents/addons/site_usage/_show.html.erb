@@ -1,0 +1,29 @@
+<%
+  return unless @item.allowed?(:edit, @cur_user, site: @cur_site)
+
+  addon ||= local_assigns.fetch(:addon, {})
+  addon[:display_body] = "hide"
+%>
+
+<dl class="see">
+  <dt><%= @model.t :usage_file_count %></dt>
+  <dd><span class="usage-file-count"><%= @item.usage_file_count.try { |v| v.to_s(:delimited) } || '-' %></span></dd>
+
+  <dt><%= @model.t :usage_db_size %></dt>
+  <dd><span class="usage-db-size"><%= @item.usage_db_size.try { |v| v.to_s(:human_size) } || '-' %></span></dd>
+
+  <dt><%= @model.t :usage_group_count %></dt>
+  <dd><span class="usage-group-count"><%= @item.usage_group_count.try { |v| v.to_s(:delimited) } || '-' %></span></dd>
+
+  <dt><%= @model.t :usage_user_count %></dt>
+  <dd><span class="usage-user-count"><%= @item.usage_user_count.try { |v| v.to_s(:delimited) } || '-' %></span></dd>
+
+  <dt><%= @model.t :usage_calculated_at %></dt>
+  <dd><span class="usage-calculated-at"><%= @item.usage_calculated_at.try { |v| I18n.l(v) } || '-' %></span></dd>
+</dl>
+
+<%= button_tag(t('service.buttons.reload'), name: "reload", type: "button", class: "btn btn-reload-usages", data: { href: gws_apis_reload_site_usages_path(site: @item, format: "json") }) %>
+
+<%= jquery do %>
+  new SS_Usage("#<%= addon[:id] %>")
+<% end %>

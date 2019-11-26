@@ -69,6 +69,7 @@ Rails.application.routes.draw do
       get "custom_groups" => "custom_groups#index"
       get "contrasts" => "contrasts#index"
       get "desktop_settings" => "desktop_settings#index"
+      put "reload_site_usages" => "site_usages#reload"
 
       resources :files, concerns: :deletion do
         get :select, on: :member

@@ -5,6 +5,7 @@ module SS::Model::File
   include SS::Reference::User
   include SS::FileFactory
   include SS::ExifGeoLocation
+  include SS::FileUsageAggregation
   include History::Addon::Trash
   include ActiveSupport::NumberHelper
 
