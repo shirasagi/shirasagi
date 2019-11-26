@@ -4,22 +4,18 @@
 <% end %>
 
 <% @index_title = proc do |item| %>
-  <%= item.resource_name %>
+  <span class="resource"><%= item.resource_name %></span>
 <% end %>
 
 <% @index_meta = proc do |item| %>
   <span class="datetime"><%= item.downloaded.strftime("%Y/%m/%d %H:%M") %></span>
-  <span class="downloaded-by"><%= item.downloaded_by %></span>
+  <span class="downloaded-by"><%= item.label(:downloaded_by).presence || t("opendata.downloaded_by_options.single") %></span>
   <span class="dataset"><%= item.dataset_name %></span>
   <span class="url"><%= link_to item.full_url, item.full_url, target: "_blank" %></span>
   <span class="remote-addr"><%= item.remote_addr %></span>
   <span class="user-agent"><%= render_user_agent(item.user_agent, accept_language: request.accept_language) %></span>
 <% end %>
 
-<style>
-  .list-head .check { display: none; }
-  .list-head .list-head-action { display: none; }
-  .list-item .check { display: none; }
-</style>
-
-<%= render file: "cms/crud/index" %>
+<div class="opendata-resource-download-histories">
+  <%= render file: "cms/crud/index" %>
+</div>

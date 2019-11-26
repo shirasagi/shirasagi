@@ -79,8 +79,11 @@ Rails.application.routes.draw do
       end
     end
     scope "history", as: "dataset_history" do
-      get "/" => redirect { |p, req| "#{req.path}/downloads" }, as: :main
-      resources :downloads, only: %i[index], controller: "dataset/resource_download_histories"
+      get "/" => redirect { |p, req| "#{req.path}/downloads/#{Time.zone.now.strftime('%Y%m%d')}" }, as: :main
+      get "/downloads" => redirect { |p, req| "#{req.path}/#{Time.zone.now.strftime('%Y%m%d')}" }, as: :downloads_main
+      resources :downloads, only: %i[index], controller: "dataset/resource_download_histories", path: 'downloads/:ymd' do
+        get :download, on: :collection
+      end
     end
 
     scope module: :dataset do

@@ -333,6 +333,10 @@ ja:
       - '    </div>'
       - '  </article>'
       - '</div>'
+    downloaded_by_options:
+      single: 単独
+      dataset: データセット
+      bulk: 一括
 
     # Web API
     api:
@@ -539,6 +543,7 @@ ja:
       opendata/export_datasets: エクスポート
       opendata/import_datasets: インポート
       opendata/dataset_importer: インポート
+      opendata/resource_download_history: リソースダンロード履歴
       opendata/resource_download_report: リソースダンロード数集計結果
     attributes:
       opendata/addon/category:
@@ -776,6 +781,21 @@ ja:
         update_plan_mail_state: 更新予定日のメール通知
       opendata/addon/pref_code:
         pref_code: コード
+      opendata/resource_download_history:
+        downloaded: ダウンロード日時
+        downloaded_by: ダウンロード方法
+        full_url: URL
+        dataset_id: データセットID
+        dataset_name: データセット名
+        dataset_areas: 地域
+        dataset_categories: 分野
+        dataset_estat_categories: eStat分野
+        resource_id: リソースID
+        resource_name: リソース名
+        resource_filename: リソースファイル名
+        resource_source_url: リソースソースURL
+        remote_addr: 接続元IP
+        user_agent: ユーザーエージェント
       opendata/resource_download_report:
         year_month: 年月
         dataset_id: データセットID

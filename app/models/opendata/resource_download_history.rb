@@ -37,20 +37,37 @@ class Opendata::ResourceDownloadHistory
         resource_source_url: resource.source_url,
         full_url: dataset.full_url,
         downloaded: (downloaded || Time.zone.now),
-        downloaded_by: downloaded_by.presence || "single",
+        downloaded_by: (downloaded_by.presence || "single"),
         remote_addr: remote_addr,
         user_agent: user_agent
       )
     end
 
     def search(params)
-      all.search_keyword(params)
+      all.search_ymd(params).search_keyword(params)
+    end
+
+    def search_ymd(params)
+      return all if params.blank? || params[:ymd].blank?
+
+      ymd = params[:ymd]
+      ymd = Time.zone.parse(ymd) if ymd.is_a?(String)
+      ymd = ymd.in_time_zone
+      ymd = ymd.beginning_of_day
+
+      all.gte(downloaded: ymd).lt(downloaded: ymd + 1.day)
     end
 
     def search_keyword(params)
       return all if params.blank? || params[:keyword].blank?
 
       all.keyword_in params[:keyword], :dataset_name, :resource_name
+    end
+  end
+
+  def downloaded_by_options
+    %w(single dataset bulk).map do |v|
+      [ I18n.t("opendata.downloaded_by_options.#{v}"), v ]
     end
   end
 end
@@ -68,8 +85,8 @@ class Opendata::ResourceDownloadHistory::HistoryCsv
   attr_accessor :cur_site, :items
 
   CSV_HEADERS = %i[
-    downloaded downloaded_by dataset_id dataset_name dataset_areas dataset_categories dataset_estat_categories
-    resource_id resource_name resource_filename resource_source_url full_url remote_addr user_agent
+    downloaded downloaded_by full_url dataset_id dataset_name dataset_areas dataset_categories dataset_estat_categories
+    resource_id resource_name resource_filename resource_source_url remote_addr user_agent
   ].freeze
 
   class << self
@@ -96,6 +113,10 @@ class Opendata::ResourceDownloadHistory::HistoryCsv
     CSV_HEADERS.each do |k|
       if k == :downloaded
         terms << I18n.l(item.downloaded)
+      elsif k == :downloaded_by
+        terms << (item.label(:downloaded_by).presence || I18n.t("opendata.downloaded_by_options.single"))
+      elsif %i[dataset_areas dataset_categories dataset_estat_categories].include?(k)
+        terms << item.send(k).join("\n")
       else
         terms << item.send(k)
       end
