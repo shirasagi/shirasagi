@@ -4,6 +4,7 @@ FactoryBot.define do
     name "post"
     poster "poster"
     text "post"
+    poster_url "poster"
     delete_key "pass"
   end
 end
