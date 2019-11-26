@@ -57,7 +57,7 @@ class Opendata::Agents::Nodes::Dataset::SearchDatasetController < ApplicationCon
     item.resources.each do |resource|
       if !preview_path?
         resource.dataset.inc downloaded: 1
-        resource.create_dataset_download_history(request, downloaded)
+        resource.create_dataset_download_history(remote_addr, request.user_agent, downloaded)
       end
     end
 
@@ -91,7 +91,7 @@ class Opendata::Agents::Nodes::Dataset::SearchDatasetController < ApplicationCon
           item.resources.each do |resource|
             if !preview_path?
               resource.dataset.inc downloaded: 1
-              resource.create_bulk_download_history(request, downloaded)
+              resource.create_bulk_download_history(remote_addr, request.user_agent, downloaded)
             end
           end
         end

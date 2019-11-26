@@ -12,10 +12,6 @@ module Member::LoginFilter
 
   private
 
-  def remote_addr
-    request.env["HTTP_X_REAL_IP"] || request.remote_addr
-  end
-
   def logged_in?(opts = {})
     if @cur_member
       set_last_logged_in

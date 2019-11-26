@@ -31,42 +31,46 @@ class Opendata::Resource
     "/resource"
   end
 
-  def create_download_history(request, downloaded)
+  def create_download_history(remote_addr, user_agent, downloaded)
     Opendata::ResourceDownloadHistory.create_history(
       site: dataset.site,
       dataset: dataset,
       resource: self,
-      request: request,
+      remote_addr: remote_addr,
+      user_agent: user_agent,
       downloaded: downloaded
     )
   end
 
-  def create_bulk_download_history(request, downloaded)
+  def create_bulk_download_history(remote_addr, user_agent, downloaded)
     Opendata::ResourceBulkDownloadHistory.create_history(
       site: dataset.site,
       dataset: dataset,
       resource: self,
-      request: request,
+      remote_addr: remote_addr,
+      user_agent: user_agent,
       downloaded: downloaded
     )
   end
 
-  def create_dataset_download_history(request, downloaded)
+  def create_dataset_download_history(remote_addr, user_agent, downloaded)
     Opendata::ResourceDatasetDownloadHistory.create_history(
       site: dataset.site,
       dataset: dataset,
       resource: self,
-      request: request,
+      remote_addr: remote_addr,
+      user_agent: user_agent,
       downloaded: downloaded
     )
   end
 
-  def create_preview_history(request, previewed)
+  def create_preview_history(remote_addr, user_agent, previewed)
     Opendata::ResourcePreviewHistory.create_history(
       site: dataset.site,
       dataset: dataset,
       resource: self,
-      request: request,
+      remote_addr: remote_addr,
+      user_agent: user_agent,
       previewed: previewed
     )
   end
