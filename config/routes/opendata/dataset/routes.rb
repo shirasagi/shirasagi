@@ -84,6 +84,8 @@ Rails.application.routes.draw do
       resources :downloads, only: %i[index], controller: "dataset/resource_download_histories", path: 'downloads/:ymd' do
         get :download, on: :collection
       end
+      resources :download_archives, only: %i[index show destroy], concerns: :deletion,
+                controller: "dataset/resource_download_history_archives"
     end
 
     scope module: :dataset do

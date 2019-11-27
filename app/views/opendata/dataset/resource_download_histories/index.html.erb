@@ -16,6 +16,15 @@
   <span class="user-agent"><%= render_user_agent(item.user_agent, accept_language: request.accept_language) %></span>
 <% end %>
 
-<div class="opendata-resource-download-histories">
+<div class="opendata-resource-download-histories no-checkboxes">
+  <div class="cms-tabs">
+    <%= link_to opendata_dataset_history_downloads_main_path, class: 'current' do %>
+      <span class="tab-name"><%= t("opendata.histories.download_histories") %></span>
+    <% end %>
+    <%= link_to opendata_dataset_history_download_archives_path do %>
+      <span class="tab-name"><%= t("opendata.histories.download_history_archives") %></span>
+    <% end %>
+  </div>
+
   <%= render file: "cms/crud/index" %>
 </div>

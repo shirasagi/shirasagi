@@ -186,8 +186,10 @@ table.opendata-harvest-report {
 }
 
 .opendata-resource-download-histories {
-  .list-item .check {
-    display: none;
+  &.no-checkboxes {
+    .list-item .check {
+      display: none;
+    }
   }
 
   .btn-group {
@@ -205,6 +207,9 @@ table.opendata-harvest-report {
   .btn-disabled {
     color: $gray2;
     cursor: default;
+    &:hover {
+      @include grd-white;
+    }
   }
 
   .btn-download {

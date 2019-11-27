@@ -77,6 +77,7 @@ ja:
     histories:
       history: 履歴
       download_histories: ダウンロード履歴
+      download_history_archives: アーカイブ
     public_entity:
       format: データセット一覧
       download: 公開中のデータセットの一覧を推奨データセット「オープンデータ一覧」の形式にてダウンロードできます。

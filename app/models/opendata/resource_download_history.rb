@@ -114,7 +114,13 @@ class Opendata::ResourceDownloadHistory::HistoryCsv
       if k == :downloaded
         terms << I18n.l(item.downloaded)
       elsif k == :downloaded_by
-        terms << (item.label(:downloaded_by).presence || I18n.t("opendata.downloaded_by_options.single"))
+        if item.is_a?(Opendata::ResourceDatasetDownloadHistory)
+          terms << I18n.t("opendata.downloaded_by_options.dataset")
+        elsif item.is_a?(Opendata::ResourceBulkDownloadHistory)
+          terms << I18n.t("opendata.downloaded_by_options.bulk")
+        else
+          terms << (item.label(:downloaded_by).presence || I18n.t("opendata.downloaded_by_options.single"))
+        end
       elsif %i[dataset_areas dataset_categories dataset_estat_categories].include?(k)
         terms << item.send(k).join("\n")
       else
