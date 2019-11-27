@@ -77,6 +77,7 @@ ja:
     histories:
       history: 履歴
       download_histories: ダウンロード履歴
+      preview_histories: プレビュー履歴
       download_history_archives: アーカイブ
     public_entity:
       format: データセット一覧
@@ -783,9 +784,7 @@ ja:
         update_plan_mail_state: 更新予定日のメール通知
       opendata/addon/pref_code:
         pref_code: コード
-      opendata/resource_download_history:
-        downloaded: ダウンロード日時
-        downloaded_by: ダウンロード方法
+      opendata/resource/history_model:
         full_url: URL
         dataset_id: データセットID
         dataset_name: データセット名
@@ -798,6 +797,11 @@ ja:
         resource_source_url: リソースソースURL
         remote_addr: 接続元IP
         user_agent: ユーザーエージェント
+      opendata/resource_download_history:
+        downloaded: ダウンロード日時
+        downloaded_by: ダウンロード方法
+      opendata/resource_preview_history:
+        previewed: プレビュー日時
       opendata/resource_download_report:
         year_month: 年月
         dataset_id: データセットID

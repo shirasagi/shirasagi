@@ -55,7 +55,7 @@
       var ymd = $input.val();
       ymd = ymd.replace(/\//g, '');
 
-      var url = '<%= opendata_dataset_history_downloads_path(ymd: ':ymd') %>';
+      var url = '<%= url_for(action: :index, ymd: ':ymd') %>';
       url = url.replace(':ymd', ymd);
 
       location.href = url;

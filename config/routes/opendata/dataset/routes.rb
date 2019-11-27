@@ -86,6 +86,10 @@ Rails.application.routes.draw do
       end
       resources :download_archives, only: %i[index show destroy], concerns: :deletion,
                 controller: "dataset/resource_download_history_archives"
+      get "/previews" => redirect { |p, req| "#{req.path}/#{Time.zone.now.strftime('%Y%m%d')}" }, as: :previews_main
+      resources :previews, only: %i[index], controller: "dataset/resource_preview_histories", path: 'previews/:ymd' do
+        get :download, on: :collection
+      end
     end
 
     scope module: :dataset do

@@ -45,8 +45,20 @@
       <li><%= link_to t("opendata.reports.access_reports"), opendata_dataset_report_accesses_path, class: "icon-node" %></li>
       <li><%= link_to t("opendata.reports.preview_reports"), opendata_dataset_report_previews_path, class: "icon-node" %></li>
     </ul>
+    <% history_links = [] %>
     <% if Opendata::ResourceDownloadHistory.allowed?(:read, @cur_user, site: @cur_site, node: @cur_node) %>
-      <h3><%= link_to t("opendata.histories.download_histories"), opendata_dataset_history_downloads_main_path, class: "icon-node" %></h3>
+      <% history_links << link_to(t("opendata.histories.download_histories"), opendata_dataset_history_downloads_main_path, class: "icon-node") %>
+    <% end %>
+    <% if Opendata::ResourcePreviewHistory.allowed?(:read, @cur_user, site: @cur_site, node: @cur_node) %>
+      <% history_links << link_to(t("opendata.histories.preview_histories"), opendata_dataset_history_previews_main_path, class: "icon-node") %>
+    <% end %>
+    <% if history_links.present? %>
+      <h3><%= link_to t("opendata.histories.history"), opendata_dataset_history_main_path, class: "icon-node" %></h3>
+      <ul class="narrow-page">
+        <% history_links.each do |link| %>
+          <li><%= link %></li>
+        <% end %>
+      </ul>
     <% end %>
 
     <% if Opendata::PublicEntityDataset.allowed?(:edit, @cur_user, site: @cur_site, node: @cur_node) %>
