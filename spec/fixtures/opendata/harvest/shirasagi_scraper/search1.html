@@ -1,0 +1,451 @@
+<!doctype html>
+<html lang="ja">
+
+<head>
+<meta charset="UTF-8" />
+<title>データセット検索 - オープンデータサンプル</title>
+<link rel="stylesheet" media="screen" href="/assets/cms/public.css" />
+<script src="/assets/cms/public.js"></script>
+<script>
+//<![CDATA[
+
+  SS.config = {"site_url":"/","kana_url":"/kana/","theme":{},"recommend":{"receiver_url":"https://opendata.demo.ss-proj.org/.s4/recommend/history/receiver.json","params":{"path":"/dataset/search/index.html","target_class":"Opendata::Node::SearchDataset","target_id":346}}};
+
+//]]>
+</script>
+  <meta name="viewport" content="width=device-width,initial-scale=1.0,user-scalable=yes,minimum-scale=0.25,maximum-scale=2.0">
+  <link href="/css/style.css" media="all" rel="stylesheet" />
+  <script src="/js/common.js"></script>
+  <!--[if lt IE 9]>
+    <script src="/js/html5shiv.js"></script>
+    <script src="/js/selectivizr.js"></script>
+  <![endif]-->
+
+
+
+<meta name="csrf-param" content="authenticity_token" />
+<meta name="csrf-token" content="NF0BFM208jtIngfuQVfXckzU8MCfw2HA2ECbi/GTuoG6PG1v0NsOQ2kzMT+Od7AFrNyyPeXiRrr1iebZ8zBcug==" />
+</head>
+
+<body id="body--dataset-search-index" class="body--dataset body--dataset-search dataset">
+<div id="page">
+  <header id="head">
+    <div class="wrap">
+      <div class="logo">
+  <h1><a href="/"><img src="/img/logo.png" alt="Open Data" /></a></h1>
+</div>
+<div class="tab">
+  <nav>
+    <ul>
+      <li class="dataset"><a href="/dataset/">データカタログ</a></li>
+      <li class="app"><a href="/app/">アプリマーケット</a></li>
+      <li class="idea"><a href="/idea/">アイデアボックス</a></li>
+    </ul>
+  </nav>
+</div>
+      <div class="login">
+        <a class="ss-part" data-href="/mypage-login.part.json">ログイン</a>
+      </div>
+    </div>
+  </header>
+  <header id="site-title" class="dataset">
+  <h1 class="logo"><a href="/dataset/"><img src="/img/logo-data.png" alt="データカタログサイト"></a></h1>
+  <div class="menu">
+    <div class="u-menu">
+      <div class="search">
+        <form action="http://www.google.com/search">
+          <input type="hidden" value="ja" name="hl">
+          <input type="text" title="サイト内検索" placeholder="サイト内検索" class="text" id="search-box" name="q">
+          <input type="image" src="/img/ic-search.png" alt="検索" id="search-button" value="検索" name="sa">
+        </form>
+      </div>
+      <div class="inquiry">
+        <a href="/inquiry">お問い合わせ</a>
+      </div>
+    </div>
+    <div class="l-menu">
+      <nav>
+        <ul>
+          <li><a class="entry" href="/mypage/dataset/">データセット登録</a></li>
+          <li><a class="search" href="/dataset/search/">データセット検索</a></li>
+          <li><a class="group" href="/dataset/search_group/">グループ検索</a></li>
+        </ul>
+      </nav>
+    </div>
+  </div>
+</header>
+<nav id="gnav">
+  <ul>
+    <li class="kurashi"><a href="/dataset/bunya/kurashi/">くらし・手続き</a></li>
+    <li class="kosodate"><a href="/dataset/bunya/kosodate/">子育て・教育</a></li>
+    <li class="kenko"><a href="/dataset/bunya/kenko/">健康・福祉</a></li>
+    <li class="kanko"><a href="/dataset/bunya/kanko/">観光・文化・スポーツ</a></li>
+    <li class="sangyo"><a href="/dataset/bunya/sangyo/">産業・仕事</a></li>
+    <li class="shisei"><a href="/dataset/bunya/shisei/">市政情報</a></li>
+  </ul>
+</nav>
+
+  <div id="wrap">
+    <div class="crumbs">
+<div class="crumb"><span class="page"><a href="/">HOME</a></span><span class="separator">&rsaquo;</span><span class="page"><a href="/dataset/">データカタログ</a></span><span class="separator">&rsaquo;</span><span class="page">データセット検索</span></div>
+</div>
+
+    <div id="main">
+      <header id="page-name"><h1>データセット検索</h1></header>
+      <!-- layout_yield -->
+
+  <link href="/assets/css/colorbox/colorbox.css" media="all" rel="stylesheet" />
+<script src="/assets/js/jquery.colorbox.js"></script>
+<script>
+//<![CDATA[
+$(function() {
+
+var pair = location.search.substring(1).split('&');
+for(var i=0;pair[i];i++) {
+  var kv = pair[i].split('=');
+  var key = decodeURIComponent(kv[0]);
+  var value = decodeURIComponent(kv[1]).replace('+', ' ');
+  $('input[name="' + key + '"]').each(function() {
+    $(this).val(value);
+  });
+  $('select[name="' + key + '"]').each(function() {
+    $(this).val(value);
+  });
+}
+$(".tag a.more").colorbox({ fixed: true, height: "80%" });
+$('select[name="s[tag]"]').change(function() {
+  if($(this).val() == "もっと見る") {
+    $(this).val('');
+    $(this).parents('.tag').find('.more').click();
+  }
+});
+
+});
+//]]>
+</script>
+<form class="opendata-search-datasets-form" action="/dataset/search/" accept-charset="UTF-8" method="get"><input name="utf8" type="hidden" value="&#x2713;" />
+  <dl class="keyword">
+    <dt><label for="s_keyword">キーワード</label></dt>
+    <dd><input type="text" name="s[keyword]" id="s_keyword" /></dd>
+  </dl>
+  <dl class="category">
+    <dt><label for="s_category_id">分野</label></dt>
+    <dd><select name="s[category_id]" id="s_category_id"><option value=""></option>
+<option value="363"> 観光・文化・スポーツ</option>
+<option value="364"> 健康・福祉</option>
+<option value="365"> 子育て・教育</option>
+<option value="366"> くらし・手続き</option>
+<option value="367"> 産業・仕事</option>
+<option value="368"> 市政情報</option></select></dd>
+  </dl>
+  <dl class="estat_category">
+    <dt><label for="s_estat_category_id">eStat分野</label></dt>
+    <dd><select name="s[estat_category_id]" id="s_estat_category_id"><option value=""></option>
+<option value="370"> 国土・気象</option>
+<option value="387">　　- 国土</option>
+<option value="388">　　- 気象</option>
+<option value="371"> 人口・世帯</option>
+<option value="389">　　- 人口</option>
+<option value="390">　　- 世帯</option>
+<option value="391">　　- 人口動態</option>
+<option value="392">　　- 人口移動</option>
+<option value="372"> 労働・賃金</option>
+<option value="393">　　- 労働力</option>
+<option value="394">　　- 賃金・労働条件</option>
+<option value="395">　　- 雇用</option>
+<option value="396">　　- 労使関係</option>
+<option value="397">　　- 労働災害</option>
+<option value="373"> 農林水産業</option>
+<option value="398">　　- 農業</option>
+<option value="399">　　- 畜産業</option>
+<option value="400">　　- 林業</option>
+<option value="401">　　- 水産業</option>
+<option value="374"> 鉱工業</option>
+<option value="402">　　- 鉱業</option>
+<option value="403">　　- 製造業</option>
+<option value="375"> 商業・サービス業</option>
+<option value="404">　　- 商業</option>
+<option value="405">　　- 需給流通</option>
+<option value="406">　　- サービス業</option>
+<option value="376"> 企業・家計・経済</option>
+<option value="407">　　- 企業活動</option>
+<option value="408">　　- 金融・保険・通貨</option>
+<option value="409">　　- 物価</option>
+<option value="410">　　- 家計</option>
+<option value="411">　　- 国民経済計算</option>
+<option value="412">　　- 景気</option>
+<option value="377"> 住宅・土地・建設</option>
+<option value="413">　　- 住宅・土地</option>
+<option value="414">　　- 建設</option>
+<option value="378"> エネルギー・水</option>
+<option value="415">　　- 電気</option>
+<option value="416">　　- ガス</option>
+<option value="417">　　- エネルギー需給</option>
+<option value="418">　　- 水</option>
+<option value="379"> 運輸・観光</option>
+<option value="419">　　- 運輸</option>
+<option value="420">　　- 倉庫</option>
+<option value="421">　　- 観光</option>
+<option value="380"> 情報通信・科学技術</option>
+<option value="422">　　- 情報通信・放送</option>
+<option value="423">　　- 科学技術</option>
+<option value="424">　　- 知的財産</option>
+<option value="381"> 教育・文化・スポーツ・生活</option>
+<option value="425">　　- 学校教育</option>
+<option value="426">　　- 社会教育</option>
+<option value="427">　　- 文化・スポーツ・生活</option>
+<option value="382"> 行財政</option>
+<option value="428">　　- 行政</option>
+<option value="429">　　- 財政</option>
+<option value="430">　　- 公務員</option>
+<option value="431">　　- 選挙</option>
+<option value="383"> 司法・安全・環境</option>
+<option value="432">　　- 司法</option>
+<option value="433">　　- 犯罪</option>
+<option value="434">　　- 災害</option>
+<option value="435">　　- 事故</option>
+<option value="436">　　- 環境</option>
+<option value="384"> 社会保障・衛生</option>
+<option value="437">　　- 社会保障</option>
+<option value="438">　　- 社会保険</option>
+<option value="439">　　- 社会福祉</option>
+<option value="440">　　- 保険衛生</option>
+<option value="441">　　- 医療</option>
+<option value="385"> 国際</option>
+<option value="442">　　- 貿易・国際収支</option>
+<option value="443">　　- 国際協力</option>
+<option value="386"> その他</option>
+<option value="444">　　- その他</option></select></dd>
+  </dl>
+  <dl class="area">
+    <dt><label for="s_area_id">地域</label></dt>
+    <dd><select name="s[area_id]" id="s_area_id"><option value=""></option>
+<option value="446">シラサギ市</option>
+<option value="447">東区</option>
+<option value="448">北区</option>
+<option value="449">南区</option>
+<option value="450">西区</option></select></dd>
+  </dl>
+  <dl class="tag">
+    <dt><label for="s_tag">タグ</label></dt>
+    <dd><select name="s[tag]" id="s_tag"><option value=""></option>
+<option value="タグ">タグ(5)</option></select></dd>
+    <a class="more" style="display: none;" href="/dataset/search/tags/">もっと見る</a>
+  </dl>
+  <dl class="format">
+    <dt><label for="s_format">フォーマット</label></dt>
+    <dd><select name="s[format]" id="s_format"><option value=""></option>
+<option value="CSV">CSV(1)</option>
+<option value="TXT">TXT(1)</option>
+<option value="XLSX">XLSX(1)</option></select></dd>
+  </dl>
+  <dl class="license">
+    <dt><label for="s_license_id">ライセンス</label></dt>
+    <dd><select name="s[license_id]" id="s_license_id"><option value=""></option>
+<option value="1">表示（CC BY）</option>
+<option value="2">表示-継承（CC BY-SA）</option>
+<option value="3">表示-改変禁止（CC BY-ND）</option>
+<option value="4">表示-非営利（CC BY-NC）</option>
+<option value="5">表示-非営利-継承（CC BY-NC-SA）</option>
+<option value="6">表示-非営利-改変禁止（CC BY-NC-ND）</option>
+<option value="7">いかなる権利も保有しない（CC 0）</option></select></dd>
+  </dl>
+  <dl class="group">
+    <dt><label for="s_dataset_group_id">グループ</label></dt>
+    <dd><select name="s[dataset_group_id]" id="s_dataset_group_id"><option value=""></option>
+<option value="2">データセットグループ2(3)</option>
+<option value="1">データセットグループ1(1)</option>
+<option value="3">データセットグループ3(1)</option></select></dd>
+  </dl>
+  <dl class="sort">
+    <dt><label for="s_sort">並び順</label></dt>
+    <dd><select name="s[sort]" id="s_sort"><option value="released">新着順</option>
+<option value="popular">人気順</option>
+<option value="attention">注目順</option></select></dd>
+  </dl>
+  <dl class="option">
+    <dt><label for="s_option">検索オプション</label></dt>
+    <dd><select name="s[option]" id="s_option"><option value="all_keywords">すべてのキーワードを含む</option>
+<option value="any_keywords">いずれかのキーワードを含む</option>
+<option value="any_conditions">すべてをOR条件で検索する</option></select></dd>
+  </dl>
+
+  <div class="send">
+    <input type="submit" name="search" value="検索" />
+  </div>
+</form>
+
+  <section class="result">
+    <h2>
+      <span class="number">5</span>
+      件ヒットしました。
+      <span class="first">1</span>
+      ～
+      <span class="last">
+        5
+      </span>
+      件を表示しています。
+    </h2>
+  </section>
+
+
+
+  <a class="download-all" href="/dataset/search/bulk_download?ids%5B%5D=143&amp;ids%5B%5D=139">一括ダウンロード</a>
+
+<div class="opendata-search-datasets pages">
+  <article>
+    <header>
+      <time datetime="2019-11-22">2019年11月22日</time>
+      <h2>
+        <a href="/dataset/5.html">サンプルデータ【5】</a>
+        <div class="download">
+          <a href="/dataset/search/dataset_download/143">ダウンロード(2件)</a>
+        </div>
+
+        <span class="point">0</span>
+      </h2>
+    </header>
+    <div class="categories">
+        <span class="category">産業・仕事</span>
+        <span class="area">シラサギ市</span>
+        <span class="tag">タグ</span>
+    </div>
+  </article>
+  <article>
+    <header>
+      <time datetime="2019-11-22">2019年11月22日</time>
+      <h2><a href="/dataset/4.html">サンプルデータ【4】</a>
+
+        <span class="point">0</span>
+      </h2>
+    </header>
+    <div class="categories">
+        <span class="category">産業・仕事</span>
+        <span class="area">東区</span>
+        <span class="tag">タグ</span>
+    </div>
+  </article>
+  <article>
+    <header>
+      <time datetime="2019-11-22">2019年11月22日</time>
+      <h2><a href="/dataset/3.html">サンプルデータ【3】</a>
+
+        <span class="point">0</span>
+      </h2>
+    </header>
+    <div class="categories">
+        <span class="category">くらし・手続き</span>
+        <span class="area">東区</span>
+        <span class="tag">タグ</span>
+    </div>
+  </article>
+  <article>
+    <header>
+      <time datetime="2019-11-22">2019年11月22日</time>
+      <h2><a href="/dataset/2.html">サンプルデータ【2】</a>
+
+        <span class="point">0</span>
+      </h2>
+    </header>
+    <div class="categories">
+        <span class="category">産業・仕事</span>
+        <span class="area">北区</span>
+        <span class="tag">タグ</span>
+    </div>
+  </article>
+  <article>
+    <header>
+      <time datetime="2019-11-22">2019年11月22日</time>
+      <h2><a href="/dataset/1.html">サンプルデータ【1】</a>
+        <div class="download">
+          <a href="/dataset/search/dataset_download/139">ダウンロード(1件)</a>
+        </div>
+
+        <span class="point">0</span>
+      </h2>
+    </header>
+    <div class="categories">
+        <span class="category">産業・仕事</span>
+        <span class="area">北区</span>
+        <span class="tag">タグ</span>
+    </div>
+  </article>
+
+</div>
+
+
+<!-- /layout_yield -->
+    </div>
+    <div id="side">
+      <section id="search-group">
+        <header><h1 id="od-searchgroup-name">グループ</h1></header>
+        <div class="opendata-dataset_groups nodes">
+  <article class="item- ">
+  <header>
+     <h2><a href="/dataset/search/?s%5Bdataset_group_id%5D=1">データセットグループ1</a></h2>
+  </header>
+</article>
+<article class="item- ">
+  <header>
+     <h2><a href="/dataset/search/?s%5Bdataset_group_id%5D=2">データセットグループ2</a></h2>
+  </header>
+</article>
+<article class="item- ">
+  <header>
+     <h2><a href="/dataset/search/?s%5Bdataset_group_id%5D=3">データセットグループ3</a></h2>
+  </header>
+</article>
+</div>
+
+<nav>
+  <a class="more" href="/dataset/search_group/">もっと見る</a>
+</nav>
+
+      </section>
+      <section id="app-attention">
+        <div class="opendata-apps pages">
+<header><h1>注目アプリ</h1></header>
+<ul>
+<li><a href="/app/5.html">サンプルアプリ【5】</a></li>
+<li><a href="/app/4.html">サンプルアプリ【4】</a></li>
+<li><a href="/app/3.html">サンプルアプリ【3】</a></li>
+<li><a href="/app/2.html">サンプルアプリ【2】</a></li>
+<li><a href="/app/1.html">サンプルアプリ【1】</a></li>
+</ul>
+<footer>
+  <nav class="feed">
+    <a class="more" href="/app/search/?sort=attention">もっと見る</a>
+    <a class="rss" href="/app/search/rss.xml?sort=attention">RSS</a>
+  </nav>
+</footer>
+</div>
+
+      </section>
+      <section id="idea-attention">
+        <div class="opendata-ideas pages">
+<header><h1>注目アイデア</h1></header>
+<ul>
+</ul>
+<footer>
+  <nav class="feed">
+    <a class="more" href="/idea/search/?sort=attention">もっと見る</a>
+    <a class="rss" href="/idea/search/rss.xml?sort=attention">RSS</a>
+  </nav>
+</footer>
+</div>
+
+      </section>
+    </div>
+  </div>
+
+  <footer id="foot">
+  <nav>
+    <a href="#">利用規約</a> | <a href="/inquiry/">お問い合わせ</a>
+  </nav>
+  <div id="copyright"><small>Copyright &copy; City of Shirasagi All rights Reserved.</small></div>
+</footer>
+
+</div>
+</body>
+
+</html>
