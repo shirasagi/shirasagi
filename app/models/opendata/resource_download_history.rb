@@ -1,8 +1,11 @@
 class Opendata::ResourceDownloadHistory
   include SS::Document
   include SS::Reference::Site
+  include Cms::SitePermission
 
   index({ site_id: 1, downloaded: -1 })
+
+  set_permission_name "opendata_histories", :read
 
   field :dataset_id, type: Integer
   field :dataset_name, type: String
@@ -75,6 +78,9 @@ end
 class Opendata::ResourceDownloadHistory::ArchiveFile
   include SS::Model::File
   include SS::Reference::Site
+  include Cms::SitePermission
+
+  set_permission_name "opendata_histories", :read
 
   default_scope ->{ where(model: "opendata/resource_download_history/archive_file") }
 end

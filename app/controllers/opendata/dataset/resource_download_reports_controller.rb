@@ -44,11 +44,15 @@ class Opendata::Dataset::ResourceDownloadReportsController < ApplicationControll
   public
 
   def index
+    raise "403" unless @model.allowed?(:read, @cur_user, site: @cur_site, node: @cur_node)
+
     @items = Kaminari.paginate_array(@items) if @items.is_a?(Array)
     @items = @items.page(params[:page]).per(50)
   end
 
   def download
+    raise "403" unless @model.allowed?(:read, @cur_user, site: @cur_site, node: @cur_node)
+
     enum = begin
       case @s.type
       when "month"

@@ -98,6 +98,8 @@ module Opendata
 
     Cms::Role.permission :edit_other_opendata_public_entity_datasets
 
+    Cms::Role.permission :read_opendata_histories
+
     SS::File.model "opendata/dataset", SS::File, permit: %i(role)
     SS::File.model "opendata/resource", SS::File, permit: %i(role)
     SS::File.model "opendata/url_resource", SS::File, permit: %i(role)

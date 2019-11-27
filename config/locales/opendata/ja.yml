@@ -528,6 +528,7 @@ ja:
     edit_other_opendata_harvests: ハーベスト機能の利用
     edit_other_opendata_harvested: ハーベスト機能の取込みデータセット強制編集
     edit_other_opendata_public_entity_datasets: データセット一覧ダウンロードの利用
+    read_opendata_histories: 各種履歴の閲覧
 
   mongoid:
     models:

@@ -1,6 +1,8 @@
 <div class="cms-tabs">
-  <%= link_to opendata_dataset_report_downloads_path do %>
-    <span class="tab-name"><%= t("opendata.reports.download_reports") %></span>
+  <% if Opendata::ResourceDownloadReport.allowed?(:read, @cur_user, site: @cur_site, node: @cur_node) %>
+    <%= link_to opendata_dataset_report_downloads_path do %>
+      <span class="tab-name"><%= t("opendata.reports.download_reports") %></span>
+    <% end %>
   <% end %>
   <%= link_to opendata_dataset_report_accesses_path, class: 'current' do %>
     <span class="tab-name"><%= t("opendata.reports.access_reports") %></span>

@@ -1,8 +1,11 @@
 class Opendata::ResourceDownloadReport
   include SS::Document
   include SS::Reference::Site
+  include Cms::SitePermission
 
   index({ site_id: 1, year_month: 1 })
+
+  set_permission_name "opendata_histories", :read
 
   field :year_month, type: Integer
   field :deleted, type: DateTime

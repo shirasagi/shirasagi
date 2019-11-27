@@ -28,35 +28,4 @@ class Opendata::Dataset::ResourceDownloadHistoryArchivesController < Application
   def set_items
     @items ||= @model.site(@cur_site).search(@s)
   end
-
-  public
-
-  def index
-    @items = @items.page(params[:page]).per(50)
-  end
-
-  def show
-    render
-  end
-
-  def delete
-    render
-  end
-
-  def destroy
-    render_destroy @item.destroy
-  end
-
-  def destroy_all
-    entries = @items.entries
-    @items = []
-
-    entries.each do |item|
-      next if item.destroy
-
-      @items << item
-    end
-
-    render_destroy_all(entries.size != @items.size)
-  end
 end

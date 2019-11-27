@@ -44,11 +44,9 @@ class Opendata::Dataset::ResourceDownloadHistoriesController < ApplicationContro
 
   public
 
-  def index
-    @items = @items.page(params[:page]).per(50)
-  end
-
   def download
+    raise "403" unless @model.allowed?(:read, @cur_user, site: @cur_site, node: @cur_node)
+
     enum = Opendata::ResourceDownloadHistory::HistoryCsv.enum_csv(@cur_site, @items)
     send_enum enum, type: 'text/csv; charset=Shift_JIS',
               filename: "dataset_download_history_#{Time.zone.now.to_i}.csv"
