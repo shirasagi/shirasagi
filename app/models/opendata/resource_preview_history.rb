@@ -22,3 +22,8 @@ class Opendata::ResourcePreviewHistory::HistoryCsv
 
   self.model = Opendata::ResourcePreviewHistory
 end
+
+class Opendata::ResourcePreviewHistory::ArchiveFile
+  include SS::Model::File
+  include Opendata::Resource::HistoryArchiveFileModel
+end

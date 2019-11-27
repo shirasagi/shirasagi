@@ -16,16 +16,6 @@ class Opendata::ResourceDownloadHistory
   end
 end
 
-class Opendata::ResourceDownloadHistory::ArchiveFile
-  include SS::Model::File
-  include SS::Reference::Site
-  include Cms::SitePermission
-
-  set_permission_name "opendata_histories", :read
-
-  default_scope ->{ where(model: "opendata/resource_download_history/archive_file") }
-end
-
 class Opendata::ResourceDownloadHistory::HistoryCsv
   include ActiveModel::Model
   include Opendata::Resource::HistoryCsvModel
@@ -56,4 +46,9 @@ class Opendata::ResourceDownloadHistory::HistoryCsv
   def encode_sjis(str)
     str.encode("SJIS", invalid: :replace, undef: :replace)
   end
+end
+
+class Opendata::ResourceDownloadHistory::ArchiveFile
+  include SS::Model::File
+  include Opendata::Resource::HistoryArchiveFileModel
 end

@@ -90,6 +90,8 @@ Rails.application.routes.draw do
       resources :previews, only: %i[index], controller: "dataset/resource_preview_histories", path: 'previews/:ymd' do
         get :download, on: :collection
       end
+      resources :preview_archives, only: %i[index show destroy], concerns: :deletion,
+                controller: "dataset/resource_preview_history_archives"
     end
 
     scope module: :dataset do
