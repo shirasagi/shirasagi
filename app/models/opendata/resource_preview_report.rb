@@ -1,4 +1,4 @@
-class Opendata::ResourceDownloadReport
+class Opendata::ResourcePreviewReport
   include SS::Document
   include Opendata::Resource::ReportModel
 end

@@ -26,7 +26,7 @@
                 <span class="resource-name">
                   <%= item["_id"]["resource_name"] %>
                   <% if item["deleted"].present? %>
-                    <% if item["deleted"] == Opendata::ResourceDownloadReport::UNCERTAIN_DELETED_TIME %>
+                    <% if item["deleted"] == @model::UNCERTAIN_DELETED_TIME %>
                     [削]
                     <% else %>
                     [削: <%= I18n.l(item["deleted"].in_time_zone.to_date) %>]

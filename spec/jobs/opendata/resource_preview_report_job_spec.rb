@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe Opendata::ResourceDownloadReportJob, dbscope: :example do
+describe Opendata::ResourcePreviewReportJob, dbscope: :example do
   let(:site) { cms_site }
   let(:user) { cms_user }
   let!(:node) { create(:opendata_node_dataset, cur_site: site) }
@@ -23,8 +23,8 @@ describe Opendata::ResourceDownloadReportJob, dbscope: :example do
 
     remote_addr = "10.0.0.1"
     user_agent = "user-agent-#{unique_id}"
-    resource.create_download_history(remote_addr, user_agent, Time.zone.parse("2019/11/01 00:00:00"))
-    resource.create_download_history(remote_addr, user_agent, Time.zone.parse("2019/11/30 00:00:00").end_of_day)
+    resource.create_preview_history(remote_addr, user_agent, Time.zone.parse("2019/11/01 00:00:00"))
+    resource.create_preview_history(remote_addr, user_agent, Time.zone.parse("2019/11/30 00:00:00").end_of_day)
 
     Fs::UploadedFile.create_from_file(resource_file_path, basename: "spec") do |f|
       dataset3.resources.create(
@@ -43,8 +43,8 @@ describe Opendata::ResourceDownloadReportJob, dbscope: :example do
         expect(log.logs).to include(include("INFO -- : Completed Job"))
       end
 
-      expect(Opendata::ResourceDownloadReport.all.count).to eq 1
-      Opendata::ResourceDownloadReport.all.first.tap do |report|
+      expect(Opendata::ResourcePreviewReport.all.count).to eq 1
+      Opendata::ResourcePreviewReport.all.first.tap do |report|
         expect(report.year_month).to eq 2_019 * 100 + 11
         expect(report.deleted).to be_blank
         expect(report.dataset_id).to eq dataset1.id
@@ -94,13 +94,13 @@ describe Opendata::ResourceDownloadReportJob, dbscope: :example do
   context "daily normal operation mode" do
     let!(:report1) do
       create(
-        :opendata_resource_download_report, cur_site: site, year_month: 2019 * 100 + 11,
+        :opendata_resource_preview_report, cur_site: site, year_month: 2019 * 100 + 11,
         dataset_id: rand(100..200), resource_id: rand(200..300)
       )
     end
     let!(:report2) do
       create(
-        :opendata_resource_download_report, cur_site: site, year_month: 2019 * 100 + 10,
+        :opendata_resource_preview_report, cur_site: site, year_month: 2019 * 100 + 10,
         dataset_id: report1.dataset_id, resource_id: report1.resource_id
       )
     end
@@ -116,10 +116,10 @@ describe Opendata::ResourceDownloadReportJob, dbscope: :example do
         expect(log.logs).to include(include("INFO -- : Completed Job"))
       end
 
-      expect(Opendata::ResourceDownloadReport.all.count).to eq 4
-      expect(Opendata::ResourceDownloadReport.all.where(dataset_id: dataset1.id).count).to eq 1
-      expect(Opendata::ResourceDownloadReport.all.where(dataset_id: dataset3.id).count).to eq 1
-      Opendata::ResourceDownloadReport.all.where(dataset_id: dataset1.id).first.tap do |report|
+      expect(Opendata::ResourcePreviewReport.all.count).to eq 4
+      expect(Opendata::ResourcePreviewReport.all.where(dataset_id: dataset1.id).count).to eq 1
+      expect(Opendata::ResourcePreviewReport.all.where(dataset_id: dataset3.id).count).to eq 1
+      Opendata::ResourcePreviewReport.all.where(dataset_id: dataset1.id).first.tap do |report|
         expect(report.year_month).to eq 2_019 * 100 + 11
         expect(report.deleted).to be_blank
         expect(report.dataset_id).to eq dataset1.id
@@ -163,7 +163,7 @@ describe Opendata::ResourceDownloadReportJob, dbscope: :example do
         expect(report.day29_count).to be_blank
         expect(report.day30_count).to be_blank
       end
-      Opendata::ResourceDownloadReport.all.where(dataset_id: dataset3.id).first.tap do |report|
+      Opendata::ResourcePreviewReport.all.where(dataset_id: dataset3.id).first.tap do |report|
         expect(report.year_month).to eq 2_019 * 100 + 11
         expect(report.deleted).to be_blank
         expect(report.dataset_id).to eq dataset3.id
@@ -220,8 +220,8 @@ describe Opendata::ResourceDownloadReportJob, dbscope: :example do
         described_class.bind(site_id: site.id, node_id: node.id, user_id: user.id).perform_now
       end
 
-      expect(Opendata::ResourceDownloadReport.all.count).to eq 4
-      Opendata::ResourceDownloadReport.all.where(dataset_id: dataset1.id).first.tap do |report|
+      expect(Opendata::ResourcePreviewReport.all.count).to eq 4
+      Opendata::ResourcePreviewReport.all.where(dataset_id: dataset1.id).first.tap do |report|
         expect(report.year_month).to eq 2_019 * 100 + 11
         expect(report.deleted).to be_blank
         expect(report.dataset_id).to eq dataset1.id

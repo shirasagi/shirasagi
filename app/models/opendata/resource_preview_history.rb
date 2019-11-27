@@ -1,6 +1,11 @@
 class Opendata::ResourcePreviewHistory
   include SS::Document
   include SS::Reference::Site
+  include Cms::SitePermission
+
+  index({ site_id: 1, previewed: -1 })
+
+  set_permission_name "opendata_histories", :read
 
   field :dataset_id, type: Integer
   field :dataset_name, type: String

@@ -1,5 +1,5 @@
 FactoryBot.define do
-  factory :opendata_resource_download_report, class: Opendata::ResourceDownloadReport do
+  factory :opendata_resource_preview_report, class: Opendata::ResourcePreviewReport do
     cur_site { cms_site }
     year_month { Time.zone.now.year * 100 + Time.zone.now.month }
     dataset_id { rand(1..100) }

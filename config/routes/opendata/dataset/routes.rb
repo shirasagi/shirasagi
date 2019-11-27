@@ -74,7 +74,7 @@ Rails.application.routes.draw do
       resources :accesses, only: %i[index], controller: "dataset/access_reports" do
         get :download, on: :collection
       end
-      resources :previews, only: %i[index], controller: "dataset/preview_reports" do
+      resources :previews, only: %i[index], controller: "dataset/resource_preview_reports" do
         get :download, on: :collection
       end
     end
