@@ -29,7 +29,9 @@ module SS::HistoryArchiveBase
     end
   end
 
-  def perform
+  def perform(*args)
+    @options = args.extract_options!
+
     prepare_workdir
 
     select_histories
