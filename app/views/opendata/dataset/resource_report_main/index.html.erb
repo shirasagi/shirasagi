@@ -5,8 +5,11 @@
       <span class="tab-name"><%= t("opendata.reports.download_reports") %></span>
     <% end %>
   <% end %>
-  <%= link_to opendata_dataset_report_accesses_path do %>
-    <span class="tab-name"><%= t("opendata.reports.access_reports") %></span>
+  <% if Opendata::DatasetAccessReport.allowed?(:read, @cur_user, site: @cur_site, node: @cur_node) %>
+    <% css_classes = request.path.start_with?(opendata_dataset_report_accesses_path) ? %w(current) : nil %>
+    <%= link_to opendata_dataset_report_accesses_path, class: css_classes do %>
+      <span class="tab-name"><%= t("opendata.reports.access_reports") %></span>
+    <% end %>
   <% end %>
   <% if Opendata::ResourcePreviewReport.allowed?(:read, @cur_user, site: @cur_site, node: @cur_node) %>
     <% css_classes = request.path.start_with?(opendata_dataset_report_previews_path) ? %w(current) : nil %>

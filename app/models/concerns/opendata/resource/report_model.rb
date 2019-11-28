@@ -227,12 +227,27 @@ module Opendata::Resource::ReportModel
       header
     end
 
+    def format_name_with_id(item_id, item_name)
+      ret = ""
+
+      if item_id.present?
+        ret << "[#{item_id}]"
+      end
+
+      if item_name.present?
+        ret << " " if ret.present?
+        ret << item_name
+      end
+
+      ret
+    end
+
     def dataset_header_for(_site, node, item)
       deleted = item.dataset_name.blank? || item.dataset_name.include?(I18n.t("ss.options.state.deleted"))
 
       [
         item.dataset_id,
-        "[#{item.dataset_id}] #{item.dataset_name}",
+        format_name_with_id(item.dataset_id, item.dataset_name),
         nil, # resource_name is always nil on dataset header
         deleted ? nil : item.dataset_url, # URL
         item.dataset_areas.present? ? item.dataset_areas.join("\n") : nil, # 地域
@@ -244,7 +259,7 @@ module Opendata::Resource::ReportModel
       data = [
         nil, # dataset_id
         nil, # dataset_name
-        "[#{item.resource_id}] #{item.resource_name}",
+        format_name_with_id(item.resource_id, item.resource_name),
         nil, # URL
         nil, # 地域
         delete_status(item.deleted), # ステータス
@@ -327,7 +342,7 @@ module Opendata::Resource::ReportModel
 
       [
         result["_id"]["dataset_id"],
-        "[#{result["_id"]["dataset_id"]}] #{dataset_name}",
+        format_name_with_id(result["_id"]["dataset_id"], dataset_name),
         nil, # resource_name is always nil on dataset header
         deleted ? nil : result["dataset_url"].presence || dataset_url(node, result["_id"]["dataset_id"]), # URL
         result["dataset_areas"].present? ? result["dataset_areas"].join("\n") : nil, # 地域
@@ -342,7 +357,7 @@ module Opendata::Resource::ReportModel
       data = [
         nil, # dataset_id
         nil, # dataset_name
-        "[#{resource_id}] #{resource_name}",
+        format_name_with_id(resource_id, resource_name),
         nil, # URL
         nil, # 地域
         delete_status(result["deleted"]), # ステータス
@@ -405,7 +420,7 @@ module Opendata::Resource::ReportModel
       data = [
         nil, # dataset_id
         nil, # dataset_name
-        "[#{resource_id}] #{resource_name}",
+        format_name_with_id(resource_id, resource_name),
         nil, # URL
         nil, # 地域
         delete_status(result["deleted"]), # ステータス
