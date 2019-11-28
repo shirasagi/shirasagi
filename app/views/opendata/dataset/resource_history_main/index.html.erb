@@ -15,10 +15,16 @@
   <span class="dataset"><%= item.dataset_name %></span>
   <span class="url"><%= link_to item.full_url, item.full_url, target: "_blank" %></span>
   <span class="remote-addr"><%= item.remote_addr %></span>
-  <span class="user-agent"><%= render_user_agent(item.user_agent, accept_language: request.accept_language) %></span>
+  <span class="user-agent" title="<%= item.user_agent %>">
+    <%= render_user_agent(item.user_agent, accept_language: request.accept_language) %>
+  </span>
 <% end %>
 
 <div class="opendata-resource-histories no-checkboxes">
   <%= render file: "_tabs" %>
   <%= render file: "cms/crud/index" %>
 </div>
+
+<%= jquery do %>
+  $(".opendata-resource-histories .user-agent").tooltip();
+<% end %>
