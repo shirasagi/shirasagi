@@ -28,6 +28,7 @@
 
 $(function () {
   SS_Kana.render();
+  SS_Translate.render();
   SS_Font.render();
   SS_AdobeReader.render();
   SS_Mobile.render();
@@ -55,19 +56,23 @@ this.SS_Kana = (function () {
   SS_Kana.kanaUrl = "<%= SS.config.kana.location %>" + "/";
 
   SS_Kana.render = function () {
-    var bind, url;
+    var bind, url, html;
     if (SS.config["site_url"] && SS.config["kana_url"]) {
       SS_Kana.siteUrl = SS.config["site_url"];
       SS_Kana.kanaUrl = SS.config["kana_url"];
     }
     if ($("body").data("kana")) {
       url = SS_Kana.url(location.pathname, false);
+      url = SS_Translate.url(url);
       bind = 'onclick="location.href=\'' + url + '\'; return false"';
-      return $("#ss-kana").html("<a class=\"off\" href=\"#" + url + "\" " + bind + "><%= I18n.t 'cms.links.ruby_off' %></a>");
+      html = $("#ss-kana").html();
+      return $("#ss-kana").html("<a class=\"off\" href=\"#" + url + "\" " + bind + ">" + html + "</a>");
     } else {
-      url = SS_Kana.url(location.pathname, true);
+      url = SS_Translate.url(location.pathname, false)
+      url = SS_Kana.url(url, true);
       bind = 'onclick="location.href=\'' + url + '\'; return false"';
-      return $("#ss-kana").html("<a class=\"on\" href=\"#" + url + "\" " + bind + "><%= I18n.t 'cms.links.ruby_on' %></a>");
+      html = $("#ss-kana").html();
+      return $("#ss-kana").html("<a class=\"on\" href=\"#" + url + "\" " + bind + ">"  + html + "</a>");
     }
   };
 
@@ -105,6 +110,53 @@ this.SS_Kana = (function () {
 
 })();
 
+this.SS_Translate = (function () {
+  function SS_Translate() {
+  }
+
+  SS_Translate.dir = "<%= SS.config.translate.location %>";
+
+  SS_Translate.siteUrl = "/";
+
+  SS_Translate.translateUrl = "<%= SS.config.translate.location %>" + "/";
+
+  SS_Translate.url = function (url, target) {
+    if (target) {
+      var targetUrl = this.translateUrl + target + "/";
+      url = url.replace(RegExp("^(\\/\\.s\\d+?\\/preview\\d*)?" + this.siteUrl), "$1" + targetUrl);
+    } else {
+      var targetUrl = this.translateUrl + $("body").data("translate") + "/";
+      url = url.replace(RegExp("^(\\/\\.s\\d+?\\/preview\\d*)?" + targetUrl), "$1" + this.siteUrl);
+    }
+    return url;
+  };
+
+  SS_Translate.render = function () {
+    var lang = $("body").data("translate");
+    var select = $('#ss-translate select[name="lang"]');
+    if (lang) {
+      select.find('option:nth-child(1)').hide();
+      select.val(lang);
+    } else {
+      select.find('option:nth-child(2)').hide();
+    }
+    select.on("change", function () {
+      var target = $(this).val();
+      if (target) {
+        url = SS_Translate.url(location.pathname, false)
+        url = SS_Translate.url(url, target)
+        location.href = url;
+      } else {
+        url = SS_Translate.url(location.pathname, false)
+        location.href = url;
+      }
+    });
+  };
+
+  return SS_Translate;
+
+})();
+
 this.SS_Theme = (function () {
   function SS_Theme() {
   }
@@ -115,18 +167,16 @@ this.SS_Theme = (function () {
       return;
     }
     theme = SS.config["theme"];
-    $("#ss-theme").html("");
     css = "";
     for (cls in theme) {
       v = theme[cls];
-      a = $('<a href="#" class="' + cls + '">' + v["name"] + '</a>');
       if (v["css_path"]) {
         $('head').append('<link rel="alternate stylesheet" type="text/css" title="' + v["name"] + '" href="' + v["css_path"] + '" class="ss-theme ' + cls + '" disabled />');
       }
       if (v["font_color"] && v["background_color"]) {
         css += SS_Theme.cssTemplate(cls, v["font_color"], v["background_color"]) + "\n";
       }
-      a.on("click", function (e) {
+      $("#ss-theme a." + cls).on("click", function (e) {
         cls = $(this).attr("class");
         Cookies.set("ss-theme", cls, {
           expires: 7,
@@ -135,7 +185,6 @@ this.SS_Theme = (function () {
         SS_Theme.switchTheme(cls);
         return false;
       });
-      $("#ss-theme").append(a);
     }
     style = $('<style type="text/css" class="ss-theme">' + css + '</style>');
     $("head").append(style);

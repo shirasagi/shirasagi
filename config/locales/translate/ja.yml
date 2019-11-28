@@ -1,0 +1,39 @@
+ja:
+  translate:
+    main: 自動翻訳
+    text_cache: 翻訳テキスト
+    site_setting: 設定
+    lang: 言語
+    update_state: ステータス
+    ignore_character: '0123456789-'
+    views:
+      show_original: 原文を表示
+      select_lang: 言語を選択
+
+    options:
+      api:
+        mock: "開発用API"
+        microsoft_translator_text: "Microsoft Translator Text"
+        google_translation: "Google Translation API"
+      update_state:
+        auto: 自動登録
+        manually: 手動登録
+
+    notice:
+      not_set_api: "翻訳APIが設定されていません。"
+      api_request_count: "※実際のリクエスト数および課金文字数については、各APIの管理コンソールを確認してください。"
+
+    errors:
+      duplicate_hexdigest: '%{original_text}（%{source} から %{target} への翻訳） は既に登録されています。'
+
+  mongoid:
+    attributes:
+      translate/text_cache:
+        api: API
+        original_text: 翻訳前テキスト
+        text: 翻訳先テキスト
+        source: 翻訳前言語コード
+        target: 翻訳先言語コード
+        update_state: ステータス
+      translate/compressor:
+        css: CSSセレクタ

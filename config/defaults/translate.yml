@@ -1,0 +1,204 @@
+# translate
+
+production: &production
+  location: /translate
+  mock:
+    array_size_limit: 100
+    text_size_limit: 4000
+    contents_size_limit: 4000
+    interval: 0
+
+  microsoft_translator_text:
+    key: ""
+    url: 'https://api.cognitive.microsofttranslator.com/translate?api-version=3.0'
+    array_size_limit: 100
+    text_size_limit: 4000
+    contents_size_limit: 4000
+    interval: 0.2
+
+  google_translation:
+    array_size_limit: 100
+    text_size_limit: 20000
+    contents_size_limit: 20000
+    interval: 0.2
+
+  lang_codes:
+  # Google Translation API (https://cloud.google.com/translate/docs/languages?hl=ja)
+    af: アフリカーンス語
+    am: アムハラ語
+    ar: アラビア文字
+    az: アゼルバイジャン語
+    be: ベラルーシ語
+    bg: ブルガリア語
+    bn: ベンガル文字
+    bs: ボスニア語
+    ca: カタロニア語
+    ceb: セブ語
+    co: コルシカ語
+    cs: チェコ語
+    cy: ウェールズ語
+    da: デンマーク語
+    de: ドイツ語
+    el: ギリシャ語
+    en: 英語
+    eo: エスペラント語
+    es: スペイン語
+    et: エストニア語
+    eu: バスク語
+    fa: ペルシャ語
+    fi: フィンランド語
+    fr: フランス語
+    fy: フリジア語
+    ga: アイルランド語
+    gd: スコットランド ゲール語
+    gl: ガリシア語
+    gu: グジャラト語
+    ha: ハウサ語
+    haw: ハワイ語
+    he: ヘブライ語
+    iw: ヘブライ語
+    hi: ヒンディー語
+    hmn: モン語
+    hr: クロアチア語
+    ht: クレオール語（ハイチ）
+    hu: ハンガリー語
+    hy: アルメニア語
+    id: インドネシア語
+    ig: イボ語
+    is: アイスランド語
+    it: イタリア語
+    ja: 日本語
+    jw: ジャワ語
+    ka: グルジア語
+    kk: カザフ語
+    km: クメール語
+    kn: カンナダ語
+    ko: 韓国語
+    ku: クルド語
+    ky: キルギス語
+    la: ラテン語
+    lb: ルクセンブルク語
+    lo: ラオ語
+    lt: リトアニア語
+    lv: ラトビア語
+    mg: マラガシ語
+    mi: マオリ語
+    mk: マケドニア語
+    ml: マラヤーラム文字
+    mn: モンゴル語
+    mr: マラーティー語
+    ms: マレー語
+    mt: マルタ語
+    my: ミャンマー語（ビルマ語）
+    ne: ネパール語
+    nl: オランダ語
+    no: ノルウェー語
+    ny: ニャンジャ語（チェワ語）
+    pa: パンジャブ語
+    pl: ポーランド語
+    ps: パシュト語
+    pt: ポルトガル語（ポルトガル、ブラジル）
+    ro: ルーマニア語
+    ru: ロシア語
+    sd: シンド語
+    si: シンハラ語
+    sk: スロバキア語
+    sl: スロベニア語
+    sm: サモア語
+    sn: ショナ語
+    so: ソマリ語
+    sq: アルバニア語
+    sr: セルビア語
+    st: セソト語
+    su: スンダ語
+    sv: スウェーデン語
+    sw: スワヒリ語
+    ta: タミル語
+    te: テルグ語
+    tg: タジク語
+    th: タイ語
+    tl: タガログ語（フィリピン語）
+    tr: トルコ語
+    uk: ウクライナ語
+    ur: ウルドゥー語
+    uz: ウズベク語
+    vi: ベトナム語
+    xh: コーサ語
+    yi: イディッシュ語
+    yo: ヨルバ語
+    zh: 中国語（簡体）
+    zh-CN: 中国語（簡体）
+    zh-TW: 中国語（繁体）
+    zu: ズールー語
+  # Microsoft Translator Text API (https://docs.microsoft.com/ja-jp/azure/cognitive-services/translator/language-support)
+    af: アフリカーンス語
+    ar: アラビア語
+    bg: ブルガリア語
+    bn: ベンガル語
+    bs: ボスニア語 (ラテン)
+    ca: カタルニア語
+    cs: チェコ語
+    cy: ウェールズ語
+    da: デンマーク語
+    de: ドイツ語
+    el: ギリシャ語
+    en: 英語
+    es: スペイン語
+    et: エストニア語
+    fa: ペルシャ語
+    fi: フィンランド語
+    fil: フィリピン語
+    fj: フィジー語
+    fr: フランス語
+    he: ヘブライ語
+    hi: ヒンディー語
+    hr: クロアチア語
+    ht: ハイチ・クレオール語
+    hu: ハンガリー語
+    id: インドネシア語
+    is: アイスランド語
+    it: イタリア語
+    ja: 日本語
+    ko: 韓国語
+    lt: リトアニア語
+    lv: ラトビア語
+    mg: マダガスカル語
+    mi: マオリ語
+    ms: マレー語
+    mt: マルタ語
+    mww: ミャオ語
+    nb: ノルウェー語
+    nl: オランダ語
+    otq: オトミ語
+    pl: ポーランド語
+    pt: ポルトガル語
+    ro: ルーマニア語
+    ru: ロシア語
+    sk: スロバキア語
+    sl: スロベニア語
+    sm: サモア語
+    sr-Cyrl: セルビア語 (キリル文字)
+    sr-Latn: セルビア語 (ラテン)
+    sv: スウェーデン語
+    sw: スワヒリ語
+    ta: タミル語
+    te: テルグ語
+    th: タイ語
+    tlh: クリンゴン語
+    tlh-Qaak: クリンゴン語 (plqaD)
+    to: トンガ語
+    tr: トルコ語
+    ty: タヒチ語
+    uk: ウクライナ語
+    ur: ウルドゥー語
+    vi: ベトナム語
+    yua: ユカテコ語
+    yue: 広東語 (繁体字)
+    zh-Hans: 中国語 (簡体字)
+    zh-Hant: 中国語 (繁体字)
+
+test:
+  <<: *production
+
+development:
+  <<: *production

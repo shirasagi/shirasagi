@@ -71,6 +71,7 @@ ja:
     draft_page: 下書きページ
     inplace_edit: 編集モード
     preview_date: プレビュー日時
+    translate: 自動翻訳
     column_file_upload:
       image:
         file_label: 代替えテキスト

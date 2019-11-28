@@ -13,8 +13,8 @@ this.KeyVisual_Image = (function () {
     defaultOpts = {
       auto: true,
       autoControls: true,
-      startText: "<%= I18n.t 'key_visual.controls.start' %>",
-      stopText: "<%= I18n.t 'key_visual.controls.stop' %>",
+      startText: $(selector).find(".controls-start").text(),
+      stopText: $(selector).find(".controls-stop").text(),
       controls: false,
       pagerCustom: selector + " .bx-thumbs"
     };

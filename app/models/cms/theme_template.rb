@@ -42,6 +42,12 @@ class Cms::ThemeTemplate
       criteria
     end
 
+    def template(site)
+      self.and_public.site(site).map do |item|
+        "<a href=\"#\" class=\"#{item.class_name}\">#{item.name}</a>"
+      end.join
+    end
+
     def to_config(opts = {})
       h = {}
       h[:theme] = {}

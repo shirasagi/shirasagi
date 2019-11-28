@@ -127,6 +127,12 @@ Rails.application.routes.draw do
       delete :search, on: :member, action: :destroy_all_pages
     end
 
+    namespace "translate" do
+      get "/" => redirect { |p, req| "#{req.path}/text_caches" }, as: :main
+      resources :text_caches, concerns: :deletion
+      resource :site_setting
+    end
+
     get "check_links" => "check_links#index"
     post "check_links" => "check_links#run"
     get "generate_nodes" => "generate_nodes#index"

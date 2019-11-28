@@ -1,0 +1,10 @@
+<dl class="see">
+  <dt><%= @model.t :translate_state %><%= @model.tt :translate_state %></dt>
+  <dd><%= f.select :translate_state, @item.translate_state_options %></dd>
+
+  <dt><%= @model.t :translate_source %><%= @model.tt :translate_source %></dt>
+  <dd><%= f.text_field :translate_source %></dd>
+
+  <dt><%= @model.t :translate_targets %><%= @model.tt :translate_targets %></dt>
+  <dd><%= f.text_area :translate_targets %></dd>
+</dl>
