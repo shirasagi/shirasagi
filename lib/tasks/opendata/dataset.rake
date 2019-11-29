@@ -62,4 +62,38 @@ namespace :opendata do
       exporter.initialize_group
     end
   end
+
+  namespace :report do
+    task :generate_download, [:site] => :environment do |_task, args|
+      ::Tasks::Cms.with_site(args[:site] || ENV['site']) do |site|
+        Opendata::ResourceDownloadReportJob.bind(site_id: site.id).perform_now
+      end
+    end
+
+    task :generate_access, [:site] => :environment do |_task, args|
+      ::Tasks::Cms.with_site(args[:site] || ENV['site']) do |site|
+        Opendata::DatasetAccessReportJob.bind(site_id: site.id).perform_now
+      end
+    end
+
+    task :generate_preview, [:site] => :environment do |_task, args|
+      ::Tasks::Cms.with_site(args[:site] || ENV['site']) do |site|
+        Opendata::ResourcePreviewReportJob.bind(site_id: site.id).perform_now
+      end
+    end
+  end
+
+  namespace :history do
+    task :archive_download, [:site] => :environment do |_task, args|
+      ::Tasks::Cms.with_site(args[:site] || ENV['site']) do |site|
+        Opendata::ResourceDownloadHistoryArchiveJob.bind(site_id: site.id).perform_now
+      end
+    end
+
+    task :archive_preview, [:site] => :environment do |_task, args|
+      ::Tasks::Cms.with_site(args[:site] || ENV['site']) do |site|
+        Opendata::ResourcePreviewHistoryArchiveJob.bind(site_id: site.id).perform_now
+      end
+    end
+  end
 end

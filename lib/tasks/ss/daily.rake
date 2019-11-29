@@ -28,6 +28,11 @@ namespace :ss do
 
         # リンクチェック
         # Rake.application.invoke_task("cms:check_links[#{site.host}, 'admin@example.jp']")
+
+        # オープンデータのレポート作成
+        Rake.application.invoke_task("opendata:report:generate_download[#{site.host}]")
+        Rake.application.invoke_task("opendata:report:generate_access[#{site.host}]")
+        Rake.application.invoke_task("opendata:report:generate_preview[#{site.host}]")
       end
 
       # 各種使用率の更新
