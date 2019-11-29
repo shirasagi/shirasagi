@@ -795,6 +795,7 @@ ja:
         resource_id: リソースID
         resource_name: リソース名
         resource_filename: リソースファイル名
+        resource_format: リソースフォーマット
         resource_source_url: リソースソースURL
         remote_addr: 接続元IP
         user_agent: ユーザーエージェント
@@ -803,8 +804,9 @@ ja:
         downloaded_by: ダウンロード方法
       opendata/resource_preview_history:
         previewed: プレビュー日時
-      opendata/resource_download_report:
+      opendata/resource/report_model:
         year_month: 年月
+        deleted: 削除日
         dataset_id: データセットID
         dataset_name: データセット名
         dataset_url: データセットURL
@@ -814,6 +816,7 @@ ja:
         resource_id: リソースID
         resource_name: リソース名
         resource_filename: リソースファイル名
+        resource_format: リソースフォーマット
 
   activemodel:
     models:

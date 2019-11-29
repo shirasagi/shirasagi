@@ -22,7 +22,7 @@ class Opendata::ResourceDownloadHistory::HistoryCsv
 
   self.csv_headers = %i[
     downloaded downloaded_by full_url dataset_id dataset_name dataset_areas dataset_categories dataset_estat_categories
-    resource_id resource_name resource_filename resource_source_url remote_addr user_agent
+    resource_id resource_name resource_filename resource_format resource_source_url remote_addr user_agent
   ].freeze
 
   self.model = Opendata::ResourceDownloadHistory

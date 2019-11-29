@@ -19,11 +19,10 @@ module Opendata::Resource::HistoryModel
     field :resource_id, type: Integer
     field :resource_name, type: String
     field :resource_filename, type: String
+    field :resource_format, type: String
     field :resource_source_url, type: String
 
     field :full_url, type: String
-    # field :downloaded, type: DateTime
-    # field :downloaded_by, type: String
     field :remote_addr, type: String
     field :user_agent, type: String
   end
@@ -47,6 +46,7 @@ module Opendata::Resource::HistoryModel
         resource_id: resource.id,
         resource_name: resource.name,
         resource_filename: resource.filename,
+        resource_format: resource.format,
         resource_source_url: resource.source_url,
         full_url: dataset.full_url,
         remote_addr: remote_addr,

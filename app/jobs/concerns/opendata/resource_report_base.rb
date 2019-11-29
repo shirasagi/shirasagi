@@ -66,6 +66,7 @@ module Opendata::ResourceReportBase
     dataset_name = item.dataset_name.presence
     resource_name = item.resource_name.presence
     resource_filename = item.resource_filename.presence
+    resource_format = item.resource_format.presence || item.resource_filename.try { |filename| filename.sub(/.*\./, "").upcase }
 
     dataset_url = item.full_url.presence
     dataset_areas = item.dataset_areas.presence
@@ -101,7 +102,7 @@ module Opendata::ResourceReportBase
       issued_at: issued_at, year: year, month: month, dataset_id: dataset_id, dataset_name: dataset_name,
       dataset_url: dataset_url, dataset_areas: dataset_areas, dataset_categories: dataset_categories,
       dataset_estat_categories: dataset_estat_categories, resource_id: resource_id, resource_name: resource_name,
-      resource_filename: resource_filename, count_field => 1
+      resource_filename: resource_filename, resource_format: resource_format, count_field => 1
     }
   end
 
@@ -128,6 +129,7 @@ module Opendata::ResourceReportBase
       r.dataset_categories = item[:dataset_categories].presence
       r.dataset_estat_categories = item[:dataset_estat_categories].presence
       r.resource_filename = item[:resource_filename].presence
+      r.resource_format = item[:resource_format].presence
 
       31.times do |i|
         count_field = "day#{i}_count".to_sym
@@ -205,6 +207,7 @@ module Opendata::ResourceReportBase
         r.dataset_estat_categories = dataset.estat_categories.and_public.order_by(order: 1).pluck(:name)
       end
       r.resource_filename = resource.filename.presence if r.resource_filename.blank?
+      r.resource_format = resource.format.presence if r.resource_format.blank?
 
       r.save
       Rails.logger.info "report #{r.id}: created without any count"

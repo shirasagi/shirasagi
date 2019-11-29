@@ -28,6 +28,7 @@ module Opendata::Resource::ReportModel
     field :resource_id, type: Integer
     field :resource_name, type: String
     field :resource_filename, type: String
+    field :resource_format, type: String
 
     31.times do |i|
       field "day#{i}_count", type: Integer
@@ -53,8 +54,19 @@ module Opendata::Resource::ReportModel
       Opendata::Node::Area.site(site).order_by(order: 1).pluck(:name)
     end
 
+    def format_options(site)
+      pipes = []
+      pipes << { "$match" => self.unscoped.site(site).exists(resource_format: true).selector }
+      pipes << { "$group" => { "_id" => { "$toUpper" => "$resource_format" }, "count" => { "$sum" => 1 } } }
+      pipes << { "$sort" => { 'count' => -1, '_id' => 1 } }
+      self.collection.aggregate(pipes).map do |data|
+        format = data["_id"]
+        [format, format]
+      end
+    end
+
     def search(params)
-      all.search_start(params).search_end(params).search_keyword(params).search_area(params)
+      all.search_start(params).search_end(params).search_keyword(params).search_area(params).search_format(params)
     end
 
     def search_start(params)
@@ -81,6 +93,12 @@ module Opendata::Resource::ReportModel
       return all if params.blank? || params[:area].blank?
 
       all.where(dataset_areas: params[:area])
+    end
+
+    def search_format(params)
+      return all if params.blank? || params[:format].blank?
+
+      all.where(resource_format: params[:format].upcase)
     end
 
     def aggregate_by_month

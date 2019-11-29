@@ -46,6 +46,13 @@
       <%= f.select :area, @model.area_options(@cur_site), include_blank: t("opendata.labels.area") %>
     </span>
 
+    <% format_options = @model.format_options(@cur_site) %>
+    <% if format_options.present? %>
+      <span style="margin: 0 5px;">
+        <%= f.select :format, format_options, include_blank: t("opendata.labels.format") %>
+      </span>
+    <% end %>
+
     <span>
       <input type="submit" value="<%= t('ss.buttons.search') %>" class="btn" />
       <input type="button" value="<%= t('ss.buttons.reset') %>" onclick="location.href='<%= url_for(action: :index) %>'" class="btn" />
