@@ -1,12 +1,12 @@
 <table class="see opendata-dataset-resources show">
   <% if @item.file %>
-  <tr class="parent-row">
-    <td class="field"><%= @model.t :file_id %></td>
-    <td class="input">
-    <%= link_to @item.filename, "file" %>
-    (<%= number_to_human_size @item.size %>)
-  </td>
-  </tr>
+    <tr class="parent-row">
+      <td class="field"><%= @model.t :file_id %></td>
+      <td class="input">
+        <%= link_to @item.filename, "file" %>
+        (<%= number_to_human_size @item.size %>)
+      </td>
+    </tr>
   <% end %>
 
   <% if @item.source_url.present? %>
@@ -37,26 +37,26 @@
   </tr>
 
   <% if @item.tsv %>
-  <tr class="parent-row">
-    <td class="field"><%= @model.t :tsv_id %></td>
-    <td class="input">
-    <%= link_to @item.tsv.filename, "tsv" %>
-    (<%= number_to_human_size @item.tsv.size %>)
-  </td>
-  </tr>
+    <tr class="parent-row">
+      <td class="field"><%= @model.t :tsv_id %></td>
+      <td class="input">
+        <%= link_to @item.tsv.filename, "tsv" %>
+        (<%= number_to_human_size @item.tsv.size %>)
+      </td>
+    </tr>
   <% end %>
 
   <% if @item.rdf_iri.present? %>
-  <tr class="parent-row">
-    <td class="field"><%= @model.t :rdf_iri %></td>
-    <td class="input"><%= link_to @item.rdf_iri, "#{sparql_path}?graph_name=#{@item.rdf_iri}" %></td>
-  </tr>
+    <tr class="parent-row">
+      <td class="field"><%= @model.t :rdf_iri %></td>
+      <td class="input"><%= link_to @item.rdf_iri, "#{sparql_path}?graph_name=#{@item.rdf_iri}", rel: @cur_site.anti_bot_set_nofollow? ? "nofollow" : nil %></td>
+    </tr>
   <% end %>
 
   <% if @item.rdf_error.present? %>
-  <tr class="parent-row">
-    <td class="field"><%= @model.t :rdf_error %></td>
-    <td class="input"><%= @item.send :rdf_error %></td>
-  </tr>
+    <tr class="parent-row">
+      <td class="field"><%= @model.t :rdf_error %></td>
+      <td class="input"><%= @item.send :rdf_error %></td>
+    </tr>
   <% end %>
 </table>

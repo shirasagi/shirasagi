@@ -340,6 +340,9 @@ ja:
       single: 単独
       dataset: データセット
       bulk: 一括
+    anti_bot_method_options:
+      set_nofollow: "ダウンロードやプレビューなどの <a> タグに rel=\"nofollow\" をつける"
+      use_button_for_bulk_download: "一括ダウンロードに <button> タグを用いる"
 
     # Web API
     api:
@@ -739,6 +742,7 @@ ja:
         dataset_state: データセット
         app_state: アプリ
         idea_state: アイデア
+        anti_bot_methods: Bot対策
       opendata/addon/workflow/idea_comment_approver:
         workflow_user_id: 申請者
         workflow_state: 承認状態
@@ -1071,6 +1075,11 @@ ja:
           #{class_estat_categories} リンク先ページ内がeStat分野に関連付けられている場合、全てのカテゴリのフォルダ名が表示されます。
           #{dataset_point} データセットのいいね！数が表示されます。
           #{dataset_downloaded} データセットのダウンロード数が表示されます。
+    opendata/addon/site_setting:
+      anti_bot_methods:
+        - Bot 対策方法を選択します。
+        - "&lt;a&gt; タグに rel=\"nofollow\" をつけると、Bot はリンクを辿らなくなります（ただし、紳士的な Bot のみ）。"
+        - "通常の Bot ではボタンをクリックしないので、一括ダウンロードに &lt;button&gt; タグを用いるようにすると、Bot が辿らなくなります。"
 
   job:
     models:

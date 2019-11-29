@@ -183,8 +183,9 @@ Rails.application.routes.draw do
     get "search_dataset/tags" => "public#index_tags", cell: "nodes/dataset/search_dataset"
     get "search_dataset/search" => "public#search", cell: "nodes/dataset/search_dataset"
     get "search_dataset/rss.xml" => "public#rss", cell: "nodes/dataset/search_dataset"
-    get "search_dataset/bulk_download" => "public#bulk_download", cell: "nodes/dataset/search_dataset"
-    get "search_dataset/dataset_download/:id" => "public#dataset_download", cell: "nodes/dataset/search_dataset"
+    match "search_dataset/bulk_download" => "public#bulk_download", cell: "nodes/dataset/search_dataset", via: [:get, :post]
+    match "search_dataset/dataset_download/:id" => "public#dataset_download", cell: "nodes/dataset/search_dataset",
+          via: [:get, :post]
   end
 
   part "opendata" do
