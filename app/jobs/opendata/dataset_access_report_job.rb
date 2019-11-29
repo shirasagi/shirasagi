@@ -57,7 +57,17 @@ class Opendata::DatasetAccessReportJob < Cms::ApplicationJob
     available_datasets.find { |dataset| dataset.id == dataset_id }
   end
 
+  def bot?(item)
+    user_agent = item.user_agent
+    return false if user_agent.blank?
+
+    browser = Browser.new(user_agent)
+    browser.bot?
+  end
+
   def update_result(item)
+    return if bot?(item)
+
     issued_at = item.created
     year = issued_at.year
     month = issued_at.month

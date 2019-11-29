@@ -54,7 +54,17 @@ module Opendata::ResourceReportBase
     end
   end
 
+  def bot?(item)
+    user_agent = item.user_agent
+    return false if user_agent.blank?
+
+    browser = Browser.new(user_agent)
+    browser.bot?
+  end
+
   def update_result(item)
+    return if bot?(item)
+
     issued_at = extract_issued_at(item)
     year = issued_at.year
     month = issued_at.month
