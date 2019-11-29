@@ -42,6 +42,10 @@
       <%= f.text_field :keyword, style: "width: 150px;" %>
     </span>
 
+    <span style="margin: 0 5px;">
+      <%= f.select :area, @model.area_options(@cur_site), include_blank: t("opendata.labels.area") %>
+    </span>
+
     <span>
       <input type="submit" value="<%= t('ss.buttons.search') %>" class="btn" />
       <input type="button" value="<%= t('ss.buttons.reset') %>" onclick="location.href='<%= url_for(action: :index) %>'" class="btn" />

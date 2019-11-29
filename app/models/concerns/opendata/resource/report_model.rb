@@ -49,8 +49,12 @@ module Opendata::Resource::ReportModel
       [:day, :month, :year].map { |t| [ I18n.t("activemodel.attributes.opendata/dataset_download_report/type.#{t}"), t ] }
     end
 
+    def area_options(site)
+      Opendata::Node::Area.site(site).order_by(order: 1).pluck(:name)
+    end
+
     def search(params)
-      all.search_start(params).search_end(params).search_keyword(params)
+      all.search_start(params).search_end(params).search_keyword(params).search_area(params)
     end
 
     def search_start(params)
@@ -71,6 +75,12 @@ module Opendata::Resource::ReportModel
       return all if params.blank? || params[:keyword].blank?
 
       all.keyword_in params[:keyword], :dataset_name, :resource_name
+    end
+
+    def search_area(params)
+      return all if params.blank? || params[:area].blank?
+
+      all.where(dataset_areas: params[:area])
     end
 
     def aggregate_by_month
