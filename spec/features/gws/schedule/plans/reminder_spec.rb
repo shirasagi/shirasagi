@@ -103,14 +103,18 @@ describe "gws_schedule_plans", type: :feature, dbscope: :example, js: true do
       #
       # リマインド日時まで時を進め、通知送信ジョブを実行する
       #
-      Timecop.freeze(reminder.notifications.first.notify_at + 1.minute) do
+      Timecop.freeze(reminder.notifications.first.notify_at) do
         Gws::Reminder::NotificationJob.bind(site_id: site.id).perform_now
+      end
+      Job::Log.first.tap do |log|
+        expect(log.logs).to include(include("INFO -- : Started Job"))
+        expect(log.logs).to include(include("INFO -- : Completed Job"))
       end
 
       reminder.reload
       expect(reminder.notifications.length).to eq 1
       reminder.notifications.first.tap do |notification|
-        expect(notification.delivered_at).to eq notification.notify_at + 1.minute
+        expect(notification.delivered_at).to eq notification.notify_at
       end
 
       expect(SS::Notification.all.count).to eq 1
@@ -163,19 +167,24 @@ describe "gws_schedule_plans", type: :feature, dbscope: :example, js: true do
         expect(notification.notify_at).to eq plan.start_at - notification.interval.minutes
         expect(notification.base_time).to be_blank
         expect(notification.delivered_at).to eq Time.zone.at(0)
+        puts "notification.notify_at=#{notification.notify_at}"
       end
 
       #
       # リマインド日時まで時を進め、通知送信ジョブを実行する
       #
-      Timecop.freeze(reminder.notifications.first.notify_at + 1.minute) do
+      Timecop.freeze(reminder.notifications.first.notify_at) do
         Gws::Reminder::NotificationJob.bind(site_id: site.id).perform_now
+      end
+      Job::Log.first.tap do |log|
+        expect(log.logs).to include(include("INFO -- : Started Job"))
+        expect(log.logs).to include(include("INFO -- : Completed Job"))
       end
 
       reminder.reload
       expect(reminder.notifications.length).to eq 1
       reminder.notifications.first.tap do |notification|
-        expect(notification.delivered_at).to eq notification.notify_at + 1.minute
+        expect(notification.delivered_at).to eq notification.notify_at
       end
 
       # 通知はされていない

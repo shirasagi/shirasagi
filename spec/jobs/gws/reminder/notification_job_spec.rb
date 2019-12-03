@@ -26,7 +26,7 @@ describe Gws::Reminder::NotificationJob, dbscope: :example do
   context 'usual case' do
     it do
       expect(reminder.notifications).to be_present
-      Timecop.travel(reminder.notifications.first.notify_at + 1.minute) do
+      Timecop.travel(reminder.notifications.first.notify_at) do
         described_class.bind(site_id: site.id).perform_now
       end
 
@@ -54,7 +54,7 @@ describe Gws::Reminder::NotificationJob, dbscope: :example do
       reminder.notifications.first.update_attributes(state: 'enabled')
 
       expect(reminder.notifications).to be_present
-      Timecop.travel(reminder.notifications.first.notify_at + 1.minute) do
+      Timecop.travel(reminder.notifications.first.notify_at) do
         described_class.bind(site_id: site.id).perform_now
       end
 
@@ -69,7 +69,7 @@ describe Gws::Reminder::NotificationJob, dbscope: :example do
 
   context 'send notification twice' do
     it do
-      Timecop.travel(reminder.notifications.first.notify_at + 1.minute) do
+      Timecop.travel(reminder.notifications.first.notify_at) do
         described_class.bind(site_id: site.id).perform_now
         described_class.bind(site_id: site.id).perform_now
       end
@@ -104,7 +104,7 @@ describe Gws::Reminder::NotificationJob, dbscope: :example do
 
     it do
       expect(reminder.notifications).to be_present
-      Timecop.travel(reminder.notifications.first.notify_at + 1.minute) do
+      Timecop.travel(reminder.notifications.first.notify_at) do
         described_class.bind(site_id: site.id).perform_now
       end
 
