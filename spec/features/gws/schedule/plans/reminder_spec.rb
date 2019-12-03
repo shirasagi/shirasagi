@@ -41,7 +41,7 @@ describe "gws_schedule_plans", type: :feature, dbscope: :example, js: true do
       visit show_path
       expect(Gws::Reminder.count).to eq 1
       within ".gws-addon-reminder" do
-        within first('.remider-conditions tr') do
+        within first('.reminder-conditions tr') do
           selected = I18n.t('gws/reminder.options.notify_state.mail')
           expect(page).to have_select("item[in_reminder_conditions][][state]", selected: selected)
         end
@@ -51,7 +51,7 @@ describe "gws_schedule_plans", type: :feature, dbscope: :example, js: true do
       # リマインダーを解除
       #
       within ".gws-addon-reminder" do
-        within first('.remider-conditions tr') do
+        within first('.reminder-conditions tr') do
           find('button.action-remove').click
         end
         click_on I18n.t('gws/reminder.buttons.register_reminder')
@@ -73,7 +73,7 @@ describe "gws_schedule_plans", type: :feature, dbscope: :example, js: true do
       #
       visit show_path
       within ".gws-addon-reminder" do
-        within first('.remider-conditions tr') do
+        within first('.reminder-conditions tr') do
           select I18n.t('gws/reminder.options.notify_state.enabled'), from: 'item[in_reminder_conditions][][state]'
         end
         click_on I18n.t('gws/reminder.buttons.register_reminder')
@@ -138,7 +138,7 @@ describe "gws_schedule_plans", type: :feature, dbscope: :example, js: true do
       #
       visit show_path
       within ".gws-addon-reminder" do
-        within first('.remider-conditions tr') do
+        within first('.reminder-conditions tr') do
           select I18n.t('gws/reminder.options.notify_state.mail'), from: 'item[in_reminder_conditions][][state]'
         end
         click_on I18n.t('gws/reminder.buttons.register_reminder')
