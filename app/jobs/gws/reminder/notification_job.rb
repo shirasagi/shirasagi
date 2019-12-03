@@ -1,8 +1,11 @@
 class Gws::Reminder::NotificationJob < Gws::ApplicationJob
-  def perform(opts = {})
+  def perform(*args)
+    options = args.extract_options!
+    options = options.with_indifferent_access
     @now = Time.zone.now.beginning_of_minute
-    @from = opts[:from] || @now - 10.minutes
-    @to = opts[:to] || @now + 1.minute
+    @from = options[:from].try { |time| Time.zone.parse(time.to_s) } || @now - 10.minutes
+    @to = options[:to].try { |time| Time.zone.parse(time.to_s) } || @now + 1.minute
+
     send_count = 0
     each_reminder do |item|
       mail = Gws::Reminder::Mailer.notify_mail(site, item)
