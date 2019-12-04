@@ -21,7 +21,7 @@
 </div>
 <% end %>
 
-<% if @cms_sites.size > 0 && SS.config.cms.disable.blank? && Cms.allowed?(:use, @cur_user) %>
+<% if @cms_sites.size > 0 && SS.config.cms.disable.blank? %>
 <div class="mypage-box">
   <div class="index mypage-sites">
     <div class="list-head"><%= t "cms.site" %></div>
@@ -43,7 +43,7 @@
 </div>
 <% end %>
 
-<% if @gws_sites.size > 0 && SS.config.gws.disable.blank? && Gws.allowed?(:use, @cur_user) %>
+<% if @gws_sites.size > 0 && SS.config.gws.disable.blank? %>
 <div class="mypage-box">
   <div class="index mypage-groups">
     <div class="list-head"><%= t "gws.group" %></div>
