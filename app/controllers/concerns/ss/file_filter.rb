@@ -18,13 +18,14 @@ module SS::FileFilter
     @item = @model.new get_params
     raise "403" unless @item.allowed?(:edit, @cur_user, site: @cur_site)
 
-    if @item.in_files
+    if @item.in_files.present?
       def @item.to_json
         saved_files.to_json
       end
       render_create @item.save_files, location: { action: :index }
     else
-      render_create @item.save
+      @item.errors.add :in_files, :blank
+      render_create false
     end
   end
 
