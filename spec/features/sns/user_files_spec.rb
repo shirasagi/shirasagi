@@ -53,4 +53,24 @@ describe "sns_user_files", type: :feature, dbscope: :example, tmpdir: true do
       expect(current_path).to eq index_path
     end
   end
+
+  context "when validation error occurred" do
+    before { login_ss_user }
+
+    it "#new" do
+      visit new_path
+      within "form#item-form" do
+        click_button I18n.t('ss.buttons.save')
+      end
+      expect(status_code).to eq 200
+      expect(page).to have_css("form#item-form")
+
+      within "form#item-form" do
+        attach_file "item[in_files][]", "#{Rails.root}/spec/fixtures/ss/logo.png"
+        click_button I18n.t('ss.buttons.save')
+      end
+      expect(status_code).to eq 200
+      expect(page).to have_no_css("form#item-form")
+    end
+  end
 end
