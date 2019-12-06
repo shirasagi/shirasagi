@@ -12,7 +12,7 @@ module Opendata::Resource::ReportModel
   included do
     index({ site_id: 1, year_month: 1 })
 
-    set_permission_name "opendata_histories", :read
+    set_permission_name "opendata_reports", :read
 
     field :year_month, type: Integer
     field :deleted, type: DateTime
