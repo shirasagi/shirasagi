@@ -552,7 +552,7 @@ article1 = save_page route: "article/page", filename: "docs/page1.html", name: "
 article2 = save_page route: "article/page", filename: "docs/page2.html", name: "お知らせ情報が入ります。お知らせ情報が入ります。",
   layout_id: layouts["docs"].id, category_ids: [categories["news"].id]
 
-file = save_ss_files "ss_files/article/dummy.jpg", filename: "dummy.jpg", model: "article/page"
+file = save_ss_files "ss_files/article/dummy.jpg", filename: "dummy1.jpg", model: "article/page"
 article3 = save_page route: "article/page", filename: "docs/page3.html", name: "お知らせ情報が入ります。",
   layout_id: layouts["docs"].id, category_ids: [categories["news"].id], file_ids: [file.id],
   map_points: [ { name: "徳島駅", loc: [34.074722, 134.5516], text: "徳島駅です。" } ], related_page_ids: [article1.id, article2.id],
@@ -561,7 +561,7 @@ article3 = save_page route: "article/page", filename: "docs/page3.html", name: "
 article3.html = article3.html.gsub("src=\"#\"", "src=\"#{file.url}\"")
 article3.update
 
-file = save_ss_files "ss_files/article/dummy.jpg", filename: "dummy.jpg", model: "article/page"
+file = save_ss_files "ss_files/article/dummy.jpg", filename: "dummy2.jpg", model: "article/page"
 article4 = save_page route: "article/page", filename: "docs/page4.html", name: "子育てサークルにさんかしませんか？",
   layout_id: layouts["docs"].id, category_ids: [categories["topics"].id], file_ids: [file.id],
   contact_group_id: contact_group_id, contact_email: contact_email, contact_tel: contact_tel,
@@ -676,7 +676,7 @@ save_page route: "sitemap/page", filename: "sitemap/index.html", name: "サイ�
   sitemap_deny_urls: %w(ads css img js relation slide sub-menu)
 
 puts "# cms pages"
-file = save_ss_files "ss_files/facility/dummy.jpg", filename: "dummy.jpg", model: "facility/image"
+file = save_ss_files "ss_files/facility/dummy.jpg", filename: "dummy1.jpg", model: "facility/file"
 page1 = save_page route: "cms/page", filename: "know/pregnancy/procedure.html", name: "妊娠した時の手続き",
   layout_id: layouts["page"].id, file_ids: [file.id],
   category_ids: [categories["age/pregnancy"].id, categories["purpose/birth"].id],
@@ -688,7 +688,7 @@ page1 = save_page route: "cms/page", filename: "know/pregnancy/procedure.html", 
 page1.html = page1.html.gsub("src=\"#\"", "src=\"#{file.url}\"")
 page1.update
 
-file = save_ss_files "ss_files/facility/dummy.jpg", filename: "dummy.jpg", model: "facility/image"
+file = save_ss_files "ss_files/facility/dummy.jpg", filename: "dummy2.jpg", model: "facility/file"
 page2 = save_page route: "cms/page", filename: "know/pregnancy/exploration.html", name: "妊婦健康診査",
   layout_id: layouts["page"].id, file_ids: [file.id],
   category_ids: [categories["age/pregnancy"].id, categories["purpose/birth"].id],
@@ -700,7 +700,7 @@ page2 = save_page route: "cms/page", filename: "know/pregnancy/exploration.html"
 page2.html = page2.html.gsub("src=\"#\"", "src=\"#{file.url}\"")
 page2.update
 
-file = save_ss_files "ss_files/facility/dummy.jpg", filename: "dummy.jpg", model: "facility/image"
+file = save_ss_files "ss_files/facility/dummy.jpg", filename: "dummy3.jpg", model: "facility/file"
 page3 = save_page route: "cms/page", filename: "know/pregnancy/born.html", name: "赤ちゃんが生まれたら",
   layout_id: layouts["page"].id, file_ids: [file.id],
   category_ids: [categories["age/pregnancy"].id, categories["purpose/birth"].id],
@@ -711,7 +711,7 @@ page3 = save_page route: "cms/page", filename: "know/pregnancy/born.html", name:
 page3.html = page3.html.gsub("src=\"#\"", "src=\"#{file.url}\"")
 page3.update
 
-file = save_ss_files "ss_files/facility/dummy.jpg", filename: "dummy.jpg", model: "facility/image"
+file = save_ss_files "ss_files/facility/dummy.jpg", filename: "dummy4.jpg", model: "facility/file"
 page4 = save_page route: "cms/page", filename: "know/pregnancy/birth.html", name: "出生届",
   layout_id: layouts["page"].id, file_ids: [file.id],
   category_ids: [categories["age/pregnancy"].id, categories["purpose/birth"].id],
@@ -723,7 +723,7 @@ page4 = save_page route: "cms/page", filename: "know/pregnancy/birth.html", name
 page4.html = page4.html.gsub("src=\"#\"", "src=\"#{file.url}\"")
 page4.update
 
-file = save_ss_files "ss_files/facility/dummy.jpg", filename: "dummy.jpg", model: "facility/image"
+file = save_ss_files "ss_files/facility/dummy.jpg", filename: "dummy5.jpg", model: "facility/file"
 page5 = save_page route: "cms/page", filename: "know/pregnancy/lump-sum.html", name: "出産育児一時金",
   layout_id: layouts["page"].id, file_ids: [file.id],
   category_ids: [categories["age/pregnancy"].id, categories["purpose/birth"].id],
