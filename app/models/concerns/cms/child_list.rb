@@ -50,7 +50,15 @@ module Cms::ChildList
     return category_nodes if self.route == 'category/node'
     return category_pages if self.route == 'category/page'
 
-    child_nodes + child_pages
+    items = child_nodes + child_pages
+    self.sort_hash.reverse_each do |k, v|
+      next if v.zero?
+      i = 0
+      items.sort_by! do |item|
+        [item.send(k) * v, i += 1]
+      end
+    end
+    items.take(child_list_limit)
   end
 
   def template_variable_handler_child_items(name, issuer)
