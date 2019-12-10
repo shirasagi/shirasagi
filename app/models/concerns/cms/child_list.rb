@@ -53,9 +53,8 @@ module Cms::ChildList
     items = child_nodes + child_pages
     self.sort_hash.reverse_each do |k, v|
       next if v.zero?
-      i = 0
-      items.sort_by! do |item|
-        [item.send(k) * v, i += 1]
+      items.sort! do |a, b|
+        (a.send(k) <=> b.send(k)) * v
       end
     end
     items.take(child_list_limit)

@@ -35,4 +35,35 @@ describe "cms_agents_nodes_node", type: :feature, dbscope: :example do
       expect(page).to have_selector("a[href='/mobile/node/item/']")
     end
   end
+
+  context "public with child_item conditions" do
+    let! (:upper_html) { '<div>' }
+    let! (:loop_html) { '<h2><a href="#{url}">#{index_name}</a></h2>#{child_items}' }
+    let! (:lower_html) { '</div>' }
+    let! (:child_upper_html) { '<ul>' }
+    let! (:child_loop_html) { '<li><a href="#{url}">#{index_name}</a></li>' }
+    let! (:child_lower_html) { '</ul>' }
+    let!(:cms_node) do
+      create :cms_node_node, layout_id: layout.id, filename: "cms-node",
+             upper_html: upper_html, loop_html: loop_html, lower_html: lower_html,
+             child_upper_html: child_upper_html, child_loop_html: child_loop_html, child_lower_html: child_lower_html
+    end
+    let!(:pages) { create :cms_node_page, layout_id: layout.id, filename: "cms-node/pages" }
+    let!(:docs_node) { create :cms_node_node, layout_id: layout.id, filename: "cms-node/pages/node" }
+
+    let!(:item_1) { create :cms_page, filename: "cms-node/pages/item_1.html", group_ids: [cms_group.id] }
+    let!(:item_2) { create :article_page, filename: "cms-node/pages/item_2.html", group_ids: [cms_group.id] }
+
+    before do
+      Capybara.app_host = "http://#{site.domain}"
+    end
+
+    it "#index" do
+      visit cms_node.url
+      expect(status_code).to eq 200
+      expect(page).to have_link(pages.name)
+      expect(page).to have_link(item_1.name)
+      expect(page).to have_link(item_2.name)
+    end
+  end
 end
