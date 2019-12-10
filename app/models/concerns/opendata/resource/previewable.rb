@@ -34,8 +34,7 @@ module Opendata::Resource::Previewable
       end
     end
   rescue => e
-    logger.warn("#{e.class} (#{e.message}):\n  #{e.backtrace.join("\n  ")}")
-    puts("#{e.class} (#{e.message}):\n  #{e.backtrace.join("\n  ")}")
+    logger.error("Opendata Resource save_map_resources failed : #{e.class} (#{e.message})")
   end
 
   public
