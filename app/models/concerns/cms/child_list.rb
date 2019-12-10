@@ -51,11 +51,16 @@ module Cms::ChildList
     return category_pages if self.route == 'category/page'
 
     items = child_nodes + child_pages
-    self.sort_hash.reverse_each do |k, v|
-      next if v.zero?
-      items.sort! do |a, b|
-        (a.send(k) <=> b.send(k)) * v
+    items.sort! do |a, b|
+      cmp = 0
+      self.sort_hash.each do |k, v|
+        cmp = (a.send(k) <=> b.send(k)) * v
+        break if cmp.nonzero?
       end
+      next cmp if cmp.nonzero?
+      cmp = a.id <=> b.id
+      next cmp if cmp.nonzero?
+      a.collection_name <=> b.collection_name
     end
     items.take(child_list_limit)
   end
