@@ -26,7 +26,16 @@ ja:
     errors:
       duplicate_hexdigest: '%{original_text}（%{source} から %{target} への翻訳） は既に登録されています。'
 
+  modules:
+    translate: 自動翻訳
+
+  cms:
+    parts:
+      translate/tool: 翻訳ツール
+
   mongoid:
+    models:
+      translate/part/tool: 翻訳ツール
     attributes:
       translate/text_cache:
         api: API

@@ -1,7 +1,8 @@
 Rails.application.routes.draw do
 
-  concern :deletion do
-    get :delete, on: :member
-    delete :destroy_all, on: :collection, path: ''
+  Translate::Initializer
+
+  part "translate" do
+    get "tool" => "public#index", cell: "parts/tool"
   end
 end
