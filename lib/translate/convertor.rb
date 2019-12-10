@@ -69,7 +69,7 @@ class Translate::Convertor
       next if value.blank?
       next if node.instance_variable_get(:@notranslate)
 
-      nodes << node
+      nodes << value
     end
 
     item = Translate::RequestBuffer.new(@site, @source, @target)
