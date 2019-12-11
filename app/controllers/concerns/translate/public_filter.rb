@@ -17,6 +17,7 @@ module Translate::PublicFilter
 
     if @cur_site.translate_targets.include?(@translate_target)
       filters << :translate
+      request.env["ss.translate_target"] = @translate_target
       @cur_main_path = main_path
     end
   end
