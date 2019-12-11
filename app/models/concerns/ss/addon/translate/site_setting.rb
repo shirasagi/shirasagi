@@ -45,6 +45,7 @@ module SS::Addon
       permit_params :translate_google_api_request_count
       permit_params :translate_google_api_request_word_count
 
+      validates :translate_api, presence: true, if: -> { translate_enabled? }
       validate :validate_translate_targets, if: -> { translate_targets.present? }
     end
 
@@ -83,22 +84,13 @@ module SS::Addon
       ::File.join(url, translate_location, "/")
     end
 
-    def translate_tool_template
-      return if translate_targets.blank?
+    def available_lang_codes
+      return {} if translate_api.blank?
 
-      h = '<select name="lang" class="notranslate">'
-      h += '<option value="">' + I18n.t("translate.views.select_lang") + '</option>'
-      h += '<option value="">' + I18n.t("translate.views.show_original") + '</option>'
-      h += translate_targets.map do |target|
-        label = lang_codes[target] ? lang_codes[target] : target
-        '<option value="' + target + '">' + label + '</option>'
-      end.join
-      h += '</select>'
-      h
-    end
+      conf = SS.config.translate[translate_api]
+      return {} if conf.blank?
 
-    def lang_codes
-      @lang_codes ||= SS.config.translate.lang_codes
+      conf["lang_codes"]
     end
   end
 end

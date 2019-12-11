@@ -8,7 +8,15 @@ class Translate::Agents::Parts::ToolController < ApplicationController
   end
 
   def index
-    available = SS.config.translate.lang_codes.keys
-    @preferred_lang = http_accept_language.preferred_language_from(available)
+    if !@cur_site.translate_enabled?
+      return
+    end
+
+    @lang_codes = @cur_site.available_lang_codes
+    @preferred_lang = http_accept_language.preferred_language_from(@lang_codes.keys)
+
+    if @preferred_lang != @cur_site.translate_source
+      Rails.logger.info "Accept-Language : #{http_accept_language.user_preferred_languages.join(" ")}"
+    end
   end
 end

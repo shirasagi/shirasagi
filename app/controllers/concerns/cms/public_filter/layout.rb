@@ -103,7 +103,6 @@ module Cms::PublicFilter::Layout
     end
 
     html = render_theme_tool(html)
-    html = render_translate_tool(html)
     html = render_template_variables(html)
     html.sub!(/(\{\{ yield \}\}|<\/ yield \/>)/) do
       body = []
@@ -235,13 +234,6 @@ module Cms::PublicFilter::Layout
   def render_theme_tool(html)
     template = Cms::ThemeTemplate.template(@cur_site)
     html.gsub(/(<.+? id="ss-theme".*?>)(.*?)(<\/.+?>)/) do
-      "#{$1}#{template}#{$3}"
-    end
-  end
-
-  def render_translate_tool(html)
-    template = @cur_site.translate_tool_template
-    html.gsub(/(<.+? id="ss-translate".*?>)(.*?)(<\/.+?>)/) do
       "#{$1}#{template}#{$3}"
     end
   end

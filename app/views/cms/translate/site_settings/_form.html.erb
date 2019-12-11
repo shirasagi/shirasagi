@@ -6,5 +6,5 @@
   <dd><%= f.text_field :translate_source %></dd>
 
   <dt><%= @model.t :translate_targets %><%= @model.tt :translate_targets %></dt>
-  <dd><%= f.text_area :translate_targets %></dd>
+  <dd><%= f.text_area :translate_targets, value: @item.translate_targets.join("\n") %></dd>
 </dl>

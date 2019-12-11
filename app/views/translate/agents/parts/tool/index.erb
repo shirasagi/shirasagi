@@ -2,7 +2,6 @@
   return "" if !@cur_site.translate_enabled?
 
   id = "translate-tool-#{@cur_part.id}"
-  lang_codes = @cur_site.lang_codes
 
   if @translate_target
     options = [ [ I18n.t("translate.views.show_original"), "" ] ]
@@ -10,7 +9,7 @@
     options = [ [I18n.t("translate.views.select_lang"), ""] ]
   end
   options += @cur_site.translate_targets.map do |target|
-    label = lang_codes[target] ? lang_codes[target] : target
+    label = @lang_codes[target] ? @lang_codes[target] : target
     [label, target]
   end
 

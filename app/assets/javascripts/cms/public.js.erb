@@ -28,7 +28,6 @@
 
 $(function () {
   SS_Kana.render();
-  SS_Translate.render();
   SS_Font.render();
   SS_AdobeReader.render();
   SS_Mobile.render();
@@ -129,28 +128,6 @@ this.SS_Translate = (function () {
       url = url.replace(RegExp("^(\\/\\.s\\d+?\\/preview\\d*)?" + targetUrl), "$1" + this.siteUrl);
     }
     return url;
-  };
-
-  SS_Translate.render = function () {
-    var lang = $("body").data("translate");
-    var select = $('#ss-translate select[name="lang"]');
-    if (lang) {
-      select.find('option:nth-child(1)').hide();
-      select.val(lang);
-    } else {
-      select.find('option:nth-child(2)').hide();
-    }
-    select.on("change", function () {
-      var target = $(this).val();
-      if (target) {
-        url = SS_Translate.url(location.pathname, false)
-        url = SS_Translate.url(url, target)
-        location.href = url;
-      } else {
-        url = SS_Translate.url(location.pathname, false)
-        location.href = url;
-      }
-    });
   };
 
   return SS_Translate;

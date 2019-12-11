@@ -46,3 +46,14 @@ ja:
         update_state: ステータス
       translate/compressor:
         css: CSSセレクタ
+
+  tooltip:
+    ss/addon/translate/site_setting:
+      translate_state:
+        - 翻訳機能の有効/無効を設定します。
+      translate_source:
+        - 翻訳元となる言語コードを入力します。
+        - 言語コードは利用するAPIのリファレンスを確認してください。
+      translate_targets:
+        - 翻訳先となる言語コードを改行区切りで入力します。
+        - 言語コードは利用するAPIのリファレンスを確認してください。

@@ -6,5 +6,5 @@
   <dd><%= @item.translate_source %></dd>
 
   <dt><%= @model.t :translate_targets %></dt>
-  <dd><%=br(@item.translate_targets.map { |c| "#{c}: #{@cur_site.lang_codes[c]}" }.join("\n")) %></dd>
+  <dd><%=br(@item.translate_targets.map { |c| "#{c}: #{@cur_site.available_lang_codes[c]}" }.join("\n")) %></dd>
 </dl>
