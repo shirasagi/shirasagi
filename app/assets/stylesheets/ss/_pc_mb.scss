@@ -2539,7 +2539,7 @@ input[type=email], input[type=number], input[type=tel] {
   }
 }
 input[type=number] {
-  width: 12em;
+  width: 12em !important;
 }
 input.alnum {
   // scss-lint:disable PropertySpelling
@@ -2555,14 +2555,14 @@ input.filename {
   ime-mode: disabled;
 }
 input.datetime {
-  width: 12em;
+  width: 12em !important;
   text-align: center;
   @include mb {
     text-align: left;
   }
 }
 input.date {
-  width: 9em;
+  width: 9em !important;
   text-align: center;
   @include mb {
     text-align: left;
