@@ -77,23 +77,26 @@ class Opendata::Agents::Nodes::Dataset::ResourceController < ApplicationControll
     @item = @dataset.resources.find_by id: params[:id]
     @item.create_preview_history(request, Time.zone.now) if !preview_path?
 
-    if @item.tsv_present?
-      tsv_content
-    elsif @item.xls_present?
-      xls_content
-    elsif @item.kml_present?
-      kml_content
-    elsif @item.geojson_present?
-      geojson_content
-    elsif @item.pdf_present?
-      pdf_content
-    elsif @item.image_present?
-      image_content
-    else
-      raise "404"
+    Timeout.timeout(20) do
+      if @item.tsv_present?
+        tsv_content
+      elsif @item.xls_present?
+        xls_content
+      elsif @item.kml_present?
+        kml_content
+      elsif @item.geojson_present?
+        geojson_content
+      elsif @item.pdf_present?
+        pdf_content
+      else
+        raise "404"
+      end
     end
-  rescue => e
-    Rails.logger.error("#{e.class} (#{e.message}):\n  #{e.backtrace.join("\n  ")}")
+  rescue Timeout::Error
+    @error_message = I18n.t("opendata.errors.messages.resource_preview_timeout")
+    render :error_content, layout: 'cms/ajax'
+  rescue
+    @error_message = I18n.t("opendata.errors.messages.resource_preview_failed")
     render :error_content, layout: 'cms/ajax'
   end
 
@@ -111,7 +114,7 @@ class Opendata::Agents::Nodes::Dataset::ResourceController < ApplicationControll
   end
 
   def xls_content
-    @sheets, @data = @item.parse_xls_page(params[:page])
+    @sheets, @data = @item.parse_xls(params[:page])
     @map_markers = @item.extract_map_points(@data)
 
     if @data.blank?
