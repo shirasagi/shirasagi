@@ -5,6 +5,10 @@ module Kana::PublicFilter
     after_action :render_kana, if: ->{ filters.include?(:kana) }
   end
 
+  def kana_path?
+    filter_include?(:kana)
+  end
+
   private
 
   def set_request_path_with_kana

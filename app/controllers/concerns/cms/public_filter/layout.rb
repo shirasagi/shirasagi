@@ -102,6 +102,7 @@ module Cms::PublicFilter::Layout
       response.body = %(#{notice_html}#{response.body})
     end
 
+    html = render_kana_tool(html)
     html = render_theme_tool(html)
     html = render_template_variables(html)
     html.sub!(/(\{\{ yield \}\}|<\/ yield \/>)/) do
@@ -229,6 +230,13 @@ module Cms::PublicFilter::Layout
       html << "</div>"
     end
     html.join
+  end
+
+  def render_kana_tool(html)
+    label = try(:kana_path?) ? I18n.t("cms.links.ruby_off") : I18n.t("cms.links.ruby_on")
+    html.gsub(/(<.+? id="ss-kana".*?>)(.*?)(<\/.+?>)/) do
+      "#{$1}#{label}#{$3}"
+    end
   end
 
   def render_theme_tool(html)
