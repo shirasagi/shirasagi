@@ -437,6 +437,8 @@ ja:
           not_found: "%{line_no} 行目: Id %{id} のユーザーは存在しません。"
         ss/model/role:
           not_found: "%{line_no} 行目: Id %{id} のロールは存在しません。"
+        ss/model/prefecture_code:
+          invalid_code: "は不正です。"
     attributes:
       ss/document:
         id: id
