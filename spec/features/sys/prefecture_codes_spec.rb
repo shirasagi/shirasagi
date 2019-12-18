@@ -92,5 +92,35 @@ describe "prefecture_codes", type: :feature, dbscope: :example do
       end
       expect(page).to have_css('#notice', text: I18n.t('ss.notice.started_import'))
     end
+
+    it "#search" do
+      # ensure that item is created
+      item
+
+      visit index_path
+      within "form.index-search" do
+        fill_in "s[keyword]", with: item.code
+        click_on I18n.t("ss.buttons.search")
+      end
+      within ".list-items" do
+        expect(page).to have_css(".title", text: item.code)
+      end
+
+      within "form.index-search" do
+        fill_in "s[keyword]", with: item.prefecture
+        click_on I18n.t("ss.buttons.search")
+      end
+      within ".list-items" do
+        expect(page).to have_css(".title", text: item.code)
+      end
+
+      within "form.index-search" do
+        fill_in "s[keyword]", with: unique_id
+        click_on I18n.t("ss.buttons.search")
+      end
+      within ".list-items" do
+        expect(page).to have_no_css(".title")
+      end
+    end
   end
 end

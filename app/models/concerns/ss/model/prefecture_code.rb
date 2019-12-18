@@ -34,16 +34,17 @@ module SS::Model::PrefectureCode
 
   module ClassMethods
     def search(params = {})
-      criteria = self.where({})
-      return criteria if params.blank?
+      all.search_name(params).search_keyword(params)
+    end
 
-      if params[:name].present?
-        criteria = criteria.search_text params[:name]
-      end
-      if params[:keyword].present?
-        criteria = criteria.keyword_in params[:keyword], :code, :prefecture, :prefecture_kana, :city, :city_kana
-      end
-      criteria
+    def search_name(params = {})
+      return all if params.blank? || params[:name].blank?
+      all.search_text params[:name]
+    end
+
+    def search_keyword(params = {})
+      return all if params.blank? || params[:keyword].blank?
+      all.keyword_in params[:keyword], :code, :prefecture, :prefecture_kana, :city, :city_kana
     end
 
     def to_csv

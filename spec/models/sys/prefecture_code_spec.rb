@@ -14,4 +14,24 @@ describe Sys::PrefectureCode, dbscope: :example do
       expect(described_class.check_digit("43105")).to eq "2"
     end
   end
+
+  describe ".search" do
+    let!(:item) { create :sys_prefecture_code }
+
+    context "with keyword" do
+      it do
+        expect(described_class.search(keyword: unique_id).count).to eq 0
+      end
+
+      it do
+        expect(described_class.search(keyword: item.code).count).to eq 1
+        expect(described_class.search(keyword: item.code).first).to eq item
+      end
+
+      it do
+        expect(described_class.search(keyword: item.prefecture).count).to eq 1
+        expect(described_class.search(keyword: item.prefecture).first).to eq item
+      end
+    end
+  end
 end
