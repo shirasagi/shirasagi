@@ -189,6 +189,30 @@ module Opendata::ResourceReportBase
   # 履歴の存在しないデータセットとリソースを登録
   def add_datasets_with_no_history
     year_month = @start_at.year * 100 + @start_at.month
+
+    each_dataset_and_resource_with_no_history do |dataset, resource|
+      conditions = {
+        year_month: year_month, dataset_id: dataset.id, dataset_name: dataset.name,
+        resource_id: resource.id, resource_name: resource.name
+      }
+
+      r = self.class.report_model.site(site).where(conditions).first_or_create
+      r.dataset_url = dataset.full_url.presence if r.dataset_url.blank?
+      r.dataset_areas = dataset.areas.and_public.order_by(order: 1).pluck(:name) if r.dataset_areas.blank?
+      r.dataset_categories = dataset.categories.and_public.order_by(order: 1).pluck(:name) if r.dataset_categories.blank?
+      if r.dataset_estat_categories.blank?
+        r.dataset_estat_categories = dataset.estat_categories.and_public.order_by(order: 1).pluck(:name)
+      end
+      r.resource_filename = resource.filename.presence if r.resource_filename.blank?
+      r.resource_format = resource.format.presence if r.resource_format.blank?
+
+      r.save
+      Rails.logger.info "report #{r.id}: created without any count"
+    end
+  end
+
+  def each_dataset_and_resource_with_no_history
+    year_month = @start_at.year * 100 + @start_at.month
     criteria = self.class.report_model.site(site).where(year_month: year_month).exists(deleted: false)
     not_exist_ids = available_dataset_and_resources - criteria.pluck(:dataset_id, :resource_id)
     Rails.logger.info "found #{not_exist_ids.length.to_s(:delimited)} datasets/resources with no history"
@@ -204,23 +228,7 @@ module Opendata::ResourceReportBase
       next if resource.blank?
       next if resource.source_url.present?
 
-      conditions = {
-        year_month: year_month, dataset_id: dataset_id, dataset_name: dataset.name,
-        resource_id: resource_id, resource_name: resource.name
-      }
-
-      r = self.class.report_model.site(site).where(conditions).first_or_create
-      r.dataset_url = dataset.full_url.presence if r.dataset_url.blank?
-      r.dataset_areas = dataset.areas.and_public.order_by(order: 1).pluck(:name) if r.dataset_areas.blank?
-      r.dataset_categories = dataset.categories.and_public.order_by(order: 1).pluck(:name) if r.dataset_categories.blank?
-      if r.dataset_estat_categories.blank?
-        r.dataset_estat_categories = dataset.estat_categories.and_public.order_by(order: 1).pluck(:name)
-      end
-      r.resource_filename = resource.filename.presence if r.resource_filename.blank?
-      r.resource_format = resource.format.presence if r.resource_format.blank?
-
-      r.save
-      Rails.logger.info "report #{r.id}: created without any count"
+      yield dataset, resource
     end
   end
 end
