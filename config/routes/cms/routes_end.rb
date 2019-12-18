@@ -130,6 +130,7 @@ Rails.application.routes.draw do
     namespace "translate" do
       get "/" => redirect { |p, req| "#{req.path}/text_caches" }, as: :main
       resources :text_caches, concerns: :deletion
+      resources :langs, concerns: [:deletion, :download, :import]
       resource :site_setting
     end
 
@@ -237,6 +238,10 @@ Rails.application.routes.draw do
           post :lock, on: :member
           delete :lock, on: :member, action: :unlock
         end
+      end
+
+      namespace "translate" do
+        get "langs" => "langs#index"
       end
     end
   end

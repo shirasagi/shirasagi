@@ -5,14 +5,14 @@ namespace :translate do
     @site = ::Cms::Site.where(host: ENV['site']).first
     exit if !@site.translate_enabled?
 
-    target = ENV['lang']
-    if @site.translate_targets.index(target)
+    target = @site.find_translate_target(ENV['lang'])
+    if target
       targets = [target]
     else
       targets = @site.translate_targets
     end
 
-    puts "# #{@site.name} - #{targets.join(",")}"
+    puts "# #{@site.name} - #{targets.map(&:code).join(",")}"
 
     # pages
     puts "# pages"
@@ -27,11 +27,11 @@ namespace :translate do
       targets.each do |target|
         next if !Fs.exists?(page.path)
 
-        puts "#{idx + 1} #{target} : #{page.name} #{page.path.sub(@site.path, "")}"
+        puts "#{idx + 1} #{target.code} : #{page.name} #{page.path.sub(@site.path, "")}"
         count += 1
 
         html = Fs.read(page.path)
-        converter = Translate::Convertor.new(@site, @site.translate_source, target)
+        converter = Translate::Convertor.new(@site, @site.translate_source, target.api_code)
         converter.convert(html)
       end
     end

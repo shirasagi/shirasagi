@@ -12,11 +12,16 @@ class Translate::Agents::Parts::ToolController < ApplicationController
       return
     end
 
-    @lang_codes = @cur_site.available_lang_codes
-    @preferred_lang = http_accept_language.preferred_language_from(@lang_codes.keys)
+    @available_lang = {}
 
-    if @preferred_lang != @cur_site.translate_source
-      Rails.logger.info "Accept-Language : #{http_accept_language.user_preferred_languages.join(" ")}"
+    items = [@cur_site.translate_source] + @cur_site.translate_targets
+    items.each do |item|
+      item.accept_languages.each do |lang|
+        @available_lang[lang] ||= item
+      end
     end
+
+    @preferred_lang = http_accept_language.preferred_language_from(@available_lang.keys)
+    @preferred_lang = @available_lang[@preferred_lang]
   end
 end

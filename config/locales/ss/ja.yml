@@ -667,8 +667,8 @@ ja:
         elasticsearch_deny: 除外パス
       ss/addon/translate/site_setting:
         translate_state: ステータス
-        translate_source: 元言語コード
-        translate_targets: 翻訳言語コード
+        translate_source_id: 元言語コード
+        translate_target_ids: 翻訳言語コード
         translate_api: API
         translate_mock_api_request_count: APIリクエスト数
         translate_mock_api_request_word_count: APIリクエスト文字数

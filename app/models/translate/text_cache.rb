@@ -45,12 +45,12 @@ class Translate::TextCache
 
     self.hexdigest = self.class.hexdigest(api, source, target, original_text)
     if self.class.where(hexdigest: hexdigest).ne(id: id).first
-      errors.add :base, I18n.t("translate.errors.duplicate_hexdigest", original_text: original_text, source: source, target: target)
+      errors.add :base, :duplicate_hexdigest, original_text: original_text, source: source, target: target
     end
   end
 
   def api_options
-    I18n.t("translate.options.api").map { |k, v| [v, k] }
+    @_api_options ||= SS.config.translate.api_options.map { |k, v| [v, k] }
   end
 
   def update_state_options

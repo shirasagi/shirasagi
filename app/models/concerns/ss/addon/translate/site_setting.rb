@@ -6,8 +6,14 @@ module SS::Addon
 
     included do
       field :translate_state, type: String, default: "disabled"
-      field :translate_source, type: String, default: "ja"
-      field :translate_targets, type: SS::Extensions::Lines, default: []
+
+      belongs_to :translate_source, class_name: "Translate::Lang"
+      embeds_ids :translate_targets, class_name: "Translate::Lang"
+      define_method(:translate_targets) do
+        items = ::Translate::Lang.in(id: translate_target_ids).to_a
+        translate_target_ids.map { |id| items.find { |item| item.id == id } }
+      end
+
       field :translate_api, type: String
 
       # mock
@@ -28,8 +34,8 @@ module SS::Addon
       field :translate_google_api_request_word_count, type: Integer, default: 0
 
       permit_params :translate_state
-      permit_params :translate_source
-      permit_params :translate_targets
+      permit_params :translate_source_id
+      permit_params translate_target_ids: []
       permit_params :translate_api
 
       permit_params :translate_mock_api_request_count
@@ -46,12 +52,37 @@ module SS::Addon
       permit_params :translate_google_api_request_word_count
 
       validates :translate_api, presence: true, if: -> { translate_enabled? }
-      validate :validate_translate_targets, if: -> { translate_targets.present? }
+      validate :validate_translate_source, if: -> { translate_api.present? }
+      validate :validate_translate_targets, if: -> { translate_api.present? }
+    end
+
+    private
+
+    def validate_translate_source
+      if translate_source.blank?
+        self.errors.add :translate_source_id, :blank
+        return
+      end
+
+      if translate_source.api_code.blank?
+        self.errors.add :translate_source_id, :unsupported_lang, name: translate_source.name
+      end
     end
 
     def validate_translate_targets
-      self.translate_targets = translate_targets.select(&:present?).map(&:strip)
+      if translate_targets.blank?
+        self.errors.add :translate_target_ids, :blank
+        return
+      end
+
+      translate_targets.each do |item|
+        if item.api_code.blank?
+          self.errors.add :translate_target_ids, :unsupported_lang, name: item.name
+        end
+      end
     end
+
+    public
 
     def translate_state_options
       [
@@ -61,7 +92,7 @@ module SS::Addon
     end
 
     def translate_api_options
-      I18n.t("translate.options.api").map { |k, v| [v, k] }
+      @_translate_api_options ||= SS.config.translate.api_options.map { |k, v| [v, k] }
     end
 
     def translate_enabled?
@@ -84,13 +115,8 @@ module SS::Addon
       ::File.join(url, translate_location, "/")
     end
 
-    def available_lang_codes
-      return {} if translate_api.blank?
-
-      conf = SS.config.translate[translate_api]
-      return {} if conf.blank?
-
-      conf["lang_codes"]
+    def find_translate_target(code)
+      translate_targets.select { |item| item.code == code }.first
     end
   end
 end

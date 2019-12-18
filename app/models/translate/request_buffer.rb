@@ -26,6 +26,8 @@ class Translate::RequestBuffer
       @api = Translate::Api::GoogleTranslator.new(@site)
     when "mock"
       @api = Translate::Api::MockTranslator.new(@site)
+    else
+      raise "translate : unsupported api"
     end
 
     config = SS.config.translate[@site.translate_api]

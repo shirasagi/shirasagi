@@ -2,20 +2,12 @@
   return "" if !@cur_site.translate_enabled?
 
   id = "translate-tool-#{@cur_part.id}"
+  options = @cur_part.translate_target_options(@translate_target)
+  selected = @translate_target.try(:code)
 
-  if @translate_target
-    options = [ [ I18n.t("translate.views.show_original"), "" ] ]
-  else
-    options = [ [I18n.t("translate.views.select_lang"), ""] ]
-  end
-  options += @cur_site.translate_targets.map do |target|
-    label = @lang_codes[target] ? @lang_codes[target] : target
-    [label, target]
-  end
-
-  body = select_tag("lang", options_for_select(options, @translate_target), class: "translate", id: id)
-  if @preferred_lang.present? && @cur_site.translate_source != @preferred_lang
-    convertor = Translate::Convertor.new(@cur_site, @cur_site.translate_source, @preferred_lang)
+  body = select_tag("lang", options_for_select(options, selected), class: "translate", id: id)
+  if @preferred_lang.present? && @cur_site.translate_source.code != @preferred_lang.code
+    convertor = Translate::Convertor.new(@cur_site, @cur_site.translate_source.api_code, @preferred_lang.api_code)
     body = convertor.convert(body)
   end
   body.sub!('class="translate"', 'class="notranslate"')

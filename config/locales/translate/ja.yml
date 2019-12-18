@@ -11,10 +11,6 @@ ja:
       select_lang: 言語を選択
 
     options:
-      api:
-        mock: "開発用API"
-        microsoft_translator_text: "Microsoft Translator Text"
-        google_translation: "Google Translation API"
       update_state:
         auto: 自動登録
         manually: 手動登録
@@ -23,7 +19,15 @@ ja:
       not_set_api: "翻訳APIが設定されていません。"
       api_request_count: "※実際のリクエスト数および課金文字数については、各APIの管理コンソールを確認してください。"
 
-    errors:
+    apis:
+      langs:
+        index: 言語を選択する
+        search: 言語を検索
+        select: 言語を設定する
+
+  errors:
+    messages:
+      unsupported_lang: ': %{name} は選択しているAPIでは利用できません。'
       duplicate_hexdigest: '%{original_text}（%{source} から %{target} への翻訳） は既に登録されています。'
 
   modules:
@@ -44,16 +48,33 @@ ja:
         source: 翻訳前言語コード
         target: 翻訳先言語コード
         update_state: ステータス
-      translate/compressor:
-        css: CSSセレクタ
+      translate/lang:
+        name: 名称
+        code: 言語コード
+        mock_code: "開発用API"
+        microsoft_translator_text_code: "Microsoft API"
+        google_translation_code: "Google API"
+        accept_languages: "Accept-Language"
+        in_file: ファイル
 
   tooltip:
     ss/addon/translate/site_setting:
       translate_state:
         - 翻訳機能の有効/無効を設定します。
-      translate_source:
-        - 翻訳元となる言語コードを入力します。
-        - 言語コードは利用するAPIのリファレンスを確認してください。
-      translate_targets:
-        - 翻訳先となる言語コードを改行区切りで入力します。
-        - 言語コードは利用するAPIのリファレンスを確認してください。
+      translate_source_id:
+        - 翻訳元となる言語コードを選択します。
+      translate_target_ids:
+        - 翻訳先となる言語コードを選択します。
+    translate/lang:
+      code:
+        - 言語コードを入力します。
+      name:
+        - 名称を入力します。
+      mock_code:
+        - 開発用APIの言語コードを入力します。
+      microsoft_translator_text_code:
+        - Microsoft Translator Text APIの言語コードを入力します。
+      google_translation_code:
+        - Google Translation APIの言語コードを入力します。
+      accept_languages:
+        - Accept-Language の言語コードを入力します。

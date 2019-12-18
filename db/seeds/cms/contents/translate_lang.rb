@@ -1,0 +1,1 @@
+puts "# translate_lang"

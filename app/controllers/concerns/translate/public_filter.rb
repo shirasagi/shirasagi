@@ -17,12 +17,12 @@ module Translate::PublicFilter
     return if @cur_main_path !~ /^#{@cur_site.translate_url}.+?\//
 
     main_path = @cur_main_path.sub(/^#{@cur_site.translate_url}(.+?)\//, "/")
-    @translate_target = ::Regexp.last_match[1]
+    @translate_target = @cur_site.find_translate_target(::Regexp.last_match[1])
     @translate_source = @cur_site.translate_source
 
-    if @cur_site.translate_targets.include?(@translate_target)
+    if @translate_target
       filters << :translate
-      request.env["ss.translate_target"] = @translate_target
+      request.env["ss.translate_target"] = @translate_target.code
       @cur_main_path = main_path
     end
   end
@@ -34,7 +34,7 @@ module Translate::PublicFilter
       body = ActiveSupport::JSON.decode(body)
     end
 
-    convertor = Translate::Convertor.new(@cur_site, @translate_source, @translate_target)
+    convertor = Translate::Convertor.new(@cur_site, @translate_source.api_code, @translate_target.api_code)
     body = convertor.convert(body)
 
     if params[:format] == "json"
