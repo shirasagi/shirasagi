@@ -107,5 +107,11 @@ module Opendata
     SS::File.model "opendata/app", SS::File, permit: %i(role)
     SS::File.model "opendata/appfile", SS::File, permit: %i(role)
     SS::File.model "opendata/idea", SS::File, permit: %i(role)
+    Opendata::ResourceDownloadHistory::ArchiveFile.tap do |model|
+      SS::File.model model.model_name.i18n_key.to_s, model
+    end
+    Opendata::ResourcePreviewHistory::ArchiveFile.tap do |model|
+      SS::File.model model.model_name.i18n_key.to_s, model
+    end
   end
 end

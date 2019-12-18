@@ -5,7 +5,7 @@ describe Opendata::Dataset::ResourcePreviewHistoryArchivesController, type: :fea
   let(:node) { create(:opendata_node_dataset, name: "opendata_dataset") }
   let(:archive1_name) { "#{unique_id}.zip" }
   let(:archive1_filename) { "#{unique_id}.zip" }
-  let(:zip_path) { Rails.root.join("spec/fixtures/opendata/dataset_import/resources/sample.zip") }
+  let(:zip_path) { Rails.root.join("spec/fixtures/opendata/dataset_import.zip") }
   let!(:archive1) do
     Opendata::ResourcePreviewHistory::ArchiveFile.create_empty!(
       cur_site: site, name: archive1_name, filename: archive1_filename, content_type: 'application/zip'
@@ -29,7 +29,7 @@ describe Opendata::Dataset::ResourcePreviewHistoryArchivesController, type: :fea
       within "form" do
         click_on I18n.t("ss.buttons.delete")
       end
-      expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+      expect(page).to have_css('#notice', text: I18n.t('ss.notice.deleted'))
 
       expect { archive1.reload }.to raise_error Mongoid::Errors::DocumentNotFound
     end
