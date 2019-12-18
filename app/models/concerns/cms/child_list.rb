@@ -58,8 +58,10 @@ module Cms::ChildList
         break if cmp.nonzero?
       end
       next cmp if cmp.nonzero?
+
       cmp = a.id <=> b.id
       next cmp if cmp.nonzero?
+
       a.collection_name <=> b.collection_name
     end
     items.take(child_list_limit)
