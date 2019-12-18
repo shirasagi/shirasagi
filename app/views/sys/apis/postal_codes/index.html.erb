@@ -1,0 +1,81 @@
+<%#
+  使用方法
+  ===
+
+  呼び出し元の View に次のようなリンクを設置します。
+
+  ~~~ruby
+  link_to t("sys.apis.postal_codes.index"), sys_apis_postal_codes_path, class: "ajax-box btn-postal-code"
+  ~~~
+
+  次に、このダイアログの決定処理をフックします。例を下に示します。
+
+  ~~~
+  <script type="application/javascript">
+    $('.btn-postal-code').data('on-select', function ($item) {
+      var $tr = $item.closest("[data-code]");
+      var code = $tr.data("code");
+      if (code) {
+        $("input[name='item[postal_code]']").val(code);
+      }
+      var address = $tr.data("address");
+      if (address) {
+        $("input[name='item[addr]']").val(address);
+      }
+    });
+  </script>
+  ~~~
+%>
+<%= jquery do %>
+  SS_SearchUI.modal();
+<% end %>
+
+<div class="search-ui-form">
+  <%= form_for :s, url: { action: :index }, html: { method: "GET", class: :search } do |f| %>
+    <%= hidden_field_tag :single, params[:single] %>
+    <%= f.text_field :keyword, value: params[:s].try(:[], :keyword) %>
+    <%= f.submit t("ss.buttons.search"), class: :btn %>
+  <% end %>
+</div>
+
+<table class="index">
+  <thead class="list-head">
+  <tr>
+    <% if @multi %>
+      <th class="checkbox"><input type="checkbox"/></th>
+    <% end %>
+    <th class="code"><%= @model.t :code %></th>
+  </tr>
+  </thead>
+  <tbody class="items">
+  <% @items.each do |item| %>
+    <tr id="item-<%= item.id %>" class="list-item" data-id="<%= item.id %>" data-code="<%= item.code %>" data-prefecture="<%= item.prefecture %>" data-city="<%= item.city %>" data-town="<%= item.town %>" data-address="<%= [ item.prefecture, item.city, item.town ].join %>">
+      <% if @multi %>
+        <td class="checkbox">
+          <input type="checkbox" name="ids[]" value="<%= item.id %>"/>
+        </td>
+      <% end %>
+      <td>
+        <%= link_to "#item-#{item.id}", class: @multi ? "select-item" : "select-single-item" do %>
+          <span class="code"><%= item.code %></span>
+          <span class="prefecture"><%= item.prefecture %></span>
+          <% if item.city.present? %>
+            <span class="city"><%= item.city %></span>
+          <% end %>
+          <% if item.town.present? %>
+            <span class="town"><%= item.town %></span>
+          <% end %>
+        <% end %>
+      </td>
+    </tr>
+  <% end %>
+  </tbody>
+</table>
+
+<% if @multi %>
+  <div class="search-ui-select">
+    <%= button_tag t("ss.links.select"), { type: :button, class: "select-items btn" } %>
+  </div>
+<% end %>
+
+<%= paginate @items if @items.try(:current_page) %>
