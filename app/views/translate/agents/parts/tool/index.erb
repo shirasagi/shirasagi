@@ -14,6 +14,8 @@
 %>
 
 <%= jquery do %>
+SS_Translate.siteUrl = "<%= @cur_site.url %>";
+SS_Translate.translateUrl = "<%= @cur_site.translate_url %>";
 $("#<%= id %>").on("change", function () {
   var target = $(this).val();
   if (target) {

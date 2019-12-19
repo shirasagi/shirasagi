@@ -14,9 +14,10 @@ module Translate::PublicFilter
     end
 
     return if !@cur_site.translate_enabled?
-    return if @cur_main_path !~ /^#{@cur_site.translate_url}.+?\//
+    return if @cur_main_path !~ /^#{@cur_site.translate_location}\/.+?\//
 
-    main_path = @cur_main_path.sub(/^#{@cur_site.translate_url}(.+?)\//, "/")
+    main_path = @cur_main_path.sub(/^#{@cur_site.translate_location}\/(.+?)\//, "/")
+
     @translate_target = @cur_site.find_translate_target(::Regexp.last_match[1])
     @translate_source = @cur_site.translate_source
 

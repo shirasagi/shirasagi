@@ -22,7 +22,7 @@ class Translate::Lang
   permit_params :microsoft_translator_text_code
   permit_params :accept_languages
 
-  validates :code, presence: true, uniqueness: true
+  validates :code, presence: true, uniqueness: { scope: :site_id }
   validates :name, presence: true
   validate :validate_accept_languages
 

@@ -5,7 +5,7 @@ class Translate::Convertor
     @site = site
     @source = source
     @target = target
-    @location = "#{site.translate_path.sub(/^\//, "")}/#{@target}"
+    @location = "#{site.translate_location.sub(/^\//, "")}/#{@target}"
   end
 
   def translatable?(text)

@@ -3,3 +3,21 @@
   margin-left: 10px;
   color: #f30;
 }
+
+.translate-text-chaches {
+  .api {
+    margin-bottom: 10px;
+  }
+  table.text-chaches {
+    margin-bottom: 10px;
+    border-collapse: collapse;
+    thead tr {
+      background: #f2f2f2;
+      border: 1px solid #dcdcdc;
+    }
+    tbody tr {
+      background: #ffffff;
+      border: 1px solid #dcdcdc;
+    }
+  }
+}

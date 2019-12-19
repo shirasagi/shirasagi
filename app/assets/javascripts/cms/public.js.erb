@@ -28,6 +28,7 @@
 
 $(function () {
   SS_Kana.render();
+  SS_Translate.render();
   SS_Font.render();
   SS_AdobeReader.render();
   SS_Mobile.render();
@@ -128,6 +129,13 @@ this.SS_Translate = (function () {
       url = url.replace(RegExp("^(\\/\\.s\\d+?\\/preview\\d*)?" + targetUrl), "$1" + this.siteUrl);
     }
     return url;
+  };
+
+  SS_Translate.render = function () {
+    if (SS.config["site_url"] && SS.config["translate_url"]) {
+      SS_Translate.siteUrl = SS.config["site_url"];
+      SS_Translate.translateUrl = SS.config["translate_url"];
+    }
   };
 
   return SS_Translate;

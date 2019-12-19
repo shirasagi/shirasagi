@@ -31,7 +31,7 @@ namespace :translate do
         count += 1
 
         html = Fs.read(page.path)
-        converter = Translate::Convertor.new(@site, @site.translate_source, target.api_code)
+        converter = Translate::Convertor.new(@site, @site.translate_source.api_code, target.api_code)
         converter.convert(html)
       end
     end
@@ -59,11 +59,11 @@ namespace :translate do
 
       Dir.glob(paths).each do |path|
         targets.each do |target|
-          puts "#{idx + 1} #{target} : #{node.name} #{path.sub(@site.path, "")}"
+          puts "#{idx + 1} #{target.code} : #{node.name} #{path.sub(@site.path, "")}"
           count += 1
 
           html = Fs.read(path)
-          converter = Translate::Convertor.new(@site, @site.translate_source, target)
+          converter = Translate::Convertor.new(@site, @site.translate_source.api_code, target.api_code)
           converter.convert(html)
         end
       end
@@ -74,13 +74,13 @@ namespace :translate do
   task remove_text_caches: :environment do
     puts "Please input site: site=[www]" or exit if ENV['site'].blank?
 
-    target = ENV['lang']
     @site = ::Cms::Site.where(host: ENV['site']).first
     @items = Translate::TextCache.site(@site)
 
-    if target.present?
-      @items = @items.where(target: target)
-      puts "# #{@site.name} - #{target}"
+    target = @site.find_translate_target(ENV['lang'])
+    if target
+      @items = @items.where(target: target.api_code)
+      puts "# #{@site.name} - #{target.code}"
     else
       puts "# #{@site.name}"
     end
