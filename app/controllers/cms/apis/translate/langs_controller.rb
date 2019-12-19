@@ -1,7 +1,7 @@
 class Cms::Apis::Translate::LangsController < ApplicationController
   include Cms::ApiFilter
 
-  model Translate::Lang
+  model ::Translate::Lang
 
   def index
     @single = params[:single].present?
