@@ -75,8 +75,8 @@ module Translate::Lang::Export
           line = []
           line << item.code
           line << item.name
-          line << item.microsoft_translator_text_code
           line << item.google_translation_code
+          line << item.microsoft_translator_text_code
           line << item.mock_code
           line << item.accept_languages.join("\n")
           y << encode_sjis(line.to_csv)

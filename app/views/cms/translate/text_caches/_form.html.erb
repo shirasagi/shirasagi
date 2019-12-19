@@ -5,15 +5,15 @@
     <%= f.hidden_field :api, value: @cur_site.translate_api %>
   </dd>
 
-  <dt><%= @model.t :original_text %></dt>
+  <dt><%= @model.t :original_text %><%= @model.tt :original_text %></dt>
   <dd><%= f.text_field :original_text %></dd>
 
-  <dt><%= @model.t :text %></dt>
+  <dt><%= @model.t :text %><%= @model.tt :text %></dt>
   <dd><%= f.text_field :text %></dd>
 
-  <dt><%= @model.t :source %></dt>
+  <dt><%= @model.t :source %><%= @model.tt :source %></dt>
   <dd><%= f.text_field :source %></dd>
 
-  <dt><%= @model.t :target %></dt>
+  <dt><%= @model.t :target %><%= @model.tt :target %></dt>
   <dd><%= f.text_field :target %></dd>
 </dl>

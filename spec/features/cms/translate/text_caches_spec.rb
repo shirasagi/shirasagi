@@ -8,6 +8,12 @@ describe "cms_translate_text_caches", type: :feature, dbscope: :example do
   let(:edit_path) { edit_cms_translate_text_cach_path site.id, item.id }
   let(:delete_path) { delete_cms_translate_text_cach_path site.id, item.id }
 
+  let!(:lang_ja) { create :translate_lang_ja }
+  let!(:lang_en) { create :translate_lang_en }
+  let!(:lang_ko) { create :translate_lang_ko }
+  let!(:lang_zh_CN) { create :translate_lang_zh_cn }
+  let!(:lang_zh_TW) { create :translate_lang_zh_tw }
+
   let(:text1) { "first" }
   let(:text2) { "second" }
   let(:text3) { "third" }
@@ -20,6 +26,8 @@ describe "cms_translate_text_caches", type: :feature, dbscope: :example do
     before do
       site.translate_state = "enabled"
       site.translate_api = "mock"
+      site.translate_source = lang_ja
+      site.translate_target_ids = [lang_en, lang_ko, lang_zh_CN, lang_zh_TW].map(&:id)
       site.update!
 
       item = Translate::Convertor.new(site, source, target)

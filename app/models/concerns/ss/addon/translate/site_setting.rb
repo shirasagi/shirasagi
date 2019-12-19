@@ -64,6 +64,7 @@ module SS::Addon
         return
       end
 
+      translate_source.cur_site = self
       if translate_source.api_code.blank?
         self.errors.add :translate_source_id, :unsupported_lang, name: translate_source.name
       end
@@ -76,6 +77,7 @@ module SS::Addon
       end
 
       translate_targets.each do |item|
+        item.cur_site = self
         if item.api_code.blank?
           self.errors.add :translate_target_ids, :unsupported_lang, name: item.name
         end

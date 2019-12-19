@@ -33,7 +33,7 @@ class Translate::Lang
   end
 
   def api_code
-    try("#{site.translate_api}_code")
+    try("#{(cur_site || site).translate_api}_code")
   end
 
   def validate_accept_languages

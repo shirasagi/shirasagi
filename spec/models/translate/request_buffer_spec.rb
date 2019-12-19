@@ -2,8 +2,16 @@ require 'spec_helper'
 
 describe Translate::RequestBuffer, dbscope: :example do
   let(:site) { cms_site }
+
+  let!(:lang_ja) { create :translate_lang_ja }
+  let!(:lang_en) { create :translate_lang_en }
+  let!(:lang_ko) { create :translate_lang_ko }
+  let!(:lang_zh_CN) { create :translate_lang_zh_cn }
+  let!(:lang_zh_TW) { create :translate_lang_zh_tw }
+
   let(:source) { "ja" }
   let(:target) { "en" }
+
   let(:item) do
     Translate::RequestBuffer.new(
       site, source, target,
@@ -17,6 +25,8 @@ describe Translate::RequestBuffer, dbscope: :example do
   before do
     site.translate_state = "enabled"
     site.translate_api = "mock"
+    site.translate_source = lang_ja
+    site.translate_target_ids = [lang_en, lang_ko, lang_zh_CN, lang_zh_TW].map(&:id)
     site.update!
   end
 

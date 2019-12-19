@@ -65,6 +65,15 @@ ja:
         - 翻訳元となる言語コードを選択します。
       translate_target_ids:
         - 翻訳先となる言語コードを選択します。
+    translate/text_cache:
+      original_text:
+        - 翻訳前テキストを入力します。
+      text:
+        - 翻訳先テキストを入力します。
+      source:
+        - 翻訳前言語コードを入力します。
+      target:
+        - 翻訳先言語コードを入力します。
     translate/lang:
       code:
         - 言語コードを入力します。
