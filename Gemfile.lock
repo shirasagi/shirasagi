@@ -439,7 +439,7 @@ GEM
     rdoc (6.1.1)
     ref (2.0.0)
     regexp_parser (1.6.0)
-    rmagick (2.16.0)
+    rmagick (3.2.0)
     romaji (0.2.4)
       rake (>= 0.8.0)
     roo (2.8.2)
@@ -674,7 +674,7 @@ DEPENDENCIES
   rails_autolink
   rdf-rdfxml
   rdf-turtle
-  rmagick
+  rmagick (~> 3.2.0)
   romaji
   roo
   rspec
