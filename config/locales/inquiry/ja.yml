@@ -243,7 +243,7 @@ ja:
       close_date:
         - 公開を終了する日時を指定します。
         - 指定した日時が来るとメールフォームが非公開になります。
-    inquiry/addon/release_plan:
+    inquiry/addon/reception_plan:
       reception_start_date:
         - 回答受付開始日時を指定します。
         - 指定した日時が来ると回答入力フォームが公開されます。
