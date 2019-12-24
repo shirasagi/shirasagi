@@ -95,6 +95,10 @@ class Inquiry::Answer
     end
   end
 
+  def find_data(column)
+    data.select { |d| d.column_id == column.id }.first
+  end
+
   def set_data(hash = {})
     self.data = []
     hash.each do |key, data|
@@ -113,11 +117,11 @@ class Inquiry::Answer
           ss_file.save
           ss_file
         end
-        values = [ ss_file._id, ss_file.filename, ss_file.size ]
+        values = [ ss_file._id, ss_file.filename, ss_file.name, ss_file.size ]
         value = ss_file._id
       elsif value.kind_of? SS::File
         ss_file = value
-        values = [ ss_file._id, ss_file.filename, ss_file.size ]
+        values = [ ss_file._id, ss_file.filename, ss_file.name, ss_file.size ]
         value = ss_file.name
       else
         values = [value.to_s]

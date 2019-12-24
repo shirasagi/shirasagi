@@ -6,6 +6,9 @@ namespace :ss do
     # 一時ファイルの削除（エクスポート）
     Rake.application.invoke_task("ss:delete_download_files")
 
+    # 一時ファイルの削除（CMSお問い合わせ）
+    Rake.application.invoke_task("inquiry:delete_inquiry_temp_files")
+
     # 一時ファイルの削除（アクセストークン）
     Rake.application.invoke_task("ss:delete_access_tokens")
 

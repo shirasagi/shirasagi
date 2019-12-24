@@ -13,11 +13,11 @@ module Inquiry::Node
     include Inquiry::Addon::Captcha
     include Inquiry::Addon::Notice
     include Inquiry::Addon::Reply
-    include Inquiry::Addon::ReleasePlan
-    include Inquiry::Addon::ReceptionPlan
     include Inquiry::Addon::Aggregation
     include Inquiry::Addon::Faq
     include Cms::Addon::ForMemberNode
+    include Inquiry::Addon::ReleasePlan
+    include Inquiry::Addon::ReceptionPlan
     include Cms::Addon::Release
     include Cms::Addon::GroupPermission
     include History::Addon::Backup
