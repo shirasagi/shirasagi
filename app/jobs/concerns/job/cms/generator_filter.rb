@@ -3,7 +3,7 @@ module Job::Cms::GeneratorFilter
   include Job::SS::TaskFilter
 
   included do
-    self.task_class = Cms::Task
+    self.task_class = Cms::GenerateTask
   end
 
   def perform(opts = {})
@@ -13,7 +13,7 @@ module Job::Cms::GeneratorFilter
   private
 
   def task_cond
-    cond = { name: self.class.task_name }
+    cond = { name: self.task_name }
     cond[:site_id] = site_id
     cond[:node_id] = node_id
     cond
