@@ -13,9 +13,10 @@ module Job::Cms::GeneratorFilter
   private
 
   def task_cond
-    cond = { name: self.task_name }
+    cond = { name: self.class.task_name }
     cond[:site_id] = site_id
     cond[:node_id] = node_id
+    cond[:generate_key] = generate_key
     cond
   end
 end

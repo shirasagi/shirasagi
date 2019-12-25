@@ -1,0 +1,12 @@
+<% if @keys.present? %>
+  <div class="generate-keys">
+    <% cls = "key #{@key.blank? ? "current" : ""}" %>
+    <%= link_to "all", cms_generate_pages_path, class: cls %>
+    <% @keys.each do |key| %>
+      <% cls = "key #{(@key == key) ? "current" : ""}" %>
+      <%= link_to key, { key: key }, class: cls %>
+    <% end %>
+  </div>
+<% end %>
+
+<%= render file: "ss/tasks/index" %>

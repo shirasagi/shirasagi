@@ -11,10 +11,6 @@ class Cms::Node::GenerateJob < Cms::ApplicationJob
     arguments.dig(0, :generate_key)
   end
 
-  def task_name
-    generate_key.present? ? "#{self.class.task_name} key=#{generate_key}" : self.class.task_name
-  end
-
   private
 
   def run_public_file_remover_job

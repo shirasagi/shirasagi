@@ -4,6 +4,13 @@ class Cms::GeneratePagesController < ApplicationController
 
   navi_view "cms/main/navi"
 
+  def index
+    respond_to do |format|
+      format.html { render }
+      format.json { render json: @item.to_json(methods: :head_logs) }
+    end
+  end
+
   private
 
   def job_class
@@ -16,11 +23,24 @@ class Cms::GeneratePagesController < ApplicationController
     }
   end
 
+  def job_options
+    @key.present? ? { generate_key: @key } : {}
+  end
+
   def task_name
     job_class.task_name
   end
 
+  def set_key
+    @keys = SS.config.cms.generate_keys
+    return if @keys.blank?
+
+    @key = params[:key]
+    @key = nil if !@keys.include?(@key)
+  end
+
   def set_item
-    @item = Cms::Task.find_or_create_by name: task_name, site_id: @cur_site.id, node_id: nil
+    set_key
+    @item = Cms::GenerateTask.find_or_create_by name: task_name, site_id: @cur_site.id, node_id: nil, generate_key: @key
   end
 end

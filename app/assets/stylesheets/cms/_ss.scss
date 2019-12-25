@@ -144,6 +144,21 @@
   }
 }
 
+.generate-keys {
+  .key {
+    padding: 5px 10px;
+    color: black;
+    text-decoration: none;
+    @include border-radius(3px);
+    &:hover {
+      color: #f25a38;
+    }
+    &.current {
+      background: #dcdcdc;
+    }
+  }
+}
+
 // Dropdown
 .cms-dropdown-menu {
   left: -4px;

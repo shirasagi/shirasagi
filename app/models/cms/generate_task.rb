@@ -6,8 +6,4 @@ class Cms::GenerateTask
   field :generate_key, type: String
 
   validates :site_id, presence: true
-
-  def name
-    generate_key.present? ? "#{super}(#{generate_key})" : super
-  end
 end
