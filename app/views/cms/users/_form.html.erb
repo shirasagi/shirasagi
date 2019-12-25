@@ -61,6 +61,9 @@
   <dt><%= @model.t :lock_state %><%= @model.tt :lock_state %></dt>
   <dd><%= f.select :lock_state, @item.lock_state_options, include_blank: true %></dd>
 
+  <dt><%= @model.t :deletion_lock_state %><%= @model.tt :deletion_lock_state %></dt>
+  <dd><%= f.select :deletion_lock_state, @item.deletion_lock_state_options, include_blank: true %></dd>
+
   <dt><%= @model.t :organization_id %><%= @model.tt :organization_id %></dt>
   <dd><%= f.select :organization_id, @cur_site.root_groups.map { |c| [c.name, c.id] }, include_blank: true %></dd>
 

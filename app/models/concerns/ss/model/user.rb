@@ -53,6 +53,9 @@ module SS::Model::User
     # 利用停止
     field :lock_state, type: String
 
+    # 削除ロック
+    field :deletion_lock_state, type: String, default: "disabled"
+
     belongs_to :organization, class_name: "SS::Group"
     belongs_to :switch_user, class_name: "SS::User"
 
@@ -60,7 +63,7 @@ module SS::Model::User
 
     permit_params :name, :kana, :uid, :email, :tel, :tel_ext, :type, :login_roles, :remark, group_ids: []
     permit_params :account_start_date, :account_expiration_date, :session_lifetime
-    permit_params :restriction, :lock_state
+    permit_params :restriction, :lock_state, :deletion_lock_state
     permit_params :organization_id, :organization_uid, :switch_user_id
 
     validates :name, presence: true, length: { maximum: 40 }
@@ -233,6 +236,10 @@ module SS::Model::User
     !enabled?
   end
 
+  def deletion_locked?
+    deletion_lock_state == 'locked'
+  end
+
   def locked?
     lock_state == 'locked'
   end
@@ -268,6 +275,12 @@ module SS::Model::User
   def lock_state_options
     %w(unlocked locked).map do |v|
       [ I18n.t("ss.options.user_lock_state.#{v}"), v ]
+    end
+  end
+
+  def deletion_lock_state_options
+    %w(unlocked locked).map do |v|
+      [ I18n.t("ss.options.user_deletion_lock_state.#{v}"), v ]
     end
   end
 
