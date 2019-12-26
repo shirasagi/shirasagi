@@ -59,7 +59,7 @@
   <% end %>
 
   <dt><%= @model.t :group_ids %></dt>
-  <dd><%=br @item.groups.order_by(name: 1).map{|c| c.name }.join("\n") %></dd>
+  <dd><%=br @item.groups.order_by(name: 1).map{|c| c.name } %></dd>
 
   <% if @item.remark.present? %>
   <dt><%= @model.t :remark %></dt>

@@ -24,6 +24,6 @@ $('.btn.apply-filter').click(function(){
     <dt><%= @model.t :filter_error_at %></dt>
     <dd><%= I18n.l(@item.filter_error_at) %></dd>
     <dt><%= @model.t :filter_errors %></dt>
-    <dd><%= br @item.filter_errors.join("\n") %></dd>
+    <dd><%= br @item.filter_errors %></dd>
   </dl>
 <% end %>

@@ -2,7 +2,7 @@
   st_categories = @item.st_categories.presence || @item.default_st_categories
 %>
 <dl class="see">
-  <dd class="wide"><%=br st_categories.map(&:name).join("\n") %></dd>
+  <dd class="wide"><%=br st_categories.map(&:name) %></dd>
 </dl>
 
 <% if @item.categories_limit.to_i > 0 %>

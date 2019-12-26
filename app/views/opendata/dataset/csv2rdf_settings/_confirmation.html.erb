@@ -31,7 +31,7 @@
       </tr>
       <tr class="rdf-class">
         <% 0.upto(@item.header_cols - 1) do |i| %>
-          <td data-id="<%= i %>"><%= br(@item.column_types[i]["classes"].join("\n")) %></td>
+          <td data-id="<%= i %>"><%= br(@item.column_types[i]["classes"]) %></td>
         <% end %>
       </tr>
       <% (@item.header_rows).upto(19) do |i| %>

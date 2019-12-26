@@ -65,9 +65,9 @@
           <%= link_to dataset.name, { action: :dataset, dataset_id: dataset.id } %>
         </td>
 
-        <td rowspan="<%= resources.size + 1 %>" class="category"><%=br dataset.categories.pluck(:name).join("\n") %></td>
-        <td rowspan="<%= resources.size + 1 %>" class="estat-category"><%=br dataset.estat_categories.pluck(:name).join("\n") %></td>
-        <td rowspan="<%= resources.size + 1 %>" class="area"><%=br dataset.areas.pluck(:name).join("\n") %></td>
+        <td rowspan="<%= resources.size + 1 %>" class="category"><%=br dataset.categories.pluck(:name) %></td>
+        <td rowspan="<%= resources.size + 1 %>" class="estat-category"><%=br dataset.estat_categories.pluck(:name) %></td>
+        <td rowspan="<%= resources.size + 1 %>" class="area"><%=br dataset.areas.pluck(:name) %></td>
 
         <% if resource %>
           <% style = (resource.state == "failed") ? 'background-color: #ffdada;' : "" %>

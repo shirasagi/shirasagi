@@ -13,7 +13,7 @@
     <dl class="see">
       <dt><%= @model.t :name %></dt>
       <dd>
-        <%= br @items.map(&:name).join("\n") %>
+        <%= br @items.map(&:name) %>
       </dd>
     </dl>
   </section>

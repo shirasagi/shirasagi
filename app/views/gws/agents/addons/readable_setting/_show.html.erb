@@ -12,14 +12,14 @@
     <dl class="see">
       <% if @item.class.readable_setting_included_custom_groups? %>
       <dt><%= @model.t :readable_custom_group_ids %></dt>
-      <dd><%=tryb { br @item.readable_custom_group_names.join("\n") } %></dd>
+      <dd><%=tryb { br @item.readable_custom_group_names } %></dd>
       <% end %>
 
       <dt><%= @model.t :readable_group_ids %></dt>
-      <dd><%=br @item.readable_group_names.join("\n") %></dd>
+      <dd><%=br @item.readable_group_names %></dd>
 
       <dt><%= @model.t :readable_member_ids %></dt>
-      <dd><%=br @item.readable_member_names.join("\n") %></dd>
+      <dd><%=br @item.readable_member_names %></dd>
     </dl>
   </div>
 </div>

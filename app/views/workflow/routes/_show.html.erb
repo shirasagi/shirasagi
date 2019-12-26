@@ -9,5 +9,5 @@
   <dd><%= @item.label :on_remand %></dd>
 
   <dt><%= @model.t :group_ids %></dt>
-  <dd><%= br @item.groups.order_by(name: 1).map{|c| c.name }.join("\n") %></dd>
+  <dd><%= br @item.groups.order_by(name: 1).map{|c| c.name } %></dd>
 </dl>
