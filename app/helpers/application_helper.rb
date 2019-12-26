@@ -9,8 +9,8 @@ module ApplicationHelper
     end
   end
 
-  def br(str)
-    h(str.to_s).gsub(/(\r\n?)|(\n)/, "<br />").html_safe
+  def br(*args)
+    args.flatten.map { |value| h(value.to_s).gsub(/\R/, "<br />") }.flatten.join("<br />").html_safe
   end
 
   def br_not_h(str)
