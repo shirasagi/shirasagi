@@ -61,5 +61,17 @@ describe ApplicationHelper, type: :helper do
       it { is_expected.to eq "&lt;a&gt;<br /><br />&#39;b&#39;" }
       it { is_expected.to be_a ActiveSupport::SafeBuffer }
     end
+
+    context "when option `html_escape: false` is given" do
+      subject { helper.br("<a>\r\n'b'", html_escape: false) }
+      it { is_expected.to eq "<a><br />'b'" }
+      it { is_expected.to be_a ActiveSupport::SafeBuffer }
+    end
+
+    context "when non-string objects are given" do
+      subject { helper.br(1, { a: 1 }, URI.parse("http://www.yahoo.co.jp/"), html_escape: false) }
+      it { is_expected.to eq "1<br />{:a=>1}<br />http://www.yahoo.co.jp/" }
+      it { is_expected.to be_a ActiveSupport::SafeBuffer }
+    end
   end
 end
