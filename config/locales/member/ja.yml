@@ -130,7 +130,7 @@ ja:
       member/blog/blog_setting: ブログ設定
       member/blog/page_setting: ブログ設定
       member/photo/body: フォト
-      member/photo/category: カテゴリ
+      member/photo/category: カテゴリー
       member/photo/location: 地域
       member/photo/map: 地図
       member/photo/spot: フォト
@@ -249,7 +249,7 @@ ja:
         image: 画像
         image_id: 画像
         caption: キャプション
-        photo_categories: カテゴリ
+        photo_categories: カテゴリー
         photo_locations: 地域
         map_points: 地図
         contributor: 投稿者
@@ -530,7 +530,7 @@ ja:
       caption:
         - 画像のキャプションを設定します。
       photo_categories:
-        - 画像のカテゴリを設定します。
+        - 画像のカテゴリーを設定します。
       photo_locations:
         - 画像の地域を設定します。
       license_name:
