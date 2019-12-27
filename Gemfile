@@ -92,6 +92,7 @@ gem 'faraday'
 gem 'elasticsearch'
 
 group :development, :test do
+  gem 'bullet'
   gem 'dotenv-rails'
   gem 'capybara', require: false
   gem 'coveralls', require: false
