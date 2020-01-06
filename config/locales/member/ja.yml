@@ -535,7 +535,11 @@ ja:
         - 画像の地域を設定します。
       license_name:
         - ライセンスを設定します。
-        - フォルダーに設定したテキストが表示されます。
+    member/addon/photo/license_setting:
+      license_free:
+        - フォトページを「誰でも利用可」にて公開した際に表示するHTMLを入力します。
+      license_not_free:
+        - フォトページを「許可が必要」にて公開した際に表示するHTMLを入力します。
     member/addon/photo/slide:
       node_url:
         - フォトフォルダーのURLを設定します。
