@@ -106,18 +106,28 @@ $(function () {
   crumbs.shift();
   // navi
   var path = location.pathname + "/";
-  var addCurrent = function (selector) {
-    var added = false;
-    $($(selector).get().reverse()).each(function () {
-      var menu = $(this);
-      var href = menu.attr('href');
+  var longestMatchedElement = function (selector) {
+    var matchedElement = null, hrefLength = 0;
+    $(selector).each(function() {
+      var $this = $(this);
+      var href = $this.attr('href');
       if (path.match(new RegExp('^' + href.replace(/([.?*+$\[\]\/\\(){}|\-])/g, '\\$1') + '(\/|$)')) || crumbs.indexOf(href) !== -1) {
-        menu.addClass("current").parent().addClass("current");
-        added = true;
-        return false;
+        if (hrefLength < href.length) {
+          matchedElement = this;
+          hrefLength = href.length;
+        }
       }
     });
-    return added;
+    return matchedElement;
+  };
+  var addCurrent = function (selector) {
+    var elem = longestMatchedElement(selector);
+    if (! elem) {
+      return false;
+    }
+
+    $(elem).addClass("current").parent().addClass("current");
+    return true;
   };
   addCurrent("#navi .mod-navi a") || addCurrent("#navi .main-navi a");
   $('#navi .main-navi h3.current').parent().prev('h2').addClass('current');
