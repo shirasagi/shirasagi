@@ -54,7 +54,7 @@ module SS::Model::User
     field :lock_state, type: String
 
     # 削除ロック
-    field :deletion_lock_state, type: String, default: "disabled"
+    field :deletion_lock_state, type: String, default: "unlocked"
 
     belongs_to :organization, class_name: "SS::Group"
     belongs_to :switch_user, class_name: "SS::User"
