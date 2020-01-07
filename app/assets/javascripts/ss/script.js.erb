@@ -79,7 +79,6 @@
 //  $(".js-date").datetimepicker { lang: "ja", timepicker: false, format: "Y/m/d" }
 //#
 $(function () {
-  var addCurrent, crumbs, link, menu, path;
   $.ajaxSetup({
     // prevent caching ajax response. see #596.
     cache: false,
@@ -89,8 +88,8 @@ $(function () {
   SS.render();
   // head
   if ($(window).width() >= 800 && 0) {
-    menu = $("#head .pulldown-menu");
-    link = menu.find("a");
+    var menu = $("#head .pulldown-menu");
+    var link = menu.find("a");
     menu.each(function () {
       link.not(".current").hide();
       return link.filter(".current").prependTo(menu).click(function () {
@@ -100,20 +99,18 @@ $(function () {
     });
   }
   //crumbs
-  crumbs = $('#crumbs a[href]').map(function () {
+  var crumbs = $('#crumbs a[href]').map(function () {
     return $(this).attr('href');
   });
   crumbs = crumbs.get();
   crumbs.shift();
   // navi
-  path = location.pathname + "/";
-  addCurrent = function (selector) {
-    var added;
-    added = false;
+  var path = location.pathname + "/";
+  var addCurrent = function (selector) {
+    var added = false;
     $($(selector).get().reverse()).each(function () {
-      var href;
-      menu = $(this);
-      href = menu.attr('href');
+      var menu = $(this);
+      var href = menu.attr('href');
       if (path.match(new RegExp('^' + href.replace(/([.?*+$\[\]\/\\(){}|\-])/g, '\\$1') + '(\/|$)')) || crumbs.indexOf(href) !== -1) {
         menu.addClass("current").parent().addClass("current");
         added = true;
@@ -132,10 +129,11 @@ $(function () {
   });
   //dropdown
   $(".dropdown-toggle").click(function (e) {
-    var $dropdown, $target, $this, ref;
-    $this = $(this);
-    $target = $(e.target);
-    ref = $this.data('ref');
+    var $this = $(this);
+    var $target = $(e.target);
+    var ref = $this.data('ref');
+
+    var $dropdown;
     if (ref) {
       $dropdown = $this.find(ref);
     } else {
