@@ -391,6 +391,13 @@ ja:
       ss/elasticsearch/site_setting: サイト内検索設定
       ss/site_usage: 使用量
 
+  activemodel:
+    attributes:
+      ss/download_param:
+        encoding: 文字コード
+      ss/import_param:
+        in_file: ファイル
+
   mongoid:
     models:
       session: セッション
