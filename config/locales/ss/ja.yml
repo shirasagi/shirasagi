@@ -28,7 +28,6 @@ ja:
     encoding: 文字コード
     text_zoom: 文字サイズ
     default_here_label: "詳細はこちら⇒"
-    errors: エラー
     wave_dash: ～
 
     views:
