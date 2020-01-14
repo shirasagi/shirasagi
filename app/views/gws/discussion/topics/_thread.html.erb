@@ -1,4 +1,4 @@
-<div class="addon-view">
+<div class="addon-view" id="topic-<%= topic.id %>">
   <div class="addon-head">
     <h2><%= link_to topic.name, gws_discussion_forum_topic_comments_path(forum_id: @forum.id, topic_id: topic.id) %></h2>
   </div>
@@ -39,7 +39,7 @@
     <div style="background: #f2f2f2; padding-bottom: 12px; border-left: hidden; border-right: hidden;"></div>
   <% end %>
   <% comments.each_with_index do |comment, i| %>
-    <div class="addon-body">
+    <div class="addon-body" id="comment-<%= comment.id %>">
       <header>
         <div class="contributor">
           <span class="no"><%= "#{offset + i + 2}." %></span>
