@@ -23,7 +23,7 @@ class Gws::Discussion::Topic
     return unless f.public?
     return unless f.notify_enabled?
 
-    notify_member_ids = f.discussion_member_ids - [user.id]
+    notify_member_ids = f.overall_members.pluck(:id) - [user.id]
     notify_member_ids.select! { |user_id| Gws::User.find(user_id).use_notice?(self) }
     return if notify_member_ids.blank?
 

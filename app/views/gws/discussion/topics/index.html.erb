@@ -66,7 +66,7 @@ Gws_Discussion_Unseen.renderUnseen(
   <% end %>
 
   <%= render "ss/crud/addon", addon: { head: t("gws/discussion.members"), toggle: true } do %>
-    <% @forum.discussion_members.each do |member| %>
+    <% @forum.overall_members.each do |member| %>
       <p><%= member.long_name %></p>
     <% end %>
   <% end %>

@@ -17,27 +17,12 @@ class Gws::Discussion::Forum
   set_permission_name "gws_discussion_forums"
 
   def discussion_member_ids
-    ids = []
-
-    # group permission
-    #ids = user_ids
-    #groups.each do |g|
-    #  g = Gws::Group.find(g.id)
-    #  ids += g.users.pluck(:id)
-    #end
-
-    # member
-    ids += member_ids
-    member_custom_groups.each do |custom_group|
-      ids += custom_group.member_ids
-    end
-
-    ids.uniq
+    overall_members.pluck(:id)
   end
+  deprecate discussion_member_ids: "discussion_member_ids is deprecated. use `#overall_members.pluck(:id)' instead"
 
-  def discussion_members
-    Gws::User.in(id: discussion_member_ids)
-  end
+  alias discussion_members overall_members
+  deprecate discussion_members: "discussion_members is deprecated. use `#overall_members' instead"
 
   def save_main_topic
     main_topic = Gws::Discussion::Topic.new

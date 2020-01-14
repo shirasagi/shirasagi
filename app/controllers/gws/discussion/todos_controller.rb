@@ -75,7 +75,7 @@ class Gws::Discussion::TodosController < ApplicationController
     @item.name = "[#{@forum.name}]"
     #@item.member_ids = @forum.member_ids
     #@item.member_custom_group_ids = @forum.member_custom_group_ids
-    @item.member_ids = @forum.discussion_member_ids
+    @item.member_ids = @forum.overall_members.pluck(:id)
   end
 
   def print
