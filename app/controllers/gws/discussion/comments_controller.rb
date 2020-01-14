@@ -48,7 +48,6 @@ class Gws::Discussion::CommentsController < ApplicationController
   public
 
   def index
-    #
   end
 
   def show
