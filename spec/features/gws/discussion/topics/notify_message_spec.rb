@@ -79,8 +79,7 @@ describe "gws_discussion_topics_notify_message", type: :feature, dbscope: :examp
       expect(mail.from.first).to eq site.sender_address
       expect(mail.bcc.first).to eq discussion_member.send_notice_mail_address
       expect(mail.subject).to eq notification.subject
-      url = "#{site.canonical_scheme}://#{site.canonical_domain}/.g#{site.id}/memo/notices/#{notification.id}"
-      puts mail.decoded.to_s
+      url = "#{SS.config.gws.canonical_scheme}://#{SS.config.gws.canonical_domain}/.g#{site.id}/memo/notices/#{notification.id}"
       expect(mail.decoded.to_s).to include(mail.subject, url)
     end
 
