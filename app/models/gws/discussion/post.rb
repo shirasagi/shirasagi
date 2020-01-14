@@ -28,7 +28,7 @@ class Gws::Discussion::Post
     return if notify_member_ids.blank?
 
     url = Rails.application.routes.url_helpers.gws_discussion_forum_topic_comments_path(
-      forum_id: forum.id, topic_id: topic.id, site: @cur_site.id, category: '-', mode: '-')
+      site: @cur_site.id, mode: '-', forum_id: forum.id, topic_id: topic.id)
 
     item = SS::Notification.new
     item.cur_group = site

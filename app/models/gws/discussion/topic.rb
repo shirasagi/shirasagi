@@ -28,7 +28,8 @@ class Gws::Discussion::Topic
     return if notify_member_ids.blank?
 
     url = Rails.application.routes.url_helpers.gws_discussion_forum_topics_path(
-      forum_id: forum.id, site: @cur_site.id, category: '-', mode: '-')
+      site: @cur_site.id, mode: '-', forum_id: forum.id
+    )
 
     item = SS::Notification.new
     item.cur_group = site
