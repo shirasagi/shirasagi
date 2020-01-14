@@ -73,7 +73,8 @@ class Gws::Survey::NotificationJob < Gws::ApplicationJob
     end
 
     path = Rails.application.routes.url_helpers.edit_gws_survey_readable_file_path(
-      protocol: site.canonical_scheme, host: site.canonical_domain,
+      protocol: site.canonical_scheme.presence || SS.config.gws.canonical_scheme,
+      host: site.canonical_domain.presence || SS.config.gws.canonical_domain,
       site: site, folder_id: '-', category_id: '-', readable_id: item
     )
 
