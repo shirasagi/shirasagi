@@ -3,6 +3,7 @@
     <% @inherit_keys.each do |key| %>
       <%= hidden_field_tag key, params[key] %>
     <% end %>
+    <%= hidden_field_tag 'fragment', '#gws-memo-persona-address-personal' %>
 
     <dl class="see">
       <dt><%= @model.t :address_group_id %></dt>
@@ -56,3 +57,5 @@
   <% end %>
   </tbody>
 </table>
+
+<%= paginate @items, params: { fragment: "#gws-memo-persona-address-personal" } if @items.try(:current_page) %>
