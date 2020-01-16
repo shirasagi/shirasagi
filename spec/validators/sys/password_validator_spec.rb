@@ -14,7 +14,7 @@ describe Sys::PasswordValidator, type: :validator, dbscope: :example do
   end
 
   before do
-    user.in_password = password
+    user.in_password = [ password ].flatten.join
     setting.password_validator.validate(user)
   end
 
@@ -149,22 +149,40 @@ describe Sys::PasswordValidator, type: :validator, dbscope: :example do
   end
 
   describe "#validate_password_prohibited_char" do
-    let(:setting) do
-      Sys::Setting.create(
-        password_min_use: "enabled", password_min_length: rand(8..12),
-        password_prohibited_char_use: "enabled", password_prohibited_char: chars.sample(rand(2..4)).join
-      )
-    end
+    context "usual case" do
+      let(:setting) do
+        Sys::Setting.create(
+          password_min_use: "enabled", password_min_length: rand(8..12),
+          password_prohibited_char_use: "enabled", password_prohibited_char: chars.sample(rand(2..4)).join
+        )
+      end
 
-    context "when invalid password is given" do
-      let(:password) { chars.sample(setting.password_min_length).join + setting.password_prohibited_char }
+      context "when invalid password is given" do
+        let(:password) { chars.sample(setting.password_min_length).join + setting.password_prohibited_char }
 
-      it do
-        expect(user.errors).not_to be_blank
+        it do
+          expect(user.errors).not_to be_blank
+        end
+      end
+
+      context "when valid password is given" do
+        let(:password) do
+          (chars - setting.password_prohibited_char.split("")).sample(setting.password_min_length)
+        end
+
+        it do
+          expect(user.errors).to be_blank
+        end
       end
     end
 
-    context "when valid password is given" do
+    context "edge case: '(-#'" do
+      let(:setting) do
+        Sys::Setting.create(
+          password_min_use: "enabled", password_min_length: rand(8..12),
+          password_prohibited_char_use: "enabled", password_prohibited_char: "(-#"
+        )
+      end
       let(:password) do
         (chars - setting.password_prohibited_char.split("")).sample(setting.password_min_length)
       end
