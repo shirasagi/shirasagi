@@ -13,7 +13,7 @@ this.SS_Tooltips = (function () {
 
     // tippy default settings
     tippy.setDefaultProps({
-      content: function(el) { return el.querySelector("ul"); },
+      content: function(el) { return el.querySelector(".tooltip-content"); },
       trigger: 'click',
       theme: 'light-border ss-tooltip'
     });

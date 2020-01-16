@@ -1735,7 +1735,7 @@ dl.mod-cms-parent_crumbs {
   color: $white;
   text-align: center;
   cursor: pointer;
-  ul {
+  .tooltip-content {
     display: none;
   }
 }
