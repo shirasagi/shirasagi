@@ -6,7 +6,7 @@ describe "gws_schedule_plans", type: :feature, dbscope: :example do
     let(:member_user) do
       create :gws_user, group_ids: [gws_site.id],
        notice_schedule_user_setting: "notify",
-       send_notice_mail_address: "ss@example.jp"
+       send_notice_mail_addresses: "ss@example.jp"
     end
     let(:item) { create :gws_schedule_plan, member_ids: [gws_user.id, member_user.id] }
     let(:show_path) { gws_schedule_plan_path site, item }

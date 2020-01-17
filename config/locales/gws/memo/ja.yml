@@ -295,7 +295,7 @@ ja:
         notice_discussion_email_user_setting: 電子会議室通知メール転送
         notice_report_email_user_setting: レポート通知メール転送
         notice_announcement_email_user_setting: お知らせ通知メール転送
-        send_notice_mail_address: 転送先メールアドレス
+        send_notice_mail_addresses: 転送先メールアドレス
 
   activemodel:
     models:
