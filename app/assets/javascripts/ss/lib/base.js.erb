@@ -155,8 +155,12 @@ this.SS = (function () {
       success: function (data) {
         return $(elem).replaceWith(data);
       },
-      error: function () {
-        return $(elem).find("img").remove();
+      error: function (xhr, status, error) {
+        if (xhr.status === 404) {
+          return $(elem).remove();
+        } else {
+          return $(elem).find("img").remove();
+        }
       },
       complete: function () {
         SS.part = SS.part - 1;
