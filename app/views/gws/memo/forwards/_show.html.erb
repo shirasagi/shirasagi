@@ -1,6 +1,6 @@
 <dl class="see">
-  <dt><%= @model.t :email %></dt>
-  <dd><%= @item.send :email %></dd>
+  <dt><%= @model.t :emails %></dt>
+  <dd><%= @item.emails.join(", ") %></dd>
 
   <dt><%= @model.t :default %></dt>
   <dd><%= @item.label :default %></dd>

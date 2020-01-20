@@ -7,27 +7,27 @@ class Gws::Memo::Forward
   set_permission_name 'private_gws_memo_messages', :edit
 
   field :default, type: String, default: 'disabled'
-  field :email, type: String
+  field :emails, type: SS::Extensions::Words
 
-  permit_params :email, :default
+  permit_params :emails, :default
 
-  validates :email, presence: true, if: ->{ self.default == "enabled" }
-  validates :email, email: true, if: ->{ email.present? }
+  validates :emails, presence: true, if: ->{ self.default == "enabled" }
+  validates :emails, emails: true, length: { maximum: 5, message: :too_large }
 
-  scope :default, -> { where default: 'disabled' }
-  scope :search, ->(params) {
-    criteria = where({})
-    return criteria if params.blank?
-
-    criteria = criteria.keyword_in params[:keyword], :name, :text if params[:keyword].present?
-    criteria
-  }
+  #scope :default, -> { where default: 'disabled' }
+  #scope :search, ->(params) {
+  #  criteria = where({})
+  #  return criteria if params.blank?
+  #
+  #  criteria = criteria.keyword_in params[:keyword], :name, :text if params[:keyword].present?
+  #  criteria
+  #}
 
   def default_options
     %w(enabled disabled).map { |m| [I18n.t("ss.options.state.#{m}"), m] }
   end
 
-  def default?
-    default == 'disabled'
-  end
+  #def default?
+  #  default == 'disabled'
+  #end
 end
