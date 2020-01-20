@@ -1,5 +1,6 @@
 メッセージが届きました。
 
+元メッセージ: <%= gws_memo_message_url(protocol: @cur_site.canonical_scheme.presence || SS.config.gws.canonical_scheme, host: @cur_site.canonical_domain.presence || SS.config.gws.canonical_domain, site: @cur_site, folder: "REDIRECT", id: @item) %>
 件名: <%= @item.name %>
 <%= @item.text %>
 時刻: <%= @item.send_date.strftime("%Y/%m/%d %H:%M") rescue nil %>
