@@ -5,12 +5,15 @@ class SS::Migration20200117000000
 
   def change
     each_user do |user|
-      if user.send_notice_mail_address.blank? || user.send_notice_mail_addresses.present?
+      if user[:send_notice_mail_address].blank? || user.send_notice_mail_addresses.present?
         user.unset(:send_notice_mail_address)
         next
       end
 
-      user.set(send_notice_mail_addresses: [ user[:send_notice_mail_address] ])
+      send_notice_mail_addresses = [ user[:send_notice_mail_address].presence ].compact
+      next if send_notice_mail_addresses.blank?
+
+      user.set(send_notice_mail_addresses: send_notice_mail_addresses)
       user.unset(:send_notice_mail_address)
     end
   end

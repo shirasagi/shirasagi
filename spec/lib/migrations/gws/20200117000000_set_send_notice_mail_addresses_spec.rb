@@ -10,10 +10,12 @@ RSpec.describe SS::Migration20200117000000, dbscope: :example do
 
   before do
     # user1 has valid email address
-    user1.set(send_notice_mail_address: valid_email1)
+    user1[:send_notice_mail_address] = valid_email1
+    user1.save!
 
     # user2 has invalid email address
-    user2.set(send_notice_mail_address: invalid_email1)
+    user2[:send_notice_mail_address] = invalid_email1
+    user2.save!
 
     described_class.new.change
   end

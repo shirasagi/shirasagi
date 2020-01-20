@@ -13,9 +13,6 @@ module Gws::Memo::NoticeUserSetting
       alias_method("notice_#{name}_email_user_setting_options", "notice_email_user_setting_options")
     end
 
-    # for backward compatibility
-    field :send_notice_mail_address, type: String
-
     field :send_notice_mail_addresses, type: SS::Extensions::Words
     permit_params :send_notice_mail_addresses
     validates :send_notice_mail_addresses, emails: true, length: { maximum: 5, message: :too_large }
