@@ -4,11 +4,10 @@ module SS::Relation::File
 
   module ClassMethods
     def belongs_to_file(name, opts = {})
-      store = opts[:store_as] || "#{name.to_s.singularize}_id"
       class_name = opts[:class_name] || "SS::File"
       required = opts[:required] || false
 
-      belongs_to name.to_sym, foreign_key: store, class_name: class_name, dependent: :destroy
+      belongs_to name.to_sym, class_name: class_name, dependent: :destroy
 
       attr_accessor "in_#{name}", "rm_#{name}", "in_#{name}_resizing"
       permit_params "in_#{name}", "rm_#{name}"
@@ -84,20 +83,16 @@ module SS::Relation::File
   end
 
   def _save_relation(name, opts)
-    store = opts[:store_as] || "#{name.to_s.singularize}_id"
-
     file = relation_file(name, opts)
     file.save
-    send("#{store}=", file.id)
+    send("#{name}=", file)
   end
 
-  def _remove_relation(name, opts)
-    store = opts[:store_as] || "#{name.to_s.singularize}_id"
-
+  def _remove_relation(name, _opts)
     file = send(name)
     file.destroy if file
-    unset(store) rescue nil
-    send("#{store}=", nil)
+    unset("#{name}_id") rescue nil
+    send("#{name}=", nil)
   end
 
   def _file_state(_name, opts)
