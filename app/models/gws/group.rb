@@ -1,5 +1,6 @@
 class Gws::Group
   include SS::Model::Group
+  include SS::Relation::File
   include Gws::Referenceable
   include Gws::SitePermission
   include Gws::Addon::Notice::GroupSetting
@@ -22,6 +23,7 @@ class Gws::Group
   include Gws::Addon::System::FileSetting
   include Gws::Addon::System::MenuSetting
   include Gws::Addon::System::NoticeSetting
+  include Gws::Addon::System::LogoSetting
   include Gws::Addon::System::LogSetting
   include Gws::Addon::System::GroupSetting
   include Gws::Addon::System::DesktopSetting

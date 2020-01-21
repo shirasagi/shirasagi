@@ -40,21 +40,4 @@ module Cms::FormHelper
     st_forms = st_forms.and_public.allow(:read, @cur_user, site: @cur_site).order_by(update: 1)
     st_forms
   end
-
-  def show_image_info(file)
-    return nil unless file
-
-    content_tag(:div, class: "file-view", data: { "file-id" => file.id }) do
-      link_to(file.url, target: "_blank") do
-        output_buffer << content_tag(:div, class: "thumb") do
-          if file.image?
-            image_tag(file.thumb_url, alt: file.basename)
-          else
-            content_tag(:span, file.extname, class: [ "ext", "icon-#{file.extname}" ])
-          end
-        end
-        output_buffer << content_tag(:div, file.humanized_name, class: "name")
-      end
-    end
-  end
 end
