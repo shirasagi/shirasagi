@@ -15,7 +15,7 @@ class Event::Agents::Nodes::PageController < ApplicationController
 
     if @year_presented
       @cur_node.window_name ||= "#{@cur_node.name} #{I18n.t("event.options.event_display.#{@cur_display || "table"}")}
-          #{I18n.l(@date, format: :long_month)}"
+        #{I18n.l(@date, format: :long_month)}"
     else
       @cur_node.window_name = "#{@cur_node.name} #{I18n.t("event.options.event_display.#{@cur_display || "table"}")}"
     end
