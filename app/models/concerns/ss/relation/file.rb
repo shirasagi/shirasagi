@@ -4,7 +4,7 @@ module SS::Relation::File
 
   module ClassMethods
     def belongs_to_file(name, opts = {})
-      class_name = opts[:class_name] || "SS::File"
+      class_name = opts[:class_name].presence || "SS::File"
       required = opts[:required] || false
 
       belongs_to name.to_sym, class_name: class_name, dependent: :destroy
@@ -32,6 +32,34 @@ module SS::Relation::File
         _update_relation_owner_item(name, opts)
       end
 
+      expose_public_methods(name, opts)
+    end
+
+    def belongs_to_file2(name, opts = {})
+      class_name = opts[:class_name].presence || "SS::File"
+
+      belongs_to name.to_sym, class_name: class_name, dependent: :destroy
+
+      attr_accessor "rm_#{name}", "in_#{name}_resizing"
+      permit_params "#{name}_id", "rm_#{name}", "in_#{name}_resizing" => []
+
+      before_save if: ->{ send("#{name}_id").present? } do
+        _transfer_relation_ownership(name, opts)
+      end
+      after_save if: ->{ send(name).present? } do
+        _update_relation_state(name, opts)
+      end
+      after_save if: ->{ send(name).present? } do
+        _update_relation_owner_item(name, opts)
+      end
+      before_save if: ->{ send("rm_#{name}").to_s == "1" } do
+        _remove_relation(name, opts)
+      end
+
+      expose_public_methods(name, opts)
+    end
+
+    def expose_public_methods(name, opts)
       define_method("#{name}_file_state") do
         _file_state(name, opts)
       end
@@ -132,5 +160,29 @@ module SS::Relation::File
   def _remove_relation_public(name, opts)
     file = send(name)
     file.remove_public_file if file
+  end
+
+  def _transfer_relation_ownership(name, opts)
+    return unless send("#{name}_id_changed?")
+
+    cur_id = send("#{name}_id")
+    prev_id = send("#{name}_id_was")
+
+    file = SS::File.find(cur_id)
+    expected_model = opts[:file_model] || (opts[:class_name].presence || "SS::File").to_s.underscore
+    if file.model != expected_model
+      file.update(model: expected_model)
+
+      resizing = send("in_#{name}_resizing").presence || opts[:resizing]
+      if resizing
+        file.shrink_image_to(resizing[0].to_i, resizing[1].to_i)
+      end
+    end
+
+    if prev_id.present?
+      SS::File.where(id: prev_id).destroy_all
+    end
+
+    true
   end
 end
