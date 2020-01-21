@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe Gws::Group, type: :model, dbscope: :example do
+describe Gws::Group, type: :model, dbscope: :example, tmpdir: true do
   describe "#sender_address" do
     subject { gws_site }
     let(:sender_name) { unique_id }
@@ -46,6 +46,32 @@ describe Gws::Group, type: :model, dbscope: :example do
       end
 
       its(:sender_address) { is_expected.to eq "#{sender_user.name} <#{sender_user.email}>" }
+    end
+  end
+
+  describe "#logo_application_image" do
+    subject { gws_site }
+    let(:ss_file1) { tmp_ss_file(contents: "#{Rails.root}/spec/fixtures/ss/file/keyvisual.jpg", user: cms_user) }
+    let(:ss_file2) { tmp_ss_file(contents: "#{Rails.root}/spec/fixtures/ss/file/keyvisual.jpg", user: cms_user) }
+
+    it do
+      prev_filesize = ss_file1.size
+      expect(ss_file1.model).to eq "ss/temp_file"
+
+      subject.logo_application_image_id = ss_file1.id
+      subject.save!
+
+      # logo_application_image_id に画像ファイルをセットすると、リサイズされて小さくなる。その影響でファイルサイズが減るはず
+      ss_file1.reload
+      expect(ss_file1.model).to eq "ss/logo_file"
+      expect(ss_file1.size).to be < prev_filesize
+
+      # 別の画像で上書きする
+      subject.logo_application_image_id = ss_file2.id
+      subject.save!
+
+      # 最初にセットしたファイルは削除されるはず
+      expect { ss_file1.reload }.to raise_error Mongoid::Errors::DocumentNotFound
     end
   end
 end
