@@ -380,10 +380,6 @@ ja:
         notice_report_state: レポート
         notice_announcement_state: お知らせ
         send_notice_email_state: 個人メール転送
-      gws/addon/system/logo_setting:
-        logo_application_name: アプリケーション名
-        logo_application_image_id: ロゴ画像
-        logo_application_template: ロゴHTML
       gws/addon/system/log_setting:
         log_save_days: ログ保持日数
         log_main_severity: 標準機能のログ
