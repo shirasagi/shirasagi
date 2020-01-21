@@ -73,8 +73,8 @@ ja:
     preview_date: プレビュー日時
     column_file_upload:
       image:
-        file_label: 代替えテキスト
-        file_label_place_holder: 代替えテキストを入力してください。
+        file_label: 代替テキスト
+        file_label_place_holder: 代替テキストを入力してください。
       video:
         text: 動画の内容説明
         text_place_holder: 動画の内容を説明する文書を入力してください。
@@ -82,9 +82,9 @@ ja:
         file_label: ファイル名
         file_label_place_holder: リンクテキストとして表示するファイル名を入力してください。
       banner:
-        file_label: 代替えテキスト
+        file_label: 代替テキスト
         link_url: URL
-        file_label_place_holder: 代替えテキストを入力してください。
+        file_label_place_holder: 代替テキストを入力してください。
         link_url_place_holder: URLを入力してください。
     column_table:
       width: 列数
@@ -853,7 +853,7 @@ ja:
         html_additional_attr: HTML追加属性
         label_max_length: リンクテキスト最大長
         label_place_holder: リンクテキストプレースホルダー
-        image_text: 代替えテキスト
+        image_text: 代替テキスト
         max_length: 最大長
         place_holder: プレースホルダー
         file_type: ファイルタイプ
