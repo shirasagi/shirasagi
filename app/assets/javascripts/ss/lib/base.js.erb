@@ -156,11 +156,7 @@ this.SS = (function () {
         return $(elem).replaceWith(data);
       },
       error: function (xhr, status, error) {
-        if (xhr.status === 404 || xhr.status === 500) {
-          return $(elem).remove();
-        } else {
-          return $(elem).find("img").remove();
-        }
+        return $(elem).remove();
       },
       complete: function () {
         SS.part = SS.part - 1;
