@@ -26,20 +26,18 @@
               <% end %>
             <% end %>
 
-            <div class="name">
-              <label>
-                <%= file.name %><br />
-                <%= file.filename %>
-              </label><br />
+            <div class="no-overflow">
+              <div class="name">
+                <span title="<%= file.name %>"><%= file.name %></span><br />
+                <span title="<%= file.filename %>"><%= file.filename %></span><br />
+              </div>
+              <%= link_to cms_page_path(id: page.id), target: "_blank" do %>
+                <div class="name">
+                  <span title="<%= page.name %>"><%= page.name %></span><br />
+                  <span title="<%= page.filename %>"><%= page.filename %></span><br />
+                </div>
+              <% end %>
             </div>
-            <%= link_to cms_page_path(id: page.id), target: "_blank" do %>
-            <span class="name">
-              <label>
-                <%= page.name %><br />
-                <%= page.filename %>
-              </label><br />
-            </span>
-            <% end %>
           </div>
         <% end %>
       </div>
