@@ -4,6 +4,8 @@ class Gws::Memo::Forward
   include Gws::Reference::Site
   include Gws::SitePermission
 
+  MAX_MAIL_COUNT = SS.config.gws.dig("memo", "max_foward_mail_address_count") || 10
+
   set_permission_name 'private_gws_memo_messages', :edit
 
   field :default, type: String, default: 'disabled'
@@ -12,7 +14,7 @@ class Gws::Memo::Forward
   permit_params :emails, :default
 
   validates :emails, presence: true, if: ->{ self.default == "enabled" }
-  validates :emails, emails: true, length: { maximum: 5, message: :too_large }
+  validates :emails, emails: true, length: { maximum: MAX_MAIL_COUNT, message: :too_large }
 
   #scope :default, -> { where default: 'disabled' }
   #scope :search, ->(params) {
