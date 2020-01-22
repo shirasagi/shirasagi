@@ -27,6 +27,14 @@ class Cms::UsersController < ApplicationController
     raise e
   end
 
+  def set_selected_items
+    ids = params[:ids]
+    raise "400" unless ids
+    ids = ids.split(",") if ids.is_a?(String)
+    @selected_items = @items = @model.unscoped.in(id: ids)
+    raise "400" unless @items.present?
+  end
+
   public
 
   def index

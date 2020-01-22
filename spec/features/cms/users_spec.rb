@@ -54,6 +54,45 @@ describe "cms_users", type: :feature, dbscope: :example do
         click_on I18n.t("ss.buttons.delete")
       end
       expect(page).to have_css('#notice', text: I18n.t('ss.notice.deleted'))
+
+      #delete_all
+      within ".index-search" do
+        fill_in "s[keyword]", with: item.name
+        select I18n.t('ss.options.state.disabled'), from: 's[state]'
+        click_button I18n.t("ss.buttons.search")
+      end
+      expect(page).to have_css(".list-items", count: 1)
+
+      find('.list-head label.check input').set(true)
+      page.accept_alert do
+        click_button I18n.t('ss.links.delete')
+      end
+      expect(page).to have_no_content(item.name)
+
+      #lock_all
+      within ".index-search" do
+        select I18n.t('ss.options.state.disabled'), from: 's[state]'
+        click_button I18n.t("ss.buttons.search")
+      end
+      expect(page).to have_css(".list-items", count: 1)
+
+      find('.list-head label.check input').set(true)
+      click_button I18n.t('ss.links.lock_user')
+      expect(page).to have_css('#notice', text: I18n.t('ss.notice.lock_user_all'))
+      expect(page).to have_no_content(item.name)
+
+      #unlock_all
+      within ".index-search" do
+        fill_in "s[keyword]", with: item.name
+        select I18n.t('ss.options.state.all'), from: 's[state]'
+        click_button I18n.t("ss.buttons.search")
+      end
+      expect(page).to have_css(".list-items", count: 1)
+
+      find('.list-head label.check input').set(true)
+      click_button I18n.t('ss.links.unlock_user')
+      expect(page).to have_css('#notice', text: I18n.t('ss.notice.unlock_user_all'))
+      expect(page).to have_no_content(item.name)
     end
   end
 
@@ -144,6 +183,24 @@ describe "cms_users", type: :feature, dbscope: :example do
       expect(users.map{ |u| u.groups.map(&:name) }).to eq expected_groups
       expect(users.map{ |u| u.cms_roles.order_by(name: 1).map(&:name) }).to eq expected_cms_roles
       expect(users.map(&:initial_password_warning)).to eq expected_initial_password_warning
+    end
+
+    context do
+      before do
+        cms_site.set(group_ids: [cms_group.id])
+      end
+
+      it "#import" do
+        login_cms_user
+        visit import_path
+        within "form" do
+          attach_file "item[in_file]", "#{Rails.root}/spec/fixtures/cms/user/cms_users_1.csv"
+          click_button I18n.t('ss.buttons.import')
+        end
+        expect(status_code).to eq 200
+        expect(current_path).to eq import_path
+        expect(page).to have_selector('#errorExplanation ul li', count: 9)
+      end
     end
   end
 

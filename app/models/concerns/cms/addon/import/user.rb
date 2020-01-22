@@ -42,7 +42,7 @@ module Cms::Addon::Import
               line << I18n.t('ss.options.state.disabled')
             end
             line << (item.organization ? item.organization.name : nil)
-            line << item.groups.map(&:name).join("\n")
+            line << item.groups.in(name: opts[:site].groups.active.pluck(:name).map{ |name| /^#{::Regexp.escape(name)}(\/|$)/ } ).pluck(:name).join("\n")
             line << item.ldap_dn
             line << roles.map(&:name).join("\n")
             data << line
@@ -120,15 +120,14 @@ module Cms::Addon::Import
 
       # groups
       groups = row[t("groups")].to_s.strip.split(/\n/)
-      item.group_ids = SS::Group.in(name: groups).map(&:id)
-      # item.group_ids = item.group_ids - rm_group_ids
-      # if groups.present?
-      #   item.group_ids += SS::Group.in(name: groups).pluck(:id)
-      # end
-      # item.imported_group_keys = groups
-      # item.imported_groups = item.groups
-      # item.imported_cms_groups = @cur_site.groups.collect(&:root)
-      # item.group_ids = item.group_ids.uniq.sort
+      item.group_ids = item.group_ids - rm_group_ids
+      if groups.present?
+        item.group_ids += SS::Group.in(name: groups).pluck(:id)
+      end
+      item.imported_group_keys = groups
+      item.imported_groups = item.groups
+      item.imported_cms_groups = @cur_site.groups.collect(&:root)
+      item.group_ids = item.group_ids.uniq.sort
 
       # cms_roles
       cms_roles = row[t("cms_roles")].to_s.strip.split(/\n/)
@@ -157,16 +156,17 @@ module Cms::Addon::Import
     end
 
     def set_errors(item, index)
-      error = ""
-      item.errors.each do |n, e|
-        error += "#{item.class.t(n)}#{e} "
+      sig = "#{Cms::User.t(:uid)}: #{item.uid}の" if item.uid.present?
+      sig ||= "#{Cms::User.t(:email)}: #{item.email}の" if item.email.present?
+      sig ||= "#{Cms::User.t(:id)}: #{item.id}の" if item.persisted?
+      item.errors.full_messages.each do |error|
+        errors.add(:base, "#{index}行目: #{sig}#{error}")
       end
-      self.errors.add :base, "#{index}: #{error}"
     end
 
-    # def rm_group_ids
-    #   root_groups = @cur_site.groups.collect(&:root).collect(&:name)
-    #   @rm_group_ids ||= SS::Group.where(name: /\A#{Regexp.union(root_groups)}/).pluck(:id)
-    # end
+    def rm_group_ids
+      root_groups = @cur_site.groups.collect(&:root).collect(&:name)
+      @rm_group_ids ||= SS::Group.where(name: /\A#{Regexp.union(root_groups)}/).pluck(:id)
+    end
   end
 end
