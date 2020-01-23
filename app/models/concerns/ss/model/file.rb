@@ -153,20 +153,31 @@ module SS::Model::File
   end
 
   def humanized_name
-    "#{name.sub(/\.[^\.]+$/, '')} (#{extname.upcase} #{number_to_human_size(size)})"
+    "#{::File.basename(name, ".*")} (#{extname.upcase} #{number_to_human_size(size)})"
   end
 
   def download_filename
-    name.include?('.') ? name : "#{name}.#{extname}"
+    return name if name.include?('.') && !name.end_with?(".")
+
+    name_without_ext = ::File.basename(name, ".*")
+    ext = ::File.extname(filename)
+    return name_without_ext if ext.blank?
+
+    name_without_ext + ext
   end
 
   def basename
-    filename.to_s.sub(/.*\//, "")
+    filename.present? ? ::File.basename(filename) : ""
   end
 
   def extname
-    return "" unless filename.to_s.include?('.')
-    filename.to_s.sub(/.*\W/, "")
+    return "" if filename.blank?
+
+    ret = ::File.extname(filename)
+    return "" if ret.blank?
+
+    ret = ret[1..-1] if ret.start_with?(".")
+    ret
   end
 
   def image?
