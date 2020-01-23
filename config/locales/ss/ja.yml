@@ -195,6 +195,7 @@ ja:
 
     info:
       soft_delete: データの実削除ではなく無効状態として保存されます。
+      hard_delete: データが実削除されます。
     warning:
       initial_password: 初期パスワードを変更してください。
       session_timeout: セッションの有効期限が切れました。
