@@ -6,23 +6,9 @@
 
 <dl class="see mod-cms-thumb-form">
   <dt><%= @model.t :thumb_id %></dt>
-  <dd>
-    <div class="file-view" data-file-id="<%= @item.thumb.id %>">
-      <%= link_to @item.thumb.url, class: :thumb, target: "_blank" do %>
-        <% if @item.thumb.image? %>
-          <%= image_tag(@item.thumb.thumb_url, alt: @item.thumb.basename) %>
-        <% else %>
-          <span class="ext icon-<%= @item.thumb.extname %>"><%= @item.thumb.extname %></span>
-        <% end %>
-      <% end %>
-
-      <div class="name">
-        <%= @item.thumb.basename %>
-      </div>
-    </div>
-  </dd>
+  <dd><%= show_image_info @item.thumb %></dd>
 </dl>
+
 <%= jquery do %>
-  var $el = $("#<%= addon[:id] %>");
-  SS_FileView.listenTo("#<%= addon[:id] %> a.thumb", { viewPath: "<%= view_cms_apis_content_file_path(id: ":id") %>" });
+  SS_FileView.listenTo("#<%= addon[:id] %> .file-view > a", { viewPath: "<%= view_cms_apis_content_file_path(id: ":id") %>" });
 <% end %>

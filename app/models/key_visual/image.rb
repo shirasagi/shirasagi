@@ -11,9 +11,9 @@ class KeyVisual::Image
 
   field :link_url, type: String
 
-  belongs_to_file :file
+  belongs_to_file2 :file
 
-  validates :in_file, presence: true, if: -> { file_id.blank? }
+  validates :file_id, presence: true
 
   permit_params :link_url
 
