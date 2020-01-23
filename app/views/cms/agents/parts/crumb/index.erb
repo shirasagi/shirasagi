@@ -1,21 +1,17 @@
-<div class="crumbs">
-<% @items.each do |crumb| %>
-<%
-
-size = crumb.size
-html = []
-
-crumb.each_with_index do |item, idx|
-  html << "<span class=\"separator\">&rsaquo;</span>".html_safe if idx > 0
-
-  if size == idx + 1
-    html << "<span class=\"page\">#{h(item[0])}</span>".html_safe
-  else
-    html << "<span class=\"page\">#{link_to(*item)}</span>".html_safe
-  end
-end
-
-%>
-<div class="crumb"><%== html.join %></div>
-<% end %>
+<div class="crumbs" itemscope itemtype="http://schema.org/BreadcrumbList">
+  <% @items.each do |crumb| %>
+    <%
+      size = crumb.size
+      html = []
+      crumb.each_with_index do |item, idx|
+        html << "<span class=\"separator\">&rsaquo;</span>".html_safe if idx > 0
+        if size == idx + 1
+          html << "<span itemprop=\"name\" class=\"page\">#{h(item[0])}</span><meta itemprop=\"position\" content=\"#{idx + 1}\" />".html_safe
+        else
+          html << "<span itemprop=\"name\" class=\"page\">#{link_to(*item)}</span><meta itemprop=\"position\" content=\"#{idx + 1}\" />".html_safe
+        end
+      end
+    %>
+    <div class="crumb" itemprop="itemListElement" itemscope itemtype="http://schema.org/ListItem" ><%== html.join %></div>
+  <% end %>
 </div>
