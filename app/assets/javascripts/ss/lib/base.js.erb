@@ -469,7 +469,8 @@ this.SS = (function () {
         return;
       }
 
-      $this.data("on-select", function($item) {
+      var $container = $this.closest(".ss-file-field")
+      var onSelect = function($item) {
         $.colorbox.close();
 
         var $data = $item.closest("[data-id]");
@@ -479,10 +480,31 @@ this.SS = (function () {
           return;
         }
 
-        var $container = $this.closest(".ss-file-field")
         $container.find(".humanized-name").text(fileName);
         $container.find(".file-id").val(fileId)
         $container.find(".btn-file-delete").show();
+      };
+
+      $this.data("on-select", onSelect);
+
+      var $a = $("<a/>", { href: "#", class: "hide" });
+      $a.data("on-select", onSelect);
+      $a.colorbox({ width: "90%", height: "90%", fixed: true });
+
+      $container.find(".dropdown-item").on("click", function(ev) {
+        ev.preventDefault();
+
+        var $this = $(this);
+        var href = $this.attr("href");
+
+        $a.attr("href", href);
+        $a.colorbox({ open: true });
+
+        var $dropdown = $this.closest(".dropdown")
+        $dropdown.removeClass('active');
+        $dropdown.find(".dropdown-menu").removeClass('active');
+
+        return false;
       });
     });
 

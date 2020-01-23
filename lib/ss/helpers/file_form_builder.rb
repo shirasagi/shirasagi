@@ -20,15 +20,30 @@ module SS::Helpers::FileFormBuilder
       path = @template.sns_apis_temp_files_path(user: cur_user)
     end
 
-    @template.content_tag(:div, class: "ss-file-field") do
-      @template.output_buffer << @template.link_to(I18n.t('ss.links.upload'), path, class: %w(ajax-box btn btn-file-upload))
+    id = options.fetch(:id, sanitize_to_id("#{@object_name}[#{method}_id]"))
+    @template.content_tag(:div, class: "ss-file-field", id: id) do
+      @template.output_buffer << @template.content_tag(:span, class: "dropdown") do
+        @template.output_buffer << @template.link_to(I18n.t('ss.links.upload'), path, class: %w(ajax-box btn btn-file-upload))
+        @template.output_buffer << @template.button_tag("▼", name: nil, type: "button", class: %w(btn dropdown-toggle))
+        @template.output_buffer << @template.content_tag(:div, class: %w(dropdown-menu)) do
+          @template.output_buffer << @template.link_to(I18n.t('ss.links.upload'), path, class: "dropdown-item")
+          @template.output_buffer << @template.link_to(
+            I18n.t('sns.user_file'), @template.sns_apis_user_files_path(user: cur_user), class: "dropdown-item")
+          if ss_mode == :cms
+            @template.output_buffer << @template.link_to(
+              I18n.t('cms.file'), @template.cms_apis_files_path, class: "dropdown-item")
+          end
+        end
+      end
       @template.output_buffer << " "
       @template.output_buffer << @template.content_tag(:span, file.try(:humanized_name), class: "humanized-name")
       @template.output_buffer << " "
       @template.output_buffer << @template.hidden_field_tag(
         "#{@object_name}[#{method}_id]", file.try(:id), id: nil, class: "file-id")
       @template.output_buffer << " "
-      @template.output_buffer << @template.link_to("#", class: 'btn-file-delete', style: file.present? ? nil : "display: none") do
+      @template.output_buffer << @template.link_to(
+        "##{id}", class: 'btn-file-delete', style: file.present? ? nil : "display: none"
+      ) do
         @template.content_tag(:i, "&#xE872;".html_safe, class: "material-icons", style: "font-size: 120%;")
       end
     end

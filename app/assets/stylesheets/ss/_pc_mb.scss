@@ -3359,3 +3359,29 @@ body.ss-ajax-in-iframe {
     @include btn-active;
   }
 }
+
+.ss-file-field {
+  .btn-file-upload.cboxElement {
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+  }
+  .btn.dropdown-toggle {
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+    margin-left: -1px;
+    padding-left: .5rem;
+    padding-right: .5rem;
+  }
+  .dropdown-menu {
+    padding: 4px;
+    border: $border-gray4;
+    @include box-shadow(0 3px 12px rgba(0, 0, 0, .2));
+    background: $white;
+    white-space: nowrap;
+    a {
+      display: block;
+      padding: 5px 10px;
+      background-image: none;
+    }
+  }
+}
