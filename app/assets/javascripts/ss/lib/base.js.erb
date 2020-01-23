@@ -51,7 +51,8 @@ this.SS = (function () {
       return $(this).addClass("external");
     });
     this.renderAjaxBox();
-    return this.renderDateTimePicker();
+    this.renderDateTimePicker();
+    this.renderFileUpload();
   };
 
   SS.renderNotInBox = function () {
@@ -457,7 +458,48 @@ this.SS = (function () {
     }
 
     return moment(time).format(format);
-  }
+  };
+
+  SS.renderFileUploadInitialized = false;
+
+  SS.renderFileUpload = function() {
+    $(".ss-file-field .btn-file-upload").each(function() {
+      var $this = $(this);
+      if ($this.data("on-select")) {
+        return;
+      }
+
+      $this.data("on-select", function($item) {
+        $.colorbox.close();
+
+        var $data = $item.closest("[data-id]");
+        var fileId = $data.data('id');
+        var fileName = $data.data("humanizedName") || $data.data("name") || $data.find(".select-item").text() || $item.text() || $data.text();
+        if (! fileId || ! fileName) {
+          return;
+        }
+
+        var $container = $this.closest(".ss-file-field")
+        $container.find(".humanized-name").text(fileName);
+        $container.find(".file-id").val(fileId)
+        $container.find(".btn-file-delete").show();
+      });
+    });
+
+    if (! SS.renderFileUploadInitialized) {
+      SS.renderFileUploadInitialized = true;
+
+      $(document).on("click", ".ss-file-field .btn-file-delete", function() {
+        var $this = $(this);
+        var $container = $this.closest(".ss-file-field")
+        $container.find(".humanized-name").text("");
+        $container.find(".file-id").val("");
+        $container.find(".btn-file-delete").hide();
+
+        return false;
+      });
+    }
+  };
 
   return SS;
 
