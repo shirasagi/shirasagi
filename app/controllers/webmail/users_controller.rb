@@ -31,7 +31,7 @@ class Webmail::UsersController < ApplicationController
 
   def destroy
     raise "403" unless @item.allowed?(:delete, @cur_user)
-    render_destroy @item.disable
+    render_destroy @item.disabled? ? @item.destroy : @item.disable
   end
 
   def destroy_all
