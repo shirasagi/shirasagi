@@ -35,7 +35,7 @@ describe "opendata_licenses", type: :feature, dbscope: :example, js: true do
           first("a[data-id='#{file.id}']").click
         end
         within "form#item-form" do
-          expect(page).to have_css(".humanized-name", text: file.name)
+          expect(page).to have_css(".humanized-name", text: file.humanized_name)
           click_button I18n.t('ss.buttons.save')
         end
         wait_for_notice I18n.t("ss.notice.saved")
@@ -43,9 +43,7 @@ describe "opendata_licenses", type: :feature, dbscope: :example, js: true do
     end
 
     describe "#show" do
-      let(:license_logo_file_path) { Rails.root.join("spec", "fixtures", "ss", "logo.png") }
-      let(:license_logo_file) { tmp_ss_file(contents: "#{Rails.root}/spec/fixtures/ss/logo.png") }
-      let(:item) { create(:opendata_license, cur_site: site, file_id: license_logo_file.id) }
+      let(:item) { create(:opendata_license, cur_site: site) }
       let(:show_path) { opendata_license_path site, node, item }
 
       it do
@@ -55,9 +53,7 @@ describe "opendata_licenses", type: :feature, dbscope: :example, js: true do
     end
 
     describe "#edit" do
-      let(:license_logo_file_path) { Rails.root.join("spec", "fixtures", "ss", "logo.png") }
-      let(:license_logo_file) { tmp_ss_file(contents: "#{Rails.root}/spec/fixtures/ss/logo.png") }
-      let(:item) { create(:opendata_license, cur_site: site, file_id: license_logo_file.id) }
+      let(:item) { create(:opendata_license, cur_site: site) }
       let(:edit_path) { edit_opendata_license_path site, node, item }
 
       it do
@@ -71,9 +67,7 @@ describe "opendata_licenses", type: :feature, dbscope: :example, js: true do
     end
 
     describe "#delete" do
-      let(:license_logo_file_path) { Rails.root.join("spec", "fixtures", "ss", "logo.png") }
-      let(:license_logo_file) { tmp_ss_file(contents: "#{Rails.root}/spec/fixtures/ss/logo.png") }
-      let(:item) { create(:opendata_license, cur_site: site, file_id: license_logo_file.id) }
+      let(:item) { create(:opendata_license, cur_site: site) }
       let(:delete_path) { delete_opendata_license_path site, node, item }
 
       it do

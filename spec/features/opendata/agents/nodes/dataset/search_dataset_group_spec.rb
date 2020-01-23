@@ -11,9 +11,7 @@ describe "opendata_agents_nodes_dataset", type: :feature, dbscope: :example do
   let!(:node_category) { create :opendata_node_category, filename: "bunya/kurashi" }
   let(:dataset_resource_file_path) { Rails.root.join("spec", "fixtures", "opendata", "shift_jis.csv") }
   let(:dataset_resource) { page_dataset.resources.new(attributes_for(:opendata_resource)) }
-  let(:license_logo_file_path) { Rails.root.join("spec", "fixtures", "ss", "logo.png") }
-  let(:license_logo_file) { Fs::UploadedFile.create_from_file(license_logo_file_path, basename: "spec") }
-  let(:license) { create(:opendata_license, cur_site: site, in_file: license_logo_file) }
+  let(:license) { create(:opendata_license, cur_site: site) }
   let(:node) { create :opendata_node_search_dataset_group }
   let(:index_url) { ::URI.parse "http://#{site.domain}#{node.url}" }
 

@@ -6,9 +6,7 @@ describe Opendata::Csv2rdfConverter::Job, dbscope: :example do
   let!(:node_sparql) { create(:opendata_node_sparql) }
   let!(:node_search_dataset) { create(:opendata_node_search_dataset) }
   let(:node) { create(:opendata_node_dataset) }
-  let(:license_logo_path) { Rails.root.join("spec", "fixtures", "ss", "logo.png") }
-  let(:license_logo_file) { Fs::UploadedFile.create_from_file(license_logo_path, basename: "spec") }
-  let(:license) { create(:opendata_license, cur_site: site, in_file: license_logo_file) }
+  let(:license) { create(:opendata_license, cur_site: site) }
   let!(:dataset) { create(:opendata_dataset, cur_node: node) }
   let(:resource) { dataset.resources.new(attributes_for(:opendata_resource)) }
   let(:content_type) { "application/vnd.ms-excel" }

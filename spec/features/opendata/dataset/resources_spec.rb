@@ -4,9 +4,7 @@ describe "opendata_dataset_resources", type: :feature, dbscope: :example do
   let(:site) { cms_site }
   let(:node) { create_once :opendata_node_dataset, name: "opendata_dataset" }
   let!(:node_search) { create_once :opendata_node_search_dataset }
-  let!(:license_logo_file_path) { Rails.root.join("spec", "fixtures", "ss", "logo.png").to_s }
-  let!(:license_logo_file) { Fs::UploadedFile.create_from_file(license_logo_file_path, basename: "spec") }
-  let!(:license) { create(:opendata_license, cur_site: site, in_file: license_logo_file) }
+  let!(:license) { create(:opendata_license, cur_site: site) }
   let(:dataset) { create(:opendata_dataset, cur_node: node) }
   let(:index_path) { opendata_dataset_resources_path site, node, dataset.id }
 
