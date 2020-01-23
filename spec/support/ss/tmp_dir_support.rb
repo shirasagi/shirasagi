@@ -88,4 +88,4 @@ module SS
   end
 end
 
-RSpec.configuration.extend(SS::TmpDir::Support, tmpdir: true)
+RSpec.configuration.extend(SS::TmpDir::Support)
