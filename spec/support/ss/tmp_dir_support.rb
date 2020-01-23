@@ -40,7 +40,7 @@ module SS
       user = options.delete(:user)
       node = options.delete(:node)
 
-      basename = options.delete(:basename) || "spec"
+      basename = options.delete(:basename) || extract_basename_from_contents(contents) || "spec"
       attr = { model: options.delete(:model) || "ss/temp_file", name: basename, filename: basename }
       attr[:site_id] = site.id if site
       if user
@@ -51,6 +51,14 @@ module SS
       attr[:content_type] = options.delete(:content_type) || ::Fs.content_type(basename, "application/octet-stream")
       file_model.create_empty!(attr.update(options)) do |ss_file|
         write_contents_to(ss_file, contents, binary)
+      end
+    end
+
+    def extract_basename_from_contents(contents)
+      if contents.respond_to?(:path)
+        ::File.basename(contents.path)
+      elsif contents.present? && (::File.exists?(contents) rescue false)
+        ::File.basename(contents)
       end
     end
 
