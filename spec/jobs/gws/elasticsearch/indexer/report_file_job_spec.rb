@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe Gws::Elasticsearch::Indexer::ReportFileJob, dbscope: :example, tmpdir: true do
+describe Gws::Elasticsearch::Indexer::ReportFileJob, dbscope: :example do
   let(:site) { create(:gws_group) }
   let(:user) { gws_user }
   let(:es_host) { "#{unique_id}.example.jp" }

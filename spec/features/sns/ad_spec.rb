@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe "login_ad", type: :feature, dbscope: :example, tmpdir: true do
+describe "login_ad", type: :feature, dbscope: :example do
   context "file exists" do
     let(:ss_file) do
       tmp_ss_file(

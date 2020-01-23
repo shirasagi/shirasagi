@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe "gws_user_titles", type: :feature, dbscope: :example, tmpdir: true do
+describe "gws_user_titles", type: :feature, dbscope: :example do
   let(:site) { gws_site }
   let(:index_path) { gws_user_titles_path site }
 

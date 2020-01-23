@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe Rss::ImportWeatherXmlJob, dbscope: :example, tmpdir: true do
+describe Rss::ImportWeatherXmlJob, dbscope: :example do
   after(:all) do
     WebMock.reset!
   end

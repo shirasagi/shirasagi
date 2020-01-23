@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe Article::Page, dbscope: :example, tmpdir: true do
+describe Article::Page, dbscope: :example do
   let(:node) { create :article_node_page }
 
   describe "#attributes" do

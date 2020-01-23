@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe "sys_ad", type: :feature, dbscope: :example, tmpdir: true, js: true do
+describe "sys_ad", type: :feature, dbscope: :example, js: true do
   context "basic crud" do
     let(:ss_file) { tmp_ss_file(SS::TempFile, contents: "#{Rails.root}/spec/fixtures/ss/logo.png", user: SS::User.find(1)) }
     let(:time) { rand(1..10) }

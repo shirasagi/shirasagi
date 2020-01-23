@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-RSpec.describe Gws::Schedule::Plan, type: :model, dbscope: :example, tmpdir: true do
+RSpec.describe Gws::Schedule::Plan, type: :model, dbscope: :example do
   describe "plan" do
     context "blank params" do
       subject { Gws::Schedule::Plan.new(cur_site: gws_site, cur_user: gws_user).valid? }

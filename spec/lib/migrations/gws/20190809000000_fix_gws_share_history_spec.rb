@@ -1,7 +1,7 @@
 require 'spec_helper'
 require Rails.root.join("lib/migrations/gws/20190809000000_fix_gws_share_history.rb")
 
-RSpec.describe SS::Migration20190809000000, dbscope: :example, tmpdir: true do
+RSpec.describe SS::Migration20190809000000, dbscope: :example do
   let(:site) { gws_site }
   let(:user) { gws_user }
   let!(:file1) do

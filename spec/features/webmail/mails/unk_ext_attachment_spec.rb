@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe "webmail_mails", type: :feature, dbscope: :example, imap: true, js: true, tmpdir: true do
+describe "webmail_mails", type: :feature, dbscope: :example, imap: true, js: true do
   context "when a file with unknown ext is given" do
     let(:user) { webmail_imap }
     let(:item_subject) { "subject-#{unique_id}" }

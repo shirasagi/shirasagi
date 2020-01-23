@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe Cms::Elasticsearch::Indexer::PageReleaseJob, dbscope: :example, tmpdir: true, es: true do
+describe Cms::Elasticsearch::Indexer::PageReleaseJob, dbscope: :example, es: true do
   let(:site) { cms_site }
   let(:user) { cms_user }
   let(:node) { create(:article_node_page, cur_site: site) }

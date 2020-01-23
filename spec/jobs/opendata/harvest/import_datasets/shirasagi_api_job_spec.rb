@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe Opendata::Harvest::ImportDatasetsJob, dbscope: :example, tmpdir: true do
+describe Opendata::Harvest::ImportDatasetsJob, dbscope: :example do
   let!(:site) { cms_site }
   let!(:node) { create(:opendata_node_dataset, name: "datasets") }
   let!(:importer) { create(:opendata_harvest_importer, cur_node: node, api_type: "shirasagi_api") }

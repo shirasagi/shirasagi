@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe Gws::Workflow::FilesController, type: :feature, dbscope: :example, tmpdir: true, js: true do
+describe Gws::Workflow::FilesController, type: :feature, dbscope: :example, js: true do
   let(:site) { gws_site }
   let(:admin) { gws_user }
   let(:form) { create(:gws_workflow_form, state: "public", agent_state: "enabled") }
