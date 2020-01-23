@@ -32,7 +32,7 @@ module SS
 
     def tmp_ss_file(*args)
       options = args.extract_options!.dup
-      file_model = args.first || options[:model].try { |model| model.classify.constantize rescue nil } || SS::File
+      file_model = args.first || constantize_file_model(options[:model]) || SS::File
       contents = options.delete(:contents)
       binary = options.delete(:binary)
 
@@ -60,6 +60,17 @@ module SS
       elsif contents.present? && (::File.exists?(contents) rescue false)
         ::File.basename(contents)
       end
+    end
+
+    def constantize_file_model(model)
+      return if model.blank?
+
+      klass = model.classify.constantize
+      return unless klass.ancestors.include?(SS::Model::File)
+
+      klass
+    rescue LoadError
+      nil
     end
 
     def write_contents_to(ss_file, contents, binary)
