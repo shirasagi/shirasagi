@@ -30,91 +30,40 @@ module SS
       tmpfile
     end
 
-    def tmp_ss_file(options = {})
-      options = options.dup
-      contents = options[:contents]
+    def tmp_ss_file(*args)
+      options = args.extract_options!.dup
+      file_model = args.first || options[:model].try { |model| model.classify.constantize rescue nil } || SS::File
+      contents = options.delete(:contents)
+      binary = options.delete(:binary)
 
-      if contents.respond_to?(:path)
-        source_file = contents.path
-      elsif contents.present? && (::File.exists?(contents) rescue false)
-        source_file = contents
-      else
-        source_file = tmpfile(binary: options.delete(:binary)) { |file| file.write contents }
-      end
-
-      ss_file = SS::File.new(model: options.delete(:model) || "ss/temp_file")
-      ss_file.site_id = options[:site].id if options[:site]
-      ss_file.user_id = options[:user].id if options[:user]
-      options.delete(:site)
-      options.delete(:user)
+      site = options.delete(:site)
+      user = options.delete(:user)
+      node = options.delete(:node)
 
       basename = options.delete(:basename) || "spec"
-      content_type = options.delete(:content_type) || "application/octet-stream"
-      Fs::UploadedFile.create_from_file(source_file, basename: basename, content_type: content_type) do |f|
-        ss_file.in_file = f
-        ss_file.save!
-        ss_file.in_file = nil
+      attr = { model: options.delete(:model) || "ss/temp_file", name: basename, filename: basename }
+      attr[:site_id] = site.id if site
+      if user
+        attr[:cur_user] = user
+        attr[:user_id] = user.id
       end
-      ss_file.reload
-      ss_file
+      attr[:node_id] = node.id if node
+      attr[:content_type] = options.delete(:content_type) || ::Fs.content_type(basename, "application/octet-stream")
+      file_model.create_empty!(attr.update(options)) do |ss_file|
+        write_contents_to(ss_file, contents, binary)
+      end
     end
 
-    def tmp_ss_link_file(options = {})
-      options = options.dup
-      contents = options[:contents]
-
+    def write_contents_to(ss_file, contents, binary)
       if contents.respond_to?(:path)
-        source_file = contents.path
+        ::FileUtils.copy_file(contents.path, ss_file.path)
       elsif contents.present? && (::File.exists?(contents) rescue false)
-        source_file = contents
+        ::FileUtils.copy_file(contents, ss_file.path)
+      elsif binary
+        ::File.binwrite(ss_file.path, contents)
       else
-        source_file = tmpfile(binary: options.delete(:binary)) { |file| file.write contents }
+        ::File.write(ss_file.path, contents)
       end
-
-      ss_file = SS::LinkFile.new(model: options.delete(:model) || "ss/temp_file")
-      ss_file.site_id = options[:site].id if options[:site]
-      ss_file.user_id = options[:user].id if options[:user]
-      options.delete(:site)
-      options.delete(:user)
-
-      basename = options.delete(:basename) || "spec"
-      content_type = options.delete(:content_type) || "application/octet-stream"
-      Fs::UploadedFile.create_from_file(source_file, basename: basename, content_type: content_type) do |f|
-        ss_file.in_file = f
-        ss_file.save!
-        ss_file.in_file = nil
-      end
-      ss_file.reload
-      ss_file
-    end
-
-    def tmp_file(options = {})
-      options = options.dup
-      contents = options[:contents]
-
-      if contents.respond_to?(:path)
-        source_file = contents.path
-      elsif contents.present? && (::File.exists?(contents) rescue false)
-        source_file = contents
-      else
-        source_file = tmpfile(binary: options.delete(:binary)) { |file| file.write contents }
-      end
-
-      ss_file = SS::TempFile.new(model: options.delete(:model) || "ss/temp_file")
-      ss_file.site_id = options[:site].id if options[:site]
-      ss_file.user_id = options[:user].id if options[:user]
-      options.delete(:site)
-      options.delete(:user)
-
-      basename = options.delete(:basename) || "spec"
-      content_type = options.delete(:content_type) || "application/octet-stream"
-      Fs::UploadedFile.create_from_file(source_file, basename: basename, content_type: content_type) do |f|
-        ss_file.in_file = f
-        ss_file.save!
-        ss_file.in_file = nil
-      end
-      ss_file.reload
-      ss_file
     end
 
     module Support
@@ -132,7 +81,7 @@ module SS
             ::SS::TmpDir.created_tmpdir
           end
 
-          delegate :created_tmpdir, :tmpfile, :tmp_ss_file, :tmp_ss_link_file, :tmpfile, to: ::SS::TmpDir
+          delegate :created_tmpdir, :tmpfile, :tmp_ss_file, to: ::SS::TmpDir
         end
       end
     end
