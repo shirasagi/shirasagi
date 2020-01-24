@@ -195,6 +195,7 @@ ja:
 
     info:
       soft_delete: データの実削除ではなく無効状態として保存されます。
+      soft_delete_locked: 削除状態が削除不可になっている為、削除できません。
     warning:
       initial_password: 初期パスワードを変更してください。
       session_timeout: セッションの有効期限が切れました。
@@ -346,6 +347,9 @@ ja:
       user_lock_state:
         unlocked: 利用可
         locked: 利用停止
+      user_deletion_lock_state:
+        unlocked: 削除可
+        locked: 削除不可
       text_zoom:
         zoom_in: '+'
         zoom_out: '-'
@@ -475,6 +479,7 @@ ja:
         session_lifetime: セッション寿命
         restriction: 利用制限
         lock_state: 利用状態
+        deletion_lock_state: 削除状態
         remark: 備考
         organization_id: 所属組織
         organization_uid: 職員番号
@@ -716,6 +721,8 @@ ja:
         - 利用制限を選択します。
       lock_state:
         - 利用状態を選択します。
+      deletion_lock_state:
+        - 削除状態を選択します。
       remark:
         - 備考を入力します。
       organization_id: 所属する組織を選択します。

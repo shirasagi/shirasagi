@@ -69,7 +69,7 @@
     @include border-radius(3px);
     font-size: 90%;
     font-weight: normal;
-    &.state-public, &.state-closed, &.state-ready, &.state-request, &.state-edit, &.state-remand {
+    &.state-public, &.state-closed, &.state-ready, &.state-request, &.state-edit, &.state-remand, &.state-deletion-locked {
       color: #fff;
     }
     &.state-public {
@@ -89,6 +89,9 @@
     }
     &.state-remand {
       background-color: #895b8a;
+    }
+    &.state-deletion-locked {
+      background-color: #6c757d;
     }
   }
 }
