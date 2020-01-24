@@ -42,7 +42,8 @@ module Cms::Addon::Import
               line << I18n.t('ss.options.state.disabled')
             end
             line << (item.organization ? item.organization.name : nil)
-            line << item.groups.in(name: opts[:site].groups.active.pluck(:name).map{ |name| /^#{::Regexp.escape(name)}(\/|$)/ } ).pluck(:name).join("\n")
+            line << item.groups.in(name: opts[:site].groups.active.pluck(:name).map{ |name| /^#{::Regexp.escape(name)}(\/|$)/ } ).
+              pluck(:name).join("\n")
             line << item.ldap_dn
             line << roles.map(&:name).join("\n")
             data << line
@@ -120,14 +121,7 @@ module Cms::Addon::Import
 
       # groups
       groups = row[t("groups")].to_s.strip.split(/\n/)
-      item.group_ids = item.group_ids - rm_group_ids
-      if groups.present?
-        item.group_ids += SS::Group.in(name: groups).pluck(:id)
-      end
-      item.imported_group_keys = groups
-      item.imported_groups = item.groups
-      item.imported_cms_groups = @cur_site.groups.collect(&:root)
-      item.group_ids = item.group_ids.uniq.sort
+      set_group_ids(item, groups)
 
       # cms_roles
       cms_roles = row[t("cms_roles")].to_s.strip.split(/\n/)
@@ -147,6 +141,17 @@ module Cms::Addon::Import
         set_errors(item, index)
       end
       item
+    end
+
+    def set_group_ids(item, groups)
+      item.group_ids = item.group_ids - rm_group_ids
+      if groups.present?
+        item.group_ids += SS::Group.in(name: groups).pluck(:id)
+      end
+      item.imported_group_keys = groups
+      item.imported_groups = item.groups
+      item.imported_cms_groups = @cur_site.groups.collect(&:root)
+      item.group_ids = item.group_ids.uniq.sort
     end
 
     def add_cms_roles(item, cms_roles)

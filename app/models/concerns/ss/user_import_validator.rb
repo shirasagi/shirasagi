@@ -18,7 +18,7 @@ module SS::UserImportValidator
     attr_accessor :imported_gws_group
     attr_accessor :imported_cms_groups
     attr_accessor :imported_group_keys, :imported_groups
-    validate :validate_imported_groups, if: ->{ imported_group_keys.present? || imported_cms_groups.present? || imported_gws_group.present? }
+    validate :validate_imported_groups, if: ->{ imported_group_keys.present? }
 
     # gws_main_group_id
     attr_accessor :imported_gws_main_group_key, :imported_gws_main_group
