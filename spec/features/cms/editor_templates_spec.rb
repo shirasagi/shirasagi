@@ -10,6 +10,7 @@ describe "cms_editor_templates", type: :feature, dbscope: :example do
   let(:delete_path) { delete_cms_editor_template_path site.id, item }
   let(:thumb_path) { Rails.root.join("spec", "fixtures", "ss", "logo.png").to_s }
   let(:template_path) { template_cms_editor_templates_path site.id }
+  let!(:file) { tmp_ss_file(Cms::TempFile, user: cms_user, site: site, node: node, contents: thumb_path) }
 
   context "with auth" do
     before { login_cms_user }
@@ -29,7 +30,14 @@ describe "cms_editor_templates", type: :feature, dbscope: :example do
           fill_in "item[name]", with: "name-#{unique_id}"
           fill_in "item[description]", with: "description-#{unique_id}"
           fill_in "item[html]", with: "html-#{unique_id}"
-          attach_file "item[in_thumb]", thumb_path
+          first(".btn-file-upload").click
+        end
+        wait_for_cbox do
+          # click_on file.name
+          expect(page).to have_css(".file-view", text: file.name)
+          first("a[data-id='#{file.id}']").click
+        end
+        within "form#item-form" do
           click_button I18n.t('ss.buttons.save')
         end
         expect(status_code).to eq 200
@@ -53,7 +61,14 @@ describe "cms_editor_templates", type: :feature, dbscope: :example do
           fill_in "item[name]", with: "name-#{unique_id}"
           fill_in "item[description]", with: "description-#{unique_id}"
           fill_in "item[html]", with: "html-#{unique_id}"
-          attach_file "item[in_thumb]", thumb_path
+          first(".btn-file-upload").click
+        end
+        wait_for_cbox do
+          # click_on file.name
+          expect(page).to have_css(".file-view", text: file.name)
+          first("a[data-id='#{file.id}']").click
+        end
+        within "form#item-form" do
           click_button I18n.t('ss.buttons.save')
         end
         expect(status_code).to eq 200
