@@ -10,6 +10,8 @@ describe "webmail_users", type: :feature, dbscope: :example, js: true do
     let(:password) { unique_id }
     let(:uid2) { unique_id }
     let(:email2) { "#{uid2}@example.jp" }
+    let(:index_path) { webmail_users_path }
+    let(:delete_path) { "#{index_path}/#{webmail_user.id}/delete" }
 
     it do
       visit webmail_users_path
@@ -116,6 +118,19 @@ describe "webmail_users", type: :feature, dbscope: :example, js: true do
       Webmail::User.all.find_by(uid: uid2).tap do |item|
         expect(item.active?).to be_truthy
       end
+
+      visit delete_path
+      save_and_open_page
+      within "form" do
+        click_on I18n.t("ss.buttons.delete")
+      end
+
+      visit delete_path
+      save_and_open_page
+      within "form" do
+        click_on I18n.t("ss.buttons.delete")
+      end
+      expect(page).to have_css("#notice", text: I18n.t("ss.notice.deleted"))
     end
   end
 end

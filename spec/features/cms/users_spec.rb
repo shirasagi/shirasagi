@@ -54,6 +54,13 @@ describe "cms_users", type: :feature, dbscope: :example do
         click_on I18n.t("ss.buttons.delete")
       end
       expect(page).to have_css('#notice', text: I18n.t('ss.notice.deleted'))
+
+      #delete disabled user
+      visit delete_path
+      within "form" do
+        click_on I18n.t("ss.buttons.delete")
+      end
+      expect(page).to have_css('#notice', text: I18n.t('ss.notice.deleted'))
     end
   end
 
