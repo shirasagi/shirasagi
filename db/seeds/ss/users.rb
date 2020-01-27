@@ -60,11 +60,11 @@ end
 puts "# users"
 sys = save_user(
   { name: "システム管理者", uid: "sys", email: "sys@example.jp", in_password: "pass", kana: "システムカンリシャ" },
-  { group_ids: [g11.id], sys_role_ids: [sys_r01.id], organization_id: g00.id, organization_uid: "0000001" }
+  { group_ids: [g11.id], sys_role_ids: [sys_r01.id], organization_id: g00.id, organization_uid: "0000001", deletion_lock_state: "locked" }
 )
 adm = save_user(
   { name: "サイト管理者", uid: "admin", email: "admin@example.jp", in_password: "pass", kana: "サイトカンリシャ " },
-  { group_ids: [g11.id], sys_role_ids: [sys_r02.id], organization_id: g00.id, organization_uid: "0000000" }
+  { group_ids: [g11.id], sys_role_ids: [sys_r02.id], organization_id: g00.id, organization_uid: "0000000", deletion_lock_state: "locked" }
 )
 u01 = save_user(
   { name: "鈴木 茂", uid: "user1", email: "user1@example.jp", in_password: "pass", kana: "スズキ シゲル" },
