@@ -120,13 +120,11 @@ describe "webmail_users", type: :feature, dbscope: :example, js: true do
       end
 
       visit delete_path
-      save_and_open_page
       within "form" do
         click_on I18n.t("ss.buttons.delete")
       end
 
       visit delete_path
-      save_and_open_page
       within "form" do
         click_on I18n.t("ss.buttons.delete")
       end
