@@ -87,6 +87,7 @@ describe 'article_pages', type: :feature, dbscope: :example, js: true do
 
   before do
     cms_role.add_to_set(permissions: %w(read_cms_body_layouts))
+    site.set(auto_keywords: 'enabled', auto_description: 'enabled')
     node.st_form_ids = [ form.id ]
     node.save!
   end
@@ -116,6 +117,8 @@ describe 'article_pages', type: :feature, dbscope: :example, js: true do
         expect(Article::Page.all.count).to eq 1
         Article::Page.all.first.tap do |item|
           expect(item.name).to eq name
+          expect(item.description).to eq form.html
+          expect(item.summary).to eq form.html
           expect(item.column_values).to be_blank
           expect(item.backups.count).to eq 1
         end
@@ -537,6 +540,8 @@ describe 'article_pages', type: :feature, dbscope: :example, js: true do
         expect(Article::Page.all.count).to eq 1
         Article::Page.all.first.tap do |item|
           expect(item.name).to eq name
+          expect(item.description).to eq form.html
+          expect(item.summary).to eq form.html
           expect(item.column_values).to have(13).items
 
           expect(item.column_values.find_by(column_id: column1.id).value).to eq column1_value1
