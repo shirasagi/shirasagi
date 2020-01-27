@@ -1,6 +1,5 @@
 class Member::PhotosController < ApplicationController
   include Cms::BaseFilter
-  include Cms::PageFilter
   include Member::Photo::PageFilter
 
   model Member::Photo
