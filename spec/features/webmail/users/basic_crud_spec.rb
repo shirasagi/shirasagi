@@ -124,7 +124,7 @@ describe "webmail_users", type: :feature, dbscope: :example, js: true do
         click_on I18n.t("ss.buttons.delete")
       end
       expect(page).to have_css("#notice", text: I18n.t("ss.notice.deleted"))
-      expect { Webmail::User.all.find(webmail_user.id) }.not_to raise_error Mongoid::Errors::DocumentNotFound
+      expect { Webmail::User.all.active.find(webmail_user.id) }.to raise_error Mongoid::Errors::DocumentNotFound
 
       visit delete_path
       within "form" do
