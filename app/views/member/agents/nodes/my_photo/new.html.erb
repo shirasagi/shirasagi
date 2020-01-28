@@ -1,3 +1,14 @@
+<%= jquery do %>
+  $("input[type=submit]").on("click", function(e) {
+    if ($("#item_state").val() === 'public') {
+      $("<input />").attr("type", "hidden")
+        .attr("name", "item[workflow_reset]")
+        .attr("value", "1")
+        .appendTo("#item-form");
+    }
+  });
+<% end %>
+
 <%= render partial: "menu" %>
 
 <%= form_for :item, url: @cur_node.url, html: { method: :post, multipart: true, autocomplete: :off, class: "mypage-new member-photo-page" } do |f| %>
