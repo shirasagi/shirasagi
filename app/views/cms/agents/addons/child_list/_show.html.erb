@@ -1,4 +1,4 @@
-<% return if @item.loop_format === "liquid" %>
+<% return if @item.try(:loop_format) == "liquid" %>
 <%= code_editor ".mod-cms-child_list .html", mode: :html, readonly: true %>
 <dl class="see mod-cms-child_list">
   <dt><%= @model.t :child_limit %></dt>
