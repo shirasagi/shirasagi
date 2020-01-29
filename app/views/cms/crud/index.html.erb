@@ -55,6 +55,9 @@
           <% else %>
             <% title = item.try(:name) || item.try(:title) || item.try(:filename) || "##{item.id}" %>
             <%= link_to title, { action: :show, id: item }, class: "title" %>
+            <% if item.try(:default?) %>
+              (<%= item.t :default_theme %>)
+            <% end %>
           <% end %>
 
           <div class="meta">

@@ -605,6 +605,7 @@ ja:
         class_name: class属性
         order: 並び順
         css_path: cssパス
+        default_theme: 既定のtheme
       cms/source_cleaner_template:
         name: 名前
         order: 並び順

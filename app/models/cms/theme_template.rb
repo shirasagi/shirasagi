@@ -13,10 +13,13 @@ class Cms::ThemeTemplate
   field :css_path, type: String
   field :order, type: Integer
   field :state, type: String, default: "public"
-  permit_params :name, :class_name, :order, :css_path, :state
+  field :default_theme, type: String, default: 'disabled'
+  permit_params :name, :class_name, :order, :css_path, :state, :default_theme
 
   validates :name, presence: true, length: { maximum: 40 }
   validates :class_name, presence: true, uniqueness: { scope: :site_id }
+
+  after_save :check_default, if: ->{ default? }
 
   default_scope -> { order_by(order: 1, name: 1) }
   scope :and_public, ->{ where state: "public" }
@@ -26,6 +29,23 @@ class Cms::ThemeTemplate
       [I18n.t("ss.options.state.public"), "public"],
       [I18n.t("ss.options.state.closed"), "closed"],
     ]
+  end
+
+  def default_theme_options
+    %w(enabled disabled).map { |m| [I18n.t("ss.options.state.#{m}"), m] }
+  end
+
+  def default?
+    default_theme == 'enabled'
+  end
+
+  private
+
+  def check_default
+    self.class.
+        where(default_theme: 'enabled').
+        where(:id.ne => id).
+        update_all(default_theme: 'disabled')
   end
 
   class << self
