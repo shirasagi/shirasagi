@@ -185,7 +185,7 @@ describe "cms_users", type: :feature, dbscope: :example do
       expect(users.map(&:initial_password_warning)).to eq expected_initial_password_warning
     end
 
-    context do
+    context "with invalid group in csv" do
       before do
         cms_site.set(group_ids: [cms_group.id])
       end

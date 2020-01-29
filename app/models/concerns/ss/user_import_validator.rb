@@ -65,7 +65,7 @@ module SS::UserImportValidator
     if imported_gws_group
       imported_group_names = imported_groups.in_group(imported_gws_group).pluck(:name)
     elsif imported_cms_groups.present?
-      imported_group_names = imported_groups.where(name: /\A#{imported_cms_groups.pluck(:name).join('|')}(\/|\z)/).pluck(:name)
+      imported_group_names = imported_groups.in(id: imported_cms_groups.pluck(:id)).pluck(:name)
     else
       imported_group_names = imported_groups.pluck(:name)
     end
