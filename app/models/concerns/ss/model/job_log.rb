@@ -19,6 +19,7 @@ module SS::Model::JobLog
     seqid :id
     field :job_id, type: String
     field :state, type: String
+    field :hostname, type: String
     field :started, type: DateTime
     field :closed, type: DateTime
     field :logs, type: Array, default: []

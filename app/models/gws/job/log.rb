@@ -17,6 +17,7 @@ class Gws::Job::Log
         user_id: job.try(:user_id),
         job_id: job.job_id,
         state: 'stop',
+        hostname: Rails.application.hostname,
         pool: job.queue_name,
         class_name: job.class.name,
         args: job.arguments

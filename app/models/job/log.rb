@@ -13,6 +13,7 @@ class Job::Log
         user_id: task.user_id,
         job_id: task.id,
         state: task.state,
+        hostname: Rails.application.hostname,
         started: task.started,
         closed: task.closed,
         logs: task.logs,
@@ -31,6 +32,7 @@ class Job::Log
         user_id: job.try(:user_id),
         job_id: job.job_id,
         state: 'stop',
+        hostname: Rails.application.hostname,
         pool: job.queue_name,
         class_name: job.class.name,
         args: job.arguments

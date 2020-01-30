@@ -82,6 +82,17 @@ module SS
         nil
       end
     end
+
+    def hostname
+      @hostname ||= begin
+        hostname! rescue nil
+      end
+    end
+
+    def hostname!
+      require "socket"
+      Socket.gethostname
+    end
   end
 
   def self.config
