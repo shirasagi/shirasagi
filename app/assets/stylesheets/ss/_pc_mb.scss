@@ -1744,9 +1744,12 @@ dl.mod-cms-parent_crumbs {
     font-size: 90%;
     font-weight: normal;
     text-align: left;
+    .tippy-content {
+      padding: 15px;
+    }
     ul {
       margin: 0;
-      padding: 15px;
+      padding: 0;
     }
   }
 }
