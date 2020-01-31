@@ -900,6 +900,7 @@ ja:
         head: 見出し
         text: テキスト
       cms/column/value/list:
+        lists: リスト
         order: 順番
         text: テキスト
       cms/column/value/youtube:
