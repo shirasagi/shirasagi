@@ -42,10 +42,13 @@ module SS::Helpers::FileFormBuilder
         "#{@object_name}[#{method}_id]", file.try(:id), id: nil, class: "file-id")
       @template.output_buffer << " "
       @template.output_buffer << @template.link_to(
-        "##{id}", class: 'btn-file-delete', style: file.present? ? nil : "display: none"
+        "##{id}", class: [ 'btn-file-delete', file.blank? ? "hide" : nil ]
       ) do
         @template.content_tag(:i, "&#xE872;".html_safe, class: "material-icons", style: "font-size: 120%;")
       end
+      @template.output_buffer << @template.content_tag(
+        :span, I18n.t("ss.notice.file_droppable"), class: [ "upload-drop-notice", file.blank? ? nil : "hide" ]
+      )
     end
   end
 end
