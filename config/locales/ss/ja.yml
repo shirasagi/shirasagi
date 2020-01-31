@@ -636,6 +636,7 @@ ja:
       ss/model/job_log:
         job_id: ジョブID
         hostname: ホスト名
+        process_id: プロセスID
         class_name: ジョブ名
         started: 開始日時
         closed: 終了日時
