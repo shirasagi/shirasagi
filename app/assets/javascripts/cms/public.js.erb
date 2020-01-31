@@ -126,6 +126,10 @@ this.SS_Theme = (function () {
       if (v["font_color"] && v["background_color"]) {
         css += SS_Theme.cssTemplate(cls, v["font_color"], v["background_color"]) + "\n";
       }
+      if (v["default_theme"]) {
+          a.css('border', 'double');
+          SS_Theme.switchTheme(cls);
+      }
       a.on("click", function (e) {
         cls = $(this).attr("class");
         $('#ss-theme a').removeAttr('style');
@@ -142,9 +146,10 @@ this.SS_Theme = (function () {
     style = $('<style type="text/css" class="ss-theme">' + css + '</style>');
     $("head").append(style);
     cls = Cookies.get("ss-theme");
-    $("#ss-theme a" + "." + cls).css('border', 'double');
     if (cls) {
-      return SS_Theme.switchTheme(cls);
+        $('#ss-theme a').removeAttr('style');
+        $("#ss-theme a" + "." + cls).css('border', 'double');
+        return SS_Theme.switchTheme(cls);
     }
   };
 
@@ -156,7 +161,7 @@ this.SS_Theme = (function () {
     $('head link.ss-theme').prop("disabled", true);
     $('head link.ss-theme.' + cls).prop("disabled", false);
     $("body").attr("data-ss-theme", "");
-    return $("body").attr("data-ss-theme", cls);
+      return $("body").attr("data-ss-theme", cls);
   };
 
   return SS_Theme;

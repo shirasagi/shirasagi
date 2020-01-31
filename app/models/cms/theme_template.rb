@@ -73,6 +73,10 @@ class Cms::ThemeTemplate
         h[:theme][item.class_name]["css_path"] = replace_with_preview_path(item.css_path, opts)
         h[:theme][item.class_name]["name"] = item.name
 
+        if item.default_theme == 'enabled'
+          h[:theme][item.class_name]["default_theme"] = true
+        end
+
         if item.high_contrast_mode_enabled?
           h[:theme][item.class_name]["font_color"] = item.font_color
           h[:theme][item.class_name]["background_color"] = item.background_color
