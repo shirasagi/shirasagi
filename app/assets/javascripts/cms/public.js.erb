@@ -146,6 +146,11 @@ this.SS_Theme = (function () {
     style = $('<style type="text/css" class="ss-theme">' + css + '</style>');
     $("head").append(style);
     cls = Cookies.get("ss-theme");
+    if (!theme[cls]) {
+        Cookies.remove("ss-theme");
+        cls = null;
+    }
+
     if (cls) {
         $('#ss-theme a').removeAttr('style');
         $("#ss-theme a" + "." + cls).css('border', 'double');
