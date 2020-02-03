@@ -127,13 +127,11 @@ this.SS_Theme = (function () {
         css += SS_Theme.cssTemplate(cls, v["font_color"], v["background_color"]) + "\n";
       }
       if (v["default_theme"]) {
-          a.css('border', 'double');
+          a.attr('id', 'active');
           SS_Theme.switchTheme(cls);
       }
       a.on("click", function (e) {
         cls = $(this).attr("class");
-        $('#ss-theme a').removeAttr('style');
-        $(this).css('border', 'double');
         Cookies.set("ss-theme", cls, {
           expires: 7,
           path: '/'
@@ -152,8 +150,6 @@ this.SS_Theme = (function () {
     }
 
     if (cls) {
-        $('#ss-theme a').removeAttr('style');
-        $("#ss-theme a" + "." + cls).css('border', 'double');
         return SS_Theme.switchTheme(cls);
     }
   };
@@ -166,7 +162,9 @@ this.SS_Theme = (function () {
     $('head link.ss-theme').prop("disabled", true);
     $('head link.ss-theme.' + cls).prop("disabled", false);
     $("body").attr("data-ss-theme", "");
-      return $("body").attr("data-ss-theme", cls);
+    $("body").attr("data-ss-theme", cls);
+    $('#ss-theme a').removeAttr('id', 'active');
+    $("#ss-theme a" + "." + cls).attr('id', 'active');
   };
 
   return SS_Theme;
