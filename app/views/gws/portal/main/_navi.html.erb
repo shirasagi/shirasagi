@@ -1,18 +1,27 @@
 <nav class="mod-navi current-navi">
-  <h2><%= link_to @cur_site.menu_portal_label || t('modules.gws/portal'), "#{gws_portal_path}/", class: "icon-portal" %></h2>
-  <h3><%= link_to t('gws/portal.self_portal'), gws_portal_user_path(user: @cur_user.id), class: "icon-portal" %></h3>
-
-  <% @cur_user.groups.in_group(@cur_site).each do |group| %>
-    <% next if group.id == @cur_site.id %>
-    <% portal = group.find_portal_setting(cur_user: @cur_user, cur_site: @cur_site) %>
+  <h2><%= link_to @cur_site.menu_portal_label || t('modules.gws/portal'), gws_portal_path, class: "icon-portal" %></h2>
+  <% if @cur_user.gws_role_permit_any?(@cur_site, :use_gws_portal_user_settings) %>
+    <% portal = @cur_user.find_portal_setting(cur_user: @cur_user, cur_site: @cur_site) %>
     <% if portal.portal_readable?(@cur_user, site: @cur_site) %>
-      <h3><%= link_to group.trailing_name, gws_portal_group_path(group: group) %></h3>
+      <h3><%= link_to t('gws/portal.self_portal'), gws_portal_user_path(user: @cur_user.id), class: "icon-portal" %></h3>
     <% end %>
   <% end %>
 
-  <% portal = @cur_site.find_portal_setting(cur_user: @cur_user, cur_site: @cur_site) %>
-  <% if portal.portal_readable?(@cur_user, site: @cur_site) %>
-    <h3><%= link_to t('gws/portal.tabs.root_portal'), gws_portal_group_path(group: @cur_site) %></h3>
+  <% if @cur_user.gws_role_permit_any?(@cur_site, :use_gws_portal_group_settings) %>
+    <% @cur_user.groups.in_group(@cur_site).each do |group| %>
+      <% next if group.id == @cur_site.id %>
+      <% portal = group.find_portal_setting(cur_user: @cur_user, cur_site: @cur_site) %>
+      <% if portal.portal_readable?(@cur_user, site: @cur_site) %>
+        <h3><%= link_to group.trailing_name, gws_portal_group_path(group: group) %></h3>
+      <% end %>
+    <% end %>
+  <% end %>
+
+  <% if @cur_user.gws_role_permit_any?(@cur_site, :use_gws_portal_organization_settings) %>
+    <% portal = @cur_site.find_portal_setting(cur_user: @cur_user, cur_site: @cur_site) %>
+    <% if portal.portal_readable?(@cur_user, site: @cur_site) %>
+      <h3><%= link_to t('gws/portal.tabs.root_portal'), gws_portal_group_path(group: @cur_site) %></h3>
+    <% end %>
   <% end %>
 
   <% if params[:group].present? %>
