@@ -14,8 +14,8 @@ class Gws::Portal::User::PortalController < ApplicationController
   def set_crumbs
     set_portal_setting
 
-    if request.path =~ /^#{::Regexp.quote(gws_portal_path)}\/?$/
-      @crumbs << [t("modules.gws/portal"), "#{gws_portal_path}/"]
+    if /^#{::Regexp.quote(gws_portal_path)}\/?$/.match?(request.path)
+      @crumbs << [t("modules.gws/portal"), gws_portal_path]
     else
       #@crumbs << [t("gws/portal.user_portal"), gws_portal_setting_users_path]
       @crumbs << [@portal_user.name, gws_portal_user_path(user: @portal_user)]
