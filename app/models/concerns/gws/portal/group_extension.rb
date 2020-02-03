@@ -7,11 +7,13 @@ module Gws::Portal::GroupExtension
   end
 
   def find_portal_setting(params = {})
-    portal = portal_setting.site(params[:cur_site]).first || Gws::Portal::GroupSetting.new(
+    site = params[:cur_site]
+    portal = portal_setting.site(site).first || Gws::Portal::GroupSetting.new(
       {
-        site_id: params[:cur_site].id,
+        site_id: site.id,
         portal_group_id: id,
-        readable_group_ids: [id],
+        readable_setting_range: organization? ? "public" : "select",
+        readable_group_ids: organization? ? [] : [id],
         group_ids: [id]
       }
     )
