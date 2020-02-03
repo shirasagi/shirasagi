@@ -10,6 +10,8 @@ class Gws::Portal::GroupSetting
 
   index({ portal_group_id: 1, site_id: 1 }, { unique: true })
 
+  no_needs_read_permission_to_read
+
   field :name, type: String
   belongs_to :portal_group, class_name: 'Gws::Group', inverse_of: :portal_group_setting
   has_many :portlets, class_name: 'Gws::Portal::GroupPortlet', dependent: :destroy

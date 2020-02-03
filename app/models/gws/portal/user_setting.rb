@@ -10,6 +10,8 @@ class Gws::Portal::UserSetting
 
   index({ portal_user_id: 1, site_id: 1 }, { unique: true })
 
+  no_needs_read_permission_to_read
+
   field :name, type: String
   belongs_to :portal_user, class_name: 'Gws::User', inverse_of: :portal_user_setting
   has_many :portlets, class_name: 'Gws::Portal::UserPortlet', dependent: :destroy
