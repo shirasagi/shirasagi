@@ -111,6 +111,9 @@ ja:
       closed_portlet: このポートレットは閲覧できません。
 
   gws_role:
+    use_gws_portal_user_settings: 個人ポータルの利用
+    use_gws_portal_group_settings: 部課ポータルの利用
+    use_gws_portal_organization_settings: 組織ポータルの利用
     read_other_gws_portal_user_settings: 個人ポータル設定の閲覧（全て）
     read_private_gws_portal_user_settings: 個人ポータル設定の閲覧（所有）
     edit_other_gws_portal_user_settings: 個人ポータル設定の編集（全て）
