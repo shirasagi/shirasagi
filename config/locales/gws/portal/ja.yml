@@ -109,6 +109,7 @@ ja:
     messages:
       no_portlets: ポートレットを作成してください。
       closed_portlet: このポートレットは閲覧できません。
+      no_portals: ポータルが見つかりません。
 
   gws_role:
     use_gws_portal_user_settings: 個人ポータルの利用
