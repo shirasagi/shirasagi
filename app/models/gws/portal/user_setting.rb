@@ -26,7 +26,7 @@ class Gws::Portal::UserSetting
     end
   end
 
-  def default_portlets
-    Gws::Portal::UserPortlet.default_portlets(SS.config.gws['portal']['user_portlets'])
+  def default_portlets(settings = [])
+    Gws::Portal::UserPortlet.default_portlets(settings.presence || SS.config.gws['portal']['user_portlets'])
   end
 end

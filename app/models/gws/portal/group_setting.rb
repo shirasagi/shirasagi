@@ -30,7 +30,7 @@ class Gws::Portal::GroupSetting
     end
   end
 
-  def default_portlets
-    Gws::Portal::GroupPortlet.default_portlets(SS.config.gws['portal']['group_portlets'])
+  def default_portlets(settings = [])
+    Gws::Portal::GroupPortlet.default_portlets(settings.presence || SS.config.gws['portal']['group_portlets'])
   end
 end

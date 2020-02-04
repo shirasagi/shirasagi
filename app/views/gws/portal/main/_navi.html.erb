@@ -24,7 +24,7 @@
 
       portal = group.find_portal_setting(cur_user: @cur_user, cur_site: @cur_site)
       if portal.portal_readable?(@cur_user, site: @cur_site)
-        navi_links << [ :h3, portal.name, gws_portal_group_path(group: group) ]
+        navi_links << [ :h3, portal.name, gws_portal_group_path(group: group), class: "icon-portal" ]
       end
     end
   end
@@ -33,7 +33,7 @@
   if @cur_user.gws_role_permit_any?(@cur_site, :use_gws_portal_organization_settings)
     portal = @cur_site.find_portal_setting(cur_user: @cur_user, cur_site: @cur_site)
     if portal.portal_readable?(@cur_user, site: @cur_site)
-      navi_links << [ :h3, portal.name, gws_portal_group_path(group: @cur_site) ]
+      navi_links << [ :h3, portal.name, gws_portal_group_path(group: @cur_site), class: "icon-portal" ]
     end
   end
 
