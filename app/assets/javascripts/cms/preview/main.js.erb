@@ -1003,13 +1003,14 @@ SS_Preview = (function () {
       var action = updateType + "_update";
       var url = SS_Preview.workflowPath.pages.replace(":id", SS_Preview.item.pageId);
       url += "/" + action;
+      var path = SS_Preview.request_path || location.pathname;
 
       $.ajax({
         type: "POST",
         url: url,
         data: {
           remand_comment: remandComment,
-          url: SS_Preview.request_path,
+          url: path,
           forced_update_option: true
         },
         success: function (data) {
