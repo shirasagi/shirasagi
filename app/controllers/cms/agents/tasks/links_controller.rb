@@ -99,7 +99,8 @@ class Cms::Agents::Tasks::LinksController < ApplicationController
   # Checks the url.
   def check_url(url, refs)
     Rails.logger.info("#{url}: check by referer: #{refs.join(", ")}")
-    if url.match?(/(\/|\.html?)$/)
+    uri = URI.parse(url)
+    if uri.path.match?(/(\/|\.html?)$/)
       check_html(url, refs)
     else
       check_file(url, refs)
