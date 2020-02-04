@@ -119,7 +119,7 @@ this.SS_Theme = (function () {
     css = "";
     for (cls in theme) {
       v = theme[cls];
-      a = $('<a href="#" data-ss-theme="' + cls + '">' + v["name"] + '</a>');
+      a = $('<a href="#" data-ss-theme="' + cls + '" class="' + cls + '">' + v["name"] + '</a>');
       if (v["css_path"]) {
         $('head').append('<link rel="alternate stylesheet" type="text/css" title="' + v["name"] + '" href="' + v["css_path"] + '" class="ss-theme ' + cls + '" disabled />');
       }
@@ -127,13 +127,13 @@ this.SS_Theme = (function () {
           css += SS_Theme.cssTemplate(cls, v["font_color"], v["background_color"]) + "\n";
       }
       if (v["default_theme"]) {
-          $('#ss-theme a').removeAttr('class');
+          $('#ss-theme a').removeClass('active');
           a.addClass('active');
           SS_Theme.switchTheme(cls);
       }
       a.on("click", function (e) {
           cls = $(this).data("ss-theme");
-          $('#ss-theme a').removeAttr('class');
+          $('#ss-theme a').removeClass('active');
           $(this).addClass('active');
         Cookies.set("ss-theme", cls, {
           expires: 7,
@@ -152,7 +152,7 @@ this.SS_Theme = (function () {
         cls = null;
     }
     if (cls) {
-        $('#ss-theme a').removeAttr('class');
+        $('#ss-theme a').removeClass('active');
         $('#ss-theme a[data-ss-theme="'+cls+'"]').addClass('active');
         return SS_Theme.switchTheme(cls);
     }
