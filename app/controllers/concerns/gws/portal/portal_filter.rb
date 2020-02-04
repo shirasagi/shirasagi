@@ -3,7 +3,7 @@ module Gws::Portal::PortalFilter
 
   included do
     helper Gws::Schedule::PlanHelper
-    #before_action :set_portal_setting
+    menu_view "gws/portal/common/portal/menu"
   end
 
   private
