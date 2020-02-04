@@ -14,7 +14,7 @@ describe 'gws_portal_user_portal', type: :feature, dbscope: :example do
       # remove permissions
       role = gws_user.gws_roles.first
       permissions = role.permissions.reject { |name| name =~ /_other_gws_portal_/ }
-      role.update_attributes(permissions: permissions)
+      role.update(permissions: permissions)
     end
 
     it '#index 403' do
