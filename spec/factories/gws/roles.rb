@@ -125,6 +125,14 @@ FactoryBot.define do
     end
   end
 
+  trait :gws_role_portal_user_use do
+    after(:build) do |item|
+      item.permissions += %w(
+        use_gws_portal_user_settings
+      )
+    end
+  end
+
   factory :gws_role, class: Gws::Role, traits: [:gws_role]
 
   factory :gws_role_admin, class: Gws::Role, traits: [:gws_role, :gws_role_admin]
