@@ -92,6 +92,7 @@ ja:
 
       inquiry/addon/captcha:
         inquiry_captcha: 画像認証
+        captcha_test: 認証画像の表示確認
 
       inquiry/addon/notice:
         notice_state: 通知設定
@@ -170,6 +171,8 @@ ja:
     inquiry/addon/captcha:
       inquiry_captcha:
         - フォームに画像認証を利用する場合は「使用する」を選択してください。
+      captcha_test:
+        - 認証画像の表示を確認します。
     inquiry/addon/notice:
       notice_state:
         - フォームへの投稿があったことを通知することが可能です。

@@ -113,6 +113,7 @@ ja:
     attributes:
       cms/addon/captcha:
         captcha: 画像認証
+        captcha_test: 認証画像の表示確認
       board/post:
         poster: 投稿者
         poster_name: お名前
