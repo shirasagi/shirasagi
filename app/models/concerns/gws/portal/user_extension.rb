@@ -6,17 +6,14 @@ module Gws::Portal::UserExtension
       foreign_key: :portal_user_id, dependent: :destroy, inverse_of: :portal_user
   end
 
-  def find_portal_setting(params = {})
-    portal = portal_setting.site(params[:cur_site]).first || Gws::Portal::UserSetting.new(
-      {
-        site_id: params[:cur_site].id,
-        portal_user_id: id,
-        readable_member_ids: [id],
-        user_ids: [id]
-      }
+  def find_portal_setting(overwrite_params = {})
+    site = overwrite_params[:cur_site]
+    portal = portal_setting.site(site).first_or_initialize(
+      name: long_name.truncate(20),
+      readable_member_ids: [id],
+      user_ids: [id]
     )
-    portal.name = long_name
-    portal.attributes = params
+    portal.attributes = overwrite_params
     portal
   end
 end

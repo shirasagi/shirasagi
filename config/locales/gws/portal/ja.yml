@@ -30,7 +30,6 @@ ja:
     self_portal: 個人
     user_portal: 個人ポータル
     group_portal: 部課ポータル
-    root_portal: 全庁ポータル
     create_portlets_for_reset: 作成されるポートレット
     delete_portlets_for_reset: 削除されるポートレット
     other_config: 他者・他部課設定

@@ -16,7 +16,9 @@ class Gws::Portal::GroupSetting
   belongs_to :portal_group, class_name: 'Gws::Group', inverse_of: :portal_group_setting
   has_many :portlets, class_name: 'Gws::Portal::GroupPortlet', dependent: :destroy
 
-  validates :name, presence: true
+  permit_params :name
+
+  validates :name, presence: true, length: { maximum: 20 }
   validates :portal_group_id, presence: true, uniqueness: { scope: :site_id }
 
   def portlet_models

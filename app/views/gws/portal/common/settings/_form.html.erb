@@ -1,7 +1,10 @@
 <dl class="see">
   <dt><%= @model.t :name %></dt>
   <dd>
-    <%= tryb { @item.portal_user.long_name } %>
-    <%= tryb { @item.portal_group.name } %>
+    <% if @item.is_a?(Gws::Portal::GroupSetting) %>
+      <%= f.text_field :name %>
+    <% else %>
+      <%= @item.name %>
+    <% end %>
   </dd>
 </dl>
