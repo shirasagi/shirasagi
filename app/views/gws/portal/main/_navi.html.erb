@@ -5,7 +5,15 @@
   if @cur_user.gws_role_permit_any?(@cur_site, :use_gws_portal_user_settings)
     portal = @cur_user.find_portal_setting(cur_user: @cur_user, cur_site: @cur_site)
     if portal.portal_readable?(@cur_user, site: @cur_site)
-      navi_links << [ :h3, t('gws/portal.self_portal'), gws_portal_user_path(user: @cur_user.id), class: "icon-portal" ]
+      navi_links << [ :h3, t('gws/portal.self_portal'), gws_portal_user_path(user: @cur_user), class: "icon-portal" ]
+    end
+  end
+
+  # user portal
+  if @portal_user.present? && @cur_user != @portal_user
+    portal = @portal_user.find_portal_setting(cur_user: @cur_user, cur_site: @cur_site)
+    if portal.portal_readable?(@cur_user, site: @cur_site)
+      navi_links << [ :h3, @portal_user.name, gws_portal_user_path(user: @portal_user), class: "icon-portal" ]
     end
   end
 
