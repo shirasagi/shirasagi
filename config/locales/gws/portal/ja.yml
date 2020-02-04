@@ -24,6 +24,7 @@ ja:
       gws/portal/portlet/ad_file: 広告画像
       gws/portal/notice_setting: お知らせ設定
       gws/portal/monitor_setting: 照会・回答設定
+      gws/portal/link_setting: リンク集設定
 
   gws/portal:
     self_portal: 個人
@@ -203,6 +204,8 @@ ja:
         portal_notice_browsed_state: 未読・既読
       gws/addon/portal/monitor_setting:
         portal_monitor_state: 表示・非表示
+      gws/addon/portal/link_setting:
+        portal_link_state: 表示・非表示
     errors:
       models:
         gws/addon/portal/portlet/ad_file:
@@ -226,3 +229,7 @@ ja:
     gws/addon/portal/monitor_setting:
       portal_monitor_state:
         - ポータルに照会・回答を表示するか、しないかを選択します。
+    gws/addon/portal/link_setting:
+      portal_link_state:
+        - リンク集を表示するか、しないかを選択します。
+        - 「表示」を選択した場合、リンク集はサイドメニューの下部に表示されます。

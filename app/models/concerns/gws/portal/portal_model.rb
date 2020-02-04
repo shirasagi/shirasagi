@@ -3,6 +3,7 @@ module Gws::Portal::PortalModel
   extend SS::Translation
   include Gws::Addon::Portal::NoticeSetting
   include Gws::Addon::Portal::MonitorSetting
+  include Gws::Addon::Portal::LinkSetting
 
   included do
     attr_accessor :portal_type
