@@ -1,5 +1,3 @@
-<% return if @item.respond_to?(:form) && ancestral_forms.present? %>
-
 <%
   editor_opts = html_editor_options(
     advanced: Cms::EditorExtension.allowed?(:use, @cur_user, site: @cur_site)
@@ -7,9 +5,6 @@
   syntax_check = @cur_node ? (@cur_node.syntax_check_enabled? || @cur_site.syntax_check_enabled?) : @cur_site.syntax_check_enabled?
 %>
 <%= jquery do %>
-if ($("#item_body_layout_id").length == 0) {
-  $("#addon-cms-agents-addons-body_part").addClass('hide');
-}
 switch ("<%= SS.config.cms.html_editor %>"){
   case "ckeditor":
     window.Cms_HTML_Editor = Cms_Editor_CKEditor
@@ -21,11 +16,17 @@ switch ("<%= SS.config.cms.html_editor %>"){
 
 var body_parts = <%= raw @item.body_parts.to_json %>;
 var select_body_layout = function() {
+  if (Cms_Form.addonSelector == "#addon-cms-agents-addons-form-page .addon-body") {
+    return false;
+  }
   var site = <%= @cur_site.id %>;
   var id = $(this).val();
   if (id) {
     $("#addon-cms-agents-addons-body").addClass('hide');
     $("#addon-cms-agents-addons-body_part").removeClass('hide');
+    $("#addon-cms-agents-addons-form-page").addClass('hide');
+    $("#item_form_id").parent('dd').prev('dt').addClass('hide');
+    $("#item_form_id").parent('dd').addClass('hide');
     $(".mod-body-part-html .buttons").prevAll().remove();
 
     $(".mod-body-part-html").prepend(SS.loading);
@@ -79,11 +80,20 @@ var select_body_layout = function() {
     Cms_Form.addonSelector = ".mod-cms-body";
     $("#addon-cms-agents-addons-body").removeClass('hide');
     $("#addon-cms-agents-addons-body_part").addClass('hide');
+    $("#addon-cms-agents-addons-form-page").addClass('hide');
+    $("#item_form_id").parent('dd').prev('dt').removeClass('hide');
+    $("#item_form_id").parent('dd').removeClass('hide');
   }
 }
 
 $("#item_body_layout_id").on("change", select_body_layout);
-$("#item_body_layout_id").trigger("change");
+if ($("#item_form_id").val()) {
+  $("#addon-cms-agents-addons-body_part").addClass('hide');
+  $("#item_body_layout_id").parent('dd').prev('dt').addClass('hide');
+  $("#item_body_layout_id").parent('dd').addClass('hide');
+} else {
+  $("#item_body_layout_id").trigger("change");
+}
 <% end %>
 
 <dl class="see mod-body-part-html">
