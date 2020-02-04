@@ -29,10 +29,4 @@ class Gws::Portal::Group::PortalController < ApplicationController
     set_portal_setting
     @item = @portal
   end
-
-  public
-
-  def show
-    show_portal
-  end
 end
