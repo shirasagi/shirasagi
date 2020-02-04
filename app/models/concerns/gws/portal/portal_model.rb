@@ -1,6 +1,8 @@
 module Gws::Portal::PortalModel
   extend ActiveSupport::Concern
   extend SS::Translation
+  include Gws::Addon::Portal::NoticeSetting
+  include Gws::Addon::Portal::MonitorSetting
 
   included do
     attr_accessor :portal_type

@@ -22,6 +22,8 @@ ja:
       gws/portal/portlet/survey: アンケート
       gws/portal/portlet/ad: 広告
       gws/portal/portlet/ad_file: 広告画像
+      gws/portal/notice_setting: お知らせ設定
+      gws/portal/monitor_setting: 照会・回答設定
 
   gws/portal:
     self_portal: 個人
@@ -196,6 +198,11 @@ ja:
       gws/addon/portal/portlet/ad_file:
         ad_files: 広告画像
         ad_file_ids: 広告画像
+      gws/addon/portal/notice_setting:
+        portal_notice_state: 表示・非表示
+        portal_notice_browsed_state: 未読・既読
+      gws/addon/portal/monitor_setting:
+        portal_monitor_state: 表示・非表示
     errors:
       models:
         gws/addon/portal/portlet/ad_file:
@@ -211,3 +218,11 @@ ja:
       circular_article_state:
         - <b>未読</b> - 未読のみをポータルに表示する。
         - <b>全表示</b> - 既読・未読すべてをポータルに表示する。
+    gws/addon/portal/notice_setting:
+      portal_notice_state:
+        - ポータルにお知らせを表示するか、しないかを選択します。
+      portal_notice_browsed_state:
+        - ポータルにお知らせを表示するを選択した際に、未読のみを表示するか、未読と既読の両方を表示するかを選択します。
+    gws/addon/portal/monitor_setting:
+      portal_monitor_state:
+        - ポータルに照会・回答を表示するか、しないかを選択します。
