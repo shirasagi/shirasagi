@@ -2,6 +2,7 @@ class Gws::Portal::User::PortletsController < ApplicationController
   include Gws::BaseFilter
   include Gws::CrudFilter
   include Gws::Portal::PortalFilter
+  include Gws::Portal::UserPortalFilter
   include Gws::Portal::PortletFilter
 
   model Gws::Portal::UserPortlet

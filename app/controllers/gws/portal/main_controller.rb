@@ -9,10 +9,6 @@ class Gws::Portal::MainController < ApplicationController
 
   private
 
-  def fix_params
-    { cur_user: @cur_user, cur_site: @cur_site }
-  end
-
   def set_item
     set_portal_setting
     @item = @portal
@@ -51,11 +47,6 @@ class Gws::Portal::MainController < ApplicationController
   public
 
   def show
-    if @portal.blank?
-      render
-      return
-    end
-
-    super
+    show_portal
   end
 end

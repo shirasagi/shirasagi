@@ -2,6 +2,7 @@ class Gws::Portal::User::SettingsController < ApplicationController
   include Gws::BaseFilter
   include Gws::CrudFilter
   include Gws::Portal::PortalFilter
+  include Gws::Portal::UserPortalFilter
 
   model Gws::Portal::UserSetting
 

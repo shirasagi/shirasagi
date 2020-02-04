@@ -2,6 +2,7 @@ class Gws::Portal::Group::LayoutsController < ApplicationController
   include Gws::BaseFilter
   include Gws::CrudFilter
   include Gws::Portal::PortalFilter
+  include Gws::Portal::GroupPortalFilter
 
   model Gws::Portal::GroupSetting
 
@@ -14,10 +15,11 @@ class Gws::Portal::Group::LayoutsController < ApplicationController
   private
 
   def set_crumbs
-    if @cur_site.id.to_s == params[:group].to_s
+    set_portal_setting
+    if @portal_group == @cur_site
       @crumbs << [t("gws/portal.root_portal"), gws_portal_group_path]
     else
-      @crumbs << [t("gws/portal.group_portal"), gws_portal_group_path]
+      @crumbs << [@portal_group.trailing_name, gws_portal_group_path]
     end
     @crumbs << [t("gws/portal.links.arrange_portlets"), action: :show]
   end

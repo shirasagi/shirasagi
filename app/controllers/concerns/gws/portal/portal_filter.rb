@@ -8,22 +8,13 @@ module Gws::Portal::PortalFilter
 
   private
 
+  def fix_params
+    { cur_user: @cur_user, cur_site: @cur_site }
+  end
+
+  # must be overridden by sub-class
   def set_portal_setting
-    return if @portal
-
-    if params[:group].present?
-      @portal_group = Gws::Group.find(params[:group])
-      @portal = @portal_group.find_portal_setting(cur_user: @cur_user, cur_site: @cur_site)
-      @portal.portal_type = (@portal_group.id == @cur_site.id) ? :root_portal : :group_portal
-    else
-      @portal_user = Gws::User.find(params[:user]) if params[:user].present?
-      @portal_user ||= @cur_user
-      @portal = @portal_user.find_portal_setting(cur_user: @cur_user, cur_site: @cur_site)
-      @portal.portal_type = (@portal_user.id == @cur_user.id) ? :my_portal : :user_portal
-    end
-
-    return if @portal.my_portal?
-    raise '403' unless @portal.portal_readable?(@cur_user, site: @cur_site)
+    raise NotImplementedError
   end
 
   def save_portal_setting
@@ -36,11 +27,14 @@ module Gws::Portal::PortalFilter
 
   public
 
-  def show
-    show_portal
-  end
-
   def show_portal
+    if @portal.blank?
+      render file: "gws/portal/common/portal/no_portals"
+      return
+    end
+
+    raise '403' unless @portal.portal_readable?(@cur_user, site: @cur_site)
+
     @items = @portal.portlets.presence || @portal.default_portlets
     @items.select! do |item|
       @cur_site.menu_visible?(item.portlet_model) && Gws.module_usable?(item.portlet_model, @cur_site, @cur_user)

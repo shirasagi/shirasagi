@@ -2,6 +2,7 @@ class Gws::Portal::User::PortalController < ApplicationController
   include Gws::BaseFilter
   include Gws::CrudFilter
   include Gws::Portal::PortalFilter
+  include Gws::Portal::UserPortalFilter
 
   model Gws::Portal::UserSetting
 
@@ -14,20 +15,21 @@ class Gws::Portal::User::PortalController < ApplicationController
   def set_crumbs
     set_portal_setting
 
-    if /^#{::Regexp.quote(gws_portal_path)}\/?$/.match?(request.path)
-      @crumbs << [t("modules.gws/portal"), gws_portal_path]
+    if @cur_user == @portal_user
+      @crumbs << [t("gws/portal.self_portal"), gws_portal_user_path(user: @portal_user)]
     else
-      #@crumbs << [t("gws/portal.user_portal"), gws_portal_setting_users_path]
       @crumbs << [@portal_user.name, gws_portal_user_path(user: @portal_user)]
     end
-  end
-
-  def fix_params
-    { cur_user: @cur_user, cur_site: @cur_site }
   end
 
   def set_item
     set_portal_setting
     @item = @portal
+  end
+
+  public
+
+  def show
+    show_portal
   end
 end
