@@ -1,6 +1,10 @@
 module Gws::Portal::GroupPortalFilter
   extend ActiveSupport::Concern
 
+  included do
+    before_action :check_use_permission
+  end
+
   private
 
   def set_portal_setting
@@ -14,4 +18,10 @@ module Gws::Portal::GroupPortalFilter
     raise '403' unless @portal.portal_readable?(@cur_user, site: @cur_site)
   end
 
+  def check_use_permission
+    set_portal_setting
+
+    permission_to_check = @portal_group.organization? ? :use_gws_portal_organization_settings : :use_gws_portal_group_settings
+    raise '403' unless @cur_user.gws_role_permit_any?(@cur_site, permission_to_check)
+  end
 end
