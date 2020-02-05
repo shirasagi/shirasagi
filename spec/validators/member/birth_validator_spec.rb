@@ -19,7 +19,6 @@ describe Member::BirthValidator, type: :validator do
       is_expected.to be_valid
     end
 
-
     let(:value) { { era: "showa", year: "63", month: "4", day: "4" } }
     it do
       is_expected.to be_valid
