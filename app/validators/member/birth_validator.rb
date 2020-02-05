@@ -1,6 +1,6 @@
 class Member::BirthValidator < ActiveModel::EachValidator
   def validate_each(record, attribute, value)
-    calendar = find_by_era(value[:era])
+    calendar = fetch_calendar(value[:era])
     if calendar.blank?
       record.errors.add(:in_birth, :invalid, options.merge(value: value[:era]))
       return
@@ -46,7 +46,7 @@ class Member::BirthValidator < ActiveModel::EachValidator
 
   private
 
-  def find_by_era(era)
+  def fetch_calendar(era)
     wareki = I18n.t("ss.wareki")[era.to_sym] rescue nil
     return nil if wareki.blank?
     min = Date.parse(wareki[:min])
@@ -57,16 +57,22 @@ class Member::BirthValidator < ActiveModel::EachValidator
 
   def include_year_range?(setting, year)
     min, max = setting
-    1 <= year && (min.year + year - 1) <= max.year
+    year >= 1 && (min.year + year - 1) <= max.year
   end
 
   def include_month_range?(setting, year, month)
     min, max = setting
-    1 <= month && month <= 12 && Date.new(min.year + year - 1, month, 1) < max
+    date = Date.new(min.year + year - 1, month, 1)
+    month >= 1 && month <= 12 && date < max
+  rescue
+    false
   end
 
   def include_day_range?(setting, year, month, day)
     min, max = setting
-    1 <= day && day <= 31 && Date.new(min.year + year - 1, month, day) < max
+    date = Date.new(min.year + year - 1, month, day)
+    day >= 1 && day <= 31 && date < max
+  rescue
+    false
   end
 end
