@@ -23,7 +23,7 @@
 
       <!--
       <dt><%= t("sys.server_addr") %></dt>
-      <dd><%#= Socket::getaddrinfo(Socket.gethostname, 'echo', Socket::AF_INET)[0][3] rescue nil %></dd>
+      <dd><%= Rails.application.ip_address %></dd>
       -->
     </dl>
   </div>
