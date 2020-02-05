@@ -21,7 +21,7 @@ describe "cms_users", type: :feature, dbscope: :example do
 
       #new
       visit new_path
-      click_on "グループを選択する"
+      click_on I18n.t("ss.apis.groups.index")
       wait_for_cbox do
         click_on group.name
       end
@@ -62,7 +62,7 @@ describe "cms_users", type: :feature, dbscope: :example do
       login_cms_user
 
       visit new_path
-      click_on "グループを選択する"
+      click_on I18n.t("ss.apis.groups.index")
       wait_for_cbox do
         click_on group.name
       end
@@ -203,8 +203,8 @@ describe "cms_users", type: :feature, dbscope: :example do
 
   context "ss-1075" do
     let(:site2) { create(:cms_site, name: unique_id, host: unique_id, domains: "#{unique_id}.example.jp") }
-    let(:role) { create(:cms_role, cur_site: site, name: '管理者1', permissions: Cms::Role.permission_names) }
-    let(:role2) { create(:cms_role, cur_site: site2, name: '管理者2', permissions: Cms::Role.permission_names) }
+    let(:role) { create(:cms_role, cur_site: site, name: I18n.t("sys.roles.admin") + "1", permissions: Cms::Role.permission_names) }
+    let(:role2) { create(:cms_role, cur_site: site2, name: I18n.t("sys.roles.admin") + "2", permissions: Cms::Role.permission_names) }
     let(:header) do
       %w(
         id name kana uid organization_uid email password tel tel_ext account_start_date account_expiration_date
@@ -221,7 +221,7 @@ describe "cms_users", type: :feature, dbscope: :example do
 
     it do
       visit index_path
-      click_on 'ダウンロード'
+      click_on I18n.t("ss.buttons.download")
 
       csv = page.html.encode("UTF-8")
       expect(csv).to include(header)
