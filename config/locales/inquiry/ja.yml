@@ -159,6 +159,8 @@ ja:
     label: 画像の数字を入力してください
     message:
       default: が正しくありません
+    captcha_error: 画像認証はご利用いただけません。
+    captcha_button: 画像認証のテスト
 
   tooltip:
     inquiry/addon/message:

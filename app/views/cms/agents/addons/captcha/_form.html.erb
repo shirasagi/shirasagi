@@ -8,7 +8,7 @@
 
   var $el = $(".simple-captcha");
   $el.find("img").on("error", function() {
-  $(this).closest(".image").html("画像認証はご利用いただけません。");
+  $(this).closest(".image").html('<%= I18n.t('simple_captcha.captcha_error') %>');
   });
 <% end %>
 
@@ -17,7 +17,7 @@
   <dd><%= f.select :captcha, @item.captcha_options %></dd>
   <dt><%= @model.t :captcha_test %><%= @model.tt :captcha_test %></dt>
   <dd>
-    <button type="button">画像認証のテスト</button>
+    <button type="button"><%= I18n.t('simple_captcha.captcha_button') %></button>
     <div class='simple-captcha'>
       <div class='image'><%= simple_captcha_options[:image] %></div>
     </div>
