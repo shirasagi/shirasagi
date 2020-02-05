@@ -8,8 +8,10 @@
       <dt><%= t("sys.user_agent") %></dt>
       <dd><%= request.user_agent %></dd>
 
+      <!--
       <dt><%= t("sys.server_name") %></dt>
-      <dd><%= Socket.gethostname %></dd>
+      <dd><%= Rails.application.hostname %></dd>
+      -->
 
       <!--
       <dt><%= t("sys.server_addr") %></dt>
