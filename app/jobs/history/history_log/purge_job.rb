@@ -1,4 +1,4 @@
-class History::HistoryLog::TrashPurgeJob < Cms::ApplicationJob
+class History::HistoryLog::PurgeJob < Cms::ApplicationJob
   include SS::TrashPurge::BaseJob
 
   self.model = History::Log

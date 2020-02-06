@@ -8,7 +8,7 @@ module History::Model::Data
     store_in_repl_master
     index({ created: -1 })
     index({ ref_coll: 1, "data._id" => 1, created: -1 })
-    ""
+
     cattr_reader(:max_age) { SS.config.ss.history_max_age || 20 }
     cattr_accessor(:root, instance_accessor: false) { "#{Rails.root}/private/trash" }
 

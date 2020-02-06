@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe History::HistoryLog::TrashPurgeJob, dbscope: :example do
+describe History::HistoryLog::PurgeJob, dbscope: :example do
   let(:site) { cms_site }
   let(:now) { Time.zone.now.beginning_of_minute }
 

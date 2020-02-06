@@ -10,7 +10,7 @@ namespace :history do
       puts "delete history logs"
       ::Rails.application.eager_load!
       sites.each do |site|
-        History::HistoryLog::TrashPurgeJob.bind(site_id: site).perform_now(*params)
+        History::HistoryLog::PurgeJob.bind(site_id: site).perform_now(*params)
       end
     end
   end
