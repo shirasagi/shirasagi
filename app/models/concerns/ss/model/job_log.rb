@@ -20,6 +20,7 @@ module SS::Model::JobLog
     field :job_id, type: String
     field :state, type: String
     field :hostname, type: String
+    field :ip_address, type: String
     field :process_id, type: Integer
     field :started, type: DateTime
     field :closed, type: DateTime

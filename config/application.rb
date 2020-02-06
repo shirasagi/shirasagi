@@ -93,6 +93,24 @@ module SS
       require "socket"
       Socket.gethostname
     end
+
+    def ip_address
+      @ip_address ||= begin
+        ip_address! rescue nil
+      end
+    end
+
+    def ip_address!
+      require "socket"
+
+      udp = UDPSocket.new
+      # クラスBの先頭アドレス,echoポート 実際にはパケットは送信されない。
+      udp.connect("128.0.0.0", 7)
+      address = Socket.unpack_sockaddr_in(udp.getsockname)[1]
+      address
+    ensure
+      udp.close rescue nil
+    end
   end
 
   def self.config
