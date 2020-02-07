@@ -25,7 +25,7 @@ describe "gws_users", type: :feature, dbscope: :example, js: true do
       click_on I18n.t("ss.links.edit")
 
       within "form#item-form" do
-        select "削除不可", from: "item[deletion_lock_state]"
+        select I18n.t("ss.options.user_deletion_lock_state.locked"), from: "item[deletion_lock_state]"
         click_button I18n.t('ss.buttons.save')
       end
 
