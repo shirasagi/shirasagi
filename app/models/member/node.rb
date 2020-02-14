@@ -209,6 +209,14 @@ module Member::Node
     include History::Addon::Backup
 
     default_scope ->{ where(route: "member/photo_search") }
+
+    def condition_hash
+      if conditions.present?
+        super
+      else
+        {}
+      end
+    end
   end
 
   class PhotoSpot

@@ -4,30 +4,6 @@ module Member::Addon::Photo::Search
     extend SS::Addon
     include Cms::Addon::List::Model
 
-    def condition_hash(opts = {})
-      cond = []
-      cids = []
-
-      conditions.each do |url|
-        # regex
-        if url =~ /\/\*$/
-          filename = url.sub(/\/\*$/, "")
-          cond << { filename: /^#{filename}\// }
-          next
-        end
-
-        node = Cms::Node.site(cur_site || site).filename(url).first rescue nil
-        next unless node
-
-        cond << { filename: /^#{::Regexp.escape(node.filename)}\//, depth: node.depth + 1 }
-        cids << node.id
-      end
-      cond << { :category_ids.in => cids } if cids.present?
-      return {} if cond.blank?
-
-      { '$or' => cond }
-    end
-
     def sort_options
       [
         [I18n.t('cms.options.sort.name'), 'name'],

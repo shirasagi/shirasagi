@@ -6,7 +6,7 @@ describe "member_agents_nodes_photo_spot", type: :feature, dbscope: :example do
   let(:node)   { create :member_node_photo_spot, layout_id: layout.id, filename: "node" }
 
   context "public" do
-    let!(:item) { create :member_photo_spot, filename: "node/item" }
+    let!(:item) { create :member_photo_spot, cur_node: node }
 
     before do
       Capybara.app_host = "http://#{site.domain}"
@@ -15,7 +15,10 @@ describe "member_agents_nodes_photo_spot", type: :feature, dbscope: :example do
     it "#index" do
       visit node.url
       expect(page).to have_css(".member-photos")
-      expect(page).to have_selector(".member-photos article")
+      expect(page).to have_css(".member-photos article a")
+
+      first('.member-photos a').click
+      expect(current_path).to eq item.url
     end
   end
 end
