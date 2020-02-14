@@ -11,11 +11,13 @@ module Cms::ListHelper
 
   def default_node_loop_liquid
     ih = []
-    ih << '<article class="item-#{class} #{current}">'
+    ih << '{% for node in nodes %}'
+    ih << '<article class="item-{{ node.css_class }} {% if node.current? %}current{% endif %}">'
     ih << '  <header>'
-    ih << '     <h2><a href="#{url}">#{name}</a></h2>'
+    ih << '     <h2><a href="{{ node.url }}">{{ node.name }}</a></h2>'
     ih << '  </header>'
     ih << '</article>'
+    ih << '{% endfor %}'
     ih.join("\n").freeze
   end
 
