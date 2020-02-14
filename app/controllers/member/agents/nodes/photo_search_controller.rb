@@ -40,6 +40,8 @@ class Member::Agents::Nodes::PhotoSearchController < ApplicationController
       order_by(@cur_node.sort_hash).
       page(params[:page]).
       per(@cur_node.limit)
+
+    render_with_pagination @items
   end
 
   def map
@@ -51,6 +53,9 @@ class Member::Agents::Nodes::PhotoSearchController < ApplicationController
       order_by(@cur_node.sort_hash).
       page(params[:page]).
       per(@cur_node.limit)
+
     @markers = @items.map { |item| item.map_points }.flatten
+
+    render_with_pagination @items
   end
 end

@@ -18,6 +18,12 @@ module Member::Addon::Photo
         template_variable_handler('img.src', :template_variable_handler_img_src)
         template_variable_handler('thumb.src', :template_variable_handler_thumb_src)
       end
+
+      liquidize do
+        export as: :image do
+          image ? SS::File.find(image.id) : nil
+        end
+      end
     end
 
     private
