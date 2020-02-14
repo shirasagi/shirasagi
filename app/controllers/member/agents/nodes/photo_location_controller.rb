@@ -1,6 +1,6 @@
 class Member::Agents::Nodes::PhotoLocationController < ApplicationController
   include Cms::NodeFilter::View
-  helper Cms::ListHelper
+  helper Member::PhotoHelper
 
   before_action :accept_cors_request, only: [:rss]
 
