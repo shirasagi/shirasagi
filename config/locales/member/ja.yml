@@ -138,6 +138,7 @@ ja:
       member/photo/slide: フォトスライド
       member/photo/license: ライセンス
       member/photo/license_setting: ライセンス
+      member/photo/search/page_list: 一覧表示
       member/registration/sender_address: 送信者設定
       member/registration/notice: メール通知
       member/registration/confirmation: 登録確認

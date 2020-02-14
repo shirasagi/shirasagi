@@ -3,7 +3,7 @@ class Member::Agents::Nodes::PhotoSearchController < ApplicationController
 
   model Member::Photo
 
-  helper Cms::ListHelper
+  helper Member::PhotoHelper
 
   before_action :set_query
 
@@ -33,7 +33,8 @@ class Member::Agents::Nodes::PhotoSearchController < ApplicationController
   public
 
   def index
-    @items = @model.site(@cur_site).and_public.
+    @items = @model.site(@cur_site).and_public(@cur_date).
+      where(@cur_node.condition_hash).
       listable.
       contents_search(@query).
       order_by(@cur_node.sort_hash).
@@ -42,7 +43,8 @@ class Member::Agents::Nodes::PhotoSearchController < ApplicationController
   end
 
   def map
-    @items = @model.site(@cur_site).and_public.
+    @items = @model.site(@cur_site).and_public(@cur_date).
+      where(@cur_node.condition_hash).
       listable.
       where(:map_points.exists => true).
       contents_search(@query).

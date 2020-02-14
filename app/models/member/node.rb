@@ -203,12 +203,10 @@ module Member::Node
     include Cms::Model::Node
     include Cms::Addon::NodeSetting
     include Cms::Addon::Meta
-    include Cms::Addon::PageList
+    include Member::Addon::Photo::Search::PageList
     include Cms::Addon::Release
     include Cms::Addon::GroupPermission
     include History::Addon::Backup
-
-    self.use_liquid = false
 
     default_scope ->{ where(route: "member/photo_search") }
   end

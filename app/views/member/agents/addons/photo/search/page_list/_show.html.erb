@@ -1,0 +1,61 @@
+<% addon ||= local_assigns.fetch(:addon, {}) %>
+<%= code_editor "##{addon[:id]} .html", mode: :html, readonly: true %>
+
+<dl class="see">
+  <dt><%= @model.t :conditions %></dt>
+  <dd><%=br @item.conditions.join("\n") %></dd>
+
+  <dt><%= @model.t :sort %></dt>
+  <dd><%= @item.label :sort %></dd>
+
+  <dt><%= @model.t :limit %></dt>
+  <dd><%= @item.limit %></dd>
+
+  <% if @item.loop_format_liquid? %>
+    <dt><%= @model.t :loop_liquid %></dt>
+    <dd>
+      <% if @item.loop_liquid.present? %>
+        <%= text_area_tag :loop_liquid, @item.loop_liquid, class: "html", style: "height: 100px;"  %>
+      <% end %>
+    </dd>
+  <% else %>
+    <dt><%= @model.t :upper_html %></dt>
+    <dd>
+      <% if @item.upper_html.present? %>
+      <%= text_area_tag :upper_html, @item.upper_html, class: "html" %>
+      <% end %>
+    </dd>
+
+    <dt><%= @model.t :loop_html %></dt>
+    <% if @item.loop_setting.present? %>
+    <dd><%= tryb{@item.loop_setting.name} %></dd>
+    <% end %>
+    <dd>
+      <% if @item.loop_html.present? %>
+      <%= text_area_tag :loop_html, @item.loop_html, class: "html", style: "height: 100px;"  %>
+      <% end %>
+    </dd>
+
+    <dt><%= @model.t :lower_html %></dt>
+    <dd>
+      <% if @item.lower_html.present? %>
+      <%= text_area_tag :lower_html, @item.lower_html, class: "html" %>
+      <% end %>
+    </dd>
+
+    <dt><%= @model.t :no_items_display_state %></dt>
+    <dd><%= @item.label :no_items_display_state %></dd>
+
+    <dt><%= @model.t :substitute_html %></dt>
+    <dd>
+      <% if @item.substitute_html.present? %>
+        <%= text_area_tag :substitute_html, @item.substitute_html, class: "html" %>
+      <% end %>
+    </dd>
+  <% end %>
+
+  <% if @model.use_new_days %>
+    <dt><%= @model.t :new_days %></dt>
+    <dd><%= @item.new_days %> <%= t "datetime.prompts.day" %></dd>
+  <% end %>
+</dl>
