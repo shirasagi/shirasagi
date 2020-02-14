@@ -1,9 +1,9 @@
 class Member::Agents::Nodes::PhotoController < ApplicationController
   include Cms::NodeFilter::View
 
-  model Member::Photo
+  helper Member::PhotoHelper
 
-  helper Cms::ListHelper
+  model Member::Photo
 
   private
 
