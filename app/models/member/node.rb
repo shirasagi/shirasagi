@@ -196,8 +196,6 @@ module Member::Node
     include Cms::Addon::GroupPermission
     include History::Addon::Backup
 
-    self.use_liquid = false
-
     default_scope ->{ where(route: "member/photo") }
   end
 
