@@ -65,7 +65,7 @@ $(".ms-container").each(function () {
       <% users.each do |user| %>
         <%= hidden_field_tag "workflow_approvers", "#{level},#{user.id},#{@route.approver_user_editable?(level, user) ? '1' : ''},pending," %>
       <% end %>
-      <%= br names.join("\n") %>
+      <%= br names %>
     </dd>
   </dl>
 <% end %>

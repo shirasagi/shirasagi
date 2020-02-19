@@ -2,5 +2,5 @@
 
 <dl class="column blog_page-locations">
   <dt><%= @model.t :blog_page_locations %></dt>
-  <dd><%=br @item.blog_page_locations.pluck(:name).join("\n") %></dd>
+  <dd><%=br @item.blog_page_locations.pluck(:name) %></dd>
 </dl>

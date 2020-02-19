@@ -2,5 +2,5 @@
 
 <dl class="see mod-event-facility">
   <dt><%= @model.t :facilities %></dt>
-  <dd><%=br @item.send(:facilities).pluck(:name).join("\n") %></dd>
+  <dd><%=br @item.send(:facilities).pluck(:name) %></dd>
 </dl>

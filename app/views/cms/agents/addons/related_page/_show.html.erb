@@ -2,7 +2,7 @@
 
 <dl class="see">
   <dt><%= @model.t :related_pages %></dt>
-  <dd><%=br @item.send(:related_pages).pluck(:name).join("\n") %></dd>
+  <dd><%=br @item.send(:related_pages).pluck(:name) %></dd>
 
   <dt><%= @model.t :related_page_sort %></dt>
   <dd><%=br @item.label :related_page_sort %></dd>

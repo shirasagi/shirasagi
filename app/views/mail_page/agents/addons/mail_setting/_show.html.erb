@@ -1,9 +1,9 @@
 <dl class="see mod-mail_page-mail_setting">
   <dt><%= @model.t :mail_page_from_conditions %></dt>
-  <dd><%=br @item.mail_page_from_conditions.join("\n") %></dd>
+  <dd><%=br @item.mail_page_from_conditions %></dd>
 
   <dt><%= @model.t :mail_page_to_conditions %></dt>
-  <dd><%=br @item.mail_page_to_conditions.join("\n") %></dd>
+  <dd><%=br @item.mail_page_to_conditions %></dd>
 
   <dt><%= @model.t :arrival_days %></dt>
   <dd><%= @item.arrival_days %> <%= t "datetime.prompts.day" %></dd>

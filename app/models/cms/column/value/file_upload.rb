@@ -186,7 +186,7 @@ class Cms::Column::Value::FileUpload < Cms::Column::Value::Base
   def to_default_html_video
     div_content = []
     div_content << ApplicationController.helpers.video_tag(file.url, controls: 'controls')
-    escaped_text = ApplicationController.helpers.sanitize(ApplicationController.helpers.br_not_h(text))
+    escaped_text = ApplicationController.helpers.sanitize(ApplicationController.helpers.br(text, html_escape: false))
     div_content << ApplicationController.helpers.content_tag(:div, escaped_text)
     ApplicationController.helpers.content_tag(:div) do
       div_content.join.html_safe

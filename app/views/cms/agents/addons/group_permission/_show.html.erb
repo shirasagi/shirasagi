@@ -1,6 +1,6 @@
 <dl class="see">
   <dt><%= @model.t :group_ids %></dt>
-  <dd><%=br @item.groups.order_by(name: 1).map{|c| c.name }.join("\n") %></dd>
+  <dd><%=br @item.groups.order_by(name: 1).map{|c| c.name } %></dd>
 
   <dt><%= @model.t :permission_level %></dt>
   <dd><%= @item.label :permission_level %></dd>
