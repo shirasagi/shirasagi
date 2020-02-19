@@ -60,17 +60,18 @@ describe "sns_login", type: :feature, dbscope: :example do
   end
 
   context "with ldap user", ldap: true do
-    let(:base_dn) { "dc=city,dc=shirasagi,dc=jp" }
+    let(:base_dn) { "dc=example,dc=jp" }
     let(:group) { create(:cms_group, name: unique_id, ldap_dn: base_dn) }
-    let(:user_dn) { "uid=user1,ou=001002秘書広報課,ou=001企画部, dc=city, dc=shirasagi, dc=jp" }
+    let(:user_dn) { "uid=user1, ou=001001政策課, ou=001企画政策部, dc=example, dc=jp" }
+    let(:password) { "pass" }
     subject { create(:cms_ldap_user, ldap_dn: user_dn, group: group) }
 
     it "valid login" do
       visit sns_login_path
       within "form" do
         fill_in "item[email]", with: subject.name
-        fill_in "item[password]", with: "user1"
-        click_button "ログイン"
+        fill_in "item[password]", with: password
+        click_button I18n.t("ss.login")
       end
       expect(current_path).to eq sns_mypage_path
       expect(page).to have_no_css(".login-box")
