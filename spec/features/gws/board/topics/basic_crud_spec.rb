@@ -235,6 +235,49 @@ describe "gws_board_topics", type: :feature, dbscope: :example do
           expect(mail.decoded.to_s).to include(mail.subject, url)
         end
       end
+
+      describe "#soft_delete_all" do
+        it do
+          visit index_path
+          within ".list-items" do
+            first("input[value='#{item.id}']").click
+          end
+          within ".list-head" do
+            page.accept_confirm do
+              click_on I18n.t("ss.links.delete")
+            end
+          end
+          expect(page).to have_css("#notice", text: I18n.t("ss.notice.deleted"))
+
+          item.reload
+          expect(item.deleted).to be_present
+
+          expect(SS::Notification.all.count).to eq 1
+          notice = SS::Notification.first
+          expect(notice.group_id).to eq site.id
+          expect(notice.member_ids).to eq [ user1.id ]
+          expect(notice.user_id).to eq gws_user.id
+          expect(notice.subject).to eq I18n.t("gws_notification.gws/board/topic/destroy.subject", name: item.name)
+          expect(notice.text).to be_blank
+          expect(notice.html).to be_blank
+          expect(notice.format).to eq "text"
+          expect(notice.seen).to be_blank
+          expect(notice.state).to eq "public"
+          expect(notice.send_date).to be_present
+          expect(notice.url).to be_blank
+          expect(notice.reply_module).to be_blank
+          expect(notice.reply_model).to be_blank
+          expect(notice.reply_item_id).to be_blank
+
+          expect(ActionMailer::Base.deliveries.length).to eq 1
+          mail = ActionMailer::Base.deliveries.first
+          expect(mail.from.first).to eq site.sender_address
+          expect(mail.bcc.first).to eq user1.send_notice_mail_address
+          expect(mail.subject).to eq notice.subject
+          url = "#{site.canonical_scheme}://#{site.canonical_domain}/.g#{site.id}/memo/notices/#{notice.id}"
+          expect(mail.decoded.to_s).to include(mail.subject, url)
+        end
+      end
     end
   end
 end

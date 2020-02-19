@@ -27,7 +27,7 @@ module Gws::Addon::Board::NotifySetting
       #end
 
       role_ids = Gws::Role.site(site).all_in(
-        permissions: %w(read_other_gws_board_posts edit_other_gws_board_posts delete_other_gws_board_posts)
+        permissions: %w(read_other_gws_board_topics edit_other_gws_board_topics delete_other_gws_board_topics)
       ).pluck(:id)
 
       conds = []
