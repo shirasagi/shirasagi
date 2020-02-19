@@ -56,20 +56,6 @@ class Board::Post
     end
   end
 
-  def modified_text
-    return "" if self.text.blank?
-
-    helpers = ApplicationController.helpers
-
-    ret = self.text
-    ret = helpers.sanitize(ret, tags: [])
-    ret = ret.strip
-    ret = CGI.escapeHTML(ret)
-    ret = helpers.auto_link(ret, link: :urls)
-    ret = helpers.br(ret)
-    ret
-  end
-
   def file_previewable?(file, user:, member:)
     node.present? && node.public?
   end

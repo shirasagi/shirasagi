@@ -8,7 +8,7 @@
     </h2>
   </header>
   <div class="body">
-    <%= item.modified_text %>
+    <%= item.sanitized_text %>
   </div>
   <% if item.files.present? %>
     <div class="files">
