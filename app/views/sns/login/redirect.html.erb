@@ -1,4 +1,4 @@
 <div style="margin: 20px;">
   <%= t "ss.confirm.redirect" %>
-  <p><%= link_to URI::decode(params[:ref].to_s), URI.parse(params[:ref].to_s).path %></p>
+  <p><%= link_to @url.to_s, @url.to_s %></p>
 </div>
