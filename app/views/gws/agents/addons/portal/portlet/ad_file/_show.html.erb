@@ -19,7 +19,7 @@
           </label><br />
           <% if file.link_url %>
             <label>
-              <%= link_to(file.link_url, file.link_url) %>
+              <%= link_to(file.link_url, sns_redirect_path(ref: file.link_url), target: "_blank") %>
             </label><br />
           <% end %>
         </div>

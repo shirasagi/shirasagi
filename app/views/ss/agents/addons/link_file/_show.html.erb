@@ -17,7 +17,7 @@
             <%= file.name %>
           </label><br />
           <label>
-            <%= link_to(file.link_url, file.link_url) if file.link_url %>
+            <%= link_to(file.link_url, sns_redirect_path(ref: file.link_url), target: "_blank") if file.link_url %>
           </label><br />
         </div>
       </div>
