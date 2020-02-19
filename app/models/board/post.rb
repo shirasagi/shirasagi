@@ -57,11 +57,17 @@ class Board::Post
   end
 
   def modified_text
-    text = self.text
-    text.gsub!(%r{https?://[\w/:%#\$&\?\(\)~\.=\+\-]+}) do |href|
-      "<a href=\"#{href}\">#{href}</a>"
-    end
-    text.gsub(/(\r\n?)|(\n)/, "<br />").html_safe
+    return "" if self.text.blank?
+
+    helpers = ApplicationController.helpers
+
+    ret = self.text
+    ret = helpers.sanitize(ret, tags: [])
+    ret = ret.strip
+    ret = CGI.escapeHTML(ret)
+    ret = helpers.auto_link(ret, link: :urls)
+    ret = helpers.br(ret)
+    ret
   end
 
   def file_previewable?(file, user:, member:)
