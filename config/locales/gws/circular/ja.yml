@@ -128,6 +128,7 @@ ja:
         circular_filesize_limit: 添付サイズ制限
         circular_delete_threshold: 回覧復旧可能期間
         circular_files_break: ファイル表示の並び
+        circular_new_days: 新着表示期間
       gws/addon/circular/category:
         category_ids: カテゴリー
   tooltip:
@@ -161,6 +162,8 @@ ja:
         - 初期値は 2年 です。
       circular_files_break:
         - 添付ファイルの表示の並びを選択します。
+      circular_new_days:
+        - 新着表示期間を入力します。
 
   job:
     models:

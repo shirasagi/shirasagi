@@ -1,5 +1,5 @@
 function Gws_Portal(selector, settings) {
-  options = {
+  var options = {
     autogenerate_stylesheet: true,
     resize: {
       enabled: true,
@@ -30,13 +30,16 @@ Gws_Portal.prototype.addItems = function(items) {
 Gws_Portal.prototype.addItem = function(item) {
   var id = item._id.$oid;
 
-  li = this.gs.add_widget(
+  var li = this.gs.add_widget(
     '<li class="portlet-item" data-id="' + id + '"></li>',
     item.grid_data.size_x,
     item.grid_data.size_y,
     item.grid_data.col,
     item.grid_data.row
   );
+  if (! li) {
+    return;
+  }
   li.data('id', id);
 
   var html = this.el.find(".portlet-html[data-id='" + id + "']");

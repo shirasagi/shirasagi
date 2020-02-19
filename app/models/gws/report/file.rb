@@ -111,6 +111,10 @@ class Gws::Report::File
     [ *ret, options ]
   end
 
+  def new_flag?
+    created > Time.zone.now - site.report_new_days.day
+  end
+
   private
 
   def send_notification_mail

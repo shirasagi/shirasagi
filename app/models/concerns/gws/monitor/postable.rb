@@ -81,12 +81,13 @@ module Gws::Monitor::Postable
   end
 
   def new_flag?
-    descendants_updated > Time.zone.now - site.monitor_new_days.day
+    (released.presence || created) > Time.zone.now - site.monitor_new_days.day
   end
 
   def showable_comment?(cur_user, cur_group)
     return true if topic.user_ids.include?(cur_user.id) || topic.group_ids.include?(cur_group.id)
     return true if topic.spec_config == 'other_groups_and_contents'
+
     user_group_id == cur_group.id
   end
 
@@ -152,13 +153,13 @@ module Gws::Monitor::Postable
   # コメントを許可しているか検証
   def validate_comment
     return if topic.permit_comment?
+
     errors.add :base, I18n.t("gws/monitor.errors.denied_comment")
   end
 
   # 最新レス投稿日時の初期値をトピックのみ設定
   # 明示的に age るケースが発生するかも
   def set_descendants_updated
-    #return unless new_record?
     self.descendants_updated = updated
   end
 
@@ -166,7 +167,7 @@ module Gws::Monitor::Postable
   # 明示的に age るケースが発生するかも
   def update_topic_descendants_updated
     return unless topic
-    #return unless _id_changed?
+
     topic.set descendants_updated: updated
   end
 

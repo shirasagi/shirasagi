@@ -99,6 +99,10 @@ class Gws::Share::File
     end
   end
 
+  def new_flag?
+    created > Time.zone.now - site.share_new_days.day
+  end
+
   private
 
   def validate_size

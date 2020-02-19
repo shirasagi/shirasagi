@@ -36,6 +36,7 @@ end
 
 <% @index_title = proc do |item| %>
   <%= link_to item.name, edit_gws_survey_readable_file_path(readable_id: item), class: "title" %>
+  <% if item.new_flag? %><span class="gws-board-flag-new"></span><% end %>
 <% end %>
 
 <% @index_meta = proc do |item| %>
