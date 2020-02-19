@@ -1,6 +1,6 @@
 <nav class="main-navi">
   <% if @cur_site.menu_portal_visible? %>
-    <h2><%= link_to @cur_site.menu_portal_label || t('modules.gws/portal'), "#{gws_portal_path}/", class: "icon-portal" %></h2>
+    <h2><%= link_to @cur_site.menu_portal_label || t('modules.gws/portal'), gws_portal_path, class: "icon-portal" %></h2>
     <div class="child-menu">
       <% @cur_user.groups.in_group(@cur_site).each do |group| %>
         <% next if group.id == @cur_site.id %>

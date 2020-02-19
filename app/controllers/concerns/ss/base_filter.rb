@@ -142,26 +142,40 @@ module SS::BaseFilter
     @logout_path = session[:logout_path].presence
   end
 
-  def rescue_action(e)
-    begin
-      # below codes may cause "invalid byte sequence in UTF-8" error or other errors in some cases.
-      # So, it is required to wrap around begin, rescue and end.
-      if e.to_s =~ /^\d+$/
-        status = e.to_s.to_i
-        file = error_html_file(status)
-        return ss_send_file(file, status: status, type: Fs.content_type(file), disposition: :inline)
-      end
-
-      return render_job_size_limit(e) if e.is_a?(Job::SizeLimitPerUserExceededError)
-    rescue
-    end
-
-    raise e
+  def rescue_action(exception)
+    render_exception!(exception)
   end
 
-  def error_html_file(status)
-    file = "#{Rails.public_path}/.error_pages/#{status}.html"
-    Fs.exists?(file) ? file : "#{Rails.public_path}/.error_pages/500.html"
+  def render_exception!(exception)
+    if exception.is_a?(Job::SizeLimitPerUserExceededError)
+      render_job_size_limit(exception)
+      return
+    end
+
+    backtrace_cleaner = request.get_header("action_dispatch.backtrace_cleaner")
+    wrapper = ::ActionDispatch::ExceptionWrapper.new(backtrace_cleaner, exception)
+    if exception.is_a?(RuntimeError) && exception.message.numeric?
+      status_code = Integer(exception.message)
+    else
+      status_code = wrapper.status_code
+    end
+
+    @ss_rescue = { status: status_code }
+    @wrapper = wrapper if Rails.env.development?
+
+    if @ss_mode == :cms && !@cur_site
+      @ss_mode = nil
+    elsif @ss_mode == :gws && !@cur_site
+      @ss_mode = nil
+    end
+
+    render(
+      file: "ss/rescues/index", layout: @cur_user ? "ss/base" : "ss/login", status: status_code,
+      type: request.xhr? ? "text/plain" : "text/html", formats: request.xhr? ? :text : :html
+    )
+  rescue => e
+    Rails.logger.info("#{e.class} (#{e.message}):\n  #{e.backtrace.join("\n  ")}")
+    raise exception
   end
 
   def render_job_size_limit(error)

@@ -31,7 +31,7 @@
     </h2>
   <% end %>
 
-  <% if sys_conf_path.present? %>
+  <% if respond_to?(:sys_conf_path) && sys_conf_path.present? %>
     <h2 class="sys-conf">
       <%= link_to sys_conf_path do %>
         <i class="material-icons">&#xE8B8;</i><%= t("sys.conf") %>

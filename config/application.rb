@@ -43,9 +43,10 @@ module SS
     Dir["#{config.root}/config/routes/**/routes.rb"].sort.each do |file|
       config.paths["config/routes.rb"] << file
     end
-    Dir["#{config.root}/config/routes/*/routes_end.rb"].sort.each do |file|
+    Dir["#{config.root}/config/routes/**/routes_end.rb"].sort.reverse_each do |file|
       config.paths["config/routes.rb"] << file
     end
+    config.paths["config/routes.rb"] << "#{config.root}/config/routes_end.rb"
 
     config.paths["config/initializers"] << "#{config.root}/config/after_initializers"
 

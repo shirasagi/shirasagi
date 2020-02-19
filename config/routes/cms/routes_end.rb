@@ -299,6 +299,12 @@ Rails.application.routes.draw do
     get "import_page/:filename.:format" => "public#index", cell: "pages/import_page"
   end
 
+  unless Rails.env.development?
+    namespace "cms", path: ".s:site" do
+      match "*private_path" => "catch_all#index", via: :all
+    end
+  end
+
   match "*public_path" => "cms/public#index", public_path: /[^\.].*/,
         via: [:get, :post, :put, :patch, :delete], format: true
   match "*public_path" => "cms/public#index", public_path: /[^\.].*/,

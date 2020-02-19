@@ -373,6 +373,11 @@ ja:
       days_progress: 日経過
       mobile_size: KB(キロバイト)
 
+    rescues:
+      default:
+        head: お探しのページは見つかりません
+        body: お探しのページは見つかりませんでした。<br>一時的にアクセスできない状態になっているか、URLが変更・削除されたのかもしれません。
+
   modules:
     addons:
       ss/body: 本文
