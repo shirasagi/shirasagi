@@ -129,7 +129,11 @@ module Gws::Export
         return item
       end
 
-      item.attributes = data
+      begin
+        item.attributes = data
+      rescue Mongoid::Errors::InvalidValue
+        raise export_fields.inspect
+      end
     else
       data.delete(:id)
       item = import_new_item(data)

@@ -6,6 +6,7 @@ class Gws::StaffRecord::UserTitle
   include Gws::Reference::User
   include Gws::Reference::Site
   include Gws::StaffRecord::Yearly
+  include Gws::Export
 
   store_in collection: "gws_staff_record_user_titles"
 
@@ -41,5 +42,9 @@ class Gws::StaffRecord::UserTitle
 
   def import_new_item(data)
     self.class.new(data.merge(year_id: year_id))
+  end
+
+  def export_fields
+    %w(id created updated deleted text_index code name remark order activation_date expiration_date group_id permission_level group_ids user_ids custom_group_ids user_uid user_name user_group_id user_group_name user_id site_id year_code year_name year_id)
   end
 end
