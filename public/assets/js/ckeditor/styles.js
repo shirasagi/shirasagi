@@ -33,15 +33,6 @@ CKEDITOR.stylesSet.add( 'default', [
 
 	{ name: 'Italic Title',		element: 'h2', styles: { 'font-style': 'italic' } },
 	{ name: 'Subtitle',			element: 'h3', styles: { 'color': '#aaa', 'font-style': 'italic' } },
-	{
-		name: 'Special Container',
-		element: 'div',
-		styles: {
-			padding: '5px 10px',
-			background: '#eee',
-			border: '1px solid #ccc'
-		}
-	},
 
 	/* Inline Styles */
 
@@ -58,10 +49,7 @@ CKEDITOR.stylesSet.add( 'default', [
 	*/
 
 	{ name: 'Marker',			element: 'span', attributes: { 'class': 'marker' } },
-
-	{ name: 'Big',				element: 'big' },
 	{ name: 'Small',			element: 'small' },
-	{ name: 'Typewriter',		element: 'tt' },
 
 	{ name: 'Computer Code',	element: 'code' },
 	{ name: 'Keyboard Phrase',	element: 'kbd' },
@@ -112,17 +100,7 @@ CKEDITOR.stylesSet.add( 'default', [
 CKEDITOR.stylesSet.add( 'webmail', [
 	{ name: 'Italic Title',		element: 'h2', styles: { 'font-style': 'italic' } },
 	{ name: 'Subtitle',			element: 'h3', styles: { 'color': '#aaa', 'font-style': 'italic' } },
-	{
-		name: 'Special Container',
-		element: 'div',
-		styles: {
-			padding: '5px 10px',
-			background: '#eee',
-			border: '1px solid #ccc'
-		}
-	},
 
-	{ name: 'Big',				element: 'big' },
 	{ name: 'Small',			element: 'small' },
 
 	{ name: 'Deleted Text',		element: 'del' },
