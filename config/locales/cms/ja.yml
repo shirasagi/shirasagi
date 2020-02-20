@@ -1388,7 +1388,7 @@ ja:
               &lt;time datetime="{{ page.date }}">{{ page.date | ss_date: "long" }}&lt;/time>
               &lt;h2>&lt;a href="{{ page.url }}">{{ page.index_name }}&lt;/a>&lt;/h2>
             &lt;/header>
-            &lt;p>#{summary}&lt;/p>
+            &lt;p>{{ page.summary }}&lt;/p>
           &lt;/article>
           {% endfor %}
       new_days:
