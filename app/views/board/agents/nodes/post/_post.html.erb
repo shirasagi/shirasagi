@@ -27,7 +27,7 @@
       <%= item.poster %>
     </span>
     <% if @cur_node.show_email? %>
-      <%= mail_to item.name, item.email, class: "email" if item.email.present? %>
+      <%= mail_to item.email, item.email, class: "email" if item.email.present? %>
     <% end %>
     <% if @cur_node.show_url? %>
       <%= link_to item.poster_url, item.poster_url, class: "url" if item.poster_url.present? %>
