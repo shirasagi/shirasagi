@@ -12,6 +12,7 @@ class Gws::StaffRecord::UserTitle
 
   attr_accessor :cur_user, :cur_site
 
+  validates :code, uniqueness: { scope: [:group_id, :year] }
   before_validation :set_group_id, if: -> { cur_site.present? }
   after_save :update_users_title_order
 
