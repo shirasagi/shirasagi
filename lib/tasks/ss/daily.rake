@@ -16,6 +16,9 @@ namespace :ss do
       # ゴミ箱の掃除
       Rake.application.invoke_task("history:trash:purge")
 
+      # history_logの削除
+      Rake.application.invoke_task("history:history_log:purge")
+
       ::Tasks::Cms.each_sites do |site|
         # クローリングリソースの更新
         Rake.application.invoke_task("opendata:crawl[#{site.host}]")
