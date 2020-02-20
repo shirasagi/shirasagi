@@ -59,6 +59,8 @@ ja:
         index: サイトを選択する
         search: サイトを検索
         select: サイトを設定する
+      postal_codes:
+        index: 郵便番号を選択する
     postal_code: 郵便番号
     postal_code_normalize_city: 以下に掲載がない場合
     import_official_japan_postal_service_csv: 日本郵政CSVの取り込み
