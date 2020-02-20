@@ -20,7 +20,7 @@ class Opendata::ResourceDownloadHistory
   field :user_agent, type: String
 
   class << self
-    def create_history(site:, dataset:, resource:, request:, downloaded:)
+    def create_history(site:, dataset:, resource:, remote_addr:, user_agent:, downloaded:)
       self.create(
         cur_site: site,
         dataset_id: dataset.id,
@@ -34,8 +34,8 @@ class Opendata::ResourceDownloadHistory
         resource_source_url: resource.source_url,
         full_url: dataset.full_url,
         downloaded: (downloaded || Time.zone.now),
-        remote_addr: (request.env["HTTP_X_REAL_IP"] || request.remote_ip),
-        user_agent: request.user_agent
+        remote_addr: remote_addr,
+        user_agent: user_agent
       )
     end
 
