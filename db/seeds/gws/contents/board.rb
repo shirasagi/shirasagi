@@ -5,9 +5,9 @@ def create_board_category(data)
 end
 
 @bd_cate = [
-  create_board_category(name: "告知", color: "#002288", order: 10),
-  create_board_category(name: "質問", color: "#EE00DD", order: 20),
-  create_board_category(name: "募集", color: "#CCCCCC", order: 30)
+  create_board_category(name: "告知", color: "#002288", order: 10, readable_setting_range: "public"),
+  create_board_category(name: "質問", color: "#EE00DD", order: 20, readable_setting_range: "public"),
+  create_board_category(name: "募集", color: "#CCCCCC", order: 30, readable_setting_range: "public")
 ]
 
 ## -------------------------------------
@@ -20,12 +20,12 @@ end
 @bd_topics = [
   create_board_topic(
     name: "業務説明会を開催します。", text: "#{@site_name}についても業務説明会を開催します。", mode: "thread",
-    category_ids: [@bd_cate[0].id]
+    category_ids: [@bd_cate[0].id], member_group_ids: @groups.pluck(:id).sort
   ),
   create_board_topic(
     name: "会議室の増設について",
     text: "会議室の利用率が高いので増設を考えています。\n特に希望される内容などあればお願いします。", mode: "tree",
-    category_ids: [@bd_cate[1].id]
+    category_ids: [@bd_cate[1].id], member_group_ids: @groups.pluck(:id).sort
   )
 ]
 

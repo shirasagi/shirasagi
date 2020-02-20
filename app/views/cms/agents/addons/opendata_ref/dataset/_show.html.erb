@@ -10,5 +10,5 @@
   <dd><%= @item.label :opendata_dataset_state %></dd>
 
   <dt><%= @model.t :opendata_dataset_ids %></dt>
-  <dd><%= br @item.opendata_datasets.pluck(:name).join("\n") %></dd>
+  <dd><%= br @item.opendata_datasets.pluck(:name) %></dd>
 </dl>

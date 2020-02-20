@@ -1,0 +1,50 @@
+<div id="ss-file-view">
+  <div class="toolbar-container">
+    <div class="toolbar">
+      <span class="btn-group toolbar-zoom">
+        <%= button_tag(type: "button", name: "btn-zoom-out", class: "btn btn-zoom-out") do %>
+          <i class="material-icons md-18">&#xe900;</i>
+          <%= t("ss.buttons.zoom_out") %>
+        <% end %>
+        <input id="zoom-slider" name="zoom-slider" type="range">
+        <%= button_tag(type: "button", name: "btn-zoom-in", class: "btn btn-zoom-in") do %>
+          <i class="material-icons md-18">&#xe8ff;</i>
+          <%= t("ss.buttons.zoom_in") %>
+        <% end %>
+      </span>
+
+      <span class="btn-group toolbar-foreground-color">
+        <label><%= t("ss.color") %></label>
+        <%= text_field_tag("foreground-color", "#000000", class: 'js-color') %>
+        <%= button_tag(type: "button", name: "btn-foreground-color-picker", class: "btn btn-color-picker") do %>
+          <i class="material-icons md-18">&#xe3b8;</i>
+        <% end %>
+      </span>
+
+      <span class="btn-group toolbar-background-color">
+        <label><%= t("ss.bg_color") %></label>
+        <%= text_field_tag("background-color", "#ffffff", class: 'js-color') %>
+        <%= button_tag(type: "button", name: "btn-background-color-picker", class: "btn btn-color-picker") do %>
+          <i class="material-icons md-18">&#xe3b8;</i>
+        <% end %>
+      </span>
+
+      <span class="btn-group toolbar-contrast-ratio">
+        <label>
+          <%= t("ss.contrast_ratio") %>
+          <%= tt("ss.contrast_ratio")  %>
+        </label>
+        <span class="contrast-ratio">-.--</span>
+        <%= button_tag(t("ss.buttons.calculate"), type: "button", name: "btn-contrast-ratio", class: "btn btn-contrast-ratio") %>
+      </span>
+    </div>
+  </div>
+
+  <div class="canvas-container">
+  </div>
+</div>
+
+<%= javascript_tag do %>
+  var options = <%== { itemUrl: @item.url, contrastRatioPath: url_for(action: :contrast_ratio, format: "json") }.to_json %>;
+  new SS_FileView("#ss-file-view", options);
+<% end %>

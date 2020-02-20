@@ -20,7 +20,7 @@ $('.mod-photo a.ajax-box').data('on-select', function(item) {
 
     <div id="selected-files">
       <% @item.member_photos.each do |item| %>
-        <div class="file-view member-photo" data-id="<%= item.id %>">
+        <article class="file-view member-photo" data-id="<%= item.id %>" data-file-id="<%= item.id %>">
           <%= hidden_field_tag "item[member_photo_ids][]", item.id, class: "photo-id" %>
           <%= link_to item.image.url, class: :thumb, target: "_blank" do %>
             <%= image_tag item.image.thumb_url, alt: item.name %>
@@ -29,7 +29,7 @@ $('.mod-photo a.ajax-box').data('on-select', function(item) {
           <div class="action delete">
             <%= link_to t("ss.buttons.delete"), "#", onclick: "deleteContent('#{item.id}'); return false;" %>
           </div>
-        </div>
+        </article>
       <% end %>
     </div>
   </dd>

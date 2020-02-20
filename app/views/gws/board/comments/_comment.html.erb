@@ -5,11 +5,11 @@ if @item.permit_comment? && recursion && @model.allowed?(:edit, @cur_user, site:
   link = new_gws_board_topic_parent_comment_path(topic_id: @item.id, parent_id: comment.id)
   menu << link_to(t('gws/board.links.comment'), link, class: "btn primary")
 end
-if comment.allowed?(:edit, @cur_user, site: @cur_site)
+if @item.allowed?(:edit, @cur_user, site: @cur_site) || (@item.member?(@cur_user) && (comment.group_ids & @cur_user.group_ids).present? || comment.user_ids.include?(@cur_user.id))
   link = edit_gws_board_topic_parent_comment_path(topic_id: @item.id, parent_id: comment.parent_id, id: comment.id)
   menu << link_to(t('ss.links.edit'), link, class: "btn")
 end
-if comment.allowed?(:delete, @cur_user, site: @cur_site)
+if @item.allowed?(:delete, @cur_user, site: @cur_site) || (@item.member?(@cur_user) && (comment.group_ids & @cur_user.group_ids).present? || comment.user_ids.include?(@cur_user.id))
   link = delete_gws_board_topic_parent_comment_path(topic_id: @item.id, parent_id: comment.parent_id, id: comment.id)
   menu << link_to(t('ss.links.delete'), link, class: "btn")
 end

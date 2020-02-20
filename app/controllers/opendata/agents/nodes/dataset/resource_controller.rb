@@ -50,7 +50,7 @@ class Opendata::Agents::Nodes::Dataset::ResourceController < ApplicationControll
   def download_resource
     if !preview_path?
       @item.dataset.inc downloaded: 1
-      @item.create_download_history(request, Time.zone.now)
+      @item.create_download_history(remote_addr, request.user_agent, Time.zone.now)
     end
     @cur_node.layout_id = nil
 
@@ -75,7 +75,7 @@ class Opendata::Agents::Nodes::Dataset::ResourceController < ApplicationControll
     @cur_node.layout_id = nil
 
     @item = @dataset.resources.find_by id: params[:id]
-    @item.create_preview_history(request, Time.zone.now) if !preview_path?
+    @item.create_preview_history(remote_addr, request.user_agent, Time.zone.now) if !preview_path?
 
     if @item.tsv_present?
       tsv_content

@@ -11,7 +11,7 @@
       </tr>
       <tr>
         <th><%= @dataset.t :resources %></th>
-        <td><%=br @item.resources.map { |resource| "#{resource.filename} (#{number_to_human_size(resource.size)})" }.join("\n") %></td>
+        <td><%=br @item.resources.map { |resource| "#{resource.filename} (#{number_to_human_size(resource.size)})" } %></td>
       </tr>
       <tr>
         <th><%= @dataset.t :harvest_text_index %></th>
@@ -70,13 +70,13 @@
       <% style = (@item.state == "failed") ? 'background-color: #ffdada;' : "" %>
       <tr>
         <th style="<%= style %>"><%= t("opendata.dataset") %></th>
-        <td style="<%= style %>"><%=br @item.error_messages.join("\n") %></td>
+        <td style="<%= style %>"><%=br @item.error_messages %></td>
       </tr>
       <% @item.resources.each_with_index do |resource, idx| %>
         <% style = (resource.state == "failed") ? 'background-color: #ffdada;' : "" %>
         <tr>
           <th style="<%= style %>"><%= "#{t("opendata.labels.resource")}#{idx + 1}" %></th>
-          <td style="<%= style %>"><%=br resource.error_messages.join("\n") %></td>
+          <td style="<%= style %>"><%=br resource.error_messages %></td>
         </tr>
       <% end %>
     </tbody>

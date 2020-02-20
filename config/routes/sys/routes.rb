@@ -54,6 +54,8 @@ Rails.application.routes.draw do
     namespace "apis" do
       get "groups" => "groups#index"
       get "sites" => "sites#index"
+      get "postal_codes" => "postal_codes#index"
+      get "prefecture_codes" => "prefecture_codes#index"
       resources :temp_files, concerns: :deletion do
         get :select, on: :member
         get :view, on: :member

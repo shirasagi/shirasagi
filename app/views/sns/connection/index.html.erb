@@ -3,7 +3,7 @@
   <div class="addon-body">
     <dl class="see">
       <dt><%= t("sys.remote_addr") %></dt>
-      <dd><%= request.env["HTTP_X_REAL_IP"] || request.remote_addr %></dd>
+      <dd><%= remote_addr %></dd>
 
       <dt><%= t("sys.user_agent") %></dt>
       <dd><%= request.user_agent %></dd>

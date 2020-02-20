@@ -8,15 +8,16 @@ class Ldap::Connection
       return nil if host.blank?
       return nil if auth_method.blank?
 
-      host, port = host.split(":")
+      host, port = host.split(":", 2)
       config = { host: host }
-      config[:port] = port.to_i if port.present?
+      config[:port] = port.to_i if port.numeric?
       config[:base] = base_dn if base_dn.present?
-      config[:auth_method] = auth_method.to_sym
+      config[:auth] = { method: auth_method.to_sym, username: username, password: password }
 
       ldap = Net::LDAP.new(config)
       raise Ldap::BindError unless do_bind(ldap, auth_method, username, password)
-      new(ldap, config)
+
+      new(config)
     end
 
     def authenticate(host: SS.config.ldap.host, username: nil, password: nil)
@@ -24,27 +25,31 @@ class Ldap::Connection
       return false if username.blank?
       return false if password.blank?
 
-      host, port = host.split(":")
+      host, port = host.split(":", 2)
       config = { host: host }
-      config[:port] = port.to_i if port.present?
+      config[:port] = port.to_i if port.numeric?
       config[:base] = username
 
       ldap = Net::LDAP.new(config)
-      return false unless do_bind(ldap, :simple, username, password)
-      true
+      do_bind(ldap, :simple, username, password) ? true : false
     end
 
-    def split_dn(dn)
-      index = dn.index(",")
+    def split_dn(ldap_dn)
+      index = ldap_dn.index(",")
       return nil if index.nil?
 
-      first = dn[0..index - 1].strip
-      remains = dn[index + 1..-1].strip
+      first = ldap_dn[0..index - 1].strip
+      remains = ldap_dn[index + 1..-1].strip
 
-      key, value = first.split("=")
+      key, value = first.split("=", 2)
       filter = Net::LDAP::Filter.eq(key.strip, value.strip)
 
       [ filter, remains ]
+    end
+
+    def decrypt(password)
+      ret = SS::Crypt.decrypt(password)
+      ret.present? ? ret : password
     end
 
     private
@@ -58,27 +63,24 @@ class Ldap::Connection
       end
       ldap.bind(auth)
     end
-
-    def decrypt(password)
-      ret = SS::Crypt.decrypt(password)
-      ret.present? ? ret : password
-    end
   end
 
-  def initialize(ldap, config)
-    @ldap = ldap
+  attr_reader :config
+
+  def initialize(config)
     @config = config
-  end
-
-  def config
-    @config
   end
 
   def search(filter, base: nil, scope: Net::LDAP::SearchScope_SingleLevel)
     params = { filter: filter }
     params[:base] = base if base.present?
     params[:scope] = scope if scope.present?
-    @ldap.search(params) || []
+
+    copy = self.config.dup
+    copy[:auth][:password] = self.class.decrypt(copy[:auth][:password])
+    Net::LDAP.open(copy) do |ldap|
+      ldap.search(params) || []
+    end
   end
 
   def groups
@@ -93,11 +95,12 @@ class Ldap::Connection
     end.compact
   end
 
-  def find(dn, klass)
-    filter, base = Ldap::Connection.split_dn(dn)
+  def find(ldap_dn, klass)
+    filter, base = Ldap::Connection.split_dn(ldap_dn)
     filter = Net::LDAP::Filter.join(klass::DEFAULT_FILTER, filter)
     entries = search(filter, base: base)
     return nil if entries.nil?
+
     entries = entries.map do |e|
       klass.create(self, e)
     end

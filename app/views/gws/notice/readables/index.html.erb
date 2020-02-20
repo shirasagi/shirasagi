@@ -14,10 +14,15 @@
   end
 %>
 
+<% @index_title = proc do |item| %>
+  <%= link_to item.name, { action: :show, id: item }, class: "title" %>
+  <% if item.new_flag? %><span class="gws-board-flag-new"></span><% end %>
+<% end %>
+
 <% @index_meta = proc do |item| %>
   <span class="id">#<%= item.id %></span>
   <span class="datetime"><%= item.updated.strftime("%Y/%m/%d %H:%M") %></span>
-  <span class="user"><%= t("gws/board.options.browsed_state.#{item.browsed?(@cur_user) ? 'read' : 'unread'}") %></span>
+  <span class="browsed"><%= t("gws/board.options.browsed_state.#{item.browsed?(@cur_user) ? 'read' : 'unread'}") %></span>
   <span class="user"><%= item.contributor_name.presence || item.user_long_name %></span>
   <% if item.folder.present? && item.folder.for_post_reader?(@cur_site, @cur_user) %>
     <span class="folder">

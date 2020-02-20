@@ -25,7 +25,7 @@
     <% @items.each do |item| %>
       <tr>
         <td><%= item.name %></td>
-        <td><%=br item.categories.map(&:name).join("\n") %></td>
+        <td><%=br item.categories.map(&:name) %></td>
         <td><%=br item.remark %></td>
       </tr>
     <% end %>

@@ -72,3 +72,8 @@ ja:
         parent: 親フォルダー
         children: 配下のコンテンツ
         state: ステータス
+
+  job:
+    models:
+      history/trash/trash_purge_job: ゴミ箱掃除
+      history/history_log/purge_job: 操作履歴削除

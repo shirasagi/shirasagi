@@ -10,7 +10,7 @@
   <tbody>
     <tr>
       <td><%= @cur_node.name %></td>
-      <td><%=br @cur_node.categories.map(&:name).join("\n") %></td>
+      <td><%=br @cur_node.categories.map(&:name) %></td>
       <td><%=br @cur_node.remark %></td>
     </tr>
   </tbody>

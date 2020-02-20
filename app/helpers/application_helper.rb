@@ -9,13 +9,25 @@ module ApplicationHelper
     end
   end
 
-  def br(str)
-    h(str.to_s).gsub(/(\r\n?)|(\n)/, "<br />").html_safe
+  def br(*args)
+    options = args.extract_options!
+    option_html_escape = options.fetch(:html_escape, true)
+
+    array = args
+    array.flatten!
+    # stringify
+    array.map! { |value| value.to_s }
+    # html escape
+    array.map! { |value| h(value) } if option_html_escape
+    # replace new-line with "<br />"
+    array.map! { |value| value.gsub(/\R/, "<br />") }
+
+    array.join("<br />").html_safe
   end
 
-  def br_not_h(str)
-    str.to_s.gsub(/(\r\n?)|(\n)/, "<br />").html_safe
-  end
+  #def br_not_h(str)
+  #  br(str, html_escape: false)
+  #end
 
   def paragraph(str)
     texts = h(str.to_s).split(/(\r\n?)|(\n)/)
@@ -215,5 +227,14 @@ module ApplicationHelper
 
     # '<img style="vertical-align:middle" src="/assets/img/loading.gif" alt="loading.." border="0" widtth="16" height="11" />'
     image_tag("/assets/img/loading.gif", options)
+  end
+
+  def status_code_to_symbol(status_code)
+    return status_code if !status_code.numeric?
+
+    message = ::Rack::Utils::HTTP_STATUS_CODES[status_code.to_i]
+    return status_code if message.blank?
+
+    message.downcase.gsub(/\s|-|'/, '_').to_sym
   end
 end

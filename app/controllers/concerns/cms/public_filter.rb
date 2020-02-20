@@ -5,7 +5,7 @@ module Cms::PublicFilter
   include Cms::PublicFilter::Page
 
   included do
-    rescue_from StandardError, with: :rescue_action
+    # rescue_from StandardError, with: :rescue_action
     before_action :ensure_site_presence
     before_action :set_request_path
     #before_action :redirect_slash, if: ->{ request.env["REQUEST_PATH"] =~ /\/[^\.]+[^\/]$/ }
@@ -212,13 +212,17 @@ module Cms::PublicFilter
   end
 
   def page_not_found
+    request.env["action_dispatch.show_exceptions"] = false if @preview
     raise "404"
   end
 
   def rescue_action(exception = nil)
-    return render_error(exception, status: exception.to_s.to_i) if exception.to_s.numeric?
-    return render_error(exception, status: 404) if exception.is_a? Mongoid::Errors::DocumentNotFound
-    return render_error(exception, status: 404) if exception.is_a? ActionController::RoutingError
+    if !@preview
+      return render_error(exception, status: exception.to_s.to_i) if exception.to_s.numeric?
+      return render_error(exception, status: 404) if exception.is_a? Mongoid::Errors::DocumentNotFound
+      return render_error(exception, status: 404) if exception.is_a? ActionController::RoutingError
+    end
+
     raise exception
   end
 

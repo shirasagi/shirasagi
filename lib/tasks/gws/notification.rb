@@ -12,6 +12,7 @@ module Tasks
             ::Gws::Reminder::NotificationJob.bind(site_id: site.id).perform_now(opts)
             ::Gws::Notice::NotificationJob.bind(site_id: site.id).perform_now
             ::Gws::Survey::NotificationJob.bind(site_id: site.id).perform_now
+            ::Gws::Board::NotificationJob.bind(site_id: site.id).perform_now
           end
         end
 

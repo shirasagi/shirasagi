@@ -9,5 +9,5 @@
   <dd><%= @item.triggers.first.try(:name) %></dd>
 
   <dt><%= @model.t :action_ids %></dt>
-  <dd><%= br @item.actions.pluck(:name).join("\n") %></dd>
+  <dd><%= br @item.actions.pluck(:name) %></dd>
 </dl>

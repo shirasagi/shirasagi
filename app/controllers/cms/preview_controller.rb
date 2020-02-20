@@ -216,13 +216,6 @@ class Cms::PreviewController < ApplicationController
       chunks << convert_html_to_preview(body, mode: mode, rendered: @contents_env["ss.rendered"], desktop_pc: desktop_pc)
     end
     render html: chunks.join.html_safe, layout: false
-  rescue => exception
-    if exception.to_s.numeric?
-      status = exception.to_s.to_i
-      file = error_html_file(status)
-      return ss_send_file(file, status: status, type: Fs.content_type(file), disposition: :inline)
-    end
-    raise
   end
 
   public

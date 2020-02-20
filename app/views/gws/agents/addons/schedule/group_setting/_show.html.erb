@@ -29,6 +29,9 @@
       <% else %>
         <%= @item.label("schedule_#{type}_tab_state") %>
       <% end %>
+      <% if @item.respond_to?("schedule_#{type}_extra_state") && @item.send("schedule_#{type}_extra_state").present? %>
+        + <%= @item.label("schedule_#{type}_extra_state") %>
+      <% end %>
     </dd>
   <% end %>
 </dl>

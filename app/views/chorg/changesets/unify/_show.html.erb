@@ -11,5 +11,5 @@
   <dt><%= t "chorg.views.#{params[:type]}_changesets.before_unify" %></dt>
   <dd></dd>
   <dt><%= t "chorg.views.#{params[:type]}_changesets.name" %></dt>
-  <dd><%= br @item.sources.map { |e| e["name"] }.join("\n") %></dd>
+  <dd><%= br @item.sources.map { |e| e["name"] } %></dd>
 </dl>

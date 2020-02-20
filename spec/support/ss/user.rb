@@ -16,11 +16,11 @@ def ss_site
   ss_site
 end
 
-def login_user(user)
+def login_user(user, pass: nil)
   visit sns_login_path
   within "form" do
     fill_in "item[email]", with: user.email
-    fill_in "item[password]", with: "pass"
+    fill_in "item[password]", with: pass.presence || user.in_password.presence || "pass"
     set_value_to_hidden_input('input#ref', '/robots.txt')
     click_button "ログイン"
   end

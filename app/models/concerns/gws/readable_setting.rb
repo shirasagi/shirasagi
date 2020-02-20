@@ -3,6 +3,7 @@ module Gws::ReadableSetting
 
   included do
     class_variable_set(:@@_readable_setting_include_custom_groups, nil)
+    class_variable_set(:@@_requires_read_permission_to_read, true)
 
     field :readable_setting_range, type: String, default: 'select'
     field :readable_groups_hash, type: Hash
@@ -23,7 +24,9 @@ module Gws::ReadableSetting
 
     # Allow readable settings and readable permissions.
     scope :readable, ->(user, opts = {}) {
-      return none unless self.allowed?(:read, user, opts)
+      if requires_read_permission_to_read?
+        return none unless self.allowed?(:read, user, opts)
+      end
       or_conds = readable_conditions(user, opts)
       where("$and" => [{ "$or" => or_conds }])
     }
@@ -33,17 +36,21 @@ module Gws::ReadableSetting
     return true if readable_group_ids.present?
     return true if readable_member_ids.present?
     return true if readable_custom_group_ids.present?
+
     false
   end
 
   def readable?(user, opts = {})
     opts[:site] ||= self.site
 
-    return false unless self.class.allowed?(:read, user, opts)
+    if self.class.requires_read_permission_to_read?
+      return false unless self.class.allowed?(:read, user, opts)
+    end
     return true if !readable_setting_present?
     return true if readable_group_ids.any? { |m| user.group_ids.include?(m) }
     return true if readable_member_ids.include?(user.id)
     return true if readable_custom_groups.any? { |m| m.member?(user) }
+
     false
   end
 
@@ -150,10 +157,18 @@ module Gws::ReadableSetting
       or_conds
     end
 
+    def requires_read_permission_to_read?
+      class_variable_get(:@@_requires_read_permission_to_read)
+    end
+
     private
 
     def readable_setting_include_custom_groups
       class_variable_set(:@@_readable_setting_include_custom_groups, true)
+    end
+
+    def no_needs_read_permission_to_read
+      class_variable_set(:@@_requires_read_permission_to_read, false)
     end
   end
 end

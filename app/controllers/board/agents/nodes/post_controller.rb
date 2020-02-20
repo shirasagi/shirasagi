@@ -13,7 +13,7 @@ class Board::Agents::Nodes::PostController < ApplicationController
 
   def deny
     if @cur_node.deny_ips.present?
-      remote_ip = request.env["HTTP_X_REAL_IP"] || request.remote_ip
+      remote_ip = remote_addr
       @cur_node.deny_ips.each do |deny_ip|
         raise "403" if remote_ip.match?(/^#{deny_ip}/)
       end

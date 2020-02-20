@@ -50,6 +50,7 @@ ja:
       gws/workflow/column_setting: 入力設定
       gws/workflow/custom_form: 入力内容
       gws/workflow/approver_print: 承認
+      gws/workflow/group_setting: ワークフロー
 
   gws_role:
     use_gws_workflow: ワークフローの利用
@@ -106,6 +107,8 @@ ja:
       gws/workflow/column:
         name: 項目名
         order: 並び順
+      gws/addon/workflow/group_setting:
+        workflow_new_days: 新着表示期間
 
   tooltip:
     gws/workflow/file:
@@ -130,6 +133,9 @@ ja:
       order:
         - 並び順を入力します。
         - 数字が小さいほど上位に表示されます。
+    gws/addon/workflow/group_setting:
+      workflow_new_days:
+        - 新着表示期間を入力します。
 
   job:
     models:
