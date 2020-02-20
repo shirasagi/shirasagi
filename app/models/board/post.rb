@@ -19,6 +19,8 @@ class Board::Post
   permit_params :captcha, :captcha_key
 
   validates :poster, presence: true
+  validates :email, email: true
+  validates :poster_url, url: true
   validates :node_id, presence: true
 
   validate :validate_text, if: -> { node.text_size_limit != 0 }
