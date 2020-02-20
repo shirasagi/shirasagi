@@ -26,8 +26,8 @@
       <%= t("board.views.poster") %>
       <%= item.poster %>
     </span>
-    <% if @cur_node.show_email? %>
-      <%= mail_to item.email, item.email, class: "email" if item.email.present? %>
+    <% if @cur_node.show_email? && item.email.present? && ::EmailValidator::REGEXP.match?(item.email) %>
+      <%= mail_to item.email, item.email, class: "email" %>
     <% end %>
     <% if @cur_node.show_url? %>
       <%= link_to item.poster_url, item.poster_url, class: "url" if item.poster_url.present? %>
