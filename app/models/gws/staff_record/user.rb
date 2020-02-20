@@ -109,24 +109,17 @@ class Gws::StaffRecord::User
     false
   end
 
-  def update_all_title_orders(title)
-    self.where(title_ids: title.id).each do |item|
-      item.send(:set_title_order, title.group_id, title.order)
-      item.save
-    end
+  private
+
+  def set_section_order
+    item = Gws::StaffRecord::Group.where(site_id: site_id, year: year, name: section_name).first
+    self.section_order = item ? item.order : nil
   end
 
   def set_title_ids
     title_ids = titles.reject { |m| m.group_id == cur_site.id }.map(&:id)
     title_ids << in_title_id.to_i if in_title_id.present?
     self.title_ids = title_ids
-  end
-
-  private
-
-  def set_section_order
-    item = Gws::StaffRecord::Group.where(site_id: site_id, year: year, name: section_name).first
-    self.section_order = item ? item.order : nil
   end
 
   def export_fields
