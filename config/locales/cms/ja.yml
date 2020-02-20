@@ -1041,6 +1041,8 @@ ja:
     cms/addon/captcha:
       captcha:
         - フォームに画像認証を利用する場合は「使用する」を選択してください。
+      captcha_test:
+        - 認証画像の表示を確認します。
 
     cms/role:
       permission_level:
