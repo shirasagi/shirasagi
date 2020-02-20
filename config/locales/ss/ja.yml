@@ -366,6 +366,9 @@ ja:
         week: 週
         month: か月
         year: 年
+      gws_use:
+        disabled: 使用しない
+        enabled: 使用する
 
     tasks:
       started: 開始しました。
@@ -515,6 +518,7 @@ ja:
         activation_date: 有効期限（開始）
         expiration_date: 有効期限（終了）
         domains: ドメイン
+        gws_use: グループウェアの使用
       ss/user_group_history:
         created: 異動日時
         cms_site_id: CMSサイト
@@ -755,6 +759,9 @@ ja:
         - 有効期限の開始日を指定します。
       expiration_date:
         - 有効期限の終了日を指定します。
+      gws_use:
+        - グループウェアを使用するかどうかを指定します。
+        - 既定では、グループウェアを使用します。
     ss/document:
       title:
         - ページのタイトルに利用し、ブラウザのタイトルバーに表示されます。
