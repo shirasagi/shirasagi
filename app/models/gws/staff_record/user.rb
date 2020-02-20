@@ -90,6 +90,14 @@ class Gws::StaffRecord::User
     staff_records_view_options
   end
 
+  def name_with_code
+    if code.present?
+      "[#{code}] #{name}"
+    else
+      name
+    end
+  end
+
   def editable_charge?(user)
     permissions = user.gws_role_permissions
 
