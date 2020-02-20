@@ -29,8 +29,8 @@
     <% if @cur_node.show_email? && item.email.present? && ::EmailValidator::REGEXP.match?(item.email) %>
       <%= mail_to item.email, item.email, class: "email" %>
     <% end %>
-    <% if @cur_node.show_url? %>
-      <%= link_to item.poster_url, item.poster_url, class: "url" if item.poster_url.present? %>
+    <% if @cur_node.show_url? && item.poster_url.present? && item.poster_url.start_with?("http://", "https://") %>
+      <%= link_to item.poster_url, item.poster_url, class: "url" %>
     <% end %>
   </div>
   <nav class="action">
