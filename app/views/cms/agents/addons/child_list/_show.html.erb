@@ -1,5 +1,5 @@
+<% return if @item.try(:loop_format) == "liquid" %>
 <%= code_editor ".mod-cms-child_list .html", mode: :html, readonly: true %>
-
 <dl class="see mod-cms-child_list">
   <dt><%= @model.t :child_limit %></dt>
   <dd><%= @item.send :child_limit %></dd>
@@ -7,21 +7,21 @@
   <dt><%= @model.t :child_upper_html %></dt>
   <dd>
     <% if @item.child_upper_html.present? %>
-    <%= text_area_tag :child_upper_html, @item.child_upper_html, class: "html" %>
+      <%= text_area_tag :child_upper_html, @item.child_upper_html, class: "html" %>
     <% end %>
   </dd>
 
   <dt><%= @model.t :child_loop_html %></dt>
   <dd>
     <% if @item.child_loop_html.present? %>
-    <%= text_area_tag :child_loop_html, @item.child_loop_html, class: "html", style: "height: 100px;"  %>
+      <%= text_area_tag :child_loop_html, @item.child_loop_html, class: "html", style: "height: 100px;"  %>
     <% end %>
   </dd>
 
   <dt><%= @model.t :child_lower_html %></dt>
   <dd>
     <% if @item.child_lower_html.present? %>
-    <%= text_area_tag :child_lower_html, @item.child_lower_html, class: "html" %>
+      <%= text_area_tag :child_lower_html, @item.child_lower_html, class: "html" %>
     <% end %>
   </dd>
 </dl>
