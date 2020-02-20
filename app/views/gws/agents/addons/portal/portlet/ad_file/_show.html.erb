@@ -4,7 +4,7 @@
   <div id="selected-files">
     <% @item.ad_files.each do |file| %>
       <% file = file.becomes_with(SS::LinkFile) %>
-      <div id="file-<%= file.id %>" class="file-view">
+      <div id="file-<%= file.id %>" class="file-view" data-file-id="<%= file.id %>">
         <%= link_to file.url, class: :thumb, target: "_blank" do %>
           <% if file.image? %>
             <%= image_tag file.thumb_url, alt: file.name %>

@@ -1,4 +1,4 @@
-<div class="file-view">
+<div class="file-view" data-file-id="<%= @item.id %>">
   <a class="thumb" href="<%= view_facility_apis_temp_file_path(id: @item) %>" target="_blank">
     <% if @item.image? %>
     <img src="<%= thumb_facility_apis_temp_file_path(id: @item, _: @item.updated.to_i) %>" alt="<%= @item.basename %>" />
