@@ -6,6 +6,46 @@ class Rss::ImportWeatherXmlJob < Rss::ImportBase
     set_model Rss::WeatherXmlPage
   end
 
+  class << self
+    def pull_all
+      SS.config.rss.weather_xml["urls"].each do |url|
+        pull_one(url)
+      end
+    end
+
+    def pull_one(url)
+      http_client = Faraday.new(url: url) do |builder|
+        builder.request  :url_encoded
+        builder.response :logger, Rails.logger
+        builder.adapter Faraday.default_adapter
+      end
+      http_client.headers[:user_agent] += " (SHIRASAGI/#{SS.version}; PID/#{Process.pid})"
+
+      resp = http_client.get
+      return false if resp.status != 200
+
+      each_node do |node|
+        site = node.site
+        file = Rss::TempFile.create_from_post(site, resp.body, resp.headers['Content-Type'].presence || "application/xml")
+        job = Rss::ImportWeatherXmlJob.bind(site_id: site, node_id: node)
+        job.perform_now(file.id)
+      end
+
+      true
+    end
+
+    private
+
+    def each_node
+      all_ids = Rss::Node::WeatherXml.all.and_public.pluck(:id)
+      all_ids.each_slice(20) do |ids|
+        Rss::Node::WeatherXml.all.and_public.in(id: ids).to_a.each do |node|
+          yield node
+        end
+      end
+    end
+  end
+
   private
 
   def before_import(file, *args)
@@ -29,7 +69,21 @@ class Rss::ImportWeatherXmlJob < Rss::ImportBase
 
   def gc_rss_tempfile
     return if rand(100) >= 20
-    Rss::TempFile.with_repl_master.lt(updated: 2.weeks.ago).destroy_all
+
+    threshold = 2.weeks.ago
+    Rss::TempFile.with_repl_master.lt(updated: threshold).destroy_all
+    remove_old_cache(threshold)
+  end
+
+  def remove_old_cache(threshold)
+    data_dir = SS.config.rss.weather_xml["data_cache_dir"]
+    return if data_dir.blank?
+
+    data_dir = ::File.expand_path(data_dir, Rails.root)
+    ::Dir.glob("*.xml", base: data_dir).each do |file_path|
+      file_path = ::File.expand_path(file_path, data_dir)
+      ::FileUtils.rm_f(file_path) if ::File.mtime(file_path) < threshold
+    end
   end
 
   def import_rss_item(*args)
@@ -51,28 +105,43 @@ class Rss::ImportWeatherXmlJob < Rss::ImportBase
     page
   end
 
+  # override Rss::ImportBase#remove_unimported_pages to reduce destroy call
   def remove_unimported_pages
-    return if @rss_links.blank? || @min_released.blank? || @max_released.blank?
-
-    criteria = model.site(site).node(node)
-    criteria = criteria.between(released: @min_released..@max_released)
-    criteria = criteria.nin(rss_link: @rss_links)
-    criteria.each do |item|
-      item.destroy
-      put_history_log(item, :destroy)
-    end
   end
 
   def download(url)
-    uri = URI.parse(url)
-    http = Net::HTTP.new(uri.host, uri.port)
-    http.use_ssl = true if uri.scheme == 'https'
-    req = Net::HTTP::Get.new(uri.path)
-    res = http.request(req)
-    return nil if res.code != '200'
-    res.body.force_encoding('UTF-8')
+    cache(url) do
+      http_client = Faraday.new(url: url) do |builder|
+        builder.request  :url_encoded
+        builder.response :logger, Rails.logger
+        builder.adapter Faraday.default_adapter
+      end
+      http_client.headers[:user_agent] += " (SHIRASAGI/#{SS.version}; PID/#{Process.pid})"
+
+      resp = http_client.get
+      break if resp.status != 200
+
+      resp.body.force_encoding('UTF-8')
+    end
   rescue => e
     Rails.logger.warn("#{e.class} (#{e.message}):\n  #{e.backtrace.join("\n  ")}")
+  end
+
+  def cache(url)
+    data_dir = SS.config.rss.weather_xml["data_cache_dir"]
+    return yield if data_dir.blank?
+
+    data_dir = ::File.expand_path(data_dir, Rails.root)
+    ::FileUtils.mkdir_p(data_dir) unless ::Dir.exists?(data_dir)
+
+    hash = Digest::MD5.hexdigest(url)
+    file_path = ::File.join(data_dir, "#{hash}.xml")
+    return ::File.read(file_path) if ::File.exists?(file_path)
+
+    data = yield
+    ::File.write(file_path, data)
+
+    data
   end
 
   def extract_event_id(xml)
@@ -140,7 +209,7 @@ class Rss::ImportWeatherXmlJob < Rss::ImportBase
           pref_code: pref_code,
           area_name: area_name,
           area_code: area_code,
-          area_max_int: area_max_int,
+          area_max_int: area_max_int
         }
       end
     end
@@ -186,7 +255,6 @@ class Rss::ImportWeatherXmlJob < Rss::ImportBase
 
   def execute_weather_xml_filters
     return if @imported_pages.blank?
-    ids = @imported_pages.select { |item| !item.destroyed? }.map(&:id)
-    Rss::ExecuteWeatherXmlFiltersJob.bind(site_id: site.id, node_id: node.id).perform_later(ids)
+    Rss::ExecuteWeatherXmlFiltersJob.bind(site_id: site.id, node_id: node.id).perform_later(@imported_pages.map(&:id))
   end
 end
