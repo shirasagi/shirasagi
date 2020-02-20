@@ -164,6 +164,7 @@ ja:
       not_found_webmail_role: "ウェブメール権限「%{name}」が見つかりません。"
       not_found_main_group: "グループ（主）「%{name}」が見つかりません。"
       not_found_user_title: "役職コード「%{code}」が見つかりません。"
+      url: は有効なURLを入力してください。
     template:
       body: 次の項目を確認してください。
       header:
