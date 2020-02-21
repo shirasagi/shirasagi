@@ -353,7 +353,6 @@ GEM
       httpauth
       omniauth (~> 1.0)
       omniauth-oauth2 (~> 1.1)
-    open_uri_redirections (0.2.1)
     parallel (1.17.0)
     parser (2.6.3.0)
       ast (~> 2.4.0)
@@ -664,7 +663,6 @@ DEPENDENCIES
   omniauth-google-oauth2!
   omniauth-twitter
   omniauth-yahoojp
-  open_uri_redirections
   pry-byebug
   pry-doc
   pry-rails
