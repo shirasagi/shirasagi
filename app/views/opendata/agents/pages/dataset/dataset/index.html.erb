@@ -140,7 +140,7 @@ categories = [
                   </div>
                 <% end %>
                 <div class="download-wrap">
-                  <%= link_to t("opendata.labels.downloaded"), rs.download_url, class: "download" %>
+                  <%= link_to t("opendata.labels.downloaded"), rs.download_url, class: "download", "data-url": rs.data_url %>
                 </div>
                 <div class="clipboard-wrap">
                   <% url = rs.source_url.present? ? rs.source_url : rs.download_full_url %>
@@ -194,19 +194,19 @@ categories = [
                   </span>
                 <% end %>
 
-                <% if urs.tsv_present? %>
-                  <div class="content-wrap">
-                    <%= link_to t("opendata.labels.preview"), urs.content_url, class: "content" %>
-                  </div>
-                <% end %>
+                <div class="content-wrap">
+                  <%= link_to(I18n.t("opendata.labels.preview"), urs.content_url, class: "content") if urs.tsv_present? %>
+                </div>
 
-                <div class="download-wrap"><%= link_to t("opendata.labels.downloaded"), urs.download_url, class: "download", "data-url": urs.file.url %></div>
+                <div class="download-wrap">
+                  <%= link_to(t("opendata.labels.downloaded"), urs.download_url, class: "download", "data-url": urs.original_url) %>
+                </div>
 
                 <div class="clipboard-wrap">
-                  <%= link_to t("opendata.links.copy_url"), urs.url,
+                  <%= link_to t("opendata.links.copy_url"), urs.download_url,
                     "class" => "ss-clipboard-copy",
                     "data-clip-attr" => "data-full-url",
-                    "data-full-url" => urs.full_url
+                    "data-full-url" => ::File.join(@cur_site.full_url, urs.download_url)
                   %>
                 </div>
               </div>
