@@ -102,6 +102,8 @@ module Cms::PublicFilter::Layout
       response.body = %(#{notice_html}#{response.body})
     end
 
+    html = render_kana_tool(html)
+    html = render_theme_tool(html)
     html = render_template_variables(html)
     html.sub!(/(\{\{ yield \}\}|<\/ yield \/>)/) do
       body = []
@@ -230,6 +232,20 @@ module Cms::PublicFilter::Layout
     html.join
   end
 
+  def render_kana_tool(html)
+    label = try(:kana_path?) ? I18n.t("cms.links.ruby_off") : I18n.t("cms.links.ruby_on")
+    html.gsub(/(<.+? id="ss-kana".*?>)(.*?)(<\/.+?>)/) do
+      "#{$1}#{label}#{$3}"
+    end
+  end
+
+  def render_theme_tool(html)
+    template = Cms::ThemeTemplate.template(@cur_site)
+    html.gsub(/(<.+? id="ss-theme".*?>)(.*?)(<\/.+?>)/) do
+      "#{$1}#{template}#{$3}"
+    end
+  end
+
   def date_convert(date, format = nil, datetime = nil)
     return "" unless date
 
@@ -282,6 +298,7 @@ module Cms::PublicFilter::Layout
 
       @javascript_config["site_url"] = @cur_site.url
       @javascript_config["kana_url"] = @cur_site.kana_url
+      @javascript_config["translate_url"] = @cur_site.translate_url
 
       conf = Cms::ThemeTemplate.to_config(site: @cur_site, preview_path: preview_path?)
       @javascript_config.merge!(conf)
