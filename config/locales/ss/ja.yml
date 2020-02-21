@@ -28,7 +28,6 @@ ja:
     encoding: 文字コード
     text_zoom: 文字サイズ
     default_here_label: "詳細はこちら⇒"
-    errors: エラー
     wave_dash: ～
     color: 表示色
     bg_color: 背景色
@@ -410,6 +409,13 @@ ja:
       ss/elasticsearch/site_setting: サイト内検索設定
       ss/site_usage: 使用量
 
+  activemodel:
+    attributes:
+      ss/download_param:
+        encoding: 文字コード
+      ss/import_param:
+        in_file: ファイル
+
   mongoid:
     models:
       session: セッション
@@ -787,12 +793,12 @@ ja:
       order:
         - フォルダーの並び順の設定で「指定順」を指定している場合に利用します。
         - 数字が小さいほど一覧ページの上位にリンクが表示されます。
-      keywords: &tooltip_keywords
+      keywords:
         - 検索エンジン用のキーワードの設定に利用します。
         - 「,」で区切ることにより複数のキーワードの設定が可能です。
       description:
         - 検索エンジン用のページ概要の設定に利用します。
-      summary_html: &tooltip_summary_html
+      summary_html:
         - 一覧ページで表示するページの概要に利用します。
         - |-
           一覧系のフォルダーのループHTMLの設定で下記のように記述した箇所に表示されます。
