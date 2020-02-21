@@ -6,6 +6,7 @@ module SS::Relation::File
     def belongs_to_file(name, opts = {})
       store = opts[:store_as] || "#{name.to_s.singularize}_id"
       class_name = opts[:class_name] || "SS::File"
+      required = opts[:required] || false
 
       belongs_to name.to_sym, foreign_key: store, class_name: class_name, dependent: :destroy
 
@@ -14,6 +15,7 @@ module SS::Relation::File
       permit_params "in_#{name}_resizing" => []
 
       validate "validate_relation_#{name}".to_sym, if: ->{ send("in_#{name}").present? }
+      validate "validate_relation_#{name}_required".to_sym, if: -> { required }
       before_save "save_relation_#{name}".to_sym, if: ->{ send("in_#{name}").present? }
       before_save "remove_relation_#{name}".to_sym, if: ->{ send("rm_#{name}").to_s == "1" }
       after_save "update_relation_#{name}_state".to_sym, if: ->{ send(name).present? }
@@ -27,6 +29,12 @@ module SS::Relation::File
           errors.add :base, msg
         end
         false
+      end
+
+      define_method("validate_relation_#{name}_required") do
+        return if send("in_#{name}").present?
+        return if send(name)
+        errors.add "#{name}_id", :blank
       end
 
       define_method("save_relation_#{name}") do
