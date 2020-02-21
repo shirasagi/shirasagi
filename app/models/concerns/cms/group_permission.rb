@@ -26,6 +26,10 @@ module Cms::GroupPermission
     (self.group_ids & user.group_ids).present?
   end
 
+  def root_owned?(user)
+    false
+  end
+
   def permission_level_options
     [%w(1 1), %w(2 2), %w(3 3)]
   end
@@ -41,7 +45,7 @@ module Cms::GroupPermission
     if owned
       is_owned = owned
     elsif new_record?
-      is_owned = node ? node.owned?(user) : false
+      is_owned = node ? node.owned?(user) : root_owned?(user)
     else
       is_owned = owned?(user)
     end
