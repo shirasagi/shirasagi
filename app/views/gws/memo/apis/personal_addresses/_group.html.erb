@@ -39,3 +39,5 @@
   <% end %>
   </tbody>
 </table>
+
+<%= paginate @group_items, param_name: "group_page", params: { fragment: '#gws-memo-persona-address-group' } if @group_items.try(:current_page) %>
