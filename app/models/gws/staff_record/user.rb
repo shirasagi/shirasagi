@@ -124,7 +124,7 @@ class Gws::StaffRecord::User
 
   def export_fields
     %w(
-      id name code order kana multi_section section_name tel_ext
+      id name code order kana multi_section section_name title_ids tel_ext
       charge_name charge_address charge_tel divide_duties remark staff_records_view divide_duties_view
       group_ids user_ids permission_level
     )

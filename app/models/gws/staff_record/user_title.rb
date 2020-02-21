@@ -19,10 +19,6 @@ class Gws::StaffRecord::UserTitle
   default_scope -> { order_by(order: -1) }
   scope :site, ->(site) { where group_id: site.id }
 
-  def users
-    Gws::User.in(title_ids: self.id)
-  end
-
   private
 
   def set_group_id
