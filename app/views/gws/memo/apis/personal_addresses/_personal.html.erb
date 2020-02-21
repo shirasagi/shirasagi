@@ -57,3 +57,5 @@
   <% end %>
   </tbody>
 </table>
+
+<%= paginate @items, params: { fragment: '#gws-memo-persona-address-personal' } if @items.try(:current_page) %>

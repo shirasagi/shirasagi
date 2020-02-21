@@ -63,7 +63,6 @@ this.Syntax_Checker = (function () {
     this.$elBody.append(ul);
 
     this.moveLast();
-    SS_Tooltips.render(".detail");
 
     $(window).trigger('resize');
 
@@ -71,11 +70,8 @@ this.Syntax_Checker = (function () {
   };
 
   ResultBox.prototype.appendMessage = function (ul, checks, errors) {
-    var results, self;
-    var correct, detail, li, message, code, column;
-
-    results = [];
-    self = this;
+    var self = this;
+    var correct, li, message, code, column;
 
     var errorHash = {};
 
@@ -109,10 +105,10 @@ this.Syntax_Checker = (function () {
           li = ul.find('> ul:last li:last');
           message = $('<span class="message detail">' + error["msg"] + '</span>');
           if (error["detail"]) {
-            detail = $('<ul>').appendTo(message);
+            var tooltip = $('<div class="tooltip">!</div>').appendTo(message);
+            var detail = $('<ul class="tooltip-content">').appendTo(tooltip);
             $.each(error["detail"], function () {
-              detail.append("<li>" + this + "</li>");
-              detail.hide();
+              detail.append("<li>" + this + "<br></li>");
             });
           }
           li.append(message);

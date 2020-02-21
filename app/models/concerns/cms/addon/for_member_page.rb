@@ -4,7 +4,12 @@ module Cms::Addon
     extend SS::Addon
 
     def for_member_enabled?
-      parent.try(:for_member_enabled?) || false
+      return false if parent.blank?
+
+      parent_node = parent.becomes_with_route
+      return false if parent_node.blank? || !parent_node.respond_to?(:for_member_enabled?)
+
+      parent_node.for_member_enabled?
     end
 
     def for_member_disabled?

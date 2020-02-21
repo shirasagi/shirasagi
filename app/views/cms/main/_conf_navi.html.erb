@@ -59,6 +59,9 @@
   <% if SS.config.recommend.disable.blank? && Recommend::History::Log.allowed?(:read, @cur_user, site: @cur_site) %>
     <h3><%= link_to t("recommend.main"), recommend_history_logs_tokens_path %></h3>
   <% end %>
+  <% if Translate::TextCache.allowed?(:edit, @cur_user, site: @cur_site) %>
+    <h3><%= link_to t("translate.main"), cms_translate_main_path %></h3>
+  <% end %>
   <% if Rdf::Vocab.allowed?(:edit, @cur_user, site: @cur_site) %>
     <h3><%= link_to t("rdf.links.vocabs"), rdf_vocabs_path %></h3>
   <% end %>

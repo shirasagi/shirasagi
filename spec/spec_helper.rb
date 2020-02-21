@@ -135,6 +135,22 @@ def unique_id
   num.to_s(36)
 end
 
+def unique_tel
+  "99-#{Array.new(4) { rand(0..9 ) }.join}-#{Array.new(4) { rand(0..9 ) }.join}"
+end
+
+def unique_domain
+  "#{unique_id}.example.jp"
+end
+
+def unique_url
+  "#{%w(http https).sample}://#{unique_domain}/#{unique_id}/"
+end
+
+def unique_email
+  "#{unique_id}@example.jp"
+end
+
 def ss_japanese_text(length: 10, separator: '')
   @japanese_chars ||= begin
     hiragana = ('あ'..'ん').to_a

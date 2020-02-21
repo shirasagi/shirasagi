@@ -203,7 +203,7 @@ class Gws::Memo::MessageExportJob < Gws::ApplicationJob
   end
 
   def gen_message_id(data)
-    @domain_for_message_id ||= site.canonical_domain.presence || SS.config.mail.domain.presence || "localhost.local"
+    @domain_for_message_id ||= site.canonical_domain.presence || SS.config.gws.canonical_domain.presence || "localhost.local"
     "<#{data["id"].to_s.presence || data["_id"].to_s.presence || SecureRandom.uuid}@#{@domain_for_message_id}>"
   end
 

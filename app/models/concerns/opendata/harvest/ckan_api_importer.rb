@@ -150,6 +150,7 @@ module Opendata::Harvest::CkanApiImporter
     filename = attributes["name"] + ::File.extname(url)
     format = attributes["format"]
     format = ::File.extname(url).delete(".").sub(/\?.*$/, "").downcase if format.blank?
+    format = "html" if format.blank?
 
     if external_resouce?(url, format)
       # set source url

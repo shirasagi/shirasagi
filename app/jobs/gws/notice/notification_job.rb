@@ -47,7 +47,9 @@ class Gws::Notice::NotificationJob < Gws::ApplicationJob
     return if recipients.blank?
 
     path = Rails.application.routes.url_helpers.gws_notice_readable_path(
-      protocol: site.canonical_scheme, host: site.canonical_domain, site: site, folder_id: '-', category_id: '-', id: notice
+      protocol: site.canonical_scheme.presence || SS.config.gws.canonical_scheme,
+      host: site.canonical_domain.presence || SS.config.gws.canonical_domain,
+      site: site, folder_id: '-', category_id: '-', id: notice
     )
 
     i18n_key = Gws::Notice::Post.model_name.i18n_key
