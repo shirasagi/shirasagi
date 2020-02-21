@@ -39,7 +39,9 @@ FactoryBot.define do
       ldap_dn { "cn=#{name},dc=example,dc=jp" }
     end
 
-    factory :cms_user, traits: [:cms_user_fixed_name, :cms_user_uid, :cms_user_email, :cms_user_org_id, :cms_user_org_uid]
+    factory :cms_user, traits: [:cms_user_fixed_name, :cms_user_uid, :cms_user_email, :cms_user_org_id, :cms_user_org_uid] do
+      deletion_lock_state "locked"
+    end
     factory :cms_test_user, traits: [:cms_user_rand_name, :cms_user_uid, :cms_user_email]
     factory :cms_ldap_user, traits: [:cms_user_rand_name, :cms_user_uid, :cms_user_email, :cms_user_ldap]
   end

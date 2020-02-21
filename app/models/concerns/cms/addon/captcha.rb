@@ -5,7 +5,8 @@ module Cms::Addon
 
     included do
       field :captcha, type: String, default: "enabled"
-      permit_params :captcha
+      field :captcha_test, type: String
+      permit_params :captcha, :captcha_test
     end
 
     def captcha_options

@@ -3,7 +3,9 @@
     <% if @model.allowed?(:edit, @cur_user, site: @cur_site) %>
       <%= link_to t('ss.links.new'), action: :new %>
     <% end %>
-  <% elsif params[:action] =~ /new|create|lock/ %>
+    <%= link_to t('ss.links.download'), action: :download_all rescue nil %>
+    <%= link_to t('ss.links.import'), action: :import rescue nil %>
+  <% elsif params[:action] =~ /new|create|lock|download_all|import/ %>
     <%= link_to t('ss.links.back_to_index'), action: :index %>
   <% elsif params[:action] =~ /edit|update|delete|move/ %>
     <% if @item.allowed?(:read, @cur_user, site: @cur_site) %>

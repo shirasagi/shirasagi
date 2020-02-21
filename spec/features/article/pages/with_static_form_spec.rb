@@ -45,8 +45,10 @@ describe 'article_pages', type: :feature, dbscope: :example, js: true do
   let(:column6_value2) { column6.select_options.sample }
   let(:column7_value2) { column7.select_options.sample }
   let(:column8_image_text2) { unique_id }
+  let!(:body_layout) { create(:cms_body_layout) }
 
   before do
+    cms_role.add_to_set(permissions: %w(read_cms_body_layouts))
     node.st_form_ids = [ form.id ]
     node.save!
   end
@@ -59,6 +61,7 @@ describe 'article_pages', type: :feature, dbscope: :example, js: true do
       # Create
       #
       visit new_article_page_path(site: site, cid: node)
+      expect(page).to have_selector('#item_body_layout_id')
 
       within 'form#item-form' do
         fill_in 'item[name]', with: name
@@ -66,6 +69,7 @@ describe 'article_pages', type: :feature, dbscope: :example, js: true do
         find('.btn-form-change').click
 
         expect(page).to have_css("#addon-cms-agents-addons-form-page .addon-head", text: form.name)
+        expect(page).to have_no_selector('#item_body_layout_id', visible: true)
 
         within ".column-value-cms-column-textfield" do
           fill_in "item[column_values][][in_wrap][value]", with: column1_value
@@ -125,6 +129,8 @@ describe 'article_pages', type: :feature, dbscope: :example, js: true do
       # Update
       #
       visit article_pages_path(site: site, cid: node)
+      expect(page).to have_no_selector('#item_body_layout_id', visible: true)
+
       click_on name
       click_on I18n.t('ss.links.edit')
       within 'form#item-form' do

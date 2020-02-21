@@ -3,9 +3,23 @@
   <%= text_area_tag "mod-cms-body", value.value, id: nil, class: "column-free-html", style: "height: 400px;" %>
 
   <% if value.files.present? %>
-    <div style="margin-top: 10px;">
+    <div id="selected-files">
       <% value.files.each do |file| %>
-        <%= link_to file.name, file.url %><br>
+        <div class="file-view" data-file-id="<%= file.id %>">
+          <%= link_to file.url, class: :thumb, target: "_blank" do %>
+            <% if file.image? %>
+              <%= image_tag file.thumb_url, alt: file.name %>
+            <% else %>
+              <span class="ext icon-<%= file.extname %>"><%= file.extname %></span>
+            <% end %>
+          <% end %>
+
+          <div class="name">
+            <label>
+              <%= file.name %>
+            </label><br />
+          </div>
+        </div>
       <% end %>
     </div>
   <% end %>

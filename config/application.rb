@@ -18,7 +18,7 @@ require "sprockets/railtie"
 Bundler.require(*Rails.groups)
 
 module SS
-  mattr_reader(:version) { "1.12.2" }
+  mattr_reader(:version) { "1.12.3" }
 
   class Application < Rails::Application
     # Initialize configuration defaults for originally generated Rails version.
@@ -43,9 +43,10 @@ module SS
     Dir["#{config.root}/config/routes/**/routes.rb"].sort.each do |file|
       config.paths["config/routes.rb"] << file
     end
-    Dir["#{config.root}/config/routes/*/routes_end.rb"].sort.each do |file|
+    Dir["#{config.root}/config/routes/**/routes_end.rb"].sort.reverse_each do |file|
       config.paths["config/routes.rb"] << file
     end
+    config.paths["config/routes.rb"] << "#{config.root}/config/routes_end.rb"
 
     config.paths["config/initializers"] << "#{config.root}/config/after_initializers"
 

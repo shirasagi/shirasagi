@@ -92,6 +92,7 @@ ja:
 
       inquiry/addon/captcha:
         inquiry_captcha: 画像認証
+        captcha_test: 認証画像の表示確認
 
       inquiry/addon/notice:
         notice_state: 通知設定
@@ -158,6 +159,8 @@ ja:
     label: 画像の数字を入力してください
     message:
       default: が正しくありません
+    captcha_error: 画像認証はご利用いただけません。
+    captcha_button: 画像認証のテスト
 
   tooltip:
     inquiry/addon/message:
@@ -170,6 +173,8 @@ ja:
     inquiry/addon/captcha:
       inquiry_captcha:
         - フォームに画像認証を利用する場合は「使用する」を選択してください。
+      captcha_test:
+        - 認証画像の表示を確認します。
     inquiry/addon/notice:
       notice_state:
         - フォームへの投稿があったことを通知することが可能です。
@@ -229,10 +234,12 @@ ja:
         - 入力項目を二重に入力させ、入力内容を確認するかどうかを選択します。
       question:
         - FAQの新規作成時に回答データを引用するかどうかを選択します。
+        - 入力形式がファイル投稿の場合は利用できません。
       max_upload_file_size:
         - アップロード出来るファイルサイズを指定します。ファイルサイズをMB(メガバイト)単位で指定します。
       transfers:
         - 入力形式で「テキストボックス」「テキストエリア」を選択した場合の回答に特定キーワードが含まれた場合、転送するアドレスを入力します。
+        - 転送するにはフォルダーの通知設定を有効にする必要があります。
     inquiry/addon/release_plan:
       release_date:
         - 公開を開始する日時を指定します。
@@ -241,7 +248,7 @@ ja:
       close_date:
         - 公開を終了する日時を指定します。
         - 指定した日時が来るとメールフォームが非公開になります。
-    inquiry/addon/release_plan:
+    inquiry/addon/reception_plan:
       reception_start_date:
         - 回答受付開始日時を指定します。
         - 指定した日時が来ると回答入力フォームが公開されます。

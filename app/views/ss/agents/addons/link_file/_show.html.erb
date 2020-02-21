@@ -3,7 +3,7 @@
 <div class="see">
   <div id="selected-files">
     <% @item.files.each do |file| %>
-      <div id="file-<%= file.id %>" class="file-view">
+      <div id="file-<%= file.id %>" class="file-view" data-file-id="<%= file.id %>">
         <%= link_to file.url, class: :thumb, target: "_blank" do %>
           <% if file.image? %>
             <%= image_tag file.thumb_url, alt: file.name %>
@@ -17,7 +17,7 @@
             <%= file.name %>
           </label><br />
           <label>
-            <%= link_to(file.link_url, file.link_url) if file.link_url %>
+            <%= link_to(file.link_url, sns_redirect_path(ref: file.link_url), target: "_blank") if file.link_url %>
           </label><br />
         </div>
       </div>

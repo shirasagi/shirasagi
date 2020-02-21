@@ -41,4 +41,6 @@
   Form_Preview.form_preview_path = "<%= cms_form_preview_path(path: "#{tryb{@cur_node.filename + "/"}}.html") %>";
   Form_Preview.render();
   <% end %>
+
+  $("body").on("click", ".column-value .file-view a.thumb", function(ev) { SS_FileView.open(ev, { viewPath: "<%= view_cms_apis_content_file_path(id: ":id") %>" }); });
 <% end %>

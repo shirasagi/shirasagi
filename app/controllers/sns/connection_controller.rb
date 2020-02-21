@@ -1,6 +1,8 @@
 class Sns::ConnectionController < ApplicationController
   include Sns::BaseFilter
 
+  helper_method :remote_addr
+
   private
 
   def set_crumbs

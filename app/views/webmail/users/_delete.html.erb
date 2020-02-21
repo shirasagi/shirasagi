@@ -1,5 +1,9 @@
 <div class="ss-confirm-text">
-  <%= t 'ss.info.soft_delete' %>
+  <% if @item.deletion_locked? %>
+    <%= t 'ss.info.soft_delete_locked' %>
+  <% else %>
+    <%= t 'ss.info.soft_delete' %>
+  <% end %>
 </div>
 
 <dl class="see">

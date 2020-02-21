@@ -114,6 +114,8 @@ ja:
         invalid_regexp: 正規表現が不正です。
         too_many_categories: "分野の設定数が多すぎます（末端分野の制限数: %{limit}）"
         too_many_estat_categories: "eStat分野の設定数が多すぎます（末端eStat分野の制限数: %{limit}）"
+        resource_preview_failed: リソースをプレビューできませんでした。
+        resource_preview_timeout: 容量が大きいためリソースをプレビューできませんでした。
     crawl_state:
       same:
       updated: 更新

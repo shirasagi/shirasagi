@@ -80,7 +80,7 @@ module Gws::Qna::Postable
   end
 
   def new_flag?
-    descendants_updated > Time.zone.now - site.qna_new_days.day
+    (release_date.presence || created) > Time.zone.now - site.qna_new_days.day
   end
 
   def mode_options
@@ -138,13 +138,13 @@ module Gws::Qna::Postable
   # コメントを許可しているか検証
   def validate_comment
     return if topic.permit_comment?
+
     errors.add :base, I18n.t("gws/qna.errors.denied_comment")
   end
 
   # 最新レス投稿日時の初期値をトピックのみ設定
   # 明示的に age るケースが発生するかも
   def set_descendants_updated
-    #return unless new_record?
     self.descendants_updated = updated
   end
 
@@ -152,7 +152,7 @@ module Gws::Qna::Postable
   # 明示的に age るケースが発生するかも
   def update_topic_descendants_updated
     return unless topic
-    #return unless _id_changed?
+
     topic.set descendants_updated: updated
   end
 end

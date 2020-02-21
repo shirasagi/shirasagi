@@ -1,0 +1,9 @@
+<%
+  addon ||= local_assigns.fetch(:addon, {})
+  addon[:display_body] = "hide"
+%>
+
+<dl class="see addon-gws-report-group-setting">
+  <dt><%= @model.t :report_new_days %><%= @model.tt :report_new_days %></dt>
+  <dd class="short"><%= f.number_field :report_new_days %> <span class="postfix"><%= t("datetime.prompts.day") %></span></dd>
+</dl>

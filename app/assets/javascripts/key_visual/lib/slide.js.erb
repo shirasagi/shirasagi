@@ -16,7 +16,8 @@ this.KeyVisual_Image = (function () {
       startText: $(selector).find(".controls-start").text(),
       stopText: $(selector).find(".controls-stop").text(),
       controls: false,
-      pagerCustom: selector + " .bx-thumbs"
+      pagerCustom: selector + " .bx-thumbs",
+      touchEnabled : false
     };
     return slider = $(selector + " .images").bxSlider($.extend(defaultOpts, opts));
   };

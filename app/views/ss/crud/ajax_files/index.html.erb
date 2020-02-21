@@ -117,7 +117,7 @@ SS_SearchUI.modal();
 
 <div class="index user-files">
   <% @items.each do |item| %>
-  <article class="file-view" id="user-file<%= item.id %>">
+  <article class="file-view" id="user-file<%= item.id %>" data-file-id="<%= item.id %>">
     <%
       opts = { action: :select, id: item }
       opts[:unnormalize] = true if params[:unnormalize].present?

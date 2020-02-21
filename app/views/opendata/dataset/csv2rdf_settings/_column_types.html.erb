@@ -26,7 +26,7 @@
       </tr>
       <tr class="rdf-class">
         <% 0.upto(@item.header_cols - 1) do |i| %>
-          <td data-id="<%= i %>"><%= link_to br(@item.column_types[i]["classes"].join("\n")), { action: :rdf_prop_select, column_index: i }, { class: "rdf-class" } %></td>
+          <td data-id="<%= i %>"><%= link_to br(@item.column_types[i]["classes"]), { action: :rdf_prop_select, column_index: i }, { class: "rdf-class" } %></td>
         <% end %>
       </tr>
       <% (@item.header_rows).upto(19) do |i| %>

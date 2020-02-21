@@ -9,6 +9,6 @@ module Cms::ForMemberFilter::Node
   private
 
   def for_member_enabled?
-    @cur_node.try(:for_member_enabled?)
+    @cur_node.try(:for_member_enabled?) && !@preview
   end
 end

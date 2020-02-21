@@ -33,26 +33,32 @@ module SS::Model::PostalCode
 
   module ClassMethods
     def search(params = {})
-      criteria = self.where({})
-      return criteria if params.blank?
+      all.search_name(params).search_keyword(params).search_code(params)
+    end
 
-      if params[:name].present?
-        criteria = criteria.search_text params[:name]
-      end
-      if params[:keyword].present?
-        criteria = criteria.keyword_in(
-          params[:keyword],
-          :code,
-          :prefecture,
-          :prefecture_kana,
-          :prefecture_code,
-          :city,
-          :city_kana,
-          :town,
-          :town_kana
-        )
-      end
-      criteria
+    def search_name(params = {})
+      return all if params.blank? || params[:name].blank?
+
+      all.search_text params[:name]
+    end
+
+    def search_keyword(params = {})
+      return all if params.blank? || params[:keyword].blank?
+
+      all.keyword_in(
+        params[:keyword], :code, :prefecture, :prefecture_kana, :prefecture_code, :city, :city_kana, :town, :town_kana
+      )
+    end
+
+    def search_code(params = {})
+      return all if params.blank?
+
+      postal_code = params[:code]
+      return all if postal_code.blank?
+
+      # normalize postal code
+      postal_code = postal_code.tr('０-９ａ-ｚＡ-Ｚ', '0-9a-zA-Z').gsub(/[^0-9a-zA-Z]/, '')
+      all.where(code: postal_code)
     end
 
     def to_csv

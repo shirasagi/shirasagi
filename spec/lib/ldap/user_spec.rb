@@ -2,17 +2,17 @@ require 'spec_helper'
 require 'net-ldap'
 
 describe Ldap::User, ldap: true do
-  let(:host) { ENV["ldap_host"] }
-  let(:base_dn) { "dc=city,dc=shirasagi,dc=jp" }
+  let(:host) { SS.config.ldap.host }
+  let(:base_dn) { "dc=example,dc=jp" }
   let(:auth_method) { "simple" }
 
   describe "#find" do
-    subject(:username) { "cn=Manager,dc=city,dc=shirasagi,dc=jp" }
-    subject(:password) { "ldappass" }
+    let(:username) { "cn=admin,dc=example,dc=jp" }
+    let(:password) { SS::Crypt.encrypt("admin") }
 
     context "existing dn is given" do
-      subject(:dn) { "uid=admin,ou=001002秘書広報課,ou=001企画部, dc=city, dc=shirasagi, dc=jp" }
-      subject(:connection) do
+      let(:dn) { "uid=admin, ou=001001政策課, ou=001企画政策部, dc=example, dc=jp" }
+      let(:connection) do
         Ldap::Connection.connect(host: host, base_dn: base_dn, auth_method: auth_method,
                                  username: username, password: password)
       end
@@ -21,8 +21,8 @@ describe Ldap::User, ldap: true do
     end
 
     context "non-existing dn is given" do
-      subject(:dn) { "uid=u#{rand(0x100000000).to_s(36)},ou=001002秘書広報課,ou=001企画部, dc=city, dc=shirasagi, dc=jp" }
-      subject(:connection) do
+      let(:dn) { "uid=u#{rand(0x100000000).to_s(36)}, ou=001001政策課, ou=001企画政策部, dc=example, dc=jp" }
+      let(:connection) do
         Ldap::Connection.connect(host: host, base_dn: base_dn, auth_method: auth_method,
                                  username: username, password: password)
       end
@@ -32,11 +32,11 @@ describe Ldap::User, ldap: true do
   end
 
   describe "#parent" do
-    subject(:dn) { "uid=admin,ou=001002秘書広報課,ou=001企画部, dc=city, dc=shirasagi, dc=jp" }
-    subject(:parent_dn) { dn[dn.index(",") + 1..-1] }
-    subject(:username) { "cn=Manager,dc=city,dc=shirasagi,dc=jp" }
-    subject(:password) { "ldappass" }
-    subject(:connection) do
+    let(:dn) { "uid=admin, ou=001001政策課, ou=001企画政策部, dc=example, dc=jp" }
+    let(:parent_dn) { dn[dn.index(",") + 1..-1] }
+    let(:username) { "cn=admin,dc=example,dc=jp" }
+    let(:password) { SS::Crypt.encrypt("admin") }
+    let(:connection) do
       Ldap::Connection.connect(host: host, base_dn: base_dn, auth_method: auth_method,
                                username: username, password: password)
     end
@@ -45,8 +45,8 @@ describe Ldap::User, ldap: true do
   end
 
   describe "#auth admin" do
-    subject(:username) { "uid=admin,ou=001002秘書広報課,ou=001企画部, dc=city, dc=shirasagi, dc=jp" }
-    subject(:password) { "admin" }
+    let(:username) { "uid=admin, ou=001001政策課, ou=001企画政策部, dc=example, dc=jp" }
+    let(:password) { "pass" }
     subject do
       Ldap::Connection.connect(host: host, base_dn: base_dn, auth_method: auth_method,
                                username: username.gsub(/\s+/, ""), password: password) rescue nil
@@ -55,8 +55,8 @@ describe Ldap::User, ldap: true do
   end
 
   describe "#auth admin with illegal password" do
-    subject(:username) { "uid=admin,ou=001002秘書広報課,ou=001企画部, dc=city, dc=shirasagi, dc=jp" }
-    subject(:password) { "pass#{rand(0x100000000).to_s(36)}" }
+    let(:username) { "uid=admin, ou=001001政策課, ou=001企画政策部, dc=example, dc=jp" }
+    let(:password) { "pass-#{rand(0x100000000).to_s(36)}" }
     subject do
       Ldap::Connection.connect(host: host, base_dn: base_dn, auth_method: auth_method,
                                username: username, password: password) rescue nil
@@ -65,8 +65,8 @@ describe Ldap::User, ldap: true do
   end
 
   describe "#auth user1" do
-    subject(:username) { "uid=user1,ou=001002秘書広報課,ou=001企画部, dc=city, dc=shirasagi, dc=jp" }
-    subject(:password) { "user1" }
+    let(:username) { "uid=user1, ou=001001政策課, ou=001企画政策部, dc=example, dc=jp" }
+    let(:password) { "pass" }
     subject do
       Ldap::Connection.connect(host: host, base_dn: base_dn, auth_method: auth_method,
                                username: username, password: password) rescue nil
@@ -75,8 +75,8 @@ describe Ldap::User, ldap: true do
   end
 
   describe "#auth user1 with illegal password" do
-    subject(:username) { "uid=user1,ou=001002秘書広報課,ou=001企画部, dc=city, dc=shirasagi, dc=jp" }
-    subject(:password) { "pass#{rand(0x100000000).to_s(36)}" }
+    let(:username) { "uid=user1, ou=001001政策課, ou=001企画政策部, dc=example, dc=jp" }
+    let(:password) { "pass-#{rand(0x100000000).to_s(36)}" }
     subject do
       Ldap::Connection.connect(host: host, base_dn: base_dn, auth_method: auth_method,
                                username: username, password: password) rescue nil

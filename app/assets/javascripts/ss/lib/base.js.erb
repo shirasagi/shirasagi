@@ -160,8 +160,8 @@ this.SS = (function () {
       success: function (data) {
         return $(elem).replaceWith(data);
       },
-      error: function () {
-        return $(elem).find("img").remove();
+      error: function (xhr, status, error) {
+        return $(elem).remove();
       },
       complete: function () {
         SS.part = SS.part - 1;

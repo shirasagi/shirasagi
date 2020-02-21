@@ -11,6 +11,10 @@ describe "gws_schedule_csv", type: :feature, dbscope: :example, tmpdir: true, js
   end
   let(:plan_name) { unique_id }
 
+  around do |example|
+    travel_to(now) { example.run }
+  end
+
   shared_examples "a facility plan import" do
     let(:plan_to_csv) do
       Gws::Schedule::Plan.new(
@@ -41,20 +45,18 @@ describe "gws_schedule_csv", type: :feature, dbscope: :example, tmpdir: true, js
     it do
       Gws::Schedule::Plan.all.destroy_all
 
-      Timecop.freeze(now) do
-        login_user user
+      login_user user
 
-        visit gws_schedule_csv_path(site: site)
-        within "form#import_form" do
-          attach_file "item[in_file]", csv_file
-          page.accept_confirm do
-            click_on I18n.t("ss.import")
-          end
+      visit gws_schedule_csv_path(site: site)
+      within "form#import_form" do
+        attach_file "item[in_file]", csv_file
+        page.accept_confirm do
+          click_on I18n.t("ss.import")
         end
-
-        expect(page).to have_css("div.mb-1", text: I18n.t('gws/schedule.import.count', count: count))
-        expect(page).to have_css(css_class, text: message)
       end
+
+      expect(page).to have_css("div.mb-1", text: I18n.t('gws/schedule.import.count', count: count))
+      expect(page).to have_css(css_class, text: message)
 
       expect(Gws::Schedule::Plan.all.count).to eq count
       if count > 0

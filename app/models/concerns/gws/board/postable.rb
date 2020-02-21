@@ -10,7 +10,7 @@ module Gws::Board::Postable
 
   included do
     store_in collection: "gws_board_posts"
-    set_permission_name "gws_board_posts"
+    set_permission_name "gws_board_topics"
 
     attr_accessor :cur_site
 
@@ -62,11 +62,13 @@ module Gws::Board::Postable
 
     def search_keyword(params)
       return all if params.blank? || params[:keyword].blank?
+
       all.keyword_in(params[:keyword], :name, :text, :contributor_name)
     end
 
     def search_severity(params)
       return all if params.blank? || params[:severity].blank?
+
       all.where(severity: params[:severity])
     end
 
@@ -79,6 +81,7 @@ module Gws::Board::Postable
 
     def search_browsed_state(params)
       return all if params.blank? || params[:browsed_state].blank?
+
       case params[:browsed_state]
       when 'read'
         all.exists("browsed_users_hash.#{params[:user].id}" => 1)
@@ -105,7 +108,7 @@ module Gws::Board::Postable
   end
 
   def new_flag?
-    descendants_updated > Time.zone.now - site.board_new_days.day
+    created > Time.zone.now - site.board_new_days.day
   end
 
   def mode_options
@@ -163,13 +166,13 @@ module Gws::Board::Postable
   # コメントを許可しているか検証
   def validate_comment
     return if topic.permit_comment?
+
     errors.add :base, I18n.t("gws/board.errors.denied_comment")
   end
 
   # 最新レス投稿日時の初期値をトピックのみ設定
   # 明示的に age るケースが発生するかも
   def set_descendants_updated
-    #return unless new_record?
     self.descendants_updated = updated
   end
 
@@ -177,7 +180,7 @@ module Gws::Board::Postable
   # 明示的に age るケースが発生するかも
   def update_topic_descendants_updated
     return unless topic
-    #return unless _id_changed?
+
     topic.set descendants_updated: updated
   end
 end

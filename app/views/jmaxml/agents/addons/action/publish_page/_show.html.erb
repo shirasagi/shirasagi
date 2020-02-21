@@ -3,7 +3,7 @@
   <dd><%= @item.publish_to.try(:name) %></dd>
 
   <dt><%= @model.t :category_ids %></dt>
-  <dd><%= br @item.categories.pluck(:name).join("\n") %></dd>
+  <dd><%= br @item.categories.pluck(:name) %></dd>
 
   <dt><%= @model.t :publish_state %></dt>
   <dd><%= @item.label :publish_state %></dd>

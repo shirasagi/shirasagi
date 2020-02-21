@@ -15,7 +15,7 @@ module SS::CapybaraSupport
       options = Selenium::WebDriver::Chrome::Options.new
       options.add_preference('download.prompt_for_download', false)
       options.add_preference('download.default_directory', SS::DownloadHelpers.path)
-      options.add_argument('window-size=1680,1050')
+      options.add_argument('window-size=1280,800')
       if headless != '0'
         options.add_argument('headless')
         options.add_argument('disable-gpu')

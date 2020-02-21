@@ -88,6 +88,7 @@ ja:
         share_max_file_size: 最大ファイルサイズ
         share_files_capacity: 総容量制限
         share_default_sort: 並び順の規定値
+        share_new_days: 新着表示期間
       gws/addon/share/resource_limitation:
         share_max_file_size: 最大ファイルサイズ
         share_max_folder_size: 総容量制限
@@ -121,6 +122,8 @@ ja:
         - 総容量を入力します。
       share_default_sort:
         - ファイル一覧の並び順の規定値を選択します。
+      share_new_days:
+        - 新着表示期間を入力します。
     gws/addon/share/resource_limitation:
       share_max_file_size:
         - 最大ファイルサイズを入力します。

@@ -1,37 +1,30 @@
-<%= jquery do %>
-SS_SearchUI.modal();
-SS.ajax("#ajax-box .select", {
-  success: function (data) {
-    var dataId = $('<div>' + data + '</div>').find("[data-id]").attr("data-id");
-    if (dataId) {
-      $("#selected-member-photos .file-view[data-id='" + dataId + "']").remove();
-    }
-    $("#selected-member-photos").append(data);
-    $.colorbox.close();
-  }
-});
-<% end %>
+<%= jquery do %>SS_SearchUI.modal();<% end %>
 
-<div style="margin-bottom: 20px; padding: 10px; border: 1px solid #ddd;">
-<%= form_for :s, url: { action: :index }, html: { method: "GET", class: :search } do |f| %>
-  <%= f.text_field :name, value: params[:s].try(:[], :name) %>
-  <%= f.submit t("member.links.search"), class: :btn %>
-<% end %>
+<div class="search-ui-form">
+  <%= form_for :s, url: { action: :index }, html: { method: "GET", class: :search } do |f| %>
+    <%= f.text_field :name, value: params[:s].try(:[], :name) %>
+    <%= f.submit t("member.links.search"), class: :btn %>
+  <% end %>
 </div>
 
-<div class="index user-files">
+<div class="items index user-files">
   <% @items.each do |item| %>
-    <article class="file-view member-photo">
-      <a class="thumb select" href="<%= select_member_apis_photo_path(id: item.id, site: @cur_site) %>">
-        <%= image_tag item.image.thumb_url, alt: item.name %>
-      </a>
-      <div class="name">
-        <%= item.name %>
+    <article class="file-view member-photo" data-id="<%= item.id %>" data-file-id="<%= item.id %>">
+      <%= hidden_field_tag "item[member_photo_ids][]", item.id, class: "photo-id" %>
+      <a class="thumb select-item" href="#"><%= image_tag item.image.thumb_url, alt: item.name %></a>
+      <label style="display: flex; align-items: center;">
+        <input type="checkbox" />
+        <div class="name"><%= item.name %></div>
+      </label>
+      <div class="action delete" style="display: none;">
+        <%= link_to t("ss.buttons.delete"), "#", onclick: "deleteContent('#{item.id}'); return false;" %>
       </div>
     </article>
   <% end %>
 </div>
 
-<div style="clear: both;"></div>
+<div class="search-ui-select">
+  <%= button_tag t("cms.apis.pages.select"), { type: :button, class: "select-items btn" } %>
+</div>
 
 <%= paginate @items if @items.try(:current_page) %>

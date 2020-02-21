@@ -53,7 +53,7 @@
     <%= item.label(:state) %>
     <% if item.state == 'draft' && item.allowed?(:edit, @cur_user, site: @cur_site) %>
     <div class="tooltip" style="margin-left: 0">!
-      <ul>
+      <ul class="tooltip-content">
         <% Array[t('tooltip.gws/monitor/postable.draft_alert', default: '')].flatten.each do |msg| %>
         <li><%= msg %><br></li>
         <% end %>

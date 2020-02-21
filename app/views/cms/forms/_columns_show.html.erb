@@ -11,3 +11,7 @@
     <% end %>
   <% end %>
 </div>
+
+<%= jquery do %>
+  SS_FileView.listenTo(".column-value .file-view a.thumb", { viewPath: "<%= view_cms_apis_content_file_path(id: ":id") %>" });
+<% end %>

@@ -6,5 +6,5 @@
 
 <dl class="see mod-cms-opendata-category">
   <dt><%= @model.t :opendata_category_ids %></dt>
-  <dd><%= br @item.opendata_categories.pluck(:name).join("\n") %></dd>
+  <dd><%= br @item.opendata_categories.pluck(:name) %></dd>
 </dl>

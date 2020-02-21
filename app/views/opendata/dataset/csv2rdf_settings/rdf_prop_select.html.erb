@@ -5,7 +5,7 @@
     <div class="addon-view" id="addon-basic">
       <dl class="see csv2rdf-settings-rdf-prop-select">
         <dt><%= @model.t :header_labels %></dt>
-        <dd><%= br @header_labels.join("\n") %></dd>
+        <dd><%= br @header_labels %></dd>
 
         <dt><%= t("opendata.labels.samples") %></dt>
         <dd><%= text_area_tag "samples", safe_join(@samples, "\n"), readonly: true, class: "sample" %></dd>
