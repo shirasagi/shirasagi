@@ -21,6 +21,8 @@
 //= require mdn-polyfills/String.prototype.startsWith.js
 //= require mdn-polyfills/String.prototype.trim.js
 //= require moment
+//= require popper.js/dist/umd/popper.js
+//= require tippy.js/dist/tippy-bundle.iife.js
 //= require_self
 //= require ss/chart
 //= require ss/lib/base
@@ -38,7 +40,7 @@
 //= require ss/lib/tree_navi
 //= require ss/lib/mobile
 //= require ss/lib/search_ui
-//= require ss/lib/tooltips
+//= require ss/lib/popup
 //= require ss/lib/dropdown
 //= require ss/lib/clipboard
 //= require ss/lib/color
@@ -177,7 +179,7 @@ $(function () {
   SS_ListUI.render();
   SS_Mobile.render();
   SS_AddonTabs.render();
-  SS_Tooltips.render(".tooltip");
+  SS_Popup.render(".tooltip", { "ss-popup-inline": true, "ss-popup-href": ".tooltip-content", "tippy-theme": "light-border ss-tooltip" });
   SS_SearchUI.render();
   SS_Color.render();
   SS_TextZoom.render();

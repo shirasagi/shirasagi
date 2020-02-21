@@ -1725,7 +1725,6 @@ dl.mod-cms-parent_crumbs {
   dd { margin-bottom: 10px; }
 }
 .tooltip {
-  position: relative;
   display: inline-block;
   width: 16px;
   height: 16px;
@@ -1736,63 +1735,21 @@ dl.mod-cms-parent_crumbs {
   color: $white;
   text-align: center;
   cursor: pointer;
-  ul {
-    position: absolute;
+  .tooltip-content {
     display: none;
-    left: -220px;
-    width: 30em;
-    padding: 15px;
-    border: $border-gray4;
-    line-height: 1.6;
-    z-index: 100;
-    background: $white;
-    @include box-shadow(0 1px 6px $gray4);
-    color: $black;
+  }
+}
+.tippy-tooltip {
+  &.ss-tooltip-theme {
     font-size: 90%;
     font-weight: normal;
     text-align: left;
-    cursor: auto;
-    @include mb {
-      left: -70px;
-      width: 20em;
+    .tippy-content {
+      padding: 15px;
     }
-    &:before {
-      content: "";
-      position: absolute;
-      left: 215px;
-      bottom: -12px;
-      width: 0;
-      height: 0;
-      border-left: 12px solid transparent;
-      border-right: 12px solid transparent;
-      border-top: 12px solid $gray4;
-      @include mb {
-        left: 65px;
-      }
-    }
-    &:after {
-      content: "";
-      position: absolute;
-      left: 215px;
-      bottom: -19px;
-      width: 0;
-      height: 0;
-      border-left: 12px solid transparent;
-      border-right: 12px solid transparent;
-      border-top: 12px solid $white;
-      @include mb {
-        left: 65px;
-      }
-    }
-    &.tooltip-bottom:before {
-      top: -13px;
-      border-top: 0;
-      border-bottom: 12px solid $gray4;
-    }
-    &.tooltip-bottom:after {
-      top: -12px;
-      border-top: 0;
-      border-bottom: 12px solid $white;
+    ul {
+      margin: 0;
+      padding: 0;
     }
   }
 }
