@@ -1,6 +1,7 @@
 ja:
   modules:
     sns: SNS
+    sns/notification: 通知
 
   sns:
     profile: プロフィール
@@ -14,3 +15,6 @@ ja:
     thumb_paste: サムネイル
     errors:
       invalid_login: ログインできませんでした。
+    message:
+      notification:
+        no_recents: 新着はありません

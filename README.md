@@ -7,25 +7,27 @@ Code Status
 -----------
 
 [![Build Status](https://travis-ci.org/shirasagi/shirasagi.svg?branch=master)](https://travis-ci.org/shirasagi/shirasagi)
-[![Code Climate](https://codeclimate.com/github/shirasagi/shirasagi/badges/gpa.svg)](https://codeclimate.com/github/shirasagi/shirasagi)
 [![Coverage Status](https://coveralls.io/repos/shirasagi/shirasagi/badge.png)](https://coveralls.io/r/shirasagi/shirasagi)
+[![Code Climate](https://api.codeclimate.com/v1/badges/e6274965ec75ce8fd605/test_coverage)](https://codeclimate.com/github/shirasagi/shirasagi/test_coverage)
 [![GitHub version](https://badge.fury.io/gh/shirasagi%2Fshirasagi.svg)](http://badge.fury.io/gh/shirasagi%2Fshirasagi)
-[![Inline docs](http://inch-ci.org/github/shirasagi/shirasagi.png?branch=master)](http://inch-ci.org/github/shirasagi/shirasagi)
 [![Gitter](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/shirasagi/shirasagi?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
-[![Stories in Ready](https://badge.waffle.io/shirasagi/shirasagi.svg?label=ready&title=Ready)](http://waffle.io/shirasagi/shirasagi)
+<!-- [![Inline docs](http://inch-ci.org/github/shirasagi/shirasagi.png?branch=master)](http://inch-ci.org/github/shirasagi/shirasagi) -->
 
 Documentation
 -------------
 
 - [公式サイト](http://ss-proj.org/)
+    - [オンラインデモ](https://www.ss-proj.org/download/demo.html)
+    - [ダウンロード](https://www.ss-proj.org/download/)
+    - [よくある質問記事](https://www.ss-proj.org/faq/docs/)
 - [開発マニュアル](http://shirasagi.github.io/)
 
 Platform
 --------
 
 - CentOS, Ubuntu
-- Ruby 2.4
-- Ruby on Rails 5
+- Ruby 2.6
+- Ruby on Rails 5.2
 - MongoDB 3
 - Unicorn
 
@@ -80,8 +82,8 @@ gpgkey=https://www.mongodb.org/static/pgp/server-3.4.asc
 # gpg2 --keyserver hkp://pool.sks-keyservers.net --recv-keys 409B6B1796C275462A1703113804BB82D39DC0E3 7D2BAF1CF37B13E2069D6956105BD0E739499BDB
 # \curl -sSL https://get.rvm.io | sudo bash -s stable
 # source /etc/profile
-# rvm install 2.4.4
-# rvm use 2.4.4 --default
+# rvm install 2.6.3
+# rvm use 2.6.3 --default
 # gem install bundler
 ```
 

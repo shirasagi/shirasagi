@@ -1,4 +1,7 @@
-<%= jquery do %> SS_AddonTabs.hide(".gws-addon-history"); <% end %>
+<%
+  addon ||= local_assigns.fetch(:addon, {})
+  addon[:display_body] = "hide"
+%>
 
 <div class="gws-addon-history">
   <table class="index">
@@ -15,17 +18,21 @@
       </tr>
     </thead>
     <tbody>
-      <% @item.histories.each do |item| %>
-      <tr>
-        <td><%= item.mode_name %></td>
-        <td><%= tryb { item.created.strftime("%Y/%m/%d %H:%M") } %></td>
-        <td><%= item.user_long_name %></td>
-        <td><%= item.user_tel %></td>
-        <td><%= item.uploadfile_name %></td>
-        <td><%= item.uploadfile_size %></td>
-        <td><%= link_to t('ss.links.download'), download_history_gws_share_file_path(history_id: item._id), { class: "btn" } %></td>
+      <% @item.histories.each do |history| %>
+      <tr id="history-<%= history.id %>">
+        <td><%= history.mode_name %></td>
+        <td><%= tryb { history.created.strftime("%Y/%m/%d %H:%M") } %></td>
+        <td><%= history.user_long_name %></td>
+        <td><%= history.user_tel %></td>
+        <td><%= history.uploadfile_name %></td>
+        <td><%= history.uploadfile_size %></td>
         <td>
-          <% if (names = item.updated_field_names).present? %>
+          <% if ::Fs.file?(history.path) %>
+          <%= link_to t('ss.links.download'), { action: :download_history, history_id: history.id }, { class: "btn" } %>
+          <% end %>
+        </td>
+        <td>
+          <% if (names = history.updated_field_names).present? %>
           <%= truncate names.join(', '), length: 30 %>
           <% end %>
         </td>

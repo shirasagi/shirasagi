@@ -7,7 +7,7 @@ module Gws::Monitor::TopicFilter
 
     before_action :set_item, only: %i[
       show edit update delete destroy public preparation question_not_applicable answered disable active publish
-      close open download file_download
+      close open download file_download all_topic_files
     ]
 
     before_action :set_selected_items, only: %i[
@@ -61,12 +61,14 @@ module Gws::Monitor::TopicFilter
 
   def show
     raise "403" unless @item.attended?(@cur_group) || @item.allowed?(:read, @cur_user, site: @cur_site)
+
     render file: "show_#{@item.mode}"
   end
 
   def destroy
     raise '403' unless @item.allowed?(:delete, @cur_user, site: @cur_site)
-    render_destroy @item.destroy, {notice: t('ss.notice.deleted')}
+
+    render_destroy @item.destroy
   end
 
   FORWARD_ATTRIBUTES = %w(name spec_config due_date notice_state notice_start_at mode text_type text category_ids).freeze
@@ -80,6 +82,7 @@ module Gws::Monitor::TopicFilter
     @item = @model.new(@source.attributes.slice(*FORWARD_ATTRIBUTES).merge(fix_params))
     @item.group_ids = [@cur_group.id]
     @item.user_ids = [@cur_user.id]
+    @item.ref_file_ids = @source.file_ids
 
     render file: :new
   end
@@ -88,6 +91,7 @@ module Gws::Monitor::TopicFilter
   def public
     @item.attributes = fix_params
     raise '403' unless @item.attended?(@cur_group)
+
     @item.answer_state_hash.update(@cur_group.id.to_s => "public")
     @item.save
     render_update @item.update
@@ -97,6 +101,7 @@ module Gws::Monitor::TopicFilter
   def preparation
     @item.attributes = fix_params
     raise '403' unless @item.attended?(@cur_group)
+
     @item.answer_state_hash.update(@cur_group.id.to_s => "preparation")
     @item.save
     render_update @item.update
@@ -106,6 +111,7 @@ module Gws::Monitor::TopicFilter
   def question_not_applicable
     @item.attributes = fix_params
     raise '403' unless @item.attended?(@cur_group)
+
     @item.answer_state_hash.update(@cur_group.id.to_s => "question_not_applicable")
     @item.save
     render_update @item.update
@@ -117,6 +123,7 @@ module Gws::Monitor::TopicFilter
     @item.state = 'public'
     raise '403' unless @item.allowed?(:delete, @cur_user, site: @cur_site)
     return if request.get?
+
     @item.attributes = get_params
     render_update @item.save, {notice: t('gws/monitor.notice.published')}
   end
@@ -125,45 +132,52 @@ module Gws::Monitor::TopicFilter
   def close
     @item.attributes = fix_params
     raise '403' unless @item.allowed?(:edit, @cur_user, site: @cur_site)
+
     render_update @item.update(state: 'closed'), {notice: t('gws/monitor.notice.close')}
   end
 
   # 再募集
   def open
     raise '403' unless @item.allowed?(:edit, @cur_user, site: @cur_site)
+
     render_update @item.update(state: 'public'), {notice: t('gws/monitor.notice.open')}
   end
 
   # 回答一覧CSV
   def download
     raise '403' unless @item.allowed?(:edit, @cur_user, site: @cur_site)
-    csv = @item.to_csv.encode('SJIS', invalid: :replace, undef: :replace)
 
+    csv = @item.to_csv.encode('SJIS', invalid: :replace, undef: :replace)
     send_data csv, filename: "monitor_#{Time.zone.now.to_i}.csv"
   end
 
   # 添付ファイル一括ダウンロード
   def file_download
     raise '403' unless @item.allowed?(:edit, @cur_user, site: @cur_site)
+
     @download_file_group_ssfile_ids = []
     @item.attend_groups.each do |group|
-      if @item.comment(group.id).present?
-        download_file_ids = @item.comment(group.id)[0]
-        @download_file_group_ssfile_ids << [File.basename(download_file_ids.user_group_name), download_file_ids.file_ids]
-      end
+      next if @item.comment(group.id).blank?
+
+      download_file_ids = @item.comment(group.id)[0]
+      order = group.order || 0
+      filename = "#{order}_#{File.basename(download_file_ids.user_group_name)}"
+      @download_file_group_ssfile_ids << [filename, download_file_ids.file_ids]
     end
 
     download_file_group_ssfile_ids_hash = @download_file_group_ssfile_ids.to_h
     @group_ssfile = []
     download_file_group_ssfile_ids_hash.each do |group_fileids|
       group_fileids[1].each do |fileids|
-        @group_ssfile.push([group_fileids[0], SS::File.find_by(id: fileids)])
+        @group_ssfile << [group_fileids[0], SS::File.find_by(id: fileids)]
       end
     end
 
     @owner_ssfile = []
     @item.file_ids.each do |fileids|
-      @owner_ssfile.push([ File.basename(@cur_group.name), SS::File.find_by(id: fileids)])
+      order = @cur_group.order || 0
+      filename = "#{order}_#{File.basename(@cur_group.name)}"
+      @owner_ssfile << [filename, SS::File.find_by(id: fileids)]
     end
 
     zipfile = @item.name + ".zip"
@@ -171,6 +185,20 @@ module Gws::Monitor::TopicFilter
     @item.create_download_directory(File.dirname(@item.zip_path))
     @item.create_zip(@item.zip_path, @group_ssfile, @owner_ssfile)
     send_file(@item.zip_path, type: 'application/zip', filename: zipfile, disposition: 'attachment', x_sendfile: true)
+  end
+
+  # ファイル一括ダンロード（トピック）
+  def all_topic_files
+    zip_creator = SS::ZipCreator.new("gws_monitor_topic_files.zip", @cur_user, cur_site: @cur_site)
+    @item.files.each do |file|
+      zip_creator.add_file(file)
+    end
+    zip_creator.close
+
+    filename = "gws_monitor_topic_files_#{Time.zone.now.to_i}.zip"
+    send_file(zip_creator.path, type: 'application/zip', filename: filename, disposition: 'attachment', x_sendfile: true)
+  ensure
+    zip_creator.close if zip_creator.present?
   end
 
   # 全て受け取りにする

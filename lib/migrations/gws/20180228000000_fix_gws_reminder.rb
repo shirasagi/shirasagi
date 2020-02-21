@@ -1,4 +1,8 @@
 class SS::Migration20180228000000
+  include SS::Migration::Base
+
+  depends_on "20180201000000"
+
   def change
     Gws::Reminder.where("notifications.notify_at" => { "$exists" => false }).destroy_all
     ids = Gws::Reminder.where("notifications.notify_at" => { "$exists" => true }).pluck(:id)

@@ -14,6 +14,11 @@ class Gws::Circular::Post
   include Gws::Addon::GroupPermission
   include Gws::Addon::History
 
+  index({ site_id: 1, post_id: 1, deleted: 1 })
+  index({ due_date: 1, site_id: 1, post_id: 1, deleted: 1 })
+  index({ updated: 1, site_id: 1, post_id: 1, deleted: 1 })
+  index({ created: 1, site_id: 1, post_id: 1, deleted: 1 })
+
   member_include_custom_groups
   permission_include_custom_groups
 
@@ -42,10 +47,22 @@ class Gws::Circular::Post
   around_save ::Gws::Elasticsearch::Indexer::CircularPostJob.callback
   around_destroy ::Gws::Elasticsearch::Indexer::CircularPostJob.callback
 
-  scope :topic, ->{ exists post_id: false }
+  scope :topic, -> { exists post_id: false }
 
   scope :and_public, -> {
     where(state: 'public')
+  }
+
+  scope :custom_order, ->(key) {
+    if key.start_with?('created_')
+      all.reorder(created: key.end_with?('_asc') ? 1 : -1)
+    elsif key.start_with?('updated_')
+      all.reorder(updated: key.end_with?('_asc') ? 1 : -1)
+    elsif key.start_with?('due_date')
+      all.reorder(due_date: key.end_with?('_asc') ? 1 : -1)
+    else
+      all
+    end
   }
 
   class << self
@@ -55,39 +72,37 @@ class Gws::Circular::Post
       criteria = criteria.search_category_id(params)
       criteria = criteria.search_state(params)
       criteria = criteria.search_article_state(params)
-      criteria = criteria.order_by_sort(params)
       criteria
     end
 
     def search_keyword(params)
       return all if params.blank? || params[:keyword].blank?
+
       all.keyword_in(params[:keyword], :name, :text)
     end
 
     def search_category_id(params)
       return all if params.blank? || params[:category_id].blank?
+
       all.in(category_ids: params[:category_id])
     end
 
     def search_state(params)
       return all if params.blank? || params[:state].blank?
+
       all.where(state: params[:state])
     end
 
     def search_article_state(params)
       return all if params.blank? || params[:article_state].blank?
       return all if params[:article_state] == 'both'
+
       case params[:article_state]
       when 'seen'
         exists("seen.#{params[:user].id}" => true)
       when 'unseen'
         exists("seen.#{params[:user].id}" => false)
       end
-    end
-
-    def order_by_sort(params)
-      return all if params.blank? || params[:sort].blank?
-      all.reorder(new.sort_hash(params[:sort].to_i))
     end
 
     def to_csv
@@ -110,10 +125,10 @@ class Gws::Circular::Post
     end
   end
 
-  def reminder_url
-    name = reference_model.tr('/', '_') + '_path'
-    [name, category: '-', id: id, site: site_id]
-  end
+  # def reminder_url
+  #   name = reference_model.tr('/', '_') + '_path'
+  #   [name, category: '-', id: id, site: site_id]
+  # end
 
   def draft?
     !public?
@@ -131,23 +146,27 @@ class Gws::Circular::Post
     deleted.present? && deleted <= Time.zone.now
   end
 
-  def custom_group_member?(user)
-    custom_groups.where(member_ids: user.id).exists?
+  def new_flag?
+    created > Time.zone.now - site.circular_new_days.day
   end
 
-  def user?(user)
-    self.user.id == user.id
-  end
+  # def custom_group_member?(user)
+  #   custom_groups.where(member_ids: user.id).exists?
+  # end
+
+  # def user?(user)
+  #   self.user.id == user.id
+  # end
 
   def state_options
     %w(public draft).map do |v|
-      [ I18n.t("ss.options.state.#{v}"), v ]
+      [I18n.t("ss.options.state.#{v}"), v]
     end
   end
 
   def article_state_options
     %w(both unseen).map do |v|
-      [ I18n.t("gws/circular.options.article_state.#{v}"), v ]
+      [I18n.t("gws/circular.options.article_state.#{v}"), v]
     end
   end
 
@@ -157,7 +176,7 @@ class Gws::Circular::Post
     return if site.circular_filesize_limit.blank?
     return if site.circular_filesize_limit <= 0
 
-    limit = site.circular_filesize_limit * 1024 * 1024
+    limit = site.circular_filesize_limit_in_bytes
     size = files.compact.map(&:size).sum
 
     if size > limit
@@ -194,36 +213,37 @@ class Gws::Circular::Post
     end
 
     cur_user_id = @cur_user.try(:id) || user.id
-    added_member_ids   -= [cur_user_id]
+    added_member_ids -= [cur_user_id]
     removed_member_ids -= [cur_user_id]
-    added_member_ids.select!{|user_id| Gws::User.find(user_id).use_notice?(self)}
-    removed_member_ids.select!{|user_id| Gws::User.find(user_id).use_notice?(self)}
+    added_member_ids.select! { |user_id| Gws::User.find(user_id).use_notice?(self) }
+    removed_member_ids.select! { |user_id| Gws::User.find(user_id).use_notice?(self) }
 
     return if added_member_ids.blank? && removed_member_ids.blank?
+
     create_memo_notice(added_member_ids, removed_member_ids)
   end
 
   def create_memo_notice(added_member_ids, removed_member_ids)
     url_helper = Rails.application.routes.url_helpers
     if added_member_ids.present?
-      message = Gws::Memo::Notice.new
-      message.cur_site = site
+      message = SS::Notification.new
+      message.cur_group = site
       message.cur_user = @cur_user || user
       message.member_ids = added_member_ids
       message.send_date = Time.zone.now
       message.subject = I18n.t("gws_notification.gws/circular/post.subject", name: name)
       message.format = 'text'
-      message.url = url_helper.gws_circular_post_path(id: id, site: cur_site.id, category: '-', mode: '-')
+      message.url = url_helper.gws_circular_post_path(id: id, site: cur_site.id, category: '-')
       message.save!
 
-      to_users = added_member_ids.map{|user_id| Gws::User.find(user_id)}
+      to_users = added_member_ids.map { |user_id| Gws::User.find(user_id) }
       mail = Gws::Memo::Mailer.notice_mail(message, to_users, self)
       mail.deliver_now if mail
     end
 
     if removed_member_ids.present?
-      message = Gws::Memo::Notice.new
-      message.cur_site = site
+      message = SS::Notification.new
+      message.cur_group = site
       message.cur_user = @cur_user || user
       message.member_ids = removed_member_ids
       message.send_date = Time.zone.now
@@ -232,9 +252,22 @@ class Gws::Circular::Post
       message.url = I18n.t("gws_notification.gws/circular/post/remove.text", name: name)
       message.save!
 
-      to_users = removed_member_ids.map{|user_id| Gws::User.find(user_id)}
+      to_users = removed_member_ids.map { |user_id| Gws::User.find(user_id) }
       mail = Gws::Memo::Mailer.notice_mail(message, to_users, self)
       mail.deliver_now if mail
     end
   end
+
+  # def search_start_end(params)
+  #   return all if params.blank?
+  #
+  #   criteria = all
+  #   if params[:start].present?
+  #     criteria = criteria.gte(due_date: params[:start])
+  #   end
+  #   if params[:end].present?
+  #     criteria = criteria.lte(start_at: params[:end])
+  #   end
+  #   criteria
+  # end
 end

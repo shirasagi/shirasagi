@@ -11,7 +11,7 @@ module Opendata::Csv2rdfConverter::Helpers
       @cur_resource = @cur_dataset.resources.find(resource)
       @item = Opendata::Csv2rdfSetting.site(@cur_site).resource(@cur_resource).first
       @csv = @cur_resource.parse_tsv
-      @uri = "#{UNF::Normalizer.normalize(@cur_resource.full_url, :nfkc)}#"
+      @uri = "#{UNF::Normalizer.normalize(@cur_resource.full_url.presence || @cur_resource.url, :nfkc)}#"
       @tmp_dir = nil
       @tmp_file = nil
     end
@@ -56,13 +56,13 @@ module Opendata::Csv2rdfConverter::Helpers
       classes = type_setting["classes"]
       last_class = classes.last
       if last_class == "xsd:integer"
-        if /^[-+]?[0-9,]+$/ =~ value
+        if /^[-+]?[0-9,]+$/.match?(value)
           "\"#{value.delete(",")}\"^^#{last_class}"
         else
           "\"#{value.delete(",")}\""
         end
       elsif last_class == "xsd:decimal"
-        if /^[-+]?[0-9,]+\.[0-9]+$/ =~ value
+        if /^[-+]?[0-9,]+\.[0-9]+$/.match?(value)
           "\"#{value.delete(",")}\"^^#{last_class}"
         else
           "\"#{value.delete(",")}\""

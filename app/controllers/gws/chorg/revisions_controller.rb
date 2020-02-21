@@ -8,14 +8,16 @@ class Gws::Chorg::RevisionsController < ApplicationController
 
   def download
     set_item
+    raise "404" unless @item.allowed?(:read, @cur_user, site: @cur_site)
+
     csv = @item.changesets_to_csv
     filename = "revision_#{@item.name}_#{Time.zone.now.to_i}.csv"
     send_data csv.encode("SJIS", invalid: :replace, undef: :replace), filename: filename
   end
 
-  def download_template
-    csv = @model.new.changesets_to_csv
-    filename = "revision_template.csv"
+  def download_sample_csv
+    csv = @model.new.changesets_sample_csv
+    filename = "revision_sample.csv"
     send_data csv.encode("SJIS", invalid: :replace, undef: :replace), filename: filename
   end
 

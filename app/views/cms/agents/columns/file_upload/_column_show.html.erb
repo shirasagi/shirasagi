@@ -3,7 +3,7 @@
 <%= render 'cms/agents/columns/main/base', show: true, column: column, value: value do %>
   <% if file.present? %>
     <div id="selected-files">
-      <div class="file-view">
+      <div class="file-view" data-file-id="<%= file.id %>">
         <%= link_to file.url, class: :thumb, target: "_blank" do %>
           <% if file.image? %>
             <%= image_tag file.thumb_url, alt: file.name %>
@@ -19,13 +19,16 @@
         </div>
         <div>
           <% case column.file_type %>
-          <% when "image" %>
-            <label><%= Cms::Column::Value::FileUpload.t(:image_text) %>: <%= value.try(:image_text) %></label><br />
-            <label><%= I18n.t("cms.options.column_image_html_type.#{value.try(:image_html_type)}") %></label>
+          <% when "attachment" %>
+            <label><%= t("cms.column_file_upload.attachment.file_label") %>: <%= value.try(:file_label) %></label>
           <% when "video" %>
-            <label><%= Cms::Column::Value::FileUpload.t(:video_description) %>: <%= value.try(:video_description) %></label>
+            <label><%= t("cms.column_file_upload.video.text") %>: <%= value.try(:text) %></label>
           <% when "banner" %>
-            <label><%= Cms::Column::Value::FileUpload.t(:banner_link) %>: <%= value.try(:banner_link) %></label>
+            <label><%= t("cms.column_file_upload.banner.link_url") %>: <%= value.try(:link_url) %></label>
+            <label><%= t("cms.column_file_upload.banner.file_label") %>: <%= value.try(:file_label) %></label>
+          <% else # "image" %>
+            <label><%= t("cms.column_file_upload.image.file_label") %>: <%= value.try(:file_label) %></label><br />
+            <label><% if value.try(:image_html_type) %><%= I18n.t("cms.options.column_image_html_type.#{value.try(:image_html_type)}") %><% end %></label>
           <% end %>
         </div>
       </div>

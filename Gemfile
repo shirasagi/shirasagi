@@ -1,12 +1,12 @@
 source 'https://rubygems.org'
 
-gem 'rails', '~> 5.1.0'
+gem 'rails', '~> 5.2.0'
 gem 'sassc-rails'
-gem 'uglifier', '>= 1.3.0'
-gem 'coffee-rails', '~> 4.2.2'
-gem 'therubyracer', '~> 0.12.3', platforms: :ruby
-gem 'jbuilder', '~> 2.0'
-gem 'sdoc', '~> 0.4.0', group: :doc
+gem 'uglifier'
+gem 'coffee-rails'
+gem 'therubyracer', platforms: :ruby
+gem 'jbuilder'
+gem 'sdoc', group: :doc
 
 # Server
 gem 'unicorn'
@@ -45,7 +45,7 @@ gem 'kramdown'
 gem 'mail-iso-2022-jp'
 gem 'net-ldap'
 gem 'non-stupid-digest-assets'
-gem 'oj', '~> 3.3.5'
+gem 'oj'
 gem 'open_uri_redirections'
 gem 'rails_autolink'
 gem 'rmagick'
@@ -56,7 +56,7 @@ gem 'rubyzip'
 gem 'thinreports'
 gem 'bootsnap', require: false
 gem 'addressable', require: 'addressable/uri'
-gem 'roo', git: 'https://github.com/roo-rb/roo.git' #'~> 2.7.0'
+gem 'roo'
 #gem 'roo-xls', git: "https://github.com/roo-rb/roo-xls.git"
 gem 'liquid'
 
@@ -65,7 +65,7 @@ gem 'oauth2', git: 'https://github.com/oauth-xx/oauth2.git' #'~> 1.5.0'
 gem 'omniauth'
 gem 'omniauth-facebook'
 gem 'omniauth-github'
-gem 'omniauth-google-oauth2'
+gem 'omniauth-google-oauth2', git: 'https://github.com/zquestz/omniauth-google-oauth2.git'
 gem 'omniauth-twitter'
 gem 'omniauth-yahoojp'
 
@@ -76,6 +76,7 @@ gem 'twitter'
 gem 'ruby-saml'
 
 # JWT/JWS
+gem 'jwt'
 gem 'json-jwt'
 
 # SPARQL/RDF
@@ -87,42 +88,49 @@ gem 'sparql-client'
 gem 'unf'
 
 # elasticsearch
-gem 'faraday', '~> 0.14.0'
+gem 'faraday'
 gem 'elasticsearch'
 
 group :development, :test do
-  gem 'capybara'
-  gem 'coveralls', require: false
   gem 'dotenv-rails'
-  gem 'factory_bot_rails'
-  gem 'fuubar'
-  gem 'guard'
-  gem 'guard-rspec', '~> 4.3.1'
-  gem 'guard-rubocop', '~> 1.1.0'
-  gem 'poltergeist', require: false
-  gem 'selenium-webdriver', require: false
-  gem 'chromedriver-helper'
-  gem 'pry-rails'
-  gem 'pry-doc'
-  gem 'pry-byebug'
-  gem 'pry-stack_explorer'
-  gem 'rspec'
-  gem 'rspec-collection_matchers'
-  gem 'rspec-its'
-  gem 'rspec-rails'
-  gem 'rails-controller-testing'
+  gem 'capybara', require: false
+  gem 'coveralls', require: false
+  gem 'factory_bot_rails', require: false
+  gem 'fuubar', require: false
+  gem 'guard', require: false
+  gem 'guard-rspec', '~> 4.3.1', require: false
+  gem 'guard-rubocop', require: false
+  gem 'guard-scss_lint', require: false
+  gem 'pry-byebug', require: false
+  gem 'pry-doc', require: false
+  gem 'pry-rails', require: false
+  gem 'pry-stack_explorer', require: false
+  gem 'rails-controller-testing', require: false
+  gem 'rspec', require: false
+  gem 'rspec-collection_matchers', require: false
+  gem 'rspec-its', require: false
+  gem 'rspec-rails', require: false
   gem 'rubocop', require: false
-  gem 'spring', '~> 2.0.2'
-  gem 'timecop'
+  gem 'rubocop-performance', require: false
+  gem 'scss_lint', require: false
+  gem 'selenium-webdriver', require: false
+  gem 'simplecov', require: false
+  gem 'simplecov-csv', require: false
+  gem 'simplecov-html', require: false
+  gem 'spring', '~> 2.0.2', require: false
+  gem 'test-queue', require: false
+  gem 'timecop', require: false
+  gem 'webdrivers', require: false
 end
 
 group :development do
   gem 'brakeman', require: false
   gem 'guard-brakeman', require: false
-  gem 'yard', require: false
   gem 'terminal-notifier-guard', require: false
+  gem 'yard', require: false
 end
 
 group :test do
-  gem 'webmock', '~> 3.0.1'
+  gem 'docker-api'
+  gem 'webmock'
 end

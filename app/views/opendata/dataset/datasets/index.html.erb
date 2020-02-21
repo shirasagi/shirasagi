@@ -3,7 +3,7 @@
   <span class="datetime"><%= item.updated.strftime("%Y/%m/%d %H:%M") %></span>
   <span class="filename"><%= File.basename item.filename %></span>
   <span class="route"><%= t "modules.#{item.route.sub(/\/.*/, '')}" %></span>
-  <span class="state"><%= t "ss.state.#{item.status}" %></span>
+  <%= colored_state_label(item) %>
   <span class="tags"><%= item.tags.join(",") %></span>
 
   <% if item.harvest_imported %>

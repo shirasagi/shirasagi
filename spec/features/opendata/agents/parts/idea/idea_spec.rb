@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe "opendata_agents_parts_idea", dbscope: :example do
+describe "opendata_agents_parts_idea", type: :feature, dbscope: :example do
   let(:site) { cms_site }
   let!(:parts) { create(:opendata_part_idea) }
   let(:index_path) { parts.url }

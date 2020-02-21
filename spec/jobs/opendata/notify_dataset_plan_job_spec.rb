@@ -6,6 +6,7 @@ describe Opendata::NotifyDatasetPlanJob, dbscope: :example do
   let!(:node) { create_once :opendata_node_dataset, name: "opendata_dataset" }
 
   describe "update_plan_date not set" do
+    let(:today) { Date.parse("2019/2/25") }
     let(:dataset) { create(:opendata_dataset, cur_node: node) }
 
     before do
@@ -19,7 +20,7 @@ describe Opendata::NotifyDatasetPlanJob, dbscope: :example do
     it "with yesterday" do
       dataset
 
-      Timecop.travel(Time.zone.now.yesterday) do
+      Timecop.travel(today.yesterday) do
         described_class.bind(site_id: site.id).perform_now
         mail = ActionMailer::Base.deliveries.first
         expect(mail.blank?).to be true
@@ -37,7 +38,7 @@ describe Opendata::NotifyDatasetPlanJob, dbscope: :example do
     it "with tomorrow" do
       dataset
 
-      Timecop.travel(Time.zone.now.tomorrow) do
+      Timecop.travel(today.tomorrow) do
         described_class.bind(site_id: site.id).perform_now
         mail = ActionMailer::Base.deliveries.first
         expect(mail.blank?).to be true
@@ -47,7 +48,7 @@ describe Opendata::NotifyDatasetPlanJob, dbscope: :example do
     it "with next month" do
       dataset
 
-      Timecop.travel(Time.zone.now.next_month) do
+      Timecop.travel(today.next_month) do
         described_class.bind(site_id: site.id).perform_now
         mail = ActionMailer::Base.deliveries.first
         expect(mail.blank?).to be true
@@ -57,7 +58,7 @@ describe Opendata::NotifyDatasetPlanJob, dbscope: :example do
     it "with next year" do
       dataset
 
-      Timecop.travel(Time.zone.now.next_year) do
+      Timecop.travel(today.next_year) do
         described_class.bind(site_id: site.id).perform_now
         mail = ActionMailer::Base.deliveries.first
         expect(mail.blank?).to be true
@@ -66,13 +67,14 @@ describe Opendata::NotifyDatasetPlanJob, dbscope: :example do
   end
 
   describe "update_plan_date today" do
+    let(:today) { Date.parse("2019/2/25") }
     let(:dataset1) do
       create(
         :opendata_dataset,
         cur_node: node,
         update_plan: "update per year",
         update_plan_mail_state: "enabled",
-        update_plan_date: Time.zone.today
+        update_plan_date: today
       )
     end
     let(:dataset2) do
@@ -81,7 +83,7 @@ describe Opendata::NotifyDatasetPlanJob, dbscope: :example do
         cur_node: node,
         update_plan: "update per year",
         update_plan_mail_state: "disabled",
-        update_plan_date: Time.zone.today
+        update_plan_date: today
       )
     end
 
@@ -97,7 +99,7 @@ describe Opendata::NotifyDatasetPlanJob, dbscope: :example do
       dataset1
       dataset2
 
-      Timecop.travel(Time.zone.now.yesterday) do
+      Timecop.travel(today.yesterday) do
         described_class.bind(site_id: site.id).perform_now
         mail = ActionMailer::Base.deliveries.first
         expect(mail.blank?).to be true
@@ -108,17 +110,19 @@ describe Opendata::NotifyDatasetPlanJob, dbscope: :example do
       dataset1
       dataset2
 
-      described_class.bind(site_id: site.id).perform_now
-      mail = ActionMailer::Base.deliveries.first
-      expect(mail.decoded.to_s).to include(dataset1.private_show_path)
-      expect(mail.decoded.to_s).not_to include(dataset2.private_show_path)
+      Timecop.travel(today) do
+        described_class.bind(site_id: site.id).perform_now
+        mail = ActionMailer::Base.deliveries.first
+        expect(mail.decoded.to_s).to include(dataset1.private_show_path)
+        expect(mail.decoded.to_s).not_to include(dataset2.private_show_path)
+      end
     end
 
     it "with tomorrow" do
       dataset1
       dataset2
 
-      Timecop.travel(Time.zone.now.tomorrow) do
+      Timecop.travel(today.tomorrow) do
         described_class.bind(site_id: site.id).perform_now
         mail = ActionMailer::Base.deliveries.first
         expect(mail.blank?).to be true
@@ -129,7 +133,7 @@ describe Opendata::NotifyDatasetPlanJob, dbscope: :example do
       dataset1
       dataset2
 
-      Timecop.travel(Time.zone.now.next_month) do
+      Timecop.travel(today.next_month) do
         described_class.bind(site_id: site.id).perform_now
         mail = ActionMailer::Base.deliveries.first
         expect(mail.blank?).to be true
@@ -140,7 +144,7 @@ describe Opendata::NotifyDatasetPlanJob, dbscope: :example do
       dataset1
       dataset2
 
-      Timecop.travel(Time.zone.now.next_year) do
+      Timecop.travel(today.next_year) do
         described_class.bind(site_id: site.id).perform_now
         mail = ActionMailer::Base.deliveries.first
         expect(mail.blank?).to be true
@@ -149,13 +153,14 @@ describe Opendata::NotifyDatasetPlanJob, dbscope: :example do
   end
 
   describe "update_plan_date tomorrow" do
+    let(:today) { Date.parse("2019/2/25") }
     let(:dataset) do
       create(
         :opendata_dataset,
         cur_node: node,
         update_plan: "update per year",
         update_plan_mail_state: "enabled",
-        update_plan_date: Time.zone.tomorrow
+        update_plan_date: today.tomorrow
       )
     end
 
@@ -170,7 +175,7 @@ describe Opendata::NotifyDatasetPlanJob, dbscope: :example do
     it "with yesterday" do
       dataset
 
-      Timecop.travel(Time.zone.now.yesterday) do
+      Timecop.travel(today.yesterday) do
         described_class.bind(site_id: site.id).perform_now
         mail = ActionMailer::Base.deliveries.first
         expect(mail.blank?).to be true
@@ -180,15 +185,17 @@ describe Opendata::NotifyDatasetPlanJob, dbscope: :example do
     it "with today" do
       dataset
 
-      described_class.bind(site_id: site.id).perform_now
-      mail = ActionMailer::Base.deliveries.first
-      expect(mail.blank?).to be true
+      Timecop.travel(today) do
+        described_class.bind(site_id: site.id).perform_now
+        mail = ActionMailer::Base.deliveries.first
+        expect(mail.blank?).to be true
+      end
     end
 
     it "with tomorrow" do
       dataset
 
-      Timecop.travel(Time.zone.now.tomorrow) do
+      Timecop.travel(today.tomorrow) do
         described_class.bind(site_id: site.id).perform_now
         mail = ActionMailer::Base.deliveries.first
         expect(mail.decoded.to_s).to include(dataset.private_show_path)
@@ -198,7 +205,7 @@ describe Opendata::NotifyDatasetPlanJob, dbscope: :example do
     it "with next month" do
       dataset
 
-      Timecop.travel(Time.zone.now.next_month) do
+      Timecop.travel(today.next_month) do
         described_class.bind(site_id: site.id).perform_now
         mail = ActionMailer::Base.deliveries.first
         expect(mail.blank?).to be true
@@ -208,7 +215,7 @@ describe Opendata::NotifyDatasetPlanJob, dbscope: :example do
     it "with next year" do
       dataset
 
-      Timecop.travel(Time.zone.now.next_year) do
+      Timecop.travel(today.next_year) do
         described_class.bind(site_id: site.id).perform_now
         mail = ActionMailer::Base.deliveries.first
         expect(mail.blank?).to be true
@@ -217,13 +224,14 @@ describe Opendata::NotifyDatasetPlanJob, dbscope: :example do
   end
 
   describe "update_plan_date yearly" do
+    let(:today) { Date.parse("2019/2/25") }
     let(:dataset1) do
       create(
         :opendata_dataset,
         cur_node: node,
         update_plan: "yearly",
         update_plan_mail_state: "enabled",
-        update_plan_date: Time.zone.now.advance(years: 1),
+        update_plan_date: today.advance(years: 1),
         update_plan_unit: "yearly"
       )
     end
@@ -233,7 +241,7 @@ describe Opendata::NotifyDatasetPlanJob, dbscope: :example do
         cur_node: node,
         update_plan: "yearly",
         update_plan_mail_state: "enabled",
-        update_plan_date: Time.zone.now.advance(years: 2),
+        update_plan_date: today.advance(years: 2),
         update_plan_unit: "yearly"
       )
     end
@@ -243,7 +251,7 @@ describe Opendata::NotifyDatasetPlanJob, dbscope: :example do
         cur_node: node,
         update_plan: "yearly",
         update_plan_mail_state: "enabled",
-        update_plan_date: Time.zone.now.advance(years: 3),
+        update_plan_date: today.advance(years: 3),
         update_plan_unit: "yearly"
       )
     end
@@ -253,7 +261,7 @@ describe Opendata::NotifyDatasetPlanJob, dbscope: :example do
         cur_node: node,
         update_plan: "yearly",
         update_plan_mail_state: "enabled",
-        update_plan_date: Time.zone.now.advance(years: 1).tomorrow,
+        update_plan_date: today.advance(years: 1).tomorrow,
         update_plan_unit: "yearly"
       )
     end
@@ -263,7 +271,7 @@ describe Opendata::NotifyDatasetPlanJob, dbscope: :example do
         cur_node: node,
         update_plan: "yearly",
         update_plan_mail_state: "disabled",
-        update_plan_date:  Time.zone.now.advance(years: 1),
+        update_plan_date: today.advance(years: 1),
         update_plan_unit: "yearly"
       )
     end
@@ -283,7 +291,7 @@ describe Opendata::NotifyDatasetPlanJob, dbscope: :example do
       dataset4
       dataset5
 
-      Timecop.travel(Time.zone.now.yesterday) do
+      Timecop.travel(today.yesterday) do
         described_class.bind(site_id: site.id).perform_now
         mail = ActionMailer::Base.deliveries.first
         expect(mail.blank?).to be true
@@ -297,9 +305,11 @@ describe Opendata::NotifyDatasetPlanJob, dbscope: :example do
       dataset4
       dataset5
 
-      described_class.bind(site_id: site.id).perform_now
-      mail = ActionMailer::Base.deliveries.first
-      expect(mail.blank?).to be true
+      Timecop.travel(today) do
+        described_class.bind(site_id: site.id).perform_now
+        mail = ActionMailer::Base.deliveries.first
+        expect(mail.blank?).to be true
+      end
     end
 
     it "with tomorrow" do
@@ -309,7 +319,7 @@ describe Opendata::NotifyDatasetPlanJob, dbscope: :example do
       dataset4
       dataset5
 
-      Timecop.travel(Time.zone.now.tomorrow) do
+      Timecop.travel(today.tomorrow) do
         described_class.bind(site_id: site.id).perform_now
         mail = ActionMailer::Base.deliveries.first
         expect(mail.blank?).to be true
@@ -323,7 +333,7 @@ describe Opendata::NotifyDatasetPlanJob, dbscope: :example do
       dataset4
       dataset5
 
-      Timecop.travel(Time.zone.now.next_year) do
+      Timecop.travel(today.next_year) do
         described_class.bind(site_id: site.id).perform_now
         mail = ActionMailer::Base.deliveries.first
 
@@ -342,7 +352,7 @@ describe Opendata::NotifyDatasetPlanJob, dbscope: :example do
       dataset4
       dataset5
 
-      Timecop.travel(Time.zone.now.advance(years: 2)) do
+      Timecop.travel(today.advance(years: 2)) do
         described_class.bind(site_id: site.id).perform_now
         mail = ActionMailer::Base.deliveries.first
 
@@ -361,7 +371,7 @@ describe Opendata::NotifyDatasetPlanJob, dbscope: :example do
       dataset4
       dataset5
 
-      Timecop.travel(Time.zone.now.advance(years: 3)) do
+      Timecop.travel(today.advance(years: 3)) do
         described_class.bind(site_id: site.id).perform_now
         mail = ActionMailer::Base.deliveries.first
 

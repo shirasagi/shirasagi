@@ -1,13 +1,13 @@
 module Job::Cms::CopyNodes::SsFiles
   extend ActiveSupport::Concern
-  include Sys::SiteCopy::SsFiles
+  include SS::Copy::SsFiles
 
   def copy_ss_file(src_file)
     src_file = src_file.becomes_with_model
     klass = src_file.class
     dest_file = nil
     id = cache(:files, src_file.id) do
-      @task.log("#{src_file.filename}(#{src_file.id}): ファイルのコピーを開始します。")
+      Rails.logger.debug("#{src_file.filename}(#{src_file.id}): ファイルのコピーを開始します。")
       dest_file = klass.new(site_id: @cur_site.id)
       dest_file.attributes = copy_basic_attributes(src_file, klass)
       pseudo_file(src_file) do |tempfile|

@@ -22,7 +22,7 @@ class Gws::StaffRecord::CopySituationJob < Gws::ApplicationJob
   def copy_group(group)
     sr_group = Gws::StaffRecord::Group.new(
       cur_site: site, cur_user: user,
-      year_id: @cur_year.id, name: group.name, order: group.order,
+      year_id: @cur_year.id, name: group.trailing_name, order: group.order,
       readable_setting_range: @cur_year.readable_setting_range, readable_group_ids: @cur_year.readable_group_ids,
       readable_custom_group_ids: @cur_year.readable_custom_group_ids, readable_member_ids: @cur_year.readable_member_ids,
       group_ids: @cur_year.group_ids, custom_group_ids: @cur_year.custom_group_ids, user_ids: @cur_year.user_ids,

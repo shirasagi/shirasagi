@@ -5,7 +5,7 @@
     <% end %>
   <% elsif params[:action] =~ /new|create|lock/ %>
     <%= link_to t('ss.links.back_to_index'), action: :index %>
-  <% elsif params[:action] =~ /edit|update|delete|move|publish|depublish|soft_delete/ %>
+  <% elsif params[:action] =~ /edit|update|delete|move|publish|depublish|soft_delete|copy/ %>
     <% if @item.allowed?(:read, @cur_user, site: @cur_site) %>
       <%= link_to t('ss.links.back_to_show'), action: :show, id: @item %>
     <% end %>
@@ -16,10 +16,11 @@
         <%= link_to t('gws/workflow.links.depublish'), action: :depublish, id: @item %>
       <% else %>
         <%= link_to t('gws/workflow.links.publish'), action: :publish, id: @item %>
+        <%= link_to t('ss.links.edit'), action: :edit, id: @item %>
       <% end %>
-      <%= link_to t('ss.links.edit'), action: :edit, id: @item %>
+      <%= link_to t('ss.links.copy'), action: :copy, id: @item %>
     <% end %>
-    <% if @item.allowed?(:delete, @cur_user, site: @cur_site) %>
+    <% if @item.allowed?(:delete, @cur_user, site: @cur_site) && @item.closed? %>
       <%= link_to t('ss.links.delete'), action: :soft_delete, id: @item %>
     <% end %>
     <%= link_to t('ss.links.back_to_index'), action: :index %>

@@ -1,4 +1,4 @@
-SS::Application.routes.draw do
+Rails.application.routes.draw do
   Gws::Chorg::Initializer
 
   concern :deletion do
@@ -8,7 +8,7 @@ SS::Application.routes.draw do
 
   concern :download do
     get :download, on: :member
-    get :download_template, on: :collection
+    get :download_sample_csv, on: :collection
   end
 
   gws 'chorg' do

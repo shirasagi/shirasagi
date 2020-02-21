@@ -1,3 +1,5 @@
+<% if map_enabled?(mypage: true) %>
+
 <%= render_member_photo_form_map "#map-canvas", site: @cur_site, map: { zoom: @item.map_zoom_level } %>
 
 <div class="mod-map">
@@ -21,3 +23,9 @@
     <%= button_tag t("map.buttons.clear_marker"), { type: :button, class: "clear-marker btn" } %>
   </dl>
 </div>
+
+<% else %>
+
+<%== render file: "app/views/member/agents/addons/photo/map/_form_no_api", locals: { f: f } %>
+
+<% end %>

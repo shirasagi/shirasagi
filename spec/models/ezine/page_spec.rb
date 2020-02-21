@@ -1,6 +1,21 @@
 require 'spec_helper'
 
 RSpec.describe Ezine::Page, type: :model, dbscope: :example do
+  describe "#attributes" do
+    let(:node) { create :ezine_node_page }
+    let(:item) { create :ezine_page, cur_node: node }
+    let(:show_path) { Rails.application.routes.url_helpers.ezine_page_path(site: item.site, cid: node.id, id: item.id) }
+
+    it { expect(item.becomes_with_route).not_to eq nil }
+    it { expect(item.dirname).to eq node.filename }
+    it { expect(item.basename).not_to eq nil }
+    it { expect(item.path).not_to eq nil }
+    it { expect(item.url).not_to eq nil }
+    it { expect(item.full_url).not_to eq nil }
+    it { expect(item.parent).to eq node }
+    it { expect(item.private_show_path).to eq show_path }
+  end
+
   describe "#members_to_deliver" do
     subject { page.members_to_deliver }
     let!(:node) { create :ezine_node_page }

@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe "jmaxml/water_level_stations", dbscope: :example do
+describe "jmaxml/water_level_stations", type: :feature, dbscope: :example do
   let(:site) { cms_site }
   let(:node) { create :rss_node_weather_xml, cur_site: site }
   let(:index_path) { jmaxml_water_level_stations_path(site, node) }
@@ -64,7 +64,7 @@ describe "jmaxml/water_level_stations", dbscope: :example do
       within 'form' do
         click_on I18n.t('ss.buttons.delete')
       end
-      expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'), wait: 60)
+      expect(page).to have_css('#notice', text: I18n.t('ss.notice.deleted'), wait: 60)
 
       expect(Jmaxml::WaterLevelStation.count).to eq 0
     end
@@ -80,12 +80,12 @@ describe "jmaxml/water_level_stations", dbscope: :example do
       expect(page).to have_css('.list-item .title', text: region.name)
 
       fill_in 's[keyword]', with: region.name
-      click_on '検索'
+      click_on I18n.t('ss.buttons.search')
       expect(page).to have_css('.list-item .title', text: region.name)
 
       visit index_path
       fill_in 's[keyword]', with: unique_id
-      click_on '検索'
+      click_on I18n.t('ss.buttons.search')
 
       expect(page).to have_no_css('.list-item .title', text: region.name)
     end

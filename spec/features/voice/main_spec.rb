@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe "voice_main", dbscope: :example, http_server: true do
+describe "voice_main", type: :feature, dbscope: :example, http_server: true do
   http.default port: 33_190
   http.default doc_root: Rails.root.join("spec", "fixtures", "voice")
 

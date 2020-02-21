@@ -24,8 +24,7 @@ describe "gws_schedule_plans", type: :feature, dbscope: :example, js: true do
 
     context 'with delete all' do
       it do
-        visit gws_schedule_plans_path(site)
-        click_on I18n.t('gws/schedule.links.add_plan')
+        visit new_gws_schedule_plan_path(site)
 
         within "form#item-form" do
           fill_in "item[name]", with: name
@@ -48,8 +47,8 @@ describe "gws_schedule_plans", type: :feature, dbscope: :example, js: true do
 
           click_on I18n.t('ss.buttons.save')
         end
-        expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
 
+        expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
         expect(Gws::Schedule::Plan.site(site).without_deleted.member(gws_user).count).to eq 4
         expect(Gws::Schedule::Plan.site(site).only_deleted.member(gws_user).count).to eq 0
 
@@ -69,8 +68,8 @@ describe "gws_schedule_plans", type: :feature, dbscope: :example, js: true do
         within '.gws-schedule-repeat-submit' do
           click_on I18n.t('gws/schedule.buttons.delete_all')
         end
-        expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
 
+        expect(page).to have_css('#notice', text: I18n.t('ss.notice.deleted'))
         expect(Gws::Schedule::Plan.site(site).without_deleted.member(gws_user).count).to eq 0
         expect(Gws::Schedule::Plan.site(site).only_deleted.member(gws_user).count).to eq 4
       end
@@ -78,8 +77,7 @@ describe "gws_schedule_plans", type: :feature, dbscope: :example, js: true do
 
     context 'with delete later' do
       it do
-        visit gws_schedule_plans_path(site)
-        click_on I18n.t('gws/schedule.links.add_plan')
+        visit new_gws_schedule_plan_path(site)
 
         within "form#item-form" do
           fill_in "item[name]", with: name
@@ -102,23 +100,23 @@ describe "gws_schedule_plans", type: :feature, dbscope: :example, js: true do
 
           click_on I18n.t('ss.buttons.save')
         end
-        expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
 
+        expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
         expect(Gws::Schedule::Plan.site(site).without_deleted.member(gws_user).count).to eq 4
         expect(Gws::Schedule::Plan.site(site).only_deleted.member(gws_user).count).to eq 0
 
         # do soft delete at first item
         item = Gws::Schedule::Plan.site(site).without_deleted.member(gws_user).order_by(start_at: 1).second
-        visit gws_schedule_plan_path(site, item)
-        click_on I18n.t('ss.links.delete')
+        visit soft_delete_gws_schedule_plan_path(site, item)
+
         within 'form' do
           click_on I18n.t('ss.buttons.delete')
         end
         within '.gws-schedule-repeat-submit' do
           click_on I18n.t('gws/schedule.buttons.delete_later')
         end
-        expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
 
+        expect(page).to have_css('#notice', text: I18n.t('ss.notice.deleted'))
         expect(Gws::Schedule::Plan.site(site).without_deleted.member(gws_user).count).to eq 1
         expect(Gws::Schedule::Plan.site(site).only_deleted.member(gws_user).count).to eq 3
       end
@@ -126,8 +124,7 @@ describe "gws_schedule_plans", type: :feature, dbscope: :example, js: true do
 
     context 'with delete one' do
       it do
-        visit gws_schedule_plans_path(site)
-        click_on I18n.t('gws/schedule.links.add_plan')
+        visit new_gws_schedule_plan_path(site)
 
         within "form#item-form" do
           fill_in "item[name]", with: name
@@ -150,23 +147,23 @@ describe "gws_schedule_plans", type: :feature, dbscope: :example, js: true do
 
           click_on I18n.t('ss.buttons.save')
         end
-        expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
 
+        expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
         expect(Gws::Schedule::Plan.site(site).without_deleted.member(gws_user).count).to eq 4
         expect(Gws::Schedule::Plan.site(site).only_deleted.member(gws_user).count).to eq 0
 
         # do soft delete at first item
         item = Gws::Schedule::Plan.site(site).without_deleted.member(gws_user).order_by(start_at: 1).third
-        visit gws_schedule_plan_path(site, item)
-        click_on I18n.t('ss.links.delete')
+        visit soft_delete_gws_schedule_plan_path(site, item)
+
         within 'form' do
           click_on I18n.t('ss.buttons.delete')
         end
         within '.gws-schedule-repeat-submit' do
           click_on I18n.t('gws/schedule.buttons.delete_one')
         end
-        expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
 
+        expect(page).to have_css('#notice', text: I18n.t('ss.notice.deleted'))
         expect(Gws::Schedule::Plan.site(site).without_deleted.member(gws_user).count).to eq 3
         expect(Gws::Schedule::Plan.site(site).only_deleted.member(gws_user).count).to eq 1
       end

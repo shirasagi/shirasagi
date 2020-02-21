@@ -17,6 +17,12 @@ class Cms::Column::UrlField2 < Cms::Column::Base
   validates :label_max_length, numericality: { only_integer: true, greater_than_or_equal_to: 0, allow_blank: true }
   validates :link_max_length, numericality: { only_integer: true, greater_than_or_equal_to: 0, allow_blank: true }
 
+  def link_target_options
+    %w(_blank).map do |v|
+      [ v, v ]
+    end
+  end
+
   def html_tag_options
     %w(a).map do |v|
       [ I18n.t("cms.options.html_tag.#{v}", default: v), v ]
@@ -24,12 +30,12 @@ class Cms::Column::UrlField2 < Cms::Column::Base
   end
 
   def form_options(type = nil)
-    if type == :label
+    if type == :link_label
       options = {}
       options['maxlength'] = label_max_length if label_max_length.present?
       options['placeholder'] = label_place_holder if label_place_holder.present?
       options
-    elsif type == :link
+    elsif type == :link_url
       options = {}
       options['maxlength'] = link_max_length if link_max_length.present?
       options['placeholder'] = link_place_holder if link_place_holder.present?

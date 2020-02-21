@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe "opendata_datasets", type: :feature, dbscope: :example do
+describe "opendata_dataset_resources", type: :feature, dbscope: :example do
   let(:site) { cms_site }
   let(:node) { create_once :opendata_node_dataset, name: "opendata_dataset" }
   let!(:node_search) { create_once :opendata_node_search_dataset }
@@ -33,7 +33,7 @@ describe "opendata_datasets", type: :feature, dbscope: :example do
           fill_in "item[name]", with: unique_id
           select license.name, from: "item_license_id"
           attach_file "item[in_tsv]", resource_tsv_path
-          click_button "保存"
+          click_button I18n.t('ss.buttons.save')
         end
         expect(status_code).to eq 200
         expect(current_path).not_to eq new_path
@@ -76,7 +76,7 @@ describe "opendata_datasets", type: :feature, dbscope: :example do
           within "form#item-form" do
             fill_in "item[name]", with: "#{item.name}-modify"
             fill_in "item[text]", with: "sample-#{unique_id}"
-            click_button "保存"
+            click_button I18n.t('ss.buttons.save')
           end
           expect(current_path).to eq show_path
           expect(page).to have_no_css("form#item-form")
@@ -87,7 +87,7 @@ describe "opendata_datasets", type: :feature, dbscope: :example do
         it do
           visit delete_path
           within "form" do
-            click_button "削除"
+            click_button I18n.t('ss.buttons.delete')
           end
           expect(current_path).to eq index_path
         end
@@ -155,7 +155,7 @@ describe "opendata_datasets", type: :feature, dbscope: :example do
             fill_in "item[name]", with: unique_id
             select license.name, from: "item_license_id"
             attach_file "item[in_tsv]", resource_tsv_path
-            click_button "保存"
+            click_button I18n.t('ss.buttons.save')
           end
           expect(status_code).to eq 200
           expect(current_path).to eq index_path
@@ -179,7 +179,7 @@ describe "opendata_datasets", type: :feature, dbscope: :example do
             select license.name, from: "item_license_id"
             attach_file "item[in_tsv]", resource_tsv_path
             attach_file "item[in_file]", resource_file_path
-            click_button "保存"
+            click_button I18n.t('ss.buttons.save')
           end
           expect(status_code).to eq 200
 

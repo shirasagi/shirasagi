@@ -16,10 +16,10 @@ class Inquiry::AnswersController < ApplicationController
   def send_csv(items)
     require "csv"
 
-    columns = @cur_node.becomes_with_route("inquiry/form").columns.pluck(:name)
-    headers = %w(id)
+    columns = @cur_node.becomes_with_route("inquiry/form").columns.order_by(order: 1).pluck(:name)
+    headers = %w(id state comment).map { |key| @model.t(key) }
     headers += columns
-    headers += %w(created source_url source_name)
+    headers += %w(source_url source_name created).map { |key| @model.t(key) }
     csv = CSV.generate do |data|
       data << headers
       items.each do |item|
@@ -33,12 +33,14 @@ class Inquiry::AnswersController < ApplicationController
 
         row = []
         row << item.id
+        row << (item.label :state)
+        row << item.comment
         columns.each do |col|
           row << values[col]
         end
-        row << item.updated.strftime("%Y/%m/%d %H:%M")
         row << item.source_full_url
         row << item.source_name
+        row << item.updated.strftime("%Y/%m/%d %H:%M")
 
         data << row
       end
@@ -63,9 +65,12 @@ class Inquiry::AnswersController < ApplicationController
 
   def index
     raise "403" unless @cur_node.allowed?(:read, @cur_user, site: @cur_site)
+
+    @state = params.dig(:s, :state).presence || "unclosed"
     @items = @model.site(@cur_site).
       where(node_id: @cur_node.id).
       search(params[:s]).
+      state(@state).
       order_by(updated: -1).
       page(params[:page]).per(50)
   end

@@ -1,0 +1,10 @@
+<nav class="nav-menu">
+  <% if params[:action] =~ /index/ %>
+  <% elsif params[:action] =~ /edit|update|delete/ %>
+    <%= link_to t('ss.links.back_to_show'), action: :show %>
+    <%= link_to t('ss.links.back_to_index'), action: :index %>
+  <% else %>
+    <%= link_to(t('ss.links.delete'), action: :delete, id: @item) %>
+    <%= link_to t('ss.links.back_to_index'), action: :index %>
+  <% end %>
+</nav>

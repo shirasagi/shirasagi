@@ -34,13 +34,9 @@ class Sys::MailLogsController < ApplicationController
     set_item
     raise "403" unless @item.allowed?(:edit, @cur_user)
 
-    if @item.subject =~ /ISO-2022-JP/i
-      @item.subject = NKF.nkf("-w", @item.subject)
-    end
-
-    if @item.mail =~ /ISO-2022-JP/i
-      @item.mail = NKF.nkf("-w", @item.mail)
-    end
+    mail = ::Mail.new(@item.mail)
+    @item.subject = mail.subject
+    @item.mail = mail.header.fields.map { |f| "#{f.name}: #{f.decoded}" }.join("\n") + "\n\n" + mail.decoded
   end
 
   def commit_decode

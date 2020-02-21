@@ -17,7 +17,7 @@ class Gws::UsersController < ApplicationController
   end
 
   def set_model
-    if params[:action] == 'import'
+    if params[:action] == 'import' || params[:action] == 'webmail_import'
       @model = Gws::UserCsv::Importer
     else
       super
@@ -98,7 +98,7 @@ class Gws::UsersController < ApplicationController
     form_data = build_form_data
     result = @item.valid?
     if form_data.present? && form_data.invalid?(:required_check)
-      @item.errors[:base] += form_data.errors.full_messages
+      @item.errors.messages[:base] += form_data.errors.full_messages
       result = false
     end
 
@@ -124,7 +124,7 @@ class Gws::UsersController < ApplicationController
     result = @item.valid?
     form_data = save_form_data
     if form_data && form_data.invalid?
-      @item.errors[:base] += form_data.errors.full_messages
+      @item.errors.messages[:base] += form_data.errors.full_messages
       result = false
     end
 
@@ -151,9 +151,10 @@ class Gws::UsersController < ApplicationController
   def download
     @items = @model.unscoped.site(@cur_site).order_by_title(@cur_site)
     filename = "gws_users_#{Time.zone.now.to_i}.csv"
+    webmail_support = params[:webmail_support].present?
     response.status = 200
     send_enum(
-      Gws::UserCsv::Exporter.enum_csv(@items, site: @cur_site),
+      Gws::UserCsv::Exporter.enum_csv(@items, site: @cur_site, webmail_support: webmail_support),
       type: 'text/csv; charset=Shift_JIS', filename: filename
     )
   end
@@ -161,9 +162,10 @@ class Gws::UsersController < ApplicationController
   def download_template
     @items = @model.none
     filename = 'gws_users_template.csv'
+    webmail_support = params[:webmail_support].present?
     response.status = 200
     send_enum(
-      Gws::UserCsv::Exporter.enum_csv(@items, site: @cur_site),
+      Gws::UserCsv::Exporter.enum_csv(@items, site: @cur_site, webmail_support: webmail_support),
       type: 'text/csv; charset=Shift_JIS', filename: filename
     )
   end
@@ -176,6 +178,16 @@ class Gws::UsersController < ApplicationController
     end
     flash.now[:notice] = t("ss.notice.saved") if !result && @item.imported > 0
     render_create result, location: { action: :index }, render: { file: :import }
+  end
+
+  def webmail_import
+    return if request.get?
+    @item = Gws::UserCsv::Importer.new get_params
+    if @item.valid?
+      result = @item.import
+    end
+    flash.now[:notice] = t("ss.notice.saved") if !result && @item.imported > 0
+    render_create result, location: { action: :index }, render: { file: :webmail_import }
   end
 
   def lock_all

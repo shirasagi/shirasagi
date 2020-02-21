@@ -21,7 +21,7 @@ describe "gws_schedule_holidays", type: :feature, dbscope: :example, js: true do
         fill_in "item[name]", with: "name"
         fill_in "item[start_on]", with: "2016/01/01"
         fill_in "item[end_on]", with: "2016/01/02"
-        click_button "保存"
+        click_button I18n.t('ss.buttons.save')
       end
       wait_for_ajax
       expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
@@ -36,7 +36,7 @@ describe "gws_schedule_holidays", type: :feature, dbscope: :example, js: true do
       visit "#{path}/#{item.id}/edit"
       within "form#item-form" do
         fill_in "item[name]", with: "name2"
-        click_button "保存"
+        click_button I18n.t('ss.buttons.save')
       end
       wait_for_ajax
       expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
@@ -45,10 +45,10 @@ describe "gws_schedule_holidays", type: :feature, dbscope: :example, js: true do
     it "#delete" do
       visit "#{path}/#{item.id}/delete"
       within "form" do
-        click_button "削除"
+        click_button I18n.t('ss.buttons.delete')
       end
       wait_for_ajax
-      expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+      expect(page).to have_css('#notice', text: I18n.t('ss.notice.deleted'))
     end
   end
 end

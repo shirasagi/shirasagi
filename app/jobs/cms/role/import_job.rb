@@ -65,7 +65,7 @@ class Cms::Role::ImportJob < Cms::ApplicationJob
   def set_attributes(row, item)
     item.name = value(row, :name)
     item.permissions = permissions_value(row, :permissions)
-    item.site_id = value(row, :site_id)
+    item.site_id = site.id
     item.permission_level = value(row, :permission_level)
   end
 end

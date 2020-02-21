@@ -3,6 +3,7 @@ class Recommend::History::Log
   include SS::Reference::Site
   include Cms::SitePermission
 
+  store_in_repl_master
   index({ created: -1 })
 
   field :token, type: String
@@ -55,8 +56,14 @@ class Recommend::History::Log
       item = opts[:item]
       path = opts[:path]
       path += "index.html" if path =~ /\/$/
-      receiver_path = Rails.application.routes.url_helpers.recommend_history_receiver_path(site: site.id)
-      receiver_url = ::File.join(site.full_root_url, receiver_path)
+
+      receiver_node = Recommend::Node::Receiver.site(site).and_public.first
+      if receiver_node
+        receiver_url = receiver_node.full_url + "index.json"
+      else
+        receiver_path = Rails.application.routes.url_helpers.recommend_history_receiver_path(site: site.id, format: "json")
+        receiver_url = ::File.join(site.full_root_url, receiver_path)
+      end
 
       h[:recommend][:receiver_url] = receiver_url
       h[:recommend][:params] = {}

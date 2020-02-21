@@ -1,13 +1,4 @@
-<%= javascript_include_tag "//www.google.com/jsapi" %>
-<%= javascript_tag do %>
-(function(){
-  Chart.load(function(){
-    $(".graph-canvas").each(function(){
-       Chart.drawBar(this, $.parseJSON($(this).attr("data-columns")));
-     });
-  });
-}).call(this);
-<% end %>
+<%= jquery do %>Inquiry_Chart.drawBar(".graph-canvas");<% end %>
 
 <% if @cur_node.inquiry_results_html.present? %>
   <%= raw @cur_node.inquiry_results_html %>
@@ -42,7 +33,9 @@
             </tbody>
           </table>
           <% if data.size > 0 %>
-            <dd class="graph"><div class="graph-canvas" data-columns='<%= data.to_json %>'></div></dd>
+            <dd class="graph">
+              <canvas class="graph-canvas" height="<%= data.keys.count * 25 %>" data-name='<%= column.name %>' data-columns='<%= data.to_json %>'></canvas>
+            </dd>
           <% end %>
         </dd>
       </dl>

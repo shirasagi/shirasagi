@@ -6,7 +6,7 @@
       margin: 12px 0 0;
       &.on    .material-icons { color: #f70; }
       &.off   .material-icons { color: #ddd; }
-      &:hover .material-icons { opacity: 0.8; }
+      &:hover .material-icons { opacity: .8; }
     }
     .subject {
       display: block;
@@ -51,13 +51,13 @@
     margin: -5px 0 10px;
     padding: 8px;
     border: 1px solid #fd8;
-    background-color: rgba(255,255,0,.2);
+    background-color: rgba(255, 255, 0, .2);
     background-color: #ffc;
     text-decoration: none;
     text-align: center;
     &:hover {
       border-color: #fb8;
-      background-color: rgba(255,255,0,.35);
+      background-color: rgba(255, 255, 0, .35);
       background-color: #ffa;
     }
   }
@@ -188,7 +188,7 @@ table.index.gws-memo-folder {
   border-collapse: collapse;
   table-layout: fixed;
   &:before {
-    content: '';
+    content: "";
     position: absolute;
     top: 0;
     left: 100%;
@@ -196,7 +196,7 @@ table.index.gws-memo-folder {
     height: 1px;
   }
   .folder {
-    background: #ffffff !important;
+    background: #fff !important;
   }
   .current {
     background: #f2f2f2 !important;
@@ -214,7 +214,6 @@ table.index.gws-memo-folder {
 }
 
 .gws-memo-search {
-  display: none;
   margin: 0 10px;
   padding: 10px 20px;
   border-bottom: 1px solid #eee;
@@ -222,17 +221,25 @@ table.index.gws-memo-folder {
   input[type="text"] {
     width: 300px;
   }
+  input.date {
+    width: 9em;
+    text-align: center;
+  }
+  label.flag {
+    width: auto;
+    padding: 0 15px;
+  }
 }
 
 .gws-memo-dropdown {
-display: inline;
-font-weight: normal;
+  display: inline;
+  font-weight: normal;
   .dropdown-menu {
     left: 0;
     margin: 0;
     padding: 5px 0;
     border: 1px solid #ccc;
-    @include box-shadow(0px 3px 12px rgba(0,0,0,.2));
+    @include box-shadow(0 3px 12px rgba(0, 0, 0, .2));
     background: #fff;
     text-align: left;
     a {
@@ -260,7 +267,7 @@ font-weight: normal;
     min-width: 50px !important;
   }
   dd {
-    margin: 0px 0px 0px 50px !important;
+    margin: 0 0 0 50px !important;
   }
 }
 // -------------------------------------------------------------------------------------------------
@@ -271,7 +278,7 @@ font-weight: normal;
       background-color: #f9e9e3;
     }
     &.seen:hover, &.unseen:hover {
-      background-color: #fbeee8
+      background-color: #fbeee8;
     }
   }
 }

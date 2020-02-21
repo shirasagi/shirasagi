@@ -8,6 +8,9 @@ class SS::Site
   include SS::Addon::SiteAutoPostSetting
   include SS::Addon::FileSetting
   include SS::Addon::MailSetting
+  include SS::Addon::TrashSetting
   include SS::Addon::ApproveSetting
   include SS::Addon::EditorSetting
+  include SS::Addon::Elasticsearch::SiteSetting
+  include SS::Addon::SiteUsage
 end

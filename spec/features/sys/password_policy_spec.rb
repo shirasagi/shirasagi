@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe "sys_password_policies", type: :feature, dbscope: :example do
+describe "sys_password_policies", type: :feature, dbscope: :example, js: true do
   context "basic crud" do
     let(:password_limit_days) { rand(1..100) }
     let(:password_warning_days) { rand(1..password_limit_days) }
@@ -208,7 +208,7 @@ describe "sys_password_policies", type: :feature, dbscope: :example do
       expect(page).to have_css("div#errorExplanation", text: msg)
 
       fill_password_and_save(password1)
-      expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+      wait_for_notice I18n.t('ss.notice.saved')
 
       fill_password_and_save(insufficient_password)
       msg = I18n.t("errors.messages.password_min_change_chars", count: setting.password_min_change_char_count)

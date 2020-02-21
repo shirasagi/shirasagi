@@ -58,15 +58,29 @@ module Gws::Attendance::TimeCardFilter
 
   def holiday?(date)
     return true if HolidayJapan.check(date.localtime.to_date)
+
     Gws::Schedule::Holiday.site(@cur_site).
       and_public.
       allow(:read, @cur_user, site: @cur_site).
       search(start: date, end: date).present?
   end
 
+  WELL_KNOWN_TYPES = begin
+    types = %w(enter leave)
+    SS.config.gws.attendance['max_break'].times do |i|
+      types << "break_enter#{i + 1}"
+      types << "break_leave#{i + 1}"
+    end
+    types.freeze
+  end
+
   public
 
   def time
+    index = WELL_KNOWN_TYPES.find_index(params[:type])
+    raise '404' if index.blank?
+
+    @type = WELL_KNOWN_TYPES[index]
     @model = Gws::Attendance::TimeEdit
     if request.get?
       @cell = @model.new
@@ -78,18 +92,20 @@ module Gws::Attendance::TimeCardFilter
     result = false
     if @cell.valid?
       time = @cell.calc_time(@cur_date)
-      @item.histories.create(date: @cur_date, field_name: params[:type], action: 'modify', time: time, reason: @cell.in_reason)
-      @record.send("#{params[:type]}=", time)
+      @item.histories.create(date: @cur_date, field_name: @type, action: 'modify', time: time, reason: @cell.in_reason)
+      @record.send("#{@type}=", time)
       result = @record.save
     end
 
-    location = crud_redirect_url || { action: :index }
     if result
+      location = crud_redirect_url || url_for(action: :index)
       notice = t('ss.notice.saved')
+
+      flash[:notice] = notice
+      render json: { location: location }, status: :ok, content_type: json_content_type
     else
-      notice = @cell.errors.full_messages.join("\n")
+      render file: 'time', layout: false, status: :unprocessable_entity
     end
-    redirect_to location, notice: notice
   end
 
   def memo

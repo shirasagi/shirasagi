@@ -51,6 +51,9 @@ Cms_TemplateForm.prototype.render = function() {
 };
 
 Cms_TemplateForm.prototype.changeForm = function() {
+  if (Cms_Form.addonSelector == ".mod-body-part-html") {
+    return false;
+  }
   var formId = this.$formSelect.val();
   if (formId) {
     if (!this.selectedFormId || this.selectedFormId !== formId) {
@@ -99,7 +102,11 @@ Cms_TemplateForm.prototype.showError = function(msg) {
 Cms_TemplateForm.prototype.activateForm = function() {
   this.$formPage.removeClass('hide');
   $('#addon-cms-agents-addons-body').addClass('hide');
+  $("#addon-cms-agents-addons-body_part").addClass('hide');
   $('#addon-cms-agents-addons-file').addClass('hide');
+  $("#addon-cms-agents-addons-form-page").removeClass('hide');
+  $("#item_body_layout_id").parent('dd').prev('dt').addClass('hide');
+  $("#item_body_layout_id").parent('dd').addClass('hide');
   Cms_Form.addonSelector = "#addon-cms-agents-addons-form-page .addon-body";
   Cms_Form.activateSyntaxChecks();
 };
@@ -108,7 +115,11 @@ Cms_TemplateForm.prototype.deactivateForm = function() {
   this.$formPageBody.html('');
   this.$formPage.addClass('hide');
   $('#addon-cms-agents-addons-body').removeClass('hide');
+  $("#addon-cms-agents-addons-body_part").addClass('hide');
   $('#addon-cms-agents-addons-file').removeClass('hide');
+  $("#addon-cms-agents-addons-form-page").addClass('hide');
+  $("#item_body_layout_id").parent('dd').prev('dt').removeClass('hide');
+  $("#item_body_layout_id").parent('dd').removeClass('hide');
   Cms_Form.addonSelector = ".mod-cms-body";
   Cms_Form.activateSyntaxChecks();
 };
@@ -181,11 +192,14 @@ Cms_TemplateForm.prototype.bindOne = function(el, options) {
       handle: '.sortable-handle',
       items: "> .column-value",
       // start: function (ev, ui) {
-      //   ui.item.addClass("column-value-dragging");
+      //   console.log("start");
       // },
-      // stop: function (ev, ui) {
-      //   ui.item.removeClass("column-value-dragging");
-      // },
+      beforeStop: function(ev, ui) {
+        ui.item.trigger("column:beforeMove");
+      },
+      stop: function (ev, ui) {
+        ui.item.trigger("column:afterMove");
+      },
       update: function (ev, ui) {
         self.resetOrder();
       }
@@ -251,8 +265,12 @@ Cms_TemplateForm.prototype.movePosition = function($evSource) {
   }
 
   Cms_TemplateForm.insertElement($source, $moveTo, function() {
+    $source.trigger("column:beforeMove");
+
     moveToMethod($source);
     self.resetOrder();
+
+    $source.trigger("column:afterMove");
   });
 };
 
@@ -269,8 +287,12 @@ Cms_TemplateForm.prototype.moveUp = function($evTarget) {
 
   var self = this;
   Cms_TemplateForm.swapElement($prev, $columnValue, function() {
+    $columnValue.trigger("column:beforeMove");
+
     $prev.before($columnValue);
     self.resetOrder();
+
+    $columnValue.trigger("column:afterMove");
   });
 };
 
@@ -287,8 +309,12 @@ Cms_TemplateForm.prototype.moveDown = function($evTarget) {
 
   var self = this;
   Cms_TemplateForm.swapElement($columnValue, $next, function() {
+    $columnValue.trigger("column:beforeMove");
+
     $next.after($columnValue);
     self.resetOrder();
+
+    $columnValue.trigger("column:afterMove");
   });
 };
 

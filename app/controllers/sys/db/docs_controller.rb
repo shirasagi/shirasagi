@@ -14,14 +14,14 @@ class Sys::Db::DocsController < ApplicationController
   end
 
   def set_db
-    raise '500' unless Rails.env =~ /development|test/
+    raise '500' unless Rails.env.macth?(/development|test/)
     @db = Mongoid.default_client
     @coll = @db[params[:coll]]
   end
 
   def set_item
     id = params[:id]
-    if id =~ /^\d+$/
+    if id.match?(/^\d+$/)
       id = id.to_i
     elsif id.length == 24
       id = BSON::ObjectId.from_string(id)

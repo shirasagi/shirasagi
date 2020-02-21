@@ -9,7 +9,7 @@ describe SS::File, dbscope: :example do
   context "with valid item" do
     subject { create :ss_file }
     its(:valid?) { is_expected.to be_truthy }
-    its(:path) { is_expected.to eq "#{Rails.root}/tmp/ss_files/ss_files/#{subject.id}/_/#{subject.id}" }
+    its(:path) { is_expected.to eq "#{SS::File.root}/ss_files/#{subject.id}/_/#{subject.id}" }
     its(:url) { is_expected.to eq "/fs/#{subject.id}/_/#{subject.name}" }
     its(:thumb_url) { is_expected.to eq "/fs/#{subject.id}/_/thumb/#{subject.name}" }
     its(:public?) { is_expected.to be_falsey }
@@ -27,7 +27,7 @@ describe SS::File, dbscope: :example do
     let(:site) { ss_site }
     subject { create :ss_file, site_id: site.id }
     its(:valid?) { is_expected.to be_truthy }
-    its(:path) { is_expected.to eq "#{Rails.root}/tmp/ss_files/ss_files/#{subject.id}/_/#{subject.id}" }
+    its(:path) { is_expected.to eq "#{SS::File.root}/ss_files/#{subject.id}/_/#{subject.id}" }
     its(:url) { is_expected.to eq "/fs/#{subject.id}/_/#{subject.name}" }
     its(:thumb_url) { is_expected.to eq "/fs/#{subject.id}/_/thumb/#{subject.name}" }
     its(:public?) { is_expected.to be_falsey }
@@ -46,7 +46,7 @@ describe SS::File, dbscope: :example do
     let(:site1) { create(:ss_site_subdir, domains: site0.domains, parent_id: site0.id) }
     subject { create :ss_file, site_id: site1.id }
     its(:valid?) { is_expected.to be_truthy }
-    its(:path) { is_expected.to eq "#{Rails.root}/tmp/ss_files/ss_files/#{subject.id}/_/#{subject.id}" }
+    its(:path) { is_expected.to eq "#{SS::File.root}/ss_files/#{subject.id}/_/#{subject.id}" }
     its(:url) { is_expected.to eq "/fs/#{subject.id}/_/#{subject.name}" }
     its(:thumb_url) { is_expected.to eq "/fs/#{subject.id}/_/thumb/#{subject.name}" }
     its(:public?) { is_expected.to be_falsey }
@@ -370,6 +370,54 @@ describe SS::File, dbscope: :example do
 
       it do
         expect(copy).not_to eq src
+      end
+    end
+  end
+
+  describe "what ss/file exports to liquid" do
+    let(:assigns) { {} }
+    let(:registers) { {} }
+    subject { file.to_liquid }
+
+    before do
+      subject.context = ::Liquid::Context.new(assigns, {}, registers, true)
+    end
+
+    context "with image file" do
+      let!(:file) { create :ss_file }
+
+      it do
+        expect(subject.name).to eq file.name
+        expect(subject.extname).to eq file.extname
+        expect(subject.size).to eq file.size
+        expect(subject.humanized_name).to eq file.humanized_name
+        expect(subject.filename).to eq file.filename
+        expect(subject.basename).to eq file.basename
+        expect(subject.url).to eq file.url
+        expect(subject.thumb_url).to be_present
+        expect(subject.thumb_url).to eq file.thumb_url
+        expect(subject.image?).to be_truthy
+      end
+    end
+
+    context "with pdf file" do
+      let(:path) { Rails.root.join("spec/fixtures/ss/shirasagi.pdf") }
+      let!(:file) do
+        Fs::UploadedFile.create_from_file(path, content_type: 'application/pdf') do |file|
+          create :ss_file, in_file: file
+        end
+      end
+
+      it do
+        expect(subject.name).to eq file.name
+        expect(subject.extname).to eq file.extname
+        expect(subject.size).to eq file.size
+        expect(subject.humanized_name).to eq file.humanized_name
+        expect(subject.filename).to eq file.filename
+        expect(subject.basename).to eq file.basename
+        expect(subject.url).to eq file.url
+        expect(subject.thumb_url).to be_blank
+        expect(subject.image?).to be_falsey
       end
     end
   end

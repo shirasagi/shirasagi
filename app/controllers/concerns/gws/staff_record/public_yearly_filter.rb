@@ -17,4 +17,13 @@ module Gws::StaffRecord::PublicYearlyFilter
 
     render(html: t('gws/staff_record.errors.no_data'), layout: true) unless @cur_year
   end
+
+  def set_search_params
+    @s = OpenStruct.new params[:s]
+    unless @s[:section_name]
+      user = @cur_year.yearly_users.where(code: @cur_user.organization_uid).first
+      @s[:section_name] = user.try(:section_name) if @cur_year.yearly_groups.where(name: user.try(:section_name)).present?
+      @s[:section_name] ||= @cur_group.trailing_name if @cur_year.yearly_groups.where(name: @cur_group.trailing_name).present?
+    end
+  end
 end

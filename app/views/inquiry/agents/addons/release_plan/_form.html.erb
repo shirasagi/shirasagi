@@ -1,6 +1,7 @@
-<%= jquery do %>
-  SS_AddonTabs.hide(".mod-cms-release_plan");
-<% end %>
+<%
+  addon ||= local_assigns.fetch(:addon, {})
+  addon[:display_body] = "hide"
+%>
 
 <dl class="see mod-cms-release_plan">
   <dt><%= @model.t :release_date %><%= @model.tt :release_date %></dt>

@@ -1,4 +1,7 @@
-<%= jquery do %> SS_AddonTabs.hide(".addon-gws-schedule-group-setting"); <% end %>
+<%
+  addon ||= local_assigns.fetch(:addon, {})
+  addon[:display_body] = "hide"
+%>
 
 <% @item.in_schedule_max_file_size_mb = @item.schedule_max_file_size.to_i / (1_024 * 1_024) %>
 
@@ -24,5 +27,18 @@
   <% if false %>
   <dt><%= @model.t :todo_delete_threshold %><%= @model.tt :todo_delete_threshold %></dt>
   <dd><%= f.select :todo_delete_threshold, @item.todo_delete_threshold_options %></dd>
+  <% end %>
+
+  <% %w(personal group custom_group group_all facility).each do |type| %>
+    <dt><%= @model.t("schedule_#{type}_tab_state") %><%= @model.tt("schedule_#{type}_tab_state") %></dt>
+    <dd>
+      <%= f.select "schedule_#{type}_tab_state", @item.send("schedule_#{type}_tab_state_options") %>
+      <% if @item.respond_to?("schedule_#{type}_tab_label") %>
+        <%= f.text_field("schedule_#{type}_tab_label", placeholder: @item.send("schedule_#{type}_tab_placeholder"), style: 'width: 10.5em;') %>
+      <% end %>
+      <% if @item.respond_to?("schedule_#{type}_extra_state") %>
+        <%= f.select "schedule_#{type}_extra_state", @item.send("schedule_#{type}_extra_state_options"), include_blank: true %>
+      <% end %>
+    </dd>
   <% end %>
 </dl>

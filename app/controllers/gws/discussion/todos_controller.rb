@@ -8,6 +8,7 @@ class Gws::Discussion::TodosController < ApplicationController
 
   before_action :set_forum
   before_action :set_crumbs
+  before_action :set_addons
 
   navi_view "gws/discussion/main/navi"
 
@@ -16,6 +17,8 @@ class Gws::Discussion::TodosController < ApplicationController
   def set_forum
     raise "403" unless Gws::Discussion::Forum.allowed?(:read, @cur_user, site: @cur_site)
     @forum = Gws::Discussion::Forum.find(params[:forum_id])
+
+    raise "404" unless @forum.allowed?(:read, @cur_user, site: @cur_site) || @forum.member?(@cur_user)
   end
 
   def set_crumbs
@@ -28,19 +31,41 @@ class Gws::Discussion::TodosController < ApplicationController
     @skip_default_group = true
     {
       start_at: params[:start] || Time.zone.now.strftime('%Y/%m/%d %H:00'),
-      member_ids: params[:member_ids].presence || [@cur_user.id],
+      member_ids: params[:member_ids].presence || [@cur_user.id]
     }
   end
 
   def fix_params
     set_forum
-    { cur_user: @cur_user, cur_site: @cur_site, discussion_forum_id: @forum.id }
+    { cur_user: @cur_user, cur_site: @cur_site, in_discussion_forum: true, discussion_forum: @forum }
+  end
+
+  def set_addons
+    @addons ||= begin
+      addons = @model.addons
+      addons = addons.reject do |addon|
+        [ Gws::Addon::Schedule::Todo::Category, Gws::Addon::Discussion::Todo ].include?(addon.klass)
+      end
+      addons
+    end
+  end
+
+  def set_items
+    or_conds = @model.member_conditions(@cur_user)
+    or_conds += @model.readable_conditions(@cur_user, site: @cur_site)
+    or_conds << @model.allow_condition(:read, @cur_user, site: @cur_site)
+
+    @items = @model.site(@cur_site).
+      discussion_forum(@forum).
+      where("$and" =>[ "$or" => or_conds ]).
+      without_deleted.
+      search(params[:s])
   end
 
   public
 
   def index
-    @items = []
+    @items = @model.none
   end
 
   def new
@@ -54,12 +79,7 @@ class Gws::Discussion::TodosController < ApplicationController
   end
 
   def print
-    @items = @model.site(@cur_site).
-      discussion_forum(@forum).
-      member_or_readable(@cur_user, site: @cur_site, include_role: true).
-      without_deleted.
-      search(params[:s])
-
+    set_items
     render layout: 'ss/print'
   end
 
@@ -67,16 +87,12 @@ class Gws::Discussion::TodosController < ApplicationController
     @start_at = params[:s][:start].to_date
     @end_at = params[:s][:end].to_date
 
-    @todos = @model.site(@cur_site).
-      discussion_forum(@forum).
-      member_or_readable(@cur_user, site: @cur_site, include_role: true).
-      without_deleted.
-      search(params[:s]).
-      map do |todo|
-        result = todo.calendar_format(@cur_user, @cur_site)
-        result[:restUrl] = gws_discussion_forum_todos_path(site: @cur_site.id)
-        result
-      end
+    set_items
+    @todos = @items.map do |todo|
+      result = todo.calendar_format(@cur_user, @cur_site)
+      result[:restUrl] = gws_discussion_forum_todos_path(site: @cur_site.id)
+      result
+    end
 
     @holidays = HolidayJapan.between(@start_at, @end_at).map do |date, name|
       { className: 'fc-holiday', title: "  #{name}", start: date, allDay: true, editable: false, noPopup: true }

@@ -33,9 +33,7 @@ class Member::Renderer::MemberInvitation
     return if registration_node.blank?
     my_group_node = Member::Node::MyGroup.site(group.site).and_public.first
 
-    params = {
-      token: recipent.verification_token,
-    }
+    params = { token: recipent.verification_token }
     if my_group_node && my_group_node.member_joins_to_invited_group == 'auto'
       params[:group] = SS::Crypt.encrypt(group.id.to_s)
     end

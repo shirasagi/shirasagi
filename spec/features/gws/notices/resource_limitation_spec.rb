@@ -26,9 +26,10 @@ describe "gws_notices", type: :feature, dbscope: :example, tmpdir: true, js: tru
         click_on I18n.t('ss.links.upload')
       end
     end
-    within '#cboxLoadedContent' do
+    wait_for_cbox do
       expect(page).to have_content(notice_file.name)
-      click_on notice_file.name
+      # click_on notice_file.name
+      first("a[data-id=\"#{notice_file.id}\"]").click
     end
     within 'form#item-form' do
       click_on I18n.t('ss.buttons.save')
@@ -89,8 +90,10 @@ describe "gws_notices", type: :feature, dbscope: :example, tmpdir: true, js: tru
 
     it do
       create_notice
-      expect(page).to have_css('#errorExplanation', text: exceeded_total_body_size_limit)
-      expect(page).to have_css('#errorExplanation', text: exceeded_total_file_size_limit)
+      within '#errorExplanation' do
+        expect(page).to have_content(exceeded_total_body_size_limit)
+        expect(page).to have_content(exceeded_total_file_size_limit)
+      end
 
       folder.reload
       expect(folder.notice_total_body_size).to eq folder.notice_total_body_size_limit - notice_text.length + 1

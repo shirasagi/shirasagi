@@ -1,82 +1,39 @@
-<style>
-.gws-schedule-csv .import-log { min-height: 2em; padding: 20px 10px 10px; border-top: 1px solid #f2f2f2; }
-.gws-schedule-csv .import-loading { color: #bbb; }
-.gws-schedule-csv .import-exist { color: #bbb; }
-.gws-schedule-csv .import-saved { color: #06d; }
-.gws-schedule-csv .import-error { color: #e00; }
-</style>
-
 <%= jquery do %>
-  $('.import-confirm').click(function(){
-    $('#import_mode').val('confirm');
-  });
-  $('.import-save').click(function(){
-    $('#import_mode').val('save');
-  });
-  $('#import_form').ajaxForm({
-    beforeSubmit: function() {
-      $('.import-log').html('<span class="import-loading"><%= t("ss.notice.uploading") %></span>');
-    },
-    success: function(data, status) {
-      var log = $('.import-log');
-      log.html('')
-
-      if (data.messages) {
-        log.append('<div class="mb-1">' + data.messages.join('<br />') + '</div>');
-      }
-      if (data.items) {
-        var count = { exist: 0, entry: 0, saved: 0, error: 0 };
-        var html = '<table class="index mt-1"><thead><tr>' +
-          '<th style="width: 150px"><%= @model.t :start_at %></th>' +
-          '<th style="width: 150px"><%= @model.t :end_at %></th>' +
-          '<th style="width: 30%"><%= @model.t :name %></th>' +
-          '<th><%= t('gws/schedule.import.result') %></th>' +
-          '</tr></thead><tbody>';
-
-        $.each(data.items, function(i, item){
-          if (item.result == 'exist') count.exist += 1;
-          if (item.result == 'entry') count.entry += 1;
-          if (item.result == 'saved') count.saved += 1;
-          if (item.result == 'error') count.error += 1;
-
-          html += '<tr class="import-' + item.result + '">' +
-            '<td>' + moment(item.start_at).format('YYYY-MM-DD h:mm') + '</td>' +
-            '<td>' + moment(item.end_at).format('YYYY-MM-DD h:mm') + '</td>' +
-            '<td>' + item.name + '</td>' +
-            '<td>' + item.messages.join('<br />') + '</td>' +
-            '</tr>'
-        });
-        html += '</tbody></table>';
-
-        var tabs = '<div class="mb-1">';
-        if (count.exist) tabs += '<span class="ml-2 import-exist"><%= t('gws/schedule.import.exist') %>(' + count.exist + ')</span>';
-        if (count.entry) tabs += '<span class="ml-2 import-entry"><%= t('gws/schedule.import.entry') %>(' + count.entry + ')</span>';
-        if (count.saved) tabs += '<span class="ml-2 import-saved"><%= t('gws/schedule.import.saved') %>(' + count.saved + ')</span>';
-        if (count.error) tabs += '<span class="ml-2 import-error"><%= t('gws/schedule.import.error') %>(' + count.error + ')</span>';
-        tabs += '</div>'
-
-        log.append(tabs + html);
-      }
-    }
-  });
+  Gws_Schedule_Csv.render(".gws-schedule-csv");
 <% end %>
 
-<section class="main-box gws-schedule-csv">
-  <header>
-    <h2><%= t("ss.import") %></h2>
-  </header>
+<div class="addon-views gws-schedule-csv">
+  <%= render "ss/crud/addon", addon: { id: "addon-basic", head: t("ss.import") } do %>
+    <%= form_for :item, url: gws_schedule_import_csv_path, html: { method: :post, id: :import_form } do |f| %>
+      <%= error_messages_for :item %>
 
-  <%= form_for :item, url: gws_schedule_import_csv_path, html: { method: :post, id: :import_form } do |f| %>
-    <%= error_messages_for :item %>
+      <dl class="see">
+        <dd class="wide">
+          <%= f.hidden_field_tag "import_mode", "save" %>
+          <%= f.file_field :in_file %>
+        </dd>
+        <dd class="wide">
+          <%= link_to(t('ss.links.download_template'), { action: :download_template }, class: "download-csv-template") %>
+          (
+          <%= link_to("項目の解説", "#csv-description-body", class: "show-csv-description") %>
+          )
+        </dd>
+      </dl>
 
-    <%= f.hidden_field_tag "import_mode", "save" %>
-    <%= f.file_field :in_file %>
-
-    <footer class="send text-left">
-      <%= f.button t("ss.buttons.confirm"), class: 'btn-default import-confirm' %>
-      <%= f.submit t("ss.import"), class: 'save import-save', data: { confirm: I18n.t("ss.confirm.import") } %>
-    </footer>
+      <footer class="send text-left">
+        <%= f.button t("ss.buttons.confirm"), class: 'btn-default import-confirm' %>
+        <%= f.submit t("ss.import"), class: 'save import-save', data: { confirm: I18n.t("ss.confirm.import") } %>
+      </footer>
+    <% end %>
   <% end %>
 
-  <div class="import-log mt-4"></div>
-</section>
+  <%= render "ss/crud/addon", addon: { id: "import-result", head: t("gws/schedule.import.result"), toggle: true, display_body: "hide" } do %>
+    <div class="import-log"></div>
+  <% end %>
+
+  <%= render "ss/crud/addon", addon: { id: "csv-description", head: t("gws/schedule.import.csv_description"), class: "hide" } do %>
+    <div id="csv-description-body" class="markdown-body">
+      <%= render "csv_description" %>
+    </div>
+  <% end %>
+</div>

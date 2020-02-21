@@ -1,34 +1,12 @@
 <dl class="see">
-  <% @item.data.each do |data| %>
-    <dt><%= tryb { data.column.name } || "Unknown Name" %></dt>
-    <% if data.column && data.column.input_type =~ /upload_file/ %>
-      <dd><%= link_to data.value, inquiry_path(params[:site], params[:cid], params[:id], data.values[0]) %></dd>
-    <% else %>
-      <dd><%= br data.value %></dd>
-    <% end %>
-  <% end %>
-
-  <dt><%= @model.t :remote_addr %></dt>
-  <dd><%= @item.remote_addr %></dd>
-
-  <dt><%= @model.t :user_agent %></dt>
-  <% browser = Browser.new(@item.user_agent, accept_language: request.accept_language) rescue nil %>
-  <% if browser %>
+  <dt><%= @item.t :state %></dt>
   <dd>
-    <span class="browser"><%= browser.name %> <%= browser.full_version %></span>
-    @
-    <span class="platform"><%= browser.platform.name %></span>
+    <span class="answer-state state-<%= @item.state %>"><%= @item.label :state %></span>
+    <% if @item.closed %><%= "(#{@item.closed.strftime("%Y/%m/%d %H:%M")})" %><% end %>
   </dd>
-  <% end %>
-  <dd><%= @item.user_agent %></dd>
 
-  <% if @item.source_url.present? %>
-  <dt><%= @model.t :source_url %></dt>
-  <dd><%= @item.source_content && @item.source_content.public? ? link_to(@item.source_content.full_url, @item.source_content.full_url, target: "_blank") : @item.source_url %></dd>
-  <% end %>
-
-  <% if @item.source_name.present? %>
-  <dt><%= @model.t :source_name %></dt>
-  <dd><%= @item.source_name %></dd>
+  <% if @item.comment.present? %>
+  <dt><%= @item.t :comment %></dt>
+  <dd><%=br @item.comment %></dd>
   <% end %>
 </dl>

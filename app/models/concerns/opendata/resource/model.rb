@@ -21,12 +21,12 @@ module Opendata::Resource::Model
 
   def url
     return source_url if source_url.present?
-    dataset.url.sub(/\.html$/, "") + "#{URI.escape(context_path)}/#{id}/#{URI.escape(filename)}"
+    file.url
   end
 
   def full_url
     return source_url if source_url.present?
-    dataset.full_url.sub(/\.html$/, "") + "#{URI.escape(context_path)}/#{id}/#{URI.escape(filename)}"
+    file.full_url
   end
 
   def content_url
@@ -35,8 +35,13 @@ module Opendata::Resource::Model
   end
 
   def download_url
-    return source_url if source_url.present?
-    dataset.url.sub(/\.html$/, "") + "#{URI.escape(context_path)}/#{id}/download"
+    n = source_url.present? ? "source-url" : filename
+    dataset.url.sub(/\.html$/, "") + "#{URI.escape(context_path)}/#{id}/#{URI.escape(n)}"
+  end
+
+  def download_full_url
+    n = source_url.present? ? "source-url" : filename
+    dataset.full_url.sub(/\.html$/, "") + "#{URI.escape(context_path)}/#{id}/#{URI.escape(n)}"
   end
 
   def path
@@ -49,6 +54,12 @@ module Opendata::Resource::Model
 
   def size
     file ? file.size : nil
+  end
+
+  def relation_file(name, opts = {})
+    file = super(name, opts)
+    file.site_id = dataset.site.id rescue nil
+    file
   end
 
   module ClassMethods

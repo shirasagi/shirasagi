@@ -20,7 +20,7 @@ module Mongoid
     def build(klass, attributes = nil)
       attributes ||= {}
       type = attributes[TYPE] || attributes[TYPE.to_sym]
-      if type && klass._types.include?(type)
+      if type
         effective_kass = type.camelize.constantize rescue klass
       else
         effective_kass = klass
@@ -32,7 +32,7 @@ module Mongoid
       selected_fields = criteria.options[:fields] if criteria
       attributes ||= {}
       type = attributes[TYPE] || attributes[TYPE.to_sym]
-      if type && klass._types.include?(type)
+      if type
         effective_kass = type.camelize.constantize rescue klass
       else
         effective_kass = klass

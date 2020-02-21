@@ -2,7 +2,7 @@
   .all-groups {
     border: 1px solid #dcdcdc;
     margin-bottom: 5px;
-    line-height: 2.0;
+    line-height: 2;
     a {
       margin-left: 10px;
     }
@@ -10,7 +10,7 @@
   .tree-groups, .custom-groups {
     margin-bottom: 5px;
     .list-item {
-      background: white;
+      background: #fff;
     }
   }
   .list-item.current {
@@ -27,18 +27,18 @@
     overflow: auto;
     z-index: 10000;
     color: #000;
-    background: #ffffff;
+    background: #fff;
     cursor: pointer;
     p {
       display: flex;
       margin-bottom: 5px;
       &.none {
-        border: 2px solid #CCCCCC;
+        border: 2px solid #ccc;
         padding: 0 2px;
         border-radius: 4px;
       }
       &.active {
-        border: 2px solid springgreen;
+        border: 2px solid #00ff7f;
         padding: 0 2px;
         border-radius: 4px;
       }
@@ -63,10 +63,13 @@
     color: #f25a38;
   }
   .data-table-wrap {
-    padding: 0px 10px 10px 10px
+    padding: 0 10px 10px;
   }
   table.data-table {
     table-layout: fixed;
+    tr {
+      background: $white;
+    }
     th.name {
       width: 18%;
     }
@@ -80,6 +83,7 @@
       width: 10%;
     }
     td {
+      background: none;
       .group-name {
         display: inline-block;
         vertical-align: middle;
@@ -91,7 +95,7 @@
         display: inline-block;
         vertical-align: middle;
         &.active {
-          border: 2px solid springgreen;
+          border: 2px solid #00ff7f;
           padding: 0 2px;
           border-radius: 4px;
         }
@@ -101,7 +105,7 @@
           border-radius: 4px;
         }
         &.none {
-          border: 2px solid #CCCCCC;
+          border: 2px solid #ccc;
           padding: 0 2px;
           border-radius: 4px;
         }
@@ -109,6 +113,9 @@
       &.presence-state-toggle {
         position: relative;
       }
+    }
+    .select-presence-state {
+      width: calc(100% - 3em);
     }
     .editable .presence-state {
       cursor: pointer;

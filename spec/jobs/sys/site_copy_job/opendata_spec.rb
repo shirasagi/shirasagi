@@ -44,6 +44,13 @@ describe Sys::SiteCopyJob, dbscope: :example do
           page.save!
         end
 
+        resource = page.resources.new(attributes_for(:opendata_resource))
+        resource.source_url = 'https://example.com'
+        resource.format = 'html'
+        resource.license_id = license.id
+        resource.save!
+        page.save!
+
         perform_enqueued_jobs do
           Sys::SiteCopyJob.perform_now
         end
@@ -67,8 +74,9 @@ describe Sys::SiteCopyJob, dbscope: :example do
         expect(dest_layout.user_id).to eq layout.user_id
         expect(dest_layout.html).to eq layout.html
 
-        expect(page.resources.count).to eq 1
+        expect(page.resources.count).to eq 2
         resource = page.resources.first
+        license = resource.license
         Cms::Page.site(dest_site).find_by(filename: page.filename).tap do |dest_page|
           dest_page = dest_page.becomes_with_route
           expect(dest_page.name).to eq page.name
@@ -81,7 +89,7 @@ describe Sys::SiteCopyJob, dbscope: :example do
           expect(dest_page.areas.pluck(:name)).to eq page.areas.pluck(:name)
           expect(dest_page.dataset_group_ids).not_to eq page.dataset_group_ids
           expect(dest_page.dataset_groups.pluck(:name)).to eq page.dataset_groups.pluck(:name)
-          expect(dest_page.resources.count).to eq 1
+          expect(dest_page.resources.count).to eq 2
           dest_page.resources.first.tap do |dest_resource|
             expect(dest_resource.name).to eq resource.name
             expect(dest_resource.text).to eq resource.text
@@ -89,12 +97,44 @@ describe Sys::SiteCopyJob, dbscope: :example do
             expect(dest_resource.format).to eq resource.format
             expect(dest_resource.rdf_iri).to eq resource.rdf_iri
             expect(dest_resource.rdf_error).to eq resource.rdf_error
-            expect(dest_resource.license_id).not_to eq resource.license_id
+            dest_resource.license.tap do |dest_license|
+              expect(dest_license.id).not_to eq license.id
+              expect(dest_license.name).to eq license.name
+              expect(dest_license.file_id).not_to eq license.file_id
+              expect(dest_license.file.name).to eq license.file.name
+              expect(dest_license.file.size).to eq license.file.size
+              expect(dest_license.file.content_type).to eq license.file.content_type
+              expect(dest_license.file.owner_item_id).to eq dest_license.id
+              expect(dest_license.file.owner_item_type).to eq dest_license.class.name
+            end
             expect(dest_resource.license.name).to eq resource.license.name
             expect(dest_resource.file_id).not_to eq resource.file_id
             expect(dest_resource.file.name).to eq resource.file.name
             expect(dest_resource.file.size).to eq resource.file.size
             expect(dest_resource.file.content_type).to eq resource.file.content_type
+            expect(dest_resource.file.owner_item_id).to eq dest_page.id
+            expect(dest_resource.file.owner_item_type).to eq dest_page.class.name
+          end
+          resource = page.resources[1]
+          dest_page.resources[1].tap do |dest_resource|
+            expect(dest_resource.name).to eq resource.name
+            expect(dest_resource.text).to eq resource.text
+            expect(dest_resource.filename).to eq resource.filename
+            expect(dest_resource.format).to eq resource.format
+            expect(dest_resource.rdf_iri).to eq resource.rdf_iri
+            expect(dest_resource.rdf_error).to eq resource.rdf_error
+            dest_resource.license.tap do |dest_license|
+              expect(dest_license.id).not_to eq license.id
+              expect(dest_license.name).to eq license.name
+              expect(dest_license.file_id).not_to eq license.file_id
+              expect(dest_license.file.name).to eq license.file.name
+              expect(dest_license.file.size).to eq license.file.size
+              expect(dest_license.file.content_type).to eq license.file.content_type
+              expect(dest_license.file.owner_item_id).to eq dest_license.id
+              expect(dest_license.file.owner_item_type).to eq dest_license.class.name
+            end
+            expect(dest_resource.license.name).to eq resource.license.name
+            expect(dest_resource.source_url).to eq resource.source_url
           end
         end
       end
@@ -190,6 +230,8 @@ describe Sys::SiteCopyJob, dbscope: :example do
             expect(dest_appfile.file.name).to eq appfile.file.name
             expect(dest_appfile.file.size).to eq appfile.file.size
             expect(dest_appfile.file.content_type).to eq appfile.file.content_type
+            expect(dest_appfile.file.owner_item_id).to eq dest_app.id
+            expect(dest_appfile.file.owner_item_type).to eq dest_app.class.name
           end
         end
 

@@ -9,7 +9,7 @@ class Gws::Schedule::Approval
   permit_params :approval_state, :facility_id
 
   validates :approval_state, presence: true, inclusion: { in: %w(unknown approve deny), allow_blank: true }
-  validates :user_id, uniqueness: { scope: :schedule_id }
+  validates :user_id, uniqueness: { scope: [ :schedule_id, :facility_id ] }
 
   def approval_state_options
     %w(unknown approve deny).map do |v|

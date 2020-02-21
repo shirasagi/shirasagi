@@ -20,9 +20,12 @@ class Opendata::Harvest::Exporter
   field :host, type: String
   field :deleted_resources, type: Array, default: []
 
-  has_many :group_settings, class_name: 'Opendata::Harvest::Exporter::GroupSetting', dependent: :destroy, inverse_of: :exporter
-  has_many :owner_org_settings, class_name: 'Opendata::Harvest::Exporter::OwnerOrgSetting', dependent: :destroy, inverse_of: :exporter
-  has_many :dataset_relations, class_name: 'Opendata::Harvest::Exporter::DatasetRelation', dependent: :destroy, inverse_of: :exporter
+  has_many :group_settings, class_name: 'Opendata::Harvest::Exporter::GroupSetting',
+    dependent: :destroy, inverse_of: :exporter
+  has_many :owner_org_settings, class_name: 'Opendata::Harvest::Exporter::OwnerOrgSetting',
+    dependent: :destroy, inverse_of: :exporter
+  has_many :dataset_relations, class_name: 'Opendata::Harvest::Exporter::DatasetRelation',
+    dependent: :destroy, inverse_of: :exporter
 
   validates :name, presence: true
   validates :api_type, presence: true
@@ -37,11 +40,9 @@ class Opendata::Harvest::Exporter
   private
 
   def validate_host
-    begin
-      self.host = ::URI.parse(url).host
-    rescue => e
-      errors.add :host, :invalid
-    end
+    self.host = ::URI.parse(url).host
+  rescue => e
+    errors.add :host, :invalid
   end
 
   public

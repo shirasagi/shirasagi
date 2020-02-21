@@ -1,35 +1,35 @@
-<% if @cur_page.contact_state == "show" && @cur_page.contact_present? %>
-  <footer class="contact">
-    <h2><%= t("contact.view.title") %></h2>
-    <% if @cur_page.contact_group %>
-      <p class="group"><%= @cur_page.contact_group.name.sub(/.*\//, "") %></p>
-    <% end %>
-    <% if @cur_page.contact_charge.present? %>
-      <p class="charge"><%= @cur_page.contact_charge %></p>
-    <% end %>
-    <% if @cur_page.contact_tel.present? %>
-      <dl class="tel">
-        <dt><%= "#{t("contact.view.tel")}:" %></dt>
-        <dd><a href="tel:<%= @cur_page.contact_tel.delete("-") %>"><%= @cur_page.contact_tel %></a></dd>
-      </dl>
-    <% end %>
-    <% if @cur_page.contact_fax.present? %>
-      <dl class="fax">
-        <dt><%= "#{t("contact.view.fax")}:" %></dt>
-        <dd><%= @cur_page.contact_fax %></dd>
-      </dl>
-    <% end %>
-    <% if @cur_page.contact_email.present? %>
-      <dl class="email">
-        <dt><%= "#{t("contact.view.email")}:" %></dt>
-        <dd><%= mail_to_entity @cur_page.contact_email %></dd>
-      </dl>
-    <% end %>
-    <% if @cur_page.contact_link_url.present? %>
-      <dl class="link">
-        <dt><%= "#{t("contact.view.link_url")}:" %></dt>
-        <dd><%= link_to @cur_page.contact_link, @cur_page.contact_link_url %></dd>
-      </dl>
-    <% end %>
-  </footer>
-<% end %>
+<% return if @cur_page.contact_state == "hide" || !@cur_page.contact_present? %>
+
+<footer class="contact">
+  <h2><%= t("contact.view.title") %></h2>
+  <% if @cur_page.contact_group %>
+    <p class="group"><%= @cur_page.contact_group.name.sub(/.*\//, "") %></p>
+  <% end %>
+  <% if @cur_page.contact_charge.present? %>
+    <p class="charge"><%= @cur_page.contact_charge %></p>
+  <% end %>
+  <% if @cur_page.contact_tel.present? %>
+    <dl class="tel">
+      <dt><%= "#{t("contact.view.tel")}:" %></dt>
+      <dd><a href="tel:<%= @cur_page.contact_tel.delete("-") %>"><%= @cur_page.contact_tel %></a></dd>
+    </dl>
+  <% end %>
+  <% if @cur_page.contact_fax.present? %>
+    <dl class="fax">
+      <dt><%= "#{t("contact.view.fax")}:" %></dt>
+      <dd><%= @cur_page.contact_fax %></dd>
+    </dl>
+  <% end %>
+  <% if @cur_page.contact_email.present? %>
+    <dl class="email">
+      <dt><%= "#{t("contact.view.email")}:" %></dt>
+      <dd><%= mail_to_entity @cur_page.contact_email %></dd>
+    </dl>
+  <% end %>
+  <% if @cur_page.contact_link_url.present? %>
+    <dl class="link">
+      <dt><%= "#{t("contact.view.link_url")}:" %></dt>
+      <dd><%= link_to @cur_page.contact_link, @cur_page.contact_link_url %></dd>
+    </dl>
+  <% end %>
+</footer>

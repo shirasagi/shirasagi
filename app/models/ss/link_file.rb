@@ -1,18 +1,12 @@
 class SS::LinkFile
-  include SS::Model::LinkFile
+  include SS::Model::File
   include SS::Relation::Thumb
 
-  cattr_accessor(:models, instance_accessor: false) { [] }
+  field :link_url, type: String
 
-  class << self
-    def model(model, klass)
-      self.models << [ model, klass ]
-    end
+  default_scope ->{ where(model: "ss/link_file") }
 
-    def find_model_class(model)
-      klass = SS::LinkFile.models.find { |k, v| k == model }
-      klass = klass[1] if klass
-      klass
-    end
+  def previewable?(opts = {})
+    public?
   end
 end

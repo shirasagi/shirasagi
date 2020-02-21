@@ -11,7 +11,7 @@
 
         <label class="check"><input type="checkbox" name="ids[]" value="<%= item.id %>" /></label>
         <div class="info">
-          <%= link_to item.name, { action: :show, id: item }, class: "title" %>
+          <%= link_to item.subject_with_group, { action: :show, id: item }, class: "title" %>
           <div class="meta">
             <span class="datetime"><%= item.send_date.strftime("%Y/%m/%d %H:%M") %></span>
           </div>

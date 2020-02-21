@@ -8,7 +8,7 @@ module Gws::Circular::PostFilter
 
     before_action :set_cur_tab
     before_action :set_crumbs
-    before_action :set_item, only: %i[show edit update disable delete destroy set_seen unset_seen toggle_seen active recover]
+    before_action :set_item, only: %i[show edit update disable delete destroy set_seen unset_seen active recover]
     before_action :set_selected_items, only: %i[active_all disable_all destroy_all set_seen_all unset_seen_all download_all]
     before_action :set_category
   end
@@ -26,17 +26,17 @@ module Gws::Circular::PostFilter
     ret
   end
 
+  # must be overridden by sub-class
   def set_cur_tab
-    @cur_tab = nil
   end
 
   def set_crumbs
     set_category
     @crumbs << [@cur_site.menu_circular_label || I18n.t('modules.gws/circular'), gws_circular_main_path]
+    @crumbs << @cur_tab if @cur_tab
     if @category.present?
-      @crumbs << [@category.name, action: :index]
+      @crumbs << [@category.name, { action: :index, category: @category }]
     end
-    @crumbs << @cur_tab
   end
 
   def set_category
@@ -80,6 +80,7 @@ module Gws::Circular::PostFilter
       @item.state = 'public'
     end
     raise '403' unless @item.allowed?(:edit, @cur_user, site: @cur_site)
+
     render_create @item.save
   end
 
@@ -92,6 +93,7 @@ module Gws::Circular::PostFilter
       @item.state = 'public'
     end
     raise '403' unless @item.allowed?(:edit, @cur_user, site: @cur_site)
+
     render_update @item.update
   end
 
@@ -107,26 +109,17 @@ module Gws::Circular::PostFilter
   end
 
   def set_seen
-    raise '404' if !@item.public? || @item.active?
-    raise '403' unless @item.member?(@cur_user)
-    raise '404' if @item.seen?(@cur_user)
-    render_update @item.set_seen(@cur_user).update
-  end
-
-  def unset_seen
-    raise '404' if !@item.public? || @item.active?
-    raise '403' unless @item.member?(@cur_user)
-    raise '404' if @item.unseen?(@cur_user)
-    render_update @item.unset_seen(@cur_user).update
-  end
-
-  def toggle_seen
     raise '404' if !@item.public? || !@item.active?
     raise '403' unless @item.member?(@cur_user)
 
-    result = @item.toggle_seen(@cur_user).update
-    notice = @item.seen?(@cur_user) ? t("gws/circular.notice.set_seen") : t("gws/circular.notice.unset_seen")
-    render_update result, notice: notice
+    render_update @item.set_seen(@cur_user).save, notice: t("ss.notice.set_seen")
+  end
+
+  def unset_seen
+    raise '404' if !@item.public? || !@item.active?
+    raise '403' unless @item.member?(@cur_user)
+
+    render_update @item.unset_seen(@cur_user).save, notice: t("ss.notice.unset_seen")
   end
 
   def set_seen_all
@@ -136,7 +129,7 @@ module Gws::Circular::PostFilter
         item.set_seen(@cur_user).save
       end
     end
-    render_destroy_all(true, notice: t("gws/circular.notice.set_seen"))
+    render_destroy_all(true, notice: t("ss.notice.set_seen"))
   end
 
   def unset_seen_all
@@ -146,6 +139,6 @@ module Gws::Circular::PostFilter
         item.unset_seen(@cur_user).save
       end
     end
-    render_destroy_all(true, notice: t("gws/circular.notice.unset_seen"))
+    render_destroy_all(true, notice: t("ss.notice.unset_seen"))
   end
 end

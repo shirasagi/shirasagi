@@ -36,8 +36,8 @@ class Gws::Share::FileUploader
       item.user_ids = user_ids
       item.custom_group_ids = custom_group_ids
 
-      if item.invalid?
-        errors[:base] += item.errors.full_messages
+      if item.invalid?(%i[update change_model])
+        errors.messages[:base] += item.errors.full_messages
         next
       end
 
@@ -45,6 +45,10 @@ class Gws::Share::FileUploader
     end
     return false if errors.present?
 
-    items.each { |item| item.save }
+    items.all? do |item|
+      result = item.save
+      errors.messages[:base] += item.errors.full_messages unless result
+      result
+    end
   end
 end

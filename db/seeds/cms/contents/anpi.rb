@@ -1,6 +1,7 @@
 puts "# anpi"
 
 def save_board_anpi_post(data)
+  return if SS.config.cms.enable_lgwan
   puts data[:name]
   cond = { site_id: @site._id, member_id: data[:member_id] }
   item = Board::AnpiPost.find_or_create_by(cond)

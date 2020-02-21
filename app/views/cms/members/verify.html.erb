@@ -3,7 +3,7 @@
   text << @node.reply_upper_text
   text << "#{@node.full_url}verify?#{ { token: @item.verification_token }.to_query }"
   text << @node.reply_lower_text
-  text << @node.reply_signature
+  text << @node.sender_signature
   text = text.join("\n\n")
 %>
 <%= form_for :item, url: { action: :verify }, html: { method: :verify, multipart: true } do |f| %>
@@ -12,8 +12,8 @@
 <div class="addon-views">
   <%= render "ss/crud/addon", addon: { id: "addon-basic", head: t("ss.confirm.send") } do %>
     <dl class="see">
-      <dt><%= @node.t :subject %></dt>
-      <dd><%= @node.subject %></dd>
+      <dt><%= @node.t :reply_subject %></dt>
+      <dd><%= @node.reply_subject %></dd>
 
       <dt><%= t('modules.addons.ss/body') %></dt>
       <dd><%= text_area_tag :name, text, readonly: true %></dd>

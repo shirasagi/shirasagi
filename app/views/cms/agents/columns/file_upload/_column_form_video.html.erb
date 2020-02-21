@@ -1,4 +1,4 @@
-<% name = "#{f.object_name}[][in_wrap][video_description]" %>
+<% name = "#{f.object_name}[][in_wrap][text]" %>
 
 <%= jquery do %>
 Cms_Form.addSyntaxCheck("<%= id %>", {
@@ -9,4 +9,4 @@ Cms_Form.addSyntaxCheck("<%= id %>", {
 });
 <% end %>
 
-<%= text_area_tag(name, value.try(:video_description), column.form_options(:video_description).merge(id: nil, "data-check-presence": t("cms.column_file_upload.video_description"))) %>
+<%= text_area_tag(name, value.try(:text), id: nil, "data-check-presence": t("cms.column_file_upload.video.text"), placeholder: t("cms.column_file_upload.video.text_place_holder")) %>

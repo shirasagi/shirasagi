@@ -1,4 +1,4 @@
-SS::Application.routes.draw do
+Rails.application.routes.draw do
 
   Webmail::Initializer
 
@@ -16,13 +16,18 @@ SS::Application.routes.draw do
   concern :mail do
     collection do
       put :set_seen
+      get :unset_seen, to: ->(_) { [200, {}, ['']] }
       put :unset_seen
+      get :set_star, to: ->(_) { [200, {}, ['']] }
       put :set_star
+      get :unset_star, to: ->(_) { [200, {}, ['']] }
       put :unset_star
       put :move
       put :rename_mailbox
       put :copy
+      get :empty, to: ->(_) { [200, {}, ['']] }
       delete :empty
+      # blank
     end
     member do
       get :download
@@ -30,9 +35,13 @@ SS::Application.routes.draw do
       get :parts_batch_download
       get :header_view
       get :source_view
+      get :set_seen, to: ->(_) { [200, {}, ['']] }
       put :set_seen
+      get :unset_seen, to: ->(_) { [200, {}, ['']] }
       put :unset_seen
+      get :set_star, to: ->(_) { [200, {}, ['']] }
       put :set_star
+      get :unset_star, to: ->(_) { [200, {}, ['']] }
       put :unset_star
       put :move
       put :copy
@@ -118,8 +127,8 @@ SS::Application.routes.draw do
     namespace "apis" do
       get ":webmail_mode-:account/recent" => "imap#recent",
         webmail_mode: /[a-z]+/, account: /\d+/, as: :recent, defaults: { webmail_mode: 'account' }
-      get ":webmail_mode-:account/latest" => "imap#latest",
-        webmail_mode: /[a-z]+/, account: /\d+/, defaults: { webmail_mode: 'account' }
+      get ":webmail_mode-:account/latest/(:mailbox)" => "imap#latest",
+        webmail_mode: /[a-z]+/, account: /\d+/, mailbox: /[^\/]+/, defaults: { webmail_mode: 'account', mailbox: 'INBOX' }
       get ":webmail_mode-:account/quota" => "imap#quota",
         webmail_mode: /[a-z]+/, account: /\d+/, as: :quota, defaults: { webmail_mode: 'account' }
       get ":webmail_mode-:account/mails" => "mails#index",

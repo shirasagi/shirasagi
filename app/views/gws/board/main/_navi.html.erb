@@ -1,17 +1,25 @@
+<%
+  links = []
+  if Gws::Board::Post.allowed?(:read, @cur_user, site: @cur_site)
+    links << link_to(t('ss.navi.editable'), gws_board_topics_path(mode: 'editable', category: '-'))
+  end
+  if Gws::Board::Post.allowed?(:trash, @cur_user, site: @cur_site)
+    links << link_to(t('ss.navi.trash'), gws_board_topics_path(mode: 'trash', category: '-'), class: 'trash')
+  end
+  if Gws::Board::Category.allowed?(:read, @cur_user, site: @cur_site)
+    links << link_to(t('gws.category'), gws_board_categories_path, class: "management")
+  end
+%>
+
+<% if links.present? %>
 <nav class="mod-navi current-navi">
   <h2><%= link_to @cur_site.menu_board_label || t('modules.gws/board'), gws_board_main_path, class: "icon-board" %></h2>
   <h3><%= link_to t('ss.navi.readable'), gws_board_topics_path(mode: '-', category: '-') %></h3>
-  <% if Gws::Board::Post.allowed?(:edit, @cur_user, site: @cur_site) %>
-    <h3><%= link_to t('ss.navi.editable'), gws_board_topics_path(mode: 'editable', category: '-') %></h3>
-  <% end %>
-  <% if Gws::Board::Post.allowed?(:trash, @cur_user, site: @cur_site) %>
-    <h3><%= link_to t('ss.navi.trash'), gws_board_topics_path(mode: 'trash', category: '-'), class: 'trash' %></h3>
-  <% end %>
-
-  <% if Gws::Board::Category.allowed?(:read, @cur_user, site: @cur_site) %>
-    <h3><%= link_to t('gws.category'), gws_board_categories_path, class: "management" %></h3>
+  <% links.each do |link| %>
+  <h3><%= link %></h3>
   <% end %>
 </nav>
+<% end %>
 
 <%= render partial: 'gws/main/navi' %>
 

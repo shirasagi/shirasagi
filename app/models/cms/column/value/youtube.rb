@@ -1,15 +1,13 @@
 class Cms::Column::Value::Youtube < Cms::Column::Value::Base
-  # field :url, type: String
-  attr_accessor :url
+  field :url, type: String
   field :youtube_id, type: String
   field :width, type: Integer
   field :height, type: Integer
   field :auto_width, type: String, default: -> { "disabled" }
-  # field :iframe, type: String
 
-  permit_values :url, :width, :height, :auto_width, :iframe, :youtube_id
+  permit_values :url, :youtube_id, :width, :height, :auto_width
 
-  before_validation :set_youtube_id
+  before_validation :set_youtube_id, unless: ->{ @new_clone }
 
   liquidize do
     export :youtube_id
@@ -30,10 +28,14 @@ class Cms::Column::Value::Youtube < Cms::Column::Value::Base
       end
 
       if uri.host.end_with?(".youtube.com")
-        return if uri.query.blank?
+        if uri.query.present?
+          value = URI::decode_www_form(uri.query).find { |k, _| k == "v" }
+          return value ? value[1] : nil
+        end
 
-        value = URI::decode_www_form(uri.query).find { |k, _| k == "v" }
-        return value ? value[1] : nil
+        if uri.path.start_with?("/embed/")
+          return uri.path[7..-1].sub(/\/.*$/, "")
+        end
       end
 
       # other
@@ -41,11 +43,19 @@ class Cms::Column::Value::Youtube < Cms::Column::Value::Base
     end
   end
 
-  def iframe
+  def youtube_url
+    youtube_id.present? ? "https://youtu.be/#{youtube_id}" : nil
+  end
+
+  def youtube_embed_url
+    youtube_id.present? ? "https://www.youtube.com/embed/#{youtube_id}" : nil
+  end
+
+  def youtube_iframe
     return if youtube_id.blank?
 
     options = {
-      src: "https://www.youtube.com/embed/#{youtube_id}",
+      src: youtube_embed_url,
       frameborder: "0",
       allow: "accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture",
       allowfullscreen: "allowfullscreen"
@@ -57,6 +67,25 @@ class Cms::Column::Value::Youtube < Cms::Column::Value::Base
     end
 
     ApplicationController.helpers.content_tag(:iframe, nil, options)
+  end
+
+  def import_csv(values)
+    super
+
+    values.map do |name, value|
+      case name
+      when self.class.t(:url)
+        self.url = value
+      when self.class.t(:youtube_id)
+        self.youtube_id = value
+      when self.class.t(:width)
+        self.width = value
+      when self.class.t(:height)
+        self.height = value
+      when self.class.t(:auto_width)
+        self.auto_width = value.present? ? I18n.t("cms.column_youtube_auto_width").invert[value] : nil
+      end
+    end
   end
 
   private
@@ -82,10 +111,10 @@ class Cms::Column::Value::Youtube < Cms::Column::Value::Base
 
     if auto_width == "enabled"
       ApplicationController.helpers.content_tag(:div, class: "youtube-auto-width youtube-embed-wrapper") do
-        iframe.try(:html_safe)
+        youtube_iframe
       end
     else
-      iframe.try(:html_safe)
+      youtube_iframe
     end
   end
 end

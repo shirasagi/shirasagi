@@ -1,73 +1,52 @@
-<div class="index">
-  <%= render file: "_list_head" %>
+<% @tap_menu = proc do |item| %>
+  <% opts = params[:folder] ? { id: item, folder: params[:folder] } : { id: item } %>
+  <%= link_to t('ss.links.show'), opts.merge(action: :show) if item.allowed?(:read, @cur_user, site: @cur_site) %>
+  <%= link_to t('ss.links.edit'), opts.merge(action: :edit) if item.allowed?(:edit, @cur_user, site: @cur_site) %>
+  <%= link_to t('ss.links.delete'), opts.merge(action: :delete) if item.allowed?(:delete, @cur_user, site: @cur_site) %>
 
-  <ul class="list-items">
-    <% @items.each do |item| %>
-    <li class="list-item">
-      <nav class="tap-menu">
-        <% opts = params[:folder] ? { id: item, folder: params[:folder] } : { id: item } %>
-        <%= link_to t('ss.links.show'), opts.merge(action: :show) if item.allowed?(:read, @cur_user, site: @cur_site) %>
-        <%= link_to t('ss.links.edit'), opts.merge(action: :edit) if item.allowed?(:edit, @cur_user, site: @cur_site) %>
-        <%= link_to t('ss.links.delete'), opts.merge(action: :delete) if item.allowed?(:delete, @cur_user, site: @cur_site) %>
-
-        <% if item.try(:image) %>
-          <%= link_to image_tag(item.image.thumb_url), item.image.url, { class: "thumb", target: "_blank" } %>
-        <% elsif item.try(:image?) %>
-          <%= link_to image_tag(item.thumb_url), item.url, { class: "thumb", target: "_blank" } %>
-        <% end %>
-      </nav>
-
-      <label class="check"><input type="checkbox" name="ids[]" value="<%= item.id %>" /></label>
-      <div class="info">
-        <%= link_to opts.merge(action: :show), class: "title" do %>
-          <i class="material-icons md-18 md-dark title-icon">&#xE24D;</i>
-          <%= item.name %>
-        <% end %>
-
-        <div class="meta">
-          <span class="id">#<%= item.id %></span>
-          <span class="datetime"><%= item.updated.strftime("%Y/%m/%d %H:%M") %></span>
-          <span class="content-type"><%= item.content_type %></span>
-          <span class="size"><%= number_to_human_size(item.size) %></span>
-          <span class="gws-share-categories">
-            <% item.categories.readable(@cur_user, site: @cur_site).compact.each do |category| %>
-              <% if params[:folder].present? %>
-                <%= link_to category.trailing_name, gws_share_folder_files_path(folder: item.folder_id, category: category.id),
-                            class: "gws-category-label", style: category_label_css(category) %>
-              <% else %>
-                <%= link_to category.trailing_name, gws_share_files_path(category: category.id),
-                            class: "gws-category-label", style: category_label_css(category) %>
-              <% end %>
-            <% end %>
-          </span>
-        </div>
-      </div>
-      <div class="links">
-        <%= link_to t('ss.links.download'), { action: :download, id: item }, { class: "btn" } %>
-      </div>
-    </li>
-    <% end %>
-  </ul>
-</div>
-
-<%= paginate @items if @items.try(:current_page) %>
-
-<% if @sub_folders.present? %>
-<div class="content-main index">
-  <div class="list-head">
-    <h2 class="list-head-title"><%= t('gws/share.child_folder') %></h2>
-  </div>
-  <ul class="list-items">
-    <% @sub_folders.each do |item| %>
-    <li class="list-item">
-      <div class="info">
-        <%= link_to gws_share_folder_files_path(folder: item, category: params[:category]), class: "title" do %>
-          <i class="material-icons md-18 md-dark title-icon">&#xE2C8;</i>
-          <%= item.trailing_name %>
-        <% end %>
-      </div>
-    </li>
-    <% end %>
-  </ul>
-</div>
+  <% if item.try(:image) %>
+    <%= link_to image_tag(item.image.thumb_url), item.image.url, { class: "thumb", target: "_blank" } %>
+  <% elsif item.try(:image?) %>
+    <%= link_to image_tag(item.thumb_url), item.url, { class: "thumb", target: "_blank" } %>
+  <% end %>
 <% end %>
+
+<% @index_title = proc do |item| %>
+  <% opts = params[:folder] ? { id: item, folder: params[:folder] } : { id: item } %>
+  <%= link_to opts.merge(action: :show), class: "title" do %>
+    <i class="material-icons md-18 md-dark title-icon">&#xE24D;</i>
+    <%= item.name %>
+  <% end %>
+  <% if item.new_flag? %><span class="gws-board-flag-new"></span><% end %>
+<% end %>
+
+<% @index_meta = proc do |item| %>
+  <span class="id">#<%= item.id %></span>
+  <span class="datetime"><%= item.updated.strftime("%Y/%m/%d %H:%M") %></span>
+  <span class="content-type"><%= item.content_type %></span>
+  <span class="size"><%= number_to_human_size(item.size) %></span>
+  <span class="gws-share-categories">
+    <% item.categories.readable(@cur_user, site: @cur_site).compact.each do |category| %>
+      <% if params[:folder].present? %>
+        <%= link_to category.trailing_name, gws_share_folder_files_path(folder: item.folder_id, category: category.id),
+                    class: "gws-category-label", style: category_label_css(category) %>
+      <% else %>
+        <%= link_to category.trailing_name, gws_share_files_path(category: category.id),
+                    class: "gws-category-label", style: category_label_css(category) %>
+      <% end %>
+    <% end %>
+  </span>
+<% end %>
+
+<% @index_extra = proc do |item| %>
+  <div class="links">
+    <%= link_to t('ss.links.download'), { action: :download, id: item }, { class: "btn" } %>
+  </div>
+<% end %>
+
+<div class="gws-schedule-file-index">
+  <%= render "folder_navi" %>
+  <div class="gws-schedule-file-main">
+    <%= render file: "gws/crud/index" %>
+  </div>
+</div>

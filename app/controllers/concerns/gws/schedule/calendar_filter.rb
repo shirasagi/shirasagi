@@ -24,6 +24,10 @@ module Gws::Schedule::CalendarFilter
       params.dig(:calendar, :view).presence || 'month'
     end
 
+    def redirection_date
+      @item.present? ? @item.start_at.to_date.to_s : params.dig(:calendar, :date)
+    end
+
     def redirection_view_format
       params.dig(:calendar, :viewFormat).presence || 'default'
     end
@@ -39,7 +43,7 @@ module Gws::Schedule::CalendarFilter
     def redirection_calendar_params
       {
         view: redirection_view,
-        date: @item.start_at.to_date.to_s,
+        date: redirection_date,
         viewFormat: redirection_view_format,
         viewTodo: redirection_view_todo,
         viewAttendance: redirection_view_attendance

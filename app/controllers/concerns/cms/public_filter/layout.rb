@@ -109,7 +109,9 @@ module Cms::PublicFilter::Layout
         body << "<div id=\"ss-preview-content-begin\" class=\"ss-preview-hide\"></div>"
       end
 
+      body << "<!-- layout_yield -->"
       body << response.body
+      body << "<!-- /layout_yield -->"
 
       if @preview && !html.include?("ss-preview-content-begin")
         body << "<div id=\"ss-preview-content-end\" class=\"ss-preview-hide\"></div>"

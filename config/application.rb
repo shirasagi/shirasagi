@@ -1,26 +1,33 @@
-require File.expand_path('boot', __dir__)
+require_relative 'boot'
 
+require "rails"
+# Pick the frameworks you want:
+require "active_model/railtie"
+require "active_job/railtie"
 # require "active_record/railtie"
+# require "active_storage/engine"
 require "action_controller/railtie"
 require "action_mailer/railtie"
+require "action_view/railtie"
+# require "action_cable/engine"
 require "sprockets/railtie"
 # require "rails/test_unit/railtie"
 
+# Require the gems listed in Gemfile, including any gems
+# you've limited to :test, :development, or :production.
 Bundler.require(*Rails.groups)
 
 module SS
-  mattr_reader(:version) { "1.11.0" }
+  mattr_reader(:version) { "1.12.3" }
 
   class Application < Rails::Application
+    # Initialize configuration defaults for originally generated Rails version.
+    config.load_defaults 5.0
+
     config.autoload_paths << "#{config.root}/lib"
     config.autoload_paths << "#{config.root}/app/validators"
     config.autoload_paths << "#{config.root}/app/helpers/concerns"
     config.autoload_paths << "#{config.root}/app/jobs/concerns"
-    config.assets.paths << "#{config.root}/public/assets/css"
-    config.assets.paths << "#{config.root}/public/assets/js"
-    config.assets.precompile << proc do |path, fn|
-      fn =~ /#{Rails.root}\/app/ && %w(.js .css).include?(::File.extname(path)) && path !~ /\/lib\// && path !~ /\/_/
-    end
 
     I18n.enforce_available_locales = true
     config.time_zone = 'Tokyo'
@@ -36,9 +43,10 @@ module SS
     Dir["#{config.root}/config/routes/**/routes.rb"].sort.each do |file|
       config.paths["config/routes.rb"] << file
     end
-    Dir["#{config.root}/config/routes/*/routes_end.rb"].sort.each do |file|
+    Dir["#{config.root}/config/routes/**/routes_end.rb"].sort.reverse_each do |file|
       config.paths["config/routes.rb"] << file
     end
+    config.paths["config/routes.rb"] << "#{config.root}/config/routes_end.rb"
 
     config.paths["config/initializers"] << "#{config.root}/config/after_initializers"
 

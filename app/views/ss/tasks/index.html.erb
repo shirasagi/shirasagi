@@ -13,7 +13,7 @@
           $("#task-form .count").html(data["current_count"] + " / " + data["total_count"]);
           $("#task-form .started").html(started.replace(/\..*/, "").replace("T", " "));
           $("#task-form .closed").html(closed.replace(/\..*/, "").replace("T", " "));
-          $("#task-form .log").val(data["logs"].join("\n"));
+          $("#task-form .log").val(data["head_logs"].join("\n"));
           if (data["state"] === "stop") {
             $("#task-form .stop-button").hide();
             $("#task-form .run-button").show();

@@ -175,7 +175,7 @@ this.Gws_Schedule_Calendar = (function () {
           start = (date.format()) + "T" + (now.getHours()) + ":00:00";
           state = ("calendar[date]=" + (date.format()) + "&") + Gws_Schedule_Calendar.viewStateQuery(view);
           links = "<a href='" + url + "/new?start=" + start + "&" + state + "' class='add-plan'><%= I18n.t 'gws/schedule.links.add_plan' %></a>";
-          todo = url.replace(/schedule\/.*/, 'schedule/todo/readables');
+          todo = url.replace(/schedule\/.*/, 'schedule/todo/-/readables');
           links += "<a href='" + todo + "/new?start=" + start + "&" + state + "' class='add-plan'><%= I18n.t 'gws/schedule.links.add_todo' %></a>";
         }
         if ($('#calendar-controller').length === 0) {

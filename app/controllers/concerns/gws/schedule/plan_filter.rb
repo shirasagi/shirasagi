@@ -53,6 +53,7 @@ module Gws::Schedule::PlanFilter
     end
   rescue Mongoid::Errors::DocumentNotFound => e
     return render_destroy(true) if params[:action] == 'destroy'
+
     raise e
   end
 
@@ -60,10 +61,10 @@ module Gws::Schedule::PlanFilter
     path = params.dig(:calendar, :path)
     if path.present?
       uri = URI(path)
-      uri.query = redirection_calendar_params.to_param
+      uri.query = { calendar: redirection_calendar_params }.to_param
       uri.to_s
     else
-      url_for(action: :index, calendar: redirection_calendar_params)
+      url_for(controller: 'gws/schedule/main', action: :index, calendar: redirection_calendar_params)
     end
   end
 
@@ -87,6 +88,7 @@ module Gws::Schedule::PlanFilter
 
   def show
     raise '403' unless @item.readable?(@cur_user, site: @cur_site)
+
     render
   end
 
@@ -124,6 +126,7 @@ module Gws::Schedule::PlanFilter
 
   def destroy
     raise "403" unless @item.allowed?(:delete, @cur_user, site: @cur_site)
+
     @item.edit_range = params.dig(:item, :edit_range)
     render_destroy @item.destroy
   end

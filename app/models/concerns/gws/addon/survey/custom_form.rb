@@ -7,6 +7,8 @@ module Gws::Addon::Survey::CustomForm
     embeds_many :column_values, class_name: 'Gws::Column::Value::Base', cascade_callbacks: true
 
     validate :validate_column_values
+
+    around_save :update_file_owner_in_column_values
   end
 
   def read_column_value(column)
@@ -57,6 +59,17 @@ module Gws::Addon::Survey::CustomForm
     return if form.blank?
     column_values.each do |column_value|
       column_value.validate_value(self, :column_values)
+    end
+  end
+
+  def update_file_owner_in_column_values
+    is_new = new_record?
+    yield
+
+    if is_new && form.present?
+      column_values.each do |column_value|
+        column_value.update_file_owner(self)
+      end
     end
   end
 end

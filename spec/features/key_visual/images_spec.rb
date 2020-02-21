@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe "key_visual_images" do
+describe "key_visual_images", type: :feature do
   let(:site) { cms_site }
   let(:node) { create_once :key_visual_node_image, name: "key_visual" }
   let(:item) { KeyVisual::Image.last }
@@ -26,7 +26,7 @@ describe "key_visual_images" do
         fill_in "item[name]", with: "sample"
         fill_in "item[link_url]", with: "http://example.jp"
         attach_file "item[in_file]", "#{Rails.root}/spec/fixtures/ss/logo.png"
-        click_button "保存"
+        click_button I18n.t('ss.buttons.save')
       end
       expect(status_code).to eq 200
       expect(current_path).not_to eq new_path
@@ -41,7 +41,7 @@ describe "key_visual_images" do
         fill_in "item[name]", with: "sample"
         fill_in "item[link_url]", with: "http://example.jp"
         attach_file "item[in_file]", "#{Rails.root}/spec/fixtures/ss/logo.png"
-        click_button "保存"
+        click_button I18n.t('ss.buttons.save')
       end
       expect(status_code).to eq 200
       expect(current_path).not_to eq new_path
@@ -58,7 +58,7 @@ describe "key_visual_images" do
       visit edit_path
       within "form#item-form" do
         fill_in "item[name]", with: "modify"
-        click_button "保存"
+        click_button I18n.t('ss.buttons.save')
       end
       expect(current_path).not_to eq sns_login_path
       expect(page).to have_no_css("form#item-form")
@@ -67,7 +67,7 @@ describe "key_visual_images" do
     it "#delete" do
       visit delete_path
       within "form" do
-        click_button "削除"
+        click_button I18n.t('ss.buttons.delete')
       end
       expect(current_path).to eq index_path
     end

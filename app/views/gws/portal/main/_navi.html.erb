@@ -33,12 +33,19 @@
     <% end %>
   <% end %>
 
-  <% if params[:group].present? || params[:user].present? %>
-    <% if Gws::Portal::UserSetting.allowed?(:read, @cur_user, site: @cur_site) %>
-      <h3><%= link_to t('gws/portal.user_portal'), gws_portal_setting_users_path, class: "management" %></h3>
+  <% if params[:group].present? || params[:user].present? || params[:controller].start_with?("gws/portal/setting/") %>
+    <% html = capture do %>
+      <% if Gws::Portal::UserSetting.allowed?(:read, @cur_user, site: @cur_site, only: :other) %>
+        <h3><%= link_to t('gws/portal.user_portal'), gws_portal_setting_users_path, class: "management" %></h3>
+      <% end %>
+      <% if Gws::Portal::GroupSetting.allowed?(:read, @cur_user, site: @cur_site, only: :other) %>
+        <h3><%= link_to t('gws/portal.group_portal'), gws_portal_setting_groups_path, class: "management" %></h3>
+      <% end %>
     <% end %>
-    <% if Gws::Portal::GroupSetting.allowed?(:read, @cur_user, site: @cur_site) %>
-      <h3><%= link_to t('gws/portal.group_portal'), gws_portal_setting_groups_path, class: "management" %></h3>
+
+    <% if html.present? %>
+      <h2><%= t("gws/portal.other_config") %></h2>
+      <%= html %>
     <% end %>
   <% end %>
 </nav>

@@ -3,6 +3,7 @@ module History::LogFilter::View
 
   def index
     @items = @model.where(cond).
+      search(params[:s]).
       order_by(created: -1, id: -1).
       page(params[:page]).per(50)
   end

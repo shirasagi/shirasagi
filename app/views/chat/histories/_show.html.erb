@@ -1,0 +1,37 @@
+<dl class="see">
+  <dt><%= @model.t :session_id %></dt>
+  <dd><%= @item.session_id %></dd>
+
+  <dt><%= @model.t :request_id %></dt>
+  <dd><%= @item.request_id %></dd>
+
+  <% if @item.question.present? %>
+    <dt><%= @model.t :question %></dt>
+    <dd><%= @cur_node.becomes_with_route.question %> → <%= @item.label :question %></dd>
+  <% else %>
+    <dt><%= @model.t :text %></dt>
+    <dd><%= @item.text %></dd>
+  <% end %>
+
+  <dt><%= @model.t :result %></dt>
+  <dd>
+    <%= html_editor "#mod-chat-history-result", height: "400px", readonly: true %>
+    <%= text_area_tag "mod-chat-history-result", @item.result, style: "height: 400px;" %>
+  </dd>
+
+  <dt><%= @model.t :suggest %></dt>
+  <dd><%= @item.suggest %></dd>
+
+  <dt><%= @model.t :click_suggest %></dt>
+  <dd><%= @item.click_suggest %></dd>
+
+  <% if @item.prev_intent.present? %>
+    <dt><%= @model.t :prev_intent_id %></dt>
+    <dd><%= link_to @item.prev_intent.name, chat_intent_path(id: @item.prev_intent.id) %></dd>
+  <% end %>
+
+  <% if @item.intent.present? %>
+    <dt><%= @model.t :intent_id %></dt>
+    <dd><%= link_to @item.intent.name, chat_intent_path(id: @item.intent.id) %></dd>
+  <% end %>
+</dl>

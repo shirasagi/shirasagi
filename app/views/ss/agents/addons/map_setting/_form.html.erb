@@ -1,6 +1,7 @@
-<%= jquery do %>
-  SS_AddonTabs.hide(".mod-ss-map-setting");
-<% end %>
+<%
+  addon ||= local_assigns.fetch(:addon, {})
+  addon[:display_body] = "hide"
+%>
 <dl class="see mod-ss-map-setting">
   <dt><%= @model.t :map_api %><%= @model.tt :map_api %></dt>
   <dd><%= f.select :map_api, @item.map_api_options, include_blank: true %></dd>

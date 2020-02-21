@@ -3,7 +3,7 @@
     clear: both;
     float: left;
     width: 100%;
-    padding: 5px 0px;
+    padding: 5px 0;
     border-bottom: 1px solid #ddd;
     h1 {
       clear: both;
@@ -15,7 +15,7 @@
       float: left;
       a {
         display: inline-block;
-        margin: 0px 5px 0px 0px;
+        margin: 0 5px 0 0;
         padding: 5px;
       }
     }
@@ -24,7 +24,7 @@
 
 #task-form {
   .info {
-    margin: 0px 0px 15px;
+    margin: 0 0 15px;
     dt, dd {
       display: inline-block;
       padding: 5px 10px;
@@ -35,7 +35,7 @@
     }
     dd {
       min-width: 60px;
-      margin: 0px;
+      margin: 0;
     }
   }
   .logs {
@@ -67,33 +67,52 @@
     display: inline-block;
     padding: 1px 5px;
     @include border-radius(3px);
-    background-image: url(/assets/img/gws/bg-plan.png);
     font-size: 90%;
     font-weight: normal;
-
+    &.state-public, &.state-closed, &.state-ready, &.state-request, &.state-edit, &.state-remand, &.state-deletion-locked {
+      color: #fff;
+    }
     &.state-public {
-      background-color: #28a745;
-      color: #000000;
+      background-color: #2f7e42;
     }
     &.state-closed {
       background-color: #6c757d;
-      color: #fff;
     }
     &.state-ready {
-      background-color: #fdc02f;
-      color: #000000;
+      background-color: #956c0a;
     }
     &.state-request {
-      background-color: #167FFB;
-      color: #000000;
+      background-color: #426ba9;
     }
     &.state-edit {
-      background-color: #dc3545;
-      color: #000000;
+      background-color: #c82635;
     }
     &.state-remand {
-      background-color: #17a2b8;
-      color: #000000;
+      background-color: #895b8a;
+    }
+    &.state-deletion-locked {
+      background-color: #6c757d;
+    }
+  }
+}
+.list-item, .see {
+  .answer-state {
+    display: inline-block;
+    padding: 1px 5px;
+    @include border-radius(3px);
+    font-size: 90%;
+    font-weight: normal;
+    &.state-open {
+      background-color: rgba(237, 128, 119, .4);
+    }
+    &.state-processing {
+      background-color: rgba(68, 136, 197, .4);
+    }
+    &.state-processed {
+      background-color: rgba(94, 181, 166, .4);
+    }
+    &.state-closed {
+      background-color: rgba(176, 190, 60, .4);
     }
   }
 }
@@ -131,12 +150,12 @@
 // Dropdown
 .cms-dropdown-menu {
   left: -4px;
-  max-height:300px;
+  max-height: 300px;
   overflow-y: scroll;
   margin: 0;
   padding: 4px;
   border: $border-gray4;
-  @include box-shadow(0px 3px 12px rgba(0,0,0,.2));
+  @include box-shadow(0 3px 12px rgba(0, 0, 0, .2));
   background: $white;
   white-space: nowrap;
 }

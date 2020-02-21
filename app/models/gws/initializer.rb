@@ -40,6 +40,7 @@ module Gws
 
     SS::File.model "gws/file", Gws::File
     SS::File.model "share/file", Gws::Share::File
+    SS::File.model "gws/history_archive_file", Gws::HistoryArchiveFile
 
     Gws.module_usable :bookmark do |site, user|
       Gws::Bookmark.allowed?(:read, user, site: site)

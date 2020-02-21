@@ -2,7 +2,7 @@ require 'spec_helper'
 
 describe "sys_ad", type: :feature, dbscope: :example, tmpdir: true, js: true do
   context "basic crud" do
-    let(:ss_file) { tmp_file(contents: "#{Rails.root}/spec/fixtures/ss/logo.png", user: SS::User.find(1)) }
+    let(:ss_file) { SS::TmpDir.tmp_file(contents: "#{Rails.root}/spec/fixtures/ss/logo.png", user: SS::User.find(1)) }
     let(:time) { rand(1..10) }
     let(:width) { rand(1..100) }
     let(:url) { "http://example.com" }
@@ -20,7 +20,7 @@ describe "sys_ad", type: :feature, dbscope: :example, tmpdir: true, js: true do
         find('a.btn', text: I18n.t('ss.buttons.upload')).click
       end
 
-      within '#cboxLoadedContent' do
+      wait_for_cbox do
         expect(page).to have_content(ss_file.name)
         find("a[data-id='#{ss_file.id}']").click
       end

@@ -33,6 +33,13 @@ class Gws::Report::File
   around_destroy ::Gws::Elasticsearch::Indexer::ReportFileJob.callback
 
   class << self
+    def accessible(user, opts)
+      conds = self.readable_conditions(user, opts)
+      conds += self.member_conditions(user, opts)
+      conds << self.allow_condition(:read, user, opts)
+      self.all.where("$and" => [{ "$or" => conds }])
+    end
+
     def search(params)
       criteria = all
       return criteria if params.blank?
@@ -44,6 +51,7 @@ class Gws::Report::File
 
     def search_keyword(params)
       return all if params[:keyword].blank?
+
       all.keyword_in(params[:keyword], :name, :text, 'column_values.text_index')
     end
 
@@ -103,6 +111,10 @@ class Gws::Report::File
     [ *ret, options ]
   end
 
+  def new_flag?
+    created > Time.zone.now - site.report_new_days.day
+  end
+
   private
 
   def send_notification_mail
@@ -134,10 +146,10 @@ class Gws::Report::File
     end
 
     cur_user_id = @cur_user.try(:id) || user.id
-    added_member_ids   -= [cur_user_id]
-    removed_member_ids -= [cur_user_id]
-    added_member_ids.select!{|user_id| Gws::User.find(user_id).use_notice?(self)}
-    removed_member_ids.select!{|user_id| Gws::User.find(user_id).use_notice?(self)}
+    added_member_ids   -= [ cur_user_id ]
+    removed_member_ids -= [ cur_user_id ]
+    added_member_ids.select!{ |user_id| Gws::User.find(user_id).use_notice?(self) }
+    removed_member_ids.select!{ |user_id| Gws::User.find(user_id).use_notice?(self) }
 
     return if added_member_ids.blank? && removed_member_ids.blank?
 

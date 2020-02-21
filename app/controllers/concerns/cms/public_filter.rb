@@ -1,11 +1,12 @@
 module Cms::PublicFilter
   extend ActiveSupport::Concern
+  include Cms::PublicFilter::Site
   include Cms::PublicFilter::Node
   include Cms::PublicFilter::Page
 
   included do
-    rescue_from StandardError, with: :rescue_action
-    before_action :set_site
+    # rescue_from StandardError, with: :rescue_action
+    before_action :ensure_site_presence
     before_action :set_request_path
     #before_action :redirect_slash, if: ->{ request.env["REQUEST_PATH"] =~ /\/[^\.]+[^\/]$/ }
     before_action :deny_path
@@ -16,7 +17,7 @@ module Cms::PublicFilter
   end
 
   def index
-    if @cur_path =~ /\.p[1-9]\d*\.html$/
+    if @cur_path.match?(/\.p[1-9]\d*\.html$/)
       page = @cur_path.sub(/.*\.p(\d+)\.html$/, '\\1')
       params[:page] = page.to_i
       @cur_path.sub!(/\.p\d+\.html$/, ".html")
@@ -36,13 +37,11 @@ module Cms::PublicFilter
 
   private
 
-  def set_site
-    host = request_host
-    path = request_path
-
-    @cur_site ||= request.env["ss.site"] ||= SS::Site.find_by_domain(host, path)
+  def ensure_site_presence
     return if @cur_site
 
+    host = request_host
+    path = request_path
     if path =='/' && group = SS::Group.where(domains: host).first
       return redirect_to "//#{host}" + gws_login_path(site: group)
     end
@@ -76,7 +75,7 @@ module Cms::PublicFilter
   end
 
   def deny_path
-    raise "404" if @cur_path =~ /^\/sites\/.\//
+    raise "404" if @cur_path.match?(/^\/sites\/.\//)
   end
 
   def parse_path
@@ -97,8 +96,8 @@ module Cms::PublicFilter
   end
 
   def compile_scss
-    return if @cur_path !~ /\.css$/
-    return if @cur_path =~ /\/_[^\/]*$/
+    return unless @cur_path.match?(/\.css$/)
+    return if @cur_path.match?(/\/_[^\/]*$/)
     return unless Fs.exists? @scss = @file.sub(/\.css$/, ".scss")
 
     css_mtime = Fs.exists?(@file) ? Fs.stat(@file).mtime : 0
@@ -213,13 +212,17 @@ module Cms::PublicFilter
   end
 
   def page_not_found
+    request.env["action_dispatch.show_exceptions"] = false if @preview
     raise "404"
   end
 
   def rescue_action(exception = nil)
-    return render_error(exception, status: exception.to_s.to_i) if exception.to_s.numeric?
-    return render_error(exception, status: 404) if exception.is_a? Mongoid::Errors::DocumentNotFound
-    return render_error(exception, status: 404) if exception.is_a? ActionController::RoutingError
+    if !@preview
+      return render_error(exception, status: exception.to_s.to_i) if exception.to_s.numeric?
+      return render_error(exception, status: 404) if exception.is_a? Mongoid::Errors::DocumentNotFound
+      return render_error(exception, status: 404) if exception.is_a? ActionController::RoutingError
+    end
+
     raise exception
   end
 
@@ -243,7 +246,7 @@ module Cms::PublicFilter
       return file if Fs.exists?(file)
     end
 
-    file = "#{Rails.public_path}/#{status}.html"
-    Fs.exists?(file) ? file : "#{Rails.public_path}/500.html"
+    file = "#{Rails.public_path}/.error_pages/#{status}.html"
+    Fs.exists?(file) ? file : "#{Rails.public_path}/.error_pages/500.html"
   end
 end

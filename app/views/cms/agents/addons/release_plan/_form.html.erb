@@ -1,7 +1,7 @@
-<%= jquery do %>
-  SS_AddonTabs.hide(".mod-cms-release_plan");
-<% end %>
 <%
+  addon ||= local_assigns.fetch(:addon, {})
+  addon[:display_body] = "hide"
+
   if @item.new_record? && @item.default_release_plan_enabled?
     @item.release_date ||= @item.default_release_date
     @item.close_date ||= @item.default_close_date

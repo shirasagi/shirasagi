@@ -1,4 +1,6 @@
 <%
+return if @item.estat_categories.blank?
+
 def name_hier(category)
   names = []
   names << category.name
@@ -10,5 +12,5 @@ def name_hier(category)
 end
 %>
 <dl class="see">
-  <dd class="wide"><%=br @item.estat_categories.map { |cate| name_hier(cate) }.join("\n") %></dd>
+  <dd class="wide"><%=br @item.estat_categories.map { |cate| name_hier(cate) } %></dd>
 </dl>

@@ -6,9 +6,6 @@ class Webmail::UsersController < ApplicationController
 
   # prepend_view_path "app/views/ss/roles"
 
-  before_action :set_items
-  before_action :set_item, only: [:show, :edit, :update, :delete, :destroy]
-
   private
 
   def set_crumbs
@@ -19,21 +16,26 @@ class Webmail::UsersController < ApplicationController
     { cur_user: @cur_user }
   end
 
-  def set_items
-    @items = @model.all.allow(:read, @cur_user).state(params.dig(:s, :state)).search(params[:s])
-  end
-
-  def set_item
-    @item = @items.find(params[:id])
-  end
-
   public
 
   def index
     raise "403" unless @model.allowed?(:read, @cur_user)
 
-    @items = @items.order_by(_id: -1).
+    @items = @model.all.
+      allow(:read, @cur_user).
+      state(params.dig(:s, :state)).
+      search(params[:s]).
+      order_by(_id: -1).
       page(params[:page]).per(50)
+  end
+
+  def destroy
+    raise "403" unless @item.allowed?(:delete, @cur_user)
+    render_destroy @item.disable
+  end
+
+  def destroy_all
+    disable_all
   end
 
   def import

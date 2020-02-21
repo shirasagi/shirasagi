@@ -1,5 +1,4 @@
 <%= jquery do %>
-  //SS_AddonTabs.hide(".gws-addon-member");
   $('.sortable-index tbody').sortable();
 <% end %>
 
@@ -51,7 +50,7 @@ show_personal_addr = @cur_user.gws_role_permit_any?(@cur_site, :edit_gws_persona
     <a class="cc-bcc-label" href="#">[ <%= t 'webmail.links.show_cc_bcc' %> ]</a>
   <% end %>
 
-  <dl class="see cc-bcc cc  <%= 'hide' if cc_blank %>">
+  <dl class="see cc-bcc cc"<% if cc_blank %> style="display: none;"<% end %>>
     <dt><%= @model.t :cc_member_ids %><%= @model.tt :cc_member_ids %></dt>
     <dd>
       <%= f.hidden_field "in_cc_members[]", value: "", class: "hidden-ids" %>
@@ -89,7 +88,7 @@ show_personal_addr = @cur_user.gws_role_permit_any?(@cur_site, :edit_gws_persona
     </dd>
   </dl>
 
-  <dl class="see cc-bcc bcc  <%= 'hide' if cc_blank %>">
+  <dl class="see cc-bcc bcc"<% if cc_blank %> style="display: none;"<% end %>>
     <dt><%= @model.t :bcc_member_ids %><%= @model.tt :bcc_member_ids %></dt>
     <dd>
       <%= f.hidden_field "in_bcc_members[]", value: "", class: "hidden-ids" %>

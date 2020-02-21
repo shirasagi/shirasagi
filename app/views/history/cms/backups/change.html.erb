@@ -11,7 +11,7 @@
     <% next if @data[k] == value %>
     <% value ||= '' if @data[k].is_a?(String) %>
     <tr>
-      <th><%= @item.ref_class.constantize.t k %></th>
+      <th><%= @item.model.t k %></th>
       <% case value %>
       <% when Array %>
         <% before_value = value.present? ? value.join(',') : "" %>

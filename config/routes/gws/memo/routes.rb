@@ -1,4 +1,4 @@
-SS::Application.routes.draw do
+Rails.application.routes.draw do
   Gws::Memo::Initializer
 
   concern :deletion do
@@ -24,7 +24,8 @@ SS::Application.routes.draw do
       end
       member do
         get :trash
-        post :toggle_star
+        put :set_star
+        put :unset_star
         get :download
         get :parts, path: 'parts/:section', format: false, section: /[^\/]+/
         get :reply
@@ -39,12 +40,10 @@ SS::Application.routes.draw do
 
     resources :notices, concerns: :deletion, only: [:index, :show, :destroy] do
       get :recent, on: :collection
-      get :latest, on: :collection
+      get 'latest/(:filter)' => :latest, on: :collection, defaults: { filter: :all }
     end
 
     resource :notice_user_settings, only: [:show, :edit, :update]
-
-    resources :comments, path: ':message_id/comments', only: [:create, :destroy]
 
     namespace "apis" do
       get "shared_addresses" => "shared_addresses#index"

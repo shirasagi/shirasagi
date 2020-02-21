@@ -1,6 +1,7 @@
 puts "# parts"
 
 def save_part(data)
+  return if SS.config.cms.enable_lgwan && data[:route].start_with?('member/')
   puts data[:name]
   cond = { site_id: @site._id, filename: data[:filename] }
 
@@ -9,14 +10,21 @@ def save_part(data)
   loop_html ||= File.read("parts/" + data[:filename].sub(/\.html$/, ".loop_html")) rescue nil
   lower_html ||= File.read("parts/" + data[:filename].sub(/\.html$/, ".lower_html")) rescue nil
 
-  item = Cms::Part.unscoped.find_or_create_by(cond).becomes_with_route(data[:route])
-  item.html = html if html
+  item = data[:route].sub("/", "/part/").camelize.constantize.unscoped.find_or_initialize_by(cond)
+  if html
+    if SS.config.cms.enable_lgwan
+      html.gsub!('<li class="sight"><a href="/kanko-info/">観光情報</a></li>', '')
+      html.gsub!('<li><a href="/mypage/">安否確認</a></li>', '')
+    end
+    item.html = html
+  end
   item.upper_html = upper_html if upper_html
   item.loop_html = loop_html if loop_html
   item.lower_html = lower_html if lower_html
 
   item.attributes = data
-  item.update
+  item.cur_user = @user
+  item.save
   item.add_to_set group_ids: @site.group_ids
 
   item

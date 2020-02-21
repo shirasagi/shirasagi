@@ -4,11 +4,11 @@
 // menu and common
 
 .webmail-dropdown-menu, .webmail-address-dropdown-menu {
+  @include box-shadow(0 3px 12px rgba(0, 0, 0, .2));
   left: 0;
   margin: 0;
   padding: 5px 0;
   border: 1px solid #ccc;
-  @include box-shadow(0px 3px 12px rgba(0,0,0,.2));
   background: #fff;
   text-align: left;
   a {
@@ -45,9 +45,9 @@ li.webmail-accounts {
   margin-right: 10px;
 }
 .webmail-category-label {
+  @include border-radius(3px);
   display: inline-block;
   padding: 1px 5px;
-  @include border-radius(3px);
   background-color: #e8e8e8;
   background-image: url(/assets/img/gws/bg-plan.png);
   color: #444;
@@ -55,8 +55,8 @@ li.webmail-accounts {
   font-weight: normal;
 
   &.webmail-error {
-    background-color: #FF4000;
-    color: #ffffff;
+    background-color: #f40;
+    color: #fff;
   }
 }
 
@@ -67,7 +67,7 @@ li.webmail-accounts {
   .reload {
     &:hover { background: none !important; }
     &:hover .material-icons { color: $orange; }
-    &.disabled .material-icons { color: rgba(0,0,0,.2); }
+    &.disabled .material-icons { color: rgba(0, 0, 0, .2); }
   }
 }
 .webmail-navi-mailboxes {
@@ -111,11 +111,11 @@ li.webmail-accounts {
       vertical-align: middle;
     }
     .mailbox--noselect .material-icons {
-      color: rgba(0,0,0,.5);
+      color: rgba(0, 0, 0, .5);
     }
   }
   .droppable-hover {
-    color: red;
+    color: #f00;
   }
 }
 .webmail-navi-quota {
@@ -166,8 +166,8 @@ li.webmail-accounts {
   padding: 10px 20px;
   border-bottom: 1px solid #eee;
   label.flag {
-   width: auto;
-   padding: 0 15px 0 15px;
+    width: auto;
+    padding: 0 15px;
   }
 }
 
@@ -192,18 +192,18 @@ li.webmail-accounts {
     display: block;
   }
   .list-item-head {
+    @include mb { display: none; }
     font-weight: bold;
     padding-bottom: 8px;
     .head {
       height: 20px;
       position: relative;
-      .field { position:absolute; }
+      .field { position: absolute; }
       .from, .to { left: 82px; }
       .title { left: 286px; }
       .datetime { right: 128px; }
       .size { right: 14px; }
     }
-    @include mb { display: none; }
   }
   .info {
     @include truncate;
@@ -248,7 +248,7 @@ li.webmail-accounts {
       margin: 12px 0 0;
       &.on    .material-icons { color: #f70; }
       &.off   .material-icons { color: #ddd; }
-      &:hover .material-icons { opacity: 0.8; }
+      &:hover .material-icons { opacity: .8; }
     }
     .subject {
       display: block;
@@ -309,13 +309,13 @@ li.webmail-accounts {
     margin: -5px 0 10px;
     padding: 8px;
     border: 1px solid #fd8;
-    background-color: rgba(255,255,0,.2);
+    background-color: rgba(255, 255, 0, .2);
     background-color: #ffc;
     text-decoration: none;
     text-align: center;
     &:hover {
       border-color: #fb8;
-      background-color: rgba(255,255,0,.35);
+      background-color: rgba(255, 255, 0, .35);
       background-color: #ffa;
     }
   }
@@ -323,21 +323,17 @@ li.webmail-accounts {
     min-height: 200px;
     border-top: 1px solid #e4e4e4;
     .body--html {
-      ul {
-        li {
-          list-style-type: disc;
-        }
+      ul li {
+        list-style-type: disc;
       }
-
       blockquote {
         padding: 2px 8px 2px 20px;
         border-left-style: solid;
         border-left-color: #ccc;
         border-left-width: 5px;
       }
-
       img[data-url] {
-         height: unset;
+        height: unset;
       }
     }
   }
@@ -361,7 +357,6 @@ li.webmail-accounts {
   margin: 0;
   padding: 0 10px;
   &.cc-bcc {
-    //display: none;
     margin-top: 10px;
     padding-top: 15px;
     border-top: 1px solid #e4e4e4;
@@ -387,15 +382,15 @@ li.webmail-accounts {
       max-width: 500px;
       margin: 0 4px 4px 0;
       padding: 2px 5px;
-      border: 1px solid #bbccdd;
+      border: 1px solid #bcd;
       border-radius: 3px;
-      background: #ddeeff;
+      background: #def;
       &:hover {
         background: #d7e7f7;
       }
     }
     .invalid-address {
-      border-bottom: dotted 2px red;
+      border-bottom: dotted 2px #f00;
     }
     .placeholder {
       height: 26px;
@@ -457,7 +452,7 @@ li.webmail-accounts {
   }
   .address-group-label {
     display: block;
-    padding: 0 0 2px 0;
+    padding: 0 0 2px;
   }
 }
 .webmail-addon-mail-file {

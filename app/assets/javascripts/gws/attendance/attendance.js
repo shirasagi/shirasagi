@@ -45,6 +45,11 @@ Gws_Attendance.prototype.render = function() {
     location.href = _this.options.indexUrl.replace(':year_month', val);
   });
 
+  this.$toolbar.find(".punch").on("click", function() {
+    _this.onPunchClicked($(this).attr("href"), $(this).data("confirmation"));
+    return false;
+  });
+
   $(document).on('click', this.el + ' .time-card .time', function(ev) {
     ev.preventDefault();
     ev.stopPropagation();
@@ -139,14 +144,42 @@ Gws_Attendance.prototype.onClickCell = function($cell, urlTemplate) {
     return;
   }
 
-  var url = urlTemplate;
-  url = url.replace(':day', $cell.data('day'));
-  url = url.replace(':type', $cell.data('type'));
-  this.$toolbar.find('.edit').attr('href', url);
-  if (this.options.editable || this.isCellToday($cell)) {
-    this.$toolbar.find('.edit').show();
-  } else {
+  var day = $cell.data('day');
+  var type = $cell.data('type');
+  var mode = $cell.data('mode');
+
+  var punchable = this.isCellToday($cell);
+  var editable = this.options.editable;
+
+  if (type === "memo") {
+    if (this.isCellToday($cell)) {
+      editable = true;
+    }
+  }
+
+  var showsToolbar = false;
+  if (mode === "punch" && punchable) {
+    var url = this.options.punchUrl;
+    url = url.replace(':type', type);
+
     this.$toolbar.find('.edit').hide();
+    this.$toolbar.find('.punch').attr('href', url).show();
+    showsToolbar = true;
+  }
+
+  if (mode === "edit" && editable) {
+    var url = urlTemplate;
+    url = url.replace(':day', day);
+    url = url.replace(':type', type);
+
+    this.$toolbar.find('.punch').hide();
+    this.$toolbar.find('.edit').attr('href', url).show();
+    showsToolbar = true;
+  }
+
+  if (! showsToolbar) {
+    this.$toolbar.hide();
+    return;
   }
 
   var offset = $cell.offset();

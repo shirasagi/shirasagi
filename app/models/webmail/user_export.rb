@@ -32,7 +32,9 @@ class Webmail::UserExport
     # Ldap::Addon::Group
     { key: 'ldap_dn', label: Webmail::User.t('ldap_dn') }.freeze,
     # Webmail::Addon::Role
-    { key: 'webmail_role_ids', label: Webmail::User.t('webmail_role_ids') }.freeze,
+    { key: 'webmail_role_ids', label: I18n.t("mongoid.attributes.ss/model/user.webmail_role_ids") }.freeze,
+    # Sys::Reference::Role
+    { key: 'sys_role_ids', label: I18n.t("mongoid.attributes.ss/model/user.sys_role_ids") }.freeze,
     # Webmail::UserExtension
     { key: 'imap_setting.account_index', label: with_imap_prefix(Webmail::User.t('account_index')), setter: :none }.freeze,
     { key: 'imap_setting.name', label: with_imap_prefix(Webmail::ImapSetting.t('name')) }.freeze,
@@ -93,7 +95,11 @@ class Webmail::UserExport
       update_row(row, index)
       index += 1
     end
-    errors.empty?
+    result = errors.empty?
+
+    purge_webmail_caches
+
+    result
   end
 
   private
@@ -171,7 +177,10 @@ class Webmail::UserExport
     return errors.add :in_file, :blank if in_file.blank?
 
     fname = in_file.original_filename
-    return errors.add :in_file, :invalid_file_type if ::File.extname(fname) !~ /^\.csv$/i
+    unless /^\.csv$/i.match?(::File.extname(fname))
+      errors.add :in_file, :invalid_file_type
+      return
+    end
 
     unmatched = 0
     CSV.foreach(in_file.path, headers: true, encoding: 'SJIS:UTF-8') do |row|
@@ -262,6 +271,10 @@ class Webmail::UserExport
     item.webmail_roles.pluck(:name).join("\n")
   end
 
+  def get_item_sys_role_ids(item, index, setting)
+    item.sys_roles.and_general.pluck(:name).join("\n")
+  end
+
   def get_item_imap_setting_account_index(item, index, setting)
     index + 1
   end
@@ -317,11 +330,7 @@ class Webmail::UserExport
     return if account_index != 0
 
     password = str(row, 'password')
-    if password.present?
-      item.in_password = password
-    else
-      item.password = nil
-    end
+    item.in_password = password if password.present?
   end
 
   def set_item_type(row, item, setting)
@@ -377,8 +386,11 @@ class Webmail::UserExport
     account_index = str(row, 'imap_setting.account_index').to_i - 1
     return if account_index != 0
 
-    groups = str(row, 'group_ids').split("\n")
-    groups = SS::Group.unscoped.in(name: groups)
+    group_names = str(row, 'group_ids').split("\n")
+    groups = SS::Group.unscoped.in(name: group_names)
+
+    item.imported_group_keys = group_names
+    item.imported_groups = groups
 
     item.group_ids = groups.pluck(:id)
   end
@@ -387,10 +399,34 @@ class Webmail::UserExport
     account_index = str(row, 'imap_setting.account_index').to_i - 1
     return if account_index != 0
 
-    roles = str(row, 'webmail_role_ids').split("\n")
-    roles = Webmail::Role.in(name: roles)
+    role_names = str(row, 'webmail_role_ids').split("\n")
+    roles = Webmail::Role.in(name: role_names)
+
+    item.imported_webmail_role_keys = role_names
+    item.imported_webmail_roles = roles
 
     item.webmail_role_ids = roles.pluck(:id)
+  end
+
+  def set_item_sys_role_ids(row, item, setting)
+    account_index = str(row, 'imap_setting.account_index').to_i - 1
+    return if account_index != 0
+
+    value = str(row, 'sys_role_ids').to_s
+    general_role_ids = Sys::Role.and_general.pluck(:id)
+
+    if value.present?
+      add_role_names = value.split(/\n/)
+      add_roles = Sys::Role.in(name: add_role_names).to_a
+      add_role_ids = add_roles.pluck(:id)
+
+      item.imported_sys_role_keys = add_role_names
+      item.imported_sys_roles = add_roles
+    else
+      add_role_ids = []
+    end
+
+    item.sys_role_ids = item.sys_role_ids - general_role_ids + add_role_ids
   end
 
   def set_item_imap_setting_name(row, item, setting)
@@ -463,5 +499,11 @@ class Webmail::UserExport
   def set_item_imap_setting_default(row, item, setting)
     return if str(row, 'imap_setting.default').blank?
     item.imap_default_index = str(row, 'imap_setting.account_index').to_i - 1
+  end
+
+  def purge_webmail_caches
+    Webmail::Mail.all.find_each(&:destroy_rfc822)
+    Webmail::Mail.all.delete_all
+    Webmail::Mailbox.all.delete_all
   end
 end

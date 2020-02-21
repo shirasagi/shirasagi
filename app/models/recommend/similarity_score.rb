@@ -48,8 +48,8 @@ class Recommend::SimilarityScore
           "scores" => {
             "$push" => {
               "path" => "$path",
-              "score" => "$score",
-            },
+              "score" => "$score"
+            }
           }
         }}
       aggregation = self.collection.aggregate(pipes)

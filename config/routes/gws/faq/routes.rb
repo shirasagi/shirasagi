@@ -1,4 +1,4 @@
-SS::Application.routes.draw do
+Rails.application.routes.draw do
   Gws::Faq::Initializer
 
   concern :deletion do

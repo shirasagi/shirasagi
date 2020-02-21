@@ -25,9 +25,14 @@ class Gws::Attendance::Record
     criteria.order_by(created: -1).first
   end
 
-  def calc_working_time
-    return if enter.blank? || leave.blank?
-    duration = (leave - enter).to_i
-    Time::EPOCH + duration
+  def date_range
+    changed_minute = time_card.site.attendance_time_changed_minute
+    hour, min = changed_minute.divmod(60)
+
+    lower_bound = date.in_time_zone.change(hour: hour, min: min, sec: 0)
+    upper_bound = lower_bound + 1.day
+
+    # lower_bound から upper_bound。ただし upper_bound は範囲に含まない。
+    lower_bound...upper_bound
   end
 end

@@ -182,17 +182,9 @@ module Opendata::Api
     package_resource[:rdf_error] = resource.rdf_error
     package_resource[:created] = resource.created
     package_resource[:updated] = resource.updated
-
-    package_resource[:download_url] = resource.full_url
-    if resource.source_url.present?
-      package_resource[:url] = resource.source_url
-      package_resource[:format] = "html"
-    else
-      file = resource.file
-      file.site = @cur_site
-      package_resource[:url] = file.full_url
-      package_resource[:format] = resource.format
-    end
+    package_resource[:download_url] = resource.download_full_url
+    package_resource[:url] = resource.full_url
+    package_resource[:format] = resource.format
 
     package_resource
   end

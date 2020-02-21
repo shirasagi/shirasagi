@@ -1,0 +1,32 @@
+Date: Thu, 18 Oct 2018 14:51:09 +0900
+From: webmail-imap <user5@example.jp>
+To: user5@example.jp
+Message-ID: <5bc81f4d74ffa_122ba3fe9c16180ec53727@example.jp>
+Subject: rspec-f5ttl71mhn
+Mime-Version: 1.0
+Content-Type: multipart/alternative;
+ boundary="------------97F3F05C86C6CA0671D1AA3C"
+
+This is a multi-part message in MIME format.
+--------------97F3F05C86C6CA0671D1AA3C
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+
+This is the mail system at host shirasagi.localhost.local.
+
+--------------97F3F05C86C6CA0671D1AA3C
+Content-Type: message/rfc822
+Content-Transfer-Encoding: 8bit
+Content-Disposition: attachment
+
+Date: Wed, 17 Apr 2019 20:35:38 +0900
+From: =?UTF-8?Q?=E3=82=B7=E3=82=B9=E3=83=86=E3=83=A0=E7=AE=A1=E7=90=86=E8=80=85?= <user5@example.jp>
+To: =?UTF-8?Q?=E3=83=A6=E3=83=BC=E3=82=B6=E3=83=BC5?= <sys@example.jp>
+Subject: =?UTF-8?Q?=E3=83=86=E3=82=B9=E3=83=88?=
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
+
+=E3=83=86=E3=82=B9=E3=83=88
+
+--------------97F3F05C86C6CA0671D1AA3C--

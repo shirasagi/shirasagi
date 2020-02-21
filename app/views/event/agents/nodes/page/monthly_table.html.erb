@@ -1,8 +1,12 @@
 <nav class="event-date">
   <h2 class="<%= event_h1_class @month %>"><%= "#{@year}#{t_date('year')}#{@month}#{t_date('month')}" %></h2>
   <% unless @cur_node.event_display.to_s.end_with?('only') %>
-    <span class="list"><%= link_to_monthly Date.new(@year, @month, 1), name: I18n.t("event.options.event_display.list"), display: 'list' %></span>
-    <span class="table current"><%= link_to_monthly Date.new(@year, @month, 1), name: I18n.t("event.options.event_display.table"), display: 'table' %></span>
+    <span class="list">
+      <%= link_to_monthly Date.new(@year, @month, 1), name: I18n.t("event.options.event_display.list"), display: 'list', style: true %>
+    </span>
+    <span class="table current">
+      <%= link_to_monthly Date.new(@year, @month, 1), name: I18n.t("event.options.event_display.table"), display: 'table', style: true %>
+    </span>
   <% end %>
   <ul>
     <li class="prev"><%= link_to_monthly Date.new(@year, @month, 1).advance(days: -1), display: params[:display] %></li>

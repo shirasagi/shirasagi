@@ -159,6 +159,9 @@ describe Sys::SiteCopyJob, dbscope: :example do
         dest_page = Cms::Page.site(dest_site).find_by(filename: page.filename)
         dest_page = dest_page.becomes_with_route
         expect(dest_page.html).to eq page.html.sub(page.files.first.url, dest_page.files.first.url)
+        expect(dest_page.files).to have(1).items
+        expect(dest_page.files.first.owner_item_id).to eq dest_page.id
+        expect(dest_page.files.first.owner_item_type).to eq dest_page.class.name
       end
     end
 
@@ -221,6 +224,91 @@ describe Sys::SiteCopyJob, dbscope: :example do
 
         expect(dest_page1.related_page_ids).to eq [dest_page2.id]
         expect(dest_page2.related_page_ids).to eq [dest_page1.id]
+      end
+    end
+
+    describe "copy article/page node with too long name page" do
+      let(:node) { create :article_node_page, cur_site: site, layout_id: layout.id }
+      let!(:page) { create :article_page, cur_site: site, cur_node: node, layout_id: layout.id }
+
+      before do
+        site.max_name_length = 0
+        site.save!
+
+        page.name = SecureRandom.hex(200)
+        page.save!
+
+        task.copy_contents = 'pages'
+        task.save!
+
+        perform_enqueued_jobs do
+          Sys::SiteCopyJob.perform_now
+        end
+      end
+
+      it do
+        dest_site = Cms::Site.find_by(host: target_host_host)
+
+        dest_page = Cms::Page.site(dest_site).find_by(filename: page.filename)
+
+        expect(dest_page).to be_truthy
+      end
+    end
+
+    describe "copy key_visual/image node" do
+      let(:node) { create :key_visual_node_image, cur_site: site, layout_id: layout.id }
+      let!(:page) { create :key_visual_image, cur_site: site, cur_node: node }
+
+      before do
+        task.copy_contents = 'pages'
+        task.save!
+
+        perform_enqueued_jobs do
+          Sys::SiteCopyJob.perform_now
+        end
+      end
+
+      it do
+        dest_site = Cms::Site.find_by(host: target_host_host)
+
+        dest_page = Cms::Page.site(dest_site).find_by(filename: page.filename)
+        dest_page = dest_page.becomes_with_route
+
+        expect(dest_page).to be_truthy
+        expect(dest_page.file_id).not_to eq page.file_id
+        expect(dest_page.file.name).to eq page.file.name
+      end
+    end
+
+    describe "copy article/page node with workflow request" do
+      let(:node) { create :article_node_page, cur_site: site, layout_id: layout.id }
+      let(:user) { create :cms_test_user, group: cms_group }
+      let!(:page) do
+        create :article_page, cur_site: site, cur_node: node, layout_id: layout.id, workflow_state: 'request',
+          workflow_user_id: cms_user.id, workflow_approvers: [{ level: 1, user_id: user.id, state: "request" }],
+          workflow_required_counts: [ false ]
+      end
+
+      before do
+        task.copy_contents = 'pages'
+        task.save!
+
+        perform_enqueued_jobs do
+          Sys::SiteCopyJob.perform_now
+        end
+      end
+
+      it do
+        dest_site = Cms::Site.find_by(host: target_host_host)
+
+        dest_page = Cms::Page.site(dest_site).find_by(filename: page.filename)
+        dest_page = dest_page.becomes_with_route
+
+        expect(dest_page).to be_truthy
+        expect(dest_page.workflow_state).to eq 'request'
+        expect(dest_page.workflow_user_id).to eq cms_user.id
+        expect(dest_page.workflow_approvers).to be_truthy
+        expect(dest_page.workflow_required_counts).to eq [ false ]
       end
     end
   end

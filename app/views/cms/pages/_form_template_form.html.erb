@@ -1,20 +1,31 @@
-<% if @item.respond_to?(:form) && ancestral_forms.present? %>
-  <%
-    if params[:form_id].present?
-      form = ancestral_forms.find(params[:form_id]) rescue nil
-      if form.present?
-        @item.form_id = form.id
-      end
-    elsif params.key?(:form_id)
-      @item.form_id = nil
-    end
+<% return unless @item.respond_to?(:form) %>
 
-    cur_form = @item.form
-  %>
+<%
+  forms = ancestral_forms.to_a
+  forms << @item.form if @item.form
+  forms = forms.uniq(&:id)
+
+  if params[:form_id].present?
+    form = forms.select { |form| form.id == params[:form_id].to_i }.first
+    if form.present?
+      @item.form_id = form.id
+    end
+  elsif params.key?(:form_id)
+    @item.form_id = nil
+  end
+
+  cur_form = @item.form
+%>
+<% if forms.present? %>
   <dt><%= @model.t :form_id %><%= @model.tt :form_id %></dt>
   <dd>
-    <%= f.select(:form_id, options_from_collection_for_select(ancestral_forms, :id, :name, selected: cur_form.try(:id)), include_blank: true) %>
-    <%= button_tag(t('ss.buttons.change'), type: :button, class: %w(btn btn-form-change)) %>
+    <% if cur_form && !cur_form.allowed?(:read, @cur_user, site: @cur_site) %>
+      <%= f.hidden_field :form_id, value: cur_form.try(:id) %>
+      <%= f.select(:form_id, options_from_collection_for_select(forms, :id, :name, selected: cur_form.try(:id)), { include_blank: t("cms.default_form") }, { disabled: true }) %>
+    <% else %>
+      <%= f.select(:form_id, options_from_collection_for_select(forms, :id, :name, selected: cur_form.try(:id)), include_blank: t("cms.default_form")) %>
+      <%= button_tag(t('ss.buttons.change'), type: :button, class: %w(btn btn-form-change)) %>
+    <% end %>
 
     <%= jquery do %>
       Cms_Column_FileUpload.userId = <%= @cur_user.id %>;
@@ -23,12 +34,12 @@
 
       Cms_Column_Free.userId = <%= @cur_user.id %>;
       Cms_Column_Free.fileUploadPath = <%== cms_apis_temp_files_path(format: "json").to_json %>;
-      Cms_Column_Free.fileSelectPath = <%== select_cms_apis_temp_file_path(id: ":fileId").to_json %>;
+      Cms_Column_Free.fileSelectPath = <%== cms_apis_form_temp_file_select_path(id: ":fileId", form: "free").to_json %>;
 
       Cms_TemplateForm.userId = <%= @cur_user.id %>;
       Cms_TemplateForm.confirms.delete = <%== t("ss.confirm.delete").to_json %>;
       Cms_TemplateForm.paths.formColumn = <%== cms_apis_form_column_new_path(id: ":formId", column_id: ":columnId").to_json %>;
-      Cms_TemplateForm.paths.formUrlTemplate = <%== cms_apis_form_path(id: ':id', item_id: @item.new_record? ? nil : @item.id).to_json %>;
+      Cms_TemplateForm.paths.formUrlTemplate = <%== cms_apis_form_path(id: ':id', node: @cur_node.try(:id), item_id: (@item.new_record? ? nil : @item.id), item_route: @item.route).to_json %>;
       Cms_TemplateForm.render();
     <% end %>
   </dd>

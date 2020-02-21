@@ -18,7 +18,7 @@ class Gws::Schedule::Notifier::Approval
 
       i18n_key = "#{item.class.model_name.i18n_key}/approval/request"
       opts[:subject] = I18n.t("gws_notification.#{i18n_key}.subject", name: item.name)
-      opts[:text] = I18n.t("gws_notification.#{i18n_key}.text", from: from.name, text: "#{url}")
+      opts[:text] = I18n.t("gws_notification.#{i18n_key}.text", from: from.name, text: url.to_s)
       Gws::Memo::Notifier.new(opts).deliver!
     end
 
@@ -40,7 +40,7 @@ class Gws::Schedule::Notifier::Approval
 
       i18n_key = "#{item.class.model_name.i18n_key}/approval/approve"
       opts[:subject] = I18n.t("gws_notification.#{i18n_key}.subject", name: item.name)
-      opts[:text] = I18n.t("gws_notification.#{i18n_key}.text", from: from.name, text: "#{url}")
+      opts[:text] = I18n.t("gws_notification.#{i18n_key}.text", from: from.name, text: url.to_s)
       Gws::Memo::Notifier.new(opts).deliver!
     end
 
@@ -62,7 +62,7 @@ class Gws::Schedule::Notifier::Approval
 
       i18n_key = "#{item.class.model_name.i18n_key}/approval/remand"
       opts[:subject] = I18n.t("gws_notification.#{i18n_key}.subject", name: item.name, from: from.name)
-      opts[:text] = I18n.t("gws_notification.#{i18n_key}.text", from: from.name, text: "#{url}")
+      opts[:text] = I18n.t("gws_notification.#{i18n_key}.text", from: from.name, text: url.to_s)
       Gws::Memo::Notifier.new(opts).deliver!
     end
   end

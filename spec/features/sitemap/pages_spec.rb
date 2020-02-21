@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe "sitemap_pages" do
+describe "sitemap_pages", type: :feature do
   subject(:site) { cms_site }
   subject(:node) { create_once :sitemap_node_page, filename: "docs", name: "sitemap" }
   subject(:item) { Sitemap::Page.last }
@@ -25,7 +25,7 @@ describe "sitemap_pages" do
       within "form#item-form" do
         fill_in "item[name]", with: "sample"
         fill_in "item[basename]", with: "sample"
-        click_button "保存"
+        click_button I18n.t('ss.buttons.save')
       end
       expect(status_code).to eq 200
       expect(current_path).not_to eq new_path
@@ -42,7 +42,7 @@ describe "sitemap_pages" do
       visit edit_path
       within "form#item-form" do
         fill_in "item[name]", with: "modify"
-        click_button "保存"
+        click_button I18n.t('ss.buttons.save')
       end
       expect(current_path).not_to eq sns_login_path
       expect(page).to have_no_css("form#item-form")
@@ -52,7 +52,7 @@ describe "sitemap_pages" do
       visit move_path
       within "form" do
         fill_in "destination", with: "docs/destination"
-        click_button "保存"
+        click_button I18n.t('ss.buttons.save')
       end
       expect(status_code).to eq 200
       expect(current_path).to eq move_path
@@ -60,7 +60,7 @@ describe "sitemap_pages" do
 
       within "form" do
         fill_in "destination", with: "docs/sample"
-        click_button "保存"
+        click_button I18n.t('ss.buttons.save')
       end
       expect(status_code).to eq 200
       expect(current_path).to eq move_path
@@ -70,7 +70,7 @@ describe "sitemap_pages" do
     it "#copy" do
       visit copy_path
       within "form" do
-        click_button "保存"
+        click_button I18n.t('ss.buttons.save')
       end
       expect(status_code).to eq 200
       expect(current_path).to eq index_path
@@ -81,7 +81,7 @@ describe "sitemap_pages" do
     it "#delete" do
       visit delete_path
       within "form" do
-        click_button "削除"
+        click_button I18n.t('ss.buttons.delete')
       end
       expect(current_path).to eq index_path
     end

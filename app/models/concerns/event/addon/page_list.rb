@@ -47,7 +47,7 @@ module Event::Addon
       if sort =~ /event_dates/
         { "event_dates.0" => 1 }
       else
-        { sort.sub(/ .*/, "") => (sort =~ /-1$/ ? -1 : 1) }
+        { sort.sub(/ .*/, "") => (/-1$/.match?(sort) ? -1 : 1) }
       end
     end
   end

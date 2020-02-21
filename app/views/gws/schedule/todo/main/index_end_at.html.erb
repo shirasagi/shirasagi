@@ -1,0 +1,39 @@
+<div class="index">
+  <%= render file: "_list_head" %>
+
+  <ul class="list-items">
+    <% @items.group_by_end_at do |limit, items| %>
+      <li class="list-item gws-schedule-todo-list-item-header" id="limit-<%= limit.id %>" data-depth="0" data-group="limit-<%= limit.id %>">
+        <span class="list-item-indent"></span>
+        <span class="material-icons md-18 list-item-switch">expand_less</span>
+        <label class="check"></label>
+        <div class="info">
+          <span><%= limit.name %></span>
+        </div>
+      </li>
+
+      <% items.each do |item| %>
+        <li class="list-item" id="item-<%= item.id %>" data-depth="0" data-group="limit-<%= limit.id %>">
+          <nav class="tap-menu">
+            <% @tap_menu.call(item) %>
+          </nav>
+
+          <span class="list-item-indent"></span>
+          <span class="list-item-switch"></span>
+          <label class="check"><input type="checkbox" name="ids[]" value="<%= item.id %>" /></label>
+
+          <div class="info">
+            <% title = item.try(:name) || item.try(:title) || item.try(:filename) || "##{item.id}" %>
+            <%= link_to title, { action: :show, id: item }, class: "title" %>
+
+            <div class="meta">
+              <% @index_meta.call(item) %>
+            </div>
+          </div>
+        </li>
+      <% end %>
+    <% end %>
+  </ul>
+</div>
+
+<%= paginate @items if @items.try(:current_page) %>

@@ -12,10 +12,6 @@ module Member::LoginFilter
 
   private
 
-  def remote_addr
-    request.env["HTTP_X_REAL_IP"] || request.remote_addr
-  end
-
   def logged_in?(opts = {})
     if @cur_member
       set_last_logged_in
@@ -38,21 +34,24 @@ module Member::LoginFilter
   end
 
   def set_member(member, timestamp = Time.zone.now.to_i)
-    session[:member] = {
-      "member_id" => member.id,
-      "remote_addr" => remote_addr,
-      "user_agent" => request.user_agent,
-      "last_logged_in" => timestamp
-    }
+    if @cur_site
+      session[session_member_key] = {
+        "member_id" => member.id,
+        "remote_addr" => remote_addr,
+        "user_agent" => request.user_agent,
+        "last_logged_in" => timestamp
+      }
+    end
     @cur_member = member
   end
 
   def set_last_logged_in(timestamp = Time.zone.now.to_i)
-    session[:member]["last_logged_in"] = timestamp if session[:member]
+    return if !@cur_site
+    session[session_member_key]["last_logged_in"] = timestamp if session[session_member_key]
   end
 
   def clear_member
-    session[:member] = nil
+    session[session_member_key] = nil if @cur_site
     @cur_member = nil
   end
 

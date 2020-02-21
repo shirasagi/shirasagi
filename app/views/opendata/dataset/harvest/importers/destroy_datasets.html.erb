@@ -4,10 +4,12 @@
   <section class="main-box">
     <header><h2><%= t("opendata.dataset") %><%= t("ss.buttons.delete") %></h2></header>
 
-    <dl class="see">
-      <dt><%= t("job.main") %></dt>
-      <dd><%= link_to t("job.log"), job_cms_logs_path, target: "_blank" %></dd>
-    </dl>
+    <% if Cms::Tool.allowed?(:edit, @cur_user, site: @cur_site) %>
+      <dl class="see">
+        <dt><%= t("job.main") %></dt>
+        <dd><%= link_to t("job.log"), job_cms_logs_path, target: "_blank" %></dd>
+      </dl>
+    <% end %>
   </section>
 
   <footer class="send">

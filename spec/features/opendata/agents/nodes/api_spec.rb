@@ -22,11 +22,11 @@ describe "opendata_agents_nodes_api", dbscope: :example, http_server: true do
   let!(:node_search_dataset) { create_once :opendata_node_search_dataset, filename: "dataset/search" }
   let!(:page_dataset_01) do
     create(:opendata_dataset, cur_node: node_dataset, dataset_group_ids: [node_dataset_group_01.id],
-                              area_ids: [ node_area.id ], tags: ["TEST_1"])
+                              area_ids: [ node_area.id ], tags: %w(TEST_1))
   end
   let!(:page_dataset_02) do
     create(:opendata_dataset, cur_node: node_dataset, dataset_group_ids: [node_dataset_group_02.id],
-                              area_ids: [ node_area.id ], tags: ["TEST_2"])
+                              area_ids: [ node_area.id ], tags: %w(TEST_2))
   end
 
   let(:dataset_resource_file_path) { Rails.root.join("spec", "fixtures", "opendata", "shift_jis.csv") }

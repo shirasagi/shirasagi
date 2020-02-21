@@ -1,6 +1,6 @@
 <% map_points = @cur_page.member_photos.and_public.map(&:map_points).select(&:present?).flatten %>
 <% return if map_points.blank? %>
 
-<%= render_map "#map-canvas", markers: map_points, site: @cur_site %>
+<%= render_map "#map-canvas", markers: map_points, site: @cur_site, preview: @preview %>
 
 <div id="map-canvas" style="width: 100%; height: 400px;"></div>

@@ -38,13 +38,17 @@
         </div>
       <% end %>
     <% else %>
-      <% alignment_options = %w(flow left center right).map { |v| [ I18n.t("cms.options.alignment.#{v}"), v ] } %>
-      <div class="column-value-header-group">
-        <label>
-          <%= t("mongoid.attributes.cms/column/value/base.alignment") %>
-          <%= select_tag("#{f.object_name}[][alignment]", options_for_select(alignment_options, value.try(:alignment)), id: nil) %>
-        </label>
-      </div>
+      <% alignment_options = column.alignment_options %>
+      <% if alignment_options.length > 1 %>
+        <div class="column-value-header-group">
+          <label>
+            <%= t("mongoid.attributes.cms/column/value/base.alignment") %>
+            <%= select_tag("#{f.object_name}[][alignment]", options_for_select(alignment_options, value.try(:alignment)), id: nil) %>
+          </label>
+        </div>
+      <% elsif alignment_options.length == 1 %>
+        <%= hidden_field_tag("#{f.object_name}[][alignment]", alignment_options.first[1], id: nil) %>
+      <% end %>
     <% end %>
 
     <% if controller %>

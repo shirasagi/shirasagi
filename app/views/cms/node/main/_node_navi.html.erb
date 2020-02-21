@@ -25,7 +25,7 @@
   <% if @cur_node.allowed?(:read, @cur_user, site: @cur_site) %>
     <h2><%= link_to t("cms.node_config"), node_conf_path, class: "icon-conf" %></h2>
   <% end %>
-  <% if @cur_node.allowed?(:edit, @cur_user, site: @cur_site) %>
+  <% if @cur_node.allowed?(:import, @cur_user, site: @cur_site, owned: true) %>
     <h2><%= link_to t("cms.import_page"), node_import_path, class: "icon-conf" %></h2>
   <% end %>
   <% if @cur_node.allowed?(:edit, @cur_user, site: @cur_site) %>
@@ -33,6 +33,9 @@
   <% end %>
   <% if @cur_node.allowed?(:edit, @cur_user, site: @cur_site) %>
     <h2><%= link_to t("cms.generate_page"), node_generate_pages_path, class: "icon-write" %></h2>
+  <% end %>
+  <% if History::Trash.allowed?(:read, @cur_user, site: @cur_site, node: @cur_node) %>
+    <h2><%= link_to History::Trash.model_name.human, history_cms_trashes_path, class: "icon-trash" %></h2>
   <% end %>
   <% if @cur_node.allowed?(:edit, @cur_user, site: @cur_site) %>
     <% if Cms::Command.allowed?(:use, @cur_user, site: @cur_site) %>

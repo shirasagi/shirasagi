@@ -4,4 +4,4 @@ namespace :gws do
       ::Tasks::Gws::Notification.deliver
     end
   end
- end
+end

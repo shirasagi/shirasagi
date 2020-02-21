@@ -40,7 +40,7 @@ class Gws::Survey::FileEnumerator < Enumerator
       term = ""
       if column.is_a?(Gws::Column::TextArea)
         term << "#{column.prefix_label}\n" if column.prefix_label
-        term << column_value.value
+        term << column_value.value if column_value.value
         term << "\n#{column.postfix_label}" if column.postfix_label
       elsif column.is_a?(Gws::Column::FileUpload)
         if column_value.files.present?
@@ -59,8 +59,13 @@ class Gws::Survey::FileEnumerator < Enumerator
     end
 
     if !@cur_form.anonymous?
-      terms << item.user_long_name
-      terms << I18n.l(item.updated)
+      if item.anonymous?
+        terms << nil
+        terms << nil
+      else
+        terms << item.user_long_name
+        terms << I18n.l(item.updated)
+      end
     end
 
     yielder << encode(terms.to_csv)

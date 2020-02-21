@@ -2,7 +2,7 @@
 
 production:
   clients:
-    default:
+    default: &default
       database: ss
       hosts:
         - localhost:27017
@@ -14,7 +14,10 @@ production:
         - localhost:27018
 
     # Slave / ログ用
+    # default が Master の場合、 default と同じ設定にする
+    # default が Slave の場合、 Master に接続できる設定にする
     repl_master:
+      # <<: *default
       database: ss
       hosts:
         - other:27017

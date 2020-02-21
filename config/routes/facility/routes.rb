@@ -1,4 +1,4 @@
-SS::Application.routes.draw do
+Rails.application.routes.draw do
 
   Facility::Initializer
 
@@ -62,6 +62,7 @@ SS::Application.routes.draw do
         get :view, on: :member
         get :thumb, on: :member
         get :download, on: :member
+        get :contrast_ratio, on: :collection
       end
     end
   end

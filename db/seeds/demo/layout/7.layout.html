@@ -1,1 +1,3 @@
-<p><a href="{{ value.file.url }}">{{ value.attachment_text  }}</a></p>
+{% if value.file %}
+  <p>{{ value.html }}</p>
+{% endif %}

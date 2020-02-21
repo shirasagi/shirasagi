@@ -5,6 +5,8 @@ module SS::Model::File
   include SS::Reference::User
   include SS::FileFactory
   include SS::ExifGeoLocation
+  include SS::FileUsageAggregation
+  include History::Addon::Trash
   include ActiveSupport::NumberHelper
 
   attr_accessor :in_file, :resizing, :unnormalize
@@ -23,6 +25,8 @@ module SS::Model::File
 
     belongs_to :site, class_name: "SS::Site"
 
+    belongs_to :owner_item, class_name: "Object", polymorphic: true
+
     attr_accessor :in_data_url
 
     permit_params :in_file, :state, :name, :filename, :resizing, :in_data_url
@@ -33,6 +37,7 @@ module SS::Model::File
     validates :model, presence: true
     validates :state, presence: true
     validates :filename, presence: true, if: ->{ in_file.blank? && in_files.blank? }
+    validates :content_type, presence: true, if: ->{ in_file.blank? && in_files.blank? }
     validate :validate_filename, if: ->{ filename.present? }
     validates_with SS::FileSizeValidator, if: ->{ size.present? }
 
@@ -108,8 +113,35 @@ module SS::Model::File
   end
 
   def previewable?(opts = {})
+    meta = SS::File.find_model_metadata(model) || {}
+
+    # be careful: cur_user and item may be nil
     cur_user = opts[:user]
-    cur_user.present?
+    cur_member = opts[:member]
+    item = effective_owner_item
+    if cur_user && item
+      permit = meta[:permit] || %i(role readable member)
+      if permit.include?(:readable) && item.respond_to?(:readable?)
+        return true if item.readable?(cur_user, site: item.try(:site))
+      end
+      if permit.include?(:member) && item.respond_to?(:member?)
+        return true if item.member?(cur_user)
+      end
+      if permit.include?(:role) && item.respond_to?(:allowed?)
+        return true if item.allowed?(:read, cur_user, site: item.try(:site))
+      end
+    end
+
+    if item && item.is_a?(Fs::FilePreviewable)
+      # special delegation if item implements previewable?
+      return true if item.file_previewable?(self, user: cur_user, member: cur_member)
+    end
+
+    if cur_user && respond_to?(:user_id)
+      return true if user_id == cur_user.id
+    end
+
+    false
   end
 
   def state_options
@@ -133,11 +165,16 @@ module SS::Model::File
   end
 
   def extname
+    return "" unless filename.to_s.include?('.')
     filename.to_s.sub(/.*\W/, "")
   end
 
   def image?
-    filename =~ /\.(bmp|gif|jpe?g|png)$/i
+    content_type.to_s.start_with?('image/')
+  end
+
+  def exif_image?
+    image? && filename =~ /\.(jpe?g|tiff?)$/i
   end
 
   def viewable?
@@ -156,17 +193,21 @@ module SS::Model::File
     Fs.exists?(path) ? Fs.binread(path) : nil
   end
 
+  def to_io
+    Fs.exists?(path) ? Fs.to_io(path) : nil
+  end
+
   def uploaded_file(&block)
     Fs::UploadedFile.create_from_file(self, filename: basename, content_type: content_type, fs_mode: ::Fs.mode, &block)
   end
 
   def generate_public_file
-    return unless site && basename.ascii_only?
+    return if site.blank?
+    return if !basename.ascii_only?
+    return if Fs.exists?(public_path) && Fs.cmp(path, public_path)
 
-    file = public_path
-    data = self.read
-    return if Fs.exists?(file) && data == Fs.read(file)
-    Fs.binwrite file, data
+    Fs.mkdir_p(::File.dirname(public_path))
+    Fs.cp(path, public_path)
   end
 
   def remove_public_file
@@ -200,6 +241,17 @@ module SS::Model::File
 
   private
 
+  def effective_owner_item
+    item = owner_item rescue nil
+    return item if item.present?
+
+    type = @item.model.camelize.constantize rescue nil
+    return if type.blank?
+
+    conds = (type.fields.keys & %w(file_id file_ids)).map { |f| { f => id} }
+    type.where("$and" => [{ "$or" => conds }]).first
+  end
+
   def set_filename
     self.name         = in_file.original_filename if self[:name].blank?
     self.filename     = in_file.original_filename if filename.blank?
@@ -225,7 +277,7 @@ module SS::Model::File
 
   def mangle_filename
     set_sequence
-    self.filename = SS::FilenameConvertor.convert(filename, id: id)
+    self.filename = SS::FilenameUtils.convert(filename, id: id)
   end
 
   def save_file
@@ -236,13 +288,15 @@ module SS::Model::File
     if image?
       list = Magick::ImageList.new
       list.from_blob(in_file.read)
-      extract_geo_location(list)
+      extract_geo_location(list) if exif_image?
       list.each do |image|
-        case SS.config.env.image_exif_option
-        when "auto_orient"
-          image.auto_orient!
-        when "strip"
-          image.strip!
+        if exif_image?
+          case SS.config.env.image_exif_option
+          when "auto_orient"
+            image.auto_orient!
+          when "strip"
+            image.strip!
+          end
         end
 
         next unless resizing
@@ -259,6 +313,22 @@ module SS::Model::File
     Fs.mkdir_p(dir) unless Fs.exists?(dir)
     Fs.binwrite(path, binary)
     self.size = binary.length
+  end
+
+  def create_history_trash
+    return if model.to_s.include?('temp_file')
+    return if owner_item_type.to_s.start_with?('Gws', 'Sns', 'SS', 'Sys', 'Webmail')
+
+    backup = History::Trash.new
+    backup.ref_coll = collection_name
+    backup.ref_class = self.class.to_s
+    backup.data = attributes
+    backup.site = self.site
+    return unless backup.save
+    return unless File.exists?(path)
+    trash_path = "#{History::Trash.root}/#{path.sub(/.*\/(ss_files\/)/, '\\1')}"
+    FileUtils.mkdir_p(File.dirname(trash_path))
+    FileUtils.cp(path, trash_path)
   end
 
   def remove_file

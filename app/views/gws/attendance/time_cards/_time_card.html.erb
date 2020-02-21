@@ -14,7 +14,9 @@
   <% td_classes = %w(time) %>
   <% td_classes << field_name %>
   <% td_classes << (date.day >= 16 ? 'top' : nil) %>
-  <td class="<%= td_classes.join(' ') %>" data-day="<%= date.day %>" data-type="<%= field_name %>">
+  <% mode = "edit" %>
+  <% mode = "punch" if record.try(:find_latest_history, field_name).blank? && Time.zone.now.beginning_of_day == date %>
+  <td class="<%= td_classes.join(' ') %>" data-day="<%= date.day %>" data-type="<%= field_name %>" data-mode="<%= mode %>">
     <%= format_time(date, record.try(field_name)) %>
     <% render_reason.call(record.try(:find_latest_history, field_name)) %>
   </td>
@@ -38,10 +40,10 @@
           <th class="memo"><%= Gws::Attendance::Record.t(:memo) %></th>
         </tr>
       <% end %>
-      <% tr_css_classes = [] %>
+      <% tr_css_classes = [ "day-#{date.day}" ] %>
       <% tr_css_classes << (Time.zone.now.beginning_of_day == date ? 'current' : nil) %>
       <% tr_css_classes << if holiday?(date); 'holiday' elsif date.wday == 0; 'sunday' elsif date.wday == 6; 'saturday' end %>
-      <tr class="<%= tr_css_classes.compact.join(' ') %>">
+      <tr class="<%= tr_css_classes.compact.join(' ') %>" data-day="<%= date.day %>">
         <% record = @item.records.where(date: date).first %>
         <td class="date"><%= I18n.l(date.to_date, format: :attendance_month_day) %></td>
         <% render_time.call(date, record, 'enter') %>
@@ -50,7 +52,7 @@
           <% render_time.call(date, record, "break_enter#{i + 1}") %>
           <% render_time.call(date, record, "break_leave#{i + 1}") %>
         <% end %>
-        <td class="memo <%= offset %>" data-day="<%= date.day %>"><%= record ? record.memo : '' %></td>
+        <td class="memo <%= offset %>" data-day="<%= date.day %>" data-type="memo" data-mode="edit"><%= record ? record.memo : '' %></td>
       </tr>
       <% date += 1.day %>
     <% end %>
@@ -59,5 +61,6 @@
 </div>
 
 <div class="cell-toolbar">
+  <a href="#" class="punch" data-confirmation="<%= t('gws/attendance.confirm.punch') %>"><%= t('gws/attendance.links.punch') %></a>
   <a href="#" class="edit ajax-box"><%= t('ss.links.edit') %></a>
 </div>

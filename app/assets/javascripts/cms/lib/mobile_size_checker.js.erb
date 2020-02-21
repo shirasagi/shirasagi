@@ -101,7 +101,7 @@ this.Mobile_Size_Checker = (function () {
       Mobile_Size_Checker.reset();
 
       var resolved = function(html) {
-        Mobile_Size_Checker.check(html, true, function () {
+        Mobile_Size_Checker.check(html, function () {
           Mobile_Size_Checker.resultBox.showResult();
           button.disabled = false;
         });
@@ -141,14 +141,14 @@ this.Mobile_Size_Checker = (function () {
     return size;
   };
 
-  Mobile_Size_Checker.check = function (html, async, complete) {
+  Mobile_Size_Checker.check = function (html, complete) {
     var err_str, imgs, isThumb, j, len, mobile_size, numOfImage, ref, size, src, str_id, str_src;
     mobile_size = Mobile_Size_Checker.mobile_size;
     size = Mobile_Size_Checker.get_str_byte(html);
     if (mobile_size < size) {
       err_str = "<p class=\"error\">";
       err_str += Mobile_Size_Checker.message["SizeCheckError"];
-      err_str += "(本文サイズ：" + (parseInt(size / 1024)) + "KB";
+      err_str += "(本文サイズ：" + (parseInt(size / 1024)) + "KB)";
       err_str += "</p>";
       Mobile_Size_Checker.error = [err_str];
       complete();
@@ -183,7 +183,6 @@ this.Mobile_Size_Checker = (function () {
       contentType: 'application/json',
       dataType: "json",
       crossDomain: true,
-      async: async,
       success: function (res, status) {
         if (res["errors"].length > 0) {
           return Mobile_Size_Checker.error = res["errors"];
@@ -202,53 +201,38 @@ this.Mobile_Size_Checker = (function () {
     });
   };
 
-  Mobile_Size_Checker.checkHtmlSize = function (html) {
+  Mobile_Size_Checker.asyncCheckHtmlSize = function (html) {
+    var defer = $.Deferred();
+
     Mobile_Size_Checker.reset();
-    if (Mobile_Size_Checker.enabled) {
-      return Mobile_Size_Checker.check(html, false, function () {
-        var err, errors, j, len, ref, result;
-        if (Mobile_Size_Checker.error.length > 0) {
-          result = Mobile_Size_Checker.result_open();
-          errors = [];
-          ref = Mobile_Size_Checker.error;
-          for (j = 0, len = ref.length; j < len; j++) {
-            err = ref[j];
-            errors.push({
-              code: "",
-              msg: err,
-              detail: err
-            });
-            result.append('<p class="error">' + err + '</p>');
-          }
-          Syntax_Checker.pushError(errors);
-          return Mobile_Size_Checker.result_close(result);
-        }
-      });
+    if (!Mobile_Size_Checker.enabled) {
+      defer.resolve();
+      return defer.promise();
     }
+
+    Mobile_Size_Checker.resultBox.showChecking();
+    Mobile_Size_Checker.check(html, function () {
+      Mobile_Size_Checker.resultBox.showResult();
+      defer.resolve();
+    });
+
+    return defer.promise();
   };
 
-  Mobile_Size_Checker.validateHtml = function (form, submit, opts) {
-    var count = Syntax_Checker.errorCount;
-    if (Mobile_Size_Checker.checkHtmlSize(opts.html)) {
-      return;
-    }
-    if (!Syntax_Checker.errors[count]) {
-      return;
-    }
-
-    var error, i, j, len, ref, results;
-    ref = Syntax_Checker.errors[count];
-    results = [];
-    for (i = j = 0, len = ref.length; j < len; i = ++j) {
-      error = ref[i];
-      if (error["correct"] && Syntax_Checker.autoCorrect) {
-        results.push(Form_Alert.add("<%= I18n.t('cms.auto_correct.notice') %>", this, error["msg"]));
-      } else {
-        results.push(Form_Alert.add("<%= I18n.t('cms.mobile_size_check') %>", this, error["msg"]));
+  Mobile_Size_Checker.asyncValidateHtml = function (form, submit, opts) {
+    var promise = Mobile_Size_Checker.asyncCheckHtmlSize(opts.html);
+    promise.done(function() {
+      if (Mobile_Size_Checker.error.length === 0) {
+        return;
       }
-    }
 
-    return results;
+      for (var j = 0, len = Mobile_Size_Checker.error.length; j < len; j++) {
+        var err = Mobile_Size_Checker.error[j];
+        Form_Alert.add("<%= I18n.t('cms.mobile_size_check') %>", this, err);
+      }
+    });
+
+    return promise;
   };
 
   return Mobile_Size_Checker;

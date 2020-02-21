@@ -9,6 +9,7 @@ this.Gws_Memo_Message = (function () {
 
     $(".gws-memo-search .reset").on("click", function () {
       $(".gws-memo-search input[type=text]").val("");
+      $(".gws-memo-search input[type=checkbox]").val("");
       $(".gws-memo-search .search").click();
     });
 
@@ -50,6 +51,35 @@ this.Gws_Memo_Message = (function () {
           return $(".request-mdn-notice").remove();
         }
       });
+    });
+
+    $(".icon-star a").on("click", function () {
+      var $wrap = $(this).parent();
+      var url;
+      if ($wrap.hasClass('on')) {
+        url = $(this).attr('href') + '/unset_star';
+      } else {
+        url = $(this).attr('href') + '/set_star';
+      }
+      $.ajax({
+        url: url,
+        method: 'POST',
+        dataType: 'json',
+        data: {
+          _method: 'put'
+        },
+        success: function (data) {
+          if (data.action === 'set_star') {
+            $wrap.removeClass('off').addClass('on');
+          } else {
+            $wrap.removeClass('on').addClass('off');
+          }
+          if (data.notice) {
+            SS.notice(data.notice);
+          }
+        }
+      });
+      return false;
     });
   };
 

@@ -121,7 +121,10 @@ class Gws::Report::FilesController < ApplicationController
   end
 
   def show
-    raise '403' unless @item.readable?(@cur_user, site: @cur_site) || @item.member?(@cur_user)
+    showable = @item.readable?(@cur_user, site: @cur_site)
+    showable ||= @item.member?(@cur_user)
+    showable ||= @item.allowed?(:read, @cur_user, site: @cur_site)
+    raise '403' unless showable
     render
   end
 
@@ -229,7 +232,7 @@ class Gws::Report::FilesController < ApplicationController
 
     result = @new_item.save
     if !result
-      @item.errors[:base] += @new_item.errors.full_messages
+      @item.errors.messages[:base] += @new_item.errors.full_messages
     end
 
     render_opts = {}

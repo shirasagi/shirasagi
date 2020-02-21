@@ -22,7 +22,7 @@ module Opendata::Resource::Previewable
     elsif xls_present?
       sp = parse_xls
       if sp
-        sp.sheets.each_with_index do|sheet, page|
+        sp.sheets.each_with_index do |sheet, page|
           Timeout.timeout(10) do
             csv = CSV.parse(sp.sheet(page).to_csv)
           end
@@ -33,7 +33,6 @@ module Opendata::Resource::Previewable
         end
       end
     end
-
   rescue => e
     logger.warn("#{e.class} (#{e.message}):\n  #{e.backtrace.join("\n  ")}")
     puts("#{e.class} (#{e.message}):\n  #{e.backtrace.join("\n  ")}")
@@ -103,7 +102,7 @@ module Opendata::Resource::Previewable
       next if lat < -90.0 || lat > 90.0
       next if lon < -180.0 || lat > 180.0
 
-      map_points <<  { "name" => name, "loc" => [ lat, lon ] }
+      map_points << { "name" => name, "loc" => [ lat, lon ] }
     end
     map_points
   end

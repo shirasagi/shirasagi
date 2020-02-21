@@ -1,8 +1,9 @@
-<% return "" unless @cur_site.twitter_token_enabled? %>
+<%
+  return "" unless @cur_site.twitter_token_enabled?
 
-<%= jquery do %>
-  SS_AddonTabs.hide(".mod-ss-node-auto-post-setting");
-<% end %>
+  addon ||= local_assigns.fetch(:addon, {})
+  addon[:display_body] = "hide"
+%>
 
 <dl class="see mod-ss-node-auto-post-setting">
   <% if @cur_site.twitter_token_enabled? %>

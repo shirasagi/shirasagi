@@ -22,7 +22,6 @@ class Cms::Node
     include Cms::Addon::EditorSetting
     include Cms::Addon::NodeAutoPostSetting
     include Cms::Addon::NodeList
-    include Cms::Addon::Form::Node
     include Cms::Addon::ChildList
     include Cms::Addon::ForMemberNode
     include Cms::Addon::Release
@@ -80,7 +79,19 @@ class Cms::Node
     include Cms::Model::Node
     include Cms::Addon::NodeSetting
     include Cms::Addon::PageGroupList
+    include ::Cms::ChildList
     include History::Addon::Backup
+
+    def child_items
+      child_pages
+    end
+
+    def child_pages
+      Cms::Page.site(site).and_public.
+        where(self.condition_hash).
+        order_by(self.sort_hash).
+        limit(child_list_limit)
+    end
 
     default_scope ->{ where(route: "cms/group_page") }
   end
@@ -103,10 +114,21 @@ class Cms::Node
       conditions.each do |url|
         node = Cms::Node.site(cur_site || site).filename(url).first rescue nil
         next unless node
-        cond << { filename: /^#{node.filename}\//, depth: node.depth + 1 }
+        cond << { filename: /^#{::Regexp.escape(node.filename)}\//, depth: node.depth + 1 }
       end
 
       { '$or' => cond }
     end
+  end
+
+  class SiteSearch
+    include Cms::Model::Node
+    include Cms::Addon::NodeSetting
+    include Cms::Addon::Meta
+    include Cms::Addon::Release
+    include Cms::Addon::GroupPermission
+    include History::Addon::Backup
+
+    default_scope ->{ where(route: "cms/site_search") }
   end
 end

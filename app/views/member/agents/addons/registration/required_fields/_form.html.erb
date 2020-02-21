@@ -1,4 +1,7 @@
-<%= jquery do %> SS_AddonTabs.hide(".mod-cms-member-registration-required-fields"); <% end %>
+<%
+  addon ||= local_assigns.fetch(:addon, {})
+  addon[:display_body] = "hide"
+%>
 
 <dl class="see mod-cms-member-registration-required-fields">
   <dt><%= @model.t :kana_required %><%= @model.tt :kana_required %></dt>

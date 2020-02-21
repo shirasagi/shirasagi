@@ -1,4 +1,4 @@
-SS::Application.routes.draw do
+Rails.application.routes.draw do
 
   concern :deletion do
     get :delete, on: :member
@@ -68,7 +68,7 @@ SS::Application.routes.draw do
     match "logout" => "login#logout", as: :logout, via: [:get]
     match "login" => "login#login", as: :login, via: [:get, :post]
     get "preview(:preview_date)/(*path)" => "preview#index", as: :preview
-    post "preview(:preview_date)/(*path)" => "preview#form_preview", as: :form_preview
+    post "preview(:preview_date)/(*path)" => "preview#form_preview", as: :form_preview, format: false
   end
 
   namespace "cms", path: ".s:site/cms" do
@@ -107,8 +107,7 @@ SS::Application.routes.draw do
     resources :word_dictionaries, concerns: [:deletion, :template]
     resources :forms, concerns: [:deletion] do
       resources :init_columns, concerns: [:deletion]
-      resources :columns, concerns: [:deletion], except: [:new, :create]
-      resources :columns, path: 'columns/:type', only: [:new, :create], as: 'columns_type'
+      resources :columns, concerns: [:deletion]
     end
     resources :notices, concerns: [:deletion, :copy]
     resources :public_notices, concerns: [:deletion, :copy]
@@ -120,6 +119,7 @@ SS::Application.routes.draw do
       get :download, on: :member
       get :resize, on: :member
       post :resize, on: :member
+      get :contrast_ratio, on: :collection
     end
 
     resources :page_searches, concerns: :deletion do
@@ -162,6 +162,7 @@ SS::Application.routes.draw do
       get "contents/html" => "contents/html#index"
       get "members" => "members#index"
       get "sites" => "sites#index"
+      put "reload_site_usages" => "site_usages#reload"
       get "users" => "users#index"
       get "node_tree/:id" => "node_tree#index", as: :node_tree
       get "forms" => "forms#index"
@@ -176,12 +177,14 @@ SS::Application.routes.draw do
         get :view, on: :member
         get :thumb, on: :member
         get :download, on: :member
+        get :contrast_ratio, on: :collection
       end
       resources :temp_files, concerns: :deletion do
         get :select, on: :member
         get :view, on: :member
         get :thumb, on: :member
         get :download, on: :member
+        get :contrast_ratio, on: :collection
       end
       namespace :node, path: "node:cid/cms", cid: /\w+/ do
         resources :temp_files, concerns: :deletion do
@@ -189,7 +192,12 @@ SS::Application.routes.draw do
           get :view, on: :member
           get :thumb, on: :member
           get :download, on: :member
+          get :contrast_ratio, on: :collection
         end
+      end
+      resources :content_files, only: [] do
+        get :view, on: :member
+        get :contrast_ratio, on: :collection
       end
       namespace "opendata_ref" do
         get "datasets:cid" => "datasets#index", as: 'datasets'
@@ -264,6 +272,7 @@ SS::Application.routes.draw do
     resources :layouts, concerns: :deletion
     resources :archives, only: [:index]
     resources :photo_albums, only: [:index]
+    resources :site_searches, only: [:index]
     get "search_contents/:id" => "page_search_contents#show", as: "page_search_contents"
     get "search_contents/:id/download" => "page_search_contents#download", as: "download_page_search_contents"
   end
@@ -279,6 +288,7 @@ SS::Application.routes.draw do
     get "archive/:ymd/(index.:format)" => "public#index", cell: "nodes/archive", ymd: /\d+/
     get "archive" => "public#redirect_to_archive_index", cell: "nodes/archive"
     get "photo_album" => "public#index", cell: "nodes/photo_album"
+    get "site_search/(index.:format)" => "public#index", cell: "nodes/site_search"
   end
 
   part "cms" do
@@ -295,6 +305,12 @@ SS::Application.routes.draw do
   page "cms" do
     get "page/:filename.:format" => "public#index", cell: "pages/page"
     get "import_page/:filename.:format" => "public#index", cell: "pages/import_page"
+  end
+
+  unless Rails.env.development?
+    namespace "cms", path: ".s:site" do
+      match "*private_path" => "catch_all#index", via: :all
+    end
   end
 
   match "*public_path" => "cms/public#index", public_path: /[^\.].*/,

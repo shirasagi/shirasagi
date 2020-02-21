@@ -4,7 +4,9 @@ module Gws::Faq::Postable
   include SS::Document
   include Gws::Reference::User
   include Gws::Reference::Site
+  include Gws::ReadableSetting
   include Gws::GroupPermission
+  include Fs::FilePreviewable
 
   included do
     store_in collection: "gws_faq_posts"
@@ -75,7 +77,7 @@ module Gws::Faq::Postable
   end
 
   def new_flag?
-    descendants_updated > Time.zone.now - site.faq_new_days.day
+    (release_date.presence || created) > Time.zone.now - site.faq_new_days.day
   end
 
   def mode_options
@@ -104,6 +106,25 @@ module Gws::Faq::Postable
     becomes_with(Gws::Faq::Topic)
   end
 
+  def readable?(user, opts = {})
+    if topic.present? && topic.id != id
+      return topic.readable?(user, opts)
+    end
+
+    super
+  end
+
+  def file_previewable?(file, user:, member:)
+    return false if user.blank?
+    return false if !file_ids.include?(file.id)
+
+    if topic.present? && topic.id != id
+      return true if topic.allowed?(:read, user, site: site)
+    end
+
+    false
+  end
+
   private
 
   # topic(root_post)を設定
@@ -114,13 +135,13 @@ module Gws::Faq::Postable
   # コメントを許可しているか検証
   def validate_comment
     return if topic.permit_comment?
+
     errors.add :base, I18n.t("gws/faq.errors.denied_comment")
   end
 
   # 最新レス投稿日時の初期値をトピックのみ設定
   # 明示的に age るケースが発生するかも
   def set_descendants_updated
-    #return unless new_record?
     self.descendants_updated = updated
   end
 
@@ -128,7 +149,7 @@ module Gws::Faq::Postable
   # 明示的に age るケースが発生するかも
   def update_topic_descendants_updated
     return unless topic
-    #return unless _id_changed?
+
     topic.set descendants_updated: updated
   end
 end

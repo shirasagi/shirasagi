@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe "member_logins", dbscope: :example do
+describe "member_logins", type: :feature, dbscope: :example do
   let(:site) { cms_site }
   let(:node) { create :member_node_login, cur_site: cms_site }
   let(:index_path) { member_logins_path site.id, node.id }

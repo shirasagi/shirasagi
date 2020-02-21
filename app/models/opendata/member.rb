@@ -7,6 +7,4 @@ class Opendata::Member
 
   has_one :points, primary_key: :member_id, class_name: "Opendata::MemberNotice",
     dependent: :destroy
-
-  validates :email, uniqueness: { scope: :site_id }, if: ->{ email.present? }
 end

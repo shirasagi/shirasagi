@@ -9,7 +9,7 @@ $font-head: "Arial Black", Futura, Meiryo, "メイリオ", Verdana, "MS PGothic"
 
 html {
   color: #444;
-  font-size: 75.0%;
+  font-size: 75%;
   font-family: $font-base;
   line-height: 1.4;
 }
@@ -18,7 +18,7 @@ body {
   font-family: $font-base;
 }
 h1, h2, h3, h4, h5 {
-  margin: 0px;
+  margin: 0;
   font-size: 100%;
 }
 rp, rt {
@@ -44,11 +44,11 @@ a:hover {
 
 html, body {
   height: 100%;
-  margin: 0px;
+  margin: 0;
 }
 #head {
   max-width: $page-max-width;
-  margin: 0px auto;
+  margin: 0 auto;
   padding: 10px 15px;
   h1 {
     padding: 10px 10px 5px;
@@ -66,19 +66,19 @@ html, body {
 }
 #navi {
   @include clear;
-  margin: 0px 0px 20px;
+  margin: 0 0 20px;
   background-color: #259;
   .wrap {
     @include clear;
     max-width: $page-max-width;
-    margin: 0px auto;
-    padding: 0px 15px;
+    margin: 0 auto;
+    padding: 0 15px;
   }
   a {
     float: left;
     display: block;
     min-width: 120px;
-    padding: 0px 10px;
+    padding: 0 10px;
     border-right: 1px solid #eee;
     color: #fff;
     font-size: 120%;
@@ -95,15 +95,15 @@ html, body {
 }
 #crumbs {
   @include clear;
-  margin: -10px 0px 10px;
+  margin: -10px 0 10px;
   .wrap {
     @include clear;
     max-width: $page-max-width;
-    margin: 0px auto;
-    padding: 0px 15px;
+    margin: 0 auto;
+    padding: 0 15px;
   }
   .separator {
-    margin: 0px 5px;
+    margin: 0 5px;
   }
 }
 #wrap {
@@ -112,8 +112,8 @@ html, body {
   width: 100%;
   max-width: $page-max-width;
   height: auto;
-  margin: 0px auto;
-  padding: 0px 15px;
+  margin: 0 auto;
+  padding: 0 15px;
   #main {
     display: table-cell;
     .wrap {
@@ -121,29 +121,29 @@ html, body {
       //padding-bottom: 32778px;
     }
   }
-  #menu { 
+  #menu {
     display: table-cell;
     width: 350px;
-    padding-left: 15px; 
+    padding-left: 15px;
   }
   #side {
     display: table-cell;
     width: 350px;
-    padding-left: 15px; 
+    padding-left: 15px;
   }
 }
 #foot {
   @include clear;
-  margin: 40px 0px 0px;
+  margin: 40px 0 0;
   border-top: 1px solid #bbb;
   .wrap {
     max-width: $page-max-width;
-    margin: 0px auto;
+    margin: 0 auto;
     padding: 20px 15px;
     text-align: center;
   }
   a {
-    margin: 0px 10px;
+    margin: 0 10px;
   }
 }
 #ss-pc, #ss-mb {
@@ -165,15 +165,15 @@ html, body {
 #wrap {
   .wrap {
     > header h1 {
-      margin: 0px 0px 10px;
+      margin: 0 0 10px;
       padding: 5px 10px;
       background-color: #259;
       color: #fff;
     }
     > section {
-      margin: 0px 0px 20px;
+      margin: 0 0 20px;
       > header h1 {
-        margin: 0px 0px 10px;
+        margin: 0 0 10px;
         padding: 5px 10px;
         background-color: #259;
         color: #fff;
@@ -181,29 +181,30 @@ html, body {
     }
     > nav {
       > header h1 {
-        margin: 20px 0px 10px;
+        margin: 20px 0 10px;
         padding: 4px 8px;
-        border: 1px solid #259;
-        border-width: 0px 0px 1px 5px;
+        border-style: solid;
+        border-color: #259;
+        border-width: 0 0 1px 5px;
       }
     }
   }
 }
 aside h2 {
-  margin: 0px 0px 10px;
+  margin: 0 0 10px;
   padding: 5px 10px;
   background-color: #ddd;
 }
 .nodes, .pages {
   article {
-    padding: 5px 5px;
+    padding: 5px;
     border-bottom: 1px solid #ddd;
     &.current {
       background-color: #ffd;
     }
     time {
       display: inline;
-      margin: 0px 10px 0px 0px;
+      margin: 0 10px 0 0;
     }
     h2 {
       display: inline;
@@ -220,10 +221,10 @@ aside h2 {
   }
 }
 .tabs {
-  margin: 0px 0px 20px;
+  margin: 0 0 20px;
   .name {
     display: inline-block;
-    margin: 0px 4px 0px 0px;
+    margin: 0 4px 0 0;
     padding: 4px 8px;
     border: 1px solid #bbb;
     background-color: #eee;
@@ -234,11 +235,11 @@ aside h2 {
   }
   .view {
     min-height: 170px;
-    margin: -1px 0px 0px;
+    margin: -1px 0 0;
     padding: 8px;
     border: 1px solid #bbb;
     nav {
-      margin: 8px 0px 0px;
+      margin: 8px 0 0;
       text-align: right;
     }
   }
@@ -251,39 +252,38 @@ aside h2 {
     //background-color: red;
   }
   #head {
-    padding: 0px;
+    padding: 0;
     h1 {
       float: none;
       padding: 10px 10px 5px;
     }
     nav {
       float: none;
-      margin: 0px;
-      padding: 0px 10px 5px;
+      margin: 0;
+      padding: 0 10px 5px;
       text-align: right;
     }
   }
   #navi {
     .wrap {
-      padding: 0px 8px;
+      padding: 0 8px;
     }
     a {
-      min-width: initial;
       min-width: auto;
-      margin: 0px 0px 0px 0px;
-      padding: 5px 5px;
+      margin: 0;
+      padding: 5px;
       font-size: 90%;
     }
   }
   #wrap {
     display: block;
     width: auto;
-    margin: 0px 8px;
-    padding: 0px;
+    margin: 0 8px;
+    padding: 0;
     #main, #menu, #side {
       display: block;
       width: auto;
-      padding: 0px;
+      padding: 0;
     }
   }
 }

@@ -8,7 +8,7 @@ this.SS = (function () {
 
   SS.href = "";
 
-  SS.loading = '<img style="vertical-align:middle" src="/assets/img/loading.gif" alt="loading.." border="0" widtth="16" height="11" />';
+  SS.loading = '<%= ApplicationController.helpers.loading %>';
 
   SS.noticeTimeoutId = null;
 
@@ -19,6 +19,10 @@ this.SS = (function () {
   SS.parts = null;
 
   SS.siteName = null;
+
+  SS.timeFormatter = {
+    default: "YYYY/M/D HH:mm"
+  };
 
   SS.disableClick = function (el) {
     if (el.data('clicked')) {
@@ -103,13 +107,12 @@ this.SS = (function () {
     body = $("body");
     SS.head = head.html();
     SS.page = $("#page").html();
-    body.html("");
+    body.html(SS.loading);
     return $.ajax({
       type: "GET",
       url: SS_Kana.url(url),
       dataType: "json",
       cache: true,
-      async: false,
       success: function (data) {
         var cache;
         body.append(data.body.replace("</ yield />", SS.page));
@@ -152,8 +155,8 @@ this.SS = (function () {
       success: function (data) {
         return $(elem).replaceWith(data);
       },
-      error: function () {
-        return $(elem).find("img").remove();
+      error: function (xhr, status, error) {
+        return $(elem).remove();
       },
       complete: function () {
         SS.part = SS.part - 1;
@@ -432,6 +435,24 @@ this.SS = (function () {
       });
     }
   };
+
+  // SS.formatTime("2019-07-09T14:33:38+0900") = "2019/7/9 14:33"
+  // SS.formatTime("2019-07-09T14:33:38+0900", "default") = "2019/7/9 14:33"
+  //
+  // You can pass a Date or moment instance to 1st argument
+  //
+  // SS.formatTime(new Date())
+  // SS.formatTime(moment())
+  SS.formatTime = function(time, format) {
+    if (!format) {
+      format = "default"
+    }
+    if (SS.timeFormatter[format]) {
+      format = SS.timeFormatter[format];
+    }
+
+    return moment(time).format(format);
+  }
 
   return SS;
 

@@ -1,4 +1,4 @@
-SS::Application.routes.draw do
+Rails.application.routes.draw do
 
   Article::Initializer
 
@@ -22,13 +22,12 @@ SS::Application.routes.draw do
     delete :lock, action: :unlock, on: :member
   end
 
-  concern :download do
-    get :download, on: :collection
+  concern :download_all do
+    match :download_all, on: :collection, via: %i[get post]
   end
 
   concern :import do
-    get :import, on: :collection
-    post :import, on: :collection
+    match :import, on: :collection, via: %i[get post]
   end
 
   concern :command do
@@ -54,7 +53,7 @@ SS::Application.routes.draw do
     get "generate" => "generate#index"
     post "generate" => "generate#run"
     resources :pages, concerns: [
-      :deletion, :copy, :move, :lock, :download, :import, :command, :opendata_ref, :contains_urls, :tag
+      :deletion, :copy, :move, :lock, :download_all, :import, :command, :opendata_ref, :contains_urls, :tag
     ]
   end
 

@@ -22,6 +22,7 @@ module Cms::GroupPermission
   end
 
   def owned?(user)
+    user = user.cms_user
     (self.group_ids & user.group_ids).present?
   end
 
@@ -30,11 +31,16 @@ module Cms::GroupPermission
   end
 
   def allowed?(action, user, opts = {})
+    user = user.cms_user
     site = opts[:site] || @cur_site
     node = opts[:node] || @cur_node
+    owned = opts[:owned] || false
 
     action = permission_action || action
-    if new_record?
+
+    if owned
+      is_owned = owned
+    elsif new_record?
       is_owned = node ? node.owned?(user) : false
     else
       is_owned = owned?(user)
@@ -43,16 +49,14 @@ module Cms::GroupPermission
     permits = ["#{action}_other_#{self.class.permission_name}"]
     permits << "#{action}_private_#{self.class.permission_name}" if is_owned
 
-    permits.each do |permit|
-      return true if user.cms_role_permissions["#{permit}_#{site.id}"].to_i > 0
-    end
-    false
+    user.cms_role_permit_any?(site, permits)
   end
 
   module ClassMethods
     # @param [String] action
     # @param [Cms::User] user
     def allow(action, user, opts = {})
+      user = user.cms_user
       site_id = opts[:site] ? opts[:site].id : criteria.selector["site_id"]
 
       action = permission_action || action

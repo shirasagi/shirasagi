@@ -3,6 +3,7 @@ module Cms::SitePermission
   include SS::Permission
 
   def allowed?(action, user, opts = {})
+    user = user.cms_user
     action = permission_action || action
     permit = "#{action}_#{self.class.permission_name}"
 
@@ -20,6 +21,7 @@ module Cms::SitePermission
 
   module ClassMethods
     def allow(action, user, opts = {})
+      user = user.cms_user
       site_id = opts[:site] ? opts[:site].id : criteria.selector["site_id"]
 
       action = permission_action || action

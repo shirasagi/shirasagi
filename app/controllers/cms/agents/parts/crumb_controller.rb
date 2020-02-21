@@ -6,7 +6,7 @@ class Cms::Agents::Parts::CrumbController < ApplicationController
     @root_node = @cur_node || @cur_site
 
     @items = []
-    return if @cur_path !~ /^#{@root_node.url}/
+    return unless @cur_path.match?(/^#{@root_node.url}/)
 
     path = @cur_path.sub(/^#{@cur_site.url}/, "")
     parent_crumb_urls = @cur_item.parent_crumb_urls.select(&:present?) rescue nil
@@ -24,7 +24,6 @@ class Cms::Agents::Parts::CrumbController < ApplicationController
       item << [@cur_part.home_label, @root_node.url]
       find_node(item, url.sub(/^#{@cur_site.url}/, ""))
 
-      item << [@preview_page.name, @preview_page.url] if @preview_page
       if page
         last_item = item.last
         unless last_item[0] == page.name && page.url.end_with?("/index.html")

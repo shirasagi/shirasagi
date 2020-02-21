@@ -33,6 +33,7 @@ class Member::Agents::Nodes::MyPhotoController < ApplicationController
 
   def update
     @item.attributes = get_params
+    @item.workflow_reset = @item.state == 'public'
     @item.in_updated = params[:_updated] if @item.respond_to?(:in_updated)
     render_update @item.update, { action: "show"}
   end

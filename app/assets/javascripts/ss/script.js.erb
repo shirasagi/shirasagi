@@ -12,6 +12,7 @@
 //= require jquery.minicolors
 //= require jquery.autosize
 //= require marked
+//= require mdn-polyfills/Array.prototype.includes.js
 //= require mdn-polyfills/String.prototype.endsWith.js
 //= require mdn-polyfills/String.prototype.includes.js
 //= require mdn-polyfills/String.prototype.padEnd.js
@@ -19,7 +20,9 @@
 //= require mdn-polyfills/String.prototype.repeat.js
 //= require mdn-polyfills/String.prototype.startsWith.js
 //= require mdn-polyfills/String.prototype.trim.js
+//= require moment
 //= require_self
+//= require ss/chart
 //= require ss/lib/base
 //= require ss/lib/form
 //= require ss/lib/font
@@ -28,6 +31,7 @@
 //= require ss/lib/addon_tabs
 //= require ss/lib/addon/markdown
 //= require ss/lib/addon/temp_file
+//= require ss/lib/edit_lock
 //= require ss/lib/image_editor
 //= require ss/lib/list_ui
 //= require ss/lib/tree_ui
@@ -43,14 +47,18 @@
 //= require ss/lib/text_zoom
 //= require ss/lib/popup_notice
 //= require ss/lib/cascade_menu
+//= require ss/lib/html_message
+//= require ss/lib/file_view
+//= require chat/lib/chart
 //= require cms/lib/editor
 //= require cms/lib/form
-//= require cms/lib/edit_lock
 //= require cms/lib/source_cleaner
 //= require cms/lib/template_form
 //= require cms/lib/column_file_upload
 //= require cms/lib/column_free
 //= require cms/lib/column_list
+//= require cms/lib/column_table
+//= require cms/lib/column_radio_button
 //= require event/lib/form
 //= require map/googlemaps/map
 //= require map/googlemaps/form
@@ -66,13 +74,13 @@
 //= require service/lib/quota.js
 //= require flexibility-1.0.6.js
 //= require cms/lib/readable_setting
+//= require ss/lib/usage
 //= require bxslider
 
 //#
 //  $(".js-date").datetimepicker { lang: "ja", timepicker: false, format: "Y/m/d" }
 //#
 $(function () {
-  var addCurrent, crumbs, link, menu, path;
   $.ajaxSetup({
     // prevent caching ajax response. see #596.
     cache: false,
@@ -82,8 +90,8 @@ $(function () {
   SS.render();
   // head
   if ($(window).width() >= 800 && 0) {
-    menu = $("#head .pulldown-menu");
-    link = menu.find("a");
+    var menu = $("#head .pulldown-menu");
+    var link = menu.find("a");
     menu.each(function () {
       link.not(".current").hide();
       return link.filter(".current").prependTo(menu).click(function () {
@@ -93,27 +101,35 @@ $(function () {
     });
   }
   //crumbs
-  crumbs = $('#crumbs a[href]').map(function () {
+  var crumbs = $('#crumbs a[href]').map(function () {
     return $(this).attr('href');
   });
   crumbs = crumbs.get();
   crumbs.shift();
   // navi
-  path = location.pathname + "/";
-  addCurrent = function (selector) {
-    var added;
-    added = false;
-    $($(selector).get().reverse()).each(function () {
-      var href;
-      menu = $(this);
-      href = menu.attr('href');
-      if (path.match(new RegExp('^' + href + '(\/|$)')) || crumbs.indexOf(href) !== -1) {
-        menu.addClass("current").parent().addClass("current");
-        added = true;
-        return false;
+  var path = location.pathname + "/";
+  var longestMatchedElement = function (selector) {
+    var matchedElement = null, hrefLength = 0;
+    $(selector).each(function() {
+      var $this = $(this);
+      var href = $this.attr('href');
+      if (path.match(new RegExp('^' + href.replace(/([.?*+$\[\]\/\\(){}|\-])/g, '\\$1') + '(\/|$)')) || crumbs.indexOf(href) !== -1) {
+        if (hrefLength < href.length) {
+          matchedElement = this;
+          hrefLength = href.length;
+        }
       }
     });
-    return added;
+    return matchedElement;
+  };
+  var addCurrent = function (selector) {
+    var elem = longestMatchedElement(selector);
+    if (! elem) {
+      return false;
+    }
+
+    $(elem).addClass("current").parent().addClass("current");
+    return true;
   };
   addCurrent("#navi .mod-navi a") || addCurrent("#navi .main-navi a");
   $('#navi .main-navi h3.current').parent().prev('h2').addClass('current');
@@ -125,10 +141,11 @@ $(function () {
   });
   //dropdown
   $(".dropdown-toggle").click(function (e) {
-    var $dropdown, $target, $this, ref;
-    $this = $(this);
-    $target = $(e.target);
-    ref = $this.data('ref');
+    var $this = $(this);
+    var $target = $(e.target);
+    var ref = $this.data('ref');
+
+    var $dropdown;
     if (ref) {
       $dropdown = $this.find(ref);
     } else {

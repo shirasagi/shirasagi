@@ -52,21 +52,21 @@ describe Gws::Workflow::FilesController, type: :feature, dbscope: :example, tmpd
         choose "agent_type_agent"
         click_on I18n.t("gws/workflow.search_delegatees.index")
       end
-      within "#cboxLoadedContent" do
+      wait_for_cbox do
         expect(page).to have_content(user1.long_name)
         click_on user1.long_name
       end
       within ".mod-workflow-request" do
         click_on I18n.t("workflow.search_approvers.index")
       end
-      within "#cboxLoadedContent" do
+      wait_for_cbox do
         expect(page).to have_content(user2.long_name)
         click_on user2.long_name
       end
       within ".mod-workflow-request" do
         click_on I18n.t("workflow.search_circulations.index")
       end
-      within "#cboxLoadedContent" do
+      wait_for_cbox do
         expect(page).to have_content(user3.long_name)
         click_on user3.long_name
       end
@@ -74,16 +74,15 @@ describe Gws::Workflow::FilesController, type: :feature, dbscope: :example, tmpd
         fill_in "workflow[comment]", with: workflow_comment
         click_on I18n.t("workflow.buttons.request")
       end
-      expect(page).to have_css(".mod-workflow-view dd", text: /#{::Regexp.escape(user1.uid)}/)
-      expect(page).to have_css(".mod-workflow-view dd", text: /#{::Regexp.escape(user2.uid)}/)
-      expect(page).to have_css(".mod-workflow-view dd", text: /#{::Regexp.escape(user3.uid)}/)
+
+      expect(page).to have_css(".mod-workflow-view dd", text: I18n.t("workflow.state.request"))
+      expect(page).to have_css(".mod-workflow-view dd", text: workflow_comment)
 
       expect(Gws::Workflow::File.count).to eq 1
       Gws::Workflow::File.all.first.tap do |item|
         expect(item.workflow_user_id).to eq user1.id
         expect(item.workflow_agent_id).to eq admin.id
         expect(item.workflow_state).to eq 'request'
-        expect(item.workflow_comment).to eq workflow_comment
         expect(item.workflow_approvers.count).to eq 1
         expect(item.workflow_approvers).to \
           include({level: 1, user_id: user2.id, editable: '', state: 'request', comment: ''})
@@ -92,8 +91,8 @@ describe Gws::Workflow::FilesController, type: :feature, dbscope: :example, tmpd
           include({level: 1, user_id: user3.id, state: 'pending', comment: ''})
       end
 
-      expect(Gws::Memo::Notice.count).to eq 1
-      Gws::Memo::Notice.order_by(id: -1).first.tap do |memo|
+      expect(SS::Notification.count).to eq 1
+      SS::Notification.order_by(id: -1).first.tap do |memo|
         expect(memo.subject).to eq I18n.t("gws_notification.gws/workflow/file.request", name: file_name)
         expect(memo.user_id).to eq admin.id
         expect(memo.member_ids).to eq [user2.id]
@@ -127,14 +126,14 @@ describe Gws::Workflow::FilesController, type: :feature, dbscope: :example, tmpd
           include({level: 1, user_id: user3.id, state: 'unseen', comment: ''})
       end
 
-      expect(Gws::Memo::Notice.count).to eq 3
-      Gws::Memo::Notice.order_by(id: -1).second.tap do |memo|
+      expect(SS::Notification.count).to eq 3
+      SS::Notification.order_by(id: -1).second.tap do |memo|
         expect(memo.subject).to eq I18n.t("gws_notification.gws/workflow/file.approve", name: file_name)
         expect(memo.user_id).to eq user2.id
         expect(memo.member_ids).to include(admin.id, user1.id)
         expect(memo.text).to eq ""
       end
-      Gws::Memo::Notice.order_by(id: -1).first.tap do |memo|
+      SS::Notification.order_by(id: -1).first.tap do |memo|
         expect(memo.subject).to eq I18n.t("gws_notification.gws/workflow/file.circular", name: file_name)
         expect(memo.user_id).to eq user2.id
         expect(memo.member_ids).to eq [user3.id]
@@ -168,8 +167,8 @@ describe Gws::Workflow::FilesController, type: :feature, dbscope: :example, tmpd
           include({level: 1, user_id: user3.id, state: 'seen', comment: circulation_comment2})
       end
 
-      expect(Gws::Memo::Notice.count).to eq 4
-      Gws::Memo::Notice.order_by(id: -1).first.tap do |memo|
+      expect(SS::Notification.count).to eq 4
+      SS::Notification.order_by(id: -1).first.tap do |memo|
         expect(memo.subject).to eq I18n.t("gws_notification.gws/workflow/file.comment", name: file_name)
         expect(memo.user_id).to eq user3.id
         expect(memo.member_ids).to include(admin.id, user1.id)

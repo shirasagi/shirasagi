@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe "cms_search", dbscope: :example, js: true do
+describe "cms_search", type: :feature, dbscope: :example, js: true do
   let(:site) { cms_site }
   let(:pages_index_path) { cms_search_contents_pages_path site.id }
   let(:html_index_path) { cms_search_contents_html_path site.id }
@@ -50,7 +50,7 @@ describe "cms_search", dbscope: :example, js: true do
       it "search with empty conditions" do
         visit pages_index_path
         expect(current_path).not_to eq sns_login_path
-        click_button "検索"
+        click_button I18n.t('ss.buttons.search')
         expect(page).to have_css(".search-count", text: "5 件の検索結果")
         expect(page).to have_css("div.info a.title", text: "[TEST]A")
         expect(page).to have_css("div.info a.title", text: "[TEST]B")
@@ -64,7 +64,7 @@ describe "cms_search", dbscope: :example, js: true do
         expect(current_path).not_to eq sns_login_path
         within "form.search-pages" do
           fill_in "item[search_name]", with: "A"
-          click_button "検索"
+          click_button I18n.t('ss.buttons.search')
         end
         expect(page).to have_css(".search-count", text: "1 件の検索結果")
         expect(page).to have_css("div.info a.title", text: "[TEST]A")
@@ -75,7 +75,7 @@ describe "cms_search", dbscope: :example, js: true do
         expect(current_path).not_to eq sns_login_path
         within "form.search-pages" do
           fill_in "item[search_filename]", with: "#{node_filename}/"
-          click_button "検索"
+          click_button I18n.t('ss.buttons.search')
         end
         expect(page).to have_css(".search-count", text: "3 件の検索結果")
         expect(page).to have_css("div.info a.title", text: "[TEST]B")
@@ -88,7 +88,7 @@ describe "cms_search", dbscope: :example, js: true do
         expect(current_path).not_to eq sns_login_path
         within "form.search-pages" do
           fill_in "item[search_keyword]", with: "[TEST]A"
-          click_button "検索"
+          click_button I18n.t('ss.buttons.search')
         end
         expect(page).to have_css(".search-count", text: "2 件の検索結果")
         expect(page).to have_css("div.info a.title", text: "[TEST]A")
@@ -100,14 +100,14 @@ describe "cms_search", dbscope: :example, js: true do
         expect(current_path).not_to eq sns_login_path
         within "form.search-pages" do
           select "公開", from: "item[search_state]"
-          click_button "検索"
+          click_button I18n.t('ss.buttons.search')
         end
         expect(page).to have_css(".search-count", text: "2 件の検索結果")
         expect(page).to have_css("div.info a.title", text: "[TEST]A")
         expect(page).to have_css("div.info a.title", text: "[TEST]B")
         within "form.search-pages" do
           select "非公開", from: "item[search_state]"
-          click_button "検索"
+          click_button I18n.t('ss.buttons.search')
         end
         expect(page).to have_css(".search-count", text: "3 件の検索結果")
         expect(page).to have_css("div.info a.title", text: "[TEST]C")
@@ -120,14 +120,14 @@ describe "cms_search", dbscope: :example, js: true do
         expect(current_path).not_to eq sns_login_path
         within "form.search-pages" do
           select "公開済み", from: "item[search_first_released]"
-          click_button "検索"
+          click_button I18n.t('ss.buttons.search')
         end
         expect(page).to have_css(".search-count", text: "2 件の検索結果")
         expect(page).to have_css("div.info a.title", text: "[TEST]A")
         expect(page).to have_css("div.info a.title", text: "[TEST]B")
         within "form.search-pages" do
           select "未公開", from: "item[search_first_released]"
-          click_button "検索"
+          click_button I18n.t('ss.buttons.search')
         end
         expect(page).to have_css(".search-count", text: "3 件の検索結果")
         expect(page).to have_css("div.info a.title", text: "[TEST]C")
@@ -140,7 +140,7 @@ describe "cms_search", dbscope: :example, js: true do
         expect(current_path).not_to eq sns_login_path
         within "form.search-pages" do
           select "公開待ち", from: "item[search_state]"
-          click_button "検索"
+          click_button I18n.t('ss.buttons.search')
         end
         expect(page).to have_css(".search-count", text: "0 件の検索結果")
 
@@ -149,7 +149,7 @@ describe "cms_search", dbscope: :example, js: true do
           item.save!
         end
 
-        click_button "検索"
+        click_button I18n.t('ss.buttons.search')
         expect(page).to have_css(".search-count", text: "1 件の検索結果")
         expect(page).to have_css("div.info a.title", text: "[TEST]B")
       end
@@ -192,7 +192,7 @@ describe "cms_search", dbscope: :example, js: true do
             fill_in "item[search_released_close]", with: close
             fill_in "item[search_updated_start]", with: ""
             fill_in "item[search_updated_close]", with: ""
-            click_button "検索"
+            click_button I18n.t('ss.buttons.search')
           end
           expect(page).to have_css(".search-count", text: "1 件の検索結果")
           expect(page).to have_css("div.info a.title", text: "[TEST]D")
@@ -207,7 +207,7 @@ describe "cms_search", dbscope: :example, js: true do
             fill_in "item[search_released_close]", with: ""
             fill_in "item[search_updated_start]", with: start
             fill_in "item[search_updated_close]", with: close
-            click_button "検索"
+            click_button I18n.t('ss.buttons.search')
           end
           expect(page).to have_css(".search-count", text: "2 件の検索結果")
           expect(page).to have_css("div.info a.title", text: "[TEST]A")
@@ -220,7 +220,7 @@ describe "cms_search", dbscope: :example, js: true do
         expect(current_path).not_to eq sns_login_path
         within "form.search-pages" do
           select "申請したもの", from: "item[search_approver_state]"
-          click_button "検索"
+          click_button I18n.t('ss.buttons.search')
         end
         expect(page).to have_css(".search-count", text: "0 件の検索結果")
 
@@ -234,7 +234,7 @@ describe "cms_search", dbscope: :example, js: true do
           item.save!
         end
 
-        click_button "検索"
+        click_button I18n.t('ss.buttons.search')
         expect(page).to have_css(".search-count", text: "1 件の検索結果")
         expect(page).to have_css("div.info a.title", text: "[TEST]B")
       end
@@ -244,7 +244,7 @@ describe "cms_search", dbscope: :example, js: true do
         expect(current_path).not_to eq sns_login_path
         within "form.search-pages" do
           select "依頼されたもの", from: "item[search_approver_state]"
-          click_button "検索"
+          click_button I18n.t('ss.buttons.search')
         end
         expect(page).to have_css(".search-count", text: "0 件の検索結果")
 
@@ -258,7 +258,7 @@ describe "cms_search", dbscope: :example, js: true do
           item.save!
         end
 
-        click_button "検索"
+        click_button I18n.t('ss.buttons.search')
         expect(page).to have_css(".search-count", text: "1 件の検索結果")
         expect(page).to have_css("div.info a.title", text: "[TEST]B")
       end
@@ -267,7 +267,7 @@ describe "cms_search", dbscope: :example, js: true do
         visit pages_index_path
         click_on 'カテゴリーを選択する'
         click_on cate_name1
-        click_button "検索"
+        click_button I18n.t('ss.buttons.search')
         expect(page).to have_css(".search-count", text: "1 件の検索結果")
         expect(page).to have_css("div.info a.title", text: "[TEST]A")
       end
@@ -276,7 +276,7 @@ describe "cms_search", dbscope: :example, js: true do
         visit pages_index_path
         click_on 'カテゴリーを選択する'
         click_on opendata_cate_name1
-        click_button "検索"
+        click_button I18n.t('ss.buttons.search')
         expect(page).to have_css(".search-count", text: "1 件の検索結果")
         expect(page).to have_css("div.info a.title", text: "[TEST]E")
       end
@@ -285,7 +285,7 @@ describe "cms_search", dbscope: :example, js: true do
         visit pages_index_path
         click_on 'グループを選択する'
         click_on cms_group.name
-        click_button "検索"
+        click_button I18n.t('ss.buttons.search')
         expect(page).to have_css(".search-count", text: "5 件の検索結果")
         expect(page).to have_css("div.info a.title", text: "[TEST]A")
         expect(page).to have_css("div.info a.title", text: "[TEST]B")
@@ -298,7 +298,7 @@ describe "cms_search", dbscope: :example, js: true do
         visit pages_index_path
         click_on 'ユーザーを選択する'
         click_on user.name
-        click_button "検索"
+        click_button I18n.t('ss.buttons.search')
         expect(page).to have_css(".search-count", text: "1 件の検索結果")
         expect(page).to have_css("div.info a.title", text: "[TEST]A")
       end
@@ -307,7 +307,7 @@ describe "cms_search", dbscope: :example, js: true do
         visit pages_index_path
         click_on 'フォルダーを選択する'
         click_on node_name
-        click_button "検索"
+        click_button I18n.t('ss.buttons.search')
         expect(page).to have_css(".search-count", text: "3 件の検索結果")
         expect(page).to have_css("div.info a.title", text: "[TEST]B")
         expect(page).to have_css("div.info a.title", text: "[TEST]C")
@@ -318,7 +318,7 @@ describe "cms_search", dbscope: :example, js: true do
         visit pages_index_path
         click_on 'ページ属性を選択する'
         click_on '記事/記事ページ'
-        click_button "検索"
+        click_button I18n.t('ss.buttons.search')
         expect(page).to have_css(".search-count", text: "1 件の検索結果")
         expect(page).to have_css("div.info a.title", text: "[TEST]B")
       end
@@ -337,7 +337,7 @@ describe "cms_search", dbscope: :example, js: true do
         expect(current_path).not_to eq sns_login_path
         within "form.index-search" do
           fill_in "keyword", with: "くらし"
-          click_button "検索"
+          click_button I18n.t('ss.buttons.search')
         end
         wait_for_ajax
         expect(page).to have_no_css(".result table a", text: "[TEST]top")
@@ -356,7 +356,7 @@ describe "cms_search", dbscope: :example, js: true do
 
         within "form.index-search" do
           fill_in "keyword", with: "戸籍"
-          click_button "検索"
+          click_button I18n.t('ss.buttons.search')
         end
         wait_for_ajax
         expect(page).to have_no_css(".result table a", text: "[TEST]top")
@@ -371,7 +371,7 @@ describe "cms_search", dbscope: :example, js: true do
         within "form.index-search" do
           fill_in "keyword", with: "/top/child/"
           check "option-url"
-          click_button "検索"
+          click_button I18n.t('ss.buttons.search')
         end
         wait_for_ajax
         expect(page).to have_no_css(".result table a", text: "[TEST]top")
@@ -392,7 +392,7 @@ describe "cms_search", dbscope: :example, js: true do
         within "form.index-search" do
           fill_in "keyword", with: "/kurashi/koseki/"
           check "option-url"
-          click_button "検索"
+          click_button I18n.t('ss.buttons.search')
         end
         wait_for_ajax
         expect(page).to have_no_css(".result table a", text: "[TEST]top")
@@ -407,7 +407,7 @@ describe "cms_search", dbscope: :example, js: true do
         within "form.index-search" do
           fill_in "keyword", with: '<p>.+?<\/p>'
           check "option-regexp"
-          click_button "検索"
+          click_button I18n.t('ss.buttons.search')
         end
         wait_for_ajax
         expect(page).to have_no_css(".result table a", text: "[TEST]top")
@@ -428,7 +428,7 @@ describe "cms_search", dbscope: :example, js: true do
         within "form.index-search" do
           fill_in "keyword", with: '<s>.+?<\/s>'
           check "option-regexp"
-          click_button "検索"
+          click_button I18n.t('ss.buttons.search')
         end
         wait_for_ajax
         expect(page).to have_no_css(".result table a", text: "[TEST]top")
@@ -450,7 +450,7 @@ describe "cms_search", dbscope: :example, js: true do
         expect(current_path).not_to eq sns_login_path
         within "form.index-search" do
           fill_in "keyword", with: "anchor"
-          click_button "検索"
+          click_button I18n.t('ss.buttons.search')
         end
         wait_for_ajax
         expect(page).to have_css(".result table a", text: "[TEST]top")
@@ -472,7 +472,7 @@ describe "cms_search", dbscope: :example, js: true do
         within "form.index-search" do
           fill_in "keyword", with: "/TOP/"
           check "option-url"
-          click_button "検索"
+          click_button I18n.t('ss.buttons.search')
         end
         wait_for_ajax
         expect(page).to have_no_css(".result table a", text: "[TEST]top")

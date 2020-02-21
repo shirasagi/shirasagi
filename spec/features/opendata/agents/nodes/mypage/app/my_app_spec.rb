@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe "opendata_agents_nodes_my_app", dbscope: :example, js: true do
+describe "opendata_agents_nodes_my_app", type: :feature, dbscope: :example, js: true do
   def create_appfile(app, file, format)
     appfile = app.appfiles.new(text: "aaa", format: format)
     appfile.in_file = file
@@ -50,7 +50,7 @@ describe "opendata_agents_nodes_my_app", dbscope: :example, js: true do
       visit "http://#{site.domain}#{index_path}"
       expect(current_path).to eq index_path
 
-      click_link "新規作成"
+      click_link I18n.t('ss.links.new')
       within "form#item-form" do
         fill_in "item[name]", with: "あぷり"
         fill_in "item[text]", with: "せつめい"
@@ -83,8 +83,8 @@ describe "opendata_agents_nodes_my_app", dbscope: :example, js: true do
         expect(page).to have_content "GPL"
       end
 
-      click_link "削除"
-      click_button "削除"
+      click_link I18n.t('ss.buttons.delete')
+      click_button I18n.t('ss.buttons.delete')
       expect(current_path).to eq index_path
 
       within "table.opendata-app" do
@@ -96,7 +96,7 @@ describe "opendata_agents_nodes_my_app", dbscope: :example, js: true do
   describe "new error" do
     it do
       visit "http://#{site.domain}#{index_path}"
-      click_link "新規作成"
+      click_link I18n.t('ss.links.new')
       within "form#item-form" do
         click_on "公開保存"
       end
@@ -153,7 +153,7 @@ describe "opendata_agents_nodes_my_app", dbscope: :example, js: true do
       visit "http://#{site.domain}#{index_path}"
       expect(current_path).to eq index_path
 
-      click_link "新規作成"
+      click_link I18n.t('ss.links.new')
       within "form#item-form" do
         fill_in "item[name]", with: item_name
         fill_in "item[text]", with: item_text
@@ -161,7 +161,7 @@ describe "opendata_agents_nodes_my_app", dbscope: :example, js: true do
         check category.name
         click_on "公開申請"
       end
-      expect(page).to have_css("#ss-notice", text: "保存しました。")
+      expect(page).to have_css("#ss-notice", text: I18n.t('ss.notice.saved'))
 
       click_link item_name
       expect(page).to have_css(".name .input", text: item_name)

@@ -1,3 +1,8 @@
+<%
+  limit = 100
+  @map_markers = @map_markers.slice(0, limit)
+%>
+
 <% selector = "map-canvas-#{SecureRandom.uuid}" %>
 <%= jquery do %>
 $(".resource-content .tab.list a").on("click", function() {
@@ -27,9 +32,21 @@ $(".resource-content .tab.map a").on("click", function() {
   });
   return false;
 });
+$(".resource-content .pagination a").on("click", function() {
+  var url = $(this).attr("href");
+  $.ajax({
+    url: url,
+    type: "GET",
+    success: function (data) {
+      $("#cboxLoadedContent").html(data);
+    },
+    error: function (data, status) {
+      $("#cboxLoadedContent").html("== Error ==");
+    }
+  });
+  return false;
+});
 <% end %>
-
-<% limit = 100 %>
 
 <div class="resource-content">
   <div class="resource-name"><%= @item.name %></div>
@@ -62,7 +79,7 @@ $(".resource-content .tab.map a").on("click", function() {
   <div class="resource-list">
     <table class="cells" summary="<%= @item.name %>">
       <tbody>
-      <% @data.slice(0, limit).each do |line| %>
+      <% @data.slice(0, limit + 1).each do |line| %>
         <tr>
           <% line.each do |col| %>
             <td><%= col %></td>
@@ -73,14 +90,18 @@ $(".resource-content .tab.map a").on("click", function() {
     </table>
 
     <% if @data.size > limit %>
-      <div><%= limit %><%= I18n.t("opendata.labels.count_display") %></div>
+      <div><%= limit %><%= t("opendata.labels.count_display") %></div>
     <% end %>
   </div>
 
   <div class="resource-map" style="display: none;">
-    <%= render_map "##{selector}", site: @cur_site, markers: @map_markers %>
+    <%= render_map "##{selector}", site: @cur_site, markers: @map_markers, preview: @preview %>
     <div class="resource-content resource-map">
       <div id="<%= selector %>" class="map-canvas" style="width: 100%; height: 400px;"></div>
     </div>
+
+    <% if @data.size > limit %>
+      <div><%= limit %><%= t("opendata.labels.count_display") %></div>
+    <% end %>
   </div>
 </div>

@@ -75,7 +75,6 @@ production: &production
       - "Gws::Faq::Category"
       - "Gws::Faq::Post"
       - "Gws::Link"
-      - "Gws::Memo::Comment"
       - "Gws::Memo::Filter"
       - "Gws::Memo::Folder"
       - "Gws::Memo::Message"
@@ -162,6 +161,9 @@ production: &production
       leave: none
       dayoff: none
       '': none
+
+  share:
+    max_history_count: 20
 
 test:
   <<: *production

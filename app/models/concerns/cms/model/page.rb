@@ -5,12 +5,16 @@ module Cms::Model::Page
   include Cms::Reference::Layout
 
   included do
+    class_variable_set(:@@_show_path, nil)
+
     define_model_callbacks :generate_file
     define_model_callbacks :remove_file
     define_model_callbacks :rename_file
 
     store_in collection: "cms_pages"
     set_permission_name "cms_pages"
+
+    index({ updated: -1 })
 
     #text_index :name, :html
 
@@ -44,18 +48,21 @@ module Cms::Model::Page
     site.subdir ? "#{site.subdir}/#{filename}" : filename
   end
 
-  def generate_file
+  def generate_file(opts = {})
     return false unless serve_static_file?
     return false unless public?
     return false unless public_node?
     run_callbacks :generate_file do
-      Cms::Agents::Tasks::PagesController.new.generate_page(self)
+      updated = Cms::Agents::Tasks::PagesController.new.generate_page(self)
+      Cms::PageRelease.release(self) if opts[:release] != false
+      updated
     end
   end
 
   def remove_file
     run_callbacks :remove_file do
       Fs.rm_rf path
+      Cms::PageRelease.close(self)
     end
   end
 
@@ -70,6 +77,7 @@ module Cms::Model::Page
     run_callbacks :rename_file do
       Fs.mkdir_p dst_dir unless Fs.exists?(dst_dir)
       Fs.mv src, dst if Fs.exists?(src)
+      Cms::PageRelease.close(self, @db_changes['filename'][0])
     end
   end
 
@@ -125,8 +133,12 @@ module Cms::Model::Page
       options = options.merge(site: site || cur_site, cid: parent, id: self)
       if respond_to?(:route)
         route = self.route
-        route = route =~ /cms\// ? "node_page" : route.tr("/", "_")
+        route = /cms\//.match?(route) ? "node_page" : route.tr("/", "_")
         methods << "#{route}_path"
+
+        klass = self.route.camelize.constantize rescue nil
+        method = klass ? klass.class_variable_get(:@@_show_path) : nil
+        methods << "#{method}_path" if method
       end
       methods << "node_#{model}_path"
     end
@@ -165,5 +177,13 @@ module Cms::Model::Page
     end
 
     ret.join("\n").html_safe
+  end
+
+  module ClassMethods
+    private
+
+    def set_show_path(show_path)
+      class_variable_set(:@@_show_path, show_path)
+    end
   end
 end

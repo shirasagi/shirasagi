@@ -6,18 +6,39 @@ module Opendata::Addon::Harvest
     include Opendata::Harvest::ShirasagiApiImporter
     include Opendata::Harvest::ShirasagiScrapingImporter
 
-    EXTERNAL_RESOUCE_FORMAT = %w(html htm)
+    EXTERNAL_RESOUCE_FORMAT = %w(html htm).freeze
+
+    def import
+      if api_type == "ckan"
+        import_from_ckan_api
+      elsif api_type == "shirasagi_api"
+        import_from_shirasagi_api
+      elsif api_type == "shirasagi_scraper"
+        import_from_shirasagi_scraper
+      end
+    end
+
+    def destroy_imported_datasets
+      dataset_ids = ::Opendata::Dataset.site(site).node(node).where("$or" => [
+          { harvest_api_type: api_type, harvest_host: source_host },
+          { harvest_importer_id: id }
+      ]).pluck(:id)
+
+      put_log("datasets #{dataset_ids.size}")
+      dataset_ids.each do |id|
+        dataset = ::Opendata::Dataset.find(id) rescue nil
+        next unless dataset
+
+        put_log("- dataset : destroy #{dataset.name}")
+        dataset.destroy
+      end
+    end
+
+    private
 
     def put_log(message)
       Rails.logger.warn(message)
       puts message
-    end
-
-    def uploaded_sample_file(filename, format)
-      path = "#{Rails.root}/spec/fixtures/opendata/dataset_import/resources/sample.#{format.downcase}"
-      file = ::Fs::UploadedFile.create_from_file(path)
-      file.original_filename = filename
-      file
     end
 
     def get_license_from_uid(uid)
@@ -87,7 +108,12 @@ module Opendata::Addon::Harvest
 
       # area
       dataset.area_ids = self.default_area_ids
-      put_log("- set category_ids #{dataset.category_ids.join(", ")} estat_category_ids #{dataset.estat_category_ids.join(", ")} area_ids #{dataset.area_ids.join(", ")}")
+
+      message = "- "
+      message += "set category_ids #{dataset.category_ids.join(", ")} "
+      message += "estat_category_ids #{dataset.estat_category_ids.join(", ")} "
+      message += "area_ids #{dataset.area_ids.join(", ")}"
+      put_log(message)
 
       def dataset.set_updated; end
       dataset.save!
@@ -108,32 +134,6 @@ module Opendata::Addon::Harvest
     rescue => e
       put_log("#{e.class} (#{e.message}):\n  #{e.backtrace.join("\n  ")}")
       false
-    end
-
-    def import
-      if api_type == "ckan"
-        import_from_ckan_api
-      elsif api_type == "shirasagi_api"
-        import_from_shirasagi_api
-      elsif api_type == "shirasagi_scraper"
-        import_from_shirasagi_scraper
-      end
-    end
-
-    def destroy_imported_datasets
-      dataset_ids = ::Opendata::Dataset.site(site).node(node).where("$or" => [
-        { harvest_api_type: api_type, harvest_host: source_host },
-        { harvest_importer_id: id }
-      ]).pluck(:id)
-
-      put_log("datasets #{dataset_ids.size}")
-      dataset_ids.each do |id|
-        dataset = ::Opendata::Dataset.find(id) rescue nil
-        next unless dataset
-
-        put_log("- dataset : destroy #{dataset.name}")
-        dataset.destroy
-      end
     end
   end
 end

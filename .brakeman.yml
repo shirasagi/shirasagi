@@ -1,0 +1,28 @@
+#
+# Brakeman
+#   https://brakemanscanner.org/docs/options/ja.html
+#   https://brakemanscanner.org/docs/brakeman_as_a_library/
+#
+# Commands
+#   brakeman -A
+#   brakeman -c .brakeman.yml
+#
+:min_confidence: 1
+:run_all_checks: true
+:skip_checks:
+- CheckFileAccess
+#- CheckLinkToHref
+- CheckSendFile
+- CheckWeakHash
+:skip_files:
+- app/views/
+:escape_html: true
+:faster: true
+:ignore_file: ".brakeman.ignore"
+:ignore_ifs: true
+:pager: true
+
+:safe_methods:
+- method_name
+:url_safe_methods:
+- method_name

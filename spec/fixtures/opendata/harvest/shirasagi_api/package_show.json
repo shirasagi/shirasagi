@@ -1,0 +1,90 @@
+{
+  "success": true,
+  "result": {
+    "type": "dataset",
+    "site": {
+      "id": 4,
+      "name": "オープンデータサンプル",
+      "url": "https://source.example.jp/",
+      "created": "2019-05-22T16:47:31.932+09:00",
+      "updated": "2019-05-22T16:51:41.727+09:00"
+    },
+    "member": {
+      "id": 3,
+      "name": "白鷺　太郎",
+      "email": "member@example.jp",
+      "created": "2019-05-22T16:51:02.480+09:00",
+      "updated": "2019-05-22T16:51:02.644+09:00"
+    },
+    "author": "白鷺　太郎",
+    "id": 137,
+    "uuid": "29b8d70d-1070-4e91-ad38-b5c181494fd6",
+    "name": "サンプルデータ【1】",
+    "filename": "dataset/1.html",
+    "url": "https://source.example.jp/dataset/1.html",
+    "text": "サンプルデータ【1】",
+    "update_plan": null,
+    "state": "public",
+    "released": "2019-05-22T16:51:14.764+09:00",
+    "created": "2019-05-22T16:51:14.703+09:00",
+    "updated": "2019-05-22T16:51:14.987+09:00",
+    "categories": [
+      {
+        "id": 360,
+        "name": "健康・福祉",
+        "filename": "bunya/kenko",
+        "state": "public",
+        "created": "2019-05-22T16:51:05.057+09:00",
+        "updated": "2019-05-22T16:51:05.081+09:00"
+      }
+    ],
+    "estat_categories": [
+
+    ],
+    "areas": [
+      {
+        "id": 443,
+        "name": "東区",
+        "filename": "chiiki/shirasagi/higashi",
+        "state": "public",
+        "created": "2019-05-22T16:51:08.162+09:00",
+        "updated": "2019-05-22T16:51:08.189+09:00"
+      }
+    ],
+    "tags": [
+      "タグ"
+    ],
+    "point": 0,
+    "downloaded": null,
+    "groups": [
+
+    ],
+    "resources": [
+      {
+        "id": 167,
+        "uuid": "a3f340e2-fd2c-4b4c-b0d0-06c3170045a7",
+        "revision_id": "b815875b-a428-4406-a93c-904dba2c0981",
+        "name": "サンプルリソース",
+        "filename": "sample.txt",
+        "text": null,
+        "license": {
+          "id": 1,
+          "name": "表示（CC BY）",
+          "uid": "cc-by",
+          "state": "public",
+          "created": "2019-05-22T16:51:14.328+09:00",
+          "updated": "2019-05-22T16:51:14.343+09:00"
+        },
+        "rdf_iri": null,
+        "rdf_error": null,
+        "created": "2019-05-22T16:51:14.960+09:00",
+        "updated": "2019-05-22T16:51:14.971+09:00",
+        "download_url": "https://source.example.jp/dataset/1/resource/1/sample.txt",
+        "url": "https://source.example.jp/fs/1/2/3/_/sample.txt",
+        "format": "TXT"
+      }
+    ],
+    "num_resources": 1
+  },
+  "help": "[api] package_show - 公開データセット情報を取得する。\n[param1] id - IDまたは名称が指定した文字列と一致するデータセット情報を出力する。（必須）\n[param2] use_default_schema - 未実装。"
+}

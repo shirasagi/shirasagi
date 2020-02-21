@@ -19,4 +19,9 @@
   <dt><%= @model.t :expiration_date %></dt>
   <dd><%= tryb { @item.expiration_date.strftime("%Y/%m/%d %H:%M") } %></dd>
   <% end %>
+
+  <% if @item.root? %>
+  <dt><%= @model.t :gws_use %></dt>
+  <dd><%= @item.label :gws_use %></dd>
+  <% end %>
 </dl>

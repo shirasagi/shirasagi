@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe 'article_agents_nodes_page', dbscope: :example do
+describe 'article_agents_nodes_page', type: :feature, dbscope: :example do
   let(:site) { cms_site }
   let(:layout) { create_cms_layout }
   let!(:article_node) { create(:article_node_page, cur_site: site, layout_id: layout.id) }

@@ -1,4 +1,4 @@
-SS::Application.routes.draw do
+Rails.application.routes.draw do
   Gws::Survey::Initializer
 
   concern :deletion do
@@ -26,6 +26,8 @@ SS::Application.routes.draw do
       resources :editables, concerns: [:soft_deletion], except: [:destroy] do
         match :publish, on: :member, via: [:get, :post]
         match :depublish, on: :member, via: [:get, :post]
+        match :copy, on: :member, via: [:get, :post]
+        get :print, on: :member
         resources :columns, concerns: :deletion
         resources :files, controller: 'editable_files', only: [:index] do
           match :download_all, on: :collection, via: [:get, :post]

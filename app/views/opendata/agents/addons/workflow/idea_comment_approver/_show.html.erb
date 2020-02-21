@@ -32,7 +32,6 @@
     $.ajax({
       type: "post",
       url: uri,
-      async: false,
       data: {
         workflow_comment: $("#workflow_comment").prop("value"),
         workflow_approvers: approvers,
@@ -81,7 +80,6 @@ $(".workflow-partial-section").each(function () {
   $.ajax({
     type: "get",
     url: uri,
-    async: false,
     success: function (html, status) {
       $(html).find("#xxxxxx").html();
       $(".workflow-partial-section").html(html);

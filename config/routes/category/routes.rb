@@ -1,4 +1,4 @@
-SS::Application.routes.draw do
+Rails.application.routes.draw do
 
   Category::Initializer
 
@@ -8,16 +8,21 @@ SS::Application.routes.draw do
   end
 
   concern :integration do
-    get :split, :on => :collection
-    post :split, :on => :collection
-    get :integrate, :on => :collection
-    post :integrate, :on => :collection
+    get :split, on: :member
+    post :split, on: :member
+    get :integrate, on: :member
+    post :integrate, on: :member
   end
 
   content "category" do
     get "/" => redirect { |p, req| "#{req.path}/nodes" }, as: :main
     resources :nodes, concerns: [:deletion, :integration]
     resources :pages
+
+    get "conf/split" => "node/confs#split"
+    post "conf/split" => "node/confs#split"
+    get "conf/integrate" => "node/confs#integrate"
+    post "conf/integrate" => "node/confs#integrate"
   end
 
   node "category" do

@@ -35,7 +35,7 @@ describe "webmail_mails", type: :feature, dbscope: :example, imap: true, js: tru
 
           click_on I18n.t("ss.links.upload")
         end
-        within "#cboxLoadedContent" do
+        wait_for_cbox do
           expect(page).to have_content(file.name)
           first(".file-view a").click
         end

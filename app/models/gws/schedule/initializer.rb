@@ -21,15 +21,22 @@ module Gws::Schedule
     Gws::Role.permission :delete_other_gws_schedule_categories, module_name: 'gws/schedule'
     Gws::Role.permission :delete_private_gws_schedule_categories, module_name: 'gws/schedule'
 
-    Gws::Role.permission :read_other_gws_schedule_todos, module_name: 'gws/schedule'
-    Gws::Role.permission :read_private_gws_schedule_todos, module_name: 'gws/schedule'
-    Gws::Role.permission :edit_other_gws_schedule_todos, module_name: 'gws/schedule'
-    Gws::Role.permission :edit_private_gws_schedule_todos, module_name: 'gws/schedule'
-    Gws::Role.permission :delete_other_gws_schedule_todos, module_name: 'gws/schedule'
-    Gws::Role.permission :delete_private_gws_schedule_todos, module_name: 'gws/schedule'
-    Gws::Role.permission :trash_other_gws_schedule_todos, module_name: 'gws/schedule'
-    Gws::Role.permission :trash_private_gws_schedule_todos, module_name: 'gws/schedule'
-    Gws::Role.permission :use_private_gws_schedule_todos, module_name: 'gws/schedule'
+    Gws::Role.permission :read_other_gws_schedule_todos, module_name: 'gws/schedule/todo'
+    Gws::Role.permission :read_private_gws_schedule_todos, module_name: 'gws/schedule/todo'
+    Gws::Role.permission :edit_other_gws_schedule_todos, module_name: 'gws/schedule/todo'
+    Gws::Role.permission :edit_private_gws_schedule_todos, module_name: 'gws/schedule/todo'
+    Gws::Role.permission :delete_other_gws_schedule_todos, module_name: 'gws/schedule/todo'
+    Gws::Role.permission :delete_private_gws_schedule_todos, module_name: 'gws/schedule/todo'
+    Gws::Role.permission :trash_other_gws_schedule_todos, module_name: 'gws/schedule/todo'
+    Gws::Role.permission :trash_private_gws_schedule_todos, module_name: 'gws/schedule/todo'
+    Gws::Role.permission :use_private_gws_schedule_todos, module_name: 'gws/schedule/todo'
+
+    Gws::Role.permission :read_other_gws_schedule_todo_categories, module_name: 'gws/schedule/todo'
+    Gws::Role.permission :read_private_gws_schedule_todo_categories, module_name: 'gws/schedule/todo'
+    Gws::Role.permission :edit_other_gws_schedule_todo_categories, module_name: 'gws/schedule/todo'
+    Gws::Role.permission :edit_private_gws_schedule_todo_categories, module_name: 'gws/schedule/todo'
+    Gws::Role.permission :delete_other_gws_schedule_todo_categories, module_name: 'gws/schedule/todo'
+    Gws::Role.permission :delete_private_gws_schedule_todo_categories, module_name: 'gws/schedule/todo'
 
     Gws.module_usable :schedule do |site, user|
       Gws::Schedule::Plan.allowed?(:use, user, site: site) || user.gws_role_permit_any?(site, :use_private_gws_facility_plans)

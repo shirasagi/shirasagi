@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe "cms_check_links_pages", dbscope: :example do
+describe "cms_check_links_pages", type: :feature, dbscope: :example do
   let!(:site) { cms_site }
   let!(:site2) { create :cms_site, name: "another", host: "another", domains: "another.localhost.jp" }
   let!(:index_path) { cms_check_links_pages_path site.id }

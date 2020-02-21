@@ -29,7 +29,7 @@ describe "webmail_login", type: :feature, dbscope: :example, imap: true do
       expect(current_path).to eq main_path
     end
 
-    it "with organization_uid" do
+    it "with uid" do
       visit login_path
       within "form" do
         fill_in "item[email]", with: user.uid
@@ -44,6 +44,45 @@ describe "webmail_login", type: :feature, dbscope: :example, imap: true do
 
       visit main_path
       expect(current_path).to eq login_path
+    end
+  end
+
+  context "when internal path is given at `ref` parameter" do
+    it do
+      visit webmail_login_path(ref: webmail_addresses_path(group: "-"))
+      within "form" do
+        fill_in "item[email]", with: user.email
+        fill_in "item[password]", with: "pass"
+        click_button I18n.t("ss.login")
+      end
+
+      expect(current_path).to eq webmail_addresses_path(group: "-")
+    end
+  end
+
+  context "when internal url is given at `ref` parameter" do
+    it do
+      visit webmail_login_path(ref: webmail_addresses_url(group: "-"))
+      within "form" do
+        fill_in "item[email]", with: user.email
+        fill_in "item[password]", with: "pass"
+        click_button I18n.t("ss.login")
+      end
+
+      expect(current_path).to eq webmail_addresses_path(group: "-")
+    end
+  end
+
+  context "when external url is given at `ref` parameter" do
+    it do
+      visit webmail_login_path(ref: "https://www.google.com/")
+      within "form" do
+        fill_in "item[email]", with: user.email
+        fill_in "item[password]", with: "pass"
+        click_button I18n.t("ss.login")
+      end
+
+      expect(current_path).to eq main_path
     end
   end
 end

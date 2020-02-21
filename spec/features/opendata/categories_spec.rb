@@ -15,7 +15,7 @@ describe "opendata_categories", type: :feature, dbscope: :example, js: true do
     it "without auth" do
       login_ss_user
       visit opendata_categories_path(site, node)
-      expect(page).to have_css('h1', text: '403 Forbidden')
+      expect(page).to have_title('403 Forbidden')
     end
   end
 
@@ -50,7 +50,9 @@ describe "opendata_categories", type: :feature, dbscope: :example, js: true do
 
       # read
       click_on I18n.t('ss.links.back_to_index')
-      click_on name
+      within '.list-items' do
+        click_on name
+      end
       click_on I18n.t('cms.node_config')
 
       # update

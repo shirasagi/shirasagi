@@ -1,9 +1,9 @@
 .history-backup {
   th, td {
     border: $border-gray5;
-    @include mb { 
+    @include mb {
       display: block !important;
-      border: none;
+      border: 0;
     }
   }
   th { font-weight: bold; }

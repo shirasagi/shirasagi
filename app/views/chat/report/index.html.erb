@@ -1,0 +1,37 @@
+<%
+  gen = SS::HslGenerator.new(@cur_node.id).to_enum
+
+  dates = (Time.zone.now.prev_month.to_date..Time.zone.now.to_date).to_a
+  counts = dates.collect do |date|
+    @items.gte(created: date).lt(created: date.tomorrow).count
+  end
+  sessions = [dates, counts, gen.next]
+
+  suggests = @items.pluck(:click_suggest).flatten.uniq.compact
+  suggests = suggests.collect do |suggest|
+    [suggest, @items.where(click_suggest: suggest).count, gen.next]
+  end
+%>
+<%= jquery do %>
+  Chat_Chart.drawBar(".graph-sessions");
+  Chat_Chart.drawPie(".graph-suggests");
+<% end %>
+<div class="addon-views">
+  <div class="addon-view">
+    <div class="addon-head">
+      <h2><%= I18n.t('chat.session_count') %></h2>
+    </div>
+    <div class="addon-body">
+      <canvas class="graph-sessions" data-name='<%= I18n.t('chat.session_count') %>' data-columns='<%= sessions.to_json %>'></canvas>
+    </div>
+  </div>
+
+  <div class="addon-view">
+    <div class="addon-head">
+      <h2><%= @model.t(:click_suggest) %></h2>
+    </div>
+    <div class="addon-body">
+      <canvas class="graph-suggests" data-name='<%= @model.t(:click_suggest) %>' data-columns='<%= suggests.to_json %>'></canvas>
+    </div>
+  </div>
+</div>

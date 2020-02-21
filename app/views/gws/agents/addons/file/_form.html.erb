@@ -37,7 +37,7 @@ var tempFile = new SS_Addon_TempFile(".upload-drop-area", <%= @cur_user.id %>);
 
   <div id="selected-files">
     <% @item.files.each do |file| %>
-      <div id="file-<%= file.id %>" class="file-view">
+      <div id="file-<%= file.id %>" class="file-view" data-file-id="<%= file.id %>">
 
         <%= link_to file.url, class: :thumb, target: "_blank" do %>
           <% if file.image? %>
@@ -61,7 +61,7 @@ var tempFile = new SS_Addon_TempFile(".upload-drop-area", <%= @cur_user.id %>);
     <% end %>
 
     <% @item.ref_files.each do |file| %>
-      <div id="file-<%= file.id %>" class="file-view">
+      <div id="file-<%= file.id %>" class="file-view" data-file-id="<%= file.id %>">
 
         <%= link_to file.url, class: :thumb, target: "_blank" do %>
           <% if file.image? %>

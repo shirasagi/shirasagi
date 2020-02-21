@@ -1,7 +1,7 @@
 require 'spec_helper'
 require "csv"
 
-describe "article_pages", dbscope: :example, js: true do
+describe "article_pages", type: :feature, dbscope: :example, js: true do
   let(:site) { cms_site }
   let(:node) { create_once :article_node_page, filename: "docs", name: "article" }
   let(:index_path) { article_pages_path site.id, node }
@@ -27,9 +27,11 @@ describe "article_pages", dbscope: :example, js: true do
       click_on I18n.t("ss.links.import")
       expect(current_path).to eq import_path
 
-      attach_file "item[file]", "#{Rails.root}/spec/fixtures/article/article_import_test_1.csv"
-      page.accept_confirm do
-        click_on I18n.t("ss.links.import")
+      within "form#task-form" do
+        attach_file "item[file]", "#{Rails.root}/spec/fixtures/article/article_import_test_1.csv"
+        page.accept_confirm do
+          click_on I18n.t("ss.links.import")
+        end
       end
       expect(page).to have_content I18n.t("ss.notice.started_import")
     end

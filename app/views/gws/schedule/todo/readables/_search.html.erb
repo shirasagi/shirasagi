@@ -1,7 +1,11 @@
-<% @s = OpenStruct.new params[:s] %>
-<%= form_for :s, url: '', html: { method: :get, class: :search } do |f| %>
-  <%= f.select :sort, @model.new.sort_options %>
+<%= form_for :s, url: '', html: { method: :get, class: %w(search schedule-todo-search) } do |f| %>
+  <%= f.select :sort, @model.new.sort_options, {}, class: "schedule-todo-auto-submit" %>
   <%= f.text_field :keyword, style: 'width: 140px;', placeholder: t('gws/schedule/todo.search_todos') %>
-  <%= f.select :todo_state, @model.new.todo_state_options %>
+  <%= f.select :todo_state, @model.todo_state_filter_options, {}, class: "schedule-todo-auto-submit" %>
+  <%= f.select :grouping, @model.todo_grouping_options(user: @cur_user, site: @cur_site, except: :user), {}, class: "schedule-todo-auto-submit" %>
   <input type="submit" value="<%= t('ss.buttons.search') %>" class="btn" />
+<% end %>
+
+<%= jquery do %>
+  new Gws_Schedule_Todo_Search(".schedule-todo-search");
 <% end %>

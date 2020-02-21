@@ -55,9 +55,11 @@ ja:
       start_export: エクスポートを開始しました。
       source_url: "リンクを登録する際にURLを入力してください。ファイルを設定した場合は入力の必要はありません。"
       resource_preview_error: リソースをプレビューできませんでした。
+      bulk_download_exceeded_filesize: "検索結果の一括ダウンロードサイズが大きすぎます。\\n一括ダウンロードのサイズは、%{size}までを想定しています。\\n申し訳ありませんが、個別にダウンロードしていただくか、検索条件を変更してください。"
+      recreate_rdf: "次のリソースに関連する RDF が作成されています。"
     export:
       subject: '[オープンデータ/データセット] エクスポートが完了しました。'
-      notiry_message: "ダウンロードの準備が完了しました。\n下記のURLからダウンロードしてください。\n\n%{link}"
+      notify_message: "ダウンロードの準備が完了しました。\n下記のURLからダウンロードしてください。\n\n%{link}"
       start_message: "エクスポート処理を開始しました。"
       export_message: "エクスポート処理が完了次第、ログインユーザーのメールアドレスにダウンロードリンクが通知されます。"
       emtpy_email_message: "ログインユーザーにメールアドレスが設定されていません。"
@@ -69,6 +71,8 @@ ja:
       preview_reports: プレビュー数
       access_reports: アクセス数
       not_exists_reports: 集計結果がありません。
+      total_year: 年合計
+      total_month: 月合計
     public_entity:
       format: データセット一覧
       download: 公開中のデータセットの一覧を推奨データセット「オープンデータ一覧」の形式にてダウンロードできます。
@@ -108,6 +112,8 @@ ja:
         invalid_type: タイプが不正です。
         invalid_operator: 操作が不正です。
         invalid_regexp: 正規表現が不正です。
+        too_many_categories: "分野の設定数が多すぎます（末端分野の制限数: %{limit}）"
+        too_many_estat_categories: "eStat分野の設定数が多すぎます（末端eStat分野の制限数: %{limit}）"
     crawl_state:
       same:
       updated: 更新
@@ -121,6 +127,7 @@ ja:
 
     confirm:
       build_csv2rdf: "RDF 変換処理を開始します。よろしいですか？"
+      recreate_rdf: "RDF を再作成しますか？"
     labels:
       auto_assing: "自動割付結果"
       auto_mis_assing: "自動割付ミス"
@@ -533,8 +540,10 @@ ja:
         area_ids: 地域
       opendata/addon/category_setting:
         st_category_ids: 分野
+        categories_limit: 分野数の上限
       opendata/addon/estat_category_setting:
         st_estat_category_ids: eStat分野
+        estat_categories_limit: eStat分野数の上限
       opendata/addon/rdf_store:
         rdf_iri: グラフ名
         rdf_error: RDF登録エラー
@@ -557,6 +566,7 @@ ja:
       opendata/dataset:
         name: データセット名
         text: 説明
+        creator_name: データ作成者
         site_id: サイト
         user_id: データ作成者
         group_id: 所属グループ
@@ -810,6 +820,8 @@ ja:
       tags:
         - 関連する単語を登録します。
         - カンマ、スペースで区切ることにより複数の単語を設定することができます。
+      creator_name:
+        - データ作成者を入力します。
     opendata/resource:
       source_url:
         - リソースが外部サイトに存在する場合、リソースのURLを入力します。
@@ -942,6 +954,17 @@ ja:
     opendata/addon/harvest/importer_area_setting:
       default_area_ids:
         - 既定の地域を設定します。
+    opendata/addon/category_setting:
+      categories_limit:
+        - データセットに設定できる末端の分野数の上限を設定します。
+        - 空欄 および 0 は無制限です。
+    opendata/addon/estat_category_setting:
+      st_estat_categories:
+        - フォルダー下で使用するカテゴリーを設定します。
+        - 設定されていない場合は全カテゴリーが対象となります。
+      estat_categories_limit:
+        - データセットに設定できる末端のeStat分野数の上限を設定します。
+        - 空欄 および 0 は無制限です。
     opendata/harvest/exporter:
       name:
         - 名前を設定します。

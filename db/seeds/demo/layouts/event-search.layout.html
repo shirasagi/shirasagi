@@ -11,24 +11,34 @@
 <body>
 <div id="page">
 
-  {{ part "tool" }}
-  {{ part "head" }}
-  {{ part "navi" }}
+{{ part "tool" }}
+{{ part "head" }}
+{{ part "navi" }}
 
-  <div id="wrap" class="event">
-    {{ part "breadcrumb" }}
-    <div id="main" class="one">
-      <header><h1 id="ss-page-name">#{page_name}</h1></header>
-       <section id="calendar-search" class="content-box">
-        <article class="content-body search">
-          {{ yield }}
-        </article>
-      </section>
-      {{ part "page-top" }}
-    </div>
+<div id="wrap" class="event">
+  {{ part "breadcrumb" }}
+  <div id="main" class="one">
+    <header><h1 id="ss-page-name">#{page_name}</h1></header>
+     <section id="calendar-search" class="content-box">
+      <article class="content-body search">
+        {{ yield }}
+      </article>
+    </section>
+    {{ part "page-top" }}
   </div>
+</div>
 
-  {{ part "foot" }}
+<section id="chat">
+  <div class="chat-close">
+    <p>チャットボット</p>
+  </div>
+  <div class="chat-open">
+    <header><h2>チャットボット</h2><span class="close-btn"><img src="/img/chat-close.png" alt="閉じる" /></span></header>
+    {{ part "bot" }}
+  </div>
+</section>
+
+{{ part "foot" }}
 
 </div>
 </body>

@@ -1,4 +1,8 @@
 class SS::Migration20181009202100
+  include SS::Migration::Base
+
+  depends_on "20180402000000"
+
   def change
     all_ids = Webmail::Signature.all.exists(host: false).pluck(:id)
     all_ids.each_slice(20) do |ids|

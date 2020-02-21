@@ -41,6 +41,10 @@ class Opendata::Dataset::ResourcesController < ApplicationController
     raise "400" unless @items.present?
   end
 
+  def csv2_rdf_setting_exist?
+    Opendata::Csv2rdfSetting.site(@cur_site).resource(@item).present?
+  end
+
   public
 
   def index
@@ -66,7 +70,15 @@ class Opendata::Dataset::ResourcesController < ApplicationController
     @item.attributes = get_params
     @item.status = params[:item][:state]
     @item.workflow = { workflow_reset: true } if @dataset.member.present?
-    render_update @item.update
+    result = @item.save
+
+    if result && csv2_rdf_setting_exist?
+      location = url_for(controller: :csv2rdf_settings, action: :guidance, resource_id: @item)
+      redirect_to location, notice: t("ss.notice.saved")
+      return
+    end
+
+    render_update result
   end
 
   def destroy

@@ -20,6 +20,7 @@ ja:
       restore: システムのバージョンが異なる場合、正常に動作しなくなる可能性があります。
       restored: 復元しました。
       reseted_state: 状態を初期化しました。
+      size_limit_exceeded: 同時に実行できるジョブ数を超過しています。
     buttons:
       restore: 復元
       reset: 停止する
@@ -35,6 +36,7 @@ ja:
       adapter_is_not_shirasagi:
         - ActiveJob の queue_adapter 設定が shirasagi ではありません。
         - 本画面には queue_adapter 設定が shirasagi の場合に実行予約されたタスクが表示されます。
+    task_manager: タスク・マネージャー
 
   modules:
     job: ジョブ

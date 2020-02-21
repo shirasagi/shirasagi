@@ -9,7 +9,7 @@
     </li>
   <% end %>
 
-  <%= content_tag column.list_type.to_sym, class: "list" do %>
+  <%= content_tag column.list_type, class: "list list-#{column.list_type}" do %>
     <% if lists.present? %>
       <% lists.each do |list| %>
         <% render_item.call(list) %>
@@ -32,14 +32,14 @@
       name: "<%= column.name %>",
       getContent: function () {
         var contents = [];
-        $('<%= "##{id}" %> [name="item[column_values][][in_wrap][lists][]"').each(function () {
+        $('<%= "##{id}" %> [name="item[column_values][][in_wrap][lists][]"]').each(function () {
           contents.push($(this).val());
         });
         return contents;
       },
       setContent: function (content) {
         var selector, ele;
-        selector = $('<%= "##{id}" %> [name="item[column_values][][in_wrap][lists][]"');
+        selector = $('<%= "##{id}" %> [name="item[column_values][][in_wrap][lists][]"]');
         $.each(content, function (idx, value) {
           ele = selector[idx];
           if (ele) {

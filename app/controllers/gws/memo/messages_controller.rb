@@ -6,8 +6,8 @@ class Gws::Memo::MessagesController < ApplicationController
 
   before_action :deny_with_auth
 
-  before_action :set_item, only: [:show, :edit, :update, :send_mdn, :ignore_mdn, :print, :trash, :delete, :destroy, :toggle_star]
-  before_action :redirect_to_appropriate_folder, only: [:show], if: -> { params[:folder] == 'REDIRECT' }
+  before_action :set_item, only: [:show, :edit, :update, :send_mdn, :ignore_mdn, :print, :trash, :delete, :destroy,
+                                  :set_star, :unset_star]
   before_action :set_selected_items, only: [:trash_all, :destroy_all, :set_seen_all, :unset_seen_all,
                                             :set_star_all, :unset_star_all, :move_all]
   before_action :set_folders, only: [:index, :recent]
@@ -23,7 +23,11 @@ class Gws::Memo::MessagesController < ApplicationController
 
   def set_item
     super
-    raise "404" unless @item.readable?(@cur_user, @cur_site)
+    if params[:folder] == 'REDIRECT' && request.get?
+      redirect_to_appropriate_folder
+      return
+    end
+    raise "404" unless @item.readable?(@cur_user, site: @cur_site)
   end
 
   def fix_params
@@ -66,17 +70,19 @@ class Gws::Memo::MessagesController < ApplicationController
       where(default: "enabled").
       pluck(:email).
       select(&:present?)
-
     return if forward_emails.blank?
+
     Gws::Memo::Mailer.forward_mail(@item, forward_emails).deliver_now
   end
 
   def redirect_to_appropriate_folder
-    path = @item.path[@cur_user.id.to_s]
+    path = @item.path(@cur_user)
     if path.present?
       redirect_to({ folder: path })
     elsif (@cur_user.id == @item.user_id) && @item.deleted["sent"].nil?
       redirect_to({ folder: "INBOX.Sent" })
+    elsif @item.list_message? && @item.to_list_message.list.allowed?(:read, @cur_user, site: @cur_site)
+      redirect_to gws_memo_list_message_path(list_id: @item.to_list_message.list, id: @item)
     else
       raise '404'
     end
@@ -132,6 +138,7 @@ class Gws::Memo::MessagesController < ApplicationController
 
   def edit
     raise "404" unless @item.editable?(@cur_user, @cur_site)
+
     render
   end
 
@@ -162,7 +169,7 @@ class Gws::Memo::MessagesController < ApplicationController
   end
 
   def destroy
-    render_destroy @item.destroy_from_folder(@cur_user, @cur_folder, unsend: params[:unsend]), notice: t("ss.notice.deleted")
+    render_destroy @item.destroy_from_folder(@cur_user, @cur_folder, unsend: params[:unsend])
   end
 
   def destroy_all
@@ -241,7 +248,7 @@ class Gws::Memo::MessagesController < ApplicationController
       @item.request_mdn_ids = @item.request_mdn_ids - [@cur_user.id]
       @item.update
     else
-      @item.errors[:base] += item_mdn.errors.full_messages
+      @item.errors.messages[:base] += item_mdn.errors.full_messages
     end
 
     render_change result, :send_mdn, redirect: { action: :show }
@@ -262,63 +269,78 @@ class Gws::Memo::MessagesController < ApplicationController
 
   def trash_all
     @items.each do |item|
-      raise "404" unless item.readable?(@cur_user, @cur_site)
+      raise "404" unless item.readable?(@cur_user, site: @cur_site)
+
       item.move(@cur_user, 'INBOX.Trash').update
     end
-    render_destroy_all(false)
+    render_destroy_all(true)
   end
 
   def move_all
     @items.each do |item|
-      raise "404" unless item.readable?(@cur_user, @cur_site)
+      raise "404" unless item.readable?(@cur_user, site: @cur_site)
+
       item.move(@cur_user, params[:path]).update
     end
-    render_destroy_all(false)
+    render_change_all
   end
 
   def set_seen_all
     @items.each do |item|
-      raise "404" unless item.readable?(@cur_user, @cur_site)
+      raise "404" unless item.readable?(@cur_user, site: @cur_site)
+
       item.set_seen(@cur_user).update
     end
-    render_destroy_all(false)
+    render_change_all
   end
 
   def unset_seen_all
     @items.each do |item|
-      raise "404" unless item.readable?(@cur_user, @cur_site)
+      raise "404" unless item.readable?(@cur_user, site: @cur_site)
+
       item.unset_seen(@cur_user).update
     end
-    render_destroy_all(false)
+    render_change_all
   end
 
-  def toggle_star
-    render_destroy @item.toggle_star(@cur_user).update, location: { action: params[:location] }
+  def set_star
+    render_change @item.set_star(@cur_user).save, params[:action], location: { action: params[:location] }
+  end
+
+  def unset_star
+    render_change @item.unset_star(@cur_user).save, params[:action], location: { action: params[:location] }
   end
 
   def set_star_all
     @items.each do |item|
-      raise "404" unless item.readable?(@cur_user, @cur_site)
+      raise "404" unless item.readable?(@cur_user, site: @cur_site)
+
       item.set_star(@cur_user).update
     end
-    render_destroy_all(false)
+    render_change_all
   end
 
   def unset_star_all
     @items.each do |item|
-      raise "404" unless item.readable?(@cur_user, @cur_site)
+      raise "404" unless item.readable?(@cur_user, site: @cur_site)
+
       item.unset_star(@cur_user).update
     end
-    render_destroy_all(false)
+    render_change_all
   end
 
   def render_change(result, action, opts = {})
     location = params[:redirect].presence || opts[:redirect] || { action: :index }
 
     if result
+      notice = opts[:notice].presence
+      notice ||= t("gws/memo/message.notice.#{action}", default: nil)
+      notice ||= t("ss.notice.#{action}", default: nil)
+      notice ||= t("ss.notice.saved")
+
       respond_to do |format|
-        format.html { redirect_to location, notice: t("gws/memo/message.notice.#{action}") }
-        format.json { render json: { action: params[:action], notice: t("gws/memo/message.notice.#{action}") } }
+        format.html { redirect_to location, notice: notice }
+        format.json { render json: { action: action, notice: notice } }
       end
     else
       respond_to do |format|
@@ -328,11 +350,26 @@ class Gws::Memo::MessagesController < ApplicationController
     end
   end
 
+  def render_change_all(opts = {})
+    location = params[:redirect].presence || opts[:redirect] || { action: :index }
+    action = opts[:action] || params[:action]
+    notice = opts[:notice].presence
+    notice ||= t("gws/memo/message.notice.#{action}", default: nil)
+    notice ||= t("ss.notice.#{action}", default: nil)
+    notice ||= t("ss.notice.saved")
+    errors = @items.select { |item| item.errors.present? }.map { |item| [ item.id.to_s, item.errors.full_messages ] }
+
+    respond_to do |format|
+      format.html { redirect_to location, notice: notice }
+      format.json { render json: { action: action, notice: notice, errors: errors } }
+    end
+  end
+
   def latest
-    from = params[:from].present? ? Time.zone.parse(params[:from]) : Time.zone.now - 12.hours
     @sort_hash = @cur_user.memo_message_sort_hash(@cur_folder, params[:sort], params[:order])
 
-    @unseen = @model.folder(@cur_folder, @cur_user).
+    inbox = Gws::Memo::Folder.new(path: 'INBOX')
+    @unseen = @model.folder(inbox, @cur_user).
       site(@cur_site).
       unseen(@cur_user).
       reorder(@sort_hash)
@@ -340,20 +377,23 @@ class Gws::Memo::MessagesController < ApplicationController
     @items = @model.folder(@cur_folder, @cur_user).
       site(@cur_site).
       reorder(@sort_hash).
-      limit(10).
-      entries
+      limit(10)
+
+    fix_seen = @cur_folder.unseen? ? nil : true # Sent or Draft
 
     resp = {
-      recent: @unseen.where(:send_date.gte => from).size,
+      latest: @unseen.first.try(:send_date),
       unseen: @unseen.size,
-      latest: @items.first.try(:send_date),
       items: @items.map do |item|
         {
           date: item.send_date,
           from: item.user_name,
+          to: item.display_to.presence,
+          cc: item.display_cc.presence,
           subject: item.subject,
+          text: item.text.presence,
           url: gws_memo_message_url(folder: 'INBOX', id: item.id),
-          unseen: item.unseen?(@cur_user)
+          unseen: fix_seen ? false : item.unseen?(@cur_user)
         }
       end
     }

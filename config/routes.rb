@@ -15,6 +15,12 @@ class ActionDispatch::Routing::Mapper
     namespace(name, as: "#{name}_cms", path: ".s:site/#{ns}", module: "#{mod}/cms") { yield }
   end
 
+  def sns(ns, opts = {}, &block)
+    name = opts[:name] || ns.tr("/", "_")
+    mod  = opts[:module] || ns
+    namespace(name, as: "#{name}_sns", path: ".u/#{ns}", module: "#{mod}/sns") { yield }
+  end
+
   def content(ns, opts = {}, &block)
     name = opts[:name] || ns.tr("/", "_")
     mod  = opts[:module] || ns
@@ -40,7 +46,7 @@ class ActionDispatch::Routing::Mapper
   end
 end
 
-SS::Application.routes.draw do
+Rails.application.routes.draw do
   SS::Initializer
 
   namespace "sns", path: ".mypage" do
@@ -48,6 +54,7 @@ SS::Application.routes.draw do
     get   "logout" => "login#logout", as: :logout
     match "login"  => "login#login", as: :login, via: [:get, :post]
     match "remote_login" => "login#remote_login", as: :remote_login, via: [:get, :post]
+    get   "redirect" => "login#redirect", as: :redirect
     resources :public_notices, only: [:index, :show]
     resources :sys_notices, only: [:index, :show]
     get   "status" => "login#status", as: :login_status

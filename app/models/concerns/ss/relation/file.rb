@@ -17,6 +17,7 @@ module SS::Relation::File
       before_save "save_relation_#{name}".to_sym, if: ->{ send("in_#{name}").present? }
       before_save "remove_relation_#{name}".to_sym, if: ->{ send("rm_#{name}").to_s == "1" }
       after_save "update_relation_#{name}_state".to_sym, if: ->{ send(name).present? }
+      after_save "update_relation_#{name}_owner_item".to_sym, if: ->{ send(name).present? }
 
       define_method("validate_relation_#{name}") do
         file = relation_file(name, opts)
@@ -49,7 +50,15 @@ module SS::Relation::File
         return unless respond_to?(:state)
         file = send(name)
         file_state = send("#{name}_file_state")
-        file.update_attributes(state: file_state) if file.state != file_state
+        file.update(state: file_state) if file.state != file_state
+      end
+
+      define_method("update_relation_#{name}_owner_item") do
+        file = send(name)
+        owner_item = self.embedded? ? self._parent : self
+        if file.owner_item.blank? || file.owner_item_type != owner_item.class.name || file.owner_item_id != owner_item.id
+          file.update(owner_item: owner_item)
+        end
       end
 
       define_method("generate_relation_public_#{name}") do
@@ -83,7 +92,9 @@ module SS::Relation::File
     file.site_id  = site_id if respond_to?(:site_id)
     file.user_id  = @cur_user.id if @cur_user
     file.state    = send("#{name}_file_state")
+    file.content_type = ::Fs.content_type(file.filename)
     file.resizing = send("in_#{name}_resizing").presence || opts[:resizing]
+    file.owner_item = self.embedded? ? self._parent : self if file.respond_to?(:owner_item=)
     file
   end
 end

@@ -72,4 +72,45 @@ describe SS::Group, type: :model, dbscope: :example do
       expect(ids).to include(group1.id, group11.id, group12.id)
     end
   end
+
+  describe "what ss/group exports to liquid" do
+    let(:assigns) { {} }
+    let(:registers) { {} }
+    subject { group.to_liquid }
+
+    before do
+      subject.context = ::Liquid::Context.new(assigns, {}, registers, true)
+    end
+
+    context "with root group" do
+      let(:name) { unique_id }
+      let!(:group) { create(:ss_group, name: name) }
+
+      it do
+        expect(subject.name).to eq name
+        expect(subject.full_name).to eq name
+        expect(subject.section_name).to eq name
+        expect(subject.trailing_name).to eq name
+        expect(subject.last_name).to eq name
+      end
+    end
+
+    context "with sub group" do
+      let(:names) { Array.new(4) { unique_id } }
+      let!(:root_group) { create(:ss_group, name: names.first) }
+      let!(:secondary_group) { create(:ss_group, name: names[0..1].join("/")) }
+      let!(:group) { create(:ss_group, name: names.join("/")) }
+
+      it do
+        expect(subject.name).to eq names.join("/")
+        expect(subject.full_name).to eq names.join(" ")
+        expect(subject.section_name).to eq names[1..3].join(" ")
+        expect(subject.last_name).to eq names[3]
+
+        # trailing_name depends on #depth
+        expect(group.depth).to eq 2
+        expect(subject.trailing_name).to eq names[2..3].join("/")
+      end
+    end
+  end
 end

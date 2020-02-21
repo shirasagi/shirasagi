@@ -20,13 +20,13 @@ class Gws::Notice::EditablesController < ApplicationController
   private
 
   def set_crumbs
-    @crumbs << [t("mongoid.models.gws/notice/post"), gws_notice_main_path]
+    @crumbs << [@cur_site.menu_notice_label || t('modules.gws/notice'), gws_notice_main_path]
     @crumbs << [t('ss.navi.editable'), action: :index, folder_id: '-', category_id: '-']
   end
 
   def pre_params
     {
-      folder: @folder,
+      folder: @folder
     }
   end
 
@@ -93,14 +93,6 @@ class Gws::Notice::EditablesController < ApplicationController
       @item.readable_member_ids = @folder.readable_member_ids
       @item.readable_custom_group_ids = @folder.readable_custom_group_ids
     end
-  end
-
-  def set_selected_items
-    ids = params[:ids]
-    raise "400" unless ids
-    ids = ids.split(",") if ids.is_a?(String)
-    @items = @items.in(id: ids)
-    raise "400" unless @items.present?
   end
 
   public

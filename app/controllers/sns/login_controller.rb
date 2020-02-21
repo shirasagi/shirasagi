@@ -2,7 +2,7 @@ class Sns::LoginController < ApplicationController
   include Sns::BaseFilter
   include Sns::LoginFilter
 
-  skip_before_action :logged_in?, only: [:login, :remote_login, :status]
+  skip_before_action :logged_in?, only: [:login, :remote_login, :status, :redirect]
 
   layout "ss/login"
   navi_view nil

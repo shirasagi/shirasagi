@@ -5,6 +5,20 @@ describe Opendata::Dataset, dbscope: :example do
   let!(:node_search_dataset) { create(:opendata_node_search_dataset) }
   let(:node) { create(:opendata_node_dataset) }
 
+  describe "#attributes" do
+    let(:item) { create :opendata_dataset, cur_node: node }
+    let(:show_path) { Rails.application.routes.url_helpers.opendata_dataset_path(site: item.site, cid: node, id: item.id) }
+
+    it { expect(item.becomes_with_route).not_to eq nil }
+    it { expect(item.dirname).to eq node.filename }
+    it { expect(item.basename).not_to eq nil }
+    it { expect(item.path).not_to eq nil }
+    it { expect(item.url).not_to eq nil }
+    it { expect(item.full_url).not_to eq nil }
+    it { expect(item.parent).to eq node }
+    it { expect(item.private_show_path).to eq show_path }
+  end
+
   context "check attributes with typical url resource" do
     subject { create(:opendata_dataset, cur_node: node) }
     its(:becomes_with_route) { is_expected.not_to be_nil }
@@ -368,7 +382,7 @@ describe Opendata::Dataset, dbscope: :example do
         area_ids: [1],
         point: 1,
         text: "text",
-        tags: ["tag"],
+        tags: %w(tag),
         member_id: 1,
         dataset_group_ids: [1],
         contact_state: "hide",

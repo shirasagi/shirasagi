@@ -3,7 +3,7 @@
     <h2>
       <span class="name"><%= @item.name %></span>
       <span class="categories">
-        <% @item.categories.each do |category| %>
+        <% @item.categories.readable(@cur_user, site: @cur_site).each do |category| %>
           <%= link_to category.trailing_name, gws_board_topics_path(category: category.id),
                       class: "gws-category-label", style: category_label_css(category) %>
         <% end %>
@@ -59,11 +59,9 @@
     </div>
   <% end %>
 
-  <% if @item.permit_comment? && @model.allowed?(:edit, @cur_user, site: @cur_site) %>
+  <% if @item.permit_comment? && (@item.allowed?(:edit, @cur_user, site: @cur_site) || @item.member?(@cur_user)) %>
     <div class="menu">
-      <%= link_to t('gws/board.links.comment'),
-                  new_gws_board_topic_parent_comment_path(topic_id: @item.id, parent_id: @item.id),
-                  class: "btn primary" %>
+      <%= link_to t('gws/board.links.comment'), new_gws_board_topic_parent_comment_path(topic_id: @item.id, parent_id: @item.id), class: "btn primary" %>
     </div>
   <% end %>
 </article>

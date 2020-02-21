@@ -67,7 +67,7 @@ SS.renderClipboardCopy();
 <% if @cur_node.show_point? %>
 <div class="point">
   <div class="count">
-    <span class="label"><%= I18n.t("opendata.labels.iine") %></span>
+    <span class="label"><%= t("opendata.labels.iine") %></span>
     <span class="number"><%= @cur_page.point %></span>
   </div>
 </div>
@@ -76,8 +76,8 @@ SS.renderClipboardCopy();
 <%
 max = 3
 categories = [
-  { items: @cur_page.categories, type: :category, name: :name, key: :category_id, val: :id },
-  { items: @cur_page.estat_categories, type: "estat-category", name: :name, key: :estat_category_id, val: :id },
+  { items: @cur_page.categories.sort(order: 1), type: :category, name: :name, key: :category_id, val: :id },
+  { items: @cur_page.estat_categories.sort(order: 1), type: "estat-category", name: :name, key: :estat_category_id, val: :id },
   { items: @cur_page.areas.sort(order: 1), type: :area, name: :name, key: :area_id, val: :id },
   { items: @cur_page.tags, type: :tag, name: :to_s, key: :tag, val: :to_s },
 ]
@@ -90,7 +90,7 @@ categories = [
         class: cate[:type], style: hide %>
     <% end %>
     <% if cate[:items].size > max %>
-      <%= link_to I18n.t("opendata.labels.other") + "#{cate[:items].size-max}" + I18n.t("opendata.labels.count"), "#",
+      <%= link_to t("opendata.labels.other") + "#{cate[:items].size-max}" + t("opendata.labels.count"), "#",
         class: "#{cate[:type]}", "data-class" => "other" %>
     <% end %>
   <% end %>
@@ -107,12 +107,12 @@ categories = [
 
 <div class="dataset-tabs tabs"  id="dataset-tabs-<%= @cur_node.id %>">
   <article class="tab" id="cms-tab-<%= @cur_node.id %>-0">
-    <header><h2><%= I18n.t("opendata.labels.resource") %></h2></header>
+    <header><h2><%= t("opendata.labels.resource") %></h2></header>
     <div class="pages">
       <div class="info-wrap">
         <div class="resources">
           <header>
-            <h1><%= I18n.t("opendata.labels.resource") %></h1>
+            <h1><%= t("opendata.labels.resource") %></h1>
           </header>
 
           <% @cur_page.resources.order(name: 1).each do |rs| %>
@@ -136,26 +136,15 @@ categories = [
 
                 <% if rs.source_url.blank? && rs.previewable? %>
                   <div class="content-wrap">
-                    <%= link_to I18n.t("opendata.labels.preview"), rs.content_url, class: "content" %>
+                    <%= link_to t("opendata.labels.preview"), rs.content_url, class: "content" %>
                   </div>
                 <% end %>
-
                 <div class="download-wrap">
-                  <% if rs.source_url.present? %>
-                    <%= link_to I18n.t("opendata.labels.downloaded"), rs.source_url, class: "download external", "data-url": rs.source_url, target: "_blank" %>
-                  <% elsif controller.preview_path? %>
-                    <%= link_to I18n.t("opendata.labels.downloaded"), rs.file.url, class: "download", "data-url": rs.file.url %>
-                  <% else %>
-                    <%= link_to I18n.t("opendata.labels.downloaded"), rs.url, class: "download", "data-url": rs.file.url %>
-                  <% end %>
+                  <%= link_to t("opendata.labels.downloaded"), rs.download_url, class: "download" %>
                 </div>
-
                 <div class="clipboard-wrap">
-                  <%= link_to t("opendata.links.copy_url"), rs.url,
-                    "class" => "ss-clipboard-copy",
-                    "data-clip-attr" => "data-full-url",
-                    "data-full-url" => rs.full_url
-                  %>
+                  <% url = rs.source_url.present? ? rs.source_url : rs.download_full_url %>
+                  <%= link_to t("opendata.links.copy_url"), rs.url, class: "ss-clipboard-copy", "data-clip-attr": "data-full-url", "data-full-url": url %>
                 </div>
               </div>
 
@@ -207,11 +196,11 @@ categories = [
 
                 <% if urs.tsv_present? %>
                   <div class="content-wrap">
-                    <%= link_to I18n.t("opendata.labels.preview"), urs.content_url, class: "content" %>
+                    <%= link_to t("opendata.labels.preview"), urs.content_url, class: "content" %>
                   </div>
                 <% end %>
 
-                <div class="download-wrap"><%= link_to I18n.t("opendata.labels.downloaded"), urs.download_url, class: "download", "data-url": urs.file.url %></div>
+                <div class="download-wrap"><%= link_to t("opendata.labels.downloaded"), urs.download_url, class: "download", "data-url": urs.file.url %></div>
 
                 <div class="clipboard-wrap">
                   <%= link_to t("opendata.links.copy_url"), urs.url,
@@ -227,12 +216,8 @@ categories = [
         </div>
 
         <%
-           pref, city = @cur_page.pref_codes
-           if city.present?
-             code = city.first
-           elsif pref.present?
-             code = pref.first
-           end
+           prefs, cities = @cur_page.pref_codes
+           codes = cities.presence || prefs
         %>
         <dl class="cio-format author">
           <dt><%= @cur_page.t :no %></dt>
@@ -244,19 +229,19 @@ categories = [
             <span class="api-uuid"><%= @cur_page.uuid %></span>
           </dd>
 
-          <% if code && code.prefecture.present?  %>
-          <dt><%= code.t :prefecture %></dt>
-          <dd><%= code.prefecture %></dd>
+          <% if prefs.present?  %>
+          <dt><%= SS::PrefectureCode.t :prefecture %></dt>
+          <dd><%= prefs.map { |code| code.prefecture }.join(",") %></dd>
           <% end %>
 
-          <% if code && code.city.present?  %>
-          <dt><%= code.t :city %></dt>
-          <dd><%= code.city %></dd>
+          <% if cities.present?  %>
+          <dt><%= SS::PrefectureCode.t :city %></dt>
+          <dd><%= cities.map { |code| code.city }.join(",") %></dd>
           <% end %>
 
-          <% if code %>
-          <dt><%= code.t :code %></dt>
-          <dd><%= code.code %></dd>
+          <% if codes.present? %>
+          <dt><%= SS::PrefectureCode.t :code %></dt>
+          <dd><%= codes.map { |code| code.code }.join(",") %></dd>
           <% end %>
 
           <% if @cur_page.update_plan.present? %>
@@ -264,13 +249,16 @@ categories = [
           <dd><%= @cur_page.update_plan %></dd>
           <% end %>
 
-          <% if @cur_page.member_id.present? %>
+          <% if @cur_page.creator_name.present? %>
+            <dt><%= @cur_page.t :user_id %></dt>
+            <dd><%= @cur_page.creator_name %><br /></dd>
+          <% elsif @cur_page.member_id.present? %>
             <dt><%= @cur_page.t :user_id %></dt>
             <dd>
               <% if @cur_page.member %>
                 <%= link_to @cur_page.member.name, "#{member_path}#{@cur_page.member.id}" %>
               <% else %>
-                <%= I18n.t("opendata.labels.guest_user") %>
+                <%= t("opendata.labels.guest_user") %>
               <% end %>
             </dd>
           <% elsif @cur_page.contact_charge.present? %>
@@ -281,11 +269,11 @@ categories = [
             <dd><%= @cur_page.contact_group.name.sub(/.*\//, "") %><br /></dd>
           <% elsif @cur_page.groups.present? %>
             <dt><%= @cur_page.t :user_id %></dt>
-            <dd><%= @cur_page.groups.first.name %><br /></dd>
+            <dd><%= @cur_page.groups.first.name.sub(/.*\//, "") %><br /></dd>
           <% end %>
 
           <dt><%= @cur_page.t :downloaded %></dt>
-          <dd><%= @cur_page.downloaded.to_i %><%= I18n.t("opendata.labels.time")%></dd>
+          <dd><%= @cur_page.downloaded.to_i %><%= t("opendata.labels.time")%></dd>
 
           <dt><%= @cur_page.t :created %></dt>
           <dd><%= tryb{@cur_page.created.strftime("%Y-%m-%d")} %><br /></dd>
@@ -300,10 +288,10 @@ categories = [
   </article>
   <% if app_enabled? %>
   <article class="tab" id="cms-tab-<%= @cur_node.id %>-1">
-    <header><h2><%= I18n.t("opendata.labels.relation_app") %></h2></header>
+    <header><h2><%= t("opendata.labels.relation_app") %></h2></header>
     <div class="pages">
       <div id="tab-app">
-        <header><h1><%= I18n.t("opendata.labels.relation_app") %></h1></header>
+        <header><h1><%= t("opendata.labels.relation_app") %></h1></header>
         <div class="dataset-apps" id="dataset-apps"></div>
       </div>
     </div>
@@ -312,10 +300,10 @@ categories = [
   <% end %>
   <% if idea_enabled? %>
   <article class="tab" id="cms-tab-<%= @cur_node.id %>-2">
-    <header><h2><%= I18n.t("opendata.labels.relation_idea") %></h2></header>
+    <header><h2><%= t("opendata.labels.relation_idea") %></h2></header>
     <div class="pages">
       <div id="tab-idea">
-        <header><h1><%= I18n.t("opendata.labels.relation_idea") %></h1></header>
+        <header><h1><%= t("opendata.labels.relation_idea") %></h1></header>
         <div class="dataset-ideas" id="dataset-ideas"></div>
       </div>
     </div>

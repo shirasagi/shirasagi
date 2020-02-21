@@ -22,8 +22,8 @@ describe "webmail_groups", type: :feature, dbscope: :example do
     click_on "#{webmail_admin.groups.first.name}/name"
     click_on I18n.t("ss.links.edit")
     within "form#item-form" do
-      fill_in "item[name]", with: "#{gws_user.groups.first.name}/name2"
-      click_button "保存"
+      fill_in "item[name]", with: "#{webmail_admin.groups.first.name}/name2"
+      click_button I18n.t("ss.buttons.save")
     end
     expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
 
@@ -36,6 +36,6 @@ describe "webmail_groups", type: :feature, dbscope: :example do
     within "form" do
       click_button I18n.t("ss.buttons.delete")
     end
-    expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+    expect(page).to have_css('#notice', text: I18n.t('ss.notice.deleted'))
   end
 end

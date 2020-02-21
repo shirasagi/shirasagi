@@ -1,0 +1,12 @@
+<dl class="see gws-share-apis-folder_crud">
+  <dt><%= @model.t :name %><%= @model.tt :name %></dt>
+  <% if @parent %>
+  <dd><%= @parent.name %>/</dd>
+  <% end %>
+  <dd><%= f.text_field :in_basename %></dd>
+</dl>
+
+<% @crud_buttons = proc do |f| %>
+  <%= f.submit t("ss.buttons.save"), class: 'btn-primary save' %>
+  <%= f.button t("ss.buttons.cancel"), class: 'btn-default', type: :reset, onclick: "$.colorbox.close(); return false;" %>
+<% end %>

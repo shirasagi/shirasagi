@@ -2,34 +2,48 @@
 # ref. http://docs.travis-ci.com/user/environment-variables/#Default-Environment-Variables
 require 'dotenv'
 Dotenv.load
-def analyze_coverage?
-  (ENV["CI"] == "true" && ENV["TRAVIS"] == "true") || ENV["ANALYZE_COVERAGE"] != "disabled"
-end
-if analyze_coverage?
-  require 'simplecov'
-  require 'coveralls'
-  Coveralls.wear!
-end
 
-# This file is copied to spec/ when you run 'rails generate rspec:install'
 ENV["RAILS_ENV"] ||= 'test'
-require File.expand_path("../../config/environment", __FILE__)
-require File.expand_path(__FILE__, "../../app/helpers")
+require File.expand_path("../config/environment", __dir__)
+
+require 'webdrivers'
+# Webdrivers.logger.level = :DEBUG
+require 'rails-controller-testing'
 require 'rspec/rails'
-#require 'rspec/autorun'
+# require 'rspec/autorun'
+require 'rspec/collection_matchers'
+require 'rspec/its'
 require 'capybara/rspec'
 require 'capybara/rails'
+require 'factory_bot'
+require 'timecop'
 require 'support/ss/capybara_support'
 
 # Checks for pending migrations before tests are run.
 # If you are not using ActiveRecord, you can remove this line.
 ActiveRecord::Migration.check_pending! if defined?(ActiveRecord::Migration)
 
+def travis?
+  ENV["CI"] == "true" && ENV["TRAVIS"] == "true"
+end
+
+def analyze_coverage?
+  travis? || ENV["ANALYZE_COVERAGE"] != "disabled"
+end
+
 if analyze_coverage?
-  SimpleCov.formatters = [
+  require 'simplecov'
+  require 'simplecov-csv'
+
+  SimpleCov.formatter = SimpleCov::Formatter::MultiFormatter.new([
     SimpleCov::Formatter::HTMLFormatter,
-    Coveralls::SimpleCov::Formatter
-  ]
+    SimpleCov::Formatter::CSVFormatter
+  ])
+  if travis?
+    require 'coveralls'
+    Coveralls.wear!
+  end
+
   SimpleCov.start do
     add_filter 'spec/'
     add_filter 'vendor/bundle'
@@ -74,23 +88,18 @@ RSpec.configure do |config|
   config.include Capybara::DSL
   config.include ActiveJob::TestHelper
   config.include ActiveSupport::Testing::TimeHelpers
-
   config.include FactoryBot::Syntax::Methods
-  config.before(:all) do
-    FactoryBot.reload
-    Capybara.app_host = nil
-  end
+
+  config.add_setting :default_dbscope, default: :context
 
   driver = ENV['driver'].presence || 'auto'
   if !SS::CapybaraSupport.activate_driver(driver, config)
     config.filter_run_excluding(js: true)
   end
 
-  # ref.
-  #   http://kakakakakku.hatenablog.com/entry/2015/05/14/124653
-  #   http://qiita.com/upinetree/items/4d4022c90ce32b68c38d
-  Capybara.configure do |config|
-    config.ignore_hidden_elements = false
+  # fragile specs are ignored when rspec is executing in Travis CI.
+  if ENV["CI"] == "true" && ENV["TRAVIS"] == "true"
+    config.filter_run_excluding(fragile: true)
   end
 
   config.before(:suite) do
@@ -100,11 +109,22 @@ RSpec.configure do |config|
     ::Mongoid::Clients.default.database.drop
   end
 
-  config.add_setting :default_dbscope, default: :context
+  config.before(:context) do
+    FactoryBot.reload
+    Capybara.app_host = nil
+  end
 
-  # fragile specs are ignored when rspec is executing in Travis CI.
-  if ENV["CI"] == "true" && ENV["TRAVIS"] == "true"
-    config.filter_run_excluding(fragile: true)
+  config.before(:example, type: :feature) do
+    page.reset!
+  end
+
+  config.after(:example, type: :feature) do
+    page.reset!
+  end
+
+  Capybara.configure do |config|
+    config.ignore_hidden_elements = false
+    config.default_max_wait_time = (ENV["CAPYBARA_MAX_WAIT_TIME"] || 10).to_i
   end
 end
 
@@ -113,6 +133,42 @@ def unique_id
   # add random value to work with `Timecop.freeze`
   num += rand(0xffff)
   num.to_s(36)
+end
+
+def ss_japanese_text(length: 10, separator: '')
+  @japanese_chars ||= begin
+    hiragana = ('あ'..'ん').to_a
+    katakana = ('ア'..'ン').to_a
+    sjis_1st_level_start = "亜".encode("cp932")
+    sjis_1st_level_end = "腕".encode("cp932")
+    sjis_1st_level = (sjis_1st_level_start..sjis_1st_level_end).to_a
+    sjis_1st_level.map! { |k| k.encode("UTF-8", invalid: :replace, undef: :replace, replace: '') }
+    sjis_1st_level.reject! { |k| k.blank? }
+
+    hiragana + katakana + sjis_1st_level
+  end
+
+  @japanese_chars.sample(length).join(separator)
+end
+
+def with_env(hash)
+  save = {}
+  hash.each do |k, v|
+    save[k] = ENV[k] if ENV.key?(k)
+    ENV[k] = v
+  end
+
+  ret = yield
+
+  hash.each do |k, _|
+    if save.key?(k)
+      ENV[k] = save[k]
+    else
+      ENV.delete(k)
+    end
+  end
+
+  ret
 end
 
 # ref.

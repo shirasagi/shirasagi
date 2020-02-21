@@ -35,7 +35,16 @@ load "#{Rails.root}/db/seeds/cms/contents/board.rb"
 load "#{Rails.root}/db/seeds/cms/contents/anpi.rb"
 load "#{Rails.root}/db/seeds/cms/contents/weather_xml.rb"
 load "#{Rails.root}/db/seeds/cms/contents/cms_garbage_node.rb"
+load "#{Rails.root}/db/seeds/cms/contents/chat.rb"
 load "#{Rails.root}/db/seeds/cms/contents/max_file_size.rb"
 load "#{Rails.root}/db/seeds/cms/contents/source_cleaner_templates.rb"
 load "#{Rails.root}/db/seeds/cms/contents/postal_code.rb"
 load "#{Rails.root}/db/seeds/cms/contents/word_dictionary.rb"
+
+if @site.subdir.present?
+  # rake cms:set_subdir_url site=@site.host
+  require 'rake'
+  Rails.application.load_tasks
+  ENV["site"]=@site.host
+  Rake::Task['cms:set_subdir_url'].invoke
+end

@@ -1,13 +1,13 @@
 // openlayers
 #marker-popup {
   position: absolute;
-  background-color: white;
-  -webkit-filter: drop-shadow(0 1px 4px rgba(0,0,0,0.2));
-  filter: drop-shadow(0 1px 4px rgba(0,0,0,0.2));
+  background-color: #fff;
+  -webkit-filter: drop-shadow(0 1px 4px rgba(0, 0, 0, .2));
+  filter: drop-shadow(0 1px 4px rgba(0, 0, 0, .2));
   min-width: 260px;
   padding: 15px;
   border-radius: 10px;
-  border: 1px solid #cccccc;
+  border: 1px solid #ccc;
   bottom: 12px;
   left: -50px;
   font-size: 12px;
@@ -22,13 +22,13 @@
   pointer-events: none;
 }
 #marker-popup:after {
-  border-top-color: white;
+  border-top-color: #fff;
   border-width: 10px;
   left: 48px;
   margin-left: -10px;
 }
 #marker-popup:before {
-  border-top-color: #cccccc;
+  border-top-color: #ccc;
   border-width: 11px;
   left: 48px;
   margin-left: -11px;

@@ -1,8 +1,11 @@
-<% message.subject = @node.subject %>
+<%
+  message.subject = "[#{I18n.t('member.mail.subject.verification')}]#{@member.name} - #{@node.site.name}"
+  message.subject = @node.reply_subject if @node.reply_subject.present?
+%>
 <%= @node.reply_upper_text %>
 
 <%= "#{@node.full_url}verify?#{ { token: @member.verification_token }.to_query }" %>
 
 <%= @node.reply_lower_text %>
 
-<%= @node.reply_signature %>
+<%= @node.sender_signature %>

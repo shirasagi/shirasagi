@@ -16,6 +16,8 @@
 @import "presence/gws";
 @import "survey/gws";
 @import "workflow/gws";
+@import "notice/gws";
+@import "share/gws";
 
 // File
 .gws-addon-file {
@@ -142,7 +144,7 @@ a.gws-category-label:hover {
     border-left: 10px solid transparent;
     border-right: 10px solid transparent;
     border-top: 10px solid #bbb;
-    content: '';
+    content: "";
     position: absolute;
     left: 50%;
     bottom: -10px;
@@ -168,12 +170,12 @@ a.gws-category-label:hover {
 // Dropdown
 .gws-dropdown-menu {
   left: -4px;
-  max-height:300px;
+  max-height: 300px;
   overflow-y: scroll;
   margin: 0;
   padding: 4px;
   border: $border-gray4;
-  @include box-shadow(0px 3px 12px rgba(0,0,0,.2));
+  @include box-shadow(0 3px 12px rgba(0, 0, 0, .2));
   background: $white;
   white-space: nowrap;
 }

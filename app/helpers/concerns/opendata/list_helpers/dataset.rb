@@ -41,6 +41,7 @@ module Opendata::ListHelpers::Dataset
     cur_item.cur_date = @cur_date
 
     dataset_node = Opendata::Node::Dataset.site(@cur_site).and_public.first
+    dataset_node = Opendata::Node::Dataset.site(@cur_site).first if dataset_node.blank?
     return if dataset_node.blank?
     show_point = dataset_node.show_point?
 

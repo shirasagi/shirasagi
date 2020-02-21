@@ -32,10 +32,7 @@ class Opendata::Idea
   embeds_ids :apps, class_name: "Opendata::App"
   belongs_to :member, class_name: "Opendata::Member"
 
-  has_many :points, foreign_key: :idea_id, class_name: "Opendata::IdeaPoint",
-    dependent: :delete_all
-  has_many :comments, foreign_key: :idea_id, class_name: "Opendata::IdeaComment",
-    dependent: :delete_all
+  has_many :points, class_name: "Opendata::IdeaPoint", dependent: :destroy, inverse_of: :idea
 
   validates :text, presence: true, length: { maximum: 400 }
   validates :state, presence: true

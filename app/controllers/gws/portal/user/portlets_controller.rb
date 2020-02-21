@@ -10,6 +10,7 @@ class Gws::Portal::User::PortletsController < ApplicationController
   navi_view 'gws/portal/main/navi'
 
   before_action :set_portal_setting
+  before_action :check_portal_permission, except: %i[delete destroy]
   before_action :save_portal_setting
 
   private
@@ -17,5 +18,9 @@ class Gws::Portal::User::PortletsController < ApplicationController
   def set_crumbs
     @crumbs << [t("gws/portal.user_portal"), gws_portal_user_path]
     @crumbs << [t("gws/portal.links.manage_portlets"), action: :index]
+  end
+
+  def check_portal_permission
+    raise "403" unless @portal.allowed?(:edit, @cur_user, site: @cur_site)
   end
 end

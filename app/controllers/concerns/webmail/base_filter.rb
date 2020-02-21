@@ -30,6 +30,7 @@ module Webmail::BaseFilter
     return unless @cur_org = @cur_user.organization
     return unless @account = Service::Account.where(organization_ids: @cur_org.id).first
     return if @account.webmail_enabled?
+
     msg = [I18n.t("service.messages.disabled_app", name: I18n.t("modules.webmail"))]
     msg << I18n.t("service.messages.over_quota") if @account.webmail_quota_over?
     render html: msg.join("<br />").html_safe
@@ -55,31 +56,34 @@ module Webmail::BaseFilter
   end
 
   def imap_initialize
-    if @webmail_mode == :group
-      raise "403" if !@cur_user.webmail_user.webmail_permitted_all?(:use_webmail_group_imap_setting)
-      group = @cur_user.groups.find_by(id: params[:account])
-      @imap = group.webmail_group.initialize_imap
-    elsif params.key?(:account)
-      @imap = @cur_user.initialize_imap(params[:account].to_i)
-    end
-    return if @imap.blank?
+    @webmail_redirect_path ||= [ :render, "app/views/webmail/main/login_failed", 403 ]
 
-    @imap_setting = @imap.setting
-    @webmail_redirect_path = [ :render, "app/views/webmail/main/login_failed" ]
+    @imap_setting ||= begin
+      if @webmail_mode == :group
+        raise "403" if !@cur_user.webmail_user.webmail_permitted_all?(:use_webmail_group_imap_setting)
+
+        group = @cur_user.groups.find_by(id: params[:account])
+        @imap = group.webmail_group.initialize_imap
+      elsif params.key?(:account)
+        @imap = @cur_user.initialize_imap(params[:account].to_i)
+      end
+
+      @imap.present? ? @imap.setting : nil
+    end
   end
 
   def imap_disconnect
-    @imap.disconnect if @imap
+    Webmail.imap_pool.disconnect_all
   end
 
   def imap_login
-    @webmail_imap_login = @imap.login
+    @webmail_imap_login = @imap.login if @imap
     return if @webmail_imap_login
 
-    method, path = @webmail_redirect_path
+    method, path, status = @webmail_redirect_path
     case method
     when :render
-      render file: path
+      render file: path, status: status
     else
       redirect_to path
     end
@@ -87,6 +91,7 @@ module Webmail::BaseFilter
 
   def rescue_imap_no_response_error(exception)
     raise exception if Rails.env.development?
+
     render plain: exception.to_s, layout: true
   end
 end

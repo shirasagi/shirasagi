@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe "sns_cur_user_accounts", dbscope: :example do
+describe "sns_cur_user_accounts", type: :feature, dbscope: :example do
   let!(:show_path) { sns_cur_user_account_path }
   let!(:edit_path) { edit_sns_cur_user_account_path }
 
@@ -21,7 +21,7 @@ describe "sns_cur_user_accounts", dbscope: :example do
         fill_in "item[in_password]", with: "abc123"
         fill_in "item[tel]", with: "000-000-0000"
         fill_in "item[tel_ext]", with: "000-000-0000"
-        click_button "保存"
+        click_button I18n.t('ss.buttons.save')
       end
       expect(current_path).to eq show_path
 

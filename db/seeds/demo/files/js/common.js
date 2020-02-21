@@ -54,4 +54,14 @@ $(function() {
     return false;
   });
 
+// chat
+  $('.chat-close').click(function() {
+    $('.chat-close').hide();
+    $('.chat-open').show();
+  });
+  $('.chat-open .close-btn').click(function() {
+    $('.chat-open').hide();
+    $('.chat-close').show();
+  });
+
 });

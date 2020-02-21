@@ -30,11 +30,19 @@ module Sys::SiteImport::Contents
       item[:ads_category_ids] = convert_ids(@cms_nodes_map, item[:ads_category_ids])
       item[:area_ids] = convert_ids(@cms_nodes_map, item[:area_ids])
       if item[:column_values].present?
-        item[:column_values] = item[:column_values].collect do |column_value|
-          next if column_value['class_name'].blank?
-          column_value['column_id'] = @cms_columns_map[column_value['column_id']]
-          column_value['file_id'] = @ss_files_map[column_value['file_id']] if column_value['file_id'].present?
-          column_value['class_name'].constantize.new(column_value)
+        item.column_values.each do |column_value|
+          column_value['column_id'] = @cms_columns_map["$oid" => column_value['column_id'].to_s]
+          if column_value['file_id'].present?
+            column_value['file_id'] = @ss_files_map[column_value['file_id']]
+          end
+          if column_value['file_ids'].present?
+            column_value['file_ids'] = column_value['file_ids'].map do |file_id|
+              @ss_files_map[file_id]
+            end
+            @ss_files_url.each do |src, dst|
+              column_value.value = column_value.value.gsub(src, dst)
+            end
+          end
         end
       end
     end
@@ -70,17 +78,7 @@ module Sys::SiteImport::Contents
   end
 
   def import_cms_columns
-    read_json('cms_columns').each do |data|
-      id   = data.delete('_id')
-      data = convert_data(data)
-
-      item = data['class_name'].constantize.new
-      data.each { |k, v| item[k] = v }
-
-      if save_document(item)
-        @cms_columns_map[id] = item.id
-      end
-    end
+    @cms_columns_map = import_documents "cms_columns", Cms::Column::Base
   end
 
   def import_cms_loop_settings

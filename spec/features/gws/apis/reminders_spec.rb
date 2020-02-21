@@ -20,7 +20,7 @@ describe "gws_apis_reminders", type: :feature, dbscope: :example, js: true do
 
       visit path
       within '.gws-addon-reminder' do
-        within first('.remider-conditions tr') do
+        within first('.reminder-conditions tr') do
           select I18n.t('gws/reminder.options.notify_state.mail'), from: 'item[in_reminder_conditions][][state]'
           find('button.action-insert').click
         end
@@ -49,7 +49,7 @@ describe "gws_apis_reminders", type: :feature, dbscope: :example, js: true do
 
       visit path
       within '.gws-addon-reminder' do
-        within first('.remider-conditions tr') do
+        within first('.reminder-conditions tr') do
           find('button.action-remove').click
         end
         click_on I18n.t('gws/reminder.buttons.register_reminder')

@@ -2,6 +2,7 @@
   <dd class="wide">
     <%= link_to(I18n.t('gws/workflow.columns.index'), gws_survey_editable_columns_path(editable_id: @item), class: :btn) %>
     <%= link_to(I18n.t('ss.links.preview'), edit_gws_survey_readable_file_path(readable_id: @item, state: 'preview', format: :html), class: %w(btn preview)) %>
+    <%= link_to(I18n.t('ss.links.print'), print_gws_survey_editable_path, class: %w(btn)) %>
   </dd>
   <% if @item.columns.present? %>
   <dd class="wide">

@@ -1,4 +1,4 @@
-SS::Application.routes.draw do
+Rails.application.routes.draw do
 
   Inquiry::Initializer
 
@@ -16,7 +16,7 @@ SS::Application.routes.draw do
     resources :nodes, concerns: :deletion
     resources :forms, only: [:index]
     resources :columns, concerns: :deletion
-    resources :answers, concerns: [:deletion, :download], only: [:index, :show, :destroy]
+    resources :answers, concerns: [:deletion, :download], only: [:index, :show, :edit, :update, :destroy]
     get "results" => "results#index", as: :results
     get "results/download" => "results#download", as: :results_download
     resources :feedbacks, only: [:index, :show]

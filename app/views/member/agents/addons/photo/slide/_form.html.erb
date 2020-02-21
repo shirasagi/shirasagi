@@ -1,4 +1,7 @@
-<%= jquery do %> SS_AddonTabs.hide(".mod-photo-slide"); <% end %>
+<%
+  addon ||= local_assigns.fetch(:addon, {})
+  addon[:display_body] = "hide"
+%>
 
 <dl class="see mod-photo-slide">
   <dt><%= @item.t :node_url %><%= @item.tt :node_url %></dt>

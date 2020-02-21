@@ -8,21 +8,23 @@
     <% items.each do |item| %>
       <li class="list-item">
         <div class="info">
-          <% if item.new_flag? %><span class="gws-board-flag-new"></span><% end %>
           <%= link_to item.name, gws_qna_topic_path(mode: '-', category: '-', id: item), class: 'title' %>
-          <% if item.descendants_files_count.to_i > 0 %>
-            <span class="gws-board-file-count"><img src="/assets/img/gws/ic-file.png" alt="" /><%= item.descendants_files_count %></span>
-          <% end %>
+          <% if item.new_flag? %><span class="gws-board-flag-new"></span><% end %>
 
           <div class="meta">
             <span class="datetime"><%= item.descendants_updated.strftime("%Y/%m/%d %H:%M") %></span>
-            <span class="mode"><%= item.updated? ? t('gws.history.mode.update') : t('gws.history.mode.create') %></span>
-            <span>
+            <span class="categories">
               <% item.categories.compact.each do |category| %>
                 <%= link_to category.trailing_name, gws_qna_topics_path(mode: '-', category: category.id),
                             class: "gws-category-label", style: category_label_css(category) %>
               <% end %>
+              <span class="<%= "gws-category-label gws-category-label-#{item.question_state}" %>">
+                <%= item.label(:question_state) %>
+              </span>
             </span>
+            <% if item.descendants_files_count.to_i > 0 %>
+              <span class="gws-board-file-count"><img src="/assets/img/gws/ic-file.png" alt="" /><%= item.descendants_files_count %></span>
+            <% end %>
           </div>
         </div>
       </li>

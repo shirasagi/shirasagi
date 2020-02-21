@@ -147,13 +147,13 @@ create_memo_list_message(
     u("sys").id, u("admin").id, u("user1").id, u("user2").id, u("user3").id,
     u("user4").id, u("user5").id
   ],
-  seen: {
-    u('sys').id.to_s => @now,
-    u('admin').id.to_s => @now,
-    u('user1').id.to_s => @now,
-    u('user4').id.to_s => @now,
-    u('user5').id.to_s => @now
-  }
+  user_settings: [
+    { 'user_id' => u('sys').id, 'path' => 'INBOX', 'seen_at' => @now },
+    { 'user_id' => u('admin').id, 'path' => 'INBOX', 'seen_at' => @now },
+    { 'user_id' => u('user1').id, 'path' => 'INBOX', 'seen_at' => @now },
+    { 'user_id' => u('user4').id, 'path' => 'INBOX', 'seen_at' => @now },
+    { 'user_id' => u('user5').id, 'path' => 'INBOX', 'seen_at' => @now },
+  ]
 )
 
 ## -------------------------------------
@@ -431,13 +431,13 @@ new_ss_files(filepath, cur_user: u("sys"), filename: "file7.pdf", model: "ss/tem
     to_member_name: "伊藤 幸子 (user4); 渡辺 和子 (user2); 高橋 清 (user5); 斎藤　拓也 (user3); 鈴木 茂 (user1)",
     member_ids: [u("user1").id, u("user2").id, u("user3").id, u("user4").id, u("user5").id],
     in_to_members: [u("user1").id, u("user2").id, u("user3").id, u("user4").id, u("user5").id, u("admin").id],
-    path: {
-      u("sys").id.to_s => memo_folder(u("sys"), "#{@site_name}プロジェクト").id,
-      u("admin").id.to_s => memo_folder(u("admin"), "#{@site_name}プロジェクト").id,
-      u("user1").id.to_s => memo_folder(u("user1"), "#{@site_name}プロジェクト").id,
-      u("user3").id.to_s => memo_folder(u("user3"), "#{@site_name}プロジェクト").id,
-      u("user5").id.to_s => memo_folder(u("user5"), "#{@site_name}プロジェクト").id
-    },
+    user_settings: [
+      { 'user_id' => u('sys').id, 'path' => memo_folder(u("sys"), "#{@site_name}プロジェクト").id.to_s },
+      { 'user_id' => u('admin').id, 'path' => memo_folder(u("admin"), "#{@site_name}プロジェクト").id.to_s },
+      { 'user_id' => u('user1').id, 'path' => memo_folder(u("user1"), "#{@site_name}プロジェクト").id.to_s },
+      { 'user_id' => u('user3').id, 'path' => memo_folder(u("user3"), "#{@site_name}プロジェクト").id.to_s },
+      { 'user_id' => u('user5').id, 'path' => memo_folder(u("user5"), "#{@site_name}プロジェクト").id.to_s }
+    ],
     file_ids: [file.id]
   )
 end
@@ -459,13 +459,13 @@ new_ss_files(filepath, cur_user: u("user1"), filename: "file8.pdf", model: "ss/t
     to_member_name: "地域振興イベント",
     member_ids: [u("sys").id, u("admin").id, u("user1").id],
     in_to_members: [u("sys").id, u("user1").id],
-    path: {
-      u("sys").id.to_s => memo_folder(u("sys"), "イベント").id,
-      u("admin").id.to_s => memo_folder(u("admin"), "イベント").id,
-      u("user1").id.to_s => memo_folder(u("user1"), "イベント").id,
-      u("user3").id.to_s => memo_folder(u("user3"), "イベント").id,
-      u("user5").id.to_s => memo_folder(u("user5"), "イベント").id
-    },
+    user_settings: [
+      { 'user_id' => u('sys').id, 'path' => memo_folder(u("sys"), "イベント").id.to_s },
+      { 'user_id' => u('admin').id, 'path' => memo_folder(u("admin"), "イベント").id.to_s },
+      { 'user_id' => u('user1').id, 'path' => memo_folder(u("user1"), "イベント").id.to_s },
+      { 'user_id' => u('user3').id, 'path' => memo_folder(u("user3"), "イベント").id.to_s },
+      { 'user_id' => u('user5').id, 'path' => memo_folder(u("user5"), "イベント").id.to_s }
+    ],
     file_ids: [file.id]
   )
 end
@@ -485,13 +485,13 @@ create_message(
   member_ids: [u("admin").id, u("user1").id, u("user3").id, u("user5").id],
   in_to_members: [u("user1").id], priority: '2',
   in_cc_members: [u("sys").id],
-  path: {
-    u("sys").id.to_s => memo_folder(u("sys"), "イベント").id,
-    u("admin").id.to_s => memo_folder(u("admin"), "イベント").id,
-    u("user1").id.to_s => memo_folder(u("user1"), "イベント").id,
-    u("user3").id.to_s => memo_folder(u("user3"), "イベント").id,
-    u("user5").id.to_s => memo_folder(u("user5"), "イベント").id
-  }
+  user_settings: [
+    { 'user_id' => u('sys').id, 'path' => memo_folder(u("sys"), "イベント").id.to_s },
+    { 'user_id' => u('admin').id, 'path' => memo_folder(u("admin"), "イベント").id.to_s },
+    { 'user_id' => u('user1').id, 'path' => memo_folder(u("user1"), "イベント").id.to_s },
+    { 'user_id' => u('user3').id, 'path' => memo_folder(u("user3"), "イベント").id.to_s },
+    { 'user_id' => u('user5').id, 'path' => memo_folder(u("user5"), "イベント").id.to_s }
+  ]
 )
 
 #   作りかけ

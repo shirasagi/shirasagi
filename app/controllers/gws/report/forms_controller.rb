@@ -20,6 +20,8 @@ class Gws::Report::FormsController < ApplicationController
 
   def publish
     set_item
+    raise "404" unless @item.allowed?(:read, @cur_user, site: @cur_site)
+
     if @item.public?
       redirect_to({ action: :show }, { notice: t('ss.notice.published') })
       return
@@ -33,6 +35,8 @@ class Gws::Report::FormsController < ApplicationController
 
   def depublish
     set_item
+    raise "404" unless @item.allowed?(:read, @cur_user, site: @cur_site)
+
     if @item.closed?
       redirect_to({ action: :show }, { notice: t('ss.notice.depublished') })
       return

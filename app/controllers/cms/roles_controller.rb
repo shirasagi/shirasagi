@@ -50,7 +50,7 @@ class Cms::RolesController < ApplicationController
       ss_file.save
 
       # call job
-      Cms::Role::ImportJob.bind(site_id: @cur_site, node_id: @cur_node).perform_later(ss_file.id)
+      Cms::Role::ImportJob.bind(site_id: @cur_site).perform_later(ss_file.id)
       flash.now[:notice] = I18n.t("ss.notice.started_import")
     rescue => e
       Rails.logger.error("#{e.class} (#{e.message}):\n  #{e.backtrace.join("\n  ")}")

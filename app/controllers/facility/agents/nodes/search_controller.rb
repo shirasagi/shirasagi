@@ -34,7 +34,6 @@ class Facility::Agents::Nodes::SearchController < ApplicationController
   def set_markers
     @items = []
     @markers = []
-    images = SS::File.all.map { |image| [image.id, image.url] }.to_h
 
     Facility::Map.site(@cur_site).and_public.each do |map|
       parent_path = ::File.dirname(map.filename)
@@ -49,11 +48,10 @@ class Facility::Agents::Nodes::SearchController < ApplicationController
       next unless item
 
       @items << item
-      categories   = item.categories.entries
-      category_ids = categories.map(&:id)
-      image_id     = categories.map(&:image_id).first
+      category_ids, image_ids = item.categories.pluck(:id, :image_id).transpose
+      image_id = image_ids.try(:first)
 
-      image_url = images[image_id]
+      image_url = SS::File.where(id: image_id).first.try(:url) if image_id.present?
       marker_info = view_context.render_marker_info(item)
 
       map.map_points.each do |point|
@@ -76,7 +74,6 @@ class Facility::Agents::Nodes::SearchController < ApplicationController
       opts["data-zoom-level"] = l.center_point[:zoom_level] if l.center_point[:zoom_level]
       [l.name, l.center_point[:loc].join(","), opts]
     end
-    @focus_options.unshift [I18n.t("facility.select_location"), ""]
   end
 
   public

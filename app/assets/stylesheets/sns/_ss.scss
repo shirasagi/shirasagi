@@ -10,7 +10,7 @@
 
 .mypage-sites {
   min-height: 150px;
-  margin-right:5px;
+  margin-right: 5px;
 }
 .mypage-groups {
   min-height: 150px;
@@ -23,4 +23,15 @@
 .mypage-groups .list-head {
   padding: 10px 20px 10px 55px;
   background: url(/assets/img/ic-gws-on.png) no-repeat 18px center;
+}
+
+.gws-memo-notices {
+  .list-item {
+    &.unseen {
+      background-color: #f9e9e3;
+    }
+    &.seen:hover, &.unseen:hover {
+      background-color: #fbeee8;
+    }
+  }
 }

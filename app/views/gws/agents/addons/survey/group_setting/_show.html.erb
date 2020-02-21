@@ -1,6 +1,12 @@
-<%= jquery do %> SS_AddonTabs.hide(".addon-gws-survey-group-setting"); <% end %>
+<%
+  addon ||= local_assigns.fetch(:addon, {})
+  addon[:display_body] = "hide"
+%>
 
 <dl class="see addon-gws-survey-group-setting">
   <dt><%= @model.t :survey_default_due_date %></dt>
   <dd><%= @item.survey_default_due_date %> <%= t('datetime.prompts.day') %></dd>
+
+  <dt><%= @model.t :survey_new_days %></dt>
+  <dd><%= @item.survey_new_days %> <%= t("datetime.prompts.day") %></dd>
 </dl>

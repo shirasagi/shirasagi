@@ -15,7 +15,11 @@ describe "webmail_mails", type: :feature, dbscope: :example, imap: true, js: tru
         ActionMailer::Base.deliveries.clear
         login_user(user)
 
-        file.name = "#{unique_id}.#{unique_id[0, 3]}"
+        name = unique_id.to_s
+        ext = unique_id[0, 3].to_s
+        ext = "unknown" if ::MIME::Types.type_for(ext).present?
+
+        file.name = "#{name}.#{ext}"
         file.filename = file.name
         file.save!
       end
@@ -35,7 +39,7 @@ describe "webmail_mails", type: :feature, dbscope: :example, imap: true, js: tru
 
           click_on I18n.t("ss.links.upload")
         end
-        within "#cboxLoadedContent" do
+        wait_for_cbox do
           expect(page).to have_content(file.name)
           first(".file-view a").click
         end

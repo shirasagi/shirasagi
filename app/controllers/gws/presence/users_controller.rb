@@ -12,7 +12,7 @@ class Gws::Presence::UsersController < ApplicationController
 
   def set_group
     @groups = @cur_site.root.to_a + @cur_site.root.descendants.active.to_a
-    @custom_groups = Gws::CustomGroup.site(@cur_site).in(member_ids: @cur_user.id)
+    @custom_groups = Gws::CustomGroup.site(@cur_site).member(@cur_user)
   end
 
   def items

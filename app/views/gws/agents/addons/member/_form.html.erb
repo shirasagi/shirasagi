@@ -1,7 +1,5 @@
-<%= jquery do %>
-  //SS_AddonTabs.hide(".gws-addon-member");
-
-  <% if @item.class.keep_members_order? %>
+<% if @item.class.keep_members_order? %>
+  <%= jquery do %>
   $('.sortable-index tbody').sortable();
   <% end %>
 <% end %>

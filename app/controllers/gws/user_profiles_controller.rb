@@ -26,6 +26,14 @@ class Gws::UserProfilesController < ApplicationController
           imap_setting: imap_setting
         }
 
+        if presence = @cur_user.user_presence(@cur_site)
+          data[:user][:presence_state] = presence.state
+          data[:user][:presence_state_label] = presence.label(:state)
+          data[:user][:presence_state_style] = presence.state_style
+          data[:user][:presence_plan] = presence.plan
+          data[:user][:presence_memo] = presence.memo
+        end
+
         data[:user][:password] = nil
         render json: data.to_json
       }

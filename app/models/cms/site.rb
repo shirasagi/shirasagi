@@ -12,8 +12,11 @@ class Cms::Site
   include SS::Addon::FileSetting
   include SS::Addon::MailSetting
   include SS::Addon::ApproveSetting
+  include SS::Addon::TrashSetting
   include Opendata::Addon::SiteSetting
   include SS::Addon::EditorSetting
+  include SS::Addon::Elasticsearch::SiteSetting
+  include SS::Addon::SiteUsage
 
   set_permission_name "cms_sites", :edit
 end

@@ -1,4 +1,8 @@
 class SS::Migration20181218120000
+  include SS::Migration::Base
+
+  depends_on "20181218000000"
+
   def change
     unless valid_index?
       SS::User.remove_indexes

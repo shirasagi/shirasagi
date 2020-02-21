@@ -1,4 +1,5 @@
-<% if mode == :preview && !mobile %>
+<% if desktop_pc %>
+<% if mode == :preview %>
   <div class="ss-preview-wrap-row">
     <% if inplace_editable? %>
     <div class="ss-preview-btn-group">
@@ -36,55 +37,56 @@
   </div>
 <% end %>
 
-<div id="ss-preview-messages" class="ss-preview-wrap-row">
-  <% if rendered && (page = rendered[:page]) %>
-    <% if page.try(:master?) && page.branches.present? %>
-      <% branch_page = page.branches.order_by(id: -1).first %>
-      <% if branch_page.allowed?(:edit, @cur_user, site: @cur_site) %>
-        <div class="ss-preview-branch-notice ss-preview-notice">
-          <p>差し替えページが作成されています。<%= link_to "「差し替えページ」", cms_preview_path(preview_date: params[:preview_date], path: branch_page.filename) %>へ移動し編集してください。</p>
-          <p>編集中の差し替えページを削除する場合は<%= link_to("管理画面", branch_page.private_show_path) %>より削除してください。</p>
+  <div id="ss-preview-messages" class="ss-preview-wrap-row">
+    <% if rendered && (page = rendered[:page]) %>
+      <% if page.try(:master?) && page.branches.present? %>
+        <% branch_page = page.branches.order_by(id: -1).first %>
+        <% if branch_page.allowed?(:edit, @cur_user, site: @cur_site) %>
+          <div class="ss-preview-branch-notice ss-preview-notice">
+            <p>差し替えページが作成されています。<%= link_to "「差し替えページ」", cms_preview_path(preview_date: params[:preview_date], path: branch_page.filename) %>へ移動し編集してください。</p>
+            <p>編集中の差し替えページを削除する場合は<%= link_to("管理画面", branch_page.private_show_path) %>より削除してください。</p>
+          </div>
+        <% end %>
+      <% end %>
+
+      <% if page.state == "closed" %>
+        <div class="ss-preview-btn-group">
+          <% if page.allowed?(:edit, @cur_user, site: @cur_site) %>
+            <% if page.workflow_requested? %>
+              <% request = page.find_workflow_request_to(@cur_user) %>
+              <% if page.allowed?(:approve, @cur_user, site: @cur_site) && request.present? %>
+                <div class="ss-preview-workflow-notice ss-preview-notice">
+                  <p>承認依頼が届いています。</p>
+                </div>
+                <% if request[:state] == 'request' %>
+                  <button type="button" id="ss-preview-btn-workflow-approve" class="ss-preview-btn ss-preview-btn-outline"><%= t("workflow.buttons.approve") %></button>
+                  <button type="button" id="ss-preview-btn-workflow-remand" class="ss-preview-btn ss-preview-btn-outline"><%= t("workflow.buttons.remand") %></button>
+                <% elsif request[:state] == 'pending' %>
+                  <button type="button" id="ss-preview-btn-workflow-pull-up" class="ss-preview-btn ss-preview-btn-outline"><%= t("workflow.buttons.pull_up") %></button>
+                <% end %>
+              <% else %>
+                <div class="ss-preview-workflow-notice ss-preview-notice">
+                  <p>申請中です。</p>
+                </div>
+              <% end %>
+            <% else %>
+              <button type="button" id="ss-preview-btn-workflow-start" class="ss-preview-btn ss-preview-btn-outline"><%= t("workflow.buttons.approve") %></button>
+            <% end %>
+          <% end %>
+
+          <% if page.allowed?(:release, @cur_user, site: @cur_site) && !page.workflow_requested? %>
+            <button type="button" id="ss-preview-btn-publish" class="ss-preview-btn ss-preview-btn-outline"><%= t("ss.buttons.publish") %></button>
+          <% end %>
         </div>
       <% end %>
     <% end %>
 
-    <% if page.state == "closed" %>
-      <div class="ss-preview-btn-group">
-        <% if page.allowed?(:edit, @cur_user, site: @cur_site) %>
-          <% if page.workflow_requested? %>
-            <% request = page.find_workflow_request_to(@cur_user) %>
-            <% if page.allowed?(:approve, @cur_user, site: @cur_site) && request.present? %>
-              <div class="ss-preview-workflow-notice ss-preview-notice">
-                <p>承認依頼が届いています。</p>
-              </div>
-              <% if request[:state] == 'request' %>
-                <button type="button" id="ss-preview-btn-workflow-approve" class="ss-preview-btn ss-preview-btn-outline"><%= t("workflow.buttons.approve") %></button>
-                <button type="button" id="ss-preview-btn-workflow-remand" class="ss-preview-btn ss-preview-btn-outline"><%= t("workflow.buttons.remand") %></button>
-              <% elsif request[:state] == 'pending' %>
-                <button type="button" id="ss-preview-btn-workflow-pull-up" class="ss-preview-btn ss-preview-btn-outline"><%= t("workflow.buttons.pull_up") %></button>
-              <% end %>
-            <% else %>
-              <div class="ss-preview-workflow-notice ss-preview-notice">
-                <p>申請中です。</p>
-              </div>
-            <% end %>
-          <% else %>
-            <button type="button" id="ss-preview-btn-workflow-start" class="ss-preview-btn ss-preview-btn-outline"><%= t("workflow.buttons.approve") %></button>
-          <% end %>
-        <% end %>
-
-        <% if page.allowed?(:release, @cur_user, site: @cur_site) && !page.workflow_requested? %>
+    <% if rendered && (node = rendered[:node]) %>
+      <% if node.state == "closed" && node.allowed?(:edit, @cur_user, site: @cur_site) %>
+        <div class="ss-preview-btn-group">
           <button type="button" id="ss-preview-btn-publish" class="ss-preview-btn ss-preview-btn-outline"><%= t("ss.buttons.publish") %></button>
-        <% end %>
-      </div>
+        </div>
+      <% end %>
     <% end %>
-  <% end %>
-
-  <% if rendered && (node = rendered[:node]) %>
-    <% if node.state == "closed" && node.allowed?(:edit, @cur_user, site: @cur_site) %>
-      <div class="ss-preview-btn-group">
-        <button type="button" id="ss-preview-btn-publish" class="ss-preview-btn ss-preview-btn-outline"><%= t("ss.buttons.publish") %></button>
-      </div>
-    <% end %>
-  <% end %>
-</div>
+  </div>
+<% end %>

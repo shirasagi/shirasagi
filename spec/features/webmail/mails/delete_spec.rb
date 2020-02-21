@@ -26,10 +26,10 @@ describe "webmail_mails", type: :feature, dbscope: :example, imap: true do
         visit index_path
         expect { Webmail::Mail.find_by(subject: item_subject) }.not_to raise_error
 
-        click_link item_subject
-        click_link I18n.t('ss.links.delete')
-        click_button I18n.t('ss.buttons.delete')
-        expect(current_path).to eq index_path
+        click_on item_subject
+        click_on I18n.t('ss.links.delete')
+        click_on I18n.t('ss.buttons.delete')
+        expect(page).to have_css("#notice", text: I18n.t("ss.notice.deleted"))
 
         expect { Webmail::Mail.find_by(subject: item_subject) }.to raise_error Mongoid::Errors::DocumentNotFound
       end

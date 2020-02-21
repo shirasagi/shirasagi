@@ -12,7 +12,7 @@ describe 'cms_agents_nodes_archive', type: :feature, dbscope: :example, js: true
 
     it do
       visit index_url
-      expect(page).to have_css('body > div.cms-pages > article')
+      expect(page).to have_css('#main > div.cms-pages > article')
     end
   end
 
@@ -22,17 +22,13 @@ describe 'cms_agents_nodes_archive', type: :feature, dbscope: :example, js: true
 
     it do
       visit index_url
-      expect(page).to have_css('body > div.cms-pages > article')
+      expect(page).to have_css('#main > div.cms-pages > article')
     end
   end
 
   context 'switch calendar_view' do
     let!(:archive_node) do
-      create :cms_node_archive,
-      cur_site: site,
-      layout_id: layout.id,
-      conditions: root_node.filename,
-      archive_view: 'calendar'
+      create(:cms_node_archive, cur_site: site, layout_id: layout.id, conditions: root_node.filename, archive_view: 'calendar')
     end
     let(:index_url) { "#{archive_node.full_url}#{Time.zone.now.year}#{format('%02d', Time.zone.now.month)}" }
 

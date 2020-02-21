@@ -1,6 +1,6 @@
-SS::Application.routes.draw do
+Rails.application.routes.draw do
 
-  #History::Initializer
+  History::Initializer
 
   concern :deletion do
     get :delete, on: :member
@@ -28,5 +28,10 @@ SS::Application.routes.draw do
     put "backups/:source/:id" => "backups#update", source: /[^\/]+/
     get "backups/:source/:id/restore" => "backups#restore", as: :restore, source: /[^\/]+/
     get "backups/:source/:id/change" => "backups#change", as: :change, source: /[^\/]+/
+
+    resources :trashes, only: [:index, :show, :destroy], concerns: :deletion do
+      match :undo_delete, on: :member, via: [:get, :delete]
+      post :undo_delete_all, on: :collection
+    end
   end
 end

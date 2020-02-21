@@ -10,13 +10,13 @@ describe "cms_node_import", type: :feature, dbscope: :example do
 
     it "#import" do
       visit index_path
-      expect(status_code).to eq 200
       expect(current_path).to eq index_path
-      within "form#item-form" do
+
+      within "form#task-form" do
         attach_file "item[in_file]", "#{Rails.root}/spec/fixtures/cms/import/site.zip"
-        click_button "取り込み"
+        click_button I18n.t('ss.buttons.import')
       end
-      expect(status_code).to eq 200
+      expect(page).to have_css('#notice', text: I18n.t('ss.notice.started_import'))
     end
   end
 end

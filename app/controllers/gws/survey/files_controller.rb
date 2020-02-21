@@ -8,7 +8,7 @@ class Gws::Survey::FilesController < ApplicationController
   before_action :set_cur_form
   before_action :check_form_permissions
   before_action :set_items
-  before_action :set_item, only: %i[show edit update delete destroy]
+  before_action :set_item, only: %i[show edit update delete destroy others print]
 
   navi_view "gws/survey/main/navi"
 
@@ -51,7 +51,7 @@ class Gws::Survey::FilesController < ApplicationController
   end
 
   def pre_params
-    { name: t("gws/survey.file_name", form: @cur_form.name) }
+    { name: t("gws/survey.file_name", form: @cur_form.name), anonymous_state: @cur_form.anonymous_state }
   end
 
   def set_items
@@ -93,14 +93,11 @@ class Gws::Survey::FilesController < ApplicationController
   def update
     raise '403' if @item.persisted? && !@cur_form.file_editable?
 
-    custom = params.require(:custom)
+    custom = params.require(:custom) rescue {}
     new_column_values = @cur_form.build_column_values(custom)
     @item.update_column_values(new_column_values)
     @item.in_updated = params[:_updated] if @item.respond_to?(:in_updated)
-    render_opts = { location: { action: :edit } }
-    if !@cur_form.file_editable?
-      render_opts[:location] = { action: :show }
-    end
+    render_opts = { location: gws_survey_readables_path(s: { answered_state: "" }) }
 
     result = @item.save
     if result
@@ -135,5 +132,9 @@ class Gws::Survey::FilesController < ApplicationController
   def others
     raise '404' if @cur_form.file_closed?
     @items = @items.ne(user_id: @cur_user.id).order_by(updated: -1).page(params[:page]).per(50)
+  end
+
+  def print
+    render layout: 'ss/print'
   end
 end

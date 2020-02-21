@@ -27,12 +27,12 @@ class Cms::Agents::Tasks::NodesController < ApplicationController
       next unless node.public?
       next unless node.public_node?
 
-      node  = node.becomes_with_route
-      cname = node.route.sub("/", "/agents/tasks/node/").camelize.pluralize + "Controller"
-      klass = cname.constantize rescue nil
-      next if klass.nil? || klass.to_s != cname
+      node = node.becomes_with_route
+      cont = node.route.sub("/", "/agents/tasks/node/").camelize.pluralize
+      cname = cont + "Controller"
 
-      agent = SS::Agent.new klass
+      agent = SS::Agent.new cont rescue nil
+      next if agent.blank? || agent.controller.class.to_s != cname
       agent.controller.instance_variable_set :@task, @task
       agent.controller.instance_variable_set :@site, @site
       agent.controller.instance_variable_set :@node, node

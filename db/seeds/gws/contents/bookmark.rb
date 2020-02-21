@@ -10,7 +10,7 @@ def create_bookmark(data)
 end
 
 create_bookmark(
-  cur_user: u('sys'), name: @faq_topics[0].name, url: "/.g#{@site.id}/faq/topics/#{@faq_topics[0].id}",
+  cur_user: u('sys'), name: @faq_topics[0].name, url: "/.g#{@site.id}/faq/-/-/topics/#{@faq_topics[0].id}",
   bookmark_model: 'faq'
 )
 create_bookmark(
@@ -22,34 +22,34 @@ create_bookmark(
   bookmark_model: 'other'
 )
 create_bookmark(
-  cur_user: u('sys'), name: 'お気に入り', url: "/.g#{@site.id}gws/bookmarks#{@sh_files[0].folder_id}/files/#{@sh_files[0].id}",
+  cur_user: u('sys'), name: 'お気に入り', url: "/.g#{@site.id}/gws/bookmarks",
   bookmark_model: 'bookmark'
 )
 
 create_bookmark(
-  cur_user: u('admin'), name: @ds_forums[0].name, url: "/.g#{@site.id}/discussion/forums/#{@ds_forums[0].id}/topics",
+  cur_user: u('admin'), name: @ds_forums[0].name, url: "/.g#{@site.id}/discussion/-/forums/#{@ds_forums[0].id}/topics",
   bookmark_model: 'discussion'
 )
 create_bookmark(
-  cur_user: u('admin'), name: @ds_forums[1].name, url: "/.g#{@site.id}/discussion/forums/#{@ds_forums[1].id}/topics",
+  cur_user: u('admin'), name: @ds_forums[1].name, url: "/.g#{@site.id}/discussion/-/forums/#{@ds_forums[1].id}/topics",
   bookmark_model: 'discussion'
 )
 create_bookmark(
-  cur_user: u('admin'), name: @cr_posts[1].name, url: "/.g#{@site.id}/circular/admins/#{@cr_posts[1].id}",
+  cur_user: u('admin'), name: @cr_posts[1].name, url: "/.g#{@site.id}/circular/-/admins/#{@cr_posts[1].id}",
   bookmark_model: 'circular'
 )
 
 create_bookmark(
-  cur_user: u('user1'), name: @ds_forums[0].name, url: "/.g#{@site.id}/discussion/forums/#{@ds_forums[0].id}/topics",
+  cur_user: u('user1'), name: @ds_forums[0].name, url: "/.g#{@site.id}/discussion/-/forums/#{@ds_forums[0].id}/topics",
   bookmark_model: 'discussion'
 )
 create_bookmark(
-  cur_user: u('user1'), name: @ds_forums[1].name, url: "/.g#{@site.id}/discussion/forums/#{@ds_forums[1].id}/topics",
+  cur_user: u('user1'), name: @ds_forums[1].name, url: "/.g#{@site.id}/discussion/-/forums/#{@ds_forums[1].id}/topics",
   bookmark_model: 'discussion'
 )
 
 create_bookmark(
-  cur_user: u('user2'), name: @ds_forums[0].name, url: "/.g#{@site.id}/discussion/forums/#{@ds_forums[0].id}/topics",
+  cur_user: u('user2'), name: @ds_forums[0].name, url: "/.g#{@site.id}/discussion/-/forums/#{@ds_forums[0].id}/topics",
   bookmark_model: 'discussion'
 )
 create_bookmark(
@@ -59,28 +59,28 @@ create_bookmark(
 )
 
 create_bookmark(
-  cur_user: u('user3'), name: @ds_forums[0].name, url: "/.g#{@site.id}/discussion/forums/#{@ds_forums[0].id}/topics",
+  cur_user: u('user3'), name: @ds_forums[0].name, url: "/.g#{@site.id}/discussion/-/forums/#{@ds_forums[0].id}/topics",
   bookmark_model: 'discussion'
 )
 create_bookmark(
-  cur_user: u('user3'), name: @mon_topics[0].name, url: "/.g1/monitor/topics/#{@mon_topics[0].id}",
+  cur_user: u('user3'), name: @mon_topics[0].name, url: "/.g1/monitor/-/topics/#{@mon_topics[0].id}",
   bookmark_model: 'monitor'
 )
 
 create_bookmark(
-  cur_user: u('user4'), name: @ds_forums[0].name, url: "/.g#{@site.id}/discussion/forums/#{@ds_forums[0].id}/topics",
+  cur_user: u('user4'), name: @ds_forums[0].name, url: "/.g#{@site.id}/discussion/-/forums/#{@ds_forums[0].id}/topics",
   bookmark_model: 'discussion'
 )
 create_bookmark(
-  cur_user: u('user4'), name: @bd_topics[0].name, url: "/.g#{@site.id}/board/topics/#{@bd_topics[0].id}",
+  cur_user: u('user4'), name: @bd_topics[0].name, url: "/.g#{@site.id}/board/-/-/topics/#{@bd_topics[0].id}",
   bookmark_model: 'board'
 )
 
 create_bookmark(
-  cur_user: u('user5'), name: @ds_forums[0].name, url: "/.g#{@site.id}/discussion/forums/#{@ds_forums[0].id}/topics",
+  cur_user: u('user5'), name: @ds_forums[0].name, url: "/.g#{@site.id}/discussion/-/forums/#{@ds_forums[0].id}/topics",
   bookmark_model: 'discussion'
 )
 create_bookmark(
-  cur_user: u('user5'), name: @bd_topics[1].name, url: "/.g#{@site.id}/board/topics/#{@bd_topics[1].id}",
+  cur_user: u('user5'), name: @bd_topics[1].name, url: "/.g#{@site.id}/board/-/-/topics/#{@bd_topics[1].id}",
   bookmark_model: 'board'
 )

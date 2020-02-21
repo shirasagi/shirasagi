@@ -12,6 +12,7 @@ class Gws::User
   include SS::Addon::UserGroupHistory
   include Gws::Addon::History
   include Sys::Reference::Role
+  include Webmail::Reference::Role
 
   set_permission_name "gws_users", :edit
 

@@ -8,7 +8,7 @@ module Kana::PublicFilter
   private
 
   def set_request_path_with_kana
-    return if @cur_main_path !~ /^#{SS.config.kana.location}\//
+    return unless @cur_main_path.match?(/^#{SS.config.kana.location}\//)
     @cur_main_path.sub!(/^#{SS.config.kana.location}\//, "/")
     filters << :kana
   end

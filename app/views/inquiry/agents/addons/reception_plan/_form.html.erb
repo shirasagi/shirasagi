@@ -1,6 +1,7 @@
-<%= jquery do %>
-  SS_AddonTabs.hide(".mod-inquiry-reception_plan");
-<% end %>
+<%
+  addon ||= local_assigns.fetch(:addon, {})
+  addon[:display_body] = "hide"
+%>
 
 <dl class="see mod-inquiry-reception_plan">
   <dt><%= @model.t :reception_start_date %><%= @model.tt :reception_start_date %></dt>

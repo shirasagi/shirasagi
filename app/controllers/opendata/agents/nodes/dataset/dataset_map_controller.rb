@@ -32,12 +32,15 @@ class Opendata::Agents::Nodes::Dataset::DatasetMapController < ApplicationContro
   public
 
   def index
-    view_context.include_map_api(site: @cur_site, api: "openlayers")
+    view_context.include_map_api(site: @cur_site, api: "openlayers", preview: @preview)
   end
 
   def search
     @model = Opendata::Dataset
-    @dataset_node = Opendata::Node::Dataset.where(id: @cur_node.parent.id).first
+
+    if @cur_node.parent
+      @dataset_node = Opendata::Node::Dataset.where(id: @cur_node.parent.id).first
+    end
 
     if @dataset_node
       @items = @model.site(@cur_site).node(@dataset_node)

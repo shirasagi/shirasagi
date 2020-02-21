@@ -55,9 +55,16 @@ module Member
     Cms::Role.permission :delete_private_member_photos
     Cms::Role.permission :release_other_member_photos
     Cms::Role.permission :release_private_member_photos
+    Cms::Role.permission :approve_other_member_photos
+    Cms::Role.permission :approve_private_member_photos
+    Cms::Role.permission :reroute_other_member_photos
+    Cms::Role.permission :reroute_private_member_photos
+    Cms::Role.permission :revoke_other_member_photos
+    Cms::Role.permission :revoke_private_member_photos
 
-    SS::File.model "member/photo", Member::PhotoFile
-    SS::File.model "member/blog_page", Member::File
+    SS::File.model "member/photo", Member::PhotoFile, permit: %i(role)
+    SS::File.model "member/blog_page", Member::File, permit: %i(role)
     SS::File.model "member/temp_file", Member::File
+    SS::File.model "member/node/blog_page", SS::File, permit: %i(role)
   end
 end

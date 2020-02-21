@@ -3,6 +3,8 @@ module SS::Addon
     extend ActiveSupport::Concern
     extend SS::Addon
 
+    set_addon_type :ad
+
     included do
       attr_accessor :in_clone_file, :ref_file_ids, :link_urls
       embeds_ids :files, class_name: "SS::LinkFile"
@@ -28,14 +30,16 @@ module SS::Addon
         add_ids = file_ids - file_ids_was.to_a
 
         ids = []
-        files.each do |file|
+        file_ids.select(&:numeric?).each do |file_id|
+          file = SS::LinkFile.unscoped.where(id: file_id).first
+          next if file.blank?
+
           file.update(link_url: link_urls[file.id.to_s]) if link_urls.present?
           if !add_ids.include?(file.id)
           elsif !allowed_other_user_files? && @cur_user && @cur_user.id != file.user_id
             next
-          elsif file.model == "share/file"
           else
-            file.update(model: model_name.i18n_key)
+            file.update(model: "ss/link_file", owner_item: self, state: "public")
           end
           ids << file.id
         end
@@ -63,6 +67,8 @@ module SS::Addon
           file.id = nil
           file.in_file = f.uploaded_file
           file.user_id = @cur_user.id if @cur_user
+          file.owner_item = self
+          file.state = "public"
 
           file.save validate: false
           ids[f.id] = file.id
@@ -110,6 +116,8 @@ module SS::Addon
         ss_file.user_id = @cur_user.try(:id) || try(:user_id)
         ss_file.site_id = @cur_site.try(:id) || try(:site_id)
         ss_file.in_file = file
+        ss_file.owner_item = self
+        ss_file.state = "public"
         ss_file.save
 
         add_ids << ss_file.id

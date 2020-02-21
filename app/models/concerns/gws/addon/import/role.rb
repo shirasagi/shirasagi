@@ -72,7 +72,11 @@ module Gws::Addon::Import
       return errors.add :cur_site, :blank if cur_site.blank?
 
       fname = in_file.original_filename
-      return errors.add :in_file, :invalid_file_type if ::File.extname(fname) !~ /^\.csv$/i
+      unless /^\.csv$/i.match?(::File.extname(fname))
+        errors.add :in_file, :invalid_file_type
+        return
+      end
+
       begin
         CSV.read(in_file.path, headers: true, encoding: 'SJIS:UTF-8')
         in_file.rewind

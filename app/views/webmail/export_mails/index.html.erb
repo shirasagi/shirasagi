@@ -39,8 +39,8 @@ $('a.ajax-box').data('on-select', function($item) {
         <dl class="see" style="margin-top: 20px;">
           <dt><%= @model.t :all_export %></dt>
           <dd>
-            <label><%= f.radio_button :all_export, 'all' %> <%= t("webmail.export.all_mail") %></label>
-            <label><%= f.radio_button :all_export, 'select' %> <%= t("webmail.export.select_mail") %></label>
+            <label><%= radio_button_tag "#{f.object_name}[all_export]", 'all', true %> <%= t("webmail.export.all_mail") %></label>
+            <label><%= radio_button_tag "#{f.object_name}[all_export]", 'select' %> <%= t("webmail.export.select_mail") %></label>
           </dd>
           <dt><%= t "webmail.mail" %></dt>
           <dd>

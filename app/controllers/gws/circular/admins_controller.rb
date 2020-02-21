@@ -8,7 +8,7 @@ class Gws::Circular::AdminsController < ApplicationController
   private
 
   def set_cur_tab
-    @cur_tab = [I18n.t('gws/circular.tabs.admin'), action: :index]
+    @cur_tab = [I18n.t('gws/circular.tabs.admin'), { action: :index, category: '-' }]
   end
 
   def set_items
@@ -17,6 +17,7 @@ class Gws::Circular::AdminsController < ApplicationController
       without_deleted.
       allow(:read, @cur_user, site: @cur_site).
       search(params[:s]).
-      page(params[:page]).per(50)
+      page(params[:page]).per(50).
+      custom_order(params.dig(:s, :sort) || 'due_date')
   end
 end

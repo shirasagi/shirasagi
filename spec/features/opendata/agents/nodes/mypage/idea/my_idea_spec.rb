@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe "opendata_agents_nodes_my_idea", dbscope: :example, js: true do
+describe "opendata_agents_nodes_my_idea", type: :feature, dbscope: :example, js: true do
   let(:site) { cms_site }
   let(:layout) { create_cms_layout }
   let!(:node) { create :opendata_node_idea, cur_site: cms_site, layout_id: layout.id }
@@ -35,7 +35,7 @@ describe "opendata_agents_nodes_my_idea", dbscope: :example, js: true do
 
   let(:save) { "公開保存" }
   let(:edit) { "編集" }
-  let(:delete) { "削除" }
+  let(:delete) { I18n.t('ss.buttons.delete') }
 
   before do
     login_opendata_member(site, node_login)
@@ -49,7 +49,7 @@ describe "opendata_agents_nodes_my_idea", dbscope: :example, js: true do
     visit index_path
     expect(current_path).to eq index_path
 
-    click_link "新規作成"
+    click_link I18n.t('ss.links.new')
     fill_in "item_name", with: item_name
     fill_in "item_text", with: item_text
     check category.name
@@ -97,14 +97,14 @@ describe "opendata_agents_nodes_my_idea", dbscope: :example, js: true do
 
     it do
       visit index_path
-      click_link "新規作成"
+      click_link I18n.t('ss.links.new')
 
       fill_in "item_name", with: item_name
       fill_in "item_text", with: item_text
       check category.name
       click_button "公開申請"
 
-      expect(page).to have_css("#ss-notice", text: "保存しました。")
+      expect(page).to have_css("#ss-notice", text: I18n.t('ss.notice.saved'))
 
       click_link item_name
       expect(page).to have_css(".status .input", text: "申請")

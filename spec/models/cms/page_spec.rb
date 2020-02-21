@@ -22,6 +22,22 @@ describe Cms::Page do
     it { expect(item.private_show_path).to eq show_path }
   end
 
+  describe "#attributes with node" do
+    let(:node) { create :cms_node_page }
+    let(:item) { create :cms_page, cur_node: node }
+    let(:show_path) { Rails.application.routes.url_helpers.node_page_path(site: item.site, cid: node.id, id: item.id) }
+
+    it { expect(item.becomes_with_route).not_to eq nil }
+    it { expect(item.dirname).to eq node.filename }
+    it { expect(item.basename).not_to eq nil }
+    it { expect(item.path).not_to eq nil }
+    it { expect(item.url).not_to eq nil }
+    it { expect(item.full_url).not_to eq nil }
+    it { expect(item.public?).not_to eq nil }
+    it { expect(item.parent).to eq node }
+    it { expect(item.private_show_path).to eq show_path }
+  end
+
   describe "validation" do
     let(:site_limit0) { create :cms_site_unique, max_name_length: 0 }
     let(:site_limit80) { create :cms_site_unique, max_name_length: 80 }

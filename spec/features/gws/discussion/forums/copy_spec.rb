@@ -13,7 +13,7 @@ describe "gws_discussion_forums", type: :feature, dbscope: :example do
 
       within "form#item-form" do
         fill_in "item[name]", with: "copy"
-        click_button "保存"
+        click_button I18n.t('ss.buttons.save')
       end
 
       forum = Gws::Discussion::Forum.where(name: "copy").first

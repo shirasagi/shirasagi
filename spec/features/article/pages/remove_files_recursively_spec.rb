@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe "article_pages remove_files_recursively", dbscope: :example do
+describe "article_pages remove_files_recursively", type: :feature, dbscope: :example do
   let(:site) { cms_site }
   let(:node) {
     create_once :article_node_page, filename: "docs", name: "article", state: "public", for_member_state: "disabled"
@@ -19,7 +19,7 @@ describe "article_pages remove_files_recursively", dbscope: :example do
       visit edit_path
       within "form#item-form" do
         fill_in "item[name]", with: "modify"
-        click_button "保存"
+        click_button I18n.t('ss.buttons.save')
       end
 
       expect(::File.exists?(item.path)).to be true
@@ -38,7 +38,7 @@ describe "article_pages remove_files_recursively", dbscope: :example do
       select "非公開", from: "item_state"
 
       within "form#item-form" do
-        click_button "保存"
+        click_button I18n.t('ss.buttons.save')
       end
 
       expect(::File.exists?(item.path)).to be false
@@ -64,7 +64,7 @@ describe "article_pages remove_files_recursively", dbscope: :example do
       expect(page).to have_content '広告管理/広告バナー'
 
       within "form#item-form" do
-        click_button "保存"
+        click_button I18n.t('ss.buttons.save')
       end
 
       expect(::File.exists?(item.path)).to be false
@@ -83,7 +83,7 @@ describe "article_pages remove_files_recursively", dbscope: :example do
       select "有効", from: "item_for_member_state"
 
       within "form#item-form" do
-        click_button "保存"
+        click_button I18n.t('ss.buttons.save')
       end
 
       expect(::File.exists?(item.path)).to be false

@@ -53,8 +53,12 @@ def save_ss_files(path, data)
   file = Fs::UploadedFile.create_from_file(path)
   file.original_filename = data[:filename] if data[:filename].present?
 
-  item = SS::File.new(cond)
+  item = SS::File.find_or_initialize_by(cond)
+  return item if item.persisted?
+
   item.in_file = file
+  item.name = data[:name] if data[:name].present?
+  item.cur_user = @user
   item.save
 
   item
@@ -68,9 +72,14 @@ def save_layout(data)
   cond = { site_id: @site._id, filename: data[:filename] }
   html = File.read("layouts/" + data[:filename]) rescue nil
 
-  item = Cms::Layout.find_or_create_by(cond)
+  item = Cms::Layout.find_or_initialize_by(cond)
   item.attributes = data.merge html: html
-  item.update
+  if SS.config.cms.enable_lgwan
+    html.gsub!('{{ part "mypage-login" }}', '')
+    html.gsub!('{{ part "mypage-tabs" }}', '')
+  end
+  item.cur_user = @user
+  item.save
   item.add_to_set group_ids: @site.group_ids
 
   item
@@ -87,7 +96,9 @@ save_layout filename: "dataset-top.layout.html", name: "データ：トップ"
 save_layout filename: "idea-bunya.layout.html", name: "アイデア：分野、アイデア検索"
 save_layout filename: "idea-page.layout.html", name: "アイデア：詳細ページ"
 save_layout filename: "idea-top.layout.html", name: "アイデア：トップ"
-save_layout filename: "mypage-page.layout.html", name: "マイページ：詳細"
+if SS.config.cms.enable_lgwan.blank?
+  save_layout filename: "mypage-page.layout.html", name: "マイページ：詳細"
+end
 save_layout filename: "mypage-top.layout.html", name: "マイページ：トップ、メンバー、SPARQL"
 save_layout filename: "portal-event.layout.html", name: "ポータル：イベント"
 save_layout filename: "portal-general.layout.html", name: "ポータル：汎用"
@@ -100,6 +111,7 @@ layouts = Hash[*array.flatten]
 puts "# nodes"
 
 def save_node(data)
+  return if SS.config.cms.enable_lgwan && data[:route].start_with?('member/')
   puts data[:name]
   cond = { site_id: @site._id, filename: data[:filename], route: data[:route] }
 
@@ -108,14 +120,15 @@ def save_node(data)
   lower_html ||= File.read("nodes/" + data[:filename] + ".lower_html") rescue nil
   summary_html ||= File.read("nodes/" + data[:filename] + ".summary_html") rescue nil
 
-  item = Cms::Node.unscoped.find_or_create_by(cond).becomes_with_route
+  item = data[:route].sub("/", "/node/").camelize.constantize.unscoped.find_or_initialize_by(cond)
   item.upper_html = upper_html if upper_html
   item.loop_html = loop_html if loop_html
   item.lower_html = lower_html if lower_html
   item.summary_html = summary_html if summary_html
 
   item.attributes = data
-  item.update
+  item.cur_user = @user
+  item.save
   item.add_to_set group_ids: @site.group_ids
 
   item
@@ -177,23 +190,25 @@ save_node filename: "sparql", name: "SPARQL", route: "opendata/sparql",
 save_node filename: "api", name: "API", route: "opendata/api"
 
 save_node filename: "member", name: "ユーザー", route: "opendata/member",
-  layout_id: layouts["mypage-top"].id
+          layout_id: layouts["mypage-top"].id
 
-save_node filename: "auth", name: "ログイン", route: "member/login",
-  layout_id: layouts["mypage-top"].id, redirect_url: "/mypage/", form_auth: "enabled",
-  twitter_oauth: "enabled", facebook_oauth: "enabled", yahoojp_oauth: "enabled",
-  google_oauth2_oauth: "enabled", github_oauth: "enabled"
+if SS.config.cms.enable_lgwan.blank?
+  save_node filename: "auth", name: "ログイン", route: "member/login",
+            layout_id: layouts["mypage-top"].id, redirect_url: "/mypage/", form_auth: "enabled",
+            twitter_oauth: "enabled", facebook_oauth: "enabled", yahoojp_oauth: "enabled",
+            google_oauth2_oauth: "enabled", github_oauth: "enabled"
 
-save_node filename: "mypage", name: "マイページ", route: "opendata/mypage",
-  layout_id: layouts["mypage-top"].id
-save_node filename: "mypage/profile", name: "プロフィール", route: "opendata/my_profile",
-  layout_id: layouts["mypage-page"].id
-save_node filename: "mypage/dataset", name: "データカタログ", route: "opendata/my_dataset",
-  layout_id: layouts["mypage-page"].id
-save_node filename: "mypage/app", name: "アプリマーケット", route: "opendata/my_app",
-  layout_id: layouts["mypage-page"].id
-save_node filename: "mypage/idea", name: "アイデアボックス", route: "opendata/my_idea",
-  layout_id: layouts["mypage-page"].id
+  save_node filename: "mypage", name: "マイページ", route: "opendata/mypage",
+            layout_id: layouts["mypage-top"].id
+  save_node filename: "mypage/profile", name: "プロフィール", route: "opendata/my_profile",
+            layout_id: layouts["mypage-page"].id
+  save_node filename: "mypage/dataset", name: "データカタログ", route: "opendata/my_dataset",
+            layout_id: layouts["mypage-page"].id
+  save_node filename: "mypage/app", name: "アプリマーケット", route: "opendata/my_app",
+            layout_id: layouts["mypage-page"].id
+  save_node filename: "mypage/idea", name: "アイデアボックス", route: "opendata/my_idea",
+            layout_id: layouts["mypage-page"].id
+end
 
 save_node filename: "bunya", name: "分野", route: "cms/node"
 save_node filename: "bunya/kanko", name: "観光・文化・スポーツ", route: "opendata/category", order: 1
@@ -328,6 +343,7 @@ save_inquiry_column node_id: inquiry_node.id, name: "お問い合わせ内容", 
 puts "# parts"
 
 def save_part(data)
+  return if SS.config.cms.enable_lgwan && data[:route].start_with?('member/')
   puts data[:name]
   cond = { site_id: @site._id, filename: data[:filename] }
 
@@ -336,14 +352,25 @@ def save_part(data)
   loop_html  = File.read("parts/" + data[:filename].sub(/\.html$/, ".loop_html")) rescue nil
   lower_html = File.read("parts/" + data[:filename].sub(/\.html$/, ".lower_html")) rescue nil
 
-  item = Cms::Part.unscoped.find_or_create_by(cond).becomes_with_route(data[:route])
-  item.html = html if html
+  item = data[:route].sub("/", "/part/").camelize.constantize.unscoped.find_or_initialize_by(cond)
+  if html
+    if SS.config.cms.enable_lgwan
+      html.gsub!('<li><a class="entry" href="/mypage/app/">アプリ登録</a></li>', '')
+      html.gsub!('<li><a class="entry" href="/mypage/app/">アプリを登録する</a></li>', '')
+      html.gsub!('<li><a class="entry" href="/mypage/dataset/">データセット登録</a></li>', '')
+      html.gsub!('<li><a class="entry" href="/mypage/dataset/">データセットを登録する</a></li>', '')
+      html.gsub!('<li><a class="entry" href="/mypage/idea/">アイデア登録</a></li>', '')
+      html.gsub!('<li><a class="entry" href="/mypage/idea/">アイデアを登録する</a></li>', '')
+    end
+    item.html = html
+  end
   item.upper_html = upper_html if upper_html
   item.loop_html = loop_html if loop_html
   item.lower_html = lower_html if lower_html
 
   item.attributes = data
-  item.update
+  item.cur_user = @user
+  item.save
   item.add_to_set group_ids: @site.group_ids
 
   item
@@ -366,9 +393,11 @@ save_part filename: "idea-attention.part.html", name: "アイデア：注目順"
   route: "opendata/idea", limit: 10, sort: "attention"
 save_part filename: "idea-head.part.html", name: "アイデア：ヘッダー", route: "cms/free"
 save_part filename: "idea-kv.part.html", name: "アイデア：キービジュアル", route: "cms/free"
-save_part filename: "mypage-login.part.html", name: "ログイン", \
-  route: "opendata/mypage_login", ajax_view: "enabled"
-save_part filename: "mypage-tabs.part.html", name: "マイページ：タブ", route: "cms/free"
+if SS.config.cms.enable_lgwan.blank?
+  save_part filename: "mypage-login.part.html", name: "ログイン", \
+    route: "opendata/mypage_login", ajax_view: "enabled"
+  save_part filename: "mypage-tabs.part.html", name: "マイページ：タブ", route: "cms/free"
+end
 save_part filename: "portal-about.part.html", name: "ポータル：Our Open Dateとは", route: "cms/free"
 save_part filename: "portal-app.part.html", name: "ポータル：オープンアプリマーケット", \
   route: "opendata/app", limit: 5, sort: "released"
@@ -394,12 +423,14 @@ def save_page(data)
   html ||= File.read("pages/" + data[:filename]) rescue nil
   summary_html ||= File.read("pages/" + data[:filename].sub(/\.html$/, "") + ".summary_html") rescue nil
 
-  item = Cms::Page.find_or_create_by(cond).becomes_with_route(data[:route])
+  route = data[:route].presence || 'cms/page'
+  item = route.camelize.constantize.find_or_initialize_by(cond)
   item.html = html if html
   item.summary_html = summary_html if summary_html
 
   item.attributes = data
-  item.update
+  item.cur_user = @user
+  item.save
   item.add_to_set group_ids: @site.group_ids
 
   item
@@ -437,6 +468,9 @@ event0 = save_page route: "event/page", filename: "event/4.html", name: "オー�
   event_dates: 7.upto(18).map { |d| d.days.since.strftime("%Y/%m/%d") }.join("\r\n")
 page0.related_page_ids = [ page2.id, event0.id ]
 page0.save!
+
+save_page route: "cms/page", name: "お探しのページは見つかりません。 404 Not Found", filename: "404.html",
+  layout_id: layouts["portal-general"].id
 
 ## -------------------------------------
 puts "# ads"
@@ -632,7 +666,7 @@ import_vocab prefix: "xsd", file: "rdf/xsd.ttl", order: 2000
 import_vocab prefix: "dcmitype", file: "rdf/dctype.ttl", order: 2000
 import_vocab prefix: "dc11", file: "rdf/dcelements.ttl", order: 2000
 import_vocab prefix: "dc", file: "rdf/dcterms.ttl", order: 2000
-import_vocab prefix: "ic", file: "rdf/ipa-core.ttl", order: 1000
+import_vocab prefix: "ic", file: "rdf/imicore242.ttl", order: 1000
 
 ## -------------------------------------
 puts "# max file size"
@@ -675,3 +709,11 @@ save_word_dictionary name: "機種依存文字", body_file: "#{Rails.root}/db/se
 
 @site.editor_css_path = '/css/ckeditor_contents.css'
 @site.update!
+
+if @site.subdir.present?
+  # rake cms:set_subdir_url site=@site.host
+  require 'rake'
+  Rails.application.load_tasks
+  ENV["site"]=@site.host
+  Rake::Task['cms:set_subdir_url'].invoke
+end

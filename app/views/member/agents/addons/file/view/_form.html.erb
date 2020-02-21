@@ -39,7 +39,7 @@ window.deleteContent = function(id) {
 
     <div id="selected-files">
       <% @item.files.each do |file| %>
-        <div class="file-view">
+        <div class="file-view" data-file-id="<%= file.id %>">
 
           <%= link_to file.url, class: :thumb, target: "_blank" do %>
             <% if file.image? %>
@@ -64,7 +64,7 @@ window.deleteContent = function(id) {
             <% if file.image? %>
               <% content = image_tag file.url, alt: file.name %>
               <%= link_to t("sns.image_paste"), "#", onclick: "insertContent('#{escape_javascript(content)}'); return false;" %>
-              <% content = link_to(file.url, alt: file.name, class: "ajax-box", target: "_blank") { image_tag(file.thumb_url, alt: file.name) } %>
+              <% content = link_to(file.url, alt: file.name, class: "ajax-box") { image_tag(file.thumb_url, alt: file.name) } %>
               <%= link_to t("sns.thumb_paste"), "#", onclick: "insertContent('#{escape_javascript(content)}'); return false;" %>
             <% end %>
             <%= link_to t("ss.buttons.delete"), "#", onclick: "deleteContent('#{file.id}'); return false;" %>

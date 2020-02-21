@@ -9,7 +9,7 @@ class Gws::Presence::Apis::CustomGroup::UsersController < ApplicationController
     @group = Gws::CustomGroup.find(params[:group]) rescue nil
 
     raise "404" unless @group
-    raise "404" unless @group.member_ids.include?(@cur_user.id)
+    raise "404" unless @group.readable?(@cur_user)
 
     @groups = [@group]
   end

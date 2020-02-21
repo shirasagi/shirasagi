@@ -1,0 +1,17 @@
+<div id="chat-<%= @cur_node.id %>" class="chat-part">
+  <%= jquery do %>
+    var bot = new Chat_Bot("chat-<%= @cur_node.id %>", "<%= @preview ? cms_preview_path(@cur_site, path: File.join(@cur_node.filename, 'index.json')) : File.join(@cur_node.url, 'index.json') %>");
+  <% end %>
+  <div class="chat-items">
+    <%= content_tag :div, @result.html_safe, class: 'chat-item sys' if @result.present? %>
+    <% @cur_node.becomes_with_route.first_suggest.each do |suggest| %>
+      <%= content_tag :div, class: 'chat-item suggest' do %>
+        <%= link_to suggest, File.join(@cur_node.url, 'index.html'), class: 'chat-suggest' %>
+      <% end %>
+    <% end %>
+  </div>
+  <div class="chat-form">
+    <%= text_field_tag 'chat[text]', '', class: 'chat-text' %>
+    <%= button_tag t('ss.buttons.send'), type: 'button', class: 'chat-button' %>
+  </div>
+</div>

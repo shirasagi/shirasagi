@@ -30,12 +30,13 @@ module Inquiry::Addon
       # validate :validate_max_upload_file_size_options
       validate :validate_transfers
       validate :validate_form_select
+      validate :validate_question
     end
 
     def input_type_options
       %w(text_field text_area email_field radio_button select check_box upload_file form_select).map do |v|
         label = I18n.t("inquiry.options.input_type.#{v}")
-        label += I18n.t("inquiry.cannot_use") if v == "upload_file" && Mongoid::Config.clients[:default_post]
+        label += I18n.t("inquiry.cannot_use") if v == "upload_file" && SS.config.cms.enable_lgwan
         [ label, v ]
       end
     end
@@ -79,13 +80,13 @@ module Inquiry::Addon
     private
 
     def validate_select_options
-      if input_type =~ /(select|radio_button|check_box|form_select)/
+      if /(select|radio_button|check_box|form_select)/.match?(input_type)
         errors.add :select_options, :blank if select_options.blank?
       end
     end
 
     def validate_input_confirm_options
-      if input_type =~ /(select|radio_button|check_box|text_area|upload_file)/ && input_confirm == 'enabled'
+      if /(select|radio_button|check_box|text_area|upload_file)/.match?(input_type) && input_confirm == 'enabled'
         errors.add :input_confirm, :invalid_input_type_for_input_confirm, input_type: label(:input_type)
       end
     end
@@ -97,7 +98,7 @@ module Inquiry::Addon
     # end
 
     def validate_input_type_upload_file
-      if input_type == "upload_file" && Mongoid::Config.clients[:default_post]
+      if input_type == "upload_file" && SS.config.cms.enable_lgwan
         errors.add :input_type, :cannot_use_upload_file
       end
     end
@@ -116,6 +117,11 @@ module Inquiry::Addon
       if column.present? && column != self
         errors.add :input_type, :exist_form_select, input_type: label(:input_type)
       end
+    end
+
+    def validate_question
+      return if input_type != "upload_file"
+      self.question = "disabled"
     end
   end
 end

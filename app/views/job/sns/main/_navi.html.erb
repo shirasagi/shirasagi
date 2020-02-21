@@ -1,0 +1,8 @@
+<nav class="mod-navi">
+  <h2><%= t "job.main" %></h2>
+
+  <h3><%= link_to t("job.log"), job_sns_logs_path %></h3>
+  <h3><%= link_to t("job.reservation"), job_sns_reservations_path %></h3>
+</nav>
+
+<%= render partial: "sns/main/navi" %>

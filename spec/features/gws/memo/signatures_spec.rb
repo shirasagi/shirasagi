@@ -24,7 +24,7 @@ describe 'gws_memo_signatures', type: :feature, dbscope: :example do
       within "form#item-form" do
         fill_in "item[name]", with: name
         fill_in "item[text]", with: "signature"
-        click_button "保存"
+        click_button I18n.t('ss.buttons.save')
       end
       expect(first('#addon-basic')).to have_text(name)
     end
@@ -40,7 +40,7 @@ describe 'gws_memo_signatures', type: :feature, dbscope: :example do
       name = "modify-#{unique_id}"
       within "form#item-form" do
         fill_in "item[name]", with: name
-        click_button "保存"
+        click_button I18n.t('ss.buttons.save')
       end
       expect(first('#addon-basic')).to have_text(name)
     end
@@ -48,7 +48,7 @@ describe 'gws_memo_signatures', type: :feature, dbscope: :example do
     it "#delete" do
       visit delete_path
       within "form" do
-        click_button "削除"
+        click_button I18n.t('ss.buttons.delete')
       end
       expect(current_path).to eq index_path
     end

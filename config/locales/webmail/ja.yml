@@ -33,8 +33,12 @@ ja:
       select_mail: 選択したメール
       start_export: エクスポートを開始しました。
       subject: "[メール] エクスポートが完了しました。"
-      notiry_message: "ダウンロードの準備が完了しました。\n下記のURLからダウンロードしてください。\n\n%{link}"
+      notify_message: "ダウンロードの準備が完了しました。\n下記のURLからダウンロードしてください。\n\n%{link}"
       start_message: "エクスポート処理を開始しました。\nエクスポート処理が完了次第、ダウンロードリンクが通知されます。"
+    export_failed:
+      subject: '[メッセージ] エクスポートが失敗しました。'
+      notify_message: "エクスポートが失敗しました。失敗の原因はタスク・マネージャーから確認することができます。"
+      empty_mails: エクスポート対象のメールが見つかりませんでした。
     import:
       start_import: インポートしました。
     box:
@@ -139,10 +143,6 @@ ja:
       move: 移動しました。
       delete: 削除しました。
       empty: 空にしました。
-      set_seen: 既読にしました。
-      unset_seen: 未読にしました。
-      set_star: スターをつけました。
-      unset_star: スターをはずしました。
       requested_mdn: メッセージ送信者は開封確認を要求しています。
       send_mdn: 開封確認メールを送信しました。
       ignore_mdn: 開封確認を無視しました。
@@ -383,6 +383,10 @@ ja:
         何も設定しない場合、警告は表示されません。
       imap_default_index:
         - このアカウントを既定のアカウントにするか選択します。
+
+    webmail/role:
+      permission_level:
+        - 権限レベルを設定します。
 
   job:
     models:

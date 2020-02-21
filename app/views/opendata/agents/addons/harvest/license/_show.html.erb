@@ -1,4 +1,7 @@
-<%= jquery do %> SS_AddonTabs.hide(".mod-opendata_dataset_importer_license"); <% end %>
+<%
+  addon ||= local_assigns.fetch(:addon, {})
+  addon[:display_body] = "hide"
+%>
 <dl class="see mod-opendata_dataset_importer_license">
   <dt><%= @model.t :uid %></dt>
   <dd><%= @item.uid %></dd>

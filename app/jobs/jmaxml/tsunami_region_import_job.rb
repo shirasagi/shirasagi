@@ -3,8 +3,12 @@ class Jmaxml::TsunamiRegionImportJob < Cms::ApplicationJob
 
   private
 
+  def model
+    Jmaxml::TsunamiRegion
+  end
+
   def import_file
-    table = ::CSV.table(@cur_file.path, converters: nil, encoding: 'SJIS:UTF-8')
+    table = ::CSV.read(@cur_file.path, headers: true, encoding: 'SJIS:UTF-8')
     table.each do |row|
       import_row(row)
     end
@@ -12,15 +16,15 @@ class Jmaxml::TsunamiRegionImportJob < Cms::ApplicationJob
   end
 
   def import_row(row)
-    code = row[:code].presence
-    name = row[:name].presence
+    code = row[model.t(:code)].presence
+    name = row[model.t(:name)].presence
     return if code.blank? || name.blank?
 
-    item = Jmaxml::TsunamiRegion.site(self.site).where(code: code).first_or_create(name: name)
+    item = model.site(self.site).where(code: code).first_or_create(name: name)
     item.name = name
-    item.yomi = row[:yomi].presence if row[:yomi].present?
-    item.order = row[:order].presence if row[:order].present?
-    item.state = row[:state].presence if row[:state].present?
+    item.yomi = row[model.t(:yomi)].presence if row[model.t(:yomi)].present?
+    item.order = row[model.t(:order)].presence if row[model.t(:order)].present?
+    item.state = row[model.t(:state)].presence if row[model.t(:state)].present?
     item.save!
   end
 end

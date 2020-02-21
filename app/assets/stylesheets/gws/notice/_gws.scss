@@ -1,0 +1,9 @@
+// list
+.gws-notices {
+  .unread {
+    background-color: #f9e9e3;
+    &:hover {
+      background: $orange2;
+    }
+  }
+}

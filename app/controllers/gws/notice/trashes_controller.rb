@@ -13,7 +13,7 @@ class Gws::Notice::TrashesController < ApplicationController
   private
 
   def set_crumbs
-    @crumbs << [t("mongoid.models.gws/notice/post"), gws_notice_main_path]
+    @crumbs << [@cur_site.menu_notice_label || t('modules.gws/notice'), gws_notice_main_path]
     @crumbs << [t('ss.navi.trash'), action: :index]
   end
 
@@ -37,14 +37,6 @@ class Gws::Notice::TrashesController < ApplicationController
   rescue Mongoid::Errors::DocumentNotFound => e
     return render_destroy(true) if params[:action] == 'destroy'
     raise e
-  end
-
-  def set_selected_items
-    ids = params[:ids]
-    raise "400" unless ids
-    ids = ids.split(",") if ids.is_a?(String)
-    @items = @items.in(id: ids)
-    raise "400" unless @items.present?
   end
 
   public

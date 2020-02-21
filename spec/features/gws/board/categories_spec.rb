@@ -20,12 +20,12 @@ describe "gws_board_categories", type: :feature, dbscope: :example do
       # create
       #
 
-      click_on "新規作成"
+      click_on I18n.t('ss.links.new')
 
       within "form#item-form" do
         fill_in "item[name]", with: name
-        fill_in "item[color]", with: color
-        click_button "保存"
+        fill_in "item[color]", with: color + "\n"
+        click_button I18n.t('ss.buttons.save')
       end
 
       category = Gws::Board::Category.site(site).find_by(name: name)
@@ -37,11 +37,11 @@ describe "gws_board_categories", type: :feature, dbscope: :example do
       #
       # edit
       #
-      click_link "編集する"
+      click_link I18n.t('ss.links.edit')
 
       within "form#item-form" do
         fill_in "item[name]", with: name2
-        click_button "保存"
+        click_button I18n.t('ss.buttons.save')
       end
 
       category.reload
@@ -53,7 +53,7 @@ describe "gws_board_categories", type: :feature, dbscope: :example do
       #
       # index
       #
-      click_link "一覧へ戻る"
+      click_link I18n.t('ss.links.back_to_index')
       within "div.info" do
         expect(page).to have_css("a.title", text: name2)
         click_link name2
@@ -62,8 +62,8 @@ describe "gws_board_categories", type: :feature, dbscope: :example do
       #
       # delete
       #
-      click_link "削除する"
-      click_button "削除"
+      click_link I18n.t('ss.links.delete')
+      click_button I18n.t('ss.buttons.delete')
 
       category = Gws::Board::Category.site(site).where(name: name).first
       expect(category).to be_nil

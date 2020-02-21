@@ -1,6 +1,6 @@
 <%= jquery do %>
   var options = {};
-  options.request_url = "<%= request.url %>";
+  options.request_url = "<%= request.path %>";
   options.workflow_node = "workflow" + "<%= @cur_node? @cur_node.id : "" %>";
   options.user_id = <%= @cur_user.id %>;
   options.errors = {};
@@ -117,7 +117,7 @@
         <%= t("workflow.state.#{@item.workflow_state}") if @item.workflow_state.present? %>
         <% if @item.workflow_requested? %>
           <% if @ss_mode == :cms && @item.allowed?(:revoke, @cur_user, site: @cur_site) %>
-            <%= link_to t('workflow.buttons.cancel'), { controller: '/workflow/pages', action: 'request_cancel' }, { class: "btn request-cancel", data: { ss_confirmation: t("workflow.confirm.request_cancel") } } %>
+            <%= button_tag(t('workflow.buttons.cancel'), name: "cancel", type: "button", href: url_for(controller: '/workflow/pages', action: 'request_cancel'), class: "btn request-cancel", data: { ss_confirmation: t("workflow.confirm.request_cancel") }) %>
           <% elsif @ss_mode == :gws && @item.allowed?(:edit, @cur_user, site: @cur_site) %>
             <%= link_to(t('workflow.buttons.cancel'), { action: :request_cancel }, class: :btn) rescue nil %>
           <% end %>

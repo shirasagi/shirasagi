@@ -4,10 +4,9 @@ class Cms::Member
   include ::Member::Addon::AdditionalAttributes
   include Ezine::Addon::Subscription
 
-  EMAIL_REGEX = /\A([^@\s]+)@((?:[-a-z0-9]+\.)+[a-z]{2,})\z/i
+  EMAIL_REGEX = /\A([^@\s]+)@((?:[-a-z0-9]+\.)+[a-z]{2,})\z/i.freeze
 
   index({ site_email: 1 }, { unique: true, sparse: true })
-  validates :email, uniqueness: { scope: :site_id }, if: ->{ email.present? }
 
   class << self
     def create_auth_member(auth, site)
@@ -30,7 +29,7 @@ class Cms::Member
       name = info.email if name.blank? && info.email?
       name = "(no name)" if name.blank?
 
-      if name =~ EMAIL_REGEX
+      if EMAIL_REGEX.match?(name)
         authname = name.split(EMAIL_REGEX)
         name = name.gsub("@#{authname.last}", "")
       end
@@ -53,7 +52,11 @@ class Cms::Member
 
     def to_csv
       CSV.generate do |data|
-        data << %w(id state name email kana organization_name job tel postal_code addr sex birthday updated created)
+        data << %w(
+          id state name email kana organization_name job tel
+          postal_code addr sex birthday updated created
+        ).map { |k| t(k) }
+
         criteria.each do |item|
           line = []
           line << item.id

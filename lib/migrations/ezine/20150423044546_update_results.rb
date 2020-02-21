@@ -1,4 +1,8 @@
 class SS::Migration20150423044546
+  include SS::Migration::Base
+
+  depends_on "20150408081234"
+
   def change
     Ezine::Page.all.each do |page|
       results = page[:results]

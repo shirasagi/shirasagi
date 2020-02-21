@@ -1,0 +1,54 @@
+<% cate_rendered = {} %>
+
+<% render_cate_hierarichy = proc do |cate| %>
+  <% if !cate.root? %>
+    <% parent = cate.parent %>
+    <% render_cate_hierarichy.call(parent) %>
+  <% end %>
+
+  <% if !cate_rendered.key?(cate.id) %>
+    <li class="list-item gws-schedule-todo-list-item-header" id="cate-<%= cate.id %>" data-depth="<%= cate.depth %>" data-group="cate-<%= cate.id %>"<% if parent.present? %> data-parent="cate-<%= parent.id %>"<% end %>>
+      <span class="list-item-indent"></span>
+      <span class="material-icons md-18 list-item-switch">expand_less</span>
+      <label class="check"><input type="checkbox" /></label>
+      <div class="info">
+        <span><%= cate.trailing_name %></span>
+      </div>
+    </li>
+
+    <% cate_rendered[cate.id] = true %>
+  <% end %>
+<% end %>
+
+<div class="index gws-schedule-todo-list">
+  <%= render file: "_list_head" %>
+
+  <ul class="list-items">
+    <% @items.group_by_category(user: @cur_user, site: @cur_site) do |header, items, cate| %>
+      <% render_cate_hierarichy.call(cate) %>
+
+      <% items.each do |item| %>
+        <li class="list-item" id="item-<%= item.id %>" data-depth="<%= cate.depth %>" data-group="cate-<%= cate.id %>">
+          <nav class="tap-menu">
+            <% @tap_menu.call(item) %>
+          </nav>
+
+          <span class="list-item-indent"></span>
+          <span class="list-item-switch"></span>
+          <label class="check"><input type="checkbox" name="ids[]" value="<%= item.id %>" /></label>
+
+          <div class="info">
+            <% title = item.try(:name) || item.try(:title) || item.try(:filename) || "##{item.id}" %>
+            <%= link_to title, { action: :show, id: item }, class: "title" %>
+
+            <div class="meta">
+              <% @index_meta.call(item) %>
+            </div>
+          </div>
+        </li>
+      <% end %>
+    <% end %>
+  </ul>
+</div>
+
+<%= paginate @items if @items.try(:current_page) %>

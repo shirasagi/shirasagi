@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe "uploader_files", dbscope: :example, type: :feature do
+describe "uploader_files", type: :feature, dbscope: :example do
   let(:site) { cms_site }
   let(:node) { create_once :uploader_node_file, name: "uploader" }
   let(:index_path) { uploader_files_path site.id, node }
@@ -153,7 +153,7 @@ describe "uploader_files", dbscope: :example, type: :feature do
         end
       end
 
-      expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+      expect(page).to have_css('#notice', text: I18n.t('ss.notice.deleted'))
       within "div.info" do
         expect(page).to have_css("a.file")
       end

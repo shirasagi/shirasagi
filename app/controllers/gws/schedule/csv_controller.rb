@@ -1,7 +1,9 @@
 class Gws::Schedule::CsvController < ApplicationController
   include Gws::BaseFilter
-  #include Gws::CrudFilter
+  include Gws::CrudFilter
   include Gws::Schedule::PlanFilter
+
+  model Gws::Schedule::PlanCsv::Importer
 
   navi_view "gws/schedule/main/navi"
 
@@ -15,11 +17,11 @@ class Gws::Schedule::CsvController < ApplicationController
   public
 
   def index
-    @item = Gws::Schedule::PlanCsv::Importer.new #get_params
+    @item = @model.new
   end
 
   def import
-    @item = Gws::Schedule::PlanCsv::Importer.new params[:item]
+    @item = @model.new get_params
     @item.cur_user = @cur_user
     @item.cur_site = @cur_site
 
@@ -32,5 +34,14 @@ class Gws::Schedule::CsvController < ApplicationController
       @item.import(confirm: true)
       render json: { items: @item.items }.to_json
     end
+  end
+
+  def download_template
+    filename = "gws_schedule_plans_template.csv"
+    response.status = 200
+    send_enum(
+      Gws::Schedule::PlanCsv::Exporter.enum_template_csv(site: @cur_site, user: @cur_user),
+      type: 'text/csv; charset=Shift_JIS', filename: filename
+    )
   end
 end

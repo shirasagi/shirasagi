@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe "opendata_search_ideas", dbscope: :example, js: true do
+describe "opendata_search_ideas", type: :feature, dbscope: :example, js: true do
   let(:site) { cms_site }
   let(:layout) { create_cms_layout }
   let(:node_idea) { create :opendata_node_idea, cur_site: site, layout_id: layout.id }
@@ -104,7 +104,7 @@ describe "opendata_search_ideas", dbscope: :example, js: true do
     it "#keyword_input" do
       visit index_path
       fill_in "s_keyword", with: "アイデア"
-      click_button "検索"
+      click_button I18n.t('ss.buttons.search')
       within first('.opendata-search-ideas article') do
         expect(page).to have_css('h2', text: 'アイデアは見つかりませんでした。')
       end
@@ -113,7 +113,7 @@ describe "opendata_search_ideas", dbscope: :example, js: true do
     it "#keyword_input" do
       visit index_path
       fill_in "s_keyword", with: "text3"
-      click_button "検索"
+      click_button I18n.t('ss.buttons.search')
 
       page_idea = Opendata::Idea.find_by(text: 'text3')
       within first('.opendata-search-ideas article') do
@@ -130,7 +130,7 @@ describe "opendata_search_ideas", dbscope: :example, js: true do
       visit index_path
       fill_in "s_keyword", with: "text3 text7"
       select "すべてのキーワードを含む"
-      click_button "検索"
+      click_button I18n.t('ss.buttons.search')
 
       expect(page).to have_css('.opendata-search-ideas article', count: 1)
       within first('.opendata-search-ideas article') do
@@ -138,7 +138,7 @@ describe "opendata_search_ideas", dbscope: :example, js: true do
       end
 
       select "いずれかのキーワードを含む"
-      click_button "検索"
+      click_button I18n.t('ss.buttons.search')
 
       expect(page).to have_css('.opendata-search-ideas article', count: 2)
     end
@@ -146,7 +146,7 @@ describe "opendata_search_ideas", dbscope: :example, js: true do
     it "#category_select" do
       visit index_path
       select node_category.name
-      click_button "検索"
+      click_button I18n.t('ss.buttons.search')
 
       page_idea = Opendata::Idea.site(site).search(site: site, category_id: node_category.id).order_by(released: -1).first
       within first('.opendata-search-ideas article') do
@@ -162,7 +162,7 @@ describe "opendata_search_ideas", dbscope: :example, js: true do
     it "#area_select" do
       visit index_path
       select node_area.name
-      click_button "検索"
+      click_button I18n.t('ss.buttons.search')
 
       page_idea = Opendata::Idea.site(site).search(site: site, area_id: node_area.id).order_by(released: -1).first
       within first('.opendata-search-ideas article') do
@@ -178,7 +178,7 @@ describe "opendata_search_ideas", dbscope: :example, js: true do
     it "#tag_input" do
       visit index_path
       select "tag5"
-      click_button "検索"
+      click_button I18n.t('ss.buttons.search')
 
       page_idea = Opendata::Idea.find_by(tags: 'tag5')
       within first('.opendata-search-ideas article') do
@@ -196,7 +196,7 @@ describe "opendata_search_ideas", dbscope: :example, js: true do
       fill_in "s_keyword", with: "text3"
       select "tag5"
       select "すべてのキーワードを含む"
-      click_button "検索"
+      click_button I18n.t('ss.buttons.search')
 
       expect(page).to have_css('.opendata-search-ideas article', count: 1)
       within first('.opendata-search-ideas article') do
@@ -204,7 +204,7 @@ describe "opendata_search_ideas", dbscope: :example, js: true do
       end
 
       select "いずれかのキーワードを含む"
-      click_button "検索"
+      click_button I18n.t('ss.buttons.search')
 
       expect(page).to have_css('.opendata-search-ideas article', count: 1)
       within first('.opendata-search-ideas article') do
@@ -212,7 +212,7 @@ describe "opendata_search_ideas", dbscope: :example, js: true do
       end
 
       select "すべてをOR条件で検索する"
-      click_button "検索"
+      click_button I18n.t('ss.buttons.search')
       expect(page).to have_css('.opendata-search-ideas article', count: 2)
     end
 

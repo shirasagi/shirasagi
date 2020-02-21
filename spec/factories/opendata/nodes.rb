@@ -103,4 +103,9 @@ FactoryBot.define do
     route "opendata/member"
     filename { "member-#{unique_id}" }
   end
+
+  factory :opendata_node_dataset_map, class: Opendata::Node::DatasetMap, traits: [:cms_node] do
+    route "opendata/dataset_map"
+    filename { "dataset-#{unique_id}" }
+  end
 end

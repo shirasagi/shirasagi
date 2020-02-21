@@ -1,4 +1,4 @@
-SS::Application.routes.draw do
+Rails.application.routes.draw do
   Gws::Attendance::Initializer
 
   concern :deletion do
@@ -8,6 +8,7 @@ SS::Application.routes.draw do
 
   gws 'attendance' do
     get '/' => redirect { |p, req| "#{req.path}/time_cards/#{Time.zone.now.strftime('%Y%m')}" }, as: :main
+    get '/time_cards/' => redirect { |p, req| "#{req.path}/#{Time.zone.now.strftime('%Y%m')}" }, as: :time_card_main
     resources :time_cards, path: 'time_cards/:year_month', only: %i[index] do
       match :download, on: :collection, via: %i[get post]
       get :print, on: :collection
@@ -21,6 +22,7 @@ SS::Application.routes.draw do
 
     namespace 'management' do
       get '/' => redirect { |p, req| "#{req.path}/time_cards/#{Time.zone.now.strftime('%Y%m')}" }, as: :main
+      get '/time_cards/' => redirect { |p, req| "#{req.path}/#{Time.zone.now.strftime('%Y%m')}" }, as: :time_card_main
       resources :time_cards, path: 'time_cards/:year_month', except: %i[new create edit update], concerns: %i[deletion] do
         match :memo, path: ':day/memo', on: :member, via: %i[get post]
         match :time, path: ':day/:type', on: :member, via: %i[get post]

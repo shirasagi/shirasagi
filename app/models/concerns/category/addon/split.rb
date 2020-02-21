@@ -11,7 +11,7 @@ module Category::Addon
 
     def category_split
       partial = self.class.new
-      partial.attributes = self.attributes
+      partial.attributes = self.attributes.select!{ |k| self.fields.key?(k) }
 
       partial.id = nil
       partial.cur_user = @cur_user
@@ -19,13 +19,14 @@ module Category::Addon
 
       partial.name = in_partial_name
       partial.basename = in_partial_basename
+      partial.filename = nil
 
       path = File.dirname(filename)
       partial.cur_node = Cms::Node.site(@cur_site).in_path(path).sort(depth: -1).first
 
       validate_category_split(partial)
       if errors.empty?
-        partial.save
+        partial.save!
         integrate_embeds_ids(self, partial, Cms::Node)
         integrate_embeds_ids(self, partial, Cms::Page)
         true

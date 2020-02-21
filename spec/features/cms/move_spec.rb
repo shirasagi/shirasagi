@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe "move_cms_pages" do
+describe "move_cms_pages", type: :feature, dbscope: :example do
   subject(:site) { cms_site }
   subject(:index_path) { cms_pages_path site.id }
 
@@ -34,7 +34,7 @@ describe "move_cms_pages" do
       visit move_page_path
       within "form" do
         fill_in "destination", with: "A/page"
-        click_button "保存"
+        click_button I18n.t('ss.buttons.save')
       end
 
       #expect(current_path).to eq move_page_path
@@ -50,7 +50,7 @@ describe "move_cms_pages" do
       visit move_node_path
       within "form" do
         fill_in "destination", with: "D/E"
-        click_button "保存"
+        click_button I18n.t('ss.buttons.save')
       end
 
       expect(current_path).to eq move_node_path
@@ -62,7 +62,7 @@ describe "move_cms_pages" do
       visit move_page_path
       within "form" do
         fill_in "destination", with: "D/E/page"
-        click_button "保存"
+        click_button I18n.t('ss.buttons.save')
       end
       #expect(current_path).to eq move_page_path
       expect(page).to have_css("form#item-form h2", text: "D/E/page.html")
@@ -73,7 +73,7 @@ describe "move_cms_pages" do
       visit move_node_path
       within "form" do
         fill_in "destination", with: "A/B/C"
-        click_button "保存"
+        click_button I18n.t('ss.buttons.save')
       end
       expect(current_path).to eq move_node_path
       expect(page).to have_css("form#item-form h2", text: "A/B/C")

@@ -157,6 +157,13 @@ ja:
       contact_system_administrator: システム管理者にお問い合わせください。
       try_again_later: 時間を置いてもう一度お試しください。
       malformed_liquid_template: "の形式が正しくありません。%{error}"
+      include_not_general_sys_roles: "SYSロール「%{name}」は管理用の権限が含まれている為、設定できません。"
+      not_found_group: "グループ「%{name}」が見つかりません。"
+      not_found_sys_role: "システム権限「%{name}」が見つかりません。"
+      not_found_gws_role: "グループウェア権限「%{name}」が見つかりません。"
+      not_found_webmail_role: "ウェブメール権限「%{name}」が見つかりません。"
+      not_found_main_group: "グループ（主）「%{name}」が見つかりません。"
+      not_found_user_title: "役職コード「%{code}」が見つかりません。"
     template:
       body: 次の項目を確認してください。
       header:

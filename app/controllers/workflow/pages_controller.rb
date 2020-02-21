@@ -186,6 +186,7 @@ class Workflow::PagesController < ApplicationController
     merged = false
     if @item.workflow_state == @model::WORKFLOW_STATE_APPROVE && @item.try(:branch?) && @item.state == "public"
       save = @item.master
+      @item.file_ids = nil if @item.respond_to?(:file_ids)
       @item.destroy
       @item = save
       merged = true

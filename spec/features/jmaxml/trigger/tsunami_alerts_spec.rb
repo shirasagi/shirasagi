@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe "jmaxml/trigger/tsunami_alerts", dbscope: :example, js: true do
+describe "jmaxml/trigger/tsunami_alerts", type: :feature, dbscope: :example, js: true do
   let(:site) { cms_site }
   let(:node) { create :rss_node_weather_xml, cur_site: site }
   let(:index_path) { jmaxml_trigger_bases_path(site, node) }
@@ -82,7 +82,7 @@ describe "jmaxml/trigger/tsunami_alerts", dbscope: :example, js: true do
       within 'form' do
         click_on I18n.t('ss.buttons.delete')
       end
-      expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'), wait: 60)
+      expect(page).to have_css('#notice', text: I18n.t('ss.notice.deleted'), wait: 60)
 
       expect(model.count).to eq 0
     end

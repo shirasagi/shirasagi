@@ -14,6 +14,9 @@ ja:
       state:
         closed: 下書き
         public: 送信済み
+      export_filter:
+        all: 全てのメッセージ
+        selected: 選択したメッセージ
     links:
       show_messages: メッセージを見る
       publish: 送信する
@@ -34,6 +37,7 @@ ja:
     export_messages: エクスポート
     import_messages: インポート
     unsend: 送信先のメッセージも削除する（送信取り消し）
+    export_filter: 対象
     links:
       move: 移動する
       etc: その他
@@ -71,8 +75,12 @@ ja:
       no_recents: 新着はありません
     export:
       subject: '[メッセージ] エクスポートが完了しました。'
-      notiry_message: "ダウンロードの準備が完了しました。\n下記のURLからダウンロードしてください。\n\n%{link}"
+      notify_message: "ダウンロードの準備が完了しました。\n下記のURLからダウンロードしてください。\n\n%{link}"
       start_message: "エクスポート処理を開始しました。\nエクスポート処理が完了次第、ダウンロードリンクが通知されます。"
+    export_failed:
+      subject: '[メッセージ] エクスポートが失敗しました。'
+      notify_message: "エクスポートが失敗しました。失敗の原因はタスク・マネージャーから確認することができます。"
+      empty_messages: エクスポート対象のメッセージが見つかりませんでした。
     import:
       caution: "※差出人や送信者等のユーザー情報は、エクスポートしたデータとID及び氏名が一致している場合のみ復元されます。"
     mdn:
@@ -115,17 +123,13 @@ ja:
   modules:
     gws/memo: メッセージ
     gws/memo/message: メッセージ
-    gws/memo/notice: 通知
     gws/memo/notice_mail: メール通知
     addons:
-      gws/memo/comments: コメント
       gws/memo/group_setting: メッセージ
       gws/memo/body: 内容
       gws/memo/member: 宛先
       gws/memo/priority: 重要度
       gws/memo/notify_setting: 通知
-      gws/memo/notice/reply:
-        discussion: 電子会議室
       gws/memo/message_sort: メッセージ並び順
   gws_role:
     edit_private_gws_memo_messages: メッセージの利用
@@ -182,10 +186,11 @@ ja:
           attributes:
             in_basename:
               invalid_chars_as_name: "には次の文字は使えません: \\ / : * ? \" < > |"
+        gws/memo/category:
+          too_deep: は%{max}階層以下にしてください。
+          not_found_parent: 親カテゴリーが存在しません。
+          found_children: 子カテゴリーが存在します。
     attributes:
-      gws/memo/notice:
-        name: 件名
-        display_send_date: 送信日時
       gws/model/memo/message:
         type: 型名
         name: 件名
@@ -195,6 +200,9 @@ ja:
         html: 本文HTML
         seen: 既読日時
         star: フラグ
+        flags: フラグ
+        unseen: 未読
+        flagged: スター付き
         filtered: フィルター適用
         deleted: 削除状態
         format: フォーマット
@@ -218,8 +226,6 @@ ja:
         send_date: 送信日時
         display_send_date: 送信日時
         request_mdn_ids: 開封確認
-      gws/memo/comment:
-        name: タイトル
       gws/memo/folder:
         name: フォルダー名
         path: パス
@@ -392,4 +398,4 @@ ja:
 
   job:
     models:
-      gws/memo/message_export: メッセージ/エクスポート
+      gws/memo/message_export_job: メッセージ/エクスポート

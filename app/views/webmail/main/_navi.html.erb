@@ -62,7 +62,7 @@ end
     <% @mailboxes.all.each do |box| %>
     <li>
       <a href="#" data-name="<%= box.original_name %>">
-        <%== "<span class='pad'></span>" * box.depth %><%= box.basename %>
+        <%== "<span class='pad'></span>" * box.depth rescue nil %><%= box.basename %>
       </a>
     </li>
     <% end %>
@@ -73,7 +73,7 @@ end
 <nav class="mod-navi webmail-navi webmail-navi-quota">
   <h2><%= t('mongoid.models.webmail/quota') %></h2>
 
-  <%= link_to webmail_apis_quota_path, class: "reload" do %>
+  <%= link_to webmail_apis_quota_path(account: params[:account] || @cur_user.imap_default_index, webmail_mode: @webmail_mode), class: "reload" do %>
     <i class="material-icons md-dark">&#xE5D5;</i>
   <% end if @quota.quota?  %>
 

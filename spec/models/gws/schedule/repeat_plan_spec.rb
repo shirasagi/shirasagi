@@ -14,11 +14,13 @@ RSpec.describe Gws::Schedule::RepeatPlan, type: :model, dbscope: :example do
       end
       subject { item.plan_dates }
 
-      it { is_expected.to include(Date.new(2016, 5, 1)) }
-      it { is_expected.to include(Date.new(2017, 4, 30)) }
-      it { is_expected.to include(Date.new(2017, 5, 1)) }
-      it { is_expected.not_to include(Date.new(2017, 5, 2)) }
-      it { expect(subject.count).to eq 366 }
+      it do
+        is_expected.to include(Date.new(2016, 5, 1))
+        is_expected.to include(Date.new(2017, 4, 30))
+        is_expected.to include(Date.new(2017, 5, 1))
+        is_expected.not_to include(Date.new(2017, 5, 2))
+        expect(subject.count).to eq 366
+      end
     end
 
     context 'when weekly is given as repeat_type' do
@@ -35,10 +37,12 @@ RSpec.describe Gws::Schedule::RepeatPlan, type: :model, dbscope: :example do
         end
         subject { item.plan_dates }
 
-        it { is_expected.to include(Date.new(2016, 5, 1)) }
-        it { is_expected.to include(Date.new(2017, 4, 30)) }
-        it { is_expected.not_to include(Date.new(2017, 5, 1)) }
-        it { expect(subject.count).to eq 53 }
+        it do
+          is_expected.to include(Date.new(2016, 5, 1))
+          is_expected.to include(Date.new(2017, 4, 30))
+          is_expected.not_to include(Date.new(2017, 5, 1))
+          expect(subject.count).to eq 53
+        end
       end
 
       context 'when wdays is not given' do
@@ -52,13 +56,15 @@ RSpec.describe Gws::Schedule::RepeatPlan, type: :model, dbscope: :example do
         end
         subject { item.plan_dates }
 
-        it { is_expected.not_to include(Date.new(2016, 5, 1)) }
-        it { is_expected.to include(Date.new(2016, 5, 3)) }
-        it { is_expected.to include(Date.new(2016, 5, 6)) }
-        it { is_expected.to include(Date.new(2017, 4, 25)) }
-        it { is_expected.to include(Date.new(2017, 4, 28)) }
-        it { is_expected.not_to include(Date.new(2017, 5, 1)) }
-        it { expect(subject.count).to eq 104 }
+        it do
+          is_expected.not_to include(Date.new(2016, 5, 1))
+          is_expected.to include(Date.new(2016, 5, 3))
+          is_expected.to include(Date.new(2016, 5, 6))
+          is_expected.to include(Date.new(2017, 4, 25))
+          is_expected.to include(Date.new(2017, 4, 28))
+          is_expected.not_to include(Date.new(2017, 5, 1))
+          expect(subject.count).to eq 104
+        end
       end
 
       context 'when empty range is given' do
@@ -71,8 +77,10 @@ RSpec.describe Gws::Schedule::RepeatPlan, type: :model, dbscope: :example do
           )
         end
         subject { item.plan_dates }
-        it { expect(subject.count).to eq 0 }
-        it { expect(subject.empty?).to be_truthy }
+        it do
+          expect(subject.count).to eq 0
+          expect(subject.empty?).to be_truthy
+        end
       end
     end
 
@@ -90,19 +98,21 @@ RSpec.describe Gws::Schedule::RepeatPlan, type: :model, dbscope: :example do
         end
         subject { item.plan_dates }
 
-        it { is_expected.to include(Date.new(2016, 5, 31)) }
-        it { is_expected.to include(Date.new(2016, 6, 30)) }
-        it { is_expected.to include(Date.new(2016, 7, 31)) }
-        it { is_expected.to include(Date.new(2016, 8, 31)) }
-        it { is_expected.to include(Date.new(2016, 9, 30)) }
-        it { is_expected.to include(Date.new(2016, 10, 31)) }
-        it { is_expected.to include(Date.new(2016, 11, 30)) }
-        it { is_expected.to include(Date.new(2016, 12, 31)) }
-        it { is_expected.to include(Date.new(2017, 1, 31)) }
-        it { is_expected.to include(Date.new(2017, 2, 28)) }
-        it { is_expected.to include(Date.new(2017, 3, 31)) }
-        it { is_expected.to include(Date.new(2017, 4, 30)) }
-        it { expect(subject.count).to eq 12 }
+        it do
+          is_expected.to include(Date.new(2016, 5, 31))
+          is_expected.to include(Date.new(2016, 6, 30))
+          is_expected.to include(Date.new(2016, 7, 31))
+          is_expected.to include(Date.new(2016, 8, 31))
+          is_expected.to include(Date.new(2016, 9, 30))
+          is_expected.to include(Date.new(2016, 10, 31))
+          is_expected.to include(Date.new(2016, 11, 30))
+          is_expected.to include(Date.new(2016, 12, 31))
+          is_expected.to include(Date.new(2017, 1, 31))
+          is_expected.to include(Date.new(2017, 2, 28))
+          is_expected.to include(Date.new(2017, 3, 31))
+          is_expected.to include(Date.new(2017, 4, 30))
+          expect(subject.count).to eq 12
+        end
       end
 
       context 'when wday is given as repeat_base' do
@@ -115,19 +125,21 @@ RSpec.describe Gws::Schedule::RepeatPlan, type: :model, dbscope: :example do
         end
         subject { item.plan_dates }
 
-        it { is_expected.to include(Date.new(2016, 5, 31)) }
-        it { is_expected.to include(Date.new(2016, 6, 28)) }
-        it { is_expected.to include(Date.new(2016, 7, 26)) }
-        it { is_expected.to include(Date.new(2016, 8, 30)) }
-        it { is_expected.to include(Date.new(2016, 9, 27)) }
-        it { is_expected.to include(Date.new(2016, 10, 25)) }
-        it { is_expected.to include(Date.new(2016, 11, 29)) }
-        it { is_expected.to include(Date.new(2016, 12, 27)) }
-        it { is_expected.to include(Date.new(2017, 1, 31)) }
-        it { is_expected.to include(Date.new(2017, 2, 28)) }
-        it { is_expected.to include(Date.new(2017, 3, 28)) }
-        it { is_expected.to include(Date.new(2017, 4, 25)) }
-        it { expect(subject.count).to eq 12 }
+        it do
+          is_expected.to include(Date.new(2016, 5, 31))
+          is_expected.to include(Date.new(2016, 6, 28))
+          is_expected.to include(Date.new(2016, 7, 26))
+          is_expected.to include(Date.new(2016, 8, 30))
+          is_expected.to include(Date.new(2016, 9, 27))
+          is_expected.to include(Date.new(2016, 10, 25))
+          is_expected.to include(Date.new(2016, 11, 29))
+          is_expected.to include(Date.new(2016, 12, 27))
+          is_expected.to include(Date.new(2017, 1, 31))
+          is_expected.to include(Date.new(2017, 2, 28))
+          is_expected.to include(Date.new(2017, 3, 28))
+          is_expected.to include(Date.new(2017, 4, 25))
+          expect(subject.count).to eq 12
+        end
       end
     end
 
@@ -143,9 +155,11 @@ RSpec.describe Gws::Schedule::RepeatPlan, type: :model, dbscope: :example do
       end
       subject { item.plan_dates }
 
-      it { is_expected.to include(Date.new(2016, 5, 1)) }
-      it { is_expected.to include(Date.new(2017, 5, 1)) }
-      it { expect(subject.count).to eq 2 }
+      it do
+        is_expected.to include(Date.new(2016, 5, 1))
+        is_expected.to include(Date.new(2017, 5, 1))
+        expect(subject.count).to eq 2
+      end
     end
   end
 end

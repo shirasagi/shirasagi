@@ -4,6 +4,7 @@ describe 'gws_memo_lists', type: :feature, dbscope: :example, js: true do
   let(:site) { gws_site }
   let(:name1) { "name-#{unique_id}" }
   let(:name2) { "name-#{unique_id}" }
+  let!(:category) { create(:gws_memo_category) }
 
   context 'without login' do
     it do
@@ -27,16 +28,25 @@ describe 'gws_memo_lists', type: :feature, dbscope: :example, js: true do
         end
       end
 
-      wait_for_ajax
-      within '#cboxLoadedContent' do
-        expect(page).to have_content(gws_user.name)
+      wait_for_cbox do
         click_on gws_user.name
+      end
+
+      within 'form#item-form' do
+        click_on I18n.t('gws.apis.categories.index')
+      end
+
+      wait_for_cbox do
+        fill_in 's[keyword]', with: category.name
+        click_on I18n.t('ss.buttons.search')
+        wait_for_ajax
+        click_on category.name
       end
 
       within 'form#item-form' do
         click_on I18n.t('ss.buttons.save')
       end
-      expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+      wait_for_notice I18n.t('ss.notice.saved')
 
       expect(Gws::Memo::List.all.count).to eq 1
       Gws::Memo::List.all.first.tap do |list|
@@ -69,7 +79,7 @@ describe 'gws_memo_lists', type: :feature, dbscope: :example, js: true do
       within 'form' do
         click_on I18n.t('ss.buttons.delete')
       end
-      expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+      expect(page).to have_css('#notice', text: I18n.t('ss.notice.deleted'))
 
       expect(Gws::Memo::List.all.count).to eq 0
     end

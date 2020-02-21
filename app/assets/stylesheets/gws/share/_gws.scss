@@ -1,0 +1,39 @@
+.gws-schedule-file-index {
+  @include display-flex;
+
+  .gws-share-file-folder-navi {
+    width: 30%;
+    margin-right: 10px;
+  }
+
+  .gws-schedule-file-main {
+    flex: 1;
+  }
+}
+
+.gws-share-file-folder-navi {
+  .toolbar {
+    .material-icons {
+      font-size: 18px;
+    }
+
+    .separator {
+      display: inline-block;
+    }
+
+    margin-bottom: 10px;
+  }
+
+  .folder-name {
+    word-break: break-all;
+  }
+}
+
+.gws-share-apis-folder_crud {
+  #item_in_basename {
+    min-width: 30em;
+    @include mb {
+      min-width: unset;
+    }
+  }
+}

@@ -45,6 +45,7 @@ class Gws::Share::FilesController < ApplicationController
 
   def set_folder
     return if params[:folder].blank?
+
     @folder ||= Gws::Share::Folder.site(@cur_site).find(params[:folder])
     raise "403" unless @folder.readable?(@cur_user) || @folder.allowed?(:read, @cur_user, site: @cur_site)
   end
@@ -61,9 +62,26 @@ class Gws::Share::FilesController < ApplicationController
     p
   end
 
+  def set_item
+    super
+    raise "404" unless @item.readable?(@cur_user) || @item.allowed?(:read, @cur_user, site: @cur_site)
+  end
+
   def update_folder_file_info
     @folder.update_folder_descendants_file_info if @folder
     @item.folder.update_folder_descendants_file_info if @item.is_a?(Gws::Share::File) && @item.folder != @folder
+  end
+
+  def render_update(result, opts = {})
+    unless result
+      # if result is false, browser goes to edit form which requires to be locked.
+      unless @item.acquire_lock
+        redirect_to action: :lock
+        return
+      end
+    end
+
+    super
   end
 
   public
@@ -92,17 +110,9 @@ class Gws::Share::FilesController < ApplicationController
       search(params[:s]).
       custom_order(@sort).
       page(params[:page]).per(50)
-
-    folder_name = Gws::Share::Folder.site(@cur_site).
-      where(id: params[:folder].to_i).pluck(:name).first
-
-    @sub_folders = Gws::Share::Folder.site(@cur_site).readable(@cur_user, site: @cur_site).
-      sub_folder(params[:folder] || 'root_folder', folder_name)
   end
 
   def show
-    raise "404" unless @item.readable?(@cur_user) || @item.allowed?(:read, @cur_user, site: @cur_site)
-
     if params[:folder].present?
       raise "404" unless @item.folder_id.to_s == params[:folder]
     end
@@ -152,19 +162,21 @@ class Gws::Share::FilesController < ApplicationController
         tmp_file.close
       end
     else
-      location = { action: :show, folder: @item.folder_id, category: params[:category] } if params[:action] == "update" && before_folder_id != @item.folder_id
+      if params[:action] == "update" && before_folder_id != @item.folder_id
+        location = { action: :show, folder: @item.folder_id, category: params[:category] }
+      end
       render_update @item.update, { location: location }
     end
   end
 
   def edit
     raise "403" unless @item.allowed?(:edit, @cur_user, site: @cur_site)
-    if @item.is_a?(Gws::Addon::EditLock)
-      unless @item.acquire_lock
-        redirect_to action: :lock
-        return
-      end
+
+    unless @item.acquire_lock
+      redirect_to action: :lock
+      return
     end
+
     render
   end
 
@@ -172,21 +184,28 @@ class Gws::Share::FilesController < ApplicationController
     set_item
     set_last_modified
 
-    if params[:history_id].present?
-      history_item = Gws::Share::History.where(item_id: @item.id, _id: params[:history_id]).first
-      server_dir = File.dirname(@item.path)
-      uploadfile_path = File.join(server_dir, "#{@item.id}_#{history_item.uploadfile_srcname}")
+    raise "404" if params[:history_id].blank?
+
+    history_item = @item.histories.where(id: params[:history_id].to_s).first
+    raise "404" if history_item.blank?
+
+    if history_item.id == @item.histories.first.id
+      # latest history item
+      path = @item.path
+      type = @item.content_type
+      filename = @item.download_filename
+    else
+      path = history_item.path
+      type = history_item.uploadfile_content_type
+      filename = history_item.uploadfile_name
     end
 
-    if Fs.mode == :file && Fs.file?(uploadfile_path)
-      send_file uploadfile_path, type: history_item.uploadfile_content_type, filename: history_item.uploadfile_name,
-                disposition: :attachment, x_sendfile: true
-    elsif Fs.mode == :file && Fs.file?(@item.path)
-      send_file @item.path, type: @item.content_type, filename: @item.download_filename,
-                disposition: :attachment, x_sendfile: true
+    raise "404" unless Fs.file?(path)
+
+    if Fs.mode == :file
+      send_file path, type: type, filename: filename, disposition: :attachment, x_sendfile: true
     else
-      send_data @item.read, type: @item.content_type, filename: @item.download_filename,
-                disposition: :attachment
+      send_data ::Fs.binread(path), type: type, filename: filename, disposition: :attachment
     end
   end
 
@@ -235,9 +254,9 @@ class Gws::Share::FilesController < ApplicationController
 
   def disable
     raise '403' unless @item.allowed?(:delete, @cur_user, site: @cur_site)
-    notice = t("ss.notice.deleted")
+
     location = { action: :index, folder: params[:folder], category: params[:category] }
-    render_destroy @item.disable, { location: location, notice: notice }
+    render_destroy @item.disable, { location: location }
   end
 
   def download_all
@@ -252,6 +271,7 @@ class Gws::Share::FilesController < ApplicationController
       redirect_to({ action: :index }, { notice: zip.delay_message })
     else
       raise '500' unless zip.save
+
       send_file(zip.path, type: zip.type, filename: zip.name, disposition: 'attachment', x_sendfile: true)
     end
   end

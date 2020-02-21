@@ -36,6 +36,22 @@ class Member::Agents::Nodes::RegistrationController < ApplicationController
     group.accept(@item)
   end
 
+  def set_item_for_interim(extra_attrs = {})
+    @item = item = @model.new get_params.merge(extra_attrs)
+    if item.email.present?
+      item = @model.site(@cur_site).where(email: item.email, state: 'temporary').first
+    end
+    if item
+      @item = item
+      @item.attributes = get_params
+    end
+
+    @item.in_check_name = true
+    @item.set_required @cur_node
+    @item.state = 'temporary'
+    @item
+  end
+
   public
 
   # 新規登録
@@ -45,21 +61,13 @@ class Member::Agents::Nodes::RegistrationController < ApplicationController
 
   # 入力確認
   def confirm
-    @item = @model.new get_params
-    @item.in_check_name = true
-    @item.in_check_email_again = true
-    @item.set_required @cur_node
-    @item.state = 'temporary'
-
+    set_item_for_interim(in_check_email_again: true)
     render action: :new unless @item.valid?
   end
 
   # 仮登録完了
   def interim
-    @item = @model.new get_params
-    @item.in_check_name = true
-    @item.set_required @cur_node
-    @item.state = 'temporary'
+    set_item_for_interim
 
     # 戻るボタンのクリック
     unless params[:submit]
@@ -69,7 +77,7 @@ class Member::Agents::Nodes::RegistrationController < ApplicationController
 
     if @cur_node.confirm_personal_data_state == 'enabled'
       if @item.in_confirm_personal_info != 'yes'
-        @item.errors.add :base, I18n.t("errors.messages.please_confirm_personal_data_protection")
+        @item.errors.add :base, :please_confirm_personal_data_protection
         render action: :confirm
         return
       end
@@ -94,10 +102,22 @@ class Member::Agents::Nodes::RegistrationController < ApplicationController
     @item.set_required @cur_node
     @item.state = 'enabled'
 
+    if @item.in_password_again.blank?
+      @item.errors.add :in_password_again, :not_input
+      render action: :verify
+      return
+    elsif @item.in_password != @item.in_password_again
+      @item.errors.add :password, :mismatch
+      render action: :verify
+      return
+    end
+
     unless @item.update
       render action: :verify
       return
     end
+
+    Member::Mailer.registration_completed_mail(@item).deliver_now
   end
 
   def send_again
@@ -108,20 +128,18 @@ class Member::Agents::Nodes::RegistrationController < ApplicationController
     @item = @model.new get_params
 
     if @item.email.blank?
-      @item.errors.add :email, I18n.t("errors.messages.not_input")
+      @item.errors.add :email, :not_input
       render action: :send_again
       return
     end
 
     member = Cms::Member.site(@cur_site).where(email: @item.email).first
     if member.nil?
-      @item.errors.add :email, I18n.t("errors.messages.not_registerd")
+      @item.errors.add :email, :not_registerd
       render action: :send_again
       return
-    end
-
-    if member.authorized?
-      @item.errors.add :email, I18n.t("errors.messages.already_registerd")
+    elsif member.authorized?
+      @item.errors.add :email, :already_registerd
       render action: :send_again
       return
     end
@@ -139,18 +157,14 @@ class Member::Agents::Nodes::RegistrationController < ApplicationController
     @item = @model.new get_params
 
     if @item.email.blank?
-      @item.errors.add :email, I18n.t("errors.messages.not_input")
-      render action: :reset_password
-      return
-    elsif @item.in_password != @item.in_password_again
-      @item.errors.add :email, :mismatch
+      @item.errors.add :email, :not_input
       render action: :reset_password
       return
     end
 
     member = Cms::Member.site(@cur_site).and_enabled.where(email: @item.email).first
     if member.nil?
-      @item.errors.add :email, I18n.t("errors.messages.not_registerd")
+      @item.errors.add :email, :not_registerd
       render action: :reset_password
       return
     end
@@ -170,19 +184,15 @@ class Member::Agents::Nodes::RegistrationController < ApplicationController
     return if request.get?
 
     if params[:item][:new_password].blank?
-      @item.errors.add I18n.t("member.view.new_password"), I18n.t("errors.messages.not_input")
+      @item.errors.add :base, "#{I18n.t("member.view.new_password")}#{I18n.t("errors.messages.not_input")}"
       render action: :change_password
       return
-    end
-
-    if params[:item][:new_password_again].blank?
-      @item.errors.add I18n.t("member.view.new_password_again"), I18n.t("errors.messages.not_input")
+    elsif params[:item][:new_password_again].blank?
+      @item.errors.add :base, "#{I18n.t("member.view.new_password_again")}#{I18n.t("errors.messages.not_input")}"
       render action: :change_password
       return
-    end
-
-    if params[:item][:new_password] != params[:item][:new_password_again]
-      @item.errors.add I18n.t("member.view.new_password"), I18n.t("errors.messages.mismatch")
+    elsif params[:item][:new_password] != params[:item][:new_password_again]
+      @item.errors.add :base, "#{I18n.t("member.view.new_password")}#{I18n.t("errors.messages.mismatch")}"
       render action: :change_password
       return
     end

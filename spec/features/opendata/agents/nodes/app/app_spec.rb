@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe "opendata_agents_nodes_app", dbscope: :example, js: true do
+describe "opendata_agents_nodes_app", type: :feature, dbscope: :example, js: true do
   def create_appfile(app, file, format)
     appfile = app.appfiles.new(text: "aaa", format: format)
     appfile.in_file = file

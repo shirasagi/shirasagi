@@ -351,4 +351,94 @@ describe Article::Part::Page, type: :model, dbscope: :example do
       end
     end
   end
+
+  describe "what article/part/page exports to liquid" do
+    let(:assigns) { { "parts" => SS::LiquidPartDrop.get(cms_site) } }
+    let(:registers) { { cur_site: cms_site, cur_part: part, cur_path: page.url } }
+    let(:node) { create :article_node_page }
+    let(:page) { create :article_page, cur_node: node }
+    subject { part.to_liquid }
+
+    before do
+      subject.context = ::Liquid::Context.new(assigns, {}, registers, true)
+    end
+
+    context "with Cms::Content" do
+      let!(:released) { Time.zone.now.change(min: rand(0..59)) }
+      let!(:part) { create :article_part_page, cur_node: node, index_name: unique_id, released: released }
+
+      it do
+        # Cms::Content
+        expect(subject.id).to eq part.id
+        expect(subject.name).to eq part.name
+        expect(subject.url).to eq part.url
+        expect(subject.full_url).to eq part.full_url
+        expect(subject.basename).to eq part.basename
+        expect(subject.filename).to eq part.filename
+        expect(subject.parent.id).to eq node.id
+
+        # undocument, but supported
+        expect(subject.index_name).to eq part.index_name
+        expect(subject.order).to eq part.order
+        expect(subject.date).to eq part.date
+        expect(subject.released).to eq part.released
+        expect(subject.updated).to eq part.updated
+        expect(subject.created).to eq part.created
+        expect(subject.css_class).to eq part.basename.sub(".part.html", "").dasherize
+        expect(subject.new?).to be_truthy
+        expect(subject.current?).to be_falsey
+      end
+    end
+
+    context "with Cms::Model::Part" do
+      context "with shirasagi format" do
+        let!(:upper_html) { '<div class="middle dw">' }
+        let!(:loop_html) { '<div><h2><a href="#{url}">#{index_name}</a></h2></div>' }
+        let!(:lower_html) { '</div>' }
+        let!(:part) do
+          create(
+            :article_part_page, cur_node: node, loop_format: "shirasagi",
+            upper_html: upper_html, loop_html: loop_html, lower_html: lower_html
+          )
+        end
+
+        it do
+          expected = []
+          expected << '<div class="article-pages pages">'
+          expected << '<div class="middle dw">'
+          expected << "<div><h2><a href=\"#{page.url}\">#{page.name}</a></h2></div>"
+          expected << '</div>'
+          expected << '</div>'
+          expect(subject.html.strip).to eq expected.join("\n").strip
+        end
+      end
+
+      context "with liquid format" do
+        let!(:loop_liquid) do
+          templ = []
+          templ << '<div class="middle dw">'
+          templ << '{% for page in pages %}'
+          templ << '<div><h2><a href="{{ page.url }}">{{ page.index_name | default: page.name }}</a></h2></div>'
+          templ << '{% endfor %}'
+          templ << '</div>'
+          templ.join("\n")
+        end
+        let!(:part) do
+          create(:article_part_page, cur_node: node, loop_format: "liquid", loop_liquid: loop_liquid)
+        end
+
+        it do
+          expected = []
+          expected << '<div class="article-pages pages">'
+          expected << '<div class="middle dw">'
+          expected << ''
+          expected << "<div><h2><a href=\"#{page.url}\">#{page.name}</a></h2></div>"
+          expected << ''
+          expected << '</div>'
+          expected << '</div>'
+          expect(subject.html.strip).to eq expected.join("\n").strip
+        end
+      end
+    end
+  end
 end

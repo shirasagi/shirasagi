@@ -26,19 +26,23 @@ describe "workflow_routes", type: :feature, dbscope: :example do
         end
 
         click_on "グループを選択する"
-        within "div#ajax-box table.index" do
-          click_on group.name
+        wait_for_cbox do
+          within "table.index" do
+            click_on group.name
+          end
         end
 
         within "dl.workflow-level-1" do
           click_on "承認者を選択する"
         end
-        within "div#ajax-box table.index tbody.items" do
-          click_on user.name
+        wait_for_cbox do
+          within "table.index tbody.items" do
+            click_on user.name
+          end
         end
 
         within "form#item-form" do
-          click_on "保存"
+          click_on I18n.t('ss.buttons.save')
         end
         expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'), wait: 60)
 

@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe "opendata_agents_nodes_my_profile", dbscope: :example do
+describe "opendata_agents_nodes_my_profile", type: :feature, dbscope: :example do
   let(:site) { cms_site }
   let(:node_mypage) { create :opendata_node_mypage, filename: "mypage", basename: "mypage" }
   let(:node_my_profile) { create :opendata_node_my_profile, filename: "#{node_mypage.filename}/myprofile" }
@@ -39,7 +39,7 @@ describe "opendata_agents_nodes_my_profile", dbscope: :example do
     within "form#item-form" do
       fill_in "item[name]", with: item_name
       fill_in "item[email]", with: item_email
-      click_button '保存'
+      click_button I18n.t('ss.buttons.save')
     end
     expect(status_code).to eq 200
 

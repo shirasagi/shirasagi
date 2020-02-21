@@ -24,7 +24,7 @@ class Gws::Notice::CategoriesController < ApplicationController
   private
 
   def set_crumbs
-    @crumbs << [t('modules.gws/notice'), gws_notice_main_path]
+    @crumbs << [@cur_site.menu_notice_label || t('modules.gws/notice'), gws_notice_main_path]
     @crumbs << [t('mongoid.models.gws/board/category'), gws_notice_categories_path]
   end
 

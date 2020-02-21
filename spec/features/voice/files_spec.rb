@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe "voice_files" do
+describe "voice_files", type: :feature, dbscope: :example do
   subject(:site) { cms_site }
   subject(:index_path) { voice_files_path site.id }
   subject(:download_path) { download_voice_files_path site.id }
@@ -26,7 +26,7 @@ describe "voice_files" do
     it "#delete" do
       visit delete_path
       within "form" do
-        click_button "削除"
+        click_button I18n.t('ss.buttons.delete')
       end
       expect(status_code).to eq 200
       expect(current_path).to eq index_path

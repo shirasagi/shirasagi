@@ -21,12 +21,17 @@ describe 'gws_memo_filters', type: :feature, dbscope: :example do
     it "#new" do
       visit new_path
 
+      within "form#item-form" do
+        click_button I18n.t('ss.buttons.save')
+      end
+      expect(page).to have_selector("div#errorExplanation ul li", count: 3)
+
       name = "name-#{unique_id}"
       within "form#item-form" do
         fill_in "item[name]", with: name
         fill_in "item[subject]", with: "subject-#{unique_id}"
         select folder.name
-        click_button "保存"
+        click_button I18n.t('ss.buttons.save')
       end
       expect(first('#addon-basic')).to have_text(name)
     end
@@ -42,7 +47,7 @@ describe 'gws_memo_filters', type: :feature, dbscope: :example do
       name = "modify-#{unique_id}"
       within "form#item-form" do
         fill_in "item[name]", with: name
-        click_button "保存"
+        click_button I18n.t('ss.buttons.save')
       end
       expect(first('#addon-basic')).to have_text(name)
     end
@@ -50,7 +55,7 @@ describe 'gws_memo_filters', type: :feature, dbscope: :example do
     it "#delete" do
       visit delete_path
       within "form" do
-        click_button "削除"
+        click_button I18n.t('ss.buttons.delete')
       end
       expect(current_path).to eq index_path
     end

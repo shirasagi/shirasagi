@@ -35,7 +35,7 @@
                     <% if column_value.present? && column_value.files.present? %>
                       <% column_value.files.each do |file| %>
                         <span class="prefix"><%= column.prefix_label %></span>
-                        <span class="value"><%= link_to(file.humanized_name, file.url, file.image? ? {} : { download: true }) %></span>
+                        <span class="value"><%= link_to(file.humanized_name, file.url) %></span>
                         <span class="postfix"><%= column.postfix_label %></span>
                         <br/>
                       <% end %>
@@ -53,8 +53,13 @@
               </td>
             <% end %>
             <% if !cur_form.anonymous? %>
-              <td><div><%= item.user_long_name %></div></td>
-              <td><div><%= I18n.l(item.updated) %></div></td>
+              <% if item.anonymous? %>
+                <td></td>
+                <td></td>
+              <% else %>
+                <td><div><%= item.user_long_name %></div></td>
+                <td><div><%= I18n.l(item.updated) %></div></td>
+              <% end %>
             <% end %>
           </tr>
         <% end %>

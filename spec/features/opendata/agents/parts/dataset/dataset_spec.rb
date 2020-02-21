@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe "opendata_agents_nodes_dataset", dbscope: :example do
+describe "opendata_agents_nodes_dataset", type: :feature, dbscope: :example do
   let(:site) { cms_site }
   let!(:node_category) { create :opendata_node_category, filename: "bunya/kurashi" }
   let!(:node_search_dataset) { create :opendata_node_search_dataset, filename: "dataset/search" }

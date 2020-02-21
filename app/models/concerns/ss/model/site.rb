@@ -34,7 +34,7 @@ module SS::Model::Site
     validate :validate_domains, if: ->{ domains.present? }
 
     def domain
-      cur_domain ? cur_domain : domains[0]
+      cur_domain || domains[0]
     end
 
     def domain_with_subdir

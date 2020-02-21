@@ -1,4 +1,7 @@
-<%= jquery do %> SS_AddonTabs.hide(".gws-addon-history"); <% end %>
+<%
+  addon ||= local_assigns.fetch(:addon, {})
+  addon[:display_body] = "hide"
+%>
 
 <div class="gws-addon-history">
   <table class="index">

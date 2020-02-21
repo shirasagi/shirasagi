@@ -6,18 +6,21 @@ module Gws::Addon::Portal::Portlet
     set_addon_type :gws_portlet
 
     included do
-      include Gws::Addon::Portal::Portlet::LinkFile
-      field :state, type: String
-      field :time, type: Integer
-      permit_params :state, :time
-      validate :validate_files_limit
+      field :ad_width, type: Integer
+      field :ad_speed, type: Integer
+      field :ad_pause, type: Integer
+      permit_params :ad_width, :ad_speed, :ad_pause
     end
 
-    def validate_files_limit
-      limit = SS.config.gws.portal["portlet_settings"]["ad"]["image_limit"]
-      if files.size > limit
-        errors.add :files, :too_many_files, limit: limit
-      end
+    def effective_ad_width
+      ad_width.present? && ad_width > 0 ? ad_width : 600
+    end
+
+    def ad_options
+      ret = { auto: true, slideWidth: effective_ad_width, mode: 'horizontal', touchEnabled: false }
+      ret[:speed] = ad_speed if ad_speed.present?
+      ret[:pause] = ad_pause if ad_pause.present?
+      ret
     end
   end
 end

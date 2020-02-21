@@ -3,7 +3,7 @@
   <ul class="list-items ss-messages gws-memos">
     <li class="list-item-head">
       <div class="head">
-        <% if @cur_folder.path == "INBOX.Sent" %>
+        <% if @cur_folder.sent_box? || @cur_folder.draft_box? %>
           <span class="field to"><%= @model.t :to %><%== @cur_user.memo_message_sort_icon(@sort_hash, "to_member_name") %></span>
         <% else %>
           <span class="field from"><%= @model.t :from %><%== @cur_user.memo_message_sort_icon(@sort_hash, "from_member_name") %></span>
@@ -27,7 +27,7 @@
         </label>
 
         <div class="icon icon-star <%= item.star?(@cur_user) ? 'on' : 'off' %>">
-          <%= link_to options={action: :toggle_star, id: item.id}, method: :post do %>
+          <%= link_to({ action: :show, id: item.id }) do %>
             <i class="material-icons md-18">&#xE838;</i>
           <% end %>
         </div>
@@ -37,7 +37,7 @@
         </div>
 
         <div class="info">
-          <% if @cur_folder.sent_box? %>
+          <% if @cur_folder.sent_box? || @cur_folder.draft_box? %>
             <% addr = item.to_members? ? item.display_to.first : nil %>
             <span class="field to" title="<%= addr %>"><%= addr %></span>
           <% else %>

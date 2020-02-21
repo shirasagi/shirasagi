@@ -1,4 +1,4 @@
-<article class="file-view member-photo" data-id="<%= @item.id %>">
+<article class="file-view member-photo" data-id="<%= @item.id %>" data-file-id="<%= @item.id %>">
   <%= hidden_field_tag "item[member_photo_ids][]", @item.id, class: "photo-id" %>
   <%= link_to @item.image.url, class: :thumb, target: "_blank" do %>
     <% if @item.image.image? %>

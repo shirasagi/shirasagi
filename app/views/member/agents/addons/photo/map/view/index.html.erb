@@ -1,6 +1,6 @@
 <% return if @cur_page.map_points.blank? %>
 
-<%= render_map "#map-canvas", markers: @cur_page.map_points, site: @cur_site, map: { zoom: @cur_page.map_zoom_level } %>
+<%= render_map "#map-canvas", markers: @cur_page.map_points, site: @cur_site, map: { zoom: @cur_page.map_zoom_level }, preview: @preview %>
 
 <section class="map-page">
   <header>

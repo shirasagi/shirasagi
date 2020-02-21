@@ -2,16 +2,20 @@ language: ruby
 dist: trusty
 sudo: false
 rvm:
-  - 2.4.4
+  - 2.6.3
 
 cache:
   apt: true
   bundler: true
   directories:
     - $HOME/.local
+    - public/assets
+    - tmp/cache/assets
 
 services:
+  - docker
   - mongodb
+  #- elasticsearch
 
 addons:
   chrome: stable
@@ -32,6 +36,140 @@ addons:
       # - mecab-ipadic-utf8
 
 bundler_args: "--without development"
-install: bash .travis.d/install.sh
-before_script: bash .travis.d/before_script.sh
-script: bash .travis.d/script.sh
+
+env:
+  global:
+    - PATH=$PATH:$HOME/.local/bin
+    - LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$HOME/.local/lib
+    - LD_RUN_PATH=$LD_RUN_PATH:$HOME/.local/lib
+    - TZ=Asia/Tokyo
+    - CAPYBARA_MAX_WAIT_TIME=45
+    - CAPYBARA_AJAX_WAIT_TIME=45
+    - allow_open_jtalk=1
+
+before_install:
+  - wget http://dl.google.com/linux/chrome/deb/pool/main/g/google-chrome-stable/google-chrome-stable_76.0.3809.132-1_amd64.deb
+  - sudo dpkg -i google-chrome-stable_76.0.3809.132-1_amd64.deb
+
+install: # bash .travis.d/install.sh
+  - bash .travis.d/exec.sh install 20-mecab
+  - bash .travis.d/exec.sh install 21-mecab-ipadic
+  - bash .travis.d/exec.sh install 22-mecab-ruby
+  - bash .travis.d/exec.sh install 30-hts-engine
+  - bash .travis.d/exec.sh install 31-open-jtalk
+  - bash .travis.d/exec.sh install 90-bundle-install
+  - docker pull osixia/openldap
+  - docker pull shirasagi/mail
+  - docker run --name test_mail -d -p 10143:143 -p 10587:587 shirasagi/mail
+  - docker ps -a
+  - curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
+  - chmod +x ./cc-test-reporter
+  - ./cc-test-reporter before-build
+
+before_script: # bash .travis.d/before_script.sh
+  - bash .travis.d/exec.sh install 95-bin-deploy
+  - bash .travis.d/exec.sh before_script 10-copy-config
+  - bash .travis.d/exec.sh before_script 20-fix-mecab-path
+  - bash .travis.d/exec.sh before_script 30-fix-voice-path
+  - bash .travis.d/exec.sh before_script 50-update-gem
+
+#script: travis_wait 60 bash .travis.d/script.sh
+
+after_script:
+  - echo $TRAVIS_BUILD_ID
+  - echo $TRAVIS_BUILD_NUMBER
+  - echo $TRAVIS_JOB_ID
+  - echo $TRAVIS_JOB_NUMBER
+  - echo $TRAVIS_JOB_NAME
+
+jobs:
+  include:
+    - stage: compile
+      script: true
+
+    - stage: test
+      name: Features_A
+      script:
+        - bundle exec rspec -p 10 spec/ --pattern "spec/features/{a,b,c,d,e,f}*/**/*.rb"
+        - ./cc-test-reporter format-coverage -t simplecov -o codeclimate.2.json coverage/.resultset.json
+      workspaces:
+        create:
+          name: codeclimate.2.json
+          paths: codeclimate.2.json
+    - name: Features_G (1)
+      script:
+        - bundle exec rspec -p 10 spec/ --pattern "spec/features/{g}*/**/*_*_spec.rb"
+        - ./cc-test-reporter format-coverage -t simplecov -o codeclimate.3.json coverage/.resultset.json
+      workspaces:
+        create:
+          name: codeclimate.3.json
+          paths: codeclimate.3.json
+    - name: Features_G (2)
+      script:
+        - bundle exec rspec -p 10 spec/ --pattern "spec/features/{g}*/**/*.rb" --exclude "**/*_*_spec.rb"
+        - ./cc-test-reporter format-coverage -t simplecov -o codeclimate.4.json coverage/.resultset.json
+      workspaces:
+        create:
+          name: codeclimate.4.json
+          paths: codeclimate.4.json
+    - name: Features_H
+      script:
+        - bundle exec rspec -p 10 spec/ --pattern "spec/features/{h,i,j,k,l,m,o}*/**/*.rb"
+        - ./cc-test-reporter format-coverage -t simplecov -o codeclimate.5.json coverage/.resultset.json
+      workspaces:
+        create:
+          name: codeclimate.5.json
+          paths: codeclimate.5.json
+    - name: Features_P
+      script:
+        - bundle exec rspec -p 10 spec/ --pattern "spec/features/{p,q,r,s,u,v,w}*/**/*.rb" --exclude "**/webmail/**/*.rb"
+        - ./cc-test-reporter format-coverage -t simplecov -o codeclimate.6.json coverage/.resultset.json
+      workspaces:
+        create:
+          name: codeclimate.6.json
+          paths: codeclimate.6.json
+    - name: Features_Webmail
+      script:
+        - bundle exec rspec -p 10 spec/ --pattern "spec/features/webmail/**/*.rb"
+        - ./cc-test-reporter format-coverage -t simplecov -o codeclimate.7.json coverage/.resultset.json
+      workspaces:
+        create:
+          name: codeclimate.7.json
+          paths: codeclimate.7.json
+    - name: Models
+      script:
+        - bundle exec rspec -p 10 spec/ --pattern "spec/models/**/*.rb"
+        - ./cc-test-reporter format-coverage -t simplecov -o codeclimate.8.json coverage/.resultset.json
+      workspaces:
+        create:
+          name: codeclimate.8.json
+          paths: codeclimate.8.json
+    - name: Other
+      script:
+        - bundle exec rspec -p 10 spec/ --pattern "spec/{jobs,helpers,lib,mailers,requests,validators}/**/*.rb"
+        - ./cc-test-reporter format-coverage -t simplecov -o codeclimate.9.json coverage/.resultset.json
+      workspaces:
+        create:
+          name: codeclimate.9.json
+          paths: codeclimate.9.json
+
+    - stage: deploy
+      name: Code Climate
+      before_script: skip
+      script:
+        - ls -la codeclimate.*
+        - ./cc-test-reporter sum-coverage codeclimate.*.json -p 8
+        - ./cc-test-reporter upload-coverage -r 8447130d9db9efadd8b86604c1976a4595fd3adc290daf45674490ba949da336
+      workspaces:
+        use:
+          - codeclimate.2.json
+          - codeclimate.3.json
+          - codeclimate.4.json
+          - codeclimate.5.json
+          - codeclimate.6.json
+          - codeclimate.7.json
+          - codeclimate.8.json
+          - codeclimate.9.json
+
+#notifications:
+#  webhooks: https://coveralls.io/webhook

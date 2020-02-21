@@ -15,13 +15,12 @@ module Gws::Model
       field :html, type: String, default: ''
       field :format, type: String
       field :size, type: Integer, default: 0
-      field :seen, type: Hash, default: {}
       field :star, type: Hash, default: {}
       field :filtered, type: Hash, default: {}
       field :deleted, type: Hash, default: {}
       field :state, type: String, default: 'public'
-      field :path, type: Hash, default: {}
       field :send_date, type: DateTime
+      field :user_settings, type: Array, default: []
 
       field :to_member_name, type: String, default: ''
       field :from_member_name, type: String, default: ''
@@ -56,22 +55,8 @@ module Gws::Model
       before_validation :set_size
       before_validation :set_member_name
 
-      validates :subject, presence: true
+      validates :subject, presence: true, length: { maximum: 200 }
 
-      # scope :search, ->(params) {
-      #   criteria = where({})
-      #   return criteria if params.blank?
-      #
-      #   if params[:subject].present?
-      #     criteria = criteria.keyword_in params[:subject], :subject
-      #   end
-      #
-      #   params.values_at(:text, :html).reject(&:blank?).each do |value|
-      #     criteria = criteria.keyword_in value, :text, :html
-      #   end
-      #
-      #   criteria
-      # }
       scope :and_public, -> { where(state: "public") }
       scope :and_closed, -> { self.and('$or' => [ { :state.ne => "public" }, { :state.exists => false } ]) }
       scope :folder, ->(folder, user) {
@@ -80,11 +65,13 @@ module Gws::Model
         elsif folder.draft_box?
           user(user).and_closed
         else
-          where("path.#{user.id}" => folder.folder_path).and_public
+          where(user_settings: { "$elemMatch" => { 'user_id' => user.id, 'path' => folder.folder_path } }).and_public
         end
       }
-      scope :unseen, ->(user) {
-        where("seen.#{user.id}" => { '$exists' => false })
+      scope :unseen, ->(user, opts = {}) {
+        conditions = { 'user_id' => user.id, 'seen_at' => { "$exists" => false } }
+        conditions['path'] = opts[:path] if opts[:path].present?
+        where(user_settings: { "$elemMatch" => conditions })
       }
       scope :unfiltered, ->(user) {
         where(:"filtered.#{user.id}".exists => false)
@@ -94,20 +81,13 @@ module Gws::Model
     private
 
     def set_path
-      self.path = {}
-
-      member_ids.each do |member_id|
-        if path_was && path_was[member_id.to_s]
-          self.path[member_id.to_s] = path_was[member_id.to_s]
-        else
-          self.path[member_id.to_s] = "INBOX"
-        end
-      end
-
-      if in_path.present?
-        in_path.each do |member_id, path|
-          self.path[member_id.to_s] = path
-        end
+      self.user_settings = member_ids.collect do |member_id|
+        user_setting_was = (user_settings_was.presence || []).find{ |setting| setting['user_id'] == member_id }
+        path = in_path.try(:[], member_id.to_s).presence || user_setting_was.try(:[], 'path').presence || 'INBOX'
+        seen_at = user_settings.find{ |setting| setting['user_id'] == member_id }.try(:[], 'seen_at')
+        user_setting = { 'user_id' => member_id, 'path' => path }
+        user_setting['seen_at'] = seen_at if seen_at.present?
+        user_setting
       end
     end
 
@@ -128,6 +108,7 @@ module Gws::Model
       return true if Array(in_to_members).flatten.compact.uniq.select(&:present?).present?
       return true if Array(in_cc_members).flatten.compact.uniq.select(&:present?).present?
       return true if Array(in_bcc_members).flatten.compact.uniq.select(&:present?).present?
+
       false
     end
 
@@ -209,6 +190,7 @@ module Gws::Model
       return if in_request_mdn != "1"
       return if send_date.present?
       return unless @cur_user
+
       self.request_mdn_ids = self.member_ids - [@cur_user.id]
     end
 
@@ -220,11 +202,11 @@ module Gws::Model
 
     public
 
-    def readable?(user, site)
-      return false if self.site_id != site.id
+    def readable?(user, opts = {})
+      return false if self.site_id != opts[:site].id
       return true if member?(user)
 
-      if self.user_id == user.id
+      if self.respond_to?(:user_id) && self.user_id == user.id
         if deleted["sent"]
           return false
         else
@@ -232,11 +214,12 @@ module Gws::Model
         end
       end
 
-      return false
+      false
     end
 
     def editable?(user, site)
       return false if self.site_id != site.id
+
       (self.user_id == user.id && draft?)
     end
 
@@ -273,16 +256,38 @@ module Gws::Model
     end
 
     def attachments?
+      return false if file_ids.blank?
+
       files.present?
     end
 
     def unseen?(user)
       return false unless user
-      seen.exclude?(user.id.to_s)
+
+      user_settings.find{ |setting| setting['user_id'] == user.id && setting['seen_at'].present? }.blank?
+    end
+
+    def seen_at(user)
+      return if user.blank?
+
+      found = user_settings.find { |setting| setting['user_id'] == user.id && setting['seen_at'].present? }
+      return if found.blank?
+
+      found['seen_at']
+    end
+
+    def path(user)
+      return if user.blank?
+
+      found = user_settings.find { |setting| setting['user_id'] == user.id }
+      return if found.blank?
+
+      found['path']
     end
 
     def star?(user)
       return false unless user
+
       star.include?(user.id.to_s)
     end
 
@@ -342,12 +347,18 @@ module Gws::Model
     end
 
     def set_seen(user)
-      self.seen[user.id.to_s] = Time.zone.now.utc
+      self.user_settings = user_settings.collect do |setting|
+        setting['seen_at'] = Time.zone.now.utc if user.id.to_s == setting['user_id'].to_s
+        setting
+      end
       self
     end
 
     def unset_seen(user)
-      self.seen.delete(user.id.to_s)
+      self.user_settings = user_settings.collect do |setting|
+        setting['seen_at'] = nil if user.id.to_s == setting['user_id'].to_s
+        setting
+      end
       self
     end
 
@@ -361,9 +372,9 @@ module Gws::Model
       self
     end
 
-    def toggle_star(user)
-      star?(user) ? unset_star(user) : set_star(user)
-    end
+    # def toggle_star(user)
+    #   star?(user) ? unset_star(user) : set_star(user)
+    # end
 
     def move(user, path)
       self.in_path = { user.id.to_s => path }
@@ -437,25 +448,50 @@ module Gws::Model
       ERB::Util.h(str)
     end
 
+    def list_message?
+      self[:list_id].present?
+    end
+
+    def to_list_message
+      Gws::Memo::ListMessage.find(self.id)
+    end
+
     module ClassMethods
       def search(params)
-        all.search_keyword(params).search_subject(params).search_text_or_html(params).search_state(params).search_unseen(params)
+        all.search_keyword(params).
+          search_from_member_name(params).
+          search_to_member_name(params).
+          search_subject(params).
+          search_text_or_html(params).
+          search_date(params).
+          search_state(params).
+          search_unseen(params).
+          search_flagged(params).
+          search_priorities(params)
       end
 
       def search_keyword(params = {})
         return all if params.blank? || params[:keyword].blank?
+
         all.keyword_in(params[:keyword], :subject, :text, :html)
+      end
+
+      def search_from_member_name(params = {})
+        return all if params.blank? || params[:from_member_name].blank?
+
+        all.keyword_in params[:from_member_name], :from_member_name
+      end
+
+      def search_to_member_name(params = {})
+        return all if params.blank? || params[:to_member_name].blank?
+
+        all.keyword_in params[:to_member_name], :to_member_name
       end
 
       def search_subject(params = {})
         return all if params.blank? || params[:subject].blank?
-        all.keyword_in params[:subject], :subject
-      end
 
-      def search_unseen(params = {})
-        return all if params.blank? || params[:unseen].blank?
-        user_id = params[:unseen]
-        where("seen.#{user_id}" => { '$exists' => false })
+        all.keyword_in params[:subject], :subject
       end
 
       def search_text_or_html(params = {})
@@ -470,11 +506,46 @@ module Gws::Model
 
       def search_state(params = {})
         return all if params.blank? || params[:state].blank?
+
         all.where(state: params[:state])
       end
 
+      def search_date(params)
+        return all if params.blank?
+
+        cond = []
+        cond << [ send_date: { "$gte" => params[:since] } ] if params[:since].present?
+        cond << [ send_date: { "$lte" => params[:before] } ] if params[:before].present?
+        return all if cond.blank?
+
+        all.and(cond)
+      end
+
+      def search_unseen(params = {})
+        return all if params.blank? || params[:unseen].blank?
+
+        user_id = params[:unseen]
+        all.and(user_settings: { "$elemMatch" => { 'user_id' => user_id.to_i, 'seen_at' => { "$exists" => false } } })
+      end
+
+      def search_flagged(params = {})
+        return all if params.blank? || params[:flagged].blank?
+
+        user_id = params[:flagged]
+        all.and("star.#{user_id}" => { "$exists" => true })
+      end
+
+      def search_priorities(params = {})
+        return all if params.blank?
+
+        priorities = params[:priorities].to_a.select(&:present?)
+        return all if priorities.blank?
+
+        all.and([priority: { "$in" => priorities }])
+      end
+
       def unseens(user, site)
-        self.member(user).site(site).unseen(user).and_public
+        self.site(site).unseen(user).and_public
         #self.where('$and' => [
         #  { "to.#{user.id}".to_sym.exists => true },
         #  { "seen.#{user.id}".to_sym.exists => false },

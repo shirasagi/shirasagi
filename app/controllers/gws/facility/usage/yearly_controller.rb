@@ -11,12 +11,8 @@ class Gws::Facility::Usage::YearlyController < ApplicationController
     1.year
   end
 
-  def aggregation_ids
-    {
-      'facility_id' => '$facility_ids',
-      'year' => { '$year' => '$local_start_at' },
-      'month' => { '$month' => '$local_start_at' }
-    }
+  def aggregation_type
+    :year
   end
 
   public

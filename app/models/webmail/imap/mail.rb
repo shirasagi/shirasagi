@@ -4,7 +4,7 @@ module Webmail::Imap
 
     def initialize(imap)
       @imap = imap
-      @mailbox = imap.mailbox ? imap.mailbox : 'INBOX'
+      @mailbox = imap.mailbox || 'INBOX'
       @search = %w(UNDELETED)
       @sort = %w(REVERSE ARRIVAL)
       @limit = 50
@@ -37,18 +37,21 @@ module Webmail::Imap
 
       [:from, :to, :subject, :text].each do |key|
         next if params[key].blank?
+
         @search << key.to_s.upcase
         @search << params[key].dup.force_encoding('ASCII-8BIT')
       end
 
       [:since, :before, :sentsince, :sentbefore].each do |key|
         next if params[key].blank?
+
         @search << key.to_s.upcase
         @search << Date.parse(params[key]).strftime('%-d-%b-%Y')
       end
 
       [:flagged, :unflagged, :seen, :unseen].each do |key|
         next if params[key].blank?
+
         @search << key.to_s.upcase
       end
 
@@ -151,6 +154,7 @@ module Webmail::Imap
 
       resp = imap.conn.uid_fetch(uid, attr)
       raise Mongoid::Errors::DocumentNotFound.new(Webmail::Imap, uid: uid) unless resp
+
       item.imap = imap
       item.parse(resp[0])
       item.save
@@ -171,7 +175,7 @@ module Webmail::Imap
       flags = []
 
       if items.present?
-        resp = imap.conn.uid_fetch(item_uids, ['FLAGS']) || []
+        resp = imap.conn.uid_fetch(item_uids, %w(FLAGS)) || []
         resp.each do |data|
           flags[data.attr['UID']] = data.attr['FLAGS'] || []
         end
@@ -179,6 +183,7 @@ module Webmail::Imap
 
       items.each do |item|
         next if ref_items[item.uid]
+
         item.flags = flags[item.uid]
         ref_items[item.uid] = item
       end
@@ -200,6 +205,7 @@ module Webmail::Imap
           item.save if SS.config.webmail.cache_mails
         rescue => e
           raise e if Rails.env.development?
+
           item.subject = "[Error] #{e}"
         end
       end

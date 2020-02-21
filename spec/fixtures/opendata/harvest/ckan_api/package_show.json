@@ -1,0 +1,90 @@
+{
+  "help": "https://source.example.jp/api/3/action/help_show?name=package_show",
+  "success": true,
+  "result": {
+    "license_title": "CC-BY",
+    "maintainer": null,
+    "relationships_as_object": [
+
+    ],
+    "private": false,
+    "maintainer_email": null,
+    "num_tags": 0,
+    "id": "b98c93d4-6461-4927-86c0-162984136d09",
+    "metadata_created": "2017-03-29T05:20:17.067178",
+    "owner_org": "82a53a5e-4f07-4c36-8966-6e617c46bb8f",
+    "metadata_modified": "2017-03-30T02:31:35.200484",
+    "author": null,
+    "author_email": null,
+    "state": "active",
+    "version": null,
+    "license_id": "CC-BY",
+    "type": "dataset",
+    "resources": [
+      {
+        "cache_last_updated": null,
+        "package_id": "b98c93d4-6461-4927-86c0-162984136d09",
+        "webstore_last_updated": null,
+        "datastore_active": true,
+        "id": "c53c15c7-7ef4-4dec-9a42-58f731703c40",
+        "size": null,
+        "state": "active",
+        "hash": "",
+        "description": "サンプルtxt",
+        "format": "TXT",
+        "mimetype_inner": null,
+        "url_type": "upload",
+        "mimetype": null,
+        "cache_url": null,
+        "name": "サンプルTXT（20151031）",
+        "created": "2017-03-30T11:31:29.749399",
+        "url": "http://source.example.jp/dataset/b98c93d4-6461-4927-86c0-162984136d09/resource/c53c15c7-7ef4-4dec-9a42-58f731703c40/download/1490836176.txt",
+        "webstore_url": null,
+        "last_modified": "2017-03-30T02:31:29.724612",
+        "position": 0,
+        "revision_id": "706b93ce-151f-442a-a8b9-d256614c50db",
+        "resource_type": null
+      }
+    ],
+    "num_resources": 1,
+    "tags": [
+
+    ],
+    "groups": [
+      {
+        "display_name": "人口統計",
+        "description": "",
+        "title": "人口統計",
+        "image_display_url": "",
+        "id": "bf36101b-b414-43b2-93f8-b0d1708827da",
+        "name": "tokei"
+      }
+    ],
+    "creator_user_id": "9d4f8bf0-702f-42c4-89e8-7f8ec833ff5c",
+    "relationships_as_subject": [
+
+    ],
+    "name": "1490764602",
+    "isopen": false,
+    "url": null,
+    "notes": null,
+    "title": "サンプルTXT（20151031）",
+    "extras": [
+
+    ],
+    "organization": {
+      "description": "シラサギ市",
+      "title": "シラサギ市",
+      "created": "2017-03-22T19:12:33.062755",
+      "approval_status": "approved",
+      "is_organization": true,
+      "state": "active",
+      "image_url": "",
+      "revision_id": "d7e56407-83fc-4ad8-a5e3-d0bf3e91c41d",
+      "type": "organization",
+      "id": "82a53a5e-4f07-4c36-8966-6e617c46bb8f",
+      "name": "shirasagi-city"
+    },
+    "revision_id": "2555b13d-f62f-491d-b86f-503839e128fa"
+  }
+}

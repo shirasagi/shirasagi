@@ -46,6 +46,7 @@ class Gws::Workflow::File
 
     def search_keyword(params)
       return all if params[:keyword].blank?
+
       all.keyword_in(params[:keyword], :name, :text, 'column_values.text_index')
     end
 
@@ -96,10 +97,11 @@ class Gws::Workflow::File
           attachment_ids += bson_doc["file_ids"] if bson_doc["file_ids"].present?
         end
       end
+
       attachment_ids += all.pluck(:workflow_approvers).compact.flatten.map { |bson_doc| bson_doc["file_ids"] }.compact.flatten
       attachment_ids += all.pluck(:workflow_circulations).compact.flatten.map { |bson_doc| bson_doc["file_ids"] }.compact.flatten
-
       return SS::File.none if attachment_ids.blank?
+
       SS::File.in(id: attachment_ids)
     end
   end
@@ -172,14 +174,19 @@ class Gws::Workflow::File
 
     attachment_ids += workflow_approvers.map { |approver| approver[:file_ids] }.compact.flatten
     attachment_ids += workflow_circulations.map { |circulation| circulation[:file_ids] }.compact.flatten
-
     return SS::File.none if attachment_ids.blank?
+
     SS::File.in(id: attachment_ids)
   end
 
   def agent_enabled?
     return false if form.blank?
+
     form.agent_enabled?
+  end
+
+  def new_flag?
+    created > Time.zone.now - site.workflow_new_days.day
   end
 
   private
@@ -193,8 +200,8 @@ class Gws::Workflow::File
       new_file = SS::File.find(new_id) rescue nil
       next if old_file.blank? || new_file.blank?
 
-      text.gsub!("#{old_file.url}", "#{new_file.url}")
-      text.gsub!("#{old_file.thumb_url}", "#{new_file.thumb_url}") if old_file.thumb.present? && new_file.thumb.present?
+      text.gsub!(old_file.url.to_s, new_file.url.to_s)
+      text.gsub!(old_file.thumb_url.to_s, new_file.thumb_url.to_s) if old_file.thumb.present? && new_file.thumb.present?
     end
 
     self.text = text

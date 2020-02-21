@@ -15,6 +15,7 @@ class SS::StreamingFile
     basename = ::File.basename(::Addressable::URI.unescape(in_remote_url))
     self.name = basename if name.blank?
     self.filename = basename if filename.blank?
+    self.content_type = ::SS::MimeType.find(filename, "application/octet-stream")
   end
 
   # not implemented save_file for grid-fs mode
@@ -35,7 +36,7 @@ class SS::StreamingFile
         raise SS::StreamingFile::SizeError, "file size limit exceeded"
       end
 
-      open(path, "wb") do |f|
+      ::File.open(path, "wb") do |f|
         response.read_body do |chunk|
           if size_limit > 0 && overall_received_bytes > size_limit
             raise SS::StreamingFile::SizeError, "file size limit exceeded"
@@ -51,20 +52,7 @@ class SS::StreamingFile
     self.content_type = ::SS::MimeType.find(filename, content_type)
     self.size = Fs.stat(path).size
 
-    #if image?
-    #  list = Magick::ImageList.new
-    #  list.from_blob(path)
-    #  extract_geo_location(list)
-    #  list.each do |image|
-    #    case SS.config.env.image_exif_option
-    #    when "auto_orient"
-    #      image.auto_orient!
-    #    when "strip"
-    #      image.strip!
-    #    end
-    #  end
-    #  Fs.binwrite path, list.to_blob
-    #end
+    # TODO: do some exif things
   end
 
   def start_fetch(url, limit = 10, opts = {}, &block)

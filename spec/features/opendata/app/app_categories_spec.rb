@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe "opendata_app_categories", dbscope: :example do
+describe "opendata_app_categories", type: :feature, dbscope: :example do
   let(:site) { cms_site }
   let(:node) { create_once :opendata_node_app_category, name: "opendata_app_categories" }
 

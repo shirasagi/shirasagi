@@ -1,13 +1,21 @@
 module Map::MapHelper
+  def map_enabled?(opts = {})
+    return true if !SS.config.cms.enable_lgwan
+    return false if opts[:mypage]
+    opts[:preview] ? false : true
+  end
+
   def default_map_api(opts = {})
     map_setting = opts[:site].map_setting rescue {}
     opts[:api] || map_setting[:api] || SS.config.map.api
   end
 
   def include_map_api(opts = {})
+    return "" unless map_enabled?(opts)
+
     api = default_map_api(opts)
 
-    if api == "openlayers"
+    if %w(openlayers open_street_map).include?(api)
       include_openlayers_api
     else
       include_googlemaps_api(opts)
@@ -34,11 +42,14 @@ module Map::MapHelper
   end
 
   def render_map(selector, opts = {})
-    api = default_map_api(opts)
+    return "" unless map_enabled?(opts)
+
     markers = opts[:markers]
     map_options = opts[:map] || {}
+    s = []
 
-    if api == "openlayers"
+    case default_map_api(opts)
+    when 'openlayers'
       include_openlayers_api
 
       # set default values
@@ -46,14 +57,23 @@ module Map::MapHelper
       map_options[:markers] = markers if markers.present?
       map_options[:layers] = SS.config.map.layers
 
-      s = []
+      s << 'var canvas = $("' + selector + '")[0];'
+      s << "var opts = #{map_options.to_json};"
+      s << 'var map = new Openlayers_Map(canvas, opts);'
+    when 'open_street_map'
+      include_openlayers_api
+
+      # set default values
+      map_options[:readonly] = true
+      map_options[:markers] = markers if markers.present?
+      map_options[:layers] = SS.config.map.open_street_map
+
       s << 'var canvas = $("' + selector + '")[0];'
       s << "var opts = #{map_options.to_json};"
       s << 'var map = new Openlayers_Map(canvas, opts);'
     else
       include_googlemaps_api(opts)
 
-      s = []
       s << "Googlemaps_Map.load(\"" + selector + "\", #{map_options.to_json});"
       s << 'Googlemaps_Map.setMarkers(' + markers.to_json + ');' if markers.present?
     end
@@ -62,12 +82,15 @@ module Map::MapHelper
   end
 
   def render_map_form(selector, opts = {})
-    api = default_map_api(opts)
+    return "" unless map_enabled?(opts)
+
     center = opts[:center] || SS.config.map.map_center
     max_point_form = opts[:max_point_form] || SS.config.map.map_max_point_form
     map_options = opts[:map] || {}
+    s = []
 
-    if api == "openlayers"
+    case default_map_api(opts)
+    when 'openlayers'
       include_openlayers_api
 
       # set default values
@@ -77,7 +100,20 @@ module Map::MapHelper
       map_options[:max_point_form] = max_point_form if max_point_form.present?
 
       # 初回アドオン表示後に地図を描画しないと、クリックした際にマーカーがずれてしまう
-      s = []
+      s << 'SS_AddonTabs.findAddonView(".mod-map").one("ss:addonShown", function() {'
+      s << '  var canvas = $("' + selector + '")[0];'
+      s << "  var opts = #{map_options.to_json};"
+      s << '  var map = new Openlayers_Map_Form(canvas, opts);'
+      s << '});'
+    when 'open_street_map'
+      include_openlayers_api
+
+      # set default values
+      map_options[:readonly] = true
+      map_options[:center] = center.reverse if center.present?
+      map_options[:layers] = SS.config.map.open_street_map
+      map_options[:max_point_form] = max_point_form if max_point_form.present?
+
       s << 'SS_AddonTabs.findAddonView(".mod-map").one("ss:addonShown", function() {'
       s << '  var canvas = $("' + selector + '")[0];'
       s << "  var opts = #{map_options.to_json};"
@@ -86,7 +122,6 @@ module Map::MapHelper
     else
       include_googlemaps_api(opts)
 
-      s = []
       s << "Googlemaps_Map.center = #{center.to_json};" if center.present?
       s << "Map_Form.maxPointForm = #{max_point_form.to_json};" if max_point_form.present?
       s << 'Googlemaps_Map.setForm(Map_Form);'
@@ -102,12 +137,14 @@ module Map::MapHelper
   end
 
   def render_facility_search_map(selector, opts = {})
-    api = default_map_api(opts)
+    return "" unless map_enabled?(opts)
+
     center = opts[:center] || SS.config.map.map_center
     markers = opts[:markers]
 
     s = []
-    if api == "openlayers"
+    case default_map_api(opts)
+    when 'openlayers'
       include_openlayers_api
 
       s << 'var opts = {'
@@ -117,12 +154,22 @@ module Map::MapHelper
       s << '  layers: ' + SS.config.map.layers.to_json + ','
       s << '};'
       s << 'Openlayers_Facility_Search.render("' + selector + '", opts);'
+    when 'open_street_map'
+      include_openlayers_api
+
+      s << 'var opts = {'
+      s << '  readonly: true,'
+      s << '  center:' + center.reverse.to_json + ',' if center.present?
+      s << '  markers: ' + markers.to_json + ',' if markers.present?
+      s << '  layers: ' + SS.config.map.open_street_map.to_json + ','
+      s << '};'
+      s << 'Openlayers_Facility_Search.render("' + selector + '", opts);'
     else
       include_googlemaps_api(opts)
 
       s << 'Googlemaps_Map.center = ' + center.to_json + ';' if center.present?
       s << 'var opts = {'
-      s << '  markers: ' + markers.to_json + ',' if markers.present?
+      s << '  markers: ' + (markers.try(:to_json) || '[]') + ','
       s << '};'
       s << 'Facility_Search.render("' + selector + '", opts);'
     end
@@ -131,12 +178,14 @@ module Map::MapHelper
   end
 
   def render_member_photo_form_map(selector, opts = {})
-    api = default_map_api(opts)
+    return "" unless map_enabled?(opts)
+
     center = opts[:center] || SS.config.map.map_center
     map_options = opts[:map] || {}
 
     s = []
-    if api == "openlayers"
+    case default_map_api(opts)
+    when 'openlayers'
       include_openlayers_api
       controller.javascript "/assets/js/exif-js.js"
 
@@ -145,7 +194,19 @@ module Map::MapHelper
       map_options[:center] = center.reverse if center.present?
       map_options[:layers] = SS.config.map.layers
 
-      s = []
+      s << 'var canvas = $("' + selector + '")[0];'
+      s << "var opts = #{map_options.to_json};"
+      s << 'var map = new Openlayers_Member_Photo_Form(canvas, opts);'
+      s << 'map.setExifLatLng("#item_in_image");'
+    when 'open_street_map'
+      include_openlayers_api
+      controller.javascript "/assets/js/exif-js.js"
+
+      # set default values
+      map_options[:readonly] = true
+      map_options[:center] = center.reverse if center.present?
+      map_options[:layers] = SS.config.map.open_street_map
+
       s << 'var canvas = $("' + selector + '")[0];'
       s << "var opts = #{map_options.to_json};"
       s << 'var map = new Openlayers_Member_Photo_Form(canvas, opts);'

@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe "sys/auth/saml", dbscope: :example do
+describe "sys/auth/saml", type: :feature, dbscope: :example do
   let(:name) { unique_id }
   let(:filename) { unique_id }
   let(:entity_id) { unique_id }
@@ -74,7 +74,7 @@ describe "sys/auth/saml", dbscope: :example do
     within "form" do
       click_on I18n.t("ss.buttons.delete")
     end
-    expect(page).to have_css("#notice", text: I18n.t("ss.notice.saved"))
+    expect(page).to have_css("#notice", text: I18n.t("ss.notice.deleted"))
 
     expect(Sys::Auth::Saml.count).to eq 0
   end

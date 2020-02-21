@@ -1,4 +1,4 @@
-SS::Application.routes.draw do
+Rails.application.routes.draw do
   Gws::Discussion::Initializer
 
   concern :deletion do
@@ -57,6 +57,10 @@ SS::Application.routes.draw do
 
     namespace "apis" do
       get 'unseen/:id' => "unseen#index", id: /\d+/, as: :unseen
+      scope path: 'forums/:forum_id/todos/:todo_id', as: :forum_todo do
+        resources :comments, controller: "/gws/schedule/todo/apis/comments",
+                  concerns: [:deletion], except: [:index, :new, :show, :destroy_all]
+      end
     end
   end
 end

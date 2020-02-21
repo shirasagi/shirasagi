@@ -3,7 +3,7 @@ module Opendata::Addon::Comment
   extend ActiveSupport::Concern
 
   included do
-    embeds_many :comments, class_name: "Opendata::IdeaComment"
+    has_many :comments, class_name: "Opendata::IdeaComment", dependent: :destroy, inverse_of: :idea
   end
 
 end

@@ -16,7 +16,7 @@ body {
   color: $black1;
 }
 h1, h2, h3, h4, h5 {
-  margin: 0px;
+  margin: 0;
   font-size: 100%;
   font-weight: normal;
 }
@@ -36,7 +36,7 @@ rp, rt {
   font-weight: normal;
 }
 rp {
-  margin: 0px;
+  margin: 0;
 }
 img {
   vertical-align: middle;
@@ -55,7 +55,7 @@ input[type=text], input[type=password], input[type=date], input[type=datetime], 
 input[type=email], input[type=number] {
   width: 70%;
   min-height: 1.8em;
-  margin: 0 0;
+  margin: 0;
   padding: 3px 5px;
 }
 input[type=number] {
@@ -184,7 +184,7 @@ textarea {
         width: auto;
         min-height: 1em;
         padding: 0;
-        border: none;
+        border: 0;
       }
       #search-button {
         float: left;
@@ -317,7 +317,7 @@ textarea {
         font-weight: bold;
       }
       .summary {
-        display:block;
+        display: block;
         padding: 3px 0;
         color: $white;
         text-align: center;
@@ -385,7 +385,7 @@ textarea {
     padding: 0 10px;
   }
   nav {
-    margin: 134px 0 $box-margin 0;
+    margin: 134px 0 $box-margin;
     ul {
       @include clear;
     }
@@ -450,17 +450,17 @@ textarea {
 }
 #body--dataset-index .dataset-count {
   .count {
-    background: url(../img/ic-data.png) no-repeat 45px 0.7em;
+    background: url(../img/ic-data.png) no-repeat 45px .7em;
   }
 }
 #body--app-index .app-count {
   .count {
-    background: url(../img/ic-app.png) no-repeat 45px 0.7em;
+    background: url(../img/ic-app.png) no-repeat 45px .7em;
   }
 }
 #body--idea-index .idea-count {
   .count {
-    background: url(../img/ic-idea.png) no-repeat 45px 0.7em;
+    background: url(../img/ic-idea.png) no-repeat 45px .7em;
   }
 }
 // -----------------------------------------------------------------------------
@@ -565,7 +565,7 @@ textarea {
   @include btn-black;
   width: 100%;
   text-align: center;
-;box-sizing: border-box;
+  box-sizing: border-box;
 }
 .body--dataset-map #wrap {
   width: 100%;
@@ -586,7 +586,7 @@ textarea {
     overflow-y: scroll;
     padding: 10px;
     border: 1px solid $gray2;
-    border-right: none;
+    border-right: 0;
     box-sizing: border-box;
     #ajax-search {
       @include btn-black;
@@ -618,7 +618,7 @@ textarea {
         position: absolute;
         top: -3px;
         right: 0;
-        border: none;
+        border: 0;
         box-sizing: border-box;
       }
       label {
@@ -637,7 +637,7 @@ textarea {
       background: $green;
       color: $white;
       &:hover {
-        opacity: 0.8;
+        opacity: .8;
       }
     }
   }
@@ -663,7 +663,7 @@ textarea {
       @include btn-black;
       vertical-align: top;
       margin-bottom: 10px;
-      border: none;
+      border: 0;
     }
     .search-ui-form {
       margin: 10px;
@@ -904,7 +904,7 @@ textarea {
   }
   .send input {
     float: right;
-    margin-top : 20px;
+    margin-top: 20px;
     @include btn-black;
   }
 }
@@ -916,17 +916,25 @@ textarea {
     position: relative;
   }
   .categories {
-    margin-top: 15px;
+    margin-top: 0;
   }
   .download {
     position: absolute;
-    bottom: 10px;
+    bottom: 20px;
     right: 15px;
   }
 }
-.opendata-search-apps {
-  border: 2px solid $green;
+.opendata-search-datasets,
+.opendata-search-apps,
+.opendata-search-ideas {
+  article {
+    padding: 7px 14px 20px;
+    time, h2 {
+      font-size: $px16;
+    }
+  }
 }
+
 .opendata-search-ideas-form {
   border: 2px solid $yellow;
 }
@@ -938,6 +946,46 @@ textarea {
   @include btn-black;
   &:hover {
     color: $white;
+  }
+}
+// -----------------------------------------------------------------------------
+// categories
+div.categories, nav.categories {
+  margin-top: 15px;
+  @include display-flex;
+  @include flex-wrap(wrap);
+  width: calc(100% - 187px);
+  span, a {
+    display: block;
+    margin: 7px 7px 0 0;
+    padding: 3px 10px;
+    @include border-radius(3px);
+    color: $black1;
+    text-decoration: none;
+  }
+  .estat-category {
+    background: $hpurple;
+    &:hover {
+      background: #f1dcfc;
+    }
+  }
+  .category {
+    background: #ffcf38;
+    &:hover {
+      background: #ffe593;
+    }
+  }
+  .area {
+    background: $hgreen;
+    &:hover {
+      background: #e9f7cb;
+    }
+  }
+  .tag {
+    background: $hblue;
+    &:hover {
+      background: #e4f5ff;
+    }
   }
 }
 // -----------------------------------------------------------------------------
@@ -981,39 +1029,6 @@ textarea {
     float: left;
     width: 803px;
     margin-bottom: $item-margin;
-    a {
-      float: left;
-      display: block;
-      margin: 0 7px 7px 0;
-      padding: 3px 10px;
-      @include border-radius(3px);
-      color: $black1;
-      text-decoration: none;
-    }
-    .estat-category {
-      background: $hpurple;
-      &:hover {
-        background: #f1dcfc;
-      }
-    }
-    .category {
-      background: #ffcf38;
-      &:hover {
-        background: #ffe593;
-      }
-    }
-    .area {
-      background: $hgreen;
-      &:hover {
-        background: #e9f7cb;
-      }
-    }
-    .tag {
-      background: $hblue;
-      &:hover {
-        background: #e4f5ff;
-      }
-    }
   }
   .text, div.idea {
     float: left;
@@ -1028,7 +1043,7 @@ textarea {
     width: 100%;
   }
   .tabs {
-    clear:both;
+    clear: both;
   }
   .names {
     clear: both;
@@ -1046,7 +1061,7 @@ textarea {
     border: 2px solid $sky;
     h1 {
       @include midashi-dataset;
-      border-bottom: none;
+      border-bottom: 0;
     }
     .resource, .url-resource, .appfile {
       @include clear;
@@ -1140,7 +1155,7 @@ textarea {
     border: 2px solid $green;
     h1 {
       @include midashi-app;
-      border-bottom: none;
+      border-bottom: 0;
     }
     .contribute-wrap {
       padding: 12px;
@@ -1152,7 +1167,7 @@ textarea {
       width: 100%;
     }
     tr {
-      border-top:$border-gray2;
+      border-top: $border-gray2;
     }
     td {
       padding: 12px;
@@ -1162,14 +1177,14 @@ textarea {
     border: 2px solid $sky;
     h1 {
       @include midashi-dataset;
-      border-bottom: none;
+      border-bottom: 0;
     }
   }
   #tab-idea, #tab-comment {
     border: 2px solid $yellow;
     h1 {
       @include midashi-idea;
-      border-bottom: none;
+      border-bottom: 0;
     }
   }
   .fullscreen {
@@ -1335,6 +1350,45 @@ textarea {
     }
   }
 }
+.body--dataset {
+  .related-pages, .contact {
+    h2 {
+      @include midashi-dataset;
+    }
+  }
+}
+.body--app {
+  .related-pages, .contact {
+    h2 {
+      @include midashi-app;
+    }
+  }
+}
+.body--idea {
+  .related-pages, .contact {
+    h2 {
+      @include midashi-idea;
+    }
+  }
+}
+.body--dataset, .body--app, .body--idea {
+  .related-pages {
+    ul {
+      margin: 0 0 $box-margin 25px;
+    }
+    h2 {
+      margin-bottom: $item-margin;
+    }
+  }
+  .related-pages, .contact {
+    h2 {
+      border-bottom: 0;
+    }
+  }
+}
+
+
+
 // -----------------------------------------------------------------------------
 // portal
 // -----------------------------------------------------------------------------
@@ -1483,7 +1537,10 @@ textarea {
       font-weight: bold;
     }
   }
-  .map-page {
+  .related-pages ul {
+    margin: 0 0 $box-margin 25px;
+  }
+  .related-pages, .map-page, .contact {
     margin-bottom: $box-margin;
     h2 {
       margin-bottom: $item-margin;
@@ -1643,7 +1700,7 @@ textarea {
     margin: 0;
     padding: 6px 10px 3px;
     border-bottom: $border-gray2;
-    zoom:1;
+    zoom: 1;
     &:before {
       content: "\0020";
       display: block;
@@ -1660,7 +1717,7 @@ textarea {
     .page {
       margin-bottom: 0;
       padding-bottom: 6px;
-      border: none;
+      border: 0;
       &:last-child {
         padding-bottom: 3px;
       }
@@ -1671,7 +1728,7 @@ textarea {
     color: #039;
   }
   dl.sun, dl.holiday {
-    background: #ffeeee;
+    background: #fee;
     color: #e00;
   }
   dt {
@@ -1683,7 +1740,7 @@ textarea {
     h2 {
       margin: 0;
       padding: 0;
-      border: none;
+      border: 0;
       font-size: 100%;
       font-weight: normal;
     }
@@ -1708,7 +1765,7 @@ textarea {
     h2 {
       margin: 0;
       padding: 0;
-      border: none;
+      border: 0;
       font-size: 100%;
       font-weight: normal;
     }
@@ -1718,7 +1775,7 @@ textarea {
     .categories {
       @include clear;
       margin-bottom: 0;
-      border: none;
+      border: 0;
       li {
         padding-left: 0;
       }
@@ -2340,7 +2397,7 @@ textarea {
   .apps .pages header h2,
   .ideas .pages header h2 {
     padding: 0;
-    border-bottom: none;
+    border-bottom: 0;
     background: none;
     font-size: $px14;
   }

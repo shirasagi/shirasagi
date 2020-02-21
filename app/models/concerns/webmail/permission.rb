@@ -3,6 +3,7 @@ module Webmail::Permission
   include SS::Permission
 
   def allowed?(action, user, _opts = {})
+    user   = user.webmail_user
     action = permission_action || action
     permit = "#{action}_#{self.class.permission_name}"
 

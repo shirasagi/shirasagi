@@ -18,18 +18,19 @@ describe Cms::ImportFilesJob, dbscope: :example do
     it do
       log = Job::Log.first
       expect(log.logs).to include(include("INFO -- : Started Job"))
+      expect(log.logs).not_to include(include("INFO -- : error:"))
       expect(log.logs).to include(include("INFO -- : Completed Job"))
 
-      pages = Cms::ImportPage.all.entries
-      nodes = Cms::Node::ImportNode.all.entries
-      expect(pages.map(&:name)).to eq %w(page.html index.html)
-      expect(nodes.map(&:name)).to eq %w(import article css img)
+      pages = Cms::ImportPage.all
+      nodes = Cms::Node::ImportNode.all
+      expect(pages.pluck(:name).sort).to eq %w(index.html page.html)
+      expect(nodes.pluck(:name).sort).to eq %w(article css img import)
 
       pages.each do |page|
         expect(page.html.present?).to eq true
         page.html.scan(/(href|src)="\/(.+?)"/) do
           path = $2
-          expect(path =~ /#{node.filename}\//).to eq 0
+          expect(path =~ /#{::Regexp.escape(node.filename)}\//).to eq 0
         end
       end
 

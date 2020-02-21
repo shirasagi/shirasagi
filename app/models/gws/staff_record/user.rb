@@ -62,9 +62,19 @@ class Gws::StaffRecord::User
     criteria = criteria.where(section_name: params[:section_name]) if params[:section_name].present?
 
     if params[:keyword].present?
-      criteria = criteria.keyword_in params[:keyword], :name, :code, :kana,
-                                     :section_name, :charge_name, :charge_address, :charge_tel,
-                                     :tel_ext, :divide_duties, :remark
+      criteria = criteria.keyword_in(
+        params[:keyword],
+        :name,
+        :code,
+        :kana,
+        :section_name,
+        :charge_name,
+        :charge_address,
+        :charge_tel,
+        :tel_ext,
+        :divide_duties,
+        :remark
+      )
     end
     criteria
   }

@@ -27,9 +27,10 @@ def save_layout(data)
   cond = { site_id: @site._id, filename: data[:filename] }
   html = File.read("layouts/" + data[:filename]) rescue nil
 
-  item = Cms::Layout.find_or_create_by(cond)
+  item = Cms::Layout.find_or_initialize_by(cond)
   item.attributes = data.merge html: html
-  item.update
+  item.cur_user = @user
+  item.save
   item.add_to_set group_ids: @site.group_ids
 
   item
@@ -84,14 +85,15 @@ def save_node(data)
   lower_html = File.read("nodes/" + data[:filename] + ".lower_html") rescue nil
   summary_html = File.read("nodes/" + data[:filename] + ".summary_html") rescue nil
 
-  item = Cms::Node.unscoped.find_or_create_by(cond).becomes_with_route
+  item = data[:route].sub("/", "/node/").camelize.constantize.unscoped.find_or_initialize_by(cond)
   item.upper_html = upper_html if upper_html
   item.loop_html = loop_html if loop_html
   item.lower_html = lower_html if lower_html
   item.summary_html = summary_html if summary_html
 
   item.attributes = data
-  item.update
+  item.cur_user = @user
+  item.save
   item.add_to_set group_ids: @site.group_ids
 
   item
@@ -103,6 +105,7 @@ save_node route: "uploader/file", name: "画像", filename: "img", shortcut: "sh
 save_node route: "uploader/file", name: "JavaScript", filename: "js", shortcut: "show"
 save_node route: "article/page", name: "ニュース", filename: "news", shortcut: "show", layout_id: layouts["news"].id, new_days: 1,
   conditions: %w(product/solution product/software product/office product/marketing recruit)
+save_node route: "cms/site_search", name: "サイト内検索", filename: "search", layout_id: layouts["one"].id
 save_node route: "category/page", name: "お知らせ", filename: "oshirase", shortcut: "show", layout_id: layouts["news"].id
 save_node route: "category/page", name: "製品・サービス", filename: "product", shortcut: "show", layout_id: layouts["product"].id,
   sort: "order", new_days: 1, conditions: %w(product/solution product/software product/office product/marketing)
@@ -181,14 +184,15 @@ def save_part(data)
   loop_html  = File.read("parts/" + data[:filename].sub(/\.html$/, ".loop_html")) rescue nil
   lower_html = File.read("parts/" + data[:filename].sub(/\.html$/, ".lower_html")) rescue nil
 
-  item = Cms::Part.unscoped.find_or_create_by(cond).becomes_with_route(data[:route])
+  item = data[:route].sub("/", "/part/").camelize.constantize.unscoped.find_or_initialize_by(cond)
   item.html = html if html
   item.upper_html = upper_html if upper_html
   item.loop_html = loop_html if loop_html
   item.lower_html = lower_html if lower_html
 
   item.attributes = data
-  item.update
+  item.cur_user = @user
+  item.save
   item.add_to_set group_ids: @site.group_ids
 
   item
@@ -243,12 +247,14 @@ def save_page(data)
   html = File.read("pages/" + data[:filename]) rescue nil
   summary_html = File.read("pages/" + data[:filename].sub(/\.html$/, "") + ".summary_html") rescue nil
 
-  item = Cms::Page.find_or_create_by(cond).becomes_with_route(data[:route])
+  route = data[:route].presence || 'cms/page'
+  item = route.camelize.constantize.find_or_initialize_by(cond)
   item.html = html if html
   item.summary_html = summary_html if summary_html
 
   item.attributes = data
-  item.update
+  item.cur_user = @user
+  item.save
   item.add_to_set group_ids: @site.group_ids
 
   item
@@ -311,6 +317,8 @@ save_page route: "cms/page", name: "人材紹介サービス", filename: "produc
   order: 10, layout_id: layouts["product"].id
 save_page route: "cms/page", name: "販売促進支援", filename: "product/solution/sales.html",
   order: 20, layout_id: layouts["product"].id
+save_page route: "cms/page", name: "お探しのページは見つかりません。 404 Not Found", filename: "404.html",
+  layout_id: layouts["one"].id
 
 ## -------------------------------------
 puts "# max file size"
@@ -353,3 +361,11 @@ save_word_dictionary name: "機種依存文字", body_file: "#{Rails.root}/db/se
 
 @site.editor_css_path = '/css/ckeditor_contents.css'
 @site.update!
+
+if @site.subdir.present?
+  # rake cms:set_subdir_url site=@site.host
+  require 'rake'
+  Rails.application.load_tasks
+  ENV["site"]=@site.host
+  Rake::Task['cms:set_subdir_url'].invoke
+end

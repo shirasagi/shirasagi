@@ -42,6 +42,14 @@ class Member::Photo
     value < 0 ? 0 : value
   end
 
+  def file_previewable?(file, user:, member:)
+    return true if super
+
+    return true if member.present? && member_id == member.id
+
+    false
+  end
+
   private
 
   def validate_filename

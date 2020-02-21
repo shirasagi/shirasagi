@@ -39,7 +39,7 @@ describe "gws_notices", type: :feature, dbscope: :example, js: true do
           click_on I18n.t('ss.apis.users.index')
         end
       end
-      within '#cboxLoadedContent' do
+      wait_for_cbox do
         expect(page).to have_content(recipient1.name)
         click_on recipient1.name
       end
@@ -71,39 +71,11 @@ describe "gws_notices", type: :feature, dbscope: :example, js: true do
         # record notification_noticed
         expect(notice.notification_noticed).not_to be_nil
 
-        expect(Gws::Memo::Notice.count).to eq 1
-        Gws::Memo::Notice.first.tap do |message|
+        expect(SS::Notification.count).to eq 1
+        SS::Notification.first.tap do |message|
           expect(message.subject).to eq I18n.t('gws_notification.gws/notice/post.subject', name: notice.name)
           expect(message.url).to eq "/.g#{site.id}/notice/-/-/readables/#{notice.id}"
         end
-      end
-    end
-  end
-
-  context 'when notification_noticed was cleared' do
-    let!(:item) do
-      create(
-        :gws_notice_post, cur_site: site, folder: folder,
-        notification_noticed: Time.zone.now - 1.day
-      )
-    end
-
-    it do
-      expect(item.notification_noticed).not_to be_nil
-
-      visit index_path
-      click_on item.name
-      click_on I18n.t('ss.links.edit')
-
-      within 'form#item-form' do
-        click_on I18n.t('ss.buttons.clear')
-        click_on I18n.t('ss.buttons.save')
-      end
-      expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
-
-      expect(Gws::Notice::Post.all.count).to eq 1
-      Gws::Notice::Post.all.first.tap do |item|
-        expect(item.notification_noticed).to be_nil
       end
     end
   end

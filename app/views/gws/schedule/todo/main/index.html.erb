@@ -1,0 +1,55 @@
+<% @tap_menu = proc do |item| %>
+  <%= link_to t('ss.links.show'), action: :show, id: item if item.allowed?(:read, @cur_user, site: @cur_site) || item.member?(@cur_user) || item.readable?(@cur_user) %>
+  <%= link_to t('ss.links.edit'), action: :edit, id: item if item.allowed?(:edit, @cur_user, site: @cur_site) %>
+  <%= link_to t('ss.links.delete'), action: :soft_delete, id: item if item.allowed?(:delete, @cur_user, site: @cur_site) %>
+<% end %>
+
+<% @index_meta = proc do |item| %>
+  <span class="ss-quota-bar gws-schedule-todo-achievement-bar">
+    <div class="label"><%= t("gws/schedule/todo.achievement_rate", count: item.achievement_rate || 0) %></div>
+    <div class="usage " style="width: <%= item.achievement_rate || 0 %>%"></div>
+  </span>
+  <% if params[:controller].end_with?("/manageables") %>
+    <span class="members"><%= truncate(item.sorted_overall_members.limit(3).map(&:long_name).join(", ")) %></span>
+  <% end %>
+  <span class="categories">
+    <% item.categories.compact.each do |category| %>
+      <% category_root = category.root %>
+      <%= link_to category.name, url_for(category: category_root.id),
+                  class: "gws-category-label", style: category_label_css(category_root) %>
+    <% end %>
+  </span>
+  <span class="datetime">
+    <%= @model.t(:term) %>: <%= term(item) %>
+    <% if item.todo_state == 'unfinished' && item.end_at < Time.zone.now %>
+    <span class="todo-over"><%= t('gws/schedule/todo.todo_over') %></span>
+    <% end %>
+  </span>
+  <span class="datetime"><%= @model.t(:updated) %>: <%= item.updated.strftime('%Y/%m/%d %H:%M') %></span>
+  <span class="datetime"><%= @model.t(:created) %>: <%= item.created.strftime('%Y/%m/%d %H:%M') %></span>
+<% end %>
+
+<div class="gws-schedule-todo-index">
+  <div class="navi">
+    <%= render "gws/schedule/todo/main/category_navi" %>
+  </div>
+  <div class="main">
+    <%= render "gws/schedule/todo/main/tabs" %>
+    <% case @s.grouping %>
+    <% when "category" %>
+      <%= render file: "gws/schedule/todo/main/index_category" %>
+    <% when "user" %>
+      <%= render file: "gws/schedule/todo/main/index_user" %>
+    <% when "end_at" %>
+      <%= render file: "gws/schedule/todo/main/index_end_at" %>
+    <% when "discussion_forum" %>
+      <%= render file: "gws/schedule/todo/main/index_discussion_forum" %>
+    <% else %>
+      <%= render file: "gws/schedule/todo/main/index_default" %>
+    <% end %>
+  </div>
+</div>
+
+<%= jquery do %>
+  new Gws_Schedule_Todo_Index(".gws-schedule-todo-index");
+<% end %>

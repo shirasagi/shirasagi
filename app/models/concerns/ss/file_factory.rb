@@ -12,6 +12,7 @@ module SS::FileFactory
       if item.respond_to?(:disable_thumb=)
         item.disable_thumb = true # サムネイル作成時にエラーになるので、無効にする
       end
+      item.name = ::File.basename(item.filename) if item.name.blank? && item.filename.present?
       item.size = 0
       item.save!
 
@@ -51,6 +52,7 @@ module SS::FileFactory
       item.cur_site = cur_site if respond_to?(:cur_site)
       item.cur_user = cur_user if respond_to?(:cur_user)
       item.cur_node = cur_node if respond_to?(:cur_node)
+      item.cur_group = cur_group if respond_to?(:cur_group)
       item.in_file = file
       item.resizing = resizing
       item.unnormalize = unnormalize

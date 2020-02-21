@@ -59,7 +59,7 @@ describe Rdf::Class, dbscope: :example do
     it do
       expect(described_class.search({ category_ids: %w(1 2) }).selector.to_h).to \
         include("category_ids" => include("$in" => include(1, 2)))
-      expect(described_class.search({ category_ids: ["false"] }).selector.to_h).to be_empty
+      expect(described_class.search({ category_ids: %w(false) }).selector.to_h).to be_empty
     end
   end
 

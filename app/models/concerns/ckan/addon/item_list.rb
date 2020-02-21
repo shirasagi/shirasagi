@@ -53,7 +53,7 @@ module Ckan::Addon::ItemList
 
   def sort_hash
     return { released: -1 } if sort.blank?
-    { sort.sub(/ .*/, "") => (sort =~ /-1$/ ? -1 : 1) }
+    { sort.sub(/ .*/, "") => (/-1$/.match?(sort) ? -1 : 1) }
   end
 
   # overwrites super class methods

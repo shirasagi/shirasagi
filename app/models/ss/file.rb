@@ -13,19 +13,27 @@ class SS::File
     export :filename
     export :basename
     export :url
-    export :thumb_url
+    export as: :thumb_url do
+      thumb ? thumb.url : nil
+    end
     export :image?
   end
 
   class << self
-    def model(model, klass)
-      self.models << [ model, klass ]
+    def model(model, klass, metadata = {})
+      self.models << [ model, klass, metadata ]
     end
 
     def find_model_class(model)
-      klass = SS::File.models.find { |k, v| k == model }
-      klass = klass[1] if klass
+      config = SS::File.models.find { |k, v| k == model }
+      klass = config[1] if config
       klass
+    end
+
+    def find_model_metadata(model)
+      config = SS::File.models.find { |k, v| k == model }
+      metadata = config[2] if config
+      metadata
     end
   end
 end

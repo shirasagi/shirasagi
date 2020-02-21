@@ -5,14 +5,15 @@
   <table class="index gws-memo-folder">
     <% @folders.each do |item| %>
       <% droppable = %W(INBOX.Sent INBOX.Draft #{params[:folder]}).exclude?(item.folder_path) %>
-      <% unseen = item.unseen? && !item.sent_box? && !item.draft_box? %>
+      <% unseen_count = item.unseens.count %>
+      <% unseen = unseen_count > 0 %>
       <tr class="folder <%= 'droppable' if droppable %> <%= 'current' if item.folder_path == params[:folder] %>">
         <td class="<%= unseen ? 'unseen' : 'seen' %>">
           <%= link_to item.trailing_name,
                       gws_memo_messages_path(folder: item.folder_path ),
                       { class: "field title depth-#{ item.depth }", 'data-path': item.folder_path } %>
           <% if unseen %>
-            <span>(<%= item.unseens.count %>)</span>
+            <span>(<%= unseen_count %>)</span>
           <% end %>
         </td>
       </tr>

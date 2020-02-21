@@ -16,12 +16,13 @@ class Gws::Chorg::RunController < ApplicationController
   private
 
   def set_crumbs
-    @crumbs << [t('modules.gws/chorg'), controller: :revisions, action: :index]
-    @crumbs << [t("chorg.views.run/confirmation.#{params[:type]}.run_button"), action: :confirmation]
+    set_revision
+    @crumbs << [t('modules.gws/chorg'), { controller: :revisions, action: :index }]
+    @crumbs << [@revision.name, { controller: :revisions, action: :show, id: @revision }]
   end
 
   def set_revision
-    @revision = Gws::Chorg::Revision.find params[:rid]
+    @revision ||= Gws::Chorg::Revision.find params[:rid]
   end
 
   def set_task

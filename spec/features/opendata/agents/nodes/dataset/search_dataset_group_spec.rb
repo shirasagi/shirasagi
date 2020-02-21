@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe "opendata_agents_nodes_dataset", dbscope: :example do
+describe "opendata_agents_nodes_dataset", type: :feature, dbscope: :example do
   let(:site) { cms_site }
   # let(:area) { create_once :opendata_node_area, filename: "opendata_area_1" }
   let!(:node_dataset) { create_once :opendata_node_dataset }
@@ -32,7 +32,7 @@ describe "opendata_agents_nodes_dataset", dbscope: :example do
     within "form.opendata-search-groups-form" do
       fill_in "s[name]", with: dataset_resource.name
       select node_category.name, from: 's[category_id]'
-      click_button '検索'
+      click_button I18n.t('ss.buttons.search')
     end
     expect(status_code).to eq 200
   end

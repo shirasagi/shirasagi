@@ -63,5 +63,17 @@ module Fs::File
     def glob(path)
       Dir.glob(path)
     end
+
+    def to_io(path)
+      ::File.open(path, "rb")
+    end
+
+    def cp(src, dest)
+      ::FileUtils.cp(src, dest)
+    end
+
+    def cmp(src, dest)
+      ::FileUtils.cmp(src, dest)
+    end
   end
 end

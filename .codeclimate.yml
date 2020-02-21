@@ -1,11 +1,15 @@
+version: "2"
 engines:
   rubocop:
     enabled: true
+    channel: rubocop-0-71
+    config:
+      file: .rubocop.yml
   brakeman:
     enabled: true
+    config:
+      file: .brakeman.yml # not supported
   bundler-audit:
-    enabled: true
-  coffeelint:
     enabled: true
   csslint:
     enabled: true
@@ -18,6 +22,8 @@ engines:
     enabled: true
   scss-lint:
     enabled: true
+    config:
+      file: .scss-lint.yml
 ratings:
   paths:
   - Gemfile.lock

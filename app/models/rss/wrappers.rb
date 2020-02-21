@@ -192,8 +192,10 @@ module Rss::Wrappers
     require 'open-uri'
     if url_or_file.respond_to?(:path)
       rss_source = url_or_file.read
+    elsif url_or_file.to_s.start_with?("http:", "https:")
+      rss_source = ::URI.parse(url_or_file).open(opts)
     else
-      rss_source = open(url_or_file, opts)
+      rss_source = ::File.open(url_or_file, opts)
     end
     rss = ::RSS::Parser.parse(rss_source, false)
 

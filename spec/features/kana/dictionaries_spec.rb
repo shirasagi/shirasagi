@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe "kana_dictionaries" do
+describe "kana_dictionaries", type: :feature do
   subject(:site) { cms_site }
   subject(:index_path) { kana_dictionaries_path site.id }
   subject(:new_path) { new_kana_dictionary_path site.id }
@@ -20,7 +20,7 @@ describe "kana_dictionaries" do
       within "form#item-form" do
         fill_in "item[name]", with: "sample"
         fill_in "item[body]", with: "sample, サンプル"
-        click_button "保存"
+        click_button I18n.t('ss.buttons.save')
       end
       expect(status_code).to eq 200
       expect(current_path).not_to eq new_path
@@ -43,7 +43,7 @@ describe "kana_dictionaries" do
         visit edit_path
         within "form#item-form" do
           fill_in "item[name]", with: "modify"
-          click_button "保存"
+          click_button I18n.t('ss.buttons.save')
         end
         expect(status_code).to eq 200
         expect(current_path).not_to eq sns_login_path
@@ -53,7 +53,7 @@ describe "kana_dictionaries" do
       it "#delete" do
         visit delete_path
         within "form" do
-          click_button "削除"
+          click_button I18n.t('ss.buttons.delete')
         end
         expect(status_code).to eq 200
         expect(current_path).to eq index_path
@@ -88,15 +88,18 @@ describe "kana_dictionaries" do
       end
 
       it "#show" do
-        expect { visit show_path }.to raise_error Mongoid::Errors::DocumentNotFound
+        visit show_path
+        expect(page).to have_title("404")
       end
 
       it "#edit" do
-        expect { visit edit_path }.to raise_error Mongoid::Errors::DocumentNotFound
+        visit edit_path
+        expect(page).to have_title("404")
       end
 
       it "#delete" do
-        expect { visit delete_path }.to raise_error Mongoid::Errors::DocumentNotFound
+        visit delete_path
+        expect(page).to have_title("404")
       end
 
       describe "#build", mecab: true do

@@ -17,14 +17,15 @@ describe 'gws_presence_users', type: :feature, dbscope: :example do
       wait_for_ajax
 
       find(".editable-users .editicon.presence-plan").click
-      fill_in "presence_plan", with: "modified_plan\n"
+      native_fill_in "presence_plan", with: "modified_plan\n"
       wait_for_ajax
 
       find(".editable-users .editicon.presence-memo").click
-      fill_in "presence_memo", with: "modified_memo\n"
+      native_fill_in "presence_memo", with: "modified_memo\n"
       wait_for_ajax
 
       find(".group-users .list-head-title .editicon").click
+      wait_for_ajax
       expect(current_path).to eq index_path
 
       expect(page).to have_text('modified_plan')

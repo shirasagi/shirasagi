@@ -1,12 +1,6 @@
 class Cms::PreviewController < ApplicationController
   include Cms::BaseFilter
 
-  if SS.config.cms.remote_preview
-    skip_before_action :logged_in?
-    skip_before_action :set_group
-    skip_before_action :check_api_user
-  end
-
   before_action :set_controller
   before_action :set_preview_date
   before_action :set_preview_notice
@@ -61,13 +55,20 @@ class Cms::PreviewController < ApplicationController
 
   def set_form_data
     path = params[:path]
+    path = path.sub(/\..*?$/, "")
+    path = path.sub(/\/$/, "")
+
     preview_item = params.require(:preview_item).permit!
     id = preview_item[:id]
     route = preview_item[:route]
 
     page = Cms::Page.site(@cur_site).find(id) rescue Cms::Page.new(route: route)
     page = page.becomes_with_route
-    page.attributes = preview_item.select { |k, v| k != "id" }
+
+    preview_item.delete("id")
+    column_values = preview_item.delete("column_values")
+
+    page.attributes = preview_item
     page.site = @cur_site
     page.lock_owner_id = nil if page.respond_to?(:lock_owner_id)
     page.lock_until = nil if page.respond_to?(:lock_until)
@@ -76,17 +77,25 @@ class Cms::PreviewController < ApplicationController
     raise page_not_found unless page.basename.present?
     page.basename = page.basename.sub(/\..+?$/, "") + ".html"
 
+    # column_values
+    column_values = column_values.to_a.select(&:present?)
+    column_values.each do |column_value|
+      _type = column_value["_type"]
+      page.column_values << _type.constantize.new(column_value)
+    end
+
     @cur_layout = Cms::Layout.site(@cur_site).where(id: page.layout_id).first
     @cur_body_layout = Cms::BodyLayout.site(@cur_site).where(id: page.body_layout_id).first
     page.layout_id = nil if @cur_layout.nil?
     page.body_layout_id = nil if @cur_body_layout.nil?
-    @cur_node = page.cur_node = Cms::Node.site(@cur_site).where(filename: /^#{path.sub(/\/$/, "")}/).first
+
+    @cur_node = page.cur_node = Cms::Node.site(@cur_site).where(filename: path).first
     page.valid?
     @cur_page = page
     @preview_page = page
     @preview_item = preview_item
 
-    @cur_path = "/#{path}#{page.basename}"
+    @cur_path = ::File.join("/", path, page.basename)
   end
 
   def render_contents
@@ -196,18 +205,17 @@ class Cms::PreviewController < ApplicationController
       mobile = true
     end
 
+    if mobile
+      desktop_pc = false
+    else
+      desktop_pc = browser.platform.linux? || browser.platform.mac? || browser.platform.windows?
+    end
+
     chunks = []
     @contents_body.each do |body|
-      chunks << convert_html_to_preview(body, mode: mode, rendered: @contents_env["ss.rendered"], mobile: mobile)
+      chunks << convert_html_to_preview(body, mode: mode, rendered: @contents_env["ss.rendered"], desktop_pc: desktop_pc)
     end
     render html: chunks.join.html_safe, layout: false
-  rescue => exception
-    if exception.to_s.numeric?
-      status = exception.to_s.to_i
-      file = error_html_file(status)
-      return ss_send_file(file, status: status, type: Fs.content_type(file), disposition: :inline)
-    end
-    raise
   end
 
   public

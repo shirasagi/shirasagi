@@ -1,6 +1,6 @@
 module Sys::SiteCopy::CmsLoopSettings
   extend ActiveSupport::Concern
-  include Sys::SiteCopy::Cache
+  include SS::Copy::Cache
   include Sys::SiteCopy::CmsContents
 
   def copy_cms_loop_setting(src_item)

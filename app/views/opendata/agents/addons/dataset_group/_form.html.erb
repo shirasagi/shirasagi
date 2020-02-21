@@ -16,7 +16,7 @@
         <% @item.dataset_groups.each do |group| %>
         <tr data-id="<%= group.id %>">
           <td><%= f.hidden_field "dataset_group_ids[]", value: group.id %> <%= group.name %></td>
-          <td><%= link_to t("opendata.search_dataset_groups.deselect"), "#", class: :deselect %></td>
+          <td><%= link_to t("opendata.search_dataset_groups.deselect"), "#", class: 'deselect btn' %></td>
         </tr>
         <% end %>
         <tr style="display:none" <%= raw(@item.present? ? "data-id=#{@item.id}" : "") %>></tr>

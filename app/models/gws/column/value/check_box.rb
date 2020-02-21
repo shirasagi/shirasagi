@@ -2,6 +2,8 @@ class Gws::Column::Value::CheckBox < Gws::Column::Value::Base
   field :values, type: SS::Extensions::Words
 
   def validate_value(record, attribute)
+    self.values = values.select(&:present?)
+
     return if column.blank?
 
     if column.required? && values.blank?
@@ -25,5 +27,13 @@ class Gws::Column::Value::CheckBox < Gws::Column::Value::Base
 
   def value
     values.join(', ')
+  end
+
+  def import_csv(values)
+    values.each do |sub_key, value|
+      if sub_key.blank?
+        self.values = value
+      end
+    end
   end
 end

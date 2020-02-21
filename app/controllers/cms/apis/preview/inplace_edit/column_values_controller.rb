@@ -342,7 +342,7 @@ class Cms::Apis::Preview::InplaceEdit::ColumnValuesController < ApplicationContr
   def update
     safe_params = params.require(:item).permit(@model.permit_params)
     column_value_param = safe_params[:column_values].first
-    @cur_column_value.attributes = column_value_param[:in_wrap]
+    @cur_column_value.attributes = column_value_param[:in_wrap].merge(column_value_param.slice(:alignment))
     @item.attributes = fix_params
     @item.in_updated = params[:_updated] if @item.respond_to?(:in_updated)
     raise "403" unless @item.allowed?(:edit, @cur_user, site: @cur_site)
@@ -423,7 +423,7 @@ class Cms::Apis::Preview::InplaceEdit::ColumnValuesController < ApplicationContr
       set_column_and_value
       safe_params = params.require(:item).permit(@model.permit_params)
       column_value_param = safe_params[:column_values].first
-      @cur_column_value.attributes = column_value_param[:in_wrap]
+      @cur_column_value.attributes = column_value_param[:in_wrap].merge(column_value_param.slice(:alignment))
     else
       new_column_value
     end
@@ -437,7 +437,7 @@ class Cms::Apis::Preview::InplaceEdit::ColumnValuesController < ApplicationContr
       set_column_and_value
       safe_params = params.require(:item).permit(@model.permit_params)
       column_value_param = safe_params[:column_values].first
-      @cur_column_value.attributes = column_value_param[:in_wrap]
+      @cur_column_value.attributes = column_value_param[:in_wrap].merge(column_value_param.slice(:alignment))
     else
       new_column_value
     end

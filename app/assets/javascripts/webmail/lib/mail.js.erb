@@ -36,7 +36,7 @@ this.Webmail_Mail_Navi = (function () {
         for (i in ref) {
           mailbox = ref[i];
           h = " <span class='unseen count" + mailbox.unseen + "'>(" + mailbox.unseen + ")</span>";
-          navi.find("a[data-name='" + mailbox.name + "']").append(h);
+          navi.find("a[data-name='" + mailbox.original_name + "']").append(h);
         }
         if (data.notice && opts['notice'] !== -1) {
           SS.notice(data.notice);
@@ -263,9 +263,12 @@ this.Webmail_Mail_List = (function () {
         },
         success: function (data) {
           if (data.action === 'set_star') {
-            return wrap.removeClass('off').addClass('on');
+            wrap.removeClass('off').addClass('on');
           } else {
-            return wrap.removeClass('on').addClass('off');
+            wrap.removeClass('on').addClass('off');
+          }
+          if (data.notice) {
+            SS.notice(data.notice);
           }
         }
       });
@@ -454,19 +457,7 @@ this.Webmail_Mail_Detail = (function () {
   }
 
   Webmail_Mail_Detail.render = function () {
-    var body;
-    body = $('.webmail-mail .body--html');
-    if (body.find('img[data-url]').length) {
-      body.find('img[data-url][height]').each(function () {
-        return $(this).css('height', $(this).attr('height') + 'px');
-      });
-      body.before('<a class="show-image" href="#"><%= I18n.t("webmail.links.show_image") %></a>');
-      $('.show-image').click(function () {
-        $(this).hide();
-        Webmail_Mail_Detail.loadImages();
-        return false;
-      });
-    }
+    Webmail_Mail_Detail.htmlMessage = new SS_HtmlMessage('.webmail-mail .body--html');
     $(".update-mail").on("click", function () {
       $('.dropdown-menu').removeClass('active');
       $.ajax({

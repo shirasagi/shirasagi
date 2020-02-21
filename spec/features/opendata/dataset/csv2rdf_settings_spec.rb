@@ -100,7 +100,7 @@ describe "opendata_csv2rdf_settings", type: :feature, dbscope: :example do
 
       within "form#item-form" do
         choose "item_prop_id_endemicdecimal"
-        click_button "保存"
+        click_button I18n.t('ss.buttons.save')
       end
 
       expect(status_code).to eq 200

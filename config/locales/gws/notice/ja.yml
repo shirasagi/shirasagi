@@ -21,11 +21,11 @@ ja:
       unset_seen: 未読にしてもよろしいですか？
       create_my_folder: 自所属を作成してよろしいですか？
     notice:
-      set_seen: 既読にしました。
-      unset_seen: 未読にしました。
       not_a_member_in_this_folder: このフォルダーへお知らせを掲示する権限がありません。
+      reclaimed: 使用量を再計算しました。
 
   gws_role:
+    use_gws_notice: お知らせの利用
     read_other_gws_notices: お知らせの閲覧（全て）
     read_private_gws_notices: お知らせの閲覧（所有）
     edit_other_gws_notices: お知らせの編集（全て）
@@ -53,11 +53,12 @@ ja:
   modules:
     gws/notice: お知らせ
     addons:
-      gws/notice/notification: 通知
       gws/notice/comment_setting: コメント設定
       gws/notice/comment_post: コメント
       gws/notice/category: カテゴリー
       gws/notice/resource_limitation: 容量制限
+      gws/notice/member: 閲覧者
+      gws/notice/group_setting: お知らせ
 
   gws_notification:
     gws/notice/post:
@@ -94,7 +95,7 @@ ja:
         member_ids: 投稿ユーザー
         member_group_ids: 投稿グループ
         member_custom_group_ids: 投稿カスタムグループ
-      gws/addon/notice/notification:
+      gws/notice/notification:
         notification_noticed: 通知日時
       gws/addon/notice/comment_setting:
         comment_state: コメント投稿
@@ -116,6 +117,8 @@ ja:
         user_group_name: グループ
         user_name: 作成者
         notice_id: お知らせ
+      gws/addon/notice/group_setting:
+        notice_new_days: 新着表示期間
 
   tooltip:
     gws/notice/post:
@@ -125,12 +128,6 @@ ja:
         - 種別を選択します。
         - 「重要なお知らせ」の場合、チェックをつけます。
         - 「重要なお知らせ」にチェックをつけた場合、コンテンツ内の先頭に目立つ色で表示されます。
-
-    gws/addon/notice/notification:
-      notification_noticed:
-        - 通知した日時を表示しています。
-        - 通知日時をクリアすることで、再度、通知が送信されるようになります。
-        - お知らせを編集後、再度、通知を送りたい場合、クリアしてください。
 
     gws/addon/notice/comment_setting:
       comment_state:
@@ -143,6 +140,10 @@ ja:
         - 最大ファイルサイズを入力します。
       notice_total_file_size_limit:
         - フォルダーの総容量制限を入力します。
+
+    gws/addon/notice/group_setting:
+      notice_new_days:
+        - 新着表示期間を入力します。
 
   job:
     models:

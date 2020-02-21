@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe 'article_pages', dbscope: :example, js: true do
+describe 'article_pages', type: :feature, dbscope: :example, js: true do
   let(:site) { cms_site }
   let(:node) { create :article_node_page, cur_site: site }
   let!(:form) { create(:cms_form, cur_site: site, state: 'public', sub_type: 'static') }
@@ -57,14 +57,14 @@ describe 'article_pages', dbscope: :example, js: true do
           fill_in "item[column_values][][in_wrap][value]", with: column1_value
           # find("a[data-column-id=\"#{column2.id}\"]").click
           within first(".column-value-cms-column-fileupload") do
-            fill_in "item[column_values][][in_wrap][attachment_text]", with: unique_id
+            fill_in "item[column_values][][in_wrap][file_label]", with: unique_id
             click_on I18n.t("ss.links.upload")
           end
         end
 
-        within 'div#cboxLoadedContent form.user-file' do
+        wait_for_cbox do
           attach_file 'item[in_files][]', "#{Rails.root}/spec/fixtures/ss/logo.png"
-          click_on I18n.t('ss.buttons.save')
+          click_on I18n.t('ss.buttons.attach')
         end
 
         within 'form#item-form' do

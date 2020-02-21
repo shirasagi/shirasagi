@@ -14,7 +14,7 @@ module Gws::Addon::Import::Facility
     module ClassMethods
       def to_csv
         CSV.generate do |data|
-          data << csv_headers.map { |k| header_value_to_text *k }
+          data << csv_headers.map { |k| header_value_to_text(k) }
           criteria.each do |item|
             line = []
             line << item.id
@@ -72,20 +72,21 @@ module Gws::Addon::Import::Facility
       end
 
       def csv_headers
-        %w(
+        headers = %w(
           id name category_id order min_minutes_limit max_minutes_limit
           max_days_limit reservation_start_date reservation_end_date
-          activation_date expiration_date approval_check_state
-          type html)               +
-        columns_headers            +
-        %w(reservable_group_names
-          reservable_member_names readable_setting_range
-          readable_group_names readable_member_names
-          group_names user_names permission_level)
+          activation_date expiration_date approval_check_state type html
+        )
+        headers += columns_headers
+        headers += %w(
+          reservable_group_names reservable_member_names readable_setting_range
+          readable_group_names readable_member_names group_names user_names permission_level
+        )
+        headers
       end
 
       def columns_max
-        criteria.map(&:columns).map(&:size).max
+        criteria.map(&:columns).map(&:size).max.to_i
       end
 
       def columns_headers
@@ -147,26 +148,6 @@ module Gws::Addon::Import::Facility
         I18n.l(time)
       end
 
-      def input_type_data_to_text(item)
-        return if item.blank?
-        I18n.t("gws/facility/item.csv.item.#{item}")
-      end
-
-      def input_type_data_to_text(column)
-        return if column.blank?
-        I18n.t("gws/facility/item.csv.columns.input_type_datas.#{column}")
-      end
-
-      def required_data_to_text(column)
-        return if column.blank?
-        I18n.t("gws/facility/item.csv.columns.required_datas.#{column}")
-      end
-
-      def minus_type_data_to_text(column)
-        return if column.blank?
-        I18n.t("gws/facility/item.csv.columns.minus_type_datas.#{column}")
-      end
-
       def header_value_to_text(header, options = {})
         I18n.t("gws/facility/item.csv.#{header}", options)
       end
@@ -204,7 +185,11 @@ module Gws::Addon::Import::Facility
       return errors.add :cur_site, :blank if cur_site.blank?
 
       fname = in_file.original_filename
-      return errors.add :in_file, :invalid_file_type if ::File.extname(fname) !~ /^\.csv$/i
+      unless /^\.csv$/i.match?(::File.extname(fname))
+        errors.add :in_file, :invalid_file_type
+        return
+      end
+
       begin
         CSV.read(in_file.path, headers: true, encoding: 'SJIS:UTF-8')
         in_file.rewind
@@ -269,7 +254,7 @@ module Gws::Addon::Import::Facility
       item.reservable_group_ids = group_names_to_ids(reservable_group_names)
       item.reservable_member_ids = user_names_to_ids(reservable_member_names)
 
-      item.readable_setting_range =  readable_setting_range_datas_text_to_value(readable_setting_range)
+      item.readable_setting_range = readable_setting_range_datas_text_to_value(readable_setting_range)
 
       item.text_type = type_datas_text_to_value(text_type)
       item.text = text
@@ -319,8 +304,13 @@ module Gws::Addon::Import::Facility
 
     def update_columns(row, index, item)
       columns_setting = I18n.t("modules.addons.gws/facility/column_setting")
-      column_with_index = (row.select{|header_key, _v| header_key =~ /\A#{columns_setting}/}.to_h
-                                                                                            .group_by{|k, v| k =~ /\A#{columns_setting}([0-9]+)/;$1})
+
+      column_with_index = row.select { |header_key, _v| header_key =~ /\A#{columns_setting}/ }.to_h
+      column_with_index = column_with_index.group_by do |k, v|
+        k =~ /\A#{columns_setting}([0-9]+)/
+        $1
+      end
+
       datas = column_with_index.each_with_object({}) do |(key, value), hash|
         hash[key] = value.each_with_object({}) do |(k, v), h|
           text_key, _text_value = I18n.t("gws/facility/item.csv.columns").find do |key, value|
@@ -372,9 +362,9 @@ module Gws::Addon::Import::Facility
         column.additional_attr = value[:additional_attr].to_s.strip
         column.place_holder = value[:place_holder].to_s.strip
       when Gws::Column::NumberField
-        column.min_decimal =  value[:min_decimal].to_s.strip
-        column.max_decimal =  value[:max_decimal].to_s.strip
-        column.initial_decimal =  value[:initial_decimal].to_s.strip
+        column.min_decimal = value[:min_decimal].to_s.strip
+        column.max_decimal = value[:max_decimal].to_s.strip
+        column.initial_decimal = value[:initial_decimal].to_s.strip
         column.scale = value[:scale].to_s.strip
         column.minus_type = minus_type_datas_text_to_value(value[:minus_type].to_s.strip)
         column.max_length = value[:max_length].to_s.strip
@@ -488,7 +478,7 @@ module Gws::Addon::Import::Facility
     end
 
     def columns_set_errors(item, errors)
-      item.errors.add :base, "#{errors.join(" ")}"
+      item.errors.add :base, errors.join(" ").to_s
     end
   end
 end

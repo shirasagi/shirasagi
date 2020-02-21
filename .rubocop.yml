@@ -1,7 +1,9 @@
 inherit_from: .rubocop_todo.yml
+require:
+  - rubocop-performance
 
 AllCops:
-  TargetRubyVersion: 2.4
+  TargetRubyVersion: 2.6
   Exclude:
     - Guardfile
     - Vagrantfile
@@ -22,6 +24,9 @@ Layout/AccessModifierIndentation:
   # By default, the indentation width from Layout/IndentationWidth is used
   # But it can be overridden by setting this parameter
   IndentationWidth: ~
+
+Layout/EmptyLineAfterGuardClause:
+  Enabled: false
 
 Layout/DefEndAlignment:
   AutoCorrect: false
@@ -74,7 +79,7 @@ Metrics/ModuleLength:
   Max: 500
 
 Naming/UncommunicativeMethodParamName:
-  AllowedNames: [ 'ns', 'to' ]
+  AllowedNames: [ 'ns', 'to', 'id' ]
 
 Rails:
   Enabled: true

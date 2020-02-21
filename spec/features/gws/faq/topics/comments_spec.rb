@@ -24,7 +24,7 @@ describe "gws_faq_topics", type: :feature, dbscope: :example do
         within "form#item-form" do
           fill_in "item[name]", with: name
           fill_in "item[text]", with: text
-          click_button "保存"
+          click_button I18n.t('ss.buttons.save')
         end
 
         expect(page).to have_css("aside.comment h2", text: name)
@@ -54,7 +54,7 @@ describe "gws_faq_topics", type: :feature, dbscope: :example do
         within "form#item-form" do
           fill_in "item[name]", with: name
           fill_in "item[text]", with: text
-          click_button "保存"
+          click_button I18n.t('ss.buttons.save')
         end
 
         expect(page).to have_css("aside.comment h2", text: name)
@@ -72,7 +72,7 @@ describe "gws_faq_topics", type: :feature, dbscope: :example do
         within "form#item-form" do
           fill_in "item[name]", with: name2
           fill_in "item[text]", with: text2
-          click_button "保存"
+          click_button I18n.t('ss.buttons.save')
         end
 
         expect(page).to have_css("aside.comment h2", text: name)

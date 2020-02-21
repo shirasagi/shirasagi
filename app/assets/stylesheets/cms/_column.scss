@@ -2,27 +2,19 @@
   margin-top: 15px;
 }
 
-.column-value-header {
-  @include display-flex;
-  @include flex-direction(row);
-  padding: 5px 0;
-  label {
-    color: #a0522d;
-    font-weight: bold;
-  }
-  .column-value-header-group:first-child {
-    margin-right: auto;
-  }
-  .column-value-header-group ~ .column-value-header-group {
-    margin-left: 16px;
-  }
-  .sortable-handle {
-    cursor: move;
-  }
-}
-
 .column-value-body {
   padding-bottom: 5px;
+
+  .link-fields {
+    width: 100%;
+  }
+
+  .link-label {
+    width: 30%;
+  }
+  .link-url {
+    width: 50%;
+  }
 }
 
 .column-value-files {
@@ -46,70 +38,6 @@
 }
 
 .column-value.ui-sortable-helper {
-  @include box-shadow(0px 1px 5px #666);
-  @include opacity(0.8);
-}
-
-.table-menu {
-  display: none;
-  position: fixed;
-  width: 200px;
-  background-color: #fff;
-  border: 1px solid #ccc;
-  box-shadow: 1px 1px 1px rgba(0,0,0,.2);
-  z-index: 1000;
-}
-.table-menu.show {
-  display: block;
-}
-.table-menu ul {
-  list-style: none;
-  padding: 10px 0;
-}
-.table-menu ul li {
-  padding: 4px 10px;
-  font-size: 14px;
-  color: #333;
-}
-
-.table-editor th, .table-editor td {
-  min-width: 100px;
-  border: solid 1px;  /* 枠線指定 */
-  padding: 10px;      /* 余白指定 */
-}
-
-.table-editor th:before {
-  display: block;
-  float: left;
-  height: 30px;
-  content: "";
-}
-
-.table-editor .edited {
-  padding: 0px;
-}
-
-.table-editor th {
-  background-color: #777;
-}
-
-.table-editor table {
-  border-collapse: collapse; /* セルの線を重ねる */
-  table-layout: fixed;
-}
-
-.table-editor textarea {
-  height: 100%;
-  width: 100%;
-}
-
-.table-editor .controll {
-  background-color: #fff;
-  padding: 10px 20px;
-  cursor: pointer;
-  cursor: hand;
-}
-
-.table-editor .controll:hover {
-  background-color: #f4b942;
+  @include box-shadow(0 1px 5px #666);
+  @include opacity(.8);
 }

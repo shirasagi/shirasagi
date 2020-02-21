@@ -1,0 +1,38 @@
+<% item = @model.allow(:read, @cur_user, site: @cur_site).site(@cur_site).where(node_id: @cur_node.id).order_by(order: 1, updated: -1).find_intent(suggest) %>
+<% if item.present? %>
+  <tr data-depth="<%= depth %>">
+    <td class="expandable">
+      <% if @rendered_items.find { |id| id == item.id } || @reject_items.find { |id| id == item.id } %>
+        <%= suggest %>
+      <% else %>
+        <%= link_to suggest, action: :show, id: item %>
+      <% end %>
+    </td>
+    <td><%= item.categories.order_by(order: 1, updated: -1).pluck(:name).join(', ') %></td>
+    <td><%= item.phrase.join(', ') %></td>
+    <td>
+      <%= I18n.t('chat.loop_intent') if @rendered_items.find { |id| id == item.id } %>
+      <%= @model.t(:phrase) + I18n.t('errors.messages.duplicate') if item.duplicate? %>
+    </td>
+    <td><%= link_to t('chat.links.add_or_edit'), { action: :edit, id: item }, class: :btn unless @rendered_items.find { |id| id == item.id } || @reject_items.find { |id| id == item.id } %></td>
+  </tr>
+  <% @reject_items.push(item.id) %>
+  <% if !@rendered_items.find { |id| id == item.id } %>
+    <% @rendered_items.push(item.id) %>
+    <% if item.suggest.present? %>
+      <% item.suggest.each do |suggest| %>
+        <%= render partial: 'intent', locals: { suggest: suggest, depth: depth + 1, first_suggest: false } %>
+      <% end %>
+    <% end %>
+  <% end %>
+<% else %>
+  <tr data-depth="<%= depth %>">
+    <td class="expandable">
+      <%= suggest %>
+    </td>
+    <td></td>
+    <td></td>
+    <td><%= I18n.t('chat.not_found_intent') if @model.allowed?(:read, @cur_user, site: @cur_site) %></td>
+    <td><%= link_to t('chat.links.add_or_edit'), { action: :new, name: suggest }, class: :btn if @model.allowed?(:edit, @cur_user, site: @cur_site) %></td>
+  </tr>
+<% end %>

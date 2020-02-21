@@ -1,4 +1,4 @@
-class Webmail::HistoryArchiveJob < SS::ApplicationJob
+class Webmail::HistoryArchiveJob < Webmail::ApplicationJob
   include Job::SS::TaskFilter
   include SS::HistoryArchiveBase
 

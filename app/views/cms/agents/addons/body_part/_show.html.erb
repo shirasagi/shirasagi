@@ -8,8 +8,8 @@ var body_layout_id = <%= raw @item.body_layout_id.to_json %>;
 var site = <%= raw @cur_site.id.to_json %>;
 $(".mod-body-part-html").html(SS.loading);
 if (body_layout_id) {
-  $("#addon-cms-agents-addons-body").hide();
-  $("#addon-cms-agents-addons-body_part").show();
+  $("#addon-cms-agents-addons-body").addClass('hide');
+  $("#addon-cms-agents-addons-body_part").removeClass('hide');
 
   url = "/.s" + site + "/cms/body_layouts/" + body_layout_id + ".json";
   $.get(url, function(resp){
@@ -44,8 +44,8 @@ if (body_layout_id) {
   });
 }
 else {
-  $("#addon-cms-agents-addons-body").show();
-  $("#addon-cms-agents-addons-body_part").hide();
+  $("#addon-cms-agents-addons-body").removeClass('hide');
+  $("#addon-cms-agents-addons-body_part").addClass('hide');
 }
 <% end %>
 

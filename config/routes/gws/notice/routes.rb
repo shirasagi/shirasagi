@@ -1,4 +1,4 @@
-SS::Application.routes.draw do
+Rails.application.routes.draw do
   Gws::Notice::Initializer
 
   concern :deletion do
@@ -38,6 +38,7 @@ SS::Application.routes.draw do
       get "folders" => "folders#index"
       get ":folder_id/:category_id/:mode/folder_list" => "folder_list#index", as: "folder_list"
       scope path: ':notice_id' do
+        get 'members' => 'members#index'
         resources :comments, concerns: [:deletion], except: [:index, :new, :show, :destroy_all]
       end
     end

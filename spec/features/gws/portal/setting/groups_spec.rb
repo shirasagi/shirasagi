@@ -1,10 +1,10 @@
 require 'spec_helper'
 
-describe "gws_portal_setting_groups", type: :feature, dbscope: :example do
+describe "gws_portal_setting_groups", type: :feature, dbscope: :example, js: true do
   let(:site) { gws_site }
   let(:user) { gws_user }
 
-  context "with auth", js: true do
+  context "with auth" do
     before { login_gws_user }
 
     it "#index" do
@@ -19,14 +19,14 @@ describe "gws_portal_setting_groups", type: :feature, dbscope: :example do
 
       # secured
       role = user.gws_roles[0]
-      role.update_attributes(permissions: [])
+      role.update(permissions: [])
       user.clear_gws_role_permissions
 
       visit gws_site_path(site: site)
       expect(page).to have_no_content(I18n.t('gws/portal.group_portal'))
 
       visit gws_portal_setting_groups_path(site: site)
-      expect(page).to have_no_content(user.name)
+      expect(page).to have_title("403")
     end
   end
 end

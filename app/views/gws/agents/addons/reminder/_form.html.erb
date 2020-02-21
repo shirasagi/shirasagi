@@ -7,24 +7,24 @@
 <%= jquery do %>
   var toggleConditions = function() {
     if ($("#addon-basic #item_allday").prop('checked')) {
-      $("#remider-conditions-allday").show();
-      $("#remider-conditions").hide();
+      $("#reminder-conditions-allday").show();
+      $("#reminder-conditions").hide();
 
-      $("#remider-conditions [name]").each(function() {
+      $("#reminder-conditions [name]").each(function() {
         $(this).attr("name", "");
       });
-      $("#remider-conditions-allday [name]").each(function() {
+      $("#reminder-conditions-allday [name]").each(function() {
         $(this).attr("name", $(this).attr("data-name"));
       });
     }
     else {
-      $("#remider-conditions-allday").hide();
-      $("#remider-conditions").show();
+      $("#reminder-conditions-allday").hide();
+      $("#reminder-conditions").show();
 
-      $("#remider-conditions [name]").each(function() {
+      $("#reminder-conditions [name]").each(function() {
         $(this).attr("name", $(this).attr("data-name"));
       });
-      $("#remider-conditions-allday [name]").each(function() {
+      $("#reminder-conditions-allday [name]").each(function() {
         $(this).attr("name", "");
       });
     }
@@ -45,8 +45,8 @@
       setIntervalStep(this);
     });
   };
-  var sort1 = new SS_SortableForm('#remider-conditions', { limit: 5, onInsert: changeIntervalStep });
-  var sort2 = new SS_SortableForm('#remider-conditions-allday', { limit: 5, onInsert: changeIntervalStep });
+  var sort1 = new SS_SortableForm('#reminder-conditions', { limit: 5, onInsert: changeIntervalStep });
+  var sort2 = new SS_SortableForm('#reminder-conditions-allday', { limit: 5, onInsert: changeIntervalStep });
 
   <% if @item.allday == "allday" %>
   sort2.renderItems(<%== reminder_conditions.to_json %>);
@@ -63,7 +63,7 @@
     <%= @model.t :reminder_date %><%= @model.tt :reminder_date %>
   </dt>
   <dd>
-    <table id="remider-conditions" class="remider-conditions">
+    <table id="reminder-conditions" class="reminder-conditions">
       <tbody>
       <tr data-base="true">
         <td>
@@ -82,7 +82,7 @@
       </tbody>
     </table>
 
-    <table id="remider-conditions-allday" class="remider-conditions">
+    <table id="reminder-conditions-allday" class="reminder-conditions">
       <tbody>
       <tr data-base="true">
         <td>

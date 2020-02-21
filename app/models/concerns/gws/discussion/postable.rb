@@ -5,7 +5,9 @@ module Gws::Discussion::Postable
   include Gws::Referenceable
   include Gws::Reference::User
   include Gws::Reference::Site
+  include Gws::Member
   include Gws::GroupPermission
+  include Fs::FilePreviewable
 
   included do
     store_in collection: "gws_discussion_posts"
@@ -24,8 +26,8 @@ module Gws::Discussion::Postable
     field :topic_quota, type: Integer, default: nil
     field :order, type: Integer, default: 0
 
-    belongs_to :forum, class_name: "Gws::Discussion::Post", inverse_of: :forum_descendants
-    belongs_to :topic, class_name: "Gws::Discussion::Post", inverse_of: :descendants
+    belongs_to :forum, class_name: "Gws::Discussion::Forum", inverse_of: :forum_descendants
+    belongs_to :topic, class_name: "Gws::Discussion::Topic", inverse_of: :descendants
     belongs_to :parent, class_name: "Gws::Discussion::Post", inverse_of: :children
 
     has_many :forum_descendants, class_name: "Gws::Discussion::Post", dependent: :destroy, inverse_of: :forum,
@@ -65,6 +67,7 @@ module Gws::Discussion::Postable
 
   def current_topic
     return nil unless comment?
+
     depth == 2 ? self : parent
   end
 
@@ -106,7 +109,7 @@ module Gws::Discussion::Postable
   end
 
   def new_flag?
-    descendants_updated > Time.zone.now - site.discussion_new_days.day
+    created > Time.zone.now - site.discussion_new_days.day
   end
 
   def save_clone(new_parent = nil)
@@ -140,6 +143,29 @@ module Gws::Discussion::Postable
 
     children.order(id: 1).each { |c| c.save_clone(post) }
     post
+  end
+
+  def member?(*args)
+    if forum.present? && forum_id != id
+      forum.member?(*args)
+    end
+
+    super
+  end
+
+  def file_previewable?(file, user:, member:)
+    return false if user.blank?
+    return false if !file_ids.include?(file.id)
+
+    if forum.present? && forum_id != id
+      return true if forum.allowed?(:read, user, site: @cur_site || site)
+      return true if forum.member?(user)
+    else
+      return true if self.allowed?(:read, user, site: @cur_site || site)
+      return true if self.member?(user)
+    end
+
+    false
   end
 
   private

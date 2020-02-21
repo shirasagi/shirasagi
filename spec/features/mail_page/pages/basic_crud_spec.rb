@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe "mail_pages", dbscope: :example do
+describe "mail_pages", type: :feature, dbscope: :example do
   let(:site) { cms_site }
   let(:node) { create_once :mail_page_node_page, filename: "node", name: "article" }
   let(:item) { create(:mail_page_page, cur_node: node) }
@@ -24,7 +24,7 @@ describe "mail_pages", dbscope: :example do
       within "form#item-form" do
         fill_in "item[name]", with: "sample"
         fill_in "item[basename]", with: "sample"
-        click_button "保存"
+        click_button I18n.t('ss.buttons.save')
       end
       expect(status_code).to eq 200
       expect(current_path).not_to eq new_path
@@ -41,7 +41,7 @@ describe "mail_pages", dbscope: :example do
       visit edit_path
       within "form#item-form" do
         fill_in "item[name]", with: "modify"
-        click_button "保存"
+        click_button I18n.t('ss.buttons.save')
       end
       expect(current_path).not_to eq sns_login_path
       expect(page).to have_no_css("form#item-form")
@@ -50,7 +50,7 @@ describe "mail_pages", dbscope: :example do
     it "#copy" do
       visit copy_path
       within "form" do
-        click_button "保存"
+        click_button I18n.t('ss.buttons.save')
       end
       expect(status_code).to eq 200
       expect(current_path).to eq index_path
@@ -61,7 +61,7 @@ describe "mail_pages", dbscope: :example do
     it "#delete" do
       visit delete_path
       within "form" do
-        click_button "削除"
+        click_button I18n.t('ss.buttons.delete')
       end
       expect(current_path).to eq index_path
     end

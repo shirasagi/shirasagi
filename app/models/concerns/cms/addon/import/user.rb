@@ -13,8 +13,8 @@ module Cms::Addon::Import
     module ClassMethods
       def csv_headers
         %w(
-          id name kana uid email password tel tel_ext account_start_date account_expiration_date
-          initial_password_warning groups ldap_dn cms_roles
+          id name kana uid organization_uid email password tel tel_ext account_start_date account_expiration_date
+          initial_password_warning organization_id groups ldap_dn cms_roles
         )
       end
 
@@ -29,6 +29,7 @@ module Cms::Addon::Import
             line << item.name
             line << item.kana
             line << item.uid
+            line << item.organization_uid
             line << item.email
             line << nil
             line << item.tel
@@ -40,9 +41,10 @@ module Cms::Addon::Import
             else
               line << I18n.t('ss.options.state.disabled')
             end
-            line << item.groups.map(&:name).join("\n")
+            line << item.organization&.name
+            line << Cms::Group.site(opts[:site]).in(id: item.group_ids).pluck(:name).join("\n")
             line << item.ldap_dn
-            line << roles.map(&:name).join("\n")
+            line << roles.pluck(:name).join("\n")
             data << line
           end
         end
@@ -67,7 +69,11 @@ module Cms::Addon::Import
       return errors.add :in_file, :blank if in_file.blank?
 
       fname = in_file.original_filename
-      return errors.add :in_file, :invalid_file_type if ::File.extname(fname) !~ /^\.csv$/i
+      unless /^\.csv$/i.match?(::File.extname(fname))
+        errors.add :in_file, :invalid_file_type
+        return
+      end
+
       begin
         CSV.read(in_file.path, headers: true, encoding: 'SJIS:UTF-8')
         in_file.rewind
@@ -98,18 +104,23 @@ module Cms::Addon::Import
       end
 
       %w(
-        name kana uid email tel tel_ext account_start_date account_expiration_date ldap_dn
+        name kana uid organization_uid email tel tel_ext account_start_date account_expiration_date ldap_dn
       ).each do |k|
         item[k] = row[t(k)].to_s.strip
       end
 
       # password
       password = row[t("password")].to_s.strip
-      item.in_password = password if password.present?
+      item.in_password = password.presence
+
+      # organization
+      value = row[t('organization_id')].to_s.strip
+      group = SS::Group.where(name: value).first if value.present?
+      item.organization_id = group&.id
 
       # groups
       groups = row[t("groups")].to_s.strip.split(/\n/)
-      item.group_ids = SS::Group.in(name: groups).map(&:id)
+      set_group_ids(item, groups)
 
       # cms_roles
       cms_roles = row[t("cms_roles")].to_s.strip.split(/\n/)
@@ -131,18 +142,34 @@ module Cms::Addon::Import
       item
     end
 
+    def set_group_ids(item, groups)
+      item.group_ids = item.group_ids - rm_group_ids
+      if groups.present?
+        item.group_ids += SS::Group.in(name: groups).pluck(:id)
+      end
+      item.imported_group_keys = groups
+      item.imported_groups = item.groups
+      item.imported_cms_groups = Cms::Group.site(@cur_site)
+      item.group_ids = item.group_ids.uniq.sort
+    end
+
     def add_cms_roles(item, cms_roles)
-      site_role_ids = Cms::Role.site(@cur_site).map(&:id)
-      add_role_ids = Cms::Role.site(@cur_site).in(name: cms_roles).map(&:id)
+      site_role_ids = Cms::Role.site(@cur_site).pluck(:id)
+      add_role_ids = Cms::Role.site(@cur_site).in(name: cms_roles).pluck(:id)
       item.cms_role_ids = item.cms_role_ids - site_role_ids + add_role_ids
     end
 
     def set_errors(item, index)
-      error = ""
-      item.errors.each do |n, e|
-        error += "#{item.class.t(n)}#{e} "
+      sig = "#{Cms::User.t(:uid)}: #{item.uid}の" if item.uid.present?
+      sig ||= "#{Cms::User.t(:email)}: #{item.email}の" if item.email.present?
+      sig ||= "#{Cms::User.t(:id)}: #{item.id}の" if item.persisted?
+      item.errors.full_messages.each do |error|
+        errors.add(:base, "#{index}行目: #{sig}#{error}")
       end
-      self.errors.add :base, "#{index}: #{error}"
+    end
+
+    def rm_group_ids
+      @rm_group_ids ||= Cms::Group.site(@cur_site).pluck(:id)
     end
   end
 end

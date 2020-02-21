@@ -9,7 +9,7 @@ class Gws::Notice::FoldersController < ApplicationController
   private
 
   def set_crumbs
-    @crumbs << [t('modules.gws/notice'), gws_notice_main_path]
+    @crumbs << [@cur_site.menu_notice_label || t('modules.gws/notice'), gws_notice_main_path]
     @crumbs << [Gws::Notice::Folder.model_name.human, gws_notice_folders_path]
   end
 
@@ -59,15 +59,13 @@ class Gws::Notice::FoldersController < ApplicationController
     end
 
     @item.attributes = get_params
-    render_update @item.save
+    render_update @item.save, notice: t("ss.notice.moved")
   end
 
   def reclaim
     set_item
 
     @item.reclaim!
-    render_update true
-  rescue => e
-    render_update false
+    redirect_to({ action: :show }, { notice: t("gws/notice.notice.reclaimed") })
   end
 end

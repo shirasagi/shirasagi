@@ -12,10 +12,10 @@
   <dd><%= tryb{@item.account_expiration_date.strftime("%Y/%m/%d %H:%M")} %></dd>
 
   <dt><%= @model.t :organization_ids %><%= @model.tt :organization_ids %></dt>
-  <dd><%= br @item.organizations.map { |m| m.name }.join("\n") %></dd>
+  <dd><%= br @item.organizations.map { |m| m.name } %></dd>
 
   <dt><%= @model.t :site_ids %><%= @model.tt :site_ids %></dt>
-  <dd><%= br @item.sites.map { |m| m.name }.join("\n") %></dd>
+  <dd><%= br @item.sites.map { |m| m.name } %></dd>
 
   <dt><%= @model.t :cms_use %></dt>
   <dd><%= @item.label :cms_use %></dd>

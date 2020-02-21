@@ -1,4 +1,7 @@
-<%= jquery do %> SS_AddonTabs.hide(".webmail-addon-history"); <% end %>
+<%
+  addon ||= local_assigns.fetch(:addon, {})
+  addon[:display_body] = "hide"
+%>
 
 <div class="webmail-addon-history">
   <table class="index">

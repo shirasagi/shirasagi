@@ -48,7 +48,7 @@ describe 'members/agents/nodes/my_photo', type: :feature, dbscope: :example do
           fill_in 'item[name]', with: photo_name
           attach_file 'item[in_image]', photo_image
 
-          click_button '保存'
+          click_button I18n.t('ss.buttons.save')
         end
 
         expect(Member::Photo.site(site).count).to eq 1
@@ -82,15 +82,36 @@ describe 'members/agents/nodes/my_photo', type: :feature, dbscope: :example do
         #
         visit index_url
         click_link photo_name
-        click_link '削除する'
+        click_link I18n.t('ss.links.delete')
 
         within 'form div.member-photo-page' do
           expect(page).to have_css('.column dd', text: photo_name)
 
-          click_button '削除'
+          click_button I18n.t('ss.buttons.delete')
         end
 
         expect(Member::Photo.site(site).count).to eq 0
+      end
+
+      context 'with workflow' do
+        let(:item) do
+          create :member_photo, cur_site: site, cur_node: node_mypage, layout_id: layout.id, state: 'closed',
+                 workflow_state: 'request',
+                 workflow_approvers: [{"level"=>1, "user_id"=>cms_user.id, state: 'request'}],
+                 workflow_required_counts: [false]
+        end
+
+        it '#edit' do
+          visit File.join(node_my_photo.full_url, item.id.to_s, 'edit')
+          within 'form div.member-photo-page' do
+            select I18n.t('ss.options.state.public'), from: 'item[state]'
+            click_button I18n.t('ss.buttons.save')
+          end
+          photo_page = Member::Photo.site(site).first
+          expect(photo_page.workflow_state).to be_nil
+          expect(photo_page.workflow_approvers).to eq []
+          expect(photo_page.workflow_required_counts).to eq []
+        end
       end
     end
   end

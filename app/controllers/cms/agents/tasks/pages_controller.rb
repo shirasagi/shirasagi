@@ -1,16 +1,7 @@
 class Cms::Agents::Tasks::PagesController < ApplicationController
   include Cms::PublicFilter::Page
 
-  before_action :set_attachments, only: :generate
   PER_BATCH = 100
-
-  private
-
-  def set_attachments
-    @attachments = (@attachments == "1")
-  end
-
-  public
 
   def generate
     @task.log "# #{@site.name}"
@@ -24,8 +15,7 @@ class Cms::Agents::Tasks::PagesController < ApplicationController
       @task.count
       page = Cms::Page.site(@site).and_public.where(id: id).first
       next unless page
-      page.serve_static_relation_files = @attachments
-      @task.log page.url if page.becomes_with_route.generate_file
+      @task.log page.url if page.becomes_with_route.generate_file(release: false)
     end
   end
 

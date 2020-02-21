@@ -1,6 +1,7 @@
-<%= jquery do %>
-  SS_AddonTabs.hide(".mod-ss-site-auto-post-setting");
-<% end %>
+<%
+  addon ||= local_assigns.fetch(:addon, {})
+  addon[:display_body] = "hide"
+%>
 <dl class="see mod-ss-site-auto-post-setting">
   <dt><%= @model.t :site_twitter_auto_post %><%= @model.tt :site_twitter_auto_post %></dt>
   <dd><%= f.select :site_twitter_auto_post, @item.site_twitter_auto_post_options, include_blank: true %></dd>

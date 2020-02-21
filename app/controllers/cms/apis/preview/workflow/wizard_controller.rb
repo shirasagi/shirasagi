@@ -38,6 +38,9 @@ class Cms::Apis::Preview::Workflow::WizardController < ApplicationController
   end
 
   def check_item_lock_status
+    return if !@item.respond_to?(:locked?)
+    return if !@item.respond_to?(:lock_owned?)
+
     if @item.locked? && !@item.lock_owned?
       render json: [ t("errors.messages.locked", user: @item.lock_owner.long_name) ], status: :locked
       return

@@ -1,14 +1,12 @@
 .ads-total {
   overflow-x: auto;
-  padding: 0px 0px 10px;
+  padding: 0 0 10px;
   table {
     caption {
-      font-size: 120%;;
+      font-size: 120%;
       text-align: left;
     }
     th, td {
-      //overflow-x: visible;
-      //text-overflow: clip;
       white-space: nowrap;
     }
     thead th {

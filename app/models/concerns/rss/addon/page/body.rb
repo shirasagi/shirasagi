@@ -8,6 +8,8 @@ module Rss::Addon::Page
       field :html, type: String
       embeds_many :authors, class_name: "Rss::Author", as: :rss_author
       permit_params :rss_link, :html
+
+      validates :rss_link, presence: true
     end
 
     module ClassMethods
@@ -18,7 +20,7 @@ module Rss::Addon::Page
         count = criteria.count
         if count > max
           limit = count - max
-          criteria.order(released: 1, _id: 1).limit(limit).each do |item|
+          criteria.reorder(released: 1, id: 1).limit(limit).each do |item|
             item.with(mongo_client_options) do |model|
               model.destroy
             end
@@ -29,11 +31,11 @@ module Rss::Addon::Page
     end
 
     def url
-      rss_link
+      rss_link.presence || super
     end
 
     def full_url
-      rss_link
+      rss_link.presence || super
     end
 
     def json_path

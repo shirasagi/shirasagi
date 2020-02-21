@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe "opendata_agents_nodes_my_dataset_resources", dbscope: :example do
+describe "opendata_agents_nodes_my_dataset_resources", type: :feature, dbscope: :example do
   let(:site) { cms_site }
   let(:member) { opendata_member(site: site) }
   let!(:node_member) { create :opendata_node_member }
@@ -43,7 +43,7 @@ describe "opendata_agents_nodes_my_dataset_resources", dbscope: :example do
       expect(status_code).to eq 200
       click_link dataset.name
       click_link 'リソースを管理する'
-      click_link '新規作成'
+      click_link I18n.t('ss.links.new')
       expect(status_code).to eq 200
 
       within "form#item-form" do
@@ -79,10 +79,10 @@ describe "opendata_agents_nodes_my_dataset_resources", dbscope: :example do
         expect(page).to have_content(item_name2)
       end
       within "nav.menu" do
-        click_link '削除'
+        click_link I18n.t('ss.buttons.delete')
       end
       within "form#item-form" do
-        click_button '削除'
+        click_button I18n.t('ss.buttons.delete')
       end
       expect(status_code).to eq 200
 

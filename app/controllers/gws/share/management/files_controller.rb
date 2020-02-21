@@ -41,6 +41,7 @@ class Gws::Share::Management::FilesController < ApplicationController
 
   def set_folder
     return if params[:folder].blank?
+
     @folder ||= Gws::Share::Folder.site(@cur_site).find(params[:folder])
   end
 
@@ -48,12 +49,17 @@ class Gws::Share::Management::FilesController < ApplicationController
     { cur_user: @cur_user, cur_site: @cur_site }
   end
 
-  def pre_params
-    p = super
-    if @category.present?
-      p[:category_ids] = [ @category.id ]
-    end
-    p
+  # def pre_params
+  #   p = super
+  #   if @category.present?
+  #     p[:category_ids] = [ @category.id ]
+  #   end
+  #   p
+  # end
+
+  def set_item
+    super
+    raise "403" unless @item.allowed?(:read, @cur_user, site: @cur_site)
   end
 
   def update_folder_file_info
@@ -88,24 +94,15 @@ class Gws::Share::Management::FilesController < ApplicationController
       search(params[:s]).
       custom_order(params.dig(:s, :sort) || 'updated_desc').
       page(params[:page]).per(50)
-
-    folder_name = Gws::Share::Folder.site(@cur_site).
-      allow(:read, @cur_user, site: @cur_site).
-      where(id: params[:folder].to_i).
-      pluck(:name).
-      first
-
-    @sub_folders = Gws::Share::Folder.site(@cur_site).allow(:read, @cur_user, site: @cur_site).
-      sub_folder(params[:folder] || 'root_folder', folder_name)
   end
 
   def show
-    raise "403" unless @item.allowed?(:read, @cur_user, site: @cur_site)
     render
   end
 
   def recover
     raise "403" unless @item.allowed?(:delete, @cur_user, site: @cur_site)
+
     render
   end
 
@@ -113,44 +110,52 @@ class Gws::Share::Management::FilesController < ApplicationController
     set_item
     set_last_modified
 
-    if params[:history_id].present?
-      history_item = Gws::Share::History.where(item_id: @item.id, _id: params[:history_id]).first
-      server_dir = File.dirname(@item.path)
-      uploadfile_path = File.join(server_dir, "#{@item.id}_#{history_item.uploadfile_srcname}")
+    raise "404" if params[:history_id].blank?
+
+    history_item = @item.histories.where(id: params[:history_id].to_s).first
+    raise "404" if history_item.blank?
+
+    if history_item.id == @item.histories.first.id
+      # latest history item
+      path = @item.path
+      type = @item.content_type
+      filename = @item.download_filename
+    else
+      path = history_item.path
+      type = history_item.uploadfile_content_type
+      filename = history_item.uploadfile_name
     end
 
-    if Fs.mode == :file && Fs.file?(uploadfile_path)
-      send_file uploadfile_path, type: history_item.uploadfile_content_type, filename: history_item.uploadfile_name,
-                disposition: :attachment, x_sendfile: true
-    elsif Fs.mode == :file && Fs.file?(@item.path)
-      send_file @item.path, type: @item.content_type, filename: @item.download_filename,
-                disposition: :attachment, x_sendfile: true
+    raise "404" unless Fs.file?(path)
+
+    if Fs.mode == :file
+      send_file path, type: type, filename: filename, disposition: :attachment, x_sendfile: true
     else
-      send_data @item.read, type: @item.content_type, filename: @item.download_filename,
-                disposition: :attachment
+      send_data ::Fs.binread(path), type: type, filename: filename, disposition: :attachment
     end
   end
 
   def active
     raise '403' unless @item.allowed?(:edit, @cur_user, site: @cur_site)
+
     location = { action: :index, folder: params[:folder], category: params[:category] }
     render_destroy @item.active, { location: location }
   end
 
-  def active_all
-    entries = @items.entries
-    @items = []
-
-    entries.each do |item|
-      if item.allowed?(:edit, @cur_user, site: @cur_site)
-        next if item.active
-      else
-        item.errors.add :base, :auth_error
-      end
-      @items << item
-    end
-    render_destroy_all(entries.size != @items.size)
-  end
+  # def active_all
+  #   entries = @items.entries
+  #   @items = []
+  #
+  #   entries.each do |item|
+  #     if item.allowed?(:edit, @cur_user, site: @cur_site)
+  #       next if item.active
+  #     else
+  #       item.errors.add :base, :auth_error
+  #     end
+  #     @items << item
+  #   end
+  #   render_destroy_all(entries.size != @items.size)
+  # end
 
   def destroy_all
     entries = @items.entries

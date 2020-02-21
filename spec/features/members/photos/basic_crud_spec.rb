@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe "member_photos", dbscope: :example do
+describe "member_photos", type: :feature, dbscope: :example do
   let(:site) { cms_site }
   let(:node) { create_once :member_node_photo, filename: "photos", name: "photos" }
   let(:item) { create(:member_photo, cur_node: node) }
@@ -24,7 +24,7 @@ describe "member_photos", dbscope: :example do
         fill_in "item[name]", with: "sample"
         attach_file "item[in_image]", Rails.root.join("spec", "fixtures", "ss", "logo.png").to_s
         select I18n.t("member.options.license_name.free"), from: 'item[license_name]'
-        click_button "保存"
+        click_button I18n.t('ss.buttons.save')
       end
       expect(status_code).to eq 200
       expect(current_path).not_to eq new_path
@@ -41,7 +41,7 @@ describe "member_photos", dbscope: :example do
       visit edit_path
       within "form#item-form" do
         fill_in "item[name]", with: "modify"
-        click_button "保存"
+        click_button I18n.t('ss.buttons.save')
       end
       expect(current_path).not_to eq sns_login_path
       expect(page).to have_no_css("form#item-form")

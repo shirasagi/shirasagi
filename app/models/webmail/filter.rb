@@ -100,6 +100,7 @@ class Webmail::Filter
   def search_keys
     reduced = conditions.map do |cond|
       next if cond[:field].blank? || cond[:value].blank?
+
       keys = []
       keys << 'NOT' if cond[:operator] == 'exclude'
       keys << cond[:field].upcase

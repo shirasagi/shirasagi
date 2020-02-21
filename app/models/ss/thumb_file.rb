@@ -21,4 +21,9 @@ class SS::ThumbFile
   def url
     "/fs/" + original_id.to_s.split(//).join("/") + "/_/thumb/#{filename}"
   end
+
+  def remove_file
+    Fs.rm_rf(path)
+    remove_public_file
+  end
 end

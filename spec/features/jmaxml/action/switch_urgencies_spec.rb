@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe "jmaxml/action/switch_urgencies", dbscope: :example, js: true do
+describe "jmaxml/action/switch_urgencies", type: :feature, dbscope: :example, js: true do
   let(:site) { cms_site }
   let(:group) { cms_group }
   let(:node) { create :rss_node_weather_xml, cur_site: site }
@@ -80,7 +80,7 @@ describe "jmaxml/action/switch_urgencies", dbscope: :example, js: true do
       within 'form' do
         click_on I18n.t('ss.buttons.delete')
       end
-      expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'), wait: 60)
+      expect(page).to have_css('#notice', text: I18n.t('ss.notice.deleted'), wait: 60)
 
       expect(model.count).to eq 0
     end

@@ -14,7 +14,11 @@ class Opendata::Agents::Nodes::Mypage::Idea::MyIdeaController < ApplicationContr
   protected
 
   def idea_node
-    @idea_node ||= Opendata::Node::Idea.site(@cur_site).and_public.first
+    @idea_node ||= begin
+      node = Opendata::Node::Idea.site(@cur_site).and_public.first
+      node = Opendata::Node::Idea.site(@cur_site).first if node.blank?
+      node
+    end
   end
 
   def set_model

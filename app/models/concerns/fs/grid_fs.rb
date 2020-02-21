@@ -7,9 +7,9 @@ module Fs::GridFs
   class Stat
     attr_reader :size, :atime, :mtime, :ctime
 
-    def initialize(fs)
-      @size  = fs[:length]
-      @atime = fs[:updated] || fs[:uploadDate]
+    def initialize(obj)
+      @size  = obj[:length]
+      @atime = obj[:updated] || obj[:uploadDate]
       @mtime = @atime
       @ctime = @ctime
     end
@@ -40,6 +40,7 @@ module Fs::GridFs
 
     def directory?(path)
       return false if file?(path)
+
       Mongoid::GridFs.find(filename: /#{::Regexp.escape(path_filter(path))}/) != nil
     end
 
@@ -50,6 +51,7 @@ module Fs::GridFs
     def binread(path)
       obj = get(path)
       raise FileNotFoundError if obj.nil?
+
       obj.data
     end
 
@@ -73,6 +75,7 @@ module Fs::GridFs
     def stat(path)
       obj = get(path)
       raise FileNotFoundError if obj.nil?
+
       Stat.new obj
     end
 
@@ -99,6 +102,7 @@ module Fs::GridFs
         fs.save
       end
       raise FileNotFoundError if count == 0
+
       0
     end
 
@@ -115,6 +119,14 @@ module Fs::GridFs
       path = path.gsub('\\*\\*/', "([^/]*\/)*")
       path = path.gsub('\\*', ".*")
       Mongoid::GridFs.file_model.where(filename: /^#{path}$/).map { |fs| fs.filename }
+    end
+
+    def to_io(path)
+      raise NotImplementedError
+    end
+
+    def cp(src, dest)
+      binwrite(dest, binread(src))
     end
   end
 end

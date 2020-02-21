@@ -37,15 +37,20 @@ class Gws::SharedAddress::Address
   private
 
   def export_fields
-    %w(id name kana company title tel email memo address_group_id)
+    %w(id member_id address_group_id name kana company title tel email memo)
   end
 
   def export_convert_item(item, data)
-    data[8] = item.address_group.name if item.address_group
+    data[1] = item.member ? item.member.uid : nil
+    data[2] = item.address_group ? item.address_group.name : nil
     data
   end
 
   def import_convert_data(data)
+    if data[:member_id].present?
+      member = Gws::User.site(@cur_site).where(uid: data[:member_id]).first
+      data[:member_id] = member ? member.id : nil
+    end
     if data[:address_group_id].present?
       group = Gws::SharedAddress::Group.site(@cur_site).where(name: data[:address_group_id]).first
       data[:address_group_id] = group ? group.id : nil

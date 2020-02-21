@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe 'article_pages', dbscope: :example, js: true do
+describe 'article_pages', type: :feature, dbscope: :example, js: true do
   let(:site) { cms_site }
   let(:node) { create :article_node_page, cur_site: site }
   let!(:form) { create(:cms_form, cur_site: site, state: 'public', sub_type: 'static') }
@@ -81,19 +81,19 @@ describe 'article_pages', dbscope: :example, js: true do
           select column5_value, from: "item[column_values][][in_wrap][value]"
         end
         within ".column-value-cms-column-radiobutton" do
-          first(:field, name: "item[column_values][][in_wrap][value]", with: column6_value).click
+          first(:field, type: "radio", with: column6_value).click
         end
         within ".column-value-cms-column-checkbox" do
           first(:field, name: "item[column_values][][in_wrap][values][]", with: column7_value).click
         end
         within ".column-value-cms-column-fileupload" do
-          fill_in "item[column_values][][in_wrap][image_text]", with: column8_image_text
+          fill_in "item[column_values][][in_wrap][file_label]", with: column8_image_text
           click_on I18n.t("ss.links.upload")
         end
       end
-      within 'div#cboxLoadedContent form.user-file' do
+      wait_for_cbox do
         attach_file 'item[in_files][]', "#{Rails.root}/spec/fixtures/ss/logo.png"
-        click_on I18n.t('ss.buttons.save')
+        click_on I18n.t('ss.buttons.attach')
       end
       within 'form#item-form' do
         within ".column-value-cms-column-fileupload" do
@@ -127,20 +127,20 @@ describe 'article_pages', dbscope: :example, js: true do
           select column5_value2, from: "item[column_values][][in_wrap][value]"
         end
         within ".column-value-cms-column-radiobutton" do
-          first(:field, name: "item[column_values][][in_wrap][value]", with: column6_value2).click
+          first(:field, type: "radio", with: column6_value2).click
         end
         within ".column-value-cms-column-checkbox" do
           first(:field, name: "item[column_values][][in_wrap][values][]", with: column7_value).click
           first(:field, name: "item[column_values][][in_wrap][values][]", with: column7_value2).click
         end
         within ".column-value-cms-column-fileupload" do
-          fill_in "item[column_values][][in_wrap][image_text]", with: column8_image_text2
+          fill_in "item[column_values][][in_wrap][file_label]", with: column8_image_text2
           click_on I18n.t("ss.links.upload")
         end
       end
-      within 'div#cboxLoadedContent form.user-file' do
+      wait_for_cbox do
         attach_file 'item[in_files][]', "#{Rails.root}/spec/fixtures/ss/file/keyvisual.gif"
-        click_on I18n.t('ss.buttons.save')
+        click_on I18n.t('ss.buttons.attach')
       end
       within 'form#item-form' do
         within ".column-value-cms-column-fileupload" do
@@ -177,11 +177,13 @@ describe 'article_pages', dbscope: :example, js: true do
         expect(item.column_values.find_by(column_id: column5.id).value).to eq column5_value
         expect(item.column_values.find_by(column_id: column6.id).value).to eq column6_value
         expect(item.column_values.find_by(column_id: column7.id).values).to eq [ column7_value ]
-        expect(item.column_values.find_by(column_id: column8.id).file_id).not_to be_nil
-        expect(item.column_values.find_by(column_id: column8.id).file).to be_nil
+        expect(item.column_values.find_by(column_id: column8.id).file_id).to be_truthy
+        expect(item.column_values.find_by(column_id: column8.id).file).to be_truthy
+        expect(item.column_values.find_by(column_id: column8.id).file.name).to eq 'logo.png'
+        expect(item.column_values.find_by(column_id: column8.id).file_label).to eq column8_image_text
         expect(item.backups.count).to eq 2
       end
-      expect(SS::File.all.unscoped.count).to eq 2
+      expect(SS::File.all.unscoped.count).to eq 4
     end
   end
 end

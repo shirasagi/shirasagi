@@ -1,25 +1,27 @@
 module Category::IntegrationFilter
   extend ActiveSupport::Concern
 
+  public
+
   def split
-    @item = @cur_node.becomes_with_route
+    set_item
+    @item = @item.becomes_with_route
     @model = @item.class
-    #raise "403" unless @item.allowed?(:edit, @cur_user)
+    raise "403" unless @item.allowed?(:edit, @cur_user, site: @cur_site)
 
     return if request.get?
     @item.attributes = get_params
-    #@item.in_updated = params[:_updated] if @item.respond_to?(:in_updated)
-    render_create @item.category_split, location: { action: :index }, render: { file: :split }
+    render_create @item.category_split, location: redirect_url, render: { file: :split }
   end
 
   def integrate
-    @item = @cur_node.becomes_with_route
+    set_item
+    @item = @item.becomes_with_route
     @model = @item.class
-    #raise "403" unless @item.allowed?(:edit, @cur_user)
+    raise "403" unless @item.allowed?(:edit, @cur_user, site: @cur_site)
 
     return if request.get?
     @item.attributes = get_params
-    #@item.in_updated = params[:_updated] if @item.respond_to?(:in_updated)
-    render_create @item.category_integrate, location: { action: :index }, render: { file: :integrate }
+    render_create @item.category_integrate, location: redirect_url, render: { file: :integrate }
   end
 end

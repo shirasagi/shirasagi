@@ -5,14 +5,14 @@
 
 header, footer, nav, section, article, figure, aside {
   display: block;
-  margin: 0px;
+  margin: 0;
 }
 
 // -----------------------------------------------------------------------------
 // mixin
 
 @mixin clear {
-  zoom:1;
+  zoom: 1;
   &:before, &:after {
     content: "\0020";
     display: block;

@@ -456,6 +456,7 @@ module Workflow::Approver
   end
 
   def validate_workflow_approvers_role
+    return if new_record?
     return if cur_site.nil?
     return if errors.present?
 

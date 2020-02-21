@@ -9,6 +9,19 @@ class Cms::Column::Value::Headline < Cms::Column::Value::Base
     export :text
   end
 
+  def import_csv(values)
+    super
+
+    values.map do |name, value|
+      case name
+      when self.class.t(:head)
+        self.head = value
+      when self.class.t(:text)
+        self.text = value
+      end
+    end
+  end
+
   private
 
   def validate_value
@@ -35,6 +48,7 @@ class Cms::Column::Value::Headline < Cms::Column::Value::Base
     return '' if text.blank?
     return '' if head.blank?
 
-    ApplicationController.helpers.content_tag(head.to_sym, text)
+    escaped = ApplicationController.helpers.sanitize(text)
+    ApplicationController.helpers.content_tag(head.to_sym, escaped)
   end
 end

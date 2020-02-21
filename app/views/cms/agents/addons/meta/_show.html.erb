@@ -1,5 +1,9 @@
-<% return "" unless @item.meta_present? %>
-<%= jquery do %> SS_AddonTabs.hide("dl.meta"); <% end %>
+<%
+  return "" unless @item.meta_present?
+
+  addon ||= local_assigns.fetch(:addon, {})
+  addon[:display_body] = "hide"
+%>
 
 <dl class="see meta">
   <dt><%= @model.t :keywords %></dt>

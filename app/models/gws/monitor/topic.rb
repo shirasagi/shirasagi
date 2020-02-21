@@ -186,7 +186,7 @@ class Gws::Monitor::Topic
 
       owner_items.each do |ownerssfile|
         if File.exist?(ownerssfile[1].path)
-          zip_file.add(NKF::nkf('-sx --cp932', "own" + ownerssfile[0] + "_" + ownerssfile[1].name), ownerssfile[1].path)
+          zip_file.add(NKF::nkf('-sx --cp932', "own_" + ownerssfile[0] + "_" + ownerssfile[1].name), ownerssfile[1].path)
         end
       end
     end

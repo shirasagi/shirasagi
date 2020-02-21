@@ -1,0 +1,15 @@
+<% facilities = @cur_page.facilities.and_public %>
+<% if facilities.present? %>
+  <dl class="see">
+    <dt><%= @cur_page.t :facilities %></dt>
+    <dd class="page">
+      <ul>
+        <% facilities.each do |item| %>
+          <%= content_tag(:li, class: item.categories.pluck(:filename).map { |c| c.tr('/', '-') }.presence) do %>
+            <%= link_to item.name, item.url %>
+          <% end %>
+        <% end %>
+      </ul>
+    </dd>
+  </dl>
+<% end %>

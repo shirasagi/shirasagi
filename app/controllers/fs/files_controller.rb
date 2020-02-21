@@ -2,12 +2,18 @@ class Fs::FilesController < ApplicationController
   include SS::AuthFilter
   include Member::AuthFilter
   include Fs::FileFilter
+  include Cms::PublicFilter::Site
 
+  before_action :set_user
   before_action :set_item
   before_action :deny
   rescue_from StandardError, with: :rescue_action
 
   private
+
+  def set_user
+    @cur_user = get_user_by_session
+  end
 
   def set_item
     id = params[:id_path].present? ? params[:id_path].gsub(/\//, "") : params[:id]
@@ -15,18 +21,12 @@ class Fs::FilesController < ApplicationController
     path << ".#{params[:format]}" if params[:format].present?
 
     @item = SS::File.find_by id: id, filename: path
-    raise "404" if @item.thumb?
+    @item = @item.becomes_with_model
+    raise "404" if @item.try(:thumb?)
   end
 
   def deny
-    return if @item.public?
-    return if SS.config.env.remote_preview
-
-    user   = get_user_by_session
-    member = get_member_by_session
-    item   = @item.becomes_with_model
-    raise "404" unless item.previewable?(user: user, member: member)
-
+    raise "404" unless @item.previewable?(user: @cur_user, member: get_member_by_session)
     set_last_logged_in
   end
 
@@ -40,24 +40,32 @@ class Fs::FilesController < ApplicationController
       file = error_html_file(status)
       return ss_send_file(file, status: status, type: Fs.content_type(file), disposition: :inline)
     end
+    if e.is_a?(Mongoid::Errors::DocumentNotFound)
+      status = 404
+      file = error_html_file(status)
+      return ss_send_file(file, status: status, type: Fs.content_type(file), disposition: :inline)
+    end
     raise e
   end
 
   def error_html_file(status)
-    file = "#{Rails.public_path}/#{status}.html"
-    Fs.exists?(file) ? file : "#{Rails.public_path}/500.html"
+    if @cur_site && @cur_user.nil?
+      file = "#{@cur_site.path}/#{status}.html"
+      return file if Fs.exists?(file)
+    end
+
+    file = "#{Rails.public_path}/.error_pages/#{status}.html"
+    Fs.exists?(file) ? file : "#{Rails.public_path}/.error_pages/500.html"
   end
 
   def send_item(disposition = :inline)
     set_last_modified
 
-    filename = @item.name.presence || @item.filename
-
     if Fs.mode == :file && Fs.file?(@item.path)
-      send_file @item.path, type: @item.content_type, filename: filename,
+      send_file @item.path, type: @item.content_type, filename: @item.download_filename,
                 disposition: disposition, x_sendfile: true
     else
-      send_data @item.read, type: @item.content_type, filename: filename,
+      send_data @item.read, type: @item.content_type, filename: @item.download_filename,
                 disposition: disposition
     end
   end
@@ -72,7 +80,7 @@ class Fs::FilesController < ApplicationController
     size   = params[:size]
     width  = params[:width]
     height = params[:height]
-    thumb  = @item.thumb(size)
+    thumb  = @item.try(:thumb, size)
 
     if width.present? && height.present?
       set_last_modified

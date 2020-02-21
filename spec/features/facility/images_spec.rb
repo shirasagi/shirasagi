@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe "facility_images" do
+describe "facility_images", type: :feature do
   subject(:site) { cms_site }
   subject(:node) { create_once :facility_node_page, name: "facility" }
   subject(:item) { Facility::Image.last }

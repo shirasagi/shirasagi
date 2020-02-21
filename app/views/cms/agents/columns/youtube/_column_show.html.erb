@@ -1,6 +1,6 @@
 <%= render 'cms/agents/columns/main/base', show: true, column: column, value: value do %>
   <% if value.youtube_id.present? %>
-    <%= "https://youtu.be/#{value.youtube_id}" %>
+    <%= value.url %> (<%= value.youtube_id %>)
     (
     <% if value.auto_width == "enabled" %>
       <%= I18n.t("cms.column_youtube_auto_width.#{value.auto_width}") %>
@@ -10,7 +10,7 @@
     )
 
     <div>
-      <%== value.iframe %>
+      <%== value.youtube_iframe %>
     </div>
   <% end %>
 <% end %>

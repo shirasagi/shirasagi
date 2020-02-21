@@ -109,6 +109,8 @@ ja:
     mail:
       subject:
         notify: 会員登録申請
+        verification: 会員登録確認
+        completed: 会員登録完了
 
   modules:
     member: メンバー
@@ -140,7 +142,8 @@ ja:
       member/registration/notice: メール通知
       member/registration/confirmation: 登録確認
       member/registration/reply: 登録確認メール
-      member/registration/reset_password_mail: パスワード再設定メール
+      member/registration/completed: 登録完了メール
+      member/registration/reset_password: パスワード再設定メール
       member/registration/required_fields: 必須入力
       member/additional_attributes: 追加情報
       member/group_invitation_setting: グループ招待メール設定
@@ -261,6 +264,7 @@ ja:
       member/addon/registration/sender_address:
         sender_name: 送信者名
         sender_email: 送信メールアドレス
+        sender_signature: 署名
       member/addon/registration/notice:
         notice_state: 通知設定
         notice_email: 通知メールアドレス
@@ -270,15 +274,17 @@ ja:
         header_html: ヘッダーHTML
         footer_html: フッターHTML
       member/addon/registration/reply:
-        subject: 件名
+        reply_subject: 件名
         reply_upper_text: 上部確認テキスト
         reply_lower_text: 下部確認テキスト
-        reply_signature: 署名
-      member/addon/registration/reset_password_mail:
+      member/addon/registration/completed:
+        completed_subject: 件名
+        completed_upper_text: 上部確認テキスト
+        completed_lower_text: 下部確認テキスト
+      member/addon/registration/reset_password:
         reset_password_subject: 件名
         reset_password_upper_text: 上部確認テキスト
         reset_password_lower_text: 下部確認テキスト
-        reset_password_signature: 署名
       member/addon/registration/required_fields:
         kana_required: 氏名（ふりがな）
         organization_name_required: 会社、団体名
@@ -341,6 +347,12 @@ ja:
     delete_private_member_photos: メンバーフォトの削除（所有）
     release_other_member_photos: メンバーフォトの公開（全て）
     release_private_member_photos: メンバーフォトの公開（所有）
+    approve_other_member_photos: メンバーフォトの承認（全て）
+    approve_private_member_photos: メンバーフォトの承認（所有）
+    reroute_other_member_photos: メンバーフォトの承認申請取消（全て）
+    reroute_private_member_photos: メンバーフォトの承認申請取消（所有）
+    revoke_other_member_photos: メンバーフォトの承認経路変更（全て）
+    revoke_private_member_photos: メンバーフォトの承認経路変更（所有）
 
   views:
     registration:
@@ -461,6 +473,29 @@ ja:
         - 送信者名を設定します。
       sender_email:
         - 送信メールアドレスを設定します。
+      sender_signature:
+        - 署名を設定します。
+    member/addon/registration/reply:
+      reply_subject:
+        - 件名を設定します。
+      reply_upper_text:
+        - 上部確認テキストを設定します。
+      reply_lower_text:
+        - 下部確認テキストを設定します。
+    member/addon/registration/completed:
+      completed_subject:
+        - 件名を設定します。
+      completed_upper_text:
+        - 上部確認テキストを設定します。
+      completed_lower_text:
+        - 下部確認テキストを設定します。
+    member/addon/registration/reset_password:
+      reset_password_subject:
+        - 件名を設定します。
+      reset_password_upper_text:
+        - 上部確認テキストを設定します。
+      reset_password_lower_text:
+        - 下部確認テキストを設定します。
     member/addon/registration/notice:
       notice_state:
         - メンバーの登録申請通知を使用するか設定します。

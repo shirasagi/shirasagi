@@ -17,12 +17,23 @@ module Cms::PageFilter
   end
 
   def pre_params
+    params = {}
+
     if @cur_node
-      layout_id = @cur_node.page_layout_id || @cur_node.layout_id
-      { layout_id: layout_id }
-    else
-      {}
+      n = @cur_node.class == Cms::Node ? @cur_node.becomes_with_route : @cur_node
+
+      layout_id = n.page_layout_id || n.layout_id
+      params[:layout_id] = layout_id if layout_id.present?
+
+      if n.respond_to?(:st_forms) && n.st_form_ids.include?(n.st_form_default_id)
+        default_form = n.st_form_default
+        if default_form.present? && default_form.allowed?(:read, @cur_user, site: @cur_site)
+          params[:form_id] = default_form.id
+        end
+      end
     end
+
+    params
   end
 
   def set_items
@@ -97,8 +108,18 @@ module Cms::PageFilter
     location = nil
     if result && @item.try(:branch?) && @item.state == "public"
       location = { action: :index }
-      @item.delete
+      @item.file_ids = nil if @item.respond_to?(:file_ids)
+      @item.destroy
     end
+
+    # If page is failed to update, page is going to show in edit mode with update errors
+    if !result && @item.is_a?(Cms::Addon::EditLock)
+      # So, edit lock must be held
+      unless @item.acquire_lock
+        location = { action: :lock }
+      end
+    end
+
     render_update result, location: location
   end
 

@@ -22,7 +22,7 @@
       </div>
     </div>
     <div class="addon-body">
-      <div class="main" id="gws-notice-text">
+      <div class="main <%= @item.text_type == 'markdown' ? "markdown-body" : nil %>" id="gws-notice-text">
         <%= @item.html %>
       </div>
       <% if @item.files.present? %>
@@ -45,68 +45,13 @@
       <% end %>
     </div>
     <div class="menu">
-      <%= button_tag @item.browsed?(@cur_user) ? t('gws/notice.links.unset_seen') : t('gws/notice.links.set_seen'), name: 'toggle-browsed', type: 'button', class: 'btn' %>
+      <% if @item.browsed?(@cur_user) %>
+        <%= button_to(t('gws/notice.links.unset_seen'), url_for(action: :toggle_browsed), 'data-confirm': t('gws/notice.confirm.unset_seen'), class: 'btn') %>
+      <% else %>
+        <%= button_to(t('gws/notice.links.set_seen'), url_for(action: :toggle_browsed), 'data-confirm': t('gws/notice.confirm.set_seen'), class: 'btn') %>
+      <% end %>
     </div>
   </div>
 
-  <%= render file: "_addons_show", locals: {addons: @item.addons.select {|addon| addon.klass == Gws::Addon::Notice::CommentPost}} %>
+  <%= render file: "_addons_show", locals: { addons: @item.addons.select { |addon| [Gws::Addon::Notice::CommentPost].include?(addon.klass) } } %>
 </div>
-
-<%= jquery do %>
-  var url = "<%= url_for(action: :toggle_browsed, format: 'json') %>";
-  var browsed = <%== @item.browsed?(@cur_user) ? true.to_json : false.to_json %>;
-  var $button = $('button[name=toggle-browsed]');
-  var token = $('meta[name="csrf-token"]').attr('content');
-
-  var renderButton = function() {
-    if (browsed) {
-      $button.html("<%= t('gws/notice.links.unset_seen') %>");
-    } else {
-      $button.html("<%= t('gws/notice.links.set_seen') %>");
-    }
-  };
-
-  var toggleBrowsed = function(success) {
-    $.ajax({
-      url: url,
-      type: 'POST',
-      data: { authenticity_token: token },
-      success: success
-    });
-  };
-
-  var setBrowsed = function() {
-    if (! confirm("<%= t('gws/notice.confirm.set_seen') %>")) {
-      return;
-    }
-
-    toggleBrowsed(function() {
-      browsed = true;
-      renderButton();
-      SS.notice("<%= t('gws/notice.notice.set_seen') %>");
-    });
-    return;
-  };
-
-  var unsetBrowsed = function() {
-    if (! confirm("<%= t('gws/notice.confirm.unset_seen') %>")) {
-      return;
-    }
-
-    toggleBrowsed(function() {
-      browsed = false;
-      renderButton();
-      SS.notice("<%= t('gws/notice.notice.unset_seen') %>");
-    });
-    return;
-  };
-
-  $button.on('click', function() {
-    if (browsed) {
-      unsetBrowsed();
-    } else {
-      setBrowsed();
-    }
-    return false;
-  });
-<% end %>

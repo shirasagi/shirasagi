@@ -31,6 +31,7 @@ class Gws::Portal::User::SettingsController < ApplicationController
   public
 
   def show
+    raise "403" unless @item.allowed?(:edit, @cur_user, site: @cur_site)
     show_setting
   end
 end

@@ -63,9 +63,10 @@ module Category::Addon
       # validate static files duplication
       src_path = ::File.join(@cur_site.path, partial.filename)
       dst_path = ::File.join(@cur_site.path, filename)
-      files= Fs.glob("#{dst_path}/**/{*,.*}").map { |item| item.sub(/#{dst_path}\//, "") }
+      files = Fs.glob("#{dst_path}/**/{*,.*}").map { |item| item.sub(/#{dst_path}\//, "") }
       Fs.glob("#{src_path}/**/{*,.*}").each do |item|
         file = item.sub(/^#{src_path}\//, "")
+        next if %w(index.html rss.xml).include?(file)
 
         if files.include?(file)
           error_opts = { file: file }
@@ -93,6 +94,9 @@ module Category::Addon
       # move static files
       Fs.mkdir_p dst_path unless Fs.exists?(dst_path)
       Fs.glob("#{src_path}/**/{*,.*}").each do |src|
+        file = src.sub(/^#{src_path}\//, "")
+        next if %w(index.html rss.xml).include?(file)
+
         dst = src.sub(/^#{src_path}\//, "#{dst_path}\/")
         Fs.mv src, dst if Fs.exists?(src)
       end

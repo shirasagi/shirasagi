@@ -21,20 +21,23 @@
           <%= link_to t('ss.links.show'), action: :show, id: item if item.allowed?(:read, @cur_user, site: @cur_site) %>
 
           <% if item.try(:image) %>
-            <%= link_to image_tag(item.image.thumb_url), item.image.url, {class: "thumb", target: "_blank"} %>
+            <%= link_to image_tag(item.image.thumb_url), item.image.url, { class: "thumb", target: "_blank" } %>
           <% elsif item.try(:image?) %>
-            <%= link_to image_tag(item.thumb_url), item.url, {class: "thumb", target: "_blank"} %>
+            <%= link_to image_tag(item.thumb_url), item.url, { class: "thumb", target: "_blank" } %>
           <% end %>
         </nav>
 
         <label class="check"><input type="checkbox" name="ids[]" value="<%= item.id %>"/></label>
         <div class="info">
           <% title = item.try(:name) || item.try(:title) || item.try(:filename) || "##{item.id}" %>
-          <%= link_to title, {action: :show, id: item}, class: "title" %>
+          <%= link_to title, { action: :show, id: item }, class: "title" %>
+          <% if item.new_flag? %><span class="gws-board-flag-new"></span><% end %>
 
           <div class="meta">
             <span class="id">#<%= item.id %></span>
-            <span class="datetime"><%= tryb { item.due_date.strftime('%Y/%m/%d %H:%M') } %></span>
+            <span class="datetime"><%= @model.t(:due_date) %>: <%= tryb { item.due_date.strftime('%Y/%m/%d') } %></span>
+            <span class="datetime"><%= @model.t(:updated) %>: <%= item.updated.strftime('%Y/%m/%d %H:%M') %></span>
+            <span class="datetime"><%= @model.t(:created) %>: <%= item.created.strftime('%Y/%m/%d %H:%M') %></span>
             <span class="seen"><%= item.seen?(@cur_user) ? t('gws/circular.post.seen') : t('gws/circular.post.unseen') if item.member?(@cur_user) %></span>
             <span><%= item.user_long_name %></span>
             <span class="gws-share-categories">

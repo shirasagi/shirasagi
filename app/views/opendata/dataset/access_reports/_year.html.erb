@@ -12,6 +12,8 @@
     dataset_ids["#{item["year"]}"] ||= []
     dataset_ids["#{item["year"]}"] << item["target_id"]
   end
+  dataset_ids.each { |key, values| values.sort! }
+
   datasets = {}
   @aggregate.datasets.in(id: dataset_ids.values.flatten.map(&:to_i)).each do |dataset|
     datasets["#{dataset.id}"] = dataset
@@ -24,37 +26,41 @@
     <% if aggregate_hash[y].present? %>
 
       <% year, month = y.split("-") %>
-      <div class="list-head"><%= "#{year}年" %></div>
+      <div class="list-head"><%= "#{year}#{t("datetime.prompts.year")}" %></div>
       <div class="reports-table">
         <table class="index">
           <thead>
             <tr>
-              <th colspan="100%"><%= t("opendata.download_reports.dataset_data") %></th>
+              <th colspan="7"><%= t("opendata.download_reports.dataset_data") %></th>
+              <th class="sum-<%= y %>"></th>
             </tr>
           </thead>
           <tbody>
             <%
+              y_count = 0
               y_dataset_ids = dataset_ids[y].uniq
               y_dataset_ids.each do |id|
                 dataset = datasets[id]
+                next unless dataset
             %>
               <tr>
                 <td colspan="7"><%= dataset.name %></td>
-                <% if aggregate_hash[y] %>
-                  <th><%= aggregate_hash[y]["#{dataset.id}"].to_i %></th>
-                <% else %>
-                  <th><%= 0 %></th>
-                <% end %>
+                <%
+                  count = aggregate_hash[y][dataset.id.to_s].to_i rescue 0
+                  y_count += count
+                %>
+                <th><%= count %></th>
               </tr>
             <% end %>
           </tbody>
         </table>
+        <%= jquery do %>$(".reports-table .sum-<%== y %>").text("<%== "#{t("opendata.reports.total_year")} #{y_count}" %>")<% end %>
       </div>
 
     <% else %>
 
       <% year, month = y.split("-") %>
-      <div class="list-head"><%= "#{year}年" %></div>
+      <div class="list-head"><%= "#{year}#{t("datetime.prompts.year")}" %></div>
       <div class="reports-table">
         <p class="not-exists"><%= t("opendata.reports.not_exists_reports") %></p>
       </div>

@@ -1,4 +1,8 @@
 class SS::Migration20170411153100
+  include SS::Migration::Base
+
+  depends_on "20161226000000"
+
   def change
     ids = Cms::Page.pluck(:id)
     ids.each do |id|

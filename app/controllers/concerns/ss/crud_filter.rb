@@ -43,7 +43,7 @@ module SS::CrudFilter
     ids = params[:ids]
     raise "400" unless ids
     ids = ids.split(",") if ids.is_a?(String)
-    @items = @model.in(id: ids)
+    @selected_items = @items = @model.in(id: ids)
     raise "400" unless @items.present?
   end
 
@@ -109,7 +109,9 @@ module SS::CrudFilter
   end
 
   def destroy_all
-    @items.destroy_all
+    raise "400" if @selected_items.blank?
+
+    @selected_items.destroy_all
     render_destroy_all true
   end
 
@@ -154,7 +156,7 @@ module SS::CrudFilter
   def render_destroy(result, opts = {})
     location = opts[:location].presence || crud_redirect_url || { action: :index }
     render_opts = opts[:render].presence || { file: :delete }
-    notice = opts[:notice].presence || t("ss.notice.saved")
+    notice = opts[:notice].presence || t("ss.notice.deleted")
 
     if result
       respond_to do |format|

@@ -2,29 +2,29 @@ $page-width: 1080px;
 
 // -----------------------------------------------------------------------------
 // font
-$px10:72%;
-$px11:79%;
-$px12:86%;
-$px13:93%;
-$px14:100%;
-$px15:108%;
-$px16:115%;
-$px17:122%;
-$px18:129%;
-$px19:136%;
-$px20:143%;
-$px21:150%;
-$px22:158%;
-$px23:165%;
-$px24:172%;
-$px25:179%;
-$px26:186%;
-$px27:193%;
-$px28:200%;
-$px29:208%;
-$px30:215%;
-$px31:222%;
-$px32:229%;
+$px10: 72%;
+$px11: 79%;
+$px12: 86%;
+$px13: 93%;
+$px14: 100%;
+$px15: 108%;
+$px16: 115%;
+$px17: 122%;
+$px18: 129%;
+$px19: 136%;
+$px20: 143%;
+$px21: 150%;
+$px22: 158%;
+$px23: 165%;
+$px24: 172%;
+$px25: 179%;
+$px26: 186%;
+$px27: 193%;
+$px28: 200%;
+$px29: 208%;
+$px30: 215%;
+$px31: 222%;
+$px32: 229%;
 
 $font-base: Meiryo, "メイリオ", Tahoma, "Hiragino Kaku Gothic Pro", "ヒラギノ角ゴ Pro W3", Verdana, "MS PGothic", "ＭＳ　Ｐゴシック", sans-serif;
 $font-head: Meiryo, "メイリオ", Verdana, "MS PGothic", "ＭＳ　Ｐゴシック", sans-serif;
@@ -77,20 +77,20 @@ $item-margin: 14px;
 }
 @mixin grd-sky {
   background: #cef3ff;
-  @include background-image(linear-gradient(top, #cef3ff, #ffffff));
-  @include filter-gradient(#cef3ff, #ffffff, vertical);
+  @include background-image(linear-gradient(top, #cef3ff, #fff));
+  @include filter-gradient(#cef3ff, #fff, vertical);
   background: url(data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiIHZpZXdCb3g9IjAgMCAxIDEiIHByZXNlcnZlQXNwZWN0UmF0aW89Im5vbmUiPgo8bGluZWFyR3JhZGllbnQgaWQ9Imc4NTMiIGdyYWRpZW50VW5pdHM9InVzZXJTcGFjZU9uVXNlIiB4MT0iMCUiIHkxPSIwJSIgeDI9IjAlIiB5Mj0iMTAwJSI+CjxzdG9wIHN0b3AtY29sb3I9IiNDRUYzRkYiIG9mZnNldD0iMCIvPjxzdG9wIHN0b3AtY29sb3I9IiNGRkZGRkYiIG9mZnNldD0iMSIvPgo8L2xpbmVhckdyYWRpZW50Pgo8cmVjdCB4PSIwIiB5PSIwIiB3aWR0aD0iMSIgaGVpZ2h0PSIxIiBmaWxsPSJ1cmwoI2c4NTMpIiAvPgo8L3N2Zz4=);
 }
 @mixin grd-black {
   background: $black1;
-  @include background-image(linear-gradient(top, #666666, #383838));
-  @include filter-gradient(#666666, #383838, vertical);
+  @include background-image(linear-gradient(top, #666, #383838));
+  @include filter-gradient(#666, #383838, vertical);
   background: url(data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiIHZpZXdCb3g9IjAgMCAxIDEiIHByZXNlcnZlQXNwZWN0UmF0aW89Im5vbmUiPgo8bGluZWFyR3JhZGllbnQgaWQ9Imc5NDAiIGdyYWRpZW50VW5pdHM9InVzZXJTcGFjZU9uVXNlIiB4MT0iMCUiIHkxPSIwJSIgeDI9IjAlIiB5Mj0iMTAwJSI+CjxzdG9wIHN0b3AtY29sb3I9IiM2NjY2NjYiIG9mZnNldD0iMCIvPjxzdG9wIHN0b3AtY29sb3I9IiMzODM4MzgiIG9mZnNldD0iMSIvPgo8L2xpbmVhckdyYWRpZW50Pgo8cmVjdCB4PSIwIiB5PSIwIiB3aWR0aD0iMSIgaGVpZ2h0PSIxIiBmaWxsPSJ1cmwoI2c5NDApIiAvPgo8L3N2Zz4=);
 }
 @mixin grd-gray {
   background: $white;
-  @include background-image(linear-gradient(top, #ffffff, #dedede));
-  @include filter-gradient(#ffffff, #dedede, vertical);
+  @include background-image(linear-gradient(top, #fff, #dedede));
+  @include filter-gradient(#fff, #dedede, vertical);
   background: url(data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiIHZpZXdCb3g9IjAgMCAxIDEiIHByZXNlcnZlQXNwZWN0UmF0aW89Im5vbmUiPgo8bGluZWFyR3JhZGllbnQgaWQ9ImcxNTAiIGdyYWRpZW50VW5pdHM9InVzZXJTcGFjZU9uVXNlIiB4MT0iMCUiIHkxPSIwJSIgeDI9IjAlIiB5Mj0iMTAwJSI+CjxzdG9wIHN0b3AtY29sb3I9IiNGRkZGRkYiIG9mZnNldD0iMCIvPjxzdG9wIHN0b3AtY29sb3I9IiNERURFREUiIG9mZnNldD0iMSIvPgo8L2xpbmVhckdyYWRpZW50Pgo8cmVjdCB4PSIwIiB5PSIwIiB3aWR0aD0iMSIgaGVpZ2h0PSIxIiBmaWxsPSJ1cmwoI2cxNTApIiAvPgo8L3N2Zz4=);
 }
 @mixin btn-black {
@@ -108,7 +108,7 @@ $item-margin: 14px;
 @mixin btn-blue {
   display: inline-block;
   padding: $item-margin $box-margin;
-  border: none;
+  border: 0;
   @include border-radius(5px);
   @include grd-blue;
   color: $white;
@@ -179,7 +179,7 @@ $item-margin: 14px;
     }
   }
 }
-@mixin tabs{
+@mixin tabs {
   margin-bottom: $box-margin;
   .names {
     @include tab;
@@ -194,7 +194,7 @@ $item-margin: 14px;
       @include btn-black;
     }
     .rss {
-      @include rss
+      @include rss;
     }
   }
 }

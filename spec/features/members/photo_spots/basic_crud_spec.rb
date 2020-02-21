@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe "member_photo_spots", dbscope: :example do
+describe "member_photo_spots", type: :feature, dbscope: :example do
   let(:site) { cms_site }
   let(:node) { create_once :member_node_photo_spot, filename: "photo-spots", name: "photo-spots" }
   let(:item) { create(:member_photo_spot, cur_node: node) }
@@ -23,7 +23,7 @@ describe "member_photo_spots", dbscope: :example do
       within "form#item-form" do
         fill_in "item[name]", with: "sample"
         fill_in "item[basename]", with: "sample"
-        click_button "保存"
+        click_button I18n.t('ss.buttons.save')
       end
       expect(status_code).to eq 200
       expect(current_path).not_to eq new_path
@@ -40,7 +40,7 @@ describe "member_photo_spots", dbscope: :example do
       visit edit_path
       within "form#item-form" do
         fill_in "item[name]", with: "modify"
-        click_button "保存"
+        click_button I18n.t('ss.buttons.save')
       end
       expect(current_path).not_to eq sns_login_path
       expect(page).to have_no_css("form#item-form")

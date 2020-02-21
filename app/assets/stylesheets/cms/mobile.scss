@@ -3,12 +3,12 @@
 /* ---------------------------------- */
 
 body {
-  margin: 0px 10px;
+  margin: 0 10px;
   font-size: 12px;
   font-family: sans-serif;
 }
 h1, h2, h3, h4, h5 {
-  margin: 0px;
+  margin: 0;
   font-size: 120%;
 }
 a {
@@ -28,11 +28,11 @@ a:hover {
 /* ---------------------------------- */
 
 #head {
-  margin: 0px -10px;
+  margin: 0 -10px;
   background-color: #259;
 }
 #head h1 {
-  padding: 10px 0px;
+  padding: 10px 0;
   font-size: 120%;
   text-align: center;
 }
@@ -41,20 +41,20 @@ a:hover {
   text-decoration: none;
 }
 #navi {
-  margin: 0px -10px 0px;
-  padding: 10px 0px;
+  margin: 0 -10px;
+  padding: 10px 0;
   border-bottom: 1px solid #ccc;
   background-color: #ddd;
   text-align: center;
 }
 .crumbs {
-  margin: 0px -10px 10px;
+  margin: 0 -10px 10px;
   padding: 10px;
   border-bottom: 1px solid #ccc;
 }
 #foot {
-  margin: 20px -10px 0px;
-  padding: 20px 0px;
+  margin: 20px -10px 0;
+  padding: 20px 0;
   background-color: #259;
   color: #fff;
   text-align: center;
@@ -75,16 +75,16 @@ a:hover {
 }
 
 .pages .tag-article {
-  margin: 0px 0px 5px;
-  padding: 0px 0px 5px;
+  margin: 0 0 5px;
+  padding: 0 0 5px;
   border-bottom: 1px solid #ddd;
 }
 .pages .tag-article .tag-time {
-  margin: 0px 0px 5px;
+  margin: 0 0 5px;
   color: #080;
 }
 .nodes .tag-article {
-  margin: 0px 0px 5px;
-  padding: 0px 0px 5px;
+  margin: 0 0 5px;
+  padding: 0 0 5px;
   border-bottom: 1px solid #ddd;
 }

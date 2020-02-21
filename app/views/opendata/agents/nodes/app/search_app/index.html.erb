@@ -5,6 +5,22 @@
   <%= render file: 'opendata/agents/nodes/app/search_app/search' %>
 <% end %>
 
+<% if @items.count > 0 %>
+  <section class="result">
+    <h2>
+      <span class="number"><%= @items.count %></span>
+      <%= t("ss.notice.hit") %>
+      <span class="first"><%= @items.offset_value + 1 %></span>
+      <%= t("ss.wave_dash") %>
+      <span class="last">
+        <% limit = @cur_node.limit || 20 %>
+        <%= (@items.current_page * limit) > @items.count ? @items.count : (@items.current_page * limit) %>
+      </span>
+      <%= t("ss.notice.first_to_last") %>
+    </h2>
+  </section>
+<% end %>
+
 <%= paginate @items %>
 
 <div class="opendata-search-apps pages">
@@ -19,10 +35,10 @@
       </h2>
     </header>
     <div class="categories">
-      <% item.categories.each_with_index do |category, idx| %>
+      <% item.categories.sort(order: 1).each_with_index do |category, idx| %>
         <span class="category"><%= category.name %></span>
       <% end %>
-      <% item.areas.each_with_index do |area, idx| %>
+      <% item.areas.sort(order: 1).each_with_index do |area, idx| %>
         <span class="area"><%= area.name %></span>
       <% end %>
       <% item.tags.each_with_index do |tag, idx| %>

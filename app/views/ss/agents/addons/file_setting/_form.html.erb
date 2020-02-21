@@ -1,6 +1,7 @@
-<%= jquery do %>
-  SS_AddonTabs.hide(".mod-ss-file-setting");
-<% end %>
+<%
+  addon ||= local_assigns.fetch(:addon, {})
+  addon[:display_body] = "hide"
+%>
 <dl class="see mod-ss-file-setting">
   <dt><%= @model.t :file_resizing %><%= @model.tt :file_resizing %></dt>
   <dd class="short">

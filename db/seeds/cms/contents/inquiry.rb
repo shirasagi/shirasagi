@@ -89,73 +89,75 @@ save_inquiry_answer node_id: @feedback_node.id, site_id: @site._id,
                       column_feedback_3.id => "どちらともいえない"
                     }
 
-## member
-save_node route: "member/login", filename: "login", name: "ログイン", layout_id: @layouts["login"].id,
-          form_auth: "enabled", redirect_url: "/mypage/"
-save_node route: "member/registration", filename: "registration", name: "会員登録", layout_id: @layouts["one"].id,
-          sender_email: "info@example.jp", sender_name: "送信者名", kana_required: "required", postal_code_required: "required",
-          addr_required: "required", sex_required: "required", birthday_required: "required"
-save_node route: "member/mypage", filename: "mypage", name: "マイページ", layout_id: @layouts["mypage"].id
-save_node route: "member/my_profile", filename: "mypage/profile", name: "プロフィール", layout_id: @layouts["mypage"].id, order: 10,
-          kana_required: "required", postal_code_required: "required", addr_required: "required", sex_required: "required",
-          birthday_required: "required"
-save_node route: "member/my_blog", filename: "mypage/blog", name: "ブログ", layout_id: @layouts["mypage"].id, order: 20
-save_node route: "member/my_photo", filename: "mypage/photo", name: "フォト", layout_id: @layouts["mypage"].id, order: 30
-@anpi_node = save_node route: "member/my_anpi_post", filename: "mypage/anpi", name: "安否",
-                       layout_id: @layouts["mypage"].id, order: 40, map_state: "enabled", map_view_state: "enabled", text_size_limit: 400
-save_node route: "member/my_group", filename: "mypage/group", name: "グループ", layout_id: @layouts["mypage"].id, order: 50,
-          sender_name: "シラサギサンプルサイト", sender_email: "admin@example.jp"
+if SS.config.cms.enable_lgwan.blank?
+  ## member
+  save_node route: "member/login", filename: "login", name: "ログイン", layout_id: @layouts["login"].id,
+            form_auth: "enabled", redirect_url: "/mypage/"
+  save_node route: "member/registration", filename: "registration", name: "会員登録", layout_id: @layouts["one"].id,
+            sender_email: "info@example.jp", sender_name: "送信者名", kana_required: "required", postal_code_required: "required",
+            addr_required: "required", sex_required: "required", birthday_required: "required"
+  save_node route: "member/mypage", filename: "mypage", name: "マイページ", layout_id: @layouts["mypage"].id
+  save_node route: "member/my_profile", filename: "mypage/profile", name: "プロフィール", layout_id: @layouts["mypage"].id, order: 10,
+            kana_required: "required", postal_code_required: "required", addr_required: "required", sex_required: "required",
+            birthday_required: "required"
+  save_node route: "member/my_blog", filename: "mypage/blog", name: "ブログ", layout_id: @layouts["mypage"].id, order: 20
+  save_node route: "member/my_photo", filename: "mypage/photo", name: "フォト", layout_id: @layouts["mypage"].id, order: 30
+  @anpi_node = save_node route: "member/my_anpi_post", filename: "mypage/anpi", name: "安否",
+                         layout_id: @layouts["mypage"].id, order: 40, map_state: "enabled", map_view_state: "enabled", text_size_limit: 400
+  save_node route: "member/my_group", filename: "mypage/group", name: "グループ", layout_id: @layouts["mypage"].id, order: 50,
+            sender_name: "シラサギサンプルサイト", sender_email: "admin@example.jp"
 
-## member blog
-save_node route: "cms/node", filename: "kanko-info", name: "観光情報", layout_id: @layouts["kanko-info-top"].id
-save_node route: "member/blog", filename: "kanko-info/blog", name: "ブログ",
-          layout_id: @layouts["kanko-info"].id, order: 20, page_limit: 4
+  ## member blog
+  save_node route: "cms/node", filename: "kanko-info", name: "観光情報", layout_id: @layouts["kanko-info-top"].id
+  save_node route: "member/blog", filename: "kanko-info/blog", name: "ブログ",
+            layout_id: @layouts["kanko-info"].id, order: 20, page_limit: 4
 
-save_node route: "cms/node", filename: "kanko-info/blog/area", name: "地域", layout_id: @layouts["kanko-info"].id
-blog_l1 = save_node route: "member/blog_page_location", filename: "kanko-info/blog/area/east",
-                    name: "東区", layout_id: @layouts["kanko-info"].id, order: 10
-blog_l2 = save_node route: "member/blog_page_location", filename: "kanko-info/blog/area/west",
-                    name: "西区", layout_id: @layouts["kanko-info"].id, order: 20
-blog_l3 = save_node route: "member/blog_page_location", filename: "kanko-info/blog/area/south",
-                    name: "南区", layout_id: @layouts["kanko-info"].id, order: 30
-blog_l4 = save_node route: "member/blog_page_location", filename: "kanko-info/blog/area/north",
-                    name: "北区", layout_id: @layouts["kanko-info"].id, order: 40
-blog_thumb = Fs::UploadedFile.create_from_file("files/img/logo.png")
-
-save_node route: "member/blog_page", filename: "kanko-info/blog/shirasagi", name: "白鷺太郎のブログ",
-          layout_id: @layouts["kanko-info/blog/blog1"].id, member_id: @member_1.id, description: "白鷺太郎のブログです。よろしくお願いしいます。",
-          genres: %w(ジャンル1 ジャンル2 ジャンル3), blog_page_location_ids: [blog_l1.id], in_image: blog_thumb
-
-## member photo
-save_node route: "member/photo", filename: "kanko-info/photo", name: "写真データベース",
-          layout_id: @layouts["kanko-info-photo"].id, order: 10,
-          license_free: "<h2>ライセンスについて</h2><p>どなたでも自由にご利用いただけます。<br />肖像権については、使用者の判断によるものとし、当サイトは関与しません。</p>",
-          license_not_free: "<h2>ライセンスについて</h2><p>画像のご利用には画像投稿者からの利用許可が必要です。</p>",
-          limit: 40,
-          page_layout_id: @layouts["kanko-info"].id
-
-save_node route: "cms/node", filename: "kanko-info/photo/area", name: "地域", layout_id: @layouts["kanko-info"].id
-@photo_l1 = save_node route: "member/photo_location", filename: "kanko-info/photo/area/east",
+  save_node route: "cms/node", filename: "kanko-info/blog/area", name: "地域", layout_id: @layouts["kanko-info"].id
+  blog_l1 = save_node route: "member/blog_page_location", filename: "kanko-info/blog/area/east",
                       name: "東区", layout_id: @layouts["kanko-info"].id, order: 10
-@photo_l2 = save_node route: "member/photo_location", filename: "kanko-info/photo/area/west",
+  blog_l2 = save_node route: "member/blog_page_location", filename: "kanko-info/blog/area/west",
                       name: "西区", layout_id: @layouts["kanko-info"].id, order: 20
-@photo_l3 = save_node route: "member/photo_location", filename: "kanko-info/photo/area/south",
+  blog_l3 = save_node route: "member/blog_page_location", filename: "kanko-info/blog/area/south",
                       name: "南区", layout_id: @layouts["kanko-info"].id, order: 30
-@photo_l4 = save_node route: "member/photo_location", filename: "kanko-info/photo/area/north",
+  blog_l4 = save_node route: "member/blog_page_location", filename: "kanko-info/blog/area/north",
                       name: "北区", layout_id: @layouts["kanko-info"].id, order: 40
+  blog_thumb = Fs::UploadedFile.create_from_file("files/img/logo.png")
 
-save_node route: "cms/node", filename: "kanko-info/photo/category", name: "カテゴリー", layout_id: @layouts["kanko-info"].id
-@photo_c1 = save_node route: "member/photo_category", filename: "kanko-info/photo/category/institution",
-                      name: "施設", layout_id: @layouts["kanko-info"].id, order: 10
-@photo_c2 = save_node route: "member/photo_category", filename: "kanko-info/photo/category/nature",
-                      name: "自然", layout_id: @layouts["kanko-info"].id, order: 20
-@photo_c3 = save_node route: "member/photo_category", filename: "kanko-info/photo/category/souvenir",
-                      name: "物産", layout_id: @layouts["kanko-info"].id, order: 30
-@photo_c4 = save_node route: "member/photo_category", filename: "kanko-info/photo/category/other",
-                      name: "その他", layout_id: @layouts["kanko-info"].id, order: 40
+  save_node route: "member/blog_page", filename: "kanko-info/blog/shirasagi", name: "白鷺太郎のブログ",
+            layout_id: @layouts["kanko-info/blog/blog1"].id, member_id: @member_1.id, description: "白鷺太郎のブログです。よろしくお願いしいます。",
+            genres: %w(ジャンル1 ジャンル2 ジャンル3), blog_page_location_ids: [blog_l1.id], in_image: blog_thumb
 
-save_node route: "member/photo_search", filename: "kanko-info/photo/search", name: "検索結果", layout_id: @layouts["kanko-info"].id
-save_node route: "member/photo_spot", filename: "kanko-info/photo/spot", name: "おすすめスポット", layout_id: @layouts["kanko-info"].id
+  ## member photo
+  save_node route: "member/photo", filename: "kanko-info/photo", name: "写真データベース",
+            layout_id: @layouts["kanko-info-photo"].id, order: 10,
+            license_free: "<h2>ライセンスについて</h2><p>どなたでも自由にご利用いただけます。<br />肖像権については、使用者の判断によるものとし、当サイトは関与しません。</p>",
+            license_not_free: "<h2>ライセンスについて</h2><p>画像のご利用には画像投稿者からの利用許可が必要です。</p>",
+            limit: 40,
+            page_layout_id: @layouts["kanko-info"].id
+
+  save_node route: "cms/node", filename: "kanko-info/photo/area", name: "地域", layout_id: @layouts["kanko-info"].id
+  @photo_l1 = save_node route: "member/photo_location", filename: "kanko-info/photo/area/east",
+                        name: "東区", layout_id: @layouts["kanko-info"].id, order: 10
+  @photo_l2 = save_node route: "member/photo_location", filename: "kanko-info/photo/area/west",
+                        name: "西区", layout_id: @layouts["kanko-info"].id, order: 20
+  @photo_l3 = save_node route: "member/photo_location", filename: "kanko-info/photo/area/south",
+                        name: "南区", layout_id: @layouts["kanko-info"].id, order: 30
+  @photo_l4 = save_node route: "member/photo_location", filename: "kanko-info/photo/area/north",
+                        name: "北区", layout_id: @layouts["kanko-info"].id, order: 40
+
+  save_node route: "cms/node", filename: "kanko-info/photo/category", name: "カテゴリー", layout_id: @layouts["kanko-info"].id
+  @photo_c1 = save_node route: "member/photo_category", filename: "kanko-info/photo/category/institution",
+                        name: "施設", layout_id: @layouts["kanko-info"].id, order: 10
+  @photo_c2 = save_node route: "member/photo_category", filename: "kanko-info/photo/category/nature",
+                        name: "自然", layout_id: @layouts["kanko-info"].id, order: 20
+  @photo_c3 = save_node route: "member/photo_category", filename: "kanko-info/photo/category/souvenir",
+                        name: "物産", layout_id: @layouts["kanko-info"].id, order: 30
+  @photo_c4 = save_node route: "member/photo_category", filename: "kanko-info/photo/category/other",
+                        name: "その他", layout_id: @layouts["kanko-info"].id, order: 40
+
+  save_node route: "member/photo_search", filename: "kanko-info/photo/search", name: "検索結果", layout_id: @layouts["kanko-info"].id
+  save_node route: "member/photo_spot", filename: "kanko-info/photo/spot", name: "おすすめスポット", layout_id: @layouts["kanko-info"].id
+end
 
 ## layout
 Cms::Node.where(site_id: @site._id, route: /^article\//).update_all(layout_id: @layouts["pages"].id)
@@ -201,22 +203,3 @@ Cms::Node.where(site_id: @site._id, route: /facility\//).
   update_all(layout_id: @layouts["map"].id)
 Cms::Node.where(site_id: @site._id, route: /ezine\//).
   update_all(layout_id: @layouts["ezine"].id)
-
-## -------------------------------------
-def save_page(data)
-  puts data[:name]
-  cond = { site_id: @site._id, filename: data[:filename] }
-
-  html ||= File.read("pages/" + data[:filename]) rescue nil
-  summary_html ||= File.read("pages/" + data[:filename].sub(/\.html$/, "") + ".summary_html") rescue nil
-
-  item = Cms::Page.find_or_create_by(cond) { |page| page.name = data[:name] }.becomes_with_route(data[:route])
-  item.html = html if html
-  item.summary_html = summary_html if summary_html
-
-  item.attributes = data
-  item.update
-  item.add_to_set group_ids: @site.group_ids
-
-  item
-end

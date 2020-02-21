@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe "cms_page_search", dbscope: :example do
+describe "cms_page_search", type: :feature, dbscope: :example do
   let(:site) { cms_site }
   let(:index_path) { cms_page_searches_path site.id }
 
@@ -82,15 +82,15 @@ describe "cms_page_search", dbscope: :example do
     context "with name" do
       it do
         visit index_path
-        click_on "新規作成"
+        click_on I18n.t('ss.links.new')
 
         within "form#item-form" do
           fill_in "item[name]", with: name
           fill_in "item[search_name]", with: "A"
-          click_on "保存"
+          click_on I18n.t('ss.buttons.save')
         end
 
-        click_on "検索"
+        click_on I18n.t('ss.buttons.search')
 
         expect(page).to have_css(".search-count", text: "1 件の検索結果")
         expect(page).to have_css("div.info a.title", text: "[TEST]A")
@@ -100,15 +100,15 @@ describe "cms_page_search", dbscope: :example do
     context "with filename" do
       it do
         visit index_path
-        click_on "新規作成"
+        click_on I18n.t('ss.links.new')
 
         within "form#item-form" do
           fill_in "item[name]", with: name
           fill_in "item[search_filename]", with: "base/"
-          click_on "保存"
+          click_on I18n.t('ss.buttons.save')
         end
 
-        click_on "検索"
+        click_on I18n.t('ss.buttons.search')
 
         expect(page).to have_css(".search-count", text: "3 件の検索結果")
         expect(page).to have_css("div.info a.title", text: "[TEST]B")

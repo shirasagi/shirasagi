@@ -56,7 +56,7 @@ module Job::TasksFilter
     if @item.save
       respond_to do |format|
         format.html { redirect_to({ action: :index }, { notice: I18n.t('job.notice.reseted_state') }) }
-        format.json { render json: @item.to_json, status: :created, content_type: json_content_type }
+        format.json { render json: @item.to_json(methods: :head_logs), status: :created, content_type: json_content_type }
       end
     else
       respond_to do |format|

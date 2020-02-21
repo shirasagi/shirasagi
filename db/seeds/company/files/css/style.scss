@@ -15,7 +15,7 @@ body {
   color: $black;
 }
 h1, h2, h3, h4, h5 {
-  margin: 0px;
+  margin: 0;
   font-size: 100%;
   font-weight: normal;
 }
@@ -36,7 +36,7 @@ rp, rt {
   font-weight: normal;
 }
 rp {
-  margin: 0px;
+  margin: 0;
 }
 img {
   vertical-align: middle;
@@ -80,13 +80,13 @@ img {
       float: left;
       width: 220px;
       padding: 4px 5px;
-      border: none;
+      border: 0;
     }
     #search-button {
       float: left;
       padding: 3px 10px;
-      border: none;
-      background: #333333;
+      border: 0;
+      background: #333;
       color: $white;
       &:hover {
         background: $black;
@@ -135,10 +135,10 @@ img {
     position: absolute;
     top: 50px;
     left: 0;
-    & > div {
+    > div {
       width: 50%;
       background: #fff;
-      background: rgba(255, 255, 255, 0.8);
+      background: rgba(255, 255, 255, .8);
       color: $black;
       font-size: $px24;
       @include text-shadow(1px 1px 0 #fff);
@@ -151,7 +151,7 @@ img {
     li {
       margin: 0 5px;
       background: $red;
-      & > span {
+      > span {
         top: 2px;
         left: 2px;
         width: 12px;
@@ -250,7 +250,7 @@ img {
     padding-left: 25px;
     background: $orange url(../img/ic-rss.png) no-repeat 5px center;
     &:hover {
-      backgroud: $horange;
+      background: $horange;
     }
   }
 }
@@ -307,7 +307,7 @@ img {
     header {
       margin: 0;
       padding: 100px 0 0;
-      border: none;
+      border: 0;
       h2 a {
         position: relative;
         display: block;
@@ -345,7 +345,7 @@ img {
       margin: 0;
     }
     &:hover {
-      opacity: 0.8;
+      opacity: .8;
     }
   }
 }
@@ -363,7 +363,7 @@ img {
     padding: 35px 5px 10px;
     @include border-radius(5px 0 0 5px);
     background: $black;
-    background: rgba(0, 0, 0, 0.8);
+    background: rgba(0, 0, 0, .8);
     text-align: center;
     color: #fff;
     font-size: $px10;
@@ -387,7 +387,7 @@ img {
 #foot {
   border-top: $border-gray;
   border-bottom: $border-red5;
-  & > nav {
+  > nav {
     width: 100%;
     padding: $item-margin 0;
     border-bottom: $border-gray;
@@ -397,10 +397,10 @@ img {
       margin: 0 auto;
       li {
         float: left;
-        padding:  0 $item-margin;
+        padding: 0 $item-margin;
         border-right: $border-gray;
         &:last-child {
-          border: none;
+          border: 0;
         }
       }
     }
@@ -532,7 +532,7 @@ img {
         margin: 0;
         padding: 0 10px;
         border-left: $border-gray;
-        border-bottom: none;
+        border-bottom: 0;
         font-size: $px14;
         font-weight: normal;
       }
@@ -553,7 +553,7 @@ footer.contact {
   }
   dl {
     display: inline-block;
-    border: none;
+    border: 0;
     margin: 0 $item-margin 0 0;
     padding: 0;
     dt, dd {
@@ -665,7 +665,7 @@ footer.contact {
       }
     }
     .current {
-      & > header h2 a {
+      > header h2 a {
         background: $red;
         color: $white;
       }
@@ -747,7 +747,7 @@ footer.contact {
     background: $hred;
     font-size: $px16;
   }
-  & > p {
+  > p {
     position: absolute;
     top: 5px;
     right: 10px;
@@ -755,7 +755,7 @@ footer.contact {
       @include btn;
       @include look;
       &:hover {
-        @include box-shadow(0 0 3px rgba(0,0,0,0.5) inset);
+        @include box-shadow(0 0 3px rgba(0, 0, 0, .5) inset);
       }
     }
   }
@@ -765,7 +765,7 @@ footer.contact {
     width: 210px;
     margin: 0 0 $item-margin $item-margin;
     padding: 140px $item-margin $item-margin;
-    border: none;
+    border: 0;
     cursor: pointer;
     &.item-consulting {
       background: $gray2 url(../img/bg-consulting.jpg) no-repeat left 10px;
@@ -878,7 +878,7 @@ footer.contact {
       float: left;
       margin-right: $box-margin;
       padding: 10px 20px;
-      border: none;
+      border: 0;
       background: $red;
       color: $white;
       @include border-radius(3px);
@@ -1004,7 +1004,7 @@ footer.contact {
         background-color: $hred;
         @include border-radius(3px);
         text-indent: -9999px;
-        pointer: cursor;
+        cursor: pointer;
         &:after, &:before {
           content: "";
           position: absolute;
@@ -1027,7 +1027,7 @@ footer.contact {
       width: auto;
       margin-bottom: 0;
       padding: 0 10px;
-      border: none;
+      border: 0;
       @include box-sizing(border-box);
       h2 {
         display: block;
@@ -1044,7 +1044,7 @@ footer.contact {
         background-size: 18px 18px;
         @include border-radius(3px);
         text-indent: -9999px;
-        pointer: cursor;
+        cursor: pointer;
         &.open {
           background-color: $red;
         }
@@ -1079,7 +1079,7 @@ footer.contact {
   }
   #keyvisual .camera_caption {
     top: 15px;
-    & > div {
+    > div {
       width: 70%;
       font-size: $px14;
     }
@@ -1103,7 +1103,7 @@ footer.contact {
       }
       &:nth-child(3) {
         width: 30%;
-        border-right: none;
+        border-right: 0;
       }
     }
     .pages {
@@ -1147,27 +1147,27 @@ footer.contact {
     &.item-solution {
       background: none;
       header {
-        background : url(../img/bg-solution.jpg) no-repeat left top;
+        background: url(../img/bg-solution.jpg) no-repeat left top;
       }
     }
     &.item-software {
       background: none;
       header {
         margin: 0 10px 10px 5px;
-        background : url(../img/bg-software.jpg) no-repeat left top;
+        background: url(../img/bg-software.jpg) no-repeat left top;
       }
     }
     &.item-office {
       background: none;
       header {
-        background : url(../img/bg-office.jpg) no-repeat left top;
+        background: url(../img/bg-office.jpg) no-repeat left top;
       }
     }
     &.item-marketing {
       background: none;
       header {
         margin: 0 10px 10px 5px;
-        background : url(../img/bg-marketing.jpg) no-repeat left top;
+        background: url(../img/bg-marketing.jpg) no-repeat left top;
       }
     }
     header {
@@ -1355,4 +1355,65 @@ footer.contact {
 }
 .ss-alignment-right {
   float: right;
+}
+// -----------------------------------------------------------------------------
+// search
+@mixin mb {
+  @media only screen and (max-width: 600px) { @content; }
+}
+.cms-site-search {
+  @include mb {
+    padding: 15px;
+  }
+  .search-form {
+    @include display-flex;
+    @include justify-content(space-between);
+    width: 20em;
+    margin-bottom: 30px;
+    border: $border-gray;
+    @include mb {
+      border-radius: 0;
+    }
+  }
+  #s_keyword {
+    width: 80%;
+    padding: 5px;
+    border: 0;
+    color: $black;
+    @include mb {
+      width: 80%;
+      @include border-radius(0);
+    }
+  }
+  input[type="submit"] {
+    padding: 5px 10px;
+    margin: 0;
+    border: 0;
+    background: #333;
+    color: $white;
+    @include mb {
+      padding: 4px 10px;
+      border-radius: 0;
+      -webkit-appearance: none;
+    }
+  }
+  .search-result {
+    margin-bottom: 30px;
+    .search-stats {
+      margin-bottom: 20px;
+      padding-bottom: 10px;
+      border-bottom: $border-gray;
+    }
+    .cms-site-search-pages {
+      .item {
+        margin-bottom: 20px;
+        h2 {
+          font-size: $px16;
+        }
+      }
+      .meta .url {
+        display: block;
+      }
+    }
+  }
 }

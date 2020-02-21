@@ -41,7 +41,7 @@ module Job::SS::Loggable
     Job::Log.create_from_active_job!(self)
   end
 
-  def system_error?(e)
-    e.kind_of?(NoMemoryError) || e.kind_of?(SignalException) || e.kind_of?(SystemExit)
+  def system_error?(error)
+    error.kind_of?(NoMemoryError) || error.kind_of?(SignalException) || error.kind_of?(SystemExit)
   end
 end

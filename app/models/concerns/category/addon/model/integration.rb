@@ -10,7 +10,7 @@ module Category::Addon::Model
         next false unless item
 
         embeds_fields = item.fields.select do |n, v|
-          next false unless n =~ /_ids$/
+          next false unless n.match?(/_ids$/)
           next false unless v.type == SS::Extensions::ObjectIds
 
           begin

@@ -1,4 +1,7 @@
-<%= jquery do %> SS_AddonTabs.hide(".addon-gws-system-menu-setting"); <% end %>
+<%
+  addon ||= local_assigns.fetch(:addon, {})
+  addon[:display_body] = "hide"
+%>
 
 <% render_menu_setting = proc do |type, fallback_label| %>
   <dl class="see addon-gws-system-menu-setting">
@@ -14,6 +17,7 @@
 <% end %>
 
 <% render_menu_setting.call(:portal, t('modules.gws/portal')) %>
+<% render_menu_setting.call(:notice) %>
 <% render_menu_setting.call(:schedule) %>
 <% render_menu_setting.call(:todo, t('mongoid.models.gws/schedule/todo')) %>
 <% render_menu_setting.call(:reminder, t('mongoid.models.gws/reminder')) %>

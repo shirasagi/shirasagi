@@ -29,9 +29,9 @@ module OpenURI
   end
 
   class << self
-    return if SS.config.proxy.disable
-
-    alias open_uri_without_proxy open_uri
-    alias open_uri open_uri_with_proxy
+    if !SS.config.proxy.disable
+      alias open_uri_without_proxy open_uri
+      alias open_uri open_uri_with_proxy
+    end
   end
 end

@@ -30,7 +30,7 @@ module Inquiry::Addon
 
       match = build_match_stage(params)
 
-      selects = columns.select { |c| c.input_type =~ /(select|radio_button|check_box)/ }
+      selects = columns.select { |c| /(select|radio_button|check_box)/.match?(c.input_type) }
       match["data.column_id"] = { "$in" => selects.map(&:id) }
 
       pipes << { "$match" => match } if match.present?

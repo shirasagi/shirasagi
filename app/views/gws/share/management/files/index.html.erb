@@ -46,24 +46,4 @@
   </ul>
 </div>
 
-<% if @sub_folders.present? %>
-<div class="content-main index">
-  <div class="list-head">
-    <h2 class="list-head-title"><%= t('gws/share.child_folder') %></h2>
-  </div>
-  <ul class="list-items">
-    <% @sub_folders.each do |item| %>
-    <li class="list-item">
-      <div class="info">
-        <%= link_to gws_share_folder_files_path(folder: item, category: params[:category]), class: "title" do %>
-          <i class="material-icons md-18 md-dark title-icon">&#xE2C8;</i>
-          <%= item.trailing_name %>
-        <% end %>
-      </div>
-    </li>
-    <% end %>
-  </ul>
-</div>
-<% end %>
-
 <%= paginate @items if @items.try(:current_page) %>

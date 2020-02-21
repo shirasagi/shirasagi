@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe "article_pages", dbscope: :example do
+describe "article_pages", type: :feature, dbscope: :example do
   let!(:site) { cms_site }
   let!(:node) { create_once :article_node_page, filename: "docs", name: "article" }
   let!(:item) { create(:article_page, cur_node: node) }
@@ -14,12 +14,17 @@ describe "article_pages", dbscope: :example do
     it "#new" do
       visit new_path
 
-      first('#addon-contact-agents-addons-page').click
-      first('#addon-contact-agents-addons-page .ajax-box').click
-      wait_for_cbox
+      within '#addon-contact-agents-addons-page' do
+        first('.toggle-head').click
 
-      click_on "contact_group"
-      #sleep 1
+        within '.toggle-body' do
+          first('.ajax-box').click
+        end
+      end
+
+      wait_for_cbox do
+        click_on "contact_group"
+      end
 
       within "form#item-form" do
         fill_in "item[name]", with: "sample"

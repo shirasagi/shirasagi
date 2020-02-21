@@ -13,6 +13,8 @@ class Webmail::Mail
   include Webmail::Addon::MailFile
 
   #index({ host: 1, account: 1, mailbox: 1, uid: 1 }, { unique: true })
+  index(internal_date: -1)
+  index(host: 1, account: 1, mailbox: 1, uid: 1, internal_date: -1)
 
   attr_accessor :flags, :text, :html, :attachments, :format,
                 :reply_uid, :forward_uid, :edit_as_new_uid, :signature,
@@ -115,8 +117,8 @@ class Webmail::Mail
     return if limit.to_i <= 0
 
     if limit.to_i < size.to_i
-      errors.add :base,
-        I18n.t("errors.messages.too_large_mail_size", size: size.to_s(:human_size), limit: limit.to_s(:human_size))
+      message = I18n.t("errors.messages.too_large_mail_size", size: size.to_s(:human_size), limit: limit.to_s(:human_size))
+      errors.add :base, message
     end
   end
 
@@ -128,9 +130,9 @@ class Webmail::Mail
       field.include_in_headers = true if field.respond_to?(:include_in_headers)
     end
 
+    imap.select(imap.draft_box)
     imap.conn.append(imap.draft_box, msg.to_s, [:Draft, :Seen], Time.zone.now)
     if draft?
-      imap.select(imap.draft_box)
       imap.uids_delete([uid])
     end
     true
@@ -154,9 +156,9 @@ class Webmail::Mail
       field.include_in_headers = true if field.respond_to?(:include_in_headers)
     end
 
+    imap.select(imap.sent_box)
     imap.conn.append(imap.sent_box, msg.to_s, [:Seen], Time.zone.now)
     if draft?
-      imap.select(imap.draft_box)
       imap.uids_delete([uid])
     end
     true
@@ -166,7 +168,7 @@ class Webmail::Mail
     date_time = opts[:date_time] || Time.zone.now
 
     imap.select('INBOX')
-    imap.conn.append('INBOX', msg.to_s, [:Seen], date_time.to_time)
+    imap.conn.append('INBOX', msg.to_s, [:Seen], date_time.in_time_zone)
   end
 
   def requested_mdn?
@@ -196,6 +198,7 @@ class Webmail::Mail
 
   def save_rfc822
     return if rfc822.blank?
+
     dir = ::File.dirname(rfc822_path)
     Fs.mkdir_p(dir) unless Fs.exists?(dir)
     Fs.binwrite(rfc822_path, rfc822)

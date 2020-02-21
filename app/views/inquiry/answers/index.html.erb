@@ -1,5 +1,6 @@
 <% @tap_menu = proc do |item| %>
   <%= link_to t('ss.links.show'), action: :show, id: item  if @cur_node.allowed?(:read, @cur_user, site: @cur_site) %>
+  <%= link_to t('ss.links.edit'), action: :show, id: item  if @cur_node.allowed?(:edit, @cur_user, site: @cur_site) %>
   <%= link_to t('ss.links.delete'), action: :delete, id: item if @cur_node.allowed?(:edit, @cur_user, site: @cur_site) %>
 <% end %>
 <% @index_title = proc do |item| %>
@@ -14,6 +15,7 @@
   <% if item.source_name.present? %>
   <span class="name"><%= item.source_name %></span>
   <% end %>
+  <span class="answer-state state-<%= item.state %>"><%= item.label :state %></span>
 <% end %>
 
 <%= render file: "cms/crud/index" %>

@@ -1,6 +1,7 @@
-<%= jquery do %> SS_AddonTabs.hide(".mod-cms-tag"); <% end %>
-
 <%
+  addon ||= local_assigns.fetch(:addon, {})
+  addon[:display_body] = "hide"
+
   st_tags = @cur_node.attributes[:st_tags] if @cur_node.present?
   st_tags ||= []
 %>

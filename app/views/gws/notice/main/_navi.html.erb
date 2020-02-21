@@ -1,5 +1,5 @@
 <nav class="mod-navi current-navi">
-  <h2><%= link_to t('mongoid.models.gws/notice/post'), gws_notice_main_path, class: 'icon-notice' %></h2>
+  <h2><%= link_to @cur_site.menu_notice_label || t('modules.gws/notice'), gws_notice_main_path, class: 'icon-notice' %></h2>
 
   <h3><%= link_to t('ss.navi.readable'), gws_notice_readables_path(folder_id: '-', category_id: '-'), class: 'readable' %></h3>
 

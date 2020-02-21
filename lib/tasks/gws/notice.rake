@@ -8,4 +8,4 @@ namespace :gws do
       end
     end
   end
- end
+end

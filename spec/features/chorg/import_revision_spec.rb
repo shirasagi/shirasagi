@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe "chorg_import_revision", dbscope: :example do
+describe "chorg_import_revision", type: :feature, dbscope: :example do
   let!(:site) { cms_site }
   let!(:new_path) { new_chorg_revision_path site: site.id }
 
@@ -77,11 +77,11 @@ describe "chorg_import_revision", dbscope: :example do
   context "revision in new path" do
     before { login_cms_user }
 
-    it "#download_template" do
+    it "#download_sample" do
       visit new_path
       expect(current_path).not_to eq sns_login_path
 
-      click_on I18n.t("ss.links.download_template")
+      click_on I18n.t("ss.links.download_sample_csv")
 
       expect(page.response_headers['Content-Type']).to eq("text/csv")
       header = CSV.parse(page.body.encode("UTF-8")).first
@@ -96,7 +96,7 @@ describe "chorg_import_revision", dbscope: :example do
       within "form#item-form" do
         fill_in "item[name]", with: "sample"
         attach_file "item[in_revision_csv_file]", Rails.root.join("spec", "fixtures", "chorg", "add_revision_template.csv").to_s
-        click_button "保存"
+        click_button I18n.t('ss.buttons.save')
       end
 
       expect(current_path).not_to eq new_path
@@ -127,7 +127,7 @@ describe "chorg_import_revision", dbscope: :example do
       within "form#item-form" do
         fill_in "item[name]", with: "sample"
         attach_file "item[in_revision_csv_file]", Rails.root.join("spec", "fixtures", "chorg", "move_revision_template.csv").to_s
-        click_button "保存"
+        click_button I18n.t('ss.buttons.save')
       end
 
       expect(current_path).not_to eq new_path
@@ -166,7 +166,7 @@ describe "chorg_import_revision", dbscope: :example do
       within "form#item-form" do
         fill_in "item[name]", with: "sample"
         attach_file "item[in_revision_csv_file]", Rails.root.join("spec", "fixtures", "chorg", "unify_revision_template.csv").to_s
-        click_button "保存"
+        click_button I18n.t('ss.buttons.save')
       end
 
       expect(current_path).not_to eq new_path
@@ -214,7 +214,7 @@ describe "chorg_import_revision", dbscope: :example do
       within "form#item-form" do
         fill_in "item[name]", with: "sample"
         attach_file "item[in_revision_csv_file]", Rails.root.join("spec", "fixtures", "chorg", "division_revision_template.csv").to_s
-        click_button "保存"
+        click_button I18n.t('ss.buttons.save')
       end
 
       expect(current_path).not_to eq new_path
@@ -255,7 +255,7 @@ describe "chorg_import_revision", dbscope: :example do
       within "form#item-form" do
         fill_in "item[name]", with: "sample"
         attach_file "item[in_revision_csv_file]", Rails.root.join("spec", "fixtures", "chorg", "delete_revision_template.csv").to_s
-        click_button "保存"
+        click_button I18n.t('ss.buttons.save')
       end
 
       expect(current_path).not_to eq new_path

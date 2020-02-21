@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe "rss_pages", dbscope: :example do
+describe "rss_pages", type: :feature, dbscope: :example do
   let(:site) { cms_site }
   let(:node) { create :rss_node_page, site: site }
   let(:index_path) { rss_pages_path site.id, node.id }
@@ -22,7 +22,7 @@ describe "rss_pages", dbscope: :example do
         fill_in "item[name]", with: "sample"
         fill_in "item[basename]", with: "sample"
         fill_in "item[rss_link]", with: "http://example.jp/docs/1.html"
-        click_button "保存"
+        click_button I18n.t('ss.buttons.save')
       end
       expect(status_code).to eq 200
       expect(current_path).not_to eq new_path
@@ -62,7 +62,7 @@ describe "rss_pages", dbscope: :example do
         visit edit_path
         within "form#item-form" do
           fill_in "item[name]", with: "modify"
-          click_button "保存"
+          click_button I18n.t('ss.buttons.save')
         end
         expect(status_code).to eq 200
         expect(current_path).not_to eq sns_login_path
@@ -72,7 +72,7 @@ describe "rss_pages", dbscope: :example do
       it "#delete" do
         visit delete_path
         within "form" do
-          click_button "削除"
+          click_button I18n.t('ss.buttons.delete')
         end
         expect(status_code).to eq 200
         expect(current_path).to eq index_path

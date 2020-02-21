@@ -58,11 +58,12 @@ module Member::Node
     include Cms::Model::Node
     include Cms::Addon::NodeSetting
     include Cms::Addon::Meta
-    include Member::Addon::Registration::SenderAddress
     include Member::Addon::Registration::Notice
+    include Member::Addon::Registration::SenderAddress
     include Member::Addon::Registration::Confirmation
     include Member::Addon::Registration::Reply
-    include Member::Addon::Registration::ResetPasswordMail
+    include Member::Addon::Registration::Completed
+    include Member::Addon::Registration::ResetPassword
     include Member::Addon::Registration::RequiredFields
     include Cms::Addon::GroupPermission
     include History::Addon::Backup
@@ -140,6 +141,14 @@ module Member::Node
     def pages
       Member::BlogPage.site(site).where(filename: /^#{filename}\//, depth: depth + 1).and_public
     end
+
+    def file_previewable?(file, user:, member:)
+      return true if super
+
+      return true if member.present? && member_id == member.id
+
+      false
+    end
   end
 
   class BlogPageLocation
@@ -168,7 +177,7 @@ module Member::Node
       conditions.each do |url|
         node = Cms::Node.site(cur_site || site).filename(url).first rescue nil
         next unless node
-        cond << { filename: /^#{node.filename}\//, depth: node.depth + 1 }
+        cond << { filename: /^#{::Regexp.escape(node.filename)}\//, depth: node.depth + 1 }
         cids << node.id
       end
       cond << { :blog_page_location_ids.in => cids } if cids.present?
@@ -241,7 +250,7 @@ module Member::Node
       conditions.each do |url|
         node = Cms::Node.site(cur_site || site).filename(url).first rescue nil
         next unless node
-        cond << { filename: /^#{node.filename}\//, depth: node.depth + 1 }
+        cond << { filename: /^#{::Regexp.escape(node.filename)}\//, depth: node.depth + 1 }
         cids << node.id
       end
       cond << { :photo_category_ids.in => cids } if cids.present?
@@ -271,7 +280,7 @@ module Member::Node
       conditions.each do |url|
         node = Cms::Node.site(cur_site || site).filename(url).first rescue nil
         next unless node
-        cond << { filename: /^#{node.filename}\//, depth: node.depth + 1 }
+        cond << { filename: /^#{::Regexp.escape(node.filename)}\//, depth: node.depth + 1 }
         cids << node.id
       end
       cond << { :photo_location_ids.in => cids } if cids.present?

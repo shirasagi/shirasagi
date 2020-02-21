@@ -1,4 +1,4 @@
-SS::Application.routes.draw do
+Rails.application.routes.draw do
   Gws::Initializer
 
   concern :deletion do
@@ -14,6 +14,11 @@ SS::Application.routes.draw do
   concern :import do
     get :import, on: :collection
     post :import, on: :collection
+  end
+
+  concern :webmail_import do
+    get :webmail_import, on: :collection
+    post :webmail_import, on: :collection
   end
 
   concern :lock_and_unlock do
@@ -34,7 +39,7 @@ SS::Application.routes.draw do
     resource  :site
     resources :groups, concerns: [:deletion, :download, :import]
     resources :custom_groups, concerns: [:deletion]
-    resources :users, concerns: [:deletion, :download, :import, :lock_and_unlock]
+    resources :users, concerns: [:deletion, :download, :import, :webmail_import, :lock_and_unlock]
     resources :user_titles, concerns: [:deletion]
     resources :roles, concerns: [:deletion, :download, :import]
     resources :sys_notices, only: [:index, :show]
@@ -63,6 +68,8 @@ SS::Application.routes.draw do
       post "reminders/notifications" => "reminders#notification"
       get "custom_groups" => "custom_groups#index"
       get "contrasts" => "contrasts#index"
+      get "desktop_settings" => "desktop_settings#index"
+      put "reload_site_usages" => "site_usages#reload"
 
       resources :files, concerns: :deletion do
         get :select, on: :member

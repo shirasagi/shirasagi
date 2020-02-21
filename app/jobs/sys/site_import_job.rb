@@ -1,3 +1,5 @@
+require 'nkf'
+
 class Sys::SiteImportJob < SS::ApplicationJob
   include Job::SS::TaskFilter
   include Sys::SiteImport::Contents
@@ -74,10 +76,17 @@ class Sys::SiteImportJob < SS::ApplicationJob
 
     Zip::File.open(@import_zip) do |entries|
       entries.each do |entry|
-        if entry.name.start_with?('public/')
-          path = "#{@dst_site.path}/" + entry.name.encode("UTF-8").tr('\\', '/').sub(/^public\//, '')
+        name = entry.name
+        if entry.gp_flags & Zip::Entry::EFS
+          name.force_encoding("UTF-8")
         else
-          path = "#{@import_dir}/" + entry.name.encode("UTF-8").tr('\\', '/')
+          name = NKF.nkf('-w', name)
+        end
+
+        if name.start_with?('public/')
+          path = "#{@dst_site.path}/" + name.tr('\\', '/').sub(/^public\//, '')
+        else
+          path = "#{@import_dir}/" + name.tr('\\', '/')
         end
 
         if entry.directory?
@@ -167,11 +176,17 @@ class Sys::SiteImportJob < SS::ApplicationJob
       id   = data.delete('_id')
       data = convert_data(data)
 
+      if data.key?("_type")
+        effective_model = data["_type"].constantize rescue model
+      else
+        effective_model = model
+      end
+
       if fields
         cond = data.select { |k, v| fields.include?(k) }
-        item = model.unscoped.find_or_initialize_by(cond)
+        item = effective_model.unscoped.find_or_initialize_by(cond)
       else
-        item = model.new
+        item = effective_model.new
       end
 
       data.each { |k, v| item[k] = v }

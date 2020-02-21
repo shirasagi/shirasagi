@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe "my_group", dbscope: :example, js: true do
+describe "my_group", type: :feature, dbscope: :example, js: true do
   let(:site) { cms_site }
   let(:group) { cms_group }
   let(:layout) { create_cms_layout }
@@ -42,7 +42,7 @@ describe "my_group", dbscope: :example, js: true do
           click_on I18n.t("workflow.buttons.select")
           click_on I18n.t("workflow.search_approvers.index")
         end
-        within "#cboxLoadedContent" do
+        wait_for_cbox do
           expect(page).to have_content(user1.long_name)
           find("tr[data-id='1,#{user1.id}'] input[type=checkbox]").click
           find("tr[data-id='1,#{user2.id}'] input[type=checkbox]").click
@@ -52,7 +52,8 @@ describe "my_group", dbscope: :example, js: true do
           fill_in "workflow[comment]", with: workflow_comment
           click_on I18n.t("workflow.buttons.request")
         end
-        expect(page).to have_css(".mod-workflow-view dd", text: /#{::Regexp.escape(user1.uid)}/)
+
+        expect(page).to have_css(".mod-workflow-view dd", text: I18n.t("workflow.state.request"))
 
         item.reload
         expect(item.workflow_user_id).to eq cms_user.id
@@ -159,7 +160,7 @@ describe "my_group", dbscope: :example, js: true do
           click_on I18n.t("workflow.buttons.select")
           click_on I18n.t("workflow.search_approvers.index")
         end
-        within "#cboxLoadedContent" do
+        wait_for_cbox do
           expect(page).to have_content(user1.long_name)
           find("tr[data-id='1,#{user1.id}'] input[type=checkbox]").click
           find("tr[data-id='1,#{user2.id}'] input[type=checkbox]").click
@@ -169,7 +170,8 @@ describe "my_group", dbscope: :example, js: true do
           fill_in "workflow[comment]", with: workflow_comment
           click_on I18n.t("workflow.buttons.request")
         end
-        expect(page).to have_css(".mod-workflow-view dd", text: /#{::Regexp.escape(user1.uid)}/)
+
+        expect(page).to have_css(".mod-workflow-view dd", text: I18n.t("workflow.state.request"))
 
         item.reload
         expect(item.workflow_user_id).to eq cms_user.id
@@ -254,7 +256,7 @@ describe "my_group", dbscope: :example, js: true do
           click_on I18n.t("workflow.buttons.select")
           click_on I18n.t("workflow.search_approvers.index")
         end
-        within "#cboxLoadedContent" do
+        wait_for_cbox do
           expect(page).to have_content(user1.long_name)
           find("tr[data-id='1,#{user1.id}'] input[type=checkbox]").click
           find("tr[data-id='1,#{user2.id}'] input[type=checkbox]").click
@@ -264,13 +266,14 @@ describe "my_group", dbscope: :example, js: true do
           fill_in "workflow[comment]", with: workflow_comment
           click_on I18n.t("workflow.buttons.request")
         end
-        expect(page).to have_css(".mod-workflow-view dd", text: /#{::Regexp.escape(user1.uid)}/)
+
+        expect(page).to have_css(".mod-workflow-view dd", text: I18n.t("workflow.state.request"))
+        expect(page).to have_css(".mod-workflow-view dd", text: workflow_comment)
 
         item.reload
         expect(item.workflow_user_id).to eq cms_user.id
         expect(item.workflow_state).to eq "request"
         expect(item.state).to eq "closed"
-        expect(item.workflow_comment).to eq workflow_comment
         expect(item.workflow_approvers.count).to eq 2
         expect(item.workflow_approvers).to include({level: 1, user_id: user1.id, editable: '', state: 'request', comment: ''})
         expect(item.workflow_approvers).to include({level: 1, user_id: user2.id, editable: '', state: 'request', comment: ''})
@@ -353,7 +356,7 @@ describe "my_group", dbscope: :example, js: true do
           click_on I18n.t("workflow.buttons.select")
           click_on I18n.t("workflow.search_approvers.index")
         end
-        within "#cboxLoadedContent" do
+        wait_for_cbox do
           expect(page).to have_content(user1.long_name)
           find("tr[data-id='1,#{user1.id}'] input[type=checkbox]").click
           find("tr[data-id='1,#{user2.id}'] input[type=checkbox]").click
@@ -363,7 +366,8 @@ describe "my_group", dbscope: :example, js: true do
           fill_in "workflow[comment]", with: workflow_comment
           click_on I18n.t("workflow.buttons.request")
         end
-        expect(page).to have_css(".mod-workflow-view dd", text: /#{::Regexp.escape(user1.uid)}/)
+
+        expect(page).to have_css(".mod-workflow-view dd", text: I18n.t("workflow.state.request"))
 
         item.reload
         expect(item.workflow_user_id).to eq cms_user.id

@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe "board_posts", dbscope: :example do
+describe "board_posts", type: :feature, dbscope: :example do
   let(:site) { cms_site }
   let(:node) { create_once :board_node_post, filename: "posts", name: "posts" }
   let(:item) { create(:board_post, node: node) }
@@ -17,21 +17,21 @@ describe "board_posts", dbscope: :example do
       visit index_path
       expect(current_path).not_to eq sns_login_path
 
-      expect(page).to have_css('div#menu nav a', text: '新規作成')
+      expect(page).to have_css('div#menu nav a', text: I18n.t('ss.links.new'))
       expect(page).to have_css('div#menu nav a', text: 'ダウンロード')
     end
 
     it "#new" do
       visit new_path
 
-      expect(page).to have_css('div#menu nav a', text: '一覧へ戻る')
+      expect(page).to have_css('div#menu nav a', text: I18n.t('ss.links.back_to_index'))
 
       within "form#item-form" do
         fill_in "item[name]", with: "sample"
         fill_in "item[poster]", with: "sample"
         fill_in "item[text]", with: "sample"
         fill_in "item[delete_key]", with: "pass"
-        click_button "保存"
+        click_button I18n.t('ss.buttons.save')
       end
       expect(status_code).to eq 200
       expect(current_path).not_to eq new_path
@@ -43,21 +43,21 @@ describe "board_posts", dbscope: :example do
       expect(status_code).to eq 200
       expect(current_path).not_to eq sns_login_path
 
-      expect(page).to have_css('div#menu nav a', text: '編集する')
+      expect(page).to have_css('div#menu nav a', text: I18n.t('ss.links.edit'))
       expect(page).to have_css('div#menu nav a', text: '返信する')
-      expect(page).to have_css('div#menu nav a', text: '削除する')
-      expect(page).to have_css('div#menu nav a', text: '一覧へ戻る')
+      expect(page).to have_css('div#menu nav a', text: I18n.t('ss.links.delete'))
+      expect(page).to have_css('div#menu nav a', text: I18n.t('ss.links.back_to_index'))
     end
 
     it "#edit" do
       visit edit_path
 
-      expect(page).to have_css('div#menu nav a', text: '詳細へ戻る')
-      expect(page).to have_css('div#menu nav a', text: '一覧へ戻る')
+      expect(page).to have_css('div#menu nav a', text: I18n.t('ss.links.back_to_show'))
+      expect(page).to have_css('div#menu nav a', text: I18n.t('ss.links.back_to_index'))
 
       within "form#item-form" do
         fill_in "item[name]", with: "modify"
-        click_button "保存"
+        click_button I18n.t('ss.buttons.save')
       end
       expect(current_path).not_to eq sns_login_path
       expect(page).to have_no_css("form#item-form")
@@ -66,11 +66,11 @@ describe "board_posts", dbscope: :example do
     it "#delete" do
       visit delete_path
 
-      expect(page).to have_css('div#menu nav a', text: '詳細へ戻る')
-      expect(page).to have_css('div#menu nav a', text: '一覧へ戻る')
+      expect(page).to have_css('div#menu nav a', text: I18n.t('ss.links.back_to_show'))
+      expect(page).to have_css('div#menu nav a', text: I18n.t('ss.links.back_to_index'))
 
       within "form" do
-        click_button "削除"
+        click_button I18n.t('ss.buttons.delete')
       end
       expect(current_path).to eq index_path
     end

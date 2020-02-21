@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe "chorg_revisions", dbscope: :example do
+describe "chorg_revisions", type: :feature, dbscope: :example do
   let(:site) { cms_site }
   let(:index_path) { chorg_revisions_path site.id }
   let(:new_path) { new_chorg_revision_path site.id }
@@ -38,7 +38,7 @@ describe "chorg_revisions", dbscope: :example do
         visit new_path
         within "form#item-form" do
           fill_in "item[name]", with: "sample"
-          click_button "保存"
+          click_button I18n.t('ss.buttons.save')
         end
         expect(status_code).to eq 200
         expect(page).to have_no_selector("div#errorExplanation")
@@ -57,7 +57,7 @@ describe "chorg_revisions", dbscope: :example do
         visit new_path
         within "form#item-form" do
           fill_in "item[name]", with: revision.name
-          click_button "保存"
+          click_button I18n.t('ss.buttons.save')
         end
 
         expect(status_code).to eq 200

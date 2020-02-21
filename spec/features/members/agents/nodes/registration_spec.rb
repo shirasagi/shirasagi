@@ -14,6 +14,8 @@ describe 'members/agents/nodes/registration', type: :feature, dbscope: :example 
       ログインパスワードの再設定用のURLをお送りします。
       次の URL をクリックし、画面の指示にしたがってパスワード再設定を完了させてください。).join("\n")
   end
+  let(:completed_upper_text) { "会員登録が完了しました。" }
+  let(:completed_lower_text) { "上記メールアドレスにてログインください。" }
   let!(:node_registration) do
     create(
       :member_node_registration,
@@ -21,14 +23,17 @@ describe 'members/agents/nodes/registration', type: :feature, dbscope: :example 
       layout_id: layout.id,
       sender_name: '会員登録',
       sender_email: 'admin@example.jp',
-      subject: '登録確認',
+      sender_signature: "----\nシラサギ市",
+      reply_subject: '登録確認',
       reply_upper_text: reply_upper_text,
       reply_lower_text: '本メールに心当たりのない方は、お手数ですがメールを削除してください。',
-      reply_signature: "----\nシラサギ市",
       reset_password_subject: 'パスワード再設定案内',
       reset_password_upper_text: reset_password_upper_text,
       reset_password_lower_text: "本メールに心当たりのない方は、お手数ですがメールを削除してください。",
-      reset_password_signature: "----\nシラサギ市")
+      completed_subject: '登録完了',
+      completed_upper_text: completed_upper_text,
+      completed_lower_text: completed_lower_text,
+    )
   end
   let!(:node_login) do
     create(
@@ -80,8 +85,8 @@ describe 'members/agents/nodes/registration', type: :feature, dbscope: :example 
         choose "item_sex_#{sex}"
         select era, from: "item[in_birth][era]"
         fill_in "item[in_birth][year]", with: birthday.year
-        select birthday.month, from: "item[in_birth][month]"
-        select birthday.day, from: "item[in_birth][day]"
+        select birthday.month.to_s, from: "item[in_birth][month]"
+        select birthday.day.to_s, from: "item[in_birth][day]"
 
         click_button "確認画面へ"
       end
@@ -150,7 +155,7 @@ describe 'members/agents/nodes/registration', type: :feature, dbscope: :example 
       expect(mail.body.multipart?).to be_falsey
       expect(mail.body.raw_source).to include(node_registration.reply_upper_text)
       expect(mail.body.raw_source).to include(node_registration.reply_lower_text)
-      expect(mail.body.raw_source).to include(node_registration.reply_signature)
+      expect(mail.body.raw_source).to include(node_registration.sender_signature)
 
       member = Cms::Member.where(email: email).first
       expect(member.name).to eq name
@@ -182,6 +187,18 @@ describe 'members/agents/nodes/registration', type: :feature, dbscope: :example 
         click_button "登録"
       end
 
+      expect(ActionMailer::Base.deliveries.length).to eq 2
+      mail = ActionMailer::Base.deliveries.last
+      expect(mail.from.first).to eq "admin@example.jp"
+      expect(mail.to.first).to eq email
+      expect(mail.subject).to eq '登録完了'
+      expect(mail.body.multipart?).to be_falsey
+      expect(mail.body.raw_source).to include(node_registration.completed_upper_text)
+      expect(mail.body.raw_source).to include(node_registration.completed_lower_text)
+      expect(mail.body.raw_source).to include(node_registration.sender_signature)
+      expect(mail.body.raw_source).to include(email)
+      expect(mail.body.raw_source).to include(name)
+
       member = Cms::Member.where(email: email).first
       expect(member.name).to eq name
       expect(member.email).to eq email
@@ -202,6 +219,58 @@ describe 'members/agents/nodes/registration', type: :feature, dbscope: :example 
       end
 
       expect(page). to have_css("div#mypage")
+    end
+
+    it do
+      visit index_path
+
+      node_registration.notice_state = "enabled"
+      node_registration.notice_email = "sys@example.jp"
+      node_registration.update!
+
+      within "form" do
+        fill_in "item[name]", with: name
+        fill_in "item[email]", with: email
+        fill_in "item[email_again]", with: email
+        fill_in "item[kana]", with: kana
+        fill_in "item[organization_name]", with: organization_name
+        fill_in "item[job]", with: job
+        fill_in "item[tel]", with: tel
+        fill_in "item[postal_code]", with: postal_code
+        fill_in "item[addr]", with: addr
+        choose "item_sex_#{sex}"
+        select era, from: "item[in_birth][era]"
+        fill_in "item[in_birth][year]", with: birthday.year
+        select birthday.month.to_s, from: "item[in_birth][month]"
+        select birthday.day.to_s, from: "item[in_birth][day]"
+
+        click_button "確認画面へ"
+      end
+
+      within "form" do
+        expect(page.find("input[name='item[name]']", visible: false).value).to eq name
+        expect(page.find("input[name='item[email]']", visible: false).value).to eq email
+        expect(page.find("input[name='item[kana]']", visible: false).value).to eq kana
+        expect(page.find("input[name='item[organization_name]']", visible: false).value).to eq organization_name
+        expect(page.find("input[name='item[job]']", visible: false).value).to eq job
+        expect(page.find("input[name='item[tel]']", visible: false).value).to eq tel
+        expect(page.find("input[name='item[postal_code]']", visible: false).value).to eq postal_code
+        expect(page.find("input[name='item[addr]']", visible: false).value).to eq addr
+        expect(page.find("input[name='item[sex]']", visible: false).value).to eq sex
+        expect(page.find("input[name='item[in_birth][era]']", visible: false).value).to eq "seireki"
+        expect(page.find("input[name='item[in_birth][year]']", visible: false).value).to eq birthday.year.to_s
+        expect(page.find("input[name='item[in_birth][month]']", visible: false).value).to eq birthday.month.to_s
+        expect(page.find("input[name='item[in_birth][day]']", visible: false).value).to eq birthday.day.to_s
+
+        click_button "登録"
+      end
+
+      expect(ActionMailer::Base.deliveries.length).to eq 1
+      mail = ActionMailer::Base.deliveries.first
+
+      expect(mail.to.first).to eq "sys@example.jp"
+      expect(mail.subject).to start_with '[会員登録申請]'
+      expect(mail.body.multipart?).to be_falsey
     end
   end
 
@@ -228,8 +297,8 @@ describe 'members/agents/nodes/registration', type: :feature, dbscope: :example 
         choose "item_sex_#{sex}"
         select era, from: "item[in_birth][era]"
         fill_in "item[in_birth][year]", with: birthday.year
-        select birthday.month, from: "item[in_birth][month]"
-        select birthday.day, from: "item[in_birth][day]"
+        select birthday.month.to_s, from: "item[in_birth][month]"
+        select birthday.day.to_s, from: "item[in_birth][day]"
 
         click_button "確認画面へ"
       end
@@ -261,7 +330,7 @@ describe 'members/agents/nodes/registration', type: :feature, dbscope: :example 
       expect(mail.body.multipart?).to be_falsey
       expect(mail.body.raw_source).to include(node_registration.reply_upper_text)
       expect(mail.body.raw_source).to include(node_registration.reply_lower_text)
-      expect(mail.body.raw_source).to include(node_registration.reply_signature)
+      expect(mail.body.raw_source).to include(node_registration.sender_signature)
 
       member = Cms::Member.where(email: email).first
       expect(member.name).to eq name
@@ -367,7 +436,7 @@ describe 'members/agents/nodes/registration', type: :feature, dbscope: :example 
       expect(mail.body.multipart?).to be_falsey
       expect(mail.body.raw_source).to include(node_registration.reset_password_upper_text)
       expect(mail.body.raw_source).to include(node_registration.reset_password_lower_text)
-      expect(mail.body.raw_source).to include(node_registration.reset_password_signature)
+      expect(mail.body.raw_source).to include(node_registration.sender_signature)
 
       mail.body.raw_source =~ /(#{::Regexp.escape(node_registration.full_url)}[^ \t\r\n]+)/
       url = $1
@@ -386,6 +455,38 @@ describe 'members/agents/nodes/registration', type: :feature, dbscope: :example 
 
       member.reload
       expect(member.password).to eq SS::Crypt.crypt(new_password)
+    end
+  end
+
+  describe "overwrite existing temporal member" do
+    let(:member) { create(:cms_member, state: "temporary") }
+
+    it do
+      visit node_registration.full_url
+
+      within "form" do
+        fill_in "item[name]", with: member.name
+        fill_in "item[email]", with: member.email
+        fill_in "item[email_again]", with: member.email
+
+        click_button "確認画面へ"
+      end
+
+      within "form" do
+        click_button "登録"
+      end
+
+      expect(page).to have_content("メールに記載の案内を読み、登録を完了してください。")
+
+      expect(ActionMailer::Base.deliveries.length).to eq 1
+      mail = ActionMailer::Base.deliveries.first
+      expect(mail.from.first).to eq "admin@example.jp"
+      expect(mail.to.first).to eq member.email
+      expect(mail.subject).to eq '登録確認'
+      expect(mail.body.multipart?).to be_falsey
+      expect(mail.body.raw_source).to include(node_registration.reply_upper_text)
+      expect(mail.body.raw_source).to include(node_registration.reply_lower_text)
+      expect(mail.body.raw_source).to include(node_registration.sender_signature)
     end
   end
 end

@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe "member_my_anpi_posts", dbscope: :example, js: true do
+describe "member_my_anpi_posts", type: :feature, dbscope: :example, js: true do
   let(:site) { cms_site }
   let(:member) do
     create(:cms_member,
@@ -32,7 +32,7 @@ describe "member_my_anpi_posts", dbscope: :example, js: true do
       visit index_path
       expect(current_path).to eq index_path
 
-      click_on '新規作成'
+      click_on I18n.t('ss.links.new')
       fill_in 'item[name]', with: member.name
       fill_in 'item[kana]', with: member.kana
       fill_in 'item[addr]', with: member.addr
@@ -41,12 +41,12 @@ describe "member_my_anpi_posts", dbscope: :example, js: true do
       fill_in 'item[email]', with: member.email
       fill_in 'item[text]', with: text0
       click_on 'メンバーを選択する'
-      within '#ajax-box' do
+      wait_for_cbox do
         click_link member.name
       end
+      click_on I18n.t("ss.buttons.save")
 
-      click_on '保存'
-      expect(page).to have_css('#notice', text: '保存しました。', wait: 60)
+      expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
       expect(Board::AnpiPost.count).to eq 1
       Board::AnpiPost.first.tap do |anpi|
         expect(anpi.member_id).to eq member.id
@@ -54,16 +54,16 @@ describe "member_my_anpi_posts", dbscope: :example, js: true do
         expect(anpi.text).to eq text0
       end
 
-      click_on '一覧へ戻る'
+      click_on I18n.t('ss.links.back_to_index')
       expect(current_path).to eq index_path
       expect(page).to have_css('.list-item .title', text: member.name)
 
       click_on member.name
-      click_on '編集する'
+      click_on I18n.t('ss.links.edit')
       fill_in 'item[text]', with: text1
+      click_on I18n.t("ss.buttons.save")
 
-      click_on '保存'
-      expect(page).to have_css('#notice', text: '保存しました。', wait: 60)
+      expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
       expect(Board::AnpiPost.count).to eq 1
       Board::AnpiPost.first.tap do |anpi|
         expect(anpi.member_id).to eq member.id
@@ -73,9 +73,10 @@ describe "member_my_anpi_posts", dbscope: :example, js: true do
 
       visit index_path
       click_on member.name
-      click_on '削除する'
-      click_on '削除'
-      expect(page).to have_css('#notice', text: '保存しました。', wait: 60)
+      click_on I18n.t('ss.links.delete')
+      click_on I18n.t("ss.buttons.delete")
+
+      expect(page).to have_css('#notice', text: I18n.t('ss.notice.deleted'))
     end
   end
 

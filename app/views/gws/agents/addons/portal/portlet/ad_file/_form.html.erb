@@ -1,0 +1,52 @@
+<%
+  addon ||= local_assigns.fetch(:addon, {})
+%>
+
+<%= jquery do %>
+  var $el = $("#<%= addon[:id] %>");
+  var selectPath = <%== select_gws_portal_apis_ad_file_path(id: ":id").to_json %>;
+
+  $el.find('.upload-menu-new a').data('on-select', function($item) {
+    $.colorbox.close();
+
+    var fileId = $item.data('id');
+    var humanizedName = $item.data('humanized-name');
+    if (! fileId || ! humanizedName) {
+      return;
+    }
+
+    var $html = $("<div />", { id: "file-" + fileId, class: "file-view", "data-file-id": fileId });
+    $html.html(SS.loading);
+    $el.find("#selected-files").append($html);
+
+    $.ajax({
+      url: selectPath.replace(/:id/g, fileId),
+      cache: false,
+      success: function(data) {
+        $html.html($(data).html());
+      },
+      error: function(xhr, status, error) {
+        $html.html("== Error ==");
+      }
+    });
+  });
+
+  $el.on("click", ".btn-delete", function(e) {
+    e.preventDefault();
+    $(this).closest(".file-view").remove();
+    return false;
+  });
+<% end %>
+
+<div class="see gws-addon-file">
+  <%= f.hidden_field "ad_file_ids[]", value: "", id: nil %>
+  <span class="upload-menu-new">
+    <%= link_to t('ss.links.upload'), sns_apis_temp_files_path(user: @cur_user), class: "ajax-box btn" %>
+  </span>
+
+  <div id="selected-files">
+    <% @item.ad_files.each do |file| %>
+      <%= render "gws/portal/apis/ad_files/select", file: file.becomes_with(SS::LinkFile) %>
+    <% end %>
+  </div>
+</div>

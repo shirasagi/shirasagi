@@ -25,6 +25,11 @@
   <dd><%= tryb{@item.layout.name} %></dd>
   <% end %>
 
+  <% if @item.try(:form) %>
+    <dt><%= @model.t :form_id %></dt>
+    <dd><%= @item.form.name %></dd>
+  <% end %>
+
   <% if @item.send(:body_layout_id).present? %>
   <dt><%= @model.t :body_layout_id %></dt>
   <dd><%= tryb{@item.body_layout.name} %></dd>

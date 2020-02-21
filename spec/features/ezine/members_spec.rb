@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe "ezine_members" do
+describe "ezine_members", type: :feature do
   subject(:site) { cms_site }
   subject(:node) { create_once :ezine_node_page }
   subject(:item) { Ezine::Member.last }
@@ -24,7 +24,7 @@ describe "ezine_members" do
         fill_in "item[email]", with: "sample@example.jp"
         find("input[name='item[email_type]'][value='text']").set(true) #choose "テキスト版"
         find("input[name='item[state]'][value='enabled']").set(true)   #choose "配信する"
-        click_button "保存"
+        click_button I18n.t('ss.buttons.save')
       end
       expect(status_code).to eq 200
       expect(current_path).not_to eq new_path
@@ -42,7 +42,7 @@ describe "ezine_members" do
       within "form#item-form" do
         find("input[name='item[email_type]'][value='html']").set(true) #choose "HTML版"
         find("input[name='item[state]'][value='disabled']").set(true)  #choose "配信しない"
-        click_button "保存"
+        click_button I18n.t('ss.buttons.save')
       end
       expect(current_path).not_to eq sns_login_path
       expect(page).to have_no_css("form#item-form")
@@ -51,7 +51,7 @@ describe "ezine_members" do
     it "#delete" do
       visit delete_path
       within "form" do
-        click_button "削除"
+        click_button I18n.t('ss.buttons.delete')
       end
       expect(current_path).to eq index_path
     end
@@ -68,7 +68,7 @@ describe "ezine_members" do
           find("input[name='item[email_type]'][value='text']").set(true) #choose "テキスト版"
           find("input[name='item[state]'][value='enabled']").set(true)   #choose "配信する"
           fill_in "item[in_data][#{@column.id}]", with: "text"
-          click_button "保存"
+          click_button I18n.t('ss.buttons.save')
         end
         expect(status_code).to eq 200
         expect(current_path).not_to eq new_path

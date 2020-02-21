@@ -1,5 +1,21 @@
 <%= jquery do %>
 Openlayers_Dataset_Map.modal(<%== @map_points.to_json %>);
+var cboxLoad = function() {
+  var url = $(this).attr("href");
+  $.ajax({
+    url: url,
+    type: "GET",
+    success: function (data) {
+      $("#cboxLoadedContent").html(data);
+    },
+    error: function (data, status) {
+      $("#cboxLoadedContent").html("== Error ==");
+    }
+  });
+  return false;
+};
+$("#ajax-box .pagination a").on("click", cboxLoad);
+$("#ajax-box .submitters a").on("click", cboxLoad);
 <% end %>
 
 <% @s = OpenStruct.new params[:s] %>

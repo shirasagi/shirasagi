@@ -6,7 +6,8 @@ class Gws::Survey::EditablesController < ApplicationController
   before_action :set_category
   before_action :set_search_params
   before_action :set_items
-  before_action :set_item, only: [:show, :edit, :update, :soft_delete, :move, :publish, :depublish]
+  before_action :set_item, only: [:show, :edit, :update, :soft_delete, :move, :publish, :depublish, :copy, :print]
+  before_action :respond_404_if_item_is_public, only: [:edit, :update, :soft_delete, :move]
   before_action :set_selected_items, only: [:destroy_all, :soft_delete_all]
 
   model Gws::Survey::Form
@@ -20,6 +21,14 @@ class Gws::Survey::EditablesController < ApplicationController
   def set_crumbs
     @crumbs << [@cur_site.menu_survey_label || t('modules.gws/survey'), gws_survey_main_path]
     @crumbs << [t('ss.navi.editable'), action: :index, folder_id: '-', category_id: '-']
+  end
+
+  def permit_fields
+    fields = super
+    if params[:action] == "create"
+      fields += %i[anonymous_state file_state]
+    end
+    fields
   end
 
   def pre_params
@@ -68,12 +77,8 @@ class Gws::Survey::EditablesController < ApplicationController
     raise e
   end
 
-  def set_selected_items
-    ids = params[:ids]
-    raise "400" unless ids
-    ids = ids.split(",") if ids.is_a?(String)
-    @items = @items.in(id: ids)
-    raise "400" unless @items.present?
+  def respond_404_if_item_is_public
+    raise "404" if @item.public?
   end
 
   public
@@ -106,5 +111,38 @@ class Gws::Survey::EditablesController < ApplicationController
     @item.state = 'closed'
     render_opts = { render: { file: :depublish }, notice: t('ss.notice.depublished') }
     render_update @item.save, render_opts
+  end
+
+  def copy
+    @copy = @model.new
+
+    if @copy.name.nil?
+      prefix = I18n.t("workflow.cloned_name_prefix")
+      @copy.name = "[#{prefix}] #{@item.name}"
+    end
+    return if request.get?
+
+    copy = params.require(:copy).permit(:name, :anonymous_state, :file_state)
+    @copy = @item.new_clone(
+      site: @cur_site,
+      user: @cur_user,
+      name: copy["name"],
+      anonymous_state: copy["anonymous_state"],
+      file_state: copy["file_state"]
+    )
+    render_opts = { location: { action: :index }, render: { file: :copy }, notice: t('ss.notice.copied') }
+    render_create @copy.save, render_opts
+  end
+
+  def print
+    @cur_form = @item
+    @item = Gws::Survey::File.new
+    @item.cur_site = @cur_site
+    @item.cur_user = @cur_user
+    @item.cur_form = @cur_form
+    @item.name = t("gws/survey.file_name", form: @cur_form.name)
+
+    @back = { action: :show }
+    render layout: 'ss/print'
   end
 end

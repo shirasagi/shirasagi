@@ -25,10 +25,10 @@ describe "gws_discussion_topics_notify_message", type: :feature, dbscope: :examp
       within "form#item-form" do
         fill_in "item[name]", with: "name"
         fill_in "item[text]", with: "text"
-        click_button "保存"
+        click_button I18n.t('ss.buttons.save')
       end
 
-      item = Gws::Memo::Notice.where(subject: /#{forum1.name}/).first
+      item = SS::Notification.where(subject: /#{forum1.name}/).first
       expect(item).to be_nil
     end
 
@@ -38,10 +38,10 @@ describe "gws_discussion_topics_notify_message", type: :feature, dbscope: :examp
       within "form#item-form" do
         fill_in "item[name]", with: "name"
         fill_in "item[text]", with: "text"
-        click_button "保存"
+        click_button I18n.t('ss.buttons.save')
       end
 
-      item = Gws::Memo::Notice.where(subject: /#{forum2.name}/).first
+      item = SS::Notification.where(subject: /#{forum2.name}/).first
       expect(item).not_to be_nil
     end
 
@@ -51,10 +51,10 @@ describe "gws_discussion_topics_notify_message", type: :feature, dbscope: :examp
       within "form#item-form" do
         fill_in "item[name]", with: "name"
         fill_in "item[text]", with: "text"
-        click_button "保存"
+        click_button I18n.t('ss.buttons.save')
       end
 
-      item = Gws::Memo::Notice.where(subject: /#{forum3.name}/).first
+      item = SS::Notification.where(subject: /#{forum3.name}/).first
       expect(item).to be_nil
     end
   end

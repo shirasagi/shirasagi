@@ -64,7 +64,7 @@ class Webmail::MailsController < ApplicationController
     @navi_mailboxes = true
     @mailbox = params[:mailbox]
 
-    if params[:action] == 'index' || params[:action] =~ /^(set_|unset_|send_mdn|ignore_mdn)/
+    if /^(set_|unset_|send_mdn|ignore_mdn)/.match?(params[:action])
       @imap.select(@mailbox)
     else
       @imap.examine(@mailbox)
@@ -104,6 +104,7 @@ class Webmail::MailsController < ApplicationController
 
   def edit
     raise "404" unless @item.draft?
+
     @item.set_ref_files(@item.attachments)
   end
 
@@ -253,6 +254,9 @@ class Webmail::MailsController < ApplicationController
 
     @item.destroy_files if resp
     render_create resp, notice: notice
+  rescue Net::IMAP::NoResponseError => e
+    @item.errors.add :base, e.to_s
+    render_create false
   end
 
   def destroy
@@ -333,8 +337,11 @@ class Webmail::MailsController < ApplicationController
     location = params[:redirect].presence || opts[:redirect] || { action: :index }
 
     respond_to do |format|
-      format.html { redirect_to location, notice: t("webmail.notice.#{action}") }
-      format.json { render json: { action: params[:action], notice: t("webmail.notice.#{action}") } }
+      notice = t("webmail.notice.#{action}", default: nil)
+      notice ||= t("ss.notice.#{action}", default: nil)
+      notice ||= t("ss.notice.saved")
+      format.html { redirect_to location, notice: notice }
+      format.json { render json: { action: params[:action], notice: notice } }
     end
   end
 

@@ -23,7 +23,7 @@ def save_column(type, data)
   when :date
     model = Cms::Column::DateField
   when :url
-    model = Cms::Column::UrlField
+    model = Cms::Column::UrlField2
   when :checkbox
     model = Cms::Column::CheckBox
   when :radio
@@ -34,8 +34,6 @@ def save_column(type, data)
     model = Cms::Column::FileUpload
   when :head_line
     model = Cms::Column::Headline
-  when :url_field_2
-    model = Cms::Column::UrlField2
   when :list
     model = Cms::Column::List
   when :table
@@ -176,11 +174,11 @@ end
   save_column(:text, form: @form_4, name: '一行入力', order: 10, required: 'optional', input_type: 'text', layout: '3.layout.html'),
   save_column(:text_area, form: @form_4, name: '複数行入力', order: 20, required: 'optional', layout: '4.layout.html'),
   save_column(:head_line, form: @form_4, name: '見出し', order: 30, required: 'optional'),
-  save_column(:url_field_2, form: @form_4, name: 'リンク', order: 40, required: 'optional', layout: '5.layout.html'),
+  save_column(:url, form: @form_4, name: 'リンク', order: 40, required: 'optional', layout: '5.layout.html'),
   save_column(:file_upload, form: @form_4, name: 'イメージ', order: 50, required: 'optional', file_type: 'image', layout: '6.layout.html'),
   save_column(:file_upload, form: @form_4, name: '添付ファイル', order: 60, required: 'optional', file_type: 'attachment', layout: '7.layout.html'),
   save_column(:list, form: @form_4, name: '番号付きリスト', order: 70, required: 'optional', list_type: 'ol'),
-  save_column(:list, form: @form_4, name: '番号なしリスト', order: 80, required: 'optional', list_type: 'ol'),
+  save_column(:list, form: @form_4, name: '番号なしリスト', order: 80, required: 'optional', list_type: 'ul'),
   save_column(:table, form: @form_4, name: '表', order: 90, required: 'optional'),
   save_column(:youtube, form: @form_4, name: 'YouTube埋め込み', order: 100, required: 'optional'),
   save_column(:file_upload, form: @form_4, name: '動画埋め込み', order: 110, required: 'optional', file_type: 'video'),

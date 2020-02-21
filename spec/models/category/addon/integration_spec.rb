@@ -109,6 +109,14 @@ describe Category::Addon::Integration, dbscope: :example do
     end
 
     it "#integrate" do
+      Cms::Node::GenerateJob.bind(site_id: site).perform_now
+      sleep 1
+
+      Job::Log.first.tap do |log|
+        expect(log.logs).to include(include('INFO -- : Started Job'))
+        expect(log.logs).to include(include('INFO -- : Completed Job'))
+      end
+
       master_node.in_partial_id = partial_node.id
       master_node.cur_user = user
       master_node.cur_node = master_node
@@ -247,6 +255,14 @@ describe Category::Addon::Integration, dbscope: :example do
     end
 
     it "#integrate" do
+      Cms::Node::GenerateJob.bind(site_id: site).perform_now
+      sleep 1
+
+      Job::Log.first.tap do |log|
+        expect(log.logs).to include(include('INFO -- : Started Job'))
+        expect(log.logs).to include(include('INFO -- : Completed Job'))
+      end
+
       master_node.in_partial_id = partial_node.id
       master_node.cur_user = user
       master_node.cur_node = master_node
@@ -389,6 +405,14 @@ describe Category::Addon::Integration, dbscope: :example do
     end
 
     it "#integrate" do
+      Cms::Node::GenerateJob.bind(site_id: site).perform_now
+      sleep 1
+
+      Job::Log.first.tap do |log|
+        expect(log.logs).to include(include('INFO -- : Started Job'))
+        expect(log.logs).to include(include('INFO -- : Completed Job'))
+      end
+
       master_node.in_partial_id = partial_node.id
       master_node.cur_user = user
       master_node.cur_node = master_node
@@ -527,6 +551,14 @@ describe Category::Addon::Integration, dbscope: :example do
     end
 
     it "#integrate" do
+      Cms::Node::GenerateJob.bind(site_id: site).perform_now
+      sleep 1
+
+      Job::Log.first.tap do |log|
+        expect(log.logs).to include(include('INFO -- : Started Job'))
+        expect(log.logs).to include(include('INFO -- : Completed Job'))
+      end
+
       master_node.in_partial_id = partial_node.id
       master_node.cur_user = user
       master_node.cur_node = master_node.parent
@@ -662,6 +694,14 @@ describe Category::Addon::Integration, dbscope: :example do
     end
 
     it "#integrate" do
+      Cms::Node::GenerateJob.bind(site_id: site).perform_now
+      sleep 1
+
+      Job::Log.first.tap do |log|
+        expect(log.logs).to include(include('INFO -- : Started Job'))
+        expect(log.logs).to include(include('INFO -- : Completed Job'))
+      end
+
       master_node.in_partial_id = partial_node.id
       master_node.cur_user = user
       master_node.cur_node = master_node

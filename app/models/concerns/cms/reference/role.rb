@@ -32,5 +32,11 @@ module Cms::Reference
       # TODO 関連するモデルを引数に取って正しいroleだけの中から最大値を取るようにする
       # TODO nilを返さないようにもする
     end
+
+    def cms_role_permit_any?(site, *permissions, level: 0)
+      Array(permissions).flatten.any? do |permission|
+        cms_role_permissions["#{permission}_#{site.id}"].to_i > level
+      end
+    end
   end
 end

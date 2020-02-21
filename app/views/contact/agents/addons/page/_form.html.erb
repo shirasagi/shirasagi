@@ -1,4 +1,7 @@
-<%= jquery do %> SS_AddonTabs.hide(".mod-contact-page"); <% end %>
+<%
+  addon ||= local_assigns.fetch(:addon, {})
+  addon[:display_body] = "hide"
+%>
 
 <dl class="see mod-contact-page">
   <dt><%= @model.t :contact_state %><%= @model.tt :contact_state %></dt>

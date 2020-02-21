@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe "opendata_main", dbscope: :example do
+describe "opendata_main", type: :feature, dbscope: :example do
   let(:site) { cms_site }
 
   context "with auth" do

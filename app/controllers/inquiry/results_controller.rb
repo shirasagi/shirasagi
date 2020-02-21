@@ -43,7 +43,7 @@ class Inquiry::ResultsController < ApplicationController
       @columns.each do |column|
         data << []
         data << [column.name]
-        if column.input_type =~ /(select|radio_button|check_box)/
+        if /(select|radio_button|check_box)/.match?(column.input_type)
           column.select_options.each do |opts|
             data << [opts, @aggregation[{ "column_id" => column.id, "value" => opts }]]
           end

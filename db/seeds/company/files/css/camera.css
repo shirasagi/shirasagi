@@ -5,18 +5,18 @@
 **************************/
 .camera_wrap a, .camera_wrap img,
 .camera_wrap ol, .camera_wrap ul, .camera_wrap li,
-.camera_wrap table, .camera_wrap tbody, .camera_wrap tfoot, .camera_wrap thead, .camera_wrap tr, .camera_wrap th, .camera_wrap td
+.camera_wrap table, .camera_wrap tbody, .camera_wrap tfoot, .camera_wrap thead, .camera_wrap tr, .camera_wrap th, .camera_wrap td,
 .camera_thumbs_wrap a, .camera_thumbs_wrap img,
 .camera_thumbs_wrap ol, .camera_thumbs_wrap ul, .camera_thumbs_wrap li,
 .camera_thumbs_wrap table, .camera_thumbs_wrap tbody, .camera_thumbs_wrap tfoot, .camera_thumbs_wrap thead, .camera_thumbs_wrap tr, .camera_thumbs_wrap th, .camera_thumbs_wrap td {
-    background: none;
+  background: none;
   border: 0;
   font: inherit;
   font-size: 100%;
   margin: 0;
   padding: 0;
   vertical-align: baseline;
-  list-style: none
+  list-style: none;
 }
 .camera_wrap {
   display: none;
@@ -25,7 +25,7 @@
   z-index: 0;
 }
 .camera_wrap img {
-  max-width: none!important;
+  max-width: none !important;
 }
 .camera_fakehover {
   height: 100%;
@@ -96,15 +96,15 @@
   z-index: 2;
 }
 .camera_target_content .camera_link {
-    background: url(../img/blank.gif);
+  background: url(../img/blank.gif);
   display: block;
   height: 100%;
   text-decoration: none;
 }
 .camera_loader {
-    background: #fff url(../img/camera-loader.gif) no-repeat center;
-  background: rgba(255, 255, 255, 0.9) url(../img/camera-loader.gif) no-repeat center;
-  border: 1px solid #ffffff;
+  background: #fff;
+  background: rgba(255, 255, 255, .9) url(../img/camera-loader.gif) no-repeat center;
+  border: 1px solid #fff;
   -webkit-border-radius: 18px;
   -moz-border-radius: 18px;
   border-radius: 18px;
@@ -205,7 +205,7 @@
 .camera_command_wrap {
   left: 0;
   position: relative;
-  right:0;
+  right: 0;
   z-index: 4;
 }
 .camera_wrap .camera_pag .camera_pag_ul {
@@ -229,14 +229,14 @@
 }
 .camera_commands_emboss .camera_pag .camera_pag_ul li {
   -moz-box-shadow:
-    0px 1px 0px rgba(255,255,255,1),
-    inset 0px 1px 1px rgba(0,0,0,0.2);
+    0 1px 0 rgba(255, 255, 255, 1),
+    inset 0 1px 1px rgba(0, 0, 0, .2);
   -webkit-box-shadow:
-    0px 1px 0px rgba(255,255,255,1),
-    inset 0px 1px 1px rgba(0,0,0,0.2);
+    0 1px 0 rgba(255, 255, 255, 1),
+    inset 0 1px 1px rgba(0, 0, 0, .2);
   box-shadow:
-    0px 1px 0px rgba(255,255,255,1),
-    inset 0px 1px 1px rgba(0,0,0,0.2);
+    0 1px 0 rgba(255, 255, 255, 1),
+    inset 0 1px 1px rgba(0, 0, 0, .2);
 }
 .camera_wrap .camera_pag .camera_pag_ul li > span {
   -webkit-border-radius: 5px;
@@ -251,28 +251,28 @@
 }
 .camera_commands_emboss .camera_pag .camera_pag_ul li:hover > span {
   -moz-box-shadow:
-    0px 1px 0px rgba(255,255,255,1),
-    inset 0px 1px 1px rgba(0,0,0,0.2);
+    0 1px 0 rgba(255, 255, 255, 1),
+    inset 0 1px 1px rgba(0, 0, 0, .2);
   -webkit-box-shadow:
-    0px 1px 0px rgba(255,255,255,1),
-    inset 0px 1px 1px rgba(0,0,0,0.2);
+    0 1px 0 rgba(255, 255, 255, 1),
+    inset 0 1px 1px rgba(0, 0, 0, .2);
   box-shadow:
-    0px 1px 0px rgba(255,255,255,1),
-    inset 0px 1px 1px rgba(0,0,0,0.2);
+    0 1px 0 rgba(255, 255, 255, 1),
+    inset 0 1px 1px rgba(0, 0, 0, .2);
 }
 .camera_wrap .camera_pag .camera_pag_ul li.cameracurrent > span {
-  -moz-box-shadow: 0;
-  -webkit-box-shadow: 0;
-  box-shadow: 0;
+  -moz-box-shadow: 0 0;
+  -webkit-box-shadow: 0 0;
+  box-shadow: 0 0;
 }
 .camera_pag_ul li img {
   display: none;
   position: absolute;
 }
 .camera_pag_ul .thumb_arrow {
-    border-left: 4px solid transparent;
-    border-right: 4px solid transparent;
-    border-top: 4px solid;
+  border-left: 4px solid transparent;
+  border-right: 4px solid transparent;
+  border-top: 4px solid;
   top: 0;
   left: 50%;
   margin-left: -4px;
@@ -344,14 +344,14 @@
 }
 .camera_commands_emboss .camera_thumbs_cont {
   -moz-box-shadow:
-    0px 1px 0px rgba(255,255,255,1),
-    inset 0px 1px 1px rgba(0,0,0,0.2);
+    0 1px 0 rgba(255, 255, 255, 1),
+    inset 0 1px 1px rgba(0, 0, 0, .2);
   -webkit-box-shadow:
-    0px 1px 0px rgba(255,255,255,1),
-    inset 0px 1px 1px rgba(0,0,0,0.2);
+    0 1px 0 rgba(255, 255, 255, 1),
+    inset 0 1px 1px rgba(0, 0, 0, .2);
   box-shadow:
-    0px 1px 0px rgba(255,255,255,1),
-    inset 0px 1px 1px rgba(0,0,0,0.2);
+    0 1px 0 rgba(255, 255, 255, 1),
+    inset 0 1px 1px rgba(0, 0, 0, .2);
 }
 .camera_thumbs_cont > div {
   float: left;
@@ -371,7 +371,7 @@
   border: 1px solid;
   cursor: pointer;
   margin-top: 5px;
-  vertical-align:bottom;
+  vertical-align: bottom;
 }
 .camera_clear {
   display: block;
@@ -427,7 +427,7 @@
 }
 .camera_caption > div {
   background: #000;
-  background: rgba(0, 0, 0, 0.8);
+  background: rgba(0, 0, 0, .8);
 }
 .camera_wrap .camera_pag .camera_pag_ul li {
   background: #b7b7b7;
@@ -440,22 +440,22 @@
 }
 .camera_pag_ul li img {
   border: 4px solid #e6e6e6;
-  -moz-box-shadow: 0px 3px 6px rgba(0,0,0,.5);
-  -webkit-box-shadow: 0px 3px 6px rgba(0,0,0,.5);
-  box-shadow: 0px 3px 6px rgba(0,0,0,.5);
+  -moz-box-shadow: 0 3px 6px rgba(0, 0, 0, .5);
+  -webkit-box-shadow: 0 3px 6px rgba(0, 0, 0, .5);
+  box-shadow: 0 3px 6px rgba(0, 0, 0, .5);
 }
 .camera_pag_ul .thumb_arrow {
-    border-top-color: #e6e6e6;
+  border-top-color: #e6e6e6;
 }
 .camera_prevThumbs, .camera_nextThumbs, .camera_prev, .camera_next, .camera_commands, .camera_thumbs_cont {
   background: #d8d8d8;
-  background: rgba(216, 216, 216, 0.85);
+  background: rgba(216, 216, 216, .85);
 }
 .camera_wrap .camera_pag .camera_pag_ul li {
   background: #b7b7b7;
 }
 .camera_thumbs_cont ul li > img {
-  border-color: 1px solid #000;
+  border: 1px solid #000;
 }
 /*AMBER SKIN*/
 .camera_amber_skin .camera_prevThumbs div {
@@ -645,7 +645,7 @@
   background-position: -80px -440px;
 }
 .camera_chocolate_skin .camera_commands > .camera_stop {
-  background-position: -120px -440px  ;
+  background-position: -120px -440px;
 }
 /*COFFEE SKIN*/
 .camera_coffee_skin .camera_prevThumbs div {
@@ -664,7 +664,7 @@
   background-position: -80px -480px;
 }
 .camera_coffee_skin .camera_commands > .camera_stop {
-  background-position: -120px -480px  ;
+  background-position: -120px -480px;
 }
 /*CYAN SKIN*/
 .camera_cyan_skin .camera_prevThumbs div {
@@ -683,7 +683,7 @@
   background-position: -80px -520px;
 }
 .camera_cyan_skin .camera_commands > .camera_stop {
-  background-position: -120px -520px  ;
+  background-position: -120px -520px;
 }
 /*FUCHSIA SKIN*/
 .camera_fuchsia_skin .camera_prevThumbs div {
@@ -702,7 +702,7 @@
   background-position: -80px -560px;
 }
 .camera_fuchsia_skin .camera_commands > .camera_stop {
-  background-position: -120px -560px  ;
+  background-position: -120px -560px;
 }
 /*GOLD SKIN*/
 .camera_gold_skin .camera_prevThumbs div {
@@ -721,7 +721,7 @@
   background-position: -80px -600px;
 }
 .camera_gold_skin .camera_commands > .camera_stop {
-  background-position: -120px -600px  ;
+  background-position: -120px -600px;
 }
 /*GREEN SKIN*/
 .camera_green_skin .camera_prevThumbs div {
@@ -740,7 +740,7 @@
   background-position: -80px -640px;
 }
 .camera_green_skin .camera_commands > .camera_stop {
-  background-position: -120px -640px  ;
+  background-position: -120px -640px;
 }
 /*GREY SKIN*/
 .camera_grey_skin .camera_prevThumbs div {
@@ -759,7 +759,7 @@
   background-position: -80px -680px;
 }
 .camera_grey_skin .camera_commands > .camera_stop {
-  background-position: -120px -680px  ;
+  background-position: -120px -680px;
 }
 /*INDIGO SKIN*/
 .camera_indigo_skin .camera_prevThumbs div {
@@ -778,7 +778,7 @@
   background-position: -80px -720px;
 }
 .camera_indigo_skin .camera_commands > .camera_stop {
-  background-position: -120px -720px  ;
+  background-position: -120px -720px;
 }
 /*KHAKI SKIN*/
 .camera_khaki_skin .camera_prevThumbs div {
@@ -797,7 +797,7 @@
   background-position: -80px -760px;
 }
 .camera_khaki_skin .camera_commands > .camera_stop {
-  background-position: -120px -760px  ;
+  background-position: -120px -760px;
 }
 /*LIME SKIN*/
 .camera_lime_skin .camera_prevThumbs div {
@@ -816,7 +816,7 @@
   background-position: -80px -800px;
 }
 .camera_lime_skin .camera_commands > .camera_stop {
-  background-position: -120px -800px  ;
+  background-position: -120px -800px;
 }
 /*MAGENTA SKIN*/
 .camera_magenta_skin .camera_prevThumbs div {
@@ -835,7 +835,7 @@
   background-position: -80px -840px;
 }
 .camera_magenta_skin .camera_commands > .camera_stop {
-  background-position: -120px -840px  ;
+  background-position: -120px -840px;
 }
 /*MAROON SKIN*/
 .camera_maroon_skin .camera_prevThumbs div {
@@ -854,7 +854,7 @@
   background-position: -80px -880px;
 }
 .camera_maroon_skin .camera_commands > .camera_stop {
-  background-position: -120px -880px  ;
+  background-position: -120px -880px;
 }
 /*ORANGE SKIN*/
 .camera_orange_skin .camera_prevThumbs div {
@@ -873,7 +873,7 @@
   background-position: -80px -920px;
 }
 .camera_orange_skin .camera_commands > .camera_stop {
-  background-position: -120px -920px  ;
+  background-position: -120px -920px;
 }
 /*OLIVE SKIN*/
 .camera_olive_skin .camera_prevThumbs div {
@@ -892,7 +892,7 @@
   background-position: -80px -1080px;
 }
 .camera_olive_skin .camera_commands > .camera_stop {
-  background-position: -120px -1080px ;
+  background-position: -120px -1080px;
 }
 /*PINK SKIN*/
 .camera_pink_skin .camera_prevThumbs div {
@@ -911,7 +911,7 @@
   background-position: -80px -960px;
 }
 .camera_pink_skin .camera_commands > .camera_stop {
-  background-position: -120px -960px  ;
+  background-position: -120px -960px;
 }
 /*PISTACHIO SKIN*/
 .camera_pistachio_skin .camera_prevThumbs div {
@@ -930,7 +930,7 @@
   background-position: -80px -1040px;
 }
 .camera_pistachio_skin .camera_commands > .camera_stop {
-  background-position: -120px -1040px ;
+  background-position: -120px -1040px;
 }
 /*PINK SKIN*/
 .camera_pink_skin .camera_prevThumbs div {
@@ -968,7 +968,7 @@
   background-position: -80px -1000px;
 }
 .camera_red_skin .camera_commands > .camera_stop {
-  background-position: -120px -1000px ;
+  background-position: -120px -1000px;
 }
 /*TANGERINE SKIN*/
 .camera_tangerine_skin .camera_prevThumbs div {
@@ -987,7 +987,7 @@
   background-position: -80px -1120px;
 }
 .camera_tangerine_skin .camera_commands > .camera_stop {
-  background-position: -120px -1120px ;
+  background-position: -120px -1120px;
 }
 /*TURQUOISE SKIN*/
 .camera_turquoise_skin .camera_prevThumbs div {
@@ -1006,7 +1006,7 @@
   background-position: -80px -1160px;
 }
 .camera_turquoise_skin .camera_commands > .camera_stop {
-  background-position: -120px -1160px ;
+  background-position: -120px -1160px;
 }
 /*VIOLET SKIN*/
 .camera_violet_skin .camera_prevThumbs div {
@@ -1025,7 +1025,7 @@
   background-position: -80px -1200px;
 }
 .camera_violet_skin .camera_commands > .camera_stop {
-  background-position: -120px -1200px ;
+  background-position: -120px -1200px;
 }
 /*WHITE SKIN*/
 .camera_white_skin .camera_prevThumbs div {
@@ -1063,5 +1063,5 @@
   background-position: -80px -1240px;
 }
 .camera_yellow_skin .camera_commands > .camera_stop {
-  background-position: -120px -1240px ;
+  background-position: -120px -1240px;
 }

@@ -24,7 +24,9 @@ this.SS_Addon_TempFile = (function () {
   }
 
   SS_Addon_TempFile.prototype.select = function (files, dropArea) {
-    for (var j = 0, len = files.length; j < len; j++) {
+    var sorted_name_and_datas = [];
+    var file_views = [];
+    for (var j = 0; j < files.length; j++) {
       var file = files[j];
       var id = file["_id"];
       var url = this.selectUrl(id);
@@ -32,15 +34,26 @@ this.SS_Addon_TempFile = (function () {
       if ($('#show-file-size').val()) {
         params['file_size'] = $('#show-file-size').val();
       }
-      $.ajax({
+      file_views.push($.ajax({
         url: url,
         data: params,
         success: function (data) {
-          $("#selected-files").append(data);
+          var file_name = $(data).find(".name").text().trim();
+          sorted_name_and_datas.push({name: file_name, data: data});
         }
-      });
+      }));
     }
-  };
+    $.when.apply($,file_views).done(function () {
+      sorted_name_and_datas.sort(function(a,b) {
+        if(a.name < b.name) return 1;
+        if(a.name > b.name) return -1;
+        return 0;
+      });
+      for (var i = 0; i < sorted_name_and_datas.length; i++) {
+        $("#selected-files").prepend(sorted_name_and_datas[i].data);
+      }
+    });
+  }
 
   SS_Addon_TempFile.prototype.selectUrl = function (id) {
     return "/.u" + this.userId + "/apis/temp_files/" + id + "/select";

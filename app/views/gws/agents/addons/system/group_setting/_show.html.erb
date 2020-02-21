@@ -1,4 +1,7 @@
-<%= jquery do %> SS_AddonTabs.hide(".addon-gws-system-group-setting"); <% end %>
+<%
+  addon ||= local_assigns.fetch(:addon, {})
+  addon[:display_body] = "hide"
+%>
 
 <dl class="see addon-gws-system-group-setting">
   <dt><%= @model.t :sender_name %></dt>
@@ -21,6 +24,9 @@
 
   <dt><%= @model.t :canonical_domain %></dt>
   <dd><%= @item.canonical_domain %></dd>
+
+  <dt><%= @model.t :trash_threshold %></dt>
+  <dd><%= number_with_datetime_unit(@item, :trash_threshold) %></dd>
 
   <dt><%= @model.t :color_button %></dt>
   <dd><%= @item.label :color_button %></dd>

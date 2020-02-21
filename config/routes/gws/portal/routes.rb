@@ -1,4 +1,4 @@
-SS::Application.routes.draw do
+Rails.application.routes.draw do
   Gws::Portal::Initializer
 
   concern :deletion do
@@ -32,11 +32,8 @@ SS::Application.routes.draw do
     end
 
     namespace "apis" do
-      resources :temp_files, concerns: :deletion do
+      resources :ad_files, only: [] do
         get :select, on: :member
-        get :view, on: :member
-        get :thumb, on: :member
-        get :download, on: :member
       end
     end
   end

@@ -1,6 +1,7 @@
 class Event::Page
   include Cms::Model::Page
   include Cms::Page::SequencedFilename
+  include Cms::Addon::EditLock
   include Workflow::Addon::Branch
   include Workflow::Addon::Approver
   include Cms::Addon::Meta
@@ -15,6 +16,7 @@ class Event::Page
   include Cms::Addon::AdditionalInfo
   include Event::Addon::Date
   include Map::Addon::Page
+  include Event::Addon::Facility
   include Cms::Addon::Tag
   include Cms::Addon::RelatedPage
   include Cms::Addon::Release

@@ -1,4 +1,8 @@
 class SS::Migration20190116000000
+  include SS::Migration::Base
+
+  depends_on "20181218120000"
+
   WORD_DICTIONARY_NAME = '機種依存文字'.freeze
 
   def change

@@ -9,10 +9,13 @@
     <% items.each do |item| %>
       <li class="list-item">
         <div class="info">
-          <%= link_to item.name, gws_schedule_todo_readable_path(id: item), class: 'title' %>
+          <%= link_to item.name, gws_schedule_todo_readable_path(category: '-', id: item), class: 'title' %>
 
           <div class="meta">
-            <span><%= item.label(:todo_state) %></span>
+            <span class="ss-quota-bar gws-schedule-todo-achievement-bar">
+              <div class="label"><%= t("gws/schedule/todo.achievement_rate", count: item.achievement_rate || 0) %></div>
+              <div class="usage " style="width: <%= item.achievement_rate || 0 %>%"></div>
+            </span>
             <span class="datetime">
               <%= Gws::Schedule::Todo.t(:term) %>: <%= item.end_at.strftime('%Y/%m/%d %H:%M') %>
               <% if item.todo_state == 'unfinished' && item.end_at < Time.zone.now %>

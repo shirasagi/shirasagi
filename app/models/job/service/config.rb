@@ -20,6 +20,7 @@ class Job::Service::Config
   def_delegators(:@config, :name, :name=)
   def_delegators(:@config, :mode, :mode=)
   def_delegators(:@config, :log_level, :log_level=)
+  def_delegators(:@config, :size_limit_per_user, :size_limit_per_user=)
 
   def polling
     ret = @config.polling

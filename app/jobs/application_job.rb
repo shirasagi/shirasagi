@@ -1,5 +1,6 @@
 class ApplicationJob < ActiveJob::Base
   include Job::SS::Core
+  include Job::SS::Limit
 
   class << self
     def ss_app_type

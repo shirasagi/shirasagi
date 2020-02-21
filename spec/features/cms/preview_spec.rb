@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe "cms_preview", type: :feature, dbscope: :example do
+describe "cms_preview", type: :feature, dbscope: :example, js: true do
   let(:site) { cms_site }
   category_part_node = nil
 
@@ -78,13 +78,13 @@ describe "cms_preview", type: :feature, dbscope: :example do
         expect(page).to have_css('div.category-nodes nav#category-list')
         expect(page).to have_selector('h2', text: "#{node_root.name} > #{node_root.name}")
         expect(page).to have_selector('footer', text: "#{node_root.name} > #{node_root.name} > #{category_part_node.name}")
-        expect(page).to have_css("body[data-layout-id=#{node_root.layout_id}]")
+        expect(page).to have_css("body[data-layout-id=\"#{node_root.layout_id}\"]")
         expect(page).to have_css("#ss-preview")
         expect(page).to have_css("#ss-preview .ss-preview-btn-toggle-inplace")
         expect(page).to have_css("#ss-preview #ss-preview-btn-create-new-page")
         expect(page).to have_css("#ss-preview #ss-preview-btn-select-draft-page")
         expect(page).to have_css("#ss-preview-overlay")
-        expect(page).to have_css(".ss-preview-part[data-part-id=#{faq_part_search.id}] .faq-search")
+        expect(page).to have_css(".ss-preview-part[data-part-id=\"#{faq_part_search.id}\"] .faq-search")
       end
     end
 
@@ -98,13 +98,41 @@ describe "cms_preview", type: :feature, dbscope: :example do
         expect(page).to have_css('div.category-nodes div#category-list')
         expect(page).to have_selector('h2', text: "#{node_root.name} > #{node_root.name}")
         expect(page).to have_selector('div', text: "#{node_root.name} > #{node_root.name} > #{category_part_node.name}")
-        expect(page).to have_css("body[data-layout-id=#{node_root.layout_id}]")
+        expect(page).to have_css("body[data-layout-id=\"#{node_root.layout_id}\"]")
         expect(page).to have_css("#ss-preview")
         expect(page).to have_no_css("#ss-preview .ss-preview-btn-togglea-inplace")
         expect(page).to have_no_css("#ss-preview #ss-preview-btn-create-new-page")
         expect(page).to have_no_css("#ss-preview #ss-preview-btn-select-draft-page")
         expect(page).to have_css("#ss-preview-overlay")
-        expect(page).to have_css(".ss-preview-part[data-part-id=#{faq_part_search.id}] .faq-search")
+        expect(page).to have_css(".ss-preview-part[data-part-id=\"#{faq_part_search.id}\"] .faq-search")
+      end
+    end
+  end
+
+  context "with root cms page" do
+    let(:item) { create(:cms_page, filename: "404.html", cur_site: site, html: html) }
+    let(:html) { '<h2>見出し2</h2><p>内容が入ります。</p><h3>見出し3</h3><p>内容が入ります。内容が入ります。</p>' }
+
+    let(:pc_preview_path) { cms_preview_path(site: site, path: item.url[1..-1]) }
+    let(:mobile_preview_path) { cms_preview_path(site: site, path: "#{site.mobile_location}#{item.url}"[1..-1]) }
+
+    before { login_cms_user }
+
+    context "pc preview" do
+      it do
+        visit pc_preview_path
+        expect(page).to have_css('article.body')
+        expect(page).to have_text('見出し2')
+        expect(page).to have_text('内容が入ります。')
+      end
+    end
+
+    context "mobile preview" do
+      it do
+        visit mobile_preview_path
+        expect(page).to have_css('div.tag-article')
+        expect(page).to have_text('見出し2')
+        expect(page).to have_text('内容が入ります。')
       end
     end
   end

@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe "cms_loop_settings", dbscope: :example, type: :feature do
+describe "cms_loop_settings", type: :feature, dbscope: :example do
   let(:site) { cms_site }
   let(:item) { create(:cms_loop_setting, site: site) }
   let(:index_path) { cms_loop_settings_path site.id }
@@ -27,7 +27,7 @@ describe "cms_loop_settings", dbscope: :example, type: :feature do
           fill_in "item[name]", with: "name-#{unique_id}"
           fill_in "item[description]", with: "description-#{unique_id}"
           fill_in "item[html]", with: "html-#{unique_id}"
-          click_button "保存"
+          click_button I18n.t('ss.buttons.save')
         end
         expect(status_code).to eq 200
         expect(current_path).not_to eq new_path
@@ -50,7 +50,7 @@ describe "cms_loop_settings", dbscope: :example, type: :feature do
           fill_in "item[name]", with: "name-#{unique_id}"
           fill_in "item[description]", with: "description-#{unique_id}"
           fill_in "item[html]", with: "html-#{unique_id}"
-          click_button "保存"
+          click_button I18n.t('ss.buttons.save')
         end
         expect(status_code).to eq 200
         expect(current_path).not_to eq sns_login_path
@@ -62,7 +62,7 @@ describe "cms_loop_settings", dbscope: :example, type: :feature do
       it do
         visit delete_path
         within "form" do
-          click_button "削除"
+          click_button I18n.t('ss.buttons.delete')
         end
         expect(status_code).to eq 200
         expect(current_path).to eq index_path

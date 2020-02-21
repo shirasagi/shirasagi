@@ -15,7 +15,7 @@
     <dd class="wide">
       <div id="selected-files">
         <% @items.each do |file| %>
-          <div class="file-view">
+          <div class="file-view" data-file-id="<%= file.id %>">
             <% page = Cms::Page.in(file_ids: file.id).first %>
             <% next if page.nil? %>
             <%= link_to cms_page_path(id: page.id), class: :thumb, target: "_blank" do %>

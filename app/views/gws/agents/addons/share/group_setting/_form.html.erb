@@ -1,11 +1,12 @@
 <%
 
+addon ||= local_assigns.fetch(:addon, {})
+addon[:display_body] = "hide"
+
 @item.in_share_max_file_size_mb = @item.share_max_file_size.to_i / (1_024 * 1_024)
 @item.in_share_files_capacity_mb = @item.share_files_capacity.to_i / (1_024 * 1_024)
 
 %>
-<%= jquery do %> SS_AddonTabs.hide(".addon-gws-share-group-setting"); <% end %>
-
 <dl class="see addon-gws-share-group-setting">
   <dt><%= @model.t :share_max_file_size %><%= @model.tt :share_max_file_size %></dt>
   <dd class="short"><%= f.number_field :in_share_max_file_size_mb %> <span class="postfix"><%= t("ss.units.mega_byte") %></span></dd>
@@ -15,4 +16,7 @@
 
   <dt><%= @model.t :share_default_sort %><%= @model.tt :share_default_sort %></dt>
   <dd><%= f.select :share_default_sort, @item.share_default_sort_options %></dd>
+
+  <dt><%= @model.t :share_new_days %><%= @model.tt :share_new_days %></dt>
+  <dd class="short"><%= f.number_field :share_new_days %> <span class="postfix"><%= t("datetime.prompts.day") %></span></dd>
 </dl>

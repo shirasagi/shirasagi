@@ -1,5 +1,6 @@
-<%= jquery do %>
-  SS_Form.disableEnterKey('#item_subject');
-  Webmail_Mail_Form.render();
-<% end %>
-<%= f.hidden_field :ref_file_uid, value: @mail.uid, id: nil %>
+<%
+  addon ||= local_assigns.fetch(:addon, {})
+  addon[:class] = "hide"
+%>
+
+<%= render "gws/memo/messages/form", local_assigns %>

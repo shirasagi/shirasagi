@@ -5,7 +5,7 @@ describe 'gws_memo_messages', type: :feature, dbscope: :example, js: true do
     let(:site) { gws_site }
     let!(:recipient) { create(:gws_user, cur_site: site, group_ids: gws_user.group_ids, gws_role_ids: gws_user.gws_role_ids) }
     let(:subject) { "subject-#{unique_id}" }
-    let(:texts) { Array.new(rand(1..10)) { "text-#{unique_id}" } }
+    let(:texts) { Array.new(rand(2..3)) { "text-#{unique_id}" } }
     let(:text) { texts.join("\r\n") }
     let(:forward_email) { "#{unique_id}@example.jp" }
     let(:forward_subject) { "[#{I18n.t("gws/memo/message.message")}]#{I18n.t("gws/memo/forward.subject")}:#{gws_user.name}" }
@@ -38,7 +38,7 @@ describe 'gws_memo_messages', type: :feature, dbscope: :example, js: true do
           end
         end
 
-        within '#cboxLoadedContent' do
+        wait_for_cbox do
           expect(page).to have_content(recipient.name)
           click_on recipient.name
         end
@@ -66,6 +66,7 @@ describe 'gws_memo_messages', type: :feature, dbscope: :example, js: true do
             click_on I18n.t("ss.buttons.send")
           end
         end
+        wait_for_ajax
         expect(page).to have_css('#notice', text: I18n.t("ss.notice.sent"))
 
         # send forward mail

@@ -30,8 +30,8 @@ class Gws::Survey::Form
   field :file_state, type: String
   field :file_edit_state, type: String, default: 'enabled'
 
-  permit_params :name, :description, :order, :memo, :due_date, :release_date, :close_date, :anonymous_state
-  permit_params :file_state, :file_edit_state
+  permit_params :name, :description, :order, :memo, :due_date, :release_date, :close_date
+  permit_params :file_edit_state
 
   validates :name, presence: true, length: { maximum: 80 }
   validates :order, numericality: { greater_than_or_equal_to: 0, less_than_or_equal_to: 999_999, allow_blank: true }
@@ -64,11 +64,13 @@ class Gws::Survey::Form
 
     def search_keyword(params)
       return all if params[:keyword].blank?
+
       all.keyword_in(params[:keyword], :name, :description)
     end
 
     def search_category(params)
       return all if params.blank? || params[:category_id].blank?
+
       all.where(category_ids: params[:category_id].to_i)
     end
 
@@ -82,6 +84,7 @@ class Gws::Survey::Form
 
     def search_answer_state(params)
       return all if params.blank? || params[:answered_state].blank?
+
       case params[:answered_state]
       when 'answered'
         all.and_answered(params[:user])
@@ -107,6 +110,7 @@ class Gws::Survey::Form
     return false if state != 'public'
     return false if release_date && release_date > now
     return false if close_date && close_date <= now
+
     true
   end
 
@@ -143,5 +147,58 @@ class Gws::Survey::Form
     end
 
     true
+  end
+
+  def new_flag?
+    (release_date.presence || created) > Time.zone.now - site.survey_new_days.day
+  end
+
+  def new_clone(opts = {})
+    dest_site = opts[:site] || site
+    dest_user = opts[:user] || user
+    dest_name = opts[:name] || name
+    dest_anonymous_state = opts[:anonymous_state]
+    dest_file_state = opts[:file_state]
+
+    dest = self.class.new
+    dest.site = dest_site
+    dest.user = dest_user
+    dest.name = dest_name
+    dest.description = description
+    dest.file_edit_state = file_edit_state
+    dest.due_date = due_date
+    dest.release_date = release_date
+    dest.close_date = close_date
+    dest.memo = memo
+    dest.category_ids = category_ids
+    dest.contributor_model = dest_user.class.to_s
+    dest.contributor_id = dest_user.id
+    dest.contributor_name = dest_user.long_name
+    dest.readable_setting_range = readable_setting_range
+    dest.readable_custom_group_ids = readable_custom_group_ids
+    dest.readable_group_ids = readable_group_ids
+    dest.readable_member_ids = readable_member_ids
+    dest.custom_group_ids = custom_group_ids
+    dest.group_ids = group_ids
+    dest.user_ids = user_ids
+    dest.permission_level = permission_level
+    dest.state = "closed"
+
+    dest.anonymous_state = dest_anonymous_state if dest_anonymous_state.present?
+    dest.file_state = dest_file_state if dest_file_state.present?
+
+    return dest unless dest.valid?
+
+    dest_columns = self.columns.map do |column|
+      attr = column.attributes.except("_id", "_type", "form_id", "site_id", "created", "updated")
+      dest_column = column.class.new attr
+      dest_column.site = dest_site
+      dest_column.form = dest
+      dest_column.save
+      dest_column
+    end
+    dest.columns = dest_columns
+
+    dest
   end
 end

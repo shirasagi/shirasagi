@@ -1,12 +1,17 @@
 <% value ||= nil %>
 <%= render file: 'gws/agents/columns/main/_common_label', locals: { column: column } %>
 <dd>
+  <%= hidden_field_tag("#{object_name}[#{column.id}]", nil, id: nil) %>
   <span class="prefix"><%= column.prefix_label %></span>
   <% column.select_options.each do |val| %>
     <label>
-      <%= radio_button_tag("#{object_name}[#{column.id}]", val, value.try(:value) == val, column.form_options) %>
+      <%= radio_button_tag("#{object_name}[#{column.id}]", val, value.try(:value) == val, column.form_options.reverse_merge(id: nil)) %>
       <%= val %>
     </label>
   <% end %>
   <span class="postfix"><%= column.postfix_label %></span>
+
+  <% if !column.required? %>
+    <%= button_tag(t("ss.buttons.clear"), name: nil, type: "button", class: "btn", onclick: "$(\"input[name='#{object_name}[#{column.id}]']\").prop('checked', false);") %>
+  <% end %>
 </dd>

@@ -71,7 +71,7 @@ describe Webmail::HistoryArchiveJob, dbscope: :example do
         Webmail::History::ArchiveFile.all.first.tap do |archive_file|
           expect(archive_file.model).to eq 'webmail/history/archive_file'
           expect(archive_file.state).to eq 'closed'
-          expect(archive_file.name).to eq '2017年7月30日〜2017年8月5日'
+          expect(archive_file.name).to eq '2017年7月30日〜2017年8月5日.zip'
           expect(archive_file.filename).to eq '2017-week-30.zip'
           expect(archive_file.size).to be > 0
           expect(archive_file.content_type).to eq 'application/zip'
@@ -119,7 +119,7 @@ describe Webmail::HistoryArchiveJob, dbscope: :example do
         Webmail::History::ArchiveFile.all.reorder(filename: 1, id: 1).first.tap do |archive_file|
           expect(archive_file.model).to eq 'webmail/history/archive_file'
           expect(archive_file.state).to eq 'closed'
-          expect(archive_file.name).to eq '2015年12月27日〜2015年12月31日'
+          expect(archive_file.name).to eq '2015年12月27日〜2015年12月31日.zip'
           expect(archive_file.filename).to eq '2015-week-52.zip'
           expect(archive_file.size).to be > 0
           expect(archive_file.content_type).to eq 'application/zip'
@@ -127,7 +127,7 @@ describe Webmail::HistoryArchiveJob, dbscope: :example do
         Webmail::History::ArchiveFile.all.reorder(filename: 1, id: 1).last.tap do |archive_file|
           expect(archive_file.model).to eq 'webmail/history/archive_file'
           expect(archive_file.state).to eq 'closed'
-          expect(archive_file.name).to eq '2016年1月1日〜2016年1月2日'
+          expect(archive_file.name).to eq '2016年1月1日〜2016年1月2日.zip'
           expect(archive_file.filename).to eq '2016-week-00.zip'
           expect(archive_file.size).to be > 0
           expect(archive_file.content_type).to eq 'application/zip'

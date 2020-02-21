@@ -39,7 +39,7 @@ this.Opendata = (function () {
   function Opendata() {
   }
 
-  Opendata.loading = '<img style="vertical-align:middle" src="/assets/img/loading.gif" alt="loading.." border="0" widtth="16" height="11" />';
+  Opendata.loading = '<%= ApplicationController.helpers.loading %>';
 
   Opendata.render = function (box) {
     var anchorCallback;
@@ -315,7 +315,6 @@ this.Opendata_ListUI = (function () {
     return $.ajax({
       type: "post",
       url: location.pathname + "/" + id,
-      async: false,
       data: "_method=delete",
       success: function (msg) {
       },

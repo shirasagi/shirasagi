@@ -8,7 +8,7 @@ class Gws::Circular::PostsController < ApplicationController
   private
 
   def set_cur_tab
-    @cur_tab = [I18n.t('gws/circular.tabs.post'), action: :index]
+    @cur_tab = [I18n.t('gws/circular.tabs.post'), { action: :index, category: '-' }]
   end
 
   def set_items
@@ -18,7 +18,8 @@ class Gws::Circular::PostsController < ApplicationController
       and_public.
       member(@cur_user).
       search(params[:s]).
-      page(params[:page]).per(50)
+      page(params[:page]).per(50).
+      custom_order(params.dig(:s, :sort) || 'due_date')
   end
 
   public
@@ -26,6 +27,7 @@ class Gws::Circular::PostsController < ApplicationController
   def show
     raise '404' if @item.draft? || @item.deleted?
     raise '403' unless @item.member?(@cur_user)
+
     if @item.see_type == 'simple' && @item.unseen?(@cur_user)
       @item.set_seen(@cur_user).save
     end

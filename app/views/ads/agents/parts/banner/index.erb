@@ -14,9 +14,12 @@ target = @cur_part.link_target.present? ? %(target="#{@cur_part.link_target}") :
 
   <div class="banners">
     <% @items.each do |item| %>
-    <% url = @cur_part.link_action.present? ? item.link_url : item.url %>
+    <%
+      url = @cur_part.link_action.present? ? item.link_url : item.url
+      attr_h = item.additional_attr.to_h
+    %>
     <span>
-      <a href="<%= url %>" <%== target %>>
+      <a href="<%= url %>" <%== target %> <% attr_h.each do |k, v| %><%= k %>="<%= v %>" <% end %>>
         <% if file = item.file %>
           <%= image_tag file.url, alt: item.name %>
         <% else %>

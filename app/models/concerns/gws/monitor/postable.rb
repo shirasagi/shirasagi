@@ -5,6 +5,7 @@ module Gws::Monitor::Postable
   include Gws::Reference::User
   include Gws::Reference::Site
   include Gws::GroupPermission
+  include Fs::FilePreviewable
 
   included do
     store_in collection: "gws_monitor_posts"
@@ -80,12 +81,13 @@ module Gws::Monitor::Postable
   end
 
   def new_flag?
-    descendants_updated > Time.zone.now - site.monitor_new_days.day
+    (released.presence || created) > Time.zone.now - site.monitor_new_days.day
   end
 
   def showable_comment?(cur_user, cur_group)
     return true if topic.user_ids.include?(cur_user.id) || topic.group_ids.include?(cur_group.id)
     return true if topic.spec_config == 'other_groups_and_contents'
+
     user_group_id == cur_group.id
   end
 
@@ -121,6 +123,26 @@ module Gws::Monitor::Postable
     becomes_with(Gws::Monitor::Topic)
   end
 
+  def file_previewable?(file, user:, member:)
+    return false if user.blank?
+    return false if !file_ids.include?(file.id)
+
+    if topic.blank? || topic.id == id
+      # cur_group is wanted, but currently unable to obtain it.
+      # so all groups which user has are checked.
+      ret = user.groups.in_group(site).active.any? do |group|
+        attended?(group)
+      end
+      return ret if ret
+
+      return topic.allowed?(:read, user, site: site)
+    end
+
+    user.groups.in_group(site).active.any? do |group|
+      showable_comment?(user, group)
+    end
+  end
+
   private
 
   # topic(root_post)を設定
@@ -131,13 +153,13 @@ module Gws::Monitor::Postable
   # コメントを許可しているか検証
   def validate_comment
     return if topic.permit_comment?
+
     errors.add :base, I18n.t("gws/monitor.errors.denied_comment")
   end
 
   # 最新レス投稿日時の初期値をトピックのみ設定
   # 明示的に age るケースが発生するかも
   def set_descendants_updated
-    #return unless new_record?
     self.descendants_updated = updated
   end
 
@@ -145,7 +167,7 @@ module Gws::Monitor::Postable
   # 明示的に age るケースが発生するかも
   def update_topic_descendants_updated
     return unless topic
-    #return unless _id_changed?
+
     topic.set descendants_updated: updated
   end
 

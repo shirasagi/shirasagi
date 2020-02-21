@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe "chorg_download_revision", dbscope: :example do
+describe "chorg_download_revision", type: :feature, dbscope: :example do
   let!(:site) { cms_site }
 
   let!(:group0) { create(:revision_new_group) }

@@ -32,8 +32,13 @@ class Webmail::Apis::ImapController < ApplicationController
       },
       mailboxes: @mailboxes.all.map do |box|
         {
-          name: box.original_name,
-          unseen: box.unseen
+          name: box.name,
+          basename: box.basename,
+          original_name: box.original_name,
+          depth: box.depth,
+          messages: box.messages,
+          unseen: box.unseen,
+          noselect: box.noselect?
         }
       end
     }
@@ -42,10 +47,12 @@ class Webmail::Apis::ImapController < ApplicationController
 
   def latest
     @mailboxes = @imap.mailboxes.load
-    inbox = @mailboxes.inbox.status
+    @mailboxes.apply_recent_filters
+    inbox = @mailboxes.inbox
+    mailbox = params[:mailbox]
 
-    @imap.examine('INBOX')
-    @items = @imap.mails.mailbox('INBOX').per(10).all
+    @imap.examine(mailbox)
+    @items = @imap.mails.mailbox(mailbox).per(10).all
 
     resp = {
       notice: notice_message(inbox),
@@ -53,11 +60,19 @@ class Webmail::Apis::ImapController < ApplicationController
       unseen: inbox.unseen,
       latest: @items.first.try(:internal_date),
       items: @items.map do |item|
+        if SS.config.webmail.store_mails
+          item = @imap.mails.find_and_store item.uid, :body
+        else
+          item = @imap.mails.find item.uid, :body
+        end
         {
           date: item.internal_date,
           from: item.display_sender.name,
+          to: item.display_to.map { |addr| addr.name }.presence,
+          cc: item.display_cc.map { |addr| addr.name }.presence,
           subject: item.display_subject,
-          url: webmail_mail_url(webmail_mode: @webmail_mode || :account, account: params[:account], mailbox: 'INBOX', id: item.uid),
+          text: item.text.presence,
+          url: webmail_mail_url(webmail_mode: @webmail_mode || :account, account: params[:account], mailbox: mailbox, id: item.uid),
           unseen: item.unseen?
         }
       end

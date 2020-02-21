@@ -47,12 +47,12 @@ SS_Preview = (function () {
 
   SS_Preview.form_item = null;
 
-  SS_Preview.overlayPadding = 5;
+  SS_Preview.overlayPadding = 0;
   SS_Preview.previewToolHeight = 70;
 
   SS_Preview.inplaceFormPath = { page: null, columnValue: {}, palette: null };
 
-  SS_Preview.workflowPath = { wizard: null, pages: null };
+  SS_Preview.workflowPath = { wizard: null, pages: null, request: null };
 
   SS_Preview.redirectorPath = { newPage: null };
 
@@ -65,7 +65,10 @@ SS_Preview = (function () {
   SS_Preview.instance = null;
 
   SS_Preview.minFrameSize = { width: 320, height: 150 };
-  SS_Preview.initialFrameSize = { width: 780, height: 180 };
+  SS_Preview.initialFrameSize = { width: 960, height: 240 };
+  SS_Preview.initialApproverSize = { width: SS_Preview.initialFrameSize.width, height: 480 };
+
+  SS_Preview.jqueryDialogMargin = { height: 60 };
 
   SS_Preview.pageTitle = "<%= I18n.t("modules.addons.cms/body") %>";
 
@@ -370,6 +373,10 @@ SS_Preview = (function () {
     var width = frame.contentWindow.document.body.scrollWidth;
     var height = frame.contentWindow.document.body.scrollHeight;
 
+    if ($(frame).closest(".ui-dialog")[0]) {
+      height += SS_Preview.jqueryDialogMargin.height;
+    }
+
     if (width < SS_Preview.initialFrameSize.width) {
       width = SS_Preview.initialFrameSize.width;
     }
@@ -392,7 +399,10 @@ SS_Preview = (function () {
     }
 
     if ($(frame).closest(".ui-dialog")[0]) {
-      $(frame).dialog("option", "width", width).dialog("option", "height", height).css("display", "").css("width", "");
+      $(frame).dialog("option", "width", width)
+        .dialog("option", "height", height)
+        .css("display", "")
+        .css("width", "");
     }
   };
 
@@ -539,8 +549,12 @@ SS_Preview = (function () {
     });
   };
 
-  SS_Preview.prototype.openDialog = function(url) {
+  SS_Preview.prototype.openDialog = function(url, options) {
     var self = this;
+
+    if (! options) {
+      options = {};
+    }
 
     $.ajax({
       url: url,
@@ -553,10 +567,10 @@ SS_Preview = (function () {
         $frame.html(data);
         $frame.dialog({
           autoOpen: true,
-          width: SS_Preview.initialFrameSize.width,
-          height: SS_Preview.initialFrameSize.height,
-          minWidth: SS_Preview.minFrameSize.width,
-          minHeight: SS_Preview.minFrameSize.height,
+          width: options.width || SS_Preview.initialFrameSize.width,
+          height: options.height || SS_Preview.initialFrameSize.height,
+          minWidth: options.minWidth || SS_Preview.minFrameSize.width,
+          minHeight: options.minHeight || SS_Preview.minFrameSize.height,
           closeOnEscape: false,
           dialogClass: "ss-preview-dialog ss-preview-dialog-column",
           draggable: true,
@@ -973,12 +987,12 @@ SS_Preview = (function () {
 
   SS_Preview.prototype.openWorkflowApprove = function() {
     var url = SS_Preview.workflowPath.wizard.replace(":id", SS_Preview.item.pageId) + "/frame";
-    this.openDialog(url);
+    this.openDialog(url, { width: SS_Preview.initialApproverSize.width, height: SS_Preview.initialApproverSize.height });
   };
 
   SS_Preview.prototype.openWorkflowComment = function(updateType) {
     var url = SS_Preview.workflowPath.wizard.replace(":id", SS_Preview.item.pageId) + "/comment?update_type=" + updateType;
-    this.openDialog(url);
+    this.openDialog(url, { width: SS_Preview.initialApproverSize.width, height: SS_Preview.initialApproverSize.height });
   };
 
   SS_Preview.prototype.bindToWorkflowCommentForm = function(updateType) {
@@ -1100,7 +1114,9 @@ SS_Preview = (function () {
       type: "POST",
       dataType: "json",
       cache: false,
-      data: { authenticity_token: token }
+      data: {authenticity_token: token}
+    }).done(function(data, status, xhr) {
+      self.bindBeforeUnloadOnce();
     }).fail(function(xhr, status, error) {
       if (self.container.notice) {
         if (xhr.responseJSON) {
@@ -1154,6 +1170,16 @@ SS_Preview = (function () {
       clearTimeout(this.timerId);
     }
     this.timerId = null;
+  };
+
+  EditLock.prototype.bindBeforeUnloadOnce = function() {
+    var self = this;
+
+    $(window).on("beforeunload", function () {
+      self.release();
+    });
+
+    this.bindBeforeUnloadOnce = function() {};
   };
 
   //
@@ -1338,12 +1364,6 @@ SS_Preview = (function () {
       var eventType = mode + ":movePosition";
       var order = parseInt($(this).val(), 10);
       self.$overlay.trigger(eventType, [ self.$overlay.data(), order ]);
-    });
-
-    $(document).on('click', function(e) {
-      if (! $(e.target).closest('#ss-preview-overlay').length) {
-        self.hide();
-      }
     });
 
     // delegates
@@ -1592,4 +1612,3 @@ SS_Preview = (function () {
   return SS_Preview;
 
 })();
-

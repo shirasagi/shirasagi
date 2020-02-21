@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe "article_pages", dbscope: :example do
+describe "article_pages", type: :feature, dbscope: :example do
   let(:site) { cms_site }
   let(:node) { create_once :article_node_page, filename: "docs", name: "article" }
   let(:item) { create(:article_page, cur_node: node) }
@@ -28,7 +28,7 @@ describe "article_pages", dbscope: :example do
         expect(page).to have_content(I18n.t("errors.messages.locked", user: item.lock_owner.long_name))
       end
 
-      click_link "編集する"
+      click_link I18n.t('ss.links.edit')
       expect(status_code).to eq 200
       expect(current_path).to eq lock_path
 

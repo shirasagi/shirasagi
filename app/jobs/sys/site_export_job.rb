@@ -1,10 +1,13 @@
 class Sys::SiteExportJob < SS::ApplicationJob
   include Job::SS::TaskFilter
 
+  cattr_accessor :export_root
+  self.export_root = "#{Rails.root}/private/export"
+
   def perform
     @src_site = Cms::Site.find(@task.source_site_id)
 
-    @output_dir = "#{Rails.root}/private/export/site-#{@src_site.host}"
+    @output_dir = "#{self.class.export_root}/site-#{@src_site.host}"
     @output_zip = "#{@output_dir}.zip"
 
     FileUtils.rm_rf(@output_dir)
@@ -83,7 +86,7 @@ class Sys::SiteExportJob < SS::ApplicationJob
       item = model.unscoped.find(id)
       item = item.becomes_with_route || item rescue item
       yield(item) if block_given?
-      json.write(item.to_json)
+      json.write(item.to_json(methods: "_type"))
       store_file_ids(item)
     end
     json.close
@@ -98,8 +101,7 @@ class Sys::SiteExportJob < SS::ApplicationJob
     @ss_file_ids << item[:icon_id] if item[:icon_id].present?
     if item[:column_values].present?
       item.column_values.each do |column_value|
-        next if column_value.class_name != 'Cms::Column::Value::FileUpload'
-        @ss_file_ids << column_value.file_id
+        @ss_file_ids += column_value.all_file_ids
       end
     end
   end
@@ -141,9 +143,7 @@ class Sys::SiteExportJob < SS::ApplicationJob
   end
 
   def export_cms_columns
-    export_documents "cms_columns", Cms::Column::Base do |item|
-      item.class_name = item._type
-    end
+    export_documents "cms_columns", Cms::Column::Base
   end
 
   def export_cms_layouts
@@ -168,12 +168,6 @@ class Sys::SiteExportJob < SS::ApplicationJob
       @ss_file_ids += item[:resources].map { |m| m[:file_id] } if item[:resources].present?
       @ss_file_ids += item[:url_resources].map { |m| m[:file_id] } if item[:url_resources].present?
       @ss_file_ids += item[:appfiles].map { |m| m[:file_id] } if item[:appfiles].present?
-
-      if item[:column_values].present?
-        item.column_values.each do |column_value|
-          column_value.class_name = column_value._type
-        end
-      end
     end
   end
 
@@ -246,7 +240,7 @@ class Sys::SiteExportJob < SS::ApplicationJob
 
   def copy_file(item)
     return nil unless File.exist?(item.path)
-    file = item.path.sub(/.*\/(files\/)/, '\\1')
+    file = item.path.sub("#{item.class.root}/", 'files/')
     path = "#{@output_dir}/#{file}"
     FileUtils.mkdir_p(File.dirname(path))
     FileUtils.cp(item.path, path)

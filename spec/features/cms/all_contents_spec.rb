@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe "cms_all_contents", dbscope: :example, type: :feature do
+describe "cms_all_contents", type: :feature, dbscope: :example do
   subject(:site) { cms_site }
 
   before { login_cms_user }

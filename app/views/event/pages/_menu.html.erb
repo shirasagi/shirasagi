@@ -4,10 +4,10 @@
       <%= link_to t('ss.links.new'), { action: :new }, class: :new %>
       <%= link_to t('ss.links.download'), { action: :download } %>
     <% end %>
-    <% if @model.allowed?(:import, @cur_user, site: @cur_site, node: @cur_node) %>
+    <% if @model.allowed?(:import, @cur_user, site: @cur_site, owned: true) %>
       <%= link_to t('ss.links.import'), { action: :import } %>
     <% end %>
-    <% if @model.allowed?(:edit, @cur_user, site: @cur_site, node: @cur_node) && @cur_node.ical_refresh_enabled? %>
+    <% if @model.allowed?(:edit, @cur_user, site: @cur_site, node: @cur_node) && @cur_node.try(:ical_refresh_enabled?) %>
       <%= link_to t('event.links.ical_refresh'), { action: :ical_refresh } %>
     <% end %>
   <% elsif params[:action] =~ /new|create|lock|import|download|ical_refresh/ %>

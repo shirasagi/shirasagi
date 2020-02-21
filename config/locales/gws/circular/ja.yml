@@ -11,9 +11,6 @@ ja:
       set_seen_all: 選択した項目を全て既読にしますか？
       unset_seen_all: 選択した項目を全て未読に戻しますか？
       download: 選択した項目を全てCSVに出力しますか？
-    notice:
-      set_seen: 既読にしました。
-      unset_seen: 未読にしました。
     post:
       disabled: 削除済み
       seen: 既読
@@ -27,6 +24,7 @@ ja:
       update_at: 変更日時
       user: ユーザー
       replay: 返信内容
+
     csv:
       - 回覧id
       - タイトル
@@ -54,6 +52,13 @@ ja:
         - 2年6ヶ月
         - 3年
         - 3年6ヶ月
+      sort:
+        created_asc:  投稿日(日付順)
+        created_desc: 投稿日(新着順)
+        updated_asc:  最終更新日(日付順)
+        updated_desc: 最終更新日(新着順)
+        due_date_asc:  回覧期限日時(昇順)
+        due_date_desc: 回覧期限日時(降順)
   modules:
     gws/circular: 回覧板
     addons:
@@ -101,6 +106,10 @@ ja:
         gws/circular/post:
           member_length: 参加者は%{max}人以下にしてください。
           file_size_limit: 添付ファイルのサイズ（%{size}）が 最大サイズ（%{limit}）を超えました。
+        gws/circular/category:
+          too_deep: は%{max}階層以下にしてください。
+          not_found_parent: 親カテゴリーが存在しません。
+          found_children: 子カテゴリーが存在します。
     attributes:
       gws/circular/post:
         name: タイトル
@@ -119,6 +128,7 @@ ja:
         circular_filesize_limit: 添付サイズ制限
         circular_delete_threshold: 回覧復旧可能期間
         circular_files_break: ファイル表示の並び
+        circular_new_days: 新着表示期間
       gws/addon/circular/category:
         category_ids: カテゴリー
   tooltip:
@@ -152,6 +162,8 @@ ja:
         - 初期値は 2年 です。
       circular_files_break:
         - 添付ファイルの表示の並びを選択します。
+      circular_new_days:
+        - 新着表示期間を入力します。
 
   job:
     models:

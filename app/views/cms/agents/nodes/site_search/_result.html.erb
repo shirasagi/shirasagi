@@ -1,0 +1,27 @@
+<% return if @result.blank? %>
+
+<div class="search-stats">
+  <%= I18n.t('gws/elasticsearch.format.search_results_count', count: @result['hits']['total'], from: @item.from + 1, to: @item.from + @item.size, took: @result['took'] / 1000.0) %>
+</div>
+
+<div class="cms-site-search-pages pages">
+  <% @result['hits']['hits'].each do |hit| %>
+    <article class="item">
+      <header>
+        <%
+          source = hit['_source']
+          title = source['name']
+          if source.dig('file', 'extname').present?
+            title = "#{title} (#{source.dig('file', 'extname').upcase} #{number_to_human_size(source.dig('file', 'size'))})"
+          end
+          date = source['released']
+        %>
+        <h2><%= link_to title, source['url'], class: 'title' %></h2>
+        <div class="meta">
+          <span class="url"><%= @cur_site.full_url + hit['_id'] %></span>
+          <time datetime="<%= date %>"><%= I18n.l(Time.zone.parse(date), format: :long) %></time>
+        </div>
+      </header>
+    </article>
+  <% end %>
+</div>

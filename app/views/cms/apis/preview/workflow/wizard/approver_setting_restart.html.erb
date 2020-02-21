@@ -1,0 +1,19 @@
+<div class="ss-preview-workflow-wizard ss-preview-workflow-wizard-approver-setting">
+  <%= render file: "workflow/wizard/approver_setting_restart" %>
+
+  <%= jquery do %>
+    var $frame = $("#ss-preview-dialog-frame");
+    var height = $frame.find(".ss-preview-workflow-wizard-approver-setting")[0].scrollHeight;
+    height += SS_Preview.jqueryDialogMargin.height + 20;
+
+    var maxHeight = Math.floor(window.innerHeight * 0.9);
+    if (height > maxHeight) {
+      height = maxHeight;
+    }
+
+    var currentHeight = $frame.dialog("option", "height");
+    if (currentHeight < height) {
+      $frame.dialog("option", "height", height);
+    }
+  <% end %>
+</div>

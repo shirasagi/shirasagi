@@ -30,6 +30,15 @@ ja:
       restored: 復元しました。
     buttons:
       restore: 復元
+    options:
+      target:
+        restore: 復元する
+        unrestore: 復元しない
+
+  cms_role:
+    read_history_trashes: ゴミ箱の閲覧
+    edit_history_trashes: ゴミ箱の復元
+    delete_history_trashes: ゴミ箱の完全削除
 
   modules:
     history: 履歴
@@ -39,6 +48,7 @@ ja:
   mongoid:
     models:
       history/log: 操作履歴
+      history/trash: ゴミ箱
     attributes:
       history/log:
         session_id: セッションID
@@ -54,3 +64,16 @@ ja:
         version: バージョン
         ref_coll: 保存コレクション
         data: 保存データ
+      history/trash:
+        version: バージョン
+        ref_coll: 保存コレクション
+        ref_class: 保存クラス
+        data: 保存データ
+        parent: 親フォルダー
+        children: 配下のコンテンツ
+        state: ステータス
+
+  job:
+    models:
+      history/trash/trash_purge_job: ゴミ箱掃除
+      history/history_log/purge_job: 操作履歴削除

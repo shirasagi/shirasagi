@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe "article_pages", dbscope: :example, js: true do
+describe "article_pages", type: :feature, dbscope: :example, js: true do
   context "default release plan" do
     let(:site) { cms_site }
     let(:node) { create :article_node_page, filename: "docs", name: "article" }
@@ -19,7 +19,7 @@ describe "article_pages", dbscope: :example, js: true do
       it do
         Timecop.travel(Time.utc(2016, 4, 12, 10, 32)) do
           visit index_path
-          click_on "新規作成"
+          click_on I18n.t('ss.links.new')
 
           expect(page).to have_field("item[release_date]", with: "2016/04/15 00:00")
           expect(page).to have_field("item[close_date]", with: "2016/07/21 00:00")
@@ -55,7 +55,7 @@ describe "article_pages", dbscope: :example, js: true do
       it do
         Timecop.travel(Time.utc(2016, 4, 12, 10, 32)) do
           visit index_path
-          click_on "新規作成"
+          click_on I18n.t('ss.links.new')
 
           expect(page).to have_field("item[release_date]", with: "2016/04/15 00:00")
           expect(page).to have_field("item[close_date]", with: "2016/07/21 00:00")
@@ -92,7 +92,7 @@ describe "article_pages", dbscope: :example, js: true do
       it do
         Timecop.travel(Time.utc(2016, 4, 12, 10, 32)) do
           visit index_path
-          click_on "新規作成"
+          click_on I18n.t('ss.links.new')
 
           expect(page).to have_field("item[release_date]", with: "2016/04/16 00:00")
           expect(page).to have_field("item[close_date]", with: "2016/06/22 00:00")
@@ -135,7 +135,7 @@ describe "article_pages", dbscope: :example, js: true do
       it do
         Timecop.travel(Time.utc(2016, 4, 12, 10, 32)) do
           visit index_path
-          click_on "新規作成"
+          click_on I18n.t('ss.links.new')
 
           expect(page).to have_field("item[release_date]", with: "2016/04/16 00:00")
           expect(page).to have_field("item[close_date]", with: "2016/06/22 00:00")

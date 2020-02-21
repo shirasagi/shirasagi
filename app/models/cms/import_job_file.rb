@@ -39,7 +39,9 @@ class Cms::ImportJobFile
     end
 
     if save
-      Cms::ImportFilesJob.bind(site_id: site.id).perform_later
+      job = Cms::ImportFilesJob.bind(site_id: site.id)
+      job = job.set(wait_until: self.import_date) if import_date.present?
+      job.perform_later
       return true
     else
       self.import_date = nil
@@ -50,7 +52,7 @@ class Cms::ImportJobFile
   def import
     @import_logs = []
     files.each do |file|
-      if ::File.extname(file.filename) =~ /^\.zip$/i
+      if /^\.zip$/i.match?(::File.extname(file.filename))
         import_from_zip(file)
       else
         import_from_file(file)
@@ -114,6 +116,8 @@ class Cms::ImportJobFile
   def import_from_zip(file, opts = {})
     Zip::File.open(file.path) do |archive|
       archive.each do |entry|
+        next if entry.name.start_with?('__MACOSX')
+
         fname = entry.name.force_encoding("utf-8").scrub.split(/\//)
         fname.shift # remove root folder
         fname = fname.join('/')
@@ -126,7 +130,7 @@ class Cms::ImportJobFile
           if save_import_node(entry.get_input_stream, import_filename)
             @import_logs << "import: #{import_filename}"
           end
-        elsif ::File.extname(import_filename) =~ /^\.(html|htm)$/i
+        elsif /^\.(html|htm)$/i.match?(::File.extname(import_filename))
           if save_import_page(entry.get_input_stream, import_filename)
             @import_logs << "import: #{import_filename}"
           end
@@ -142,7 +146,7 @@ class Cms::ImportJobFile
   def import_from_file(file, opts = {})
     import_filename = "#{node.filename}/#{file.filename}"
 
-    if ::File.extname(import_filename) =~ /^\.(html|htm)$/i
+    if /^\.(html|htm)$/i.match?(::File.extname(import_filename))
       if save_import_page(file, import_filename)
         @import_logs << "import: #{import_filename}"
       end

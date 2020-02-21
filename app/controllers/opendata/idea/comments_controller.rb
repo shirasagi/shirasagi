@@ -63,4 +63,32 @@ class Opendata::Idea::CommentsController < ApplicationController
 
     render_create @item.valid?
   end
+
+  def soft_delete
+    if request.get?
+      set_item
+      render
+      return
+    end
+
+    comment = Opendata::IdeaComment.where(site_id: @cur_site.id, id: params[:id]).first
+    comment.comment_deleted = Time.zone.now
+    comment.apply_status("closed", workflow_reset: true)
+    comment.save
+    render_destroy comment
+  end
+
+  def undo_delete
+    if request.get?
+      set_item
+      render
+      return
+    end
+
+    comment = Opendata::IdeaComment.where(site_id: @cur_site.id, id: params[:id]).first
+    comment.comment_deleted = nil
+    comment.apply_status("public", workflow_reset: true)
+    comment.save
+    render_update comment
+  end
 end

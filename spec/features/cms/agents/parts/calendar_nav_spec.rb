@@ -9,15 +9,31 @@ describe "cms_agents_parts_calendar_nav", type: :feature, dbscope: :example, js:
   context "public" do
     let!(:item) { create :article_page, filename: "node/item" }
     let(:cur_date) { Time.zone.now.to_date }
+    let(:prev_date) { cur_date.change(day: 1).advance(days: -1) }
+    let(:next_date) { cur_date.advance(months: 1) }
+
+    def date_label(date)
+      "#{date.year}#{I18n.t("datetime.prompts.year")}#{date.month}#{I18n.t("datetime.prompts.month")}"
+    end
 
     it "#index" do
       visit node.url
       expect(page).to have_css(".event-calendar")
+
       click_on I18n.t("event.prev_month")
+      wait_for_ajax
+      label = date_label(prev_date)
+      expect(page).to have_css('table.calendar caption', text: label)
+
       click_on I18n.t("event.current_month")
-      click_on "#{cur_date.year}#{I18n.t("datetime.prompts.year")}#{cur_date.month}#{I18n.t("datetime.prompts.month")}"
-      expect(page).to have_text(
-        "#{cur_date.year}#{I18n.t("datetime.prompts.year")}#{cur_date.month}#{I18n.t("datetime.prompts.month")}")
+      wait_for_ajax
+      label = date_label(cur_date)
+      expect(page).to have_css('table.calendar caption', text: label)
+
+      click_on I18n.t("event.next_month")
+      wait_for_ajax
+      label = date_label(next_date)
+      expect(page).to have_css('table.calendar caption', text: label)
     end
   end
 end

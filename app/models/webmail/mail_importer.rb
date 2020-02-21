@@ -4,7 +4,6 @@ class Webmail::MailImporter
   attr_accessor :cur_user, :in_file, :account
 
   SUPPORTED_MIME_TYPES = %w(application/zip message/rfc822).freeze
-  MAX_MAIL_SIZE = 10 * 1_024 * 1_024
 
   class << self
     def t(*args)
@@ -43,10 +42,12 @@ class Webmail::MailImporter
     end
   end
 
-  def import_webmail_mail(mail)
+  def import_webmail_mail(mail, msg)
+    return if mail.blank?
+
     item = Webmail::Mail.new
     item.imap = imap
-    item.import_mail(mail.to_s, date_time: mail.date)
+    item.import_mail(msg, date_time: mail.date)
   end
 
   private
@@ -59,42 +60,74 @@ class Webmail::MailImporter
 
         entry_type = SS::MimeType.find(entry.name, nil)
         next if entry_type != "message/rfc822"
-        if entry.size > MAX_MAIL_SIZE
-          add_too_large_file_error(filename: entry.name.encode("utf-8", "cp932"), size: entry.size, limit: MAX_MAIL_SIZE)
+        if !validate_size(decode_entry_name(entry), entry.size)
           next
         end
 
-        msg = ::Mail.read_from_string(entry.get_input_stream.read) rescue nil
+        msg = entry.get_input_stream.read rescue nil
         if msg.nil?
           errors.add :base, in_file.original_filename + I18n.t("errors.messages.invalid_file_type")
           next
         end
 
-        import_webmail_mail(msg)
+        mail = ::Mail.read_from_string(msg) rescue nil
+        if mail.nil?
+          errors.add :base, in_file.original_filename + I18n.t("errors.messages.invalid_file_type")
+          next
+        end
+
+        import_webmail_mail(mail, msg)
       end
     end
   end
 
   def import_from_email_file
-    if in_file.size > MAX_MAIL_SIZE
-      add_too_large_file_error(filename: in_file.original_filename, size: in_file.size, limit: MAX_MAIL_SIZE)
+    if !validate_size(in_file.original_filename, in_file.size)
       return
     end
 
-    msg = ::Mail.read_from_string(in_file.read) rescue nil
+    msg = in_file.read rescue nil
     if msg.nil?
       errors.add :base, in_file.original_filename + I18n.t("errors.messages.invalid_file_type")
       return
     end
 
-    import_webmail_mail(msg)
+    mail = ::Mail.read_from_string(msg) rescue nil
+    if msg.nil?
+      errors.add :base, in_file.original_filename + I18n.t("errors.messages.invalid_file_type")
+      return
+    end
+
+    import_webmail_mail(mail, msg)
+  end
+
+  def validate_size(filename, size)
+    limit = SS.config.webmail.import_mail_size_limit
+    return true if limit <= 0
+    return true if size <= limit
+
+    add_too_large_file_error(filename: filename, size: size, limit: limit)
+    false
   end
 
   def add_too_large_file_error(params)
     params[:size] = params[:size].to_s(:human_size) if params[:size].is_a?(Numeric)
-    params[:limit] ||= MAX_MAIL_SIZE
     params[:limit] = params[:limit].to_s(:human_size) if params[:limit].is_a?(Numeric)
     errmsg = I18n.t("errors.messages.too_large_file", params)
     errors.add :base, errmsg
+  end
+
+  def unicode_names?(entry)
+    (entry.gp_flags & Zip::Entry::EFS) == Zip::Entry::EFS
+  end
+
+  def decode_entry_name(entry)
+    if unicode_names?(entry)
+      name = entry.name
+      name.force_encoding("UTF-8")
+      name
+    else
+      entry.name.encode("utf-8", "cp932")
+    end
   end
 end

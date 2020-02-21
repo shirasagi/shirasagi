@@ -1,5 +1,9 @@
 # set member name for sort feature
 class SS::Migration20180201000000
+  include SS::Migration::Base
+
+  depends_on "20180124000000"
+
   def change
     Gws::Memo::Message.each do |message|
       if message.user && message.from_member_name.blank?

@@ -34,7 +34,7 @@ describe "opendata_ideas", type: :feature, dbscope: :example do
           fill_in "item[text]", with: "sample"
           all("input[type=checkbox][id^='item_category_ids']").each { |c| check c[:id] }
           all("input[type=checkbox][id^='item_area_ids']").each { |c| check c[:id] }
-          click_button "保存"
+          click_button I18n.t('ss.buttons.save')
         end
         expect(status_code).to eq 200
         expect(current_path).not_to eq new_path
@@ -77,24 +77,47 @@ describe "opendata_ideas", type: :feature, dbscope: :example do
         it do
           visit show_path
 
-          click_link "コメントを管理する"
+          click_link I18n.t('opendata.manage_comments')
 
-          click_link "新規作成"
+          click_link I18n.t('ss.links.new')
 
           fill_in "item_text", with: comment_text
-          click_button "保存"
+          click_button I18n.t('ss.buttons.save')
+          expect(status_code).to eq 200
+          expect(page).to have_no_css("form#item-form")
 
-          click_link "一覧へ戻る"
+          click_link I18n.t('ss.links.back_to_index')
 
           fill_in "s_keyword", with: comment_text
-          click_button "検索"
+          click_button I18n.t('ss.buttons.search')
+          expect(status_code).to eq 200
+          expect(page).to have_css("a", text: comment_text)
 
           click_link comment_text
 
-          click_link "削除する"
+          click_link I18n.t('ss.links.delete')
 
-          click_button "削除"
+          click_button I18n.t('ss.buttons.delete')
+          expect(status_code).to eq 200
 
+          click_link comment_text
+
+          click_link I18n.t('ss.links.restore')
+
+          click_button I18n.t('ss.buttons.restore')
+          expect(status_code).to eq 200
+
+          click_link I18n.t('ss.links.delete')
+
+          click_button I18n.t('ss.buttons.delete')
+
+          click_link comment_text
+
+          click_link I18n.t('ss.links.delete')
+
+          click_button I18n.t('ss.buttons.delete')
+          expect(status_code).to eq 200
+          expect(page).to have_no_css("a", text: comment_text)
         end
       end
 
@@ -104,7 +127,7 @@ describe "opendata_ideas", type: :feature, dbscope: :example do
           within "form#item-form" do
             fill_in "item[name]", with: "#{item.name}-modify"
             fill_in "item[text]", with: "sample-#{unique_id}"
-            click_button "保存"
+            click_button I18n.t('ss.buttons.save')
           end
           expect(current_path).not_to eq sns_login_path
           expect(page).to have_no_css("form#item-form")
@@ -115,7 +138,7 @@ describe "opendata_ideas", type: :feature, dbscope: :example do
         it do
           visit delete_path
           within "form" do
-            click_button "削除"
+            click_button I18n.t('ss.buttons.delete')
           end
           expect(current_path).to eq index_path
         end

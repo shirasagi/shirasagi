@@ -1,8 +1,9 @@
-<%= jquery do %>
-  <% if !@item.reservable_setting_present? %>
-  SS_AddonTabs.hide(".gws-addon-facility-reservable-setting");
-  <% end %>
-<% end %>
+<%
+  if !@item.reservable_setting_present?
+    addon ||= local_assigns.fetch(:addon, {})
+    addon[:display_body] = "hide"
+  end
+%>
 
 <div class="gws-addon-facility-reservable-setting">
   <dl class="see gws-addon-facility-reservable-setting-group">

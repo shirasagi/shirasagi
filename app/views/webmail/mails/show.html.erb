@@ -12,13 +12,16 @@
       add: "<%= add_webmail_addresses_path(group: "-") %>"
     }
   });
+  Webmail_Mail_List.renderListStars();
 <% end %>
 
 <div class="addon-views">
   <div class="addon-view webmail-mail" id="addon-basic">
     <div class="addon-head">
       <span class="icon-star <%= @item.star? ? 'on' : 'off' %>">
-        <i class="material-icons">&#xE838;</i>
+        <%= link_to action: :show do %>
+          <i class="material-icons">&#xE838;</i>
+        <% end %>
       </span>
       <h2 class="subject">
         <%= @item.display_subject %>

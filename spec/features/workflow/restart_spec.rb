@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe "restart", dbscope: :example, js: true do
+describe "restart", type: :feature, dbscope: :example, js: true do
   let(:site) { cms_site }
   let(:group) { cms_group }
   let(:layout) { create_cms_layout }
@@ -52,7 +52,7 @@ describe "restart", dbscope: :example, js: true do
           fill_in "workflow[comment]", with: workflow_comment1
           click_on I18n.t("workflow.buttons.request")
         end
-        expect(page).to have_css(".mod-workflow-view dd", text: /#{::Regexp.escape(user1.uid)}/)
+        expect(page).to have_css(".mod-workflow-view dd", text: I18n.t('workflow.state.request'))
 
         item.reload
         expect(item.workflow_user_id).to eq cms_user.id
@@ -102,7 +102,7 @@ describe "restart", dbscope: :example, js: true do
           fill_in "workflow[comment]", with: workflow_comment2
           click_on I18n.t("workflow.buttons.request")
         end
-        expect(page).to have_css(".mod-workflow-view dd", text: /#{::Regexp.escape(user1.uid)}/)
+        expect(page).to have_css(".mod-workflow-view dd", text: I18n.t('workflow.state.request'))
 
         item.reload
         expect(item.workflow_user_id).to eq cms_user.id

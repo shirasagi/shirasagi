@@ -1,4 +1,4 @@
-SS::Application.routes.draw do
+Rails.application.routes.draw do
   Gws::Schedule::Initializer
 
   concern :plans do
@@ -32,7 +32,8 @@ SS::Application.routes.draw do
     get 'search/times' => 'search/times#index', as: :search_times
     get 'search/reservations' => 'search/reservations#index', as: :search_reservations
     get 'csv' => 'csv#index', as: :csv
-    post 'import_csv' => 'csv#import', as: :import_csv
+    post 'csv/import' => 'csv#import', as: :import_csv
+    get 'csv/download_template' => 'csv#download_template', as: :download_csv_template
 
     # get '/' => redirect { |p, req| "#{req.path}/plans" }, as: :main
     get '/', to: "main#index", as: :main
@@ -51,17 +52,32 @@ SS::Application.routes.draw do
     resource :approval, path: ':plan_id/:user_id/approval', only: [:edit, :update]
 
     namespace 'todo' do
-      get '/' => redirect { |p, req| "#{req.path}/readables" }, as: :main
-      resources :readables, concerns: :plans do
+      get '/' => redirect { |p, req| "#{req.path}/-/readables" }, as: :main
+      resources :readables, path: ':category/readables', concerns: :plans do
         match :finish, on: :member, via: %i[get post]
         match :revert, on: :member, via: %i[get post]
         post :finish_all, on: :collection
         post :revert_all, on: :collection
         post :soft_delete_all, on: :collection
       end
+      resources :manageables, path: ':category/manageables', concerns: :plans do
+        # match :finish, on: :member, via: %i[get post]
+        # match :revert, on: :member, via: %i[get post]
+        # post :finish_all, on: :collection
+        # post :revert_all, on: :collection
+        # post :soft_delete_all, on: :collection
+      end
       resources :trashes, concerns: :deletion do
         match :undo_delete, on: :member, via: %i[get post]
         post :undo_delete_all, on: :collection
+      end
+      resources :categories, concerns: :deletion
+
+      namespace "apis" do
+        scope path: ':todo_id' do
+          resources :comments, concerns: [:deletion], except: [:index, :new, :show, :destroy_all]
+        end
+        get "categories" => "categories#index"
       end
     end
 

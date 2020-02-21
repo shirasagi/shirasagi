@@ -33,6 +33,7 @@ module Gws::Model::File
     validates :model, presence: true
     validates :state, presence: true
     validates :filename, presence: true, if: ->{ in_file.blank? && in_files.blank? }
+    validates :content_type, presence: true
     validate :validate_filename, if: -> { filename.present? }
     validates_with SS::FileSizeValidator, if: ->{ size.present? }
 
@@ -40,6 +41,8 @@ module Gws::Model::File
     before_save :rename_file, if: ->{ @db_changes.present? }
     before_save :save_file
     before_destroy :remove_file
+
+    define_model_callbacks :_save_file
 
     default_scope ->{ order_by id: -1 }
   end
@@ -72,6 +75,7 @@ module Gws::Model::File
 
   def public_path
     return if site.blank? || !site.respond_to?(:root_path)
+
     "#{site.root_path}/fs/" + id.to_s.split(//).join("/") + "/_/#{filename}"
   end
 
@@ -89,6 +93,7 @@ module Gws::Model::File
 
   def full_url
     return if site.blank? || !site.respond_to?(:full_root_url)
+
     "#{site.full_root_url}fs/" + id.to_s.split(//).join("/") + "/_/#{filename}"
   end
 
@@ -125,7 +130,7 @@ module Gws::Model::File
   end
 
   def download_filename
-    name =~ /\./ ? name : name.sub(/\..*/, '') + '.' + extname
+    name.include?('.') ? name : "#{name}.#{extname}"
   end
 
   def basename
@@ -133,11 +138,17 @@ module Gws::Model::File
   end
 
   def extname
+    return "" unless filename.to_s.include?('.')
+
     filename.to_s.sub(/.*\W/, "")
   end
 
   def image?
-    filename =~ /\.(bmp|gif|jpe?g|png)$/i
+    content_type.to_s.start_with?('image/')
+  end
+
+  def exif_image?
+    image? && filename =~ /\.(jpe?g|tiff?)$/i
   end
 
   def viewable?
@@ -148,8 +159,8 @@ module Gws::Model::File
     (@resizing && @resizing.size == 2) ? @resizing.map(&:to_i) : nil
   end
 
-  def resizing=(s)
-    @resizing = (s.class == String) ? s.split(",") : s
+  def resizing=(size)
+    @resizing = (size.class == String) ? size.split(",") : size
   end
 
   def read
@@ -166,6 +177,7 @@ module Gws::Model::File
     file = public_path
     data = self.read
     return if Fs.exists?(file) && data == Fs.read(file)
+
     Fs.binwrite file, data
   end
 
@@ -189,6 +201,7 @@ module Gws::Model::File
 
   def multibyte_filename_disabled?
     return if site.blank? || !site.respond_to?(:multibyte_filename_disabled?)
+
     site.multibyte_filename_disabled?
   end
 
@@ -200,7 +213,7 @@ module Gws::Model::File
 
   def mangle_filename
     set_sequence
-    self.filename = SS::FilenameConvertor.convert(filename, id: id)
+    self.filename = SS::FilenameUtils.convert(filename, id: id)
   end
 
   def save_file
@@ -211,16 +224,19 @@ module Gws::Model::File
     if image?
       list = Magick::ImageList.new
       list.from_blob(in_file.read)
-      extract_geo_location(list)
+      extract_geo_location(list) if exif_image?
       list.each do |image|
-        case SS.config.env.image_exif_option
-        when "auto_orient"
-          image.auto_orient!
-        when "strip"
-          image.strip!
+        if exif_image?
+          case SS.config.env.image_exif_option
+          when "auto_orient"
+            image.auto_orient!
+          when "strip"
+            image.strip!
+          end
         end
 
         next unless resizing
+
         width, height = resizing
         image.resize_to_fit! width, height if image.columns > width || image.rows > height
       end
@@ -233,19 +249,10 @@ module Gws::Model::File
     dir = ::File.dirname(path)
     Fs.mkdir_p(dir) unless Fs.exists?(dir)
 
-    if File.exist?(path)
-      history_file_count = Dir.glob(dir + "/#{id}*_history[0-9]*").count
+    run_callbacks(:_save_file) do
       Fs.binwrite(path, binary)
       self.size = binary.length
-      sleep(1)
-      FileUtils.cp(path, path + "_history#{history_file_count}")
-    else
-      Fs.binwrite(path, binary)
-      self.size = binary.length
-      sleep(1)
-      FileUtils.cp(path, path + "_history0")
     end
-
   end
 
   def remove_file

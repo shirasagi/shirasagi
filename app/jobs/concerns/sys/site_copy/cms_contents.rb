@@ -1,6 +1,6 @@
 module Sys::SiteCopy::CmsContents
   extend ActiveSupport::Concern
-  include Sys::SiteCopy::Cache
+  include SS::Copy::CmsContents
 
   def copy_cms_content(cache_id, src_content, options = {})
     klass = src_content.class
@@ -13,16 +13,6 @@ module Sys::SiteCopy::CmsContents
       # at first, copy non-reference values and references which have no possibility of circular reference
       dest_content = klass.new(cur_site: @dest_site)
       dest_content.attributes = copy_basic_attributes(src_content, klass)
-      if dest_content.respond_to?(:column_values)
-        dest_content.column_values = src_content.column_values.map do |src_column_value|
-          dest_column_value = src_column_value.dup
-          dest_column_value.column_id = resolve_reference(:column, src_column_value.column_id)
-          if dest_column_value.respond_to?(:file_id)
-            dest_column_value.file_id = resolve_reference(:file, src_column_value.file_id)
-          end
-          dest_column_value
-        end
-      end
       dest_content.save!
       dest_content.id
     end
@@ -40,70 +30,19 @@ module Sys::SiteCopy::CmsContents
     dest_content
   end
 
-  def array_field?(name, field)
-    field.type == Array || field.type.ancestors.include?(Array)
-  end
-
-  def reference_class(name, field)
-    metadata = field.options[:metadata]
-    association = field.association
-    return nil if metadata.blank? && association.blank?
-
-    if array_field?(name, field)
-      klass = metadata[:elem_class]
-    else
-      klass = association.try(:class_name)
-    end
-    klass = klass.constantize if klass.is_a?(String)
-    klass
-  end
-
   def on_copy(name, field)
     metadata = field.options[:metadata]
-    return nil if metadata.blank?
+    return metadata[:on_copy] if metadata.present?
 
-    metadata[:on_copy]
-  end
-
-  def reference_type(klass)
-    ancestors = klass.ancestors
-    if ancestors.include?(SS::Model::Group)
-      :group
-    elsif ancestors.include?(SS::Model::User)
-      :user
-    elsif ancestors.include?(SS::Model::File)
-      :file
-    elsif ancestors.include?(Cms::Model::Layout)
-      :layout
-    elsif ancestors.include?(Cms::Model::Node)
-      :node
-    elsif ancestors.include?(Cms::Model::Page)
-      :page
-    elsif ancestors.include?(Cms::Model::Part)
-      :part
-    elsif ancestors.include?(Cms::Model::Member)
-      :member
-    elsif klass == Cms::Form
-      :form
-    elsif ancestors.include?(SS::Model::Column)
-      :column
-    elsif klass == Cms::LoopSetting
-      :loop_setting
-    elsif klass == Opendata::DatasetGroup
-      :opendata_dataset_group
-    elsif ancestors.include?(Jmaxml::QuakeRegion)
-      :jmaxml_quake_region
-    else
-      raise "unknown reference type: #{klass}"
+    if field.association.class == Mongoid::Association::Referenced::BelongsTo
+      if [Member::Photo, KeyVisual::Image].include?(field.options[:klass])
+        if field.association.class_name.constantize.include?(SS::Model::File)
+          return :dummy
+        end
+      end
     end
-  end
 
-  def safe_reference_type?(type)
-    [:group, :user, :file, :layout].include?(type)
-  end
-
-  def unsafe_reference_type?(type)
-    !safe_reference_type?(type)
+    nil
   end
 
   def copy_basic_attributes(content, klass)
@@ -121,9 +60,11 @@ module Sys::SiteCopy::CmsContents
         next [field_name, field_value]
       when :safe
         unsafe = false
+      when :dummy
+        next [field_name, field_value]
       end
 
-      ref_class = reference_class(field_name, field_info)
+      ref_class = reference_class(field_name, field_info, content)
       next [field_name, field_value] if ref_class.blank?
 
       ref_type = reference_type(ref_class)
@@ -145,9 +86,9 @@ module Sys::SiteCopy::CmsContents
       next nil if field_names.present? && !field_names.include?(field_name)
       next [field_name, field_value] if field_value.blank?
 
-      next nil if on_copy(field_name, fields[field_name])
+      next nil if [:clear, :value, :safe].include?(on_copy(field_name, fields[field_name]))
 
-      ref_class = reference_class(field_name, fields[field_name])
+      ref_class = reference_class(field_name, fields[field_name], content)
       next nil if ref_class.nil?
 
       ref_type = reference_type(ref_class)
@@ -159,48 +100,31 @@ module Sys::SiteCopy::CmsContents
     Hash[attributes.compact]
   end
 
-  def resolve_reference(ref_type, id_or_ids)
-    if id_or_ids.respond_to?(:each)
-      return id_or_ids.map { |id| resolve_reference(ref_type, id) }
-    end
-
-    case ref_type
-    when :group
-      id_or_ids
-    when :user
-      id_or_ids
-    when :file
-      resolve_file_reference(id_or_ids)
-    when :layout
-      resolve_layout_reference(id_or_ids)
-    when :node
-      resolve_node_reference(id_or_ids)
-    when :page
-      resolve_page_reference(id_or_ids)
-    when :part
-      resolve_part_reference(id_or_ids)
-    when :form
-      resolve_form_reference(id_or_ids)
-    when :column
-      resolve_column_reference(id_or_ids)
-    when :loop_setting
-      resolve_loop_setting_reference(id_or_ids)
-    end
-  end
-
-  def update_html_links(src_content, dest_content)
+  def update_html_links(src_content, dest_content, options = {})
     file_url_maps = build_file_url_map(src_content, dest_content)
     dest_field_names = dest_content.class.fields.keys
+    names = options[:names].presence || %w(html)
     dest_content.attributes.each do |field_name, field_value|
-      next unless field_name.include?('html')
+      next unless names.any? { |name| field_name.include?(name) }
       next unless dest_field_names.include?(field_name)
       next if field_value.blank?
 
-      file_url_maps.each do |src_url, dest_url|
-        field_value = field_value.gsub(src_url, dest_url)
+      if field_value.class == Array
+        file_url_maps.each do |src_url, dest_url|
+          field_value = field_value.collect do |value|
+            value.gsub(src_url, dest_url)
+          end
+        end
+        field_value = field_value.collect do |value|
+          value.gsub(@src_site.full_url, @dest_site.full_url)
+        end
+      else
+        file_url_maps.each do |src_url, dest_url|
+          field_value = field_value.gsub(src_url, dest_url)
+        end
+        field_value = field_value.gsub(@src_site.full_url, @dest_site.full_url)
       end
 
-      field_value = field_value.gsub(@src_site.full_url, @dest_site.full_url)
       dest_content[field_name] = field_value
     end
   end

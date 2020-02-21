@@ -14,7 +14,6 @@ class Cms::Column::Value::Base
   belongs_to :column, class_name: 'Cms::Column::Base'
   field :name, type: String
   field :order, type: Integer
-  field :class_name, type: String
   field :alignment, type: String
 
   after_initialize :copy_column_settings, if: ->{ new_record? }
@@ -27,20 +26,10 @@ class Cms::Column::Value::Base
     export :name
     export :alignment
     export as: :html do |context|
-      if @liquid_context
-        to_default_html
-      else
-        @liquid_context = context
-        to_html(preview: context.registers[:preview])
-      end
+      render_html_for_liquid(context)
     end
     export as: :to_s do |context|
-      if @liquid_context
-        to_default_html
-      else
-        @liquid_context = context
-        to_html(preview: context.registers[:preview])
-      end
+      render_html_for_liquid(context)
     end
     export as: :type do
       self.class.name
@@ -52,6 +41,8 @@ class Cms::Column::Value::Base
   end
 
   def to_html(options = {})
+    return "" if column.blank?
+
     html = _to_html(options)
 
     wrap_data = []
@@ -95,13 +86,12 @@ class Cms::Column::Value::Base
     []
   end
 
-  def new_clone
-    ret = self.class.new self.attributes.to_h.except('_type')
+  def clone_to(to_item)
+    attrs = self.attributes.to_h.except('_id').slice(*self.class.fields.keys.map(&:to_s))
+    ret = to_item.column_values.build(attrs)
     ret.instance_variable_set(:@new_clone, true)
-    ret.instance_variable_set(:@origin_id, ret.id)
-    ret.id = BSON::ObjectId.new
-    ret.created = Time.zone.now
-    ret.updated = Time.zone.now
+    ret.instance_variable_set(:@origin_id, self.id)
+    ret.created = ret.updated = Time.zone.now
     ret
   end
 
@@ -115,13 +105,31 @@ class Cms::Column::Value::Base
     self.attributes = @in_wrap = ActionController::Parameters.new(Hash(value)).permit(self.class._permit_values)
   end
 
+  def import_csv(values)
+    values.map do |name, value|
+      case name
+      when self.class.t(:alignment)
+        self.alignment = value.present? ? I18n.t("cms.options.alignment").invert[value] : nil
+      when self.class.t(:value)
+        self.value = value
+      end
+    end
+  end
+
   private
 
-  def _to_html(options = {})
-    if column.blank?
-      return to_default_html
-    end
+  def render_html_for_liquid(context)
+    return to_default_html if @liquid_context
 
+    @liquid_context = context
+    begin
+      to_html(preview: context.registers[:preview])
+    ensure
+      @liquid_context = nil
+    end
+  end
+
+  def _to_html(options = {})
     layout = column.layout
     if layout.blank?
       return to_default_html

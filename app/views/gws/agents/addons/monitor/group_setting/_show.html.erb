@@ -1,4 +1,7 @@
-<%= jquery do %> SS_AddonTabs.hide(".addon-gws-monitor-group-setting"); <% end %>
+<%
+  addon ||= local_assigns.fetch(:addon, {})
+  addon[:display_body] = "hide"
+%>
 
 <dl class="see addon-gws-monitor-group-setting">
   <dt><%= @model.t :monitor_new_days %></dt>
@@ -24,4 +27,3 @@
   <dt><%= @model.t :monitor_files_break %></dt>
   <dd><%= @item.label :monitor_files_break %></dd>
 </dl>
-

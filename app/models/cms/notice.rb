@@ -7,6 +7,7 @@ class Cms::Notice
   include Cms::Addon::Release
   include Cms::Addon::ReleasePlan
   include Cms::Addon::GroupPermission
+  include Fs::FilePreviewable
 
   NOTICE_SEVERITY_NORMAL = "normal".freeze
   NOTICE_SEVERITY_HIGH ="high".freeze
@@ -72,7 +73,7 @@ class Cms::Notice
   end
 
   def new_clone(attributes = {})
-    attributes = self.attributes.merge(attributes).select{ |k| self.fields.keys.include?(k) }
+    attributes = self.attributes.merge(attributes).select{ |k| self.fields.key?(k) }
 
     item = self.class.new(attributes)
     item.id = nil
@@ -92,12 +93,13 @@ class Cms::Notice
       ids = {}
       files.each do |f|
         attributes = Hash[f.attributes]
-        attributes.select!{ |k| f.fields.keys.include?(k) }
+        attributes.select!{ |k| f.fields.key?(k) }
 
         file = SS::File.new(attributes)
         file.id = nil
         file.in_file = f.uploaded_file
         file.user_id = @cur_user.id if @cur_user
+        file.owner_item = self if file.respond_to?(:owner_item=)
 
         file.save validate: false
         ids[f.id] = file.id
@@ -110,6 +112,15 @@ class Cms::Notice
       self.file_ids = ids.values
       ids
     end
+  end
+
+  def file_previewable?(file, user:, member:)
+    return false if !file_ids.include?(file.id)
+    return false if user.blank?
+
+    return true if state == "public" && notice_target == NOTICE_TARGET_ALL
+
+    allowed?(:read, user, site: @cur_site || site)
   end
 
   private

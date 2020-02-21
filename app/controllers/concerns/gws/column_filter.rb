@@ -65,10 +65,11 @@ module Gws::ColumnFilter
     model = self.class.model_class
 
     if params[:type].present?
-      type = params[:type]
-      type = type.sub('/', '/column/')
-      type = type.classify
-      model = type.constantize
+      models = Gws::Column.route_options.collect do |k, v|
+        v.sub('/', '/column/').classify.constantize
+      end
+      model = models.find { |m| m.to_s == params[:type].sub('/', '/column/').classify }
+      raise '404' unless model
     end
 
     @model = model

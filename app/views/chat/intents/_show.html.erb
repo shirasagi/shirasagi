@@ -1,0 +1,25 @@
+<dl class="see">
+  <dt><%= @model.t :name %></dt>
+  <dd><%= @item.name %></dd>
+
+  <dt><%= @model.t :phrase %></dt>
+  <dd><%= @item.phrase %></dd>
+
+  <dt><%= @model.t :response %></dt>
+  <dd>
+    <%= html_editor "#mod-chat-intent-response", height: "400px", readonly: true %>
+    <%= text_area_tag "mod-chat-intent-response", @item.response, style: "height: 400px;" %>
+  </dd>
+
+  <dt><%= @model.t :suggest %></dt>
+  <dd><%= @item.suggest %></dd>
+
+  <dt><%= @model.t :question %></dt>
+  <dd><%= @item.label :question %></dd>
+
+  <dt><%= @model.t :site_search %></dt>
+  <dd><%= @item.label :site_search %></dd>
+
+  <dt><%= @model.t :order %></dt>
+  <dd><%= @item.order %></dd>
+</dl>

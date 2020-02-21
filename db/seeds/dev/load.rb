@@ -27,8 +27,12 @@ def save_layout(data)
   cond = { site_id: @site._id, filename: data[:filename] }
   html = File.read("layouts/" + data[:filename]) rescue nil
 
-  item = Cms::Layout.find_or_create_by(cond)
-  item.update data.merge html: html
+  item = Cms::Layout.find_or_initialize_by(cond)
+  item.attributes = data.merge html: html
+  item.cur_user = @user
+  item.save
+
+  item
 end
 
 save_layout filename: "home.layout.html", name: "トップレイアウト"
@@ -47,8 +51,12 @@ def save_node(data)
   puts data[:name]
   cond = { site_id: @site._id, filename: data[:filename] }
 
-  item = Cms::Node.unscoped.find_or_create_by(cond).becomes_with_route(data[:route])
-  item.update data
+  item = data[:route].sub("/", "/node/").camelize.constantize.unscoped.find_or_initialize_by(cond)
+  item.attributes = data
+  item.cur_user = @user
+  item.save
+
+  item
 end
 
 save_node filename: "css", name: "CSS", route: "uploader/file", shortcut: "show"
@@ -81,9 +89,13 @@ def save_part(data)
   cond = { site_id: @site._id, filename: data[:filename] }
   html = File.read("parts/" + data[:filename]) rescue nil
 
-  item = Cms::Part.unscoped.find_or_create_by(cond).becomes_with_route(data[:route])
+  item = data[:route].sub("/", "/part/").camelize.constantize.unscoped.find_or_initialize_by(cond)
   item.html = html if html
-  item.update data
+  item.attributes = data
+  item.cur_user = @user
+  item.save
+
+  item
 end
 
 save_part filename: "head.part.html", name: "ヘッダー", route: "cms/free"
@@ -109,8 +121,13 @@ def save_page(data)
   puts data[:name]
   cond = { site_id: @site._id, filename: data[:filename] }
 
-  item = Cms::Page.find_or_create_by(cond).becomes_with_route(data[:route])
-  item.update data
+  route = data[:route].presence || 'cms/page'
+  item = route.camelize.constantize.find_or_initialize_by(cond)
+  item.attributes = data
+  item.cur_user = @user
+  item.save
+
+  item
 end
 
 body = "<p>#{'本文です。<br />' * 3}</p>" * 2
@@ -148,3 +165,11 @@ def save_word_dictionary(data)
 end
 
 save_word_dictionary name: "機種依存文字", body_file: "#{Rails.root}/db/seeds/cms/word_dictionary/dependent_characters.txt"
+
+if @site.subdir.present?
+  # rake cms:set_subdir_url site=@site.host
+  require 'rake'
+  Rails.application.load_tasks
+  ENV["site"]=@site.host
+  Rake::Task['cms:set_subdir_url'].invoke
+end

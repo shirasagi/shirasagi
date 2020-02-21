@@ -69,7 +69,7 @@ class Member::Agents::Nodes::LoginController < ApplicationController
 
   def failure
     session[:auth_site] = nil
-    session[:member] = nil
+    session[session_member_key] = nil
     flash.discard(:ref)
 
     redirect_to "#{@cur_node.url}/login.html"

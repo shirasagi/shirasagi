@@ -18,7 +18,18 @@ class Cms::Column::Value::DateField < Cms::Column::Value::Base
   end
 
   def value
-    I18n.l(self.date.to_date) rescue nil
+    I18n.l(self.date.to_date, format: :long) rescue nil
+  end
+
+  def import_csv(values)
+    super
+
+    values.map do |name, value|
+      case name
+      when self.class.t(:date)
+        self.date = value
+      end
+    end
   end
 
   private

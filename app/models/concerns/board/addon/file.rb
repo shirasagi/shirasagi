@@ -92,7 +92,7 @@ module Board::Addon
       files.each do |file|
         if add_ids.include?(file.id)
           # ignore @cur_user
-          file.update_attributes(site_id: site_id, model: model_name.i18n_key, state: "public")
+          file.update(site_id: site_id, model: model_name.i18n_key, owner_item: self, state: "public")
         end
         ids << file.id
       end

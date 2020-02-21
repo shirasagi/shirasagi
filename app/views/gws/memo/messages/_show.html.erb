@@ -1,7 +1,13 @@
 <div class="addon-view gws-memo" id="message-<%= @item.id %>">
+  <% if @item.html? %>
+    <%= jquery do %>
+      var htmlMessage = new SS_HtmlMessage("#message-<%= @item.id %> .body--html");
+    <% end %>
+  <% end %>
+
   <div class="addon-head">
       <span class="icon-star <%= @item.star?(@cur_user) ? 'on' : 'off' %>">
-        <%= link_to options={action: :toggle_star, id: @item.id, location: :show}, method: :post do %>
+        <%= link_to({ action: :show, id: @item.id }) do %>
           <i class="material-icons md-18">&#xE838;</i>
         <% end %>
       </span>
@@ -73,8 +79,7 @@
   <div class="addon-body">
     <% if @item.html? %>
       <div class="body body--html">
-        <%= html_editor ".body--html .html", readonly: true %>
-        <%= text_area_tag :html, @item.html, class: "html", style: "height: 400px;" %>
+        <%= @item.sanitize_html %>
       </div>
     <% else %>
       <div class="body body--text"><%= auto_link br @item.text %></div>

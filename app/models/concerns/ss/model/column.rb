@@ -13,7 +13,6 @@ module SS::Model::Column
     field :tooltips, type: SS::Extensions::Lines
     field :prefix_label, type: String
     field :postfix_label, type: String
-    field :class_name, type: String
 
     permit_params :name, :order, :required, :tooltips, :prefix_label, :postfix_label
 

@@ -1,6 +1,6 @@
 module Member::Photo::PageFilter
   extend ActiveSupport::Concern
-  include Cms::CrudFilter
+  include Cms::PageFilter
 
   private
 

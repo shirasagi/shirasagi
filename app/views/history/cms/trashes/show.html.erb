@@ -1,0 +1,102 @@
+<div class="addon-views">
+  <div class="addon-view" id="addon-basic">
+    <div class="addon-head"><h2><%= t "ss.basic_info" %></h2></div>
+    <div class="addon-body">
+      <dl class="see mod-history-trashes">
+        <% if @item.data['route'].present? %>
+        <dt><%= @model.t :ref_class %></dt>
+        <dd><%= t "modules.#{@item.data['route'].sub(/\/.*/, '')}" %></dd>
+        <% end %>
+
+        <dt><%= @item.model.t(:name) %></dt>
+        <dd><%= @item.data[:name] %></dd>
+
+        <dt><%= @item.model.t(:filename) %></dt>
+        <dd><%= @item.data[:filename] %></dd>
+      </dl>
+    </div>
+  </div>
+
+  <% if @item.ref_coll == 'cms_pages' %>
+    <% if @item.data[:html].present? %>
+      <div class="addon-view" id="addon-basic">
+        <div class="addon-head"><h2><%= t('modules.addons.cms/body') %></h2></div>
+        <div class="addon-body">
+          <dl class="see mod-history-trashes">
+            <dd class="wide">
+              <%= html_editor ".mod-history-trashes textarea", readonly: true %>
+              <%= text_area_tag "mod-cms-html", @item.data[:html], style: "height: 400px" %>
+            </dd>
+          </dl>
+        </div>
+      </div>
+    <% end %>
+  <% elsif @item.ref_coll =~ /cms_parts|cms_nodes/ %>
+    <div class="addon-view" id="addon-basic">
+      <div class="addon-head"><h2><%= t('modules.addons.cms/html') %></h2></div>
+      <div class="addon-body">
+        <dl class="see mod-history-trashes">
+          <%= code_editor ".mod-history-trashes textarea", mode: :html, readonly: true %>
+          <% @item.data.each do |k, v| %>
+            <% next unless k.include?('html') %>
+            <dt><%= @item.model.t(k) %></dt>
+            <dd>
+              <% style = 'height: 400px' if k == 'html' %>
+              <%= text_area_tag "mod-cms-#{k}", v, style: style %>
+            </dd>
+          <% end %>
+        </dl>
+      </div>
+    </div>
+  <% elsif @item.ref_coll == 'cms_layouts' %>
+    <div class="addon-view" id="addon-basic">
+      <div class="addon-head"><h2><%= t('modules.addons.cms/layout_html') %></h2></div>
+      <div class="addon-body">
+        <dl class="see mod-history-trashes">
+          <dd class="wide">
+            <%= code_editor "#mod-cms-html", mode: :html, readonly: true %>
+            <%= text_area_tag "mod-cms-html", @item.data[:html], style: "height: 400px" %>
+          </dd>
+        </dl>
+      </div>
+    </div>
+  <% end %>
+</div>
+
+<div class="main-box">
+  <table class="see index history-trash">
+    <% @item.data.sort.each do |k, v| %>
+      <tr>
+        <th><%= @item.model.t k %></th>
+        <td>
+          <% case v %>
+          <% when Array %>
+            <% if @item.model.fields[k].present? && @item.model.fields[k].type == SS::Extensions::ObjectIds %>
+              <% elem_class = @item.model.fields[k].options[:metadata][:elem_class].constantize %>
+              <% items = [] %>
+              <% v.each do |id| %>
+                <% item = elem_class.where(_id: id).first %>
+                <% items << (item.present? ? item.name : id) %>
+              <% end %>
+              <%= items.present? ? items.join(',') : "" %>
+            <% else %>
+              <% items = v %>
+            <% end %>
+            <% items.present? ? items.join(',') : "" %>
+          <% when Integer %>
+            <% if @item.model.fields[k].present? && @item.model.fields[k].class == Mongoid::Fields::ForeignKey %>
+              <% item = @item.model.fields[k].association.class_name.constantize.where(_id: v).first %>
+              <%= item.present? ? item.name : v %>
+            <% else %>
+              <%= v %>
+            <% end %>
+          <% when String %>
+            <%= v.present? ? v : "" %>
+          <% else %>
+            <%= v.present? ? v.inspect : "" %>
+          <% end %>
+        </td>
+      </tr>
+    <% end %>
+  </table>
+</div>

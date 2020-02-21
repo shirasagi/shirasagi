@@ -27,7 +27,10 @@ module Cms::FeedFilter
         # %w(summary description).each {|m| summary ||= item.send(m) if item.respond_to?(m) }
 
         rss.items.new_item do |entry|
-          entry.title       = sanitize(item.name)
+          title = item.try(:index_name).presence || item.name
+          title = sanitize(title)
+
+          entry.title       = title
           entry.link        = item.full_url
           entry.description = sanitize(summary) if summary.present?
           entry.pubDate     = date.to_s if date.present?

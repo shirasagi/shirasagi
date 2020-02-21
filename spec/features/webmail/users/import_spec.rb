@@ -25,6 +25,7 @@ describe "webmail_users", type: :feature, dbscope: :example do
     let!(:user1) { create(:webmail_user_without_imap, id: 101, email: "#{unique_id}-1@example.jp") }
     let!(:user2) { create(:webmail_user_without_imap, id: 102, email: "#{unique_id}-2@example.jp") }
     let!(:user3) { create(:webmail_user_without_imap, id: 103, email: "#{unique_id}-3@example.jp") }
+    let!(:sys_role1) { create(:sys_role_general, name: "一般ユーザー") }
 
     it do
       expect(user1).to have(0).imap_settings
@@ -57,6 +58,7 @@ describe "webmail_users", type: :feature, dbscope: :example do
       expect(user1.organization.name).to eq "シラサギ市"
       expect(user1.group_ids).to eq [ SS::Group.find_by(name: "シラサギ市/企画政策部/政策課").id ]
       expect(user1.webmail_role_ids).to eq [ Webmail::Role.find_by(name: "管理者").id ]
+      expect(user1.sys_role_ids).to eq [ Sys::Role.and_general.first.id ]
       user1.imap_settings.first.tap do |imap_setting|
         expect(imap_setting.name).to eq '規定の設定1'
         expect(imap_setting.from).to eq 'テスト・ユーザー1'
@@ -91,6 +93,7 @@ describe "webmail_users", type: :feature, dbscope: :example do
     let!(:user1) { create(:webmail_user_without_imap, id: 101, email: "#{unique_id}-1@example.jp") }
     let!(:user2) { create(:webmail_user_without_imap, id: 102, email: "#{unique_id}-2@example.jp") }
     let!(:user3) { create(:webmail_user_without_imap, id: 103, email: "#{unique_id}-3@example.jp") }
+    let!(:sys_role1) { create(:sys_role_general, name: "一般ユーザー") }
 
     it do
       expect(user1).to have(0).imap_settings

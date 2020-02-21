@@ -11,6 +11,12 @@ describe "webmail_mailboxes", type: :feature, dbscope: :example, imap: true, js:
       it "#index" do
         visit index_path
         expect(current_path).to eq index_path
+        expect(page).to have_content('下書き')
+        expect(page).to have_content('INBOX.Draft')
+        expect(page).to have_content('送信済み')
+        expect(page).to have_content('INBOX.Sent')
+        expect(page).to have_content('ゴミ箱')
+        expect(page).to have_content('INBOX.Trash')
 
         # new
         click_link I18n.t('ss.links.new')
@@ -19,6 +25,7 @@ describe "webmail_mailboxes", type: :feature, dbscope: :example, imap: true, js:
         end
         click_button I18n.t('ss.buttons.save')
         expect(current_path).to eq index_path
+        expect(page).to have_content(item_title)
 
         # edit
         click_link item_title
@@ -27,6 +34,7 @@ describe "webmail_mailboxes", type: :feature, dbscope: :example, imap: true, js:
           fill_in "item[name]", with: "#{item_title}2"
         end
         click_button I18n.t('ss.buttons.save')
+        expect(page).to have_content("#{item_title}2")
 
         # delete
         click_link item_title
@@ -35,6 +43,8 @@ describe "webmail_mailboxes", type: :feature, dbscope: :example, imap: true, js:
 
         # reload
         click_link I18n.t('webmail.links.reload_mailboxes')
+        expect(page).to have_no_content('INBOX')
+        expect(page).to have_no_content(item_title)
         click_button I18n.t('webmail.buttons.sync')
 
         expect(current_path).to eq index_path

@@ -1,6 +1,8 @@
 module Opendata::Harvest::ShirasagiApiImporter
   extend ActiveSupport::Concern
 
+  private
+
   def import_from_shirasagi_api
     put_log("import from #{source_url} (Shirasagi API)")
 
@@ -76,9 +78,9 @@ module Opendata::Harvest::ShirasagiApiImporter
     # destroy unimported datasets
     dataset_ids = ::Opendata::Dataset.site(site).node(node).where(
       "harvest_api_type" => api_type,
-      "harvest_host" => source_host,
-      ).pluck(:id)
-    dataset_ids = dataset_ids - imported_dataset_ids
+      "harvest_host" => source_host
+    ).pluck(:id)
+    dataset_ids -= imported_dataset_ids
     dataset_ids.each do |id|
       dataset = ::Opendata::Dataset.find(id) rescue nil
       next unless dataset
@@ -188,8 +190,11 @@ module Opendata::Harvest::ShirasagiApiImporter
     resource.license = license
 
     def resource.set_updated; end
+
     def resource.set_revision_id; end
+
     def resource.compression_dataset; end
+
     resource.updated = dataset.updated
     resource.created = dataset.created
 

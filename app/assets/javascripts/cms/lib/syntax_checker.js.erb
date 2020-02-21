@@ -121,14 +121,14 @@ this.Syntax_Checker = (function () {
           if (error["correctContent"]) {
             correct = $('<a href="#" class="correct">' + "<%= I18n.t('cms.auto_correct.link') %>" + '</a>');
             correct.on("click", function (e) {
-              var setContent, getContent, correctContent, type;
+              var setContent, getContent, correctContent, resolve;
 
               correctContent = error["correctContent"];
               setContent = check["setContent"];
               getContent = check["getContent"];
-              type = check["type"];
+              resolve = check["resolve"];
 
-              setContent(correctContent(id, { content: getContent(), type: type }, error));
+              setContent(correctContent(id, { content: getContent(), resolve: resolve }, error));
               $(self.form.addonSelector).find("button.syntax-check").trigger("click");
 
               return false;
@@ -555,12 +555,13 @@ this.Syntax_Checker = (function () {
     });
   };
   Syntax_Checker.correctReplaceWords = function (id, content, error) {
-    var key, value, array, ret;
+    var key, value, array, ret, regexp, alt;
 
     array = Syntax_Checker.formatContent(content);
     key = error["replaceKey"];
     value = error["replaceValue"];
     ret = [];
+    regexp = RegExp("" + key.replace(/([.?*+$\[\]\/\\(){}|\-])/g, '\\$1', "g"));
 
     if (!(key || value)) {
       return;
@@ -572,12 +573,13 @@ this.Syntax_Checker = (function () {
         return this.nodeType === 3;
       }).each(function () {
         var text;
-        text = this.textContent.replace(RegExp("" + key.replace(/([.?*+$\[\]\/\\(){}|\-])/g, '\\$1'), "g"), function (c) {
-          return value;
-        });
-        return this.textContent = text;
+        text = this.textContent.replace(regexp, value);
+        this.textContent = text;
       });
-
+      html.find("img[alt]").each(function () {
+        alt = $(this).attr("alt").replace(regexp, value);
+        $(this).attr("alt", alt);
+      });
       ret.push(html.html());
     });
 
@@ -668,7 +670,7 @@ this.Syntax_Checker = (function () {
       $(html).find('img').each(function () {
         var alt, errors;
         alt = $(this).attr('alt');
-        if (!alt || $.trim(alt) === "" || /^[\w\s\.\-]*$/.test(alt)) {
+        if (!alt) {
           Syntax_Checker.errors.push(
             {
               id: id,

@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe "cms_generate_pages" do
+describe "cms_generate_pages", type: :feature, dbscope: :example do
   subject(:site) { cms_site }
   subject(:index_path) { cms_generate_pages_path site.id }
 

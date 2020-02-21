@@ -29,11 +29,14 @@ module Cms::CrudFilter
   end
 
   def destroy_items
-    entries = @items.entries
+    raise "400" if @selected_items.blank?
+
+    entries = @selected_items.entries
     @items = []
 
     entries.each do |item|
       if item.allowed?(:delete, @cur_user, site: @cur_site, node: @cur_node)
+        item.cur_user = @cur_user if item.respond_to?(:cur_user)
         next if item.destroy
       else
         item.errors.add :base, :auth_error
@@ -93,6 +96,7 @@ module Cms::CrudFilter
 
   def destroy
     raise "403" unless @item.allowed?(:delete, @cur_user, site: @cur_site, node: @cur_node)
+    @item.cur_user = @cur_user if @item.respond_to?(:cur_user)
     render_destroy @item.destroy
   end
 
@@ -101,7 +105,9 @@ module Cms::CrudFilter
   end
 
   def disable_all
-    entries = @items.entries
+    raise "400" if @selected_items.blank?
+
+    entries = @selected_items.entries
     @items = []
 
     entries.each do |item|

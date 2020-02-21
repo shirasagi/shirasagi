@@ -49,7 +49,8 @@ describe Gws::Workflow::FilesController, type: :feature, dbscope: :example, js: 
         fill_in "workflow[comment]", with: workflow_comment1
         click_on I18n.t("workflow.buttons.request")
       end
-      expect(page).to have_css(".mod-workflow-view dd", text: /#{::Regexp.escape(user1.uid)}/)
+      expect(page).to have_css(".mod-workflow-view dd", text: I18n.t('workflow.state.request'))
+
 
       item.reload
       expect(item.workflow_user_id).to eq admin.id
@@ -64,7 +65,7 @@ describe Gws::Workflow::FilesController, type: :feature, dbscope: :example, js: 
       expect(item.workflow_approvers).to \
         include({level: 3, user_id: user3.id, editable: '', state: 'pending', comment: ''})
 
-      expect(Gws::Memo::Notice.count).to eq 1
+      expect(SS::Notification.count).to eq 1
 
       #
       # user1: approve request
@@ -91,7 +92,7 @@ describe Gws::Workflow::FilesController, type: :feature, dbscope: :example, js: 
       expect(item.workflow_approvers).to \
         include({level: 3, user_id: user3.id, editable: '', state: 'pending', comment: ''})
 
-      expect(Gws::Memo::Notice.count).to eq 2
+      expect(SS::Notification.count).to eq 2
 
       #
       # user2: remand request
@@ -118,7 +119,7 @@ describe Gws::Workflow::FilesController, type: :feature, dbscope: :example, js: 
       expect(item.workflow_approvers).to \
         include({level: 3, user_id: user3.id, editable: '', state: 'pending', comment: ''})
 
-      expect(Gws::Memo::Notice.count).to eq 3
+      expect(SS::Notification.count).to eq 3
 
       #
       # admin: restart request
@@ -133,7 +134,7 @@ describe Gws::Workflow::FilesController, type: :feature, dbscope: :example, js: 
         fill_in "workflow[comment]", with: workflow_comment2
         click_on I18n.t("workflow.buttons.request")
       end
-      expect(page).to have_css(".mod-workflow-view dd", text: /#{::Regexp.escape(user1.uid)}/)
+      expect(page).to have_css(".mod-workflow-view dd", text: I18n.t('workflow.state.request'))
 
       item.reload
       expect(item.workflow_user_id).to eq admin.id
@@ -148,7 +149,7 @@ describe Gws::Workflow::FilesController, type: :feature, dbscope: :example, js: 
       expect(item.workflow_approvers).to \
         include({level: 3, user_id: user3.id, editable: '', state: 'pending', comment: '', file_ids: nil})
 
-      expect(Gws::Memo::Notice.count).to eq 4
+      expect(SS::Notification.count).to eq 4
 
       #
       # user1: approve request
@@ -176,7 +177,7 @@ describe Gws::Workflow::FilesController, type: :feature, dbscope: :example, js: 
       expect(item.workflow_approvers).to \
         include({level: 3, user_id: user3.id, editable: '', state: 'pending', comment: '', file_ids: nil})
 
-      expect(Gws::Memo::Notice.count).to eq 5
+      expect(SS::Notification.count).to eq 5
 
       #
       # user2: approve request
@@ -204,7 +205,7 @@ describe Gws::Workflow::FilesController, type: :feature, dbscope: :example, js: 
       expect(item.workflow_approvers).to \
         include({level: 3, user_id: user3.id, editable: '', state: 'request', comment: '', file_ids: nil})
 
-      expect(Gws::Memo::Notice.count).to eq 6
+      expect(SS::Notification.count).to eq 6
 
       #
       # user3: approve request, he is the last one
@@ -232,7 +233,7 @@ describe Gws::Workflow::FilesController, type: :feature, dbscope: :example, js: 
       expect(item.workflow_approvers).to \
         include({level: 3, user_id: user3.id, editable: '', state: 'approve', comment: approve_comment4, file_ids: nil})
 
-      expect(Gws::Memo::Notice.count).to eq 7
+      expect(SS::Notification.count).to eq 7
     end
   end
 end

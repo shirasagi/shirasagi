@@ -39,10 +39,18 @@ module Opendata::DatasetSearchable
 
       option = params[:option].presence || 'all_keywords'
       method = option == 'all_keywords' ? 'and' : 'any'
-      all.keyword_in params[:keyword],
-        :name, :text, "resources.name", "resources.filename", "resources.text",
-        "url_resources.name", "url_resources.filename", "url_resources.text",
+      all.keyword_in(
+        params[:keyword],
+        :name,
+        :text,
+        "resources.name",
+        "resources.filename",
+        "resources.text",
+        "url_resources.name",
+        "url_resources.filename",
+        "url_resources.text",
         method: method
+      )
     end
 
     def search_ids(params)

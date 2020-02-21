@@ -1,4 +1,4 @@
-SS::Application.routes.draw do
+Rails.application.routes.draw do
 
   Opendata::Initializer
 
@@ -46,6 +46,7 @@ SS::Application.routes.draw do
         get "file" => "resources#download"
         get "tsv" => "resources#download_tsv"
         get "content" => "resources#content"
+        get "guidance" => "csv2rdf_settings#guidance"
         get "header_size" => "csv2rdf_settings#header_size"
         post "header_size" => "csv2rdf_settings#header_size"
         get "rdf_class" => "csv2rdf_settings#rdf_class"
@@ -105,7 +106,7 @@ SS::Application.routes.draw do
         end
       end
     end
- end
+  end
 
   node "opendata" do
     get "dataset_category/" => "public#index", cell: "nodes/dataset/dataset_category"

@@ -19,7 +19,6 @@ class Gws::Memo::Apis::MessagesController < ApplicationController
 
   def set_folders
     @folders = Gws::Memo::Folder.static_items(@cur_user, @cur_site) + Gws::Memo::Folder.user(@cur_user).site(@cur_site)
-    @folders = @folders.reject { |folder| folder.folder_path =~ /^(INBOX\.Sent|INBOX\.Trash)$/ }
   end
 
   public

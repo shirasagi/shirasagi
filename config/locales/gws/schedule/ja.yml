@@ -10,17 +10,18 @@ ja:
     navi:
       holiday: 休日設定
       category: 種別設定
-      todo: ToDo設定
+      todo: ToDo一覧
+      trash: ゴミ箱
     tabs:
       personal: 個人
       personal_list: 予定リスト
       group: 全体
       facility: 設備予約
-      todo: ToDo
       search: 検索
       search/users: ユーザー検索
       search/times: 空き時間検索
-      trash: ゴミ箱
+      my_todo: 担当ToDo
+      manageable_todo: 他ユーザーのToDo
     calendar:
       buttonText:
         listMonth: リスト
@@ -88,6 +89,8 @@ ja:
         "3": 標準
         "4": 低
         "5": 最低
+      schedule_custom_group_extra_state:
+        creator_name: カスタムグループの作成者名の付加
     operations:
       expand_all: すべて展開
       collapse_all: すべて閉じる
@@ -135,6 +138,10 @@ ja:
     disabled_items: 削除済み
     finish_mark: "[完] "
     todo_over: 期限超過
+    achievement_rate: "%{count}%"
+    achievement_rate_unit: "%"
+    category_not_assigined: プロジェクト・工程なし
+    discussion_forum_not_assigined: 電子会議室なし
     buttons:
       finish: 完了する
       revert: 未完了に戻す
@@ -150,11 +157,27 @@ ja:
     links:
       finish: 完了する
       revert: 未完了に戻す
+    navi:
+      category: プロジェクト・工程
+    header:
+      out_dated: 期限超過
+      today: 今日
+      tomorrow: 明日
+      day_after_tomorrow: 明日以降
+    apis:
+      categories:
+        index: プロジェクト・工程を選択する
     options:
       todo_state:
-        both: 両方
         finished: 完了
-        unfinished: 未完了
+        progressing: 作業中
+        unfinished: 未着手
+      todo_state_filter:
+        finished: 完了
+        progressing: 作業中
+        unfinished: 未着手
+        except_finished: 完了を除く
+        all: すべて
       sort:
         created_asc:  作成日時(日付順)
         created_desc: 作成日時(新着順)
@@ -162,6 +185,12 @@ ja:
         updated_desc: 更新日時(新着順)
         end_at_asc:  期限日(昇順)
         end_at_desc: 期限日(降順)
+      grouping:
+        none: グループ化なし
+        category: プロジェクト・工程
+        user: 担当者
+        end_at: 期限
+        discussion_forum: 電子会議室
   gws/schedule/group_setting:
     options:
       todo_delete_threshold:
@@ -186,6 +215,9 @@ ja:
       gws/schedule/approval: 承認
       gws/schedule/reports: レポート
       gws/schedule/group_setting: スケジュール
+      gws/schedule/todo/member: 担当者
+      gws/schedule/todo/comment_post: コメント
+      gws/schedule/todo/category: プロジェクト・工程
 
   gws_role:
     edit_gws_schedule_holidays: 休日の管理
@@ -204,6 +236,7 @@ ja:
     edit_private_gws_schedule_categories: 種別の編集（所有）
     delete_other_gws_schedule_categories: 種別の削除（全て）
     delete_private_gws_schedule_categories: 種別の削除（所有）
+    use_private_gws_schedule_todos: ToDoの利用
     read_other_gws_schedule_todos: ToDoの閲覧（全て）
     read_private_gws_schedule_todos: ToDoの閲覧（所有）
     edit_other_gws_schedule_todos: ToDoの編集（全て）
@@ -212,7 +245,12 @@ ja:
     delete_private_gws_schedule_todos: ToDoの削除（所有）
     trash_other_gws_schedule_todos: ToDoゴミ箱の管理（全て）
     trash_private_gws_schedule_todos: ToDoゴミ箱の管理（所有）
-    use_private_gws_schedule_todos: ToDoの利用
+    read_other_gws_schedule_todo_categories: プロジェクト・工程の閲覧（全て）
+    read_private_gws_schedule_todo_categories: プロジェクト・工程の閲覧（所有）
+    edit_other_gws_schedule_todo_categories: プロジェクト・工程の編集（全て）
+    edit_private_gws_schedule_todo_categories: プロジェクト・工程の編集（所有）
+    delete_other_gws_schedule_todo_categories: プロジェクト・工程の削除（全て）
+    delete_private_gws_schedule_todo_categories: プロジェクト・工程の削除（所有）
 
   mongoid:
     models:
@@ -220,10 +258,11 @@ ja:
       gws/schedule/todo: ToDo
       gws/schedule/category: 種別
       gws/schedule/holiday: 休日
-      gws/schedule/todo: ToDo
       gws/schedule/comment: コメント
       gws/schedule/attendance: 出欠
       gws/schedule/approval: 承認
+      gws/schedule/todo_comment: ToDoコメント
+      gws/schedule/todo_category: プロジェクト・工程
     errors:
       models:
         gws/schedule/plan:
@@ -232,6 +271,8 @@ ja:
           attributes:
             base:
               not_found: "%{line_no}: Id %{id} の休日は存在しません。"
+        gws/schedule/todo_category:
+          invalid_chars_as_name: "には次の文字は使えません: \\ / : * ? \" < > |"
     attributes:
       gws/schedule/planable:
         name: タイトル
@@ -277,6 +318,14 @@ ja:
         todo_delete_threshold: ToDo復旧可能期間
         schedule_attachment_state: ファイル添付
         schedule_drag_drop_state: ドラッグ＆ドロップ
+        schedule_personal_tab_state: 個人タブの表示
+        schedule_personal_tab_label: 個人タブの表示
+        schedule_group_tab_state: グループタブの表示
+        schedule_custom_group_tab_state: カスタムグループタブの表示
+        schedule_group_all_tab_state: 全体タブの表示
+        schedule_group_all_tab_label: 全体タブの表示
+        schedule_facility_tab_state: 設備予約タブの表示
+        schedule_facility_tab_label: 設備予約タブの表示
       gws/schedule/user_setting:
         schedule_tabs: タブ表示
         schedule_tabs_group_ids: タブ表示/グループ
@@ -290,6 +339,7 @@ ja:
         todo_state: 状態
         deleted: 削除日時
         discussion_forum_id: 電子会議室
+        achievement_rate: 進捗率
       gws/addon/schedule/attendance:
         attendance_check_state: 出欠確認
         attendances: 出欠情報
@@ -304,6 +354,22 @@ ja:
       gws/addon/schedule/facility_column_values:
         main_facility_id: 主設備
         facility_column_values: 設備追加情報
+      gws/addon/schedule/todo/member:
+        member_ids: 担当ユーザー
+        member_group_ids: 担当グループ
+        member_custom_group_ids: 担当カスタムグループ
+      gws/addon/schedule/todo/comment_post:
+        comments: コメント
+      gws/schedule/todo_comment:
+        todo_id: ToDo
+        achievement_rate: 進捗率
+      gws/addon/schedule/todo/category:
+        category_ids: プロジェクト・工程
+      gws/schedule/todo_category:
+        name: プロジェクト・工程名
+        depth_level: 深さ
+        in_basename: プロジェクト・工程名
+        in_parent_id: 親プロジェクト・工程名
 
   tooltip:
     gws/schedule/planable:
@@ -410,6 +476,14 @@ ja:
 
         %{text}
 
+    gws/schedule/todo_comment:
+      subject: "[ToDo] 「%{name}」にコメントがありました。"
+      text: "%{text}"
+      mail_text: |
+        %{subject}
+
+        %{text}
+
     gws/schedule/attendance:
       subject: "[スケジュール] 「%{name}」の出欠確認に回答がありました。"
       text: "%{text}"
@@ -422,6 +496,10 @@ ja:
       subject: "[スケジュール] 「%{name}」が削除されました。"
       text: ""
 
+    gws/schedule/plan/undo_delete:
+      subject: "[スケジュール] 「%{name}」の削除が取り消されました。"
+      text: "%{text}"
+
     gws/schedule/comment/destroy:
       subject: "[スケジュール] 「%{name}」のコメントが削除されました。"
       text: "%{text}"
@@ -429,6 +507,10 @@ ja:
     gws/schedule/todo/destroy:
       subject: "[ToDo] 「%{name}」が削除されました。"
       text: ""
+
+    gws/schedule/todo_comment/destroy:
+      subject: "[ToDo] 「%{name}」のコメントが削除されました。"
+      text: "%{text}"
 
     gws/schedule/todo/finish:
       subject: "[ToDo] 「%{name}」が完了になりました。"
@@ -438,6 +520,12 @@ ja:
 
     gws/schedule/todo/revert:
       subject: "[ToDo] 「%{name}」が未完了になりました。"
+      text: "%{text}"
+      mail_text: |
+        %{subject}
+
+    gws/schedule/todo/undo_delete:
+      subject: "[ToDo] 「%{name}」の削除が取り消されました。"
       text: "%{text}"
       mail_text: |
         %{subject}

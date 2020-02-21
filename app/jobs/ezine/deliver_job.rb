@@ -2,6 +2,8 @@ class Ezine::DeliverJob < Cms::ApplicationJob
   include Job::SS::TaskFilter
   include Ezine::BaseJob
 
+  queue_as :external
+
   self.task_class = Ezine::Task
 
   # Deliver a page as Emails.

@@ -17,6 +17,7 @@ module Gws::Circular::See
 
   def unseen?(user = nil)
     return false if user.nil?
+
     seen.exclude?(user.id.to_s)
   end
 
@@ -30,12 +31,8 @@ module Gws::Circular::See
     self
   end
 
-  def toggle_seen(user)
-    seen?(user) ? unset_seen(user) : set_seen(user)
-  end
-
-  def see_action_label(u = user)
-    key = seen?(u) ? 'unset_seen' : 'set_seen'
+  def see_action_label(user)
+    key = seen?(user) ? 'unset_seen' : 'set_seen'
     I18n.t(key, scope: 'gws/circular.post')
   end
 
@@ -47,5 +44,13 @@ module Gws::Circular::See
     seen = self.seen.to_a.select { |user_id, seen_at| seen_at.present? }
     seen_user_ids = seen.map { |user_id, seen_at| user_id }
     Gws::User.in(id: seen_user_ids)
+  end
+
+  def see_type_simple?
+    see_type == "simple"
+  end
+
+  def see_type_normal?
+    !see_type_simple?
   end
 end

@@ -6,7 +6,9 @@ class Board::Post
   include Board::Addon::File
   include Board::Addon::PostPermission
   include SimpleCaptcha::ModelHelpers
+  include Fs::FilePreviewable
 
+  store_in_repl_master
   field :poster, type: String
   field :email, type: String
   field :poster_url, type: String
@@ -35,21 +37,21 @@ class Board::Post
   end
 
   def validate_delete_key
-    if delete_key !~ /^[a-zA-Z0-9]{4}$/
+    unless /^[a-zA-Z0-9]{4}$/.match?(delete_key)
       errors.add :delete_key, I18n.t('board.errors.invalid_delete_key')
     end
   end
 
   def validate_banned_words
     cur_node.banned_words.each do |word|
-      errors.add :name, :invalid_word, word: word if name =~ /#{word}/
-      errors.add :text, :invalid_word, word: word if text =~ /#{word}/
-      errors.add :poster, :invalid_word, word: word if poster =~ /#{word}/
+      errors.add :name, :invalid_word, word: word if name.match?(/#{word}/)
+      errors.add :text, :invalid_word, word: word if text.match?(/#{word}/)
+      errors.add :poster, :invalid_word, word: word if poster.match?(/#{word}/)
     end
   end
 
   def validate_deny_url
-    if text =~ %r{https?://[\w/:%#\$&\?\(\)~\.=\+\-]+}
+    if %r{https?://[\w/:%#\$&\?\(\)~\.=\+\-]+}.match?(text)
       errors.add :text, I18n.t('board.errors.not_allow_urls')
     end
   end
@@ -60,6 +62,10 @@ class Board::Post
       "<a href=\"#{href}\">#{href}</a>"
     end
     text.gsub(/(\r\n?)|(\n)/, "<br />").html_safe
+  end
+
+  def file_previewable?(file, user:, member:)
+    node.present? && node.public?
   end
 
   class << self

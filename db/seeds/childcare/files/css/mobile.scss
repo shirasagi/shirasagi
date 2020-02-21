@@ -13,11 +13,11 @@ body {
   font-family: sans-serif;
 }
 h1, h2, h3, h4, h5 {
-  margin: 0px;
+  margin: 0;
   font-size: 120%;
 }
 a {
-  color: #0066cc;
+  color: #06c;
 }
 a:hover {
   text-decoration: none;
@@ -26,7 +26,7 @@ a:visited {
   color: $visited;
 }
 ul, ol {
-  margin: 0 0 10px 0;
+  margin: 0 0 10px;
   padding: 0 10px 0 20px;
 }
 dt {
@@ -77,7 +77,7 @@ h2 {
   background: $primary1;
   color: $white;
   a {
-  color: $white;
+    color: $white;
   }
   .address,
   .copyright {
@@ -101,7 +101,7 @@ h2 {
     margin: 0;
     padding: 0;
   }
-  li, .tag-article  {
+  li, .tag-article {
     list-style: none;
     margin-bottom: 5px;
     padding-bottom: 5px;
@@ -182,15 +182,15 @@ h2 {
   }
   h2 {
     display: inline;
-    border: none;
+    border: 0;
     font-size: 12px;
     font-weight: normal;
   }
   .sat {
-    background: #e1ebf1
+    background: #e1ebf1;
   }
   .sun {
-    background: #ffeeee;
+    background: #fee;
   }
   .page {
     padding: 5px;

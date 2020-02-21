@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe "sns_user_profies", dbscope: :example, type: :feature do
+describe "sns_user_profies", type: :feature, dbscope: :example do
   let(:user) { ss_user }
   let(:group) { ss_group }
   let(:show_path) { sns_user_profile_path user.id }

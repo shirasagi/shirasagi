@@ -84,8 +84,6 @@ ja:
       unset_seen: 未読にしてもよろしいですか？
     notice:
       request_cancelled: 申請を取り消しました。
-      set_seen: 既読にしました。
-      unset_seen: 未読にしました。
       approver_file_droppable: ファイル追加ボタンをクリックするか、ここにファイルをドロップしてください。
       created_branch_page: 差し替えページを作成しました。
     csv:

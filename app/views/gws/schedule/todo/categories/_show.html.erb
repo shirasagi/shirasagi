@@ -1,0 +1,10 @@
+<dl class="see mod-gws-board-category">
+  <dt><%= @model.t :name %></dt>
+  <dd><%= @item.basename %></dd>
+
+  <dt><%= @model.t :in_parent_id %></dt>
+  <dd><%= @item.parent.try(:name) %></dd>
+
+  <dt><%= @model.t :order %></dt>
+  <dd><%= @item.order %></dd>
+</dl>

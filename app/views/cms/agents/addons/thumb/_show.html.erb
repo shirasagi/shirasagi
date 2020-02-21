@@ -1,14 +1,28 @@
-<% return if @item.thumb.blank? %>
+<%
+  return if @item.thumb.blank?
+
+  addon ||= local_assigns.fetch(:addon, {})
+%>
 
 <dl class="see mod-cms-thumb-form">
   <dt><%= @model.t :thumb_id %></dt>
   <dd>
-    <a class="thumb" href="/fs/<%= @item.thumb.id %>/<%= @item.thumb.filename %>" target="_blank">
-      <% if @item.thumb.image? %>
-        <img src="/fs/<%= @item.thumb.id %>/thumb/<%= @item.thumb.filename %>" alt="<%= @item.thumb.basename %>" />
-      <% else %>
-        <span class="ext icon-<%= @item.thumb.extname %>"><%= @item.thumb.extname %></span>
+    <div class="file-view" data-file-id="<%= @item.thumb.id %>">
+      <%= link_to @item.thumb.url, class: :thumb, target: "_blank" do %>
+        <% if @item.thumb.image? %>
+          <%= image_tag(@item.thumb.thumb_url, alt: @item.thumb.basename) %>
+        <% else %>
+          <span class="ext icon-<%= @item.thumb.extname %>"><%= @item.thumb.extname %></span>
+        <% end %>
       <% end %>
-    </a>
+
+      <div class="name">
+        <%= @item.thumb.basename %>
+      </div>
+    </div>
   </dd>
 </dl>
+<%= jquery do %>
+  var $el = $("#<%= addon[:id] %>");
+  SS_FileView.listenTo("#<%= addon[:id] %> a.thumb", { viewPath: "<%= view_cms_apis_content_file_path(id: ":id") %>" });
+<% end %>

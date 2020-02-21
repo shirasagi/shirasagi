@@ -15,6 +15,8 @@ class Gws::UserFormData
             unless: ->{ %i[required_check].include?(validation_context) }
   validate :validate_column_values
 
+  around_save :update_file_owner_in_column_values
+
   scope :form, ->(form) { where(form_id: form.id) }
 
   def read_column_value(column)
@@ -70,6 +72,17 @@ class Gws::UserFormData
     return if form.blank?
     column_values.each do |column_value|
       column_value.validate_value(self, :column_values)
+    end
+  end
+
+  def update_file_owner_in_column_values
+    is_new = new_record?
+    yield
+
+    if is_new && form.present?
+      column_values.each do |column_value|
+        column_value.update_file_owner(self)
+      end
     end
   end
 end

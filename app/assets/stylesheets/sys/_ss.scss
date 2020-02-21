@@ -37,13 +37,13 @@
     color: #fff;
   }
   .buttons {
-    margin: 0px 0px 15px;
-    button { width: 100px; min-height: 3em; margin: 0px 10px 0px 0px; }
+    margin: 0 0 15px;
+    button { width: 100px; min-height: 3em; margin: 0 10px 0 0; }
   }
 
   .view {
     #queue { width: 120px; text-align: right; }
-    div { margin: 10px 0px; }
+    div { margin: 10px 0; }
     textarea { width: 90% !important; height: 200px; }
   }
 }

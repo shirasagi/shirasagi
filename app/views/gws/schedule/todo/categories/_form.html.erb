@@ -1,0 +1,26 @@
+<dl class="see">
+  <dt><%= @model.t :name %><%= @model.tt :name %></dt>
+  <dd><%= f.text_field :in_basename, autofocus: pc_browser?, value: @item.in_basename || @item.basename %></dd>
+
+  <dt><%= @model.t :in_parent_id %></dt>
+  <dd>
+    <%= link_to t("gws/schedule/todo.apis.categories.index"), gws_schedule_todo_apis_categories_path(single: 1), class: "ajax-box" %>
+    <%= f.hidden_field :in_parent_id, value: @item.in_parent_id || @item.parent.try(:id) %>
+    <label><%= @item.in_parent.try(:name) || @item.parent.try(:name) %></label>
+  </dd>
+
+  <dt><%= @model.t :order %><%= @model.tt :order %></dt>
+  <dd><%= f.number_field :order %></dd>
+</dl>
+
+<%= jquery do %>
+  $("#addon-basic a.ajax-box").data("on-select", function($item) {
+    console.log("on select");
+    var $dataEl = $item.closest("[data-id]");
+    var id = $dataEl.data("id");
+    var name = $dataEl.data("name");
+
+    $("#addon-basic [name='item[in_parent_id]']").val(id);
+    $("#addon-basic label").text(name);
+  });
+<% end %>

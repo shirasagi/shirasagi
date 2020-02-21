@@ -8,8 +8,8 @@ class SS::ImageResizer
     (@resizing && @resizing.size == 2) ? @resizing.map(&:to_i) : nil
   end
 
-  def resizing=(s)
-    @resizing = (s.class == String) ? s.split(",") : s
+  def resizing=(size)
+    @resizing = (size.class == String) ? size.split(",") : size
   end
 
   def resize(file)

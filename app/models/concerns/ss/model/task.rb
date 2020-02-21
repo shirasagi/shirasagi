@@ -97,6 +97,10 @@ module SS::Model::Task
       Rails.logger.info "already ready."
       return false
     end
+    unless ApplicationJob.check_size_limit_per_user?(user_id)
+      Rails.logger.info I18n.t('job.notice.size_limit_exceeded')
+      return false
+    end
 
     change_state("ready")
   end
@@ -135,21 +139,19 @@ module SS::Model::Task
       return ::File.readlines(log_file_path, chomp: true) rescue []
     end
 
-    self[:logs] || []
+    []
   end
 
   def head_logs(n = 1_000)
     if log_file_path && ::File.exists?(log_file_path)
       texts = []
-      open(log_file_path) do |f|
+      ::File.open(log_file_path) do |f|
         n.times do
           line = f.gets || break
           texts << line.chomp
         end
       end
       texts
-    elsif self[:logs].present?
-      self[:logs][0..(n - 1)]
     else
       []
     end

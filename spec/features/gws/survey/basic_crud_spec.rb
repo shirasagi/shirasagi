@@ -29,7 +29,7 @@ describe "gws_survey", type: :feature, dbscope: :example, js: true do
         choose I18n.t("gws.options.readable_setting_range.public")
         click_on I18n.t("gws.apis.categories.index")
       end
-      within "#cboxLoadedContent" do
+      wait_for_cbox do
         expect(page).to have_content(cate.name)
         click_on cate.name
       end
@@ -51,6 +51,12 @@ describe "gws_survey", type: :feature, dbscope: :example, js: true do
       end
       expect(page).to have_css("#notice", text: I18n.t("ss.notice.saved"))
 
+      # click print
+      click_on(form_name)
+      click_on(I18n.t("ss.buttons.print"))
+      expect(page).to have_text(column_name)
+      click_on(I18n.t("ss.links.back"))
+
       visit gws_survey_main_path(site: site)
       click_on I18n.t("ss.navi.editable")
       click_on form_name
@@ -60,11 +66,16 @@ describe "gws_survey", type: :feature, dbscope: :example, js: true do
         click_on(I18n.t("ss.buttons.save"))
       end
 
+      # click print
+      click_on(I18n.t("ss.buttons.print"))
+      expect(page).to have_text(column_name)
+      click_on(I18n.t("ss.links.back"))
+
       expect(Gws::Survey::Form.all.count).to eq 1
       form = Gws::Survey::Form.all.site(site).find_by(name: form_name)
 
-      expect(Gws::Memo::Notice.all.count).to eq 1
-      Gws::Memo::Notice.all.first.tap do |notice|
+      expect(SS::Notification.all.count).to eq 1
+      SS::Notification.all.first.tap do |notice|
         subject = I18n.t("gws_notification.#{Gws::Survey::Form.model_name.i18n_key}.subject", name: form.name, default: form.name)
         expect(notice.subject).to eq subject
         expect(notice.member_ids).to include(user1.id, user2.id)
@@ -76,6 +87,12 @@ describe "gws_survey", type: :feature, dbscope: :example, js: true do
       login_user user1
       visit gws_survey_main_path(site: site)
       click_on form_name
+
+      # click print
+      click_on(I18n.t("ss.links.print"))
+      expect(page).to have_text(column_name)
+      click_on(I18n.t("ss.links.back"))
+
       within "form#item-form" do
         within ".mod-gws-survey-custom_form" do
           choose column_options.sample
@@ -90,6 +107,12 @@ describe "gws_survey", type: :feature, dbscope: :example, js: true do
       login_user user2
       visit gws_survey_main_path(site: site)
       click_on form_name
+
+      # click print
+      click_on(I18n.t("ss.links.print"))
+      expect(page).to have_text(column_name)
+      click_on(I18n.t("ss.links.back"))
+
       within "form#item-form" do
         within ".mod-gws-survey-custom_form" do
           choose column_options.sample
@@ -107,11 +130,55 @@ describe "gws_survey", type: :feature, dbscope: :example, js: true do
       click_on form_name
 
       click_on I18n.t("gws/survey.view_files")
-
       expect(page).to have_text(user1.name)
       expect(page).to have_text(user2.name)
 
+      within ".operations" do
+        click_on "CSV"
+      end
+      within "form#item-form" do
+        click_on I18n.t("ss.buttons.download")
+      end
+      wait_for_download
+
+      csv = ::CSV.read(downloads.first, headers: true, encoding: 'SJIS:UTF-8')
+      expect(csv.length).to eq 2
+      expect(csv[0][Gws::User.t(:name)]).to eq user2.long_name
+      expect(csv[0][Gws::Survey::File.t(:updated)].present?).to be_truthy
+
+      # zip
+      click_on I18n.t("ss.links.back_to_index")
+      within ".operations" do
+        click_on I18n.t("gws/survey.buttons.zip_all_files")
+      end
+
+      #
+      # aggregate
+      #
+      #click_on I18n.t("ss.links.back_to_index")
       click_on I18n.t("gws/survey.tabs.summary")
+      within ".gws-survey" do
+        expect(page).to have_css("dd", text: csv.length)
+      end
+
+      #
+      # delete_all
+      #
+      within ".current-navi" do
+        click_on "管理一覧"
+      end
+
+      within ".list-items" do
+        expect(page).to have_css(".info", text: form_name)
+        find("input[value]").check
+      end
+
+      within '.list-head' do
+        page.accept_confirm do
+          click_button I18n.t('ss.links.delete')
+        end
+      end
+      expect(page).to have_css("#notice", text: I18n.t("ss.notice.deleted"))
     end
   end
 end

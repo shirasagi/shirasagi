@@ -9,7 +9,7 @@ class Cms::Apis::FilesController < ApplicationController
   private
 
   def fix_params
-    { cur_user: @cur_user, cur_site: @cur_site }
+    { cur_user: @cur_user, cur_site: @cur_site, cur_group: @cur_group }
   end
 
   public

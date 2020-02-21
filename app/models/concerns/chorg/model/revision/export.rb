@@ -53,6 +53,17 @@ module Chorg::Model::Revision
       end
     end
 
+    def changesets_sample_csv
+      CSV.generate do |data|
+        data << %w(
+          id type source destination order
+          contact_tel contact_fax contact_email contact_link_url contact_link_name
+          ldap_dn
+        ).map { |k| I18n.t("chorg.import.changeset.#{k}") }
+        SS.config.chorg.changeset_sample_csv.each { |line| data << line }
+      end
+    end
+
     private
 
     def changeset_to_csv_line(changeset, source, destination)

@@ -4,7 +4,7 @@ module Sys::Reference
 
     included do
       embeds_ids :sys_roles, class_name: "Sys::Role"
-      permit_params cms_role_ids: []
+      permit_params sys_role_ids: []
     end
 
     def sys_role_permissions

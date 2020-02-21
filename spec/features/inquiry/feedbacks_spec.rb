@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe "inquiry_feedbacks", dbscope: :example do
+describe "inquiry_feedbacks", type: :feature, dbscope: :example do
   let(:site) { cms_site }
   let(:node) { create :inquiry_node_form, cur_site: site }
   let(:index_path) { inquiry_feedbacks_path(site, node) }
@@ -53,7 +53,7 @@ describe "inquiry_feedbacks", dbscope: :example do
 
     it do
       visit index_path
-      click_on "検索"
+      click_on I18n.t('ss.buttons.search')
       click_on page1.name
 
       expect(page).to have_css(".main-box th", text: contents_column.name)

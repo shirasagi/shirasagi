@@ -1,9 +1,12 @@
 <dl class="see">
   <% if params[:action] =~ /new|create/ %>
-    <dt><%= @model.t :in_files %><%= @model.tt :in_files %></dt>
-    <dd><%= f.file_field :in_files, multiple: :multiple %></dd>
+    <dt><%= @model.t :in_files %><span style="margin-left: 13px;"><%= @model.tt :in_files %></span></dt>
+    <dd>
+      <%= hidden_field_tag "item[files]" %>
+      <%= f.file_field :in_files, multiple: :multiple %>
+    </dd>
   <% else %>
-    <dt><%= @model.t :in_file %><%= @model.tt :in_file %></dt>
+    <dt><%= @model.t :in_file %><span style="margin-left: 13px;"><%= @model.tt :in_file %></span></dt>
     <dd><%= f.file_field :in_file %></dd>
 
     <dt><%= @model.t :name %><%= @model.tt :name %></dt>

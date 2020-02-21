@@ -1,12 +1,12 @@
 require 'spec_helper'
 
-describe "webmail_groups", type: :feature, dbscope: :example do
+describe "webmail_groups", type: :feature, dbscope: :example, js: true do
   let(:name) { "name-#{unique_id}" }
   let(:from) { "from-#{unique_id}" }
   let(:from2) { "from-#{unique_id}" }
   let(:address) { "address-#{unique_id}@example.jp" }
   let(:imap_host) { "host-#{unique_id}.example.jp" }
-  let(:imap_port) { rand(100) }
+  let(:imap_port) { rand(1..100) }
   let(:imap_ssl_use) { %w(disabled enabled).sample }
   let(:imap_ssl_use_label) { I18n.t("webmail.options.imap_ssl_use.#{imap_ssl_use}") }
   let(:imap_auth_type) { %w(LOGIN PLAIN CRAM-MD5 DIGEST-MD5).sample }
@@ -16,7 +16,7 @@ describe "webmail_groups", type: :feature, dbscope: :example do
   let(:imap_sent_box) { "sent-#{unique_id}" }
   let(:imap_draft_box) { "draft-#{unique_id}" }
   let(:imap_trash_box) { "trash-#{unique_id}" }
-  let(:threshold_mb) { rand(100) }
+  let(:threshold_mb) { rand(1..100) }
 
   before { login_webmail_admin }
 

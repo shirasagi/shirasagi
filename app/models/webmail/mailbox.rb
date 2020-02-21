@@ -26,9 +26,6 @@ class Webmail::Mailbox
   validates :name, presence: true
 
   before_validation :validate_name, if: ->{ @sync && name_changed? }
-  before_create :imap_create, if: ->{ @sync && imap.present? }
-  before_update :imap_update, if: ->{ @sync && imap.present? }
-  before_destroy :imap_delete, if: ->{ @sync && imap.present? }
 
   default_scope -> { order_by order: 1, downcase_name: 1 }
 
@@ -113,7 +110,35 @@ class Webmail::Mailbox
     self.original_name = box.name
     self.delim = box.delim
     self.attr = box.attr.map(&:to_s) || []
-    self.depth = original_name.split(box.delim).size - 1
+    self.depth = original_name.split(box.delim).size
+    self.depth = self.depth - 1 if self.depth.nonzero?
+  end
+
+  def imap_create
+    return false if imap.blank?
+    imap.conn.create original_name
+  rescue Net::IMAP::NoResponseError => e
+    rescue_imap_error(e)
+  end
+
+  def imap_update
+    return false if imap.blank?
+    imap.conn.rename original_name_was, original_name
+    items = Webmail::Mail.where(imap.account_scope).where(mailbox: name_was)
+    items.each(&:destroy_rfc822)
+    items.delete_all
+  rescue Net::IMAP::NoResponseError => e
+    rescue_imap_error(e)
+  end
+
+  def imap_delete
+    return false if imap.blank?
+    imap.conn.delete original_name
+    items = mails
+    items.each(&:destroy_rfc822)
+    items.delete_all
+  rescue Net::IMAP::NoResponseError => e
+    rescue_imap_error(e)
   end
 
   private
@@ -124,31 +149,8 @@ class Webmail::Mailbox
     self.original_name = Net::IMAP.encode_utf7(name)
     self.delim = '.'
     self.attr = []
-    self.depth = self.name.split('.').size - 1
-  end
-
-  def imap_create
-    imap.conn.create original_name
-  rescue Net::IMAP::NoResponseError => e
-    rescue_imap_error(e)
-  end
-
-  def imap_update
-    imap.conn.rename original_name_was, original_name
-    items = Webmail::Mail.where(imap.account_scope).where(mailbox: name_was)
-    items.each(&:destroy_rfc822)
-    items.delete_all
-  rescue Net::IMAP::NoResponseError => e
-    rescue_imap_error(e)
-  end
-
-  def imap_delete
-    imap.conn.delete original_name
-    items = mails
-    items.each(&:destroy_rfc822)
-    items.delete_all
-  rescue Net::IMAP::NoResponseError => e
-    rescue_imap_error(e)
+    self.depth = self.name.split('.').size
+    self.depth = self.depth - 1 if self.depth.nonzero?
   end
 
   def rescue_imap_error(exception)

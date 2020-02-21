@@ -1,4 +1,7 @@
-<%= jquery do %> SS_AddonTabs.hide(".mod-member-login-link"); <% end %>
+<%
+  addon ||= local_assigns.fetch(:addon, {})
+  addon[:display_body] = "hide"
+%>
 
 <dl class="see mod-member-login-link">
   <dt><%= @model.t :login_link_url %><%= @model.tt :login_link_url %></dt>

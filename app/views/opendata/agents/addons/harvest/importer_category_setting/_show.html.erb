@@ -1,4 +1,7 @@
-<%= jquery do %> SS_AddonTabs.hide(".mod-opendata_harvest_category_setting"); <% end %>
+<%
+  addon ||= local_assigns.fetch(:addon, {})
+  addon[:display_body] = "hide"
+%>
 <dl class="see mod-opendata_harvest_category_setting">
   <% if @item.default_categories.present? %>
     <dt><%= @model.t :default_category_ids %></dt>

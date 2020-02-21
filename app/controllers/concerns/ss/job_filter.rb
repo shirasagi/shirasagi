@@ -8,7 +8,7 @@ module SS::JobFilter
   def index
     respond_to do |format|
       format.html { render file: "ss/tasks/index" }
-      format.json { render json: @item.to_json }
+      format.json { render json: @item.to_json(methods: :head_logs) }
     end
   end
 

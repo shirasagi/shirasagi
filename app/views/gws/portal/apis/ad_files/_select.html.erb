@@ -1,0 +1,24 @@
+<% file ||= @item %>
+
+<div id="file-<%= file.id %>" class="file-view" data-id="<%= file.id %>" data-file-id="<%= file.id %>">
+  <%= link_to file.url, class: :thumb, target: "_blank" do %>
+    <% if file.image? %>
+      <%= image_tag file.thumb_url, alt: file.name %>
+    <% else %>
+      <span class="ext icon-<%= file.extname %>"><%= file.extname %></span>
+    <% end %>
+  <% end %>
+
+  <div class="name">
+    <label>
+      <input type="hidden" name="item[ad_file_ids][]" value="<%= file.id %>" class="file-id" />
+      <%= file.name %>
+    </label><br />
+    <label>URL</label>
+    <input type="text" name="item[link_urls][<%= file.id %>]" value="<%= file.link_url %>" >
+  </div>
+
+  <div class="action">
+    <%= link_to t("ss.buttons.delete"), "#file-#{file.id}", class: "btn btn-delete" %>
+  </div>
+</div>

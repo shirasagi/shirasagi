@@ -1,6 +1,10 @@
-<% max_term_form = SS.config.event.max_term_form.to_i %>
+<%
+  addon ||= local_assigns.fetch(:addon, {})
+  addon[:display_body] = "hide"
+
+  max_term_form = SS.config.event.max_term_form.to_i
+%>
 <%= jquery do%>
-  SS_AddonTabs.hide(".mod-event");
   Event_Form.maxTermForm = <%= (max_term_form > 0) ? max_term_form : 1 %>;
   Event_Form.render();
 <% end %>

@@ -3,6 +3,7 @@ ja:
     board: 掲示板
     post: 投稿
     anpi_post: 安否投稿
+    cannot_use: "（公開側使用不可）"
 
     views:
       reply: 返信
@@ -112,6 +113,7 @@ ja:
     attributes:
       cms/addon/captcha:
         captcha: 画像認証
+        captcha_test: 認証画像の表示確認
       board/post:
         poster: 投稿者
         poster_name: お名前

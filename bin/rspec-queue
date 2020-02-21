@@ -1,0 +1,50 @@
+#!/usr/bin/env ruby
+
+ENV['RAILS_ENV'] ||= 'test'
+
+require File.expand_path('../../config/environment', __FILE__)
+
+require 'test_queue'
+require 'test_queue/runner/rspec'
+require 'simplecov'
+
+class RSpecQueueRunner < TestQueue::Runner::RSpec
+  def after_fork(num)
+    ENV.update('TEST_ENV_NUMBER' => num.to_s)
+
+    db_name = "#{Mongoid.clients["default"]["database"]}_#{num}"
+    client = Mongoid::Clients.default.with(database: db_name)
+    Mongoid::Clients.set(:default, client)
+
+    # Load RSpec.configuration
+    Dir[Rails.root.join("spec/support/**/*.rb")].each { |f| require f }
+
+    ::RSpec.configure do |config|
+      config.color_mode = true
+      config.before(:each) do
+        SimpleCov.command_name("rspec_#{num}")
+      end
+    end
+  end
+
+  def summarize
+    unless @failures.empty?
+      puts ::RSpec::Core::Formatters::ConsoleCodes.wrap("==> Failures\n", :failure)
+      puts ::RSpec::Core::Formatters::ConsoleCodes.wrap(@failures.gsub(/^ {3}.*(\n+|$)/, ''), :failure)
+    end
+
+    estatus = @completed.inject(0){ |s, worker| s + worker.status.exitstatus }
+    estatus = 255 if estatus > 255
+    exit(estatus)
+  end
+
+  def run_worker(iterator)
+    @run_worker_ret = super
+  end
+
+  def cleanup_worker
+    Kernel.exit @run_worker_ret if @run_worker_ret
+  end
+end
+
+RSpecQueueRunner.new.execute

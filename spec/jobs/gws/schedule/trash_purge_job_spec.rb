@@ -30,5 +30,22 @@ describe Gws::Schedule::TrashPurgeJob, dbscope: :example do
         end
       end
     end
+
+    context 'when group trash_threshold is 7' do
+      before do
+        site.set(trash_threshold: 7)
+      end
+
+      it do
+        expect { described_class.bind(site_id: site).perform_now }.to \
+          change { Gws::Schedule::Plan.count }.by(-1)
+
+        expect(Job::Log.count).to eq 1
+        Job::Log.first.tap do |log|
+          expect(log.logs).to include(include("INFO -- : Started Job"))
+          expect(log.logs).to include(include("INFO -- : Completed Job"))
+        end
+      end
+    end
   end
 end

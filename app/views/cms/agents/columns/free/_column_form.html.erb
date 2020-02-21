@@ -25,6 +25,18 @@
       getContent: function () { return Cms_Form.getEditorHtml("<%= editor_id %>"); },
       setContent: function (content) { Cms_Form.setEditorHtml(content, { id: "<%= editor_id %>" }); },
     });
+
+    $(<%== "##{id}".to_json %>).on({
+      "column:beforeMove": function() {
+        var editor = $(<%== "##{editor_id}".to_json %>).data("ckeditorInstance");
+        if (editor) {
+          editor.destroy();
+        }
+      },
+      "column:afterMove": function() {
+        <%= html_editor_js "##{editor_id}", advanced: Cms::EditorExtension.allowed?(:use, @cur_user, site: @cur_site) %>
+      }
+    });
   <% end %>
 
   <% @extra_bodies << proc do %>

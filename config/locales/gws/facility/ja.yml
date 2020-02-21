@@ -99,18 +99,6 @@ ja:
           triangle: △
           filled_triangle: ▲
 
-  gws:
-    columns:
-      gws/text_field: 一行入力
-      gws/date_field: 日付入力
-      gws/number_field: 数値入力
-      gws/url_field: URL入力
-      gws/text_area: 複数行入力
-      gws/select: ドロップダウン
-      gws/radio_button: ラジオボタン
-      gws/check_box: チェックボックス
-      gws/file_upload: ファイルアップロード
-
   gws_role:
     read_other_gws_facility_items: 設備の閲覧（全て）
     read_private_gws_facility_items: 設備の閲覧（所有）

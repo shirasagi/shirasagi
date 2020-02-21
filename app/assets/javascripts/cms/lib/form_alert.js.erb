@@ -5,7 +5,7 @@ this.Form_Alert = (function () {
 
   Form_Alert.alerts = {};
 
-  Form_Alert.validations = [];
+  Form_Alert.asyncValidations = [];
 
   Form_Alert.beforeSaves = [];
 
@@ -15,13 +15,16 @@ this.Form_Alert = (function () {
       var form = $(submit).closest("form");
 
       var resolved = function(html) {
-        if (!Form_Alert.validate(form, submit, { html: html })) {
-          Form_Alert.showAlert(form, submit);
-          return;
-        }
+        var promise = Form_Alert.asyncValidate(form, submit, { html: html });
+        promise.done(function() {
+          if (! $.isEmptyObject(Form_Alert.alerts)) {
+            Form_Alert.showAlert(form, submit);
+            return;
+          }
 
-        $(submit).off(".form_alert");
-        $(submit).trigger("click");
+          $(submit).off(".form_alert");
+          $(submit).trigger("click");
+        });
       };
 
       var rejected = function(xhr, status, error) {
@@ -35,17 +38,23 @@ this.Form_Alert = (function () {
     });
   };
 
-  Form_Alert.validate = function (form, submit, opts) {
+  Form_Alert.asyncValidate = function (form, submit, opts) {
     Form_Alert.alerts = {};
-    $.each(Form_Alert.validations, function () {
-      this(form, submit, opts);
+    var promises = [];
+    $.each(Form_Alert.asyncValidations, function () {
+      var promise = this(form, submit, opts);
+      promises.push(promise);
     });
 
-    return $.isEmptyObject(Form_Alert.alerts);
+    return $.when.apply($, promises);
   };
 
   Form_Alert.addValidation = function (validate) {
-    return Form_Alert.validations.push(validate);
+    return Form_Alert.asyncValidations.push(Form_Alert.wrapDeferred(validate));
+  };
+
+  Form_Alert.addAsyncValidation = function (validate) {
+    return Form_Alert.asyncValidations.push(validate);
   };
 
   Form_Alert.runBeforeSave = function (form, submit) {
@@ -94,11 +103,14 @@ this.Form_Alert = (function () {
     return Form_Alert.beforeSaves.push(callback);
   };
 
-  Form_Alert.validateSyntaxCheck = function (form, submit, opts) {
-    Syntax_Checker.asyncCheck();
-    $.each(Syntax_Checker.errors, function(id, error) {
-      Form_Alert.add("<%= I18n.t('cms.syntax_check') %>", error["ele"], error["msg"]);
+  Form_Alert.asyncValidateSyntaxCheck = function (form, submit, opts) {
+    var promise = Syntax_Checker.asyncCheck();
+    promise.done(function() {
+      $.each(Syntax_Checker.errors, function(id, error) {
+        Form_Alert.add("<%= I18n.t('cms.syntax_check') %>", error["ele"], error["msg"]);
+      });
     });
+    return promise;
   };
 
   Form_Alert.presence = function (form, submit) {
@@ -113,12 +125,23 @@ this.Form_Alert = (function () {
     });
   };
 
+  Form_Alert.wrapDeferred = function (validate) {
+    return function (form, submit) {
+      var d = $.Deferred();
+      try {
+        validate(form, submit);
+        d.resolve();
+      } catch (ex) {
+        d.reject(ex);
+      }
+      return d.promise(form, submit);
+    };
+  };
+
   Form_Alert.clonedName = function (form, submit) {
-    var addonName, fieldName, name;
-    name = $(form).find("#addon-basic #item_name");
+    var name = $(form).find("#addon-basic #item_name");
     if ($(submit).hasClass("publish_save") && /^\[<%= I18n.t('workflow.cloned_name_prefix') %>\]/.test($(name).val())) {
-      addonName = $(name).closest(".addon-view").find("header").text();
-      fieldName = Form_Alert.justText($(name).closest("dd").prev("dt"));
+      var addonName = $(name).closest(".addon-view").find("header").text();
       return Form_Alert.add(addonName, name, "<%= I18n.t('errors.messages.cloned_name') %>");
     }
   };

@@ -1,10 +1,9 @@
-SS::Application.routes.draw do
+Rails.application.routes.draw do
   Gws::Circular::Initializer
 
   concern :posts do
     post :set_seen, on: :member
     post :unset_seen, on: :member
-    post :toggle_seen, on: :member
     post :set_seen_all, on: :collection
     post :unset_seen_all, on: :collection
   end

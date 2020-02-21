@@ -28,7 +28,7 @@ module SS::Relation::Thumb
   def thumb(key = nil)
     if key.nil?
       normal = thumbs.where(image_size_name: :normal).first
-      normal ? normal : thumbs.first
+      normal || thumbs.first
     elsif key.kind_of?(Array)
       thumbs.where(image_size: key).first
     else
@@ -75,7 +75,7 @@ module SS::Relation::Thumb
       file = thumbs_was.delete(size)
       if file
         if state_changed? || filename_changed? || site_id_changed?
-          file.update_attributes(filename: filename, state: state, site_id: site_id)
+          file.update(site_id: site_id, filename: filename, owner_item: self, state: state)
         end
         file.set(image_size_name: name) if name != file.image_size_name
       else

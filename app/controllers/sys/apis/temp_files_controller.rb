@@ -21,6 +21,11 @@ class Sys::Apis::TempFilesController < ApplicationController
     response.headers["Last-Modified"] = CGI::rfc1123_date(@item.updated.in_time_zone)
   end
 
+  def set_item
+    super
+    raise "404" unless @item.user_id == @cur_user.id
+  end
+
   def select_with_clone
     set_item
 

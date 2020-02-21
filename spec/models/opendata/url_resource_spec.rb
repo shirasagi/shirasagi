@@ -22,11 +22,11 @@ describe Opendata::UrlResource, dbscope: :example, http_server: true do
     end
 
     describe "#url" do
-      its(:url) { is_expected.to eq "#{dataset.url.sub(/\.html$/, "")}/url_resource/#{subject.id}/shift_jis.csv" }
+      its(:url) { is_expected.to eq subject.file.url }
     end
 
     describe "#full_url" do
-      its(:full_url) { is_expected.to eq "#{dataset.full_url.sub(/\.html$/, "")}/url_resource/#{subject.id}/shift_jis.csv" }
+      its(:full_url) { is_expected.to eq subject.file.full_url }
     end
 
     describe "#content_url" do
@@ -48,6 +48,10 @@ describe Opendata::UrlResource, dbscope: :example, http_server: true do
     # Opendata::Addon::UrlRdfStore
     describe "#graph_name" do
       its(:graph_name) { is_expected.to eq "#{dataset.full_url.sub(/\.html$/, "")}/url_resource/#{subject.id}/" }
+    end
+
+    describe "#file.site" do
+      it { expect(subject.file.site_id).to eq dataset.site_id }
     end
   end
 

@@ -16,7 +16,7 @@ class Opendata::Harvest::CkanPackage
   end
 
   def format_upload_filename(filename)
-    filename.gsub("_", "0")
+    filename.tr("_", "0")
   end
 
   public
@@ -32,7 +32,7 @@ class Opendata::Harvest::CkanPackage
   end
 
   def resource_url(dataset_name, id)
-    ::File.join(url, "dataset", dataset_name, "resource",id)
+    ::File.join(url, "dataset", dataset_name, "resource", id)
   end
 
   def package_list_url
@@ -142,14 +142,14 @@ class Opendata::Harvest::CkanPackage
   ## package(dataset) apis
 
   def package_list
-    result = open(package_list_url, read_timeout: 10).read
+    result = ::URI.open(package_list_url, read_timeout: 10).read
     result = ::JSON.parse(result)
     validate_result("package_list", result)
     result["result"]
   end
 
   def package_show(id)
-    result = open(package_show_url(id), read_timeout: 10).read
+    result = ::URI.open(package_show_url(id), read_timeout: 10).read
     result = ::JSON.parse(result)
     validate_result("package_show", result)
     result["result"]
@@ -235,7 +235,7 @@ class Opendata::Harvest::CkanPackage
   ## resource apis
 
   def resource_show(id)
-    result = open(resource_show_url(id), read_timeout: 10).read
+    result = ::URI.open(resource_show_url(id), read_timeout: 10).read
     result = ::JSON.parse(result)
     validate_result("resource_show", result)
     result["result"]
@@ -265,8 +265,8 @@ class Opendata::Harvest::CkanPackage
     end
 
     res = conn.post resource_create_url do |req|
-     req.headers['Authorization'] = api_key
-     req.body = params
+      req.headers['Authorization'] = api_key
+      req.body = params
     end
 
     result = ::JSON.parse(res.body)
@@ -361,14 +361,14 @@ class Opendata::Harvest::CkanPackage
   ## group apis
 
   def group_list
-    result = open(group_list_url, read_timeout: 10).read
+    result = ::URI.open(group_list_url, read_timeout: 10).read
     result = ::JSON.parse(result)
     validate_result("group_list", result)
     result["result"]
   end
 
   def group_show(id)
-    result = open(group_show_url(id), read_timeout: 10).read
+    result = ::URI.open(group_show_url(id), read_timeout: 10).read
     result = ::JSON.parse(result)
     validate_result("group_show", result)
     result["result"]
@@ -415,14 +415,14 @@ class Opendata::Harvest::CkanPackage
   ## organization
 
   def organization_list
-    result = open(organization_list_url, read_timeout: 10).read
+    result = ::URI.open(organization_list_url, read_timeout: 10).read
     result = ::JSON.parse(result)
     validate_result("organization_list", result)
     result["result"]
   end
 
   def organization_show(id)
-    result = open(organization_show_url(id), read_timeout: 10).read
+    result = ::URI.open(organization_show_url(id), read_timeout: 10).read
     result = ::JSON.parse(result)
     validate_result("organization_show", result)
     result["result"]

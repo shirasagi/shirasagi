@@ -42,7 +42,7 @@ class Cms::MembersController < ApplicationController
   end
 
   def verify
-    raise '404' unless @node = Member::Node::Registration.first
+    raise '404' unless @node = Member::Node::Registration.site(@cur_site).and_public.first
     return if request.get?
 
     Member::Mailer.verification_mail(@item).deliver_now

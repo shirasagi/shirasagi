@@ -23,6 +23,11 @@ class Gws::Share::FoldersController < ApplicationController
     p
   end
 
+  def set_item
+    super
+    raise "403" unless @item.allowed?(:read, @cur_user, site: @cur_site)
+  end
+
   public
 
   def index
@@ -47,7 +52,7 @@ class Gws::Share::FoldersController < ApplicationController
     @item = @model.new get_params
     @item.attributes["action"] = params["action"]
     if @item.in_parent.present?
-      parent_folder = @model.where(site_id: @cur_site.id, id: File.dirname(@item.in_parent)).first
+      parent_folder = @model.where(site_id: @cur_site.id, id: @item.in_parent).first
     end
 
     if parent_folder.present?
@@ -62,7 +67,6 @@ class Gws::Share::FoldersController < ApplicationController
   end
 
   def show
-    raise "403" unless @item.allowed?(:read, @cur_user, site: @cur_site)
     if @item.name.include?("/")
       parent_share_max_file_size = @model.where(site_id: @cur_site.id, name: @item.name.split("/").first)
                                          .first.share_max_file_size

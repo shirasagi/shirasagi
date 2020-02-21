@@ -54,4 +54,12 @@ class Gws::Column::Value::DateField < Gws::Column::Value::Base
       I18n.l(self.date.to_date) rescue nil
     end
   end
+
+  def import_csv(values)
+    values.each do |sub_key, value|
+      if sub_key.blank?
+        self.date = value
+      end
+    end
+  end
 end

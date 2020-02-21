@@ -44,7 +44,7 @@ module Gws::Presence::Users::ApiFilter
     @manage_all = Gws::UserPresence.allowed?(:manage_all, @cur_user, site: @cur_site)
 
     if Gws::UserPresence.allowed?(:manage_custom_group, @cur_user, site: @cur_site)
-      custom_groups = Gws::CustomGroup.site(@cur_site).in(member_ids: @cur_user.id).to_a
+      custom_groups = Gws::CustomGroup.site(@cur_site).member(@cur_user).to_a
       @custom_group_user_ids = custom_groups.map { |item| item.members.pluck(:id) }.flatten.uniq
     else
       @custom_group_user_ids = []

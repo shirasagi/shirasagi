@@ -1,4 +1,7 @@
-<% return if (reports = @item.reports.without_deleted.readable(@cur_user, site: @cur_site)).blank? %>
+<%
+  reports = @item.reports(@cur_user)
+  return if reports.blank?
+%>
 
 <dl class="see mod-gws-schedule-reports">
   <dt class="wide"></dt>

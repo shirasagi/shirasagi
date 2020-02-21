@@ -37,15 +37,21 @@ module Webmail::MailHelper
   end
 
   def webmail_other_account_select(path_helper)
-    options  = account_options(path_helper) + group_options(path_helper)
+    account_options = account_options(path_helper)
+    group_options = group_options(path_helper)
     selected = send(path_helper, webmail_mode: @webmail_mode || :account, account: params[:account])
 
-    options.unshift([nil, send(path_helper, @cur_user.webmail_user.imap_default_index)]) if account_options(path_helper).blank?
+    all_options  = account_options + group_options
+    all_options.unshift([nil, send(path_helper, @cur_user.webmail_user.imap_default_index)]) if account_options.blank?
+    option_tags = options_for_select(all_options, selected)
+
+    opts = { class: "webmail-select-account" }
+    opts[:include_blank] = true if !option_tags.include?("selected")
 
     select_tag(
       :select_account,
-      options_for_select(options, selected),
-      class: "webmail-select-account"
+      option_tags,
+      opts
     ).html_safe
   end
 

@@ -53,12 +53,12 @@ class Kana::Dictionary
       raise I18n.t("kana.build_fail.no_mecab_dicdir") unless ::Dir.exists?(mecab_dicdir)
 
       ::Dir.mktmpdir do |dir|
-        tmp_src = File.join(dir, make_tmpname("txt"))
+        tmp_src = File.join(dir, SS::FilenameUtils.make_tmpname("mecab", "txt"))
 
         count = build_source(build_criteria(site_id, item_ids), tmp_src)
         return I18n.t("kana.build_fail.no_content") if count == 0
 
-        tmp_dic = File.join(dir, make_tmpname("dic"))
+        tmp_dic = File.join(dir, SS::FilenameUtils.make_tmpname("mecab", "dic"))
         run_mecab_indexer(tmp_src, tmp_dic)
 
         # upload user.dic
@@ -104,11 +104,6 @@ class Kana::Dictionary
       criteria
     end
 
-    def make_tmpname(suffix)
-      # blow code come from Tmpname::make_tmpname
-      "mecab#{Time.zone.now.strftime("%Y%m%d")}-#{$PID}-#{rand(0x100000000).to_s(36)}#{suffix}"
-    end
-
     def build_source(criteria, output_file)
       count = 0
       ::File.open(output_file, "w:UTF-8") do |f|
@@ -133,7 +128,11 @@ class Kana::Dictionary
       mecab_indexer = SS.config.kana.mecab_indexer
       mecab_dicdir = SS.config.kana.mecab_dicdir
 
-      cmd = "#{mecab_indexer} -d #{mecab_dicdir} -u #{output_file} -f UTF-8 -t UTF-8 #{input_file}"
+      cmd = Shellwords.escape(mecab_indexer)
+      cmd << " -d #{Shellwords.escape(mecab_dicdir)}"
+      cmd << " -u #{Shellwords.escape(output_file)}"
+      cmd << " -f UTF-8 -t UTF-8"
+      cmd << " #{Shellwords.escape(input_file)}"
       logger.info("system(#{cmd})")
       system(cmd)
       raise I18n.t("kana.build_fail.index") if $CHILD_STATUS.exitstatus != 0

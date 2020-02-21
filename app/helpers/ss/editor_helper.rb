@@ -4,11 +4,11 @@ module SS::EditorHelper
     html: :htmlmixed,
     scss: :css,
     js: :javascript,
-    coffee: :coffeescript,
+    coffee: :coffeescript
   }.freeze
 
   CODE_MODE_FILES = {
-    htmlmixed: %w(xml javascript css vbscript htmlmixed),
+    htmlmixed: %w(xml javascript css vbscript htmlmixed).freeze
   }.freeze
 
   def code_editor(elem, opts = {})
@@ -51,6 +51,17 @@ module SS::EditorHelper
     end
   end
 
+  def html_editor_js(elem, opts = {})
+    case SS.config.cms.html_editor
+    when "ckeditor"
+      html_editor_ckeditor_js(elem, opts)
+    when "tinymce"
+      html_editor_tinymce_js(elem, opts)
+    when "markdown"
+      html_editor_markdown_js(elem, opts)
+    end
+  end
+
   def html_editor_options(opts = {})
     case SS.config.cms.html_editor
     when "ckeditor"
@@ -71,7 +82,7 @@ module SS::EditorHelper
       readonly_options ||= {}
       base_opts.merge!(readonly_options.symbolize_keys)
     end
-    if opts.delete(:public_side)
+    if public_side = opts.delete(:public_side)
       public_side_options = SS.config.cms.ckeditor['public_side_options'].presence
       public_side_options ||= {}
       base_opts.merge!(public_side_options.symbolize_keys)
@@ -82,7 +93,7 @@ module SS::EditorHelper
       base_opts.merge!(advanced_options.symbolize_keys)
     end
 
-    base_opts = site_ckeditor_editor_options(base_opts)
+    base_opts = site_ckeditor_editor_options(base_opts, public_side: public_side)
 
     opts.reverse_merge!(base_opts)
     opts[:extraPlugins] = opts[:extraPlugins].join(',') if opts[:extraPlugins].is_a?(Array)
@@ -101,6 +112,12 @@ module SS::EditorHelper
   end
 
   def html_editor_ckeditor(elem, opts = {})
+    jquery do
+      html_editor_ckeditor_js(elem, opts)
+    end
+  end
+
+  def html_editor_ckeditor_js(elem, opts = {})
     SS.config.cms.ckeditor.fetch('stylesheets', []).each do |ss|
       controller.stylesheet ss
     end
@@ -108,9 +125,8 @@ module SS::EditorHelper
       controller.javascript js
     end
     opts = ckeditor_editor_options(opts)
-    jquery do
-      "Cms_Editor_CKEditor.render('#{elem}', #{opts.to_json});".html_safe
-    end
+
+    "Cms_Editor_CKEditor.render('#{elem}', #{opts.to_json});".html_safe
   end
 
   def tinymce_editor_options(opts = {})
@@ -121,7 +137,7 @@ module SS::EditorHelper
       readonly_options = SS.config.cms.tinymce['readonly_options'].presence
       readonly_options ||= {}
       base_opts.merge!(readonly_options.symbolize_keys)
-    elsif opts[:public_side]
+    elsif public_side = opts[:public_side]
       public_side_options = SS.config.cms.tinymce['public_side_options'].presence
       public_side_options ||= {}
       base_opts.merge!(public_side_options.symbolize_keys)
@@ -129,7 +145,7 @@ module SS::EditorHelper
       base_opts[:templates] = "#{template_cms_editor_templates_path}.json?_=#{Time.zone.now.to_i}"
     end
 
-    base_opts = site_tinymce_editor_options(base_opts)
+    base_opts = site_tinymce_editor_options(base_opts, public_side: public_side)
     base_opts[:plugins] ||= []
 
     opts.reverse_merge!(base_opts)
@@ -137,18 +153,24 @@ module SS::EditorHelper
   end
 
   def html_editor_tinymce(elem, opts = {})
+    jquery do
+      html_editor_tinymce_js(elem, opts)
+    end
+  end
+
+  def html_editor_tinymce_js(elem, opts = {})
     controller.javascript "/assets/js/tinymce/tinymce.min.js"
     editor_opts = tinymce_editor_options(opts)
-    jquery do
-      "Cms_Editor_TinyMCE.render('#{elem}', #{editor_opts.to_json});".html_safe
-    end
+
+    "Cms_Editor_TinyMCE.render('#{elem}', #{editor_opts.to_json});".html_safe
   end
 
   def html_editor_markdown(elem, opts = {})
   end
+  alias html_editor_markdown_js html_editor_markdown
 
-  def site_ckeditor_editor_options(opts = {})
-    return opts if @cur_site.nil?
+  def site_ckeditor_editor_options(editor_options = {}, opts = {})
+    return editor_options if @cur_site.nil?
     if @cur_node
       color_button = @cur_node.try(:color_button) || @cur_site.color_button
       editor_css_path = @cur_node.try(:editor_css_path) || @cur_site.editor_css_path
@@ -158,22 +180,26 @@ module SS::EditorHelper
     end
 
     if color_button == 'enabled'
-      opts[:extraPlugins] ||= ['colorbutton']
-      opts[:removePlugins] ||= []
-      opts[:removePlugins] -= ['colorbutton']
+      editor_options[:extraPlugins] ||= %w(colorbutton)
+      editor_options[:removePlugins] ||= []
+      editor_options[:removePlugins] -= %w(colorbutton)
     end
-    opts[:removePlugins] ||= ['colorbutton'] if color_button == 'disabled'
+    editor_options[:removePlugins] ||= %w(colorbutton) if color_button == 'disabled'
 
-    opts[:contentsCss] ||= []
+    editor_options[:contentsCss] ||= []
     if editor_css_path.present?
-      opts[:contentsCss] << ::File.join(@cur_site.full_url, editor_css_path)
+      if @cur_site && !opts[:public_side]
+        editor_options[:contentsCss] << cms_preview_path(path: editor_css_path.sub(/^\//, ""))
+      else
+        editor_options[:contentsCss] << editor_css_path
+      end
     end
 
-    opts
+    editor_options
   end
 
-  def site_tinymce_editor_options(opts = {})
-    return opts if @cur_site.nil?
+  def site_tinymce_editor_options(editor_options = {}, opts = {})
+    return editor_options if @cur_site.nil?
     if @cur_node
       color_button = @cur_node.try(:color_button) || @cur_site.color_button
       editor_css_path = @cur_node.try(:editor_css_path) || @cur_site.editor_css_path
@@ -183,26 +209,30 @@ module SS::EditorHelper
     end
 
     if color_button == 'enabled'
-      opts[:plugins] ||= []
-      opts[:plugins].push('textcolor')
-      opts[:plugins].uniq!
-      if opts[:toolbar]
-        opts[:toolbar] += ' | forecolor backcolor' unless opts[:toolbar].include?('forecolor backcolor')
+      editor_options[:plugins] ||= []
+      editor_options[:plugins].push('textcolor')
+      editor_options[:plugins].uniq!
+      if editor_options[:toolbar]
+        editor_options[:toolbar] += ' | forecolor backcolor' unless editor_options[:toolbar].include?('forecolor backcolor')
       end
     end
     if color_button == 'disabled'
-      opts[:plugins] ||= []
-      opts[:plugins].delete('textcolor')
-      if opts[:toolbar]
-        opts[:toolbar].gsub!(' | forecolor backcolor', '')
+      editor_options[:plugins] ||= []
+      editor_options[:plugins].delete('textcolor')
+      if editor_options[:toolbar]
+        editor_options[:toolbar].gsub!(' | forecolor backcolor', '')
       end
     end
 
-    opts[:content_css] ||= []
+    editor_options[:content_css] ||= []
     if editor_css_path.present?
-      opts[:contents_css] << ::File.join(@cur_site.full_url, editor_css_path)
+      if @cur_site && !opts[:public_side]
+        editor_options[:contentsCss] << cms_preview_path(path: editor_css_path.sub(/^\//, ""))
+      else
+        editor_options[:contentsCss] << editor_css_path
+      end
     end
 
-    opts
+    editor_options
   end
 end

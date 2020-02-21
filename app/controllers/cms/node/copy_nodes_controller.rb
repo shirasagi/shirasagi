@@ -43,7 +43,7 @@ class Cms::Node::CopyNodesController < ApplicationController
 
     respond_to do |format|
       format.html { render }
-      format.json { render json: @item.to_json }
+      format.json { render json: @item.to_json(methods: :head_logs) }
     end
   end
 

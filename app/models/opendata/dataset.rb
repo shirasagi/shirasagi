@@ -49,18 +49,18 @@ class Opendata::Dataset
   set_permission_name "opendata_datasets"
 
   field :text, type: String
+  field :creator_name, type: String
   field :point, type: Integer, default: "0"
   field :tags, type: SS::Extensions::Words
   field :downloaded, type: Integer
 
-  has_many :points, foreign_key: :dataset_id, class_name: "Opendata::DatasetPoint",
-    dependent: :destroy
+  has_many :points, class_name: "Opendata::DatasetPoint", dependent: :destroy, inverse_of: :dataset
   has_many :apps, foreign_key: :dataset_ids, class_name: "Opendata::App"
   has_many :ideas, foreign_key: :dataset_ids, class_name: "Opendata::Idea"
 
   #validates :text, presence: true
 
-  permit_params :text, :tags, tags: []
+  permit_params :text, :creator_name, :tags, tags: []
 
   before_save :seq_filename, if: ->{ basename.blank? }
   after_save :on_state_changed, if: ->{ state_changed? }
@@ -117,7 +117,7 @@ class Opendata::Dataset
   end
 
   def no
-    sprintf("%010d", id.to_i)
+    format("%010d", id.to_i)
   end
 
   private

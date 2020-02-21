@@ -1,8 +1,9 @@
-<%= jquery do %>
-  <% if !@item.readable_setting_present? %>
-  SS_AddonTabs.hide(".gws-addon-subscription-setting");
-  <% end %>
-<% end %>
+<%
+  if !@item.readable_setting_present?
+    addon ||= local_assigns.fetch(:addon, {})
+    addon[:display_body] = "hide"
+  end
+%>
 
 <div class="gws-addon-subscription-setting">
   <% if @item.class.subscription_setting_included_custom_groups? %>

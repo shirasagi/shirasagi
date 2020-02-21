@@ -21,7 +21,7 @@ ja:
       gws/portal/portlet/presence: 在席管理設定
       gws/portal/portlet/survey: アンケート
       gws/portal/portlet/ad: 広告
-      gws/portal/portlet/link_file: ファイル
+      gws/portal/portlet/ad_file: 広告画像
 
   gws/portal:
     self_portal: 個人
@@ -30,6 +30,7 @@ ja:
     root_portal: 全庁ポータル
     create_portlets_for_reset: 作成されるポートレット
     delete_portlets_for_reset: 削除されるポートレット
+    other_config: 他者・他部課設定
     tabs:
       user_portal: 個人
       root_portal: 全庁
@@ -51,7 +52,7 @@ ja:
         text: 今週のスケジュールを表示します。
       todo:
         name: ToDo
-        text: 未完了のToDoを表示します。
+        text: 担当ToDoを表示します。
       bookmark:
         name: お気に入り
         text: お気に入りを表示します。
@@ -151,7 +152,6 @@ ja:
         schedule_member_ids: 表示ユーザー
       gws/addon/portal/portlet/todo:
         todo_state: 表示状態
-        todo_member_ids: 表示ユーザー
       gws/addon/portal/portlet/bookmark:
         bookmark_model: 機能表示範囲
       gws/addon/portal/portlet/board:
@@ -186,15 +186,17 @@ ja:
         survey_sort: 並び順
         survey_category_ids: カテゴリー
       gws/addon/portal/portlet/ad:
-        files: ファイル
-        time: 画像切り替え時間
-        ad_sort: 並び順
-        ad_category_ids: カテゴリー
+        ad_width: 横幅
+        ad_speed: スライド時間
+        ad_pause: 静止時間
+      gws/addon/portal/portlet/ad_file:
+        ad_files: 広告画像
+        ad_file_ids: 広告画像
     errors:
       models:
-        gws/addon/portal/portlet/ad:
+        gws/addon/portal/portlet/ad_file:
           attributes:
-            files:
+            ad_files:
               too_many_files: "は%{limit}つまで添付することができます。"
 
   tooltip:

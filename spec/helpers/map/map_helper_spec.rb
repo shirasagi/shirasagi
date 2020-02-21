@@ -28,6 +28,10 @@ RSpec.describe Map::MapHelper, type: :helper do
     create_once :cms_site, name: "B", host: "openlayers", domains: "openlayers.localhost.jp",
       map_api: "openlayers"
   end
+  subject(:open_street_map_site) do
+    create_once :cms_site, name: "C", host: "open_street_map", domains: "open_street_map.localhost.jp",
+      map_api: "open_street_map"
+  end
 
   subject(:map) { helper.render_map "#map-canvas", markers: markers }
   subject(:map_form) { helper.render_map_form "#map-canvas", markers: markers }
@@ -43,6 +47,11 @@ RSpec.describe Map::MapHelper, type: :helper do
   subject(:map_form_o) { helper.render_map_form "#map-canvas", markers: markers, site: openlayers_site }
   subject(:facility_search_map_o) { helper.render_facility_search_map "#map-canvas", markers: markers, site: openlayers_site }
   subject(:member_photo_form_map_o) { helper.render_member_photo_form_map "#map-canvas", markers: markers, site: openlayers_site }
+
+  subject(:map_osm) { helper.render_map "#map-canvas", markers: markers, site: open_street_map_site }
+  subject(:map_form_osm) { helper.render_map_form "#map-canvas", markers: markers, site: open_street_map_site }
+  subject(:facility_search_map_osm) { helper.render_facility_search_map "#map-canvas", markers: markers, site: open_street_map_site }
+  subject(:member_photo_form_map_osm) { helper.render_member_photo_form_map "#map-canvas", markers: markers, site: open_street_map_site }
 
   describe 'map_helpers' do
     before do
@@ -87,6 +96,46 @@ RSpec.describe Map::MapHelper, type: :helper do
 
       it 'render_member_photo_form_map' do
         expect(member_photo_form_map_o).to include('Openlayers_Member_Photo_Form(canvas, opts)')
+      end
+    end
+
+    context 'with open_street_map api by yml setting' do
+      before { SS.config.replace_value_at(:map, :api, "open_street_map") }
+
+      it 'render_map' do
+        expect(map).to include('Openlayers_Map(canvas, opts)')
+      end
+
+      it 'render_map_form' do
+        expect(map_form).to include('Openlayers_Map_Form(canvas, opts)')
+      end
+
+      it 'render_facility_search_map' do
+        expect(facility_search_map).to include('Openlayers_Facility_Search.render("#map-canvas", opts)')
+      end
+
+      it 'render_member_photo_form_map' do
+        expect(member_photo_form_map).to include('Openlayers_Member_Photo_Form(canvas, opts)')
+      end
+    end
+
+    context 'with open_street_map api by site setting' do
+      before { SS.config.replace_value_at(:map, :api, "googlemaps") }
+
+      it 'render_map' do
+        expect(map_osm).to include('Openlayers_Map(canvas, opts)')
+      end
+
+      it 'render_map_form' do
+        expect(map_form_osm).to include('Openlayers_Map_Form(canvas, opts)')
+      end
+
+      it 'render_facility_search_map' do
+        expect(facility_search_map_osm).to include('Openlayers_Facility_Search.render("#map-canvas", opts)')
+      end
+
+      it 'render_member_photo_form_map' do
+        expect(member_photo_form_map_osm).to include('Openlayers_Member_Photo_Form(canvas, opts)')
       end
     end
 

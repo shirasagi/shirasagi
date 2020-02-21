@@ -7,7 +7,7 @@ FactoryBot.define do
     text { "text-#{unique_id}" }
     format { 'text' }
 
-    path { { gws_user.id.to_s => 'INBOX.Sent' } }
+    user_settings { [{ 'user_id' => gws_user.id, 'path' => 'INBOX.Sent' }] }
     in_to_members { [gws_user.id.to_s] }
 
     send_date { Time.zone.now }

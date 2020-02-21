@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe "opendata_agents_nodes_my_dataset", dbscope: :example, js: true do
+describe "opendata_agents_nodes_my_dataset", type: :feature, dbscope: :example, js: true do
   let(:site) { cms_site }
   let(:layout) { create_cms_layout }
   let(:member) { opendata_member(site: site) }
@@ -59,7 +59,7 @@ describe "opendata_agents_nodes_my_dataset", dbscope: :example, js: true do
 
   it "#new_create_edit_delete" do
     visit index_url
-    click_link "新規作成"
+    click_link I18n.t('ss.links.new')
 
     fill_in "item_name", with: item_name
     fill_in "item_text", with: item_text
@@ -91,8 +91,8 @@ describe "opendata_agents_nodes_my_dataset", dbscope: :example, js: true do
       expect(page).to have_content category.name
     end
 
-    click_link "削除"
-    click_button "削除"
+    click_link I18n.t('ss.buttons.delete')
+    click_button I18n.t('ss.buttons.delete')
     expect(current_path).to eq index_url.path
 
     within "table.opendata-datasets" do
@@ -128,7 +128,7 @@ describe "opendata_agents_nodes_my_dataset", dbscope: :example, js: true do
 
     it do
       visit index_url
-      click_link "新規作成"
+      click_link I18n.t('ss.links.new')
 
       fill_in "item_name", with: item_name
       fill_in "item_text", with: item_text
@@ -137,7 +137,7 @@ describe "opendata_agents_nodes_my_dataset", dbscope: :example, js: true do
 
       click_link item_name
       click_link 'リソースを管理する'
-      click_link '新規作成'
+      click_link I18n.t('ss.links.new')
       attach_file "item[in_file]", resource_file
       fill_in "item[name]", with: resource_name
       fill_in "item[format]", with: resource_format
@@ -145,7 +145,7 @@ describe "opendata_agents_nodes_my_dataset", dbscope: :example, js: true do
       fill_in "item[text]", with: resource_text
       click_button '公開申請'
 
-      expect(page).to have_css("#ss-notice", text: "保存しました。")
+      expect(page).to have_css("#ss-notice", text: I18n.t('ss.notice.saved'))
 
       visit index_url
       click_link item_name

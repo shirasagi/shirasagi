@@ -46,12 +46,16 @@ class Gws::Memo::ListMessagesController < ApplicationController
       member_ids: valid_members.map(&:id),
       in_validate_presence_member: true,
       in_append_signature: true,
-      in_skip_validates_sender_quota: true,
+      in_skip_validates_sender_quota: true
     }
   end
 
   def draft_params
-    { state: 'closed', in_skip_validates_sender_quota: true }
+    {
+      state: 'closed',
+      from_member_name: @cur_list.sender_name.presence || @cur_list.name,
+      in_skip_validates_sender_quota: true
+    }
   end
 
   def state_options
@@ -74,11 +78,13 @@ class Gws::Memo::ListMessagesController < ApplicationController
   def create
     @item = @model.new get_params.merge(draft_params)
     raise '403' unless @item.allowed?(:edit, @cur_user, site: @cur_site)
+
     render_create @item.save
   end
 
   def edit
     raise '404' if @item.public?
+
     super
   end
 
@@ -87,14 +93,14 @@ class Gws::Memo::ListMessagesController < ApplicationController
     @item.in_updated = params[:_updated] if @item.respond_to?(:in_updated)
     raise '404' if @item.public?
     raise '403' unless @item.allowed?(:edit, @cur_user, site: @cur_site)
+
     render_update @item.save
   end
 
   def destroy
     raise '403' unless @item.allowed?(:delete, @cur_user, site: @cur_site)
 
-    fake_folder = OpenStruct.new({ :draft_box? => @item.draft?, :sent_box? => @item.public? })
-    render_destroy @item.destroy_from_folder(@cur_user, fake_folder)
+    render_destroy @item.destroy
   end
 
   def publish

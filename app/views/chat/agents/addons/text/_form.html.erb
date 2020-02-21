@@ -1,0 +1,23 @@
+<%= html_editor ".mod-chat-text .html", advanced: Cms::EditorExtension.allowed?(:use, @cur_user, site: @cur_site) %>
+<dl class="see mod-chat-text">
+  <dt><%= @model.t :first_text %><%= @model.tt :first_text %></dt>
+  <dd><%= f.text_area :first_text, class: 'html' %></dd>
+
+  <dt><%= @model.t :first_suggest %><%= @model.tt :first_suggest %></dt>
+  <dd><%= f.text_area :first_suggest %></dd>
+
+  <dt><%= @model.t :exception_text %><%= @model.tt :exception_text %></dt>
+  <dd><%= f.text_area :exception_text, class: 'html' %></dd>
+
+  <dt><%= @model.t :response_template %><%= @model.tt :response_template %></dt>
+  <dd><%= f.text_area :response_template, class: 'html' %></dd>
+
+  <dt><%= @model.t :question %><%= @model.tt :question %></dt>
+  <dd><%= f.text_area :question %></dd>
+
+  <dt><%= @model.t :chat_success %><%= @model.tt :chat_success %></dt>
+  <dd><%= f.text_area :chat_success, class: 'html' %></dd>
+
+  <dt><%= @model.t :chat_retry %><%= @model.tt :chat_retry %></dt>
+  <dd><%= f.text_area :chat_retry, class: 'html' %></dd>
+</dl>

@@ -75,6 +75,7 @@
 
       SS_Preview.workflowPath.wizard = <%== cms_apis_preview_workflow_wizard_path(site: @cur_site, preview_date: params[:preview_date], id: ":id").to_json %>;
       SS_Preview.workflowPath.pages = <%== "/.s#{@cur_site.id}/workflow/pages/:id".to_json %>;
+      SS_Preview.workflowPath.request = <%== request.path.to_json %>;
       SS_Preview.previewPath = <%== cms_preview_path(path: ":path").to_json %>;
       SS_Preview.redirectorPath.newPage = <%== new_page_cms_apis_preview_node_path(site: @cur_site, cid: ":nodeId").to_json %>;
 
@@ -113,12 +114,18 @@
 <% end %>
 <div id="ss-preview">
   <div class="ss-preview-wrap">
-    <div class="ss-preview-wrap-column">
-      <%= render "tool_left", local_assigns %>
-    </div>
-    <div class="ss-preview-wrap-column">
-      <%= render "tool_right", local_assigns %>
-    </div>
+    <% left = render "tool_left", local_assigns %>
+    <% if left.present? %>
+      <div class="ss-preview-wrap-column ss-preview-wrap-column-edit-mode">
+        <%= left %>
+      </div>
+    <% end %>
+    <% right = render "tool_right", local_assigns %>
+    <% if right.present? %>
+      <div class="ss-preview-wrap-column ss-preview-wrap-column-mode-change">
+        <%= right %>
+      </div>
+    <% end %>
   </div>
   <div class="ss-preview-notice-wrap" style="display: none;"></div>
 </div>

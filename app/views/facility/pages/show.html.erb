@@ -1,6 +1,4 @@
-<section class="main-box" id="facility-info">
-  <header><h2><%= t("modules.addons.facility/body") %></h2></header>
-
+<%= render "ss/crud/addon", addon: { head: t("modules.addons.facility/body"), id: "facility-info" } do %>
   <dl class="see body">
     <dt><%= @item.class.t :name %></dt>
     <dd><%= @item.name %></dd>
@@ -52,46 +50,47 @@
       <% end %>
     <% end %>
   </div>
+<% end %>
 
-  <% if @images.present? %>
-  <header>
-    <h2><%= t("facility.image") %></h2>
-  </header>
-  <div class="images">
-    <% @images.each do |page, path, thumb_size| %>
-      <div class="image">
-        <p>
-          <%= link_to path do %>
-            <%= image_tag page.image.thumb_url + "?" + thumb_size.to_query, alt: page.image_alt %>
+<% if @images.present? %>
+  <%= render "ss/crud/addon", addon: { head: t("facility.image") } do %>
+    <div class="images">
+      <% @images.each do |page, path, thumb_size| %>
+        <div class="image">
+          <p>
+            <%= link_to path do %>
+              <%= image_tag page.image.thumb_url + "?" + thumb_size.to_query, alt: page.image_alt %>
+            <% end %>
+          </p>
+          <% if page.image_comment.present? %>
+            <p><%= page.image_comment %></p>
           <% end %>
-        </p>
-        <% if page.image_comment.present? %>
-          <p><%= page.image_comment %></p>
-        <% end %>
-      </div>
-    <% end %>
-  </div>
+        </div>
+      <% end %>
+    </div>
   <% end %>
+<% end %>
 
-  <% if @merged_map.present? %>
+<% if @merged_map.present? && default_map_api(site: @cur_site).present? %>
+  <%= render "ss/crud/addon", addon: { head: t("map.map") } do %>
     <% @cur_page = @merged_map %>
-    <%= render file: "map/agents/addons/page/view/index" %>
+    <%= render file: "map/agents/addons/page/view/index", locals: { no_header: true } %>
     <% @cur_page.map_points.each do |map_point| %>
       <p><%= map_point[:name] %><%= map_point[:loc] %></p>
     <% end %>
-  <% end %>
 
-  <% if @maps.present? %>
-  <div class="map-pages">
-    <% if @cur_node.allowed?(:edit, @cur_user, site: @cur_site) %>
-      <% @maps.each do |map| %>
-        <p><%= link_to map.name, edit_facility_map_path(cid: @item.id, id: map.id), class: "btn icon-page" %></p>
+    <% if @maps.present? %>
+    <div class="map-pages">
+      <% if @cur_node.allowed?(:edit, @cur_user, site: @cur_site) %>
+        <% @maps.each do |map| %>
+          <p><%= link_to map.name, edit_facility_map_path(cid: @item.id, id: map.id), class: "btn icon-page" %></p>
+        <% end %>
+      <% else %>
+        <% @maps.each do |map| %>
+          <p><%= link_to map.name, facility_map_path(cid: @item.id, id: map.id), class: "btn icon-page" %></p>
+        <% end %>
       <% end %>
-    <% else %>
-      <% @maps.each do |map| %>
-        <p><%= link_to map.name, facility_map_path(cid: @item.id, id: map.id), class: "btn icon-page" %></p>
-      <% end %>
+    </div>
     <% end %>
-  </div>
   <% end %>
-</section>
+<% end %>

@@ -1,0 +1,23 @@
+<%= html_editor ".mod-chat-intent .html", advanced: Cms::EditorExtension.allowed?(:use, @cur_user, site: @cur_site) %>
+<dl class="see mod-chat-intent">
+  <dt><%= @model.t :name %><%= @model.tt :name %></dt>
+  <dd><%= f.text_field :name %></dd>
+
+  <dt><%= @model.t :phrase %><%= @model.tt :phrase %></dt>
+  <dd><%= f.text_area :phrase %></dd>
+
+  <dt><%= @model.t :response %><%= @model.tt :response %></dt>
+  <dd><%= f.text_area :response, class: 'html' %></dd>
+
+  <dt><%= @model.t :suggest %><%= @model.tt :suggest %></dt>
+  <dd><%= f.text_area :suggest %></dd>
+
+  <dt><%= @model.t :question %><%= @model.tt :question %></dt>
+  <dd><%= f.select :question, @item.question_options %></dd>
+
+  <dt><%= @model.t :site_search %><%= @model.tt :site_search %></dt>
+  <dd><%= f.select :site_search, @item.site_search_options %></dd>
+
+  <dt><%= @model.t :order %><%= @model.tt :order %></dt>
+  <dd><%= f.number_field :order %></dd>
+</dl>

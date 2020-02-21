@@ -5,7 +5,9 @@ class Gws::Apis::RemindersController < ApplicationController
   model Gws::Reminder
 
   def create
-    item = params[:item_model].camelize.constantize.find(params[:item_id])
+    models = Mongoid.models.select { |m| m.ancestors.include?(Gws::Referenceable) }
+    model = models.find{ |m| m.to_s == params[:item_model].classify }
+    item = model.find(params[:item_id])
     cond = {
       site_id: @cur_site.id,
       user_id: @cur_user.id,

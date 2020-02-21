@@ -14,7 +14,7 @@ class Uploader::File
 
   def save
     return false unless valid?
-    @binary = self.class.remove_exif(binary) if binary.present? && image?
+    @binary = self.class.remove_exif(binary) if binary.present? && exif_image?
     begin
       if saved_path && path != saved_path # persisted AND path chenged
         Fs.binwrite(saved_path, binary) unless directory?
@@ -70,11 +70,15 @@ class Uploader::File
   end
 
   def text?
-    self.ext =~ /txt|css|scss|coffee|js|htm|html|php/
+    ext =~ /^\.?(txt|css|scss|coffee|js|htm|html|php)$/
   end
 
   def image?
-    self.content_type.to_s.start_with?('image/')
+    content_type.to_s.start_with?('image/')
+  end
+
+  def exif_image?
+    image? && ext =~ /^(jpe?g|tiff?)$/i
   end
 
   def link
@@ -87,8 +91,8 @@ class Uploader::File
     path.sub(/^#{site.path}\//, "")
   end
 
-  def filename=(n)
-    @path = "#{path.sub(filename, '')}#{n}"
+  def filename=(fname)
+    @path = "#{path.sub(filename, '')}#{fname}"
   end
 
   def basename
@@ -100,7 +104,7 @@ class Uploader::File
   end
 
   def parent
-    path =~ /\// ? path.sub(name, "") : "/"
+    /\//.match?(path) ? path.sub(name, "") : "/"
   end
 
   def dirname
@@ -149,8 +153,12 @@ class Uploader::File
   def validate_filename
     if directory?
       errors.add :path, :invalid_filename if filename !~ /^\/?([\w\-]+\/)*[\w\-]+$/
-    elsif filename !~ /^\/?([\w\-]+\/)*[\w\-]+\.[\w\-\.]+$/
+      return
+    end
+
+    unless /^\/?([\w\-]+\/)*[\w\-]+\.[\w\-\.]+$/.match?(filename)
       errors.add :path, :invalid_filename
+      return
     end
   end
 

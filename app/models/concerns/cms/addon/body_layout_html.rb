@@ -13,8 +13,7 @@ module Cms::Addon
       Cms::Page.addons.each do |addon|
         route = addon.instance_variable_get("@name")
         next unless addon.view_file
-        next if route == "cms/body"
-        next if route == "cms/body_part"
+        next if %w(cms/body cms/body_part cms/form/page).include?(route)
         addons[route] = addon
       end
       addons

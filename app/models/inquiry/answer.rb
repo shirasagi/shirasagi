@@ -1,6 +1,7 @@
 class Inquiry::Answer
   include SS::Document
   include SS::Reference::Site
+  include Inquiry::Addon::Answer::Body
   include SimpleCaptcha::ModelHelpers
 
   attr_accessor :cur_node
@@ -14,14 +15,20 @@ class Inquiry::Answer
   field :source_url, type: String
   field :source_name, type: String
 
+  field :closed, type: DateTime, default: nil
+  field :state, type: String, default: "open"
+  field :comment, type: String
+
   belongs_to :node, foreign_key: :node_id, class_name: "Inquiry::Node::Form"
   embeds_many :data, class_name: "Inquiry::Answer::Data"
 
   permit_params :id, :node_id, :remote_addr, :user_agent, :captcha, :captcha_key
+  permit_params :state, :comment
 
   apply_simple_captcha
 
   before_validation :set_node, if: ->{ cur_node.present? }
+  before_validation :set_closed
   before_validation :copy_contents_info
   validates :node_id, presence: true
   validate :validate_data
@@ -29,13 +36,19 @@ class Inquiry::Answer
   before_save :update_file_data
   before_destroy :delete_file_data
 
+  scope :state, ->(state) {
+    return where({}) if state.blank? || state == 'all'
+    return where(:state.ne => 'closed') if state == 'unclosed'
+    where(state: state)
+  }
+
   class << self
     def search(params)
       criteria = self.where({})
       return criteria if params.blank?
 
       if params[:keyword].present?
-        criteria = criteria.keyword_in params[:keyword], :source_url, :source_name, "data.values"
+        criteria = criteria.keyword_in params[:keyword], :source_url, :source_name, :comment, "data.values"
       end
 
       if params[:year].present?
@@ -82,6 +95,10 @@ class Inquiry::Answer
     end
   end
 
+  def find_data(column)
+    data.select { |d| d.column_id == column.id }.first
+  end
+
   def set_data(hash = {})
     self.data = []
     hash.each do |key, data|
@@ -100,11 +117,11 @@ class Inquiry::Answer
           ss_file.save
           ss_file
         end
-        values = [ ss_file._id, ss_file.filename, ss_file.size ]
+        values = [ ss_file._id, ss_file.filename, ss_file.name, ss_file.size ]
         value = ss_file._id
       elsif value.kind_of? SS::File
         ss_file = value
-        values = [ ss_file._id, ss_file.filename, ss_file.size ]
+        values = [ ss_file._id, ss_file.filename, ss_file.name, ss_file.size ]
         value = ss_file.name
       else
         values = [value.to_s]
@@ -134,6 +151,14 @@ class Inquiry::Answer
     end
   end
 
+  def state_options
+    I18n.t("inquiry.options.answer_state").map { |k, v| [v, k] }
+  end
+
+  def search_state_options
+    I18n.t("inquiry.options.search_answer_state").map { |k, v| [v, k] }
+  end
+
   private
 
   def validate_data
@@ -152,6 +177,10 @@ class Inquiry::Answer
 
   def set_node
     self.node_id = cur_node.id
+  end
+
+  def set_closed
+    self.closed = (state == "closed") ? Time.zone.now : nil
   end
 
   def copy_contents_info

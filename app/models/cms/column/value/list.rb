@@ -10,6 +10,17 @@ class Cms::Column::Value::List < Cms::Column::Value::Base
     export :lists
   end
 
+  def import_csv(values)
+    super
+
+    values.map do |name, value|
+      case name
+      when self.class.t(:lists)
+        self.lists = value
+      end
+    end
+  end
+
   private
 
   def text_blank?
@@ -20,7 +31,7 @@ class Cms::Column::Value::List < Cms::Column::Value::Base
     return if column.blank?
 
     if column.required? && text_blank?
-      self.errors.add(:text, :blank)
+      self.errors.add(:lists, :blank)
     end
 
     return if text_blank?
@@ -35,7 +46,9 @@ class Cms::Column::Value::List < Cms::Column::Value::Base
   def to_default_html
     return '' if text_blank?
 
-    li = lists.map { |list| ApplicationController.helpers.content_tag(:li, list) }.join("\n")
+    li = lists.map { |list| ApplicationController.helpers.sanitize(list) }.
+      map { |list| ApplicationController.helpers.content_tag(:li, list) }.
+      join("\n")
     ApplicationController.helpers.content_tag(column.list_type.to_sym, li.html_safe)
   end
 end

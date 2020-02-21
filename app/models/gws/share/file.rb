@@ -17,7 +17,7 @@ class Gws::Share::File
 
   #validates :category_ids, presence: true
   validates :folder_id, presence: true
-  validate :validate_size, if: ->{ in_file.present? }
+  validate :validate_size
   validates :deleted, datetime: true
 
   # indexing to elasticsearch via companion object
@@ -74,6 +74,7 @@ class Gws::Share::File
 
   def folder_options
     library = Gws::Share::Folder.find(folder_id).name.split('/')[0].to_s
+    library = ::Regexp.escape(library)
     Gws::Share::Folder.site(@cur_site)
       .allow(:read, @cur_user, site: @cur_site)
       .where(name: /\A#{library}\z|\A#{library}\// )
@@ -81,16 +82,15 @@ class Gws::Share::File
   end
 
   def active?
-    return true unless deleted.present? && deleted < Time.zone.now
-    false
+    deleted.blank? || deleted > Time.zone.now
   end
 
   def active
-    update_attributes(deleted: nil)
+    update(deleted: nil)
   end
 
   def disable
-    update_attributes(deleted: Time.zone.now) if deleted.blank? || deleted > Time.zone.now
+    update(deleted: Time.zone.now) if deleted.blank? || deleted > Time.zone.now
   end
 
   def sort_options
@@ -99,97 +99,81 @@ class Gws::Share::File
     end
   end
 
+  def new_flag?
+    created > Time.zone.now - site.share_new_days.day
+  end
+
   private
 
   def validate_size
-    return if cur_site.nil?
+    return if in_file.blank? && !Array(validation_context).include?(:change_model)
 
-    @folder_max_size = 0
+    effective_site = @cur_site || self.site
+    return if effective_site.blank?
 
-    parent_folder_name = folder.name.split("/").first
-    parent_folder = Gws::Share::Folder.where(name: parent_folder_name).site(@cur_site).first
-    child_folders = Gws::Share::Folder.where(name: /^#{parent_folder_name}\/.*/).site(@cur_site)
-
-    child_folders.each do |child_folder|
-      child_folder.files.each do |file|
-        @folder_max_size += (file.size || 0)
-      end
-    end if child_folders.present?
-
-    parent_folder.files.each do |file|
-      @folder_max_size += (file.size || 0)
-    end if parent_folder.present?
-
-    @file_max_size = folder.files.max_by { |file| file.size || 0 }.size || 0
-
-    if folder.name.include?("/")
-      folder_share_max_folder_size = Gws::Share::Folder.where(name: folder.name.split("/").first)
-                                         .site(@cur_site).first.share_max_folder_size
-      folder_share_max_file_size = Gws::Share::Folder.where(name: folder.name.split("/").first)
-                                       .site(@cur_site).first.share_max_file_size
-    else
-      folder_share_max_folder_size = folder.share_max_folder_size
-      folder_share_max_file_size = folder.share_max_file_size
-    end
-
-    if @cur_site
-      validate_folder_limit(folder_share_max_folder_size)
-      validate_file_limit(folder_share_max_file_size)
-    end
-    setting_validate_size if @cur_site.share_max_file_size > folder_share_max_file_size
-    setting_validate_capacity if folder_share_max_folder_size.to_i == 0
-  end
-
-  def validate_folder_limit(folder_share_max_folder_size)
-    if (folder_limit = (folder_share_max_folder_size || 0)) > 0
-      size = @folder_max_size
-      if size > folder_limit
-        errors.add(:base,
-                   :file_size_exceeds_folder_limit,
-                   size: number_to_human_size(size),
-                   limit: number_to_human_size(folder_limit))
+    root_folder = begin
+      if folder.name.include?("/")
+        root_folder_name = folder.name.split("/").first
+        Gws::Share::Folder.site(effective_site).where(name: root_folder_name).first
+      else
+        folder
       end
     end
+    return if root_folder.blank?
+
+    context = { site: effective_site, root_folder: root_folder, size: in_file ? in_file.size : self.size }
+
+    # validate with folder setting
+    validate_size_with_folder_share_max_file_size(context)
+    validate_size_with_folder_share_max_folder_size(context)
+
+    # validate with site setting
+    validate_size_with_site_share_max_file_size(context)
+    validate_size_with_site_share_files_capacity(context)
   end
 
-  def validate_file_limit(folder_share_max_file_size)
-    if (limit = (folder_share_max_file_size || 0)) > 0
-      size = @file_max_size
-      if size > limit
-        errors.add(:base,
-                   :file_size_exceeds_limit,
-                   size: number_to_human_size(size),
-                   limit: number_to_human_size(limit))
-      end
-    end
-  end
-
-  def setting_validate_size
-    limit = @cur_site.share_max_file_size || 0
+  def validate_size_with_folder_share_max_file_size(context)
+    limit = context[:root_folder].share_max_file_size
     return if limit <= 0
 
-    if in_file.present?
-      size = in_file.size
-    elsif in_files.present?
-      size = in_files.map(&:size).max || 0
-    else
-      return
-    end
-
-    if size > limit
-      errors.add(:base, :file_size_exceeds_limit, size: number_to_human_size(size), limit: number_to_human_size(limit))
+    effective_size = context[:size]
+    if effective_size > limit
+      errors.add(:base, :file_size_exceeds_limit, size: number_to_human_size(effective_size), limit: number_to_human_size(limit))
     end
   end
 
-  def setting_validate_capacity
-    capacity = @cur_site.share_files_capacity || 0
-    return if capacity <= 0
+  def validate_size_with_folder_share_max_folder_size(context)
+    limit = context[:root_folder].share_max_folder_size
+    return if limit <= 0
 
-    total = Gws::Share::File.site(@cur_site).not_in(id: id).map(&:size).inject(:+) || 0
-    total += in_file.size if in_file.present?
+    total = context[:root_folder].descendants_total_file_size || 0
+    total += context[:size]
 
-    if total > capacity
-      errors.add(:base, :file_size_exceeds_capacity, size: number_to_human_size(total), limit: number_to_human_size(capacity))
-    end
+    return if total <= limit
+
+    errors.add(:base, :file_size_exceeds_folder_limit, size: number_to_human_size(total), limit: number_to_human_size(limit))
+  end
+
+  def validate_size_with_site_share_max_file_size(context)
+    limit = context[:site].share_max_file_size || 0
+    return if limit <= 0
+
+    effective_size = context[:size]
+    return if effective_size <= limit
+
+    errors.add(:base, :file_size_exceeds_limit, size: number_to_human_size(effective_size), limit: number_to_human_size(limit))
+  end
+
+  def validate_size_with_site_share_files_capacity(context)
+    limit = context[:site].share_files_capacity || 0
+    return if limit <= 0
+
+    # total = Gws::Share::File.site(context[:site]).not_in(id: id).pluck(:size).sum || 0
+    total = Gws::Share::Folder.site(context[:site]).where(depth: 1).pluck(:descendants_total_file_size).sum || 0
+    total += context[:size]
+
+    return if total <= limit
+
+    errors.add(:base, :file_size_exceeds_capacity, size: number_to_human_size(total), limit: number_to_human_size(limit))
   end
 end

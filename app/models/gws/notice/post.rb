@@ -11,7 +11,8 @@ class Gws::Notice::Post
   include Gws::Addon::Notice::Category
   include Gws::Addon::Notice::CommentSetting
   include Gws::Addon::Notice::CommentPost
-  include Gws::Addon::Notice::Notification
+  include Gws::Addon::Notice::Member
+  include Gws::Notice::Notification
   include Gws::Addon::Release
   include Gws::Addon::ReadableSetting
   include Gws::Addon::GroupPermission
@@ -42,26 +43,39 @@ class Gws::Notice::Post
 
   class << self
     def search(params)
-      all.search_keyword(params).search_folders(params).search_category(params).search_browsed_state(params)
+      all.search_keyword(params).
+        search_severity(params).
+        search_folders(params).
+        search_category(params).
+        search_browsed_state(params)
     end
 
     def search_keyword(params)
       return all if params.blank? || params[:keyword].blank?
+
       all.keyword_in(params[:keyword], :name, :html)
+    end
+
+    def search_severity(params)
+      return all if params.blank? || params[:severity].blank?
+      all.where(severity: params[:severity])
     end
 
     def search_folders(params)
       return all if params.blank? || params[:folder_ids].blank?
+
       all.in(folder_id: params[:folder_ids].select(&:numeric?).map(&:to_i))
     end
 
     def search_category(params)
       return all if params.blank? || params[:category_id].blank?
+
       all.where(category_ids: params[:category_id].to_i)
     end
 
     def search_browsed_state(params)
       return all if params.blank? || params[:browsed_state].blank?
+
       case params[:browsed_state]
       when 'read'
         all.exists("browsed_users_hash.#{params[:user].id}" => 1)
@@ -77,6 +91,10 @@ class Gws::Notice::Post
     [
       [I18n.t('gws.options.severity.high'), 'high'],
     ]
+  end
+
+  def new_flag?
+    (released.presence || release_date.presence || created) > Time.zone.now - site.notice_new_days.day
   end
 
   private
@@ -110,14 +128,13 @@ class Gws::Notice::Post
 
     files.each do |file|
       self.total_file_size += file.size
+      next if file.size <= folder.notice_individual_file_size_limit
 
-      if file.size > folder.notice_individual_file_size_limit
-        options = {
-          size: file.size.to_s(:human_size),
-          limit: folder.notice_individual_file_size_limit.to_s(:human_size)
-        }
-        errors.add :base, :exceeded_individual_file_size_limit, options
-      end
+      options = {
+        size: file.size.to_s(:human_size),
+        limit: folder.notice_individual_file_size_limit.to_s(:human_size)
+      }
+      errors.add :base, :exceeded_individual_file_size_limit, options
     end
 
     if self.total_file_size + folder.notice_total_file_size > folder.notice_total_file_size_limit

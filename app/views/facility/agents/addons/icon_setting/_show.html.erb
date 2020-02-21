@@ -2,7 +2,7 @@
   <dd class="wide">
     <% if @item.image.present? %>
     <div id="selected-files">
-        <div class="file-view">
+        <div class="file-view" data-file-id="<%= @item.image.id %>">
           <%= link_to @item.image.url, class: :thumb, target: "_blank" do %>
             <% if @item.image.image? %>
               <%= image_tag @item.image.thumb_url, alt: @item.image.basename %>

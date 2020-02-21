@@ -26,14 +26,19 @@ ja:
 
   mongoid:
     attributes:
-      urgency/node/layout:
-        urgency_default_layout: 通常時レイアウト
-        urgency_mail_page_layout: メール取込レイアウト
+      urgency/addon/layout:
+        urgency_default_layout_id: 通常時レイアウト
+        urgency_mail_page_layout_id: メール取込レイアウト
       urgency/addon/mail_page:
         urgency_state: 切り替え
         urgency_node_id: フォルダー
 
   tooltip:
+    urgency/addon/layout:
+      urgency_default_layout_id:
+        - 通常時のレイアウトを設定します。
+      urgency_mail_page_layout_id:
+        - メールを取り込んだ際に切り替えるレイアウトを設定します。
     urgency/addon/mail_page:
       urgency_state:
         - メールを取り込んだ際に緊急災害レイアウトに切り替えるか設定します。

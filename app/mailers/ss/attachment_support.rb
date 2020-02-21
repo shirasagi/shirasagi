@@ -13,8 +13,13 @@ module SS::AttachmentSupport
       #
       enc = ::NKF.guess(part[:body])
       part[:mime_type] = "#{content_type}; charset=\"#{enc}\""
-      part[:transfer_encoding] = "base64"
-      part[:body] = ::Base64.encode64(part[:body])
+    elsif content_type == "message/rfc822"
+      #
+      # There are some bugs in standard mail gem.
+      # To prevent from mail corruption, a part must be manually encoded.
+      #
+      encoded = ::Mail::Encodings.decode_encode(file.name, :encode)
+      part[:mime_type] = "#{DEFAULT_BINARY_TYPE}; filename=\"#{encoded}\""
     else
       #
       # There are some inconvenient manner for binary attachment in standard mail gem.
@@ -23,9 +28,9 @@ module SS::AttachmentSupport
       encoded = ::Mail::Encodings.decode_encode(file.name, :encode)
 
       part[:mime_type] = "#{content_type}; filename=\"#{encoded}\""
-      part[:transfer_encoding] = "base64"
-      part[:body] = ::Base64.encode64(part[:body])
     end
+    part[:transfer_encoding] = "base64"
+    part[:body] = ::Base64.encode64(part[:body])
 
     attachments[file.name] = part
   end

@@ -14,9 +14,9 @@ this.Gws_Schedule_Repeat_Plan = (function () {
     var repeat_type;
     repeat_type = $('#item_repeat_type').val();
     if (repeat_type === '') {
-      return $('.gws-schedule-repeat').hide();
+      return $('.gws-schedule-repeat').addClass("hide");
     } else {
-      $('.gws-schedule-repeat').show();
+      $('.gws-schedule-repeat').removeClass("hide");
       $(".repeat-daily, .repeat-weekly, .repeat-monthly").hide();
       return $(".repeat-" + repeat_type).show();
     }

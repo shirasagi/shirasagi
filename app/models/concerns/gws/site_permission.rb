@@ -3,6 +3,7 @@ module Gws::SitePermission
   include SS::Permission
 
   def allowed?(action, user, opts = {})
+    user   = user.gws_user
     action = permission_action || action
     permit = "#{action}_#{self.class.permission_name}"
 
@@ -18,6 +19,7 @@ module Gws::SitePermission
 
   module ClassMethods
     def allow(action, user, opts = {})
+      user    = user.gws_user
       site_id = opts[:site] ? opts[:site].id : criteria.selector["site_id"]
 
       action = permission_action || action

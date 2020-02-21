@@ -9,7 +9,7 @@ this.Form_Preview = (function () {
   Form_Preview.page_route;
 
   Form_Preview.render = function () {
-    return $("button.preview").on("click", function (e) {
+    $("button.preview").not(".form-preview-rendered").on("click", function (e) {
       var basename, errors, form, height, i, name, ref, token, v, width;
       name = $("#" + Form_Preview.form_id + " input[name='item[name]']").val();
       basename = $("#" + Form_Preview.form_id + " input[name='item[basename]']").val();
@@ -83,6 +83,7 @@ this.Form_Preview = (function () {
       form.submit();
       return false;
     });
+    $("button.preview").addClass("form-preview-rendered");
   };
 
   return Form_Preview;

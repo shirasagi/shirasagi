@@ -4,30 +4,38 @@ Gws_Schedule_View.renderTabs('.gws-schedule-tabs');
 
 <% menus = capture do %>
   <% if Gws::Schedule::Plan.allowed?(:use, @cur_user, site: @cur_site) %>
-    <%= link_to gws_schedule_plans_path, class: "personal" do %>
-      <span class="tab-name"><%= t('gws/schedule.tabs.personal') %></span>
-    <% end %>
-
-    <% @cur_user.schedule_tabs_visible_groups(@cur_site).each do |group| %>
-      <%= link_to gws_schedule_group_plans_path(group: group.id), class: "group" do %>
-        <span class="tab-name"><%= group.trailing_name %></span>
+    <% if @cur_site.schedule_personal_tab_visible? %>
+      <%= link_to gws_schedule_plans_path, class: "personal" do %>
+        <span class="tab-name"><%= @cur_site.schedule_personal_tab_label || @cur_site.schedule_personal_tab_placeholder %></span>
       <% end %>
     <% end %>
 
-    <% @cur_user.schedule_tabs_visible_custom_groups(@cur_site).each do |g| %>
-      <%= link_to gws_schedule_custom_group_plans_path(group: g.id), class: "custom-group" do %>
-        <span class="tab-name"><%= g.name %></span>
+    <% if @cur_site.schedule_group_tab_visible? %>
+      <% @cur_user.schedule_tabs_visible_groups(@cur_site).each do |group| %>
+        <%= link_to gws_schedule_group_plans_path(group: group.id), class: "group" do %>
+          <span class="tab-name"><%= group.trailing_name %></span>
+        <% end %>
       <% end %>
     <% end %>
 
-    <%= link_to gws_schedule_all_groups_path, class: "group-all" do %>
-      <span class="tab-name"><%= t('gws/schedule.tabs.group') %></span>
+    <% if @cur_site.schedule_custom_group_tab_visible? %>
+      <% @cur_user.schedule_tabs_visible_custom_groups(@cur_site).each do |g| %>
+        <%= link_to gws_schedule_custom_group_plans_path(group: g.id), class: "custom-group" do %>
+          <span class="tab-name"><%= g.name %></span>
+        <% end %>
+      <% end %>
+    <% end %>
+
+    <% if @cur_site.schedule_group_all_tab_visible? %>
+      <%= link_to gws_schedule_all_groups_path, class: "group-all" do %>
+        <span class="tab-name"><%= @cur_site.schedule_group_all_tab_label || @cur_site.schedule_group_all_tab_placeholder %></span>
+      <% end %>
     <% end %>
   <% end %>
 
-  <% if @cur_user.gws_role_permit_any?(@cur_site, :use_private_gws_facility_plans) %>
+  <% if @cur_user.gws_role_permit_any?(@cur_site, :use_private_gws_facility_plans) && @cur_site.schedule_facility_tab_visible? %>
     <%= link_to gws_schedule_facilities_path, class: "facility" do %>
-      <span class="tab-name"><%= t('gws/schedule.tabs.facility') %></span>
+      <span class="tab-name"><%= @cur_site.schedule_facility_tab_label || @cur_site.schedule_facility_tab_placeholder %></span>
     <% end %>
   <% end %>
 

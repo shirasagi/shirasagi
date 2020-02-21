@@ -43,6 +43,7 @@ class Cms::Apis::FormsController < ApplicationController
 
   def form
     @item = @model.site(@cur_site).find(params[:id])
+    @cur_node = Cms::Node.find(params[:node]).becomes_with_route rescue nil
     @target = Cms::Page.site(@cur_site).find(params[:item_id]).becomes_with_route if params[:item_id].present?
     render layout: false
   end
@@ -56,6 +57,7 @@ class Cms::Apis::FormsController < ApplicationController
   def select_temp_file
     @item = SS::File.find(params[:id])
     @item = @item.copy_if_necessary
+    @form = params[:form].present? ? params[:form] : "upload"
     render layout: false
   end
 

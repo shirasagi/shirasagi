@@ -17,6 +17,8 @@
     dataset_ids["#{item["year"]}-#{item["month"]}"] ||= []
     dataset_ids["#{item["year"]}-#{item["month"]}"] << item["dataset_id"]
   end
+  dataset_ids.each { |key, values| values.sort! }
+
   datasets = {}
   @aggregate.datasets.in(id: dataset_ids.values.flatten).each do |dataset|
     datasets[dataset.id] = dataset
@@ -29,7 +31,7 @@
     <% if aggregate_hash[ym].present? %>
 
       <% year, month = ym.split("-") %>
-      <div class="list-head"><%= "#{year}年 #{month}月" %></div>
+      <div class="list-head"><%= "#{year}#{t("datetime.prompts.year")} #{month}#{t("datetime.prompts.month")}" %></div>
       <div class="reports-table">
         <table class="index">
           <thead>
@@ -45,6 +47,7 @@
               ym_dataset_ids = dataset_ids[ym].uniq
               ym_dataset_ids.each do |id|
                 dataset = datasets[id]
+                next unless dataset
             %>
               <tr>
                 <td colspan="100%"><%= dataset.name %></td>
@@ -71,7 +74,7 @@
     <% else %>
 
       <% year, month = ym.split("-") %>
-      <div class="list-head"><%= "#{year}年 #{month}月" %></div>
+      <div class="list-head"><%= "#{year}#{t("datetime.prompts.year")} #{month}#{t("datetime.prompts.month")}" %></div>
       <div class="reports-table">
         <p class="not-exists"><%= t("opendata.reports.not_exists_reports") %></p>
       </div>

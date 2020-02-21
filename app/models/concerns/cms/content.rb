@@ -3,14 +3,15 @@ module Cms::Content
   extend SS::Translation
   include SS::Document
   include Cms::TemplateVariable
+  include SS::Liquidization
   include SS::Reference::User
   include SS::Reference::Site
   include Cms::GroupPermission
   include Cms::Addon::CheckLinks
-  include SS::Liquidization
+  include Fs::FilePreviewable
+  include History::Addon::Trash
 
   attr_accessor :cur_node, :basename
-  attr_accessor :serve_static_relation_files
 
   included do
     seqid :id
@@ -84,10 +85,14 @@ module Cms::Content
       end
       export :current? do |context|
         # ApplicationHelper#current_url?
-        current = context.registers[:cur_path].sub(/\?.*/, "")
-        break false if current.delete("/").blank?
-        break true if self.url.sub(/\/index\.html$/, "/") == current.sub(/\/index\.html$/, "/")
-        break true if current =~ /^#{::Regexp.escape(url)}(\/|\?|$)/
+        cur_path = context.registers[:cur_path]
+        next false if cur_path.blank?
+
+        current = cur_path.sub(/\?.*/, "")
+        next false if current.delete("/").blank?
+        next true if self.url.sub(/\/index\.html$/, "/") == current.sub(/\/index\.html$/, "/")
+        next true if current =~ /^#{::Regexp.escape(url)}(\/|\?|$)/
+
         false
       end
     end
@@ -210,14 +215,15 @@ module Cms::Content
     SS.config.cms.serve_static_pages
   end
 
-  def serve_static_relation_files?
-    return false unless serve_static_file?
-    return true if @serve_static_relation_files.nil?
-    @serve_static_relation_files == true
-  end
-
   def node_target_options
     %w(current descendant).map { |m| [ I18n.t("cms.options.node_target.#{m}"), m ] }
+  end
+
+  def file_previewable?(file, user:, member:)
+    return false unless public?
+    return false unless public_node?
+    return false if try(:for_member_enabled?) && member.blank?
+    true
   end
 
   private
@@ -256,6 +262,18 @@ module Cms::Content
 
     self.filename = filename.sub(/\..*$/, "") + fix_extname if fix_extname && basename.present?
     @basename = filename.sub(/.*\//, "") if @basename
+  end
+
+  def create_history_trash
+    backup = History::Trash.new
+    backup.ref_coll = collection_name
+    backup.ref_class = self.becomes_with_route.class.to_s
+    backup.data = attributes
+    backup.data.delete(:lock_until)
+    backup.data.delete(:lock_owner_id)
+    backup.site = self.site
+    backup.user = @cur_user
+    backup.save
   end
 
   def validate_name

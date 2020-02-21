@@ -42,6 +42,30 @@ class Webmail::MailboxesController < ApplicationController
     @items = @imap.mailboxes.load.without_inbox
   end
 
+  def create
+    @item = @model.new get_params
+    raise "403" unless @item.allowed?(:edit, @cur_user)
+    @item.imap_create if @item.valid?
+    result = @item.save if @item.errors.blank?
+    render_create result
+  end
+
+  def update
+    @item.attributes = get_params
+    @item.in_updated = params[:_updated] if @item.respond_to?(:in_updated)
+    raise "403" unless @item.allowed?(:edit, @cur_user)
+    @item.imap_update if @item.valid?
+    result = @item.update if @item.errors.blank?
+    render_update result
+  end
+
+  def destroy
+    raise "403" unless @item.allowed?(:delete, @cur_user)
+    @item.imap_delete
+    result = @item.destroy if @item.errors.blank?
+    render_destroy result
+  end
+
   def reload
     @reload_info = @imap.mailboxes.reload_info
     return unless request.post?
@@ -57,7 +81,8 @@ class Webmail::MailboxesController < ApplicationController
     entries.each do |item|
       if item.allowed?(:delete, @cur_user)
         item.attributes = fix_params
-        next if item.destroy
+        item.imap_delete
+        next if item.errors.blank? && item.destroy
       else
         item.errors.add :base, :auth_error
       end

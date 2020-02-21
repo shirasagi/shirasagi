@@ -17,12 +17,13 @@
 <%= f.hidden_field :in_reply_to, id: nil %>
 <%= f.hidden_field :ref_file_uid, value: (@item.forward_uid.presence || @item.edit_as_new_uid.presence || @item.uid), id: nil %>
 
-<% render_address_form = proc do |field, addresses, css_class| %>
-  <dl class="webmail-mail-form-address <%= css_class %>">
+<% render_address_form = proc do |field, addresses, css_class, cc_blank| %>
+  <dl class="webmail-mail-form-address <%= css_class %>"<% if cc_blank %> style="display: none;"<% end %>>
     <dt><%= @model.t field %></dt>
     <dd><%= text_field_tag field, nil, "class" => "address autocomplete", "data-name" => "item[#{field}][]" %></dd>
     <dd>
       <div class="selected-address">
+        <input type="hidden" name="item[<%= field %>][]" value="">
         <% addresses.each do |address| %>
           <span>
             <%= address %>
@@ -36,12 +37,12 @@
   </dl>
 <% end %>
 
-<% render_address_form.call(:to, @item.to, "to") %>
+<% render_address_form.call(:to, @item.to, "to", false) %>
 
 <% if cc_blank = @item.cc .blank? && @item.cc_text.blank? && @item.bcc.blank? && @item.bcc_text.blank? %>
   <a class="cc-bcc-label" href="#">[ <%= t 'webmail.links.show_cc_bcc' %> ]</a>
 <% end %>
 
-<% render_address_form.call(:cc, @item.cc, "cc-bcc cc #{cc_blank ? 'hide' : ''}") %>
+<% render_address_form.call(:cc, @item.cc, "cc-bcc cc", cc_blank) %>
 
-<% render_address_form.call(:bcc, @item.bcc, "cc-bcc bcc #{cc_blank ? 'hide' : ''}") %>
+<% render_address_form.call(:bcc, @item.bcc, "cc-bcc bcc", cc_blank) %>

@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe "cms_roles" do
+describe "cms_roles", type: :feature, dbscope: :example do
   subject(:site) { cms_site }
   subject(:item) { Cms::Role.last }
   subject(:index_path) { cms_roles_path site.id }
@@ -23,7 +23,7 @@ describe "cms_roles" do
       within "form#item-form" do
         fill_in "item[name]", with: "sample"
         #check "item[permissions][]"
-        click_button "保存"
+        click_button I18n.t('ss.buttons.save')
       end
       expect(status_code).to eq 200
       expect(current_path).not_to eq new_path
@@ -40,7 +40,7 @@ describe "cms_roles" do
       visit edit_path
       within "form#item-form" do
         fill_in "item[name]", with: "modify"
-        click_button "保存"
+        click_button I18n.t('ss.buttons.save')
       end
       expect(current_path).not_to eq sns_login_path
       expect(page).to have_no_css("form#item-form")
@@ -49,7 +49,7 @@ describe "cms_roles" do
     it "#delete" do
       visit delete_path
       within "form" do
-        click_button "削除"
+        click_button I18n.t('ss.buttons.delete')
       end
       expect(current_path).to eq index_path
     end
@@ -58,7 +58,7 @@ describe "cms_roles" do
       visit import_path
       within "form" do
         attach_file "item[file]", "#{Rails.root}/spec/fixtures/cms/role/cms_roles_1.csv"
-        click_button "インポート"
+        click_button I18n.t('ss.buttons.import')
       end
       expect(status_code).to eq 200
     end

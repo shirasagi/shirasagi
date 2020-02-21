@@ -23,16 +23,19 @@ class Gws::Attendance::TimeCard
 
     def search_name(params = {})
       return all if params.blank? || params[:name].blank?
+
       all.search_text(params[:name])
     end
 
     def search_keyword(params)
       return all if params.blank? || params[:keyword].blank?
+
       all.keyword_in(params[:keyword], :name)
     end
 
     def search_group(params)
       return all if params.blank? || params[:group].blank?
+
       group_ids = Gws::Group.active.in_group(params[:group]).pluck(:id)
       user_ids = Gws::User.active.in(group_ids: group_ids).pluck(:id)
       all.in(user_id: user_ids)
@@ -86,20 +89,6 @@ class Gws::Attendance::TimeCard
     end
   end
 
-  def year_options
-    cur_year = Time.zone.now.year
-
-    ((cur_year - 5)..(cur_year + 5)).map do |year|
-      ["#{year}年", year]
-    end
-  end
-
-  def month_options
-    (1..12).map do |month|
-      ["#{month}月", month]
-    end
-  end
-
   def punch(field_name, now = Time.zone.now)
     raise "unable to punch: #{field_name}" if !Gws::Attendance::Record.punchable_field_names.include?(field_name)
 
@@ -134,6 +123,7 @@ class Gws::Attendance::TimeCard
 
   def normalize_date
     return if self.date.blank?
+
     if self.date.day != 1
       self.date = date.beginning_of_month
     end

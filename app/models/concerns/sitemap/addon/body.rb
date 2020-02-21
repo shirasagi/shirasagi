@@ -84,11 +84,11 @@ module Sitemap::Addon
         depth = url.scan(/[^\/]+/).size
         next if depth > sitemap_depth
 
-        if url =~ /#/
+        if /#/.match?(url)
           data = { url: url.sub(/\s*#.*/, ""), name: url.sub(/^.*?\s*#/, ""), depth: depth }
         else
           url   = url.strip.sub(/\/$/, "")
-          model = url =~ /(^|\/)[^\.]+$/ ? Cms::Node : Cms::Page
+          model = /(^|\/)[^\.]+$/.match?(url) ? Cms::Node : Cms::Page
 
           if item = model.where(site_id: site_id).and_public.filename(url).first
             data = { url: item.url, name: item.name, depth: depth }

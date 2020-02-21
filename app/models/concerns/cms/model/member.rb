@@ -46,7 +46,8 @@ module Cms::Model::Member
 
     validates :name, presence: true, length: { maximum: 40 }, if: ->{ enabled? || in_check_name }
     validates :email, email: true, length: { maximum: 80 }
-    validates :email, uniqueness: { scope: :site_id }, presence: true, if: ->{ oauth_type.blank? }
+    validates :email, presence: true, if: ->{ oauth_type.blank? }
+    validates :email, uniqueness: { scope: :site_id }, if: ->{ oauth_type.blank? || email.present? }
     validate :validate_email_again, if: ->{ in_check_email_again }
     validates :email_type, inclusion: { in: %w(text html) }, if: ->{ email_type.present? }
     validates :password, presence: true, if: ->{ oauth_type.blank? && enabled? }
@@ -55,8 +56,8 @@ module Cms::Model::Member
     before_validation :encrypt_password, if: ->{ in_password.present? }
     before_validation :set_site_email, if: ->{ email.present? }
 
-    after_create :send_notify_mail, if: ->{ oauth_type.blank? }
-    after_create :send_verification_mail, if: ->{ oauth_type.blank? }
+    after_save :send_notify_mail, if: ->{ oauth_type.blank? }
+    after_save :send_verification_mail, if: ->{ oauth_type.blank? }
 
     scope :and_enabled, -> { self.or({ state: 'enabled' }, { state: nil }) }
     scope :and_temporary, -> { where(state: 'temporary') }

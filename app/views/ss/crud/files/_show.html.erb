@@ -1,3 +1,6 @@
+<%
+  addon ||= local_assigns.fetch(:addon, {})
+%>
 <dl class="see">
   <% if @item.image? %>
     <% img = Magick::ImageList.new(@item.path) %>
@@ -23,3 +26,7 @@
   <dt><%= @model.t :download %></dt>
   <dd><%= link_to t('ss.links.download'), { action: :download }, { class: "btn" } %></dd>
 </dl>
+
+<%= jquery do %>
+  SS_FileView.listenTo("#<%= addon[:id] %> .img a");
+<% end %>

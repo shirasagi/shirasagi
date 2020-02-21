@@ -1,4 +1,4 @@
-SS::Application.routes.draw do
+Rails.application.routes.draw do
 
   Opendata::Initializer
 
@@ -14,7 +14,10 @@ SS::Application.routes.draw do
 
   content "opendata" do
     resources :ideas, concerns: [:deletion, :command], module: :idea do
-      resources :comments, concerns: :deletion
+      resources :comments, concerns: :deletion do
+        match :soft_delete, on: :member, via: [:get, :post]
+        match :undo_delete, on: :member, via: [:get, :post]
+      end
     end
     resources :idea_categories, concerns: :deletion, module: :idea
     resources :search_ideas, concerns: :deletion, module: :idea

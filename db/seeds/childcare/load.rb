@@ -27,9 +27,13 @@ def save_ss_files(path, data)
   file = Fs::UploadedFile.create_from_file(path)
   file.original_filename = data[:filename] if data[:filename].present?
 
-  item = SS::File.new(cond)
+  item = SS::File.find_or_initialize_by(cond)
+  return item if item.persisted?
+
   item.in_file = file
-  item.save!
+  item.name = data[:name] if data[:name].present?
+  item.cur_user = @user
+  item.save
 
   item
 end
@@ -42,9 +46,10 @@ def save_layout(data)
   cond = { site_id: @site._id, filename: data[:filename] }
   html = File.read("layouts/" + data[:filename]) rescue nil
 
-  item = Cms::Layout.find_or_create_by(cond)
+  item = Cms::Layout.find_or_initialize_by(cond)
   item.attributes = data.merge html: html
-  item.update
+  item.cur_user = @user
+  item.save
   item.add_to_set group_ids: @site.group_ids
 
   item
@@ -172,14 +177,15 @@ def save_part(data)
   loop_html  = File.read("parts/" + data[:filename].sub(/\.html$/, ".loop_html")) rescue nil
   lower_html = File.read("parts/" + data[:filename].sub(/\.html$/, ".lower_html")) rescue nil
 
-  item = Cms::Part.unscoped.find_or_create_by(cond).becomes_with_route(data[:route])
+  item = data[:route].sub("/", "/part/").camelize.constantize.unscoped.find_or_initialize_by(cond)
   item.html = html if html
   item.upper_html = upper_html if upper_html
   item.loop_html = loop_html if loop_html
   item.lower_html = lower_html if lower_html
 
   item.attributes = data
-  item.update
+  item.cur_user = @user
+  item.save
   item.add_to_set group_ids: @site.group_ids
 
   item
@@ -238,14 +244,15 @@ def save_node(data)
   lower_html = File.read("nodes/" + data[:filename] + ".lower_html") rescue nil
   summary_html = File.read("nodes/" + data[:filename] + ".summary_html") rescue nil
 
-  item = Cms::Node.unscoped.find_or_create_by(cond).becomes_with_route
+  item = data[:route].sub("/", "/node/").camelize.constantize.unscoped.find_or_initialize_by(cond)
   item.upper_html = upper_html if upper_html
   item.loop_html = loop_html if loop_html
   item.lower_html = lower_html if lower_html
   item.summary_html = summary_html if summary_html
 
   item.attributes = data
-  item.update
+  item.cur_user = @user
+  item.save
   item.add_to_set group_ids: @site.group_ids
 
   item
@@ -349,6 +356,10 @@ save_node route: "event/page", filename: "event", name: "イベント情報",
 save_node route: "ads/banner", filename: "ads", name: "広告バナー"
 save_node route: "ads/banner", filename: "relation", name: "関連サイト"
 save_node route: "ads/banner", filename: "sub-menu", name: "サブメニュー"
+
+## site search
+save_node route: "cms/site_search", filename: "search", name: "サイト内検索",
+  layout_id: layouts["general"].id
 
 ## sitemap
 save_node route: "sitemap/page", filename: "sitemap", name: "サイトマップ",
@@ -512,12 +523,14 @@ def save_page(data)
   html ||= File.read("pages/" + data[:filename]) rescue nil
   summary_html ||= File.read("pages/" + data[:filename].sub(/\.html$/, "") + ".summary_html") rescue nil
 
-  item = Cms::Page.find_or_create_by(cond).becomes_with_route(data[:route])
+  route = data[:route].presence || 'cms/page'
+  item = route.camelize.constantize.unscoped.find_or_initialize_by(cond)
   item.html = html if html
   item.summary_html = summary_html if summary_html
 
   item.attributes = data
-  item.update
+  item.cur_user = @user
+  item.save
   item.add_to_set group_ids: @site.group_ids
 
   item
@@ -539,7 +552,7 @@ article1 = save_page route: "article/page", filename: "docs/page1.html", name: "
 article2 = save_page route: "article/page", filename: "docs/page2.html", name: "お知らせ情報が入ります。お知らせ情報が入ります。",
   layout_id: layouts["docs"].id, category_ids: [categories["news"].id]
 
-file = save_ss_files "ss_files/article/dummy.jpg", filename: "dummy.jpg", model: "article/page"
+file = save_ss_files "ss_files/article/dummy.jpg", filename: "dummy1.jpg", model: "article/page"
 article3 = save_page route: "article/page", filename: "docs/page3.html", name: "お知らせ情報が入ります。",
   layout_id: layouts["docs"].id, category_ids: [categories["news"].id], file_ids: [file.id],
   map_points: [ { name: "徳島駅", loc: [34.074722, 134.5516], text: "徳島駅です。" } ], related_page_ids: [article1.id, article2.id],
@@ -548,7 +561,7 @@ article3 = save_page route: "article/page", filename: "docs/page3.html", name: "
 article3.html = article3.html.gsub("src=\"#\"", "src=\"#{file.url}\"")
 article3.update
 
-file = save_ss_files "ss_files/article/dummy.jpg", filename: "dummy.jpg", model: "article/page"
+file = save_ss_files "ss_files/article/dummy.jpg", filename: "dummy2.jpg", model: "article/page"
 article4 = save_page route: "article/page", filename: "docs/page4.html", name: "子育てサークルにさんかしませんか？",
   layout_id: layouts["docs"].id, category_ids: [categories["topics"].id], file_ids: [file.id],
   contact_group_id: contact_group_id, contact_email: contact_email, contact_tel: contact_tel,
@@ -663,7 +676,7 @@ save_page route: "sitemap/page", filename: "sitemap/index.html", name: "サイ�
   sitemap_deny_urls: %w(ads css img js relation slide sub-menu)
 
 puts "# cms pages"
-file = save_ss_files "ss_files/facility/dummy.jpg", filename: "dummy.jpg", model: "facility/image"
+file = save_ss_files "ss_files/facility/dummy.jpg", filename: "dummy1.jpg", model: "facility/file"
 page1 = save_page route: "cms/page", filename: "know/pregnancy/procedure.html", name: "妊娠した時の手続き",
   layout_id: layouts["page"].id, file_ids: [file.id],
   category_ids: [categories["age/pregnancy"].id, categories["purpose/birth"].id],
@@ -675,7 +688,7 @@ page1 = save_page route: "cms/page", filename: "know/pregnancy/procedure.html", 
 page1.html = page1.html.gsub("src=\"#\"", "src=\"#{file.url}\"")
 page1.update
 
-file = save_ss_files "ss_files/facility/dummy.jpg", filename: "dummy.jpg", model: "facility/image"
+file = save_ss_files "ss_files/facility/dummy.jpg", filename: "dummy2.jpg", model: "facility/file"
 page2 = save_page route: "cms/page", filename: "know/pregnancy/exploration.html", name: "妊婦健康診査",
   layout_id: layouts["page"].id, file_ids: [file.id],
   category_ids: [categories["age/pregnancy"].id, categories["purpose/birth"].id],
@@ -687,7 +700,7 @@ page2 = save_page route: "cms/page", filename: "know/pregnancy/exploration.html"
 page2.html = page2.html.gsub("src=\"#\"", "src=\"#{file.url}\"")
 page2.update
 
-file = save_ss_files "ss_files/facility/dummy.jpg", filename: "dummy.jpg", model: "facility/image"
+file = save_ss_files "ss_files/facility/dummy.jpg", filename: "dummy3.jpg", model: "facility/file"
 page3 = save_page route: "cms/page", filename: "know/pregnancy/born.html", name: "赤ちゃんが生まれたら",
   layout_id: layouts["page"].id, file_ids: [file.id],
   category_ids: [categories["age/pregnancy"].id, categories["purpose/birth"].id],
@@ -698,7 +711,7 @@ page3 = save_page route: "cms/page", filename: "know/pregnancy/born.html", name:
 page3.html = page3.html.gsub("src=\"#\"", "src=\"#{file.url}\"")
 page3.update
 
-file = save_ss_files "ss_files/facility/dummy.jpg", filename: "dummy.jpg", model: "facility/image"
+file = save_ss_files "ss_files/facility/dummy.jpg", filename: "dummy4.jpg", model: "facility/file"
 page4 = save_page route: "cms/page", filename: "know/pregnancy/birth.html", name: "出生届",
   layout_id: layouts["page"].id, file_ids: [file.id],
   category_ids: [categories["age/pregnancy"].id, categories["purpose/birth"].id],
@@ -710,7 +723,7 @@ page4 = save_page route: "cms/page", filename: "know/pregnancy/birth.html", name
 page4.html = page4.html.gsub("src=\"#\"", "src=\"#{file.url}\"")
 page4.update
 
-file = save_ss_files "ss_files/facility/dummy.jpg", filename: "dummy.jpg", model: "facility/image"
+file = save_ss_files "ss_files/facility/dummy.jpg", filename: "dummy5.jpg", model: "facility/file"
 page5 = save_page route: "cms/page", filename: "know/pregnancy/lump-sum.html", name: "出産育児一時金",
   layout_id: layouts["page"].id, file_ids: [file.id],
   category_ids: [categories["age/pregnancy"].id, categories["purpose/birth"].id],
@@ -774,3 +787,11 @@ save_word_dictionary name: "機種依存文字", body_file: "#{Rails.root}/db/se
 
 @site.editor_css_path = '/css/ckeditor_contents.css'
 @site.update!
+
+if @site.subdir.present?
+  # rake cms:set_subdir_url site=@site.host
+  require 'rake'
+  Rails.application.load_tasks
+  ENV["site"]=@site.host
+  Rake::Task['cms:set_subdir_url'].invoke
+end

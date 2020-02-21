@@ -111,7 +111,7 @@ describe 'members/agents/nodes/my_group', type: :feature, dbscope: :example, js:
       it do
         visit index_url
 
-        click_link '新規作成'
+        click_link I18n.t('ss.links.new')
 
         within 'form div.member-my-group-new' do
           expect(page).to have_css('dl.admin dd', text: cms_member.name)
@@ -119,7 +119,7 @@ describe 'members/agents/nodes/my_group', type: :feature, dbscope: :example, js:
           fill_in 'item[invitation_message]', with: invitation_message
           fill_in 'item[in_invitees]', with: invitee_email
 
-          click_button '保存'
+          click_button I18n.t('ss.buttons.save')
         end
 
         expect(page).to have_css('td.name', text: group_name)
@@ -161,8 +161,8 @@ describe 'members/agents/nodes/my_group', type: :feature, dbscope: :example, js:
           choose "item_sex_#{invitee_sex}"
           select invitee_era, from: "item[in_birth][era]"
           fill_in "item[in_birth][year]", with: invitee_birthday.year
-          select invitee_birthday.month, from: "item[in_birth][month]"
-          select invitee_birthday.day, from: "item[in_birth][day]"
+          select invitee_birthday.month.to_s, from: "item[in_birth][month]"
+          select invitee_birthday.day.to_s, from: "item[in_birth][day]"
           fill_in "item[in_password]", with: invitee_password
           fill_in "item[in_password_again]", with: invitee_password
 
@@ -201,7 +201,7 @@ describe 'members/agents/nodes/my_group', type: :feature, dbscope: :example, js:
       it do
         visit index_url
 
-        click_link '新規作成'
+        click_link I18n.t('ss.links.new')
 
         within 'form div.member-my-group-new' do
           expect(page).to have_css('dl.admin dd', text: cms_member.name)
@@ -209,7 +209,7 @@ describe 'members/agents/nodes/my_group', type: :feature, dbscope: :example, js:
           fill_in 'item[invitation_message]', with: invitation_message
           fill_in 'item[in_invitees]', with: invitee.email
 
-          click_button '保存'
+          click_button I18n.t('ss.buttons.save')
         end
 
         expect(page).to have_css('td.name', text: group_name)
@@ -289,14 +289,14 @@ describe 'members/agents/nodes/my_group', type: :feature, dbscope: :example, js:
       it do
         visit index_url
 
-        click_link '新規作成'
+        click_link I18n.t('ss.links.new')
 
         within 'form div.member-my-group-new' do
           expect(page).to have_css('dl.admin dd', text: cms_member.name)
           fill_in 'item[name]', with: group_name
           fill_in 'item[invitation_message]', with: invitation_message
 
-          click_button '保存'
+          click_button I18n.t('ss.buttons.save')
         end
 
         expect(page).to have_css('td.name', text: group_name)
@@ -316,7 +316,7 @@ describe 'members/agents/nodes/my_group', type: :feature, dbscope: :example, js:
         within 'form div.member-my-group-invite' do
           fill_in 'item[in_invitees]', with: invitee.email
 
-          click_button '保存'
+          click_button I18n.t('ss.buttons.save')
         end
 
         expect(page).to have_css('td.name', text: group_name)

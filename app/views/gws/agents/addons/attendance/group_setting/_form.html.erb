@@ -1,6 +1,10 @@
-<%= jquery do %> SS_AddonTabs.hide(".addon-gws-attendance-group-setting"); <% end %>
+<%
+  addon ||= local_assigns.fetch(:addon, {})
+  addon[:display_body] = "hide"
 
-<% @item.in_attendance_time_change_hour = @item.attendance_time_changed_minute / 60 %>
+  @item.in_attendance_time_change_hour = @item.attendance_time_changed_minute / 60
+%>
+
 <dl class="see addon-gws-attendance-group-setting">
   <dt><%= @model.t :attendance_management_year %><%= @model.tt :attendance_management_year %></dt>
   <dd><%= f.select :attendance_management_year, @item.attendance_management_year_options %></dd>

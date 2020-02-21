@@ -157,6 +157,50 @@ this.Map_Form = (function () {
     $(".mod-map dd .add-marker").parent().show();
   };
 
+  Map_Form.clonePointFormNoApi = function () {
+    var cln;
+    if ($(".mod-map dd.marker").length < Map_Form.maxPointForm) {
+      cln = $(".mod-map dd.marker:last").clone(false).insertAfter($(".mod-map dd.marker:last"));
+      cln.attr("data-id", Map_Form.dataID);
+      Map_Form.dataID += 1;
+      cln.find("input,textarea").val("");
+      cln.find(".marker-name").val("");
+      cln.find(".clear-marker").on('click', function () {
+        return Map_Form.clearPointFormNoApi(cln);
+      });
+      cln.find(".marker-name").on('keypress', function (e) {
+        if (e.which === 13) {
+          return false;
+        }
+      });
+      cln.find(".marker-loc-input").on('keypress', function (e) {
+        if (e.which === 13) {
+          return false;
+        }
+      });
+    }
+    if ($(".mod-map dd.marker").length === Map_Form.maxPointForm) {
+      $(".mod-map dd .add-marker").parent().hide();
+    }
+  };
+
+  Map_Form.clearPointFormNoApi = function (ele) {
+    if (ele.find(".marker-loc-input").val() !== "") {
+      if (confirm(Map_Form.deleteMessage)) {
+        ele.find("input,textarea").val("");
+        if ($(".mod-map dd.marker").length > 1) {
+          ele.remove();
+        }
+      }
+    } else {
+      ele.find("input,textarea").val("");
+      if ($(".mod-map dd.marker").length > 1) {
+        ele.remove();
+      }
+    }
+    $(".mod-map dd .add-marker").parent().show();
+  };
+
   Map_Form.createMarker = function (ele) {
     var dataId, loc;
     loc = null;

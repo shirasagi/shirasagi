@@ -15,10 +15,11 @@
     <% @items.each do |item| %>
       <tr>
         <td>
+          <% name = item.index_name.presence || item.name %>
           <% if item.reception_enabled? %>
-            <%= link_to item.name, item.url %>
+            <%= link_to name, item.url %>
           <% else %>
-            <%= item.name %>
+            <%= name %>
           <% end %>
         </td>
         <td>

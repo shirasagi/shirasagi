@@ -1,4 +1,8 @@
 class SS::Migration20160225000000
+  include SS::Migration::Base
+
+  depends_on "20150916000000"
+
   def change
     change_sys
     change_cms

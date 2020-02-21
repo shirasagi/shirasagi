@@ -10,10 +10,17 @@ module Urgency::Node
     include Cms::Addon::NodeSetting
     include Cms::Addon::Meta
     include Urgency::Addon::Layout
-    include Cms::Addon::Release
     include Cms::Addon::GroupPermission
     include History::Addon::Backup
 
     default_scope ->{ where(route: "urgency/layout") }
+
+    before_validation :set_default_state
+
+    private
+
+    def set_default_state
+      self.state = "closed"
+    end
   end
 end

@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe Cms::InitColumnsController, dbscope: :example, js: true do
+describe Cms::InitColumnsController, type: :feature, dbscope: :example, js: true do
   let(:site) { cms_site }
   let(:form) { create(:cms_form, cur_site: site, sub_type: 'entry') }
   let!(:column) { create(:cms_column_text_field, cur_form: form, cur_site: site) }
@@ -56,7 +56,7 @@ describe Cms::InitColumnsController, dbscope: :example, js: true do
       within 'form' do
         click_on I18n.t('ss.buttons.delete')
       end
-      expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+      expect(page).to have_css('#notice', text: I18n.t('ss.notice.deleted'))
       expect(Cms::InitColumn.form(form).count).to eq 0
     end
   end

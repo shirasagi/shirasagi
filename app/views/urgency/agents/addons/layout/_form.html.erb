@@ -7,9 +7,9 @@ def selectable_layouts_options
 end
 
 %><dl class="see mod-event">
-  <dt><%= @model.t :urgency_default_layout %></dt>
+  <dt><%= @model.t :urgency_default_layout_id %><%= @model.tt :urgency_default_layout_id %></dt>
   <dd><%= f.select :urgency_default_layout_id, selectable_layouts_options, include_blank: true %></dd>
 
-  <dt><%= @model.t :urgency_mail_page_layout %></dt>
+  <dt><%= @model.t :urgency_mail_page_layout_id %><%= @model.tt :urgency_mail_page_layout_id %></dt>
   <dd><%= f.select :urgency_mail_page_layout_id, selectable_layouts_options, include_blank: true %></dd>
 </dl>

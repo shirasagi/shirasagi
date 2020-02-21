@@ -2,7 +2,6 @@ ja:
   gws/discussion:
     admin: 管理
     topics: スレッド
-    todos: ToDo
     members: 参加者
     navi:
       forum:
@@ -71,7 +70,7 @@ ja:
   modules:
     gws/discussion: 電子会議室
     addons:
-      gws/discussion/todo: ToDo
+      gws/discussion/todo: 電子会議室
       gws/discussion/release: 公開設定
       gws/discussion/group_setting: 電子会議室
       gws/discussion/quota: 容量制限

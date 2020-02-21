@@ -1,9 +1,9 @@
 require 'spec_helper'
 
-describe "ldap_import", ldap: true, dbscope: :example do
+describe "ldap_import", type: :feature, dbscope: :example, ldap: true do
   context "with ldap site" do
     let(:group) do
-      create(:cms_group, name: unique_id, ldap_dn: "dc=city,dc=shirasagi,dc=jp")
+      create(:cms_group, name: unique_id, ldap_dn: "dc=example,dc=jp")
     end
     let(:site) do
       create(:cms_site, name: unique_id, host: unique_id, domains: ["#{unique_id}.example.jp"],
@@ -45,7 +45,7 @@ describe "ldap_import", ldap: true, dbscope: :example do
         visit import_confirmation_path
         expect(current_path).to eq import_confirmation_path
         within "form#item-form" do
-          click_button "インポート"
+          click_button I18n.t('ss.buttons.import')
         end
         expect(status_code).to eq 200
         expect(current_path).to eq index_path
@@ -77,8 +77,8 @@ describe "ldap_import", ldap: true, dbscope: :example do
         #
         visit index_path
         click_on item.created.strftime("%Y/%m/%d %H:%M")
-        click_on "削除する"
-        click_on "削除"
+        click_on I18n.t('ss.links.delete')
+        click_on I18n.t('ss.buttons.delete')
         expect(Ldap::Import.count).to eq 0
       end
     end
@@ -101,7 +101,7 @@ describe "ldap_import", ldap: true, dbscope: :example do
         visit import_confirmation_path
         expect(current_path).to eq import_confirmation_path
         within "form#item-form" do
-          click_button "インポート"
+          click_button I18n.t('ss.buttons.import')
         end
         expect(status_code).to eq 200
         expect(current_path).to eq index_path

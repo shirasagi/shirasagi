@@ -1,6 +1,22 @@
 require 'spec_helper'
 
 describe Opendata::App, dbscope: :example do
+  describe "#attributes" do
+    let!(:node_search_app) { create(:opendata_node_search_app) }
+    let(:node) { create(:opendata_node_app) }
+    let(:item) { create :opendata_app, cur_node: node }
+    let(:show_path) { Rails.application.routes.url_helpers.opendata_app_path(site: item.site, cid: node, id: item.id) }
+
+    it { expect(item.becomes_with_route).not_to eq nil }
+    it { expect(item.dirname).to eq node.filename }
+    it { expect(item.basename).not_to eq nil }
+    it { expect(item.path).not_to eq nil }
+    it { expect(item.url).not_to eq nil }
+    it { expect(item.full_url).not_to eq nil }
+    it { expect(item.parent).to eq node }
+    it { expect(item.private_show_path).to eq show_path }
+  end
+
   context "check attributes with typical url resource" do
     let!(:node_search_app) { create(:opendata_node_search_app) }
     let(:node) { create(:opendata_node_app) }

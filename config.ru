@@ -5,10 +5,14 @@ if Module.const_defined?(:Unicorn)
   require 'unicorn/worker_killer'
 
   # Max requests per worker
-  use Unicorn::WorkerKiller::MaxRequests, 3072, 4096
+  request_min = (ENV['UNICORN_KILLER_REQUEST_MIN'] || 3072).to_i
+  request_max = (ENV['UNICORN_KILLER_REQUEST_MAX'] || 4096).to_i
+  use Unicorn::WorkerKiller::MaxRequests, request_min, request_max
 
   # Max memory size (RSS) per worker
-  use Unicorn::WorkerKiller::Oom, (448*(1024**2)), (512*(1024**2))
+  mem_min = (ENV['UNICORN_KILLER_MEM_MIN'] || 512).to_i
+  mem_max = (ENV['UNICORN_KILLER_MEM_MAX'] || 576).to_i
+  use Unicorn::WorkerKiller::Oom, (mem_min*(1024**2)), (mem_max*(1024**2))
 end
 
 require ::File.expand_path('../config/environment', __FILE__)

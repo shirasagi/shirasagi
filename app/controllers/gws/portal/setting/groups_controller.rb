@@ -9,7 +9,7 @@ class Gws::Portal::Setting::GroupsController < ApplicationController
   private
 
   def set_crumbs
-    @crumbs << [t("mongoid.models.gws/group"), action: :index]
+    @crumbs << [t('gws/portal.group_portal'), action: :index]
   end
 
   def fix_params
@@ -24,7 +24,7 @@ class Gws::Portal::Setting::GroupsController < ApplicationController
   public
 
   def index
-    raise "403" unless Gws::Portal::GroupSetting.allowed?(:read, @cur_user, site: @cur_site, node: @cur_node)
+    raise "403" unless Gws::Portal::GroupSetting.allowed?(:read, @cur_user, site: @cur_site, only: :other)
 
     @search_params = params[:s]
     @search_params = @search_params.except(:state).delete_if { |k, v| v.blank? } if @search_params

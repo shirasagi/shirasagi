@@ -38,6 +38,42 @@ module SS::Model::JobLog
     scope :term, ->(from) { where(:created.lt => from) }
   end
 
+  module ClassMethods
+    def search(params)
+      criteria = all
+      return criteria if params.blank?
+
+      criteria = criteria.search_keyword(params)
+      criteria = criteria.search_ymd(params)
+      criteria = criteria.search_class_name(params)
+      criteria
+    end
+
+    def search_keyword(params)
+      return all if params[:keyword].blank?
+      all.keyword_in(params[:keyword], :class_name, :logs)
+    end
+
+    def search_ymd(params)
+      return all if params[:term] == 'all_save'
+      return all if params[:ymd].blank?
+
+      ymd = params[:ymd]
+      return all if ymd.length != 8
+
+      started_at = Time.zone.local(ymd[0..3].to_i, ymd[4..5].to_i, ymd[6..7].to_i)
+      end_at = started_at.end_of_day
+      from = term_to_date(params[:term] || 'day', end_at)
+
+      all.gte(updated: from).lte(updated: end_at)
+    end
+
+    def search_class_name(params)
+      return all if params[:class_name].blank?
+      all.where(class_name: params[:class_name])
+    end
+  end
+
   def save_term_options
     %w(day month year all_save).map do |v|
       [ I18n.t("history.save_term.#{v}"), v ]
@@ -67,6 +103,21 @@ module SS::Model::JobLog
     @file_path ||= "#{SS::File.root}/job_logs/" + id.to_s.split(//).join("/") + "/_/#{id}.log"
   end
 
+  def head_logs(n = 1_000)
+    if file_path && ::File.exists?(file_path)
+      texts = []
+      ::File.open(file_path) do |f|
+        n.times do
+          line = f.gets || break
+          texts << line
+        end
+      end
+      texts
+    else
+      []
+    end
+  end
+
   def logs
     if ::Fs.mode == :file && ::File.exists?(file_path)
       return ::File.readlines(file_path) rescue []
@@ -76,7 +127,7 @@ module SS::Model::JobLog
   end
 
   module ClassMethods
-    def term_to_date(name)
+    def term_to_date(name, date = Time.zone.now)
       num, unit = name.to_s.split('.')
       if unit.blank?
         unit, num = num, unit
@@ -86,15 +137,15 @@ module SS::Model::JobLog
 
       case unit.singularize
       when "year"
-        Time.zone.now - num.years
+        date - num.years
       when "month"
-        Time.zone.now - num.months
+        date - num.months
       when "week"
-        Time.zone.now - num.weeks
+        date - num.weeks
       when "day"
-        Time.zone.now - num.days
+        date - num.days
       when "all_delete"
-        Time.zone.now
+        date
       when "all_save"
         nil
       else

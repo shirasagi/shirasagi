@@ -26,7 +26,7 @@ class Cms::Role
     private
 
     def header
-      %w(id created updated name permissions site_id permission_level).map { |e| t e }
+      %w(id name permissions permission_level).map { |e| t e }
     end
 
     def row(item)
@@ -34,11 +34,8 @@ class Cms::Role
 
       [
         item.id,
-        item.created,
-        item.updated,
         item.name,
         localized_permissions(item).join("\n"),
-        item.site_id,
         item.permission_level
       ]
     end

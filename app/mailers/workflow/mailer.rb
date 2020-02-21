@@ -3,9 +3,10 @@ class Workflow::Mailer < ActionMailer::Base
     @from_user = SS::User.find(args[:f_uid]) rescue nil
     @to_user   = SS::User.find(args[:t_uid]) rescue nil
     @agent_user = SS::User.find(args[:agent_uid]) rescue nil
-    @subject   = "[#{I18n.t('workflow.mail.subject.request')}]#{args[:page].name} - #{args[:site].name}"
+    @site      = args[:site]
     @page      = args[:page]
-    @url       = args[:url]
+    @subject   = "[#{I18n.t('workflow.mail.subject.request')}]#{@page.name} - #{@site.name}"
+    @url       = make_full_url(args[:url])
     @comment   = args[:comment]
     @site      = args[:site]
 
@@ -29,9 +30,10 @@ class Workflow::Mailer < ActionMailer::Base
   def approve_mail(args)
     @from_user = SS::User.find(args[:f_uid]) rescue nil
     @to_user   = SS::User.find(args[:t_uid]) rescue nil
-    @subject   = "[#{I18n.t('workflow.mail.subject.approve')}]#{args[:page].name} - #{args[:site].name}"
+    @site      = args[:site]
     @page      = args[:page]
-    @url       = args[:url]
+    @subject   = "[#{I18n.t('workflow.mail.subject.approve')}]#{@page.name} - #{@site.name}"
+    @url       = make_full_url(args[:url])
 
     from_email = format_email(@from_user) || site_sender(@site) || system_sender
     to_email = format_email(@to_user)
@@ -53,9 +55,10 @@ class Workflow::Mailer < ActionMailer::Base
   def remand_mail(args)
     @from_user = SS::User.find(args[:f_uid]) rescue nil
     @to_user   = SS::User.find(args[:t_uid]) rescue nil
-    @subject   = "[#{I18n.t('workflow.mail.subject.remand')}]#{args[:page].name} - #{args[:site].name}"
+    @site      = args[:site]
     @page      = args[:page]
-    @url       = args[:url]
+    @subject   = "[#{I18n.t('workflow.mail.subject.remand')}]#{@page.name} - #{@site.name}"
+    @url       = make_full_url(args[:url])
     @comment   = args[:comment]
 
     from_email = format_email(@from_user) || site_sender(@site) || system_sender
@@ -94,5 +97,9 @@ class Workflow::Mailer < ActionMailer::Base
 
   def system_sender
     SS.config.mail.default_from
+  end
+
+  def make_full_url(url)
+    URI.join(@site.mypage_full_url, url).to_s
   end
 end

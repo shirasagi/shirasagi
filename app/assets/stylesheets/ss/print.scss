@@ -1,8 +1,8 @@
 .sheet {
-  border: none;
+  border: 0;
   border-radius: unset;
   page-break-after: always;
-  background: white;
+  background: #fff;
 }
 
 .vertical {
@@ -23,18 +23,18 @@
 @media screen {
   #main {
     .wrap {
-      margin: 10px 10px;
+      margin: 10px;
     }
   }
 
   .sheet {
-    box-shadow: 0 .5mm 2mm rgba(0,0,0,.3);
+    box-shadow: 0 .5mm 2mm rgba(0, 0, 0, .3);
     margin: 5mm;
   }
 }
 @media print {
   body {
-    background: white;
+    background: #fff;
   }
   .no-print {
     display: none;

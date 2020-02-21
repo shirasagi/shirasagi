@@ -72,11 +72,20 @@ ja:
     inplace_edit: 編集モード
     preview_date: プレビュー日時
     column_file_upload:
-      image_text_place_holder: 代替えテキストを入力してください。
-      video_description: 動画の内容説明
-      video_description_place_holder: 動画の内容を説明する文書を入力してください。
-      attachment_text_place_holder: リンクテキストとして表示するファイル名を入力してください。
-      banner_link_place_holder: URLを入力してください。
+      image:
+        file_label: 代替テキスト
+        file_label_place_holder: 代替テキストを入力してください。
+      video:
+        text: 動画の内容説明
+        text_place_holder: 動画の内容を説明する文書を入力してください。
+      attachment:
+        file_label: ファイル名
+        file_label_place_holder: リンクテキストとして表示するファイル名を入力してください。
+      banner:
+        file_label: 代替テキスト
+        link_url: URL
+        file_label_place_holder: 代替テキストを入力してください。
+        link_url_place_holder: URLを入力してください。
     column_table:
       width: 列数
       height: 行数
@@ -102,7 +111,7 @@ ja:
       download_description: サイト内の全コンテンツを出力します。
       import_tab: 一括設定
       import_head: 全コンテンツ一括設定
-      import_description: サイト内の全コンテンツを一括して設定します。一括して設定できるのは、タイトル、レイアウト、キーワード、概要、サマリー、カテゴリー、検索条件URL、並び順、表示件数、上部HTML、ループHTML、下部HTML、NEWマーク期間、管理グループです。
+      import_description: サイト内の全コンテンツを一括して設定します。一括して設定できるのはフォルダーとページで、かつ設定可能な属性はタイトル、レイアウト、キーワード、概要、サマリー、カテゴリー、検索条件URL、並び順、表示件数、上部HTML、ループHTML、下部HTML、NEWマーク期間、管理グループです。
     roles:
       admin: 管理者
       user: 編集者
@@ -123,6 +132,8 @@ ja:
       contains_urls_exists: このページへのリンク、関連記事、添付ファイルが以下のページに含まれています。
       contains_urls_not_found: このページへのリンク、関連記事、添付ファイルが含まれているページは見つかりませんでした。
       check_accessibility_manually: "セマンティックなマークアップであるか確認してください。\nコントラスト比に問題がないか確認してください。"
+    notices:
+      import_with_entry_form_is_not_supported: 次のフォームでは本文ブロックは出力されません。
     apis:
       categories:
         index: カテゴリーを選択する
@@ -306,6 +317,7 @@ ja:
       cms/archive: アーカイブ
       cms/photo_album: 写真一覧
       cms/group_page: グループ別ページリスト
+      cms/site_search: サイト内検索
     parts:
       cms/free: HTML記述
       cms/node: フォルダーリスト
@@ -593,6 +605,7 @@ ja:
         class_name: class属性
         order: 並び順
         css_path: cssパス
+        default_theme: 既定のtheme
       cms/source_cleaner_template:
         name: 名前
         order: 並び順
@@ -822,8 +835,8 @@ ja:
         label_place_holder: リンクテキストプレースホルダー
         link_max_length: リンクURL最大長
         link_place_holder: リンクURLプレースホルダー
-        label: リンクテキスト
-        link: リンクURL
+        link_label: リンクテキスト
+        link_url: リンクURL
         max_length: 最大長
         place_holder: プレースホルダー
       cms/column/select:
@@ -841,14 +854,14 @@ ja:
         html_additional_attr: HTML追加属性
         label_max_length: リンクテキスト最大長
         label_place_holder: リンクテキストプレースホルダー
-        label: リンクテキスト
-        image_text: 代替えテキスト
+        image_text: 代替テキスト
         max_length: 最大長
         place_holder: プレースホルダー
         file_type: ファイルタイプ
       cms/column/list:
         list_type: 種類
       cms/column/value/base:
+        order: 並び順
         alignment: 配置
       cms/column/value/check_box:
         values: 選択肢
@@ -860,11 +873,10 @@ ja:
         html_tag: HTMLタグ
         html_additional_attr: HTML追加属性
         file_id: ファイル
-        label: リンクテキスト
-        image_text: 代替えテキスト
-        video_description: 動画の内容
-        attachment_text: リンクテキスト
-        banner_link: URL
+        file_label: リンクテキスト・代替テキスト
+        image_html_type: 貼付方法
+        text: 動画の内容説明
+        link_url: URL
       cms/column/value/radio_button:
         value: 選択肢
       cms/column/value/select:
@@ -880,12 +892,16 @@ ja:
       cms/column/value/url_field2:
         html_tag: HTMLタグ
         html_additional_attr: HTML追加属性
-        label: リンクテキスト
-        value: リンクURL
+        link_label: リンクテキスト
+        link_url: リンクURL
+        link_target: リンクターゲット
+        link_item_type: リンク先アイテム型
+        link_item_id: リンク先アイテムID
       cms/column/value/headline:
         head: 見出し
         text: テキスト
       cms/column/value/list:
+        lists: リスト
         order: 順番
         text: テキスト
       cms/column/value/youtube:
@@ -1025,6 +1041,13 @@ ja:
     cms/addon/captcha:
       captcha:
         - フォームに画像認証を利用する場合は「使用する」を選択してください。
+      captcha_test:
+        - 認証画像の表示を確認します。
+
+    cms/role:
+      permission_level:
+        - 権限レベルを設定します。
+        - 数字が大きいほど強い権限になります。
 
     search_contents:
       html:
@@ -1298,6 +1321,24 @@ ja:
           #{part_name} 現在のパーツの名前が表示されます。
           #{part_parent_name} 現在のパーツの親フォルダー名が表示されます。
           #{part_parent.parent_name} 現在のパーツの親フォルダーの親フォルダー名が表示されます。
+
+          #{if 条件分岐タグA}内容A#{end} 条件分岐タグAがtrueのとき、内容Aを表示します。
+          #{if 条件分岐タグA}内容A#{elsif 条件分岐タグB}内容B#{end} 条件分岐タグAがtrueの場合は内容A、条件分岐タグAがfalseかつ条件分岐タグBがtrueの場合は内容Bを表示します。
+          #{if 条件分岐タグA}内容A#{else}内容B#{end} 条件分岐タグAがtrueの場合は内容A、falseの場合は内容Bを表示します。
+
+          条件分岐タグ:
+          - is_page() ページならばtrue, それ以外はfalseを返します。
+          - is_node() フォルダーならばtrue, それ以外はfalseを返します。
+          - in_node('/docs') ファイル名がdocsから始まるならばtrue, それ以外はfalseを返します。
+          - has_pages() 現在のフォルダーにページがある、または現在のフォルダーのカテゴリーに所属しているならばtrue, それ以外はfalseを返します。
+
+          使用例：
+          &lt;article class="#{class}">
+            &lt;header>
+              &lt;h2>&lt;a href="#{url}">#{name}&lt;/a>&lt;/h2>
+            &lt;/header>
+            &lt;p>#{summary}&lt;/p>
+          &lt;/article>
       loop_html:
         - 自動生成されたリスト表示部分のHTMLを指定することが可能です。
         - ループHTMLを選択または直接記入することが可能です。
@@ -1333,24 +1374,6 @@ ja:
           #{category_pages} カテゴリーが設定されたページが子リストで表示されます。
           #{child_nodes} フォルダー内のフォルダーが子リストで表示されます。
           #{child_pages} フォルダー内のページが子リストで表示されます。
-
-          #{if 条件分岐タグA}内容A#{end} 条件分岐タグAがtrueのとき、内容Aを表示します。
-          #{if 条件分岐タグA}内容A#{elsif 条件分岐タグB}内容B#{end} 条件分岐タグAがtrueの場合は内容A、条件分岐タグAがfalseかつ条件分岐タグBがtrueの場合は内容Bを表示します。
-          #{if 条件分岐タグA}内容A#{else}内容B#{end} 条件分岐タグAがtrueの場合は内容A、falseの場合は内容Bを表示します。
-
-          条件分岐タグ:
-          - is_page() ページならばtrue, それ以外はfalseを返します。
-          - is_node() フォルダーならばtrue, それ以外はfalseを返します。
-          - in_node('/docs') ファイル名がdocsから始まるならばtrue, それ以外はfalseを返します。
-          - has_pages() 現在のフォルダーにページがある、または現在のフォルダーのカテゴリーに所属しているならばtrue, それ以外はfalseを返します。
-
-          使用例：
-          &lt;article class="#{class}">
-            &lt;header>
-              &lt;h2>&lt;a href="#{url}">#{name}&lt;/a>&lt;/h2>
-            &lt;/header>
-            &lt;p>#{summary}&lt;/p>
-          &lt;/article>
       lower_html:
         - リスト部分の下部に任意の内容のHTMLを記述することが可能です。
         - 上部HTMLと同じテンプレートが使用できます。
@@ -1368,7 +1391,7 @@ ja:
               &lt;time datetime="{{ page.date }}">{{ page.date | ss_date: "long" }}&lt;/time>
               &lt;h2>&lt;a href="{{ page.url }}">{{ page.index_name }}&lt;/a>&lt;/h2>
             &lt;/header>
-            &lt;p>#{summary}&lt;/p>
+            &lt;p>{{ page.summary }}&lt;/p>
           &lt;/article>
           {% endfor %}
       new_days:

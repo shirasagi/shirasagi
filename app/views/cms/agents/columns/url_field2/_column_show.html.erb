@@ -1,3 +1,3 @@
 <%= render 'cms/agents/columns/main/base', show: true, column: column, value: value do %>
-  <%= [ value.label.presence, value.link.presence ].compact.flatten.join(', ') %>
+  <%= [ value.effective_link_label.presence, value.effective_link_url.presence, value.link_target.presence ].compact.flatten.join(', ') %>
 <% end %>

@@ -33,22 +33,31 @@ module Gws::Addon::Schedule::Facility
       end
     end
 
+    if cur_user
+      max_days_limits = facilities.map do |facility|
+        next if facility.allowed?(:edit, cur_user, site: cur_site || site)
+        facility.max_days_limit
+      end
+    else
+      max_days_limits = facilities.pluck(:max_days_limit)
+    end
+
     now = Time.zone.now
-    max_days_limit = facilities.pluck(:max_days_limit).compact.min
+    max_days_limit = max_days_limits.compact.min
     if max_days_limit && end_at > now + max_days_limit.days
       errors.add :base, I18n.t("gws/schedule.errors.faciliy_day_lte", count: max_days_limit)
     end
 
     reservation_start_date = facilities.pluck(:reservation_start_date).compact.max
     if reservation_start_date.present? && start_at < reservation_start_date
-      errors.add :start_at, I18n.t('gws/schedule.errors.less_than_max_date',
-        date: I18n.l(reservation_start_date.localtime, format: :long))
+      message = I18n.t('gws/schedule.errors.less_than_max_date', date: I18n.l(reservation_start_date.localtime, format: :long))
+      errors.add :start_at, message
     end
 
     reservation_end_date = facilities.pluck(:reservation_end_date).compact.min
     if reservation_end_date.present? && end_at >= reservation_end_date
-      errors.add :end_at, I18n.t('gws/schedule.errors.less_than_max_date',
-        date: I18n.l(reservation_end_date.localtime, format: :long))
+      message = I18n.t('gws/schedule.errors.less_than_max_date', date: I18n.l(reservation_end_date.localtime, format: :long))
+      errors.add :end_at, message
     end
   end
 
@@ -63,10 +72,12 @@ module Gws::Addon::Schedule::Facility
   end
 
   def validate_facility_double_booking
-    plans = self.class.ne(id: id).without_deleted.
-      where(site_id: site_id).
-      where(:end_at.gt => start_at, :start_at.lt => end_at).
-      any_in(facility_ids: facility_ids)
+    plans = self.class.ne(id: id).without_deleted.where(site_id: site_id).any_in(facility_ids: facility_ids)
+    if allday?
+      plans = plans.where(:end_at.gt => start_on.in_time_zone.beginning_of_day, :start_at.lt => end_on.in_time_zone.end_of_day)
+    else
+      plans = plans.where(:end_at.gt => start_at, :start_at.lt => end_at)
+    end
     return if plans.blank?
 
     errors.add :base, I18n.t('gws/schedule.errors.double_booking_facility')

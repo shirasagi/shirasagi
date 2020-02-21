@@ -6,7 +6,7 @@ div.csv2rdf-settings-table-container {
   white-space: pre;
 
   table {
-    table-layout:fixed;
+    table-layout: fixed;
     th, td {
       padding: 4px 8px;
       max-width: 200px;
@@ -67,7 +67,7 @@ div.csv2rdf-settings-table-container {
     bottom: -1px;
     width: 12px;
     height: 12px;
-    margin: 0px 4px 0px 0px;
+    margin: 0 4px 0 0;
     text-indent: -99px;
     background-image: url("/assets/img/icons.png");
     content: " ";
@@ -75,12 +75,12 @@ div.csv2rdf-settings-table-container {
 }
 .od-icon-node-prop {
   &:before {
-    background-position: -15px 0px;
+    background-position: -15px 0;
   }
 }
 .od-icon-leaf-prop {
   &:before {
-    background-position: -45px 0px;
+    background-position: -45px 0;
   }
 }
 
@@ -100,7 +100,7 @@ textarea.readonly {
     select {
       float: left;
       height: 2em;
-      border: none;
+      border: 0;
       &:focus {
         @include box-shadow(none);
       }
@@ -109,7 +109,7 @@ textarea.readonly {
     input[type="text"] {
       float: left;
       height: 2em;
-      border: none;
+      border: 0;
       &:focus {
         @include box-shadow(none);
       }
@@ -118,7 +118,7 @@ textarea.readonly {
       float: left;
       margin: 0;
       padding: 2px 20px 1px;
-      border: none;
+      border: 0;
       background: $gray3;
       &:hover {
         background: $pink;
@@ -144,7 +144,7 @@ div.opendata-csv2rdf-settings-class-search {
 
 .list-items .list-item .meta .opendata-harvest {
   background: #f25a38;
-  color: white;
+  color: #fff;
   padding: 2px;
   @include border-radius(3px);
 }
@@ -165,22 +165,22 @@ table.opendata-harvest-report {
 }
 
 .reports-table {
+  table.index td[colspan="7"] {
+    padding-left: 16px;
+  }
   overflow: auto;
   th, td {
-    width: calc(100% / 30);
+    min-width: 30px;
   }
   th[colspan="7"], td[colspan="7"] {
     width: calc(100% / 30 * 7);
   }
   .index {
     th, td {
-      padding: 6px 6px;
+      padding: 6px;
     }
   }
   .not-exists {
-    padding: 10px 18px 10px;
-  }
-  .resource-name {
-    margin-left: 16px;
+    padding: 10px 18px;
   }
 }

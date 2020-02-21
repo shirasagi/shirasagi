@@ -1,4 +1,4 @@
-class Webmail::RoleImportJob < SS::ApplicationJob
+class Webmail::RoleImportJob < Webmail::ApplicationJob
   include Job::SS::TaskFilter
   include SS::ZipFileImport
 
@@ -45,8 +45,7 @@ class Webmail::RoleImportJob < SS::ApplicationJob
       end
 
       if name.blank?
-        item.disable
-        Rails.logger.info("#{index}行目: 権限/ロール #{id} を無効にしました。")
+        Rails.logger.info("#{index}行目: 権限/ロール #{id} ロール名が空白のため無視します。")
         return nil
       end
     else

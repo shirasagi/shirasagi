@@ -10,7 +10,7 @@ module Member::ExpirableSecureId
     cipher.encrypt
     cipher.pkcs5_keyivgen(salt, nil)
     secret = cipher.update("#{id},#{Time.zone.now.to_i}") + cipher.final
-    secret.unpack("H*")[0]
+    secret.unpack1("H*")
   end
 
   module ClassMethods

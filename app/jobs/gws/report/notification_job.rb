@@ -22,23 +22,9 @@ class Gws::Report::NotificationJob < Gws::ApplicationJob
 
   private
 
-  def format_email(user)
-    return nil if user.email.blank?
-
-    if user.name.present?
-      "#{user.name} <#{user.email}>"
-    else
-      user.email
-    end
-  end
-
-  def default_from_email
-    site.sender_address
-  end
-
   def create_memo_notice(mail, recipient)
-    message = Gws::Memo::Notice.new
-    message.cur_site = site
+    message = SS::Notification.new
+    message.cur_group = site
     message.cur_user = @user
     message.member_ids = [recipient.id]
     message.send_date = Time.zone.now

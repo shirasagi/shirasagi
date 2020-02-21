@@ -1,5 +1,5 @@
 module Tasks
-  class Cms
+  module Cms
     class << self
       def generate_nodes
         each_sites do |site|
@@ -17,10 +17,10 @@ module Tasks
         each_sites do |site|
           if ENV.key?("node")
             with_node(site, ENV["node"]) do |node|
-              perform_job(::Cms::Page::GenerateJob, site: site, node: node, attachments: ENV["attachments"])
+              perform_job(::Cms::Page::GenerateJob, site: site, node: node)
             end
           else
-            perform_job(::Cms::Page::GenerateJob, site: site, attachments: ENV["attachments"])
+            perform_job(::Cms::Page::GenerateJob, site: site)
           end
         end
       end
@@ -62,7 +62,9 @@ module Tasks
       end
 
       def import_files
-        ::Cms::ImportFilesJob.perform_now
+        each_sites do |site|
+          perform_job(::Cms::ImportFilesJob, site: site)
+        end
       end
 
       def export_site
@@ -91,6 +93,19 @@ module Tasks
         end
       end
 
+      def reload_site_usage
+        puts "# reload site usage"
+        each_sites do |site|
+          begin
+            puts "#{site.host}: #{site.name}"
+            site.reload_usage!
+          rescue => e
+            Rails.logger.error("#{e.class} (#{e.message}):\n  #{e.backtrace.join("\n  ")}")
+            puts("Failed to update usage: #{site.host}")
+          end
+        end
+      end
+
       def set_subdir_url
         with_site(ENV['site']) do |site|
           puts "# layouts"
@@ -104,6 +119,16 @@ module Tasks
 
           puts "# nodes"
           gsub_attrs(::Cms::Node.site(site), site)
+
+          puts "# member/login"
+          each_items(::Member::Node::Login.site(site)) do |item|
+            if item.redirect_url.start_with?("/")
+              item.set(redirect_url: "#{site.url}#{item.redirect_url[1..-1]}")
+            end
+          end
+
+          site.mobile_location = "#{site.url}#{site.mobile_location[1..-1]}" if site.mobile_location.present?
+          site.editor_css_path = "#{site.url}#{site.editor_css_path[1..-1]}" if site.editor_css_path.present?
         end
       end
 
@@ -153,6 +178,15 @@ module Tasks
         yield node
       end
 
+      def each_items(criteria)
+        all_ids = criteria.pluck(:id).sort
+        all_ids.each_slice(20) do |ids|
+          criteria.in(id: ids).to_a.each do |item|
+            yield item
+          end
+        end
+      end
+
       def perform_job(job_class, opts = {})
         job = job_class.bind(site_id: opts.delete(:site))
         job = job.bind(node_id: opts.delete(:node)) if opts.key?(:node)
@@ -170,11 +204,11 @@ module Tasks
       def gsub_path(html, site)
         html.gsub(/(href|src)=".*?"/) do |m|
           url = m.match(/.*?="(.*?)"/)[1]
-          if url =~ /^\/(assets|assets-dev|fs)\//
+          if url.start_with?("/assets/", "/assets-dev/", "/fs/")
             m
-          elsif url =~ /^#{site.url}/
+          elsif url.start_with?(site.url)
             m
-          elsif url =~ /^\/(?!\/)/
+          elsif /^\/(?!\/)/.match?(url)
             m.sub(/="\//, "=\"#{site.url}")
           else
             m
@@ -191,6 +225,7 @@ module Tasks
             attrs.each do |attr|
               next unless item.respond_to?(attr) && item.respond_to?("#{attr}=")
               next unless item.send(attr).present?
+
               item.send("#{attr}=", gsub_path(item.send(attr), site))
             end
             item.save!

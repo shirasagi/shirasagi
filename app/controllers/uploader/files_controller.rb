@@ -90,9 +90,9 @@ class Uploader::FilesController < ApplicationController
   public
 
   def file
-    action = params[:do] || "index"
     raise "404" unless @item
-    raise "404" unless %w(index new_directory new_files show edit delete check).index(action)
+    action = %w(index new_directory new_files show edit delete check).delete(params[:do].presence || "index")
+    raise "404" if action.blank?
     send action
   end
 

@@ -8,7 +8,7 @@ class Opendata::Agents::Pages::Dataset::DatasetController < ApplicationControlle
 
     @search_path = view_context.method(:search_datasets_path)
 
-    view_context.include_map_api(site: @cur_site)
+    view_context.include_map_api(site: @cur_site, preview: @preview)
 
     render
   end

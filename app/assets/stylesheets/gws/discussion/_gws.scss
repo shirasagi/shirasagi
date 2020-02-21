@@ -73,7 +73,7 @@
   .selected-files {
     margin-top: 10px;
     span {
-      margin: 0 1em 0.5em 0;
+      margin: 0 1em .5em 0;
     }
   }
   .deselect {
@@ -99,7 +99,7 @@
   float: left;
   width: calc(100% - 350px);
   min-height: 400px;
-  @include mb  {
+  @include mb {
     float: none;
     width: 100%;
   }
@@ -122,5 +122,18 @@
     float: none;
     margin: 0;
     width: 100%;
+  }
+
+  .gws-discussion-navi-list {
+    .addon-body {
+      padding: 0;
+    }
+  }
+
+  .list-items {
+    margin: 0;
+  }
+  .list-item {
+    padding: 15px;
   }
 }

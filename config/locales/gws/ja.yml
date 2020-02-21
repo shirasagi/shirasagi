@@ -79,6 +79,7 @@ ja:
 
     links:
       back_to_portal: ポータルへ戻る
+      webmail_user_import: ウェブメール権限を含むインポート
     buttons:
       unset: 解除
       add_item: 新しい要素を追加
@@ -90,6 +91,7 @@ ja:
         ファイル数が多い、またはファイル容量が大きいためバックグランドでファイルを準備します。
         ダウンロードの準備ができましたらメッセージでお知らせします。
       contrast_changed: 'コントラストを「%{name}」に変更しました。'
+      webmail_user_import: グループウェアの設定に加えて、ウェブメール権限を設定することができます。
     errors:
       allowed_domains_only_root: はルートグループにのみ設定できます。
 
@@ -147,9 +149,11 @@ ja:
       gws/system/menu_setting: メニュー設定
       gws/system/notice_setting: 通知設定
       gws/system/log_setting: ログ設定
+      gws/system/desktop_setting: デスクトップアプリ設定
       gws/user/custom_form: 拡張情報
       gws/user/public_duty: 事務分掌
       gws/link: リンク
+      gws/site_usage: 使用量
 
   mongoid:
     models:
@@ -308,9 +312,13 @@ ja:
         sendmail_domains: メール送信許可ドメイン
         canonical_scheme: グループウェアスキーム
         canonical_domain: グループウェアドメイン
+        trash_threshold: ゴミ箱保持期間
+        trash_threshold_unit: ゴミ箱保持期間単位
       gws/addon/system/menu_setting:
         menu_portal_label: ポータルの表示
         menu_portal_state: ポータルの表示
+        menu_notice_label: お知らせの表示
+        menu_notice_state: お知らせの表示
         menu_schedule_label: スケジュールの表示
         menu_schedule_state: スケジュールの表示
         menu_todo_label: ToDoの表示
@@ -393,6 +401,9 @@ ja:
         log_workflow_severity: ワークフローのログ
         log_chorg_severity: 組織変更のログ
         log_discussion_severity: 電子会議室のログ
+      gws/addon/system/desktop_setting:
+        desktop_mailstore: メールストア機能
+        desktop_chat: チャット機能
       gws/addon/subscription_setting:
         subscribed_group_ids: 購読グループ
         subscribed_groups_hash: 購読グループ(ハッシュ)
@@ -451,6 +462,12 @@ ja:
         in_file: ファイル
       gws/addon/link:
         links: リンク
+      gws/addon/site_usage:
+        usage_file_count: ファイル数
+        usage_db_size: DB使用量
+        usage_group_count: グループ数
+        usage_user_count: ユーザー数
+        usage_calculated_at: 使用量計算日時
 
   tooltip:
     gws/model/category:
@@ -504,6 +521,8 @@ ja:
       canonical_domain:
         - グループウェアドメインを入力します。
         - システムからメールを送信する際、メールに記載される URL がここで設定したドメインになります。
+      trash_threshold:
+        - ゴミ箱の保持期間を設定できます。
     gws/addon/group_permission:
       custom_group_ids:
         - 編集を許可するカスタムグループを選択します。
@@ -566,6 +585,9 @@ ja:
         - 並び順を入力します。
       in_parent:
         - 親フォルダーを選択してください。
+    gws/role:
+      permission_level:
+        - 権限レベルを設定します。
 
   activemodel:
     models:
@@ -573,6 +595,10 @@ ja:
     attributes:
       gws/user_csv/importer:
         in_file: ファイル
+    errors:
+      models:
+        gws/user_csv/importer:
+          not_found: "%{line_no}: ID %{id} のユーザーは存在しません。"
 
   job:
     models:

@@ -1,4 +1,4 @@
-SS::Application.routes.draw do
+Rails.application.routes.draw do
   Gws::Monitor::Initializer
 
   concern :deletion do
@@ -26,14 +26,20 @@ SS::Application.routes.draw do
     end
   end
 
+  concern :topic_files do
+    get :all_topic_files, on: :member
+  end
+
   gws 'monitor' do
     get '/' => redirect { |p, req| "#{req.path}/-/topics" }, as: :main
 
     scope(path: ':category', defaults: { category: '-' }) do
-      resources :topics, concerns: [:state_change, :topic_comment], except: [:new, :create, :edit, :update, :destroy]
-      resources :answers, concerns: [:state_change, :topic_comment], except: [:new, :create, :edit, :update, :destroy]
+      resources :topics, concerns: [:state_change, :topic_comment, :topic_files],
+                except: [:new, :create, :edit, :update, :destroy]
+      resources :answers, concerns: [:state_change, :topic_comment, :topic_files],
+                except: [:new, :create, :edit, :update, :destroy]
 
-      resources :admins, concerns: [:soft_deletion, :state_change, :topic_comment], except: [:destroy] do
+      resources :admins, concerns: [:soft_deletion, :state_change, :topic_comment, :topic_files], except: [:destroy] do
         get :forward, on: :member
         match :publish, on: :member, via: %i[get post]
         post :close, on: :member

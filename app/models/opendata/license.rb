@@ -5,6 +5,7 @@ class Opendata::License
   include SS::Relation::File
   include Opendata::Addon::Harvest::License
   include Cms::Addon::GroupPermission
+  include Fs::FilePreviewable
 
   set_permission_name :opendata_datasets
 
@@ -37,6 +38,10 @@ class Opendata::License
     %w(default).map do |v|
       [ I18n.t("opendata.default_state_options.#{v}"), v ]
     end
+  end
+
+  def file_previewable?(file, user:, member:)
+    state == "public"
   end
 
   class << self

@@ -1,9 +1,10 @@
-SS::Application.routes.draw do
+Rails.application.routes.draw do
 
   Rdf::Initializer
 
   concern :deletion do
     get :delete, on: :member
+    delete :destroy_all, on: :collection, path: ''
   end
 
   concern :import do

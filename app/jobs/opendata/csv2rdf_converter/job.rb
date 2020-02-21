@@ -17,6 +17,7 @@ class Opendata::Csv2rdfConverter::Job < Cms::ApplicationJob
       save_and_send_ttl
     end
     dispose_context
+    generate_dataset_page
     Rails.logger.info(I18n.t("opendata.messages.build_rdf_success"))
     nil
   rescue => e
@@ -92,5 +93,10 @@ class Opendata::Csv2rdfConverter::Job < Cms::ApplicationJob
     else
       f.puts "#{key} #{value}#{delim}"
     end
+  end
+
+  def generate_dataset_page
+    @cur_dataset.reload
+    @cur_dataset.generate_file
   end
 end

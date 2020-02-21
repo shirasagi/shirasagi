@@ -48,7 +48,7 @@ class Gws::Attendance::TimeCardEnumerator < Enumerator
 
   private
 
-  def enum_record(y, time_card)
+  def enum_record(yielder, time_card)
     date = time_card.date.beginning_of_month
     terms = []
 
@@ -82,7 +82,7 @@ class Gws::Attendance::TimeCardEnumerator < Enumerator
         end
         terms << record.try(:memo)
 
-        y << encode(terms.to_csv)
+        yielder << encode(terms.to_csv)
       end
 
       date += 1.day

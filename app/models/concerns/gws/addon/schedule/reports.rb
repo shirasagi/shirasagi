@@ -9,8 +9,11 @@ module Gws::Addon::Schedule::Reports
     after_save :save_related_reports
   end
 
-  def reports
-    Gws::Report::File.site(@cur_site || self.site).schedule(self)
+  def reports(user)
+    ret = Gws::Report::File.site(@cur_site || self.site).schedule(self)
+    ret = ret.without_deleted
+    ret = ret.accessible(user, site: @cur_site || self.site)
+    ret
   end
 
   private

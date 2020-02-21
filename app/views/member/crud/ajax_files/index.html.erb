@@ -19,6 +19,25 @@
 
   SS.ajaxDelete(".user-files .delete");
 
+  var $el = $("#ajax-box");
+  $el.find(".pagination a").on("click", function (ev) {
+    $el.find(".pagination").html(SS.loading);
+
+    $.ajax({
+      url: $(this).attr("href"),
+      type: "GET",
+      success: function (data) {
+        $el.closest("#cboxLoadedContent").html(data);
+      },
+      error: function (data, status) {
+        $el.find(".pagination").html("== Error ==");
+      }
+    });
+
+    ev.preventDefault();
+    return false;
+  });
+
 <% end %>
 
 <% if @model.allowed?(:edit, @cur_user, site: @cur_site, node: @cur_node) %>
@@ -36,7 +55,7 @@
 
 <div class="index user-files">
   <% @items.each do |item| %>
-  <article class="file-view" id="user-file<%= item.id %>">
+  <article class="file-view" id="user-file<%= item.id %>" data-file-id="<%= item.id %>">
     <a class="thumb select" href="<%= url_for action: :select, id: item %>">
       <% if item.image? %>
       <img src="<%= url_for(action: :thumb, id: item, _: item.updated.to_i) %>" alt="<%= item.basename %>" />

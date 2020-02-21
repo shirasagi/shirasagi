@@ -33,45 +33,51 @@ class Gws::Circular::CommentsController < ApplicationController
   def set_crumbs
     set_category
     @crumbs << [t("modules.gws/circular"), gws_circular_main_path]
+    if params[:parent] == 'posts'
+      @crumbs << [I18n.t('gws/circular.tabs.post'), gws_circular_posts_path(category: '-')]
+    else
+      @crumbs << [I18n.t('gws/circular.tabs.admin'), gws_circular_admins_path(category: '-')]
+    end
     if @category.present?
       if params[:parent] == 'posts'
-        @crumbs << [@category.name, gws_circular_posts_path]
-        @crumbs << [I18n.t('gws/circular.tabs.post'), action: :index]
+        @crumbs << [@category.name, gws_circular_posts_path(category: @category)]
       else
-        @crumbs << [@category.name, gws_circular_admins_path]
+        @crumbs << [@category.name, gws_circular_admins_path(category: @category)]
       end
     end
+
+    set_post
     if params[:parent] == 'posts'
-      @crumbs << [I18n.t('gws/circular.tabs.post'), gws_circular_posts_path]
+      @crumbs << [@post.name, gws_circular_post_path(category: @category || '-', id: @post)]
     else
-      @crumbs << [I18n.t('gws/circular.tabs.admin'), gws_circular_admins_path]
+      @crumbs << [@post.name, gws_circular_admin_path(category: @category || '-', id: @post)]
     end
   end
 
   def set_post
-    if params[:post_id].present?
-      @post ||= Gws::Circular::Post.find(params[:post_id])
-    elsif params[:admin_id].present?
-      @post ||= Gws::Circular::Post.find(params[:admin_id])
+    @post ||= begin
+      if params[:post_id].present?
+        Gws::Circular::Post.find(params[:post_id])
+      elsif params[:admin_id].present?
+        Gws::Circular::Post.find(params[:admin_id])
+      end
     end
-    @post ? @post : (raise '404')
+    @post || (raise '404')
   end
 
   def crud_redirect_url
-    if params[:post_id].present?
-      gws_circular_post_path(id: @post.id)
-    elsif params[:admin_id].present?
-      gws_circular_admin_path(id: @post.id)
-    end
+    location = { action: :show, id: @item }
+    location[:category] = @category if @category
+    location
   end
 
   public
 
   def index
     if params[:parent] == 'posts'
-      redirect_to gws_circular_post_path(id: @post.id)
+      redirect_to gws_circular_post_path(id: @post, category: @category || '-')
     elsif params[:parent] == 'admins'
-      redirect_to gws_circular_admin_path(id: @post.id)
+      redirect_to gws_circular_admin_path(id: @post, category: @category || '-')
     end
   end
   alias show index
@@ -84,24 +90,25 @@ class Gws::Circular::CommentsController < ApplicationController
   def create
     @item = @model.new get_params
     raise '403' unless @item.allowed?(:edit, @cur_user, site: @cur_site) || @item.post.member?(@cur_user)
+
     @post.cur_user = @cur_user
     @post.cur_site = @cur_site
-    location = { action: :show, id: @item, category: @category.id } if @category
-    render_create @item.save && @post.set_seen(@cur_user).save, { location: location }
+    render_create @item.save && @post.set_seen(@cur_user).save
   end
 
   def update
     @item.attributes = get_params
     @item.in_updated = params[:_updated] if @item.respond_to?(:in_updated)
+    raise '403' unless @item.allowed?(:edit, @cur_user, site: @cur_site)
+
     @post.cur_user = @cur_user
     @post.cur_site = @cur_site
-    raise '403' unless @item.allowed?(:edit, @cur_user, site: @cur_site)
-    location = { action: :show, category: @category.id } if @category
-    render_update @item.update && @post.set_seen(@cur_user).save, { location: location }
+    render_update @item.update && @post.set_seen(@cur_user).save
   end
 
   def destroy
-    location = { action: :index, category: @category.id } if @category
-    render_destroy @item.destroy, { location: location, notice: t("ss.notice.deleted") }
+    location = { action: :index }
+    location[:category] = @category if @category
+    render_destroy @item.destroy, { location: location }
   end
 end

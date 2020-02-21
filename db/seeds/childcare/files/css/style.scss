@@ -22,7 +22,7 @@ body {
   color: $black;
 }
 h1, h2, h3, h4, h5 {
-  margin: 0px;
+  margin: 0;
   font-size: 100%;
   font-weight: normal;
 }
@@ -35,7 +35,7 @@ a {
     color: $visited;
   }
   img:hover {
-    opacity: 0.8;
+    opacity: .8;
   }
 }
 rp, rt {
@@ -45,7 +45,7 @@ rp, rt {
   background: $white;
 }
 rp {
-  margin: 0px;
+  margin: 0;
 }
 img {
   vertical-align: middle;
@@ -73,7 +73,7 @@ input[type=text], input[type=password], input[type=date], input[type=datetime], 
 input[type=email], input[type=number] {
   width: 70%;
   min-height: 1.8em;
-  margin: 0 0;
+  margin: 0;
   padding: 3px 10px;
   border: 1px solid $gray3;
   background: $white;
@@ -82,11 +82,11 @@ input[type=email], input[type=number] {
   }
   &:focus {
     border: 1px solid $primary3;
-    @include box-shadow(0 2px 2px rgba(0,0,0,.1) inset);
+    @include box-shadow(0 2px 2px rgba(0, 0, 0, .1) inset);
   }
 }
 input[type=checkbox], input[type=radio] {
-  vertical-align: -0.1em;
+  vertical-align: -.1em;
 }
 input[type=number] {
   width: 12em;
@@ -297,8 +297,8 @@ textarea {
     #search-box {
       float: left;
       width: 20em;
-      padding: 0.4em 1em 0;
-      border: none;
+      padding: .4em 1em 0;
+      border: 0;
       background: none;
       @include mb {
         max-width: 70%;
@@ -311,14 +311,14 @@ textarea {
       float: left;
       @include btn-primary-s;
       padding: 5px 10px;
-      border: none;
+      border: 0;
       @include border-radius(0);
       @include mb {
         float: right;
       }
       &:hover {
         margin: 0;
-        border: none;
+        border: 0;
         background: $primary2;
         color: $white;
       }
@@ -331,7 +331,7 @@ textarea {
   position: relative;
   z-index: 2;
   margin-bottom: 30px;
-  @include box-shadow(0 2px 2px 0 rgba(0,0,0,.14),0 3px 1px -2px rgba(0,0,0,.2),0 1px 5px 0 rgba(0,0,0,.12));
+  @include box-shadow(0 2px 2px 0 rgba(0, 0, 0, .14), 0 3px 1px -2px rgba(0, 0, 0, .2), 0 1px 5px 0 rgba(0, 0, 0, .12));
   @include mb {
     min-height: 3px;
     .wrap { display: none; }
@@ -354,7 +354,7 @@ textarea {
       font-size: $px16;
       text-align: center;
       text-decoration: none;
-      @include transition(0.5s);
+      @include transition(.5s);
     }
     li.current a, a:hover {
       border-bottom: 5px solid $primary1;
@@ -374,8 +374,8 @@ textarea {
     padding: 40px 10px 10px;
     @include border-radius(6px);
     background: $primary2 url(../img/ic-pagetop.png) no-repeat center 10px;
-    opacity: 0.8;
-    @include box-shadow(0 2px 2px 0 rgba(0,0,0,.14),0 3px 1px -2px rgba(0,0,0,.2),0 1px 5px 0 rgba(0,0,0,.12));
+    opacity: .8;
+    @include box-shadow(0 2px 2px 0 rgba(0, 0, 0, .14), 0 3px 1px -2px rgba(0, 0, 0, .2), 0 1px 5px 0 rgba(0, 0, 0, .12));
     text-align: center;
     color: #fff;
     font-size: $px12;
@@ -408,7 +408,7 @@ textarea {
         width: 50%;
         float: left;
         padding: 0;
-        border: none;
+        border: 0;
         border-right: 1px solid $white;
         border-bottom: 1px solid $white;
         a {
@@ -419,7 +419,7 @@ textarea {
         }
       }
       &:first-child {
-        border-left: none;
+        border-left: 0;
       }
     }
   }
@@ -495,7 +495,7 @@ textarea {
       }
       &:before {
         content: "";
-        position:absolute;
+        position: absolute;
         top: 4px;
         left: 0;
       }
@@ -514,14 +514,14 @@ textarea {
   }
   .bx-thumbs {
     float: right;
-    margin: -3.6em 15px 0px 0px;
+    margin: -3.6em 15px 0 0;
     padding-left: 10em;
     @include mb { display: none; }
     a {
       display: inline-block;
       margin: 0 0 10px 5px;
       img {
-        opacity: 0.6;
+        opacity: .6;
       }
       &.active img {
         opacity: 1;
@@ -539,7 +539,7 @@ textarea {
     &:last-child {
       margin: 0;
       padding: 0;
-      border: none;
+      border: 0;
     }
   }
   time {
@@ -572,7 +572,7 @@ textarea {
   }
 }
 #side {
-  .article-pages li, .category-pages li, .cms-pages li, .faq-pages li, .ezine-pages li  {
+  .article-pages li, .category-pages li, .cms-pages li, .faq-pages li, .ezine-pages li {
     time {
       float: none;
     }
@@ -585,7 +585,7 @@ textarea {
     &:last-child {
       margin: 0;
       padding: 0;
-      border: none;
+      border: 0;
     }
   }
 }
@@ -698,7 +698,7 @@ textarea {
         &:last-child {
           margin: 0;
           padding: 0;
-          border: none;
+          border: 0;
         }
       }
     }
@@ -820,7 +820,7 @@ textarea {
 #sub-menu {
   margin-bottom: 15px;
   span {
-    dispaly: block;
+    display: block;
     width: 50%;
     float: left;
     @include mb {
@@ -831,7 +831,7 @@ textarea {
   a {
     display: block;
     margin: 0 15px 15px;
-    @include box-shadow(0 2px 2px 0 rgba(0,0,0,.14),0 3px 1px -2px rgba(0,0,0,.2),0 1px 5px 0 rgba(0,0,0,.12));
+    @include box-shadow(0 2px 2px 0 rgba(0, 0, 0, .14), 0 3px 1px -2px rgba(0, 0, 0, .2), 0 1px 5px 0 rgba(0, 0, 0, .12));
   }
 }
 #side #sub-menu {
@@ -868,7 +868,7 @@ textarea {
   .content-body {
     padding: 15px 0 0 15px;
     @include mb {
-      padding: 15px 10px 5px 10px;
+      padding: 15px 10px 5px;
     }
   }
   span {
@@ -892,7 +892,7 @@ textarea {
     display: none;
   }
   .separator {
-    margin: 0.5em;
+    margin: .5em;
   }
 }
 // -----------------------------------------------------------------------------
@@ -917,14 +917,14 @@ textarea {
     padding: 0;
     border-bottom: 1px solid $gray3;
     &:last-child {
-      border: none;
+      border: 0;
     }
   }
   a {
     position: relative;
     display: block;
     padding: 10px 15px 10px 30px;
-    @include transition(0.3s);
+    @include transition(.3s);
     &:before {
       content: "";
       position: absolute;
@@ -957,7 +957,7 @@ textarea {
 #page-title {
   padding: 15px 15px 0;
   h1 {
-    margin-bottom: 0.6em;
+    margin-bottom: .6em;
     padding-bottom: 10px;
     border-bottom: 1px solid $gray3;
     font-size: $px24;
@@ -971,7 +971,7 @@ textarea {
 .content-page {
   overflow: hidden;
   background: $white;
-  @include box-shadow(0 2px 2px 0 rgba(0,0,0,.14),0 3px 1px -2px rgba(0,0,0,.2),0 1px 5px 0 rgba(0,0,0,.12));
+  @include box-shadow(0 2px 2px 0 rgba(0, 0, 0, .14), 0 3px 1px -2px rgba(0, 0, 0, .2), 0 1px 5px 0 rgba(0, 0, 0, .12));
   .body, .map-page, .related-pages,
   .faq-question {
     @include clear;
@@ -1008,7 +1008,7 @@ textarea {
       margin: 0 15px 15px 0;
       @include mb {
         float: none;
-        margin: 0 0 15px 0;
+        margin: 0 0 15px;
       }
     }
     .float-right, .ss-alignment-right {
@@ -1016,7 +1016,7 @@ textarea {
       margin: 0 0 15px 15px;
       @include mb {
         float: none;
-        margin: 0 0 15px 0;
+        margin: 0 0 15px;
       }
     }
     .clear {
@@ -1177,7 +1177,7 @@ textarea {
     padding: 10px 0;
     border-bottom: 1px dotted $gray3;
     &:last-child {
-      border: none;
+      border: 0;
     }
   }
   dt, legend {
@@ -1219,7 +1219,7 @@ textarea {
   }
   ul {
     position: absolute;
-    top: 0.4em;
+    top: .4em;
     right: 0;
   }
   li {
@@ -1275,7 +1275,7 @@ textarea {
       }
     }
   }
-  div.page article{
+  div.page article {
     padding: 10px;
     border-bottom: 1px dotted $gray3;
     &:last-child {
@@ -1302,7 +1302,7 @@ textarea {
     font-weight: bold;
     @include mb {
       float: none;
-      widht: 100%;
+      width: 100%;
       padding-bottom: 0;
     }
   }
@@ -1332,7 +1332,7 @@ textarea {
       font-size: $px16;
     }
     th, td {
-      padding: 3px ;
+      padding: 3px;
       border: 1px solid $gray3;
     }
     th {
@@ -1436,9 +1436,9 @@ textarea {
       margin: 0 0 10px;
       padding: 0 0 10px;
       border-bottom: 1px dotted $gray3;
-      &:last-chid {
+      &:last-child {
         margin: 0;
-        border: none;
+        border: 0;
       }
     }
   }
@@ -1448,7 +1448,7 @@ textarea {
     width: 75% !important;
     margin: 0 0 15px;
     @include mb {
-      floatg: none;
+      float: none;
       width: 100% !important;
       height: 300px !important;
     }
@@ -1582,7 +1582,7 @@ textarea {
     padding-right: 10px;
     border-right: 1px solid $gray3;
     &:last-child {
-      border-right: none;
+      border-right: 0;
     }
   }
 }
@@ -1670,5 +1670,62 @@ article.post {
   input[name="search"] {
     @include btn-primary-s;
     display: inline-block;
+  }
+}
+// -----------------------------------------------------------------------------
+// search
+.cms-site-search {
+  padding: 0 15px;
+  .search-form {
+    @include display-flex;
+    @include justify-content(space-between);
+    margin-bottom: 30px;
+    border: 2px solid $gray2;
+    background: $gray4;
+    @include mb {
+      border-radius: 0;
+    }
+  }
+  #s_keyword {
+    width: 20em;
+    padding: .4em 1em 0;
+    border: 0;
+    background: none;
+    @include mb {
+      width: 70%;
+      @include border-radius(0);
+    }
+    &:focus {
+      @include box-shadow(none);
+    }
+  }
+  input[type="submit"] {
+    @include btn-primary-s;
+    padding: 5px 10px;
+    border: 0;
+    @include border-radius(0);
+    @include mb {
+      border-radius: 0;
+      -webkit-appearance: none;
+    }
+  }
+  .search-result {
+    margin-bottom: 30px;
+    .search-stats {
+      margin-bottom: 20px;
+      padding-bottom: 10px;
+      border-bottom: 1px solid $gray3;
+    }
+    .cms-site-search-pages {
+      .item {
+        margin-bottom: 20px;
+        h2 {
+          font-size: $px16;
+        }
+      }
+      .meta .url {
+        display: block;
+      }
+    }
   }
 }
