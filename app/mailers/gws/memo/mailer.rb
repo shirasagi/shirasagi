@@ -59,14 +59,14 @@ class Gws::Memo::Mailer < ActionMailer::Base
   end
 
   def page_url
-    return "" if @cur_site.canonical_domain.blank?
+    scheme = @cur_site.canonical_scheme.presence || SS.config.gws.canonical_scheme.presence || "http"
+    domain = @cur_site.canonical_domain.presence || SS.config.gws.canonical_domain
 
-    url = @cur_site.canonical_scheme + "://"
-    url += @cur_site.canonical_domain
+    url = "#{scheme}://#{domain}"
     url = url.chop if url.match?(/\/$/)
 
     url_helper = Rails.application.routes.url_helpers
     url += url_helper.gws_memo_notice_path(id: @notice.id, site: @cur_site.id)
+    url
   end
 end
-
