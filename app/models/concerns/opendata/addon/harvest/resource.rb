@@ -25,6 +25,16 @@ module Opendata::Addon::Harvest::Resource
     before_save :set_revision_id
   end
 
+  def data_url
+    if source_url.present?
+      source_url
+    elsif file
+      ::File.join(dataset.site.full_url, file.url)
+    else
+      ""
+    end
+  end
+
   def reset_harvest_attributes
     self.harvest_importer = nil
     self.harvest_importer_id = nil

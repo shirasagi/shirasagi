@@ -1,34 +1,33 @@
 <%= jquery do %>
-  window.deletePhotoContent = function (id) {
-    $(".file-view").each(function () {
-      if (id === $(this).find(".photo-id").attr("value")) {
-        $(this).remove();
-      }
-    });
-  };
+window.deleteContent = function (id) {
+  $('#item-form .file-view[data-id="' + id + '"]').remove();
+};
+$('.mod-photo a.ajax-box').data('on-select', function(item) {
+  var $div = $(item).closest("[data-id]");
+  var id = $div.attr("data-id");
+
+  if (!$("#selected-files").find("[data-id=" + id + "]").length) {
+    $div.find(".action").show();
+    $("#selected-files").append($div).find('input[type="checkbox"]').remove();
+  }
+});
 <% end %>
 
 <dl class="see mod-photo spot">
   <dd class="wide">
-    <%= f.hidden_field "photo_ids[]", value: "" %>
+    <%= f.hidden_field "member_photo_ids[]", value: "" %>
     <%= link_to t("member.view.select_page"), member_apis_photos_path(@cur_site), class: "ajax-box btn" %>
 
-   <div id="selected-member-photos">
+    <div id="selected-files">
       <% @item.member_photos.each do |item| %>
-        <article class="file-view member-photo" data-id="<%= item.id %>">
+        <article class="file-view member-photo" data-id="<%= item.id %>" data-file-id="<%= item.id %>">
           <%= hidden_field_tag "item[member_photo_ids][]", item.id, class: "photo-id" %>
           <%= link_to item.image.url, class: :thumb, target: "_blank" do %>
-            <% if item.image.image? %>
-              <%= image_tag item.image.thumb_url, alt: item.name %>
-            <% else %>
-              <span class="ext icon-<%= item.image.extname %>"><%= item.image.extname %></span>
-            <% end %>
+            <%= image_tag item.image.thumb_url, alt: item.name %>
           <% end %>
-          <div class="name">
-            <%= item.name %>
-          </div>
+          <div class="name"><%= item.name %></div>
           <div class="action delete">
-            <%= link_to t("ss.buttons.delete"), "#", onclick: "deletePhotoContent('#{item.id}'); return false;" %>
+            <%= link_to t("ss.buttons.delete"), "#", onclick: "deleteContent('#{item.id}'); return false;" %>
           </div>
         </article>
       <% end %>

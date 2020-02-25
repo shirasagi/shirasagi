@@ -107,8 +107,7 @@ Rails.application.routes.draw do
     resources :word_dictionaries, concerns: [:deletion, :template]
     resources :forms, concerns: [:deletion] do
       resources :init_columns, concerns: [:deletion]
-      resources :columns, concerns: [:deletion], except: [:new, :create]
-      resources :columns, path: 'columns/:type', only: [:new, :create], as: 'columns_type'
+      resources :columns, concerns: [:deletion]
     end
     resources :notices, concerns: [:deletion, :copy]
     resources :public_notices, concerns: [:deletion, :copy]
@@ -120,11 +119,19 @@ Rails.application.routes.draw do
       get :download, on: :member
       get :resize, on: :member
       post :resize, on: :member
+      get :contrast_ratio, on: :collection
     end
 
     resources :page_searches, concerns: :deletion do
       get :search, on: :member
       delete :search, on: :member, action: :destroy_all_pages
+    end
+
+    namespace "translate" do
+      get "/" => redirect { |p, req| "#{req.path}/text_caches" }, as: :main
+      resources :text_caches, concerns: :deletion
+      resources :langs, concerns: [:deletion, :download, :import]
+      resource :site_setting
     end
 
     get "check_links" => "check_links#index"
@@ -177,12 +184,14 @@ Rails.application.routes.draw do
         get :view, on: :member
         get :thumb, on: :member
         get :download, on: :member
+        get :contrast_ratio, on: :collection
       end
       resources :temp_files, concerns: :deletion do
         get :select, on: :member
         get :view, on: :member
         get :thumb, on: :member
         get :download, on: :member
+        get :contrast_ratio, on: :collection
       end
       namespace :node, path: "node:cid/cms", cid: /\w+/ do
         resources :temp_files, concerns: :deletion do
@@ -190,7 +199,12 @@ Rails.application.routes.draw do
           get :view, on: :member
           get :thumb, on: :member
           get :download, on: :member
+          get :contrast_ratio, on: :collection
         end
+      end
+      resources :content_files, only: [] do
+        get :view, on: :member
+        get :contrast_ratio, on: :collection
       end
       namespace "opendata_ref" do
         get "datasets:cid" => "datasets#index", as: 'datasets'
@@ -231,6 +245,10 @@ Rails.application.routes.draw do
           post :lock, on: :member
           delete :lock, on: :member, action: :unlock
         end
+      end
+
+      namespace "translate" do
+        get "langs" => "langs#index"
       end
     end
   end
@@ -298,6 +316,12 @@ Rails.application.routes.draw do
   page "cms" do
     get "page/:filename.:format" => "public#index", cell: "pages/page"
     get "import_page/:filename.:format" => "public#index", cell: "pages/import_page"
+  end
+
+  unless Rails.env.development?
+    namespace "cms", path: ".s:site" do
+      match "*private_path" => "catch_all#index", via: :all
+    end
   end
 
   match "*public_path" => "cms/public#index", public_path: /[^\.].*/,

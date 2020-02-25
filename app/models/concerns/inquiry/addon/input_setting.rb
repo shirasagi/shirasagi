@@ -30,6 +30,7 @@ module Inquiry::Addon
       # validate :validate_max_upload_file_size_options
       validate :validate_transfers
       validate :validate_form_select
+      validate :validate_question
     end
 
     def input_type_options
@@ -116,6 +117,11 @@ module Inquiry::Addon
       if column.present? && column != self
         errors.add :input_type, :exist_form_select, input_type: label(:input_type)
       end
+    end
+
+    def validate_question
+      return if input_type != "upload_file"
+      self.question = "disabled"
     end
   end
 end

@@ -16,6 +16,7 @@ class Cms::Site
   include Opendata::Addon::SiteSetting
   include SS::Addon::EditorSetting
   include SS::Addon::Elasticsearch::SiteSetting
+  include SS::Addon::Translate::SiteSetting
   include SS::Addon::SiteUsage
 
   set_permission_name "cms_sites", :edit

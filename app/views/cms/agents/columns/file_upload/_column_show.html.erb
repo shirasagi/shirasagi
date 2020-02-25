@@ -3,7 +3,7 @@
 <%= render 'cms/agents/columns/main/base', show: true, column: column, value: value do %>
   <% if file.present? %>
     <div id="selected-files">
-      <div class="file-view">
+      <div class="file-view" data-file-id="<%= file.id %>">
         <%= link_to file.url, class: :thumb, target: "_blank" do %>
           <% if file.image? %>
             <%= image_tag file.thumb_url, alt: file.name %>

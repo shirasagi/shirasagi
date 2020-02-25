@@ -516,8 +516,7 @@ describe Article::Page, dbscope: :example, tmpdir: true do
         it do
           # Cms::Model::Page
           expect(subject.categories.length).to eq 2
-          expect(subject.categories[0].id).to eq cate1.id
-          expect(subject.categories[1].id).to eq cate2.id
+          expect(subject.categories.map(&:id)).to include(cate1.id, cate2.id)
         end
       end
 

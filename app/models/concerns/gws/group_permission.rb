@@ -27,6 +27,7 @@ module Gws::GroupPermission
     return true if (self.group_ids & user.group_ids).present?
     return true if user_ids.to_a.include?(user.id)
     return true if custom_groups.any? { |m| m.member?(user) }
+
     false
   end
 
@@ -51,7 +52,7 @@ module Gws::GroupPermission
 
     return true if user.gws_role_permit_any?(site, *permits)
 
-    errors.add :base, :auth_error
+    errors.add :base, :auth_error if opts.fetch(:adds_error, true)
     false
   end
 

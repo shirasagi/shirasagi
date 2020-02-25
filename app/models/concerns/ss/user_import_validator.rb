@@ -16,9 +16,9 @@ module SS::UserImportValidator
 
     # group_ids
     attr_accessor :imported_gws_group
-    # attr_accessor :imported_cms_groups
+    attr_accessor :imported_cms_groups
     attr_accessor :imported_group_keys, :imported_groups
-    validate :validate_imported_groups, if: ->{ imported_group_keys.present? || imported_gws_group.present? }
+    validate :validate_imported_groups, if: ->{ imported_group_keys.present? }
 
     # gws_main_group_id
     attr_accessor :imported_gws_main_group_key, :imported_gws_main_group
@@ -64,8 +64,8 @@ module SS::UserImportValidator
   def validate_imported_groups
     if imported_gws_group
       imported_group_names = imported_groups.in_group(imported_gws_group).pluck(:name)
-    # elsif imported_cms_groups.present?
-    #   imported_group_names = imported_groups.where(name: /\A#{imported_cms_groups.collect(&:name).join('|')}(\/|\z)/).pluck(:name)
+    elsif imported_cms_groups.present?
+      imported_group_names = imported_groups.in(id: imported_cms_groups.pluck(:id)).pluck(:name)
     else
       imported_group_names = imported_groups.pluck(:name)
     end
@@ -73,6 +73,10 @@ module SS::UserImportValidator
     imported_group_keys.each do |key|
       next if imported_group_names.include?(key)
       errors.add :base, I18n.t("errors.messages.not_found_group", name: key)
+    end
+
+    if imported_cms_groups && imported_group_keys.find { |key| key.start_with?(*imported_cms_groups.pluck(:name)) }.blank?
+      errors.add :group_ids, :blank
     end
 
     if imported_gws_group && imported_group_keys.find { |key| key.start_with?(imported_gws_group.name) }.blank?

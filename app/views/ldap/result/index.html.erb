@@ -12,11 +12,11 @@
         <dd><%= @items["group"]["failed"] %></dd>
         <% if @items["group"]["errors"].present? %>
           <dt><%= t "ldap.views.import/sync.error" %></dt>
-          <dd><%= br @items["group"]["errors"].join("\n")%></dd>
+          <dd><%= br @items["group"]["errors"] %></dd>
         <% end %>
         <% if @items["group"]["warnings"].present? %>
           <dt><%= t "ldap.views.import/sync.warning" %></dt>
-          <dd><%= br @items["group"]["warnings"].join("\n")%></dd>
+          <dd><%= br @items["group"]["warnings"] %></dd>
         <% end %>
         <dt><%= t "ldap.views.import/sync.user" %></dt>
         <dd></dd>
@@ -28,11 +28,11 @@
         <dd><%= @items["user"]["failed"] %></dd>
         <% if @items["user"]["errors"].present? %>
           <dt><%= t "ldap.views.import/sync.error" %></dt>
-          <dd><%= br @items["user"]["errors"].join("\n")%></dd>
+          <dd><%= br @items["user"]["errors"] %></dd>
         <% end %>
         <% if @items["user"]["warnings"].present? %>
           <dt><%= t "ldap.views.import/sync.warning" %></dt>
-          <dd><%= br @items["user"]["warnings"].join("\n")%></dd>
+          <dd><%= br @items["user"]["warnings"] %></dd>
         <% end %>
       </dl>
     <% else %>

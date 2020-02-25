@@ -13,6 +13,9 @@ production: &production
   # JavaScripts on gws pages.
   javascripts: ["gws/script"]
 
+  canonical_scheme: http
+  canonical_domain: replace-me.example.jp
+
   history:
     save_days: 90
     severity: info

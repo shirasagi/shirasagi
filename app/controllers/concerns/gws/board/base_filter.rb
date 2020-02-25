@@ -25,13 +25,15 @@ module Gws::Board::BaseFilter
   end
 
   def set_parent
-    @topic  = @model.find params[:topic_id] if params[:topic_id].present?
-    @parent = @model.find params[:parent_id] if params[:parent_id].present?
+    @topic  = Gws::Board::Topic.find(params[:topic_id]) if params[:topic_id].present?
+    @parent = Gws::Board::Post.find(params[:parent_id]) if params[:parent_id].present?
   end
 
   def set_crumbs
     @crumbs << [@cur_site.menu_board_label || t("modules.gws/board"), gws_board_topics_path(mode: '-', category: '-')]
-    @crumbs << [t("ss.navi.#{@mode}"), gws_board_topics_path(category: '-')]
+    if Gws::Board::Topic.allowed?(:read, @cur_user, site: @cur_site)
+      @crumbs << [t("ss.navi.#{@mode}"), gws_board_topics_path(category: '-')]
+    end
     @crumbs << [@category.name, gws_board_topics_path] if @category.present?
   end
 end

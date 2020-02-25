@@ -9,9 +9,9 @@
       <li class="list-item">
         <div class="info">
           <%= link_to item.name, gws_report_file_path(state: 'inbox', id: item.id), class: 'title' %>
+          <% if item.new_flag? %><span class="gws-board-flag-new"></span><% end %>
           <div class="meta">
             <span class="datetime"><%= item.updated.strftime("%Y/%m/%d %H:%M") %></span>
-            <span class="mode"><%= item.updated? ? t('gws.history.mode.update') : t('gws.history.mode.create') %></span>
           </div>
         </div>
       </li>

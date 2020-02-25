@@ -6,12 +6,18 @@ namespace :ss do
     # 一時ファイルの削除（エクスポート）
     Rake.application.invoke_task("ss:delete_download_files")
 
+    # 一時ファイルの削除（CMSお問い合わせ）
+    Rake.application.invoke_task("inquiry:delete_inquiry_temp_files")
+
     # 一時ファイルの削除（アクセストークン）
     Rake.application.invoke_task("ss:delete_access_tokens")
 
     if SS.config.cms.disable.blank?
       # ゴミ箱の掃除
       Rake.application.invoke_task("history:trash:purge")
+
+      # history_logの削除
+      Rake.application.invoke_task("history:history_log:purge")
 
       ::Tasks::Cms.each_sites do |site|
         # クローリングリソースの更新

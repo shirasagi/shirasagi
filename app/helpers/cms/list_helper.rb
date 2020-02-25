@@ -1,5 +1,5 @@
 module Cms::ListHelper
-  DEFAULT_NODE_LOOP_HTML = begin
+  def default_node_loop_html
     ih = []
     ih << '<article class="item-#{class} #{current}">'
     ih << '  <header>'
@@ -9,7 +9,7 @@ module Cms::ListHelper
     ih.join("\n").freeze
   end
 
-  DEFAULT_NODE_LOOP_LIQUID = begin
+  def default_node_loop_liquid
     ih = []
     ih << '{% for node in nodes %}'
     ih << '<article class="item-{{ node.css_class }} {% if node.current? %}current{% endif %}">'
@@ -21,7 +21,7 @@ module Cms::ListHelper
     ih.join("\n").freeze
   end
 
-  DEFAULT_PAGE_LOOP_HTML = begin
+  def default_page_loop_html
     ih = []
     ih << '<article class="item-#{class} #{new} #{current}">'
     ih << '  <header>'
@@ -32,7 +32,7 @@ module Cms::ListHelper
     ih.join("\n").freeze
   end
 
-  DEFAULT_PAGE_LOOP_LIQUID = begin
+  def default_page_loop_liquid
     ih = []
     ih << '{% for page in pages %}'
     ih << '<article class="item-{{ page.css_class }} {% if page.new? %}new{% endif %} {% if page.current? %}current{% endif %}">'
@@ -53,9 +53,9 @@ module Cms::ListHelper
     cur_item.cur_date = @cur_date
 
     if cur_item.loop_format_shirasagi?
-      render_list_with_shirasagi(cur_item, Cms::ListHelper::DEFAULT_NODE_LOOP_HTML, &block)
+      render_list_with_shirasagi(cur_item, default_node_loop_html, &block)
     else
-      source = cur_item.loop_liquid.presence || Cms::ListHelper::DEFAULT_NODE_LOOP_LIQUID
+      source = cur_item.loop_liquid.presence || default_node_loop_liquid
       assigns = { "nodes" => @items.to_a.map(&:becomes_with_route) }
       render_list_with_liquid(source, assigns)
     end
@@ -69,9 +69,9 @@ module Cms::ListHelper
     cur_item.cur_date = @cur_date
 
     if cur_item.loop_format_shirasagi?
-      render_list_with_shirasagi(cur_item, Cms::ListHelper::DEFAULT_PAGE_LOOP_HTML, &block)
+      render_list_with_shirasagi(cur_item, default_page_loop_html, &block)
     else
-      source = cur_item.loop_liquid.presence || Cms::ListHelper::DEFAULT_PAGE_LOOP_LIQUID
+      source = cur_item.loop_liquid.presence || default_page_loop_liquid
       assigns = { "pages" => @items.to_a.map(&:becomes_with_route) }
       render_list_with_liquid(source, assigns)
     end

@@ -7,12 +7,13 @@ class Rss::ExecuteWeatherXmlFiltersJob < Cms::ApplicationJob
   end
 
   def perform(page_ids)
-    page_ids.each do |page_id|
-      page = Rss::WeatherXmlPage.with_repl_master.find(page_id)
-      put_log(page.name)
+    page_ids.each_slice(20) do |ids|
+      Rss::WeatherXmlPage.with_repl_master.in(id: ids).reorder(id: 1).to_a.each do |page|
+        put_log(page.name)
 
-      context = OpenStruct.new(site: site, user: user, node: node)
-      node.execute_weather_xml_filter(page, context)
+        context = OpenStruct.new(site: site, user: user, node: node)
+        node.execute_weather_xml_filter(page, context)
+      end
     end
   end
 end

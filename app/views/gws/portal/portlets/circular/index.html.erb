@@ -9,14 +9,14 @@
       <li class="list-item <%= item.seen?(@cur_user) ? 'read' : 'unread' %>">
         <div class="info">
           <%= link_to item.name, gws_circular_post_path(category: '-', id: item), class: 'title' %>
+          <% if item.new_flag? %><span class="gws-board-flag-new"></span><% end %>
 
           <div class="meta">
-            <span class="datetime"><%= item.updated.strftime("%Y/%m/%d %H:%M") %></span>
+            <span class="datetime"><%= Gws::Circular::Post.t(:due_date) %>: <%= tryb { I18n.l(item.due_date.to_date) } %></span>
             <span class="seen"><%= item.seen?(@cur_user) ? t('gws/circular.post.seen') : t('gws/circular.post.unseen') %>
               <% if item.member?(@cur_user) %>
               <% end %>
             </span>
-            <span class="mode"><%= item.updated? ? t('gws.history.mode.update') : t('gws.history.mode.create') %></span>
             <span>
               <% item.categories.compact.each do |category| %>
                 <%= link_to category.trailing_name, gws_circular_posts_path(category: category.id),

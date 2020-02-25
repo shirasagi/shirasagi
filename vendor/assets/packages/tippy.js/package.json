@@ -1,0 +1,172 @@
+{
+  "_from": "tippy.js",
+  "_id": "tippy.js@5.1.4",
+  "_inBundle": false,
+  "_integrity": "sha512-M7AqmLFbo3Cp7SMqdsbfuTpTUlbpK+e6XfCWOWdEy/Qfx7R4CrAAJYaUGEcKRF8IHRZ/9dSm2YAp/fJAdI06ZQ==",
+  "_location": "/tippy.js",
+  "_phantomChildren": {},
+  "_requested": {
+    "type": "tag",
+    "registry": true,
+    "raw": "tippy.js",
+    "name": "tippy.js",
+    "escapedName": "tippy.js",
+    "rawSpec": "",
+    "saveSpec": null,
+    "fetchSpec": "latest"
+  },
+  "_requiredBy": [
+    "#USER",
+    "/"
+  ],
+  "_resolved": "https://registry.npmjs.org/tippy.js/-/tippy.js-5.1.4.tgz",
+  "_shasum": "decbef134d35e6ef0c6936e6bd99754cbbd5fb78",
+  "_spec": "tippy.js",
+  "_where": "/Users/nakano_hideo/Projects/shirasagi/tmp/1622",
+  "author": {
+    "name": "atomiks"
+  },
+  "browserslist": [
+    "> 0.5%",
+    "not dead",
+    "not safari < 8"
+  ],
+  "bugs": {
+    "url": "https://github.com/atomiks/tippyjs/issues"
+  },
+  "bundleDependencies": false,
+  "bundlesize": [
+    {
+      "path": "dist/tippy-bundle.iife.min.js",
+      "maxSize": "10 kB"
+    },
+    {
+      "path": "dist/tippy.iife.min.js",
+      "maxSize": "10 kB"
+    },
+    {
+      "path": "dist/tippy.css",
+      "maxSize": "5 kB"
+    }
+  ],
+  "contributors": [
+    {
+      "name": "Brett Zamir"
+    }
+  ],
+  "dependencies": {
+    "popper.js": "^1.16.0"
+  },
+  "deprecated": false,
+  "description": "Highly customizable tooltip and popover library",
+  "devDependencies": {
+    "@babel/core": "^7.5.5",
+    "@babel/plugin-proposal-object-rest-spread": "^7.5.5",
+    "@babel/plugin-transform-template-literals": "^7.4.4",
+    "@babel/preset-env": "^7.5.5",
+    "@babel/preset-typescript": "^7.3.3",
+    "@testing-library/dom": "^6.8.1",
+    "@types/node": "^12.7.2",
+    "@typescript-eslint/eslint-plugin": "^2.0.0",
+    "@typescript-eslint/parser": "^2.12.0",
+    "autoprefixer": "^9.6.1",
+    "babel-jest": "^24.8.0",
+    "babel-plugin-dev-expression": "^0.2.2",
+    "bundlesize": "^0.18.0",
+    "colorette": "^1.1.0",
+    "cssnano": "^4.1.10",
+    "eslint": "^6.1.0",
+    "eslint-config-prettier": "^6.0.0",
+    "husky": "^3.0.3",
+    "jest": "^24.8.0",
+    "lint-staged": "^9.2.1",
+    "node-sass": "^4.12.0",
+    "parcel-bundler": "^1.12.4",
+    "postcss": "^7.0.17",
+    "prettier": "^1.18.2",
+    "promise": "^8.0.3",
+    "react-flip-toolkit": "^6.6.9",
+    "rimraf": "^3.0.0",
+    "rollup": "^1.19.4",
+    "rollup-plugin-babel": "^4.3.3",
+    "rollup-plugin-commonjs": "^10.0.2",
+    "rollup-plugin-css-only": "^1.0.0",
+    "rollup-plugin-json": "^4.0.0",
+    "rollup-plugin-node-resolve": "^5.2.0",
+    "rollup-plugin-replace": "^2.2.0",
+    "rollup-plugin-sass": "^1.2.2",
+    "rollup-plugin-terser": "^5.1.1",
+    "typescript": "^3.5.3"
+  },
+  "files": [
+    "dist/",
+    "animations/",
+    "themes/",
+    "index.d.ts"
+  ],
+  "homepage": "https://atomiks.github.io/tippyjs/",
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged"
+    }
+  },
+  "jest": {
+    "globals": {
+      "__DEV__": true
+    },
+    "setupFilesAfterEnv": [
+      "./test/setup.js"
+    ],
+    "testRegex": "./test/.*.test.js$"
+  },
+  "keywords": [
+    "tooltip",
+    "popover",
+    "popper",
+    "dropdown",
+    "popup",
+    "tippy",
+    "tippy.js"
+  ],
+  "license": "MIT",
+  "lint-staged": {
+    "src/**/*.ts": [
+      "jest --findRelatedTests",
+      "eslint --report-unused-disable-directives . --ext .ts,.js",
+      "git add"
+    ],
+    "{build,src,test,website/src}/**/*.{ts,js,json,css,scss,md}": [
+      "prettier --write",
+      "git add"
+    ]
+  },
+  "main": "dist/tippy.cjs.js",
+  "module": "dist/tippy.esm.js",
+  "name": "tippy.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/atomiks/tippyjs.git"
+  },
+  "scripts": {
+    "build": "node rollup.pre-build && rollup --config && bundlesize",
+    "check-types": "tsc",
+    "clean": "rimraf dist/ themes/ animations/ coverage/ .devserver/ .cache/ ./index.d.ts",
+    "dev": "parcel demo/index.html -d .devserver",
+    "dev:addons": "parcel demo/addons/index.html -d .devserver",
+    "dev:animations": "parcel demo/animations/index.html -d .devserver",
+    "dev:flip": "parcel demo/flip/index.html -d .devserver",
+    "dev:plugins": "parcel demo/plugins/index.html -d .devserver",
+    "dev:themes": "parcel demo/themes/index.html -d .devserver",
+    "format": "prettier --write \"**/*.{js,ts,json,md,mdx,scss,css}\"",
+    "lint": "eslint --report-unused-disable-directives . --ext .ts,.js",
+    "prepare": "npm run clean && npm run build",
+    "test": "jest --coverage"
+  },
+  "sideEffects": [
+    "dist/tippy-bundle*",
+    "**/*.css"
+  ],
+  "types": "index.d.ts",
+  "unpkg": "dist/tippy-bundle.iife.min.js",
+  "version": "5.1.4"
+}

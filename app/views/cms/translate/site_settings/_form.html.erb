@@ -1,0 +1,50 @@
+<%= jquery do %>
+  $('tbody.translate-targets').sortable();
+<% end %>
+
+<dl class="see" style="margin-bottom: 10px;">
+  <dt><%= @model.t :translate_state %><%= @model.tt :translate_state %></dt>
+  <dd><%= f.select :translate_state, @item.translate_state_options %></dd>
+</dl>
+
+<dl class="see">
+  <dt><%= @model.t :translate_source_id %><%= @model.tt :translate_source_id %></dt>
+  <dd>
+    <%= f.hidden_field "translate_source_id", value: "", class: "hidden-ids" %>
+    <%= link_to t('translate.apis.langs.index'), cms_apis_translate_langs_path(single: 1), class: "ajax-box btn" %>
+  </dd>
+  <dd>
+    <table class="index ajax-selected">
+      <thead><tr><th class="name"><%= Translate::Lang.t :name %></th><th class="deselect"></th></tr></thead>
+      <tbody>
+        <% if @item.translate_source.present? %>
+          <tr data-id="<%= @item.translate_source_id %>">
+            <td><%= f.hidden_field "translate_source_id", value: @item.translate_source_id, id: nil %> <%= @item.translate_source.name %></td>
+            <td><%= link_to t("ss.buttons.delete"), "#", class: "deselect btn" %></td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </dd>
+</dl>
+
+<dl class="see">
+  <dt><%= @model.t :translate_target_ids %><%= @model.tt :translate_target_ids %></dt>
+  <dd>
+    <%= f.hidden_field "translate_target_ids[]", value: "", class: "hidden-ids" %>
+    <%= link_to t('translate.apis.langs.index'), cms_apis_translate_langs_path, class: "ajax-box btn" %>
+  </dd>
+  <dd>
+    <table class="index ajax-selected sortable-index">
+      <thead><tr><th class="name"><%= Translate::Lang.t :name %></th><th class="deselect"></th></tr></thead>
+      <tbody class="translate-targets">
+        <% @item.translate_targets.each do |item| %>
+          <tr data-id="<%= item.id %>">
+            <td><%= f.hidden_field "translate_target_ids[]", value: item.id, id: nil %> <%= item.name %></td>
+            <td><%= link_to t("ss.buttons.delete"), "#", class: "deselect btn" %></td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </dd>
+</dl>

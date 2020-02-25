@@ -5,7 +5,8 @@ module Inquiry::Addon
 
     included do
       field :inquiry_captcha, type: String, default: "enabled"
-      permit_params :inquiry_captcha
+      field :captcha_test, type: String
+      permit_params :inquiry_captcha, :captcha_test
     end
 
     def inquiry_captcha_options

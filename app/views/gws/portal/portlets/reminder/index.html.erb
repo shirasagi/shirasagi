@@ -21,7 +21,6 @@
 
         <div class="info">
           <% if item.model == "gws/schedule/plan" || item.model == "gws/schedule/todo" %>
-            <% if item.unread? %><span class="gws-reminder-updated-flag"></span><% end %>
             <%= link_to item.name, redirect_gws_reminder_item_path(id: item.id, mode: "-"), class: "title" %>
           <% else %>
             <%= item.name %>

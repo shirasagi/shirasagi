@@ -53,13 +53,16 @@
   <dt><%= @model.t :lock_state %></dt>
   <dd><%= @item.label :lock_state %></dd>
 
+  <dt><%= @model.t :deletion_lock_state %></dt>
+  <dd><%= @item.label :deletion_lock_state %></dd>
+
   <% if @item.organization.present? %>
   <dt><%= @model.t :organization_id %></dt>
   <dd><%= @item.organization.name %></dd>
   <% end %>
 
   <dt><%= @model.t :group_ids %></dt>
-  <dd><%=br @item.groups.order_by(name: 1).map{|c| c.name }.join("\n") %></dd>
+  <dd><%=br @item.groups.order_by(name: 1).map{|c| c.name } %></dd>
 
   <% if @item.remark.present? %>
   <dt><%= @model.t :remark %></dt>

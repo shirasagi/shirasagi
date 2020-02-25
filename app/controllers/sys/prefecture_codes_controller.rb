@@ -18,6 +18,7 @@ class Sys::PrefectureCodesController < ApplicationController
 
     @items = @model.
       allow(:read, @cur_user).
+      search(params[:s]).
       order_by(prefecture_code: 1, code: 1, _id: 1).
       page(params[:page]).per(50)
   end

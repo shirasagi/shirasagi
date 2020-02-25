@@ -10,7 +10,7 @@
       <li>
         <% inner_html = image_tag(file.url, width: @portlet.effective_ad_width) %>
         <% if file.link_url %>
-          <%= link_to inner_html, file.link_url %>
+          <%= link_to inner_html, sns_redirect_path(ref: file.link_url), target: "_blank" %>
         <% else %>
           <%= inner_html %>
         <% end %>

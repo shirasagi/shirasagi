@@ -1,6 +1,7 @@
 module Opendata::Resource::Previewable
   extend ActiveSupport::Concern
   include Opendata::TsvParseable
+  include Opendata::PdfParseable
 
   included do
     field :map_resources, type: Array, default: []
@@ -10,32 +11,45 @@ module Opendata::Resource::Previewable
   private
 
   def save_map_resources
-    return if file.nil? || source_url.present?
     self.map_resources = []
 
+    return if file.nil?
+    return if source_url.present?
+
     if tsv_present?
+      save_map_resources_from_tsv
+    elsif xls_present?
+      save_map_resources_from_xls
+    end
+  rescue => e
+    logger.error("Opendata Resource save_map_resources failed : #{e.class} (#{e.message})")
+  end
+
+  def save_map_resources_from_tsv
+    Timeout.timeout(20) do
       csv = parse_tsv
       points = extract_map_points(csv)
       if points.present?
         self.map_resources << { sheet: "1", map_points: points }
       end
-    elsif xls_present?
-      sp = parse_xls
-      if sp
-        sp.sheets.each_with_index do |sheet, page|
-          Timeout.timeout(10) do
-            csv = CSV.parse(sp.sheet(page).to_csv)
-          end
-          points = extract_map_points(csv)
-          if points.present?
-            self.map_resources << { sheet: sheet, map_points: points }
-          end
+    end
+  end
+
+  def save_map_resources_from_xls
+    sp = nil
+    Timeout.timeout(20) do
+      sp = Roo::Spreadsheet.open(file.path, extension: format.downcase.to_sym)
+    end
+
+    sp.sheets.each_with_index do|sheet, page|
+      Timeout.timeout(10) do
+        csv = CSV.parse(sp.sheet(page).to_csv)
+        points = extract_map_points(csv)
+        if points.present?
+          self.map_resources << { sheet: sheet, map_points: points }
         end
       end
     end
-  rescue => e
-    logger.warn("#{e.class} (#{e.message}):\n  #{e.backtrace.join("\n  ")}")
-    puts("#{e.class} (#{e.message}):\n  #{e.backtrace.join("\n  ")}")
   end
 
   public
@@ -105,34 +119,5 @@ module Opendata::Resource::Previewable
       map_points << { "name" => name, "loc" => [ lat, lon ] }
     end
     map_points
-  end
-
-  def extract_pdf_base64_images(limit = nil)
-    limit ||= SS.config.opendata.preview["pdf"]["page_limit"]
-
-    return [] unless file && pdf_present?
-
-    require 'rmagick'
-    images = []
-    0.upto(limit - 1) do |n|
-      begin
-        image = Magick::Image.read(file.path + "[#{n}]") do
-          self.quality = 100
-          self.density = 200
-        end.first
-      rescue Magick::ImageMagickError => e
-        Rails.logger.warn("#{e.class} (#{e.message}):\n  #{e.backtrace.join("\n  ")}")
-        image = nil
-      end
-
-      break if image.blank?
-      images << image
-    end
-
-    images = images.map do |image|
-      image.format = "PNG"
-      Base64.strict_encode64(image.to_blob)
-    end
-    images
   end
 end

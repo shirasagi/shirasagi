@@ -33,10 +33,11 @@
         <div class="info">
           <% title = item.try(:name) || item.try(:title) || item.try(:filename) || "##{item.id}" %>
           <%= link_to title, {action: :show, id: item}, class: "title" %>
+          <% if item.new_flag? %><span class="gws-board-flag-new"></span><% end %>
 
           <div class="meta">
             <span class="id">#<%= item.id %></span>
-            <span class="datetime"><%= @model.t(:due_date) %>: <%= tryb { item.due_date.strftime('%Y/%m/%d %H:%M') } %></span>
+            <span class="datetime"><%= @model.t(:due_date) %>: <%= tryb { item.due_date.strftime('%Y/%m/%d') } %></span>
             <span class="datetime"><%= @model.t(:updated) %>: <%= item.updated.strftime('%Y/%m/%d %H:%M') %></span>
             <span class="datetime"><%= @model.t(:created) %>: <%= item.created.strftime('%Y/%m/%d %H:%M') %></span>
             <span><%= item.user_long_name %></span>

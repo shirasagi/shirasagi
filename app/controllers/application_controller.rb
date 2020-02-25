@@ -82,7 +82,7 @@ class ApplicationController < ActionController::Base
   end
 
   def remote_addr
-    request.env["HTTP_X_REAL_IP"] || request.remote_addr
+    request.env["HTTP_X_REAL_IP"].presence || request.remote_addr
   end
 
   def pc_browser?

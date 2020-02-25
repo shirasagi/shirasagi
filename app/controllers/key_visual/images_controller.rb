@@ -20,7 +20,7 @@ class KeyVisual::ImagesController < ApplicationController
   public
 
   def index
-    raise "403" unless @model.allowed?(:read, @cur_user, site: @cur_site)
+    raise "403" unless @model.allowed?(:read, @cur_user, site: @cur_site, node: @cur_node)
 
     @items = @model.site(@cur_site).node(@cur_node).
       allow(:read, @cur_user).

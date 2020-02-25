@@ -15,6 +15,7 @@ describe "member_agents_nodes_photo", type: :feature, dbscope: :example do
     it "#index" do
       visit node.url
       expect(page).to have_css(".member-photos")
+      expect(page).to have_css(".member-photos a img")
 
       first('.member-photos a').click
       expect(current_path).to eq item.url

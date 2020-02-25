@@ -219,12 +219,30 @@ file_8 = save_ss_files "ss_files/key_visual/keyvisual02.jpg", filename: "keyvisu
                        model: "ss/temp_file"
 file_9 = save_ss_files "ss_files/key_visual/keyvisual03.jpg", filename: "keyvisual03.jpg", name: "keyvisual03.jpg",
                        model: "ss/temp_file"
-file_10 = save_ss_files "ss_files/article/img.png", filename: "img.jpg", name: "img.jpg",
+file_10_1 = save_ss_files "ss_files/article/img.png", filename: "img1.jpg", name: "img.jpg",
                         model: "ss/temp_file"
+file_10_2 = save_ss_files "ss_files/article/img.png", filename: "img2.jpg", name: "img.jpg",
+                        model: "ss/temp_file"
+file_10_3 = save_ss_files "ss_files/article/img.png", filename: "img3.jpg", name: "img.jpg",
+                        model: "ss/temp_file"
+file_10_4 = save_ss_files "ss_files/article/img.png", filename: "img4.jpg", name: "img.jpg",
+                        model: "ss/temp_file"
+file_10_5 = save_ss_files "ss_files/article/img.png", filename: "img5.jpg", name: "img.jpg",
+                          model: "ss/temp_file"
+file_10_6 = save_ss_files "ss_files/article/img.png", filename: "img6.jpg", name: "img.jpg",
+                          model: "ss/temp_file"
+file_10_7 = save_ss_files "ss_files/article/img.png", filename: "img7.jpg", name: "img.jpg",
+                          model: "ss/temp_file"
+file_10_8 = save_ss_files "ss_files/article/img.png", filename: "img8.jpg", name: "img.jpg",
+                          model: "ss/temp_file"
+file_10_9 = save_ss_files "ss_files/article/img.png", filename: "img9.jpg", name: "img.jpg",
+                          model: "ss/temp_file"
+file_10_10 = save_ss_files "ss_files/article/img.png", filename: "img10.jpg", name: "img.jpg",
+                          model: "ss/temp_file"
 file_11 = save_ss_files "ss_files/article/magazine.png", filename: "magazine.png", name: "magazine.png",
                         model: "ss/temp_file"
-file_12 = save_ss_files "ss_files/article/img_min.png", filename: "img_min.png", name: "img_min.png", model: "ss/temp_file"
-file_13 = save_ss_files "ss_files/article/pdf_file.pdf", filename: "pdf_file.pdf", name: "テスト", model: "ss/temp_file"
+file_12 = save_ss_files "ss_files/article/img_min.png", filename: "img_min1.png", name: "img_min.png", model: "ss/temp_file"
+file_13 = save_ss_files "ss_files/article/img_min.png", filename: "img_min2.png", name: "img_min.png", model: "ss/temp_file"
 file_14 = save_ss_files "ss_files/article/file.pdf", filename: "file.pdf", name: "2019年1月号表紙", model: "ss/temp_file"
 file_15 = save_ss_files "ss_files/article/file_2.pdf", filename: "file_2.pdf", name: "お知らせ", model: "ss/temp_file"
 file_16 = save_ss_files "ss_files/article/file_3.pdf", filename: "file_3.pdf", name: "くらしの情報", model: "ss/temp_file"
@@ -241,7 +259,7 @@ save_page route: "article/page", filename: "docs/page29.html", name: "シラサ�
           layout_id: @layouts["pages"].id, form_id: @form.id, category_ids: [@categories["kanko/geijyutsu"].id],
           keywords: "記事, 文化・芸術", description: "説明文を入力します。" * 6,
           column_values: [
-            @form_columns[0].value_type.new(column: @form_columns[0], file_id: file_10.id, file_label: "メイン写真",
+            @form_columns[0].value_type.new(column: @form_columns[0], file_id: file_10_1.id, file_label: "メイン写真",
                                             image_html_type: "image"),
             @form_columns[1].value_type.new(column: @form_columns[1], value: "説明文を入力します。" * 6),
             @form_columns[2].value_type.new(column: @form_columns[2], value: "大鷺県シラサギ市小鷺町1丁目1番地1号"),
@@ -252,15 +270,15 @@ save_page route: "article/page", filename: "docs/page29.html", name: "シラサ�
             @form_columns[7].value_type.new(column: @form_columns[7], value: "00-0000-0000"),
             @form_columns[8].value_type.new(column: @form_columns[8], value: "shirasagi@example.jp"),
             @form_columns[9].value_type.new(column: @form_columns[9], link_url: "http://demo.ss-proj.org/", link_target: "_blank"),
-            @form_columns[10].value_type.new(column: @form_columns[10], file_id: file_10.id, file_label: "写真1",
+            @form_columns[10].value_type.new(column: @form_columns[10], file_id: file_10_2.id, file_label: "写真1",
                                              image_html_type: "image"),
-            @form_columns[11].value_type.new(column: @form_columns[11], file_id: file_10.id, file_label: "写真2",
+            @form_columns[11].value_type.new(column: @form_columns[11], file_id: file_10_3.id, file_label: "写真2",
                                              image_html_type: "image"),
-            @form_columns[12].value_type.new(column: @form_columns[12], file_id: file_10.id, file_label: "写真3",
+            @form_columns[12].value_type.new(column: @form_columns[12], file_id: file_10_4.id, file_label: "写真3",
                                              image_html_type: "image"),
-            @form_columns[13].value_type.new(column: @form_columns[13], file_id: file_10.id, file_label: "写真4",
+            @form_columns[13].value_type.new(column: @form_columns[13], file_id: file_10_5.id, file_label: "写真4",
                                              image_html_type: "image"),
-            @form_columns[14].value_type.new(column: @form_columns[14], file_id: file_10.id, file_label: "写真5",
+            @form_columns[14].value_type.new(column: @form_columns[14], file_id: file_10_6.id, file_label: "写真5",
                                              image_html_type: "image"),
           ],
           map_points: [{ "name" => "", "loc" => [35.7186823, 139.7741203], "text" => "" }],
@@ -270,11 +288,11 @@ save_page route: "article/page", filename: "docs/page30.html", name: "ふれあ�
           layout_id: @layouts["pages"].id, form_id: @form_2.id, keywords: "記事, イベント", released: '2019/01/30 10:52',
           category_ids: [@categories["oshirase/event"].id],
           column_values: [
-            @form_columns_2[0].value_type.new(column: @form_columns_2[0], file_id: file_10.id, file_label: "画像1",
+            @form_columns_2[0].value_type.new(column: @form_columns_2[0], file_id: file_10_7.id, file_label: "画像1",
                                               image_html_type: "image"),
-            @form_columns_2[1].value_type.new(column: @form_columns_2[1], file_id: file_10.id, file_label: "画像2",
+            @form_columns_2[1].value_type.new(column: @form_columns_2[1], file_id: file_10_8.id, file_label: "画像2",
                                               image_html_type: "image"),
-            @form_columns_2[2].value_type.new(column: @form_columns_2[2], file_id: file_10.id, file_label: "画像3",
+            @form_columns_2[2].value_type.new(column: @form_columns_2[2], file_id: file_10_9.id, file_label: "画像3",
                                               image_html_type: "image"),
             @form_columns_2[3].value_type.new(column: @form_columns_2[3], value: ["1月30日、シラサギ博物館でふれあいフェスティバルを開催しました。",
                                                                                   "内容を入力します。" * 15, "内容を入力します。" * 15].join("\n")),
@@ -284,8 +302,6 @@ save_page route: "article/page", filename: "docs/page30.html", name: "ふれあ�
 save_page route: "article/page", filename: "docs/page31.html", name: "広報SHIRASAGI 2019年1月号",
           layout_id: @layouts["pages"].id, form_id: @form_3.id, category_ids: [@categories["shisei/koho/shirasagi"].id],
           keywords: "記事, 広報SHIRASAGI",
-          file_ids: [file_14.id, file_15.id, file_16.id, file_17.id, file_18.id, file_19.id,
-                     file_20.id, file_21.id, file_22.id, file_23.id, file_24.id],
           column_values: [
             @form_columns_3[0].value_type.new(column: @form_columns_3[0], file_id: file_11.id,
                                               file_label: "広報SHIRASAGI 2019年1月号   表紙", image_html_type: "image"),
@@ -318,7 +334,7 @@ save_page route: "article/page", filename: "docs/page32.html", name: "インタ�
           layout_id: @layouts["pages"].id, form_id: @form_5.id, keywords: "記事",
           column_values: [
             # 画像
-            @form_columns_5[0].value_type.new(column: @form_columns_5[0], order: 0, file_id: file_10.id,
+            @form_columns_5[0].value_type.new(column: @form_columns_5[0], order: 0, file_id: file_10_10.id,
                                               file_label: "画像", image_html_type: "image"),
             # 名前
             @form_columns_5[1].value_type.new(column: @form_columns_5[1], order: 1, value: "白鷺 太郎さん"),
@@ -335,7 +351,7 @@ save_page route: "article/page", filename: "docs/page32.html", name: "インタ�
             # 質問
             @form_columns_5[2].value_type.new(column: @form_columns_5[2], order: 5, head: "h1", text: "質問を入力します。" * 2),
             # 画像右
-            @form_columns_5[5].value_type.new(column: @form_columns_5[5], order: 6, file_id: file_12.id,
+            @form_columns_5[5].value_type.new(column: @form_columns_5[5], order: 6, file_id: file_13.id,
                                               file_label: "画像", image_html_type: "image"),
             # 回答
             @form_columns_5[3].value_type.new(column: @form_columns_5[3], order: 7, value: ["回答を入力します。" * 10,

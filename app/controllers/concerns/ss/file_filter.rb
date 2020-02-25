@@ -18,13 +18,14 @@ module SS::FileFilter
     @item = @model.new get_params
     raise "403" unless @item.allowed?(:edit, @cur_user, site: @cur_site)
 
-    if @item.in_files
+    if @item.in_files.present?
       def @item.to_json
         saved_files.to_json
       end
       render_create @item.save_files, location: { action: :index }
     else
-      render_create @item.save
+      @item.errors.add :in_files, :blank
+      render_create false
     end
   end
 
@@ -59,12 +60,17 @@ module SS::FileFilter
     set_item
     set_last_modified
 
+    if @item.image? && request.xhr?
+      render file: "view", layout: "ss/ajax"
+      return
+    end
+
     if Fs.mode == :file && Fs.file?(@item.path)
       send_file @item.path, type: @item.content_type, filename: @item.filename,
-        disposition: :inline, x_sendfile: true
+                disposition: :inline, x_sendfile: true
     else
       send_data @item.read, type: @item.content_type, filename: @item.filename,
-        disposition: :inline
+                disposition: :inline
     end
   end
 
@@ -113,5 +119,17 @@ module SS::FileFilter
 
     resizer = SS::ImageResizer.new get_params
     render_update resizer.resize(@item), { file: :resize }
+  end
+
+  def contrast_ratio
+    foreground_color = params[:f].to_s
+    background_color = params[:b].to_s
+
+    raise "400" if foreground_color.blank? || background_color.blank?
+
+    ret = SS::ColorContrast.from_css_color(foreground_color, background_color)
+    raise "400" if ret.blank?
+
+    render json: { contrast_ratio: ret, contrast_ratio_human: ret.round(2).to_s }
   end
 end

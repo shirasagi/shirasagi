@@ -16,12 +16,9 @@
   <%= link_to(t('ss.links.show'), action: :show, id: item) if item.allowed?(:read, @cur_user, site: @cur_site) %>
 <% end %>
 <% @index_title = proc do |item| %>
-  <% if item.new_flag? %><span class="gws-board-flag-new"></span><% end %>
   <% if item.due_date_over?(@cur_group) %><span class="gws-monitor-due-date-over"><%= t('gws/monitor.due_date_over') %></span><% end %>
   <%= link_to item.name, { action: :show, id: item }, class: "title" %>
-  <% if (file_count = item.descendants.where(user_group_id: @cur_group.id).pluck(:file_ids).flatten.compact.length) > 0 %>
-    <span class="gws-board-file-count"><img src="/assets/img/gws/ic-file.png" alt="" /><%= file_count %></span>
-  <% end %>
+  <% if item.new_flag? %><span class="gws-board-flag-new"></span><% end %>
 <% end %>
 <% @index_meta = proc do |item| %>
   <span class="id">#<%= item.id %></span>
@@ -42,6 +39,9 @@
       <%= link_to(category.trailing_name, { category: category.id }, class: "gws-category-label", style: category_label_css(category)) %>
     <% end %>
   </span>
+  <% if (file_count = item.descendants.where(user_group_id: @cur_group.id).pluck(:file_ids).flatten.compact.length) > 0 %>
+    <span class="gws-board-file-count"><img src="/assets/img/gws/ic-file.png" alt="" /><%= file_count %></span>
+  <% end %>
   <span class="count">
     <%= t('gws/monitor.topic.answer_state') %><%= item.answer_count(@cur_group) %>
   </span>
