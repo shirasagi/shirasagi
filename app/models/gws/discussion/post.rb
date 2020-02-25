@@ -23,12 +23,12 @@ class Gws::Discussion::Post
     return unless f.public?
     return unless f.notify_enabled?
 
-    notify_member_ids = f.discussion_member_ids - [user.id]
+    notify_member_ids = f.overall_members.pluck(:id) - [user.id]
     notify_member_ids.select! { |user_id| Gws::User.find(user_id).use_notice?(self) }
     return if notify_member_ids.blank?
 
     url = Rails.application.routes.url_helpers.gws_discussion_forum_topic_comments_path(
-      forum_id: forum.id, topic_id: topic.id, site: @cur_site.id, category: '-', mode: '-')
+      site: @cur_site.id, mode: '-', forum_id: forum.id, topic_id: topic.id, anchor: "comment-#{id}")
 
     item = SS::Notification.new
     item.cur_group = site
