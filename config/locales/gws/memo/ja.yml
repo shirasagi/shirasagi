@@ -251,7 +251,7 @@ ja:
         text: 本文
         order: 並び順
       gws/memo/forward:
-        email: メールアドレス
+        emails: メールアドレス
         default: メール転送設定
       gws/addon/memo/group_setting:
         memo_quota: メッセージ容量制限
@@ -295,7 +295,7 @@ ja:
         notice_discussion_email_user_setting: 電子会議室通知メール転送
         notice_report_email_user_setting: レポート通知メール転送
         notice_announcement_email_user_setting: お知らせ通知メール転送
-        send_notice_mail_address: 転送先メールアドレス
+        send_notice_mail_addresses: 転送先メールアドレス
 
   activemodel:
     models:
@@ -359,8 +359,9 @@ ja:
         - 並び順を入力します。
         - 数字が小さいほど上位に表示されます。
     gws/memo/forward:
-      email:
+      emails:
         - メッセージ転送先のメールアドレスを入力します。
+        - メールアドレスをカンマで区切ることで複数の転送先メールアドレスを設定することができます。
       default:
         - メッセージ転送設定を行います。
         - 有効：メッセージを登録したメールアドレスに転送します

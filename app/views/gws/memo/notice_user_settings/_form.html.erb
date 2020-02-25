@@ -29,6 +29,6 @@
   <dt></dt><dd></dd>
   <dt><%= t "gws/memo/notice_user_settings.send_mail_address" %></dt>
   <dd>
-    <%= f.email_field :send_notice_mail_address %>
+    <%= f.text_field :send_notice_mail_addresses, value: @item.send_notice_mail_addresses.join(", ") %>
   </dd>
 </dl>

@@ -7,7 +7,8 @@ describe 'gws_memo_messages', type: :feature, dbscope: :example, js: true do
     let(:subject) { "subject-#{unique_id}" }
     let(:texts) { Array.new(rand(2..3)) { "text-#{unique_id}" } }
     let(:text) { texts.join("\r\n") }
-    let(:forward_email) { "#{unique_id}@example.jp" }
+    let(:forward_email1) { "#{unique_id}@example.jp" }
+    let(:forward_email2) { "#{unique_id}@example.jp" }
     let(:forward_subject) { "[#{I18n.t("gws/memo/message.message")}]#{I18n.t("gws/memo/forward.subject")}:#{gws_user.name}" }
 
     shared_examples "save as draft and send" do
@@ -16,7 +17,7 @@ describe 'gws_memo_messages', type: :feature, dbscope: :example, js: true do
 
         Gws::Memo::Forward.create!(
           cur_site: site, cur_user: recipient,
-          default: "enabled", email: forward_email
+          default: "enabled", emails: [ forward_email1, forward_email2 ]
         )
 
         login_gws_user
@@ -73,7 +74,8 @@ describe 'gws_memo_messages', type: :feature, dbscope: :example, js: true do
         expect(ActionMailer::Base.deliveries).to have(1).items
         ActionMailer::Base.deliveries.first.tap do |mail|
           expect(mail.from.first).to eq site.sender_address
-          expect(mail.bcc.first).to eq forward_email
+          expect(mail.bcc.first).to eq forward_email1
+          expect(mail.bcc.second).to eq forward_email2
           expect(mail.subject).to eq forward_subject
           expect(mail.body.multipart?).to be_falsey
           expect(mail.body.raw_source).to include(subject)

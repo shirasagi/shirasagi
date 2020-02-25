@@ -30,7 +30,8 @@ class Gws::Memo::Mailer < ActionMailer::Base
     subject = @notice.subject
     @body = I18n.t("gws_notification.#{i18n_key}.mail_text", subject: subject, text: page_url)
     set_group_settings
-    bcc = @users.map(&:send_notice_mail_address).select{ |email| email.present? && @cur_site.email_domain_allowed?(email) }
+    bcc = @users.map(&:send_notice_mail_addresses).flatten
+    bcc = bcc.select{ |email| email.present? && @cur_site.email_domain_allowed?(email) }
 
     return false unless bcc.present?
 
