@@ -145,6 +145,7 @@ ja:
       zoom_out: 縮小
       zoom_in: 拡大
       calculate: 計算
+      reload: 再読込
     confirm:
       delete: 削除してよろしいですか？
       soft_delete: 削除してよろしいですか？

@@ -96,6 +96,13 @@ this.Gws_Schedule_Calendar = (function () {
 
             return $(this).toggleClass("fc-state-active");
           }
+        },
+        reload: {
+          text: "<%= I18n.t('ss.buttons.reload') %>",
+          icon: "gws-schedule-calendar-reload",
+          click: function (e) {
+            $(selector).fullCalendar('refetchEvents');
+          }
         }
       },
       contentHeight: 'auto',
@@ -106,7 +113,7 @@ this.Gws_Schedule_Calendar = (function () {
       fixedWeekCount: false,
       slotEventOverlap: false,
       header: {
-        left: 'today prev next title',
+        left: 'today prev next title reload',
         right: 'withAbsence withTodo month,basicWeek,agendaDay withListView'
       },
       lang: 'ja',

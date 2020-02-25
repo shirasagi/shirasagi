@@ -1,7 +1,7 @@
 <%= jquery do %>
   Gws_Schedule_Multiple_Calendar.renderController('#calendar-controller', {
     defaultView: 'timelineDay',
-    header: { left: 'today prev next title', right: 'basicWeek timelineDay' },
+    header: { left: 'today prev next title reload', right: 'basicWeek timelineDay' },
     views: {
       timelineDay: {
         minTime: '<%= @cur_site.facility_min_time %>',
@@ -33,7 +33,7 @@
     Gws_Schedule_Multiple_Calendar.render('#cal-<%= item.id %>', {
       tapMenu: <%= item.reservable?(@cur_user) %>,
       defaultView: 'timelineDay',
-      header: { left: 'today prev next title', right: 'basicWeek timelineDay' },
+      header: { left: 'today prev next title reload', right: 'basicWeek timelineDay' },
       views: {
         timelineDay: {
           minTime: '<%= @cur_site.facility_min_time %>',

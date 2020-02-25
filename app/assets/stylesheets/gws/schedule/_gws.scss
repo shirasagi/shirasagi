@@ -299,6 +299,18 @@
 }
 .fc-button {
   z-index: 0 !important;
+
+  .fc-icon {
+    &.fc-icon-gws-schedule-calendar-reload {
+      &:after {
+        font-family: "Material Icons";
+        font-size: 108%;
+        font-weight: bold;
+        content: "\E5D5";
+        left: -1px;
+      }
+    }
+  }
 }
 .fc-view-container {
   background-color: #fff;
