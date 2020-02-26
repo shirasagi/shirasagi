@@ -8,13 +8,15 @@ class SS::Migration20200221000000
     all_ids = model.pluck(:id)
     all_ids.each_slice(20) do |ids|
       model.in(id: ids).each do |user|
+        next if user.title_ids.present?
+
         title_name = user[:title_name]
 
         next if title_name.blank?
 
         sr_user_title = user.year.yearly_user_titles.find_or_initialize_by(name: title_name)
         if sr_user_title.new_record?
-          user_title = Gws::UserTitle.site(user.year.site).where(name: title_name).first
+          user_title = Gws::UserTitle.site(user.year.site).active.where(name: title_name).first
 
           next if user_title.blank?
 
@@ -23,10 +25,12 @@ class SS::Migration20200221000000
           sr_user_title.activation_date = user_title.activation_date
           sr_user_title.expiration_date = user_title.expiration_date
           sr_user_title.remark = user_title.remark
-          sr_user_title.save!
+          sr_user_title.save
         end
-        user.title_ids = [sr_user_title.id]
-        user.save!
+        if sr_user_title.active?
+          user.title_ids = [sr_user_title.id]
+          user.save
+        end
       end
     end
   end
