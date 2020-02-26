@@ -4,7 +4,7 @@ describe "gws_discussion_topics_notify_message", type: :feature, dbscope: :examp
   context "notify_message", js: true do
     let!(:site) { gws_site }
     let!(:discussion_member) do
-      create :gws_user, notice_discussion_email_user_setting: "notify", send_notice_mail_address: "#{unique_id}@example.jp"
+      create :gws_user, notice_discussion_email_user_setting: "notify", send_notice_mail_addresses: "#{unique_id}@example.jp"
     end
     let!(:forum1) { create :gws_discussion_forum, notify_state: "disabled" }
     let!(:forum2) { create :gws_discussion_forum, notify_state: "enabled" }
@@ -77,7 +77,7 @@ describe "gws_discussion_topics_notify_message", type: :feature, dbscope: :examp
       expect(ActionMailer::Base.deliveries.length).to eq 1
       mail = ActionMailer::Base.deliveries.first
       expect(mail.from.first).to eq site.sender_address
-      expect(mail.bcc.first).to eq discussion_member.send_notice_mail_address
+      expect(mail.bcc.first).to eq discussion_member.send_notice_mail_addresses.first
       expect(mail.subject).to eq notification.subject
       url = "#{SS.config.gws.canonical_scheme}://#{SS.config.gws.canonical_domain}/.g#{site.id}/memo/notices/#{notification.id}"
       expect(mail.decoded.to_s).to include(mail.subject, url)

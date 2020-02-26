@@ -6,7 +6,7 @@ describe "gws_board_topics", type: :feature, dbscope: :example do
     let!(:user1) do
       create(
         :gws_user, group_ids: gws_user.group_ids, gws_role_ids: gws_user.gws_role_ids,
-        notice_board_email_user_setting: "notify", send_notice_mail_address: "#{unique_id}@example.jp"
+        notice_board_email_user_setting: "notify", send_notice_mail_addresses: "#{unique_id}@example.jp"
       )
     end
     let!(:user2) { create :gws_user, group_ids: gws_user.group_ids, gws_role_ids: gws_user.gws_role_ids }
@@ -93,7 +93,7 @@ describe "gws_board_topics", type: :feature, dbscope: :example do
         expect(ActionMailer::Base.deliveries.length).to eq 1
         mail = ActionMailer::Base.deliveries.last
         expect(mail.from.first).to eq site.sender_address
-        expect(mail.bcc.first).to eq user1.send_notice_mail_address
+        expect(mail.bcc.first).to eq user1.send_notice_mail_addresses.first
         expect(mail.subject).to eq notice.subject
         url = "#{site.canonical_scheme}://#{site.canonical_domain}/.g#{site.id}/memo/notices/#{notice.id}"
         expect(mail.decoded.to_s).to include(mail.subject, url)
@@ -133,7 +133,7 @@ describe "gws_board_topics", type: :feature, dbscope: :example do
         expect(ActionMailer::Base.deliveries.length).to eq 2
         mail = ActionMailer::Base.deliveries.last
         expect(mail.from.first).to eq site.sender_address
-        expect(mail.bcc.first).to eq user1.send_notice_mail_address
+        expect(mail.bcc.first).to eq user1.send_notice_mail_addresses.first
         expect(mail.subject).to eq notice.subject
         url = "#{site.canonical_scheme}://#{site.canonical_domain}/.g#{site.id}/memo/notices/#{notice.id}"
         expect(mail.decoded.to_s).to include(mail.subject, url)
@@ -171,7 +171,7 @@ describe "gws_board_topics", type: :feature, dbscope: :example do
         expect(ActionMailer::Base.deliveries.length).to eq 3
         mail = ActionMailer::Base.deliveries.last
         expect(mail.from.first).to eq site.sender_address
-        expect(mail.bcc.first).to eq user1.send_notice_mail_address
+        expect(mail.bcc.first).to eq user1.send_notice_mail_addresses.first
         expect(mail.subject).to eq notice.subject
         url = "#{site.canonical_scheme}://#{site.canonical_domain}/.g#{site.id}/memo/notices/#{notice.id}"
         expect(mail.decoded.to_s).to include(mail.subject, url)
@@ -249,7 +249,7 @@ describe "gws_board_topics", type: :feature, dbscope: :example do
         expect(ActionMailer::Base.deliveries.length).to eq 1
         mail = ActionMailer::Base.deliveries.last
         expect(mail.from.first).to eq site.sender_address
-        expect(mail.bcc.first).to eq user1.send_notice_mail_address
+        expect(mail.bcc.first).to eq user1.send_notice_mail_addresses.first
         expect(mail.subject).to eq notice.subject
         url = "#{site.canonical_scheme}://#{site.canonical_domain}/.g#{site.id}/memo/notices/#{notice.id}"
         expect(mail.decoded.to_s).to include(mail.subject, url)
@@ -305,7 +305,7 @@ describe "gws_board_topics", type: :feature, dbscope: :example do
         expect(ActionMailer::Base.deliveries.length).to eq 2
         mail = ActionMailer::Base.deliveries.last
         expect(mail.from.first).to eq site.sender_address
-        expect(mail.bcc.first).to eq user1.send_notice_mail_address
+        expect(mail.bcc.first).to eq user1.send_notice_mail_addresses.first
         expect(mail.subject).to eq notice.subject
         url = "#{site.canonical_scheme}://#{site.canonical_domain}/.g#{site.id}/memo/notices/#{notice.id}"
         expect(mail.decoded.to_s).to include(mail.subject, url)
@@ -345,7 +345,7 @@ describe "gws_board_topics", type: :feature, dbscope: :example do
         expect(ActionMailer::Base.deliveries.length).to eq 3
         mail = ActionMailer::Base.deliveries.last
         expect(mail.from.first).to eq site.sender_address
-        expect(mail.bcc.first).to eq user1.send_notice_mail_address
+        expect(mail.bcc.first).to eq user1.send_notice_mail_addresses.first
         expect(mail.subject).to eq notice.subject
         url = "#{site.canonical_scheme}://#{site.canonical_domain}/.g#{site.id}/memo/notices/#{notice.id}"
         expect(mail.decoded.to_s).to include(mail.subject, url)
@@ -383,7 +383,7 @@ describe "gws_board_topics", type: :feature, dbscope: :example do
         expect(ActionMailer::Base.deliveries.length).to eq 4
         mail = ActionMailer::Base.deliveries.last
         expect(mail.from.first).to eq site.sender_address
-        expect(mail.bcc.first).to eq user1.send_notice_mail_address
+        expect(mail.bcc.first).to eq user1.send_notice_mail_addresses.first
         expect(mail.subject).to eq notice.subject
         url = "#{site.canonical_scheme}://#{site.canonical_domain}/.g#{site.id}/memo/notices/#{notice.id}"
         expect(mail.decoded.to_s).to include(mail.subject, url)

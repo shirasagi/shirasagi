@@ -4,7 +4,7 @@ describe "gws_discussion_comments", type: :feature, dbscope: :example, js: true 
   context "notify_message" do
     let!(:site) { gws_site }
     let!(:discussion_member) do
-      create :gws_user, notice_discussion_email_user_setting: "notify", send_notice_mail_address: "#{unique_id}@example.jp"
+      create :gws_user, notice_discussion_email_user_setting: "notify", send_notice_mail_addresses: "#{unique_id}@example.jp"
     end
     let!(:topic) { create :gws_discussion_topic }
     let!(:forum) { topic.forum }
@@ -53,7 +53,8 @@ describe "gws_discussion_comments", type: :feature, dbscope: :example, js: true 
       expect(notification.seen).to be_blank
       expect(notification.state).to eq "public"
       expect(notification.send_date).to be_present
-      expect(notification.url).to eq "/.g#{site.id}/discussion/-/forums/#{forum.id}/topics/#{topic.id}/comments#comment-#{post.id}"
+      url = "/.g#{site.id}/discussion/-/forums/#{forum.id}/topics/#{topic.id}/comments#comment-#{post.id}"
+      expect(notification.url).to eq url
       expect(notification.reply_module).to eq "discussion"
       expect(notification.reply_model).to eq "gws/discussion/topic"
       expect(notification.reply_item_id).to eq topic.id.to_s
@@ -61,7 +62,7 @@ describe "gws_discussion_comments", type: :feature, dbscope: :example, js: true 
       expect(ActionMailer::Base.deliveries.length).to eq 1
       mail = ActionMailer::Base.deliveries.first
       expect(mail.from.first).to eq site.sender_address
-      expect(mail.bcc.first).to eq discussion_member.send_notice_mail_address
+      expect(mail.bcc.first).to eq discussion_member.send_notice_mail_addresses.first
       expect(mail.subject).to eq notification.subject
       url = "#{SS.config.gws.canonical_scheme}://#{SS.config.gws.canonical_domain}/.g#{site.id}/memo/notices/#{notification.id}"
       expect(mail.decoded.to_s).to include(mail.subject, url)
