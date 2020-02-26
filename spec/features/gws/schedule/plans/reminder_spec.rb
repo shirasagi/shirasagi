@@ -16,7 +16,7 @@ describe "gws_schedule_plans", type: :feature, dbscope: :example, js: true do
     user = gws_user
     user.notice_schedule_user_setting = "notify"
     user.notice_schedule_email_user_setting = "notify"
-    user.send_notice_mail_address = "#{unique_id}@example.jp"
+    user.send_notice_mail_addresses = "#{unique_id}@example.jp"
     user.save!
 
     login_gws_user

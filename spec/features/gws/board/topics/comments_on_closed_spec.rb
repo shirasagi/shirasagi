@@ -5,7 +5,7 @@ describe "gws_board_topics", type: :feature, dbscope: :example do
     let(:site) { gws_site }
     let!(:user1) do
       create(
-        :gws_user, notice_board_email_user_setting: "notify", send_notice_mail_address: "#{unique_id}@example.jp",
+        :gws_user, notice_board_email_user_setting: "notify", send_notice_mail_addresses: "#{unique_id}@example.jp",
         group_ids: gws_user.group_ids, gws_role_ids: gws_user.gws_role_ids
       )
     end
