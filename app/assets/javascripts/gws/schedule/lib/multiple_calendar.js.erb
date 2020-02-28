@@ -10,15 +10,15 @@ this.Gws_Schedule_Multiple_Calendar = (function () {
     if (init == null) {
       init = {};
     }
-    params = Gws_Schedule_Calendar.defaultParams(opts);
+    params = Gws_Schedule_Calendar.defaultParams(selector, opts);
     if (opts['restUrl']) {
-      $.extend(true, params, Gws_Schedule_Calendar.editableParams(opts));
+      $.extend(true, params, Gws_Schedule_Calendar.editableParams(selector, opts));
     }
     if (opts['restUrl']) {
-      $.extend(true, params, Gws_Schedule_Calendar.tapMenuParams(opts));
+      $.extend(true, params, Gws_Schedule_Calendar.tapMenuParams(selector, opts));
     }
-    $.extend(true, params, this.defaultParams(opts));
-    $.extend(true, params, this.contentParams(opts));
+    $.extend(true, params, this.defaultParams(selector, opts));
+    $.extend(true, params, this.contentParams(selector, opts));
     $.extend(true, params, opts);
     $(selector).fullCalendar(params);
     Gws_Schedule_Calendar.renderInitialize(selector, init);
@@ -27,7 +27,7 @@ this.Gws_Schedule_Multiple_Calendar = (function () {
     });
   };
 
-  Gws_Schedule_Multiple_Calendar.defaultParams = function (opts) {
+  Gws_Schedule_Multiple_Calendar.defaultParams = function (selector, opts) {
     return {
       defaultView: 'basicWeek',
       header: {
@@ -51,7 +51,7 @@ this.Gws_Schedule_Multiple_Calendar = (function () {
     };
   };
 
-  Gws_Schedule_Multiple_Calendar.controllerParams = function (opts) {
+  Gws_Schedule_Multiple_Calendar.controllerParams = function (selector, opts) {
     return {
       header: {
         left: 'today prev next title',
@@ -66,7 +66,7 @@ this.Gws_Schedule_Multiple_Calendar = (function () {
     };
   };
 
-  Gws_Schedule_Multiple_Calendar.contentParams = function (opts) {
+  Gws_Schedule_Multiple_Calendar.contentParams = function (selector, opts) {
     return {
       eventRender: function (event, element, view) {
         if (view.name === 'basicHour') {
@@ -88,9 +88,9 @@ this.Gws_Schedule_Multiple_Calendar = (function () {
     if (init == null) {
       init = {};
     }
-    params = Gws_Schedule_Calendar.defaultParams(opts);
-    $.extend(true, params, this.defaultParams(opts));
-    $.extend(true, params, this.controllerParams(opts));
+    params = Gws_Schedule_Calendar.defaultParams(selector, opts);
+    $.extend(true, params, this.defaultParams(selector, opts));
+    $.extend(true, params, this.controllerParams(selector, opts));
     $.extend(true, params, opts);
     $(selector).fullCalendar(params);
     Gws_Schedule_Calendar.renderInitialize(selector, init);
