@@ -39,4 +39,23 @@ module Opendata::ListHelper
 
     h.join("\n").html_safe
   end
+
+  def render_user_agent(user_agent, accept_language:)
+    return if user_agent.blank?
+
+    browser = Browser.new(user_agent, accept_language: accept_language) rescue nil
+    return user_agent if browser.blank?
+
+    html = "<label class=\"browser-name\">#{browser.name}</label>"
+    if browser.full_version.present? && browser.full_version != "0.0"
+      html += " "
+      html += "<label class=\"version\">#{browser.full_version}</label>"
+    end
+    if browser.platform.name != "Other"
+      html += "@"
+      html += "<label class=\"platform\">#{browser.platform.name}</label>"
+    end
+
+    html.html_safe
+  end
 end

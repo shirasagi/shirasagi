@@ -184,3 +184,46 @@ table.opendata-harvest-report {
     padding: 10px 18px;
   }
 }
+
+.opendata-resource-histories {
+  &.no-checkboxes {
+    .list-item .check {
+      display: none;
+    }
+  }
+
+  .btn-group {
+    display: inline-block;
+  }
+
+  .btn-group ~ .btn-group {
+    margin-left: 12px;
+  }
+
+  .btn-active {
+    @include btn-active;
+  }
+
+  .btn-disabled {
+    color: $gray2;
+    cursor: default;
+    &:hover {
+      @include grd-white;
+    }
+  }
+
+  .btn-download {
+    &:before {
+      font-family: "Material Icons";
+      font-size: 100%;
+      content: "\E2C4";
+      display: inline;
+      margin-right: 4px;
+      vertical-align: -3px;
+    }
+  }
+
+  .user-agent {
+    text-decoration: underline dashed $gray2;
+  }
+}

@@ -18,12 +18,6 @@ Rails.application.routes.draw do
   end
 
   content "opendata" do
-    get "dataset_download_reports" => "dataset/download_reports#index", as: :dataset_download_reports
-    get "dataset_download_reports/download" => "dataset/download_reports#download", as: :dataset_download_reports_download
-    get "dataset_preview_reports" => "dataset/preview_reports#index", as: :dataset_preview_reports
-    get "dataset_preview_reports/download" => "dataset/preview_reports#download", as: :dataset_preview_reports_download
-    get "dataset_access_reports" => "dataset/access_reports#index", as: :dataset_access_reports
-    get "dataset_access_reports/download" => "dataset/access_reports#download", as: :dataset_access_reports_download
     get "dataset_public_entity" => "dataset/public_entity#index", as: :dataset_public_entity
     get "dataset_public_entity_download" => "dataset/public_entity#download", as: :dataset_public_entity_download
     resources :crawls, concerns: :deletion, module: :dataset
@@ -71,6 +65,34 @@ Rails.application.routes.draw do
     resources :search_datasets, concerns: :deletion, module: :dataset
     resources :search_dataset_groups, concerns: :deletion, module: :dataset
     resources :dataset_maps, concerns: :deletion, module: :dataset
+
+    scope "report", as: "dataset_report" do
+      get "/" => redirect { |p, req| "#{req.path}/downloads" }, as: :main
+      resources :downloads, only: %i[index], controller: "dataset/resource_download_reports" do
+        get :download, on: :collection
+      end
+      resources :accesses, only: %i[index], controller: "dataset/access_reports" do
+        get :download, on: :collection
+      end
+      resources :previews, only: %i[index], controller: "dataset/resource_preview_reports" do
+        get :download, on: :collection
+      end
+    end
+    scope "history", as: "dataset_history" do
+      get "/" => redirect { |p, req| "#{req.path}/downloads/#{Time.zone.now.strftime('%Y%m%d')}" }, as: :main
+      get "/downloads" => redirect { |p, req| "#{req.path}/#{Time.zone.now.strftime('%Y%m%d')}" }, as: :downloads_main
+      resources :downloads, only: %i[index], controller: "dataset/resource_download_histories", path: 'downloads/:ymd' do
+        get :download, on: :collection
+      end
+      resources :download_archives, only: %i[index show destroy], concerns: :deletion,
+                controller: "dataset/resource_download_history_archives"
+      get "/previews" => redirect { |p, req| "#{req.path}/#{Time.zone.now.strftime('%Y%m%d')}" }, as: :previews_main
+      resources :previews, only: %i[index], controller: "dataset/resource_preview_histories", path: 'previews/:ymd' do
+        get :download, on: :collection
+      end
+      resources :preview_archives, only: %i[index show destroy], concerns: :deletion,
+                controller: "dataset/resource_preview_history_archives"
+    end
 
     scope module: :dataset do
       namespace :harvest do
@@ -161,8 +183,9 @@ Rails.application.routes.draw do
     get "search_dataset/tags" => "public#index_tags", cell: "nodes/dataset/search_dataset"
     get "search_dataset/search" => "public#search", cell: "nodes/dataset/search_dataset"
     get "search_dataset/rss.xml" => "public#rss", cell: "nodes/dataset/search_dataset"
-    get "search_dataset/bulk_download" => "public#bulk_download", cell: "nodes/dataset/search_dataset"
-    get "search_dataset/dataset_download/:id" => "public#dataset_download", cell: "nodes/dataset/search_dataset"
+    match "search_dataset/bulk_download" => "public#bulk_download", cell: "nodes/dataset/search_dataset", via: [:get, :post]
+    match "search_dataset/dataset_download/:id" => "public#dataset_download", cell: "nodes/dataset/search_dataset",
+          via: [:get, :post]
   end
 
   part "opendata" do

@@ -38,29 +38,32 @@ class Opendata::Resource
       resource: self,
       remote_addr: remote_addr,
       user_agent: user_agent,
-      downloaded: downloaded
+      downloaded: downloaded,
+      downloaded_by: "single"
     )
   end
 
   def create_bulk_download_history(remote_addr, user_agent, downloaded)
-    Opendata::ResourceBulkDownloadHistory.create_history(
+    Opendata::ResourceDownloadHistory.create_history(
       site: dataset.site,
       dataset: dataset,
       resource: self,
       remote_addr: remote_addr,
       user_agent: user_agent,
-      downloaded: downloaded
+      downloaded: downloaded,
+      downloaded_by: "bulk"
     )
   end
 
   def create_dataset_download_history(remote_addr, user_agent, downloaded)
-    Opendata::ResourceDatasetDownloadHistory.create_history(
+    Opendata::ResourceDownloadHistory.create_history(
       site: dataset.site,
       dataset: dataset,
       resource: self,
       remote_addr: remote_addr,
       user_agent: user_agent,
-      downloaded: downloaded
+      downloaded: downloaded,
+      downloaded_by: "dataset"
     )
   end
 

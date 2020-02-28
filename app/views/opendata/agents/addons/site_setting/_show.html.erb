@@ -16,4 +16,7 @@
 
   <dt><%= @model.t :idea_state %></dt>
   <dd><%= @item.label :idea_state %></dd>
+
+  <dt><%= @model.t :anti_bot_methods %></dt>
+  <dd><%= br @item.anti_bot_methods.select(&:present?).map { |v| t("opendata.anti_bot_method_options.#{v}") }.join("\n") %></dd>
 </dl>
