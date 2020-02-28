@@ -3,7 +3,9 @@ require 'spec_helper'
 describe 'gws_memo_messages', type: :feature, dbscope: :example, js: true do
   context 'when a message save as draft with a recipient enabled forward setting' do
     let(:site) { gws_site }
-    let!(:recipient) { create(:gws_user, cur_site: site, group_ids: gws_user.group_ids, gws_role_ids: gws_user.gws_role_ids) }
+    let!(:recipient) do
+      create(:gws_user, cur_site: site, email: nil, group_ids: gws_user.group_ids, gws_role_ids: gws_user.gws_role_ids)
+    end
     let(:subject) { "subject-#{unique_id}" }
     let(:texts) { Array.new(rand(2..3)) { "text-#{unique_id}" } }
     let(:text) { texts.join("\r\n") }
@@ -70,6 +72,11 @@ describe 'gws_memo_messages', type: :feature, dbscope: :example, js: true do
         wait_for_ajax
         expect(page).to have_css('#notice', text: I18n.t("ss.notice.sent"))
 
+        expect(Gws::Memo::Message.count).to eq 1
+        message = Gws::Memo::Message.first
+        expect(message.subject).to eq subject
+        expect(message.text).to eq text
+
         # send forward mail
         expect(ActionMailer::Base.deliveries).to have(1).items
         ActionMailer::Base.deliveries.first.tap do |mail|
@@ -80,6 +87,13 @@ describe 'gws_memo_messages', type: :feature, dbscope: :example, js: true do
           expect(mail.body.multipart?).to be_falsey
           expect(mail.body.raw_source).to include(subject)
           expect(mail.body.raw_source).to include(text)
+          url = "#{SS.config.gws.canonical_scheme}://#{SS.config.gws.canonical_domain}"
+          url += "/.g#{site.id}/memo/messages/REDIRECT/#{message.id}"
+          expect(mail.body.raw_source).to include(url)
+
+          if target != 'dl.see.bcc'
+            expect(mail.body.raw_source).to include(recipient.name + "\n")
+          end
         end
       end
     end

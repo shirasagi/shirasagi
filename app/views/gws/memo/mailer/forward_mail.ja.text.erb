@@ -1,9 +1,9 @@
 メッセージが届きました。
 
+元メッセージ: <%= gws_memo_message_url(protocol: @cur_site.canonical_scheme.presence || SS.config.gws.canonical_scheme, host: @cur_site.canonical_domain.presence || SS.config.gws.canonical_domain, site: @cur_site, folder: "REDIRECT", id: @item) %>
 件名: <%= @item.name %>
-<%= @item.text %>
 時刻: <%= @item.send_date.strftime("%Y/%m/%d %H:%M") rescue nil %>
-差出人: <%= "#{@cur_user.name} <#{@cur_user.email}>" %>
+差出人: <%= format_email(@cur_user.name, @cur_user.email) %>
 宛先: <%= @to %>
 <% if @cc.present? %>
 CC: <%= @cc %>
@@ -11,3 +11,5 @@ CC: <%= @cc %>
 <% if @item.files.present? %>
 添付ファイル: <%= @item.files.pluck(:name).join(", ") %>
 <% end -%>
+
+<%= @item.text %>

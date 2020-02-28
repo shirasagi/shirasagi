@@ -1,12 +1,14 @@
 class Gws::Memo::Mailer < ActionMailer::Base
   include SS::AttachmentSupport
 
+  helper_method :format_email
+
   def forward_mail(item, forward_emails)
     @item = item
     @cur_user = item.user
     @cur_site = item.site
-    @to = @item.sorted_to_members.map { |item| "#{item.name} <#{item.email}>" }.join(", ")
-    @cc = @item.sorted_cc_members.map { |item| "#{item.name} <#{item.email}>" }.join(", ")
+    @to = @item.sorted_to_members.map { |item| format_email(item.name, item.email) }.join(", ")
+    @cc = @item.sorted_cc_members.map { |item| format_email(item.name, item.email) }.join(", ")
 
     from = @cur_site.sender_address
     subject = "[#{I18n.t("gws/memo/message.message")}]#{I18n.t("gws/memo/forward.subject")}:#{@cur_user.name}"
@@ -65,5 +67,15 @@ class Gws::Memo::Mailer < ActionMailer::Base
 
     url_helper = Rails.application.routes.url_helpers
     url_helper.gws_memo_notice_url(protocol: scheme, host: domain, site: @cur_site.id, id: @notice.id)
+  end
+
+  def format_email(name, email)
+    if name.present? && email.present?
+      "#{name} <#{email}>"
+    elsif name.present?
+      name.to_s
+    else
+      email.to_s
+    end
   end
 end
