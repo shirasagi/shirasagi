@@ -1,5 +1,4 @@
 require 'spec_helper'
-require 'pry'
 
 
 describe "history_cms_backups restore", type: :feature, dbscope: :example do
@@ -51,6 +50,7 @@ describe "history_cms_backups restore", type: :feature, dbscope: :example do
       basic_values = page.all("#addon-basic dd").map(&:text)
       expect(basic_values.index("second update")).to be_truthy
       expect(basic_values.include?("second index_name")).to be_truthy
+      expect(page).to have_no_css('div.file-view', text: file.name)
 
       click_link I18n.l(backup_item.created)
       expect(current_path).not_to eq sns_login_path
