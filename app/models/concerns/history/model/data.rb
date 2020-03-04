@@ -71,7 +71,7 @@ module History::Model::Data
       end
     end
     model.fields.each do |k, field|
-      next if k == "_id" || k == "state"
+      next if %w(_id state).include?(k)
       data[k] = nil if data[k].blank?
 
       if field.type == SS::Extensions::ObjectIds
