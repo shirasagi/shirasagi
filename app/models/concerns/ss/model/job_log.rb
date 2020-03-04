@@ -19,6 +19,9 @@ module SS::Model::JobLog
     seqid :id
     field :job_id, type: String
     field :state, type: String
+    field :hostname, type: String
+    field :ip_address, type: String
+    field :process_id, type: Integer
     field :started, type: DateTime
     field :closed, type: DateTime
     field :logs, type: Array, default: []
@@ -103,11 +106,11 @@ module SS::Model::JobLog
     @file_path ||= "#{SS::File.root}/job_logs/" + id.to_s.split(//).join("/") + "/_/#{id}.log"
   end
 
-  def head_logs(n = 1_000)
+  def head_logs(limit = 1_000)
     if file_path && ::File.exists?(file_path)
       texts = []
       ::File.open(file_path) do |f|
-        n.times do
+        limit.times do
           line = f.gets || break
           texts << line
         end
