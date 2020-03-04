@@ -14,8 +14,8 @@ class Facility::Node::Importer
   def import(file, opts = {})
     @task = opts[:task]
 
-    put_log("destory all pages /#{node.filename}/*")
-    ::Facility::Node::Page.where(filename: /^#{node.filename}\//, site_id: site.id).destroy_all
+    # put_log("destory all pages /#{node.filename}/*")
+    # ::Facility::Node::Page.where(filename: /^#{node.filename}\//, site_id: site.id).destroy_all
 
     put_log("import start #{file.filename}")
     import_csv(file)
