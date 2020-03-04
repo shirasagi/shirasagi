@@ -62,7 +62,7 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
         click_button I18n.t("ss.buttons.save")
         wait_for_ajax
 
-        first("a.thumb.select").click
+        click_on "modify.jpg"
       end
 
       within '#selected-files' do

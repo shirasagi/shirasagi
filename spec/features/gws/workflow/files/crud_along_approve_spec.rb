@@ -28,7 +28,7 @@ describe "gws_workflow_files", type: :feature, dbscope: :example, tmpdir: true, 
       end
       wait_for_cbox do
         within "article.file-view" do
-          find("a.thumb").click
+          click_on file.name
         end
       end
       within "form#item-form" do
