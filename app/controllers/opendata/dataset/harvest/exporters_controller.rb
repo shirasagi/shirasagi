@@ -2,7 +2,7 @@ class Opendata::Dataset::Harvest::ExportersController < ApplicationController
   include Cms::BaseFilter
   include Cms::CrudFilter
 
-  helper Opendata::FormHelper
+  helper Cms::FormHelper
 
   model Opendata::Harvest::Exporter
 

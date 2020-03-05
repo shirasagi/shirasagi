@@ -1779,6 +1779,12 @@ footer.send {
 .field_with_errors {
   display: inline;
 }
+.column-with-errors {
+  border: 1px solid #e00;
+}
+.required {
+  color: #e00;
+}
 
 // -------------------------------------------------------------------------------------------------
 // button

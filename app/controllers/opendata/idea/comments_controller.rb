@@ -2,7 +2,7 @@ class Opendata::Idea::CommentsController < ApplicationController
   include Cms::BaseFilter
   include Cms::CrudFilter
   include Opendata::Idea::CommentFilter
-  helper Opendata::FormHelper
+  helper Cms::FormHelper
 
   model Opendata::IdeaComment
 

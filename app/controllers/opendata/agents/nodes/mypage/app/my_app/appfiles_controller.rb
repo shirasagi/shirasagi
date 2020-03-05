@@ -2,7 +2,7 @@ class Opendata::Agents::Nodes::Mypage::App::MyApp::AppfilesController < Applicat
   include Cms::NodeFilter::View
   include Member::LoginFilter
   include Opendata::MemberFilter
-  helper Opendata::FormHelper
+  helper Cms::FormHelper
   helper Opendata::UrlHelper
 
   before_action :accept_cors_request

@@ -3,7 +3,7 @@ class Opendata::Agents::Nodes::Mypage::Dataset::MyDatasetController < Applicatio
   include Member::LoginFilter
   include Opendata::MemberFilter
   helper Opendata::UrlHelper
-  helper Opendata::FormHelper
+  helper Cms::FormHelper
   helper Opendata::ListHelper
 
   before_action :set_model

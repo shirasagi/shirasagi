@@ -2,7 +2,7 @@ class Opendata::Dataset::Harvest::Exporter::GroupSettingsController < Applicatio
   include Cms::BaseFilter
   include Cms::CrudFilter
 
-  helper Opendata::FormHelper
+  helper Cms::FormHelper
 
   model Opendata::Harvest::Exporter::GroupSetting
 
