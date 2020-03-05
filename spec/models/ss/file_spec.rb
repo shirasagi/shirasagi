@@ -421,4 +421,24 @@ describe SS::File, dbscope: :example do
       end
     end
   end
+
+  describe "#download_filename" do
+    context "when name is with ext" do
+      subject { tmp_ss_file(contents: '0123456789', basename: "text.txt") }
+
+      its(:download_filename) { is_expected.to eq "text.txt" }
+    end
+
+    context "when name is without ext" do
+      subject { tmp_ss_file(contents: '0123456789', basename: "text") }
+
+      its(:download_filename) { is_expected.to eq "text" }
+    end
+
+    context "when name ends with period" do
+      subject { tmp_ss_file(contents: '0123456789', basename: "text.") }
+
+      its(:download_filename) { is_expected.to eq "text" }
+    end
+  end
 end
