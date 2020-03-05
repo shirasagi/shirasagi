@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe "gws_notices", type: :feature, dbscope: :example, tmpdir: true, js: true do
+describe "gws_notices", type: :feature, dbscope: :example, js: true do
   let(:site) { gws_site }
   let!(:folder) { create(:gws_notice_folder) }
   let(:notice_name) { unique_id }

@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe "gws_workflow_files", type: :feature, dbscope: :example, tmpdir: true, js: true do
+describe "gws_workflow_files", type: :feature, dbscope: :example, js: true do
   context "crud along with approve path" do
     let(:site) { gws_site }
     let(:user) { gws_user }

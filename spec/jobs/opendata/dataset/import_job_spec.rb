@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe Opendata::Dataset::ImportJob, dbscope: :example, tmpdir: true do
+describe Opendata::Dataset::ImportJob, dbscope: :example do
   let!(:site) { cms_site }
   let!(:node) { create(:opendata_node_dataset, name: "import") }
   let!(:ss_file) { tmp_ss_file(contents: "#{Rails.root}/spec/fixtures/opendata/dataset_import.zip") }

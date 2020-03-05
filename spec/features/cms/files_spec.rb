@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe "cms_files", type: :feature, dbscope: :example, tmpdir: true do
+describe "cms_files", type: :feature, dbscope: :example do
   let(:site) { cms_site }
   let(:item) { tmp_ss_file(contents: "#{Rails.root}/spec/fixtures/ss/logo.png", site: site, user: cms_user, model: 'cms/file') }
   let(:index_path) { cms_files_path site.id }

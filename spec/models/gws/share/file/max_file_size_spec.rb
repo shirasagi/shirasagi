@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-RSpec.describe Gws::Share::File, type: :model, dbscope: :example, tmpdir: true do
+RSpec.describe Gws::Share::File, type: :model, dbscope: :example do
   describe "file size limit test" do
     let(:site) { gws_site }
     let(:user) { gws_user }

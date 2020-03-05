@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe "gws_circular_admins", type: :feature, dbscope: :example, tmpdir: true, js: true do
+describe "gws_circular_admins", type: :feature, dbscope: :example, js: true do
   let(:site) { gws_site }
   let!(:user1) { create(:gws_user, group_ids: gws_user.group_ids, gws_role_ids: gws_user.gws_role_ids) }
   let(:name) { unique_id }

@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe "gws_share_files", type: :feature, dbscope: :example, tmpdir: true, js: true do
+describe "gws_share_files", type: :feature, dbscope: :example, js: true do
   let(:site) { gws_site }
   let!(:root_folder) { create :gws_share_folder }
   let!(:folder1) { create :gws_share_folder, name: "#{root_folder.name}/#{unique_id}" }

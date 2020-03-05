@@ -1,7 +1,7 @@
 require 'spec_helper'
 require 'rake'
 
-describe Sys::SiteExportJob, dbscope: :example, tmpdir: true do
+describe Sys::SiteExportJob, dbscope: :example do
   let(:site) { cms_site }
 
   before do
