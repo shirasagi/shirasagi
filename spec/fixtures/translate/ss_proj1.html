@@ -1,0 +1,474 @@
+<!doctype html>
+<html lang="ja">
+
+<head>
+<meta charset="UTF-8" />
+<title>シラサギ1.12.0 リリース - SHIRASAGI公式サイト</title>
+<link rel="stylesheet" media="screen" href="/assets/cms/public.css" />
+<script src="/assets/cms/public.js"></script>
+<script>
+//<![CDATA[
+
+  SS.config = {"site_url":"/","kana_url":"/kana/","theme":{},"recommend":{}};
+
+//]]>
+</script><meta name="keywords" content="リリースノート" />
+
+  <link href="/css/style.css" media="all" rel="stylesheet" />
+  <link rel="shortcut icon" href="/img/favicon.ico" />
+  <script src="/js/common.js"></script>
+  <!--[if lt IE9]><script src="/js/selectivizr.js"></script><![endif]-->
+  <meta name="viewport" content="width=device-width,initial-scale=1.0,user-scalable=yes,minimum-scale=1.0,maximum-scale=2.0">
+
+
+<meta property="fb:app_id" content="329052550826442" />
+<meta property="article:author" content="https://www.facebook.com/ssproj/" />
+<meta property="article:publisher" content="https://www.facebook.com/ssproj/" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://www.ss-proj.org/release/736.html" />
+<meta property="og:site_name" content="SHIRASAGI公式サイト" />
+<meta property="og:title" content="シラサギ1.12.0 リリース - SHIRASAGI公式サイト" />
+<meta property="og:description" content="シラサギv1.12.0 をリリースしました。 最新版デモ環境はこちら プラットフォーム Ruby 2.6.3 Ruby on Rails 5.2.3 MongoDB 3.4 アップデート手順 開発マニュアル：SHIRASAGIの更新を確認ください。 新機能 CMS CMS 全般 サイト内検索機能を追加しました。 サイト設定より全文検索サーバーの URL を設定し、サイト内検索のフォルダーを作..." />
+<meta property="og:image" content="https://www.ss-proj.org/fs/3/8/9/9/_/site_search.png" />
+<meta property="og:image" content="https://www.ss-proj.org/fs/3/8/9/5/_/chat_bot.png" />
+<meta property="og:image" content="https://www.ss-proj.org/fs/3/8/9/7/_/garbage.png" />
+<meta property="og:image" content="https://www.ss-proj.org/fs/3/9/0/1/_/todo.png" />
+
+
+
+</head>
+
+<body id="body--release-736" class="body--release">
+<div id="page" class="one">
+
+<div id="tool">
+<nav>
+  <a id="nocssread" href="#wrap">本文へ</a>
+  <div id="size">文字サイズ<span id="ss-small">小さく</span><span id="ss-medium">標準</span><span id="ss-large">大きく</span></div>
+  <!--<a id="read" href="#">読み上げる</a>-->
+  <!--<span id="ss-kana">ふりがなをつける</span>-->
+  <a id="info" href="/use/">ご利用案内</a>
+</nav>
+</div>
+<header id="head">
+  <div class="wrap">
+    <h1><a href="/"><img title="SHIRASAGI公式サイト" alt="SHIRASAGI公式サイト" src="/img/logo.jpg"></a></h1>
+    <div id="sp-btn">
+      <a href="#"><span></span><span></span><span></span></a>
+    </div>
+    <div id="search">
+      <form action="/search/">
+        <input type="hidden" value="010853961770051761381:31uecg5sxsk" name="cx" />
+        <input type="hidden" value="FORID:10" name="cof" />
+        <input type="hidden" value="UTF-8" name="ie" />
+        <input type="text" name="q" size="40" id="search-box" class="text" title="サイト内検索" placeholder="サイト内検索">
+        <input type="submit" name="sa" value="検索" id="search-button">
+      </form>
+    </div>
+    <nav id="gnav">
+      <ul>
+        <li class="about"><a href="/about/">シラサギとは</a></li>
+        <li class="download"><a href="/download/">ダウンロード</a></li>
+        <li class="case"><a href="/case/">導入事例</a></li>
+        <li class="inquiry"><a href="/inquiry/">お問い合わせ</a></li>
+      </ul>
+    </nav>
+  </div>
+</header>
+
+<div id="wrap">
+  <div id="crumbs">
+    <div class="crumbs">
+<div class="crumb"><span class="page"><a href="/">ホーム</a></span><span class="separator">&rsaquo;</span><span class="page"><a href="/release/">リリースノート</a></span><span class="separator">&rsaquo;</span><span class="page">シラサギ1.12.0 リリース</span></div>
+</div>
+
+  </div>
+  <div id="main">
+    <header id="content-title"><h1 id="ss-page-name" class="release">シラサギ1.12.0 リリース</h1></header>
+    <div class="wrap">
+      <!-- layout_yield -->
+
+
+
+
+
+
+
+
+
+    <article class="body">
+      <p>シラサギv1.12.0&nbsp;をリリースしました。<br />
+<a href="https://www.ss-proj.org/download/demo.html">最新版デモ環境はこちら</a></p>
+
+<h1>プラットフォーム</h1>
+
+<ul>
+	<li>Ruby 2.6.3</li>
+	<li>Ruby on Rails 5.2.3</li>
+	<li>MongoDB 3.4</li>
+</ul>
+
+<h1>アップデート手順</h1>
+
+<p><a href="http://shirasagi.github.io/updation/manual.html">開発マニュアル：SHIRASAGIの更新</a>を確認ください。</p>
+
+<h1>新機能</h1>
+
+<h2>CMS</h2>
+
+<h3>CMS 全般</h3>
+
+<ul>
+	<li>サイト内検索機能を追加しました。<br />
+	<img alt="サイト内検索" src="/fs/3/8/9/9/_/site_search.png" /><br />
+	<br />
+	サイト設定より全文検索サーバーの URL を設定し、サイト内検索のフォルダーを作成することでサイト内検索が可能です。<br />
+	&nbsp;</li>
+	<li>チャットボットを追加しました。<br />
+	<img alt="チャットボット" src="/fs/3/8/9/5/_/chat_bot.png" /><br />
+	<br />
+	チャットボットのフォルダーを作成し、シナリオを作成することで使用できます。<br />
+	&nbsp;</li>
+	<li>ゴミ箱機能を追加しました。<br />
+	<img alt="ゴミ箱機能" src="/fs/3/8/9/7/_/garbage.png" /><br />
+	<br />
+	フォルダー、ページ、パーツ、レイアウトを復元できます。</li>
+</ul>
+
+<h2>グループウェア</h2>
+
+<h3>ToDo</h3>
+
+<ul>
+	<li>プロジェクト管理機能を追加しました。<br />
+	<img alt="ToDo" src="/fs/3/9/0/1/_/todo.png" /><br />
+	<br />
+	ToDo をプロジェクト・工程でまとめて管理することができます。</li>
+</ul>
+
+<h1>変更/拡張</h1>
+
+<h2>全体</h2>
+
+<ul>
+	<li>最新の祝日に対応しました。</li>
+	<li>一部の画像ファイルのアップロード時にエラーが発生する問題を修正しました。</li>
+	<li>アップロードしたファイルが新しい順になるように変更しました。</li>
+	<li>ファイルのアップロード時にモーダル内のツールチップが隠れる問題を修正しました。</li>
+	<li>ファイルのアップロード時にモーダルが閉じなくなるボタンを追加しました。</li>
+	<li>PNGファイルやBMPファイルなどEXIF情報を持たない画像ファイルをアップロードすると500エラーが発生する問題を修正しました。</li>
+</ul>
+
+<h2>CMS</h2>
+
+<h3>CMS 全般</h3>
+
+<ul>
+	<li>リンクチェックで、コメントアウトした URL が対象になる問題を修正しました。</li>
+	<li>公開中のコンテンツを更新履歴から復元できないように変更しました。</li>
+	<li>グループ別ページリストで #{child_items} が動作するように修正しました。</li>
+	<li>フォルダー複製が動作しない問題を修正しました。</li>
+	<li>権限・ロールのインポートにて別サイトの権限・ロールを変更できてしまう問題を修正しました。</li>
+	<li>権限が無いとインポートのログが見えない問題を修正しました。</li>
+	<li>共有ファイルの所有権限を修正し、新規作成ができない問題を解消しました。</li>
+	<li>サイト複製で定形フォームのチェックボックスを使用したページが複製できない問題を修正しました。</li>
+	<li>サイト複製でタイトルが80文字以上のページを複製できない問題を修正しました。</li>
+	<li>サイト複製でキービジュアルが複製できない問題を修正しました。</li>
+	<li>サイト複製で承認申請中のページが複製できない問題を修正しました。</li>
+	<li>サイト複製でオープンデータのリソース URL が複製できない問題を修正しました。</li>
+	<li>フォルダー複製のキャンセルボタンが動作しない問題を修正しました。</li>
+	<li>フォルダー取り込みのインポート開始時刻が動作しない問題を修正しました。</li>
+	<li>フォルダー取り込みに Mac で圧縮したファイルを使用すると不要なフォルダーが作成される問題を修正しました。</li>
+	<li>複数のルートグループが存在する場合、 LDAP 接続画面が表示できない問題を修正しました。</li>
+	<li>ジョブのログのダウンロードの条件を修正しました。</li>
+	<li>CMSのページ書き出しにて、添付ファイルの書き出しを修正しました。</li>
+	<li>フォルダー複製で不要な警告が表示される不具合を修正しました。</li>
+	<li>子リストの表示数が正しく入力できない問題を修正しました。</li>
+</ul>
+
+<h3>ページ</h3>
+
+<ul>
+	<li>サムネイル画像が複製できない問題を修正しました。</li>
+	<li>非公開フォルダー配下のページを閲覧できる問題を修正しました。</li>
+	<li>ページの作成後に定形フォーム側の項目を削除すると公開画面に表示が残る現象を修正しました。</li>
+	<li>404ページ&nbsp;のプレビューが動作しない問題を修正しました。</li>
+	<li>サムネイルの target 属性を修正しました。</li>
+	<li>非公開保存時に警告が表示されない問題を修正しました。</li>
+	<li>定形フォームの閲覧権限が無いとページが編集できない問題を修正しました。</li>
+	<li>定形フォームの自由入力でユーザーファイル、共有ファイルが使用できない問題を修正しました。</li>
+	<li>アクセシビリティチェックで img タグの alt 属性が設定されていても警告される問題を修正しました。</li>
+	<li>定形フォームを使用時、 Safari でアクセシビリティチェックが動作しない問題を修正しました。</li>
+</ul>
+
+<h3>広告管理</h3>
+
+<ul>
+	<li>リンク URL に ? が含まれていると正しくリンクされない問題を修正しました。</li>
+	<li>a 要素の追加属性を設定できるようにしました。</li>
+	<li>カテゴリーが編集できない問題を修正しました。</li>
+</ul>
+
+<h3>カテゴリー</h3>
+
+<ul>
+	<li>カテゴリー分割機能が動作しない問題を修正しました。</li>
+	<li>カテゴリー統合機能が動作しない問題を修正しました。</li>
+</ul>
+
+<h3>イベント</h3>
+
+<ul>
+	<li>イベントに関連する施設を設定できるように修正しました。<br />
+	検索の条件に施設名が追加されました。</li>
+	<li>編集ロックを追加しました。</li>
+</ul>
+
+<h3>施設</h3>
+
+<ul>
+	<li>施設検索時にマーカーがセットされていない場合にモーダルが正しく開かない問題を修正しました。</li>
+</ul>
+
+<h3>お問い合わせ</h3>
+
+<ul>
+	<li>質問項目を一括で削除できるようになりました。</li>
+	<li>CSV の質問項目の並び順を修正しました。</li>
+	<li>回答データの対応状態を設定できる機能を追加しました。</li>
+</ul>
+
+<h3>気象庁防災情報 XML</h3>
+
+<ul>
+	<li>直前に取り込まれた XML が削除されてしまう問題を修正しました。</li>
+	<li>&quot;気象特別警報・警報・注意報&quot;の受信条件が動作しない問題を修正しました。</li>
+</ul>
+
+<h3>メンバー</h3>
+
+<ul>
+	<li>ブログページの承認申請が正しく動作しない問題を修正しました。</li>
+	<li>会員登録でメール通知を有効にしてもメールが届かない問題を修正しました。</li>
+	<li>メンバーの CSV の表示を修正しました。</li>
+</ul>
+
+<h3>オープンデータ</h3>
+
+<ul>
+	<li>集計結果の表示を修正しました。</li>
+	<li>RDF が正しくインポートできない問題を修正しました。</li>
+	<li>CSV を RDF に変換後、データセットを書き出して生成した RDF が即座に反映されるようにしました。</li>
+	<li>CSV の更新時、その CSV が RDF に変換済みなら RDF への変換ガイダンスを開始するように修正しました。</li>
+	<li>IMI Core Vocabulary のバージョンアップをしました。</li>
+	<li>RDF に関するエラーを修正しました。</li>
+	<li>クローリングリソースがクローリングしたファイルに正常な値が一部入っていない問題を修正しました。</li>
+	<li>データ作成者を設定できるようにしました。</li>
+</ul>
+
+<h3>RSS</h3>
+
+<ul>
+	<li>RSS配信のタイトルに一覧用タイトルを使用するように変更しました。</li>
+	<li>ソース URL を必須項目に変更しました。</li>
+</ul>
+
+<h3>緊急災害レイアウト</h3>
+
+<ul>
+	<li>フォルダーを非表示に変更しました。</li>
+</ul>
+
+<h2>グループウェア</h2>
+
+<h3>グループウェア全般</h3>
+
+<ul>
+	<li>ユーザーのインポート時、ユーザー ID が存在しない場合の表示を修正しました。</li>
+	<li>通知機能が正常に動作していない問題を修正しました。</li>
+	<li>グループ用のログイン画面にリダイレクトできない問題を修正しました。</li>
+	<li>ジョブのログが閲覧できない問題を修正しました。</li>
+	<li>一部のアイコンで 404 エラーが発生し、適切に表示できていない問題を修正しました。</li>
+</ul>
+
+<h3>お知らせ</h3>
+
+<ul>
+	<li>お知らせを左側のナビに表示するように変更しました。</li>
+	<li>お知らせの既読・未読を確認できるようにしました（管理者向け）。</li>
+	<li>表示を調整し、未読のお知らせを分かりやすく表示するように修正しました。</li>
+</ul>
+
+<h3>スケジュール</h3>
+
+<ul>
+	<li>タブの表示・非表示を設定できるようにし、また、タブの名称を設定できる機能を追加しました。</li>
+	<li>スケジュールの「日表示」を調整し、予定が重なった場合に分かりやすく表示するようにしました。</li>
+	<li>インポートができない問題を修正しました。</li>
+	<li>施設管理者なら制限を超えて施設予約を可能にするように変更しました。</li>
+	<li>施設の終日予約が正しく動作しない問題を修正しました。</li>
+	<li>スケジュールを削除した際に設定に関わらず通知される問題を修正しました。</li>
+	<li>ゴミ箱から復元した際に通知するように修正しました。</li>
+	<li>スケジュールを削除すると無関係なスケジュールの削除通知が送られてしまう問題を修正しました。</li>
+</ul>
+
+<h3>メッセージ</h3>
+
+<ul>
+	<li>動作速度を改善しました。</li>
+	<li>検索の条件を追加しました。</li>
+	<li>件名を 200 文字以内に制限しました。</li>
+	<li>スターを追加または削除した際に&quot;削除しました。&quot;と表示される問題を修正しました。</li>
+	<li>メッセージを移動できるフォルダーが無いとき、&quot;移動する&quot;メニューを非表示になるように修正しました。</li>
+	<li>送信済みトレイ、ゴミ箱のメッセージをダウンロードできるように修正しました。</li>
+	<li>eml 形式のダウンロードに失敗する問題を修正しました。</li>
+	<li>&quot;全てエクスポート&quot;を追加しました。</li>
+	<li>安定性を向上させました。</li>
+	<li>ダウンロード時、物理フォルダーが無いと 500 エラーが発生する問題を修正しました。</li>
+	<li>カテゴリーの作成時のエラーメッセージを調整しました。</li>
+</ul>
+
+<h3>出退勤</h3>
+
+<ul>
+	<li>休始 1 などの編集で 500 エラーが発生する問題を修正しました。</li>
+	<li>使用権限と編集権限を調整しました。使用権限では当日の打刻のみが可能となり、当日を編集するには編集権限が必要となります。</li>
+</ul>
+
+<h3>レポート</h3>
+
+<ul>
+	<li>入力項目の数値入力に最小値、最大値を設定しているとエラーが発生する問題を修正しました。</li>
+	<li>ゴミ箱から復元時、 500 エラーが発生する問題を修正しました。</li>
+</ul>
+
+<h3>回覧板</h3>
+
+<ul>
+	<li>並び順を変更できるようにしました。</li>
+</ul>
+
+<h3>照会・回答</h3>
+
+<ul>
+	<li>ダウンロードしたファイルの先頭に並び順を追加しました。</li>
+	<li>回答結果の添付ファイルの一括ダウンロード機能がありましたが、質問にも同様の機能を追加しました。</li>
+</ul>
+
+<h3>アンケート</h3>
+
+<ul>
+	<li>複製・印刷機能を追加しました。</li>
+</ul>
+
+<h3>共有ファイル</h3>
+
+<ul>
+	<li>紛らわし表示を調整し、見やすくなるように画面を調整しました。</li>
+	<li>ファイル一覧画面で、フォルダーの作成、名前変更および削除をできるようにし操作性を改善しました。</li>
+	<li>使用量制限が効かない問題を修正しました。</li>
+	<li>使用量計算を効率化しました。</li>
+	<li>履歴が正しく動作していない問題を修正しました。</li>
+	<li>保持できる履歴の件数に制限を設けました。これまではいくらでも履歴を保持することができ、サーバーのディスク容量を圧迫することがありました。既定では 20 件に制限されます。</li>
+</ul>
+
+<h3>電子職員録</h3>
+
+<ul>
+	<li>初期状態では所属で絞り込むようにしました。</li>
+</ul>
+
+<h2>ウェブメール</h2>
+
+<ul>
+	<li>フォルダーの作成に失敗時、正しくエラーが表示されない問題を修正しました。</li>
+	<li>特定のメールを開いた際に 500 エラーが発生する問題を修正しました。</li>
+	<li>HTML メールの返信で 500 エラーが発生する問題を修正しました。</li>
+	<li>不正なフォルダーを作成すると 500 エラーが発生する問題を修正しました。</li>
+	<li>アカウントを表示した状態でグループアカウントに切り替えると 404 エラーが発生する問題を修正しました。</li>
+	<li>RFC 違反のメールで 500 エラーが発生する問題を修正しました。</li>
+	<li>下書きフォルダーが無い状態で下書き保存すると再編集できなくなる問題を修正しました。</li>
+	<li>1 ユーザーが 2つ以上同時にインポートできないように制限しました。</li>
+	<li>スターを追加または削除した際に&quot;削除しました。&quot;と表示される問題を修正しました。</li>
+	<li>グループアカウントの容量をリロードできない問題を修正しました。</li>
+	<li>件名が長すぎるとダウンロードできない問題を修正しました。</li>
+	<li>存在しない IMAP アカウントが指定された場合に 500 エラーが発生する問題を修正しました。</li>
+	<li>安定性を向上させました。</li>
+	<li>ダウンロード時にメールが見つからなかった時、ダウンロードが止まらないように修正しました。</li>
+	<li>IMAPサーバーへのアクセス時にタイムアウトを設定するようにしました。</li>
+	<li>ユーザーを正しく削除できない問題を修正しました。</li>
+</ul>
+
+<h2>全修正履歴</h2>
+
+<p>より詳細な変更履歴はGitHubのコミットログを参照してください。<br />
+Issueに登録されている項目でv1.12.0にて対応を行ったものは、次のマイルストーンから参照してください。<br />
+<a href="https://github.com/shirasagi/shirasagi/milestone/12?closed=1">v1.12.0マイルストーン</a></p>
+    </article>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- /layout_yield -->
+    </div>
+    <div class="side">
+      <nav id="service">
+  <ul>
+    <li class="lgwan"><a href="https://www.web-tips.co.jp/work/lgwan.html" target="_blank">シラサギ<br />LGWAN-ASPサービス</a></li>
+    <li class="cloud"><a href="https://www.web-tips.co.jp/work/cloud.html" target="_blank">シラサギ<br />クラウドサービス</a></li>
+    <li class="dev"><a href="https://www.web-tips.co.jp/work/development.html" target="_blank">シラサギ<br />業務代行サービス</a></li>
+    <li class="course"><a href="https://www.web-tips.co.jp/work/course.html" target="_blank">シラサギ<br />講習会サービス</a></li>
+    <li class="support"><a href="https://www.web-tips.co.jp/work/support.html" target="_blank">シラサギ<br />サポートサービス</a></li>
+  </ul>
+</nav>
+    </div>
+  </div>
+</div>
+<p class="pagetop"><a href="#page"><img src="/img/pagetop.png" alt="このページの先頭へ" /></a></p>
+<footer id="foot">
+  <nav id="foot-navi">
+      <ul>
+        <li><a href="/sitemap/">サイトマップ</a></li>
+        <li><a href="/privacy/">プライバシーポリシー</a></li>
+        <li><a href="/inquiry/">お問い合わせ</a></li>
+        <li><a href="/vendor/">協業ベンダーの皆様</a></li>
+      </ul>
+  </nav>
+  <div id="copyright"><small>Copyright &copy; 2014- SHIRASAGI Project All Rights Reserved.</small></div>
+</footer>
+<footer id="ss-pc" style="display: none">PC表示</footer>
+<footer id="ss-mb" style="display: none">スマートフォン表示</footer>
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-51065965-1', 'ss-proj.org');
+  ga('send', 'pageview');
+
+</script>
+
+</div>
+</body>
+
+</html>

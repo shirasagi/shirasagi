@@ -49,7 +49,9 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
     it "#edit file name" do
       visit edit_path
       within "form#item-form" do
-        click_on I18n.t("ss.buttons.upload")
+        within "#addon-cms-agents-addons-file" do
+          click_on I18n.t("ss.buttons.upload")
+        end
       end
 
       wait_for_cbox do
@@ -62,7 +64,7 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
         click_button I18n.t("ss.buttons.save")
         wait_for_ajax
 
-        first("a.thumb.select").click
+        click_on "modify.jpg"
       end
 
       within '#selected-files' do
@@ -77,7 +79,9 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
     it "#edit" do
       visit edit_path
       within "form#item-form" do
-        click_on I18n.t("sns.user_file")
+        within "#addon-cms-agents-addons-file" do
+          click_on I18n.t("sns.user_file")
+        end
       end
 
       wait_for_cbox do
@@ -104,7 +108,9 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
 
         visit edit_path
         within "form#item-form" do
-          click_on I18n.t("cms.file")
+          within "#addon-cms-agents-addons-file" do
+            click_on I18n.t("cms.file")
+          end
         end
 
         wait_for_cbox do
@@ -128,7 +134,9 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
 
         visit edit_path
         within "form#item-form" do
-          click_on I18n.t("cms.file")
+          within "#addon-cms-agents-addons-file" do
+            click_on I18n.t("cms.file")
+          end
         end
 
         wait_for_cbox do

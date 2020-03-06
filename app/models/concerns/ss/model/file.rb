@@ -153,20 +153,31 @@ module SS::Model::File
   end
 
   def humanized_name
-    "#{name.sub(/\.[^\.]+$/, '')} (#{extname.upcase} #{number_to_human_size(size)})"
+    "#{::File.basename(name, ".*")} (#{extname.upcase} #{number_to_human_size(size)})"
   end
 
   def download_filename
-    name.include?('.') ? name : "#{name}.#{extname}"
+    return name if name.include?('.') && !name.end_with?(".")
+
+    name_without_ext = ::File.basename(name, ".*")
+    ext = ::File.extname(filename)
+    return name_without_ext if ext.blank?
+
+    name_without_ext + ext
   end
 
   def basename
-    filename.to_s.sub(/.*\//, "")
+    filename.present? ? ::File.basename(filename) : ""
   end
 
   def extname
-    return "" unless filename.to_s.include?('.')
-    filename.to_s.sub(/.*\W/, "")
+    return "" if filename.blank?
+
+    ret = ::File.extname(filename)
+    return "" if ret.blank?
+
+    ret = ret[1..-1] if ret.start_with?(".")
+    ret
   end
 
   def image?
@@ -237,6 +248,33 @@ module SS::Model::File
   def copy_if_necessary(opts = {})
     return self if !COPY_REQUIRED_MODELS.include?(self.model)
     copy(opts)
+  end
+
+  def image_dimension
+    return unless image?
+
+    list = Magick::ImageList.new(path)
+    max_width = 0
+    max_height = 0
+    list.each do |image|
+      max_width = image.columns if max_width < image.columns
+      max_height = image.rows if max_height < image.rows
+    end
+
+    [ max_width, max_height ]
+  end
+
+  def shrink_image_to(width, height)
+    return false unless image?
+
+    cur_width, cur_height = image_dimension
+    return false if cur_width.nil? || cur_height.nil?
+    return true if cur_width <= width && cur_height <= height
+
+    return false unless SS::ImageConverter.resize_to_fit(self, width, height)
+
+    self.update(size: ::File.size(path))
+    true
   end
 
   private

@@ -27,6 +27,6 @@ class Cms::Column::Value::TextArea < Cms::Column::Value::Base
 
   # override Cms::Column::Value::Base#to_default_html
   def to_default_html
-    ApplicationController.helpers.sanitize(ApplicationController.helpers.br_not_h(self.value))
+    ApplicationController.helpers.sanitize(ApplicationController.helpers.br(self.value, html_escape: false))
   end
 end

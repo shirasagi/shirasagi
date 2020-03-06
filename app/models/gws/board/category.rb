@@ -8,6 +8,8 @@ class Gws::Board::Category
   include Gws::Addon::GroupPermission
   include Gws::Addon::History
 
+  no_needs_read_permission_to_read
+
   default_scope ->{ where(model: "gws/board/category").order_by(name: 1) }
 
   validate :validate_name_depth

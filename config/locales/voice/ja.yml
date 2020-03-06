@@ -4,9 +4,9 @@ ja:
     error_file: エラー一覧
     synthesis_fail:
       empty_source: 読み上げる文字列がありません。
-      no_open_jtalk: Open JTalk がインストールされていません。
+      no_open_jtalk: "%{path}: Open JTalk がインストールされていません。"
       open_jtalk: Open JTalk エラーが発生しました。
-      no_sox: Sox がインストールされていません。
+      no_sox: "#{path}: Sox がインストールされていません。"
       sox: Sox エラーが発生しました。
       no_lame: Lame がインストールされていません。
       lame: Lame エラーが発生しました。

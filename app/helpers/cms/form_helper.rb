@@ -44,13 +44,17 @@ module Cms::FormHelper
   def show_image_info(file)
     return nil unless file
 
-    image = file.thumb || file
-    link  = %(<a href="#{file.url}" target="_blank">).html_safe
-
-    h = []
-    h << %(<div>#{link}#{image_tag(image.url, alt: "")}</a></div>).html_safe
-    h << %(<div>#{link}#{file.filename}</a> \(#{number_to_human_size(file.size)}\)</div>).html_safe
-
-    safe_join(h)
+    content_tag(:div, class: "file-view", data: { "file-id" => file.id }) do
+      link_to(file.url, target: "_blank") do
+        output_buffer << content_tag(:div, class: "thumb") do
+          if file.image?
+            image_tag(file.thumb_url, alt: file.basename)
+          else
+            content_tag(:span, file.extname, class: [ "ext", "icon-#{file.extname}" ])
+          end
+        end
+        output_buffer << content_tag(:div, file.humanized_name, class: "name")
+      end
+    end
   end
 end

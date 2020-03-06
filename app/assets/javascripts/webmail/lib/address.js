@@ -48,22 +48,28 @@ Webmail_Address_Autocomplete.render = function(selector, opts) {
     });
   }
 
+  var commitAddress = function($input) {
+    var label = $input.val();
+    var value = (values && values[label]) ? values[label] : label;
+    var selected = $input.closest(".webmail-mail-form-address").find(".selected-address");
+    if (!label) {
+      return false;
+    }
+
+    var span = Webmail_Address_Autocomplete.createSelectedElement($input.attr("data-name"), value, label);
+    selected.append(span);
+    $input.val("");
+  };
+
   $(autocomplete).on('keypress', function(e) {
     if (e.which !== 13) {
       return true;
     }
 
-    var label = $(this).val();
-    var value = (values && values[label]) ? values[label] : label;
-    var selected = $(this).closest(".webmail-mail-form-address").find(".selected-address");
-    if (!label) {
-      return false;
-    }
-
-    var span = Webmail_Address_Autocomplete.createSelectedElement($(this).attr("data-name"), value, label);
-    selected.append(span);
-    $(this).val("");
+    commitAddress($(this));
     return false;
+  }).on('blur', function() {
+    commitAddress($(this));
   });
 
   $(selector).find(".selected-address").sortable({

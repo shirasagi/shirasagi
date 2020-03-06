@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe "sns_user_files", type: :feature, dbscope: :example, tmpdir: true do
+describe "sns_user_files", type: :feature, dbscope: :example do
   let(:user) { ss_user }
   let(:item) { tmp_ss_file(contents: "#{Rails.root}/spec/fixtures/ss/logo.png", user: user, model: 'ss/user_file') }
   let(:index_path) { sns_user_files_path user.id }

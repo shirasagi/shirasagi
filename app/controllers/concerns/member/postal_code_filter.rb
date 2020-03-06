@@ -8,8 +8,7 @@ module Member::PostalCodeFilter
       return
     end
 
-    postal_code = postal_code.tr('０-９ａ-ｚＡ-Ｚ', '0-9a-zA-Z').gsub(/[^0-9a-zA-Z]/, '')
-    postal_code = Sys::PostalCode.find_by(code: postal_code) rescue nil
+    postal_code = Sys::PostalCode.search(code: postal_code).first
     raise "404" if postal_code.blank?
 
     render json: postal_code.attributes.except(:_id, :updated, :created)

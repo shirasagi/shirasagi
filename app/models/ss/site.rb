@@ -10,7 +10,9 @@ class SS::Site
   include SS::Addon::MailSetting
   include SS::Addon::TrashSetting
   include SS::Addon::ApproveSetting
+  include Opendata::Addon::SiteSetting
   include SS::Addon::EditorSetting
   include SS::Addon::Elasticsearch::SiteSetting
+  include SS::Addon::Translate::SiteSetting
   include SS::Addon::SiteUsage
 end

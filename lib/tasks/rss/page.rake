@@ -12,4 +12,8 @@ namespace :rss do
 
     Rake::Task["job:run"].invoke
   end
+
+  task pull_weather_xml: :environment do
+    Rss::ImportWeatherXmlJob.pull_all
+  end
 end

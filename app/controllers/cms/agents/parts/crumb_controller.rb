@@ -8,7 +8,11 @@ class Cms::Agents::Parts::CrumbController < ApplicationController
     @items = []
     return unless @cur_path.match?(/^#{@root_node.url}/)
 
-    path = @cur_path.sub(/^#{@cur_site.url}/, "")
+    path = @cur_path.sub(/^#{@cur_site.url}/, "/")
+    path.sub!(/^#{@cur_site.kana_url}/, "/")
+    path.sub!(/^#{@cur_site.translate_url}.+?\//, "/")
+    path.sub!(/^\//, "")
+
     parent_crumb_urls = @cur_item.parent_crumb_urls.select(&:present?) rescue nil
     set_items(path, parent_crumb_urls)
   end

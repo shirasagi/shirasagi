@@ -8,9 +8,7 @@ describe "opendata_agents_nodes_dataset_map", type: :feature, dbscope: :example,
   let(:node_dataset) { create_once :opendata_node_dataset, name: "datasets" }
   let!(:node_search) { create_once :opendata_node_search_dataset }
 
-  let(:license_logo_file_path) { Rails.root.join("spec", "fixtures", "ss", "logo.png") }
-  let(:license_logo_file) { Fs::UploadedFile.create_from_file(license_logo_file_path, basename: "spec") }
-  let(:license) { create(:opendata_license, cur_site: site, in_file: license_logo_file) }
+  let(:license) { create(:opendata_license, cur_site: site) }
 
   let(:item1) { create :opendata_dataset, cur_node: node_dataset }
   let(:item2) { create :opendata_dataset, cur_node: node_dataset }

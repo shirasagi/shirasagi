@@ -9,11 +9,13 @@ module Opendata::Addon::SiteSetting
     field :dataset_state, type: String, default: 'enabled'
     field :app_state, type: String, default: 'enabled'
     field :idea_state, type: String, default: 'enabled'
+    field :anti_bot_methods, type: SS::Extensions::Words
 
     permit_params :dataset_workflow_route_id
     permit_params :app_workflow_route_id
     permit_params :idea_workflow_route_id
     permit_params :dataset_state, :app_state, :idea_state
+    permit_params anti_bot_methods: []
 
     validates :dataset_state, inclusion: { in: %w(enabled disabled), allow_blank: true }
     validates :app_state, inclusion: { in: %w(enabled disabled), allow_blank: true }
@@ -50,5 +52,13 @@ module Opendata::Addon::SiteSetting
 
   def idea_enabled?
     !idea_disabled?
+  end
+
+  def anti_bot_set_nofollow?
+    anti_bot_methods.include?("set_nofollow")
+  end
+
+  def anti_bot_use_button_for_bulk_download?
+    anti_bot_methods.include?("use_button_for_bulk_download")
   end
 end

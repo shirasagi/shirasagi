@@ -119,7 +119,8 @@ class Gws::Memo::MessageExportJob < Gws::ApplicationJob
       item.text = opts[:failed_message].presence || I18n.t("gws/memo/message.export_failed.notify_message")
     else
       item.subject = I18n.t("gws/memo/message.export.subject")
-      item.text = I18n.t("gws/memo/message.export.notify_message", link: ::File.join(@root_url, @output_zip.url(name: "gws-memo-messages-#{@datetime.strftime('%Y%m%d%H%M%S')}.zip")))
+      link = ::File.join(@root_url, @output_zip.url(name: "gws-memo-messages-#{@datetime.strftime('%Y%m%d%H%M%S')}.zip"))
+      item.text = I18n.t("gws/memo/message.export.notify_message", link: link)
     end
 
     item.save!
@@ -203,7 +204,7 @@ class Gws::Memo::MessageExportJob < Gws::ApplicationJob
   end
 
   def gen_message_id(data)
-    @domain_for_message_id ||= site.canonical_domain.presence || SS.config.mail.domain.presence || "localhost.local"
+    @domain_for_message_id ||= site.canonical_domain.presence || SS.config.gws.canonical_domain.presence || "localhost.local"
     "<#{data["id"].to_s.presence || data["_id"].to_s.presence || SecureRandom.uuid}@#{@domain_for_message_id}>"
   end
 

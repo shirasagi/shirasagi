@@ -61,7 +61,7 @@
       <% users.each do |user| %>
         <%= hidden_field_tag "workflow_approvers", "#{level},#{user.id},#{@route.approver_user_editable?(level, user) ? '1' : ''},pending," %>
       <% end %>
-      <%= br names.zip(emails).join("\n") %>
+      <%= br names.zip(emails) %>
     </dd>
   </dl>
 <% end %>
@@ -80,7 +80,7 @@
           <% users.each do |user| %>
             <%= hidden_field_tag "workflow_circulations", "#{level},#{user.id},pending," %>
           <% end %>
-          <%= br names.zip(emails).join("\n") %>
+          <%= br names.zip(emails) %>
         </dd>
       </dl>
     <% end %>

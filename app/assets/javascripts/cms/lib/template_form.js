@@ -51,6 +51,9 @@ Cms_TemplateForm.prototype.render = function() {
 };
 
 Cms_TemplateForm.prototype.changeForm = function() {
+  if (Cms_Form.addonSelector == ".mod-body-part-html") {
+    return false;
+  }
   var formId = this.$formSelect.val();
   if (formId) {
     if (!this.selectedFormId || this.selectedFormId !== formId) {
@@ -99,7 +102,11 @@ Cms_TemplateForm.prototype.showError = function(msg) {
 Cms_TemplateForm.prototype.activateForm = function() {
   this.$formPage.removeClass('hide');
   $('#addon-cms-agents-addons-body').addClass('hide');
+  $("#addon-cms-agents-addons-body_part").addClass('hide');
   $('#addon-cms-agents-addons-file').addClass('hide');
+  $("#addon-cms-agents-addons-form-page").removeClass('hide');
+  $("#item_body_layout_id").parent('dd').prev('dt').addClass('hide');
+  $("#item_body_layout_id").parent('dd').addClass('hide');
   Cms_Form.addonSelector = "#addon-cms-agents-addons-form-page .addon-body";
   Cms_Form.activateSyntaxChecks();
 };
@@ -108,7 +115,11 @@ Cms_TemplateForm.prototype.deactivateForm = function() {
   this.$formPageBody.html('');
   this.$formPage.addClass('hide');
   $('#addon-cms-agents-addons-body').removeClass('hide');
+  $("#addon-cms-agents-addons-body_part").addClass('hide');
   $('#addon-cms-agents-addons-file').removeClass('hide');
+  $("#addon-cms-agents-addons-form-page").addClass('hide');
+  $("#item_body_layout_id").parent('dd').prev('dt').removeClass('hide');
+  $("#item_body_layout_id").parent('dd').removeClass('hide');
   Cms_Form.addonSelector = ".mod-cms-body";
   Cms_Form.activateSyntaxChecks();
 };

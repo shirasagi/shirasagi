@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe Article::Page, dbscope: :example, tmpdir: true do
+describe Article::Page, dbscope: :example do
   let(:node) { create :article_node_page }
 
   describe "#attributes" do
@@ -509,15 +509,14 @@ describe Article::Page, dbscope: :example, tmpdir: true do
       end
 
       context "with Cms::Model::Page" do
-        let!(:cate1) { create :category_node_page }
-        let!(:cate2) { create :category_node_page }
+        let!(:cate1) { create :category_node_page, name: "z", order: 10 }
+        let!(:cate2) { create :category_node_page, name: "y", order: 20 }
         let!(:page) { create :article_page, cur_node: node, category_ids: [ cate1.id, cate2.id ] }
 
         it do
           # Cms::Model::Page
           expect(subject.categories.length).to eq 2
-          expect(subject.categories[0].id).to eq cate1.id
-          expect(subject.categories[1].id).to eq cate2.id
+          expect(subject.categories.map(&:id)).to include(cate1.id, cate2.id)
         end
       end
 

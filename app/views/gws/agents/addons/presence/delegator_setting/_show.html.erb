@@ -1,4 +1,4 @@
 <dl class="see">
   <dt><%= @model.t :presence_editable_title_ids %></dt>
-  <dd><%=br try { @item.presence_editable_titles.map(&:name_with_code).join("\n") } %></dd>
+  <dd><%=br try { @item.presence_editable_titles.map(&:name_with_code) } %></dd>
 </dl>

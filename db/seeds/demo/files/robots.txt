@@ -1,3 +1,4 @@
 User-agent: *
 Disallow: /kana/
 Disallow: /mobile/
+Disallow: /translate/

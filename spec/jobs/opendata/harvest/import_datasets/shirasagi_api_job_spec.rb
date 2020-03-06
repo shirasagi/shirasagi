@@ -1,15 +1,14 @@
 require 'spec_helper'
 
-describe Opendata::Harvest::ImportDatasetsJob, dbscope: :example, tmpdir: true do
+describe Opendata::Harvest::ImportDatasetsJob, dbscope: :example do
   let!(:site) { cms_site }
   let!(:node) { create(:opendata_node_dataset, name: "datasets") }
   let!(:importer) { create(:opendata_harvest_importer, cur_node: node, api_type: "shirasagi_api") }
 
-  let!(:license_logo_file) { Fs::UploadedFile.create_from_file("spec/fixtures/ss/logo.png", basename: "spec") }
-  let!(:license) { create(:opendata_license, cur_site: site, in_file: license_logo_file, uid: "cc-by") }
+  let!(:license) { create(:opendata_license, cur_site: site, uid: "cc-by") }
 
   context "with empty package list" do
-    let(:package_list_json) { File.read("spec/fixtures/opendata/harvest/shirasagi_api/empty_list.json")  }
+    let(:package_list_json) { File.read("spec/fixtures/opendata/harvest/shirasagi_api/empty_list.json") }
     describe ".perform_later" do
       before do
         stub_request(:get, 'https://source.example.jp/api/package_list').
@@ -29,9 +28,9 @@ describe Opendata::Harvest::ImportDatasetsJob, dbscope: :example, tmpdir: true d
   end
 
   context "with package list" do
-    let(:package_list_json) { File.read("spec/fixtures/opendata/harvest/shirasagi_api/package_list.json")  }
-    let(:package_show_json) { File.read("spec/fixtures/opendata/harvest/shirasagi_api/package_show.json")  }
-    let(:sample_txt) { File.read("spec/fixtures/opendata/harvest/sample.txt")  }
+    let(:package_list_json) { File.read("spec/fixtures/opendata/harvest/shirasagi_api/package_list.json") }
+    let(:package_show_json) { File.read("spec/fixtures/opendata/harvest/shirasagi_api/package_show.json") }
+    let(:sample_txt) { File.read("spec/fixtures/opendata/harvest/sample.txt") }
 
     describe ".perform_later" do
       before do

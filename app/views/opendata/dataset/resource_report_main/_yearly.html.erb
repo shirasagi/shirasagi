@@ -1,0 +1,49 @@
+<%
+  now = Time.zone.now
+  this_year = now.year
+  min_year = this_year - @model::TARGET_YEAR_RANGE + 1
+%>
+<div class="index">
+  <div class="reports-table">
+    <table class="index">
+      <thead>
+      <tr>
+        <th colspan="7"><%= t("opendata.download_reports.dataset_data") %></th>
+        <% (min_year..this_year).each do |year| %>
+          <th><%= year %></th>
+        <% end %>
+      </tr>
+      </thead>
+      <tbody>
+      <% @items.group_by { |item| [ item["_id"]["dataset_id"], item["_id"]["dataset_name"] ].join(":") }.each do |dataset_id_name, dataset_items| %>
+        <% dataset_id, dataset_name = dataset_id_name.split(":", 2) %>
+        <tr data-dataset-id="<%= dataset_id %>">
+          <td colspan="100%"><%= dataset_name %></td>
+        </tr>
+        <% dataset_items.each do |item| %>
+          <tr data-dataset-id="<%= dataset_id %>" data-resource-id="<%= item["_id"]["resource_id"] %>">
+            <td colspan="7">
+              <span class="resource-name">
+                <%= item["_id"]["resource_name"] %>
+                <% if item["deleted"].present? %>
+                  <% if item["deleted"] == @model::UNCERTAIN_DELETED_TIME %>
+                  [削]
+                  <% else %>
+                  [削: <%= I18n.l(item["deleted"].in_time_zone.to_date) %>]
+                  <% end %>
+                  <% end %>
+              </span>
+            </td>
+            <% (min_year..this_year).each do |year| %>
+              <% count = item["year#{year}_count"] || 0 %>
+              <th><%= count.to_s(:delimited) %></th>
+            <% end %>
+          </tr>
+        <% end %>
+      <% end %>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<%= paginate @items if @items.try(:current_page) %>

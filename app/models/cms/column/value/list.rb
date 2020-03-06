@@ -31,7 +31,7 @@ class Cms::Column::Value::List < Cms::Column::Value::Base
     return if column.blank?
 
     if column.required? && text_blank?
-      self.errors.add(:text, :blank)
+      self.errors.add(:lists, :blank)
     end
 
     return if text_blank?

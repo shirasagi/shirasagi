@@ -80,8 +80,7 @@ var tempFile = new SS_Addon_TempFile(".upload-drop-area", <%= @cur_user.id %>, o
 
     <div id="selected-files">
       <% @item.files.each do |file| %>
-        <div class="file-view">
-
+        <div class="file-view" data-file-id="<%= file.id %>">
           <%= link_to file.url, class: :thumb, target: "_blank" do %>
             <% if file.image? %>
               <%= image_tag file.thumb_url, alt: file.name %>
@@ -115,3 +114,10 @@ var tempFile = new SS_Addon_TempFile(".upload-drop-area", <%= @cur_user.id %>, o
     </div>
   </dd>
 </dl>
+
+<%= jquery do %>
+  var $el = $("#<%= addon[:id] %>");
+  $el.on("click", ".file-view a.thumb", function(ev) {
+    SS_FileView.open(ev, { viewPath: "<%= view_cms_apis_content_file_path(id: ":id") %>" });
+  });
+<% end %>

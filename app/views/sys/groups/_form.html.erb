@@ -15,5 +15,9 @@
 
   <dt><%= @model.t :expiration_date %><%= @model.tt :expiration_date %></dt>
   <dd><%= f.text_field :expiration_date, class: 'datetime js-datetime', value: tryb { @item.expiration_date.strftime("%Y/%m/%d %H:%M") } %></dd>
-</dl>
 
+  <% if @item.persisted? && @item.root? %>
+  <dt><%= @model.t :gws_use %><%= @model.tt :gws_use %></dt>
+  <dd><%= f.select :gws_use, @item.gws_use_options, include_blank: true %></dd>
+  <% end %>
+</dl>

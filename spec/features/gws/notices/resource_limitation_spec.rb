@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe "gws_notices", type: :feature, dbscope: :example, tmpdir: true, js: true do
+describe "gws_notices", type: :feature, dbscope: :example, js: true do
   let(:site) { gws_site }
   let!(:folder) { create(:gws_notice_folder) }
   let(:notice_name) { unique_id }
@@ -27,9 +27,7 @@ describe "gws_notices", type: :feature, dbscope: :example, tmpdir: true, js: tru
       end
     end
     wait_for_cbox do
-      expect(page).to have_content(notice_file.name)
-      # click_on notice_file.name
-      first("a[data-id=\"#{notice_file.id}\"]").click
+      click_on notice_file.name
     end
     within 'form#item-form' do
       click_on I18n.t('ss.buttons.save')

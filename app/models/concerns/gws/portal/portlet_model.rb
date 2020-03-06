@@ -81,6 +81,7 @@ module Gws::Portal::PortletModel
 
   def view_file
     return nil unless PORTLETS.key?(portlet_model.to_sym)
+
     "gws/portal/portlets/#{portlet_model}/index.html.erb"
   end
 

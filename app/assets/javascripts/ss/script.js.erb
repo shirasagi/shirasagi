@@ -4,6 +4,7 @@
 //= require jquery-ui/widgets/draggable
 //= require jquery-ui/widgets/droppable
 //= require jquery-ui/widgets/autocomplete
+//= require jquery-ui/widgets/tooltip
 //= require js.cookie
 //= require jquery.form
 //= require jquery.datetimepicker
@@ -12,6 +13,7 @@
 //= require jquery.minicolors
 //= require jquery.autosize
 //= require marked
+//= require mdn-polyfills/Array.prototype.includes.js
 //= require mdn-polyfills/String.prototype.endsWith.js
 //= require mdn-polyfills/String.prototype.includes.js
 //= require mdn-polyfills/String.prototype.padEnd.js
@@ -20,6 +22,8 @@
 //= require mdn-polyfills/String.prototype.startsWith.js
 //= require mdn-polyfills/String.prototype.trim.js
 //= require moment
+//= require popper.js/dist/umd/popper.js
+//= require tippy.js/dist/tippy-bundle.iife.js
 //= require_self
 //= require ss/chart
 //= require ss/lib/base
@@ -37,7 +41,7 @@
 //= require ss/lib/tree_navi
 //= require ss/lib/mobile
 //= require ss/lib/search_ui
-//= require ss/lib/tooltips
+//= require ss/lib/popup
 //= require ss/lib/dropdown
 //= require ss/lib/clipboard
 //= require ss/lib/color
@@ -47,6 +51,7 @@
 //= require ss/lib/popup_notice
 //= require ss/lib/cascade_menu
 //= require ss/lib/html_message
+//= require ss/lib/file_view
 //= require chat/lib/chart
 //= require cms/lib/editor
 //= require cms/lib/form
@@ -79,7 +84,6 @@
 //  $(".js-date").datetimepicker { lang: "ja", timepicker: false, format: "Y/m/d" }
 //#
 $(function () {
-  var addCurrent, crumbs, link, menu, path;
   $.ajaxSetup({
     // prevent caching ajax response. see #596.
     cache: false,
@@ -89,8 +93,8 @@ $(function () {
   SS.render();
   // head
   if ($(window).width() >= 800 && 0) {
-    menu = $("#head .pulldown-menu");
-    link = menu.find("a");
+    var menu = $("#head .pulldown-menu");
+    var link = menu.find("a");
     menu.each(function () {
       link.not(".current").hide();
       return link.filter(".current").prependTo(menu).click(function () {
@@ -100,27 +104,35 @@ $(function () {
     });
   }
   //crumbs
-  crumbs = $('#crumbs a[href]').map(function () {
+  var crumbs = $('#crumbs a[href]').map(function () {
     return $(this).attr('href');
   });
   crumbs = crumbs.get();
   crumbs.shift();
   // navi
-  path = location.pathname + "/";
-  addCurrent = function (selector) {
-    var added;
-    added = false;
-    $($(selector).get().reverse()).each(function () {
-      var href;
-      menu = $(this);
-      href = menu.attr('href');
+  var path = location.pathname + "/";
+  var longestMatchedElement = function (selector) {
+    var matchedElement = null, hrefLength = 0;
+    $(selector).each(function() {
+      var $this = $(this);
+      var href = $this.attr('href');
       if (path.match(new RegExp('^' + href.replace(/([.?*+$\[\]\/\\(){}|\-])/g, '\\$1') + '(\/|$)')) || crumbs.indexOf(href) !== -1) {
-        menu.addClass("current").parent().addClass("current");
-        added = true;
-        return false;
+        if (hrefLength < href.length) {
+          matchedElement = this;
+          hrefLength = href.length;
+        }
       }
     });
-    return added;
+    return matchedElement;
+  };
+  var addCurrent = function (selector) {
+    var elem = longestMatchedElement(selector);
+    if (! elem) {
+      return false;
+    }
+
+    $(elem).addClass("current").parent().addClass("current");
+    return true;
   };
   addCurrent("#navi .mod-navi a") || addCurrent("#navi .main-navi a");
   $('#navi .main-navi h3.current').parent().prev('h2').addClass('current');
@@ -132,10 +144,11 @@ $(function () {
   });
   //dropdown
   $(".dropdown-toggle").click(function (e) {
-    var $dropdown, $target, $this, ref;
-    $this = $(this);
-    $target = $(e.target);
-    ref = $this.data('ref');
+    var $this = $(this);
+    var $target = $(e.target);
+    var ref = $this.data('ref');
+
+    var $dropdown;
     if (ref) {
       $dropdown = $this.find(ref);
     } else {
@@ -167,7 +180,7 @@ $(function () {
   SS_ListUI.render();
   SS_Mobile.render();
   SS_AddonTabs.render();
-  SS_Tooltips.render(".tooltip");
+  SS_Popup.render(".tooltip", { "ss-popup-inline": true, "ss-popup-href": ".tooltip-content", "tippy-theme": "light-border ss-tooltip" });
   SS_SearchUI.render();
   SS_Color.render();
   SS_TextZoom.render();

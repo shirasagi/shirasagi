@@ -98,11 +98,20 @@ module Opendata
 
     Cms::Role.permission :edit_other_opendata_public_entity_datasets
 
+    Cms::Role.permission :read_opendata_reports
+    Cms::Role.permission :read_opendata_histories
+
     SS::File.model "opendata/dataset", SS::File, permit: %i(role)
     SS::File.model "opendata/resource", SS::File, permit: %i(role)
     SS::File.model "opendata/url_resource", SS::File, permit: %i(role)
     SS::File.model "opendata/app", SS::File, permit: %i(role)
     SS::File.model "opendata/appfile", SS::File, permit: %i(role)
     SS::File.model "opendata/idea", SS::File, permit: %i(role)
+    Opendata::ResourceDownloadHistory::ArchiveFile.tap do |model|
+      SS::File.model model.model_name.i18n_key.to_s, model
+    end
+    Opendata::ResourcePreviewHistory::ArchiveFile.tap do |model|
+      SS::File.model model.model_name.i18n_key.to_s, model
+    end
   end
 end

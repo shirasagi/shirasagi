@@ -1,0 +1,70 @@
+<div class="cms-tabs">
+  <% if Opendata::ResourceDownloadReport.allowed?(:read, @cur_user, site: @cur_site, node: @cur_node) %>
+    <% css_classes = request.path.start_with?(opendata_dataset_report_downloads_path) ? %w(current) : nil %>
+    <%= link_to opendata_dataset_report_downloads_path, class: css_classes do %>
+      <span class="tab-name"><%= t("opendata.reports.download_reports") %></span>
+    <% end %>
+  <% end %>
+  <% if Opendata::DatasetAccessReport.allowed?(:read, @cur_user, site: @cur_site, node: @cur_node) %>
+    <% css_classes = request.path.start_with?(opendata_dataset_report_accesses_path) ? %w(current) : nil %>
+    <%= link_to opendata_dataset_report_accesses_path, class: css_classes do %>
+      <span class="tab-name"><%= t("opendata.reports.access_reports") %></span>
+    <% end %>
+  <% end %>
+  <% if Opendata::ResourcePreviewReport.allowed?(:read, @cur_user, site: @cur_site, node: @cur_node) %>
+    <% css_classes = request.path.start_with?(opendata_dataset_report_previews_path) ? %w(current) : nil %>
+    <%= link_to opendata_dataset_report_previews_path, class: css_classes do %>
+      <span class="tab-name"><%= t("opendata.reports.preview_reports") %></span>
+    <% end %>
+  <% end %>
+</div>
+
+<div class="search-form">
+  <%= form_for :s, url: { action: :index }, html: { class: "search", method: :get } do |f| %>
+    <%= error_messages_for :item, header_message: t('activemodel.errors.template.header')  %>
+    <span>
+      <%= I18n.t("activemodel.attributes.opendata/dataset_download_report.period") %>
+      <%= f.select :start_year, @model.start_year_options %>
+      <%= f.select :start_month, @model.start_month_options %>
+    </span>
+    <span style="margin: 0 5px;">~</span>
+    <span style="margin-right: 10px;">
+      <%= f.select :end_year, @model.start_year_options %>
+      <%= f.select :end_month, @model.start_month_options %>
+    </span>
+
+    <span style="margin: 0 5px;">
+      <%= I18n.t("activemodel.attributes.opendata/dataset_download_report.type") %>
+      <%= f.select :type, @model.type_options %>
+    </span>
+
+    <span style="margin: 0 5px;">
+      <%= f.text_field :keyword, style: "width: 150px;" %>
+    </span>
+
+    <span style="margin: 0 5px;">
+      <%= f.select :area, @model.area_options(@cur_site), include_blank: t("opendata.labels.area") %>
+    </span>
+
+    <% format_options = @model.format_options(@cur_site) %>
+    <% if format_options.present? %>
+      <span style="margin: 0 5px;">
+        <%= f.select :format, format_options, include_blank: t("opendata.labels.format") %>
+      </span>
+    <% end %>
+
+    <span>
+      <input type="submit" value="<%= t('ss.buttons.search') %>" class="btn" />
+      <input type="button" value="<%= t('ss.buttons.reset') %>" onclick="location.href='<%= url_for(action: :index) %>'" class="btn" />
+    </span>
+  <% end %>
+</div>
+
+<% case @s.type %>
+<% when "month" %>
+  <%= render file: "_monthly" %>
+<% when "year" %>
+  <%= render file: "_yearly" %>
+<% else %>
+  <%= render file: "_daily" %>
+<% end %>

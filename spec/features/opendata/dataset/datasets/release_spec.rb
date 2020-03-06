@@ -9,9 +9,7 @@ describe "opendata_datasets_release", type: :feature, dbscope: :example do
   let(:show_path) { opendata_dataset_path site, node, item }
   let(:edit_path) { edit_opendata_dataset_path site, node, item }
 
-  let(:license_logo_file_path) { Rails.root.join("spec", "fixtures", "ss", "logo.png") }
-  let(:license_logo_file) { Fs::UploadedFile.create_from_file(license_logo_file_path, basename: "spec") }
-  let!(:license) { create(:opendata_license, cur_site: site, in_file: license_logo_file) }
+  let!(:license) { create(:opendata_license, cur_site: site) }
 
   context "with auth" do
     before { login_cms_user }

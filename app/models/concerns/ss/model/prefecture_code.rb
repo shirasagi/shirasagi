@@ -15,7 +15,8 @@ module SS::Model::PrefectureCode
 
     permit_params :code, :prefecture, :prefecture_kana, :city, :city_kana
 
-    validates :code, presence: true, uniqueness: true
+    validates :code, presence: true, uniqueness: true, length: { is: 6 }, numericality: { only_integer: true }
+    validate :validate_code_check_digit
     validates :prefecture, presence: true, length: { maximum: 40 }
     validates :prefecture_kana, length: { maximum: 40 }
     validates :city, length: { maximum: 40 }
@@ -33,16 +34,28 @@ module SS::Model::PrefectureCode
 
   module ClassMethods
     def search(params = {})
-      criteria = self.where({})
-      return criteria if params.blank?
+      all.search_name(params).search_keyword(params).search_code(params)
+    end
 
-      if params[:name].present?
-        criteria = criteria.search_text params[:name]
-      end
-      if params[:keyword].present?
-        criteria = criteria.keyword_in params[:keyword], :code, :prefecture, :prefecture_kana, :city, :city_kana
-      end
-      criteria
+    def search_name(params = {})
+      return all if params.blank? || params[:name].blank?
+      all.search_text params[:name]
+    end
+
+    def search_keyword(params = {})
+      return all if params.blank? || params[:keyword].blank?
+      all.keyword_in params[:keyword], :code, :prefecture, :prefecture_kana, :city, :city_kana
+    end
+
+    def search_code(params = {})
+      return all if params.blank?
+
+      code = params[:code]
+      return all if code.blank?
+
+      # normalize postal code
+      code = code.tr('０-９ａ-ｚＡ-Ｚ', '0-9a-zA-Z').gsub(/[^0-9a-zA-Z]/, '')
+      all.where(code: code)
     end
 
     def to_csv
@@ -59,5 +72,22 @@ module SS::Model::PrefectureCode
         end
       end
     end
+
+    def check_digit(code)
+      sum = code[0].to_i * 6 + code[1].to_i * 5 + code[2].to_i * 4 + code[3].to_i * 3 + code[4].to_i * 2
+      mod = sum % 11
+      (11 - mod).to_s.last
+    end
+  end
+
+  private
+
+  def validate_code_check_digit
+    return if code.blank? || code.length != 6 || !code.numeric?
+
+    check = self.class.check_digit(code)
+    return if code[5] == check
+
+    errors.add :code, :invalid_code
   end
 end

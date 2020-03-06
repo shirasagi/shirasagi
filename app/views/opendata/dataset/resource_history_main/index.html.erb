@@ -1,0 +1,30 @@
+<% @tap_menu = proc do |item| %>
+  <%= link_to(t('opendata.manage_datasets'), opendata_dataset_path(id: item.dataset_id)) %>
+  <%= link_to(t('opendata.manage_resources'), opendata_dataset_resource_path(dataset_id: item.dataset_id, id: item.resource_id)) %>
+<% end %>
+
+<% @index_title = proc do |item| %>
+  <span class="resource"><%= item.resource_name %></span>
+<% end %>
+
+<% @index_meta = proc do |item| %>
+  <span class="datetime"><%= I18n.l(item.send(@model.issued_at_field)) %></span>
+  <% if item.respond_to?(:downloaded_by) %>
+    <span class="downloaded-by"><%= item.label(:downloaded_by).presence || t("opendata.downloaded_by_options.single") %></span>
+  <% end %>
+  <span class="dataset"><%= item.dataset_name %></span>
+  <span class="url"><%= link_to item.full_url, item.full_url, target: "_blank" %></span>
+  <span class="remote-addr"><%= item.remote_addr %></span>
+  <span class="user-agent" title="<%= item.user_agent %>">
+    <%= render_user_agent(item.user_agent, accept_language: request.accept_language) %>
+  </span>
+<% end %>
+
+<div class="opendata-resource-histories no-checkboxes">
+  <%= render file: "_tabs" %>
+  <%= render file: "cms/crud/index" %>
+</div>
+
+<%= jquery do %>
+  $(".opendata-resource-histories .user-agent").tooltip();
+<% end %>

@@ -16,6 +16,9 @@ SS_Clipboard.renderCopy();
   <% if item.tel_label.present? %>
     <span class="tel"><%= item.tel_label %></span>
   <% end %>
+  <% if item.deletion_locked? %>
+    <span class="deletion-lock state state-deletion-locked"><%= item.label :deletion_lock_state %></span>
+  <% end %>
 <% end %>
 
 <%= render file: "gws/crud/index" %>

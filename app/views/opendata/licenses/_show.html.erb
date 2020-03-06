@@ -4,7 +4,7 @@
 
   <% if @item.file %>
   <dt><%= @model.t :file_id %></dt>
-  <dd><%= image_tag @item.file.url %></dd>
+  <dd><%= show_image_info @item.file %></dd>
   <% end %>
 
   <dt><%= @model.t :related_url %></dt>

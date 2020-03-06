@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe "opendata_licenses", type: :feature, dbscope: :example do
+describe "opendata_licenses", type: :feature, dbscope: :example, js: true do
   let(:site) { cms_site }
   let(:node) { create_once :opendata_node_dataset, name: "opendata_dataset" }
   let(:index_path) { opendata_licenses_path site, node }
@@ -17,36 +17,43 @@ describe "opendata_licenses", type: :feature, dbscope: :example do
     end
 
     describe "#new" do
+      let!(:file) do
+        tmp_ss_file(
+          Cms::TempFile, contents: "#{Rails.root}/spec/fixtures/ss/logo.png", user: cms_user, site: site, node: node
+        )
+      end
+
       it do
         visit new_path
         within "form#item-form" do
           fill_in "item[name]", with: "sample"
-          attach_file "item[in_file]", "#{Rails.root}/spec/fixtures/ss/logo.png"
+          first(".btn-file-upload").click
+        end
+        wait_for_cbox do
+          # click_on file.name
+          expect(page).to have_css(".file-view", text: file.name)
+          first("a[data-id='#{file.id}']").click
+        end
+        within "form#item-form" do
+          expect(page).to have_css(".humanized-name", text: file.humanized_name)
           click_button I18n.t('ss.buttons.save')
         end
-        expect(status_code).to eq 200
-        expect(current_path).not_to eq new_path
-        expect(page).to have_no_css("form#item-form")
+        wait_for_notice I18n.t("ss.notice.saved")
       end
     end
 
     describe "#show" do
-      let(:license_logo_file_path) { Rails.root.join("spec", "fixtures", "ss", "logo.png") }
-      let(:license_logo_file) { Fs::UploadedFile.create_from_file(license_logo_file_path, basename: "spec") }
-      let(:item) { create(:opendata_license, cur_site: site, in_file: license_logo_file) }
+      let(:item) { create(:opendata_license, cur_site: site) }
       let(:show_path) { opendata_license_path site, node, item }
 
       it do
         visit show_path
-        expect(status_code).to eq 200
-        expect(current_path).not_to eq sns_login_path
+        expect(page).to have_css("#addon-basic", text: item.name)
       end
     end
 
     describe "#edit" do
-      let(:license_logo_file_path) { Rails.root.join("spec", "fixtures", "ss", "logo.png") }
-      let(:license_logo_file) { Fs::UploadedFile.create_from_file(license_logo_file_path, basename: "spec") }
-      let(:item) { create(:opendata_license, cur_site: site, in_file: license_logo_file) }
+      let(:item) { create(:opendata_license, cur_site: site) }
       let(:edit_path) { edit_opendata_license_path site, node, item }
 
       it do
@@ -55,15 +62,12 @@ describe "opendata_licenses", type: :feature, dbscope: :example do
           fill_in "item[name]", with: "modify"
           click_button I18n.t('ss.buttons.save')
         end
-        expect(current_path).not_to eq sns_login_path
-        expect(page).to have_no_css("form#item-form")
+        wait_for_notice I18n.t("ss.notice.saved")
       end
     end
 
     describe "#delete" do
-      let(:license_logo_file_path) { Rails.root.join("spec", "fixtures", "ss", "logo.png") }
-      let(:license_logo_file) { Fs::UploadedFile.create_from_file(license_logo_file_path, basename: "spec") }
-      let(:item) { create(:opendata_license, cur_site: site, in_file: license_logo_file) }
+      let(:item) { create(:opendata_license, cur_site: site) }
       let(:delete_path) { delete_opendata_license_path site, node, item }
 
       it do
@@ -71,7 +75,7 @@ describe "opendata_licenses", type: :feature, dbscope: :example do
         within "form" do
           click_button I18n.t('ss.buttons.delete')
         end
-        expect(current_path).to eq index_path
+        wait_for_notice I18n.t("ss.notice.deleted")
       end
     end
   end

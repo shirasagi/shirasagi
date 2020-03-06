@@ -46,22 +46,22 @@
 
       <label class="check"><input type="checkbox" name="ids[]" value="<%= item.id %>" /></label>
       <div class="info">
-        <% if item.new_flag? %><span class="gws-board-flag-new"></span><% end %>
         <%= link_to item.name, { action: :show, id: item }, class: "title" %>
-        <% if item.descendants_files_count.to_i > 0 %>
-          <span class="gws-board-file-count"><img src="/assets/img/gws/ic-file.png" alt="" /><%= item.descendants_files_count %></span>
-        <% end %>
+        <% if item.new_flag? %><span class="gws-board-flag-new"></span><% end %>
 
         <div class="meta">
           <span class="id">#<%= item.id %></span>
           <span class="datetime"><%= item.descendants_updated.strftime("%Y/%m/%d %H:%M") %></span>
           <span class="user"><%= item.contributor_name.presence || item.user_long_name %></span>
           <span class="categories">
-            <% item.categories.compact.each do |category| %>
+            <% item.categories.readable(@cur_user, site: @cur_site).each do |category| %>
               <%= link_to category.trailing_name, gws_board_topics_path(category: category.id),
                   class: "gws-category-label", style: category_label_css(category) %>
             <% end %>
           </span>
+          <% if item.descendants_files_count.to_i > 0 %>
+            <span class="gws-board-file-count"><img src="/assets/img/gws/ic-file.png" alt="" /><%= item.descendants_files_count %></span>
+          <% end %>
         </div>
       </div>
     </li>

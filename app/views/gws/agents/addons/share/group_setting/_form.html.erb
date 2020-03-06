@@ -16,4 +16,7 @@ addon[:display_body] = "hide"
 
   <dt><%= @model.t :share_default_sort %><%= @model.tt :share_default_sort %></dt>
   <dd><%= f.select :share_default_sort, @item.share_default_sort_options %></dd>
+
+  <dt><%= @model.t :share_new_days %><%= @model.tt :share_new_days %></dt>
+  <dd class="short"><%= f.number_field :share_new_days %> <span class="postfix"><%= t("datetime.prompts.day") %></span></dd>
 </dl>

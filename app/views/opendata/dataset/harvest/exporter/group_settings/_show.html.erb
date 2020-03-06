@@ -12,8 +12,8 @@
   <dd><%= @item.order %></dd>
 
   <dt><%= @model.t :category_ids %></dt>
-  <dd><%=br @item.categories.pluck(:name).join("\n") %></dd>
+  <dd><%=br @item.categories.pluck(:name) %></dd>
 
   <dt><%= @model.t :estat_category_ids %></dt>
-  <dd><%=br @item.estat_categories.pluck(:name).join("\n") %></dd>
+  <dd><%=br @item.estat_categories.pluck(:name) %></dd>
 </dl>

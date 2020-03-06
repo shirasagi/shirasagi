@@ -17,9 +17,7 @@ describe "opendata_agents_nodes_my_dataset_resources", type: :feature, dbscope: 
   let!(:node_search) { create :opendata_node_search_dataset }
   let!(:dataset) { create :opendata_dataset, cur_node: node_dataset, member_id: member.id }
 
-  let(:license_logo_file_path) { Rails.root.join("spec", "fixtures", "ss", "logo.png") }
-  let(:license_logo_file) { Fs::UploadedFile.create_from_file(license_logo_file_path, basename: "spec") }
-  let!(:license) { create(:opendata_license, cur_site: site, in_file: license_logo_file) }
+  let!(:license) { create(:opendata_license, cur_site: site) }
 
   let(:index_url) { ::URI.parse "http://#{site.domain}#{node_my_dataset.url}" }
 

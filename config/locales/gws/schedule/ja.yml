@@ -89,6 +89,8 @@ ja:
         "3": 標準
         "4": 低
         "5": 最低
+      schedule_custom_group_extra_state:
+        creator_name: カスタムグループの作成者名の付加
     operations:
       expand_all: すべて展開
       collapse_all: すべて閉じる

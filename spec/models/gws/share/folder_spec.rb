@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-RSpec.describe Gws::Share::Folder, type: :model, dbscope: :example, tmpdir: true do
+RSpec.describe Gws::Share::Folder, type: :model, dbscope: :example do
   describe "with factory" do
     context "blank params" do
       subject { Gws::Share::Folder.new(cur_site: gws_site, cur_user: gws_user).valid? }

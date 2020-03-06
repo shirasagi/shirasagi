@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe "ads_banners", type: :feature do
+describe "ads_banners", type: :feature, js: true do
   let(:site) { cms_site }
   let(:node) { create_once :ads_node_banner, name: "ads" }
   let(:item) { Ads::Banner.last }
@@ -9,6 +9,11 @@ describe "ads_banners", type: :feature do
   let(:show_path) { ads_banner_path site.id, node, item }
   let(:edit_path) { edit_ads_banner_path site.id, node, item }
   let(:delete_path) { delete_ads_banner_path site.id, node, item }
+  let!(:file) do
+    tmp_ss_file(
+      Cms::TempFile, user: cms_user, site: site, node: node, contents: "#{Rails.root}/spec/fixtures/ss/logo.png"
+    )
+  end
 
   context "with auth" do
     before { login_cms_user }
@@ -18,40 +23,27 @@ describe "ads_banners", type: :feature do
       expect(current_path).not_to eq sns_login_path
     end
 
-    it "#invalid_new" do
-      SS.config.replace_value_at(:env, :max_filesize_ext, { "png" => 1 })
-
-      visit new_path
-      within "form#item-form" do
-        fill_in "item[name]", with: "sample"
-        fill_in "item[link_url]", with: "http://example.jp"
-        attach_file "item[in_file]", "#{Rails.root}/spec/fixtures/ss/logo.png"
-        click_button I18n.t('ss.buttons.save')
-      end
-      expect(status_code).to eq 200
-      expect(current_path).not_to eq new_path
-      expect(page).to have_css("form#item-form")
-    end
-
     it "#new" do
-      SS.config.replace_value_at(:env, :max_filesize_ext, {})
-
       visit new_path
       within "form#item-form" do
         fill_in "item[name]", with: "sample"
         fill_in "item[link_url]", with: "http://example.jp"
-        attach_file "item[in_file]", "#{Rails.root}/spec/fixtures/ss/logo.png"
+        first(".btn-file-upload").click
+      end
+      wait_for_cbox do
+        # click_on file.name
+        expect(page).to have_css(".file-view", text: file.name)
+        first("a[data-id='#{file.id}']").click
+      end
+      within "form#item-form" do
         click_button I18n.t('ss.buttons.save')
       end
-      expect(status_code).to eq 200
-      expect(current_path).not_to eq new_path
-      expect(page).to have_no_css("form#item-form")
+      wait_for_notice I18n.t("ss.notice.saved")
     end
 
     it "#show" do
       visit show_path
-      expect(status_code).to eq 200
-      expect(current_path).not_to eq sns_login_path
+      expect(page).to have_css("#addon-basic", text: item.name)
     end
 
     it "#edit" do
@@ -60,8 +52,7 @@ describe "ads_banners", type: :feature do
         fill_in "item[name]", with: "modify"
         click_button I18n.t('ss.buttons.save')
       end
-      expect(current_path).not_to eq sns_login_path
-      expect(page).to have_no_css("form#item-form")
+      wait_for_notice I18n.t("ss.notice.saved")
     end
 
     it "#delete" do
@@ -69,7 +60,7 @@ describe "ads_banners", type: :feature do
       within "form" do
         click_button I18n.t('ss.buttons.delete')
       end
-      expect(current_path).to eq index_path
+      wait_for_notice I18n.t("ss.notice.deleted")
     end
   end
 end

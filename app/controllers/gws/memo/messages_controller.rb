@@ -68,8 +68,8 @@ class Gws::Memo::MessagesController < ApplicationController
     forward_emails = Gws::Memo::Forward.site(@cur_site).
       in(user_id: @item.member_ids).
       where(default: "enabled").
-      pluck(:email).
-      select(&:present?)
+      pluck(:emails)
+    forward_emails = forward_emails.flatten.select{ |email| email.present? && @cur_site.email_domain_allowed?(email) }
     return if forward_emails.blank?
 
     Gws::Memo::Mailer.forward_mail(@item, forward_emails).deliver_now

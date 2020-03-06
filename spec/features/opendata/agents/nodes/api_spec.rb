@@ -33,8 +33,7 @@ describe "opendata_agents_nodes_api", dbscope: :example, http_server: true do
   let(:dataset_resource) { page_dataset_01.resources.new(attributes_for(:opendata_resource)) }
   let(:dataset_url_resource) { page_dataset_01.url_resources.new(attributes_for(:opendata_url_resource)) }
 
-  let(:license_logo_file) { Fs::UploadedFile.create_from_file(Rails.root.join("spec", "fixtures", "ss", "logo.png")) }
-  let(:license) { create(:opendata_license, cur_site: cms_site, in_file: license_logo_file) }
+  let(:license) { create(:opendata_license, cur_site: cms_site) }
 
   before do
 

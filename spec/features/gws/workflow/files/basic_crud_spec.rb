@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe "gws_workflow_files", type: :feature, dbscope: :example, tmpdir: true do
+describe "gws_workflow_files", type: :feature, dbscope: :example do
   context "basic crud", js: true do
     let(:site) { gws_site }
     let(:user) { gws_user }
@@ -27,7 +27,7 @@ describe "gws_workflow_files", type: :feature, dbscope: :example, tmpdir: true d
       end
       wait_for_cbox do
         within "article.file-view" do
-          find("a.thumb").click
+          click_on file.name
         end
       end
       within "form#item-form" do

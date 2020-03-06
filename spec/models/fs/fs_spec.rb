@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe Fs, tmpdir: true do
+describe Fs do
   let(:filesystem) do
     Class.new do
       include ::Fs::File

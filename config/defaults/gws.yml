@@ -13,6 +13,9 @@ production: &production
   # JavaScripts on gws pages.
   javascripts: ["gws/script"]
 
+  canonical_scheme: http
+  canonical_domain: replace-me.example.jp
+
   history:
     save_days: 90
     severity: info
@@ -135,6 +138,8 @@ production: &production
   memo:
     disable_unsend: true
     disable_mail_forward: false
+    max_notice_mail_address_count: 10
+    max_foward_mail_address_count: 10
 
   popup_notice:
     # Default search condition in popup / unseen, seen
@@ -168,6 +173,11 @@ production: &production
 test:
   <<: *production
   disable: false
+  memo:
+    disable_unsend: false
+    disable_mail_forward: false
+    max_notice_mail_address_count: 3
+    max_foward_mail_address_count: 3
 
 development:
   <<: *production

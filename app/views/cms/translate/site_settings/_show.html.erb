@@ -1,0 +1,10 @@
+<dl class="see">
+  <dt><%= @model.t :translate_state %></dt>
+  <dd><%= @item.label :translate_state %></dd>
+
+  <dt><%= @model.t :translate_source_id %></dt>
+  <dd><%= tryb{ @item.translate_source.label} %></dd>
+
+  <dt><%= @model.t :translate_target_ids %></dt>
+  <dd><%=br @item.translate_targets.map(&:label).join("\n") %></dd>
+</dl>

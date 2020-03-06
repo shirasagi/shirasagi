@@ -14,7 +14,7 @@ Inquiry_Form.render = function(options) {
 };
 
 Inquiry_Form.prototype.render = function() {
-  $('.inquiry-form input').on('keypress', function (ev) {
+  $('.inquiry-form input:not([type="submit"], [type="button"], [type="reset"])').on('keypress', function (ev) {
     if ((ev.which && ev.which === 13) || (ev.keyCode && ev.keyCode === 13)) {
       return false;
     } else {

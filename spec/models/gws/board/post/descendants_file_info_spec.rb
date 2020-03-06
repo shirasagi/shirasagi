@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-RSpec.describe Gws::Board::Post, type: :model, dbscope: :example, tmpdir: true do
+RSpec.describe Gws::Board::Post, type: :model, dbscope: :example do
   describe "descendants_files_count and descendants_total_file_size" do
     let(:user) { gws_user }
 

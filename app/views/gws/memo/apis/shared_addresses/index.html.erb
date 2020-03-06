@@ -25,8 +25,6 @@
 </div>
 <% end %>
 
-<%= paginate @items if @items.try(:current_page) %>
-
 <%= jquery do %>
   $('.gws-memo-persona-address-tabs a').on('click', function(ev) {
     ev.preventDefault();

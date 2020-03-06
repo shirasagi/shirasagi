@@ -88,15 +88,18 @@ describe "kana_dictionaries", type: :feature do
       end
 
       it "#show" do
-        expect { visit show_path }.to raise_error Mongoid::Errors::DocumentNotFound
+        visit show_path
+        expect(page).to have_title("404")
       end
 
       it "#edit" do
-        expect { visit edit_path }.to raise_error Mongoid::Errors::DocumentNotFound
+        visit edit_path
+        expect(page).to have_title("404")
       end
 
       it "#delete" do
-        expect { visit delete_path }.to raise_error Mongoid::Errors::DocumentNotFound
+        visit delete_path
+        expect(page).to have_title("404")
       end
 
       describe "#build", mecab: true do

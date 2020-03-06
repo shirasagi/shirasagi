@@ -1,7 +1,7 @@
 <dl class="see mod-jmaxml-trigger-ash-fall-forecast">
   <dt><%= @model.t :sub_types %></dt>
-  <dd><%= br @item.sub_types.select(&:present?).map { |sub_type| I18n.t("jmaxml.options.ash_fall_sub_type.#{sub_type}") }.join("\n") %></dd>
+  <dd><%= br @item.sub_types.select(&:present?).map { |sub_type| I18n.t("jmaxml.options.ash_fall_sub_type.#{sub_type}") } %></dd>
 
   <dt><%= @model.t :target_region_ids %></dt>
-  <dd><%= br @item.target_regions.pluck(:name).join("\n") %></dd>
+  <dd><%= br @item.target_regions.pluck(:name) %></dd>
 </dl>

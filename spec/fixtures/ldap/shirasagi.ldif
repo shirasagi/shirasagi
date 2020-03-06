@@ -1,0 +1,167 @@
+# Domain
+# dn: dc=example, dc=jp
+# objectClass: dcObject
+# objectClass: organization
+# dc: example
+# o: example.jp
+
+# Manager
+# dn: cn=Manager, dc=example, dc=jp
+# objectClass: organizationalRole
+# cn: Manager
+
+# Group
+dn: ou=Group, dc=example, dc=jp
+objectClass: organizationalunit
+ou: Group
+
+# People
+dn: ou=People, dc=example, dc=jp
+objectClass: organizationalunit
+ou: People
+
+dn: ou=001企画政策部, dc=example, dc=jp
+objectClass: organizationalUnit
+ou: 001企画政策部
+
+dn: ou=001001政策課, ou=001企画政策部, dc=example, dc=jp
+objectClass: organizationalUnit
+ou: 001001政策課
+
+dn: ou=001002広報課, ou=001企画政策部, dc=example, dc=jp
+objectClass: organizationalUnit
+ou: 001002広報課
+
+dn: ou=002危機管理部, dc=example, dc=jp
+objectClass: organizationalUnit
+ou: 002危機管理部
+
+dn: ou=002001管理課, ou=002危機管理部, dc=example, dc=jp
+objectClass: organizationalUnit
+ou: 002001管理課
+
+dn: ou=002002防災課, ou=002危機管理部, dc=example, dc=jp
+objectClass: organizationalUnit
+ou: 002002防災課
+
+dn: uid=sys, ou=001001政策課, ou=001企画政策部, dc=example, dc=jp
+o: 001企画政策部
+ou: 001001政策課
+title: 課長
+departmentNumber: 001001
+employeeNumber: 0000001
+sn: システム管理者
+cn: システム管理者
+uid: sys
+objectClass: inetOrgPerson
+objectClass: organizationalPerson
+objectClass: person
+preferredLanguage: ja
+st: シラサギ市
+mail: sys@example.jp
+userPassword: pass
+
+dn: uid=admin, ou=001001政策課, ou=001企画政策部, dc=example, dc=jp
+o: 001企画政策部
+ou: 001001政策課
+title: 部長
+departmentNumber: 001001
+employeeNumber: 0000000
+sn: サイト管理者
+cn: サイト管理者
+uid: admin
+objectClass: inetOrgPerson
+objectClass: organizationalPerson
+objectClass: person
+preferredLanguage: ja
+st: シラサギ市
+mail: admin@example.jp
+userPassword: pass
+
+dn: uid=user1, ou=001001政策課, ou=001企画政策部, dc=example, dc=jp
+o: 001企画政策部
+ou: 001001政策課
+departmentNumber: 001001
+employeeNumber: 0000002
+givenName: 茂
+sn: 鈴木
+cn: 鈴木 茂
+uid: user1
+objectClass: inetOrgPerson
+objectClass: organizationalPerson
+objectClass: person
+preferredLanguage: ja
+st: シラサギ市
+mail: user1@example.jp
+userPassword: pass
+
+dn: uid=user2, ou=002001管理課, ou=002危機管理部, dc=example, dc=jp
+o: 002危機管理部
+ou: 002001管理課
+title: 主任
+departmentNumber: 002001
+employeeNumber: 0000003
+givenName: 和子
+sn: 渡辺
+cn: 渡辺 和子
+uid: user2
+objectClass: inetOrgPerson
+objectClass: organizationalPerson
+objectClass: person
+preferredLanguage: ja
+st: シラサギ市
+mail: user2@example.jp
+userPassword: pass
+
+dn: uid=user3, ou=001002広報課, ou=001企画政策部, dc=example, dc=jp
+o: 001企画政策部
+ou: 001002広報課
+title: 課長
+departmentNumber: 001002
+employeeNumber: 0000005
+givenName: 拓也
+sn: 斎藤
+cn: 斎藤　拓也
+uid: user3
+objectClass: inetOrgPerson
+objectClass: organizationalPerson
+objectClass: person
+preferredLanguage: ja
+st: シラサギ市
+mail: user3@example.jp
+userPassword: pass
+
+dn: uid=user4, ou=002001管理課, ou=002危機管理部, dc=example, dc=jp
+o: 002危機管理部
+ou: 002001管理課
+title: 課長
+departmentNumber: 002001
+employeeNumber: 0000006
+givenName: 幸子
+sn: 伊藤
+cn: 伊藤 幸子
+uid: user4
+objectClass: inetOrgPerson
+objectClass: organizationalPerson
+objectClass: person
+preferredLanguage: ja
+st: シラサギ市
+mail: user4@example.jp
+userPassword: pass
+
+dn: uid=user5, ou=001002広報課, ou=001企画政策部, dc=example, dc=jp
+o: 001企画政策部
+ou: 001002広報課
+departmentNumber: 001002
+employeeNumber: 0000007
+givenName: 清
+sn: 高橋
+cn: 高橋 清
+uid: user5
+objectClass: inetOrgPerson
+objectClass: organizationalPerson
+objectClass: person
+preferredLanguage: ja
+st: シラサギ市
+mail: user5@example.jp
+userPassword: pass

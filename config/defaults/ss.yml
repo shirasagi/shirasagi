@@ -13,6 +13,9 @@ production: &production
   # JavaScripts on management pages.
   javascripts: ["ss/script"]
 
+  # history backups max age
+  history_max_age: 20
+
   session:
     key: '_ss_session'
     # uncomment blow setting if you have been running SHIRASAGI with full https

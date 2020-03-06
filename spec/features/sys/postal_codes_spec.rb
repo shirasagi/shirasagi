@@ -92,4 +92,27 @@ describe "postal_codes", type: :feature, dbscope: :example do
       expect(page).to have_css('#notice', text: I18n.t('ss.notice.started_import'))
     end
   end
+
+  context "with keyword" do
+    before { login_sys_user }
+
+    it do
+      # ensure that item is created
+      item
+
+      visit index_path
+      within "form.index-search" do
+        fill_in "s[keyword]", with: item.code
+        click_on I18n.t("ss.buttons.search")
+      end
+      expect(page).to have_css(".title", text: item.code)
+
+      visit index_path
+      within "form.index-search" do
+        fill_in "s[keyword]", with: unique_id
+        click_on I18n.t("ss.buttons.search")
+      end
+      expect(page).to have_no_css(".title", text: item.code)
+    end
+  end
 end

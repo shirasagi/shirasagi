@@ -1,6 +1,0 @@
-No,,,URL,地域,ステータス,2016年,2017年,2018年
-0000000001,[1] dataset1,,http://test.localhost.jp/dataset/1.html,"",
-,,[1] resourceA.txt,,,,1,0,0
-,,[2] resourceB.txt,,,,0,2,0
-0000000002,[2] dataset2,,http://test.localhost.jp/dataset/2.html,"",
-,,[3] resourceC.txt,,,,0,0,1

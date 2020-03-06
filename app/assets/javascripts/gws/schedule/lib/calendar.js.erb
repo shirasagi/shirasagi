@@ -16,10 +16,10 @@ this.Gws_Schedule_Calendar = (function () {
     }
     params = this.defaultParams(selector, opts);
     if (opts['restUrl']) {
-      $.extend(true, params, this.editableParams(opts));
+      $.extend(true, params, this.editableParams(selector, opts));
     }
     if (opts['restUrl']) {
-      $.extend(true, params, this.tapMenuParams(opts));
+      $.extend(true, params, this.tapMenuParams(selector, opts));
     }
     $.extend(true, params, opts);
     $(selector).fullCalendar(params);
@@ -163,7 +163,7 @@ this.Gws_Schedule_Calendar = (function () {
     return "calendar[path]=" + location.pathname + "&calendar[view]=" + view.name + "&calendar[viewFormat]=" + format + "&calendar[viewTodo]=" + todo + "&calendar[viewAttendance]=" + attendance;
   };
 
-  Gws_Schedule_Calendar.tapMenuParams = function (opts) {
+  Gws_Schedule_Calendar.tapMenuParams = function (selector, opts) {
     var url;
     url = opts['restUrl'];
     return {
@@ -214,7 +214,7 @@ this.Gws_Schedule_Calendar = (function () {
     };
   };
 
-  Gws_Schedule_Calendar.editableParams = function (opts) {
+  Gws_Schedule_Calendar.editableParams = function (selector, opts) {
     var url;
     url = opts['restUrl'];
     return {

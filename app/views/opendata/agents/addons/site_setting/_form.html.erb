@@ -22,4 +22,12 @@
 
   <dt><%= @model.t :idea_state %><%= @model.tt :idea_state %></dt>
   <dd><%= f.select :idea_state, @item.idea_state_options %></dd>
+
+  <dt><%= @model.t :anti_bot_methods %><%= @model.tt :anti_bot_methods %></dt>
+  <dd>
+    <%= f.hidden_field "anti_bot_methods[]", id: nil, value: "" %>
+    <% %w(set_nofollow use_button_for_bulk_download).each do |value| %>
+      <label><%= f.check_box "anti_bot_methods[]", {}, value %> <%= t("opendata.anti_bot_method_options.#{value}") %></label>
+    <% end %>
+  </dd>
 </dl>
