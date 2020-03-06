@@ -73,6 +73,7 @@ module History::Model::Data
     model.fields.each do |k, field|
       next if %w(_id state).include?(k)
       data[k] = nil if data[k].blank?
+      next if data[k].nil?
 
       if field.type == SS::Extensions::ObjectIds
         klass = field.options[:metadata][:elem_class].constantize
