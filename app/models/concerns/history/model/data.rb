@@ -3,8 +3,6 @@ module History::Model::Data
   extend SS::Translation
   include SS::Document
   include SS::Reference::User
-  require 'pry'
-
 
   included do
     store_in_repl_master
