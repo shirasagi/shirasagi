@@ -75,11 +75,11 @@ class Member::Photo
       end
 
       if params[:location_ids].present?
-        criteria = criteria.in(photo_location_ids: params[:location_ids])
+        criteria = criteria.in(photo_location_ids: params[:location_ids].select(&:numeric?).map(&:to_i))
       end
 
       if params[:category_ids].present?
-        criteria = criteria.in(photo_category_ids: params[:category_ids])
+        criteria = criteria.in(photo_category_ids: params[:category_ids].select(&:numeric?).map(&:to_i))
       end
 
       criteria

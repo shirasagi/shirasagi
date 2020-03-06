@@ -7,18 +7,18 @@ class Facility::Agents::Nodes::SearchController < ApplicationController
   private
 
   def set_query
-    @keyword      = params[:keyword]
-    @category_ids = params[:category_ids].select(&:present?).map(&:to_i) rescue []
-    @service_ids  = params[:service_ids].select(&:present?).map(&:to_i) rescue []
-    @location_ids = params[:location_ids].select(&:present?).map(&:to_i) rescue []
+    @keyword      = params[:keyword].try { |keyword| keyword.to_s }
+    @category_ids = params[:category_ids].select(&:numeric?).map(&:to_i) rescue []
+    @service_ids  = params[:service_ids].select(&:numeric?).map(&:to_i) rescue []
+    @location_ids = params[:location_ids].select(&:numeric?).map(&:to_i) rescue []
 
     @q_category = @category_ids.present? ? { category_ids: @category_ids } : {}
     @q_service  = @service_ids.present? ? { service_ids: @service_ids } : {}
     @q_location = @location_ids.present? ? { location_ids: @location_ids } : {}
 
-    @categories = Facility::Node::Category.in(_id: @category_ids)
-    @services   = Facility::Node::Service.in(_id: @service_ids)
-    @locations  = Facility::Node::Location.in(_id: @location_ids)
+    @categories = Facility::Node::Category.site(@cur_site).and_public.in(id: @category_ids)
+    @services   = Facility::Node::Service.site(@cur_site).and_public.in(id: @service_ids)
+    @locations  = Facility::Node::Location.site(@cur_site).and_public.in(id: @location_ids)
   end
 
   def set_items
@@ -57,7 +57,7 @@ class Facility::Agents::Nodes::SearchController < ApplicationController
   end
 
   def set_filter_items
-    @filter_categories = @cur_node.st_categories.in(_id: @items.map(&:category_ids).flatten)
+    @filter_categories = @cur_node.st_categories.in(id: @items.map(&:category_ids).flatten)
     @filter_locations = @cur_node.st_locations.entries.select{ |l| l.center_point[:loc].present? }
     @focus_options = @filter_locations.map do |l|
       opts = {}
@@ -70,7 +70,7 @@ class Facility::Agents::Nodes::SearchController < ApplicationController
 
   def index
     set_query
-    render :index, locals: { search_path: "./map.html" }
+    render :index, locals: { search_path: "#{@cur_node.url}map.html" }
   end
 
   def map
