@@ -27,9 +27,7 @@ describe "opendata_agents_nodes_search_dataset", type: :feature, dbscope: :examp
   end
   let(:dataset_resource_file_path) { Rails.root.join("spec", "fixtures", "opendata", "shift_jis.csv") }
   let(:dataset_resource) { page_dataset.resources.new(attributes_for(:opendata_resource)) }
-  let(:license_logo_file_path) { Rails.root.join("spec", "fixtures", "ss", "logo.png") }
-  let(:license_logo_file) { Fs::UploadedFile.create_from_file(license_logo_file_path, basename: "spec") }
-  let(:license) { create(:opendata_license, cur_site: site, in_file: license_logo_file) }
+  let(:license) { create(:opendata_license, cur_site: site) }
   let(:index_path) { "#{node_search_dataset.url}index.html" }
   let(:rss_path) { "#{node_search_dataset.url}rss.xml" }
 

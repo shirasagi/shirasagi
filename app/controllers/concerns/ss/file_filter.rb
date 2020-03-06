@@ -20,7 +20,7 @@ module SS::FileFilter
 
     if @item.in_files.present?
       def @item.to_json
-        saved_files.to_json
+        saved_files.to_json({ methods: %i[humanized_name image? basename extname url thumb_url] })
       end
       render_create @item.save_files, location: { action: :index }
     else

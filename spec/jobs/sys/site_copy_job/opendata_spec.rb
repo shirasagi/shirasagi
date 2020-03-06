@@ -30,10 +30,7 @@ describe Sys::SiteCopyJob, dbscope: :example do
       end
 
       before do
-        license_logo = Rails.root.join("spec", "fixtures", "ss", "logo.png")
-        license = Fs::UploadedFile.create_from_file(license_logo, basename: "spec") do |file|
-          create(:opendata_license, cur_site: site, in_file: file)
-        end
+        license = create(:opendata_license, cur_site: site)
 
         file_path = Rails.root.join("spec", "fixtures", "opendata", "shift_jis.csv")
         Fs::UploadedFile.create_from_file(file_path, basename: "spec") do |file|
@@ -102,7 +99,7 @@ describe Sys::SiteCopyJob, dbscope: :example do
               expect(dest_license.name).to eq license.name
               expect(dest_license.file_id).not_to eq license.file_id
               expect(dest_license.file.name).to eq license.file.name
-              expect(dest_license.file.size).to eq license.file.size
+              expect(dest_license.file.size).to eq license.file.size + 45
               expect(dest_license.file.content_type).to eq license.file.content_type
               expect(dest_license.file.owner_item_id).to eq dest_license.id
               expect(dest_license.file.owner_item_type).to eq dest_license.class.name
@@ -128,7 +125,7 @@ describe Sys::SiteCopyJob, dbscope: :example do
               expect(dest_license.name).to eq license.name
               expect(dest_license.file_id).not_to eq license.file_id
               expect(dest_license.file.name).to eq license.file.name
-              expect(dest_license.file.size).to eq license.file.size
+              expect(dest_license.file.size).to eq license.file.size + 45
               expect(dest_license.file.content_type).to eq license.file.content_type
               expect(dest_license.file.owner_item_id).to eq dest_license.id
               expect(dest_license.file.owner_item_type).to eq dest_license.class.name

@@ -29,10 +29,7 @@ describe Opendata::CmsIntegration::AssocJob, dbscope: :example do
     article_page.opendata_dataset_state = 'public'
     article_page.save!
 
-    path = Rails.root.join("spec", "fixtures", "ss", "logo.png")
-    Fs::UploadedFile.create_from_file(path, basename: "spec") do |file|
-      create :opendata_license, cur_site: od_site, in_file: file
-    end
+    create :opendata_license, cur_site: od_site
   end
 
   describe "#perform" do

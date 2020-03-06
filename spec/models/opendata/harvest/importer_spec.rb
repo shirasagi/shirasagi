@@ -6,9 +6,8 @@ describe Opendata::Harvest::Importer, dbscope: :example do
   let!(:node_search) { create_once :opendata_node_search_dataset }
   let!(:dataset) { create(:opendata_dataset, cur_node: node) }
 
-  let!(:license_logo_file) { Fs::UploadedFile.create_from_file("spec/fixtures/ss/logo.png", basename: "spec") }
-  let!(:license1) { create(:opendata_license, cur_site: site, in_file: license_logo_file, uid: "cc-by") }
-  let!(:license2) { create(:opendata_license, cur_site: site, in_file: license_logo_file, uid: "cc-by-sa") }
+  let!(:license1) { create(:opendata_license, cur_site: site, uid: "cc-by") }
+  let!(:license2) { create(:opendata_license, cur_site: site, uid: "cc-by-sa") }
 
   let!(:cate) { create(:opendata_node_category) }
   let!(:estat_cate) { create(:opendata_node_estat_category) }

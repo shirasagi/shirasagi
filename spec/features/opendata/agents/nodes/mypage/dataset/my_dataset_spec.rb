@@ -105,8 +105,7 @@ describe "opendata_agents_nodes_my_dataset", type: :feature, dbscope: :example, 
     let(:resource_name) { unique_id }
     let(:resource_format) { 'PNG' }
     let(:resource_text) { unique_id }
-    let(:license_file) { Fs::UploadedFile.create_from_file(resource_file, basename: "spec") }
-    let!(:license) { create :opendata_license, cur_site: site, in_file: license_file }
+    let!(:license) { create :opendata_license, cur_site: site }
     let(:remand_comment) { unique_id }
 
     before do

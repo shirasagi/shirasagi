@@ -93,8 +93,8 @@ describe Cms::EditorTemplate, dbscope: :example do
     context "when thumb is given" do
       let(:site) { cms_site }
       let(:thumb_path) { Rails.root.join("spec", "fixtures", "ss", "logo.png") }
-      let(:thumb_file) { Fs::UploadedFile.create_from_file(thumb_path, basename: "spec") }
-      let(:template) { create(:cms_editor_template, site: site, in_thumb: thumb_file) }
+      let(:thumb_file) { tmp_ss_file(site: site, contents: thumb_path) }
+      let(:template) { create(:cms_editor_template, site: site, thumb: thumb_file) }
       subject { JSON.parse(template.export_for_ckeditor) }
 
       it do

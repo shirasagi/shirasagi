@@ -8,8 +8,7 @@ describe Opendata::ResourcePreviewReportJob, dbscope: :example do
 
   let!(:dataset1) { create(:opendata_dataset, cur_site: site, cur_node: node) }
   let(:resource_file_path) { Rails.root.join("spec", "fixtures", "opendata", "shift_jis.csv") }
-  let(:license_logo_file) { Fs::UploadedFile.create_from_file(Rails.root.join("spec", "fixtures", "ss", "logo.png")) }
-  let!(:license) { create(:opendata_license, cur_site: cms_site, in_file: license_logo_file) }
+  let!(:license) { create(:opendata_license, cur_site: site) }
 
   let!(:dataset2_with_no_resources) { create(:opendata_dataset, cur_site: site, cur_node: node) }
   let!(:dataset3) { create(:opendata_dataset, cur_site: site, cur_node: node) }

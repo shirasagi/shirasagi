@@ -16,14 +16,14 @@ class Opendata::License
   field :order, type: Integer, default: 0
   field :default_state, type: String
 
-  belongs_to_file :file
+  belongs_to_file2 :file
 
   permit_params :state, :name, :related_url, :order, :default_state
   permit_params file_ids: []
 
   validates :state, presence: true, inclusion: { in: %w(public closed), allow_blank: true }
   validates :name, presence: true, length: { maximum: 80 }
-  validates :in_file, presence: true, if: ->{ file_id.blank? }
+  validates :file_id, presence: true
   validates :default_state, inclusion: { in: %w(none default), allow_blank: true }
 
   scope :and_default, -> { where(default_state: 'default') }
