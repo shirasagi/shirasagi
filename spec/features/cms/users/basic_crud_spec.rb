@@ -30,6 +30,7 @@ describe "cms_users", type: :feature, dbscope: :example do
         name = unique_id
         fill_in "item[name]", with: name
         fill_in "item[email]", with: "#{name}@example.jp"
+        expect(page).to have_css('#item_email_errors', text: '')
         fill_in "item[in_password]", with: "pass"
         check "item[cms_role_ids][]"
         click_on I18n.t("ss.buttons.save")
@@ -110,6 +111,7 @@ describe "cms_users", type: :feature, dbscope: :example do
         name = unique_id
         fill_in "item[name]", with: name
         fill_in "item[uid]", with: name
+        expect(page).to have_css('#item_uid_errors', text: '')
         fill_in "item[ldap_dn]", with: "dc=#{name},dc=city,dc=example,dc=jp"
         check "item[cms_role_ids][]"
         click_on I18n.t("ss.buttons.save")

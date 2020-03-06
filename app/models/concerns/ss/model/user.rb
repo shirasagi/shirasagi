@@ -72,7 +72,7 @@ module SS::Model::User
     validates :uid, uniqueness: true, if: ->{ uid.present? }
     validates :email, email: true, length: { maximum: 80 }
     validates :email, uniqueness: true, if: ->{ email.present? }
-    validates :email, presence: true, if: ->{ uid.blank? }
+    validates :email, presence: true, if: ->{ uid.blank? && organization_uid.blank? }
     validates :last_loggedin, datetime: true
     validates :account_start_date, datetime: true
     validates :account_expiration_date, datetime: true
@@ -196,6 +196,12 @@ module SS::Model::User
 
     def type_options
       [ [ t(TYPE_SNS), TYPE_SNS ], [ t(TYPE_LDAP), TYPE_LDAP ] ]
+    end
+
+    def labels
+      %w(uid email organization_uid organization_id).collect do |key|
+        [key, t(key)]
+      end.to_h
     end
   end
 

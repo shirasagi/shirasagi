@@ -18,6 +18,8 @@ describe "webmail_users", type: :feature, dbscope: :example, js: true do
         fill_in "item[name]", with: name
         fill_in "item[uid]", with: uid
         fill_in "item[email]", with: email
+        expect(page).to have_css('#item_uid_errors', text: '')
+        expect(page).to have_css('#item_email_errors', text: '')
         fill_in "item[in_password]", with: password
         check "item_webmail_role_ids_#{webmail_user_role.id}"
         click_on I18n.t("ss.buttons.save")
@@ -37,6 +39,8 @@ describe "webmail_users", type: :feature, dbscope: :example, js: true do
       within "form#item-form" do
         fill_in "item[uid]", with: uid2
         fill_in "item[email]", with: email2
+        expect(page).to have_css('#item_uid_errors', text: '')
+        expect(page).to have_css('#item_email_errors', text: '')
         click_on I18n.t("ss.buttons.save")
       end
       expect(page).to have_css("#notice", text: I18n.t("ss.notice.saved"))
@@ -71,6 +75,8 @@ describe "webmail_users", type: :feature, dbscope: :example, js: true do
         fill_in "item[name]", with: name
         fill_in "item[uid]", with: uid
         fill_in "item[email]", with: email
+        expect(page).to have_css('#item_uid_errors', text: '')
+        expect(page).to have_css('#item_email_errors', text: '')
         fill_in "item[in_password]", with: password
         check "item_webmail_role_ids_#{webmail_user_role.id}"
         click_on I18n.t("ss.buttons.save")

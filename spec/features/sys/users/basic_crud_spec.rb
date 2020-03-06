@@ -19,12 +19,11 @@ describe "sys_users", type: :feature, dbscope: :example do
     expect(status_code).to eq 403
   end
 
-  context "with auth" do
+  context "with auth", js: true do
     before { login_sys_user }
 
     it "#index" do
       visit index_path
-      expect(status_code).to eq 200
       expect(current_path).not_to eq sns_login_path
     end
 
@@ -33,17 +32,17 @@ describe "sys_users", type: :feature, dbscope: :example do
       within "form#item-form" do
         fill_in "item[name]", with: "sample"
         fill_in "item[email]", with: "sample@example.jp"
+        expect(page).to have_css('#item_email_errors', text: '')
         fill_in "item[in_password]", with: "sample"
         click_button I18n.t('ss.buttons.save')
       end
-      expect(status_code).to eq 200
+      expect(page).to have_css("#notice", text: I18n.t("ss.notice.saved"))
       expect(current_path).not_to eq new_path
       expect(page).to have_no_css("form#item-form")
     end
 
     it "#show" do
       visit show_path
-      expect(status_code).to eq 200
       expect(current_path).not_to eq sns_login_path
     end
 
