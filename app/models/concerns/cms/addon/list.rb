@@ -84,13 +84,13 @@ module Cms::Addon::List
       else
         if self.is_a?(Cms::Model::Part)
           if parent
-            cond << { filename: /^#{parent.filename}\//, depth: depth }
+            cond << { filename: /^#{::Regexp.escape(parent.filename)}\//, depth: depth }
             cids << parent.id
           else
             cond << { depth: depth }
           end
         else
-          cond << { filename: /^#{filename}\//, depth: depth + 1 }
+          cond << { filename: /^#{::Regexp.escape(filename)}\//, depth: depth + 1 }
           cids << id
         end
         cond_url = conditions
@@ -100,7 +100,7 @@ module Cms::Addon::List
         # regex
         if url =~ /\/\*$/
           filename = url.sub(/\/\*$/, "")
-          cond << { filename: /^#{filename}\// }
+          cond << { filename: /^#{::Regexp.escape(filename)}\// }
           next
         end
 
