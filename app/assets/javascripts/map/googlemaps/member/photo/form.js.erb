@@ -120,7 +120,7 @@ this.Member_Photo_Form = (function () {
       }
       return Member_Photo_Form.dataID += 1;
     });
-    if (Googlemaps_Map.markers.length > 0) {
+    if (Googlemaps_Map.markers && Googlemaps_Map.markers.length > 0) {
       Googlemaps_Map.map.setCenter(markerBounds.getCenter());
     }
   };
