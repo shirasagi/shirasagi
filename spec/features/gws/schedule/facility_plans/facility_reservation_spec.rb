@@ -62,7 +62,11 @@ describe "gws_schedule_facility_plans", type: :feature, dbscope: :example, js: t
       let(:repeat_start) { start_at.beginning_of_month }
       let(:repeat_end) { repeat_start + 12.months }
       let!(:item) do
-        create(:gws_schedule_plan, facility_ids: [ facility.id ], start_at: start_at, end_at: end_at, repeat_type: "monthly", interval: 1, repeat_base: "date", repeat_start: repeat_start, repeat_end: repeat_end, wdays: [])
+        create(
+          :gws_schedule_plan, facility_ids: [ facility.id ], start_at: start_at, end_at: end_at,
+          repeat_type: "monthly", interval: 1, repeat_base: "date",
+          repeat_start: repeat_start, repeat_end: repeat_end, wdays: []
+        )
       end
 
       it do
