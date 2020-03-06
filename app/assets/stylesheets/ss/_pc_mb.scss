@@ -348,16 +348,43 @@ _::-webkit-full-page-media, _:future, :root .gws-memo-message .popup-notice:befo
   border-bottom: $border-gray4;
   background: $black2;
   font-size: 14px;
-  h1 {
+  .application-name {
     float: left;
+    color: $white;
+    font-size: $px21;
     a {
       display: block;
+      color: $white;
+    }
+    a:hover {
+      text-decoration: none;
     }
     .ss-logo-wrap {
+      position: relative;
       width: 210px;
-      padding: 8px 15px 5px;
+      height: 49px;
+    }
+    img {
+      max-width: 210px;
+      max-height: 49px;
+      display: block;
+      top: 0;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      position: absolute;
+      margin: auto;
     }
     .ss-logo-application-name {
+      display: block;
+      position: absolute;
+      width: 100%;
+      text-align: center;
+      top: 50%;
+      -webkit-transform: translateY(-50%);
+      transform: translateY(-50%);
+    }
+    img + .ss-logo-application-name {
       display: none;
     }
   }
