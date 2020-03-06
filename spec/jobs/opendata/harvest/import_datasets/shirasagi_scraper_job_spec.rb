@@ -9,21 +9,19 @@ describe Opendata::Harvest::ImportDatasetsJob, dbscope: :example do
   let!(:node_search) { create_once :opendata_node_search_dataset, filename: "dataset/search" }
   let!(:node) { create(:opendata_node_dataset, name: "datasets") }
 
-  let!(:license_logo_file) { Fs::UploadedFile.create_from_file("spec/fixtures/ss/logo.png", basename: "spec") }
-  let!(:license) { create(:opendata_license, cur_site: site, in_file: license_logo_file, uid: "cc-by", name: "表示（CC BY）") }
+  let!(:license) { create(:opendata_license, cur_site: site, uid: "cc-by", name: "表示（CC BY）") }
 
   context "with empty datasets" do
     let!(:importer) { create(:opendata_harvest_importer, cur_node: node, source_url: "http://source.example.jp", api_type: "shirasagi_scraper") }
 
     let(:search_html) { File.read("spec/fixtures/opendata/harvest/shirasagi_scraper/empty_search.html")  }
-    describe ".perform_later" do
+    describe "#perform" do
       before do
         stub_request(:get, "http://source.example.jp/dataset/search/index.p1.html").
           to_return(body: search_html, status: 200, headers: { 'Content-Type' => 'text/html' })
 
-        perform_enqueued_jobs do
-          described_class.bind(site_id: site).perform_later(importer.id)
-        end
+        job = described_class.bind(site_id: site)
+        expect { job.perform_now(importer.id) }.to output(include("dataset_urls 0\n")).to_stdout
       end
 
       it do
@@ -49,7 +47,7 @@ describe Opendata::Harvest::ImportDatasetsJob, dbscope: :example do
     let(:sample2_xlsx) { File.read("spec/fixtures/opendata/harvest/shirasagi_scraper/sample2.xlsx") }
     let(:sample_txt) { File.read("spec/fixtures/opendata/harvest/shirasagi_scraper/sample.txt") }
 
-    describe ".perform_later" do
+    describe "#perform" do
       before do
         stub_request(:get, 'https://source.example.jp/dataset/search/index.p1.html').
           to_return(body: search1_html, status: 200, headers: { 'Content-Type' => 'text/html' })
@@ -72,9 +70,8 @@ describe Opendata::Harvest::ImportDatasetsJob, dbscope: :example do
         stub_request(:get, 'https://source.example.jp/fs/1/6/7/_/sample2.xlsx').
           to_return(body: sample2_xlsx, status: 200, headers: { 'Content-Type' => 'application/octet-stream' })
 
-        perform_enqueued_jobs do
-          described_class.bind(site_id: site).perform_later(importer.id)
-        end
+        job = described_class.bind(site_id: site)
+        expect { job.perform_now(importer.id) }.to output(include("dataset_urls 5\n")).to_stdout
       end
 
       it do
@@ -109,7 +106,7 @@ describe Opendata::Harvest::ImportDatasetsJob, dbscope: :example do
     let(:sample2_xlsx) { "spec/fixtures/opendata/harvest/shirasagi_scraper/sample2.xlsx" }
     let(:sample_txt) { "spec/fixtures/opendata/harvest/shirasagi_scraper/sample.txt" }
 
-    describe ".perform_later" do
+    describe "#perform" do
       before do
         @dataset1 = create_dataset(sample_txt)
         @dataset2 = create_dataset
@@ -177,7 +174,8 @@ describe Opendata::Harvest::ImportDatasetsJob, dbscope: :example do
 
         Opendata::Dataset.destroy_all
 
-        described_class.bind(site_id: site).perform_now(importer.id)
+        job = described_class.bind(site_id: site)
+        expect { job.perform_now(importer.id) }.to output(include("dataset_urls 5\n")).to_stdout
 
         log = Job::Log.first
         expect(log.logs).to include(include("import from http://#{site.domain}"))

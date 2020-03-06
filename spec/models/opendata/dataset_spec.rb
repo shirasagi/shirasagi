@@ -415,7 +415,7 @@ describe Opendata::Dataset, dbscope: :example do
         downloaded: 0
       }
       expect_reset_fields.each { |k, v| expect(target.send(k)).to eq(v) }
-      expect_copy_fields = dataset_attributes.reject { |k, v| expect_reset_fields.keys?(k) }
+      expect_copy_fields = dataset_attributes.reject { |k, v| expect_reset_fields.key?(k) }
       expect_copy_fields.each { |k, v| expect(subject.send(k)).to eq(v) }
     end
 
