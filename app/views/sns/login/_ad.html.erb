@@ -20,13 +20,13 @@
         <% contents = capture do %>
           <% if file.try(:image) %>
             <% if file.link_url.present? %>
-              <%= link_to image_tag(file.image.url, width: @ad.width.to_i), sns_redirect_path(ref: file.link_url), target: "_blank" %>
+              <%= link_to image_tag(file.image.url, width: @ad.width.to_i), sns_redirect_path(ref: file.link_url, back_to: request.url), target: "_blank" %>
             <% else %>
               <%= link_to image_tag(file.image.url, width: @ad.width.to_i), "#" %>
             <% end %>
           <% elsif file.try(:image?) %>
             <% if file.link_url.present? %>
-              <%= link_to image_tag(file.url, width: @ad.width.to_i), sns_redirect_path(ref: file.link_url), target: "_blank" %>
+              <%= link_to image_tag(file.url, width: @ad.width.to_i), sns_redirect_path(ref: file.link_url, back_to: request.url), target: "_blank" %>
             <% else %>
               <%= link_to image_tag(file.url, width: @ad.width.to_i), "#" %>
             <% end %>

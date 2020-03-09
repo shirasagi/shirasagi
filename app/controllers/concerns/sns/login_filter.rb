@@ -60,13 +60,31 @@ module Sns::LoginFilter
     url
   end
 
-  def trusted_url?
-    return true if @url.scheme == @request_url.scheme && @url.host == @request_url.host && @url.port == @request_url.port
+  def myself_url?(url)
+    url.scheme == @request_url.scheme && url.host == @request_url.host && url.port == @request_url.port
+  end
+
+  def trusted_url?(url)
+    return true if myself_url?(url)
 
     trusted_urls = SS.config.sns.trusted_urls
-    return true if trusted_urls.present? && trusted_urls.include?(@url)
+    return true if trusted_urls.present? && trusted_urls.include?(url)
 
     false
+  end
+
+  def back_to_url
+    back_to = params[:back_to].to_s
+    return default_logged_in_path if back_to.blank?
+
+    @request_url ||= URI.parse(request.url)
+    back_to_url = URI.join(@request_url, back_to) rescue nil
+    return default_logged_in_path if back_to_url.blank?
+
+    back_to_url = normalize_url(back_to_url)
+    return default_logged_in_path if back_to_url.blank? || !myself_url?(back_to_url)
+
+    back_to_url.to_s
   end
 
   public
@@ -84,30 +102,30 @@ module Sns::LoginFilter
   def redirect(login = false)
     ref = params[:ref].to_s
     if ref.blank?
-      redirect_to default_logged_in_path
+      redirect_to back_to_url
       return
     end
 
     @request_url = URI.parse(request.url)
     @url = URI.join(@request_url, ref) rescue nil
     if @url.blank?
-      redirect_to default_logged_in_path
+      redirect_to back_to_url
       return
     end
 
     @url = normalize_url(@url)
     if @url.blank?
-      redirect_to default_logged_in_path
+      redirect_to back_to_url
       return
     end
 
-    if trusted_url?
+    if trusted_url?(@url)
       redirect_to @url.to_s
       return
     end
 
     if login
-      redirect_to default_logged_in_path
+      redirect_to back_to_url
       return
     end
 
