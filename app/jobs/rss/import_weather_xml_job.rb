@@ -255,6 +255,6 @@ class Rss::ImportWeatherXmlJob < Rss::ImportBase
 
   def execute_weather_xml_filters
     return if @imported_pages.blank?
-    Rss::ExecuteWeatherXmlFiltersJob.bind(site_id: site.id, node_id: node.id).perform_later(@imported_pages.map(&:id))
+    Rss::ExecuteWeatherXmlFiltersJob.bind(site_id: site.id, node_id: node.id).perform_now(@imported_pages.map(&:id))
   end
 end

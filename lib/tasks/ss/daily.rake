@@ -26,6 +26,9 @@ namespace :ss do
         # スコア計算（リコメンド機能）
         Rake.application.invoke_task("recommend:create_similarity_scores[#{site.host}]") if SS.config.recommend.disable.blank?
 
+        # 公開ファイルの一貫性チェック - 誤って公開されているファイルの削除
+        SS::PublicFileRemoverJob.bind(site_id: site).perform_now
+
         # リンクチェック
         # Rake.application.invoke_task("cms:check_links[#{site.host}, 'admin@example.jp']")
 
