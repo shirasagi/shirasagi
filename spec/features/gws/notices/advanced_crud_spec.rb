@@ -23,9 +23,9 @@ describe "gws_notices", type: :feature, dbscope: :example, js: true do
   let(:manager_group) { create(:gws_group, name: "#{site.name}/#{unique_id}") }
   let(:editor_group) { create(:gws_group, name: "#{site.name}/#{unique_id}") }
   let(:reader_group) { create(:gws_group, name: "#{site.name}/#{unique_id}") }
-  let(:manager_role) { create(:gws_role_notice_admin) }
-  let(:editor_role) { create(:gws_role_notice_editor) }
-  let(:reader_role) { create(:gws_role_notice_reader) }
+  let(:manager_role) { create(:gws_role_notice_admin, :gws_role_portal_user_use) }
+  let(:editor_role) { create(:gws_role_notice_editor, :gws_role_portal_user_use) }
+  let(:reader_role) { create(:gws_role_notice_reader, :gws_role_portal_user_use) }
   let!(:manager) { create(:gws_user, group_ids: [ manager_group.id ], gws_role_ids: [ manager_role.id ]) }
   let!(:editor) { create(:gws_user, group_ids: [ editor_group.id ], gws_role_ids: [ editor_role.id ]) }
   let!(:reader) { create(:gws_user, group_ids: [ reader_group.id ], gws_role_ids: [ reader_role.id ]) }

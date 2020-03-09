@@ -27,7 +27,8 @@ describe "gws_groups", type: :feature, dbscope: :example do
   end
 
   context "403: when user has no permissions" do
-    let(:user) { create :gws_user, name: unique_id, email: "#{unique_id}@example.jp", group_ids: [ site.id ] }
+    let(:role) { create :gws_role_portal_user_use }
+    let(:user) { create :gws_user, name: unique_id, email: unique_email, group_ids: [ site.id ], gws_role_ids: [ role.id ] }
     let(:title) { "403 Forbidden | SHIRASAGI" }
 
     before do

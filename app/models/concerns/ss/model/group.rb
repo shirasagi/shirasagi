@@ -94,10 +94,12 @@ module SS::Model::Group
     end
     nil
   end
+  alias organization root
 
   def root?
     id == root.id
   end
+  alias organization? root?
 
   def descendants
     self.class.where(name: /^#{::Regexp.escape(name)}\//)

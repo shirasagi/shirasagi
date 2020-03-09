@@ -10,6 +10,8 @@ class Gws::Portal::UserSetting
 
   index({ portal_user_id: 1, site_id: 1 }, { unique: true })
 
+  no_needs_read_permission_to_read
+
   field :name, type: String
   belongs_to :portal_user, class_name: 'Gws::User', inverse_of: :portal_user_setting
   has_many :portlets, class_name: 'Gws::Portal::UserPortlet', dependent: :destroy
@@ -24,7 +26,7 @@ class Gws::Portal::UserSetting
     end
   end
 
-  def default_portlets
-    Gws::Portal::UserPortlet.default_portlets(SS.config.gws['portal']['user_portlets'])
+  def default_portlets(settings = [])
+    Gws::Portal::UserPortlet.default_portlets(settings.presence || SS.config.gws['portal']['user_portlets'])
   end
 end
