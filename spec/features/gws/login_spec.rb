@@ -47,4 +47,43 @@ describe "gws_login", type: :feature, dbscope: :example do
       expect(current_path).to eq login_path
     end
   end
+
+  context "when internal path is given at `ref` parameter" do
+    it do
+      visit gws_login_path(site: site, ref: gws_user_profile_path(site: site))
+      within "form" do
+        fill_in "item[email]", with: user.email
+        fill_in "item[password]", with: "pass"
+        click_button I18n.t("ss.login")
+      end
+
+      expect(current_path).to eq gws_user_profile_path(site: site)
+    end
+  end
+
+  context "when internal url is given at `ref` parameter" do
+    it do
+      visit gws_login_path(site: site, ref: gws_user_profile_url(site: site))
+      within "form" do
+        fill_in "item[email]", with: user.email
+        fill_in "item[password]", with: "pass"
+        click_button I18n.t("ss.login")
+      end
+
+      expect(current_path).to eq gws_user_profile_path(site: site)
+    end
+  end
+
+  context "when external url is given at `ref` parameter" do
+    it do
+      visit gws_login_path(site: site, ref: "https://www.google.com/")
+      within "form" do
+        fill_in "item[email]", with: user.email
+        fill_in "item[password]", with: "pass"
+        click_button I18n.t("ss.login")
+      end
+
+      expect(current_path).to eq main_path
+    end
+  end
 end

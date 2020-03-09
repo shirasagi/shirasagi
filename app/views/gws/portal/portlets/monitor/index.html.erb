@@ -8,20 +8,20 @@
     <% items.each do |item| %>
       <li class="list-item">
         <div class="info">
-          <% if item.new_flag? %><span class="gws-board-flag-new"></span><% end %>
           <%= link_to item.name, gws_monitor_topic_path(category: '-', id: item), class: 'title' %>
-          <% if (file_count = item.descendants.where(user_group_id: @cur_group.id).pluck(:file_ids).flatten.compact.length) > 0 %>
-            <span class="gws-board-file-count"><img src="/assets/img/gws/ic-file.png" alt="" /><%= file_count %></span>
-          <% end %>
+          <% if item.new_flag? %><span class="gws-board-flag-new"></span><% end %>
           <div class="meta">
-            <span class="datetime"><%= tryb { item.due_date.strftime("%Y/%m/%d %H:%M") } %></span>
-            <span class="mode"><%= item.updated? ? t('gws.history.mode.update') : t('gws.history.mode.create') %></span>
+            <span class="datetime"><%= Gws::Monitor::Topic.t(:due_date) %><%= tryb { item.due_date.strftime("%Y/%m/%d %H:%M") } %></span>
+            <span class="answer-state"><%= item.answer_state_name(@cur_group) %></span>
             <span>
               <% item.categories.compact.each do |category| %>
                 <%= link_to category.trailing_name, gws_monitor_topics_path(category: category.id),
                             class: "gws-category-label", style: category_label_css(category) %>
               <% end %>
             </span>
+            <% if (file_count = item.descendants.where(user_group_id: @cur_group.id).pluck(:file_ids).flatten.compact.length) > 0 %>
+              <span class="gws-board-file-count"><img src="/assets/img/gws/ic-file.png" alt="" /><%= file_count %></span>
+            <% end %>
           </div>
         </div>
       </li>

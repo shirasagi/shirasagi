@@ -9,5 +9,5 @@
   <dd><%= @item.order %></dd>
 
   <dt><%= @model.t :group_ids %></dt>
-  <dd><%=br @item.groups.pluck(:name).join("\n") %></dd>
+  <dd><%=br @item.groups.pluck(:name) %></dd>
 </dl>

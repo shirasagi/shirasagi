@@ -3,7 +3,11 @@
     <div class="column" data-id="<%= item.id %>">
       <p><%= link_to item.name, item.url %></p>
       <p><%= item.address %></p>
-      <%= link_to t("facility.sidebar.click_marker"), "#", class: "click-marker" %>
+      <% if @markers.find { |marker| marker[:id] == item.id }.present? %>
+        <%= link_to t("facility.sidebar.click_marker"), "#", class: "click-marker" %>
+      <% else %>
+        <div class="no-marker"><%= t("facility.sidebar.no_marker") %></div>
+      <% end %>
     </div>
   <% end %>
 </div>

@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-RSpec.describe Gws::Share::History, type: :model, dbscope: :example, tmpdir: true do
+RSpec.describe Gws::Share::History, type: :model, dbscope: :example do
   describe ".item" do
     let!(:file) { create :gws_share_file }
     subject { file.histories.first }

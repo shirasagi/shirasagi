@@ -1,4 +1,13 @@
-<div style="margin: 20px;">
-  <%= t "ss.confirm.redirect" %>
-  <p><%= link_to URI::decode(params[:ref].to_s), URI.parse(params[:ref].to_s).path %></p>
+<div class="addon-views" style="margin-top: 10px;">
+  <div class="addon-view" id="addon-basic">
+    <div class="addon-head"><h2><%= t "ss.confirm.redirect_head" %></h2></div>
+    <div class="addon-body">
+      <%= t "ss.confirm.redirect" %>
+      <p><%= link_to @url.to_s, @url.to_s %></p>
+    </div>
+  </div>
+
+  <footer class="send" style="border-top: none;">
+    <%= link_to t('ss.buttons.send'), @url.to_s, class: 'btn-primary save js-send' %>
+  </footer>
 </div>

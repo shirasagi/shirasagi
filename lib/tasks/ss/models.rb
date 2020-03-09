@@ -9,6 +9,9 @@ module Tasks
 
           puts "Analysing..."
 
+          # load all models
+          ::Rails.application.eager_load!
+
           Mongoid.models.sort_by(&:to_s).each do |model|
             next if model.to_s =~ /^Mongoid::/
             puts "- #{model}"

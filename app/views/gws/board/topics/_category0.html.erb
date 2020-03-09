@@ -1,6 +1,6 @@
 <% return if depth > 2 %>
 <ul class="<%= css_class %> depth<%= depth %>">
-  <% categories.each do |category| %>
+  <% categories.readable(@cur_user, site: @cur_site).each do |category| %>
     <li class="depth<%= depth %>">
       <span class="depth<%= depth %>">
       <%= link_to category.name, gws_board_topics_path(category: category.id),

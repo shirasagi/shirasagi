@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-RSpec.describe Gws::Monitor::Topic, type: :model, dbscope: :example, tmpdir: true do
+RSpec.describe Gws::Monitor::Topic, type: :model, dbscope: :example do
   let(:model) { described_class }
 
   describe "topic" do

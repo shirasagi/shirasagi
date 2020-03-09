@@ -196,8 +196,6 @@ module Member::Node
     include Cms::Addon::GroupPermission
     include History::Addon::Backup
 
-    self.use_liquid = false
-
     default_scope ->{ where(route: "member/photo") }
   end
 
@@ -205,14 +203,20 @@ module Member::Node
     include Cms::Model::Node
     include Cms::Addon::NodeSetting
     include Cms::Addon::Meta
-    include Cms::Addon::PageList
+    include Member::Addon::Photo::Search::PageList
     include Cms::Addon::Release
     include Cms::Addon::GroupPermission
     include History::Addon::Backup
 
-    self.use_liquid = false
-
     default_scope ->{ where(route: "member/photo_search") }
+
+    def condition_hash
+      if conditions.present?
+        super
+      else
+        {}
+      end
+    end
   end
 
   class PhotoSpot
@@ -223,8 +227,6 @@ module Member::Node
     include Cms::Addon::Release
     include Cms::Addon::GroupPermission
     include History::Addon::Backup
-
-    self.use_liquid = false
 
     default_scope ->{ where(route: "member/photo_spot") }
   end
@@ -238,24 +240,14 @@ module Member::Node
     include Cms::Addon::GroupPermission
     include History::Addon::Backup
 
-    self.use_liquid = false
-
     default_scope ->{ where(route: "member/photo_category") }
 
     def condition_hash
-      cond = []
-      cids = []
-
-      cids << id
-      conditions.each do |url|
-        node = Cms::Node.site(cur_site || site).filename(url).first rescue nil
-        next unless node
-        cond << { filename: /^#{::Regexp.escape(node.filename)}\//, depth: node.depth + 1 }
-        cids << node.id
+      if conditions.present?
+        super
+      else
+        { :photo_category_ids.in => [id] }
       end
-      cond << { :photo_category_ids.in => cids } if cids.present?
-
-      { '$or' => cond }
     end
   end
 
@@ -268,24 +260,14 @@ module Member::Node
     include Cms::Addon::GroupPermission
     include History::Addon::Backup
 
-    self.use_liquid = false
-
     default_scope ->{ where(route: "member/photo_location") }
 
     def condition_hash
-      cond = []
-      cids = []
-
-      cids << id
-      conditions.each do |url|
-        node = Cms::Node.site(cur_site || site).filename(url).first rescue nil
-        next unless node
-        cond << { filename: /^#{::Regexp.escape(node.filename)}\//, depth: node.depth + 1 }
-        cids << node.id
+      if conditions.present?
+        super
+      else
+        { :photo_location_ids.in => [id] }
       end
-      cond << { :photo_location_ids.in => cids } if cids.present?
-
-      { '$or' => cond }
     end
   end
 

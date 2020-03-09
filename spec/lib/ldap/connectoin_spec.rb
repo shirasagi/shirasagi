@@ -2,11 +2,11 @@ require 'spec_helper'
 
 describe Ldap::Connection, ldap: true do
   context "when simple auth_method is given" do
-    let(:host) { ENV["ldap_host"] }
-    let(:base_dn) { "dc=city,dc=shirasagi,dc=jp" }
-    let(:auth_method) { "simple" }
-    let(:username) { "cn=Manager,dc=city,dc=shirasagi,dc=jp" }
-    let(:password) { "ldappass" }
+    let(:host) { SS.config.ldap.host }
+    let(:base_dn) { "dc=example,dc=jp" }
+    let(:auth_method) { SS.config.ldap.auth_method.presence || "simple" }
+    let(:username) { "cn=admin,dc=example,dc=jp" }
+    let(:password) { SS::Crypt.encrypt("admin") }
 
     describe ".connect" do
       context "when valid config is given" do
@@ -17,8 +17,8 @@ describe Ldap::Connection, ldap: true do
       end
 
       context "when user1 is given" do
-        let(:username) { "uid=user1,ou=001002秘書広報課,ou=001企画部, dc=city, dc=shirasagi, dc=jp" }
-        let(:password) { "user1" }
+        let(:username) { "uid=user1,ou=001001政策課,ou=001企画政策部,dc=example,dc=jp" }
+        let(:password) { "pass" }
         it do
           expect(Ldap::Connection.connect(host: host, base_dn: base_dn, auth_method: auth_method,
                                           username: username, password: password)).not_to be_nil
@@ -26,10 +26,8 @@ describe Ldap::Connection, ldap: true do
       end
 
       context "when unknown-user is given" do
-        let(:username) do
-          "uid=user#{rand(0x100000000).to_s(36)},ou=001002秘書広報課,ou=001企画部, dc=city, dc=shirasagi, dc=jp"
-        end
-        let(:password) { "user1" }
+        let(:username) { "uid=user-#{unique_id},ou=001001政策課,ou=001企画政策部,dc=example,dc=jp" }
+        let(:password) { "pass" }
         it do
           expect do
             Ldap::Connection.connect(host: host, base_dn: base_dn, auth_method: auth_method,
@@ -39,13 +37,22 @@ describe Ldap::Connection, ldap: true do
       end
 
       context "when illegal password is given" do
-        let(:username) { "uid=user1,ou=001002秘書広報課,ou=001企画部, dc=city, dc=shirasagi, dc=jp" }
-        let(:password) { rand(0x100000000).to_s(36) }
+        let(:username) { "uid=user1,ou=001001政策課,ou=001企画政策部,dc=example,dc=jp" }
+        let(:password) { "pass-#{unique_id}" }
         it do
           expect do
             Ldap::Connection.connect(host: host, base_dn: base_dn, auth_method: auth_method,
                                      username: username, password: password)
           end.to raise_error Ldap::BindError
+        end
+      end
+
+      context "when encrypted password is given" do
+        let(:username) { "uid=user1,ou=001001政策課,ou=001企画政策部,dc=example,dc=jp" }
+        let(:password) { SS::Crypt.encrypt("pass") }
+        it do
+          expect(Ldap::Connection.connect(host: host, base_dn: base_dn, auth_method: auth_method,
+                                          username: username, password: password)).not_to be_nil
         end
       end
     end
@@ -68,8 +75,8 @@ describe Ldap::Connection, ldap: true do
   end
 
   context "when anonymous auth_method is given" do
-    let(:host) { ENV["ldap_host"] }
-    let(:base_dn) { "dc=city,dc=shirasagi,dc=jp" }
+    let(:host) { SS.config.ldap.host }
+    let(:base_dn) { "dc=example,dc=jp" }
     let(:auth_method) { "anonymous" }
 
     describe ".connect" do
@@ -92,26 +99,14 @@ describe Ldap::Connection, ldap: true do
       end
 
       context "when valid user1 is given" do
-        let(:username) { "uid=user1,ou=001002秘書広報課,ou=001企画部, dc=city, dc=shirasagi, dc=jp" }
-        let(:password) { "user1" }
+        let(:username) { "uid=user1,ou=001001政策課,ou=001企画政策部,dc=example,dc=jp" }
+        let(:password) { "pass" }
         it { expect(Ldap::Connection.authenticate(host: host, username: username, password: password)).to be true }
       end
 
       context "when user1 with wrong password is given" do
-        let(:username) { "uid=user1,ou=001002秘書広報課,ou=001企画部, dc=city, dc=shirasagi, dc=jp" }
-        let(:password) { "pass#{rand(0x100000000).to_s(36)}" }
-        it { expect(Ldap::Connection.authenticate(host: host, username: username, password: password)).to be false }
-      end
-
-      context "when valid admin is given" do
-        let(:username) { "uid=admin,ou=001002秘書広報課,ou=001企画部, dc=city, dc=shirasagi, dc=jp" }
-        let(:password) { "admin" }
-        it { expect(Ldap::Connection.authenticate(host: host, username: username, password: password)).to be true }
-      end
-
-      context "when admin with wrong password is given" do
-        let(:username) { "uid=admin,ou=001002秘書広報課,ou=001企画部, dc=city, dc=shirasagi, dc=jp" }
-        let(:password) { "pass#{rand(0x100000000).to_s(36)}" }
+        let(:username) { "uid=user1,ou=001001政策課,ou=001企画政策部,dc=example,dc=jp" }
+        let(:password) { "pass-#{unique_id}" }
         it { expect(Ldap::Connection.authenticate(host: host, username: username, password: password)).to be false }
       end
     end

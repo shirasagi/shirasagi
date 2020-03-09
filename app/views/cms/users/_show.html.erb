@@ -53,6 +53,9 @@
   <dt><%= @model.t :lock_state %></dt>
   <dd><%= @item.label :lock_state %></dd>
 
+  <dt><%= @model.t :deletion_lock_state %></dt>
+  <dd><%= @item.label :deletion_lock_state %></dd>
+
   <% if @item.organization.present? %>
   <dt><%= @model.t :organization_id %></dt>
   <dd><%= @item.organization.name %></dd>
@@ -60,5 +63,5 @@
 
   <% group_ids = Cms::Group.unscoped.site(@cur_site).pluck(:id) %>
   <dt><%= @model.t :group_ids %></dt>
-  <dd><%= br @item.groups.order_by(name: 1).select{ |c| group_ids.include?(c.id) }.map{|c| c.name}.join("\n") %></dd>
+  <dd><%= br @item.groups.order_by(name: 1).select{ |c| group_ids.include?(c.id) }.map{|c| c.name} %></dd>
 </dl>

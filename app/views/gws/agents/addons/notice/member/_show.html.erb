@@ -1,6 +1,10 @@
 <dl class="see">
   <dt><%= t('gws/board.topic.browsed_user_info.title') %></dt>
   <dd>
-    <span><%= t('gws/board.topic.browsed_user_info.format', count: @item.browsed_users.count, total: @item.overall_readers.site(@cur_site).active.count) %></span>
+    <%
+      browsed_user_ids = @item.browsed_users.pluck(:id)
+      browsed_user_and_overall_readers = @item.overall_readers.site(@cur_site).active.in(id: browsed_user_ids)
+    %>
+    <span><%= t('gws/board.topic.browsed_user_info.format', count: browsed_user_and_overall_readers.count, total: @item.overall_readers.site(@cur_site).active.count) %></span>
     <%= link_to t('gws/board.topic.browsed_user_info.more'), gws_notice_apis_members_path(notice_id: @item), class: %w(btn ajax-box) %></dd>
 </dl>

@@ -10,12 +10,16 @@ class Gws::Board::Topic
   include Gws::Addon::Board::Category
   include Gws::Addon::Board::NotifySetting
   include Gws::Addon::Release
+  include Gws::Addon::Member
   include Gws::Addon::ReadableSetting
   include Gws::Addon::GroupPermission
   include Gws::Addon::History
   include Gws::Board::BrowsingState
 
+  member_include_custom_groups
+  member_ids_optional
   readable_setting_include_custom_groups
+  no_needs_read_permission_to_read
   permission_include_custom_groups
   hide_released_field
 
@@ -32,16 +36,19 @@ class Gws::Board::Topic
 
   def subscribed_users
     return Gws::User.none if new_record?
-    return Gws::User.none if categories.blank?
 
     conds = []
-    conds << { id: { '$in' => categories.pluck(:subscribed_member_ids).flatten } }
-    conds << { group_ids: { '$in' => categories.pluck(:subscribed_group_ids).flatten } }
-
-    if Gws::Board::Category.subscription_setting_included_custom_groups?
-      custom_gropus = Gws::CustomGroup.in(id: categories.pluck(:subscribed_custom_group_ids))
-      conds << { id: { '$in' => custom_gropus.pluck(:member_ids).flatten } }
+    conds << { id: { '$in' => members.active.pluck(:id) } } if members.active.present?
+    conds << { group_ids: { '$in' => member_groups.active.pluck(:id) } } if member_groups.active.present?
+    if member_custom_groups.present?
+      ids = member_custom_groups.to_a.map { |custom_group| custom_group.overall_members.active.pluck(:id) }.flatten.uniq
+      conds << { id: { '$in' => ids } } if ids.present?
     end
+    if categories.present?
+      conds << { id: { '$in' => categories.pluck(:subscribed_member_ids).flatten } }
+      conds << { group_ids: { '$in' => categories.pluck(:subscribed_group_ids).flatten } }
+    end
+    return Gws::User.none if conds.blank?
 
     Gws::User.where('$and' => [ { '$or' => conds } ])
   end

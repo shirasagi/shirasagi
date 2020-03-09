@@ -9,22 +9,17 @@ describe "opendata_url_resource", dbscope: :example, http_server: true do
   let(:node) { create(:opendata_node_dataset) }
   let(:dataset) { create(:opendata_dataset, cur_node: node) }
   let(:license) do
-    file = Fs::UploadedFile.create_from_file(Rails.root.join("spec", "fixtures", "ss", "logo.png"))
-    create(:opendata_license, cur_site: site, in_file: file)
+    create(:opendata_license, cur_site: site)
   end
   let!(:item) do
-    file = Fs::UploadedFile.create_from_file(Rails.root.join("spec", "fixtures", "ss", "logo.png"))
-    create(:opendata_license, cur_site: site, in_file: file)
+    create(:opendata_license, cur_site: site)
   end
   let(:content_type) { "application/vnd.ms-excel" }
   let(:index_path) { opendata_dataset_url_resources_path site, node, dataset_id: dataset.id }
   let(:new_path) { new_opendata_dataset_url_resource_path site, node, dataset_id: dataset.id }
   let(:file_path) { Rails.root.join("spec", "fixtures", "opendata", "utf-8.csv") }
   let(:download_path) do
-    opendata_dataset_url_resource_file_path site,
-      node,
-      dataset_id: dataset.id,
-      url_resource_id: subject.id
+    opendata_dataset_url_resource_file_path(site, node, dataset_id: dataset.id, url_resource_id: subject.id)
   end
 
   subject { dataset.url_resources.new(attributes_for(:opendata_url_resource)) }

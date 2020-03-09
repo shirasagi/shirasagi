@@ -6,7 +6,7 @@ describe "gws_schedule_plans", type: :feature, dbscope: :example do
     let(:member_user) do
       create :gws_user, group_ids: [gws_site.id],
        notice_schedule_user_setting: "notify",
-       send_notice_mail_address: "ss@example.jp"
+       send_notice_mail_addresses: "ss@example.jp"
     end
     let(:item) { create :gws_schedule_plan, member_ids: [gws_user.id, member_user.id] }
     let(:show_path) { gws_schedule_plan_path site, item }
@@ -15,7 +15,7 @@ describe "gws_schedule_plans", type: :feature, dbscope: :example do
     before { login_gws_user }
 
     it "#edit plan (request)" do
-      item.update_attributes(approval_member_ids: [member_user.id])
+      item.update(approval_member_ids: [member_user.id])
       visit edit_path
 
       within ".gws-addon-schedule-approval" do
@@ -34,7 +34,7 @@ describe "gws_schedule_plans", type: :feature, dbscope: :example do
     end
 
     it "#show plan (approve)" do
-      item.update_attributes(approval_member_ids: [gws_user.id])
+      item.update(approval_member_ids: [gws_user.id])
       visit show_path
 
       within "#addon-gws-agents-addons-schedule-approval" do
@@ -50,7 +50,7 @@ describe "gws_schedule_plans", type: :feature, dbscope: :example do
     end
 
     it "#show plan (deny)" do
-      item.update_attributes(approval_member_ids: [gws_user.id])
+      item.update(approval_member_ids: [gws_user.id])
       visit show_path
 
       within "#addon-gws-agents-addons-schedule-approval" do

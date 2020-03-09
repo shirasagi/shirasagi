@@ -21,7 +21,7 @@
       </label>
       <% if !show && column.tooltips.present? %>
         <div class="tooltip">?
-          <ul>
+          <ul class="tooltip-content">
             <% column.tooltips.each do |tooltip| %>
               <li><%= tooltip %><br></li>
             <% end %>

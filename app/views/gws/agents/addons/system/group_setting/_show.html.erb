@@ -20,10 +20,10 @@
   <dd><%= @item.sendmail_domains.join(', ') %></dd>
 
   <dt><%= @model.t :canonical_scheme %></dt>
-  <dd><%= @item.canonical_scheme %></dd>
+  <dd><%= @item.canonical_scheme.presence || SS.config.gws.canonical_scheme %></dd>
 
   <dt><%= @model.t :canonical_domain %></dt>
-  <dd><%= @item.canonical_domain %></dd>
+  <dd><%= @item.canonical_domain.presence || SS.config.gws.canonical_domain %></dd>
 
   <dt><%= @model.t :trash_threshold %></dt>
   <dd><%= number_with_datetime_unit(@item, :trash_threshold) %></dd>

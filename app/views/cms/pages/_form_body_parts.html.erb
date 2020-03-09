@@ -1,5 +1,3 @@
-<% return if @item.respond_to?(:form) && ancestral_forms.present? %>
-
 <% if @item.respond_to?(:body_parts) && Cms::BodyLayout.site(@cur_site).present? %>
   <% if Cms::BodyLayout.allowed?(:edit, @cur_user, site: @cur_site) %>
     <dt><%= @model.t :body_layout_id %><%= @model.tt :body_layout_id %></dt>

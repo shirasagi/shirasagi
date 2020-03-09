@@ -7,6 +7,10 @@ FactoryBot.define do
     limit 1
   end
 
+  trait :gws_portal_schedule_portlet do
+    portlet_model "schedule"
+  end
+
   trait :gws_portal_ad_portlet do
     portlet_model "ad"
     ad_width { rand(300..400) }

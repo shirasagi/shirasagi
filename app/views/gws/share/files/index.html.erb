@@ -17,6 +17,7 @@
     <i class="material-icons md-18 md-dark title-icon">&#xE24D;</i>
     <%= item.name %>
   <% end %>
+  <% if item.new_flag? %><span class="gws-board-flag-new"></span><% end %>
 <% end %>
 
 <% @index_meta = proc do |item| %>

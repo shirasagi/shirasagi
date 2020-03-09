@@ -8,21 +8,21 @@ describe "gws_report_files", type: :feature, dbscope: :example, js: true do
     create(
       :gws_user, group_ids: [ gws_site.id ], gws_role_ids: gws_user.gws_role_ids,
       notice_report_user_setting: "notify", notice_report_email_user_setting: "notify",
-      send_notice_mail_address: "#{unique_id}@example.jp"
+      send_notice_mail_addresses: "#{unique_id}@example.jp"
     )
   end
   let!(:user1) do
     create(
       :gws_user, group_ids: [ group1.id ], gws_role_ids: gws_user.gws_role_ids,
       notice_report_user_setting: "notify", notice_report_email_user_setting: "notify",
-      send_notice_mail_address: "#{unique_id}@example.jp"
+      send_notice_mail_addresses: "#{unique_id}@example.jp"
     )
   end
   let!(:user2) do
     create(
       :gws_user, group_ids: [ group2.id ], gws_role_ids: gws_user.gws_role_ids,
       notice_report_user_setting: "notify", notice_report_email_user_setting: "notify",
-      send_notice_mail_address: "#{unique_id}@example.jp"
+      send_notice_mail_addresses: "#{unique_id}@example.jp"
     )
   end
   let!(:category) { create :gws_report_category, cur_site: site }
@@ -84,7 +84,7 @@ describe "gws_report_files", type: :feature, dbscope: :example, js: true do
       expect(ActionMailer::Base.deliveries.length).to eq 1
       ActionMailer::Base.deliveries.first.tap do |mail|
         expect(mail.from.first).to eq site.sender_address
-        expect(mail.bcc.first).to eq user1.send_notice_mail_address
+        expect(mail.bcc.first).to eq user1.send_notice_mail_addresses.first
         expect(mail.subject).to eq "[#{Gws::Report::File.model_name.human}] 「#{subject.name}」が届きました。"
         expect(mail.decoded.to_s).to include(mail.subject)
         notice_url = "#{site.canonical_scheme}://#{site.canonical_domain}/.g#{site.id}/memo/notices/#{notice.id}"
@@ -149,7 +149,7 @@ describe "gws_report_files", type: :feature, dbscope: :example, js: true do
       expect(ActionMailer::Base.deliveries.length).to eq 2
       ActionMailer::Base.deliveries.last.tap do |mail|
         expect(mail.from.first).to eq site.sender_address
-        expect(mail.bcc.first).to eq user1.send_notice_mail_address
+        expect(mail.bcc.first).to eq user1.send_notice_mail_addresses.first
         expect(mail.subject).to eq notice.subject
         expect(mail.decoded.to_s).to include(mail.subject)
         notice_url = "#{site.canonical_scheme}://#{site.canonical_domain}/.g#{site.id}/memo/notices/#{notice.id}"

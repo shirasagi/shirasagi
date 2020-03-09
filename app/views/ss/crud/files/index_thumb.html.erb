@@ -1,6 +1,6 @@
 <div class="index">
   <% @items.each do |item| %>
-  <article class="file-view">
+  <article class="file-view" data-file-id="<%= item.id %>">
     <a class="thumb" href="<%= url_for action: :show, id: item %>">
       <% if item.image? %>
       <img src="<%= url_for(action: :thumb, id: item) %>" alt="<%= item.basename %>" />

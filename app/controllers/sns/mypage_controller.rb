@@ -12,7 +12,7 @@ class Sns::MypageController < ApplicationController
   end
 
   def gws_sites
-    @cur_user.root_groups
+    @cur_user.root_groups.select { |group| group.gws_use? }
   end
 
   def notices

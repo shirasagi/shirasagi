@@ -11,7 +11,9 @@ Gws_Schedule_Integration.render();
 <section class="main-box gws-schedule-box">
   <header>
     <h2><%= @group.name %></h2>
-    <span class="group-creator"><%= @group.user_long_name %></span>
+    <% if @cur_site.schedule_custom_group_extra_state == "creator_name" %>
+      <span class="group-creator"><%= @group.user_long_name %></span>
+    <% end %>
     <nav><%= render file: '_search' %></nav>
   </header>
 

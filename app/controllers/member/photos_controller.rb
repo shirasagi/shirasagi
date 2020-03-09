@@ -1,6 +1,5 @@
 class Member::PhotosController < ApplicationController
   include Cms::BaseFilter
-  include Cms::PageFilter
   include Member::Photo::PageFilter
 
   model Member::Photo
@@ -25,10 +24,10 @@ class Member::PhotosController < ApplicationController
   def index
     raise "403" unless @model.allowed?(:read, @cur_user, site: @cur_site, node: @cur_node)
 
-    @items = @model.site(@cur_site).
+    @items = @model.site(@cur_site).node(@cur_node).
       allow(:read, @cur_user, site: @cur_site).
       search(params[:s]).
-      order_by(released: -1).
+      order_by(updated: -1).
       page(params[:page]).per(50)
   end
 end

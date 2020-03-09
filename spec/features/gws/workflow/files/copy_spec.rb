@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe Gws::Workflow::FilesController, type: :feature, dbscope: :example, tmpdir: true, js: true do
+describe Gws::Workflow::FilesController, type: :feature, dbscope: :example, js: true do
   let(:site) { gws_site }
 
   before do

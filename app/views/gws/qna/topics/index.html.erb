@@ -46,11 +46,8 @@
 
       <label class="check"><input type="checkbox" name="ids[]" value="<%= item.id %>" /></label>
       <div class="info">
-        <% if item.new_flag? %><span class="gws-board-flag-new"></span><% end %>
         <%= link_to item.name, { action: :show, id: item }, class: "title" %>
-        <% if item.descendants_files_count.to_i > 0 %>
-          <span class="gws-board-file-count"><img src="/assets/img/gws/ic-file.png" alt="" /><%= item.descendants_files_count %></span>
-        <% end %>
+        <% if item.new_flag? %><span class="gws-board-flag-new"></span><% end %>
 
         <div class="meta">
           <span class="id">#<%= item.id %></span>
@@ -65,6 +62,9 @@
               <%= item.label(:question_state) %>
             </span>
           </span>
+          <% if item.descendants_files_count.to_i > 0 %>
+            <span class="gws-board-file-count"><img src="/assets/img/gws/ic-file.png" alt="" /><%= item.descendants_files_count %></span>
+          <% end %>
         </div>
       </div>
     </li>

@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe Gws::Share::TrashPurgeJob, dbscope: :example, tmpdir: true do
+describe Gws::Share::TrashPurgeJob, dbscope: :example do
   let(:site) { gws_site }
   let(:user) { gws_user }
   let(:file) { tmpfile { |file| file.write('01234567890') } }

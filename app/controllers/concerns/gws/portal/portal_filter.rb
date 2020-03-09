@@ -3,27 +3,18 @@ module Gws::Portal::PortalFilter
 
   included do
     helper Gws::Schedule::PlanHelper
-    #before_action :set_portal_setting
+    menu_view "gws/portal/common/portal/menu"
   end
 
   private
 
+  def fix_params
+    { cur_user: @cur_user, cur_site: @cur_site }
+  end
+
+  # must be overridden by sub-class
   def set_portal_setting
-    return if @portal
-
-    if params[:group].present?
-      @portal_group = Gws::Group.find(params[:group])
-      @portal = @portal_group.find_portal_setting(cur_user: @cur_user, cur_site: @cur_site)
-      @portal.portal_type = (@portal_group.id == @cur_site.id) ? :root_portal : :group_portal
-    else
-      @portal_user = Gws::User.find(params[:user]) if params[:user].present?
-      @portal_user ||= @cur_user
-      @portal = @portal_user.find_portal_setting(cur_user: @cur_user, cur_site: @cur_site)
-      @portal.portal_type = (@portal_user.id == @cur_user.id) ? :my_portal : :user_portal
-    end
-
-    return if @portal.my_portal?
-    raise '403' unless @portal.portal_readable?(@cur_user, site: @cur_site)
+    raise NotImplementedError
   end
 
   def save_portal_setting
@@ -37,10 +28,57 @@ module Gws::Portal::PortalFilter
   public
 
   def show_portal
+    if @portal.blank?
+      render file: "gws/portal/common/portal/no_portals"
+      return
+    end
+
+    raise '403' unless @portal.portal_readable?(@cur_user, site: @cur_site)
+
     @items = @portal.portlets.presence || @portal.default_portlets
     @items.select! do |item|
       @cur_site.menu_visible?(item.portlet_model) && Gws.module_usable?(item.portlet_model, @cur_site, @cur_user)
     end
+
+    if @portal.show_portal_notice?
+      @sys_notices = Sys::Notice.and_public.
+        gw_admin_notice.
+        page(1).per(5)
+
+      if Gws.module_usable?(:notice, @cur_site, @cur_user)
+        @notices = Gws::Notice::Post.site(@cur_site).without_deleted.and_public.
+          readable(@cur_user, site: @cur_site)
+
+        case @portal.portal_notice_browsed_state
+        when 'read'
+          @notices = @notices.and_read(@cur_user)
+        when 'both'
+          @notices = @notices
+        else # unread
+          @notices = @notices.and_unread(@cur_user)
+        end
+
+        @notices = @notices.page(1).per(5)
+      else
+        @notices = Gws::Notice::Post.none
+      end
+    end
+
+    if Gws.module_usable?(:monitor, @cur_site, @cur_user) && @portal.show_portal_monitor?
+      @monitors = Gws::Monitor::Topic.site(@cur_site).topic.
+        and_public.
+        and_attended(@cur_user, site: @cur_site, group: @cur_group).
+        and_unanswered(@cur_group).
+        and_noticed
+    else
+      @monitors = Gws::Monitor::Topic.none
+    end
+
+    if @portal.show_portal_link?
+      @links = Gws::Link.site(@cur_site).and_public.
+        readable(@cur_user, site: @cur_site).to_a
+    end
+
     render file: "gws/portal/common/portal/show"
   end
 

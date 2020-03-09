@@ -67,6 +67,7 @@ module Gws::Discussion::Postable
 
   def current_topic
     return nil unless comment?
+
     depth == 2 ? self : parent
   end
 
@@ -108,7 +109,7 @@ module Gws::Discussion::Postable
   end
 
   def new_flag?
-    descendants_updated > Time.zone.now - site.discussion_new_days.day
+    created > Time.zone.now - site.discussion_new_days.day
   end
 
   def save_clone(new_parent = nil)

@@ -3,7 +3,7 @@
   <dd><%= @item.label :input_type %></dd>
 
   <dt><%= @model.t :select_options %></dt>
-  <dd><%=br @item.send(:select_options).join("\n") %></dd>
+  <dd><%=br @item.send(:select_options) %></dd>
 
   <dt><%= @model.t :required %></dt>
   <dd><%= @item.label :required %></dd>

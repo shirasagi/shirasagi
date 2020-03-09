@@ -28,8 +28,10 @@ ja:
     encoding: 文字コード
     text_zoom: 文字サイズ
     default_here_label: "詳細はこちら⇒"
-    errors: エラー
     wave_dash: ～
+    color: 表示色
+    bg_color: 背景色
+    contrast_ratio: コントラスト比
 
     views:
       login/login:
@@ -140,6 +142,9 @@ ja:
       close: 閉じる
       csv: CSV
       ignore_alerts_and_save: 警告を無視して保存する
+      zoom_out: 縮小
+      zoom_in: 拡大
+      calculate: 計算
     confirm:
       delete: 削除してよろしいですか？
       soft_delete: 削除してよろしいですか？
@@ -147,7 +152,8 @@ ja:
       convert: 変換してよろしいですか？
       unload: 入力したデータは保存されません。
       clone: 複製してよろしいですか？
-      redirect: 下記のページにアクセスしようとしています。
+      redirect_head: アクセスしてよろしいですか？
+      redirect: 外部のサイトにアクセスしようとしています。
       export: エクスポートを開始してよろしいですか？
       import: インポートを開始してよろしいですか？
       download: ダウンロードしてよろしいですか？
@@ -195,6 +201,7 @@ ja:
 
     info:
       soft_delete: データの実削除ではなく無効状態として保存されます。
+      soft_delete_locked: 削除状態が削除不可になっている為、削除できません。
     warning:
       initial_password: 初期パスワードを変更してください。
       session_timeout: セッションの有効期限が切れました。
@@ -346,6 +353,9 @@ ja:
       user_lock_state:
         unlocked: 利用可
         locked: 利用停止
+      user_deletion_lock_state:
+        unlocked: 削除可
+        locked: 削除不可
       text_zoom:
         zoom_in: '+'
         zoom_out: '-'
@@ -355,6 +365,9 @@ ja:
         week: 週
         month: か月
         year: 年
+      gws_use:
+        disabled: 使用しない
+        enabled: 使用する
 
     tasks:
       started: 開始しました。
@@ -368,6 +381,11 @@ ja:
       days_before: 日前
       days_progress: 日経過
       mobile_size: KB(キロバイト)
+
+    rescues:
+      default:
+        head: お探しのページは見つかりません
+        body: お探しのページは見つかりませんでした。<br>一時的にアクセスできない状態になっているか、URLが変更・削除されたのかもしれません。
 
   modules:
     addons:
@@ -389,7 +407,16 @@ ja:
       ss/notification/reply:
         discussion: 電子会議室
       ss/elasticsearch/site_setting: サイト内検索設定
+      ss/translate/site_setting: 自動翻訳
       ss/site_usage: 使用量
+      ss/logo_setting: ロゴ設定
+
+  activemodel:
+    attributes:
+      ss/download_param:
+        encoding: 文字コード
+      ss/import_param:
+        in_file: ファイル
 
   mongoid:
     models:
@@ -418,6 +445,8 @@ ja:
           not_found: "%{line_no} 行目: Id %{id} のユーザーは存在しません。"
         ss/model/role:
           not_found: "%{line_no} 行目: Id %{id} のロールは存在しません。"
+        ss/model/prefecture_code:
+          invalid_code: "は不正です。"
     attributes:
       ss/document:
         id: id
@@ -475,6 +504,7 @@ ja:
         session_lifetime: セッション寿命
         restriction: 利用制限
         lock_state: 利用状態
+        deletion_lock_state: 削除状態
         remark: 備考
         organization_id: 所属組織
         organization_uid: 職員番号
@@ -498,6 +528,7 @@ ja:
         activation_date: 有効期限（開始）
         expiration_date: 有効期限（終了）
         domains: ドメイン
+        gws_use: グループウェアの使用
       ss/user_group_history:
         created: 異動日時
         cms_site_id: CMSサイト
@@ -617,10 +648,10 @@ ja:
         town: 町名
         town_kana: 町名（カナ）
       ss/model/prefecture_code:
-        code: 都道府県又は市区町村コード
-        prefecture: 都道府県名
+        code: 市町村コード
+        prefecture: 都道府県名（漢字）
         prefecture_kana: 都道府県名（カナ）
-        city: 市区町村名
+        city: 市区町村名（漢字）
         city_kana: 市区町村名（カナ）
       ss/thumb_file:
         original_id: 元画像ID
@@ -630,6 +661,9 @@ ja:
         thumb_height: 高さ
       ss/model/job_log:
         job_id: ジョブID
+        hostname: ホスト名
+        ip_address: IPアドレス
+        process_id: プロセスID
         class_name: ジョブ名
         started: 開始日時
         closed: 終了日時
@@ -664,6 +698,21 @@ ja:
       ss/addon/elasticsearch/site_setting:
         elasticsearch_hosts: 全文検索サーバー
         elasticsearch_deny: 除外パス
+      ss/addon/translate/site_setting:
+        translate_state: ステータス
+        translate_source_id: 元言語コード
+        translate_target_ids: 翻訳言語コード
+        translate_api: API
+        translate_mock_api_request_count: APIリクエスト数
+        translate_mock_api_request_word_count: APIリクエスト文字数
+        translate_microsoft_api_key: "サブスクリプション キー"
+        translate_microsoft_api_request_count: APIリクエスト数
+        translate_microsoft_api_request_word_count: APIリクエスト文字数
+        translate_microsoft_api_request_metered_usage: "x-metered-usage"
+        translate_google_api_project_id: プロジェクトID
+        translate_google_api_credential_file_id: サービスアカウント秘密鍵
+        translate_google_api_request_count: APIリクエスト数
+        translate_google_api_request_word_count: APIリクエスト文字数
       ss/addon/site_usage:
         usage_node_count: フォルダー数
         usage_page_count: ページ数
@@ -672,6 +721,10 @@ ja:
         usage_group_count: グループ数
         usage_user_count: ユーザー数
         usage_calculated_at: 使用量計算日時
+      ss/model/logo_setting:
+        logo_application_name: アプリケーション名
+        logo_application_image_id: ロゴ画像
+        logo_application_template: ロゴHTML
 
   tooltip:
     ss/model/user:
@@ -716,6 +769,8 @@ ja:
         - 利用制限を選択します。
       lock_state:
         - 利用状態を選択します。
+      deletion_lock_state:
+        - 削除状態を選択します。
       remark:
         - 備考を入力します。
       organization_id: 所属する組織を選択します。
@@ -736,6 +791,9 @@ ja:
         - 有効期限の開始日を指定します。
       expiration_date:
         - 有効期限の終了日を指定します。
+      gws_use:
+        - グループウェアを使用するかどうかを指定します。
+        - 既定では、グループウェアを使用します。
     ss/document:
       title:
         - ページのタイトルに利用し、ブラウザのタイトルバーに表示されます。
@@ -759,12 +817,12 @@ ja:
       order:
         - フォルダーの並び順の設定で「指定順」を指定している場合に利用します。
         - 数字が小さいほど一覧ページの上位にリンクが表示されます。
-      keywords: &tooltip_keywords
+      keywords:
         - 検索エンジン用のキーワードの設定に利用します。
         - 「,」で区切ることにより複数のキーワードの設定が可能です。
       description:
         - 検索エンジン用のページ概要の設定に利用します。
-      summary_html: &tooltip_summary_html
+      summary_html:
         - 一覧ページで表示するページの概要に利用します。
         - |-
           一覧系のフォルダーのループHTMLの設定で下記のように記述した箇所に表示されます。
@@ -994,6 +1052,23 @@ ja:
       elasticsearch_deny:
         - 検索対象から除外するページのパスを入力します。
         - 改行区切りで入力します。
+
+    ss/model/prefecture_code:
+      code:
+        - 6桁の市町村コード（全国地方公共団体コード）を設定します。
+      prefecture:
+        - 都道府県名（漢字）を設定します。
+      prefecture_kana:
+        - 都道府県名（カナ）を設定します。
+      city:
+        - 市町村名（漢字）を設定します。
+      city_kana:
+        - 市町村名（カナ）を設定します。
+
+    ss:
+      contrast_ratio:
+        - 7以上でAAA、4.5以上でAA
+        - （22ポイント以上の文字、または、18ポイント以上の太字の場合は4.5以上でAAA、3以上でAA）
 
   job:
     models:

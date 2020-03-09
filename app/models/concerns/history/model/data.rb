@@ -9,7 +9,7 @@ module History::Model::Data
     index({ created: -1 })
     index({ ref_coll: 1, "data._id" => 1, created: -1 })
 
-    cattr_reader(:max_age) { 20 }
+    cattr_reader(:max_age) { SS.config.ss.history_max_age || 20 }
     cattr_accessor(:root, instance_accessor: false) { "#{Rails.root}/private/trash" }
 
     field :version, type: String, default: SS.version
@@ -71,7 +71,9 @@ module History::Model::Data
       end
     end
     model.fields.each do |k, field|
-      next if data[k].blank?
+      next if %w(_id state).include?(k)
+      data[k] = nil if data[k].blank?
+      next if data[k].nil?
 
       if field.type == SS::Extensions::ObjectIds
         klass = field.options[:metadata][:elem_class].constantize

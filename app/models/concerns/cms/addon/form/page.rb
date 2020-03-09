@@ -41,6 +41,18 @@ module Cms::Addon::Form::Page
     end
   end
 
+  def render_html(registers = nil)
+    return html if form.blank?
+
+    registers ||= {
+      cur_site: site,
+      cur_path: url,
+      cur_page: self
+    }
+
+    form.render_html(self, registers).html_safe
+  end
+
   private
 
   def validate_column_values

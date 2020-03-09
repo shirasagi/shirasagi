@@ -153,7 +153,7 @@ this.Cms_Form = (function () {
   Cms_Form.form_html_path = null;
   Cms_Form.form_link_check_path = null;
   Cms_Form.getHtml = function (resolve, reject) {
-    if (Cms_Form.addonSelector === ".mod-cms-body") {
+    if ([".mod-cms-body", ".mod-body-part-html"].includes(Cms_Form.addonSelector)) {
       resolve(Cms_Form.getEditorHtml());
       return;
     }

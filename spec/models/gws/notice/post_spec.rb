@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe Gws::Notice::Post, type: :model, dbscope: :example, tmpdir: true do
+describe Gws::Notice::Post, type: :model, dbscope: :example do
   let(:site) { gws_site }
   let(:user) { gws_user }
   let(:folder1) { create(:gws_notice_folder, cur_site: site) }

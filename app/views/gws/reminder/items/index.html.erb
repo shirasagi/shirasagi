@@ -17,7 +17,6 @@
       <label class="check"><input type="checkbox" name="ids[]" value="<%= item.id %>" /></label>
       <div class="info">
         <% if item.model == "gws/schedule/plan" || item.model == "gws/schedule/todo" %>
-          <% if item.unread? %><span class="gws-reminder-updated-flag"></span><% end %>
           <%= link_to item.name, { action: :redirect, id: item.id }, class: "title" %>
         <% else %>
           <%= item.name %>

@@ -17,6 +17,9 @@
   <dt><%= @model.t :class_name %></dt>
   <dd><%= t(@item.class_name.underscore, scope: "job.models") %></dd>
 
+  <dt><%= @model.t :hostname %></dt>
+  <dd><%= @item.process_id %> @ <%= @item.hostname %>(<%= @item.ip_address %>)</dd>
+
   <dt><%= @model.t :started %></dt>
   <dd class="datetime"><%= @item.started ? @item.started.strftime("%Y/%m/%d %H:%M") : @item.started %></dd>
 

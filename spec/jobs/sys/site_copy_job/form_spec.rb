@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe Sys::SiteCopyJob, dbscope: :example, tmpdir: true do
+describe Sys::SiteCopyJob, dbscope: :example do
   describe "copy form, column and page" do
     let(:site) { cms_site }
     let!(:form1) { create(:cms_form, cur_site: site, state: 'public', sub_type: 'static') }

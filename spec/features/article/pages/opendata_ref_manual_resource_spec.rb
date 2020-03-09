@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe "article_pages", type: :feature, dbscope: :example, tmpdir: true, js: true, fragile: true do
+describe "article_pages", type: :feature, dbscope: :example, js: true, fragile: true do
   let(:site) { cms_site }
   let(:article_node) { create :article_node_page, cur_site: site }
   let(:html) do
@@ -24,10 +24,7 @@ describe "article_pages", type: :feature, dbscope: :example, tmpdir: true, js: t
 
     file = tmp_ss_file(contents: '0123456789', user: cms_user)
 
-    path = Rails.root.join("spec", "fixtures", "ss", "logo.png")
-    Fs::UploadedFile.create_from_file(path, basename: "spec") do |file|
-      create :opendata_license, cur_site: od_site, default_state: 'default', in_file: file
-    end
+    create :opendata_license, cur_site: od_site, default_state: 'default'
 
     article_page.cur_user = cms_user
     article_page.file_ids = [ file.id ]

@@ -37,6 +37,7 @@ ja:
       result: 一覧表示
     sidebar:
       click_marker: 地図上で確認
+      no_marker: マーカーはありません
     buttons:
       add_info: 項目を追加する
       del_info: 削除
@@ -49,7 +50,6 @@ ja:
       start: 施設情報の更新処理を開始しました。
       invalid_file: CSV形式のファイルを選択してください。
       log: インポートログ
-      confirm: 既に登録されている施設情報をすべて削除しインポートを行います。更新処理を開始してよろしいですか？
 
   modules:
     facility: 施設
@@ -146,7 +146,7 @@ ja:
         - 左欄項目の内容を設定します。
     facility/addon/image_info:
       image_alt:
-        - 画像のALT属性（代替え文）を記入します。
+        - 画像のALT属性（代替文）を記入します。
       image_comment:
         - 画像の説明文を記入します。
       image_thumb_size:

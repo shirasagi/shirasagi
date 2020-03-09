@@ -23,7 +23,7 @@ class Opendata::Harvest::ShirasagiScraper
       charset = "utf-8"
 
       doc = Nokogiri::HTML.parse(html, nil, charset)
-      links = doc.css('.opendata-search-datasets.pages article h2 a')
+      links = doc.css('.opendata-search-datasets.pages article h2 > a')
       break if links.blank?
 
       links.each do |link|
@@ -44,11 +44,11 @@ class Opendata::Harvest::ShirasagiScraper
     charset = "utf-8"
 
     doc = Nokogiri::HTML.parse(html, nil, charset)
-    doc = doc.css("nav.categories + .text + .dataset-tabs").first.parent
+    doc = doc.css(".dataset-tabs").first.parent
 
     dataset["url"] = dataset_url
     dataset["name"] = doc.css('header h1.name').text.to_s.strip
-    dataset["text"] = doc.css('nav.categories + .text').text.to_s.strip
+    dataset["text"] = doc.css('.text').first.text.to_s.strip
     dataset["categories"] = doc.css("nav.categories .category").map { |node| node.text.to_s.strip }
     dataset["areas"] = doc.css("nav.categories .area").map { |node| node.text.to_s.strip }
 
@@ -65,11 +65,14 @@ class Opendata::Harvest::ShirasagiScraper
       resource["name"] = node.css(".info .name").text.to_s.strip
       resource["text"] = node.css(".info .text").text.to_s.strip
 
-      a_download = node.css(".icons a.download").first
-      href = a_download.attributes["data-url"].value
-      href = a_download.attributes["href"].value if href.blank?
-      href = ::Addressable::URI.unescape(href)
-      resource["url"] = ::File.join(url, href)
+      data_url = node.css(".icons a.download").first.attributes["data-url"].try(:value)
+      if data_url.present?
+        resource["url"] = data_url
+      else
+        href = node.css(".icons a.download").first.attributes["href"].value
+        href = ::Addressable::URI.unescape(href)
+        resource["url"] = ::File.join(url, href)
+      end
 
       resource["filename"] = ::File.basename(resource["url"])
       resource["format"] = ::File.extname(resource["url"]).downcase.delete(".")

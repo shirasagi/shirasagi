@@ -106,12 +106,10 @@ describe "cms/pages", type: :feature, dbscope: :example, js: true do
       site.save!
       site.reload
 
-      file2 = Cms::File.new model: "cms/file", site_id: site.id
-      file_path = Rails.root.join("spec", "fixtures", "ss", "file", "keyvisual.jpg")
-      Fs::UploadedFile.create_from_file(file_path, basename: "spec") do |test_file|
-        file2.in_file = test_file
-        file2.save!
-      end
+      file2 = tmp_ss_file(
+        Cms::File, site: site, user: cms_user, model: "cms/file",
+        contents: "#{Rails.root}/spec/fixtures/ss/file/keyvisual.jpg"
+      )
 
       html_text = ""
       html_text += "<img src=\"/fs/#{file.id}/_/logo.png\">"

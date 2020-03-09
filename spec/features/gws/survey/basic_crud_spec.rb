@@ -66,13 +66,14 @@ describe "gws_survey", type: :feature, dbscope: :example, js: true do
         click_on(I18n.t("ss.buttons.save"))
       end
 
-      # click print
-      click_on(I18n.t("ss.buttons.print"))
-      expect(page).to have_text(column_name)
-      click_on(I18n.t("ss.links.back"))
-
       expect(Gws::Survey::Form.all.count).to eq 1
       form = Gws::Survey::Form.all.site(site).find_by(name: form_name)
+
+      expect(Gws::Job::Log.all.where(class_name: Gws::Survey::NotificationJob.name).count).to eq 1
+      Gws::Job::Log.all.first(class_name: Gws::Survey::NotificationJob.name).tap do |log|
+        expect(log.logs).to include(include("INFO -- : Started Job"))
+        expect(log.logs).to include(include("INFO -- : Completed Job"))
+      end
 
       expect(SS::Notification.all.count).to eq 1
       SS::Notification.all.first.tap do |notice|

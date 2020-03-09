@@ -20,7 +20,7 @@
 
 <% @index_meta = proc do |item| %>
   <span class="id">#<%= item.id %></span>
-  <span class="datetime"><%= @model.t(:due_date) %>: <%= tryb { item.due_date.strftime('%Y/%m/%d %H:%M') } %></span>
+  <span class="datetime"><%= @model.t(:due_date) %>: <%= tryb { item.due_date.strftime('%Y/%m/%d') } %></span>
   <span><%= item.user_long_name %></span>
   <span class="gws-share-categories">
     <span class="gws-category-label" style="background-color: gray; color: #ffffff;"><%= t('gws/circular.post.disabled') %></span>

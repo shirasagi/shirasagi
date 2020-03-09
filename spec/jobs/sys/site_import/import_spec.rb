@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe Sys::SiteImportJob, dbscope: :example, tmpdir: true do
+describe Sys::SiteImportJob, dbscope: :example do
   let(:destination_site) { create :cms_site_unique }
 
   def execute(site, file_path)

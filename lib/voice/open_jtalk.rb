@@ -13,10 +13,10 @@ class Voice::OpenJtalk
     @openjtalk_opts = @config['opts']
     @sox_path = resolve_path(@config['sox'])
 
-    raise Voice::VoiceSynthesisError, I18n.t("voice.synthesis_fail.no_open_jtalk") unless ::File.exists?(@openjtalk_bin)
-    raise Voice::VoiceSynthesisError, I18n.t("voice.synthesis_fail.no_open_jtalk") unless ::File.exists?(@openjtalk_voice)
-    raise Voice::VoiceSynthesisError, I18n.t("voice.synthesis_fail.no_open_jtalk") unless ::File.exists?(@openjtalk_dic)
-    raise Voice::VoiceSynthesisError, I18n.t("voice.synthesis_fail.no_sox") unless ::File.exists?(@sox_path)
+    [ @openjtalk_bin, @openjtalk_voice, @openjtalk_dic ].each do |path|
+      raise Voice::VoiceSynthesisError, I18n.t("voice.synthesis_fail.no_open_jtalk", path: path) unless ::File.exists?(path)
+    end
+    raise Voice::VoiceSynthesisError, I18n.t("voice.synthesis_fail.no_sox", path: @sox_path) unless ::File.exists?(@sox_path)
   end
 
   def build(site_id, texts, output)

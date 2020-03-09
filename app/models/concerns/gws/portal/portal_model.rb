@@ -1,6 +1,9 @@
 module Gws::Portal::PortalModel
   extend ActiveSupport::Concern
   extend SS::Translation
+  include Gws::Addon::Portal::NoticeSetting
+  include Gws::Addon::Portal::MonitorSetting
+  include Gws::Addon::Portal::LinkSetting
 
   included do
     attr_accessor :portal_type
@@ -28,8 +31,8 @@ module Gws::Portal::PortalModel
     false
   end
 
-  def save_default_portlets
-    default_portlets.each do |item|
+  def save_default_portlets(settings = [])
+    default_portlets(settings).each do |item|
       user_ids = [@cur_user.id]
       user_ids << portal_user_id if try(:portal_user_id)
 

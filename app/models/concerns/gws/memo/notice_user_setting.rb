@@ -2,6 +2,8 @@ module Gws::Memo::NoticeUserSetting
   extend ActiveSupport::Concern
   extend Gws::UserSetting
 
+  MAX_MAIL_COUNT = SS.config.gws.dig("memo", "max_notice_mail_address_count") || 10
+
   included do
     %w(schedule todo report workflow circular monitor board faq qna survey discussion announcement).each do |name|
       field "notice_#{name}_user_setting", type: String, default: 'notify'
@@ -13,9 +15,9 @@ module Gws::Memo::NoticeUserSetting
       alias_method("notice_#{name}_email_user_setting_options", "notice_email_user_setting_options")
     end
 
-    field :send_notice_mail_address, type: String
-    permit_params :send_notice_mail_address
-    validates :send_notice_mail_address, length: { maximum: 80 }
+    field :send_notice_mail_addresses, type: SS::Extensions::Words
+    permit_params :send_notice_mail_addresses
+    validates :send_notice_mail_addresses, emails: true, length: { maximum: MAX_MAIL_COUNT, message: :too_large }
   end
 
   def notice_user_setting_options

@@ -44,7 +44,13 @@ $(".download-all").on("click", function () {
 <%= paginate @items %>
 
 <% if bulk_download_ids.present? %>
-  <%= link_to t("opendata.search_datasets.bluk_download"), bulk_download_url, class: "download-all" %>
+  <% if @cur_site.anti_bot_use_button_for_bulk_download? %>
+    <%= form_tag bulk_download_url, method: "post", class: "download-all" do %>
+      <%= submit_tag t("opendata.search_datasets.bluk_download"), name: "bluk-download" %>
+    <% end %>
+  <% else %>
+    <%= link_to(t("opendata.search_datasets.bluk_download"), bulk_download_url, class: "download-all", rel: @cur_site.anti_bot_set_nofollow? ? "nofollow" : nil) %>
+  <% end %>
 <% end %>
 
 <div class="opendata-search-datasets pages">
@@ -55,7 +61,13 @@ $(".download-all").on("click", function () {
       <h2><%= link_to item.name, item.url %>
         <% if item.zip_exists? %>
         <div class="download">
-          <%= link_to(t("opendata.search_datasets.download", size: item.resources.size), search_dataset_download_path(item)) %>
+          <% if @cur_site.anti_bot_use_button_for_bulk_download? %>
+            <%= form_tag search_dataset_download_path(item), method: "post" do %>
+              <%= submit_tag t("opendata.search_datasets.download", size: item.resources.size), name: "dataset-download" %>
+            <% end %>
+          <% else %>
+            <%= link_to(t("opendata.search_datasets.download", size: item.resources.size), search_dataset_download_path(item), rel: @cur_site.anti_bot_set_nofollow? ? "nofollow" : nil) %>
+          <% end %>
         </div>
         <% end %>
 
