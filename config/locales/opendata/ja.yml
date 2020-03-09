@@ -1,6 +1,7 @@
 ja:
   opendata:
     create: 新規登録
+    manage_datasets: データセットを管理する
     manage_resources: リソースを管理する
     manage_url_resources: クローリングを管理する
     manage_appfiles: アプリファイルを管理する
@@ -73,6 +74,12 @@ ja:
       not_exists_reports: 集計結果がありません。
       total_year: 年合計
       total_month: 月合計
+    histories:
+      history: 履歴
+      download_histories: ダウンロード履歴
+      preview_histories: プレビュー履歴
+      download_history_archives: アーカイブ
+      preview_history_archives: アーカイブ
     public_entity:
       format: データセット一覧
       download: 公開中のデータセットの一覧を推奨データセット「オープンデータ一覧」の形式にてダウンロードできます。
@@ -114,6 +121,8 @@ ja:
         invalid_regexp: 正規表現が不正です。
         too_many_categories: "分野の設定数が多すぎます（末端分野の制限数: %{limit}）"
         too_many_estat_categories: "eStat分野の設定数が多すぎます（末端eStat分野の制限数: %{limit}）"
+        resource_preview_failed: リソースをプレビューできませんでした。
+        resource_preview_timeout: 容量が大きいためリソースをプレビューできませんでした。
     crawl_state:
       same:
       updated: 更新
@@ -327,6 +336,13 @@ ja:
       - '    </div>'
       - '  </article>'
       - '</div>'
+    downloaded_by_options:
+      single: 単独
+      dataset: データセット
+      bulk: 一括
+    anti_bot_method_options:
+      set_nofollow: "ダウンロードやプレビューなどの <a> タグに rel=\"nofollow\" をつける"
+      use_button_for_bulk_download: "一括ダウンロードに <button> タグを用いる"
 
     # Web API
     api:
@@ -517,6 +533,8 @@ ja:
     edit_other_opendata_harvests: ハーベスト機能の利用
     edit_other_opendata_harvested: ハーベスト機能の取込みデータセット強制編集
     edit_other_opendata_public_entity_datasets: データセット一覧ダウンロードの利用
+    read_opendata_reports: 各種レポートの閲覧
+    read_opendata_histories: 各種履歴の閲覧
 
   mongoid:
     models:
@@ -533,6 +551,8 @@ ja:
       opendata/export_datasets: エクスポート
       opendata/import_datasets: インポート
       opendata/dataset_importer: インポート
+      opendata/resource_download_history: リソースダンロード履歴
+      opendata/resource_download_report: リソースダンロード数集計結果
     attributes:
       opendata/addon/category:
         category_ids: 分野
@@ -723,6 +743,7 @@ ja:
         dataset_state: データセット
         app_state: アプリ
         idea_state: アイデア
+        anti_bot_methods: Bot対策
       opendata/addon/workflow/idea_comment_approver:
         workflow_user_id: 申請者
         workflow_state: 承認状態
@@ -769,6 +790,38 @@ ja:
         update_plan_mail_state: 更新予定日のメール通知
       opendata/addon/pref_code:
         pref_code: コード
+      opendata/resource/history_model:
+        full_url: URL
+        dataset_id: データセットID
+        dataset_name: データセット名
+        dataset_areas: 地域
+        dataset_categories: 分野
+        dataset_estat_categories: eStat分野
+        resource_id: リソースID
+        resource_name: リソース名
+        resource_filename: リソースファイル名
+        resource_format: リソースフォーマット
+        resource_source_url: リソースソースURL
+        remote_addr: 接続元IP
+        user_agent: ユーザーエージェント
+      opendata/resource_download_history:
+        downloaded: ダウンロード日時
+        downloaded_by: ダウンロード方法
+      opendata/resource_preview_history:
+        previewed: プレビュー日時
+      opendata/resource/report_model:
+        year_month: 年月
+        deleted: 削除日
+        dataset_id: データセットID
+        dataset_name: データセット名
+        dataset_url: データセットURL
+        dataset_areas: データセット地域
+        dataset_categories: データセット分野
+        dataset_estat_categories: データセットeStat分野
+        resource_id: リソースID
+        resource_name: リソース名
+        resource_filename: リソースファイル名
+        resource_format: リソースフォーマット
 
   activemodel:
     models:
@@ -1023,6 +1076,11 @@ ja:
           #{class_estat_categories} リンク先ページ内がeStat分野に関連付けられている場合、全てのカテゴリのフォルダ名が表示されます。
           #{dataset_point} データセットのいいね！数が表示されます。
           #{dataset_downloaded} データセットのダウンロード数が表示されます。
+    opendata/addon/site_setting:
+      anti_bot_methods:
+        - Bot 対策方法を選択します。
+        - "&lt;a&gt; タグに rel=\"nofollow\" をつけると、Bot はリンクを辿らなくなります（ただし、紳士的な Bot のみ）。"
+        - "通常の Bot ではボタンをクリックしないので、一括ダウンロードに &lt;button&gt; タグを用いるようにすると、Bot が辿らなくなります。"
 
   job:
     models:

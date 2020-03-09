@@ -106,7 +106,7 @@ class Gws::Notice::Folder
 
   def reclaim!
     set(
-      notice_total_body_size: notices.pluck(:text).map(&:size).sum,
+      notice_total_body_size: notices.pluck(:text).select(&:present?).map(&:size).sum,
       notice_total_file_size: SS::File.in(id: notices.pluck(:file_ids).flatten).sum(:size)
     )
   end

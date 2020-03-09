@@ -41,7 +41,7 @@
   <dd><%= f.select :canonical_scheme, @item.canonical_scheme_options %></dd>
 
   <dt><%= @model.t :canonical_domain %><%= @model.tt :canonical_domain %></dt>
-  <dd><%= f.text_field :canonical_domain %></dd>
+  <dd><%= f.text_field :canonical_domain, placeholder: SS.config.gws.canonical_domain %></dd>
 
   <dt><%= @model.t :trash_threshold %><%= @model.tt :trash_threshold %></dt>
   <dd><%= number_field_with_datetime_unit(:item, :trash_threshold, @item.trash_threshold_unit_options) %></dd>

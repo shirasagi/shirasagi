@@ -26,6 +26,7 @@ FactoryBot.define do
         delete_private_gws_notices
         edit_private_gws_notices
         read_private_gws_notices
+        read_private_gws_notice_categories
       )
     end
   end
@@ -101,6 +102,45 @@ FactoryBot.define do
     end
   end
 
+  trait :gws_role_board_user do
+    after(:build) do |item|
+      item.permissions += %w(
+        use_gws_board
+      )
+    end
+  end
+
+  trait :gws_role_board_admin do
+    after(:build) do |item|
+      item.permissions += %w(
+        use_gws_board
+        read_private_gws_board_topics
+        edit_private_gws_board_topics
+        delete_private_gws_board_topics
+        trash_private_gws_board_topics
+        read_private_gws_board_categories
+        edit_private_gws_board_categories
+        delete_private_gws_board_categories
+      )
+    end
+  end
+
+  trait :gws_role_portal_user_use do
+    after(:build) do |item|
+      item.permissions += %w(
+        use_gws_portal_user_settings
+      )
+    end
+  end
+
+  trait :gws_role_portal_organization_use do
+    after(:build) do |item|
+      item.permissions += %w(
+        use_gws_portal_organization_settings
+      )
+    end
+  end
+
   factory :gws_role, class: Gws::Role, traits: [:gws_role]
 
   factory :gws_role_admin, class: Gws::Role, traits: [:gws_role, :gws_role_admin]
@@ -118,4 +158,8 @@ FactoryBot.define do
   factory :gws_role_attendance_user, class: Gws::Role, traits: [:gws_role, :gws_role_attendance_user]
 
   factory :gws_role_attendance_editor, class: Gws::Role, traits: [:gws_role, :gws_role_attendance_editor]
+
+  factory :gws_role_portal_user_use, class: Gws::Role, traits: [:gws_role, :gws_role_portal_user_use]
+
+  factory :gws_role_portal_organization_use, class: Gws::Role, traits: [:gws_role, :gws_role_portal_organization_use]
 end

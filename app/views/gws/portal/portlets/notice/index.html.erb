@@ -16,15 +16,11 @@
       <li class="<%= css_classes.join(' ') %>">
         <div class="info">
           <%= link_to item.name, gws_notice_readable_path(folder_id: '-', category_id: '-', id: item), class: 'title' %>
-          <% if item.files.present? %>
-            <span class="gws-notice-file-count"><img src="/assets/img/gws/ic-file.png" alt=""/><%= item.files.count %></span>
-          <% end %>
-          <% if item.comments.count > 0 %>
-            <span class="gws-notice-comment-count"><img src="/assets/img/gws/ic-comment.png" alt=""/><%= item.comments.count %></span>
-          <% end %>
+          <% if item.new_flag? %><span class="gws-board-flag-new"></span><% end %>
 
           <div class="meta">
             <span class="datetime"><%= item.updated.strftime("%Y/%m/%d %H:%M") %></span>
+            <span class="browsed"><%= t("gws/board.options.browsed_state.#{item.browsed?(@cur_user) ? 'read' : 'unread'}") %></span>
             <span class="user"><%= item.contributor_name.presence || item.user_long_name %></span>
             <% if attr = item.label(:severity).presence %>
               <span class="label"><%= attr %></span>
@@ -35,6 +31,12 @@
                             class: "gws-category-label", style: category_label_css(category) %>
               <% end %>
             </span>
+            <% if item.files.present? %>
+              <span class="gws-notice-file-count"><img src="/assets/img/gws/ic-file.png" alt=""/><%= item.files.count %></span>
+            <% end %>
+            <% if item.comments.count > 0 %>
+              <span class="gws-notice-comment-count"><img src="/assets/img/gws/ic-comment.png" alt=""/><%= item.comments.count %></span>
+            <% end %>
           </div>
         </div>
       </li>

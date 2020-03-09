@@ -1,5 +1,5 @@
 approve_private_gws_workflow_files
-delete_private_gws_board_posts
+delete_private_gws_board_topics
 delete_private_gws_circular_categories
 delete_private_gws_circular_posts
 delete_private_gws_custom_groups
@@ -47,7 +47,7 @@ edit_gws_attendance_time_cards
 edit_gws_bookmarks
 edit_gws_personal_addresses
 edit_private_gws_board_categories
-edit_private_gws_board_posts
+edit_private_gws_board_topics
 edit_private_gws_circular_categories
 edit_private_gws_circular_posts
 edit_private_gws_custom_groups
@@ -96,7 +96,7 @@ manage_private_gws_attendance_time_cards
 manage_private_gws_user_presences
 read_gws_organization
 read_private_gws_board_categories
-read_private_gws_board_posts
+read_private_gws_board_topics
 read_private_gws_circular_categories
 read_private_gws_circular_posts
 read_private_gws_custom_groups
@@ -139,7 +139,7 @@ read_private_gws_workflow_forms
 read_private_gws_workflow_routes
 reroute_private_gws_workflow_files
 send_private_gws_memo_list_messages
-trash_private_gws_board_posts
+trash_private_gws_board_topics
 trash_private_gws_circular_posts
 trash_private_gws_discussion_forums
 trash_private_gws_faq_posts
@@ -159,6 +159,9 @@ use_gws_elasticsearch
 use_gws_faq
 use_gws_monitor
 use_gws_notice
+use_gws_portal_group_settings
+use_gws_portal_organization_settings
+use_gws_portal_user_settings
 use_gws_qna
 use_gws_report
 use_gws_share

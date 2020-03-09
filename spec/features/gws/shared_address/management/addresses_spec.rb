@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe "gws_shared_address_management_addresses", type: :feature, dbscope: :example, js: true, tmpdir: true do
+describe "gws_shared_address_management_addresses", type: :feature, dbscope: :example, js: true do
   let(:site) { gws_site }
   let(:member) { create :gws_user }
   let(:address_group) { create :gws_shared_address_group }

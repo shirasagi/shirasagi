@@ -9,13 +9,13 @@
   <dl class="see">
     <% if @item.class.subscription_setting_included_custom_groups? %>
     <dt><%= @model.t :subscribed_custom_group_ids %></dt>
-    <dd><%=tryb { br @item.subscribed_custom_group_names.join("\n") } %></dd>
+    <dd><%=tryb { br @item.subscribed_custom_group_names } %></dd>
     <% end %>
 
     <dt><%= @model.t :subscribed_group_ids %></dt>
-    <dd><%=br @item.subscribed_group_names.join("\n") %></dd>
+    <dd><%=br @item.subscribed_group_names %></dd>
 
     <dt><%= @model.t :subscribed_member_ids %></dt>
-    <dd><%=br @item.subscribed_member_names.join("\n") %></dd>
+    <dd><%=br @item.subscribed_member_names %></dd>
   </dl>
 </div>

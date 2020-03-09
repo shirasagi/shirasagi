@@ -28,8 +28,7 @@ def add_permissions(name, permissions)
   item
 end
 
-add_permissions "記事編集権限",
-  %w(
+add_permissions "記事編集権限", %w(
     read_other_opendata_datasets edit_other_opendata_datasets delete_other_opendata_datasets
     read_private_opendata_datasets edit_private_opendata_datasets delete_private_opendata_datasets
     read_other_opendata_apps edit_other_opendata_apps delete_other_opendata_apps
@@ -522,7 +521,8 @@ def save_license(data)
   item
 end
 
-license_cc_by = save_license name: "表示（CC BY）", in_file: license_file("cc-by.png"), order: 1, default_state: 'default', uid: "cc-by"
+license_cc_by = save_license name: "表示（CC BY）", in_file: license_file("cc-by.png"), order: 1,
+                             default_state: 'default', uid: "cc-by"
 save_license name: "表示-継承（CC BY-SA）", in_file: license_file("cc-by-sa.png"), order: 2, uid: "cc-by-sa"
 save_license name: "表示-改変禁止（CC BY-ND）", in_file: license_file("cc-by-nd.png"), order: 3, uid: "cc-by-nd"
 save_license name: "表示-非営利（CC BY-NC）", in_file: license_file("cc-by-nc.png"), order: 4, uid: "cc-by-nc"
@@ -566,7 +566,7 @@ def save_resource(dataset, data)
   Fs::UploadedFile.create_from_file(path) do |file|
     item = dataset.resources.where(cond).first || dataset.resources.new
     item.in_file = file
-    item.update_attributes! data
+    item.update! data
     puts item.errors.full_messages unless item.save
   end
 end
@@ -615,7 +615,7 @@ def save_appfile(app, data)
   Fs::UploadedFile.create_from_file(path) do |file|
     item = app.appfiles.where(cond).first || app.appfiles.new
     item.in_file = file
-    item.update_attributes! data
+    item.update! data
     puts item.errors.full_messages unless item.save
   end
 end
@@ -707,7 +707,11 @@ end
 
 save_word_dictionary name: "機種依存文字", body_file: "#{Rails.root}/db/seeds/cms/word_dictionary/dependent_characters.txt"
 
+##
+puts "# site settings"
+
 @site.editor_css_path = '/css/ckeditor_contents.css'
+@site.anti_bot_methods = %w(set_nofollow use_button_for_bulk_download)
 @site.update!
 
 if @site.subdir.present?

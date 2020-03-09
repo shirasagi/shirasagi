@@ -13,7 +13,7 @@ class Ads::Banner
   field :link_url, type: String
   field :additional_attr, type: Cms::Extensions::HtmlAttributes, default: ""
 
-  belongs_to_file :file
+  belongs_to_file2 :file
 
   validates :link_url, presence: true
   validate :validate_link_url

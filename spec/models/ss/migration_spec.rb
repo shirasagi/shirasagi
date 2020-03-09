@@ -2,7 +2,7 @@ require 'spec_helper'
 require 'fileutils'
 require "ss/migration/base"
 
-RSpec.describe SS::Migration, type: :model, dbscope: :example, tmpdir: true do
+RSpec.describe SS::Migration, type: :model, dbscope: :example do
   def migration_file(filepath, depend_on: nil)
     dirpath = ::File.dirname(filepath)
     ::FileUtils.mkdir_p(dirpath) if !Dir.exists?(dirpath)

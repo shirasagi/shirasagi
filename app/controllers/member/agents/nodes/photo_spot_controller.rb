@@ -16,8 +16,11 @@ class Member::Agents::Nodes::PhotoSpotController < ApplicationController
 
   def index
     @items = pages.
+      order_by(@cur_node.sort_hash).
       page(params[:page]).
       per(@cur_node.limit)
+
+    render_with_pagination @items
   end
 
   def rss

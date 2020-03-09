@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe Gws::Elasticsearch::Indexer::BoardTopicJob, dbscope: :example, tmpdir: true do
+describe Gws::Elasticsearch::Indexer::BoardTopicJob, dbscope: :example do
   let(:site) { create(:gws_group) }
   let(:user) { gws_user }
   let(:file_path) { Rails.root.join('spec', 'fixtures', 'ss', 'logo.png') }

@@ -43,9 +43,10 @@ module SS
     Dir["#{config.root}/config/routes/**/routes.rb"].sort.each do |file|
       config.paths["config/routes.rb"] << file
     end
-    Dir["#{config.root}/config/routes/*/routes_end.rb"].sort.each do |file|
+    Dir["#{config.root}/config/routes/**/routes_end.rb"].sort.reverse_each do |file|
       config.paths["config/routes.rb"] << file
     end
+    config.paths["config/routes.rb"] << "#{config.root}/config/routes_end.rb"
 
     config.paths["config/initializers"] << "#{config.root}/config/after_initializers"
 
@@ -81,6 +82,35 @@ module SS
       else
         nil
       end
+    end
+
+    def hostname
+      @hostname ||= begin
+        hostname! rescue nil
+      end
+    end
+
+    def hostname!
+      require "socket"
+      Socket.gethostname
+    end
+
+    def ip_address
+      @ip_address ||= begin
+        ip_address! rescue nil
+      end
+    end
+
+    def ip_address!
+      require "socket"
+
+      udp = UDPSocket.new
+      # クラスBの先頭アドレス,echoポート 実際にはパケットは送信されない。
+      udp.connect("128.0.0.0", 7)
+      address = Socket.unpack_sockaddr_in(udp.getsockname)[1]
+      address
+    ensure
+      udp.close rescue nil
     end
   end
 

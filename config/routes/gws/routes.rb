@@ -27,10 +27,10 @@ Rails.application.routes.draw do
   end
 
   namespace "gws", path: ".g:site" do
-    get "/", to: "portal/user/portal#show", as: :portal
+    get "/", to: "portal/main#show", as: :portal
     match "logout" => "login#logout", as: :logout, via: [:get, :delete]
-    match "login"  => "login#login", as: :login, via: [:get, :post]
-    post "access_token"  => "login#access_token", as: :access_token
+    match "login" => "login#login", as: :login, via: [:get, :post]
+    post "access_token" => "login#access_token", as: :access_token
   end
 
   namespace "gws", path: ".g:site/gws" do
@@ -40,7 +40,10 @@ Rails.application.routes.draw do
     resources :groups, concerns: [:deletion, :download, :import]
     resources :custom_groups, concerns: [:deletion]
     resources :users, concerns: [:deletion, :download, :import, :webmail_import, :lock_and_unlock]
-    resources :user_titles, concerns: [:deletion]
+    resources :user_titles, concerns: [:deletion] do
+      match :download_all, on: :collection, via: %i[get post]
+      match :import, on: :collection, via: %i[get post]
+    end
     resources :roles, concerns: [:deletion, :download, :import]
     resources :sys_notices, only: [:index, :show]
     resources :links, concerns: [:deletion]

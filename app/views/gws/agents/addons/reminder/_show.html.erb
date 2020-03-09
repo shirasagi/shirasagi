@@ -13,7 +13,7 @@
     });
   };
 
-  var sort = new SS_SortableForm('.remider-conditions', { limit: 5, onInsert: function(newItem) {
+  var sort = new SS_SortableForm('.reminder-conditions', { limit: 5, onInsert: function(newItem) {
     changeIntervalStep(newItem);
   }});
   sort.renderItems(<%== @item.reminder_conditions(@cur_user).to_json %>);
@@ -25,14 +25,14 @@
     success: function(data) {
       sort.resetItems();
       sort.renderItems(data["reminder_conditions"]);
-      $(".remider-conditions tr").each(function() { changeIntervalStep(this); });
-      $(".remider-conditions tr .interval_type").each(function() { setIntervalStep(this) });
+      $(".reminder-conditions tr").each(function() { changeIntervalStep(this); });
+      $(".reminder-conditions tr .interval_type").each(function() { setIntervalStep(this) });
       SS.notice('<%= t('gws/reminder.notification.created') %>');
     },
     error: function(data) { alert("Error"); }
   });
-  $(".remider-conditions tr").each(function() { changeIntervalStep(this); });
-  $(".remider-conditions tr .interval_type").each(function() { setIntervalStep(this) });
+  $(".reminder-conditions tr").each(function() { changeIntervalStep(this); });
+  $(".reminder-conditions tr .interval_type").each(function() { setIntervalStep(this) });
 <% end %>
 
 <%= form_for :item, url: gws_apis_reminders_path, html: { id: "ajax-form", multipart: true, autocomplete: :off } do %>
@@ -47,7 +47,7 @@
   </dt>
   <dd>
     <% if @item.allday == "allday" %>
-    <table class="remider-conditions">
+    <table class="reminder-conditions">
       <tbody>
       <tr data-base="true">
         <td><%= select_tag 'item[in_reminder_conditions][][state]', options_for_select(@item.reminder_notify_state_options), class: "state" %></td>
@@ -58,7 +58,7 @@
       </tbody>
     </table>
     <% else %>
-    <table class="remider-conditions">
+    <table class="reminder-conditions">
       <tbody>
       <tr data-base="true">
         <td><%= select_tag 'item[in_reminder_conditions][][state]', options_for_select(@item.reminder_notify_state_options), class: "state" %></td>

@@ -59,10 +59,14 @@ ja:
         index: サイトを選択する
         search: サイトを検索
         select: サイトを設定する
+      postal_codes:
+        index: 郵便番号を選択する
+      prefecture_codes:
+        index: 市町村コードを選択する
     postal_code: 郵便番号
     postal_code_normalize_city: 以下に掲載がない場合
     import_official_japan_postal_service_csv: 日本郵政CSVの取り込み
-    prefecture_code: 地域コード
+    prefecture_code: 市町村コード
     password_effective_period: パスワードの有効期限
     password_constraint: パスワードの制約
     password_change_constraint: パスワード変更時の制約
@@ -94,6 +98,7 @@ ja:
       sys/notice: システムのお知らせ
       sys/postal_code: 郵便番号
       sys/mail_log: メールログ
+      sys/prefecture_code: 市町村コード
     errors:
       models:
         sys/setting:
@@ -270,4 +275,4 @@ ja:
       sys/site_copy_job: サイト複製
       sys/postal_code/import_job: 郵便番号インポート
       sys/postal_code/official_csv_import_job: 日本郵便CSVインポート
-      sys/prefecture_code/import_job: 地域コードインポート
+      sys/prefecture_code/import_job: 市町村コードインポート

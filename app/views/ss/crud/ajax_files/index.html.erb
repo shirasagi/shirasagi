@@ -117,26 +117,28 @@ SS_SearchUI.modal();
 
 <div class="index user-files">
   <% @items.each do |item| %>
-  <article class="file-view" id="user-file<%= item.id %>">
+  <article class="file-view" id="user-file<%= item.id %>" data-file-id="<%= item.id %>">
     <%
       opts = { action: :select, id: item }
       opts[:unnormalize] = true if params[:unnormalize].present?
       opts[:file_size] = true if params[:file_size].present?
     %>
-    <a class="thumb select" href="<%= url_for opts %>" data-id="<%= item.id %>" data-humanized-name="<%= item.humanized_name %>">
-      <% if item.image? %>
-      <img src="<%= url_for(action: :thumb, id: item, _: item.updated.to_i) %>" alt="<%= item.basename %>" />
-      <% else %>
-      <span class="ext icon-<%= item.extname %>"><%= item.extname %></span>
-      <% end %>
+    <a class="select" href="<%= url_for opts %>" title="<%= item.humanized_name %>" data-id="<%= item.id %>" data-humanized-name="<%= item.humanized_name %>">
+      <div class="thumb">
+        <% if item.image? %>
+          <img src="<%= url_for(action: :thumb, id: item, _: item.updated.to_i) %>" alt="<%= item.basename %>" />
+        <% else %>
+          <span class="ext icon-<%= item.extname %>"><%= item.extname %></span>
+        <% end %>
+      </div>
+      <div class="name">
+        <%= item.name %>
+        <% if params[:file_size] %>
+        <br />
+        <span class="file-size"><%= "( #{number_to_human_size(item.size)} )" %></span>
+        <% end %>
+      </div>
     </a>
-    <div class="name">
-      <%= item.name %>
-      <% if params[:file_size] %>
-      <br />
-      <span class="file-size"><%= "( #{number_to_human_size(item.size)} )" %></span>
-      <% end %>
-    </div>
     <nav class="menu">
       <% if item.allowed?(:edit, @cur_user, site: @cur_site) %>
         <%= link_to t("ss.buttons.edit"), { action: :edit, id: item, file_size: params[:file_size] }, class: %w(edit ajax-box) %>

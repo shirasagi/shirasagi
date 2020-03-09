@@ -1,3 +1,7 @@
+<%
+  addon ||= local_assigns.fetch(:addon, {})
+%>
+
 <dl class="see mod-gws-notice-resource-limitation">
   <dt><%= t('gws/notice.body_size') %></dt>
   <dd></dd>
@@ -28,13 +32,13 @@
 
 <%= jquery do %>
   var token = $('meta[name="csrf-token"]').attr('content');
+  var $el = $("#<%= addon[:id] %>");
 
-  $('button[name=reclaim_total_size]').on('click', function() {
-    $.ajax({
-      url: "<%= url_for(action: :reclaim) %>",
-      type: 'POST',
-      data: { authenticity_token: token },
-      success: function() { location.reload(); }
-    });
+  $el.find('button[name=reclaim_total_size]').on('click', function() {
+    var $form = $("<form />", { action: "<%= url_for(action: :reclaim) %>", method: "POST" });
+    var $token = $("<input/>", { type: "hidden", name: "authenticity_token", value: token });
+    $form.append($token);
+    $el.append($form);
+    $form.submit();
   });
 <% end %>

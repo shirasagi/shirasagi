@@ -1,6 +1,5 @@
 require "timeout"
 require "open-uri"
-require 'open_uri_redirections'
 require 'resolv-replace'
 require 'nkf'
 
@@ -100,7 +99,8 @@ class Cms::Agents::Tasks::LinksController < ApplicationController
   # Checks the url.
   def check_url(url, refs)
     Rails.logger.info("#{url}: check by referer: #{refs.join(", ")}")
-    if url.match?(/(\/|\.html?)$/)
+    uri = URI.parse(url)
+    if uri.path.match?(/(\/|\.html?)$/)
       check_html(url, refs)
     else
       check_file(url, refs)
@@ -194,6 +194,10 @@ class Cms::Agents::Tasks::LinksController < ApplicationController
 
   # Returns the HTML response with HTTP request.
   def get_http(url)
+    http_basic_authentication = SS::MessageEncryptor.http_basic_authentication
+    count = 0
+    max_count = 2
+
     if url.match?(/^\/\//)
       url = @base_url.sub(/\/\/.*$/, url)
     elsif url[0] == "/"
@@ -203,11 +207,16 @@ class Cms::Agents::Tasks::LinksController < ApplicationController
     begin
       Timeout.timeout(@html_request_timeout) do
         data = []
-        ::URI.open(url, proxy: true, allow_redirections: :all) do |f|
+        ::URI.open(url, proxy: true, redirect: false, http_basic_authentication: http_basic_authentication) do |f|
           f.each_line { |line| data << line }
         end
         return data.join
       end
+    rescue OpenURI::HTTPRedirect => e
+      return if count >= max_count
+      count += 1
+      url = e.uri
+      retry
     rescue Timeout::Error
       nil
     rescue => e
@@ -217,6 +226,8 @@ class Cms::Agents::Tasks::LinksController < ApplicationController
 
   # Checks the existence with HEAD request.
   def check_head(url)
+    http_basic_authentication = SS::MessageEncryptor.http_basic_authentication
+
     if url.match?(/^\/\//)
       url = @base_url.sub(/\/\/.*$/, url)
     elsif url[0] == "/"
@@ -225,7 +236,7 @@ class Cms::Agents::Tasks::LinksController < ApplicationController
 
     begin
       Timeout.timeout(@head_request_timeout) do
-        ::URI.open url, proxy: true, allow_redirections: :all, progress_proc: ->(size) { raise "200" }
+        ::URI.open url, proxy: true, http_basic_authentication: http_basic_authentication, progress_proc: ->(size) { raise "200" }
       end
       false
     rescue Timeout::Error

@@ -1,12 +1,14 @@
 class Gws::Memo::Mailer < ActionMailer::Base
   include SS::AttachmentSupport
 
+  helper_method :format_email
+
   def forward_mail(item, forward_emails)
     @item = item
     @cur_user = item.user
     @cur_site = item.site
-    @to = @item.sorted_to_members.map { |item| "#{item.name} <#{item.email}>" }.join(", ")
-    @cc = @item.sorted_cc_members.map { |item| "#{item.name} <#{item.email}>" }.join(", ")
+    @to = @item.sorted_to_members.map { |item| format_email(item.name, item.email) }.join(", ")
+    @cc = @item.sorted_cc_members.map { |item| format_email(item.name, item.email) }.join(", ")
 
     from = @cur_site.sender_address
     subject = "[#{I18n.t("gws/memo/message.message")}]#{I18n.t("gws/memo/forward.subject")}:#{@cur_user.name}"
@@ -30,7 +32,8 @@ class Gws::Memo::Mailer < ActionMailer::Base
     subject = @notice.subject
     @body = I18n.t("gws_notification.#{i18n_key}.mail_text", subject: subject, text: page_url)
     set_group_settings
-    bcc = @users.map(&:send_notice_mail_address).select{ |email| email.present? && @cur_site.email_domain_allowed?(email) }
+    bcc = @users.map(&:send_notice_mail_addresses).flatten
+    bcc = bcc.select{ |email| email.present? && @cur_site.email_domain_allowed?(email) }
 
     return false unless bcc.present?
 
@@ -59,14 +62,20 @@ class Gws::Memo::Mailer < ActionMailer::Base
   end
 
   def page_url
-    return "" if @cur_site.canonical_domain.blank?
-
-    url = @cur_site.canonical_scheme + "://"
-    url += @cur_site.canonical_domain
-    url = url.chop if url.match?(/\/$/)
+    scheme = @cur_site.canonical_scheme.presence || SS.config.gws.canonical_scheme.presence || "http"
+    domain = @cur_site.canonical_domain.presence || SS.config.gws.canonical_domain
 
     url_helper = Rails.application.routes.url_helpers
-    url += url_helper.gws_memo_notice_path(id: @notice.id, site: @cur_site.id)
+    url_helper.gws_memo_notice_url(protocol: scheme, host: domain, site: @cur_site.id, id: @notice.id)
+  end
+
+  def format_email(name, email)
+    if name.present? && email.present?
+      "#{name} <#{email}>"
+    elsif name.present?
+      name.to_s
+    else
+      email.to_s
+    end
   end
 end
-

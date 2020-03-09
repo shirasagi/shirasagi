@@ -71,10 +71,11 @@ ja:
     draft_page: 下書きページ
     inplace_edit: 編集モード
     preview_date: プレビュー日時
+    translate: 自動翻訳
     column_file_upload:
       image:
-        file_label: 代替えテキスト
-        file_label_place_holder: 代替えテキストを入力してください。
+        file_label: 代替テキスト
+        file_label_place_holder: 代替テキストを入力してください。
       video:
         text: 動画の内容説明
         text_place_holder: 動画の内容を説明する文書を入力してください。
@@ -82,9 +83,9 @@ ja:
         file_label: ファイル名
         file_label_place_holder: リンクテキストとして表示するファイル名を入力してください。
       banner:
-        file_label: 代替えテキスト
+        file_label: 代替テキスト
         link_url: URL
-        file_label_place_holder: 代替えテキストを入力してください。
+        file_label_place_holder: 代替テキストを入力してください。
         link_url_place_holder: URLを入力してください。
     column_table:
       width: 列数
@@ -605,6 +606,7 @@ ja:
         class_name: class属性
         order: 並び順
         css_path: cssパス
+        default_theme: 既定のtheme
       cms/source_cleaner_template:
         name: 名前
         order: 並び順
@@ -853,7 +855,7 @@ ja:
         html_additional_attr: HTML追加属性
         label_max_length: リンクテキスト最大長
         label_place_holder: リンクテキストプレースホルダー
-        image_text: 代替えテキスト
+        image_text: 代替テキスト
         max_length: 最大長
         place_holder: プレースホルダー
         file_type: ファイルタイプ
@@ -900,6 +902,7 @@ ja:
         head: 見出し
         text: テキスト
       cms/column/value/list:
+        lists: リスト
         order: 順番
         text: テキスト
       cms/column/value/youtube:
@@ -1039,6 +1042,8 @@ ja:
     cms/addon/captcha:
       captcha:
         - フォームに画像認証を利用する場合は「使用する」を選択してください。
+      captcha_test:
+        - 認証画像の表示を確認します。
 
     cms/role:
       permission_level:
@@ -1387,7 +1392,7 @@ ja:
               &lt;time datetime="{{ page.date }}">{{ page.date | ss_date: "long" }}&lt;/time>
               &lt;h2>&lt;a href="{{ page.url }}">{{ page.index_name }}&lt;/a>&lt;/h2>
             &lt;/header>
-            &lt;p>#{summary}&lt;/p>
+            &lt;p>{{ page.summary }}&lt;/p>
           &lt;/article>
           {% endfor %}
       new_days:

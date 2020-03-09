@@ -1,4 +1,25 @@
+<%= jquery do %>
+  $(function(){
+    $(".simple-captcha").css("display", "none");
+    $("button").click(function(){
+      $(".simple-captcha").toggle();
+    });
+  });
+
+  var $el = $(".simple-captcha");
+  $el.find("img").on("error", function() {
+  $(this).closest(".image").html('<%= I18n.t('simple_captcha.captcha_error') %>');
+  });
+<% end %>
+
 <dl class="see mod-inquiry-captcha">
   <dt><%= @model.t :inquiry_captcha %><%= @model.tt :inquiry_captcha %></dt>
   <dd><%= f.select :inquiry_captcha, @item.inquiry_captcha_options %></dd>
+  <dt><%= @model.t :captcha_test %><%= @model.tt :captcha_test %></dt>
+  <dd>
+    <button type="button"><%= I18n.t('simple_captcha.captcha_button') %></button>
+    <div class='simple-captcha'>
+      <div class='image'><%= simple_captcha_options[:image] %></div>
+    </div>
+  </dd>
 </dl>

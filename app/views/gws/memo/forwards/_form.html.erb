@@ -1,6 +1,6 @@
 <dl class="see">
-  <dt><%= @model.t :email %><%= @model.tt :email %></dt>
-  <dd><%= f.text_field :email %></dd>
+  <dt><%= @model.t :emails %><%= @model.tt :emails %></dt>
+  <dd><%= f.text_field :emails, value: @item.emails.join(", ") %></dd>
 
   <dt><%= @model.t :default %><%= @model.tt :default %></dt>
   <dd><%= f.select :default, @item.default_options %></dd>

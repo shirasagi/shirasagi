@@ -29,7 +29,9 @@ module SS::HistoryArchiveBase
     end
   end
 
-  def perform
+  def perform(*args)
+    @options = args.extract_options!
+
     prepare_workdir
 
     select_histories
@@ -48,7 +50,7 @@ module SS::HistoryArchiveBase
   private
 
   def prepare_workdir
-    @work_dir = Rails.root.join('tmp', Process.pid.to_s)
+    @work_dir = Rails.root.join('tmp', [ Process.pid, rand(1_000_000) ].join('.'))
     ::FileUtils.mkdir_p(@work_dir)
   end
 

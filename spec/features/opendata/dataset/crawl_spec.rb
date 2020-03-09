@@ -9,8 +9,7 @@ describe "opendata_crawl", dbscope: :example, http_server: true do
   let(:node) { create(:opendata_node_dataset) }
   let(:dataset) { create(:opendata_dataset, cur_node: node) }
   let(:index_path) { opendata_crawls_path site, node }
-  let(:license_logo_file) { Fs::UploadedFile.create_from_file(Rails.root.join("spec", "fixtures", "ss", "logo.png")) }
-  let(:license) { create(:opendata_license, cur_site: site, in_file: license_logo_file) }
+  let(:license) { create(:opendata_license, cur_site: site) }
 
   context "with auth seatch updated and deleted" do
     before { login_cms_user }

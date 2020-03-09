@@ -46,7 +46,6 @@ gem 'mail-iso-2022-jp'
 gem 'net-ldap'
 gem 'non-stupid-digest-assets'
 gem 'oj'
-gem 'open_uri_redirections'
 gem 'rails_autolink'
 gem 'rmagick'
 gem 'romaji'
@@ -59,6 +58,8 @@ gem 'addressable', require: 'addressable/uri'
 gem 'roo'
 #gem 'roo-xls', git: "https://github.com/roo-rb/roo-xls.git"
 gem 'liquid'
+gem 'http_accept_language'
+gem 'google-cloud-translate', '2.0.0'
 
 # OAuth
 gem 'oauth2', git: 'https://github.com/oauth-xx/oauth2.git' #'~> 1.5.0'

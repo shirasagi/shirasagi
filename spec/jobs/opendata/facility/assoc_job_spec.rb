@@ -11,10 +11,7 @@ describe Opendata::Facility::AssocJob, dbscope: :example, js: true do
   let!(:category_node) { create :opendata_node_category, cur_site: od_site }
 
   before do
-    path = Rails.root.join("spec", "fixtures", "ss", "logo.png")
-    Fs::UploadedFile.create_from_file(path, basename: "spec") do |file|
-      create :opendata_license, cur_site: od_site, in_file: file
-    end
+    create :opendata_license, cur_site: od_site
   end
 
   describe "#perform" do

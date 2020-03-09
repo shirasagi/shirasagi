@@ -146,6 +146,10 @@ class Gws::Circular::Post
     deleted.present? && deleted <= Time.zone.now
   end
 
+  def new_flag?
+    created > Time.zone.now - site.circular_new_days.day
+  end
+
   # def custom_group_member?(user)
   #   custom_groups.where(member_ids: user.id).exists?
   # end

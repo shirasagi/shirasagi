@@ -22,12 +22,14 @@ ja:
       gws/portal/portlet/survey: アンケート
       gws/portal/portlet/ad: 広告
       gws/portal/portlet/ad_file: 広告画像
+      gws/portal/notice_setting: お知らせ設定
+      gws/portal/monitor_setting: 照会・回答設定
+      gws/portal/link_setting: リンク集設定
 
   gws/portal:
     self_portal: 個人
     user_portal: 個人ポータル
     group_portal: 部課ポータル
-    root_portal: 全庁ポータル
     create_portlets_for_reset: 作成されるポートレット
     delete_portlets_for_reset: 削除されるポートレット
     other_config: 他者・他部課設定
@@ -109,19 +111,23 @@ ja:
     messages:
       no_portlets: ポートレットを作成してください。
       closed_portlet: このポートレットは閲覧できません。
+      no_portals: ポータルが見つかりません。
 
   gws_role:
+    use_gws_portal_user_settings: 個人ポータルの利用
+    use_gws_portal_group_settings: 部課ポータルの利用
+    use_gws_portal_organization_settings: 組織ポータルの利用
     read_other_gws_portal_user_settings: 個人ポータル設定の閲覧（全て）
     read_private_gws_portal_user_settings: 個人ポータル設定の閲覧（所有）
     edit_other_gws_portal_user_settings: 個人ポータル設定の編集（全て）
     edit_private_gws_portal_user_settings: 個人ポータル設定の編集（所有）
     delete_other_gws_portal_user_settings: 個人ポータル設定の削除（全て）
     delete_private_gws_portal_user_settings: 個人ポータル設定の削除（所有）
-    read_other_gws_portal_group_settings: 部課ポータル設定の閲覧（全て）
+    read_other_gws_portal_group_settings: 組織・部課ポータル設定の閲覧（全て）
     read_private_gws_portal_group_settings: 部課ポータル設定の閲覧（所有）
-    edit_other_gws_portal_group_settings: 部課ポータル設定の編集（全て）
+    edit_other_gws_portal_group_settings: 組織・部課ポータル設定の編集（全て）
     edit_private_gws_portal_group_settings: 部課ポータル設定の編集（所有）
-    delete_other_gws_portal_group_settings: 部課ポータル設定の削除（全て）
+    delete_other_gws_portal_group_settings: 組織・部課ポータル設定の削除（全て）
     delete_private_gws_portal_group_settings: 部課ポータル設定の削除（所有）
 
   mongoid:
@@ -192,6 +198,13 @@ ja:
       gws/addon/portal/portlet/ad_file:
         ad_files: 広告画像
         ad_file_ids: 広告画像
+      gws/addon/portal/notice_setting:
+        portal_notice_state: 表示・非表示
+        portal_notice_browsed_state: 未読・既読
+      gws/addon/portal/monitor_setting:
+        portal_monitor_state: 表示・非表示
+      gws/addon/portal/link_setting:
+        portal_link_state: 表示・非表示
     errors:
       models:
         gws/addon/portal/portlet/ad_file:
@@ -207,3 +220,15 @@ ja:
       circular_article_state:
         - <b>未読</b> - 未読のみをポータルに表示する。
         - <b>全表示</b> - 既読・未読すべてをポータルに表示する。
+    gws/addon/portal/notice_setting:
+      portal_notice_state:
+        - ポータルにお知らせを表示するか、しないかを選択します。
+      portal_notice_browsed_state:
+        - ポータルにお知らせを表示するを選択した際に、未読のみを表示するか、未読と既読の両方を表示するかを選択します。
+    gws/addon/portal/monitor_setting:
+      portal_monitor_state:
+        - ポータルに照会・回答を表示するか、しないかを選択します。
+    gws/addon/portal/link_setting:
+      portal_link_state:
+        - リンク集を表示するか、しないかを選択します。
+        - 「表示」を選択した場合、リンク集はサイドメニューの下部に表示されます。

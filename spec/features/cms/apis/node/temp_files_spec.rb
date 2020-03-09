@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe "cms_apis_node_temp_files", type: :feature, dbscope: :example, tmpdir: true do
+describe "cms_apis_node_temp_files", type: :feature, dbscope: :example do
   let(:site) { cms_site.set(multibyte_filename_state: 'disabled') }
   let(:item) do
     tmp_ss_file(contents: "#{Rails.root}/spec/fixtures/ss/logo.png", site: site, user: cms_user, model: 'ss/temp_file')

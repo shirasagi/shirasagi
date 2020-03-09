@@ -1,14 +1,14 @@
-<% return if @item.thumb.blank? %>
+<%
+  return if @item.thumb.blank?
+
+  addon ||= local_assigns.fetch(:addon, {})
+%>
 
 <dl class="see mod-cms-thumb-form">
   <dt><%= @model.t :thumb_id %></dt>
-  <dd>
-    <a class="thumb" href="/fs/<%= @item.thumb.id %>/<%= @item.thumb.filename %>" target="_blank">
-      <% if @item.thumb.image? %>
-        <%= link_to image_tag(@item.thumb.thumb_url), @item.thumb.url, { class: "thumb", target: "_blank" } %>
-      <% else %>
-        <span class="ext icon-<%= @item.thumb.extname %>"><%= @item.thumb.extname %></span>
-      <% end %>
-    </a>
-  </dd>
+  <dd><%= show_image_info @item.thumb %></dd>
 </dl>
+
+<%= jquery do %>
+  SS_FileView.listenTo("#<%= addon[:id] %> .file-view > a", { viewPath: "<%= view_cms_apis_content_file_path(id: ":id") %>" });
+<% end %>

@@ -5,7 +5,7 @@ describe "gws_schedule_plans", type: :feature, dbscope: :example, js: true do
   let!(:member_user) do
     create :gws_user, group_ids: gws_user.group_ids,
      notice_schedule_user_setting: "notify",
-     send_notice_mail_address: "#{unique_id}@example.jp"
+     send_notice_mail_addresses: "#{unique_id}@example.jp"
   end
   let(:item) { create :gws_schedule_plan, member_ids: [gws_user.id, member_user.id] }
   let(:plan_name) { "name-#{unique_id}" }
@@ -119,7 +119,7 @@ describe "gws_schedule_plans", type: :feature, dbscope: :example, js: true do
         expect(ActionMailer::Base.deliveries.length).to eq 1
         mail = ActionMailer::Base.deliveries.first
         expect(mail.from.first).to eq site.sender_address
-        expect(mail.bcc.first).to eq member_user.send_notice_mail_address
+        expect(mail.bcc.first).to eq member_user.send_notice_mail_addresses.first
         expect(mail.subject).to eq I18n.t("gws_notification.gws/schedule/plan.subject", name: plan_name)
         expect(mail.decoded.to_s).to include(mail.subject)
         expect(mail.decoded.to_s).to include(mail_url)
@@ -228,7 +228,7 @@ describe "gws_schedule_plans", type: :feature, dbscope: :example, js: true do
         expect(ActionMailer::Base.deliveries.length).to eq 1
         mail = ActionMailer::Base.deliveries.first
         expect(mail.from.first).to eq site.sender_address
-        expect(mail.bcc.first).to eq member_user.send_notice_mail_address
+        expect(mail.bcc.first).to eq member_user.send_notice_mail_addresses.first
         expect(mail.subject).to eq I18n.t("gws_notification.gws/schedule/plan.subject", name: plan_name)
         expect(mail.decoded.to_s).to include(mail.subject)
         expect(mail.decoded.to_s).to include(mail_url)
@@ -343,7 +343,7 @@ describe "gws_schedule_plans", type: :feature, dbscope: :example, js: true do
         expect(ActionMailer::Base.deliveries.length).to eq 1
         mail = ActionMailer::Base.deliveries.first
         expect(mail.from.first).to eq site.sender_address
-        expect(mail.bcc.first).to eq member_user.send_notice_mail_address
+        expect(mail.bcc.first).to eq member_user.send_notice_mail_addresses.first
         expect(mail.subject).to eq I18n.t("gws_notification.gws/schedule/plan/destroy.subject", name: item.name)
         expect(mail.decoded.to_s).to include(item.name)
         expect(mail.decoded.to_s).to include(mail_url)
@@ -531,7 +531,7 @@ describe "gws_schedule_plans", type: :feature, dbscope: :example, js: true do
         expect(ActionMailer::Base.deliveries.length).to eq 1
         mail = ActionMailer::Base.deliveries.first
         expect(mail.from.first).to eq site.sender_address
-        expect(mail.bcc.first).to eq member_user.send_notice_mail_address
+        expect(mail.bcc.first).to eq member_user.send_notice_mail_addresses.first
         expect(mail.subject).to eq I18n.t("gws_notification.gws/schedule/plan/undo_delete.subject", name: item.name)
         expect(mail.decoded.to_s).to include(item.name)
         expect(mail.decoded.to_s).to include(mail_url)

@@ -5,7 +5,8 @@ namespace :ss do
 
     data = eval(ENV["data"])
     data[:sys_role_ids] = [role.id]
-    data[:in_password]  = data[:password]
+    data[:in_password] = data[:password]
+    data[:deletion_lock_state] ||= "locked"
     data.delete(:password)
 
     if item = SS::User.where(email: data[:email]).first

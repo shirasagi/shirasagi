@@ -51,7 +51,8 @@ this.SS = (function () {
       return $(this).addClass("external");
     });
     this.renderAjaxBox();
-    return this.renderDateTimePicker();
+    this.renderDateTimePicker();
+    this.renderFileUpload();
   };
 
   SS.renderNotInBox = function () {
@@ -143,20 +144,25 @@ this.SS = (function () {
   };
 
   SS.renderPart = function (elem) {
-    var url;
+    var url, ref;
     url = elem.data("href") || elem.attr("href");
     url = SS_Kana.url(url.replace(/\.html/, ".json"));
+    url = SS_Translate.url(url.replace(/\.html/, ".json"), $("body").data("translate"));
+
+    ref = SS_Kana.url(location.pathname, false);
+    ref = SS_Translate.url(location.pathname, false);
+
     elem.append(" " + SS.loading);
     return $.ajax({
       type: "GET",
       url: url,
       dataType: "json",
-      data: "ref=" + SS_Kana.url(location.pathname, false),
+      data: "ref=" + ref,
       success: function (data) {
         return $(elem).replaceWith(data);
       },
-      error: function () {
-        return $(elem).find("img").remove();
+      error: function (xhr, status, error) {
+        return $(elem).remove();
       },
       complete: function () {
         SS.part = SS.part - 1;
@@ -452,7 +458,153 @@ this.SS = (function () {
     }
 
     return moment(time).format(format);
-  }
+  };
+
+  SS.renderFileUploadInitialized = false;
+
+  SS.renderFileUpload = function() {
+    $(".ss-file-field .btn-file-upload").each(function() {
+      var $this = $(this);
+      if ($this.data("on-select")) {
+        return;
+      }
+
+      var $container = $this.closest(".ss-file-field")
+      var onSelect = function($item) {
+        $.colorbox.close();
+
+        var $data = $item.closest("[data-id]");
+        var fileId = $data.data('id');
+        var fileName = $data.data("humanizedName") || $data.data("name") || $data.find(".select-item").text() || $item.text() || $data.text();
+        if (! fileId || ! fileName) {
+          return;
+        }
+
+        $container.find(".humanized-name").text(fileName);
+        $container.find(".file-id").val(fileId);
+        $container.find(".btn-file-delete").removeClass("hide");
+        $container.find(".upload-drop-notice").addClass("hide");
+      };
+
+      $this.data("on-select", onSelect);
+
+      var $a = $("<a/>", { href: "#", class: "hide" });
+      $a.data("on-select", onSelect);
+      $a.colorbox({ width: "90%", height: "90%", fixed: true });
+
+      $container.find(".dropdown-item").on("click", function(ev) {
+        ev.preventDefault();
+
+        var $this = $(this);
+        var href = $this.attr("href");
+
+        $a.attr("href", href);
+        $a.colorbox({ open: true });
+
+        var $dropdown = $this.closest(".dropdown")
+        $dropdown.removeClass('active');
+        $dropdown.find(".dropdown-menu").removeClass('active');
+
+        return false;
+      });
+
+      var dropEventTriggered = false;
+      var dropNoticeHtml = $container.find(".upload-drop-notice").html();
+      $container.on("dragenter", function(ev) {
+        if (! dropEventTriggered) {
+          $container.addClass('file-dragenter');
+        }
+        return false;
+      });
+      $container.on("dragleave", function(ev) {
+        $container.removeClass('file-dragenter');
+        return false;
+      });
+      $container.on("dragover", function(ev) {
+        if (! dropEventTriggered) {
+          $container.addClass('file-dragenter');
+        }
+        return false;
+      });
+      $container.on("drop", function(ev) {
+        $container.removeClass('file-dragenter');
+
+        var files = ev.originalEvent.dataTransfer.files;
+        if (files.length === 0) {
+          return false;
+        }
+
+        if (dropEventTriggered) {
+          return false;
+        }
+        dropEventTriggered = true;
+        $container.find(".upload-drop-notice").html(SS.loading).removeClass("hide");
+        $container.css("cursor", "progress");
+
+        var token = $('meta[name="csrf-token"]').attr('content');
+        var formData = new FormData();
+        formData.append('authenticity_token', token);
+        if ($container.find('#file-resizing').val()) {
+          formData.append('item[resizing]', $container.find('#file-resizing').val());
+        }
+        for (var j = 0, len = files.length; j < len; j++) {
+          formData.append('item[in_files][]', files[j]);
+        }
+
+        var uploadUrl = $this.attr("href");
+        $.ajax({
+          url: uploadUrl,
+          type: "POST",
+          dataType: "JSON",
+          data: formData,
+          processData: false,
+          contentType: false
+        }).then(function(data) {
+          // success
+          var fileData = data[0];
+          if (! fileData) {
+            return;
+          }
+
+          $container.find(".humanized-name").text(fileData["humanized_name"]);
+          $container.find(".file-id").val(fileData["id"] || fileData["_id"]);
+          $container.find(".btn-file-delete").removeClass("hide");
+          $container.find(".upload-drop-notice").addClass("hide");
+        }, function(xhr, textStatus, errorThrown) {
+          // error
+          if (xhr.status === 413) {
+            alert(["== Error =="].concat("<%= I18n.t('errors.messages.request_entity_too_large') %>").join("\n"));
+          } else if (xhr.responseJSON && Array.isArray(xhr.responseJSON)) {
+            alert(["== Error =="].concat(xhr.responseJSON).join("\n"));
+          } else {
+            alert(["== Error =="].concat(xhr.statusText).join("\n"));
+          }
+        }).then(function() {
+          // complete
+          dropEventTriggered = false;
+          $container.find(".upload-drop-notice").html(dropNoticeHtml);
+          $container.css("cursor", "auto");
+        });
+
+        return false;
+      });
+    });
+
+    if (! SS.renderFileUploadInitialized) {
+      SS.renderFileUploadInitialized = true;
+
+      $(document).on("click", ".ss-file-field .btn-file-delete", function() {
+        var $this = $(this);
+        var $container = $this.closest(".ss-file-field")
+        $container.find(".humanized-name").text("");
+        $container.find(".file-id").val("");
+        $container.find(".btn-file-delete").addClass("hide");
+        $container.find(".upload-drop-notice").removeClass("hide");
+
+        return false;
+      });
+    }
+  };
 
   return SS;
 

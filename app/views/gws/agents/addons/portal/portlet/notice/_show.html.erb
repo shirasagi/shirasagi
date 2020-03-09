@@ -6,10 +6,10 @@
   <dd><%= @item.label :notice_browsed_state %></dd>
 
   <dt><%= @model.t :notice_category_ids %></dt>
-  <dd><%= br @item.notice_categories.readable(@cur_user, site: @cur_site).pluck(:name).join("\n") %></dd>
+  <dd><%= br @item.notice_categories.readable(@cur_user, site: @cur_site).pluck(:name) %></dd>
 
   <dt><%= @model.t :notice_folder_ids %></dt>
-  <dd><%= br @item.notice_folders.for_post_reader(@cur_site, @cur_user).pluck(:name).join("\n") %></dd>
+  <dd><%= br @item.notice_folders.for_post_reader(@cur_site, @cur_user).pluck(:name) %></dd>
 
   <dt><%= @model.t :limit %></dt>
   <dd><%= @item.limit %></dd>

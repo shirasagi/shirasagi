@@ -72,7 +72,7 @@ module SS::Document
 
       h = []
       h << %(<div class="tooltip">?)
-      h << %(<ul>)
+      h << %(<ul class="tooltip-content">)
       h << list
       h << %(</ul>)
       h << %(</div>)

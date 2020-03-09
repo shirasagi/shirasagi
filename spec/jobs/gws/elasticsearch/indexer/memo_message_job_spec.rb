@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe Gws::Elasticsearch::Indexer::MemoMessageJob, dbscope: :example, tmpdir: true do
+describe Gws::Elasticsearch::Indexer::MemoMessageJob, dbscope: :example do
   let(:site) { create(:gws_group) }
   let(:user) { gws_user }
   let(:recipient) { create(:gws_user) }

@@ -29,9 +29,21 @@ module Gws::Addon
       }
       scope :and_closed, ->(date = Time.zone.now) {
         where("$and" => [
-          { "$or" => [{ state: "closed" }, { released: nil }, { :release_date.gt => date }, { :close_date.lt => date }] }
+          { "$or" => [{ state: "closed" }, { :release_date.gt => date }, { :close_date.lte => date }] }
         ])
       }
+    end
+
+    def closed?(date = Time.zone.now)
+      return true if state != "public"
+      return true if release_date.present? && release_date > date
+      return true if close_date.present? && close_date <= date
+
+      false
+    end
+
+    def public?(date = Time.zone.now)
+      !closed?(date)
     end
 
     def updated_after_released?
@@ -39,11 +51,7 @@ module Gws::Addon
     end
 
     def state_with_release_date
-      now = Time.zone.now
-      return 'closed' if state == 'closed'
-      return 'closed' if release_date.present? && release_date > now
-      return 'closed' if close_date.present? && close_date < now
-      'public'
+      public? ? "public" : "closed"
     end
 
     def state_options

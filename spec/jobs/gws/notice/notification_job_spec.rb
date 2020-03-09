@@ -8,15 +8,15 @@ describe Gws::Notice::NotificationJob, dbscope: :example do
   let(:sender) { gws_user }
   let!(:recipient1) do
     create(:gws_user, notice_announcement_email_user_setting: 'notify',
-           send_notice_mail_address: 'recipient1@example.jp', email: 'recipient1@example.jp')
+           send_notice_mail_addresses: 'recipient1@example.jp', email: 'recipient1@example.jp')
   end
   let!(:recipient2) do
     create(:gws_user, group_ids: [ group1.id ], notice_announcement_email_user_setting: 'notify',
-           send_notice_mail_address: 'recipient2@example.jp', email: 'recipient2@example.jp')
+           send_notice_mail_addresses: 'recipient2@example.jp', email: 'recipient2@example.jp')
   end
   let!(:recipient3) do
     create(:gws_user, notice_announcement_email_user_setting: 'notify',
-           send_notice_mail_address: 'recipient3@example.jp', email: 'recipient3@example.jp')
+           send_notice_mail_addresses: 'recipient3@example.jp', email: 'recipient3@example.jp')
   end
   let!(:custom_group1) { create :gws_custom_group, member_ids: [recipient3.id] }
   let(:now) { Time.zone.now.beginning_of_minute }

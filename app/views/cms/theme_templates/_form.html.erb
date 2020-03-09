@@ -1,3 +1,39 @@
+<%= jquery do %>
+  function changeDefaultTheme() {
+    var theme = $("select[name='item[default_theme]']").val();
+    if (theme == "enabled") {
+      $("select[name='item[state]']").prop('disabled', true);
+      $('form').bind('submit', function () {
+        $(this).find("select[name='item[state]']").prop('disabled', false);
+      });
+    }else{
+     $("select[name='item[state]']").prop('disabled', false);
+    }
+  };
+
+  function changeState() {
+    var state = $("select[name='item[state]']").val();
+    if (state == "closed") {
+      $("select[name='item[default_theme]']").prop('disabled', true);
+      $('form').bind('submit', function () {
+        $(this).find("select[name='item[default_theme]']").prop('disabled', false);
+      });
+    }else{
+      $("select[name='item[default_theme]']").prop('disabled', false);
+    }
+  };
+
+  $("select[name='item[default_theme]']").change(function() {
+    changeDefaultTheme();
+  });
+
+  $("select[name='item[state]']").change(function() {
+    changeState();
+  });
+
+  changeDefaultTheme();
+  changeState();
+<% end %>
 <dl class="see">
   <dt><%= @model.t :name %><%= @model.tt :name %></dt>
   <dd><%= f.text_field :name %></dd>
@@ -13,4 +49,7 @@
 
   <dt><%= @model.t :state %><%= @model.tt :state %></dt>
   <dd><%= f.select :state, @item.state_options %></dd>
+
+  <dt><%= @model.t :default_theme %><%= @model.tt :default_theme %></dt>
+  <dd><%= f.select :default_theme, @item.default_theme_options %></dd>
 </dl>

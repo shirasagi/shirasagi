@@ -1,67 +1,98 @@
 <%= node_navi :opendata do %>
 
-<% if @cur_node.route == "opendata/dataset" %>
-  <h3><%= link_to t("mongoid.models.opendata/dataset"), opendata_datasets_path, class: "icon-node" %></h3>
-  <ul class="narrow-page">
-    <li><%= link_to t("workflow.page.closed"), opendata_datasets_closed_path, class: "icon-node" %></li>
-  </ul>
-  <h3><%= link_to t("mongoid.models.opendata/dataset_group"), opendata_dataset_groups_path, class: "icon-node" %></h3>
-  <h3><%= link_to t("mongoid.models.opendata/license"), opendata_licenses_path, class: "icon-node" %></h3>
-  <h3><%= link_to t("mongoid.models.opendata/crawl"), opendata_crawls_path, class: "icon-node" %></h3>
-<% elsif @cur_node.route == "opendata/app" %>
-  <h3><%= link_to t("mongoid.models.opendata/app"), opendata_apps_path, class: "icon-node" %></h3>
-  <ul class="narrow-page">
-    <li><%= link_to t("workflow.page.closed"), opendata_apps_closed_path, class: "icon-node" %></li>
-  </ul>
-  <h3><%= link_to t("mongoid.models.opendata/license"), opendata_licenses_path, class: "icon-node" %></h3>
-<% elsif @cur_node.route == "opendata/idea" %>
-  <h3><%= link_to t("mongoid.models.opendata/idea"), opendata_ideas_path, class: "icon-node" %></h3>
-  <ul class="narrow-page">
-    <li><%= link_to t("workflow.page.closed"), opendata_ideas_closed_path, class: "icon-node" %></li>
-  </ul>
-<% else %>
-  <% Opendata::Node::Dataset.site(@cur_site).each do |item| %>
-  <h3><%= link_to item.name, opendata_datasets_path(@cur_site, item), class: "icon-node" %></h3>
-  <% end %>
-  <% Opendata::Node::App.site(@cur_site).each do |item| %>
-  <h3><%= link_to item.name, opendata_apps_path(@cur_site, item), class: "icon-node" %></h3>
-  <% end %>
-  <% Opendata::Node::Idea.site(@cur_site).each do |item| %>
-  <h3><%= link_to item.name, opendata_ideas_path(@cur_site, item), class: "icon-node" %></h3>
-  <% end %>
-<% end %>
-
-<% if @cur_node.route == "opendata/dataset" %>
-  <h3><span><%= t "workflow.pages" %></span></h3>
-  <ul class="narrow-page">
-    <li><%= link_to t("workflow.page.approve"), opendata_datasets_approve_path, class: "icon-node" %></li>
-    <li><%= link_to t("workflow.page.request"), opendata_datasets_request_path, class: "icon-node" %></li>
-  </ul>
-  <h3><%= link_to Opendata::DatasetDownloadReport.model_name.human, opendata_dataset_download_reports_path, class: "icon-node" %></h3>
-
-  <% if Opendata::PublicEntityDataset.allowed?(:edit, @cur_user, site: @cur_site, node: @cur_node) %>
-    <h3><%= link_to t("opendata.public_entity.format"), opendata_dataset_public_entity_path, class: "icon-node" %></h3>
-  <% end %>
-
-  <% if Opendata::Harvest::Importer.allowed?(:read, @cur_user, site: @cur_site, node: @cur_node) %>
-    <h3><span><%= t("opendata.harvest") %></span></h3>
+  <% if @cur_node.route == "opendata/dataset" %>
+    <h3><%= link_to t("mongoid.models.opendata/dataset"), opendata_datasets_path, class: "icon-node" %></h3>
     <ul class="narrow-page">
-      <h3><%= link_to t("ss.links.import"), opendata_harvest_importers_path, class: "icon-node" %></h3>
-      <h3><%= link_to t("ss.links.export"), opendata_harvest_exporters_path, class: "icon-node" %></h3>
+      <li><%= link_to t("workflow.page.closed"), opendata_datasets_closed_path, class: "icon-node" %></li>
+    </ul>
+    <h3><%= link_to t("mongoid.models.opendata/dataset_group"), opendata_dataset_groups_path, class: "icon-node" %></h3>
+    <h3><%= link_to t("mongoid.models.opendata/license"), opendata_licenses_path, class: "icon-node" %></h3>
+    <h3><%= link_to t("mongoid.models.opendata/crawl"), opendata_crawls_path, class: "icon-node" %></h3>
+  <% elsif @cur_node.route == "opendata/app" %>
+    <h3><%= link_to t("mongoid.models.opendata/app"), opendata_apps_path, class: "icon-node" %></h3>
+    <ul class="narrow-page">
+      <li><%= link_to t("workflow.page.closed"), opendata_apps_closed_path, class: "icon-node" %></li>
+    </ul>
+    <h3><%= link_to t("mongoid.models.opendata/license"), opendata_licenses_path, class: "icon-node" %></h3>
+  <% elsif @cur_node.route == "opendata/idea" %>
+    <h3><%= link_to t("mongoid.models.opendata/idea"), opendata_ideas_path, class: "icon-node" %></h3>
+    <ul class="narrow-page">
+      <li><%= link_to t("workflow.page.closed"), opendata_ideas_closed_path, class: "icon-node" %></li>
+    </ul>
+  <% else %>
+    <% Opendata::Node::Dataset.site(@cur_site).each do |item| %>
+      <h3><%= link_to item.name, opendata_datasets_path(@cur_site, item), class: "icon-node" %></h3>
+    <% end %>
+    <% Opendata::Node::App.site(@cur_site).each do |item| %>
+      <h3><%= link_to item.name, opendata_apps_path(@cur_site, item), class: "icon-node" %></h3>
+    <% end %>
+    <% Opendata::Node::Idea.site(@cur_site).each do |item| %>
+      <h3><%= link_to item.name, opendata_ideas_path(@cur_site, item), class: "icon-node" %></h3>
+    <% end %>
+  <% end %>
+
+  <% if @cur_node.route == "opendata/dataset" %>
+    <h3><span><%= t "workflow.pages" %></span></h3>
+    <ul class="narrow-page">
+      <li><%= link_to t("workflow.page.approve"), opendata_datasets_approve_path, class: "icon-node" %></li>
+      <li><%= link_to t("workflow.page.request"), opendata_datasets_request_path, class: "icon-node" %></li>
+    </ul>
+    <% report_links = [] %>
+    <% if Opendata::ResourceDownloadReport.allowed?(:read, @cur_user, site: @cur_site, node: @cur_node) %>
+      <% report_links << link_to(t("opendata.reports.download_reports"), opendata_dataset_report_downloads_path, class: "icon-node") %>
+    <% end %>
+    <% if Opendata::DatasetAccessReport.allowed?(:read, @cur_user, site: @cur_site, node: @cur_node) %>
+      <% report_links << link_to(t("opendata.reports.access_reports"), opendata_dataset_report_accesses_path, class: "icon-node") %>
+    <% end %>
+    <% if Opendata::ResourcePreviewReport.allowed?(:read, @cur_user, site: @cur_site, node: @cur_node) %>
+      <% report_links << link_to(t("opendata.reports.preview_reports"), opendata_dataset_report_previews_path, class: "icon-node") %>
+    <% end %>
+    <% if report_links.present? %>
+      <h3><%= link_to t("opendata.reports.report"), opendata_dataset_report_main_path, class: "icon-node" %></h3>
+      <ul class="narrow-page">
+        <% report_links.each do |link| %>
+          <li><%= link %></li>
+        <% end %>
+      </ul>
+    <% end %>
+    <% history_links = [] %>
+    <% if Opendata::ResourceDownloadHistory.allowed?(:read, @cur_user, site: @cur_site, node: @cur_node) %>
+      <% history_links << link_to(t("opendata.histories.download_histories"), opendata_dataset_history_downloads_main_path, class: "icon-node") %>
+    <% end %>
+    <% if Opendata::ResourcePreviewHistory.allowed?(:read, @cur_user, site: @cur_site, node: @cur_node) %>
+      <% history_links << link_to(t("opendata.histories.preview_histories"), opendata_dataset_history_previews_main_path, class: "icon-node") %>
+    <% end %>
+    <% if history_links.present? %>
+      <h3><%= link_to t("opendata.histories.history"), opendata_dataset_history_main_path, class: "icon-node" %></h3>
+      <ul class="narrow-page">
+        <% history_links.each do |link| %>
+          <li><%= link %></li>
+        <% end %>
+      </ul>
+    <% end %>
+
+    <% if Opendata::PublicEntityDataset.allowed?(:edit, @cur_user, site: @cur_site, node: @cur_node) %>
+      <h3><%= link_to t("opendata.public_entity.format"), opendata_dataset_public_entity_path, class: "icon-node" %></h3>
+    <% end %>
+    <% if Opendata::Harvest::Importer.allowed?(:read, @cur_user, site: @cur_site, node: @cur_node) %>
+      <h3><span><%= t("opendata.harvest") %></span></h3>
+      <ul class="narrow-page">
+        <li><%= link_to t("ss.links.import"), opendata_harvest_importers_path, class: "icon-node" %></li>
+        <li><%= link_to t("ss.links.export"), opendata_harvest_exporters_path, class: "icon-node" %></li>
+      </ul>
+    <% end %>
+  <% elsif @cur_node.route == "opendata/app" %>
+    <h3><span><%= t "workflow.pages" %></span></h3>
+    <ul class="narrow-page">
+      <li><%= link_to t("workflow.page.approve"), opendata_apps_approve_path, class: "icon-node" %></li>
+      <li><%= link_to t("workflow.page.request"), opendata_apps_request_path, class: "icon-node" %></li>
+    </ul>
+  <% elsif @cur_node.route == "opendata/idea" %>
+    <h3><span><%= t "workflow.pages" %></span></h3>
+    <ul class="narrow-page">
+      <li><%= link_to t("workflow.page.approve"), opendata_ideas_approve_path, class: "icon-node" %></li>
+      <li><%= link_to t("workflow.page.request"), opendata_ideas_request_path, class: "icon-node" %></li>
     </ul>
   <% end %>
-<% elsif @cur_node.route == "opendata/app" %>
-  <h3><span><%= t "workflow.pages" %></span></h3>
-  <ul class="narrow-page">
-    <li><%= link_to t("workflow.page.approve"), opendata_apps_approve_path, class: "icon-node" %></li>
-    <li><%= link_to t("workflow.page.request"), opendata_apps_request_path, class: "icon-node" %></li>
-  </ul>
-<% elsif @cur_node.route == "opendata/idea" %>
-  <h3><span><%= t "workflow.pages" %></span></h3>
-  <ul class="narrow-page">
-    <li><%= link_to t("workflow.page.approve"), opendata_ideas_approve_path, class: "icon-node" %></li>
-    <li><%= link_to t("workflow.page.request"), opendata_ideas_request_path, class: "icon-node" %></li>
-  </ul>
-<% end %>
 
 <% end %>

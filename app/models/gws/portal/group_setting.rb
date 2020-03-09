@@ -10,11 +10,15 @@ class Gws::Portal::GroupSetting
 
   index({ portal_group_id: 1, site_id: 1 }, { unique: true })
 
+  no_needs_read_permission_to_read
+
   field :name, type: String
   belongs_to :portal_group, class_name: 'Gws::Group', inverse_of: :portal_group_setting
   has_many :portlets, class_name: 'Gws::Portal::GroupPortlet', dependent: :destroy
 
-  validates :name, presence: true
+  permit_params :name
+
+  validates :name, presence: true, length: { maximum: 20 }
   validates :portal_group_id, presence: true, uniqueness: { scope: :site_id }
 
   def portlet_models
@@ -26,7 +30,7 @@ class Gws::Portal::GroupSetting
     end
   end
 
-  def default_portlets
-    Gws::Portal::GroupPortlet.default_portlets(SS.config.gws['portal']['group_portlets'])
+  def default_portlets(settings = [])
+    Gws::Portal::GroupPortlet.default_portlets(settings.presence || SS.config.gws['portal']['group_portlets'])
   end
 end

@@ -40,7 +40,7 @@
       <% if unmapped_headers.present? %>
         <dt><%= t("opendata.labels.auto_mis_assing") %></dt>
         <dd>
-          <%= br(unmapped_headers.map { |e| e.join(", ")}.join("\n")) %>
+          <%= br(unmapped_headers.map { |e| e.join(", ")}) %>
         </dd>
       <% end %>
     </dl>

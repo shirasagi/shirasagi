@@ -12,6 +12,9 @@ opts['pause'] = @cur_part.kv_pause if @cur_part.kv_pause.present?
 <% end %>
 
 <div class="key_visual-slide" id="<%= wrap_id %>">
+  <div class="controls-start" style="display: none;"><%= t('key_visual.controls.start') %></div>
+  <div class="controls-stop" style="display: none;"><%= t('key_visual.controls.stop') %></div>
+
   <%== @cur_part.upper_html if @cur_part.upper_html.present? %>
 
   <ul class="images">

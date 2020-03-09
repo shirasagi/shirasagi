@@ -15,4 +15,20 @@ class Gws::Board::Post
   around_destroy ::Gws::Elasticsearch::Indexer::BoardPostJob.callback
 
   delegate :subscribed_users, to: :topic
+
+  after_create :clear_browsed
+
+  private
+
+  def clear_browsed
+    if topic_id.blank?
+      topic = self
+    else
+      topic = self.topic
+      return if topic.blank?
+    end
+
+    topic = Gws::Board::Topic.find(topic.id) if !topic.is_a?(Gws::Board::Topic)
+    topic.unset_browsed_except!(user)
+  end
 end

@@ -1,12 +1,15 @@
 <%= jquery do %>
-Gws_Discussion_Thread.render(<%= @cur_user.id %>);
-<% if @cur_site.discussion_unseen_interval.present? %>
-Gws_Discussion_Unseen.renderUnseen(
-  "<%= gws_discussion_apis_unseen_path(id: @forum.id) %>",
-  <%= @cur_site.discussion_unseen_interval %>,
-  <%= @forum.descendants_updated.to_i %>
-);
-<% end %>
+  Gws_Discussion_Thread.render(<%= @cur_user.id %>);
+  <% if @cur_site.discussion_unseen_interval.present? %>
+  Gws_Discussion_Unseen.renderUnseen(
+    "<%= gws_discussion_apis_unseen_path(id: @forum.id) %>",
+    <%= @cur_site.discussion_unseen_interval %>,
+    <%= @forum.descendants_updated.to_i %>
+  );
+  <% end %>
+
+  var highlighter = new Gws_Elasticsearch_Highlighter();
+  highlighter.render();
 <% end %>
 
 <h2 class="gws-discussion-topic"><%= @forum.name %></h2>
@@ -66,7 +69,7 @@ Gws_Discussion_Unseen.renderUnseen(
   <% end %>
 
   <%= render "ss/crud/addon", addon: { head: t("gws/discussion.members"), toggle: true } do %>
-    <% @forum.discussion_members.each do |member| %>
+    <% @forum.overall_members.each do |member| %>
       <p><%= member.long_name %></p>
     <% end %>
   <% end %>

@@ -6,4 +6,7 @@
 <dl class="see addon-gws-survey-group-setting">
   <dt><%= @model.t :survey_default_due_date %><%= @model.tt :survey_default_due_date %></dt>
   <dd class="short"><%= f.number_field :survey_default_due_date %> <span class="postfix"><%= t('datetime.prompts.day') %></span></dd>
+
+  <dt><%= @model.t :survey_new_days %><%= @model.tt :survey_new_days %></dt>
+  <dd class="short"><%= f.number_field :survey_new_days %> <span class="postfix"><%= t("datetime.prompts.day") %></span></dd>
 </dl>

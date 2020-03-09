@@ -1,0 +1,19 @@
+<dl class="see mod-translate-lang">
+  <dt><%= @model.t :code %><%= @model.tt :code %></dt>
+  <dd><%= f.text_field :code %></dd>
+
+  <dt><%= @model.t :name %><%= @model.tt :name %></dt>
+  <dd><%= f.text_field :name %></dd>
+
+  <dt><%= @model.t :google_translation_code %><%= @model.tt :google_translation_code %></dt>
+  <dd><%= f.text_field :google_translation_code %></dd>
+
+  <dt><%= @model.t :microsoft_translator_text_code %><%= @model.tt :microsoft_translator_text_code %></dt>
+  <dd><%= f.text_field :microsoft_translator_text_code %></dd>
+
+  <dt><%= @model.t :mock_code %><%= @model.tt :mock_code %></dt>
+  <dd><%= f.text_field :mock_code %></dd>
+
+  <dt><%= @model.t :accept_languages %><%= @model.tt :accept_languages %></dt>
+  <dd><%= f.text_area :accept_languages, value: @item.accept_languages.join("\n") %></dd>
+</dl>

@@ -33,7 +33,12 @@
     <dt><%= @model.t("schedule_#{type}_tab_state") %><%= @model.tt("schedule_#{type}_tab_state") %></dt>
     <dd>
       <%= f.select "schedule_#{type}_tab_state", @item.send("schedule_#{type}_tab_state_options") %>
-      <%= f.text_field("schedule_#{type}_tab_label", placeholder: @item.send("schedule_#{type}_tab_placeholder"), style: 'width: 10.5em;') if @item.respond_to?("schedule_#{type}_tab_label") %>
+      <% if @item.respond_to?("schedule_#{type}_tab_label") %>
+        <%= f.text_field("schedule_#{type}_tab_label", placeholder: @item.send("schedule_#{type}_tab_placeholder"), style: 'width: 10.5em;') %>
+      <% end %>
+      <% if @item.respond_to?("schedule_#{type}_extra_state") %>
+        <%= f.select "schedule_#{type}_extra_state", @item.send("schedule_#{type}_extra_state_options"), include_blank: true %>
+      <% end %>
     </dd>
   <% end %>
 </dl>

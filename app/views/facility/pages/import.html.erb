@@ -56,7 +56,7 @@ timer = setInterval(reload, 10000);
   </section>
 
   <footer class="send">
-    <%= f.submit t("ss.import"), class: "save", onclick: "return confirm('#{t("facility.import.confirm")}')" %>
+    <%= f.submit t("ss.import"), class: "save", onclick: "return confirm('#{t("ss.confirm.import")}')" %>
     <%= f.button t("ss.buttons.cancel"), class: "btn-default", onclick: "location.href='#{url_for(action: :index)}'; return false;" %>
   </footer>
 <% end %>

@@ -5,7 +5,11 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge" />
 <meta name="viewport" content="width=device-width,initial-scale=1.0,user-scalable=yes,minimum-scale=1.0,maximum-scale=2.0" />
 <%
-  window_name = @item.try(:name) || @crumbs.last.try(:first)
+  if @ss_rescue
+    window_name = "#{@ss_rescue[:status]} #{::Rack::Utils::HTTP_STATUS_CODES[@ss_rescue[:status]]}"
+  else
+    window_name = @item.try(:name) || @crumbs.last.try(:first)
+  end
   if window_name.present?
     title = "#{window_name} | #{SS.config.ss.application_name}"
   else
@@ -27,7 +31,7 @@
 
 <header id="head">
   <div class="wrap">
-    <h1 class="application-name"><%= link_to sns_mypage_path do %><%== SS.config.ss.application_logo_html %><% end %></h1>
+    <h1 class="application-name"><%= link_to sns_mypage_path do %><%= render_application_logo %><% end %></h1>
 
     <div class="sp-menu-button">
       <a href="#" class="">
@@ -365,10 +369,22 @@
         </nav>
         <% end %>
 
-        <% if ::File.exists?("#{Rails.root}/app/views/#{params[:controller]}/_navi.html.erb") %>
-        <%= render partial: "navi" %>
-        <% elsif controller.navi_view_file %>
-        <%= render partial: controller.navi_view_file %>
+        <% if @ss_rescue %>
+          <% if @ss_mode == :cms %>
+            <%= render partial: "cms/main/navi" %>
+          <% elsif @ss_mode == :gws %>
+            <%= render partial: "gws/main/navi" %>
+          <% elsif @ss_mode == :webmail %>
+            <%= render partial: "webmail/main/navi" %>
+          <% else %>
+            <%= render partial: "sns/main/navi" %>
+          <% end %>
+        <% else %>
+          <% if ::File.exists?("#{Rails.root}/app/views/#{params[:controller]}/_navi.html.erb") %>
+          <%= render partial: "navi" %>
+          <% elsif controller.navi_view_file %>
+          <%= render partial: controller.navi_view_file %>
+          <% end %>
         <% end %>
       </div>
     </div>
@@ -396,32 +412,37 @@
         <% end %>
       <% end %>
 
-      <% if @crumbs.size > 0 %>
       <ol class="breadcrumb" id="crumbs">
-        <% @crumbs.each_with_index do |item, idx| %>
-          <li <%== %(class="active") if @crumbs.size == idx + 1 %>><%= link_to *item %></li>
-        <% end %>
+        <% if @crumbs.size > 0 && (!@ss_rescue || @ss_rescue && (@ss_mode == :cms || @ss_mode == :gws)) %>
+          <% @crumbs.each_with_index do |item, idx| %>
+            <li <%== %(class="active") if @crumbs.size == idx + 1 %>><%= link_to *item %></li>
+            <% break if @ss_rescue %><%# only one crumb in rescue mode %>
+          <% end %>
 
-        <% if @webmail_other_account_path && webmail_other_account?(@webmail_other_account_path) %>
-          <li class="webmail-accounts">
-            <span><%= t('webmail.links.select_account') %></span>
-            <%= webmail_other_account_select(@webmail_other_account_path) %>
-          </li>
+          <% if @webmail_other_account_path && webmail_other_account?(@webmail_other_account_path) && !@ss_rescue %>
+            <li class="webmail-accounts">
+              <span><%= t('webmail.links.select_account') %></span>
+              <%= webmail_other_account_select(@webmail_other_account_path) %>
+            </li>
+          <% end %>
         <% end %>
       </ol>
-      <% end %>
 
-      <% if ::File.exists?("#{Rails.root}/app/views/#{params[:controller]}/_menu.html.erb") %>
-      <div id="menu"><%= render partial: "menu" %></div>
-      <% elsif controller.menu_view_file %>
-      <div id="menu"><%= render partial: controller.menu_view_file %></div>
+      <% if !@ss_rescue %>
+        <% if ::File.exists?("#{Rails.root}/app/views/#{params[:controller]}/_menu.html.erb") %>
+        <div id="menu"><%= render partial: "menu" %></div>
+        <% elsif controller.menu_view_file %>
+        <div id="menu"><%= render partial: controller.menu_view_file %></div>
+        <% end %>
       <% end %>
 
       <div class="wrap">
-        <% if ::File.exists?("#{Rails.root}/app/views/#{params[:controller]}/_content_navi.html.erb") %>
-        <%= render partial: 'content_navi' %>
-        <% elsif @tree_navi %>
-        <div id="content-navi"><%= render file: '_tree_navi' %></div>
+        <% if !@ss_rescue %>
+          <% if ::File.exists?("#{Rails.root}/app/views/#{params[:controller]}/_content_navi.html.erb") %>
+          <%= render partial: 'content_navi' %>
+          <% elsif @tree_navi %>
+          <div id="content-navi"><%= render file: '_tree_navi' %></div>
+          <% end %>
         <% end %>
 
         <%= yield %>

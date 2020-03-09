@@ -17,6 +17,9 @@ Documentation
 -------------
 
 - [公式サイト](http://ss-proj.org/)
+    - [オンラインデモ](https://www.ss-proj.org/download/demo.html)
+    - [ダウンロード](https://www.ss-proj.org/download/)
+    - [よくある質問記事](https://www.ss-proj.org/faq/docs/)
 - [開発マニュアル](http://shirasagi.github.io/)
 
 Platform

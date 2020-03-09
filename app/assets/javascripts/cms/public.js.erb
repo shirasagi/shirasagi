@@ -28,6 +28,7 @@
 
 $(function () {
   SS_Kana.render();
+  SS_Translate.render();
   SS_Font.render();
   SS_AdobeReader.render();
   SS_Mobile.render();
@@ -55,19 +56,23 @@ this.SS_Kana = (function () {
   SS_Kana.kanaUrl = "<%= SS.config.kana.location %>" + "/";
 
   SS_Kana.render = function () {
-    var bind, url;
+    var bind, url, html;
     if (SS.config["site_url"] && SS.config["kana_url"]) {
       SS_Kana.siteUrl = SS.config["site_url"];
       SS_Kana.kanaUrl = SS.config["kana_url"];
     }
     if ($("body").data("kana")) {
       url = SS_Kana.url(location.pathname, false);
+      url = SS_Translate.url(url);
       bind = 'onclick="location.href=\'' + url + '\'; return false"';
-      return $("#ss-kana").html("<a class=\"off\" href=\"#" + url + "\" " + bind + "><%= I18n.t 'cms.links.ruby_off' %></a>");
+      html = $("#ss-kana").html();
+      return $("#ss-kana").html("<a class=\"off\" href=\"#" + url + "\" " + bind + ">" + html + "</a>");
     } else {
-      url = SS_Kana.url(location.pathname, true);
+      url = SS_Translate.url(location.pathname, false)
+      url = SS_Kana.url(url, true);
       bind = 'onclick="location.href=\'' + url + '\'; return false"';
-      return $("#ss-kana").html("<a class=\"on\" href=\"#" + url + "\" " + bind + "><%= I18n.t 'cms.links.ruby_on' %></a>");
+      html = $("#ss-kana").html();
+      return $("#ss-kana").html("<a class=\"on\" href=\"#" + url + "\" " + bind + ">"  + html + "</a>");
     }
   };
 
@@ -105,6 +110,38 @@ this.SS_Kana = (function () {
 
 })();
 
+this.SS_Translate = (function () {
+  function SS_Translate() {
+  }
+
+  SS_Translate.dir = "<%= SS.config.translate.location %>";
+
+  SS_Translate.siteUrl = "/";
+
+  SS_Translate.translateUrl = "<%= SS.config.translate.location %>" + "/";
+
+  SS_Translate.url = function (url, target) {
+    if (target) {
+      var targetUrl = this.translateUrl + target + "/";
+      url = url.replace(RegExp("^(\\/\\.s\\d+?\\/preview\\d*)?" + this.siteUrl), "$1" + targetUrl);
+    } else {
+      var targetUrl = this.translateUrl + $("body").data("translate") + "/";
+      url = url.replace(RegExp("^(\\/\\.s\\d+?\\/preview\\d*)?" + targetUrl), "$1" + this.siteUrl);
+    }
+    return url;
+  };
+
+  SS_Translate.render = function () {
+    if (SS.config["site_url"] && SS.config["translate_url"]) {
+      SS_Translate.siteUrl = SS.config["site_url"];
+      SS_Translate.translateUrl = SS.config["translate_url"];
+    }
+  };
+
+  return SS_Translate;
+
+})();
+
 this.SS_Theme = (function () {
   function SS_Theme() {
   }
@@ -115,32 +152,46 @@ this.SS_Theme = (function () {
       return;
     }
     theme = SS.config["theme"];
-    $("#ss-theme").html("");
     css = "";
     for (cls in theme) {
       v = theme[cls];
-      a = $('<a href="#" class="' + cls + '">' + v["name"] + '</a>');
-      if (v["css_path"]) {
-        $('head').append('<link rel="alternate stylesheet" type="text/css" title="' + v["name"] + '" href="' + v["css_path"] + '" class="ss-theme ' + cls + '" disabled />');
-      }
-      if (v["font_color"] && v["background_color"]) {
-        css += SS_Theme.cssTemplate(cls, v["font_color"], v["background_color"]) + "\n";
-      }
-      a.on("click", function (e) {
-        cls = $(this).attr("class");
-        Cookies.set("ss-theme", cls, {
-          expires: 7,
-          path: '/'
+      a = $("#ss-theme a." + cls);
+      if (a) {
+        $(a).attr("data-ss-theme", cls);
+        if (v["css_path"]) {
+          $('head').append('<link rel="alternate stylesheet" type="text/css" title="' + v["name"] + '" href="' + v["css_path"] + '" class="ss-theme ' + cls + '" disabled />');
+        }
+        if (v["font_color"] && v["background_color"]) {
+          css += SS_Theme.cssTemplate(cls, v["font_color"], v["background_color"]) + "\n";
+        }
+        if (v["default_theme"]) {
+          $('#ss-theme a').removeClass('active');
+          a.addClass('active');
+          SS_Theme.switchTheme(cls);
+        }
+        a.on("click", function (e) {
+          cls = $(this).data("ss-theme");
+          $('#ss-theme a').removeClass('active');
+          $(this).addClass('active');
+          Cookies.set("ss-theme", cls, {
+            expires: 7,
+            path: '/'
+          });
+          SS_Theme.switchTheme(cls);
+          return false;
         });
-        SS_Theme.switchTheme(cls);
-        return false;
-      });
-      $("#ss-theme").append(a);
+      }
     }
     style = $('<style type="text/css" class="ss-theme">' + css + '</style>');
     $("head").append(style);
     cls = Cookies.get("ss-theme");
+    if (!theme[cls]) {
+      Cookies.remove("ss-theme");
+      cls = null;
+    }
     if (cls) {
+      $('#ss-theme a').removeClass('active');
+      $('#ss-theme a[data-ss-theme="'+cls+'"]').addClass('active');
       return SS_Theme.switchTheme(cls);
     }
   };
@@ -153,7 +204,7 @@ this.SS_Theme = (function () {
     $('head link.ss-theme').prop("disabled", true);
     $('head link.ss-theme.' + cls).prop("disabled", false);
     $("body").attr("data-ss-theme", "");
-    return $("body").attr("data-ss-theme", cls);
+    $("body").attr("data-ss-theme", cls);
   };
 
   return SS_Theme;

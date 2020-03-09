@@ -86,8 +86,7 @@ categories = [
   <% categories.each do |cate| %>
     <% cate[:items].each_with_index do |item, idx| %>
       <% hide = (idx >= max) ? "display: none" : nil %>
-      <%= link_to item.send(cate[:name]), @search_path.call("s[#{cate[:key]}]" => "#{item.send(cate[:val])}"),
-        class: cate[:type], style: hide %>
+      <%= link_to(item.send(cate[:name]), @search_path.call("s[#{cate[:key]}]" => "#{item.send(cate[:val])}"), class: cate[:type], style: hide) %>
     <% end %>
     <% if cate[:items].size > max %>
       <%= link_to t("opendata.labels.other") + "#{cate[:items].size-max}" + t("opendata.labels.count"), "#",
@@ -98,7 +97,7 @@ categories = [
 
 <% api_url = api_package_show_path(id: @cur_page.uuid) %>
 <% if api_url.present? %>
-<div class="api"><%= link_to "WEBAPI", api_url %></div>
+<div class="api"><%= link_to("WEBAPI", api_url, rel: @cur_site.anti_bot_set_nofollow? ? "nofollow" : nil) %></div>
 <% end %>
 
 <div class="text">
@@ -127,7 +126,7 @@ categories = [
                   <span class="license">
                     <% label = tryb { image_tag license.file.url, alt: license.name } || license.name %>
                     <% if license.related_url.present? %>
-                      <%= link_to label, license.related_url, target: "_blank" %>
+                      <%= link_to(label, license.related_url, target: "_blank", rel: @cur_site.anti_bot_set_nofollow? ? "nofollow" : nil) %>
                     <% else %>
                       <%= label %>
                     <% end %>
@@ -136,15 +135,15 @@ categories = [
 
                 <% if rs.source_url.blank? && rs.previewable? %>
                   <div class="content-wrap">
-                    <%= link_to t("opendata.labels.preview"), rs.content_url, class: "content" %>
+                    <%= link_to(t("opendata.labels.preview"), rs.content_url, class: "content", rel: @cur_site.anti_bot_set_nofollow? ? "nofollow" : nil) %>
                   </div>
                 <% end %>
                 <div class="download-wrap">
-                  <%= link_to t("opendata.labels.downloaded"), rs.download_url, class: "download" %>
+                  <%= link_to(t("opendata.labels.downloaded"), rs.download_url, class: "download", "data-url": rs.data_url, rel: @cur_site.anti_bot_set_nofollow? ? "nofollow" : nil) %>
                 </div>
                 <div class="clipboard-wrap">
                   <% url = rs.source_url.present? ? rs.source_url : rs.download_full_url %>
-                  <%= link_to t("opendata.links.copy_url"), rs.url, class: "ss-clipboard-copy", "data-clip-attr": "data-full-url", "data-full-url": url %>
+                  <%= link_to(t("opendata.links.copy_url"), rs.url, class: "ss-clipboard-copy", rel: @cur_site.anti_bot_set_nofollow? ? "nofollow" : nil, "data-clip-attr": "data-full-url", "data-full-url": url) %>
                 </div>
               </div>
 
@@ -156,7 +155,7 @@ categories = [
 
               <% if rs.rdf_iri.present? %>
                 <div class="sparql">
-                  <%= rs.t :rdf_iri %> <%= link_to rs.rdf_iri, "#{sparql_path}?graph_name=#{rs.rdf_iri}" %>
+                  <%= rs.t :rdf_iri %> <%= link_to(rs.rdf_iri, "#{sparql_path}?graph_name=#{rs.rdf_iri}", rel: @cur_site.anti_bot_set_nofollow? ? "nofollow" : nil) %>
                 </div>
               <% end %>
             </div>
@@ -178,7 +177,7 @@ categories = [
 
               <% if urs.rdf_iri.present? %>
                 <div class="sparql">
-                  <%= urs.t :rdf_iri %> <%= link_to urs.rdf_iri, "#{sparql_path}?graph_name=#{urs.rdf_iri}" %>
+                  <%= urs.t :rdf_iri %> <%= link_to(urs.rdf_iri, "#{sparql_path}?graph_name=#{urs.rdf_iri}", rel: @cur_site.anti_bot_set_nofollow? ? "nofollow" : nil) %>
                 </div>
               <% end %>
 
@@ -187,26 +186,27 @@ categories = [
                   <span class="license">
                     <% label = tryb { image_tag license.file.url, alt: license.name } || license.name %>
                     <% if license.related_url.present? %>
-                      <%= link_to label, license.related_url, target: "_blank" %>
+                      <%= link_to(label, license.related_url, target: "_blank", rel: @cur_site.anti_bot_set_nofollow? ? "nofollow" : nil) %>
                     <% else %>
                       <%= label %>
                     <% end %>
                   </span>
                 <% end %>
 
-                <% if urs.tsv_present? %>
-                  <div class="content-wrap">
-                    <%= link_to t("opendata.labels.preview"), urs.content_url, class: "content" %>
-                  </div>
-                <% end %>
+                <div class="content-wrap">
+                  <%= link_to(I18n.t("opendata.labels.preview"), urs.content_url, class: "content", rel: @cur_site.anti_bot_set_nofollow? ? "nofollow" : nil) if urs.tsv_present? %>
+                </div>
 
-                <div class="download-wrap"><%= link_to t("opendata.labels.downloaded"), urs.download_url, class: "download", "data-url": urs.file.url %></div>
+                <div class="download-wrap">
+                  <%= link_to(t("opendata.labels.downloaded"), urs.download_url, class: "download", "data-url": urs.original_url, rel: @cur_site.anti_bot_set_nofollow? ? "nofollow" : nil) %>
+                </div>
 
                 <div class="clipboard-wrap">
-                  <%= link_to t("opendata.links.copy_url"), urs.url,
+                  <%= link_to t("opendata.links.copy_url"), urs.download_url,
                     "class" => "ss-clipboard-copy",
                     "data-clip-attr" => "data-full-url",
-                    "data-full-url" => urs.full_url
+                    "data-full-url" => ::File.join(@cur_site.full_url, urs.download_url),
+                    "rel" => @cur_site.anti_bot_set_nofollow? ? "nofollow" : nil
                   %>
                 </div>
               </div>
@@ -256,7 +256,7 @@ categories = [
             <dt><%= @cur_page.t :user_id %></dt>
             <dd>
               <% if @cur_page.member %>
-                <%= link_to @cur_page.member.name, "#{member_path}#{@cur_page.member.id}" %>
+                <%= link_to(@cur_page.member.name, "#{member_path}#{@cur_page.member.id}") %>
               <% else %>
                 <%= t("opendata.labels.guest_user") %>
               <% end %>
