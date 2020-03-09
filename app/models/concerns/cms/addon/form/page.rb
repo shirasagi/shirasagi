@@ -139,7 +139,11 @@ module Cms::Addon::Form::Page
 
     unlinked_file_ids = file_ids_was - file_ids_is
     unlinked_file_ids.each_slice(20) do |file_ids|
-      SS::File.in(id: file_ids).destroy_all
+      unlinked_files = SS::File.in(id: file_ids).to_a
+      unlinked_files.each do |unlinked_file|
+        next if self.id != unlinked_file.owner_item_id
+        unlinked_file.destroy
+      end
     end
   end
 
