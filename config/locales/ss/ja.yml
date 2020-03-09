@@ -201,6 +201,7 @@ ja:
 
     info:
       soft_delete: データの実削除ではなく無効状態として保存されます。
+      hard_delete: データが実削除されます。
       soft_delete_locked: 削除状態が削除不可になっている為、削除できません。
     warning:
       initial_password: 初期パスワードを変更してください。
