@@ -8,15 +8,11 @@ module Job::Cms::CopyNodes::SsFiles
     dest_file = nil
     id = cache(:files, src_file.id) do
       Rails.logger.debug("#{src_file.filename}(#{src_file.id}): ファイルのコピーを開始します。")
-      dest_file = klass.new(site_id: @cur_site.id)
-      dest_file.attributes = copy_basic_attributes(src_file, klass)
-      pseudo_file(src_file) do |tempfile|
-        dest_file.in_file = tempfile
-        dest_file.save!
+      dest_file_attributes = copy_basic_attributes(src_file, klass)
+      dest_file_attributes[:site_id] = @cur_site.id
+      dest_file = klass.create_empty!(dest_file_attributes) do |file|
+        ::FileUtils.copy(src_file.path, file.path)
       end
-
-      FileUtils.mkdir_p File.dirname(dest_file.path)
-      FileUtils.cp src_file.path, dest_file.path
 
       @task.log("#{dest_file.filename}(#{dest_file.id}): ファイルをコピーしました。")
       dest_file.id
