@@ -55,13 +55,6 @@ describe "cms_users", type: :feature, dbscope: :example do
       end
       expect(page).to have_css('#notice', text: I18n.t('ss.notice.deleted'))
 
-      #delete disabled user
-      visit delete_path
-      within "form" do
-        click_on I18n.t("ss.buttons.delete")
-      end
-      expect(page).to have_css('#notice', text: I18n.t('ss.notice.deleted'))
-
       #delete_all
       within ".index-search" do
         fill_in "s[keyword]", with: item.name
