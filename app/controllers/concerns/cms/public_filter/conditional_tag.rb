@@ -62,7 +62,7 @@ module Cms::PublicFilter::ConditionalTag
       condition = @cur_item.filename.to_s.start_with?(matchdata[:path])
     when 'has_pages'
       return false if @cur_page
-      condition = Cms::Page.where({ filename: /^#{@cur_node.filename}\// }).present?
+      condition = Cms::Page.where({ filename: /^#{::Regexp.escape(@cur_node.filename)}\// }).present?
       condition ||= Cms::Page.in({ category_ids: @cur_node.try(:id) }).present?
     else return false
     end

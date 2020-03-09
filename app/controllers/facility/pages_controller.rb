@@ -20,12 +20,12 @@ class Facility::PagesController < ApplicationController
 
   def map_pages
     Facility::Map.site(@cur_site).and_public.
-      where(filename: /^#{@item.filename}\//, depth: @item.depth + 1).order_by(order: 1)
+      where(filename: /^#{::Regexp.escape(@item.filename)}\//, depth: @item.depth + 1).order_by(order: 1)
   end
 
   def image_pages
     Facility::Image.site(@cur_site).and_public.
-      where(filename: /^#{@item.filename}\//, depth: @item.depth + 1).order_by(order: 1).
+      where(filename: /^#{::Regexp.escape(@item.filename)}\//, depth: @item.depth + 1).order_by(order: 1).
       select { |page| page.image.present? }
   end
 

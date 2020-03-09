@@ -126,7 +126,7 @@ class Opendata::Appfile
       criteria = self.where({})
       return criteria if params.blank?
 
-      criteria = criteria.where(filename: /#{params[:keyword]}/) if params[:keyword].present?
+      criteria = criteria.where(filename: /#{::Regexp.escape(params[:keyword])}/) if params[:keyword].present?
 
       criteria
     end

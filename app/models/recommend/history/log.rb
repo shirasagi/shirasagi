@@ -28,7 +28,7 @@ class Recommend::History::Log
   end
 
   def content
-    filename = path.sub(/^#{site.url}/, "")
+    filename = path.sub(/^#{::Regexp.escape(site.url)}/, "")
     page = Cms::Page.site(site).where(filename: filename).first
     return page if page
 

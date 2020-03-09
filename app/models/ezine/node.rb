@@ -48,7 +48,7 @@ module Ezine::Node
 
     def condition_hash
       h = super
-      h['$or'] << { filename: /^#{filename}\//, depth: self.depth + 1 }
+      h['$or'] << { filename: /^#{::Regexp.escape(filename)}\//, depth: self.depth + 1 }
       h
     end
 
@@ -74,7 +74,7 @@ module Ezine::Node
 
     def condition_hash
       h = super
-      h['$or'] << { filename: /^#{parent.filename}\//, depth: self.depth }
+      h['$or'] << { filename: /^#{::Regexp.escape(parent.filename)}\//, depth: self.depth }
       h
     end
   end

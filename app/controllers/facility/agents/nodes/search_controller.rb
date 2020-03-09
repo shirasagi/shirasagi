@@ -41,7 +41,7 @@ class Facility::Agents::Nodes::SearchController < ApplicationController
       marker_info = view_context.render_marker_info(item)
       maps = Facility::Map.site(@cur_site).
         and_public.
-        where(filename: /\A#{item.filename}\//, depth: item.depth + 1).
+        where(filename: /\A#{::Regexp.escape(item.filename)}\//, depth: item.depth + 1).
         order_by(order: 1)
 
       maps.each do |map|

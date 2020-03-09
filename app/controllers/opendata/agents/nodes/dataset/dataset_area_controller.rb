@@ -15,7 +15,7 @@ class Opendata::Agents::Nodes::Dataset::DatasetAreaController < ApplicationContr
     if @item.route == "opendata/area"
       Opendata::Dataset.site(@cur_site).search(site: @cur_site, area_id: @item.id).and_public
     else
-      area_ids = Opendata::Node::Area.site(@cur_site).where(filename: /^#{@item.filename}\//).pluck(:id)
+      area_ids = Opendata::Node::Area.site(@cur_site).where(filename: /^#{::Regexp.escape(@item.filename)}\//).pluck(:id)
       Opendata::Dataset.site(@cur_site).in(area_ids: area_ids).and_public
     end
   end
