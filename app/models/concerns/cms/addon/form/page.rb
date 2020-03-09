@@ -105,6 +105,8 @@ module Cms::Addon::Form::Page
   end
 
   def column_values_was
+    return [] if new_record?
+
     docs = attribute_was("column_values")
 
     if docs.present?
@@ -119,6 +121,8 @@ module Cms::Addon::Form::Page
   end
 
   def cms_form_page_delete_unlinked_files
+    return if new_record?
+
     file_ids_is = []
     self.column_values.each do |column_value|
       file_ids_is += column_value.all_file_ids
