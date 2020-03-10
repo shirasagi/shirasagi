@@ -34,6 +34,7 @@ describe "webmail_mails", type: :feature, dbscope: :example, imap: true, js: tru
 
           click_on I18n.t('ss.buttons.draft_save')
         end
+        expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
 
         visit index_path
         within ".webmail-navi-mailboxes" do
@@ -55,6 +56,7 @@ describe "webmail_mails", type: :feature, dbscope: :example, imap: true, js: tru
         within "form#item-form" do
           click_on I18n.t('ss.buttons.send')
         end
+        expect(page).to have_css('#notice', text: I18n.t('ss.notice.sent'))
 
         expect(ActionMailer::Base.deliveries).to have(1).items
         ActionMailer::Base.deliveries.first.tap do |mail|
@@ -77,6 +79,14 @@ describe "webmail_mails", type: :feature, dbscope: :example, imap: true, js: tru
         expect(page).to have_css(".address-field", text: user3.email)
         expect(page).to have_css(".address-field", text: user4.email)
         expect(page).to have_css(".body--text", text: item_texts.first)
+
+        # confirm to remove draft main in draft box
+        visit index_path
+        within ".webmail-navi-mailboxes" do
+          click_on I18n.t("webmail.box.draft")
+        end
+        expect(page).to have_no_content(item_subject)
+        expect(page).to have_no_css(".list-item")
 
         # reply to all
         visit index_path
