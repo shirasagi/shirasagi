@@ -19,6 +19,10 @@ class Sys::SiteImportJob < SS::ApplicationJob
 
     invoke :extract
 
+    @task.log("- init lock documents")
+    ::Sys::SiteImport::Lock.init_lock_sequence
+    ::Sys::SiteImport::Lock.init_destroy_unable
+
     init_src_site
     init_mapping
     import_cms_groups
