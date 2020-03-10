@@ -2424,8 +2424,7 @@ article.body {
     }
   }
 }
-#body--institution-map .map #map-canvas,
-#body--institution-map-all .map #map-canvas {
+.map #map-sidebar + #map-canvas {
   width: 512px !important;
 }
 #colorbox {
@@ -3728,9 +3727,9 @@ table.mypage-index, .member-my-group .index, table.member-invited-group {
       padding: 0 10px;
     }
     #map-sidebar {
-      display: none;
+      width: 100%;
+      height: auto !important;
     }
-
     #map-canvas {
       width: 100% !important;
       height: 300px !important;
