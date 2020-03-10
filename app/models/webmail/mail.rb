@@ -159,8 +159,10 @@ class Webmail::Mail
     imap.select(imap.sent_box)
     imap.conn.append(imap.sent_box, msg.to_s, [:Seen], Time.zone.now)
     if draft?
+      imap.select(imap.draft_box)
       imap.uids_delete([uid])
     end
+
     true
   end
 
