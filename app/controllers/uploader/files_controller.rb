@@ -31,6 +31,8 @@ class Uploader::FilesController < ApplicationController
 
   def set_item
     filename = ::CGI.unescape params[:filename]
+    filename = ::File.expand_path(filename, "/").sub(/^\//, "")
+
     raise "404" if filename != @cur_node.filename && !filename.start_with?("#{@cur_node.filename}/")
     @item = @model.file "#{@cur_node.site.path}/#{filename}"
     raise "404" unless @item
