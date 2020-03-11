@@ -6,27 +6,20 @@ module Opendata::PdfParseable
 
     return [] unless file && pdf_present?
 
-    require 'rmagick'
-    images = []
-    0.upto(limit - 1) do |n|
-      begin
-        image = Magick::Image.read(file.path + "[#{n}]") do
-          self.quality = 100
-          self.density = 200
-        end.first
-      rescue Magick::ImageMagickError => e
-        Rails.logger.error("#{e.class} (#{e.message}):\n  #{e.backtrace.join("\n  ")}")
-        image = nil
-      end
+    parse_command = SS.config.opendata.preview["pdf"]["parse_command"]
+    parse_command += " \"#{file.path}\" \"#{limit}\""
 
-      break if image.blank?
-      images << image
-    end
+    output, error, status = Open3.capture3(parse_command)
+    raise Timeout::Error.new if status.exitstatus == 124
 
-    images = images.map do |image|
-      image.format = "PNG"
-      Base64.strict_encode64(image.to_blob)
+    if output.present?
+      output.split("\n").map do |base64|
+        next nil if base64.blank?
+        ret = Base64.strict_decode64(base64) rescue nil
+        ret ? base64 : nil
+      end.compact
+    else
+      []
     end
-    images
   end
 end
