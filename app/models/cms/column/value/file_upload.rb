@@ -110,10 +110,11 @@ class Cms::Column::Value::FileUpload < Cms::Column::Value::Base
 
       attributes["user_id"] = @cur_user.id if @cur_user
       attributes["_id"] = nil
+      attributes["owner_item"] = _parent
       clone_file = SS::File.create_empty!(attributes, validate: false) do |new_file|
         ::FileUtils.copy(file.path, new_file.path)
       end
-      clone_file.owner_item = _parent
+      clone_file.save(validate: false)
       self.file = clone_file
     end
 
