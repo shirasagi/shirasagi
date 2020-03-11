@@ -75,7 +75,7 @@ module SS::WebmailSupport
     end
 
     RSpec.configuration.extend(SS::WebmailSupport::EventHandler, imap: true)
-  rescue
+  rescue => e
     RSpec.configuration.filter_run_excluding(imap: true)
   end
 
@@ -98,7 +98,7 @@ module SS::WebmailSupport
 
     puts "found docker #{version} and container '#{container_id}' listening on #{imap_port} for imap"
   rescue
-    puts "docker seems not installed or running or container created"
+    puts "docker seems not to be installed or be running or have container '#{container_id}'"
     RSpec.configuration.filter_run_excluding(imap: true)
   end
 
