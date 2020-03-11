@@ -84,12 +84,11 @@ module Workflow::Addon
       attributes = Hash[f.attributes]
       attributes.select!{ |k| f.fields.key?(k) }
 
-      file = SS::File.new(attributes)
-      file.id = nil
-      file.in_file = f.uploaded_file
-      file.user_id = @cur_user.id if @cur_user
-
-      file.save validate: false
+      attributes["user_id"] = @cur_user.id if @cur_user
+      attributes["_id"] = nil
+      file = SS::File.create_empty!(attributes, validate: false) do |new_file|
+        ::FileUtils.copy(f.path, new_file.path)
+      end
 
       if respond_to?(:html) && html.present?
         html = self.html
