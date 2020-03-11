@@ -46,14 +46,15 @@ class Cms::Column::Value::Free < Cms::Column::Value::Base
           attributes = Hash[source_file.attributes]
           attributes.select!{ |k| source_file.fields.key?(k) }
 
-          clone_file = SS::File.new(attributes)
-          clone_file.id = nil
-          clone_file.in_file = source_file.uploaded_file
-          clone_file.user_id = @cur_user.id if @cur_user
+          attributes["user_id"] = @cur_user.id if @cur_user
+          attributes["_id"] = nil
+          clone_file = SS::File.create_empty!(attributes, validate: false) do |new_file|
+            ::FileUtils.copy(source_file.path, new_file.path)
+          end
           clone_file.model = _parent.class.name
           clone_file.owner_item = _parent
           clone_file.state = _parent.state
-          result = clone_file.save(validate: false)
+          result = clone_file
 
           next unless result
 
