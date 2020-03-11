@@ -17,6 +17,29 @@ describe "cms_login", type: :feature, dbscope: :example do
       end
       expect(current_path).to eq login_path
     end
+
+    context 'with duplicated organization_uid' do
+      let(:group) { create(:cms_group, name: unique_id) }
+      let(:user2) do
+        create(:cms_user, name: unique_id, email: "#{unique_id}@example.jp", in_password: "pass",
+               organization_uid: user.organization_uid, organization_id: group.id,
+               group_ids: [group.id], cms_role_ids: [cms_role.id])
+      end
+
+      before do
+        cms_site.set(group_ids: [cms_group.id, group.id])
+      end
+
+      it "with uid" do
+        visit login_path
+        within "form" do
+          fill_in "item[email]", with: user2.organization_uid
+          fill_in "item[password]", with: "pass"
+          click_button I18n.t("ss.login")
+        end
+        expect(current_path).to eq login_path
+      end
+    end
   end
 
   context "valid login" do

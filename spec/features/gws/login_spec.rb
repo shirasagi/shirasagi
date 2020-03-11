@@ -20,6 +20,16 @@ describe "gws_login", type: :feature, dbscope: :example do
   end
 
   context "valid login" do
+    it "with uid" do
+      visit login_path
+      within "form" do
+        fill_in "item[email]", with: user.uid
+        fill_in "item[password]", with: "pass"
+        click_button I18n.t("ss.login")
+      end
+      expect(current_path).to eq main_path
+    end
+
     it "with email" do
       visit login_path
       within "form" do
