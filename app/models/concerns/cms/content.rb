@@ -41,9 +41,9 @@ module Cms::Content
     scope :filename, ->(name) { where filename: name.sub(/^\//, "") }
     scope :node, ->(node, target = nil) {
       if target == 'descendant'
-        node ? where(filename: /^#{node.filename}\//) : where({})
+        node ? where(filename: /^#{::Regexp.escape(node.filename)}\//) : where({})
       else #current
-        node ? where(filename: /^#{node.filename}\//, depth: node.depth + 1) : where(depth: 1)
+        node ? where(filename: /^#{::Regexp.escape(node.filename)}\//, depth: node.depth + 1) : where(depth: 1)
       end
     }
     scope :and_public, ->(date = nil) {
@@ -253,11 +253,11 @@ module Cms::Content
   def validate_filename
     if @basename
       return errors.add :basename, :empty if @basename.blank?
-      errors.add :basename, :invalid if filename !~ /^([\w\-]+\/)*[\w\-]+(#{fix_extname})?$/
-      errors.add :basename, :invalid if basename !~ /^[\w\-]+(#{fix_extname})?$/
+      errors.add :basename, :invalid if filename !~ /^([\w\-]+\/)*[\w\-]+(#{::Regexp.escape(fix_extname || "")})?$/
+      errors.add :basename, :invalid if basename !~ /^[\w\-]+(#{::Regexp.escape(fix_extname || "")})?$/
     else
       return errors.add :filename, :empty if filename.blank?
-      errors.add :filename, :invalid if filename !~ /^([\w\-]+\/)*[\w\-]+(#{fix_extname})?$/
+      errors.add :filename, :invalid if filename !~ /^([\w\-]+\/)*[\w\-]+(#{::Regexp.escape(fix_extname || "")})?$/
     end
 
     self.filename = filename.sub(/\..*$/, "") + fix_extname if fix_extname && basename.present?

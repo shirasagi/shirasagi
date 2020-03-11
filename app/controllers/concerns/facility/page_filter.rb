@@ -14,7 +14,7 @@ module Facility::PageFilter
   def download
     @items = Facility::Node::Page.site(@cur_site).
       allow(:read, @cur_user, site: @cur_site, node: @cur_node).
-      where(filename: /^#{@cur_node.filename}\//, depth: @cur_node.depth + 1)
+      where(filename: /^#{::Regexp.escape(@cur_node.filename)}\//, depth: @cur_node.depth + 1)
     csv = @items.to_csv.encode("SJIS", invalid: :replace, undef: :replace)
 
     send_data csv, filename: "facility_node_pages_#{Time.zone.now.to_i}.csv"

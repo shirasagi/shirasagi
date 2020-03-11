@@ -29,7 +29,7 @@ class Cms::Agents::Tasks::LinksController < ApplicationController
   end
 
   def find_content_from_ref(ref)
-    filename = ref.sub(/^#{@site.url}/, "")
+    filename = ref.sub(/^#{::Regexp.escape(@site.url)}/, "")
     filename.sub!(/\?.*$/, "")
     filename += "index.html" if ref.match?(/\/$/)
 
@@ -142,7 +142,7 @@ class Cms::Agents::Tasks::LinksController < ApplicationController
       html = html.gsub(/<!--.*?-->/m, "")
       html.scan(/\shref="([^"]+)"/i) do |m|
         next_url = m[0]
-        next_url = next_url.sub(/^#{@base_url}/, "/")
+        next_url = next_url.sub(/^#{::Regexp.escape(@base_url)}/, "/")
         next_url = next_url.sub(/#.*/, "")
 
         next unless valid_url(next_url)

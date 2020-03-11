@@ -15,12 +15,12 @@ class Faq::Agents::Nodes::SearchController < ApplicationController
       redirect_to @cur_node.url
       return
     end
-    @category = params[:category]
-    @keyword = params[:keyword]
+    @category = params[:category].try { |cate| cate.numeric? ? cate.to_i : nil }
+    @keyword = params[:keyword].to_s
     @url = mobile_path? ? ::File.join(@cur_site.mobile_url, @cur_node.filename) : @cur_node.url
 
     @query = {}
-    @query[:category] = @category.blank? ? {} : { :category_ids.in => [@category.to_i] }
+    @query[:category] = @category.blank? ? {} : { :category_ids.in => [ @category ] }
     @query[:keyword] = @keyword.blank? ? {} : @keyword.split(/[\s　]+/).uniq.compact.map(&method(:make_query))
 
     @items = pages.

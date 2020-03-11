@@ -11,7 +11,7 @@ module Opendata::Harvest::CkanApiExporter
     put_log "export to #{url} (Ckan API)"
 
     @package = ::Opendata::Harvest::CkanPackage.new(url)
-    dataset_ids = Opendata::Dataset.where(filename: /^#{node.filename}\//, depth: node.depth + 1).
+    dataset_ids = Opendata::Dataset.where(filename: /^#{::Regexp.escape(node.filename)}\//, depth: node.depth + 1).
       and_public.pluck(:id)
     put_log "datasets #{dataset_ids.size}"
 

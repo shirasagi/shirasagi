@@ -137,7 +137,7 @@ this.Googlemaps_Map = (function () {
       }
     });
 
-    if (Googlemaps_Map.markers.length === 0) {
+    if (!Googlemaps_Map.markers || Googlemaps_Map.markers.length === 0) {
       Googlemaps_Map.map.setCenter(new google.maps.LatLng(Googlemaps_Map.center[0], Googlemaps_Map.center[1]));
     } else {
       Googlemaps_Map.map.fitBounds(markerBounds);

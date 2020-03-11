@@ -8,9 +8,9 @@ class Cms::Agents::Parts::NodeController < ApplicationController
     node = @cur_node
 
     if node && node.dirname
-      cond = { filename: /^#{node.dirname}\//, depth: node.depth }
+      cond = { filename: /^#{::Regexp.escape(node.dirname)}\//, depth: node.depth }
     elsif node
-      cond = { filename: /^#{node.filename}\//, depth: node.depth + 1 }
+      cond = { filename: /^#{::Regexp.escape(node.filename)}\//, depth: node.depth + 1 }
     else
       cond = { depth: 1 }
     end

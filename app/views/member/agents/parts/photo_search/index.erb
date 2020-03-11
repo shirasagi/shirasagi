@@ -19,8 +19,8 @@
   <%= form_tag search_path, multipart: true, method: "get" do %>
   <div class="keyword">
     <%= text_field_tag :keyword, nil, class: "keyword" %>
-    <%= submit_tag "検索" %>
+    <%= submit_tag t("ss.buttons.search") %>
   </div>
   <% end %>
-  <%= link_to "詳細検索", "#", class: "ajax-box" %>
+  <%= link_to t("member.buttons.detail_search"), "#", class: "ajax-box" %>
 </div>

@@ -70,7 +70,7 @@ module Facility::Node
       private
 
       def attributes_to_row(item, additional_columns, opts)
-        maps = Facility::Map.site(item.site).where(filename: /^#{item.filename}\//, depth: item.depth + 1)
+        maps = Facility::Map.site(item.site).where(filename: /^#{::Regexp.escape(item.filename)}\//, depth: item.depth + 1)
         points = maps.map{ |m| m.map_points }.flatten.map{ |m| m[:loc].join(",") }
 
         row = []
@@ -114,7 +114,7 @@ module Facility::Node
     def condition_hash
       cond = []
 
-      cond << { filename: /^#{filename}\// } if conditions.blank?
+      cond << { filename: /^#{::Regexp.escape(filename)}\// } if conditions.blank?
       conditions.each do |url|
         node = Cms::Node.site(cur_site || site).filename(url).first rescue nil
         next unless node

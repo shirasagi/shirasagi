@@ -48,7 +48,7 @@ module Garbage::Node
     def condition_hash
       cond = []
 
-      cond << { filename: /^#{filename}\// } if conditions.blank?
+      cond << { filename: /^#{::Regexp.escape(filename)}\// } if conditions.blank?
       conditions.each do |url|
         node = Cms::Node.site(cur_site || site).filename(url).first
         next unless node

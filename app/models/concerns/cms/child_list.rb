@@ -16,7 +16,7 @@ module Cms::ChildList
 
   def category_nodes
     Cms::Node.site(site).and_public.
-      where({ filename: /^#{self.filename}\//, route: /^category\// }).
+      where({ filename: /^#{::Regexp.escape(self.filename)}\//, route: /^category\// }).
       where(self.condition_hash).
       order_by(self.sort_hash).
       limit(child_list_limit)
@@ -32,7 +32,7 @@ module Cms::ChildList
 
   def child_pages
     Cms::Page.site(site).and_public.
-      where({ filename: /^#{self.filename}\// }).
+      where({ filename: /^#{::Regexp.escape(self.filename)}\// }).
       where(self.condition_hash).
       order_by(self.sort_hash).
       limit(child_list_limit)
@@ -40,7 +40,7 @@ module Cms::ChildList
 
   def child_nodes
     Cms::Node.site(site).and_public.
-      where({ filename: /^#{self.filename}\// }).
+      where({ filename: /^#{::Regexp.escape(self.filename)}\// }).
       where(self.condition_hash).
       order_by(self.sort_hash).
       limit(child_list_limit)
