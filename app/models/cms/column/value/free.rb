@@ -50,10 +50,10 @@ class Cms::Column::Value::Free < Cms::Column::Value::Base
           attributes["_id"] = nil
           attributes["model"] = _parent.class.name
           attributes["state"] = _parent.state
-          attributes["owner_item"] = _parent
           clone_file = SS::File.create_empty!(attributes, validate: false) do |new_file|
             ::FileUtils.copy(source_file.path, new_file.path)
           end
+          clone_file.owner_item = _parent
           clone_file.save(validate: false)
           result = clone_file
 
