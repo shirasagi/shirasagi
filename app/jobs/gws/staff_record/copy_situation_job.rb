@@ -34,7 +34,7 @@ class Gws::StaffRecord::CopySituationJob < Gws::ApplicationJob
   end
 
   def copy_user_titles
-    user_titles = Gws::UserTitle.site(site)
+    user_titles = Gws::UserTitle.site(site).active
     user_titles.each do |user_title|
       user_title.cur_site = site
       copy_user_title(user_title)
@@ -44,8 +44,8 @@ class Gws::StaffRecord::CopySituationJob < Gws::ApplicationJob
   def copy_user_title(user_title)
     sr_user_title = Gws::StaffRecord::UserTitle.new(
       cur_site: site, cur_user: user,
-      year_id: @cur_year.id, code: user_title.code, name: user_title.name, activation_date: user_title.activation_date,
-      expiration_date: user_title.expiration_date, remark: user_title.remark,
+      year_id: @cur_year.id, code: user_title.code, name: user_title.name, order: user_title.order,
+      remark: user_title.remark,
       group_ids: @cur_year.group_ids, custom_group_ids: @cur_year.custom_group_ids, user_ids: @cur_year.user_ids,
       permission_level: @cur_year.permission_level
     )

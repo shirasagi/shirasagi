@@ -43,7 +43,7 @@ class Gws::StaffRecord::UserTitle
 
   def export_fields
     %w(
-      id created updated deleted text_index code name remark order activation_date expiration_date group_id
+      id created updated deleted text_index code name remark order group_id
       permission_level group_ids user_ids custom_group_ids user_uid user_name user_group_id user_group_name user_id
       site_id year_code year_name year_id
     )

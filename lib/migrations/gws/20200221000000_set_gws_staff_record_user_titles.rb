@@ -22,8 +22,9 @@ class SS::Migration20200221000000
 
           sr_user_title.cur_site = user.year.site
           sr_user_title.code = user_title.code
-          sr_user_title.activation_date = user_title.activation_date
-          sr_user_title.expiration_date = user_title.expiration_date
+          sr_user_title.order = user_title.order
+          # sr_user_title.activation_date = user_title.activation_date
+          # sr_user_title.expiration_date = user_title.expiration_date
           sr_user_title.remark = user_title.remark
           sr_user_title.save
         end
