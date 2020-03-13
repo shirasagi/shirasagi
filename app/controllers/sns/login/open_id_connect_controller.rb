@@ -92,7 +92,7 @@ class Sns::Login::OpenIdConnectController < ApplicationController
       response_type: @item.response_type || @item.default_response_type,
       nonce: nonce,
       scope: @item.scopes.join(" ") || @item.default_scopes.join(" "),
-      state: state,
+      state: state
     }
     params[:max_age] = @item.max_age if @item.max_age.present?
     params[:response_mode] = @item.response_mode if @item.response_mode.present?
