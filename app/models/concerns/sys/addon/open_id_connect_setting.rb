@@ -88,9 +88,17 @@ module Sys::Addon
       self.issuer = discovery['issuer']
       self.auth_url = discovery['authorization_endpoint']
       self.token_url = discovery['token_endpoint']
-      self.response_type = discovery['response_types_supported'].find { |x| x.include?(default_response_type) }
+      if discovery['response_types_supported'].present?
+        self.response_type = discovery['response_types_supported'].find { |x| x.include?(default_response_type) }
+      else
+        self.response_type = default_response_type
+      end
       self.scopes = discovery['scopes_supported']
-      self.claims = default_claims - discovery['claims_supported']
+      if discovery['claims_supported'].present?
+        self.claims = default_claims & discovery['claims_supported']
+      else
+        self.claims = default_claims
+      end
       self.jwks_uri = discovery['jwks_uri']
     end
 
