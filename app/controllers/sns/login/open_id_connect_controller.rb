@@ -60,7 +60,7 @@ class Sns::Login::OpenIdConnectController < ApplicationController
   end
 
   def implicit_flow_callback
-    core_resp = params.permit(:state, :code, :id_token, :error, :error_description)
+    core_resp = params.permit(:state, :id_token, :error, :error_description)
     if core_resp[:error]
       Rails.logger.warn("#{core_resp[:error]}:#{core_resp[:error_description]}")
       raise "403"
