@@ -19,7 +19,7 @@ module Sys::Addon
       attr_accessor :in_discovery_file
       attr_accessor :in_client_secret, :rm_client_secret
       permit_params :issuer, :auth_url, :token_url, :client_id, :client_secret, :response_type
-      permit_params :scope, :max_age, :claims, :response_mode, :jwks_uri
+      permit_params :scopes, :max_age, :claims, :response_mode, :jwks_uri
       permit_params :in_discovery_file
       permit_params :in_client_secret, :rm_client_secret
       before_validation :load_discovery_file, if: ->{ in_discovery_file }
