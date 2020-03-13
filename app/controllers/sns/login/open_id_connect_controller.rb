@@ -120,4 +120,29 @@ class Sns::Login::OpenIdConnectController < ApplicationController
 
     render_login user, nil, session: true, login_path: sns_login_path
   end
+
+  if Rails.env.test?
+    def auth
+      redirect_uri = URI.parse(params[:redirect_uri].to_s)
+      claims = {
+        # required claims
+        iss: @item.issuer,
+        sub: @item.filename,
+        aud: @item.client_id,
+        exp: (Time.zone.now + 1.hour).to_i,
+        iat: Time.zone.now.to_i,
+        nonce: params[:nonce],
+        # optional claims to identify user
+        email: @item.text.try { |s| s.strip } || Sys::User.all.first.email
+      }
+      id_token = JSON::JWT.new(claims)
+      id_token = id_token.sign(SS::Crypt.decrypt(@item.client_secret))
+
+      resp = {
+        id_token: id_token.to_s,
+        state: params[:state]
+      }
+      redirect_to "#{redirect_uri}?#{resp.to_query}"
+    end
+  end
 end

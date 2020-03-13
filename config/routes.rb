@@ -71,6 +71,9 @@ Rails.application.routes.draw do
       # OpenID Connect SSO
       get  "oid/:id/init" => "open_id_connect#init", as: :open_id_connect
       match "oid/:id/callback" => "open_id_connect#callback", as: :open_id_connect_callback, via: [:get, :post]
+      if Rails.env.test?
+        get "oid/:id/auth" => "open_id_connect#auth", as: :open_id_connect_auth
+      end
 
       # Environment
       get "env/:id/login" => "environment#login", as: :env
