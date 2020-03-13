@@ -23,8 +23,8 @@ module Sys::Addon
       permit_params :in_discovery_file
       permit_params :in_client_secret, :rm_client_secret
       before_validation :load_discovery_file, if: ->{ in_discovery_file }
-      before_validation :set_client_secret, if: ->{ in_client_secret }
-      before_validation :reset_client_secret, if: ->{ rm_client_secret }
+      before_validation :set_client_secret, if: ->{ in_client_secret.present? }
+      before_validation :reset_client_secret, if: ->{ rm_client_secret.present? && rm_client_secret != "0" }
       before_validation :load_discovery_file, if: ->{ in_discovery_file }
     end
 
