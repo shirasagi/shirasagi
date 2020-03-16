@@ -1784,6 +1784,7 @@ footer.send {
 }
 .required {
   color: #e00;
+  font-weight: bold;
 }
 
 // -------------------------------------------------------------------------------------------------
@@ -3116,8 +3117,7 @@ body.ss-ajax-in-iframe {
   }
 }
 .column-value .column-value-header .column-value-header-group:first-child {
-  @include display-flex;
-  @include align-items(center);
+  display: block;
 }
 .addon-view .column-value {
   padding: 10px 15px;
