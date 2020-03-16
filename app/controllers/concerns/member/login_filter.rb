@@ -35,6 +35,7 @@ module Member::LoginFilter
 
   def set_member(member, timestamp = Time.zone.now.to_i)
     if @cur_site
+      reset_session
       session[session_member_key] = {
         "member_id" => member.id,
         "remote_addr" => remote_addr,
