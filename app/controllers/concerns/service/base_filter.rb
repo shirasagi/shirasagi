@@ -94,13 +94,13 @@ module Service::BaseFilter
     @cur_user = user
   end
 
-  def rescue_action(e)
-    if e.to_s =~ /^\d+$/
-      status = e.to_s.to_i
+  def rescue_action(exception)
+    if exception.to_s.numeric?
+      status = exception.to_s.to_i
       file = error_html_file(status)
       return ss_send_file(file, status: status, type: Fs.content_type(file), disposition: :inline)
     end
-    raise e
+    raise exception
   end
 
   def error_html_file(status)
