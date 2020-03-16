@@ -20,6 +20,11 @@ class Sys::Auth::OpenIdConnect::TokenResponse
 
   validates_with Sys::Auth::OpenIdConnect::JwtValidator
 
+  def id
+    claim = (cur_item.claims.presence || cur_item.default_claims).find { |claim| jwt[claim].present? }
+    jwt[claim]
+  end
+
   def jwt
     return nil if id_token.blank?
     @jwt ||= JSON::JWT.decode(id_token, :skip_verification)
