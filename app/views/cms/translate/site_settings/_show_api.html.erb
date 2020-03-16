@@ -4,6 +4,9 @@
 
   <% if @item.translate_api == "mock" %>
 
+  <dt><%= @model.t :translate_mock_api_loopback %><%= @model.tt :translate_mock_api_loopback %></dt>
+  <dd><%= @item.label :translate_mock_api_loopback %></dd>
+
   <dt><%= @model.t :translate_mock_api_request_count %><%= @model.tt :translate_mock_api_request_count %></dt>
   <dd><%= @item.translate_mock_api_request_count %></dd>
 
@@ -20,9 +23,6 @@
 
   <dt><%= @model.t :translate_microsoft_api_request_word_count %><%= @model.tt :translate_microsoft_api_request_word_count %></dt>
   <dd><%= @item.translate_microsoft_api_request_word_count %></dd>
-
-  <dt><%= @model.t :translate_microsoft_api_request_metered_usage %><%= @model.tt :translate_microsoft_api_request_metered_usage %></dt>
-  <dd><%= @item.translate_microsoft_api_request_metered_usage %></dd>
 
   <% elsif @item.translate_api == "google_translation" %>
 
