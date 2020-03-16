@@ -19,7 +19,7 @@ module SS::Addon
       # mock
       field :translate_mock_api_request_count, type: Integer, default: 0
       field :translate_mock_api_request_word_count, type: Integer, default: 0
-      field :translate_mock_api_request_metered_usage, type: Integer, default: 0
+      field :translate_mock_api_loopback, type: String, default: "disabled"
 
       # microsoft translator text api
       field :translate_microsoft_api_key, type: String
@@ -40,7 +40,7 @@ module SS::Addon
 
       permit_params :translate_mock_api_request_count
       permit_params :translate_mock_api_request_word_count
-      permit_params :translate_mock_api_request_metered_usage
+      permit_params :translate_mock_api_loopback
 
       permit_params :translate_microsoft_api_key
       permit_params :translate_microsoft_api_request_count
@@ -87,6 +87,13 @@ module SS::Addon
     public
 
     def translate_state_options
+      [
+        [I18n.t("ss.options.state.enabled"), "enabled"],
+        [I18n.t("ss.options.state.disabled"), "disabled"],
+      ]
+    end
+
+    def translate_mock_api_loopback_options
       [
         [I18n.t("ss.options.state.enabled"), "enabled"],
         [I18n.t("ss.options.state.disabled"), "disabled"],

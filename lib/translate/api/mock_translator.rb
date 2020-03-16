@@ -7,10 +7,16 @@ class Translate::Api::MockTranslator
   end
 
   def translate(contents, source, target, opts = {})
-    translated = contents.map { |content| "[#{target}:" + content + "]" }
+    site = opts[:site]
+
+    if site && site.translate_mock_api_loopback == "enabled"
+      translated = contents.dup
+    else
+      translated = contents.map { |content| "[#{target}:" + content + "]" }
+    end
+
     @count = contents.map(&:size).sum
 
-    site = opts[:site]
     if site
       site.translate_mock_api_request_count += 1
       site.translate_mock_api_request_word_count += @count
