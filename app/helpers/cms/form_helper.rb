@@ -53,8 +53,4 @@ module Cms::FormHelper
 
     safe_join(h)
   end
-
-  def required_label
-    %(<div class="required">&lt;#{I18n.t('ss.required')}&gt;</div>).html_safe
-  end
 end

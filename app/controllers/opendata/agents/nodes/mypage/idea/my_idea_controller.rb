@@ -2,7 +2,6 @@ class Opendata::Agents::Nodes::Mypage::Idea::MyIdeaController < ApplicationContr
   include Cms::NodeFilter::View
   include Member::LoginFilter
   include Opendata::MemberFilter
-  helper Cms::FormHelper
   helper Opendata::ListHelper
   helper Opendata::UrlHelper
 

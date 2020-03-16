@@ -1,6 +1,5 @@
 class Rdf::PropsController < ApplicationController
   include Rdf::ObjectsFilter
-  helper Cms::FormHelper
 
   model Rdf::Prop
 

@@ -1,7 +1,6 @@
 class Rdf::VocabsController < ApplicationController
   include Cms::BaseFilter
   include Cms::CrudFilter
-  helper Cms::FormHelper
 
   model Rdf::Vocab
 
