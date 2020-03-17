@@ -4,12 +4,14 @@ class Translate::Api::MockTranslator
   def initialize(site, opts = {})
     @site = site
     @count = 0
+    @processor = SS.config.translate.mock["processor"]
+    @processor = opts[:processor] if opts[:processor]
   end
 
   def translate(contents, source, target, opts = {})
     site = opts[:site]
 
-    if site && site.translate_mock_api_loopback == "enabled"
+    if @processor == "loopback"
       translated = contents.dup
     else
       translated = contents.map { |content| "[#{target}:" + content + "]" }
