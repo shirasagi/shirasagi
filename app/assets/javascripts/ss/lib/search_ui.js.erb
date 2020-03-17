@@ -129,11 +129,9 @@ this.SS_SearchUI = (function () {
         return true;
       }
     });
-    $.each(options.submit_on_changes || ["#s_group"], function() {
-      $el.find(this).on("change", function (ev) {
-        self.selectItems($el);
-        return $el.find("form.search").submit();
-      });
+    $el.find("#s_group").on("change", function (ev) {
+      self.selectItems($el);
+      return $el.find("form.search").submit();
     });
     $el.find(".submit-on-change").on("change", function (ev) {
       self.selectItems($el);
