@@ -1,0 +1,9 @@
+<%= code_editor ".mod-request-word-limit .html", mode: :html, readonly: true %>
+
+<dl class="mod-request-word-limit see">
+  <dt><%= @model.t :translate_api_request_word_limit %></dt>
+  <dd><%= @item.translate_api_request_word_limit %></dd>
+
+  <dt><%= @model.t :translate_api_limit_exceeded_html %></dt>
+  <dd><%= text_area_tag "translate_api_limit_exceeded_html", @item.translate_api_limit_exceeded_html, class: "html", style: "height: 200px;" %></dd>
+</dl>

@@ -22,19 +22,32 @@ class Translate::Api::GoogleTranslator
     @parent = @client.class.location_path(@project_id, @location_id)
   end
 
+  def request_word_limit
+    limit = @site.translate_api_request_word_limit.to_i
+    limit > 0 ? limit : nil
+  end
+
+  def request_word_limit_exceeded?(count)
+    return false if request_word_limit.nil?
+    (@site.translate_mock_api_request_word_count + count) >= request_word_limit
+  end
+
   def translate(contents, source_language, target_language, opts = {})
     @count = 0
 
     count = contents.map(&:size).sum
+
+    if request_word_limit_exceeded?(count)
+      @site.request_word_limit_exceeded = true
+      raise Translate::RequestLimitExceededError, "request word limit exceeded"
+    end
+
     response = @client.translate_text(contents, target_language, @parent, source_language_code: source_language)
     translated = response.translations.map { |translation| ::CGI.unescapeHTML(translation.translated_text) }
     @count = count
 
-    site = opts[:site]
-    if site
-      site.translate_google_api_request_count += 1
-      site.translate_google_api_request_word_count += @count
-    end
+    @site.translate_google_api_request_count += 1
+    @site.translate_google_api_request_word_count += @count
 
     translated
   end

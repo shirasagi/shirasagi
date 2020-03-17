@@ -715,6 +715,8 @@ ja:
         translate_google_api_credential_file_id: サービスアカウント秘密鍵
         translate_google_api_request_count: APIリクエスト数
         translate_google_api_request_word_count: APIリクエスト文字数
+        translate_api_request_word_limit: 文字数制限
+        translate_api_limit_exceeded_html: 制限超過時の表示HTML
       ss/addon/site_usage:
         usage_node_count: フォルダー数
         usage_page_count: ページ数

@@ -9,6 +9,8 @@ ja:
     views:
       show_original: 原文を表示
       select_lang: 言語を選択
+      api: API
+      api_request_word_limit: APIリクエスト文字数制限
 
     options:
       update_state:

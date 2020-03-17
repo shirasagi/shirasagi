@@ -18,6 +18,16 @@ class Translate::Api::MicrosoftTranslator
     @url = opts[:url] if opts[:url]
   end
 
+  def request_word_limit
+    limit = @site.translate_api_request_word_limit.to_i
+    limit > 0 ? limit : nil
+  end
+
+  def request_word_limit_exceeded?(count)
+    return false if request_word_limit.nil?
+    (@site.translate_mock_api_request_word_count + count) >= request_word_limit
+  end
+
   def translate(texts, from, to, opts = {})
     @count = 0
     @metered_usage = 0
@@ -25,6 +35,11 @@ class Translate::Api::MicrosoftTranslator
     count = texts.map(&:size).sum
     uri = URI(@url + "&from=#{from}&to=#{to}")
     content = texts.map { |text| { "Text" => text } }.to_json
+
+    if request_word_limit_exceeded?(count)
+      @site.request_word_limit_exceeded = true
+      raise Translate::RequestLimitExceededError, "request word limit exceeded"
+    end
 
     request = Net::HTTP::Post.new(uri)
     request['Content-type'] = 'application/json'
@@ -51,12 +66,9 @@ class Translate::Api::MicrosoftTranslator
       raise ApiError, response.body.to_s
     end
 
-    site = opts[:site]
-    if site
-      site.translate_microsoft_api_request_count += 1
-      site.translate_microsoft_api_request_metered_usage += @metered_usage
-      site.translate_microsoft_api_request_word_count += @count
-    end
+    @site.translate_microsoft_api_request_count += 1
+    @site.translate_microsoft_api_request_metered_usage += @metered_usage
+    @site.translate_microsoft_api_request_word_count += @count
 
     translated
   end
