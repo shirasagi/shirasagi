@@ -7,14 +7,18 @@ module SS::FileFactory
   end
 
   module ClassMethods
-    def create_empty!(attributes)
+    def create_empty!(attributes, options = {})
       item = new(attributes)
       if item.respond_to?(:disable_thumb=)
         item.disable_thumb = true # サムネイル作成時にエラーになるので、無効にする
       end
       item.name = ::File.basename(item.filename) if item.name.blank? && item.filename.present?
       item.size = 0
-      item.save!
+      if options.fetch(:validate, true)
+        item.save!
+      else
+        item.save(validate: false)
+      end
 
       # `in_file` を指定していないので before_save でエラーが発生するが、
       # 空のファイルを作成するのが目的なので、そのエラーは無視して安全。
