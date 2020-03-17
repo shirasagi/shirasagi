@@ -175,6 +175,7 @@ describe "opendata_agents_nodes_my_dataset", type: :feature, dbscope: :example, 
         click_on "承認"
       end
 
+      login_opendata_member(site, node_login, member)
       visit index_url
       click_link item_name
       expect(page).to have_css(".status .input", text: "公開")

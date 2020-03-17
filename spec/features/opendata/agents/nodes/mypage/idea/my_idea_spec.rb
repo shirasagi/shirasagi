@@ -134,6 +134,7 @@ describe "opendata_agents_nodes_my_idea", type: :feature, dbscope: :example, js:
         click_on "承認"
       end
 
+      login_opendata_member(site, node_login)
       visit index_path
       click_link item_name
       expect(page).to have_css(".status .input", text: "公開")
