@@ -14,6 +14,10 @@ describe Translate::Convertor, dbscope: :example do
   let(:target) { "en" }
 
   before do
+    mock = SS::Config.translate.mock
+    mock["processor"] = "develop"
+    SS::Config.replace_value_at(:translate, 'mock', mock)
+
     site.translate_state = "enabled"
     site.translate_api = "mock"
     site.translate_source = lang_ja
