@@ -318,4 +318,18 @@ describe "uploader_files", type: :feature, dbscope: :example do
       expect(page).to have_css("a.file", text: "style.css")
     end
   end
+
+  context "with invalid filename" do
+    let(:filename) { "/#{node.filename}/..%2Frobots.txt" }
+
+    before do
+      ::FileUtils.touch("#{site.path}/robots.txt")
+      login_cms_user
+    end
+
+    it "#show" do
+      visit uploader_file_path(site: site, cid: node, filename: filename, do: "show")
+      expect(status_code).to eq 404
+    end
+  end
 end
