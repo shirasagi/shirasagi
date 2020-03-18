@@ -108,6 +108,8 @@ class History::Trash
 
   def remove_all
     item = restore
+    return if item.blank?
+
     path = if item.class.include?(::Cms::Content)
       item.path.sub("#{Rails.root}/public", self.class.root) rescue nil
     elsif ref_coll == 'ss_files'
