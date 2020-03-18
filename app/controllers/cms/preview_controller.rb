@@ -13,7 +13,7 @@ class Cms::PreviewController < ApplicationController
   private
 
   def head_for(view, &block)
-    @head_html = view.capture(&block
+    @head_html = view.capture(&block)
   end
 
   def foot_for(view, &block)
