@@ -38,6 +38,18 @@ module Translate::PublicFilter
     convertor = Translate::Convertor.new(@cur_site, @translate_source.api_code, @translate_target.api_code)
     body = convertor.convert(body)
 
+    if @cur_site.request_word_limit_exceeded && body =~ /<body data-translate=\".+?\"/
+      h = []
+      h << '<script src="/assets/js/jquery.colorbox.js"></script>'
+      h << '<link rel="stylesheet" media="screen" href="/assets/css/colorbox/colorbox.css">'
+      h << '<div id="ss-translate-error">'
+      h << @cur_site.translate_api_limit_exceeded_html
+      h << '</div>'
+      h << '<script>$.colorbox({open: true, html: $("#ss-translate-error")});</script>'
+      h << '</html>'
+      body.sub!('</html>', h.join)
+    end
+
     if params[:format] == "json"
       body = ActiveSupport::JSON.encode(body)
     end
