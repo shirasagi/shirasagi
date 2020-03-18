@@ -110,10 +110,10 @@ class History::Trash
     item = restore
     return if item.blank?
 
-    path = if item.class.include?(::Cms::Content)
-      item.path.sub("#{Rails.root}/public", self.class.root) rescue nil
+    if item.class.include?(::Cms::Content)
+      path = item.path.sub("#{Rails.root}/public", self.class.root) rescue nil
     elsif ref_coll == 'ss_files'
-      File.join(self.class.root, item.path.sub(/.*\/(ss_files\/)/, '\\1')) rescue nil
+      path = File.join(self.class.root, item.path.sub(/.*\/(ss_files\/)/, '\\1')) rescue nil
     end
     Fs.rm_rf(path) if path.present? && !path.start_with?("#{Rails.root}/public")
   end

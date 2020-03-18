@@ -142,7 +142,10 @@ module Cms::Addon::Form::Page
       unlinked_files = SS::File.in(id: file_ids).to_a
       unlinked_files.each do |unlinked_file|
         next if self.id != unlinked_file.owner_item_id
-        unlinked_file.skip_history_trash = skip_history_trash if [ self, unlinked_file ].all? { |obj| obj.respond_to?(:skip_history_trash) }
+
+        if [ self, unlinked_file ].all? { |obj| obj.respond_to?(:skip_history_trash) }
+          unlinked_file.skip_history_trash = skip_history_trash
+        end
         unlinked_file.destroy
       end
     end
