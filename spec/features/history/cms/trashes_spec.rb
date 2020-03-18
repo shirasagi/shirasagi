@@ -19,14 +19,12 @@ describe "history_cms_trashes", type: :feature, dbscope: :example, js: true do
       expect(page).to have_no_css('a.title', text: page_item.name)
 
       expect { page_item.reload }.to raise_error Mongoid::Errors::DocumentNotFound
-      expect(History::Trash.all.count).to eq 3
+      expect(History::Trash.all.count).to eq 2
       trashes = History::Trash.all.to_a
       expect(trashes[0].ref_coll).to eq "cms_pages"
       expect(trashes[0].ref_class).to eq "Article::Page"
       expect(trashes[1].ref_coll).to eq "ss_files"
       expect(trashes[1].ref_class).to eq "SS::File"
-      expect(trashes[2].ref_coll).to eq "ss_files"
-      expect(trashes[2].ref_class).to eq "SS::ThumbFile"
 
       visit index_path
       expect(page).to have_css('a.title', text: page_item.name)
@@ -42,12 +40,10 @@ describe "history_cms_trashes", type: :feature, dbscope: :example, js: true do
       visit node_path
       expect(page).to have_no_css('a.title', text: page_item.name)
 
-      expect(History::Trash.all.count).to eq 2
+      expect(History::Trash.all.count).to eq 1
       trashes = History::Trash.all.to_a
       expect(trashes[0].ref_coll).to eq "ss_files"
       expect(trashes[0].ref_class).to eq "SS::File"
-      expect(trashes[1].ref_coll).to eq "ss_files"
-      expect(trashes[1].ref_class).to eq "SS::ThumbFile"
 
       Timecop.freeze(Time.zone.now + History::Trash::TrashPurgeJob::DEFAULT_THRESHOLD_DAYS.days + 1.second) do
         History::Trash::TrashPurgeJob.bind(site_id: site).perform_now
@@ -62,14 +58,12 @@ describe "history_cms_trashes", type: :feature, dbscope: :example, js: true do
       expect(page).to have_no_css('a.title', text: page_item.name)
 
       expect { page_item.reload }.to raise_error Mongoid::Errors::DocumentNotFound
-      expect(History::Trash.all.count).to eq 3
+      expect(History::Trash.all.count).to eq 2
       trashes = History::Trash.all.to_a
       expect(trashes[0].ref_coll).to eq "cms_pages"
       expect(trashes[0].ref_class).to eq "Article::Page"
       expect(trashes[1].ref_coll).to eq "ss_files"
       expect(trashes[1].ref_class).to eq "SS::File"
-      expect(trashes[2].ref_coll).to eq "ss_files"
-      expect(trashes[2].ref_class).to eq "SS::ThumbFile"
 
       visit index_path
       expect(page).to have_css('a.title', text: page_item.name)
@@ -86,12 +80,10 @@ describe "history_cms_trashes", type: :feature, dbscope: :example, js: true do
       visit node_path
       expect(page).to have_no_css('a.title', text: page_item.name)
 
-      expect(History::Trash.all.count).to eq 2
+      expect(History::Trash.all.count).to eq 1
       trashes = History::Trash.all.to_a
       expect(trashes[0].ref_coll).to eq "ss_files"
       expect(trashes[0].ref_class).to eq "SS::File"
-      expect(trashes[1].ref_coll).to eq "ss_files"
-      expect(trashes[1].ref_class).to eq "SS::ThumbFile"
 
       Timecop.freeze(Time.zone.now + History::Trash::TrashPurgeJob::DEFAULT_THRESHOLD_DAYS.days + 1.second) do
         History::Trash::TrashPurgeJob.bind(site_id: site).perform_now
@@ -108,14 +100,12 @@ describe "history_cms_trashes", type: :feature, dbscope: :example, js: true do
       expect(page).to have_no_css('a.title', text: page_item.name)
 
       expect { page_item.reload }.to raise_error Mongoid::Errors::DocumentNotFound
-      expect(History::Trash.all.count).to eq 3
+      expect(History::Trash.all.count).to eq 2
       trashes = History::Trash.all.to_a
       expect(trashes[0].ref_coll).to eq "cms_pages"
       expect(trashes[0].ref_class).to eq "Article::Page"
       expect(trashes[1].ref_coll).to eq "ss_files"
       expect(trashes[1].ref_class).to eq "SS::File"
-      expect(trashes[2].ref_coll).to eq "ss_files"
-      expect(trashes[2].ref_class).to eq "SS::ThumbFile"
 
       visit index_path
       expect(page).to have_css('a.title', text: page_item.name)
@@ -133,21 +123,13 @@ describe "history_cms_trashes", type: :feature, dbscope: :example, js: true do
       expect(page_item.files.first).to be_present
       expect(page_item.files.first.thumb).to be_present
 
-      expect(History::Trash.all.count).to eq 1
-      trashes = History::Trash.all.to_a
-      expect(trashes[0].ref_coll).to eq "ss_files"
-      expect(trashes[0].ref_class).to eq "SS::ThumbFile"
-
       visit node_path
       expect(page).to have_css('a.title', text: page_item.name)
 
       visit page_path
       expect(page).to have_css('div.file-view', text: file.name)
 
-      Timecop.freeze(Time.zone.now + History::Trash::TrashPurgeJob::DEFAULT_THRESHOLD_DAYS.days + 1.second) do
-        History::Trash::TrashPurgeJob.bind(site_id: site).perform_now
-        expect(History::Trash.all.count).to eq 0
-      end
+      expect(History::Trash.all.count).to eq 0
     end
 
     it "#undo_delete_all" do
@@ -159,14 +141,12 @@ describe "history_cms_trashes", type: :feature, dbscope: :example, js: true do
       expect(page).to have_no_css('a.title', text: page_item.name)
 
       expect { page_item.reload }.to raise_error Mongoid::Errors::DocumentNotFound
-      expect(History::Trash.all.count).to eq 3
+      expect(History::Trash.all.count).to eq 2
       trashes = History::Trash.all.to_a
       expect(trashes[0].ref_coll).to eq "cms_pages"
       expect(trashes[0].ref_class).to eq "Article::Page"
       expect(trashes[1].ref_coll).to eq "ss_files"
       expect(trashes[1].ref_class).to eq "SS::File"
-      expect(trashes[2].ref_coll).to eq "ss_files"
-      expect(trashes[2].ref_class).to eq "SS::ThumbFile"
 
       visit index_path
       expect(page).to have_css('a.title', text: page_item.name)
@@ -185,16 +165,13 @@ describe "history_cms_trashes", type: :feature, dbscope: :example, js: true do
       expect(page_item.files.first).to be_present
       expect(page_item.files.first.thumb).to be_present
 
-      expect(History::Trash.all.count).to eq 1
-      trashes = History::Trash.all.to_a
-      expect(trashes[0].ref_coll).to eq "ss_files"
-      expect(trashes[0].ref_class).to eq "SS::ThumbFile"
-
       visit node_path
       expect(page).to have_css('a.title', text: page_item.name)
 
       visit page_path
       expect(page).to have_css('div.file-view', text: file.name)
+
+      expect(History::Trash.all.count).to eq 0
     end
   end
 
@@ -234,7 +211,7 @@ describe "history_cms_trashes", type: :feature, dbscope: :example, js: true do
       page_item.reload
       expect(page_item.branches.count).to eq 0
       expect { branch_page.reload }.to raise_error Mongoid::Errors::DocumentNotFound
-      expect(History::Trash.all.count).to eq 3
+      expect(History::Trash.all.count).to eq 2
 
       visit index_path
       expect(page).to have_css('a.title', text: page_item.name)
@@ -249,7 +226,7 @@ describe "history_cms_trashes", type: :feature, dbscope: :example, js: true do
       expect(page_item.branches.count).to eq 0
       branch_page.reload
       expect(branch_page.master_id).to be_blank
-      expect(History::Trash.all.count).to eq 1
+      expect(History::Trash.all.count).to eq 0
 
       visit page_path
       within "#addon-workflow-agents-addons-branch" do
