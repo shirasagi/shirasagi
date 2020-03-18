@@ -144,6 +144,7 @@ class Cms::Column::Value::FileUpload < Cms::Column::Value::Base
     path = "#{History::Trash.root}/#{file.path.sub(/.*\/(ss_files\/)/, '\\1')}"
     FileUtils.mkdir_p(File.dirname(path))
     FileUtils.cp(file.path, path)
+    self.file.skip_history_trash = _parent.skip_history_trash if [ _parent, self.file ].all? { |obj| obj.respond_to?(:skip_history_trash) }
     self.file.destroy
   end
 

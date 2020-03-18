@@ -181,6 +181,7 @@ class Gws::Workflow::PagesController < ApplicationController
       end
 
       if @item.try(:branch?) && @item.state == "public"
+        @item.skip_history_trash = true if @item.respond_to?(:skip_history_trash)
         @item.delete
       end
     end
