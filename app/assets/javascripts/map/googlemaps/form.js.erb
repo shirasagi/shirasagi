@@ -21,14 +21,14 @@ this.Map_Form = (function () {
   Map_Form.getMapLoc = function (ele) {
     var latlon;
     latlon = ele.val().split(',');
-    return new google.maps.LatLng(parseFloat(latlon[0]), parseFloat(latlon[1]));
+    return new google.maps.LatLng(parseFloat(latlon[1]), parseFloat(latlon[0]));
   };
 
   Map_Form.validateLoc = function (ele) {
     var lat, latlon, lon;
     latlon = ele.val().split(',');
-    lat = parseFloat(latlon[0]);
-    lon = parseFloat(latlon[1]);
+    lat = parseFloat(latlon[1]);
+    lon = parseFloat(latlon[0]);
     if (!(lat && !isNaN(lat))) {
       return false;
     }
@@ -273,7 +273,7 @@ this.Map_Form = (function () {
 
   Map_Form.renderEvents = function () {
     google.maps.event.addListener(Googlemaps_Map.map, 'click', function (event) {
-      Map_Form.setMapLoc($(".mod-map .clicked"), event.latLng.lat(), event.latLng.lng());
+      Map_Form.setMapLoc($(".mod-map .clicked"), event.latLng.lng(), event.latLng.lat());
       if (Map_Form.clickMarker !== null) {
         Map_Form.clickMarker.setMap(null);
       }
