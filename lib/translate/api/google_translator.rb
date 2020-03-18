@@ -10,12 +10,20 @@ class Translate::Api::GoogleTranslator
     @site = site
     @count = 0
 
-    @credentials = site.translate_google_api_credential_file.path
-    @project_id = site.translate_google_api_project_id
+    @project_id = SS.config.translate.google_translation["project_id"]
+    @credentials = SS.config.translate.google_translation["credentials"]
     @location_id = "global"
 
-    @credentials = opts[:credentials] if opts[:credentials]
+    if site.translate_google_api_project_id.present?
+      @project_id = site.translate_google_api_project_id
+    end
+
+    if site.translate_google_api_credential_file.present?
+      @credentials = site.translate_google_api_credential_file.path
+    end
+
     @project_id = opts[:project_id] if opts[:project_id]
+    @credentials = opts[:credentials] if opts[:credentials]
     @location_id = opts[:location_id] if opts[:location_id]
 
     @client = Google::Cloud.translate(credentials: @credentials)

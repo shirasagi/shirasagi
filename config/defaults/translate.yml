@@ -24,6 +24,9 @@ production: &production
     interval: 0.2
 
   google_translation:
+    project_id: ""
+    credentials: ""
+    location_id: "global"
     array_size_limit: 100
     text_size_limit: 20000
     contents_size_limit: 20000
