@@ -31,16 +31,7 @@ class Chat::Intent::ImportJob < Cms::ApplicationJob
   end
 
   def update_row(row, index)
-    id = row[model.t(:id)]
-    if id.present?
-      item = model.where(site_id: site.id, node_id: node.id, id: id).first
-      if item.blank?
-        errors = model.new.errors.add :base, :not_found, line_no: index, id: id
-        raise errors.join(", ")
-      end
-    else
-      item = model.new
-    end
+    item = model.find_or_initialize_by(site_id: site.id, node_id: node.id, name: row[model.t(:name)])
     set_attributes(row, item)
 
     item.save ? item : raise(item.errors.full_messages.join(", "))
