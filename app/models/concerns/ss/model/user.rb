@@ -118,7 +118,10 @@ module SS::Model::User
     def authenticate(id, password)
       return nil if id.blank? || password.blank?
 
-      user = uid_or_email(id).first
+      users = uid_or_email(id)
+      return nil if users.size != 1
+
+      user = users.first
       return nil unless user
 
       auth_methods.each do |method|
@@ -144,11 +147,13 @@ module SS::Model::User
     def organization_authenticate(organization, id, password)
       return nil if id.blank? || password.blank?
 
-      user = self.where(
+      users = self.where(
         organization_id: organization.id,
         '$or' => [{ uid: id }, { email: id }, { organization_uid: id }]
-      ).first
+      )
+      return nil if users.size != 1
 
+      user = users.first
       return user if user.send(:dbpasswd_authenticate, password)
       nil
     end
@@ -255,11 +260,11 @@ module SS::Model::User
   end
 
   def lock
-    update_attributes(lock_state: 'locked')
+    update(lock_state: 'locked')
   end
 
   def unlock
-    update_attributes(lock_state: 'unlocked')
+    update(lock_state: 'unlocked')
   end
 
   def root_groups

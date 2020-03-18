@@ -45,7 +45,12 @@ module Sns::LoginFilter
   end
 
   def set_organization
-    @cur_organization ||= SS::Group.organizations.where(domains: request_host).first
+    return if @cur_organization.present?
+
+    organizations = SS::Group.organizations.where(domains: request_host)
+    return if organizations.size != 1
+
+    @cur_organization = organizations.first
   end
 
   def user_logged_in
