@@ -23,8 +23,8 @@ class Gws::UserTitle
         drawer.column :name
         drawer.column :remark
         drawer.column :order
-        drawer.column :activation_date
-        drawer.column :expiration_date
+        # drawer.column :activation_date
+        # drawer.column :expiration_date
         drawer.column :presence_editable_title_ids do
           drawer.body { |item| item.presence_editable_titles.pluck(:name).join("\n") }
         end

@@ -8,11 +8,13 @@
   <dt><%= @model.t :order %></dt>
   <dd><%= @item.send :order %></dd>
 
-  <dt><%= @model.t :activation_date %></dt>
-  <dd><%= tryb { @item.activation_date.strftime("%Y/%m/%d %H:%M") } %></dd>
+  <% if false %>
+    <dt><%= @model.t :activation_date %></dt>
+    <dd><%= tryb { @item.activation_date.strftime("%Y/%m/%d %H:%M") } %></dd>
 
-  <dt><%= @model.t :expiration_date %></dt>
-  <dd><%= tryb { @item.expiration_date.strftime("%Y/%m/%d %H:%M") } %></dd>
+    <dt><%= @model.t :expiration_date %></dt>
+    <dd><%= tryb { @item.expiration_date.strftime("%Y/%m/%d %H:%M") } %></dd>
+  <% end %>
 
   <% if @item.remark.present? %>
   <dt><%= @model.t :remark %></dt>
