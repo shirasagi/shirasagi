@@ -11,7 +11,7 @@ chageApi($(".translate-api .select-api"));
 <% end %>
 
 <dl class="see translate-api" style="margin-bottom: 15px;">
-  <dt><%= @model.t :translate_api %></dt>
+  <dt><%= @model.t :translate_api %><%= @model.tt :translate_api %></dt>
   <dd><%= f.select :translate_api, @item.translate_api_options, { include_blank: true }, { class: "select-api" } %></dd>
 </dl>
 

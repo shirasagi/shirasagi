@@ -61,6 +61,8 @@ ja:
 
   tooltip:
     ss/addon/translate/site_setting:
+      translate_api:
+        - 翻訳に使用するAPIを設定します。
       translate_state:
         - 翻訳機能の有効/無効を設定します。
       translate_source_id:
