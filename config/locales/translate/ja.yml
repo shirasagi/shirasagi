@@ -67,6 +67,11 @@ ja:
         - 翻訳元となる言語コードを選択します。
       translate_target_ids:
         - 翻訳先となる言語コードを選択します。
+      translate_api_request_word_limit:
+        - 文字数上限を設定します。
+        - 翻訳時にAPIリクエスト文字数が設定した上限を超える場合、翻訳を停止してエラーを表示します。
+      translate_api_limit_exceeded_html:
+        - リクエスト文字数超過時に表示するHTMLを設定します。
     translate/text_cache:
       original_text:
         - 翻訳前テキストを入力します。
