@@ -32,7 +32,7 @@ module Mobile::PublicFilter
 
     # links
     location = @cur_site.mobile_location.gsub(/^\/|\/$/, "")
-    body.gsub!(/href="#{@cur_site.url}(?!#{location}\/)(?!fs\/)/, "href=\"#{@cur_site.url}#{location}/")
+    body.gsub!(/href="#{@cur_site.url}(?!#{location}\/)(?!(fs\/|\.mypage\/redirect))/, "href=\"#{@cur_site.url}#{location}/")
     body.gsub!(/<span .*?id="ss-(small|medium|large|kana|pc|mb)".*?>.*?<\/span>/, "")
 
     # tags
