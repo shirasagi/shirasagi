@@ -40,9 +40,9 @@ describe "cms_translate_text_caches", type: :feature, dbscope: :example do
       visit index_path
       expect(current_path).not_to eq sns_login_path
       expect(page).to have_css(".translate-text-chaches tr td", text: text1)
-      expect(page).to have_css(".translate-text-chaches tr td", text: "[#{target}:#{text1}]")
+      expect(page).to have_css(".translate-text-chaches tr td", text: text1)
       expect(page).to have_css(".translate-text-chaches tr td", text: text2)
-      expect(page).to have_css(".translate-text-chaches tr td", text: "[#{target}:#{text2}]")
+      expect(page).to have_css(".translate-text-chaches tr td", text: text2)
     end
 
     it "#new" do
