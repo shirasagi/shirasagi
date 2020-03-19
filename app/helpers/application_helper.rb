@@ -273,4 +273,8 @@ module ApplicationHelper
       end
     end
   end
+
+  def required_label
+    %(<div class="required">&lt;#{I18n.t('ss.required')}&gt;</div>).html_safe
+  end
 end

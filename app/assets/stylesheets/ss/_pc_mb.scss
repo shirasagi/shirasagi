@@ -1806,6 +1806,13 @@ footer.send {
 .field_with_errors {
   display: inline;
 }
+.column-with-errors {
+  border: 1px solid #e00;
+}
+.required {
+  color: #e00;
+  font-weight: bold;
+}
 
 // -------------------------------------------------------------------------------------------------
 // button
@@ -3137,8 +3144,7 @@ body.ss-ajax-in-iframe {
   }
 }
 .column-value .column-value-header .column-value-header-group:first-child {
-  @include display-flex;
-  @include align-items(center);
+  display: block;
 }
 .addon-view .column-value {
   padding: 10px 15px;

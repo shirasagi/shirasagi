@@ -18,6 +18,7 @@ ja:
     resize_image: 画像リサイズ
     role: ロール
     role_setting: ロール一括設定
+    required: 必須入力
     required_field: ※必須入力
     search_result: 検索結果
     url: URL
