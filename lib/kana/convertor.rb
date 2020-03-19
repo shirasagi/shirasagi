@@ -17,7 +17,10 @@ module Kana::Convertor
       doc = Nokogiri::HTML.parse(html, nil, 'utf-8')
       byte = doc.inner_html.bytes
       doc.xpath('//a[@href]').each do |tag|
-        tag['href'] = tag['href'].gsub(/%[^%][^%]/, ' ')
+        tag['href'] = tag['href'].gsub(/%[^%]{2}/, ' ')
+      end
+      doc.xpath('//img[@src]').each do |tag|
+        tag['src'] = tag['src'].gsub(/%[^%]{2}/, ' ')
       end
       new_html = doc.inner_html
 
