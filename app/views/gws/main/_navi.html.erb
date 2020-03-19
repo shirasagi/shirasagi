@@ -112,6 +112,9 @@
       <% if Gws::StaffRecord::Seating.allowed?(:read, @cur_user, site: @cur_site) %>
         <h3 class="management"><%= link_to t('mongoid.models.gws/staff_record/seating'), gws_staff_record_seatings_path(year: @cur_year.id) %></h3>
       <% end %>
+      <% if Gws::StaffRecord::UserTitle.allowed?(:read, @cur_user, site: @cur_site) %>
+        <h3 class="management"><%= link_to t('mongoid.models.gws/staff_record/title_ids'), gws_staff_record_user_titles_path(year: @cur_year.id) %></h3>
+      <% end %>
     <% end %>
   </nav>
 <% end %>
@@ -121,7 +124,7 @@
     <nav class="mod-navi">
       <h2><%= link_to @cur_site.menu_links_label || t('mongoid.models.gws/link'), gws_public_links_path %></h2>
       <% @links.each do |item| %>
-      <h3><%= link_to item.name, gws_public_link_path(id: item) %></h3>
+        <h3><%= link_to item.name, gws_public_link_path(id: item) %></h3>
       <% end %>
     </nav>
   <% end %>

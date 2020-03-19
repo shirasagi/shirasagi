@@ -9,7 +9,6 @@ FactoryBot.define do
     name { "name-#{unique_id}" }
     code { "code-#{unique_id}" }
     kana { "kana-#{unique_id}" }
-    title_name { "title_name-#{unique_id}" }
     tel_ext { "tel_ext-#{unique_id}" }
     charge_name { "charge_name-#{unique_id}" }
     charge_address { "charge_address-#{unique_id}" }

@@ -19,6 +19,7 @@ class Gws::StaffRecord::PublicRecordsController < ApplicationController
     @items = @cur_year.yearly_users.show_staff_records.
       readable(@cur_user, site: @cur_site).
       search(@s).
+      order_by_title(@cur_site).
       page(params[:page]).
       per(@limit)
   end
@@ -30,6 +31,6 @@ class Gws::StaffRecord::PublicRecordsController < ApplicationController
       readable(@cur_user, site: @cur_site).
       where(section_name: @item.section_name).
       where(charge_name: @item.charge_name).
-      all
+      order_by_title(@cur_site)
   end
 end

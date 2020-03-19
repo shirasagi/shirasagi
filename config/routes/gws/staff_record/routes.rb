@@ -26,5 +26,6 @@ Rails.application.routes.draw do
     resources :groups, path: ':year/groups', concerns: [:deletion, :export]
     resources :users, path: ':year/users', concerns: [:deletion, :export]
     resources :seatings, path: ':year/seatings', concerns: [:deletion, :export]
+    resources :user_titles, path: ':year/user_titles', concerns: [:deletion, :export]
   end
 end

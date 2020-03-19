@@ -9,7 +9,8 @@ class Gws::UserTitle
 
   attr_accessor :cur_user, :cur_site
 
-  before_validation :set_group_id, if: ->{ cur_site.present? }
+  validates :code, uniqueness: { scope: :group_id }
+  before_validation :set_group_id, if: -> { cur_site.present? }
   after_save :update_users_title_order
 
   default_scope -> { order_by(order: -1) }
@@ -22,8 +23,8 @@ class Gws::UserTitle
         drawer.column :name
         drawer.column :remark
         drawer.column :order
-        drawer.column :activation_date
-        drawer.column :expiration_date
+        # drawer.column :activation_date
+        # drawer.column :expiration_date
         drawer.column :presence_editable_title_ids do
           drawer.body { |item| item.presence_editable_titles.pluck(:name).join("\n") }
         end
