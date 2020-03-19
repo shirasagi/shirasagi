@@ -221,14 +221,21 @@ class Sys::SiteImportJob < SS::ApplicationJob
 
     read_json("cms_users").each do |data|
       keyword = data['uid'].presence || data['email']
-      id   = data.delete('_id')
+      id = data.delete('_id')
+
+      cms_role_ids = data.delete("cms_role_ids")
+      data.delete("sys_role_ids")
+
       data = convert_data(data)
-      item = Cms::User.unscoped.flex_find(keyword) || Cms::User.new
-      data.each { |k, v| item[k] = v }
-      if save_document(item)
-        @cms_users_map[id] = item.id
-        @cms_user_roles_map[id] = data['cms_role_ids']
+      item = Cms::User.unscoped.flex_find(keyword)
+      if item.nil?
+        item = Cms::User.new
+        data.each { |k, v| item[k] = v }
+        next if !save_document(item)
       end
+
+      @cms_users_map[id] = item.id
+      @cms_user_roles_map[id] = cms_role_ids
     end
   end
 
