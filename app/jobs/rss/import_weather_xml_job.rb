@@ -20,13 +20,22 @@ class Rss::ImportWeatherXmlJob < Rss::ImportBase
         builder.adapter Faraday.default_adapter
       end
       http_client.headers[:user_agent] += " (SHIRASAGI/#{SS.version}; PID/#{Process.pid})"
+      http_client.headers[:accept_encoding] = "gzip"
 
       resp = http_client.get
       return false if resp.status != 200
 
+      content_encoding = resp.headers["Content-Encoding"]
+      if content_encoding.nil?
+        body = resp.body
+      elsif content_encoding.casecmp("gzip") == 0
+        body = Zlib::GzipReader.wrap(StringIO.new(resp.body)) { |gz| gz.read }
+      end
+      return false if body.blank?
+
       each_node do |node|
         site = node.site
-        file = Rss::TempFile.create_from_post(site, resp.body, resp.headers['Content-Type'].presence || "application/xml")
+        file = Rss::TempFile.create_from_post(site, body, resp.headers['Content-Type'].presence || "application/xml")
         job = Rss::ImportWeatherXmlJob.bind(site_id: site, node_id: node)
         job.perform_now(file.id)
       end
@@ -117,11 +126,20 @@ class Rss::ImportWeatherXmlJob < Rss::ImportBase
         builder.adapter Faraday.default_adapter
       end
       http_client.headers[:user_agent] += " (SHIRASAGI/#{SS.version}; PID/#{Process.pid})"
+      http_client.headers[:accept_encoding] = "gzip"
 
       resp = http_client.get
       break if resp.status != 200
 
-      resp.body.force_encoding('UTF-8')
+      content_encoding = resp.headers["Content-Encoding"]
+      if content_encoding.nil?
+        body = resp.body
+      elsif content_encoding.casecmp("gzip") == 0
+        body = Zlib::GzipReader.wrap(StringIO.new(resp.body)) { |gz| gz.read }
+      end
+      return false if body.blank?
+
+      body.force_encoding('UTF-8')
     end
   rescue => e
     Rails.logger.warn("#{e.class} (#{e.message}):\n  #{e.backtrace.join("\n  ")}")
