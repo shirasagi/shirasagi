@@ -158,7 +158,6 @@ img {
   margin: 5px 0 0 auto;
   overflow: hidden;
   text-align: center;
-  border: 1px solid #bbbbbb;
   background: #ffffff;
   select {
     width: 100%;
@@ -168,7 +167,8 @@ img {
     cursor: pointer;
     text-indent: 0.01px;
     text-overflow: ellipsis;
-    border: none;
+    border: 1px solid #bbbbbb;
+    border-radius: 0;
     outline: none;
     background: transparent;
     background-image: none;
