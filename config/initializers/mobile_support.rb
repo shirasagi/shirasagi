@@ -21,6 +21,7 @@ module SS
       return url if relative_path?(request, uri)
       return url if mobile_path?(request, uri)
       return url if fs_path?(request, uri)
+      return url if sns_redirect_path?(request, uri)
       uri.path = ::File.join(cur_site(request).mobile_url, uri.path.to_s.sub(cur_site(request).url, ""))
       uri.to_s
     end
