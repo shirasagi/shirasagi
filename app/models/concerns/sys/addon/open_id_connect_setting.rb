@@ -19,12 +19,12 @@ module Sys::Addon
       attr_accessor :in_discovery_file
       attr_accessor :in_client_secret, :rm_client_secret
       permit_params :issuer, :auth_url, :token_url, :client_id, :client_secret, :response_type
-      permit_params :scope, :max_age, :claims, :response_mode, :jwks_uri
+      permit_params :scopes, :max_age, :claims, :response_mode, :jwks_uri
       permit_params :in_discovery_file
       permit_params :in_client_secret, :rm_client_secret
       before_validation :load_discovery_file, if: ->{ in_discovery_file }
-      before_validation :set_client_secret, if: ->{ in_client_secret }
-      before_validation :reset_client_secret, if: ->{ rm_client_secret }
+      before_validation :set_client_secret, if: ->{ in_client_secret.present? }
+      before_validation :reset_client_secret, if: ->{ rm_client_secret.present? && rm_client_secret != "0" }
       before_validation :load_discovery_file, if: ->{ in_discovery_file }
     end
 
@@ -88,9 +88,17 @@ module Sys::Addon
       self.issuer = discovery['issuer']
       self.auth_url = discovery['authorization_endpoint']
       self.token_url = discovery['token_endpoint']
-      self.response_type = discovery['response_types_supported'].find { |x| x.include?(default_response_type) }
+      if discovery['response_types_supported'].present?
+        self.response_type = discovery['response_types_supported'].find { |x| x.include?(default_response_type) }
+      else
+        self.response_type = default_response_type
+      end
       self.scopes = discovery['scopes_supported']
-      self.claims = default_claims - discovery['claims_supported']
+      if discovery['claims_supported'].present?
+        self.claims = default_claims & discovery['claims_supported']
+      else
+        self.claims = default_claims
+      end
       self.jwks_uri = discovery['jwks_uri']
     end
 
