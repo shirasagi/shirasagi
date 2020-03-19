@@ -53,6 +53,9 @@ describe Gws::Member, type: :model, dbscope: :example do
       expect(item.overall_members.count).to eq 3
       expect(item.overall_members.pluck(:id)).to include(user1.id, user3.id, user4.id)
       expect(item.overall_members.pluck(:id)).not_to include(user2.id)
+      expect(item.overall_members_was.count).to eq 3
+      expect(item.overall_members_was.pluck(:id)).to include(user1.id, user3.id, user4.id)
+      expect(item.overall_members_was.pluck(:id)).not_to include(user2.id)
       expect(item.sorted_overall_members.count).to eq 2
       expect(item.sorted_overall_members.pluck(:id)).to include(user1.id, user3.id)
       expect(item.sorted_overall_members.pluck(:id)).not_to include(user2.id)
@@ -86,6 +89,9 @@ describe Gws::Member, type: :model, dbscope: :example do
       expect(item.overall_members.count).to eq 3
       expect(item.overall_members.pluck(:id)).to include(user2.id, user3.id, user4.id)
       expect(item.overall_members.pluck(:id)).not_to include(user1.id)
+      expect(item.overall_members_was.count).to eq 3
+      expect(item.overall_members_was.pluck(:id)).to include(user2.id, user3.id, user4.id)
+      expect(item.overall_members_was.pluck(:id)).not_to include(user1.id)
       expect(item.sorted_overall_members.count).to eq 2
       expect(item.sorted_overall_members.pluck(:id)).to include(user2.id, user3.id)
       expect(item.sorted_overall_members.pluck(:id)).not_to include(user1.id)
@@ -119,6 +125,9 @@ describe Gws::Member, type: :model, dbscope: :example do
       expect(item.overall_members.count).to eq 3
       expect(item.overall_members.pluck(:id)).to include(user1.id, user2.id, user4.id)
       expect(item.overall_members.pluck(:id)).not_to include(user3.id)
+      expect(item.overall_members_was.count).to eq 3
+      expect(item.overall_members_was.pluck(:id)).to include(user1.id, user2.id, user4.id)
+      expect(item.overall_members_was.pluck(:id)).not_to include(user3.id)
       expect(item.sorted_overall_members.count).to eq 2
       expect(item.sorted_overall_members.pluck(:id)).to include(user1.id, user2.id)
       expect(item.sorted_overall_members.pluck(:id)).not_to include(user3.id)
@@ -152,6 +161,9 @@ describe Gws::Member, type: :model, dbscope: :example do
       expect(item.overall_members.count).to eq 3
       expect(item.overall_members.pluck(:id)).to include(user1.id, user2.id, user4.id)
       expect(item.overall_members.pluck(:id)).not_to include(user3.id)
+      expect(item.overall_members_was.count).to eq 3
+      expect(item.overall_members_was.pluck(:id)).to include(user1.id, user2.id, user4.id)
+      expect(item.overall_members_was.pluck(:id)).not_to include(user3.id)
       expect(item.sorted_overall_members.count).to eq 2
       expect(item.sorted_overall_members.pluck(:id)).to include(user1.id, user2.id)
       expect(item.sorted_overall_members.pluck(:id)).not_to include(user3.id)
