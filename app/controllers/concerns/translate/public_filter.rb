@@ -35,7 +35,7 @@ module Translate::PublicFilter
       body = ActiveSupport::JSON.decode(body)
     end
 
-    convertor = Translate::Convertor.new(@cur_site, @translate_source.api_code, @translate_target.api_code)
+    convertor = Translate::Convertor.new(@cur_site, @translate_source.code, @translate_target.code)
     body = convertor.convert(body)
 
     if @cur_site.request_word_limit_exceeded && body =~ /<body data-translate=\".+?\"/
