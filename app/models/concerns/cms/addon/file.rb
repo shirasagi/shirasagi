@@ -46,7 +46,10 @@ module Cms::Addon
       del_ids = file_ids_was.to_a - ids
       del_ids.each do |id|
         file = SS::File.where(id: id).first
-        file.destroy if file
+        if file
+          file.skip_history_trash = skip_history_trash if [ file, self ].all? { |obj| obj.respond_to?(:skip_history_trash) }
+          file.destroy
+        end
       end
     end
 

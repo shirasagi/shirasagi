@@ -30,7 +30,9 @@ class Gws::Workflow::PagesController < ApplicationController
 
   def request_approval
     current_level = @item.workflow_current_level
-    current_workflow_approvers = @item.workflow_approvers_at(current_level).reject{|approver| approver[:user_id] == @cur_user.id}
+    current_workflow_approvers = @item.workflow_approvers_at(current_level).reject do |approver|
+      approver[:user_id] == @cur_user.id
+    end
     current_workflow_approvers.each do |workflow_approver|
       Gws::Memo::Notifier.deliver_workflow_request!(
         cur_site: @cur_site, cur_group: @cur_group, cur_user: @cur_user,
@@ -155,9 +157,9 @@ class Gws::Workflow::PagesController < ApplicationController
     workflow_state = @item.workflow_state
     if workflow_state == @model::WORKFLOW_STATE_APPROVE
       # finished workflow
-      to_user_ids = ([ @item.workflow_user_id, @item.workflow_agent_id ].compact) - [@cur_user.id]
+      to_user_ids = [ @item.workflow_user_id, @item.workflow_agent_id ].compact - [ @cur_user.id ]
       if to_user_ids.present?
-        notify_user_ids = to_user_ids.select{|user_id| Gws::User.find(user_id).use_notice?(@item)}.uniq
+        notify_user_ids = to_user_ids.select { |user_id| Gws::User.find(user_id).use_notice?(@item) }.uniq
         if notify_user_ids.present?
           Gws::Memo::Notifier.deliver_workflow_approve!(
             cur_site: @cur_site, cur_group: @cur_group, cur_user: @cur_user,
@@ -169,7 +171,7 @@ class Gws::Workflow::PagesController < ApplicationController
 
       if @item.move_workflow_circulation_next_step
         current_circulation_users = @item.workflow_current_circulation_users.nin(id: @cur_user.id).active
-        current_circulation_users = current_circulation_users.select{|user| user.use_notice?(@item)}
+        current_circulation_users = current_circulation_users.select { |user| user.use_notice?(@item) }
         if current_circulation_users.present?
           Gws::Memo::Notifier.deliver_workflow_circulations!(
             cur_site: @cur_site, cur_group: @cur_group, cur_user: @cur_user,
@@ -181,6 +183,7 @@ class Gws::Workflow::PagesController < ApplicationController
       end
 
       if @item.try(:branch?) && @item.state == "public"
+        @item.skip_history_trash = true if @item.respond_to?(:skip_history_trash)
         @item.delete
       end
     end
@@ -209,7 +212,7 @@ class Gws::Workflow::PagesController < ApplicationController
       end
       recipients -= [@cur_user.id]
 
-      notify_user_ids = recipients.select{|user_id| Gws::User.find(user_id).use_notice?(@item)}.uniq
+      notify_user_ids = recipients.select { |user_id| Gws::User.find(user_id).use_notice?(@item) }.uniq
       if notify_user_ids.present?
         Gws::Memo::Notifier.deliver_workflow_remand!(
           cur_site: @cur_site, cur_group: @cur_group, cur_user: @cur_user,
@@ -245,8 +248,8 @@ class Gws::Workflow::PagesController < ApplicationController
       return
     end
 
-    to_users = ([ @item.workflow_user, @item.workflow_agent ].compact) - [@cur_user]
-    to_users.select!{|user| user.use_notice?(@item)}
+    to_users = [ @item.workflow_user, @item.workflow_agent ].compact - [@cur_user]
+    to_users.select! { |user| user.use_notice?(@item) }
 
     if (comment.present? || file_ids.present?) && to_users.present?
       Gws::Memo::Notifier.deliver_workflow_comment!(
@@ -258,7 +261,7 @@ class Gws::Workflow::PagesController < ApplicationController
 
     if @item.workflow_current_circulation_completed? && @item.move_workflow_circulation_next_step
       current_circulation_users = @item.workflow_current_circulation_users.nin(id: @cur_user.id).active
-      current_circulation_users = current_circulation_users.select{|user| user.use_notice?(@item)}
+      current_circulation_users = current_circulation_users.select { |user| user.use_notice?(@item) }
       if current_circulation_users.present?
         Gws::Memo::Notifier.deliver_workflow_circulations!(
           cur_site: @cur_site, cur_group: @cur_group, cur_user: @item.workflow_user,

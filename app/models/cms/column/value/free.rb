@@ -87,6 +87,16 @@ class Cms::Column::Value::Free < Cms::Column::Value::Base
   end
 
   def destroy_files
-    files.destroy_all
+    if !_parent.respond_to?(:skip_history_trash)
+      files.destroy_all
+      return
+    end
+
+    file_ids.each_slice(20) do |ids|
+      SS::File.in(id: ids).to_a.map(&:becomes_with_model).each do |file|
+        file.skip_history_trash = _parent.skip_history_trash if file.respond_to?(:skip_history_trash)
+        file.destroy
+      end
+    end
   end
 end
