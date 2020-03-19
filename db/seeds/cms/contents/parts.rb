@@ -92,3 +92,4 @@ save_part route: "cms/calendar_nav", filename: "docs/archive/calendar.part.html"
 save_part route: "cms/monthly_nav", filename: "docs/archive/month.part.html", name: "月次", periods: 12
 save_part route: "recommend/history", filename: "history.part.html", name: "閲覧履歴",
           mobile_view: "hide", ajax_view: "enabled", limit: 5
+save_part route: "translate/tool", filename: "translate.part.html", name: "翻訳ツール", mobile_view: "hide", ajax_view: "enabled"
