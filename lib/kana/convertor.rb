@@ -22,6 +22,13 @@ module Kana::Convertor
       tags.each { |t| text.gsub!(/<#{t}( [^>]*\/>|[^\w].*?<\/#{t}>)/m) { |m| mpad(m) } }
       text.gsub!(/<.*?>/m) { |m| mpad(m) }
       text.gsub!(/\\u003c.*?\\u003e/m) { |m| mpad(m) } #<>
+      (0x20...0x7F).each do |c|
+        s = c.chr
+        unless s =~ /[A-Za-z0-9]/
+          encoded = URI.encode_www_form_component(s)
+          text.gsub!(encoded, "\r")
+        end
+      end
       text.gsub!(/[ -\/:-@\[-`\{-~]/m, "\r")
 
       byte = html.bytes
