@@ -6,6 +6,15 @@ class Cms::LoginController < ApplicationController
 
   private
 
+  def set_organization
+    return if @cur_organization.present?
+
+    organizations = SS::Group.organizations.in(id: @cur_site.root_groups.map(&:id)).where(domains: request_host)
+    return if organizations.size != 1
+
+    @cur_organization = organizations.first
+  end
+
   def default_logged_in_path
     cms_contents_path(site: @cur_site)
   end
@@ -34,7 +43,13 @@ class Cms::LoginController < ApplicationController
       password = SS::Crypt.decrypt(password, type: encryption_type) rescue nil
     end
 
-    @item = SS::User.site_authenticate(@cur_site, email_or_uid, password) rescue false
+    @item = begin
+      if @cur_organization
+        SS::User.organization_authenticate(@cur_organization, email_or_uid, password) rescue nil
+      else
+        SS::User.site_authenticate(@cur_site, email_or_uid, password) rescue nil
+      end
+    end
     @item = nil if @item && !@item.enabled?
     @item = @item.try_switch_user || @item if @item
 

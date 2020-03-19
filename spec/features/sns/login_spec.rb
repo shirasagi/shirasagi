@@ -12,8 +12,8 @@ describe "sns_login", type: :feature, dbscope: :example do
   end
 
   context "with sys_user" do
-    context "valid login" do
-      it do
+    context "with email" do
+      it 'valid login' do
         visit sns_login_path
         within "form" do
           fill_in "item[email]", with: sys_user.email
@@ -104,13 +104,42 @@ describe "sns_login", type: :feature, dbscope: :example do
       it "valid login" do
         visit sns_login_path
         within "form" do
-          # fill in hidden field tag
           fill_in "item[email]", with: subject.name
           fill_in "item[password]", with: "pass"
           click_button I18n.t("ss.login")
         end
         expect(current_path).to eq sns_mypage_path
         expect(page).to have_no_css(".login-box")
+      end
+    end
+
+    context "with organization_uid" do
+      subject { cms_user }
+      it "invalid login" do
+        visit sns_login_path
+        within "form" do
+          fill_in "item[email]", with: subject.organization_uid
+          fill_in "item[password]", with: "pass"
+          click_button I18n.t("ss.login")
+        end
+        expect(current_path).not_to eq sns_mypage_path
+      end
+
+      context "with cms_group domains" do
+        before do
+          cms_group.set(domains: ['www.example.com'])
+        end
+
+        it "valid login" do
+          visit sns_login_path
+          within "form" do
+            fill_in "item[email]", with: subject.organization_uid
+            fill_in "item[password]", with: "pass"
+            click_button I18n.t("ss.login")
+          end
+          expect(current_path).to eq sns_mypage_path
+          expect(page).to have_no_css(".login-box")
+        end
       end
     end
   end

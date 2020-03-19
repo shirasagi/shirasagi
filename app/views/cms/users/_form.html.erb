@@ -2,6 +2,11 @@
   $("#random-password").click(function() {
     $("#item_in_password").attr({ type: 'text' }).val(SS.randomPassword());
   });
+  SS_Validation.url = "<%= cms_apis_validation_path %>";
+  SS_Validation.model = "<%= @model.to_s %>";
+  SS_Validation.id = "<%= params[:id] %>";
+  SS_Validation.labels = <%== @model.labels.to_json %>;
+  SS_Validation.render();
 <% end %>
 
 <dl class="see mod-cms-user">

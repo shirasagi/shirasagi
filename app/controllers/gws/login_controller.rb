@@ -3,12 +3,14 @@ class Gws::LoginController < ApplicationController
   include Sns::LoginFilter
 
   skip_before_action :logged_in?, only: [:login, :remote_login, :status]
-  before_action :set_organitzaion
 
   private
 
-  def set_organitzaion
-    @cur_site = SS::Group.organizations.where(domains: request_host).first || @cur_site
+  def set_organization
+    organizations = SS::Group.organizations.where(domains: request_host)
+    raise '404' if organizations.size > 1
+
+    @cur_site = organizations.first || @cur_site
     raise '404' unless @cur_site
   end
 
