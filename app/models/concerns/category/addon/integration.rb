@@ -38,7 +38,7 @@ module Category::Addon
       end
 
       # partial is master's ancestor node
-      if filename == partial.filename || filename =~ /^#{partial.filename}\//
+      if filename == partial.filename || filename =~ /^#{::Regexp.escape(partial.filename)}\//
         self.errors.add :base, I18n.t("errors.messages.partial_ancestor_error", error_opts)
         return
       end
@@ -63,9 +63,9 @@ module Category::Addon
       # validate static files duplication
       src_path = ::File.join(@cur_site.path, partial.filename)
       dst_path = ::File.join(@cur_site.path, filename)
-      files = Fs.glob("#{dst_path}/**/{*,.*}").map { |item| item.sub(/#{dst_path}\//, "") }
+      files = Fs.glob("#{dst_path}/**/{*,.*}").map { |item| item.sub(/#{::Regexp.escape(dst_path)}\//, "") }
       Fs.glob("#{src_path}/**/{*,.*}").each do |item|
-        file = item.sub(/^#{src_path}\//, "")
+        file = item.sub(/^#{::Regexp.escape(src_path)}\//, "")
         next if %w(index.html rss.xml).include?(file)
 
         if files.include?(file)
@@ -94,17 +94,17 @@ module Category::Addon
       # move static files
       Fs.mkdir_p dst_path unless Fs.exists?(dst_path)
       Fs.glob("#{src_path}/**/{*,.*}").each do |src|
-        file = src.sub(/^#{src_path}\//, "")
+        file = src.sub(/^#{::Regexp.escape(src_path)}\//, "")
         next if %w(index.html rss.xml).include?(file)
 
-        dst = src.sub(/^#{src_path}\//, "#{dst_path}\/")
+        dst = src.sub(/^#{::Regexp.escape(src_path)}\//, "#{dst_path}/")
         Fs.mv src, dst if Fs.exists?(src)
       end
 
       # rename filenames
       %w(nodes pages parts layouts).each do |name|
-        send(name).where(filename: /^#{src_filename}\//).each do |item|
-          dst = item.filename.sub(/^#{src_filename}\//, "#{dst_filename}\/")
+        send(name).where(filename: /^#{::Regexp.escape(src_filename)}\//).each do |item|
+          dst = item.filename.sub(/^#{::Regexp.escape(src_filename)}\//, "#{dst_filename}/")
           item.set(
             filename: dst,
             depth: dst.scan("/").size + 1

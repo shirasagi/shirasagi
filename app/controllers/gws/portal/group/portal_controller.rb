@@ -2,6 +2,7 @@ class Gws::Portal::Group::PortalController < ApplicationController
   include Gws::BaseFilter
   include Gws::CrudFilter
   include Gws::Portal::PortalFilter
+  include Gws::Portal::GroupPortalFilter
 
   model Gws::Portal::GroupSetting
 
@@ -13,16 +14,7 @@ class Gws::Portal::Group::PortalController < ApplicationController
 
   def set_crumbs
     set_portal_setting
-    if @portal_group == @cur_site
-      @crumbs << [t("gws/portal.root_portal"), gws_portal_group_path]
-    else
-      #@crumbs << [t("gws/portal.group_portal"), gws_portal_setting_groups_path]
-      @crumbs << [@portal_group.trailing_name, gws_portal_group_path]
-    end
-  end
-
-  def fix_params
-    { cur_user: @cur_user, cur_site: @cur_site }
+    @crumbs << [@portal.name, gws_portal_group_path]
   end
 
   def set_item

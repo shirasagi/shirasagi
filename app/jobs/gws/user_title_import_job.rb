@@ -32,8 +32,8 @@ class Gws::UserTitleImportJob < Gws::ApplicationJob
       importer.simple_column :name
       importer.simple_column :remark
       importer.simple_column :order
-      importer.simple_column :activation_date
-      importer.simple_column :expiration_date
+      # importer.simple_column :activation_date
+      # importer.simple_column :expiration_date
       importer.simple_column :presence_editable_title_ids do |row, item, head, value|
         names = to_array(value)
         titles = Gws::UserTitle.site(site).in(name: names)

@@ -6,13 +6,14 @@ production: &production
   api_options:
     google_translation: "Google Translation API"
     microsoft_translator_text: "Microsoft Translator Text API"
-  # mock: "開発用API"
+  #  mock: "テスト用API"
 
   mock:
     array_size_limit: 100
     text_size_limit: 4000
     contents_size_limit: 4000
     interval: 0
+    processor: "loopback"
 
   microsoft_translator_text:
     key: ""
@@ -23,6 +24,9 @@ production: &production
     interval: 0.2
 
   google_translation:
+    project_id: ""
+    credentials: ""
+    location_id: "global"
     array_size_limit: 100
     text_size_limit: 20000
     contents_size_limit: 20000

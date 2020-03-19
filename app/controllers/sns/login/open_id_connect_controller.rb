@@ -60,7 +60,7 @@ class Sns::Login::OpenIdConnectController < ApplicationController
   end
 
   def implicit_flow_callback
-    core_resp = params.permit(:state, :code, :id_token, :error, :error_description)
+    core_resp = params.permit(:state, :id_token, :error, :error_description)
     if core_resp[:error]
       Rails.logger.warn("#{core_resp[:error]}:#{core_resp[:error_description]}")
       raise "403"
@@ -92,7 +92,7 @@ class Sns::Login::OpenIdConnectController < ApplicationController
       response_type: @item.response_type || @item.default_response_type,
       nonce: nonce,
       scope: @item.scopes.join(" ") || @item.default_scopes.join(" "),
-      state: state,
+      state: state
     }
     params[:max_age] = @item.max_age if @item.max_age.present?
     params[:response_mode] = @item.response_mode if @item.response_mode.present?
@@ -119,5 +119,71 @@ class Sns::Login::OpenIdConnectController < ApplicationController
     end
 
     render_login user, nil, session: true, login_path: sns_login_path
+  end
+
+  if Rails.env.test?
+    #
+    # mock methods for test
+    #
+    def implicit
+      redirect_uri = URI.parse(params[:redirect_uri].to_s)
+      claims = {
+        # required claims
+        iss: @item.issuer,
+        sub: @item.filename,
+        aud: @item.client_id,
+        exp: (Time.zone.now + 1.hour).to_i,
+        iat: Time.zone.now.to_i,
+        nonce: params[:nonce],
+        # optional claims to identify user
+        email: @item.text.try { |s| s.strip }
+      }
+      id_token = JSON::JWT.new(claims)
+      id_token = id_token.sign(SS::Crypt.decrypt(@item.client_secret))
+
+      resp = {
+        id_token: id_token.to_s,
+        state: params[:state]
+      }
+      redirect_to "#{redirect_uri}?#{resp.to_query}"
+    end
+
+    cattr_accessor :last_nonce
+
+    def authorization_code
+      redirect_uri = URI.parse(params[:redirect_uri].to_s)
+      self.class.last_nonce = params[:nonce]
+      resp = {
+        code: SecureRandom.hex(24),
+        state: params[:state]
+      }
+      redirect_to "#{redirect_uri}?#{resp.to_query}"
+    end
+
+    def authorization_token
+      claims = {
+        # required claims
+        iss: @item.issuer,
+        sub: @item.filename,
+        aud: @item.client_id,
+        exp: (Time.zone.now + 1.hour).to_i,
+        iat: Time.zone.now.to_i,
+        nonce: self.class.last_nonce,
+        # optional claims to identify user
+        email: @item.text.try { |s| s.strip }
+      }
+      id_token = JSON::JWT.new(claims)
+      id_token = id_token.sign(SS::Crypt.decrypt(@item.client_secret))
+
+      resp = {
+        access_token: SecureRandom.hex(24),
+        token_type: "Bearer",
+        refresh_token: SecureRandom.hex(24),
+        expires_in: 3600,
+        id_token: id_token.to_s
+      }
+
+      render json: resp, status: :ok
+    end
   end
 end

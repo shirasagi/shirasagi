@@ -16,6 +16,7 @@ describe "history_cms_backups restore", type: :feature, dbscope: :example do
       page_item.name = "second update"
       page_item.state = "closed"
       page_item.file_ids = []
+      page_item.index_name = "second index_name"
       page_item.update
     end
     page_item
@@ -47,6 +48,7 @@ describe "history_cms_backups restore", type: :feature, dbscope: :example do
 
       basic_values = page.all("#addon-basic dd").map(&:text)
       expect(basic_values.index("second update")).to be_truthy
+      expect(basic_values.include?("second index_name")).to be_truthy
       expect(page).to have_no_css('div.file-view', text: file.name)
 
       click_link I18n.l(backup_item.created)
@@ -63,6 +65,7 @@ describe "history_cms_backups restore", type: :feature, dbscope: :example do
 
       basic_values = page.all("#addon-basic dd").map(&:text)
       expect(basic_values.index("first update")).to be_truthy
+      expect(basic_values.include?("second index_name")).not_to be_truthy
       expect(page).to have_css('div.file-view', text: file.name)
     end
   end

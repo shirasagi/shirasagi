@@ -1,39 +1,39 @@
 <% if @cur_year %>
-<div class="list-search">
-  <h2 class="title">
-    <%= @cur_year.name %> <%= t 'gws/staff_record.user_histories' %>
-  </h2>
-  <%= render partial: 'search' %>
-</div>
+  <div class="list-search">
+    <h2 class="title">
+      <%= @cur_year.name %> <%= t 'gws/staff_record.user_histories' %>
+    </h2>
+    <%= render partial: 'search' %>
+  </div>
 <% end %>
 
 <div class="main-box">
   <div class="wrap-table">
     <table class="index data-table">
       <thead>
-        <tr>
-          <th style="width: 12%"><%= @model.t :year_id %></th>
-          <th style="width: 25%"><%= @model.t :section_name %></th>
-          <th style="width: 18%"><%= @model.t :charge_name %></th>
-          <th style="width: 15%"><%= @model.t :title_name %></th>
-          <th><%= @model.t :remark %></th>
-        </tr>
+      <tr>
+        <th style="width: 12%"><%= @model.t :year_id %></th>
+        <th style="width: 25%"><%= @model.t :section_name %></th>
+        <th style="width: 18%"><%= @model.t :charge_name %></th>
+        <th style="width: 15%"><%= @model.t :title_ids %></th>
+        <th><%= @model.t :remark %></th>
+      </tr>
       </thead>
       <tbody>
-        <% @items.each_with_index do |item, idx| %>
-          <% if idx == 0 %>
+      <% @items.each_with_index do |item, idx| %>
+        <% if idx == 0 %>
           <tr>
             <th colspan="7"><%= item.send :name %></th>
           </tr>
-          <% end %>
-          <tr>
-            <td><%= tryb { item.year.name } %></td>
-            <td><%= item.send :section_name %></td>
-            <td><%= item.send :charge_name %></td>
-            <td><%= item.send :title_name %></td>
-            <td><%= item.send :remark %></td>
-          </tr>
         <% end %>
+        <tr>
+          <td><%= tryb { item.year.name } %></td>
+          <td><%= item.send :section_name %></td>
+          <td><%= item.send :charge_name %></td>
+          <td><%= tryb { item.title(@cur_site).name } %></td>
+          <td><%= item.send :remark %></td>
+        </tr>
+      <% end %>
       </tbody>
     </table>
   </div>

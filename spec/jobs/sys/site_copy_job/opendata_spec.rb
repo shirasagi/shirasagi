@@ -30,10 +30,7 @@ describe Sys::SiteCopyJob, dbscope: :example do
       end
 
       before do
-        license_logo = Rails.root.join("spec", "fixtures", "ss", "logo.png")
-        license = Fs::UploadedFile.create_from_file(license_logo, basename: "spec") do |file|
-          create(:opendata_license, cur_site: site, in_file: file)
-        end
+        license = create(:opendata_license, cur_site: site)
 
         file_path = Rails.root.join("spec", "fixtures", "opendata", "shift_jis.csv")
         Fs::UploadedFile.create_from_file(file_path, basename: "spec") do |file|

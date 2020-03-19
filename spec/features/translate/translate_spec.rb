@@ -28,6 +28,10 @@ describe "translate/public_filter", type: :feature, dbscope: :example, js: true 
   let(:item) { create :article_page, cur_site: site, cur_node: node, layout_id: layout.id, html: page_html }
 
   before do
+    mock = SS::Config.translate.mock
+    mock["processor"] = "develop"
+    SS::Config.replace_value_at(:translate, 'mock', mock)
+
     site.translate_state = "enabled"
     site.translate_api = "mock"
     site.translate_source = lang_ja

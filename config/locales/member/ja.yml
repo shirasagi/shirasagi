@@ -82,6 +82,7 @@ ja:
       accept: 参加する
       reject: 辞退する
       address_search: 住所検索
+      detail_search: 詳細検索
     links:
       profile: プロフィール編集
       leave: 退会

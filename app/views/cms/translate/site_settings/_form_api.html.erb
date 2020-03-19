@@ -11,16 +11,16 @@ chageApi($(".translate-api .select-api"));
 <% end %>
 
 <dl class="see translate-api" style="margin-bottom: 15px;">
-  <dt><%= @model.t :translate_api %></dt>
+  <dt><%= @model.t :translate_api %><%= @model.tt :translate_api %></dt>
   <dd><%= f.select :translate_api, @item.translate_api_options, { include_blank: true }, { class: "select-api" } %></dd>
 </dl>
 
 <dl class="see translate-api api mock">
   <dt><%= @model.t :translate_mock_api_request_count %><%= @model.tt :translate_mock_request_count %></dt>
-  <dd><%= f.number_field :translate_mock_api_request_count %></dd>
+  <dd><%= f.number_field :translate_mock_api_request_count, min: 0 %></dd>
 
   <dt><%= @model.t :translate_mock_api_request_word_count %><%= @model.tt :translate_mock_request_word_count %></dt>
-  <dd><%= f.number_field :translate_mock_api_request_word_count %></dd>
+  <dd><%= f.number_field :translate_mock_api_request_word_count, min: 0 %></dd>
 </dl>
 
 <dl class="see translate-api api microsoft_translator_text">
@@ -28,13 +28,10 @@ chageApi($(".translate-api .select-api"));
   <dd><%= f.text_field :translate_microsoft_api_key %></dd>
 
   <dt><%= @model.t :translate_microsoft_api_request_count %><%= @model.tt :translate_microsoft_api_request_count %></dt>
-  <dd><%= f.number_field :translate_microsoft_api_request_count %></dd>
+  <dd><%= f.number_field :translate_microsoft_api_request_count, min: 0 %></dd>
 
   <dt><%= @model.t :translate_microsoft_api_request_word_count %><%= @model.tt :translate_microsoft_api_request_word_count %></dt>
-  <dd><%= f.number_field :translate_microsoft_api_request_word_count %></dd>
-
-  <dt><%= @model.t :translate_microsoft_api_request_metered_usage %><%= @model.tt :translate_microsoft_api_request_metered_usage %></dt>
-  <dd><%= f.number_field :translate_microsoft_api_request_metered_usage %></dd>
+  <dd><%= f.number_field :translate_microsoft_api_request_word_count, min: 0 %></dd>
 </dl>
 
 <dl class="see translate-api api google_translation">
@@ -53,8 +50,8 @@ chageApi($(".translate-api .select-api"));
   <% end %>
 
   <dt><%= @model.t :translate_google_api_request_count %></dt>
-  <dd><%= f.text_field :translate_google_api_request_count %></dd>
+  <dd><%= f.number_field :translate_google_api_request_count %></dd>
 
-  <dt><%= @model.t :translate_google_api_request_word_count %></dt>
-  <dd><%= f.text_field :translate_google_api_request_word_count %></dd>
+  <dt><%= @model.t :translate_google_api_request_word_count, min: 0 %></dt>
+  <dd><%= f.number_field :translate_google_api_request_word_count, min: 0 %></dd>
 </dl>

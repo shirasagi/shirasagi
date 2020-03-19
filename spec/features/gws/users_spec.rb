@@ -53,6 +53,13 @@ describe "gws_users", type: :feature, dbscope: :example, js: true do
       end
       expect(current_path).to eq index_path
 
+      #delete disabled user
+      visit delete_path
+      within "form" do
+        click_button I18n.t('ss.buttons.delete')
+      end
+      expect(current_path).to eq index_path
+
       #download
       visit index_path
       click_link I18n.t('ss.links.download')

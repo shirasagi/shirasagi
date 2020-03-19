@@ -148,6 +148,7 @@ ja:
       gws/system/group_setting: システム設定
       gws/system/menu_setting: メニュー設定
       gws/system/notice_setting: 通知設定
+      gws/system/logo_setting: ロゴ設定
       gws/system/log_setting: ログ設定
       gws/system/desktop_setting: デスクトップアプリ設定
       gws/user/custom_form: 拡張情報

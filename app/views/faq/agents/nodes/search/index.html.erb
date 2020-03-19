@@ -13,7 +13,7 @@
     <% if categories.present? %>
     <div class="category">
       <label for="category"><%= t('faq.query.category') %></label>
-      <%= select_tag :category,  options_for_select(category_options, @category.try(:to_i)), include_blank: true %>
+      <%= select_tag :category,  options_for_select(category_options, @category), include_blank: true %>
     </div>
     <% end %>
     <div class="keyword">

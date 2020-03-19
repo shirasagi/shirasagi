@@ -2,7 +2,7 @@
   <header>
     <h2 class="title"><%= item.name %></h2>
   </header>
-  <div class="body"><%= item.modified_text %></div>
+  <div class="body"><%= item.sanitized_text %></div>
   <div class="date"><%= t("board.views.date") %><%= I18n.l(item.updated, format: :long) %>
   </div>
   <div class="poster">

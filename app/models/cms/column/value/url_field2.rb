@@ -9,6 +9,8 @@ class Cms::Column::Value::UrlField2 < Cms::Column::Value::Base
 
   permit_values :link_url, :link_label, :link_target
 
+  validate :validate_link_url
+
   before_validation :set_link_item, unless: ->{ @new_clone }
 
   liquidize do
@@ -56,18 +58,24 @@ class Cms::Column::Value::UrlField2 < Cms::Column::Value::Base
 
   private
 
+  def validate_link_url
+    return if link_url.blank?
+    Addressable::URI.parse(link_url)
+  rescue
+    errors.add :link_url, :invalid
+  end
+
   def set_link_item
-    if link_url.blank?
+    u = Addressable::URI.parse(link_url) rescue nil
+    site = _parent.site || _parent.instance_variable_get(:@cur_site)
+
+    if link_url.blank? || u.nil? || site.nil?
       self.link_item_type = nil
       self.link_item_id = nil
       remove_instance_variable :@link_item if defined? @link_item
       return
     end
 
-    site = _parent.site || _parent.instance_variable_get(:@cur_site)
-
-    encoded_link_url = URI.encode(link_url)
-    u = URI.parse(encoded_link_url)
     if u.relative?
       node = _parent.parent
       base_url = node ? node.full_url : site.full_url
@@ -75,15 +83,15 @@ class Cms::Column::Value::UrlField2 < Cms::Column::Value::Base
     end
 
     searches = [ "#{u.host}:#{u.port}" ]
-    if u.port == 80 || u.port == 443
+    if u.port.nil? || u.port == 80 || u.port == 443
       searches << u.host
     end
 
     if site.domains.any? { |domain| searches.include?(domain) }
       # internal link
-      filename = u.path[1..-1]
+      filename = u.path[1..-1].to_s
       content = Cms::Page.site(site).where(filename: filename).first
-      content ||= Cms::Node.site(site).where(filename: filename).first
+      content ||= Cms::Node.site(site).where(filename: filename.sub(/\/$/, "")).first
       if content.present?
         self.link_item_type = content.collection_name.to_s
         self.link_item_id = content.id

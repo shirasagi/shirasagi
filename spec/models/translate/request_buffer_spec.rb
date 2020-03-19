@@ -30,15 +30,43 @@ describe Translate::RequestBuffer, dbscope: :example do
     site.update!
   end
 
-  it do
-    item.push contents[0], 0
-    item.push contents[1], 1
-    item.push contents[2], 2
-    translated = item.translate
+  context "mock develop" do
+    before do
+      mock = SS::Config.translate.mock
+      mock["processor"] = "develop"
+      SS::Config.replace_value_at(:translate, 'mock', mock)
+    end
 
-    expect(translated.keys).to eq [0, 1, 2]
-    expect(translated[0].map(&:text)).to eq ["[en:first]"]
-    expect(translated[1].map(&:text)).to eq ["[en:second]"]
-    expect(translated[2].map(&:text)).to eq ["[en:third]"]
+    it do
+      item.push contents[0], 0
+      item.push contents[1], 1
+      item.push contents[2], 2
+      translated = item.translate
+
+      expect(translated.keys).to eq [0, 1, 2]
+      expect(translated[0].map(&:text)).to eq ["[en:first]"]
+      expect(translated[1].map(&:text)).to eq ["[en:second]"]
+      expect(translated[2].map(&:text)).to eq ["[en:third]"]
+    end
+  end
+
+  context "mock loopback" do
+    before do
+      mock = SS::Config.translate.mock
+      mock["processor"] = "loopback"
+      SS::Config.replace_value_at(:translate, 'mock', mock)
+    end
+
+    it do
+      item.push contents[0], 0
+      item.push contents[1], 1
+      item.push contents[2], 2
+      translated = item.translate
+
+      expect(translated.keys).to eq [0, 1, 2]
+      expect(translated[0].map(&:text)).to eq ["first"]
+      expect(translated[1].map(&:text)).to eq ["second"]
+      expect(translated[2].map(&:text)).to eq ["third"]
+    end
   end
 end

@@ -7,6 +7,7 @@ module SS
     SS::File.model "ss/thumb_file", SS::ThumbFile
     SS::File.model "ss/user_file", SS::UserFile
     SS::File.model "ss/link_file", SS::LinkFile
+    SS::File.model "ss/logo_file", SS::LogoFile
 
     Liquid::Template.register_filter(SS::LiquidFilters)
     Liquid::Template.default_exception_renderer = lambda do |e|

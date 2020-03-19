@@ -10,6 +10,8 @@ describe "webmail_users", type: :feature, dbscope: :example, js: true do
     let(:password) { unique_id }
     let(:uid2) { unique_id }
     let(:email2) { "#{uid2}@example.jp" }
+    let(:index_path) { webmail_users_path }
+    let(:delete_path) { "#{index_path}/#{webmail_user.id}/delete" }
 
     it do
       visit webmail_users_path
@@ -18,6 +20,8 @@ describe "webmail_users", type: :feature, dbscope: :example, js: true do
         fill_in "item[name]", with: name
         fill_in "item[uid]", with: uid
         fill_in "item[email]", with: email
+        expect(page).to have_css('#item_uid_errors', text: '')
+        expect(page).to have_css('#item_email_errors', text: '')
         fill_in "item[in_password]", with: password
         check "item_webmail_role_ids_#{webmail_user_role.id}"
         click_on I18n.t("ss.buttons.save")
@@ -37,6 +41,8 @@ describe "webmail_users", type: :feature, dbscope: :example, js: true do
       within "form#item-form" do
         fill_in "item[uid]", with: uid2
         fill_in "item[email]", with: email2
+        expect(page).to have_css('#item_uid_errors', text: '')
+        expect(page).to have_css('#item_email_errors', text: '')
         click_on I18n.t("ss.buttons.save")
       end
       expect(page).to have_css("#notice", text: I18n.t("ss.notice.saved"))
@@ -71,6 +77,8 @@ describe "webmail_users", type: :feature, dbscope: :example, js: true do
         fill_in "item[name]", with: name
         fill_in "item[uid]", with: uid
         fill_in "item[email]", with: email
+        expect(page).to have_css('#item_uid_errors', text: '')
+        expect(page).to have_css('#item_email_errors', text: '')
         fill_in "item[in_password]", with: password
         check "item_webmail_role_ids_#{webmail_user_role.id}"
         click_on I18n.t("ss.buttons.save")
@@ -116,6 +124,20 @@ describe "webmail_users", type: :feature, dbscope: :example, js: true do
       Webmail::User.all.find_by(uid: uid2).tap do |item|
         expect(item.active?).to be_truthy
       end
+
+      visit delete_path
+      within "form" do
+        click_on I18n.t("ss.buttons.delete")
+      end
+      expect(page).to have_css("#notice", text: I18n.t("ss.notice.deleted"))
+      expect { Webmail::User.all.active.find(webmail_user.id) }.to raise_error Mongoid::Errors::DocumentNotFound
+
+      visit delete_path
+      within "form" do
+        click_on I18n.t("ss.buttons.delete")
+      end
+      expect(page).to have_css("#notice", text: I18n.t("ss.notice.deleted"))
+      expect { Webmail::User.all.find(webmail_user.id) }.to raise_error Mongoid::Errors::DocumentNotFound
     end
   end
 end

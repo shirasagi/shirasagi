@@ -27,6 +27,13 @@
       <% end %>
     </span>
   <% end %>
+  <% if Gws::StaffRecord::UserTitle.allowed?(:read, @cur_user, site: @cur_site) %>
+    <span>
+      <%= link_to gws_staff_record_user_titles_path(year: item.id) do %>
+        <%= t('mongoid.models.gws/staff_record/title_ids') %> (<%= number_with_delimiter item.yearly_user_titles.size %>)
+      <% end %>
+    </span>
+  <% end %>
 <% end %>
 
 <%= render file: "gws/crud/index" %>

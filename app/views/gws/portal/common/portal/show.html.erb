@@ -3,7 +3,7 @@
   portal.addItems(<%== @items.to_json %>);
 <% end %>
 
-<%= render file: "gws/portal/common/portal/_notices" if @portal.my_portal? %>
+<%= render file: "gws/portal/common/portal/_notices" %>
 
 <div class="gridster gws-portlets gws-portlets-static">
   <ul class="portlets"></ul>

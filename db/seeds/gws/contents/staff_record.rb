@@ -7,7 +7,7 @@ end
 
 def create_staff_record_group(data)
   puts data[:name]
-  cond = {site_id: @site._id, year_id: data[:year_id], name: data[:name]}
+  cond = { site_id: @site._id, year_id: data[:year_id], name: data[:name] }
   item = Gws::StaffRecord::Group.find_or_initialize_by(cond)
   item.attributes = data.reverse_merge(cur_site: @site, cur_user: u('admin'))
   item.user_ids = (Array[item.user_ids].flatten.compact + [item.cur_user.id]).uniq
@@ -18,11 +18,26 @@ end
 
 def create_staff_record_user(data)
   puts data[:name]
-  cond = {site_id: @site._id, year_id: data[:year_id], section_name: data[:section_name], name: data[:name]}
+  cond = { site_id: @site._id, year_id: data[:year_id], section_name: data[:section_name], name: data[:name] }
   item = Gws::StaffRecord::User.find_or_initialize_by(cond)
   item.attributes = data.reverse_merge(cur_site: @site, cur_user: u('admin'))
   item.user_ids = (Array[item.user_ids].flatten.compact + [item.cur_user.id]).uniq
   item.group_ids = (Array[item.group_ids].flatten.compact + item.cur_user.group_ids).uniq
+  puts item.errors.full_messages unless item.save
+  item
+end
+
+def create_staff_record_user_titles(data)
+  puts data[:name]
+  cond = { site_id: @site._id, year_id: data[:year_id], name: data[:name] }
+  item = Gws::StaffRecord::UserTitle.find_or_initialize_by(cond)
+  item.attributes = data.reverse_merge(cur_site: @site, cur_user: u('admin'))
+  if item.respond_to?("user_ids=")
+    item.user_ids = (Array[item.user_ids].flatten.compact + [item.cur_user.id]).uniq
+  end
+  if item.respond_to?("group_ids=")
+    item.group_ids = (Array[item.group_ids].flatten.compact + item.cur_user.group_ids).uniq
+  end
   puts item.errors.full_messages unless item.save
   item
 end
@@ -41,10 +56,16 @@ end
     create_staff_record_group(year_id: year.id, name: '管理課', order: 60, seating_chart_url: ''),
     create_staff_record_group(year_id: year.id, name: '防災課', order: 70, seating_chart_url: '')
   ]
+  user_titles = [
+    create_staff_record_user_titles(year_id: year.id, name: '部長', code: 'T0100', order: 10),
+    create_staff_record_user_titles(year_id: year.id, name: '課長', code: 'T0200', order: 20),
+    create_staff_record_user_titles(year_id: year.id, name: '係長', code: 'T0300', order: 30),
+    create_staff_record_user_titles(year_id: year.id, name: '主任', code: 'T0400', order: 40)
+  ]
 
   create_staff_record_user(
-    year_id: year.id, section_name: sections[2].name,
-    name: "佐藤 博", kana: 'サトウ ヒロシ', code: '101', charge_name: '庶務担当', title_name: '課長',
+    year_id: year.id, section_name: sections[2].name, in_title_id: user_titles[1].id,
+    name: "佐藤 博", kana: 'サトウ ヒロシ', code: '101', charge_name: '庶務担当',
     divide_duties: "出張・研修関係\n文書収受",
     tel_ext: '0000', charge_address: @site.name, charge_tel: '0000-00-0000'
   )
@@ -67,8 +88,8 @@ end
     tel_ext: '0000', charge_address: @site.name, charge_tel: '0000-00-0000'
   )
   create_staff_record_user(
-    year_id: year.id, section_name: sections[5].name,
-    name: "伊藤 幸子", kana: 'イトウ サチコ', code: '201', charge_name: '会計担当', title_name: '課長',
+    year_id: year.id, section_name: sections[5].name, in_title_id: user_titles[1].id,
+    name: "伊藤 幸子", kana: 'イトウ サチコ', code: '201', charge_name: '会計担当',
     divide_duties: "予算・決算関係\n営繕関係",
     tel_ext: '0000', charge_address: @site.name, charge_tel: '0000-00-0000'
   )
@@ -97,7 +118,7 @@ puts "#create_staff_record_seating"
 
 def create_staff_record_seating(data)
   puts data[:name]
-  cond = {site_id: @site._id, name: data[:name], year_id: data[:year_id]}
+  cond = { site_id: @site._id, name: data[:name], year_id: data[:year_id] }
   item = Gws::StaffRecord::Seating.find_or_initialize_by(cond)
   item.attributes = data.reverse_merge(cur_site: @site, cur_user: u('admin'))
   if item.respond_to?("user_ids=")

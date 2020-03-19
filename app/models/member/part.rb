@@ -23,7 +23,7 @@ module Member::Part
       # cids = []
       # cond_url = []
 
-      cond << { filename: /^#{parent.filename}\// }
+      cond << { filename: /^#{::Regexp.escape(parent.filename)}\// }
       #cids << id
       #cond_url = conditions
       { '$or' => cond }

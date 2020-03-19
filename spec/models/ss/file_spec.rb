@@ -441,4 +441,34 @@ describe SS::File, dbscope: :example do
       its(:download_filename) { is_expected.to eq "text" }
     end
   end
+
+  describe "#shrink_image_to" do
+    let(:ss_file) { tmp_ss_file(contents: "#{Rails.root}/spec/fixtures/ss/file/keyvisual.jpg") }
+
+    before do
+      expect(ss_file.image_dimension).to eq [ 712, 210 ]
+    end
+
+    context "shrink" do
+      it do
+        prev_size = ss_file.size
+        expect(ss_file.shrink_image_to(100, 100)).to be_truthy
+
+        ss_file.reload
+        expect(ss_file.size).to be < prev_size
+        expect(ss_file.image_dimension).to eq [ 100, 29 ]
+      end
+    end
+
+    context "expand" do
+      it do
+        prev_size = ss_file.size
+        expect(ss_file.shrink_image_to(1000, 1000)).to be_truthy
+
+        ss_file.reload
+        expect(ss_file.size).to eq prev_size
+        expect(ss_file.image_dimension).to eq [ 712, 210 ]
+      end
+    end
+  end
 end

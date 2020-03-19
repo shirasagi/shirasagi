@@ -9,6 +9,8 @@ ja:
     views:
       show_original: 原文を表示
       select_lang: 言語を選択
+      api: API
+      api_request_word_limit: APIリクエスト文字数制限
 
     options:
       update_state:
@@ -17,7 +19,7 @@ ja:
 
     notice:
       not_set_api: "翻訳APIが設定されていません。"
-      api_request_count: "※実際のリクエスト数および課金文字数については、各APIの管理コンソールを確認してください。"
+      api_request_count: "※実際のリクエスト数および課金文字数については、APIの利用状況を確認してください。"
 
     apis:
       langs:
@@ -59,12 +61,19 @@ ja:
 
   tooltip:
     ss/addon/translate/site_setting:
+      translate_api:
+        - 翻訳に使用するAPIを設定します。
       translate_state:
         - 翻訳機能の有効/無効を設定します。
       translate_source_id:
         - 翻訳元となる言語コードを選択します。
       translate_target_ids:
         - 翻訳先となる言語コードを選択します。
+      translate_api_request_word_limit:
+        - 文字数上限を設定します。
+        - 翻訳時にAPIリクエスト文字数が設定した上限を超える場合、翻訳を停止してエラーを表示します。
+      translate_api_limit_exceeded_html:
+        - リクエスト文字数超過時に表示するHTMLを設定します。
     translate/text_cache:
       original_text:
         - 翻訳前テキストを入力します。

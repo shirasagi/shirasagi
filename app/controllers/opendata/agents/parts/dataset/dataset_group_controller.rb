@@ -9,7 +9,7 @@ class Opendata::Agents::Parts::Dataset::DatasetGroupController < ApplicationCont
     return nil unless @cur_node = cur_node
     return nil if @cur_node.route != "opendata/dataset_category"
     name = File.basename(File.dirname(@cur_path))
-    Opendata::Node::Category.site(@cur_site).and_public.where(filename: /\/#{name}$/).first
+    Opendata::Node::Category.site(@cur_site).and_public.where(filename: /\/#{::Regexp.escape(name)}$/).first
   end
 
   public

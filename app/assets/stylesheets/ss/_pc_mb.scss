@@ -348,16 +348,43 @@ _::-webkit-full-page-media, _:future, :root .gws-memo-message .popup-notice:befo
   border-bottom: $border-gray4;
   background: $black2;
   font-size: 14px;
-  h1 {
+  .application-name {
     float: left;
+    color: $white;
+    font-size: $px21;
     a {
       display: block;
+      color: $white;
+    }
+    a:hover {
+      text-decoration: none;
     }
     .ss-logo-wrap {
+      position: relative;
       width: 210px;
-      padding: 8px 15px 5px;
+      height: 49px;
+    }
+    img {
+      max-width: 210px;
+      max-height: 49px;
+      display: block;
+      top: 0;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      position: absolute;
+      margin: auto;
     }
     .ss-logo-application-name {
+      display: block;
+      position: absolute;
+      width: 100%;
+      text-align: center;
+      top: 50%;
+      -webkit-transform: translateY(-50%);
+      transform: translateY(-50%);
+    }
+    img + .ss-logo-application-name {
       display: none;
     }
   }
@@ -3363,5 +3390,33 @@ body.ss-ajax-in-iframe {
   }
   .btn-active {
     @include btn-active;
+  }
+}
+
+.ss-file-field {
+  background: #f2f2f2;
+
+  .btn-file-upload.cboxElement {
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+  }
+  .btn.dropdown-toggle {
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+    margin-left: -1px;
+    padding-left: .5rem;
+    padding-right: .5rem;
+  }
+  .dropdown-menu {
+    padding: 4px;
+    border: $border-gray4;
+    @include box-shadow(0 3px 12px rgba(0, 0, 0, .2));
+    background: $white;
+    white-space: nowrap;
+    a {
+      display: block;
+      padding: 5px 10px;
+      background-image: none;
+    }
   }
 }

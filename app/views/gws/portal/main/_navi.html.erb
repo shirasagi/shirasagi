@@ -1,53 +1,84 @@
-<nav class="mod-navi current-navi">
-  <h2><%= link_to @cur_site.menu_portal_label || t('modules.gws/portal'), "#{gws_portal_path}/", class: "icon-portal" %></h2>
-  <h3><%= link_to t('gws/portal.self_portal'), gws_portal_user_path(user: @cur_user.id), class: "icon-portal" %></h3>
+<%
+  navi_links = []
 
-  <% @cur_user.groups.in_group(@cur_site).each do |group| %>
-    <% next if group.id == @cur_site.id %>
-    <% portal = group.find_portal_setting(cur_user: @cur_user, cur_site: @cur_site) %>
-    <% if portal.portal_readable?(@cur_user, site: @cur_site) %>
-      <h3><%= link_to group.trailing_name, gws_portal_group_path(group: group) %></h3>
-    <% end %>
-  <% end %>
+  # my portal
+  if @cur_user.gws_role_permit_any?(@cur_site, :use_gws_portal_user_settings)
+    portal = @cur_user.find_portal_setting(cur_user: @cur_user, cur_site: @cur_site)
+    if portal.portal_readable?(@cur_user, site: @cur_site)
+      navi_links << [ :h3, t('gws/portal.self_portal'), gws_portal_user_path(user: @cur_user), class: "icon-portal" ]
+    end
+  end
 
-  <% portal = @cur_site.find_portal_setting(cur_user: @cur_user, cur_site: @cur_site) %>
-  <% if portal.portal_readable?(@cur_user, site: @cur_site) %>
-    <h3><%= link_to t('gws/portal.tabs.root_portal'), gws_portal_group_path(group: @cur_site) %></h3>
-  <% end %>
+  # user portal
+  if @portal_user.present? && @cur_user != @portal_user
+    portal = @portal_user.find_portal_setting(cur_user: @cur_user, cur_site: @cur_site)
+    if portal.portal_readable?(@cur_user, site: @cur_site)
+      navi_links << [ :h3, @portal_user.name, gws_portal_user_path(user: @portal_user), class: "icon-portal" ]
+    end
+  end
 
-  <% if params[:group].present? %>
-    <% if @portal.allowed?(:edit, @cur_user, site: @cur_site, strict: true) %>
-      <h2><%= @portal.portal_group.trailing_name %></h2>
-      <h3><%= link_to t("gws/portal.links.arrange_portlets"), gws_portal_group_layouts_path, class: "management" %></h3>
-      <h3><%= link_to t("gws/portal.links.manage_portlets"), gws_portal_group_portlets_path, class: "management" %></h3>
-      <h3><%= link_to t("gws/portal.links.settings"), gws_portal_group_settings_path, class: "management" %></h3>
-    <% end %>
-  <% end %>
+  # group portals
+  if @cur_user.gws_role_permit_any?(@cur_site, :use_gws_portal_group_settings)
+    @cur_user.groups.in_group(@cur_site).each do |group|
+      next if group.id == @cur_site.id
 
-  <% if params[:user].present? %>
-    <% if @portal.allowed?(:edit, @cur_user, site: @cur_site, strict: true) %>
-      <h2><%= @portal.portal_user.name %></h2>
-      <h3><%= link_to t("gws/portal.links.arrange_portlets"), gws_portal_user_layouts_path, class: "management" %></h3>
-      <h3><%= link_to t("gws/portal.links.manage_portlets"), gws_portal_user_portlets_path, class: "management" %></h3>
-      <h3><%= link_to t("gws/portal.links.settings"), gws_portal_user_settings_path, class: "management" %></h3>
-    <% end %>
-  <% end %>
+      portal = group.find_portal_setting(cur_user: @cur_user, cur_site: @cur_site)
+      if portal.portal_readable?(@cur_user, site: @cur_site)
+        navi_links << [ :h3, portal.name, gws_portal_group_path(group: group), class: "icon-portal" ]
+      end
+    end
+  end
 
-  <% if params[:group].present? || params[:user].present? || params[:controller].start_with?("gws/portal/setting/") %>
-    <% html = capture do %>
-      <% if Gws::Portal::UserSetting.allowed?(:read, @cur_user, site: @cur_site, only: :other) %>
-        <h3><%= link_to t('gws/portal.user_portal'), gws_portal_setting_users_path, class: "management" %></h3>
+  # organization portal
+  if @cur_user.gws_role_permit_any?(@cur_site, :use_gws_portal_organization_settings)
+    portal = @cur_site.find_portal_setting(cur_user: @cur_user, cur_site: @cur_site)
+    if portal.portal_readable?(@cur_user, site: @cur_site)
+      navi_links << [ :h3, portal.name, gws_portal_group_path(group: @cur_site), class: "icon-portal" ]
+    end
+  end
+
+  if params[:group].present? && @portal.allowed?(:edit, @cur_user, site: @cur_site, strict: true)
+    navi_links << [ :h2, @portal.portal_group.trailing_name, nil ]
+    navi_links << [ :h3, t("gws/portal.links.arrange_portlets"), gws_portal_group_layouts_path, class: "management" ]
+    navi_links << [ :h3, t("gws/portal.links.manage_portlets"), gws_portal_group_portlets_path, class: "management" ]
+    navi_links << [ :h3, t("gws/portal.links.settings"), gws_portal_group_settings_path, class: "management" ]
+  end
+
+  if params[:user].present? && @portal.allowed?(:edit, @cur_user, site: @cur_site, strict: true)
+    navi_links << [ :h2, @portal.portal_user.name, nil ]
+    navi_links << [ :h3, t("gws/portal.links.arrange_portlets"), gws_portal_user_layouts_path, class: "management" ]
+    navi_links << [ :h3, t("gws/portal.links.manage_portlets"), gws_portal_user_portlets_path, class: "management" ]
+    navi_links << [ :h3, t("gws/portal.links.settings"), gws_portal_user_settings_path, class: "management" ]
+  end
+
+  others_management_links = []
+  if params[:group].present? || params[:user].present? || params[:controller].start_with?("gws/portal/setting/")
+    if Gws::Portal::UserSetting.allowed?(:read, @cur_user, site: @cur_site, only: :other)
+      others_management_links << [ :h3, t('gws/portal.user_portal'), gws_portal_setting_users_path, class: "management" ]
+    end
+    if Gws::Portal::GroupSetting.allowed?(:read, @cur_user, site: @cur_site, only: :other)
+      others_management_links << [ :h3, t('gws/portal.group_portal'), gws_portal_setting_groups_path, class: "management" ]
+    end
+  end
+
+  if others_management_links.present?
+    navi_links << [ :h2, t("gws/portal.other_config") ]
+    navi_links += others_management_links
+  end
+%>
+
+<% if navi_links.length > 1 %>
+  <nav class="mod-navi current-navi">
+    <h2><%= link_to @cur_site.menu_portal_label || t('modules.gws/portal'), gws_portal_path, class: "icon-portal" %></h2>
+
+    <% navi_links.each do |h, label, path, options| %>
+      <% if path.present? %>
+        <%= content_tag(h, link_to(label, path, options)) %>
+      <% else %>
+        <%= content_tag(h, label, options) %>
       <% end %>
-      <% if Gws::Portal::GroupSetting.allowed?(:read, @cur_user, site: @cur_site, only: :other) %>
-        <h3><%= link_to t('gws/portal.group_portal'), gws_portal_setting_groups_path, class: "management" %></h3>
-      <% end %>
     <% end %>
-
-    <% if html.present? %>
-      <h2><%= t("gws/portal.other_config") %></h2>
-      <%= html %>
-    <% end %>
-  <% end %>
-</nav>
+  </nav>
+<% end %>
 
 <%= render partial: 'gws/main/navi' %>

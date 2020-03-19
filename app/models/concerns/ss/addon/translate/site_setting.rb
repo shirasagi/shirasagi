@@ -5,6 +5,8 @@ module SS::Addon
     include SS::Relation::File
 
     included do
+      attr_accessor :request_word_limit_exceeded
+
       field :translate_state, type: String, default: "disabled"
 
       belongs_to :translate_source, class_name: "Translate::Lang"
@@ -15,11 +17,12 @@ module SS::Addon
       end
 
       field :translate_api, type: String
+      field :translate_api_request_word_limit, type: Integer, default: 0
+      field :translate_api_limit_exceeded_html, type: String
 
       # mock
       field :translate_mock_api_request_count, type: Integer, default: 0
       field :translate_mock_api_request_word_count, type: Integer, default: 0
-      field :translate_mock_api_request_metered_usage, type: Integer, default: 0
 
       # microsoft translator text api
       field :translate_microsoft_api_key, type: String
@@ -37,10 +40,11 @@ module SS::Addon
       permit_params :translate_source_id
       permit_params translate_target_ids: []
       permit_params :translate_api
+      permit_params :translate_api_request_word_limit
+      permit_params :translate_api_limit_exceeded_html
 
       permit_params :translate_mock_api_request_count
       permit_params :translate_mock_api_request_word_count
-      permit_params :translate_mock_api_request_metered_usage
 
       permit_params :translate_microsoft_api_key
       permit_params :translate_microsoft_api_request_count

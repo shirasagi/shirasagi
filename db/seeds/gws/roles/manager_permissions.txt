@@ -159,6 +159,9 @@ use_gws_elasticsearch
 use_gws_faq
 use_gws_monitor
 use_gws_notice
+use_gws_portal_group_settings
+use_gws_portal_organization_settings
+use_gws_portal_user_settings
 use_gws_qna
 use_gws_report
 use_gws_share

@@ -12,7 +12,7 @@ module Cms::PageFilter
   def set_item
     super
     return unless @cur_node
-    return if (@item.filename =~ /^#{@cur_node.filename}\//) && (@item.depth == @cur_node.depth + 1)
+    return if (@item.filename =~ /^#{::Regexp.escape(@cur_node.filename)}\//) && (@item.depth == @cur_node.depth + 1)
     raise "404"
   end
 
@@ -109,6 +109,7 @@ module Cms::PageFilter
     if result && @item.try(:branch?) && @item.state == "public"
       location = { action: :index }
       @item.file_ids = nil if @item.respond_to?(:file_ids)
+      @item.skip_history_trash = true if @item.respond_to?(:skip_history_trash)
       @item.destroy
     end
 

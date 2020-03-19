@@ -250,6 +250,33 @@ module SS::Model::File
     copy(opts)
   end
 
+  def image_dimension
+    return unless image?
+
+    list = Magick::ImageList.new(path)
+    max_width = 0
+    max_height = 0
+    list.each do |image|
+      max_width = image.columns if max_width < image.columns
+      max_height = image.rows if max_height < image.rows
+    end
+
+    [ max_width, max_height ]
+  end
+
+  def shrink_image_to(width, height)
+    return false unless image?
+
+    cur_width, cur_height = image_dimension
+    return false if cur_width.nil? || cur_height.nil?
+    return true if cur_width <= width && cur_height <= height
+
+    return false unless SS::ImageConverter.resize_to_fit(self, width, height)
+
+    self.update(size: ::File.size(path))
+    true
+  end
+
   private
 
   def effective_owner_item
@@ -327,7 +354,7 @@ module SS::Model::File
   end
 
   def create_history_trash
-    return if model.to_s.include?('temp_file')
+    return if model.to_s.include?('temp_file') || model.to_s.include?('thumb_file')
     return if owner_item_type.to_s.start_with?('Gws', 'Sns', 'SS', 'Sys', 'Webmail')
 
     backup = History::Trash.new

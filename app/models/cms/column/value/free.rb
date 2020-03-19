@@ -46,14 +46,16 @@ class Cms::Column::Value::Free < Cms::Column::Value::Base
           attributes = Hash[source_file.attributes]
           attributes.select!{ |k| source_file.fields.key?(k) }
 
-          clone_file = SS::File.new(attributes)
-          clone_file.id = nil
-          clone_file.in_file = source_file.uploaded_file
-          clone_file.user_id = @cur_user.id if @cur_user
-          clone_file.model = _parent.class.name
+          attributes["user_id"] = @cur_user.id if @cur_user
+          attributes["_id"] = nil
+          attributes["model"] = _parent.class.name
+          attributes["state"] = _parent.state
+          clone_file = SS::File.create_empty!(attributes, validate: false) do |new_file|
+            ::FileUtils.copy(source_file.path, new_file.path)
+          end
           clone_file.owner_item = _parent
-          clone_file.state = _parent.state
-          result = clone_file.save(validate: false)
+          clone_file.save(validate: false)
+          result = clone_file
 
           next unless result
 
@@ -85,6 +87,16 @@ class Cms::Column::Value::Free < Cms::Column::Value::Base
   end
 
   def destroy_files
-    files.destroy_all
+    if !_parent.respond_to?(:skip_history_trash)
+      files.destroy_all
+      return
+    end
+
+    file_ids.each_slice(20) do |ids|
+      SS::File.in(id: ids).to_a.map(&:becomes_with_model).each do |file|
+        file.skip_history_trash = _parent.skip_history_trash if file.respond_to?(:skip_history_trash)
+        file.destroy
+      end
+    end
   end
 end

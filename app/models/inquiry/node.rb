@@ -51,13 +51,13 @@ module Inquiry::Node
 
     def condition_hash(opts = {})
       cond = []
-      cond << { filename: /^#{filename}\//, depth: depth + 1 }
+      cond << { filename: /^#{::Regexp.escape(filename)}\//, depth: depth + 1 }
 
       conditions.each do |url|
         # regex
         if /\/\*$/.match?(url)
           filename = url.sub(/\/\*$/, "")
-          cond << { filename: /^#{filename}\// }
+          cond << { filename: /^#{::Regexp.escape(filename)}\// }
           next
         end
 

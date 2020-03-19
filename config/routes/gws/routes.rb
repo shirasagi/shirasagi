@@ -27,10 +27,10 @@ Rails.application.routes.draw do
   end
 
   namespace "gws", path: ".g:site" do
-    get "/", to: "portal/user/portal#show", as: :portal
+    get "/", to: "portal/main#show", as: :portal
     match "logout" => "login#logout", as: :logout, via: [:get, :delete]
-    match "login"  => "login#login", as: :login, via: [:get, :post]
-    post "access_token"  => "login#access_token", as: :access_token
+    match "login" => "login#login", as: :login, via: [:get, :post]
+    post "access_token" => "login#access_token", as: :access_token
   end
 
   namespace "gws", path: ".g:site/gws" do
@@ -73,6 +73,7 @@ Rails.application.routes.draw do
       get "contrasts" => "contrasts#index"
       get "desktop_settings" => "desktop_settings#index"
       put "reload_site_usages" => "site_usages#reload"
+      post "validation" => "validation#validate"
 
       resources :files, concerns: :deletion do
         get :select, on: :member

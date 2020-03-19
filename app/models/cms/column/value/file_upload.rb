@@ -108,14 +108,13 @@ class Cms::Column::Value::FileUpload < Cms::Column::Value::Base
       attributes = Hash[file.attributes]
       attributes.select!{ |k| file.fields.key?(k) }
 
-      clone_file = SS::File.new(attributes)
-      clone_file.id = nil
-      clone_file.in_file = file.uploaded_file
-      clone_file.user_id = @cur_user.id if @cur_user
+      attributes["user_id"] = @cur_user.id if @cur_user
+      attributes["_id"] = nil
+      clone_file = SS::File.create_empty!(attributes, validate: false) do |new_file|
+        ::FileUtils.copy(file.path, new_file.path)
+      end
       clone_file.owner_item = _parent
-
       clone_file.save(validate: false)
-
       self.file = clone_file
     end
 
@@ -142,10 +141,12 @@ class Cms::Column::Value::FileUpload < Cms::Column::Value::Base
   def destroy_file
     return if file.blank?
     return nil unless File.exist?(file.path)
+
     path = "#{History::Trash.root}/#{file.path.sub(/.*\/(ss_files\/)/, '\\1')}"
     FileUtils.mkdir_p(File.dirname(path))
     FileUtils.cp(file.path, path)
-    self.file.destroy
+    file.skip_history_trash = _parent.skip_history_trash if [ _parent, file ].all? { |obj| obj.respond_to?(:skip_history_trash) }
+    file.destroy
   end
 
   # override Cms::Column::Value::Base#to_default_html

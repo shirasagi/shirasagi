@@ -37,7 +37,7 @@ module Member::Node
 
     def children
       Member::Node::Base.and_public.
-        where(site_id: site_id, filename: /^#{filename}\//, depth: depth + 1).
+        where(site_id: site_id, filename: /^#{::Regexp.escape(filename)}\//, depth: depth + 1).
         order_by(order: 1)
     end
   end
@@ -118,7 +118,7 @@ module Member::Node
     end
 
     def layout_options
-      Member::BlogLayout.site(site).where(filename: /^#{filename}\//).
+      Member::BlogLayout.site(site).where(filename: /^#{::Regexp.escape(filename)}\//).
         map { |item| [item.name, item.id] }
     end
   end
@@ -139,7 +139,7 @@ module Member::Node
     before_validation ->{ self.page_layout = layout }
 
     def pages
-      Member::BlogPage.site(site).where(filename: /^#{filename}\//, depth: depth + 1).and_public
+      Member::BlogPage.site(site).where(filename: /^#{::Regexp.escape(filename)}\//, depth: depth + 1).and_public
     end
 
     def file_previewable?(file, user:, member:)

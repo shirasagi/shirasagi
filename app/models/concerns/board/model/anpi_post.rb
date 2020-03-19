@@ -3,6 +3,7 @@ module Board::Model::AnpiPost
   extend SS::Translation
   include SS::Document
   include SS::Reference::Site
+  include Board::TextSanitizer
 
   included do
     store_in collection: "board_anpi_posts"

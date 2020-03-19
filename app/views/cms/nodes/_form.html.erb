@@ -2,10 +2,6 @@
 
 file = "#{Rails.root}/app/views/" + @item.route.sub('/', '/agents/nodes/') + "/edit/_form.html.erb"
 
-url = params[:action] =~ /new|create/ ? url_for(action: :new) : url_for(action: :edit)
-bind  = "$(this).parent().parent().parent().parent().hide();"
-bind << "location.href = '#{url}?route=' + $(this).val();"
-
 %><dl class="see">
   <dt><%= @model.t :route %><%= @model.tt :route %></dt>
   <dd><%= f.hidden_field :route %>

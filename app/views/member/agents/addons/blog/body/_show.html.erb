@@ -1,8 +1,9 @@
 <% return if @item.send(:html).blank? %>
 
+<%= html_editor "#item_html", height: "400px", readonly: true %>
+
 <dl class="see member-body">
   <dd class="wide">
-    <%= html_editor "#mod-member-body", height: "400px", readonly: true %>
-    <%= text_area_tag "mod-member-body", @item.html, style: "height: 400px;" %>
+    <%= text_area_tag "html", sanitize(@item.html), id: :item_html, style: "height: 400px;" %>
   </dd>
 </dl>

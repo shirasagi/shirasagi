@@ -194,6 +194,12 @@ module SS::Document
       reduce = %(function(k, v){ if (0 == v.length) return 0; return Array.sum(v); })
       data = map_reduce(map, reduce).out(inline: 1).first.try(:[], :value).to_i || 0
     end
+
+    def labels
+      fields.collect do |field|
+        [field[0], t(field[0])]
+      end.to_h
+    end
   end
 
   def assign_attributes_safe(attr)

@@ -495,7 +495,7 @@ module Workflow::Approver
   def validate_user(route, users, *actions)
     actions.each do |action|
       unable_users = users.reject do |_, user|
-        allowed?(action, user, site: cur_site)
+        allowed?(action, user, site: cur_site, adds_error: false)
       end
       unable_users.each do |level, user|
         errors.add :base, "route_approver_unable_to_#{action}".to_sym, route: route.name, level: level, user: user.name

@@ -1,6 +1,5 @@
 require 'spec_helper'
 
-# rubocop:disable Layout/FirstParameterIndentation
 describe Opendata::UrlResource, dbscope: :example, http_server: true do
   # http.default port: 33_190
   http.default doc_root: Rails.root.join("spec", "fixtures", "opendata")
@@ -9,8 +8,7 @@ describe Opendata::UrlResource, dbscope: :example, http_server: true do
   let!(:node_search_dataset) { create(:opendata_node_search_dataset) }
   let(:node) { create(:opendata_node_dataset) }
   let(:dataset) { create(:opendata_dataset, cur_node: node) }
-  let(:license_logo_file) { Fs::UploadedFile.create_from_file(Rails.root.join("spec", "fixtures", "ss", "logo.png")) }
-  let(:license) { create(:opendata_license, cur_site: site, in_file: license_logo_file) }
+  let(:license) { create(:opendata_license, cur_site: site) }
 
   context "check attributes with typical url resource" do
     subject { dataset.url_resources.new(attributes_for(:opendata_resource)) }
@@ -151,7 +149,7 @@ describe Opendata::UrlResource, dbscope: :example, http_server: true do
       it do
         expect { subject.do_crawl }.to \
           change(subject, :original_updated).to(@now).and \
-          change(subject, :file_id).by(1)
+            change(subject, :file_id).by(1)
 
         csv = subject.parse_tsv
         expect(csv).not_to be_nil
@@ -178,7 +176,7 @@ describe Opendata::UrlResource, dbscope: :example, http_server: true do
       it do
         expect { subject.do_crawl }.to \
           change(subject, :original_updated).to(@now).and \
-          change(subject, :crawl_state).from("same").to("updated")
+            change(subject, :crawl_state).from("same").to("updated")
 
         csv = subject.parse_tsv
         expect(csv).not_to be_nil

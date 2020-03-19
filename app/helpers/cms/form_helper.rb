@@ -40,17 +40,4 @@ module Cms::FormHelper
     st_forms = st_forms.and_public.allow(:read, @cur_user, site: @cur_site).order_by(update: 1)
     st_forms
   end
-
-  def show_image_info(file)
-    return nil unless file
-
-    image = file.thumb || file
-    link  = %(<a href="#{file.url}" target="_blank">).html_safe
-
-    h = []
-    h << %(<div>#{link}#{image_tag(image.url, alt: "")}</a></div>).html_safe
-    h << %(<div>#{link}#{file.filename}</a> \(#{number_to_human_size(file.size)}\)</div>).html_safe
-
-    safe_join(h)
-  end
 end

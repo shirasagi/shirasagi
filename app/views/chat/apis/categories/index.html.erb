@@ -1,4 +1,4 @@
-<%= jquery do %> SS_SearchUI.modal({ submit_on_changes: [ "#s_category" ] }); <% end %>
+<%= jquery do %> SS_SearchUI.modal(); <% end %>
 
 <div class="search-ui-form">
   <%= form_for :s, url: { action: :index }, html: { method: "GET", class: :search } do |f| %>
