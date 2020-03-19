@@ -1,7 +1,7 @@
 <%
   @s = OpenStruct.new params[:s]
 
-  @target_options = @cur_site.translate_targets.map { |item| [item.label, item.api_code] }
+  @target_options = @cur_site.translate_targets.map { |item| [item.label, item.code] }
   @target_options.unshift([t("translate.lang"),""])
 
   @update_options = t("translate.options.update_state").map { |k, v| [v, k] }
