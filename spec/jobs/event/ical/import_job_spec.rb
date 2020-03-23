@@ -83,8 +83,13 @@ describe Event::Ical::ImportJob, dbscope: :example do
       let!(:node) { create :event_node_page, site: site, ical_refresh_method: 'auto', ical_import_url: url }
 
       it do
-        described_class.register_jobs(site, user)
-        expect { described_class.register_jobs(site, user) }.to change { enqueued_jobs.count }.by(1)
+        described_class.perform_jobs(site, user)
+
+        expect(Job::Log.count).to eq 1
+        Job::Log.first.tap do |log|
+          expect(log.logs).to include(include("INFO -- : Started Job"))
+          expect(log.logs).to include(include("INFO -- : Completed Job"))
+        end
       end
     end
 
@@ -93,7 +98,8 @@ describe Event::Ical::ImportJob, dbscope: :example do
       let!(:node) { create :event_node_page, site: site, ical_refresh_method: 'manual', ical_import_url: url }
 
       it do
-        expect { described_class.register_jobs(site, user) }.to change { enqueued_jobs.count }.by(0)
+        described_class.perform_jobs(site, user)
+        expect(Job::Log.count).to eq 0
       end
     end
 

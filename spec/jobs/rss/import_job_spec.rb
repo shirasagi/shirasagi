@@ -56,7 +56,13 @@ describe Rss::ImportJob, dbscope: :example, http_server: true do
       let!(:node) { create :rss_node_page, site: site, rss_url: url, rss_refresh_method: refresh_method }
 
       it do
-        expect { described_class.register_jobs(site, user) }.to change { enqueued_jobs.count }.by(1)
+        described_class.perform_jobs(site, user)
+
+        expect(Job::Log.count).to eq 1
+        Job::Log.first.tap do |log|
+          expect(log.logs).to include(include("INFO -- : Started Job"))
+          expect(log.logs).to include(include("INFO -- : Completed Job"))
+        end
       end
     end
 
@@ -69,7 +75,8 @@ describe Rss::ImportJob, dbscope: :example, http_server: true do
       let!(:node) { create :rss_node_page, site: site, rss_url: url, rss_refresh_method: refresh_method }
 
       it do
-        expect { described_class.register_jobs(site, user) }.to change { enqueued_jobs.count }.by(0)
+        described_class.perform_jobs(site, user)
+        expect(Job::Log.count).to eq 0
       end
     end
   end

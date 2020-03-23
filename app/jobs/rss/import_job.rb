@@ -5,15 +5,15 @@ class Rss::ImportJob < Rss::ImportBase
   attr_reader :errors
 
   class << self
-    def register_jobs(site, user = nil)
+    def perform_jobs(site, user = nil)
       Rss::Node::Page.site(site).and_public.each do |node|
-        register_job(site, node, user)
+        perform_job(site, node, user)
       end
     end
 
-    def register_job(site, node, user = nil)
+    def perform_job(site, node, user = nil)
       if node.try(:rss_refresh_method) == Rss::Node::Page::RSS_REFRESH_METHOD_AUTO
-        bind(site_id: site.id, node_id: node.id, user_id: user.present? ? user.id : nil).perform_later
+        bind(site_id: site.id, node_id: node.id, user_id: user.present? ? user.id : nil).perform_now
       else
         Rails.logger.info("node `#{node.filename}` is prohibited to update")
       end
