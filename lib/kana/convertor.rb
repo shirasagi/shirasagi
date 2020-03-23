@@ -66,7 +66,7 @@ module Kana::Convertor
     private
 
     def mpad(str)
-      str.gsub(/[^ -~]/, "   ")
+      str.gsub(/[^ -~¡¢£¤¥¦§¨©ª«¬®¯°²³´µ¶·¸¹º»¼½¾¿ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖ×ØÙÚÛÜÝÞßàáâãäåæçèéêëìíîïðñòóôõö÷øùúûüýþÿŒœŴŶŵŷ]/, "   ")
     end
 
     def katakana_to_yomi(str, format)
