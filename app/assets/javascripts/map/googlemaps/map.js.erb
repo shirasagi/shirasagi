@@ -45,7 +45,7 @@ this.Googlemaps_Map = (function () {
 
     var mapOptions;
     mapOptions = {
-      center: new google.maps.LatLng(this.center[0], this.center[1]),
+      center: new google.maps.LatLng(this.center[1], this.center[0]),
       zoom: this.zoom,
       mapTypeId: google.maps.MapTypeId.ROADMAP,
       panControl: false,
@@ -68,7 +68,7 @@ this.Googlemaps_Map = (function () {
   Googlemaps_Map.resize = function () {
     google.maps.event.trigger(this.map, "resize");
     if (!this.resized) {
-      this.map.setCenter(new google.maps.LatLng(this.center[0], this.center[1]));
+      this.map.setCenter(new google.maps.LatLng(this.center[1], this.center[0]));
       if (this.form) {
         this.form.renderMarkers();
       }
@@ -96,17 +96,17 @@ this.Googlemaps_Map = (function () {
       var marker_html, name, text;
       if (value["image"]) {
         Googlemaps_Map.markers[id]["marker"] = new google.maps.Marker({
-          position: new google.maps.LatLng(value["loc"][0], value["loc"][1]),
+          position: new google.maps.LatLng(value["loc"][1], value["loc"][0]),
           icon: value["image"],
           map: Googlemaps_Map.map
         });
       } else {
         Googlemaps_Map.markers[id]["marker"] = new google.maps.Marker({
-          position: new google.maps.LatLng(value["loc"][0], value["loc"][1]),
+          position: new google.maps.LatLng(value["loc"][1], value["loc"][0]),
           map: Googlemaps_Map.map
         });
       }
-      markerBounds.extend(new google.maps.LatLng(value["loc"][0], value["loc"][1]));
+      markerBounds.extend(new google.maps.LatLng(value["loc"][1], value["loc"][0]));
       if (value["html"]) {
         marker_html = value["html"];
         Googlemaps_Map.markers[id]["window"] = new google.maps.InfoWindow({
@@ -138,7 +138,7 @@ this.Googlemaps_Map = (function () {
     });
 
     if (!Googlemaps_Map.markers || Googlemaps_Map.markers.length === 0) {
-      Googlemaps_Map.map.setCenter(new google.maps.LatLng(Googlemaps_Map.center[0], Googlemaps_Map.center[1]));
+      Googlemaps_Map.map.setCenter(new google.maps.LatLng(Googlemaps_Map.center[1], Googlemaps_Map.center[0]));
     } else {
       Googlemaps_Map.map.fitBounds(markerBounds);
       google.maps.event.addListenerOnce(Googlemaps_Map.map, "idle", function() {
@@ -175,7 +175,7 @@ this.Googlemaps_Map = (function () {
       });
 
       if (locs.length == 0) {
-        Googlemaps_Map.map.setCenter(new google.maps.LatLng(Googlemaps_Map.center[0], Googlemaps_Map.center[1]));
+        Googlemaps_Map.map.setCenter(new google.maps.LatLng(Googlemaps_Map.center[1], Googlemaps_Map.center[0]));
       } else {
         Googlemaps_Map.map.fitBounds(bounds);
 
