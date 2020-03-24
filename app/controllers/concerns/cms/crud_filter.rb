@@ -112,7 +112,7 @@ module Cms::CrudFilter
 
     entries.each do |item|
       if item.allowed?(:delete, @cur_user, site: @cur_site, node: @cur_node)
-        if item.deletion_lock_state == "unlocked" && item.disabled?
+        if item.deletion_unlocked? && item.disabled?
           item.destroy
           next
         end

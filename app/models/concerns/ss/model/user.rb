@@ -251,6 +251,10 @@ module SS::Model::User
     deletion_lock_state == 'locked'
   end
 
+  def deletion_unlocked?
+    deletion_lock_state == 'unlocked'
+  end
+
   def locked?
     lock_state == 'locked'
   end
