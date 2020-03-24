@@ -38,15 +38,34 @@ class Sns::Login::SamlController < ApplicationController
   public
 
   def init
+    @request_url ||= URI.parse(request.url)
+
     request = OneLogin::RubySaml::Authrequest.new
     state = SecureRandom.hex(24)
-    session['ss.sso.state'] = {
-      value: state, created: Time.zone.now.to_i,
-      # "ref" is a path to redirect after user is successfully logged in
-      ref: params[:ref].try { |ref| ref.to_s },
-      # "login_path" is a path to redirect after user is logged out
-      login_path: params[:login_path].try { |path| path.to_s }
-    }
+
+    # "ref" is a path to redirect after user is successfully logged in
+    ref = params[:ref].try { |ref| ref.to_s }
+    if ref.present?
+      ref = URI.join(@request_url, ref) rescue nil
+    end
+    ref = normalize_url(ref) if ref.present?
+    if ref.present?
+      ref = nil unless trusted_url?(ref)
+    end
+    ref = ref.to_s if ref.present?
+
+    # "login_path" is a path to redirect after user is logged out
+    login_path = params[:login_path].try { |path| path.to_s }
+    if login_path.present?
+      login_path = URI.join(@request_url, login_path) rescue nil
+    end
+    login_path = normalize_url(login_path) if login_path.present?
+    if login_path.present?
+      login_path = nil unless trusted_url?(login_path)
+    end
+    login_path = login_path.to_s if login_path.present?
+
+    session['ss.sso.state'] = { value: state, created: Time.zone.now.to_i, ref: ref, login_path: login_path }
     redirect_to(request.create(settings, RelayState: state, ForceAuthn: "true"))
   end
 
