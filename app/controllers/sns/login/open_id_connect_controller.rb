@@ -29,7 +29,7 @@ class Sns::Login::OpenIdConnectController < ApplicationController
   def state
     @state ||= begin
       state = SecureRandom.hex(24)
-      session['ss.sso.state'] = state
+      session['ss.sso.state'] = { value: state, created: Time.zone.now.to_i, ref: params[:ref].try { |ref| ref.to_s } }
       state
     end
   end
@@ -98,12 +98,9 @@ class Sns::Login::OpenIdConnectController < ApplicationController
     auth_query[:response_mode] = @item.response_mode if @item.response_mode.present?
     url = "#{@item.auth_url}?#{auth_query.to_query}"
     redirect_to url
-    flash[:ref] = params[:ref].try { |ref| ref.to_s }
   end
 
   def callback
-    ref = flash[:ref]
-
     if @item.code_flow?
       authorization_code_flow_callback
     elsif @item.implicit_flow?
@@ -121,7 +118,7 @@ class Sns::Login::OpenIdConnectController < ApplicationController
       return
     end
 
-    params[:ref] = ref
+    params[:ref] = @resp.session_state[:ref]
     render_login user, nil, session: true, login_path: sns_login_path
   end
 

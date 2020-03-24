@@ -2,8 +2,6 @@ class Sns::Login::SamlController < ApplicationController
   include Sns::BaseFilter
   include Sns::LoginFilter
 
-  READY_STATE_EXPIRES_IN = 10.minutes.to_i
-
   skip_before_action :verify_authenticity_token, raise: false, only: :consume
   skip_before_action :logged_in?
   before_action :set_item
@@ -51,7 +49,7 @@ class Sns::Login::SamlController < ApplicationController
     session_state = session.delete('ss.sso.state')
     raise "404" if session_state.blank?
     raise "404" if session_state[:value] != state
-    raise "404" if session_state[:created] + READY_STATE_EXPIRES_IN < Time.zone.now.to_i
+    raise "404" if session_state[:created] + Sys::Auth::Base::READY_STATE_EXPIRES_IN < Time.zone.now.to_i
 
     response = OneLogin::RubySaml::Response.new(params[:SAMLResponse])
     response.settings = settings
