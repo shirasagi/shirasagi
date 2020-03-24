@@ -100,6 +100,11 @@ describe "cms_users", type: :feature, dbscope: :example do
       click_button I18n.t("ss.links.delete")
       page.accept_alert
       expect(page).to have_css('#notice', text: I18n.t('ss.notice.deleted'))
+
+      within ".index-search" do
+        select I18n.t('ss.options.state.disabled'), from: 's[state]'
+        click_button I18n.t("ss.buttons.search")
+      end
       expect(page).to have_no_content(item.name)
     end
   end
