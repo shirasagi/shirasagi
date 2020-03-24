@@ -30,7 +30,9 @@ describe "cms_translate_text_caches", type: :feature, dbscope: :example do
       site.translate_target_ids = [lang_en, lang_ko, lang_zh_CN, lang_zh_TW].map(&:id)
       site.update!
 
-      item = Translate::Convertor.new(site, source, target)
+      lang_ja = Translate::Lang.site(site).find_by(code: source)
+      lang_en = Translate::Lang.site(site).find_by(code: target)
+      item = Translate::Convertor.new(site, lang_ja, lang_en)
       item.convert(html)
 
       login_cms_user

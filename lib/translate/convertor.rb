@@ -5,7 +5,7 @@ class Translate::Convertor
     @site = site
     @source = source
     @target = target
-    @location = "#{site.translate_location.sub(/^\//, "")}/#{@target}"
+    @location = "#{site.translate_location.sub(/^\//, "")}/#{@target.code}"
   end
 
   def translatable?(text)
@@ -63,9 +63,11 @@ class Translate::Convertor
       node.content = text
       nodes << node
     end
-    doc.search('//input[@type=\'submit\'][@value]').each do |node|
+    doc.search('//input[@type][@value]').each do |node|
+      type = node.attributes["type"]
       value = node.attributes["value"]
 
+      next if type.content != "submit" && type.content != "reset"
       next if value.blank?
       next if node.instance_variable_get(:@notranslate)
 
@@ -87,8 +89,8 @@ class Translate::Convertor
       html.delete!("</html>", "")
     else
       html = doc.to_s
-      html.sub!(/(<html.*?)lang="#{@source}"/, "\\1lang=\"#{@target}\"")
-      html.sub!(/<body( |>)/m, '<body data-translate="' + @target + '"\\1')
+      html.sub!(/(<html.*?)lang="#{@source.code}"/, "\\1lang=\"#{@target.code}\"")
+      html.sub!(/<body( |>)/m, '<body data-translate="' + @target.code + '"\\1')
       html.sub!(/<\/head>/, '<meta name="google" value="notranslate">' + "</head>")
     end
 

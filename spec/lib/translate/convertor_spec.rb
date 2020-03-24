@@ -10,8 +10,8 @@ describe Translate::Convertor, dbscope: :example do
   let!(:lang_zh_CN) { create :translate_lang_zh_cn }
   let!(:lang_zh_TW) { create :translate_lang_zh_tw }
 
-  let(:source) { "ja" }
-  let(:target) { "en" }
+  let(:source) { Translate::Lang.site(site).find_by(code: "ja") }
+  let(:target) { Translate::Lang.site(site).find_by(code: "en") }
 
   before do
     mock = SS::Config.translate.mock
@@ -37,7 +37,7 @@ describe Translate::Convertor, dbscope: :example do
     end.compact
 
     texts.each do |text|
-      expect(text).to match(/^\[#{target}\:.+?\]/)
+      expect(text).to match(/^\[#{target.code}\:.+?\]/)
     end
   end
 end
