@@ -7,7 +7,13 @@ class Webmail::LoginController < ApplicationController
   private
 
   def default_logged_in_path
-    webmail_main_path(account: params[:account].presence || @cur_user.imap_default_index)
+    account = params[:account].try { |account| account.to_s }
+    account ||= @cur_user.imap_default_index if @cur_user
+    if account
+      webmail_main_path(account: account)
+    else
+      webmail_main_path
+    end
   end
 
   def get_params
