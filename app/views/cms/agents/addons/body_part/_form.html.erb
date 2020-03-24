@@ -92,6 +92,11 @@ if ($("#item_form_id").val()) {
   $("#item_body_layout_id").parent('dd').prev('dt').addClass('hide');
   $("#item_body_layout_id").parent('dd').addClass('hide');
 } else {
+  $("#addon-cms-agents-addons-body").removeClass('hide');
+  $("#addon-cms-agents-addons-body_part").addClass('hide');
+  $("#addon-cms-agents-addons-form-page").addClass('hide');
+  $("#item_form_id").parent('dd').prev('dt').removeClass('hide');
+  $("#item_form_id").parent('dd').removeClass('hide');
   $("#item_body_layout_id").trigger("change");
 }
 <% end %>
