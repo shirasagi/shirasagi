@@ -43,7 +43,7 @@ module Translate::PublicFilter
       h << '<script src="/assets/js/jquery.colorbox.js"></script>'
       h << '<link rel="stylesheet" media="screen" href="/assets/css/colorbox/colorbox.css">'
       h << '<div id="ss-translate-error">'
-      h << @cur_site.translate_api_limit_exceeded_html
+      h << ApplicationController.helpers.sanitize(@cur_site.translate_api_limit_exceeded_html)
       h << '</div>'
       h << '<script>$.colorbox({open: true, html: $("#ss-translate-error")});</script>'
       h << '</html>'
