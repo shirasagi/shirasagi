@@ -85,7 +85,7 @@ class Sns::Login::OpenIdConnectController < ApplicationController
   public
 
   def init
-    params = {
+    auth_query = {
       client_id: @item.client_id,
       # redirect_uri: "http://#{request.host_with_port}/.mypage/login/oid/#{@item.filename}/callback",
       redirect_uri: @item.redirect_uri(request.host_with_port),
@@ -94,13 +94,16 @@ class Sns::Login::OpenIdConnectController < ApplicationController
       scope: @item.scopes.join(" ") || @item.default_scopes.join(" "),
       state: state
     }
-    params[:max_age] = @item.max_age if @item.max_age.present?
-    params[:response_mode] = @item.response_mode if @item.response_mode.present?
-    url = "#{@item.auth_url}?#{params.to_query}"
+    auth_query[:max_age] = @item.max_age if @item.max_age.present?
+    auth_query[:response_mode] = @item.response_mode if @item.response_mode.present?
+    url = "#{@item.auth_url}?#{auth_query.to_query}"
     redirect_to url
+    flash[:ref] = params[:ref].try { |ref| ref.to_s }
   end
 
   def callback
+    ref = flash[:ref]
+
     if @item.code_flow?
       authorization_code_flow_callback
     elsif @item.implicit_flow?
@@ -118,6 +121,7 @@ class Sns::Login::OpenIdConnectController < ApplicationController
       return
     end
 
+    params[:ref] = ref
     render_login user, nil, session: true, login_path: sns_login_path
   end
 

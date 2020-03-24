@@ -42,7 +42,7 @@ class Sns::Login::SamlController < ApplicationController
   def init
     request = OneLogin::RubySaml::Authrequest.new
     state = SecureRandom.hex(24)
-    session['ss.sso.state'] = { value: state, created: Time.zone.now.to_i }
+    session['ss.sso.state'] = { value: state, created: Time.zone.now.to_i, ref: params[:ref].try { |ref| ref.to_s } }
     redirect_to(request.create(settings, RelayState: state, ForceAuthn: "true"))
   end
 
@@ -68,6 +68,7 @@ class Sns::Login::SamlController < ApplicationController
       return
     end
 
+    params[:ref] = session_state[:ref]
     render_login user, nil, session: true, login_path: sns_login_path
   end
 

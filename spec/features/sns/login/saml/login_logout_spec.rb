@@ -182,4 +182,35 @@ describe "sns/login/saml", type: :feature, dbscope: :example, js: true, saml_sam
       expect(page).to have_content("404")
     end
   end
+
+  context "when user directly log in to gws" do
+    it do
+      # ensure that sys_user is created before gws_site is created
+      sys_user
+      visit gws_portal_path(site: gws_site)
+      expect(page).to have_css("#page-login")
+      click_on name
+
+      #
+      # blow form is outside of SHIRASAGI. it's sampling (https://capriza.github.io/samling/samling.html)
+      #
+      within "form#samlProps" do
+        fill_in "nameIdentifier", with: sys_user.email
+        click_on "Next"
+      end
+
+      within "form#samlResponseForm" do
+        click_on "Post Response!"
+      end
+
+      #
+      # Now back to SHIRASAGI
+      #
+
+      # confirm a user has been logged-in
+      expect(page).to have_css("nav.user .name", text: sys_user.name)
+      # confirm gws_portal is shown to user
+      expect(page).to have_css("#head .application-menu .gws .current", text: I18n.t('ss.links.gws'))
+    end
+  end
 end
