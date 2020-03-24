@@ -336,6 +336,12 @@ module SS::Model::User
     @gws_user ||= is_a?(Gws::User) ? self : Gws::User.find(id)
   end
 
+  def ss_user
+    return self if is_a?(SS::User)
+    @sys_user ||= is_a?(SS::User) ? self : SS::User.find(id)
+  end
+  alias sys_user ss_user
+
   def webmail_user
     @webmail_user ||= begin
       if is_a?(Webmail::User)
