@@ -63,9 +63,11 @@ class Translate::Convertor
       node.content = text
       nodes << node
     end
-    doc.search('//input[@type=\'submit\'][@value]').each do |node|
+    doc.search('//input[@type][@value]').each do |node|
+      type = node.attributes["type"]
       value = node.attributes["value"]
 
+      next if type.content != "submit" && type.content != "reset"
       next if value.blank?
       next if node.instance_variable_get(:@notranslate)
 
