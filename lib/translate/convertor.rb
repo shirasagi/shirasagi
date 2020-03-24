@@ -5,7 +5,7 @@ class Translate::Convertor
     @site = site
     @source = source
     @target = target
-    @location = "#{site.translate_location.sub(/^\//, "")}/#{@target}"
+    @location = "#{site.translate_location.sub(/^\//, "")}/#{@target.code}"
   end
 
   def translatable?(text)
@@ -89,8 +89,8 @@ class Translate::Convertor
       html.delete!("</html>", "")
     else
       html = doc.to_s
-      html.sub!(/(<html.*?)lang="#{@source}"/, "\\1lang=\"#{@target}\"")
-      html.sub!(/<body( |>)/m, '<body data-translate="' + @target + '"\\1')
+      html.sub!(/(<html.*?)lang="#{@source.code}"/, "\\1lang=\"#{@target.code}\"")
+      html.sub!(/<body( |>)/m, '<body data-translate="' + @target.code + '"\\1')
       html.sub!(/<\/head>/, '<meta name="google" value="notranslate">' + "</head>")
     end
 

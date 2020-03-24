@@ -56,13 +56,13 @@ class Translate::RequestBuffer
 
   def find_cache(text, key)
     api = @site.translate_api
-    hexdigest = Translate::TextCache.hexdigest(api, @source, @target, text)
+    hexdigest = Translate::TextCache.hexdigest(api, @source.code, @target.code, text)
     cond = { site_id: @site.id, hexdigest: hexdigest }
     item = Translate::TextCache.find_or_create_by(cond) do |item|
       item.api = api
       item.update_state = "auto"
-      item.source = @source
-      item.target = @target
+      item.source = @source.code
+      item.target = @target.code
       item.original_text = text
     end
 
@@ -112,7 +112,7 @@ class Translate::RequestBuffer
       error = false
 
       begin
-        translated = @api.translate(texts, source, target, site: @site)
+        translated = @api.translate(texts, source.api_code, target.api_code, site: @site)
       rescue => e
         Rails.logger.error("#{@site.label(:translate_api)} : #{e.class} (#{e.message})")
         error = true

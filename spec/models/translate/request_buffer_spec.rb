@@ -9,8 +9,8 @@ describe Translate::RequestBuffer, dbscope: :example do
   let!(:lang_zh_CN) { create :translate_lang_zh_cn }
   let!(:lang_zh_TW) { create :translate_lang_zh_tw }
 
-  let(:source) { "ja" }
-  let(:target) { "en" }
+  let(:source) { Translate::Lang.site(site).find_by(code: "ja") }
+  let(:target) { Translate::Lang.site(site).find_by(code: "en") }
 
   let(:item) do
     Translate::RequestBuffer.new(
