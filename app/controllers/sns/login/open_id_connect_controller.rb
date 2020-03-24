@@ -29,7 +29,13 @@ class Sns::Login::OpenIdConnectController < ApplicationController
   def state
     @state ||= begin
       state = SecureRandom.hex(24)
-      session['ss.sso.state'] = { value: state, created: Time.zone.now.to_i, ref: params[:ref].try { |ref| ref.to_s } }
+      session['ss.sso.state'] = {
+        value: state, created: Time.zone.now.to_i,
+        # "ref" is a path to redirect after user is successfully logged in
+        ref: params[:ref].try { |ref| ref.to_s },
+        # "login_path" is a path to redirect after user is logged out
+        login_path: params[:login_path].try { |path| path.to_s }
+      }
       state
     end
   end
@@ -118,8 +124,10 @@ class Sns::Login::OpenIdConnectController < ApplicationController
       return
     end
 
+    # "ref" is a path to redirect after user is successfully logged in
     params[:ref] = @resp.session_state[:ref]
-    render_login user, nil, session: true, login_path: sns_login_path
+    # "login_path" is a path to redirect after user is logged out
+    render_login user, nil, session: true, login_path: @resp.session_state[:login_path] || sns_login_path
   end
 
   if Rails.env.test?

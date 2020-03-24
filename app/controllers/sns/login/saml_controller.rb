@@ -40,7 +40,13 @@ class Sns::Login::SamlController < ApplicationController
   def init
     request = OneLogin::RubySaml::Authrequest.new
     state = SecureRandom.hex(24)
-    session['ss.sso.state'] = { value: state, created: Time.zone.now.to_i, ref: params[:ref].try { |ref| ref.to_s } }
+    session['ss.sso.state'] = {
+      value: state, created: Time.zone.now.to_i,
+      # "ref" is a path to redirect after user is successfully logged in
+      ref: params[:ref].try { |ref| ref.to_s },
+      # "login_path" is a path to redirect after user is logged out
+      login_path: params[:login_path].try { |path| path.to_s }
+    }
     redirect_to(request.create(settings, RelayState: state, ForceAuthn: "true"))
   end
 
@@ -66,8 +72,10 @@ class Sns::Login::SamlController < ApplicationController
       return
     end
 
+    # "ref" is a path to redirect after user is successfully logged in
     params[:ref] = session_state[:ref]
-    render_login user, nil, session: true, login_path: sns_login_path
+    # "login_path" is a path to redirect after user is logged out
+    render_login user, nil, session: true, login_path: session_state[:login_path] || sns_login_path
   end
 
   def metadata

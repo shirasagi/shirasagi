@@ -38,17 +38,17 @@
       </footer>
     <% end %>
 
-    <% sso = Sys::Auth::Base.where(state: "enabled").order_by(order: 1).to_a %>
-    <% if sso.present? %>
+    <% ssos = Sys::Auth::Base.where(state: "enabled").order_by(order: 1).to_a %>
+    <% if ssos.present? %>
       <ul class="sso">
-        <% sso.each do |sso| %>
-        <% sso = sso.becomes_with_model %>
-        <li class="<%= sso.filename %>">
-          <%= link_to(sso.url(params.permit(:ref)), class: "btn-default") do %>
-            <h2 class="name"><%= sso.name %></h2>
-            <p class="text"><%= br sso.text %></p>
-          <% end %>
-        </li>
+        <% ssos.each do |sso| %>
+          <% sso = sso.becomes_with_model %>
+          <li class="<%= sso.filename %>">
+            <%= link_to(sso.url(ref: params[:ref].try { |ref| ref.to_s } || default_logged_in_path, login_path: request.path), class: "btn-default") do %>
+              <h2 class="name"><%= sso.name %></h2>
+              <p class="text"><%= br sso.text %></p>
+            <% end %>
+          </li>
         <% end %>
       </ul>
     <% end %>
