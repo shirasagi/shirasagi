@@ -31,7 +31,8 @@ describe Event::Ical::ImportJob, dbscope: :example do
       let(:path) { "event-1.ics" }
 
       it do
-        expect { described_class.bind(bindings).perform_now }.to change { Event::Page.count }.from(0).to(2)
+        expect { described_class.bind(bindings).perform_now }.to change { Event::Page.count }.from(0).to(2) &
+                                                                 output(include("there are 1 calendars.\n")).to_stdout
         expect(Event::Page.site(site).node(node).where(ical_uid: 'doc-1')).to be_present
         Event::Page.site(site).node(node).find_by(ical_uid: 'doc-1').tap do |doc|
           expect(doc.name).to eq "Python 夏休み集中キャンプ"
@@ -69,7 +70,8 @@ describe Event::Ical::ImportJob, dbscope: :example do
       let(:path) { "event-2.ics" }
 
       it do
-        expect { described_class.bind(bindings).perform_now }.to change { Event::Page.count }.from(0).to(2)
+        expect { described_class.bind(bindings).perform_now }.to change { Event::Page.count }.from(0).to(2) &
+                                                                 output(include("there are 1 calendars.\n")).to_stdout
         Event::Page.site(site).node(node).find_by(ical_uid: 'doc-2').tap do |doc|
           expect(doc.event_dates).to include("2018/07/30", "2018/07/31", "2018/08/01", "2018/08/02", "2018/08/03")
           expect(doc.event_dates).to include("2018/08/27", "2018/08/28", "2018/08/29", "2018/08/30", "2018/08/31")
@@ -83,8 +85,13 @@ describe Event::Ical::ImportJob, dbscope: :example do
       let!(:node) { create :event_node_page, site: site, ical_refresh_method: 'auto', ical_import_url: url }
 
       it do
-        described_class.register_jobs(site, user)
-        expect { described_class.register_jobs(site, user) }.to change { enqueued_jobs.count }.by(1)
+        expect { described_class.perform_jobs(site, user) }.to output(include("there are 1 calendars.\n")).to_stdout
+
+        expect(Job::Log.count).to eq 1
+        Job::Log.first.tap do |log|
+          expect(log.logs).to include(include("INFO -- : Started Job"))
+          expect(log.logs).to include(include("INFO -- : Completed Job"))
+        end
       end
     end
 
@@ -93,7 +100,8 @@ describe Event::Ical::ImportJob, dbscope: :example do
       let!(:node) { create :event_node_page, site: site, ical_refresh_method: 'manual', ical_import_url: url }
 
       it do
-        expect { described_class.register_jobs(site, user) }.to change { enqueued_jobs.count }.by(0)
+        described_class.perform_jobs(site, user)
+        expect(Job::Log.count).to eq 0
       end
     end
 
@@ -102,7 +110,8 @@ describe Event::Ical::ImportJob, dbscope: :example do
       let(:node) { create :event_node_page, site: site, ical_refresh_method: 'auto', ical_import_url: url, ical_max_docs: 1 }
 
       it do
-        expect { described_class.bind(bindings).perform_now }.to change { Event::Page.count }.from(0).to(1)
+        expect { described_class.bind(bindings).perform_now }.to change { Event::Page.count }.from(0).to(1) &
+                                                                 output(include("there are 1 calendars.\n")).to_stdout
         expect(Event::Page.site(site).node(node).where(ical_uid: 'doc-1')).to be_present
         expect(Event::Page.site(site).node(node).where(ical_uid: 'doc-2')).to be_blank
       end
@@ -112,10 +121,10 @@ describe Event::Ical::ImportJob, dbscope: :example do
       let(:path) { "event-1.ics" }
 
       it do
-        described_class.bind(bindings).perform_now
+        expect { described_class.bind(bindings).perform_now }.to output(include("there are 1 calendars.\n")).to_stdout
         expect(Event::Page.count).to eq 2
 
-        described_class.bind(bindings).perform_now
+        expect { described_class.bind(bindings).perform_now }.to output(include("there are 1 calendars.\n")).to_stdout
         expect(Event::Page.count).to eq 2
 
         doc1 = Event::Page.site(site).node(node).where(ical_uid: 'doc-1').first
@@ -129,7 +138,8 @@ describe Event::Ical::ImportJob, dbscope: :example do
       let(:path) { "event-exdate-1.ics" }
 
       it do
-        expect { described_class.bind(bindings).perform_now }.to change { Event::Page.count }.from(0).to(1)
+        expect { described_class.bind(bindings).perform_now }.to change { Event::Page.count }.from(0).to(1) &
+                                                                 output(include("there are 1 calendars.\n")).to_stdout
         expect(Event::Page.site(site).node(node).where(ical_uid: 'doc-1')).to be_present
         Event::Page.site(site).node(node).find_by(ical_uid: 'doc-1').tap do |doc|
           expect(doc.name).to eq "Python 夏休み集中キャンプ"
@@ -145,7 +155,8 @@ describe Event::Ical::ImportJob, dbscope: :example do
         let(:path) { "event-rrule-1.ics" }
 
         it do
-          expect { described_class.bind(bindings).perform_now }.to change { Event::Page.count }.from(0).to(3)
+          expect { described_class.bind(bindings).perform_now }.to change { Event::Page.count }.from(0).to(3) &
+                                                                   output(include("there are 1 calendars.\n")).to_stdout
 
           expect(Event::Page.site(site).node(node).where(ical_uid: 'doc-1')).to be_present
           Event::Page.site(site).node(node).find_by(ical_uid: 'doc-1').tap do |doc|
@@ -175,7 +186,8 @@ describe Event::Ical::ImportJob, dbscope: :example do
         let(:path) { "event-rrule-2.ics" }
 
         it do
-          expect { described_class.bind(bindings).perform_now }.to change { Event::Page.count }.from(0).to(3)
+          expect { described_class.bind(bindings).perform_now }.to change { Event::Page.count }.from(0).to(3) &
+                                                                   output(include("there are 1 calendars.\n")).to_stdout
 
           expect(Event::Page.site(site).node(node).where(ical_uid: 'doc-1')).to be_present
           Event::Page.site(site).node(node).find_by(ical_uid: 'doc-1').tap do |doc|
@@ -205,7 +217,8 @@ describe Event::Ical::ImportJob, dbscope: :example do
         let(:path) { "event-rrule-3.ics" }
 
         it do
-          expect { described_class.bind(bindings).perform_now }.to change { Event::Page.count }.from(0).to(6)
+          expect { described_class.bind(bindings).perform_now }.to change { Event::Page.count }.from(0).to(6) &
+                                                                   output(include("there are 1 calendars.\n")).to_stdout
 
           expect(Event::Page.site(site).node(node).where(ical_uid: 'doc-1')).to be_present
           Event::Page.site(site).node(node).find_by(ical_uid: 'doc-1').tap do |doc|
@@ -275,13 +288,13 @@ describe Event::Ical::ImportJob, dbscope: :example do
 
       it do
         travel_to('2018-05-01 00:00')
-        described_class.bind(bindings).perform_now
+        expect { described_class.bind(bindings).perform_now }.to output(include("there are 1 calendars.\n")).to_stdout
         expect(Event::Page.count).to eq 2
         expect(Event::Page.site(site).node(node).where(ical_uid: 'doc-1')).to be_present
         expect(Event::Page.site(site).node(node).where(ical_uid: 'doc-2')).to be_present
 
         travel_to('2018-07-01 00:00')
-        described_class.bind(bindings).perform_now
+        expect { described_class.bind(bindings).perform_now }.to output(include("update event/page")).to_stdout
         expect(Event::Page.count).to eq 1
         expect(Event::Page.site(site).node(node).where(ical_uid: 'doc-1')).to be_present
         expect(Event::Page.where(ical_uid: 'doc-2')).to be_blank
@@ -303,12 +316,13 @@ describe Event::Ical::ImportJob, dbscope: :example do
       end
 
       it do
-        described_class.bind(bindings).perform_now
+        expect { described_class.bind(bindings).perform_now }.to output(include("there are 1 calendars.\n")).to_stdout
         expect(Event::Page.count).to eq 2
         expect(Event::Page.site(site).node(node).where(ical_uid: 'doc-1')).to be_present
         expect(Event::Page.site(site).node(node).where(ical_uid: 'doc-2')).to be_present
 
-        described_class.bind(bindings).perform_now
+        expect { described_class.bind(bindings).perform_now }.to \
+          output(include("there are no events in the calendar\n")).to_stdout
         expect(Event::Page.count).to eq 0
         expect(Event::Page.where(ical_uid: 'doc-1')).to be_blank
         expect(Event::Page.where(ical_uid: 'doc-2')).to be_blank
@@ -326,12 +340,12 @@ describe Event::Ical::ImportJob, dbscope: :example do
       end
 
       it do
-        described_class.bind(bindings).perform_now
+        expect { described_class.bind(bindings).perform_now }.to output(include("there are 1 calendars.\n")).to_stdout
         expect(Event::Page.count).to eq 2
         expect(Event::Page.site(site).node(node).where(ical_uid: 'doc-1')).to be_present
         expect(Event::Page.site(site).node(node).where(ical_uid: 'doc-2')).to be_present
 
-        described_class.bind(bindings).perform_now
+        expect { described_class.bind(bindings).perform_now }.to output(include("-- Error\n", "execution expired\n")).to_stdout
         expect(Event::Page.count).to eq 2
         expect(Event::Page.site(site).node(node).where(ical_uid: 'doc-1')).to be_present
         expect(Event::Page.site(site).node(node).where(ical_uid: 'doc-2')).to be_present
@@ -345,16 +359,16 @@ describe Event::Ical::ImportJob, dbscope: :example do
         body1 = ::File.read(Rails.root.join("spec", "fixtures", "event", "ical", "event-1.ics"))
         stub_request(:get, node.ical_import_url).
           to_return(status: 200, body: body1, headers: {}).then.
-          to_return(status: 404)
+          to_return(status: [ 404, "Not Found" ])
       end
 
       it do
-        described_class.bind(bindings).perform_now
+        expect { described_class.bind(bindings).perform_now }.to output(include("there are 1 calendars.\n")).to_stdout
         expect(Event::Page.count).to eq 2
         expect(Event::Page.site(site).node(node).where(ical_uid: 'doc-1')).to be_present
         expect(Event::Page.site(site).node(node).where(ical_uid: 'doc-2')).to be_present
 
-        described_class.bind(bindings).perform_now
+        expect { described_class.bind(bindings).perform_now }.to output(include("-- Error\n", "404 Not Found\n")).to_stdout
         expect(Event::Page.count).to eq 2
         expect(Event::Page.site(site).node(node).where(ical_uid: 'doc-1')).to be_present
         expect(Event::Page.site(site).node(node).where(ical_uid: 'doc-2')).to be_present
