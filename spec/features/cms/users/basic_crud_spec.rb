@@ -56,19 +56,12 @@ describe "cms_users", type: :feature, dbscope: :example do
       end
       expect(page).to have_css('#notice', text: I18n.t('ss.notice.deleted'))
 
-      #delete_all
       within ".index-search" do
         fill_in "s[keyword]", with: item.name
         select I18n.t('ss.options.state.disabled'), from: 's[state]'
         click_button I18n.t("ss.buttons.search")
       end
       expect(page).to have_css(".list-items", count: 1)
-
-      find('.list-head label.check input').set(true)
-      page.accept_alert do
-        click_button I18n.t('ss.links.delete')
-      end
-      expect(page).to have_no_content(item.name)
 
       #lock_all
       within ".index-search" do
@@ -93,6 +86,20 @@ describe "cms_users", type: :feature, dbscope: :example do
       find('.list-head label.check input').set(true)
       click_button I18n.t('ss.links.unlock_user')
       expect(page).to have_css('#notice', text: I18n.t('ss.notice.unlock_user_all'))
+      expect(page).to have_no_content(item.name)
+
+      # delete_all
+      within ".index-search" do
+        fill_in "s[keyword]", with: item.name
+        select I18n.t('ss.options.state.disabled'), from: 's[state]'
+        click_button I18n.t("ss.buttons.search")
+      end
+      expect(page).to have_css(".list-items", count: 1)
+
+      find('.list-head label.check input').set(true)
+      click_button I18n.t("ss.links.delete")
+      page.accept_alert
+      expect(page).to have_css('#notice', text: I18n.t('ss.notice.deleted'))
       expect(page).to have_no_content(item.name)
     end
   end
