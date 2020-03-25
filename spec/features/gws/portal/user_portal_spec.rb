@@ -25,10 +25,10 @@ describe 'gws_portal_user_portal', type: :feature, dbscope: :example do
       expect(page).to have_no_css('.nav-management-menu a')
 
       visit gws_portal_user_portlets_path(site: site, user: user)
-      expect(page).to have_no_css('.gws')
+      expect(page).to have_css('#addon-basic .addon-head', text: I18n.t("ss.rescues.default.head"))
 
       visit gws_portal_user_settings_path(site: site, user: user)
-      expect(page).to have_no_css('.gws')
+      expect(page).to have_css('#addon-basic .addon-head', text: I18n.t("ss.rescues.default.head"))
     end
   end
 
