@@ -12,7 +12,6 @@ ja:
     filter_all: 全て
     date_range_delimiter: ～
     keyword: キーワード
-    no_event: イベントはありません
     dates:
       setting: 開催期間
       start_date: 開始

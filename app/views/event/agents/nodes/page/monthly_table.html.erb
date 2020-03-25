@@ -38,6 +38,10 @@
               <div class="holiday"><%= HolidayJapan.name date %></div>
             <% end %>
 
+            <% if events.blank? %>
+              <dd class="no-event"><%= sanitize @cur_node.substitute_html.to_s.html_safe %></dd>
+            <% end %>
+
             <% events.each do |event, categories| %>
               <% event = event.becomes_with_route %>
               <div class="page" data-id="<%= categories.pluck(:id).join(" ") %>">
