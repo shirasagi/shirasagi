@@ -83,6 +83,13 @@ class Opendata::Resource
     value < 0 ? 0 : value
   end
 
+  def downloaded_count
+    criteria = Opendata::ResourceDownloadReport.site(dataset.site)
+    criteria = criteria.where(dataset_id: dataset.id, resource_filename: filename)
+    counts = criteria.pluck(*Opendata::Resource::ReportModel::DAY_COUNT_FIELDS).flatten.compact
+    counts.sum
+  end
+
   private
 
   def set_filename

@@ -9,6 +9,8 @@ module Opendata::Resource::ReportModel
   # 削除日が不明なレコードの deleted にセットされている日時
   UNCERTAIN_DELETED_TIME = Time.at(0).in_time_zone
 
+  DAY_COUNT_FIELDS = Array.new(31) { |i| "day#{i}_count".freeze }.freeze
+
   included do
     index({ site_id: 1, year_month: 1 })
 
@@ -30,8 +32,8 @@ module Opendata::Resource::ReportModel
     field :resource_filename, type: String
     field :resource_format, type: String
 
-    31.times do |i|
-      field "day#{i}_count", type: Integer
+    DAY_COUNT_FIELDS.each do |field_name|
+      field field_name, type: Integer
     end
   end
 

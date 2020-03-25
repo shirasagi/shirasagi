@@ -120,31 +120,35 @@ categories = [
               <div class="name format-<%= rs.format.downcase %>">
                 <%= rs.name %> (<%= rs.format %> <%= rs.source_url.present? ? t("opendata.labels.external_link") : number_to_human_size(rs.size) %>)
               </div>
+              <div class="download-count">
+                <span class="label"><%= rs.t :downloaded_count %></span>
+                <span class="count"><%= rs.downloaded_count.to_s(:delimited) %><%= I18n.t("opendata.labels.time")%></span>
+              </div>
+            </div>
 
-              <div class="icons">
-                <% if license = rs.license %>
-                  <span class="license">
-                    <% label = tryb { image_tag license.file.url, alt: license.name } || license.name %>
-                    <% if license.related_url.present? %>
-                      <%= link_to(label, license.related_url, target: "_blank", rel: @cur_site.anti_bot_set_nofollow? ? "nofollow" : nil) %>
-                    <% else %>
-                      <%= label %>
-                    <% end %>
-                  </span>
-                <% end %>
+            <div class="icons">
+              <% if license = rs.license %>
+                <span class="license">
+                  <% label = tryb { image_tag license.file.url, alt: license.name } || license.name %>
+                  <% if license.related_url.present? %>
+                    <%= link_to(label, license.related_url, target: "_blank", rel: @cur_site.anti_bot_set_nofollow? ? "nofollow" : nil) %>
+                  <% else %>
+                    <%= label %>
+                  <% end %>
+                </span>
+              <% end %>
 
-                <% if rs.source_url.blank? && rs.previewable? %>
-                  <div class="content-wrap">
-                    <%= link_to(t("opendata.labels.preview"), rs.content_url, class: "content", rel: @cur_site.anti_bot_set_nofollow? ? "nofollow" : nil) %>
-                  </div>
-                <% end %>
-                <div class="download-wrap">
-                  <%= link_to(t("opendata.labels.downloaded"), rs.download_url, class: "download", "data-url": rs.data_url, rel: @cur_site.anti_bot_set_nofollow? ? "nofollow" : nil) %>
+              <% if rs.source_url.blank? && rs.previewable? %>
+                <div class="content-wrap">
+                  <%= link_to(t("opendata.labels.preview"), rs.content_url, class: "content", rel: @cur_site.anti_bot_set_nofollow? ? "nofollow" : nil) %>
                 </div>
-                <div class="clipboard-wrap">
-                  <% url = rs.source_url.present? ? rs.source_url : rs.download_full_url %>
-                  <%= link_to(t("opendata.links.copy_url"), rs.url, class: "ss-clipboard-copy", rel: @cur_site.anti_bot_set_nofollow? ? "nofollow" : nil, "data-clip-attr": "data-full-url", "data-full-url": url) %>
-                </div>
+              <% end %>
+              <div class="download-wrap">
+                <%= link_to(t("opendata.labels.downloaded"), rs.download_url, class: "download", "data-url": rs.data_url, rel: @cur_site.anti_bot_set_nofollow? ? "nofollow" : nil) %>
+              </div>
+              <div class="clipboard-wrap">
+                <% url = rs.source_url.present? ? rs.source_url : rs.download_full_url %>
+                <%= link_to(t("opendata.links.copy_url"), rs.url, class: "ss-clipboard-copy", rel: @cur_site.anti_bot_set_nofollow? ? "nofollow" : nil, "data-clip-attr": "data-full-url", "data-full-url": url) %>
               </div>
 
               <% if rs.text.present? %>
