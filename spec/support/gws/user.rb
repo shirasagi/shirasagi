@@ -53,9 +53,25 @@ def create_gws_users
     group_ids: [g11.id], gws_role_ids: [role.id],
     organization_id: g00.id, organization_uid: "org-admin",
     deletion_lock_state: "locked"
+  if user.invalid?
+    user = Gws::User.find_by(email: "admin@example.jp")
+    user.add_to_set(group_ids: g11.id, gws_role_ids: role.id)
+    user.set(organization_id: g00.id, organization_uid: "org-admin", deletion_lock_state: "locked")
+    user.in_password = "pass"
+  end
 
   sys = Gws::User.create name: "gws-sys", uid: "sys", email: "sys@example.jp", in_password: "pass",
     group_ids: [g11.id], gws_role_ids: [role.id]
+  if sys.invalid?
+    sys = Gws::User.find_by(email: "sys@example.jp")
+    sys.add_to_set(group_ids: g11.id, gws_role_ids: role.id)
+    sys.in_password = "pass"
+  end
+
+  sys_role_gws = Sys::Role.where(name: build(:sys_role_gws, cur_user: sys).name).first
+  sys_role_gws ||= create(:sys_role_gws, cur_user: sys)
+  user.sys_user.add_to_set(sys_role_ids: sys_role_gws.id)
+  sys.sys_user.add_to_set(sys_role_ids: sys_role_gws.id)
 
   user.cur_site = g00
 

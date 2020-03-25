@@ -29,7 +29,32 @@ class Sns::Login::OpenIdConnectController < ApplicationController
   def state
     @state ||= begin
       state = SecureRandom.hex(24)
-      session['ss.sso.state'] = state
+
+      @request_url ||= URI.parse(request.url)
+
+      # "ref" is a path to redirect after user is successfully logged in
+      ref = params[:ref].try { |ref| ref.to_s }
+      if ref.present?
+        ref = URI.join(@request_url, ref) rescue nil
+      end
+      ref = normalize_url(ref) if ref.present?
+      if ref.present?
+        ref = nil unless trusted_url?(ref)
+      end
+      ref = ref.to_s if ref.present?
+
+      # "login_path" is a path to redirect after user is logged out
+      login_path = params[:login_path].try { |path| path.to_s }
+      if login_path.present?
+        login_path = URI.join(@request_url, login_path) rescue nil
+      end
+      login_path = normalize_url(login_path) if login_path.present?
+      if login_path.present?
+        login_path = nil unless trusted_url?(login_path)
+      end
+      login_path = login_path.to_s if login_path.present?
+
+      session['ss.sso.state'] = { value: state, created: Time.zone.now.to_i, ref: ref, login_path: login_path }
       state
     end
   end
@@ -85,7 +110,7 @@ class Sns::Login::OpenIdConnectController < ApplicationController
   public
 
   def init
-    params = {
+    auth_query = {
       client_id: @item.client_id,
       # redirect_uri: "http://#{request.host_with_port}/.mypage/login/oid/#{@item.filename}/callback",
       redirect_uri: @item.redirect_uri(request.host_with_port),
@@ -94,9 +119,9 @@ class Sns::Login::OpenIdConnectController < ApplicationController
       scope: @item.scopes.join(" ") || @item.default_scopes.join(" "),
       state: state
     }
-    params[:max_age] = @item.max_age if @item.max_age.present?
-    params[:response_mode] = @item.response_mode if @item.response_mode.present?
-    url = "#{@item.auth_url}?#{params.to_query}"
+    auth_query[:max_age] = @item.max_age if @item.max_age.present?
+    auth_query[:response_mode] = @item.response_mode if @item.response_mode.present?
+    url = "#{@item.auth_url}?#{auth_query.to_query}"
     redirect_to url
   end
 
@@ -118,7 +143,10 @@ class Sns::Login::OpenIdConnectController < ApplicationController
       return
     end
 
-    render_login user, nil, session: true, login_path: sns_login_path
+    # "ref" is a path to redirect after user is successfully logged in
+    params[:ref] = @resp.session_state[:ref]
+    # "login_path" is a path to redirect after user is logged out
+    render_login user, nil, session: true, login_path: @resp.session_state[:login_path] || sns_login_path
   end
 
   if Rails.env.test?

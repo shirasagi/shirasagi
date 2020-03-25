@@ -10,6 +10,7 @@ module Sns::LoginFilter
     prepend_view_path "app/views/sns/login"
     layout "ss/login"
     navi_view nil
+    helper_method :default_logged_in_path
   end
 
   private
