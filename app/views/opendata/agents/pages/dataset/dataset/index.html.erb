@@ -272,9 +272,6 @@ categories = [
             <dd><%= @cur_page.groups.first.name.sub(/.*\//, "") %><br /></dd>
           <% end %>
 
-          <dt><%= @cur_page.t :downloaded %></dt>
-          <dd><%= @cur_page.downloaded.to_i %><%= t("opendata.labels.time")%></dd>
-
           <dt><%= @cur_page.t :created %></dt>
           <dd><%= tryb{@cur_page.created.strftime("%Y-%m-%d")} %><br /></dd>
 
