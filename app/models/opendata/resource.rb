@@ -27,9 +27,13 @@ class Opendata::Resource
 
   after_save :save_dataset
 
-  def context_path
-    "/resource"
+  class << self
+    def context_path
+      "/resource"
+    end
   end
+
+  delegate :context_path, to: :class
 
   def create_download_history(remote_addr, user_agent, downloaded)
     Opendata::ResourceDownloadHistory.create_history(

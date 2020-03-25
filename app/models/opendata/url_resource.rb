@@ -24,17 +24,13 @@ class Opendata::UrlResource
   after_save -> { dataset.save(validate: false) }
   after_destroy -> { dataset.save(validate: false) }
 
-  def download_url
-    dataset.url.sub(/\.html$/, "") + "#{URI.escape(context_path)}/#{id}/download"
+  class << self
+    def context_path
+      "/url_resource"
+    end
   end
 
-  def download_full_url
-    dataset.full_url.sub(/\.html$/, "") + "#{URI.escape(context_path)}/#{id}/download"
-  end
-
-  def context_path
-    "/url_resource"
-  end
+  delegate :context_path, to: :class
 
   def crawl_update_options
     [

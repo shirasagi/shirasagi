@@ -104,6 +104,61 @@ SS.renderClipboardCopy();
   <%= auto_link paragraph(@cur_page.text) %>
 </div>
 
+<% render_rs = proc do |rs, is_url_resource| %>
+  <div <% if is_url_resource %>class="url-resource"<% else %>class="resource"<% end %>>
+    <div class="info">
+      <div class="name format-<%= rs.format.downcase %>">
+        <%= rs.name %> (<%= rs.format %> <%= rs.source_url.present? ? t("opendata.labels.external_link") : number_to_human_size(rs.size) %>)
+      </div>
+      <% if rs.respond_to?(:downloaded_count) %>
+        <div class="download-count">
+          <span class="label"><%= rs.t :downloaded_count %></span>
+          <span class="count"><%= rs.downloaded_count.to_s(:delimited) %><%= I18n.t("opendata.labels.time") %></span>
+        </div>
+      <% end %>
+    </div>
+
+    <div class="icons">
+      <% license = rs.license %>
+      <% if license.present? %>
+        <span class="license">
+          <% label = tryb { image_tag license.file.url, alt: license.name } || license.name %>
+          <% if license.related_url.present? %>
+            <%= link_to(label, license.related_url, target: "_blank", rel: @cur_site.anti_bot_set_nofollow? ? "nofollow" : nil) %>
+          <% else %>
+            <%= label %>
+          <% end %>
+        </span>
+      <% end %>
+
+      <% if rs.source_url.blank? && rs.previewable? %>
+        <div class="content-wrap">
+          <%= link_to(I18n.t("opendata.labels.preview"), rs.content_url, class: "content", rel: @cur_site.anti_bot_set_nofollow? ? "nofollow" : nil) %>
+        </div>
+      <% end %>
+      <div class="download-wrap">
+        <%= link_to(I18n.t("opendata.labels.downloaded"), rs.download_url, class: "download", "data-url": is_url_resource ? rs.original_url : rs.data_url, rel: @cur_site.anti_bot_set_nofollow? ? "nofollow" : nil) %>
+      </div>
+      <div class="clipboard-wrap">
+        <% url = rs.source_url.present? ? rs.source_url : rs.download_full_url %>
+        <%= link_to(t("opendata.links.copy_url"), rs.url, class: "ss-clipboard-copy", rel: @cur_site.anti_bot_set_nofollow? ? "nofollow" : nil, "data-clip-attr": "data-full-url", "data-full-url": url) %>
+      </div>
+    </div>
+
+    <% if rs.text.present? %>
+      <div class="text">
+        <%= auto_link paragraph(rs.text) %>
+      </div>
+    <% end %>
+
+    <% if rs.rdf_iri.present? %>
+      <div class="sparql">
+        <%= rs.t :rdf_iri %> <%= link_to(rs.rdf_iri, "#{sparql_path}?graph_name=#{rs.rdf_iri}", rel: @cur_site.anti_bot_set_nofollow? ? "nofollow" : nil) %>
+      </div>
+    <% end %>
+  </div>
+<% end %>
+
 <div class="dataset-tabs tabs" id="dataset-tabs-<%= @cur_node.id %>">
   <article class="tab" id="cms-tab-<%= @cur_node.id %>-0">
     <header><h2><%= t("opendata.labels.resource") %></h2></header>
@@ -115,109 +170,11 @@ SS.renderClipboardCopy();
           </header>
 
           <% @cur_page.resources.order(name: 1).each do |rs| %>
-            <div class="resource">
-              <div class="info">
-                <div class="name format-<%= rs.format.downcase %>">
-                  <%= rs.name %>
-                  (<%= rs.format %> <%= rs.source_url.present? ? t("opendata.labels.external_link") : number_to_human_size(rs.size) %>
-                  )
-                </div>
-                <div class="download-count">
-                  <span class="label"><%= rs.t :downloaded_count %></span>
-                  <span class="count"><%= rs.downloaded_count.to_s(:delimited) %><%= I18n.t("opendata.labels.time") %></span>
-                </div>
-              </div>
-
-              <div class="icons">
-                <% if license = rs.license %>
-                <span class="license">
-                  <% label = tryb { image_tag license.file.url, alt: license.name } || license.name %>
-                  <% if license.related_url.present? %>
-                    <%= link_to(label, license.related_url, target: "_blank", rel: @cur_site.anti_bot_set_nofollow? ? "nofollow" : nil) %>
-                  <% else %>
-                    <%= label %>
-                  <% end %>
-                </span>
-                <% end %>
-
-                <% if rs.source_url.blank? && rs.previewable? %>
-                  <div class="content-wrap">
-                    <%= link_to(t("opendata.labels.preview"), rs.content_url, class: "content", rel: @cur_site.anti_bot_set_nofollow? ? "nofollow" : nil) %>
-                  </div>
-                <% end %>
-                <div class="download-wrap">
-                  <%= link_to(t("opendata.labels.downloaded"), rs.download_url, class: "download", "data-url": rs.data_url, rel: @cur_site.anti_bot_set_nofollow? ? "nofollow" : nil) %>
-                </div>
-                <div class="clipboard-wrap">
-                  <% url = rs.source_url.present? ? rs.source_url : rs.download_full_url %>
-                  <%= link_to(t("opendata.links.copy_url"), rs.url, class: "ss-clipboard-copy", rel: @cur_site.anti_bot_set_nofollow? ? "nofollow" : nil, "data-clip-attr": "data-full-url", "data-full-url": url) %>
-                </div>
-
-                <% if rs.text.present? %>
-                  <div class="text">
-                    <%= auto_link paragraph(rs.text) %>
-                  </div>
-                <% end %>
-
-                <% if rs.rdf_iri.present? %>
-                  <div class="sparql">
-                    <%= rs.t :rdf_iri %> <%= link_to(rs.rdf_iri, "#{sparql_path}?graph_name=#{rs.rdf_iri}", rel: @cur_site.anti_bot_set_nofollow? ? "nofollow" : nil) %>
-                  </div>
-                <% end %>
-              </div>
-            </div>
+            <% render_rs.call(rs, false) %>
           <% end %>
 
           <% @cur_page.url_resources.order(name: 1).each do |urs| %>
-            <div class="url-resource">
-              <div class="info">
-                <div class="name format-<%= urs.format.downcase %>">
-                  <%= urs.name %> (<%= urs.format %> <%= number_to_human_size(urs.size) %>)
-                </div>
-
-                <% if urs.text.present? %>
-                  <div class="text">
-                    <%= auto_link paragraph(urs.text) %>
-                  </div>
-                <% end %>
-
-                <% if urs.rdf_iri.present? %>
-                  <div class="sparql">
-                    <%= urs.t :rdf_iri %> <%= link_to(urs.rdf_iri, "#{sparql_path}?graph_name=#{urs.rdf_iri}", rel: @cur_site.anti_bot_set_nofollow? ? "nofollow" : nil) %>
-                  </div>
-                <% end %>
-
-                <div class="icons">
-                  <% if license = urs.license %>
-                  <span class="license">
-                    <% label = tryb { image_tag license.file.url, alt: license.name } || license.name %>
-                    <% if license.related_url.present? %>
-                      <%= link_to(label, license.related_url, target: "_blank", rel: @cur_site.anti_bot_set_nofollow? ? "nofollow" : nil) %>
-                    <% else %>
-                      <%= label %>
-                    <% end %>
-                  </span>
-                  <% end %>
-
-                  <div class="content-wrap">
-                    <%= link_to(I18n.t("opendata.labels.preview"), urs.content_url, class: "content", rel: @cur_site.anti_bot_set_nofollow? ? "nofollow" : nil) if urs.tsv_present? %>
-                  </div>
-
-                  <div class="download-wrap">
-                    <%= link_to(t("opendata.labels.downloaded"), urs.download_url, class: "download", "data-url": urs.original_url, rel: @cur_site.anti_bot_set_nofollow? ? "nofollow" : nil) %>
-                  </div>
-
-                  <div class="clipboard-wrap">
-                    <%= link_to t("opendata.links.copy_url"), urs.download_url,
-                                "class" => "ss-clipboard-copy",
-                                "data-clip-attr" => "data-full-url",
-                                "data-full-url" => ::File.join(@cur_site.full_url, urs.download_url),
-                                "rel" => @cur_site.anti_bot_set_nofollow? ? "nofollow" : nil
-                    %>
-                  </div>
-                </div>
-              </div>
-            </div>
+            <% render_rs.call(urs, true) %>
           <% end %>
         </div>
 
