@@ -46,8 +46,10 @@ class Opendata::UrlResource
     puts self.original_url
 
     last_modified = Timeout.timeout(time_out) do
-      uri = URI.parse(self.original_url)
-      uri.open(proxy: true) { |url_file| url_file.last_modified }
+      url = ::URI.parse(self.original_url) rescue nil
+      break nil if url.blank?
+
+      url.open(proxy: true) { |url_file| url_file.last_modified }
     end
 
     if last_modified.blank?
@@ -162,11 +164,12 @@ class Opendata::UrlResource
     require 'timeout'
     require 'nkf'
 
+    url = ::URI.parse(original_url) rescue nil
+    return if url.blank?
+
     temp_file.binmode
     Timeout.timeout(time_out) do
-      uri = URI.parse(original_url)
-      uri.open(proxy: true) do |data|
-
+      url.open(proxy: true) do |data|
         data.binmode
         temp_file.write(data.read)
         temp_file.rewind
