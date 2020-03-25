@@ -101,7 +101,7 @@ SS.renderClipboardCopy();
 <% end %>
 
 <div class="text">
-  <%= auto_link paragraph(@cur_page.text) %>
+  <%= auto_link paragraph(sanitize(@cur_page.text)) %>
 </div>
 
 <% render_rs = proc do |rs, is_url_resource| %>
@@ -147,7 +147,7 @@ SS.renderClipboardCopy();
 
     <% if rs.text.present? %>
       <div class="text">
-        <%= auto_link paragraph(rs.text) %>
+        <%= auto_link paragraph(sanitize(rs.text)) %>
       </div>
     <% end %>
 
