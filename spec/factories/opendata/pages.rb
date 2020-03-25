@@ -36,6 +36,7 @@ FactoryBot.define do
 
   factory :opendata_url_resource, class: Opendata::UrlResource do
     name { unique_id }
+    filename { name }
     text "eeee\nffff"
   end
 
