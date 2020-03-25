@@ -261,6 +261,12 @@ ja:
     event/addon/calendar_list:
       event_display:
         - イベントカレンダーの表示形式を指定します。
+      substitute_html:
+        - イベントがない時に表示するテキストをHTMLで記述することが可能です。
+      upper_html:
+        - リスト部分の上部に任意の内容をHTMLで記述することが可能です。
+      lower_html:
+        - リスト部分の下部に任意の内容をHTMLで記述することが可能です。
     event/addon/ical_import:
       ical_import_url:
         - iCal配信URLを設定します。
