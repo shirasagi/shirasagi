@@ -143,6 +143,7 @@ class Opendata::UrlResource
 
           ss_file.content_type = self.format = self.filename.sub(/.*\./, "").upcase
           ss_file.filename = self.filename
+          ss_file.owner_item = dataset if file.respond_to?(:owner_item=)
           ss_file.save
           send("file_id=", ss_file.id)
           self.crawl_state = "same"
