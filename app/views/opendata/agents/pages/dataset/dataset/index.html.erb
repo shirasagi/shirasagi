@@ -105,7 +105,7 @@ SS.renderClipboardCopy();
 </div>
 
 <% render_rs = proc do |rs| %>
-  <div class="<%= rs.context_path[1..-1].dasherize %>">
+  <div class="<%= rs.context_path[1..-1].dasherize %>" data-uuid="<%= rs.uuid %>">
     <div class="info">
       <div class="name format-<%= rs.format.downcase %>">
         <%= rs.name %> (<%= rs.format %> <%= rs.source_url.present? ? t("opendata.labels.external_link") : number_to_human_size(rs.size) %>)
@@ -144,7 +144,7 @@ SS.renderClipboardCopy();
       </div>
       <% if rs.rdf_iri.present? %>
         <div class="sparql">
-          <%= link_to(rs.rdf_iri, "#{sparql_path}?graph_name=#{rs.rdf_iri}", rel: @cur_site.anti_bot_set_nofollow? ? "nofollow" : nil) %>
+          <%= link_to(rs.rdf_iri, "#{sparql_path}?graph_name=#{rs.rdf_iri}", class: "sparql", rel: @cur_site.anti_bot_set_nofollow? ? "nofollow" : nil) %>
         </div>
       <% end %>
     </div>
