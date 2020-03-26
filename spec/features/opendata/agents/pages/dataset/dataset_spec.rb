@@ -67,7 +67,7 @@ describe "opendata_agents_pages_dataset", type: :feature, dbscope: :example, js:
         within "article#cms-tab-#{node_dataset.id}-0-view" do
           within ".resource[data-uuid='#{@rs1.uuid}']" do
             expect(page).to have_css(".info .name", text: "#{@rs1.name} (#{@rs1.format} #{@rs1.size.to_s(:human_size)})")
-            expect(page).to have_css(".info .download-count", text: @rs1.downloaded_count.to_s(:delimited))
+            expect(page).to have_css(".info .download-count", text: "0#{I18n.t("opendata.labels.time")}")
             expect(page).to have_css(".icons .license img[src=\"#{@rs1.license.file.url}\"]")
             expect(page).to have_css(".icons .content-wrap a.content", text: I18n.t("opendata.labels.preview"))
             # シラサギ・ハーベストは data-url が指す URL からリソースをダウンロードする。
@@ -88,7 +88,7 @@ describe "opendata_agents_pages_dataset", type: :feature, dbscope: :example, js:
           within ".resource[data-uuid='#{@rs2.uuid}']" do
             name = "#{@rs2.name} (#{@rs2.format} #{I18n.t("opendata.labels.external_link")})"
             expect(page).to have_css(".info .name", text: name)
-            expect(page).to have_css(".info .download-count", text: @rs2.downloaded_count.to_s(:delimited))
+            expect(page).to have_css(".info .download-count", text: "0#{I18n.t("opendata.labels.time")}")
             expect(page).to have_css(".icons .license img[src=\"#{@rs2.license.file.url}\"]")
             expect(page).to have_no_css(".icons .content-wrap")
             # シラサギ・ハーベストは data-url が指す URL からリソースをダウンロードする。
@@ -120,6 +120,79 @@ describe "opendata_agents_pages_dataset", type: :feature, dbscope: :example, js:
             expect(page).to have_css(".icons .clipboard-wrap a.ss-clipboard-copy", text: I18n.t("opendata.links.copy_url"))
             expect(page).to have_css(".text", text: @urs1.text)
           end
+        end
+      end
+
+      # Download resource1
+      visit page_dataset.full_url
+
+      now = Time.zone.now.beginning_of_minute
+      Timecop.freeze(now) do
+        within ".resource[data-uuid='#{@rs1.uuid}']" do
+          click_on I18n.t("opendata.labels.downloaded")
+        end
+      end
+
+      wait_for_download
+      expect(::File.binread(downloads.first)).to eq ::File.binread(csv_path)
+
+      expect(Opendata::ResourceDownloadHistory.count).to eq 1
+      Opendata::ResourceDownloadHistory.first.tap do |history|
+        expect(history.dataset_id).to eq page_dataset.id
+        expect(history.dataset_name).to eq page_dataset.name
+        expect(history.dataset_areas).to eq [ node_area.name ]
+        expect(history.dataset_categories).to be_blank
+        expect(history.dataset_estat_categories).to be_blank
+        expect(history.resource_id).to eq @rs1.id
+        expect(history.resource_name).to eq @rs1.name
+        expect(history.resource_filename).to eq @rs1.filename
+        expect(history.resource_format).to eq @rs1.format
+        expect(history.resource_source_url).to eq @rs1.source_url
+        expect(history.full_url).to eq page_dataset.full_url
+        expect(history.remote_addr).to be_present
+        expect(history.user_agent).to be_present
+        expect(history.downloaded).to eq now
+        expect(history.downloaded_by).to eq "single"
+      end
+
+      # Download resource2
+      visit page_dataset.full_url
+      Timecop.freeze(now) do
+        within ".resource[data-uuid='#{@rs2.uuid}']" do
+          click_on I18n.t("opendata.labels.downloaded")
+        end
+      end
+      # a new history is created
+      expect(Opendata::ResourceDownloadHistory.count).to eq 2
+      expect(Opendata::ResourceDownloadHistory.where(resource_id: @rs2.id).count).to eq 1
+
+      # Download url resource1
+      visit page_dataset.full_url
+      Timecop.freeze(now) do
+        within ".url-resource[data-uuid='#{@urs1.uuid}']" do
+          click_on I18n.t("opendata.labels.downloaded")
+        end
+      end
+      # no histories are created for url resources
+      expect(Opendata::ResourceDownloadHistory.count).to eq 2
+
+      # Download count is not increased because page renders with cached count
+      visit page_dataset.full_url
+      within ".resource[data-uuid='#{@rs1.uuid}']" do
+        expect(page).to have_css(".info .download-count", text: "0#{I18n.t("opendata.labels.time")}")
+      end
+      within ".resource[data-uuid='#{@rs2.uuid}']" do
+        expect(page).to have_css(".info .download-count", text: "0#{I18n.t("opendata.labels.time")}")
+      end
+
+      Timecop.freeze(now + Opendata::Resource::DOWNLOAD_CACHE_LIFETIME + 1.minute) do
+        # time passes and then download count cache is expired. so, download count is increased
+        visit page_dataset.full_url
+        within ".resource[data-uuid='#{@rs1.uuid}']" do
+          expect(page).to have_css(".info .download-count", text: "1#{I18n.t("opendata.labels.time")}")
+        end
+        within ".resource[data-uuid='#{@rs2.uuid}']" do
+          expect(page).to have_css(".info .download-count", text: "1#{I18n.t("opendata.labels.time")}")
         end
       end
     end
