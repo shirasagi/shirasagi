@@ -140,8 +140,7 @@ SS.renderClipboardCopy();
         <%= link_to(I18n.t("opendata.labels.downloaded"), rs.download_url, class: "download", "data-url": rs.data_url, rel: @cur_site.anti_bot_set_nofollow? ? "nofollow" : nil) %>
       </div>
       <div class="clipboard-wrap">
-        <% url = rs.source_url.present? ? rs.source_url : rs.download_full_url %>
-        <%= link_to(t("opendata.links.copy_url"), rs.url, class: "ss-clipboard-copy", rel: @cur_site.anti_bot_set_nofollow? ? "nofollow" : nil, "data-clip-attr": "data-full-url", "data-full-url": url) %>
+        <%= link_to(t("opendata.links.copy_url"), rs.download_url, class: "ss-clipboard-copy", rel: @cur_site.anti_bot_set_nofollow? ? "nofollow" : nil, "data-clip-attr": "data-full-url", "data-full-url": rs.download_full_url) %>
       </div>
     </div>
 
