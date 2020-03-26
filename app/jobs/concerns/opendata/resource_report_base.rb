@@ -43,7 +43,6 @@ module Opendata::ResourceReportBase
 
   def each_item(base_criteria, &block)
     criteria = base_criteria.site(site)
-    criteria = criteria.exists(resource_source_url: false)
     criteria = criteria.gte(self.class.issued_at_field => @start_at).lt(self.class.issued_at_field => @end_at)
     all_ids = criteria.pluck(:id)
     all_ids.each_slice(100) do |ids|
