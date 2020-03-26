@@ -142,17 +142,16 @@ SS.renderClipboardCopy();
       <div class="clipboard-wrap">
         <%= link_to(t("opendata.links.copy_url"), rs.download_url, class: "ss-clipboard-copy", rel: @cur_site.anti_bot_set_nofollow? ? "nofollow" : nil, "data-clip-attr": "data-full-url", "data-full-url": rs.download_full_url) %>
       </div>
+      <% if rs.rdf_iri.present? %>
+        <div class="sparql">
+          <%= link_to(rs.rdf_iri, "#{sparql_path}?graph_name=#{rs.rdf_iri}", rel: @cur_site.anti_bot_set_nofollow? ? "nofollow" : nil) %>
+        </div>
+      <% end %>
     </div>
 
     <% if rs.text.present? %>
       <div class="text">
         <%= auto_link paragraph(sanitize(rs.text)) %>
-      </div>
-    <% end %>
-
-    <% if rs.rdf_iri.present? %>
-      <div class="sparql">
-        <%= rs.t :rdf_iri %> <%= link_to(rs.rdf_iri, "#{sparql_path}?graph_name=#{rs.rdf_iri}", rel: @cur_site.anti_bot_set_nofollow? ? "nofollow" : nil) %>
       </div>
     <% end %>
   </div>
