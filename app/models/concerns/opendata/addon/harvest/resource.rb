@@ -27,9 +27,13 @@ module Opendata::Addon::Harvest::Resource
 
   def data_url
     if source_url.present?
+      # a resource referencing other site's resource
       source_url
+    elsif respond_to?(:original_url) && original_url.present?
+      # a url resource
+      original_url
     elsif file
-      ::File.join(dataset.site.full_url, file.url)
+      file.full_url
     else
       ""
     end

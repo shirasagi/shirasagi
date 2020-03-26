@@ -104,8 +104,8 @@ SS.renderClipboardCopy();
   <%= auto_link paragraph(sanitize(@cur_page.text)) %>
 </div>
 
-<% render_rs = proc do |rs, is_url_resource| %>
-  <div <% if is_url_resource %>class="url-resource"<% else %>class="resource"<% end %>>
+<% render_rs = proc do |rs| %>
+  <div class="<%= rs.context_path[1..-1].dasherize %>">
     <div class="info">
       <div class="name format-<%= rs.format.downcase %>">
         <%= rs.name %> (<%= rs.format %> <%= rs.source_url.present? ? t("opendata.labels.external_link") : number_to_human_size(rs.size) %>)
@@ -137,7 +137,7 @@ SS.renderClipboardCopy();
         </div>
       <% end %>
       <div class="download-wrap">
-        <%= link_to(I18n.t("opendata.labels.downloaded"), rs.download_url, class: "download", "data-url": is_url_resource ? rs.original_url : rs.data_url, rel: @cur_site.anti_bot_set_nofollow? ? "nofollow" : nil) %>
+        <%= link_to(I18n.t("opendata.labels.downloaded"), rs.download_url, class: "download", "data-url": rs.data_url, rel: @cur_site.anti_bot_set_nofollow? ? "nofollow" : nil) %>
       </div>
       <div class="clipboard-wrap">
         <% url = rs.source_url.present? ? rs.source_url : rs.download_full_url %>
@@ -170,11 +170,11 @@ SS.renderClipboardCopy();
           </header>
 
           <% @cur_page.resources.order(name: 1).each do |rs| %>
-            <% render_rs.call(rs, false) %>
+            <% render_rs.call(rs) %>
           <% end %>
 
           <% @cur_page.url_resources.order(name: 1).each do |urs| %>
-            <% render_rs.call(urs, true) %>
+            <% render_rs.call(urs) %>
           <% end %>
         </div>
 
