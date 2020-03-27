@@ -24,17 +24,13 @@ class Opendata::UrlResource
   after_save -> { dataset.save(validate: false) }
   after_destroy -> { dataset.save(validate: false) }
 
-  def download_url
-    dataset.url.sub(/\.html$/, "") + "#{URI.escape(context_path)}/#{id}/download"
+  class << self
+    def context_path
+      "/url_resource"
+    end
   end
 
-  def download_full_url
-    dataset.full_url.sub(/\.html$/, "") + "#{URI.escape(context_path)}/#{id}/download"
-  end
-
-  def context_path
-    "/url_resource"
-  end
+  delegate :context_path, to: :class
 
   def crawl_update_options
     [
@@ -50,8 +46,10 @@ class Opendata::UrlResource
     puts self.original_url
 
     last_modified = Timeout.timeout(time_out) do
-      uri = URI.parse(self.original_url)
-      uri.open(proxy: true) { |url_file| url_file.last_modified }
+      url = ::URI.parse(self.original_url) rescue nil
+      break nil if url.blank?
+
+      url.open(proxy: true) { |url_file| url_file.last_modified }
     end
 
     if last_modified.blank?
@@ -145,6 +143,7 @@ class Opendata::UrlResource
 
           ss_file.content_type = self.format = self.filename.sub(/.*\./, "").upcase
           ss_file.filename = self.filename
+          ss_file.owner_item = dataset if file.respond_to?(:owner_item=)
           ss_file.save
           send("file_id=", ss_file.id)
           self.crawl_state = "same"
@@ -166,11 +165,12 @@ class Opendata::UrlResource
     require 'timeout'
     require 'nkf'
 
+    url = ::URI.parse(original_url) rescue nil
+    return if url.blank?
+
     temp_file.binmode
     Timeout.timeout(time_out) do
-      uri = URI.parse(original_url)
-      uri.open(proxy: true) do |data|
-
+      url.open(proxy: true) do |data|
         data.binmode
         temp_file.write(data.read)
         temp_file.rewind

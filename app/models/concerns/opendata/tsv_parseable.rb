@@ -24,7 +24,7 @@ module Opendata::TsvParseable
     logger.error("#{e.class} (#{e.message}):\n  #{e.backtrace.join("\n  ")}")
     nil
   rescue => e
-    logger.error("#{e.class} (#{e.message}):\n  #{e.backtrace.join("\n  ")}")
+    Rails.logger.error("#{e.class} (#{e.message}):\n  #{e.backtrace.join("\n  ")}")
     nil
   end
 
@@ -34,9 +34,6 @@ module Opendata::TsvParseable
 
     sp = Roo::Spreadsheet.open(file.path, extension: format.downcase.to_sym)
     [sp.sheets, CSV.parse(sp.sheet(page).to_csv)]
-  rescue => e
-    logger.error("#{e.class} (#{e.message}):\n  #{e.backtrace.join("\n  ")}")
-    [nil, nil]
   end
 
   alias csv_present? tsv_present?

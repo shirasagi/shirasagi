@@ -11,7 +11,7 @@ describe Opendata::UrlResource, dbscope: :example, http_server: true do
   let(:license) { create(:opendata_license, cur_site: site) }
 
   context "check attributes with typical url resource" do
-    subject { dataset.url_resources.new(attributes_for(:opendata_resource)) }
+    subject { dataset.url_resources.new(attributes_for(:opendata_url_resource)) }
     before do
       subject.license_id = license.id
       subject.original_url = "http://#{http.addr}:#{http.port}/shift_jis.csv"
@@ -54,7 +54,7 @@ describe Opendata::UrlResource, dbscope: :example, http_server: true do
   end
 
   context "when last_modified is not given" do
-    subject { dataset.url_resources.new(attributes_for(:opendata_resource)) }
+    subject { dataset.url_resources.new(attributes_for(:opendata_url_resource)) }
     before do
       subject.license_id = license.id
       subject.original_url = "http://#{http.addr}:#{http.port}/shift_jis.csv"
@@ -75,7 +75,7 @@ describe Opendata::UrlResource, dbscope: :example, http_server: true do
 
   describe "#parse_tsv" do
     context "when shift_jis csv is given" do
-      subject { dataset.url_resources.new(attributes_for(:opendata_resource)) }
+      subject { dataset.url_resources.new(attributes_for(:opendata_url_resource)) }
       before do
         subject.license_id = license.id
         subject.original_url = "http://#{http.addr}:#{http.port}/shift_jis.csv"
@@ -94,7 +94,7 @@ describe Opendata::UrlResource, dbscope: :example, http_server: true do
     end
 
     context "when euc-jp csv is given" do
-      subject { dataset.url_resources.new(attributes_for(:opendata_resource)) }
+      subject { dataset.url_resources.new(attributes_for(:opendata_url_resource)) }
       before do
         subject.license_id = license.id
         subject.original_url = "http://#{http.addr}:#{http.port}/euc-jp.csv"
@@ -113,7 +113,7 @@ describe Opendata::UrlResource, dbscope: :example, http_server: true do
     end
 
     context "when utf-8 csv is given" do
-      subject { dataset.url_resources.new(attributes_for(:opendata_resource)) }
+      subject { dataset.url_resources.new(attributes_for(:opendata_url_resource)) }
       before do
         subject.license_id = license.id
         subject.original_url = "http://#{http.addr}:#{http.port}/utf-8.csv"
@@ -134,7 +134,7 @@ describe Opendata::UrlResource, dbscope: :example, http_server: true do
 
   describe "#do_crawl" do
     context "when crawl_update is auto" do
-      subject { dataset.url_resources.new(attributes_for(:opendata_resource)) }
+      subject { dataset.url_resources.new(attributes_for(:opendata_url_resource)) }
       before do
         subject.license_id = license.id
         subject.original_url = "http://#{http.addr}:#{http.port}/shift_jis.csv"
@@ -161,7 +161,7 @@ describe Opendata::UrlResource, dbscope: :example, http_server: true do
     end
 
     context "when crawl_update is none" do
-      subject { dataset.url_resources.new(attributes_for(:opendata_resource)) }
+      subject { dataset.url_resources.new(attributes_for(:opendata_url_resource)) }
       before do
         subject.license_id = license.id
         subject.original_url = "http://#{http.addr}:#{http.port}/shift_jis.csv"
@@ -188,7 +188,7 @@ describe Opendata::UrlResource, dbscope: :example, http_server: true do
     end
 
     context "when uri.path is /" do
-      subject { dataset.url_resources.new(attributes_for(:opendata_resource)) }
+      subject { dataset.url_resources.new(attributes_for(:opendata_url_resource)) }
       before do
         subject.license_id = license.id
         subject.original_url = "http://#{http.addr}:#{http.port}/"
@@ -203,7 +203,7 @@ describe Opendata::UrlResource, dbscope: :example, http_server: true do
     end
 
     context "when uri.path is invalid" do
-      subject { dataset.url_resources.new(attributes_for(:opendata_resource)) }
+      subject { dataset.url_resources.new(attributes_for(:opendata_url_resource)) }
       before do
         subject.license_id = license.id
         subject.original_url = "http://#{http.addr}:#{http.port}/notfound.csv"
@@ -246,7 +246,7 @@ describe Opendata::UrlResource, dbscope: :example, http_server: true do
     end
 
     context "when ttl file is succeeded to send to fuseki server", fuseki: true do
-      subject { dataset.url_resources.new(attributes_for(:opendata_resource)) }
+      subject { dataset.url_resources.new(attributes_for(:opendata_url_resource)) }
 
       before do
         subject.license_id = license.id
@@ -264,7 +264,7 @@ describe Opendata::UrlResource, dbscope: :example, http_server: true do
     end
 
     context "when ttl file is failed to send to fuseki server", fuseki: true do
-      subject { dataset.url_resources.new(attributes_for(:opendata_resource)) }
+      subject { dataset.url_resources.new(attributes_for(:opendata_url_resource)) }
 
       before do
         subject.license_id = license.id
