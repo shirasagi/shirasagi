@@ -1,18 +1,21 @@
 <%= code_editor ".mod-event-calendarlist .html", mode: :html %>
 
 <dl class="see mod-event-calendarlist">
-  <dt><%= @model.t :event_display %></dt>
+  <dt><%= @model.t :event_display %><%= @model.tt :event_display %></dt>
   <dd><%= f.select :event_display, @item.event_display_options %></dd>
 
-  <dt><%= @model.t :conditions %></dt>
+  <dt><%= @model.t :conditions %><%= @model.tt :conditions %></dt>
   <dd><%= f.text_area :conditions, value: @item.conditions.join("\n"), style: "height: 100px;" %></dd>
 
-  <dt><%= @model.t :upper_html %></dt>
+  <dt><%= @model.t :upper_html %><%= @model.tt :upper_html %></dt>
   <dd><%= f.text_area :upper_html, class: :html %></dd>
 
-  <dt><%= @model.t :lower_html %></dt>
+  <dt><%= @model.t :lower_html %><%= @model.tt :lower_html %></dt>
   <dd><%= f.text_area :lower_html, class: :html %></dd>
 
-  <dt><%= @model.t :new_days %></dt>
+  <dt><%= @model.t :substitute_html %><%= @model.tt :substitute_html %></dt>
+  <dd><%= f.text_area :substitute_html, class: :html %></dd>
+
+  <dt><%= @model.t :new_days %><%= @model.tt :new_days %></dt>
   <dd><%= f.number_field :new_days %> <%= t "datetime.prompts.day" %></dd>
 </dl>
