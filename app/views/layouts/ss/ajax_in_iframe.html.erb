@@ -6,7 +6,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1.0,user-scalable=yes,minimum-scale=1.0,maximum-scale=2.0" />
 <%= safe_join controller.stylesheets.map { |path| stylesheet_link_tag(path, media: "all") }, "\n" %>
 <%= safe_join controller.javascripts.map { |path| javascript_include_tag(path) }, "\n" %>
-<%= stylesheet_link_tag "cms/preview/ajax_in_iframe" %>
+<%= stylesheet_link_tag "cms/preview/ajax_in_iframe", media: 'all' %>
 <!--[if lt IE 9]>
 <script src="/assets/js/html5.js"></script>
 <script src="/assets/js/selectivizr-min.js"></script>
