@@ -6,3 +6,5 @@ ActiveSupport::Notifications.subscribe('deliver.action_mailer') do |*args|
     # suppress any errors
   end
 end
+
+ActionMailer::Base.include SS::Mailer::Rescuable
