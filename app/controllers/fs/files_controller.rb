@@ -12,7 +12,8 @@ class Fs::FilesController < ApplicationController
   private
 
   def set_user
-    @cur_user = get_user_by_session
+    @cur_user = get_user_by_access_token
+    @cur_user ||= get_user_by_session
   end
 
   def set_item
