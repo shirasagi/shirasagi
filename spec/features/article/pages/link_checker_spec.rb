@@ -71,12 +71,13 @@ describe "link_checker", type: :feature, dbscope: :example, js: true do
           click_button I18n.t("cms.link_check")
           wait_for_ajax
 
-          expect(page).to have_css('#errorLinkChecker li', text: "#{success_url1} 成功")
-          expect(page).to have_css('#errorLinkChecker li', text: "#{success_url2} 成功")
-          expect(page).to have_css('#errorLinkChecker li', text: "#{success_url3} 成功")
-          expect(page).to have_css('#errorLinkChecker li', text: "#{failed_url1} 失敗")
-          expect(page).to have_css('#errorLinkChecker li', text: "#{failed_url2} 失敗")
-          expect(page).to have_css('#errorLinkChecker li', text: "#{failed_url3} 失敗")
+          expect(page).to have_css('#errorLinkChecker li', text: "#{success_url1} #{success}")
+          expect(page).to have_css('#errorLinkChecker li', text: "#{success_url2} #{success}")
+          expect(page).to have_css('#errorLinkChecker li', text: "#{success_url3} #{success}")
+          expect(page).to have_css('#errorLinkChecker li', text: "#{failed_url1} #{failure}")
+          expect(page).to have_css('#errorLinkChecker li', text: "#{failed_url2} #{failure}")
+          expect(page).to have_css('#errorLinkChecker li', text: "#{failed_url3} #{failure}")
+          expect(page).to have_css('#errorLinkChecker li', text: "#{invalid_url1} #{failure}")
         end
       end
 
@@ -99,12 +100,13 @@ describe "link_checker", type: :feature, dbscope: :example, js: true do
           click_button I18n.t("cms.link_check")
           wait_for_ajax
 
-          expect(page).to have_css('#errorLinkChecker li', text: "#{success_url1} 成功")
-          expect(page).to have_css('#errorLinkChecker li', text: "#{success_url2} 成功")
-          expect(page).to have_css('#errorLinkChecker li', text: "#{success_url3} 成功")
-          expect(page).to have_css('#errorLinkChecker li', text: "#{failed_url1} 失敗")
-          expect(page).to have_css('#errorLinkChecker li', text: "#{failed_url2} 失敗")
-          expect(page).to have_css('#errorLinkChecker li', text: "#{failed_url3} 失敗")
+          expect(page).to have_css('#errorLinkChecker li', text: "#{success_url1} #{success}")
+          expect(page).to have_css('#errorLinkChecker li', text: "#{success_url2} #{success}")
+          expect(page).to have_css('#errorLinkChecker li', text: "#{success_url3} #{success}")
+          expect(page).to have_css('#errorLinkChecker li', text: "#{failed_url1} #{failure}")
+          expect(page).to have_css('#errorLinkChecker li', text: "#{failed_url2} #{failure}")
+          expect(page).to have_css('#errorLinkChecker li', text: "#{failed_url3} #{failure}")
+          expect(page).to have_css('#errorLinkChecker li', text: "#{invalid_url1} #{failure}")
         end
       end
     end
