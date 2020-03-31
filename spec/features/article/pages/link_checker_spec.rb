@@ -13,11 +13,11 @@ describe "link_checker", type: :feature, dbscope: :example, js: true do
   let(:ss_file1) { create :ss_file, site: site, user: user }
   let(:ss_file2) { create :ss_file, site: site, user: user }
 
-  let(:success_url1) { ::File.join(site.full_url, ss_file1.url) }
+  let(:success_url1) { ss_file1.url }
   let(:success_url2) { ::File.join(site.full_url, ss_file2.url) }
   let(:success_url3) { "https://success.example.jp" }
 
-  let(:failed_url1) { ::File.join(site.full_url, "/fs/1/_/failed.txt") }
+  let(:failed_url1) { "/fs/1/_/failed.txt" }
   let(:failed_url2) { ::File.join(site.full_url, "/fs/2/_/2.pdf") }
   let(:failed_url3) { "https://failed.example.jp" }
 
@@ -25,11 +25,11 @@ describe "link_checker", type: :feature, dbscope: :example, js: true do
 
   let(:html) do
     h = []
-    h << "<a href=\"#{success_url1}\">#{success_url1}</a>"
-    h << "<a class=\"icon-png\" href=\"#{success_url2}\">#{success_url2}</a>"
+    h << "<a class=\"icon-png\" href=\"#{success_url1}\">#{success_url1}</a>"
+    h << "<a href=\"#{success_url2}\">#{success_url2}</a>"
     h << "<a href=\"#{success_url3}\">#{success_url3}</a>"
-    h << "<a href=\"#{failed_url1}\">#{failed_url1}</a>"
-    h << "<a class=\"icon-png\" href=\"#{failed_url2}\">#{failed_url2}</a>"
+    h << "<a class=\"icon-png\" href=\"#{failed_url1}\">#{failed_url1}</a>"
+    h << "<a href=\"#{failed_url2}\">#{failed_url2}</a>"
     h << "<a href=\"#{failed_url3}\">#{failed_url3}</a>"
     h << "<a href=\"#{invalid_url1}\">#{invalid_url1}</a>"
     h.join
