@@ -185,3 +185,4 @@ ja:
   job:
     models:
       gws/board/trash_purge_job: 掲示板/投稿ゴミ箱の掃除
+      gws/board/notification_job: 掲示板/通知
