@@ -3,12 +3,12 @@ Rails.application.routes.draw do
   Member::Initializer
 
   concern :deletion do
-    get :delete, :on => :member
+    get :delete, on::member
     delete :destroy_all, on: :collection, path: ''
   end
 
   concern :download do
-    get :download, :on => :collection
+    get :download, on: :collection
   end
 
   concern :command do

@@ -7,7 +7,7 @@ Rails.application.routes.draw do
   end
 
   concern :download do
-    get :download, :on => :collection
+    get :download, on: :collection
   end
 
   concern :reply do

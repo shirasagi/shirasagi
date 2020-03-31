@@ -8,10 +8,10 @@ Rails.application.routes.draw do
   end
 
   concern :crud do
-    get :move, :on => :member
-    put :move, :on => :member
-    get :copy, :on => :member
-    put :copy, :on => :member
+    get :move, on: :member
+    put :move, on: :member
+    get :copy, on: :member
+    put :copy, on: :member
   end
 
   concern :command do
