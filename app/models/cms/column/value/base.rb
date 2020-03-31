@@ -190,7 +190,7 @@ class Cms::Column::Value::Base
   end
 
   def find_url(val)
-    val.scan(%r!<a href="(.+?)">.+?</a>!).flatten | URI.extract(val, %w(http https))
+    val.scan(%r!<a .*? href="(.+?)">.+?</a>!).flatten | URI.extract(val, %w(http https))
   end
 
   def check_url(url)
