@@ -165,7 +165,6 @@ class Cms::Column::Value::Base
     @link_errors = []
     @root_url = column.form.site.full_root_url
     @fs_url = ::File.join(@root_url, "/fs/")
-    @access_token = @link_check_access_token
     check = {}
 
     fields.each_key do |key|
