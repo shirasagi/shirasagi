@@ -30,5 +30,5 @@
   <dd><%= @item.jwks_uri %></dd>
 
   <dt><%= @model.t :redirect_uri %></dt>
-  <dd><%= @item.redirect_uri(request.host_with_port) %></dd>
+  <dd><%= @item.redirect_uri(request.protocol, request.host_with_port) %></dd>
 </dl>

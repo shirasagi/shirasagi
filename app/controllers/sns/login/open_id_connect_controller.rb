@@ -68,7 +68,7 @@ class Sns::Login::OpenIdConnectController < ApplicationController
 
     auth_resp = core_resp.merge(
       cur_item: @item,
-      redirect_uri: @item.redirect_uri(request.host_with_port),
+      redirect_uri: @item.redirect_uri(request.protocol, request.host_with_port),
       session_state: session.delete('ss.sso.state'))
     token_req = Sys::Auth::OpenIdConnect::TokenRequest.new(auth_resp)
     if token_req.invalid?
@@ -112,8 +112,8 @@ class Sns::Login::OpenIdConnectController < ApplicationController
   def init
     auth_query = {
       client_id: @item.client_id,
-      # redirect_uri: "http://#{request.host_with_port}/.mypage/login/oid/#{@item.filename}/callback",
-      redirect_uri: @item.redirect_uri(request.host_with_port),
+      # redirect_uri: "#{request.protocol}#{request.host_with_port}/.mypage/login/oid/#{@item.filename}/callback",
+      redirect_uri: @item.redirect_uri(request.protocol, request.host_with_port),
       response_type: @item.response_type || @item.default_response_type,
       nonce: nonce,
       scope: @item.scopes.join(" ") || @item.default_scopes.join(" "),
