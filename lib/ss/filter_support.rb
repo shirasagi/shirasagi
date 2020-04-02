@@ -29,12 +29,18 @@ module SS
       uri.path.start_with?("/fs")
     end
 
+    def sns_redirect_path?(_, uri)
+      return false if uri.path.blank?
+      uri.path.start_with?("/.mypage/redirect")
+    end
+
     included do
       module_function :cur_site
       module_function :same_host?
       module_function :absolute_path?
       module_function :relative_path?
       module_function :fs_path?
+      module_function :sns_redirect_path?
     end
   end
 end
