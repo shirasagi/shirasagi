@@ -434,7 +434,6 @@ textarea {
   line-height: 6em;
   .count-label {
     display: inline-block;
-    float: left;
     padding: 33px 10px;
     background: $gray2;
     line-height: 1em;
@@ -442,7 +441,6 @@ textarea {
   }
   .count {
     display: inline-block;
-    float: left;
     padding: 26px 10px 26px 90px;
     font-size: $px32;
     line-height: 1em;
@@ -1065,17 +1063,30 @@ div.categories, nav.categories {
     }
     .resource, .url-resource, .appfile {
       @include clear;
+      @include display-flex;
+      @include justify-content(space-between);
+      @include flex-wrap(wrap);
       padding: 12px;
-      border-bottom: $border-gray2;
+      &:not(:last-child) {
+        border-bottom: $border-gray2;
+        margin-bottom: 20px;
+      }
       .info {
         @include display-flex;
         @include align-items(center);
         @include justify-content(space-between);
         @include flex-wrap(wrap);
+        width: 40%;
         .name {
           display: block;
           width: 500px;
           padding: 7px 0 7px 35px;
+          float: none;
+          margin-bottom: 10px;
+        }
+        .download-count {
+          border-top: solid 1px #dfdfdf;
+          padding: 8px 12px;
         }
         div[class^="name format-"] {
           background: url(../img/file-default.gif) no-repeat left center;
@@ -1131,6 +1142,7 @@ div.categories, nav.categories {
         @include align-items(center);
         @include flex-wrap(wrap);
         @include justify-content(flex-end);
+        width: calc(60% - 10px);
         span, div {
           margin-left: $item-margin;
           &:empty {
@@ -1145,7 +1157,8 @@ div.categories, nav.categories {
         }
       }
       .text {
-        margin-top: 20px;
+        padding: 8px 17px;
+        border-top: solid 1px #dfdfdf;
       }
     }
   }
