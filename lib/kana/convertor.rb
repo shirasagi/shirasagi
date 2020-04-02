@@ -14,27 +14,21 @@ module Kana::Convertor
       return html unless @@mecab
 
       html = html.tr("\u00A0", " ")
-      doc = Nokogiri::HTML.parse(html, nil, 'utf-8')
-      byte = doc.inner_html.bytes
-      doc.xpath('//a[@href]').each do |tag|
-        tag['href'] = tag['href'].gsub(/%[^%]{2}/, ' ')
-      end
-      doc.xpath('//img[@src]').each do |tag|
-        tag['src'] = tag['src'].gsub(/%[^%]{2}/, ' ')
-      end
-      new_html = doc.inner_html
 
-      text = new_html.gsub(/[\r\n\t]/, " ")
+      text = html.gsub(/[\r\n\t]/, " ")
       tags = %w(head ruby script style)
       text.gsub!(/<!\[CDATA\[.*?\]\]>/m) { |m| mpad(m) }
       text.gsub!(/<!--.*?-->/m) { |m| mpad(m) }
       tags.each { |t| text.gsub!(/<#{t}( [^>]*\/>|[^\w].*?<\/#{t}>)/m) { |m| mpad(m) } }
       text.gsub!(/<.*?>/m) { |m| mpad(m) }
       text.gsub!(/\\u003c.*?\\u003e/m) { |m| mpad(m) } #<>
+      text.gsub!(/%[^%]{2}/m, '   ')
       text.gsub!(/[ -\/:-@\[-`\{-~]/m, "\r")
 
+      byte = html.bytes
       kana = ""
       pl   = 0
+      retry_limit = 5
 
       Kana::Dictionary.pull(site.id) do |userdic|
         mecab_param = '--node-format=%ps,%pe,%m,%H\n --unk-format='
@@ -52,6 +46,13 @@ module Kana::Convertor
 
           ps = data[0].to_i
           pe = data[1].to_i
+          if byte[ps...pe].pack("C*").force_encoding("utf-8") != data[2]
+            retry_limit.times do
+              byte.unshift(0)
+              break if byte[ps...pe].pack("C*").force_encoding("utf-8") == data[2]
+            end
+            raise "500" if byte[ps...pe].pack("C*").force_encoding("utf-8") != data[2]
+          end
           kana << byte[pl..ps-1].pack("C*").force_encoding("utf-8") if ps != pl
           yomi = katakana_to_yomi(data[10].to_s, site.kana_format)
           kana << "<ruby>#{data[2]}<rp>(</rp><rt>#{yomi}</rt><rp>)</rp></ruby>"
@@ -66,7 +67,7 @@ module Kana::Convertor
     private
 
     def mpad(str)
-      str.gsub(/[^ -~¡¢£¤¥¦§¨©ª«¬®¯°²³´µ¶·¸¹º»¼½¾¿ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖ×ØÙÚÛÜÝÞßàáâãäåæçèéêëìíîïðñòóôõö÷øùúûüýþÿŒœŴŶŵŷ]/, "   ")
+      str.gsub(/[^ -~]/, "   ")
     end
 
     def katakana_to_yomi(str, format)
