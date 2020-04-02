@@ -20,6 +20,7 @@ class Cms::Column::Value::Base
 
   validate :validate_value
 
+  attr_accessor :link_check_user
   validate :validate_link_check, on: :link
 
   liquidize do
@@ -162,7 +163,10 @@ class Cms::Column::Value::Base
 
   def validate_link_check
     @link_errors = []
+    @root_url = column.form.site.full_root_url
+    @fs_url = ::File.join(@root_url, "/fs/")
     check = {}
+
     fields.each_key do |key|
       next if LINK_CHECK_EXCLUSION_FIELDS.include?(key)
       val = send(key)
@@ -170,10 +174,9 @@ class Cms::Column::Value::Base
       next if val.blank?
       find_url(val).each do |url|
         next if url[0] == '#'
+
         if url[0] == "/"
-          str = column.form.site.https == "enabled" ? "https://" : "http://"
-          str += column.form.site.domains_with_subdir[0]
-          url = str + url
+          url = ::File.join(@root_url, url)
         end
 
         next if check.key?(url)
@@ -186,12 +189,14 @@ class Cms::Column::Value::Base
   end
 
   def find_url(val)
-    val.scan(%r!<a href="(.+?)">.+?</a>!).flatten | URI.extract(val, %w(http https))
+    val.scan(%r!<a.*?href="(.+?)">.+?</a>!).flatten | URI.extract(val, %w(http https))
   end
 
   def check_url(url)
-    proxy = ( url =~ /^https/ ) ? ENV['HTTPS_PROXY'] : ENV['HTTP_PROXY']
     progress_data_size = nil
+
+    url = normalize_url(url)
+    proxy = ( url =~ /^https/ ) ? ENV['HTTPS_PROXY'] : ENV['HTTP_PROXY']
     opts = {
       proxy: proxy,
       progress_proc: ->(size) do
@@ -205,9 +210,27 @@ class Cms::Column::Value::Base
     end
 
     :success
+  rescue URI::InvalidURIError
+    :failure
   rescue Timeout::Error
     :failure
   rescue => _e
     progress_data_size ? :success : :failure
+  end
+
+  def normalize_url(url)
+    uri = ::Addressable::URI.parse(url)
+    url = uri.normalize.to_s
+
+    if @link_check_user && @fs_url && url.start_with?(@fs_url)
+      token = SS::AccessToken.new(cur_user: @link_check_user)
+      token.create_token
+      if token.save
+        url += uri.query.present? ? "&" : "?"
+        url += "access_token=#{token.token}"
+      end
+    end
+
+    url
   end
 end

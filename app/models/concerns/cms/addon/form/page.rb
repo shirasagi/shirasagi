@@ -17,6 +17,8 @@ module Cms::Addon::Form::Page
     # default validation `validates_associated :column_values` is not suitable for column_values.
     # So, specific validation should be defined.
     validate :validate_column_values
+
+    attr_accessor :link_check_user
     validate :validate_column_links, on: :link
 
     before_save :cms_form_page_delete_unlinked_files
@@ -76,6 +78,7 @@ module Cms::Addon::Form::Page
     @column_link_errors = []
 
     column_values.each do |column_value|
+      column_value.link_check_user = link_check_user
       column_value.valid?(:link)
       if column_value.link_errors.present?
         @column_link_errors += column_value.link_errors

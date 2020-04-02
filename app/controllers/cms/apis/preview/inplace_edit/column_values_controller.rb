@@ -428,6 +428,7 @@ class Cms::Apis::Preview::InplaceEdit::ColumnValuesController < ApplicationContr
       new_column_value
     end
 
+    @cur_column_value.link_check_user = @cur_user
     @cur_column_value.valid?(%i[link])
     render json: @cur_column_value.link_errors.to_json, content_type: json_content_type
   end

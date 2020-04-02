@@ -162,7 +162,8 @@ this.Link_Checker = (function () {
       url: Link_Checker.url,
       cache: false,
       data: JSON.stringify({
-        "url": links
+        "url": links,
+        "root_url": Link_Checker.rootUrl
       }),
       contentType: 'application/json',
       dataType: "json",
