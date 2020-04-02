@@ -4,7 +4,6 @@
   <div class="list-head-action">
     <%= render file: "_list_head_tags" %>
     <div class="list-head-action-destroy">
-      <button class="undo-delete-all btn" data-ss-list-head-method="post" data-ss-list-head-action="<%= url_for(action: :undo_delete_all) %>" data-ss-confirmation="<%= t('ss.confirm.restore') %>"><%= t('ss.links.restore') %></button>
       <button class="destroy-all btn"><%= t :"ss.links.delete" %></button>
     </div>
   </div>
