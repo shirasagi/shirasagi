@@ -1,0 +1,45 @@
+{
+  "_from": "ckeditor-autogrow",
+  "_id": "ckeditor-autogrow@1.0.0",
+  "_inBundle": false,
+  "_integrity": "sha512-9OEN+zdDp5bxEW2evfqMqZDKHz7Gk0guDeMn26DJvgZiVLRmqKTjVjFor16uE2cysiBoVMYAr8r8phtPZCMUqA==",
+  "_location": "/ckeditor-autogrow",
+  "_phantomChildren": {},
+  "_requested": {
+    "type": "tag",
+    "registry": true,
+    "raw": "ckeditor-autogrow",
+    "name": "ckeditor-autogrow",
+    "escapedName": "ckeditor-autogrow",
+    "rawSpec": "",
+    "saveSpec": null,
+    "fetchSpec": "latest"
+  },
+  "_requiredBy": [
+    "#USER",
+    "/"
+  ],
+  "_resolved": "https://registry.npmjs.org/ckeditor-autogrow/-/ckeditor-autogrow-1.0.0.tgz",
+  "_shasum": "8ea080536465c4d8ab99938592f204096ec148d7",
+  "_spec": "ckeditor-autogrow",
+  "_where": "/Users/nakano_hideo/Projects/ss-freewifi/tmp/4650",
+  "author": "",
+  "bugs": {
+    "url": "https://github.com/iampuma/ckeditor-autogrow/issues"
+  },
+  "bundleDependencies": false,
+  "deprecated": false,
+  "description": "",
+  "homepage": "https://github.com/iampuma/ckeditor-autogrow#readme",
+  "license": "ISC",
+  "main": "plugin.js",
+  "name": "ckeditor-autogrow",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/iampuma/ckeditor-autogrow.git"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "version": "1.0.0"
+}
