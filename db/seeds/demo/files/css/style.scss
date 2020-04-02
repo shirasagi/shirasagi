@@ -3783,7 +3783,8 @@ table.mypage-index, .member-my-group .index, table.member-invited-group {
     }
     #map-sidebar {
       width: 100%;
-      height: auto !important;
+      height: 300px !important;
+      overflow-y: scroll;
     }
     #map-canvas {
       width: 100% !important;
