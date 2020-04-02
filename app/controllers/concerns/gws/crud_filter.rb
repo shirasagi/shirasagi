@@ -128,6 +128,12 @@ module Gws::CrudFilter
     entries.each do |item|
       if item.allowed?(:delete, @cur_user, site: @cur_site)
         item.attributes = fix_params
+        if item.is_a?(Gws::User)
+          if item.deletion_unlocked? && item.disabled?
+            item.destroy
+            next
+          end
+        end
         next if item.disable
       else
         item.errors.add :base, :auth_error

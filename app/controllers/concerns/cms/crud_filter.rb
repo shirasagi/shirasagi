@@ -112,6 +112,10 @@ module Cms::CrudFilter
 
     entries.each do |item|
       if item.allowed?(:delete, @cur_user, site: @cur_site, node: @cur_node)
+        if item.deletion_unlocked? && item.disabled?
+          item.destroy
+          next
+        end
         next if item.disable
       else
         item.errors.add :base, :auth_error
