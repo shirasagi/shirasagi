@@ -4,7 +4,7 @@
 <head>
 <meta charset="UTF-8" />
 <title><%= @window_name %></title>
-<%= stylesheet_link_tag "cms/public" %>
+<%= stylesheet_link_tag "cms/public", media: "all" %>
 <%= javascript_include_tag "cms/public" %>
 <% controller.stylesheets.each do |path| %>
   <%= stylesheet_link_tag path, media: "all" %>
