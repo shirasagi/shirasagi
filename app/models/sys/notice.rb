@@ -2,8 +2,6 @@ class Sys::Notice
   include SS::Document
   include SS::Reference::User
   include Sys::Addon::Body
-  include Cms::Addon::Release
-  include Cms::Addon::ReleasePlan
   include Sys::Permission
 
   set_permission_name "sys_notices", :edit
@@ -31,14 +29,20 @@ class Sys::Notice
   field :released, type: DateTime
   field :notice_severity, type: String, default: NOTICE_SEVERITY_NORMAL
   field :notice_target, type: Array, default: []
+  field :release_date, type: DateTime
+  field :close_date, type: DateTime
 
   permit_params :state, :html, :name, :released, :notice_severity, notice_target: []
+  permit_params :release_date, :close_date
+
+  before_validation :set_released, if: -> { state == "public" }
 
   validates :state, presence: true
   validates :name, presence: true, length: { maximum: 80 }
   validates :released, datetime: true
-
-  after_validation :set_released, if: -> { state == "public" }
+  validates :release_date, datetime: true
+  validates :close_date, datetime: true
+  validate :validate_release_date
 
   default_scope -> {
     order_by released: -1
@@ -66,9 +70,9 @@ class Sys::Notice
 
   scope :and_public, ->(date = Time.zone.now) {
     where("$and" => [
-      { state: "public" },
-      { "$or" => [ { :released.lte => date }, { :release_date.lte => date } ] },
-      { "$or" => [ { close_date: nil }, { :close_date.gt => date } ] },
+      { "$or" => [ { state: "public" }, { state: "ready" } ]},
+      { "$or" => [ { release_date: nil }, { :release_date.lte => date } ] },
+      { "$or" => [ { close_date: nil }, { :close_date.gte => date } ] },
     ])
   }
 
@@ -111,5 +115,12 @@ class Sys::Notice
 
   def set_released
     self.released ||= Time.zone.now
+  end
+
+  def validate_release_date
+    return if release_date.blank?
+    return if close_date.blank?
+
+    errors.add :close_date, :greater_than, count: t(:release_date) if release_date >= close_date
   end
 end
