@@ -28,6 +28,10 @@ module Sys::Addon
       before_validation :load_discovery_file, if: ->{ in_discovery_file }
     end
 
+    def init_uri(protocol, host)
+      Rails.application.routes.url_helpers.sns_login_open_id_connect_url(protocol: protocol, host: host, id: filename)
+    end
+
     def redirect_uri(protocol, host)
       Rails.application.routes.url_helpers.sns_login_open_id_connect_callback_url(protocol: protocol, host: host, id: filename)
     end
