@@ -52,5 +52,24 @@ describe "cms_parts", type: :feature do
       end
       expect(current_path).to eq index_path
     end
+
+    context 'with descendant part' do
+      let(:node) { create :cms_node }
+      let!(:item) { create :cms_part, filename: "#{node.filename}/name" }
+
+      it "#index" do
+        visit index_path
+        expect(current_path).not_to eq sns_login_path
+        expect(page).to have_selector('li.list-item', count: 0)
+
+        select I18n.t('cms.options.node_target.descendant'), from: 's[target]'
+        click_on I18n.t('ss.buttons.search')
+        expect(page).to have_selector('li.list-item', count: 1)
+
+        click_link item.name
+        expect(current_path).not_to eq show_path
+        expect(current_path).to eq node_part_path(site: site.id, cid: node.id, id: item.id)
+      end
+    end
   end
 end
