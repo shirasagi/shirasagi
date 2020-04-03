@@ -51,7 +51,7 @@ module Kana::Convertor
               byte.unshift(0)
               break if byte[ps...pe].pack("C*").force_encoding("utf-8") == data[2]
             end
-            raise "500" if byte[ps...pe].pack("C*").force_encoding("utf-8") != data[2]
+            raise Kana::ConvertError if byte[ps...pe].pack("C*").force_encoding("utf-8") != data[2]
           end
           kana << byte[pl..ps-1].pack("C*").force_encoding("utf-8") if ps != pl
           yomi = katakana_to_yomi(data[10].to_s, site.kana_format)
