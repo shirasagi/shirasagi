@@ -50,4 +50,6 @@ CKEDITOR.editorConfig = function( config ) {
 		element: 'strong',
 		styles: { color: '#(color)' }
 	};
+
+	config.templates_replaceContent = false;
 };
