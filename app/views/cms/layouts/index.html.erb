@@ -1,13 +1,13 @@
 <% @tap_menu = proc do |item| %>
   <%
-    if item.parent
-      show_path = node_layout_path(site: @cur_site, cid: item.parent.id, id: item.id)
-      edit_path = edit_node_layout_path(site: @cur_site, cid: item.parent.id, id: item.id)
-      delete_path = delete_node_layout_path(site: @cur_site, cid: item.parent.id, id: item.id)
+    if params.dig(:s, :target) == 'descendant'
+      show_path = item.private_show_path
+      edit_path = File.join(show_path, 'edit')
+      delete_path = File.join(show_path, 'delete')
     else
-      show_path = cms_layout_path(site: @cur_site, id: item.id)
-      edit_path = edit_cms_layout_path(site: @cur_site, id: item.id)
-      delete_path = delete_cms_layout_path(site: @cur_site, id: item.id)
+      show_path = url_for(action: :show, id: item.id)
+      edit_path = url_for(action: :edit, id: item.id)
+      delete_path = url_for(action: :delete, id: item.id)
     end
   %>
   <%= link_to t('ss.links.show'), show_path if item.allowed?(:read, @cur_user, site: @cur_site) %>
@@ -22,10 +22,10 @@
 
 <% @index_title = proc do |item| %>
   <%
-    if item.parent
-      show_path = node_layout_path(site: @cur_site, cid: item.parent.id, id: item.id)
+    if params.dig(:s, :target) == 'descendant'
+      show_path = item.private_show_path
     else
-      show_path = cms_layout_path(site: @cur_site, id: item.id)
+      show_path = url_for(action: :show, id: item.id)
     end
   %>
   <%= link_to item.name, show_path, class: "title" %>
