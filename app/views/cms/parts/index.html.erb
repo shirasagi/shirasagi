@@ -1,0 +1,34 @@
+<% @tap_menu = proc do |item| %>
+  <%
+    if item.parent
+      show_path = node_part_path(site: @cur_site, cid: item.parent.id, id: item.id)
+      edit_path = edit_node_part_path(site: @cur_site, cid: item.parent.id, id: item.id)
+      delete_path = delete_node_part_path(site: @cur_site, cid: item.parent.id, id: item.id)
+    else
+      show_path = cms_part_path(site: @cur_site, id: item.id)
+      edit_path = edit_cms_part_path(site: @cur_site, id: item.id)
+      delete_path = delete_cms_part_path(site: @cur_site, id: item.id)
+    end
+  %>
+  <%= link_to t('ss.links.show'), show_path if item.allowed?(:read, @cur_user, site: @cur_site) %>
+  <%= link_to t('ss.links.edit'), edit_path if item.allowed?(:edit, @cur_user, site: @cur_site) %>
+  <%= link_to t('ss.links.delete'), delete_path if item.allowed?(:delete, @cur_user, site: @cur_site) %>
+  <% if item.try(:image) %>
+    <%= link_to image_tag(item.image.thumb_url), item.image.url, { class: "thumb", target: "_blank" } %>
+  <% elsif item.try(:image?) %>
+    <%= link_to image_tag(item.thumb_url), item.url, { class: "thumb", target: "_blank" } %>
+  <% end %>
+<% end %>
+
+<% @index_title = proc do |item| %>
+  <%
+    if item.parent
+      show_path = node_part_path(site: @cur_site, cid: item.parent.id, id: item.id)
+    else
+      show_path = cms_part_path(site: @cur_site, id: item.id)
+    end
+  %>
+  <%= link_to item.name, show_path, class: "title" %>
+<% end %>
+
+<%= render file: "cms/crud/index" %>
