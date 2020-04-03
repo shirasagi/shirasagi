@@ -9,6 +9,7 @@ describe "kana/public_filter", type: :feature, dbscope: :example, js: true, meca
   let(:page_html) do
     html = []
     html << '<div id="content">'
+    html << '<span class="percent-escaped-url">http%3A%2F%2F127.0.0.1%3A3000</span>'
     html << '<nav class="ss-adobe-reader">'
     html << '  <div>PDFファイルをご覧いただくためには、Adobe Readerのプラグイン（無償）が必要となります。'
     html << '  お持ちでない場合は、お使いの機種とスペックに合わせたプラグインをインストールしてください。</div>'
@@ -21,7 +22,7 @@ describe "kana/public_filter", type: :feature, dbscope: :example, js: true, meca
     html << '</footer>'
     html.join("\n")
   end
-  let(:item) { create :article_page, cur_site: site, cur_node: node, layout_id: layout.id, html: page_html }
+  let(:item) { create :article_page, cur_site: site, cur_node: node, layout_id: layout.id, name: '&times;×', html: page_html }
 
   describe "kana public filter" do
     it do
@@ -44,6 +45,8 @@ describe "kana/public_filter", type: :feature, dbscope: :example, js: true, meca
         expect(page).to have_css('ruby', text: '無償(むしょう)')
         expect(page).to have_css('ruby', text: '必要(ひつよう)')
         expect(page).to have_css('ruby', text: '場合(ばあい)')
+        expect(page).to have_css('.percent-escaped-url', text: 'http%3A%2F%2F127.0.0.1%3A3000')
+        expect(page).to have_content('PDFファイルをご覧(ごらん)いただくためには、')
       end
     end
 

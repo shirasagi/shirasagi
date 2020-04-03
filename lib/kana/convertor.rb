@@ -46,12 +46,12 @@ module Kana::Convertor
 
           ps = data[0].to_i
           pe = data[1].to_i
-          if byte[ps...pe].pack("C*").force_encoding("utf-8") != data[2]
+          if byte[ps..pe-1].pack("C*").force_encoding("utf-8") != data[2]
             retry_limit.times do
               byte.unshift(0)
-              break if byte[ps...pe].pack("C*").force_encoding("utf-8") == data[2]
+              break if byte[ps..pe-1].pack("C*").force_encoding("utf-8") == data[2]
             end
-            raise Kana::ConvertError if byte[ps...pe].pack("C*").force_encoding("utf-8") != data[2]
+            raise Kana::ConvertError if byte[ps..pe-1].pack("C*").force_encoding("utf-8") != data[2]
           end
           kana << byte[pl..ps-1].pack("C*").force_encoding("utf-8") if ps != pl
           yomi = katakana_to_yomi(data[10].to_s, site.kana_format)
