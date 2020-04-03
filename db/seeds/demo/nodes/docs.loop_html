@@ -1,6 +1,0 @@
-<article class="item-#{class} #{new}">
-  <header>
-  <time datetime="#{date.iso}">#{date.long}</time>
-  <h2><a href="#{url}">#{index_name}</a></h2>
-  </header>
-</article>
