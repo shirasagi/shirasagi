@@ -16,6 +16,7 @@ class Cms::LinkCheckController < ApplicationController
   end
 
   def check_url(url)
+    @head_request_timeout = SS.config.cms.check_links["head_request_timeout"] rescue 5
     progress_data_size = nil
 
     url = normalize_url(url)
@@ -30,7 +31,7 @@ class Cms::LinkCheckController < ApplicationController
       end
     }
 
-    Timeout.timeout(2) do
+    Timeout.timeout(@head_request_timeout) do
       open(url, opts) { |_f| }
     end
 

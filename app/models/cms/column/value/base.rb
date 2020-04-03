@@ -165,6 +165,7 @@ class Cms::Column::Value::Base
     @link_errors = []
     @root_url = column.form.site.full_root_url
     @fs_url = ::File.join(@root_url, "/fs/")
+    @head_request_timeout = SS.config.cms.check_links["head_request_timeout"] rescue 5
     check = {}
 
     fields.each_key do |key|
@@ -207,7 +208,7 @@ class Cms::Column::Value::Base
       end
     }
 
-    Timeout.timeout(2) do
+    Timeout.timeout(@head_request_timeout) do
       ::OpenURI.open_uri(url, opts) { |_f| }
     end
 
