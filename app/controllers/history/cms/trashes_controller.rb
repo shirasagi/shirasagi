@@ -6,6 +6,16 @@ class History::Cms::TrashesController < ApplicationController
 
   navi_view "cms/main/navi"
 
+  private
+
+  # overwrite
+  def get_params
+    return fix_params if params[:item].blank?
+    super
+  end
+
+  public
+
   def index
     raise "403" unless @model.allowed?(:read, @cur_user, site: @cur_site, node: @cur_node)
 

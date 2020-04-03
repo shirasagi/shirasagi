@@ -27,9 +27,15 @@ class History::Trash
   def restore(opts = {})
     parent.restore(opts) if opts[:parent].present? && opts[:create_by_trash].present? && parent.present?
     data = self.data.dup
-    data[:state] = opts[:state] if opts[:state].present?
-    data[:state] = 'public' if ref_class == 'Uploader::Node::File'
-    data[:state] = 'closed' if ref_class == 'Urgency::Node::Layout'
+    if data.key?(:state)
+      if opts[:state].present?
+        data[:state] = opts[:state]
+      elsif ref_class == 'Uploader::Node::File'
+        data[:state] = 'public'
+      else
+        data[:state] = 'closed'
+      end
+    end
     data[:master_id] = nil if model.include?(Workflow::Addon::Branch)
     data = restore_data(data, opts)
     item = model.find_or_initialize_by(_id: data[:_id], site_id: data[:site_id])

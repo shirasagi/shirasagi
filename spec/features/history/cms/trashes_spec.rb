@@ -132,47 +132,50 @@ describe "history_cms_trashes", type: :feature, dbscope: :example, js: true do
       expect(History::Trash.all.count).to eq 0
     end
 
-    it "#undo_delete_all" do
-      visit page_path
-      expect(page).to have_css('div.file-view', text: file.name)
-
-      click_link I18n.t('ss.links.delete')
-      click_button I18n.t('ss.buttons.delete')
-      expect(page).to have_no_css('a.title', text: page_item.name)
-
-      expect { page_item.reload }.to raise_error Mongoid::Errors::DocumentNotFound
-      expect(History::Trash.all.count).to eq 2
-      trashes = History::Trash.all.to_a
-      expect(trashes[0].ref_coll).to eq "cms_pages"
-      expect(trashes[0].ref_class).to eq "Article::Page"
-      expect(trashes[1].ref_coll).to eq "ss_files"
-      expect(trashes[1].ref_class).to eq "SS::File"
-
-      visit index_path
-      expect(page).to have_css('a.title', text: page_item.name)
-
-      within '.list-head' do
-        check(nil)
-        page.accept_confirm do
-          click_button I18n.t('ss.buttons.restore')
-        end
-      end
-      expect(current_path).to eq index_path
-      expect(page).to have_no_css('a.title', text: page_item.name)
-
-      expect { page_item.reload }.not_to raise_error
-      expect(page_item.files.count).to eq 1
-      expect(page_item.files.first).to be_present
-      expect(page_item.files.first.thumb).to be_present
-
-      visit node_path
-      expect(page).to have_css('a.title', text: page_item.name)
-
-      visit page_path
-      expect(page).to have_css('div.file-view', text: file.name)
-
-      expect(History::Trash.all.count).to eq 0
-    end
+    # hide undo delete all from head because I thought this is dangerous for node, page which parent is deleted
+    # or some other specific conditions met.
+    #
+    # it "#undo_delete_all" do
+    #   visit page_path
+    #   expect(page).to have_css('div.file-view', text: file.name)
+    #
+    #   click_link I18n.t('ss.links.delete')
+    #   click_button I18n.t('ss.buttons.delete')
+    #   expect(page).to have_no_css('a.title', text: page_item.name)
+    #
+    #   expect { page_item.reload }.to raise_error Mongoid::Errors::DocumentNotFound
+    #   expect(History::Trash.all.count).to eq 2
+    #   trashes = History::Trash.all.to_a
+    #   expect(trashes[0].ref_coll).to eq "cms_pages"
+    #   expect(trashes[0].ref_class).to eq "Article::Page"
+    #   expect(trashes[1].ref_coll).to eq "ss_files"
+    #   expect(trashes[1].ref_class).to eq "SS::File"
+    #
+    #   visit index_path
+    #   expect(page).to have_css('a.title', text: page_item.name)
+    #
+    #   within '.list-head' do
+    #     check(nil)
+    #     page.accept_confirm do
+    #       click_button I18n.t('ss.buttons.restore')
+    #     end
+    #   end
+    #   expect(current_path).to eq index_path
+    #   expect(page).to have_no_css('a.title', text: page_item.name)
+    #
+    #   expect { page_item.reload }.not_to raise_error
+    #   expect(page_item.files.count).to eq 1
+    #   expect(page_item.files.first).to be_present
+    #   expect(page_item.files.first.thumb).to be_present
+    #
+    #   visit node_path
+    #   expect(page).to have_css('a.title', text: page_item.name)
+    #
+    #   visit page_path
+    #   expect(page).to have_css('div.file-view', text: file.name)
+    #
+    #   expect(History::Trash.all.count).to eq 0
+    # end
   end
 
   context "when branch page is restored" do

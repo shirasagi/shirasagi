@@ -23,7 +23,7 @@
 
           <% if @item.data[:state].present? %>
             <dt><%= @model.t(:state) %></dt>
-            <dd><%= select_tag "#{f.object_name}[state]", options_for_select(@item.state_options) %></dd>
+            <dd><%= I18n.t("cms.notices.restoring_public_content_from_trash") %></dd>
           <% end %>
         </dl>
       </div>
