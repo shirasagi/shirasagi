@@ -20,8 +20,10 @@ class Cms::LinkCheckController < ApplicationController
 
     url = normalize_url(url)
     proxy = ( url =~ /^https/ ) ? ENV['HTTPS_PROXY'] : ENV['HTTP_PROXY']
+    http_basic_authentication = SS::MessageEncryptor.http_basic_authentication
     opts = {
       proxy: proxy,
+      http_basic_authentication: http_basic_authentication,
       progress_proc: ->(size) do
         progress_data_size = size
         raise "200"
