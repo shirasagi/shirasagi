@@ -25,7 +25,10 @@ module SS::Addon
     class << self
       def text_to_html(text)
         return nil if text.blank?
-        ApplicationController.helpers.sanitize(Kramdown::Document.new(text, input: 'GFM').to_html)
+
+        text = text.join("\n") if text.is_a?(Array)
+        html = Kramdown::Document.new(text.to_s, input: 'GFM').to_html
+        ApplicationController.helpers.sanitize(html)
       end
     end
   end
