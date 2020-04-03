@@ -22,11 +22,13 @@ module Kana::Convertor
       tags.each { |t| text.gsub!(/<#{t}( [^>]*\/>|[^\w].*?<\/#{t}>)/m) { |m| mpad(m) } }
       text.gsub!(/<.*?>/m) { |m| mpad(m) }
       text.gsub!(/\\u003c.*?\\u003e/m) { |m| mpad(m) } #<>
+      text.gsub!(/%[^%]{2}/m, '   ')
       text.gsub!(/[ -\/:-@\[-`\{-~]/m, "\r")
 
       byte = html.bytes
       kana = ""
       pl   = 0
+      retry_limit = 5
 
       Kana::Dictionary.pull(site.id) do |userdic|
         mecab_param = '--node-format=%ps,%pe,%m,%H\n --unk-format='
@@ -44,6 +46,13 @@ module Kana::Convertor
 
           ps = data[0].to_i
           pe = data[1].to_i
+          if byte[ps..pe-1].pack("C*").force_encoding("utf-8") != data[2]
+            retry_limit.times do
+              byte.unshift(0)
+              break if byte[ps..pe-1].pack("C*").force_encoding("utf-8") == data[2]
+            end
+            raise Kana::ConvertError if byte[ps..pe-1].pack("C*").force_encoding("utf-8") != data[2]
+          end
           kana << byte[pl..ps-1].pack("C*").force_encoding("utf-8") if ps != pl
           yomi = katakana_to_yomi(data[10].to_s, site.kana_format)
           kana << "<ruby>#{data[2]}<rp>(</rp><rt>#{yomi}</rt><rp>)</rp></ruby>"
