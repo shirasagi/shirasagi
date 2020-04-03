@@ -40,10 +40,10 @@ module Inquiry::Node
   class Node
     include Cms::Model::Node
     include Cms::Addon::NodeSetting
-    include Cms::Addon::ForMemberNode
-    include Cms::Addon::Release
     include Cms::Addon::Meta
     include Cms::Addon::NodeList
+    include Cms::Addon::ForMemberNode
+    include Cms::Addon::Release
     include Cms::Addon::GroupPermission
     include History::Addon::Backup
 
