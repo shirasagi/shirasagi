@@ -26,7 +26,7 @@ describe "sys_notice", type: :feature, dbscope: :example do
     gws_user
   end
 
-  context "just before release" do
+  context "just before release date" do
     it do
       Timecop.freeze(release_date - 1.second) do
         visit sns_login_path
@@ -47,7 +47,7 @@ describe "sys_notice", type: :feature, dbscope: :example do
     end
   end
 
-  context "at release" do
+  context "at release date" do
     it do
       Timecop.freeze(release_date) do
         visit sns_login_path
@@ -80,9 +80,9 @@ describe "sys_notice", type: :feature, dbscope: :example do
     end
   end
 
-  context "at closed" do
+  context "just before close date" do
     it do
-      Timecop.freeze(close_date) do
+      Timecop.freeze(close_date - 1.second) do
         visit sns_login_path
         within ".login-notice" do
           expect(page).to have_css(".list-item .notice-severity-high", text: notice0.name)
@@ -113,9 +113,9 @@ describe "sys_notice", type: :feature, dbscope: :example do
     end
   end
 
-  context "just after closed" do
+  context "at close date" do
     it do
-      Timecop.freeze(close_date + 1.second) do
+      Timecop.freeze(close_date) do
         visit sns_login_path
         expect(page).to have_no_css(".login-notice")
 

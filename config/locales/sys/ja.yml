@@ -117,7 +117,6 @@ ja:
         menu_file_state: ファイル
         menu_connection_state: 接続情報
       sys/notice:
-        state: ステータス
         name: お知らせ見出し
         notice_severity: 種別
         notice_target: 表示場所

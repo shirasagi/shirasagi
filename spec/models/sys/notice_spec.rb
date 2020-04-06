@@ -116,17 +116,17 @@ describe Sys::Notice, dbscope: :example do
         end
       end
 
-      context "at close date" do
+      context "just before close date" do
         it do
-          Timecop.freeze(close_date) do
+          Timecop.freeze(close_date - 1.second) do
             expect(Sys::Notice.and_public.first).to eq subject
           end
         end
       end
 
-      context "just after close date" do
+      context "at close date" do
         it do
-          Timecop.freeze(close_date + 1.second) do
+          Timecop.freeze(close_date) do
             expect(Sys::Notice.and_public.count).to eq 0
           end
         end
