@@ -1,3 +1,5 @@
+<%= sanitize(@cur_node.upper_html) if @cur_node.loop_format_shirasagi? %>
+
 <div class="inquiry-nodes nodes">
   <table id="forms">
     <caption><%= @cur_node.name %></caption>
@@ -45,5 +47,6 @@
     </tbody>
   </table>
 </div>
+<%= sanitize(@cur_node.lower_html) if @cur_node.loop_format_shirasagi? %>
 
 <%= paginate @items if @items.try(:current_page) %>
