@@ -82,6 +82,7 @@ class Sys::Notice
   end
 
   def disp_notice_target(target)
+    return if target.blank?
     I18n.t("cms.options.notice_target.#{target}")
   end
 end
