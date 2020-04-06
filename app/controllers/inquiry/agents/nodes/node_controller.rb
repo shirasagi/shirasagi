@@ -5,6 +5,7 @@ class Inquiry::Agents::Nodes::NodeController < ApplicationController
   def index
     @items = Inquiry::Node::Form.site(@cur_site).and_public.
       where(@cur_node.condition_hash).
+      order_by(@cur_node.sort_hash).
       page(params[:page]).
       per(@cur_node.limit)
 
