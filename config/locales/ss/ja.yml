@@ -413,6 +413,7 @@ ja:
       ss/translate/site_setting: 自動翻訳
       ss/site_usage: 使用量
       ss/logo_setting: ロゴ設定
+      ss/release: 公開設定
 
   activemodel:
     attributes:
@@ -730,6 +731,10 @@ ja:
         logo_application_name: アプリケーション名
         logo_application_image_id: ロゴ画像
         logo_application_template: ロゴHTML
+      ss/addon/release:
+        released: 公開日時
+        release_date: 公開開始日時(予約)
+        close_date: 公開終了日時(予約)
 
   tooltip:
     ss/model/user:
