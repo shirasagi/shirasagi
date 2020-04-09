@@ -11,7 +11,7 @@ class Sys::NoticeController < ApplicationController
     @items = @model.
       allow(:edit, @cur_user).
       search(params[:s]).
-      order_by(released: -1).
+      reorder(updated: -1).
       page(params[:page]).per(50)
   end
 
