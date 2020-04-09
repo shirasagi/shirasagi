@@ -78,10 +78,11 @@ Cms_Column_Table.prototype.createTable = function () {
   var header = this.$el.find('.header').val();
   var table = $('<table></table>')
   var caption = $("<caption></caption>")
+  var thead = $("<thead></thead>")
   var tbody = $("<tbody></tbody>")
   var tr = "";
   for (var i = 0; i < height; i++) {
-    tr = tr + "<tr>";
+    tr = "<tr>";
     for (var j = 0; j < width; j++) {
       if (header == "top") {
         if (i == 0) {
@@ -108,10 +109,21 @@ Cms_Column_Table.prototype.createTable = function () {
       }
     }
     tr = tr + "</tr>";
+    if (header == "top" || header == "top-left") {
+      if (i == 0) {
+        thead.append(tr);
+      } else {
+        tbody.append(tr);
+      }
+    } else {
+      tbody.append(tr);
+    }
   }
 
-  tbody.append(tr);
   table.append(caption);
+  if (header == "top" || header == "top-left") {
+    table.append(thead);
+  }
   table.append(tbody);
 
   table_editor.html(table);
@@ -173,9 +185,15 @@ Cms_Column_Table.prototype.removeTr = function () {
 
 Cms_Column_Table.prototype.removeTds = function () {
   var cellIndex = this.tableDom[0].cellIndex;
-  var table = this.tableDom.parent().parent();
-  for (var i = 0; i < table[0].rows.length; i++) {
-    $(table[0].rows[i].cells[cellIndex]).remove();
+  var thead = this.tableDom.parents('table').find('thead');
+  var tbody = this.tableDom.parents('table').find('tbody');
+  for (var i = 0; i < tbody[0].rows.length; i++) {
+    $(tbody[0].rows[i].cells[cellIndex]).remove();
+  }
+  if (thead.length > 0) {
+    for (var i = 0; i < thead[0].rows.length; i++) {
+      $(thead[0].rows[i].cells[cellIndex]).remove();
+    }
   }
 };
 
@@ -222,51 +240,89 @@ Cms_Column_Table.prototype.appendBottom = function () {
   var index = parent[0].rowIndex;
   this.removeControlTable();
   var newTr = "<tr>";
-  for (var i = 0; i < columnNum - 1; i++) {
-    if (parent[0].cells[i].tagName == "TH") {
-      if (!parent[0].cells[i + 1]) {
-        newTr = newTr + "<td></td>";
-      } else if (parent[0].cells[i + 1].tagName == "TH") {
-        if (!table[0].rows[index + 1]) {
-          newTr = newTr + "<th scope='" + parent[0].cells[i].scope + "'></th>";
-        } else if (table[0].rows[index + 1].cells[i].tagName == "TH") {
-          newTr = newTr + "<th scope='" + parent[0].cells[i].scope + "'></th>";
-        } else {
+  if (parent.parent()[0].tagName == 'THEAD') {
+    for (var i = 0; i < columnNum - 1; i++) {
+      if (parent[0].cells[i].tagName == "TH") {
+        if (!parent[0].cells[i + 1]) {
           newTr = newTr + "<td></td>";
+        } else if (parent[0].cells[i + 1].tagName == "TH") {
+          if (!table.parents('table').find('tbody')[0].rows[index]) {
+            newTr = newTr + "<th scope='" + parent[0].cells[i].scope + "'></th>";
+          } else if (table.parents('table').find('tbody')[0].rows[index].cells[i].tagName == "TH") {
+            newTr = newTr + "<th scope='" + parent[0].cells[i].scope + "'></th>";
+          } else {
+            newTr = newTr + "<td></td>";
+          }
+        } else {
+          newTr = newTr + "<th scope='" + parent[0].cells[i].scope + "'></th>";
         }
       } else {
-        newTr = newTr + "<th scope='" + parent[0].cells[i].scope + "'></th>";
+        newTr = newTr + "<td></td>";
       }
-    } else {
-      newTr = newTr + "<td></td>";
+    }
+  } else {
+    for (var i = 0; i < columnNum - 1; i++) {
+      if (parent[0].cells[i].tagName == "TH") {
+        if (!parent[0].cells[i + 1]) {
+          newTr = newTr + "<td></td>";
+        } else if (parent[0].cells[i + 1].tagName == "TH") {
+          if (!table[0].rows[index + 1]) {
+            newTr = newTr + "<th scope='" + parent[0].cells[i].scope + "'></th>";
+          } else if (table[0].rows[index + 1].cells[i].tagName == "TH") {
+            newTr = newTr + "<th scope='" + parent[0].cells[i].scope + "'></th>";
+          } else {
+            newTr = newTr + "<td></td>";
+          }
+        } else {
+          newTr = newTr + "<th scope='" + parent[0].cells[i].scope + "'></th>";
+        }
+      } else {
+        newTr = newTr + "<td></td>";
+      }
     }
   }
   newTr = newTr + "</tr>";
-  parent.after(newTr);
+  if (parent.parent()[0].tagName == 'THEAD') {
+    table.parent().find('tbody').prepend(newTr);
+  } else {
+    parent.after(newTr);
+  }
   this.addControlTable();
 };
 
 Cms_Column_Table.prototype.appendRight = function () {
   var cellIndex = this.tableDom[0].cellIndex - 1;
-  var table = this.tableDom.parent().parent();
+  var thead = this.tableDom.parents('table').find('thead');
+  var tbody = this.tableDom.parents('table').find('tbody');
   this.removeControlTable();
-  for (var i = 1; i < table[0].rows.length; i++) {
-    if (table[0].rows[i].cells[cellIndex].tagName == "TH") {
-      if (!table[0].rows[i + 1]) {
-        $(table[0].rows[i].cells[cellIndex]).after("<td></td>");
-      } else if (table[0].rows[i + 1].cells[cellIndex].tagName == "TH") {
-        if (!table[0].rows[i].cells[cellIndex + 1]) {
-          $(table[0].rows[i].cells[cellIndex]).after("<th scope='" + table[0].rows[i].cells[cellIndex].scope + "'></th>");
-        } else if (table[0].rows[i].cells[cellIndex + 1].tagName == "TH") {
-          $(table[0].rows[i].cells[cellIndex]).after("<th scope='" + table[0].rows[i].cells[cellIndex].scope + "'></th>");
+  for (var i = 1 - thead.length; i < tbody[0].rows.length; i++) {
+    if (tbody[0].rows[i].cells[cellIndex].tagName == "TH") {
+      if (!tbody[0].rows[i + 1]) {
+        $(tbody[0].rows[i].cells[cellIndex]).after("<td></td>");
+      } else if (tbody[0].rows[i + 1].cells[cellIndex].tagName == "TH") {
+        if (!tbody[0].rows[i].cells[cellIndex + 1]) {
+          $(tbody[0].rows[i].cells[cellIndex]).after("<th scope='" + tbody[0].rows[i].cells[cellIndex].scope + "'></th>");
+        } else if (tbody[0].rows[i].cells[cellIndex + 1].tagName == "TH") {
+          $(tbody[0].rows[i].cells[cellIndex]).after("<th scope='" + tbody[0].rows[i].cells[cellIndex].scope + "'></th>");
         } else {
-          $(table[0].rows[i].cells[cellIndex]).after("<td></td>");
+          $(tbody[0].rows[i].cells[cellIndex]).after("<td></td>");
         }
       } else {
-        $(table[0].rows[i].cells[cellIndex]).after("<th scope='" + table[0].rows[i].cells[cellIndex].scope + "'></th>");
+        $(tbody[0].rows[i].cells[cellIndex]).after("<th scope='" + tbody[0].rows[i].cells[cellIndex].scope + "'></th>");
       }
     } else {
-      $(table[0].rows[i].cells[cellIndex]).after("<td></td>");
+      $(tbody[0].rows[i].cells[cellIndex]).after("<td></td>");
+    }
+  }
+  if (thead.length > 0) {
+    for (var i = 0; i < thead[0].rows.length; i++) {
+      if (!thead[0].rows[i].cells[cellIndex + 1]) {
+        $(thead[0].rows[i].cells[cellIndex]).after("<th scope='" + thead[0].rows[i].cells[cellIndex].scope + "'></th>");
+      } else if (thead[0].rows[i].cells[cellIndex + 1].tagName == "TH") {
+        $(thead[0].rows[i].cells[cellIndex]).after("<th scope='" + thead[0].rows[i].cells[cellIndex].scope + "'></th>");
+      } else {
+        $(thead[0].rows[i].cells[cellIndex]).after("<td></td>");
+      }
     }
   }
   this.addControlTable();
@@ -274,11 +330,12 @@ Cms_Column_Table.prototype.appendRight = function () {
 
 Cms_Column_Table.prototype.appendLeft = function () {
   var cellIndex = this.tableDom[0].cellIndex - 1;
-  var table = this.tableDom.parent().parent();
+  var thead = this.tableDom.parents('table').find('thead');
+  var tbody = this.tableDom.parents('table').find('tbody');
   this.removeControlTable();
-  for (var i = 1; i < table[0].rows.length; i++) {
-    if (table[0].rows[i].cells[cellIndex].tagName == "TH") {
-      if (!table[0].rows[i + 1]) {
+  for (var i = 1 - thead.length; i < tbody[0].rows.length; i++) {
+    if (tbody[0].rows[i].cells[cellIndex].tagName == "TH") {
+      if (!tbody[0].rows[i + 1]) {
         alert("<%= I18n.t("cms.column_table.cant_append_left") %>");
         this.addControlTable();
         var tableMenu = $('.table-menu');
@@ -287,7 +344,7 @@ Cms_Column_Table.prototype.appendLeft = function () {
         }
         return false;
       }
-      if (table[0].rows[i + 1].cells[cellIndex].tagName == "TH") {
+      if (tbody[0].rows[i + 1].cells[cellIndex].tagName == "TH") {
         alert("<%= I18n.t("cms.column_table.cant_append_left") %>");
         this.addControlTable();
         var tableMenu = $('.table-menu');
@@ -296,9 +353,36 @@ Cms_Column_Table.prototype.appendLeft = function () {
         }
         return false;
       }
-      $(table[0].rows[i].cells[cellIndex]).before("<th scope='" + table[0].rows[i].cells[cellIndex].scope + "'></th>");
+      $(tbody[0].rows[i].cells[cellIndex]).before("<th scope='" + tbody[0].rows[i].cells[cellIndex].scope + "'></th>");
     } else {
-      $(table[0].rows[i].cells[cellIndex]).before("<td></td>");
+      $(tbody[0].rows[i].cells[cellIndex]).before("<td></td>");
+    }
+  }
+  if (thead.length > 0) {
+    for (var i = 0; i < thead[0].rows.length; i++) {
+      if (thead[0].rows[i].cells[cellIndex].tagName == "TH") {
+        if (!tbody[0].rows[i + 1]) {
+          alert("<%= I18n.t("cms.column_table.cant_append_left") %>");
+          this.addControlTable();
+          var tableMenu = $('.table-menu');
+          if (tableMenu.hasClass('show')) {
+            tableMenu.removeClass('show');
+          }
+          return false;
+        }
+        if (tbody[0].rows[i + 1].cells[cellIndex].tagName == "TH") {
+          alert("<%= I18n.t("cms.column_table.cant_append_left") %>");
+          this.addControlTable();
+          var tableMenu = $('.table-menu');
+          if (tableMenu.hasClass('show')) {
+            tableMenu.removeClass('show');
+          }
+          return false;
+        }
+        $(thead[0].rows[i].cells[cellIndex]).before("<th scope='" + thead[0].rows[i].cells[cellIndex].scope + "'></th>");
+      } else {
+        $(thead[0].rows[i].cells[cellIndex]).before("<td></td>");
+      }
     }
   }
   this.addControlTable();
@@ -373,11 +457,17 @@ Cms_Column_Table.prototype.addControlTable = function () {
       tr.append("<th class='control control-top'></th>");
     }
   }
-  this.$el.find('.table-editor tbody').prepend(tr);
+  if (this.$el.find('.table-editor table thead').length > 0) {
+    this.$el.find('.table-editor table thead').prepend(tr);
+  } else {
+    this.$el.find('.table-editor table tbody').prepend(tr);
+  }
 };
 
 Cms_Column_Table.prototype.removeControlTable = function () {
   this.$el.find('.table-editor table .control').each(function () {
     $(this).remove();
   });
+  this.$el.find(".table-editor table thead tr:empty").remove();
+  this.$el.find(".table-editor table thead:empty").remove();
 };
