@@ -15,6 +15,9 @@
   <dt><%= @model.t :lower_html %><%= @model.tt :lower_html %></dt>
   <dd><%= f.text_area :lower_html, class: :html %></dd>
 
+  <dt><%= @model.t :substitute_html %><%= @model.tt :substitute_html %></dt>
+  <dd><%= f.text_area :substitute_html, class: :html %></dd>
+
   <dt><%= @model.t :exclude_paths %><%= @model.tt :exclude_paths %></dt>
   <dd><%= f.text_area :exclude_paths, value: @item.exclude_paths.join("\n"), style: "height: 100px;" %></dd>
 </dl>

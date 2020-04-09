@@ -2,7 +2,7 @@ require 'spec_helper'
 
 describe "recommend_agents_parts_history", type: :feature, dbscope: :example, js: true do
   let!(:site) { cms_site }
-  let!(:part) { create :recommend_part_history, cur_site: site }
+  let!(:part) { create :recommend_part_history, cur_site: site, substitute_html: "<p>no items</p>" }
   let!(:layout) { create_cms_layout part, cur_site: site }
   let!(:node) { create :cms_node_node, cur_site: site, layout_id: layout.id }
   let!(:article_page) { create :article_page, cur_site: site, cur_node: node, layout_id: layout.id }
@@ -27,10 +27,12 @@ describe "recommend_agents_parts_history", type: :feature, dbscope: :example, js
 
       it "#index" do
         visit node.full_url
-        expect(page).to have_css(".recommend-history")
-        expect(page).to have_no_link(node.name, href: node.url)
-        expect(page).to have_no_link(article_page.name, href: article_page.url)
-        expect(page).to have_no_link(cms_page.name, href: cms_page.url)
+        within ".recommend-history" do
+          expect(page).to have_content("no items")
+          expect(page).to have_no_link(node.name, href: node.url)
+          expect(page).to have_no_link(article_page.name, href: article_page.url)
+          expect(page).to have_no_link(cms_page.name, href: cms_page.url)
+        end
 
         wait_for_ajax
 
@@ -101,28 +103,36 @@ describe "recommend_agents_parts_history", type: :feature, dbscope: :example, js
 
       it "#index" do
         visit node.full_url
-        expect(page).to have_css(".recommend-history")
-        expect(page).to have_no_link(node.name, href: node.url)
-        expect(page).to have_no_link(article_page.name, href: article_page.url)
-        expect(page).to have_no_link(cms_page.name, href: cms_page.url)
+        within ".recommend-history" do
+          expect(page).to have_content("no items")
+          expect(page).to have_no_link(node.name, href: node.url)
+          expect(page).to have_no_link(article_page.name, href: article_page.url)
+          expect(page).to have_no_link(cms_page.name, href: cms_page.url)
+        end
 
         visit article_page.full_url
-        expect(page).to have_css(".recommend-history")
-        expect(page).to have_no_link(node.name, href: node.url)
-        expect(page).to have_no_link(article_page.name, href: article_page.url)
-        expect(page).to have_no_link(cms_page.name, href: cms_page.url)
+        within ".recommend-history" do
+          expect(page).to have_content("no items")
+          expect(page).to have_no_link(node.name, href: node.url)
+          expect(page).to have_no_link(article_page.name, href: article_page.url)
+          expect(page).to have_no_link(cms_page.name, href: cms_page.url)
+        end
 
         visit cms_page.full_url
-        expect(page).to have_css(".recommend-history")
-        expect(page).to have_no_link(node.name, href: node.url)
-        expect(page).to have_no_link(article_page.name, href: article_page.url)
-        expect(page).to have_no_link(cms_page.name, href: cms_page.url)
+        within ".recommend-history" do
+          expect(page).to have_content("no items")
+          expect(page).to have_no_link(node.name, href: node.url)
+          expect(page).to have_no_link(article_page.name, href: article_page.url)
+          expect(page).to have_no_link(cms_page.name, href: cms_page.url)
+        end
 
         visit part.full_url
-        expect(page).to have_css(".recommend-history")
-        expect(page).to have_no_link(node.name, href: node.url)
-        expect(page).to have_no_link(article_page.name, href: article_page.url)
-        expect(page).to have_no_link(cms_page.name, href: cms_page.url)
+        within ".recommend-history" do
+          expect(page).to have_content("no items")
+          expect(page).to have_no_link(node.name, href: node.url)
+          expect(page).to have_no_link(article_page.name, href: article_page.url)
+          expect(page).to have_no_link(cms_page.name, href: cms_page.url)
+        end
       end
     end
   end
@@ -136,10 +146,12 @@ describe "recommend_agents_parts_history", type: :feature, dbscope: :example, js
 
     it do
       visit node.full_url
-      expect(page).to have_css(".recommend-history")
-      expect(page).to have_no_link(node.name, href: node.url)
-      expect(page).to have_no_link(article_page.name, href: article_page.url)
-      expect(page).to have_no_link(cms_page.name, href: cms_page.url)
+      within ".recommend-history" do
+        expect(page).to have_content("no items")
+        expect(page).to have_no_link(node.name, href: node.url)
+        expect(page).to have_no_link(article_page.name, href: article_page.url)
+        expect(page).to have_no_link(cms_page.name, href: cms_page.url)
+      end
 
       visit article_page.full_url
       within ".recommend-history" do
