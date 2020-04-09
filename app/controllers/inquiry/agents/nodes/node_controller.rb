@@ -9,6 +9,8 @@ class Inquiry::Agents::Nodes::NodeController < ApplicationController
       page(params[:page]).
       per(@cur_node.limit)
 
+    render_with_pagination(@items)
+
     items = @items.partition { |item| item.reception_enabled? && item.reception_close_date.present? }
     items[0] = items[0].sort_by do |item|
       item.reception_close_date.to_i
