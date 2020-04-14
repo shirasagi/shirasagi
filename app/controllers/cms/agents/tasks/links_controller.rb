@@ -195,8 +195,8 @@ class Cms::Agents::Tasks::LinksController < ApplicationController
   # Returns the HTML response with HTTP request.
   def get_http(url)
     http_basic_authentication = SS::MessageEncryptor.http_basic_authentication
-    count = 0
-    max_count = 2
+    redirect_urls = []
+    max_count = 10
 
     if url.match?(/^\/\//)
       url = @base_url.sub(/\/\/.*$/, url)
@@ -213,8 +213,9 @@ class Cms::Agents::Tasks::LinksController < ApplicationController
         return data.join
       end
     rescue OpenURI::HTTPRedirect => e
-      return if count >= max_count
-      count += 1
+      return if redirect_urls.size >= max_count
+      return if redirect_urls.index(e.uri)
+      redirect_urls << e.uri
       url = e.uri
       retry
     rescue Timeout::Error
