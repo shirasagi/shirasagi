@@ -38,6 +38,9 @@ module Cms::Addon
           next
         else
           file.update(site: site, model: model_name.i18n_key, owner_item: self, state: state)
+          item = create_history_log(file)
+          item.action = "update"
+          item.save
         end
         ids << file.id
       end
@@ -49,7 +52,42 @@ module Cms::Addon
         if file
           file.skip_history_trash = skip_history_trash if [ file, self ].all? { |obj| obj.respond_to?(:skip_history_trash) }
           file.destroy
+          item = create_history_log(file)
+          item.action = "destroy"
+          item.save
         end
+      end
+
+      file_ids = []
+      self.column_values.each do |column_value|
+        file_ids += column_value.all_file_ids
+      end
+      file_ids.compact!
+      file_ids.uniq!
+
+      file_ids_was = []
+      column_values_was.each do |column_value|
+        file_ids_was += column_value.all_file_ids
+      end
+      file_ids_was.compact!
+      file_ids_was.uniq!
+
+      add_ids = file_ids - file_ids_was
+
+      files = SS::File.where(:id.in => add_ids)
+      files.each do |file|
+        item = create_history_log(file)
+        item.action = "update"
+        item.save
+      end
+
+      del_ids = file_ids_was - file_ids
+
+      files = SS::File.where(:id.in => del_ids)
+      files.each do |file|
+        item = create_history_log(file)
+        item.action = "destroy"
+        item.save
       end
     end
 
@@ -84,6 +122,17 @@ module Cms::Addon
       files.each do |file|
         file.update(owner_item: self)
       end
+    end
+
+    def create_history_log(file)
+      History::Log.new(
+        site_id: site.id,
+        user_id: user.id,
+        session_id: Rails.application.current_session_id,
+        request_id: Rails.application.current_request_id,
+        controller: self.model_name.i18n_key,
+        url: file.url
+      )
     end
   end
 end
