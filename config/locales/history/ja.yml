@@ -55,9 +55,11 @@ ja:
         request_id: リクエストID
         created: 操作日時
         user_name: ユーザー
+        controller_name: コントローラー名
         model_name: モデル名
         action: アクション
         path: URL
+        url: URL
         save_term: 保存期間
         user_ids: ユーザー
       history/backup:

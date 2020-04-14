@@ -1,0 +1,23 @@
+<dl class="see">
+  <dt><%= @model.t(:session_id) %></dt>
+  <dd><%= @item.session_id %></dd>
+
+  <dt><%= @model.t(:request_id) %></dt>
+  <dd><%= @item.request_id %></dd>
+
+    <dt><%= @model.t(:user_id) %></dt>
+    <dd><%= @item.user_label %></dd>
+
+  <% if @item.controller.present? %>
+    <dt><%= @model.t(:controller_name) %></dt>
+    <dd><%= "#{@item.controller}##{@item.action}" %></dd>
+  <% end %>
+
+  <% if @item.url.present? %>
+    <dt><%= @model.t(:url) %></dt>
+    <dd><%= @item.url %></dd>
+  <% end %>
+
+  <dt><%= @model.t(:created) %></dt>
+  <dd><%= @item.created.strftime("%Y/%m/%d %H:%M") %></dd>
+</dl>

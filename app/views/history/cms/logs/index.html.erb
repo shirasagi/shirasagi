@@ -6,8 +6,11 @@
   <ul class="list-items">
     <% @items.each do |item| %>
     <li class="list-item">
+      <nav class="tap-menu">
+        <%= link_to t('ss.links.show'), action: :show, id: item %>
+      </nav>
       <div class="info">
-        <h3 class="title"><%= item.target_label %> : <%= item.action %></h3>
+        <h3 class="title"><%= link_to "#{item.target_label} : #{item.action}", action: :show, id: item %></h3>
         <div class="meta">
           <span class="id">#<%= item.id %></span>
           <span class="datetime"><%= item.created.strftime("%Y/%m/%d %H:%M") %></span>
