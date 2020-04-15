@@ -27,6 +27,9 @@ module History::Searchable
           # request_id
           inner_cond << { request_id: word }
 
+          # page_url
+          inner_cond << { page_url: word }
+
           # user_name
           user_ids = SS::User.where(name: /#{::Regexp.escape(word)}/i).pluck(:id)
           inner_cond << { user_id: { "$in" => user_ids } } if user_ids.present?

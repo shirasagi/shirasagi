@@ -24,6 +24,10 @@
           <span class="label"><%= @model.t :request_id %></span>
           <span class="session-id"><%= item.request_id %></span>
           <% end %>
+          <% if item.page_url %>
+            <span class="label"><%= @model.t :page_url %></span>
+            <span class="session-id"><%= item.page_url %></span>
+          <% end %>
         </div>
       </div>
     </li>

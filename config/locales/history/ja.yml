@@ -60,6 +60,7 @@ ja:
         action: アクション
         path: URL
         url: URL
+        page_url: ページURL
         save_term: 保存期間
         user_ids: ユーザー
       history/backup:

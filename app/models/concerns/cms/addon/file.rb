@@ -131,7 +131,8 @@ module Cms::Addon
         session_id: Rails.application.current_session_id,
         request_id: Rails.application.current_request_id,
         controller: self.model_name.i18n_key,
-        url: file.url
+        url: file.url,
+        page_url: self.url
       )
     end
   end

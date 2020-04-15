@@ -18,6 +18,11 @@
     <dd><%= @item.url %></dd>
   <% end %>
 
+  <% if @item.page_url.present? %>
+    <dt><%= @model.t(:page_url) %></dt>
+    <dd><%= @item.page_url %></dd>
+  <% end %>
+
   <dt><%= @model.t(:created) %></dt>
   <dd><%= @item.created.strftime("%Y/%m/%d %H:%M") %></dd>
 </dl>
