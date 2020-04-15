@@ -58,36 +58,44 @@ module Cms::Addon
         end
       end
 
-      file_ids = []
-      self.column_values.each do |column_value|
-        file_ids += column_value.all_file_ids
-      end
-      file_ids.compact!
-      file_ids.uniq!
+      if add_ids.empty? && del_ids.empty?
+        unless self.try(:column_values).nil?
+          file_ids = []
+          self.column_values.each do |column_value|
+            file_ids += column_value.all_file_ids
+          end
+          file_ids.compact!
+          file_ids.uniq!
 
-      file_ids_was = []
-      column_values_was.each do |column_value|
-        file_ids_was += column_value.all_file_ids
-      end
-      file_ids_was.compact!
-      file_ids_was.uniq!
+          file_ids_was = []
+          column_values_was.each do |column_value|
+            file_ids_was += column_value.all_file_ids
+          end
+          file_ids_was.compact!
+          file_ids_was.uniq!
 
-      add_ids = file_ids - file_ids_was
+          add_ids = file_ids - file_ids_was
 
-      files = SS::File.where(:id.in => add_ids)
-      files.each do |file|
-        item = create_history_log(file)
-        item.action = "update"
-        item.save
-      end
+          if add_ids.present?
+            files = SS::File.where(:id.in => add_ids)
+            files.each do |file|
+              item = create_history_log(file)
+              item.action = "update"
+              item.save
+            end
+          end
 
-      del_ids = file_ids_was - file_ids
+          del_ids = file_ids_was - file_ids
 
-      files = SS::File.where(:id.in => del_ids)
-      files.each do |file|
-        item = create_history_log(file)
-        item.action = "destroy"
-        item.save
+          if del_ids.present?
+            files = SS::File.where(:id.in => del_ids)
+            files.each do |file|
+              item = create_history_log(file)
+              item.action = "destroy"
+              item.save
+            end
+          end
+        end
       end
     end
 
@@ -132,7 +140,7 @@ module Cms::Addon
         request_id: Rails.application.current_request_id,
         controller: self.model_name.i18n_key,
         url: file.url,
-        page_url: self.url
+        page_url: self.try(:url)
       )
     end
   end
