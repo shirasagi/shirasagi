@@ -22,8 +22,9 @@ class Cms::LinkCheckController < ApplicationController
     url = normalize_url(url)
     proxy = ( url =~ /^https/ ) ? ENV['HTTPS_PROXY'] : ENV['HTTP_PROXY']
     http_basic_authentication = SS::MessageEncryptor.http_basic_authentication
-    count = 0
-    max_count = 10
+
+    redirection = 0
+    max_redirection = SS.config.cms.check_links["max_redirection"].to_i
 
     opts = {
       proxy: proxy,
@@ -42,8 +43,8 @@ class Cms::LinkCheckController < ApplicationController
 
       200
     rescue OpenURI::HTTPRedirect => e
-      return if count >= max_count
-      count += 1
+      return if redirection >= max_redirection
+      redirection += 1
       url = e.uri
       retry
     rescue URI::InvalidURIError
