@@ -22,8 +22,12 @@ class Cms::LinkCheckController < ApplicationController
     url = normalize_url(url)
     proxy = ( url =~ /^https/ ) ? ENV['HTTPS_PROXY'] : ENV['HTTP_PROXY']
     http_basic_authentication = SS::MessageEncryptor.http_basic_authentication
+    count = 0
+    max_count = 10
+
     opts = {
       proxy: proxy,
+      redirect: false,
       http_basic_authentication: http_basic_authentication,
       progress_proc: ->(size) do
         progress_data_size = size
@@ -31,17 +35,24 @@ class Cms::LinkCheckController < ApplicationController
       end
     }
 
-    Timeout.timeout(@head_request_timeout) do
-      open(url, opts) { |_f| }
-    end
+    begin
+      Timeout.timeout(@head_request_timeout) do
+        open(url, opts) { |_f| }
+      end
 
-    200
-  rescue URI::InvalidURIError
-    0
-  rescue Timeout::Error
-    0
-  rescue => _e
-    progress_data_size ? 200 : 0
+      200
+    rescue OpenURI::HTTPRedirect => e
+      return if count >= max_count
+      count += 1
+      url = e.uri
+      retry
+    rescue URI::InvalidURIError
+      0
+    rescue Timeout::Error
+      0
+    rescue => _e
+      progress_data_size ? 200 : 0
+    end
   end
 
   def normalize_url(url)
