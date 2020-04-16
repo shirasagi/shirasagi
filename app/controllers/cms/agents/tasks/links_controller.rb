@@ -101,10 +101,8 @@ class Cms::Agents::Tasks::LinksController < ApplicationController
     Rails.logger.info("#{url}: check by referer: #{refs.join(", ")}")
     uri = URI.parse(url)
     if uri.path.match?(/(\/|\.html?)$/)
-      dump("check_html #{uri.path} #{refs.join(", ")}")
       check_html(url, refs)
     else
-      dump("check_file #{uri.path} #{refs.join(", ")}")
       check_file(url, refs)
     end
   end
@@ -231,6 +229,9 @@ class Cms::Agents::Tasks::LinksController < ApplicationController
   def check_head(url)
     http_basic_authentication = SS::MessageEncryptor.http_basic_authentication
 
+    redirection = 0
+    max_redirection = SS.config.cms.check_links["max_redirection"].to_i
+
     if url.match?(/^\/\//)
       url = @base_url.sub(/\/\/.*$/, url)
     elsif url[0] == "/"
@@ -239,15 +240,17 @@ class Cms::Agents::Tasks::LinksController < ApplicationController
 
     begin
       Timeout.timeout(@head_request_timeout) do
-        ::URI.open url, proxy: true, http_basic_authentication: http_basic_authentication, progress_proc: ->(size) { raise "200" }
+        ::URI.open url, proxy: true, redirect: false, http_basic_authentication: http_basic_authentication, progress_proc: ->(size) { raise "200" }
       end
-      #dump("check_head #{url} false")
       false
+    rescue OpenURI::HTTPRedirect => e
+      return if redirection >= max_redirection
+      redirection += 1
+      url = e.uri
+      retry
     rescue Timeout::Error
-      #dump("check_head #{url} false")
       return false
     rescue => e
-      #dump("check_head #{url} true")
       return e.to_s == "200"
     end
   end
