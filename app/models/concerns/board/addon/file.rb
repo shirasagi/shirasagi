@@ -93,6 +93,9 @@ module Board::Addon
         if add_ids.include?(file.id)
           # ignore @cur_user
           file.update(site_id: site_id, model: model_name.i18n_key, owner_item: self, state: "public")
+          item = create_history_log(file)
+          item.action = "update"
+          item.save
         end
         ids << file.id
       end
@@ -102,6 +105,9 @@ module Board::Addon
       del_ids.each do |id|
         file = SS::File.where(id: id).first
         file.destroy if file
+        item = create_history_log(file)
+        item.action = "destroy"
+        item.save
       end
     end
 
@@ -111,6 +117,18 @@ module Board::Addon
 
     def number_to_human_size(size)
       ApplicationController.helpers.number_to_human_size(size)
+    end
+
+    def create_history_log(file)
+      History::Log.new(
+        site_id: site.id,
+        user_id: user.id,
+        session_id: Rails.application.current_session_id,
+        request_id: Rails.application.current_request_id,
+        controller: self.model_name.i18n_key,
+        url: file.url,
+        page_url: Rails.application.current_env["PATH_INFO"]
+      )
     end
   end
 end

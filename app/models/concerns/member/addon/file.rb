@@ -33,6 +33,9 @@ module Member::Addon
           next
         else
           file.update(site_id: site_id, model: model_name.i18n_key, owner_item: self, state: state)
+          item = create_history_log(file)
+          item.action = "update"
+          item.save
         end
         ids << file.id
       end
@@ -42,6 +45,9 @@ module Member::Addon
       del_ids.each do |id|
         file = SS::File.where(id: id).first
         file.destroy if file
+        item = create_history_log(file)
+        item.action = "destroy"
+        item.save
       end
     end
 
@@ -59,6 +65,18 @@ module Member::Addon
       files.each do |file|
         file.remove_public_file
       end
+    end
+
+    def create_history_log(file)
+      History::Log.new(
+        site_id: site.id,
+        user_id: user.id,
+        session_id: Rails.application.current_session_id,
+        request_id: Rails.application.current_request_id,
+        controller: self.model_name.i18n_key,
+        url: file.url,
+        page_url: self.try(:url)
+      )
     end
   end
 end
