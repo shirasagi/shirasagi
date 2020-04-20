@@ -52,25 +52,32 @@ module SS
 
     config.middleware.use Mongoid::QueryCache::Middleware
 
-    attr_reader :current_env
-
     def call(*args, &block)
-      @current_env = args.first
+      Rails.logger.info("[ENTER] SS::Application#call")
+      save_current_env = Thread.current["ss.env"]
+      save_current_request = Thread.current["ss.request"]
+      Thread.current["ss.env"] = args.first
+      Thread.current["ss.request"] = nil
       super
     ensure
-      @current_env = nil
-      @current_request = nil
+      Thread.current["ss.env"] = save_current_env
+      Thread.current["ss.request"] = save_current_request
+      Rails.logger.info("[LEAVE] SS::Application#call")
+    end
+
+    def current_env
+      Thread.current["ss.env"]
     end
 
     def current_request
-      return if @current_env.nil?
-      @current_request ||= ActionDispatch::Request.new(@current_env)
+      return if current_env.nil?
+      Thread.current["ss.request"] ||= ActionDispatch::Request.new(current_env)
     end
 
     def current_session_id
-      return unless @current_env
+      return unless current_env
 
-      session = @current_env[Rack::RACK_SESSION]
+      session = current_env[Rack::RACK_SESSION]
       return unless session
 
       session.id
