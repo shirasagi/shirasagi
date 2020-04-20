@@ -39,7 +39,7 @@ module Gws::Addon
           else
             file.update(site: site, model: model_name.i18n_key, owner_item: self, state: state)
             item = create_history_log(file)
-            item.message = "#{Rails.application.current_env["PATH_INFO"]}#update"
+            item.action = "update"
             item.save
           end
           ids << file.id
@@ -54,7 +54,7 @@ module Gws::Addon
           # Only unused file
           file.destroy unless self.class.where(:id.ne => id, file_ids: file.id).exists?
           item = create_history_log(file)
-          item.message = "#{Rails.application.current_env["PATH_INFO"]}#destroy"
+          item.action = "destroy"
           item.save
         end
       end
@@ -147,6 +147,7 @@ module Gws::Addon
         name: file.filename,
         model: self.model_name.i18n_key,
         path: file.url,
+        page_url: Rails.application.current_env["PATH_INFO"],
         severity: :info
       )
     end

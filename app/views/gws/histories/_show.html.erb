@@ -38,6 +38,11 @@
     <dd><%= @item.path %></dd>
   <% end %>
 
+  <% if @item.page_url.present? %>
+    <dt><%= @model.t(:page_url) %></dt>
+    <dd><%= @item.page_url %></dd>
+  <% end %>
+
   <% if (names = @item.updated_field_names).present? %>
     <dt><%= @model.t(:updated_fields) %></dt>
     <dd><%= names.join(', ') %></dd>

@@ -140,7 +140,7 @@ module Cms::Addon
         request_id: Rails.application.current_request_id,
         controller: self.model_name.i18n_key,
         url: file.url,
-        page_url: self.try(:url)
+        page_url: Rails.application.current_env["PATH_INFO"]
       )
     end
   end
