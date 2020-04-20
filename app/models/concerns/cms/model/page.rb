@@ -52,6 +52,7 @@ module Cms::Model::Page
     return false unless serve_static_file?
     return false unless public?
     return false unless public_node?
+    return false if site.generate_locked?
     run_callbacks :generate_file do
       updated = Cms::Agents::Tasks::PagesController.new.generate_page(self)
       Cms::PageRelease.release(self) if opts[:release] != false

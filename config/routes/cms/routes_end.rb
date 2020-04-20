@@ -179,6 +179,8 @@ Rails.application.routes.draw do
       match "forms/:id/html" => "forms#html", as: :form_html, via: %i[post put]
       match "forms/:id/link_check" => "forms#link_check", as: :form_link_check, via: %i[post put]
       post "validation" => "validation#validate"
+      put "generate_lock/lock" => "generate_lock#lock"
+      put "generate_lock/unlock" => "generate_lock#unlock"
 
       resources :files, concerns: :deletion do
         get :select, on: :member

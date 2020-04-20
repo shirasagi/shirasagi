@@ -384,6 +384,7 @@ ja:
       days_before: 日前
       days_progress: 日経過
       mobile_size: KB(キロバイト)
+      during: 間
 
     rescues:
       default:
@@ -413,6 +414,7 @@ ja:
       ss/translate/site_setting: 自動翻訳
       ss/site_usage: 使用量
       ss/logo_setting: ロゴ設定
+      ss/generate_lock: 書き出し停止
 
   activemodel:
     attributes:
@@ -635,6 +637,11 @@ ja:
       ss/addon/approve_setting:
         forced_update: メールアドレス注意設定
         close_confirmation: 非公開保存の警告表示設定
+      ss/addon/generate_lock:
+        generate_lock_until: 書き出し停止期限
+        generate_lock: 書き出し停止
+        generate_unlock: 書き出し停止解除
+        generate_locked: 書き出しは停止されています。
       ss/model/max_file_size:
         name: 名前
         extensions: 拡張子

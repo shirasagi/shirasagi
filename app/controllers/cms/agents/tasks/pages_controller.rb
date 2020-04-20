@@ -6,6 +6,11 @@ class Cms::Agents::Tasks::PagesController < ApplicationController
   def generate
     @task.log "# #{@site.name}"
 
+    if @site.generate_locked?
+      @task.log(@site.t(:generate_locked))
+      return
+    end
+
     pages = Cms::Page.site(@site).and_public
     pages = pages.node(@node) if @node
     ids   = pages.pluck(:id)
