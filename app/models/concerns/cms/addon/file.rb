@@ -12,6 +12,7 @@ module Cms::Addon
       before_save :clone_files, if: ->{ try(:new_clone?) }
       before_save :save_files
       around_save :update_file_owners
+      after_save :put_contains_urls_logs
       after_destroy :destroy_files
 
       after_generate_file :generate_public_files if respond_to?(:after_generate_file)
@@ -139,9 +140,27 @@ module Cms::Addon
         session_id: Rails.application.current_session_id,
         request_id: Rails.application.current_request_id,
         controller: self.model_name.i18n_key,
-        url: file.url,
+        url: file.try(:url),
         page_url: Rails.application.current_env["PATH_INFO"]
       )
+    end
+
+    def put_contains_urls_logs
+      add_contains_urls = contains_urls - contains_urls_was
+      add_contains_urls.each do |file|
+        item = create_history_log(file)
+        item.url = file
+        item.action = "update"
+        item.save
+      end
+
+      del_contains_urls = contains_urls_was - contains_urls
+      del_contains_urls.each do |file|
+        item = create_history_log(file)
+        item.url = file
+        item.action = "destroy"
+        item.save
+      end
     end
   end
 end
