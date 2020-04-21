@@ -8,6 +8,7 @@ module Member::Addon
       permit_params file_ids: []
 
       before_save :save_files
+      after_save :put_contains_urls_logs
       after_destroy :destroy_files
 
       #after_save :generate_public_files, if: ->{ public? }
@@ -35,6 +36,7 @@ module Member::Addon
           file.update(site_id: site_id, model: model_name.i18n_key, owner_item: self, state: state)
           item = create_history_log(file)
           item.action = "update"
+          item.behavior = "attachment"
           item.save
         end
         ids << file.id
@@ -47,6 +49,7 @@ module Member::Addon
         file.destroy if file
         item = create_history_log(file)
         item.action = "destroy"
+        item.behavior = "attachment"
         item.save
       end
     end
@@ -74,9 +77,29 @@ module Member::Addon
         session_id: Rails.application.current_session_id,
         request_id: Rails.application.current_request_id,
         controller: self.model_name.i18n_key,
-        url: file.url,
+        url: file.try(:url),
         page_url: self.try(:url)
       )
+    end
+
+    def put_contains_urls_logs
+      add_contains_urls = contains_urls - contains_urls_was.to_a
+      add_contains_urls.each do |file|
+        item = create_history_log(file)
+        item.url = file
+        item.action = "update"
+        item.behavior = "paste"
+        item.save
+      end
+
+      del_contains_urls = contains_urls_was.to_a - contains_urls
+      del_contains_urls.each do |file|
+        item = create_history_log(file)
+        item.url = file
+        item.action = "destroy"
+        item.behavior = "paste"
+        item.save
+      end
     end
   end
 end
