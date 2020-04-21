@@ -7,7 +7,13 @@
 
 <dl class="see mod-cms-generate-lock">
   <dt><%= @model.t :generate_lock_until %></dt>
-  <dd><%= I18n.l(@item.generate_lock_until, format: :long) rescue nil %></dd>
+  <dd>
+    <% if @item.generate_lock_until.present? %>
+      <%= I18n.l(@item.generate_lock_until, format: :long) %><span>(<%= @item.generate_lock_user.try(:name) %>)</span>
+    <% else %>
+      <%= @model.t(:generate_unlocked) %>
+    <% end %>
+  </dd>
 </dl>
 
 <%= select_tag "generate_lock", options_for_select(@item.generate_lock_options) %>

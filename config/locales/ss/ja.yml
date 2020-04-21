@@ -642,6 +642,7 @@ ja:
         generate_lock: 書き出し停止
         generate_unlock: 書き出し停止解除
         generate_locked: 書き出しは停止されています。
+        generate_unlocked: 書き出しは停止されていません。
       ss/model/max_file_size:
         name: 名前
         extensions: 拡張子

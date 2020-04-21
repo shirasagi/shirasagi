@@ -5,6 +5,7 @@ module SS::Addon
 
     included do
       field :generate_lock_until, type: DateTime
+      belongs_to :generate_lock_user, class_name: "SS::User"
     end
 
     def generate_lock_enabled?
@@ -29,14 +30,14 @@ module SS::Addon
       generate_lock_until >= Time.zone.now
     end
 
-    def generate_lock(str)
+    def generate_lock(str, opts = {})
       if !generate_lock_enabled?
-        generate_unlock
+        generate_unlock(opts)
         return
       end
 
       if !generate_lock_options.collect(&:last).include?(str)
-        generate_unlock
+        generate_unlock(opts)
         return
       end
 
@@ -44,13 +45,19 @@ module SS::Addon
         term, unit = str.split('.')
         term = term.to_i
         self.set(generate_lock_until: Time.zone.now + term.send(unit))
+        if opts[:user].present?
+          self.set(generate_lock_user_id: opts[:user].id)
+        end
       rescue
-        generate_unlock
+        generate_unlock(opts)
       end
     end
 
-    def generate_unlock
+    def generate_unlock(opts = {})
       self.set(generate_lock_until: nil)
+      if opts[:user].present?
+        self.set(generate_lock_user_id: opts[:user].id)
+      end
     end
   end
 end

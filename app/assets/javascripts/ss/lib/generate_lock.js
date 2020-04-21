@@ -25,7 +25,8 @@ SS_GenerateLock.prototype.lock = function($btn) {
     },
     success: function(data) {
       $btn.prop("disabled", false);
-      _this.$el.find('dd').text(data['generate_lock_until']);
+      _this.$el.find('dd').html(data['generate_lock_until']);
+      SS.notice(data['notice']);
     }
   });
 };
