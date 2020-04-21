@@ -244,7 +244,7 @@ class Cms::Agents::Tasks::LinksController < ApplicationController
       end
       false
     rescue OpenURI::HTTPRedirect => e
-      return if redirection >= max_redirection
+      return false if redirection >= max_redirection
       redirection += 1
       url = e.uri
       retry

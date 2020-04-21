@@ -43,7 +43,7 @@ class Cms::LinkCheckController < ApplicationController
 
       200
     rescue OpenURI::HTTPRedirect => e
-      return if redirection >= max_redirection
+      return 0 if redirection >= max_redirection
       redirection += 1
       url = e.uri
       retry
