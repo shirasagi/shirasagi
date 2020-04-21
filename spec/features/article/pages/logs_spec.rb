@@ -14,7 +14,45 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
   subject(:logs_path) { history_cms_logs_path site.id }
 
 
-  context "attach file from upload" do
+  context "attach file upload log" do
+    before { login_cms_user }
+
+    it "#edit" do
+      visit edit_path
+
+      addon = first("#addon-cms-agents-addons-file")
+      addon.find('.toggle-head').click if addon.matches_css?(".body-closed")
+
+      within "#addon-cms-agents-addons-file" do
+        click_on I18n.t("ss.buttons.upload")
+      end
+
+      wait_for_cbox do
+        attach_file "item[in_files][]", "#{Rails.root}/spec/fixtures/ss/file/keyvisual.jpg"
+        click_button I18n.t("ss.buttons.save")
+        wait_for_ajax
+
+        attach_file "item[in_files][]", "#{Rails.root}/spec/fixtures/ss/file/keyvisual.gif"
+        click_button I18n.t("ss.buttons.attach")
+        wait_for_ajax
+      end
+      click_button I18n.t("ss.buttons.publish_save")
+
+      visit logs_path
+      expect(page).to have_css('.list-item', count: 3)
+
+      visit edit_path
+      find(".action-delete").click
+      wait_for_ajax
+
+      click_button I18n.t("ss.buttons.publish_save")
+
+      visit logs_path
+      expect(page).to have_css('.list-item', count: 5)
+    end
+  end
+
+  context "paste attach file into the text log" do
     before { login_cms_user }
 
     it "#edit" do
@@ -37,14 +75,12 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
         wait_for_ajax
       end
 
-      within '#selected-files' do
-        expect(page).to have_no_css('.name', text: 'keyvisual.jpg')
-        expect(page).to have_css('.name', text: 'keyvisual.gif')
-      end
+      find(".action-attach").click
+      wait_for_ajax
       click_button I18n.t("ss.buttons.publish_save")
 
       visit logs_path
-      expect(page).to have_css('.list-item', count: 3)
+      expect(page).to have_css('.list-item', count: 4)
     end
   end
 end
