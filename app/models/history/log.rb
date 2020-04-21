@@ -17,6 +17,7 @@ class History::Log
   field :target_id, type: String
   field :target_class, type: String
   field :page_url, type: String
+  field :behavior, type: String
 
   belongs_to :site, class_name: "SS::Site"
 

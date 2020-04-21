@@ -41,6 +41,7 @@ module Cms::Addon
           file.update(site: site, model: model_name.i18n_key, owner_item: self, state: state)
           item = create_history_log(file)
           item.action = "update"
+          item.behavior = "attachment"
           item.save
         end
         ids << file.id
@@ -55,6 +56,7 @@ module Cms::Addon
           file.destroy
           item = create_history_log(file)
           item.action = "destroy"
+          item.behavior = "attachment"
           item.save
         end
       end
@@ -82,6 +84,7 @@ module Cms::Addon
             files.each do |file|
               item = create_history_log(file)
               item.action = "update"
+              item.behavior = "attachment"
               item.save
             end
           end
@@ -93,6 +96,7 @@ module Cms::Addon
             files.each do |file|
               item = create_history_log(file)
               item.action = "destroy"
+              item.behavior = "attachment"
               item.save
             end
           end
@@ -151,6 +155,7 @@ module Cms::Addon
         item = create_history_log(file)
         item.url = file
         item.action = "update"
+        item.behavior = "paste"
         item.save
       end
 
@@ -159,6 +164,7 @@ module Cms::Addon
         item = create_history_log(file)
         item.url = file
         item.action = "destroy"
+        item.behavior = "paste"
         item.save
       end
     end

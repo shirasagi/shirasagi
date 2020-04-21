@@ -23,6 +23,11 @@
     <dd><%= @item.page_url %></dd>
   <% end %>
 
+  <% if @item.behavior.present? %>
+    <dt><%= @model.t(:behavior) %></dt>
+    <dd><%= t("history.behavior.#{@item.behavior}") %></dd>
+  <% end %>
+
   <dt><%= @model.t(:created) %></dt>
   <dd><%= @item.created.strftime("%Y/%m/%d %H:%M") %></dd>
 </dl>
