@@ -18,25 +18,24 @@ class Cms::LinkCheckController < ApplicationController
   def check_url(url)
     @head_request_timeout = SS.config.cms.check_links["head_request_timeout"] rescue 5
     progress_data_size = nil
-
-    url = normalize_url(url)
-    proxy = ( url =~ /^https/ ) ? ENV['HTTPS_PROXY'] : ENV['HTTP_PROXY']
     http_basic_authentication = SS::MessageEncryptor.http_basic_authentication
 
     redirection = 0
     max_redirection = SS.config.cms.check_links["max_redirection"].to_i
 
-    opts = {
-      proxy: proxy,
-      redirect: false,
-      http_basic_authentication: http_basic_authentication,
-      progress_proc: ->(size) do
-        progress_data_size = size
-        raise "200"
-      end
-    }
-
     begin
+      url = normalize_url(url)
+      proxy = ( url =~ /^https/ ) ? ENV['HTTPS_PROXY'] : ENV['HTTP_PROXY']
+      opts = {
+        proxy: proxy,
+        redirect: false,
+        http_basic_authentication: http_basic_authentication,
+        progress_proc: ->(size) do
+          progress_data_size = size
+          raise "200"
+        end
+      }
+
       Timeout.timeout(@head_request_timeout) do
         open(url, opts) { |_f| }
       end
