@@ -1,6 +1,6 @@
 <%
   return unless @item.generate_lock_enabled?
-  return unless @item.allowed?(:edit, @cur_user, site: @cur_site)
+  return unless Cms::GenerateLock.allowed?(:edit, @cur_user, site: @cur_site)
 
   addon ||= local_assigns.fetch(:addon, {})
 %>
