@@ -147,7 +147,7 @@ module Gws::Addon
         name: file.filename,
         model: self.model_name.i18n_key,
         path: file.url,
-        page_url: Rails.application.current_env["PATH_INFO"],
+        page_url: Rails.application.current_path_info,
         severity: :info
       )
     end

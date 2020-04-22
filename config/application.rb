@@ -91,6 +91,11 @@ module SS
       end
     end
 
+    def current_path_info
+      return if current_env.nil?
+      current_env["PATH_INFO"]
+    end
+
     def hostname
       @hostname ||= begin
         hostname! rescue nil
