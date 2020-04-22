@@ -118,6 +118,7 @@ production: &production
   check_links:
     html_request_timeout: 10
     head_request_timeout: 5
+    max_redirection: 20
 
   close_days_before: 7
   max_term_form: 10

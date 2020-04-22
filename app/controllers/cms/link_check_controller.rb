@@ -18,30 +18,41 @@ class Cms::LinkCheckController < ApplicationController
   def check_url(url)
     @head_request_timeout = SS.config.cms.check_links["head_request_timeout"] rescue 5
     progress_data_size = nil
-
-    url = normalize_url(url)
-    proxy = ( url =~ /^https/ ) ? ENV['HTTPS_PROXY'] : ENV['HTTP_PROXY']
     http_basic_authentication = SS::MessageEncryptor.http_basic_authentication
-    opts = {
-      proxy: proxy,
-      http_basic_authentication: http_basic_authentication,
-      progress_proc: ->(size) do
-        progress_data_size = size
-        raise "200"
+
+    redirection = 0
+    max_redirection = SS.config.cms.check_links["max_redirection"].to_i
+
+    begin
+      url = normalize_url(url)
+      proxy = ( url =~ /^https/ ) ? ENV['HTTPS_PROXY'] : ENV['HTTP_PROXY']
+      opts = {
+        proxy: proxy,
+        redirect: false,
+        http_basic_authentication: http_basic_authentication,
+        progress_proc: ->(size) do
+          progress_data_size = size
+          raise "200"
+        end
+      }
+
+      Timeout.timeout(@head_request_timeout) do
+        open(url, opts) { |_f| }
       end
-    }
 
-    Timeout.timeout(@head_request_timeout) do
-      open(url, opts) { |_f| }
+      200
+    rescue OpenURI::HTTPRedirect => e
+      return 0 if redirection >= max_redirection
+      redirection += 1
+      url = e.uri
+      retry
+    rescue URI::InvalidURIError
+      0
+    rescue Timeout::Error
+      0
+    rescue => _e
+      progress_data_size ? 200 : 0
     end
-
-    200
-  rescue URI::InvalidURIError
-    0
-  rescue Timeout::Error
-    0
-  rescue => _e
-    progress_data_size ? 200 : 0
   end
 
   def normalize_url(url)

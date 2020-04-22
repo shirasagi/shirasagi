@@ -195,8 +195,9 @@ class Cms::Agents::Tasks::LinksController < ApplicationController
   # Returns the HTML response with HTTP request.
   def get_http(url)
     http_basic_authentication = SS::MessageEncryptor.http_basic_authentication
-    count = 0
-    max_count = 2
+
+    redirection = 0
+    max_redirection = SS.config.cms.check_links["max_redirection"].to_i
 
     if url.match?(/^\/\//)
       url = @base_url.sub(/\/\/.*$/, url)
@@ -213,8 +214,8 @@ class Cms::Agents::Tasks::LinksController < ApplicationController
         return data.join
       end
     rescue OpenURI::HTTPRedirect => e
-      return if count >= max_count
-      count += 1
+      return if redirection >= max_redirection
+      redirection += 1
       url = e.uri
       retry
     rescue Timeout::Error
@@ -228,6 +229,9 @@ class Cms::Agents::Tasks::LinksController < ApplicationController
   def check_head(url)
     http_basic_authentication = SS::MessageEncryptor.http_basic_authentication
 
+    redirection = 0
+    max_redirection = SS.config.cms.check_links["max_redirection"].to_i
+
     if url.match?(/^\/\//)
       url = @base_url.sub(/\/\/.*$/, url)
     elsif url[0] == "/"
@@ -236,9 +240,14 @@ class Cms::Agents::Tasks::LinksController < ApplicationController
 
     begin
       Timeout.timeout(@head_request_timeout) do
-        ::URI.open url, proxy: true, http_basic_authentication: http_basic_authentication, progress_proc: ->(size) { raise "200" }
+        ::URI.open url, proxy: true, redirect: false, http_basic_authentication: http_basic_authentication, progress_proc: ->(size) { raise "200" }
       end
       false
+    rescue OpenURI::HTTPRedirect => e
+      return false if redirection >= max_redirection
+      redirection += 1
+      url = e.uri
+      retry
     rescue Timeout::Error
       return false
     rescue => e
