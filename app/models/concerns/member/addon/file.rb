@@ -83,7 +83,7 @@ module Member::Addon
     end
 
     def put_contains_urls_logs
-      add_contains_urls = contains_urls - contains_urls_was.to_a
+      add_contains_urls = self.contains_urls - self.contains_urls_was.to_a
       add_contains_urls.each do |file|
         item = create_history_log(file)
         item.url = file
@@ -92,7 +92,7 @@ module Member::Addon
         item.save
       end
 
-      del_contains_urls = contains_urls_was.to_a - contains_urls
+      del_contains_urls = self.contains_urls_was.to_a - self.contains_urls
       del_contains_urls.each do |file|
         item = create_history_log(file)
         item.url = file
