@@ -58,11 +58,9 @@ ja:
         request_id: リクエストID
         created: 操作日時
         user_name: ユーザー
-        controller_name: コントローラー名
         model_name: モデル名
         action: アクション
         path: URL
-        url: URL
         page_url: ページURL
         behavior: 動作
         save_term: 保存期間

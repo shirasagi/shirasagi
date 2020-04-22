@@ -18,7 +18,6 @@ Rails.application.routes.draw do
 
   cms "history" do
     get "logs" => "logs#index"
-    resources :logs, only: [:show]
     get "logs/delete" => "logs#delete", as: :delete
     delete "logs" => "logs#destroy", as: :destroy
 
