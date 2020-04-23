@@ -18,6 +18,7 @@ class History::Log
   field :target_class, type: String
   field :page_url, type: String
   field :behavior, type: String
+  field :ref_coll, type: String
 
   belongs_to :site, class_name: "SS::Site"
 
@@ -77,6 +78,7 @@ class History::Log
       log.cur_user     = options[:cur_user]
       log.user_id      = options[:cur_user].id if options[:cur_user]
       log.site_id      = options[:cur_site].id if options[:cur_site]
+      log.ref_coll     = options[:item].collection_name if options[:item]
 
       options[:item].tap do |item|
         if item && item.try(:new_record?)

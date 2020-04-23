@@ -145,7 +145,8 @@ module Cms::Addon
         request_id: Rails.application.current_request_id,
         controller: self.model_name.i18n_key,
         url: file.try(:url),
-        page_url: Rails.application.current_path_info
+        page_url: Rails.application.current_path_info,
+        ref_coll: file.try(:collection_name)
       )
     end
 
@@ -156,6 +157,7 @@ module Cms::Addon
         item.url = file
         item.action = "update"
         item.behavior = "paste"
+        item.ref_coll = ":ss_files"
         item.save
       end
 
@@ -165,6 +167,7 @@ module Cms::Addon
         item.url = file
         item.action = "destroy"
         item.behavior = "paste"
+        item.ref_coll = ":ss_files"
         item.save
       end
     end

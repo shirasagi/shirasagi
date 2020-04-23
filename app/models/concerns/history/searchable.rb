@@ -27,17 +27,31 @@ module History::Searchable
           # request_id
           inner_cond << { request_id: word }
 
-          # page_url
-          inner_cond << { page_url: word }
-
           # user_name
           user_ids = SS::User.where(name: /#{::Regexp.escape(word)}/i).pluck(:id)
           inner_cond << { user_id: { "$in" => user_ids } } if user_ids.present?
 
+          #url
+          inner_cond << { url: word }
+
+          # page_url
+          inner_cond << { page_url: word }
+
+          #behavior
+          if word == I18n.t("history.behavior.attachment")
+            inner_cond << { behavior: "attachment" }
+          elsif word == I18n.t("history.behavior.paste")
+            inner_cond << { behavior: "paste" }
+          end
+
           { "$or" => inner_cond }
         end
-
         criteria = criteria.where("$and" => cond)
+      end
+      if params[:ref_coll] == 'all'
+        criteria
+      elsif params[:ref_coll].present?
+        criteria = criteria.where(ref_coll: params[:ref_coll])
       end
       criteria
     end

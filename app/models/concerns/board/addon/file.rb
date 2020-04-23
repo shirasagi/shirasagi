@@ -95,6 +95,7 @@ module Board::Addon
           file.update(site_id: site_id, model: model_name.i18n_key, owner_item: self, state: "public")
           item = create_history_log(file)
           item.action = "update"
+          item.behavior = "attachment"
           item.save
         end
         ids << file.id
@@ -107,6 +108,7 @@ module Board::Addon
         file.destroy if file
         item = create_history_log(file)
         item.action = "destroy"
+        item.behavior = "attachment"
         item.save
       end
     end
@@ -127,7 +129,8 @@ module Board::Addon
         request_id: Rails.application.current_request_id,
         controller: self.model_name.i18n_key,
         url: file.url,
-        page_url: Rails.application.current_path_info
+        page_url: Rails.application.current_path_info,
+        ref_coll: file.collection_name
       )
     end
   end
