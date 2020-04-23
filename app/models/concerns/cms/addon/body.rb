@@ -49,8 +49,11 @@ module Cms::Addon
     private
 
     def set_contains_urls
-      return if html.blank?
-      self.contains_urls = html.scan(/(?:href|src)="(.*?)"/).flatten.uniq
+      if html.blank?
+        self.contains_urls = []
+      else
+        self.contains_urls = html.scan(/(?:href|src)="(.*?)"/).flatten.uniq
+      end
     end
 
     def template_variable_handler_img_src(name, issuer)
