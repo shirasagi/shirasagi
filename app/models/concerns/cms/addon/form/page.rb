@@ -75,13 +75,13 @@ module Cms::Addon::Form::Page
   end
 
   def validate_column_links
-    @column_link_errors = []
+    @column_link_errors = {}
 
     column_values.each do |column_value|
       column_value.link_check_user = link_check_user
       column_value.valid?(:link)
       if column_value.link_errors.present?
-        @column_link_errors += column_value.link_errors
+        @column_link_errors.merge!(column_value.link_errors)
       end
     end
   end

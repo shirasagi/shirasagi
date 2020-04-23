@@ -40,18 +40,58 @@ class Cms::LinkCheckController < ApplicationController
         open(url, opts) { |_f| }
       end
 
-      200
+      return {
+        code: 200,
+        redirection: redirection
+      }
     rescue OpenURI::HTTPRedirect => e
-      return 0 if redirection >= max_redirection
-      redirection += 1
-      url = e.uri
-      retry
-    rescue URI::InvalidURIError
-      0
+      if redirection >= max_redirection
+        return {
+          code: 0,
+          message: I18n.t("errors.messages.link_check_failed_redirection"),
+          redirection: redirection
+        }
+      else
+        redirection += 1
+        url = e.uri
+        retry
+      end
+    rescue Addressable::URI::InvalidURIError
+      return {
+        code: 0,
+        message: I18n.t("errors.messages.link_check_failed_invalid_link"),
+        redirection: redirection
+      }
+    rescue OpenSSL::SSL::SSLError => e
+      return {
+        code: 0,
+        message: I18n.t("errors.messages.link_check_failed_certificate_verify_failed"),
+        redirection: redirection
+      }
     rescue Timeout::Error
-      0
-    rescue => _e
-      progress_data_size ? 200 : 0
+      return {
+        code: 0,
+        message: I18n.t("errors.messages.link_check_failed_timeout"),
+        redirection: redirection
+      }
+    rescue => e
+      if progress_data_size
+        code = 200
+        message = nil
+      else
+        code = 0
+        if e.to_s == "401 Unauthorized"
+          message = I18n.t("errors.messages.link_check_failed_unauthorized")
+        else
+          message = I18n.t("errors.messages.link_check_failed_not_found")
+        end
+      end
+
+      return {
+        code: code,
+        message: message,
+        redirection: redirection
+      }
     end
   end
 
@@ -74,7 +114,7 @@ class Cms::LinkCheckController < ApplicationController
   public
 
   def check
-    result = {}
+    results = {}
     url = params[:url]
     @root_url = params[:root_url].presence
     @fs_url = ::File.join(@root_url, "/fs/") if @root_url
@@ -82,12 +122,12 @@ class Cms::LinkCheckController < ApplicationController
     raise "400" if url.blank?
     url = url.values if url.is_a?(Hash)
     url.each do |link|
-      next if result[link]
-      result[link] = check_url(link)
+      next if results[link]
+      results[link] = check_url(link)
     end
 
     respond_to do |format|
-      format.json { render json: result.to_json }
+      format.json { render json: results.to_json }
     end
   end
 end
