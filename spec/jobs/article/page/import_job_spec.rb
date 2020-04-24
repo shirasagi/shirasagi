@@ -283,6 +283,62 @@ describe Article::Page::ImportJob, dbscope: :example do
       end
     end
 
+    context "with UTF-8 without BOM file" do
+      let(:path) { "#{Rails.root}/spec/fixtures/article/article_import_test_4.csv" }
+      let(:ss_file) do
+        SS::TempFile.create_empty!(name: "#{unique_id}.csv", filename: "#{unique_id}.csv", content_type: 'text/csv') do |file|
+          ::FileUtils.cp(path, file.path)
+        end
+      end
+      let(:node) do
+        create :article_node_page, cur_site: site
+      end
+
+      before do
+        job = Article::Page::ImportJob.bind(site_id: site, node_id: node, user_id: cms_user)
+        job.perform_now(ss_file.id)
+      end
+
+      it do
+        Job::Log.first.tap do |log|
+          expect(log.logs).to include(include("INFO -- : Started Job"))
+          expect(log.logs).to include(include("INFO -- : Completed Job"))
+        end
+
+        expect(Article::Page.site(site).count).to eq 2
+        expect(Article::Page.site(site).where(filename: "#{node.filename}/test_1.html")).to be_present
+        expect(Article::Page.site(site).where(filename: "#{node.filename}/test_2.html")).to be_present
+      end
+    end
+
+    context "with non supported encoding file" do
+      let(:path) { "#{Rails.root}/spec/fixtures/article/article_import_test_5.csv" }
+      let(:ss_file) do
+        SS::TempFile.create_empty!(name: "#{unique_id}.csv", filename: "#{unique_id}.csv", content_type: 'text/csv') do |file|
+          ::FileUtils.cp(path, file.path)
+        end
+      end
+      let(:node) do
+        create :article_node_page, cur_site: site
+      end
+
+      before do
+        job = Article::Page::ImportJob.bind(site_id: site, node_id: node, user_id: cms_user)
+        job.perform_now(ss_file.id)
+      end
+
+      it do
+        Job::Log.first.tap do |log|
+          expect(log.logs).to include(include("INFO -- : Started Job"))
+          expect(log.logs).to include(include("INFO -- : Completed Job"))
+        end
+
+        expect(Article::Page.site(site).count).to eq 0
+        expect(Article::Page.site(site).where(filename: "#{node.filename}/test_1.html")).to be_blank
+        expect(Article::Page.site(site).where(filename: "#{node.filename}/test_2.html")).to be_blank
+      end
+    end
+
     context "set category_ids" do
       let!(:site2) { create :cms_site, name: "another", host: "another", domains: "another.localhost.jp" }
       let!(:node) { create :article_node_page }

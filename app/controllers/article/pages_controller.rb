@@ -82,7 +82,14 @@ class Article::PagesController < ApplicationController
         raise I18n.t("errors.messages.invalid_csv")
       end
       if !Article::Page::Importer.valid_csv?(file)
-        raise I18n.t("errors.messages.malformed_csv")
+        if Article::Page::Importer.csv_errors.present?
+          Article::Page::Importer.csv_errors.each do |e|
+            @item.errors.add :base, e.to_s
+          end
+          return
+        else
+          raise I18n.t("errors.messages.malformed_csv")
+        end
       end
 
       # save csv to use in job
