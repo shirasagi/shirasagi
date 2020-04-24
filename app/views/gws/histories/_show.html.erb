@@ -35,7 +35,7 @@
 
   <% if @item.path.present? %>
     <dt><%= @model.t(:path) %></dt>
-    <dd><%= link_to @item.path, @item.path %></dd>
+    <dd><%= @item.path %></dd>
   <% end %>
 
   <% if (names = @item.updated_field_names).present? %>
