@@ -65,6 +65,18 @@ class History::Trash
         return false
       end
 
+      if item.class == SS::File
+        file = Cms::File.new
+        Fs::UploadedFile.create_from_file(item, filename: item.name) do |upload_file|
+          file.cur_site = site
+          file.cur_user = opts[:cur_user]
+          file.cur_group = opts[:cur_group]
+          file.in_file = upload_file
+          file.model = "cms/file"
+          file.save!
+        end
+      end
+
       if model.include?(Cms::Content)
         src = item.path.sub("#{Rails.root}/public", self.class.root)
         Fs.mkdir_p(File.dirname(item.path))
@@ -96,7 +108,7 @@ class History::Trash
         criteria = criteria.keyword_in params[:keyword], 'data.name', 'data.filename', 'data.html'
       end
       if params[:ref_coll] == 'all'
-        criteria = criteria.where(ref_coll: /cms_nodes|cms_pages|cms_parts|cms_layouts/)
+        criteria = criteria.where(ref_coll: /cms_nodes|cms_pages|cms_parts|cms_layouts|ss_files/)
       elsif params[:ref_coll].present?
         criteria = criteria.where(ref_coll: params[:ref_coll])
       end
