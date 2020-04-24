@@ -25,9 +25,7 @@
   <ul class="list-items">
     <% @items.each do |item| %>
     <li class="list-item">
-      <% if item.try(:page_url).present? %>
-        <% title = "#{item.model_name} / #{item.name}##{item.action}" %>
-    <% elsif item.model.present? %>
+      <% if item.model.present? %>
         <% title = "#{item.model_name} / #{item.name}" %>
       <% elsif item.controller.present? %>
         <% title = "#{item.controller_name}##{item.action}" %>
@@ -69,10 +67,6 @@
           <% if item.request_id.present? %>
           <span class="label"><%= @model.t :request_id %></span>
           <span class="request-id"><%= item.request_id %></span>
-          <% end %>
-          <% if item.page_url.present? %>
-            <span class="label"><%= @model.t :page_url %></span>
-            <span class="page-url"><%= link_to item.page_url, item.page_url %></span>
           <% end %>
         </div>
       </div>

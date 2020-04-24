@@ -38,9 +38,6 @@ module Gws::Addon
             file.update(site: site, owner_item: self, state: state)
           else
             file.update(site: site, model: model_name.i18n_key, owner_item: self, state: state)
-            item = create_history_log(file)
-            item.action = "update"
-            item.save
           end
           ids << file.id
         end
@@ -53,9 +50,6 @@ module Gws::Addon
         files.each do |file|
           # Only unused file
           file.destroy unless self.class.where(:id.ne => id, file_ids: file.id).exists?
-          item = create_history_log(file)
-          item.action = "destroy"
-          item.save
         end
       end
     end
@@ -136,20 +130,6 @@ module Gws::Addon
       files.each do |file|
         file.update(owner_item: self)
       end
-    end
-
-    def create_history_log(file)
-      Gws::History.new(
-        cur_user: @cur_user,
-        cur_site: @cur_site,
-        session_id: Rails.application.current_session_id,
-        request_id: Rails.application.current_request_id,
-        name: file.filename,
-        model: self.model_name.i18n_key,
-        path: file.url,
-        page_url: Rails.application.current_path_info,
-        severity: :info
-      )
     end
   end
 end

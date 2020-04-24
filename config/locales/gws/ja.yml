@@ -245,7 +245,6 @@ ja:
         job_name: ジョブ名
         item_id: 項目ID
         path: URL
-        page_url: ページURL
         action: アクション
         message: メッセージ
         updated_fields: 変更箇所

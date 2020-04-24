@@ -21,7 +21,6 @@ class Gws::History
   field :job_name, type: String
   field :item_id, type: String
   field :path, type: String
-  field :page_url, type: String
   field :action, type: String
   field :message, type: String
   field :updated_fields, type: Array
@@ -61,7 +60,7 @@ class Gws::History
 
     def search_keyword(params)
       return all if params[:keyword].blank?
-      all.keyword_in(params[:keyword], :session_id, :request_id, :name, :model_name, :user_name, :user_group_name, :page_url)
+      all.keyword_in(params[:keyword], :session_id, :request_id, :name, :model_name, :user_name, :user_group_name)
     end
 
     def search_ymd(params)
