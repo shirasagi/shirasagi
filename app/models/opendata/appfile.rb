@@ -28,11 +28,11 @@ class Opendata::Appfile
   after_destroy -> { app.save(validate: false) }
 
   def url
-    get_app_url(app, "/appfile/#{id}/#{URI.escape(filename)}")
+    get_app_url(app, "/appfile/#{id}/#{Addressable::URI.escape(filename)}")
   end
 
   def full_url
-    get_app_full_url(app, "/appfile/#{id}/#{URI.escape(filename)}")
+    get_app_full_url(app, "/appfile/#{id}/#{Addressable::URI.escape(filename)}")
   end
 
   def content_url
