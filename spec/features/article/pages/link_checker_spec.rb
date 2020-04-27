@@ -86,13 +86,15 @@ describe "link_checker", type: :feature, dbscope: :example, js: true do
           click_button I18n.t("cms.link_check")
           wait_for_ajax
 
-          expect(page).to have_css('#errorLinkChecker li', text: "#{success_url1} #{success}")
-          expect(page).to have_css('#errorLinkChecker li', text: "#{success_url2} #{success}")
-          expect(page).to have_css('#errorLinkChecker li', text: "#{success_url3} #{success}")
-          expect(page).to have_css('#errorLinkChecker li', text: "#{failed_url1} #{failure}")
-          expect(page).to have_css('#errorLinkChecker li', text: "#{failed_url2} #{failure}")
-          expect(page).to have_css('#errorLinkChecker li', text: "#{failed_url3} #{failure}")
-          expect(page).to have_css('#errorLinkChecker li', text: "#{invalid_url1} #{failure}")
+          success_full_url1 = ::File.join(site.full_url, success_url1)
+          failed_full_url1 = ::File.join(site.full_url, failed_url1)
+          expect(page).to have_css('#errorLinkChecker li', text: "#{success} #{success_full_url1}")
+          expect(page).to have_css('#errorLinkChecker li', text: "#{success} #{success_url2}")
+          expect(page).to have_css('#errorLinkChecker li', text: "#{success} #{success_url3}")
+          expect(page).to have_css('#errorLinkChecker li', text: "#{failure} #{failed_full_url1}")
+          expect(page).to have_css('#errorLinkChecker li', text: "#{failure} #{failed_url2}")
+          expect(page).to have_css('#errorLinkChecker li', text: "#{failure} #{failed_url3}")
+          expect(page).to have_css('#errorLinkChecker li', text: "#{failure} #{invalid_url1}")
         end
       end
 
@@ -115,13 +117,15 @@ describe "link_checker", type: :feature, dbscope: :example, js: true do
           click_button I18n.t("cms.link_check")
           wait_for_ajax
 
-          expect(page).to have_css('#errorLinkChecker li', text: "#{success_url1} #{success}")
-          expect(page).to have_css('#errorLinkChecker li', text: "#{success_url2} #{success}")
-          expect(page).to have_css('#errorLinkChecker li', text: "#{success_url3} #{success}")
-          expect(page).to have_css('#errorLinkChecker li', text: "#{failed_url1} #{failure}")
-          expect(page).to have_css('#errorLinkChecker li', text: "#{failed_url2} #{failure}")
-          expect(page).to have_css('#errorLinkChecker li', text: "#{failed_url3} #{failure}")
-          expect(page).to have_css('#errorLinkChecker li', text: "#{invalid_url1} #{failure}")
+          success_full_url1 = ::File.join(site.full_url, success_url1)
+          failed_full_url1 = ::File.join(site.full_url, failed_url1)
+          expect(page).to have_css('#errorLinkChecker li', text: "#{success} #{success_full_url1}")
+          expect(page).to have_css('#errorLinkChecker li', text: "#{success} #{success_url2}")
+          expect(page).to have_css('#errorLinkChecker li', text: "#{success} #{success_url3}")
+          expect(page).to have_css('#errorLinkChecker li', text: "#{failure} #{failed_full_url1}")
+          expect(page).to have_css('#errorLinkChecker li', text: "#{failure} #{failed_url2}")
+          expect(page).to have_css('#errorLinkChecker li', text: "#{failure} #{failed_url3}")
+          expect(page).to have_css('#errorLinkChecker li', text: "#{failure} #{invalid_url1}")
         end
       end
     end
@@ -163,13 +167,15 @@ describe "link_checker", type: :feature, dbscope: :example, js: true do
           click_button I18n.t("cms.link_check")
           wait_for_ajax
 
-          expect(page).to have_css('#errorLinkChecker li', text: "#{success_url1} #{success}")
-          expect(page).to have_css('#errorLinkChecker li', text: "#{success_url2} #{success}")
-          expect(page).to have_css('#errorLinkChecker li', text: "#{success_url3} #{success}")
-          expect(page).to have_css('#errorLinkChecker li', text: "#{failed_url1} #{failure}")
-          expect(page).to have_css('#errorLinkChecker li', text: "#{failed_url2} #{failure}")
-          expect(page).to have_css('#errorLinkChecker li', text: "#{failed_url3} #{failure}")
-          expect(page).to have_css('#errorLinkChecker li', text: "#{invalid_url1} #{failure}")
+          success_full_url1 = ::File.join(site.full_url, success_url1)
+          failed_full_url1 = ::File.join(site.full_url, failed_url1)
+          expect(page).to have_css('#errorLinkChecker li', text: "#{success} #{success_full_url1}")
+          expect(page).to have_css('#errorLinkChecker li', text: "#{success} #{success_url2}")
+          expect(page).to have_css('#errorLinkChecker li', text: "#{success} #{success_url3}")
+          expect(page).to have_css('#errorLinkChecker li', text: "#{failure} #{failed_full_url1}")
+          expect(page).to have_css('#errorLinkChecker li', text: "#{failure} #{failed_url2}")
+          expect(page).to have_css('#errorLinkChecker li', text: "#{failure} #{failed_url3}")
+          expect(page).to have_css('#errorLinkChecker li', text: "#{failure} #{invalid_url1}")
         end
       end
 
@@ -197,13 +203,15 @@ describe "link_checker", type: :feature, dbscope: :example, js: true do
           click_button I18n.t("cms.link_check")
           wait_for_ajax
 
-          expect(page).to have_css('#errorLinkChecker li', text: "#{success_url1} #{success}")
-          expect(page).to have_css('#errorLinkChecker li', text: "#{success_url2} #{success}")
-          expect(page).to have_css('#errorLinkChecker li', text: "#{success_url3} #{success}")
-          expect(page).to have_css('#errorLinkChecker li', text: "#{failed_url1} #{failure}")
-          expect(page).to have_css('#errorLinkChecker li', text: "#{failed_url2} #{failure}")
-          expect(page).to have_css('#errorLinkChecker li', text: "#{failed_url3} #{failure}")
-          expect(page).to have_css('#errorLinkChecker li', text: "#{invalid_url1} #{failure}")
+          success_full_url1 = ::File.join(site.full_url, success_url1)
+          failed_full_url1 = ::File.join(site.full_url, failed_url1)
+          expect(page).to have_css('#errorLinkChecker li', text: "#{success} #{success_full_url1}")
+          expect(page).to have_css('#errorLinkChecker li', text: "#{success} #{success_url2}")
+          expect(page).to have_css('#errorLinkChecker li', text: "#{success} #{success_url3}")
+          expect(page).to have_css('#errorLinkChecker li', text: "#{failure} #{failed_full_url1}")
+          expect(page).to have_css('#errorLinkChecker li', text: "#{failure} #{failed_url2}")
+          expect(page).to have_css('#errorLinkChecker li', text: "#{failure} #{failed_url3}")
+          expect(page).to have_css('#errorLinkChecker li', text: "#{failure} #{invalid_url1}")
         end
       end
     end
@@ -224,8 +232,8 @@ describe "link_checker", type: :feature, dbscope: :example, js: true do
           click_button I18n.t("cms.link_check")
           wait_for_ajax
 
-          expect(page).to have_css('#errorLinkChecker li', text: "#{redirection_url5} #{success}")
-          expect(page).to have_css('#errorLinkChecker li', text: "#{redirection_self_url} #{failure}")
+          expect(page).to have_css('#errorLinkChecker li', text: "#{success} #{redirection_url5}")
+          expect(page).to have_css('#errorLinkChecker li', text: "#{failure} #{redirection_self_url}")
         end
       end
     end
