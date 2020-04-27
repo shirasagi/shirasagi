@@ -11,16 +11,8 @@ describe "board_posts", type: :feature, dbscope: :example, js: true do
   let(:delete_path) { delete_board_post_path site.id, node, item }
   subject(:logs_path) { history_cms_logs_path site.id }
 
-  context "with auth" do
+  context "history_logs" do
     before { login_cms_user }
-
-    it "#index" do
-      visit index_path
-      expect(current_path).not_to eq sns_login_path
-
-      expect(page).to have_css('div#menu nav a', text: I18n.t('ss.links.new'))
-      expect(page).to have_css('div#menu nav a', text: 'ダウンロード')
-    end
 
     it "#new" do
       visit new_path
@@ -34,9 +26,7 @@ describe "board_posts", type: :feature, dbscope: :example, js: true do
         fill_in "item[delete_key]", with: "pass"
         click_button I18n.t('ss.buttons.save')
       end
-    end
 
-    it "#history_logs" do
       visit edit_path
 
       click_on I18n.t("ss.buttons.upload")
@@ -53,10 +43,6 @@ describe "board_posts", type: :feature, dbscope: :example, js: true do
       click_button I18n.t('ss.buttons.save')
 
       expect(page).to have_text('keyvisual.jpg')
-
-      visit edit_path
-      find(".action-delete").click
-      click_button I18n.t('ss.buttons.save')
 
       visit logs_path
       expect(page).to have_css('.list-item', count: 4)
