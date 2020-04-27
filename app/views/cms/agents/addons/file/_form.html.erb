@@ -100,12 +100,12 @@ var tempFile = new SS_Addon_TempFile(".upload-drop-area", <%= @cur_user.id %>, o
 
           <div class="action">
             <% content = link_to file.humanized_name, file.url, class: "icon-#{file.extname}" %>
-            <%= link_to t("sns.file_attach"), "#", onclick: "insertContent('#{escape_javascript(content)}'); return false;" %>
+            <%= link_to t("sns.file_attach"), "#", onclick: "insertContent('#{escape_javascript(content)}'); return false;", class: "action-attach" %>
             <% if file.image? %>
               <% content = image_tag file.url, alt: file.name %>
-              <%= link_to t("sns.image_paste"), "#", onclick: "insertContent('#{escape_javascript(content)}'); return false;" %>
+              <%= link_to t("sns.image_paste"), "#", onclick: "insertContent('#{escape_javascript(content)}'); return false;", class: "action-paste" %>
               <% content = link_to(file.url, alt: file.name, class: "ajax-box") { image_tag(file.thumb_url, alt: file.name) } %>
-              <%= link_to t("sns.thumb_paste"), "#", onclick: "insertContent('#{escape_javascript(content)}'); return false;" %>
+              <%= link_to t("sns.thumb_paste"), "#", onclick: "insertContent('#{escape_javascript(content)}'); return false;", class: "action-thumb" %>
             <% end %>
             <%= link_to t("ss.buttons.delete"), "#", onclick: "deleteContent('#{file.id}'); return false;", class: "action-delete" %>
           </div>
