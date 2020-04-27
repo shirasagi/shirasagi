@@ -4,7 +4,7 @@ gem 'rails', '~> 5.2.0'
 gem 'sassc-rails'
 gem 'uglifier'
 gem 'coffee-rails'
-gem 'therubyracer', platforms: :ruby
+gem 'mini_racer'
 gem 'jbuilder'
 gem 'sdoc', group: :doc
 
