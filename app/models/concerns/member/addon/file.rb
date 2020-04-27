@@ -79,7 +79,7 @@ module Member::Addon
         controller: self.model_name.i18n_key,
         url: file.try(:url),
         page_url: Rails.application.current_path_info,
-        ref_coll: file.collection_name
+        ref_coll: file.try(:collection_name)
       )
     end
 
