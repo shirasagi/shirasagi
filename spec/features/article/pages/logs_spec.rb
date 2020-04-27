@@ -74,9 +74,6 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
         click_button I18n.t("ss.buttons.attach")
         wait_for_ajax
       end
-
-      find(".action-attach").click
-      wait_for_ajax
       click_button I18n.t("ss.buttons.publish_save")
 
       visit logs_path
