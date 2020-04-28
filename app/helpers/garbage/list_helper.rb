@@ -4,7 +4,7 @@ module Garbage::ListHelper
   def default_table_html
     ih = []
     ih << @cur_node.upper_html
-    ih << "<table class=\"garbage-nodes\">"
+    ih << "<table class=\"columns\">"
     ih << "  <caption>#{@cur_node.name}</caption>"
     ih << "  <thead>"
     ih << "    <tr>"
