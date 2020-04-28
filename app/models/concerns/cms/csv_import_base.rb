@@ -35,7 +35,7 @@ module Cms::CsvImportBase
       elsif valid_encoding?(io, Encoding::SJIS)
         io.set_encoding(Encoding::SJIS, Encoding::UTF_8)
       else
-        errors << I18n.t('errors.messages.non_supported_encoding')
+        csv_errors << I18n.t('errors.messages.non_supported_encoding')
       end
 
       csv = CSV.new(io, { headers: true })
