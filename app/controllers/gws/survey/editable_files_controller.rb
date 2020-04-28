@@ -60,6 +60,13 @@ class Gws::Survey::EditableFilesController < ApplicationController
   def summary
     @items = @cur_form.files
     @aggregation = @items.aggregate
+    @print = params.key?(:print)
+
+    if @print
+      render layout: 'ss/print'
+    else
+      render
+    end
   end
 
   def notification
