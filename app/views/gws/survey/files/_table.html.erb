@@ -1,5 +1,18 @@
-<% cur_form ||= @cur_form %>
-<% items ||= @items %>
+<%
+  cur_form ||= @cur_form
+  items ||= @items
+  users = Gws::User.site(@cur_site).in(id: items.pluck(:user_id)).order_by_title(@cur_site)
+
+  each_item_ordered_by_title = proc do |&block|
+    array_items = items.to_a
+    users.to_a.each do |user|
+      item = array_items.find { |item| item.user_id == user.id }
+      next if item.blank?
+
+      block.call item
+    end
+  end
+%>
 
 <div class="form-table">
   <div class="form-table-body">
@@ -17,7 +30,7 @@
         </tr>
         </thead>
         <tbody>
-        <% items.each do |item| %>
+        <% each_item_ordered_by_title.call do |item| %>
           <tr>
             <% if !cur_form.anonymous? %>
               <td><div><%= I18n.l(item.updated) %></div></td>
