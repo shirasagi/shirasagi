@@ -1,6 +1,7 @@
 source 'https://rubygems.org'
 
 gem 'rails', '~> 5.2.0'
+gem 'sprockets', '< 4.0'
 gem 'sassc-rails'
 gem 'uglifier'
 gem 'coffee-rails'
