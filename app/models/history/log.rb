@@ -19,6 +19,7 @@ class History::Log
   field :page_url, type: String
   field :behavior, type: String
   field :ref_coll, type: String
+  field :filename, type: String
 
   belongs_to :site, class_name: "SS::Site"
 
@@ -79,6 +80,7 @@ class History::Log
       log.user_id      = options[:cur_user].id if options[:cur_user]
       log.site_id      = options[:cur_site].id if options[:cur_site]
       log.ref_coll     = options[:item].collection_name if options[:item]
+      log.filename     = options[:item].data[:filename] if options[:item].ref_coll == "ss_files"
 
       options[:item].tap do |item|
         if item && item.try(:new_record?)

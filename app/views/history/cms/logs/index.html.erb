@@ -29,6 +29,10 @@
             <span class="label"><%= @model.t :behavior %></span>
             <span class="behavior"><%= t("history.behavior.#{item.behavior}") %></span>
           <% end %>
+          <% if item.filename %>
+            <span class="label"><%= @model.t :filename %></span>
+            <span class="filename"><%= item.filename %></span>
+          <% end %>
         </div>
       </div>
     </li>
