@@ -252,9 +252,8 @@ GEM
       concurrent-ruby (~> 1.0)
     icalendar (2.4.1)
     jaro_winkler (1.5.3)
-    jbuilder (2.8.0)
-      activesupport (>= 4.2.0)
-      multi_json (>= 1.2)
+    jbuilder (2.10.0)
+      activesupport (>= 5.0.0)
     jquery-form-rails (1.0.1)
       jquery-rails
     jquery-minicolors-rails (2.2.6.1)
