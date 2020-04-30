@@ -233,7 +233,7 @@ GEM
       tilt
     hamster (3.0.0)
       concurrent-ruby (~> 1.0)
-    hashdiff (0.3.9)
+    hashdiff (1.0.1)
     hashie (4.1.0)
     holiday_japan (1.4.3)
     htmlentities (4.3.4)
@@ -620,10 +620,10 @@ GEM
       nokogiri (~> 1.6)
       rubyzip (~> 1.0)
       selenium-webdriver (~> 3.0)
-    webmock (3.5.1)
+    webmock (3.8.3)
       addressable (>= 2.3.6)
       crack (>= 0.3.2)
-      hashdiff
+      hashdiff (>= 0.4.0, < 2.0.0)
     websocket-driver (0.7.1)
       websocket-extensions (>= 0.1.0)
     websocket-extensions (0.1.5)
