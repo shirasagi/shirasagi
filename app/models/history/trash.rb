@@ -3,7 +3,7 @@ class History::Trash
   include SS::Reference::Site
   include Cms::SitePermission
 
-  permit_params :parent, :children, :state
+  permit_params :basename, :parent, :children, :state
 
   after_destroy :remove_all
 
@@ -44,11 +44,17 @@ class History::Trash
       dir = ::File.dirname(data[:filename]).sub(/^\.$/, "")
       item_parent = Cms::Node.where(site_id: data[:site_id], filename: dir).first
       item.errors.add :base, :not_found_parent_node if item_parent.blank?
+
+      item.cur_node = item_parent if item.respond_to?(:cur_node=)
     end
     data.each do |k, v|
       item[k] = v
     end
     item.apply_status('closed', workflow_reset: true) if model.include?(Workflow::Addon::Approver)
+    if opts[:basename].present? && item.respond_to?(:filename=) && item.respond_to?(:basename=)
+      item.filename = nil
+      item.basename = opts[:basename]
+    end
     if item.respond_to?(:in_file)
       path = "#{self.class.root}/#{item.path.sub(/.*\/(ss_files\/)/, '\\1')}"
       file = Fs::UploadedFile.create_from_file(path, content_type: item.content_type) if File.exist?(path)
