@@ -95,7 +95,7 @@ GEM
     builder (3.2.4)
     bxslider-rails (4.2.5.1)
     byebug (11.0.1)
-    capybara (3.27.0)
+    capybara (3.32.1)
       addressable
       mini_mime (>= 0.1.3)
       nokogiri (~> 1.8)
@@ -468,7 +468,7 @@ GEM
     rdf-xsd (3.1.0)
       rdf (~> 3.1)
     rdoc (6.1.1)
-    regexp_parser (1.6.0)
+    regexp_parser (1.7.0)
     rly (0.2.3)
     rmagick (2.16.0)
     romaji (0.2.4)
