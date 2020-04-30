@@ -51,7 +51,7 @@ class History::Cms::TrashesController < ApplicationController
     render_opts[:notice] = t('ss.notice.restored')
 
     if @item.ref_coll == "ss_files"
-      result = @item.restore!(file_params)
+      result = @item.file_restore!(file_params)
     else
       result = @item.restore!(get_params)
     end
