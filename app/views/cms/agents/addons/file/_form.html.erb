@@ -93,8 +93,8 @@ var tempFile = new SS_Addon_TempFile(".upload-drop-area", <%= @cur_user.id %>, o
               <% if img.try(:columns).present? && img.try(:rows).present? %>
                 <span><%= t("sns.w_h") %>: <%= img.columns %> x <%= img.rows %></span><br>
               <% end %>
-              <span><%= t("sns.size") %>: <%= file.size %><%= t("sns.byte") %></span><br>
-              <span><%= t("sns.updated") %>: <%= file.updated.strftime("%Y/%m/%d %H:%M") %></span><br>
+              <span><%= t("sns.size") %>: <%= number_to_human_size(file.size) %></span><br>
+              <span><%= t("sns.datetime") %>: <%= file.updated.strftime("%Y/%m/%d %H:%M") %></span><br>
               <span><%= t("sns.user") %>: <%= file.user.name %></span><br>
             </div>
           <% end %>

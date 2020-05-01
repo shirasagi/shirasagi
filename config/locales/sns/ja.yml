@@ -16,8 +16,7 @@ ja:
     filename: ファイル名
     w_h: 横 x 縦
     size: サイズ
-    byte: バイト
-    updated: 投稿日時
+    datetime: 投稿日時
     user: 投稿者
     errors:
       invalid_login: ログインできませんでした。
