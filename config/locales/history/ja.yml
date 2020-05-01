@@ -37,6 +37,8 @@ ja:
     behavior:
       paste: 本文貼付
       attachment: 添付ファイル
+      restore: 復元
+      delete: 削除
 
   cms_role:
     read_history_trashes: ゴミ箱の閲覧

@@ -82,6 +82,12 @@ class History::Log
       log.ref_coll     = options[:item].collection_name if options[:item]
       log.filename     = options[:item].data[:filename] if options[:item].try(:ref_coll) == "ss_files"
 
+      if options[:action] == "undo_delete"
+        log.behavior = "restore"
+      elsif options[:action] == "destroy"
+        log.behavior = "delete"
+      end
+
       options[:item].tap do |item|
         if item && item.try(:new_record?)
           log.target_id    = item.id

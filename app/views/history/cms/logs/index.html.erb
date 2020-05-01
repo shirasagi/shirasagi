@@ -25,13 +25,13 @@
             <span class="label"><%= @model.t :page_url %></span>
             <span class="page-url"><%= link_to item.page_url, (item.page_url + "#selected-files") %></span>
           <% end %>
-          <% if item.behavior %>
-            <span class="label"><%= @model.t :behavior %></span>
-            <span class="behavior"><%= t("history.behavior.#{item.behavior}") %></span>
-          <% end %>
           <% if item.filename %>
             <span class="label"><%= @model.t :filename %></span>
             <span class="filename"><%= item.filename %></span>
+          <% end %>
+          <% if item.behavior %>
+            <span class="label"><%= @model.t :behavior %></span>
+            <span class="behavior"><%= t("history.behavior.#{item.behavior}") %></span>
           <% end %>
         </div>
       </div>
