@@ -156,7 +156,7 @@ describe "history_cms_trashes", type: :feature, dbscope: :example, js: true do
       expect(current_path).to eq index_path
       expect(page).to have_no_css('a.title', text: file.name)
 
-      expect { file.reload }.not_to raise_error
+      expect { file.reload }.to raise_error Mongoid::Errors::DocumentNotFound
 
       expect(Cms::File.all.count).to eq 1
       expect(History::Trash.all.count).to eq 1
