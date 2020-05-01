@@ -88,9 +88,9 @@ var tempFile = new SS_Addon_TempFile(".upload-drop-area", <%= @cur_user.id %>, o
               <span class="ext icon-<%= file.extname %>"><%= file.extname %></span>
             <% end %>
             <div class="properties">
-              <% img = Magick::ImageList.new(file.path) %>
               <span><%= I18n.t("sns.filename") %>: <%= file.name %></span><br>
-              <% if img.try(:columns).present? && img.try(:rows).present? %>
+              <% if file.image? %>
+                <% img = Magick::ImageList.new(file.path) %>
                 <span><%= t("sns.w_h") %>: <%= img.columns %> x <%= img.rows %></span><br>
               <% end %>
               <span><%= t("sns.size") %>: <%= number_to_human_size(file.size) %></span><br>

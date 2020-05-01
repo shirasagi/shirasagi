@@ -16,9 +16,9 @@
               <span class="ext icon-<%= file.extname %>"><%= file.extname %></span>
             <% end %>
             <div class="properties">
-              <% img = Magick::ImageList.new(file.path) %>
               <span><%= I18n.t("sns.filename") %>: <%= file.name %></span><br>
-              <% if img.try(:columns).present? && img.try(:rows).present? %>
+              <% if file.image? %>
+                <% img = Magick::ImageList.new(file.path) %>
                 <span><%= t("sns.w_h") %>: <%= img.columns %> x <%= img.rows %></span><br>
               <% end %>
               <span><%= t("sns.size") %>: <%= number_to_human_size(file.size) %></span><br>
@@ -41,6 +41,6 @@
 <%= jquery do %>
   var $el = $("#<%= addon[:id] %>");
   $el.on("click", ".file-view a.thumb", function(ev) {
-    SS_FileView.open(ev, { viewPath: "<%= view_cms_apis_content_file_path(id: ":id") %>" });
+  SS_FileView.open(ev, { viewPath: "<%= view_cms_apis_content_file_path(id: ":id") %>" });
   });
 <% end %>
