@@ -1904,6 +1904,19 @@ footer.send {
     &:hover {
       background-color: #eee;
       text-decoration: none;
+      .properties {
+        display: block;
+        text-align: left;
+        padding: 10px 10px;
+        background: $white;
+        line-height: 20px;
+        color: $black;
+        border: 5px solid $gray4;
+      }
+    }
+    .properties {
+      position: absolute;
+      display: none;
     }
     img {
       vertical-align: middle;
