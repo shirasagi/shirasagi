@@ -14,7 +14,8 @@ cache:
 
 services:
   - docker
-  - mongodb
+  # travis's default mongodb is 3.4 which is too old to use.
+  #- mongodb
   #- elasticsearch
 
 addons:
