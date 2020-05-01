@@ -46,6 +46,7 @@ module Member::Addon
       del_ids = file_ids_was.to_a - ids
       del_ids.each do |id|
         file = SS::File.where(id: id).first
+        file.cur_user = @cur_user if file.respond_to?(:cur_user=) && @cur_user
         file.destroy if file
         item = create_history_log(file)
         item.action = "destroy"

@@ -53,6 +53,7 @@ module Cms::Addon
         file = SS::File.where(id: id).first
         if file
           file.skip_history_trash = skip_history_trash if [ file, self ].all? { |obj| obj.respond_to?(:skip_history_trash) }
+          file.cur_user = @cur_user if file.respond_to?(:cur_user=) && @cur_user
           file.destroy
           item = create_history_log(file)
           item.action = "destroy"
