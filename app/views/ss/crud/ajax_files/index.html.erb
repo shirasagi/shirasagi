@@ -130,6 +130,16 @@ SS_SearchUI.modal();
         <% else %>
           <span class="ext icon-<%= item.extname %>"><%= item.extname %></span>
         <% end %>
+        <div class="properties">
+          <% img = Magick::ImageList.new(item.path) %>
+          <span><%= I18n.t("sns.filename") %>: <%= item.name %></span><br>
+          <% if img.try(:columns).present? && img.try(:rows).present? %>
+            <span><%= t("sns.w_h") %>: <%= img.columns %> x <%= img.rows %></span><br>
+          <% end %>
+          <span><%= t("sns.size") %>: <%= item.size %><%= t("sns.byte") %></span><br>
+          <span><%= t("sns.updated") %>: <%= item.updated.strftime("%Y/%m/%d %H:%M") %></span><br>
+          <span><%= t("sns.user") %>: <%= item.user.name %></span><br>
+        </div>
       </div>
       <div class="name">
         <%= item.name %>
