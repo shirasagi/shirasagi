@@ -9,6 +9,7 @@ module Cms::Addon
       field :html, type: String
       field :markdown, type: String
       field :contains_urls, type: Array, default: []
+      field :value_contains_urls, type: Array, default: []
       permit_params :html, :markdown
 
       before_validation :set_contains_urls

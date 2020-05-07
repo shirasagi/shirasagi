@@ -140,8 +140,8 @@ module Cms::Addon
 
     def create_history_log(file)
       History::Log.new(
-        site_id: site.id,
-        user_id: user.id,
+        site_id: @cur_site.id,
+        user_id: @cur_user.id,
         session_id: Rails.application.current_session_id,
         request_id: Rails.application.current_request_id,
         controller: self.model_name.i18n_key,
