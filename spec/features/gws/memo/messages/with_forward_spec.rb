@@ -39,6 +39,7 @@ describe 'gws_memo_messages', type: :feature, dbscope: :example, js: true do
           within target do
             click_on I18n.t('gws.organization_addresses')
           end
+          wait_for_ajax
         end
 
         wait_for_cbox do
