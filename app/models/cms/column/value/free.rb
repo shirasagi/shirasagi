@@ -118,7 +118,7 @@ class Cms::Column::Value::Free < Cms::Column::Value::Base
   end
 
   def put_contains_urls_logs
-    add_contains_urls = self._parent.value_contains_urls - self._parent.value_contains_urls_was
+    add_contains_urls = self._parent.value_contains_urls - self._parent.value_contains_urls_was.to_a
     add_contains_urls.each do |file|
       item = create_history_log(file)
       item.url = file
@@ -128,7 +128,7 @@ class Cms::Column::Value::Free < Cms::Column::Value::Base
       item.save
     end
 
-    del_contains_urls = self._parent.value_contains_urls_was - self._parent.value_contains_urls
+    del_contains_urls = self._parent.value_contains_urls_was.to_a - self._parent.value_contains_urls
     del_contains_urls.each do |file|
       item = create_history_log(file)
       item.url = file
@@ -140,8 +140,11 @@ class Cms::Column::Value::Free < Cms::Column::Value::Base
   end
 
   def set_contains_urls
-    self.contains_urls = [] if value.blank?
-    self.contains_urls = value.scan(/(?:href|src)="(.*?)"/).flatten.uniq
+    if value.blank?
+      self.contains_urls = [] if self.contains_urls.present?
+    else
+      self.contains_urls = value.scan(/(?:href|src)="(.*?)"/).flatten.uniq
+    end
     self._parent.value_contains_urls = self.contains_urls
   end
 end
