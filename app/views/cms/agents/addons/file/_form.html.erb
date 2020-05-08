@@ -14,10 +14,19 @@ window.deleteContent = function(id) {
   else if ((typeof CKEDITOR) != "undefined") {
     data = CKEDITOR.instances[Cms_Form.editorId].getData();
   }
+  else {
+    data = null;
+  }
   file = 'fs/' + id.split('').join('/') + '/_/';
   $(".file-view").each(function() {
     if (id == $(this).find(".file-id").attr("value")) {
-      if (data.indexOf(file) > 0) {
+      if (data == null) {
+        if (!confirm('<%= I18n.t('ss.confirm.in_use') %>')) {
+          return;
+        }
+        $(this).remove();
+      }
+      else if (data.indexOf(file) > 0) {
         if (!confirm('<%= I18n.t('ss.confirm.in_use') %>')) {
           return;
         }
