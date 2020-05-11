@@ -206,6 +206,7 @@ ja:
       ruby_on: ふりがなをつける
       ruby_off: ふりがなをはずす
       back_to_contents: コンテンツへ戻る
+      michecker: miChecker で確認する
     move_page:
       confirm: 確認
       message: '"%{source}"へのリンクが含まれるページ'

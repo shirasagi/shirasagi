@@ -1,0 +1,120 @@
+<div class="michecker">
+  <div class="michecker__main">
+    <iframe class="michecker__main-content" src="<%= cms_preview_path(path: @item.url[1..-1]) %>" frameborder="none"></iframe>
+  </div>
+  <div class="michecker__footer">
+    <div class="michecker-report">
+      <%= render "ss/crud/addon", addon: { head: "種別", class: "michecker-report__filter" } do %>
+        <ul class="michecker-report__filter-items">
+          <li class="michecker-report__filter-item-all">すべての項目 <span class="michecker-report__filter-item-badge">50</span></li>
+          <li class="michecker-report__filter-item-separator"><hr></li>
+          <li class="michecker-report__filter-item-error">問題あり <span class="michecker-report__filter-item-badge">1</span></li>
+          <li class="michecker-report__filter-item-warning">問題の可能性大 <span class="michecker-report__filter-item-badge">2</span></li>
+          <li class="michecker-report__filter-item-caution">要判断箇所 <span class="michecker-report__filter-item-badge">49</span></li>
+          <li class="michecker-report__filter-item-notice">手動確認 <span class="michecker-report__filter-item-badge">0</span></li>
+        </ul>
+      <% end %>
+
+      <div class="michecker-report__result">
+        <div class="cms-tabs michecker-report__result-tabs">
+          <a class="michecker-report__result-tab-accessibility current" href="#michecker-report-accessibility">
+            <span class="tab-name">アクセシビリティ検証</span>
+          </a>
+          <a class="michecker-report__result-tab-low-vision" href="#michecker-report-low-vision">
+            <span class="tab-name">視覚化</span>
+          </a>
+        </div>
+
+        <%= render "ss/crud/addon", addon: { id: "michecker-report-accessibility", class: "michecker-report__result-accessibility" } do %>
+          <table class="index">
+            <thead>
+            <tr>
+              <th>種類</th>
+              <th>JIS</th>
+              <th>深さ</th>
+              <th>前景色</th>
+              <th>背景色</th>
+              <th>X</th>
+              <th>Y</th>
+              <th>面積</th>
+              <th>達成</th>
+              <th>内容</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+              <td></td>
+            </tr>
+            <tr>
+              <td></td>
+            </tr>
+            <tr>
+              <td></td>
+            </tr>
+            <tr>
+              <td></td>
+            </tr>
+            </tbody>
+          </table>
+        <% end %>
+
+        <%= render "ss/crud/addon", addon: { id: "michecker-report-low-vision", class: "michecker-report__result-low-vision hide" } do %>
+          <table class="index">
+            <thead>
+            <tr>
+              <th>種類</th>
+              <th>JIS</th>
+              <th>深さ</th>
+              <th>前景色</th>
+              <th>背景色</th>
+              <th>X</th>
+              <th>Y</th>
+              <th>面積</th>
+              <th>達成</th>
+              <th>内容</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+              <td></td>
+            </tr>
+            <tr>
+              <td></td>
+            </tr>
+            <tr>
+              <td></td>
+            </tr>
+            <tr>
+              <td></td>
+            </tr>
+            </tbody>
+          </table>
+        <% end %>
+      </div>
+    </div>
+  </div>
+
+  <%= jquery do %>
+    $(".michecker-report__result-tabs a").on("click", function(ev) {
+      ev.preventDefault();
+
+      var $this = $(this);
+      if ($this.hasClass("current")) {
+        return false;
+      }
+
+      var id = $this.attr("href");
+      if (! id) {
+        return false;
+      }
+
+      $(".michecker-report__result-tabs a").removeClass("current");
+      $this.addClass("current");
+
+      $(".michecker-report__result-accessibility").addClass("hide");
+      $(".michecker-report__result-low-vision").addClass("hide");
+      $(id).removeClass("hide");
+      return false;
+    });
+  <% end %>
+</div>

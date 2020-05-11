@@ -48,12 +48,16 @@ Rails.application.routes.draw do
     delete :tag, action: :reset_tag_all, on: :collection
   end
 
+  concern :michecker do
+    get :michecker, action: :michecker, on: :member
+  end
+
   content "article" do
     get "/" => redirect { |p, req| "#{req.path}/pages" }, as: :main
     get "generate" => "generate#index"
     post "generate" => "generate#run"
     resources :pages, concerns: [
-      :deletion, :copy, :move, :lock, :download_all, :import, :command, :opendata_ref, :contains_urls, :tag
+      :deletion, :copy, :move, :lock, :download_all, :import, :command, :opendata_ref, :contains_urls, :tag, :michecker
     ]
   end
 

@@ -1,0 +1,123 @@
+.michecker {
+  width: 100%;
+  height: 100%;
+
+  &__main {
+    width: 100%;
+    height: calc(100% - 250px);
+  }
+
+  &__main-content {
+    width: 100%;
+    height: 100%;
+  }
+
+  &__footer {
+    width: 100%;
+    border-top: 1px solid $gray2;
+    padding: 5px;
+  }
+
+  &-report {
+    @include display-flex;
+
+    &__filter {
+      width: 30%;
+      margin-right: 10px;
+
+      &-items {
+        margin: 0;
+        padding: 0;
+      }
+
+      &-item-all {
+        padding: 5px;
+
+        &:before {
+          font-family: "Material Icons";
+          font-size: 108%;
+          content: "\e160";
+
+          display: inline;
+          margin-right: 4px;
+          vertical-align: -3px;
+        }
+      }
+
+      &-item-separator {
+        padding: 5px;
+      }
+
+      &-item-error {
+        padding: 5px;
+
+        &:before {
+          font-family: "Material Icons";
+          font-size: 108%;
+          content: "\e000";
+
+          display: inline;
+          margin-right: 4px;
+          vertical-align: -3px;
+        }
+      }
+
+      &-item-warning {
+        padding: 5px;
+
+        &:before {
+          font-family: "Material Icons";
+          font-size: 108%;
+          content: "\e002";
+
+          display: inline;
+          margin-right: 4px;
+          vertical-align: -3px;
+        }
+      }
+
+      &-item-caution {
+        padding: 5px;
+
+        &:before {
+          font-family: "Material Icons";
+          font-size: 108%;
+          content: "\e001";
+
+          display: inline;
+          margin-right: 4px;
+          vertical-align: -3px;
+        }
+      }
+
+      &-item-notice {
+        padding: 5px;
+
+        &:before {
+          font-family: "Material Icons";
+          font-size: 108%;
+          content: "\e8b2";
+
+          display: inline;
+          margin-right: 4px;
+          vertical-align: -3px;
+        }
+      }
+
+      &-item-badge {
+        display: inline-block;
+        min-width: 16px;
+        padding: 0 2px;
+        border-radius: 4px;
+        background-color: $gray3;
+        color: $white;
+        font-size: 80%;
+        text-align: center;
+      }
+    }
+
+    &__table {
+      width: 100%;
+    }
+  }
+}

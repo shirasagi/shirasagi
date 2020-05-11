@@ -229,4 +229,9 @@ module Cms::PageFilter
 
     render_update true, location: { action: :index }, render: { file: :index }
   end
+
+  def michecker
+    set_item
+    render file: "michecker", layout: "cms/michecker"
+  end
 end
