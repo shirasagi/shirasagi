@@ -15,15 +15,21 @@
   &__footer {
     width: 100%;
     border-top: 1px solid $gray2;
-    padding: 5px;
+    padding: 10px;
   }
 
   &-report {
-    @include display-flex;
+    &__selector {
+      margin-bottom: 5px;
+    }
+
+    &__accessibility, &__low-vision {
+      @include display-flex;
+    }
 
     &__filter {
       width: 15em;
-      margin-right: 10px;
+      margin-right: 5px;
 
       &-items {
         margin: 0;
@@ -117,7 +123,7 @@
     }
 
     &__result {
-      width: calc(100% - 15em - 10px - 1px);
+      width: calc(100% - 15em - 5px - 1px);
 
       &-container {
         overflow: scroll;
