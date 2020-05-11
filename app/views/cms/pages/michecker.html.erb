@@ -26,69 +26,79 @@
         </div>
 
         <%= render "ss/crud/addon", addon: { id: "michecker-report-accessibility", class: "michecker-report__result-accessibility" } do %>
-          <table class="index">
-            <thead>
-            <tr>
-              <th>種類</th>
-              <th>JIS</th>
-              <th>深さ</th>
-              <th>前景色</th>
-              <th>背景色</th>
-              <th>X</th>
-              <th>Y</th>
-              <th>面積</th>
-              <th>達成</th>
-              <th>内容</th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr>
-              <td></td>
-            </tr>
-            <tr>
-              <td></td>
-            </tr>
-            <tr>
-              <td></td>
-            </tr>
-            <tr>
-              <td></td>
-            </tr>
-            </tbody>
-          </table>
+          <div class="michecker-report__result-container">
+            <table class="index" style="width: 140em;">
+              <thead>
+              <tr>
+                <th style="width: 12em;">知覚可能</th>
+                <th style="width: 12em;">操作可能</th>
+                <th style="width: 12em;">理解可能</th>
+                <th style="width: 12em;">堅牢</th>
+                <th style="width: 12em;">WCAG 2.0</th>
+                <th style="width: 12em;">Section508</th>
+                <th style="width: 12em;">JIS</th>
+                <th style="width: 12em;">達成方法</th>
+                <th>内容</th>
+              </tr>
+              </thead>
+              <tbody>
+              <% @accessibility_result.items.each do |item| %>
+                <tr>
+                  <td><%= item.evaluationItem["tableDataMetrics"].try { |metrics| metrics[0] } %></td>
+                  <td><%= item.evaluationItem["tableDataMetrics"].try { |metrics| metrics[1] } %></td>
+                  <td><%= item.evaluationItem["tableDataMetrics"].try { |metrics| metrics[2] } %></td>
+                  <td><%= item.evaluationItem["tableDataMetrics"].try { |metrics| metrics[3] } %></td>
+                  <td><%= item.evaluationItem["guidelines"].select { |guideline| guideline["guidelineName"] == "WCAG 2.0" }.map { |guideline| guideline["id"] }.join(", ") %></td>
+                  <td><%= item.evaluationItem["guidelines"].select { |guideline| guideline["guidelineName"] == "Section508" }.map { |guideline| guideline["id"] }.join(", ") %></td>
+                  <td><%= item.evaluationItem["guidelines"].select { |guideline| guideline["guidelineName"] == "JIS" }.map { |guideline| guideline["id"] }.join(", ") %></td>
+                  <td><%= item.evaluationItem["tableDataTechniques"] %></td>
+                  <td><%= item.description %></td>
+                </tr>
+              <% end %>
+              </tbody>
+            </table>
+          </div>
         <% end %>
 
         <%= render "ss/crud/addon", addon: { id: "michecker-report-low-vision", class: "michecker-report__result-low-vision hide" } do %>
-          <table class="index">
-            <thead>
-            <tr>
-              <th>種類</th>
-              <th>JIS</th>
-              <th>深さ</th>
-              <th>前景色</th>
-              <th>背景色</th>
-              <th>X</th>
-              <th>Y</th>
-              <th>面積</th>
-              <th>達成</th>
-              <th>内容</th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr>
-              <td></td>
-            </tr>
-            <tr>
-              <td></td>
-            </tr>
-            <tr>
-              <td></td>
-            </tr>
-            <tr>
-              <td></td>
-            </tr>
-            </tbody>
-          </table>
+          <div class="michecker-report__result-container">
+            <table class="index">
+              <thead>
+              <tr>
+                <th>種類</th>
+                <th>WCAG 2.0</th>
+                <th>Section508</th>
+                <th>JIS</th>
+                <th>深刻度</th>
+                <th>前景色</th>
+                <th>背景色</th>
+                <th>X座標</th>
+                <th>Y座標</th>
+                <th>面積</th>
+                <th>達成方法</th>
+                <th>内容</th>
+              </tr>
+              </thead>
+              <tbody>
+              <% @lowvision_result.items.each do |item| %>
+                <tr>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td><%= item.description %></td>
+                </tr>
+              <% end %>
+              </tbody>
+            </table>
+          </div>
         <% end %>
       </div>
     </div>

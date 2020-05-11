@@ -22,7 +22,7 @@
     @include display-flex;
 
     &__filter {
-      width: 30%;
+      width: 15em;
       margin-right: 10px;
 
       &-items {
@@ -116,8 +116,12 @@
       }
     }
 
-    &__table {
-      width: 100%;
+    &__result {
+      width: calc(100% - 15em - 10px - 1px);
+
+      &-container {
+        overflow: scroll;
+      }
     }
   }
 }

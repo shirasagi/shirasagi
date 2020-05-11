@@ -232,6 +232,11 @@ module Cms::PageFilter
 
   def michecker
     set_item
+
+    base_dir = Rails.root.join("spec/fixtures/cms/michecker")
+    @accessibility_result = Cms::Michecker::Accessibility.load(base_dir.join("accessibility-1.json.gz"))
+    @lowvision_result = Cms::Michecker::LowVision.load(base_dir.join("lowvision-1.json.gz"))
+
     render file: "michecker", layout: "cms/michecker"
   end
 end
