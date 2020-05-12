@@ -26,7 +26,7 @@ module Event::Addon::Csv
     module ClassMethods
       def csv_headers
         %w(
-            filename name index_name layout order
+            filename name index_name layout order redirect_link
             keywords description summary_html
             html
             schedule venue content cost related_url contact
@@ -58,6 +58,7 @@ module Event::Addon::Csv
         line << item.index_name
         line << item.layout.try(:name)
         line << item.order
+        line << item.redirect_link
 
         # meta
         line << item.keywords

@@ -205,7 +205,7 @@ module Cms::PublicFilter
 
   def send_page(page)
     if response.content_type == "text/html" && page.layout
-      render html: render_layout(page.layout).html_safe, layout: (request.xhr? ? false : "cms/page")
+      render html: render_layout(page.layout).html_safe, layout: (request.xhr? ? false : page.view_layout)
     else
       @_response_body = response.body
     end

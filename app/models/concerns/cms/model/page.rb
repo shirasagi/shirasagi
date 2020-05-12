@@ -21,10 +21,12 @@ module Cms::Model::Page
     attr_accessor :window_name
 
     field :route, type: String, default: ->{ "cms/page" }
+    field :redirect_link, type: String
 
     embeds_ids :categories, class_name: "Cms::Node"
 
     permit_params category_ids: []
+    permit_params :redirect_link
 
     after_save :rename_file, if: ->{ @db_changes }
     after_save :generate_file, if: ->{ @db_changes }
@@ -150,6 +152,10 @@ module Cms::Model::Page
     end
 
     nil
+  end
+
+  def view_layout
+    redirect_link.present? ? "cms/redirect" : "cms/page"
   end
 
   private

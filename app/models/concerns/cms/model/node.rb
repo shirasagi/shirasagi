@@ -211,6 +211,10 @@ module Cms::Model::Node
     Fs.mv(path, dst) if Fs.exists?(path)
   end
 
+  def view_layout
+    "cms/page"
+  end
+
   private
 
   def validate_invalid_filename

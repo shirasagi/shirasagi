@@ -100,6 +100,7 @@ class Event::Page::CsvImporter
     item.index_name = value(row, :index_name)
     item.layout = layout
     item.order = value(row, :order)
+    item.redirect_link = value(row, :redirect_link)
 
     # meta
     item.keywords = value(row, :keywords)

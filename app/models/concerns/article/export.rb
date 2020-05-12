@@ -63,6 +63,7 @@ module Article::Export
         drawer.body { |item| item.form.try(:name) }
       end
       drawer.column :order
+      drawer.column :redirect_link
     end
 
     def draw_meta(drawer)
