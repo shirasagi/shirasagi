@@ -4,7 +4,7 @@
 %>
 <%= jquery do %>
   var blank = $(".parent-crumbs").first().text();
-  $(".parent-crumbs").mousedown(function(){
+  $(".parent-crumbs").on("mousedown", function(){
     $(this).toggleClass("pulled");
     if (!$(this).hasClass("pulled")) return true;
 

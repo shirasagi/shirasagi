@@ -213,7 +213,7 @@ this.Gws_Schedule_Calendar = (function () {
               return false;
             }
           });
-          return $(".tap-menu").mouseleave(function () {
+          return $(".tap-menu").on("mouseleave", function () {
             return $(".tap-menu").remove();
           });
         }

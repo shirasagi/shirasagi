@@ -264,12 +264,12 @@ this.Opendata_ListUI = (function () {
           return tr.find(".multiple-menu").hide();
         }
       });
-      tr.find("input[type=checkbox]").mouseover(function (e) {
+      tr.find("input[type=checkbox]").on("mouseover", function (e) {
         if (this.checked) {
           return tr.find(".multiple-menu").css("left", e.pageX + 15).css("top", e.pageY - 5).show();
         }
       });
-      tr.mouseup(function (e) {
+      tr.on("mouseup", function (e) {
         if (!$(e.target).is('a') && !$(e.target).is("input")) {
           tbody.find("input[type=checkbox]").attr("checked", false);
           tbody.find("tr").removeClass("checked");
@@ -277,7 +277,7 @@ this.Opendata_ListUI = (function () {
           return tr.find("input[type=checkbox]").trigger("click");
         }
       });
-      tr.mouseleave(function () {
+      tr.on("mouseleave", function () {
         tr.find(".tap-menu").hide();
         return tr.find(".multiple-menu").hide();
       });

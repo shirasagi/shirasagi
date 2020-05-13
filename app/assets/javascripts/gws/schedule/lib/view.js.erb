@@ -88,19 +88,19 @@ this.Gws_Schedule_View = (function () {
     }
     $("." + name).find(".xdsoft_month, .xdsoft_year").unbind('mousedown').find("i").remove();
     $("." + name + " .xdsoft_datetimepicker").not(".controller.controller").find(".xdsoft_prev, .xdsoft_next").hide();
-    $("." + name + " .controller .xdsoft_prev").mousedown(function () {
+    $("." + name + " .controller .xdsoft_prev").on("mousedown", function () {
       var k, results;
       results = [];
       for (i = k = 1; k <= 4; i = ++k) {
-        results.push($("." + name + " .xdsoft_prev").not(this).mousedown().mouseup());
+        results.push($("." + name + " .xdsoft_prev").not(this).trigger("mousedown").trigger("mouseup"));
       }
       return results;
     });
-    return $("." + name + " .controller .xdsoft_next").mousedown(function () {
+    return $("." + name + " .controller .xdsoft_next").on("mousedown", function () {
       var k, results;
       results = [];
       for (i = k = 1; k <= 4; i = ++k) {
-        results.push($("." + name + " .xdsoft_next").not(this).mousedown().mouseup());
+        results.push($("." + name + " .xdsoft_next").not(this).trigger("mousedown").trigger("mouseup"));
       }
       return results;
     });
