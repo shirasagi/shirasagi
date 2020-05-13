@@ -103,7 +103,7 @@ this.Webmail_Mail_List = (function () {
     $(".webmail-mail-search .reset").on("click", function () {
       $(".webmail-mail-search input[type=text]").val("");
       $(".webmail-mail-search input[type=checkbox]").prop('checked', false);
-      return $(".webmail-mail-search .search").click();
+      return $(".webmail-mail-search .search").trigger("click");
     });
     $(".list-head .move-all, .list-head .copy-all").each(function () {
       var menu, url;

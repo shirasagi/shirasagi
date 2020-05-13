@@ -10,7 +10,7 @@ this.Gws_Memo_Message = (function () {
     $(".gws-memo-search .reset").on("click", function () {
       $(".gws-memo-search input[type=text]").val("");
       $(".gws-memo-search input[type=checkbox]").val("");
-      $(".gws-memo-search .search").click();
+      $(".gws-memo-search .search").trigger("click");
     });
 
     $('.cc-bcc-label').on("click", function () {

@@ -115,25 +115,25 @@ this.Gws_Schedule_Multiple_Calendar = (function () {
     Gws_Schedule_Calendar.overrideAddLink(selector);
     controller = $(selector);
     controller.find('.fc-today-button').on("click", function () {
-      return $('.calendar.multiple .fc-today-button').click();
+      return $('.calendar.multiple .fc-today-button').trigger("click");
     });
     controller.find('.fc-prev-button').on("click", function () {
-      return $('.calendar.multiple .fc-prev-button').click();
+      return $('.calendar.multiple .fc-prev-button').trigger("click");
     });
     controller.find('.fc-next-button').on("click", function () {
-      return $('.calendar.multiple .fc-next-button').click();
+      return $('.calendar.multiple .fc-next-button').trigger("click");
     });
     controller.find('.fc-basicWeek-button').on("click", function () {
-      return $('.calendar.multiple .fc-basicWeek-button').click();
+      return $('.calendar.multiple .fc-basicWeek-button').trigger("click");
     });
     controller.find('.fc-timelineDay-button').on("click", function () {
-      return $('.calendar.multiple .fc-timelineDay-button').click();
+      return $('.calendar.multiple .fc-timelineDay-button').trigger("click");
     });
     controller.find('.fc-basicHour-button').on("click", function () {
-      return $('.calendar.multiple .fc-basicHour-button').click();
+      return $('.calendar.multiple .fc-basicHour-button').trigger("click");
     });
     controller.find('.fc-reload-button').on("click", function () {
-      return $('.calendar.multiple .fc-reload-button').click();
+      return $('.calendar.multiple .fc-reload-button').trigger("click");
     });
   };
 
