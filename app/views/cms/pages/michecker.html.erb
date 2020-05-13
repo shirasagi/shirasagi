@@ -1,6 +1,6 @@
 <div class="michecker">
   <div class="michecker__main">
-    <iframe class="michecker__main-content" src="<%= cms_preview_path(path: @item.url[1..-1]) %>" frameborder="none"></iframe>
+    <iframe class="michecker__main-content" src="<%= cms_preview_path(path: @item.url[1..-1], "no-controller" => true) %>" frameborder="none"></iframe>
   </div>
   <div class="michecker__footer">
     <div class="michecker-report__selector">
