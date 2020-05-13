@@ -442,40 +442,38 @@ this.SS = (function () {
 
   SS.renderDateTimePicker = function () {
     $.datetimepicker.setLocale('ja');
-    if ($.support.opacity) {
-      $.each($(".js-date"), function () {
-        var data, opts;
-        opts = {
-          timepicker: false,
-          format: 'Y/m/d',
-          closeOnDateSelect: true,
-          scrollInput: false
-        };
-        data = $(this).data();
-        if (data.minDate !== null) {
-          opts.minDate = data.minDate;
-        }
-        if (data.maxDate !== null) {
-          opts.maxDate = data.maxDate;
-        }
-        return $(this).datetimepicker(opts);
-      });
-      return $.each($(".js-datetime"), function () {
-        var data, opts;
-        opts = {
-          roundTime: 'ceil',
-          step: 30
-        };
-        data = $(this).data();
-        if (data.minDate !== null) {
-          opts.minDate = data.minDate;
-        }
-        if (data.maxDate !== null) {
-          opts.maxDate = data.maxDate;
-        }
-        return $(this).datetimepicker(opts);
-      });
-    }
+    $.each($(".js-date"), function () {
+      var data, opts;
+      opts = {
+        timepicker: false,
+        format: 'Y/m/d',
+        closeOnDateSelect: true,
+        scrollInput: false
+      };
+      data = $(this).data();
+      if (data.minDate !== null) {
+        opts.minDate = data.minDate;
+      }
+      if (data.maxDate !== null) {
+        opts.maxDate = data.maxDate;
+      }
+      return $(this).datetimepicker(opts);
+    });
+    $.each($(".js-datetime"), function () {
+      var data, opts;
+      opts = {
+        roundTime: 'ceil',
+        step: 30
+      };
+      data = $(this).data();
+      if (data.minDate !== null) {
+        opts.minDate = data.minDate;
+      }
+      if (data.maxDate !== null) {
+        opts.maxDate = data.maxDate;
+      }
+      return $(this).datetimepicker(opts);
+    });
   };
 
   // SS.formatTime("2019-07-09T14:33:38+0900") = "2019/7/9 14:33"
