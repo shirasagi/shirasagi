@@ -3,10 +3,10 @@ this.Webmail_Mail_Navi = (function () {
   }
 
   Webmail_Mail_Navi.render = function () {
-    $('.webmail-navi-mailboxes .reload').click(function () {
+    $('.webmail-navi-mailboxes .reload').on("click", function () {
       return Webmail_Mail_Navi.reloadMailbox();
     });
-    $('.webmail-navi-quota .reload').click(function () {
+    $('.webmail-navi-quota .reload').on("click", function () {
       return Webmail_Mail_Navi.reloadQuota();
     });
     return $(".webmail-select-account").on("change", function () {
@@ -109,7 +109,7 @@ this.Webmail_Mail_List = (function () {
       var menu, url;
       url = $(this).data('href');
       menu = $("#webmail-mailboxes-list .dropdown-menu").clone();
-      menu.find("a").click(function () {
+      menu.find("a").on("click", function () {
         var uids;
         uids = Webmail_Mail_List.findCheckedUids();
         if (uids.length === 0) {
@@ -544,7 +544,7 @@ this.Webmail_Mail_Address = (function () {
       menu.append('<li><a href="#" class="addr-send">' + lang.send + '</a></li>');
       menu.append('<li><a href="#" class="addr-entry">' + lang.entry + '</a></li>');
       menu.append('<li><a href="#" class="addr-copy">' + lang.copy + '</a></li>');
-      $(this).find('.addr-send').click(function () {
+      $(this).find('.addr-send').on("click", function () {
         location.href = urls.send + "?" + $.param({
           item: {
             to: name + "<" + email + ">"
@@ -552,7 +552,7 @@ this.Webmail_Mail_Address = (function () {
         });
         return false;
       });
-      $(this).find('.addr-entry').click(function () {
+      $(this).find('.addr-entry').on("click", function () {
         location.href = urls.add + "?" + $.param({
           item: {
             name: name,
@@ -561,7 +561,7 @@ this.Webmail_Mail_Address = (function () {
         });
         return false;
       });
-      return $(this).find('.addr-copy').click(function () {
+      return $(this).find('.addr-copy').on("click", function () {
         SS_Clipboard.copy(email);
         $(".dropdown, .dropdown-menu").removeClass('active');
         return false;
@@ -579,7 +579,7 @@ this.Webmail_Mail_Form = (function () {
 
   Webmail_Mail_Form.render = function () {
     $('.js-autosize').autosize();
-    $('.cc-bcc-label').click(function () {
+    $('.cc-bcc-label').on("click", function () {
       $('.webmail-mail-form-address.cc-bcc').animate({
         height: 'toggle'
       }, 'fast');
@@ -600,14 +600,14 @@ this.Webmail_Mail_Form = (function () {
       }
       return $(this).val("");
     });
-    $('.js-send').click(function () {
+    $('.js-send').on("click", function () {
       if (!$('input[name="item[to][]"][value!=""]').length) {
         return $('#item_to_text').attr('required', true);
       } else {
         return $('#item_to_text').attr('required', false);
       }
     });
-    return $('.js-save').click(function () {
+    return $('.js-save').on("click", function () {
       return $('#item_to_text').attr('required', false);
     });
   };

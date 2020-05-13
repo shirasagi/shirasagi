@@ -2,7 +2,7 @@
 <%= error_messages_for :item %>
 
 <%= jquery do %>
-$('.btn.apply-filter').click(function(){
+$('.btn.apply-filter').on("click", function(){
   if ($('.apply-mailbox').val() == '') {
     alert("<%= t('webmail.errors.blank_apply_mailbox') %>");
     return false;

@@ -132,7 +132,7 @@
             end
           %>
           <%= jquery do %>
-            $(".gws-memo-message .unseens").click(function() {
+            $(".gws-memo-message .unseens").on("click", function() {
               $(".gws-memo-message.popup-notice-container [data-url]").each(function() {
                 var url = $(this).attr("data-url");
                 var switched = $(this).attr("data-url-switched");
@@ -186,7 +186,7 @@
           end
         %>
         <%= jquery do %>
-          $(".gws-memo-notice .unseens").click(function() {
+          $(".gws-memo-notice .unseens").on("click", function() {
             $(".gws-memo-notice.popup-notice-container [data-url]").each(function() {
               var url = $(this).attr("data-url");
               var switched = $(this).attr("data-url-switched");
@@ -238,7 +238,7 @@
           end
         %>
         <%= jquery do %>
-          $(".gws-memo-notice .unseens").click(function() {
+          $(".gws-memo-notice .unseens").on("click", function() {
             $(".gws-memo-notice.popup-notice-container [data-url]").each(function() {
               var url = $(this).attr("data-url");
               var switched = $(this).attr("data-url-switched");

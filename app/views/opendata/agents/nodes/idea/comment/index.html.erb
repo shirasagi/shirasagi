@@ -1,7 +1,7 @@
 <% if @preview.blank? %>
 <%= jquery do %>
 
-  $(".comment-add").click(function (event) {
+  $(".comment-add").on("click", function (event) {
     var text;
     text = $('#s_comment_body').val();
     if (text.length > 0) {
@@ -20,7 +20,7 @@
     }
     event.preventDefault();
   });
-$(".comment_delete").click(function (event) {
+$(".comment_delete").on("click", function (event) {
     $.ajax({
       url: "<%= @idea.comment_delete_url %>",
       type: "POST",

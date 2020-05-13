@@ -13,10 +13,10 @@ this.Chat_Bot = (function () {
         _this.sendText($(this));
       }
     });
-    $(_this.id).find('.chat-button').click(function() {
+    $(_this.id).find('.chat-button').on("click", function() {
       _this.sendText($(this));
     });
-    $(_this.id).find('.chat-items').click(function(e) {
+    $(_this.id).find('.chat-items').on("click", function(e) {
       if ($(e.target).hasClass('chat-suggest')) {
         _this.clickSuggest = true;
         $(_this.id).find('.chat-text').val($(e.target).text());

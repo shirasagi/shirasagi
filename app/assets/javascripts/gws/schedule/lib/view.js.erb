@@ -25,7 +25,7 @@ this.Gws_Schedule_View = (function () {
   // Schedule tabs
 
   Gws_Schedule_View.renderTabs = function (selector) {
-    return $(selector).find('a').click(function () {
+    return $(selector).find('a').on("click", function () {
       var date, url;
       date = Gws_Schedule_View.getCalendarDate();
       if (!date) {
@@ -40,7 +40,7 @@ this.Gws_Schedule_View = (function () {
   // 4 months calendars
 
   Gws_Schedule_View.renderSideCalendars = function (selector) {
-    return $(selector).find('.fc-toolbar h2').click(function () {
+    return $(selector).find('.fc-toolbar h2').on("click", function () {
       var date, name;
       name = "gws-schedule-tool-calendars";
       date = Gws_Schedule_View.getCalendarDate();

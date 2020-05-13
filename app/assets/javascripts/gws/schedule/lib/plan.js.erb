@@ -73,7 +73,7 @@ this.Gws_Schedule_Plan = (function () {
     if (end_sel == null) {
       end_sel = '.date.end';
     }
-    $(start_sel + ", " + end_sel).click(function () {
+    $(start_sel + ", " + end_sel).on("click", function () {
       return Gws_Schedule_Plan.diffOn = Gws_Schedule_Plan.diffDates($(start_sel).val(), $(end_sel).val());
     });
     $(start_sel).change(function () {

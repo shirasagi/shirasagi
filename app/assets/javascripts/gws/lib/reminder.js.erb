@@ -17,7 +17,7 @@ this.Gws_Reminder = (function () {
       $(this).find('.restore').show();
       return $(this).find('.notification').hide();
     });
-    el.find('.list-item .delete').click(function () {
+    el.find('.list-item .delete').on("click", function () {
       var item;
       item = $(this).closest('.list-item');
       $.ajax({
@@ -44,7 +44,7 @@ this.Gws_Reminder = (function () {
       });
       return false;
     });
-    return el.find('.list-item .restore').click(function () {
+    return el.find('.list-item .restore').on("click", function () {
       var item;
       item = $(this).closest('.list-item');
       $.ajax({

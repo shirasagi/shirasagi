@@ -1,6 +1,6 @@
 <%= jquery do %>
 
-$('.popup-attributes .custom-group-name').click(function() {
+$('.popup-attributes .custom-group-name').on("click", function() {
   $(this).parent().find('.custom-group-members').slideToggle('fast');
   return false;
 });

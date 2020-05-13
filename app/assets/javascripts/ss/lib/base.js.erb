@@ -127,7 +127,7 @@ this.SS = (function () {
   };
 
   SS.renderClipboardCopy = function () {
-    $(".ss-clipboard-copy").click(function () {
+    $(".ss-clipboard-copy").on("click", function () {
       var clip_attr = $(this).attr("data-clip-attr");
       if (clip_attr) {
         SS_Clipboard.copy($(this).attr(clip_attr), { "success_alert": true });
@@ -234,7 +234,7 @@ this.SS = (function () {
     if (params == null) {
       params = {};
     }
-    return $(elem).click(function (e) {
+    return $(elem).on("click", function (e) {
       var defaults, self;
       self = $(this);
       defaults = {
@@ -259,7 +259,7 @@ this.SS = (function () {
     if (params == null) {
       params = {};
     }
-    return $(elem).click(function (e) {
+    return $(elem).on("click", function (e) {
       var defaults, self;
       if (!confirm("<%= I18n.t 'ss.confirm.delete' %>")) {
         return false;
@@ -296,7 +296,7 @@ this.SS = (function () {
     SS.clearNotice();
     notice = $('#notice');
     if (!notice.hasClass('js-notice')) {
-      notice.addClass('js-notice').click(function () {
+      notice.addClass('js-notice').on("click", function () {
         return notice.slideUp('normal');
       });
     }
@@ -336,7 +336,7 @@ this.SS = (function () {
         return "<%= I18n.t 'ss.confirm.unload' %>";
       }
     });
-    $("input[type=submit]").click(function () {
+    $("input[type=submit]").on("click", function () {
       SS.formChanged = false;
       return true;
     });

@@ -13,7 +13,7 @@ this.Gws_Memo_Message = (function () {
       $(".gws-memo-search .search").click();
     });
 
-    $('.cc-bcc-label').click(function () {
+    $('.cc-bcc-label').on("click", function () {
       $('.gws-addon-memo-member .cc-bcc').animate({ height: 'toggle' }, 'fast');
       return false;
     });
