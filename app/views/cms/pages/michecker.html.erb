@@ -1,4 +1,4 @@
-<div class="michecker">
+<div class="michecker" id="ss-michecker">
   <div class="michecker__main">
     <iframe class="michecker__main-content" src="<%= cms_preview_path(path: @item.url[1..-1], "no-controller" => true) %>" frameborder="none"></iframe>
   </div>
@@ -8,6 +8,7 @@
         <option value="accessibility">アクセシビリティ検証</option>
         <option value="low-vision">視覚化</option>
       </select>
+      <a href="#ss-michecker" class="michecker-settings"><span class="material-icons">settings</span></a>
     </div>
 
     <div class="michecker-report__accessibility">
@@ -130,6 +131,14 @@
         $(".michecker-report__accessibility").addClass("hide");
         $(".michecker-report__low-vision").removeClass("hide");
       }
+    });
+
+    $(".michecker-settings").on("click", function(ev) {
+      ev.preventDefault();
+
+      $.colorbox({
+        html: "<h2>miCheck の設定</h2><div>ただいま開発中。</div>", fixed: true, width: "90%", height: "90%"
+      });
     });
   <% end %>
 </div>
