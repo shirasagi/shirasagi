@@ -50,6 +50,7 @@ Rails.application.routes.draw do
 
   concern :michecker do
     get :michecker, action: :michecker, on: :member
+    get :michecker_lowvision_result, action: :michecker_lowvision_result, on: :member
   end
 
   content "article" do

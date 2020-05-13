@@ -239,4 +239,20 @@ module Cms::PageFilter
 
     render file: "michecker", layout: "cms/michecker"
   end
+
+  def michecker_lowvision_result
+    set_item
+
+    base_dir = Rails.root.join("spec/fixtures/cms/michecker")
+    case params[:type].to_s
+    when "source"
+      file = base_dir.join("lowvision-source-1.png")
+    when "result"
+      file = base_dir.join("lowvision-result-1.png")
+    end
+
+    raise "404" if file.blank? || !::File.exist?(file)
+
+    ss_send_file file
+  end
 end
