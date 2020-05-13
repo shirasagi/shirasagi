@@ -169,12 +169,15 @@ Cms_TemplateForm.prototype.bindOne = function(el, options) {
       success: function(data, status, xhr) {
         var $palette = $this.closest(".column-value-palette");
         $palette.before(data);
-        var $inserted = $palette.prev(".column-value");
-        // SS.render();
-        SS.renderAjaxBox();
-        SS.renderDateTimePicker();
-        Cms_Form.activateSyntaxChecks();
         self.resetOrder();
+
+        // To wait completely rendered DOM which is added dynamically,
+        // use "setTimeout" to comsume events in browser.
+        setTimeout(function() {
+          SS.renderAjaxBox();
+          SS.renderDateTimePicker();
+          Cms_Form.activateSyntaxChecks();
+        }, 0);
       },
       error: function(xhr, status, error) {
         $this.closest(".column-value-palette").find(".column-value-palette-error").html(error).removeClass("hide");
