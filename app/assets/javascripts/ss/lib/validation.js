@@ -16,7 +16,7 @@ this.SS_Validation = (function () {
       input.blur(function() {
         SS_Validation.validation();
       });
-      input.change(function() {
+      input.on("change", function() {
         SS_Validation.validation();
       });
     })

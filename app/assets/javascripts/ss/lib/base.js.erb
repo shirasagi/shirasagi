@@ -328,7 +328,7 @@ this.SS = (function () {
 
   SS.confirmUnloading = function () {
     SS.formChanged = false;
-    $("input[type=text],textarea,select").change(function () {
+    $("input[type=text],textarea,select").on("change", function () {
       SS.formChanged = true;
     });
     $(window).on("beforeunload", function () {
@@ -357,7 +357,7 @@ this.SS = (function () {
   };
 
   SS.fileCheck = function () {
-    return $('#item_files').change(function () {
+    return $('#item_files').on("change", function () {
       var form, uri;
       form = $(this).val();
       if (!form) {

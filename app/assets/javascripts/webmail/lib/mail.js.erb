@@ -585,11 +585,11 @@ this.Webmail_Mail_Form = (function () {
       }, 'fast');
       return false;
     });
-    $('#item_format').change(function () {
+    $('#item_format').on("change", function () {
       return Webmail_Mail_Form.renderBodyForm($(this).val());
     });
     Webmail_Mail_Form.renderBodyForm($('#item_format').val());
-    $('#item_signature').change(function () {
+    $('#item_signature').on("change", function () {
       if ($(this).val() === "") {
         return;
       }

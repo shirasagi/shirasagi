@@ -18,7 +18,7 @@ this.Gws_Memo_Message = (function () {
       return false;
     });
 
-    $('.add-template').change(function () {
+    $('.add-template').on("change", function () {
       if ($(this).val() === "") {
         return;
       }

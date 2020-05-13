@@ -2,7 +2,7 @@
   options = @imap.mailboxes.all.map { |item| [item.locale_name, item.name] }
 %>
 <%= jquery do %>
-  $('#parent_name').change(function() {
+  $('#parent_name').on("change", function() {
     var name = $('#item_name').val();
     name = name.replace(/.*\./, '');
 

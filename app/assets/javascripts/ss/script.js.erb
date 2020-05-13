@@ -172,14 +172,14 @@ $(function () {
     $(".dropdown").removeClass('active');
     return $(".dropdown-menu").removeClass('active');
   });
-  $("select").change(function () {
+  $("select").on("change", function () {
     if ($(this).val() === "") {
       return $(this).addClass("blank-value has-blank-value");
     } else {
       return $(this).removeClass("blank-value");
     }
   });
-  $("select").change();
+  $("select").trigger("change");
   SS_ListUI.render();
   SS_Mobile.render();
   SS_AddonTabs.render();

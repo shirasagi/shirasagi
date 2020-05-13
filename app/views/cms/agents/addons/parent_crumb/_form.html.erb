@@ -19,7 +19,7 @@
       select.append(option);
     });
 
-    select.change(function(){
+    select.on("change", function(){
       var value = select.find("option:selected").val();
       $(this).closest("dd.crumb-categories").prev("dd.crumb-urls").find("input").val(value);
     });

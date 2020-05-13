@@ -5,7 +5,7 @@ this.Gws_Schedule_Repeat_Plan = (function () {
   Gws_Schedule_Repeat_Plan.renderForm = function () {
     this.changeRepeatForm();
     this.relateDateForm();
-    return $('#item_repeat_type').change(function () {
+    return $('#item_repeat_type').on("change", function () {
       return Gws_Schedule_Repeat_Plan.changeRepeatForm();
     });
   };

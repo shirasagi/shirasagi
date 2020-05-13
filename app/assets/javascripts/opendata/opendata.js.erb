@@ -178,7 +178,7 @@ this.Opendata = (function () {
   };
 
   Opendata.confirmUnloading = function () {
-    $("input[type=text],textarea,select").change(function () {
+    $("input[type=text],textarea,select").on("change", function () {
       return $(window).on("beforeunload", function () {
         return "<%= I18n.t 'ss.confirm.unload' %>";
       });
@@ -248,7 +248,7 @@ this.Opendata_ListUI = (function () {
       tr.find("input[type=checkbox]").each(function () {
         return tr.toggleClass("checked", $(this).prop("checked"));
       });
-      tr.find("input[type=checkbox]").change(function () {
+      tr.find("input[type=checkbox]").on("change", function () {
         var chkbox, chkcnt, i, len, ref;
         tr.toggleClass("checked", $(this).prop("checked"));
         chkcnt = 0;
@@ -299,7 +299,7 @@ this.Opendata_ListUI = (function () {
         }
       });
     });
-    return $("thead input[type=checkbox]").change(function () {
+    return $("thead input[type=checkbox]").on("change", function () {
       var chkbox, i, len, ref, results;
       ref = $("input[name='ids[]']");
       results = [];

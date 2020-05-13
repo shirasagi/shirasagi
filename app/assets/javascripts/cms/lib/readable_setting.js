@@ -5,7 +5,7 @@ function Cms_ReadableSetting(selector) {
 
 Cms_ReadableSetting.prototype.render = function() {
   var _this = this;
-  this.el.find('.buttons input').change(function() {
+  this.el.find('.buttons input').on("change", function() {
     var val = $(this).val();
     if (val == 'select') {
       _this.showSelectForm();
