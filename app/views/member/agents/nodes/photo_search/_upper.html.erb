@@ -1,17 +1,6 @@
 <% controller.javascript "/assets/js/jquery.colorbox.js" %>
 <% controller.stylesheet "/assets/css/colorbox/colorbox.css" %>
 
-<%= jquery do %>
-  $(window).on("load", function () {
-    $(".ajax-box").on("click", function () {
-      $.colorbox({
-        html: '<%=j render(partial: "modal", locals: { search_path: "" }) %>'
-      });
-      return false;
-    });
-  });
-<% end %>
-
 <dl class="condition">
   <dt class="keyword"><%= t('member.view.keyword') %></dt>
   <dd><%= @query[:keyword] %></dd>
@@ -44,3 +33,12 @@
     </li>
   </ul>
 </nav>
+
+<%= jquery do %>
+  $(".ajax-box").on("click", function () {
+    $.colorbox({
+      html: '<%=j render(partial: "modal", locals: { search_path: "" }) %>'
+    });
+    return false;
+  });
+<% end %>
