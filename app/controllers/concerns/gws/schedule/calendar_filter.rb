@@ -50,4 +50,12 @@ module Gws::Schedule::CalendarFilter
       }
     end
   end
+
+  private
+
+  # override Gws::BaseFilter#set_gws_assets
+  def set_gws_assets
+    super
+    javascript("gws/calendar")
+  end
 end
