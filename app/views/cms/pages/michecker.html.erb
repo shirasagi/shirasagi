@@ -3,15 +3,24 @@
     <iframe class="michecker__main-content" src="<%= cms_preview_path(path: @item.url[1..-1], "no-controller" => true) %>" frameborder="none"></iframe>
   </div>
   <div class="michecker__footer">
-    <div class="michecker-report__selector">
+    <div class="michecker-head">
+      <h5>miChecker</h5>
+      <button type="button" class="btn btn-michecker-start" disabled="disabled">miChecker を実行し結果を確認する</button>
+      <button type="button" class="btn btn-michecker-settings">設定</button>
+    </div>
+
+    <div class="michecker-notice">
+      プレビューをロード中です <%= loading %>
+    </div>
+
+    <div class="michecker-report__selector hide">
       <select name="report-type">
         <option value="accessibility">アクセシビリティ検証</option>
         <option value="low-vision">視覚化</option>
       </select>
-      <a href="#ss-michecker" class="michecker-settings"><span class="material-icons">settings</span></a>
     </div>
 
-    <div class="michecker-report__accessibility">
+    <div class="michecker-report__accessibility hide">
       <%= render "ss/crud/addon", addon: { head: "種別", class: "michecker-report__filter" } do %>
         <ul class="michecker-report__filter-items">
           <% all_count, error_count, warning_count, caution_count, notice_count = @accessibility_result.aggregate_counts %>
@@ -153,6 +162,36 @@
   </div>
 
   <%= jquery do %>
+    $(".michecker__main-content").on("load", function() {
+      $(".michecker-notice").html("実行準備が整いました。");
+      $(".btn-michecker-start").prop("disabled", false);
+    });
+
+    $(".btn-michecker-start").on("click", function() {
+      var $this = $(this);
+      $this.prop("disabled", true);
+
+      $(".michecker-report__selector").addClass("hide");
+      $(".michecker-report__accessibility").addClass("hide");
+      $(".michecker-notice").html("miChecker を実行中 " + SS.loading).removeClass("hide");
+
+      $.ajax({
+        url: "<%= url_for(action: "michecker_start", format: "json") %>",
+        method: "POST",
+        dataType: "json",
+      }).done(function(data, status, xhr) {
+        setTimeout(function() {
+          $this.prop("disabled", false);
+          $(".michecker-notice").addClass("hide");
+          $(".michecker-report__selector").removeClass("hide");
+          $(".michecker-report__accessibility").removeClass("hide");
+        }, 5000);
+      }).fail(function(xhr, status, error) {
+        $this.prop("disabled", false);
+        $(".michecker-notice").html("miChecker の実行エラー").removeClass("hide");
+      });
+    });
+
     $(".michecker-report__selector [name=report-type]").on("change", function() {
       var $this = $(this);
       var target = $this.val();
@@ -169,7 +208,7 @@
       }
     });
 
-    $(".michecker-settings").on("click", function(ev) {
+    $(".btn-michecker-settings").on("click", function(ev) {
       ev.preventDefault();
 
       $.colorbox({

@@ -240,6 +240,19 @@ module Cms::PageFilter
     render file: "michecker", layout: "cms/michecker"
   end
 
+  def michecker_start
+    set_item
+
+    token = SS::AccessToken.new(cur_user: @cur_user)
+    token.create_token
+    token.save!
+
+    preview_path = cms_preview_url(path: @item.url[1..-1], "no-controller" => true, access_token: token.token)
+
+    job = Cms::MicheckerJob.bind(site_id: @cur_site, node_id: @cur_node, user_id: @cur_user).perform_later(preview_path)
+    render json: { job_id: job.job_id }, status: :ok
+  end
+
   def michecker_lowvision_result
     set_item
 

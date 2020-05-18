@@ -2,6 +2,24 @@
   width: 100%;
   height: 100%;
 
+  .btn:disabled {
+    color: $gray2;
+  }
+
+  &-head {
+    @include display-flex;
+    @include align-items(center);
+
+    margin-bottom: 10px;
+    h5 {
+      font-weight: bold;
+    }
+
+    * ~ * {
+      margin-left: 5px;
+    }
+  }
+
   &-settings {
     color: $black;
   }
