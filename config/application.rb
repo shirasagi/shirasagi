@@ -53,7 +53,6 @@ module SS
     config.middleware.use Mongoid::QueryCache::Middleware
 
     def call(*args, &block)
-      Rails.logger.info("[ENTER] SS::Application#call")
       save_current_env = Thread.current["ss.env"]
       save_current_request = Thread.current["ss.request"]
       Thread.current["ss.env"] = args.first
@@ -62,7 +61,6 @@ module SS
     ensure
       Thread.current["ss.env"] = save_current_env
       Thread.current["ss.request"] = save_current_request
-      Rails.logger.info("[LEAVE] SS::Application#call")
     end
 
     def current_env
