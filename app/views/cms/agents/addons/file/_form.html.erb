@@ -8,6 +8,7 @@ window.insertContent = function(cont) {
   }
 };
 window.deleteContent = function(id) {
+  var data, file;
   if ((typeof tinymce) != "undefined") {
     data = tinymce.get(Cms_Form.editorId).getContent();
   }
@@ -20,7 +21,7 @@ window.deleteContent = function(id) {
   file = 'fs/' + id.split('').join('/') + '/_/';
   $(".file-view").each(function() {
     if (id == $(this).find(".file-id").attr("value")) {
-      if (data == null) {
+      if (!data) {
         if (!confirm('<%= I18n.t('ss.confirm.in_use') %>')) {
           return;
         }
