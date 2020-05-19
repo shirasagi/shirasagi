@@ -15,10 +15,13 @@
 
   <% if @item.allowed?(:release, @cur_user, site: @cur_site) %>
   $(".save").val("<%= t("ss.buttons.draft_save") %>");
+  $(".save").attr("data-disable-with", "<%= t("ss.buttons.draft_save") %>");
+
   $("<input />").attr("type", "submit")
     .attr("name", "publish_save")
     .attr("value", "<%= t("ss.buttons.publish_save") %>")
     .attr("class", "publish_save")
+    .attr("data-disable-with", "<%= t("ss.buttons.publish_save") %>")
     .insertAfter("#item-form input.save");
   <% end %>
 
