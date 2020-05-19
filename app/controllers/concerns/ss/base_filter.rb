@@ -78,9 +78,12 @@ module SS::BaseFilter
 
     @cur_user, login_path, logout_path = get_user_by_access_token
     if @cur_user
-      redirct = request.fullpath.sub(/(\?|&)access_token=.*/, '')
       set_user(@cur_user, session: true, login_path: login_path, logout_path: logout_path)
-      return redirect_to(redirct)
+
+      # persistent session to database by redirecting to self path
+      redirect = SS::AccessToken.remove_access_token_from_query(request.fullpath)
+      redirect_to redirect
+      return
     end
 
     @cur_user = get_user_by_session
