@@ -16,8 +16,7 @@ ActiveSupport.to_time_preserves_timezone = false
 
 # Do not halt callback chains when a callback returns false. Previous versions had true.
 # ActiveSupport.halt_callback_chains_on_return_false = true
-
-Rails.application.config.action_view.automatically_disable_submit_tag = false
+#Rails.application.config.action_view.automatically_disable_submit_tag = false
 
 # Make `form_with` generate non-remote forms.
 Rails.application.config.action_view.form_with_generates_remote_forms = false
