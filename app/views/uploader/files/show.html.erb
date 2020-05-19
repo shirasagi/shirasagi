@@ -1,25 +1,41 @@
 <%= code_editor "#mod-uploader-text", filename: @item.filename, readonly: true %>
 
-<div class="addon-view">
-  <dl class="see">
-    <dt><%= @model.t :filename %></dt>
-    <dd><%= @item.filename %></dd>
+<%= jquery do %>
+$(".clipboard-copy-button").attr("data-text", "<%= @item.full_url %>");
+SS_Clipboard.renderCopy();
+<% end %>
 
-    <% if !@item.directory? %>
-      <dt><%= @model.t :size %></dt>
-      <dd><%= @item.size %></dd>
+<div class="addon-views">
+  <div class="addon-view" id="addon-basic">
+    <div class="addon-head"><h2><%= t("ss.basic_info") %></h2></div>
+    <div class="addon-body">
+      <dl class="see">
+        <dt><%= @model.t :filename %></dt>
+        <dd><%= @item.filename %></dd>
 
-      <% if @item.image? %>
-      <dt><%= @model.t :image %></dt>
-      <dd><%= image_tag @item.link %></dd>
-      <% end %>
+        <% if !@item.directory? %>
+          <dt><%= @model.t :url %></dt>
+          <dd><%= link_to @item.full_url, @item.full_url %></dd>
 
-      <% if @item.text? %>
-      <% begin %>
-      <dt class="wide"><%= @model.t :text %></dt>
-      <dd class="wide"><%= text_area_tag "mod-uploader-text", @item.text, style: "height: 400px;" %></dd>
-      <% rescue => e %>Error (<%= e %>)<% end %>
-      <% end %>
-    <% end %>
-  </dl>
+          <dt><%= @model.t :url_copy %></dt>
+          <dd><span class="btn clipboard-copy-button"><%= I18n.t('gws/share.url_copy') %></span></dd>
+
+          <dt><%= @model.t :size %></dt>
+          <dd><%= @item.size %></dd>
+
+          <% if @item.image? %>
+            <dt><%= @model.t :image %></dt>
+            <dd><%= image_tag @item.link %></dd>
+          <% end %>
+
+          <% if @item.text? %>
+            <% begin %>
+              <dt class="wide"><%= @model.t :text %></dt>
+              <dd class="wide"><%= text_area_tag "mod-uploader-text", @item.text, style: "height: 400px;" %></dd>
+            <% rescue => e %>Error (<%= e %>)<% end %>
+          <% end %>
+        <% end %>
+      </dl>
+    </div>
+  </div>
 </div>
