@@ -3,8 +3,7 @@ require 'spec_helper'
 describe "article_pages", type: :feature, dbscope: :example, js: true do
   let!(:site) { cms_site }
   let!(:node) do
-    create_once :article_node_page, filename: "docs", name: "article",
-    group_ids: [cms_group.id], st_form_ids: [form.id]
+    create :article_node_page, filename: "docs", name: "article", group_ids: [cms_group.id], st_form_ids: [form.id]
   end
   let!(:item) { create :article_page, cur_node: node, group_ids: [cms_group.id] }
   let!(:edit_path) { edit_article_page_path site.id, node, item }
@@ -103,29 +102,89 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
 
   context "attach file from cms file" do
     context "with cms addon file" do
-      it do
-        login_user(user2)
+      context "when file is attached / saved on the modal dialog" do
+        it do
+          login_user(user2)
 
-        visit edit_path
-        within "form#item-form" do
-          within "#addon-cms-agents-addons-file" do
-            click_on I18n.t("cms.file")
+          visit edit_path
+          within "form#item-form" do
+            within "#addon-cms-agents-addons-file" do
+              click_on I18n.t("cms.file")
+            end
+          end
+
+          wait_for_cbox do
+            attach_file "item[in_files][]", "#{Rails.root}/spec/fixtures/ss/file/keyvisual.jpg"
+            click_button I18n.t("ss.buttons.save")
+            wait_for_ajax
+
+            attach_file "item[in_files][]", "#{Rails.root}/spec/fixtures/ss/file/keyvisual.gif"
+            click_button I18n.t("ss.buttons.attach")
+            wait_for_ajax
+          end
+
+          within '#selected-files' do
+            expect(page).to have_no_css('.name', text: 'keyvisual.jpg')
+            expect(page).to have_css('.name', text: 'keyvisual.gif')
           end
         end
+      end
 
-        wait_for_cbox do
-          attach_file "item[in_files][]", "#{Rails.root}/spec/fixtures/ss/file/keyvisual.jpg"
-          click_button I18n.t("ss.buttons.save")
-          wait_for_ajax
-
-          attach_file "item[in_files][]", "#{Rails.root}/spec/fixtures/ss/file/keyvisual.gif"
-          click_button I18n.t("ss.buttons.attach")
-          wait_for_ajax
+      context "when a file uploaded by other user is attached" do
+        let(:file_name) { "#{unique_id}.jpg" }
+        let!(:file) do
+          # cms/file is created by cms_user
+          tmp_ss_file(
+            Cms::File,
+            site: site, user: cms_user, model: "cms/file", basename: file_name,
+            contents: "#{Rails.root}/spec/fixtures/ss/file/keyvisual.jpg",
+            group_ids: cms_user.group_ids
+          )
         end
 
-        within '#selected-files' do
-          expect(page).to have_no_css('.name', text: 'keyvisual.jpg')
-          expect(page).to have_css('.name', text: 'keyvisual.gif')
+        it do
+          login_user(user2)
+          visit edit_path
+          within "form#item-form" do
+            within "#addon-cms-agents-addons-file" do
+              click_on I18n.t("cms.file")
+            end
+          end
+
+          wait_for_cbox do
+            click_on file_name
+          end
+
+          within "form#item-form" do
+            within "#addon-cms-agents-addons-file" do
+              within ".file-view" do
+                click_on I18n.t("sns.file_attach")
+                click_on I18n.t("sns.image_paste")
+                click_on I18n.t("sns.thumb_paste")
+              end
+            end
+
+            click_on I18n.t("ss.buttons.publish_save")
+          end
+          click_on I18n.t("ss.buttons.ignore_alert")
+          wait_for_notice I18n.t('ss.notice.saved')
+
+          item.reload
+          expect(item.file_ids.length).to eq 1
+
+          file.reload
+          attached_file = item.files.first
+          # copy is attacched
+          expect(attached_file.id).not_to eq file.id
+          expect(attached_file.name).to eq file_name
+          expect(attached_file.filename).to eq file.filename
+          expect(attached_file.size).to eq file.size
+          expect(attached_file.content_type).to eq file.content_type
+          # owner item
+          expect(attached_file.owner_item_type).to eq item.class.name
+          expect(attached_file.owner_item_id).to eq item.id
+          # other
+          expect(attached_file.user_id).to eq user2.id
         end
       end
     end
