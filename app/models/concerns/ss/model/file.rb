@@ -228,7 +228,7 @@ module SS::Model::File
   COPY_SKIP_ATTRS = %w(_id id model file_id group_ids permission_level category_ids owner_item_id owner_item_type).freeze
 
   def copy(opts = {})
-    model = SS::TempFile
+    model = opts[:cur_node].present? ? Cms::TempFile : SS::TempFile
 
     copy_attrs = {}
     self.attributes.each do |key, val|
@@ -241,6 +241,10 @@ module SS::Model::File
     if opts[:cur_user].present?
       copy_attrs["cur_user"] = opts[:cur_user]
       copy_attrs["user"] = opts[:cur_user]
+    end
+    if opts[:cur_node].present?
+      copy_attrs["cur_node"] = opts[:cur_node]
+      copy_attrs["node"] = opts[:cur_node]
     end
 
     model.create_empty!(copy_attrs) do |new_file|
