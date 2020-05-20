@@ -123,10 +123,24 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
             wait_for_ajax
           end
 
-          within '#selected-files' do
-            expect(page).to have_no_css('.name', text: 'keyvisual.jpg')
-            expect(page).to have_css('.name', text: 'keyvisual.gif')
+          within "form#item-form" do
+            within '#selected-files' do
+              expect(page).to have_no_css('.name', text: 'keyvisual.jpg')
+              expect(page).to have_css('.name', text: 'keyvisual.gif')
+            end
+
+            click_on I18n.t("ss.buttons.publish_save")
           end
+          wait_for_notice I18n.t('ss.notice.saved')
+
+          item.reload
+          expect(item.file_ids.length).to eq 1
+          attached_file = item.files.first
+          # owner item
+          expect(attached_file.owner_item_type).to eq item.class.name
+          expect(attached_file.owner_item_id).to eq item.id
+          # other
+          expect(attached_file.user_id).to eq user2.id
         end
       end
 
@@ -215,9 +229,11 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
           click_on I18n.t('ss.buttons.attach')
           wait_for_ajax
         end
-        within ".column-value-cms-column-fileupload" do
-          expect(page).to have_no_css('.column-value-files', text: 'keyvisual.jpg')
-          expect(page).to have_css('.column-value-files', text: 'keyvisual.gif')
+        within "form#item-form" do
+          within ".column-value-cms-column-fileupload" do
+            expect(page).to have_no_css('.column-value-files', text: 'keyvisual.jpg')
+            expect(page).to have_css('.column-value-files', text: 'keyvisual.gif')
+          end
         end
 
         within ".column-value-palette" do
@@ -235,10 +251,32 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
           click_on I18n.t('ss.buttons.attach')
           wait_for_ajax
         end
-        within ".column-value-cms-column-free" do
-          expect(page).to have_no_css('.column-value-files', text: 'keyvisual.jpg')
-          expect(page).to have_css('.column-value-files', text: 'keyvisual.gif')
+        within "form#item-form" do
+          within ".column-value-cms-column-free" do
+            expect(page).to have_no_css('.column-value-files', text: 'keyvisual.jpg')
+            expect(page).to have_css('.column-value-files', text: 'keyvisual.gif')
+          end
+
+          click_on I18n.t("ss.buttons.publish_save")
         end
+        click_on I18n.t("ss.buttons.ignore_alert")
+        wait_for_notice I18n.t('ss.notice.saved')
+
+        item.reload
+
+        attached_file1 = item.column_values.where(column_id: column1.id).first.file
+        # owner item
+        expect(attached_file1.owner_item_type).to eq item.class.name
+        expect(attached_file1.owner_item_id).to eq item.id
+        # other
+        expect(attached_file1.user_id).to eq user2.id
+
+        attached_file2 = item.column_values.where(column_id: column2.id).first.files.first
+        # owner item
+        expect(attached_file2.owner_item_type).to eq item.class.name
+        expect(attached_file2.owner_item_id).to eq item.id
+        # other
+        expect(attached_file2.user_id).to eq user2.id
       end
     end
   end
