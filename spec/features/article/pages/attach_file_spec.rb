@@ -103,33 +103,7 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
 
   context "attach file from cms file" do
     context "with cms addon file" do
-      it "#edit" do
-        login_cms_user
-
-        visit edit_path
-        within "form#item-form" do
-          within "#addon-cms-agents-addons-file" do
-            click_on I18n.t("cms.file")
-          end
-        end
-
-        wait_for_cbox do
-          attach_file "item[in_files][]", "#{Rails.root}/spec/fixtures/ss/file/keyvisual.jpg"
-          click_button I18n.t("ss.buttons.save")
-          wait_for_ajax
-
-          attach_file "item[in_files][]", "#{Rails.root}/spec/fixtures/ss/file/keyvisual.gif"
-          click_button I18n.t("ss.buttons.attach")
-          wait_for_ajax
-        end
-
-        within '#selected-files' do
-          expect(page).to have_no_css('.name', text: 'keyvisual.jpg')
-          expect(page).to have_css('.name', text: 'keyvisual.gif')
-        end
-      end
-
-      it "#edit" do
+      it do
         login_user(user2)
 
         visit edit_path
@@ -154,57 +128,57 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
           expect(page).to have_css('.name', text: 'keyvisual.gif')
         end
       end
+    end
 
-      context "with entry form" do
-        it "#edit" do
-          login_user(user2)
+    context "with entry form" do
+      it "#edit" do
+        login_user(user2)
 
-          visit edit_path
+        visit edit_path
 
-          within 'form#item-form' do
-            select form.name, from: 'item[form_id]'
-            find('.btn-form-change').click
-          end
+        within 'form#item-form' do
+          select form.name, from: 'item[form_id]'
+          find('.btn-form-change').click
+        end
 
-          within ".column-value-palette" do
-            click_on column1.name
-          end
-          within ".column-value-cms-column-fileupload" do
-            click_on I18n.t("cms.file")
-          end
-          wait_for_cbox do
-            attach_file "item[in_files][]", "#{Rails.root}/spec/fixtures/ss/file/keyvisual.jpg"
-            click_button I18n.t("ss.buttons.save")
-            wait_for_ajax
+        within ".column-value-palette" do
+          click_on column1.name
+        end
+        within ".column-value-cms-column-fileupload" do
+          click_on I18n.t("cms.file")
+        end
+        wait_for_cbox do
+          attach_file "item[in_files][]", "#{Rails.root}/spec/fixtures/ss/file/keyvisual.jpg"
+          click_button I18n.t("ss.buttons.save")
+          wait_for_ajax
 
-            attach_file 'item[in_files][]', "#{Rails.root}/spec/fixtures/ss/file/keyvisual.gif"
-            click_on I18n.t('ss.buttons.attach')
-            wait_for_ajax
-          end
-          within ".column-value-cms-column-fileupload" do
-            expect(page).to have_no_css('.column-value-files', text: 'keyvisual.jpg')
-            expect(page).to have_css('.column-value-files', text: 'keyvisual.gif')
-          end
+          attach_file 'item[in_files][]', "#{Rails.root}/spec/fixtures/ss/file/keyvisual.gif"
+          click_on I18n.t('ss.buttons.attach')
+          wait_for_ajax
+        end
+        within ".column-value-cms-column-fileupload" do
+          expect(page).to have_no_css('.column-value-files', text: 'keyvisual.jpg')
+          expect(page).to have_css('.column-value-files', text: 'keyvisual.gif')
+        end
 
-          within ".column-value-palette" do
-            click_on column2.name
-          end
-          within ".column-value-cms-column-free" do
-            click_on I18n.t("cms.file")
-          end
-          wait_for_cbox do
-            attach_file "item[in_files][]", "#{Rails.root}/spec/fixtures/ss/file/keyvisual.jpg"
-            click_button I18n.t("ss.buttons.save")
-            wait_for_ajax
+        within ".column-value-palette" do
+          click_on column2.name
+        end
+        within ".column-value-cms-column-free" do
+          click_on I18n.t("cms.file")
+        end
+        wait_for_cbox do
+          attach_file "item[in_files][]", "#{Rails.root}/spec/fixtures/ss/file/keyvisual.jpg"
+          click_button I18n.t("ss.buttons.save")
+          wait_for_ajax
 
-            attach_file 'item[in_files][]', "#{Rails.root}/spec/fixtures/ss/file/keyvisual.gif"
-            click_on I18n.t('ss.buttons.attach')
-            wait_for_ajax
-          end
-          within ".column-value-cms-column-free" do
-            expect(page).to have_no_css('.column-value-files', text: 'keyvisual.jpg')
-            expect(page).to have_css('.column-value-files', text: 'keyvisual.gif')
-          end
+          attach_file 'item[in_files][]', "#{Rails.root}/spec/fixtures/ss/file/keyvisual.gif"
+          click_on I18n.t('ss.buttons.attach')
+          wait_for_ajax
+        end
+        within ".column-value-cms-column-free" do
+          expect(page).to have_no_css('.column-value-files', text: 'keyvisual.jpg')
+          expect(page).to have_css('.column-value-files', text: 'keyvisual.gif')
         end
       end
     end
