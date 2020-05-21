@@ -5,9 +5,16 @@ module SS
         obj.after(:example) do
           warnings = jquery_migrate_warnings
           if warnings.present?
+            puts
+            "[JQMIGRATE] #{self.inspect}".try do |msg|
+              Rails.logger.warn msg
+              puts msg
+            end
             warnings.each do |warning|
-              Rails.logger.warn "[JQMIGRATE][WARNING] #{warning}"
-              puts "[JQMIGRATE][WARNING] #{warning}"
+              "[JQMIGRATE][WARNING] #{warning}".try do |msg|
+                Rails.logger.warn msg
+                puts msg
+              end
             end
           end
           wait_for_page_load
