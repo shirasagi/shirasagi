@@ -149,6 +149,7 @@ module Cms::Addon::Form::Page
         if [ self, unlinked_file ].all? { |obj| obj.respond_to?(:skip_history_trash) }
           unlinked_file.skip_history_trash = skip_history_trash
         end
+        unlinked_file.cur_user = @cur_user
         unlinked_file.destroy
       end
     end
