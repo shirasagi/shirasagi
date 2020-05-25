@@ -1,12 +1,17 @@
 <%= form_for :item, url: { action: :destroy }, html: { method: :delete, multipart: true } do |f| %>
-<%= error_messages_for :item %>
+  <%= error_messages_for :item %>
 
-<div class="addon-view" id="addon-basic">
-<%= render file: "_delete" %>
-</div>
+  <div class="addon-views">
+    <div class="addon-view" id="addon-basic">
+      <div class="addon-head"><h2><%= t("ss.confirm.delete") %></h2></div>
+      <div class="addon-body">
+        <%= render file: "_delete" %>
+      </div>
+    </div>
+  </div>
 
-<footer class="send">
-<%= f.submit t("ss.buttons.delete"), class: "delete btn-primary" %>
-<%= f.button t("ss.buttons.cancel"), type: :reset, onclick: "location.href='#{url_for(action: :file, filename: @item.filename, do: "show")}'; return false;", class: "btn-default" %>
-</footer>
+  <footer class="send">
+    <%= f.submit t("ss.buttons.delete"), class: "delete btn-primary" %>
+    <%= f.button t("ss.buttons.cancel"), type: :reset, onclick: "location.href='#{url_for(action: :file, filename: @item.filename, do: "show")}'; return false;", class: "btn-default" %>
+  </footer>
 <% end %>
