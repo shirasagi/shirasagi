@@ -128,7 +128,7 @@
               </thead>
               <tbody>
               <% @lowvision_result.items.take(5).each do |item| %>
-                <tr>
+                <tr data-css-path="<%= item.cssPath %>">
                   <td><%= item.severityStr %></td>
                   <% if false %><td><%= item.iconTooltip %></td><% end %>
                   <% if false %><td><%= item.evaluationItem["guidelines"].select { |guideline| guideline["guidelineName"] == "WCAG 2.0" }.map { |guideline| guideline["id"] }.join(", ") %></td><% end %>
@@ -166,7 +166,8 @@
   </div>
 
   <%= jquery do %>
-    $(".michecker__main-content").on("load", function() {
+    var frame = document.querySelector(".michecker__main-content");
+    frame.addEventListener("load", function() {
       $(".michecker-notice").html("実行準備が整いました。");
       $(".btn-michecker-start").prop("disabled", false);
     });
@@ -218,6 +219,71 @@
       $.colorbox({
         html: "<h2>miCheck の設定</h2><div>ただいま開発中。</div>", fixed: true, width: "90%", height: "90%"
       });
+    });
+
+    var createOverlay = function() {
+      var el = frame.contentDocument.createElement("div");
+      el.style.display = "none";
+      el.style.backgroundColor = "rgba(255, 0, 0, .4)";
+      // 表示崩れを防ぐために box-model を明示的に設定
+      el.style.border = "none";
+      el.style.margin = "0";
+      el.style.padding = "0";
+      el.style.boxSizing = "border-box";
+      // 初期位置は (0,0) で初期サイズは 0x0。
+      el.style.position = "absolute";
+      el.style.left = "0";
+      el.style.top = "0";
+      el.style.width = "0";
+      el.style.height = "0";
+
+      frame.contentDocument.body.appendChild(el);
+
+      return el;
+    };
+
+    var overlayElement = null;
+    var moveOverlayAndShow = function(el) {
+      var rect = el.getBoundingClientRect();
+      var x = rect.x + frame.contentWindow.scrollX;
+      var y = rect.y + frame.contentWindow.scrollY;
+
+      frame.contentWindow.scrollTo(x, y > 50 ? y - 50 : 0);
+
+      if (!overlayElement) {
+        overlayElement = createOverlay();
+      }
+
+      overlayElement.style.left = x + "px";
+      overlayElement.style.top = y + "px";
+      overlayElement.style.width = rect.width + "px";
+      overlayElement.style.height = rect.height + "px";
+      overlayElement.style.display = "block";
+    };
+
+    var hideOverlay = function() {
+      if (!overlayElement) {
+        return;
+      }
+
+      overlayElement.style.display = "none";
+    };
+
+    $(".michecker-report__result-container table tr").on("click", function() {
+      hideOverlay();
+
+      var $this = $(this);
+      var cssPath = $this.data("css-path");
+      if (!cssPath) {
+        return;
+      }
+
+      var targetElement = frame.contentDocument.querySelector(cssPath);
+      if (!targetElement) {
+        return;
+      }
+
+      moveOverlayAndShow(targetElement);
     });
   <% end %>
 </div>
