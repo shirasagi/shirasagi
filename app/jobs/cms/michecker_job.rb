@@ -12,9 +12,7 @@ class Cms::MicheckerJob < Cms::ApplicationJob
 
     @task.log "miChecker による検証を開始します。"
 
-    # result = run_html_checker_and_wait
-    result = 2
-
+    result = run_html_checker_and_wait
     if result == 0
       @task.log "miChecker による検証が完了しました。"
     else
@@ -38,29 +36,21 @@ class Cms::MicheckerJob < Cms::ApplicationJob
     commands = Array(SS.config.cms.michecker["command"]).compact
     return if commands.blank?
 
-    filepath = @task.html_checker_report_filepath
-    dir_path = ::File.dirname(filepath)
-    ::FileUtils.mkdir_p(dir_path) unless ::Dir.exist?(dir_path)
-
-    basename = ::File.basename(filepath)
-    tmp_filepath = "#{dir_path}/.#{basename}.$$"
-
     commands = commands.dup
-    commands << "htmlchecker"
-    commands << "--output-report"
-    commands << tmp_filepath
+    commands << "--no-interactive"
+    commands << "--html-checker-output-report"
+    commands << @task.html_checker_report_filepath
+    commands << "--lowvision-output-report"
+    commands << @task.low_vision_report_filepath
+    commands << "--lowvision-output-image"
+    commands << @task.low_vision_source_filepath
+    commands << "--lowvision-source-image"
+    commands << @task.low_vision_result_filepath
     commands << @url
 
-    pid = spawn(*commands, { chdir: SS.config.cms.michecker["working_directory"] })
+    pid = spawn(*commands)
     _, status = Process.waitpid2(pid)
-    if status.success?
-      ::FileUtils.copy_file(tmp_filepath, filepath)
-    end
 
     status.exitstatus
-  ensure
-    if tmp_filepath.present?
-      ::FileUtils.rm_f(tmp_filepath) rescue nil
-    end
   end
 end
