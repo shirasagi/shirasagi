@@ -8,13 +8,25 @@ module Cms::Michecker::Base
   module ClassMethods
     def load(filename)
       items = []
-      ::Zlib::GzipReader.open(filename) do |gz|
-        gz.each_line do |line|
-          items.push(OpenStruct.new(::JSON.parse(line)))
-        end
+      each_line(filename) do |line|
+        items.push(OpenStruct.new(::JSON.parse(line)))
       end
 
       new(items: items)
+    end
+
+    private
+
+    def each_line(filename, &block)
+      if filename.ends_with?(".gz")
+        ::Zlib::GzipReader.open(filename) do |gz|
+          gz.each_line(&block)
+        end
+      else
+        ::File.open(filename) do |file|
+          file.each_line(&block)
+        end
+      end
     end
   end
 

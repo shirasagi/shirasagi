@@ -7,19 +7,20 @@
       <h5>miChecker</h5>
       <button type="button" class="btn btn-michecker-start" disabled="disabled">miChecker を実行し結果を確認する</button>
       <button type="button" class="btn btn-michecker-settings">設定</button>
+
+      <div class="michecker-notice">
+        プレビューをロード中です <%= loading %>
+      </div>
     </div>
 
-    <div class="michecker-notice">
-      プレビューをロード中です <%= loading %>
-    </div>
-
-    <div class="michecker-report__selector hide">
+    <div class="michecker-report__selector <% if @result.blank? %>hide<% end %>">
       <select name="report-type">
         <option value="accessibility">アクセシビリティ検証</option>
         <option value="low-vision">視覚化</option>
       </select>
     </div>
 
+    <% if @accessibility_result.present? %>
     <div class="michecker-report__accessibility hide">
       <%= render "ss/crud/addon", addon: { head: "種別", class: "michecker-report__filter" } do %>
         <ul class="michecker-report__filter-items">
@@ -83,7 +84,9 @@
         </div>
       <% end %>
     </div>
+    <% end %>
 
+    <% if @lowvision_result.present? %>
     <div class="michecker-report__low-vision hide">
       <div class="michecker-report__low-vision-result-table">
         <%= render "ss/crud/addon", addon: { head: "種別", class: "michecker-report__filter" } do %>
@@ -159,6 +162,7 @@
         <%= image_tag(url_for(action: "michecker_lowvision_result", type: "result"), class: "michecker-report__low-vision-image-result") %>
       </div>
     </div>
+    <% end %>
   </div>
 
   <%= jquery do %>
@@ -182,7 +186,7 @@
       }).done(function(data, status, xhr) {
         setTimeout(function() {
           $this.prop("disabled", false);
-          $(".michecker-notice").addClass("hide");
+          $(".michecker-notice").html("しばらく待ってからページを再読み込みしてください。");
           $(".michecker-report__selector").removeClass("hide");
           $(".michecker-report__accessibility").removeClass("hide");
         }, 5000);
@@ -206,7 +210,7 @@
         $(".michecker-report__accessibility").addClass("hide");
         $(".michecker-report__low-vision").removeClass("hide");
       }
-    });
+    }).trigger("change");
 
     $(".btn-michecker-settings").on("click", function(ev) {
       ev.preventDefault();

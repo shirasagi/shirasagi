@@ -232,10 +232,14 @@ module Cms::PageFilter
 
   def michecker
     set_item
+    @result = Cms::Michecker::Result.site(@cur_site).and_page(@item).reorder(id: -1).first
 
-    base_dir = Rails.root.join("spec/fixtures/cms/michecker")
-    @accessibility_result = Cms::Michecker::Accessibility.load(base_dir.join("accessibility-1.json.gz"))
-    @lowvision_result = Cms::Michecker::LowVision.load(base_dir.join("lowvision-1.json.gz"))
+    if @result && ::File.exists?(@result.html_checker_report_filepath)
+      @accessibility_result = Cms::Michecker::Accessibility.load(@result.html_checker_report_filepath)
+    end
+    if @result && ::File.exists?(@result.low_vision_report_filepath)
+      @lowvision_result = Cms::Michecker::LowVision.load(@result.low_vision_report_filepath)
+    end
 
     render file: "michecker", layout: "cms/michecker"
   end
@@ -243,25 +247,19 @@ module Cms::PageFilter
   def michecker_start
     set_item
 
-    token = SS::AccessToken.new(cur_user: @cur_user)
-    token.create_token
-    token.save!
-
-    preview_path = cms_preview_url(path: @item.url[1..-1], "no-controller" => true, access_token: token.token)
-
-    job = Cms::MicheckerJob.bind(site_id: @cur_site, node_id: @cur_node, user_id: @cur_user).perform_later(preview_path)
+    job = Cms::MicheckerJob.bind(site_id: @cur_site, node_id: @cur_node, user_id: @cur_user).perform_later("page", @item.id.to_s)
     render json: { job_id: job.job_id }, status: :ok
   end
 
   def michecker_lowvision_result
     set_item
+    @result = Cms::Michecker::Result.site(@cur_site).and_page(@item).reorder(id: -1).first
 
-    base_dir = Rails.root.join("spec/fixtures/cms/michecker")
     case params[:type].to_s
     when "source"
-      file = base_dir.join("lowvision-source-1.png")
+      file = @result.low_vision_source_filepath
     when "result"
-      file = base_dir.join("lowvision-result-1.png")
+      file = @result.low_vision_result_filepath
     end
 
     raise "404" if file.blank? || !::File.exist?(file)
