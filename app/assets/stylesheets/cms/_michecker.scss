@@ -158,6 +158,16 @@
       &-container {
         overflow: scroll;
       }
+
+      &-html-problem-element {
+        display: inline-block;
+        min-width: 16px;
+        padding: 0 2px;
+        border-radius: 4px;
+        border: 1px solid $gray3;
+        font-size: 80%;
+        text-align: center;
+      }
     }
 
     &__low-vision-image {

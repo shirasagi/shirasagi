@@ -53,12 +53,13 @@
               <%# <th style="width: 12em;">Section508</th> %>
               <%# <th style="width: 12em;">JIS</th> %>
               <th style="width: 12em;">達成方法</th>
+              <th style="width: 12em;">指摘箇所</th>
               <th>内容</th>
             </tr>
             </thead>
             <tbody>
             <% @accessibility_result.items.take(5).each do |item| %>
-              <tr <% if item.highlightTargetPaths.present? && item.highlightTargetPaths.first["cssPath"].present? %>data-css-path="<%= item.highlightTargetPaths.first["cssPath"] %>"<% end %>>
+              <tr <% if item.highlightTargetPaths.present? && item.highlightTargetPaths.length == 1 %>data-css-path="<%= item.highlightTargetPaths.first["cssPath"] %>"<% end %>>
                 <td><%= item.severityStr %></td>
                 <% if false %><td><%= item.evaluationItem["tableDataMetrics"].try { |metrics| metrics[0] } %></td><% end %>
                 <% if false %><td><%= item.evaluationItem["tableDataMetrics"].try { |metrics| metrics[1] } %></td><% end %>
@@ -68,6 +69,13 @@
                 <% if false %><td><%= item.evaluationItem["guidelines"].select { |guideline| guideline["guidelineName"] == "Section508" }.map { |guideline| guideline["id"] }.join(", ") %></td><% end %>
                 <% if false %><td><%= item.evaluationItem["guidelines"].select { |guideline| guideline["guidelineName"] == "JIS" }.map { |guideline| guideline["id"] }.join(", ") %></td><% end %>
                 <td><%= item.evaluationItem["tableDataTechniques"] %></td>
+                <td>
+                  <% if item.highlightTargetPaths.present? %>
+                    <% item.highlightTargetPaths.each_with_index do |highlightTargetPath, index| %>
+                    <span class="michecker-report__result-html-problem-element" data-css-path="<%= highlightTargetPath["cssPath"] %>"><%= index + 1 %></span>
+                    <% end %>
+                  <% end %>
+                </td>
                 <td><%= item.description %></td>
               </tr>
             <% end %>
@@ -270,7 +278,9 @@
       return el;
     };
 
-    $(".michecker-report__result-container table tr").on("click", function() {
+    var highlightElemetByCssPath = function(ev) {
+      ev.preventDefault();
+      ev.stopPropagation();
       hideOverlay();
 
       var $this = $(this);
@@ -285,6 +295,9 @@
       }
 
       moveOverlayAndShow(targetElement);
-    });
+    };
+
+    $(".michecker-report__result-container table tr").on("click", highlightElemetByCssPath);
+    $("[data-css-path]").on("click", highlightElemetByCssPath);
   <% end %>
 </div>
