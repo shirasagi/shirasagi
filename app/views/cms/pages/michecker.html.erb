@@ -13,164 +13,20 @@
       </div>
     </div>
 
-    <div class="michecker-report__selector <% if @result.blank? %>hide<% end %>">
+    <div class="michecker-report__selector hide">
       <select name="report-type">
-        <option value="accessibility">アクセシビリティ検証</option>
-        <option value="low-vision">視覚化</option>
+        <option value="accessibility" data-href="<%= url_for(action: "michecker_result", type: "accessibility_report", format: "html") %>">アクセシビリティ検証</option>
+        <option value="low-vision" data-href="<%= url_for(action: "michecker_result", type: "lowvision_report", format: "html") %>">視覚化</option>
       </select>
     </div>
 
-    <% if @accessibility_result.present? %>
     <div class="michecker-report__accessibility hide">
-      <%= render "ss/crud/addon", addon: { head: "種別", class: "michecker-report__filter" } do %>
-        <ul class="michecker-report__filter-items">
-          <% all_count, error_count, warning_count, caution_count, notice_count = @accessibility_result.aggregate_counts %>
-          <li class="michecker-report__filter-item-all">すべての項目 <span class="michecker-report__filter-item-badge"><%= all_count %></span></li>
-          <li class="michecker-report__filter-item-separator"><hr></li>
-          <li class="michecker-report__filter-item-error">問題あり <span class="michecker-report__filter-item-badge"><%= error_count %></span></li>
-          <li class="michecker-report__filter-item-warning">問題の可能性大 <span class="michecker-report__filter-item-badge"><%= warning_count %></span></li>
-          <li class="michecker-report__filter-item-caution">要判断箇所 <span class="michecker-report__filter-item-badge"><%= caution_count %></span></li>
-          <li class="michecker-report__filter-item-notice">手動確認 <span class="michecker-report__filter-item-badge"><%= notice_count %></span></li>
-        </ul>
-      <% end %>
-
-      <%= render "ss/crud/addon", addon: { class: "michecker-report__result" } do %>
-        <div class="michecker-report__result-container">
-          <div class="michecker-report__result-controller">
-            <button type="button" class="btn"><span class="material-icons md-13">settings</span> 表示列設定</button>
-            <button type="button" class="btn"><span class="material-icons md-13">get_app</span> CSVダウンロード</button>
-          </div>
-
-          <table class="index" style="width: 140em;">
-            <thead>
-            <tr>
-              <th style="width: 12em;">レベル</th>
-              <%# <th style="width: 12em;">知覚可能</th> %>
-              <%# <th style="width: 12em;">操作可能</th> %>
-              <%# <th style="width: 12em;">理解可能</th> %>
-              <%# <th style="width: 12em;">堅牢</th> %>
-              <%# <th style="width: 12em;">WCAG 2.0</th> %>
-              <%# <th style="width: 12em;">Section508</th> %>
-              <%# <th style="width: 12em;">JIS</th> %>
-              <th style="width: 12em;">達成方法</th>
-              <th style="width: 12em;">指摘箇所</th>
-              <th>内容</th>
-            </tr>
-            </thead>
-            <tbody>
-            <% @accessibility_result.items.take(5).each do |item| %>
-              <tr <% if item.highlightTargetPaths.present? && item.highlightTargetPaths.length == 1 %>data-css-path="<%= item.highlightTargetPaths.first["cssPath"] %>"<% end %>>
-                <td><%= item.severityStr %></td>
-                <% if false %><td><%= item.evaluationItem["tableDataMetrics"].try { |metrics| metrics[0] } %></td><% end %>
-                <% if false %><td><%= item.evaluationItem["tableDataMetrics"].try { |metrics| metrics[1] } %></td><% end %>
-                <% if false %><td><%= item.evaluationItem["tableDataMetrics"].try { |metrics| metrics[2] } %></td><% end %>
-                <% if false %><td><%= item.evaluationItem["tableDataMetrics"].try { |metrics| metrics[3] } %></td><% end %>
-                <% if false %><td><%= item.evaluationItem["guidelines"].select { |guideline| guideline["guidelineName"] == "WCAG 2.0" }.map { |guideline| guideline["id"] }.join(", ") %></td><% end %>
-                <% if false %><td><%= item.evaluationItem["guidelines"].select { |guideline| guideline["guidelineName"] == "Section508" }.map { |guideline| guideline["id"] }.join(", ") %></td><% end %>
-                <% if false %><td><%= item.evaluationItem["guidelines"].select { |guideline| guideline["guidelineName"] == "JIS" }.map { |guideline| guideline["id"] }.join(", ") %></td><% end %>
-                <td><%= item.evaluationItem["tableDataTechniques"] %></td>
-                <td>
-                  <% if item.highlightTargetPaths.present? %>
-                    <% item.highlightTargetPaths.each_with_index do |highlightTargetPath, index| %>
-                    <span class="michecker-report__result-html-problem-element" data-css-path="<%= highlightTargetPath["cssPath"] %>"><%= index + 1 %></span>
-                    <% end %>
-                  <% end %>
-                </td>
-                <td><%= item.description %></td>
-              </tr>
-            <% end %>
-            </tbody>
-            <tfooter>
-              <tr>
-                <td colspan="9">
-                  <%= @accessibility_result.items.count.to_s(:delimited) %>件中<%= 5 %>件を表示しています。
-                  <a>すべて表示</a>
-                </td>
-              </tr>
-            </tfooter>
-          </table>
-        </div>
-      <% end %>
+      <%= render file: "michecker_accessibility_report" %>
     </div>
-    <% end %>
 
-    <% if @lowvision_result.present? %>
     <div class="michecker-report__low-vision hide">
-      <div class="michecker-report__low-vision-result-table">
-        <%= render "ss/crud/addon", addon: { head: "種別", class: "michecker-report__filter" } do %>
-          <ul class="michecker-report__filter-items">
-            <% all_count, error_count, warning_count, caution_count, notice_count = @lowvision_result.aggregate_counts %>
-            <li class="michecker-report__filter-item-all">すべての項目 <span class="michecker-report__filter-item-badge"><%= all_count %></span></li>
-            <li class="michecker-report__filter-item-separator"><hr></li>
-            <li class="michecker-report__filter-item-error">問題あり <span class="michecker-report__filter-item-badge"><%= error_count %></span></li>
-            <li class="michecker-report__filter-item-warning">問題の可能性大 <span class="michecker-report__filter-item-badge"><%= warning_count %></span></li>
-            <li class="michecker-report__filter-item-caution">要判断箇所 <span class="michecker-report__filter-item-badge"><%= caution_count %></span></li>
-            <li class="michecker-report__filter-item-notice">手動確認 <span class="michecker-report__filter-item-badge"><%= notice_count %></span></li>
-          </ul>
-        <% end %>
-
-        <%= render "ss/crud/addon", addon: { class: "michecker-report__result" } do %>
-          <div class="michecker-report__result-controller">
-            <button type="button" class="btn"><span class="material-icons md-13">settings</span> 表示列設定</button>
-            <button type="button" class="btn"><span class="material-icons md-13">get_app</span> CSVダウンロード</button>
-          </div>
-
-          <div class="michecker-report__result-container">
-            <table class="index" style="width: 170em;">
-              <thead>
-              <tr>
-                <th style="width: 12em;">レベル</th>
-                <%# <th style="width: 12em;">種類</th> %>
-                <%# <th style="width: 12em;">WCAG 2.0</th> %>
-                <%# <th style="width: 12em;">Section508</th> %>
-                <%# <th style="width: 12em;">JIS</th> %>
-                <%# <th style="width: 12em;">深刻度</th> %>
-                <%# <th style="width: 12em;">前景色</th> %>
-                <%# <th style="width: 12em;">背景色</th> %>
-                <%# <th style="width: 12em;">X座標</th> %>
-                <%# <th style="width: 12em;">Y座標</th> %>
-                <%# <th style="width: 12em;">面積</th> %>
-                <th style="width: 12em;">達成方法</th>
-                <th>内容</th>
-              </tr>
-              </thead>
-              <tbody>
-              <% @lowvision_result.items.take(5).each do |item| %>
-                <tr data-css-path="<%= item.cssPath %>">
-                  <td><%= item.severityStr %></td>
-                  <% if false %><td><%= item.iconTooltip %></td><% end %>
-                  <% if false %><td><%= item.evaluationItem["guidelines"].select { |guideline| guideline["guidelineName"] == "WCAG 2.0" }.map { |guideline| guideline["id"] }.join(", ") %></td><% end %>
-                  <% if false %><td><%= item.evaluationItem["guidelines"].select { |guideline| guideline["guidelineName"] == "Section508" }.map { |guideline| guideline["id"] }.join(", ") %></td><% end %>
-                  <% if false %><td><%= item.evaluationItem["guidelines"].select { |guideline| guideline["guidelineName"] == "JIS" }.map { |guideline| guideline["id"] }.join(", ") %></td><% end %>
-                  <% if false %><td><%= item.severityLV %></td> <% end %>
-                  <% if false %><td><%= item.foreground %></td><% end %>
-                  <% if false %><td><%= item.background %></td><% end %>
-                  <% if false %><td><%= item.x %></td><% end %>
-                  <% if false %><td><%= item.y %></td><% end %>
-                  <% if false %><td><%= item.area %></td> <% end %>
-                  <td><%= item.evaluationItem["tableDataTechniques"] %></td>
-                  <td><%= item.description %></td>
-                </tr>
-              <% end %>
-              </tbody>
-              <tfooter>
-                <tr>
-                  <td colspan="9">
-                    <%= @lowvision_result.items.count.to_s(:delimited) %>件中<%= 5 %>件を表示しています。
-                    <a>すべて表示</a>
-                  </td>
-                </tr>
-              </tfooter>
-            </table>
-          </div>
-        <% end %>
-      </div> <%# michecker-report__low-vision-result-table %>
-      <div class="michecker-report__low-vision-image">
-        <%= image_tag(url_for(action: "michecker_lowvision_result", type: "source"), class: "michecker-report__low-vision-image-source") %>
-        <%= image_tag(url_for(action: "michecker_lowvision_result", type: "result"), class: "michecker-report__low-vision-image-result") %>
-      </div>
+      <%= render file: "michecker_lowvision_report" %>
     </div>
-    <% end %>
   </div>
 
   <%= jquery do %>
