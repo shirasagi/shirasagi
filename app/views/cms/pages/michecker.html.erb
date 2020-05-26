@@ -5,7 +5,7 @@
   <div class="michecker__footer">
     <div class="michecker-head">
       <h5>miChecker</h5>
-      <button type="button" class="btn btn-michecker-start" disabled="disabled">miChecker を実行し結果を確認する</button>
+      <button type="button" class="btn btn-michecker-start" disabled="disabled" data-href="<%= url_for(action: "michecker_start", format: "json") %>">miChecker を実行し結果を確認する</button>
       <button type="button" class="btn btn-michecker-settings">設定</button>
 
       <div class="michecker-notice">
@@ -174,130 +174,6 @@
   </div>
 
   <%= jquery do %>
-    var frame = document.querySelector(".michecker__main-content");
-    frame.addEventListener("load", function() {
-      $(".michecker-notice").html("実行準備が整いました。");
-      $(".btn-michecker-start").prop("disabled", false);
-    });
-
-    var overlayElement = null;
-    var moveOverlayAndShow = function(el) {
-      var rect = el.getBoundingClientRect();
-      var x = rect.x + frame.contentWindow.scrollX;
-      var y = rect.y + frame.contentWindow.scrollY;
-
-      frame.contentWindow.scrollTo(x, y > 50 ? y - 50 : 0);
-
-      if (!overlayElement) {
-        overlayElement = createOverlay();
-      }
-
-      overlayElement.style.left = x + "px";
-      overlayElement.style.top = y + "px";
-      overlayElement.style.width = rect.width + "px";
-      overlayElement.style.height = rect.height + "px";
-      overlayElement.style.display = "block";
-    };
-
-    var hideOverlay = function() {
-      if (!overlayElement) {
-        return;
-      }
-
-      overlayElement.style.display = "none";
-    };
-
-    $(".btn-michecker-start").on("click", function() {
-      var $this = $(this);
-      $this.prop("disabled", true);
-
-      $(".michecker-report__selector").addClass("hide");
-      $(".michecker-report__accessibility").addClass("hide");
-      $(".michecker-notice").html("miChecker を実行中 " + SS.loading).removeClass("hide");
-
-      $.ajax({
-        url: "<%= url_for(action: "michecker_start", format: "json") %>",
-        method: "POST",
-        dataType: "json",
-      }).done(function(data, status, xhr) {
-        setTimeout(function() {
-          $this.prop("disabled", false);
-          $(".michecker-notice").html("しばらく待ってからページを再読み込みしてください。");
-          $(".michecker-report__selector").removeClass("hide");
-          $(".michecker-report__accessibility").removeClass("hide");
-        }, 5000);
-      }).fail(function(xhr, status, error) {
-        $this.prop("disabled", false);
-        $(".michecker-notice").html("miChecker の実行エラー").removeClass("hide");
-      });
-    });
-
-    $(".michecker-report__selector [name=report-type]").on("change", function() {
-      var $this = $(this);
-      var target = $this.val();
-      if (! target) {
-        return;
-      }
-
-      hideOverlay();
-      if (target === "accessibility") {
-        $(".michecker-report__accessibility").removeClass("hide");
-        $(".michecker-report__low-vision").addClass("hide");
-      } else {
-        $(".michecker-report__accessibility").addClass("hide");
-        $(".michecker-report__low-vision").removeClass("hide");
-      }
-    }).trigger("change");
-
-    $(".btn-michecker-settings").on("click", function(ev) {
-      ev.preventDefault();
-
-      $.colorbox({
-        html: "<h2>miCheck の設定</h2><div>ただいま開発中。</div>", fixed: true, width: "90%", height: "90%"
-      });
-    });
-
-    var createOverlay = function() {
-      var el = frame.contentDocument.createElement("div");
-      el.style.display = "none";
-      el.style.backgroundColor = "rgba(255, 0, 0, .4)";
-      // 表示崩れを防ぐために box-model を明示的に設定
-      el.style.border = "none";
-      el.style.margin = "0";
-      el.style.padding = "0";
-      el.style.boxSizing = "border-box";
-      // 初期位置は (0,0) で初期サイズは 0x0。
-      el.style.position = "absolute";
-      el.style.left = "0";
-      el.style.top = "0";
-      el.style.width = "0";
-      el.style.height = "0";
-
-      frame.contentDocument.body.appendChild(el);
-
-      return el;
-    };
-
-    var highlightElemetByCssPath = function(ev) {
-      ev.preventDefault();
-      ev.stopPropagation();
-      hideOverlay();
-
-      var $this = $(this);
-      var cssPath = $this.data("css-path");
-      if (!cssPath) {
-        return;
-      }
-
-      var targetElement = frame.contentDocument.querySelector(cssPath);
-      if (!targetElement) {
-        return;
-      }
-
-      moveOverlayAndShow(targetElement);
-    };
-
-    $(".michecker-report__result-container table tr").on("click", highlightElemetByCssPath);
-    $("[data-css-path]").on("click", highlightElemetByCssPath);
+    var michecker = new Cms_Michecker("#ss-michecker");
   <% end %>
 </div>

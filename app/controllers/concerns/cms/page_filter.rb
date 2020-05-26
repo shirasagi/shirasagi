@@ -248,7 +248,7 @@ module Cms::PageFilter
     set_item
 
     job = Cms::MicheckerJob.bind(site_id: @cur_site, node_id: @cur_node, user_id: @cur_user).perform_later("page", @item.id.to_s)
-    render json: { job_id: job.job_id }, status: :ok
+    render json: { job_id: job.job_id, status_check_url: job_sns_apis_status_path(id: job.job_id) }, status: :ok
   end
 
   def michecker_lowvision_result
