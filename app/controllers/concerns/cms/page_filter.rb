@@ -1,6 +1,7 @@
 module Cms::PageFilter
   extend ActiveSupport::Concern
   include Cms::CrudFilter
+  include Cms::MicheckerFilter
 
   included do
     before_action :set_item, only: [:show, :edit, :update, :delete, :destroy, :move, :copy, :contains_urls]
@@ -228,42 +229,5 @@ module Cms::PageFilter
     end
 
     render_update true, location: { action: :index }, render: { file: :index }
-  end
-
-  def michecker
-    set_item
-    @result = Cms::Michecker::Result.site(@cur_site).and_page(@item).reorder(id: -1).first
-
-    if @result && ::File.exists?(@result.html_checker_report_filepath)
-      @accessibility_result = Cms::Michecker::Accessibility.load(@result.html_checker_report_filepath)
-    end
-    if @result && ::File.exists?(@result.low_vision_report_filepath)
-      @lowvision_result = Cms::Michecker::LowVision.load(@result.low_vision_report_filepath)
-    end
-
-    render file: "michecker", layout: "cms/michecker"
-  end
-
-  def michecker_start
-    set_item
-
-    job = Cms::MicheckerJob.bind(site_id: @cur_site, node_id: @cur_node, user_id: @cur_user).perform_later("page", @item.id.to_s)
-    render json: { job_id: job.job_id, status_check_url: job_sns_apis_status_path(id: job.job_id) }, status: :ok
-  end
-
-  def michecker_lowvision_result
-    set_item
-    @result = Cms::Michecker::Result.site(@cur_site).and_page(@item).reorder(id: -1).first
-
-    case params[:type].to_s
-    when "source"
-      file = @result.low_vision_source_filepath
-    when "result"
-      file = @result.low_vision_result_filepath
-    end
-
-    raise "404" if file.blank? || !::File.exist?(file)
-
-    ss_send_file file
   end
 end
