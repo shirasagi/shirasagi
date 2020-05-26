@@ -1,4 +1,7 @@
-<% return if @lowvision_result.blank? %>
+<%
+  limit = 5
+  return if @lowvision_result.blank?
+%>
 
 <div class="michecker-report__low-vision-result-table">
   <%= render "ss/crud/addon", addon: { head: "種別", class: "michecker-report__filter" } do %>
@@ -39,8 +42,8 @@
         </tr>
         </thead>
         <tbody>
-        <% @lowvision_result.items.take(5).each do |item| %>
-          <tr data-css-path="<%= item.cssPath %>">
+        <% @lowvision_result.items.each_with_index do |item, index| %>
+          <tr data-css-path="<%= item.cssPath %>" <% if index >= limit %>class="hide"<% end %>>
             <td><%= item.severityStr %></td>
             <% if false %><td><%= item.iconTooltip %></td><% end %>
             <% if false %><td><%= item.evaluationItem["guidelines"].select { |guideline| guideline["guidelineName"] == "WCAG 2.0" }.map { |guideline| guideline["id"] }.join(", ") %></td><% end %>
@@ -57,14 +60,19 @@
           </tr>
         <% end %>
         </tbody>
-        <tfooter>
-          <tr>
-            <td colspan="9">
-              <%= @lowvision_result.items.count.to_s(:delimited) %>件中<%= 5 %>件を表示しています。
-              <a>すべて表示</a>
+        <tfoot>
+          <tr class="top">
+            <td colspan="3">
+              <%= @lowvision_result.items.count.to_s(:delimited) %>件中<%= limit.to_s(:delimited) %>件を表示しています。
+              <a class="michecker-report__result-show-all">すべて表示</a>
             </td>
           </tr>
-        </tfooter>
+          <tr class="all hide">
+            <td colspan="3">
+              <%= @lowvision_result.items.count.to_s(:delimited) %>件表示しています。
+            </td>
+          </tr>
+        </tfoot>
       </table>
     </div>
   <% end %>

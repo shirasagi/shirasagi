@@ -1,4 +1,7 @@
-<% return if @accessibility_result.blank? %>
+<%
+  limit = 5
+  return if @accessibility_result.blank?
+%>
 
 <%= render "ss/crud/addon", addon: { head: "種別", class: "michecker-report__filter" } do %>
   <ul class="michecker-report__filter-items">
@@ -36,8 +39,8 @@
       </tr>
       </thead>
       <tbody>
-      <% @accessibility_result.items.take(5).each do |item| %>
-        <tr <% if item.highlightTargetPaths.present? && item.highlightTargetPaths.length == 1 %>data-css-path="<%= item.highlightTargetPaths.first["cssPath"] %>"<% end %>>
+      <% @accessibility_result.items.each_with_index do |item, index| %>
+        <tr <% if item.highlightTargetPaths.present? && item.highlightTargetPaths.length == 1 %>data-css-path="<%= item.highlightTargetPaths.first["cssPath"] %>"<% end %> <% if index >= limit %>class="hide"<% end %>>
           <td><%= item.severityStr %></td>
           <% if false %><td><%= item.evaluationItem["tableDataMetrics"].try { |metrics| metrics[0] } %></td><% end %>
           <% if false %><td><%= item.evaluationItem["tableDataMetrics"].try { |metrics| metrics[1] } %></td><% end %>
@@ -58,14 +61,19 @@
         </tr>
       <% end %>
       </tbody>
-      <tfooter>
-        <tr>
-          <td colspan="9">
-            <%= @accessibility_result.items.count.to_s(:delimited) %>件中<%= 5 %>件を表示しています。
-            <a>すべて表示</a>
+      <tfoot>
+        <tr class="top">
+          <td colspan="4">
+            <%= @accessibility_result.items.count.to_s(:delimited) %>件中<%= limit.to_s(:delimited) %>件を表示しています。
+            <a class="michecker-report__result-show-all">すべて表示</a>
           </td>
         </tr>
-      </tfooter>
+        <tr class="all hide">
+          <td colspan="4">
+            <%= @accessibility_result.items.count.to_s(:delimited) %>件表示しています。
+          </td>
+        </tr>
+      </tfoot>
     </table>
   </div>
 <% end %>
