@@ -75,5 +75,10 @@ Rails.application.routes.draw do
     end
 
     resources :reservations, only: [:index, :show, :destroy], concerns: [:deletion]
+
+    namespace "apis" do
+      # resources :logs, only: [:index, :show]
+      resources :statuses, only: [:show]
+    end
   end
 end
