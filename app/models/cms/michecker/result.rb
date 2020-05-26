@@ -13,6 +13,8 @@ class Cms::Michecker::Result
   field :michecker_last_result, type: Integer
   field :michecker_last_executed_at, type: DateTime
 
+  after_destroy :remove_all
+
   class << self
     def and_node(node)
       all.where(target_type: "node", target_class: node.class.name, target_id: node.id)
@@ -43,5 +45,10 @@ class Cms::Michecker::Result
 
   def root_filepath
     "#{SS::File.root}/cms_michecker_results/" + id.to_s.split(//).join("/") + "/_"
+  end
+
+  def remove_all
+    path = root_filepath
+    ::Fs.rm_rf(path) if ::Fs.exists?(path)
   end
 end
