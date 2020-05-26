@@ -965,6 +965,31 @@ ja:
       cms/addon/redirect_link:
         redirect_link: リダイレクトURL
 
+  activemodel:
+    attributes:
+      cms/michecker/base:
+        severity: 重度指数
+        severityStr: 重度指数名
+        description: 内容
+        evaluationItem_tableDataMetrics0: 知覚可能
+        evaluationItem_tableDataMetrics1: 操作可能
+        evaluationItem_tableDataMetrics2: 理解可能
+        evaluationItem_tableDataMetrics3: 堅牢
+        evaluationItem_tableDataGuideline0: WCAG 2.0
+        evaluationItem_tableDataGuideline1: Section508
+        evaluationItem_tableDataGuideline2: JIS
+        evaluationItem_tableDataTechniques: 達成方法
+      cms/michecker/accessibility:
+        highlightTargetPaths: 指摘箇所
+      cms/michecker/low_vision:
+        iconTooltip: 種類
+        severityLV: 深刻度
+        foreground: 前景色
+        background: 背景色
+        x: X座標
+        y: Y座標
+        area: 面積
+
   errors:
     messages:
       set_filename: ファイル名を入力してください。

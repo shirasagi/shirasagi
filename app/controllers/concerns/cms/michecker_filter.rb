@@ -49,7 +49,21 @@ module Cms::MicheckerFilter
       @accessibility_result = Cms::Michecker::Accessibility.load(@result.html_checker_report_filepath)
     end
 
-    render file: "michecker_accessibility_report", layout: false
+    respond_to do |format|
+      format.html { render(file: "michecker_accessibility_report", layout: false) }
+      format.csv do
+        if @accessibility_result.blank?
+          response.status = 404
+          break
+        end
+
+        filename = "accessibility_report_#{Time.zone.now.to_i}.csv"
+
+        response.status = 200
+        enum = @accessibility_result.enum_csv(encoding: "UTF-8")
+        send_enum enum, type: enum.content_type, filename: filename
+      end
+    end
   end
 
   def michecker_result_lowvision_report
@@ -57,7 +71,21 @@ module Cms::MicheckerFilter
       @lowvision_result = Cms::Michecker::LowVision.load(@result.low_vision_report_filepath)
     end
 
-    render file: "michecker_lowvision_report", layout: false
+    respond_to do |format|
+      format.html { render file: "michecker_lowvision_report", layout: false }
+      format.csv do
+        if @lowvision_result.blank?
+          response.status = 404
+          break
+        end
+
+        filename = "low_vision_report_#{Time.zone.now.to_i}.csv"
+
+        response.status = 200
+        enum = @lowvision_result.enum_csv(encoding: "UTF-8")
+        send_enum enum, type: enum.content_type, filename: filename
+      end
+    end
   end
 
   def michecker_result_lowvision_source

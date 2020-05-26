@@ -16,23 +16,23 @@
   <div class="michecker-report__result-container">
     <div class="michecker-report__result-controller">
       <button type="button" class="btn"><span class="material-icons md-13">settings</span> 表示列設定</button>
-      <button type="button" class="btn"><span class="material-icons md-13">get_app</span> CSVダウンロード</button>
+      <a class="btn btn-michecker-report-download" href="<%= url_for(action: "michecker_result", type: "accessibility_report", _: @result.updated.to_i, format: "csv") %>"><span class="material-icons md-13">get_app</span> CSVダウンロード</a>
     </div>
 
     <table class="index" style="width: 140em;">
       <thead>
       <tr>
-        <th style="width: 12em;">レベル</th>
-        <%# <th style="width: 12em;">知覚可能</th> %>
-        <%# <th style="width: 12em;">操作可能</th> %>
-        <%# <th style="width: 12em;">理解可能</th> %>
-        <%# <th style="width: 12em;">堅牢</th> %>
-        <%# <th style="width: 12em;">WCAG 2.0</th> %>
-        <%# <th style="width: 12em;">Section508</th> %>
-        <%# <th style="width: 12em;">JIS</th> %>
-        <th style="width: 12em;">達成方法</th>
-        <th style="width: 12em;">指摘箇所</th>
-        <th>内容</th>
+        <th style="width: 12em;"><%= Cms::Michecker::Accessibility.t :severityStr %></th>
+        <% if false %><th style="width: 12em;"><%= Cms::Michecker::Accessibility.t :evaluationItem_tableDataMetrics0 %></th><% end %>
+        <% if false %><th style="width: 12em;"><%= Cms::Michecker::Accessibility.t :evaluationItem_tableDataMetrics1 %></th><% end %>
+        <% if false %><th style="width: 12em;"><%= Cms::Michecker::Accessibility.t :evaluationItem_tableDataMetrics2 %></th><% end %>
+        <% if false %><th style="width: 12em;"><%= Cms::Michecker::Accessibility.t :evaluationItem_tableDataMetrics3 %></th><% end %>
+        <% if false %><th style="width: 12em;"><%= Cms::Michecker::Accessibility.t :evaluationItem_tableDataGuideline0 %></th><% end %>
+        <% if false %><th style="width: 12em;"><%= Cms::Michecker::Accessibility.t :evaluationItem_tableDataGuideline1 %></th><% end %>
+        <% if false %><th style="width: 12em;"><%= Cms::Michecker::Accessibility.t :evaluationItem_tableDataGuideline2 %></th><% end %>
+        <th style="width: 12em;"><%= Cms::Michecker::Accessibility.t :evaluationItem_tableDataTechniques %></th>
+        <th style="width: 12em;"><%= Cms::Michecker::Accessibility.t :highlightTargetPaths %></th>
+        <th><%= Cms::Michecker::Accessibility.t :description %></th>
       </tr>
       </thead>
       <tbody>
@@ -43,9 +43,9 @@
           <% if false %><td><%= item.evaluationItem["tableDataMetrics"].try { |metrics| metrics[1] } %></td><% end %>
           <% if false %><td><%= item.evaluationItem["tableDataMetrics"].try { |metrics| metrics[2] } %></td><% end %>
           <% if false %><td><%= item.evaluationItem["tableDataMetrics"].try { |metrics| metrics[3] } %></td><% end %>
-          <% if false %><td><%= item.evaluationItem["guidelines"].select { |guideline| guideline["guidelineName"] == "WCAG 2.0" }.map { |guideline| guideline["id"] }.join(", ") %></td><% end %>
-          <% if false %><td><%= item.evaluationItem["guidelines"].select { |guideline| guideline["guidelineName"] == "Section508" }.map { |guideline| guideline["id"] }.join(", ") %></td><% end %>
-          <% if false %><td><%= item.evaluationItem["guidelines"].select { |guideline| guideline["guidelineName"] == "JIS" }.map { |guideline| guideline["id"] }.join(", ") %></td><% end %>
+          <% if false %><td><%= item.evaluationItem["tableDataGuideline"].try { |metrics| metrics[0] } %></td><% end %>
+          <% if false %><td><%= item.evaluationItem["tableDataGuideline"].try { |metrics| metrics[1] } %></td><% end %>
+          <% if false %><td><%= item.evaluationItem["tableDataGuideline"].try { |metrics| metrics[2] } %></td><% end %>
           <td><%= item.evaluationItem["tableDataTechniques"] %></td>
           <td>
             <% if item.highlightTargetPaths.present? %>

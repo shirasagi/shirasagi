@@ -16,26 +16,26 @@
   <%= render "ss/crud/addon", addon: { class: "michecker-report__result" } do %>
     <div class="michecker-report__result-controller">
       <button type="button" class="btn"><span class="material-icons md-13">settings</span> 表示列設定</button>
-      <button type="button" class="btn"><span class="material-icons md-13">get_app</span> CSVダウンロード</button>
+      <a class="btn btn-michecker-report-download" href="<%= url_for(action: "michecker_result", type: "lowvision_report", _: @result.updated.to_i, format: "csv") %>"><span class="material-icons md-13">get_app</span> CSVダウンロード</a>
     </div>
 
     <div class="michecker-report__result-container">
       <table class="index" style="width: 170em;">
         <thead>
         <tr>
-          <th style="width: 12em;">レベル</th>
-          <%# <th style="width: 12em;">種類</th> %>
-          <%# <th style="width: 12em;">WCAG 2.0</th> %>
-          <%# <th style="width: 12em;">Section508</th> %>
-          <%# <th style="width: 12em;">JIS</th> %>
-          <%# <th style="width: 12em;">深刻度</th> %>
-          <%# <th style="width: 12em;">前景色</th> %>
-          <%# <th style="width: 12em;">背景色</th> %>
-          <%# <th style="width: 12em;">X座標</th> %>
-          <%# <th style="width: 12em;">Y座標</th> %>
-          <%# <th style="width: 12em;">面積</th> %>
-          <th style="width: 12em;">達成方法</th>
-          <th>内容</th>
+          <th style="width: 12em;"><%= Cms::Michecker::LowVision.t :severityStr %></th>
+          <% if false %><th style="width: 12em;"><%= Cms::Michecker::LowVision.t :iconTooltip %></th><% end %>
+          <% if false %><th style="width: 12em;"><%= Cms::Michecker::LowVision.t :evaluationItem_tableDataGuideline0 %></th><% end %>
+          <% if false %><th style="width: 12em;"><%= Cms::Michecker::LowVision.t :evaluationItem_tableDataGuideline1 %></th><% end %>
+          <% if false %><th style="width: 12em;"><%= Cms::Michecker::LowVision.t :evaluationItem_tableDataGuideline2 %></th> %><% end %>
+          <% if false %><th style="width: 12em;"><%= Cms::Michecker::LowVision.t :severityLV %></th><% end %>
+          <% if false %><th style="width: 12em;"><%= Cms::Michecker::LowVision.t :foreground %></th><% end %>
+          <% if false %><th style="width: 12em;"><%= Cms::Michecker::LowVision.t :background %></th><% end %>
+          <% if false %><th style="width: 12em;"><%= Cms::Michecker::LowVision.t :x %></th><% end %>
+          <% if false %><th style="width: 12em;"><%= Cms::Michecker::LowVision.t :y %></th><% end %>
+          <% if false %><th style="width: 12em;"><%= Cms::Michecker::LowVision.t :area %></th><% end %>
+          <th style="width: 12em;"><%= Cms::Michecker::LowVision.t :evaluationItem_tableDataTechniques %></th>
+          <th><%= Cms::Michecker::LowVision.t :description %></th>
         </tr>
         </thead>
         <tbody>
