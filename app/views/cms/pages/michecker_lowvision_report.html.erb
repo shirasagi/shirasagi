@@ -70,6 +70,6 @@
   <% end %>
 </div> <%# michecker-report__low-vision-result-table %>
 <div class="michecker-report__low-vision-image">
-  <%= image_tag(url_for(action: "michecker_result", type: "lowvision_source", format: "jpeg"), class: "michecker-report__low-vision-image-source") %>
-  <%= image_tag(url_for(action: "michecker_result", type: "lowvision_result", format: "jpeg"), class: "michecker-report__low-vision-image-result") %>
+  <%= image_tag(url_for(action: "michecker_result", type: "lowvision_source", _: @result.updated.to_i, format: "jpeg"), class: "michecker-report__low-vision-image-source") %>
+  <%= image_tag(url_for(action: "michecker_result", type: "lowvision_result", _: @result.updated.to_i, format: "jpeg"), class: "michecker-report__low-vision-image-result") %>
 </div>

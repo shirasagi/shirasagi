@@ -19,7 +19,9 @@ this.Cms_Michecker = (function () {
     micheckerStarted: "miChecker の実行を待機中",
     micheckerFailedToStart: "miChecker を開始できませんでした。",
     micheckerUnknownError: "miChecker 実行時にエラーが発生しました。管理画面へ戻り、タスク・マネージャーからエラーを確認してください。",
-    micheckerCompleted: "miChecker による検証が完了しました。結果を確認してください。"
+    micheckerCompleted: "miChecker による検証が完了しました。結果を確認してください。",
+    accessibilityReportLoadError: "アクセシビリティ検証結果の読み込みに失敗しました。",
+    lowVisionReportLoadError: "視覚化結果の読み込みに失敗しました。"
   }
 
   Cms_Michecker.lastNoneEmptyLog = function(logs) {
@@ -57,20 +59,22 @@ this.Cms_Michecker = (function () {
 
     this.$reportSelector.find("[name=report-type]").on("change", function(ev) {
       self.onReportTypeChanged(ev);
-    }).trigger("change");
+    });
 
     this.$btnSetting.on("click", function(ev) {
       ev.preventDefault();
       self.onBtnMicheckerSettingClicked(ev);
     });
 
-    this.$el.find(".michecker-report__result-container table tr").on("click", function(ev) { self.highlightElemetByCssPath(ev) });
-    this.$el.find("[data-css-path]").on("click", function(ev) { self.highlightElemetByCssPath(ev) });
+    this.$el.on("click", ".michecker-report__result-container table tr", function(ev) { self.highlightElemetByCssPath(ev) });
+    this.$el.on("click", "[data-css-path]", function(ev) { self.highlightElemetByCssPath(ev) });
   };
 
   Cms_Michecker.prototype.onFrameLoaded = function() {
     this.$notice.html(Cms_Michecker.messages.prepared);
     this.$btnStart.prop("disabled", false);
+
+    this.$reportSelector.removeClass("hide").find("[name=report-type]").trigger("change");
   }
 
   Cms_Michecker.prototype.onBtnMicheckerStartClicked = function() {
@@ -98,7 +102,7 @@ this.Cms_Michecker = (function () {
 
     var d = $.Deferred();
 
-    var func = function() {
+    var checkJobStatus = function() {
       $.ajax({
         url: url,
         method: "GET",
@@ -116,7 +120,7 @@ this.Cms_Michecker = (function () {
           }
         }
 
-        setTimeout(func, 5000);
+        setTimeout(checkJobStatus, 5000);
       }).fail(function(_xhr, _status, _error) {
         d.reject();
       });
@@ -127,13 +131,13 @@ this.Cms_Michecker = (function () {
       self.$btnStart.prop("disabled", false);
       self.$notice.html(Cms_Michecker.messages.micheckerCompleted);
       self.$reportSelector.removeClass("hide");
-      self.$reportAccessibility.removeClass("hide");
+      self.$reportSelector.find("[name=report-type]").trigger("change");
     }).fail(function(_xhr, _status, _error) {
       self.$btnStart.prop("disabled", false);
       self.$notice.html(Cms_Michecker.messages.micheckerUnknownError);
     });
 
-    setTimeout(func, 5000);
+    setTimeout(checkJobStatus, 5000);
   };
 
   Cms_Michecker.prototype.onMicheckerFailedToStart = function() {
@@ -142,20 +146,49 @@ this.Cms_Michecker = (function () {
   };
 
   Cms_Michecker.prototype.onReportTypeChanged = function(ev) {
-    var target = $(ev.target).val();
-    if (! target) {
+    this.hideOverlay();
+
+    var selectedOption = ev.currentTarget.options[ev.currentTarget.selectedIndex];
+    if (! selectedOption) {
+      this.$reportAccessibility.addClass("hide");
+      this.$reportLowVision.addClass("hide");
       return;
     }
 
-    this.hideOverlay();
-    if (target === "accessibility") {
-      this.$reportAccessibility.removeClass("hide");
-      this.$reportLowVision.addClass("hide");
+    if (selectedOption.value === "accessibility") {
+      this.loadAccessibilityReport(selectedOption.dataset.href);
     } else {
-      this.$reportAccessibility.addClass("hide");
-      this.$reportLowVision.removeClass("hide");
+      this.loadLowVisionReport(selectedOption.dataset.href);
     }
   };
+
+  Cms_Michecker.prototype.loadAccessibilityReport = function(url) {
+    this.$reportAccessibility.html(SS.loading).removeClass("hide");
+    this.$reportLowVision.addClass("hide");
+
+    var self = this;
+    $.ajax({
+      url: url, method: "GET"
+    }).done(function(data, _status, _xhr) {
+      self.$reportAccessibility.html(data);
+    }).fail(function(_xhr, _status, _error) {
+      self.$reportAccessibility.html(Cms_Michecker.messages.accessibilityReportLoadError);
+    });
+  }
+
+  Cms_Michecker.prototype.loadLowVisionReport = function(url) {
+    this.$reportAccessibility.addClass("hide");
+    this.$reportLowVision.html(SS.loading).removeClass("hide");
+
+    var self = this;
+    $.ajax({
+      url: url, method: "GET"
+    }).done(function(data, _status, _xhr) {
+      self.$reportLowVision.html(data);
+    }).fail(function(_xhr, _status, _error) {
+      self.$reportLowVision.html(Cms_Michecker.messages.lowVisionReportLoadError);
+    });
+  }
 
   Cms_Michecker.prototype.onBtnMicheckerSettingClicked = function() {
     $.colorbox({
