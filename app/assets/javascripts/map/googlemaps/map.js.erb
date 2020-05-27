@@ -42,9 +42,15 @@ this.Googlemaps_Map = (function () {
   };
 
   Googlemaps_Map.load = function (selector, options) {
+    set_center_position = options.set_center_position
+    if (set_center_position) {
+      set_center_position = set_center_position.split(',').map(Number);
+    }
+    set_zoom_level = options.set_zoom_level
     if (options && options.zoom) {
       Googlemaps_Map.zoom = options.zoom;
     }
+    default_zoom = options.default_zoom
 
     var mapOptions = {
       center: new google.maps.LatLng(this.center[0], this.center[1]),
@@ -182,8 +188,45 @@ this.Googlemaps_Map = (function () {
   Googlemaps_Map.adjustMarkerBounds = function(pointCount, bounds) {
     if (pointCount <= 0) {
       Googlemaps_Map.map.setCenter(new google.maps.LatLng(Googlemaps_Map.center[0], Googlemaps_Map.center[1]));
+      Googlemaps_Map.map.setZoom(default_zoom || Googlemaps_Map.defaultZoom);
       return;
     }
+
+    if (pointCount == 1 && !set_center_position && !set_zoom_level) {
+      Googlemaps_Map.map.setCenter(bounds.getCenter());
+      Googlemaps_Map.map.setZoom(default_zoom || Googlemaps_Map.defaultZoom);
+      return;
+    }
+
+    if (pointCount == 1 && set_center_position && !set_zoom_level) {
+      Googlemaps_Map.map.setCenter(new google.maps.LatLng(set_center_position[0], set_center_position[1]));
+      Googlemaps_Map.map.setZoom(default_zoom || Googlemaps_Map.defaultZoom);
+      return;
+    }
+
+    if (pointCount <= 2 && !set_center_position && !set_zoom_level) {
+      Googlemaps_Map.map.setCenter(bounds.getCenter());
+      Googlemaps_Map.map.fitBounds(bounds);
+      return;
+    }
+
+    if (set_center_position && set_zoom_level) {
+      Googlemaps_Map.map.setCenter(new google.maps.LatLng(set_center_position[0], set_center_position[1]));
+      Googlemaps_Map.map.setZoom(set_zoom_level);
+      return;
+    }
+
+    if (set_center_position && !set_zoom_level) {
+      Googlemaps_Map.map.setCenter(new google.maps.LatLng(set_center_position[0], set_center_position[1]));
+      Googlemaps_Map.map.setZoom(Googlemaps_Map.zoom);
+      return;
+    }
+
+    if (!set_center_position && set_zoom_level) {
+      Googlemaps_Map.map.setCenter(bounds.getCenter());
+      Googlemaps_Map.map.setZoom(set_zoom_level);
+      return;
+    };
 
     if (Googlemaps_Map.zoom < 0) {
       // use "fitBounds" to set zoom level auto

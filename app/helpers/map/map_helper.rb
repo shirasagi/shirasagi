@@ -46,6 +46,7 @@ module Map::MapHelper
 
     markers = opts[:markers]
     map_options = opts[:map] || {}
+    map_options[:default_zoom] = SS.config.map.zoom_level
     s = []
 
     case default_map_api(opts)
@@ -87,6 +88,7 @@ module Map::MapHelper
     center = opts[:center] || SS.config.map.map_center
     max_point_form = opts[:max_point_form] || SS.config.map.map_max_point_form
     map_options = opts[:map] || {}
+    map_options[:default_zoom] = SS.config.map.zoom_level
     s = []
 
     case default_map_api(opts)
