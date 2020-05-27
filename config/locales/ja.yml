@@ -166,6 +166,9 @@ ja:
       not_found_main_group: "グループ（主）「%{name}」が見つかりません。"
       not_found_user_title: "役職コード「%{code}」が見つかりません。"
       url: は有効なURLを入力してください。
+      invalid_latlon: |-
+        の正しい座標をカンマ(,)区切りで入力してください。
+        例）33.8957612,133.6806607
     template:
       body: 次の項目を確認してください。
       header:
