@@ -12,6 +12,27 @@
     <%= text_field_tag :keyword, nil, class: "keyword", placeholder: t("map.search") %>
     <%= button_tag t("ss.buttons.search"), { type: :button, class: "btn" } %>
   </div>
+  <div class="center-position">
+    <span><%= t("map.center_position") %>:</span>
+    <span>
+      <%= f.radio_button :center_setting, :auto, checked: "checked" %>
+      <%= f.label :auto %>
+      <%= f.radio_button :center_setting, :designated_location %>
+      <%= f.label :designated_location %>
+      <%= f.text_field :set_center_position %>
+      <%= button_tag "追加", { type: :button, class: "set-center-position btn" } %>
+    </span>
+  </div>
+  <div class="zoom-level">
+    <span><%= t("map.zoom") %>:</span>
+    <span>
+      <%= f.radio_button :zoom_setting, :auto, checked: "checked" %>
+      <%= f.label :auto %>
+      <%= f.radio_button :zoom_setting, :designated_level %>
+      <%= f.label :designated_level %>
+      <%= f.number_field  :set_zoom_level, min: 1, max: 21 %>
+    </span>
+  </div>
   <%= f.hidden_field :map_zoom_level %>
   <div class="map-canvas" style="width: 100%; height: 320px"></div>
   <dl class="marker-setting">

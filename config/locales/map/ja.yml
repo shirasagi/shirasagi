@@ -8,6 +8,7 @@ ja:
     setting: マップ設定
     markers: マーカー設定
     clicked: クリック座標
+    center_position: 中心位置
     alert:
       invalid_center: 座標を取得できませんでした。
       invalid_location:
@@ -35,6 +36,9 @@ ja:
         marker_text: 説明
         marker_loc: 座標
         marker_link: リンク
+        auto: 自動
+        designated_location: 指定位置
+        designated_level: 指定レベル
 
   tooltip:
     map/addon/page:
