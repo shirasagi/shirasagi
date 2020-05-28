@@ -25,9 +25,6 @@ class Cms::Notice
 
   validates :name, presence: true, length: { maximum: 80 }
 
-  default_scope -> {
-    order_by released: -1
-  }
   scope :target_to, ->(user) {
     where("$or" => [
       { notice_target: NOTICE_TARGET_ALL },

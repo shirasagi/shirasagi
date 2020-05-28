@@ -1,4 +1,4 @@
-<% @notices = Sys::Notice.and_public.and_show_login.limit(5) %>
+<% @notices = Sys::Notice.and_public.and_show_login.reorder(notice_severity: 1, released: -1).limit(5) %>
 <% if @notices.present? %>
 <div class="main-box login-notice">
   <header>

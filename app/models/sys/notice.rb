@@ -33,10 +33,6 @@ class Sys::Notice
 
   validates :name, presence: true, length: { maximum: 80 }
 
-  default_scope -> {
-    order_by released: -1
-  }
-
   scope :cms_admin_notice, -> {
     where(:notice_target.in => [NOTICE_TARGET_CMS_ADMIN])
   }

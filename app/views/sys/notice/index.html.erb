@@ -9,11 +9,13 @@
 <% @index_meta = proc do |item| %>
   <span class="id">#<%= item.id %></span>
   <span class="datetime"><%= item.updated.strftime("%Y/%m/%d %H:%M") %></span>
-  <% if attr = item.label(:notice_severity).presence %>
-    <span class="severity label"><%= attr %></span>
+  <% if item.notice_severity == @model::NOTICE_SEVERITY_HIGH %>
+    <span class="severity label"><%= t "cms.important_notice" %></span>
   <% end %>
-  <span class="target"><%= item.label :notice_target %></span>
+  <% if item.notice_target.select(&:present?).present? %>
+    <span class="target"><%= item.notice_target.map { |val| item.disp_notice_target val }.select(&:present?).join(", ") %></span>
+  <% end %>
   <span class="state"><%= t "ss.state.#{item.state}" %></span>
 <% end %>
 
-<%= render file: "cms/crud/index" %>
+<%= render file: "ss/crud/index" %>

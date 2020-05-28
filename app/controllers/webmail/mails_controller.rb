@@ -74,7 +74,7 @@ class Webmail::MailsController < ApplicationController
   public
 
   def index
-    @sys_notices = Sys::Notice.and_public.webmail_admin_notice.page(1).per(2)
+    @sys_notices = Sys::Notice.and_public.webmail_admin_notice.reorder(notice_severity: 1, released: -1).page(1).per(5)
 
     @items = @imap.mails.
       mailbox(@mailbox).
