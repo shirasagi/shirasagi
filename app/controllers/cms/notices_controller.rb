@@ -21,7 +21,7 @@ class Cms::NoticesController < ApplicationController
   public
 
   def index
-    raise "403" unless @model.allowed?(:read, @cur_user, site: @cur_site, node: @cur_node)
+    raise "403" unless @model.allowed?(:read, @cur_user, site: @cur_site, owned: true)
 
     @items = @model.site(@cur_site).
       allow(:edit, @cur_user, site: @cur_site).
@@ -31,7 +31,7 @@ class Cms::NoticesController < ApplicationController
   end
 
   def copy
-    raise "403" unless @model.allowed?(:edit, @cur_user, site: @cur_site, node: @cur_node)
+    raise "403" unless @model.allowed?(:edit, @cur_user, site: @cur_site, owned: true)
 
     if request.get?
       prefix = I18n.t("workflow.cloned_name_prefix")
