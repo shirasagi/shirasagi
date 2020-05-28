@@ -46,7 +46,6 @@ module Map::MapHelper
 
     markers = opts[:markers]
     map_options = opts[:map] || {}
-    map_options[:default_zoom] = SS.config.map.zoom_level
     s = []
 
     case default_map_api(opts)
@@ -57,6 +56,7 @@ module Map::MapHelper
       map_options[:readonly] = true
       map_options[:markers] = markers if markers.present?
       map_options[:layers] = SS.config.map.layers
+      map_options[:default_zoom] = SS.config.map.openlayers_zoom_level
 
       s << 'var canvas = $("' + selector + '")[0];'
       s << "var opts = #{map_options.to_json};"
@@ -74,6 +74,7 @@ module Map::MapHelper
       s << 'var map = new Openlayers_Map(canvas, opts);'
     else
       include_googlemaps_api(opts)
+      map_options[:default_zoom] = SS.config.map.googlemaps_zoom_level
 
       s << "Googlemaps_Map.load(\"" + selector + "\", #{map_options.to_json});"
       s << 'Googlemaps_Map.setMarkers(' + markers.to_json + ');' if markers.present?
@@ -88,7 +89,6 @@ module Map::MapHelper
     center = opts[:center] || SS.config.map.map_center
     max_point_form = opts[:max_point_form] || SS.config.map.map_max_point_form
     map_options = opts[:map] || {}
-    map_options[:default_zoom] = SS.config.map.zoom_level
     markers = opts[:markers]
     s = []
 
@@ -102,6 +102,7 @@ module Map::MapHelper
       map_options[:layers] = SS.config.map.layers
       map_options[:max_point_form] = max_point_form if max_point_form.present?
       map_options[:markers] = markers if markers.present?
+      map_options[:default_zoom] = SS.config.map.openlayers_zoom_level
 
       # 初回アドオン表示後に地図を描画しないと、クリックした際にマーカーがずれてしまう
       s << 'SS_AddonTabs.findAddonView(".mod-map").one("ss:addonShown", function() {'
@@ -125,6 +126,7 @@ module Map::MapHelper
       s << '});'
     else
       include_googlemaps_api(opts)
+      map_options[:default_zoom] = SS.config.map.googlemaps_zoom_level
 
       # 初回アドオン表示後に地図を描画しないと、ズームが 2 に初期設定されてしまう。
       s << 'SS_AddonTabs.findAddonView(".mod-map").one("ss:addonShown", function() {'

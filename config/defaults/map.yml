@@ -24,8 +24,11 @@ production: &production
   # Max Number of Markers in Map Addon
   map_max_point_form: 10
 
-  # Map Addon Zoom Level
-  zoom_level: 13
+  # Google Maps Addon Zoom Level
+  googlemaps_zoom_level: 13
+
+  # Openlayers Addon Zoom Level
+  openlayers_zoom_level: 10
 
 test:
   <<: *production

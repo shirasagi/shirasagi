@@ -227,16 +227,6 @@ this.Googlemaps_Map = (function () {
       Googlemaps_Map.map.setZoom(set_zoom_level);
       return;
     };
-
-    if (Googlemaps_Map.zoom < 0) {
-      // use "fitBounds" to set zoom level auto
-      Googlemaps_Map.map.fitBounds(bounds);
-      return;
-    }
-
-    // avoid using "fitBounds" to apply specified zoom level
-    Googlemaps_Map.map.setCenter(bounds.getCenter());
-    Googlemaps_Map.map.setZoom(Googlemaps_Map.zoom);
   };
 
   return Googlemaps_Map;

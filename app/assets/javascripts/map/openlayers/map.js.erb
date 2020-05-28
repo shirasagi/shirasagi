@@ -5,6 +5,7 @@ this.Openlayers_Map = (function () {
     }
     this.canvas = canvas;
     this.opts = opts;
+    default_zoom = this.opts.default_zoom || Openlayers_Map.defaultZoom
     pointCount = this.opts.markers ? this.opts.markers.length : 0
     set_center_position = this.opts.set_center_position
 
@@ -290,7 +291,7 @@ this.Openlayers_Map = (function () {
     if (pointCount == 1 && !set_center_position && !set_zoom_level) {
       extent = this.markerLayer.getSource().getExtent();
       this.map.getView().fit(extent, this.map.getSize());
-      this.map.getView().setZoom(Openlayers_Map.defaultZoom);
+      this.map.getView().setZoom(default_zoom);
       return;
     }
 
@@ -320,12 +321,8 @@ this.Openlayers_Map = (function () {
     }
 
     if (!set_zoom_level) {
-      this.map.getView().setZoom(Openlayers_Map.defaultZoom);
+      this.map.getView().setZoom(default_zoom);
       return;
-    }
-
-    if (this.map.getView().getZoom() > this.opts.zoom) {
-      this.map.getView().setZoom(Openlayers_Map.defaultZoom);
     }
   };
 

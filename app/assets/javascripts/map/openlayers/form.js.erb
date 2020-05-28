@@ -12,8 +12,8 @@ this.Openlayers_Map_Form = (function () {
     this.clonePointForm = bind(this.clonePointForm, this);
     this.canvas = canvas;
     this.opts = opts;
+    default_zoom = this.opts.default_zoom || Openlayers_Map.defaultZoom
     pointCount = this.opts.markers ? this.opts.markers.length : 0
-    console.log(pointCount)
     set_center_position = this.opts.set_center_position
     if (set_center_position) {
       set_center_position = set_center_position.split(',').map(Number);
@@ -442,14 +442,11 @@ this.Openlayers_Map_Form = (function () {
   };
 
   Openlayers_Map_Form.prototype.resize = function () {
-    if (!this.markerLayer) {
-      return;
-    }
-
+    var extent;
     if (pointCount == 1 && !set_center_position && !set_zoom_level) {
       extent = this.markerLayer.getSource().getExtent();
       this.map.getView().fit(extent, this.map.getSize());
-      this.map.getView().setZoom(Openlayers_Map.defaultZoom);
+      this.map.getView().setZoom(default_zoom);
       return;
     }
 
@@ -479,12 +476,8 @@ this.Openlayers_Map_Form = (function () {
     }
 
     if (!set_zoom_level) {
-      this.map.getView().setZoom(Openlayers_Map.defaultZoom);
+      this.map.getView().setZoom(default_zoom);
       return;
-    }
-
-    if (this.map.getView().getZoom() > this.opts.zoom) {
-      this.map.getView().setZoom(this.opts.zoom);
     }
   };
 
