@@ -89,6 +89,7 @@ module Map::MapHelper
     max_point_form = opts[:max_point_form] || SS.config.map.map_max_point_form
     map_options = opts[:map] || {}
     map_options[:default_zoom] = SS.config.map.zoom_level
+    markers = opts[:markers]
     s = []
 
     case default_map_api(opts)
@@ -100,6 +101,7 @@ module Map::MapHelper
       map_options[:center] = center.reverse if center.present?
       map_options[:layers] = SS.config.map.layers
       map_options[:max_point_form] = max_point_form if max_point_form.present?
+      map_options[:markers] = markers if markers.present?
 
       # 初回アドオン表示後に地図を描画しないと、クリックした際にマーカーがずれてしまう
       s << 'SS_AddonTabs.findAddonView(".mod-map").one("ss:addonShown", function() {'
