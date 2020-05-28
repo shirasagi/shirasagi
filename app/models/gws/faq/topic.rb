@@ -7,7 +7,7 @@ class Gws::Faq::Topic
   include Gws::Addon::File
   include Gws::Faq::DescendantsFileInfo
   include Gws::Addon::Faq::Category
-  include Gws::Addon::Release
+  include SS::Addon::Release
   include Gws::Addon::ReadableSetting
   include Gws::Addon::GroupPermission
   include Gws::Addon::History
