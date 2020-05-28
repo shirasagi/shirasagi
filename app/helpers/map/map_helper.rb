@@ -68,6 +68,7 @@ module Map::MapHelper
       map_options[:readonly] = true
       map_options[:markers] = markers if markers.present?
       map_options[:layers] = SS.config.map.open_street_map
+      map_options[:default_zoom] = SS.config.map.openlayers_zoom_level
 
       s << 'var canvas = $("' + selector + '")[0];'
       s << "var opts = #{map_options.to_json};"
@@ -118,6 +119,8 @@ module Map::MapHelper
       map_options[:center] = center.reverse if center.present?
       map_options[:layers] = SS.config.map.open_street_map
       map_options[:max_point_form] = max_point_form if max_point_form.present?
+      map_options[:markers] = markers if markers.present?
+      map_options[:default_zoom] = SS.config.map.openlayers_zoom_level
 
       s << 'SS_AddonTabs.findAddonView(".mod-map").one("ss:addonShown", function() {'
       s << '  var canvas = $("' + selector + '")[0];'
