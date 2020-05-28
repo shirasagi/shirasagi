@@ -23,7 +23,7 @@
 
 <div>
   <%= button_tag(t("cms.syntax_check"), name: nil, type: "button", class: "btn syntax-check") if syntax_check %>
-  <%= button_tag(t("cms.mobile_size_check"), name: nil, type: "button", class: "btn mobile-size-check") %>
+  <%= button_tag(t("cms.mobile_size_check"), name: nil, type: "button", class: "btn mobile-size-check") if @cur_site.mobile_enabled? %>
   <%= button_tag(t("cms.link_check"), name: nil, type: "button", class: "btn link-check") %>
   <% if !@preview %>
     <%= button_tag(t("cms.preview"), name: nil, type: "button", class: "btn preview") %>
