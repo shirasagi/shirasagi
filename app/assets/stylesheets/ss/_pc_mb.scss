@@ -2009,6 +2009,17 @@ footer.send {
   }
   .location-search { margin-bottom: 20px; }
   > button { @include mb { margin-bottom: 10px; } }
+  .map-position {
+    display: flex;
+    flex-wrap: wrap;
+    padding: 10px 0px;
+    .center-position {
+      padding-right: 10px;
+      .center-input {
+        width: 260px;
+      }
+    }
+  }
   .marker-setting {
     @include clear;
     margin: 20px 0 0;
