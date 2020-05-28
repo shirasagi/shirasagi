@@ -1,5 +1,5 @@
 <% if @sys_notices.present? %>
-<div class="index">
+<div class="index sys-notices">
   <div class="list-head"><%= t "sys.notice" %></div>
   <ul class="list-items">
     <% @sys_notices.each do |item| %>
@@ -20,7 +20,7 @@
 <% end %>
 
 <% if @notices.present? || @monitors.present? %>
-<div class="index">
+<div class="index gws-notices">
   <div class="list-head"><%= @cur_site.menu_notice_label || t('modules.gws/notice') %></div>
   <ul class="list-items">
     <% if @monitors.present? %>
