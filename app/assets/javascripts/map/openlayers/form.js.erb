@@ -427,8 +427,8 @@ this.Openlayers_Map_Form = (function () {
     });
   };
 
-  Openlayers_Map_Form.prototype.createCenter = function (ele) {
-    var dataId, loc;
+  Openlayers_Map_Form.prototype.createCenter = function () {
+    var loc;
     loc = null;
     if ($(".mod-map .clicked").val() !== "") {
       loc = $(".mod-map .clicked").val();

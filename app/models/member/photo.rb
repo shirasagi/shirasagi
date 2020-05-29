@@ -15,6 +15,7 @@ class Member::Photo
   before_save :seq_filename, if: ->{ basename.blank? }
 
   default_scope ->{ where(route: "member/photo") }
+  validate :center_position_validate, if: -> { set_center_position.present? }
 
   field :listable_state, type: String, default: "public"
   field :slideable_state, type: String, default: "closed"
@@ -58,6 +59,21 @@ class Member::Photo
 
   def seq_filename
     self.filename = dirname ? "#{dirname}#{id}.html" : "#{id}.html"
+  end
+
+  def center_position_validate
+    latlon = set_center_position.split(',')
+    if latlon.length == 2
+      lat = latlon[0]
+      lon = latlon[1]
+      if !lat.match?(/^([1-9]\d*|0)(\.\d+)?$/) || !lon.match?(/^([1-9]\d*|0)(\.\d+)?$/)
+        self.errors.add :set_center_position, :invalid_latlon
+      elsif lat.to_i <= -90 || lat.to_i >= 90 || lon.to_i <= -180 || lon.to_i >= 180
+        self.errors.add :set_center_position, :invalid_latlon
+      end
+    else
+      self.errors.add :set_center_position, :invalid_latlon
+    end
   end
 
   class << self
