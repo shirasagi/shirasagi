@@ -18,6 +18,20 @@ this.Openlayers_Map_Form = (function () {
     if (set_center_position) {
       set_center_position = set_center_position.split(',').map(Number);
       set_center_position = [set_center_position[1], set_center_position[0]];
+      var lat, lon;
+      lat = set_center_position[1];
+      lon = set_center_position[0];
+      if (!(lat && !isNaN(lat))) {
+        set_center_position = null;
+      }
+      if (!(lon && !isNaN(lon))) {
+        set_center_position = null;
+      }
+      if (lat >= -90 && lat <= 90 && lon >= -180 && lon <= 180) {
+        set_center_position
+      } else {
+        set_center_position = null;
+      }
     }
     set_zoom_level = this.opts.set_zoom_level
     this.markerFeature = null;
