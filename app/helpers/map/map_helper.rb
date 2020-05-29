@@ -75,7 +75,6 @@ module Map::MapHelper
       s << 'var map = new Openlayers_Map(canvas, opts);'
     else
       include_googlemaps_api(opts)
-      map_options[:default_zoom] = SS.config.map.googlemaps_zoom_level
 
       s << "Googlemaps_Map.load(\"" + selector + "\", #{map_options.to_json});"
       s << 'Googlemaps_Map.setMarkers(' + markers.to_json + ');' if markers.present?
