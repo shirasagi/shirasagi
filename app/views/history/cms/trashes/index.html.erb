@@ -12,7 +12,9 @@
   <span class="datetime"><%= item.updated.strftime("%Y/%m/%d %H:%M") %></span>
   <span class="filename"><%= item.data['filename'] %></span>
   <% if item.data['route'].present? %>
-  <span class="route"><%= t "modules.#{item.data['route'].sub(/\/.*/, '')}" %></span>
+    <span class="route"><%= t "modules.#{item.data['route'].sub(/\/.*/, '')}" %></span>
+  <% elsif item.data['owner_item_type'].present? %>
+    <span class="route"><%= t "modules.#{item.data['owner_item_type'].downcase.sub!(/:.*/, "")}" %></span>
   <% end %>
   <span class="user"><%= item.user.try(:name) %></span>
 <% end %>

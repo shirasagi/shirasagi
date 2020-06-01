@@ -136,6 +136,7 @@ ja:
     notices:
       import_with_entry_form_is_not_supported: 次のフォームでは本文ブロックは出力されません。
       restoring_public_content_from_trash: 非公開で復元されます。復元後、内容を確認うえ、公開してください。
+      restoring_share_file_from_trash: 共有ファイルに復元されます。
     apis:
       categories:
         index: カテゴリーを選択する

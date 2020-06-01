@@ -565,6 +565,9 @@ ja:
         content_type: コンテンツタイプ
         resizing: リサイズ
         geo_location: 緯度・経度
+        owner_item_id: オーナーId
+        owner_item_type: オーナー
+        site_id: サイト
       ss/model/role:
         name: ロール名
         permission_level: 権限レベル
