@@ -75,7 +75,7 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
   context "attach file from user file" do
     before { login_cms_user }
 
-    it "#edit" do
+    it do
       visit edit_path
       within "form#item-form" do
         within "#addon-cms-agents-addons-file" do
@@ -93,10 +93,23 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
         wait_for_ajax
       end
 
-      within '#selected-files' do
-        expect(page).to have_no_css('.name', text: 'keyvisual.jpg')
-        expect(page).to have_css('.name', text: 'keyvisual.gif')
+      within "form#item-form" do
+        within '#selected-files' do
+          expect(page).to have_no_css('.name', text: 'keyvisual.jpg')
+          expect(page).to have_css('.name', text: 'keyvisual.gif')
+        end
+        click_on I18n.t("ss.buttons.publish_save")
       end
+      wait_for_notice I18n.t('ss.notice.saved')
+
+      item.reload
+      expect(item.file_ids.length).to eq 1
+      attached_file = item.files.first
+      # owner item
+      expect(attached_file.owner_item_type).to eq item.class.name
+      expect(attached_file.owner_item_id).to eq item.id
+      # other
+      expect(attached_file.user_id).to eq cms_user.id
     end
   end
 

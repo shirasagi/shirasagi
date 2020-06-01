@@ -71,8 +71,8 @@ var tempFile = new SS_Addon_TempFile(".upload-drop-area", <%= @cur_user.id %>, o
       <% end %>
     </span>
     <span class="upload-menu-select">
-      <%= link_to t("sns.user_file"), sns_apis_user_files_path(@cur_user), class: "ajax-box btn" %>
-      <%= link_to t("cms.file"), cms_apis_files_path, class: "ajax-box btn" %>
+      <%= link_to t("sns.user_file"), cms_apis_user_files_path(cid: @cur_node || '-'), class: "ajax-box btn" %>
+      <%= link_to t("cms.file"), cms_apis_files_path(cid: @cur_node || '-'), class: "ajax-box btn" %>
     </span>
     <div class="upload-drop-area">
       <span class="upload-drop-notice"><%= t('ss.notice.file_droppable') %></span>
