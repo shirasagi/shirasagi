@@ -401,6 +401,7 @@ ja:
       ss/kana_setting: かな設定
       ss/facebook_setting: Facebook設定
       ss/twitter_setting: Twitter設定
+      ss/line_setting: Line設定
       ss/site_auto_post_setting: SNS自動投稿設定
       ss/approve_setting: 承認設定
       ss/editor_setting: エディタ設定
@@ -619,6 +620,9 @@ ja:
         twitter_consumer_secret: コンシューマーシークレット
         twitter_access_token: アクセストークン
         twitter_access_token_secret: トークンシークレット
+      ss/addon/line_setting:
+        line_channel_secret: チャンネルシークレット
+        line_channel_access_token: チャンネルアクセストークン
       ss/addon/site_auto_post_setting:
         site_twitter_auto_post: Twitter自動投稿
         site_sns_auto_delete: 非公開時に投稿を削除
@@ -998,6 +1002,13 @@ ja:
       twitter_access_token_secret:
         - アクセストークンシークレット(Access Token Secret)を設定します。
         - Twitterへの自動投稿に必須です。
+    ss/addon/line_setting:
+      line_channel_secret:
+        - Lineのチャンネルシークレットを設定します。
+        - Lineとの連携に必須です。
+      line_channel_access_token:
+        - Lineのチャンネルアクセストークンを設定します。
+        - Lineとの連携に必須です。
     ss/addon/site_auto_post_setting:
       site_twitter_auto_post:
         - Twitterへの自動投稿の設定を行います。

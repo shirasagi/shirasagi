@@ -13,6 +13,41 @@ ja:
       question:
         success: はい
         retry: いいえ
+    line_bot:
+      service:
+        about: 約
+        details: 詳細情報
+        map: 地図
+        no_facility: 近くに施設はありません。
+        search_results: サイト内検索結果を開く
+        search_location: 近くの施設を探す
+        send_location: 現在の位置情報を送りますか？
+        set_location: 位置を送る
+        site_search: サイト内検索へ移動
+        success: はい
+        retry: いいえ
+        choices: 選択肢
+      line_report: Lineのレポート
+    line_report:
+      phrase/input: 入力されたフレーズ
+      used_time: 時間帯別利用者数
+      phrase/called: 使用されたフレーズ
+      phrase/name: フレーズ名
+      phrase/frequency: 使用回数
+      phrase/success: 解決した
+      phrase/retry: 解決しなかった
+      phrase/reply_count: 返答回数
+      phrase/reply_rate: 返答率
+      session/range: 期間
+      session/users: 利用者数
+      session/today: 今日
+      session/yesterday: 昨日
+      session/this_month: 今月
+      session/last_month: 先月
+      date: 日付
+      total: 合計
+      hour: 時
+      session: 利用回数
 
   modules:
     chat: チャット
@@ -69,6 +104,7 @@ ja:
         phrase: フレーズ
         suggest: サジェスト
         response: 返答
+        link: リンク
         question: フィードバック
         site_search: サイト内検索のリンク
         order: 並び順
@@ -86,6 +122,7 @@ ja:
         question: フィードバック
         chat_success: フィードバック返答(はい)
         chat_retry: フィードバック返答(いいえ)
+        facility_search: 施設検索テキスト
         intent_ids: シナリオ
         chat_category_ids: シナリオカテゴリー
 
@@ -105,6 +142,10 @@ ja:
         - 返答を設定します。
         - チャットボットで指定のフレーズが使用されていると返答します。
         - 設定しない場合、親フォルダーの返答テンプレートを使用します。
+      link:
+        - リンクを設定します。
+        - 改行でリンクを複数設定できます。
+        - 返答で設定したリンクをLineチャットボットで表示するのに必要です。
       question:
         - フィードバックを表示するか設定します。
       site_search:
@@ -140,6 +181,8 @@ ja:
         - フィードバックに対して"はい"を押された場合に表示される文章を設定できます。
       chat_retry:
         - フィードバックに対して"いいえ"を押された場合に表示される文章を設定できます。
+      facility_search:
+        - Lineで施設を検索する時のテキストを設定できます。
 
   job:
     models:

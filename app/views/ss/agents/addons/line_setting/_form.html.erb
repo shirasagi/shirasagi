@@ -1,0 +1,11 @@
+<%
+  addon ||= local_assigns.fetch(:addon, {})
+  addon[:display_body] = "hide"
+%>
+<dl class="see mod-ss-line-setting">
+  <dt><%= @model.t :line_channel_secret %><%= @model.tt :line_channel_secret %></dt>
+  <dd><%= f.text_field :line_channel_secret %></dd>
+
+  <dt><%= @model.t :line_channel_access_token %><%= @model.tt :line_channel_access_token %></dt>
+  <dd><%= f.text_field :line_channel_access_token %></dd>
+</dl>

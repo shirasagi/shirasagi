@@ -1,0 +1,171 @@
+<%
+  gen = SS::HslGenerator.new(@cur_node.id).to_enum
+
+  @dates = (@current_month_date..@current_month_end_date).to_a
+  @session_counts = @dates.collect do |date|
+    @sessions.gte(date_created: date).lt(date_created: date.tomorrow).count
+  end
+  sessions = [@dates, @session_counts, gen.next]
+
+  @hours = (0..23).to_a
+  @used_times_counts = @hours.collect do |hour|
+    @used_times.gte(hour: hour).lt(hour: hour + 1).count
+  end
+  used_times = [@hours, @used_times_counts, gen.next]
+
+%>
+<%= jquery do %>
+  Chat_Chart.drawBar(".graph-sessions");
+<% end %>
+
+<div class="addon-views">
+  <div class="addon-view">
+    <div class="addon-head">
+      <h2><%= I18n.t('chat.line_report.phrase/input') %></h2>
+    </div>
+    <% if @record_phrases.present? %>
+      <div class="addon-body">
+        <div class="list-head">
+          <%= link_to I18n.t('ss.links.download'), {action: :download_record_phrases}, {class: "btn list-head-search"} %>
+        </div>
+        <div class="main-box">
+          <div class="column" style="overflow: auto; max-height: 300px; border: 1px solid #cccccc;">
+            <table class="index th-lock">
+              <thead>
+              <tr colspan="2">
+                <th><%= I18n.t('chat.line_report.phrase/name') %></th>
+                <th><%= I18n.t('chat.line_report.phrase/frequency') %></th>
+              </tr>
+              </thead>
+              <tbody>
+              <% @record_phrases.each do |item| %>
+                <tr>
+                  <td><%= item.name %></td>
+                  <td><%= item.frequency %></td>
+                </tr>
+              <% end %>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    <% end %>
+  </div>
+
+  <div class="addon-view">
+    <div class="addon-head">
+      <h2><%= I18n.t('chat.line_report.phrase/called') %></h2>
+    </div>
+    <% if @exists_phrases.present? %>
+      <div class="addon-body">
+        <div class="list-head">
+          <%= link_to I18n.t('ss.links.download'), {action: :download_exists_phrases}, {class: "btn list-head-search"} %>
+        </div>
+        <div class="main-box">
+          <div class="column" style="overflow: auto; max-height: 300px; border: 1px solid #cccccc;">
+            <table class="index th-lock">
+              <thead>
+              <tr colspan="2">
+                <th><%= I18n.t('chat.line_report.phrase/name') %></th>
+                <th><%= I18n.t('chat.line_report.phrase/frequency') %></th>
+                <th><%= I18n.t('chat.line_report.phrase/success') %></th>
+                <th><%= I18n.t('chat.line_report.phrase/retry') %></th>
+                <th><%= I18n.t('chat.line_report.phrase/reply_count') %></th>
+                <th><%= I18n.t('chat.line_report.phrase/reply_rate') %></th>
+              </tr>
+              </thead>
+              <tbody>
+              <% @exists_phrases.each do |item| %>
+                <% if item.frequency != 0 %>
+                  <tr>
+                    <td><%= item.name %></td>
+                    <td><%= item.frequency %></td>
+                    <% if Chat::Intent.site(@cur_site).where(node_id: @cur_node.id).find_by(name: item.name).question === "enabled" %>
+                      <td><%= item.confirm_yes %></td>
+                      <td><%= item.confirm_no %></td>
+                      <td><%= item.confirm_yes + item.confirm_no %></td>
+                      <% if item.confirm_yes == 0 && item.confirm_no == 0 %>
+                        <td>0%</td>
+                      <% else %>
+                        <td><%= ((item.confirm_yes + item.confirm_no).fdiv(item.frequency) * 100).floor %>%</td>
+                      <% end %>
+                    <% else %>
+                      <td>-</td>
+                      <td>-</td>
+                      <td>-</td>
+                      <td>-</td>
+                    <% end %>
+                  </tr>
+                <% end %>
+              <% end %>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    <% end %>
+  </div>
+
+  <div class="addon-view">
+    <div class="addon-head">
+      <h2><%= "#{@current_month_date.year}年#{@current_month_date.month}月の" %><%= I18n.t('chat.line_report.session/users') %></h2>
+    </div>
+    <div class="addon-body">
+      <div class="list-head">
+        <%= link_to_monthly @current_month_date.advance(months: -1) %>
+        <% if @current_month_date == Time.zone.today.beginning_of_month %>
+          <%= "#{@current_month_date.advance(months: 1).year}年#{@current_month_date.advance(months: 1).month}月" %>
+        <% else %>
+          <%= link_to_monthly @current_month_date.advance(months: 1) %>
+        <% end %>
+        <%= link_to I18n.t('ss.links.download'), {action: :download_sessions, dates: @dates, session_counts: @session_counts, current_date: @current_month_date.strftime('%Y%m')}, {class: "btn list-head-search"} %>
+      </div>
+      <canvas class="graph-sessions" data-name='<%= I18n.t('chat.line_report.session/users') %>' data-columns='<%= sessions.to_json %>'></canvas>
+      <div class="main-box">
+        <div class="column" style="overflow: auto; max-height: 200px; border: 1px solid #cccccc;">
+          <table class="index">
+            <thead>
+            <tr>
+              <th><%= I18n.t('chat.line_report.session/range') %></th>
+              <th><%= I18n.t('chat.line_report.session/users') %></th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+              <td><%= I18n.t('chat.line_report.session/today') %></td>
+              <td><%= Chat::LineBot::Session.site(@cur_site).where(node_id: @cur_node.id, date_created: Time.zone.today).count %>人</td>
+            </tr>
+            <tr>
+              <td><%= I18n.t('chat.line_report.session/yesterday') %></td>
+              <td><%= Chat::LineBot::Session.site(@cur_site).where(node_id: @cur_node.id, date_created: Time.zone.yesterday).count %>人</td>
+            </tr>
+            <tr>
+              <td><%= I18n.t('chat.line_report.session/this_month') %></td>
+              <td><%= @sessions.gt(date_created: Time.current.prev_month.end_of_month).lte(date_created: Time.current.end_of_month).count %>人</td>
+            </tr>
+            <tr>
+              <td><%= I18n.t('chat.line_report.session/last_month') %></td>
+              <td><%= @sessions.gte(date_created: Time.current.prev_month.beginning_of_month).lte(date_created: Time.current.prev_month.end_of_month).count %>人</td>
+            </tr>
+            <tr>
+              <td><%= "#{@current_month_date.year}年#{@current_month_date.month}月" %></td>
+              <td><%= @sessions.gte(date_created: @current_month_date).lte(date_created: @current_month_end_date).count %>人</td>
+            </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="addon-view">
+    <div class="addon-head">
+      <h2><%= I18n.t('chat.line_report.used_time') %></h2>
+    </div>
+    <div class="addon-body">
+      <div class="list-head">
+        <%= link_to I18n.t('ss.links.download'), {action: :download_used_times, hours: @hours, used_times_counts: @used_times_counts}, {class: "btn list-head-search"} %>
+      </div>
+      <canvas class="graph-sessions" data-name='<%= I18n.t('chat.line_report.session/users') %>' data-columns='<%= used_times.to_json %>'></canvas>
+    </div>
+  </div>
+</div>

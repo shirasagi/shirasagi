@@ -2477,6 +2477,12 @@ table.form-index.sortable-index {
     &:after { display: none; }
   }
 }
+.th-lock thead th {
+  position: -webkit-sticky;
+  position: sticky;
+  top: 0;
+  z-index: 1;
+}
 
 // -------------------------------------------------------------------------------------------------
 // form

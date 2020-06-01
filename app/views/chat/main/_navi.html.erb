@@ -4,5 +4,6 @@
     <h3><%= link_to Chat::Category.model_name.human, chat_categories_path %></h3>
     <h3><%= link_to Chat::History.model_name.human, chat_histories_path %></h3>
     <h3><%= link_to I18n.t('chat.report'), chat_report_path %></h3>
+    <h3><%= link_to I18n.t('chat.line_bot.line_report'), chat_line_reports_path %></h3>
   <% end %>
 <% end %>
