@@ -16,7 +16,7 @@
 <div class="mod-map">
   <div class="map-position">
     <div class="center-position">
-      <span><%= t("map.center_position") %>:</span>
+      <span><%= t("map.center_position") %><%= @item.tt :center_setting %></span>
       <span>
         <%= f.radio_button :center_setting, :auto, checked: "checked" %>
         <%= f.label :auto %>
@@ -27,7 +27,7 @@
       </span>
     </div>
     <div class="zoom-level">
-      <span><%= t("map.zoom") %>:</span>
+      <span><%= t("map.zoom") %><%= @item.tt :zoom_setting %></span>
       <span>
         <%= f.radio_button :zoom_setting, :auto, checked: "checked" %>
         <%= f.label :auto %>
