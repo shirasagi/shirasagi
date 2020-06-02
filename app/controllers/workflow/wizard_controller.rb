@@ -25,12 +25,12 @@ class Workflow::WizardController < ApplicationController
     if "my_group" == @route_id || "restart" == @route_id
       @route = nil
     else
-      @route = Workflow::Route.find(params[:route_id])
+      @route = Workflow::Route.site(@cur_site).find(params[:route_id])
     end
   end
 
   def set_item
-    @item = @model.find(params[:id]).becomes_with_route
+    @item = @model.site(@cur_site).find(params[:id]).becomes_with_route
     @item.attributes = fix_params
   end
 

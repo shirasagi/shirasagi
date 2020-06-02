@@ -26,7 +26,7 @@ class Cms::Apis::Preview::Workflow::WizardController < ApplicationController
     if @route_id == "my_group" || @route_id == "restart"
       @route = nil
     else
-      @route = Workflow::Route.find(params[:route_id])
+      @route = Workflow::Route.site(@cur_site).find(params[:route_id])
     end
   end
 
