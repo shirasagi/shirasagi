@@ -37,13 +37,6 @@ class Workflow::WizardController < ApplicationController
   public
 
   def index
-    route_options = Workflow::Route.site(@cur_site).route_options(@cur_user, item: @item)
-    if route_options.length == 1
-      _route_name, route_id = *route_options.first
-      redirect_to url_for(action: "approver_setting", route_id: route_id)
-      return
-    end
-
     render file: :index, layout: false
   end
 
