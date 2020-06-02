@@ -5,20 +5,16 @@ class Cms::Apis::Preview::Workflow::WizardController < ApplicationController
 
   layout "ss/ajax_in_iframe"
 
-  before_action :set_routes
   before_action :set_route, only: [:approver_setting]
   before_action :set_item
   before_action :check_item_status
   before_action :check_item_lock_status
+  before_action :set_routes
 
   private
 
   def fix_params
     { cur_user: @cur_user, cur_site: @cur_site }
-  end
-
-  def set_routes
-    @route_options ||= Workflow::Route.site(@cur_site).route_options(@cur_user, item: @item)
   end
 
   def set_route
@@ -31,10 +27,12 @@ class Cms::Apis::Preview::Workflow::WizardController < ApplicationController
   end
 
   def set_item
-    @item = @cur_page = Cms::Page.site(@cur_site).find(params[:id]).becomes_with_route
-    @item.attributes = fix_params
-
-    @model = @item.class
+    @item ||= begin
+      item = @cur_page = Cms::Page.site(@cur_site).find(params[:id]).becomes_with_route
+      item.attributes = fix_params
+      @model = item.class
+      item
+    end
   end
 
   def check_item_status
@@ -50,6 +48,10 @@ class Cms::Apis::Preview::Workflow::WizardController < ApplicationController
       render json: [ t("errors.messages.locked", user: @item.lock_owner.long_name) ], status: :locked
       return
     end
+  end
+
+  def set_routes
+    @route_options ||= Workflow::Route.site(@cur_site).route_options(@cur_user, item: @item)
   end
 
   public

@@ -4,9 +4,9 @@ class Gws::Workflow::WizardController < ApplicationController
 
   prepend_view_path "app/views/workflow/wizard"
 
-  before_action :set_routes
   before_action :set_route, only: [:approver_setting]
   before_action :set_item
+  before_action :set_routes
 
   private
 
@@ -16,10 +16,6 @@ class Gws::Workflow::WizardController < ApplicationController
 
   def fix_params
     { cur_user: @cur_user, cur_site: @cur_site }
-  end
-
-  def set_routes
-    @route_options = Gws::Workflow::Route.route_options(@cur_user, item: @item)
   end
 
   def set_route
@@ -32,8 +28,15 @@ class Gws::Workflow::WizardController < ApplicationController
   end
 
   def set_item
-    @item = @model.find(params[:id])
-    @item.attributes = fix_params
+    @item ||= begin
+      item = @model.find(params[:id])
+      item.attributes = fix_params
+      item
+    end
+  end
+
+  def set_routes
+    @route_options = Gws::Workflow::Route.route_options(@cur_user, item: @item)
   end
 
   public

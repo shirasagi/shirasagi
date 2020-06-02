@@ -2,9 +2,9 @@ class Workflow::WizardController < ApplicationController
   include Cms::ApiFilter
   include Workflow::WizardFilter
 
-  before_action :set_routes
   before_action :set_route, only: [:approver_setting]
   before_action :set_item
+  before_action :set_routes
 
   private
 
@@ -14,10 +14,6 @@ class Workflow::WizardController < ApplicationController
 
   def fix_params
     { cur_user: @cur_user, cur_site: @cur_site, cur_node: false }
-  end
-
-  def set_routes
-    @route_options ||= Workflow::Route.site(@cur_site).route_options(@cur_user, item: @item)
   end
 
   def set_route
@@ -30,8 +26,15 @@ class Workflow::WizardController < ApplicationController
   end
 
   def set_item
-    @item = @model.site(@cur_site).find(params[:id]).becomes_with_route
-    @item.attributes = fix_params
+    @item ||= begin
+      item = @model.site(@cur_site).find(params[:id]).becomes_with_route
+      item.attributes = fix_params
+      item
+    end
+  end
+
+  def set_routes
+    @route_options ||= Workflow::Route.site(@cur_site).route_options(@cur_user, item: @item)
   end
 
   public
