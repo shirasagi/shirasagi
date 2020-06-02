@@ -76,24 +76,60 @@ describe Google::PersonFinder, dbscope: :example do
         phone_of_found_person: phone_of_found_person,
         last_known_location: last_known_location,
         text: text,
-        photo_url: photo_url,
+        photo_url: photo_url
       }
     }
   end
 
+  before(:all) do
+    @net_connect_allowed = WebMock.net_connect_allowed?
+    WebMock.disable_net_connect!
+  end
+
   after(:all) do
     WebMock.reset!
+    WebMock.allow_net_connect! if @net_connect_allowed
   end
 
   describe "#get" do
+    let(:response) do
+      xml = []
+      xml << "<?xml version=\"1.0\" encoding=\"UTF-8\"?>"
+      xml << "<pfif:pfif xmlns:pfif=\"http://zesty.ca/pfif/1.4\">"
+      xml << "</pfif:pfif>"
+      xml.join("\n")
+    end
+
+    before do
+      stub_request(:any, "https://www.google.org/personfinder/test/api/search").
+        with(query: hash_including("id", "key")).
+        to_return(body: response, status: 200, headers: { 'Content-Type' => 'application/xml' })
+    end
+
     subject { described_class.new.get(person_record_id: SecureRandom.uuid) }
+
     it do
       expect(subject["pfif"]).not_to be_nil
     end
   end
 
   describe "#search" do
+    let(:response) do
+      xml = []
+      xml << "<?xml version=\"1.0\" encoding=\"UTF-8\"?>"
+      xml << "<pfif:pfif xmlns:pfif=\"http://zesty.ca/pfif/1.4\">"
+      xml << "</pfif:pfif>"
+      xml.join("\n")
+    end
+
+    before do
+      stub_request(:any, "https://www.google.org/personfinder/test/api/search").
+          with(query: hash_including("id", "key")).
+          to_return(body: response, status: 200, headers: { 'Content-Type' => 'application/xml' })
+    end
+
     subject { described_class.new.get(q: 'test') }
+
     it do
       expect(subject["pfif"]).not_to be_nil
     end
