@@ -75,12 +75,12 @@ class Cms::Apis::Preview::Workflow::WizardController < ApplicationController
   def approver_setting
     if @route.present?
       if @item.apply_workflow?(@route)
-        render file: "approver_setting_multi", layout: false
+        render file: "approver_setting_multi", locals: { cancel_button: @route_options.count > 1 }, layout: false
       else
         render json: @item.errors.full_messages, status: :bad_request
       end
     elsif @route_id == "my_group"
-      render file: :approver_setting, layout: false
+      render file: :approver_setting, locals: { cancel_button: @route_options.count > 1 }, layout: false
     elsif @route_id == "restart"
       render file: "approver_setting_restart", layout: false
     else
