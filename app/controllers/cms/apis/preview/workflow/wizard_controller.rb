@@ -5,6 +5,7 @@ class Cms::Apis::Preview::Workflow::WizardController < ApplicationController
 
   layout "ss/ajax_in_iframe"
 
+  before_action :set_routes
   before_action :set_route, only: [:approver_setting]
   before_action :set_item
   before_action :check_item_status
@@ -14,6 +15,10 @@ class Cms::Apis::Preview::Workflow::WizardController < ApplicationController
 
   def fix_params
     { cur_user: @cur_user, cur_site: @cur_site }
+  end
+
+  def set_routes
+    @route_options ||= Workflow::Route.site(@cur_site).route_options(@cur_user, item: @item)
   end
 
   def set_route
@@ -50,9 +55,8 @@ class Cms::Apis::Preview::Workflow::WizardController < ApplicationController
   public
 
   def index
-    route_options = Workflow::Route.site(@cur_site).route_options(@cur_user, item: @item)
-    if route_options.length == 1
-      _route_name, route_id = *route_options.first
+    if @route_options.length == 1
+      _route_name, route_id = @route_options.first
       redirect_to url_for(action: "approver_setting", route_id: route_id)
       return
     end
