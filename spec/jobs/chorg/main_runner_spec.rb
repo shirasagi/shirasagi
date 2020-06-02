@@ -142,7 +142,9 @@ describe Chorg::MainRunner, dbscope: :example do
           expect(task.entity_logs.count).to eq 1
           expect(task.entity_logs[0]['model']).to eq 'Cms::Group'
           expect(task.entity_logs[0]['id']).to eq group.id.to_s
-          expect(task.entity_logs[0]['changes']).to include('name')
+          expect(task.entity_logs[0]['changes']).to include(
+            'name', 'contact_tel', 'contact_fax', 'contact_email', 'contact_link_url', 'contact_link_name'
+          )
         end
       end
     end
@@ -201,7 +203,9 @@ describe Chorg::MainRunner, dbscope: :example do
         expect(task.entity_logs.count).to eq 2
         expect(task.entity_logs[0]['model']).to eq 'Cms::Group'
         expect(task.entity_logs[0]['id']).to eq group.id.to_s
-        expect(task.entity_logs[0]['changes']).to include('name')
+        expect(task.entity_logs[0]['changes']).to include(
+          'name', 'contact_tel', 'contact_fax', 'contact_email', 'contact_link_url', 'contact_link_name'
+        )
         expect(task.entity_logs[1]['model']).to eq 'Article::Page'
         expect(task.entity_logs[1]['id']).to eq '1'
         expect(task.entity_logs[1]['changes']).to include(
@@ -256,7 +260,9 @@ describe Chorg::MainRunner, dbscope: :example do
           expect(task.entity_logs.count).to eq 2
           expect(task.entity_logs[0]['model']).to eq 'Cms::Group'
           expect(task.entity_logs[0]['id']).to eq group.id.to_s
-          expect(task.entity_logs[0]['changes']).to include('name')
+          expect(task.entity_logs[0]['changes']).to include(
+            'name', 'contact_tel', 'contact_fax', 'contact_email', 'contact_link_url', 'contact_link_name'
+          )
           expect(task.entity_logs[1]['model']).to eq 'Article::Page'
           expect(task.entity_logs[1]['id']).to eq '1'
           expect(task.entity_logs[1]['changes']).to include(
@@ -415,7 +421,9 @@ describe Chorg::MainRunner, dbscope: :example do
         expect(task.entity_logs.count).to eq 4
         expect(task.entity_logs[0]['model']).to eq 'Cms::Group'
         expect(task.entity_logs[0]['id']).to eq group1.id.to_s
-        expect(task.entity_logs[0]['changes']).not_to be_nil
+        expect(task.entity_logs[0]['changes']).to include(
+          'contact_tel', 'contact_fax', 'contact_email', 'contact_link_url', 'contact_link_name'
+        )
         expect(task.entity_logs[1]['model']).to eq 'Cms::Site'
         expect(task.entity_logs[1]['id']).to eq site.id.to_s
         expect(task.entity_logs[1]['changes']).to include('group_ids')
@@ -500,7 +508,9 @@ describe Chorg::MainRunner, dbscope: :example do
 
         expect(task.entity_logs[5]['model']).to eq 'Article::Page'
         expect(task.entity_logs[5]['id']).to eq page.id.to_s
-        expect(task.entity_logs[5]['changes']).to include('contact_email', 'contact_group_id')
+        expect(task.entity_logs[5]['changes']).to include(
+          'contact_group_id', 'contact_tel', 'contact_fax', 'contact_email', 'contact_link_url', 'contact_link_name'
+        )
 
         expect(task.entity_logs[6]['model']).to eq 'Cms::Group'
         expect(task.entity_logs[6]['id']).to eq group0.id.to_s
@@ -569,7 +579,9 @@ describe Chorg::MainRunner, dbscope: :example do
         expect(task.entity_logs[2]['changes']).to include('group_ids')
         expect(task.entity_logs[3]['model']).to eq 'Article::Page'
         expect(task.entity_logs[3]['id']).to eq page.id.to_s
-        expect(task.entity_logs[3]['changes']).not_to be_nil
+        expect(task.entity_logs[3]['changes']).to include(
+          'contact_tel', 'contact_fax', 'contact_email', 'contact_link_url', 'contact_link_name'
+        )
       end
     end
   end

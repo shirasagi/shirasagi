@@ -6,7 +6,7 @@ class Gws::Chorg::MainRunner < Gws::Chorg::Runner
 
   private
 
-  def init_context
+  def init_context(opts = {})
     super
     create_staff_record
   end

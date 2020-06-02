@@ -2,11 +2,12 @@ class Chorg::RunParams
   include SS::Document
 
   field :add_newly_created_group_to_site, type: Integer
+  field :forced_overwrite, type: Integer
   field :reservation, type: DateTime
 
   validate :check_job_mode
 
-  permit_params :add_newly_created_group_to_site, :reservation
+  permit_params :add_newly_created_group_to_site, :forced_overwrite, :reservation
 
   private
 
