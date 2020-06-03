@@ -1,4 +1,4 @@
-module Gws::Addon
+module SS::Addon
   module Release
     extend ActiveSupport::Concern
     extend SS::Addon

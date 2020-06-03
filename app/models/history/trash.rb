@@ -38,12 +38,19 @@ class History::Trash
     end
     data[:master_id] = nil if model.include?(Workflow::Addon::Branch)
     data = restore_data(data, opts)
-    item = model.find_or_initialize_by(_id: data[:_id], site_id: data[:site_id])
+    if opts[:file_restore]
+      item = Cms::File.new(site_id: data[:site_id])
+    else
+      item = model.find_or_initialize_by(_id: data[:_id], site_id: data[:site_id])
+    end
     item = item.becomes_with_route(data[:route]) if data[:route].present?
     if model.include?(Cms::Content) && data[:depth].present? && data[:depth] > 1
       dir = ::File.dirname(data[:filename]).sub(/^\.$/, "")
       item_parent = Cms::Node.where(site_id: data[:site_id], filename: dir).first
       item.errors.add :base, :not_found_parent_node if item_parent.blank?
+    end
+    if opts[:file_restore]
+      data = data.except(*%w(id _id model node_id owner_item_type owner_item_id))
     end
     data.each do |k, v|
       item[k] = v
@@ -76,11 +83,29 @@ class History::Trash
       end
       self.destroy
     end
+    if opts[:file_restore]
+      item.group_ids = opts[:cur_group].to_a.pluck(:id)
+      item.save
+      id = self.data[:_id]
+      path = "#{self.class.root}/ss_files/" + id.to_s.split(//).join("/") + "/_/#{id}"
+      src = path
+      file = Fs::UploadedFile.create_from_file(path, content_type: self.data[:content_type])
+      Fs.mkdir_p(File.dirname(item.path))
+      Fs.mv(src, item.path) if Fs.exists?(src)
+      item.in_file = file
+      item.save
+      self.destroy
+    end
     item
   end
 
   def restore!(opts = {})
     opts[:create_by_trash] = true
+    self.restore(opts)
+  end
+
+  def file_restore!(opts = {})
+    opts[:file_restore] = true
     self.restore(opts)
   end
 
@@ -96,7 +121,7 @@ class History::Trash
         criteria = criteria.keyword_in params[:keyword], 'data.name', 'data.filename', 'data.html'
       end
       if params[:ref_coll] == 'all'
-        criteria = criteria.where(ref_coll: /cms_nodes|cms_pages|cms_parts|cms_layouts/)
+        criteria = criteria.where(ref_coll: /cms_nodes|cms_pages|cms_parts|cms_layouts|ss_files/)
       elsif params[:ref_coll].present?
         criteria = criteria.where(ref_coll: params[:ref_coll])
       end

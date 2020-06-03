@@ -182,7 +182,7 @@ module Cms::PublicFilter::Layout
     html
   end
 
-  def render_layout_parts(html)
+  def render_layout_parts(html, opts = {})
     return html if html.blank?
 
     # TODO: deprecated </ />
@@ -200,12 +200,16 @@ module Cms::PublicFilter::Layout
     return html.gsub(/\{\{ part "(.*?)" \}\}/) do
       path = $1
       part = @parts[path]
-      part ? render_layout_part(part) : ''
+      part ? render_layout_part(part, opts) : ''
     end
   end
 
-  def render_layout_part(part)
-    previewable = @preview && part.allowed?(:read, @cur_user, site: @cur_site, node: @cur_node)
+  def render_layout_part(part, opts = {})
+    if !opts[:previewable].nil?
+      previewable = opts[:previewable] && part.allowed?(:read, @cur_user, site: @cur_site, node: @cur_node)
+    else
+      previewable = @preview && part.allowed?(:read, @cur_user, site: @cur_site, node: @cur_node)
+    end
     html = []
     if previewable
       if part.parent

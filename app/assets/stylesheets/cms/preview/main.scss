@@ -179,10 +179,10 @@
   }
   .ss-preview-btn-toggle-inplace {
     &:after {
-      content: " on";
+      content: " onにする";
     }
     &.ss-preview-active:after {
-      content: " off";
+      content: " offにする";
     }
   }
   .ss-preview-notice {

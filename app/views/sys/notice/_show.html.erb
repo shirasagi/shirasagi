@@ -6,8 +6,5 @@
   <dd><%= @item.label :notice_severity %></dd>
 
   <dt><%= @model.t :notice_target %></dt>
-  <dd><% @item.notice_target.each do |val| %>
-    <%= @item.disp_notice_target val %><br>
-    <% end %>
-  </dd>
+  <dd><%= br @item.notice_target.map { |val| @item.disp_notice_target val }.select(&:present?) %></dd>
 </dl>

@@ -1,6 +1,6 @@
 class Garbage::Agents::Nodes::SearchController < ApplicationController
   include Cms::NodeFilter::View
-  helper Cms::ListHelper
+  helper Garbage::ListHelper
 
   def set_params
     @name = params[:name]

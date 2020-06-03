@@ -1,5 +1,18 @@
-<% cur_form ||= @cur_form %>
-<% items ||= @items %>
+<%
+  cur_form ||= @cur_form
+  items ||= @items
+  users = Gws::User.site(@cur_site).in(id: items.pluck(:user_id)).order_by_title(@cur_site)
+
+  each_item_ordered_by_title = proc do |&block|
+    array_items = items.to_a
+    users.to_a.each do |user|
+      item = array_items.find { |item| item.user_id == user.id }
+      next if item.blank?
+
+      block.call item
+    end
+  end
+%>
 
 <div class="form-table">
   <div class="form-table-body">
@@ -7,18 +20,22 @@
       <table>
         <thead>
         <tr>
+          <% if !cur_form.anonymous? %>
+            <th><%= Gws::Survey::File.t :updated %></th>
+            <th><%= Gws::User.t :name %></th>
+          <% end %>
           <% cur_form.columns.order_by(order: 1, name: 1).each do |column| %>
             <th><%= column.name %></th>
-          <% end %>
-          <% if !cur_form.anonymous? %>
-            <th><%= Gws::User.t :name %></th>
-            <th><%= Gws::Survey::File.t :updated %></th>
           <% end %>
         </tr>
         </thead>
         <tbody>
-        <% items.each do |item| %>
+        <% each_item_ordered_by_title.call do |item| %>
           <tr>
+            <% if !cur_form.anonymous? %>
+              <td><div><%= I18n.l(item.updated) %></div></td>
+              <td><div><%= item.user_long_name %></div></td>
+            <% end %>
             <% cur_form.columns.order_by(order: 1, name: 1).each do |column| %>
               <% column_value = item.column_values.where(column_id: column.id).first %>
               <td class="<%= column.class.name.underscore.gsub("/", "-") %>">
@@ -51,15 +68,6 @@
                   <% end %>
                 </div>
               </td>
-            <% end %>
-            <% if !cur_form.anonymous? %>
-              <% if item.anonymous? %>
-                <td></td>
-                <td></td>
-              <% else %>
-                <td><div><%= item.user_long_name %></div></td>
-                <td><div><%= I18n.l(item.updated) %></div></td>
-              <% end %>
             <% end %>
           </tr>
         <% end %>

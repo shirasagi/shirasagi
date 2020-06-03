@@ -158,4 +158,90 @@ describe "kana/public_filter", type: :feature, dbscope: :example, js: true, meca
       expect(page).to have_css('ruby', text: '大鷺県(だいさぎけん)')
     end
   end
+
+  context "with kana-marks" do
+    let(:kana_url) { item.full_url.sub(node.url, SS.config.kana.location + node.url) }
+
+    before do
+      site.auto_description = 'enabled'
+      site.auto_keywords = 'enabled'
+      site.save!
+
+      item.html = [
+        "<!-- write-kana --><div>上部</div><!-- end-write-kana -->",
+        item.html,
+        "<div>下部</div>"
+      ].join
+      item.save!
+
+      FileUtils.rm_rf(item.path)
+    end
+
+    it do
+      visit kana_url
+      expect(page).to have_no_css('ruby', text: '無償(むしょう)')
+      expect(page).to have_no_css('ruby', text: '必要(ひつよう)')
+      expect(page).to have_no_css('ruby', text: '場合(ばあい)')
+      expect(page).to have_css('ruby', text: '上部(じょうぶ)')
+      expect(page).to have_no_css('ruby', text: '下部(かぶ)')
+    end
+  end
+
+  context "with skip-marks" do
+    let(:kana_url) { item.full_url.sub(node.url, SS.config.kana.location + node.url) }
+
+    before do
+      site.auto_description = 'enabled'
+      site.auto_keywords = 'enabled'
+      site.save!
+
+      item.html = [
+          "<!-- skip-kana --><div>上部</div><!-- end-skip-kana -->",
+          item.html,
+          "<div>下部</div>"
+      ].join
+      item.save!
+
+      FileUtils.rm_rf(item.path)
+    end
+
+    it do
+      visit kana_url
+      expect(page).to have_css('ruby', text: '無償(むしょう)')
+      expect(page).to have_css('ruby', text: '必要(ひつよう)')
+      expect(page).to have_css('ruby', text: '場合(ばあい)')
+      expect(page).to have_no_css('ruby', text: '上部(じょうぶ)')
+      expect(page).to have_css('ruby', text: '下部(かぶ)')
+    end
+  end
+
+  context "with write-marks and skip-marks" do
+    let(:kana_url) { item.full_url.sub(node.url, SS.config.kana.location + node.url) }
+
+    before do
+      site.auto_description = 'enabled'
+      site.auto_keywords = 'enabled'
+      site.save!
+
+      item.html = [
+          "<!-- write-kana -->",
+          "<!-- skip-kana --><div>上部</div><!-- end-skip-kana -->",
+          item.html,
+          "<!-- end-write-kana -->",
+          "<div>下部</div>"
+      ].join
+      item.save!
+
+      FileUtils.rm_rf(item.path)
+    end
+
+    it do
+      visit kana_url
+      expect(page).to have_css('ruby', text: '無償(むしょう)')
+      expect(page).to have_css('ruby', text: '必要(ひつよう)')
+      expect(page).to have_css('ruby', text: '場合(ばあい)')
+      expect(page).to have_no_css('ruby', text: '上部(じょうぶ)')
+      expect(page).to have_no_css('ruby', text: '下部(かぶ)')
+    end
+  end
 end

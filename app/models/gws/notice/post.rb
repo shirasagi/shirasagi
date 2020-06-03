@@ -13,7 +13,7 @@ class Gws::Notice::Post
   include Gws::Addon::Notice::CommentPost
   include Gws::Addon::Notice::Member
   include Gws::Notice::Notification
-  include Gws::Addon::Release
+  include SS::Addon::Release
   include Gws::Addon::ReadableSetting
   include Gws::Addon::GroupPermission
   include Gws::Addon::History

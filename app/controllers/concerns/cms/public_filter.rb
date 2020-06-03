@@ -82,7 +82,7 @@ module Cms::PublicFilter
     @cur_path.sub!(/\/$/, "/index.html")
     @cur_main_path.sub!(/\/$/, "/index.html")
     @html = @cur_main_path.sub(/\.\w+$/, ".html")
-    @file = File.join(@cur_site.root_path, @cur_path)
+    @file = File.join(@cur_site.path, @cur_main_path)
   end
 
   def set_preview_params
