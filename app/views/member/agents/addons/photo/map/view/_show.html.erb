@@ -18,6 +18,25 @@
     <dt><%= @model.t :map_points %></dt>
     <dd class="marker">
       <div id="map-canvas" style="width: 100%; height: 320px"></div>
+      <div class="map-position">
+        <div class="center-position">
+          <span><%= t("map.center_position") %></span>
+          <% if @item.center_setting == "designated_location" && @item.set_center_position %>
+            <span>[<%= @item.set_center_position %>]</span>
+          <% else %>
+            <span><%= t("map.auto") %></span>
+          <% end %>
+        </div>
+        <div class="zoom-level">
+          <span><%= t("map.zoom_level") %></span>
+          <% if @item.zoom_setting == "designated_level" && @item.set_zoom_level %>
+            <span><%= @item.set_zoom_level %></span>
+          <% else %>
+            <span><%= t("map.auto") %></span>
+          <% end %>
+        </div>
+      </div>
     </dd>
   </dl>
 </div>
+
