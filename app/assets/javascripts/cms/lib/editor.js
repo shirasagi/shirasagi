@@ -124,6 +124,20 @@ this.Cms_Editor_CKEditor = (function () {
         return text['default'] = "";
       }
     });
+
+    // fix. CKEditor Paste Dialog: github.com/ckeditor/ckeditor4/issues/469
+    CKEDITOR.on('instanceReady', function (ev) {
+      ev.editor.on("beforeCommandExec", function(event) {
+        // Show the paste dialog for the paste buttons and right-click paste
+        if (event.data.name === "paste") {
+          event.editor._.forcePasteDialog = true;
+        }
+        // Don't show the paste dialog for Ctrl+Shift+V
+        if (event.data.name === "pastetext" && event.data.commandData.from === "keystrokeHandler") {
+          event.cancel();
+        }
+      })
+    });
   };
 
   return Cms_Editor_CKEditor;

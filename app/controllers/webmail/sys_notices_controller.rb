@@ -17,6 +17,7 @@ class Webmail::SysNoticesController < ApplicationController
     @items = @model.and_public.
       webmail_admin_notice.
       search(params[:s]).
+      reorder(notice_severity: 1, released: -1).
       page(params[:page]).per(50)
   end
 end

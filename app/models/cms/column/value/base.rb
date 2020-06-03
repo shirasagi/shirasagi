@@ -162,11 +162,10 @@ class Cms::Column::Value::Base
   end
 
   def validate_link_check
-    @link_errors = []
-    @root_url = column.form.site.full_root_url
-    @fs_url = ::File.join(@root_url, "/fs/")
-    @head_request_timeout = SS.config.cms.check_links["head_request_timeout"] rescue 5
-    check = {}
+    @link_errors = {}
+
+    root_url = column.form.site.full_root_url
+    checker = Cms::LinkChecker.new(cur_user: @link_check_user, root_url: root_url)
 
     fields.each_key do |key|
       next if LINK_CHECK_EXCLUSION_FIELDS.include?(key)
@@ -177,63 +176,16 @@ class Cms::Column::Value::Base
         next if url[0] == '#'
 
         if url[0] == "/"
-          url = ::File.join(@root_url, url)
+          url = ::File.join(root_url, url)
         end
 
-        next if check.key?(url)
-        check[url] = true
-
-        result = check_url(url)
-        @link_errors << [url, result]
+        next if @link_errors[url]
+        @link_errors[url] = checker.check_url(url)
       end
     end
   end
 
   def find_url(val)
     val.scan(%r!<a.*?href="(.+?)">.+?</a>!).flatten | URI.extract(val, %w(http https))
-  end
-
-  def check_url(url)
-    progress_data_size = nil
-
-    url = normalize_url(url)
-    proxy = ( url =~ /^https/ ) ? ENV['HTTPS_PROXY'] : ENV['HTTP_PROXY']
-    http_basic_authentication = SS::MessageEncryptor.http_basic_authentication
-    opts = {
-      proxy: proxy,
-      http_basic_authentication: http_basic_authentication,
-      progress_proc: ->(size) do
-        progress_data_size = size
-        raise "200"
-      end
-    }
-
-    Timeout.timeout(@head_request_timeout) do
-      ::OpenURI.open_uri(url, opts) { |_f| }
-    end
-
-    :success
-  rescue URI::InvalidURIError
-    :failure
-  rescue Timeout::Error
-    :failure
-  rescue => _e
-    progress_data_size ? :success : :failure
-  end
-
-  def normalize_url(url)
-    uri = ::Addressable::URI.parse(url)
-    url = uri.normalize.to_s
-
-    if @link_check_user && @fs_url && url.start_with?(@fs_url)
-      token = SS::AccessToken.new(cur_user: @link_check_user)
-      token.create_token
-      if token.save
-        url += uri.query.present? ? "&" : "?"
-        url += "access_token=#{token.token}"
-      end
-    end
-
-    url
   end
 end

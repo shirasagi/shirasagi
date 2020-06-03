@@ -14,6 +14,7 @@ module Event::Addon
         [I18n.t('event.options.sort.order'), 'order'],
         [I18n.t('event.options.sort.event_dates'), 'event_dates'],
         [I18n.t('event.options.sort.unfinished_event_dates'), 'unfinished_event_dates'],
+        [I18n.t('event.options.sort.finished_event_dates'), 'finished_event_dates'],
         [I18n.t('event.options.sort.event_dates_today'), 'event_dates_today'],
         [I18n.t('event.options.sort.event_dates_tomorrow'), 'event_dates_tomorrow'],
         [I18n.t('event.options.sort.event_dates_week'), 'event_dates_week'],
@@ -29,6 +30,8 @@ module Event::Addon
         { "$and" => [ h, { "event_dates.0" => { "$exists" => true } } ] }
       when "unfinished_event_dates"
         { "$and" => [ h, { "event_dates" => { "$elemMatch" => { "$gte" => today } } } ] }
+      when "finished_event_dates"
+        { "$and" => [ h, { "event_dates" => { "$elemMatch" => { "$lt" => today } } } ] }
       when "event_dates_today"
         { "$and" => [ h, { "event_dates" => { "$eq" => today } } ] }
       when "event_dates_tomorrow"
@@ -45,9 +48,17 @@ module Event::Addon
       return { released: -1 } if sort.blank?
 
       if sort =~ /event_dates/
-        { "event_dates.0" => 1 }
+        event_dates_sort_hash
       else
         { sort.sub(/ .*/, "") => (/-1$/.match?(sort) ? -1 : 1) }
+      end
+    end
+
+    def event_dates_sort_hash
+      if sort == "finished_event_dates"
+        { "event_dates.0" => -1 }
+      else
+        { "event_dates.0" => 1 }
       end
     end
   end

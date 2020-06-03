@@ -317,6 +317,35 @@ describe SS::File, dbscope: :example do
         expect(copy.thumb.id).not_to eq src.thumb.id
       end
     end
+
+    context "when a file copies from one user to other user and specific node" do
+      let(:site) { create(:cms_site, name: unique_id, host: unique_id, domains: "#{unique_id}.example.jp") }
+      let(:group) { create(:cms_group, name: unique_id) }
+      let(:user1) { create(:cms_user, name: unique_id, email: "#{unique_id}@example.jp", group_ids: [ group.id ]) }
+      let(:user2) { create(:cms_user, name: unique_id, email: "#{unique_id}@example.jp", group_ids: [ group.id ]) }
+      let(:node) { create(:article_node_page, cur_site: site) }
+      let(:src) do
+        tmp_ss_file(
+          Cms::File,
+          site: site, user: user1, model: "cms/file", contents: "#{Rails.root}/spec/fixtures/ss/logo.png",
+          group_ids: user1.group_ids
+        )
+      end
+
+      it do
+        copy = src.copy(cur_user: user2, cur_site: site, cur_node: node)
+
+        expect(copy).to be_a(Cms::TempFile)
+        expect(copy.id).not_to eq src.id
+        expect(copy.name).to eq src.name
+        expect(copy.filename).to eq src.filename
+        expect(copy.content_type).to eq src.content_type
+        expect(copy.size).to eq src.size
+        expect(copy.model).to eq "ss/temp_file"
+        expect(copy.user_id).to eq user2.id
+        expect(copy.node_id).to eq node.id
+      end
+    end
   end
 
   describe "#copy_if_necessary" do

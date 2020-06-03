@@ -85,7 +85,7 @@
             <% items.present? ? items.join(',') : "" %>
           <% when Integer %>
             <% if @item.model.fields[k].present? && @item.model.fields[k].class == Mongoid::Fields::ForeignKey %>
-              <% item = @item.model.fields[k].association.class_name.constantize.where(_id: v).first %>
+              <% item = @item.model.fields[k].association.class_name.constantize.where(_id: v).first unless k == "owner_item_id" %>
               <%= item.present? ? item.name : v %>
             <% else %>
               <%= v %>

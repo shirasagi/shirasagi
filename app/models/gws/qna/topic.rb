@@ -7,7 +7,7 @@ class Gws::Qna::Topic
   include Gws::Addon::File
   include Gws::Qna::DescendantsFileInfo
   include Gws::Addon::Qna::Category
-  include Gws::Addon::Release
+  include SS::Addon::Release
   include Gws::Addon::ReadableSetting
   include Gws::Addon::GroupPermission
   include Gws::Addon::History

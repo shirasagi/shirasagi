@@ -264,6 +264,21 @@ SS_Preview = (function () {
       });
     });
 
+    this.$el.on("click", "#ss-preview-btn-workflow-start", function () {
+      var before = self.inplaceMode;
+      if (self.inplaceMode) {
+        self.toggleInplaceMode().always(function () {
+          if (before === self.inplaceMode) {
+            return;
+          }
+          if (!window.history.pushState) {
+            return;
+          }
+          window.history.pushState(null, null, window.location.pathname);
+        });
+      }
+    });
+
     $(document).on("click", ".ss-preview-btn-open-path", function () {
       var path = $(this).data("path");
       if (path) {
