@@ -16,7 +16,7 @@ class Uploader::FilesController < ApplicationController
 
   def set_crumbs
     filename = @item.filename.sub(@cur_node.filename, "")
-    url = uploader_files_path(filename: @cur_node.filename)
+    url = ::File.join(uploader_files_path, @cur_node.filename)
 
     filename.split("/").select(&:present?).each do |name|
       url = ::File.join(url, name)
