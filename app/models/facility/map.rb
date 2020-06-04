@@ -10,6 +10,7 @@ class Facility::Map
 
   default_scope ->{ where(route: "facility/map") }
   validate :center_position_validate, if: -> { set_center_position.present? }
+  validate :zoom_level_validate, if: -> { set_zoom_level.present? }
 
   private
 
@@ -29,6 +30,12 @@ class Facility::Map
       end
     else
       self.errors.add :set_center_position, :invalid_latlon
+    end
+  end
+
+  def zoom_level_validate
+    if set_zoom_level <= 0 || set_zoom_level > 21
+      self.errors.add :set_zoom_level, :invalid_zoom_level
     end
   end
 end

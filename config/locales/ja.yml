@@ -169,6 +169,8 @@ ja:
       invalid_latlon: |-
         の正しい座標をカンマ(,)区切りで入力してください。
         例）33.8957612,133.6806607
+      invalid_zoom_level: |-
+        は1~21の範囲で設定してください。
     template:
       body: 次の項目を確認してください。
       header:

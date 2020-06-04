@@ -42,6 +42,7 @@ ja:
         marker_loc: 座標
         marker_link: リンク
         set_center_position: 中心位置
+        set_zoom_level: ズームレベル
 
   tooltip:
     map/addon/page:

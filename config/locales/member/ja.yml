@@ -257,6 +257,7 @@ ja:
         contributor: 投稿者
         keyword: キーワード
         set_center_position: 中心位置
+        set_zoom_level: ズームレベル
       member/addon/photo/license:
         license_name: ライセンス
       member/addon/photo/license_setting:
