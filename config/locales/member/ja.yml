@@ -256,9 +256,6 @@ ja:
         map_points: 地図
         contributor: 投稿者
         keyword: キーワード
-        auto: 自動
-        designated_location: 指定位置
-        designated_level: 指定レベル
         set_center_position: 中心位置
       member/addon/photo/license:
         license_name: ライセンス

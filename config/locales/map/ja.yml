@@ -10,6 +10,9 @@ ja:
     markers: マーカー設定
     clicked: クリック座標
     center_position: 中心位置
+    auto: 自動
+    designated_location: 指定位置
+    designated_level: 指定レベル
     alert:
       invalid_center: 座標を取得できませんでした。
       invalid_location:
@@ -23,7 +26,6 @@ ja:
     confirm:
       delete_marker: マーカーを削除してよろしいですか？
       find_exif: 画像に位置情報が含まれています。位置情報を地図に設定しますか？
-    auto: 自動
 
   modules:
     map: 地図
@@ -39,9 +41,6 @@ ja:
         marker_text: 説明
         marker_loc: 座標
         marker_link: リンク
-        auto: 自動
-        designated_location: 指定位置
-        designated_level: 指定レベル
         set_center_position: 中心位置
 
   tooltip:
