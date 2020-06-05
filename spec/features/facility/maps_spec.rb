@@ -96,6 +96,62 @@ describe "facility_maps", type: :feature do
     it "#center position validation" do
       visit edit_path
       within "form" do
+        fill_in "item[set_center_position]", with: "90,134.589971"
+        click_on I18n.t("ss.buttons.save")
+      end
+      expect(page).not_to have_css("#errorExplanation")
+
+      visit edit_path
+      within "form" do
+        fill_in "item[set_center_position]", with: "90.1,134.589971"
+        click_on I18n.t("ss.buttons.save")
+      end
+      expect(page).to have_css("#errorExplanation")
+
+      visit edit_path
+      within "form" do
+        fill_in "item[set_center_position]", with: "-90,134.589971"
+        click_on I18n.t("ss.buttons.save")
+      end
+      expect(page).not_to have_css("#errorExplanation")
+
+      visit edit_path
+      within "form" do
+        fill_in "item[set_center_position]", with: "-90.1,134.589971"
+        click_on I18n.t("ss.buttons.save")
+      end
+      expect(page).to have_css("#errorExplanation")
+
+      visit edit_path
+      within "form" do
+        fill_in "item[set_center_position]", with: "34.067035,180"
+        click_on I18n.t("ss.buttons.save")
+      end
+      expect(page).not_to have_css("#errorExplanation")
+
+      visit edit_path
+      within "form" do
+        fill_in "item[set_center_position]", with: "34.067035,180.1"
+        click_on I18n.t("ss.buttons.save")
+      end
+      expect(page).to have_css("#errorExplanation")
+
+      visit edit_path
+      within "form" do
+        fill_in "item[set_center_position]", with: "34.067035,-180"
+        click_on I18n.t("ss.buttons.save")
+      end
+      expect(page).not_to have_css("#errorExplanation")
+
+      visit edit_path
+      within "form" do
+        fill_in "item[set_center_position]", with: "34.067035,-180.1"
+        click_on I18n.t("ss.buttons.save")
+      end
+      expect(page).to have_css("#errorExplanation")
+
+      visit edit_path
+      within "form" do
         fill_in "item[set_center_position]", with: "134.589971,34.067035"
         click_on I18n.t("ss.buttons.save")
       end
@@ -118,6 +174,13 @@ describe "facility_maps", type: :feature do
       visit edit_path
       within "form" do
         fill_in "item[set_center_position]", with: "latitude,longitude"
+        click_on I18n.t("ss.buttons.save")
+      end
+      expect(page).to have_css("#errorExplanation")
+
+      visit edit_path
+      within "form" do
+        fill_in "item[set_center_position]", with: "34.067abc035,134.589971"
         click_on I18n.t("ss.buttons.save")
       end
       expect(page).to have_css("#errorExplanation")
