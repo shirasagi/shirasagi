@@ -67,9 +67,9 @@ class Member::Photo
     if latlon.length == 2
       lat = latlon[0]
       lon = latlon[1]
-      if !lat.match?(/^([1-9]\d*|0)(\.\d+)?$/) || !lon.match?(/^([1-9]\d*|0)(\.\d+)?$/)
+      if !lat.match?(/^([+-]?[1-9]\d*|0)(\.\d+)?$/) || !lon.match?(/^([+-]?[1-9]\d*|0)(\.\d+)?$/)
         self.errors.add :set_center_position, :invalid_latlon
-      elsif lat.to_i <= -90 || lat.to_i >= 90 || lon.to_i <= -180 || lon.to_i >= 180
+      elsif lat.to_f.floor < -90 || lat.to_f.ceil > 90 || lon.to_f.floor < -180 || lon.to_f.ceil > 180
         self.errors.add :set_center_position, :invalid_latlon
       end
     else
