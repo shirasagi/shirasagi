@@ -20,11 +20,29 @@ this.Gws_Schedule_Multiple_Calendar = (function () {
     $.extend(true, params, this.defaultParams(selector, opts));
     $.extend(true, params, this.contentParams(selector, opts));
     $.extend(true, params, opts);
-    $(selector).fullCalendar(params);
-    Gws_Schedule_Calendar.renderInitialize(selector, init);
-    return $(document).click(function (ev) {
-      return $(".fc-event").not($(ev.target).closest(".fc-event")).find(".fc-popup").remove();
+    // To render gridster and/or other frames first, all fullCalendar initializations is delayed.
+    // And a calendar is individually rendered from top to bottom.
+    setTimeout(function() {
+      $(selector).fullCalendar(params);
+      Gws_Schedule_Calendar.renderInitialize(selector, init);
+
+      Gws_Schedule_Multiple_Calendar.renderOnce();
+    }, 0);
+  };
+
+  Gws_Schedule_Multiple_Calendar.onceRendered = false;
+
+  // bind click handler once
+  Gws_Schedule_Multiple_Calendar.renderOnce = function () {
+    if (Gws_Schedule_Multiple_Calendar.onceRendered) {
+      return;
+    }
+
+    $(document).on("click", function (ev) {
+      $(".fc-event").not($(ev.target).closest(".fc-event")).find(".fc-popup").remove();
     });
+
+    Gws_Schedule_Multiple_Calendar.onceRendered = true;
   };
 
   Gws_Schedule_Multiple_Calendar.defaultParams = function (selector, opts) {
