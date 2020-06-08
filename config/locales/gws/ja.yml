@@ -76,6 +76,13 @@ ja:
       break:
         vertically: 縦並び
         horizontal: 横並び
+      user_public_profiles:
+        uid: UID
+        updated: 更新日
+        main_group: グループ
+        user_title: 役職
+        email: メールアドレス
+        tel: 電話番号
 
     links:
       back_to_portal: ポータルへ戻る
@@ -145,6 +152,7 @@ ja:
       gws/schedules: スケジュール
       gws/system/file_setting: ファイル設定
       gws/system/group_setting: システム設定
+      gws/system/user_setting: ユーザー設定
       gws/system/menu_setting: メニュー設定
       gws/system/notice_setting: 通知設定
       gws/system/logo_setting: ロゴ設定
@@ -310,6 +318,8 @@ ja:
         canonical_domain: グループウェアドメイン
         trash_threshold: ゴミ箱保持期間
         trash_threshold_unit: ゴミ箱保持期間単位
+      gws/addon/system/user_setting:
+        user_public_profiles: 公開プロフィール
       gws/addon/system/menu_setting:
         menu_portal_label: ポータルの表示
         menu_portal_state: ポータルの表示
