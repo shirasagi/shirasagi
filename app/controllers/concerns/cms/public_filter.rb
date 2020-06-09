@@ -13,7 +13,7 @@ module Cms::PublicFilter
     before_action :parse_path
     before_action :set_preview_params
     before_action :compile_scss
-    before_action :x_sendfile, unless: ->{ filter_include?(:mobile) || filter_include?(:kana) || @preview }
+    before_action :x_sendfile, unless: ->{ filter_include?(:mobile) || filter_include?(:kana) || filter_include?(:translate) || @preview }
   end
 
   def index
