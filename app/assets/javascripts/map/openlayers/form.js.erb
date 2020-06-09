@@ -327,10 +327,17 @@ this.Openlayers_Map_Form = (function () {
       };
     })(this));
     $(".mod-map .set-center-position").on('click', (function (_this) {
-      return function (e) {
-        var ele;
-        ele = e.target;
-        _this.createCenter($(ele).closest("dd.marker"));
+      return function () {
+        var latlng = ol.proj.transform(_this.map.getView().getCenter(), 'EPSG:3857', 'EPSG:4326');
+        var lat = Math.floor((latlng[1] * 1000000)) / 1000000;
+        var lng = Math.floor((latlng[0] * 1000000)) / 1000000;
+        $(".center-input").val(lat + "," + lng);
+        return false;
+      };
+    })(this));
+    $(".mod-map .set-zoom-level").on('click', (function (_this) {
+      return function () {
+        $(".zoom-input").val(_this.map.getView().getZoom());
         return false;
       };
     })(this));
@@ -439,24 +446,6 @@ this.Openlayers_Map_Form = (function () {
     return this.setMarker(this.getMapLoc(ele.find(".marker-loc")), {
       id: dataId
     });
-  };
-
-  Openlayers_Map_Form.prototype.createCenter = function () {
-    var loc;
-    loc = null;
-    if ($(".mod-map .clicked").val() !== "") {
-      loc = $(".mod-map .clicked").val();
-    } else if ($(".center-input").val() !== "") {
-      if (Map_Form.validateLoc($(".center-input"))) {
-        loc = $(".center-input").val();
-      } else {
-        alert("<%= I18n.t('map.alert.invalid_location').join('\n') %>");
-      }
-    }
-    if (!loc) {
-      return;
-    }
-    $(".center-input").val(loc);
   };
 
   Openlayers_Map_Form.prototype.clearPointForm = function (ele) {

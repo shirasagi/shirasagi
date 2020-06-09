@@ -37,7 +37,7 @@
           <%= t('map.designated_location') %>
         </label>
         <%= f.text_field :set_center_position, class: "center-input" %>
-        <%= button_tag t("map.buttons.add"), { type: :button, class: "set-center-position btn" } %>
+        <%= button_tag t("map.buttons.add_center"), { type: :button, class: "set-center-position btn" } %>
       </span>
     </div>
     <div class="zoom-level">
@@ -52,6 +52,7 @@
           <%= t('map.designated_level') %>
         </label>
         <%= f.number_field  :set_zoom_level, min: 1, max: 21, class: "zoom-input" %>
+        <%= button_tag t("map.buttons.add_zoom"), { type: :button, class: "set-zoom-level btn" } %>
       </span>
     </div>
   </div>
