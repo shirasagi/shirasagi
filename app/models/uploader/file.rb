@@ -14,22 +14,20 @@ class Uploader::File
 
   def save
     return false unless valid?
-    @binary = self.class.remove_exif(binary) if binary.present? && exif_image?
-    begin
-      if saved_path && path != saved_path # persisted AND path chenged
-        Fs.binwrite(saved_path, binary) unless directory?
-        Fs.mv(saved_path, path)
-      else
-        directory? ? Fs.mkdir_p(path) : Fs.binwrite(path, binary)
-      end
-      @saved_path = @path
-      compile_scss if @css
-      compile_coffee if @js
-      return true
-    rescue => e
-      errors.add :path, ":" + e.message
-      return false
+    @binary = self.class.remove_exif(binary) if binary && exif_image?
+    if saved_path && path != saved_path # persisted AND path chenged
+      Fs.binwrite(saved_path, binary) unless directory?
+      Fs.mv(saved_path, path)
+    else
+      directory? ? Fs.mkdir_p(path) : Fs.binwrite(path, binary)
     end
+    @saved_path = @path
+    compile_scss if @css
+    compile_coffee if @js
+    return true
+  rescue => e
+    errors.add :path, ":" + e.message
+    return false
   end
 
   def destroy
