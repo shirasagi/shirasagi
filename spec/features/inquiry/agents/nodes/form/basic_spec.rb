@@ -10,7 +10,7 @@ describe "inquiry_agents_nodes_form", type: :feature, dbscope: :example do
       layout_id: layout.id,
       inquiry_captcha: 'disabled',
       notice_state: 'enabled',
-      notice_content: 'enabled',
+      notice_content: 'link_only',
       notice_email: 'notice@example.jp',
       from_name: 'admin',
       from_email: 'admin@example.jp',
