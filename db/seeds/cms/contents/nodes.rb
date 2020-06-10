@@ -230,8 +230,9 @@ inquiry_sent_html = File.read("nodes/inquiry.inquiry_sent_html") rescue nil
                           inquiry_html: inquiry_html, inquiry_sent_html: inquiry_sent_html,
                           reply_state: "disabled",
                           reply_subject: "シラサギ市へのお問い合わせを受け付けました。",
-                          reply_upper_text: "以下の内容でお問い合わせを受け付けました。",
-                          reply_lower_text: "以上。",
+                          reply_upper_text: "",
+                          reply_content_state: "static",
+                          reply_lower_text: "",
                           aggregation_state: "disabled"
 
 ## feedback
@@ -253,8 +254,9 @@ save_node route: "inquiry/node", filename: "comment", name: "パブリックコ�
                                inquiry_sent_html: "<p>パブリックコメントを受け付けました。</p>",
                                reply_state: "disabled",
                                reply_subject: "シラサギ市へのお問い合わせを受け付けました。",
-                               reply_upper_text: "以下の内容でお問い合わせを受け付けました。",
-                               reply_lower_text: "以上。",
+                               reply_upper_text: "",
+                               reply_content_state: "static",
+                               reply_lower_text: "",
                                aggregation_state: "enabled",
                                reception_start_date: Time.zone.now.beginning_of_month,
                                reception_close_date: Time.zone.now.end_of_month
@@ -265,8 +267,9 @@ save_node route: "inquiry/node", filename: "comment", name: "パブリックコ�
                                inquiry_sent_html: "<p>パブリックコメントを受け付けました。</p>",
                                reply_state: "disabled",
                                reply_subject: "シラサギ市へのお問い合わせを受け付けました。",
-                               reply_upper_text: "以下の内容でお問い合わせを受け付けました。",
-                               reply_lower_text: "以上。",
+                               reply_upper_text: "",
+                               reply_content_state: "static",
+                               reply_lower_text: "",
                                aggregation_state: "enabled",
                                reception_start_date: Time.zone.now.prev_month.beginning_of_month,
                                reception_close_date: Time.zone.now.prev_month.end_of_month

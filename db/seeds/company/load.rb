@@ -124,8 +124,9 @@ inquiry_node = save_node route: "inquiry/form", filename: "inquiry",
   inquiry_html: inquiry_html, inquiry_sent_html: inquiry_sent_html,
   reply_state: "disabled",
   reply_subject: "シラサギ株式会社へのお問い合わせを受け付けました。",
-  reply_upper_text: "以下の内容でお問い合わせを受け付けました。",
-  reply_lower_text: "以上。"
+  reply_upper_text: "",
+  reply_content_state: "static",
+  reply_lower_text: ""
 
 def save_inquiry_column(data)
   puts data[:name]
