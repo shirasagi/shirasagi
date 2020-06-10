@@ -58,7 +58,7 @@ describe "inquiry_agents_nodes_form", type: :feature, dbscope: :example do
           check "item[7][2]"
           attach_file "item[8]", Rails.root.join("spec", "fixtures", "ss", "logo.png").to_s
         end
-        click_button "確認画面へ"
+        click_button I18n.t('inquiry.confirm')
       end
 
       expect(status_code).to eq 200
@@ -77,7 +77,7 @@ describe "inquiry_agents_nodes_form", type: :feature, dbscope: :example do
         #   fill_in "answer[captcha]", with: "xxxx"
         # end
         within 'footer.send' do
-          click_button "送信する"
+          click_button I18n.t('inquiry.submit')
         end
       end
 
@@ -163,7 +163,7 @@ describe "inquiry_agents_nodes_form", type: :feature, dbscope: :example do
           check "item[7][2]"
           attach_file "item[8]", Rails.root.join("spec", "fixtures", "ss", "logo.png").to_s
         end
-        click_button "確認画面へ"
+        click_button I18n.t('inquiry.confirm')
       end
 
       expect(status_code).to eq 200
@@ -182,7 +182,7 @@ describe "inquiry_agents_nodes_form", type: :feature, dbscope: :example do
         #   fill_in "answer[captcha]", with: "xxxx"
         # end
         within 'footer.send' do
-          click_button "送信する"
+          click_button I18n.t('inquiry.submit')
         end
       end
 

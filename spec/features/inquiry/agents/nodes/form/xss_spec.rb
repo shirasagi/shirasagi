@@ -225,7 +225,7 @@ describe "inquiry_agents_nodes_form", type: :feature, dbscope: :example, js: tru
           fill_in "item[4]", with: "<script>alert(\"hello\");</script>"
           fill_in "item[4_confirm]", with: "<script>alert(\"hello\");</script>"
         end
-        click_button "確認画面へ"
+        click_button I18n.t('inquiry.confirm')
       end
 
       within 'div.inquiry-form' do
