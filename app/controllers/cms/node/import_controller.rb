@@ -10,7 +10,7 @@ class Cms::Node::ImportController < ApplicationController
   private
 
   def fix_params
-    { cur_site: @cur_site, cur_node: @cur_node, cur_user: @cur_user }
+    { cur_site: @cur_site, cur_user: @cur_user, node: @cur_node }
   end
 
   def set_task
