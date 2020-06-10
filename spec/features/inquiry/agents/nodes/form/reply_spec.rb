@@ -9,13 +9,16 @@ describe "inquiry_agents_nodes_form", type: :feature, dbscope: :example do
       cur_site: site,
       layout_id: layout.id,
       inquiry_captcha: 'disabled',
-      notice_state: 'enabled',
-      notice_content: 'include_answers',
-      notice_email: 'notice@example.jp',
+      notice_state: 'disabled',
       from_name: 'admin',
       from_email: 'admin@example.jp',
-      reply_state: 'disabled')
+      reply_state: 'enabled',
+      reply_subject: 'お問い合わせを受け付けました',
+      reply_upper_text: '上部テキスト',
+      reply_lower_text: '下部テキスト',
+      reply_content_state: reply_content_state)
   end
+  let(:index_url) { ::URI.parse "http://#{site.domain}/#{node.filename}/" }
 
   before do
     node.columns.create! attributes_for(:inquiry_column_name).reverse_merge({cur_site: site})
@@ -37,8 +40,8 @@ describe "inquiry_agents_nodes_form", type: :feature, dbscope: :example do
     ActionMailer::Base.deliveries = []
   end
 
-  context "when pc site is accessed" do
-    let(:index_url) { ::URI.parse "http://#{site.domain}/#{node.filename}/" }
+  context "when reply_content_state is answer" do
+    let(:reply_content_state) { "answer" }
 
     it do
       visit index_url
@@ -103,84 +106,51 @@ describe "inquiry_agents_nodes_form", type: :feature, dbscope: :example do
       expect(answer.data[7].values[1]).to eq 'logo.png'
       expect(answer.data[7].confirm).to be_nil
 
-      expect(ActionMailer::Base.deliveries.count).to eq 2
+      expect(ActionMailer::Base.deliveries.count).to eq 1
 
-      ActionMailer::Base.deliveries.first.tap do |notify_mail|
-        expect(notify_mail.from.first).to eq 'admin@example.jp'
-        expect(notify_mail.to.first).to eq 'notice@example.jp'
-        expect(notify_mail.subject).to eq "[自動通知]#{node.name} - #{site.name}"
-        expect(notify_mail.body.multipart?).to be_falsey
-        expect(notify_mail.body.raw_source).to include("「#{node.name}」に入力がありました。")
-        expect(notify_mail.body.raw_source).to include(inquiry_answer_path(site: site, cid: node, id: answer))
+      ActionMailer::Base.deliveries.last.tap do |reply_mail|
+        expect(reply_mail.from.first).to eq 'admin@example.jp'
+        expect(reply_mail.to.first).to eq 'shirasagi@example.jp'
+        expect(reply_mail.subject).to eq 'お問い合わせを受け付けました'
+        expect(reply_mail.body.multipart?).to be_falsey
+        # upper
+        expect(reply_mail.body.raw_source).to include('上部テキスト')
         # inquiry_column_name
-        expect(notify_mail.body.raw_source).to include("- " + node.columns[0].name)
-        expect(notify_mail.body.raw_source).to include("シラサギ太郎")
+        expect(reply_mail.body.raw_source).to include("- " + node.columns[0].name)
+        expect(reply_mail.body.raw_source).to include("シラサギ太郎")
         # inquiry_column_optional
-        expect(notify_mail.body.raw_source).to include("- " + node.columns[1].name)
-        expect(notify_mail.body.raw_source).to include("株式会社シラサギ")
+        expect(reply_mail.body.raw_source).to include("- " + node.columns[1].name)
+        expect(reply_mail.body.raw_source).to include("株式会社シラサギ")
         # inquiry_column_transfers
-        expect(notify_mail.body.raw_source).to include("- " + node.columns[2].name)
-        expect(notify_mail.body.raw_source).to include('キーワード')
+        expect(reply_mail.body.raw_source).to include("- " + node.columns[2].name)
+        expect(reply_mail.body.raw_source).to include('キーワード')
         # inquiry_column_email
-        expect(notify_mail.body.raw_source).to include("- " + node.columns[3].name)
-        expect(notify_mail.body.raw_source).to include("shirasagi@example.jp")
+        expect(reply_mail.body.raw_source).to include("- " + node.columns[3].name)
+        expect(reply_mail.body.raw_source).to include("shirasagi@example.jp")
         # inquiry_column_radio
-        expect(notify_mail.body.raw_source).to include("- " + node.columns[4].name)
-        expect(notify_mail.body.raw_source).to include("男性")
+        expect(reply_mail.body.raw_source).to include("- " + node.columns[4].name)
+        expect(reply_mail.body.raw_source).to include("男性")
         # inquiry_column_select
-        expect(notify_mail.body.raw_source).to include("- " + node.columns[5].name)
-        expect(notify_mail.body.raw_source).to include("50代")
+        expect(reply_mail.body.raw_source).to include("- " + node.columns[5].name)
+        expect(reply_mail.body.raw_source).to include("50代")
         # inquiry_column_check
-        expect(notify_mail.body.raw_source).to include("- " + node.columns[6].name)
-        expect(notify_mail.body.raw_source).to include("申請について")
+        expect(reply_mail.body.raw_source).to include("- " + node.columns[6].name)
+        expect(reply_mail.body.raw_source).to include("申請について")
         # inquiry_column_upload_file
-        expect(notify_mail.body.raw_source).to include("- " + node.columns[7].name)
-        expect(notify_mail.body.raw_source).to include("logo.png")
-      end
-
-      ActionMailer::Base.deliveries[1].tap do |notify_mail|
-        expect(notify_mail.from.first).to eq 'admin@example.jp'
-        expect(notify_mail.to.first).to eq 'transfers@example.jp'
-        expect(notify_mail.subject).to eq "[自動通知]#{node.name} - #{site.name}"
-        expect(notify_mail.body.multipart?).to be_falsey
-        expect(notify_mail.body.raw_source).to include("「#{node.name}」に入力がありました。")
-        expect(notify_mail.body.raw_source).to include(inquiry_answer_path(site: site, cid: node, id: answer))
-        # inquiry_column_name
-        expect(notify_mail.body.raw_source).to include("- " + node.columns[0].name)
-        expect(notify_mail.body.raw_source).to include("シラサギ太郎")
-        # inquiry_column_optional
-        expect(notify_mail.body.raw_source).to include("- " + node.columns[1].name)
-        expect(notify_mail.body.raw_source).to include("株式会社シラサギ")
-        # inquiry_column_transfers
-        expect(notify_mail.body.raw_source).to include("- " + node.columns[2].name)
-        expect(notify_mail.body.raw_source).to include('キーワード')
-        # inquiry_column_email
-        expect(notify_mail.body.raw_source).to include("- " + node.columns[3].name)
-        expect(notify_mail.body.raw_source).to include("shirasagi@example.jp")
-        # inquiry_column_radio
-        expect(notify_mail.body.raw_source).to include("- " + node.columns[4].name)
-        expect(notify_mail.body.raw_source).to include("男性")
-        # inquiry_column_select
-        expect(notify_mail.body.raw_source).to include("- " + node.columns[5].name)
-        expect(notify_mail.body.raw_source).to include("50代")
-        # inquiry_column_check
-        expect(notify_mail.body.raw_source).to include("- " + node.columns[6].name)
-        expect(notify_mail.body.raw_source).to include("申請について")
-        # inquiry_column_upload_file
-        expect(notify_mail.body.raw_source).to include("- " + node.columns[7].name)
-        expect(notify_mail.body.raw_source).to include("logo.png")
+        expect(reply_mail.body.raw_source).to include("- " + node.columns[7].name)
+        expect(reply_mail.body.raw_source).to include("logo.png")
+        # static
+        expect(reply_mail.body.raw_source).not_to include(I18n.t("inquiry.default_reply_content_static"))
+        # lower
+        expect(reply_mail.body.raw_source).to include('下部テキスト')
       end
     end
   end
 
-  context "when mobile site is accessed" do
-    let(:index_url) { ::URI.parse "http://#{site.domain}#{site.mobile_location}/#{node.filename}/" }
-
+  shared_examples "static reply" do
     it do
       visit index_url
       expect(status_code).to eq 200
-      # mobile モードの場合、form の action は /mobile/ で始まる
-      expect(find('form')['action']).to start_with "#{site.mobile_location}/#{node.filename}/"
       within 'div.inquiry-form' do
         within 'div.columns' do
           fill_in "item[1]", with: "シラサギ太郎"
@@ -191,15 +161,12 @@ describe "inquiry_agents_nodes_form", type: :feature, dbscope: :example do
           choose "item_5_0"
           select "50代", from: "item[6]"
           check "item[7][2]"
+          attach_file "item[8]", Rails.root.join("spec", "fixtures", "ss", "logo.png").to_s
         end
         click_button "確認画面へ"
       end
 
       expect(status_code).to eq 200
-      # mobile モードの場合、/mobile/ で始まるはず
-      expect(current_path).to start_with "#{site.mobile_location}/#{node.filename}/"
-      # mobile モードの場合、form の action は /mobile/ で始まる
-      expect(find('form')['action']).to start_with "#{site.mobile_location}/#{node.filename}/"
       within 'div.inquiry-form' do
         within 'div.columns' do
           expect(find('#item_1')['value']).to eq 'シラサギ太郎'
@@ -209,16 +176,17 @@ describe "inquiry_agents_nodes_form", type: :feature, dbscope: :example do
           expect(find('#item_5')['value']).to eq '男性'
           expect(find('#item_6')['value']).to eq '50代'
           expect(find('#item_7_2')['value']).to eq '申請について'
+          expect(find('#item_8')['value']).to eq '1'
         end
-        # mobile モードの場合 <footer> タグが <div> タグに置換されているはず
-        within 'div.tag-footer' do
+        # within 'div.simple-captcha' do
+        #   fill_in "answer[captcha]", with: "xxxx"
+        # end
+        within 'footer.send' do
           click_button "送信する"
         end
       end
 
       expect(status_code).to eq 200
-      # mobile モードの場合、/mobile/ で始まるはず
-      expect(current_path).to start_with "#{site.mobile_location}/#{node.filename}/"
       expect(find('div.inquiry-sent').text).to eq node.inquiry_sent_html.gsub(/<.*?>/, '')
 
       expect(Inquiry::Answer.site(site).count).to eq 1
@@ -239,8 +207,60 @@ describe "inquiry_agents_nodes_form", type: :feature, dbscope: :example do
       expect(answer.data[5].confirm).to be_nil
       expect(answer.data[6].values).to eq %w(申請について)
       expect(answer.data[6].confirm).to be_nil
+      expect(answer.data[7].values[0]).to eq 1
+      expect(answer.data[7].values[1]).to eq 'logo.png'
+      expect(answer.data[7].confirm).to be_nil
 
-      expect(ActionMailer::Base.deliveries.count).to eq 2
+      expect(ActionMailer::Base.deliveries.count).to eq 1
+
+      ActionMailer::Base.deliveries.last.tap do |reply_mail|
+        expect(reply_mail.from.first).to eq 'admin@example.jp'
+        expect(reply_mail.to.first).to eq 'shirasagi@example.jp'
+        expect(reply_mail.subject).to eq 'お問い合わせを受け付けました'
+        expect(reply_mail.body.multipart?).to be_falsey
+        # upper
+        expect(reply_mail.body.raw_source).to include('上部テキスト')
+        # inquiry_column_name
+        expect(reply_mail.body.raw_source).not_to include("- " + node.columns[0].name)
+        expect(reply_mail.body.raw_source).not_to include("シラサギ太郎")
+        # inquiry_column_optional
+        expect(reply_mail.body.raw_source).not_to include("- " + node.columns[1].name)
+        expect(reply_mail.body.raw_source).not_to include("株式会社シラサギ")
+        # inquiry_column_transfers
+        expect(reply_mail.body.raw_source).not_to include("- " + node.columns[2].name)
+        expect(reply_mail.body.raw_source).not_to include('キーワード')
+        # inquiry_column_email
+        expect(reply_mail.body.raw_source).not_to include("- " + node.columns[3].name)
+        expect(reply_mail.body.raw_source).not_to include("shirasagi@example.jp")
+        # inquiry_column_radio
+        expect(reply_mail.body.raw_source).not_to include("- " + node.columns[4].name)
+        expect(reply_mail.body.raw_source).not_to include("男性")
+        # inquiry_column_select
+        expect(reply_mail.body.raw_source).not_to include("- " + node.columns[5].name)
+        expect(reply_mail.body.raw_source).not_to include("50代")
+        # inquiry_column_check
+        expect(reply_mail.body.raw_source).not_to include("- " + node.columns[6].name)
+        expect(reply_mail.body.raw_source).not_to include("申請について")
+        # inquiry_column_upload_file
+        expect(reply_mail.body.raw_source).not_to include("- " + node.columns[7].name)
+        expect(reply_mail.body.raw_source).not_to include("logo.png")
+        # static
+        expect(reply_mail.body.raw_source).to include(I18n.t("inquiry.default_reply_content_static"))
+        # lower
+        expect(reply_mail.body.raw_source).to include('下部テキスト')
+      end
     end
+  end
+
+  context "when reply_content_state is static" do
+    let(:reply_content_state) { "static" }
+
+    it_behaves_like "static reply"
+  end
+
+  context "when reply_content_state is static" do
+    let(:reply_content_state) { nil }
+
+    it_behaves_like "static reply"
   end
 end

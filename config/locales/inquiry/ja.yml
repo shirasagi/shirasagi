@@ -20,6 +20,9 @@ ja:
     confirm_input: "%{name}確認用"
     confirm_input_description: "もう一度、同じ%{name}を入力してください。"
     cannot_use: "（使用不可）"
+    default_reply_content_static: |-
+      お問い合わせいただきました方に自動的に送信しております。
+      もしお心当たりがない場合は、破棄していただきますようお願いいたします。
 
     options:
       state:
@@ -55,6 +58,9 @@ ja:
         processed: 処理済み
         closed: 完了
         all: すべて
+      reply_content_state:
+        static: 固定メッセージ
+        answer: お問い合わせ内容のコピー
     links:
       back_to_page: 元のページに戻る
       faq: FAQを新規作成
@@ -106,6 +112,8 @@ ja:
         reply_subject: 返信件名
         reply_upper_text: 上部返信テキスト
         reply_lower_text: 下部返信テキスト
+        reply_content_state: 返信内容
+        reply_content_static: 固定メッセージ
 
       inquiry/addon/release_plan:
         release_date: 公開開始日
@@ -191,7 +199,6 @@ ja:
     inquiry/addon/reply:
       reply_state:
         - フォームへ投稿した利用者に自動返信メールを送ることが可能です。
-        - 本文にはフォームに入力された内容が記載されます。
       reply_subject:
         - 自動返信メールの件名を設定します。
       reply_upper_text:
@@ -200,6 +207,18 @@ ja:
       reply_lower_text:
         - 自動返信メールの本文下部のテキストを設定します。
         - 署名等の記載に利用します。
+      reply_content_state:
+        - 返信の内容を設定します。
+        -
+        - 「固定メッセージ」を選択した場合、固定のメッセージが送られます。SPAM メール対策など、通常はこちらの選択肢が好ましい選択肢となります。
+        -
+        - 「お問い合わせ内容のコピー」を選択した場合、お問い合わせ内容のコピーが送られます。この選択肢は過去の互換性のために残されています。
+        - SPAM メール対策などを考えると、フォームに入力された内容を送信することは好ましくありません。危険性や脆弱性など十分考慮の上、選択してください。
+        -
+        - 省略した場合「固定メッセージ」が選択されたものとみなします。
+      reply_content_static:
+        - 返信内容に「固定メッセージ」を選択した場合に送信するメッセージを選択します。
+        - 空の場合、システムの既定のメッセージを送信します。
     inquiry/column:
       name:
         - 質問項目の名称を入力します。

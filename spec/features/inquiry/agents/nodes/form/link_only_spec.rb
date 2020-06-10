@@ -14,10 +14,7 @@ describe "inquiry_agents_nodes_form", type: :feature, dbscope: :example do
       notice_email: 'notice@example.jp',
       from_name: 'admin',
       from_email: 'admin@example.jp',
-      reply_state: 'enabled',
-      reply_subject: 'お問い合わせを受け付けました',
-      reply_upper_text: '上部テキスト',
-      reply_lower_text: '下部テキスト')
+      reply_state: 'disabled')
   end
 
   before do
@@ -106,7 +103,7 @@ describe "inquiry_agents_nodes_form", type: :feature, dbscope: :example do
       expect(answer.data[7].values[1]).to eq 'logo.png'
       expect(answer.data[7].confirm).to be_nil
 
-      expect(ActionMailer::Base.deliveries.count).to eq 3
+      expect(ActionMailer::Base.deliveries.count).to eq 2
 
       ActionMailer::Base.deliveries.first.tap do |notify_mail|
         expect(notify_mail.from.first).to eq 'admin@example.jp'
@@ -172,41 +169,6 @@ describe "inquiry_agents_nodes_form", type: :feature, dbscope: :example do
         # inquiry_column_upload_file
         expect(notify_mail.body.raw_source).not_to include("- " + node.columns[7].name)
         expect(notify_mail.body.raw_source).not_to include("logo.png")
-      end
-
-      ActionMailer::Base.deliveries.last.tap do |reply_mail|
-        expect(reply_mail.from.first).to eq 'admin@example.jp'
-        expect(reply_mail.to.first).to eq 'shirasagi@example.jp'
-        expect(reply_mail.subject).to eq 'お問い合わせを受け付けました'
-        expect(reply_mail.body.multipart?).to be_falsey
-        # upper
-        expect(reply_mail.body.raw_source).to include('上部テキスト')
-        # inquiry_column_name
-        expect(reply_mail.body.raw_source).to include("- " + node.columns[0].name)
-        expect(reply_mail.body.raw_source).to include("シラサギ太郎")
-        # inquiry_column_optional
-        expect(reply_mail.body.raw_source).to include("- " + node.columns[1].name)
-        expect(reply_mail.body.raw_source).to include("株式会社シラサギ")
-        # inquiry_column_transfers
-        expect(reply_mail.body.raw_source).to include("- " + node.columns[2].name)
-        expect(reply_mail.body.raw_source).to include('キーワード')
-        # inquiry_column_email
-        expect(reply_mail.body.raw_source).to include("- " + node.columns[3].name)
-        expect(reply_mail.body.raw_source).to include("shirasagi@example.jp")
-        # inquiry_column_radio
-        expect(reply_mail.body.raw_source).to include("- " + node.columns[4].name)
-        expect(reply_mail.body.raw_source).to include("男性")
-        # inquiry_column_select
-        expect(reply_mail.body.raw_source).to include("- " + node.columns[5].name)
-        expect(reply_mail.body.raw_source).to include("50代")
-        # inquiry_column_check
-        expect(reply_mail.body.raw_source).to include("- " + node.columns[6].name)
-        expect(reply_mail.body.raw_source).to include("申請について")
-        # inquiry_column_upload_file
-        expect(reply_mail.body.raw_source).to include("- " + node.columns[7].name)
-        expect(reply_mail.body.raw_source).to include("logo.png")
-        # lower
-        expect(reply_mail.body.raw_source).to include('下部テキスト')
       end
     end
   end
@@ -278,7 +240,7 @@ describe "inquiry_agents_nodes_form", type: :feature, dbscope: :example do
       expect(answer.data[6].values).to eq %w(申請について)
       expect(answer.data[6].confirm).to be_nil
 
-      expect(ActionMailer::Base.deliveries.count).to eq 3
+      expect(ActionMailer::Base.deliveries.count).to eq 2
     end
   end
 end

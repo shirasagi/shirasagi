@@ -3,10 +3,14 @@
 <%= @node.reply_upper_text %>
 <%= "" %>
 <% end %>
+<% if @node.reply_content_static? %>
+<%= @node.reply_content_static.presence || I18n.t("inquiry.default_reply_content_static") %>
+<% else %>
 <% @answer.data.each do |data| %>
 <%= "- #{data.column.name}" %>
 <%= convert_to_lines(data.value.to_s) %>
 <%= "" %>
+<% end %>
 <% end %>
 <% if @node.reply_lower_text.present? %>
 <%= "" %>
