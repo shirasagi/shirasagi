@@ -9,8 +9,6 @@
   <% else %>
     <%= link_to t('ss.links.edit'), { action: :edit, id: @item }, class: :edit %>
     <%= link_to t("cms.convert_to_cms_page"), { action: :convert, id: @item }, class: :convert %>
-    <%= link_to t('ss.links.copy'), { action: :copy, id: @item }, class: :copy %>
-    <%= link_to t('ss.links.move'), { action: :move, id: @item }, class: :move %>
     <%= link_to t('ss.links.delete'), { action: :delete, id: @item }, class: :delete %>
     <%= link_to t('ss.links.back_to_index'), { action: :index }, class: "back-to-index" %>
   <% end %>
