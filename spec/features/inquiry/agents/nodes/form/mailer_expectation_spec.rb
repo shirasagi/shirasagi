@@ -37,12 +37,10 @@ describe "inquiry_agents_nodes_form", type: :feature, dbscope: :example do
     it do
       # override deliver method
       # ref: https://github.com/mikel/mail/blob/master/lib/mail/network/delivery_methods/test_mailer.rb
-      allow_any_instance_of(Mail::TestMailer).to receive(:deliver!) do |mail|
+      allow_any_instance_of(Mail::TestMailer).to receive(:deliver!) do |_mail|
         # Create the envelope to validate it
         # Mail::SmtpEnvelope.new(mail)
-        raise Net::SMTPFatalError.new("550 : Recipient address rejected: User unknown")
-
-        Mail::TestMailer.deliveries << mail
+        raise Net::SMTPFatalError, "550 : Recipient address rejected: User unknown"
       end
 
       # submit inquiry
