@@ -4,12 +4,31 @@ class Sys::Diag::ServersController < ApplicationController
   navi_view "sys/diag/main/navi"
   menu_view nil
 
+  helper_method :uptime
   helper_method :http_key?, :rack_key?, :rails_key?, :other_key?
 
   private
 
   def set_crumbs
     @crumbs << ["Server Info", action: :show]
+  end
+
+  def uptime
+    ret = nil
+    r, w = ::IO.pipe
+    begin
+      pid = spawn(%w(uptime uptime), out: w)
+      w.close
+      _, status = ::Process.waitpid2(pid)
+      ret = r.read if status.success?
+    rescue => e
+      Rails.logger.debug("#{e.class} (#{e.message}):\n  #{e.backtrace.join("\n  ")}")
+    ensure
+      r.close if r.closed?
+      w.close if w.closed?
+    end
+
+    ret
   end
 
   def http_key?(key)
