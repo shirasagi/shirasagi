@@ -1,12 +1,12 @@
-class Sys::Test::HttpController < ApplicationController
+class Sys::Diag::HttpsController < ApplicationController
   include Sys::BaseFilter
 
-  menu_view "sys/test/menu"
+  menu_view "sys/diag/menu"
 
   private
 
   def set_crumbs
-    @crumbs << ["HTTTP Test", sys_test_http_path]
+    @crumbs << ["HTTTP Test", action: :index]
   end
 
   public

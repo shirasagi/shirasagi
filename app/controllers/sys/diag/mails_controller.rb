@@ -1,13 +1,13 @@
-class Sys::Test::MailController < ApplicationController
+class Sys::Diag::MailsController < ApplicationController
   include Sys::BaseFilter
   include Sys::CrudFilter
 
-  menu_view "sys/test/menu"
+  menu_view "sys/diag/menu"
 
   private
 
   def set_crumbs
-    @crumbs << ["MAIL Test", sys_test_mail_path]
+    @crumbs << ["MAIL Test", action: :index]
   end
 
   def permit_fields
@@ -45,6 +45,6 @@ class Sys::Test::MailController < ApplicationController
       ).deliver_now
     end
 
-    render action: :index
+    redirect_to({ action: :index }, { notice: "Sent Successfully" })
   end
 end
