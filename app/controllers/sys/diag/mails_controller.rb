@@ -2,7 +2,8 @@ class Sys::Diag::MailsController < ApplicationController
   include Sys::BaseFilter
   include Sys::CrudFilter
 
-  menu_view "sys/diag/menu"
+  navi_view "sys/diag/main/navi"
+  menu_view nil
 
   private
 

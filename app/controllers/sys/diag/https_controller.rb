@@ -1,7 +1,8 @@
 class Sys::Diag::HttpsController < ApplicationController
   include Sys::BaseFilter
 
-  menu_view "sys/diag/menu"
+  navi_view "sys/diag/main/navi"
+  menu_view nil
 
   private
 

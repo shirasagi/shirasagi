@@ -1,0 +1,19 @@
+<%
+  links = []
+  links << link_to("MAIL Test", sys_diag_mails_path)
+  if Rails.env.development?
+    links << link_to("HTTP Test", sys_diag_https_path)
+  end
+%>
+
+<% if links.length > 1 %>
+  <nav class="mod-navi">
+    <h2><%= t("sys.diag") %></h2>
+
+    <% links.each do |link| %>
+      <h3><%= link %></h3>
+    <% end %>
+  </nav>
+<% end %>
+
+<%= render partial: "sys/main/navi" %>
