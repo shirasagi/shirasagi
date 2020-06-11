@@ -51,6 +51,7 @@ Rails.application.routes.draw do
       get "/" => "main#index", as: :main
       resources :https, only: [:index]
       resources :mails, only: [:index, :create]
+      resource :server, only: [:show]
     end
 
     namespace "apis" do

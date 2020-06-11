@@ -4,6 +4,7 @@
   if Rails.env.development?
     links << link_to("HTTP Test", sys_diag_https_path)
   end
+  links << link_to("Server Info", sys_diag_server_path)
 %>
 
 <% if links.length > 1 %>
