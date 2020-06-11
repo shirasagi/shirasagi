@@ -49,7 +49,9 @@ Rails.application.routes.draw do
 
     namespace "diag" do
       get "/" => "main#index", as: :main
-      resources :https, only: [:index]
+      if Rails.env.development?
+        resources :https, only: [:index]
+      end
       resources :mails, only: [:index, :create]
       resource :server, only: [:show]
     end
