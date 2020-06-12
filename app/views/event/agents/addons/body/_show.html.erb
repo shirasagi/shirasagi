@@ -2,6 +2,9 @@
   <dt><%= @model.t :schedule %></dt>
   <dd><%=br @item.schedule.to_s %></dd>
 
+  <dt><%= @model.t :facilities %></dt>
+  <dd><%=br @item.send(:facilities).pluck(:name) %></dd>
+
   <dt><%= @model.t :venue %></dt>
   <dd><%=br @item.venue.to_s %></dd>
 

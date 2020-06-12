@@ -151,6 +151,8 @@ ja:
     attributes:
       cms/model/page:
         schedule: 日時
+        facilities: 開催施設
+        facility_ids: 開催施設
         venue: 開催場所
         content: 内容
         cost: 費用
@@ -215,6 +217,8 @@ ja:
     event/addon/body:
       schedule:
         - イベントの日時をテキスト形式で入力します。
+      facility_ids:
+        - イベントに関係する施設を設定します。
       venue:
         - イベントの開催場所を入力します。
       related_url:

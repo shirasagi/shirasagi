@@ -4,6 +4,20 @@
     <dd><%=br @cur_page.schedule.to_s %></dd>
   <% end %>
 
+  <% facilities = @cur_page.facilities.and_public %>
+  <% if facilities.present? %>
+    <dt><%= @cur_page.t :facilities %></dt>
+    <dd class="page">
+      <ul style="list-style: none">
+        <% facilities.each do |item| %>
+          <%= content_tag(:li, class: item.categories.pluck(:filename).map { |c| c.tr('/', '-') }.presence) do %>
+            <%= link_to item.name, item.url %>
+          <% end %>
+        <% end %>
+      </ul>
+    </dd>
+  <% end %>
+
   <% if @cur_page.venue.present? %>
     <dt><%= @cur_page.class.t :venue %></dt>
     <dd><%=br @cur_page.venue.to_s %></dd>

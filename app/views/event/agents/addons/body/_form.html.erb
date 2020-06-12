@@ -2,6 +2,32 @@
   <dt><%= @model.t :schedule %><%= @model.tt :schedule %></dt>
   <dd><%= f.text_area :schedule %></dd>
 
+  <dt><%= @model.t :facility_ids %><%= @model.tt :facility_ids %></dt>
+  <dd>
+    <%= f.hidden_field "facility_ids[]", value: "", class: "hidden-ids" %>
+    <%= link_to t("event.apis.facilities.index"), cms_apis_nodes_path(model: 'Facility::Node::Page'), class: "ajax-box" %>
+  </dd>
+  <dd>
+    <table class="index ajax-selected">
+      <thead>
+      <thead>
+      <tr>
+        <th class="name"><%= @model.t :name %></th>
+        <th></th>
+      </tr>
+      </thead>
+      <tbody>
+      <% @item.facilities.each do |fac| %>
+        <tr data-id="<%= fac.id %>">
+          <td><%= f.hidden_field "facility_ids[]", value: fac.id %> <%= fac.name %></td>
+          <td><%= link_to t("ss.buttons.delete"), "#", class: "deselect btn" %></td>
+        </tr>
+      <% end %>
+      <tr style="display:none" <%= raw(@item.present? ? "data-id=#{@item.id}" : "") %>></tr>
+      </tbody>
+    </table>
+  </dd>
+
   <dt><%= @model.t :venue %><%= @model.tt :venue %></dt>
   <dd><%= f.text_area :venue %></dd>
 

@@ -11,6 +11,8 @@ module Event::Addon
       field :related_url, type: String
       field :contact, type: String
 
+      embeds_ids :facilities, class_name: "Facility::Node::Page"
+      permit_params facility_ids: []
       permit_params :schedule, :venue, :content, :cost, :related_url, :contact
     end
   end
