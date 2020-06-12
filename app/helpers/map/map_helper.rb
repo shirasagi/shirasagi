@@ -209,6 +209,40 @@ module Map::MapHelper
     jquery { s.join("\n").html_safe }
   end
 
+  def marker_info(item)
+    h = []
+    h << %(<div class="maker-info" data-id="#{item.id}">)
+    h << %(<p class="name">#{item.name}</p>)
+    h << %(<p class="address">#{item.address}</p>)
+    h << %(<p class="show">#{link_to t('ss.links.show'), item.url}</p>)
+    h << %(</div>)
+  end
+
+  def map_point_info(event, map_point)
+    h = []
+    h << %(<div class="maker-info">)
+    h << %(<p class="name">#{map_point[:name]}</p>)
+    h << %(<p class="name">#{map_point[:text]}</p>)
+    h << %(</div>)
+    h << %(<div class="event-info">イベント情報(1#{t("event.count")}))
+    h << %(<div class="event-list">)
+    h << %(<div>)
+    h << %(<p class="event-name">#{link_to event.name, event.url}</p>)
+    h << %(<p class="event-dates">#{raw event.dates_to_html(:long)}</p>)
+    h << %(</div>)
+    h << %(</div>)
+    h << %(</div>)
+    h.join("\n")
+  end
+
+  def render_map_point_info(event, map_point)
+    if event_end_date(event).present?
+      if event_end_date(event) >= Time.zone.today
+        map_point_info(event, map_point)
+      end
+    end
+  end
+
   def map_marker_address(item)
     if item.respond_to?(:column_values)
       item.column_values.each do |col|
@@ -310,12 +344,7 @@ module Map::MapHelper
   end
 
   def render_facility_info(item)
-    h = []
-    h << %(<div class="maker-info" data-id="#{item.id}">)
-    h << %(<p class="name">#{item.name}</p>)
-    h << %(<p class="address">#{item.address}</p>)
-    h << %(<p class="show">#{link_to t('ss.links.show'), item.url}</p>)
-    h << %(</div>)
+    h = marker_info(item)
     events = Event::Page.site(@cur_site).and_public.where(facility_ids: item.id).order(event_dates: "ASC")
     if events.present?
       event_count = 0
@@ -338,6 +367,39 @@ module Map::MapHelper
             h << %(<p class="event-dates">#{raw event.dates_to_html(:long)}</p>)
             h << %(</div>)
           end
+        end
+        h << %(</div>)
+        h << %(</div>)
+      end
+    end
+    h.join("\n")
+  end
+
+  def monthly_map_point_info(event, map_point)
+    map_point_info(event, map_point)
+  end
+
+  def monthly_facility_info(item, dates)
+    h = marker_info(item)
+    events = Event::Page.site(@cur_site).and_public.where(facility_ids: item.id).order(event_dates: "ASC")
+    if events.present?
+      events = events.where(:event_dates.in => dates).
+        entries.
+        sort_by { |page| page.event_dates.size }
+      event_count = 0
+      events.each do |event|
+        next if event.map_points.present? && event.facility_ids.present?
+        event_count += 1
+      end
+      if event_count != 0
+        h << %(<div class="event-info">イベント情報(#{event_count}#{t("event.count")}))
+        h << %(<div class="event-list">)
+        events.each do |event|
+          next if event.map_points.present? && event.facility_ids.present?
+          h << %(<div>)
+          h << %(<p class="event-name">#{link_to event.name, event.url}</p>)
+          h << %(<p class="event-dates">#{raw event.dates_to_html(:long)}</p>)
+          h << %(</div>)
         end
         h << %(</div>)
         h << %(</div>)
