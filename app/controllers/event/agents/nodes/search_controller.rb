@@ -77,7 +77,7 @@ class Event::Agents::Nodes::SearchController < ApplicationController
 
       if event.map_points.present?
         event.map_points.each do |map_point|
-          marker_info = view_context.render_event_info(event, map_point)
+          marker_info = view_context.render_map_point_info(event, map_point)
           map_point[:html] = marker_info
           @markers << map_point
         end
@@ -91,7 +91,7 @@ class Event::Agents::Nodes::SearchController < ApplicationController
           facility = Facility::Node::Page.site(@cur_site).and_public.where(id: facility_id).first
           map_point = Facility::Map.site(@cur_site).and_public.
             where(filename: /^#{::Regexp.escape(facility.filename)}\//, depth: facility.depth + 1).order_by(order: 1).first.map_points.first
-          marker_info = view_context.render_marker_info(facility)
+          marker_info = view_context.render_facility_info(facility)
           map_point[:html] = marker_info
           @markers << map_point
         end
