@@ -25,7 +25,7 @@
 
   <fieldset class="event-facility">
     <legend><%= t("event.facility.setting") %></legend>
-    <%= text_field_tag :facility_name, @facility_name %>
+    <%= select_tag :facility_id, options_for_select(@facilities.map {|facility| [facility.name, facility.id]}, selected: @facility_id), include_blank: true %>
   </fieldset>
 
   <footer class="send">

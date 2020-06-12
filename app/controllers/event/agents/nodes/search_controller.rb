@@ -15,12 +15,13 @@ class Event::Agents::Nodes::SearchController < ApplicationController
     if @keyword.present? || @category_ids.present? || @start_date.present? || @close_date.present? || @facility_ids.present?
       list_events
     end
+    @facilities = Facility::Node::Page.site(@cur_site).and_public
   end
 
   private
 
   def set_params
-    safe_params = params.permit(:search_keyword, :facility_name, category_ids: [], event: [ :start_date, :close_date])
+    safe_params = params.permit(:search_keyword, :facility_id, category_ids: [], event: [ :start_date, :close_date])
     @keyword = safe_params[:search_keyword].presence
     @category_ids = safe_params[:category_ids].presence || []
     @category_ids = @category_ids.map(&:to_i)
@@ -30,9 +31,9 @@ class Event::Agents::Nodes::SearchController < ApplicationController
     end
     @start_date = Date.parse(@start_date) if @start_date.present?
     @close_date = Date.parse(@close_date) if @close_date.present?
-    @facility_name = safe_params[:facility_name].presence
-    if @facility_name.present?
-      @facility_ids = Facility::Node::Page.site(@cur_site).where(name: /#{::Regexp.escape(@facility_name)}/).and_public.pluck(:id)
+    @facility_id = safe_params[:facility_id].presence
+    if @facility_id.present?
+      @facility_ids = Facility::Node::Page.site(@cur_site).where(id: @facility_id).and_public.pluck(:id)
     end
   end
 
@@ -41,7 +42,7 @@ class Event::Agents::Nodes::SearchController < ApplicationController
     criteria = criteria.search(keyword: @keyword) if @keyword.present?
     criteria = criteria.where(@cur_node.condition_hash)
     criteria = criteria.in(category_ids: @category_ids) if @category_ids.present?
-    criteria = criteria.in(facility_ids: @facility_ids) if @facility_name.present?
+    criteria = criteria.in(facility_ids: @facility_ids) if @facility_id.present?
 
     if @start_date.present? && @close_date.present?
       criteria = criteria.search(dates: @start_date..@close_date)
