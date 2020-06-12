@@ -1,4 +1,13 @@
 .gws-survey {
+  .form-abstract {
+    margin: 16px;
+    dl.see > dt ~ dt {
+      margin-top: 0;
+    }
+    dl.see > dd ~ dd {
+      margin-top: 0;
+    }
+  }
   .form-table {
     border: $border-gray5;
     overflow-x: auto;
@@ -104,13 +113,25 @@
 
   .summary {
     border: 0;
-    padding: 15px 10px;
+    margin: 15px 0;
+    padding: 0 10px;
 
     h2 {
       background: $gray1;
       @include border-radius(2px);
       padding: 6px 18px;
       border: $border-gray5;
+    }
+
+    dl.see {
+      margin: 0;
+    }
+
+    dl.see > dt ~ dt {
+      margin-top: 0;
+    }
+    dl.see > dd ~ dd {
+      margin-top: 0;
     }
   }
   .chart {
