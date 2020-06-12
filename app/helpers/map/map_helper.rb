@@ -289,6 +289,26 @@ module Map::MapHelper
     h.join("\n")
   end
 
+  def render_event_info(event, map_point)
+    if event_end_date(event).present?
+      if event_end_date(event) >= Time.zone.today
+        h = []
+        h << %(<div class="maker-info">)
+        h << %(<p class="name">#{map_point[:name]}</p>)
+        h << %(<p class="name">#{map_point[:text]}</p>)
+        h << %(</div>)
+        h << %(<div class="event-info">イベント情報(1#{t("event.count")}))
+        h << %(<div class="event-list">)
+        h << %(<div>)
+        h << %(<p class="event-name">#{link_to event.name, event.url}</p>)
+        h << %(<p class="event-dates">#{raw event.dates_to_html(:long)}</p>)
+        h << %(</div>)
+        h << %(</div>)
+        h << %(</div>)
+      end
+    end
+  end
+
   def event_info(h, item)
     events = Event::Page.site(@cur_site).and_public.where(facility_ids: item.id).order(event_dates: "ASC")
     if events.present?
@@ -303,6 +323,7 @@ module Map::MapHelper
         h << %(<div class="event-info">イベント情報(#{event_count}#{t("event.count")}))
         h << %(<div class="event-list">)
         events.each do |event|
+          next if event.map_points.present? && event.facility_ids.present?
           if event_end_date(event).present?
             next if event_end_date(event) <= Time.zone.today
             h << %(<div>)

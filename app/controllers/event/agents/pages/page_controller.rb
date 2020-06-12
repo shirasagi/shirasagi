@@ -22,7 +22,7 @@ class Event::Agents::Pages::PageController < ApplicationController
         map_point[:html] = marker_info
         map_points << map_point
       end
+      @cur_page.map_points = map_points
     end
-    @cur_page.map_points = map_points
   end
 end
