@@ -14,6 +14,7 @@ class Event::Agents::Nodes::SearchController < ApplicationController
     end
     if @keyword.present? || @category_ids.present? || @start_date.present? || @close_date.present? || @facility_ids.present?
       list_events
+      set_markers
     end
     @facilities = Facility::Node::Page.site(@cur_site).and_public
   end
@@ -56,6 +57,51 @@ class Event::Agents::Nodes::SearchController < ApplicationController
 
     @items = criteria.order_by(@cur_node.sort_hash).
       page(params[:page]).
-      per(@cur_node.limit)
+      per(@cur_node.limit).to_a
+
+    @items.each do |item|
+      if event_end_date(item).present?
+        next if event_end_date(item) >= Time.zone.today
+        @items.delete(item)
+      end
+    end
+  end
+
+  def set_markers
+    @markers = []
+    @items = list_events
+    @items.each do |item|
+      event = Event::Page.site(@cur_site).
+        and_public.
+        where(filename: item.filename).first
+
+      event.facility_ids.each do |facility_id|
+        if @facility_ids.present?
+          next if !@facility_ids.include?(facility_id)
+        end
+        facility = Facility::Node::Page.site(@cur_site).and_public.where(id: facility_id).first
+        map_point = Facility::Map.site(@cur_site).and_public.
+          where(filename: /^#{::Regexp.escape(facility.filename)}\//, depth: facility.depth + 1).order_by(order: 1).first.map_points.first
+        marker_info = view_context.render_marker_info(facility)
+        map_point[:html] = marker_info
+        @markers << map_point
+      end
+    end
+  end
+
+  def event_end_date(event)
+    event_dates = event.get_event_dates
+    return if event_dates.blank?
+
+    event_range = event_dates.first
+
+    if event_dates.length == 1
+      end_date = ::Icalendar::Values::Date.new(event_range.last.tomorrow.to_date)
+    else # event_dates.length > 1
+      dates = event_dates.flatten.uniq.sort
+      event_range = ::Icalendar::Values::Array.new(dates, ::Icalendar::Values::Date, {}, { delimiter: "," })
+      end_date = ::Icalendar::Values::Date.new(event_range.last.tomorrow.to_date)
+    end
+    end_date
   end
 end
