@@ -3157,6 +3157,10 @@ form .CodeMirror {
   .post-text {
     margin-top: 15px;
   }
+  .event-list {
+    max-height: 150px;
+    overflow: scroll;
+  }
 }
 
 // -------------------------------------------------------------------------------------------------

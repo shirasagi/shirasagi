@@ -3,7 +3,7 @@
   <dl class="see">
     <dt><%= @cur_page.t :facilities %></dt>
     <dd class="page">
-      <ul>
+      <ul style="list-style: none">
         <% facilities.each do |item| %>
           <%= content_tag(:li, class: item.categories.pluck(:filename).map { |c| c.tr('/', '-') }.presence) do %>
             <%= link_to item.name, item.url %>
