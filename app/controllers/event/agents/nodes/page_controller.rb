@@ -24,6 +24,8 @@ class Event::Agents::Nodes::PageController < ApplicationController
         case @cur_display
         when "list"
           index_monthly_list
+        when "map"
+          index_monthly_map
         else # when "table"
           index_monthly_table
         end
@@ -61,7 +63,7 @@ class Event::Agents::Nodes::PageController < ApplicationController
     @cur_display = params[:display].to_s.presence
     @cur_display ||= default_display
     @cur_display = default_display if @cur_display == "index"
-    raise '404' if @cur_display != 'list' && @cur_display != 'table'
+    raise '404' if @cur_display != 'list' && @cur_display != 'table' && @cur_display != 'map'
     raise '404' if @cur_display == 'list' && @cur_node.event_display == 'table_only'
     raise '404' if @cur_display == 'table' && @cur_node.event_display == 'list_only'
   end
@@ -109,6 +111,40 @@ class Event::Agents::Nodes::PageController < ApplicationController
     end
   end
 
+  def set_markers(dates)
+    @markers = []
+    dates = dates.map { |m| m.mongoize }
+    @items = events(dates)
+    @items.each do |item|
+      event = Event::Page.site(@cur_site).
+        and_public.
+        where(filename: item.filename).first
+      event = item if event.nil?
+
+      if event.try(:map_points).present?
+        event.map_points.each do |map_point|
+          marker_info = view_context.render_event_info(event, map_point)
+          map_point[:html] = marker_info
+          @markers << map_point
+        end
+      end
+
+      if event.try(:map_points).blank? && event.try(:facility_ids).present?
+        event.facility_ids.each do |facility_id|
+          if @facility_ids.present?
+            next if !@facility_ids.include?(facility_id)
+          end
+          facility = Facility::Node::Page.site(@cur_site).and_public.where(id: facility_id).first
+          map_point = Facility::Map.site(@cur_site).and_public.
+            where(filename: /^#{::Regexp.escape(facility.filename)}\//, depth: facility.depth + 1).order_by(order: 1).first.map_points.first
+          marker_info = view_context.render_marker_info(facility)
+          map_point[:html] = marker_info
+          @markers << map_point
+        end
+      end
+    end
+  end
+
   def index_monthly_list
     start_date = @date
     close_date = start_date.advance(months: 1)
@@ -121,6 +157,13 @@ class Event::Agents::Nodes::PageController < ApplicationController
     close_date = start_date.advance(days: 7 * 6)
     set_events(start_date...close_date)
     render :monthly_table
+  end
+
+  def index_monthly_map
+    start_date = @date
+    close_date = start_date.advance(months: 1)
+    set_markers(start_date...close_date)
+    render :monthly_map
   end
 
   def index_ics

@@ -316,6 +316,7 @@ module Map::MapHelper
       events.each do |event|
         if event_end_date(event).present?
           next if event_end_date(event) <= Time.zone.today
+          next if event.map_points.present? && event.facility_ids.present?
           event_count += 1
         end
       end

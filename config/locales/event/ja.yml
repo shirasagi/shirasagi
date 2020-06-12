@@ -70,6 +70,7 @@ ja:
       event_display:
         list: リスト形式
         table: 表形式
+        map: 地図形式
         list_only: リスト形式のみ
         table_only: 表形式のみ
         simple_table: 表形式(簡易)

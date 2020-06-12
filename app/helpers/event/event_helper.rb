@@ -87,4 +87,18 @@ module Event::EventHelper
     end
   end
 
+  def link_to_map(date, opts = {})
+    year  = date.year
+    month = date.month
+    name = opts[:name].present? ? opts[:name] : "#{month}#{t_date('month')}"
+    path = opts[:path].present? ? opts[:path] : @cur_node.try(:url).to_s
+    enable = (opts[:enable] != nil) ? opts[:enable] : true
+    display = opts[:display].present? ? opts[:display] : 'index'
+
+    if enable && within_one_year?(date) || opts[:style]
+      link_to name, sprintf("#{path}%04d%02d/#{display}.html", year, month)
+    else
+      name
+    end
+  end
 end

@@ -1,0 +1,29 @@
+<nav class="event-date">
+  <h2 class="<%= event_h1_class @month %>"><%= "#{@year}#{t_date('year')}#{@month}#{t_date('month')}" %></h2>
+  <% unless @cur_node.event_display.to_s.end_with?('only') %>
+    <span class="list current">
+      <%= link_to_map Date.new(@year, @month, 1), name: I18n.t("event.options.event_display.map"), display: 'map', style: true %>
+    </span>
+    <span class="list">
+      <%= link_to_monthly Date.new(@year, @month, 1), name: I18n.t("event.options.event_display.list"), display: 'list', style: true %>
+    </span>
+    <span class="table">
+      <%= link_to_monthly Date.new(@year, @month, 1), name: I18n.t("event.options.event_display.table"), display: 'table', style: true %>
+    </span>
+  <% end %>
+  <ul>
+    <li class="prev"><%= link_to_monthly Date.new(@year, @month, 1).advance(days: -1), display: params[:display] %></li>
+    <li class="next"><%= link_to_monthly Date.new(@year, @month, 1).advance(months: 1), display: params[:display] %></li>
+  </ul>
+</nav>
+
+<div id="event-map">
+  <%= render_map "#map-canvas", markers: @markers, site: @cur_site, preview: @preview %>
+
+  <section class="map-page">
+    <header>
+      <h2><%= t("map.map") %></h2>
+    </header>
+    <div id="map-canvas" style="width: 100%; height: 400px;"></div>
+  </section>
+</div>

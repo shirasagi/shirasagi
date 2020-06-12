@@ -3,6 +3,9 @@
   <% unless @cur_node.event_display.to_s.end_with?('only') %>
     <div class="event-format">
       <span class="list">
+        <%= link_to_map Date.new(@year, @month, 1), name: I18n.t("event.options.event_display.map"), display: 'map', style: true %>
+      </span>
+      <span class="list">
         <%= link_to_monthly Date.new(@year, @month, 1), name: I18n.t("event.options.event_display.list"), display: 'list', style: true %>
       </span>
       <span class="table current">
