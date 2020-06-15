@@ -36,6 +36,9 @@
   <table class="index">
     <thead>
       <tr>
+        <% if @ss_mode != :cms %>
+          <th><%= @model.t :site_id %></th>
+        <% end %>
         <th><%= @model.t :class_name %></th>
         <th class="datetime"><%= @model.t :started %></th>
         <th class="datetime"><%= @model.t :closed %></th>
@@ -45,6 +48,9 @@
     <tbody>
       <% @items.each do |item| %>
       <tr class="list-item">
+        <% if @ss_mode != :cms %>
+          <td class="site"><%= item.site.try { |site| site.name } %></td>
+        <% end %>
         <% args = item.args.join(",") rescue nil %>
         <td><%= link_to(t(item.class_name.underscore, scope: "job.models") + "(#{args})", action: :show, id: item) %>
           <nav class="tap-menu">

@@ -17,6 +17,11 @@
   <dt><%= @model.t :class_name %></dt>
   <dd><%= t(@item.class_name.underscore, scope: "job.models") %></dd>
 
+  <% if @ss_mode.nil? %>
+    <dt><%= @model.t :site_id %></dt>
+    <dd><%= @item.site.try { |site| site.name } %></dd>
+  <% end %>
+
   <dt><%= @model.t :hostname %></dt>
   <dd><%= @item.process_id %> @ <%= @item.hostname %>(<%= @item.ip_address %>)</dd>
 
