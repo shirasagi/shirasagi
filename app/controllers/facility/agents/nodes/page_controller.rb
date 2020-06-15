@@ -21,6 +21,7 @@ class Facility::Agents::Nodes::PageController < ApplicationController
 
         image_ids = @cur_node.categories.pluck(:image_id)
         points[i][:image] = SS::File.in(id: image_ids).first.try(:url)
+        points[i][:html] = view_context.render_event_info(@cur_node, point)
       end
       map.map_points = points
 
