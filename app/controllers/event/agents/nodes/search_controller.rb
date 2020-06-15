@@ -17,6 +17,8 @@ class Event::Agents::Nodes::SearchController < ApplicationController
       set_markers
     end
     @facilities = Facility::Node::Page.site(@cur_site).and_public
+
+    render_with_pagination @items
   end
 
   private
@@ -56,15 +58,9 @@ class Event::Agents::Nodes::SearchController < ApplicationController
     end
 
     @items = criteria.order_by(@cur_node.sort_hash).
+      where(:event_dates.gte => Time.zone.today).
       page(params[:page]).
-      per(@cur_node.limit).to_a
-
-    @items.each do |item|
-      if event_end_date(item).present?
-        next if event_end_date(item) >= Time.zone.today
-        @items.delete(item)
-      end
-    end
+      per(@cur_node.limit)
   end
 
   def set_markers

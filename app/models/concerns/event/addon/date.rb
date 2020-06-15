@@ -35,8 +35,8 @@ module Event::Addon
         criteria = super
 
         if params[:dates].present?
-          criteria = criteria.gte_event_dates(params[:dates].first)
-          criteria = criteria.lte_event_dates(params[:dates].last)
+          dates = (params[:dates].first..params[:dates].last).map { |d| d.mongoize }
+          criteria = criteria.where(:event_dates.in => dates)
         end
 
         if params[:start_date].present?
