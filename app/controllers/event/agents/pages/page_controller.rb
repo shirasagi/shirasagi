@@ -1,7 +1,6 @@
 class Event::Agents::Pages::PageController < ApplicationController
   include Cms::PageFilter::View
   include Cms::ForMemberFilter::Page
-  helper Map::MapHelper
 
   def index
     if @cur_page.ical_link.present?
