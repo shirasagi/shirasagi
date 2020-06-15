@@ -16,11 +16,13 @@ class Event::Agents::Pages::PageController < ApplicationController
       map_points = []
       @cur_page.facility_ids.each do |facility_id|
         facility = Facility::Node::Page.site(@cur_site).and_public.where(id: facility_id).first
-        map_point = Facility::Map.site(@cur_site).and_public.
-          where(filename: /^#{::Regexp.escape(facility.filename)}\//, depth: facility.depth + 1).order_by(order: 1).first.map_points.first
-        marker_info = view_context.render_facility_info(facility)
-        map_point[:html] = marker_info
-        map_points << map_point
+        items = Facility::Map.site(@cur_site).and_public.
+          where(filename: /^#{::Regexp.escape(facility.filename)}\//, depth: facility.depth + 1).order_by(order: 1).first.map_points
+        items.each do |item|
+          marker_info = view_context.render_facility_info(facility)
+          item[:html] = marker_info
+          map_points << item
+        end
       end
       @cur_page.map_points = map_points
     end
