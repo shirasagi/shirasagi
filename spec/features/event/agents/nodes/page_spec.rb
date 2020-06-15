@@ -34,6 +34,12 @@ describe "event_agents_nodes_page", type: :feature, dbscope: :example do
       expect(page).to have_css("div#event-table")
     end
 
+    it "map" do
+      visit "#{node.url}map.html"
+      expect(status_code).to eq 200
+      expect(page).to have_css("div#event-map")
+    end
+
     it "monthly" do
       time = Time.zone.now
       year = time.year
@@ -60,6 +66,15 @@ describe "event_agents_nodes_page", type: :feature, dbscope: :example do
       visit sprintf("#{node.url}%04d%02d/table.html", year, month)
       expect(status_code).to eq 200
       expect(page).to have_css("div#event-table")
+    end
+
+    it "monthly map" do
+      time = Time.zone.now
+      year = time.year
+      month = time.month
+      visit sprintf("#{node.url}%04d%02d/map.html", year, month)
+      expect(status_code).to eq 200
+      expect(page).to have_css("div#event-map")
     end
 
     it "daily" do
@@ -91,6 +106,12 @@ describe "event_agents_nodes_page", type: :feature, dbscope: :example do
       visit "#{list_node.url}table.html"
       expect(status_code).to eq 200
       expect(page).to have_css("div#event-table")
+    end
+
+    it "map" do
+      visit "#{list_node.url}map.html"
+      expect(status_code).to eq 200
+      expect(page).to have_css("div#event-map")
     end
 
     it "monthly index type1" do
@@ -130,6 +151,15 @@ describe "event_agents_nodes_page", type: :feature, dbscope: :example do
       expect(status_code).to eq 200
       expect(page).to have_css("div#event-table")
     end
+
+    it "monthly map" do
+      time = Time.zone.now
+      year = time.year
+      month = time.month
+      visit sprintf("#{node.url}%04d%02d/map.html", year, month)
+      expect(status_code).to eq 200
+      expect(page).to have_css("div#event-map")
+    end
   end
 
   context "when access table_node" do
@@ -149,6 +179,12 @@ describe "event_agents_nodes_page", type: :feature, dbscope: :example do
       visit "#{table_node.url}table.html"
       expect(status_code).to eq 200
       expect(page).to have_css("div#event-table")
+    end
+
+    it "map" do
+      visit "#{list_node.url}map.html"
+      expect(status_code).to eq 200
+      expect(page).to have_css("div#event-map")
     end
 
     it "monthly index type1" do
@@ -188,6 +224,15 @@ describe "event_agents_nodes_page", type: :feature, dbscope: :example do
       expect(status_code).to eq 200
       expect(page).to have_css("div#event-table")
     end
+
+    it "monthly map" do
+      time = Time.zone.now
+      year = time.year
+      month = time.month
+      visit sprintf("#{node.url}%04d%02d/map.html", year, month)
+      expect(status_code).to eq 200
+      expect(page).to have_css("div#event-map")
+    end
   end
 
   context "when access list_only_node" do
@@ -205,6 +250,10 @@ describe "event_agents_nodes_page", type: :feature, dbscope: :example do
 
     it "table" do
       expect { visit "#{list_only_node.url}table.html" }.to raise_error "404"
+    end
+
+    it "map" do
+      expect { visit "#{list_only_node.url}map.html" }.to raise_error "404"
     end
 
     it "monthly index type1" do
@@ -243,6 +292,14 @@ describe "event_agents_nodes_page", type: :feature, dbscope: :example do
       url = sprintf("#{list_only_node.url}%04d%02d/table.html", year, month)
       expect { visit url }.to raise_error "404"
     end
+
+    it "monthly map" do
+      time = Time.zone.now
+      year = time.year
+      month = time.month
+      url = sprintf("#{list_only_node.url}%04d%02d/map.html", year, month)
+      expect { visit url }.to raise_error "404"
+    end
   end
 
   context "when access table_only_node" do
@@ -260,6 +317,10 @@ describe "event_agents_nodes_page", type: :feature, dbscope: :example do
       visit "#{table_only_node.url}table.html"
       expect(status_code).to eq 200
       expect(page).to have_css("div#event-table")
+    end
+
+    it "map" do
+      expect { visit "#{list_only_node.url}map.html" }.to raise_error "404"
     end
 
     it "monthly index type1" do
@@ -297,6 +358,14 @@ describe "event_agents_nodes_page", type: :feature, dbscope: :example do
       visit sprintf("#{table_only_node.url}%04d%02d/table.html", year, month)
       expect(status_code).to eq 200
       expect(page).to have_css("div#event-table")
+    end
+
+    it "monthly map" do
+      time = Time.zone.now
+      year = time.year
+      month = time.month
+      url = sprintf("#{list_only_node.url}%04d%02d/map.html", year, month)
+      expect { visit url }.to raise_error "404"
     end
   end
 
