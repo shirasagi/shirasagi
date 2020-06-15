@@ -64,8 +64,8 @@ class Event::Agents::Nodes::PageController < ApplicationController
     @cur_display ||= default_display
     @cur_display = default_display if @cur_display == "index"
     raise '404' if @cur_display != 'list' && @cur_display != 'table' && @cur_display != 'map'
-    raise '404' if @cur_display == 'list' && @cur_node.event_display == 'table_only'
-    raise '404' if @cur_display == 'table' && @cur_node.event_display == 'list_only'
+    raise '404' if (@cur_display == 'list' || @cur_display == 'map') && @cur_node.event_display == 'table_only'
+    raise '404' if (@cur_display == 'table' || @cur_display == 'map') && @cur_node.event_display == 'list_only'
   end
 
   def set_calendar_year_month
