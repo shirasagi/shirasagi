@@ -66,14 +66,14 @@
         <tbody>
           <% if params[:action] =~ /new/ && @item.user_ids.blank? %>
           <tr data-id="<%= @cur_user.id %>">
-            <td><%= f.hidden_field "user_ids[]", value: @cur_user.id, id: nil %> <%= @cur_user.long_name %></td>
+            <td><%= f.hidden_field "user_ids[]", value: @cur_user.id, id: nil %> <%= gws_public_user_long_name(@cur_user.long_name) %></td>
             <td><%= link_to t("ss.buttons.delete"), "#", class: "deselect btn" %></td>
           </tr>
           <% end %>
 
           <% @item.users.order_by_title(@cur_site).each do |user| %>
           <tr data-id="<%= user.id %>">
-            <td><%= f.hidden_field "user_ids[]", value: user.id, id: nil %> <%= user.long_name %></td>
+            <td><%= f.hidden_field "user_ids[]", value: user.id, id: nil %> <%= gws_public_user_long_name(user.long_name) %></td>
             <td><%= link_to t("ss.buttons.delete"), "#", class: "deselect btn" %></td>
           </tr>
           <% end %>

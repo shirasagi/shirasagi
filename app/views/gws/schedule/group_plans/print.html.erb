@@ -17,7 +17,7 @@ Gws_Schedule_Integration.render();
 
   <% @users.each_with_index do |user, idx| %>
     <div class="calendar-multiple-header">
-      <%= link_to user.long_name, gws_schedule_user_plans_path(user: user.id), class: "calendar-name" %>
+      <%= link_to gws_public_user_long_name(user.long_name), gws_schedule_user_plans_path(user: user.id), class: "calendar-name" %>
       <%= render "gws/schedule/main/calendar_attr", user: user %>
     </div>
     <div class="calendar multiple" id="cal-<%= user.id %>"></div>

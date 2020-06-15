@@ -25,7 +25,7 @@ show_personal_addr = @cur_user.gws_role_permit_any?(@cur_site, :edit_gws_persona
         <tbody>
           <% @item.sorted_to_members.each do |user| %>
           <tr data-id="<%= user.id %>">
-            <td><%= f.hidden_field "in_to_members[]", value: user.id, id: nil %> <%= user.long_name %></td>
+            <td><%= f.hidden_field "in_to_members[]", value: user.id, id: nil %> <%= gws_public_user_long_name(user.long_name) %></td>
             <td><%= link_to t("ss.buttons.delete"), "#", class: "deselect btn" %></td>
           </tr>
           <% end %>
@@ -67,7 +67,7 @@ show_personal_addr = @cur_user.gws_role_permit_any?(@cur_site, :edit_gws_persona
         <tbody>
         <% @item.sorted_cc_members.each do |user| %>
             <tr data-id="<%= user.id %>">
-              <td><%= f.hidden_field "in_cc_members[]", value: user.id, id: nil %> <%= user.long_name %></td>
+              <td><%= f.hidden_field "in_cc_members[]", value: user.id, id: nil %> <%= gws_public_user_long_name(user.long_name) %></td>
               <td><%= link_to t("ss.buttons.delete"), "#", class: "deselect btn" %></td>
             </tr>
         <% end %>
@@ -105,7 +105,7 @@ show_personal_addr = @cur_user.gws_role_permit_any?(@cur_site, :edit_gws_persona
         <tbody>
         <% @item.sorted_bcc_members.each do |user| %>
             <tr data-id="<%= user.id %>">
-              <td><%= f.hidden_field "in_bcc_members[]", value: user.id, id: nil %> <%= user.long_name %></td>
+              <td><%= f.hidden_field "in_bcc_members[]", value: user.id, id: nil %> <%= gws_public_user_long_name(user.long_name) %></td>
               <td><%= link_to t("ss.buttons.delete"), "#", class: "deselect btn" %></td>
             </tr>
         <% end %>

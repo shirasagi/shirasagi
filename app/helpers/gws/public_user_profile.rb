@@ -45,4 +45,17 @@ module Gws::PublicUserProfile
 
     html.join("\n").html_safe
   end
+
+  def gws_public_user_long_name(long_name, **options)
+    return long_name if long_name.blank?
+
+    cur_site = options[:cur_site] || @cur_site
+    return long_name if cur_site.user_profile_public?("uid")
+
+    long_name.sub(/\(.*$/, '').strip
+  end
+
+  def gws_public_user_long_names(*long_names, **options)
+    Array(long_names).flatten.map { |long_name| gws_public_user_long_name(long_name, **options) }
+  end
 end

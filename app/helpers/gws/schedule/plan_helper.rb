@@ -1,6 +1,5 @@
 module Gws::Schedule::PlanHelper
   extend ActiveSupport::Concern
-  include Gws::PublicUserProfile
 
   def search_query
     params.to_unsafe_h.select { |k, v| k == 's' }.to_query

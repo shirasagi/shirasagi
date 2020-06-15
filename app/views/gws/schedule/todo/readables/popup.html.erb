@@ -32,7 +32,7 @@ $('.popup-attributes .custom-group-name').click(function() {
         <div class="custom-group">
           <a class="custom-group-name" href="#"><%= c.name %></a><br />
           <div class="custom-group-members" id="custom-group-<%= c.id %>">
-            <%= c.members.map(&:long_name).join(', ') %>
+            <%= gws_public_user_long_names(c.members.map(&:long_name)).join(', ') %>
           </div>
         </div>
       <% end %>
@@ -41,12 +41,12 @@ $('.popup-attributes .custom-group-name').click(function() {
         <div class="custom-group">
           <a class="custom-group-name" href="#"><%= g.section_name %></a><br/>
           <div class="custom-group-members" id="custom-group-<%= g.id %>">
-            <%= Gws::User.active.in(group_ids: g.id).map(&:long_name).join(', ') %>
+            <%= gws_public_user_long_names(Gws::User.active.in(group_ids: g.id).map(&:long_name)).join(', ') %>
           </div>
         </div>
       <% end %>
 
-      <%= @item.members.order_by_title(@cur_site).map(&:long_name).join(', ') %>
+      <%= gws_public_user_long_names(@item.members.order_by_title(@cur_site).map(&:long_name)).join(', ') %>
     </div>
   </div>
 
@@ -54,8 +54,8 @@ $('.popup-attributes .custom-group-name').click(function() {
       <div class="popup-attr popup-history">
         <div class="popup-label"><%= t "gws.history.user.update" %></div>
         <div class="popup-value">
-          <span class="user"><%= hist.user_long_name %></span>
-          <% if hist.user_tel %><span class="tel"><%= hist.user_tel %></span><% end %>
+          <span class="user"><%= gws_public_user_long_name(hist.user_long_name) %></span>
+          <% if hist.user_tel.present? && @cur_site.user_profile_public?("tel") %><span class="tel"><%= hist.user_tel %></span><% end %>
         </div>
       </div>
   <% end %>
@@ -63,8 +63,8 @@ $('.popup-attributes .custom-group-name').click(function() {
   <div class="popup-attr popup-history">
     <div class="popup-label"><%= t "gws.history.user.create" %></div>
     <div class="popup-value">
-      <span class="user"><%= @item.user_long_name %></span>
-      <% if @item.user_tel %><span class="tel"><%= @item.user_tel %></span><% end %>
+      <span class="user"><%= gws_public_user_long_name(@item.user_long_name) %></span>
+      <% if @item.user_tel.present? && @cur_site.user_profile_public?("tel") %><span class="tel"><%= @item.user_tel %></span><% end %>
     </div>
   </div>
 </div>

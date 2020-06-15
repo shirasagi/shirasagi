@@ -2,8 +2,6 @@ class Gws::Portal::Setting::UsersController < ApplicationController
   include Gws::BaseFilter
   include Gws::CrudFilter
 
-  helper Gws::PublicUserProfile
-
   model Gws::User
 
   prepend_view_path "app/views/sys/users"

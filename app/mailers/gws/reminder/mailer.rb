@@ -1,5 +1,6 @@
 class Gws::Reminder::Mailer < ActionMailer::Base
   helper Gws::Schedule::PlanHelper
+  helper Gws::PublicUserProfile
 
   def notify_mail(site, reminder)
     @reminder = reminder

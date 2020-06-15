@@ -11,7 +11,7 @@
         </span>
       </h2>
       <nav class="meta">
-        <span class="user"><%= @item.contributor_name.presence || @item.user_long_name %></span>
+        <span class="user"><%= gws_public_user_long_name(@item.contributor_name.presence || @item.user_long_name) %></span>
         <span class="datetime"><%= @model.t(:due_date) %>: <%= tryb { @item.due_date.strftime("%Y/%m/%d %H:%M") } %></span>
         <span class="datetime"><%= @model.t(:released) %>: <%= tryb { @item.released.strftime("%Y/%m/%d %H:%M") } %></span>
       </nav>
