@@ -381,11 +381,11 @@ module Map::MapHelper
 
   def monthly_facility_info(item, dates)
     h = marker_info(item)
-    events = Event::Page.site(@cur_site).and_public.where(facility_ids: item.id).order(event_dates: "ASC")
+    events = Event::Page.site(@cur_site).and_public.where(facility_ids: item.id)
     if events.present?
       events = events.where(:event_dates.in => dates).
         entries.
-        sort_by { |page| page.event_dates.size }
+        sort_by { |page| page.event_dates }
       event_count = 0
       events.each do |event|
         next if event.map_points.present? && event.facility_ids.present?
