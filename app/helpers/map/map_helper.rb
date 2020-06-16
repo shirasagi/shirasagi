@@ -237,7 +237,11 @@ module Map::MapHelper
 
   def render_map_point_info(event, map_point)
     if event_end_date(event).present?
-      if event_end_date(event) >= Time.zone.today
+      if @items.present?
+        if event_end_date(event) >= Time.zone.today || @items.where(id: event.id).present?
+          map_point_info(event, map_point)
+        end
+      elsif event_end_date(event) >= Time.zone.today
         map_point_info(event, map_point)
       end
     end
@@ -350,7 +354,11 @@ module Map::MapHelper
       event_count = 0
       events.each do |event|
         if event_end_date(event).present?
-          next if event_end_date(event) <= Time.zone.today
+          if @items.present?
+            next if event_end_date(event) <= Time.zone.today && @items.where(id: event.id).blank?
+          elsif event_end_date(event) <= Time.zone.today
+            next
+          end
           next if event.map_points.present? && event.facility_ids.present?
           event_count += 1
         end
@@ -361,7 +369,11 @@ module Map::MapHelper
         events.each do |event|
           next if event.map_points.present? && event.facility_ids.present?
           if event_end_date(event).present?
-            next if event_end_date(event) <= Time.zone.today
+            if @items.present?
+              next if event_end_date(event) <= Time.zone.today && @items.where(id: event.id).blank?
+            elsif event_end_date(event) <= Time.zone.today
+              next
+            end
             h << %(<div>)
             h << %(<p class="event-name">#{link_to event.name, event.url}</p>)
             h << %(<p class="event-dates">#{raw event.dates_to_html(:long)}</p>)
