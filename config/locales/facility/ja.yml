@@ -26,6 +26,7 @@ ja:
     image: 施設写真
     map: 地図
     notice: お知らせ
+    event: イベント
     edit_page: 施設情報を編集する
     select_location: 地域を選択
     empty: 上記の条件では施設が見つかりませんでした。
