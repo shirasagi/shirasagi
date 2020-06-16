@@ -61,7 +61,7 @@ class Event::Agents::Nodes::SearchController < ApplicationController
       page(params[:page]).
       per(@cur_node.limit)
 
-    @items.gte_event_dates(Time.zone.today) if @start_date.blank? || @close_date.blank?
+    @items = @items.gte_event_dates(Time.zone.today) if @start_date.blank? || @close_date.blank?
     @items
   end
 
