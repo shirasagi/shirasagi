@@ -38,10 +38,10 @@
 
         <div class="info">
           <% if @cur_folder.sent_box? || @cur_folder.draft_box? %>
-            <% addr = item.to_members? ? item.display_to.first : nil %>
+            <% addr = item.to_members? ? gws_public_user_long_name(item.display_to.first) : nil %>
             <span class="field to" title="<%= addr %>"><%= addr %></span>
           <% else %>
-            <span class="field from" title="<%= item.from_member_name || t('gws/memo.no_senders') %>"><%= item.from_member_name || t('gws/memo.no_senders') %></span>
+            <span class="field from" title="<%= gws_public_user_long_name(item.from_member_name) || t('gws/memo.no_senders') %>"><%= gws_public_user_long_name(item.from_member_name) || t('gws/memo.no_senders') %></span>
           <% end %>
           <%= link_to item.display_subject, { action: :show, id: item.id }, class: 'field title', title: item.display_subject %>
           <span class="field priority"><%= item.label :priority %></span>
