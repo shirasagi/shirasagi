@@ -58,9 +58,11 @@ class Event::Agents::Nodes::SearchController < ApplicationController
     end
 
     @items = criteria.order_by(@cur_node.sort_hash).
-      where(:event_dates.gte => Time.zone.today).
       page(params[:page]).
       per(@cur_node.limit)
+
+    @items.gte_event_dates(Time.zone.today) if @start_date.blank? || @close_date.blank?
+    @items
   end
 
   def set_markers
