@@ -3,8 +3,7 @@ class Article::Agents::Parts::PageNaviController < ApplicationController
   helper Cms::ListHelper
 
   def pages
-    Article::Page.site(@cur_site).and_public(@cur_date).
-      where(@cur_node.condition_hash)
+    Article::Page.public_list(site: @cur_site, node: @cur_node, date: @cur_date)
   end
 
   def index

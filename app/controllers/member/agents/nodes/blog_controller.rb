@@ -9,8 +9,7 @@ class Member::Agents::Nodes::BlogController < ApplicationController
   private
 
   def pages
-    @model.site(@cur_site).node(@cur_node).and_public.
-      where(@cur_node.condition_hash)
+    @model.public_list(site: @cur_site, node: @cur_node, date: @cur_date)
   end
 
   public

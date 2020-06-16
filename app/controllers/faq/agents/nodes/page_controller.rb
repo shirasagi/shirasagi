@@ -5,8 +5,7 @@ class Faq::Agents::Nodes::PageController < ApplicationController
   before_action :accept_cors_request, only: [:rss]
 
   def pages
-    Faq::Page.site(@cur_site).and_public(@cur_date).
-      where(@cur_node.condition_hash)
+    Faq::Page.public_list(site: @cur_site, node: @cur_node, date: @cur_date)
   end
 
   def index

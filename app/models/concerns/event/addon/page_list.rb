@@ -22,7 +22,7 @@ module Event::Addon
       ]
     end
 
-    def condition_hash(opts = {})
+    def condition_hash
       h = super
       today = Time.zone.today
       case sort

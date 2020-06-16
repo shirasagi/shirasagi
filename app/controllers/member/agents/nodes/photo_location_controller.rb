@@ -5,8 +5,7 @@ class Member::Agents::Nodes::PhotoLocationController < ApplicationController
   before_action :accept_cors_request, only: [:rss]
 
   def pages
-    Member::Photo.site(@cur_site).and_public(@cur_date).listable.
-      where(@cur_node.condition_hash)
+    Member::Photo.public_list(site: @cur_site, node: @cur_node, date: @cur_date).listable
   end
 
   def index
