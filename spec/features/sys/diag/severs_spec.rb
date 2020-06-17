@@ -2,15 +2,20 @@ require 'spec_helper'
 
 describe "sys_diag_servers", type: :feature, dbscope: :example do
   before do
-    @save = Sys::Diag::ServersController::PROC_MEMINFO_FILE_PATH
+    @save_cpuinfo = Sys::Diag::ServersController::PROC_CPUINFO_FILE_PATH
+    @save_meminfo = Sys::Diag::ServersController::PROC_MEMINFO_FILE_PATH
+    Sys::Diag::ServersController.send(:remove_const, :PROC_CPUINFO_FILE_PATH)
     Sys::Diag::ServersController.send(:remove_const, :PROC_MEMINFO_FILE_PATH)
+    Sys::Diag::ServersController.const_set(:PROC_CPUINFO_FILE_PATH, "#{Rails.root}/spec/fixtures/sys/diag/cpuinfo-1")
     Sys::Diag::ServersController.const_set(:PROC_MEMINFO_FILE_PATH, "#{Rails.root}/spec/fixtures/sys/diag/meminfo-1")
     login_sys_user
   end
 
   after do
+    Sys::Diag::ServersController.send(:remove_const, :PROC_CPUINFO_FILE_PATH)
     Sys::Diag::ServersController.send(:remove_const, :PROC_MEMINFO_FILE_PATH)
-    Sys::Diag::ServersController.const_set(:PROC_MEMINFO_FILE_PATH, @save)
+    Sys::Diag::ServersController.const_set(:PROC_CPUINFO_FILE_PATH, @save_cpuinfo)
+    Sys::Diag::ServersController.const_set(:PROC_MEMINFO_FILE_PATH, @save_meminfo)
   end
 
   it do
@@ -18,6 +23,11 @@ describe "sys_diag_servers", type: :feature, dbscope: :example do
 
     within "#server-info" do
       expect(page).to have_css("dt", text: "uptime")
+    end
+
+    within "#cpu-info" do
+      expect(page).to have_css("dt", text: "processor")
+      expect(page).to have_css("dt", text: "power management")
     end
 
     within "#mem-info" do

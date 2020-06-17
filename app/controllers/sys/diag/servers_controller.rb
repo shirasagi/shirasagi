@@ -1,6 +1,7 @@
 class Sys::Diag::ServersController < ApplicationController
   include Sys::BaseFilter
 
+  PROC_CPUINFO_FILE_PATH = "/proc/cpuinfo".freeze
   PROC_MEMINFO_FILE_PATH = "/proc/meminfo".freeze
 
   navi_view "sys/diag/main/navi"

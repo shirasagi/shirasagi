@@ -12,11 +12,33 @@
     </dl>
   <% end %>
 
+  <% if ::File.exist?(Sys::Diag::ServersController::PROC_CPUINFO_FILE_PATH) %>
+    <% begin %>
+      <%= render "ss/crud/addon", addon: { id: "cpu-info", head: "Server CPU", toggle: true } do %>
+        <dl class="see">
+          <% ::File.readlines(Sys::Diag::ServersController::PROC_CPUINFO_FILE_PATH).each do |line| %>
+            <% if line.blank? %>
+              <dt><hr></dt>
+              <dd><hr></dd>
+            <% else %>
+              <% key, value = line.strip.split(":", 2) %>
+              <dt><%= key.strip %></dt>
+              <dd><%= value.strip %></dd>
+            <% end %>
+          <% end %>
+        </dl>
+      <% end %>
+    <% rescue %>
+    <% raise %>
+    <% end %>
+  <% end %>
+
   <% if ::File.exist?(Sys::Diag::ServersController::PROC_MEMINFO_FILE_PATH) %>
     <% begin %>
       <%= render "ss/crud/addon", addon: { id: "mem-info", head: "Server Memory", toggle: true } do %>
         <dl class="see">
           <% ::File.readlines(Sys::Diag::ServersController::PROC_MEMINFO_FILE_PATH).each do |line| %>
+            <% next if line.blank? %>
             <% key, value = line.strip.split(":", 2) %>
             <dt><%= key.strip %></dt>
             <dd><%= value.strip %></dd>
