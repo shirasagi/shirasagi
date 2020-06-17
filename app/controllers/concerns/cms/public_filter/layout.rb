@@ -168,7 +168,7 @@ module Cms::PublicFilter::Layout
       else
         item = @cur_item.updated
       end
-      date ||= ERB::Util.html_escape(item)
+      date = ERB::Util.html_escape(item)
       datetime = matchdata[:datetime]
       convert_date = date_convert(date, matchdata[:format].to_sym, datetime)
       if matchdata[:time].present?
