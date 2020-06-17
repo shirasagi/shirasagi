@@ -1,87 +1,26 @@
-<%
-  now = Time.zone.now
-  ymd = params[:ymd]
-  if ymd.present?
-    origin = Time.zone.local(ymd[0..3].to_i, ymd[4..5].to_i, ymd[6..7].to_i)
-    next_day = origin + 1.day
-    prev_day = origin - 1.day
-  else
-    next_day = now.beginning_of_day + 1.day
-    prev_day = now.beginning_of_day - 1.day
-  end
-%>
-<div class="list-head">
-  <%= form_tag({ action: :index }, { method: "GET", class: :search }) do %>
-    <div class="list-head-action">
-      <% if origin.blank? || now.to_date != origin.to_date %>
-        <%= link_to(t('gws.history.days.today'), { ymd: now.strftime('%Y%m%d') }, class: :btn, style: 'font-weight: normal; margin-right: 12px;') %>
-      <% end %>
-
-      <% if now >= next_day %>
-        <%= link_to(t('gws.history.days.next_day'), { ymd: next_day.strftime('%Y%m%d') }, class: :btn, style: 'font-weight: normal;') %>
-      <% end %>
-
-      <%= text_field_tag("ymd", origin.try { |value| value.strftime('%Y/%m/%d') }, id: nil, class: 'datetime js-date', data: { min_date: min_updated.strftime('%Y/%m/%d'), max_date: 0}) %>
-      <%= link_to(t('gws.history.days.prev_day'), { ymd: prev_day.strftime('%Y%m%d') }, class: :btn, style: 'font-weight: normal;') %>
-    </div>
-    <% if class_name_options.present? %>
-      <div class="list-head-action" style="margin-left: 18px">
-        <%= select_tag "s[class_name]", options_for_select(class_name_options, @s.class_name), id: nil, include_blank: true %>
-      </div>
-    <% end %>
-  <% end %>
-</div>
-
-<section class="main-box">
-  <table class="index">
-    <thead>
-      <tr>
-        <% if @ss_mode != :cms %>
-          <th><%= @model.t :site_id %></th>
-        <% end %>
-        <th><%= @model.t :class_name %></th>
-        <th class="datetime"><%= @model.t :started %></th>
-        <th class="datetime"><%= @model.t :closed %></th>
-        <th><%= @model.t :state %></th>
-      </tr>
-    </thead>
-    <tbody>
-      <% @items.each do |item| %>
-      <tr class="list-item">
-        <% if @ss_mode != :cms %>
-          <td class="site"><%= item.site.try { |site| site.name } %></td>
-        <% end %>
-        <% args = item.args.join(",") rescue nil %>
-        <td><%= link_to(t(item.class_name.underscore, scope: "job.models") + "(#{args})", action: :show, id: item) %>
-          <nav class="tap-menu">
-            <%= link_to t('ss.links.show'), action: :show, id: item %>
-          </nav>
-        </td>
-        <td class="datetime"><%= item.started ? item.started.strftime("%Y/%m/%d %H:%M") : item.started %></td>
-        <td class="datetime"><%= item.closed ? item.closed.strftime("%Y/%m/%d %H:%M") : item.closed %></td>
-        <td><%= t(item.state, scope: "job.state") %></td>
-      </tr>
-      <% end %>
-    </tbody>
-  </table>
-</section>
-
-<%= paginate @items if @items.try(:current_page) %>
-
-<%= jquery do %>
-  $('.list-head input[name="ymd"]').datetimepicker({
-    onChangeDateTime: function(dp, $input) {
-      var ymd = $input.val();
-      ymd = ymd.replace(/\//g, '');
-
-      var url = '<%= url_for(action: :index, ymd: ':ymd') %>';
-      url = url.replace(':ymd', ymd);
-      url = url.replace('//', '/')
-
-      location.href = url;
-    }
-  });
-  $('.list-head select[name="s[class_name]"]').on("change", function() {
-    $(this).closest("form").submit();
-  });
+<% @tap_menu = proc do |item| %>
+  <%= link_to t('ss.links.show'), action: :show, id: item %>
 <% end %>
+
+<% @index_title = proc do |item| %>
+  <% args = item.args.join(",") rescue nil %>
+  <%= link_to(t(item.class_name.underscore, scope: "job.models") + "(#{args})", action: :show, id: item) %>
+<% end %>
+
+<% @index_meta = proc do |item| %>
+  <span class="id">#<%= item.id %></span>
+  <% if @ss_mode != :cms && item.site.present? %>
+    <span class="site"><%= item.site.name %></span>
+  <% end %>
+  <span class="datetime"><%= item.started ? item.started.strftime("%Y/%m/%d %H:%M") : item.started %></span>
+  <span class="datetime"><%= item.closed ? item.closed.strftime("%Y/%m/%d %H:%M") : item.closed %></span>
+  <span><%= t(item.state, scope: "job.state") %></span>
+<% end %>
+
+<style>
+  .list-item [name="ids[]"] {
+    display: none;
+  }
+</style>
+
+<%= render file: "cms/crud/index" %>
