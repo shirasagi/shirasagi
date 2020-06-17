@@ -12,11 +12,11 @@
     </dl>
   <% end %>
 
-  <% if ::File.exist?("/proc/meminfo") %>
+  <% if ::File.exist?(Sys::Diag::ServersController::PROC_MEMINFO_FILE_PATH) %>
     <% begin %>
-      <%= render "ss/crud/addon", addon: { id: "server-info", head: "Server Memory", toggle: true } do %>
+      <%= render "ss/crud/addon", addon: { id: "mem-info", head: "Server Memory", toggle: true } do %>
         <dl class="see">
-          <% ::File.readlines("/proc/meminfo").each do |line| %>
+          <% ::File.readlines(Sys::Diag::ServersController::PROC_MEMINFO_FILE_PATH).each do |line| %>
             <% key, value = line.strip.split(":", 2) %>
             <dt><%= key.strip %></dt>
             <dd><%= value.strip %></dd>
@@ -28,7 +28,7 @@
   <% end %>
 
   <% sorted_keys = request.env.keys.sort %>
-  <%= render "ss/crud/addon", addon: { id: "env list", head: "HTTP Environments", toggle: true } do %>
+  <%= render "ss/crud/addon", addon: { id: "http-env-list", head: "HTTP Environments", toggle: true } do %>
     <dl class="see">
       <% sorted_keys.each do |key| %>
         <% if http_key?(key) %>
@@ -39,7 +39,7 @@
     </dl>
   <% end %>
 
-  <%= render "ss/crud/addon", addon: { id: "env list", head: "Rack Environments", toggle: true } do %>
+  <%= render "ss/crud/addon", addon: { id: "rack-env-list", head: "Rack Environments", toggle: true } do %>
     <dl class="see">
       <% sorted_keys.each do |key| %>
         <% if rack_key?(key) %>
@@ -50,7 +50,7 @@
     </dl>
   <% end %>
 
-  <%= render "ss/crud/addon", addon: { id: "env list", head: "Rails Environments", toggle: true } do %>
+  <%= render "ss/crud/addon", addon: { id: "rails-env-list", head: "Rails Environments", toggle: true } do %>
     <dl class="see">
       <% sorted_keys.each do |key| %>
         <% if rails_key?(key) %>
@@ -61,7 +61,7 @@
     </dl>
   <% end %>
 
-  <%= render "ss/crud/addon", addon: { id: "env list", head: "Other Environments", toggle: true } do %>
+  <%= render "ss/crud/addon", addon: { id: "other-env-list", head: "Other Environments", toggle: true } do %>
     <dl class="see">
       <% sorted_keys.each do |key| %>
         <% if other_key?(key) %>
