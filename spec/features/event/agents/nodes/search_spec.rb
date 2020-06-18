@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe "event_agents_nodes_search", type: :feature, dbscope: :example, js: true do
+describe "event_agents_nodes_search", type: :feature, dbscope: :example do
   let(:site) { cms_site }
   let(:layout) { create_cms_layout }
   let(:event_node) { create :event_node_page, layout_id: layout.id }
