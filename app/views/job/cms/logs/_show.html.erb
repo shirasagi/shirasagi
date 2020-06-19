@@ -26,10 +26,20 @@
   <dd><%= @item.process_id %> @ <%= @item.hostname %>(<%= @item.ip_address %>)</dd>
 
   <dt><%= @model.t :started %></dt>
-  <dd class="datetime"><%= @item.started ? @item.started.strftime("%Y/%m/%d %H:%M") : @item.started %></dd>
+  <dd class="datetime">
+    <%= @item.started.try do |time| %>
+      <%= content_tag("time", I18n.l(time, format: :picker), datetime: time.iso8601, title: time.iso8601) %>
+      <%= link_to(t("ss.buttons.copy"), "#", class: "clipboard-copy-button", data: { text: time.iso8601 }) %>
+    <% end %>
+  </dd>
 
   <dt><%= @model.t :closed %></dt>
-  <dd class="datetime"><%= @item.closed ? @item.closed.strftime("%Y/%m/%d %H:%M") : @item.closed %></dd>
+  <dd class="datetime">
+    <%= @item.closed.try do |time| %>
+      <%= content_tag("time", I18n.l(time, format: :picker), datetime: time.iso8601, title: time.iso8601) %>
+      <%= link_to(t("ss.buttons.copy"), "#", class: "clipboard-copy-button", data: { text: time.iso8601 }) %>
+    <% end %>
+  </dd>
 
   <dt><%= @model.t :state %></dt>
   <dd><%= t(@item.state, scope: "job.state") %></dd>
@@ -50,3 +60,7 @@
   <% end %>
   </dd>
 </dl>
+
+<%= jquery do %>
+  SS_Clipboard.renderCopy();
+<% end %>
