@@ -137,6 +137,9 @@ class Cms::PreviewController < ApplicationController
         m
       end
     end
+    body.gsub!(/<form.*?method="get".*?>/) do |m|
+      m.sub(/action="/, "action=\"#{preview_url}")
+    end
 
     if rendered = options[:rendered]
       case rendered[:type]

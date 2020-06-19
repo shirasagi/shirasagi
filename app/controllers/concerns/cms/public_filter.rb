@@ -204,7 +204,10 @@ module Cms::PublicFilter
   end
 
   def send_page(page)
-    if response.content_type == "text/html" && page.layout
+    if page.view_layout == "cms/redirect" && !mobile_path?
+      @redirect_link = page.redirect_link
+      render html: "", layout: "cms/redirect"
+    elsif response.content_type == "text/html" && page.layout
       render html: render_layout(page.layout).html_safe, layout: (request.xhr? ? false : "cms/page")
     else
       @_response_body = response.body

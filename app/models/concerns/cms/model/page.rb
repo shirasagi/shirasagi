@@ -2,6 +2,7 @@ module Cms::Model::Page
   extend ActiveSupport::Concern
   extend SS::Translation
   include Cms::Content
+  include Cms::RedirectPage
   include Cms::Reference::Layout
 
   included do
@@ -154,6 +155,14 @@ module Cms::Model::Page
     end
 
     nil
+  end
+
+  def redirect_link
+    nil
+  end
+
+  def view_layout
+    "cms/page"
   end
 
   private

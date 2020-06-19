@@ -49,7 +49,10 @@ module Cms::PublicFilter::Page
       raise e
     end
 
-    if response.content_type == "text/html" && page.layout
+    if page.view_layout == "cms/redirect"
+      @redirect_link = page.redirect_link
+      html = render_to_string html: "", layout: "cms/redirect"
+    elsif response.content_type == "text/html" && page.layout
       html = render_to_string html: render_layout(page.layout).html_safe, layout: "cms/page"
     else
       html = response.body

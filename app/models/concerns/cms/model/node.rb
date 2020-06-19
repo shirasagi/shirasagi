@@ -2,6 +2,7 @@ module Cms::Model::Node
   extend ActiveSupport::Concern
   extend SS::Translation
   include Cms::Content
+  include Cms::RedirectPage
   include Cms::Reference::Layout
   include Cms::Reference::PageLayout
   include Cms::Reference::StCategory

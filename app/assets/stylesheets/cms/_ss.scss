@@ -159,3 +159,31 @@
   background: $white;
   white-space: nowrap;
 }
+
+.cms-guide-tabs {
+  zoom: 1;
+  margin-top: -1px;
+  padding: 0 10px;
+  height: 30px;
+  a {
+    display: block;
+    float: left;
+    margin: 1px 6px -1px 0;
+    border: 1px solid #d0d0d0;
+    border-left: 3px solid #bbb;
+    border-radius: 0 4px 0 0;
+    background-color: #dcdcdc;
+    color: #000;
+    text-decoration: none;
+    &.current, &:hover {
+      border-bottom-color: #fff;
+      border-left-color: #f25a38;
+      background-color: #fff;
+    }
+    .tab-name {
+      display: block;
+      padding: 5px 8px;
+      text-align: center;
+    }
+  }
+}

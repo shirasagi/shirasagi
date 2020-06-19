@@ -1,0 +1,22 @@
+<% edge = ::Guide::Diagram::Edge.new(in_edge) %>
+<dl class="see edge" style="background: #f5f5f5; border-radius: 3px; padding-top: 5px;">
+  <dt><%= t("guide.links.applicable") %></dt>
+  <dd>
+    <%= hidden_field_tag "item[in_edges][][value]", t("guide.links.applicable") %>
+    <%= hidden_field_tag "item[in_edges][][question_type]", "yes_no" %>
+    <%= hidden_field_tag "item[in_edges][][point_ids][]", edge.value, class: "hidden-ids" %>
+    <%= link_to t("ss.links.select"), guide_apis_procedures_path(nid: @cur_node.id, id: @item.id), class: "ajax-box" %>
+  </dd>
+  <dd>
+    <table class="index ajax-selected">
+      <tbody>
+        <% edge.points.each do |point| %>
+          <tr data-id="<%= point.id %>">
+            <td><%= hidden_field_tag "item[in_edges][][point_ids][]", point.id %> <%= point.name_with_type %></td>
+            <td><%= link_to t("ss.buttons.delete"), "#", class: "deselect btn" %></td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </dd>
+</dl>

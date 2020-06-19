@@ -1,0 +1,38 @@
+<dl class="see">
+  <dt><%= @model.t :question_type %></dt>
+  <dd><%= @item.label :question_type %></dd>
+
+  <% if @item.question_type == "choices" %>
+    <dt><%= @model.t :check_type %></dt>
+    <dd><%= @item.label :check_type %></dd>
+  <% end %>
+
+  <% @item.edges.each_with_index do |edge, no| %>
+    <% if @item.question_type == "choices" %>
+      <dt><%= "選択肢#{no + 1}" %></dt>
+      <dd><%= edge.value %></dd>
+    <% else %>
+      <dt><%= edge.value %></dt>
+    <% end %>
+
+    <dd>
+      <% if edge.points.present? %>
+        <table class="index">
+          <tbody>
+          <% edge.points.each do |point| %>
+            <tr>
+              <td>
+                <% if point.question? %>
+                  <%= link_to point.name_with_type, guide_question_path(id: point.id) %>
+                <% elsif point.procedure? %>
+                  <%= link_to point.name_with_type, guide_procedure_path(id: point.id) %>
+                <% end %>
+              </td>
+            </tr>
+          <% end %>
+          </tbody>
+        </table>
+      <% end %>
+    </dd>
+  <% end %>
+</dl>
