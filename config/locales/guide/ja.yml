@@ -1,0 +1,206 @@
+ja:
+  guide:
+    guide: 目的別ガイド
+    question: 質問
+    procedure: 手続き
+    apis:
+      questions:
+        index: 質問項目を選択する
+        search: 質問項目を検索
+        select: 質問項目を設定する
+      procedures:
+        index: 手続きを選択する
+        search: 手続きを検索
+        select: 手続きを設定する
+    links:
+      applicable: はい
+      back_to_first: 最初に戻る
+      back_to_before: 一つ前に戻る
+      back_to_index: 一覧に戻る
+      next: 次へ
+      not_applicable: いいえ
+      revise_and_resubmit: 修正して再投稿
+      show_answer: 回答を確認する
+      show_procedure: 全ての手続きを確認する
+      show_result: 手続きを確認する
+      start_guide: ガイドを開始する
+    views:
+      procedures_needed: "%{count}件の手続きが必要です。"
+      procedures_others: "そのほか下記に該当する方は、それぞれの窓口にお問い合わせください"
+      your-answers: あなたの回答
+      all_procedure: 全ての手続き
+    options:
+      question_type:
+        yes_no: 'はい・いいえ'
+        choices: '選択肢'
+      check_type:
+        multiple: 複数選択（チェックボックス）
+        single: 一択（ラジオボタン）
+
+  cms_role:
+    read_guide_questions: 質問の閲覧
+    edit_guide_questions: 質問の編集
+    delete_guide_questions: 質問の削除
+    read_guide_procedures: 手続きの閲覧
+    edit_guide_procedures: 手続きの編集
+    delete_guide_procedures: 手続きの削除
+
+  modules:
+    guide: 目的別ガイド
+    addons:
+      guide/question: 質問
+      guide/procedure: 手続き
+      guide/procedure_setting: 手続き設定
+      guide/genre: ジャンル
+      guide/guide_list: リスト表示
+
+  cms:
+    nodes:
+      guide/guide: 目的別ガイド
+    parts:
+      guide/node: 目的別ガイドリスト
+
+  mongoid:
+    models:
+      guide/column: 質問項目
+      guide/procedure: 手続き
+      guide/question: 質問
+    attributes:
+      guide/column:
+        select_options_id: 選択肢識別子
+        name: タイトル
+        order: 並び順
+        question_id: 質問
+      guide/procedure:
+        name: タイトル
+        link_url: リンク URL
+        html: 概要
+        procedure_location: 手続き場所
+        belongings: 持ち物
+        procedure_applicant: 手続き申請者
+        remarks: 備考
+        order: 並び順
+      guide/question:
+        name: タイトル
+        select_options: 選択肢
+        order: 並び順
+        question_type: 質問の形式
+        check_type: 選択肢の形式
+      guide/addon/genre:
+        genre_ids: ジャンル
+      guide/addon/question:
+        column_ids: 質問項目
+        question_ids: 質問
+      guide/addon/procedure_setting:
+        procedure_ids: その他の手続き
+      guide/addon/guide_list:
+        guide_index_html: ガイド開始画面 HTML
+        guide_url_fragment: ガイドURLアンカー
+        guide_html: ガイド画面 HTML
+        loop_html: 結果画面 ループHTML
+        upper_html: 結果画面 上部HTML
+        lower_html: 結果画面 下部HTML
+        loop_format: 結果画面 ループHTML形式
+        loop_liquid: 結果画面 ループHTML
+        no_items_display_state: 結果画面 手続き未検出時表示
+        substitute_html: 結果画面 代替HTML
+      guide/diagram/edge:
+        value: 選択肢の質問
+
+  tooltip:
+    guide/question:
+      name:
+        - タイトルを入力します。
+      question:
+        - 質問を入力します。
+      select_options:
+        - |-
+          選択肢を入力します。
+          「ID,質問項目」のように入力することで、
+          IDという識別子を持つ
+          質問項目という選択肢が使用できます。
+      order:
+        - 並び順を入力します。
+    guide/procedure:
+      name:
+        - タイトルを入力します。
+      link_url:
+        - リンク URL を入力します。
+      html:
+        - 概要を入力します。
+      procedure_location:
+        - 手続き場所を入力します。
+      belongings:
+        - 手続きに必要な持ち物を入力します。
+      procedure_applicant:
+        - 手続き申請者を入力します。
+      remarks:
+        - 備考を入力します。
+      order:
+        - 並び順を入力します。
+    guide/addon/question:
+      question_ids:
+        - 該当する場合に必要な手続きとして表示させる条件を選択します。
+    guide/addon/procedure:
+      procedure_ids:
+        - 手続きを選択します。
+        - 回答に応じて、必要な手続きが表示されます。
+    guide/addon/procedure_setting:
+      procedure_ids:
+        - どのような回答でも結果に表示したい手続きを選択します。
+        - 設定した場合、結果画面に「その他の手続き」として表示されます。
+    guide/addon/guide_list:
+      guide_index_html:
+        - ガイド開始画面 HTML を入力します。
+      guide_url_fragment:
+        - 遷移時のURLアンカーを入力します。
+      guide_html:
+        - ガイド画面 HTML を入力します。
+      upper_html:
+        - リスト部分の上部に任意の内容のHTMLを記述することが可能です。
+      loop_html:
+        - 自動生成されたリスト表示部分のHTMLを指定することが可能です。
+        - ループHTMLを選択または直接記入することが可能です。
+        - |-
+          下記のように記述します。
+          #{link_url}　リンク先ページのURLが表示されます。
+          #{link}　リンクが表示されます。
+          #{name}　リンク先ページのタイトルが表示されます。
+          #{html}　リンク先ページの本文が表示されます。
+          #{id}　リンク先のファイルIDが表示されます。
+          #{procedure_location}　リンク先の手続き場所が表示されます。
+          #{belongings}　リンク先の手続きに必要な持ち物が表示されます。
+          #{procedure_applicant}　リンク先の手続き申請者が表示されます。
+          #{remarks}　リンク先の備考が表示されます。
+
+          使用例：
+          &lt;dl class="procedure item-#{id}">
+            &lt;dt>#{link}&lt;/dt>
+            &lt;dd>#{html}&lt;/dd>
+          &lt;/dl>
+      lower_html:
+        - リスト部分の下部に任意の内容のHTMLを記述することが可能です。
+      no_items_display_state:
+        - ページが見つからない時、上部HTMLと下部HTMLを表示するか設定できます。
+      substitute_html:
+        - ページが見つからない時、ループHTMLの代わりに表示するHTMLを記述することが可能です。
+      loop_liquid:
+        - Liquid 形式で記述します。
+        - |-
+          使用例：
+          {% for item in procedures %}
+          &lt;dl class="procedure item-{{ item.id }}">
+            &lt;dt>
+              {% if item.link_url %}
+                &lt;a href="{{ item.link_url }}">{{ item.name }}&lt;/a>
+              {% else %}
+                {{ item.name }}
+              {% endif %}
+            &lt;/dt>
+            &lt;dd>{{ item.procedure_location }}&lt;/dd>
+          &lt;/dl>
+          {% endfor %}
+
+  job:
+    models:
+      guide/procedure/import_job: 手続きインポート

@@ -1,0 +1,55 @@
+<% addon ||= local_assigns.fetch(:addon, {}) %>
+
+<%= code_editor "##{addon[:id]} .html", mode: :html %>
+<%= jquery do %>
+  <% if @model.use_liquid %>
+    var $addon = $("<%= "##{addon[:id]}" %>");
+    var changeLoopFormat = function() {
+      var format = $addon.find("select[name='item[loop_format]']").val();
+      if (format === "liquid") {
+        $addon.find(".loop-format-shirasagi").addClass("hide");
+        $addon.find(".loop-format-liquid").removeClass("hide");
+        $("#addon-cms-agents-addons-child_list").addClass("hide");
+      } else {
+        $addon.find(".loop-format-shirasagi").removeClass("hide");
+        $addon.find(".loop-format-liquid").addClass("hide");
+        $("#addon-cms-agents-addons-child_list").removeClass("hide");
+      }
+    };
+
+    changeLoopFormat();
+
+    $addon.find("select[name='item[loop_format]']").on("change", changeLoopFormat);
+  <% end %>
+<% end %>
+
+<dl class="see mod-guide-procedure-list">
+  <dt><%= @model.t :guide_index_html %><%= @model.tt :guide_index_html %></dt>
+  <dd><%= f.text_area :guide_index_html, class: :html %></dd>
+
+  <dt><%= @model.t :guide_url_fragment %><%= @model.tt :guide_url_fragment %></dt>
+  <dd><%= f.text_field :guide_url_fragment %></dd>
+
+  <% if @model.use_liquid %>
+    <dt><%= @model.t :loop_format %><%= @model.tt :loop_format %></dt>
+    <dd><%= f.select :loop_format, @item.loop_format_options %></dd>
+  <% end %>
+</dl>
+
+<dl class="see loop-format-shirasagi">
+  <dt><%= @model.t :upper_html %><%= @model.tt :upper_html %></dt>
+  <dd><%= f.text_area :upper_html, class: :html %></dd>
+
+  <dt><%= @model.t :loop_html %><%= @model.tt :loop_html %></dt>
+  <dd><%= f.text_area :loop_html, class: :html, style: "height: 100px;" %></dd>
+
+  <dt><%= @model.t :lower_html %><%= @model.tt :lower_html %></dt>
+  <dd><%= f.text_area :lower_html, class: :html %></dd>
+</dl>
+
+<% if @model.use_liquid %>
+  <dl class="see loop-format-liquid">
+    <dt><%= @model.t :loop_liquid %><%= @model.tt :loop_liquid %></dt>
+    <dd><%= f.text_area :loop_liquid, class: :html, style: "height: 300px;" %></dd>
+  </dl>
+<% end %>
