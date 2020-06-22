@@ -125,7 +125,7 @@ module Cms::Content
       criteria = self.all
 
       # condition_hash
-      if parent_item
+      if parent_item && parent_item.respond_to?(:condition_hash)
         ids = self.unscoped.where(parent_item.condition_hash).distinct(:id)
         return criteria.none if ids.blank?
 
