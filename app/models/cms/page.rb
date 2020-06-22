@@ -32,6 +32,7 @@ class Cms::Page
   # public_list
   index({ filename: 1, depth: 1 })
   index({ category_ids: 1 })
+  index({ group_ids: 1 })
   #index({ _id: 1, site_id: 1, state: 1 }, { unique: true })
 
   class << self
