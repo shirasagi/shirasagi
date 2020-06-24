@@ -21,17 +21,17 @@ module Chorg::MongoidSupport
     hash
   end
 
-  def with_all_entity_updates(models, substituter)
-    with_all_entities(models) do |entity|
+  def with_entity_updates(models, substituter, scope = {})
+    with_entities(models, scope) do |entity|
       with_updates(entity, substituter) do |updates|
         yield entity, updates
       end
     end
   end
 
-  def with_all_entities(models)
+  def with_entities(models, scope = {})
     models.each do |model|
-      model.each do |entity|
+      model.where(scope).each do |entity|
         entity = entity.try(:becomes_with_route) || entity
         entity = entity.try(:becomes_with_topic) || entity
         entity.try(:cur_site=, @cur_site)
