@@ -43,7 +43,7 @@ class Ezine::MembersController < ApplicationController
         row << item.email_type
         row << item.created.strftime("%Y-%m-%d %H:%M")
         @columns.each_with_index do |column, i|
-          row << item.data[i].value
+          row << item.data.where(column_id: column.id).first.try(:value)
         end
         data << row
       end
