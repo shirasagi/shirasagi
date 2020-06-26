@@ -9,9 +9,9 @@ describe "translate/public_filter", type: :feature, dbscope: :example, js: true 
   let!(:lang_zh_CN) { create :translate_lang_zh_cn }
   let!(:lang_zh_TW) { create :translate_lang_zh_tw }
 
-  let(:part) { create :translate_part_tool, cur_site: site, filename: "tool" }
-  let(:layout) { create_cms_layout part }
-  let(:node) { create :article_node_page, cur_site: site, layout_id: layout.id }
+  let!(:part) { create :translate_part_tool, cur_site: site, filename: "tool" }
+  let!(:layout) { create_cms_layout part }
+  let!(:node) { create :article_node_page, cur_site: site, layout_id: layout.id }
 
   let(:text1) { unique_id }
   let(:text2) { unique_id }
@@ -25,7 +25,7 @@ describe "translate/public_filter", type: :feature, dbscope: :example, js: true 
     html << "<p>#{text3}<br>#{text4}</p>"
     html.join("\n")
   end
-  let(:item) { create :article_page, cur_site: site, cur_node: node, layout_id: layout.id, html: page_html }
+  let!(:item) { create :article_page, cur_site: site, cur_node: node, layout_id: layout.id, html: page_html }
 
   before do
     mock = SS::Config.translate.mock
@@ -37,6 +37,8 @@ describe "translate/public_filter", type: :feature, dbscope: :example, js: true 
     site.translate_source = lang_ja
     site.translate_target_ids = [lang_en, lang_ko, lang_zh_CN, lang_zh_TW].map(&:id)
     site.update!
+
+    ::FileUtils.rm_f(item.path)
   end
 
   describe "translate public filter" do
