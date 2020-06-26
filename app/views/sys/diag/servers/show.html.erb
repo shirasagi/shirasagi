@@ -93,4 +93,26 @@
       <% end %>
     </dl>
   <% end %>
+
+  <% if request.query_parameters.present? %>
+    <%= render "ss/crud/addon", addon: { id: "query-parameters", head: "Query Parameters", toggle: true } do %>
+      <dl class="see">
+        <% request.query_parameters.each do |key, value| %>
+          <dt><%= key %></dt>
+          <dd><%= value.inspect %></dd>
+        <% end %>
+      </dl>
+    <% end %>
+  <% end %>
+
+  <% if request.request_parameters.present? %>
+    <%= render "ss/crud/addon", addon: { id: "request-parameters", head: "Request Parameters", toggle: true } do %>
+      <dl class="see">
+        <% request.request_parameters.each do |key, value| %>
+          <dt><%= key %></dt>
+          <dd><%= value.inspect %></dd>
+        <% end %>
+      </dl>
+    <% end %>
+  <% end %>
 </div>
