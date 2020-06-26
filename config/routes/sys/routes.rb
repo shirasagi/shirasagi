@@ -53,7 +53,9 @@ Rails.application.routes.draw do
         resources :https, only: [:index]
       end
       resources :mails, only: [:index, :create]
-      resource :server, only: [:show]
+      resource :server, only: [] do
+        match :show, on: :member, via: [:get, :post, :put, :delete]
+      end
     end
 
     namespace "apis" do
