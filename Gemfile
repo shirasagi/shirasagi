@@ -69,6 +69,7 @@ gem 'omniauth-github'
 gem 'omniauth-google-oauth2'
 gem 'omniauth-twitter'
 gem 'omniauth-yahoojp'
+gem 'omniauth-rails_csrf_protection'
 
 # SNS
 gem 'twitter'
