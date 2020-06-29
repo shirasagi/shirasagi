@@ -28,4 +28,29 @@ describe "urgency_layouts", type: :feature, dbscope: :example do
       expect(Cms::Page.find(item.id).layout_id).to eq layout1.id
     end
   end
+
+  describe "ss-3647" do
+    before { login_cms_user }
+
+    it do
+      # change to urgency layout
+      visit urgency_layouts_path(site: site, cid: node)
+      click_on layout2.name
+      click_on I18n.t('urgency.switch_layout')
+      expect(page).to have_css("#notice", text: I18n.t("ss.notice.saved"))
+
+      item.reload
+      expect(item.layout_id).to eq layout2.id
+
+      # edit page without any modifications
+      visit cms_page_path(site: site, id: item)
+      click_on I18n.t("ss.links.edit")
+      click_on I18n.t("ss.buttons.save")
+      expect(page).to have_css("#notice", text: I18n.t("ss.notice.saved"))
+
+      # confirm that layout is still set
+      item.reload
+      expect(item.layout_id).to eq layout2.id
+    end
+  end
 end
