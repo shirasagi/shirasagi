@@ -1,5 +1,5 @@
 module Cms::FormHelper
-  def ancestral_layouts(node)
+  def ancestral_layouts(node, cur_layout = nil)
     node  = @cur_node if !node || node.new_record?
     items = []
     if node
@@ -14,6 +14,11 @@ module Cms::FormHelper
     end
     Cms::Layout.site(@cur_site).where(depth: 1).sort(name: 1).each do |item|
       items << [item.name, item.id]
+    end
+    if cur_layout
+      unless items.find { |_name, id| id == cur_layout.id }
+        items.prepend([cur_layout.name, cur_layout.id])
+      end
     end
     items
   end
