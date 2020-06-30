@@ -131,8 +131,13 @@ module Cms::Content
 
         criteria = criteria.in(id: ids)
         criteria = criteria.hint({ _id: 1 })
-        def criteria.count; self.to_a.size end # criteria.count does not use hint
-        def criteria.size; self.to_a.size end # criteria.size does not use hint
+
+        # criteria.count does not use hint
+        def criteria.count(options = {}, &block)
+          options = options.symbolize_keys
+          options[:hint] = { _id: 1 }
+          super(options, &block)
+        end
       end
 
       # site and_public
