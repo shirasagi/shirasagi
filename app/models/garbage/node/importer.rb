@@ -33,7 +33,7 @@ class Garbage::Node::Importer
   end
 
   def import_csv(file)
-    table = CSV.read(file.path, headers: true, encoding: 'SJIS:UTF-8')
+    table = CSV.read(file.path, headers: true, encoding: 'BOM|UTF-8')
     table.each_with_index do |row, i|
       begin
         name = update_row(row)
@@ -65,6 +65,8 @@ class Garbage::Node::Importer
     item.name   = row[model.t("name")].to_s.strip
     item.layout = Cms::Layout.site(site).where(name: row[model.t("layout")].to_s.strip).first
     item.remark = row[model.t("remark")].to_s.strip
+    item.order  = row[model.t("order")].to_s.strip
+    item.kana  = row[model.t("kana")].to_s.strip
 
     set_page_categories(row, item)
     set_page_groups(row, item)
@@ -74,8 +76,9 @@ class Garbage::Node::Importer
 
   def set_page_categories(row, item)
     @st_categories ||= node.becomes_with_route.st_categories.map{ |c| [c.name, c.id] }.to_h
-    categories = row[model.t("category_ids")].to_s.strip.split("\n")
-    item.category_ids = categories.map{ |c| @st_categories[c] }.compact
+    categories = row[model.t("category_ids")].to_s.strip
+    category_ids = item.category_ids << @st_categories[categories]
+    item.category_ids = category_ids
   end
 
   def set_page_groups(row, item)

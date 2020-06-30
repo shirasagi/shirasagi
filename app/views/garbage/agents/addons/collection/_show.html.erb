@@ -1,0 +1,11 @@
+<dl class="see mod-garbage-collection">
+  <dt><%= @model.t :center %></dt>
+  <dd><%=br @item.send :center %></dd>
+
+  <% @item.garbage_type.each do |info| %>
+    <dt><%= @model.t :garbage_type %></dt>
+    <dd><%=br info[:field] %></dd>
+    <dd><%=br info[:value] %></dd>
+    <dd><%=br info[:view] %></dd>
+  <% end %>
+</dl>

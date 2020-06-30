@@ -1,0 +1,17 @@
+<table class="columns column">
+  <caption><%= @cur_node.name %></caption>
+  <thead>
+  <tr>
+    <th><%= t('garbage.category.name') %></th>
+    <th><%= t('garbage.collection') %></th>
+  </tr>
+  </thead>
+  <tbody>
+  <% @cur_node.garbage_type.each do |item| %>
+    <tr>
+      <td><%= item[:field] %></td>
+      <td><%= item[:view] %></td>
+    </tr>
+  <% end %>
+  </tbody>
+</table>

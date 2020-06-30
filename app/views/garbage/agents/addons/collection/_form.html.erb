@@ -1,0 +1,87 @@
+<%= jquery do %>
+  $(".garbage-type .add-info").on('click', function () {
+    var field, value, view;
+    if ($(".garbage-type").length < 10) {
+
+      field = $(".garbage-type .field:last").clone(true);
+      value = $(".garbage-type .value:last").clone(true);
+      view = $(".garbage-type .view:last").clone(true);
+      field.find("option").attr("selected", false);
+      value.find("input").val("");
+      view.find("input").val("");
+      $(".garbage-type .view:last").after(field);
+      $(".garbage-type .field:last").after(value);
+      $(".garbage-type .value:last").after(view);
+    }
+    return false;
+  });
+  $(".garbage-type .clear").on('click', function () {
+    var field, value, view;
+    view = $(this).closest($(".view"));
+    value = view.prev($(".value"));
+    field = value.prev($(".field"));
+    if ($(".garbage-type .field").length > 2) {
+      if (view.find("input").val() !== "" || value.find("input").val() !== "" || field.find("option").filter(':selected').text() !== "") {
+        if (confirm('<%= t("cms.confirm.delete_item") %>')) {
+          field.remove();
+          value.remove();
+          view.remove();
+        }
+      } else {
+        field.remove();
+        value.remove();
+        view.remove();
+      }
+    } else {
+      if (view.find("input").val() !== "" || value.find("input").val() !== "" || field.find("option").filter(':selected').text() !== "") {
+        if (confirm('<%= t("cms.confirm.delete_item") %>')) {
+          field.find("option").attr("selected", false);
+          value.find("input").val("");
+          view.find("input").val("");
+        }
+      } else {
+        field.find("option").attr("selected", false);
+        value.find("input").val("");
+        view.find("input").val("");
+      }
+      return false;
+    }
+  });
+<% end %>
+
+<dl class="see mod-garbage-collection">
+  <dt><%= @model.t :center %><%= @model.tt :center %></dt>
+  <dd><%= f.text_field :center %></dd>
+</dl>
+<dl class="see garbage-type">
+  <dt class="field"><%= @item.t :field %><%= @item.tt :field %></dt>
+  <dd class="value"><%= @item.t :value %><%= @item.tt :value %></dd>
+  <dd class="view"><%= @item.t :view %><%= @item.tt :view %></dd>
+
+  <% if @cur_node.becomes_with_route.parent.present? %>
+    <% category_options = @cur_node.becomes_with_route.parent.try(:becomes_with_route).st_categories.pluck(:name) %>
+    <% if @item.garbage_type.blank? %>
+      <dt class="field"><%= select_tag "item[garbage_type][][field]", options_for_select(category_options), include_blank: true %></dt>
+      <dt class="value">
+        <%= text_field_tag "item[garbage_type][][value]", nil, placeholder: t('garbage.placeholder.value') %>
+      </dt>
+      <dd class="view">
+        <%= text_field_tag "item[garbage_type][][view]", nil, placeholder: t('garbage.placeholder.view') %>
+        <%= button_tag @item.t(:del_info), {type: :button, class: "clear btn"} %>
+      </dd>
+    <% end %>
+
+    <% @item.garbage_type.each do |info| %>
+      <dt class="field"><%= select_tag "item[garbage_type][][field]", options_for_select(category_options, info[:field]), include_blank: true %></dt>
+      <dt class="value">
+        <%= text_field_tag "item[garbage_type][][value]", info[:value], placeholder: t('garbage.placeholder.value') %>
+      </dt>
+      <dd class="view">
+        <%= text_field_tag "item[garbage_type][][view]", info[:view], placeholder: t('garbage.placeholder.view') %>
+        <%= button_tag @item.t(:del_info), {type: :button, class: "clear btn"} %>
+      </dd>
+    <% end %>
+
+    <%= button_tag @item.t(:add_info), {type: :button, class: "add-info btn"} %>
+  <% end %>
+</dl>

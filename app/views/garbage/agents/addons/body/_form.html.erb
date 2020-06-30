@@ -1,4 +1,7 @@
 <dl class="see mod-garbage-body">
+  <dt><%= @model.t :kana %><%= @model.tt :kana %></dt>
+  <dd><%= f.text_field :kana, placeholder: t('garbage.placeholder.kana') %></dd>
+
   <dt><%= @model.t :remark %><%= @model.tt :remark %></dt>
   <dd><%= f.text_area :remark %></dd>
 </dl>

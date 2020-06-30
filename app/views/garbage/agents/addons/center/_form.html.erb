@@ -1,0 +1,7 @@
+<dl class="see mod-garbage-center">
+  <dt><%= @model.t :rest_start %><%= @model.tt :rest_start %></dt>
+  <dd><%= f.text_field :rest_start, include_blank: true, class: "date js-date start" %></dd>
+
+  <dt><%= @model.t :rest_end%><%= @model.tt :rest_end %></dt>
+  <dd><%= f.text_field :rest_end, include_blank: true, class: "date js-date end" %></dd>
+</dl>

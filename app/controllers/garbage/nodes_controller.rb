@@ -28,33 +28,39 @@ class Garbage::NodesController < ApplicationController
 
     csv = CSV.generate do |data|
       data << [
-        @model.t(:filename),
-        @model.t(:name),
-        @model.t(:layout),
         @model.t(:category_ids),
+        @model.t(:name),
         @model.t(:remark),
-        @model.t(:groups)
+        @model.t(:kana),
+        @model.t(:filename),
+        @model.t(:layout),
+        @model.t(:groups),
+        @model.t(:order)
       ]
       items.each do |item|
-        row = []
-        row << item.basename
-        row << item.name
-        row << item.layout.try(:name)
-        row << item.categories.pluck(:name).join("\n")
-        row << item.remark
-        row << item.groups.pluck(:name).join("_n")
-        data << row
+        item.categories.pluck(:name).each do |category|
+          row = []
+          row << category
+          row << item.name
+          row << item.remark
+          row << item.kana
+          row << item.basename
+          row << item.layout.try(:name)
+          row << item.groups.pluck(:name).join("_n")
+          row << item.order
+          data << row
+        end
       end
     end
-
-    send_data csv.encode("SJIS", invalid: :replace, undef: :replace),
-              filename: "garbage_pages_#{Time.zone.now.strftime("%Y_%m%d_%H%M")}.csv"
+    csv = "\uFEFF" + csv
+    send_data csv.encode("UTF-8", invalid: :replace, undef: :replace),
+      filename: "target.csv"
   end
 
   public
 
   def download
-    send_csv @cur_node.children.map(&:becomes_with_route)
+    send_csv @cur_node.children.sort(order: "ASC").map(&:becomes_with_route)
   end
 
   def import

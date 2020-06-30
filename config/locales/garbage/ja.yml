@@ -10,9 +10,8 @@ ja:
       setting: 分別区分設定
       index: 分別区分を設定する
       search: ゴミ品目の分別区分を検索
-      setting: 分別区分を選択
-
-    search: ゴミ品目検索
+      select: 分別区分を選択
+    category_list: カテゴリーリスト
     result: 検索結果
     count: 件の品目がヒットしました。
     first_to_last: 件の品目を表示しています。
@@ -26,6 +25,23 @@ ja:
       search: この条件で検索する
       reset: 検索条件をリセットする
       change: 検索条件を変更する
+    area: 地区
+    area_name: 地名
+    collection: 収集日
+    center: センター
+    center_name: センター名
+    rest_start: 休止開始日
+    rest_end: 休止終了日
+    remarks: 備考
+    remark_id: ID
+    attention: 注意事項
+    import:
+      invalid_file: CSV形式のファイルを選択してください。
+    placeholder:
+      kana: "例: あ"
+      value: "例: 月1"
+      view: "例: 毎週月曜日"
+    view: "(公開画面)"
 
   modules:
     garbage: ゴミDB
@@ -34,24 +50,60 @@ ja:
       garbage/additional_info: 追加情報
       garbage/category: ゴミの分別区分
       garbage/category_setting: ゴミの分別区分
+      garbage/collection: ゴミ回収設定
+      garbage/center: センター設定
+      garbage/description: スタイル設定
+      garbage/remark: 備考
 
   cms:
     nodes:
       garbage/page: ゴミ品目
       garbage/node: ゴミ品目リスト
+      garbage/category_list: カテゴリーリスト
       garbage/category: ゴミ品目カテゴリー
       garbage/search: ゴミ品目検索
+      garbage/area_list: 地区リスト
+      garbage/area: 地区
+      garbage/center_list: センターリスト
+      garbage/center: センター
+      garbage/remark_list: 備考リスト
+      garbage/remark: 備考
 
   mongoid:
     attributes:
       garbage/node/page:
         name: 品目名
         remark: 出し方・ワンポイント
+        kana: ふりがな
         field: 項目名
         category_ids: カテゴリー
+      garbage/node/area:
+        name: 地名
+        center: センター
+        field: 分別区分
+        value: 収集日(5374)
+        view: 収集日(公開画面)
+        add_info: 追加
+        del_info: 削除
+        garbage_type: ゴミの種類
+      garbage/node/center:
+        name: 名称
+        rest_start: 休止開始日
+        rest_end: 休止終了日
+      garbage/node/category:
+        style: スタイル
+        bgcolor: 背景色
+      garbage/node/remark:
+        remark_id: ID
+        attention: 注意事項
+
   job:
     models:
       garbage/import_job: ゴミ品目インポート
+      garbage/area_import_job: 地区インポート
+      garbage/category_import_job: カテゴリーインポート
+      garbage/center_import_job: センターインポート
+      garbage/remark_import_job: 備考インポート
 
   tooltip:
     garbage/node/node:
@@ -63,9 +115,49 @@ ja:
           #{categories} ゴミの分別区分が表示されます。
           #{remark} 出し方・ワンポイントが表示されます。
 
+    garbage/node/page:
+      kana:
+        - ふりがなを設定します。
+        - 品目名を平仮名にしたときの1文字目を、平仮名で入力してください。
+        - 品目名が「鉛筆」の場合、「え」と入力します。
+
     garbage/node/search:
       loop_html: *garbage_node_loop_html
 
     garbage/addon/category_setting:
       st_categories:
         - ゴミの分別区分を設定します。
+
+    garbage/node/area:
+      center:
+        - センターを設定します。
+      field:
+        - ゴミの分別区分を設定します。
+      value:
+        - 5374アプリでのゴミの回収日を設定します
+        -
+        - 曜日は「日」・「月」・「火」・「水」・「木」・「金」・「土」という各曜日の一文字を記述します。
+        - 毎週の場合は、一文字だけ記述します。
+        -
+        - 複数ある場合は、半角スペースで区切り記述します。
+        - 毎週月曜・木曜の場合は 月 木と記述します。
+        -
+        - 毎月第1週月曜の場合は、月1と記述します。
+        - 毎月収集が無いゴミは対象月をコロン(:)の後に指定できます。 例えば、4、6、8、10、12、2月の偶数月の第2火曜、第4金曜の場合には、 火2 金4:4 6 8 10 12 2 のように記述します。
+      view:
+        - 公開画面でのゴミの回収日を設定します
+    garbage/node/center:
+      rest_start:
+        - センターの休止開始日を設定します。
+      rest_end:
+        - センターの休止終了日を設定します。
+    garbage/node/category:
+      style:
+        - 5374アプリで分別区分の表示を設定します。
+      bgcolor:
+        - 5374アプリで分別区分の背景色を設定します。
+    garbage/node/remark:
+      remark_id:
+        - 5374アプリで注意事項を表示する対象を設定します。
+      attention:
+        - 5374アプリで表示する注意事項を設定します。

@@ -1,0 +1,61 @@
+<%= jquery do %>
+
+  var reload, timer;
+  reload = function () {
+    $.ajax({
+      url: "<%= url_for(action: :import, format: :json) %>",
+      success: function (data) {
+        var closed, started, state;
+        started = data["started"] + "";
+        closed = data["closed"] + "";
+        state = data["state"];
+
+        $("#task-form .state").html(state);
+        $("#task-form .started").html(started.replace(/\..*/, "").replace("T", " "));
+        $("#task-form .closed").html(closed.replace(/\..*/, "").replace("T", " "));
+        $("#task-form .log").val(data["head_logs"].join("\n"));
+
+        if (state == "stop") {
+          clearInterval(timer);
+        }
+      }
+    });
+  };
+  timer = setInterval(reload, 10000);
+
+<% end %>
+
+<%= form_for :item, url: { action: :import }, html: { method: :post, id: "task-form" } do |f| %>
+  <%= error_messages_for :item %>
+
+  <section class="main-box">
+    <header><h2><%= t("ss.import") %></h2></header>
+
+    <dl class="see">
+      <dt><%= t("ss.file") %></dt>
+      <dd><%= f.file_field :file %></dd>
+    </dl>
+  </section>
+
+  <section class="main-box">
+    <dl class="info">
+      <dt><%= @task.t :state %></dt>
+      <dd class="state"><%= @task.send :state %></dd>
+
+      <dt><%= @task.t :started %></dt>
+      <dd class="started"><%= tryb { @task.started.strftime("%Y/%m/%d %H:%M:%S") } %></dd>
+
+      <dt><%= @task.t :closed %></dt>
+      <dd class="closed"><%= tryb { @task.closed.strftime("%Y/%m/%d %H:%M:%S") } %></dd>
+    </dl>
+
+    <div class="logs">
+      <textarea class="log" readonly="readonly"><%= @task.head_logs.join("\n") %></textarea>
+    </div>
+  </section>
+
+  <footer class="send">
+    <%= f.submit t("ss.import"), class: :save, onclick: "return confirm('#{t("ss.confirm.import")}')" %>
+    <%= f.button t("ss.buttons.cancel"), onclick: "location.href='#{url_for(action: :index)}'; return false;", class: "btn btn-default" %>
+  </footer>
+<% end %>
