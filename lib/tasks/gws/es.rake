@@ -140,7 +140,7 @@ namespace :gws do
         end
 
         puts 'gws/memo/message'
-        ::Gws::Memo::Message.site(site).each do |message|
+        ::Tasks::Gws::Base.each_item(::Gws::Memo::Message.site(site)) do |message|
           puts "- #{message.subject}"
           job = ::Gws::Elasticsearch::Indexer::MemoMessageJob.bind(site_id: site)
           job.perform_now(action: 'index', id: message.id.to_s)
@@ -161,11 +161,11 @@ namespace :gws do
         end
 
         puts 'gws/board/topic and gws/board/post'
-        ::Gws::Board::Topic.site(site).topic.each do |topic|
+        ::Tasks::Gws::Base.each_item(::Gws::Board::Topic.site(site).topic) do |topic|
           puts "- #{topic.name}"
           job = ::Gws::Elasticsearch::Indexer::BoardTopicJob.bind(site_id: site)
           job.perform_now(action: 'index', id: topic.id.to_s)
-          topic.descendants.each do |post|
+          ::Tasks::Gws::Base.each_item(topic.descendants) do |post|
             puts "-- #{post.name}"
             job = ::Gws::Elasticsearch::Indexer::BoardPostJob.bind(site_id: site)
             job.perform_now(action: 'index', id: post.id.to_s)
@@ -187,11 +187,11 @@ namespace :gws do
         end
 
         puts 'gws/faq/topic and gws/faq/post'
-        ::Gws::Faq::Topic.site(site).topic.each do |topic|
+        ::Tasks::Gws::Base.each_item(::Gws::Faq::Topic.site(site).topic) do |topic|
           puts "- #{topic.name}"
           job = ::Gws::Elasticsearch::Indexer::FaqTopicJob.bind(site_id: site)
           job.perform_now(action: 'index', id: topic.id.to_s)
-          topic.descendants.each do |post|
+          ::Tasks::Gws::Base.each_item(topic.descendants) do |post|
             puts "-- #{post.name}"
             job = ::Gws::Elasticsearch::Indexer::FaqPostJob.bind(site_id: site)
             job.perform_now(action: 'index', id: post.id.to_s)
@@ -213,11 +213,11 @@ namespace :gws do
         end
 
         puts 'gws/qna/topic and gws/qna/post'
-        ::Gws::Qna::Topic.site(site).topic.each do |topic|
+        ::Tasks::Gws::Base.each_item(::Gws::Qna::Topic.site(site).topic) do |topic|
           puts "- #{topic.name}"
           job = ::Gws::Elasticsearch::Indexer::QnaTopicJob.bind(site_id: site)
           job.perform_now(action: 'index', id: topic.id.to_s)
-          topic.descendants.each do |post|
+          ::Tasks::Gws::Base.each_item(topic.descendants) do |post|
             puts "-- #{post.name}"
             job = ::Gws::Elasticsearch::Indexer::QnaPostJob.bind(site_id: site)
             job.perform_now(action: 'index', id: post.id.to_s)
@@ -239,11 +239,11 @@ namespace :gws do
         end
 
         puts 'gws/circular/post and gws/circular/comment'
-        ::Gws::Circular::Post.site(site).topic.each do |post|
+        ::Tasks::Gws::Base.each_item(::Gws::Circular::Post.site(site).topic) do |post|
           puts "- #{post.name}"
           job = ::Gws::Elasticsearch::Indexer::CircularPostJob.bind(site_id: site)
           job.perform_now(action: 'index', id: post.id.to_s)
-          post.comments.each do |comment|
+          ::Tasks::Gws::Base.each_item(post.comments) do |comment|
             puts "-- #{comment.name}"
             job = ::Gws::Elasticsearch::Indexer::CircularCommentJob.bind(site_id: site)
             job.perform_now(action: 'index', id: comment.id.to_s)
@@ -265,11 +265,11 @@ namespace :gws do
         end
 
         puts 'gws/qna/topic and gws/qna/post'
-        ::Gws::Monitor::Topic.site(site).topic.each do |topic|
+        ::Tasks::Gws::Base.each_item(::Gws::Monitor::Topic.site(site).topic) do |topic|
           puts "- #{topic.name}"
           job = ::Gws::Elasticsearch::Indexer::MonitorTopicJob.bind(site_id: site)
           job.perform_now(action: 'index', id: topic.id.to_s)
-          topic.descendants.each do |post|
+          ::Tasks::Gws::Base.each_item(topic.descendants) do |post|
             puts "-- #{post.name}"
             job = ::Gws::Elasticsearch::Indexer::MonitorPostJob.bind(site_id: site)
             job.perform_now(action: 'index', id: post.id.to_s)
@@ -291,7 +291,7 @@ namespace :gws do
         end
 
         puts 'gws/report/file'
-        ::Gws::Report::File.site(site).each do |file|
+        ::Tasks::Gws::Base.each_item(::Gws::Report::File.site(site)) do |file|
           puts "- #{file.name}"
           job = ::Gws::Elasticsearch::Indexer::ReportFileJob.bind(site_id: site)
           job.perform_now(action: 'index', id: file.id.to_s)
@@ -312,7 +312,7 @@ namespace :gws do
         end
 
         puts 'gws/workflow/file'
-        ::Gws::Workflow::File.site(site).each do |file|
+        ::Tasks::Gws::Base.each_item(::Gws::Workflow::File.site(site)) do |file|
           puts "- #{file.name}"
           job = ::Gws::Elasticsearch::Indexer::WorkflowFileJob.bind(site_id: site)
           job.perform_now(action: 'index', id: file.id.to_s)
@@ -333,7 +333,7 @@ namespace :gws do
         end
 
         puts 'gws/share/file'
-        ::Gws::Share::File.site(site).each do |file|
+        ::Tasks::Gws::Base.each_item(::Gws::Share::File.site(site)) do |file|
           puts "- #{file.name}"
           job = ::Gws::Elasticsearch::Indexer::ShareFileJob.bind(site_id: site)
           job.perform_now(action: 'index', id: file.id.to_s)
