@@ -151,7 +151,6 @@ module Cms::PublicFilter::Layout
       ERB::Util.html_escape(@cur_item.parent ? @cur_item.parent.name : "")
     end
 
-    date = nil
     template = %w(
       #\{
       (?<time>|time\.)
@@ -164,11 +163,12 @@ module Cms::PublicFilter::Layout
     html.gsub!(::Regexp.compile(template)) do
       matchdata = ::Regexp.last_match
       if matchdata[:item] == 'released'
-        item = @cur_item.released
+        released ||= ERB::Util.html_escape(@cur_item.released)
+        date = released
       else
-        item = @cur_item.updated
+        updated ||= ERB::Util.html_escape(@cur_item.updated)
+        date = updated
       end
-      date ||= ERB::Util.html_escape(item)
       datetime = matchdata[:datetime]
       convert_date = date_convert(date, matchdata[:format].to_sym, datetime)
       if matchdata[:time].present?
