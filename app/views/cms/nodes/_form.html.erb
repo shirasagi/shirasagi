@@ -17,7 +17,7 @@ file = "#{Rails.root}/app/views/" + @item.route.sub('/', '/agents/nodes/') + "/e
   <dd><%= f.text_field :basename, class: "filename" %></dd>
 
   <dt><%= @model.t :layout_id %><%= @model.tt :layout_id %></dt>
-  <dd><%= f.select :layout_id, ancestral_layouts(@item), include_blank: " " %></dd>
+  <dd><%= f.select :layout_id, ancestral_layouts(@item, @item.layout), include_blank: " " %></dd>
 </dl>
 
 <%= render file: file, locals: { f: f } if File.exists?(file) %>
