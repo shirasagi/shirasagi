@@ -31,10 +31,11 @@ class Job::Task
     end
 
     def dequeue(name)
+      now = Time.zone.now
       criteria = Job::Task.where(pool: name, started: nil)
-      criteria = criteria.lte(at: Time.zone.now)
+      criteria = criteria.lte(at: now)
       criteria = criteria.asc(:priority)
-      criteria.find_one_and_update({ '$set' => { started: Time.zone.now }}, return_document: :after)
+      criteria.find_one_and_update({ '$set' => { started: now.utc }}, return_document: :after)
     end
   end
 

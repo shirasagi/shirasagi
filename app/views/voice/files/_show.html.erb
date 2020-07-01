@@ -11,5 +11,8 @@
   <dd><%= text_area_tag :error, @item.error %></dd>
 
   <dt><%= @model.t :updated %></dt>
-  <dd><%= @item.updated.strftime("%Y/%m/%d %H:%M") %></dd>
+  <dd><%= I18n.l(@item.updated, format: :picker) %></dd>
+
+  <dt><%= @model.t :lock_until %></dt>
+  <dd><%= @item.lock_until.try { |time| I18n.l(time, format: :picker) } %></dd>
 </dl>
