@@ -18,7 +18,7 @@ module Member::Part
 
     default_scope ->{ where(route: "member/blog_page") }
 
-    def condition_hash(opts = {})
+    def condition_hash
       cond = []
       # cids = []
       # cond_url = []

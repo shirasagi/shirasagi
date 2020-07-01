@@ -3,8 +3,8 @@ class Member::Agents::Parts::PhotoController < ApplicationController
   helper Cms::ListHelper
 
   def index
-    @items = Member::Photo.site(@cur_site).and_public(@cur_date).
-      listable.where(@cur_part.condition_hash(cur_main_path: @cur_main_path)).
+    @cur_part.cur_main_path = @cur_main_path
+    @items = Member::Photo.public_list(site: @cur_site, part: @cur_part, date: @cur_date).listable.
       order_by(@cur_part.sort_hash).
       limit(@cur_part.limit)
   end

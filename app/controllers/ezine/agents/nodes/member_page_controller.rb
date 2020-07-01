@@ -5,7 +5,7 @@ class Ezine::Agents::Nodes::MemberPageController < ApplicationController
   private
 
   def pages
-    Ezine::Page.site(@cur_site).and_public(@cur_date).where(@cur_node.condition_hash)
+    Ezine::Page.public_list(site: @cur_site, node: @cur_node, date: @cur_date)
   end
 
   public

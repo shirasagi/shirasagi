@@ -9,7 +9,7 @@ module Cms::Addon
       permit_params condition_group_ids: []
     end
 
-    def condition_hash(opts = {})
+    def condition_hash
       cond = conditions.present? ? super : {}
       cond.merge :group_ids.in => condition_groups.map(&:id)
     end
