@@ -58,9 +58,13 @@ module Chorg::Runner::Base
 
   private
 
+  def models_scope
+    {}
+  end
+
   def update_all
     return if substituter.empty?
-    with_all_entity_updates(@models, substituter) do |entity, updates|
+    with_entity_updates(@models, substituter, models_scope) do |entity, updates|
       next if updates.blank?
 
       put_log("#{entity_title(entity)} has some updates. module=#{entity.class}")
@@ -113,7 +117,7 @@ module Chorg::Runner::Base
 
   def validate_all
     return if validation_substituter.empty?
-    with_all_entity_updates(@models, validation_substituter) do |entity, deletes|
+    with_entity_updates(@models, validation_substituter, models_scope) do |entity, deletes|
       put_log("#{entity.name}(#{entity.url}) has deleted attributes: #{deletes}") if deletes.present?
     end
   end
