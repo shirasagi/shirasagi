@@ -12,7 +12,7 @@
   <% if enabled_providers.present? %>
     <ul class="oauth-login">
       <% enabled_providers.each do |provider| %>
-        <li class="<%= provider %>"><%= link_to t("member.login_by.#{provider}"), "#{@cur_node.url}#{provider}", rel: "nofollow" %></li>
+        <li class="<%= provider %>"><%= link_to t("member.login_by.#{provider}"), "#{@cur_node.url}#{provider}", method: :post, rel: "nofollow" %></li>
       <% end %>
     </ul>
   <% end %>
