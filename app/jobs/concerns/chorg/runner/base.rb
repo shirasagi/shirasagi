@@ -22,7 +22,7 @@ module Chorg::Runner::Base
     end
 
     self.class.revision_class.ensure_release_lock(@item) do
-      init_context
+      init_context(opts)
 
       run_primitive_chorg
 
@@ -93,7 +93,7 @@ module Chorg::Runner::Base
           end
         end
       end
-      update_attributes(entity, updates)
+      update(entity, updates)
       save_or_collect_errors(entity)
     end
   end

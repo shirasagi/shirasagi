@@ -3,7 +3,7 @@ module Chorg::MongoidSupport
   include Chorg::Context
   include Chorg::Loggable
 
-  def update_attributes(entity, hash)
+  def update(entity, hash)
     hash.select { |k, v| v.present? }.each { |k, v| entity[k] = v }
     entity
   end
@@ -46,7 +46,7 @@ module Chorg::MongoidSupport
   def find_or_create_group(attributes)
     group = self.class.group_class.where(name: attributes["name"]).first
     group ||= self.class.group_class.create
-    update_attributes(group, attributes)
+    update(group, attributes)
   end
 
   def group_field?(_key, val)

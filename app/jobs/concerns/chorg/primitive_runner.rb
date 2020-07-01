@@ -41,7 +41,7 @@ module Chorg::PrimitiveRunner
     end
 
     source_attributes = copy_attributes_deeply(group)
-    update_attributes(group, destination)
+    update(group, destination)
     if save_or_collect_errors(group)
       put_log("updated group: #{group.name}(#{group.id})")
       inc_counter(:move, :success)
