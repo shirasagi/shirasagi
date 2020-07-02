@@ -1,4 +1,4 @@
-module Voice::Lockable
+module SS::Lockable
   extend ActiveSupport::Concern
   extend SS::Translation
 
