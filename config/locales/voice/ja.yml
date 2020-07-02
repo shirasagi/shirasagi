@@ -26,8 +26,6 @@ ja:
         error: エラー
         updated: 作成日時
         play: 再生
-      voice/lockable:
-        lock_until: ロック期限日時
 
   tooltip:
     voice/file:

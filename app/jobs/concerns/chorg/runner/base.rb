@@ -15,7 +15,7 @@ module Chorg::Runner::Base
     @adds_group_to_site = opts['newly_created_group_to_site'].presence == 'add'
     @gws_staff_record = opts['gws_staff_record']
     @item = self.class.revision_class.site(@cur_site).find_by(name: name)
-    @item = self.class.revision_class.acquire_lock(@item, 1.hour.from_now)
+    @item = self.class.revision_class.acquire_lock(@item, 1.hour)
     unless @item
       put_log("already running")
       return

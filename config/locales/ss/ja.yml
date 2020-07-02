@@ -738,6 +738,8 @@ ja:
         released: 公開日時
         release_date: 公開開始日時(予約)
         close_date: 公開終了日時(予約)
+      ss/lockable:
+        lock_until: ロック期限日時
 
   tooltip:
     ss/model/user:
