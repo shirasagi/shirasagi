@@ -74,8 +74,8 @@ $('.popup-attributes .custom-group-name').click(function() {
 <%
 menu = []
 menu << link_to(I18n.t('ss.links.show'), { action: :show })
-menu << link_to(I18n.t('ss.links.edit'), { action: :edit }) if @item.allowed?(:edit, @cur_user, @cur_site)
-menu << link_to(I18n.t('ss.links.delete'), { action: :soft_delete }) if @item.allowed?(:delete, @cur_user, @cur_site)
+menu << link_to(I18n.t('ss.links.edit'), { action: :edit }) if @item.allowed?(:edit, @cur_user, site: @cur_site)
+menu << link_to(I18n.t('ss.links.delete'), { action: :soft_delete }) if @item.allowed?(:delete, @cur_user, site: @cur_site)
 %>
 <% if menu.present? %>
 <div class="popup-menu"><%= safe_join(menu) %></div>
