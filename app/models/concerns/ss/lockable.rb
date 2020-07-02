@@ -2,10 +2,8 @@ module SS::Lockable
   extend ActiveSupport::Concern
   extend SS::Translation
 
-  EPOCH = Time.zone.at(0).utc.freeze
-
   included do
-    field :lock_until, type: DateTime, default: EPOCH
+    field :lock_until, type: DateTime, default: ::Time::EPOCH
   end
 
   module ClassMethods
@@ -20,8 +18,8 @@ module SS::Lockable
 
     def release_lock(item)
       criteria = item.class.where(id: item.id)
-      criteria = criteria.ne(lock_until: EPOCH)
-      criteria.find_one_and_update({ '$set' => { lock_until: EPOCH }}, return_document: :after)
+      criteria = criteria.ne(lock_until: ::Time::EPOCH)
+      criteria.find_one_and_update({ '$set' => { lock_until: ::Time::EPOCH }}, return_document: :after)
     end
 
     def ensure_release_lock(item)
