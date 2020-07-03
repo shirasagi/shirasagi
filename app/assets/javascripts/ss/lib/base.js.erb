@@ -394,7 +394,7 @@ this.SS = (function () {
 
     box.find(".ajax-box:not(.cboxElement)").each(function () {
       var elem = $(this);
-      if (elem.attr("target") || elem.data("target")) {
+      if (elem.attr("target") || elem.data("target") || typeof elem.colorbox === 'undefined') {
         return;
       }
 
