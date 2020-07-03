@@ -18,6 +18,11 @@ module Garbage::Node
     include History::Addon::Backup
 
     default_scope ->{ where(route: "garbage/node") }
+
+    def sort_hash
+      return { name: 1 } if sort.blank?
+      super
+    end
   end
 
   class Page
@@ -57,6 +62,11 @@ module Garbage::Node
 
       { '$or' => cond }
     end
+
+    def sort_hash
+      return { name: 1 } if sort.blank?
+      super
+    end
   end
 
   class Category
@@ -84,6 +94,11 @@ module Garbage::Node
       cond << { :category_ids.in => cids } if cids.present?
 
       { '$or' => cond }
+    end
+
+    def sort_hash
+      return { name: 1 } if sort.blank?
+      super
     end
   end
 end
