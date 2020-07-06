@@ -1722,7 +1722,7 @@ article.body {
 .event-date {
   @include clear;
   margin-bottom: 10px;
-  span.list, span.table {
+  span.list, span.table, span.map {
     float: right;
     margin-left: 10px;
     a {
