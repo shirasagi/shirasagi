@@ -1093,4 +1093,5 @@ ja:
       opendata/harvest/export_datasets_job: ハーベストエクスポート削除ジョブ
       opendata/harvest/destroy_datasets_job: ハーベスト関連データセット削除ジョブ
       opendata/notify_dataset_plan_job: データセット更新通知ジョブ
+      opendata/dataset/export_job: データセットエクスポートジョブ
       opendata/dataset/import_job: データセットインポートジョブ
