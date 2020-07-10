@@ -1,21 +1,24 @@
 <%= jquery do %>Inquiry_Form.render({ confirm: true, requiredLabel: <%== t('inquiry.required_field').to_json %> });<% end %>
+<% @cur_node.name = @group.section_name + " " + @cur_node.name if @group %>
 <div class="inquiry-form confirm">
-<%= form_for :item, url: "#{@cur_node.url}create.html", html: { multipart: true } do |f| %>
-  <% if @answer.errors.empty? %>
-  <div class="inquiry-confirm-message"><%= t('inquiry.confirm_message') %></div>
+  <%= form_for :item, url: "#{@cur_node.url}create.html", html: { multipart: true } do |f| %>
+    <% if @answer.errors.empty? %>
+      <div class="inquiry-confirm-message"><%= t('inquiry.confirm_message') %></div>
+    <% end %>
+    <%= error_messages_for :answer, header_message: false %>
+    <%= render partial: "form", locals: { f: f, confirm: true }  %>
+    <% if params[:preview] %>
+      <%= hidden_field_tag "preview", params[:preview] %>
+    <% end %>
+    <%= hidden_field_tag "#{f.object_name}[source_url]", @answer.source_url %>
+    <% if @cur_node.captcha_enabled? %>
+      <%= show_simple_captcha(object: :answer, code_type: 'numeric', input_html: { required: nil }) %>
+    <% end %>
+    <%= hidden_field_tag "group", @group.id if @group %>
+    <%= hidden_field_tag "page", @page.id if @page %>
+    <footer class="send">
+      <%= f.submit t('inquiry.cancel'), name: :cancel %>
+      <%= f.submit t('inquiry.submit'), name: :submit %>
+    </footer>
   <% end %>
-  <%= error_messages_for :answer, header_message: false %>  
-  <%= render partial: "form", locals: { f: f, confirm: true }  %>
-  <% if params[:preview] %>
-    <%= hidden_field_tag "preview", params[:preview] %>
-  <% end %>
-  <%= hidden_field_tag "#{f.object_name}[source_url]", @answer.source_url %>
-  <% if @cur_node.captcha_enabled? %>
-    <%= show_simple_captcha(object: :answer, code_type: 'numeric', input_html: { required: nil }) %>
-  <% end %>
-  <footer class="send">
-  <%= f.submit t('inquiry.cancel'), name: :cancel %>
-  <%= f.submit t('inquiry.submit'), name: :submit %>
-  </footer>
 </div>
-<% end %>

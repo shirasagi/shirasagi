@@ -32,4 +32,11 @@
       <dd><%= link_to @cur_page.contact_link, @cur_page.contact_link_url %></dd>
     </dl>
   <% end %>
+  <% if @cur_page.contact_group.present? && @cur_site.inquiry_form.present? %>
+    <% url = @cur_site.inquiry_form.url %>
+    <% url = url + "?group=#{@cur_page.contact_group.id}" + "&page=#{@cur_page.id}" %>
+    <div class="inquiry-form">
+      <%= link_to t("contact.view.inquiry_form"), url %>
+    </div>
+  <% end %>
 </footer>

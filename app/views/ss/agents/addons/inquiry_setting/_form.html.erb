@@ -1,0 +1,9 @@
+<%
+  addon ||= local_assigns.fetch(:addon, {})
+  addon[:display_body] = "hide"
+%>
+<dl class="see mod-ss-inquiry-setting">
+  <dt><%= @model.t :inquiry_form_id %><%= @model.tt :inquiry_form_id %></dt>
+  <% inquiry = Inquiry::Node::Form.site(@cur_site).and_public.where(depth: "1") %>
+  <dd><%= f.select :inquiry_form_id, inquiry.map { |i| [i.name, i.id] }, include_blank: true %></dd>
+</dl>

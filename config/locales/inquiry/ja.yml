@@ -87,6 +87,21 @@ ja:
     parts:
       inquiry/feedback: フィードバック
 
+  cms_role:
+    read_other_inquiry_columns: 質問項目の閲覧（全て）
+    read_private_inquiry_columns: 質問項目の閲覧（所有）
+    edit_other_inquiry_columns: 質問項目の編集（全て）
+    edit_private_inquiry_columns: 質問項目の編集（所有）
+    delete_other_inquiry_columns: 質問項目の削除（全て）
+    delete_private_inquiry_columns: 質問項目の削除（所有）
+    read_other_inquiry_answers: 回答データの閲覧（全て）
+    read_private_inquiry_answers: 回答データの閲覧（所有）
+    edit_other_inquiry_answers: 回答データの編集（全て）
+    edit_private_inquiry_answers: 回答データの編集（所有）
+    delete_other_inquiry_answers: 回答データの削除（全て）
+    delete_private_inquiry_answers: 回答データの削除（所有）
+
+
   mongoid:
     models:
       inquiry/column: 入力項目
@@ -155,6 +170,8 @@ ja:
         created: 作成日時
         state: 状態
         comment: コメント
+        inquiry_page_url: お問い合わせページURL
+        inquiry_page_name: お問い合わせページタイトル
 
       inquiry/addon/feedback_setting:
         upper_html: 上部HTML

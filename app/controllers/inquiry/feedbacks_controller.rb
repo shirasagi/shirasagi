@@ -9,6 +9,7 @@ class Inquiry::FeedbacksController < ApplicationController
   menu_view nil
 
   skip_before_action :set_item
+  before_action :check_permission
 
   private
 
@@ -16,11 +17,13 @@ class Inquiry::FeedbacksController < ApplicationController
     { cur_site: @cur_site, node_id: @cur_node.id }
   end
 
+  def check_permission
+    raise "403" unless @cur_node.allowed?(:edit, @cur_user, site: @cur_site)
+  end
+
   public
 
   def index
-    raise "403" unless @cur_node.allowed?(:read, @cur_user, site: @cur_site)
-
     if params[:s].blank?
       redirect_to action: :index, s: { year: Time.zone.today.year, month: Time.zone.today.month }
       return
@@ -37,8 +40,6 @@ class Inquiry::FeedbacksController < ApplicationController
   end
 
   def show
-    raise "403" unless @cur_node.allowed?(:read, @cur_user, site: @cur_site)
-
     options = params[:s] || {}
     options[:site] = @cur_site
     options[:node] = @cur_node

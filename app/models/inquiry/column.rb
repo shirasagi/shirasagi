@@ -3,6 +3,7 @@ class Inquiry::Column
   include SS::Reference::Site
   include Cms::SitePermission
   include Inquiry::Addon::InputSetting
+  include Cms::Addon::GroupPermission
 
   INPUT_TYPE_VALIDATION_HANDLERS = [
     [ :email_field, :validate_email_field ].freeze,
@@ -11,6 +12,8 @@ class Inquiry::Column
     [ :check_box, :validate_check_box ].freeze,
     [ :upload_file, :validate_upload_file ].freeze,
   ].freeze
+
+  set_permission_name "inquiry_columns"
 
   seqid :id
   field :node_id, type: Integer

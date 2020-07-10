@@ -49,7 +49,11 @@
   <dd><%= f.text_field :contact_fax, value: (params[:action] =~ /new/) ? @cur_group[:contact_fax] : @item.contact_fax %></dd>
 
   <dt><%= @model.t :contact_email %><%= @model.tt :contact_email %></dt>
-  <dd><%= f.text_field :contact_email, value: (params[:action] =~ /new/) ? @cur_group[:contact_email] : @item.contact_email %></dd>
+  <% if @cur_site.inquiry_form.present? %>
+    <dd><%= f.text_field :contact_email %></dd>
+  <% else %>
+    <dd><%= f.text_field :contact_email, value: (params[:action] =~ /new/) ? @cur_group[:contact_email] : @item.contact_email %></dd>
+  <% end %>
 
   <dt><%= @model.t :contact_link_url %><%= @model.tt :contact_link_url %></dt>
   <dd><%= f.text_field :contact_link_url, value: (params[:action] =~ /new/) ? @cur_group[:contact_link_url] : @item.contact_link_url %></dd>

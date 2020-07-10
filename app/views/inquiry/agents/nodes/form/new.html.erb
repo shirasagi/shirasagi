@@ -1,4 +1,5 @@
 <%= jquery do %>Inquiry_Form.render({ confirm: false, requiredLabel: <%== t('inquiry.required_field').to_json %> });<% end %>
+<% @cur_node.name = @group.section_name + " " + @cur_node.name if @group %>
 <div class="inquiry-html">
   <%== @cur_node.inquiry_html %>
 </div>
@@ -12,6 +13,8 @@
       <%= hidden_field_tag "preview", params[:preview] %>
     <% end %>
     <%= hidden_field_tag "#{f.object_name}[source_url]", @answer.source_url %>
+    <%= hidden_field_tag "group", @group.id if @group %>
+    <%= hidden_field_tag "page", @page.id if @page %>
     <footer class="send">
     <%= f.submit t('inquiry.confirm'), name: :confirm %>
     </footer>
