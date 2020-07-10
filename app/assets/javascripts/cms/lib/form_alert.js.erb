@@ -17,7 +17,7 @@ this.Form_Alert = (function () {
       var resolved = function(html) {
         var promise = Form_Alert.asyncValidate(form, submit, { html: html });
         promise.done(function() {
-          if (! $.isEmptyObject(Form_Alert.alerts)) {
+          if (! SS.isEmptyObject(Form_Alert.alerts)) {
             Form_Alert.showAlert(form, submit);
             return;
           }
@@ -185,7 +185,7 @@ this.Form_Alert = (function () {
       results.push($(form).find(addonIds.join(",")).find("input,textarea").not(excludes.join(",")).each(function () {
         var addonName, fieldName, val;
         val = $(this).val();
-        if (val && !$.isEmptyObject(val.match(RegExp("" + k.replace(/([.?*+$\[\]\/\\(){}|\-])/g, '\\$1'), "g")))) {
+        if (val && !SS.isEmptyObject(val.match(RegExp("" + k.replace(/([.?*+$\[\]\/\\(){}|\-])/g, '\\$1'), "g")))) {
           $(this).closest("dl").show();
           addonName = $(this).closest(".addon-view").find(".addon-head").text();
           fieldName = Form_Alert.justText($(this).closest("dd").prev("dt"));
