@@ -3,8 +3,10 @@
     <h3><%= link_to t("inquiry.column"), inquiry_columns_path %></h3>
     <h3><%= link_to t("inquiry.answer"), inquiry_answers_path %></h3>
     <% if @cur_node.allowed?(:edit, @cur_user, site: @cur_site) %>
-      <h3><%= link_to t("inquiry.result"), inquiry_results_path %></h3>
-      <h3><%= link_to t("inquiry.feedback"), inquiry_feedbacks_path %></h3>
+      <% if @cur_site.inquiry_form.try(:id) != @cur_node.id %>
+        <h3><%= link_to t("inquiry.result"), inquiry_results_path %></h3>
+        <h3><%= link_to t("inquiry.feedback"), inquiry_feedbacks_path %></h3>
+      <% end %>
     <% end %>
   <% else %>
     <h3><%= link_to t("inquiry.nodes"), inquiry_nodes_path %></h3>

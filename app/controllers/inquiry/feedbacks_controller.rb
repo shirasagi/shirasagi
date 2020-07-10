@@ -18,7 +18,9 @@ class Inquiry::FeedbacksController < ApplicationController
   end
 
   def check_permission
-    raise "403" unless @cur_node.allowed?(:edit, @cur_user, site: @cur_site)
+    if @cur_site.inquiry_form == @cur_node
+      raise "403" unless @cur_node.allowed?(:edit, @cur_user, site: @cur_site)
+    end
   end
 
   public

@@ -160,7 +160,6 @@ class Inquiry::Agents::Nodes::FormController < ApplicationController
     query[:group] = @group.id if @group
     query = query.to_query
 
-
     url = "#{@cur_node.url}sent.html"
     url = "#{url}?#{query}" if query.present?
     redirect_to url
