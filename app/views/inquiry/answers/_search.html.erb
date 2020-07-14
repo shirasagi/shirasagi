@@ -11,6 +11,7 @@
 %>
 <div class="list-head-search">
   <%= form_for :s, url: "", html: { class: "index-search", method: :get } do |f| %>
+    <%= select_tag("s[group]", options_for_select(@groups.to_options, @group.try(:id)), include_blank: t("inquiry.group")) %>
     <span style="margin-right: 10px;">
       <%= f.select :year, @years, include_blank: true %>
       <%= f.select :month, @months, include_blank: t("ads.yearly") %>

@@ -75,6 +75,10 @@ class Inquiry::Answer
         criteria = criteria.where(source_url: { "$exists" => true, "$ne" => nil })
       end
 
+      if params[:group].present?
+        criteria = criteria.in(group_ids: params[:group].to_i)
+      end
+
       criteria
     end
 

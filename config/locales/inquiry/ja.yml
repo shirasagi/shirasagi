@@ -23,6 +23,7 @@ ja:
     default_reply_content_static: |-
       このメールは、お問い合わせいただきました方に自動的に送信しております。
       もしお心当たりがない場合は、破棄していただきますようお願い申し上げます。
+    group: グループ
 
     options:
       state:
