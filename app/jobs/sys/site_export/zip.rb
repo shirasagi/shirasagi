@@ -1,10 +1,11 @@
 class Sys::SiteExport::Zip
   extend ActiveSupport::Concern
 
-  attr_accessor :output_dir, :site_dir
+  attr_accessor :output_dir, :site_dir, :exclude_public_files
 
-  def initialize(path)
+  def initialize(path, opts = {})
     @path = path
+    @exclude_public_files = opts[:exclude_public_files] || []
   end
 
   def compress
@@ -44,6 +45,8 @@ class Sys::SiteExport::Zip
   def add_public_files(zip)
     require "find"
     Find.find(@site_dir) do |path|
+      next if @exclude_public_files.include?(path)
+
       entry = path.sub(/^#{@site_dir}/, 'public')
       if File.directory?(path)
         zip.mkdir(entry)
