@@ -75,7 +75,7 @@ module Sys::CrudFilter
 
     entries.each do |item|
       if item.allowed?(:delete, @cur_user, site: @cur_site)
-        if item.deletion_unlocked? && item.disabled?
+        if item.try(:deletion_unlocked?) && item.try(:disabled?)
           item.destroy
           next
         end
