@@ -72,8 +72,6 @@ class Inquiry::AnswersController < ApplicationController
   public
 
   def index
-    raise "403" unless @cur_node.allowed?(:read, @cur_user, site: @cur_site)
-
     @state = params.dig(:s, :state).presence || "unclosed"
     if params[:s].present? && params[:s][:group].present?
       @group = Cms::Group.site(@cur_site).active.find(params[:s][:group])

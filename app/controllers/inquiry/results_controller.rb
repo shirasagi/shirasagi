@@ -19,6 +19,7 @@ class Inquiry::ResultsController < ApplicationController
 
   def set_aggregation
     @cur_node = @cur_node.becomes_with_route
+    raise "403" unless Inquiry::Node::Form.site(@cur_site).include?(@cur_node)
     @columns = @cur_node.columns.order_by(order: 1)
     @answer_count = @cur_node.answers.count
 

@@ -28,6 +28,15 @@ module Inquiry::Node
     after_validation :set_released, if: -> { public? }
     default_scope ->{ where(route: "inquiry/form") }
 
+    def serve_static_file?
+      if self.site.inquiry_form == self
+        file = "#{self.path}/index.html"
+        File.delete(file) if File.exists?(file)
+        return false
+      end
+      super
+    end
+
     private
 
     def set_released
