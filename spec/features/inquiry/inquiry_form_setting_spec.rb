@@ -12,6 +12,8 @@ describe "inquiry_form", type: :feature, dbscope: :example, js: true do
     create(:article_page, layout_id: layout.id, contact_group_id: cms_group.id, contact_tel: "000-0000", cur_node: article_node)
   end
   let(:edit_article_path) { edit_article_page_path site.id, article_node, article }
+  let(:new_article_node_path) { new_article_page_path site.id, article_node }
+  let(:edit_group_path) { edit_cms_group_path site.id, cms_group.id }
 
   let(:remote_addr) { "X.X.X.X" }
   let(:user_agent) { unique_id }
@@ -72,6 +74,59 @@ describe "inquiry_form", type: :feature, dbscope: :example, js: true do
 
       click_on I18n.t("contact.view.inquiry_form")
       expect(current_path).to eq node.url
+    end
+  end
+
+  context "replace email" do
+    before { login_cms_user }
+
+    it do
+      visit edit_group_path
+      fill_in "item_contact_email", with: "#{unique_id}@example.jp"
+      click_on I18n.t('ss.buttons.save')
+      expect(page).to have_content cms_group.contact_email
+
+      visit new_article_node_path
+      find("#addon-contact-agents-addons-page").click
+      expect(find("#item_contact_email").value).to eq cms_group.contact_email
+
+      visit edit_article_path
+      find("#addon-contact-agents-addons-page").click
+
+      click_link I18n.t("contact.search_groups.index")
+      wait_for_cbox do
+        click_on cms_group.name
+      end
+      expect(find("#item_contact_email").value).to eq cms_group.contact_email
+    end
+  end
+
+  context "do not replace email" do
+    before { login_cms_user }
+
+    it do
+      visit edit_group_path
+      fill_in "item_contact_email", with: "#{unique_id}@example.jp"
+      click_on I18n.t('ss.buttons.save')
+      expect(page).to have_content cms_group.contact_email
+
+      visit edit_site_path
+      find("#addon-ss-agents-addons-inquiry_setting").click
+      select node.name, from: "item_inquiry_form_id"
+      click_button I18n.t('ss.buttons.save')
+
+      visit new_article_node_path
+      find("#addon-contact-agents-addons-page").click
+      expect(find("#item_contact_email").value).not_to eq cms_group.contact_email
+
+      visit edit_article_path
+      find("#addon-contact-agents-addons-page").click
+
+      click_link I18n.t("contact.search_groups.index")
+      wait_for_cbox do
+        click_on cms_group.name
+      end
+      expect(find("#item_contact_email").value).not_to eq cms_group.contact_email
     end
   end
 end
