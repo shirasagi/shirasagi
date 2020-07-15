@@ -34,7 +34,7 @@ class Sys::SiteExportJob < SS::ApplicationJob
     invoke :export_cms_body_layouts
     invoke :export_cms_nodes
     invoke :export_cms_parts
-    invoke :export_cms_pages if !@exclude_cms_pages
+    invoke :export_cms_pages
     invoke :export_cms_page_searches
     invoke :export_cms_notices
     invoke :export_cms_editor_templates
@@ -166,7 +166,10 @@ class Sys::SiteExportJob < SS::ApplicationJob
   end
 
   def export_cms_pages
-    export_documents "cms_pages", Cms::Page do |item|
+    scope = Cms::Page.site(@src_site)
+    scope = scope.where(filename: /^(index.html|404.html|mobile.html)$/) if @exclude_cms_pages
+
+    export_documents "cms_pages", Cms::Page, scope do |item|
       # opendata
       @ss_file_ids += item[:resources].map { |m| m[:file_id] } if item[:resources].present?
       @ss_file_ids += item[:url_resources].map { |m| m[:file_id] } if item[:url_resources].present?
