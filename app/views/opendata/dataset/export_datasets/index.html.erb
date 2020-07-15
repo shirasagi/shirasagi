@@ -1,4 +1,5 @@
 <%= form_for :item, url: { action: :export }, html: { id: "item-form", method: :put, multipart: true } do |f| %>
+  <%= error_messages_for :item %>
   <%= f.hidden_field "root_url", value: root_url, class: "hidden-ids" %>
 
   <div class="addon-views">
