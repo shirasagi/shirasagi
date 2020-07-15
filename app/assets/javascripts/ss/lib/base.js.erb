@@ -24,6 +24,42 @@ this.SS = (function () {
     default: "YYYY/M/D HH:mm"
   };
 
+  // $.isEmptyObject には IE11 で非互換がある。
+  //
+  //                            | Chrome 84 | IE 11  |
+  // ===========================|===========|========|
+  // $.isEmptyObject()          | true      | true   |
+  // $.isEmptyObject(undefined) | true      | true   |
+  // $.isEmptyObject(null)      | true      | true   |
+  // $.isEmptyObject([])        | true      | false  |
+  // $.isEmptyObject({})        | true      | true   |
+  // $.isEmptyObject(0)         | true      | true   |
+  // $.isEmptyObject("")        | true      | false  |
+  // $.isEmptyObject([0])       | false     | false  |
+  // $.isEmptyObject({a:0})     | false     | false  |
+  // $.isEmptyObject(1)         | true      | true   |
+  // $.isEmptyObject(-1)        | true      | true   |
+  // $.isEmptyObject("a")       | false     | false  |
+  // * `[]` と `""` との場合で非互換がある。
+  //
+  // 本来の $.isEmptyObject には上記のような非互換は存在しないが、
+  // IE 11 向けにポリフィルを組み込むと、上記のような非互換が発生する。
+  //
+  // IE 11 でも isEmptyObject が動作するように本メソッドを提供する。
+  SS.isEmptyObject = function(objectOrArray) {
+    if ($.isEmptyObject(objectOrArray)) {
+      return true;
+    }
+    if ($.isArray(objectOrArray) && objectOrArray.length === 0) {
+      return true;
+    }
+    if ($.type(objectOrArray) === "string" && objectOrArray.length === 0) {
+      return true;
+    }
+
+    return false;
+  };
+
   SS.disableClick = function (el) {
     if (el.data('clicked')) {
       return false;
