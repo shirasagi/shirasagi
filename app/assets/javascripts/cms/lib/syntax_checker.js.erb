@@ -394,7 +394,7 @@ this.Syntax_Checker = (function () {
           return chars.push(c);
         }
       });
-      if (!$.isEmptyObject(chars)) {
+      if (!SS.isEmptyObject(chars)) {
         Syntax_Checker.errors.push(
           {
             id: id,
@@ -444,7 +444,7 @@ this.Syntax_Checker = (function () {
 
     $.each(array, function(idx, html) {
       chars = html.match(/[｡-ﾟ]/g);
-      if (!$.isEmptyObject(chars)) {
+      if (!SS.isEmptyObject(chars)) {
         Syntax_Checker.errors.push(
           {
             id: id,
@@ -533,7 +533,7 @@ this.Syntax_Checker = (function () {
       for (k in words) {
         v = words[k];
         c = html.match(RegExp("" + k.replace(/([.?*+$\[\]\/\\(){}|\-])/g, '\\$1'), "g"));
-        if (!$.isEmptyObject(c)) {
+        if (!SS.isEmptyObject(c)) {
           Syntax_Checker.errors.push(
             {
               id: id,
@@ -604,13 +604,13 @@ this.Syntax_Checker = (function () {
           dates = $.merge(dates, d);
         }
       });
-      if ($.isEmptyObject(dates)) {
+      if (SS.isEmptyObject(dates)) {
         return;
       }
       dates = $.grep(dates, function (date) {
         return Syntax_Checker.isValidDate(new Date(date));
       });
-      if (!$.isEmptyObject(dates)) {
+      if (!SS.isEmptyObject(dates)) {
         Syntax_Checker.errors.push(
           {
             id: id,

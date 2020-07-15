@@ -148,7 +148,7 @@ this.Link_Checker = (function () {
     });
 
     if (links.length === 0) {
-      if ($.isEmptyObject(this.links)) {
+      if (SS.isEmptyObject(this.links)) {
         this.resultBox.showMessage("<p>" + Link_Checker.message["noLinks"] + "</p>");
       } else {
         this.resultBox.showResult(this.links);
