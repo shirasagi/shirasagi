@@ -4,11 +4,14 @@ class Sys::SiteExportJob < SS::ApplicationJob
   cattr_accessor :export_root
   self.export_root = "#{Rails.root}/private/export"
 
-  def perform
+  def perform(opts = {})
     @src_site = Cms::Site.find(@task.source_site_id)
 
     @output_dir = "#{self.class.export_root}/site-#{@src_site.host}"
     @output_zip = "#{@output_dir}.zip"
+
+    exclude_models = opts[:exclude].to_s.split(",")
+    @exclude_cms_pages = exclude_models.include?("cms_pages")
 
     FileUtils.rm_rf(@output_dir)
     FileUtils.mkdir_p(@output_dir)
@@ -31,7 +34,7 @@ class Sys::SiteExportJob < SS::ApplicationJob
     invoke :export_cms_body_layouts
     invoke :export_cms_nodes
     invoke :export_cms_parts
-    invoke :export_cms_pages
+    invoke :export_cms_pages if !@exclude_cms_pages
     invoke :export_cms_page_searches
     invoke :export_cms_notices
     invoke :export_cms_editor_templates

@@ -73,7 +73,7 @@ module Tasks
           job.task = mock_task(
             source_site_id: site.id
           )
-          job.perform
+          job.perform(exclude: ENV['exclude'])
         end
       end
 
