@@ -1,5 +1,4 @@
 <%
-  limit = 5
   return if @accessibility_result.blank?
 %>
 
@@ -21,8 +20,13 @@
       <button type="button" class="btn"><span class="material-icons md-13">settings</span> 表示列設定</button>
       <a class="btn btn-michecker-report-download" href="<%= url_for(action: "michecker_result", type: "accessibility_report", _: @result.updated.to_i, format: "csv") %>"><span class="material-icons md-13">get_app</span> CSVダウンロード</a>
     </div>
-
-    <table class="index" style="width: 140em;">
+    <div class="michecker-report__result-controller">
+      表示列 <a class="toggle-vis" data-column="0"><%= Cms::Michecker::Accessibility.t :severityStr %></a> -
+      <a class="toggle-vis" data-column="1"><%= Cms::Michecker::Accessibility.t :evaluationItem_tableDataTechniques %></a> -
+      <a class="toggle-vis" data-column="2"><%= Cms::Michecker::Accessibility.t :highlightTargetPaths %></a> -
+      <a class="toggle-vis" data-column="3"><%= Cms::Michecker::Accessibility.t :description %></a>
+    </div>
+    <table class="index" id="myTable">
       <thead>
       <tr>
         <th style="width: 12em;"><%= Cms::Michecker::Accessibility.t :severityStr %></th>
@@ -39,8 +43,8 @@
       </tr>
       </thead>
       <tbody>
-      <% @accessibility_result.items.each_with_index do |item, index| %>
-        <tr <% if item.highlightTargetPaths.present? && item.highlightTargetPaths.length == 1 %>data-css-path="<%= item.highlightTargetPaths.first["cssPath"] %>"<% end %> <% if index >= limit %>class="hide"<% end %>>
+      <% @accessibility_result.items.each do |item| %>
+        <tr <% if item.highlightTargetPaths.present? && item.highlightTargetPaths.length == 1 %>data-css-path="<%= item.highlightTargetPaths.first["cssPath"] %>"<% end %>>
           <td><%= item.severityStr %></td>
           <% if false %><td><%= item.evaluationItem["tableDataMetrics"].try { |metrics| metrics[0] } %></td><% end %>
           <% if false %><td><%= item.evaluationItem["tableDataMetrics"].try { |metrics| metrics[1] } %></td><% end %>
@@ -61,19 +65,36 @@
         </tr>
       <% end %>
       </tbody>
-      <tfoot>
-        <tr class="top">
-          <td colspan="4">
-            <%= @accessibility_result.items.count.to_s(:delimited) %>件中<%= limit.to_s(:delimited) %>件を表示しています。
-            <a class="michecker-report__result-show-all">すべて表示</a>
-          </td>
-        </tr>
-        <tr class="all hide">
-          <td colspan="4">
-            <%= @accessibility_result.items.count.to_s(:delimited) %>件表示しています。
-          </td>
-        </tr>
-      </tfoot>
     </table>
   </div>
 <% end %>
+
+<script>
+  $(document).ready( function () {
+    var table = $('#myTable').DataTable({
+      lengthMenu: [ [5, 10, 25, -1], [5, 10, 25, "All"] ],
+      scrollY: "300px",
+      scrollCollapse: true,
+      oLanguage: {
+        sLengthMenu : "表示　_MENU_　件",
+        oPaginate : {
+          sNext : "次へ",
+          sPrevious : "前へ"
+        },
+        sInfo : "_TOTAL_ 件中 _START_件から_END_件 を表示しています",
+        sSearch : "検索 ",
+        sZeroRecords : "表示するデータがありません",
+        sInfoEmpty : "0 件中 0件 を表示しています",
+        sInfoFiltered : "全 _MAX_ 件から絞り込み"
+      }
+    });
+    $('a.toggle-vis').on( 'click', function (e) {
+      e.preventDefault();
+      var column = table.column( $(this).attr('data-column') );
+      column.visible( ! column.visible() );
+    });
+    $('.toggle-vis').click(function(){
+      $(this).toggleClass('michecker-inactive');
+    });
+  });
+</script>

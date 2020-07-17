@@ -6,6 +6,10 @@
     color: $gray2;
   }
 
+  &-inactive {
+    color: $gray2;
+  }
+
   &-head {
     @include display-flex;
     @include align-items(center);
@@ -27,6 +31,8 @@
   &__main {
     width: 100%;
     height: calc(100% - 250px);
+    border-bottom: solid 5px;
+    color: lightgrey;
   }
 
   &__main-content {

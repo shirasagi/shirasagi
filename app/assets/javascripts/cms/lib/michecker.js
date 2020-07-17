@@ -68,7 +68,6 @@ this.Cms_Michecker = (function () {
 
     this.$el.on("click", ".michecker-report__result-container table tr", function(ev) { self.highlightElemetByCssPath(ev); });
     this.$el.on("click", "[data-css-path]", function(ev) { self.highlightElemetByCssPath(ev); });
-    this.$el.on("click", ".michecker-report__result-show-all", function(ev) { self.onShowAllResultClicked(ev); return false; });
   };
 
   Cms_Michecker.prototype.onFrameLoaded = function() {
@@ -161,15 +160,6 @@ this.Cms_Michecker = (function () {
     } else {
       this.loadLowVisionReport(selectedOption.dataset.href);
     }
-  };
-
-  Cms_Michecker.prototype.onShowAllResultClicked = function(ev) {
-    ev.preventDefault();
-
-    var $table = $(ev.target).closest("table");
-    $table.find("tbody tr.hide").removeClass("hide");
-    $table.find("tfoot tr.top").addClass("hide");
-    $table.find("tfoot tr.all").removeClass("hide");
   };
 
   Cms_Michecker.prototype.loadAccessibilityReport = function(url) {
