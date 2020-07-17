@@ -17,7 +17,6 @@
 <%= render "ss/crud/addon", addon: { class: "michecker-report__result" } do %>
   <div class="michecker-report__result-container">
     <div class="michecker-report__result-controller">
-      <button type="button" class="btn"><span class="material-icons md-13">settings</span> 表示列設定</button>
       <a class="btn btn-michecker-report-download" href="<%= url_for(action: "michecker_result", type: "accessibility_report", _: @result.updated.to_i, format: "csv") %>"><span class="material-icons md-13">get_app</span> CSVダウンロード</a>
     </div>
     <div class="michecker-report__result-controller">
@@ -26,7 +25,7 @@
       <a class="toggle-vis" data-column="2"><%= Cms::Michecker::Accessibility.t :highlightTargetPaths %></a> -
       <a class="toggle-vis" data-column="3"><%= Cms::Michecker::Accessibility.t :description %></a>
     </div>
-    <table class="index" id="myTable">
+    <table class="index" id="accessibility">
       <thead>
       <tr>
         <th style="width: 12em;"><%= Cms::Michecker::Accessibility.t :severityStr %></th>
@@ -71,7 +70,7 @@
 
 <script>
   $(document).ready( function () {
-    var table = $('#myTable').DataTable({
+    var table = $('#accessibility').DataTable({
       lengthMenu: [ [5, 10, 25, -1], [5, 10, 25, "All"] ],
       scrollY: "300px",
       scrollCollapse: true,
@@ -90,7 +89,7 @@
     });
     $('a.toggle-vis').on( 'click', function (e) {
       e.preventDefault();
-      var column = table.column( $(this).attr('data-column') );
+      let column = table.column( $(this).attr('data-column') );
       column.visible( ! column.visible() );
     });
     $('.toggle-vis').click(function(){
