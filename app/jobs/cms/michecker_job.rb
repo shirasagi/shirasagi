@@ -9,13 +9,13 @@ class Cms::MicheckerJob < Cms::ApplicationJob
     @task.user_id = user_id
     @task.save
 
-    @task.log "miChecker による検証を開始します。"
+    @task.log I18n.t('cms.cms/michecker/task.start')
 
     result = run_html_checker_and_wait
     if result == 0
-      @task.log "miChecker による検証が完了しました。"
+      @task.log I18n.t('cms.cms/michecker/task.success')
     else
-      @task.log "miChecker による検証が失敗しました。"
+      @task.log I18n.t('cms.cms/michecker/task.failed')
     end
 
     @task.michecker_last_result = result

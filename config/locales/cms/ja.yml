@@ -378,6 +378,25 @@ ja:
       cms/youtube: YouTube埋め込み
       cms/free: 自由入力
       cms/table: 表
+    cms/michecker:
+      start: miChecker を実行し結果を確認する
+      setting: 設定
+      loading: プレビューをロード中です
+      accessibility: アクセシビリティ検証
+      lowvision: 視覚化
+    cms/michecker/report:
+      type: 種別
+      all: すべての項目
+      error: 問題あり
+      warning: 問題の可能性大
+      caution: 要判断箇所
+      notice: 手動確認
+      download: CSVダウンロード
+      display_column: 表示列
+    cms/michecker/task:
+      start: miChecker による検証を開始します。
+      success: miChecker による検証が完了しました。
+      failed: miChecker による検証が失敗しました。
 
   cms_role:
     edit_cms_sites: サイトの管理

@@ -7,18 +7,24 @@
   <div class="michecker__footer">
     <div class="michecker-head">
       <h5>miChecker</h5>
-      <button type="button" class="btn btn-michecker-start" disabled="disabled" data-href="<%= url_for(action: "michecker_start", format: "json") %>">miChecker を実行し結果を確認する</button>
-      <button type="button" class="btn btn-michecker-settings">設定</button>
+      <button type="button" class="btn btn-michecker-start" disabled="disabled" data-href="<%= url_for(action: "michecker_start", format: "json") %>">
+        <%= t('cms.cms/michecker.start') %>
+      </button>
+      <button type="button" class="btn btn-michecker-settings"><%= t('cms.cms/michecker.setting') %></button>
 
       <div class="michecker-notice">
-        プレビューをロード中です <%= loading %>
+        <%= t('cms.cms/michecker.loading') %> <%= loading %>
       </div>
     </div>
 
     <div class="michecker-report__selector hide">
       <select name="report-type">
-        <option value="accessibility" data-href="<%= url_for(action: "michecker_result", type: "accessibility_report", format: "html") %>">アクセシビリティ検証</option>
-        <option value="low-vision" data-href="<%= url_for(action: "michecker_result", type: "lowvision_report", format: "html") %>">視覚化</option>
+        <option value="accessibility" data-href="<%= url_for(action: "michecker_result", type: "accessibility_report", format: "html") %>">
+          <%= t('cms.cms/michecker.accessibility') %>
+        </option>
+        <option value="low-vision" data-href="<%= url_for(action: "michecker_result", type: "lowvision_report", format: "html") %>">
+          <%= t('cms.cms/michecker.lowvision') %>
+        </option>
       </select>
     </div>
 
@@ -28,13 +34,12 @@
     <div class="michecker-report__low-vision hide">
     </div>
   </div>
-
-  <%= jquery do %>
-    var michecker = new Cms_Michecker("#ss-michecker");
-    $("#resize").resizable({
-      handles: 's'
-    });
-  <% end %>
 </div>
+<%= jquery do %>
+  var michecker = new Cms_Michecker("#ss-michecker");
+  $("#resize").resizable({
+    handles: 's'
+  });
+<% end %>
 <%= javascript_include_tag('cms/preview/datatables') %>
 <%= javascript_include_tag('cms/preview/jquery-ui') %>

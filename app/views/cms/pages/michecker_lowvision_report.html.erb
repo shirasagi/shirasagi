@@ -3,24 +3,27 @@
 %>
 
 <div class="michecker-report__low-vision-result-table">
-  <%= render "ss/crud/addon", addon: { head: "種別", class: "michecker-report__filter" } do %>
+  <%= render "ss/crud/addon", addon: { head: t('cms.cms/michecker/report.type'), class: "michecker-report__filter" } do %>
     <ul class="michecker-report__filter-items">
       <% all_count, error_count, warning_count, caution_count, notice_count = @lowvision_result.aggregate_counts %>
-      <li class="michecker-report__filter-item-all">すべての項目 <span class="michecker-report__filter-item-badge"><%= all_count %></span></li>
+      <li class="michecker-report__filter-item-all"><%= t('cms.cms/michecker/report.all') %> <span class="michecker-report__filter-item-badge"><%= all_count %></span></li>
       <li class="michecker-report__filter-item-separator"><hr></li>
-      <li class="michecker-report__filter-item-error">問題あり <span class="michecker-report__filter-item-badge"><%= error_count %></span></li>
-      <li class="michecker-report__filter-item-warning">問題の可能性大 <span class="michecker-report__filter-item-badge"><%= warning_count %></span></li>
-      <li class="michecker-report__filter-item-caution">要判断箇所 <span class="michecker-report__filter-item-badge"><%= caution_count %></span></li>
-      <li class="michecker-report__filter-item-notice">手動確認 <span class="michecker-report__filter-item-badge"><%= notice_count %></span></li>
+      <li class="michecker-report__filter-item-error"><%= t('cms.cms/michecker/report.error') %> <span class="michecker-report__filter-item-badge"><%= error_count %></span></li>
+      <li class="michecker-report__filter-item-warning"><%= t('cms.cms/michecker/report.warning') %> <span class="michecker-report__filter-item-badge"><%= warning_count %></span></li>
+      <li class="michecker-report__filter-item-caution"><%= t('cms.cms/michecker/report.caution') %> <span class="michecker-report__filter-item-badge"><%= caution_count %></span></li>
+      <li class="michecker-report__filter-item-notice"><%= t('cms.cms/michecker/report.notice') %> <span class="michecker-report__filter-item-badge"><%= notice_count %></span></li>
     </ul>
   <% end %>
 
   <%= render "ss/crud/addon", addon: { class: "michecker-report__result" } do %>
     <div class="michecker-report__result-controller">
-      <a class="btn btn-michecker-report-download" href="<%= url_for(action: "michecker_result", type: "lowvision_report", _: @result.updated.to_i, format: "csv") %>"><span class="material-icons md-13">get_app</span> CSVダウンロード</a>
+      <a class="btn btn-michecker-report-download" href="<%= url_for(action: "michecker_result", type: "lowvision_report", _: @result.updated.to_i, format: "csv") %>">
+        <span class="material-icons md-13">get_app</span> <%= t('cms.cms/michecker/report.download') %>
+      </a>
     </div>
     <div class="michecker-report__result-controller">
-      表示列 <a class="toggle-vis" data-column="0"><%= Cms::Michecker::Accessibility.t :severityStr %></a> -
+      <%= t('cms.cms/michecker/report.display_column') %>
+      <a class="toggle-vis" data-column="0"><%= Cms::Michecker::Accessibility.t :severityStr %></a> -
       <a class="toggle-vis" data-column="1"><%= Cms::Michecker::Accessibility.t :evaluationItem_tableDataTechniques %></a> -
       <a class="toggle-vis" data-column="2"><%= Cms::Michecker::Accessibility.t :description %></a>
     </div>
@@ -45,7 +48,7 @@
         </tr>
         </thead>
         <tbody>
-        <% @lowvision_result.items.each_with_index do |item| %>
+        <% @lowvision_result.items.each do |item| %>
           <tr data-css-path="<%= item.cssPath %>">
             <td><%= item.severityStr %></td>
             <% if false %><td><%= item.iconTooltip %></td><% end %>
@@ -72,23 +75,23 @@
   <%= image_tag(url_for(action: "michecker_result", type: "lowvision_result", _: @result.updated.to_i, format: "jpeg"), class: "michecker-report__low-vision-image-result") %>
 </div>
 
-<script>
+<%= jquery do %>
   $(document).ready( function () {
     var table = $('#lowvision').DataTable({
-      lengthMenu: [ [5, 10, 25, -1], [5, 10, 25, "All"] ],
+      lengthMenu: [ [5, 10, 25, -1], [5, 10, 25, "全て"] ],
       scrollY: "300px",
       scrollCollapse: true,
       oLanguage: {
         sLengthMenu : "表示　_MENU_　件",
-        oPaginate : {
-          sNext : "次へ",
-          sPrevious : "前へ"
+        oPaginate: {
+          sNext: "次へ",
+          sPrevious: "前へ"
         },
-        sInfo : "_TOTAL_ 件中 _START_件から_END_件 を表示しています",
-        sSearch : "検索 ",
-        sZeroRecords : "表示するデータがありません",
-        sInfoEmpty : "0 件中 0件 を表示しています",
-        sInfoFiltered : "全 _MAX_ 件から絞り込み"
+        sInfo: "_TOTAL_ 件中 _START_件から_END_件 を表示しています",
+        sSearch: "検索 ",
+        sZeroRecords: "表示するデータがありません",
+        sInfoEmpty: "0 件中 0件 を表示しています",
+        sInfoFiltered: "全 _MAX_ 件から絞り込み"
       }
     });
     $('a.toggle-vis').on( 'click', function (e) {
@@ -100,4 +103,4 @@
       $(this).toggleClass('michecker-inactive');
     });
   });
-</script>
+<% end %>
