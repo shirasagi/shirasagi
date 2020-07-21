@@ -43,9 +43,15 @@ Rails.application.routes.draw do
     delete :tag, action: :reset_tag_all, on: :collection
   end
 
+  concern :michecker do
+    get :michecker, on: :member
+    post :michecker_start, on: :member
+    get :michecker_result, on: :member
+  end
+
   content "event" do
     get "/" => redirect { |p, req| "#{req.path}/pages" }, as: :main
-    resources :pages, concerns: [:deletion, :crud, :download, :import, :ical_refresh, :command, :contains_urls, :tag]
+    resources :pages, concerns: [:deletion, :crud, :download, :import, :ical_refresh, :command, :contains_urls, :tag, :michecker]
     resources :searches, only: [:index]
   end
 

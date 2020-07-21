@@ -36,6 +36,11 @@
         <%= link_to(t('ss.links.command'), { action: :command, id: @item }, class: :command) rescue nil %>
       <% end %>
     <% end %>
+    <% if SS.config.michecker %>
+      <% if SS.config.michecker['disable'].blank? %>
+        <%= link_to t('cms.links.michecker'), { action: :michecker }, target: "_blank" rescue nil %>
+      <% end %>
+    <% end %>
     <%= link_to t('ss.links.back_to_index'), { action: :index }, class: "back-to-index" %>
   <% end %>
 </nav>
