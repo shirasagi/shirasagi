@@ -2,7 +2,6 @@ this.Cms_Michecker = (function () {
   function Cms_Michecker(el) {
     this.$el = $(el);
     this.$btnStart = this.$el.find(".btn-michecker-start");
-    this.$btnSetting = this.$el.find(".btn-michecker-settings");
     this.$notice = this.$el.find(".michecker-notice");
     this.$frame = this.$el.find(".michecker__main-content");
     this.frame = this.$frame[0];
@@ -59,11 +58,6 @@ this.Cms_Michecker = (function () {
 
     this.$reportSelector.find("[name=report-type]").on("change", function(ev) {
       self.onReportTypeChanged(ev);
-    });
-
-    this.$btnSetting.on("click", function(ev) {
-      ev.preventDefault();
-      self.onBtnMicheckerSettingClicked(ev);
     });
 
     this.$el.on("click", ".michecker-report__result-container table tr", function(ev) { self.highlightElemetByCssPath(ev); });
@@ -189,12 +183,6 @@ this.Cms_Michecker = (function () {
       self.$reportLowVision.html(Cms_Michecker.messages.lowVisionReportLoadError);
     });
   }
-
-  Cms_Michecker.prototype.onBtnMicheckerSettingClicked = function() {
-    $.colorbox({
-      html: "<h2>miCheck の設定</h2><div>ただいま開発中。</div>", fixed: true, width: "90%", height: "90%"
-    });
-  };
 
   Cms_Michecker.prototype.createOverlay = function() {
     var el = this.frame.contentDocument.createElement("div");

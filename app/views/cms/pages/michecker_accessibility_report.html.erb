@@ -23,24 +23,31 @@
     </div>
     <div class="michecker-report__result-controller">
       <%= t('cms.cms/michecker/report.display_column') %>
-      <a class="toggle-vis" data-column="0"><%= Cms::Michecker::Accessibility.t :severityStr %></a> -
-      <a class="toggle-vis" data-column="1"><%= Cms::Michecker::Accessibility.t :evaluationItem_tableDataTechniques %></a> -
-      <a class="toggle-vis" data-column="2"><%= Cms::Michecker::Accessibility.t :highlightTargetPaths %></a> -
-      <a class="toggle-vis" data-column="3"><%= Cms::Michecker::Accessibility.t :description %></a>
+      <a class="toggle-vis" data-column="0" id="a-column0"><%= Cms::Michecker::Accessibility.t :severityStr %></a> -
+      <a class="toggle-vis" data-column="1" id="a-column1"><%= Cms::Michecker::Accessibility.t :evaluationItem_tableDataMetrics0 %></a> -
+      <a class="toggle-vis" data-column="2" id="a-column2"><%= Cms::Michecker::Accessibility.t :evaluationItem_tableDataMetrics1 %></a> -
+      <a class="toggle-vis" data-column="3" id="a-column3"><%= Cms::Michecker::Accessibility.t :evaluationItem_tableDataMetrics2 %></a> -
+      <a class="toggle-vis" data-column="4" id="a-column4"><%= Cms::Michecker::Accessibility.t :evaluationItem_tableDataMetrics3 %></a> -
+      <a class="toggle-vis" data-column="5" id="a-column5"><%= Cms::Michecker::Accessibility.t :evaluationItem_tableDataGuideline0 %></a> -
+      <a class="toggle-vis" data-column="6" id="a-column6"><%= Cms::Michecker::Accessibility.t :evaluationItem_tableDataGuideline1 %></a> -
+      <a class="toggle-vis" data-column="7" id="a-column7"><%= Cms::Michecker::Accessibility.t :evaluationItem_tableDataGuideline2 %></a> -
+      <a class="toggle-vis" data-column="8" id="a-column8"><%= Cms::Michecker::Accessibility.t :evaluationItem_tableDataTechniques %></a> -
+      <a class="toggle-vis" data-column="9" id="a-column9"><%= Cms::Michecker::Accessibility.t :highlightTargetPaths %></a> -
+      <a class="toggle-vis" data-column="10" id="a-column10"><%= Cms::Michecker::Accessibility.t :description %></a>
     </div>
     <table class="index" id="accessibility">
       <thead>
       <tr>
-        <th style="width: 12em;"><%= Cms::Michecker::Accessibility.t :severityStr %></th>
-        <% if false %><th style="width: 12em;"><%= Cms::Michecker::Accessibility.t :evaluationItem_tableDataMetrics0 %></th><% end %>
-        <% if false %><th style="width: 12em;"><%= Cms::Michecker::Accessibility.t :evaluationItem_tableDataMetrics1 %></th><% end %>
-        <% if false %><th style="width: 12em;"><%= Cms::Michecker::Accessibility.t :evaluationItem_tableDataMetrics2 %></th><% end %>
-        <% if false %><th style="width: 12em;"><%= Cms::Michecker::Accessibility.t :evaluationItem_tableDataMetrics3 %></th><% end %>
-        <% if false %><th style="width: 12em;"><%= Cms::Michecker::Accessibility.t :evaluationItem_tableDataGuideline0 %></th><% end %>
-        <% if false %><th style="width: 12em;"><%= Cms::Michecker::Accessibility.t :evaluationItem_tableDataGuideline1 %></th><% end %>
-        <% if false %><th style="width: 12em;"><%= Cms::Michecker::Accessibility.t :evaluationItem_tableDataGuideline2 %></th><% end %>
-        <th style="width: 12em;"><%= Cms::Michecker::Accessibility.t :evaluationItem_tableDataTechniques %></th>
-        <th style="width: 12em;"><%= Cms::Michecker::Accessibility.t :highlightTargetPaths %></th>
+        <th class="row"><%= Cms::Michecker::Accessibility.t :severityStr %></th>
+        <th class="row"><%= Cms::Michecker::Accessibility.t :evaluationItem_tableDataMetrics0 %></th>
+        <th class="row"><%= Cms::Michecker::Accessibility.t :evaluationItem_tableDataMetrics1 %></th>
+        <th class="row"><%= Cms::Michecker::Accessibility.t :evaluationItem_tableDataMetrics2 %></th>
+        <th class="row"><%= Cms::Michecker::Accessibility.t :evaluationItem_tableDataMetrics3 %></th>
+        <th class="row"><%= Cms::Michecker::Accessibility.t :evaluationItem_tableDataGuideline0 %></th>
+        <th class="row"><%= Cms::Michecker::Accessibility.t :evaluationItem_tableDataGuideline1 %></th>
+        <th class="row"><%= Cms::Michecker::Accessibility.t :evaluationItem_tableDataGuideline2 %></th>
+        <th class="row"><%= Cms::Michecker::Accessibility.t :evaluationItem_tableDataTechniques %></th>
+        <th class="row"><%= Cms::Michecker::Accessibility.t :highlightTargetPaths %></th>
         <th><%= Cms::Michecker::Accessibility.t :description %></th>
       </tr>
       </thead>
@@ -48,13 +55,13 @@
       <% @accessibility_result.items.each do |item| %>
         <tr <% if item.highlightTargetPaths.present? && item.highlightTargetPaths.length == 1 %>data-css-path="<%= item.highlightTargetPaths.first["cssPath"] %>"<% end %>>
           <td><%= item.severityStr %></td>
-          <% if false %><td><%= item.evaluationItem["tableDataMetrics"].try { |metrics| metrics[0] } %></td><% end %>
-          <% if false %><td><%= item.evaluationItem["tableDataMetrics"].try { |metrics| metrics[1] } %></td><% end %>
-          <% if false %><td><%= item.evaluationItem["tableDataMetrics"].try { |metrics| metrics[2] } %></td><% end %>
-          <% if false %><td><%= item.evaluationItem["tableDataMetrics"].try { |metrics| metrics[3] } %></td><% end %>
-          <% if false %><td><%= item.evaluationItem["tableDataGuideline"].try { |metrics| metrics[0] } %></td><% end %>
-          <% if false %><td><%= item.evaluationItem["tableDataGuideline"].try { |metrics| metrics[1] } %></td><% end %>
-          <% if false %><td><%= item.evaluationItem["tableDataGuideline"].try { |metrics| metrics[2] } %></td><% end %>
+          <td><%= item.evaluationItem["tableDataMetrics"].try { |metrics| metrics[0] } %></td>
+          <td><%= item.evaluationItem["tableDataMetrics"].try { |metrics| metrics[1] } %></td>
+          <td><%= item.evaluationItem["tableDataMetrics"].try { |metrics| metrics[2] } %></td>
+          <td><%= item.evaluationItem["tableDataMetrics"].try { |metrics| metrics[3] } %></td>
+          <td><%= item.evaluationItem["tableDataGuideline"].try { |metrics| metrics[0] } %></td>
+          <td><%= item.evaluationItem["tableDataGuideline"].try { |metrics| metrics[1] } %></td>
+          <td><%= item.evaluationItem["tableDataGuideline"].try { |metrics| metrics[2] } %></td>
           <td><%= item.evaluationItem["tableDataTechniques"] %></td>
           <td>
             <% if item.highlightTargetPaths.present? %>
@@ -92,11 +99,66 @@
     });
     $('a.toggle-vis').on( 'click', function (e) {
       e.preventDefault();
-      let column = table.column( $(this).attr('data-column') );
+      var column = table.column( $(this).attr('data-column') );
       column.visible( ! column.visible() );
     });
     $('.toggle-vis').click(function(){
       $(this).toggleClass('michecker-inactive');
     });
+    <% if !SS.config.cms.michecker["column"]["severityStr"] %>
+      $('#a-column0').toggleClass('michecker-inactive');
+      var column = table.column( $('#a-column0').attr('data-column') );
+      column.visible( ! column.visible() );
+    <% end %>
+    <% if !SS.config.cms.michecker["column"]["evaluationItem_tableDataMetrics0"] %>
+    $('#a-column1').toggleClass('michecker-inactive');
+      var column = table.column( $('#a-column1').attr('data-column') );
+      column.visible( ! column.visible() );
+    <% end %>
+    <% if !SS.config.cms.michecker["column"]["evaluationItem_tableDataMetrics1"] %>
+      $('#a-column2').toggleClass('michecker-inactive');
+      var column = table.column( $('#a-column2').attr('data-column') );
+      column.visible( ! column.visible() );
+    <% end %>
+    <% if !SS.config.cms.michecker["column"]["evaluationItem_tableDataMetrics2"] %>
+      $('#a-column3').toggleClass('michecker-inactive');
+      var column = table.column( $('#a-column3').attr('data-column') );
+      column.visible( ! column.visible() );
+    <% end %>
+    <% if !SS.config.cms.michecker["column"]["evaluationItem_tableDataMetrics3"] %>
+      $('#a-column4').toggleClass('michecker-inactive');
+      var column = table.column( $('#a-column4').attr('data-column') );
+      column.visible( ! column.visible() );
+    <% end %>
+    <% if !SS.config.cms.michecker["column"]["evaluationItem_tableDataGuideline0"] %>
+      $('#a-column5').toggleClass('michecker-inactive');
+      var column = table.column( $('#a-column5').attr('data-column') );
+      column.visible( ! column.visible() );
+    <% end %>
+    <% if !SS.config.cms.michecker["column"]["evaluationItem_tableDataGuideline1"] %>
+      $('#a-column6').toggleClass('michecker-inactive');
+      var column = table.column( $('#a-column6').attr('data-column') );
+      column.visible( ! column.visible() );
+    <% end %>
+    <% if !SS.config.cms.michecker["column"]["evaluationItem_tableDataGuideline2"] %>
+      $('#a-column7').toggleClass('michecker-inactive');
+      var column = table.column( $('#a-column7').attr('data-column') );
+      column.visible( ! column.visible() );
+    <% end %>
+    <% if !SS.config.cms.michecker["column"]["evaluationItem_tableDataTechniques"] %>
+      $('#a-column8').toggleClass('michecker-inactive');
+      var column = table.column( $('#a-column8').attr('data-column') );
+      column.visible( ! column.visible() );
+    <% end %>
+    <% if !SS.config.cms.michecker["column"]["highlightTargetPaths"] %>
+      $('#a-column9').toggleClass('michecker-inactive');
+      var column = table.column( $('#a-column9').attr('data-column') );
+      column.visible( ! column.visible() );
+    <% end %>
+    <% if !SS.config.cms.michecker["column"]["description"] %>
+      $('#a-column10').toggleClass('michecker-inactive');
+      var column = table.column( $('#a-column10').attr('data-column') );
+      column.visible( ! column.visible() );
+    <% end %>
   });
 <% end %>

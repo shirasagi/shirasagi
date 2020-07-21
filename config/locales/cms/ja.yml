@@ -380,7 +380,6 @@ ja:
       cms/table: 表
     cms/michecker:
       start: miChecker を実行し結果を確認する
-      setting: 設定
       loading: プレビューをロード中です
       accessibility: アクセシビリティ検証
       lowvision: 視覚化

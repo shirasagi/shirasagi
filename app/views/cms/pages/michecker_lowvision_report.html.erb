@@ -23,27 +23,37 @@
     </div>
     <div class="michecker-report__result-controller">
       <%= t('cms.cms/michecker/report.display_column') %>
-      <a class="toggle-vis" data-column="0"><%= Cms::Michecker::Accessibility.t :severityStr %></a> -
-      <a class="toggle-vis" data-column="1"><%= Cms::Michecker::Accessibility.t :evaluationItem_tableDataTechniques %></a> -
-      <a class="toggle-vis" data-column="2"><%= Cms::Michecker::Accessibility.t :description %></a>
+      <a class="toggle-vis" data-column="0" id="l-column0"><%= Cms::Michecker::LowVision.t :severityStr %></a> -
+      <a class="toggle-vis" data-column="1" id="l-column1"><%= Cms::Michecker::LowVision.t :iconTooltip %></a> -
+      <a class="toggle-vis" data-column="2" id="l-column2"><%= Cms::Michecker::LowVision.t :evaluationItem_tableDataGuideline0 %></a> -
+      <a class="toggle-vis" data-column="3" id="l-column3"><%= Cms::Michecker::LowVision.t :evaluationItem_tableDataGuideline1 %></a> -
+      <a class="toggle-vis" data-column="4" id="l-column4"><%= Cms::Michecker::LowVision.t :evaluationItem_tableDataGuideline2 %></a> -
+      <a class="toggle-vis" data-column="5" id="l-column5"><%= Cms::Michecker::LowVision.t :severityLV %></a> -
+      <a class="toggle-vis" data-column="6" id="l-column6"><%= Cms::Michecker::LowVision.t :foreground %></a> -
+      <a class="toggle-vis" data-column="7" id="l-column7"><%= Cms::Michecker::LowVision.t :background %></a> -
+      <a class="toggle-vis" data-column="8" id="l-column8"><%= Cms::Michecker::LowVision.t :x %></a> -
+      <a class="toggle-vis" data-column="9" id="l-column9"><%= Cms::Michecker::LowVision.t :y %></a> -
+      <a class="toggle-vis" data-column="10" id="l-column10"><%= Cms::Michecker::LowVision.t :area %></a> -
+      <a class="toggle-vis" data-column="11" id="l-column11"><%= Cms::Michecker::LowVision.t :evaluationItem_tableDataTechniques %></a> -
+      <a class="toggle-vis" data-column="12" id="l-column12"><%= Cms::Michecker::LowVision.t :description %></a>
     </div>
 
     <div class="michecker-report__result-container">
       <table class="index" id="lowvision">
         <thead>
         <tr>
-          <th style="width: 12em;"><%= Cms::Michecker::LowVision.t :severityStr %></th>
-          <% if false %><th style="width: 12em;"><%= Cms::Michecker::LowVision.t :iconTooltip %></th><% end %>
-          <% if false %><th style="width: 12em;"><%= Cms::Michecker::LowVision.t :evaluationItem_tableDataGuideline0 %></th><% end %>
-          <% if false %><th style="width: 12em;"><%= Cms::Michecker::LowVision.t :evaluationItem_tableDataGuideline1 %></th><% end %>
-          <% if false %><th style="width: 12em;"><%= Cms::Michecker::LowVision.t :evaluationItem_tableDataGuideline2 %></th> %><% end %>
-          <% if false %><th style="width: 12em;"><%= Cms::Michecker::LowVision.t :severityLV %></th><% end %>
-          <% if false %><th style="width: 12em;"><%= Cms::Michecker::LowVision.t :foreground %></th><% end %>
-          <% if false %><th style="width: 12em;"><%= Cms::Michecker::LowVision.t :background %></th><% end %>
-          <% if false %><th style="width: 12em;"><%= Cms::Michecker::LowVision.t :x %></th><% end %>
-          <% if false %><th style="width: 12em;"><%= Cms::Michecker::LowVision.t :y %></th><% end %>
-          <% if false %><th style="width: 12em;"><%= Cms::Michecker::LowVision.t :area %></th><% end %>
-          <th style="width: 12em;"><%= Cms::Michecker::LowVision.t :evaluationItem_tableDataTechniques %></th>
+          <th class="row"><%= Cms::Michecker::LowVision.t :severityStr %></th>
+          <th class="row"><%= Cms::Michecker::LowVision.t :iconTooltip %></th>
+          <th class="row"><%= Cms::Michecker::LowVision.t :evaluationItem_tableDataGuideline0 %></th>
+          <th class="row"><%= Cms::Michecker::LowVision.t :evaluationItem_tableDataGuideline1 %></th>
+          <th class="row"><%= Cms::Michecker::LowVision.t :evaluationItem_tableDataGuideline2 %></th>
+          <th class="row"><%= Cms::Michecker::LowVision.t :severityLV %></th>
+          <th class="row"><%= Cms::Michecker::LowVision.t :foreground %></th>
+          <th class="row"><%= Cms::Michecker::LowVision.t :background %></th>
+          <th class="row"><%= Cms::Michecker::LowVision.t :x %></th>
+          <th class="row"><%= Cms::Michecker::LowVision.t :y %></th>
+          <th class="row"><%= Cms::Michecker::LowVision.t :area %></th>
+          <th class="row"><%= Cms::Michecker::LowVision.t :evaluationItem_tableDataTechniques %></th>
           <th><%= Cms::Michecker::LowVision.t :description %></th>
         </tr>
         </thead>
@@ -51,16 +61,16 @@
         <% @lowvision_result.items.each do |item| %>
           <tr data-css-path="<%= item.cssPath %>">
             <td><%= item.severityStr %></td>
-            <% if false %><td><%= item.iconTooltip %></td><% end %>
-            <% if false %><td><%= item.evaluationItem["guidelines"].select { |guideline| guideline["guidelineName"] == "WCAG 2.0" }.map { |guideline| guideline["id"] }.join(", ") %></td><% end %>
-            <% if false %><td><%= item.evaluationItem["guidelines"].select { |guideline| guideline["guidelineName"] == "Section508" }.map { |guideline| guideline["id"] }.join(", ") %></td><% end %>
-            <% if false %><td><%= item.evaluationItem["guidelines"].select { |guideline| guideline["guidelineName"] == "JIS" }.map { |guideline| guideline["id"] }.join(", ") %></td><% end %>
-            <% if false %><td><%= item.severityLV %></td> <% end %>
-            <% if false %><td><%= item.foreground %></td><% end %>
-            <% if false %><td><%= item.background %></td><% end %>
-            <% if false %><td><%= item.x %></td><% end %>
-            <% if false %><td><%= item.y %></td><% end %>
-            <% if false %><td><%= item.area %></td> <% end %>
+            <td><%= item.iconTooltip %></td>
+            <td><%= item.evaluationItem["guidelines"].select { |guideline| guideline["guidelineName"] == "WCAG 2.0" }.map { |guideline| guideline["id"] }.join(", ") %></td>
+            <td><%= item.evaluationItem["guidelines"].select { |guideline| guideline["guidelineName"] == "Section508" }.map { |guideline| guideline["id"] }.join(", ") %></td>
+            <td><%= item.evaluationItem["guidelines"].select { |guideline| guideline["guidelineName"] == "JIS" }.map { |guideline| guideline["id"] }.join(", ") %></td>
+            <td><%= item.severityLV %></td>
+            <td><%= item.foreground %></td>
+            <td><%= item.background %></td>
+            <td><%= item.x %></td>
+            <td><%= item.y %></td>
+            <td><%= item.area %></td>
             <td><%= item.evaluationItem["tableDataTechniques"] %></td>
             <td><%= item.description %></td>
           </tr>
@@ -96,11 +106,76 @@
     });
     $('a.toggle-vis').on( 'click', function (e) {
       e.preventDefault();
-      let column = table.column( $(this).attr('data-column') );
+      var column = table.column( $(this).attr('data-column') );
       column.visible( ! column.visible() );
     });
     $('.toggle-vis').click(function(){
       $(this).toggleClass('michecker-inactive');
     });
+    <% if !SS.config.cms.michecker["column"]["severityStr"] %>
+      $('#l-column0').toggleClass('michecker-inactive');
+      var column = table.column( $('#l-column0').attr('data-column') );
+      column.visible( ! column.visible() );
+    <% end %>
+    <% if !SS.config.cms.michecker["column"]["iconTooltip"] %>
+      $('#l-column1').toggleClass('michecker-inactive');
+      var column = table.column( $('#l-column1').attr('data-column') );
+      column.visible( ! column.visible() );
+    <% end %>
+    <% if !SS.config.cms.michecker["column"]["evaluationItem_tableDataGuideline0"] %>
+      $('#l-column2').toggleClass('michecker-inactive');
+      var column = table.column( $('#l-column2').attr('data-column') );
+      column.visible( ! column.visible() );
+    <% end %>
+    <% if !SS.config.cms.michecker["column"]["evaluationItem_tableDataGuideline1"] %>
+      $('#l-column3').toggleClass('michecker-inactive');
+      var column = table.column( $('#l-column3').attr('data-column') );
+      column.visible( ! column.visible() );
+    <% end %>
+    <% if !SS.config.cms.michecker["column"]["evaluationItem_tableDataGuideline2"] %>
+      $('#l-column4').toggleClass('michecker-inactive');
+      var column = table.column( $('#l-column4').attr('data-column') );
+      column.visible( ! column.visible() );
+    <% end %>
+    <% if !SS.config.cms.michecker["column"]["severityLV"] %>
+      $('#l-column5').toggleClass('michecker-inactive');
+      var column = table.column( $('#l-column5').attr('data-column') );
+      column.visible( ! column.visible() );
+    <% end %>
+    <% if !SS.config.cms.michecker["column"]["foreground"] %>
+      $('#l-column6').toggleClass('michecker-inactive');
+      var column = table.column( $('#l-column6').attr('data-column') );
+      column.visible( ! column.visible() );
+    <% end %>
+    <% if !SS.config.cms.michecker["column"]["background"] %>
+      $('#l-column7').toggleClass('michecker-inactive');
+      var column = table.column( $('#l-column7').attr('data-column') );
+      column.visible( ! column.visible() );
+    <% end %>
+    <% if !SS.config.cms.michecker["column"]["x"] %>
+      $('#l-column8').toggleClass('michecker-inactive');
+      var column = table.column( $('#l-column8').attr('data-column') );
+      column.visible( ! column.visible() );
+    <% end %>
+    <% if !SS.config.cms.michecker["column"]["y"] %>
+      $('#l-column9').toggleClass('michecker-inactive');
+      var column = table.column( $('#l-column9').attr('data-column') );
+      column.visible( ! column.visible() );
+    <% end %>
+    <% if !SS.config.cms.michecker["column"]["area"] %>
+      $('#l-column10').toggleClass('michecker-inactive');
+      var column = table.column( $('#l-column10').attr('data-column') );
+      column.visible( ! column.visible() );
+    <% end %>
+    <% if !SS.config.cms.michecker["column"]["evaluationItem_tableDataTechniques"] %>
+      $('#l-column11').toggleClass('michecker-inactive');
+      var column = table.column( $('#l-column11').attr('data-column') );
+      column.visible( ! column.visible() );
+    <% end %>
+    <% if !SS.config.cms.michecker["column"]["description"] %>
+      $('#l-column12').toggleClass('michecker-inactive');
+      var column = table.column( $('#l-column12').attr('data-column') );
+      column.visible( ! column.visible() );
+    <% end %>
   });
 <% end %>

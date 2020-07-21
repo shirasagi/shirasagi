@@ -146,6 +146,26 @@ production: &production
   # basic_auth: [ 'user', 'pass' ]
   # basic_auth: [ "a0w1dWZFdStGR2pHOS9VTGlSRXlYQT09LS1ROFh5RVB4SXFSQjkwNjhSQzZlRTZnPT0=--3da032b7de13acb88d7d9526ef948155f27e0a4a", "NmNVNzV6L0VzWWo4TnE0REMxeFIrdz09LS1weVFrQk9DQ3I4VzNTNFRSV2hkS293PT0=--e4dcab18efa113380568af8b7558e1509522d0fc" ]
 
+    column:
+      severityStr: true
+      evaluationItem_tableDataMetrics0: false
+      evaluationItem_tableDataMetrics1: false
+      evaluationItem_tableDataMetrics2: false
+      evaluationItem_tableDataMetrics3: false
+      evaluationItem_tableDataGuideline0: false
+      evaluationItem_tableDataGuideline1: false
+      evaluationItem_tableDataGuideline2: false
+      evaluationItem_tableDataTechniques: true
+      highlightTargetPaths: true
+      description: true
+      iconTooltip: false
+      severityLV: false
+      foreground: false
+      background: false
+      x: false
+      y: false
+      area: false
+
   generate_lock:
     disable: false
     generate_lock_until: 1.hour

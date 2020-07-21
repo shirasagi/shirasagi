@@ -163,6 +163,9 @@
       }
       &-container {
         overflow: scroll;
+        .row {
+          min-width: 3rem;
+        }
       }
 
       &-html-problem-element {
