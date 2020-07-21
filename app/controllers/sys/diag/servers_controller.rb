@@ -1,6 +1,8 @@
 class Sys::Diag::ServersController < ApplicationController
   include Sys::BaseFilter
 
+  skip_before_action :verify_authenticity_token, only: :show
+
   PROC_CPUINFO_FILE_PATH = "/proc/cpuinfo".freeze
   PROC_MEMINFO_FILE_PATH = "/proc/meminfo".freeze
 
