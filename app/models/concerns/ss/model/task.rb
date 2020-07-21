@@ -75,8 +75,8 @@ module SS::Model::Task
     self.log_buffer = 50
   end
 
-  def running?
-    state == "running"
+  def running?(limit = 1.day)
+    state == "running" && (started.presence || updated) + limit > Time.zone.now
   end
 
   def start
