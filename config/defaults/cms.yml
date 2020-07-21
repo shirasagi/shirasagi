@@ -147,23 +147,41 @@ production: &production
   # basic_auth: [ "a0w1dWZFdStGR2pHOS9VTGlSRXlYQT09LS1ROFh5RVB4SXFSQjkwNjhSQzZlRTZnPT0=--3da032b7de13acb88d7d9526ef948155f27e0a4a", "NmNVNzV6L0VzWWo4TnE0REMxeFIrdz09LS1weVFrQk9DQ3I4VzNTNFRSV2hkS293PT0=--e4dcab18efa113380568af8b7558e1509522d0fc" ]
 
     column:
+      # 重度指数名
       severityStr: true
+      # 知覚可能
       evaluationItem_tableDataMetrics0: false
+      # 操作可能
       evaluationItem_tableDataMetrics1: false
+      # 理解可能
       evaluationItem_tableDataMetrics2: false
+      # 堅牢
       evaluationItem_tableDataMetrics3: false
+      # WCAG 2.0
       evaluationItem_tableDataGuideline0: false
+      # Section508
       evaluationItem_tableDataGuideline1: false
+      # JIS
       evaluationItem_tableDataGuideline2: false
+      # 達成方法
       evaluationItem_tableDataTechniques: true
+      # 指摘箇所
       highlightTargetPaths: true
+      # 内容
       description: true
+      # 種類
       iconTooltip: false
+      # 深刻度
       severityLV: false
+      # 前景色
       foreground: false
+      # 背景色
       background: false
+      # X座標
       x: false
+      # Y座標
       y: false
+      # 面積
       area: false
 
   generate_lock:
