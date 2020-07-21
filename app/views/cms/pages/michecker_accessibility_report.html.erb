@@ -38,16 +38,16 @@
     <table class="index" id="accessibility">
       <thead>
       <tr>
-        <th class="row"><%= Cms::Michecker::Accessibility.t :severityStr %></th>
-        <th class="row"><%= Cms::Michecker::Accessibility.t :evaluationItem_tableDataMetrics0 %></th>
-        <th class="row"><%= Cms::Michecker::Accessibility.t :evaluationItem_tableDataMetrics1 %></th>
-        <th class="row"><%= Cms::Michecker::Accessibility.t :evaluationItem_tableDataMetrics2 %></th>
-        <th class="row"><%= Cms::Michecker::Accessibility.t :evaluationItem_tableDataMetrics3 %></th>
-        <th class="row"><%= Cms::Michecker::Accessibility.t :evaluationItem_tableDataGuideline0 %></th>
-        <th class="row"><%= Cms::Michecker::Accessibility.t :evaluationItem_tableDataGuideline1 %></th>
-        <th class="row"><%= Cms::Michecker::Accessibility.t :evaluationItem_tableDataGuideline2 %></th>
-        <th class="row"><%= Cms::Michecker::Accessibility.t :evaluationItem_tableDataTechniques %></th>
-        <th class="row"><%= Cms::Michecker::Accessibility.t :highlightTargetPaths %></th>
+        <th><%= Cms::Michecker::Accessibility.t :severityStr %></th>
+        <th><%= Cms::Michecker::Accessibility.t :evaluationItem_tableDataMetrics0 %></th>
+        <th><%= Cms::Michecker::Accessibility.t :evaluationItem_tableDataMetrics1 %></th>
+        <th><%= Cms::Michecker::Accessibility.t :evaluationItem_tableDataMetrics2 %></th>
+        <th><%= Cms::Michecker::Accessibility.t :evaluationItem_tableDataMetrics3 %></th>
+        <th><%= Cms::Michecker::Accessibility.t :evaluationItem_tableDataGuideline0 %></th>
+        <th><%= Cms::Michecker::Accessibility.t :evaluationItem_tableDataGuideline1 %></th>
+        <th><%= Cms::Michecker::Accessibility.t :evaluationItem_tableDataGuideline2 %></th>
+        <th><%= Cms::Michecker::Accessibility.t :evaluationItem_tableDataTechniques %></th>
+        <th><%= Cms::Michecker::Accessibility.t :highlightTargetPaths %></th>
         <th><%= Cms::Michecker::Accessibility.t :description %></th>
       </tr>
       </thead>
@@ -83,6 +83,7 @@
     var table = $('#accessibility').DataTable({
       lengthMenu: [ [5, 10, 25, -1], [5, 10, 25, "全て"] ],
       scrollY: "300px",
+      scrollX: true,
       scrollCollapse: true,
       oLanguage: {
         sLengthMenu: "表示　_MENU_　件",

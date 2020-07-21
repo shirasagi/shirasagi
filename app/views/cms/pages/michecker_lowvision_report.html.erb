@@ -42,18 +42,18 @@
       <table class="index" id="lowvision">
         <thead>
         <tr>
-          <th class="row"><%= Cms::Michecker::LowVision.t :severityStr %></th>
-          <th class="row"><%= Cms::Michecker::LowVision.t :iconTooltip %></th>
-          <th class="row"><%= Cms::Michecker::LowVision.t :evaluationItem_tableDataGuideline0 %></th>
-          <th class="row"><%= Cms::Michecker::LowVision.t :evaluationItem_tableDataGuideline1 %></th>
-          <th class="row"><%= Cms::Michecker::LowVision.t :evaluationItem_tableDataGuideline2 %></th>
-          <th class="row"><%= Cms::Michecker::LowVision.t :severityLV %></th>
-          <th class="row"><%= Cms::Michecker::LowVision.t :foreground %></th>
-          <th class="row"><%= Cms::Michecker::LowVision.t :background %></th>
-          <th class="row"><%= Cms::Michecker::LowVision.t :x %></th>
-          <th class="row"><%= Cms::Michecker::LowVision.t :y %></th>
-          <th class="row"><%= Cms::Michecker::LowVision.t :area %></th>
-          <th class="row"><%= Cms::Michecker::LowVision.t :evaluationItem_tableDataTechniques %></th>
+          <th><%= Cms::Michecker::LowVision.t :severityStr %></th>
+          <th><%= Cms::Michecker::LowVision.t :iconTooltip %></th>
+          <th><%= Cms::Michecker::LowVision.t :evaluationItem_tableDataGuideline0 %></th>
+          <th><%= Cms::Michecker::LowVision.t :evaluationItem_tableDataGuideline1 %></th>
+          <th><%= Cms::Michecker::LowVision.t :evaluationItem_tableDataGuideline2 %></th>
+          <th><%= Cms::Michecker::LowVision.t :severityLV %></th>
+          <th><%= Cms::Michecker::LowVision.t :foreground %></th>
+          <th><%= Cms::Michecker::LowVision.t :background %></th>
+          <th><%= Cms::Michecker::LowVision.t :x %></th>
+          <th><%= Cms::Michecker::LowVision.t :y %></th>
+          <th><%= Cms::Michecker::LowVision.t :area %></th>
+          <th><%= Cms::Michecker::LowVision.t :evaluationItem_tableDataTechniques %></th>
           <th><%= Cms::Michecker::LowVision.t :description %></th>
         </tr>
         </thead>
@@ -90,6 +90,7 @@
     var table = $('#lowvision').DataTable({
       lengthMenu: [ [5, 10, 25, -1], [5, 10, 25, "全て"] ],
       scrollY: "300px",
+      scrollX: true,
       scrollCollapse: true,
       oLanguage: {
         sLengthMenu : "表示　_MENU_　件",
