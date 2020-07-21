@@ -37,7 +37,11 @@
     <% if @item.allowed?(:delete, @cur_user, site: @cur_site, node: @cur_node) %>
       <%= link_to t('ss.links.delete'), { action: :delete, id: @item }, class: :delete %>
     <% end %>
-    <%= link_to t('cms.links.michecker'), { action: :michecker }, target: "_blank" rescue nil %>
+    <% if SS.config.michecker %>
+      <% if SS.config.michecker['disable'].blank? %>
+        <%= link_to t('cms.links.michecker'), { action: :michecker }, target: "_blank" rescue nil %>
+      <% end %>
+    <% end %>
     <%= link_to t('ss.links.back_to_index'), { action: :index }, class: "back-to-index" %>
   <% end %>
 </nav>

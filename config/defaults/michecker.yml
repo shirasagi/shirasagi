@@ -1,0 +1,46 @@
+production: &production
+  disable: false
+  command: [ "/opt/michecker/bin/michecker", "--no-sandbox", "--lang=ja-JP" ]
+  column:
+    # 重度指数名
+    severityStr: true
+    # 知覚可能
+    evaluationItem_tableDataMetrics0: false
+    # 操作可能
+    evaluationItem_tableDataMetrics1: false
+    # 理解可能
+    evaluationItem_tableDataMetrics2: false
+    # 堅牢
+    evaluationItem_tableDataMetrics3: false
+    # WCAG 2.0
+    evaluationItem_tableDataGuideline0: false
+    # Section508
+    evaluationItem_tableDataGuideline1: false
+    # JIS
+    evaluationItem_tableDataGuideline2: false
+    # 達成方法
+    evaluationItem_tableDataTechniques: true
+    # 指摘箇所
+    highlightTargetPaths: true
+    # 内容
+    description: true
+    # 種類
+    iconTooltip: false
+    # 深刻度
+    severityLV: false
+    # 前景色
+    foreground: false
+    # 背景色
+    background: false
+    # X座標
+    x: false
+    # Y座標
+    y: false
+    # 面積
+    area: false
+
+test:
+  <<: *production
+
+development:
+  <<: *production

@@ -106,57 +106,57 @@
     $('.toggle-vis').click(function(){
       $(this).toggleClass('michecker-inactive');
     });
-    <% if !SS.config.cms.michecker["column"]["severityStr"] %>
+    <% if !SS.config.michecker["column"]["severityStr"] %>
       $('#a-column0').toggleClass('michecker-inactive');
       var column = table.column( $('#a-column0').attr('data-column') );
       column.visible( ! column.visible() );
     <% end %>
-    <% if !SS.config.cms.michecker["column"]["evaluationItem_tableDataMetrics0"] %>
+    <% if !SS.config.michecker["column"]["evaluationItem_tableDataMetrics0"] %>
     $('#a-column1').toggleClass('michecker-inactive');
       var column = table.column( $('#a-column1').attr('data-column') );
       column.visible( ! column.visible() );
     <% end %>
-    <% if !SS.config.cms.michecker["column"]["evaluationItem_tableDataMetrics1"] %>
+    <% if !SS.config.michecker["column"]["evaluationItem_tableDataMetrics1"] %>
       $('#a-column2').toggleClass('michecker-inactive');
       var column = table.column( $('#a-column2').attr('data-column') );
       column.visible( ! column.visible() );
     <% end %>
-    <% if !SS.config.cms.michecker["column"]["evaluationItem_tableDataMetrics2"] %>
+    <% if !SS.config.michecker["column"]["evaluationItem_tableDataMetrics2"] %>
       $('#a-column3').toggleClass('michecker-inactive');
       var column = table.column( $('#a-column3').attr('data-column') );
       column.visible( ! column.visible() );
     <% end %>
-    <% if !SS.config.cms.michecker["column"]["evaluationItem_tableDataMetrics3"] %>
+    <% if !SS.config.michecker["column"]["evaluationItem_tableDataMetrics3"] %>
       $('#a-column4').toggleClass('michecker-inactive');
       var column = table.column( $('#a-column4').attr('data-column') );
       column.visible( ! column.visible() );
     <% end %>
-    <% if !SS.config.cms.michecker["column"]["evaluationItem_tableDataGuideline0"] %>
+    <% if !SS.config.michecker["column"]["evaluationItem_tableDataGuideline0"] %>
       $('#a-column5').toggleClass('michecker-inactive');
       var column = table.column( $('#a-column5').attr('data-column') );
       column.visible( ! column.visible() );
     <% end %>
-    <% if !SS.config.cms.michecker["column"]["evaluationItem_tableDataGuideline1"] %>
+    <% if !SS.config.michecker["column"]["evaluationItem_tableDataGuideline1"] %>
       $('#a-column6').toggleClass('michecker-inactive');
       var column = table.column( $('#a-column6').attr('data-column') );
       column.visible( ! column.visible() );
     <% end %>
-    <% if !SS.config.cms.michecker["column"]["evaluationItem_tableDataGuideline2"] %>
+    <% if !SS.config.michecker["column"]["evaluationItem_tableDataGuideline2"] %>
       $('#a-column7').toggleClass('michecker-inactive');
       var column = table.column( $('#a-column7').attr('data-column') );
       column.visible( ! column.visible() );
     <% end %>
-    <% if !SS.config.cms.michecker["column"]["evaluationItem_tableDataTechniques"] %>
+    <% if !SS.config.michecker["column"]["evaluationItem_tableDataTechniques"] %>
       $('#a-column8').toggleClass('michecker-inactive');
       var column = table.column( $('#a-column8').attr('data-column') );
       column.visible( ! column.visible() );
     <% end %>
-    <% if !SS.config.cms.michecker["column"]["highlightTargetPaths"] %>
+    <% if !SS.config.michecker["column"]["highlightTargetPaths"] %>
       $('#a-column9').toggleClass('michecker-inactive');
       var column = table.column( $('#a-column9').attr('data-column') );
       column.visible( ! column.visible() );
     <% end %>
-    <% if !SS.config.cms.michecker["column"]["description"] %>
+    <% if !SS.config.michecker["column"]["description"] %>
       $('#a-column10').toggleClass('michecker-inactive');
       var column = table.column( $('#a-column10').attr('data-column') );
       column.visible( ! column.visible() );

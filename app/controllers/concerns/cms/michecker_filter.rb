@@ -2,6 +2,7 @@ module Cms::MicheckerFilter
   extend ActiveSupport::Concern
 
   def michecker
+    raise '403' unless michecker_enabled?
     set_item
     @result = Cms::Michecker::Result.site(@cur_site).and_page(@item).reorder(id: -1).first
 
@@ -40,6 +41,11 @@ module Cms::MicheckerFilter
     else
       raise "404"
     end
+  end
+
+  def michecker_enabled?
+    return false if SS.config.michecker.blank?
+    SS.config.michecker['disable'].blank?
   end
 
   private

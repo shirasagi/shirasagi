@@ -71,7 +71,7 @@ class Cms::MicheckerJob < Cms::ApplicationJob
   end
 
   def run_html_checker_and_wait
-    commands = Array(SS.config.cms.michecker["command"]).compact
+    commands = Array(SS.config.michecker["command"]).compact
     return if commands.blank?
 
     commands = commands.dup
