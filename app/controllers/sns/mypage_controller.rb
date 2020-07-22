@@ -16,7 +16,7 @@ class Sns::MypageController < ApplicationController
   end
 
   def notices
-    @notices = Sys::Notice.and_public.sys_admin_notice.page(1).per(5)
+    @notices = Sys::Notice.and_public.sys_admin_notice.reorder(notice_severity: 1, released: -1).page(1).per(5)
   end
 
   public

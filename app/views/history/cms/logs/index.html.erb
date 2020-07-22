@@ -11,15 +11,27 @@
         <div class="meta">
           <span class="id">#<%= item.id %></span>
           <span class="datetime"><%= item.created.strftime("%Y/%m/%d %H:%M") %></span>
-          <span class="filename"><%= item.url %></span>
+          <span class="filename"><%= item.page_url ? link_to(item.url, (item.page_url + "#selected-files")) : item.url %></span>
           <span class="user"><%= item.user ? link_to(item.user_label, cms_user_path(@cur_site.id, item.user)) : item.user_id %></span>
           <% if item.session_id %>
-          <span class="label"><%= @model.t :session_id %></span>
-          <span class="session-id"><%= item.session_id %></span>
+            <span class="label"><%= @model.t :session_id %></span>
+            <span class="session-id"><%= item.session_id %></span>
           <% end %>
           <% if item.request_id %>
-          <span class="label"><%= @model.t :request_id %></span>
-          <span class="session-id"><%= item.request_id %></span>
+            <span class="label"><%= @model.t :request_id %></span>
+            <span class="request-id"><%= item.request_id %></span>
+          <% end %>
+          <% if item.page_url %>
+            <span class="label"><%= @model.t :page_url %></span>
+            <span class="page-url"><%= link_to item.page_url, (item.page_url + "#selected-files") %></span>
+          <% end %>
+          <% if item.filename %>
+            <span class="label"><%= @model.t :filename %></span>
+            <span class="filename"><%= item.filename %></span>
+          <% end %>
+          <% if item.behavior %>
+            <span class="label"><%= @model.t :behavior %></span>
+            <span class="behavior"><%= t("history.behavior.#{item.behavior}") %></span>
           <% end %>
         </div>
       </div>

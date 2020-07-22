@@ -3,12 +3,12 @@ require 'spec_helper'
 describe "facility_apis_temp_files", type: :feature, dbscope: :example do
   let(:site) { cms_site.set(multibyte_filename_state: 'disabled') }
   let(:item) { tmp_ss_file(contents: "#{Rails.root}/spec/fixtures/ss/logo.png", site: site, user: cms_user, model: 'cms/file') }
-  let(:index_path) { cms_apis_files_path site.id }
-  let(:new_path) { new_cms_apis_file_path site.id }
-  let(:show_path) { cms_apis_file_path site.id, item }
-  let(:edit_path) { edit_cms_apis_file_path site.id, item }
-  let(:delete_path) { delete_cms_apis_file_path site.id, item }
-  let(:select_path) { select_cms_apis_file_path site.id, item }
+  let(:index_path) { cms_apis_files_path site.id, '-' }
+  let(:new_path) { new_cms_apis_file_path site.id, '-' }
+  let(:show_path) { cms_apis_file_path site.id, '-', item }
+  let(:edit_path) { edit_cms_apis_file_path site.id, '-', item }
+  let(:delete_path) { delete_cms_apis_file_path site.id, '-', item }
+  let(:select_path) { select_cms_apis_file_path site.id, '-', item }
 
   context "with auth" do
     before { login_cms_user }

@@ -11,8 +11,8 @@
     <%= link_to t('ss.links.upload'), cms_apis_temp_files_path, class: "ajax-box btn btn-file-upload" %>
   </span>
   <span class="upload-menu-select">
-    <%= link_to t("sns.user_file"), sns_apis_user_files_path(@cur_user), class: "ajax-box btn btn-file-upload" %>
-    <%= link_to t("cms.file"), cms_apis_files_path, class: "ajax-box btn btn-file-upload" %>
+    <%= link_to t("sns.user_file"), cms_apis_user_files_path(cid: @cur_node || '-'), class: "ajax-box btn btn-file-upload" %>
+    <%= link_to t("cms.file"), cms_apis_files_path(cid: @cur_node || '-'), class: "ajax-box btn btn-file-upload" %>
   </span>
 
   <div class="column-value-upload-drop-area">

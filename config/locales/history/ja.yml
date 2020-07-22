@@ -34,6 +34,11 @@ ja:
       target:
         restore: 復元する
         unrestore: 復元しない
+    behavior:
+      paste: 本文貼付
+      attachment: 添付ファイル
+      restore: 復元
+      delete: 削除
 
   cms_role:
     read_history_trashes: ゴミ箱の閲覧
@@ -58,6 +63,8 @@ ja:
         model_name: モデル名
         action: アクション
         path: URL
+        page_url: ページURL
+        behavior: 動作
         save_term: 保存期間
         user_ids: ユーザー
       history/backup:

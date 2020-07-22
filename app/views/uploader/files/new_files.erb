@@ -1,18 +1,26 @@
-<%= jquery do %> SS.confirmUnloading(); <% end %>
-<%= jquery do %> SS.fileCheck(); <% end %>
+<%= jquery do %>
+SS.confirmUnloading();
+SS.fileCheck();
+<% end %>
 
 <%= form_for :item, url: { action: :create, filename: @item.filename }, html: { multipart: true } do |f| %>
-<%= error_messages_for :item %>
-<div class="addon-view">
-  <dl class="see">
-    <dt><%= t('uploader.new_files')  %></dt>
-    <dd><%= f.file_field :files, multiple: :multiple %></dd>
+  <%= error_messages_for :item %>
 
-    <dd class="js-uploader-alert-message" style="display: none"></dd>
-  </dl>
-</div>
-<footer class="send">
-  <%= f.submit t("ss.buttons.save"), class: "save btn-primary" %>
-  <%= f.button t("ss.buttons.cancel"), type: :reset, onclick: "location.href='#{url_for(action: :file, filename: @item.filename)}'; return false;", class: "btn-default" %>
-</footer>
+  <div class="addon-views">
+    <div class="addon-view" id="addon-basic">
+      <div class="addon-head"><h2><%= t("ss.basic_info") %></h2></div>
+      <div class="addon-body">
+        <dl class="see">
+          <dt><%= t('uploader.new_files')  %></dt>
+          <dd><%= f.file_field :files, multiple: :multiple %></dd>
+          <dd class="js-uploader-alert-message" style="display: none"></dd>
+        </dl>
+      </div>
+    </div>
+  </div>
+
+  <footer class="send">
+    <%= f.submit t("ss.buttons.save"), class: "save btn-primary" %>
+    <%= f.button t("ss.buttons.cancel"), type: :reset, onclick: "location.href='#{url_for(action: :file, filename: @item.filename)}'; return false;", class: "btn-default" %>
+  </footer>
 <% end %>

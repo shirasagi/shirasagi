@@ -52,3 +52,20 @@ ja:
   job:
     models:
       garbage/import_job: ゴミ品目インポート
+
+  tooltip:
+    garbage/node/node:
+      loop_html: &garbage_node_loop_html
+        - 自動生成されたリスト表示部分のHTMLを指定することが可能です。
+        - 下記のように記述します。
+        - |-
+          #{name} ゴミ品目名が表示されます。
+          #{categories} ゴミの分別区分が表示されます。
+          #{remark} 出し方・ワンポイントが表示されます。
+
+    garbage/node/search:
+      loop_html: *garbage_node_loop_html
+
+    garbage/addon/category_setting:
+      st_categories:
+        - ゴミの分別区分を設定します。

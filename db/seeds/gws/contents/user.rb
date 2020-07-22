@@ -85,10 +85,10 @@ def create_user_title(data)
 end
 
 user_titles = [
-  create_user_title(name: '部長', code: 'T0100', order: 10),
-  create_user_title(name: '課長', code: 'T0200', order: 20),
-  create_user_title(name: '係長', code: 'T0300', order: 30),
-  create_user_title(name: '主任', code: 'T0400', order: 40)
+  create_user_title(name: '部長', code: 'T0100', order: 40),
+  create_user_title(name: '課長', code: 'T0200', order: 30),
+  create_user_title(name: '係長', code: 'T0300', order: 20),
+  create_user_title(name: '主任', code: 'T0400', order: 10)
 ]
 
 u('sys').add_to_set(title_ids: [user_titles[1].id])

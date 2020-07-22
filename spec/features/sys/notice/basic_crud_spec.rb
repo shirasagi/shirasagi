@@ -36,7 +36,7 @@ describe "sys_notice", type: :feature, dbscope: :example do
         expect(notice.name).to eq name
         expect(notice.html).to eq html
         expect(notice.notice_severity).to eq "high"
-        expect(notice.notice_target).to have(5).items
+        expect(notice.notice_target).to have_at_least(5).items
         expect(notice.notice_target).to include("login_view", "cms_admin", "gw_admin", "webmail_admin", "sys_admin")
       end
 

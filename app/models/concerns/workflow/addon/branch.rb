@@ -8,8 +8,6 @@ module Workflow::Addon
 
       define_model_callbacks :merge_branch
 
-      field :master_id, type: Integer
-
       belongs_to :master, foreign_key: "master_id", class_name: self.to_s
       has_many :branches, foreign_key: "master_id", class_name: self.to_s, dependent: :destroy
 
@@ -22,6 +20,8 @@ module Workflow::Addon
 
       define_method(:master?) { master.blank? }
       define_method(:branch?) { master.present? }
+
+      index({ master_id: 1 })
     end
 
     def new_clone?

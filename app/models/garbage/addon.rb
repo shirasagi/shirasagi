@@ -8,6 +8,12 @@ module Garbage::Addon
       field :remark, type: String
 
       permit_params :name, :remark
+
+      template_variable_handler(:remark, :template_variable_handler_name)
+
+      liquidize do
+        export :remark
+      end
     end
   end
 end

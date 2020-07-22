@@ -2,10 +2,16 @@ module History::LogFilter::View
   extend ActiveSupport::Concern
 
   def index
-    @items = @model.where(cond).
-      search(params[:s]).
-      order_by(created: -1, id: -1).
-      page(params[:page]).per(50)
+    @ref_coll_options = [Cms::Node, Cms::Page, Cms::Part, Cms::Layout, SS::File].collect do |model|
+      [model.model_name.human, model.collection_name]
+    end
+    @ref_coll_options.unshift([I18n.t('ss.all'), 'all'])
+    @s = OpenStruct.new params[:s]
+    @s[:ref_coll] ||= 'all'
+    @items = @model.where(cond).search(@s)
+               .order_by(created: -1)
+               .page(params[:page])
+               .per(50)
   end
 
   def delete

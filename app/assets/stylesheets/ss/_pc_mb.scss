@@ -1904,6 +1904,19 @@ footer.send {
     &:hover {
       background-color: #eee;
       text-decoration: none;
+      .properties {
+        display: block;
+        text-align: left;
+        padding: 10px;
+        background: $white;
+        line-height: 20px;
+        color: $black;
+        border: 5px solid $gray4;
+      }
+    }
+    .properties {
+      position: absolute;
+      display: none;
     }
     img {
       vertical-align: middle;
@@ -2690,6 +2703,21 @@ form .CodeMirror {
   }
   p, ul {
     color: #822;
+  }
+}
+#errorLinkChecker {
+  li {
+    padding: 1px;
+  }
+  .success {
+    color: #2f7e42;
+  }
+  .failure {
+    color: #e00;
+  }
+  .message {
+    margin-top: 1px;
+    margin-left: 38px;
   }
 }
 .field_with_errors {
