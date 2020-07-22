@@ -135,6 +135,8 @@ ja:
       check_accessibility_manually: "セマンティックなマークアップであるか確認してください。\nコントラスト比に問題がないか確認してください。"
     notices:
       import_with_entry_form_is_not_supported: 次のフォームでは本文ブロックは出力されません。
+      restoring_public_content_from_trash: 非公開で復元されます。復元後、内容を確認うえ、公開してください。
+      restoring_share_file_from_trash: 共有ファイルに復元されます。
     apis:
       categories:
         index: カテゴリーを選択する
@@ -936,10 +938,16 @@ ja:
       invalid_img_scheme: 画像のURIにバイナリー文字列が含まれています。
       set_table_caption: 表にキャプションが設定されていません。
       set_th_scope: 表のヘッダーにスコープ属性が設定されていません。
-      link_check_success: 成功
-      link_check_failure: 失敗
+      link_check_success: "[成功]"
+      link_check_failure: "[失敗]"
       link_check_failed_to_connect: リンクチェックに失敗しました。次のURLに接続できません。
       form_check_failed_to_connect: 内容チェックに失敗しました。次のURLに接続できません。
+      link_check_failed_invalid_link: リンクが不正な形式です。
+      link_check_failed_certificate_verify_failed: リンク先のSSL証明書の検証に失敗しました。
+      link_check_failed_timeout: リンク先がタイムアウトしました。
+      link_check_failed_unauthorized: リンク先の内容を取得できませんでした。（認証がかかっています）
+      link_check_failed_not_found: リンク先の内容を取得できませんでした。
+      link_check_failed_redirection: リンク先のリダイレクトが多すぎる為、内容を取得できませんでした。
       mobile_size_check_success: 成功
       mobile_size_check_failure: 失敗
       mobile_size_check_disable: モバイルサイズが設定されていません。

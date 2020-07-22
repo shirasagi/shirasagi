@@ -8,7 +8,6 @@ this.Chat_Bot = (function () {
 
   Chat_Bot.prototype.render = function () {
     var _this = this;
-    _this.getAuthenticityToken();
     $(_this.id).find('.chat-text').keypress(function (ev) {
       if ((ev.which && ev.which === 13) || (ev.keyCode && ev.keyCode === 13)) {
         _this.sendText($(this));
@@ -31,17 +30,6 @@ this.Chat_Bot = (function () {
     });
   };
 
-  Chat_Bot.prototype.getAuthenticityToken = function () {
-    var _this = this;
-    $.ajax({
-      url: '/.mypage/auth_token.json',
-      method: 'GET',
-      success: function(data) {
-        _this.authenticityToken = data.auth_token;
-      }
-    });
-  };
-
   Chat_Bot.prototype.firstText = function (el) {
     var _this = this;
     $.ajax({
@@ -49,7 +37,6 @@ this.Chat_Bot = (function () {
       url: this.url,
       cache: false,
       data: {
-        authenticity_token: this.authenticityToken,
         click_suggest: this.clickSuggest
       },
       success: function (res, status) {
@@ -93,7 +80,6 @@ this.Chat_Bot = (function () {
       url: this.url,
       cache: false,
       data: {
-        authenticity_token: this.authenticityToken,
         text: text,
         click_suggest: this.clickSuggest
       },
@@ -141,7 +127,6 @@ this.Chat_Bot = (function () {
       url: this.url,
       cache: false,
       data: {
-        authenticity_token: this.authenticityToken,
         intent_id: el.attr('data-id'),
         question: 'success'
       },
@@ -170,7 +155,6 @@ this.Chat_Bot = (function () {
       url: this.url,
       cache: false,
       data: {
-        authenticity_token: this.authenticityToken,
         intent_id: el.attr('data-id'),
         question: 'retry'
       },

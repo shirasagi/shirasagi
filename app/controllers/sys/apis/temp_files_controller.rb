@@ -13,6 +13,7 @@ class Sys::Apis::TempFilesController < ApplicationController
   end
 
   def append_view_paths
+    append_view_path "app/views/ss/crud/files"
     append_view_path "app/views/sys/apis/ajax_files"
     super
   end

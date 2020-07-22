@@ -90,6 +90,7 @@
   </dl>
 
   <%= jquery do %>
+    var hostUrl = "<%= @cur_site.url %>";
     var insertContent = function(cont) {
       if (typeof tinymce !== "undefined") {
         tinymce.get(Cms_Form.editorId).execCommand("mceInsertContent", false, cont);
@@ -100,7 +101,7 @@
 
     $('#addon-cms-agents-addons-body a.ajax-box.related-pages').data('on-select', function ($item) {
       var data = $item.closest("[data-id]");
-      var href = "/" + data.find(".filename").text();
+      var href = hostUrl + data.find(".filename").text();
       var label = data.find(".select-item").text();
       var text = "<a href='" + href + "'>" + label + '</a>';
       insertContent(text);

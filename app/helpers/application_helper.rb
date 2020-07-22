@@ -50,6 +50,9 @@ module ApplicationHelper
 
   def current_url?(url)
     current = @cur_path.sub(/\?.*/, "")
+    current = current.sub(@cur_site.mobile_location, '') if @cur_site.mobile_enabled?
+    current = current.sub(SS.config.kana.location, '') if !SS.config.kana.disable
+    current = current.sub(/#{::Regexp.escape(SS.config.translate.location)}\/[^\/]*/, '') if @cur_site.translate_enabled?
     return nil if current.delete("/").blank?
     return :current if url.sub(/\/index\.html$/, "/") == current.sub(/\/index\.html$/, "/")
     return :current if current.match?(/^#{::Regexp.escape(url)}(\/|\?|$)/)
@@ -272,5 +275,9 @@ module ApplicationHelper
         output_buffer << content_tag(:span, name, class: "ss-logo-application-name")
       end
     end
+  end
+
+  def required_label
+    %(<div class="required">&lt;#{I18n.t('ss.required')}&gt;</div>).html_safe
   end
 end

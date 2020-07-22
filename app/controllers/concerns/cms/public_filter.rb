@@ -5,7 +5,7 @@ module Cms::PublicFilter
   include Cms::PublicFilter::Page
 
   included do
-    # rescue_from StandardError, with: :rescue_action
+    rescue_from StandardError, with: :rescue_action
     before_action :ensure_site_presence
     before_action :set_request_path
     #before_action :redirect_slash, if: ->{ request.env["REQUEST_PATH"] =~ /\/[^\.]+[^\/]$/ }
@@ -82,7 +82,7 @@ module Cms::PublicFilter
     @cur_path.sub!(/\/$/, "/index.html")
     @cur_main_path.sub!(/\/$/, "/index.html")
     @html = @cur_main_path.sub(/\.\w+$/, ".html")
-    @file = File.join(@cur_site.root_path, @cur_path)
+    @file = File.join(@cur_site.path, @cur_main_path)
   end
 
   def set_preview_params

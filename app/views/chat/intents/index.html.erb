@@ -1,6 +1,6 @@
 <%
   depth = 1
-  @reject_items = []
+  @reject_items = {}
 %>
 <%= jquery do %>
 SS_TreeUI.render(".index.items", { collapse_all: true });
@@ -31,24 +31,25 @@ SS_TreeUI.render(".index.items", { collapse_all: true });
           <td></td>
         </tr>
         <% @cur_node.becomes_with_route.first_suggest.each do |suggest| %>
-          <% @rendered_items = [] %>
+          <% @rendered_items = {} %>
           <%= render partial: 'intent', locals: { suggest: suggest, depth: depth + 1, first_suggest: true } %>
         <% end %>
       <% end %>
-      <% @items.and(id: { "$nin" => @reject_items }).each do |item| %>
-        <% @rendered_items = [] %>
+      <% @items.and(id: { "$nin" => @reject_items.keys }).each do |item| %>
+        <% next if @reject_items.keys.include?(item.id) %>
+        <% @rendered_items = {} %>
         <tr data-depth="<%= depth %>">
           <td class="expandable">
             <%= link_to item.name, action: :show, id: item %>
           </td>
-          <td><%= item.categories.order_by(order: 1, updated: -1).pluck(:name).join(', ') %></td>
+          <td><%= item.categories.order_by(order: 1, name: 1, updated: -1).pluck(:name).join(', ') %></td>
           <td><%= item.phrase.join(', ') %></td>
-          <td><%= @model.t(:phrase) + I18n.t('errors.messages.duplicate') if item.duplicate? %></td>
+          <td><%#= @model.t(:phrase) + I18n.t('errors.messages.duplicate') if item.duplicate? %></td>
           <td><%= link_to t('chat.links.add_or_edit'), { action: :edit, id: item }, class: :btn if @model.allowed?(:edit, @cur_user, site: @cur_site) %></td>
         </tr>
-        <% @reject_items.push(item.id) %>
-        <% if !@rendered_items.find { |id| id == item.id } %>
-          <% @rendered_items.push(item.id) %>
+        <% @reject_items[item.id] = depth if @reject_items[item.id].blank? || @reject_items[item.id].try(:<, depth) %>
+        <% unless @rendered_items[item.id].try(:<=, depth) %>
+          <% @rendered_items[item.id] = depth if @rendered_items[item.id].blank? || @rendered_items[item.id].try(:<, depth) %>
           <% if item.suggest.present? %>
             <% item.suggest.each do |suggest| %>
               <%= render partial: 'intent', locals: { suggest: suggest, depth: depth + 1, first_suggest: false } %>

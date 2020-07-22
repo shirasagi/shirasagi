@@ -2,8 +2,6 @@ class Sns::Login::SamlController < ApplicationController
   include Sns::BaseFilter
   include Sns::LoginFilter
 
-  READY_STATE_EXPIRES_IN = 10.minutes.to_i
-
   skip_before_action :verify_authenticity_token, raise: false, only: :consume
   skip_before_action :logged_in?
   before_action :set_item
@@ -40,9 +38,34 @@ class Sns::Login::SamlController < ApplicationController
   public
 
   def init
+    @request_url ||= URI.parse(request.url)
+
     request = OneLogin::RubySaml::Authrequest.new
     state = SecureRandom.hex(24)
-    session['ss.sso.state'] = { value: state, created: Time.zone.now.to_i }
+
+    # "ref" is a path to redirect after user is successfully logged in
+    ref = params[:ref].try { |ref| ref.to_s }
+    if ref.present?
+      ref = URI.join(@request_url, ref) rescue nil
+    end
+    ref = normalize_url(ref) if ref.present?
+    if ref.present?
+      ref = nil unless trusted_url?(ref)
+    end
+    ref = ref.to_s if ref.present?
+
+    # "login_path" is a path to redirect after user is logged out
+    login_path = params[:login_path].try { |path| path.to_s }
+    if login_path.present?
+      login_path = URI.join(@request_url, login_path) rescue nil
+    end
+    login_path = normalize_url(login_path) if login_path.present?
+    if login_path.present?
+      login_path = nil unless trusted_url?(login_path)
+    end
+    login_path = login_path.to_s if login_path.present?
+
+    session['ss.sso.state'] = { value: state, created: Time.zone.now.to_i, ref: ref, login_path: login_path }
     redirect_to(request.create(settings, RelayState: state, ForceAuthn: "true"))
   end
 
@@ -51,7 +74,7 @@ class Sns::Login::SamlController < ApplicationController
     session_state = session.delete('ss.sso.state')
     raise "404" if session_state.blank?
     raise "404" if session_state[:value] != state
-    raise "404" if session_state[:created] + READY_STATE_EXPIRES_IN < Time.zone.now.to_i
+    raise "404" if session_state[:created] + Sys::Auth::Base::READY_STATE_EXPIRES_IN < Time.zone.now.to_i
 
     response = OneLogin::RubySaml::Response.new(params[:SAMLResponse])
     response.settings = settings
@@ -68,7 +91,10 @@ class Sns::Login::SamlController < ApplicationController
       return
     end
 
-    render_login user, nil, session: true, login_path: sns_login_path
+    # "ref" is a path to redirect after user is successfully logged in
+    params[:ref] = session_state[:ref]
+    # "login_path" is a path to redirect after user is logged out
+    render_login user, nil, session: true, login_path: session_state[:login_path] || sns_login_path
   end
 
   def metadata

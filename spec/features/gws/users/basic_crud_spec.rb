@@ -29,6 +29,7 @@ describe "gws_users", type: :feature, dbscope: :example, js: true do
       within "form#item-form" do
         fill_in "item[name]", with: name
         fill_in "item[email]", with: "#{name}@example.jp"
+        expect(page).to have_css('#item_email_errors', text: '')
         fill_in "item[in_password]", with: "pass"
         click_on I18n.t('ss.buttons.save')
       end
@@ -97,6 +98,7 @@ describe "gws_users", type: :feature, dbscope: :example, js: true do
       within 'form#item-form' do
         fill_in 'item[name]', with: name
         fill_in 'item[email]', with: "#{name}@example.jp"
+        expect(page).to have_css('#item_email_errors', text: '')
         fill_in 'item[in_password]', with: 'pass'
         fill_in "custom[#{column1.id}]", with: unique_id
         click_on I18n.t('ss.buttons.save')

@@ -131,6 +131,7 @@ img {
       position: absolute;
       top: 2.5em;
       right: 0;
+      z-index: 999;
     }
     #ss-kana {
       padding: 0 10px;
@@ -145,6 +146,59 @@ img {
   }
 }
 // -----------------------------------------------------------------------------
+// translate
+.translate-wrap {
+  width: $page-width;
+  margin: 0 auto;
+  padding: 0 10px;
+  text-align: right;
+}
+.translate-box {
+  position: relative;
+  width: 200px;
+  margin: 5px 0 0 auto;
+  overflow: hidden;
+  text-align: center;
+  background: #ffffff;
+  select {
+    width: 100%;
+    padding: 4px 38px 4px 8px;
+    color: #666666;
+    padding-right: 1em;
+    cursor: pointer;
+    text-indent: 0.01px;
+    text-overflow: ellipsis;
+    border: 1px solid #bbbbbb;
+    border-radius: 0;
+    outline: none;
+    background: transparent;
+    background-image: none;
+    box-shadow: none;
+    -webkit-appearance: none;
+    appearance: none;
+  }
+  &:before {
+    position: absolute;
+    top: 0.8em;
+    right: 0.9em;
+    width: 0;
+    height: 0;
+    padding: 0;
+    content: '';
+    border-left: 6px solid transparent;
+    border-right: 6px solid transparent;
+    border-top: 6px solid #666666;
+    pointer-events: none;
+  }
+}
+.translate-box select::-ms-expand {
+  display: none;
+}
+#ss-translate-error {
+  padding: 5px;
+  font-size: $px15;
+}
+// -----------------------------------------------------------------------------
 // head
 #head {
   width: $page-width;
@@ -153,7 +207,7 @@ img {
   @include clear;
   .logo {
     float: left;
-    padding: 17px 0;
+    padding: 0px 0 0 17px;
     @include mb {
       float: none;
       display: block;
@@ -166,6 +220,7 @@ img {
   }
   .menu {
     @include float(right);
+    margin-bottom: 5px;
     @include mb {
       float: none;
       display: block;
@@ -3728,7 +3783,8 @@ table.mypage-index, .member-my-group .index, table.member-invited-group {
     }
     #map-sidebar {
       width: 100%;
-      height: auto !important;
+      height: 300px !important;
+      overflow-y: scroll;
     }
     #map-canvas {
       width: 100% !important;

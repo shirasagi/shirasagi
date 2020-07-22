@@ -1,11 +1,15 @@
 class Cms::Column::Value::Free < Cms::Column::Value::Base
   field :value, type: String
+  field :contains_urls, type: Array, default: []
+
   embeds_ids :files, class_name: "SS::File"
 
   permit_values :value, file_ids: []
 
   before_save :before_save_files
   after_destroy :destroy_files
+  after_save :put_contains_urls_logs
+  before_validation :set_contains_urls
 
   liquidize do
     export :value
@@ -22,7 +26,7 @@ class Cms::Column::Value::Free < Cms::Column::Value::Base
     return if column.blank?
 
     if column.required? && value.blank?
-      self.errors.add(:base, :blank)
+      self.errors.add(:value, :blank)
     end
 
     return if value.blank?
@@ -87,6 +91,64 @@ class Cms::Column::Value::Free < Cms::Column::Value::Base
   end
 
   def destroy_files
-    files.destroy_all
+    if !_parent.respond_to?(:skip_history_trash)
+      files.destroy_all
+      return
+    end
+
+    file_ids.each_slice(20) do |ids|
+      SS::File.in(id: ids).to_a.map(&:becomes_with_model).each do |file|
+        file.skip_history_trash = _parent.skip_history_trash if file.respond_to?(:skip_history_trash)
+        file.destroy
+      end
+    end
+  end
+
+  def create_history_log(file)
+    site_id = nil
+    user_id = nil
+    site_id = self._parent.cur_site.id if self._parent.cur_site.present?
+    user_id = self._parent.cur_user.id if self._parent.cur_user.present?
+    History::Log.new(
+      site_id: site_id,
+      user_id: user_id,
+      session_id: Rails.application.current_session_id,
+      request_id: Rails.application.current_request_id,
+      controller: self.model_name.i18n_key,
+      url: file.try(:url),
+      page_url: Rails.application.current_path_info,
+      ref_coll: file.try(:collection_name)
+    )
+  end
+
+  def put_contains_urls_logs
+    add_contains_urls = self._parent.value_contains_urls - self._parent.value_contains_urls_was.to_a
+    add_contains_urls.each do |file|
+      item = create_history_log(file)
+      item.url = file
+      item.action = "update"
+      item.behavior = "paste"
+      item.ref_coll = ":ss_files"
+      item.save
+    end
+
+    del_contains_urls = self._parent.value_contains_urls_was.to_a - self._parent.value_contains_urls
+    del_contains_urls.each do |file|
+      item = create_history_log(file)
+      item.url = file
+      item.action = "destroy"
+      item.behavior = "paste"
+      item.ref_coll = ":ss_files"
+      item.save
+    end
+  end
+
+  def set_contains_urls
+    if value.blank?
+      self.contains_urls = [] if self.contains_urls.present?
+    else
+      self.contains_urls = value.scan(/(?:href|src)="(.*?)"/).flatten.uniq
+    end
+    self._parent.value_contains_urls = self.contains_urls
   end
 end

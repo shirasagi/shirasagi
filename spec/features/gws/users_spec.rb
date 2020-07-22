@@ -79,6 +79,50 @@ describe "gws_users", type: :feature, dbscope: :example, js: true do
       end
       expect(current_path).to eq index_path
     end
+
+    it "delete_all disabled user" do
+      visit index_path
+      expect(current_path).to eq index_path
+
+      #new"
+      visit new_path
+      first('.mod-gws-user-groups').click_on I18n.t('ss.apis.groups.index')
+      wait_for_cbox
+      first('tbody.items a.select-item').click
+
+      within "form#item-form" do
+        fill_in "item[name]", with: name
+        fill_in "item[email]", with: "#{name}@example.jp"
+        fill_in "item[in_password]", with: "pass"
+        click_on I18n.t('ss.buttons.save')
+      end
+
+      #delete
+      visit delete_path
+      within "form" do
+        click_button I18n.t('ss.buttons.delete')
+      end
+      expect(current_path).to eq index_path
+
+      #delete_all disabled user
+      within ".index-search" do
+        fill_in "s[keyword]", with: item.name
+        select I18n.t('ss.options.state.disabled'), from: 's[state]'
+        click_button I18n.t("ss.buttons.search")
+      end
+      expect(page).to have_css(".list-items", count: 1)
+
+      find('.list-head label.check input').set(true)
+      click_button I18n.t("ss.links.delete")
+      page.accept_alert
+      expect(page).to have_css('#notice', text: I18n.t('ss.notice.deleted'))
+
+      within ".index-search" do
+        select I18n.t('ss.options.state.disabled'), from: 's[state]'
+        click_button I18n.t("ss.buttons.search")
+      end
+      expect(page).to have_no_content(item.name)
+    end
   end
 
   context 'with form data' do

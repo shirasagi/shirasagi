@@ -8,27 +8,27 @@ Rails.application.routes.draw do
   end
 
   concern :copy do
-    get :copy, :on => :member
-    put :copy, :on => :member
+    get :copy, on: :member
+    put :copy, on: :member
   end
 
   concern :move do
-    get :move, :on => :member
-    put :move, :on => :member
+    get :move, on: :member
+    put :move, on: :member
   end
 
   concern :lock do
-    get :lock, :on => :member
-    delete :lock, action: :unlock, :on => :member
+    get :lock, on: :member
+    delete :lock, action: :unlock, on: :member
   end
 
   concern :download do
-    get :download, :on => :collection
+    get :download, on: :collection
   end
 
   concern :import do
-    get :import, :on => :collection
-    post :import, :on => :collection
+    get :import, on: :collection
+    post :import, on: :collection
   end
 
   concern :command do

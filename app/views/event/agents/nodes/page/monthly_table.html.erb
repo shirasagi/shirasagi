@@ -33,12 +33,15 @@
             <div class="daily">
               <%= link_to_daily date, name: date.day, path: @cur_node.parent.try(:url).to_s, enable: events.present? %>
             </div>
+
             <% if date.national_holiday? %>
               <div class="holiday"><%= HolidayJapan.name date %></div>
             <% end %>
-            <% if events.blank? %>
-              <div class="no-event"><%= t("event.no_event") %></div>
+
+            <% if events.blank? && @cur_node.substitute_html.present? %>
+              <dd class="no-event"><%= sanitize @cur_node.substitute_html.html_safe %></dd>
             <% end %>
+
             <% events.each do |event, categories| %>
               <% event = event.becomes_with_route %>
               <div class="page" data-id="<%= categories.pluck(:id).join(" ") %>">

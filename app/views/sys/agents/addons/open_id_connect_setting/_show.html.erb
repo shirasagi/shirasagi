@@ -29,6 +29,11 @@
   <dt><%= @model.t :jwks_uri %></dt>
   <dd><%= @item.jwks_uri %></dd>
 
+  <dt><%= @model.t :init_uri %></dt>
+  <dd><%= @item.init_uri(request.protocol, request.host_with_port) %></dd>
+  <dd class="markdown-body"><%= SS::Addon::Markdown.text_to_html(t("sys.notices.open_id_init_uri_md")) %></dd>
+
   <dt><%= @model.t :redirect_uri %></dt>
-  <dd><%= @item.redirect_uri(request.host_with_port) %></dd>
+  <dd><%= @item.redirect_uri(request.protocol, request.host_with_port) %></dd>
+  <dd class="markdown-body"><%= SS::Addon::Markdown.text_to_html(t("sys.notices.open_id_redirect_uri_md")) %></dd>
 </dl>

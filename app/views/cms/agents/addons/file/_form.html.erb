@@ -71,8 +71,8 @@ var tempFile = new SS_Addon_TempFile(".upload-drop-area", <%= @cur_user.id %>, o
       <% end %>
     </span>
     <span class="upload-menu-select">
-      <%= link_to t("sns.user_file"), sns_apis_user_files_path(@cur_user), class: "ajax-box btn" %>
-      <%= link_to t("cms.file"), cms_apis_files_path, class: "ajax-box btn" %>
+      <%= link_to t("sns.user_file"), cms_apis_user_files_path(cid: @cur_node || '-'), class: "ajax-box btn" %>
+      <%= link_to t("cms.file"), cms_apis_files_path(cid: @cur_node || '-'), class: "ajax-box btn" %>
     </span>
     <div class="upload-drop-area">
       <span class="upload-drop-notice"><%= t('ss.notice.file_droppable') %></span>
@@ -87,6 +87,18 @@ var tempFile = new SS_Addon_TempFile(".upload-drop-area", <%= @cur_user.id %>, o
             <% else %>
               <span class="ext icon-<%= file.extname %>"><%= file.extname %></span>
             <% end %>
+            <div class="properties">
+              <span><%= I18n.t("sns.filename") %>: <%= file.name %></span><br>
+              <% if file.image? %>
+                <% img = Magick::ImageList.new(file.path) %>
+                <span><%= t("sns.w_h") %>: <%= img.columns %> x <%= img.rows %></span><br>
+              <% end %>
+              <span><%= t("sns.size") %>: <%= number_to_human_size(file.size) %></span><br>
+              <span><%= t("sns.datetime") %>: <%= file.updated.strftime("%Y/%m/%d %H:%M") %></span><br>
+              <% if file.user.present? %>
+                <span><%= t("sns.user") %>: <%= file.user.name %></span><br>
+              <% end %>
+            </div>
           <% end %>
 
           <div class="name">
@@ -100,14 +112,14 @@ var tempFile = new SS_Addon_TempFile(".upload-drop-area", <%= @cur_user.id %>, o
 
           <div class="action">
             <% content = link_to file.humanized_name, file.url, class: "icon-#{file.extname}" %>
-            <%= link_to t("sns.file_attach"), "#", onclick: "insertContent('#{escape_javascript(content)}'); return false;" %>
+            <%= link_to t("sns.file_attach"), "#", onclick: "insertContent('#{escape_javascript(content)}'); return false;", class: "action-attach" %>
             <% if file.image? %>
               <% content = image_tag file.url, alt: file.name %>
-              <%= link_to t("sns.image_paste"), "#", onclick: "insertContent('#{escape_javascript(content)}'); return false;" %>
+              <%= link_to t("sns.image_paste"), "#", onclick: "insertContent('#{escape_javascript(content)}'); return false;", class: "action-paste" %>
               <% content = link_to(file.url, alt: file.name, class: "ajax-box") { image_tag(file.thumb_url, alt: file.name) } %>
-              <%= link_to t("sns.thumb_paste"), "#", onclick: "insertContent('#{escape_javascript(content)}'); return false;" %>
+              <%= link_to t("sns.thumb_paste"), "#", onclick: "insertContent('#{escape_javascript(content)}'); return false;", class: "action-thumb" %>
             <% end %>
-            <%= link_to t("ss.buttons.delete"), "#", onclick: "deleteContent('#{file.id}'); return false;" %>
+            <%= link_to t("ss.buttons.delete"), "#", onclick: "deleteContent('#{file.id}'); return false;", class: "action-delete" %>
           </div>
         </div>
       <% end %>

@@ -47,9 +47,10 @@
     <dd class="holiday"><%= HolidayJapan.name date %></dd>
     <% end %>
 
-    <% if pages.blank? %>
-    <dd class="no-event"><%= t("event.no_event") %></dd>
+    <% if pages.blank? && @cur_node.substitute_html.present? %>
+      <dd class="no-event"><%= sanitize @cur_node.substitute_html.html_safe %></dd>
     <% end %>
+
     <% pages.each do |page, categories| %>
     <% page = page.becomes_with_route %>
     <dd class="page" data-id="<%= categories.pluck(:id).join(" ") %>">

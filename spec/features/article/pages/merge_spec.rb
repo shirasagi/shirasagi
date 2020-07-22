@@ -52,6 +52,9 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
           # branch page is destroyed after merge
           expect(Cms::Page.where(id: branch_page.id)).to be_blank
 
+          # there are no pages in trash
+          expect(History::Trash.all.count).to eq 0
+
           # master page has `file`
           master_page.reload
           expect(master_page.file_ids).to eq branch_page.file_ids
@@ -197,6 +200,9 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
               expect(column_value.files).to have(0).items
             end
           end
+
+          # there are no pages in trash
+          expect(History::Trash.all.count).to eq 0
         end
       end
 

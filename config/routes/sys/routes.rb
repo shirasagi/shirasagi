@@ -3,7 +3,7 @@ Rails.application.routes.draw do
   Sys::Initializer
 
   concern :deletion do
-    get :delete, :on => :member
+    get :delete, on: :member
     delete :destroy_all, on: :collection, path: ''
   end
 
@@ -56,6 +56,7 @@ Rails.application.routes.draw do
       get "sites" => "sites#index"
       get "postal_codes" => "postal_codes#index"
       get "prefecture_codes" => "prefecture_codes#index"
+      post "validation" => "validation#validate"
       resources :temp_files, concerns: :deletion do
         get :select, on: :member
         get :view, on: :member

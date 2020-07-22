@@ -23,6 +23,13 @@
     <% end %>
   </dd>
 
+  <dt><%= @model.t :substitute_html %></dt>
+  <dd>
+    <% if @item.substitute_html.present? %>
+      <%= text_area_tag :substitute_html, @item.substitute_html, class: "html" %>
+    <% end %>
+  </dd>
+
   <dt><%= @model.t :new_days %></dt>
   <dd><%= @item.send :new_days %> <%= t "datetime.prompts.day" %></dd>
 </dl>

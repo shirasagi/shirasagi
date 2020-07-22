@@ -8,13 +8,13 @@ module Translate::PublicFilter
   private
 
   def set_request_path_with_translate
+    return if !@cur_site.translate_enabled?
+    return if @cur_main_path !~ /^#{@cur_site.translate_location}\/.+?\//
+
     if browser.bot?
       Rails.logger.warn("translate denied : #{request.user_agent}")
       return
     end
-
-    return if !@cur_site.translate_enabled?
-    return if @cur_main_path !~ /^#{@cur_site.translate_location}\/.+?\//
 
     main_path = @cur_main_path.sub(/^#{@cur_site.translate_location}\/(.+?)\//, "/")
 
@@ -35,7 +35,7 @@ module Translate::PublicFilter
       body = ActiveSupport::JSON.decode(body)
     end
 
-    convertor = Translate::Convertor.new(@cur_site, @translate_source.api_code, @translate_target.api_code)
+    convertor = Translate::Convertor.new(@cur_site, @translate_source, @translate_target)
     body = convertor.convert(body)
 
     if @cur_site.request_word_limit_exceeded && body =~ /<body data-translate=\".+?\"/
@@ -43,7 +43,7 @@ module Translate::PublicFilter
       h << '<script src="/assets/js/jquery.colorbox.js"></script>'
       h << '<link rel="stylesheet" media="screen" href="/assets/css/colorbox/colorbox.css">'
       h << '<div id="ss-translate-error">'
-      h << @cur_site.translate_api_limit_exceeded_html
+      h << ApplicationController.helpers.sanitize(@cur_site.translate_api_limit_exceeded_html)
       h << '</div>'
       h << '<script>$.colorbox({open: true, html: $("#ss-translate-error")});</script>'
       h << '</html>'

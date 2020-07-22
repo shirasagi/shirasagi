@@ -20,6 +20,8 @@ describe "webmail_users", type: :feature, dbscope: :example, js: true do
         fill_in "item[name]", with: name
         fill_in "item[uid]", with: uid
         fill_in "item[email]", with: email
+        expect(page).to have_css('#item_uid_errors', text: '')
+        expect(page).to have_css('#item_email_errors', text: '')
         fill_in "item[in_password]", with: password
         check "item_webmail_role_ids_#{webmail_user_role.id}"
         click_on I18n.t("ss.buttons.save")
@@ -39,6 +41,8 @@ describe "webmail_users", type: :feature, dbscope: :example, js: true do
       within "form#item-form" do
         fill_in "item[uid]", with: uid2
         fill_in "item[email]", with: email2
+        expect(page).to have_css('#item_uid_errors', text: '')
+        expect(page).to have_css('#item_email_errors', text: '')
         click_on I18n.t("ss.buttons.save")
       end
       expect(page).to have_css("#notice", text: I18n.t("ss.notice.saved"))
@@ -73,6 +77,8 @@ describe "webmail_users", type: :feature, dbscope: :example, js: true do
         fill_in "item[name]", with: name
         fill_in "item[uid]", with: uid
         fill_in "item[email]", with: email
+        expect(page).to have_css('#item_uid_errors', text: '')
+        expect(page).to have_css('#item_email_errors', text: '')
         fill_in "item[in_password]", with: password
         check "item_webmail_role_ids_#{webmail_user_role.id}"
         click_on I18n.t("ss.buttons.save")
@@ -132,6 +138,41 @@ describe "webmail_users", type: :feature, dbscope: :example, js: true do
       end
       expect(page).to have_css("#notice", text: I18n.t("ss.notice.deleted"))
       expect { Webmail::User.all.find(webmail_user.id) }.to raise_error Mongoid::Errors::DocumentNotFound
+    end
+
+    it "delete_all disabled user" do
+      visit webmail_users_path
+      click_on I18n.t("ss.links.new")
+      within "form#item-form" do
+        fill_in "item[name]", with: name
+        fill_in "item[uid]", with: uid
+        fill_in "item[email]", with: email
+        expect(page).to have_css('#item_uid_errors', text: '')
+        expect(page).to have_css('#item_email_errors', text: '')
+        fill_in "item[in_password]", with: password
+        check "item_webmail_role_ids_#{webmail_user_role.id}"
+        click_on I18n.t("ss.buttons.save")
+      end
+
+      visit webmail_users_path
+      click_on name
+      click_on I18n.t("ss.links.delete")
+      within "form" do
+        click_on I18n.t("ss.buttons.delete")
+      end
+      expect(page).to have_css("#notice", text: I18n.t("ss.notice.deleted"))
+
+      within ".index-search" do
+        select I18n.t('ss.options.state.disabled'), from: 's[state]'
+        click_button I18n.t("ss.buttons.search")
+      end
+      expect(page).to have_css(".list-items", count: 1)
+
+      find('.list-head label.check input').set(true)
+      click_button I18n.t("ss.links.delete")
+      page.accept_alert
+      expect(page).to have_css('#notice', text: I18n.t('ss.notice.deleted'))
+      expect { Webmail::User.all.find_by(uid: uid) }.to raise_error Mongoid::Errors::DocumentNotFound
     end
   end
 end

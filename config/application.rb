@@ -18,7 +18,7 @@ require "sprockets/railtie"
 Bundler.require(*Rails.groups)
 
 module SS
-  mattr_reader(:version) { "1.12.3" }
+  mattr_reader(:version) { "1.13.1" }
 
   class Application < Rails::Application
     # Initialize configuration defaults for originally generated Rails version.
@@ -52,25 +52,30 @@ module SS
 
     config.middleware.use Mongoid::QueryCache::Middleware
 
-    attr_reader :current_env
-
     def call(*args, &block)
-      @current_env = args.first
+      save_current_env = Thread.current["ss.env"]
+      save_current_request = Thread.current["ss.request"]
+      Thread.current["ss.env"] = args.first
+      Thread.current["ss.request"] = nil
       super
     ensure
-      @current_env = nil
-      @current_request = nil
+      Thread.current["ss.env"] = save_current_env
+      Thread.current["ss.request"] = save_current_request
+    end
+
+    def current_env
+      Thread.current["ss.env"]
     end
 
     def current_request
-      return if @current_env.nil?
-      @current_request ||= ActionDispatch::Request.new(@current_env)
+      return if current_env.nil?
+      Thread.current["ss.request"] ||= ActionDispatch::Request.new(current_env)
     end
 
     def current_session_id
-      return unless @current_env
+      return unless current_env
 
-      session = @current_env[Rack::RACK_SESSION]
+      session = current_env[Rack::RACK_SESSION]
       return unless session
 
       session.id
@@ -82,6 +87,11 @@ module SS
       else
         nil
       end
+    end
+
+    def current_path_info
+      return if current_env.nil?
+      current_env["PATH_INFO"]
     end
 
     def hostname

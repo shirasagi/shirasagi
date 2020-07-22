@@ -141,10 +141,12 @@ class Cms::Column::Value::FileUpload < Cms::Column::Value::Base
   def destroy_file
     return if file.blank?
     return nil unless File.exist?(file.path)
+
     path = "#{History::Trash.root}/#{file.path.sub(/.*\/(ss_files\/)/, '\\1')}"
     FileUtils.mkdir_p(File.dirname(path))
     FileUtils.cp(file.path, path)
-    self.file.destroy
+    file.skip_history_trash = _parent.skip_history_trash if [ _parent, file ].all? { |obj| obj.respond_to?(:skip_history_trash) }
+    file.destroy
   end
 
   # override Cms::Column::Value::Base#to_default_html

@@ -73,6 +73,7 @@ Rails.application.routes.draw do
       get "contrasts" => "contrasts#index"
       get "desktop_settings" => "desktop_settings#index"
       put "reload_site_usages" => "site_usages#reload"
+      post "validation" => "validation#validate"
 
       resources :files, concerns: :deletion do
         get :select, on: :member

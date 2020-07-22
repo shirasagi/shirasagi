@@ -12,7 +12,6 @@ ja:
     filter_all: 全て
     date_range_delimiter: ～
     keyword: キーワード
-    no_event: イベントはありません
     dates:
       setting: 開催期間
       start_date: 開始
@@ -44,6 +43,7 @@ ja:
         order: 指定順
         event_dates: イベント日
         unfinished_event_dates: イベント日(未終了)
+        finished_event_dates: イベント日(終了)
         event_dates_today: イベント日(今日)
         event_dates_tomorrow: イベント日(明日)
         event_dates_week: イベント日(一週間以内)
@@ -204,6 +204,7 @@ ja:
         - 指定順での並び順は降順です
         - イベント日はイベント日が設定されている項目を古い順に表示します。
         - イベント日(未終了)は本日以降のイベントが古い順に表示されます。
+        - イベント日(終了)は本日以前のイベントが古い順に表示されます。
         - イベント日(今日)は本日のイベントが古い順に表示されます。
         - イベント日(明日)は明日のイベントが古い順に表示されます。
         - イベント日(一週間以内)は一週間以内のイベントが古い順に表示されます。
@@ -262,6 +263,12 @@ ja:
     event/addon/calendar_list:
       event_display:
         - イベントカレンダーの表示形式を指定します。
+      substitute_html:
+        - イベントがない時に表示するテキストをHTMLで記述することが可能です。
+      upper_html:
+        - リスト部分の上部に任意の内容をHTMLで記述することが可能です。
+      lower_html:
+        - リスト部分の下部に任意の内容をHTMLで記述することが可能です。
     event/addon/ical_import:
       ical_import_url:
         - iCal配信URLを設定します。

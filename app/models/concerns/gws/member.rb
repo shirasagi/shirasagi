@@ -74,20 +74,28 @@ module Gws::Member
     overall_members.active.order_by_title(site || cur_site)
   end
 
+  def overall_members_was
+    user_ids = member_ids_was.to_a
+    group_ids = member_group_ids_was.to_a
+
+    if self.class.member_include_custom_groups?
+      member_custom_groups_was = Gws::CustomGroup.site(site || cur_site).in(id: member_custom_group_ids_was)
+      user_ids += member_custom_groups_was.pluck(:member_ids).flatten
+      group_ids += member_custom_groups_was.pluck(:member_group_ids).flatten
+    end
+
+    group_ids.compact!
+    group_ids.uniq!
+    group_ids += Gws::Group.site(@cur_site || site).in(id: group_ids).active.pluck(:id)
+
+    user_ids += Gws::User.in(group_ids: group_ids).pluck(:id)
+    user_ids.compact!
+    user_ids.uniq!
+    Gws::User.in(id: user_ids)
+  end
+
   def sorted_overall_members_was
-    member_ids = Gws::CustomGroup.site(site || cur_site).in(id: member_custom_group_ids_was).pluck(:member_ids).flatten
-    member_ids += self.member_ids_was.to_a
-    member_ids += Gws::User.in(group_ids: Gws::Group.in(id: member_group_ids_was).pluck(:id)).pluck(:id)
-    member_ids.compact!
-    member_ids.uniq!
-
-    members = Gws::User.in(id: member_ids)
-
-    return members.order_by_title(site || cur_site) unless self.class.keep_members_order?
-    return @sorted_members if @sorted_members
-
-    hash = members.map { |m| [m.id, m] }.to_h
-    @sorted_members = member_ids.map { |id| hash[id] }.compact
+    overall_members_was.active.order_by_title(site || cur_site)
   end
 
   private

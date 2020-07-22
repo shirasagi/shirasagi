@@ -30,7 +30,9 @@ describe "cms_translate_text_caches", type: :feature, dbscope: :example do
       site.translate_target_ids = [lang_en, lang_ko, lang_zh_CN, lang_zh_TW].map(&:id)
       site.update!
 
-      item = Translate::Convertor.new(site, source, target)
+      lang_ja = Translate::Lang.site(site).find_by(code: source)
+      lang_en = Translate::Lang.site(site).find_by(code: target)
+      item = Translate::Convertor.new(site, lang_ja, lang_en)
       item.convert(html)
 
       login_cms_user
@@ -40,9 +42,9 @@ describe "cms_translate_text_caches", type: :feature, dbscope: :example do
       visit index_path
       expect(current_path).not_to eq sns_login_path
       expect(page).to have_css(".translate-text-chaches tr td", text: text1)
-      expect(page).to have_css(".translate-text-chaches tr td", text: "[#{target}:#{text1}]")
+      expect(page).to have_css(".translate-text-chaches tr td", text: text1)
       expect(page).to have_css(".translate-text-chaches tr td", text: text2)
-      expect(page).to have_css(".translate-text-chaches tr td", text: "[#{target}:#{text2}]")
+      expect(page).to have_css(".translate-text-chaches tr td", text: text2)
     end
 
     it "#new" do

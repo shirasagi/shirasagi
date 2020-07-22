@@ -27,8 +27,8 @@ module History::Model::Data
   end
 
   def model
-    models = Mongoid.models.reject { |m| m.to_s.start_with?('Mongoid::') }
-    models.find{ |m| m.to_s == ref_class }
+    return if ref_class.blank? || ref_class.start_with?('Mongoid::')
+    @model ||= ref_class.constantize rescue nil
   end
 
   private

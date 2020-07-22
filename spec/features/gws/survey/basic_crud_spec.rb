@@ -2,8 +2,18 @@ require 'spec_helper'
 
 describe "gws_survey", type: :feature, dbscope: :example, js: true do
   let(:site) { gws_site }
-  let!(:user1) { create(:gws_user, group_ids: gws_user.group_ids, gws_role_ids: gws_user.gws_role_ids) }
-  let!(:user2) { create(:gws_user, group_ids: gws_user.group_ids, gws_role_ids: gws_user.gws_role_ids) }
+  let!(:user1) do
+    create(
+      :gws_user, uid: "U001", organization_uid: "U001", organization_id: gws_user.groups.first.id,
+      group_ids: gws_user.group_ids, gws_role_ids: gws_user.gws_role_ids
+    )
+  end
+  let!(:user2) do
+    create(
+      :gws_user, uid: "U002", organization_uid: "U002", organization_id: gws_user.groups.first.id,
+      group_ids: gws_user.group_ids, gws_role_ids: gws_user.gws_role_ids
+    )
+  end
   let!(:cate) { create(:gws_survey_category, cur_site: site) }
 
   before do
@@ -144,8 +154,9 @@ describe "gws_survey", type: :feature, dbscope: :example, js: true do
 
       csv = ::CSV.read(downloads.first, headers: true, encoding: 'SJIS:UTF-8')
       expect(csv.length).to eq 2
-      expect(csv[0][Gws::User.t(:name)]).to eq user2.long_name
       expect(csv[0][Gws::Survey::File.t(:updated)].present?).to be_truthy
+      expect(csv[0][Gws::User.t(:name)]).to eq user1.name
+      expect(csv[0][Gws::User.t(:organization_uid)]).to eq user1.organization_uid
 
       # zip
       click_on I18n.t("ss.links.back_to_index")

@@ -1,11 +1,14 @@
 <% @index_title = proc do |item| %>
-  <%= link_to item.name_with_code, { action: :show, id: item }, class: "title" %>
+  <%= link_to item.name, { action: :show, id: item }, class: "title" %>
 <% end %>
 
 <% @index_meta = proc do |item| %>
   <span class="id">#<%= item.id %></span>
   <span class="datetime"><%= item.updated.strftime("%Y/%m/%d %H:%M") %></span>
-  <span class=""><%= item.section_name %></span>
+  <span class="group"><%= item.section_name %></span>
+  <% if title = item.title(@cur_site) %>
+    <span class="user-title"><%= title.name %></span>
+  <% end %>
   <span class="order"><%= item.order %></span>
 <% end %>
 

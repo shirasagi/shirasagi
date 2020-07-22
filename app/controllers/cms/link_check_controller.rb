@@ -2,47 +2,36 @@ require "timeout"
 require "open-uri"
 
 class Cms::LinkCheckController < ApplicationController
+  include SS::AuthFilter
+
   protect_from_forgery except: :check
   skip_before_action :verify_authenticity_token, raise: false unless SS.config.env.csrf_protect
   before_action :accept_cors_request
+  before_action :set_user
+
+  private
+
+  def set_user
+    @cur_user = get_user_by_session
+  end
+
+  public
 
   def check
-    result = {}
+    results = {}
     url = params[:url]
+    root_url = params[:root_url]
+    checker = Cms::LinkChecker.new(cur_user: @cur_user, root_url: root_url)
 
     raise "400" if url.blank?
     url = url.values if url.is_a?(Hash)
     url.each do |link|
-      next if result[link]
-      result[link] = check_url(::URI.escape(link))
+      next if results[link]
+      results[link] = checker.check_url(link)
     end
 
     respond_to do |format|
-      format.json { render json: result.to_json }
+      format.json { render json: results.to_json }
     end
-  end
-
-  private
-
-  def check_url(url)
-    proxy = ( url =~ /^https/ ) ? ENV['HTTPS_PROXY'] : ENV['HTTP_PROXY']
-    progress_data_size = nil
-    opts = {
-      proxy: proxy,
-      progress_proc: ->(size) do
-        progress_data_size = size
-        raise "200"
-      end
-    }
-
-    Timeout.timeout(2) do
-      open(url, opts) { |_f| }
-    end
-
-    200
-  rescue Timeout::Error
-    0
-  rescue => _e
-    progress_data_size ? 200 : 0
   end
 end

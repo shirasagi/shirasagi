@@ -8,12 +8,12 @@ Rails.application.routes.draw do
   end
 
   concern :download do
-    get :download, :on => :collection
+    get :download, on: :collection
   end
 
   concern :import do
-    get :import, :on => :collection
-    post :import, :on => :collection
+    get :import, on: :collection
+    post :import, on: :collection
   end
 
   content "facility" do

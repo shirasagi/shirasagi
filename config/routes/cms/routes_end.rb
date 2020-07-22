@@ -178,8 +178,16 @@ Rails.application.routes.draw do
       get "forms/:id/columns/:column_id/new" => "forms#new_column", as: :form_column_new
       match "forms/:id/html" => "forms#html", as: :form_html, via: %i[post put]
       match "forms/:id/link_check" => "forms#link_check", as: :form_link_check, via: %i[post put]
+      post "validation" => "validation#validate"
 
-      resources :files, concerns: :deletion do
+      resources :files, path: ":cid/files", concerns: :deletion do
+        get :select, on: :member
+        get :view, on: :member
+        get :thumb, on: :member
+        get :download, on: :member
+        get :contrast_ratio, on: :collection
+      end
+      resources :user_files, path: ":cid/user_files", concerns: :deletion do
         get :select, on: :member
         get :view, on: :member
         get :thumb, on: :member

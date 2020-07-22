@@ -17,6 +17,8 @@ module Cms::Addon::Form::Page
     # default validation `validates_associated :column_values` is not suitable for column_values.
     # So, specific validation should be defined.
     validate :validate_column_values
+
+    attr_accessor :link_check_user
     validate :validate_column_links, on: :link
 
     before_save :cms_form_page_delete_unlinked_files
@@ -73,12 +75,13 @@ module Cms::Addon::Form::Page
   end
 
   def validate_column_links
-    @column_link_errors = []
+    @column_link_errors = {}
 
     column_values.each do |column_value|
+      column_value.link_check_user = link_check_user
       column_value.valid?(:link)
       if column_value.link_errors.present?
-        @column_link_errors += column_value.link_errors
+        @column_link_errors.merge!(column_value.link_errors)
       end
     end
   end
@@ -142,6 +145,11 @@ module Cms::Addon::Form::Page
       unlinked_files = SS::File.in(id: file_ids).to_a
       unlinked_files.each do |unlinked_file|
         next if self.id != unlinked_file.owner_item_id
+
+        if [ self, unlinked_file ].all? { |obj| obj.respond_to?(:skip_history_trash) }
+          unlinked_file.skip_history_trash = skip_history_trash
+        end
+        unlinked_file.cur_user = @cur_user
         unlinked_file.destroy
       end
     end

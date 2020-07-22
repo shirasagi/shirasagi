@@ -1,0 +1,41 @@
+<% @tap_menu = proc do |item| %>
+  <%
+    if params.dig(:s, :target) == 'descendant'
+      show_path = item.private_show_path
+      edit_path = File.join(show_path, 'edit')
+      delete_path = File.join(show_path, 'delete')
+    else
+      show_path = url_for(action: :show, id: item.id)
+      edit_path = url_for(action: :edit, id: item.id)
+      delete_path = url_for(action: :delete, id: item.id)
+    end
+  %>
+  <%= link_to t('ss.links.show'), show_path if item.allowed?(:read, @cur_user, site: @cur_site) %>
+  <%= link_to t('ss.links.edit'), edit_path if item.allowed?(:edit, @cur_user, site: @cur_site) %>
+  <%= link_to t('ss.links.delete'), delete_path if item.allowed?(:delete, @cur_user, site: @cur_site) %>
+  <%= link_to t('ss.links.view_site'), item.full_url, target: :_blank if item.public? %>
+  <% if @cur_site.mobile_enabled? %>
+    <%= link_to t('ss.links.pc_preview'), cms_preview_path(path: item.preview_path), target: :_blank %>
+    <%= link_to(t('ss.links.mobile_preview'), cms_mobile_preview_path(path: item.preview_path), target: :_blank) %>
+  <% else %>
+    <%= link_to t('ss.links.preview'), cms_preview_path(path: item.preview_path), target: :_blank %>
+  <% end %>
+  <% if item.try(:image) %>
+    <%= link_to image_tag(item.image.thumb_url), item.image.url, { class: "thumb", target: "_blank" } %>
+  <% elsif item.try(:image?) %>
+    <%= link_to image_tag(item.thumb_url), item.url, { class: "thumb", target: "_blank" } %>
+  <% end %>
+<% end %>
+
+<% @index_title = proc do |item| %>
+  <%
+    if params.dig(:s, :target) == 'descendant'
+      show_path = item.private_show_path
+    else
+      show_path = url_for(action: :show, id: item.id)
+    end
+  %>
+  <%= link_to item.name, show_path, class: "title" %>
+<% end %>
+
+<%= render file: "cms/crud/index" %>

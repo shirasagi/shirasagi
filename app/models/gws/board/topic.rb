@@ -9,7 +9,7 @@ class Gws::Board::Topic
   include Gws::Board::DescendantsFileInfo
   include Gws::Addon::Board::Category
   include Gws::Addon::Board::NotifySetting
-  include Gws::Addon::Release
+  include SS::Addon::Release
   include Gws::Addon::Member
   include Gws::Addon::ReadableSetting
   include Gws::Addon::GroupPermission

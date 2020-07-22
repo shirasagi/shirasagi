@@ -108,6 +108,7 @@ module SS::BaseFilter
 
   def set_user(user, opts = {})
     if opts[:session]
+      reset_session
       session[:user] = {
         "user_id" => user.id,
         "remote_addr" => remote_addr,

@@ -62,7 +62,7 @@ module Cms::BaseFilter
   end
 
   def set_node
-    return unless params[:cid]
+    return if params[:cid].blank? || params[:cid].to_s == "-"
     @cur_node = Cms::Node.site(@cur_site).find params[:cid]
     @cur_node.parents.each { |node| @crumbs << [node.name, view_context.contents_path(node)] }
     @crumbs << [@cur_node.name, view_context.contents_path(@cur_node)]

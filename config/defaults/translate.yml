@@ -6,7 +6,7 @@ production: &production
   api_options:
     google_translation: "Google Translation API"
     microsoft_translator_text: "Microsoft Translator Text API"
-  #  mock: "テスト用API"
+  #  mock: "開発用API"
 
   mock:
     array_size_limit: 100

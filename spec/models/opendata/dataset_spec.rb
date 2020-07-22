@@ -476,6 +476,7 @@ describe Opendata::Dataset, dbscope: :example do
           updated: Time.zone.yesterday,
           license_id: license.id,
           in_file: upload_file(file, "application/json"),
+          filename: "test.json",
           original_url: "http://test@example.jp/test.json",
           original_updated: Time.zone.yesterday,
           crawl_state: "same",

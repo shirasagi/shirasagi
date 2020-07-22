@@ -122,14 +122,17 @@ module Map::MapHelper
     else
       include_googlemaps_api(opts)
 
-      s << "Googlemaps_Map.center = #{center.to_json};" if center.present?
-      s << "Map_Form.maxPointForm = #{max_point_form.to_json};" if max_point_form.present?
-      s << 'Googlemaps_Map.setForm(Map_Form);'
-      s << "Googlemaps_Map.load(#{selector.to_json}, #{map_options.to_json});"
-      s << 'Googlemaps_Map.renderMarkers();'
-      s << 'Googlemaps_Map.renderEvents();'
-      s << 'SS_AddonTabs.findAddonView(".mod-map").on("ss:addonShown", function() {'
-      s << '  Googlemaps_Map.resize();'
+      # 初回アドオン表示後に地図を描画しないと、ズームが 2 に初期設定されてしまう。
+      s << 'SS_AddonTabs.findAddonView(".mod-map").one("ss:addonShown", function() {'
+      s << "  Googlemaps_Map.center = #{center.to_json};" if center.present?
+      s << "  Map_Form.maxPointForm = #{max_point_form.to_json};" if max_point_form.present?
+      s << '  Googlemaps_Map.setForm(Map_Form);'
+      s << "  Googlemaps_Map.load(#{selector.to_json}, #{map_options.to_json});"
+      s << '  Googlemaps_Map.renderMarkers();'
+      s << '  Googlemaps_Map.renderEvents();'
+      s << '  SS_AddonTabs.findAddonView(".mod-map").on("ss:addonShown", function() {'
+      s << '    Googlemaps_Map.resize();'
+      s << '  });'
       s << '});'
     end
 

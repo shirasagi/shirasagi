@@ -259,16 +259,7 @@ this.Map_Form = (function () {
       Map_Form.dataID += 1;
     });
 
-    if (!Googlemaps_Map.markers || Googlemaps_Map.markers.length === 0) {
-      Googlemaps_Map.map.setCenter(new google.maps.LatLng(Googlemaps_Map.center[0], Googlemaps_Map.center[1]));
-    } else {
-      Googlemaps_Map.map.fitBounds(markerBounds);
-      google.maps.event.addListenerOnce(Googlemaps_Map.map, "idle", function(){
-        if (Googlemaps_Map.map.getZoom() > Googlemaps_Map.zoom) {
-          Googlemaps_Map.map.setZoom(Googlemaps_Map.zoom);
-        }
-      })
-    }
+    Googlemaps_Map.adjustMarkerBounds(Googlemaps_Map.markers.length, markerBounds);
   };
 
   Map_Form.renderEvents = function () {

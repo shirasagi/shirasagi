@@ -98,7 +98,7 @@ class Cms::Column::Value::Youtube < Cms::Column::Value::Base
     return if column.blank?
 
     if column.required? && youtube_id.blank?
-      self.errors.add(:youtube_id, :blank)
+      self.errors.add(:url, :blank)
     end
 
     if url.present? && youtube_id.blank?

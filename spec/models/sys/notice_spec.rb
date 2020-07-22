@@ -76,6 +76,61 @@ describe Sys::Notice, dbscope: :example do
       expect(Sys::Notice.cms_admin_notice.count).to eq 0
       expect(Sys::Notice.gw_admin_notice.count).to eq 0
     end
+  end
 
+  describe ".and_public" do
+    context "when closed notice is given" do
+      subject! { create(:sys_notice, state: "closed", release_date: nil, close_date: nil) }
+      it { expect(Sys::Notice.and_public.count).to eq 0 }
+    end
+
+    context "when public notice without release plan is given" do
+      subject! { create(:sys_notice, state: "public", release_date: nil, close_date: nil) }
+      it { expect(Sys::Notice.and_public.first).to eq subject }
+    end
+
+    context "when public notice with release plan is given" do
+      let(:current) { Time.zone.now.beginning_of_minute }
+      let(:release_date) { current + 1.day }
+      let(:close_date) { release_date + 1.day }
+      subject! { create(:sys_notice, state: "public", release_date: release_date, close_date: close_date) }
+
+      before do
+        Sys::Notice.all.unset(:released)
+        subject.reload
+      end
+
+      context "just before release date" do
+        it do
+          Timecop.freeze(release_date - 1.second) do
+            expect(Sys::Notice.and_public.count).to eq 0
+          end
+        end
+      end
+
+      context "at release date" do
+        it do
+          Timecop.freeze(release_date) do
+            expect(Sys::Notice.and_public.first).to eq subject
+          end
+        end
+      end
+
+      context "just before close date" do
+        it do
+          Timecop.freeze(close_date - 1.second) do
+            expect(Sys::Notice.and_public.first).to eq subject
+          end
+        end
+      end
+
+      context "at close date" do
+        it do
+          Timecop.freeze(close_date) do
+            expect(Sys::Notice.and_public.count).to eq 0
+          end
+        end
+      end
+    end
   end
 end

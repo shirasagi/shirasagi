@@ -61,26 +61,26 @@ SS.renderClipboardCopy();
 <% end %>
 
 <header>
-  <h1 class="name"><%= @cur_page.send :name %></h1>
+  <h1 class="name"><%= @cur_page.name %></h1>
 </header>
 
 <% if @cur_node.show_point? %>
-<div class="point">
-  <div class="count">
-    <span class="label"><%= t("opendata.labels.iine") %></span>
-    <span class="number"><%= @cur_page.point %></span>
+  <div class="point">
+    <div class="count">
+      <span class="label"><%= t("opendata.labels.iine") %></span>
+      <span class="number"><%= @cur_page.point %></span>
+    </div>
   </div>
-</div>
 <% end %>
 
 <%
-max = 3
-categories = [
-  { items: @cur_page.categories.sort(order: 1), type: :category, name: :name, key: :category_id, val: :id },
-  { items: @cur_page.estat_categories.sort(order: 1), type: "estat-category", name: :name, key: :estat_category_id, val: :id },
-  { items: @cur_page.areas.sort(order: 1), type: :area, name: :name, key: :area_id, val: :id },
-  { items: @cur_page.tags, type: :tag, name: :to_s, key: :tag, val: :to_s },
-]
+  max = 3
+  categories = [
+      { items: @cur_page.categories.sort(order: 1), type: :category, name: :name, key: :category_id, val: :id },
+      { items: @cur_page.estat_categories.sort(order: 1), type: "estat-category", name: :name, key: :estat_category_id, val: :id },
+      { items: @cur_page.areas.sort(order: 1), type: :area, name: :name, key: :area_id, val: :id },
+      { items: @cur_page.tags, type: :tag, name: :to_s, key: :tag, val: :to_s },
+  ]
 %>
 <nav class="categories">
   <% categories.each do |cate| %>
@@ -89,22 +89,75 @@ categories = [
       <%= link_to(item.send(cate[:name]), @search_path.call("s[#{cate[:key]}]" => "#{item.send(cate[:val])}"), class: cate[:type], style: hide) %>
     <% end %>
     <% if cate[:items].size > max %>
-      <%= link_to t("opendata.labels.other") + "#{cate[:items].size-max}" + t("opendata.labels.count"), "#",
-        class: "#{cate[:type]}", "data-class" => "other" %>
+      <%= link_to t("opendata.labels.other") + "#{cate[:items].size - max}" + t("opendata.labels.count"), "#",
+                  class: "#{cate[:type]}", "data-class" => "other" %>
     <% end %>
   <% end %>
 </nav>
 
 <% api_url = api_package_show_path(id: @cur_page.uuid) %>
 <% if api_url.present? %>
-<div class="api"><%= link_to("WEBAPI", api_url, rel: @cur_site.anti_bot_set_nofollow? ? "nofollow" : nil) %></div>
+  <div class="api"><%= link_to("WEBAPI", api_url, rel: @cur_site.anti_bot_set_nofollow? ? "nofollow" : nil) %></div>
 <% end %>
 
 <div class="text">
-  <%= auto_link paragraph(@cur_page.text) %>
+  <%= auto_link paragraph(sanitize(@cur_page.text)) %>
 </div>
 
-<div class="dataset-tabs tabs"  id="dataset-tabs-<%= @cur_node.id %>">
+<% render_rs = proc do |rs| %>
+  <div class="<%= rs.context_path[1..-1].dasherize %>" data-uuid="<%= rs.uuid %>">
+    <div class="info">
+      <div class="name format-<%= rs.format.downcase %>">
+        <%= rs.name %> (<%= rs.format %> <%= rs.source_url.present? ? t("opendata.labels.external_link") : number_to_human_size(rs.size) %>)
+      </div>
+      <% if rs.respond_to?(:downloaded_count) %>
+        <div class="download-count">
+          <span class="label"><%= rs.t :downloaded_count %></span>
+          <span class="count"><%= rs.downloaded_count.to_s(:delimited) %><%= I18n.t("opendata.labels.time") %></span>
+        </div>
+      <% end %>
+    </div>
+
+    <div class="icons">
+      <% license = rs.license %>
+      <% if license.present? %>
+        <span class="license">
+          <% label = tryb { image_tag license.file.url, alt: license.name } || license.name %>
+          <% if license.related_url.present? %>
+            <%= link_to(label, license.related_url, target: "_blank", rel: @cur_site.anti_bot_set_nofollow? ? "nofollow" : nil) %>
+          <% else %>
+            <%= label %>
+          <% end %>
+        </span>
+      <% end %>
+
+      <% if rs.source_url.blank? && rs.previewable? %>
+        <div class="content-wrap">
+          <%= link_to(I18n.t("opendata.labels.preview"), rs.content_url, class: "content", rel: @cur_site.anti_bot_set_nofollow? ? "nofollow" : nil) %>
+        </div>
+      <% end %>
+      <div class="download-wrap">
+        <%= link_to(I18n.t("opendata.labels.downloaded"), rs.download_url, class: "download", "data-url": rs.data_url, rel: @cur_site.anti_bot_set_nofollow? ? "nofollow" : nil) %>
+      </div>
+      <div class="clipboard-wrap">
+        <%= link_to(t("opendata.links.copy_url"), rs.download_url, class: "ss-clipboard-copy", rel: @cur_site.anti_bot_set_nofollow? ? "nofollow" : nil, "data-clip-attr": "data-full-url", "data-full-url": rs.download_full_url) %>
+      </div>
+      <% if rs.rdf_iri.present? %>
+        <div class="sparql">
+          <%= link_to(rs.rdf_iri, "#{sparql_path}?graph_name=#{rs.rdf_iri}", class: "sparql", rel: @cur_site.anti_bot_set_nofollow? ? "nofollow" : nil) %>
+        </div>
+      <% end %>
+    </div>
+
+    <% if rs.text.present? %>
+      <div class="text">
+        <%= auto_link paragraph(sanitize(rs.text)) %>
+      </div>
+    <% end %>
+  </div>
+<% end %>
+
+<div class="dataset-tabs tabs" id="dataset-tabs-<%= @cur_node.id %>">
   <article class="tab" id="cms-tab-<%= @cur_node.id %>-0">
     <header><h2><%= t("opendata.labels.resource") %></h2></header>
     <div class="pages">
@@ -115,109 +168,17 @@ categories = [
           </header>
 
           <% @cur_page.resources.order(name: 1).each do |rs| %>
-          <div class="resource">
-            <div class="info">
-              <div class="name format-<%= rs.format.downcase %>">
-                <%= rs.name %> (<%= rs.format %> <%= rs.source_url.present? ? t("opendata.labels.external_link") : number_to_human_size(rs.size) %>)
-              </div>
-
-              <div class="icons">
-                <% if license = rs.license %>
-                  <span class="license">
-                    <% label = tryb { image_tag license.file.url, alt: license.name } || license.name %>
-                    <% if license.related_url.present? %>
-                      <%= link_to(label, license.related_url, target: "_blank", rel: @cur_site.anti_bot_set_nofollow? ? "nofollow" : nil) %>
-                    <% else %>
-                      <%= label %>
-                    <% end %>
-                  </span>
-                <% end %>
-
-                <% if rs.source_url.blank? && rs.previewable? %>
-                  <div class="content-wrap">
-                    <%= link_to(t("opendata.labels.preview"), rs.content_url, class: "content", rel: @cur_site.anti_bot_set_nofollow? ? "nofollow" : nil) %>
-                  </div>
-                <% end %>
-                <div class="download-wrap">
-                  <%= link_to(t("opendata.labels.downloaded"), rs.download_url, class: "download", "data-url": rs.data_url, rel: @cur_site.anti_bot_set_nofollow? ? "nofollow" : nil) %>
-                </div>
-                <div class="clipboard-wrap">
-                  <% url = rs.source_url.present? ? rs.source_url : rs.download_full_url %>
-                  <%= link_to(t("opendata.links.copy_url"), rs.url, class: "ss-clipboard-copy", rel: @cur_site.anti_bot_set_nofollow? ? "nofollow" : nil, "data-clip-attr": "data-full-url", "data-full-url": url) %>
-                </div>
-              </div>
-
-              <% if rs.text.present? %>
-                <div class="text">
-                  <%= auto_link paragraph(rs.text) %>
-                </div>
-              <% end %>
-
-              <% if rs.rdf_iri.present? %>
-                <div class="sparql">
-                  <%= rs.t :rdf_iri %> <%= link_to(rs.rdf_iri, "#{sparql_path}?graph_name=#{rs.rdf_iri}", rel: @cur_site.anti_bot_set_nofollow? ? "nofollow" : nil) %>
-                </div>
-              <% end %>
-            </div>
-          </div>
+            <% render_rs.call(rs) %>
           <% end %>
 
           <% @cur_page.url_resources.order(name: 1).each do |urs| %>
-          <div class="url-resource">
-            <div class="info">
-              <div class="name format-<%= urs.format.downcase %>">
-                <%= urs.name %> (<%= urs.format %> <%= number_to_human_size(urs.size) %>)
-              </div>
-
-              <% if urs.text.present? %>
-                <div class="text">
-                  <%= auto_link paragraph(urs.text) %>
-                </div>
-              <% end %>
-
-              <% if urs.rdf_iri.present? %>
-                <div class="sparql">
-                  <%= urs.t :rdf_iri %> <%= link_to(urs.rdf_iri, "#{sparql_path}?graph_name=#{urs.rdf_iri}", rel: @cur_site.anti_bot_set_nofollow? ? "nofollow" : nil) %>
-                </div>
-              <% end %>
-
-              <div class="icons">
-                <% if license = urs.license %>
-                  <span class="license">
-                    <% label = tryb { image_tag license.file.url, alt: license.name } || license.name %>
-                    <% if license.related_url.present? %>
-                      <%= link_to(label, license.related_url, target: "_blank", rel: @cur_site.anti_bot_set_nofollow? ? "nofollow" : nil) %>
-                    <% else %>
-                      <%= label %>
-                    <% end %>
-                  </span>
-                <% end %>
-
-                <div class="content-wrap">
-                  <%= link_to(I18n.t("opendata.labels.preview"), urs.content_url, class: "content", rel: @cur_site.anti_bot_set_nofollow? ? "nofollow" : nil) if urs.tsv_present? %>
-                </div>
-
-                <div class="download-wrap">
-                  <%= link_to(t("opendata.labels.downloaded"), urs.download_url, class: "download", "data-url": urs.original_url, rel: @cur_site.anti_bot_set_nofollow? ? "nofollow" : nil) %>
-                </div>
-
-                <div class="clipboard-wrap">
-                  <%= link_to t("opendata.links.copy_url"), urs.download_url,
-                    "class" => "ss-clipboard-copy",
-                    "data-clip-attr" => "data-full-url",
-                    "data-full-url" => ::File.join(@cur_site.full_url, urs.download_url),
-                    "rel" => @cur_site.anti_bot_set_nofollow? ? "nofollow" : nil
-                  %>
-                </div>
-              </div>
-            </div>
-          </div>
+            <% render_rs.call(urs) %>
           <% end %>
         </div>
 
         <%
-           prefs, cities = @cur_page.pref_codes
-           codes = cities.presence || prefs
+          prefs, cities = @cur_page.pref_codes
+          codes = cities.presence || prefs
         %>
         <dl class="cio-format author">
           <dt><%= @cur_page.t :no %></dt>
@@ -229,29 +190,29 @@ categories = [
             <span class="api-uuid"><%= @cur_page.uuid %></span>
           </dd>
 
-          <% if prefs.present?  %>
-          <dt><%= SS::PrefectureCode.t :prefecture %></dt>
-          <dd><%= prefs.map { |code| code.prefecture }.join(",") %></dd>
+          <% if prefs.present? %>
+            <dt><%= SS::PrefectureCode.t :prefecture %></dt>
+            <dd><%= prefs.map { |code| code.prefecture }.join(",") %></dd>
           <% end %>
 
-          <% if cities.present?  %>
-          <dt><%= SS::PrefectureCode.t :city %></dt>
-          <dd><%= cities.map { |code| code.city }.join(",") %></dd>
+          <% if cities.present? %>
+            <dt><%= SS::PrefectureCode.t :city %></dt>
+            <dd><%= cities.map { |code| code.city }.join(",") %></dd>
           <% end %>
 
           <% if codes.present? %>
-          <dt><%= SS::PrefectureCode.t :code %></dt>
-          <dd><%= codes.map { |code| code.code }.join(",") %></dd>
+            <dt><%= SS::PrefectureCode.t :code %></dt>
+            <dd><%= codes.map { |code| code.code }.join(",") %></dd>
           <% end %>
 
           <% if @cur_page.update_plan.present? %>
-          <dt><%= @cur_page.t :update_plan %></dt>
-          <dd><%= @cur_page.update_plan %></dd>
+            <dt><%= @cur_page.t :update_plan %></dt>
+            <dd><%= @cur_page.update_plan %></dd>
           <% end %>
 
           <% if @cur_page.creator_name.present? %>
             <dt><%= @cur_page.t :user_id %></dt>
-            <dd><%= @cur_page.creator_name %><br /></dd>
+            <dd><%= @cur_page.creator_name %><br/></dd>
           <% elsif @cur_page.member_id.present? %>
             <dt><%= @cur_page.t :user_id %></dt>
             <dd>
@@ -263,23 +224,20 @@ categories = [
             </dd>
           <% elsif @cur_page.contact_charge.present? %>
             <dt><%= @cur_page.t :user_id %></dt>
-            <dd><%= @cur_page.contact_charge %><br /></dd>
+            <dd><%= @cur_page.contact_charge %><br/></dd>
           <% elsif @cur_page.contact_group %>
             <dt><%= @cur_page.t :user_id %></dt>
-            <dd><%= @cur_page.contact_group.name.sub(/.*\//, "") %><br /></dd>
+            <dd><%= @cur_page.contact_group.name.sub(/.*\//, "") %><br/></dd>
           <% elsif @cur_page.groups.present? %>
             <dt><%= @cur_page.t :user_id %></dt>
-            <dd><%= @cur_page.groups.first.name.sub(/.*\//, "") %><br /></dd>
+            <dd><%= @cur_page.groups.first.name.sub(/.*\//, "") %><br/></dd>
           <% end %>
 
-          <dt><%= @cur_page.t :downloaded %></dt>
-          <dd><%= @cur_page.downloaded.to_i %><%= t("opendata.labels.time")%></dd>
-
           <dt><%= @cur_page.t :created %></dt>
-          <dd><%= tryb{@cur_page.created.strftime("%Y-%m-%d")} %><br /></dd>
+          <dd><%= tryb { @cur_page.created.strftime("%Y-%m-%d") } %><br/></dd>
 
           <dt><%= @cur_page.t :updated %></dt>
-          <dd><%= tryb{@cur_page.updated.strftime("%Y-%m-%d")} %><br /></dd>
+          <dd><%= tryb { @cur_page.updated.strftime("%Y-%m-%d") } %><br/></dd>
         </dl>
 
       </div>
@@ -287,28 +245,28 @@ categories = [
     <nav class="feed"></nav>
   </article>
   <% if app_enabled? %>
-  <article class="tab" id="cms-tab-<%= @cur_node.id %>-1">
-    <header><h2><%= t("opendata.labels.relation_app") %></h2></header>
-    <div class="pages">
-      <div id="tab-app">
-        <header><h1><%= t("opendata.labels.relation_app") %></h1></header>
-        <div class="dataset-apps" id="dataset-apps"></div>
+    <article class="tab" id="cms-tab-<%= @cur_node.id %>-1">
+      <header><h2><%= t("opendata.labels.relation_app") %></h2></header>
+      <div class="pages">
+        <div id="tab-app">
+          <header><h1><%= t("opendata.labels.relation_app") %></h1></header>
+          <div class="dataset-apps" id="dataset-apps"></div>
+        </div>
       </div>
-    </div>
-    <nav class="feed"></nav>
-  </article>
+      <nav class="feed"></nav>
+    </article>
   <% end %>
   <% if idea_enabled? %>
-  <article class="tab" id="cms-tab-<%= @cur_node.id %>-2">
-    <header><h2><%= t("opendata.labels.relation_idea") %></h2></header>
-    <div class="pages">
-      <div id="tab-idea">
-        <header><h1><%= t("opendata.labels.relation_idea") %></h1></header>
-        <div class="dataset-ideas" id="dataset-ideas"></div>
+    <article class="tab" id="cms-tab-<%= @cur_node.id %>-2">
+      <header><h2><%= t("opendata.labels.relation_idea") %></h2></header>
+      <div class="pages">
+        <div id="tab-idea">
+          <header><h1><%= t("opendata.labels.relation_idea") %></h1></header>
+          <div class="dataset-ideas" id="dataset-ideas"></div>
+        </div>
       </div>
-    </div>
-    <nav class="feed"></nav>
-  </article>
+      <nav class="feed"></nav>
+    </article>
   <% end %>
 </div>
 

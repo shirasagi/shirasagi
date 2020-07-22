@@ -1,4 +1,5 @@
 <section class="main-box">
   <header><h2><%= @item.send :name %></h2></header>
-  <%== @item.html %>
+  <%= html_editor "#notice-body", height: "400px", readonly: true %>
+  <%= text_area_tag "notice-body", sanitize(@item.html), style: "height: 400px;" %>
 </section>

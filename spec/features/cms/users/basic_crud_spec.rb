@@ -30,6 +30,7 @@ describe "cms_users", type: :feature, dbscope: :example do
         name = unique_id
         fill_in "item[name]", with: name
         fill_in "item[email]", with: "#{name}@example.jp"
+        expect(page).to have_css('#item_email_errors', text: '')
         fill_in "item[in_password]", with: "pass"
         check "item[cms_role_ids][]"
         click_on I18n.t("ss.buttons.save")
@@ -55,19 +56,12 @@ describe "cms_users", type: :feature, dbscope: :example do
       end
       expect(page).to have_css('#notice', text: I18n.t('ss.notice.deleted'))
 
-      #delete_all
       within ".index-search" do
         fill_in "s[keyword]", with: item.name
         select I18n.t('ss.options.state.disabled'), from: 's[state]'
         click_button I18n.t("ss.buttons.search")
       end
       expect(page).to have_css(".list-items", count: 1)
-
-      find('.list-head label.check input').set(true)
-      page.accept_alert do
-        click_button I18n.t('ss.links.delete')
-      end
-      expect(page).to have_no_content(item.name)
 
       #lock_all
       within ".index-search" do
@@ -93,6 +87,25 @@ describe "cms_users", type: :feature, dbscope: :example do
       click_button I18n.t('ss.links.unlock_user')
       expect(page).to have_css('#notice', text: I18n.t('ss.notice.unlock_user_all'))
       expect(page).to have_no_content(item.name)
+
+      # delete_all
+      within ".index-search" do
+        fill_in "s[keyword]", with: item.name
+        select I18n.t('ss.options.state.disabled'), from: 's[state]'
+        click_button I18n.t("ss.buttons.search")
+      end
+      expect(page).to have_css(".list-items", count: 1)
+
+      find('.list-head label.check input').set(true)
+      click_button I18n.t("ss.links.delete")
+      page.accept_alert
+      expect(page).to have_css('#notice', text: I18n.t('ss.notice.deleted'))
+
+      within ".index-search" do
+        select I18n.t('ss.options.state.disabled'), from: 's[state]'
+        click_button I18n.t("ss.buttons.search")
+      end
+      expect(page).to have_no_content(item.name)
     end
   end
 
@@ -110,6 +123,7 @@ describe "cms_users", type: :feature, dbscope: :example do
         name = unique_id
         fill_in "item[name]", with: name
         fill_in "item[uid]", with: name
+        expect(page).to have_css('#item_uid_errors', text: '')
         fill_in "item[ldap_dn]", with: "dc=#{name},dc=city,dc=example,dc=jp"
         check "item[cms_role_ids][]"
         click_on I18n.t("ss.buttons.save")

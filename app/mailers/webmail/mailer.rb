@@ -1,6 +1,10 @@
 class Webmail::Mailer < ActionMailer::Base
   include SS::AttachmentSupport
 
+  def rescue_deliver(e)
+    raise e
+  end
+
   def new_message(item)
     @item = item
 

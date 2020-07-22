@@ -24,6 +24,18 @@
               <% else %>
                 <span class="ext icon-<%= file.extname %>"><%= file.extname %></span>
               <% end %>
+              <div class="properties">
+                <span><%= I18n.t("sns.filename") %>: <%= file.name %></span><br>
+                <% if file.image? %>
+                  <% img = Magick::ImageList.new(file.path) %>
+                  <span><%= t("sns.w_h") %>: <%= img.columns %> x <%= img.rows %></span><br>
+                <% end %>
+                <span><%= t("sns.size") %>: <%= number_to_human_size(file.size) %></span><br>
+                <span><%= t("sns.datetime") %>: <%= file.updated.strftime("%Y/%m/%d %H:%M") %></span><br>
+                <% if file.user.present? %>
+                  <span><%= t("sns.user") %>: <%= file.user.name %></span><br>
+                <% end %>
+              </div>
             <% end %>
 
             <div class="no-overflow">

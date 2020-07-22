@@ -31,7 +31,7 @@ namespace :translate do
         count += 1
 
         html = Fs.read(page.path)
-        converter = Translate::Convertor.new(@site, @site.translate_source.api_code, target.api_code)
+        converter = Translate::Convertor.new(@site, @site.translate_source, target)
         converter.convert(html)
       end
     end
@@ -63,7 +63,7 @@ namespace :translate do
           count += 1
 
           html = Fs.read(path)
-          converter = Translate::Convertor.new(@site, @site.translate_source.api_code, target.api_code)
+          converter = Translate::Convertor.new(@site, @site.translate_source, target)
           converter.convert(html)
         end
       end

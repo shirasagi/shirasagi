@@ -20,7 +20,7 @@ module SS::Model::UserTitle
 
     permit_params :code, :name, :remark, :order, :activation_date, :expiration_date
 
-    validates :code, presence: true, uniqueness: { scope: :group_id }, length: { maximum: 40 }
+    validates :code, presence: true, length: { maximum: 40 }
     validates :name, presence: true
     validates :order, presence: true
     validates :group_id, presence: true

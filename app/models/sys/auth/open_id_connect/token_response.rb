@@ -11,14 +11,21 @@ class Sys::Auth::OpenIdConnect::TokenResponse
   attr_accessor :error_uri
 
   attr_accessor :cur_item
+  attr_accessor :session_state
   attr_accessor :session_nonce
 
   validates :id_token, presence: true
 
   validates :cur_item, presence: true
+  validates :session_state, presence: true
   validates :session_nonce, presence: true
 
   validates_with Sys::Auth::OpenIdConnect::JwtValidator
+
+  def id
+    claim = (cur_item.claims.presence || cur_item.default_claims).find { |claim| jwt[claim].present? }
+    jwt[claim]
+  end
 
   def jwt
     return nil if id_token.blank?

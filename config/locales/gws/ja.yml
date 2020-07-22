@@ -134,7 +134,6 @@ ja:
       gws/role: 権限/ロール
       gws/group_permission: 管理権限
       gws/file: ファイル
-      gws/release: 公開設定
       gws/history: 変更履歴
       gws/share/history: 変更履歴
       gws/readable_setting: 閲覧権限
@@ -288,10 +287,6 @@ ja:
         custom_group_ids: 管理カスタムグループ
         custom_groups_hash: 管理カスタムグループ(ハッシュ)
         permission_level: 権限レベル
-      gws/addon/release:
-        released: 公開日時
-        release_date: 公開開始日時(予約)
-        close_date: 公開終了日時(予約)
       gws/addon/readable_setting:
         readable_setting_range: 公開範囲
         readable_group_ids: 閲覧グループ
@@ -605,3 +600,4 @@ ja:
     models:
       gws/history_archive_job: 操作履歴アーカイブ作成
       gws/compress_job: ファイル/圧縮ダウンロード
+      gws/user_title_import_job: 役職インポート

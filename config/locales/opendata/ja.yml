@@ -620,6 +620,7 @@ ja:
         tsv_id: プレビュー用データ
         content: データの内容
         order: 並び順
+        downloaded_count: ダウンロード数
       opendata/url_resource:
         file_id: クローリングファイル
         in_file: クローリングファイル

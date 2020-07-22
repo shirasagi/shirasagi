@@ -31,6 +31,9 @@ class Sys::Auth::OpenIdConnect::ImplicitFlowResponse
   private
 
   def validate_state
-    errors.add :state, :mismatch if state != session_state
+    return if state.blank? || session_state.blank?
+
+    errors.add :state, :mismatch if state != session_state[:value]
+    errors.add :state, :expired if session_state[:created] + Sys::Auth::Base::READY_STATE_EXPIRES_IN < Time.zone.now.to_i
   end
 end

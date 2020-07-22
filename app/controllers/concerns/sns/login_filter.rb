@@ -3,12 +3,14 @@ module Sns::LoginFilter
 
   included do
     protect_from_forgery except: :remote_login
+    before_action :set_organization
     after_action :user_logged_in, only: [:login]
     after_action :user_logged_out, only: [:logout]
     skip_before_action :verify_authenticity_token, raise: false unless SS.config.env.protect_csrf
     prepend_view_path "app/views/sns/login"
     layout "ss/login"
     navi_view nil
+    helper_method :default_logged_in_path
   end
 
   private
@@ -41,6 +43,15 @@ module Sns::LoginFilter
         format.json { render json: alert, status: :unprocessable_entity }
       end
     end
+  end
+
+  def set_organization
+    return if @cur_organization.present?
+
+    organizations = SS::Group.organizations.where(domains: request_host)
+    return if organizations.size != 1
+
+    @cur_organization = organizations.first
   end
 
   def user_logged_in

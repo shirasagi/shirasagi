@@ -6,7 +6,7 @@ describe "opendata_agents_nodes_my_idea", type: :feature, dbscope: :example, js:
   let!(:node) { create :opendata_node_idea, cur_site: cms_site, layout_id: layout.id }
   let!(:member) { create :opendata_node_member, cur_site: cms_site, layout_id: layout.id }
 
-  let!(:upper_html) { '<a href="new/">新規作成</a>' }
+  let!(:upper_html) { "<a href=\"new/\">#{I18n.t("ss.links.new")}</a>" }
   let!(:node_mypage) { create :opendata_node_mypage, cur_site: cms_site, layout_id: layout.id, filename: "mypage" }
   let!(:node_myidea) do
     create :opendata_node_my_idea, cur_site: cms_site, cur_node: node_mypage, layout_id: layout.id, upper_html: upper_html
@@ -33,8 +33,8 @@ describe "opendata_agents_nodes_my_idea", type: :feature, dbscope: :example, js:
   let(:item_name2) { "アイデア０２" }
   let(:item_text) { "アイデア内容" }
 
-  let(:save) { "公開保存" }
-  let(:edit) { "編集" }
+  let(:save) { I18n.t("ss.buttons.publish_save") }
+  let(:edit) { I18n.t("ss.buttons.edit") }
   let(:delete) { I18n.t('ss.buttons.delete') }
 
   before do
@@ -102,12 +102,12 @@ describe "opendata_agents_nodes_my_idea", type: :feature, dbscope: :example, js:
       fill_in "item_name", with: item_name
       fill_in "item_text", with: item_text
       check category.name
-      click_button "公開申請"
+      click_button I18n.t("ss.buttons.request")
 
       expect(page).to have_css("#ss-notice", text: I18n.t('ss.notice.saved'))
 
       click_link item_name
-      expect(page).to have_css(".status .input", text: "申請")
+      expect(page).to have_css(".status .input", text: I18n.t("ss.options.state.request"))
 
       expect(Opendata::Idea.count).to eq 1
       Opendata::Idea.first.tap do |idea|
@@ -117,7 +117,7 @@ describe "opendata_agents_nodes_my_idea", type: :feature, dbscope: :example, js:
       expect(ActionMailer::Base.deliveries.length).to eq 1
       ActionMailer::Base.deliveries.first.tap do |mail|
         expect(mail.to.first).to eq cms_user.email
-        expect(mail.subject).to eq "[承認申請]#{item_name} - #{site.name}"
+        expect(mail.subject).to eq "[#{I18n.t('workflow.mail.subject.request')}]#{item_name} - #{site.name}"
         expect(mail.body.multipart?).to be_falsey
         expect(mail.body.raw_source).to include(opendata_member(site: site).name)
         expect(mail.body.raw_source).to include(item_name)
@@ -131,12 +131,13 @@ describe "opendata_agents_nodes_my_idea", type: :feature, dbscope: :example, js:
       end
       within ".mod-workflow-approve" do
         fill_in "remand[comment]", with: remand_comment
-        click_on "承認"
+        click_on I18n.t("workflow.buttons.approve")
       end
 
+      login_opendata_member(site, node_login)
       visit index_path
       click_link item_name
-      expect(page).to have_css(".status .input", text: "公開")
+      expect(page).to have_css(".status .input", text: I18n.t("ss.options.state.public"))
       expect(page).to have_css(".workflow-comment .input", text: remand_comment)
     end
   end
