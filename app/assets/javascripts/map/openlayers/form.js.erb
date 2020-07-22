@@ -199,7 +199,7 @@ this.Openlayers_Map_Form = (function () {
         src: src
       })
     });
-    pos = [loc[1], loc[0]];
+    pos = [loc[0], loc[1]];
     feature = new ol.Feature({
       geometry: new ol.geom.Point(ol.proj.transform(pos, "EPSG:4326", "EPSG:3857")),
       markerId: (ref = opts['id']) != null ? ref : null,
@@ -272,7 +272,6 @@ this.Openlayers_Map_Form = (function () {
         while (pos[0] > 180) {
           pos[0] -= 360;
         }
-        pos.reverse();
         _this.clickMarkerId = "click";
         _this.setMarker(pos, {
           image: _this.clickIcon,

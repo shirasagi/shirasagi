@@ -23,7 +23,7 @@ this.Member_Photo_Form = (function () {
   Member_Photo_Form.getMapLoc = function (ele) {
     var latlon;
     latlon = ele.val().split(',');
-    return new google.maps.LatLng(parseFloat(latlon[0]), parseFloat(latlon[1]));
+    return new google.maps.LatLng(parseFloat(latlon[1]), parseFloat(latlon[0]));
   };
 
   Member_Photo_Form.attachMessage = function (id) {
@@ -122,6 +122,8 @@ this.Member_Photo_Form = (function () {
     });
     if (Googlemaps_Map.markers && Googlemaps_Map.markers.length > 0) {
       Googlemaps_Map.map.setCenter(markerBounds.getCenter());
+    } else {
+      Googlemaps_Map.map.setCenter(new google.maps.LatLng(Googlemaps_Map.center[0], Googlemaps_Map.center[1]));
     }
   };
 
@@ -148,14 +150,14 @@ this.Member_Photo_Form = (function () {
         lon = (lon[0] + (lon[1] / 60) + (lon[2] / 3600)) * lonRef;
         $(".mod-map .clicked").val([lat, lon].join());
         Member_Photo_Form.createMarker($(".mod-map .marker-loc"));
-        return Googlemaps_Map.map.setCenter(new google.maps.LatLng(lat, lon));
+        return Googlemaps_Map.map.setCenter(new google.maps.LatLng(lon, lat));
       });
     });
   };
 
   Member_Photo_Form.renderEvents = function () {
     google.maps.event.addListener(Googlemaps_Map.map, 'click', function (event) {
-      Member_Photo_Form.setMapLoc($(".mod-map .clicked"), event.latLng.lat(), event.latLng.lng());
+      Member_Photo_Form.setMapLoc($(".mod-map .clicked"), event.latLng.lng(), event.latLng.lat());
       return Member_Photo_Form.createMarker($(".mod-map .marker-loc"));
     });
     $(".mod-map .clear-marker").on('click', function (e) {

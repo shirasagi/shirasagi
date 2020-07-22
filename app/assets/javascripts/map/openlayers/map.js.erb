@@ -247,7 +247,7 @@ this.Openlayers_Map = (function () {
           }
         });
       }
-      pos = [marker['loc'][1], marker['loc'][0]];
+      pos = [marker['loc'][0], marker['loc'][1]];
       feature = new ol.Feature({
         geometry: new ol.geom.Point(ol.proj.transform(pos, "EPSG:4326", "EPSG:3857")),
         markerId: (ref = marker['id']) != null ? ref : id,

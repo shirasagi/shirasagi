@@ -88,7 +88,7 @@ this.Openlayers_Member_Photo_Form = (function () {
 
   Openlayers_Member_Photo_Form.prototype.setCenter = function (loc) {
     var pos;
-    pos = [loc[1], loc[0]];
+    pos = [loc[0], loc[1]];
     return this.map.getView().setCenter(ol.proj.transform(pos, "EPSG:4326", "EPSG:3857"));
   };
 
@@ -125,7 +125,7 @@ this.Openlayers_Member_Photo_Form = (function () {
         src: src
       })
     });
-    pos = [loc[1], loc[0]];
+    pos = [loc[0], loc[1]];
     feature = new ol.Feature({
       geometry: new ol.geom.Point(ol.proj.transform(pos, "EPSG:4326", "EPSG:3857")),
       markerId: (ref = opts['id']) != null ? ref : null,
@@ -187,7 +187,6 @@ this.Openlayers_Member_Photo_Form = (function () {
         while (pos[0] > 180) {
           pos[0] -= 360;
         }
-        pos.reverse();
         _this.setMapLoc($(".mod-map .clicked"), pos[0], pos[1]);
         _this.setMapLoc($(".mod-map .marker-loc"), pos[0], pos[1]);
         return _this.createMarker($(".mod-map .marker-loc"));

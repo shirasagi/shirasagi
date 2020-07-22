@@ -60,6 +60,7 @@ gem 'roo'
 gem 'liquid'
 gem 'http_accept_language'
 gem 'google-cloud-translate', '2.0.0'
+gem 'geocoder'
 
 # OAuth
 gem 'oauth2', git: 'https://github.com/oauth-xx/oauth2.git' #'~> 1.5.0'
