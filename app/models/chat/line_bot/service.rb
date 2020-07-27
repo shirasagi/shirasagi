@@ -43,7 +43,7 @@ class Chat::LineBot::Service
             answer(event)
           end
         when Line::Bot::Event::MessageType::Location
-          client.reply_message(event["replyToken"], show_facilities(event))
+          client.reply_message(event["replyToken"], select_info(event))
         end
       when Line::Bot::Event::Postback
         reply_confirm(event)
@@ -88,6 +88,10 @@ class Chat::LineBot::Service
         "type": "text",
         "text": @cur_node.chat_retry.gsub(%r{</?[^>]+?>}, "")
       })
+    elsif event['postback']['data'].split(',')[0] == 'facility'
+      client.reply_message(event["replyToken"], show_facilities(event))
+    elsif event['postback']['data'].split(',')[0] == 'event'
+      client.reply_message(event["replyToken"], show_events(event))
     end
   end
 
@@ -158,7 +162,7 @@ class Chat::LineBot::Service
       template =
         {
           "type": "template",
-          "altText": "this is a buttons template",
+          "altText": suggest_text(event, templates),
           "template": {
             "type": "buttons",
             "actions": action,
@@ -207,7 +211,7 @@ class Chat::LineBot::Service
       template =
         {
           "type": "template",
-          "altText": "this is a buttons template",
+          "altText": link_text(event, templates),
           "template": {
             "type": "buttons",
             "actions": action,
@@ -239,7 +243,7 @@ class Chat::LineBot::Service
   def question(event)
     {
       "type": "template",
-      "altText": "this is a confirm template",
+      "altText": @cur_node.question.gsub(%r{</?[^>]+?>}, ""),
       "template": {
         "type": "confirm",
         "text": @cur_node.question.gsub(%r{</?[^>]+?>}, ""),
@@ -261,10 +265,10 @@ class Chat::LineBot::Service
 
   def answer(event)
     if Chat::Node::Bot.site(@cur_site).and_public.first.present?
-      facility_search = Chat::Node::Bot.site(@cur_site).and_public.first.facility_search
+      set_location = Chat::Node::Bot.site(@cur_site).and_public.first.set_location
     end
 
-    if event.message["text"].eql?(facility_search)
+    if event.message["text"].eql?(set_location)
       send_location(event)
     else
       template = []
@@ -285,7 +289,7 @@ class Chat::LineBot::Service
     url = uri.try(:to_s)
     template = {
       "type": "template",
-      "altText": "this is a buttons template",
+      "altText": I18n.t("chat.line_bot.service.site_search"),
       "template": {
         "type": "buttons",
         "text": I18n.t("chat.line_bot.service.site_search"),
@@ -311,7 +315,7 @@ class Chat::LineBot::Service
   def send_location(event)
     client.reply_message(event["replyToken"], {
       "type": "template",
-      "altText": "searching location",
+      "altText": I18n.t("chat.line_bot.service.send_location"),
       "template": {
         "type": "buttons",
         "text": I18n.t("chat.line_bot.service.send_location"),
@@ -326,10 +330,33 @@ class Chat::LineBot::Service
     })
   end
 
+  def select_info(event)
+    {
+      "type": "template",
+      "altText": I18n.t("chat.line_bot.service.select_info"),
+      "template": {
+        "type": "buttons",
+        "text": I18n.t("chat.line_bot.service.select_info"),
+        "actions": [
+          {
+            "type": "postback",
+            "label": I18n.t("chat.line_bot.service.facility"),
+            "data": "facility, #{event.message['latitude']}, #{event.message['longitude']}"
+          },
+          {
+            "type": "postback",
+            "label": I18n.t("chat.line_bot.service.event"),
+            "data": "event, #{event.message['latitude']}, #{event.message['longitude']}"
+          }
+        ]
+      }
+    }
+  end
+
   def set_loc(event)
-    @lat = event["message"]["latitude"]
-    @lng = event["message"]["longitude"]
-    @radius = 3
+    @lat = event['postback']['data'].split(',')[1]
+    @lng = event['postback']['data'].split(',')[2]
+    @radius = @cur_node.radius
     @lat = @lat.to_f
     @lng = @lng.to_f
 
@@ -413,7 +440,125 @@ class Chat::LineBot::Service
 
       template = {
         "type": "template",
-        "altText": "this is a carousel template",
+        "altText": I18n.t("chat.line_bot.service.facility_info"),
+        "template": {
+          "type": "carousel",
+          "columns": columns,
+          "imageAspectRatio": "rectangle",
+          "imageSize": "cover"
+        }
+      }
+      template
+    end
+  end
+
+  def search_events(event)
+    set_loc(event)
+    @events = Event::Page.site(@cur_site).where(
+      map_points: {
+        "$elemMatch" => {
+          "loc" => {
+            "$geoWithin" => { "$centerSphere" => [ @loc, @radius / EARTH_RADIUS_KM ] }
+          }
+        }
+      }
+    ).to_a
+
+    @markers = @events.map do |item|
+      points = item.map_points.map do |point|
+        point[:event_url] = item.url
+        point[:distance] = ::Geocoder::Calculations.distance_between(@loc, [point[:loc][0], point[:loc][1]], units: :km) rescue 0.0
+        point[:state] = item.state
+        point[:event_id] = item.id
+        point
+      end
+      points
+    end.flatten
+
+    @facility_points = []
+    Event::Page.site(@cur_site).and_public.map do |event|
+      if event.facility_ids.present? && event.map_points.blank?
+        item = Facility::Node::Page.site(@cur_site).and_public.find(event.facility_ids).first
+        maps = Facility::Map.site(@cur_site).and_public.
+          where(filename: /\A#{::Regexp.escape(item.filename)}\//, depth: item.depth + 1).
+          where(
+            map_points: {
+              "$elemMatch" => {
+                "loc" => {
+                  "$geoWithin" => { "$centerSphere" => [ @loc, @radius / EARTH_RADIUS_KM ] }
+                }
+              }
+            }
+          ).to_a
+        maps.each do |map|
+          points = map.map_points.map do |point|
+            point[:event_url] = event.url
+            point[:distance] = ::Geocoder::Calculations.distance_between(@loc, [point[:loc][0], point[:loc][1]], units: :km) rescue 0.0
+            point[:state] = event.state
+            point[:event_id] = event.id
+            point
+          end
+          @facility_points << points.flatten
+          @facility_points.flatten!
+        end
+      end
+    end
+    @markers << @facility_points
+    @markers.flatten!
+    @markers = @markers.delete_if do |item|
+      item[:state] == "closed"
+    end
+    @markers = @markers.sort_by { |point| point[:distance] }
+    @markers = @markers[0..9]
+  end
+
+  def show_events(event)
+    search_events(event)
+    if @markers.empty?
+      client.reply_message(event['replyToken'], {
+        "type": "text",
+        "text": I18n.t("chat.line_bot.service.no_event")
+      })
+    else
+      columns = []
+      domain = @cur_site.domains.first
+      @markers.each do |map|
+        item = Event::Page.site(@cur_site).find(map[:event_id])
+        map_lat = map[:loc][1]
+        map_lng = map[:loc][0]
+        if map[:distance] > 1.0
+          distance = I18n.t("chat.line_bot.service.about") + "#{map[:distance].round(1)}km"
+        else
+          distance = I18n.t("chat.line_bot.service.about") + "#{(map[:distance] * 1000).round}m"
+        end
+        column =
+          {
+            "title": item.name,
+            "text": "#{item.venue}\n #{distance}",
+            "defaultAction": {
+              "type": "uri",
+              "label": "View detail",
+              "uri": "https://" + domain + item.url
+            },
+            "actions": [
+              {
+                "type": "uri",
+                "label": I18n.t("chat.line_bot.service.map"),
+                "uri": "https://www.google.com/maps/search/?api=1&query=#{map_lat},#{map_lng}"
+              },
+              {
+                "type": "uri",
+                "label": I18n.t("chat.line_bot.service.details"),
+                "uri": "https://" + domain + item.url
+              }
+            ]
+          }
+        columns << column
+      end
+
+      template = {
+        "type": "template",
+        "altText": I18n.t("chat.line_bot.service.event_info"),
         "template": {
           "type": "carousel",
           "columns": columns,
