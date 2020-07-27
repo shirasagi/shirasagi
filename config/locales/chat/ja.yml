@@ -27,6 +27,12 @@ ja:
         success: はい
         retry: いいえ
         choices: 選択肢
+        select_info: 何をお探しですか？
+        no_event: 近くにイベントはありません。
+        facility: 施設
+        event: イベント
+        facility_info: 施設情報
+        event_info: イベント情報
       line_report: Lineのレポート
     line_report:
       phrase/input: 入力されたフレーズ
@@ -122,7 +128,8 @@ ja:
         question: フィードバック
         chat_success: フィードバック返答(はい)
         chat_retry: フィードバック返答(いいえ)
-        facility_search: 施設検索テキスト
+        set_location: 位置情報送信テキスト
+        radius: 半径(km)
         intent_ids: シナリオ
         chat_category_ids: シナリオカテゴリー
 
@@ -181,8 +188,10 @@ ja:
         - フィードバックに対して"はい"を押された場合に表示される文章を設定できます。
       chat_retry:
         - フィードバックに対して"いいえ"を押された場合に表示される文章を設定できます。
-      facility_search:
-        - Lineで施設を検索する時のテキストを設定できます。
+      set_location:
+        - Lineで位置情報を送る時のテキストを設定できます。
+      radius:
+        - Lineで位置情報を送った時の検索範囲を設定できます。
 
   job:
     models:
