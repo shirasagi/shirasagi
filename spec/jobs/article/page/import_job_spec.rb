@@ -44,8 +44,8 @@ describe Article::Page::ImportJob, dbscope: :example do
 
       it do
         Job::Log.first.tap do |log|
-          expect(log.logs).to include(include("INFO -- : Started Job"))
-          expect(log.logs).to include(include("INFO -- : Completed Job"))
+          expect(log.logs).to include(/INFO -- : .* Started Job/)
+          expect(log.logs).to include(/INFO -- : .* Completed Job/)
         end
 
         expect(Article::Page.site(site).count).to eq 2
@@ -75,8 +75,8 @@ describe Article::Page::ImportJob, dbscope: :example do
         job.perform_now(csv_file.id)
 
         Job::Log.first.tap do |log|
-          expect(log.logs).to include(include("INFO -- : Started Job"))
-          expect(log.logs).to include(include("INFO -- : Completed Job"))
+          expect(log.logs).to include(/INFO -- : .* Started Job/)
+          expect(log.logs).to include(/INFO -- : .* Completed Job/)
         end
 
         expect(Article::Page.site(site).node(dest_node).count).to eq 1
@@ -322,8 +322,8 @@ describe Article::Page::ImportJob, dbscope: :example do
 
       it do
         Job::Log.first.tap do |log|
-          expect(log.logs).to include(include("INFO -- : Started Job"))
-          expect(log.logs).to include(include("INFO -- : Completed Job"))
+          expect(log.logs).to include(/INFO -- : .* Started Job/)
+          expect(log.logs).to include(/INFO -- : .* Completed Job/)
         end
 
         page1 = Article::Page.site(site).find_by(name: "page1")

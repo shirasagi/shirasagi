@@ -58,8 +58,8 @@ describe Rss::ImportWeatherXmlJob, dbscope: :example do
 
       expect(Job::Log.count).to eq 2
       Job::Log.all.each do |log|
-        expect(log.logs).to include(include("INFO -- : Started Job"))
-        expect(log.logs).to include(include("INFO -- : Completed Job"))
+        expect(log.logs).to include(/INFO -- : .* Started Job/)
+        expect(log.logs).to include(/INFO -- : .* Completed Job/)
       end
     end
   end
@@ -121,8 +121,8 @@ describe Rss::ImportWeatherXmlJob, dbscope: :example do
 
       expect(Job::Log.count).to eq 4
       Job::Log.all.each do |log|
-        expect(log.logs).to include(include("INFO -- : Started Job"))
-        expect(log.logs).to include(include("INFO -- : Completed Job"))
+        expect(log.logs).to include(/INFO -- : .* Started Job/)
+        expect(log.logs).to include(/INFO -- : .* Completed Job/)
       end
     end
   end
@@ -200,8 +200,8 @@ describe Rss::ImportWeatherXmlJob, dbscope: :example do
 
       expect(Job::Log.count).to eq 3
       Job::Log.all.each do |log|
-        expect(log.logs).to include(include("INFO -- : Started Job"))
-        expect(log.logs).to include(include("INFO -- : Completed Job"))
+        expect(log.logs).to include(/INFO -- : .* Started Job/)
+        expect(log.logs).to include(/INFO -- : .* Completed Job/)
       end
 
       expect(ActionMailer::Base.deliveries.length).to eq 10
@@ -277,8 +277,8 @@ describe Rss::ImportWeatherXmlJob, dbscope: :example do
 
       expect(Job::Log.count).to eq 2
       Job::Log.all.each do |log|
-        expect(log.logs).to include(include("INFO -- : Started Job"))
-        expect(log.logs).to include(include("INFO -- : Completed Job"))
+        expect(log.logs).to include(/INFO -- : .* Started Job/)
+        expect(log.logs).to include(/INFO -- : .* Completed Job/)
       end
 
       expect(Article::Page.count).to eq 1
@@ -382,8 +382,8 @@ describe Rss::ImportWeatherXmlJob, dbscope: :example do
 
         expect(Job::Log.count).to eq 3
         Job::Log.all.each do |log|
-          expect(log.logs).to include(include("INFO -- : Started Job"))
-          expect(log.logs).to include(include("INFO -- : Completed Job"))
+          expect(log.logs).to include(/INFO -- : .* Started Job/)
+          expect(log.logs).to include(/INFO -- : .* Completed Job/)
         end
 
         expect(ActionMailer::Base.deliveries.length).to eq 10
@@ -470,8 +470,8 @@ describe Rss::ImportWeatherXmlJob, dbscope: :example do
 
         expect(Job::Log.count).to eq 2
         Job::Log.all.each do |log|
-          expect(log.logs).to include(include("INFO -- : Started Job"))
-          expect(log.logs).to include(include("INFO -- : Completed Job"))
+          expect(log.logs).to include(/INFO -- : .* Started Job/)
+          expect(log.logs).to include(/INFO -- : .* Completed Job/)
         end
 
         expect(Article::Page.count).to eq 1
@@ -552,8 +552,8 @@ describe Rss::ImportWeatherXmlJob, dbscope: :example do
 
         expect(Job::Log.count).to eq 4
         Job::Log.all.each do |log|
-          expect(log.logs).to include(include("INFO -- : Started Job"))
-          expect(log.logs).to include(include("INFO -- : Completed Job"))
+          expect(log.logs).to include(/INFO -- : .* Started Job/)
+          expect(log.logs).to include(/INFO -- : .* Completed Job/)
         end
       end
     end
@@ -602,8 +602,8 @@ describe Rss::ImportWeatherXmlJob, dbscope: :example do
 
         expect(Job::Log.count).to eq 4
         Job::Log.all.each do |log|
-          expect(log.logs).to include(include("INFO -- : Started Job"))
-          expect(log.logs).to include(include("INFO -- : Completed Job"))
+          expect(log.logs).to include(/INFO -- : .* Started Job/)
+          expect(log.logs).to include(/INFO -- : .* Completed Job/)
         end
       end
     end

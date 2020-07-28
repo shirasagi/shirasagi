@@ -53,8 +53,8 @@ describe "webmail_export_mails", type: :feature, dbscope: :example, imap: true, 
 
         expect(Gws::Job::Log.count).to eq 1
         Job::Log.first.tap do |log|
-          expect(log.logs).to include(include('INFO -- : Started Job'))
-          expect(log.logs).to include(include('INFO -- : Completed Job'))
+          expect(log.logs).to include(/INFO -- : .* Started Job/)
+          expect(log.logs).to include(/INFO -- : .* Completed Job/)
         end
 
         within "nav.user" do
@@ -96,8 +96,8 @@ describe "webmail_export_mails", type: :feature, dbscope: :example, imap: true, 
 
         expect(Gws::Job::Log.count).to eq 1
         Job::Log.first.tap do |log|
-          expect(log.logs).to include(include('INFO -- : Started Job'))
-          expect(log.logs).to include(include('INFO -- : Completed Job'))
+          expect(log.logs).to include(/INFO -- : .* Started Job/)
+          expect(log.logs).to include(/INFO -- : .* Completed Job/)
         end
 
         within "nav.user" do
@@ -178,8 +178,8 @@ describe "webmail_export_mails", type: :feature, dbscope: :example, imap: true, 
 
       expect(Gws::Job::Log.count).to eq 1
       Job::Log.first.tap do |log|
-        expect(log.logs).to include(include('INFO -- : Started Job'))
-        expect(log.logs).to include(include('INFO -- : Completed Job'))
+        expect(log.logs).to include(/INFO -- : .* Started Job/)
+        expect(log.logs).to include(/INFO -- : .* Completed Job/)
       end
 
       within "nav.user" do
@@ -221,8 +221,8 @@ describe "webmail_export_mails", type: :feature, dbscope: :example, imap: true, 
 
       expect(Gws::Job::Log.count).to eq 1
       Job::Log.first.tap do |log|
-        expect(log.logs).to include(include('INFO -- : Started Job'))
-        expect(log.logs).to include(include('INFO -- : Completed Job'))
+        expect(log.logs).to include(/INFO -- : .* Started Job/)
+        expect(log.logs).to include(/INFO -- : .* Completed Job/)
       end
 
       within "nav.user" do
@@ -271,8 +271,8 @@ describe "webmail_export_mails", type: :feature, dbscope: :example, imap: true, 
 
       expect(Gws::Job::Log.count).to eq 1
       Job::Log.first.tap do |log|
-        expect(log.logs).to include(include('INFO -- : Started Job'))
-        expect(log.logs).to include(include('INFO -- : Completed Job'))
+        expect(log.logs).to include(/INFO -- : .* Started Job/)
+        expect(log.logs).to include(/INFO -- : .* Completed Job/)
       end
 
       within "nav.user" do
