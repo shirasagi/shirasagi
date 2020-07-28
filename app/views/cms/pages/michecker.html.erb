@@ -1,5 +1,3 @@
-<%= stylesheet_link_tag "cms/preview/datatables" %>
-
 <div class="michecker" id="ss-michecker">
   <div class="michecker__main" id="resize">
     <iframe class="michecker__main-content" src="<%= cms_preview_path(path: @item.url[1..-1], "no-controller" => true) %>" frameborder="none"></iframe>
@@ -40,5 +38,3 @@
     handles: 's'
   });
 <% end %>
-<%= javascript_include_tag('cms/preview/datatables') %>
-<%= javascript_include_tag('cms/preview/jquery-ui') %>
