@@ -39,6 +39,9 @@ ja:
         id: ユーザーIDまたはメールアドレス
         password: パスワード
         organization_uid: 職員番号またはメールアドレス
+      index:
+        updated: "更新日時：%{updated}"
+        released: "公開日時：%{released}"
     navi:
       readable: 閲覧一覧
       editable: 管理一覧
