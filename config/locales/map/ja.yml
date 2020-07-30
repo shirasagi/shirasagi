@@ -43,6 +43,8 @@ ja:
       map_reference_method:
         direct: 地図上で個別に地点を選択する
         page: 定型フォームで選択されたページの地点を参照する
+    hide: 非表示
+    show: 表示
 
   modules:
     map: 地図
@@ -57,11 +59,13 @@ ja:
         marker_name: マーカー名
         marker_text: 説明
         marker_loc: 座標
+        marker_number: 番号
         marker_link: リンク
         set_center_position: 中心位置
         set_zoom_level: ズームレベル
         map_reference_method: 指定方法
         map_reference_column_name: 項目名
+        map_link: Googleマップのリンク
 
   tooltip:
     map/addon/page:
@@ -115,3 +119,6 @@ ja:
         - 選択された地点が公開画面に表示されます。
         -
         - 項目名を選択した場合、選択した項目名に設定されているページの地点が公開画面に表示されます。
+      map_link:
+        - マーカーの番号順に経路が表示されるGoogleマップのリンクを表示します。
+        - マーカーに番号がない場合は、そのマーカーは経路に含まれません。

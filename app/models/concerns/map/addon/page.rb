@@ -12,10 +12,11 @@ module Map::Addon
       field :set_zoom_level, type: Integer
       field :map_reference_method, type: String, default: "direct"
       field :map_reference_column_name, type: String
+      field :map_link, type: String, default: "hide"
 
       permit_params map_points: [ :name, :loc, :text, :link, :image ]
       permit_params :map_zoom_level, :center_setting, :set_center_position, :zoom_setting, :set_zoom_level
-      permit_params :map_reference_method, :map_reference_column_name
+      permit_params :map_reference_method, :map_reference_column_name, :map_link
 
       after_save :save_geolocation, if: ->{ map_points.present? }
       after_destroy :remove_geolocation
@@ -81,6 +82,24 @@ module Map::Addon
       return if map_reference_column.blank? || map_reference_column.page_id.blank?
 
       Cms::Page.site(cur_site).where(id: map_reference_column.page_id).first
+    end
+
+    def map_link_options
+      %w(hide show).map do |v|
+        [ I18n.t("map.#{v}"), v ]
+      end
+    end
+
+    def map_url
+      if self.map_points.present?
+        url = "https://www.google.co.jp/maps/dir/"
+        map_points = self.map_points.sort_by! { |map_point| map_point[:number] }
+        map_points.each do |map_point|
+          next if map_point[:number].blank?
+          url += map_point[:loc].join(',') + "/"
+        end
+        url
+      end
     end
   end
 end
