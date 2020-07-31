@@ -1971,6 +1971,7 @@ ja:
     cms/addon/redirect_link:
       redirect_link:
         - ページを別URLにリダイレクトする際に入力します。
+        - リダイレクトするにはレイアウトが設定されている必要があります。
 
   all_content:
     page_id: ページID
