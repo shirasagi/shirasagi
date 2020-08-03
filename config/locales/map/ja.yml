@@ -45,6 +45,8 @@ ja:
         page: 定型フォームで選択されたページの地点を参照する
     hide: 非表示
     show: 表示
+    googlemap_url: Googleマップで見る
+    googlemap_route_url: Googleマップでルートを見る
 
   modules:
     map: 地図
@@ -66,6 +68,14 @@ ja:
         map_reference_method: 指定方法
         map_reference_column_name: 項目名
         map_link: Googleマップのリンク
+        map_goal: ゴール地点
+        map_route: ルート設定
+        map_points: マーカー
+        marker_route: "例：1,2,3,4"
+
+  errors:
+    messages:
+      uniq_number: に同じ番号が使用されています。
 
   tooltip:
     map/addon/page:
@@ -122,3 +132,12 @@ ja:
       map_link:
         - マーカーの番号順に経路が表示されるGoogleマップのリンクを表示します。
         - マーカーに番号がない場合は、そのマーカーは経路に含まれません。
+        - ルート設定を入力している場合は、ルート設定の経路が表示されます。
+      map_goal:
+        - Googleマップで表示する経路の目的地を設定できます。
+        - 目的地に設定したいマーカーの番号を入力します。
+        - ルート設定には反映されません。
+      map_route:
+        - Googleマップで表示する経路を設定できます。
+        - カンマ(,)区切りでマーカーの番号を入力します。
+        - 例：1,2,3,4

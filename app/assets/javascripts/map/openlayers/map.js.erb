@@ -164,13 +164,22 @@ this.Openlayers_Map = (function () {
     })(this));
   };
 
-  Openlayers_Map.prototype.createMarkerStyle = function (iconSrc) {
+  Openlayers_Map.prototype.createMarkerStyle = function (iconSrc, number) {
     return new ol.style.Style({
       image: new ol.style.Icon({
         anchor: [0.5, 0],
         anchorXUnits: 'fraction',
         anchorYUnits: 'fraction',
         src: iconSrc
+      }),
+      text: new ol.style.Text({
+        fill: new ol.style.Fill({color: "#333"}),
+        stroke: new ol.style.Stroke({color: "#333", width: 1}),
+        scale: 1.6,
+        textAlign: "center",
+        textBaseline: "center",
+        offsetY: -15,
+        text: number
       })
     });
   };
@@ -251,17 +260,19 @@ this.Openlayers_Map = (function () {
   };
 
   Openlayers_Map.prototype.renderMarkers = function (markers) {
-    var feature, iconSrc, id, marker, markerHtml, name, pos, style, text;
-
+    var feature, iconSrc, id, marker, markerHtml, name, pos, ref, ref1, ref2, results, style, text, number, loc, url;
+    results = [];
     for (id = 0; id < markers.length; id++) {
       marker = markers[id];
       iconSrc = marker['image'] || this.markerIcon || '/assets/img/openlayers/marker1.png';
+      number = marker['number'];
       style = this.createMarkerStyle(iconSrc);
 
       name = marker['name'];
       text = marker['html'] || marker['text'];
       pos = [marker['loc'][0], marker['loc'][1]];
-
+      loc = marker['loc'];
+      url = "https://www.google.co.jp/maps/search/" + loc;
       markerHtml = "";
       if (name) {
         markerHtml += '<p>' + name + '</p>';
@@ -274,6 +285,9 @@ this.Openlayers_Map = (function () {
             markerHtml += '<p>' + this + '</p>';
           }
         });
+      }
+      if (loc) {
+        markerHtml += '<p><a href="' + url + '">' + "<%= I18n.t('map.googlemap_url') %>" + '</a></p>';
       }
       if (this.showGoogleMapsSearch) {
         markerHtml += Googlemaps_Map.getMapsSearchHtml(pos[1], pos[0]);

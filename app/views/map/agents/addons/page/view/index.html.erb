@@ -13,6 +13,6 @@
   <% end %>
   <div id="map-canvas" style="width: 100%; height: 400px;"></div>
   <% if @cur_page.map_link == "show" %>
-    <%= link_to "Googleマップでの表示はこちら", @cur_page.map_url %>
+    <%= link_to t('map.googlemap_route_url'), @cur_page.set_map_url, class: "map-link" %>
   <% end %>
 </section>

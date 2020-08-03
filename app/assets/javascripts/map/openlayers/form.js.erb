@@ -187,7 +187,8 @@ this.Openlayers_Map_Form = (function () {
   Openlayers_Map_Form.prototype.renderMarkers = function () {
     $(".mod-map dd.marker").each((function (_this) {
       return function (i, e) {
-        var loc, image, opts;
+        var loc, image, opts, num;
+        num = $(e).find(".marker-number").val();
         $(e).attr("data-id", _this.dataID);
         if ($(e).find(".marker-loc").val()) {
           loc = _this.getMapLoc($(e).find(".marker-loc"));
@@ -198,7 +199,7 @@ this.Openlayers_Map_Form = (function () {
           if (image) {
             opts["image"] = image;
           }
-          _this.setMarker(loc, opts);
+          _this.setMarker(loc, opts, num);
         }
         //Map_Form.attachMessage(Map_Form.dataID)
         _this.dataID += 1;
@@ -215,21 +216,25 @@ this.Openlayers_Map_Form = (function () {
     }
     markerHtml = "";
     $('dd[data-id = "' + markerId + '"]').each(function () {
-      var name, text;
+      var name, text, loc, url;
       name = $(this).find(".marker-name").val();
       text = $(this).find(".marker-text").val();
       loc = $(this).find(".marker-loc").val();
+      url = "https://www.google.co.jp/maps/search/" + loc;
       if (name) {
         markerHtml += '<p>' + name + '</p>';
       }
       if (text) {
-        return $.each(text.split(/[\r\n]+/), function () {
+        $.each(text.split(/[\r\n]+/), function () {
           if (this.match(/^https?:\/\//)) {
-            return markerHtml += '<p><a href="' + this + '">' + this + '</a></p>';
+            markerHtml += '<p><a href="' + this + '">' + this + '</a></p>';
           } else {
-            return markerHtml += '<p>' + this + '</p>';
+            markerHtml += '<p>' + this + '</p>';
           }
         });
+      }
+      if (loc) {
+        return markerHtml += '<p><a href="' + url + '">' + "<%= I18n.t('map.googlemap_url') %>" + '</a></p>';
       }
     });
     if (this.showGoogleMapsSearch) {
@@ -245,11 +250,12 @@ this.Openlayers_Map_Form = (function () {
     this.popupOverlay.setPosition(e.coordinate);
   };
 
-  Openlayers_Map_Form.prototype.setMarker = function (loc, opts) {
-    var feature, iconSrc, pos, style;
+  Openlayers_Map_Form.prototype.setMarker = function (loc, opts, num) {
+    var feature, iconSrc, pos, ref, ref1, ref2, src, style, number;
     if (opts == null) {
       opts = {};
     }
+    number = num;
     iconSrc = this.markerIcon;
     if (opts['image']) {
       iconSrc = opts['image'];
@@ -260,6 +266,15 @@ this.Openlayers_Map_Form = (function () {
         anchorXUnits: 'fraction',
         anchorYUnits: 'fraction',
         src: iconSrc
+      }),
+      text: new ol.style.Text({
+        fill: new ol.style.Fill({color: "#333"}),
+        stroke: new ol.style.Stroke({color: "#333", width: 1}),
+        scale: 1.6,
+        textAlign: "center",
+        textBaseline: "center",
+        offsetY: -15,
+        text: number,
       })
     });
     pos = [loc[0], loc[1]];
@@ -493,8 +508,8 @@ this.Openlayers_Map_Form = (function () {
   };
 
   Openlayers_Map_Form.prototype.clickSetMarker = function (ele) {
-    var loc;
-
+    var dataId, loc, num;
+    loc = null;
     if ($(".mod-map .clicked").val() !== "") {
       loc = $(".mod-map .clicked").val();
       this.removeClickMarker();
@@ -507,7 +522,7 @@ this.Openlayers_Map_Form = (function () {
   };
 
   Openlayers_Map_Form.prototype.createMarker = function (ele, loc) {
-    var dataId, opts, image;
+    var dataId, opts, image, num;
 
     if (!Openlayers_Map_Form.validateLoc(loc)) {
       alert(<%= Array(I18n.t('map.alert.invalid_location')).join('\n').to_json %>);
@@ -519,14 +534,14 @@ this.Openlayers_Map_Form = (function () {
     ele.addClass("active");
     dataId = parseInt(ele.attr("data-id"));
     this.removeMarker(dataId);
-
+    num = ele.find(".marker-number").val();
     opts = {}
     opts["id"] = dataId;
     image = ele.find('[name="item[map_points][][image]"]').val();
     if (image) {
       opts["image"] = image;
     }
-    this.setMarker(this.getMapLoc(ele.find(".marker-loc")), opts);
+    this.setMarker(this.getMapLoc(ele.find(".marker-loc")), opts, num);
   };
 
   Openlayers_Map_Form.prototype.clearPointForm = function (ele) {
