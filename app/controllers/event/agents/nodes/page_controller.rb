@@ -125,6 +125,7 @@ class Event::Agents::Nodes::PageController < ApplicationController
         event.map_points.each do |map_point|
           marker_info = view_context.monthly_map_point_info(event, map_point)
           map_point[:html] = marker_info
+          map_point[:number] = ""
           @markers << map_point
         end
       end
@@ -138,8 +139,9 @@ class Event::Agents::Nodes::PageController < ApplicationController
           items = Facility::Map.site(@cur_site).and_public.
             where(filename: /^#{::Regexp.escape(facility.filename)}\//, depth: facility.depth + 1).order_by(order: 1).first.map_points
           items.each do |item|
-            marker_info = view_context.monthly_facility_info(facility, dates)
+            marker_info = view_context.monthly_facility_info(facility, dates, item[:loc])
             item[:html] = marker_info
+            item[:number] = ""
             @markers << item
           end
         end

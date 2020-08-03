@@ -18,7 +18,7 @@ class Event::Agents::Pages::PageController < ApplicationController
         items = Facility::Map.site(@cur_site).and_public.
           where(filename: /^#{::Regexp.escape(facility.filename)}\//, depth: facility.depth + 1).order_by(order: 1).first.map_points
         items.each do |item|
-          marker_info = view_context.render_facility_info(facility)
+          marker_info = view_context.render_facility_info(facility, item[:loc])
           item[:html] = marker_info
           map_points << item
         end
