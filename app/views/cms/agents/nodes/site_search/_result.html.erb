@@ -14,8 +14,9 @@
           if source.dig('file', 'extname').present?
             title = "#{title} (#{source.dig('file', 'extname').upcase} #{number_to_human_size(source.dig('file', 'size'))})"
           end
-          date = source['released'].presence || source['updated'].presence || source['created'].presence
-          date = Time.zone.parse(date) rescue nil if date
+          date = source['released'].presence.try { |time| Time.zone.parse(time) rescue nil }
+          date ||= source['updated'].presence.try { |time| Time.zone.parse(time) rescue nil }
+          date ||= source['created'].presence.try { |time| Time.zone.parse(time) rescue nil }
         %>
         <h2><%= link_to title, source['url'], class: 'title' %></h2>
         <div class="meta">
