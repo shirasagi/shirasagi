@@ -133,10 +133,18 @@ this.Googlemaps_Map = (function () {
     markerBounds = new google.maps.LatLngBounds();
     $.each(Googlemaps_Map.markers, function (id, value) {
       var name, text, opts;
-
+      if (value["number"] == "") {
+        value["number"] = null;
+      }
       opts = {
         position: new google.maps.LatLng(value["loc"][1], value["loc"][0]),
-        map: Googlemaps_Map.map
+        map: Googlemaps_Map.map,
+        label: {
+          text: value["number"],
+          color: '#ffffff',
+          fontWeight: 'bold',
+          fontSize: '16px'
+        }
       };
       if (value["image"]) {
         opts["icon"] = value["image"];
@@ -152,6 +160,7 @@ this.Googlemaps_Map = (function () {
       } else if (value["name"] || value["text"]) {
         name = value["name"];
         text = value["text"];
+        var url = "https://www.google.co.jp/maps/search/" + value["loc"];
         markerHtml = '<div class="marker-info">';
         if (name && name !== "") {
           markerHtml += '<p>' + name + '</p>';
@@ -164,6 +173,9 @@ this.Googlemaps_Map = (function () {
               }
             });
           }
+        }
+        if (url) {
+          markerHtml += '<p><a href="' + url + '">' + "<%= I18n.t('map.googlemap_url') %>" + '</a></p>';
         }
         markerHtml += '</div>';
       }

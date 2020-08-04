@@ -45,11 +45,12 @@ this.Map_Form = (function () {
         Googlemaps_Map.openedInfo.close();
       }
       $('dd[data-id = "' + id + '"]').each(function () {
-        var markerHtml, name, text, loc;
+        var markerHtml, name, text, loc, url;
         markerHtml = "";
         name = $(this).find(".marker-name").val();
         text = $(this).find(".marker-text").val();
         loc = $(this).find(".marker-loc-input").val();
+        url = "https://www.google.co.jp/maps/search/" + loc;
         if (name !== "" || text !== "") {
           markerHtml = '<div class="marker-info">';
           if (name !== "") {
@@ -63,6 +64,9 @@ this.Map_Form = (function () {
                 return markerHtml += '<p>' + this + '</p>';
               }
             });
+          }
+          if (loc) {
+            marker_html += '<p><a href="' + url + '">' + "<%= I18n.t('map.googlemap_url') %>" + '</a></p>';
           }
         }
 
@@ -236,8 +240,9 @@ this.Map_Form = (function () {
     }
   };
 
-  Map_Form.clickSetMarker = function (ele) {
-    var loc;
+  Map_Form.createMarker = function (ele) {
+    var dataId, loc, num;
+    loc = null;
     if ($(".mod-map .clicked").val() !== "") {
       loc = $(".mod-map .clicked").val();
       Map_Form.removeClickMarker();
@@ -272,10 +277,17 @@ this.Map_Form = (function () {
       Googlemaps_Map.markers[dataId].setMap(null);
     }
 
+    num = ele.find(".marker-number").val()
     image = ele.find('[name="item[map_points][][image]"]').val();
     opts = {
       position: Map_Form.getMapLoc(ele.find(".marker-loc")),
-      map: Googlemaps_Map.map
+      map: Googlemaps_Map.map,
+      label: {
+        text: num,
+        color: '#ffffff',
+        fontWeight: 'bold',
+        fontSize: '16px'
+      }
     };
     if (image) {
       opts["icon"] = image;
@@ -289,7 +301,7 @@ this.Map_Form = (function () {
   };
 
   Map_Form.renderMarkers = function () {
-    var i, len, markerBounds;
+    var i, len, markerBounds, num;
     markerBounds = new google.maps.LatLngBounds();
     if (Googlemaps_Map.markers) {
       var ref = Googlemaps_Map.markers;
@@ -305,11 +317,18 @@ this.Map_Form = (function () {
       if ($(this).find(".marker-loc").val() !== "") {
         var loc = Map_Form.getMapLoc($(this).find(".marker-loc"));
         var image = $(this).find('[name="item[map_points][][image]"]').val();
+        num = $(this).find(".marker-number").val()
         var opts = {};
 
         opts = {
           position: loc,
-          map: Googlemaps_Map.map
+          map: Googlemaps_Map.map,
+          label: {
+            text: num,
+            color: '#ffffff',
+            fontWeight: 'bold',
+            fontSize: '16px'
+          }
         };
         if (image) {
           opts["icon"] = image;
