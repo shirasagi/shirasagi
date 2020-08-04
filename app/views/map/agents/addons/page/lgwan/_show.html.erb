@@ -1,3 +1,12 @@
 <% @item.map_points.each do |map_point| %>
   <p><%= "#{map_point[:name]} #{map_point[:loc]}" %></p>
 <% end %>
+
+<dl class="see">
+  <dt><%= @model.t :map_link %></dt>
+  <dd><%= I18n.t("map.#{@item.map_link}") %></dd>
+  <dt><%= @model.t :map_goal %></dt>
+  <dd><%= @item.map_goal %></dd>
+  <dt><%= @model.t :map_route %></dt>
+  <dd><%= @item.map_route %></dd>
+</dl>

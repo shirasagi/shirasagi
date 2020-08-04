@@ -92,7 +92,7 @@
         </p>
         <%== render_marker_picker(site: @cur_site) %>
         <p>
-          <%= number_field_tag "item[map_points][][number]", point[:number], min: 1, class: "marker-number", placeholder: @item.t(:marker_number) %>
+          <%= number_field_tag "item[map_points][][number]", point[:number], min: 1, max: 99, class: "marker-number", placeholder: @item.t(:marker_number) %>
         </p>
         <p>
           <%= text_field_tag "item[map_points][][loc_]", point[:loc].join(","), class: "marker-loc-input loc", placeholder: @item.t(:marker_loc) %>
@@ -120,7 +120,7 @@
   </dl>
   <dl class="see map-goal">
     <dt><%= @model.t :map_goal %><%= @model.tt :map_goal %></dt>
-    <dd><%= number_field_tag "item[map_goal]", @item.map_goal, min: 1, placeholder: @item.t(:marker_number) %></dd>
+    <dd><%= number_field_tag "item[map_goal]", @item.map_goal, min: 1, max: 99, placeholder: @item.t(:marker_number) %></dd>
   </dl>
   <dl class="see map-route">
     <dt><%= @model.t :map_route %><%= @model.tt :map_route %></dt>
