@@ -20,7 +20,7 @@ module Opendata::Addon::ZipDataset
   end
 
   def compression_dataset
-    ::FileUtils.rm_rf(zip_path)
+    ::FileUtils.rm_rf(zip_path) if zip_exists?
     ::FileUtils.mkdir_p(::File.dirname(zip_path))
     return if resources.blank?
 
@@ -63,7 +63,7 @@ module Opendata::Addon::ZipDataset
   end
 
   def remove_dataset_zip
-    FileUtils.rm_rf(zip_path) if zip_exists?
+    ::FileUtils.rm_rf(zip_path) if zip_exists?
   rescue => e
     Rails.logger.warn("#{e.class} (#{e.message}):\n  #{e.backtrace.join("\n  ")}")
   end
