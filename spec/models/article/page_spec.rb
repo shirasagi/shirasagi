@@ -618,8 +618,8 @@ describe Article::Page, dbscope: :example do
       end
 
       context "with Map::Addon::Page" do
-        let!(:map_point1) { { "name" => unique_id, "loc" => [ rand(30..40), rand(135..145) ], "text" => unique_id } }
-        let!(:map_point2) { { "name" => unique_id, "loc" => [ rand(30..40), rand(135..145) ], "text" => unique_id } }
+        let!(:map_point1) { { "name" => unique_id, "loc" => [ rand(135..145), rand(30..40) ], "text" => unique_id } }
+        let!(:map_point2) { { "name" => unique_id, "loc" => [ rand(135..145), rand(30..40) ], "text" => unique_id } }
         let!(:map_points) { [ map_point1, map_point2 ] }
         let!(:page) { create :article_page, cur_node: node, map_points: map_points, map_zoom_level: rand(10..15) }
 
