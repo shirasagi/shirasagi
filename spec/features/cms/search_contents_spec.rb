@@ -455,6 +455,174 @@ describe "cms_search", type: :feature, dbscope: :example, js: true do
         expect(page).to have_no_css(".result table a", text: "[TEST]1")
         expect(page).to have_no_css(".result table a", text: "[TEST]nothing")
       end
+
+      context "with contact_group_id" do
+        let(:root_group) { create(:revision_root_group) }
+        let(:group) { create(:revision_new_group) }
+
+        before(:each) do
+          create(:revisoin_page, cur_site: site, group: group)
+        end
+
+        it "replace_html with string" do
+          visit html_index_path
+          expect(current_path).not_to eq sns_login_path
+          within "form.index-search" do
+            fill_in "keyword", with: group.contact_tel
+            click_button I18n.t('ss.buttons.search')
+          end
+          wait_for_ajax
+          expect(page).to have_no_css(".result table a", text: "[TEST]top")
+          expect(page).to have_no_css(".result table a", text: "[TEST]child")
+          expect(page).to have_no_css(".result table a", text: "[TEST]1.html")
+          expect(page).to have_no_css(".result table a", text: "[TEST]nothing")
+          expect(page).to have_css(".result table a", text: "自動交付機・コンビニ交付サービスについて")
+
+          page.accept_confirm do
+            within "form.index-search" do
+              fill_in "keyword", with: group.contact_tel
+              fill_in "replacement", with: "contact_tel"
+              click_button I18n.t("ss.buttons.replace_all")
+            end
+          end
+          expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+
+          within "form.index-search" do
+            fill_in "keyword", with: "contact_tel"
+            click_button I18n.t('ss.buttons.search')
+          end
+          wait_for_ajax
+          expect(page).to have_no_css(".result table a", text: "[TEST]top")
+          expect(page).to have_no_css(".result table a", text: "[TEST]child")
+          expect(page).to have_no_css(".result table a", text: "[TEST]1.html")
+          expect(page).to have_no_css(".result table a", text: "[TEST]nothing")
+          expect(page).to have_css(".result table a", text: "自動交付機・コンビニ交付サービスについて")
+
+          within "form.index-search" do
+            fill_in "keyword", with: group.contact_fax
+            click_button I18n.t('ss.buttons.search')
+          end
+          wait_for_ajax
+          expect(page).to have_no_css(".result table a", text: "[TEST]top")
+          expect(page).to have_no_css(".result table a", text: "[TEST]child")
+          expect(page).to have_no_css(".result table a", text: "[TEST]1.html")
+          expect(page).to have_no_css(".result table a", text: "[TEST]nothing")
+          expect(page).to have_css(".result table a", text: "自動交付機・コンビニ交付サービスについて")
+
+          page.accept_confirm do
+            within "form.index-search" do
+              fill_in "keyword", with: group.contact_fax
+              fill_in "replacement", with: "contact_fax"
+              click_button I18n.t("ss.buttons.replace_all")
+            end
+          end
+          expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+
+          within "form.index-search" do
+            fill_in "keyword", with: "contact_fax"
+            click_button I18n.t('ss.buttons.search')
+          end
+          wait_for_ajax
+          expect(page).to have_no_css(".result table a", text: "[TEST]top")
+          expect(page).to have_no_css(".result table a", text: "[TEST]child")
+          expect(page).to have_no_css(".result table a", text: "[TEST]1.html")
+          expect(page).to have_no_css(".result table a", text: "[TEST]nothing")
+          expect(page).to have_css(".result table a", text: "自動交付機・コンビニ交付サービスについて")
+
+          within "form.index-search" do
+            fill_in "keyword", with: group.contact_email
+            click_button I18n.t('ss.buttons.search')
+          end
+          wait_for_ajax
+          expect(page).to have_no_css(".result table a", text: "[TEST]top")
+          expect(page).to have_no_css(".result table a", text: "[TEST]child")
+          expect(page).to have_no_css(".result table a", text: "[TEST]1.html")
+          expect(page).to have_no_css(".result table a", text: "[TEST]nothing")
+          expect(page).to have_css(".result table a", text: "自動交付機・コンビニ交付サービスについて")
+
+          page.accept_confirm do
+            within "form.index-search" do
+              fill_in "keyword", with: group.contact_email
+              fill_in "replacement", with: "contact_email"
+              click_button I18n.t("ss.buttons.replace_all")
+            end
+          end
+          expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+
+          within "form.index-search" do
+            fill_in "keyword", with: "contact_email"
+            click_button I18n.t('ss.buttons.search')
+          end
+          wait_for_ajax
+          expect(page).to have_no_css(".result table a", text: "[TEST]top")
+          expect(page).to have_no_css(".result table a", text: "[TEST]child")
+          expect(page).to have_no_css(".result table a", text: "[TEST]1.html")
+          expect(page).to have_no_css(".result table a", text: "[TEST]nothing")
+          expect(page).to have_css(".result table a", text: "自動交付機・コンビニ交付サービスについて")
+
+          within "form.index-search" do
+            fill_in "keyword", with: group.contact_link_url
+            click_button I18n.t('ss.buttons.search')
+          end
+          wait_for_ajax
+          expect(page).to have_no_css(".result table a", text: "[TEST]top")
+          expect(page).to have_no_css(".result table a", text: "[TEST]child")
+          expect(page).to have_no_css(".result table a", text: "[TEST]1.html")
+          expect(page).to have_no_css(".result table a", text: "[TEST]nothing")
+          expect(page).to have_css(".result table a", text: "自動交付機・コンビニ交付サービスについて")
+
+          page.accept_confirm do
+            within "form.index-search" do
+              fill_in "keyword", with: group.contact_link_url
+              fill_in "replacement", with: "contact_link_url"
+              click_button I18n.t("ss.buttons.replace_all")
+            end
+          end
+          expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+
+          within "form.index-search" do
+            fill_in "keyword", with: "contact_link_url"
+            click_button I18n.t('ss.buttons.search')
+          end
+          wait_for_ajax
+          expect(page).to have_no_css(".result table a", text: "[TEST]top")
+          expect(page).to have_no_css(".result table a", text: "[TEST]child")
+          expect(page).to have_no_css(".result table a", text: "[TEST]1.html")
+          expect(page).to have_no_css(".result table a", text: "[TEST]nothing")
+          expect(page).to have_css(".result table a", text: "自動交付機・コンビニ交付サービスについて")
+
+          within "form.index-search" do
+            fill_in "keyword", with: group.contact_link_name
+            click_button I18n.t('ss.buttons.search')
+          end
+          wait_for_ajax
+          expect(page).to have_no_css(".result table a", text: "[TEST]top")
+          expect(page).to have_no_css(".result table a", text: "[TEST]child")
+          expect(page).to have_no_css(".result table a", text: "[TEST]1.html")
+          expect(page).to have_no_css(".result table a", text: "[TEST]nothing")
+          expect(page).to have_css(".result table a", text: "自動交付機・コンビニ交付サービスについて")
+
+          page.accept_confirm do
+            within "form.index-search" do
+              fill_in "keyword", with: group.contact_link_name
+              fill_in "replacement", with: "contact_link_name"
+              click_button I18n.t("ss.buttons.replace_all")
+            end
+          end
+          expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+
+          within "form.index-search" do
+            fill_in "keyword", with: "contact_link_name"
+            click_button I18n.t('ss.buttons.search')
+          end
+          wait_for_ajax
+          expect(page).to have_no_css(".result table a", text: "[TEST]top")
+          expect(page).to have_no_css(".result table a", text: "[TEST]child")
+          expect(page).to have_no_css(".result table a", text: "[TEST]1.html")
+          expect(page).to have_no_css(".result table a", text: "[TEST]nothing")
+          expect(page).to have_css(".result table a", text: "自動交付機・コンビニ交付サービスについて")
+        end
+      end
     end
 
     context "ss-909" do

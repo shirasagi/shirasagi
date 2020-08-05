@@ -43,12 +43,13 @@ module Chorg::Substituter
 
   # @private
   class StringSubstituter < BaseSubstituter
-    def initialize(from_value, to_value, key = nil, group_ids = nil)
+    def initialize(from_value, to_value, key = nil, group_ids = nil, opts = {})
       @from_value = from_value
       @to_value = to_value.nil? ? "" : to_value
       @from_regex = /#{::Regexp.escape(@from_value)}/
       @key = key
       @group_ids = group_ids
+      @forced_overwrite = opts['forced_overwrite'].present?
     end
 
     def call(key, value, group_id)
@@ -62,32 +63,33 @@ module Chorg::Substituter
     end
 
     def overwrite_field?(key, value, group_id)
-      @key == key && overwrite_fields.include?(key) && @from_value.presence == value.presence && @group_ids.include?(group_id)
+      @key == key && overwrite_fields.include?(key) && (@forced_overwrite || @from_value.presence == value.presence) &&
+        @group_ids.include?(group_id)
     end
 
     def overwrite_fields
-      %(contact_tel contact_fax contact_email contact_link_url contact_link_name)
+      %w(contact_tel contact_fax contact_email contact_link_url contact_link_name)
     end
   end
 
   # @private
   module HierarchySubstituterSupport
-    def self.collect(from_value, to_value, key = nil, group_ids = nil, separator)
-      from_parts = from_value.split(separator)
-      to_parts = to_value.split(separator)
+    def self.collect(from_value, to_value, key = nil, group_ids = nil, opts = {})
+      from_parts = from_value.split(opts['separator'])
+      to_parts = to_value.split(opts['separator'])
       from_leaf = from_parts.last
       to_leaf = to_parts.last
 
-      substituters = [StringSubstituter.new(from_value, to_value, key, group_ids)]
-      substituters << StringSubstituter.new(from_leaf, to_leaf, key, group_ids) if from_leaf.present? && to_leaf.present?
+      substituters = [StringSubstituter.new(from_value, to_value, key, group_ids, opts)]
+      substituters << StringSubstituter.new(from_leaf, to_leaf, key, group_ids, opts) if from_leaf.present? && to_leaf.present?
       if from_parts.length > 1 && from_parts.length == to_parts.length
         1.upto(from_parts.length - 1) do |index|
           from_hierarchy = to_parts[0..(index - 1)]
           from_hierarchy << from_parts[index]
-          from_hierarchy = from_hierarchy.join(separator)
-          to_hierarchy = to_parts[0..index].join(separator)
+          from_hierarchy = from_hierarchy.join(opts['separator'])
+          to_hierarchy = to_parts[0..index].join(opts['separator'])
           if from_hierarchy.present? && to_hierarchy.present? && from_hierarchy != to_hierarchy
-            substituters << StringSubstituter.new(from_hierarchy, to_hierarchy, key, group_ids)
+            substituters << StringSubstituter.new(from_hierarchy, to_hierarchy, key, group_ids, opts)
           end
         end
       end
@@ -97,9 +99,11 @@ module Chorg::Substituter
 
   # @private
   class ChainSubstituter
-    def initialize(substituters = [])
+    def initialize(substituters = [], opts = {})
       @substituters = [] + substituters
       @sorted = false
+      @opts = opts
+      @opts['separator'] = '/'
     end
 
     def config
@@ -115,10 +119,10 @@ module Chorg::Substituter
         if config.ids_fields.include?(k.to_s)
           @substituters << IdSubstituter.new(from_value, to_value, k, group_ids)
         elsif from_value.is_a?(String) && to_value.is_a?(String)
-          if from_value.include?("/")
-            @substituters += HierarchySubstituterSupport.collect(from_value, to_value, k, group_ids, "/")
+          if from_value.include?(@opts['separator'])
+            @substituters += HierarchySubstituterSupport.collect(from_value, to_value, k, group_ids, @opts)
           else
-            @substituters << StringSubstituter.new(from_value, to_value, k, group_ids)
+            @substituters << StringSubstituter.new(from_value, to_value, k, group_ids, @opts)
           end
         end
       end
@@ -142,11 +146,11 @@ module Chorg::Substituter
     end
   end
 
-  def self.new
-    ChainSubstituter.new
+  def self.new(opts = {})
+    ChainSubstituter.new([], opts)
   end
 
-  def self.collect(from, to, group_id = nil)
-    ChainSubstituter.new.collect(from, to, group_id)
+  def self.collect(from, to, group_id = nil, opts = {})
+    ChainSubstituter.new([], opts).collect(from, to, group_id)
   end
 end

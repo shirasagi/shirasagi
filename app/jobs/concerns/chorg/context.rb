@@ -17,14 +17,14 @@ module Chorg::Context
     attr_reader :results, :substituter, :validation_substituter, :delete_group_ids
   end
 
-  def init_context
+  def init_context(opts = {})
     @results = { "add" => { "success" => 0, "failed" => 0 },
                  "move" => { "success" => 0, "failed" => 0 },
                  "unify" => { "success" => 0, "failed" => 0 },
                  "division" => { "success" => 0, "failed" => 0 },
                  "delete" => { "success" => 0, "failed" => 0 } }
-    @substituter = self.class.substituter_class.new
-    @validation_substituter = self.class.substituter_class.new
+    @substituter = self.class.substituter_class.new(opts)
+    @validation_substituter = self.class.substituter_class.new(opts)
     @delete_group_ids = []
 
     task.init_entity_logs

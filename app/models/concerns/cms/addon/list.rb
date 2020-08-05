@@ -4,6 +4,7 @@ module Cms::Addon::List
     extend SS::Translation
 
     attr_accessor :cur_date
+    attr_accessor :cur_main_path
 
     included do
       cattr_accessor(:use_new_days, instance_accessor: false) { true }
@@ -73,21 +74,26 @@ module Cms::Addon::List
       date + new_days > (@cur_date || Time.zone.now)
     end
 
-    def condition_hash(opts = {})
+    def request_dir_conditions
+      return if cur_main_path.blank?
+      return if !conditions.index('#{request_dir}')
+
+      cur_dir = cur_main_path.sub(/\/[\w\-\.]*?$/, "").sub(/^\//, "")
+      conditions.map { |url| url.sub('#{request_dir}', cur_dir) }
+    end
+
+    def condition_hash
       cond = []
       cids = []
-      cond_url = []
 
-      if opts[:cur_main_path] && conditions.index('#{request_dir}')
-        cur_dir = opts[:cur_main_path].sub(/\/[\w\-\.]*?$/, "").sub(/^\//, "")
-        cond_url = conditions.map { |url| url.sub('#{request_dir}', cur_dir) }
-      else
+      cond_url = request_dir_conditions
+      if cond_url.nil?
         if self.is_a?(Cms::Model::Part)
           if parent
             cond << { filename: /^#{::Regexp.escape(parent.filename)}\//, depth: depth }
             cids << parent.id
           else
-            cond << { depth: depth }
+            cond << { filename: /^[^\/]+$/, depth: 1 }
           end
         else
           cond << { filename: /^#{::Regexp.escape(filename)}\//, depth: depth + 1 }

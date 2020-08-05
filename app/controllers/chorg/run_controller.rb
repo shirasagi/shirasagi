@@ -57,7 +57,8 @@ class Chorg::RunController < ApplicationController
         job_class = job_class.set(wait_until: @item.reservation) if @item.reservation
 
         opts = {}
-        opts['newly_created_group_to_site'] = 'add' if @item.add_newly_created_group_to_site
+        opts['newly_created_group_to_site'] = 'add' if @item.add_newly_created_group_to_site.nonzero?
+        opts['forced_overwrite'] = @item.forced_overwrite.nonzero?
 
         @job = job_class.perform_later(@cur_revision.name, opts)
         @cur_revision.add_to_set(job_ids: @job.job_id)

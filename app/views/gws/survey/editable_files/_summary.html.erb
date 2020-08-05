@@ -11,6 +11,12 @@
 
 <div class="summary">
   <dl class="see">
+    <dt><%= @cur_form.class.t :name %></dt>
+    <dd><%= @cur_form.name %></dd>
+
+    <dt><%= @cur_form.class.t :description %></dt>
+    <dd><%= br @cur_form.description %></dd>
+
     <dt><%= t "inquiry.total_count" %></dt>
     <dd>
       <%= @items.count.to_s(:delimited) %>

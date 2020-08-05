@@ -143,6 +143,7 @@ ja:
         destinations: 移動先
       chorg/run_params:
         add_newly_created_group_to_site: 新規作成グループをサイトに追加
+        forced_overwrite: 連絡先情報を上書きする
         reservation: 予約実行
       chorg/revision:
         content_csv_file_id: コンテンツCSVファイル

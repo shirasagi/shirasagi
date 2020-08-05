@@ -429,7 +429,7 @@ ja:
 
   modules:
     cms: 標準機能
-    import_page: 取り込みページ
+    import_node: フォルダー取り込み
     addons:
       cms/role: ロール
       cms/group_permission: 管理権限

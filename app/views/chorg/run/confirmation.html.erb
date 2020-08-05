@@ -25,6 +25,12 @@
           <%= @model.t :add_newly_created_group_to_site %>
         </label>
       </dd>
+      <dd>
+        <label for="<%= f.object_name %>_forced_overwrite">
+          <%= f.check_box(:forced_overwrite) %>
+          <%= @model.t :forced_overwrite %>
+        </label>
+      </dd>
       <% if params[:type] == 'main' || !Rails.env.production? %>
       <dt><%= @model.t :reservation %><%= @model.tt :reservation %></dt>
       <dd><%= f.text_field :reservation, class: 'datetime js-datetime' %></dd>

@@ -9,7 +9,7 @@
   <dd><%= f.text_field :basename, id: "ezine-pages-form-dd-input", class: "filename", style: "display: none" %></dd>
 
   <dt><%= @model.t :layout_id %><%= @model.tt :layout_id %></dt>
-  <dd><%= f.select :layout_id, ancestral_layouts(@item.parent), include_blank: " " %></dd>
+  <dd><%= f.select :layout_id, ancestral_layouts(@item.parent, @item.layout), include_blank: " " %></dd>
 
   <%= render file: 'cms/pages/_form_body_parts', locals: { f: f } %>
 

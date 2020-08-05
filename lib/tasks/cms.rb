@@ -136,8 +136,17 @@ module Tasks
         name = ENV['site']
         if name
           all_ids = ::Cms::Site.where(host: name).pluck(:id)
+        elsif ENV.key?('include_sites')
+          names = ENV['include_sites'].split(/[, 　、\r\n]+/)
+          all_ids = ::Cms::Site.in(host: names).pluck(:id)
         else
           all_ids = ::Cms::Site.all.pluck(:id)
+        end
+
+        if ENV.key?('exclude_sites')
+          names = ENV['exclude_sites'].split(/[, 　、\r\n]+/)
+          exclude_ids = ::Cms::Site.in(host: names).pluck(:id)
+          all_ids -= exclude_ids
         end
 
         all_ids.each_slice(20) do |ids|

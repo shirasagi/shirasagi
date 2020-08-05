@@ -13,7 +13,7 @@ load "#{Rails.root}/db/seeds/cms/users.rb"
 @g_seisaku = SS::Group.where(name: "シラサギ市/企画政策部/政策課").first
 
 if @site.translate_api_limit_exceeded_html.blank?
-  @site.translate_api_limit_exceeded_html = '<div>翻訳文字数がAPIの制限を超過したため、翻訳できませんでした。</div>'
+  @site.translate_api_limit_exceeded_html = ::File.read("translate/limit_exceeded.html") rescue nil
   @site.save
 end
 

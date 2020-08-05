@@ -61,7 +61,9 @@ describe Gws::Chorg::TestRunner, dbscope: :example do
       expect(task.entity_logs.count).to eq 1
       expect(task.entity_logs[0]['model']).to eq 'Gws::Group'
       expect(task.entity_logs[0]['id']).to eq group.id.to_s
-      expect(task.entity_logs[0]['changes']).to include('name')
+      expect(task.entity_logs[0]['changes']).to include(
+        'name', 'contact_tel', 'contact_fax', 'contact_email', 'contact_link_url', 'contact_link_name'
+      )
     end
   end
 

@@ -22,7 +22,7 @@ class Garbage::Agents::Nodes::SearchController < ApplicationController
       where(@cur_node.condition_hash).
       search(name: params[:name]).
       in(@q_category).
-      order_by(name: 1).
+      order_by(@cur_node.sort_hash).
       page(params[:page]).
       per(@cur_node.limit)
   end

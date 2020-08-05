@@ -142,7 +142,9 @@ describe Chorg::MainRunner, dbscope: :example do
           expect(task.entity_logs.count).to eq 1
           expect(task.entity_logs[0]['model']).to eq 'Cms::Group'
           expect(task.entity_logs[0]['id']).to eq group.id.to_s
-          expect(task.entity_logs[0]['changes']).to include('name')
+          expect(task.entity_logs[0]['changes']).to include(
+            'name', 'contact_tel', 'contact_fax', 'contact_email', 'contact_link_url', 'contact_link_name'
+          )
         end
       end
     end
@@ -201,7 +203,9 @@ describe Chorg::MainRunner, dbscope: :example do
         expect(task.entity_logs.count).to eq 2
         expect(task.entity_logs[0]['model']).to eq 'Cms::Group'
         expect(task.entity_logs[0]['id']).to eq group.id.to_s
-        expect(task.entity_logs[0]['changes']).to include('name')
+        expect(task.entity_logs[0]['changes']).to include(
+          'name', 'contact_tel', 'contact_fax', 'contact_email', 'contact_link_url', 'contact_link_name'
+        )
         expect(task.entity_logs[1]['model']).to eq 'Article::Page'
         expect(task.entity_logs[1]['id']).to eq '1'
         expect(task.entity_logs[1]['changes']).to include(
@@ -256,7 +260,9 @@ describe Chorg::MainRunner, dbscope: :example do
           expect(task.entity_logs.count).to eq 2
           expect(task.entity_logs[0]['model']).to eq 'Cms::Group'
           expect(task.entity_logs[0]['id']).to eq group.id.to_s
-          expect(task.entity_logs[0]['changes']).to include('name')
+          expect(task.entity_logs[0]['changes']).to include(
+            'name', 'contact_tel', 'contact_fax', 'contact_email', 'contact_link_url', 'contact_link_name'
+          )
           expect(task.entity_logs[1]['model']).to eq 'Article::Page'
           expect(task.entity_logs[1]['id']).to eq '1'
           expect(task.entity_logs[1]['changes']).to include(
@@ -415,7 +421,9 @@ describe Chorg::MainRunner, dbscope: :example do
         expect(task.entity_logs.count).to eq 4
         expect(task.entity_logs[0]['model']).to eq 'Cms::Group'
         expect(task.entity_logs[0]['id']).to eq group1.id.to_s
-        expect(task.entity_logs[0]['changes']).not_to be_nil
+        expect(task.entity_logs[0]['changes']).to include(
+          'contact_tel', 'contact_fax', 'contact_email', 'contact_link_url', 'contact_link_name'
+        )
         expect(task.entity_logs[1]['model']).to eq 'Cms::Site'
         expect(task.entity_logs[1]['id']).to eq site.id.to_s
         expect(task.entity_logs[1]['changes']).to include('group_ids')
@@ -500,7 +508,9 @@ describe Chorg::MainRunner, dbscope: :example do
 
         expect(task.entity_logs[5]['model']).to eq 'Article::Page'
         expect(task.entity_logs[5]['id']).to eq page.id.to_s
-        expect(task.entity_logs[5]['changes']).to include('contact_email', 'contact_group_id')
+        expect(task.entity_logs[5]['changes']).to include(
+          'contact_group_id', 'contact_tel', 'contact_fax', 'contact_email', 'contact_link_url', 'contact_link_name'
+        )
 
         expect(task.entity_logs[6]['model']).to eq 'Cms::Group'
         expect(task.entity_logs[6]['id']).to eq group0.id.to_s
@@ -569,7 +579,9 @@ describe Chorg::MainRunner, dbscope: :example do
         expect(task.entity_logs[2]['changes']).to include('group_ids')
         expect(task.entity_logs[3]['model']).to eq 'Article::Page'
         expect(task.entity_logs[3]['id']).to eq page.id.to_s
-        expect(task.entity_logs[3]['changes']).not_to be_nil
+        expect(task.entity_logs[3]['changes']).to include(
+          'contact_tel', 'contact_fax', 'contact_email', 'contact_link_url', 'contact_link_name'
+        )
       end
     end
   end
@@ -964,6 +976,214 @@ describe Chorg::MainRunner, dbscope: :example do
         expect(page2.contact_fax).not_to eq group1.contact_fax
         expect(page2.contact_link_url).not_to eq group1.contact_link_url
         expect(page2.contact_link_name).not_to eq group1.contact_link_name
+      end
+    end
+  end
+
+  context 'with forced_overwrite' do
+    let(:job_opts) { { 'newly_created_group_to_site' => 'add', 'forced_overwrite' => true } }
+
+    context "non-empty to non-empty" do
+      let(:group_attributes) do
+        {
+          contact_email: unique_email,
+          contact_tel: unique_tel,
+          contact_fax: unique_tel,
+          contact_link_url: unique_url,
+          contact_link_name: unique_id
+        }
+      end
+      let!(:group1) { create(:revision_new_group, group_attributes) }
+      let!(:revision) { create(:revision, site_id: site.id) }
+      let(:destination) do
+        {
+          name: group1.name,
+          order: "",
+          contact_email: unique_email,
+          contact_tel: unique_tel,
+          contact_fax: unique_tel,
+          contact_link_url: unique_url,
+          contact_link_name: unique_id,
+          ldap_dn: ""
+        }
+      end
+      let!(:changeset) do
+        create(
+          :move_changeset, revision_id: revision.id, source: group1, destinations: [ destination.stringify_keys ]
+        )
+      end
+      # group1 と同じ情報が連絡先にセットされているページ
+      let!(:page1) do
+        create(
+          :revisoin_page, cur_site: site, group: group1, filename: nil,
+          contact_email: group1.contact_email,
+          contact_tel: group1.contact_tel,
+          contact_fax: group1.contact_fax,
+          contact_link_url: group1.contact_link_url,
+          contact_link_name: group1.contact_link_name
+        )
+      end
+      # 連絡先が空のページ
+      let!(:page2) do
+        create(
+          :revisoin_page, cur_site: site, group: group1, filename: nil,
+          contact_email: "",
+          contact_tel: "",
+          contact_fax: "",
+          contact_link_url: "",
+          contact_link_name: ""
+        )
+      end
+      # 連絡先に異なる情報がセットされているページ
+      let!(:page3) do
+        create(
+          :revisoin_page, cur_site: site, group: group1, filename: nil,
+          contact_email: unique_email,
+          contact_tel: unique_tel,
+          contact_fax: unique_tel,
+          contact_link_url: unique_url,
+          contact_link_name: unique_id
+        )
+      end
+
+      it do
+        # execute
+        job = described_class.bind(site_id: site, task_id: task)
+        expect { job.perform_now(revision.name, job_opts) }.to output(include("[移動] 成功: 1, 失敗: 0\n")).to_stdout
+
+        # check for job was succeeded
+        expect(Job::Log.count).to eq 1
+        Job::Log.first.tap do |log|
+          expect(log.logs).to include(include('INFO -- : Started Job'))
+          expect(log.logs).to include(include('INFO -- : Completed Job'))
+        end
+
+        group1.reload
+        expect(group1.contact_email).to eq destination[:contact_email]
+        expect(group1.contact_tel).to eq destination[:contact_tel]
+        expect(group1.contact_fax).to eq destination[:contact_fax]
+        expect(group1.contact_link_url).to eq destination[:contact_link_url]
+        expect(group1.contact_link_name).to eq destination[:contact_link_name]
+
+        # check page
+        page1.reload
+        expect(page1.group_ids).to eq [ group1.id ]
+        expect(page1.contact_group_id).to eq group1.id
+        expect(page1.contact_email).to eq group1.contact_email
+        expect(page1.contact_tel).to eq group1.contact_tel
+        expect(page1.contact_fax).to eq group1.contact_fax
+        expect(page1.contact_link_url).to eq group1.contact_link_url
+        expect(page1.contact_link_name).to eq group1.contact_link_name
+
+        page2.reload
+        expect(page2.group_ids).to eq [ group1.id ]
+        expect(page2.contact_group_id).to eq group1.id
+        expect(page2.contact_email).to eq group1.contact_email
+        expect(page2.contact_tel).to eq group1.contact_tel
+        expect(page2.contact_fax).to eq group1.contact_fax
+        expect(page2.contact_link_url).to eq group1.contact_link_url
+        expect(page2.contact_link_name).to eq group1.contact_link_name
+
+        page3.reload
+        expect(page3.group_ids).to eq [ group1.id ]
+        expect(page3.contact_group_id).to eq group1.id
+        expect(page3.contact_email).to eq group1.contact_email
+        expect(page3.contact_tel).to eq group1.contact_tel
+        expect(page3.contact_fax).to eq group1.contact_fax
+        expect(page3.contact_link_url).to eq group1.contact_link_url
+        expect(page3.contact_link_name).to eq group1.contact_link_name
+      end
+    end
+
+    context "empty to non-empty" do
+      let(:group_attributes) do
+        {
+          contact_email: "",
+          contact_tel: "",
+          contact_fax: "",
+          contact_link_url: "",
+          contact_link_name: ""
+        }
+      end
+      let!(:group1) { create(:revision_new_group, group_attributes) }
+      let!(:revision) { create(:revision, site_id: site.id) }
+      let(:destination) do
+        {
+          name: group1.name,
+          order: "",
+          contact_email: unique_email,
+          contact_tel: unique_tel,
+          contact_fax: unique_tel,
+          contact_link_url: unique_url,
+          contact_link_name: unique_id,
+          ldap_dn: ""
+        }
+      end
+      let!(:changeset) do
+        create(
+          :move_changeset, revision_id: revision.id, source: group1, destinations: [ destination.stringify_keys ]
+        )
+      end
+      # group1 と同じ情報が連絡先にセットされているページ
+      let!(:page1) do
+        create(
+          :revisoin_page, cur_site: site, group: group1, filename: nil,
+          contact_email: group1.contact_email,
+          contact_tel: group1.contact_tel,
+          contact_fax: group1.contact_fax,
+          contact_link_url: group1.contact_link_url,
+          contact_link_name: group1.contact_link_name
+        )
+      end
+      # 連絡先に異なる情報がセットされているページ
+      let!(:page2) do
+        create(
+          :revisoin_page, cur_site: site, group: group1, filename: nil,
+          contact_email: unique_email,
+          contact_tel: unique_tel,
+          contact_fax: unique_tel,
+          contact_link_url: unique_url,
+          contact_link_name: unique_id
+        )
+      end
+
+      it do
+        # execute
+        job = described_class.bind(site_id: site, task_id: task)
+        expect { job.perform_now(revision.name, job_opts) }.to output(include("[移動] 成功: 1, 失敗: 0\n")).to_stdout
+
+        # check for job was succeeded
+        expect(Job::Log.count).to eq 1
+        Job::Log.first.tap do |log|
+          expect(log.logs).to include(include('INFO -- : Started Job'))
+          expect(log.logs).to include(include('INFO -- : Completed Job'))
+        end
+
+        group1.reload
+        expect(group1.contact_email).to eq destination[:contact_email]
+        expect(group1.contact_tel).to eq destination[:contact_tel]
+        expect(group1.contact_fax).to eq destination[:contact_fax]
+        expect(group1.contact_link_url).to eq destination[:contact_link_url]
+        expect(group1.contact_link_name).to eq destination[:contact_link_name]
+
+        # check page
+        page1.reload
+        expect(page1.group_ids).to eq [ group1.id ]
+        expect(page1.contact_group_id).to eq group1.id
+        expect(page1.contact_email).to eq group1.contact_email
+        expect(page1.contact_tel).to eq group1.contact_tel
+        expect(page1.contact_fax).to eq group1.contact_fax
+        expect(page1.contact_link_url).to eq group1.contact_link_url
+        expect(page1.contact_link_name).to eq group1.contact_link_name
+
+        page2.reload
+        expect(page2.group_ids).to eq [ group1.id ]
+        expect(page2.contact_group_id).to eq group1.id
+        expect(page2.contact_email).to eq group1.contact_email
+        expect(page2.contact_tel).to eq group1.contact_tel
+        expect(page2.contact_fax).to eq group1.contact_fax
+        expect(page2.contact_link_url).to eq group1.contact_link_url
+        expect(page2.contact_link_name).to eq group1.contact_link_name
       end
     end
   end

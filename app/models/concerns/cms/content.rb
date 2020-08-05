@@ -116,6 +116,36 @@ module Cms::Content
       end
       criteria
     end
+
+    def public_list(opts = {})
+      site = opts[:site]
+      parent_item = opts[:node] || opts[:part] || opts[:parent]
+      date = opts[:date]
+
+      criteria = self.all
+
+      # condition_hash
+      if parent_item && parent_item.respond_to?(:condition_hash)
+        ids = self.unscoped.where(parent_item.condition_hash).distinct(:id)
+        return criteria.none if ids.blank?
+
+        criteria = criteria.in(id: ids)
+        criteria = criteria.hint({ _id: 1 })
+
+        # criteria.count does not use hint
+        def criteria.count(options = {}, &block)
+          options = options.symbolize_keys
+          options[:hint] = { _id: 1 }
+          super(options, &block)
+        end
+      end
+
+      # site and_public
+      criteria = criteria.site(site) if site
+      criteria = criteria.and_public(date)
+
+      criteria
+    end
   end
 
   def name_for_index
