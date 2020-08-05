@@ -277,7 +277,7 @@ this.Map_Form = (function () {
       Googlemaps_Map.markers[dataId].setMap(null);
     }
 
-    num = ele.find(".marker-number").val()
+    num = ele.find(".marker-number").val() || null;
     image = ele.find('[name="item[map_points][][image]"]').val();
     opts = {
       position: Map_Form.getMapLoc(ele.find(".marker-loc")),
@@ -317,7 +317,7 @@ this.Map_Form = (function () {
       if ($(this).find(".marker-loc").val() !== "") {
         var loc = Map_Form.getMapLoc($(this).find(".marker-loc"));
         var image = $(this).find('[name="item[map_points][][image]"]').val();
-        num = $(this).find(".marker-number").val()
+        num = $(this).find(".marker-number").val() || null;
         var opts = {};
 
         opts = {

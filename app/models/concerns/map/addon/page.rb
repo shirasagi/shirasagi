@@ -123,9 +123,15 @@ module Map::Addon
 
     def validate_number
       if self.map_points.present?
-        self.map_points.uniq.group_by { |e| e[:number] }.map do |n, m|
-          if n.numeric? && m.length > 1
-            return self.errors.add :map_points, :uniq_number
+        self.map_points.group_by { |e| e[:number] }.map do |n, m|
+          if n.present?
+            if !n.numeric?
+              return self.errors.add :map_points, :invalid_number
+            elsif n.to_i < 1 || n.to_i > 99
+              return self.errors.add :map_points, :invalid_number_range
+            elsif m.length > 1
+              return self.errors.add :map_points, :uniq_number
+            end
           end
         end
       end
