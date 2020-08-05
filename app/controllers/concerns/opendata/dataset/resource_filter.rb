@@ -100,6 +100,10 @@ module Opendata::Dataset::ResourceFilter
     end
   end
 
+  def image_content
+    render :image_content, layout: 'cms/ajax'
+  end
+
   public
 
   def index
@@ -137,6 +141,8 @@ module Opendata::Dataset::ResourceFilter
         geojson_content
       elsif @item.pdf_present?
         pdf_content
+      elsif @item.image_present?
+        image_content
       else
         raise "404"
       end
