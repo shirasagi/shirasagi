@@ -43,7 +43,6 @@ class Event::Agents::Nodes::SearchController < ApplicationController
   def list_events
     criteria = Cms::Page.site(@cur_site).and_public
     criteria = criteria.search(keyword: @keyword) if @keyword.present?
-    criteria = criteria.where(@cur_node.condition_hash)
     criteria = criteria.in(category_ids: @category_ids) if @category_ids.present?
     criteria = criteria.in(facility_ids: @facility_ids) if @facility_id.present?
 
@@ -68,11 +67,7 @@ class Event::Agents::Nodes::SearchController < ApplicationController
   def set_markers
     @markers = []
     @items = list_events
-    @items.each do |item|
-      event = Event::Page.site(@cur_site).
-        and_public.
-        where(filename: item.filename).first
-
+    @items.each do |event|
       if event.map_points.present?
         event.map_points.each do |map_point|
           marker_info = view_context.render_map_point_info(event, map_point)
@@ -82,7 +77,11 @@ class Event::Agents::Nodes::SearchController < ApplicationController
         end
       end
 
-      if event.map_points.blank? && event.facility_ids.present?
+      event = Event::Page.site(@cur_site).
+        and_public.
+        where(filename: event.filename).first
+
+      if event.present?
         event.facility_ids.each do |facility_id|
           if @facility_ids.present?
             next if !@facility_ids.include?(facility_id)
