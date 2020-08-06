@@ -79,7 +79,7 @@ class Cms::Column::Value::UrlField2 < Cms::Column::Value::Base
     if u.relative?
       node = _parent.parent
       base_url = node ? node.full_url : site.full_url
-      u = URI.join(base_url, encoded_link_url)
+      u = URI.join(base_url, URI.encode(link_url))
     end
 
     searches = [ "#{u.host}:#{u.port}" ]
