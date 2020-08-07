@@ -86,7 +86,12 @@ class Cms::Column::Value::Free < Cms::Column::Value::Base
         end
       end
 
-      self.file_ids = file_ids + add_ids - del_ids
+      begin
+        self.file_ids = file_ids + add_ids - del_ids
+      rescue
+        self.file_ids
+      end
+
     end
   end
 
@@ -145,9 +150,13 @@ class Cms::Column::Value::Free < Cms::Column::Value::Base
 
   def set_contains_urls
     if value.blank?
-      self.contains_urls = [] if self.contains_urls.present?
+      self.contains_urls.clear if self.contains_urls.present?
     else
-      self.contains_urls = value.scan(/(?:href|src)="(.*?)"/).flatten.uniq
+      begin
+        self.contains_urls = value.scan(/(?:href|src)="(.*?)"/).flatten.uniq
+      rescue
+        self.contains_urls
+      end
     end
     self._parent.value_contains_urls = self.contains_urls
   end
