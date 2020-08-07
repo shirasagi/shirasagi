@@ -79,7 +79,9 @@ class Rss::ImportWeatherXmlJob < Rss::ImportBase
   def gc_rss_tempfile
     return if rand(100) >= 20
 
-    threshold = 2.weeks.ago
+    expires_in = SS.config.rss.weather_xml["expires_in"].try { |threshold| SS::Duration.parse(threshold) rescue nil }
+    expires_in ||= 2.weeks
+    threshold = Time.zone.now - expires_in
     Rss::TempFile.with_repl_master.lt(updated: threshold).destroy_all
     remove_old_cache(threshold)
   end
