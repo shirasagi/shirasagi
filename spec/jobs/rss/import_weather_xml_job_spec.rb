@@ -14,6 +14,10 @@ describe Rss::ImportWeatherXmlJob, dbscope: :example do
   end
 
   around do |example|
+    data_dir = SS.config.rss.weather_xml["data_cache_dir"]
+    data_dir = ::File.expand_path(data_dir, Rails.root) if data_dir.present?
+    ::FileUtils.rm_rf(data_dir) if data_dir.present?
+
     perform_enqueued_jobs do
       example.run
     end
