@@ -89,7 +89,7 @@ class Rss::ImportWeatherXmlJob < Rss::ImportBase
     return if data_dir.blank?
 
     data_dir = ::File.expand_path(data_dir, Rails.root)
-    ::Dir.glob("*.xml", base: data_dir).each do |file_path|
+    ::Dir.glob(%w(*.xml *.xml.gz), base: data_dir).each do |file_path|
       file_path = ::File.expand_path(file_path, data_dir)
       ::FileUtils.rm_f(file_path) if ::File.mtime(file_path) < threshold
     end
@@ -153,11 +153,18 @@ class Rss::ImportWeatherXmlJob < Rss::ImportBase
     ::FileUtils.mkdir_p(data_dir) unless ::Dir.exists?(data_dir)
 
     hash = Digest::MD5.hexdigest(url)
-    file_path = ::File.join(data_dir, "#{hash}.xml")
-    return ::File.read(file_path) if ::File.exists?(file_path)
+    file_paths = %w(xml.gz xml).map { |ext| ::File.join(data_dir, "#{hash}.#{ext}") }
+    file_path = file_paths.find { |path| ::File.exists?(path) }
+    if file_path
+      if file_path.ends_with?(".gz")
+        return ::Zlib::GzipReader.open(file_path) { |gz| gz.read }
+      else
+        return ::File.read(file_path)
+      end
+    end
 
     data = yield
-    ::File.write(file_path, data)
+    ::Zlib::GzipWriter.open(file_paths.first) { |gz| gz.write data }
 
     data
   end
