@@ -12,21 +12,14 @@ RSpec.configuration.before(:suite) do
 
   ::Fs.mkdir_p(root_dir)
 
-  super_classes = [ ::SS::Model::File, ::Gws::Model::File ]
+  SS::Application.private_root = root_dir
 
+  # backward compatibility
   all_models = ::Mongoid.models
-  super_classes.each do |super_class|
-    models = all_models.select { |model| model.ancestors.include?(super_class) }
-    models.each do |model|
-      model.root = "#{root_dir}/files"
-    end
-  end
-  models = all_models.select { |model| model.ancestors.include?(::History::Model::Data) }
+  models = all_models.select { |model| model.respond_to?(:root=) && model.root.to_s.start_with?("#{Rails.root}/") }
   models.each do |model|
-    model.root = "#{root_dir}/trash"
+    model.root = root_dir
   end
-
-  SS::DownloadJobFile.root = "#{root_dir}/download"
 end
 
 RSpec.configuration.after(:suite) do

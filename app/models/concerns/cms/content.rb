@@ -150,7 +150,7 @@ module Cms::Content
     end
 
     def private_root
-      "#{SS::File.root}/#{self.collection_name}"
+      "#{SS::Application.private_root}/#{self.collection_name}"
     end
   end
 
