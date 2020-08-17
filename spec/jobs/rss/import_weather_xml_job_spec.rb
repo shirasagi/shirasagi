@@ -52,8 +52,8 @@ describe Rss::ImportWeatherXmlJob, dbscope: :example do
       expect(item.authors.first.email).to be_nil
       expect(item.authors.first.uri).to be_nil
       expect(item.event_id).to eq '20160318182200_984'
-      expect(item.xml).not_to be_nil
-      expect(item.xml).to include('<InfoKind>気象警報・注意報</InfoKind>')
+      expect(item.weather_xml).not_to be_nil
+      expect(item.weather_xml).to include('<InfoKind>気象警報・注意報</InfoKind>')
       expect(item.state).to eq 'closed'
 
       expect(Job::Log.count).to eq 2
@@ -100,8 +100,8 @@ describe Rss::ImportWeatherXmlJob, dbscope: :example do
       expect(item.authors.first.email).to be_nil
       expect(item.authors.first.uri).to be_nil
       expect(item.event_id).to eq '20160318182200_984'
-      expect(item.xml).not_to be_nil
-      expect(item.xml).to include('<InfoKind>気象警報・注意報</InfoKind>')
+      expect(item.weather_xml).not_to be_nil
+      expect(item.weather_xml).to include('<InfoKind>気象警報・注意報</InfoKind>')
       expect(item.state).to eq 'closed'
 
       item = model.where(rss_link: 'http://xml.kishou.go.jp/data/9b43a982-fecf-3866-95e7-c375226a7c87.xml').first
@@ -115,8 +115,8 @@ describe Rss::ImportWeatherXmlJob, dbscope: :example do
       expect(item.authors.first.email).to be_nil
       expect(item.authors.first.uri).to be_nil
       expect(item.event_id).to eq '20160308133250'
-      expect(item.xml).not_to be_nil
-      expect(item.xml).to include('<InfoKind>震度速報</InfoKind>')
+      expect(item.weather_xml).not_to be_nil
+      expect(item.weather_xml).to include('<InfoKind>震度速報</InfoKind>')
       expect(item.state).to eq 'closed'
 
       expect(Job::Log.count).to eq 4
@@ -194,8 +194,8 @@ describe Rss::ImportWeatherXmlJob, dbscope: :example do
       expect(item.authors.first.email).to be_nil
       expect(item.authors.first.uri).to be_nil
       expect(item.event_id).to eq '20160308133250'
-      expect(item.xml).not_to be_nil
-      expect(item.xml).to include('<InfoKind>震度速報</InfoKind>')
+      expect(item.weather_xml).not_to be_nil
+      expect(item.weather_xml).to include('<InfoKind>震度速報</InfoKind>')
       expect(item.state).to eq 'closed'
 
       expect(Job::Log.count).to eq 3
@@ -271,8 +271,8 @@ describe Rss::ImportWeatherXmlJob, dbscope: :example do
       expect(item.authors.first.email).to be_nil
       expect(item.authors.first.uri).to be_nil
       expect(item.event_id).to eq nil
-      expect(item.xml).not_to be_nil
-      expect(item.xml).to include('<InfoKind>気象警報・注意報</InfoKind>')
+      expect(item.weather_xml).not_to be_nil
+      expect(item.weather_xml).to include('<InfoKind>気象警報・注意報</InfoKind>')
       expect(item.state).to eq 'closed'
 
       expect(Job::Log.count).to eq 2
@@ -376,8 +376,8 @@ describe Rss::ImportWeatherXmlJob, dbscope: :example do
         expect(item.authors.first.email).to be_nil
         expect(item.authors.first.uri).to be_nil
         expect(item.event_id).to eq '20110311144640'
-        expect(item.xml).not_to be_nil
-        expect(item.xml).to include('<InfoKind>震度速報</InfoKind>')
+        expect(item.weather_xml).not_to be_nil
+        expect(item.weather_xml).to include('<InfoKind>震度速報</InfoKind>')
         expect(item.state).to eq 'closed'
 
         expect(Job::Log.count).to eq 3
@@ -464,8 +464,8 @@ describe Rss::ImportWeatherXmlJob, dbscope: :example do
         expect(item.authors.first.email).to be_nil
         expect(item.authors.first.uri).to be_nil
         expect(item.event_id).to eq '20110311144640'
-        expect(item.xml).not_to be_nil
-        expect(item.xml).to include('<InfoKind>震度速報</InfoKind>')
+        expect(item.weather_xml).not_to be_nil
+        expect(item.weather_xml).to include('<InfoKind>震度速報</InfoKind>')
         expect(item.state).to eq 'closed'
 
         expect(Job::Log.count).to eq 2
@@ -542,8 +542,8 @@ describe Rss::ImportWeatherXmlJob, dbscope: :example do
         expect(item1.authors.first.email).to be_nil
         expect(item1.authors.first.uri).to be_nil
         expect(item1.event_id).to eq '20160318182200_984'
-        expect(item1.xml).not_to be_nil
-        expect(item1.xml).to include('<InfoKind>気象警報・注意報</InfoKind>')
+        expect(item1.weather_xml).not_to be_nil
+        expect(item1.weather_xml).to include('<InfoKind>気象警報・注意報</InfoKind>')
         expect(item1.state).to eq 'closed'
 
         item2 = model.site(site2).node(node2).where(rss_link: 'http://xml.kishou.go.jp/data/afeedc52-107a-3d1d-9196-b108234d6e0f.xml').first
@@ -592,8 +592,8 @@ describe Rss::ImportWeatherXmlJob, dbscope: :example do
         expect(item1.authors.first.email).to be_nil
         expect(item1.authors.first.uri).to be_nil
         expect(item1.event_id).to eq '20160318182200_984'
-        expect(item1.xml).not_to be_nil
-        expect(item1.xml).to include('<InfoKind>気象警報・注意報</InfoKind>')
+        expect(item1.weather_xml).not_to be_nil
+        expect(item1.weather_xml).to include('<InfoKind>気象警報・注意報</InfoKind>')
         expect(item1.state).to eq 'closed'
 
         item2 = model.site(site2).node(node2).where(rss_link: 'http://xml.kishou.go.jp/data/afeedc52-107a-3d1d-9196-b108234d6e0f.xml').first

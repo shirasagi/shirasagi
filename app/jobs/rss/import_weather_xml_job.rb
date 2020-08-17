@@ -105,8 +105,8 @@ class Rss::ImportWeatherXmlJob < Rss::ImportBase
     return page if content.nil?
 
     page.event_id = extract_event_id(content) rescue nil
-    page.xml = content
     page.save!
+    page.save_weather_xml(content)
 
     if content.include?('<InfoKind>震度速報</InfoKind>')
       process_earthquake(page)
@@ -199,7 +199,7 @@ class Rss::ImportWeatherXmlJob < Rss::ImportBase
     return if node.my_anpi_post.blank?
     return if node.anpi_mail.blank?
 
-    xmldoc = REXML::Document.new(page.xml)
+    xmldoc = REXML::Document.new(page.weather_xml)
     status = REXML::XPath.first(xmldoc, '/Report/Control/Status/text()').to_s.strip
     return if status != Jmaxml::Status::NORMAL
 
