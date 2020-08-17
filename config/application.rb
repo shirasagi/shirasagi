@@ -52,6 +52,8 @@ module SS
 
     config.middleware.use Mongoid::QueryCache::Middleware
 
+    cattr_accessor(:private_root, instance_accessor: false) { "#{Rails.root}/private" }
+
     def call(*args, &block)
       save_current_env = Thread.current["ss.env"]
       save_current_request = Thread.current["ss.request"]
