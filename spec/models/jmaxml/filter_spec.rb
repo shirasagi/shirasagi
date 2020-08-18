@@ -12,7 +12,7 @@ describe Jmaxml::Filter, dbscope: :example do
   let(:target_time) { REXML::XPath.first(xmldoc, '/Report/Head/TargetDateTime/text()').to_s.strip }
   let(:event_id) { REXML::XPath.first(xmldoc, '/Report/Head/EventID/text()').to_s.strip }
   let(:rss_node) { create(:rss_node_weather_xml) }
-  let!(:rss_page1) { create(:rss_weather_xml_page, cur_node: rss_node, event_id: event_id, xml: xml1) }
+  let!(:rss_page1) { create(:rss_weather_xml_page, cur_node: rss_node, event_id: event_id, in_xml: xml1) }
   let!(:article_node) { create(:article_node_page) }
   let!(:category_node) { create(:category_node_page, cur_node: article_node) }
   let(:context) { OpenStruct.new(site: site, node: rss_node) }

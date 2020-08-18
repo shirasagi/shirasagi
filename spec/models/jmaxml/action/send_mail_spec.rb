@@ -48,7 +48,7 @@ describe Jmaxml::Action::SendMail, dbscope: :example do
       let(:target_time) { REXML::XPath.first(xmldoc, '/Report/Head/TargetDateTime/text()').to_s.strip }
       let(:event_id) { REXML::XPath.first(xmldoc, '/Report/Head/EventID/text()').to_s.strip }
       let(:rss_node) { create(:rss_node_weather_xml) }
-      let!(:rss_page1) { create(:rss_weather_xml_page, cur_node: rss_node, event_id: event_id, xml: xml1) }
+      let!(:rss_page1) { create(:rss_weather_xml_page, cur_node: rss_node, event_id: event_id, in_xml: xml1) }
       let(:context) { OpenStruct.new(site: site, node: rss_node, xmldoc: xmldoc) }
 
       context 'when quake intensity flash is given' do
@@ -494,8 +494,8 @@ describe Jmaxml::Action::SendMail, dbscope: :example do
       let(:target_time) { REXML::XPath.first(xmldoc, '/Report/Head/TargetDateTime/text()').to_s.strip }
       let(:event_id) { REXML::XPath.first(xmldoc, '/Report/Head/EventID/text()').to_s.strip }
       let(:rss_node) { create(:rss_node_weather_xml) }
-      let!(:rss_page1) { create(:rss_weather_xml_page, cur_node: rss_node, event_id: event_id, xml: xml1) }
-      let!(:rss_page2) { create(:rss_weather_xml_page, cur_node: rss_node, event_id: event_id, xml: xml2) }
+      let!(:rss_page1) { create(:rss_weather_xml_page, cur_node: rss_node, event_id: event_id, in_xml: xml1) }
+      let!(:rss_page2) { create(:rss_weather_xml_page, cur_node: rss_node, event_id: event_id, in_xml: xml2) }
       let(:context) { OpenStruct.new(site: site, node: rss_node, xmldoc: xmldoc) }
 
       context 'when quake intensity flash is canceled' do

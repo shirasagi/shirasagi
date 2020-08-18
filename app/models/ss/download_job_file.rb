@@ -1,7 +1,6 @@
 class SS::DownloadJobFile
   include ActiveModel::Model
 
-  cattr_accessor(:root, instance_accessor: false) { "#{Rails.root}/private/download" }
   attr_reader :user, :filename, :path
   attr_accessor :in_file, :in_path
 
@@ -41,6 +40,10 @@ class SS::DownloadJobFile
   end
 
   class << self
+    def root
+      "#{SS::Application.private_root}/download"
+    end
+
     def find(user, filename)
       item = self.new(user, filename)
       ::File.exist?(item.path) ? item : nil

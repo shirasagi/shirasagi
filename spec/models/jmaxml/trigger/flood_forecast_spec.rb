@@ -15,7 +15,7 @@ describe Jmaxml::Trigger::FloodForecast, dbscope: :example do
     let(:xml1) { File.read(Rails.root.join(*%w(spec fixtures jmaxml 70_16_01_100806_kasenkozui1.xml))) }
     let(:xmldoc) { REXML::Document.new(xml1) }
     let(:report_time) { REXML::XPath.first(context.xmldoc, '/Report/Head/ReportDateTime/text()').to_s.strip }
-    let(:page) { create(:rss_weather_xml_page, xml: xml1) }
+    let(:page) { create(:rss_weather_xml_page, in_xml: xml1) }
     let(:context) { OpenStruct.new(site: site, xmldoc: xmldoc) }
     subject { create(:jmaxml_trigger_flood_forecast) }
 

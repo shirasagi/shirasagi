@@ -22,7 +22,6 @@ describe "Rss::Node::WeatherXml", type: :feature, dbscope: :example, js: true do
       fill_in 'item[name]', with: name0
       fill_in 'item[rss_link]', with: rss_link
       fill_in 'item[html]', with: html
-      fill_in 'item[xml]', with: xml
 
       click_on I18n.t('ss.buttons.save')
       expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'), wait: 60)
@@ -32,7 +31,6 @@ describe "Rss::Node::WeatherXml", type: :feature, dbscope: :example, js: true do
         expect(item.name).to eq name0
         expect(item.rss_link).to eq rss_link
         expect(item.html).to eq html
-        expect(item.xml).to eq xml.gsub("\n", "\r\n").strip
       end
 
       visit index_path
