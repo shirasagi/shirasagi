@@ -1,6 +1,11 @@
 class History::Backup::SweepJob < SS::ApplicationJob
   def perform
-    each_backup(Time.zone.now.beginning_of_day - 2.weeks) do |backup|
+    now = Time.zone.now.beginning_of_day
+    duration = SS::Duration.parse(SS.config.ss.keep_history_backup_after_destroyed)
+    created = now - duration
+    Rails.logger.info("データベース上から削除されたページ、フォルダー、レイアウト、パーツに関連した操作履歴のうち、#{created.iso8601} 以前に作成されたものを削除します。")
+
+    each_backup(created) do |backup|
       item_id = backup.data[:_id]
       next if item_id.blank?
 
