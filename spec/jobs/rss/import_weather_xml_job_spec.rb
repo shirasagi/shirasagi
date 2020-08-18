@@ -14,6 +14,10 @@ describe Rss::ImportWeatherXmlJob, dbscope: :example do
   end
 
   around do |example|
+    data_dir = SS.config.rss.weather_xml["data_cache_dir"]
+    data_dir = ::File.expand_path(data_dir, Rails.root) if data_dir.present?
+    ::FileUtils.rm_rf(data_dir) if data_dir.present?
+
     perform_enqueued_jobs do
       example.run
     end
@@ -608,6 +612,7 @@ describe Rss::ImportWeatherXmlJob, dbscope: :example do
   describe "#remove_old_cache" do
     let(:base_name1) { "#{unique_id}.xml" }
     let(:base_name2) { "#{unique_id}.xml" }
+    let(:base_name3) { "#{unique_id}.xml.gz" }
     let(:threshold) { Time.zone.now.beginning_of_minute - 1.day }
 
     before do
@@ -616,9 +621,11 @@ describe Rss::ImportWeatherXmlJob, dbscope: :example do
 
       ::File.write(::File.join(tmpdir, base_name1), unique_id)
       ::File.write(::File.join(tmpdir, base_name2), unique_id)
+      Zlib::GzipWriter.open(::File.join(tmpdir, base_name3)) { |gz| gz.write unique_id }
 
       mtime = threshold - 1.second
       ::File.utime(mtime.to_i, mtime.to_i, ::File.join(tmpdir, base_name1))
+      ::File.utime(mtime.to_i, mtime.to_i, ::File.join(tmpdir, base_name3))
     end
 
     after do
@@ -628,12 +635,14 @@ describe Rss::ImportWeatherXmlJob, dbscope: :example do
     it do
       expect(::File.exists?(::File.join(tmpdir, base_name1))).to be_truthy
       expect(::File.exists?(::File.join(tmpdir, base_name2))).to be_truthy
+      expect(::File.exists?(::File.join(tmpdir, base_name3))).to be_truthy
 
       # call private method
       described_class.new.send(:remove_old_cache, threshold)
 
       expect(::File.exists?(::File.join(tmpdir, base_name1))).to be_falsey
       expect(::File.exists?(::File.join(tmpdir, base_name2))).to be_truthy
+      expect(::File.exists?(::File.join(tmpdir, base_name3))).to be_falsey
     end
   end
 end
