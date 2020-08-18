@@ -4,6 +4,7 @@ class SS::Duration
     raise "malformed duration: #{name}" if !num.numeric?
 
     num = num.to_i
+    unit = "day" if unit.blank?
     case unit.singularize
     when "year"
       num.years

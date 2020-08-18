@@ -30,5 +30,11 @@ describe SS::Duration do
         expect { SS::Duration.parse("hello.days") }.to raise_error RuntimeError, "malformed duration: hello.days"
       end
     end
+
+    context "when unit is missing" do
+      it do
+        expect(SS::Duration.parse("3")).to eq 3.days
+      end
+    end
   end
 end
