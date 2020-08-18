@@ -424,7 +424,7 @@ Cms_TemplateForm.prototype.remove = function($evTarget) {
 
   var self = this;
   $columnValue.addClass("column-value-deleting").fadeOut(Cms_TemplateForm.duration).queue(function() {
-    var id = $columnValue.find(".column-value-body .html").attr("id")
+    var id = $columnValue.find(".column-value-body .html").attr("id");
     if (id) {
       CKEDITOR.instances[id].destroy();
     }
