@@ -12,6 +12,9 @@ namespace :ss do
     # 一時ファイルの削除（アクセストークン）
     Rake.application.invoke_task("ss:delete_access_tokens")
 
+    # history_backupの削除
+    Rake.application.invoke_task("history:backup:sweep")
+
     if SS.config.cms.disable.blank?
       # ゴミ箱の掃除
       Rake.application.invoke_task("history:trash:purge")
