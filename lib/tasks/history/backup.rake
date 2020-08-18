@@ -1,7 +1,7 @@
 namespace :history do
   namespace :backup do
     task sweep: :environment do
-      ::Tasks::History.sweep_backup
+      History::Backup::SweepJob.perform_now
     end
   end
 end
