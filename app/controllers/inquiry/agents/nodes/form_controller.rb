@@ -137,7 +137,7 @@ class Inquiry::Agents::Nodes::FormController < ApplicationController
     if @cur_node.notify_mail_enabled?
       if @group
         notice_email = @group.contact_email
-        Inquiry::Mailer.notify_mail(@cur_site, @cur_node, @answer, notice_email).deliver_now
+        Inquiry::Mailer.notify_mail(@cur_site, @cur_node, @answer, notice_email).deliver_now if notice_email.present?
       else
         @to.each { |notice_email| Inquiry::Mailer.notify_mail(@cur_site, @cur_node, @answer, notice_email).deliver_now }
       end
