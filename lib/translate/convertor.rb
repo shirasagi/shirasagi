@@ -74,13 +74,17 @@ class Translate::Convertor
       nodes << value
     end
 
-    item = Translate::RequestBuffer.new(@site, @source, @target)
-    nodes.each do |node|
-      text = node.content
-      item.push text, node
-    end
-    item.translate.each do |node, caches|
-      node.content = caches.map { |caches| caches.text }.join("\n")
+    begin
+      item = Translate::RequestBuffer.new(@site, @source, @target)
+      nodes.each do |node|
+        text = node.content
+        item.push text, node
+      end
+      item.translate.each do |node, caches|
+        node.content = caches.map { |caches| caches.text }.join("\n")
+      end
+    rescue => e
+      Rails.logger.error("#{e.class} (#{e.message}):\n  #{e.backtrace.join("\n  ")}")
     end
 
     if partial
