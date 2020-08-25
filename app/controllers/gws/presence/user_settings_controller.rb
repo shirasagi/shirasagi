@@ -12,7 +12,7 @@ class Gws::Presence::UserSettingsController < ApplicationController
   end
 
   def permit_fields
-    [ :sync_available_state, :sync_unavailable_state ]
+    [ :sync_available_state, :sync_unavailable_state, :sync_timecard_state ]
   end
 
   def update

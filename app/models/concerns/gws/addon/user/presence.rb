@@ -39,4 +39,19 @@ module Gws::Addon::User::Presence
       item.save
     end
   end
+
+  def presence_punch(site, field_name)
+    user_presences.each do |item|
+      next if !item.sync_timecard_enabled?
+      next if item.site_id != site.id
+
+      if field_name == "enter"
+        item.state = "enter"
+        item.save
+      elsif field_name == "leave"
+        item.state = "leave"
+        item.save
+      end
+    end
+  end
 end
