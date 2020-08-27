@@ -167,6 +167,15 @@ production: &production
       leave: none
       dayoff: none
       '': none
+    reset:
+      available: ''
+      unavailable: ''
+      leave: ''
+      dayoff: ''
+    sync_available:
+      disable: false
+    sync_timecard:
+      disable: true
 
   share:
     max_history_count: 20
