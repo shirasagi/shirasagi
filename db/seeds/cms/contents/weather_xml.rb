@@ -13,7 +13,7 @@ puts Jmaxml::WaterLevelStation.model_name.human
 Jmaxml::WaterLevelStationImportJob.import_from_zip("weather_xml_regions/water_level_stations.zip", site_id: @site)
 
 weather_xml_node = save_node route: "rss/weather_xml", filename: "weather",
-                             name: "気象庁防災XML", layout_id: @layouts["one"].id, page_state: "closed",
+                             name: "気象庁防災XML", layout_id: @layouts["one"].id, rss_max_docs: 100, page_state: "closed",
                              earthquake_intensity: "5+", anpi_mail_id: @ezine_anpi.try(:id), my_anpi_post_id: @anpi_node.try(:id),
                              target_region_ids: %w(350 351 352).map { |code| Jmaxml::QuakeRegion.site(@site).find_by(code: code).id }
 
