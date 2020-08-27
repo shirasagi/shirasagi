@@ -9,6 +9,7 @@ class Rss::ImportWeatherXmlJob < Rss::ImportBase
   class << self
     def pull_all
       SS.config.rss.weather_xml["urls"].each do |url|
+        puts "pull from #{url}"
         pull_one(url)
       end
     end
@@ -35,6 +36,10 @@ class Rss::ImportWeatherXmlJob < Rss::ImportBase
 
       each_node do |node|
         site = node.site
+        next if site.blank?
+
+        puts "-- import into #{node.name}(#{node.filename}) on #{site.name}(#{site.host})"
+
         file = Rss::TempFile.create_from_post(site, body, resp.headers['Content-Type'].presence || "application/xml")
         job = Rss::ImportWeatherXmlJob.bind(site_id: site, node_id: node)
         job.perform_now(file.id)
