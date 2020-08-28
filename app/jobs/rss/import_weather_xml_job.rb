@@ -127,29 +127,31 @@ class Rss::ImportWeatherXmlJob < Rss::ImportBase
 
   def download(url)
     cache(url) do
-      http_client = Faraday.new(url: url) do |builder|
-        builder.request  :url_encoded
-        builder.response :logger, Rails.logger
-        builder.adapter Faraday.default_adapter
+      retriable do
+        http_client = Faraday.new(url: url) do |builder|
+          builder.request  :url_encoded
+          builder.response :logger, Rails.logger
+          builder.adapter Faraday.default_adapter
+        end
+        http_client.headers[:user_agent] += " (SHIRASAGI/#{SS.version}; PID/#{Process.pid})"
+        http_client.headers[:accept_encoding] = "gzip"
+
+        resp = http_client.get
+        raise "#{resp.status}: http error" if resp.status != 200
+
+        content_encoding = resp.headers["Content-Encoding"]
+        if content_encoding.nil?
+          body = resp.body
+        elsif content_encoding.casecmp("gzip") == 0
+          body = Zlib::GzipReader.wrap(StringIO.new(resp.body)) { |gz| gz.read }
+        else
+          raise "#{content_encoding}: unsupported content encoding"
+        end
+
+        raise "empty body" if body.blank?
+
+        body.force_encoding('UTF-8')
       end
-      http_client.headers[:user_agent] += " (SHIRASAGI/#{SS.version}; PID/#{Process.pid})"
-      http_client.headers[:accept_encoding] = "gzip"
-
-      resp = http_client.get
-      break if resp.status != 200
-
-      content_encoding = resp.headers["Content-Encoding"]
-      if content_encoding.nil?
-        body = resp.body
-      elsif content_encoding.casecmp("gzip") == 0
-        body = Zlib::GzipReader.wrap(StringIO.new(resp.body)) { |gz| gz.read }
-      else
-        Rails.logger.error("#{content_encoding}: unsupported content encoding")
-        break
-      end
-
-      body = body.force_encoding('UTF-8') if body.present?
-      body
     end
   rescue => e
     Rails.logger.warn("#{e.class} (#{e.message}):\n  #{e.backtrace.join("\n  ")}")
@@ -178,6 +180,19 @@ class Rss::ImportWeatherXmlJob < Rss::ImportBase
     ::Zlib::GzipWriter.open(file_paths.first) { |gz| gz.write data.to_s }
 
     data
+  end
+
+  def retriable(tries = 3, timeout_sec = 10)
+    tries.times do |index|
+      try = index + 1
+
+      begin
+        return ::Timeout.timeout(timeout_sec) { yield }
+      rescue => _e
+        raise if try >= tries
+        sleep 5 * try
+      end
+    end
   end
 
   def extract_event_id(xml)
