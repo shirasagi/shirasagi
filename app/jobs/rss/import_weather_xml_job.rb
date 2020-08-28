@@ -85,7 +85,7 @@ class Rss::ImportWeatherXmlJob < Rss::ImportBase
     return if rand(100) >= 20
 
     expires_in = SS.config.rss.weather_xml["expires_in"].try { |threshold| SS::Duration.parse(threshold) rescue nil }
-    expires_in ||= 2.weeks
+    expires_in ||= 3.days
     threshold = Time.zone.now - expires_in
     Rss::TempFile.with_repl_master.lt(updated: threshold).destroy_all
     remove_old_cache(threshold)
@@ -143,13 +143,17 @@ class Rss::ImportWeatherXmlJob < Rss::ImportBase
         body = resp.body
       elsif content_encoding.casecmp("gzip") == 0
         body = Zlib::GzipReader.wrap(StringIO.new(resp.body)) { |gz| gz.read }
+      else
+        Rails.logger.error("#{content_encoding}: unsupported content encoding")
+        break
       end
-      return false if body.blank?
 
-      body.force_encoding('UTF-8')
+      body = body.force_encoding('UTF-8') if body.present?
+      body
     end
   rescue => e
     Rails.logger.warn("#{e.class} (#{e.message}):\n  #{e.backtrace.join("\n  ")}")
+    nil
   end
 
   def cache(url)
@@ -171,7 +175,7 @@ class Rss::ImportWeatherXmlJob < Rss::ImportBase
     end
 
     data = yield
-    ::Zlib::GzipWriter.open(file_paths.first) { |gz| gz.write data }
+    ::Zlib::GzipWriter.open(file_paths.first) { |gz| gz.write data.to_s }
 
     data
   end
