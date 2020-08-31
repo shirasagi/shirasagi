@@ -188,9 +188,12 @@ class Rss::ImportWeatherXmlJob < Rss::ImportBase
 
       begin
         return ::Timeout.timeout(timeout_sec) { yield }
-      rescue => _e
+      rescue => e
         raise if try >= tries
-        sleep 5 * try
+
+        next_interval = 5 * try
+        Rails.logger.info("#{e.class}: '#{e.message}' - #{try} tries and #{next_interval} seconds until the next try.")
+        sleep(next_interval)
       end
     end
   end
