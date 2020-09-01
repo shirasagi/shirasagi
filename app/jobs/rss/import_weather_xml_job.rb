@@ -85,7 +85,7 @@ class Rss::ImportWeatherXmlJob < Rss::ImportBase
     return if rand(100) >= 20
 
     expires_in = SS.config.rss.weather_xml["expires_in"].try { |threshold| SS::Duration.parse(threshold) rescue nil }
-    expires_in ||= 2.weeks
+    expires_in ||= 3.days
     threshold = Time.zone.now - expires_in
     Rss::TempFile.with_repl_master.lt(updated: threshold).destroy_all
     remove_old_cache(threshold)
@@ -127,29 +127,35 @@ class Rss::ImportWeatherXmlJob < Rss::ImportBase
 
   def download(url)
     cache(url) do
-      http_client = Faraday.new(url: url) do |builder|
-        builder.request  :url_encoded
-        builder.response :logger, Rails.logger
-        builder.adapter Faraday.default_adapter
+      retriable do
+        http_client = Faraday.new(url: url) do |builder|
+          builder.request  :url_encoded
+          builder.response :logger, Rails.logger
+          builder.adapter Faraday.default_adapter
+        end
+        http_client.headers[:user_agent] += " (SHIRASAGI/#{SS.version}; PID/#{Process.pid})"
+        http_client.headers[:accept_encoding] = "gzip"
+
+        resp = http_client.get
+        raise "#{resp.status}: http error" if resp.status != 200
+
+        content_encoding = resp.headers["Content-Encoding"]
+        if content_encoding.nil?
+          body = resp.body
+        elsif content_encoding.casecmp("gzip") == 0
+          body = Zlib::GzipReader.wrap(StringIO.new(resp.body)) { |gz| gz.read }
+        else
+          raise "#{content_encoding}: unsupported content encoding"
+        end
+
+        raise "empty body" if body.blank?
+
+        body.force_encoding('UTF-8')
       end
-      http_client.headers[:user_agent] += " (SHIRASAGI/#{SS.version}; PID/#{Process.pid})"
-      http_client.headers[:accept_encoding] = "gzip"
-
-      resp = http_client.get
-      break if resp.status != 200
-
-      content_encoding = resp.headers["Content-Encoding"]
-      if content_encoding.nil?
-        body = resp.body
-      elsif content_encoding.casecmp("gzip") == 0
-        body = Zlib::GzipReader.wrap(StringIO.new(resp.body)) { |gz| gz.read }
-      end
-      return false if body.blank?
-
-      body.force_encoding('UTF-8')
     end
   rescue => e
     Rails.logger.warn("#{e.class} (#{e.message}):\n  #{e.backtrace.join("\n  ")}")
+    nil
   end
 
   def cache(url)
@@ -171,9 +177,25 @@ class Rss::ImportWeatherXmlJob < Rss::ImportBase
     end
 
     data = yield
-    ::Zlib::GzipWriter.open(file_paths.first) { |gz| gz.write data }
+    ::Zlib::GzipWriter.open(file_paths.first) { |gz| gz.write data.to_s }
 
     data
+  end
+
+  def retriable(tries = 3, timeout_sec = 10)
+    tries.times do |index|
+      try = index + 1
+
+      begin
+        return ::Timeout.timeout(timeout_sec) { yield }
+      rescue => e
+        raise if try >= tries
+
+        next_interval = 5 * try
+        Rails.logger.info("#{e.class}: '#{e.message}' - #{try} tries and #{next_interval} seconds until the next try.")
+        sleep(next_interval)
+      end
+    end
   end
 
   def extract_event_id(xml)
