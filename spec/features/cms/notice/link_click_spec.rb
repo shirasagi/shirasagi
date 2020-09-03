@@ -23,6 +23,7 @@ describe "cms_notices", type: :feature, dbscope: :example, js: true do
       # new window (tab) is opened and pdf is show
       expect(new_window).to be_present
       within_window new_window do
+        puts page.html
         expect(page).to have_css("embed[type='application/pdf']")
       end
     end
