@@ -38,6 +38,12 @@ module Facility::Node
 
     default_scope ->{ where(route: "facility/page") }
 
+    def redirect_link
+      @tourism_page = ::Tourism::Page.site(site).in(facility_id: id).first
+      return nil if @tourism_page.blank?
+      @tourism_page.url
+    end
+
     def serve_static_file?
       false
     end
