@@ -92,9 +92,12 @@ class Inquiry::AnswersController < ApplicationController
 
   def download
     raise "403" unless @cur_node.allowed?(:read, @cur_user, site: @cur_site)
+
+    @state = params.dig(:s, :state).presence || "unclosed"
     @items = @model.site(@cur_site).
       where(node_id: @cur_node.id).
       search(params[:s]).
+      state(@state).
       order_by(updated: -1)
     send_csv @items
   end
