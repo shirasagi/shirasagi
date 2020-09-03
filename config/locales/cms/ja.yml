@@ -712,6 +712,9 @@ ja:
       cms/addon/tabs:
         conditions: タブ設定(URL)
         new_days: NEWマーク期間
+        loop_format: ループHTML形式
+        loop_html: ループHTML
+        loop_liquid: ループHTML
       cms/addon/thumb:
         thumb_id: サムネイル画像
       cms/addon/parent_crumb:
@@ -1351,7 +1354,7 @@ ja:
         - リストの並び替え方法を指定します。
       limit:
         - リストの表示件数を指定します。
-      loop_format:
+      loop_format: &loop_format
         - ループHTML形式の形式を選択します。
         -
         - "SHIRASAGI: シラサギ形式で上部 HTML, ループ HTML, 下部 HTMLを記述します。"
@@ -1382,7 +1385,7 @@ ja:
             &lt;/header>
             &lt;p>#{summary}&lt;/p>
           &lt;/article>
-      loop_html:
+      loop_html: &loop_html
         - 自動生成されたリスト表示部分のHTMLを指定することが可能です。
         - ループHTMLを選択または直接記入することが可能です。
         - |-
@@ -1424,7 +1427,7 @@ ja:
         - ページが見つからない時、上部HTMLと下部HTMLを表示するか設定できます。
       substitute_html:
         - ページが見つからない時、ループHTMLの代わりに表示するHTMLを記述することが可能です。
-      loop_liquid:
+      loop_liquid: &loop_liquid
         - Liquid 形式で記述します。
         - |-
           使用例：
@@ -1449,6 +1452,9 @@ ja:
           oshirase
           oshirase/event
           shisei/jinji
+      loop_format: *loop_format
+      loop_html: *loop_html
+      loop_liquid: *loop_liquid
       limit:
         - リストの表示件数を指定します。
       new_days:

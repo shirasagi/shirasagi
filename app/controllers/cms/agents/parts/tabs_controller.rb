@@ -1,6 +1,7 @@
 class Cms::Agents::Parts::TabsController < ApplicationController
   include Cms::PartFilter::View
   include Cms::PublicFilter::Agent
+  helper Cms::TabsHelper
 
   def index
     @tabs = []
