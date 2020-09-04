@@ -51,8 +51,8 @@
               <div class="holiday"><%= HolidayJapan.name date %></div>
             <% end %>
 
-            <% if events.blank? && @cur_part.parent.becomes_with_route.substitute_html.present? %>
-              <dd class="no-event"><%= sanitize @cur_part.parent.becomes_with_route.substitute_html.html_safe %></dd>
+            <% if events.blank? && @parent_node.present? && @parent_node.substitute_html.present? %>
+              <dd class="no-event"><%= sanitize @parent_node.substitute_html.html_safe %></dd>
             <% end %>
 
             <% events.each do |event, categories| %>

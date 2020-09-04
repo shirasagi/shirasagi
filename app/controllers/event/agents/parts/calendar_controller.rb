@@ -3,6 +3,7 @@ class Event::Agents::Parts::CalendarController < ApplicationController
   helper Event::EventHelper
 
   before_action :set_year_month
+  before_action :set_parent_node
 
   def index
     case @cur_part.event_display
@@ -43,10 +44,14 @@ class Event::Agents::Parts::CalendarController < ApplicationController
     @date = Date.new(@year, @month, @day)
   end
 
+  def set_parent_node
+    @parent_node = @cur_part.parent.try(:becomes_with_route)
+  end
+
   def set_event_dates(dates)
     @event_dates = Cms::Page.public_list(
       site: @cur_site,
-      part: @cur_part.parent.try(:becomes_with_route),
+      node: @parent_node,
       date: @cur_date).
       in(event_dates: dates).
       distinct(:event_dates).
@@ -64,8 +69,11 @@ class Event::Agents::Parts::CalendarController < ApplicationController
     dates.each do |d|
       @events[d] = []
     end
+
+    return if @parent_node.blank?
+
     dates = dates.map { |m| m.mongoize }
-    node_category_ids = @cur_part.parent.becomes_with_route.st_categories.pluck(:id)
+    node_category_ids = @parent_node.st_categories.pluck(:id)
     events(dates).each do |page|
       page.event_dates.split(/\R/).each do |date|
         d = Date.parse(date)
