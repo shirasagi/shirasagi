@@ -268,15 +268,7 @@ module SS::Model::File
   def image_dimension
     return unless image?
 
-    list = Magick::ImageList.new(path)
-    max_width = 0
-    max_height = 0
-    list.each do |image|
-      max_width = image.columns if max_width < image.columns
-      max_height = image.rows if max_height < image.rows
-    end
-
-    [ max_width, max_height ]
+    ::FastImage.size(path)
   end
 
   def shrink_image_to(width, height)
