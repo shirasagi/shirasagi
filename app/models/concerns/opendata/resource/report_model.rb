@@ -17,7 +17,6 @@ module Opendata::Resource::ReportModel
     set_permission_name "opendata_reports", :read
 
     field :year_month, type: Integer
-    field :deleted, type: DateTime
 
     field :dataset_id, type: Integer
     field :dataset_name, type: String

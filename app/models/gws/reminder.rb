@@ -11,7 +11,6 @@ class Gws::Reminder
   field :model, type: String
   field :date, type: DateTime #start_at
   field :read_at, type: DateTime
-  field :deleted, type: DateTime
   embeds_many :notifications, class_name: "Gws::Reminder::Notification"
 
   # related item fields
