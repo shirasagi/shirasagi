@@ -16,12 +16,14 @@ describe "inquiry_answers", type: :feature, dbscope: :example do
   let(:radio_value) { radio_column.select_options.sample }
   let(:select_value) { select_column.select_options.sample }
   let(:check_value) { Hash[check_column.select_options.map.with_index { |val, i| [i.to_s, val] }.sample(2)] }
+  let(:same_as_name) { unique_id }
   let(:name_column) { node.columns[0] }
   let(:company_column) { node.columns[1] }
   let(:email_column) { node.columns[2] }
   let(:radio_column) { node.columns[3] }
   let(:select_column) { node.columns[4] }
   let(:check_column) { node.columns[5] }
+  let(:same_as_name_column) { node.columns[6] }
 
   before do
     node.columns.create! attributes_for(:inquiry_column_name).reverse_merge({cur_site: site}).merge(question: 'enabled')
@@ -30,6 +32,7 @@ describe "inquiry_answers", type: :feature, dbscope: :example do
     node.columns.create! attributes_for(:inquiry_column_radio).reverse_merge({cur_site: site})
     node.columns.create! attributes_for(:inquiry_column_select).reverse_merge({cur_site: site})
     node.columns.create! attributes_for(:inquiry_column_check).reverse_merge({cur_site: site})
+    node.columns.create! attributes_for(:inquiry_column_same_as_name).reverse_merge({cur_site: site})
     node.reload
   end
 
@@ -40,6 +43,7 @@ describe "inquiry_answers", type: :feature, dbscope: :example do
     data[radio_column.id] = [radio_value]
     data[select_column.id] = [select_value]
     data[check_column.id] = [check_value]
+    data[same_as_name_column.id] = [same_as_name]
 
     answer.set_data(data)
     answer.save!
@@ -62,6 +66,8 @@ describe "inquiry_answers", type: :feature, dbscope: :example do
         expect(page).to have_css(".mod-inquiry-answer-body dd", text: radio_value)
         expect(page).to have_css(".mod-inquiry-answer-body dt", text: select_column.name)
         expect(page).to have_css(".mod-inquiry-answer-body dd", text: select_value)
+        expect(page).to have_css(".mod-inquiry-answer-body dt", text: same_as_name_column.name)
+        expect(page).to have_css(".mod-inquiry-answer-body dd", text: same_as_name)
 
         expect(page).to have_css(".mod-inquiry-answer-body dd", text: remote_addr)
         expect(page).to have_css(".mod-inquiry-answer-body dd", text: user_agent)
@@ -88,6 +94,8 @@ describe "inquiry_answers", type: :feature, dbscope: :example do
         expect(page).to have_css(".mod-inquiry-answer-body dd", text: radio_value)
         expect(page).to have_css(".mod-inquiry-answer-body dt", text: select_column.name)
         expect(page).to have_css(".mod-inquiry-answer-body dd", text: select_value)
+        expect(page).to have_css(".mod-inquiry-answer-body dt", text: same_as_name_column.name)
+        expect(page).to have_css(".mod-inquiry-answer-body dd", text: same_as_name)
 
         expect(page).to have_css(".mod-inquiry-answer-body dd", text: remote_addr)
         expect(page).to have_css(".mod-inquiry-answer-body dd", text: user_agent)
@@ -188,6 +196,8 @@ describe "inquiry_answers", type: :feature, dbscope: :example do
         expect(page).to have_css(".mod-inquiry-answer-body dd", text: radio_value)
         expect(page).to have_css(".mod-inquiry-answer-body dt", text: select_column.name)
         expect(page).to have_css(".mod-inquiry-answer-body dd", text: select_value)
+        expect(page).to have_css(".mod-inquiry-answer-body dt", text: same_as_name_column.name)
+        expect(page).to have_css(".mod-inquiry-answer-body dd", text: same_as_name)
 
         expect(page).to have_css(".mod-inquiry-answer-body dd", text: remote_addr)
         expect(page).to have_css(".mod-inquiry-answer-body dd", text: user_agent)
@@ -215,6 +225,8 @@ describe "inquiry_answers", type: :feature, dbscope: :example do
         expect(page).to have_css(".mod-inquiry-answer-body dd", text: radio_value)
         expect(page).to have_css(".mod-inquiry-answer-body dt", text: select_column.name)
         expect(page).to have_css(".mod-inquiry-answer-body dd", text: select_value)
+        expect(page).to have_css(".mod-inquiry-answer-body dt", text: same_as_name_column.name)
+        expect(page).to have_css(".mod-inquiry-answer-body dd", text: same_as_name)
 
         expect(page).to have_css(".mod-inquiry-answer-body dd", text: remote_addr)
         expect(page).to have_css(".mod-inquiry-answer-body dd", text: user_agent)
@@ -249,9 +261,11 @@ describe "inquiry_answers", type: :feature, dbscope: :example do
         expect(csv_lines[0][6]).to eq radio_column.name
         expect(csv_lines[0][7]).to eq select_column.name
         expect(csv_lines[0][8]).to eq check_column.name
-        expect(csv_lines[0][9]).to eq Inquiry::Answer.t('source_url')
-        expect(csv_lines[0][10]).to eq Inquiry::Answer.t('source_name')
-        expect(csv_lines[0][11]).to eq Inquiry::Answer.t('created')
+        expect(csv_lines[0][9]).to eq same_as_name_column.name
+        expect(csv_lines[0][10]).to eq Inquiry::Answer.t('source_url')
+        expect(csv_lines[0][11]).to eq Inquiry::Answer.t('source_name')
+        expect(csv_lines[0][12]).to eq Inquiry::Answer.t('created')
+
         expect(csv_lines[1][0]).to eq answer.id.to_s
         expect(csv_lines[1][1]).to eq((answer.label :state))
         expect(csv_lines[1][2]).to eq answer.comment
@@ -261,9 +275,11 @@ describe "inquiry_answers", type: :feature, dbscope: :example do
         expect(csv_lines[1][6]).to eq radio_value
         expect(csv_lines[1][7]).to eq select_value
         expect(csv_lines[1][8]).to eq check_value.values.join("\n")
-        expect(csv_lines[1][9]).to be_nil
+        expect(csv_lines[1][9]).to eq same_as_name
         expect(csv_lines[1][10]).to be_nil
-        expect(csv_lines[1][11]).to eq answer.created.strftime('%Y/%m/%d %H:%M')
+        expect(csv_lines[1][11]).to be_nil
+        expect(csv_lines[1][12]).to eq answer.created.strftime('%Y/%m/%d %H:%M')
+
       end
     end
 
@@ -278,6 +294,7 @@ describe "inquiry_answers", type: :feature, dbscope: :example do
 
         csv_lines = CSV.parse(page.html.encode("UTF-8"))
         expect(csv_lines.length).to eq 2
+
         expect(csv_lines[0][0]).to eq 'id'
         expect(csv_lines[0][1]).to eq((answer.t :state))
         expect(csv_lines[0][2]).to eq((answer.t :comment))
@@ -286,9 +303,11 @@ describe "inquiry_answers", type: :feature, dbscope: :example do
         expect(csv_lines[0][5]).to eq radio_column.name
         expect(csv_lines[0][6]).to eq select_column.name
         expect(csv_lines[0][7]).to eq check_column.name
-        expect(csv_lines[0][8]).to eq Inquiry::Answer.t('source_url')
-        expect(csv_lines[0][9]).to eq Inquiry::Answer.t('source_name')
-        expect(csv_lines[0][10]).to eq Inquiry::Answer.t('created')
+        expect(csv_lines[0][8]).to eq same_as_name_column.name
+        expect(csv_lines[0][9]).to eq Inquiry::Answer.t('source_url')
+        expect(csv_lines[0][10]).to eq Inquiry::Answer.t('source_name')
+        expect(csv_lines[0][11]).to eq Inquiry::Answer.t('created')
+
         expect(csv_lines[1][0]).to eq answer.id.to_s
         expect(csv_lines[1][1]).to eq((answer.label :state))
         expect(csv_lines[1][2]).to eq answer.comment
@@ -297,9 +316,10 @@ describe "inquiry_answers", type: :feature, dbscope: :example do
         expect(csv_lines[1][5]).to eq radio_value
         expect(csv_lines[1][6]).to eq select_value
         expect(csv_lines[1][7]).to eq check_value.values.join("\n")
-        expect(csv_lines[1][8]).to be_nil
+        expect(csv_lines[1][8]).to eq same_as_name
         expect(csv_lines[1][9]).to be_nil
-        expect(csv_lines[1][10]).to eq answer.created.strftime('%Y/%m/%d %H:%M')
+        expect(csv_lines[1][10]).to be_nil
+        expect(csv_lines[1][11]).to eq answer.created.strftime('%Y/%m/%d %H:%M')
       end
     end
   end
@@ -321,6 +341,8 @@ describe "inquiry_answers", type: :feature, dbscope: :example do
         expect(page).to have_css(".mod-inquiry-answer-body dd", text: radio_value)
         expect(page).to have_css(".mod-inquiry-answer-body dt", text: select_column.name)
         expect(page).to have_css(".mod-inquiry-answer-body dd", text: select_value)
+        expect(page).to have_css(".mod-inquiry-answer-body dt", text: same_as_name_column.name)
+        expect(page).to have_css(".mod-inquiry-answer-body dd", text: same_as_name)
 
         expect(page).to have_css(".mod-inquiry-answer-body dd", text: remote_addr)
         expect(page).to have_css(".mod-inquiry-answer-body dd", text: user_agent)
@@ -345,6 +367,8 @@ describe "inquiry_answers", type: :feature, dbscope: :example do
         expect(page).to have_css(".mod-inquiry-answer-body dd", text: radio_value)
         expect(page).to have_css(".mod-inquiry-answer-body dt", text: select_column.name)
         expect(page).to have_css(".mod-inquiry-answer-body dd", text: select_value)
+        expect(page).to have_css(".mod-inquiry-answer-body dt", text: same_as_name_column.name)
+        expect(page).to have_css(".mod-inquiry-answer-body dd", text: same_as_name)
 
         expect(page).to have_css(".mod-inquiry-answer-body dd", text: remote_addr)
         expect(page).to have_css(".mod-inquiry-answer-body dd", text: user_agent)
