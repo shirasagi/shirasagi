@@ -65,7 +65,7 @@ describe "gws_qna_topics", type: :feature, dbscope: :example do
         expect(notice.text).to be_blank
         expect(notice.html).to be_blank
         expect(notice.format).to eq "text"
-        expect(notice.seen).to be_blank
+        expect(notice.user_states).to be_blank
         expect(notice.state).to eq "public"
         expect(notice.send_date).to be_present
         expect(notice.url).to eq "/.g#{site.id}/qna/-/-/topics/#{topic.id}#post-#{comment.id}"
@@ -106,7 +106,7 @@ describe "gws_qna_topics", type: :feature, dbscope: :example do
         expect(notice.text).to be_blank
         expect(notice.html).to be_blank
         expect(notice.format).to eq "text"
-        expect(notice.seen).to be_blank
+        expect(notice.user_states).to be_blank
         expect(notice.state).to eq "public"
         expect(notice.send_date).to be_present
         expect(notice.url).to eq "/.g#{site.id}/qna/-/-/topics/#{topic.id}#post-#{comment.id}"
@@ -144,7 +144,7 @@ describe "gws_qna_topics", type: :feature, dbscope: :example do
         expect(notice.text).to be_blank
         expect(notice.html).to be_blank
         expect(notice.format).to eq "text"
-        expect(notice.seen).to be_blank
+        expect(notice.user_states).to be_blank
         expect(notice.state).to eq "public"
         expect(notice.send_date).to be_present
         expect(notice.url).to eq "/.g#{site.id}/qna/-/-/topics/#{topic.id}#post-#{comment.id}"
@@ -203,7 +203,7 @@ describe "gws_qna_topics", type: :feature, dbscope: :example do
         expect(notice.text).to be_blank
         expect(notice.html).to be_blank
         expect(notice.format).to eq "text"
-        expect(notice.seen).to be_blank
+        expect(notice.user_states).to be_blank
         expect(notice.state).to eq "public"
         expect(notice.send_date).to be_present
         expect(notice.url).to eq "/.g#{site.id}/qna/-/-/topics/#{topic.id}#post-#{comment.id}"
@@ -251,7 +251,7 @@ describe "gws_qna_topics", type: :feature, dbscope: :example do
         expect(notice.text).to be_blank
         expect(notice.html).to be_blank
         expect(notice.format).to eq "text"
-        expect(notice.seen).to be_blank
+        expect(notice.user_states).to be_blank
         expect(notice.state).to eq "public"
         expect(notice.send_date).to be_present
         expect(notice.url).to eq "/.g#{site.id}/qna/-/-/topics/#{topic.id}#post-#{comment2.id}"
@@ -292,7 +292,7 @@ describe "gws_qna_topics", type: :feature, dbscope: :example do
         expect(notice.text).to be_blank
         expect(notice.html).to be_blank
         expect(notice.format).to eq "text"
-        expect(notice.seen).to be_blank
+        expect(notice.user_states).to be_blank
         expect(notice.state).to eq "public"
         expect(notice.send_date).to be_present
         expect(notice.url).to eq "/.g#{site.id}/qna/-/-/topics/#{topic.id}#post-#{comment2.id}"
@@ -330,7 +330,7 @@ describe "gws_qna_topics", type: :feature, dbscope: :example do
         expect(notice.text).to be_blank
         expect(notice.html).to be_blank
         expect(notice.format).to eq "text"
-        expect(notice.seen).to be_blank
+        expect(notice.user_states).to be_blank
         expect(notice.state).to eq "public"
         expect(notice.send_date).to be_present
         expect(notice.url).to eq "/.g#{site.id}/qna/-/-/topics/#{topic.id}#post-#{comment2.id}"

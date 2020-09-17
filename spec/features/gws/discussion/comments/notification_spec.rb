@@ -50,7 +50,7 @@ describe "gws_discussion_comments", type: :feature, dbscope: :example, js: true 
       expect(notification.text).to be_blank
       expect(notification.html).to be_blank
       expect(notification.format).to eq "text"
-      expect(notification.seen).to be_blank
+      expect(notification.user_states).to be_blank
       expect(notification.state).to eq "public"
       expect(notification.send_date).to be_present
       url = "/.g#{site.id}/discussion/-/forums/#{forum.id}/topics/#{topic.id}/comments#comment-#{post.id}"
