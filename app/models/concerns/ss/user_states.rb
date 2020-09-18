@@ -7,13 +7,14 @@ module SS::UserStates
   end
 
   module ClassMethods
-    def and_user_state_blank(user_or_user_id, state, exists = false)
+    def and_user_state_blank(user_or_user_id, state)
       user_id = user_or_user_id.numeric? ? user_or_user_id.to_i : user_or_user_id.id
-      where(user_states: { "$elemMatch" => { "user_id" => user_id, state => { "$exists" => exists } } })
+      where(user_states: { "$not" => { "$elemMatch" => { "user_id" => user_id, state => { "$exists" => true } } } })
     end
 
     def and_user_state_present(user_or_user_id, state)
-      and_user_state_blank(user_or_user_id, state, true)
+      user_id = user_or_user_id.numeric? ? user_or_user_id.to_i : user_or_user_id.id
+      where(user_states: { "$elemMatch" => { "user_id" => user_id, state => { "$exists" => true } } })
     end
   end
 

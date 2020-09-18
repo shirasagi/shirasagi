@@ -116,7 +116,31 @@ describe SS::Notification, dbscope: :example do
   end
 
   describe ".undeleted" do
-    let!(:notification1) do
+    let!(:n1) do
+      create(:ss_notification, member_ids: [ user1.id, user2.id, user3.id ])
+    end
+    let!(:n2) do
+      create(
+        :ss_notification, member_ids: [ user1.id, user2.id, user3.id ],
+        user_states: [
+          { "user_id" => user1.id, "seen" => Time.zone.now.utc, "deleted" => Time.zone.now.utc },
+        ])
+    end
+    let!(:n3) do
+      create(
+        :ss_notification, member_ids: [ user1.id, user2.id, user3.id ],
+        user_states: [
+          { "user_id" => user2.id, "deleted" => Time.zone.now.utc },
+        ])
+    end
+    let!(:n4) do
+      create(
+        :ss_notification, member_ids: [ user1.id, user2.id, user3.id ],
+        user_states: [
+          { "user_id" => user3.id, "seen" => Time.zone.now.utc },
+        ])
+    end
+    let!(:n5) do
       create(
         :ss_notification, member_ids: [ user1.id, user2.id, user3.id ],
         user_states: [
@@ -127,18 +151,45 @@ describe SS::Notification, dbscope: :example do
     end
 
     it do
-      expect(described_class.all.count).to eq 1
-      expect(described_class.undeleted(user1).count).to eq 1
-      expect(described_class.undeleted(user1.id).count).to eq 1
-      expect(described_class.undeleted(user2).count).to eq 0
-      expect(described_class.undeleted(user2.id).count).to eq 0
-      expect(described_class.undeleted(user3).count).to eq 0
-      expect(described_class.undeleted(user3.id).count).to eq 0
+      expect(described_class.all.count).to eq 5
+      expect(described_class.undeleted(user1).count).to eq 4
+      expect(described_class.undeleted(user1).pluck(:id)).to include(n1.id, n3.id, n4.id, n5.id)
+      expect(described_class.undeleted(user1.id).count).to eq 4
+      expect(described_class.undeleted(user2).count).to eq 3
+      expect(described_class.undeleted(user2).pluck(:id)).to include(n1.id, n2.id, n4.id)
+      expect(described_class.undeleted(user2.id).count).to eq 3
+      expect(described_class.undeleted(user3).count).to eq 4
+      expect(described_class.undeleted(user3).pluck(:id)).to include(n1.id, n2.id, n3.id, n4.id)
+      expect(described_class.undeleted(user3.id).count).to eq 4
     end
   end
 
   describe ".unseen" do
-    let!(:notification1) do
+    let!(:n1) do
+      create(:ss_notification, member_ids: [ user1.id, user2.id, user3.id ])
+    end
+    let!(:n2) do
+      create(
+        :ss_notification, member_ids: [ user1.id, user2.id, user3.id ],
+        user_states: [
+          { "user_id" => user1.id, "seen" => Time.zone.now.utc, "deleted" => Time.zone.now.utc },
+        ])
+    end
+    let!(:n3) do
+      create(
+        :ss_notification, member_ids: [ user1.id, user2.id, user3.id ],
+        user_states: [
+          { "user_id" => user2.id, "deleted" => Time.zone.now.utc },
+        ])
+    end
+    let!(:n4) do
+      create(
+        :ss_notification, member_ids: [ user1.id, user2.id, user3.id ],
+        user_states: [
+          { "user_id" => user3.id, "seen" => Time.zone.now.utc },
+        ])
+    end
+    let!(:n5) do
       create(
         :ss_notification, member_ids: [ user1.id, user2.id, user3.id ],
         user_states: [
@@ -149,13 +200,16 @@ describe SS::Notification, dbscope: :example do
     end
 
     it do
-      expect(described_class.all.count).to eq 1
-      expect(described_class.unseen(user1).count).to eq 0
-      expect(described_class.unseen(user1.id).count).to eq 0
-      expect(described_class.unseen(user2).count).to eq 1
-      expect(described_class.unseen(user2.id).count).to eq 1
-      expect(described_class.unseen(user3).count).to eq 0
-      expect(described_class.unseen(user3.id).count).to eq 0
+      expect(described_class.all.count).to eq 5
+      expect(described_class.unseen(user1).count).to eq 3
+      expect(described_class.unseen(user1).pluck(:id)).to include(n1.id, n3.id, n4.id)
+      expect(described_class.unseen(user1.id).count).to eq 3
+      expect(described_class.unseen(user2).count).to eq 5
+      expect(described_class.unseen(user2).pluck(:id)).to include(n1.id, n2.id, n3.id, n4.id, n5.id)
+      expect(described_class.unseen(user2.id).count).to eq 5
+      expect(described_class.unseen(user3).count).to eq 3
+      expect(described_class.unseen(user3).pluck(:id)).to include(n1.id, n2.id, n3.id)
+      expect(described_class.unseen(user3.id).count).to eq 3
     end
   end
 end
