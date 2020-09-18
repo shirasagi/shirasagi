@@ -155,6 +155,7 @@ Rails.application.routes.draw do
     delete "search_contents/pages" => "search_contents/pages#destroy_all"
     get "search_contents/:id/download" => "page_search_contents#download", as: "download_page_search_contents"
     delete "search_contents/:id" => "search_contents/pages#destroy_all_pages"
+    resource :generate_lock
 
     resources :check_links_pages, only: [:show, :index]
     resources :check_links_nodes, only: [:show, :index]
@@ -179,8 +180,6 @@ Rails.application.routes.draw do
       match "forms/:id/html" => "forms#html", as: :form_html, via: %i[post put]
       match "forms/:id/link_check" => "forms#link_check", as: :form_link_check, via: %i[post put]
       post "validation" => "validation#validate"
-      put "generate_lock/lock" => "generate_lock#lock"
-      put "generate_lock/unlock" => "generate_lock#unlock"
 
       resources :files, concerns: :deletion do
         get :select, on: :member

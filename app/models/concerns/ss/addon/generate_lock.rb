@@ -6,21 +6,12 @@ module SS::Addon
     included do
       field :generate_lock_until, type: DateTime
       belongs_to :generate_lock_user, class_name: "SS::User"
+      permit_params :generate_lock_until
+      validate :validate_generate_lock
     end
 
     def generate_lock_enabled?
       SS.config.cms.generate_lock['disable'].blank?
-    end
-
-    def generate_lock_options
-      SS.config.cms.generate_lock['options'].collect do |opt|
-        term, unit = opt.split('.')
-        valid_unit = I18n.t("datetime.prompts.#{unit.singularize.downcase}", default: '')
-        next if valid_unit.blank?
-        [term + valid_unit + I18n.t('ss.units.during'), opt]
-      rescue
-        nil
-      end.compact
     end
 
     def generate_locked?
@@ -30,33 +21,21 @@ module SS::Addon
       generate_lock_until >= Time.zone.now
     end
 
-    def generate_lock(str, opts = {})
-      if !generate_lock_enabled?
-        generate_unlock(opts)
-        return
-      end
+    private
 
-      if !generate_lock_options.collect(&:last).include?(str)
-        generate_unlock(opts)
-        return
-      end
+    def validate_generate_lock
+      return if !generate_lock_until_changed? || generate_lock_until.blank?
 
       begin
-        term, unit = str.split('.')
-        term = term.to_i
-        self.set(generate_lock_until: Time.zone.now + term.send(unit))
-        if opts[:user].present?
-          self.set(generate_lock_user_id: opts[:user].id)
+        if SS.config.cms.generate_lock['generate_lock_until'].present?
+          term, unit = SS.config.cms.generate_lock['generate_lock_until'].split('.')
+          term = term.to_i
+          if generate_lock_until > Time.zone.now + term.send(unit)
+            errors.add :generate_lock_until, :disallow_datetime_by_system
+          end
         end
       rescue
-        generate_unlock(opts)
-      end
-    end
-
-    def generate_unlock(opts = {})
-      self.set(generate_lock_until: nil)
-      if opts[:user].present?
-        self.set(generate_lock_user_id: opts[:user].id)
+        errors.add :generate_lock_until, :invalid
       end
     end
   end

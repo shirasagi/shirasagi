@@ -437,6 +437,9 @@ this.SS = (function () {
         if (data.maxDate !== null) {
           opts.maxDate = data.maxDate;
         }
+        if (data.step !== null) {
+          opts.step = data.step;
+        }
         return $(this).datetimepicker(opts);
       });
     }

@@ -2,5 +2,5 @@
 class Cms::GenerateLock
   include Cms::SitePermission
 
-  set_permission_name "cms_generate_lock", :use
+  set_permission_name "cms_generate_lock"
 end

@@ -452,6 +452,8 @@ ja:
           not_found: "%{line_no} 行目: Id %{id} のロールは存在しません。"
         ss/model/prefecture_code:
           invalid_code: "は不正です。"
+        ss/addon/generate_lock:
+          disallow_datetime_by_system: の日時はシステムにより許可されていません。より短い日時を入力してください。
     attributes:
       ss/document:
         id: id

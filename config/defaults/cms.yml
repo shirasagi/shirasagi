@@ -136,9 +136,7 @@ production: &production
 
   generate_lock:
     disable: false
-    options:
-      - 1.hour
-      - 15.minutes
+    generate_lock_until: 1.hour
 
 test:
   <<: *production
