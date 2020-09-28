@@ -17,7 +17,7 @@ class SS::Migration20200918000000
       end
       if seen.present?
         seen.each do |str_user_id, time|
-          upsert_user_setting(user_settings, str_user_id.to_i, "seen", time)
+          upsert_user_setting(user_settings, str_user_id.to_i, "seen_at", time)
         end
         user_settings_modified = true
       end

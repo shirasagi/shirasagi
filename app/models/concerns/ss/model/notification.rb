@@ -52,7 +52,7 @@ module SS::Model::Notification
   public
 
   def set_seen(user)
-    upsert_user_setting(user.id, "seen", Time.zone.now.utc)
+    upsert_user_setting(user.id, "seen_at", Time.zone.now.utc)
     self
   end
 
@@ -65,7 +65,7 @@ module SS::Model::Notification
   end
 
   def unseen?(user)
-    find_user_setting(user.id, "seen").blank?
+    find_user_setting(user.id, "seen_at").blank?
   end
 
   def deleted?(user)
@@ -104,7 +104,7 @@ module SS::Model::Notification
     end
 
     def unseen(user_or_user_id)
-      and_user_setting_blank(user_or_user_id, "seen")
+      and_user_setting_blank(user_or_user_id, "seen_at")
     end
 
     def unseens(user, opts = {})

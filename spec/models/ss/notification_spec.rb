@@ -23,7 +23,7 @@ describe SS::Notification, dbscope: :example do
         expect(notification.unseen?(user2)).to be_falsey
         expect(notification.unseen?(user3)).to be_truthy
         notification.reload
-        expect(notification.send(:find_user_setting, user2.id, "seen")).to eq now - 3.hours
+        expect(notification.send(:find_user_setting, user2.id, "seen_at")).to eq now - 3.hours
 
         Timecop.freeze(now - 2.hours) do
           notification.set_seen(user1)
@@ -32,7 +32,7 @@ describe SS::Notification, dbscope: :example do
         expect(notification.unseen?(user2)).to be_falsey
         expect(notification.unseen?(user3)).to be_truthy
         notification.reload
-        expect(notification.send(:find_user_setting, user1.id, "seen")).to eq now - 2.hours
+        expect(notification.send(:find_user_setting, user1.id, "seen_at")).to eq now - 2.hours
 
         Timecop.freeze(now - 1.hour) do
           notification.set_seen(user3)
@@ -41,7 +41,7 @@ describe SS::Notification, dbscope: :example do
         expect(notification.unseen?(user2)).to be_falsey
         expect(notification.unseen?(user3)).to be_falsey
         notification.reload
-        expect(notification.send(:find_user_setting, user3.id, "seen")).to eq now - 1.hour
+        expect(notification.send(:find_user_setting, user3.id, "seen_at")).to eq now - 1.hour
       end
     end
 
@@ -105,11 +105,11 @@ describe SS::Notification, dbscope: :example do
 
         notification.reload
         expect(notification.user_setting.length).to eq 3
-        expect(notification.send(:find_user_setting, user1.id, "seen")).to eq now - 3.hours
+        expect(notification.send(:find_user_setting, user1.id, "seen_at")).to eq now - 3.hours
         expect(notification.send(:find_user_setting, user1.id, "deleted")).to be_blank
-        expect(notification.send(:find_user_setting, user2.id, "seen")).to eq now - 3.hours
+        expect(notification.send(:find_user_setting, user2.id, "seen_at")).to eq now - 3.hours
         expect(notification.send(:find_user_setting, user2.id, "deleted")).to eq now - 3.hours
-        expect(notification.send(:find_user_setting, user3.id, "seen")).to be_blank
+        expect(notification.send(:find_user_setting, user3.id, "seen_at")).to be_blank
         expect(notification.send(:find_user_setting, user3.id, "deleted")).to eq now - 3.hours
       end
     end
@@ -123,7 +123,7 @@ describe SS::Notification, dbscope: :example do
       create(
         :ss_notification, member_ids: [ user1.id, user2.id, user3.id ],
         user_settings: [
-          { "user_id" => user1.id, "seen" => Time.zone.now.utc, "deleted" => Time.zone.now.utc },
+          { "user_id" => user1.id, "seen_at" => Time.zone.now.utc, "deleted" => Time.zone.now.utc },
         ])
     end
     let!(:n3) do
@@ -137,16 +137,16 @@ describe SS::Notification, dbscope: :example do
       create(
         :ss_notification, member_ids: [ user1.id, user2.id, user3.id ],
         user_settings: [
-          { "user_id" => user3.id, "seen" => Time.zone.now.utc },
+          { "user_id" => user3.id, "seen_at" => Time.zone.now.utc },
         ])
     end
     let!(:n5) do
       create(
         :ss_notification, member_ids: [ user1.id, user2.id, user3.id ],
         user_settings: [
-          { "user_id" => user1.id, "seen" => Time.zone.now.utc },
+          { "user_id" => user1.id, "seen_at" => Time.zone.now.utc },
           { "user_id" => user2.id, "deleted" => Time.zone.now.utc },
-          { "user_id" => user3.id, "seen" => Time.zone.now.utc, "deleted" => Time.zone.now.utc },
+          { "user_id" => user3.id, "seen_at" => Time.zone.now.utc, "deleted" => Time.zone.now.utc },
         ])
     end
 
@@ -172,7 +172,7 @@ describe SS::Notification, dbscope: :example do
       create(
         :ss_notification, member_ids: [ user1.id, user2.id, user3.id ],
         user_settings: [
-          { "user_id" => user1.id, "seen" => Time.zone.now.utc, "deleted" => Time.zone.now.utc },
+          { "user_id" => user1.id, "seen_at" => Time.zone.now.utc, "deleted" => Time.zone.now.utc },
         ])
     end
     let!(:n3) do
@@ -186,16 +186,16 @@ describe SS::Notification, dbscope: :example do
       create(
         :ss_notification, member_ids: [ user1.id, user2.id, user3.id ],
         user_settings: [
-          { "user_id" => user3.id, "seen" => Time.zone.now.utc },
+          { "user_id" => user3.id, "seen_at" => Time.zone.now.utc },
         ])
     end
     let!(:n5) do
       create(
         :ss_notification, member_ids: [ user1.id, user2.id, user3.id ],
         user_settings: [
-          { "user_id" => user1.id, "seen" => Time.zone.now.utc },
+          { "user_id" => user1.id, "seen_at" => Time.zone.now.utc },
           { "user_id" => user2.id, "deleted" => Time.zone.now.utc },
-          { "user_id" => user3.id, "seen" => Time.zone.now.utc, "deleted" => Time.zone.now.utc },
+          { "user_id" => user3.id, "seen_at" => Time.zone.now.utc, "deleted" => Time.zone.now.utc },
         ])
     end
 

@@ -65,9 +65,9 @@ RSpec.describe SS::Migration20200918000000, dbscope: :example do
     expect(n3.attributes["seen"]).to be_present
     n3.reload
     expect(n3.user_settings.length).to eq 1
-    expect(n3.send(:find_user_setting, user_id1, "seen")).to be_blank
-    expect(n3.send(:find_user_setting, user_id2, "seen")).to be_present
-    expect(n3.send(:find_user_setting, user_id3, "seen")).to be_blank
+    expect(n3.send(:find_user_setting, user_id1, "seen_at")).to be_blank
+    expect(n3.send(:find_user_setting, user_id2, "seen_at")).to be_present
+    expect(n3.send(:find_user_setting, user_id3, "seen_at")).to be_blank
     expect(n3.attributes["deleted"]).to be_blank
     expect(n3.attributes["seen"]).to be_blank
 
@@ -85,9 +85,9 @@ RSpec.describe SS::Migration20200918000000, dbscope: :example do
     expect(n4.send(:find_user_setting, user_id1, "deleted")).to be_present
     expect(n4.send(:find_user_setting, user_id2, "deleted")).to be_blank
     expect(n4.send(:find_user_setting, user_id3, "deleted")).to be_present
-    expect(n4.send(:find_user_setting, user_id1, "seen")).to be_blank
-    expect(n4.send(:find_user_setting, user_id2, "seen")).to be_present
-    expect(n4.send(:find_user_setting, user_id3, "seen")).to be_present
+    expect(n4.send(:find_user_setting, user_id1, "seen_at")).to be_blank
+    expect(n4.send(:find_user_setting, user_id2, "seen_at")).to be_present
+    expect(n4.send(:find_user_setting, user_id3, "seen_at")).to be_present
     # 古い廃止された属性が削除されているか？
     expect(n4.attributes.key?("deleted")).to be_falsey
     expect(n4.attributes.key?("seen")).to be_falsey
