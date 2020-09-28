@@ -22,7 +22,7 @@ describe "sitemap_agents_nodes_page", type: :feature, dbscope: :example do
     end
 
     it "#xml" do
-      file = Kernel.open(File.join(node.path, 'item.xml'))
+      file = File.open(File.join(node.path, 'item.xml'))
       xml = file.read
       expect(xml).to include(article_node.full_url)
       expect(xml).not_to include(article_page.full_url)
@@ -44,7 +44,7 @@ describe "sitemap_agents_nodes_page", type: :feature, dbscope: :example do
     end
 
     it "#xml" do
-      file = Kernel.open(File.join(node.path, 'item.xml'))
+      file = File.open(File.join(node.path, 'item.xml'))
       xml = file.read
       expect(xml).to include(article_node.full_url)
       expect(xml).to include(article_page.full_url)
@@ -65,7 +65,7 @@ describe "sitemap_agents_nodes_page", type: :feature, dbscope: :example do
       end
 
       it "#xml" do
-        file = Kernel.open(File.join(node.path, 'item.xml'))
+        file = File.open(File.join(node.path, 'item.xml'))
         xml = file.read
         expect(xml).to include(article_node.full_url)
         expect(xml).to include(article_page.full_url)
@@ -87,7 +87,7 @@ describe "sitemap_agents_nodes_page", type: :feature, dbscope: :example do
       end
 
       it "#xml" do
-        file = Kernel.open(File.join(node.path, 'item.xml'))
+        file = File.open(File.join(node.path, 'item.xml'))
         xml = file.read
         expect(xml).to include(article_node.full_url)
         expect(xml).to include(article_page.full_url)
