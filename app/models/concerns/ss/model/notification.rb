@@ -5,7 +5,7 @@ module SS::Model::Notification
   include SS::Reference::User
   include SS::UserPermission
   include SS::Addon::Notification::Reply
-  include SS::UserStates
+  include SS::UserSettings
 
   attr_accessor :cur_group
 
@@ -52,7 +52,7 @@ module SS::Model::Notification
   public
 
   def set_seen(user)
-    upsert_user_state(user.id, "seen", Time.zone.now.utc)
+    upsert_user_setting(user.id, "seen", Time.zone.now.utc)
     self
   end
 
@@ -65,11 +65,11 @@ module SS::Model::Notification
   end
 
   def unseen?(user)
-    find_user_state(user.id, "seen").blank?
+    find_user_setting(user.id, "seen").blank?
   end
 
   def deleted?(user)
-    find_user_state(user.id, "deleted").present?
+    find_user_setting(user.id, "deleted").present?
   end
 
   def attachments?
@@ -89,7 +89,7 @@ module SS::Model::Notification
     end
 
     result = save
-    upsert_user_state(user.id, "deleted", Time.zone.now.utc) if result
+    upsert_user_setting(user.id, "deleted", Time.zone.now.utc) if result
     result
   end
 
@@ -100,11 +100,11 @@ module SS::Model::Notification
 
   module ClassMethods
     def undeleted(user_or_user_id)
-      and_user_state_blank(user_or_user_id, "deleted")
+      and_user_setting_blank(user_or_user_id, "deleted")
     end
 
     def unseen(user_or_user_id)
-      and_user_state_blank(user_or_user_id, "seen")
+      and_user_setting_blank(user_or_user_id, "seen")
     end
 
     def unseens(user, opts = {})

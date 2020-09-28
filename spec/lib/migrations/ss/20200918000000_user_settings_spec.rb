@@ -1,5 +1,5 @@
 require 'spec_helper'
-require Rails.root.join("lib/migrations/ss/20200918000000_user_states.rb")
+require Rails.root.join("lib/migrations/ss/20200918000000_user_settings.rb")
 
 RSpec.describe SS::Migration20200918000000, dbscope: :example do
   let(:now) { Time.zone.now.beginning_of_minute }
@@ -45,49 +45,49 @@ RSpec.describe SS::Migration20200918000000, dbscope: :example do
   it do
     # n1
     n1.reload
-    expect(n1.user_states).to be_blank
+    expect(n1.user_settings).to be_blank
 
     # n2
-    expect(n2.user_states).to be_blank
+    expect(n2.user_settings).to be_blank
     expect(n2.attributes["deleted"]).to be_present
     expect(n2.attributes["seen"]).to be_blank
     n2.reload
-    expect(n2.user_states.length).to eq 1
-    expect(n2.send(:find_user_state, user_id1, "deleted")).to be_present
-    expect(n2.send(:find_user_state, user_id2, "deleted")).to be_blank
-    expect(n2.send(:find_user_state, user_id3, "deleted")).to be_blank
+    expect(n2.user_settings.length).to eq 1
+    expect(n2.send(:find_user_setting, user_id1, "deleted")).to be_present
+    expect(n2.send(:find_user_setting, user_id2, "deleted")).to be_blank
+    expect(n2.send(:find_user_setting, user_id3, "deleted")).to be_blank
     expect(n2.attributes["deleted"]).to be_blank
     expect(n2.attributes["seen"]).to be_blank
 
     # n3
-    expect(n3.user_states).to be_blank
+    expect(n3.user_settings).to be_blank
     expect(n3.attributes["deleted"]).to be_blank
     expect(n3.attributes["seen"]).to be_present
     n3.reload
-    expect(n3.user_states.length).to eq 1
-    expect(n3.send(:find_user_state, user_id1, "seen")).to be_blank
-    expect(n3.send(:find_user_state, user_id2, "seen")).to be_present
-    expect(n3.send(:find_user_state, user_id3, "seen")).to be_blank
+    expect(n3.user_settings.length).to eq 1
+    expect(n3.send(:find_user_setting, user_id1, "seen")).to be_blank
+    expect(n3.send(:find_user_setting, user_id2, "seen")).to be_present
+    expect(n3.send(:find_user_setting, user_id3, "seen")).to be_blank
     expect(n3.attributes["deleted"]).to be_blank
     expect(n3.attributes["seen"]).to be_blank
 
     # n4
-    expect(n4.user_states).to be_blank
+    expect(n4.user_settings).to be_blank
     expect(n4.attributes["deleted"]).to be_present
     expect(n4.attributes["seen"]).to be_present
     n4.reload
-    expect(n4.user_states.length).to eq 3
-    # user_states は user_id の昇順でなければならない
-    expect(n4.user_states.find_index { |user_state| user_state["user_id"] == user_id1 }).to eq 0
-    expect(n4.user_states.find_index { |user_state| user_state["user_id"] == user_id2 }).to eq 1
-    expect(n4.user_states.find_index { |user_state| user_state["user_id"] == user_id3 }).to eq 2
+    expect(n4.user_settings.length).to eq 3
+    # user_settings は user_id の昇順でなければならない
+    expect(n4.user_settings.find_index { |user_state| user_state["user_id"] == user_id1 }).to eq 0
+    expect(n4.user_settings.find_index { |user_state| user_state["user_id"] == user_id2 }).to eq 1
+    expect(n4.user_settings.find_index { |user_state| user_state["user_id"] == user_id3 }).to eq 2
     # ユーザーごとの状態が正しいか？
-    expect(n4.send(:find_user_state, user_id1, "deleted")).to be_present
-    expect(n4.send(:find_user_state, user_id2, "deleted")).to be_blank
-    expect(n4.send(:find_user_state, user_id3, "deleted")).to be_present
-    expect(n4.send(:find_user_state, user_id1, "seen")).to be_blank
-    expect(n4.send(:find_user_state, user_id2, "seen")).to be_present
-    expect(n4.send(:find_user_state, user_id3, "seen")).to be_present
+    expect(n4.send(:find_user_setting, user_id1, "deleted")).to be_present
+    expect(n4.send(:find_user_setting, user_id2, "deleted")).to be_blank
+    expect(n4.send(:find_user_setting, user_id3, "deleted")).to be_present
+    expect(n4.send(:find_user_setting, user_id1, "seen")).to be_blank
+    expect(n4.send(:find_user_setting, user_id2, "seen")).to be_present
+    expect(n4.send(:find_user_setting, user_id3, "seen")).to be_present
     # 古い廃止された属性が削除されているか？
     expect(n4.attributes.key?("deleted")).to be_falsey
     expect(n4.attributes.key?("seen")).to be_falsey

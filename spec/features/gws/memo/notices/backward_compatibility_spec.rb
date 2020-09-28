@@ -47,8 +47,8 @@ describe 'gws/memo/notices', type: :feature, dbscope: :example, js: true do
         expect(page).to have_content(item_old.text)
 
         item_old.reload
-        expect(item_old.user_states).to be_present
-        expect(item_old.user_states.any? { |user_state| user_state["user_id"] == gws_user.id }).to be_truthy
+        expect(item_old.user_settings).to be_present
+        expect(item_old.user_settings.any? { |user_state| user_state["user_id"] == gws_user.id }).to be_truthy
       end
     end
 
@@ -70,8 +70,8 @@ describe 'gws/memo/notices', type: :feature, dbscope: :example, js: true do
         expect(page).to have_content(curcular_item.text)
 
         item_new.reload
-        expect(item_new.user_states).to be_present
-        expect(item_new.user_states.any? { |user_state| user_state["user_id"] == gws_user.id }).to be_truthy
+        expect(item_new.user_settings).to be_present
+        expect(item_new.user_settings.any? { |user_state| user_state["user_id"] == gws_user.id }).to be_truthy
       end
     end
 
@@ -93,8 +93,8 @@ describe 'gws/memo/notices', type: :feature, dbscope: :example, js: true do
         expect(page).to have_css('#notice', text: I18n.t('ss.notice.set_seen'))
 
         item_no_info.reload
-        expect(item_no_info.user_states).to be_present
-        expect(item_no_info.user_states.any? { |user_state| user_state["user_id"] == gws_user.id }).to be_truthy
+        expect(item_no_info.user_settings).to be_present
+        expect(item_no_info.user_settings.any? { |user_state| user_state["user_id"] == gws_user.id }).to be_truthy
       end
     end
   end

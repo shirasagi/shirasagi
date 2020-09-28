@@ -66,7 +66,7 @@ describe "gws_discussion_topics_notify_message", type: :feature, dbscope: :examp
       expect(notification.text).to be_blank
       expect(notification.html).to be_blank
       expect(notification.format).to eq "text"
-      expect(notification.user_states).to be_blank
+      expect(notification.user_settings).to be_blank
       expect(notification.state).to eq "public"
       expect(notification.send_date).to be_present
       expect(notification.url).to eq "/.g#{site.id}/discussion/-/forums/#{forum2.id}/topics#topic-#{topic.id}"
