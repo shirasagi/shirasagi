@@ -104,7 +104,7 @@ describe SS::Notification, dbscope: :example do
         expect(notification.deleted?(user3)).to be_truthy
 
         notification.reload
-        expect(notification.user_setting.length).to eq 3
+        expect(notification.user_settings.length).to eq 3
         expect(notification.send(:find_user_setting, user1.id, "seen_at")).to eq now - 3.hours
         expect(notification.send(:find_user_setting, user1.id, "deleted")).to be_blank
         expect(notification.send(:find_user_setting, user2.id, "seen_at")).to eq now - 3.hours
