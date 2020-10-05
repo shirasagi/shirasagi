@@ -21,6 +21,8 @@ module SS::UserSettings
   private
 
   def insert_user_setting(user_id, state, value)
+    # to insert item into array, use `#persist_atomic_operations` method.
+    # be careful, you must not use `#set` method. this method update hash totally.
     persist_atomic_operations(
       "$push" => {
         user_settings: {
@@ -39,11 +41,13 @@ module SS::UserSettings
   end
 
   def update_user_setting(user_id, state, value)
+    # to update hash (item of array) partially, use mongodb native method.
+    # be careful, you must not use `#set` method. this method update hash totally.
     filter_spec = { _id: self.id, user_settings: { "$elemMatch" => { "user_id" => user_id } } }
     update_spec = { "$set" => { "user_settings.$.#{state}" => value } }
     self.collection.update_one(filter_spec, update_spec)
 
-    user_setting = user_settings.bsearch { |user_setting| user_setting["user_id"] <=> user_id }
+    user_setting = bsearch_user_setting(user_id)
     user_setting[state] = value
   end
 
@@ -53,7 +57,7 @@ module SS::UserSettings
       return
     end
 
-    user_setting = user_settings.bsearch { |user_setting| user_setting["user_id"] <=> user_id }
+    user_setting = bsearch_user_setting(user_id)
     if user_setting.blank?
       insert_user_setting(user_id, state, value)
       return
@@ -63,11 +67,14 @@ module SS::UserSettings
   end
 
   def find_user_setting(user_id, state)
-    return if user_settings.blank?
-
-    user_setting = user_settings.bsearch { |user_setting| user_id <=> user_setting["user_id"] }
+    user_setting = bsearch_user_setting(user_id)
     return if user_setting.blank?
 
     user_setting[state]
+  end
+
+  def bsearch_user_setting(user_id)
+    return if user_settings.blank?
+    user_settings.bsearch { |user_setting| user_id <=> user_setting["user_id"] }
   end
 end
