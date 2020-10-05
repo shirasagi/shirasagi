@@ -56,6 +56,11 @@ module SS::Model::Notification
     self
   end
 
+  def unset_seen(user)
+    delete_user_setting(user.id, "seen_at")
+    self
+  end
+
   def display_send_date
     send_date ? send_date.strftime('%Y/%m/%d %H:%M') : ''
   end

@@ -45,6 +45,59 @@ describe SS::Notification, dbscope: :example do
       end
     end
 
+    describe "#unset_seen" do
+      let(:now) { Time.zone.now.beginning_of_minute }
+
+      before do
+        notification.set(user_settings: [
+          { "user_id" => user1.id, "seen_at" => now.utc },
+          { "user_id" => user2.id, "deleted" => now.utc },
+          { "user_id" => user3.id, "seen_at" => now.utc, "deleted" => now.utc },
+        ])
+      end
+
+      it do
+        expect(notification.unseen?(user1)).to be_falsey
+        expect(notification.deleted?(user1)).to be_falsey
+        notification.unset_seen(user1)
+        expect(notification.unseen?(user1)).to be_truthy
+        expect(notification.deleted?(user1)).to be_falsey
+
+        # user1's user_setting has been removed
+        expect(notification.user_settings.length).to eq 2
+        expect(notification.user_settings).to include({ "user_id" => user2.id, "deleted" => now.utc })
+        expect(notification.user_settings).to include({ "user_id" => user3.id, "seen_at" => now.utc, "deleted" => now.utc })
+      end
+
+      it do
+        expect(notification.unseen?(user2)).to be_truthy
+        expect(notification.deleted?(user2)).to be_truthy
+        notification.unset_seen(user2)
+        expect(notification.unseen?(user2)).to be_truthy
+        expect(notification.deleted?(user2)).to be_truthy
+
+        # unchanged
+        expect(notification.user_settings.length).to eq 3
+        expect(notification.user_settings).to include({ "user_id" => user1.id, "seen_at" => now.utc })
+        expect(notification.user_settings).to include({ "user_id" => user2.id, "deleted" => now.utc })
+        expect(notification.user_settings).to include({ "user_id" => user3.id, "seen_at" => now.utc, "deleted" => now.utc })
+      end
+
+      it do
+        expect(notification.unseen?(user3)).to be_falsey
+        expect(notification.deleted?(user3)).to be_truthy
+        notification.unset_seen(user3)
+        expect(notification.unseen?(user3)).to be_truthy
+        expect(notification.deleted?(user3)).to be_truthy
+
+        # user3's seen_at has been removed
+        expect(notification.user_settings.length).to eq 3
+        expect(notification.user_settings).to include({ "user_id" => user1.id, "seen_at" => now.utc })
+        expect(notification.user_settings).to include({ "user_id" => user2.id, "deleted" => now.utc })
+        expect(notification.user_settings).to include({ "user_id" => user3.id, "deleted" => now.utc })
+      end
+    end
+
     describe "#destroy_from_member" do
       it do
         now = Time.zone.now.beginning_of_minute

@@ -66,6 +66,28 @@ module SS::UserSettings
     update_user_setting(user_id, state, value)
   end
 
+  def delete_user_setting(user_id, state)
+    user_setting = bsearch_user_setting(user_id)
+    return if user_setting.blank?
+
+    save = user_setting.delete(state)
+    user_setting.delete_if { |_key, value| value.nil? }
+    if user_setting.keys.length == 1 && user_setting.keys.first == "user_id"
+      # all states have been deleted --> remove hash from array
+      filter_spec = { _id: self.id }
+      update_spec = { "$pull" => { user_settings: { user_id: user_id } } }
+      self.collection.update_one(filter_spec, update_spec)
+      self.user_settings.delete(user_setting)
+    elsif save
+      # some states remains --> unset value of hash in array (unset means set nil)
+      filter_spec = { _id: self.id, user_settings: { "$elemMatch" => { "user_id" => user_id } } }
+      update_spec = { "$unset" => { "user_settings.$.#{state}" => "" } }
+      self.collection.update_one(filter_spec, update_spec)
+    end
+
+    save
+  end
+
   def find_user_setting(user_id, state)
     user_setting = bsearch_user_setting(user_id)
     return if user_setting.blank?
