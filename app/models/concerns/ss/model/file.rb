@@ -267,8 +267,9 @@ module SS::Model::File
 
   def image_dimension
     return unless image?
+    return unless ::File.exists?(path)
 
-    ::FastImage.size(path)
+    ::FastImage.size(path) rescue nil
   end
 
   def shrink_image_to(width, height)
