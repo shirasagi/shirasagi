@@ -54,8 +54,10 @@ class ApplicationController < ActionController::Base
     name = ::Regexp.last_match[1]
     filename = ::Regexp.last_match[2]
 
+    name = "attachment" if browser.ie?("<= 11")
     encoded = ERB::Util.url_encode(filename)
-    headers['Content-Disposition'] = "#{name}; filename*=UTF-8''#{encoded}" if encoded != filename
+
+    headers['Content-Disposition'] = "#{name}; filename*=UTF-8''#{encoded}"
   end
 
   def ss_send_file(file, opts = {})
