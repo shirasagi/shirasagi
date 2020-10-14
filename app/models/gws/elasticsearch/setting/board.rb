@@ -5,11 +5,13 @@ class Gws::Elasticsearch::Setting::Board
   self.model = Gws::Board::Topic
 
   def menu_label
-    @cur_site.menu_board_label || I18n.t('modules.gws/board')
+    cur_site.menu_board_label.presence || I18n.t('modules.gws/board')
   end
 
   def search_types
     return [] unless cur_site.menu_board_visible?
+    return [] unless Gws.module_usable?(:board, cur_site, cur_user)
+
     super
   end
 
