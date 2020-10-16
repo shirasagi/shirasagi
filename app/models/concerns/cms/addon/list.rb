@@ -74,50 +74,87 @@ module Cms::Addon::List
       date + new_days > (@cur_date || Time.zone.now)
     end
 
-    def request_dir_conditions
-      return if cur_main_path.blank?
-      return if !conditions.index('#{request_dir}')
+    def interpret_conditions(default_site, &block)
+      cur_dir = nil
+      interprets_default_location = false
 
-      cur_dir = cur_main_path.sub(/\/[\w\-\.]*?$/, "").sub(/^\//, "")
-      conditions.map { |url| url.sub('#{request_dir}', cur_dir) }
-    end
+      conditions.each do |url_with_host|
+        host, url = url_with_host.split(":", 2)
+        host, url = url, host if url.blank?
 
-    def condition_hash
-      cond = []
-      cids = []
+        if host.present?
+          site = Cms::Site.where(host: host).first
+          next if site.blank? || !(site.parent.id == default_site.id || site.partner_site_ids.include?(default_site.id))
+        end
+        site ||= default_site
 
-      cond_url = request_dir_conditions
-      if cond_url.nil?
+        if url.include?('#{request_dir}')
+          next if cur_main_path.blank?
+
+          # #{request_dir} indicates "special default location".
+          # usually default location is a current node (or current part's parent if part is given).
+          # if #{request_dir} is specified, default location is changed to cur_main_path.
+          cur_dir ||= cur_main_path.sub(/\/[\w\-\.]*?$/, "").sub(/^\//, "")
+          url = url.sub('#{request_dir}', cur_dir)
+          interprets_default_location = true
+        end
+
+        yield site, url
+      end
+
+      unless interprets_default_location
         if self.is_a?(Cms::Model::Part)
           if parent
-            cond << { filename: /^#{::Regexp.escape(parent.filename)}\//, depth: depth }
-            cids << parent.id
+            yield parent.site, parent
           else
-            cond << { filename: /^[^\/]+$/, depth: 1 }
+            yield default_site, :root_contents
           end
         else
-          cond << { filename: /^#{::Regexp.escape(filename)}\//, depth: depth + 1 }
-          cids << id
+          yield self.site, self
         end
-        cond_url = conditions
       end
+    end
 
-      cond_url.each do |url|
-        # regex
-        if url =~ /\/\*$/
-          filename = url.sub(/\/\*$/, "")
-          cond << { filename: /^#{::Regexp.escape(filename)}\// }
+    def condition_hash(options = {})
+      default_site = options[:site] || @cur_site || self.site
+      cond = []
+      category_ids = []
+
+      interpret_conditions(default_site) do |site, content_or_path|
+        if content_or_path.is_a?(Cms::Content)
+          node = content_or_path
+        elsif content_or_path == :root_contents
+          cond << { site_id: site.id, filename: /^[^\/]+$/, depth: 1 }
           next
+        elsif content_or_path.end_with?("*")
+          # wildcard
+          cond << { site_id: site.id, filename: /^#{::Regexp.escape(content_or_path[0..-2])}/ }
+          next
+        else
+          node = Cms::Node.site(site).filename(content_or_path).first rescue nil
+          next unless node
         end
 
-        node = Cms::Node.site(cur_site || site).filename(url).first rescue nil
-        next unless node
-
-        cond << { filename: /^#{::Regexp.escape(node.filename)}\//, depth: node.depth + 1 }
-        cids << node.id
+        cond << { site_id: site.id, filename: /^#{::Regexp.escape(node.filename)}\//, depth: node.depth + 1 }
+        category_ids << [ site.id, node.id ]
       end
-      cond << { :category_ids.in => cids } if cids.present?
-      cond << { :id => -1 } if cond.blank?
+
+      if category_ids.present?
+        if category_ids.length == 1
+          cond << { site_id: category_ids.first[0], category_ids: category_ids.first[1] }
+        else
+          category_ids.group_by { |site_id, _node_id| site_id }.each do |site_id, ids|
+            node_ids = ids.map { |_site_id, node_id| node_id }
+            if node_ids.length == 1
+              cond << { site_id: site_id, category_ids: node_ids.first }
+            else
+              cond << { site_id: site_id, :category_ids.in => node_ids }
+            end
+          end
+        end
+      end
+
+      return { "$and" => [{ id: -1 }] } if cond.blank?
 
       { '$or' => cond }
     end

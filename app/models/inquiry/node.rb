@@ -49,7 +49,7 @@ module Inquiry::Node
 
     default_scope ->{ where(route: "inquiry/node") }
 
-    def condition_hash
+    def condition_hash(options = {})
       cond = []
       cond << { filename: /^#{::Regexp.escape(filename)}\//, depth: depth + 1 }
 

@@ -46,7 +46,7 @@ module Ezine::Node
 
     default_scope ->{ where(route: "ezine/member_page") }
 
-    def condition_hash
+    def condition_hash(options = {})
       h = super
       h['$or'] << { filename: /^#{::Regexp.escape(filename)}\//, depth: self.depth + 1 }
       h
@@ -72,7 +72,7 @@ module Ezine::Node
 
     default_scope ->{ where(route: "ezine/backnumber") }
 
-    def condition_hash
+    def condition_hash(options = {})
       h = super
       h['$or'] << { filename: /^#{::Regexp.escape(parent.filename)}\//, depth: self.depth }
       h

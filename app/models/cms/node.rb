@@ -107,7 +107,7 @@ class Cms::Node
 
     default_scope ->{ where(route: "cms/photo_album") }
 
-    def condition_hash
+    def condition_hash(options = {})
       cond = []
 
       cond << { filename: /^#{::Regexp.escape(filename)}\// } if conditions.blank?

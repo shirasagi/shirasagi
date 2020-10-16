@@ -22,7 +22,7 @@ module Event::Addon
       ]
     end
 
-    def condition_hash
+    def condition_hash(options = {})
       h = super
       today = Time.zone.today
       case sort
@@ -47,7 +47,7 @@ module Event::Addon
     def sort_hash
       return { released: -1 } if sort.blank?
 
-      if sort =~ /event_dates/
+      if sort.include?("event_dates")
         event_dates_sort_hash
       else
         { sort.sub(/ .*/, "") => (/-1$/.match?(sort) ? -1 : 1) }

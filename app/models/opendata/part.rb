@@ -19,7 +19,7 @@ module Opendata::Part
 
     default_scope ->{ where(route: "opendata/dataset") }
 
-    def condition_hash
+    def condition_hash(options = {})
       {} # TODO:
     end
 
@@ -49,7 +49,7 @@ module Opendata::Part
 
     default_scope ->{ where(route: "opendata/dataset_group") }
 
-    def condition_hash
+    def condition_hash(options = {})
       {} # TODO:
     end
 
@@ -74,7 +74,7 @@ module Opendata::Part
 
     default_scope ->{ where(route: "opendata/app") }
 
-    def condition_hash
+    def condition_hash(options = {})
       {} # TODO:
     end
 
@@ -106,7 +106,7 @@ module Opendata::Part
 
     default_scope ->{ where(route: "opendata/idea") }
 
-    def condition_hash
+    def condition_hash(options = {})
       {} # TODO:
     end
 

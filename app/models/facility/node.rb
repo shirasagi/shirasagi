@@ -111,7 +111,7 @@ module Facility::Node
 
     default_scope ->{ where(route: "facility/search") }
 
-    def condition_hash
+    def condition_hash(options = {})
       cond = []
 
       cond << { filename: /^#{::Regexp.escape(filename)}\// } if conditions.blank?
@@ -137,7 +137,7 @@ module Facility::Node
 
     default_scope ->{ where(route: "facility/category") }
 
-    def condition_hash
+    def condition_hash(options = {})
       cond = []
       cids = []
 
@@ -165,7 +165,7 @@ module Facility::Node
 
     default_scope ->{ where(route: "facility/service") }
 
-    def condition_hash
+    def condition_hash(options = {})
       cond = []
       cids = []
 
@@ -195,7 +195,7 @@ module Facility::Node
 
     default_scope ->{ where(route: "facility/location") }
 
-    def condition_hash
+    def condition_hash(options = {})
       cond = []
       cids = []
 
