@@ -24,5 +24,8 @@
   <dd><%= @item.send :mypage_domain %></dd>
 
   <dt><%= @model.t :group_ids %></dt>
-  <dd><%=br @item.groups.order_by(name: 1).map{|c| c.name } %></dd>
+  <dd><%=br @item.groups.order_by(name: 1).pluck(:name) %></dd>
+
+  <dt><%= @model.t :partner_site_ids %></dt>
+  <dd><%=br @item.partner_sites.order_by(host: 1).pluck(:name) %></dd>
 </dl>

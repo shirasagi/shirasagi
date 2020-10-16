@@ -16,6 +16,7 @@ class SS::Site
   include SS::Addon::LogoSetting
   include SS::Addon::Elasticsearch::SiteSetting
   include SS::Addon::Translate::SiteSetting
+  include SS::Addon::PartnerSetting
   include SS::Addon::SiteUsage
   include SS::Addon::GenerateLock
 end
