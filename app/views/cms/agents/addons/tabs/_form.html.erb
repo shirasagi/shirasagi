@@ -33,6 +33,12 @@
 <dl class="see loop-format-shirasagi">
   <dt><%= @model.t :loop_html %><%= @model.tt :loop_html %></dt>
   <dd><%= f.text_area :loop_html, class: :html, style: "height: 100px;" %></dd>
+
+  <dt><%= @model.t :no_items_display_state %><%= @model.tt :no_items_display_state %></dt>
+  <dd><%= f.select :no_items_display_state, @item.no_items_display_state_options, include_blank: true %></dd>
+
+  <dt><%= @model.t :substitute_html %><%= @model.tt :substitute_html %></dt>
+  <dd><%= f.text_area :substitute_html, class: :html %></dd>
 </dl>
 
 <dl class="see loop-format-liquid">

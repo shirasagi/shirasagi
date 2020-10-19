@@ -715,6 +715,8 @@ ja:
         loop_format: ループHTML形式
         loop_html: ループHTML
         loop_liquid: ループHTML
+        no_items_display_state: ページ未検出時表示
+        substitute_html: 代替HTML
       cms/addon/thumb:
         thumb_id: サムネイル画像
       cms/addon/parent_crumb:
@@ -1423,9 +1425,9 @@ ja:
       lower_html:
         - リスト部分の下部に任意の内容のHTMLを記述することが可能です。
         - 上部HTMLと同じテンプレートが使用できます。
-      no_items_display_state:
+      no_items_display_state: &no_items_display_state
         - ページが見つからない時、上部HTMLと下部HTMLを表示するか設定できます。
-      substitute_html:
+      substitute_html: &substitute_html
         - ページが見つからない時、ループHTMLの代わりに表示するHTMLを記述することが可能です。
       loop_liquid: &loop_liquid
         - Liquid 形式で記述します。
@@ -1455,6 +1457,8 @@ ja:
       loop_format: *loop_format
       loop_html: *loop_html
       loop_liquid: *loop_liquid
+      no_items_display_state: *no_items_display_state
+      substitute_html: *substitute_html
       limit:
         - リストの表示件数を指定します。
       new_days:
