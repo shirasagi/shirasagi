@@ -1,0 +1,20 @@
+{
+  "@context" : "http://iiif.io/api/image/2/context.json",
+  "@id" : "http://127.0.0.1/demo",
+  "protocol" : "http://iiif.io/api/image",
+  "width" : 4000,
+  "height" : 3600,
+  "sizes" : [
+     { "width" : 250, "height" : 225 },
+     { "width" : 500, "height" : 450 }
+  ],
+  "tiles" : [
+     { "width" : 256, "height" : 256, "scaleFactors" : [ 1, 2, 4, 8, 16 ] }
+  ],
+  "profile" : [
+     "http://iiif.io/api/image/2/level1.json",
+     { "formats" : [ "jpg" ],
+       "qualities" : [ "native","color","gray" ],
+       "supports" : ["regionByPct","regionSquare","sizeByForcedWh","sizeByWh","sizeAboveFull","rotationBy90s","mirroring"] }
+  ]
+}

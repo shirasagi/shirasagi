@@ -5,6 +5,7 @@ module Cms::PageFilter::View
   included do
     helper Gravatar::GravatarHelper
     helper Map::MapHelper
+    helper SS::ImageViewerHelper
   end
 
   def index

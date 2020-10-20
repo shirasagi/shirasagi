@@ -1,0 +1,9 @@
+production: &production
+  options:
+    prefixUrl: /assets/js/openseadragon/images/
+
+test:
+  <<: *production
+
+development:
+  <<: *production
