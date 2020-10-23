@@ -105,6 +105,8 @@ module Cms::Addon::List
 
       if default_location == :default
         interpret_default_location(default_site, &block) unless interprets_default_location
+      elsif default_location == :always
+        interpret_default_location(default_site, &block)
       elsif default_location == :only_blank
         interpret_default_location(default_site, &block) if conditions.blank?
       end
