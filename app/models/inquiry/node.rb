@@ -51,20 +51,23 @@ module Inquiry::Node
 
     def condition_hash(options = {})
       cond = []
-      cond << { filename: /^#{::Regexp.escape(filename)}\//, depth: depth + 1 }
-
-      conditions.each do |url|
-        # regex
-        if /\/\*$/.match?(url)
-          filename = url.sub(/\/\*$/, "")
-          cond << { filename: /^#{::Regexp.escape(filename)}\// }
+      interpret_conditions(options.reverse_merge(request_dir: false)) do |site, content_or_path|
+        if content_or_path.is_a?(Cms::Content)
+          node = content_or_path
+          cond << { site_id: site.id, filename: /^#{::Regexp.escape(node.filename)}\//, depth: node.depth + 1 }
+        elsif content_or_path == :root_contents
+          cond << { site_id: site.id, filename: /^[^\/]+$/, depth: 1 }
           next
+        elsif content_or_path.end_with?("*")
+          # wildcard
+          cond << { site_id: site.id, filename: /^#{::Regexp.escape(content_or_path[0..-2])}/ }
+          next
+        else
+          node = Cms::Node.site(site).filename(content_or_path).first rescue nil
+          next unless node
+
+          cond << { site_id: site.id, filename: node.filename }
         end
-
-        node = Cms::Node.site(cur_site || site).filename(url).first rescue nil
-        next unless node
-
-        cond << { filename: node.filename }
       end
 
       { '$or' => cond }

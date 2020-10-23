@@ -74,7 +74,9 @@ module Cms::Addon::List
       date + new_days > (@cur_date || Time.zone.now)
     end
 
-    def interpret_conditions(default_site, &block)
+    def interpret_conditions(options, &block)
+      default_site = options[:site] || @cur_site || self.site
+      request_dir = options.fetch(:request_dir, cur_main_path)
       cur_dir = nil
       interprets_default_location = false
 
@@ -88,13 +90,11 @@ module Cms::Addon::List
         end
         site ||= default_site
 
-        if url.include?('#{request_dir}')
-          next if cur_main_path.blank?
-
+        if request_dir && url.include?('#{request_dir}')
           # #{request_dir} indicates "special default location".
           # usually default location is a current node (or current part's parent if part is given).
           # if #{request_dir} is specified, default location is changed to cur_main_path.
-          cur_dir ||= cur_main_path.sub(/\/[\w\-\.]*?$/, "").sub(/^\//, "")
+          cur_dir ||= request_dir.sub(/\/[\w\-\.]*?$/, "").sub(/^\//, "")
           url = url.sub('#{request_dir}', cur_dir)
           interprets_default_location = true
         end
@@ -116,11 +116,10 @@ module Cms::Addon::List
     end
 
     def condition_hash(options = {})
-      default_site = options[:site] || @cur_site || self.site
       cond = []
       category_ids = []
 
-      interpret_conditions(default_site) do |site, content_or_path|
+      interpret_conditions(options) do |site, content_or_path|
         if content_or_path.is_a?(Cms::Content)
           node = content_or_path
         elsif content_or_path == :root_contents
