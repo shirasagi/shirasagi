@@ -27,7 +27,8 @@ describe Cms::Addon::List::Model do
         it do
           expect(subject).to be_a(Array)
           expect(subject.length).to eq 2
-          expect(subject[0]).to include(site_id: site.id, filename: article_node.filename)
+          expect(subject[0]).to include(
+            site_id: site.id, filename: /^#{::Regexp.escape(article_node.filename)}\//, depth: article_node.depth + 1)
           # the default location is always contained
           expect(subject[1]).to include(site_id: site.id, filename: /^#{::Regexp.escape(node.filename)}\//, depth: node.depth + 1)
         end
@@ -148,7 +149,8 @@ describe Cms::Addon::List::Model do
         it do
           expect(subject).to be_a(Array)
           expect(subject.length).to eq 2
-          expect(subject[0]).to include(site_id: site1.id, filename: site1_article_node.filename)
+          expect(subject[0]).to include(
+            site_id: site1.id, filename: /^#{::Regexp.escape(site1_article_node.filename)}\//, depth: site1_article_node.depth + 1)
           # the default location is always contained
           expect(subject[1]).to include(
             site_id: site.id, filename: /^#{::Regexp.escape(node.filename)}\//, depth: node.depth + 1)

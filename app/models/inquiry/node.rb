@@ -50,27 +50,7 @@ module Inquiry::Node
     default_scope ->{ where(route: "inquiry/node") }
 
     def condition_hash(options = {})
-      cond = []
-      interpret_conditions(options.reverse_merge(request_dir: false)) do |site, content_or_path|
-        if content_or_path.is_a?(Cms::Content)
-          node = content_or_path
-          cond << { site_id: site.id, filename: /^#{::Regexp.escape(node.filename)}\//, depth: node.depth + 1 }
-        elsif content_or_path == :root_contents
-          cond << { site_id: site.id, filename: /^[^\/]+$/, depth: 1 }
-          next
-        elsif content_or_path.end_with?("*")
-          # wildcard
-          cond << { site_id: site.id, filename: /^#{::Regexp.escape(content_or_path[0..-2])}/ }
-          next
-        else
-          node = Cms::Node.site(site).filename(content_or_path).first rescue nil
-          next unless node
-
-          cond << { site_id: site.id, filename: node.filename }
-        end
-      end
-
-      { '$or' => cond }
+      super(options.reverse_merge(category: false, request_dir: false))
     end
   end
 end
