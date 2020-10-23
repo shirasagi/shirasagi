@@ -209,19 +209,7 @@ module Member::Node
     end
 
     def condition_hash(options = {})
-      cond = []
-      cids = []
-
-      cids << id
-      conditions.each do |url|
-        node = Cms::Node.site(cur_site || site).filename(url).first rescue nil
-        next unless node
-        cond << { filename: /^#{::Regexp.escape(node.filename)}\//, depth: node.depth + 1 }
-        cids << node.id
-      end
-      cond << { :blog_page_location_ids.in => cids } if cids.present?
-
-      { '$or' => cond }
+      super(options.reverse_merge(category: :blog_page_location_ids))
     end
   end
 
@@ -252,8 +240,10 @@ module Member::Node
     def condition_hash(options = {})
       if conditions.present?
         super
+      elsif parent
+        parent.becomes_with_route.condition_hash(options)
       else
-        {}
+        { "$and" => [{ id: -1 }]}
       end
     end
   end
@@ -282,11 +272,7 @@ module Member::Node
     default_scope ->{ where(route: "member/photo_category") }
 
     def condition_hash(options = {})
-      if conditions.present?
-        super
-      else
-        { :photo_category_ids.in => [id] }
-      end
+      super(options.reverse_merge(category: :photo_category_ids))
     end
   end
 
@@ -302,11 +288,7 @@ module Member::Node
     default_scope ->{ where(route: "member/photo_location") }
 
     def condition_hash(options = {})
-      if conditions.present?
-        super
-      else
-        { :photo_location_ids.in => [id] }
-      end
+      super(options.reverse_merge(category: :photo_location_ids))
     end
   end
 

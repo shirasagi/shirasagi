@@ -19,14 +19,7 @@ module Member::Part
     default_scope ->{ where(route: "member/blog_page") }
 
     def condition_hash(options = {})
-      cond = []
-      # cids = []
-      # cond_url = []
-
-      cond << { filename: /^#{::Regexp.escape(parent.filename)}\// }
-      #cids << id
-      #cond_url = conditions
-      { '$or' => cond }
+      super(bind: :descendants, category: false)
     end
   end
 
