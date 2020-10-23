@@ -108,16 +108,7 @@ class Cms::Node
     default_scope ->{ where(route: "cms/photo_album") }
 
     def condition_hash(options = {})
-      cond = []
-
-      cond << { filename: /^#{::Regexp.escape(filename)}\// } if conditions.blank?
-      conditions.each do |url|
-        node = Cms::Node.site(cur_site || site).filename(url).first rescue nil
-        next unless node
-        cond << { filename: /^#{::Regexp.escape(node.filename)}\//, depth: node.depth + 1 }
-      end
-
-      { '$or' => cond }
+      super(options.reverse_merge(category: false, default_location: :only_blank, request_dir: false))
     end
   end
 

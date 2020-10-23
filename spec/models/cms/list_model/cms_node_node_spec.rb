@@ -6,7 +6,6 @@ describe Cms::Addon::List::Model do
   let!(:root_node) { create :cms_node_node, cur_site: site, layout: layout }
   let!(:article_node) { create :article_node_page, cur_site: site, cur_node: root_node, layout: layout }
   let!(:article_page) { create :article_page, cur_site: site, cur_node: article_node, layout: layout }
-  let(:cate_key) { Mongoid::Criteria::Queryable::Key.new(:category_ids, nil, "$in") }
 
   describe "#condition_hash" do
     context "on a node 'cms/node'" do
@@ -32,7 +31,7 @@ describe Cms::Addon::List::Model do
           expect(subject[0]).to include(
             site_id: site.id, filename: /^#{::Regexp.escape(article_node.filename)}\//, depth: article_node.depth + 1)
           expect(subject[1]).to include(site_id: site.id, filename: /^#{::Regexp.escape(node.filename)}\//, depth: node.depth + 1)
-          expect(subject[2]).to include(site_id: site.id, cate_key => include(node.id, article_node.id))
+          expect(subject[2]).to include(site_id: site.id, category_ids: { "$in" => include(node.id, article_node.id) })
         end
       end
 

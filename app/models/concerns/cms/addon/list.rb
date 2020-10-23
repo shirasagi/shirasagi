@@ -76,6 +76,7 @@ module Cms::Addon::List
 
     def interpret_conditions(options, &block)
       default_site = options[:site] || @cur_site || self.site
+      default_location = options.fetch(:default_location, :default)
       request_dir = options.fetch(:request_dir, cur_main_path)
       cur_dir = nil
       interprets_default_location = false
@@ -102,20 +103,27 @@ module Cms::Addon::List
         yield site, url
       end
 
-      unless interprets_default_location
-        if self.is_a?(Cms::Model::Part)
-          if parent
-            yield parent.site, parent
-          else
-            yield default_site, :root_contents
-          end
+      if default_location == :default
+        interpret_default_location(default_site, &block) unless interprets_default_location
+      elsif default_location == :only_blank
+        interpret_default_location(default_site, &block) if conditions.blank?
+      end
+    end
+
+    def interpret_default_location(default_site, &block)
+      if self.is_a?(Cms::Model::Part)
+        if parent
+          yield parent.site, parent
         else
-          yield self.site, self
+          yield default_site, :root_contents
         end
+      else
+        yield self.site, self
       end
     end
 
     def condition_hash(options = {})
+      category_key = options.fetch(:category, :category_ids)
       cond = []
       category_ids = []
 
@@ -135,19 +143,19 @@ module Cms::Addon::List
         end
 
         cond << { site_id: site.id, filename: /^#{::Regexp.escape(node.filename)}\//, depth: node.depth + 1 }
-        category_ids << [ site.id, node.id ]
+        category_ids << [ site.id, node.id ] if category_key
       end
 
       if category_ids.present?
         if category_ids.length == 1
-          cond << { site_id: category_ids.first[0], category_ids: category_ids.first[1] }
+          cond << { site_id: category_ids.first[0], category_key => category_ids.first[1] }
         else
           category_ids.group_by { |site_id, _node_id| site_id }.each do |site_id, ids|
             node_ids = ids.map { |_site_id, node_id| node_id }
             if node_ids.length == 1
-              cond << { site_id: site_id, category_ids: node_ids.first }
+              cond << { site_id: site_id, category_key => node_ids.first }
             else
-              cond << { site_id: site_id, :category_ids.in => node_ids }
+              cond << { site_id: site_id, category_key => { "$in" => node_ids } }
             end
           end
         end
