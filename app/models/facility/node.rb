@@ -112,7 +112,7 @@ module Facility::Node
     default_scope ->{ where(route: "facility/search") }
 
     def condition_hash(options = {})
-      super(options.reverse_merge(category: false, default_location: :only_blank, request_dir: false))
+      super(options.reverse_merge(bind: :descendants, category: false, default_location: :only_blank, request_dir: false))
     end
   end
 
