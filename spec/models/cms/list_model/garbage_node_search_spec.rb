@@ -16,8 +16,8 @@ describe Cms::Addon::List::Model do
         it do
           expect(subject).to be_a(Array)
           expect(subject.length).to eq 1
-          # wildcard is assumed.
-          expect(subject[0]).to include(filename: /^#{::Regexp.escape(node.filename)}\//)
+          # wildcard is assumed. key `:depth` isn't contained
+          expect(subject[0]).to eq(site_id: site.id, filename: /^#{::Regexp.escape(node.filename)}\//)
         end
       end
 
@@ -28,18 +28,19 @@ describe Cms::Addon::List::Model do
         it do
           expect(subject).to be_a(Array)
           expect(subject.length).to eq 1
-          expect(subject[0]).to include(
-            filename: /^#{::Regexp.escape(article_node.filename)}\//, depth: article_node.depth + 1)
+          # wildcard is assumed. key `:depth` isn't contained
+          expect(subject[0]).to eq(site_id: site.id, filename: /^#{::Regexp.escape(article_node.filename)}\//)
         end
       end
 
       context "with non-existing node" do
         let!(:node) { create :garbage_node_search, cur_site: site, layout: layout, conditions: [ "node-#{unique_id}" ] }
-        subject { node.condition_hash["$or"] }
+        subject { node.condition_hash["$and"] }
 
         it do
           expect(subject).to be_a(Array)
-          expect(subject.length).to eq 0 # this means `where("$or" => [])` and will cause system error because of invalid where
+          expect(subject.length).to eq 1
+          expect(subject[0]).to eq(id: -1)
         end
       end
 
@@ -49,7 +50,8 @@ describe Cms::Addon::List::Model do
 
         it do
           expect(subject).to be_a(Array)
-          expect(subject.length).to eq 0 # this means `where("$or" => [])` and will cause system error because of invalid where
+          expect(subject.length).to eq 1
+          expect(subject[0]).to eq(site_id: site.id, filename: /^#{::Regexp.escape(article_node.filename)}\//)
         end
       end
 
@@ -60,7 +62,8 @@ describe Cms::Addon::List::Model do
 
         it do
           expect(subject).to be_a(Array)
-          expect(subject.length).to eq 0 # this means `where("$or" => [])` and will cause system error because of invalid where
+          expect(subject.length).to eq 1
+          expect(subject[0]).to eq(site_id: site.id, filename: /^#{::Regexp.escape(filename)}\//)
         end
       end
 
@@ -68,13 +71,14 @@ describe Cms::Addon::List::Model do
         let!(:node) { create :garbage_node_search, cur_site: site, layout: layout, conditions: [ "\#{request_dir}" ] }
         subject do
           node.cur_main_path = nil
-          node.condition_hash["$or"]
+          node.condition_hash["$and"]
         end
 
         it do
           # #{request_dir} is not supported at garbage/node/search#condition_hash
           expect(subject).to be_a(Array)
-          expect(subject.length).to eq 0 # this means `where("$or" => [])` and will cause system error because of invalid where
+          expect(subject.length).to eq 1
+          expect(subject[0]).to eq(id: -1)
         end
       end
 
@@ -82,13 +86,14 @@ describe Cms::Addon::List::Model do
         let!(:node) { create :garbage_node_search, cur_site: site, layout: layout, conditions: [ "\#{request_dir}" ] }
         subject do
           node.cur_main_path = "/#{article_node.filename}/index.html"
-          node.condition_hash["$or"]
+          node.condition_hash["$and"]
         end
 
         it do
           # #{request_dir} is not supported at garbage/node/search#condition_hash
           expect(subject).to be_a(Array)
-          expect(subject.length).to eq 0 # this means `where("$or" => [])` and will cause system error because of invalid where
+          expect(subject.length).to eq 1
+          expect(subject[0]).to eq(id: -1)
         end
       end
 
@@ -96,13 +101,14 @@ describe Cms::Addon::List::Model do
         let!(:node) { create :garbage_node_search, cur_site: site, layout: layout, conditions: [ "\#{request_dir}" ] }
         subject do
           node.cur_main_path = "/node-#{unique_id}/index.html"
-          node.condition_hash["$or"]
+          node.condition_hash["$and"]
         end
 
         it do
           # #{request_dir} is not supported at garbage/node/search#condition_hash
           expect(subject).to be_a(Array)
-          expect(subject.length).to eq 0 # this means `where("$or" => [])` and will cause system error because of invalid where
+          expect(subject.length).to eq 1
+          expect(subject[0]).to eq(id: -1)
         end
       end
 
@@ -111,13 +117,33 @@ describe Cms::Addon::List::Model do
         let!(:node) { create :garbage_node_search, cur_site: site, layout: layout, conditions: [ condition ] }
         subject do
           node.cur_main_path = "/#{root_node.filename}/index.html"
-          node.condition_hash["$or"]
+          node.condition_hash["$and"]
         end
 
         it do
           # #{request_dir} is not supported at garbage/node/search#condition_hash
           expect(subject).to be_a(Array)
-          expect(subject.length).to eq 0 # this means `where("$or" => [])` and will cause system error because of invalid where
+          expect(subject.length).to eq 1
+          expect(subject[0]).to eq(id: -1)
+        end
+      end
+
+      context "inter-site reference" do
+        let(:site1) { create(:cms_site_subdir, parent: site) }
+        let(:site1_layout) { create_cms_layout(cur_site: site1) }
+        let!(:site1_root_node) { create :cms_node_node, cur_site: site1, layout: site1_layout }
+        let!(:site1_article_node) do
+          create :article_node_page, cur_site: site1, cur_node: site1_root_node, layout: site1_layout
+        end
+
+        let(:condition) { "#{site1.host}:#{site1_article_node.filename}" }
+        let!(:node) { create :garbage_node_search, cur_site: site, layout: layout, conditions: [ condition ] }
+        subject { node.condition_hash["$or"] }
+
+        it do
+          expect(subject).to be_a(Array)
+          expect(subject.length).to eq 1
+          expect(subject[0]).to eq(site_id: site1.id, filename: /^#{::Regexp.escape(site1_article_node.filename)}\//)
         end
       end
     end
