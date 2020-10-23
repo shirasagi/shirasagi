@@ -126,6 +126,8 @@ module Cms::Addon::List
 
     def condition_hash(options = {})
       category_key = options.fetch(:category, :category_ids)
+      use_wildcard = options.fetch(:wildcard, true)
+      bind = options.fetch(:bind, :children)
       cond = []
       category_ids = []
 
@@ -137,14 +139,20 @@ module Cms::Addon::List
           next
         elsif content_or_path.end_with?("*")
           # wildcard
-          cond << { site_id: site.id, filename: /^#{::Regexp.escape(content_or_path[0..-2])}/ }
+          if use_wildcard
+            cond << { site_id: site.id, filename: /^#{::Regexp.escape(content_or_path[0..-2])}/ }
+          end
           next
         else
           node = Cms::Node.site(site).filename(content_or_path).first rescue nil
           next unless node
         end
 
-        cond << { site_id: site.id, filename: /^#{::Regexp.escape(node.filename)}\//, depth: node.depth + 1 }
+        if bind == :children
+          cond << { site_id: site.id, filename: /^#{::Regexp.escape(node.filename)}\//, depth: node.depth + 1 }
+        elsif bind == :descendants
+          cond << { site_id: site.id, filename: /^#{::Regexp.escape(node.filename)}\// }
+        end
         category_ids << [ site.id, node.id ] if category_key
       end
 
