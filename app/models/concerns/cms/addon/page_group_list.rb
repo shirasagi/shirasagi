@@ -10,8 +10,16 @@ module Cms::Addon
     end
 
     def condition_hash(options = {})
-      cond = conditions.present? ? super : {}
-      cond.merge :group_ids.in => condition_groups.map(&:id)
+      if conditions.present?
+        # 指定されたフォルダー内のページが対象
+        cond = super
+      else
+        # サイト内の全ページが対象
+        default_site = options[:site] || @cur_site || self.site
+        cond = { site_id: default_site.id }
+      end
+
+      cond.merge(:group_ids.in => condition_groups.active.pluck(:id))
     end
 
     def sort_options

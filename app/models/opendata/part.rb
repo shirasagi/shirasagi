@@ -20,7 +20,9 @@ module Opendata::Part
     default_scope ->{ where(route: "opendata/dataset") }
 
     def condition_hash(options = {})
-      {} # TODO:
+      # サイト内の全ページが対象
+      default_site = options[:site] || @cur_site || self.site
+      { site_id: default_site.id } # TODO:
     end
 
     def sort_options
@@ -50,7 +52,9 @@ module Opendata::Part
     default_scope ->{ where(route: "opendata/dataset_group") }
 
     def condition_hash(options = {})
-      {} # TODO:
+      # サイト内の全ページが対象
+      default_site = options[:site] || @cur_site || self.site
+      { site_id: default_site.id } # TODO:
     end
 
     def sort_options
@@ -75,7 +79,9 @@ module Opendata::Part
     default_scope ->{ where(route: "opendata/app") }
 
     def condition_hash(options = {})
-      {} # TODO:
+      # サイト内の全ページが対象
+      default_site = options[:site] || @cur_site || self.site
+      { site_id: default_site.id } # TODO:
     end
 
     def sort_options
@@ -107,7 +113,9 @@ module Opendata::Part
     default_scope ->{ where(route: "opendata/idea") }
 
     def condition_hash(options = {})
-      {} # TODO:
+      # サイト内の全ページが対象
+      default_site = options[:site] || @cur_site || self.site
+      { site_id: default_site.id } # TODO:
     end
 
     def sort_options

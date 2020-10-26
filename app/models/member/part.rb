@@ -19,7 +19,7 @@ module Member::Part
     default_scope ->{ where(route: "member/blog_page") }
 
     def condition_hash(options = {})
-      super(bind: :descendants, category: false)
+      super(options.reverse_merge(bind: :descendants, category: false))
     end
   end
 
