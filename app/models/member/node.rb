@@ -239,11 +239,12 @@ module Member::Node
 
     def condition_hash(options = {})
       if conditions.present?
+        # 指定されたフォルダー内のページが対象
         super
-      elsif parent
-        parent.becomes_with_route.condition_hash(options)
       else
-        { "$and" => [{ id: -1 }]}
+        # サイト内の全ページが対象
+        default_site = options[:site] || @cur_site || self.site
+        { site_id: default_site.id }
       end
     end
   end

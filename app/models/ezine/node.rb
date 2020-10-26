@@ -46,10 +46,6 @@ module Ezine::Node
 
     default_scope ->{ where(route: "ezine/member_page") }
 
-    def condition_hash(options = {})
-      super(options.reverse_merge(default_location: :always))
-    end
-
     def members_to_deliver
       Ezine::CmsMemberWrapper.site(site).where(subscription_ids: id).and_enabled
     end
@@ -69,10 +65,6 @@ module Ezine::Node
     include History::Addon::Backup
 
     default_scope ->{ where(route: "ezine/backnumber") }
-
-    def condition_hash(options = {})
-      super(options.reverse_merge(default_location: :always))
-    end
   end
 
   class CategoryBase
