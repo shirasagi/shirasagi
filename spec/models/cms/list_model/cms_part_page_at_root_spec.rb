@@ -27,9 +27,9 @@ describe Cms::Addon::List::Model do
         it do
           expect(subject).to be_a(Array)
           expect(subject.length).to eq 3
-          expect(subject[0]).to eq(
+          expect(subject[0]).to eq(site_id: site.id, filename: /^[^\/]+$/, depth: 1)
+          expect(subject[1]).to eq(
             site_id: site.id, filename: /^#{::Regexp.escape(article_node.filename)}\//, depth: article_node.depth + 1)
-          expect(subject[1]).to eq(site_id: site.id, filename: /^[^\/]+$/, depth: 1)
           expect(subject[2]).to eq(site_id: site.id, category_ids: article_node.id)
         end
       end
@@ -52,8 +52,8 @@ describe Cms::Addon::List::Model do
         it do
           expect(subject).to be_a(Array)
           expect(subject.length).to eq 2
-          expect(subject[0]).to eq(site_id: site.id, filename: /^#{::Regexp.escape(article_node.filename)}\//)
-          expect(subject[1]).to eq(site_id: site.id, filename: /^[^\/]+$/, depth: 1)
+          expect(subject[0]).to eq(site_id: site.id, filename: /^[^\/]+$/, depth: 1)
+          expect(subject[1]).to eq(site_id: site.id, filename: /^#{::Regexp.escape(article_node.filename)}\//)
         end
       end
 
@@ -64,9 +64,8 @@ describe Cms::Addon::List::Model do
 
         it do
           expect(subject).to be_a(Array)
-          expect(subject.length).to eq 2
-          expect(subject[0]).to eq(site_id: site.id, filename: /^#{::Regexp.escape(filename)}\//)
-          expect(subject[1]).to eq(site_id: site.id, filename: /^[^\/]+$/, depth: 1)
+          expect(subject.length).to eq 1
+          expect(subject[0]).to eq(site_id: site.id, filename: /^[^\/]+$/, depth: 1)
         end
       end
 
@@ -142,10 +141,10 @@ describe Cms::Addon::List::Model do
         it do
           expect(subject).to be_a(Array)
           expect(subject.length).to eq 3
-          expect(subject[0]).to eq(
+          expect(subject[0]).to eq(site_id: site.id, filename: /^[^\/]+$/, depth: 1)
+          expect(subject[1]).to eq(
             site_id: site1.id,
             filename: /^#{::Regexp.escape(site1_article_node.filename)}\//, depth: site1_article_node.depth + 1)
-          expect(subject[1]).to eq(site_id: site.id, filename: /^[^\/]+$/, depth: 1)
           expect(subject[2]).to eq(site_id: site1.id, category_ids: site1_article_node.id)
         end
       end

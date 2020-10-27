@@ -18,6 +18,7 @@ describe Cms::Addon::List::Model do
           expect(subject.length).to eq 2
           expect(subject[0]).to eq(
             site_id: site.id, filename: /^#{::Regexp.escape(node.filename)}\//, depth: node.depth + 1)
+          # category key is "service_ids"
           expect(subject[1]).to eq(site_id: site.id, service_ids: node.id)
         end
       end
@@ -29,54 +30,11 @@ describe Cms::Addon::List::Model do
         it do
           expect(subject).to be_a(Array)
           expect(subject.length).to eq 3
-          expect(subject[0]).to eq(
+          expect(subject[0]).to eq(site_id: site.id, filename: /^#{::Regexp.escape(node.filename)}\//, depth: node.depth + 1)
+          expect(subject[1]).to eq(
             site_id: site.id, filename: /^#{::Regexp.escape(article_node.filename)}\//, depth: article_node.depth + 1)
-          expect(subject[1]).to eq(
-            site_id: site.id, filename: /^#{::Regexp.escape(node.filename)}\//, depth: node.depth + 1)
-          expect(subject[2]).to eq(site_id: site.id, service_ids: { "$in" => [ article_node.id, node.id ] })
-        end
-      end
-
-      context "with non-existing node" do
-        let!(:node) { create :facility_node_service, cur_site: site, layout: layout, conditions: [ "node-#{unique_id}" ] }
-        subject { node.condition_hash["$or"] }
-
-        it do
-          expect(subject).to be_a(Array)
-          expect(subject.length).to eq 2
-          expect(subject[0]).to eq(
-            site_id: site.id, filename: /^#{::Regexp.escape(node.filename)}\//, depth: node.depth + 1)
-          expect(subject[1]).to eq(site_id: site.id, service_ids: node.id)
-        end
-      end
-
-      context "with existing node as wildcard" do
-        let(:condition) { "#{article_node.filename}/*" }
-        let!(:node) { create :facility_node_service, cur_site: site, layout: layout, conditions: [ condition ] }
-        subject { node.condition_hash["$or"] }
-
-        it do
-          expect(subject).to be_a(Array)
-          expect(subject.length).to eq 3
-          expect(subject[0]).to eq(site_id: site.id, filename: /^#{::Regexp.escape(article_node.filename)}\//)
-          expect(subject[1]).to eq(
-            site_id: site.id, filename: /^#{::Regexp.escape(node.filename)}\//, depth: node.depth + 1)
-          expect(subject[2]).to eq(site_id: site.id, service_ids: node.id)
-        end
-      end
-
-      context "with non-existing node as wildcard" do
-        let(:filename) { "node-#{unique_id}" }
-        let!(:node) { create :facility_node_service, cur_site: site, layout: layout, conditions: [ "#{filename}/*" ] }
-        subject { node.condition_hash["$or"] }
-
-        it do
-          expect(subject).to be_a(Array)
-          expect(subject.length).to eq 3
-          expect(subject[0]).to eq(site_id: site.id, filename: /^#{::Regexp.escape(filename)}\//)
-          expect(subject[1]).to eq(
-            site_id: site.id, filename: /^#{::Regexp.escape(node.filename)}\//, depth: node.depth + 1)
-          expect(subject[2]).to eq(site_id: site.id, service_ids: node.id)
+          # category key is "service_ids"
+          expect(subject[2]).to eq(site_id: site.id, service_ids: { "$in" => [ node.id, article_node.id ] })
         end
       end
 
@@ -96,12 +54,13 @@ describe Cms::Addon::List::Model do
           expect(subject).to be_a(Array)
           expect(subject.length).to eq 4
           expect(subject[0]).to eq(
+            site_id: site.id, filename: /^#{::Regexp.escape(node.filename)}\//, depth: node.depth + 1)
+          expect(subject[1]).to eq(
             site_id: site1.id, filename: /^#{::Regexp.escape(site1_article_node.filename)}\//,
             depth: site1_article_node.depth + 1)
-          expect(subject[1]).to eq(
-            site_id: site.id, filename: /^#{::Regexp.escape(node.filename)}\//, depth: node.depth + 1)
-          expect(subject[2]).to eq(site_id: site1.id, service_ids: site1_article_node.id)
-          expect(subject[3]).to eq(site_id: site.id, service_ids: node.id)
+          # category key is "service_ids"
+          expect(subject[2]).to eq(site_id: site.id, service_ids: node.id)
+          expect(subject[3]).to eq(site_id: site1.id, service_ids: site1_article_node.id)
         end
       end
     end

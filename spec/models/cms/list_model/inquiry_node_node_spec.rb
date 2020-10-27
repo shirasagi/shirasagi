@@ -17,6 +17,7 @@ describe Cms::Addon::List::Model do
           expect(subject).to be_a(Array)
           expect(subject.length).to eq 1
           expect(subject[0]).to eq(site_id: site.id, filename: /^#{::Regexp.escape(node.filename)}\//, depth: node.depth + 1)
+          # there are no category references
         end
       end
 
@@ -27,73 +28,10 @@ describe Cms::Addon::List::Model do
         it do
           expect(subject).to be_a(Array)
           expect(subject.length).to eq 2
-          expect(subject[0]).to eq(
-            site_id: site.id, filename: /^#{::Regexp.escape(article_node.filename)}\//, depth: article_node.depth + 1)
-          # the default location is always contained
-          expect(subject[1]).to eq(site_id: site.id, filename: /^#{::Regexp.escape(node.filename)}\//, depth: node.depth + 1)
-        end
-      end
-
-      context "with non-existing node" do
-        let!(:node) { create :inquiry_node_node, cur_site: site, layout: layout, conditions: [ "node-#{unique_id}" ] }
-        subject { node.condition_hash["$or"] }
-
-        it do
-          expect(subject).to be_a(Array)
-          expect(subject.length).to eq 1
-          # the default location is always contained
           expect(subject[0]).to eq(site_id: site.id, filename: /^#{::Regexp.escape(node.filename)}\//, depth: node.depth + 1)
-        end
-      end
-
-      context "with existing node as wildcard" do
-        let!(:node) { create :inquiry_node_node, cur_site: site, layout: layout, conditions: [ "#{article_node.filename}/*" ] }
-        subject { node.condition_hash["$or"] }
-
-        it do
-          expect(subject).to be_a(Array)
-          expect(subject.length).to eq 2
-          expect(subject[0]).to eq(site_id: site.id, filename: /^#{::Regexp.escape(article_node.filename)}\//)
-          # the default location is always contained
-          expect(subject[1]).to eq(site_id: site.id, filename: /^#{::Regexp.escape(node.filename)}\//, depth: node.depth + 1)
-        end
-      end
-
-      context "with non-existing node as wildcard" do
-        let(:filename) { "node-#{unique_id}" }
-        let!(:node) { create :inquiry_node_node, cur_site: site, layout: layout, conditions: [ "#{filename}/*" ] }
-        subject { node.condition_hash["$or"] }
-
-        it do
-          expect(subject).to be_a(Array)
-          expect(subject.length).to eq 2
-          expect(subject[0]).to eq(site_id: site.id, filename: /^#{::Regexp.escape(filename)}\//)
-          # the default location is always contained
-          expect(subject[1]).to eq(site_id: site.id, filename: /^#{::Regexp.escape(node.filename)}\//, depth: node.depth + 1)
-        end
-      end
-
-      context "inter-site reference" do
-        let(:site1) { create(:cms_site_subdir, parent: site) }
-        let(:site1_layout) { create_cms_layout(cur_site: site1) }
-        let!(:site1_root_node) { create :cms_node_node, cur_site: site1, layout: site1_layout }
-        let!(:site1_article_node) do
-          create :article_node_page, cur_site: site1, cur_node: site1_root_node, layout: site1_layout
-        end
-
-        let(:condition) { "#{site1.host}:#{site1_article_node.filename}" }
-        let!(:node) { create :inquiry_node_node, cur_site: site, layout: layout, conditions: [ condition ] }
-        subject { node.condition_hash["$or"] }
-
-        it do
-          expect(subject).to be_a(Array)
-          expect(subject.length).to eq 2
-          expect(subject[0]).to eq(
-            site_id: site1.id, filename: /^#{::Regexp.escape(site1_article_node.filename)}\//,
-            depth: site1_article_node.depth + 1)
-          # the default location is always contained
           expect(subject[1]).to eq(
-            site_id: site.id, filename: /^#{::Regexp.escape(node.filename)}\//, depth: node.depth + 1)
+            site_id: site.id, filename: /^#{::Regexp.escape(article_node.filename)}\//, depth: article_node.depth + 1)
+          # there are no category references
         end
       end
     end

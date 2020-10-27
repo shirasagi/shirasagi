@@ -115,39 +115,43 @@ module Cms::Addon::List
     def condition_hash(options = {})
       category_key = options.fetch(:category, :category_ids)
       bind = options.fetch(:bind, :children)
-      cond = []
-      category_ids = []
+      conditions = []
 
+      pending_nodes = []
+      pending_filenames = []
       interpret_conditions(options) do |site, content_or_path|
         if content_or_path.is_a?(Cms::Content)
-          node = content_or_path
+          pending_nodes << [ site, content_or_path, bind, category_key ]
         elsif content_or_path == :root_contents
-          cond << { site_id: site.id, filename: /^[^\/]+$/, depth: 1 }
+          conditions << { site_id: site.id, filename: /^[^\/]+$/, depth: 1 }
           next
         elsif content_or_path.end_with?("*")
           # wildcard
           filename = content_or_path[0..-2]
-          filename += "/" unless filename.ends_with?("/")
-          cond << { site_id: site.id, filename: /^#{::Regexp.escape(filename)}/ }
+          filename = filename[0..-2] if filename.end_with?("/")
+          pending_filenames << [ site, filename, :descendants, nil ]
           next
         else
-          node = Cms::Node.site(site).filename(content_or_path).first rescue nil
-          next unless node
+          pending_filenames << [ site, content_or_path, bind, category_key ]
         end
+      end
 
+      pending_nodes += retrieve_nodes(pending_filenames) if pending_filenames.present?
+
+      category_ids = []
+      pending_nodes.each do |site, node, bind, category_key|
         if bind == :children
-          cond << { site_id: site.id, filename: /^#{::Regexp.escape(node.filename)}\//, depth: node.depth + 1 }
+          conditions << { site_id: site.id, filename: /^#{::Regexp.escape(node.filename)}\//, depth: node.depth + 1 }
         elsif bind == :descendants
-          cond << { site_id: site.id, filename: /^#{::Regexp.escape(node.filename)}\// }
+          conditions << { site_id: site.id, filename: /^#{::Regexp.escape(node.filename)}\// }
         end
         category_ids << [ site.id, node.id ] if category_key
       end
+      conditions += bind_to_category(category_key, category_ids) if category_key
 
-      cond += bind_to_category(category_key, category_ids) if category_key
+      return { "$and" => [{ id: -1 }] } if conditions.blank?
 
-      return { "$and" => [{ id: -1 }] } if cond.blank?
-
-      { '$or' => cond }
+      { '$or' => conditions }
     end
 
     def render_loop_html(item, opts = {})
@@ -173,6 +177,24 @@ module Cms::Addon::List
       else
         yield self.site, self
       end
+    end
+
+    def retrieve_nodes(pending_filenames)
+      return [] if pending_filenames.blank?
+
+      all_nodes = begin
+        nodes_conditions = pending_filenames.map do |site, filename, _bind, _category_key|
+          { site_id: site.id, filename: filename.start_with?("/") ? filename[1..-1] : filename }
+        end
+        Cms::Node.unscoped.where("$or" => nodes_conditions).to_a
+      end
+
+      pending_filenames.map do |site, filename, bind, category_key|
+        node = all_nodes.find { |node| node.site_id == site.id && node.filename == filename }
+        next unless node
+
+        [ site, node, bind, category_key ]
+      end.compact
     end
 
     def bind_to_category(category_key, category_ids)
