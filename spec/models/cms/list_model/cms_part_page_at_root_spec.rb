@@ -73,8 +73,7 @@ describe Cms::Addon::List::Model do
       context "when \#{request_dir} is given with blank cur_main_path" do
         let!(:part) { create :cms_part_page, cur_site: site, conditions: [ "\#{request_dir}" ] }
         subject do
-          part.cur_main_path = nil
-          part.condition_hash["$or"]
+          part.condition_hash(request_dir: nil)["$or"]
         end
 
         it do
@@ -87,8 +86,7 @@ describe Cms::Addon::List::Model do
       context "when \#{request_dir} is given with actual cur_main_path" do
         let!(:part) { create :cms_part_page, cur_site: site, conditions: [ "\#{request_dir}" ] }
         subject do
-          part.cur_main_path = "/#{article_node.filename}/index.html"
-          part.condition_hash["$or"]
+          part.condition_hash(request_dir: "/#{article_node.filename}/index.html")["$or"]
         end
 
         it do
@@ -103,8 +101,7 @@ describe Cms::Addon::List::Model do
       context "when \#{request_dir} is given with non-existing cur_main_path" do
         let!(:part) { create :cms_part_page, cur_site: site, conditions: [ "\#{request_dir}" ] }
         subject do
-          part.cur_main_path = "/node-#{unique_id}/index.html"
-          part.condition_hash["$and"]
+          part.condition_hash(request_dir: "/node-#{unique_id}/index.html")["$and"]
         end
 
         it do
@@ -118,8 +115,7 @@ describe Cms::Addon::List::Model do
         let(:condition) { "\#{request_dir}/#{::File.basename(article_node.filename)}" }
         let!(:part) { create :cms_part_page, cur_site: site, conditions: [ condition ] }
         subject do
-          part.cur_main_path = "/#{root_node.filename}/index.html"
-          part.condition_hash["$or"]
+          part.condition_hash(request_dir: "/#{root_node.filename}/index.html")["$or"]
         end
 
         it do

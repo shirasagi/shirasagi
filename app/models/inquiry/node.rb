@@ -50,7 +50,7 @@ module Inquiry::Node
     default_scope ->{ where(route: "inquiry/node") }
 
     def condition_hash(options = {})
-      super(options.reverse_merge(category: false, request_dir: false))
+      super(options.reverse_merge(category: false))
     end
   end
 end

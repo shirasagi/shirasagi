@@ -73,67 +73,6 @@ describe Cms::Addon::List::Model do
         end
       end
 
-      context "when \#{request_dir} is given with blank cur_main_path" do
-        let!(:node) { create :inquiry_node_node, cur_site: site, layout: layout, conditions: [ "\#{request_dir}" ] }
-        subject do
-          node.cur_main_path = nil
-          node.condition_hash["$or"]
-        end
-
-        it do
-          expect(subject).to be_a(Array)
-          expect(subject.length).to eq 1
-          # the default location is always contained
-          expect(subject[0]).to eq(site_id: site.id, filename: /^#{::Regexp.escape(node.filename)}\//, depth: node.depth + 1)
-        end
-      end
-
-      context "when \#{request_dir} is given with actual cur_main_path" do
-        let!(:node) { create :inquiry_node_node, cur_site: site, layout: layout, conditions: [ "\#{request_dir}" ] }
-        subject do
-          node.cur_main_path = "/#{article_node.filename}/index.html"
-          node.condition_hash["$or"]
-        end
-
-        it do
-          expect(subject).to be_a(Array)
-          expect(subject.length).to eq 1
-          # the default location is always contained
-          expect(subject[0]).to eq(site_id: site.id, filename: /^#{::Regexp.escape(node.filename)}\//, depth: node.depth + 1)
-        end
-      end
-
-      context "when \#{request_dir} is given with non-existing cur_main_path" do
-        let!(:node) { create :inquiry_node_node, cur_site: site, layout: layout, conditions: [ "\#{request_dir}" ] }
-        subject do
-          node.cur_main_path = "/node-#{unique_id}/index.html"
-          node.condition_hash["$or"]
-        end
-
-        it do
-          expect(subject).to be_a(Array)
-          expect(subject.length).to eq 1
-          # the default location is always contained
-          expect(subject[0]).to eq(site_id: site.id, filename: /^#{::Regexp.escape(node.filename)}\//, depth: node.depth + 1)
-        end
-      end
-
-      context "when \#{request_dir} with sub directory is given with actual cur_main_path" do
-        let(:condition) { "\#{request_dir}/#{::File.basename(article_node.filename)}" }
-        let!(:node) { create :inquiry_node_node, cur_site: site, layout: layout, conditions: [ condition ] }
-        subject do
-          node.cur_main_path = "/#{root_node.filename}/index.html"
-          node.condition_hash["$or"]
-        end
-
-        it do
-          expect(subject).to be_a(Array)
-          expect(subject.length).to eq 1
-          # the default location is always contained
-          expect(subject[0]).to eq(site_id: site.id, filename: /^#{::Regexp.escape(node.filename)}\//, depth: node.depth + 1)
-        end
-      end
-
       context "inter-site reference" do
         let(:site1) { create(:cms_site_subdir, parent: site) }
         let(:site1_layout) { create_cms_layout(cur_site: site1) }
@@ -150,7 +89,8 @@ describe Cms::Addon::List::Model do
           expect(subject).to be_a(Array)
           expect(subject.length).to eq 2
           expect(subject[0]).to eq(
-            site_id: site1.id, filename: /^#{::Regexp.escape(site1_article_node.filename)}\//, depth: site1_article_node.depth + 1)
+            site_id: site1.id, filename: /^#{::Regexp.escape(site1_article_node.filename)}\//,
+            depth: site1_article_node.depth + 1)
           # the default location is always contained
           expect(subject[1]).to eq(
             site_id: site.id, filename: /^#{::Regexp.escape(node.filename)}\//, depth: node.depth + 1)

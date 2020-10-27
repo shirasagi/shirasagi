@@ -56,12 +56,12 @@ describe Cms::Addon::List::Model do
         subject { node.condition_hash["$or"] }
 
         it do
-          # wildcard is not supported
           expect(subject).to be_a(Array)
-          expect(subject.length).to eq 2
-          expect(subject[0]).to eq(
+          expect(subject.length).to eq 3
+          expect(subject[0]).to eq(site_id: site.id, filename: /^#{::Regexp.escape(article_node.filename)}\//)
+          expect(subject[1]).to eq(
             site_id: site.id, filename: /^#{::Regexp.escape(node.filename)}\//, depth: node.depth + 1)
-          expect(subject[1]).to eq(site_id: site.id, service_ids: node.id)
+          expect(subject[2]).to eq(site_id: site.id, service_ids: node.id)
         end
       end
 
@@ -71,81 +71,12 @@ describe Cms::Addon::List::Model do
         subject { node.condition_hash["$or"] }
 
         it do
-          # wildcard is not supported
           expect(subject).to be_a(Array)
-          expect(subject.length).to eq 2
-          expect(subject[0]).to eq(
+          expect(subject.length).to eq 3
+          expect(subject[0]).to eq(site_id: site.id, filename: /^#{::Regexp.escape(filename)}\//)
+          expect(subject[1]).to eq(
             site_id: site.id, filename: /^#{::Regexp.escape(node.filename)}\//, depth: node.depth + 1)
-          expect(subject[1]).to eq(site_id: site.id, service_ids: node.id)
-        end
-      end
-
-      context "when \#{request_dir} is given with blank cur_main_path" do
-        let!(:node) { create :facility_node_service, cur_site: site, layout: layout, conditions: [ "\#{request_dir}" ] }
-        subject do
-          node.cur_main_path = nil
-          node.condition_hash["$or"]
-        end
-
-        it do
-          # #{request_dir} is not supported at facility/node/service#condition_hash
-          expect(subject).to be_a(Array)
-          expect(subject.length).to eq 2
-          expect(subject[0]).to eq(
-            site_id: site.id, filename: /^#{::Regexp.escape(node.filename)}\//, depth: node.depth + 1)
-          expect(subject[1]).to eq(site_id: site.id, service_ids: node.id)
-        end
-      end
-
-      context "when \#{request_dir} is given with actual cur_main_path" do
-        let!(:node) { create :facility_node_service, cur_site: site, layout: layout, conditions: [ "\#{request_dir}" ] }
-        subject do
-          node.cur_main_path = "/#{article_node.filename}/index.html"
-          node.condition_hash["$or"]
-        end
-
-        it do
-          # #{request_dir} is not supported at facility/node/service#condition_hash
-          expect(subject).to be_a(Array)
-          expect(subject.length).to eq 2
-          expect(subject[0]).to eq(
-            site_id: site.id, filename: /^#{::Regexp.escape(node.filename)}\//, depth: node.depth + 1)
-          expect(subject[1]).to eq(site_id: site.id, service_ids: node.id)
-        end
-      end
-
-      context "when \#{request_dir} is given with non-existing cur_main_path" do
-        let!(:node) { create :facility_node_service, cur_site: site, layout: layout, conditions: [ "\#{request_dir}" ] }
-        subject do
-          node.cur_main_path = "/node-#{unique_id}/index.html"
-          node.condition_hash["$or"]
-        end
-
-        it do
-          # #{request_dir} is not supported at facility/node/service#condition_hash
-          expect(subject).to be_a(Array)
-          expect(subject.length).to eq 2
-          expect(subject[0]).to eq(
-            site_id: site.id, filename: /^#{::Regexp.escape(node.filename)}\//, depth: node.depth + 1)
-          expect(subject[1]).to eq(site_id: site.id, service_ids: node.id)
-        end
-      end
-
-      context "when \#{request_dir} with sub directory is given with actual cur_main_path" do
-        let(:condition) { "\#{request_dir}/#{::File.basename(article_node.filename)}" }
-        let!(:node) { create :facility_node_service, cur_site: site, layout: layout, conditions: [ condition ] }
-        subject do
-          node.cur_main_path = "/#{root_node.filename}/index.html"
-          node.condition_hash["$or"]
-        end
-
-        it do
-          # #{request_dir} is not supported at facility/node/service#condition_hash
-          expect(subject).to be_a(Array)
-          expect(subject.length).to eq 2
-          expect(subject[0]).to eq(
-            site_id: site.id, filename: /^#{::Regexp.escape(node.filename)}\//, depth: node.depth + 1)
-          expect(subject[1]).to eq(site_id: site.id, service_ids: node.id)
+          expect(subject[2]).to eq(site_id: site.id, service_ids: node.id)
         end
       end
 

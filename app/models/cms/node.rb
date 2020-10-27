@@ -108,7 +108,7 @@ class Cms::Node
     default_scope ->{ where(route: "cms/photo_album") }
 
     def condition_hash(options = {})
-      super(options.reverse_merge(bind: :descendants, category: false, default_location: :only_blank, request_dir: false))
+      super(options.reverse_merge(bind: :descendants, category: false, default_location: :only_blank))
     end
   end
 

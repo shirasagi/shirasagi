@@ -127,7 +127,8 @@ module Cms::Content
       # condition_hash
       if parent_item && parent_item.respond_to?(:condition_hash)
         # list addon included
-        ids = self.unscoped.where(parent_item.condition_hash(site: site)).distinct(:id)
+        condition_hash = parent_item.condition_hash(opts.slice(*Cms::Addon::List::Model::WELL_KONWN_CONDITION_HASH_OPTIONS))
+        ids = self.unscoped.where(condition_hash).distinct(:id)
         return self.none if ids.blank?
 
         criteria = all.in(id: ids)

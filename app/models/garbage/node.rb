@@ -51,7 +51,7 @@ module Garbage::Node
     default_scope ->{ where(route: "garbage/search") }
 
     def condition_hash(options = {})
-      super(options.reverse_merge(bind: :descendants, category: false, default_location: :only_blank, request_dir: false))
+      super(options.reverse_merge(bind: :descendants, category: false, default_location: :only_blank))
     end
 
     def sort_hash
@@ -70,10 +70,6 @@ module Garbage::Node
     include History::Addon::Backup
 
     default_scope ->{ where(route: "garbage/category") }
-
-    def condition_hash(options = {})
-      super(options.reverse_merge(request_dir: false, wildcard: false))
-    end
 
     def sort_hash
       return { name: 1 } if sort.blank?

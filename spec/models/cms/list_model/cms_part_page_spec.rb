@@ -83,8 +83,7 @@ describe Cms::Addon::List::Model do
         let!(:node) { create :cms_node_node, cur_site: site, layout: layout }
         let!(:part) { create :cms_part_page, cur_site: site, cur_node: node, conditions: [ "\#{request_dir}" ] }
         subject do
-          part.cur_main_path = nil
-          part.condition_hash["$or"]
+          part.condition_hash(request_dir: nil)["$or"]
         end
 
         it do
@@ -99,8 +98,7 @@ describe Cms::Addon::List::Model do
         let!(:node) { create :cms_node_node, cur_site: site, layout: layout }
         let!(:part) { create :cms_part_page, cur_site: site, cur_node: node, conditions: [ "\#{request_dir}" ] }
         subject do
-          part.cur_main_path = "/#{article_node.filename}/index.html"
-          part.condition_hash["$or"]
+          part.condition_hash(request_dir: "/#{article_node.filename}/index.html")["$or"]
         end
 
         it do
@@ -116,8 +114,7 @@ describe Cms::Addon::List::Model do
         let!(:node) { create :cms_node_node, cur_site: site, layout: layout }
         let!(:part) { create :cms_part_page, cur_site: site, cur_node: node, conditions: [ "\#{request_dir}" ] }
         subject do
-          part.cur_main_path = "/node-#{unique_id}/index.html"
-          part.condition_hash["$and"]
+          part.condition_hash(request_dir: "/node-#{unique_id}/index.html")["$and"]
         end
 
         it do
@@ -132,8 +129,7 @@ describe Cms::Addon::List::Model do
         let!(:node) { create :cms_node_node, cur_site: site, layout: layout }
         let!(:part) { create :cms_part_page, cur_site: site, cur_node: node, conditions: [ condition ] }
         subject do
-          part.cur_main_path = "/#{root_node.filename}/index.html"
-          part.condition_hash["$or"]
+          part.condition_hash(request_dir: "/#{root_node.filename}/index.html")["$or"]
         end
 
         it do

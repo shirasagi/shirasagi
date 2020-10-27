@@ -65,67 +65,6 @@ describe Cms::Addon::List::Model do
         end
       end
 
-      context "when \#{request_dir} is given with blank cur_main_path" do
-        let!(:node) { create :cms_node_photo_album, cur_site: site, layout: layout, conditions: [ "\#{request_dir}" ] }
-        subject do
-          node.cur_main_path = nil
-          node.condition_hash["$and"]
-        end
-
-        it do
-          # #{request_dir} is not supported at cms/node/photo_album#condition_hash
-          expect(subject).to be_a(Array)
-          expect(subject.length).to eq 1
-          expect(subject[0]).to eq(id: -1)
-        end
-      end
-
-      context "when \#{request_dir} is given with actual cur_main_path" do
-        let!(:node) { create :cms_node_photo_album, cur_site: site, layout: layout, conditions: [ "\#{request_dir}" ] }
-        subject do
-          node.cur_main_path = "/#{article_node.filename}/index.html"
-          node.condition_hash["$and"]
-        end
-
-        it do
-          # #{request_dir} is not supported at cms/node/photo_album#condition_hash
-          expect(subject).to be_a(Array)
-          expect(subject.length).to eq 1
-          expect(subject[0]).to eq(id: -1)
-        end
-      end
-
-      context "when \#{request_dir} is given with non-existing cur_main_path" do
-        let!(:node) { create :cms_node_photo_album, cur_site: site, layout: layout, conditions: [ "\#{request_dir}" ] }
-        subject do
-          node.cur_main_path = "/node-#{unique_id}/index.html"
-          node.condition_hash["$and"]
-        end
-
-        it do
-          # #{request_dir} is not supported at cms/node/photo_album#condition_hash
-          expect(subject).to be_a(Array)
-          expect(subject.length).to eq 1
-          expect(subject[0]).to eq(id: -1)
-        end
-      end
-
-      context "when \#{request_dir} with sub directory is given with actual cur_main_path" do
-        let(:condition) { "\#{request_dir}/#{::File.basename(article_node.filename)}" }
-        let!(:node) { create :cms_node_photo_album, cur_site: site, layout: layout, conditions: [ condition ] }
-        subject do
-          node.cur_main_path = "/#{root_node.filename}/index.html"
-          node.condition_hash["$and"]
-        end
-
-        it do
-          # #{request_dir} is not supported at cms/node/photo_album#condition_hash
-          expect(subject).to be_a(Array)
-          expect(subject.length).to eq 1
-          expect(subject[0]).to eq(id: -1)
-        end
-      end
-
       context "inter-site reference" do
         let(:site1) { create(:cms_site_subdir, parent: site) }
         let(:site1_layout) { create_cms_layout(cur_site: site1) }

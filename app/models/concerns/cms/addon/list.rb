@@ -3,8 +3,8 @@ module Cms::Addon::List
     extend ActiveSupport::Concern
     extend SS::Translation
 
+    WELL_KONWN_CONDITION_HASH_OPTIONS = %i[site default_location request_dir category bind].freeze
     attr_accessor :cur_date
-    attr_accessor :cur_main_path
 
     included do
       cattr_accessor(:use_new_days, instance_accessor: false) { true }
@@ -77,7 +77,7 @@ module Cms::Addon::List
     def interpret_conditions(options, &block)
       default_site = options[:site] || @cur_site || self.site
       default_location = options.fetch(:default_location, :default)
-      request_dir = options.fetch(:request_dir, cur_main_path)
+      request_dir = options.fetch(:request_dir, nil)
       cur_dir = nil
       interprets_default_location = false
 
@@ -91,7 +91,9 @@ module Cms::Addon::List
         end
         site ||= default_site
 
-        if request_dir && url.include?('#{request_dir}')
+        if url.include?('#{request_dir}')
+          next unless request_dir
+
           # #{request_dir} indicates "special default location".
           # usually default location is a current node (or current part's parent if part is given).
           # if #{request_dir} is specified, default location is changed to cur_main_path.
@@ -103,30 +105,15 @@ module Cms::Addon::List
         yield site, url
       end
 
-      if default_location == :default
-        interpret_default_location(default_site, &block) unless interprets_default_location
-      elsif default_location == :always
+      if default_location == :default && !interprets_default_location
         interpret_default_location(default_site, &block)
-      elsif default_location == :only_blank
-        interpret_default_location(default_site, &block) if conditions.blank?
-      end
-    end
-
-    def interpret_default_location(default_site, &block)
-      if self.is_a?(Cms::Model::Part)
-        if parent
-          yield parent.site, parent
-        else
-          yield default_site, :root_contents
-        end
-      else
-        yield self.site, self
+      elsif default_location == :only_blank && conditions.blank?
+        interpret_default_location(default_site, &block)
       end
     end
 
     def condition_hash(options = {})
       category_key = options.fetch(:category, :category_ids)
-      use_wildcard = options.fetch(:wildcard, true)
       bind = options.fetch(:bind, :children)
       cond = []
       category_ids = []
@@ -139,9 +126,9 @@ module Cms::Addon::List
           next
         elsif content_or_path.end_with?("*")
           # wildcard
-          if use_wildcard
-            cond << { site_id: site.id, filename: /^#{::Regexp.escape(content_or_path[0..-2])}/ }
-          end
+          filename = content_or_path[0..-2]
+          filename += "/" unless filename.ends_with?("/")
+          cond << { site_id: site.id, filename: /^#{::Regexp.escape(filename)}/ }
           next
         else
           node = Cms::Node.site(site).filename(content_or_path).first rescue nil
@@ -156,20 +143,7 @@ module Cms::Addon::List
         category_ids << [ site.id, node.id ] if category_key
       end
 
-      if category_ids.present?
-        if category_ids.length == 1
-          cond << { site_id: category_ids.first[0], category_key => category_ids.first[1] }
-        else
-          category_ids.group_by { |site_id, _node_id| site_id }.each do |site_id, ids|
-            node_ids = ids.map { |_site_id, node_id| node_id }
-            if node_ids.length == 1
-              cond << { site_id: site_id, category_key => node_ids.first }
-            else
-              cond << { site_id: site_id, category_key => { "$in" => node_ids } }
-            end
-          end
-        end
-      end
+      cond += bind_to_category(category_key, category_ids) if category_key
 
       return { "$and" => [{ id: -1 }] } if cond.blank?
 
@@ -187,6 +161,40 @@ module Cms::Addon::List
       self.conditions = conditions.map do |m|
         m.strip.sub(/^\w+:\/\/.*?\//, "").sub(/^\//, "").sub(/\/$/, "")
       end.compact.uniq
+    end
+
+    def interpret_default_location(default_site, &block)
+      if self.is_a?(Cms::Model::Part)
+        if parent
+          yield parent.site, parent
+        else
+          yield default_site, :root_contents
+        end
+      else
+        yield self.site, self
+      end
+    end
+
+    def bind_to_category(category_key, category_ids)
+      cond = []
+
+      return cond if category_ids.blank?
+
+      if category_ids.length == 1
+        cond << { site_id: category_ids.first[0], category_key => category_ids.first[1] }
+        return cond
+      end
+
+      category_ids.group_by { |site_id, _node_id| site_id }.each do |site_id, ids|
+        node_ids = ids.map { |_site_id, node_id| node_id }
+        if node_ids.length == 1
+          cond << { site_id: site_id, category_key => node_ids.first }
+        else
+          cond << { site_id: site_id, category_key => { "$in" => node_ids } }
+        end
+      end
+
+      cond
     end
   end
 end
