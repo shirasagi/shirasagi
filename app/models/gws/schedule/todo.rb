@@ -60,7 +60,7 @@ class Gws::Schedule::Todo
   def reminder_url(*args)
     # ret = super
     name = reference_model.tr('/', '_') + '_readable_path'
-    [name, id: id, site: site_id]
+    [name, id: id, site: site_id, category: '-']
   end
 
   def calendar_format(user, site)
