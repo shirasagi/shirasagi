@@ -5,8 +5,10 @@ module SS::Addon::Elasticsearch::SiteSetting
   included do
     field :elasticsearch_hosts, type: SS::Extensions::Words
     field :elasticsearch_deny, type: SS::Extensions::Lines, default: '404.html'
+    field :elasticsearch_indexes, type: SS::Extensions::Words
+    embeds_ids :elasticsearch_sites, class_name: "Cms::Site"
 
-    permit_params :elasticsearch_hosts, :elasticsearch_deny
+    permit_params :elasticsearch_hosts, :elasticsearch_deny, :elasticsearch_indexes, elasticsearch_site_ids: []
 
     after_save :deny_elasticsearch_paths, if: ->{ @db_changes["elasticsearch_deny"] }
   end

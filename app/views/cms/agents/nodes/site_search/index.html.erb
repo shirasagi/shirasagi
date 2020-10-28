@@ -23,6 +23,7 @@
 <div class="cms-site-search">
   <%= form_for :s, url: @cur_node.url, html: { method: :get, class: 'search-form' } do |f| %>
     <%= f.text_field :keyword %>
+    <%= select_tag 'target', options_for_select([[t('ss.search_on', name: @cur_site.name), 'inside'], [t('ss.search_on', name: SS::Config.cms.elasticsearch['label']), 'outside']], selected: params[:target]) %>
     <input type="submit" value="<%= t('ss.buttons.search') %>" />
   <% end %>
 

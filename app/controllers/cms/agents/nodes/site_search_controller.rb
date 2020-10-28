@@ -20,7 +20,7 @@ class Cms::Agents::Nodes::SiteSearchController < ApplicationController
   end
 
   def permit_fields
-    [:keyword]
+    [:keyword, :target]
   end
 
   def get_params
@@ -35,6 +35,15 @@ class Cms::Agents::Nodes::SiteSearchController < ApplicationController
 
   def index
     @s = @item = @model.new(get_params)
+
+    if @cur_site.elasticsearch_sites.present?
+      @s.index = @cur_site.elasticsearch_sites.collect { |site| "s#{site.id}" }.join(",")
+    end
+
+    if params[:target] == 'outside'
+      indexes = @cur_site.elasticsearch_indexes.presence || SS::Config.cms.elasticsearch['indexes']
+      @s.index = [@s.index, indexes].flatten.join(",")
+    end
 
     if @s.keyword.present?
       @s.from = (params[:page].to_i - 1) * @s.size if params[:page].present?

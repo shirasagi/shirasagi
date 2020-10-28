@@ -18,11 +18,11 @@
           date ||= source['updated'].presence.try { |time| Time.zone.parse(time) rescue nil }
           date ||= source['created'].presence.try { |time| Time.zone.parse(time) rescue nil }
         %>
-        <h2><%= link_to title, source['url'], class: 'title' %></h2>
+        <h2><%= link_to title, Addressable::URI.join((Cms::Site.where(id: source['site_id']).first.presence || @cur_site).full_root_url, source['url']).to_s, class: 'title' %></h2>
         <div class="meta">
-          <span class="url"><%= @cur_site.full_url + hit['_id'] %></span>
+          <span class="url"><%= (Cms::Site.where(id: source['site_id']).first.presence || @cur_site).full_url + hit['_id'] %></span>
           <% if date %>
-            <time datetime="<%= date.iso8601 %>"><%= I18n.l(date, format: :long) %></time>
+            <time datetime="<%= date %>"><%= I18n.l(Time.zone.parse(date), format: :long) %></time>
           <% end %>
         </div>
       </header>

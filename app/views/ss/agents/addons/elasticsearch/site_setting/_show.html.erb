@@ -4,4 +4,10 @@
 
   <dt><%= @model.t :elasticsearch_deny %></dt>
   <dd><%=br @item.elasticsearch_deny %></dd>
+
+  <dt><%= @model.t :elasticsearch_site_ids %></dt>
+  <dd><%=br @item.elasticsearch_sites.pluck(:host) %></dd>
+
+  <dt><%= @model.t :elasticsearch_indexes %></dt>
+  <dd><%= @item.elasticsearch_indexes %></dd>
 </dl>

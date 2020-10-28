@@ -10,3 +10,32 @@
   <dt><%= @model.t :elasticsearch_deny %><%= @model.tt :elasticsearch_deny %></dt>
   <dd><%= f.text_area :elasticsearch_deny %></dd>
 </dl>
+
+<dl class="see addon-cms-elasticsearch-site-setting">
+  <dt><%= @model.t :elasticsearch_site_ids %><%= @model.tt :elasticsearch_site_ids %></dt>
+  <dd>
+    <%= f.hidden_field "elasticsearch_site_ids[]", value: "", class: "hidden-ids" %>
+    <%= link_to t("cms.apis.sites.index"), cms_apis_sites_path, class: "ajax-box" %>
+  </dd>
+  <dd>
+    <table class="index ajax-selected">
+      <thead>
+      <tr>
+        <th class="name"><%= t("mongoid.models.cms/site") %></th>
+        <th></th>
+      </tr>
+      </thead>
+      <tbody>
+      <% @item.elasticsearch_sites.each do |site| %>
+        <tr data-id="<%= site.id %>">
+          <td><%= f.hidden_field "elasticsearch_site_ids[]", value: site.id %> <%= site.host %></td>
+          <td><%= link_to t("ss.buttons.delete"), "#", class: "deselect btn" %></td>
+        </tr>
+      <% end %>
+      </tbody>
+    </table>
+  </dd>
+
+  <dt><%= @model.t :elasticsearch_indexes %><%= @model.tt :elasticsearch_indexes %></dt>
+  <dd><%= f.text_field :elasticsearch_indexes %></dd>
+</dl>

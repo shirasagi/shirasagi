@@ -34,6 +34,7 @@ ja:
     color: 表示色
     bg_color: 背景色
     contrast_ratio: コントラスト比
+    search_on: "%{name}で検索する"
 
     views:
       login/login:
@@ -736,6 +737,8 @@ ja:
       ss/addon/elasticsearch/site_setting:
         elasticsearch_hosts: 全文検索サーバー
         elasticsearch_deny: 除外パス
+        elasticsearch_site_ids: サイト
+        elasticsearch_indexes: インデックス
       ss/addon/translate/site_setting:
         translate_state: ステータス
         translate_source_id: 元言語コード
@@ -1112,6 +1115,12 @@ ja:
       elasticsearch_deny:
         - 検索対象から除外するページのパスを入力します。
         - 改行区切りで入力します。
+      elasticsearch_site_ids:
+        - 検索対象サイトを設定します。
+        - 設定したサイトのページが表示されるされるようになります。
+      elasticsearch_indexes:
+        - 検索対象のインデックスを設定します。
+        - 設定したインデックスのページが表示されるされるようになります。
 
     ss/model/prefecture_code:
       code:
