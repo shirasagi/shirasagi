@@ -29,9 +29,7 @@
   var $el = $('form.cell-edit');
 
   $el.on('click', 'button[name=clear]', function() {
-    console.log('on click clear');
     var $select = $('form.cell-edit select[name="cell[in_hour]"]');
-    console.log($select.find('option:selected').length);
     $select.find('option:selected').removeAttr('selected');
 
     $('form.cell-edit select[name="cell[in_hour]"] option:selected').removeAttr('selected');
