@@ -218,6 +218,7 @@ Rails.application.routes.draw do
           get :thumb, on: :member
           get :download, on: :member
           get :contrast_ratio, on: :collection
+          post :similar_files, on: :collection
         end
       end
       resources :content_files, only: [] do

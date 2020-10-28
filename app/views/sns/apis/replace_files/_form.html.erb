@@ -1,0 +1,12 @@
+<dl class="see">
+  <dt><%= @model.t :in_file %><span style="margin-left: 13px;"><%= @model.tt :in_file %></span></dt>
+  <dd>
+    <%= f.file_field :in_file %>
+    <% if @item.image? %>
+      <%= f.select :resizing, @model.resizing_options, { include_blank: t("ss.resize_image") }, { class: "image-size" } %>
+    <% end %>
+  </dd>
+
+  <dt><%= @model.t :name %><%= @model.tt :name %></dt>
+  <dd><%#= f.text_field :name %></dd>
+</dl>

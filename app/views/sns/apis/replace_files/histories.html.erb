@@ -1,0 +1,123 @@
+<%= jquery do %>
+
+var loading = $(SS.loading).hide();
+$("#ajax-box").after(loading);
+
+$("#ajax-box .restore").on("click", function() {
+  if (!confirm("ファイルを復元してもよろしいですか？")) {
+    return false;
+  }
+
+  var url = $(this).attr("href");
+  $.ajax({
+    url: url,
+    type: "post",
+    dataType: 'json',
+    beforeSend: function() {
+      $("#ajax-box").hide();
+      loading.show();
+    },
+    success: function(data) {
+      var size = data.length;
+      $.each(data, function(k, v){
+        var url = v["url"] + "?_update=" + v["updated_to_i"];
+        $.get(url, function () {
+          size -= 1;
+          if (size == 0) {
+            location.reload();
+          }
+        });
+      });
+    },
+    error: function(data, status, err) {
+      $("#ajax-box").show();
+      loading.hide();
+
+      resp = eval(data.responseText);
+      alert(resp.join("\n"));
+    }
+  });
+
+  return false;
+});
+
+$("#ajax-box .destroy").on("click", function() {
+  if (!confirm("ファイル履歴を削除してもよろしいですか？")) {
+    return false;
+  }
+
+  var url = $(this).attr("href");
+  $.ajax({
+    url: url,
+    type: "post",
+    dataType: 'json',
+    beforeSend: function() {
+      $("#ajax-box").hide();
+      loading.show();
+    },
+    success: function(data) {
+      $("#cboxLoadedContent").load("<%= url_for(action: :histories) %>");
+    },
+    error: function(data, status, err) {
+      $("#ajax-box").show();
+      loading.hide();
+
+      resp = eval(data.responseText);
+      alert(resp.join("\n"));
+    }
+  });
+  return false;
+});
+
+<% end %>
+
+<%
+  def branch_page?
+    @owner_item.class.include?(Cms::Model::Page) && @owner_item.respond_to?(:master?) && !@owner_item.master?
+  end
+%>
+
+<div class="cms-modal-tabs">
+  <% action = (params[:source] == "confirm") ? { action: :confirm } : { action: :edit } %>
+  <%= link_to(action, { class: "ajax-box" }) do %>
+    <span class="tab-name"><%= "差し替え" %></span>
+  <% end %>
+  <%= link_to({ action: :histories }, { class: "current", onclick: "return false;" }) do %>
+    <span class="tab-name"><%= "ファイル履歴" %></span>
+  <% end %>
+</div>
+
+<% if branch_page? %>
+  <div style="padding: 10px; border: 1px solid #ddd;">差し替えページのため、履歴はありません。</div>
+<% elsif @item.history_files.blank? %>
+  <div style="padding: 10px; border: 1px solid #ddd;">履歴はありません。</div>
+<% else %>
+  <table class="index">
+    <thead>
+    <tr>
+      <th><%= @model.t :name %></th>
+      <th><%= @model.t :created %></th>
+      <th><%= @model.t :size %></th>
+      <th style="width: 220px;"></th>
+    </tr>
+    </thead>
+    <tbody>
+    <% @item.history_files.each do |item| %>
+      <tr>
+        <td><%= item.name %></td>
+        <td><%= item.created.strftime("%Y/%m/%d %H:%M") %></td>
+        <td><%= number_to_human_size item.size %></td>
+        <td>
+          <%= link_to "復元", { action: :restore, source: item.id }, class: "restore" %>
+          |
+          <%= link_to t("ss.links.download"), { action: :download, source: item.id } %>
+          |
+          <%= link_to t("ss.buttons.delete"), { action: :destroy, source: item.id }, class: "destroy" %>
+        </td>
+      </tr>
+    <% end %>
+    </tbody>
+  </table>
+<% end %>
+
+<%= paginate @items if @items.try(:current_page) %>

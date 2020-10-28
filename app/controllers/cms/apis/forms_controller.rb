@@ -50,6 +50,7 @@ class Cms::Apis::FormsController < ApplicationController
 
   def new_column
     @item = Cms::Form.site(@cur_site).find(params[:id])
+    @cur_node = Cms::Node.find(params[:node]).becomes_with_route rescue nil
     @cur_column = @item.columns.find(params[:column_id])
     render layout: false
   end

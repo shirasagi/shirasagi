@@ -5,6 +5,7 @@ module Opendata::CmsRef::Page
     field :assoc_site_id, type: Integer
     field :assoc_node_id, type: Integer
     field :assoc_page_id, type: Integer
+    field :assoc_file_id, type: Integer
 
     scope :and_associated_node, ->(node) { where(assoc_site_id: node.site_id, assoc_node_id: node.id) }
     scope :and_associated_page, ->(page) do

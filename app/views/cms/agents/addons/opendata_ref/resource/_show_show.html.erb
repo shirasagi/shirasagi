@@ -1,7 +1,7 @@
 <% licenses = Opendata::License.in(site_id: @cur_node.becomes_with_route.try(:opendata_site_ids)).and_public.pluck(:name, :id) %>
 
 <div class="see mod-cms-opendata-resource">
-  <% @item.files.each do |file| %>
+  <% @item.attached_files.each do |file| %>
     <div class="od-resource-file" data-file-id="<%= file.id %>">
       <div class="od-resource-file-img">
         <%= link_to file.url, class: :thumb, target: "_blank", rel: "noopener" do %>

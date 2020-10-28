@@ -1,0 +1,240 @@
+<%= jquery do %>
+
+var submitted = null;
+$(".search-ui-form .save").on("click", function() {
+  submitted = $(this).attr("data-submitted");
+});
+
+var onSelect;
+var $element = $.colorbox.element();
+var $cboxContent = $("#cboxContent");
+if ($element) {
+  onSelect = $element.data('on-select');
+}
+if ($cboxContent.length) {
+  $cboxContent.data('on-select', onSelect);
+  onSelect = $cboxContent.data('on-select');
+}
+
+var urlOption = function () {
+  if (submitted == "similar_files") {
+    return "<%= url_for(action: :similar_files) rescue nil %>";
+  } else {
+    return "<%= url_for(action: :create) %>" + ".json";
+  }
+};
+var dataTypeOption = function () {
+  if (submitted == "similar_files") {
+    return "html";
+  } else {
+    return "json";
+  }
+};
+var successAttach = function (data) {
+  $("#cboxLoadedContent").load("<%= url_for(action: :index, file_size: params[:file_size]) %>", function() {
+    if (!Array.isArray(data) || data.length == 0) {
+      return;
+    }
+
+    var sorted_name_and_datas = [];
+    var file_views = [];
+
+    $.each(data, function(index, file) {
+      var item = $(".user-files .select[data-id='" + file._id + "']");
+      var url = item.attr('href');
+      if (!url) return true;
+      if (onSelect) {
+        onSelect(item);
+      } else {
+        file_views.push($.ajax({
+          url: url,
+          success: function(data) {
+            sorted_name_and_datas.push({name: file.filename, data: data});
+          }
+        }));
+      }
+    });
+    $.when.apply($,file_views).done(function () {
+      sorted_name_and_datas.sort(function(a,b) {
+        if(a.name < b.name) return 1;
+        if(a.name > b.name) return -1;
+        return 0;
+      });
+      for (var i = 0; i < sorted_name_and_datas.length; i++) {
+        $("#selected-files").prepend(sorted_name_and_datas[i].data);
+      }
+    });
+    $.colorbox.close();
+  });
+};
+var successSave = function (data) {
+  $("#cboxLoadedContent").load("<%= url_for(action: :index, file_size: params[:file_size], similar_files: params[:similar_files]) %>");
+};
+var successSimilarFiles = function (data) {
+  var html = $(data);
+
+  $(html).find(".search").on("click", function () {
+    $('#ajax-box .search-ui-form [data-submitted="similar_files"]').trigger("submit");
+    return false;
+  });
+
+  $(html).find("input").on('keypress', function (ev) {
+    if ((ev.which && ev.which === 13) || (ev.keyCode && ev.keyCode === 13)) {
+      return false;
+    } else {
+      return true;
+    }
+  });
+
+  $(html).find(".pagination a").on('click', function (ev) {
+    var href = $(this).attr("href");
+    var page = href.match(/page=(\d+)/);
+
+    if (page) {
+      page = page[1];
+    } else {
+      page = "1";
+    }
+    $("#ajax-box .similar-files .current-page").val(page);
+    $('#ajax-box .search-ui-form [data-submitted="similar_files"]').trigger("submit");
+    return false;
+  });
+
+  $(html).find(".back-to-index").on("click", function() {
+    $("#ajax-box .similar-files").remove();
+
+    $("#ajax-box .search-ui-form").show();
+    $("#ajax-box .user-files").show();
+
+    return false;
+  });
+
+  $("#ajax-box .similar-files").remove();
+  $("#ajax-box .search-ui-form").after(html);
+
+  $("#ajax-box .search-ui-form").hide();
+  $("#ajax-box .user-files").hide();
+};
+
+var options = function () {
+  var url = urlOption();
+  var dataType = dataTypeOption();
+
+  return {
+    url: url,
+    dataType: dataType,
+    success: function(data) {
+      if(submitted == "attach") {
+        successAttach(data);
+      } else if (submitted == "save") {
+        successSave(data);
+      } else if (submitted == "similar_files") {
+        successSimilarFiles(data);
+      }
+    },
+    error: function(xhr) {
+      if (xhr.status == 413) {
+        alert(["== Error =="].concat("<%= I18n.t('errors.messages.request_entity_too_large') %>").join("\n"));
+      } else {
+        try {
+          alert(["== Error =="].concat(xhr.responseJSON).join("\n"));
+        } catch(_error) {
+          alert(["== Error =="].concat(xhr.statusText).join("\n"));
+        }
+      }
+    }
+  };
+};
+
+SS.ajaxForm("form.user-file", options);
+
+if (onSelect) {
+  $(".user-files .select").on('click', function(e) {
+    onSelect($(this));
+    e.preventDefault();
+    return false;
+  });
+} else {
+  SS.ajax(".user-files .select", {
+    success: function(data) {
+      var dataFileId = $('<div>' + data + '</div>').find("[data-file-id]").attr("data-file-id");
+      if (dataFileId) {
+        $("#selected-files .file-view[data-file-id='" + dataFileId + "']").remove();
+      }
+      $("#selected-files").prepend(data);
+      $.colorbox.close();
+    }
+  });
+}
+
+SS.ajaxDelete(".user-files .delete");
+
+var resizing = $('#file-resizing').val();
+if (resizing) {
+  var label = $('#file-resizing').attr('data-label');
+  var option = $('<option>').val(resizing).text(label).prop('selected', true);
+  $('select.image-size').append(option);
+}
+
+SS_SearchUI.modal();
+<% end %>
+
+<% if @model.allowed?(:edit, @cur_user, site: @cur_site, node: @cur_node) %>
+  <%= form_for :item, url: { action: :create }, html: { class: "user-file", multipart: true } do |f| %>
+  <%= error_messages_for :item %>
+
+    <div class="search-ui-form">
+      <%= f.file_field :in_files, multiple: :multiple, required: :required %>
+      <%= f.select :resizing, @model.resizing_options, { include_blank: t("ss.resize_image") }, { class: "image-size" } %>
+      <%= hidden_field_tag :unnormalize, params[:unnormalize] if params[:unnormalize].present? %>
+      <%= f.submit t("ss.buttons.attach"), class: "save btn", style: "margin-left: 10px;", "data-submitted": "attach" %>
+      <%= f.submit t("ss.buttons.save"), class: "save btn", style: "margin-left: 10px;", "data-submitted": "save" %>
+
+      <% if params[:similar_files].present? %>
+        <%= hidden_field_tag :similar_files, params[:similar_files] %>
+        <%= f.submit t("ss.buttons.search"), class: "save btn", style: "margin-left: 10px;", "data-submitted": "similar_files" %>
+      <% end %>
+    </div>
+
+  <% end %>
+<% end %>
+
+<div class="index user-files">
+  <% @items.each do |item| %>
+  <article class="file-view" id="user-file<%= item.id %>" data-file-id="<%= item.id %>">
+    <%
+      opts = { action: :select, id: item }
+      opts[:unnormalize] = true if params[:unnormalize].present?
+      opts[:file_size] = true if params[:file_size].present?
+    %>
+    <a class="select" href="<%= url_for opts %>" title="<%= item.humanized_name %>" data-id="<%= item.id %>" data-humanized-name="<%= item.humanized_name %>">
+      <div class="thumb">
+        <% if item.image? %>
+          <img src="<%= url_for(action: :thumb, id: item, _: item.updated.to_i) %>" alt="<%= item.basename %>" />
+        <% else %>
+          <span class="ext icon-<%= item.extname %>"><%= item.extname %></span>
+        <% end %>
+      </div>
+      <div class="name">
+        <%= item.name %>
+        <% if params[:file_size] %>
+        <br />
+        <span class="file-size"><%= "( #{number_to_human_size(item.size)} )" %></span>
+        <% end %>
+      </div>
+    </a>
+    <nav class="menu">
+      <% if item.allowed?(:edit, @cur_user, site: @cur_site) %>
+        <%= link_to t("ss.buttons.edit"), { action: :edit, id: item, file_size: params[:file_size] }, class: %w(edit ajax-box) %>
+      <% end %>
+      <% if item.allowed?(:delete, @cur_user, site: @cur_site) %>
+        <%= link_to t("ss.buttons.delete"), { action: :destroy, id: item }, class: "delete", "data-remove" => "#user-file#{item.id}" %>
+      <% end %>
+    </nav>
+  </article>
+  <% end %>
+</div>
+
+<div style="clear: both;"></div>
+
+<%= paginate @items if @items.try(:current_page) %>

@@ -152,6 +152,9 @@ ja:
       zoom_in: 拡大
       calculate: 計算
       reload: 再読込
+      replace_file: 差し替え
+      file_histories: ファイル履歴
+      translate: 翻訳
     confirm:
       delete: 削除してよろしいですか？
       soft_delete: 削除してよろしいですか？

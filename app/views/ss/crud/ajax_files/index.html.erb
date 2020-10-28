@@ -16,58 +16,82 @@ if ($cboxContent.length) {
   onSelect = $cboxContent.data('on-select');
 }
 
-SS.ajaxForm("form.user-file", {
-  success: function(data) {
-    $("#cboxLoadedContent").load("<%= url_for(action: :index, file_size: params[:file_size]) %>", function() {
-      if (!Array.isArray(data) || data.length == 0) {
-        return;
-      }
+var urlOption = function () {
+  return "<%= url_for(action: :create) %>" + ".json";
+};
+var dataTypeOption = function () {
+  return "json";
+};
+var successAttach = function (data) {
+  $("#cboxLoadedContent").load("<%= url_for(action: :index, file_size: params[:file_size]) %>", function() {
+    if (!Array.isArray(data) || data.length == 0) {
+      return;
+    }
 
-      if(submitted == "attach") {
-        var sorted_name_and_datas = [];
-        var file_views = [];
+    var sorted_name_and_datas = [];
+    var file_views = [];
 
-        $.each(data, function(index, file) {
-          var item = $(".user-files .select[data-id='" + file._id + "']");
-          var url = item.attr('href');
-          if (!url) return true;
-          if (onSelect) {
-            onSelect(item);
-          } else {
-            file_views.push($.ajax({
-              url: url,
-              success: function(data) {
-                sorted_name_and_datas.push({name: file.filename, data: data});
-              }
-            }));
+    $.each(data, function(index, file) {
+      var item = $(".user-files .select[data-id='" + file._id + "']");
+      var url = item.attr('href');
+      if (!url) return true;
+      if (onSelect) {
+        onSelect(item);
+      } else {
+        file_views.push($.ajax({
+          url: url,
+          success: function(data) {
+            sorted_name_and_datas.push({name: file.filename, data: data});
           }
-        });
-        $.when.apply($,file_views).done(function () {
-          sorted_name_and_datas.sort(function(a,b) {
-            if(a.name < b.name) return 1;
-            if(a.name > b.name) return -1;
-            return 0;
-          });
-          for (var i = 0; i < sorted_name_and_datas.length; i++) {
-            $("#selected-files").prepend(sorted_name_and_datas[i].data);
-          }
-        });
-        $.colorbox.close();
+        }));
       }
     });
-  },
-  error: function(xhr) {
-    if (xhr.status == 413) {
-      alert(["== Error =="].concat("<%= I18n.t('errors.messages.request_entity_too_large') %>").join("\n"));
-    } else {
-      try {
-        alert(["== Error =="].concat(xhr.responseJSON).join("\n"));
-      } catch(_error) {
-        alert(["== Error =="].concat(xhr.statusText).join("\n"));
+    $.when.apply($,file_views).done(function () {
+      sorted_name_and_datas.sort(function(a,b) {
+        if(a.name < b.name) return 1;
+        if(a.name > b.name) return -1;
+        return 0;
+      });
+      for (var i = 0; i < sorted_name_and_datas.length; i++) {
+        $("#selected-files").prepend(sorted_name_and_datas[i].data);
+      }
+    });
+    $.colorbox.close();
+  });
+};
+var successSave = function (data) {
+  $("#cboxLoadedContent").load("<%= url_for(action: :index, file_size: params[:file_size]) %>");
+};
+
+var options = function () {
+  var url = urlOption();
+  var dataType = dataTypeOption();
+
+  return {
+    url: url,
+    dataType: dataType,
+    success: function(data) {
+      if(submitted == "attach") {
+        successAttach(data);
+      } else if (submitted == "save") {
+        successSave(data);
+      }
+    },
+    error: function(xhr) {
+      if (xhr.status == 413) {
+        alert(["== Error =="].concat("<%= I18n.t('errors.messages.request_entity_too_large') %>").join("\n"));
+      } else {
+        try {
+          alert(["== Error =="].concat(xhr.responseJSON).join("\n"));
+        } catch(_error) {
+          alert(["== Error =="].concat(xhr.statusText).join("\n"));
+        }
       }
     }
-  }
-});
+  };
+};
+
+SS.ajaxForm("form.user-file", options);
 
 if (onSelect) {
   $(".user-files .select").on('click', function(e) {

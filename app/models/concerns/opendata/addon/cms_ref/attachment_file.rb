@@ -9,29 +9,35 @@ module Opendata::Addon::CmsRef::AttachmentFile
 
     validates :assoc_method, inclusion: { in: %w(none auto) }
 
-    scope :and_associated_file, ->(file) { where(assoc_filename: file.filename) }
+    scope :and_associated_file, ->(file) do
+      where({ '$or' => [assoc_file_id: file.id, assoc_filename: file.filename] })
+    end
   end
 
-  def associate_resource_with_file!(page, file, license_id)
+  def associate_resource_with_file!(page, file, license_id, text)
     file.uploaded_file do |tmp_file|
       self.name = file.name.gsub(/\..*$/, '')
       self.license_id = license_id
+      self.text = text
       self.in_file = tmp_file
       self.assoc_site_id = page.site.id
       self.assoc_node_id = page.parent.id
       self.assoc_page_id = page.id
       self.assoc_filename = file.filename
+      self.assoc_file_id = file.id
       self.save!
     end
   end
 
-  def update_resource_with_file!(page, file, license_id)
+  def update_resource_with_file!(page, file, license_id, text)
     self.name = file.name.gsub(/\..*$/, '')
     self.license_id = license_id
+    self.text = text
     self.assoc_site_id = page.site.id
     self.assoc_node_id = page.parent.id
     self.assoc_page_id = page.id
     self.assoc_filename = file.filename
+    self.assoc_file_id = file.id
     self.updated = Time.zone.now
     self.save!
 
@@ -47,8 +53,8 @@ module Opendata::Addon::CmsRef::AttachmentFile
   end
 
   def assoc_file
-    if assoc_page_id.present? && assoc_filename.present?
-      assoc_page.files.find_by(filename: assoc_filename) rescue nil
+    if assoc_page.present? && (assoc_file_id.present? || assoc_filename.present?)
+      assoc_page.attached_files.find { |file| (file.id == assoc_file_id || file.filename == assoc_filename) }
     end
   end
 

@@ -21,6 +21,7 @@ class Cms::Page
   include Cms::Addon::Release
   include Cms::Addon::ReleasePlan
   include Cms::Addon::GroupPermission
+  include Cms::AttachedFiles
   include History::Addon::Backup
   include Cms::Addon::ForMemberPage
 

@@ -23,6 +23,7 @@ class Event::Page
   include Cms::Addon::Release
   include Cms::Addon::ReleasePlan
   include Cms::Addon::GroupPermission
+  include Cms::AttachedFiles
   include History::Addon::Backup
   include Event::Addon::Csv::Page
   include Cms::Addon::ForMemberPage

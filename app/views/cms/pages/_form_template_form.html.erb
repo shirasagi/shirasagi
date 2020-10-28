@@ -38,7 +38,7 @@
 
       Cms_TemplateForm.userId = <%= @cur_user.id %>;
       Cms_TemplateForm.confirms.delete = <%== t("ss.confirm.delete").to_json %>;
-      Cms_TemplateForm.paths.formColumn = <%== cms_apis_form_column_new_path(id: ":formId", column_id: ":columnId").to_json %>;
+      Cms_TemplateForm.paths.formColumn = <%== cms_apis_form_column_new_path(id: ":formId", column_id: ":columnId", node: @cur_node.try(:id)).to_json %>;
       Cms_TemplateForm.paths.formUrlTemplate = <%== cms_apis_form_path(id: ':id', node: @cur_node.try(:id), item_id: (@item.new_record? ? nil : @item.id), item_route: @item.route).to_json %>;
       Cms_TemplateForm.render();
     <% end %>

@@ -46,6 +46,27 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
     context "basic" do
       it do
         #
+        # activate opendata integration
+        #
+        visit article_pages_path(site, article_node)
+        click_on article_page.name
+        click_on I18n.t('ss.links.edit')
+
+        within '#addon-cms-agents-addons-opendata_ref-dataset' do
+          find('.addon-head h2').click
+          # wait for appearing select
+          expect(page).to have_css('a.ajax-box', text: I18n.t('cms.apis.opendata_ref.datasets.index'))
+          # choose 'item_opendata_dataset_state_public'
+          find('input#item_opendata_dataset_state_public').click
+        end
+        click_on I18n.t('ss.buttons.publish_save')
+
+        expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'), wait: 60)
+        item = article_page.class.find(article_page.id)
+        expect(item.state).to eq 'public'
+        expect(item.opendata_dataset_state).to eq 'public'
+
+        #
         # individual resources setting
         #
         visit article_pages_path(site, article_node)
@@ -197,6 +218,27 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
 
     context "after associated with resource, move attachment file to another dataset" do
       it do
+        #
+        # activate opendata integration
+        #
+        visit article_pages_path(site, article_node)
+        click_on article_page.name
+        click_on I18n.t('ss.links.edit')
+
+        within '#addon-cms-agents-addons-opendata_ref-dataset' do
+          find('.addon-head h2').click
+          # wait for appearing select
+          expect(page).to have_css('a.ajax-box', text: I18n.t('cms.apis.opendata_ref.datasets.index'))
+          # choose 'item_opendata_dataset_state_public'
+          find('input#item_opendata_dataset_state_public').click
+        end
+        click_on I18n.t('ss.buttons.publish_save')
+
+        expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'), wait: 60)
+        item = Article::Page.find(article_page.id)
+        expect(item.state).to eq 'public'
+        expect(item.opendata_dataset_state).to eq 'public'
+
         #
         # individual resources setting
         #

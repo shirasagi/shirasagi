@@ -16,7 +16,11 @@
 
     <span class="upload-menu-new">
       <% if @cur_node %>
-        <%= link_to t('ss.links.upload'), cms_apis_node_temp_files_path(cid: @cur_node), class: "ajax-box btn" %>
+        <% if @cur_node.becomes_with_route.try(:opendata_sites).present? %>
+          <%= link_to t('ss.links.upload'), cms_apis_node_temp_files_path(cid: @cur_node, similar_files: 1), class: "ajax-box btn" %>
+        <% else %>
+          <%= link_to t('ss.links.upload'), cms_apis_node_temp_files_path(cid: @cur_node), class: "ajax-box btn" %>
+        <% end %>
       <% else %>
         <%= link_to t('ss.links.upload'), cms_apis_temp_files_path, class: "ajax-box btn" %>
       <% end %>

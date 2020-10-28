@@ -41,7 +41,15 @@
 
   <% @extra_bodies << proc do %>
     <span class="upload-menu-new">
-      <%= link_to t('ss.links.upload'), cms_apis_temp_files_path, class: "ajax-box btn btn-file-upload" %>
+      <% if @cur_node %>
+        <% if @cur_node.becomes_with_route.try(:opendata_sites).present? %>
+          <%= link_to t('ss.links.upload'), cms_apis_node_temp_files_path(cid: @cur_node, similar_files: 1), class: "ajax-box btn btn-file-upload" %>
+        <% else %>
+          <%= link_to t('ss.links.upload'), cms_apis_node_temp_files_path(cid: @cur_node), class: "ajax-box btn btn-file-upload" %>
+        <% end %>
+      <% else %>
+        <%= link_to t('ss.links.upload'), cms_apis_temp_files_path, class: "ajax-box btn btn-file-upload" %>
+      <% end %>
     </span>
     <span class="upload-menu-select">
       <%= link_to t("sns.user_file"), cms_apis_user_files_path(cid: @cur_node || '-'), class: "ajax-box btn btn-file-upload" %>

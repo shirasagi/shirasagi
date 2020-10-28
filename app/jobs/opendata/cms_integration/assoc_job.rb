@@ -60,9 +60,11 @@ class Opendata::CmsIntegration::AssocJob < Cms::ApplicationJob
     page_html = get_page_html
     if page_html.blank?
       Rails.logger.warn("#{@cur_page.name}: html is blank")
-      return
+      #return # support for form page
     end
-    if @cur_page.files.blank?
+
+    files = @cur_page.attached_files
+    if files.blank?
       Rails.logger.warn("#{@cur_page.name}: no files are attached")
       return
     end
@@ -77,7 +79,7 @@ class Opendata::CmsIntegration::AssocJob < Cms::ApplicationJob
       end
     end
 
-    @cur_page.files.each do |file|
+    files.each do |file|
       state = @cur_page.opendata_resources_state(file)
       case state
       when 'none'
@@ -98,10 +100,12 @@ class Opendata::CmsIntegration::AssocJob < Cms::ApplicationJob
   end
 
   def get_page_html
-    if @cur_page.body_layout.present?
-      @page_html ||= @cur_page.body_parts.join
+    if @cur_page.class.include?(Cms::Addon::Form::Page) && @cur_page.form
+      ""
+    elsif @cur_page.body_layout.present?
+      @page_html ||= @cur_page.body_parts.join.to_s
     else
-      @page_html ||= @cur_page.html
+      @page_html ||= @cur_page.html.to_s
     end
   end
 
@@ -163,9 +167,10 @@ class Opendata::CmsIntegration::AssocJob < Cms::ApplicationJob
 
   def create_resource(dataset, file)
     license_id = find_license(file).id
+    text = @cur_page.opendata_resources_text(file)
 
     resource = dataset.resources.new
-    resource.associate_resource_with_file!(@cur_page, file, license_id)
+    resource.associate_resource_with_file!(@cur_page, file, license_id, text)
 
     @file_goes_to << [ file.filename, dataset.id, resource.id ]
     Rails.logger.info("#{file.name}: resource is created in #{dataset.name}")
@@ -173,6 +178,7 @@ class Opendata::CmsIntegration::AssocJob < Cms::ApplicationJob
 
   def update_resources(dataset, resources, file)
     license_id = find_license(file).id
+    text = @cur_page.opendata_resources_text(file)
 
     resources.each do |resource|
       if resource.assoc_method != 'auto'
@@ -180,7 +186,7 @@ class Opendata::CmsIntegration::AssocJob < Cms::ApplicationJob
         next
       end
 
-      resource.update_resource_with_file!(@cur_page, file, license_id)
+      resource.update_resource_with_file!(@cur_page, file, license_id, text)
 
       @file_goes_to << [ file.filename, dataset.id, resource.id ]
       Rails.logger.info("#{file.name}: resource is updated in #{dataset.name}")

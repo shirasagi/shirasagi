@@ -1,0 +1,56 @@
+<%= jquery do %>
+
+var loading = $(SS.loading).hide();
+$("#ajax-box").after(loading);
+
+$('#ajax-form').ajaxForm({
+  type: "post",
+  dataType: 'json',
+  beforeSend: function() {
+    $("#ajax-box").hide();
+    loading.show();
+  },
+  success: function(data) {
+    $("#cboxLoadedContent").load("<%= url_for(action: :confirm) %>");
+  },
+  error: function(data, status, err) {
+    $("#ajax-box").show();
+    loading.hide();
+
+    resp = eval(data.responseText);
+    alert(resp.join("\n"));
+  }
+});
+
+<% end %>
+
+<div class="cms-modal-tabs">
+  <%= link_to({ action: :edit }, { class: "current", onclick: "return false;" }) do %>
+    <span class="tab-name"><%= "差し替え" %></span>
+  <% end %>
+  <%= link_to({ action: :histories }, { class: "ajax-box" }) do %>
+    <span class="tab-name"><%= "ファイル履歴" %></span>
+  <% end %>
+</div>
+
+<div style="padding: 10px; border: 1px solid #ddd;">
+  <%= form_for :item, url: { action: :confirm }, html: { id: "ajax-form", method: :post, multipart: true, autocomplete: :off } do |f| %>
+  <%= error_messages_for :item %>
+
+  <dl class="see">
+    <dt><%= @model.t :in_file %><span style="margin-left: 13px;"><%= @model.tt :in_file %></span></dt>
+    <dd>
+      <%= f.file_field :in_file, required: :required %>
+      <% if @item.image? %>
+        <%= f.select :resizing, @model.resizing_options, { include_blank: t("ss.resize_image") }, { class: "image-size" } %>
+      <% end %>
+    </dd>
+  </dl>
+
+  <footer class="send">
+    <%= f.submit "確認画面へ", class: "btn-primary save" %>
+    <%= link_to(t("ss.buttons.cancel"), "", { class: "btn-default", onclick: '$.colorbox.close(); return false;' }) %>
+  </footer>
+
+  <% end %>
+</div>

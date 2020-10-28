@@ -1,6 +1,5 @@
 <%
   return "" if @item.files.blank?
-
   addon ||= local_assigns.fetch(:addon, {})
 %>
 
@@ -8,7 +7,7 @@
   <dd class="wide">
     <div id="selected-files">
       <% @item.files.each do |file| %>
-        <div class="file-view" data-file-id="<%= file.id %>">
+        <div id="file-<%= file.id %>" class="file-view" data-file-id="<%= file.id %>">
           <%= sanitizer_status(file) %>
           <%= link_to file.url, class: :thumb, target: "_blank", rel: "noopener" do %>
             <% if file.image? %>
@@ -35,6 +34,16 @@
               <%= file.name %>
             </label><br />
           </div>
+
+          <% if SS::ReplaceFile.replaceable?(@item, user: @cur_user, site: @cur_site, node: @cur_node) %>
+            <div class="replace-file">
+              <% if params[:replace_temp_file].present? %>
+                <%= link_to "差し替え", confirm_sns_apis_replace_file_path(user: @cur_user.id, id: file.id), class: "ajax-box" %>
+              <% else %>
+                <%= link_to "差し替え", edit_sns_apis_replace_file_path(user: @cur_user.id, id: file.id), class: "ajax-box" %>
+              <% end %>
+            </div>
+          <% end %>
         </div>
       <% end %>
     </div>
@@ -42,8 +51,11 @@
 </dl>
 
 <%= jquery do %>
-  var $el = $("#<%= addon[:id] %>");
+var $el = $("#<%= addon[:id] %>");
   $el.on("click", ".file-view a.thumb", function(ev) {
   SS_FileView.open(ev, { viewPath: "<%= view_cms_apis_content_file_path(id: ":id") %>" });
-  });
+});
+
+var highlighter = new Cms_File_Highlighter();
+highlighter.render();
 <% end %>

@@ -1,0 +1,67 @@
+<div class="similar-files" style="margin: 0 0 20px;
+  padding: 10px;
+  border: 1px solid #ddd;"
+>
+  <dl class="see" style="margin-bottom: 20px;">
+    <dt><%= "ファイル" %></dt>
+    <dd><%= @humanized_name %></dd>
+
+    <dt><%= "ファイル名" %></dt>
+    <dd><%= text_field_tag "similar[filename]", @filename %></dd>
+
+    <dt><%= "オープンデータ連携" %></dt>
+    <dd>
+      <label><%= radio_button_tag("similar[assoc]", "assoced", (@assoc == "assoced")) %> <%= "連携ページのみ" %></label>
+      <label><%= radio_button_tag("similar[assoc]", "all", (@assoc == "all")) %> <%= "全てのページ" %></label>
+    </dd>
+
+    <dt></dt>
+    <dd>
+      <%= link_to t("ss.buttons.search"), "", class: "btn search" %>
+      <%= link_to t("ss.links.back"), "", class: "btn back-to-index", style: "margin-left: 10px;" %>
+    </dd>
+  </dl>
+
+  <% if @items.present? %>
+
+    <table class="index">
+      <thead>
+        <tr>
+          <th><%= "ページ名" %></th>
+          <th><%= "ファイル名" %></th>
+          <th><%= "ページ更新日時" %></th>
+          <th><%= "連携データセット" %></th>
+        </tr>
+      </thead>
+
+      <tbody>
+        <% @items.each do |item| %>
+          <% page = item.page.becomes_with_route %>
+          <% dataset = @datasets[page.id] %>
+          <tr data-id="<%= item.id %>">
+            <td>
+              <%= link_to page.name, page.private_show_path + "?replace_temp_file=1#file-#{item.file_id}", target: "_blank" rescue nil %>
+            </td>
+            <td><%= item.name %></td>
+            <td><%= page.updated.strftime("%Y/%m/%d %H:%M") rescue nil %></td>
+            <td>
+              <% if dataset %>
+                <%= link_to "#{dataset.name}（#{dataset.site.name}）", dataset.private_show_path, target: "_blank" rescue nil %>
+              <% else %>
+                <%= "なし" %>
+              <% end %>
+            </td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+
+    <%= hidden_field_tag "page", @items.try(:current_page), class: "current-page" %>
+    <%= paginate @items if @items.try(:current_page) %>
+
+  <% else %>
+
+    <div><%= "既に添付されているファイルは見つかりませんでした。" %></div>
+
+  <% end %>
+</div>

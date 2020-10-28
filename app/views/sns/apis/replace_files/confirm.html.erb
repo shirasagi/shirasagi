@@ -1,0 +1,106 @@
+<%= jquery do %>
+
+var loading = $(SS.loading).hide();
+$("#ajax-box").after(loading);
+
+$('#ajax-form').ajaxForm({
+  url: "<%= url_for action: :update %>",
+  dataType: 'json',
+  beforeSend: function() {
+    $("#ajax-box").hide();
+    loading.show();
+  },
+  success: function(data) {
+    var size = data.length;
+    $.each(data, function(k, v){
+      var url = v["url"] + "?_update=" + v["updated_to_i"];
+      $.get(url, function () {
+        size -= 1;
+        if (size == 0) {
+          location.reload();
+        }
+      });
+    });
+  },
+  error: function(data, status, err) {
+    $("#ajax-box").show();
+    loading.hide();
+
+    resp = eval(data.responseText);
+    alert(resp.join("\n"));
+  }
+});
+
+$('#ajax-box [name="item[in_file]"]').on("change", function(ev) {
+  if (this.files && this.files[0]) {
+    $('#ajax-box [name="item[name]"]').val(this.files[0].name);
+  }
+});
+
+$("#ajax-box .back-to-edit").on("click", function() {
+  $("#cboxLoadedContent").load("<%= url_for(action: :edit) %>");
+  return false;
+});
+
+<% end %>
+
+<div class="cms-modal-tabs">
+  <%= link_to({ action: :confirm }, { class: "current", onclick: "return false;" }) do %>
+    <span class="tab-name"><%= "差し替え" %></span>
+  <% end %>
+  <%= link_to({ action: :histories, source: :confirm }, { class: "ajax-box" }) do %>
+    <span class="tab-name"><%= "ファイル履歴" %></span>
+  <% end %>
+</div>
+
+<div style="padding: 10px; border: 1px solid #ddd;">
+  <%= form_for :item, url: { action: :update }, html: { id: "ajax-form", method: :put, multipart: true, autocomplete: :off } do |f| %>
+    <%= error_messages_for :item %>
+
+    <dl class="see">
+      <dt><%= @model.t :in_file %><span style="margin-left: 13px;"><%= @model.tt :in_file %></span></dt>
+      <dd>
+        <div class="" style="display: flex;">
+          <article class="file-view before">
+            <div>差し替え前</div>
+            <a class="thumb select" href="<%= @dst_file.url %>" target="_blank">
+              <% if @item.image? %>
+                <img src="<%= @item.thumb_url %>" alt="<%= @item.basename %>" />
+              <% else %>
+                <span class="ext icon-<%= @item.extname %>"><%= @item.extname %></span>
+              <% end %>
+            </a>
+            <div><%= @item.humanized_name %></div>
+          </article>
+
+          <div class="material-icons md-36" style="
+            margin-top: 60px;
+            margin-left: -20px;
+            padding-right: 10px;">trending_flat</div>
+
+          <article class="file-view after">
+            <div>差し替え後</div>
+            <a class="thumb select" href="<%= @dst_file.url %>" target="_blank">
+              <% if @dst_file.image? %>
+                <img src="<%= @dst_file.thumb_url %>" alt="<%= @dst_file.basename %>" />
+              <% else %>
+                <span class="ext icon-<%= @dst_file.extname %>"><%= @dst_file.extname %></span>
+              <% end %>
+            </a>
+            <div><%= @dst_file.humanized_name %></div>
+            <%= f.hidden_field "in_file", value: @dst_file.id %>
+          </article>
+        </div>
+      </dd>
+
+      <dt><%= @model.t :name %><%= @model.tt :name %></dt>
+      <dd><%= f.text_field :name, value: @dst_file.name %></dd>
+    </dl>
+
+    <footer class="send">
+      <%= f.submit "差し替え保存", class: "btn-primary save" %>
+      <%= link_to(t("ss.buttons.cancel"), { action: :edit }, { class: "btn-default back-to-edit" }) %>
+    </footer>
+
+  <% end %>
+</div>
