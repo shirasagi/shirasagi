@@ -9,7 +9,7 @@ describe Opendata::Part::Dataset, dbscope: :example do
   subject { create(:opendata_part_dataset) }
 
   describe "#condition_hash" do
-    its(:condition_hash) { is_expected.to be_empty }
+    its(:condition_hash) { is_expected.to eq(site_id: subject.site_id) }
   end
 
   describe "#sort_options" do
@@ -45,7 +45,7 @@ describe Opendata::Part::DatasetGroup, dbscope: :example do
   subject { create(:opendata_part_dataset_group) }
 
   describe "#condition_hash" do
-    its(:condition_hash) { is_expected.to be_empty }
+    its(:condition_hash) { is_expected.to eq(site_id: subject.site_id) }
   end
 end
 
@@ -53,7 +53,7 @@ describe Opendata::Part::App, dbscope: :example do
   subject { create(:opendata_part_app) }
 
   describe "#condition_hash" do
-    its(:condition_hash) { is_expected.to be_empty }
+    its(:condition_hash) { is_expected.to eq(site_id: subject.site_id) }
   end
 
   describe "#sort_options" do
@@ -89,7 +89,7 @@ describe Opendata::Part::Idea, dbscope: :example do
   subject { create(:opendata_part_idea) }
 
   describe "#condition_hash" do
-    its(:condition_hash) { is_expected.to be_empty }
+    its(:condition_hash) { is_expected.to eq(site_id: subject.site_id) }
   end
 
   describe "#sort_options" do
