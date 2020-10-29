@@ -4,15 +4,16 @@ module Cms::Addon::List
     extend SS::Translation
 
     WELL_KONWN_CONDITION_HASH_OPTIONS = %i[site default_location request_dir category bind].freeze
-    attr_accessor :cur_date
 
     included do
       cattr_accessor(:use_new_days, instance_accessor: false) { true }
       cattr_accessor(:use_liquid, instance_accessor: false) { true }
+      cattr_accessor(:default_limit, instance_accessor: false) { 20 }
+      attr_accessor :cur_date
 
       field :conditions, type: SS::Extensions::Words
       field :sort, type: String
-      field :limit, type: Integer, default: 20
+      field :limit, type: Integer, default: -> { self.class.default_limit }
       field :loop_html, type: String
       field :upper_html, type: String
       field :lower_html, type: String
