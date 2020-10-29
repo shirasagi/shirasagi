@@ -96,7 +96,7 @@ var successSimilarFiles = function (data) {
       page = "1";
     }
     $("#ajax-box .similar-files .current-page").val(page);
-    $('#ajax-box .search-ui-form [data-submitted="similar_files"]').trigger("submit");
+    $('#ajax-box [data-submitted="similar_files"]').trigger("submit");
     return false;
   });
 

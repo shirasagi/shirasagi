@@ -1,10 +1,64 @@
+<%= jquery do %>
+
+$("#ajax-box .similar-files").find("input").on('keypress', function (ev) {
+  if ((ev.which && ev.which === 13) || (ev.keyCode && ev.keyCode === 13)) {
+    return false;
+  } else {
+    return true;
+  }
+});
+
+$("#ajax-box .similar-files").find(".back-to-index").on("click", function() {
+  $.colorbox.close();
+  return false;
+});
+
+$("#ajax-box .similar-files").find(".pagination a").on('click', function (ev) {
+  var href = $(this).attr("href");
+  var page = href.match(/page=(\d+)/);
+
+  if (page) {
+    page = page[1];
+  } else {
+    page = "1";
+  }
+  $("#ajax-box .similar-files .current-page").val(page);
+  $('#ajax-box [data-submitted="similar_files"]').trigger("submit");
+  return false;
+});
+
+var options = function () {
+  return {
+    url: "<%= url_for(action: :drop_and_search) %>",
+    dataType: "html",
+    success: function(data) {
+      $("#cboxLoadedContent").html(data);
+    },
+    error: function(xhr) {
+      try {
+        alert(["== Error =="].concat(xhr.responseJSON).join("\n"));
+      } catch(_error) {
+        alert(["== Error =="].concat(xhr.statusText).join("\n"));
+      }
+    }
+  };
+};
+SS.ajaxForm("form.user-file", options);
+
+<% end %>
+
+<%= form_for :item, url: { action: :drop_and_search }, html: { class: "user-file", multipart: true } do |f| %>
+
 <div class="similar-files" style="margin: 0 0 20px;
   padding: 10px;
   border: 1px solid #ddd;"
 >
   <dl class="see" style="margin-bottom: 20px;">
     <dt><%= "ファイル" %></dt>
-    <dd><%= @item.humanized_name %></dd>
+    <dd>
+      <%= @item.humanized_name %>
+      <%= hidden_field_tag "similar[id]", @item.id %>
+    </dd>
 
     <dt><%= "ファイル名" %></dt>
     <dd><%= text_field_tag "similar[name]", @name %></dd>
@@ -17,7 +71,7 @@
 
     <dt></dt>
     <dd>
-      <%= link_to t("ss.buttons.search"), "", class: "btn search" %>
+      <%= f.submit t("ss.buttons.search"), class: "save btn", style: "margin-left: 10px;", "data-submitted": "similar_files" %>
       <%= link_to t("ss.links.back"), "", class: "btn back-to-index", style: "margin-left: 10px;" %>
     </dd>
   </dl>
@@ -65,3 +119,5 @@
 
   <% end %>
 </div>
+
+<% end %>

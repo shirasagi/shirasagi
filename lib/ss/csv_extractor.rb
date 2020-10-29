@@ -1,9 +1,9 @@
 class SS::CsvExtractor
-  attr_accessor :in_file, :filename, :extname, :csv_headers
+  attr_accessor :file, :filename, :extname, :csv_headers
 
-  def initialize(in_file)
-    @in_file = in_file
-    @filename = in_file.original_filename.unicode_normalize(:nfkc)
+  def initialize(file)
+    @file = file
+    @filename = file.respond_to?(:original_filename) ? file.original_filename : file.filename
     @extname = ::File.extname(@filename).delete(".")
     @csv_headers = []
   end
@@ -27,7 +27,7 @@ class SS::CsvExtractor
     return unless Roo::CLASS_FOR_EXTENSION.include?(ext)
 
     Timeout.timeout(60) do
-      sp = Roo::Spreadsheet.open(in_file.path, extension: ext)
+      sp = Roo::Spreadsheet.open(file.path, extension: ext)
       csv = sp.sheet(0).to_csv
       @csv_headers = CSV::parse(csv).first.select { |v| v.present? }
     end
@@ -36,7 +36,7 @@ class SS::CsvExtractor
   def extract_headers_from_csv
     require "nkf"
 
-    data = NKF.nkf('-wd', in_file.read)
+    data = NKF.nkf('-wd', file.read)
     csv = CSV.parse(data, headers: true)
     @csv_headers = csv.headers.select { |v| v.present? }
   end

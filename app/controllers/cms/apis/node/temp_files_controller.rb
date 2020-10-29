@@ -15,21 +15,22 @@ class Cms::Apis::Node::TempFilesController < ApplicationController
   end
 
   def similar_files
-    @in_file = params.dig(:item, :in_files).first
+    if params.dig(:similar, :id).present?
+      @item = SS::ReplaceTempFile.find(params.dig(:similar, :id))
+      @name = @item.name
+    else
+      @in_file = params.dig(:item, :in_files).first
+      @name = @in_file.original_filename
 
-    SS::ReplaceTempFile.user(@cur_user).destroy_all
-    @item = SS::ReplaceTempFile.new
-    @item.in_file = @in_file
-    @item.cur_user = @cur_user
-    @item.save
+      SS::ReplaceTempFile.user(@cur_user).destroy_all
+      @item = SS::ReplaceTempFile.new
+      @item.in_file = @in_file
+      @item.cur_user = @cur_user
+      @item.save!
+    end
 
-    @filename = params.dig(:similar, :filename).presence
-    @filename ||= @in_file.original_filename
-
+    @name = params.dig(:similar, :name).presence || @name
     @assoc = params.dig(:similar, :assoc).presence || "assoced"
-
-    @extname = ::File.extname(@in_file.original_filename).to_s.delete(".")
-    @humanized_name = "#{@in_file.original_filename} (#{@extname.upcase})"
 
     set_similar_page_model
     @items = @page_model.site(@cur_site).node(@cur_node).
@@ -39,7 +40,7 @@ class Cms::Apis::Node::TempFilesController < ApplicationController
       @items = @items.in(opendata_dataset_state: %w(public closed existance))
     end
 
-    @items = @items.similar_files(@in_file, filename: @filename)
+    @items = @items.similar_files(@item, name: @name)
     @items = Kaminari.paginate_array(@items).
       page(params[:page]).
       per(20)
@@ -47,6 +48,40 @@ class Cms::Apis::Node::TempFilesController < ApplicationController
     set_datasets
 
     render layout: false
+  end
+
+  def drop_and_search
+    if params.dig(:similar, :id).present?
+      @item = SS::ReplaceTempFile.find(params.dig(:similar, :id))
+      @name = @item.name
+    else
+      @in_file = params.dig(:item, :in_files).first
+      @name = @in_file.original_filename
+
+      SS::ReplaceTempFile.user(@cur_user).destroy_all
+      @item = SS::ReplaceTempFile.new
+      @item.in_file = @in_file
+      @item.cur_user = @cur_user
+      @item.save!
+    end
+
+    @name = params.dig(:similar, :name).presence || @name
+    @assoc = params.dig(:similar, :assoc).presence || "assoced"
+
+    set_similar_page_model
+    @items = @page_model.site(@cur_site).node(@cur_node).
+      allow(:read, @cur_user, site: @cur_site)
+
+    if @assoc == "assoced"
+      @items = @items.in(opendata_dataset_state: %w(public closed existance))
+    end
+
+    @items = @items.similar_files(@item, name: @name)
+    @items = Kaminari.paginate_array(@items).
+      page(params[:page]).
+      per(20)
+
+    set_datasets
   end
 
   private

@@ -16,6 +16,16 @@ this.SS_Addon_TempFile = (function () {
       this.uploadUrl = options.uploadUrl;
     }
 
+    if (options && options.searchUrl) {
+      this.searchUrl = options.searchUrl;
+    }
+
+    if (options && options.drop == "search") {
+      this.drop = SS_Addon_TempFile.prototype.dropAndSearch;
+    } else {
+      this.drop = SS_Addon_TempFile.prototype.dropAndSelect;
+    }
+
     this.render();
   }
 
@@ -23,7 +33,7 @@ this.SS_Addon_TempFile = (function () {
     return new SS_Addon_TempFile(selector, userId, {});
   }
 
-  SS_Addon_TempFile.prototype.select = function (files, dropArea) {
+  SS_Addon_TempFile.prototype.select = function (files) {
     var sorted_name_and_datas = [];
     var file_views = [];
     for (var j = 0; j < files.length; j++) {
@@ -82,48 +92,98 @@ this.SS_Addon_TempFile = (function () {
     });
 
     $(document).on("drop", this.selector, function(ev) {
-      var dropArea = ev.target;
-      var token = $('meta[name="csrf-token"]').attr('content');
-      var formData = new FormData();
-      formData.append('authenticity_token', token);
-      if ($('#file-resizing').val()) {
-        formData.append('item[resizing]', $('#file-resizing').val());
-      }
-      var files = ev.originalEvent.dataTransfer.files;
-      if (files.length === 0) {
-        return false;
-      }
-      if (_this.dropEventTriggered) {
-        return false;
-      }
-      _this.dropEventTriggered = true;
-      for (var j = 0, len = files.length; j < len; j++) {
-        formData.append('item[in_files][]', files[j]);
-      }
-      var request = new XMLHttpRequest();
-      request.onload = function (e) {
-        if (request.readyState === XMLHttpRequest.DONE) {
-          $(dropArea).removeClass('file-dragenter');
-          if (request.status === 200 || request.status === 201) {
-            var files = JSON.parse(request.response);
-            _this.select(files, dropArea);
-          } else if (request.status === 413) {
-            alert(["== Error =="].concat("<%= I18n.t('errors.messages.request_entity_too_large') %>").join("\n"));
-          } else {
-            try {
-              var json = $.parseJSON(request.response);
-              alert(["== Error =="].concat(json).join("\n"));
-            } catch (_error) {
-              alert(["== Error =="].concat(request.statusText).join("\n"));
-            }
-          }
-          _this.dropEventTriggered = false;
-        }
-      };
-      request.open("POST", _this.uploadUrl());
-      request.send(formData);
+      _this.drop(_this, ev);
       return false;
     });
+  };
+
+  SS_Addon_TempFile.prototype.dropAndSelect = function(_this, ev) {
+    var dropArea = _this.selector;
+    var token = $('meta[name="csrf-token"]').attr('content');
+    var formData = new FormData();
+    formData.append('authenticity_token', token);
+    if ($('#file-resizing').val()) {
+      formData.append('item[resizing]', $('#file-resizing').val());
+    }
+    var files = ev.originalEvent.dataTransfer.files;
+    if (files.length === 0) {
+      return false;
+    }
+    if (_this.dropEventTriggered) {
+      return false;
+    }
+    _this.dropEventTriggered = true;
+    for (var j = 0, len = files.length; j < len; j++) {
+      formData.append('item[in_files][]', files[j]);
+    }
+    var request = new XMLHttpRequest();
+    request.onload = function (e) {
+      if (request.readyState === XMLHttpRequest.DONE) {
+        $(dropArea).removeClass('file-dragenter');
+        if (request.status === 200 || request.status === 201) {
+          var files = JSON.parse(request.response);
+          _this.select(files);
+        } else if (request.status === 413) {
+          alert(["== Error =="].concat("<%= I18n.t('errors.messages.request_entity_too_large') %>").join("\n"));
+        } else {
+          try {
+            var json = $.parseJSON(request.response);
+            alert(["== Error =="].concat(json).join("\n"));
+          } catch (_error) {
+            alert(["== Error =="].concat(request.statusText).join("\n"));
+          }
+        }
+        _this.dropEventTriggered = false;
+      }
+    };
+    request.open("POST", _this.uploadUrl());
+    request.send(formData);
+    return false;
+  };
+
+  SS_Addon_TempFile.prototype.dropAndSearch = function(_this, ev) {
+    var dropArea = _this.selector;
+    var token = $('meta[name="csrf-token"]').attr('content');
+    var formData = new FormData();
+    formData.append('authenticity_token', token);
+    var files = ev.originalEvent.dataTransfer.files;
+    if (files.length === 0) {
+      return false;
+    }
+    if (_this.dropEventTriggered) {
+      return false;
+    }
+    _this.dropEventTriggered = true;
+
+    var file = files[0]
+    formData.append('item[in_files][]', file);
+
+    var request = new XMLHttpRequest();
+    request.onload = function (e) {
+      if (request.readyState === XMLHttpRequest.DONE) {
+        $(dropArea).removeClass('file-dragenter');
+        if (request.status === 200 || request.status === 201) {
+          $.colorbox({
+            html: request.response,
+            fixed: true,
+            width: "90%",
+            height: "90%"
+          });
+        } else if (request.status === 413) {
+          alert(["== Error =="].concat("<%= I18n.t('errors.messages.request_entity_too_large') %>").join("\n"));
+        } else {
+          try {
+            var json = $.parseJSON(request.response);
+            alert(["== Error =="].concat(json).join("\n"));
+          } catch (_error) {
+            alert(["== Error =="].concat(request.statusText).join("\n"));
+          }
+        }
+        _this.dropEventTriggered = false;
+      }
+    };
+    request.open("POST", _this.searchUrl());
+    request.send(formData);
   };
 
   return SS_Addon_TempFile;

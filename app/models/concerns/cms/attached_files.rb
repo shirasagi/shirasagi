@@ -16,30 +16,26 @@ module Cms::AttachedFiles
   end
 
   module ClassMethods
-    def similar_files(in_file, opts = {})
-      return [] unless in_file
+    def similar_files(file, opts = {})
+      return [] if file.blank?
 
       pipes = []
       pipes << { "$match" => self.criteria.selector }
       pipes << { "$project" => { attached_file_attributes: "$attached_file_attributes" } }
       pipes << { "$unwind" => "$attached_file_attributes" }
 
-      extractor = SS::CsvExtractor.new(in_file)
+      extractor = SS::CsvExtractor.new(file)
       extractor.extract_csv_headers
 
-      filename = extractor.filename
-      filename = opts[:filename] if opts[:filename].present?
-
-      extname = extractor.extname
-      basename = filename.sub(/\.#{extname}$/, "").unicode_normalize(:nfkc)
+      name = file.name
+      name = opts[:name].unicode_normalize(:nfkc) if opts[:name].present?
       csv_headers = extractor.csv_headers
 
       match_pipeline = {}
-      #match_pipeline["attached_file_attributes.extname"] = extname
+      #match_pipeline["attached_file_attributes.extname"] = extractor.extname
 
       or_cond = []
-      #or_cond << { "attached_file_attributes.filename" => /#{::Regexp.escape(basename)}/ }
-      or_cond << { "attached_file_attributes.name" => /#{::Regexp.escape(basename)}/ }
+      or_cond << { "attached_file_attributes.name" => /#{::Regexp.escape(name)}/ }
       or_cond << { "attached_file_attributes.csv_headers" => csv_headers } if csv_headers.present?
       match_pipeline["$or"] = or_cond
 

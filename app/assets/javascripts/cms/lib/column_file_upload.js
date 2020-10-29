@@ -25,6 +25,10 @@ Cms_Column_FileUpload.prototype.getFileSelectPath = function() {
   return this.options.fileSelectPath || Cms_Column_FileUpload.fileSelectPath;
 };
 
+Cms_Column_FileUpload.prototype.getFileSearchPath = function() {
+  return this.options.fileSearchPath || Cms_Column_FileUpload.fileSearchPath;
+};
+
 Cms_Column_FileUpload.prototype.getTempFileOptions = function() {
   var self = this;
   var ret = {};
@@ -60,9 +64,26 @@ Cms_Column_FileUpload.prototype.getTempFileOptions = function() {
   return ret;
 };
 
+Cms_Column_FileUpload.prototype.getSearchFileOptions = function() {
+  var self = this;
+  var ret = {};
+
+  ret.searchUrl = function() {
+    return self.getFileSearchPath();
+  };
+
+  ret.drop = "search";
+
+  return ret;
+};
+
 Cms_Column_FileUpload.prototype.render = function() {
   this.tempFile = new SS_Addon_TempFile(
     this.$el.find(".column-value-upload-drop-area"), this.getUserId(), this.getTempFileOptions()
+  );
+
+  this.searchFile = new SS_Addon_TempFile(
+    this.$el.find(".column-value-upload-drop-and-search-area"), this.getUserId(), this.getSearchFileOptions()
   );
 
   var self = this;
