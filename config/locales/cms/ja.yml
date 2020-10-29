@@ -967,6 +967,7 @@ ja:
       check_embedded_media: 動画や音声を含む場合、説明があるか確認してください。
       replace_word: 使用が好ましくない単語が含まれています。
       replace_word_validation: に使用が好ましくない単語が含まれています。
+      alt_is_included_in_filename: 代替テキストがファイル名に含まれています。
       syntax_check_detail:
         set_img_alt:
           - 画像の内容を示す代替テキストを設定してください。
@@ -1005,6 +1006,10 @@ ja:
           - オブジェクト要素が正しく読み込まれなかった場合の説明を要素内に記述してください。
         check_embedded_media:
           - 動画や音声を本文に埋め込む場合は説明を記述してください。
+        alt_is_included_in_filename:
+          - 代替テキストの一部もしくは全部がファイル名に含まれています。
+          - 一般的にファイル名をそのまま代替テキストに設定するのは好ましくないと考えられます。
+          - 設定している代替テキストが妥当かどうか確認してください。
       thums_is_not_an_image: には画像ファイルを指定してください。
 
     template:
