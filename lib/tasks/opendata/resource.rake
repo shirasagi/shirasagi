@@ -29,4 +29,25 @@ namespace :opendata do
       end
     end
   end
+
+  namespace :url_resources do
+    task destory_fragment_files: :environment do
+      ss_files = SS::File.where(model: "opendata/url_resource").map { |item| [item.id, item] }.to_h
+
+      Opendata::Dataset.each do |dataset|
+        next if dataset.url_resources.blank?
+
+        dataset.url_resources.each do |url_resource|
+          next if ss_files[url_resource.file_id].blank?
+
+          ss_files.delete(url_resource.file_id)
+        end
+      end
+
+      ss_files.each do |id, item|
+        puts item.filename
+        item.destroy
+      end
+    end
+  end
 end
