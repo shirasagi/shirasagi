@@ -216,4 +216,27 @@ module Map::MapHelper
 
     h.join("\n")
   end
+
+  def map_marker_images(opts = {})
+    api = default_map_api(opts)
+    if %w(openlayers open_street_map).include?(api)
+      SS.config.map.dig("map_marker_images", "openlayers")
+    else
+      SS.config.map.dig("map_marker_images", "googlemaps")
+    end
+  end
+
+  def render_marker_image_form(opts = {})
+    h = []
+    h << %w(<div class="images" style="display: none;">)
+    map_marker_images(opts).each do |key, url|
+      h << "<div class=\"image\">#{image_tag(url)}</div>"
+    end
+    h << %(</div>)
+    h.join("\n")
+  end
+
+  def default_marker_image
+    SS.config.map.map_marker_images["default"]
+  end
 end
