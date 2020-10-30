@@ -6,7 +6,17 @@ this.SS_Color = (function () {
     return $(".js-color").each(function () {
       var btn, sel;
       sel = $(this);
-      sel.minicolors();
+      sel.minicolors({
+        swatches: sel.data('swatches') ? sel.data('swatches').split(' ') : [],
+      });
+      if (sel.data('swatches')) {
+        $('ul.minicolors-swatches').prependTo('div.minicolors-panel');
+
+        var top = $('li.minicolors-swatch.minicolors-sprite').outerHeight(true) * 2
+          + $('ul.minicolors-swatches').outerHeight(true)
+          + parseInt($('.minicolors-slider').css('top'));
+        $('.minicolors-slider').css('top', `${top}px`);
+      }
       if (sel.data('clear')) {
         btn = $("<input type='button' class='btn' value='<%= I18n.t('ss.buttons.clear') %>' />").uniqueId();
         $(sel).after(btn).after(' ');
