@@ -88,12 +88,23 @@ module Cms::Addon::List
 
         if host.present?
           site = Cms::Site.where(host: host).first
-          next if site.blank? || !(site.parent.id == default_site.id || site.partner_site_ids.include?(default_site.id))
+          next if site.blank?
+
+          # myself
+          site_ok = (site.id == default_site.id)
+          # sub site
+          site_ok ||= (site.parent.id == default_site.id)
+          # partners
+          site_ok ||= site.partner_site_ids.include?(default_site.id)
+
+          next unless site_ok
         end
         site ||= default_site
 
         if url.include?('#{request_dir}')
           next unless request_dir
+          # request dir of partner site is not allowed
+          next unless site.id == default_site.id
 
           # #{request_dir} indicates "special default location".
           # usually default location is a current node (or current part's parent if part is given).

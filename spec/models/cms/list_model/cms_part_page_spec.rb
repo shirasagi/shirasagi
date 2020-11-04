@@ -194,6 +194,50 @@ describe Cms::Addon::List::Model do
           expect(subject[3]).to eq(site_id: site1.id, category_ids: site1_article_node.id)
         end
       end
+
+      context "inter-site reference of wildcard" do
+        let(:site1) { create(:cms_site_subdir, parent: site) }
+        let(:site1_layout) { create_cms_layout(cur_site: site1) }
+        let!(:site1_root_node) { create :cms_node_node, cur_site: site1, layout: site1_layout }
+        let!(:site1_article_node) do
+          create :article_node_page, cur_site: site1, cur_node: site1_root_node, layout: site1_layout
+        end
+
+        let(:condition) { "#{site1.host}:#{site1_article_node.filename}*" }
+        let!(:node) { create :cms_node_node, cur_site: site, layout: layout }
+        let!(:part) { create :cms_part_page, cur_site: site, cur_node: node, conditions: [ condition ] }
+        subject { part.condition_hash["$or"] }
+
+        it do
+          expect(subject).to be_a(Array)
+          expect(subject.length).to eq 3
+          expect(subject[0]).to eq(
+            site_id: site.id, filename: /^#{::Regexp.escape(node.filename)}\//, depth: node.depth + 1)
+          expect(subject[1]).to eq(site_id: site1.id, filename: /^#{::Regexp.escape(site1_article_node.filename)}\//)
+          expect(subject[2]).to eq(site_id: site.id, category_ids: node.id)
+        end
+      end
+
+      context "inter-site reference of request_dir is not allowed" do
+        let(:site1) { create(:cms_site_subdir, parent: site) }
+        let(:site1_layout) { create_cms_layout(cur_site: site1) }
+        let!(:site1_root_node) { create :cms_node_node, cur_site: site1, layout: site1_layout }
+        let!(:site1_article_node) do
+          create :article_node_page, cur_site: site1, cur_node: site1_root_node, layout: site1_layout
+        end
+
+        let(:condition) { "#{site1.host}:\#{request_dir}" }
+        let!(:node) { create :cms_node_node, cur_site: site, layout: layout }
+        let!(:part) { create :cms_part_page, cur_site: site, cur_node: node, conditions: [ condition ] }
+        subject { part.condition_hash(request_dir: "/#{article_node.filename}/index.html")["$or"] }
+
+        it do
+          expect(subject).to be_a(Array)
+          expect(subject.length).to eq 2
+          expect(subject[0]).to eq(site_id: site.id, filename: /^#{::Regexp.escape(node.filename)}\//, depth: node.depth + 1)
+          expect(subject[1]).to eq(site_id: site.id, category_ids: node.id)
+        end
+      end
     end
   end
 end
