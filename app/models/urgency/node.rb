@@ -10,6 +10,7 @@ module Urgency::Node
     include Cms::Addon::NodeSetting
     include Cms::Addon::Meta
     include Urgency::Addon::Layout
+    include Urgency::Addon::SiteSetting
     include Cms::Addon::GroupPermission
     include History::Addon::Backup
     include Cms::Lgwan::Node

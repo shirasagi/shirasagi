@@ -19,6 +19,7 @@ ja:
     addons:
       urgency/layout: 緊急災害レイアウト設定
       urgency/mail_page: 緊急災害レイアウト設定
+      urgency/site_setting: 連携サイト設定
 
   cms:
     nodes:
@@ -32,6 +33,8 @@ ja:
       urgency/addon/mail_page:
         urgency_state: 切り替え
         urgency_node_id: フォルダー
+      urgency/addon/site_setting:
+        related_urgency_site_ids: 連携サイト
 
   tooltip:
     urgency/addon/layout:
@@ -44,3 +47,7 @@ ja:
         - メールを取り込んだ際に緊急災害レイアウトに切り替えるか設定します。
       urgency_node_id:
         - 連携する緊急災害レイアウトフォルダーを設定します。
+    urgency/addon/site_setting:
+      related_urgency_site_ids:
+        - 連携サイトを設定すると、このサイトの緊急災害レイアウトを切り替えた際に、連携サイトの緊急災害レイアウトの切り替えを実行します。
+        - 切り替え対象となるレイアウトは、サイト毎にファイル名が同一のレイアウトになります。
