@@ -40,12 +40,12 @@ class Translate::Convertor
         action = node.attributes["action"].try(:value)
         next if node.instance_variable_get(:@link_replaced)
 
-        if href.present? && href =~ /(\.html|\/)$/ && href.match?(regexp)
-          node.attributes["href"].value = href.gsub(regexp, location)
+        if href.present? && href.match?(regexp)
+          node.attributes["href"].value = gsub_uri_path(href, regexp, location)
           node.instance_variable_set(:@link_replaced, true)
         end
         if action.present? && action.match?(regexp)
-          node.attributes["action"].value = action.gsub(regexp, location)
+          node.attributes["action"].value = gsub_uri_path(action, regexp, location)
           node.instance_variable_set(:@link_replaced, true)
         end
       end
@@ -59,7 +59,7 @@ class Translate::Convertor
       node.instance_variable_set(:@notranslate, true)
     end
 
-    # exstract translate text
+    # extract translate text
     nodes = []
     doc.search('//text()').each do |node|
       next if node.node_type != 3
@@ -108,5 +108,13 @@ class Translate::Convertor
     end
 
     html
+  end
+
+  def gsub_uri_path(url, pattern, replace)
+    uri = URI.parse(url) rescue nil
+    return url unless uri
+
+    uri.path = uri.path.gsub(pattern, replace)
+    uri.to_s
   end
 end
