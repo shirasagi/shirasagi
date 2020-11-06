@@ -3,7 +3,7 @@
 <%== @cur_node.upper_html %>
 
 <% if @cur_node.st_categories.present? %>
-  <nav class="event-pages-filter">
+  <nav class="event-pages-filter" aria-label="filter">
     <ul>
       <li class="all">
         <%= link_to t("event.filter_all"), "#", class: "clicked", "data-id" => "all" %>
@@ -17,7 +17,7 @@
   </nav>
 <% end %>
 
-<nav class="event-date">
+<nav class="event-date" aria-label="date">
   <h2 class="<%= event_h1_class @month %>"><%= "#{@year}#{t_date('year')}#{@month}#{t_date('month')}" %></h2>
   <% unless @cur_node.event_display.to_s.end_with?('only') %>
     <span class="list current">
