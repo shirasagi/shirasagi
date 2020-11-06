@@ -26,7 +26,7 @@ describe Cms::Elasticsearch::Indexer::PageReleaseJob, dbscope: :example, es: tru
         job = ::Cms::Elasticsearch::Indexer::PageReleaseJob.bind(site_id: site)
         job.perform_now(action: 'index', id: page.id.to_s)
       end
-      expect(Job::Log.first.logs).to include(include("INFO -- : Completed Job"))
+      expect(Job::Log.last.logs).to include(include("INFO -- : Completed Job"))
       expect(Job::Log.count).to eq 1
       expect(Cms::PageRelease.all.size).to eq 1
       expect(Cms::PageIndexQueue.all.size).to eq 1
@@ -62,7 +62,7 @@ describe Cms::Elasticsearch::Indexer::PageReleaseJob, dbscope: :example, es: tru
 
       job = ::Cms::Elasticsearch::Indexer::PageReleaseJob.bind(site_id: site)
       job.perform_now(action: item.job_action, id: item.page_id.to_s, queue_id: item.id.to_s)
-      expect(Job::Log.first.logs).to include(include("INFO -- : Completed Job"))
+      expect(Job::Log.last.logs).to include(include("INFO -- : Completed Job"))
       expect(Job::Log.count).to eq 1
       expect(Cms::PageRelease.all.size).to eq 1
       expect(Cms::PageIndexQueue.all.size).to eq 0
@@ -85,9 +85,46 @@ describe Cms::Elasticsearch::Indexer::PageReleaseJob, dbscope: :example, es: tru
 
       job = ::Cms::Elasticsearch::Indexer::PageReleaseJob.bind(site_id: site)
       job.perform_now(action: item.job_action, id: item.page_id.to_s, queue_id: item.id.to_s)
-      expect(Job::Log.first.logs).to include(include("INFO -- : Completed Job"))
+      expect(Job::Log.last.logs).to include(include("INFO -- : Completed Job"))
       expect(Job::Log.count).to eq 2
       expect(Cms::PageRelease.all.size).to eq 2
+      expect(Cms::PageIndexQueue.all.size).to eq 0
+
+      # index / release
+
+      page.update(state: 'public')
+
+      item = Cms::PageIndexQueue.site(site).order_by(created: -1).first
+      expect(item.job_action).to eq 'index'
+
+      job = ::Cms::Elasticsearch::Indexer::PageReleaseJob.bind(site_id: site)
+      job.perform_now(action: item.job_action, id: item.page_id.to_s, queue_id: item.id.to_s)
+      expect(Job::Log.last.logs).to include(include("INFO -- : Completed Job"))
+      expect(Job::Log.count).to eq 3
+      expect(Cms::PageRelease.all.size).to eq 3
+      expect(Cms::PageIndexQueue.all.size).to eq 0
+
+      # close
+
+      page.destroy
+
+      releases = Cms::PageRelease.all.order_by(created: -1).entries
+      releases.first.tap do |release|
+        expect(release.action).to eq 'close'
+      end
+      expect(releases.size).to eq 4
+      expect(Cms::PageIndexQueue.all.size).to eq 1
+
+      # index / close
+
+      item = Cms::PageIndexQueue.site(site).order_by(created: 1).first
+      expect(item.job_action).to eq 'delete'
+
+      job = ::Cms::Elasticsearch::Indexer::PageReleaseJob.bind(site_id: site)
+      job.perform_now(action: item.job_action, id: item.page_id.to_s, queue_id: item.id.to_s)
+      expect(Job::Log.last.logs).to include(include("INFO -- : Completed Job"))
+      expect(Job::Log.count).to eq 4
+      expect(Cms::PageRelease.all.size).to eq 4
       expect(Cms::PageIndexQueue.all.size).to eq 0
     end
   end
