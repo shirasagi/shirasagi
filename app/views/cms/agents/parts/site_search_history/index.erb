@@ -8,7 +8,7 @@ Cms_Site_Search_History.render(".site-search-history-part", "<%= @node.full_url 
 <form class="site-search-history-part" action="<%= @node.url %>" accept-charset="UTF-8" method="get">
   <div class="site-search-keyword">
     <input type="text" title=<%= t "cms.search_contents" %> placeholder=<%= t "cms.search_contents" %> class="text" id="s_keyword" size="40" name="s[keyword]" autocomplete="off">
-    <ul class="site-search-history" style="display: none;"></ul>
+    <ul class="site-search-history notranslate" style="display: none;"></ul>
   </div>
   <button type="submit" id="search-button"><%= t "cms.search_button" %></button>
 </form>
