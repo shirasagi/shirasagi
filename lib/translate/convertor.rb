@@ -27,18 +27,27 @@ class Translate::Convertor
 
     doc = Nokogiri.parse(html)
 
-    # links
-    regexp = /^#{@site.url}(?!#{@location}\/)(?!fs\/)/
-    location = "#{@site.url}#{@location}/"
-    doc.css('body a,body form').each do |node|
-      href = node.attributes["href"].try(:value)
-      action = node.attributes["action"].try(:value)
+    # sub sites
+    site_urls = SS::Site.all.select { |site| @site.full_root_url == site.full_root_url }.map(&:url)
+    site_urls = site_urls.sort_by { |url| url.count("/") }.reverse
 
-      if href.present? && href =~ /(\.html|\/)$/
-        node.attributes["href"].value = href.gsub(regexp, location)
-      end
-      if action.present?
-        node.attributes["action"].value = action.gsub(regexp, location)
+    # links
+    site_urls.each do |site_url|
+      regexp = /^#{site_url}(?!#{@location}\/)(?!fs\/)/
+      location = "#{site_url}#{@location}/"
+      doc.css('body a,body form').each do |node|
+        href = node.attributes["href"].try(:value)
+        action = node.attributes["action"].try(:value)
+        next if node.instance_variable_get(:@link_replaced)
+
+        if href.present? && href =~ /(\.html|\/)$/ && href.match?(regexp)
+          node.attributes["href"].value = href.gsub(regexp, location)
+          node.instance_variable_set(:@link_replaced, true)
+        end
+        if action.present? && action.match?(regexp)
+          node.attributes["action"].value = action.gsub(regexp, location)
+          node.instance_variable_set(:@link_replaced, true)
+        end
       end
     end
 
