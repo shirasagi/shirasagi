@@ -17,7 +17,8 @@ def save_node(data)
   item.summary_html = summary_html if summary_html
 
   item.attributes = data
-  item.cur_user = @user
+  item.cur_site ||= @site
+  item.cur_user ||= @user
   item.save
   item.add_to_set group_ids: @site.group_ids
 
