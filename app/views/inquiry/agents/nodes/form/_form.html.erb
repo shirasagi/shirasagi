@@ -79,7 +79,7 @@
   <% end %>
   <% if column.input_confirm == "enabled" && !confirm %>
     <fieldset class="column">
-      <legend><label for="item_3">確認用</label><span class="required">※必須入力</span></legend>
+      <legend><%= f.label "#{column.id}_confirm" ,"確認用" %><span class="required">※必須入力</span></legend>
       <p><%= t "inquiry.confirm_input_description", name: column.name %></p>
       <% opt = { value: "" } %>
       <%= f.send(column.input_type, "#{column.id}_confirm", opt) %>
