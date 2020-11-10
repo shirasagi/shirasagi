@@ -33,6 +33,7 @@ namespace :opendata do
   namespace :url_resources do
     task destory_fragment_files: :environment do
       ss_files = SS::File.where(model: "opendata/url_resource").map { |item| [item.id, item] }.to_h
+      return if ss_files.blank?
 
       Opendata::Dataset.each do |dataset|
         next if dataset.url_resources.blank?
