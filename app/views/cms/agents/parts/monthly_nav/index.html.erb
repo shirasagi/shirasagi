@@ -1,5 +1,5 @@
 <div class="archive-nav">
-  <nav class="monthly-nav">
+  <nav class="monthly-nav" aria-label="月別ページ一覧アーカイブ">
     <ul>
       <% @months.each do |date, num| %>
         <% body = "#{date.year}#{t('datetime.prompts.year')}#{date.month}#{t('datetime.prompts.month')}(#{num})" %>
