@@ -109,6 +109,7 @@ ja:
     column_youtube_auto_width:
       enabled: 画面幅に合わせる
       disabled: 画面幅に合わせない
+    visit_article: 記事を見る
 
     adobe_reader:
       remark:
@@ -326,7 +327,10 @@ ja:
         left: 左
         center: 中央
         right: 右
-
+      line_post_format_options:
+        thumb_carousel: サムネイル画像とテキストメッセージ
+        body_carousel: 本文内の最初の画像とテキストメッセージ
+        message_only_carousel: テキストメッセージ
     sns_share:
       fb_like: Facebook いいね！
       fb_share: Facebook シェア
@@ -560,6 +564,9 @@ ja:
       cms/column/text_like: 制約条件
       cms/column/select_like: 選択
       cms/redirect_link: リンクページ
+      cms/site_search/keyword: 注目ワード
+      cms/site_search/history: 履歴
+      cms/line_poster: LINE連携
 
   mongoid:
     models:
@@ -1014,6 +1021,12 @@ ja:
         low_vision_report_filepath: 視覚化検証結果
         low_vision_source_filepath: 視覚化検証元画像
         low_vision_result_filepath: 視覚化検証画像
+      cms/addon/line_poster:
+        line_auto_post: LINE投稿
+        line_post_format: 投稿形式
+        line_text_message: LINEメッセージ
+        line_posted: 投稿日時
+        line_edit_auto_post: 編集時に自動投稿
 
   activemodel:
     attributes:
@@ -1135,6 +1148,8 @@ ja:
           - 設定している代替テキストが妥当かどうか確認してください。
       thums_is_not_an_image: には画像ファイルを指定してください。
       unsupported_encoding: 対応していない文字コードです。
+      thumb_is_blank: サムネイル画像が登録されていません。
+      not_found_file_url_in_body: 本文内の画像が見つかりませんでした。
 
     template:
       no_errors: エラーは見つかりませんでした。
@@ -2110,6 +2125,25 @@ ja:
       file:
         - インポートするファイルを設定します。
         - ファイルはUTF-8またはShift_JISでエンコードされている必要があります。
+
+    cms/addon/line_poster:
+      line_auto_post:
+        - 有効に設定すると公開時にLINE投稿をおこないます。
+      line_post_format:
+        - 投稿形式を選択します。
+        -
+        - ・サムネイル画像
+        - サムネイル画像とテキストメッセージ、記事へのリンクをカルーセル形式で投稿します。
+        -
+        - ・本文内の最初の画像
+        - 本文内の最初の画像とテキストメッセージ、記事へのリンクをカルーセル形式で投稿します。
+        -
+        - ・テキストメッセージのみ
+        - テキストメッセージ、記事へのリンクをカルーセル形式で投稿します。
+      line_text_message:
+        - LINEに投稿するメッセージを入力します。
+      line_edit_auto_post:
+        - 有効に設定すると公開記事を編集時にLINE投稿をおこないます。
 
   all_content:
     page_id: ページID
