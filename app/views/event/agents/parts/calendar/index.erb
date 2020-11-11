@@ -1,7 +1,7 @@
 <%= jquery do %> Event_Calendar.render("<%= raw @render_url %>"); <% end %>
 
 <div class="event-calendar">
-  <nav class="calendar-nav" aria-label="calender">
+  <nav class="calendar-nav" aria-label="カレンダー">
     <ul>
       <li class="prev">
         <% if within_one_year?(@prev_month_date) %>
