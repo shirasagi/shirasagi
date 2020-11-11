@@ -22,7 +22,7 @@ module Rss::Node
     private
 
     def purge_pages
-      Rss::Page.limit_docs(@cur_site, self, rss_max_docs)
+      Rss::Page.limit_docs((@cur_site || site), self, rss_max_docs)
     end
   end
 
@@ -61,7 +61,7 @@ module Rss::Node
     private
 
     def purge_pages
-      Rss::Page.limit_docs(@cur_site, self, rss_max_docs)
+      Rss::Page.limit_docs((@cur_site || site), self, rss_max_docs)
     end
   end
 end
