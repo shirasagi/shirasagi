@@ -54,10 +54,18 @@ class ApplicationController < ActionController::Base
     name = ::Regexp.last_match[1]
     filename = ::Regexp.last_match[2]
 
-    name = "attachment" if browser.ie?("<= 11")
+    if browser.ie?("<= 11") && ie11_attachment_mime_types.include?(options[:type])
+      name = "attachment"
+    end
     encoded = ERB::Util.url_encode(filename)
 
     headers['Content-Disposition'] = "#{name}; filename*=UTF-8''#{encoded}"
+  end
+
+  def ie11_attachment_mime_types
+    @_ie11_attachment_mime_types ||= begin
+      SS.config.ie11.dig("content_disposition", "attachment", "mime_type_map").values.flatten
+    end
   end
 
   def ss_send_file(file, opts = {})
