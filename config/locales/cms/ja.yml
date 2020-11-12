@@ -1027,6 +1027,7 @@ ja:
         line_text_message: LINEメッセージ
         line_posted: 投稿日時
         line_edit_auto_post: 編集時に自動投稿
+        line_post_error: 投稿エラー
 
   activemodel:
     attributes:
