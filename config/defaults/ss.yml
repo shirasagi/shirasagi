@@ -18,6 +18,7 @@ production: &production
 
   session:
     key: '_ss_session'
+    same_site: 'Lax'
     # uncomment blow setting if you have been running SHIRASAGI with full https
     # secure: true
 
