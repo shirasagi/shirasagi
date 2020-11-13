@@ -328,9 +328,9 @@ ja:
         center: 中央
         right: 右
       line_post_format_options:
-        thumb_carousel: サムネイル画像とテキストメッセージ
-        body_carousel: 本文内の最初の画像とテキストメッセージ
-        message_only_carousel: テキストメッセージ
+        thumb_carousel: サムネイル画像とLINEメッセージ
+        body_carousel: 本文内の最初の画像とLINEメッセージ
+        message_only_carousel: LINEメッセージ
     sns_share:
       fb_like: Facebook いいね！
       fb_share: Facebook シェア
@@ -537,6 +537,7 @@ ja:
       cms/sns_share: SNS共有
       cms/sns_poster: SNS自動投稿設定
       cms/node_auto_post_setting: SNS自動投稿設定
+      cms/node_line_post_setting: LINE連携設定
       cms/captcha: 認証
       cms/body_layout_html: HTML
       cms/default_release_plan: 公開予約の既定値
@@ -802,6 +803,10 @@ ja:
         node_twitter_auto_post: Twitter自動投稿
         node_sns_auto_delete: 非公開時に投稿を削除
         node_edit_auto_post: 編集時に自動投稿
+      cms/addon/node_line_post_setting:
+        node_line_auto_post: LINE投稿
+        node_line_post_format: 投稿形式
+        node_line_edit_auto_post: 編集時に自動投稿
       cms/addon/import/page:
         in_file: ファイル
       cms/addon/import/group:
@@ -2127,20 +2132,37 @@ ja:
         - インポートするファイルを設定します。
         - ファイルはUTF-8またはShift_JISでエンコードされている必要があります。
 
+    cms/addon/node_line_post_setting:
+      node_line_auto_post:
+        - 有効に設定すると公開時にLINE投稿をおこないます。
+      node_line_post_format:
+        - 投稿形式を選択します。
+        -
+        - ・サムネイル画像とLINEメッセージ
+        - サムネイル画像とLINEメッセージおよび記事へのリンクをカルーセル形式で投稿します。
+        -
+        - ・本文内の最初の画像とLINEメッセージ
+        - 本文内の最初の画像とLINEメッセージおよび記事へのリンクをカルーセル形式で投稿します。
+        -
+        - ・LINEメッセージのみ
+        - LINEメッセージと記事へのリンクをカルーセル形式で投稿します。
+      node_line_edit_auto_post:
+        - 有効に設定すると公開記事を編集時にLINE投稿をおこないます。
+
     cms/addon/line_poster:
       line_auto_post:
         - 有効に設定すると公開時にLINE投稿をおこないます。
       line_post_format:
         - 投稿形式を選択します。
         -
-        - ・サムネイル画像
-        - サムネイル画像とテキストメッセージ、記事へのリンクをカルーセル形式で投稿します。
+        - ・サムネイル画像とLINEメッセージ
+        - サムネイル画像とLINEメッセージおよび記事へのリンクをカルーセル形式で投稿します。
         -
-        - ・本文内の最初の画像
-        - 本文内の最初の画像とテキストメッセージ、記事へのリンクをカルーセル形式で投稿します。
+        - ・本文内の最初の画像とLINEメッセージ
+        - 本文内の最初の画像とLINEメッセージおよび記事へのリンクをカルーセル形式で投稿します。
         -
-        - ・テキストメッセージのみ
-        - テキストメッセージ、記事へのリンクをカルーセル形式で投稿します。
+        - ・LINEメッセージのみ
+        - LINEメッセージと記事へのリンクをカルーセル形式で投稿します。
       line_text_message:
         - LINEに投稿するメッセージを入力します。
       line_edit_auto_post:

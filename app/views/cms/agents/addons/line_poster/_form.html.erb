@@ -2,22 +2,26 @@
   return "" unless @cur_site.line_token_enabled?
   return "" if @item.try(:branch?)
 
+  addon ||= local_assigns.fetch(:addon, {})
+  addon[:display_body] = "hide"
+
   line_auto_post = @item.line_auto_post.presence || @cur_node.try(:node_line_auto_post).presence || "expired"
+  line_post_format = @item.line_post_format.presence || @cur_node.try(:node_line_post_format).presence || "thumb_carousel"
   line_edit_auto_post = @item.line_edit_auto_post.presence || @cur_node.try(:node_line_edit_auto_post).presence || "expired"
 %>
 
 <dl class="see mod-cms-line_poster">
   <% if @cur_site.line_token_enabled? %>
     <dt><%= @model.t :line_auto_post %><%= @model.tt :line_auto_post %></dt>
-    <dd><%= f.select :line_auto_post, @item.line_auto_post_options, :selected => line_auto_post %></dd>
+    <dd><%= f.select :line_auto_post, @item.line_auto_post_options, selected: line_auto_post %></dd>
 
     <dt><%= @model.t :line_post_format %><%= @model.tt :line_post_format %></dt>
-    <dd><%= f.select :line_post_format, @item.line_post_format_options %></dd>
+    <dd><%= f.select :line_post_format, @item.line_post_format_options, selected: line_post_format %></dd>
 
     <dt><%= @model.t :line_text_message %><%= @model.tt :line_text_message %></dt>
     <dd><%= f.text_area :line_text_message %></dd>
 
     <dt><%= @model.t :line_edit_auto_post %><%= @model.tt :line_edit_auto_post %></dt>
-    <dd><%= f.select :line_edit_auto_post, @item.line_auto_post_options, :selected => line_edit_auto_post %></dd>
+    <dd><%= f.select :line_edit_auto_post, @item.line_auto_post_options, selected: line_edit_auto_post %></dd>
   <% end %>
 </dl>

@@ -72,7 +72,6 @@ module Cms::Addon
           raise I18n.t("errors.messages.thumb_is_blank")
         end
       elsif line_post_format == "body_carousel"
-
         body = nil
         body = html if respond_to?(:html)
         body = column_values.map(&:to_html).join("\n") if respond_to?(:form) && form
