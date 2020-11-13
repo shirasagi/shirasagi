@@ -89,15 +89,12 @@ module Cms::Addon
     def post_to_twitter
       tweet = "#{name}｜#{full_url}"
       client = connect_twitter
-      media_files = nil
-      if file_ids.present?
-        # 画像の添付を収集
-        media_files = []
-        files.each do |file|
-          next if !file.image?
-          media_files << ::File.new(file.path)
-          break if media_files.length >= TWITTER_MAX_MEDIA_COUNT
-        end
+      media_files = []
+      # 画像の添付を収集
+      attached_files.each do |file|
+        next if !file.image?
+        media_files << ::File.new(file.path)
+        break if media_files.length >= TWITTER_MAX_MEDIA_COUNT
       end
       if media_files.present?
         # 画像の添付があれば update_with_media を用いて投稿
