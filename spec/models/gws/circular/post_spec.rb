@@ -215,4 +215,36 @@ RSpec.describe Gws::Circular::Post, type: :model, dbscope: :example do
       end
     end
   end
+
+  describe '#browsable_comments' do
+    let!(:post) { create(:gws_circular_post, :gws_circular_posts, user: circular_author, cur_user: cur_user) }
+    let!(:comment1) { create(:gws_circular_comment, post: post, user: circular_author, browsing_authority: 'all') }
+    let!(:comment2) { create(:gws_circular_comment, post: post, user: circular_viewer, browsing_authority: 'all') }
+    let!(:comment3) do
+      create(:gws_circular_comment, post: post, user: circular_author, browsing_authority: 'author_or_commenter')
+    end
+    let!(:comment4) do
+      create(:gws_circular_comment, post: post, user: circular_viewer, browsing_authority: 'author_or_commenter')
+    end
+    let(:circular_author) { create(:gws_user, :gws_user_base) }
+    let(:circular_viewer) { create(:gws_user, :gws_user_base) }
+
+    subject { post.reload.browsable_comments }
+
+    context 'cur_user is circular_author' do
+      let(:cur_user) { circular_author }
+
+      it 'should return all comments' do
+        is_expected.to match [comment1, comment2, comment3, comment4]
+      end
+    end
+
+    context 'cur_user is not circular_author' do
+      let(:cur_user) { circular_viewer }
+
+      it 'should return comments which browsing_authority is all or commenter is myself' do
+        is_expected.to match [comment1, comment2, comment4]
+      end
+    end
+  end
 end
