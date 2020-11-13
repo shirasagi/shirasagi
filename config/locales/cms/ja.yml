@@ -533,6 +533,8 @@ ja:
       cms/column/table: 表
     errors:
       models:
+        cms/content:
+          unsafe_numeric_filename: は、数字のみで構成されていますが、数字のみのファイル名は自由に使用できません。アルファベットを1文字以上加えてください。
         cms/model/node:
           routed_folders_under_uploader: アップローダー下に属性付きフォルダーは作成できません。アップローダーに切り替え、新規フォルダーよりフォルダーを作成してください。
         cms/column/value/youtube:
