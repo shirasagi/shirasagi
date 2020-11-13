@@ -38,6 +38,15 @@ class Recommend::SimilarityScore
       ])
     end
 
+    def exclude_paths(paths)
+      return all if paths.blank?
+
+      paths = paths.select(&:present?)
+      return all if paths.blank?
+
+      all.where(path: { "$nin" => paths })
+    end
+
     def to_key_axis_aggregation(match = {})
       pipes = []
       pipes << { "$match" => match } if match.present?
