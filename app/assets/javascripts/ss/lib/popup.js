@@ -29,7 +29,12 @@ this.SS_Popup = (function () {
     }
 
     $(document).on("click", selector, function (ev) {
-      new SS_Popup(ev.target, options);
+      if (ev.target._ss && ev.target._ss.popup) {
+        return;
+      }
+
+      var popup = new SS_Popup(ev.target, options);
+      popup.show();
       return false;
     });
   };
@@ -69,8 +74,7 @@ this.SS_Popup = (function () {
       if (overflow) {
         tippyOptions["popperOptions"] = { modifiers: { preventOverflow: { escapeWithReference: true } } };
       }
-      var instance = tippy(self.el, tippyOptions);
-      instance.show();
+      tippy(self.el, tippyOptions);
     };
 
     var overflow = this.el.dataset["ssPopupOverflow"] || this.options["ss-popup-overflow"];
@@ -109,8 +113,7 @@ this.SS_Popup = (function () {
       tippyOptions["popperOptions"] = { modifiers: { preventOverflow: { escapeWithReference: true } } };
     }
 
-    var instance = tippy(this.el, tippyOptions);
-    instance.show();
+    tippy(this.el, tippyOptions);
 
     var self = this;
     $.ajax({
@@ -128,6 +131,14 @@ this.SS_Popup = (function () {
   SS_Popup.prototype.showError = function(xhr, status, error) {
     this.el._tippy.setContent("[==Error==]");
   };
+
+  SS_Popup.prototype.show = function() {
+    if (!this.el._tippy) {
+      return;
+    }
+
+    this.el._tippy.show();
+  }
 
   return SS_Popup;
 })();
