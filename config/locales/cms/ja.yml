@@ -484,6 +484,7 @@ ja:
       cms/column/layout: レイアウト
       cms/column/text_like: 制約条件
       cms/column/select_like: 選択
+      cms/redirect_link: リンクページ
 
   mongoid:
     models:
@@ -918,6 +919,8 @@ ja:
         value: テキスト
       cms/column/value/table:
         value: 表
+      cms/addon/redirect_link:
+        redirect_link: リダイレクトURL
 
   errors:
     messages:
@@ -1973,6 +1976,10 @@ ja:
     cms/column/list:
       list_type:
         - 種類を選択します。
+
+    cms/addon/redirect_link:
+      redirect_link:
+        - ページを別URLにリダイレクトする際に入力します。
 
   all_content:
     page_id: ページID

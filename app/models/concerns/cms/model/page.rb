@@ -153,14 +153,6 @@ module Cms::Model::Page
     nil
   end
 
-  def redirect_link
-    nil
-  end
-
-  def view_layout
-    "cms/page"
-  end
-
   private
 
   def fix_extname

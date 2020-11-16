@@ -1,8 +1,9 @@
 module Cms::RedirectPage
   extend ActiveSupport::Concern
 
-  def redirect_link
-    nil
+  included do
+    field :redirect_link, type: String
+    permit_params :redirect_link
   end
 
   def view_layout
