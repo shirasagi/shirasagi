@@ -143,7 +143,7 @@ ja:
       other_than: "は%{count}以外の値にしてください。"
       email: は有効な電子メールアドレスを入力してください。
       domain: は有効なドメインを入力してください。
-      invalid_updated: 他のユーザーによって更新されています。編集をやり直してください。
+      invalid_updated: "同じ画面で複数回保存しようとしています。この画面に入力中の内容は保存されていない可能性がありますので、変更箇所を別途保存して編集をやり直してください。"
       too_large_file: "%{filename}(%{size}) のサイズが大きすぎます（制限値: %{limit}）。"
       file_count: "ファイル数（%{size}）が多すぎます（制限値: %{limit}）。"
       malformed_kana_dictionary: "書式が不正です: %{line}(%{no})"
