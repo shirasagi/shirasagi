@@ -164,7 +164,7 @@ module SS::Model::File
 
     name_without_ext = ::File.basename(name, ".*")
     ext = ::File.extname(filename)
-    return name_without_ext if ext.blank?
+    return name_without_ext if ext.blank? || ext == "."
 
     name_without_ext + ext
   end
