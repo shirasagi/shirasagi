@@ -77,34 +77,3 @@ this.Gws_Reminder = (function () {
   return Gws_Reminder;
 
 })();
-
-//@renderAddon: (opts = {})->
-//  addon = $(".gws-addon-reminder")
-
-//  params = {
-//    data:
-//      item:
-//        item_id: addon.find("#item_id").val()
-//        model: addon.find("#item_model").val()
-//        name: addon.find("#item_name").val()
-//    beforeSend: (data)->
-//      $(".gws-addon-reminder-label").html("")
-//    success: (data)->
-//      $(".gws-addon-reminder-label").html(data)
-//    error: (data)->
-//      alert("Error")
-//  }
-//  $.extend true, params, opts
-
-//  $("#gws-addon-reminder-set").click ->
-//    ajax_params = { method: "post" }
-//    $.extend true, ajax_params, params
-//    ajax_params["data"]["item"]["date"] = addon.find("#item_date").val()
-//    $.ajax(ajax_params)
-
-//  $("#gws-addon-reminder-unset").click ->
-//    ajax_params = { method: "post" }
-//    $.extend true, ajax_params, params
-//    ajax_params["data"]["_method"] = "delete"
-//    $.ajax(ajax_params)
-//    $.ajax(ajax_params)

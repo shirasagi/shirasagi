@@ -18,7 +18,7 @@ $(".tag a.more").colorbox({ fixed: true, height: "80%" });
 $('select[name="s[tag]"]').on("change", function() {
   if($(this).val() == "<%= I18n.t('ss.links.more') %>") {
     $(this).val('');
-    $(this).parents('.tag').find('.more').click();
+    $(this).parents('.tag').find('.more').trigger("click");
   }
 });
 <% end %>
