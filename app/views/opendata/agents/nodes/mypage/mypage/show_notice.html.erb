@@ -1,6 +1,6 @@
 <% if @notice && @notice.commented_count != 0 %>
  <%= jquery do %>
-  $(".confirm").click(function (event) {
+  $(".confirm").on("click", function (event) {
     $.ajax({
       url: "<%= mypage_path %>notice/confirm.html",
       type: "GET",

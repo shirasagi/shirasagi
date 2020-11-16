@@ -25,7 +25,7 @@ Gws_Schedule_Integration.render = function() {
 
   $el.find(".copy-email-address").each(function() {
     $(this).on("click", function(ev) {
-      $(this).closest("[data-email]").find(".clipboard-copy-button").click();
+      $(this).closest("[data-email]").find(".clipboard-copy-button").trigger("click");
 
       $(".dropdown, .dropdown-menu").removeClass('active');
 

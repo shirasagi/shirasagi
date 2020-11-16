@@ -1,7 +1,7 @@
 <%= code_editor ".mod-sitemap-body .text" %>
 <%= jquery do %>
 
-  $("#export-urls").click(function () {
+  $("#export-urls").on("click", function () {
     $("#item_sitemap_urls").data("editor").setValue("loading..");
     $.ajax({
       type: "GET",

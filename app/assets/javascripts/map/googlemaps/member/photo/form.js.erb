@@ -126,7 +126,7 @@ this.Member_Photo_Form = (function () {
   };
 
   Member_Photo_Form.setExifLatLng = function (selector) {
-    return $(selector).change(function (e) {
+    return $(selector).on("change", function (e) {
       if (!e.target.files[0]) {
         return;
       }

@@ -1,7 +1,7 @@
 <%= jquery do %>
   var convert_html_to_text;
 
-  $('.ezine-convert-button').click(function () {
+  $('.ezine-convert-button').on("click", function () {
     var text;
     if (typeof tinymce !== 'undefined') {
       text = convert_html_to_text(tinymce.get('item_html').getContent());

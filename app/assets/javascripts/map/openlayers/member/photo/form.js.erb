@@ -230,7 +230,7 @@ this.Openlayers_Member_Photo_Form = (function () {
   };
 
   Openlayers_Member_Photo_Form.prototype.setExifLatLng = function (selector) {
-    return $(selector).change((function (_this) {
+    return $(selector).on("change", (function (_this) {
       return function (e) {
         var self;
         if (!e.target.files[0]) {

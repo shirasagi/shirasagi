@@ -2,13 +2,13 @@
   var sort = new SS_SortableForm('.webmail-filter-conditions', { limit: 10 });
   sort.renderItems(<%== @item.conditions.to_json %>);
 
-  $('#item_action').change(function() {
+  $('#item_action').on("change", function() {
     if ($(this).val().match(/copy|move/)) {
       $('#item_mailbox').show();
     } else {
       $('#item_mailbox').hide();
     }
-  }).change();
+  }).trigger("change");
 <% end %>
 
 <dl class="see">

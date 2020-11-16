@@ -14,6 +14,12 @@ class Gws::Discussion::TodosController < ApplicationController
 
   private
 
+  # override Gws::BaseFilter#set_gws_assets
+  def set_gws_assets
+    super
+    javascript("gws/calendar")
+  end
+
   def set_forum
     raise "403" unless Gws::Discussion::Forum.allowed?(:read, @cur_user, site: @cur_site)
     @forum = Gws::Discussion::Forum.find(params[:forum_id])

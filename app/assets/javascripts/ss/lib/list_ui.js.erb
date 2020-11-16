@@ -9,7 +9,7 @@ this.SS_ListUI = (function () {
       $el = $(document);
     }
 
-    $el.find(".list-head input:checkbox").change(function () {
+    $el.find(".list-head input:checkbox").on("change", function () {
       var chk;
       chk = $(this).prop('checked');
       return $el.find('.list-item').each(function () {
@@ -20,10 +20,10 @@ this.SS_ListUI = (function () {
     $el.find(".list-item").each(function () {
       var list;
       list = $(this);
-      list.find("input:checkbox").change(function () {
+      list.find("input:checkbox").on("change", function () {
         return list.toggleClass("checked", $(this).prop("checked"));
       });
-      list.mouseup(function (e) {
+      list.on("mouseup", function (e) {
         var menu, offset, relX, relY;
         if ($(e.target).is('a') || $(e.target).closest('a,label').length) {
           return;
@@ -39,7 +39,7 @@ this.SS_ListUI = (function () {
         }
         return menu.css("left", relX - menu.width() + 5).css("top", relY).show();
       });
-      return list.mouseleave(function () {
+      return list.on("mouseleave", function () {
         return $el.find(".tap-menu").hide();
       });
     });
