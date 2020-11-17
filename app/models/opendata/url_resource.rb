@@ -15,6 +15,7 @@ class Opendata::UrlResource
   permit_params :name, :text, :license_id, :original_url, :crawl_update
 
   before_validation :validate_original_url, if: -> { original_url.present? }
+  after_validation :destroy_download_temp_file, if: -> { @download_temp_file }
 
   validates :original_url, presence: true
   validates :original_updated, presence: true
@@ -134,18 +135,22 @@ class Opendata::UrlResource
           self.original_updated = last_modified
           self.filename = ::File.basename(uri.path) if self.filename.blank?
 
-          ss_file = SS::File.new
-          ss_file.in_file = ActionDispatch::Http::UploadedFile.new(tempfile: temp_file,
+          @download_temp_file = SS::File.new
+          @download_temp_file.in_file = ActionDispatch::Http::UploadedFile.new(tempfile: temp_file,
                                                                    filename: self.filename,
                                                                    type: 'application/octet-stream')
-          ss_file.site_id = dataset.site_id
-          ss_file.model = self.class.to_s.underscore
+          @download_temp_file.site_id = dataset.site_id
+          @download_temp_file.model = self.class.to_s.underscore
 
-          ss_file.content_type = self.format = self.filename.sub(/.*\./, "").upcase
-          ss_file.filename = self.filename
-          ss_file.owner_item = dataset if file.respond_to?(:owner_item=)
-          ss_file.save
-          send("file_id=", ss_file.id)
+          @download_temp_file.content_type = self.format = self.filename.sub(/.*\./, "").upcase
+          @download_temp_file.filename = self.filename
+          @download_temp_file.owner_item = dataset
+
+          if @download_temp_file.save
+            self.file.destroy if file
+            self.file_id = @download_temp_file.id
+          end
+
           self.crawl_state = "same"
         end
       rescue Timeout::Error => e
@@ -186,5 +191,10 @@ class Opendata::UrlResource
         end
       end
     end
+  end
+
+  def destroy_download_temp_file
+    return if self.errors.blank?
+    @download_temp_file.destroy
   end
 end
