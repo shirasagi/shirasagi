@@ -58,6 +58,28 @@ module SS::Model::Task
       end
       task.close
     end
+
+    def search(params)
+      all.search_keyword(params).search_site(params).search_state(params)
+    end
+
+    def search_keyword(params)
+      return all if params.blank || params[:keyword].blank?
+
+      all.keyword_in(params[:keyword], :name)
+    end
+
+    def search_site(params)
+      return all if params.blank || params[:site_id].blank?
+
+      all.where(site_id: params[:site_id])
+    end
+
+    def search_state(params)
+      return all if params.blank || params[:state].blank?
+
+      all.where(state: params[:state])
+    end
   end
 
   def count(other = 1)
