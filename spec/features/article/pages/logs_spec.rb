@@ -40,6 +40,7 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
       visit edit_path
       wait_for_ajax do
         find(".action-delete").click
+        page.accept_alert
       end
       click_button I18n.t("ss.buttons.publish_save")
 
