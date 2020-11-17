@@ -39,6 +39,9 @@ ja:
         id: ユーザーIDまたはメールアドレス
         password: パスワード
         organization_uid: 職員番号またはメールアドレス
+      index:
+        updated: "更新日時：%{updated}"
+        released: "公開日時：%{released}"
     navi:
       readable: 閲覧一覧
       editable: 管理一覧
@@ -335,11 +338,13 @@ ja:
         30min: 30分
         60min: 60分
       sort:
-        created_asc:  作成日時(日付順)
+        created_asc: 作成日時(日付順)
         created_desc: 作成日時(新着順)
-        updated_asc:  更新日時(日付順)
+        updated_asc: 更新日時(日付順)
         updated_desc: 更新日時(新着順)
-        order_asc:  指定値(昇順)
+        released_asc: 公開日時(日付順)
+        released_desc: 公開日時(新着順)
+        order_asc: 指定値(昇順)
         order_desc: 指定値(降順)
         filename: ファイル名
         filename_asc: ファイル名(昇順)

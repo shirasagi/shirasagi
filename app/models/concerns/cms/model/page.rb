@@ -152,6 +152,10 @@ module Cms::Model::Page
     nil
   end
 
+  def sort_options
+    %w(updated_desc updated_asc released_desc released_asc).map { |k| [I18n.t("ss.options.sort.#{k}"), k] }
+  end
+
   private
 
   def fix_extname
@@ -180,6 +184,16 @@ module Cms::Model::Page
   end
 
   module ClassMethods
+    def custom_order(key)
+      if key.start_with?('updated_')
+        all.order_by(updated: key.end_with?('_asc') ? 1 : -1)
+      elsif key.start_with?('released_')
+        all.order_by(released: key.end_with?('_asc') ? 1 : -1)
+      else
+        all
+      end
+    end
+
     private
 
     def set_show_path(show_path)
