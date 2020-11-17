@@ -8,7 +8,7 @@ module Cms::PublicFilter::TwitterCard
         [ 'twitter:site', @cur_site.twitter_username ],
         [ 'twitter:url', ->() { @cur_item.full_url } ],
         [ 'twitter:title', ->() { @window_name } ],
-        [ 'twitter:description', ->() { twitter_description } ],
+        [ 'twitter:description', ->() { @cur_item.description } ],
         [ 'twitter:image', ->() { twitter_image_urls } ],
       ]
     end
