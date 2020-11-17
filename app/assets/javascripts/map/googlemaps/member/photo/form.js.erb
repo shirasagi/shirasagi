@@ -120,9 +120,7 @@ this.Member_Photo_Form = (function () {
       }
       return Member_Photo_Form.dataID += 1;
     });
-    if (Googlemaps_Map.markers && Googlemaps_Map.markers.length > 0) {
-      Googlemaps_Map.map.setCenter(markerBounds.getCenter());
-    }
+    Googlemaps_Map.adjustMarkerBounds(Googlemaps_Map.markers.length, markerBounds);
   };
 
   Member_Photo_Form.setExifLatLng = function (selector) {
@@ -160,6 +158,17 @@ this.Member_Photo_Form = (function () {
     });
     $(".mod-map .clear-marker").on('click', function (e) {
       Member_Photo_Form.clearMarker($(".mod-map .marker-loc"));
+      return false;
+    });
+    $(".mod-map .set-center-position").on('click', function () {
+      var latlng = Googlemaps_Map.map.getCenter();
+      var lat = Math.floor((latlng.lat() * 1000000)) / 1000000;
+      var lng = Math.floor((latlng.lng() * 1000000)) / 1000000;
+      $(".center-input").val(lat + "," + lng);
+      return false;
+    });
+    $(".mod-map .set-zoom-level").on('click', function () {
+      $(".zoom-input").val(Googlemaps_Map.map.getZoom());
       return false;
     });
     google.maps.event.addListener(Googlemaps_Map.map, 'bounds_changed', function (event) {

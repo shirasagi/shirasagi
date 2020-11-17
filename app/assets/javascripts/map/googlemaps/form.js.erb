@@ -286,6 +286,17 @@ this.Map_Form = (function () {
       Map_Form.clearPointForm($(this).closest("dd.marker"));
       return false;
     });
+    $(".mod-map .set-center-position").on('click', function () {
+      var latlng = Googlemaps_Map.map.getCenter();
+      var lat = Math.floor((latlng.lat() * 1000000)) / 1000000;
+      var lng = Math.floor((latlng.lng() * 1000000)) / 1000000;
+      $(".center-input").val(lat + "," + lng);
+      return false;
+    });
+    $(".mod-map .set-zoom-level").on('click', function () {
+      $(".zoom-input").val(Googlemaps_Map.map.getZoom());
+      return false;
+    });
     $(".mod-map .set-marker").on('click', function (e) {
       Map_Form.createMarker($(this).closest("dd.marker"));
       return false;

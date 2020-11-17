@@ -5,6 +5,29 @@ this.Openlayers_Map = (function () {
     }
     this.canvas = canvas;
     this.opts = opts;
+    default_zoom = this.opts.default_zoom || Openlayers_Map.defaultZoom
+    pointCount = this.opts.markers ? this.opts.markers.length : 0
+    set_center_position = this.opts.set_center_position
+
+    if (set_center_position) {
+      set_center_position = set_center_position.split(',').map(Number);
+      set_center_position = [set_center_position[1], set_center_position[0]];
+      var lat, lon;
+      lat = set_center_position[1];
+      lon = set_center_position[0];
+      if (!(lat && !isNaN(lat))) {
+        set_center_position = null;
+      }
+      if (!(lon && !isNaN(lon))) {
+        set_center_position = null;
+      }
+      if (lat >= -90 && lat <= 90 && lon >= -180 && lon <= 180) {
+        set_center_position
+      } else {
+        set_center_position = null;
+      }
+    }
+    set_zoom_level = this.opts.set_zoom_level
     if (! this.opts.zoom) {
       this.opts.zoom = Openlayers_Map.defaultZoom;
     }
@@ -49,6 +72,9 @@ this.Openlayers_Map = (function () {
   Openlayers_Map.prototype.initMap = function () {
     var center, layerOpts;
     center = this.opts['center'] || [138.252924, 36.204824];
+    if (set_center_position) {
+      center = set_center_position
+    }
     layerOpts = this.opts['layers'];
     layerOpts || (layerOpts = [
       {
@@ -275,11 +301,42 @@ this.Openlayers_Map = (function () {
     if (!this.markerLayer) {
       return;
     }
-    extent = this.markerLayer.getSource().getExtent();
 
-    this.map.getView().fit(extent, this.map.getSize());
-    if (this.map.getView().getZoom() > this.opts.zoom) {
-      this.map.getView().setZoom(this.opts.zoom);
+    if (pointCount == 1 && !set_center_position && !set_zoom_level) {
+      extent = this.markerLayer.getSource().getExtent();
+      this.map.getView().fit(extent, this.map.getSize());
+      this.map.getView().setZoom(default_zoom);
+      return;
+    }
+
+    if (pointCount == 1 && !set_center_position && set_zoom_level) {
+      extent = this.markerLayer.getSource().getExtent();
+      this.map.getView().fit(extent, this.map.getSize());
+      this.map.getView().setZoom(set_zoom_level);
+      return;
+    }
+
+    if (pointCount >= 2 && !set_center_position && !set_zoom_level) {
+      extent = this.markerLayer.getSource().getExtent();
+      this.map.getView().fit(extent, this.map.getSize());
+      return;
+    }
+
+    if (pointCount >= 2 && !set_center_position && set_zoom_level) {
+      extent = this.markerLayer.getSource().getExtent();
+      this.map.getView().fit(extent, this.map.getSize());
+      this.map.getView().setZoom(set_zoom_level);
+      return;
+    }
+
+    if (set_zoom_level) {
+      this.map.getView().setZoom(set_zoom_level);
+      return;
+    }
+
+    if (!set_zoom_level) {
+      this.map.getView().setZoom(default_zoom);
+      return;
     }
   };
 

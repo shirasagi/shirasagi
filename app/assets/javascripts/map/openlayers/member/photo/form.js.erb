@@ -5,6 +5,28 @@ this.Openlayers_Member_Photo_Form = (function () {
     }
     this.canvas = canvas;
     this.opts = opts;
+    default_zoom = this.opts.default_zoom
+    pointCount = this.opts.markers ? this.opts.markers.length : 0
+    set_center_position = this.opts.set_center_position
+    if (set_center_position) {
+      set_center_position = set_center_position.split(',').map(Number);
+      set_center_position = [set_center_position[1], set_center_position[0]];
+      var lat, lon;
+      lat = set_center_position[1];
+      lon = set_center_position[0];
+      if (!(lat && !isNaN(lat))) {
+        set_center_position = null;
+      }
+      if (!(lon && !isNaN(lon))) {
+        set_center_position = null;
+      }
+      if (lat >= -90 && lat <= 90 && lon >= -180 && lon <= 180) {
+        set_center_position
+      } else {
+        set_center_position = null;
+      }
+    }
+    set_zoom_level = this.opts.set_zoom_level
     this.markerFeature = null;
     this.markerLayer = null;
     this.popup = null;
@@ -59,6 +81,9 @@ this.Openlayers_Member_Photo_Form = (function () {
   Openlayers_Member_Photo_Form.prototype.initMap = function () {
     var center, layerOpts;
     center = this.opts['center'] || [138.252924, 36.204824];
+    if (set_center_position) {
+      center = set_center_position
+    }
     layerOpts = this.opts['layers'];
     layerOpts || (layerOpts = [
       {
@@ -199,6 +224,21 @@ this.Openlayers_Member_Photo_Form = (function () {
         $('input[name="item[map_zoom_level]"]').val(zoom);
       }
     });
+    $(".mod-map .set-center-position").on('click', (function (_this) {
+      return function () {
+        var latlng = ol.proj.transform(_this.map.getView().getCenter(), 'EPSG:3857', 'EPSG:4326');
+        var lat = Math.floor((latlng[1] * 1000000)) / 1000000;
+        var lng = Math.floor((latlng[0] * 1000000)) / 1000000;
+        $(".center-input").val(lat + "," + lng);
+        return false;
+      };
+    })(this));
+    $(".mod-map .set-zoom-level").on('click', (function (_this) {
+      return function () {
+        $(".zoom-input").val(_this.map.getView().getZoom());
+        return false;
+      };
+    })(this));
     return $(".mod-map .clear-marker").on('click', (function (_this) {
       return function (e) {
         _this.clearMarker($(".mod-map .marker-loc"));
@@ -264,11 +304,29 @@ this.Openlayers_Member_Photo_Form = (function () {
 
   Openlayers_Member_Photo_Form.prototype.resize = function () {
     var extent;
-    if (!this.markerLayer) {
+    if (pointCount == 1 && !set_center_position && !set_zoom_level) {
+      extent = this.markerLayer.getSource().getExtent();
+      this.map.getView().fit(extent, this.map.getSize());
+      this.map.getView().setZoom(default_zoom);
       return;
     }
-    extent = this.markerLayer.getSource().getExtent();
-    this.map.getView().setCenter(ol.extent.getCenter(extent));
+
+    if (pointCount == 1 && !set_center_position && set_zoom_level) {
+      extent = this.markerLayer.getSource().getExtent();
+      this.map.getView().fit(extent, this.map.getSize());
+      this.map.getView().setZoom(set_zoom_level);
+      return;
+    }
+
+    if (set_zoom_level) {
+      this.map.getView().setZoom(set_zoom_level);
+      return;
+    }
+
+    if (!set_zoom_level) {
+      this.map.getView().setZoom(default_zoom);
+      return;
+    }
   };
 
   return Openlayers_Member_Photo_Form;

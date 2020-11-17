@@ -5,12 +5,56 @@
 
 <% if map_enabled?(mypage: true) %>
 
-<%= render_map_form "##{addon[:id]} .map-canvas", site: @cur_site, map: { zoom: @item.map_zoom_level } %>
+<%
+  if @item.center_setting == "designated_location" && @item.set_center_position.present?
+    set_center_position = @item.set_center_position
+  end
+
+  if @item.zoom_setting == "designated_level" && @item.set_zoom_level.present?
+    set_zoom_level = @item.set_zoom_level
+  end
+
+  default_zoom = SS.config.map.googlemaps_zoom_level
+%>
+
+<%= render_map_form "##{addon[:id]} .map-canvas", site: @cur_site, markers: @item.map_points, map: { zoom: @item.map_zoom_level, set_center_position: set_center_position, set_zoom_level: set_zoom_level, default_zoom: default_zoom } %>
 
 <div class="mod-map">
   <div class="location-search">
     <%= text_field_tag :keyword, nil, class: "keyword", placeholder: t("map.search") %>
     <%= button_tag t("ss.buttons.search"), { type: :button, class: "btn" } %>
+  </div>
+  <div class="map-position">
+    <div class="center-position">
+      <span><%= t("map.center_position") %><%= @item.tt :center_setting %></span>
+      <span>
+        <label>
+          <%= f.radio_button :center_setting, :auto, checked: "checked" %>
+          <%= t('map.auto') %>
+        </label>
+        <label>
+          <%= f.radio_button :center_setting, :designated_location %>
+          <%= t('map.designated_location') %>
+        </label>
+        <%= f.text_field :set_center_position, class: "center-input" %>
+        <%= button_tag t("map.buttons.add_center"), { type: :button, class: "set-center-position btn" } %>
+      </span>
+    </div>
+    <div class="zoom-level">
+      <span><%= t("map.zoom") %><%= @item.tt :zoom_setting %></span>
+      <span>
+        <label>
+          <%= f.radio_button :zoom_setting, :auto, checked: "checked" %>
+          <%= t('map.auto') %>
+        </label>
+        <label>
+          <%= f.radio_button :zoom_setting, :designated_level %>
+          <%= t('map.designated_level') %>
+        </label>
+        <%= f.number_field  :set_zoom_level, min: 1, max: 21, class: "zoom-input" %>
+        <%= button_tag t("map.buttons.add_zoom"), { type: :button, class: "set-zoom-level btn" } %>
+      </span>
+    </div>
   </div>
   <%= f.hidden_field :map_zoom_level %>
   <div class="map-canvas" style="width: 100%; height: 320px"></div>
