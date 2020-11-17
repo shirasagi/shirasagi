@@ -29,10 +29,6 @@ Rails.application.routes.draw do
     post "site_copy/confirm" => "site_copy#confirm"
     post "site_copy/run" => "site_copy#run"
     post "site_copy/reset_state" => "site_copy#reset_state"
-    get "test" => "test#index", as: :test
-    get "test/http" => "test/http#index", as: :test_http
-    get "test/mail" => "test/mail#index", as: :test_mail
-    post "test/mail" => "test/mail#create", as: :send_test_mail
 
     resource :menu_settings, only: [:show, :edit, :update]
     resource :password_policy, only: [:show, :edit, :update]
@@ -49,6 +45,17 @@ Rails.application.routes.draw do
     resources :mail_logs, concerns: :deletion, only: [ :index, :show, :delete, :destroy ] do
       get :decode, on: :member
       put :decode, on: :member, action: :commit_decode
+    end
+
+    namespace "diag" do
+      get "/" => "main#index", as: :main
+      if Rails.env.development?
+        resources :https, only: [:index]
+      end
+      resources :mails, only: [:index, :create]
+      resource :server, only: [] do
+        match :show, on: :member, via: [:get, :post, :put, :delete]
+      end
     end
 
     namespace "apis" do
