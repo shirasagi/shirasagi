@@ -156,6 +156,16 @@ module Cms::Model::Page
     %w(updated_desc updated_asc released_desc released_asc).map { |k| [I18n.t("ss.options.sort.#{k}"), k] }
   end
 
+  def attached_files
+    if self.class.include?(Cms::Addon::Form::Page) && self.form
+      self.form_files.to_a
+    elsif self.class.include?(Cms::Addon::File)
+      self.files.to_a
+    else
+      []
+    end
+  end
+
   private
 
   def fix_extname
