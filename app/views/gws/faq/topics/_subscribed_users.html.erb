@@ -16,7 +16,7 @@
         <% subscribed_users = @item.subscribed_users.to_a %>
         <% subscribed_users.each do |user| %>
           <tr data-user-id="<%= user.id %>">
-            <td class="name"><%= user.long_name %></td>
+            <td class="name"><%= gws_public_user_long_name(user.long_name) %></td>
             <td class="browsed">
               <% @item.browsed_at(user).tap do |browsed_at| %>
               <span class="browsed">

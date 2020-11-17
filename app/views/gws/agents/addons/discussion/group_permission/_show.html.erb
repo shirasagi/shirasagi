@@ -13,7 +13,7 @@
   <dd><%=br @item.group_names %></dd>
 
   <dt><%= @model.t :user_ids %></dt>
-  <dd><%=br @item.user_names %></dd>
+  <dd><%=br gws_public_user_long_names(@item.user_names) %></dd>
 
   <% unless SS.config.ss.disable_permission_level %>
     <dt><%= @model.t :permission_level %></dt>

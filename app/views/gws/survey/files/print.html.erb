@@ -22,7 +22,7 @@ $(".btn-file-delete").remove();
             <% else %>
               <span class="answered"><%= @model.t :updated %>: <%= I18n.l(@item.updated) %></span>
             <% end %>
-            <span class="name"><%= @cur_form.contributor_name %></span>
+            <span class="name"><%= gws_public_user_long_name(@cur_form.contributor_name) %></span>
           </div>
           <h2 class="title"><%= @cur_form.name %></h2>
           <div class="description"><%= br auto_link(@cur_form.description) %></div>

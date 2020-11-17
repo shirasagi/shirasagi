@@ -36,11 +36,11 @@
   <tbody class="items">
   <% @items.each do |item| %>
     <% if item.member %>
-      <tr class="list-item" data-id="<%= item.member_id %>" data-name="<%= item.member.long_name %>" data-email="<%= item.email_address %>" data-address="<%= item.email %>">
+      <tr class="list-item" data-id="<%= item.member_id %>" data-name="<%= gws_public_user_long_name(item.member.long_name) %>" data-email="<%= item.email_address %>" data-address="<%= item.email %>">
         <% if @multi %>
           <td class="checkbox"><input type="checkbox" name="ids[]" value="<%= item.member_id %>" /></td>
         <% end %>
-        <td><%= link_to item.member.long_name, "#", class: @multi ? "select-item" : "select-single-item" %></td>
+        <td><%= link_to gws_public_user_long_name(item.member.long_name), "#", class: @multi ? "select-item" : "select-single-item" %></td>
         <td><%= item.name %></td>
         <td><%= item.email %></td>
       </tr>

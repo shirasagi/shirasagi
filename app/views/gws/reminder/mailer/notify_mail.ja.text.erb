@@ -6,5 +6,5 @@
 
 [<%= @item.class.t :member_ids %>]
 <% @item.sorted_members.map(&:long_name).each do |long_name| %>
-・<%= long_name %>
+・<%= gws_public_user_long_name(long_name, cur_site: @item.site) %>
 <% end %>

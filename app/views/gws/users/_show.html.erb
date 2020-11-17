@@ -86,7 +86,7 @@ SS_Clipboard.renderCopy();
 
   <% if @item.switch_user.present? %>
   <dt><%= @model.t :switch_user_id %></dt>
-  <dd><%=br @item.switch_user.long_name %></dd>
+  <dd><%= gws_public_user_long_name(@item.switch_user.long_name) %></dd>
   <% end %>
 
   <% if @item.remark.present? %>

@@ -8,7 +8,7 @@
   <span class="id">#<%= item.id %></span>
   <span class="datetime"><%= item.updated.strftime("%Y/%m/%d %H:%M") %></span>
   <span class="state"><%= t "ss.state.#{item.state_with_release_date}" %></span>
-  <span class="user"><%= item.contributor_name.presence || item.user_long_name %></span>
+  <span class="user"><%= gws_public_user_long_name(item.contributor_name.presence || item.user_long_name) %></span>
   <% if item.folder.present? %>
     <span class="folder"><%= t('mongoid.models.gws/notice/folder') %>: <%= item.folder.name %></span>
   <% end %>

@@ -20,7 +20,7 @@
   <span class="datetime"><%= item.updated.strftime('%Y/%m/%d %H:%M') %></span>
   <span class="date"><%= I18n.l(item.date.to_date, format: :attendance_year_month) %></span>
   <span class="group"><%= item.user.gws_default_group.section_name %></span>
-  <span class="user"><%= item.user.long_name %></span>
+  <span class="user"><%= gws_public_user_long_name(item.user.long_name) %></span>
 <% end %>
 
 <div class="gws-category-navi gws-attendance-year-month-navi">
