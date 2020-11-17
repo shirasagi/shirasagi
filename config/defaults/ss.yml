@@ -22,6 +22,8 @@ production: &production
     # uncomment blow setting if you have been running SHIRASAGI with full https
     # secure: true
 
+  disable_permission_level: true
+
 test:
   <<: *production
   disable: false

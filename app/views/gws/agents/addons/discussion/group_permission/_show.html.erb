@@ -15,6 +15,8 @@
   <dt><%= @model.t :user_ids %></dt>
   <dd><%=br @item.user_names %></dd>
 
-  <dt><%= @model.t :permission_level %></dt>
-  <dd><%= @item.label :permission_level %></dd>
+  <% unless SS.config.ss.disable_permission_level %>
+    <dt><%= @model.t :permission_level %></dt>
+    <dd><%= @item.label :permission_level %></dd>
+  <% end %>
 </dl>
