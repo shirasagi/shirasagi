@@ -1,3 +1,5 @@
+require 'open-uri'
+
 module OpenURI
   def self.open_uri_with_proxy(name, *rest, &block)
     proxy_uri = SS.config.proxy.proxy_http_basic_authentication["proxy_uri"]

@@ -31,17 +31,17 @@ module Opendata::Resource::Model
 
   def content_url
     return source_url if source_url.present?
-    dataset.url.sub(/\.html$/, "") + "#{URI.escape(context_path)}/#{id}/content.html"
+    dataset.url.sub(/\.html$/, "") + "#{Addressable::URI.escape(context_path)}/#{id}/content.html"
   end
 
   def download_url
     n = source_url.present? ? "source-url" : filename
-    dataset.url.sub(/\.html$/, "") + "#{URI.escape(context_path)}/#{id}/#{URI.escape(n)}"
+    dataset.url.sub(/\.html$/, "") + "#{Addressable::URI.escape(context_path)}/#{id}/#{Addressable::URI.escape(n)}"
   end
 
   def download_full_url
     n = source_url.present? ? "source-url" : filename
-    dataset.full_url.sub(/\.html$/, "") + "#{URI.escape(context_path)}/#{id}/#{URI.escape(n)}"
+    dataset.full_url.sub(/\.html$/, "") + "#{Addressable::URI.escape(context_path)}/#{id}/#{Addressable::URI.escape(n)}"
   end
 
   def path

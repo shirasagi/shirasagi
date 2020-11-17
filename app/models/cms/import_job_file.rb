@@ -3,50 +3,31 @@ class Cms::ImportJobFile
   include SS::Document
   include SS::Reference::User
   include Cms::Reference::Site
-  include Cms::Reference::Node
 
-  attr_accessor :in_file, :import_logs, :name, :basename
+  attr_accessor :name, :basename
+  attr_accessor :in_file, :import_logs
 
   seqid :id
   field :import_date, type: DateTime
+  belongs_to :node, class_name: "Cms::Node"
   embeds_ids :files, class_name: "SS::File"
 
   permit_params :in_file, :name, :basename, :import_date
-  validates :in_file, presence: true
-  validates :import_date, presence: true
 
-  before_validation :set_import_date
-  before_save :save_files
+  validates :in_file, presence: true
+
+  validate :validate_root_node, if: -> { !node }
+  validate :validate_in_file, if: -> { in_file }
+
+  before_save :set_import_date
+  before_save :save_root_node, if: -> { @root_node }
+  before_save :save_in_file, if: -> { @import_file }
+
+  after_save :perform_job, if: -> { @import_job }
 
   def save_with_import
-    if !cur_node
-      # save root node
-      root_node = Cms::Node::ImportNode.new
-      root_node.filename = basename
-      root_node.name = name
-      root_node.cur_site = cur_site
-      root_node.group_ids = cur_user.group_ids
-
-      if root_node.save
-        self.cur_node = root_node
-      else
-        self.errors.add :base, I18n.t("errors.messages.root_node_save_error")
-        root_node.errors.full_messages.each do |e|
-          self.errors.add :base, e
-        end
-        return false
-      end
-    end
-
-    if save
-      job = Cms::ImportFilesJob.bind(site_id: site.id)
-      job = job.set(wait_until: self.import_date) if import_date.present?
-      job.perform_later
-      return true
-    else
-      self.import_date = nil
-      return false
-    end
+    @import_job = true
+    save
   end
 
   def import
@@ -165,21 +146,51 @@ class Cms::ImportJobFile
     end
   end
 
-  private
-
-  def save_files
-    item = SS::File.new
-    item.in_file = in_file
-    item.site = site
-    item.state = "closed"
-    item.name = name
-    item.model = "cms/import_file"
-    item.save!
-
-    self.file_ids = [item.id]
+  def perform_job
+    job = Cms::ImportFilesJob.bind(site_id: site.id)
+    job = job.set(wait_until: import_date) if import_date.present?
+    job.perform_later
   end
+
+  private
 
   def set_import_date
     self.import_date ||= Time.zone.now
+  end
+
+  def validate_root_node
+    @root_node = Cms::Node::ImportNode.new
+    @root_node.filename = basename
+    @root_node.name = name
+    @root_node.cur_site = cur_site
+    @root_node.group_ids = cur_user.group_ids if cur_user
+    return if @root_node.valid?
+
+    self.errors.add :base, I18n.t("errors.messages.root_node_save_error")
+    @root_node.errors.full_messages.each { |e| self.errors.add :base, e }
+  end
+
+  def validate_in_file
+    @import_file = SS::File.new
+    @import_file.in_file = in_file
+    @import_file.site = cur_site
+    @import_file.state = "closed"
+    @import_file.name = name
+    @import_file.model = "cms/import_file"
+
+    v = @import_file.valid?
+    return if v
+
+    @import_file.errors.full_messages.each { |e| self.errors.add :base, e }
+  end
+
+  def save_in_file
+    @import_file.save!
+    self.file_ids = [@import_file.id]
+  end
+
+  def save_root_node
+    @root_node.save!
+    self.node = @root_node
   end
 end

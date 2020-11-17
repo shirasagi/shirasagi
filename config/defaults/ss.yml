@@ -16,10 +16,16 @@ production: &production
   # history backups max age
   history_max_age: 20
 
+  # history backups max age
+  keep_history_backup_after_destroyed: 14.days
+
   session:
     key: '_ss_session'
+    same_site: 'Lax'
     # uncomment blow setting if you have been running SHIRASAGI with full https
     # secure: true
+
+  disable_permission_level: true
 
 test:
   <<: *production

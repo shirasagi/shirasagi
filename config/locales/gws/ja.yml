@@ -76,6 +76,13 @@ ja:
       break:
         vertically: 縦並び
         horizontal: 横並び
+      user_public_profiles:
+        uid: UID
+        updated: 更新日
+        main_group: グループ
+        user_title: 役職
+        email: メールアドレス
+        tel: 電話番号
 
     links:
       back_to_portal: ポータルへ戻る
@@ -134,7 +141,6 @@ ja:
       gws/role: 権限/ロール
       gws/group_permission: 管理権限
       gws/file: ファイル
-      gws/release: 公開設定
       gws/history: 変更履歴
       gws/share/history: 変更履歴
       gws/readable_setting: 閲覧権限
@@ -146,6 +152,7 @@ ja:
       gws/schedules: スケジュール
       gws/system/file_setting: ファイル設定
       gws/system/group_setting: システム設定
+      gws/system/user_setting: ユーザー設定
       gws/system/menu_setting: メニュー設定
       gws/system/notice_setting: 通知設定
       gws/system/logo_setting: ロゴ設定
@@ -288,10 +295,6 @@ ja:
         custom_group_ids: 管理カスタムグループ
         custom_groups_hash: 管理カスタムグループ(ハッシュ)
         permission_level: 権限レベル
-      gws/addon/release:
-        released: 公開日時
-        release_date: 公開開始日時(予約)
-        close_date: 公開終了日時(予約)
       gws/addon/readable_setting:
         readable_setting_range: 公開範囲
         readable_group_ids: 閲覧グループ
@@ -315,6 +318,8 @@ ja:
         canonical_domain: グループウェアドメイン
         trash_threshold: ゴミ箱保持期間
         trash_threshold_unit: ゴミ箱保持期間単位
+      gws/addon/system/user_setting:
+        user_public_profiles: 公開プロフィール
       gws/addon/system/menu_setting:
         menu_portal_label: ポータルの表示
         menu_portal_state: ポータルの表示

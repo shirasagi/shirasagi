@@ -195,8 +195,11 @@ img {
   display: none;
 }
 #ss-translate-error {
-  padding: 5px;
+  padding: 19px 10px 0;
   font-size: $px15;
+  p {
+    padding: 5px 0 0 10px;
+  }
 }
 // -----------------------------------------------------------------------------
 // head

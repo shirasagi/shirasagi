@@ -10,7 +10,6 @@ module History::Model::Data
     index({ ref_coll: 1, "data._id" => 1, created: -1 })
 
     cattr_reader(:max_age) { SS.config.ss.history_max_age || 20 }
-    cattr_accessor(:root, instance_accessor: false) { "#{Rails.root}/private/trash" }
 
     field :version, type: String, default: SS.version
     field :ref_coll, type: String
@@ -20,6 +19,12 @@ module History::Model::Data
 
     validates :ref_coll, presence: true
     validates :data, presence: true
+  end
+
+  module ClassMethods
+    def root
+      "#{SS::Application.private_root}/trash"
+    end
   end
 
   def coll

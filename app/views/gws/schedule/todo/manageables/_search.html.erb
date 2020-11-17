@@ -11,7 +11,7 @@
   <% selected_members = Gws::User.active.in(id: Array[@s.member_ids].flatten.compact.map(&:to_i)) %>
   <span class="schedule-todo-selected-members <% if selected_members.blank? %>hide<% end %>" style="font-weight: normal">
     <% selected_members.each do |user| %>
-      <% render_selected_member.call(user.id, user.long_name) %>
+      <% render_selected_member.call(user.id, gws_public_user_long_name(user.long_name)) %>
     <% end %>
   </span>
   <%= f.select :sort, @model.new.sort_options, {}, class: "schedule-todo-auto-submit" %>

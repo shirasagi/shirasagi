@@ -13,7 +13,7 @@ module Cms::PublicFilter
     before_action :parse_path
     before_action :set_preview_params
     before_action :compile_scss
-    before_action :x_sendfile, unless: ->{ filter_include?(:mobile) || filter_include?(:kana) || @preview }
+    before_action :x_sendfile, unless: ->{ filter_include?(:mobile) || filter_include?(:kana) || filter_include?(:translate) || @preview }
   end
 
   def index
@@ -82,7 +82,7 @@ module Cms::PublicFilter
     @cur_path.sub!(/\/$/, "/index.html")
     @cur_main_path.sub!(/\/$/, "/index.html")
     @html = @cur_main_path.sub(/\.\w+$/, ".html")
-    @file = File.join(@cur_site.root_path, @cur_path)
+    @file = File.join(@cur_site.path, @cur_main_path)
   end
 
   def set_preview_params
@@ -204,7 +204,10 @@ module Cms::PublicFilter
   end
 
   def send_page(page)
-    if response.content_type == "text/html" && page.layout
+    if page.view_layout == "cms/redirect" && !mobile_path?
+      @redirect_link = page.redirect_link
+      render html: "", layout: "cms/redirect"
+    elsif response.content_type == "text/html" && page.layout
       render html: render_layout(page.layout).html_safe, layout: (request.xhr? ? false : "cms/page")
     else
       @_response_body = response.body

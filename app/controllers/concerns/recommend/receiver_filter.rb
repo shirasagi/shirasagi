@@ -21,7 +21,11 @@ module Recommend::ReceiverFilter
     )
     log.save if log.class.enable_access_logging?(@cur_site)
 
-    cookies.permanent["_ss_recommend"] = log.token
+    cookie_value = { value: log.token, http_only: true }
+    cookie_value[:same_site] = SS.config.ss.session["same_site"] if !SS.config.ss.session["same_site"].nil?
+    cookie_value[:secure] = SS.config.ss.session["secure"] if !SS.config.ss.session["secure"].nil?
+
+    cookies.permanent["_ss_recommend"] = cookie_value
 
     head :ok
   end

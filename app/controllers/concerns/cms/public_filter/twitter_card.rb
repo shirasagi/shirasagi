@@ -63,7 +63,10 @@ module Cms::PublicFilter::TwitterCard
       if @cur_item.respond_to?(:thumb)
         thumb = @cur_item.thumb
       end
-      if @cur_item.respond_to?(:html)
+
+      if @cur_item.respond_to?(:form) && @cur_item.form
+        html = @cur_item.column_values.map(&:to_html).join("\n")
+      elsif @cur_item.respond_to?(:html)
         html = @cur_item.html.to_s
       end
     end

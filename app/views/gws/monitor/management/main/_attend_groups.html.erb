@@ -25,7 +25,7 @@
             <td class="mark_at"><%= post ? post.try(:created).strftime('%Y/%m/%d %H:%M') : '' %></td>
             <td class="udpate_at"><%= post ? post.try(:updated).strftime('%Y/%m/%d %H:%M') : '' %></td>
             <td class="group"><%= group.name %></td>
-            <td class="user"><%= post ? post.try(:contributor_name) : '' %></td>
+            <td class="user"><%= post.try { |p| gws_public_user_long_name(p.contributor_name) } || '' %></td>
             <td class="contents"><%= post ? post.try(:text) : '' %></td>
             <td class="file">
               <% if post && post.file_ids.present? %>

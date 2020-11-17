@@ -2,6 +2,7 @@ module Cms::Model::Page
   extend ActiveSupport::Concern
   extend SS::Translation
   include Cms::Content
+  include Cms::RedirectPage
   include Cms::Reference::Layout
 
   included do
@@ -153,6 +154,20 @@ module Cms::Model::Page
     nil
   end
 
+  def sort_options
+    %w(updated_desc updated_asc released_desc released_asc).map { |k| [I18n.t("ss.options.sort.#{k}"), k] }
+  end
+
+  def attached_files
+    if self.class.include?(Cms::Addon::Form::Page) && self.form
+      self.form_files.to_a
+    elsif self.class.include?(Cms::Addon::File)
+      self.files.to_a
+    else
+      []
+    end
+  end
+
   private
 
   def fix_extname
@@ -181,6 +196,16 @@ module Cms::Model::Page
   end
 
   module ClassMethods
+    def custom_order(key)
+      if key.start_with?('updated_')
+        all.order_by(updated: key.end_with?('_asc') ? 1 : -1)
+      elsif key.start_with?('released_')
+        all.order_by(released: key.end_with?('_asc') ? 1 : -1)
+      else
+        all
+      end
+    end
+
     private
 
     def set_show_path(show_path)

@@ -39,6 +39,9 @@ class SS::Migration20190918000000
     all_ids = Gws::Board::Topic.topic.pluck(:id)
     all_ids.each_slice(20) do |ids|
       Gws::Board::Topic.topic.in(id: ids).to_a.each do |item|
+        # site has been deleted
+        next if item.site.blank?
+
         item.cur_site = item.site
         yield item
       end
@@ -49,6 +52,9 @@ class SS::Migration20190918000000
     all_ids = Gws::Role.all.pluck(:id)
     all_ids.each_slice(20) do |ids|
       Gws::Role.all.in(id: ids).to_a.each do |item|
+        # site has been deleted
+        next if item.site.blank?
+
         item.cur_site = item.site
         yield item
       end

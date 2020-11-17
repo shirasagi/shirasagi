@@ -36,7 +36,7 @@ class Jmaxml::Trigger::VolcanoFlash < Jmaxml::Trigger::Base
     last_page = last_page_criteria.order_by(id: -1).first
     return if last_page.blank?
 
-    xmldoc = REXML::Document.new(last_page.xml)
+    xmldoc = REXML::Document.new(last_page.weather_xml)
     area_codes = extract_area_codes(context.site, xmldoc)
     return false if area_codes.blank?
 

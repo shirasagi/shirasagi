@@ -28,6 +28,13 @@
     <% end %>
   </dd>
 
+  <dt><%= @model.t :substitute_html %></dt>
+  <dd>
+    <% if @item.substitute_html.present? %>
+      <%= text_area_tag :substitute_html, @item.substitute_html, class: "html" %>
+    <% end %>
+  </dd>
+
   <dt><%= @model.t :exclude_paths %></dt>
   <dd><%=br @item.exclude_paths %></dd>
 </dl>

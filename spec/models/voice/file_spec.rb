@@ -198,4 +198,24 @@ describe Voice::File, http_server: true, dbscope: :example do
       end
     end
   end
+
+  describe '.acquire_lock' do
+    let(:voice_site) do
+      Cms::Site.find_or_create_by(name: "VoiceSite", host: "test-voice", domains: [ "127.0.0.1:33190" ])
+    end
+    let(:path) { "#{rand(0x100000000).to_s(36)}.html" }
+    let(:now) { Time.zone.now.beginning_of_minute }
+    subject { described_class.find_or_create_by_url("http://#{voice_site.domain}/#{path}") }
+
+    it do
+      expect(subject.lock_until).to eq ::Time::EPOCH
+
+      Timecop.freeze(now) do
+        expect(described_class.acquire_lock(subject)).to be_truthy
+      end
+
+      subject.reload
+      expect(subject.lock_until).to eq now + 5.minutes
+    end
+  end
 end

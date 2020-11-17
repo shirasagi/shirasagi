@@ -18,7 +18,7 @@
           <i class="material-icons"><%== @item.attachments? ? '&#xE226;' : '' %></i>
         </span>
     </h2>
-    <div class="from"><%= @item.from_member_name || t('gws/memo.no_senders') %></div>
+    <div class="from"><%= gws_public_user_long_name(@item.from_member_name) || t('gws/memo.no_senders') %></div>
     <div class="date"><%= @item.display_send_date %></div>
   </div>
 
@@ -30,21 +30,21 @@
       <% if show_to_section %>
         <div class="address">
           <div class="label"><%= @model.t :to_member_ids %></div>
-          <div class="value"><%= @item.display_to.join('; ') %></div>
+          <div class="value"><%= gws_public_user_long_names(@item.display_to).join('; ') %></div>
         </div>
       <% end %>
 
       <% if show_cc_section %>
         <div class="address">
           <div class="label"><%= @model.t :cc_member_ids %></div>
-          <div class="value"><%= @item.display_cc.join('; ') %></div>
+          <div class="value"><%= gws_public_user_long_names(@item.display_cc).join('; ') %></div>
         </div>
       <% end %>
 
       <% if show_bcc_section %>
         <div class="address">
           <div class="label"><%= @model.t :bcc_member_ids %></div>
-          <div class="value"><%= @item.display_bcc.join('; ') %></div>
+          <div class="value"><%= gws_public_user_long_names(@item.display_bcc).join('; ') %></div>
         </div>
       <% end %>
     </div>

@@ -15,6 +15,8 @@ describe Gws::CompressJob, dbscope: :example do
   let(:physical_filepath) { "#{SS::DownloadJobFile.root}/#{id_path}/#{zip.filename}" }
 
   before do
+    ActionMailer::Base.deliveries.clear
+
     Gws::CompressJob.bind(site_id: site, user_id: user).perform_now(zip.serialize)
 
     expect(Job::Log.count).to eq 1
@@ -25,6 +27,8 @@ describe Gws::CompressJob, dbscope: :example do
 
     # no mails are sent
     expect(ActionMailer::Base.deliveries.length).to eq 0
+
+    ActionMailer::Base.deliveries.clear
   end
 
   it do

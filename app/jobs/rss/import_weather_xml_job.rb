@@ -9,6 +9,7 @@ class Rss::ImportWeatherXmlJob < Rss::ImportBase
   class << self
     def pull_all
       SS.config.rss.weather_xml["urls"].each do |url|
+        puts "pull from #{url}"
         pull_one(url)
       end
     end
@@ -35,6 +36,10 @@ class Rss::ImportWeatherXmlJob < Rss::ImportBase
 
       each_node do |node|
         site = node.site
+        next if site.blank?
+
+        puts "-- import into #{node.name}(#{node.filename}) on #{site.name}(#{site.host})"
+
         file = Rss::TempFile.create_from_post(site, body, resp.headers['Content-Type'].presence || "application/xml")
         job = Rss::ImportWeatherXmlJob.bind(site_id: site, node_id: node)
         job.perform_now(file.id)
@@ -79,7 +84,9 @@ class Rss::ImportWeatherXmlJob < Rss::ImportBase
   def gc_rss_tempfile
     return if rand(100) >= 20
 
-    threshold = 2.weeks.ago
+    expires_in = SS.config.rss.weather_xml["expires_in"].try { |threshold| SS::Duration.parse(threshold) rescue nil }
+    expires_in ||= 3.days
+    threshold = Time.zone.now - expires_in
     Rss::TempFile.with_repl_master.lt(updated: threshold).destroy_all
     remove_old_cache(threshold)
   end
@@ -89,7 +96,7 @@ class Rss::ImportWeatherXmlJob < Rss::ImportBase
     return if data_dir.blank?
 
     data_dir = ::File.expand_path(data_dir, Rails.root)
-    ::Dir.glob("*.xml", base: data_dir).each do |file_path|
+    ::Dir.glob(%w(*.xml *.xml.gz), base: data_dir).each do |file_path|
       file_path = ::File.expand_path(file_path, data_dir)
       ::FileUtils.rm_f(file_path) if ::File.mtime(file_path) < threshold
     end
@@ -103,8 +110,8 @@ class Rss::ImportWeatherXmlJob < Rss::ImportBase
     return page if content.nil?
 
     page.event_id = extract_event_id(content) rescue nil
-    page.xml = content
     page.save!
+    page.save_weather_xml(content)
 
     if content.include?('<InfoKind>震度速報</InfoKind>')
       process_earthquake(page)
@@ -120,29 +127,35 @@ class Rss::ImportWeatherXmlJob < Rss::ImportBase
 
   def download(url)
     cache(url) do
-      http_client = Faraday.new(url: url) do |builder|
-        builder.request  :url_encoded
-        builder.response :logger, Rails.logger
-        builder.adapter Faraday.default_adapter
+      retriable do
+        http_client = Faraday.new(url: url) do |builder|
+          builder.request  :url_encoded
+          builder.response :logger, Rails.logger
+          builder.adapter Faraday.default_adapter
+        end
+        http_client.headers[:user_agent] += " (SHIRASAGI/#{SS.version}; PID/#{Process.pid})"
+        http_client.headers[:accept_encoding] = "gzip"
+
+        resp = http_client.get
+        raise "#{resp.status}: http error" if resp.status != 200
+
+        content_encoding = resp.headers["Content-Encoding"]
+        if content_encoding.nil?
+          body = resp.body
+        elsif content_encoding.casecmp("gzip") == 0
+          body = Zlib::GzipReader.wrap(StringIO.new(resp.body)) { |gz| gz.read }
+        else
+          raise "#{content_encoding}: unsupported content encoding"
+        end
+
+        raise "empty body" if body.blank?
+
+        body.force_encoding('UTF-8')
       end
-      http_client.headers[:user_agent] += " (SHIRASAGI/#{SS.version}; PID/#{Process.pid})"
-      http_client.headers[:accept_encoding] = "gzip"
-
-      resp = http_client.get
-      break if resp.status != 200
-
-      content_encoding = resp.headers["Content-Encoding"]
-      if content_encoding.nil?
-        body = resp.body
-      elsif content_encoding.casecmp("gzip") == 0
-        body = Zlib::GzipReader.wrap(StringIO.new(resp.body)) { |gz| gz.read }
-      end
-      return false if body.blank?
-
-      body.force_encoding('UTF-8')
     end
   rescue => e
     Rails.logger.warn("#{e.class} (#{e.message}):\n  #{e.backtrace.join("\n  ")}")
+    nil
   end
 
   def cache(url)
@@ -153,13 +166,36 @@ class Rss::ImportWeatherXmlJob < Rss::ImportBase
     ::FileUtils.mkdir_p(data_dir) unless ::Dir.exists?(data_dir)
 
     hash = Digest::MD5.hexdigest(url)
-    file_path = ::File.join(data_dir, "#{hash}.xml")
-    return ::File.read(file_path) if ::File.exists?(file_path)
+    file_paths = %w(xml.gz xml).map { |ext| ::File.join(data_dir, "#{hash}.#{ext}") }
+    file_path = file_paths.find { |path| ::File.exists?(path) }
+    if file_path
+      if file_path.ends_with?(".gz")
+        return ::Zlib::GzipReader.open(file_path) { |gz| gz.read }
+      else
+        return ::File.read(file_path)
+      end
+    end
 
     data = yield
-    ::File.write(file_path, data)
+    ::Zlib::GzipWriter.open(file_paths.first) { |gz| gz.write data.to_s }
 
     data
+  end
+
+  def retriable(tries = 3, timeout_sec = 10)
+    tries.times do |index|
+      try = index + 1
+
+      begin
+        return ::Timeout.timeout(timeout_sec) { yield }
+      rescue => e
+        raise if try >= tries
+
+        next_interval = 5 * try
+        Rails.logger.info("#{e.class}: '#{e.message}' - #{try} tries and #{next_interval} seconds until the next try.")
+        sleep(next_interval)
+      end
+    end
   end
 
   def extract_event_id(xml)
@@ -190,7 +226,7 @@ class Rss::ImportWeatherXmlJob < Rss::ImportBase
     return if node.my_anpi_post.blank?
     return if node.anpi_mail.blank?
 
-    xmldoc = REXML::Document.new(page.xml)
+    xmldoc = REXML::Document.new(page.weather_xml)
     status = REXML::XPath.first(xmldoc, '/Report/Control/Status/text()').to_s.strip
     return if status != Jmaxml::Status::NORMAL
 

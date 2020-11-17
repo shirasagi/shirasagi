@@ -12,7 +12,7 @@ Gws_Schedule_Integration.render();
   <header>
     <h2><%= @group.name %></h2>
     <% if @cur_site.schedule_custom_group_extra_state == "creator_name" %>
-      <span class="group-creator"><%= @group.user_long_name %></span>
+      <span class="group-creator"><%= gws_public_user_long_name(@group.user_long_name) %></span>
     <% end %>
     <nav><%= render file: '_search' %></nav>
   </header>
@@ -21,7 +21,7 @@ Gws_Schedule_Integration.render();
 
   <% @users.each_with_index do |user, idx| %>
     <div class="calendar-multiple-header">
-      <%= link_to user.long_name, gws_schedule_user_plans_path(user: user.id), class: "calendar-name" %>
+      <%= link_to gws_public_user_long_name(user.long_name), gws_schedule_user_plans_path(user: user.id), class: "calendar-name" %>
       <% if user.id == @cur_user.id %>
         <%= link_to t('gws/schedule.links.add_plan'), new_gws_schedule_user_plan_path(user: user.id), class: 'add-plan' %>
       <% end %>

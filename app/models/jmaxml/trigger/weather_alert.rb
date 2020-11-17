@@ -29,9 +29,9 @@ class Jmaxml::Trigger::WeatherAlert < Jmaxml::Trigger::Base
     REXML::XPath.match(xmldoc, '/Report/Body/Warning[@type="気象警報・注意報（市町村等）"]/Item').each do |item|
       kind_names = REXML::XPath.match(item, 'Kind/Name/text()').map { |n| n.to_s.strip }
       kind_names = kind_names.select do |kind_name|
-        sub_type = sub_types.select(&:present?).first do |t|
+        sub_type = sub_types.select(&:present?).select do |t|
           kind_name.include?(I18n.t("jmaxml.options.weather_alert_sub_type.#{t}"))
-        end
+        end.first
         sub_type.present?
       end
       next if kind_names.blank?

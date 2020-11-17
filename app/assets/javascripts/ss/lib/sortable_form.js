@@ -45,7 +45,7 @@ SS_SortableForm.prototype.resetItems = function() {
 SS_SortableForm.prototype.setEvent = function(item) {
   var _this = this;
 
-  item.find('.action-insert').click(function() {
+  item.find('.action-insert').on("click", function() {
     if (_this.limit && _this.body.find('tr').length >= _this.limit) return false;
 
     var newItem = _this.base.clone();
@@ -57,7 +57,7 @@ SS_SortableForm.prototype.setEvent = function(item) {
     return false;
   });
 
-  item.find('.action-remove').click(function() {
+  item.find('.action-remove').on("click", function() {
     item.remove();
     if (_this.body.find('tr').length == 0) {
       var newItem = _this.base.clone();

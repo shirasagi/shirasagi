@@ -9,29 +9,31 @@
 <% end %>
 
 <%= jquery do %>
-$('.gws-schedule-box header .operations .btn-print').on('click', function() {
-  var viewName = $('#calendar').fullCalendar('getView').name
-  if (!viewName) {
-    viewName = $('#calendar-controller').fullCalendar('getView').name
-  }
-
-  var viewFormat = "default";
-  if ($('#calendar').find('.fc-withListView-button').hasClass("fc-state-active")) {
-    viewFormat = "list";
-  }
-
-  var queryString = '';
-  if (viewName) {
-    var queryParams = <%== request.query_parameters.to_json %>;
-    if (! queryParams.calendar) {
-      queryParams.calendar = {};
+(function ($) {
+  $('.gws-schedule-box header .operations .btn-print').on('click', function() {
+    var viewName = $('#calendar').fullCalendar('getView').name
+    if (!viewName) {
+      viewName = $('#calendar-controller').fullCalendar('getView').name
     }
-    queryParams.calendar.view = viewName;
-    queryParams.calendar.viewFormat = viewFormat;
-    queryString = '?' + $.param(queryParams);
-  }
 
-  var path = '<%= url_for({ action: :print }) %>' + queryString;
-  location.href = path;
-});
+    var viewFormat = "default";
+    if ($('#calendar').find('.fc-withListView-button').hasClass("fc-state-active")) {
+      viewFormat = "list";
+    }
+
+    var queryString = '';
+    if (viewName) {
+      var queryParams = <%== request.query_parameters.to_json %>;
+      if (! queryParams.calendar) {
+        queryParams.calendar = {};
+      }
+      queryParams.calendar.view = viewName;
+      queryParams.calendar.viewFormat = viewFormat;
+      queryString = '?' + $.param(queryParams);
+    }
+
+    var path = '<%= url_for({ action: :print }) %>' + queryString;
+    location.href = path;
+  });
+})($jQuery1);
 <% end %>

@@ -7,6 +7,6 @@ class Recommend::Agents::Parts::SimilarityController < ApplicationController
     path += "index.html" if @cur_path =~ /\/$/
 
     @limit = @cur_part.limit
-    @items = Recommend::SimilarityScore.site(@cur_site).similarity(path).limit(@limit)
+    @items = Recommend::SimilarityScore.site(@cur_site).similarity(path).exclude_paths(@cur_part.exclude_paths).limit(@limit)
   end
 end

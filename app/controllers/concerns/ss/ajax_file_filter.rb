@@ -14,7 +14,9 @@ module SS::AjaxFileFilter
 
   def select_with_clone
     set_item
-    @item = @item.copy(unnormalize: params[:unnormalize].to_s.presence)
+    @item = @item.copy(
+      unnormalize: params[:unnormalize].to_s.presence, cur_user: @cur_user, cur_site: @cur_site, cur_node: @cur_node
+    )
 
     render file: :select, layout: !request.xhr?
   end

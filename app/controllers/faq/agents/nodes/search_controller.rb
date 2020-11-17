@@ -7,7 +7,7 @@ class Faq::Agents::Nodes::SearchController < ApplicationController
   before_action :accept_cors_request, only: [:rss]
 
   def pages
-    Faq::Page.site(@cur_site).and_public(@cur_date)
+    Faq::Page.public_list(site: @cur_site, node: @cur_node, date: @cur_date)
   end
 
   def index
@@ -26,7 +26,6 @@ class Faq::Agents::Nodes::SearchController < ApplicationController
     @items = pages.
       and(@query[:category]).
       and(@query[:keyword]).
-      and(@cur_node.condition_hash).
       order_by(@cur_node.sort_hash).
       page(params[:page]).
       per(@cur_node.limit)

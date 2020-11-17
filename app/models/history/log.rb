@@ -16,6 +16,10 @@ class History::Log
   field :action, type: String
   field :target_id, type: String
   field :target_class, type: String
+  field :page_url, type: String
+  field :behavior, type: String
+  field :ref_coll, type: String
+  field :filename, type: String
 
   belongs_to :site, class_name: "SS::Site"
 
@@ -75,6 +79,14 @@ class History::Log
       log.cur_user     = options[:cur_user]
       log.user_id      = options[:cur_user].id if options[:cur_user]
       log.site_id      = options[:cur_site].id if options[:cur_site]
+      log.ref_coll     = options[:item].collection_name if options[:item]
+      log.filename     = options[:item].data[:filename] if options[:item].try(:ref_coll) == "ss_files"
+
+      if options[:action] == "undo_delete"
+        log.behavior = "restore"
+      elsif options[:action] == "destroy"
+        log.behavior = "delete"
+      end
 
       options[:item].tap do |item|
         if item && item.try(:new_record?)

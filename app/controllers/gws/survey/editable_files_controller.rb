@@ -50,12 +50,23 @@ class Gws::Survey::EditableFilesController < ApplicationController
   public
 
   def index
-    @items = @cur_form.files.search(@s).order_by(updated: -1).page(params[:page]).per(50)
+    criteria = @cur_form.files.search(@s)
+    if !@cur_form.anonymous?
+      criteria = criteria.order_by(user_uid: 1, updated: -1)
+    end
+    @items = criteria.page(params[:page]).per(50)
   end
 
   def summary
     @items = @cur_form.files
     @aggregation = @items.aggregate
+    @print = params.key?(:print)
+
+    if @print
+      render layout: 'ss/print'
+    else
+      render
+    end
   end
 
   def notification
@@ -71,7 +82,11 @@ class Gws::Survey::EditableFilesController < ApplicationController
   end
 
   def download_all
-    @items = @cur_form.files.search(@s).order_by(updated: -1)
+    criteria = @cur_form.files.search(@s)
+    if !@cur_form.anonymous?
+      criteria = criteria.order_by(user_uid: 1, updated: -1)
+    end
+    @items = criteria
 
     if request.get?
       render

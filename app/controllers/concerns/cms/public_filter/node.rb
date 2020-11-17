@@ -83,7 +83,10 @@ module Cms::PublicFilter::Node
       raise e
     end
 
-    if response.content_type == "text/html" && node.layout
+    if node.view_layout == "cms/redirect"
+      @redirect_link = node.redirect_link
+      html = render_to_string html: "", layout: "cms/redirect"
+    elsif response.content_type == "text/html" && node.layout
       html = render_layout_with_pagination_cache(node.layout, opts[:cache])
     else
       html = response.body

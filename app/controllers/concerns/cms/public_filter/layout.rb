@@ -151,7 +151,6 @@ module Cms::PublicFilter::Layout
       ERB::Util.html_escape(@cur_item.parent ? @cur_item.parent.name : "")
     end
 
-    date = nil
     template = %w(
       #\{
       (?<time>|time\.)
@@ -164,11 +163,12 @@ module Cms::PublicFilter::Layout
     html.gsub!(::Regexp.compile(template)) do
       matchdata = ::Regexp.last_match
       if matchdata[:item] == 'released'
-        item = @cur_item.released
+        released ||= ERB::Util.html_escape(@cur_item.released)
+        date = released
       else
-        item = @cur_item.updated
+        updated ||= ERB::Util.html_escape(@cur_item.updated)
+        date = updated
       end
-      date ||= ERB::Util.html_escape(item)
       datetime = matchdata[:datetime]
       convert_date = date_convert(date, matchdata[:format].to_sym, datetime)
       if matchdata[:time].present?
@@ -182,7 +182,7 @@ module Cms::PublicFilter::Layout
     html
   end
 
-  def render_layout_parts(html)
+  def render_layout_parts(html, opts = {})
     return html if html.blank?
 
     # TODO: deprecated </ />
@@ -200,12 +200,16 @@ module Cms::PublicFilter::Layout
     return html.gsub(/\{\{ part "(.*?)" \}\}/) do
       path = $1
       part = @parts[path]
-      part ? render_layout_part(part) : ''
+      part ? render_layout_part(part, opts) : ''
     end
   end
 
-  def render_layout_part(part)
-    previewable = @preview && part.allowed?(:read, @cur_user, site: @cur_site, node: @cur_node)
+  def render_layout_part(part, opts = {})
+    if !opts[:previewable].nil?
+      previewable = opts[:previewable] && part.allowed?(:read, @cur_user, site: @cur_site, node: @cur_node)
+    else
+      previewable = @preview && part.allowed?(:read, @cur_user, site: @cur_site, node: @cur_node)
+    end
     html = []
     if previewable
       if part.parent
@@ -290,6 +294,18 @@ module Cms::PublicFilter::Layout
   def javascript(path)
     @javascripts ||= []
     @javascripts << path unless @javascripts.include?(path)
+  end
+
+  def jquery_migrate_mute
+    return unless Rails.env.production?
+
+    view_context.javascript_tag do
+      scripts = []
+      scripts << "if ( typeof jQuery.migrateMute === \"undefined\" ) {"
+      scripts << "  jQuery.migrateMute = true;"
+      scripts << "}"
+      scripts.join("\n").html_safe
+    end
   end
 
   def javascript_configs

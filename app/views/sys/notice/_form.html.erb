@@ -12,6 +12,7 @@
 
   <dt><%= @model.t :notice_target %><%= @model.tt :notice_target %></dt>
   <dd>
+    <%= hidden_field_tag "#{f.object_name}[notice_target][]", nil, id: nil %>
     <% @item.notice_target_options.each do |option| %>
     <label>
       <%= f.check_box :notice_target, {multiple: true}, option[1], nil %>

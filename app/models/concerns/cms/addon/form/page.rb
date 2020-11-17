@@ -55,6 +55,19 @@ module Cms::Addon::Form::Page
     form.render_html(self, registers).html_safe
   end
 
+  def form_files
+    files = []
+    column_values.each do |value|
+      if value.respond_to?(:file_id) && value.file
+        files << value.file
+      end
+      if value.respond_to?(:files) && value.files.present?
+        files += value.files.to_a
+      end
+    end
+    files
+  end
+
   private
 
   def validate_column_values
@@ -75,13 +88,13 @@ module Cms::Addon::Form::Page
   end
 
   def validate_column_links
-    @column_link_errors = []
+    @column_link_errors = {}
 
     column_values.each do |column_value|
       column_value.link_check_user = link_check_user
       column_value.valid?(:link)
       if column_value.link_errors.present?
-        @column_link_errors += column_value.link_errors
+        @column_link_errors.merge!(column_value.link_errors)
       end
     end
   end
@@ -149,6 +162,7 @@ module Cms::Addon::Form::Page
         if [ self, unlinked_file ].all? { |obj| obj.respond_to?(:skip_history_trash) }
           unlinked_file.skip_history_trash = skip_history_trash
         end
+        unlinked_file.cur_user = @cur_user
         unlinked_file.destroy
       end
     end

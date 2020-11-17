@@ -8,6 +8,10 @@ class Chorg::Runner < Cms::ApplicationJob
   MAIN = 'main'.freeze
   TEST = 'test'.freeze
 
+  def models_scope
+    { site_id: @cur_site.id }
+  end
+
   def self.job_class(type)
     case type
     when MAIN then

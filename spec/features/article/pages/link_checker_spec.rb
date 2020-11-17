@@ -23,17 +23,13 @@ describe "link_checker", type: :feature, dbscope: :example, js: true do
 
   let(:invalid_url1) { "https://invalid.example.jp /" }
 
-  let(:html) do
-    h = []
-    h << "<a class=\"icon-png\" href=\"#{success_url1}\">#{success_url1}</a>"
-    h << "<a href=\"#{success_url2}\">#{success_url2}</a>"
-    h << "<a href=\"#{success_url3}\">#{success_url3}</a>"
-    h << "<a class=\"icon-png\" href=\"#{failed_url1}\">#{failed_url1}</a>"
-    h << "<a href=\"#{failed_url2}\">#{failed_url2}</a>"
-    h << "<a href=\"#{failed_url3}\">#{failed_url3}</a>"
-    h << "<a href=\"#{invalid_url1}\">#{invalid_url1}</a>"
-    h.join
-  end
+  let(:redirection_url0) { "https://redirection-0.example.jp/" }
+  let(:redirection_url1) { "http://redirection-1.example.jp/" }
+  let(:redirection_url2) { "https://redirection-2.example.jp/" }
+  let(:redirection_url3) { "http://redirection-3.example.jp/" }
+  let(:redirection_url4) { "https://redirection-4.example.jp/" }
+  let(:redirection_url5) { "http://redirection-5.example.jp/" }
+  let(:redirection_self_url) { "https://redirection-self.example.jp/" }
 
   let(:success) { I18n.t("errors.messages.link_check_success") }
   let(:failure) { I18n.t("errors.messages.link_check_failure") }
@@ -44,6 +40,14 @@ describe "link_checker", type: :feature, dbscope: :example, js: true do
     stub_request(:get, success_url3).to_return(body: "", status: 200, headers: { 'Content-Type' => 'text/html' })
     stub_request(:get, failed_url3).to_return(body: "", status: 404, headers: { 'Content-Type' => 'text/html' })
 
+    stub_request(:get, redirection_url0).to_return(body: "", status: 200, headers: { 'Content-Type' => 'text/html' })
+    stub_request(:get, redirection_url1).to_return(status: 302, headers: { 'Location' => redirection_url0, 'Content-Type' => 'text/html' })
+    stub_request(:get, redirection_url2).to_return(status: 302, headers: { 'Location' => redirection_url1, 'Content-Type' => 'text/html' })
+    stub_request(:get, redirection_url3).to_return(status: 302, headers: { 'Location' => redirection_url2, 'Content-Type' => 'text/html' })
+    stub_request(:get, redirection_url4).to_return(status: 302, headers: { 'Location' => redirection_url3, 'Content-Type' => 'text/html' })
+    stub_request(:get, redirection_url5).to_return(status: 302, headers: { 'Location' => redirection_url4, 'Content-Type' => 'text/html' })
+    stub_request(:get, redirection_self_url).to_return(status: 302, headers: { 'Location' => redirection_self_url, 'Content-Type' => 'text/html' })
+
     Capybara.app_host = "http://#{site.domain}"
 
     login_cms_user
@@ -52,6 +56,17 @@ describe "link_checker", type: :feature, dbscope: :example, js: true do
   context "check links" do
     context "with cms addon body" do
       let(:item) { create :article_page, cur_node: node, file_ids: [ss_file1.id, ss_file2.id], state: "public" }
+      let(:html) do
+        h = []
+        h << "<a class=\"icon-png\" href=\"#{success_url1}\">#{success_url1}</a>"
+        h << "<a href=\"#{success_url2}\">#{success_url2}</a>"
+        h << "<a href=\"#{success_url3}\">#{success_url3}</a>"
+        h << "<a class=\"icon-png\" href=\"#{failed_url1}\">#{failed_url1}</a>"
+        h << "<a href=\"#{failed_url2}\">#{failed_url2}</a>"
+        h << "<a href=\"#{failed_url3}\">#{failed_url3}</a>"
+        h << "<a href=\"#{invalid_url1}\">#{invalid_url1}</a>"
+        h.join
+      end
 
       it "publish" do
         visit edit_path
@@ -71,13 +86,15 @@ describe "link_checker", type: :feature, dbscope: :example, js: true do
           click_button I18n.t("cms.link_check")
           wait_for_ajax
 
-          expect(page).to have_css('#errorLinkChecker li', text: "#{success_url1} #{success}")
-          expect(page).to have_css('#errorLinkChecker li', text: "#{success_url2} #{success}")
-          expect(page).to have_css('#errorLinkChecker li', text: "#{success_url3} #{success}")
-          expect(page).to have_css('#errorLinkChecker li', text: "#{failed_url1} #{failure}")
-          expect(page).to have_css('#errorLinkChecker li', text: "#{failed_url2} #{failure}")
-          expect(page).to have_css('#errorLinkChecker li', text: "#{failed_url3} #{failure}")
-          expect(page).to have_css('#errorLinkChecker li', text: "#{invalid_url1} #{failure}")
+          success_full_url1 = ::File.join(site.full_url, success_url1)
+          failed_full_url1 = ::File.join(site.full_url, failed_url1)
+          expect(page).to have_css('#errorLinkChecker li', text: "#{success} #{success_full_url1}")
+          expect(page).to have_css('#errorLinkChecker li', text: "#{success} #{success_url2}")
+          expect(page).to have_css('#errorLinkChecker li', text: "#{success} #{success_url3}")
+          expect(page).to have_css('#errorLinkChecker li', text: "#{failure} #{failed_full_url1}")
+          expect(page).to have_css('#errorLinkChecker li', text: "#{failure} #{failed_url2}")
+          expect(page).to have_css('#errorLinkChecker li', text: "#{failure} #{failed_url3}")
+          expect(page).to have_css('#errorLinkChecker li', text: "#{failure} #{invalid_url1}")
         end
       end
 
@@ -100,19 +117,32 @@ describe "link_checker", type: :feature, dbscope: :example, js: true do
           click_button I18n.t("cms.link_check")
           wait_for_ajax
 
-          expect(page).to have_css('#errorLinkChecker li', text: "#{success_url1} #{success}")
-          expect(page).to have_css('#errorLinkChecker li', text: "#{success_url2} #{success}")
-          expect(page).to have_css('#errorLinkChecker li', text: "#{success_url3} #{success}")
-          expect(page).to have_css('#errorLinkChecker li', text: "#{failed_url1} #{failure}")
-          expect(page).to have_css('#errorLinkChecker li', text: "#{failed_url2} #{failure}")
-          expect(page).to have_css('#errorLinkChecker li', text: "#{failed_url3} #{failure}")
-          expect(page).to have_css('#errorLinkChecker li', text: "#{invalid_url1} #{failure}")
+          success_full_url1 = ::File.join(site.full_url, success_url1)
+          failed_full_url1 = ::File.join(site.full_url, failed_url1)
+          expect(page).to have_css('#errorLinkChecker li', text: "#{success} #{success_full_url1}")
+          expect(page).to have_css('#errorLinkChecker li', text: "#{success} #{success_url2}")
+          expect(page).to have_css('#errorLinkChecker li', text: "#{success} #{success_url3}")
+          expect(page).to have_css('#errorLinkChecker li', text: "#{failure} #{failed_full_url1}")
+          expect(page).to have_css('#errorLinkChecker li', text: "#{failure} #{failed_url2}")
+          expect(page).to have_css('#errorLinkChecker li', text: "#{failure} #{failed_url3}")
+          expect(page).to have_css('#errorLinkChecker li', text: "#{failure} #{invalid_url1}")
         end
       end
     end
 
     context "with entry form" do
       let!(:item) { create :article_page, cur_node: node, file_ids: [ss_file1.id, ss_file2.id], form_id: form.id }
+      let(:html) do
+        h = []
+        h << "<a class=\"icon-png\" href=\"#{success_url1}\">#{success_url1}</a>"
+        h << "<a href=\"#{success_url2}\">#{success_url2}</a>"
+        h << "<a href=\"#{success_url3}\">#{success_url3}</a>"
+        h << "<a class=\"icon-png\" href=\"#{failed_url1}\">#{failed_url1}</a>"
+        h << "<a href=\"#{failed_url2}\">#{failed_url2}</a>"
+        h << "<a href=\"#{failed_url3}\">#{failed_url3}</a>"
+        h << "<a href=\"#{invalid_url1}\">#{invalid_url1}</a>"
+        h.join
+      end
 
       it "publish" do
         visit edit_path
@@ -137,13 +167,15 @@ describe "link_checker", type: :feature, dbscope: :example, js: true do
           click_button I18n.t("cms.link_check")
           wait_for_ajax
 
-          expect(page).to have_css('#errorLinkChecker li', text: "#{success_url1} #{success}")
-          expect(page).to have_css('#errorLinkChecker li', text: "#{success_url2} #{success}")
-          expect(page).to have_css('#errorLinkChecker li', text: "#{success_url3} #{success}")
-          expect(page).to have_css('#errorLinkChecker li', text: "#{failed_url1} #{failure}")
-          expect(page).to have_css('#errorLinkChecker li', text: "#{failed_url2} #{failure}")
-          expect(page).to have_css('#errorLinkChecker li', text: "#{failed_url3} #{failure}")
-          expect(page).to have_css('#errorLinkChecker li', text: "#{invalid_url1} #{failure}")
+          success_full_url1 = ::File.join(site.full_url, success_url1)
+          failed_full_url1 = ::File.join(site.full_url, failed_url1)
+          expect(page).to have_css('#errorLinkChecker li', text: "#{success} #{success_full_url1}")
+          expect(page).to have_css('#errorLinkChecker li', text: "#{success} #{success_url2}")
+          expect(page).to have_css('#errorLinkChecker li', text: "#{success} #{success_url3}")
+          expect(page).to have_css('#errorLinkChecker li', text: "#{failure} #{failed_full_url1}")
+          expect(page).to have_css('#errorLinkChecker li', text: "#{failure} #{failed_url2}")
+          expect(page).to have_css('#errorLinkChecker li', text: "#{failure} #{failed_url3}")
+          expect(page).to have_css('#errorLinkChecker li', text: "#{failure} #{invalid_url1}")
         end
       end
 
@@ -171,13 +203,37 @@ describe "link_checker", type: :feature, dbscope: :example, js: true do
           click_button I18n.t("cms.link_check")
           wait_for_ajax
 
-          expect(page).to have_css('#errorLinkChecker li', text: "#{success_url1} #{success}")
-          expect(page).to have_css('#errorLinkChecker li', text: "#{success_url2} #{success}")
-          expect(page).to have_css('#errorLinkChecker li', text: "#{success_url3} #{success}")
-          expect(page).to have_css('#errorLinkChecker li', text: "#{failed_url1} #{failure}")
-          expect(page).to have_css('#errorLinkChecker li', text: "#{failed_url2} #{failure}")
-          expect(page).to have_css('#errorLinkChecker li', text: "#{failed_url3} #{failure}")
-          expect(page).to have_css('#errorLinkChecker li', text: "#{invalid_url1} #{failure}")
+          success_full_url1 = ::File.join(site.full_url, success_url1)
+          failed_full_url1 = ::File.join(site.full_url, failed_url1)
+          expect(page).to have_css('#errorLinkChecker li', text: "#{success} #{success_full_url1}")
+          expect(page).to have_css('#errorLinkChecker li', text: "#{success} #{success_url2}")
+          expect(page).to have_css('#errorLinkChecker li', text: "#{success} #{success_url3}")
+          expect(page).to have_css('#errorLinkChecker li', text: "#{failure} #{failed_full_url1}")
+          expect(page).to have_css('#errorLinkChecker li', text: "#{failure} #{failed_url2}")
+          expect(page).to have_css('#errorLinkChecker li', text: "#{failure} #{failed_url3}")
+          expect(page).to have_css('#errorLinkChecker li', text: "#{failure} #{invalid_url1}")
+        end
+      end
+    end
+
+    context "with redirection url" do
+      let(:item) { create :article_page, cur_node: node, file_ids: [ss_file1.id, ss_file2.id], state: "public" }
+      let(:html) do
+        h = []
+        h << "<a href=\"#{redirection_url5}\">#{redirection_url5}</a>"
+        h << "<a href=\"#{redirection_self_url}\">#{redirection_self_url}</a>"
+        h.join
+      end
+
+      it do
+        visit edit_path
+        within "#addon-cms-agents-addons-body" do
+          fill_in_ckeditor "item[html]", with: html
+          click_button I18n.t("cms.link_check")
+          wait_for_ajax
+
+          expect(page).to have_css('#errorLinkChecker li', text: "#{success} #{redirection_url5}")
+          expect(page).to have_css('#errorLinkChecker li', text: "#{failure} #{redirection_self_url}")
         end
       end
     end

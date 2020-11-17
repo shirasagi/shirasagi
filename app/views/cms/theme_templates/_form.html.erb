@@ -23,11 +23,11 @@
     }
   };
 
-  $("select[name='item[default_theme]']").change(function() {
+  $("select[name='item[default_theme]']").on("change", function() {
     changeDefaultTheme();
   });
 
-  $("select[name='item[state]']").change(function() {
+  $("select[name='item[state]']").on("change", function() {
     changeState();
   });
 

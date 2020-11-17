@@ -16,7 +16,15 @@ FactoryBot.define do
   end
 
   factory :rss_weather_xml_page, class: Rss::WeatherXmlPage, traits: [:cms_page] do
+    transient do
+      in_xml nil
+    end
+
     route "rss/weather_xml_page"
     rss_link { "http://weather.example.com/developer/xml/data/#{SecureRandom.uuid}.xml" }
+
+    after(:create) do |page, evaluator|
+      page.save_weather_xml(evaluator.in_xml)
+    end
   end
 end

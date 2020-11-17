@@ -65,7 +65,7 @@ ja:
         authors: 作成者
       rss/addon/page/weather_xml:
         event_id: イベントID
-        xml: XML
+        weather_xml: XML
       rss/addon/pub_sub_hubbub:
         hub_url: Hub URL
         callback_url: Callback URL

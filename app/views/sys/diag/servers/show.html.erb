@@ -1,0 +1,118 @@
+<div class="addon-views">
+  <%= render "ss/crud/addon", addon: { id: "server-info", head: "Server Information", toggle: true } do %>
+    <dl class="see">
+      <dt><%= t("sys.server_name") %></dt>
+      <dd><%= Rails.application.hostname %></dd>
+
+      <dt><%= t("sys.server_addr") %></dt>
+      <dd><%= Rails.application.ip_address %></dd>
+
+      <dt>uptime</dt>
+      <dd><%= uptime %></dd>
+    </dl>
+  <% end %>
+
+  <% if ::File.exist?(Sys::Diag::ServersController::PROC_CPUINFO_FILE_PATH) %>
+    <% begin %>
+      <%= render "ss/crud/addon", addon: { id: "cpu-info", head: "Server CPU", toggle: true } do %>
+        <dl class="see">
+          <% ::File.readlines(Sys::Diag::ServersController::PROC_CPUINFO_FILE_PATH).each do |line| %>
+            <% if line.blank? %>
+              <dt><hr></dt>
+              <dd><hr></dd>
+            <% else %>
+              <% key, value = line.strip.split(":", 2) %>
+              <dt><%= key.strip %></dt>
+              <dd><%= value.strip %></dd>
+            <% end %>
+          <% end %>
+        </dl>
+      <% end %>
+    <% rescue %>
+    <% raise %>
+    <% end %>
+  <% end %>
+
+  <% if ::File.exist?(Sys::Diag::ServersController::PROC_MEMINFO_FILE_PATH) %>
+    <% begin %>
+      <%= render "ss/crud/addon", addon: { id: "mem-info", head: "Server Memory", toggle: true } do %>
+        <dl class="see">
+          <% ::File.readlines(Sys::Diag::ServersController::PROC_MEMINFO_FILE_PATH).each do |line| %>
+            <% next if line.blank? %>
+            <% key, value = line.strip.split(":", 2) %>
+            <dt><%= key.strip %></dt>
+            <dd><%= value.strip %></dd>
+          <% end %>
+        </dl>
+      <% end %>
+    <% rescue %>
+    <% end %>
+  <% end %>
+
+  <% sorted_keys = request.env.keys.sort %>
+  <%= render "ss/crud/addon", addon: { id: "http-env-list", head: "HTTP Environments", toggle: true } do %>
+    <dl class="see">
+      <% sorted_keys.each do |key| %>
+        <% if http_key?(key) %>
+          <dt><%= key %></dt>
+          <dd><%= request.env[key].inspect %></dd>
+        <% end %>
+      <% end %>
+    </dl>
+  <% end %>
+
+  <%= render "ss/crud/addon", addon: { id: "rack-env-list", head: "Rack Environments", toggle: true } do %>
+    <dl class="see">
+      <% sorted_keys.each do |key| %>
+        <% if rack_key?(key) %>
+          <dt><%= key %></dt>
+          <dd><%= request.env[key].inspect %></dd>
+        <% end %>
+      <% end %>
+    </dl>
+  <% end %>
+
+  <%= render "ss/crud/addon", addon: { id: "rails-env-list", head: "Rails Environments", toggle: true } do %>
+    <dl class="see">
+      <% sorted_keys.each do |key| %>
+        <% if rails_key?(key) %>
+          <dt><%= key %></dt>
+          <dd><%= request.env[key].inspect %></dd>
+        <% end %>
+      <% end %>
+    </dl>
+  <% end %>
+
+  <%= render "ss/crud/addon", addon: { id: "other-env-list", head: "Other Environments", toggle: true } do %>
+    <dl class="see">
+      <% sorted_keys.each do |key| %>
+        <% if other_key?(key) %>
+          <dt><%= key %></dt>
+          <dd><%= request.env[key].inspect %></dd>
+        <% end %>
+      <% end %>
+    </dl>
+  <% end %>
+
+  <% if request.query_parameters.present? %>
+    <%= render "ss/crud/addon", addon: { id: "query-parameters", head: "Query Parameters", toggle: true } do %>
+      <dl class="see">
+        <% request.query_parameters.each do |key, value| %>
+          <dt><%= key %></dt>
+          <dd><%= value.inspect %></dd>
+        <% end %>
+      </dl>
+    <% end %>
+  <% end %>
+
+  <% if request.request_parameters.present? %>
+    <%= render "ss/crud/addon", addon: { id: "request-parameters", head: "Request Parameters", toggle: true } do %>
+      <dl class="see">
+        <% request.request_parameters.each do |key, value| %>
+          <dt><%= key %></dt>
+          <dd><%= value.inspect %></dd>
+        <% end %>
+      </dl>
+    <% end %>
+  <% end %>
+</div>

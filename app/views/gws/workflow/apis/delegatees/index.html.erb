@@ -33,7 +33,7 @@
           <input type="checkbox" name="ids[]" value="<%= item.id %>" />
         </td>
         <% end %>
-        <td class="name"><%= link_to item.long_name, "#", class: "select-item" %></td>
+        <td class="name"><%= link_to gws_public_user_long_name(item.long_name), "#", class: "select-item" %></td>
       </tr>
     <% end %>
   </tbody>

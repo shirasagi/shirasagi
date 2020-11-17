@@ -18,7 +18,7 @@
     <%= f.hidden_field(:contributor_id) %>
     <%= f.hidden_field(:contributor_name) %>
 
-    <% show_radio_button.call('Gws::User', @cur_user.id, @cur_user.long_name) %>
+    <% show_radio_button.call('Gws::User', @cur_user.id, gws_public_user_long_name(@cur_user.long_name)) %>
 
     <% @cur_user.groups.in_group(@cur_site).active.each do |group| %>
       <% show_radio_button.call('Gws::Group', group.id, group.section_name) %>
@@ -43,6 +43,6 @@
     $('.mod-gws-board-contributor input[name="tmp[contributor]"]').val(['Gws::User:<%= @cur_user.id %>']);
     $('.mod-gws-board-contributor input#item_contributor_model').val('Gws::User');
     $('.mod-gws-board-contributor input#item_contributor_id').val(<%== @cur_user.id.to_s.to_json %>);
-    $('.mod-gws-board-contributor input#item_contributor_name').val(<%== @cur_user.long_name.to_json %>);
+    $('.mod-gws-board-contributor input#item_contributor_name').val(<%== gws_public_user_long_name(@cur_user.long_name).to_json %>);
   }
 <% end %>

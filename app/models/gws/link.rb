@@ -4,7 +4,7 @@ class Gws::Link
   include Gws::Reference::User
   include Gws::Reference::Site
   include Gws::Addon::Link
-  include Gws::Addon::Release
+  include SS::Addon::Release
   include Gws::Addon::ReadableSetting
   include Gws::Addon::GroupPermission
   include Gws::Addon::History

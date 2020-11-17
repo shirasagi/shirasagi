@@ -151,7 +151,7 @@ SS_Workflow.prototype = {
     var pThis = this;
     var updatetype = $this.attr("updatetype");
     var approvers = this.collectApprovers();
-    if ($.isEmptyObject(approvers) && updatetype === "request") {
+    if (SS.isEmptyObject(approvers) && updatetype === "request") {
       alert(this.options.errors.not_select);
       return;
     }

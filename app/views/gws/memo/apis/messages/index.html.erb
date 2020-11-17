@@ -46,7 +46,7 @@
       <tr class="list-item"
         data-id="<%= item.id %>"
         data-attachments="<%= item.attachments? ? 1 : nil %>"
-        data-from="<%= item.from_member_name || t('gws/memo.no_senders') %>"
+        data-from="<%= gws_public_user_long_name(item.from_member_name) || t('gws/memo.no_senders') %>"
         data-name="<%= item.subject %>"
         data-priority="<%= item.label :priority %>"
         data-send_date="<%= item.display_send_date %>"
@@ -56,7 +56,7 @@
         <% end %>
         <td>
           <i class="material-icons md-15" <%== item.attachments? ? '' : 'style="visibility: hidden;"' %>>&#xE226;</i>
-          <%= item.from_member_name || t('gws/memo.no_senders') %>
+          <%= gws_public_user_long_name(item.from_member_name) || t('gws/memo.no_senders') %>
         </td>
         <td><%= link_to item.subject, "#", class: @multi ? "select-item" : "select-single-item" %></td>
         <td><%= item.label :priority %></td>

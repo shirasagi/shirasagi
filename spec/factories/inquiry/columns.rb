@@ -94,4 +94,12 @@ FactoryBot.define do
     max_upload_file_size 2
     order 80
   end
+
+  factory :inquiry_column_same_as_name, class: Inquiry::Column do
+    name "お名前"
+    input_type "text_field"
+    required "optional"
+    html "<p>お名前を入力してください。（重複）</p>"
+    order 90
+  end
 end

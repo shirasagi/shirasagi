@@ -1,12 +1,11 @@
 class Cms::Node::ImportPagesController < ApplicationController
   include Cms::BaseFilter
   include Cms::PageFilter
-  include Workflow::PageFilter
 
   model Cms::ImportPage
 
   prepend_view_path "app/views/cms/pages"
-  navi_view "cms/node/import_pages/navi"
+  navi_view "cms/node/import/navi"
   menu_view "cms/node/import_pages/menu"
 
   private

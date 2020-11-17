@@ -30,7 +30,7 @@
         <% if @item.workflow_member.present? %>
           <%= "#{@item.workflow_member.name}(#{t("workflow.member")})" %>
         <% elsif @item.workflow_user.present? %>
-          <%= "#{@item.workflow_user.long_name}(#{@item.workflow_user.email})" %>
+          <%= "#{gws_public_user_long_name(@item.workflow_user.long_name)}(#{@item.workflow_user.email})" %>
         <% else %>
           <%= t("workflow.user_deleted") %>
         <% end %>
@@ -38,7 +38,7 @@
       <% agent = @item.workflow_agent %>
       <% if agent.present? %>
       <dd>
-        <%= t(agent.email.blank? ? "agent_name" : "agent_name_with_email", scope: :workflow, long_name: agent.long_name, email: agent.email) %>
+        <%= t(agent.email.blank? ? "agent_name" : "agent_name_with_email", scope: :workflow, long_name: gws_public_user_long_name(agent.long_name), email: agent.email) %>
       </dd>
       <% end %>
 
@@ -76,7 +76,7 @@
               <% end %>
               <td>
               <% if user %>
-                <%= "#{user.long_name}(#{user.email})" %>
+                <%= "#{gws_public_user_long_name(user.long_name)}(#{user.email})" %>
               <% else %>
                 <%= t("workflow.user_deleted") %>
               <% end %>
@@ -115,7 +115,7 @@
                   <% end %>
                   <td>
                   <% if user %>
-                    <%= "#{user.long_name}(#{user.email})" %>
+                    <%= "#{gws_public_user_long_name(user.long_name)}(#{user.email})" %>
                   <% else %>
                     <%= t("workflow.user_deleted") %>
                   <% end %>

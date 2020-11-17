@@ -14,7 +14,7 @@
     <% @item.comments.order_by(created: 1).each do |comment| %>
       <div class="comment" id="comment-<%= comment.id %>">
         <div class="row user">
-          <%= comment.user_long_name %>
+          <%= gws_public_user_long_name(comment.user_long_name) %>
         </div>
         <div class="row meta">
           <% if comment.achievement_rate.present? %>

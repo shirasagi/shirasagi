@@ -12,10 +12,11 @@
 <% controller.javascripts.each do |path| %>
   <%= javascript_include_tag path %>
 <% end %>
+<%= controller.jquery_migrate_mute %>
 <%= javascript_tag do %>
   SS.config = <%= raw controller.javascript_configs.to_json %>;
 <% end %>
-<%== render_layout_parts(@cur_layout.head) %>
+<%== render_layout_parts(@cur_layout.head, previewable: false) %>
 <%= render file: "layouts/cms/_opengraph" %>
 <%= render file: "layouts/cms/_twitter_card" %>
 <%= csrf_meta_tags if @csrf_token != false %>

@@ -136,6 +136,7 @@ ja:
     notices:
       import_with_entry_form_is_not_supported: 次のフォームでは本文ブロックは出力されません。
       restoring_public_content_from_trash: 非公開で復元されます。復元後、内容を確認うえ、公開してください。
+      restoring_share_file_from_trash: 共有ファイルに復元されます。
       generate_locked: 書き出しを停止しました。
       generate_unlocked: 書き出しの停止を解除しました。
     apis:
@@ -432,7 +433,7 @@ ja:
 
   modules:
     cms: 標準機能
-    import_page: 取り込みページ
+    import_node: フォルダー取り込み
     addons:
       cms/role: ロール
       cms/group_permission: 管理権限
@@ -487,6 +488,7 @@ ja:
       cms/column/layout: レイアウト
       cms/column/text_like: 制約条件
       cms/column/select_like: 選択
+      cms/redirect_link: リンクページ
 
   mongoid:
     models:
@@ -536,6 +538,8 @@ ja:
       cms/column/table: 表
     errors:
       models:
+        cms/content:
+          unsafe_numeric_filename: は、数字のみで構成されていますが、数字のみのファイル名は自由に使用できません。アルファベットを1文字以上加えてください。
         cms/model/node:
           routed_folders_under_uploader: アップローダー下に属性付きフォルダーは作成できません。アップローダーに切り替え、新規フォルダーよりフォルダーを作成してください。
         cms/column/value/youtube:
@@ -919,6 +923,8 @@ ja:
         value: テキスト
       cms/column/value/table:
         value: 表
+      cms/addon/redirect_link:
+        redirect_link: リダイレクトURL
 
   errors:
     messages:
@@ -941,10 +947,16 @@ ja:
       invalid_img_scheme: 画像のURIにバイナリー文字列が含まれています。
       set_table_caption: 表にキャプションが設定されていません。
       set_th_scope: 表のヘッダーにスコープ属性が設定されていません。
-      link_check_success: 成功
-      link_check_failure: 失敗
+      link_check_success: "[成功]"
+      link_check_failure: "[失敗]"
       link_check_failed_to_connect: リンクチェックに失敗しました。次のURLに接続できません。
       form_check_failed_to_connect: 内容チェックに失敗しました。次のURLに接続できません。
+      link_check_failed_invalid_link: リンクが不正な形式です。
+      link_check_failed_certificate_verify_failed: リンク先のSSL証明書の検証に失敗しました。
+      link_check_failed_timeout: リンク先がタイムアウトしました。
+      link_check_failed_unauthorized: リンク先の内容を取得できませんでした。（認証がかかっています）
+      link_check_failed_not_found: リンク先の内容を取得できませんでした。
+      link_check_failed_redirection: リンク先のリダイレクトが多すぎる為、内容を取得できませんでした。
       mobile_size_check_success: 成功
       mobile_size_check_failure: 失敗
       mobile_size_check_disable: モバイルサイズが設定されていません。
@@ -1968,6 +1980,10 @@ ja:
     cms/column/list:
       list_type:
         - 種類を選択します。
+
+    cms/addon/redirect_link:
+      redirect_link:
+        - ページを別URLにリダイレクトする際に入力します。
 
   all_content:
     page_id: ページID

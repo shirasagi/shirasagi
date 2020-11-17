@@ -23,7 +23,7 @@
   <span class="id">#<%= item.id %></span>
   <span class="datetime"><%= item.updated.strftime("%Y/%m/%d %H:%M") %></span>
   <span class="browsed"><%= t("gws/board.options.browsed_state.#{item.browsed?(@cur_user) ? 'read' : 'unread'}") %></span>
-  <span class="user"><%= item.contributor_name.presence || item.user_long_name %></span>
+  <span class="user"><%= gws_public_user_long_name(item.contributor_name.presence || item.user_long_name) %></span>
   <% if item.folder.present? && item.folder.for_post_reader?(@cur_site, @cur_user) %>
     <span class="folder">
       <span class="label"><%= t('mongoid.models.gws/notice/folder') %></span>

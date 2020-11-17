@@ -1,14 +1,14 @@
 <% if comment.showable_comment?(@cur_user, @cur_group) %>
-  <aside class="comment" id="post-<%= comment.id %>">
+  <aside class="addon-view comment <%= "body-closed" if recursion %>" id="post-<%= comment.id %>">
     <header class="<%= 'toggle-head' if recursion %>">
       <h2><%= comment.name %></h2>
       <nav class="meta">
-        <span class="user"><%= comment.contributor_name.presence || comment.user_long_name %></span>
+        <span class="user"><%= gws_public_user_long_name(comment.contributor_name.presence || comment.user_long_name) %></span>
         <span class="datetime"><%= comment.created.strftime("%Y/%m/%d %H:%M") %></span>
       </nav>
     </header>
 
-    <div class="toggle-body <%= 'hide' if recursion %>">
+    <div class="toggle-body" <% if recursion %>style="display: none;"<% end %>>
       <div class="body markdown-body"><%= comment.html %></div>
 
       <% if comment.files.present? %>

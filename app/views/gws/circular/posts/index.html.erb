@@ -39,7 +39,7 @@
             <span class="datetime"><%= @model.t(:updated) %>: <%= item.updated.strftime('%Y/%m/%d %H:%M') %></span>
             <span class="datetime"><%= @model.t(:created) %>: <%= item.created.strftime('%Y/%m/%d %H:%M') %></span>
             <span class="seen"><%= item.seen?(@cur_user) ? t('gws/circular.post.seen') : t('gws/circular.post.unseen') if item.member?(@cur_user) %></span>
-            <span><%= item.user_long_name %></span>
+            <span><%= gws_public_user_long_name(item.user_long_name) %></span>
             <span class="gws-share-categories">
               <% item.categories.compact.each do |category| %>
                 <%= link_to category.trailing_name, gws_circular_posts_path(category: category.id),

@@ -1,6 +1,6 @@
 <dl class="see">
   <dt><%= @model.t :member_id %></dt>
-  <dd><%= tryb { @item.member.long_name } %></dd>
+  <dd><%= tryb { gws_public_user_long_name(@item.member.long_name) } %></dd>
 
   <dt><%= @model.t :address_group_id %></dt>
   <dd><%= tryb { @item.address_group.name } %></dd>

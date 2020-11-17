@@ -40,16 +40,16 @@ module Inquiry::Node
   class Node
     include Cms::Model::Node
     include Cms::Addon::NodeSetting
-    include Cms::Addon::ForMemberNode
-    include Cms::Addon::Release
     include Cms::Addon::Meta
     include Cms::Addon::NodeList
+    include Cms::Addon::ForMemberNode
+    include Cms::Addon::Release
     include Cms::Addon::GroupPermission
     include History::Addon::Backup
 
     default_scope ->{ where(route: "inquiry/node") }
 
-    def condition_hash(opts = {})
+    def condition_hash
       cond = []
       cond << { filename: /^#{::Regexp.escape(filename)}\//, depth: depth + 1 }
 

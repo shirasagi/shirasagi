@@ -1,6 +1,6 @@
 class Garbage::Agents::Nodes::CategoryController < ApplicationController
   include Cms::NodeFilter::View
-  helper Cms::ListHelper
+  helper Garbage::ListHelper
 
   def index
     @items = Garbage::Node::Page.site(@cur_site).and_public.

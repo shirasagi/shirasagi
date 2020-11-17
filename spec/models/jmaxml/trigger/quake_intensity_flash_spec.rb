@@ -17,7 +17,7 @@ describe Jmaxml::Trigger::QuakeIntensityFlash, dbscope: :example do
       let(:xml1) { File.read(Rails.root.join(*%w(spec fixtures jmaxml 70_32-39_11_120615_01shindosokuhou3.xml))) }
       let(:xmldoc) { REXML::Document.new(xml1) }
       let(:report_time) { REXML::XPath.first(context.xmldoc, '/Report/Head/ReportDateTime/text()').to_s.strip }
-      let(:page) { create(:rss_weather_xml_page, xml: xml1) }
+      let(:page) { create(:rss_weather_xml_page, in_xml: xml1) }
       let(:context) { OpenStruct.new(site: site, xmldoc: xmldoc) }
       subject { create(:jmaxml_trigger_quake_intensity_flash) }
 
@@ -62,8 +62,8 @@ describe Jmaxml::Trigger::QuakeIntensityFlash, dbscope: :example do
       let(:report_time) { REXML::XPath.first(xmldoc, '/Report/Head/ReportDateTime/text()').to_s.strip }
       let(:event_id) { REXML::XPath.first(xmldoc, '/Report/Head/EventID/text()').to_s.strip }
       let(:node) { create(:rss_node_weather_xml) }
-      let!(:page1) { create(:rss_weather_xml_page, cur_node: node, event_id: event_id, xml: xml1) }
-      let!(:page2) { create(:rss_weather_xml_page, cur_node: node, event_id: event_id, xml: xml2) }
+      let!(:page1) { create(:rss_weather_xml_page, cur_node: node, event_id: event_id, in_xml: xml1) }
+      let!(:page2) { create(:rss_weather_xml_page, cur_node: node, event_id: event_id, in_xml: xml2) }
       let(:context) { OpenStruct.new(site: site, node: node, xmldoc: xmldoc) }
       subject { create(:jmaxml_trigger_quake_intensity_flash) }
 

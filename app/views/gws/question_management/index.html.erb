@@ -20,7 +20,7 @@
         <div class="meta">
           <span class="id">#<%= item.id %></span>
           <span class="datetime"><%= item.descendants_updated.strftime("%Y/%m/%d %H:%M") %></span>
-          <span class="user"><%= item.contributor_name.presence || item.user_long_name %></span>
+          <span class="user"><%= gws_public_user_long_name(item.contributor_name.presence || item.user_long_name) %></span>
           <span class="categories">
             <% item.categories.compact.each do |category| %>
               <%= link_to category.trailing_name, gws_faq_topics_path(mode: '-', category: category.id),
@@ -59,7 +59,7 @@
         <div class="meta">
           <span class="id">#<%= item.id %></span>
           <span class="datetime"><%= item.descendants_updated.strftime("%Y/%m/%d %H:%M") %></span>
-          <span class="user"><%= item.contributor_name.presence || item.user_long_name %></span>
+          <span class="user"><%= gws_public_user_long_name(item.contributor_name.presence || item.user_long_name) %></span>
           <span class="categories">
             <% item.categories.compact.each do |category| %>
               <%= link_to category.trailing_name, gws_qna_topics_path(mode: '-', category: category.id),

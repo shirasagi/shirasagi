@@ -5,7 +5,6 @@ class Opendata::Resource
   include Opendata::Addon::RdfStore
   include Opendata::Addon::CmsRef::AttachmentFile
   include Opendata::Addon::Harvest::Resource
-  include Opendata::Addon::ZipDataset
 
   DOWNLOAD_CACHE_LIFETIME = 10.minutes
 
@@ -29,6 +28,7 @@ class Opendata::Resource
   before_validation :set_format
 
   after_save :save_dataset
+  after_destroy :compression_dataset
 
   class << self
     def context_path
@@ -164,5 +164,9 @@ class Opendata::Resource
       self.filename = nil
       self.file.destroy if file
     end
+  end
+
+  def compression_dataset
+    dataset.compression_dataset
   end
 end
