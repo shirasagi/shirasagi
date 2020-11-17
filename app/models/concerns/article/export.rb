@@ -63,6 +63,9 @@ module Article::Export
         drawer.body { |item| item.form.try(:name) }
       end
       drawer.column :order
+      if respond_to?(:redirect_link_enabled?) && redirect_link_enabled?
+        drawer.column :redirect_link
+      end
     end
 
     def draw_meta(drawer)

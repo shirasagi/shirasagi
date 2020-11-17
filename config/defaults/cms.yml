@@ -7,6 +7,9 @@ production: &production
   # Disable navigation
   disable_navi: false
 
+  # Disable page redirect link feature
+  disable_redirect_link: true
+
   # enable LGWAN
   enable_lgwan: false
 
