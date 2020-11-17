@@ -4,11 +4,15 @@ class Sys::SiteExportJob < SS::ApplicationJob
   cattr_accessor :export_root
   self.export_root = "#{Rails.root}/private/export"
 
-  def perform
+  def perform(opts = {})
     @src_site = Cms::Site.find(@task.source_site_id)
 
     @output_dir = "#{self.class.export_root}/site-#{@src_site.host}"
     @output_zip = "#{@output_dir}.zip"
+
+    exclude_models = opts[:exclude].to_s.split(",")
+    @exclude_cms_pages = exclude_models.include?("cms_pages")
+    @exclude_public_files = []
 
     FileUtils.rm_rf(@output_dir)
     FileUtils.mkdir_p(@output_dir)
@@ -60,7 +64,7 @@ class Sys::SiteExportJob < SS::ApplicationJob
   def compress
     FileUtils.rm(@output_zip) if File.exist?(@output_zip)
 
-    zip = Sys::SiteExport::Zip.new(@output_zip)
+    zip = Sys::SiteExport::Zip.new(@output_zip, exclude_public_files: @exclude_public_files)
     zip.output_dir = @output_dir
     zip.site_dir = @src_site.path
     zip.compress
@@ -163,7 +167,16 @@ class Sys::SiteExportJob < SS::ApplicationJob
   end
 
   def export_cms_pages
-    export_documents "cms_pages", Cms::Page do |item|
+    scope = Cms::Page.site(@src_site)
+
+    if @exclude_cms_pages
+      known_pages = { filename: /^(index.html|404.html|mobile.html)$/ }
+      @exclude_public_files += scope.not(known_pages).map(&:path)
+
+      scope = scope.where(known_pages)
+    end
+
+    export_documents "cms_pages", Cms::Page, scope do |item|
       # opendata
       @ss_file_ids += item[:resources].map { |m| m[:file_id] } if item[:resources].present?
       @ss_file_ids += item[:url_resources].map { |m| m[:file_id] } if item[:url_resources].present?
