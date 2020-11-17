@@ -164,6 +164,11 @@ class Gws::Attendance::Management::TimeCardsController < ApplicationController
       return
     end
 
+    unless params[:item]
+      redirect_to({ action: :index, s: params[:s] }, { notice: t('gws/attendance.no_target_users') })
+      return
+    end
+
     safe_params = params.require(:item).permit(user_ids: [])
     user_ids = Gws::User.in(id: safe_params[:user_ids]).active.pluck(:id)
     render_update @items.in(user_id: user_ids).lock_all, location: { action: :index }, render: { file: :lock }
@@ -176,6 +181,11 @@ class Gws::Attendance::Management::TimeCardsController < ApplicationController
       if @target_users.blank?
         redirect_to({ action: :index, s: params[:s] }, { notice: t('gws/attendance.no_target_users') })
       end
+      return
+    end
+
+    unless params[:item]
+      redirect_to({ action: :index, s: params[:s] }, { notice: t('gws/attendance.no_target_users') })
       return
     end
 
