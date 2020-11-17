@@ -64,7 +64,8 @@ class ApplicationController < ActionController::Base
 
   def ie11_attachment_mime_types
     @_ie11_attachment_mime_types ||= begin
-      SS.config.ie11.dig("content_disposition", "attachment", "mime_type_map").values.flatten
+      mime_types = SS.config.ie11.dig("content_disposition", "attachment", "mime_type_map")
+      mime_types ? mime_types.values.flatten : []
     end
   end
 
