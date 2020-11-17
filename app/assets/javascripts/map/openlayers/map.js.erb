@@ -251,7 +251,7 @@ this.Openlayers_Map = (function () {
   Openlayers_Map.prototype.renderMarkers = function (markers) {
     var feature, iconSrc, id, marker, markerHtml, name, pos, ref, ref1, ref2, results, style, text;
     results = [];
-    for (id in markers) {
+    for (id = 0; id < markers.length; id++) {
       marker = markers[id];
       iconSrc = '/assets/img/map-marker.png';
       if (marker['image']) {
