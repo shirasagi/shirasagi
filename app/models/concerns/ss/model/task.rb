@@ -75,8 +75,8 @@ module SS::Model::Task
     self.log_buffer = 50
   end
 
-  def running?
-    state == "running"
+  def running?(limit = 1.day)
+    state == "running" && (started.presence || updated) + limit > Time.zone.now
   end
 
   def start
@@ -142,11 +142,11 @@ module SS::Model::Task
     []
   end
 
-  def head_logs(n = 1_000)
+  def head_logs(num_logs = 1_000)
     if log_file_path && ::File.exists?(log_file_path)
       texts = []
       ::File.open(log_file_path) do |f|
-        n.times do
+        num_logs.times do
           line = f.gets || break
           texts << line.chomp
         end
