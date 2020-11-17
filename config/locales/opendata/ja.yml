@@ -12,6 +12,7 @@ ja:
     tag: タグ
     dataset_group: グループ
     harvest: ハーベスト
+    poster: 投稿
     ckan:
       group: CKANグループ
       organization: CKAN組織
