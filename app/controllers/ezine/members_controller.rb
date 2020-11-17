@@ -17,7 +17,7 @@ class Ezine::MembersController < ApplicationController
   end
 
   def get_params
-    fix_fields = permit_fields + [ in_data: @columns.map{ |c| c.id.to_s } ]
+    fix_fields = permit_fields + [ in_data: @columns.map{ |c| [c.id.to_s, { c.id.to_s => {} }] }.flatten ]
     params.require(:item).permit(fix_fields).merge(fix_params)
   rescue
     raise "400"
@@ -42,14 +42,14 @@ class Ezine::MembersController < ApplicationController
         row << item.email
         row << item.email_type
         row << item.created.strftime("%Y-%m-%d %H:%M")
-        @columns.each do |column|
-          row << item.in_data[column.id.to_s]
+        @columns.each_with_index do |column, i|
+          row << item.data.where(column_id: column.id).first.try(:value)
         end
         data << row
       end
     end
     send_data csv.encode("SJIS", invalid: :replace, undef: :replace),
-      filename: "ezine_members_#{Time.zone.now.to_i}.csv"
+              filename: "ezine_members_#{Time.zone.now.to_i}.csv"
   end
 
   public

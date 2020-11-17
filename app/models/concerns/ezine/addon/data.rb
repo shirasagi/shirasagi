@@ -16,16 +16,20 @@ module Ezine::Addon
     def set_in_data
       return if in_data
       self.in_data = {}
-      data.each { |data| self.in_data[data.column_id.to_s] = data.value }
+      data.each { |data| self.in_data[data.column_id.to_s] = data.values }
     end
 
     def set_data
       self.data = []
       in_data.each do |key, value|
         next if value.nil?
+        value = value.to_unsafe_h if value.respond_to?(:to_unsafe_h)
         if value.kind_of?(Hash)
           values = value.values
           value  = value.map { |k, v| v }.join("\n")
+        elsif value.kind_of?(Array)
+          values = value
+          value = value.join("\n")
         else
           values = [value.to_s]
           value  = value.to_s
