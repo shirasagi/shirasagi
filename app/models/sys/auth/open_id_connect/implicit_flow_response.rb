@@ -34,6 +34,6 @@ class Sys::Auth::OpenIdConnect::ImplicitFlowResponse
     return if state.blank? || sso_token.blank?
 
     errors.add :state, :mismatch if state != sso_token.token
-    errors.add :state, :expired if sso_token.created.to_i + Sys::Auth::Base::READY_STATE_EXPIRES_IN < Time.zone.now.to_i
+    errors.add :state, :expired unless sso_token.available?
   end
 end

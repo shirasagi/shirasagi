@@ -65,7 +65,6 @@ class Sns::Login::OpenIdConnectController < ApplicationController
     end
 
     sso_token = SS::SsoToken.where(token: core_resp[:state]).first
-
     auth_resp = core_resp.merge(
       cur_item: @item,
       redirect_uri: @item.redirect_uri(request.protocol, request.host_with_port),
@@ -95,8 +94,8 @@ class Sns::Login::OpenIdConnectController < ApplicationController
       render file: 'sns/login/open_id_connect/implicit_flow_post_back', layout: false
       return
     end
-    sso_token = SS::SsoToken.where(token: core_resp[:state]).first
 
+    sso_token = SS::SsoToken.where(token: core_resp[:state]).first
     auth_resp = core_resp.merge(
       cur_item: @item,
       sso_token: sso_token,
