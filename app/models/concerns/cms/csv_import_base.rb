@@ -3,7 +3,6 @@ module Cms::CsvImportBase
 
   included do
     cattr_accessor(:required_headers) { [] }
-    cattr_accessor(:csv_errors) { [] }
   end
 
   module ClassMethods
@@ -20,9 +19,8 @@ module Cms::CsvImportBase
         break if no >= max_read_lines
       end
 
-      csv_errors.blank?
-    rescue => e
-      csv_errors << e.to_s
+      true
+    rescue
       false
     ensure
       file.rewind
@@ -34,8 +32,6 @@ module Cms::CsvImportBase
         io.set_encoding(Encoding::UTF_8)
       elsif valid_encoding?(io, Encoding::SJIS)
         io.set_encoding(Encoding::SJIS, Encoding::UTF_8)
-      else
-        csv_errors << I18n.t('errors.messages.non_supported_encoding')
       end
 
       csv = CSV.new(io, { headers: true })
@@ -43,8 +39,6 @@ module Cms::CsvImportBase
     ensure
       io.set_encoding(Encoding::ASCII_8BIT)
     end
-
-    private
 
     def valid_encoding?(file, encoding)
       file.rewind
@@ -54,7 +48,7 @@ module Cms::CsvImportBase
         return true if SS::Csv::UTF8_BOM == bom
         file.rewind
       end
-      body = file.gets
+      body = file.gets(1000)
       file.rewind
       body.force_encoding(encoding).valid_encoding?
     end

@@ -1011,7 +1011,7 @@ ja:
         check_embedded_media:
           - 動画や音声を本文に埋め込む場合は説明を記述してください。
       thums_is_not_an_image: には画像ファイルを指定してください。
-      non_supported_encoding: 対応していない文字コードです。
+      unsupported_encoding: 対応していない文字コードです。
 
     template:
       no_errors: エラーは見つかりませんでした。
@@ -1981,6 +1981,11 @@ ja:
     cms/addon/redirect_link:
       redirect_link:
         - ページを別URLにリダイレクトする際に入力します。
+
+    cms/csv_import_base:
+      file:
+        - インポートするファイルを設定します。
+        - ファイルはutf-8またはShiftJISでエンコードされている必要があります。
 
   all_content:
     page_id: ページID
