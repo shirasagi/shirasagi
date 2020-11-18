@@ -13,6 +13,7 @@ ja:
     content: コンテンツ
     convert_to_cms_page: 固定ページに変換する
     editor_template: テンプレート
+    event_calendar: イベントカレンダー
     file: 共有ファイル
     generate_node: フォルダー書き出し
     generate_page: ページ書き出し
@@ -37,6 +38,7 @@ ja:
     node_config: フォルダー設定
     notice: お知らせ
     page: 固定ページ
+    pagination: ページネーション
     page_search: ページ検索
     part: パーツ
     preview: プレビュー
@@ -72,6 +74,7 @@ ja:
     inplace_edit: 編集モード
     preview_date: プレビュー日時
     translate: 自動翻訳
+    list_menu_of_monthly_page: 月別ページ一覧メニュー
     column_file_upload:
       image:
         file_label: 代替テキスト

@@ -1,5 +1,5 @@
 <div class="archive-nav">
-  <nav class="monthly-nav" aria-label="月別ページ一覧メニュー">
+  <nav class="monthly-nav" aria-label="<%= t("cms.list_menu_of_monthly_page") %>">
     <ul>
       <% @months.each do |date, num| %>
         <% body = "#{date.year}#{t('datetime.prompts.year')}#{date.month}#{t('datetime.prompts.month')}(#{num})" %>
@@ -9,7 +9,7 @@
           <% else %>
             <%= link_to body, sprintf("#{@cur_part.parent.try(:url)}%04d%02d", date.year, date.month) %>
           <% end %>
-         </li>
+        </li>
       <% end %>
     </ul>
   </nav>
