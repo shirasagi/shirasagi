@@ -76,7 +76,7 @@ class Sns::Login::SamlController < ApplicationController
     raise "404" if sso_token.blank?
 
     sso_token.destroy
-    raise "404" if sso_token.created.to_i + Sys::Auth::Base::READY_STATE_EXPIRES_IN < Time.zone.now.to_i
+    raise "404" unless sso_token.available?
 
     response = OneLogin::RubySaml::Response.new(params[:SAMLResponse])
     response.settings = settings

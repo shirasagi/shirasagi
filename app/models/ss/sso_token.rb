@@ -20,5 +20,13 @@ class SS::SsoToken
       token.save!
       token
     end
+
+    def and_unavailable
+      all.where(created: { "$lt" => Time.zone.now.to_i - Sys::Auth::Base::READY_STATE_EXPIRES_IN })
+    end
+  end
+
+  def available?
+    created.to_i + Sys::Auth::Base::READY_STATE_EXPIRES_IN >= Time.zone.now.to_i
   end
 end
