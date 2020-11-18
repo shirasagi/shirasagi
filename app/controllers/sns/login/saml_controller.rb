@@ -41,7 +41,6 @@ class Sns::Login::SamlController < ApplicationController
     @request_url ||= URI.parse(request.url)
 
     request = OneLogin::RubySaml::Authrequest.new
-    state = SecureRandom.hex(24)
 
     # "ref" is a path to redirect after user is successfully logged in
     ref = params[:ref].try { |ref| ref.to_s }
@@ -65,16 +64,19 @@ class Sns::Login::SamlController < ApplicationController
     end
     login_path = login_path.to_s if login_path.present?
 
-    session['ss.sso.state'] = { value: state, created: Time.zone.now.to_i, ref: ref, login_path: login_path }
-    redirect_to(request.create(settings, RelayState: state, ForceAuthn: "true"))
+    sso_token = SS::SsoToken.create_token!(ref: ref, login_path: login_path)
+    redirect_to(request.create(settings, RelayState: sso_token.token, ForceAuthn: "true"))
   end
 
   def consume
     state = params[:RelayState]
-    session_state = session.delete('ss.sso.state')
-    raise "404" if session_state.blank?
-    raise "404" if session_state[:value] != state
-    raise "404" if session_state[:created] + Sys::Auth::Base::READY_STATE_EXPIRES_IN < Time.zone.now.to_i
+    raise "404" if state.blank?
+
+    sso_token = SS::SsoToken.where(token: state).first
+    raise "404" if sso_token.blank?
+
+    sso_token.destroy
+    raise "404" if sso_token.created.to_i + Sys::Auth::Base::READY_STATE_EXPIRES_IN < Time.zone.now.to_i
 
     response = OneLogin::RubySaml::Response.new(params[:SAMLResponse])
     response.settings = settings
@@ -92,9 +94,9 @@ class Sns::Login::SamlController < ApplicationController
     end
 
     # "ref" is a path to redirect after user is successfully logged in
-    params[:ref] = session_state[:ref]
+    params[:ref] = sso_token.ref
     # "login_path" is a path to redirect after user is logged out
-    render_login user, nil, session: true, login_path: session_state[:login_path] || sns_login_path
+    render_login user, nil, session: true, login_path: sso_token.login_path || sns_login_path
   end
 
   def metadata
