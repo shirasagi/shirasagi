@@ -19,7 +19,7 @@
     <dd><%= f.select :line_post_format, @item.line_post_format_options, selected: line_post_format %></dd>
 
     <dt><%= @model.t :line_text_message %><%= @model.tt :line_text_message %></dt>
-    <dd><%= f.text_area :line_text_message %></dd>
+    <dd><%= f.text_area :line_text_message, placeholder: (@item.t :line_text_message_placeholder) %></dd>
 
     <dt><%= @model.t :line_edit_auto_post %><%= @model.tt :line_edit_auto_post %></dt>
     <dd><%= f.select :line_edit_auto_post, @item.line_auto_post_options, selected: line_edit_auto_post %></dd>
