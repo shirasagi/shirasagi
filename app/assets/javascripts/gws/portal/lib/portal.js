@@ -64,14 +64,14 @@ Gws_Portal.prototype.autoResizeItem = function(widget, height) {
 Gws_Portal.prototype.setSerializeEvent = function(selector) {
   var _this = this;
   _this.updateUrl = $(selector).data('href');
-  $(selector).click(function() {
+  $(selector).on("click", function() {
     _this.serialize();
   });
 };
 
 Gws_Portal.prototype.setResetEvent = function(selector) {
   var _this = this;
-  $(selector).click(function() {
+  $(selector).on("click", function() {
     var list = [];
     _this.el.find(".portlet-item").each(function(index) {
       list.push($(this).clone());

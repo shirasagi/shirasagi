@@ -12,6 +12,7 @@ ja:
     tag: タグ
     dataset_group: グループ
     harvest: ハーベスト
+    poster: 投稿
     ckan:
       group: CKANグループ
       organization: CKAN組織
@@ -56,7 +57,7 @@ ja:
       start_export: エクスポートを開始しました。
       source_url: "リンクを登録する際にURLを入力してください。ファイルを設定した場合は入力の必要はありません。"
       resource_preview_error: リソースをプレビューできませんでした。
-      bulk_download_exceeded_filesize: "検索結果の一括ダウンロードサイズが大きすぎます。\\n一括ダウンロードのサイズは、%{size}までを想定しています。\\n申し訳ありませんが、個別にダウンロードしていただくか、検索条件を変更してください。"
+      bulk_download_exceeded_filesize: "検索結果の一括ダウンロードサイズが大きすぎます。\n一括ダウンロードのサイズは、%{size}までを想定しています。\n申し訳ありませんが、個別にダウンロードしていただくか、検索条件を変更してください。"
       recreate_rdf: "次のリソースに関連する RDF が作成されています。"
     export:
       subject: '[オープンデータ/データセット] エクスポートが完了しました。'
@@ -1093,4 +1094,5 @@ ja:
       opendata/harvest/export_datasets_job: ハーベストエクスポート削除ジョブ
       opendata/harvest/destroy_datasets_job: ハーベスト関連データセット削除ジョブ
       opendata/notify_dataset_plan_job: データセット更新通知ジョブ
+      opendata/dataset/export_job: データセットエクスポートジョブ
       opendata/dataset/import_job: データセットインポートジョブ

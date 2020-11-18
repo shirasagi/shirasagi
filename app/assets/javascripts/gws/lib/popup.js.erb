@@ -11,7 +11,7 @@ this.Gws_Popup = (function () {
       $(window).resize(function () {
         return $('.gws-popup').remove();
       });
-      $(document).click(function (ev) {
+      $(document).on("click", function (ev) {
         if (!$(ev.target).closest('.gws-popup, .gws-popup-event').length) {
           return $('.gws-popup').remove();
         }

@@ -19,7 +19,7 @@
       <dd><%=br @item.readable_group_names %></dd>
 
       <dt><%= @model.t :readable_member_ids %></dt>
-      <dd><%=br @item.readable_member_names %></dd>
+      <dd><%=br gws_public_user_long_names(@item.readable_member_names) %></dd>
     </dl>
   </div>
 </div>

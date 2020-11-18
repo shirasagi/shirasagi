@@ -2,12 +2,12 @@
 
 level = 1
 
-if params[:controller] =~ /^gws/
-  def groups_path; gws_apis_groups_path; end
-  def approvers_path(*args); gws_workflow_search_approvers_path(*args); end
-else
+if @ss_mode == :cms
   def groups_path; cms_apis_groups_path; end
   def approvers_path(*args); workflow_search_approvers_path(*args); end
+else
+  def groups_path; gws_apis_groups_path; end
+  def approvers_path(*args); gws_workflow_search_approvers_path(*args); end
 end
 
 use_agent = @ss_mode == :gws && @item.agent_enabled? && @cur_user.gws_role_permit_any?(@cur_site, :agent_all_gws_workflow_files, :agent_private_gws_workflow_files)
@@ -163,7 +163,11 @@ end
   <dd>
     <div class="buttons">
       <%= button_tag t("workflow.buttons.request"), { updatetype: :request, class: "update-item btn-primary" } %>
-      <%= button_tag t("workflow.buttons.cancel"), { class: "workflow-route-cancel btn-default" } %>
+      <% if local_assigns.fetch(:cancel_button, true) %>
+        <%# プレビューからの承認時、選択可能なルートが 2 個以上（複数）ある場合にのみ取り消すことができる。 %>
+        <%# それ以外では常に取り消すことができる。 %>
+        <%= button_tag t("workflow.buttons.cancel"), { class: "workflow-route-cancel btn-default" } %>
+      <% end %>
     </div>
     <div class="checkbox">
       <label>

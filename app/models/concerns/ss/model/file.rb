@@ -12,7 +12,6 @@ module SS::Model::File
   attr_accessor :in_file, :resizing, :unnormalize
 
   included do
-    cattr_accessor(:root, instance_accessor: false) { "#{Rails.root}/private/files" }
     store_in collection: "ss_files"
 
     seqid :id
@@ -50,6 +49,10 @@ module SS::Model::File
   end
 
   module ClassMethods
+    def root
+      "#{SS::Application.private_root}/files"
+    end
+
     def resizing_options
       [
         [320, 240], [240, 320], [640, 480], [480, 640], [800, 600], [600, 800],
@@ -161,7 +164,7 @@ module SS::Model::File
 
     name_without_ext = ::File.basename(name, ".*")
     ext = ::File.extname(filename)
-    return name_without_ext if ext.blank?
+    return name_without_ext if ext.blank? || ext == "."
 
     name_without_ext + ext
   end
@@ -225,22 +228,34 @@ module SS::Model::File
     Fs.rm_rf(public_path) if public_path
   end
 
-  def copy(opts = {})
-    copy = SS::TempFile.new
+  COPY_SKIP_ATTRS = %w(_id id model file_id group_ids permission_level category_ids owner_item_id owner_item_type).freeze
 
+  def copy(opts = {})
+    model = opts[:cur_node].present? ? Cms::TempFile : SS::TempFile
+
+    copy_attrs = {}
     self.attributes.each do |key, val|
-      next if key =~ /^(id|file_id)$/
-      next if key =~ /^(group_ids|permission_level|category_ids)$/
-      copy.send("#{key}=", val) unless copy.send(key)
+      next if COPY_SKIP_ATTRS.include?(key)
+      copy_attrs[key] = val if model.fields.key?(key)
     end
 
-    copy.in_file = self.uploaded_file
-    copy.state = "public"
-    copy.name = self.name
-    copy.unnormalize = true if opts[:unnormalize].present?
-    copy.save
-    copy.in_file.delete
-    copy
+    # forcibly overwrite by opts
+    copy_attrs["site"] = opts[:cur_site] if opts[:cur_site].present?
+    if opts[:cur_user].present?
+      copy_attrs["cur_user"] = opts[:cur_user]
+      copy_attrs["user"] = opts[:cur_user]
+    end
+    if opts[:cur_node].present?
+      copy_attrs["cur_node"] = opts[:cur_node]
+      copy_attrs["node"] = opts[:cur_node]
+    end
+
+    model.create_empty!(copy_attrs) do |new_file|
+      ::FileUtils.copy(self.path, new_file.path)
+      new_file.unnormalize = true if opts[:unnormalize].present?
+      # to create thumbnail call "#save!"
+      new_file.save!
+    end
   end
 
   COPY_REQUIRED_MODELS = %w(cms/file ss/user_file).freeze
@@ -362,6 +377,7 @@ module SS::Model::File
     backup.ref_class = self.class.to_s
     backup.data = attributes
     backup.site = self.site
+    backup.user = @cur_user
     return unless backup.save
     return unless File.exists?(path)
     trash_path = "#{History::Trash.root}/#{path.sub(/.*\/(ss_files\/)/, '\\1')}"

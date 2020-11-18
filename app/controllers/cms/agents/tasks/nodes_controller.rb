@@ -43,12 +43,12 @@ class Cms::Agents::Tasks::NodesController < ApplicationController
   end
 
   def generate_root_pages
-    pages = Cms::Page.site(@site).and_public.where(depth: 1)
+    pages = Cms::Page.site(@site).and_public.where(filename: /^[^\/]+$/, depth: 1)
     ids   = pages.pluck(:id)
 
     ids.each do |id|
       @task.count
-      page = Cms::Page.site(@site).and_public.where(depth: 1).where(id: id).first
+      page = Cms::Page.where(id: id).first
       next unless page
       @task.log page.url if page.becomes_with_route.generate_file
     end

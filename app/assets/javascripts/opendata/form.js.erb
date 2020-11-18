@@ -20,11 +20,11 @@ this.Opendata_ResourceForm = (function () {
         }));
       }
     });
-    $("#item_in_file").change(function () {
+    $("#item_in_file").on("change", function () {
       Opendata_ResourceForm.autosetFilename();
       return Opendata_ResourceForm.toggleTsv();
     });
-    return $("#item_format").change(function () {
+    return $("#item_format").on("change", function () {
       return Opendata_ResourceForm.toggleTsv();
     });
   };

@@ -7,6 +7,7 @@ class Event::Page
   include Cms::Addon::Meta
   include Cms::Addon::SnsPoster
   include Gravatar::Addon::Gravatar
+  include Cms::Addon::RedirectLink
   include Cms::Addon::Body
   include Cms::Addon::File
   include Category::Addon::Category

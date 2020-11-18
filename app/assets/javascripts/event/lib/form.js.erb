@@ -8,12 +8,12 @@ this.Event_Form = (function () {
 
   Event_Form.render = function () {
     if ($("form .mod-event").length) {
-      $(".mod-event button:button.add-date").click(function () {
+      $(".mod-event button:button.add-date").on("click", function () {
         if ($(".mod-event dd.dates").length < Event_Form.maxTermForm) {
           Event_Form.cloneTermForm();
         }
       });
-      $(".mod-event button:button.clear").click(function () {
+      $(".mod-event button:button.clear").on("click", function () {
         var close, start;
         start = $(this).parent("dd").find(".start").val();
         close = $(this).parent("dd").find(".close").val();
@@ -171,7 +171,7 @@ this.Event_Form = (function () {
     cln = $(".mod-event dd.dates:last").clone(false).insertAfter($(".mod-event dd.dates:last"));
     cln.find(".start").val("");
     cln.find(".close").val("");
-    cln.find(".clear").click(function () {
+    cln.find(".clear").on("click", function () {
       var close, start;
       start = $(this).parent("dd").find(".start").val();
       close = $(this).parent("dd").find(".close").val();

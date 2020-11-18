@@ -1,0 +1,7 @@
+<% return if !@item.class.redirect_link_enabled? %>
+<% return if @item.redirect_link.blank? %>
+
+<dl class="see mod-cms-page_link">
+  <dt><%= @model.t :redirect_link %></dt>
+  <dd><%= link_to @item.redirect_link, @item.redirect_link %></dd>
+</dl>

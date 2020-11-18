@@ -10,7 +10,7 @@
       var tr;
       tr = $(this);
       tr.find("input[type=checkbox]:enabled").off();
-      tr.find("input[type=checkbox]:enabled").change(function () {
+      tr.find("input[type=checkbox]:enabled").on("change", function () {
         if (tbody.find("input[type=checkbox]:enabled").length === tbody.find("input[type=checkbox]:checked:enabled").length) {
           $(thead).find("input[type=checkbox]:enabled").prop("checked", true);
         } else {
@@ -20,7 +20,7 @@
     });
 
     thead.find("input[type=checkbox]:enabled").off();
-    thead.find("input[type=checkbox]:enabled").change(function () {
+    thead.find("input[type=checkbox]:enabled").on("change", function () {
       var chkbox, i, len, ref, results;
       ref = tbody.find("input[type=checkbox]:enabled");
       results = [];

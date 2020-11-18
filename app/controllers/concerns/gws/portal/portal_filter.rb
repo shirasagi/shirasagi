@@ -41,9 +41,7 @@ module Gws::Portal::PortalFilter
     end
 
     if @portal.show_portal_notice?
-      @sys_notices = Sys::Notice.and_public.
-        gw_admin_notice.
-        page(1).per(5)
+      @sys_notices = Sys::Notice.and_public.gw_admin_notice.reorder(notice_severity: 1, released: -1).page(1).per(5)
 
       if Gws.module_usable?(:notice, @cur_site, @cur_user)
         @notices = Gws::Notice::Post.site(@cur_site).without_deleted.and_public.
@@ -58,6 +56,7 @@ module Gws::Portal::PortalFilter
           @notices = @notices.and_unread(@cur_user)
         end
 
+        @notices = @notices.reorder(severity: -1, released: -1)
         @notices = @notices.page(1).per(5)
       else
         @notices = Gws::Notice::Post.none

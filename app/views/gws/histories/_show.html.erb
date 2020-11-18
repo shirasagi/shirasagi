@@ -10,7 +10,7 @@
 
   <% if @item.user_long_name %>
   <dt><%= @model.t(:user_id) %></dt>
-  <dd><%= @item.user_long_name %></dd>
+  <dd><%= gws_public_user_long_name(@item.user_long_name) %></dd>
   <% end %>
 
   <% if @item.model.present? %>

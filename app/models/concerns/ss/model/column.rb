@@ -59,7 +59,7 @@ module SS::Model::Column
     end
 
     def value_type
-      @value_type ||= name.insert(name.rindex("::"), "::Value").constantize
+      @value_type ||= name.dup.insert(name.rindex("::"), "::Value").constantize
     end
   end
 

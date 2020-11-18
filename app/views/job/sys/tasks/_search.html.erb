@@ -1,0 +1,10 @@
+<% @s ||= OpenStruct.new params[:s] %>
+<div class="list-head-search">
+  <%= form_for :s, url: "", html: { class: "index-search", method: :get } do |f| %>
+    <% sites = SS::Site.all.in(id: @model.all.pluck(:site_id)) %>
+    <%= f.select(:site_id, sites.pluck(:name, :id), { include_blank: true }, { id: nil }) %>
+    <%= f.select(:state, %w(stop ready running), { include_blank: true }, { id: nil }) %>
+    <%= f.text_field :keyword, style: "width: 150px;" %>
+    <input type="submit" value="<%= t('ss.buttons.search') %>" class="btn" />
+  <% end %>
+</div>

@@ -120,7 +120,9 @@ module Cms
     group_ids = groups.pluck(:id)
 
     size = site_criteria.total_bsonsize
-    size += groups.total_bsonsize if opts[:except] != "common"
+    if opts[:except] != "common" && !groups.none?
+      size += groups.total_bsonsize rescue 0
+    end
 
     if opts[:except] == "common"
       modules = MODULES_BOUND_TO_SITE.reject { |klass| MODULES_COMMON.include?(klass) }

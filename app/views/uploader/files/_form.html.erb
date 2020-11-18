@@ -1,32 +1,38 @@
 <%= code_editor ".mod-uploader textarea", filename: @item.filename %>
 <%= jquery do %> SS.fileCheck(); <% end %>
 
-<div class="addon-view">
-  <dl class="see mod-uploader">
-    <dt><%= @model.t :filename %></dt>
-    <dd><%= f.text_field :filename, class: :code, required: true, pattern: "^#{@cur_node.filename}\/.+" %></dd>
+<div class="addon-views">
+  <div class="addon-view" id="addon-basic">
+    <div class="addon-head"><h2><%= t("ss.basic_info") %></h2></div>
+    <div class="addon-body">
+      <dl class="see mod-uploader">
+        <dt><%= @model.t :filename %></dt>
+        <dd><%= f.text_field :filename, class: :code, required: true, pattern: "^#{@cur_node.filename}\/.+" %></dd>
 
-    <% if !@item.directory? %>
-      <% if @item.image? %>
-      <dt><%= @model.t :image %></dt>
-      <dd><%= f.file_field :files, multiple: :multiple %></dd>
+        <% if !@item.directory? %>
+          <% if @item.image? %>
+            <dt><%= @model.t :image %></dt>
+            <dd><%= f.file_field :files, multiple: :multiple %></dd>
 
-      <dd class="js-uploader-alert-message" style="display: none"></dd>
+            <dd class="js-uploader-alert-message" style="display: none"></dd>
 
-      <dd><%= image_tag @item.link %></dd>
-      <% end %>
+            <dd><%= image_tag @item.link %></dd>
+          <% end %>
 
-      <% if @item.text? %>
-      <% begin %>
-      <dt><%= t('uploader.new_files')  %></dt>
-      <dd><%= f.file_field :files, multiple: :multiple %></dd>
+          <% if @item.text? %>
+            <% begin %>
+              <dt><%= t('uploader.new_files')  %></dt>
+              <dd><%= f.file_field :files, multiple: :multiple %></dd>
 
-      <dd class="js-uploader-alert-message" style="display: none"></dd>
+              <dd class="js-uploader-alert-message" style="display: none"></dd>
 
-      <dt class="wide"><%= @model.t :text %></dt>
-      <dd class="wide"><%= f.text_area :text, style: "height: 400px;"  %></dd>
-      <% rescue => e %>Error (<%= e %>)<% end %>
-      <% end%>
-    <% end %>
-  </dl>
+              <dt class="wide"><%= @model.t :text %></dt>
+              <dd class="wide"><%= f.text_area :text, style: "height: 400px;"  %></dd>
+            <% rescue => e %>Error (<%= e %>)<% end %>
+          <% end%>
+        <% end %>
+      </dl>
+    </div>
+  </div>
 </div>
+

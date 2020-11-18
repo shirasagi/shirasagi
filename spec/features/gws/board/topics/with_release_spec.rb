@@ -41,7 +41,7 @@ describe "gws_board_topics", type: :feature, dbscope: :example, js: true do
 
         select I18n.t("ss.options.state.enabled"), from: "item[notify_state]"
 
-        within "#addon-gws-agents-addons-release" do
+        within "#addon-ss-agents-addons-release" do
           first(".addon-head h2").click
 
           fill_in "item[release_date]", with: I18n.l(release_date, format: :picker) + "\n"

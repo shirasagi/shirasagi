@@ -53,4 +53,73 @@ describe Rss::Page, dbscope: :example do
       its(:full_url) { is_expected.to eq Cms::Page.find(subject.id).full_url }
     end
   end
+
+  describe ".and_public" do
+    let(:current) { Time.zone.now.beginning_of_minute }
+    let!(:page1) { create :rss_page, site: site, node: node, released: current, state: "public" }
+    let!(:page2) { create :rss_page, site: site, node: node, released: current, state: "closed" }
+    let!(:page3) { create :rss_page, site: site, node: node, released: current + 1.day, state: "public" }
+    let!(:page4) { create :rss_page, site: site, node: node, released: current + 1.day, state: "closed" }
+
+    it do
+      # without specific date to and_public
+      expect(described_class.and_public.count).to eq 2
+      expect(described_class.and_public.pluck(:id)).to include(page1.id, page3.id)
+      expect(Cms::Page.and_public.count).to eq 2
+      expect(Cms::Page.and_public.pluck(:id)).to include(page1.id, page3.id)
+
+      # at current
+      expect(described_class.and_public(current).count).to eq 1
+      expect(described_class.and_public(current).pluck(:id)).to include(page1.id)
+      expect(Cms::Page.and_public(current).count).to eq 1
+      expect(Cms::Page.and_public(current).pluck(:id)).to include(page1.id)
+
+      # at current + 1.day
+      expect(described_class.and_public(current + 1.day).count).to eq 2
+      expect(described_class.and_public(current + 1.day).pluck(:id)).to include(page1.id, page3.id)
+      expect(Cms::Page.and_public(current + 1.day).count).to eq 2
+      expect(Cms::Page.and_public(current + 1.day).pluck(:id)).to include(page1.id, page3.id)
+    end
+  end
+
+  describe "#public?" do
+    let(:current) { Time.zone.now.beginning_of_minute }
+    let!(:page1) { create :rss_page, site: site, node: node, released: current, state: "public" }
+    let!(:page2) { create :rss_page, site: site, node: node, released: current, state: "closed" }
+    let!(:page3) { create :rss_page, site: site, node: node, released: current + 1.day, state: "public" }
+    let!(:page4) { create :rss_page, site: site, node: node, released: current + 1.day, state: "closed" }
+
+    it do
+      expect(page1.public?).to be_truthy
+      expect(page2.public?).to be_falsey
+      expect(page3.public?).to be_truthy
+      expect(page4.public?).to be_falsey
+
+      # at current
+      Timecop.freeze(current) do
+        page1.reload
+        page2.reload
+        page3.reload
+        page4.reload
+
+        expect(page1.public?).to be_truthy
+        expect(page2.public?).to be_falsey
+        expect(page3.public?).to be_truthy
+        expect(page4.public?).to be_falsey
+      end
+
+      # at current + 1.day
+      Timecop.freeze(current + 1.day) do
+        page1.reload
+        page2.reload
+        page3.reload
+        page4.reload
+
+        expect(page1.public?).to be_truthy
+        expect(page2.public?).to be_falsey
+        expect(page3.public?).to be_truthy
+        expect(page4.public?).to be_falsey
+      end
+    end
+  end
 end

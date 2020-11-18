@@ -40,7 +40,7 @@ describe "inquiry_agents_parts_feedback", type: :feature, dbscope: :example do
         fill_in "item[#{comment_column.id}]", with: comment_value
       end
 
-      click_on "確認画面へ"
+      click_on I18n.t('inquiry.confirm')
 
       expect(page).to have_css("dd", text: page1.name)
       expect(page).to have_css("dt", text: contents_column.name)
@@ -73,7 +73,7 @@ describe "inquiry_agents_parts_feedback", type: :feature, dbscope: :example do
         fill_in "item[#{comment_column.id}]", with: comment_value
       end
 
-      click_on "確認画面へ"
+      click_on I18n.t('inquiry.confirm')
 
       expect(page).to have_css("dd", text: page1.name)
       expect(page).to have_css("dt", text: contents_column.name)
@@ -106,7 +106,7 @@ describe "inquiry_agents_parts_feedback", type: :feature, dbscope: :example do
         fill_in "item[#{comment_column.id}]", with: comment_value
       end
 
-      click_on "確認画面へ"
+      click_on I18n.t('inquiry.confirm')
 
       expect(page).to have_css("dd", text: page1.name)
       expect(page).to have_css("dt", text: contents_column.name)
@@ -119,7 +119,7 @@ describe "inquiry_agents_parts_feedback", type: :feature, dbscope: :example do
       expect(page).to have_no_css(".captcha-label", text: "画像の数字を入力してください")
 
       # proceed ahead
-      click_on "送信する"
+      click_on I18n.t('inquiry.submit')
 
       expect(page).to have_css(".inquiry-sent", text: "お問い合わせを受け付けました。")
       expect(page).to have_css(".back-to-ref", text: "元のページに戻る")
@@ -152,7 +152,7 @@ describe "inquiry_agents_parts_feedback", type: :feature, dbscope: :example do
         fill_in "item[#{comment_column.id}]", with: comment_value
       end
 
-      click_on "送信する"
+      click_on I18n.t('inquiry.submit')
 
       expect(page).to have_css(".inquiry-sent", text: "お問い合わせを受け付けました。")
       expect(page).to have_css(".back-to-ref", text: "元のページに戻る")

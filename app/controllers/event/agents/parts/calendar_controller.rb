@@ -10,12 +10,6 @@ class Event::Agents::Parts::CalendarController < ApplicationController
     @next_month_date = @current_month_date.advance(months: 1)
     @dates = []
 
-    if @cur_part.parent.present?
-      @condition_hash = @cur_part.parent.becomes_with_route.try(:condition_hash)
-    else
-      @condition_hash = {}
-    end
-
     start_date = @current_month_date.advance(days: -1 * @current_month_date.wday)
     close_date = start_date.advance(days: 7 * 6)
     dates = (start_date...close_date).to_a
@@ -61,10 +55,12 @@ class Event::Agents::Parts::CalendarController < ApplicationController
   end
 
   def set_event_dates(dates)
-    @event_dates = Cms::Page.site(@cur_site).and_public(@cur_date).
-      where(@condition_hash).
+    @event_dates = Cms::Page.public_list(
+        site: @cur_site,
+        part: @cur_part.parent.try(:becomes_with_route),
+        date: @cur_date).
       in(event_dates: dates).
-      pluck(:event_dates).
+      distinct(:event_dates).
       flatten.compact.uniq.sort
   end
 end

@@ -39,7 +39,7 @@ this.SS_Clipboard = (function () {
       label = '<%= I18n.t("ss.buttons.copy") %>';
       return $(this).append("<a href='#' class='clipboard-copy-button' data-text='" + text + "'>" + label + "</a>");
     });
-    return $('.clipboard-copy-button').click(function () {
+    return $('.clipboard-copy-button').on("click", function () {
       $('.clipboard-copy-button').removeClass('copied');
       if (SS_Clipboard.copy($(this).data('text'))) {
         $(this).addClass('copied');

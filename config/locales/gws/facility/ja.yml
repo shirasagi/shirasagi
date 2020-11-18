@@ -1,5 +1,6 @@
 ja:
   gws/facility:
+    facility: 設備
     category: カテゴリー
     manage_columns: 追加入力を管理する
     prompts:

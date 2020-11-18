@@ -1,3 +1,12 @@
-<div class="recommend-similarity contents">
-<%= render_content_list %>
-</div>
+<%
+  if @items.present?
+    html = render_content_list
+  elsif @cur_part.substitute_html.present?
+    html = sanitize(@cur_part.substitute_html)
+  end
+%>
+<% if html.present? %>
+  <div class="recommend-similarity contents">
+    <%= html %>
+  </div>
+<% end %>

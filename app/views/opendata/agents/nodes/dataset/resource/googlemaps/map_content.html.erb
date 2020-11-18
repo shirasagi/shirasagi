@@ -24,12 +24,7 @@ $(".resource-content .tab.map a").on("click", function() {
   $.each(Googlemaps_Map.markers, function (id, value) {
     markerBounds.extend(new google.maps.LatLng(value["loc"][0], value["loc"][1]));
   });
-  Googlemaps_Map.map.fitBounds(markerBounds);
-  google.maps.event.addListenerOnce(Googlemaps_Map.map, "idle", function() {
-    if (Googlemaps_Map.map.getZoom() > Googlemaps_Map.zoom) {
-      Googlemaps_Map.map.setZoom(Googlemaps_Map.zoom);
-    }
-  });
+  Googlemaps_Map.adjustMarkerBounds(Googlemaps_Map.markers.length, markerBounds);
   return false;
 });
 $(".resource-content .pagination a").on("click", function() {

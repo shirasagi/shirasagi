@@ -46,6 +46,18 @@ module SS::BaseFilter
     @javascripts << path unless @javascripts.include?(path)
   end
 
+  def jquery_migrate_mute
+    return unless Rails.env.production?
+
+    view_context.javascript_tag do
+      scripts = []
+      scripts << "if ( typeof jQuery.migrateMute === \"undefined\" ) {"
+      scripts << "  jQuery.migrateMute = true;"
+      scripts << "}"
+      scripts.join("\n").html_safe
+    end
+  end
+
   private
 
   def set_model
@@ -117,8 +129,7 @@ module SS::BaseFilter
       }
       session[:user]["password"] = SS::Crypt.encrypt(opts[:password]) if opts[:password].present?
     end
-    login_path = opts[:login_path] || request_path
-    cookies[:login_path] = { :value => login_path, :expires => 7.days.from_now }
+    set_login_path_to_cookie(opts[:login_path] || request_path)
     session[:logout_path] = opts[:logout_path]
     redirect_to sns_mypage_path if opts[:redirect]
     @cur_user = user
@@ -141,6 +152,19 @@ module SS::BaseFilter
 
   def set_logout_path_by_session
     @logout_path = session[:logout_path].presence
+  end
+
+  def set_login_path_to_cookie(path)
+    if path.blank?
+      cookies.delete(:login_path)
+      return
+    end
+
+    value = { value: path, http_only: true }
+    value[:same_site] = SS.config.ss.session["same_site"] if !SS.config.ss.session["same_site"].nil?
+    value[:secure] = SS.config.ss.session["secure"] if !SS.config.ss.session["secure"].nil?
+
+    cookies[:login_path] = value
   end
 
   def rescue_action(exception)

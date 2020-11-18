@@ -27,11 +27,14 @@ module SS::Helpers::FileFormBuilder
         @template.output_buffer << @template.button_tag("▼", name: nil, type: "button", class: %w(btn dropdown-toggle))
         @template.output_buffer << @template.content_tag(:div, class: %w(dropdown-menu)) do
           @template.output_buffer << @template.link_to(I18n.t('ss.links.upload'), path, class: "dropdown-item")
-          @template.output_buffer << @template.link_to(
-            I18n.t('sns.user_file'), @template.sns_apis_user_files_path(user: cur_user), class: "dropdown-item")
           if ss_mode == :cms
             @template.output_buffer << @template.link_to(
-              I18n.t('cms.file'), @template.cms_apis_files_path, class: "dropdown-item")
+              I18n.t('sns.user_file'), @template.cms_apis_user_files_path(cid: cur_node || "-"), class: "dropdown-item")
+            @template.output_buffer << @template.link_to(
+              I18n.t('cms.file'), @template.cms_apis_files_path(cid: cur_node || "-"), class: "dropdown-item")
+          else
+            @template.output_buffer << @template.link_to(
+              I18n.t('sns.user_file'), @template.sns_apis_user_files_path(user: cur_user), class: "dropdown-item")
           end
         end
       end

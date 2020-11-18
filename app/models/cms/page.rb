@@ -26,6 +26,18 @@ class Cms::Page
 
   index({ site_id: 1, filename: 1 }, { unique: true })
 
+  # and_public
+  #index({ site_id: 1, state: 1 })
+
+  # public_list
+  index({ filename: 1, depth: 1 })
+  index({ category_ids: 1 })
+  index({ group_ids: 1 })
+  #index({ _id: 1, site_id: 1, state: 1 }, { unique: true })
+
+  # rss
+  index({ released: 1, id: 1 })
+
   class << self
     def routes
       pages = ::Mongoid.models.select { |model| model.ancestors.include?(Cms::Model::Page) }

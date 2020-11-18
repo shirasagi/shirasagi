@@ -10,7 +10,6 @@ module Gws::Model::File
   attr_accessor :in_file, :resizing
 
   included do
-    cattr_accessor(:root, instance_accessor: false) { "#{Rails.root}/private/files" }
     store_in collection: "ss_files"
 
     seqid :id
@@ -48,6 +47,10 @@ module Gws::Model::File
   end
 
   module ClassMethods
+    def root
+      "#{SS::Application.private_root}/files"
+    end
+
     def resizing_options
       [
         [320, 240], [240, 320], [640, 480], [480, 640], [800, 600], [600, 800],

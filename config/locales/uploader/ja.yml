@@ -23,6 +23,8 @@ ja:
       uploader/file:
         name: タイトル
         filename: ファイル名
+        url: URL
+        url_copy: URLのコピー
         path: ファイル名
         content_type: MIME
         size: ファイルサイズ

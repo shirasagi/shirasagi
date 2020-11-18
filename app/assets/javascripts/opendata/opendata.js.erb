@@ -23,7 +23,7 @@ $(function () {
     link = menu.find("a");
     menu.each(function () {
       link.not(".current").hide();
-      return link.filter(".current").prependTo(menu).click(function () {
+      return link.filter(".current").prependTo(menu).on("click", function () {
         link.not(".current").slideToggle("fast");
         return false;
       });
@@ -123,7 +123,7 @@ this.Opendata = (function () {
     if (params == null) {
       params = {};
     }
-    return $(elem).click(function (e) {
+    return $(elem).on("click", function (e) {
       var defaults, self;
       self = $(this);
       defaults = {
@@ -148,7 +148,7 @@ this.Opendata = (function () {
     if (params == null) {
       params = {};
     }
-    return $(elem).click(function (e) {
+    return $(elem).on("click", function (e) {
       var defaults, self;
       if (!confirm("<%= I18n.t 'ss.confirm.delete' %>")) {
         return false;
@@ -178,12 +178,12 @@ this.Opendata = (function () {
   };
 
   Opendata.confirmUnloading = function () {
-    $("input[type=text],textarea,select").change(function () {
+    $("input[type=text],textarea,select").on("change", function () {
       return $(window).on("beforeunload", function () {
         return "<%= I18n.t 'ss.confirm.unload' %>";
       });
     });
-    return $("input[type=submit]").click(function () {
+    return $("input[type=submit]").on("click", function () {
       return $(window).off("beforeunload");
     });
   };
@@ -199,7 +199,7 @@ this.Opendata_Tooltips = (function () {
   Opendata_Tooltips.render = function () {
     var ttips;
     ttips = $(".tooltip");
-    ttips.click(function (ev) {
+    ttips.on("click", function (ev) {
       var css, cur, hgt, ofs, style;
       $(".tooltip ul").hide();
       cur = $(this);
@@ -220,7 +220,7 @@ this.Opendata_Tooltips = (function () {
       }
       return cur.find("ul").show();
     });
-    return $(document).click(function (ev) {
+    return $(document).on("click", function (ev) {
       if (!ttips.is($(ev.target).closest("div"))) {
         return $(".tooltip ul").hide();
       }
@@ -248,7 +248,7 @@ this.Opendata_ListUI = (function () {
       tr.find("input[type=checkbox]").each(function () {
         return tr.toggleClass("checked", $(this).prop("checked"));
       });
-      tr.find("input[type=checkbox]").change(function () {
+      tr.find("input[type=checkbox]").on("change", function () {
         var chkbox, chkcnt, i, len, ref;
         tr.toggleClass("checked", $(this).prop("checked"));
         chkcnt = 0;
@@ -264,12 +264,12 @@ this.Opendata_ListUI = (function () {
           return tr.find(".multiple-menu").hide();
         }
       });
-      tr.find("input[type=checkbox]").mouseover(function (e) {
+      tr.find("input[type=checkbox]").on("mouseover", function (e) {
         if (this.checked) {
           return tr.find(".multiple-menu").css("left", e.pageX + 15).css("top", e.pageY - 5).show();
         }
       });
-      tr.mouseup(function (e) {
+      tr.on("mouseup", function (e) {
         if (!$(e.target).is('a') && !$(e.target).is("input")) {
           tbody.find("input[type=checkbox]").attr("checked", false);
           tbody.find("tr").removeClass("checked");
@@ -277,7 +277,7 @@ this.Opendata_ListUI = (function () {
           return tr.find("input[type=checkbox]").trigger("click");
         }
       });
-      tr.mouseleave(function () {
+      tr.on("mouseleave", function () {
         tr.find(".tap-menu").hide();
         return tr.find(".multiple-menu").hide();
       });
@@ -299,7 +299,7 @@ this.Opendata_ListUI = (function () {
         }
       });
     });
-    return $("thead input[type=checkbox]").change(function () {
+    return $("thead input[type=checkbox]").on("change", function () {
       var chkbox, i, len, ref, results;
       ref = $("input[name='ids[]']");
       results = [];

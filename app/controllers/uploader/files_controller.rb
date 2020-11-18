@@ -8,10 +8,22 @@ class Uploader::FilesController < ApplicationController
   before_action :create_folder
   before_action :redirect_from_index
   before_action :set_item
+  before_action :set_crumbs
 
   navi_view "uploader/main/navi"
 
   private
+
+  def set_crumbs
+    filename = @item.filename.sub(@cur_node.filename, "")
+    url = ::File.join(uploader_files_path, @cur_node.filename)
+
+    filename.split("/").select(&:present?).each do |name|
+      url = ::File.join(url, name)
+      @crumbs << [name, url]
+    end
+    @crumbs.pop if params[:do].present?
+  end
 
   def set_format
     request.formats = [params[:format] || :html]

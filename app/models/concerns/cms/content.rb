@@ -38,6 +38,8 @@ module Cms::Content
 
     validate :validate_name, if: ->{ name.present? }
 
+    after_destroy :remove_private_dir
+
     scope :filename, ->(name) { where filename: name.sub(/^\//, "") }
     scope :node, ->(node, target = nil) {
       if target == 'descendant'
@@ -116,6 +118,40 @@ module Cms::Content
       end
       criteria
     end
+
+    def public_list(opts = {})
+      site = opts[:site]
+      parent_item = opts[:node] || opts[:part] || opts[:parent]
+      date = opts[:date]
+
+      criteria = self.all
+
+      # condition_hash
+      if parent_item && parent_item.respond_to?(:condition_hash)
+        ids = self.unscoped.where(parent_item.condition_hash).distinct(:id)
+        return criteria.none if ids.blank?
+
+        criteria = criteria.in(id: ids)
+        criteria = criteria.hint({ _id: 1 })
+
+        # criteria.count does not use hint
+        def criteria.count(options = {}, &block)
+          options = options.symbolize_keys
+          options[:hint] = { _id: 1 }
+          super(options, &block)
+        end
+      end
+
+      # site and_public
+      criteria = criteria.site(site) if site
+      criteria = criteria.and_public(date)
+
+      criteria
+    end
+
+    def private_root
+      "#{SS::Application.private_root}/#{self.collection_name}"
+    end
   end
 
   def name_for_index
@@ -151,6 +187,16 @@ module Cms::Content
 
   def json_url
     site.url + filename.sub(/(\/|\.html)?$/, ".json")
+  end
+
+  def private_dir
+    return if new_record?
+    self.class.private_root + "/" + id.to_s.split(//).join("/") + "/_"
+  end
+
+  def private_file(basename)
+    return if new_record?
+    "#{private_dir}/#{basename}"
   end
 
   def date
@@ -283,5 +329,9 @@ module Cms::Content
     if name.length > max_name_length
       errors.add :name, :too_long, { count: max_name_length }
     end
+  end
+
+  def remove_private_dir
+    ::FileUtils.rm_rf private_dir
   end
 end

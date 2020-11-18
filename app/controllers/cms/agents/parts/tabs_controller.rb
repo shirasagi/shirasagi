@@ -29,7 +29,7 @@ class Cms::Agents::Parts::TabsController < ApplicationController
 
       if pages.nil?
         if node.class.method_defined?(:condition_hash)
-          pages = Cms::Page.site(@cur_site).and_public(@cur_date).where(node.condition_hash)
+          pages = Cms::Page.public_list(site: @cur_site, node: node, date: @cur_date)
         else
           pages = Cms::Page.site(@cur_site).and_public(@cur_date).where(cond).node(node)
         end

@@ -26,7 +26,7 @@
     <h2><%= link_to t("cms.node_config"), node_conf_path, class: "icon-conf" %></h2>
   <% end %>
   <% if @cur_node.allowed?(:import, @cur_user, site: @cur_site, owned: true) %>
-    <h2><%= link_to t("cms.import_page"), node_import_path, class: "icon-conf" %></h2>
+    <h2><%= link_to t("cms.import_node"), node_import_path, class: "icon-conf" %></h2>
   <% end %>
   <% if @cur_node.allowed?(:edit, @cur_user, site: @cur_site) %>
     <h2><%= link_to t("cms.generate_node"), node_generate_nodes_path, class: "icon-write" %></h2>

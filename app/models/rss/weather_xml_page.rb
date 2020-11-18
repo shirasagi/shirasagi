@@ -11,8 +11,6 @@ class Rss::WeatherXmlPage
   set_permission_name "article_pages"
   set_show_path "rss_weather_xml"
 
-  index({ released: 1, id: 1 })
-
   store_in_repl_master
   default_scope ->{ where(route: "rss/weather_xml_page") }
 

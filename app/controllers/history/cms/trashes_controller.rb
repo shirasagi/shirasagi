@@ -14,12 +14,16 @@ class History::Cms::TrashesController < ApplicationController
     super
   end
 
+  def file_params
+    { cur_user: @cur_user, cur_group: @cur_group }
+  end
+
   public
 
   def index
     raise "403" unless @model.allowed?(:read, @cur_user, site: @cur_site, node: @cur_node)
 
-    @ref_coll_options = [Cms::Node, Cms::Page, Cms::Part, Cms::Layout].collect do |model|
+    @ref_coll_options = [Cms::Node, Cms::Page, Cms::Part, Cms::Layout, SS::File].collect do |model|
       [model.model_name.human, model.collection_name]
     end
     @ref_coll_options.unshift([I18n.t('ss.all'), 'all'])
@@ -46,7 +50,11 @@ class History::Cms::TrashesController < ApplicationController
     render_opts[:render] = { file: :undo_delete }
     render_opts[:notice] = t('ss.notice.restored')
 
-    result = @item.restore!(get_params)
+    if @item.ref_coll == "ss_files"
+      result = @item.file_restore!(file_params)
+    else
+      result = @item.restore!(get_params)
+    end
     @item.children.restore!(get_params) if params.dig(:item, :children) == 'restore' && @item.ref_coll == 'cms_nodes' && result
     render_update result, render_opts
   end

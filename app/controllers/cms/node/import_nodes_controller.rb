@@ -4,7 +4,7 @@ class Cms::Node::ImportNodesController < ApplicationController
 
   model Cms::Node::ImportNode
 
-  navi_view "cms/node/import_pages/navi"
+  navi_view "cms/node/import/navi"
 
   private
 

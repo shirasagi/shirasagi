@@ -15,14 +15,14 @@ module Chorg::Runner::Base
     @adds_group_to_site = opts['newly_created_group_to_site'].presence == 'add'
     @gws_staff_record = opts['gws_staff_record']
     @item = self.class.revision_class.site(@cur_site).find_by(name: name)
-    @item = self.class.revision_class.acquire_lock(@item, 1.hour.from_now)
+    @item = self.class.revision_class.acquire_lock(@item, 1.hour)
     unless @item
       put_log("already running")
       return
     end
 
     self.class.revision_class.ensure_release_lock(@item) do
-      init_context
+      init_context(opts)
 
       run_primitive_chorg
 
@@ -58,9 +58,13 @@ module Chorg::Runner::Base
 
   private
 
+  def models_scope
+    {}
+  end
+
   def update_all
     return if substituter.empty?
-    with_all_entity_updates(@models, substituter) do |entity, updates|
+    with_entity_updates(@models, substituter, models_scope) do |entity, updates|
       next if updates.blank?
 
       put_log("#{entity_title(entity)} has some updates. module=#{entity.class}")
@@ -93,7 +97,7 @@ module Chorg::Runner::Base
           end
         end
       end
-      update_attributes(entity, updates)
+      update(entity, updates)
       save_or_collect_errors(entity)
     end
   end
@@ -113,7 +117,7 @@ module Chorg::Runner::Base
 
   def validate_all
     return if validation_substituter.empty?
-    with_all_entity_updates(@models, validation_substituter) do |entity, deletes|
+    with_entity_updates(@models, validation_substituter, models_scope) do |entity, deletes|
       put_log("#{entity.name}(#{entity.url}) has deleted attributes: #{deletes}") if deletes.present?
     end
   end

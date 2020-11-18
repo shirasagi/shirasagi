@@ -33,7 +33,7 @@ module Event::Node
     private
 
     def purge_pages
-      Event::Page.limit_docs(@cur_site, self, ical_max_docs)
+      Event::Page.limit_docs((@cur_site || site), self, ical_max_docs)
     end
   end
 
