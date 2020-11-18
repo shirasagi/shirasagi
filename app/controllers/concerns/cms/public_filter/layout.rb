@@ -82,12 +82,12 @@ module Cms::PublicFilter::Layout
     @cur_item.window_name ||= @cur_item.name
 
     @items = pages.
-    order_by(@cur_node.sort_hash).
+    order_by(@cur_node.try(:sort_hash)).
     page(params[:page]).
-    per(@cur_node.limit)
+    per(@cur_node.try(:limit))
 
     @window_name = @cur_site.name
-    @window_name = "#{@cur_item.window_name} - #{@items.current_page}ページ目 - #{@cur_site.name}" if @cur_item.filename != 'index.html'
+    @window_name = "#{@cur_item.window_name} - #{@items.current_page}#{t("cms.count_pages")} - #{@cur_site.name}" if @cur_item.filename != 'index.html'
 
     @cur_layout.keywords    = @cur_item.keywords if @cur_item.respond_to?(:keywords)
     @cur_layout.description = @cur_item.description if @cur_item.respond_to?(:description)
