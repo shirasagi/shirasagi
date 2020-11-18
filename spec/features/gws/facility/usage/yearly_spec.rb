@@ -67,7 +67,7 @@ describe "gws_facility_usage", type: :feature, dbscope: :example, js: true do
 
     # change year
     within ".gws-facility-usage-yearly form.search" do
-      select "", from: "s[category]"
+      select I18n.t('gws/facility.facility'), from: "s[category]"
       select "#{now.year - 1}#{I18n.t('datetime.prompts.year')}", from: "s[year]"
       click_on I18n.t("ss.buttons.search")
     end
