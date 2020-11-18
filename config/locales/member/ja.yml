@@ -400,7 +400,7 @@ ja:
       password_short_downcase: "は英小文字（a-z）を%{count}文字以上含むようにしてください。"
       password_short_digit: "は数字（0-9）を%{count}文字以上含むようにしてください。"
       password_short_symbol: "は記号を%{count}文字以上含むようにしてください。"
-      password_contains_prohibited_chars: "は使用禁止文字が含まれています。"
+      password_contains_prohibited_chars: "に使用禁止文字（%{prohibited_chars}）が含まれています。"
       password_min_change_chars: "は以前のものから%{count}文字以上違う文字を含むようにしてください。"
       password_alphabet_only: に英字のみの文字は使用できません。
       password_numeric_only: に数字のみの文字は使用できません。
