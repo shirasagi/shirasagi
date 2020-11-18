@@ -10,14 +10,14 @@ class Sys::Auth::OpenIdConnect::TokenRequest
 
   attr_accessor :cur_item
   attr_accessor :redirect_uri
-  attr_accessor :session_state
+  attr_accessor :sso_token
 
   validates :state, presence: true
   validates :grant_type, presence: true
   validates :code, presence: true
 
   validates :cur_item, presence: true
-  validates :session_state, presence: true
+  validates :sso_token, presence: true
 
   validate :validate_state
 
@@ -49,7 +49,7 @@ class Sys::Auth::OpenIdConnect::TokenRequest
       :access_token, :token_type, :refresh_token, :expires_in, :id_token,
       :error, :error_description, :error_uri)
     body[:cur_item] = cur_item
-    body[:session_state] = session_state
+    body[:sso_token] = sso_token
 
     ::Sys::Auth::OpenIdConnect::TokenResponse.new(body)
   end
@@ -57,10 +57,10 @@ class Sys::Auth::OpenIdConnect::TokenRequest
   private
 
   def validate_state
-    return if state.blank? || session_state.blank?
+    return if state.blank? || sso_token.blank?
 
-    errors.add :state, :mismatch if state != session_state[:value]
-    errors.add :state, :expired if session_state[:created] + Sys::Auth::Base::READY_STATE_EXPIRES_IN < Time.zone.now.to_i
+    errors.add :state, :mismatch if state != sso_token.token
+    errors.add :state, :expired if sso_token.created.to_i + Sys::Auth::Base::READY_STATE_EXPIRES_IN < Time.zone.now.to_i
   end
 
   def http_client
