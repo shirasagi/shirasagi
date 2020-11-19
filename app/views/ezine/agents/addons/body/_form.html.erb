@@ -26,11 +26,13 @@
 <%= html_editor ".ezine-page-html", height: "400px", advanced: Cms::EditorExtension.allowed?(:use, @cur_user, site: @cur_site) %>
 
 <dl class="see mod-ezine-page-body">
-  <dt><%= @model.t :html %></dt>
-  <dd><%= f.text_area :html, class: "ezine-page-html", style: "height:400px;" %></dd>
+  <% if SS.config.ezine.html_editor? %>
+    <dt><%= @model.t :html %></dt>
+    <dd><%= f.text_area :html, class: "ezine-page-html", style: "height:400px;" %></dd>
 
-  <dt>&nbsp;</dt>
-  <dd><%= button_tag t("ezine.buttons.convert_html_to_text"), { type: :button, class: "ezine-convert-button btn" } %></dd>
+    <dt>&nbsp;</dt>
+    <dd><%= button_tag t("ezine.buttons.convert_html_to_text"), { type: :button, class: "ezine-convert-button btn" } %></dd>
+  <%end%>
 
   <dt><%= @model.t :text %></dt>
   <dd><%= f.text_area :text, class: "ezine-page-text monospace", style: "height:400px;" %></dd>
