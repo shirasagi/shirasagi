@@ -61,6 +61,11 @@ describe Cms::Column::Value::UrlField2, type: :model, dbscope: :example do
     let(:valid_url15) { "https://シラサギプロジェクト.jp" }
     let(:valid_url16) { "https://#{domain}/シラサギプロジェクト" }
 
+    let(:valid_url17) { "/docs/page1.html" }
+    let(:valid_url18) { "/docs" }
+    let(:valid_url19) { "/docs/" }
+    let(:valid_url20) { "/シラサギプロジェクト" }
+
     let(:invalid_url1) { "http://#{domain} /" }
     let(:invalid_url2) { "https://#{domain} /" }
 
@@ -76,16 +81,25 @@ describe Cms::Column::Value::UrlField2, type: :model, dbscope: :example do
     it "valid_url1" do
       item = build_page(valid_url1)
       expect(item.valid?).to be_truthy
+
+      expect(item.column_values.first.link_item_type).to be_nil
+      expect(item.column_values.first.link_item_id).to be_nil
     end
 
     it "valid_url2" do
       item = build_page(valid_url2)
       expect(item.valid?).to be_truthy
+
+      expect(item.column_values.first.link_item_type).to be_nil
+      expect(item.column_values.first.link_item_id).to be_nil
     end
 
     it "valid_url3" do
       item = build_page(valid_url3)
       expect(item.valid?).to be_truthy
+
+      expect(item.column_values.first.link_item_type).to be_nil
+      expect(item.column_values.first.link_item_id).to be_nil
     end
 
     it "valid_url4" do
@@ -115,26 +129,41 @@ describe Cms::Column::Value::UrlField2, type: :model, dbscope: :example do
     it "valid_url7" do
       item = build_page(valid_url7)
       expect(item.valid?).to be_truthy
+
+      expect(item.column_values.first.link_item_type).to be_nil
+      expect(item.column_values.first.link_item_id).to be_nil
     end
 
     it "valid_url8" do
       item = build_page(valid_url8)
       expect(item.valid?).to be_truthy
+
+      expect(item.column_values.first.link_item_type).to be_nil
+      expect(item.column_values.first.link_item_id).to be_nil
     end
 
     it "valid_url9" do
       item = build_page(valid_url9)
       expect(item.valid?).to be_truthy
+
+      expect(item.column_values.first.link_item_type).to be_nil
+      expect(item.column_values.first.link_item_id).to be_nil
     end
 
     it "valid_url10" do
       item = build_page(valid_url10)
       expect(item.valid?).to be_truthy
+
+      expect(item.column_values.first.link_item_type).to be_nil
+      expect(item.column_values.first.link_item_id).to be_nil
     end
 
     it "valid_url11" do
       item = build_page(valid_url11)
       expect(item.valid?).to be_truthy
+
+      expect(item.column_values.first.link_item_type).to be_nil
+      expect(item.column_values.first.link_item_id).to be_nil
     end
 
     it "valid_url12" do
@@ -164,21 +193,65 @@ describe Cms::Column::Value::UrlField2, type: :model, dbscope: :example do
     it "valid_url15" do
       item = build_page(valid_url15)
       expect(item.valid?).to be_truthy
+
+      expect(item.column_values.first.link_item_type).to be_nil
+      expect(item.column_values.first.link_item_id).to be_nil
     end
 
     it "valid_url16" do
       item = build_page(valid_url16)
       expect(item.valid?).to be_truthy
+
+      expect(item.column_values.first.link_item_type).to be_nil
+      expect(item.column_values.first.link_item_id).to be_nil
+    end
+
+    it "valid_url17" do
+      item = build_page(valid_url17)
+      expect(item.valid?).to be_truthy
+
+      expect(item.column_values.first.link_item_type).to eq article_page.collection_name.to_s
+      expect(item.column_values.first.link_item_id).to eq article_page.id
+    end
+
+    it "valid_url18" do
+      item = build_page(valid_url18)
+      expect(item.valid?).to be_truthy
+
+      expect(item.column_values.first.link_item_type).to eq article_node.collection_name.to_s
+      expect(item.column_values.first.link_item_id).to eq article_node.id
+    end
+
+    it "valid_url19" do
+      item = build_page(valid_url19)
+      expect(item.valid?).to be_truthy
+
+      expect(item.column_values.first.link_item_type).to eq article_node.collection_name.to_s
+      expect(item.column_values.first.link_item_id).to eq article_node.id
+    end
+
+    it "valid_url20" do
+      item = build_page(valid_url20)
+      expect(item.valid?).to be_truthy
+
+      expect(item.column_values.first.link_item_type).to be_nil
+      expect(item.column_values.first.link_item_id).to be_nil
     end
 
     it "invalid_url1" do
       item = build_page(invalid_url1)
       expect(item.valid?).to be_falsey
+
+      expect(item.column_values.first.link_item_type).to be_nil
+      expect(item.column_values.first.link_item_id).to be_nil
     end
 
     it "invalid_url2" do
       item = build_page(invalid_url2)
       expect(item.valid?).to be_falsey
+
+      expect(item.column_values.first.link_item_type).to be_nil
+      expect(item.column_values.first.link_item_id).to be_nil
     end
   end
 end
