@@ -19,8 +19,8 @@ describe Gws::Chorg::TestRunner, dbscope: :example do
       # check for job was succeeded
       expect(Gws::Job::Log.count).to eq 1
       Gws::Job::Log.first.tap do |log|
-        expect(log.logs).to include(include('INFO -- : Started Job'))
-        expect(log.logs).to include(include('INFO -- : Completed Job'))
+        expect(log.logs).to include(/INFO -- : .* Started Job/)
+        expect(log.logs).to include(/INFO -- : .* Completed Job/)
       end
 
       expect(Gws::Group.where(name: changeset.destinations.first['name']).first).to be_nil
@@ -49,8 +49,8 @@ describe Gws::Chorg::TestRunner, dbscope: :example do
       # check for job was succeeded
       expect(Gws::Job::Log.count).to eq 1
       Gws::Job::Log.first.tap do |log|
-        expect(log.logs).to include(include('INFO -- : Started Job'))
-        expect(log.logs).to include(include('INFO -- : Completed Job'))
+        expect(log.logs).to include(/INFO -- : .* Started Job/)
+        expect(log.logs).to include(/INFO -- : .* Completed Job/)
       end
 
       expect(Gws::Group.where(id: group.id).first).not_to be_nil
@@ -89,8 +89,8 @@ describe Gws::Chorg::TestRunner, dbscope: :example do
       # check for job was succeeded
       expect(Gws::Job::Log.count).to eq 1
       Gws::Job::Log.first.tap do |log|
-        expect(log.logs).to include(include('INFO -- : Started Job'))
-        expect(log.logs).to include(include('INFO -- : Completed Job'))
+        expect(log.logs).to include(/INFO -- : .* Started Job/)
+        expect(log.logs).to include(/INFO -- : .* Completed Job/)
       end
 
       expect(Gws::Group.where(id: group1.id).first).not_to be_nil
@@ -133,8 +133,8 @@ describe Gws::Chorg::TestRunner, dbscope: :example do
       # check for job was succeeded
       expect(Gws::Job::Log.count).to eq 1
       Gws::Job::Log.first.tap do |log|
-        expect(log.logs).to include(include('INFO -- : Started Job'))
-        expect(log.logs).to include(include('INFO -- : Completed Job'))
+        expect(log.logs).to include(/INFO -- : .* Started Job/)
+        expect(log.logs).to include(/INFO -- : .* Completed Job/)
       end
 
       # check for not changed

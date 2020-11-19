@@ -22,8 +22,8 @@ describe Gws::StaffRecord::CopySituationJob, dbscope: :example do
 
       expect(Gws::Job::Log.count).to eq 1
       Gws::Job::Log.first.tap do |log|
-        expect(log.logs).to include(include('INFO -- : Started Job'))
-        expect(log.logs).to include(include('INFO -- : Completed Job'))
+        expect(log.logs).to include(/INFO -- : .* Started Job/)
+        expect(log.logs).to include(/INFO -- : .* Completed Job/)
       end
 
       expect(Gws::StaffRecord::Group.count).to eq 3

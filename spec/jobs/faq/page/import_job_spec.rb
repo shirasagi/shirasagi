@@ -34,8 +34,8 @@ describe Faq::Page::ImportJob, dbscope: :example do
 
       it do
         log = Job::Log.first
-        expect(log.logs).to include(include("INFO -- : Started Job"))
-        expect(log.logs).to include(include("INFO -- : Completed Job"))
+        expect(log.logs).to include(/INFO -- : .* Started Job/)
+        expect(log.logs).to include(/INFO -- : .* Completed Job/)
 
         items = Faq::Page.site(site).where(filename: /^#{node_1.filename}\//, depth: 3)
         expect(items.count).to be 4
@@ -80,8 +80,8 @@ describe Faq::Page::ImportJob, dbscope: :example do
 
       it do
         log = Job::Log.first
-        expect(log.logs).to include(include("INFO -- : Started Job"))
-        expect(log.logs).to include(include("INFO -- : Completed Job"))
+        expect(log.logs).to include(/INFO -- : .* Started Job/)
+        expect(log.logs).to include(/INFO -- : .* Completed Job/)
 
         items = Faq::Page.site(site).where(filename: /^#{node_2.filename}\//, depth: 3)
         expect(items.count).to be 4

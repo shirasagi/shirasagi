@@ -17,9 +17,9 @@ describe Cms::ImportFilesJob, dbscope: :example do
 
     it do
       log = Job::Log.first
-      expect(log.logs).to include(include("INFO -- : Started Job"))
-      expect(log.logs).not_to include(include("INFO -- : error:"))
-      expect(log.logs).to include(include("INFO -- : Completed Job"))
+      expect(log.logs).to include(/INFO -- : .* Started Job/)
+      expect(log.logs).not_to include(/INFO -- : .* error:/)
+      expect(log.logs).to include(/INFO -- : .* Completed Job/)
 
       pages = Cms::ImportPage.all
       nodes = Cms::Node::ImportNode.all

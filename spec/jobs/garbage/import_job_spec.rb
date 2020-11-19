@@ -32,8 +32,8 @@ describe Garbage::ImportJob, dbscope: :example do
 
       it do
         log = Job::Log.first
-        expect(log.logs).to include(include("INFO -- : Started Job"))
-        expect(log.logs).to include(include("INFO -- : Completed Job"))
+        expect(log.logs).to include(/INFO -- : .* Started Job/)
+        expect(log.logs).to include(/INFO -- : .* Completed Job/)
 
         item1 = Garbage::Node::Page.find_by(filename: "garbage/item1")
         expect(item1.name).to eq "name1"
