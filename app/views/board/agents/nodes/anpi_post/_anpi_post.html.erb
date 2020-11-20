@@ -27,7 +27,7 @@
     <% if @cur_node.show_email? %>
     <span class="member"><%= @model.t :member_id %>: <%= mail_to item.member.email, "#{item.member.name} <#{item.member.email}>", class: "email" %></span>
     <% else %>
-    <span class="member"><%= @model.t :member_id %>: <%= item.member.name %></span>
+    <span class="member"><%= @model.t :member_id %>: <%= item.member.try(:name) %></span>
     <% end %>
   </div>
 </article>
