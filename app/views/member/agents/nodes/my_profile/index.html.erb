@@ -7,10 +7,12 @@
       <dd><%= @item.name %></dd>
     </dl>
 
+    <% if @cur_node.try(:show_email?) %>
     <dl class="column">
       <dt><%= @model.t :email %></dt>
       <dd><%= @item.email %></dd>
     </dl>
+    <% end %>
 
     <dl class="column">
       <dt><%= @model.t :kana %></dt>

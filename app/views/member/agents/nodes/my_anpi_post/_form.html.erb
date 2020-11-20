@@ -11,6 +11,17 @@
 
 <dl class="column">
   <dt>
+    <%= @model.t :email %>
+    <%= required_label %>
+  </dt>
+  <dd>
+    <%= f.text_field :email %>
+    <%= remarks :email %>
+  </dd>
+</dl>
+
+<dl class="column">
+  <dt>
     <%= @model.t :text %>
     <%= required_label %>
   </dt>
