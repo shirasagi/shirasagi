@@ -3,8 +3,10 @@
 <% if @cur_node.route == 'board/post' %>
 <h3><%= link_to t("board.post"), board_posts_path %></h3>
 <% end %>
-<% if @cur_node.route == 'board/anpi_post' %>
-<h3><%= link_to t("board.post"), board_anpi_posts_path %></h3>
-<% end %>
+<% if SS.config.cms.post_menu? %>
+  <% if @cur_node.route == 'board/anpi_post' %>
+  <h3><%= link_to t("board.post"), board_anpi_posts_path %></h3>
+  <% end %>
+<%end%>
 
 <% end %>
