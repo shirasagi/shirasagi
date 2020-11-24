@@ -135,7 +135,7 @@ module Cms::Addon
       return if twitter_posted.blank?
 
       client = connect_twitter
-      twitter_posted.each do |posted|
+      twitter_posted.to_a.each do |posted|
         post_id = posted[:twitter_post_id]
         client.destroy_status(post_id) rescue nil
       end
