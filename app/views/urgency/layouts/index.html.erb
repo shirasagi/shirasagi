@@ -13,8 +13,12 @@
       <% @items.each do |item| %>
       <%
         filename = "layout-#{item.id}.html"
+
         preview_path = ::File.join((@cur_site.subdir ? @cur_site.subdir : ""), @cur_node.filename, filename)
+        preview_path.sub!(/^\//, "")
+
         mobile_preview_path = ::File.join((@cur_site.subdir ? @cur_site.subdir : ""), @cur_site.mobile_location, @cur_node.filename, filename)
+        mobile_preview_path.sub!(/^\//, "")
       %>
       <tr class="list-item <%= default_layout?(item) ? 'default-layout' : '' %>">
         <td>
