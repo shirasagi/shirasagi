@@ -91,6 +91,9 @@ ja:
         "5": 最低
       schedule_custom_group_extra_state:
         creator_name: カスタムグループの作成者名の付加
+      member_mode:
+        default: 既定のユーザー
+        specific: 特定のユーザー（以下で指定）
     operations:
       expand_all: すべて展開
       collapse_all: すべて閉じる
