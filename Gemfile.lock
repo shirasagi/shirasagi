@@ -289,7 +289,10 @@ GEM
       kaminari-core (~> 1.0)
       mongoid
     kgio (2.11.3)
-    kramdown (1.17.0)
+    kramdown (2.3.0)
+      rexml
+    kramdown-parser-gfm (1.1.0)
+      kramdown (~> 2.0)
     levenshtein (0.2.2)
     libv8 (7.3.492.27.1)
     link_header (0.0.8)
@@ -467,6 +470,7 @@ GEM
       rdf (~> 3.1)
     rdoc (6.1.1)
     regexp_parser (1.7.0)
+    rexml (3.2.4)
     rly (0.2.3)
     rmagick (2.16.0)
     romaji (0.2.4)
@@ -675,6 +679,7 @@ DEPENDENCIES
   kaminari
   kaminari-mongoid
   kramdown
+  kramdown-parser-gfm
   levenshtein
   liquid
   mail-iso-2022-jp
