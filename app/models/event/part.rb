@@ -1,6 +1,7 @@
 module Event::Part
   class Calendar
     include Cms::Model::Part
+    include Event::Addon::Calendar
     include Cms::Addon::Release
     include Cms::Addon::GroupPermission
     include History::Addon::Backup
