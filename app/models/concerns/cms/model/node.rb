@@ -96,6 +96,10 @@ module Cms::Model::Node
     site.subdir ? "#{site.subdir}/#{filename}/" : "#{filename}/"
   end
 
+  def mobile_preview_path
+    ::File.join((site.subdir ? site.subdir : ""), site.mobile_location, filename, "/")
+  end
+
   def parents
     dirs = self.class.split_path(filename)
     dirs.pop
