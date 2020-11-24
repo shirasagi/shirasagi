@@ -26,7 +26,7 @@
 <%= html_editor ".ezine-page-html", height: "400px", advanced: Cms::EditorExtension.allowed?(:use, @cur_user, site: @cur_site) %>
 
 <dl class="see mod-ezine-page-body">
-  <% if SS.config.ezine.html_editor? %>
+  <% if SS.config.ezine.html_editor %>
     <dt><%= @model.t :html %></dt>
     <dd><%= f.text_area :html, class: "ezine-page-html", style: "height:400px;" %></dd>
 
