@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 describe Sitemap::Page do
-  subject(:model) { Sitemap::Page }
+  subject(:model) { described_class }
   subject(:factory) { :sitemap_page }
 
   it_behaves_like "mongoid#save"
@@ -20,5 +20,7 @@ describe Sitemap::Page do
     it { expect(item.full_url).not_to eq nil }
     it { expect(item.parent).to eq node }
     it { expect(item.private_show_path).to eq show_path }
+    it { expect(item.load_sitemap_urls).to include(node.url) }
+    it { expect(item.load_sitemap_urls(name: true)).to include("#{node.url} ##{node.name}") }
   end
 end
