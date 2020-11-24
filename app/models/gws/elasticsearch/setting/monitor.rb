@@ -5,11 +5,13 @@ class Gws::Elasticsearch::Setting::Monitor
   self.model = Gws::Monitor::Topic
 
   def menu_label
-    @cur_site.menu_monitor_label || I18n.t('modules.gws/monitor')
+    cur_site.menu_monitor_label.presence || I18n.t('modules.gws/monitor')
   end
 
   def search_types
     return [] unless cur_site.menu_monitor_visible?
+    return [] unless Gws.module_usable?(:monitor, cur_site, cur_user)
+
     super
   end
 
