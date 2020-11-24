@@ -99,6 +99,7 @@ group :development, :test do
   gem 'capybara', require: false
   gem 'coveralls', require: false
   gem 'factory_bot_rails', require: false
+  gem 'debase', require: false
   gem 'fuubar', require: false
   gem 'guard', require: false
   gem 'guard-rspec', '~> 4.3.1', require: false
@@ -115,6 +116,7 @@ group :development, :test do
   gem 'rspec-rails', require: false
   gem 'rubocop', require: false
   gem 'rubocop-performance', require: false
+  gem 'ruby-debug-ide', require: false
   gem 'scss_lint', require: false
   gem 'selenium-webdriver', require: false
   gem 'simplecov', require: false
