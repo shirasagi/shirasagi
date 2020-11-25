@@ -301,8 +301,8 @@ describe Article::Page::ImportJob, dbscope: :example do
 
       it do
         Job::Log.first.tap do |log|
-          expect(log.logs).to include(include("INFO -- : Started Job"))
-          expect(log.logs).to include(include("INFO -- : Completed Job"))
+          expect(log.logs).to include(/INFO -- : .* Started Job/)
+          expect(log.logs).to include(/INFO -- : .* Completed Job/)
         end
 
         expect(Article::Page.site(site).count).to eq 2
@@ -329,8 +329,8 @@ describe Article::Page::ImportJob, dbscope: :example do
 
       it do
         Job::Log.first.tap do |log|
-          expect(log.logs).to include(include("INFO -- : Started Job"))
-          expect(log.logs).to include(include("INFO -- : Completed Job"))
+          expect(log.logs).to include(/INFO -- : .* Started Job/)
+          expect(log.logs).to include(/INFO -- : .* Completed Job/)
         end
 
         expect(Article::Page.site(site).count).to eq 0
