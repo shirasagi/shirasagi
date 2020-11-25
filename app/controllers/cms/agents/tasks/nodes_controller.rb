@@ -15,6 +15,11 @@ class Cms::Agents::Tasks::NodesController < ApplicationController
   def generate
     @task.log "# #{@site.name}"
 
+    if @site.generate_locked?
+      @task.log(@site.t(:generate_locked))
+      return
+    end
+
     generate_root_pages unless @node
 
     nodes = Cms::Node.site(@site).and_public

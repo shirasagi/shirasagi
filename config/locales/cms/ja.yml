@@ -137,6 +137,8 @@ ja:
       import_with_entry_form_is_not_supported: 次のフォームでは本文ブロックは出力されません。
       restoring_public_content_from_trash: 非公開で復元されます。復元後、内容を確認うえ、公開してください。
       restoring_share_file_from_trash: 共有ファイルに復元されます。
+      generate_locked: 書き出しを停止しました。
+      generate_unlocked: 書き出しの停止を解除しました。
     apis:
       categories:
         index: カテゴリーを選択する
@@ -363,6 +365,8 @@ ja:
     use_cms_commands: コマンドの実行
     use_cms_tools: 運用ツールの利用
     use_cms_editor_extensions: エディターの高度な利用
+    read_cms_generate_lock: 書き出し停止の閲覧
+    edit_cms_generate_lock: 書き出し停止の編集
     read_other_cms_nodes: フォルダーの閲覧（全て）
     read_private_cms_nodes: フォルダーの閲覧（所有）
     edit_other_cms_nodes: フォルダーの編集（全て）

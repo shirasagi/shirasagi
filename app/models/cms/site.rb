@@ -20,6 +20,7 @@ class Cms::Site
   include SS::Addon::Elasticsearch::SiteSetting
   include SS::Addon::Translate::SiteSetting
   include SS::Addon::SiteUsage
+  include SS::Addon::GenerateLock
 
   set_permission_name "cms_sites", :edit
 end

@@ -1,0 +1,29 @@
+<% addons = @addons || @item.try(:addons) || [] %>
+
+<%= form_for :item, url: { action: :update }, html: { id: "item-form", method: :put, multipart: true, autocomplete: :off } do |f| %>
+<%= error_messages_for :item %>
+
+<%= hidden_field_tag :_updated, params[:_updated] || @item.updated if @item.respond_to?(:updated) %>
+
+<div class="addon-views">
+  <%
+    addon_options = {}
+    addon_options[:id] = "addon-basic"
+    addon_options[:head] = t('modules.addons.ss/generate_lock') if addons.size > 0
+  %>
+  <% buf = render file: "_form", locals: { f: f, addon: addon_options } %>
+  <%= render "ss/crud/addon", addon: addon_options do %>
+    <%= buf %>
+  <% end %>
+</div>
+
+<% if Cms::GenerateLock.allowed?(:edit, @cur_user, site: @cur_site) %>
+  <footer class="send">
+    <%= f.submit(@model.t(:generate_lock), name: "lock", class: "btn btn-primary btn-generate-lock") %>
+    <%= f.submit(@model.t(:generate_unlock), name: "unlock", class: "btn btn-default btn-generate-lock") %>
+  </footer>
+<% end %>
+
+<% end %>
+
+<%= jquery do %> SS.confirmUnloading(); <% end %>

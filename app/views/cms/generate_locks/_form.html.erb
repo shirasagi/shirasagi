@@ -1,0 +1,13 @@
+<dl class="see">
+  <dt><%= @model.t :generate_lock_until %></dt>
+  <dd>
+    <% if @item.generate_lock_until.present? %>
+      <%= I18n.l(@item.generate_lock_until, format: :long) %><span>(<%= @item.generate_lock_user.try(:name) %>)</span>
+    <% else %>
+      <%= @model.t(:generate_unlocked) %>
+    <% end %>
+  </dd>
+  <% if Cms::GenerateLock.allowed?(:edit, @cur_user, site: @cur_site) %>
+    <dd><%= f.text_field :generate_lock_until, class: 'datetime js-datetime', value: tryb { @item.generate_lock_until.strftime("%Y/%m/%d %H:%M") }, 'data-step': '15' %></dd>
+  <% end %>
+</dl>
