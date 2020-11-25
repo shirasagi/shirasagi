@@ -52,6 +52,8 @@ def name_hier(category)
   end
   names.reverse.join('/')
 end
+
+return if @categories.blank? && @disallowed_categories.blank?
 %>
 <dl class="see category-form mod-opendata-category">
   <dd class="wide allowed-categories">
