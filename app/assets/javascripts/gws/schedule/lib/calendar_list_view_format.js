@@ -23,6 +23,7 @@ var fullCalendar_renderListEvents = function(segs) {
   var view = clearView(firstOrCreateView());
   var table = $('<div class="fc-listMonth-view-table"></div>');
   var eventCount = 0;
+  var duplicateCheck = [];
 
   var noPlan = $('<div class="td no-plan" style="display: none;">' + Gws_Schedule_Calendar.messages.noPlan + '</div>');
   $('<div class="tr"></div>').appendTo(table).append(noPlan);
@@ -32,6 +33,12 @@ var fullCalendar_renderListEvents = function(segs) {
     var event = seg.event;
 
     if (event.className.indexOf('fc-holiday') !== -1) continue;
+
+    var uniqueKey = [ event.id, event.startDateLabel, event.startTimeLabel ].join(":");
+    if (duplicateCheck.includes(uniqueKey)) {
+    continue;
+    }
+    duplicateCheck.push(uniqueKey);
 
     var cont = $('<span class="fc-content"></span>').text(event.title);
     var evEl = $('<a class="fc-event fc-event-point"></a>').append(cont);
