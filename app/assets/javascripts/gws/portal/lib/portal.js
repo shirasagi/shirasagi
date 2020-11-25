@@ -15,6 +15,9 @@ function Gws_Portal(selector, settings) {
     options['resize'] = { enabled: false };
     options['draggable'] = { enabled: false, handle: 'disable' };
   }
+  if (settings && settings['max_rows']) {
+    options['max_rows'] = settings['max_rows'];
+  }
 
   this.el = $(selector);
   this.gs = this.el.find("ul.portlets").gridster(options).data('gridster');
