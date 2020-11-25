@@ -161,6 +161,7 @@ GEM
     faraday (0.17.3)
       multipart-post (>= 1.2, < 3)
     fast_blank (1.0.0)
+    fastimage (2.2.0)
     ffi (1.12.2)
     formatador (0.2.5)
     fullcalendar.io-rails (2.6.1)
@@ -657,6 +658,7 @@ DEPENDENCIES
   factory_bot_rails
   faraday
   fast_blank
+  fastimage
   fullcalendar.io-rails (~> 2.6.0)
   fuubar
   google-cloud-translate (= 2.0.0)

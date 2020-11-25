@@ -3,11 +3,11 @@
 %>
 <dl class="see">
   <% if @item.image? %>
-    <% img = Magick::ImageList.new(@item.path) %>
+    <% width, height = @item.image_dimension %>
     <dt><%= @model.t :image %></dt>
     <dd>
       <div class="img"><%= link_to image_tag(url_for(action: :thumb, _: @item.updated.to_i), alt: ""), { action: :view }, { target: "_blank" } %></div>
-      <div class="properties"><span class="width"><%= img.columns %></span> x <span class="height"><%= img.rows %></span></div>
+      <div class="properties"><span class="width"><%= width %></span> x <span class="height"><%= height %></span></div>
     </dd>
   <% end %>
 
