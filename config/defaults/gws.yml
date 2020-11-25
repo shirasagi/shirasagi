@@ -63,7 +63,7 @@ production: &production
       - model: qna
 
     portlet_settings:
-      max_rows: 30
+      max_rows: 50
       ad:
         image_limit: 5
 
