@@ -15,8 +15,8 @@
             <div class="properties">
               <span><%= I18n.t("sns.filename") %>: <%= file.name %></span><br>
               <% if file.image? %>
-                <% img = Magick::ImageList.new(file.path) %>
-                <span><%= t("sns.w_h") %>: <%= img.columns %> x <%= img.rows %></span><br>
+                <% width, height = file.image_dimension %>
+                <span><%= t("sns.w_h") %>: <%= width %> x <%= height %></span><br>
               <% end %>
               <span><%= t("sns.size") %>: <%= number_to_human_size(file.size) %></span><br>
               <span><%= t("sns.datetime") %>: <%= file.updated.strftime("%Y/%m/%d %H:%M") %></span><br>
