@@ -20,7 +20,7 @@ module Cms::CsvImportBase
       end
 
       true
-    rescue => e
+    rescue
       false
     ensure
       file.rewind
@@ -28,28 +28,29 @@ module Cms::CsvImportBase
 
     def each_csv(file, &block)
       io = file.to_io
-      if utf8_file?(io)
-        io.seek(3)
-        io.set_encoding('UTF-8')
-      else
-        io.set_encoding('SJIS:UTF-8')
+      if valid_encoding?(io, Encoding::UTF_8)
+        io.set_encoding(Encoding::UTF_8)
+      elsif valid_encoding?(io, Encoding::SJIS)
+        io.set_encoding(Encoding::SJIS, Encoding::UTF_8)
       end
 
       csv = CSV.new(io, { headers: true })
       csv.each(&block)
     ensure
-      io.set_encoding("ASCII-8BIT")
+      io.set_encoding(Encoding::ASCII_8BIT)
     end
 
-    private
-
-    def utf8_file?(file)
+    def valid_encoding?(file, encoding)
       file.rewind
-      bom = file.read(3)
+      if encoding == Encoding::UTF_8
+        bom = file.read(3)
+        bom.force_encoding(encoding)
+        return true if SS::Csv::UTF8_BOM == bom
+        file.rewind
+      end
+      body = file.gets(1000)
       file.rewind
-
-      bom.force_encoding("UTF-8")
-      SS::Csv::UTF8_BOM == bom
+      body.force_encoding(encoding).valid_encoding?
     end
   end
 end
