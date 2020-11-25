@@ -709,7 +709,6 @@ ja:
         text: 本文TEXT
         html: 本文HTML
         format: フォーマット
-        seen: 既読日時
         send_date: 送信日時
         export: エクスポート
         url: URL
@@ -755,6 +754,8 @@ ja:
         close_date: 公開終了日時(予約)
       ss/lockable:
         lock_until: ロック期限日時
+      ss/user_settings:
+        user_settings: ユーザー別設定
 
   tooltip:
     ss/model/user:

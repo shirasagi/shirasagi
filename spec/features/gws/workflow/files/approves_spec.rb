@@ -84,7 +84,7 @@ describe Gws::Workflow::FilesController, type: :feature, dbscope: :example, js: 
       expect(notice1.text).to be_blank
       expect(notice1.html).to be_blank
       expect(notice1.format).to eq "text"
-      expect(notice1.seen).to be_blank
+      expect(notice1.user_settings).to be_blank
       expect(notice1.state).to eq "public"
       expect(notice1.send_date).to be_present
       expect(notice1.url).to eq "/.g#{site.id}/workflow/files/all/#{item.id}"
@@ -99,7 +99,7 @@ describe Gws::Workflow::FilesController, type: :feature, dbscope: :example, js: 
         expect(notice.text).to be_blank
         expect(notice.html).to be_blank
         expect(notice.format).to eq "text"
-        expect(notice.seen).to be_blank
+        expect(notice.user_settings).to be_blank
         expect(notice.state).to eq "public"
         expect(notice.send_date).to be_present
         expect(notice.url).to eq "/.g#{site.id}/workflow/files/all/#{item.id}"
@@ -175,7 +175,7 @@ describe Gws::Workflow::FilesController, type: :feature, dbscope: :example, js: 
       expect(notice3.text).to be_blank
       expect(notice3.html).to be_blank
       expect(notice3.format).to eq "text"
-      expect(notice3.seen).to be_blank
+      expect(notice3.user_settings).to be_blank
       expect(notice3.state).to eq "public"
       expect(notice3.send_date).to be_present
       expect(notice3.url).to eq "/.g#{site.id}/workflow/files/all/#{item.id}"

@@ -5,6 +5,7 @@ module SS::Model::Notification
   include SS::Reference::User
   include SS::UserPermission
   include SS::Addon::Notification::Reply
+  include SS::UserSettings
 
   attr_accessor :cur_group
 
@@ -21,8 +22,6 @@ module SS::Model::Notification
     field :text, type: String, default: ''
     field :html, type: String, default: ''
     field :format, type: String
-    field :seen, type: Hash, default: {}
-    field :deleted, type: Hash, default: {}
     field :state, type: String, default: 'public' # always public
     field :send_date, type: DateTime
     field :url, type: String, default: ''
@@ -35,11 +34,9 @@ module SS::Model::Notification
 
     default_scope -> { order_by(send_date: -1, updated: -1) }
 
-    scope :undeleted, ->(user) { where(:"deleted.#{user.id}".exists => false) }
-    scope :unseen, ->(user) { where(:"seen.#{user.id}".exists => false) }
     scope :member, ->(user) { self.in(member_ids: user.id) }
 
-    alias name subject
+    alias_method :name, :subject
   end
 
   private
@@ -55,7 +52,12 @@ module SS::Model::Notification
   public
 
   def set_seen(user)
-    self.seen[user.id.to_s] = Time.zone.now
+    upsert_user_setting(user.id, "seen_at", Time.zone.now.utc)
+    self
+  end
+
+  def unset_seen(user)
+    delete_user_setting(user.id, "seen_at")
     self
   end
 
@@ -68,11 +70,11 @@ module SS::Model::Notification
   end
 
   def unseen?(user)
-    seen[user.id.to_s].nil?
+    find_user_setting(user.id, "seen_at").blank?
   end
 
   def deleted?(user)
-    deleted[user.id.to_s].present?
+    find_user_setting(user.id, "deleted").present?
   end
 
   def attachments?
@@ -86,22 +88,30 @@ module SS::Model::Notification
   end
 
   def destroy_from_member(user)
-    self.member_ids = member_ids - [user.id]
-    self.deleted[user.id.to_s] = Time.zone.now
-
+    self.member_ids = (member_ids - [user.id]).select(&:present?)
     if member_ids.blank?
-      destroy
-    else
-      update
+      return destroy
     end
+
+    result = save
+    upsert_user_setting(user.id, "deleted", Time.zone.now.utc) if result
+    result
   end
 
   def subject_with_group
     return self.subject if self.group.blank?
-    return "[#{self.group.name}] #{self.subject}"
+    "[#{self.group.name}] #{self.subject}"
   end
 
   module ClassMethods
+    def undeleted(user_or_user_id)
+      and_user_setting_blank(user_or_user_id, "deleted")
+    end
+
+    def unseen(user_or_user_id)
+      and_user_setting_blank(user_or_user_id, "seen_at")
+    end
+
     def unseens(user, opts = {})
       criteria.member(user).unseen(user)
     end
@@ -116,7 +126,7 @@ module SS::Model::Notification
 
       if params[:unseen].present?
         user_id = params[:unseen].to_s.gsub(/\D/, '')
-        criteria = criteria.where("seen.#{user_id}" => { '$exists' => false })
+        criteria = criteria.unseen(user_id)
       end
 
       criteria
