@@ -111,9 +111,9 @@ describe Cms::Node::GenerateJob, dbscope: :example do
 
       expect(Job::Log.count).to eq 1
       Job::Log.first.tap do |log|
-        expect(log.logs).to include(include('INFO -- : Started Job'))
+        expect(log.logs).to include(/INFO -- : .* Started Job/)
         expect(log.logs).to include(include(I18n.t('mongoid.attributes.ss/addon/generate_lock.generate_locked')))
-        expect(log.logs).to include(include('INFO -- : Completed Job'))
+        expect(log.logs).to include(/INFO -- : .* Completed Job/)
       end
     end
   end
