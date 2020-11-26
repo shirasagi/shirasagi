@@ -496,4 +496,19 @@ RSpec.describe Gws::Schedule::Todo, type: :model, dbscope: :example do
       end
     end
   end
+
+  describe "#reminder_url" do
+    let(:item) { create :gws_schedule_todo }
+    subject { item.reminder_url }
+
+    it do
+      expect(subject).to be_a(Array)
+      expect(subject.length).to eq 2
+      expect(subject[0]).to eq "gws_schedule_todo_readable_path"
+      expect(subject[1]).to be_a(Hash)
+
+      path = Rails.application.routes.url_helpers.send(subject[0], subject[1])
+      expect(path).to eq "/.g#{item.site_id}/schedule/todo/-/readables/#{item.id}"
+    end
+  end
 end
