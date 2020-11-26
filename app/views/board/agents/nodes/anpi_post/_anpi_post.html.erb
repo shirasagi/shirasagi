@@ -24,10 +24,10 @@
     <% if @cur_node.show_email? && item.email.present? %>
     <span class="email"><%= @model.t :email %>: <%= item.email %></span>
     <% end %>
-    <% if @cur_node.show_email? %>
+    <% if @cur_node.show_email? && item.member.present? %>
     <span class="member"><%= @model.t :member_id %>: <%= mail_to item.member.email, "#{item.member.name} <#{item.member.email}>", class: "email" %></span>
-    <% else %>
-    <span class="member"><%= @model.t :member_id %>: <%= item.member.try(:name) %></span>
+    <% elsif !@cur_node.show_email? && item.member.present? %>
+    <span class="member"><%= @model.t :member_id %>: <%= item.member.name %></span>
     <% end %>
   </div>
 </article>
