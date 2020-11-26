@@ -72,22 +72,17 @@ module Cms::PublicFilter::Layout
     body
   end
 
-  def pages
-    Article::Page.public_list(site: @cur_site, node: @cur_node, date: @cur_date)
-  end
 
   def render_layout(layout)
     @cur_layout = layout
     @cur_item   = @cur_page || @cur_node
     @cur_item.window_name ||= @cur_item.name
 
-    @items = pages.
-    order_by(@cur_node.try(:sort_hash)).
-    page(params[:page]).
-    per(@cur_node.try(:limit))
+    @count_pages = params[:page] if params[:page].numeric?
+    @current_page = "#{@count_pages}#{t("cms.count_pages")} - " if @count_pages
 
     @window_name = @cur_site.name
-    @window_name = "#{@cur_item.window_name} - #{@items.current_page}#{t("cms.count_pages")} - #{@cur_site.name}" if @cur_item.filename != 'index.html'
+    @window_name = "#{@cur_item.window_name} - #{@current_page} #{@cur_site.name}" if @cur_item.filename != 'index.html'
 
     @cur_layout.keywords    = @cur_item.keywords if @cur_item.respond_to?(:keywords)
     @cur_layout.description = @cur_item.description if @cur_item.respond_to?(:description)
