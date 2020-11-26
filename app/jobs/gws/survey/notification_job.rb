@@ -42,9 +42,10 @@ class Gws::Survey::NotificationJob < Gws::ApplicationJob
           Rails.logger.info("#{item.name}: 通知を送信済みです")
           next
         end
+
+        item = result
       end
 
-      item = result
       if !@options[:unanswered_only] && item.notification_notice_state != 'enabled'
         Rails.logger.info("#{item.name}: 通知が有効ではありません")
         return
