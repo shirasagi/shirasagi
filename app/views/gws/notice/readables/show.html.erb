@@ -7,7 +7,7 @@
         <% if @item.categories.present? %>
           <span class="categories">
           <% @item.categories.compact.each do |category| %>
-            <%= link_to category.trailing_name, url_for(action: :index, category: category.id), class: "gws-category-label", style: category_label_css(category) %>
+            <%= link_to category.trailing_name, url_for(action: :index, category_id: category.id), class: "gws-category-label", style: category_label_css(category) %>
           <% end %>
           </span>
         <% end %>
