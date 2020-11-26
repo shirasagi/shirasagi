@@ -7,6 +7,9 @@ production: &production
   # Disable navigation
   disable_navi: false
 
+  # disable post from left bar menu
+  post_menu: false
+
   # enable LGWAN
   enable_lgwan: false
 
@@ -140,4 +143,5 @@ test:
 
 development:
   <<: *production
+  # disable post from left bar menu
   post_menu: false
