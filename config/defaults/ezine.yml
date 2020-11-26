@@ -9,7 +9,7 @@ production:
   sleep_seconds: 10
 
   # disable html editor
-  html-editor: false
+  html_editor: false
 
 ## Multiple servers example
 #
