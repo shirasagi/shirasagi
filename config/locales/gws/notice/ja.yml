@@ -23,6 +23,8 @@ ja:
     notice:
       not_a_member_in_this_folder: このフォルダーへお知らせを掲示する権限がありません。
       reclaimed: 使用量を再計算しました。
+    prefix:
+      copy: 【複製】
 
   gws_role:
     use_gws_notice: お知らせの利用
