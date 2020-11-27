@@ -51,7 +51,7 @@ module Gws::Member
     @sorted_members = member_ids.map { |id| hash[id] }.compact
   end
 
-  def overall_members
+  def overall_member_ids
     user_ids = members.pluck(:id)
     group_ids = member_groups.active.pluck(:id)
 
@@ -67,7 +67,11 @@ module Gws::Member
     user_ids += Gws::User.in(group_ids: group_ids).pluck(:id)
     user_ids.compact!
     user_ids.uniq!
-    Gws::User.in(id: user_ids)
+    user_ids
+  end
+
+  def overall_members
+    Gws::User.in(id: overall_member_ids)
   end
 
   def sorted_overall_members
