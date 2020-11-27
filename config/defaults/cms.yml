@@ -140,3 +140,4 @@ test:
 
 development:
   <<: *production
+  tag: false
