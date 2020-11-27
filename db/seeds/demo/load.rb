@@ -4,7 +4,7 @@
 puts "Please input site_name: site=[site_host]" or exit if ENV['site'].blank?
 Dir.chdir @root = File.dirname(__FILE__)
 
-@site = SS::Site.where(host: ENV['site']).first
+@site = Cms::Site.where(host: ENV['site']).first
 puts "Site not found: #{ENV['site']}" or exit unless @site
 @link_url = "http://#{@site.domains.first}"
 
