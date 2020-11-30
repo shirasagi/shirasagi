@@ -124,14 +124,14 @@ module Cms::Content
       parent_item = opts[:node] || opts[:part] || opts[:parent]
       date = opts[:date]
 
-      criteria = self.all
-
       # condition_hash
       if parent_item && parent_item.respond_to?(:condition_hash)
-        ids = self.unscoped.where(parent_item.condition_hash).distinct(:id)
-        return criteria.none if ids.blank?
+        # list addon included
+        condition_hash = parent_item.condition_hash(opts.slice(*Cms::Addon::List::Model::WELL_KONWN_CONDITION_HASH_OPTIONS))
+        ids = self.unscoped.where(condition_hash).distinct(:id)
+        return self.none if ids.blank?
 
-        criteria = criteria.in(id: ids)
+        criteria = all.in(id: ids)
         criteria = criteria.hint({ _id: 1 })
 
         # criteria.count does not use hint
@@ -142,8 +142,10 @@ module Cms::Content
         end
       end
 
-      # site and_public
-      criteria = criteria.site(site) if site
+      # default criteria (no list addon included)
+      criteria = self.all.site(site) if criteria.blank?
+
+      # and_public
       criteria = criteria.and_public(date)
 
       criteria

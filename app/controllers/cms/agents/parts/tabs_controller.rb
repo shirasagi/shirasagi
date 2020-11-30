@@ -4,17 +4,26 @@ class Cms::Agents::Parts::TabsController < ApplicationController
 
   def index
     @tabs = []
+    save_site = @cur_site
+    save_node = @cur_node
 
-    @cur_part.conditions.each do |path|
-      node = Cms::Node.site(@cur_site).and_public.filename(path).first
+    @cur_part.interpret_conditions(site: @cur_site, default_location: :never, request_dir: false) do |site, content_or_path|
+      if content_or_path.is_a?(Cms::Content) || content_or_path == :root_contents || content_or_path.end_with?("*")
+        # - default content is not supported
+        # - root content is not supported
+        # - wildcard is not supported
+        next
+      end
+
+      node = Cms::Node.site(site).and_public.filename(content_or_path).first
       next unless node
 
       node = node.becomes_with_route
 
       @tabs << tab = { name: node.name, url: node.url, rss: nil, pages: [] }
 
-      rest = path.sub(/^#{::Regexp.escape(node.filename)}/, "")
-      spec = recognize_agent "/.s#{@cur_site.id}/nodes/#{node.route}#{rest}", method: "GET"
+      rest = content_or_path.sub(/^#{::Regexp.escape(node.filename)}/, "")
+      spec = recognize_agent "/.s#{site.id}/nodes/#{node.route}#{rest}", method: "GET"
       next unless spec
 
       node_class = node.route.sub(/\/.*/, "/agents/#{spec[:cell]}")
@@ -23,15 +32,21 @@ class Cms::Agents::Parts::TabsController < ApplicationController
       pages = nil
 
       if @agent.controller.class.method_defined?(:index)
-        @cur_node = node
-        pages = call_node_index
+        begin
+          @cur_site = site
+          @cur_node = node
+          pages = call_node_index
+        ensure
+          @cur_site = save_site
+          @cur_node = save_node
+        end
       end
 
       if pages.nil?
         if node.class.method_defined?(:condition_hash)
-          pages = Cms::Page.public_list(site: @cur_site, node: node, date: @cur_date)
+          pages = Cms::Page.public_list(site: site, node: node, date: @cur_date)
         else
-          pages = Cms::Page.site(@cur_site).and_public(@cur_date).where(cond).node(node)
+          pages = Cms::Page.site(site).and_public(@cur_date).where(cond).node(node)
         end
       end
 

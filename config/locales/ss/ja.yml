@@ -421,6 +421,7 @@ ja:
       ss/logo_setting: ロゴ設定
       ss/release: 公開設定
       ss/generate_lock: 書き出し停止
+      ss/partner_site: 提携サイト設定
 
   activemodel:
     attributes:
@@ -756,6 +757,8 @@ ja:
         lock_until: ロック期限日時
       ss/user_settings:
         user_settings: ユーザー別設定
+      ss/addon/partner_setting:
+        partner_site_ids: 提携サイト
 
   tooltip:
     ss/model/user:

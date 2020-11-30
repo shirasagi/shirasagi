@@ -35,8 +35,15 @@ module Faq::Node
 
     default_scope ->{ where(route: "faq/search") }
 
-    def condition_hash
-      conditions.present? ? super : {}
+    def condition_hash(options = {})
+      if conditions.present?
+        # 指定されたフォルダー内のページが対象
+        super
+      else
+        # サイト内の全ページが対象
+        default_site = options[:site] || @cur_site || self.site
+        { site_id: default_site.id }
+      end
     end
   end
 end
