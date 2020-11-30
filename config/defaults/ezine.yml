@@ -8,6 +8,9 @@ production:
   interval: 50
   sleep_seconds: 10
 
+  # disable html editor
+  html_editor: false
+
 ## Multiple servers example
 #
 ## On primary (internal) server configurations
@@ -27,6 +30,8 @@ development: &development
   register_member_here: true
   interval: 1
   sleep_seconds: 0
+  # disable html editor
+  html_editor: false
 
 test:
   <<: *development
