@@ -8,7 +8,7 @@ module Cms::PublicFilter::TwitterCard
         [ 'twitter:site', @cur_site.twitter_username ],
         [ 'twitter:url', ->() { @cur_item.full_url } ],
         [ 'twitter:title', ->() { @window_name } ],
-        [ 'twitter:description', ->() { twitter_description } ],
+        [ 'twitter:description', ->() { @cur_item.try(:description) } ],
         [ 'twitter:image', ->() { twitter_image_urls } ],
       ]
     end
@@ -33,22 +33,6 @@ module Cms::PublicFilter::TwitterCard
   end
 
   private
-
-  def twitter_description
-    if @cur_item
-      description ||= @cur_item.html.presence if @cur_item.respond_to?(:html)
-      description ||= @cur_item.text.presence if @cur_item.respond_to?(:text)
-      description ||= @cur_item.description.presence if @cur_item.respond_to?(:description)
-      description ||= @cur_item.summary.presence if @cur_item.respond_to?(:summary)
-      description ||= (@cur_item.keywords.presence || []).join(' ').presence if @cur_item.respond_to?(:keywords)
-    end
-    return if description.blank?
-
-    %w(script style).each do |tag|
-      description = description.gsub(/<#{tag}.+?<\/#{tag}>/mi, '')
-    end
-    ApplicationController.helpers.sanitize(description, tags: []).squish.truncate(200)
-  end
 
   def twitter_image_urls
     urls = extract_image_urls
