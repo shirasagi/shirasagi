@@ -19,8 +19,8 @@ describe Gws::Survey::NotificationJob, dbscope: :example do
           # item 作成時にジョブが実行され通知が送られているはず
           expect(Gws::Job::Log.count).to eq 1
           Gws::Job::Log.first.tap do |log|
-            expect(log.logs).to include(include('INFO -- : Started Job'))
-            expect(log.logs).to include(include('INFO -- : Completed Job'))
+            expect(log.logs).to include(/INFO -- : .* Started Job/)
+            expect(log.logs).to include(/INFO -- : .* Completed Job/)
             expect(log.logs).to include(include('1件のアンケートがあります。'))
           end
           expect(SS::Notification.all.count).to eq 1
@@ -36,8 +36,8 @@ describe Gws::Survey::NotificationJob, dbscope: :example do
 
           expect(Gws::Job::Log.count).to eq 2
           Gws::Job::Log.reorder(created: -1).first.tap do |log|
-            expect(log.logs).to include(include('INFO -- : Started Job'))
-            expect(log.logs).to include(include('INFO -- : Completed Job'))
+            expect(log.logs).to include(/INFO -- : .* Started Job/)
+            expect(log.logs).to include(/INFO -- : .* Completed Job/)
             expect(log.logs).to include(include('0件のアンケートがあります。'))
           end
 
@@ -56,8 +56,8 @@ describe Gws::Survey::NotificationJob, dbscope: :example do
 
           expect(Gws::Job::Log.count).to eq 2
           Gws::Job::Log.reorder(created: -1).first.tap do |log|
-            expect(log.logs).to include(include('INFO -- : Started Job'))
-            expect(log.logs).to include(include('INFO -- : Completed Job'))
+            expect(log.logs).to include(/INFO -- : .* Started Job/)
+            expect(log.logs).to include(/INFO -- : .* Completed Job/)
             expect(log.logs).to include(include('1件のアンケートがあります。'))
           end
 
@@ -82,8 +82,8 @@ describe Gws::Survey::NotificationJob, dbscope: :example do
 
           expect(Gws::Job::Log.count).to eq 2
           Gws::Job::Log.reorder(created: -1).first.tap do |log|
-            expect(log.logs).to include(include('INFO -- : Started Job'))
-            expect(log.logs).to include(include('INFO -- : Completed Job'))
+            expect(log.logs).to include(/INFO -- : .* Started Job/)
+            expect(log.logs).to include(/INFO -- : .* Completed Job/)
             expect(log.logs).to include(include('1件のアンケートがあります。'))
             expect(log.logs).to include(include('通知対象ユーザーが見つかりません'))
           end
@@ -113,8 +113,8 @@ describe Gws::Survey::NotificationJob, dbscope: :example do
 
           expect(Gws::Job::Log.count).to eq 1
           Gws::Job::Log.first.tap do |log|
-            expect(log.logs).to include(include('INFO -- : Started Job'))
-            expect(log.logs).to include(include('INFO -- : Completed Job'))
+            expect(log.logs).to include(/INFO -- : .* Started Job/)
+            expect(log.logs).to include(/INFO -- : .* Completed Job/)
             expect(log.logs).to include(include('0件のアンケートがあります。'))
           end
 
@@ -130,8 +130,8 @@ describe Gws::Survey::NotificationJob, dbscope: :example do
 
           expect(Gws::Job::Log.count).to eq 1
           Gws::Job::Log.first.tap do |log|
-            expect(log.logs).to include(include('INFO -- : Started Job'))
-            expect(log.logs).to include(include('INFO -- : Completed Job'))
+            expect(log.logs).to include(/INFO -- : .* Started Job/)
+            expect(log.logs).to include(/INFO -- : .* Completed Job/)
             expect(log.logs).to include(include('1件のアンケートがあります。'))
           end
 
@@ -153,8 +153,8 @@ describe Gws::Survey::NotificationJob, dbscope: :example do
 
           expect(Gws::Job::Log.count).to eq 1
           Gws::Job::Log.first.tap do |log|
-            expect(log.logs).to include(include('INFO -- : Started Job'))
-            expect(log.logs).to include(include('INFO -- : Completed Job'))
+            expect(log.logs).to include(/INFO -- : .* Started Job/)
+            expect(log.logs).to include(/INFO -- : .* Completed Job/)
             expect(log.logs).to include(include('1件のアンケートがあります。'))
           end
 
