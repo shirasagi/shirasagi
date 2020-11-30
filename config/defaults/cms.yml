@@ -147,3 +147,4 @@ test:
 
 development:
   <<: *production
+  is_facility_list: false
