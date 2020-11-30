@@ -507,6 +507,8 @@ GEM
       rspec-expectations (~> 3.7.0)
       rspec-mocks (~> 3.7.0)
       rspec-support (~> 3.7.0)
+    rspec-retry (0.6.2)
+      rspec-core (> 3.3)
     rspec-support (3.7.1)
     rubocop (0.71.0)
       jaro_winkler (~> 1.5.1)
@@ -725,6 +727,7 @@ DEPENDENCIES
   rspec-collection_matchers
   rspec-its
   rspec-rails
+  rspec-retry
   rubocop
   rubocop-performance
   ruby-debug-ide

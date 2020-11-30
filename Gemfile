@@ -141,5 +141,6 @@ end
 
 group :test do
   gem 'docker-api'
+  gem 'rspec-retry', require: false
   gem 'webmock'
 end
