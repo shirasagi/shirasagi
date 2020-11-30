@@ -59,7 +59,7 @@ class Sys::PasswordValidator < ActiveModel::Validator
     return if @setting.password_prohibited_char.blank?
     return unless @setting.password_prohibited_char.chars.any? { |ch| record.in_password.include?(ch) }
 
-    record.errors.add :password, :password_contains_prohibited_chars
+    record.errors.add :password, :password_contains_prohibited_chars, prohibited_chars: @setting.password_prohibited_char
   end
 
   def validate_password_min_change_char(record)
