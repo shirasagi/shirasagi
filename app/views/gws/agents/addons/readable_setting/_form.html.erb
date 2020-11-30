@@ -1,6 +1,10 @@
 <%
 
   if params[:action] =~ /new/
+    if !@default_readable_setting && respond_to?(:set_default_readable_setting)
+      @default_readable_setting = method(:set_default_readable_setting)
+    end
+
     if @default_readable_setting
       @default_readable_setting.call
     else
