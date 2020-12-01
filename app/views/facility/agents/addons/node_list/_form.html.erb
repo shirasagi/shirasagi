@@ -61,13 +61,14 @@
     <dt><%= @model.t :substitute_html %><%= @model.tt :substitute_html %></dt>
     <dd><%= f.text_area :substitute_html, class: :html %></dd>
   </dl>
-<% end %>
 
-<% if @model.use_liquid %>
-  <dl class="see loop-format-liquid">
-    <dt><%= @model.t :loop_liquid %><%= @model.tt :loop_liquid %></dt>
-    <dd><%= f.text_area :loop_liquid, class: :html, style: "height: 300px;" %></dd>
-  </dl>
+
+  <% if @model.use_liquid %>
+    <dl class="see loop-format-liquid">
+      <dt><%= @model.t :loop_liquid %><%= @model.tt :loop_liquid %></dt>
+      <dd><%= f.text_area :loop_liquid, class: :html, style: "height: 300px;" %></dd>
+    </dl>
+  <% end %>
 <% end %>
 
 <% if @model.use_new_days %>
