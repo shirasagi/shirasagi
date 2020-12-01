@@ -118,9 +118,15 @@ describe Article::Page, dbscope: :example do
     let(:node) { create :article_node_page, cur_site: site }
 
     before do
+      # to generate keywords and description from html set these attributes
+      site.auto_keywords = 'enabled'
+      site.auto_description = 'enabled'
+
+      # facebook setting
       site.opengraph_type = 'article'
       site.facebook_app_id = unique_id
       site.facebook_page_url = "https://www.facebook.com/pages/#{unique_id}"
+
       site.save!
     end
 
@@ -130,7 +136,10 @@ describe Article::Page, dbscope: :example do
       end
       let(:item) do
         h = html + "<img src=\"#{file.url}\">"
-        create(:article_page, cur_site: site, cur_node: node, cur_user: user, layout_id: layout.id, html: h)
+        create(
+          :article_page, cur_site: site, cur_node: node, cur_user: user, layout_id: layout.id,
+          keywords: nil, description: nil, html: h
+        )
       end
       let(:description) do
         ApplicationController.helpers.sanitize(item.html, tags: []).squish.truncate(200)
@@ -170,7 +179,10 @@ describe Article::Page, dbscope: :example do
 
     context "with opengraph_defaul_image_url" do
       let(:item) do
-        create(:article_page, cur_site: site, cur_node: node, cur_user: user, layout_id: layout.id, html: html)
+        create(
+          :article_page, cur_site: site, cur_node: node, cur_user: user, layout_id: layout.id,
+          keywords: nil, description: nil, html: html
+        )
       end
       let(:description) do
         ApplicationController.helpers.sanitize(item.html, tags: []).squish.truncate(200)
@@ -222,7 +234,10 @@ describe Article::Page, dbscope: :example do
       end
       let(:item) do
         h = html + "<img src=\"#{file1.url}\"><img src=\"#{file0.url}\">"
-        create(:article_page, cur_site: site, cur_node: node, cur_user: user, layout_id: layout.id, html: h)
+        create(
+          :article_page, cur_site: site, cur_node: node, cur_user: user, layout_id: layout.id,
+          keywords: nil, description: nil, html: h
+        )
       end
       let(:description) do
         ApplicationController.helpers.sanitize(item.html, tags: []).squish.truncate(200)
@@ -276,8 +291,14 @@ describe Article::Page, dbscope: :example do
     let(:html) { "   <p>あ。&rarr;い</p>\r\n   " }
 
     before do
+      # to generate keywords and description from html set these attributes
+      site.auto_keywords = 'enabled'
+      site.auto_description = 'enabled'
+
+      # twitter setting
       site.twitter_card = 'summary_large_image'
       site.twitter_username = unique_id
+
       site.save!
     end
 
@@ -287,7 +308,10 @@ describe Article::Page, dbscope: :example do
       end
       let(:item) do
         h = html + "<img src=\"#{file.url}\">"
-        create(:article_page, cur_site: site, cur_node: node, cur_user: user, layout_id: layout.id, html: h)
+        create(
+          :article_page, cur_site: site, cur_node: node, cur_user: user, layout_id: layout.id,
+          keywords: nil, description: nil, html: h
+        )
       end
       let(:description) do
         ApplicationController.helpers.sanitize(item.html, tags: []).squish.truncate(200)
@@ -319,7 +343,10 @@ describe Article::Page, dbscope: :example do
 
     context "with opengraph_defaul_image_url" do
       let(:item) do
-        create(:article_page, cur_site: site, cur_node: node, cur_user: user, layout_id: layout.id, html: html)
+        create(
+          :article_page, cur_site: site, cur_node: node, cur_user: user, layout_id: layout.id,
+          keywords: nil, description: nil, html: html
+        )
       end
       let(:description) do
         ApplicationController.helpers.sanitize(item.html, tags: []).squish.truncate(200)
@@ -363,7 +390,10 @@ describe Article::Page, dbscope: :example do
       end
       let(:item) do
         h = html + "<img src=\"#{file1.url}\"><img src=\"#{file0.url}\">"
-        create(:article_page, cur_site: site, cur_node: node, cur_user: user, layout_id: layout.id, html: h)
+        create(
+          :article_page, cur_site: site, cur_node: node, cur_user: user, layout_id: layout.id,
+          keywords: nil, description: nil, html: h
+        )
       end
       let(:description) do
         ApplicationController.helpers.sanitize(item.html, tags: []).squish.truncate(200)
