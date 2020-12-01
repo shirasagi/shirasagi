@@ -53,7 +53,6 @@ describe "ezine_member_page_main", type: :feature, dbscope: :example do
     describe "create item" do
       let(:new_path) { new_ezine_member_page_path site, node }
       let(:name) { "test #{unique_id}" }
-      let(:html) { "<p>test #{unique_id}</p>" }
       let(:text) { "test #{unique_id}" }
       let(:show_path) { ezine_member_page_path site, node, Ezine::Page.last }
 
@@ -64,7 +63,6 @@ describe "ezine_member_page_main", type: :feature, dbscope: :example do
 
         within "form#item-form" do
           fill_in "item[name]", with: name
-          fill_in "item[html]", with: html
           fill_in "item[text]", with: text
           click_button I18n.t('ss.buttons.save')
         end
@@ -83,7 +81,6 @@ describe "ezine_member_page_main", type: :feature, dbscope: :example do
     end
 
     describe "edit item" do
-      let(:html) { "<p>test #{unique_id}</p>" }
       let(:text) { "test #{unique_id}" }
       let!(:item) { create(:ezine_page, cur_site: site, cur_node: node, cur_user: cms_user) }
 
@@ -94,7 +91,6 @@ describe "ezine_member_page_main", type: :feature, dbscope: :example do
         click_link I18n.t('ss.links.edit')
 
         within "form#item-form" do
-          fill_in "item[html]", with: html
           fill_in "item[text]", with: text
           click_button I18n.t('ss.buttons.save')
         end
