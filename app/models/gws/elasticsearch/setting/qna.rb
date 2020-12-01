@@ -5,11 +5,13 @@ class Gws::Elasticsearch::Setting::Qna
   self.model = Gws::Qna::Topic
 
   def menu_label
-    I18n.t('modules.gws/qna')
+    cur_site.menu_qna_label.presence || I18n.t('modules.gws/qna')
   end
 
   def search_types
     return [] unless cur_site.menu_qna_visible?
+    return [] unless Gws.module_usable?(:qna, cur_site, cur_user)
+
     super
   end
 

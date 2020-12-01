@@ -6,6 +6,8 @@ class Gws::Share::FoldersController < ApplicationController
 
   navi_view "gws/share/main/navi"
 
+  before_action :set_default_readable_setting, only: [:new]
+
   private
 
   def set_crumbs
@@ -17,10 +19,13 @@ class Gws::Share::FoldersController < ApplicationController
     { cur_user: @cur_user, cur_site: @cur_site }
   end
 
-  def pre_params
-    p = super
-    p[:readable_member_ids] = [@cur_user.id]
-    p
+  def set_default_readable_setting
+    @default_readable_setting = proc do
+      @item.readable_setting_range = "select"
+      @item.readable_group_ids = [ @cur_group.id ]
+      @item.readable_member_ids = [ @cur_user.id ]
+      @item.readable_custom_group_ids = []
+    end
   end
 
   def set_item

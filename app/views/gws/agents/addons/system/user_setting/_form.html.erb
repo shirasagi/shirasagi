@@ -1,0 +1,16 @@
+<%
+  addon ||= local_assigns.fetch(:addon, {})
+  addon[:display_body] = "hide"
+%>
+<dl class="see">
+  <dt><%= @model.t :user_public_profiles %></dt>
+  <dd>
+    <%= hidden_field_tag("#{f.object_name}[user_public_profiles][]", "") %>
+    <% @model::USER_PUBLIC_PROFILES.each do |profile| %>
+      <label>
+        <%= check_box_tag("#{f.object_name}[user_public_profiles][]", profile, @item.user_profile_public?(profile)) %>
+        <%= t("gws.options.user_public_profiles.#{profile}") %>
+      </label>
+    <% end %>
+  </dd>
+</dl>

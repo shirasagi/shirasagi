@@ -7,14 +7,14 @@
         <% if @item.categories.present? %>
           <span class="categories">
           <% @item.categories.compact.each do |category| %>
-            <%= link_to category.trailing_name, url_for(action: :index, category: category.id), class: "gws-category-label", style: category_label_css(category) %>
+            <%= link_to category.trailing_name, url_for(action: :index, category_id: category.id), class: "gws-category-label", style: category_label_css(category) %>
           <% end %>
           </span>
         <% end %>
       </div>
       <div class="aside">
         <span class="updated"><%= I18n.l(@item.updated) %></span>
-        <span class="user"><%= @item.contributor_name.presence || @item.user_long_name %></span>
+        <span class="user"><%= gws_public_user_long_name(@item.contributor_name.presence || @item.user_long_name) %></span>
         <span class="severity">
           <span class="severity-label"><%= @model.t :severity %></span>
           <span class="severity-value"><%= @item.label(:severity) %></span>

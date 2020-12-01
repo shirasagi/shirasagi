@@ -23,8 +23,8 @@ describe Webmail::RoleImportJob, dbscope: :example do
 
       Job::Log.first.tap do |log|
         expect(log.attributes[:logs]).to be_empty
-        expect(log.logs).to include(include("INFO -- : Started Job"))
-        expect(log.logs).to include(include("INFO -- : Completed Job"))
+        expect(log.logs).to include(/INFO -- : .* Started Job/)
+        expect(log.logs).to include(/INFO -- : .* Completed Job/)
         expect(log.logs).to include(match(/2行目:.*インポートしました。/))
         expect(log.logs).to include(match(/3行目:.*空白のため無視します。/))
         expect(log.logs).to include(match(/4行目:.*見つからないため無視します。/))

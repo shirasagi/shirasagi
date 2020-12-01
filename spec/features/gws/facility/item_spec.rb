@@ -101,7 +101,7 @@ describe "facility_item", type: :feature, dbscope: :example do
         end
         expect(status_code).to eq 200
         expect(page.response_headers['Content-Type']).to eq("text/csv")
-        expect(page.response_headers['Content-Disposition']).to eq("attachment; filename=\"gws_items_#{time.to_i}.csv\"")
+        expect(page.response_headers['Content-Disposition']).to eq("attachment; filename*=UTF-8''gws_items_#{time.to_i}.csv")
       end
 
       csv = CSV.parse(page.html.encode("UTF-8", "SJIS"), headers: true)

@@ -24,8 +24,8 @@ describe Gws::Board::NotificationJob, dbscope: :example do
 
         expect(Job::Log.count).to eq 1
         Job::Log.first.tap do |log|
-          expect(log.logs).to include(include("INFO -- : Started Job"))
-          expect(log.logs).to include(include("INFO -- : Completed Job"))
+          expect(log.logs).to include(/INFO -- : .* Started Job/)
+          expect(log.logs).to include(/INFO -- : .* Completed Job/)
         end
 
         expect(SS::Notification.all.count).to eq 0
@@ -43,8 +43,8 @@ describe Gws::Board::NotificationJob, dbscope: :example do
 
         expect(Job::Log.count).to eq 1
         Job::Log.first.tap do |log|
-          expect(log.logs).to include(include("INFO -- : Started Job"))
-          expect(log.logs).to include(include("INFO -- : Completed Job"))
+          expect(log.logs).to include(/INFO -- : .* Started Job/)
+          expect(log.logs).to include(/INFO -- : .* Completed Job/)
         end
 
         expect(SS::Notification.all.count).to eq 0
@@ -62,8 +62,8 @@ describe Gws::Board::NotificationJob, dbscope: :example do
 
         expect(Job::Log.count).to eq 1
         Job::Log.first.tap do |log|
-          expect(log.logs).to include(include("INFO -- : Started Job"))
-          expect(log.logs).to include(include("INFO -- : Completed Job"))
+          expect(log.logs).to include(/INFO -- : .* Started Job/)
+          expect(log.logs).to include(/INFO -- : .* Completed Job/)
         end
 
         expect(SS::Notification.all.count).to eq 0
@@ -76,8 +76,8 @@ describe Gws::Board::NotificationJob, dbscope: :example do
 
         expect(Job::Log.count).to eq 1
         Job::Log.first.tap do |log|
-          expect(log.logs).to include(include("INFO -- : Started Job"))
-          expect(log.logs).to include(include("INFO -- : Completed Job"))
+          expect(log.logs).to include(/INFO -- : .* Started Job/)
+          expect(log.logs).to include(/INFO -- : .* Completed Job/)
         end
 
         expect(SS::Notification.all.count).to eq 1
@@ -89,7 +89,7 @@ describe Gws::Board::NotificationJob, dbscope: :example do
         expect(notice.text).to be_blank
         expect(notice.html).to be_blank
         expect(notice.format).to eq "text"
-        expect(notice.seen).to be_blank
+        expect(notice.user_settings).to be_blank
         expect(notice.state).to eq "public"
         expect(notice.send_date).to be_present
         expect(notice.url).to eq "/.g#{site.id}/board/-/-/topics/#{topic.id}"
@@ -116,8 +116,8 @@ describe Gws::Board::NotificationJob, dbscope: :example do
 
             expect(Job::Log.count).to eq 1
             Job::Log.first.tap do |log|
-              expect(log.logs).to include(include("INFO -- : Started Job"))
-              expect(log.logs).to include(include("INFO -- : Completed Job"))
+              expect(log.logs).to include(/INFO -- : .* Started Job/)
+              expect(log.logs).to include(/INFO -- : .* Completed Job/)
             end
 
             expect(SS::Notification.all.count).to eq 0
@@ -132,8 +132,8 @@ describe Gws::Board::NotificationJob, dbscope: :example do
 
             expect(Job::Log.count).to eq 1
             Job::Log.first.tap do |log|
-              expect(log.logs).to include(include("INFO -- : Started Job"))
-              expect(log.logs).to include(include("INFO -- : Completed Job"))
+              expect(log.logs).to include(/INFO -- : .* Started Job/)
+              expect(log.logs).to include(/INFO -- : .* Completed Job/)
             end
 
             expect(SS::Notification.all.count).to eq 1
@@ -148,8 +148,8 @@ describe Gws::Board::NotificationJob, dbscope: :example do
 
             expect(Job::Log.count).to eq 1
             Job::Log.first.tap do |log|
-              expect(log.logs).to include(include("INFO -- : Started Job"))
-              expect(log.logs).to include(include("INFO -- : Completed Job"))
+              expect(log.logs).to include(/INFO -- : .* Started Job/)
+              expect(log.logs).to include(/INFO -- : .* Completed Job/)
             end
 
             expect(SS::Notification.all.count).to eq 1
@@ -168,8 +168,8 @@ describe Gws::Board::NotificationJob, dbscope: :example do
 
             expect(Job::Log.count).to eq 1
             Job::Log.first.tap do |log|
-              expect(log.logs).to include(include("INFO -- : Started Job"))
-              expect(log.logs).to include(include("INFO -- : Completed Job"))
+              expect(log.logs).to include(/INFO -- : .* Started Job/)
+              expect(log.logs).to include(/INFO -- : .* Completed Job/)
             end
 
             expect(SS::Notification.all.count).to eq 0

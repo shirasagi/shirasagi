@@ -4,8 +4,8 @@ module SS::Addon
     extend SS::Addon
 
     included do
-      field :trash_threshold, type: Integer, default: 14
-      field :trash_threshold_unit, type: String, default: 'day'
+      field :trash_threshold, type: Integer, default: 1
+      field :trash_threshold_unit, type: String, default: 'year'
       permit_params :trash_threshold, :trash_threshold_unit
     end
 

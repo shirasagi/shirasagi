@@ -53,8 +53,8 @@ describe Cms::AllContentsImportJob, dbscope: :example do
       # check for job was succeeded
       expect(Job::Log.count).to eq 1
       Job::Log.first.tap do |log|
-        expect(log.logs).to include(include('INFO -- : Started Job'))
-        expect(log.logs).to include(include('INFO -- : Completed Job'))
+        expect(log.logs).to include(/INFO -- : .* Started Job/)
+        expect(log.logs).to include(/INFO -- : .* Completed Job/)
       end
 
       node.reload
@@ -108,8 +108,8 @@ describe Cms::AllContentsImportJob, dbscope: :example do
       # check for job was succeeded
       expect(Job::Log.count).to eq 1
       Job::Log.first.tap do |log|
-        expect(log.logs).to include(include('INFO -- : Started Job'))
-        expect(log.logs).to include(include('INFO -- : Completed Job'))
+        expect(log.logs).to include(/INFO -- : .* Started Job/)
+        expect(log.logs).to include(/INFO -- : .* Completed Job/)
       end
 
       page.reload
@@ -159,8 +159,8 @@ describe Cms::AllContentsImportJob, dbscope: :example do
       # check for job was succeeded
       expect(Job::Log.count).to eq 1
       Job::Log.first.tap do |log|
-        expect(log.logs).to include(include('INFO -- : Started Job'))
-        expect(log.logs).to include(include('INFO -- : Completed Job'))
+        expect(log.logs).to include(/INFO -- : .* Started Job/)
+        expect(log.logs).to include(/INFO -- : .* Completed Job/)
       end
 
       # all references are set to empty because other site's objects is unable to import.

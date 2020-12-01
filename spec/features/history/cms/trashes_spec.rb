@@ -8,6 +8,7 @@ describe "history_cms_trashes", type: :feature, dbscope: :example, js: true do
   let(:index_path) { history_cms_trashes_path(site: site.id) }
   let(:node_path) { article_pages_path(site: site.id, cid: node.id) }
   let(:page_path) { article_page_path(site: site.id, cid: node.id, id: page_item.id) }
+  let(:new_filename) { "#{unique_id}.html"}
 
   context "with auth" do
     before { login_cms_user }
@@ -46,7 +47,7 @@ describe "history_cms_trashes", type: :feature, dbscope: :example, js: true do
       expect(trashes[0].ref_coll).to eq "ss_files"
       expect(trashes[0].ref_class).to eq "SS::File"
 
-      Timecop.freeze(Time.zone.now + History::Trash::TrashPurgeJob::DEFAULT_THRESHOLD_DAYS.days + 1.second) do
+      Timecop.freeze(Time.zone.now + History::Trash::TrashPurgeJob::DEFAULT_THRESHOLD_YEARS.years + 1.second) do
         History::Trash::TrashPurgeJob.bind(site_id: site).perform_now
         expect(History::Trash.all.count).to eq 0
       end
@@ -206,6 +207,52 @@ describe "history_cms_trashes", type: :feature, dbscope: :example, js: true do
     #
     #   expect(History::Trash.all.count).to eq 0
     # end
+
+    it "#undo_delete as another filename" do
+      visit page_path
+      expect(page).to have_css('div.file-view', text: file.name)
+
+      click_link I18n.t('ss.links.delete')
+      click_button I18n.t('ss.buttons.delete')
+      expect(page).to have_no_css('a.title', text: page_item.name)
+
+      expect { page_item.reload }.to raise_error Mongoid::Errors::DocumentNotFound
+      expect(History::Trash.all.count).to eq 2
+      trashes = History::Trash.all.to_a
+      expect(trashes[0].ref_coll).to eq "cms_pages"
+      expect(trashes[0].ref_class).to eq "Article::Page"
+      expect(trashes[1].ref_coll).to eq "ss_files"
+      expect(trashes[1].ref_class).to eq "SS::File"
+
+      visit index_path
+      expect(page).to have_css('a.title', text: page_item.name)
+
+      click_link page_item.name
+      expect(page).to have_css('dd', text: page_item.name)
+
+      click_link I18n.t('ss.buttons.restore')
+
+      click_on I18n.t("ss.links.change")
+      fill_in "item[basename]", with: new_filename
+
+      click_button I18n.t('ss.buttons.restore')
+      expect(current_path).to eq index_path
+      expect(page).to have_no_css('a.title', text: page_item.name)
+
+      expect { page_item.reload }.not_to raise_error
+      expect(page_item.files.count).to eq 1
+      expect(page_item.files.first).to be_present
+      expect(page_item.files.first.thumb).to be_present
+      expect(page_item.filename).to end_with "/" + new_filename
+
+      visit node_path
+      expect(page).to have_css('a.title', text: page_item.name)
+
+      visit page_path
+      expect(page).to have_css('div.file-view', text: file.name)
+
+      expect(History::Trash.all.count).to eq 0
+    end
   end
 
   context "when branch page is restored" do

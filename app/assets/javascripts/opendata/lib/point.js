@@ -12,7 +12,7 @@ this.Opendata_Point = (function () {
   };
 
   Opendata_Point.renderButton = function () {
-    return $(".point .update").click(function (event) {
+    return $(".point .update").on("click", function (event) {
       var data, url;
       url = event.target.href;
       data = {

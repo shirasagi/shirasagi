@@ -1,6 +1,18 @@
 <% return if @cur_page.map_points.blank? %>
 
-<%= render_map "#map-canvas", markers: @cur_page.map_points, site: @cur_site, map: { zoom: @cur_page.map_zoom_level }, preview: @preview %>
+<%
+  if @cur_page.center_setting == "designated_location" && @cur_page.set_center_position.present?
+    set_center_position = @cur_page.set_center_position
+  end
+
+  if @cur_page.zoom_setting == "designated_level" && @cur_page.set_zoom_level.present?
+    set_zoom_level = @cur_page.set_zoom_level
+  end
+
+  default_zoom = SS.config.map.googlemaps_zoom_level
+%>
+
+<%= render_map "#map-canvas", markers: @cur_page.map_points, site: @cur_site, map: { zoom: @cur_page.map_zoom_level, set_center_position: set_center_position, set_zoom_level: set_zoom_level, default_zoom: default_zoom }, preview: @preview %>
 
 <section class="map-page">
   <% if local_assigns && !local_assigns[:no_header] %>

@@ -10,7 +10,7 @@
       </li>
       <% @cur_node.st_categories.order_by(order: 1).each do |cate| %>
         <li class="<%= cate.basename %>">
-          <%= link_to cate.name, "#", "data-id" => cate.id %>
+          <%= link_to cate.name, "##{cate.id}", "data-id" => cate.id, role: "button" %>
         </li>
       <% end %>
     </ul>

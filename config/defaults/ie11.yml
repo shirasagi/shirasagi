@@ -1,0 +1,49 @@
+# ie11
+
+production: &production
+  content_disposition:
+    attachment:
+      # ref : https://raw.githubusercontent.com/mime-types/mime-types-data/master/data/mime-types.json
+      mime_type_map:
+        xls:
+          - "application/excel"
+          - "application/vnd.ms-excel"
+        xlam: "application/vnd.ms-excel.addin.macroEnabled.12"
+        xlsb: "application/vnd.ms-excel.sheet.binary.macroEnabled.12"
+        xlsm: "application/vnd.ms-excel.sheet.macroEnabled.12"
+        xltm: "application/vnd.ms-excel.template.macroEnabled.12"
+        xlsx: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+        xltx: "application/vnd.openxmlformats-officedocument.spreadsheetml.template"
+
+        doc:
+          - "application/word"
+          - "application/msword"
+          - "application/x-msword"
+          - "application/x-word"
+        docm: "application/vnd.ms-word.document.macroEnabled.12"
+        dotm: "application/vnd.ms-word.template.macroEnabled.12"
+        docx: "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+        dotx: "application/vnd.openxmlformats-officedocument.wordprocessingml.template"
+        wri: "application/x-mswrite"
+
+        ppt:
+          - "application/powerpoint"
+          - "application/vnd.ms-powerpoint"
+        ppam: "application/vnd.ms-powerpoint.addin.macroEnabled.12"
+        pptm: "application/vnd.ms-powerpoint.presentation.macroEnabled.12"
+        sldm: "application/vnd.ms-powerpoint.slide.macroEnabled.12"
+        ppsm: "application/vnd.ms-powerpoint.slideshow.macroEnabled.12"
+        potm: "application/vnd.ms-powerpoint.template.macroEnabled.12"
+        pptx: "application/vnd.openxmlformats-officedocument.presentationml.presentation"
+        sldx: "application/vnd.openxmlformats-officedocument.presentationml.slide"
+        ppsx: "application/vnd.openxmlformats-officedocument.presentationml.slideshow"
+        potx: "application/vnd.openxmlformats-officedocument.presentationml.template"
+
+        onepkg: "application/onenote"
+        thmx: "application/vnd.ms-officetheme"
+
+test:
+  <<: *production
+
+development:
+  <<: *production

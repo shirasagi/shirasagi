@@ -1,5 +1,5 @@
 <%= jquery do %>
-  $('.close-topic').click(function() {
+  $('.close-topic').on("click", function() {
     if (!confirm($(this).data('confirm'))) return false;
     var token = $('meta[name="csrf-token"]').attr('content');
     var form = $('<form/>').

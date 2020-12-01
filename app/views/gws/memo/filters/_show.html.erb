@@ -7,10 +7,10 @@
   <dd><%= @item.name %></dd>
 
   <dt><%= @model.t :from_member_ids %></dt>
-  <dd><%= @item.from_members.map(&:long_name).join('; ') %></dd>
+  <dd><%= gws_public_user_long_names(@item.from_members.map(&:long_name)).join('; ') %></dd>
 
   <dt><%= @model.t :to_member_ids %></dt>
-  <dd><%= @item.to_members.map(&:long_name).join('; ') %></dd>
+  <dd><%= gws_public_user_long_names(@item.to_members.map(&:long_name)).join('; ') %></dd>
 
   <dt><%= @model.t :subject %></dt>
   <dd><%= @item.subject %></dd>

@@ -7,8 +7,22 @@
   <span class="id">#<%= item.id %></span>
   <span class="site"><%= tryb { item.site.name } %></span>
   <span class="state"><%= item.state %></span>
-  <span class="started"><%= tryb { item.started.strftime("%Y/%m/%d %H:%M") } %></span>
-  <span class="closed"><%= tryb { item.closed.strftime("%Y/%m/%d %H:%M") } %></span>
+  <span class="started">
+    <%= item.started.try do |time| %>
+      <%= content_tag("time", I18n.l(time, format: :picker), datetime: time.iso8601, title: time.iso8601) %>
+      <%= link_to(t("ss.buttons.copy"), "#", class: "clipboard-copy-button", data: { text: time.iso8601 }) %>
+    <% end %>
+  </span>
+  <span class="closed">
+    <%= item.closed.try do |time| %>
+      <%= content_tag("time", I18n.l(time, format: :picker), datetime: time.iso8601, title: time.iso8601) %>
+      <%= link_to(t("ss.buttons.copy"), "#", class: "clipboard-copy-button", data: { text: time.iso8601 }) %>
+    <% end %>
+  </span>
 <% end %>
 
 <%= render file: "ss/crud/index" %>
+
+<%= jquery do %>
+  SS_Clipboard.renderCopy();
+<% end %>

@@ -8,8 +8,8 @@ describe Ldap::ImportJob, dbscope: :example, ldap: true do
 
         expect(Job::Log.count).to eq 1
         log = Job::Log.first
-        expect(log.logs).to include(include("INFO -- : Started Job"))
-        expect(log.logs).to include(include("FATAL -- : Failed Job"))
+        expect(log.logs).to include(/INFO -- : .* Started Job/)
+        expect(log.logs).to include(/FATAL -- : .* Failed Job/)
         expect(log.logs).to include(include("Net::LDAP::BindingInformationInvalidError"))
       end
     end

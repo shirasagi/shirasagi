@@ -55,6 +55,19 @@ module Cms::Addon::Form::Page
     form.render_html(self, registers).html_safe
   end
 
+  def form_files
+    files = []
+    column_values.each do |value|
+      if value.respond_to?(:file_id) && value.file
+        files << value.file
+      end
+      if value.respond_to?(:files) && value.files.present?
+        files += value.files.to_a
+      end
+    end
+    files
+  end
+
   private
 
   def validate_column_values

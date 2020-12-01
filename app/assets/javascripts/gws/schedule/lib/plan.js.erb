@@ -28,7 +28,7 @@ this.Gws_Schedule_Plan = (function () {
 
   Gws_Schedule_Plan.renderAlldayForm = function () {
     this.changeDateForm();
-    return $('#item_allday').change(function () {
+    return $('#item_allday').on("change", function () {
       Gws_Schedule_Plan.changeDateValue();
       return Gws_Schedule_Plan.changeDateForm();
     });
@@ -73,10 +73,10 @@ this.Gws_Schedule_Plan = (function () {
     if (end_sel == null) {
       end_sel = '.date.end';
     }
-    $(start_sel + ", " + end_sel).click(function () {
+    $(start_sel + ", " + end_sel).on("click", function () {
       return Gws_Schedule_Plan.diffOn = Gws_Schedule_Plan.diffDates($(start_sel).val(), $(end_sel).val());
     });
-    $(start_sel).change(function () {
+    $(start_sel).on("change", function () {
       var date, format, start;
       start = $(start_sel).val();
       if (!start) {
@@ -95,7 +95,7 @@ this.Gws_Schedule_Plan = (function () {
       return $(end_sel).val(sprintf(format, date.getFullYear(), date.getMonth() + 1, date.getDate(), date.getHours(), date.getMinutes()));
     });
     if ($(end_sel).val() === "") {
-      return $(start_sel).change();
+      return $(start_sel).trigger("change");
     }
   };
 

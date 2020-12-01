@@ -9,6 +9,7 @@ class Cms::Apis::Preview::Workflow::WizardController < ApplicationController
   before_action :set_item
   before_action :check_item_status
   before_action :check_item_lock_status
+  before_action :set_routes
 
   private
 
@@ -21,15 +22,17 @@ class Cms::Apis::Preview::Workflow::WizardController < ApplicationController
     if @route_id == "my_group" || @route_id == "restart"
       @route = nil
     else
-      @route = Workflow::Route.find(params[:route_id])
+      @route = Workflow::Route.site(@cur_site).find(params[:route_id])
     end
   end
 
   def set_item
-    @item = @cur_page = Cms::Page.site(@cur_site).find(params[:id]).becomes_with_route
-    @item.attributes = fix_params
-
-    @model = @item.class
+    @item ||= begin
+      item = @cur_page = Cms::Page.site(@cur_site).find(params[:id]).becomes_with_route
+      item.attributes = fix_params
+      @model = item.class
+      item
+    end
   end
 
   def check_item_status
@@ -47,9 +50,19 @@ class Cms::Apis::Preview::Workflow::WizardController < ApplicationController
     end
   end
 
+  def set_routes
+    @route_options ||= Workflow::Route.site(@cur_site).route_options(@cur_user, item: @item)
+  end
+
   public
 
   def index
+    if @route_options.length == 1
+      _route_name, route_id = @route_options.first
+      redirect_to url_for(action: "approver_setting", route_id: route_id)
+      return
+    end
+
     render layout: false
   end
 
@@ -64,12 +77,12 @@ class Cms::Apis::Preview::Workflow::WizardController < ApplicationController
   def approver_setting
     if @route.present?
       if @item.apply_workflow?(@route)
-        render file: "approver_setting_multi", layout: false
+        render file: "approver_setting_multi", locals: { cancel_button: @route_options.count > 1 }, layout: false
       else
         render json: @item.errors.full_messages, status: :bad_request
       end
     elsif @route_id == "my_group"
-      render file: :approver_setting, layout: false
+      render file: :approver_setting, locals: { cancel_button: @route_options.count > 1 }, layout: false
     elsif @route_id == "restart"
       render file: "approver_setting_restart", layout: false
     else

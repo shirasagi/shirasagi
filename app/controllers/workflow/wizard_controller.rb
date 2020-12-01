@@ -4,6 +4,7 @@ class Workflow::WizardController < ApplicationController
 
   before_action :set_route, only: [:approver_setting]
   before_action :set_item
+  before_action :set_routes
 
   private
 
@@ -20,13 +21,20 @@ class Workflow::WizardController < ApplicationController
     if "my_group" == @route_id || "restart" == @route_id
       @route = nil
     else
-      @route = Workflow::Route.find(params[:route_id])
+      @route = Workflow::Route.site(@cur_site).find(params[:route_id])
     end
   end
 
   def set_item
-    @item = @model.find(params[:id]).becomes_with_route
-    @item.attributes = fix_params
+    @item ||= begin
+      item = @model.site(@cur_site).find(params[:id]).becomes_with_route
+      item.attributes = fix_params
+      item
+    end
+  end
+
+  def set_routes
+    @route_options ||= Workflow::Route.site(@cur_site).route_options(@cur_user, item: @item)
   end
 
   public

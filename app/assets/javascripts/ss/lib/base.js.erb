@@ -127,7 +127,7 @@ this.SS = (function () {
   };
 
   SS.renderClipboardCopy = function () {
-    $(".ss-clipboard-copy").click(function () {
+    $(".ss-clipboard-copy").on("click", function () {
       var clip_attr = $(this).attr("data-clip-attr");
       if (clip_attr) {
         SS_Clipboard.copy($(this).attr(clip_attr), { "success_alert": true });
@@ -234,7 +234,7 @@ this.SS = (function () {
     if (params == null) {
       params = {};
     }
-    return $(elem).click(function (e) {
+    return $(elem).on("click", function (e) {
       var defaults, self;
       self = $(this);
       defaults = {
@@ -259,14 +259,14 @@ this.SS = (function () {
     if (params == null) {
       params = {};
     }
-    return $(elem).click(function (e) {
+    return $(elem).on("click", function (e) {
       var defaults, self;
       if (!confirm("<%= I18n.t 'ss.confirm.delete' %>")) {
         return false;
       }
       self = $(this);
       defaults = {
-        type: "DELETE",
+        type: "POST",
         data: "_method=delete",
         url: self.attr("href") + ".json",
         dataType: "json",
@@ -296,7 +296,7 @@ this.SS = (function () {
     SS.clearNotice();
     notice = $('#notice');
     if (!notice.hasClass('js-notice')) {
-      notice.addClass('js-notice').click(function () {
+      notice.addClass('js-notice').on("click", function () {
         return notice.slideUp('normal');
       });
     }
@@ -328,7 +328,7 @@ this.SS = (function () {
 
   SS.confirmUnloading = function () {
     SS.formChanged = false;
-    $("input[type=text],textarea,select").change(function () {
+    $("input[type=text],textarea,select").on("change", function () {
       SS.formChanged = true;
     });
     $(window).on("beforeunload", function () {
@@ -336,7 +336,7 @@ this.SS = (function () {
         return "<%= I18n.t 'ss.confirm.unload' %>";
       }
     });
-    $("input[type=submit]").click(function () {
+    $("input[type=submit]").on("click", function () {
       SS.formChanged = false;
       return true;
     });
@@ -357,7 +357,7 @@ this.SS = (function () {
   };
 
   SS.fileCheck = function () {
-    return $('#item_files').change(function () {
+    return $('#item_files').on("change", function () {
       var form, uri;
       form = $(this).val();
       if (!form) {
@@ -442,40 +442,41 @@ this.SS = (function () {
 
   SS.renderDateTimePicker = function () {
     $.datetimepicker.setLocale('ja');
-    if ($.support.opacity) {
-      $.each($(".js-date"), function () {
-        var data, opts;
-        opts = {
-          timepicker: false,
-          format: 'Y/m/d',
-          closeOnDateSelect: true,
-          scrollInput: false
-        };
-        data = $(this).data();
-        if (data.minDate !== null) {
-          opts.minDate = data.minDate;
-        }
-        if (data.maxDate !== null) {
-          opts.maxDate = data.maxDate;
-        }
-        return $(this).datetimepicker(opts);
-      });
-      return $.each($(".js-datetime"), function () {
-        var data, opts;
-        opts = {
-          roundTime: 'ceil',
-          step: 30
-        };
-        data = $(this).data();
-        if (data.minDate !== null) {
-          opts.minDate = data.minDate;
-        }
-        if (data.maxDate !== null) {
-          opts.maxDate = data.maxDate;
-        }
-        return $(this).datetimepicker(opts);
-      });
-    }
+    $.each($(".js-date"), function () {
+      var data, opts;
+      opts = {
+        timepicker: false,
+        format: 'Y/m/d',
+        closeOnDateSelect: true,
+        scrollInput: false
+      };
+      data = $(this).data();
+      if (data.minDate !== null) {
+        opts.minDate = data.minDate;
+      }
+      if (data.maxDate !== null) {
+        opts.maxDate = data.maxDate;
+      }
+      return $(this).datetimepicker(opts);
+    });
+    $.each($(".js-datetime"), function () {
+      var data, opts;
+      opts = {
+        roundTime: 'ceil',
+        step: 30
+      };
+      data = $(this).data();
+      if (data.minDate !== null) {
+        opts.minDate = data.minDate;
+      }
+      if (data.maxDate !== null) {
+        opts.maxDate = data.maxDate;
+      }
+      if (data.step !== null) {
+        opts.step = data.step;
+      }
+      return $(this).datetimepicker(opts);
+    });
   };
 
   // SS.formatTime("2019-07-09T14:33:38+0900") = "2019/7/9 14:33"

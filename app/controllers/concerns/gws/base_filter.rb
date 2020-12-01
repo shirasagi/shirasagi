@@ -9,6 +9,8 @@ module Gws::BaseFilter
 
     helper Gws::LayoutHelper
     helper Gws::Presence::UserHelper
+    helper Gws::PublicUserProfile
+    helper Gws::ReadableSettingHelper
 
     before_action :validate_gws
     before_action :set_gws_assets

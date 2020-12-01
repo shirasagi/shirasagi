@@ -117,14 +117,15 @@ this.Syntax_Checker = (function () {
           if (error["correctContent"]) {
             correct = $('<a href="#" class="correct">' + "<%= I18n.t('cms.auto_correct.link') %>" + '</a>');
             correct.on("click", function (e) {
-              var setContent, getContent, correctContent, resolve;
+              var setContent, getContent, correctContent, resolve, type;
 
               correctContent = error["correctContent"];
               setContent = check["setContent"];
               getContent = check["getContent"];
               resolve = check["resolve"];
+              type = check["type"];
 
-              setContent(correctContent(id, { content: getContent(), resolve: resolve }, error));
+              setContent(correctContent(id, { content: getContent(), resolve: resolve, type: type }, error));
               $(self.form.addonSelector).find("button.syntax-check").trigger("click");
 
               return false;

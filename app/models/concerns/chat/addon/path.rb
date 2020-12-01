@@ -11,7 +11,7 @@ module Chat::Addon
 
     def chat_bot_node
       chat_node = Chat::Node::Bot.site(site).and_public.where(filename: chat_path.sub(/\A\//, '')).first
-      chat_node ||= parent.becomes_with_route
+      chat_node ||= parent.becomes_with_route if parent.present?
       chat_node
     end
   end

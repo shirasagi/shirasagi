@@ -36,7 +36,7 @@ Gws_Bookmark.prototype.render = function(opts) {
   ul.append($('<li><div class="bookmark-notice"></div></li>')).append(li);
   this.el.html(span).append(ul);
 
-  this.el.click(function(e) {
+  this.el.on("click", function(e) {
     if (_this.loading) {
       return false;
     } else if ($(e.target).hasClass('update')) {

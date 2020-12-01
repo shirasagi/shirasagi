@@ -12,56 +12,60 @@ save_inquiry_column node_id: @inquiry_node.id, name: "お名前", order: 0, inpu
 save_inquiry_column node_id: @inquiry_node.id, name: "企業・団体名", order: 10, input_type: "text_field",
                     html: column_company_html, select_options: [], required: "optional", site_id: @site._id
 save_inquiry_column node_id: @inquiry_node.id, name: "メールアドレス", order: 20, input_type: "email_field",
-                    html: column_email_html, select_options: [], required: "required", input_confirm: "enabled", site_id: @site._id
+                    html: column_email_html, select_options: [], required: "required",
+                    input_confirm: "enabled", site_id: @site._id
 save_inquiry_column node_id: @inquiry_node.id, name: "性別", order: 30, input_type: "radio_button",
                     html: column_gender_html, select_options: %w(男性 女性), required: "required", site_id: @site._id
 save_inquiry_column node_id: @inquiry_node.id, name: "年齢", order: 40, input_type: "select",
-                    html: column_age_html, select_options: %w(10代 20代 30代 40代 50代 60代 70代 80代), required: "required", site_id: @site._id
+                    html: column_age_html, select_options: %w(10代 20代 30代 40代 50代 60代 70代 80代),
+                    required: "required", site_id: @site._id
 save_inquiry_column node_id: @inquiry_node.id, name: "お問い合わせ区分", order: 50, input_type: "check_box",
-                    html: column_category_html, select_options: %w(市政について ご意見・ご要望 申請について その他), required: "required", site_id: @site._id
+                    html: column_category_html, select_options: %w(市政について ご意見・ご要望 申請について その他),
+                    required: "required", site_id: @site._id
 save_inquiry_column node_id: @inquiry_node.id, name: "お問い合わせ内容", order: 60, input_type: "text_area",
                     html: column_question_html, select_options: [], required: "required", site_id: @site._id
 save_inquiry_column node_id: @inquiry_node.id, name: "添付ファイル", order: 70, input_type: "upload_file",
                     select_options: [], required: "optional", site_id: @site._id
 
 puts "# inquiry public comment"
-save_inquiry_column node_id: @inquiry_comment_1.id, name: "性別", order: 0, input_type: "radio_button",
+save_inquiry_column node_id: @inquiry_comment1.id, name: "性別", order: 0, input_type: "radio_button",
                     html: column_gender_html, select_options: %w(男性 女性), required: "required", site_id: @site._id
-save_inquiry_column node_id: @inquiry_comment_1.id, name: "年齢", order: 10, input_type: "select",
-                    html: column_age_html, select_options: %w(10代 20代 30代 40代 50代 60代 70代 80代), required: "required", site_id: @site._id
-save_inquiry_column node_id: @inquiry_comment_1.id, name: "意見", order: 20, input_type: "text_area",
+save_inquiry_column node_id: @inquiry_comment1.id, name: "年齢", order: 10, input_type: "select",
+                    html: column_age_html, select_options: %w(10代 20代 30代 40代 50代 60代 70代 80代),
+                    required: "required", site_id: @site._id
+save_inquiry_column node_id: @inquiry_comment1.id, name: "意見", order: 20, input_type: "text_area",
                     html: "<p>ご意見を入力してください。</p>", select_options: [], required: "required", site_id: @site._id
 
-column_gender = save_inquiry_column node_id: @inquiry_comment_2.id, name: "性別", order: 0, input_type: "radio_button",
+column_gender = save_inquiry_column node_id: @inquiry_comment2.id, name: "性別", order: 0, input_type: "radio_button",
                                     html: column_gender_html, select_options: %w(男性 女性), required: "required", site_id: @site._id
-column_age = save_inquiry_column node_id: @inquiry_comment_2.id, name: "年齢", order: 10, input_type: "select",
+column_age = save_inquiry_column node_id: @inquiry_comment2.id, name: "年齢", order: 10, input_type: "select",
                                  html: column_age_html, select_options: %w(10代 20代 30代 40代 50代 60代 70代 80代), required: "required",
                                  site_id: @site._id
-column_opinion = save_inquiry_column node_id: @inquiry_comment_2.id, name: "意見", order: 20, input_type: "text_area",
+column_opinion = save_inquiry_column node_id: @inquiry_comment2.id, name: "意見", order: 20, input_type: "text_area",
                                      html: "<p>ご意見を入力してください。</p>", select_options: [], required: "required", site_id: @site._id
 
-save_inquiry_answer node_id: @inquiry_comment_2.id, site_id: @site._id,
+save_inquiry_answer node_id: @inquiry_comment2.id, site_id: @site._id,
                     remote_addr: "192.0.2.0", user_agent: "dummy connection (input by seed demo)",
                     data: {
                       column_gender.id => "女性",
                       column_age.id => "10代",
                       column_opinion.id => "意見があります。"
                     }
-save_inquiry_answer node_id: @inquiry_comment_2.id, site_id: @site._id,
+save_inquiry_answer node_id: @inquiry_comment2.id, site_id: @site._id,
                     remote_addr: "192.0.2.0", user_agent: "dummy connection (input by seed demo)",
                     data: {
                       column_gender.id => "女性",
                       column_age.id => "80代",
                       column_opinion.id => "意見があります。"
                     }
-save_inquiry_answer node_id: @inquiry_comment_2.id, site_id: @site._id,
+save_inquiry_answer node_id: @inquiry_comment2.id, site_id: @site._id,
                     remote_addr: "192.0.2.0", user_agent: "dummy connection (input by seed demo)",
                     data: {
                       column_gender.id => "男性",
                       column_age.id => "50代",
                       column_opinion.id => "意見があります。"
                     }
-save_inquiry_answer node_id: @inquiry_comment_2.id, site_id: @site._id,
+save_inquiry_answer node_id: @inquiry_comment2.id, site_id: @site._id,
                     remote_addr: "192.0.2.0", user_agent: "dummy connection (input by seed demo)",
                     data: {
                       column_gender.id => "男性",
@@ -71,22 +75,25 @@ save_inquiry_answer node_id: @inquiry_comment_2.id, site_id: @site._id,
 
 puts "# feedback"
 
-column_feedback_1 = save_inquiry_column node_id: @feedback_node.id, name: "このページの内容は役に立ちましたか？",
-                                        order: 10, input_type: "radio_button", select_options: %w(役に立った どちらともいえない 役に立たなかった),
+column_feedback1 = save_inquiry_column node_id: @feedback_node.id, name: "このページの内容は役に立ちましたか？",
+                                        order: 10, input_type: "radio_button",
+                                        select_options: %w(役に立った どちらともいえない 役に立たなかった),
                                         required: "required", site_id: @site._id
-column_feedback_2 = save_inquiry_column node_id: @feedback_node.id, name: "このページの内容は分かりやすかったですか？",
-                                        order: 20, input_type: "radio_button", select_options: %w(分かりやすかった どちらともいえない 分かりにくかった),
+column_feedback2 = save_inquiry_column node_id: @feedback_node.id, name: "このページの内容は分かりやすかったですか？",
+                                        order: 20, input_type: "radio_button",
+                                        select_options: %w(分かりやすかった どちらともいえない 分かりにくかった),
                                         required: "required", site_id: @site._id
-column_feedback_3 = save_inquiry_column node_id: @feedback_node.id, name: "このページの情報は見つけやすかったですか？",
-                                        order: 30, input_type: "radio_button", select_options: %w(見つけやすかった どちらともいえない 見つけにくかった),
+column_feedback3 = save_inquiry_column node_id: @feedback_node.id, name: "このページの情報は見つけやすかったですか？",
+                                        order: 30, input_type: "radio_button",
+                                        select_options: %w(見つけやすかった どちらともいえない 見つけにくかった),
                                         required: "required", site_id: @site._id
 
 save_inquiry_answer node_id: @feedback_node.id, site_id: @site._id,
                     remote_addr: "192.0.2.0", user_agent: "dummy connection (input by seed demo)",
                     data: {
-                      column_feedback_1.id => "どちらともいえない",
-                      column_feedback_2.id => "どちらともいえない",
-                      column_feedback_3.id => "どちらともいえない"
+                      column_feedback1.id => "どちらともいえない",
+                      column_feedback2.id => "どちらともいえない",
+                      column_feedback3.id => "どちらともいえない"
                     }
 
 if SS.config.cms.enable_lgwan.blank?
@@ -103,7 +110,8 @@ if SS.config.cms.enable_lgwan.blank?
   save_node route: "member/my_blog", filename: "mypage/blog", name: "ブログ", layout_id: @layouts["mypage"].id, order: 20
   save_node route: "member/my_photo", filename: "mypage/photo", name: "フォト", layout_id: @layouts["mypage"].id, order: 30
   @anpi_node = save_node route: "member/my_anpi_post", filename: "mypage/anpi", name: "安否",
-                         layout_id: @layouts["mypage"].id, order: 40, map_state: "enabled", map_view_state: "enabled", text_size_limit: 400
+                         layout_id: @layouts["mypage"].id, order: 40, map_state: "enabled", map_view_state: "enabled",
+                         text_size_limit: 400
   save_node route: "member/my_group", filename: "mypage/group", name: "グループ", layout_id: @layouts["mypage"].id, order: 50,
             sender_name: "シラサギサンプルサイト", sender_email: "admin@example.jp"
 

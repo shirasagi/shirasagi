@@ -8,6 +8,12 @@ module Gws::Portal::PortalFilter
 
   private
 
+  # override Gws::BaseFilter#set_gws_assets
+  def set_gws_assets
+    super
+    javascript("gws/calendar")
+  end
+
   def fix_params
     { cur_user: @cur_user, cur_site: @cur_site }
   end

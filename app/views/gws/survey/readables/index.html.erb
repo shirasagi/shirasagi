@@ -41,7 +41,7 @@ end
 
 <% @index_meta = proc do |item| %>
   <span class="datetime"><%= item.updated.strftime("%Y/%m/%d %H:%M") %></span>
-  <span class="user"><%= item.contributor_name.presence || item.user_long_name %></span>
+  <span class="user"><%= gws_public_user_long_name(item.contributor_name.presence || item.user_long_name) %></span>
   <% answered = item.answered_at(@cur_user) %>
   <% if answered %>
     <span class="answered"><%= Gws::Survey::File.t :updated %>: <%= I18n.l(answered) %></span>
@@ -56,7 +56,7 @@ end
   <% if item.categories.present? %>
     <span class="categories">
     <% item.categories.readable(@cur_user, site: @cur_site).each do |category| %>
-      <%= link_to category.trailing_name, url_for(action: :index, category: category.id), class: "gws-category-label", style: category_label_css(category) %>
+      <%= link_to category.trailing_name, url_for(action: :index, category_id: category), class: "gws-category-label", style: category_label_css(category) %>
     <% end %>
   </span>
   <% end %>

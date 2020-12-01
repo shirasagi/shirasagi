@@ -63,4 +63,27 @@ describe "article_agents_parts_page", type: :feature, dbscope: :example do
       expect(page).to have_selector(".current")
     end
   end
+
+  context "request_dir" do
+    let!(:item) { create :article_page, cur_node: node }
+    let(:node2) { create :article_node_page, layout_id: layout.id }
+    let!(:item2) { create :article_page, cur_node: node2 }
+
+    before do
+      part.upper_html = '<div class="parts">'
+      part.lower_html = '</div>'
+      part.conditions = [ "\#{request_dir}" ]
+      part.save!
+    end
+
+    it do
+      visit "#{node.full_url}/index.html"
+      expect(page).to have_css(".parts", text: item.name)
+      expect(page).to have_no_css(".parts", text: item2.name)
+
+      visit "#{node2.full_url}/index.html"
+      expect(page).to have_no_css(".parts", text: item.name)
+      expect(page).to have_css(".parts", text: item2.name)
+    end
+  end
 end

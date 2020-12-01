@@ -5,11 +5,13 @@ class Gws::Elasticsearch::Setting::Memo
   self.model = Gws::Memo::Message
 
   def menu_label
-    @cur_site.menu_memo_label || I18n.t('modules.gws/memo')
+    cur_site.menu_memo_label.presence || I18n.t('modules.gws/memo')
   end
 
   def search_types
     return [] unless cur_site.menu_memo_visible?
+    return [] unless Gws.module_usable?(:memo, cur_site, cur_user)
+
     [ model.collection_name ]
   end
 

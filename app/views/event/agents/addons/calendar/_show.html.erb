@@ -1,0 +1,6 @@
+<dl class="see mod-event-calendar">
+  <% if @item.event_display.present? %>
+    <dt><%= @model.t :event_display %></dt>
+    <dd><%= @item.label :event_display %></dd>
+  <% end %>
+</dl>

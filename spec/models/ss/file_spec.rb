@@ -471,6 +471,49 @@ describe SS::File, dbscope: :example do
     end
   end
 
+  describe "#image_dimension" do
+    context "when image file is given" do
+      let(:ss_file) { tmp_ss_file(contents: "#{Rails.root}/spec/fixtures/ss/file/keyvisual.jpg") }
+
+      it do
+        expect(ss_file.image_dimension).to eq [ 712, 210 ]
+      end
+    end
+
+    context "when non-image file is given" do
+      let(:ss_file) { tmp_ss_file(contents: "0123", content_type: "application/octet-stream") }
+
+      it do
+        expect(ss_file.image_dimension).to be_nil
+      end
+    end
+
+    context "when actual file is not existed (this is like that a file is isolated by anti-virus softwares)" do
+      let(:ss_file) { tmp_ss_file(contents: "#{Rails.root}/spec/fixtures/ss/file/keyvisual.jpg") }
+
+      before do
+        ::FileUtils.rm_f(ss_file.path)
+      end
+
+      it do
+        expect(ss_file.image_dimension).to be_nil
+      end
+    end
+
+    context "when actual file is replaced by directory" do
+      let(:ss_file) { tmp_ss_file(contents: "#{Rails.root}/spec/fixtures/ss/file/keyvisual.jpg") }
+
+      before do
+        ::FileUtils.rm_f(ss_file.path)
+        ::FileUtils.mkdir_p(ss_file.path)
+      end
+
+      it do
+        expect(ss_file.image_dimension).to be_nil
+      end
+    end
+  end
+
   describe "#shrink_image_to" do
     let(:ss_file) { tmp_ss_file(contents: "#{Rails.root}/spec/fixtures/ss/file/keyvisual.jpg") }
 

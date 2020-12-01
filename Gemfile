@@ -1,10 +1,11 @@
 source 'https://rubygems.org'
 
 gem 'rails', '~> 5.2.0'
+gem 'sprockets', '< 4.0'
 gem 'sassc-rails'
 gem 'uglifier'
 gem 'coffee-rails'
-gem 'therubyracer', platforms: :ruby
+gem 'mini_racer'
 gem 'jbuilder'
 gem 'sdoc', group: :doc
 
@@ -42,12 +43,14 @@ gem 'icalendar'
 gem 'kaminari'
 gem 'kaminari-mongoid'
 gem 'kramdown'
+gem 'kramdown-parser-gfm'
 gem 'mail-iso-2022-jp'
 gem 'net-ldap'
 gem 'non-stupid-digest-assets'
 gem 'oj'
 gem 'rails_autolink'
 gem 'rmagick'
+gem 'fastimage'
 gem 'romaji'
 gem 'simple_captcha2', require: 'simple_captcha'
 gem 'ungarbled'
@@ -98,6 +101,7 @@ group :development, :test do
   gem 'capybara', require: false
   gem 'coveralls', require: false
   gem 'factory_bot_rails', require: false
+  gem 'debase', require: false
   gem 'fuubar', require: false
   gem 'guard', require: false
   gem 'guard-rspec', '~> 4.3.1', require: false
@@ -114,6 +118,7 @@ group :development, :test do
   gem 'rspec-rails', require: false
   gem 'rubocop', require: false
   gem 'rubocop-performance', require: false
+  gem 'ruby-debug-ide', require: false
   gem 'scss_lint', require: false
   gem 'selenium-webdriver', require: false
   gem 'simplecov', require: false

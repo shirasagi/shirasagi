@@ -53,6 +53,8 @@ ja:
         table: 表形式
         list_only: リスト形式のみ
         table_only: 表形式のみ
+        simple_table: 表形式(簡易)
+        detail_table: 表形式(詳細)
       ical_refresh_method:
         manual: 手動
         auto: 自動
@@ -87,6 +89,7 @@ ja:
       event/ical_import: ical取り込み
       event/ical_link: iCal情報
       event/facility: 施設
+      event/calendar: カレンダー
 
   cms:
     nodes:
@@ -160,6 +163,8 @@ ja:
       event/addon/facility:
         facilities: 施設
         facility_ids: 施設
+      event/addon/calendar:
+        event_display: 表示形式
 
   datetime:
     prompts:
@@ -310,3 +315,6 @@ ja:
     event/addon/facility:
       facility_ids:
         - イベントに関係する施設を設定します。
+    event/addon/calendar:
+      event_display:
+        - イベントカレンダーの表示形式を指定します。

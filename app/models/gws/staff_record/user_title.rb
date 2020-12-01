@@ -17,7 +17,13 @@ class Gws::StaffRecord::UserTitle
   after_save :update_users_title_order
 
   default_scope -> { order_by(order: -1) }
-  scope :site, ->(site) { where group_id: site.id }
+
+  class << self
+    # override scope
+    def site(site)
+      where group_id: site.id
+    end
+  end
 
   private
 

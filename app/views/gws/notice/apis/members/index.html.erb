@@ -48,7 +48,7 @@
   <tbody>
   <% @items.each do |user| %>
     <tr data-user-id="<%= user.id %>">
-      <td class="name"><%= user.long_name %></td>
+      <td class="name"><%= gws_public_user_long_name(user.long_name) %></td>
       <td class="browsed">
         <% @cur_post.browsed_at(user).tap do |seen_at| %>
           <span class="browsed">

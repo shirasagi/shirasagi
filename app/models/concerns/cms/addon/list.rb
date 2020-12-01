@@ -3,16 +3,17 @@ module Cms::Addon::List
     extend ActiveSupport::Concern
     extend SS::Translation
 
-    attr_accessor :cur_date
-    attr_accessor :cur_main_path
+    WELL_KONWN_CONDITION_HASH_OPTIONS = %i[site default_location request_dir category bind].freeze
 
     included do
       cattr_accessor(:use_new_days, instance_accessor: false) { true }
       cattr_accessor(:use_liquid, instance_accessor: false) { true }
+      cattr_accessor(:default_limit, instance_accessor: false) { 20 }
+      attr_accessor :cur_date
 
       field :conditions, type: SS::Extensions::Words
       field :sort, type: String
-      field :limit, type: Integer, default: 20
+      field :limit, type: Integer, default: -> { self.class.default_limit }
       field :loop_html, type: String
       field :upper_html, type: String
       field :lower_html, type: String
@@ -74,52 +75,95 @@ module Cms::Addon::List
       date + new_days > (@cur_date || Time.zone.now)
     end
 
-    def request_dir_conditions
-      return if cur_main_path.blank?
-      return if !conditions.index('#{request_dir}')
+    def interpret_conditions(options, &block)
+      default_site = options[:site] || @cur_site || self.site
+      default_location = options.fetch(:default_location, :default)
+      request_dir = options.fetch(:request_dir, nil)
+      cur_dir = nil
+      interprets_default_location = false
 
-      cur_dir = cur_main_path.sub(/\/[\w\-\.]*?$/, "").sub(/^\//, "")
-      conditions.map { |url| url.sub('#{request_dir}', cur_dir) }
+      conditions.each do |url_with_host|
+        host, url = url_with_host.split(":", 2)
+        host, url = url, host if url.blank?
+
+        if host.present?
+          site = Cms::Site.where(host: host).first
+          next if site.blank?
+
+          # myself
+          site_ok = (site.id == default_site.id)
+          # sub site
+          site_ok ||= (site.parent.id == default_site.id)
+          # partners
+          site_ok ||= site.partner_site_ids.include?(default_site.id)
+
+          next unless site_ok
+        end
+        site ||= default_site
+
+        if url.include?('#{request_dir}')
+          next unless request_dir
+          # request dir of partner site is not allowed
+          next unless site.id == default_site.id
+
+          # #{request_dir} indicates "special default location".
+          # usually default location is a current node (or current part's parent if part is given).
+          # if #{request_dir} is specified, default location is changed to cur_main_path.
+          cur_dir ||= request_dir.sub(/\/[\w\-\.]*?$/, "").sub(/^\//, "")
+          url = url.sub('#{request_dir}', cur_dir)
+          interprets_default_location = true
+        end
+
+        yield site, url
+      end
+
+      if default_location == :default && !interprets_default_location
+        interpret_default_location(default_site, &block)
+      elsif default_location == :only_blank && conditions.blank?
+        interpret_default_location(default_site, &block)
+      end
     end
 
-    def condition_hash
-      cond = []
-      cids = []
+    def condition_hash(options = {})
+      category_key = options.fetch(:category, :category_ids)
+      bind = options.fetch(:bind, :children)
+      conditions = []
 
-      cond_url = request_dir_conditions
-      if cond_url.nil?
-        if self.is_a?(Cms::Model::Part)
-          if parent
-            cond << { filename: /^#{::Regexp.escape(parent.filename)}\//, depth: depth }
-            cids << parent.id
-          else
-            cond << { filename: /^[^\/]+$/, depth: 1 }
-          end
-        else
-          cond << { filename: /^#{::Regexp.escape(filename)}\//, depth: depth + 1 }
-          cids << id
-        end
-        cond_url = conditions
-      end
-
-      cond_url.each do |url|
-        # regex
-        if url =~ /\/\*$/
-          filename = url.sub(/\/\*$/, "")
-          cond << { filename: /^#{::Regexp.escape(filename)}\// }
+      pending_nodes = []
+      pending_filenames = []
+      interpret_conditions(options) do |site, content_or_path|
+        if content_or_path.is_a?(Cms::Content)
+          pending_nodes << [ site, content_or_path, bind, category_key ]
+        elsif content_or_path == :root_contents
+          conditions << { site_id: site.id, filename: /^[^\/]+$/, depth: 1 }
           next
+        elsif content_or_path.end_with?("*")
+          # wildcard
+          filename = content_or_path[0..-2]
+          filename = filename[0..-2] if filename.end_with?("/")
+          pending_filenames << [ site, filename, :descendants, nil ]
+          next
+        else
+          pending_filenames << [ site, content_or_path, bind, category_key ]
         end
-
-        node = Cms::Node.site(cur_site || site).filename(url).first rescue nil
-        next unless node
-
-        cond << { filename: /^#{::Regexp.escape(node.filename)}\//, depth: node.depth + 1 }
-        cids << node.id
       end
-      cond << { :category_ids.in => cids } if cids.present?
-      cond << { :id => -1 } if cond.blank?
 
-      { '$or' => cond }
+      pending_nodes += retrieve_nodes(pending_filenames) if pending_filenames.present?
+
+      category_ids = []
+      pending_nodes.each do |site, node, bind, category_key|
+        if bind == :children
+          conditions << { site_id: site.id, filename: /^#{::Regexp.escape(node.filename)}\//, depth: node.depth + 1 }
+        elsif bind == :descendants
+          conditions << { site_id: site.id, filename: /^#{::Regexp.escape(node.filename)}\// }
+        end
+        category_ids << [ site.id, node.id ] if category_key
+      end
+      conditions += bind_to_category(category_key, category_ids) if category_key
+
+      return { "$and" => [{ id: -1 }] } if conditions.blank?
+
+      { '$or' => conditions }
     end
 
     def render_loop_html(item, opts = {})
@@ -133,6 +177,58 @@ module Cms::Addon::List
       self.conditions = conditions.map do |m|
         m.strip.sub(/^\w+:\/\/.*?\//, "").sub(/^\//, "").sub(/\/$/, "")
       end.compact.uniq
+    end
+
+    def interpret_default_location(default_site, &block)
+      if self.is_a?(Cms::Model::Part)
+        if parent
+          yield parent.site, parent
+        else
+          yield default_site, :root_contents
+        end
+      else
+        yield self.site, self
+      end
+    end
+
+    def retrieve_nodes(pending_filenames)
+      return [] if pending_filenames.blank?
+
+      all_nodes = begin
+        nodes_conditions = pending_filenames.map do |site, filename, _bind, _category_key|
+          { site_id: site.id, filename: filename.start_with?("/") ? filename[1..-1] : filename }
+        end
+        Cms::Node.unscoped.where("$or" => nodes_conditions).to_a
+      end
+
+      pending_filenames.map do |site, filename, bind, category_key|
+        node = all_nodes.find { |node| node.site_id == site.id && node.filename == filename }
+        next unless node
+
+        [ site, node, bind, category_key ]
+      end.compact
+    end
+
+    def bind_to_category(category_key, category_ids)
+      cond = []
+
+      return cond if category_ids.blank?
+
+      if category_ids.length == 1
+        cond << { site_id: category_ids.first[0], category_key => category_ids.first[1] }
+        return cond
+      end
+
+      category_ids.group_by { |site_id, _node_id| site_id }.each do |site_id, ids|
+        node_ids = ids.map { |_site_id, node_id| node_id }
+        if node_ids.length == 1
+          cond << { site_id: site_id, category_key => node_ids.first }
+        else
+          cond << { site_id: site_id, category_key => { "$in" => node_ids } }
+        end
+      end
+
+      cond
     end
   end
 end

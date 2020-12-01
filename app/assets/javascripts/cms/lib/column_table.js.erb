@@ -13,7 +13,7 @@ Cms_Column_Table.render = function (el) {
   Cms_Column_Table.instances.push(instance);
 
   if (!Cms_Column_Table.initialized) {
-    $(document).click(function (event) {
+    $(document).on("click", function (event) {
       if (!$(event.target).closest('.control').length) {
         Cms_Column_Table.hideAllTableMenus();
       }

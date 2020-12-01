@@ -14,8 +14,8 @@ describe Opendata::Dataset::ImportJob, dbscope: :example do
 
     it do
       log = Job::Log.first
-      expect(log.logs).to include(include("INFO -- : Started Job"))
-      expect(log.logs).to include(include("INFO -- : Completed Job"))
+      expect(log.logs).to include(/INFO -- : .* Started Job/)
+      expect(log.logs).to include(/INFO -- : .* Completed Job/)
 
       pages = Opendata::Dataset.all
       expect(pages.map(&:name)).to eq %w(サンプルデータ【1】)

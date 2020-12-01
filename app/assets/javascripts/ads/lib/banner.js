@@ -18,12 +18,3 @@ this.Ads_Banner = (function () {
   return Ads_Banner;
 
 })();
-
-
-
-//  ## puts access log
-//  @countHandle: ->
-//    $(".ads-banners a").click (e) ->
-//      $.ajax
-//        url: $(this).data("count")
-

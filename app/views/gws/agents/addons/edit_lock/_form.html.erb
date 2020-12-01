@@ -11,7 +11,7 @@
 
     <dl class="see mod-gws-edit_lock">
       <dt><%= @model.t :lock_owner %><%= @model.tt :lock_owner %></dt>
-      <dd class="lock_owner"><%= @item.lock_owner.try { |owner| owner.long_name } %></dd>
+      <dd class="lock_owner"><%= @item.lock_owner.try { |owner| gws_public_user_long_name(owner.long_name) } %></dd>
       <dt><%= @model.t :lock_until %></dt>
       <dd class="lock_until"><%= @item.lock_until.try { |time| time.strftime("%Y/%m/%d %H:%M") } %></dd>
     </dl>

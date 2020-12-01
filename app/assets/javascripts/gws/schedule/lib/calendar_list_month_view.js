@@ -1,7 +1,7 @@
 /**
  * ListMonth View
  */
-(function() {
+(function($) {
   var FC = $.fullCalendar;
   var View = FC.View;
   var installedWithTodoClick = false;
@@ -101,4 +101,4 @@
       fixedWeekCount: false
     }
   };
-})();
+})($jQuery1);

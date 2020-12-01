@@ -1,6 +1,6 @@
 <header>
   <div class="contributor">
-    <%= @item.contributor_name %>
+    <%= gws_public_user_long_name(@item.contributor_name) %>
   </div>
   <div class="datetime updated">
     <%= @item.updated.strftime("%Y/%m/%d %H:%M") %>

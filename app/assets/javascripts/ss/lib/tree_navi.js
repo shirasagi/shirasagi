@@ -104,7 +104,9 @@ SS_TreeNavi.prototype.openItem = function(item, mark) {
     return;
   }
   this.el.find('.tree-item').each(function(){
-    if ($(this).data('filename').startsWith(item.data('filename') + '/')) {
+    var filename = $(this).data('filename').toString();
+    var path = item.data('filename').toString() + '/';
+    if (filename.startsWith(path)) {
       $(this).show();
     }
   });
@@ -116,7 +118,9 @@ SS_TreeNavi.prototype.closeItem = function(item, mark) {
   mark.html(this.closeMark);
 
   this.el.find('.tree-item').each(function() {
-    if ($(this).data('filename').startsWith(item.data('filename') + '/')) {
+    var filename = $(this).data('filename').toString();
+    var path = item.data('filename').toString() + '/';
+    if (filename.startsWith(path)) {
       $(this).hide();
     }
   });

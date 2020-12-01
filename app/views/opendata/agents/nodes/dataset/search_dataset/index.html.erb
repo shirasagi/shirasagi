@@ -13,7 +13,7 @@
 <% if exceeded_filesize %>
 <%= jquery do %>
 $(".download-all").on("click", function () {
-  alert('<%= t("opendata.notice.bulk_download_exceeded_filesize", size: number_to_human_size(bulk_download_max_filesize)) %>');
+  alert(<%== t("opendata.notice.bulk_download_exceeded_filesize", size: number_to_human_size(bulk_download_max_filesize)).to_json %>);
   return false;
 });
 <% end %>

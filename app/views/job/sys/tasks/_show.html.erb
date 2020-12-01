@@ -38,10 +38,20 @@
   <dd><%= @item.interrupt %></dd>
 
   <dt><%= @model.t :started %></dt>
-  <dd><%= tryb { @item.started.strftime("%Y/%m/%d %H:%M") } %></dd>
+  <dd>
+    <%= @item.started.try do |time| %>
+      <%= content_tag("time", I18n.l(time, format: :picker), datetime: time.iso8601, title: time.iso8601) %>
+      <%= link_to(t("ss.buttons.copy"), "#", class: "clipboard-copy-button", data: { text: time.iso8601 }) %>
+    <% end %>
+  </dd>
 
   <dt><%= @model.t :closed %></dt>
-  <dd><%= tryb { @item.closed.strftime("%Y/%m/%d %H:%M") } %></dd>
+  <dd>
+    <%= @item.closed.try do |time| %>
+      <%= content_tag("time", I18n.l(time, format: :picker), datetime: time.iso8601, title: time.iso8601) %>
+      <%= link_to(t("ss.buttons.copy"), "#", class: "clipboard-copy-button", data: { text: time.iso8601 }) %>
+    <% end %>
+  </dd>
 
   <dt><%= @model.t :total_count %></dt>
   <dd><%= @item.total_count %></dd>
@@ -59,3 +69,7 @@
     <% end %>
   </dd>
 </dl>
+
+<%= jquery do %>
+  SS_Clipboard.renderCopy();
+<% end %>

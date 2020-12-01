@@ -8,16 +8,26 @@ window.insertContent = function(cont) {
   }
 };
 window.deleteContent = function(id) {
+  var data, file;
   if ((typeof tinymce) != "undefined") {
     data = tinymce.get(Cms_Form.editorId).getContent();
   }
   else if ((typeof CKEDITOR) != "undefined") {
     data = CKEDITOR.instances[Cms_Form.editorId].getData();
   }
+  else {
+    data = null;
+  }
   file = 'fs/' + id.split('').join('/') + '/_/';
   $(".file-view").each(function() {
     if (id == $(this).find(".file-id").attr("value")) {
-      if (data.indexOf(file) > 0) {
+      if (!data) {
+        if (!confirm('<%= I18n.t('ss.confirm.in_use') %>')) {
+          return;
+        }
+        $(this).remove();
+      }
+      else if (data.indexOf(file) > 0) {
         if (!confirm('<%= I18n.t('ss.confirm.in_use') %>')) {
           return;
         }
@@ -90,8 +100,8 @@ var tempFile = new SS_Addon_TempFile(".upload-drop-area", <%= @cur_user.id %>, o
             <div class="properties">
               <span><%= I18n.t("sns.filename") %>: <%= file.name %></span><br>
               <% if file.image? %>
-                <% img = Magick::ImageList.new(file.path) %>
-                <span><%= t("sns.w_h") %>: <%= img.columns %> x <%= img.rows %></span><br>
+                <% width, height = file.image_dimension %>
+                <span><%= t("sns.w_h") %>: <%= width %> x <%= height %></span><br>
               <% end %>
               <span><%= t("sns.size") %>: <%= number_to_human_size(file.size) %></span><br>
               <span><%= t("sns.datetime") %>: <%= file.updated.strftime("%Y/%m/%d %H:%M") %></span><br>

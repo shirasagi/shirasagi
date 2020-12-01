@@ -18,7 +18,7 @@ class Gws::Attendance::Apis::Management::UsersController < ApplicationController
         Gws::Group.in_group(@cur_site).active
       elsif Gws::Attendance::TimeCard.allowed?(:manage_private, @cur_user, site: @cur_site)
         available_groups_for_user = @cur_user.groups.in_group(@cur_site).active
-        Gws::Group.in_groups(available_groups_for_user).active
+        Gws::Group.in_group(available_groups_for_user).active
       else
         Gws::Group.none
       end

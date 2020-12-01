@@ -11,7 +11,7 @@
   <dt><%= @model.t :source_site_id %><%= @model.tt :source_site_id %></dt>
   <dd>
     <%= f.hidden_field "source_site_id", value: "", class: "hidden-ids" %>
-    <%= link_to t("sys.apis.sites.index"), sys_apis_sites_path, :action => :index, class: "ajax-box" %>
+    <%= link_to t("sys.apis.sites.index"), sys_apis_sites_path(single: 1), :action => :index, class: "ajax-box" %>
   </dd>
   <dd>
     <table class="index ajax-selected">
@@ -24,7 +24,7 @@
       <tbody>
         <% if @item.source_site.present? %>
           <tr data-id="<%= @item.source_site_id %>">
-            <td><%= f.hidden_field "item_ids[]", value: @item.source_site_id %> <%= @item.source_site.name %></td>
+            <td><%= f.hidden_field "source_site_id", value: @item.source_site_id %> <%= @item.source_site.name %></td>
             <td><%= link_to t("ss.buttons.delete"), "#", class: "deselect btn" %></td>
           </tr>
         <% end %>

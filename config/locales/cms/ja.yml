@@ -137,6 +137,8 @@ ja:
       import_with_entry_form_is_not_supported: 次のフォームでは本文ブロックは出力されません。
       restoring_public_content_from_trash: 非公開で復元されます。復元後、内容を確認うえ、公開してください。
       restoring_share_file_from_trash: 共有ファイルに復元されます。
+      generate_locked: 書き出しを停止しました。
+      generate_unlocked: 書き出しの停止を解除しました。
     apis:
       categories:
         index: カテゴリーを選択する
@@ -363,6 +365,8 @@ ja:
     use_cms_commands: コマンドの実行
     use_cms_tools: 運用ツールの利用
     use_cms_editor_extensions: エディターの高度な利用
+    read_cms_generate_lock: 書き出し停止の閲覧
+    edit_cms_generate_lock: 書き出し停止の編集
     read_other_cms_nodes: フォルダーの閲覧（全て）
     read_private_cms_nodes: フォルダーの閲覧（所有）
     edit_other_cms_nodes: フォルダーの編集（全て）
@@ -484,6 +488,7 @@ ja:
       cms/column/layout: レイアウト
       cms/column/text_like: 制約条件
       cms/column/select_like: 選択
+      cms/redirect_link: リンクページ
 
   mongoid:
     models:
@@ -533,6 +538,8 @@ ja:
       cms/column/table: 表
     errors:
       models:
+        cms/content:
+          unsafe_numeric_filename: は、数字のみで構成されていますが、数字のみのファイル名は自由に使用できません。アルファベットを1文字以上加えてください。
         cms/model/node:
           routed_folders_under_uploader: アップローダー下に属性付きフォルダーは作成できません。アップローダーに切り替え、新規フォルダーよりフォルダーを作成してください。
         cms/column/value/youtube:
@@ -916,6 +923,8 @@ ja:
         value: テキスト
       cms/column/value/table:
         value: 表
+      cms/addon/redirect_link:
+        redirect_link: リダイレクトURL
 
   errors:
     messages:
@@ -1006,6 +1015,7 @@ ja:
         check_embedded_media:
           - 動画や音声を本文に埋め込む場合は説明を記述してください。
       thums_is_not_an_image: には画像ファイルを指定してください。
+      unsupported_encoding: 対応していない文字コードです。
 
     template:
       no_errors: エラーは見つかりませんでした。
@@ -1971,6 +1981,15 @@ ja:
     cms/column/list:
       list_type:
         - 種類を選択します。
+
+    cms/addon/redirect_link:
+      redirect_link:
+        - ページを別URLにリダイレクトする際に入力します。
+
+    cms/csv_import_base:
+      file:
+        - インポートするファイルを設定します。
+        - ファイルはutf-8またはShiftJISでエンコードされている必要があります。
 
   all_content:
     page_id: ページID

@@ -55,7 +55,7 @@
           <% if item.path.present? %>
           <span class="label"><%= item.path %></span>
           <% end %>
-          <span><%= item.user_long_name %></span>
+          <span><%= gws_public_user_long_name(item.user_long_name) %></span>
           <% if (names = item.updated_field_names).present? %>
             <span class="label"><%= @model.t :updated_fields %></span>
             <%= names.join(', ') %>

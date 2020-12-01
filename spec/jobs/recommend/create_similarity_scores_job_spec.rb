@@ -60,8 +60,8 @@ describe Recommend::CreateSimilarityScoresJob, dbscope: :example do
 
       it do
         log = Job::Log.first
-        expect(log.logs).to include(include("INFO -- : Started Job"))
-        expect(log.logs).to include(include("INFO -- : Completed Job"))
+        expect(log.logs).to include(/INFO -- : .* Started Job/)
+        expect(log.logs).to include(/INFO -- : .* Completed Job/)
 
         expect(Recommend::SimilarityScore.count).to be > 0
         expect(Recommend::SimilarityScore.where(path: "/site/page1.html").first).to be_nil
@@ -128,8 +128,8 @@ describe Recommend::CreateSimilarityScoresJob, dbscope: :example do
 
       it do
         log = Job::Log.first
-        expect(log.logs).to include(include("INFO -- : Started Job"))
-        expect(log.logs).to include(include("INFO -- : Completed Job"))
+        expect(log.logs).to include(/INFO -- : .* Started Job/)
+        expect(log.logs).to include(/INFO -- : .* Completed Job/)
 
         expect(Recommend::SimilarityScore.count).to be > 0
         expect(Recommend::SimilarityScore.where(path: "/site/page1.html").first).to be_nil

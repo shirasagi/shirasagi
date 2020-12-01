@@ -12,7 +12,12 @@ class Job::Sys::TasksController < ApplicationController
     raise "403" unless SS::User.allowed?(:edit, @cur_user)
   end
 
+  def set_search_params
+    @s ||= OpenStruct.new(params[:s])
+  end
+
   def item_criteria
-    @model.all.exists(at: false)
+    set_search_params
+    @model.all.exists(at: false).search(@s)
   end
 end

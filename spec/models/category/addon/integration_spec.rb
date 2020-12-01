@@ -113,8 +113,8 @@ describe Category::Addon::Integration, dbscope: :example do
       sleep 1
 
       Job::Log.first.tap do |log|
-        expect(log.logs).to include(include('INFO -- : Started Job'))
-        expect(log.logs).to include(include('INFO -- : Completed Job'))
+        expect(log.logs).to include(/INFO -- : .* Started Job/)
+        expect(log.logs).to include(/INFO -- : .* Completed Job/)
       end
 
       master_node.in_partial_id = partial_node.id
@@ -259,8 +259,8 @@ describe Category::Addon::Integration, dbscope: :example do
       sleep 1
 
       Job::Log.first.tap do |log|
-        expect(log.logs).to include(include('INFO -- : Started Job'))
-        expect(log.logs).to include(include('INFO -- : Completed Job'))
+        expect(log.logs).to include(/INFO -- : .* Started Job/)
+        expect(log.logs).to include(/INFO -- : .* Completed Job/)
       end
 
       master_node.in_partial_id = partial_node.id
@@ -409,8 +409,8 @@ describe Category::Addon::Integration, dbscope: :example do
       sleep 1
 
       Job::Log.first.tap do |log|
-        expect(log.logs).to include(include('INFO -- : Started Job'))
-        expect(log.logs).to include(include('INFO -- : Completed Job'))
+        expect(log.logs).to include(/INFO -- : .* Started Job/)
+        expect(log.logs).to include(/INFO -- : .* Completed Job/)
       end
 
       master_node.in_partial_id = partial_node.id
@@ -555,8 +555,8 @@ describe Category::Addon::Integration, dbscope: :example do
       sleep 1
 
       Job::Log.first.tap do |log|
-        expect(log.logs).to include(include('INFO -- : Started Job'))
-        expect(log.logs).to include(include('INFO -- : Completed Job'))
+        expect(log.logs).to include(/INFO -- : .* Started Job/)
+        expect(log.logs).to include(/INFO -- : .* Completed Job/)
       end
 
       master_node.in_partial_id = partial_node.id
@@ -698,8 +698,8 @@ describe Category::Addon::Integration, dbscope: :example do
       sleep 1
 
       Job::Log.first.tap do |log|
-        expect(log.logs).to include(include('INFO -- : Started Job'))
-        expect(log.logs).to include(include('INFO -- : Completed Job'))
+        expect(log.logs).to include(/INFO -- : .* Started Job/)
+        expect(log.logs).to include(/INFO -- : .* Completed Job/)
       end
 
       master_node.in_partial_id = partial_node.id
