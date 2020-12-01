@@ -99,7 +99,7 @@ describe Cms::Elasticsearch::Indexer::PageReleaseJob, dbscope: :example, es: tru
 
       job = ::Cms::Elasticsearch::Indexer::PageReleaseJob.bind(site_id: site)
       job.perform_now(action: item.job_action, id: item.page_id.to_s, queue_id: item.id.to_s)
-      expect(Job::Log.last.logs).to include(include("INFO -- : Completed Job"))
+      expect(Job::Log.last.logs).to include(/INFO -- : .* Completed Job/)
       expect(Job::Log.count).to eq 3
       expect(Cms::PageRelease.all.size).to eq 3
       expect(Cms::PageIndexQueue.all.size).to eq 0
@@ -122,7 +122,7 @@ describe Cms::Elasticsearch::Indexer::PageReleaseJob, dbscope: :example, es: tru
 
       job = ::Cms::Elasticsearch::Indexer::PageReleaseJob.bind(site_id: site)
       job.perform_now(action: item.job_action, id: item.page_id.to_s, queue_id: item.id.to_s)
-      expect(Job::Log.last.logs).to include(include("INFO -- : Completed Job"))
+      expect(Job::Log.last.logs).to include(/INFO -- : .* Completed Job/)
       expect(Job::Log.count).to eq 4
       expect(Cms::PageRelease.all.size).to eq 4
       expect(Cms::PageIndexQueue.all.size).to eq 0
