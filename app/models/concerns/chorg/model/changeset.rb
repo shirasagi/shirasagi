@@ -111,11 +111,11 @@ module Chorg::Model::Changeset
     if sources.blank?
       case type
         when "unify"
-          errors.add :sources, :unify_before_blank
+          errors.add :base, :unify_before_blank
         when "move"
-          errors.add :sources, :move_before_blank
+          errors.add :base, :move_before_blank
         when "division"
-          errors.add :destinations, :division_before_blank
+          errors.add :base, :division_before_blank
       end
     end
   end
@@ -124,11 +124,13 @@ module Chorg::Model::Changeset
     if destinations.blank?
       case type
         when "unify"
-          errors.add :destinations, :unify_after_blank
+          errors.add :base, :unify_after_blank
         when "move"
-          errors.add :destinations, :move_after_blank
+          errors.add :base, :move_after_blank
         when "division"
-          errors.add :destinations, :division_after_blank
+          errors.add :base, :division_after_blank
+        when "add"
+          errors.add :base, :add_after_blank
       end
     end
   end

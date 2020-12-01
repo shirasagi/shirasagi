@@ -137,6 +137,7 @@ ja:
         move_after_blank: 移動先が入力されていません。
         division_before_blank: 分割元が入力されていません。
         division_after_blank: １番目の分割先が入力されていません。
+        add_after_blank: 新設先が入力されていません。
     attributes:
       chorg/model/revision:
         name: 名前
@@ -146,8 +147,8 @@ ja:
         delete_method: 削除方法
       chorg/model/changeset:
         type: 種別
-        sources: ""
-        destinations: ""
+        sources: 移動元
+        destinations: 移動先
       chorg/run_params:
         add_newly_created_group_to_site: 新規作成グループをサイトに追加
         forced_overwrite: 連絡先情報を上書きする

@@ -60,10 +60,9 @@ class Gws::StaffRecord::PublicDutiesController < ApplicationController
     @item.in_updated = params[:_updated] if @item.respond_to?(:in_updated)
 
     @cur_year.yearly_users.show_divide_duties.
-      readable(@cur_user, site: @cur_site).
-      where(section_name: @item.section_name).
-      where(charge_name: @item.charge_name).
-      update_all(get_charge_params)
+    readable(@cur_user, site: @cur_site).
+    where(section_name: @item.section_name).
+    where(charge_name: @item.charge_name).update_all(get_charge_params)
 
     render_update true, render: { file: :edit_charge }
   end
