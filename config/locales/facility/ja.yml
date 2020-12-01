@@ -71,6 +71,7 @@ ja:
       facility/category: 施設の種類
       facility/category_setting: 施設の種類
       facility/opendata_assoc: オープンデータ連携
+      facility/node_list: リスト情報
 
   cms:
     nodes:
