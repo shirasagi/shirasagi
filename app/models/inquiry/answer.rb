@@ -85,16 +85,14 @@ class Inquiry::Answer
     def find_node(site, source_url)
       return if source_url.blank?
       path = source_url
-      path = path[1..-1] if path.start_with?("/")
-
+      path = path.sub(/^#{site.url}/, "")
       Cms::Node.site(site).in_path(path).order_by(depth: -1).first
     end
 
     def find_page(site, source_url)
       return if source_url.blank?
       path = source_url
-      path = path[1..-1] if path.start_with?("/")
-
+      path = path.sub(/^#{site.url}/, "")
       Cms::Page.site(site).filename(path).first
     end
 

@@ -34,7 +34,13 @@
 
   <% if @item.inquiry_page_url.present? %>
     <dt><%= @model.t :inquiry_page_url %></dt>
-    <dd><%= @item.inquiry_page_url && @item.inquiry_page_content.public? ? link_to(@item.inquiry_page_content.full_url, @item.inquiry_page_content.full_url, target: "_blank") : @item.inquiry_page_url %></dd>
+    <dd>
+      <% if @item.inquiry_page_content.try(:public?) %>
+        <%= link_to(@item.inquiry_page_content.full_url, @item.inquiry_page_content.full_url, target: "_blank") %>
+      <% else %>
+        <%= @item.inquiry_page_url %>
+      <% end %>
+    </dd>
   <% end %>
 
   <% if @item.inquiry_page_name.present? %>
