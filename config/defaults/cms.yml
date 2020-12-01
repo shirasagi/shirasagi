@@ -13,6 +13,9 @@ production: &production
   # enable LGWAN
   enable_lgwan: false
 
+  # Disable limit to substitute_html
+  is_facility_list: false
+
   # StyleSheets on gws pages.
   stylesheets: []
 
@@ -147,4 +150,5 @@ test:
 
 development:
   <<: *production
+  # Disable limit to substitute_html
   is_facility_list: false
