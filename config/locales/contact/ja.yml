@@ -41,6 +41,7 @@ ja:
         contact_email: メールアドレス
         contact_link_url: リンクURL
         contact_link_name: リンク名
+        contact_group_name: 担当部署
       contact/addon/group:
         <<: *cmspage
       contact/addon/page:
@@ -65,6 +66,8 @@ ja:
       contact_link_name:
         - 連絡先に表示する部署のリンク名を記入します。
     contact/addon/group:
+      contact_group_name:
+        - 連絡先に表示する担当部署を記入します。
       contact_tel:
         - グループの電話番号を記入します。
         - ページ作成時に連絡先として自動で挿入されます。

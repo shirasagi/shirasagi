@@ -1,4 +1,6 @@
 <dl class="see">
+  <dt><%= @model.t :contact_group_name %></dt>
+  <dd class="contact-group-name"><%= @item.contact_group_name if @item.contact_group_name.present? %></dd>
   <dt><%= @model.t :contact_tel %></dt>
   <dd class="contact-tel"><%= @item.contact_tel if @item.contact_tel.present? %></dd>
   <dt><%= @model.t :contact_fax %></dt>

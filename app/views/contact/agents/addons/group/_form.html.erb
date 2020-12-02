@@ -1,5 +1,8 @@
 <% telptn = "\\d{1,4}-\\d{4}$|\\d{1,5}-\\d{1,4}-\\d{4,5}" %>
 <dl class="see">
+  <dt><%= @model.t :contact_group_name %><%= @model.tt :contact_group_name %></dt>
+  <dd><%= f.text_field :contact_group_name %></dd>
+
   <dt><%= @model.t :contact_tel %><%= @model.tt :contact_tel %></dt>
   <dd><%= f.telephone_field :contact_tel %></dd>
 

@@ -3,7 +3,13 @@
 <footer class="contact">
   <h2><%= t("contact.view.title") %></h2>
   <% if @cur_page.contact_group %>
-    <p class="group"><%= @cur_page.contact_group.name.sub(/.*\//, "") %></p>
+    <p class="group">
+      <% if @cur_page.contact_group.contact_group_name.present? %>
+        <%= @cur_page.contact_group.contact_group_name %>
+      <% else %>
+        <%= @cur_page.contact_group.name.sub(/.*\//, "") %>
+      <% end %>
+    </p>
   <% end %>
   <% if @cur_page.contact_charge.present? %>
     <p class="charge"><%= @cur_page.contact_charge %></p>
