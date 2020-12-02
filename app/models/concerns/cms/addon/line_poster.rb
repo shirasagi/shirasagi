@@ -4,12 +4,12 @@ module Cms::Addon
     extend SS::Addon
 
     included do
-      field :line_auto_post, type: String, metadata: { branch: false }
+      field :line_auto_post, type: String
       field :line_posted, type: Array, default: [], metadata: { branch: false }
       field :line_post_error, type: String, metadata: { branch: false }
 
-      field :line_text_message, type: String, metadata: { branch: false }
-      field :line_post_format, type: String, metadata: { branch: false }
+      field :line_text_message, type: String
+      field :line_post_format, type: String
 
       validates :line_text_message, presence: true, if: -> { line_post_enabled? }
       validates :thumb_id, presence: true, if: -> { line_post_enabled? && line_post_format == "thumb_carousel" }

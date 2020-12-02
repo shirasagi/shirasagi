@@ -1,23 +1,27 @@
 <% return if !@cur_site.line_token_enabled? %>
-<% return if @item.try(:branch?)%>
 
 <dl class="see">
   <dt><%= @model.t :line_auto_post %></dt>
   <dd><%= @item.label :line_auto_post %></dd>
 
-  <dt><%= @model.t :line_post_format %></dt>
-  <dd><%= @item.label :line_post_format %></dd>
+  <% if @item.line_auto_post == "active" %>
+    <dt><%= @model.t :line_post_format %></dt>
+    <dd><%= @item.label :line_post_format %></dd>
 
-  <dt><%= @model.t :line_text_message %></dt>
-  <dd><%=br @item.line_text_message %></dd>
+    <dt><%= @model.t :line_text_message %></dt>
+    <dd><%=br @item.line_text_message %></dd>
 
-  <dt><%= @model.t :line_posted %></dt>
-  <dd><%= tryb { @item.line_posted.first.strftime("%Y/%m/%d %H:%M") } %></dd>
+    <dt><%= @model.t :line_edit_auto_post %></dt>
+    <dd><%= @item.label :line_edit_auto_post %></dd>
 
-  <% if @item.line_post_error.present? %>
-    <dt class="depth-2"><%= @model.t :line_post_error %></dt>
-    <dd class="depth-2">
-      <div class="errorExplanation"><%= br @item.line_post_error %></div>
-    </dd>
+    <dt><%= @model.t :line_posted %></dt>
+    <dd><%= tryb { @item.line_posted.first.strftime("%Y/%m/%d %H:%M") } %></dd>
+
+    <% if @item.line_post_error.present? %>
+      <dt class="depth-2"><%= @model.t :line_post_error %></dt>
+      <dd class="depth-2">
+        <div class="errorExplanation"><%= br @item.line_post_error %></div>
+      </dd>
+    <% end %>
   <% end %>
 </dl>
