@@ -10,11 +10,11 @@ module Cms::Addon
 
     included do
 
-      field :twitter_auto_post,   type: String, metadata: { branch: false }
+      field :twitter_auto_post,   type: String
       field :twitter_user_id,     type: String, metadata: { branch: false }
       field :twitter_post_id,     type: String, metadata: { branch: false }
-      field :sns_auto_delete,     type: String, metadata: { branch: false }
-      field :edit_auto_post,      type: String, metadata: { branch: false }
+      field :sns_auto_delete,     type: String
+      field :edit_auto_post,      type: String
       field :twitter_posted,      type: Array, default: [], metadata: { branch: false }
       field :twitter_post_error,  type: String, metadata: { branch: false }
 
@@ -59,6 +59,7 @@ module Cms::Addon
 
     def twitter_post_enabled?
       return false unless use_twitter_post?
+      return false if respond_to?(:branch?) && branch?
       return true if edit_auto_post_enabled?
       return false if twitter_posted.present?
       true

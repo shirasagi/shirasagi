@@ -1,5 +1,4 @@
 <% return "" unless @cur_site.twitter_token_enabled? %>
-<% return "" if @item.try(:branch?)%>
 
 <dl class="see">
   <% if @cur_site.twitter_token_enabled? %>
