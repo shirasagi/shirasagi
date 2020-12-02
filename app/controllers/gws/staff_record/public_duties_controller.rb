@@ -18,7 +18,7 @@ class Gws::StaffRecord::PublicDutiesController < ApplicationController
   end
 
   def get_charge_params
-    params.require(:item).permit(:charge_address, :charge_tel).merge(fix_params).to_h
+    params.require(:item).permit(:charge_address, :charge_tel).to_h
   end
 
   def prepare_edit_charge
