@@ -23,6 +23,20 @@ module SS
       end
     end
 
+    CLOSE_COLORBOX_AND_WAIT_SCRIPT = "
+      (function(resolve) {
+        var $element = $.colorbox.element();
+        if (!$element) {
+          // a colorbox isn't opened
+          resolve(false);
+          return;
+        }
+
+        $element.colorbox({ onClosed: function() { resolve(true); } });
+        $.colorbox.close();
+      })(arguments[0]);
+    ".freeze
+
     def wait_timeout
       Capybara.default_max_wait_time
     end
@@ -95,12 +109,9 @@ module SS
       end
     end
 
-    def wait_for_cbox_close(&block)
-      wait_for_ajax
-      Timeout.timeout(ajax_timeout) do
-        sleep 1 until colorbox_closed?
-      end
-      yield if block_given?
+    def close_cbox_and_wait
+      ret = page.evaluate_async_script(CLOSE_COLORBOX_AND_WAIT_SCRIPT)
+      expect(ret).to be_truthy
     end
 
     def colorbox_opened?

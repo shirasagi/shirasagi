@@ -64,7 +64,7 @@ describe "Rss::Node::WeatherXml", type: :feature, dbscope: :example, js: true do
 
     it do
       visit index_path
-      click_on 'フォルダー設定'
+      click_on I18n.t("cms.node_config")
 
       click_on I18n.t('ss.links.edit')
       fill_in 'item[hub_url]', with: "http://example.jp/#{unique_id}.html"
@@ -72,35 +72,42 @@ describe "Rss::Node::WeatherXml", type: :feature, dbscope: :example, js: true do
       fill_in 'item[lease_seconds]', with: 300
       fill_in 'item[secret]', with: unique_id
       fill_in 'item[rss_max_docs]', with: 10
-      select '非公開', from: 'item[page_state]'
+      select I18n.t("ss.options.state.closed"), from: 'item[page_state]'
       fill_in 'item[title_mail_text]', with: unique_id
       fill_in 'item[upper_mail_text]', with: unique_id
       fill_in 'item[loop_mail_text]', with: unique_id
       fill_in 'item[lower_mail_text]', with: unique_id
-      select '6弱', from: 'item[earthquake_intensity]'
+      select I18n.t("rss.options.earthquake_intensity.6-"), from: 'item[earthquake_intensity]'
 
-      click_on '区域を選択する'
+      click_on I18n.t("jmaxml.apis.quake_regions.index")
       wait_for_cbox do
         click_on region.name
       end
+      within ".mod-rss-anpi-mail-setting-regions" do
+        expect(page).to have_css(".index", text: region.name)
+      end
 
       within '.mod-rss-anpi-mail-setting-my-anpi-post' do
-        click_on 'フォルダーを選択する'
+        click_on I18n.t("cms.apis.nodes.index")
       end
       wait_for_cbox do
         expect(page).to have_css("span.select-item", text: member_node_my_anpi_post.name)
-        find("#cboxClose").click
+        close_cbox_and_wait
       end
-      wait_for_cbox_close
+      within '.mod-rss-anpi-mail-setting-my-anpi-post' do
+        expect(page).to have_css(".index", text: member_node_my_anpi_post.name)
+      end
 
       within '.mod-rss-anpi-mail-setting-anpi-mail' do
-        click_on 'フォルダーを選択する'
+        click_on I18n.t("cms.apis.nodes.index")
       end
       wait_for_cbox do
         expect(page).to have_css("span.select-item", text: ezine_node_member_page.name)
-        find("#cboxClose").click
+        close_cbox_and_wait
       end
-      wait_for_cbox_close
+      within '.mod-rss-anpi-mail-setting-anpi-mail' do
+        expect(page).to have_css(".index", text: ezine_node_member_page.name)
+      end
 
       click_on I18n.t('ss.buttons.save')
       expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
