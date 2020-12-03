@@ -108,30 +108,28 @@ module Chorg::Model::Changeset
   end
 
   def validate_sources_presence
-    if sources.blank?
-      case type
-        when "unify"
-          errors.add :base, :unify_before_blank
-        when "move"
-          errors.add :base, :move_before_blank
-        when "division"
-          errors.add :base, :division_before_blank
-      end
+    return if sources.present?
+    case type
+    when "unify"
+      errors.add :base, :unify_before_blank
+    when "move"
+      errors.add :base, :move_before_blank
+    when "division"
+      errors.add :base, :division_before_blank
     end
   end
 
   def validate_destinations_presence
-    if destinations.blank?
-      case type
-        when "unify"
-          errors.add :base, :unify_after_blank
-        when "move"
-          errors.add :base, :move_after_blank
-        when "division"
-          errors.add :base, :division_after_blank
-        when "add"
-          errors.add :base, :add_after_blank
-      end
+    return if destinations.present?
+    case type
+    when "unify"
+      errors.add :base, :unify_after_blank
+    when "move"
+      errors.add :base, :move_after_blank
+    when "division"
+      errors.add :base, :division_after_blank
+    when "add"
+      errors.add :base, :add_after_blank
     end
   end
 end
