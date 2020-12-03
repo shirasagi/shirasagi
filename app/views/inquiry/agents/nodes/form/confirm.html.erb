@@ -1,5 +1,13 @@
 <%= jquery do %>Inquiry_Form.render({ confirm: true, requiredLabel: <%== t('inquiry.required_field').to_json %> });<% end %>
-<% @cur_node.name = @group.section_name + " " + @cur_node.name if @group %>
+<%
+  if @group.present?
+    if @group.contact_group_name.present?
+      @cur_node.name = @group.contact_group_name + " " + @cur_node.name
+    else
+      @cur_node.name = @group.section_name + " " + @cur_node.name
+    end
+  end
+%>
 <div class="inquiry-form confirm">
   <%= form_for :item, url: "#{@cur_node.url}create.html", html: { multipart: true } do |f| %>
     <% if @answer.errors.empty? %>

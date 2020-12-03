@@ -1,4 +1,12 @@
-<% @cur_node.name = @group.section_name + " " + @cur_node.name if @group %>
+<%
+  if @group.present?
+    if @group.contact_group_name.present?
+      @cur_node.name = @group.contact_group_name + " " + @cur_node.name
+    else
+      @cur_node.name = @group.section_name + " " + @cur_node.name
+    end
+  end
+%>
 <div class="inquiry-sent">
 <%= sanitize(@cur_node.inquiry_sent_html) %>
 </div>
