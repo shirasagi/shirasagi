@@ -146,6 +146,31 @@ module SS
     def jquery_migrate_reset
       page.execute_script("jQuery.migrateReset();")
     end
+
+    def capture_console_logs
+      page.driver.browser.manage.logs.get(:browser).collect(&:message)
+    rescue => _e
+    end
+
+    def puts_console_logs
+      logs = capture_console_logs
+      return if logs.blank?
+
+      puts
+      puts "==== console.log (#{caller(1, 1).try(:first)}) ===="
+      puts logs
+      puts
+    end
+
+    def enable_js_debug
+      page.execute_script("SS.debug = true;")
+    rescue => _e
+    end
+
+    def disable_js_debug
+      page.execute_script("SS.debug = false;")
+    rescue => _e
+    end
   end
 end
 
