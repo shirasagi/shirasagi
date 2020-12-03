@@ -29,7 +29,7 @@ this.SS_TreeUI = (function () {
 
   SS_TreeUI.openSelectedGroupsTree = function (current_tr) {
     for (i = 0; i < parseInt(current_tr.attr("data-depth")); i++) {
-      var tr = current_tr.prevAll(`tr[data-depth=${i}]:first`);
+      var tr = current_tr.prevAll('tr[data-depth=' + i.toString() + ']:first');
       var img = tr.find(".toggle:first");
       tr.nextAll("tr").each(function () {
         var subordinated_depth = parseInt($(this).attr("data-depth"));
