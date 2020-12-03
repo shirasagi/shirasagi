@@ -21,11 +21,13 @@ class Inquiry::ResultsController < ApplicationController
     @cur_node = @cur_node.becomes_with_route
     raise "403" unless Inquiry::Node::Form.site(@cur_site).include?(@cur_node)
     @columns = @cur_node.columns.order_by(order: 1)
-    @answer_count = @cur_node.answers.count
+    @answer_count = @cur_node.answers.site(@cur_site).allow(:read, @cur_user).count
 
     options = params[:s] || {}
     options[:site] = @cur_site
     options[:node] = @cur_node
+    options[:user] = @cur_user
+    @answer_data_opts = options
     @aggregation = @cur_node.aggregate_select_columns(options)
   end
 

@@ -30,7 +30,10 @@ class Inquiry::Column
   validates :node_id, :state, :name, :max_upload_file_size, presence: true
 
   def answer_data(opts = {})
-    node.answers.search(opts).
+    answers = node.answers
+    answers = answers.site(opts[:site]) if opts[:site].present?
+    answers = answers.allow(:read, opts[:user]) if opts[:user].present?
+    answers.search(opts).
       map { |ans| ans.data.entries.select { |data| data.column_id == id } }.flatten
   end
 
