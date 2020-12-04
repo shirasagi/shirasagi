@@ -65,6 +65,10 @@ ja:
     links:
       back_to_page: 元のページに戻る
       faq: FAQを新規作成
+    views:
+      index:
+        created: "受信日時：%{created}"
+        updated: "更新日時：%{updated}"
 
   modules:
     inquiry: メールフォーム
@@ -168,7 +172,7 @@ ja:
         captcha: 画像の数字
         source_url: ページURL
         source_name: ページタイトル
-        created: 作成日時
+        created: 受信日時
         state: 状態
         comment: コメント
         inquiry_page_url: お問い合わせページURL

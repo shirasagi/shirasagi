@@ -20,8 +20,8 @@ class Inquiry::AnswersController < ApplicationController
 
     columns = @cur_node.becomes_with_route("inquiry/form").columns.order_by(order: 1).to_a
     headers = %w(id state comment).map { |key| @model.t(key) }
-    headers += columns.map(&:name)
-    headers += %w(source_url source_name inquiry_page_url inquiry_page_name created).map { |key| @model.t(key) }
+    headers += columns
+    headers += %w(source_url source_name inquiry_page_url inquiry_page_name created updated).map { |key| @model.t(key) }
     csv = CSV.generate do |data|
       data << headers
       items.each do |item|
@@ -44,6 +44,7 @@ class Inquiry::AnswersController < ApplicationController
         row << item.source_name
         row << item.inquiry_page_full_url
         row << item.inquiry_page_name
+        row << item.created.strftime("%Y/%m/%d %H:%M")
         row << item.updated.strftime("%Y/%m/%d %H:%M")
 
         data << row
