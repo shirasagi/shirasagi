@@ -67,14 +67,17 @@ this.Openlayers_Map_Form = (function () {
   };
 
   Openlayers_Map_Form.prototype.createLayers = function (layerOpts) {
-    var j, layer, layers, len, opts, projection, source, url;
+    var j, layer, layers, len, opts, projection, source, url, name;
     layers = [];
     for (j = 0, len = layerOpts.length; j < len; j++) {
       opts = layerOpts[j];
+      name = opts["name"];
       source = opts["source"];
       url = opts["url"];
       projection = opts["projection"];
       layer = new ol.layer.Tile({
+        name: name,
+        visible: j == 0,
         source: new ol.source[source]({
           url: url,
           projection: projection

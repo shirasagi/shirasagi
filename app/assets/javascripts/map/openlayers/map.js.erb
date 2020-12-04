@@ -51,14 +51,17 @@ this.Openlayers_Map = (function () {
   };
 
   Openlayers_Map.prototype.createLayers = function (layerOpts) {
-    var i, layer, layers, len, opts, projection, source, url;
+    var i, layer, layers, len, opts, projection, source, url, name;
     layers = [];
     for (i = 0, len = layerOpts.length; i < len; i++) {
       opts = layerOpts[i];
+      name = opts["name"];
       source = opts["source"];
       url = opts["url"];
       projection = opts["projection"];
       layer = new ol.layer.Tile({
+        name: name,
+        visible: i == 0,
         source: new ol.source[source]({
           url: url,
           projection: projection
@@ -149,7 +152,7 @@ this.Openlayers_Map = (function () {
   };
 
   Openlayers_Map.prototype.renderEvents = function () {
-    return this.map.on('click', (function (_this) {
+    this.map.on('click', (function (_this) {
       return function (e) {
         var feature;
         feature = _this.map.forEachFeatureAtPixel(e.pixel, function (feature, layer) {

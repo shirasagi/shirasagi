@@ -8,11 +8,12 @@ production: &production
   language: ja
   region: jp
   layers:
-    - source: "XYZ"
+    - name: '国土地理院地図'
+      source: "XYZ"
       url: "https://cyberjapandata.gsi.go.jp/xyz/std/{z}/{x}/{y}.png"
       projection: "EPSG:3857"
-  open_street_map:
-    - source: "OSM"
+    - name: 'OpenStreetMap'
+      source: "OSM"
       url: "https://{a-c}.tile.openstreetmap.org/{z}/{x}/{y}.png"
       projection: "EPSG:3857"
 
