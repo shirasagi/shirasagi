@@ -1,4 +1,5 @@
 <% locations = @items.map(&:locations).flatten.uniq.sort_by{ |item| item.order } %>
+<% locations = locations.where(id: @items.location_ids) if locations[0].filename == "institution/chiki/*" %>
 
 <div class="facility-nodes">
   <% if locations.present? %>
