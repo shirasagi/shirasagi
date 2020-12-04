@@ -124,6 +124,7 @@ ja:
       invalid_filename: は半角英数、アンダースコア、ハイフンのみ使用可能です。
       invalid_csv: CSV形式のファイルを選択してください。
       malformed_csv: CSVの形式が正しくありません。正しい形式のCSVファイルを選択してください。
+      invalid_new_line_included: "に改行を含めることはできません。"
       invalid_email_included: に不正なメールアドレスが含まれています。
       too_large_mail_size: "メールの添付ファイルサイズが大きすぎます。合計: %{size}（制限値: %{limit}）"
       smtp_delivery_error: "メールを送信できませんでした。STMPエラーメッセージ： %{message}"

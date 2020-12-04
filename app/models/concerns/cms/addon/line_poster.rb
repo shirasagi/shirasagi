@@ -12,8 +12,8 @@ module Cms::Addon
       field :line_text_message, type: String, metadata: { branch: false }
       field :line_post_format, type: String, metadata: { branch: false }
 
-      validates :line_text_message, length: { maximum: 60 }
       validates :line_text_message, presence: true, if: -> { line_auto_post == "active" }
+      validate :validate_line_text_message, if: -> { line_text_message.present? }
 
       permit_params :line_auto_post, :line_edit_auto_post, :line_text_message, :line_post_format
 
@@ -49,6 +49,15 @@ module Cms::Addon
     end
 
     private
+
+    def validate_line_text_message
+      if line_text_message.index("\n")
+        errors.add :line_text_message, :invalid_new_line_included
+      end
+      if line_text_message.size > 45
+        errors.add :line_text_message, :too_long, count: 45
+      end
+    end
 
     def post_line_bot
       return unless public?
