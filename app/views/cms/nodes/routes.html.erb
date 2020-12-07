@@ -4,7 +4,11 @@
     <h1><%= mod[:name] %></h1>
     <div>
       <% mod[:items].each do |name, path| %>
+      <% if request.fullpath.include?("new") %>
       <%= link_to name, "?route=#{path}", target: "_self" %>
+      <% elsif !request.fullpath.include?("new") %>
+      <%= link_to name, url_for(action: :new, route: path), target: "_self" %>
+      <% end %>
       <% end %>
     </div>
   </article>
