@@ -23,6 +23,27 @@ module SS
       end
     end
 
+    HOOK_CBOX_COMPLETION = "
+      (function(promiseId) {
+        var defer = $.Deferred();
+        $(document).one('cbox_complete', function() { defer.resolve(true); });
+        window.SS[promiseId] = defer.promise();
+      })(arguments[0]);
+    ".freeze
+
+    WAIT_CBOX_COMPLETION = "
+      (function(promiseId, resolve) {
+        var promise = window.SS[promiseId];
+        if (!promise) {
+          resolve(false);
+          return;
+        }
+
+        delete window.SS[promiseId];
+        promise.done(function() { resolve(true); });
+      })(arguments[0], arguments[1]);
+    ".freeze
+
     CLOSE_COLORBOX_AND_WAIT_SCRIPT = "
       (function(resolve) {
         var $element = $.colorbox.element();
@@ -107,6 +128,22 @@ module SS
         wait_for_ajax
         sleep 1
       end
+    end
+
+    #
+    # Usage:
+    #   open_cbox_and_wait do
+    #     click_on I18n.t("ss.buttons.upload")
+    #   end
+    #
+    def open_cbox_and_wait
+      promise_id = "promise_#{unique_id}"
+      page.execute_script(HOOK_CBOX_COMPLETION, promise_id)
+
+      yield
+
+      ret = page.evaluate_async_script(WAIT_CBOX_COMPLETION, promise_id)
+      expect(ret).to be_truthy
     end
 
     def close_cbox_and_wait
