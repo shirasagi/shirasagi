@@ -117,6 +117,7 @@ class Gws::Board::TopicsController < ApplicationController
       return
     end
 
+    @item.notification_noticed_at = nil
     @item.deleted = nil
 
     render_opts = {}

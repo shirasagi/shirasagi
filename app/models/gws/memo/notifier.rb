@@ -259,6 +259,10 @@ class Gws::Memo::Notifier
 
     mail = Gws::Memo::Mailer.notice_mail(message, to_users, item)
     mail.deliver_now if mail
+
+    # item は操作対象の copy の場合がある。copy の場合 `set(...)` を呼び出しても DB が更新されないので、
+    # 回りくどいようだが `where(id: item.id).set(...)` とする。
+    item.class.where(id: item.id).set(notification_noticed_at: message.send_date) if item.respond_to?(:notification_noticed_at)
   end
 
   private
