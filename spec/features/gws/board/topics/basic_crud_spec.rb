@@ -50,6 +50,7 @@ describe "gws_board_topics", type: :feature, dbscope: :example do
         expect(item.name).to eq "name"
         expect(item.text).to eq "text"
         expect(item.notify_state).to eq "enabled"
+        expect(item.notification_noticed_at).to be_present
         expect(item.state).to eq "public"
         expect(item.mode).to eq "thread"
         expect(item.descendants_updated).to eq now
@@ -80,6 +81,10 @@ describe "gws_board_topics", type: :feature, dbscope: :example do
         expect(mail.subject).to eq notice.subject
         url = "#{site.canonical_scheme}://#{site.canonical_domain}/.g#{site.id}/memo/notices/#{notice.id}"
         expect(mail.decoded.to_s).to include(mail.subject, url)
+
+        # #3786: https://github.com/shirasagi/shirasagi/issues/3786
+        Gws::Board::NotificationJob.bind(site_id: site.id).perform_now
+        expect(SS::Notification.all.count).to eq 1
       end
     end
 
@@ -99,6 +104,7 @@ describe "gws_board_topics", type: :feature, dbscope: :example do
 
           item.reload
           expect(item.name).to eq "modify"
+          expect(item.notification_noticed_at).to be_present
           expect(item.category_ids).to include(category.id)
 
           expect(SS::Notification.all.count).to eq 1
@@ -125,6 +131,10 @@ describe "gws_board_topics", type: :feature, dbscope: :example do
           expect(mail.subject).to eq notice.subject
           url = "#{site.canonical_scheme}://#{site.canonical_domain}/.g#{site.id}/memo/notices/#{notice.id}"
           expect(mail.decoded.to_s).to include(mail.subject, url)
+
+          # #3786: https://github.com/shirasagi/shirasagi/issues/3786
+          Gws::Board::NotificationJob.bind(site_id: site.id).perform_now
+          expect(SS::Notification.all.count).to eq 1
         end
       end
 
@@ -139,6 +149,7 @@ describe "gws_board_topics", type: :feature, dbscope: :example do
           expect(page).to have_css("#notice", text: I18n.t("ss.notice.deleted"))
 
           item.reload
+          expect(item.notification_noticed_at).to be_present
           expect(item.deleted).to be_present
 
           expect(SS::Notification.all.count).to eq 1
@@ -165,6 +176,10 @@ describe "gws_board_topics", type: :feature, dbscope: :example do
           expect(mail.subject).to eq notice.subject
           url = "#{site.canonical_scheme}://#{site.canonical_domain}/.g#{site.id}/memo/notices/#{notice.id}"
           expect(mail.decoded.to_s).to include(mail.subject, url)
+
+          # #3786: https://github.com/shirasagi/shirasagi/issues/3786
+          Gws::Board::NotificationJob.bind(site_id: site.id).perform_now
+          expect(SS::Notification.all.count).to eq 1
         end
       end
 
@@ -187,6 +202,10 @@ describe "gws_board_topics", type: :feature, dbscope: :example do
           expect { item.reload }.to raise_error Mongoid::Errors::DocumentNotFound
           expect(SS::Notification.all.count).to eq 0
           expect(ActionMailer::Base.deliveries.length).to eq 0
+
+          # #3786: https://github.com/shirasagi/shirasagi/issues/3786
+          Gws::Board::NotificationJob.bind(site_id: site.id).perform_now
+          expect(SS::Notification.all.count).to eq 0
         end
       end
 
@@ -207,6 +226,7 @@ describe "gws_board_topics", type: :feature, dbscope: :example do
           expect(page).to have_css("#notice", text: I18n.t("ss.notice.restored"))
 
           item.reload
+          expect(item.notification_noticed_at).to be_present
           expect(item.deleted).to be_blank
 
           expect(SS::Notification.all.count).to eq 1
@@ -233,6 +253,10 @@ describe "gws_board_topics", type: :feature, dbscope: :example do
           expect(mail.subject).to eq notice.subject
           url = "#{site.canonical_scheme}://#{site.canonical_domain}/.g#{site.id}/memo/notices/#{notice.id}"
           expect(mail.decoded.to_s).to include(mail.subject, url)
+
+          # #3786: https://github.com/shirasagi/shirasagi/issues/3786
+          Gws::Board::NotificationJob.bind(site_id: site.id).perform_now
+          expect(SS::Notification.all.count).to eq 1
         end
       end
 
@@ -250,6 +274,7 @@ describe "gws_board_topics", type: :feature, dbscope: :example do
           expect(page).to have_css("#notice", text: I18n.t("ss.notice.deleted"))
 
           item.reload
+          expect(item.notification_noticed_at).to be_present
           expect(item.deleted).to be_present
 
           expect(SS::Notification.all.count).to eq 1
@@ -276,6 +301,10 @@ describe "gws_board_topics", type: :feature, dbscope: :example do
           expect(mail.subject).to eq notice.subject
           url = "#{site.canonical_scheme}://#{site.canonical_domain}/.g#{site.id}/memo/notices/#{notice.id}"
           expect(mail.decoded.to_s).to include(mail.subject, url)
+
+          # #3786: https://github.com/shirasagi/shirasagi/issues/3786
+          Gws::Board::NotificationJob.bind(site_id: site.id).perform_now
+          expect(SS::Notification.all.count).to eq 1
         end
       end
     end
