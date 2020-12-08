@@ -58,7 +58,7 @@ module Map::MapHelper
       if opts[:site].try(:map_api_layer).present?
         map_options[:layers] = SS.config.map.layers.select { |layer| layer['name'] == opts[:site].map_api_layer }
       else
-        map_options[:layers] = SS.config.map.layers
+        map_options[:layers] = [SS.config.map.layers.first]
       end
       map_options[:default_zoom] = SS.config.map.openlayers_zoom_level
 
@@ -95,7 +95,7 @@ module Map::MapHelper
       if opts[:site].try(:map_api_layer).present?
         map_options[:layers] = SS.config.map.layers.select { |layer| layer['name'] == opts[:site].map_api_layer }
       else
-        map_options[:layers] = SS.config.map.layers
+        map_options[:layers] = [SS.config.map.layers.first]
       end
       map_options[:max_point_form] = max_point_form if max_point_form.present?
       map_options[:markers] = markers if markers.present?
@@ -139,7 +139,7 @@ module Map::MapHelper
       if opts[:site].try(:map_api_layer).present?
         layers = SS.config.map.layers.select { |layer| layer['name'] == opts[:site].map_api_layer }
       else
-        layers = SS.config.map.layers
+        layers = [SS.config.map.layers.first]
       end
 
       s << 'var opts = {'
@@ -182,7 +182,7 @@ module Map::MapHelper
       if opts[:site].try(:map_api_layer).present?
         map_options[:layers] = SS.config.map.layers.select { |layer| layer['name'] == opts[:site].map_api_layer }
       else
-        map_options[:layers] = SS.config.map.layers
+        map_options[:layers] = [SS.config.map.layers.first]
       end
       map_options[:default_zoom] = SS.config.map.openlayers_zoom_level
 
