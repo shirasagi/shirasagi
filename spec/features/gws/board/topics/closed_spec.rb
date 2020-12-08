@@ -63,6 +63,7 @@ describe "gws_board_topics", type: :feature, dbscope: :example do
         expect(item.text).to eq "markdown"
         expect(item.text_type).to eq "markdown"
         expect(item.notify_state).to eq "enabled"
+        expect(item.notification_noticed_at).to be_blank
         expect(item.state).to eq "closed"
         expect(item.mode).to eq "thread"
         expect(item.descendants_updated).to be_present
@@ -71,11 +72,20 @@ describe "gws_board_topics", type: :feature, dbscope: :example do
 
         expect(SS::Notification.all.count).to eq 0
         expect(ActionMailer::Base.deliveries.length).to eq 0
+
+        # #3786: https://github.com/shirasagi/shirasagi/issues/3786
+        Gws::Board::NotificationJob.bind(site_id: site.id).perform_now
+        expect(SS::Notification.all.count).to eq 0
       end
     end
 
     context "with item" do
-      let!(:item) { create :gws_board_topic, category_ids: [ category.id ], notify_state: "enabled", state: "closed" }
+      let!(:item) do
+        create(
+          :gws_board_topic, category_ids: [ category.id ], notify_state: "enabled", notification_noticed_at: Time.zone.now,
+          state: "closed"
+        )
+      end
 
       describe "#edit" do
         it do
@@ -91,10 +101,15 @@ describe "gws_board_topics", type: :feature, dbscope: :example do
 
           item.reload
           expect(item.name).to eq "modify"
+          expect(item.notification_noticed_at).to be_blank
           expect(item.category_ids).to include(category.id)
 
           expect(SS::Notification.all.count).to eq 0
           expect(ActionMailer::Base.deliveries.length).to eq 0
+
+          # #3786: https://github.com/shirasagi/shirasagi/issues/3786
+          Gws::Board::NotificationJob.bind(site_id: site.id).perform_now
+          expect(SS::Notification.all.count).to eq 0
         end
       end
 
@@ -110,10 +125,15 @@ describe "gws_board_topics", type: :feature, dbscope: :example do
           expect(page).to have_css("#notice", text: I18n.t("ss.notice.deleted"))
 
           item.reload
+          expect(item.notification_noticed_at).to be_blank
           expect(item.deleted).to be_present
 
           expect(SS::Notification.all.count).to eq 0
           expect(ActionMailer::Base.deliveries.length).to eq 0
+
+          # #3786: https://github.com/shirasagi/shirasagi/issues/3786
+          Gws::Board::NotificationJob.bind(site_id: site.id).perform_now
+          expect(SS::Notification.all.count).to eq 0
         end
       end
 
@@ -136,6 +156,10 @@ describe "gws_board_topics", type: :feature, dbscope: :example do
           expect { item.reload }.to raise_error Mongoid::Errors::DocumentNotFound
           expect(SS::Notification.all.count).to eq 0
           expect(ActionMailer::Base.deliveries.length).to eq 0
+
+          # #3786: https://github.com/shirasagi/shirasagi/issues/3786
+          Gws::Board::NotificationJob.bind(site_id: site.id).perform_now
+          expect(SS::Notification.all.count).to eq 0
         end
       end
 
@@ -156,10 +180,15 @@ describe "gws_board_topics", type: :feature, dbscope: :example do
           expect(page).to have_css("#notice", text: I18n.t("ss.notice.restored"))
 
           item.reload
+          expect(item.notification_noticed_at).to be_blank
           expect(item.deleted).to be_blank
 
           expect(SS::Notification.all.count).to eq 0
           expect(ActionMailer::Base.deliveries.length).to eq 0
+
+          # #3786: https://github.com/shirasagi/shirasagi/issues/3786
+          Gws::Board::NotificationJob.bind(site_id: site.id).perform_now
+          expect(SS::Notification.all.count).to eq 0
         end
       end
     end

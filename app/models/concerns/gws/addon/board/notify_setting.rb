@@ -6,7 +6,7 @@ module Gws::Addon::Board::NotifySetting
   included do
     field :subscribed_users_readable_state, type: String, default: "admin"
     field :notification_noticed_at, type: DateTime
-    permit_params :subscribed_users_readable_state
+    permit_params :subscribed_users_readable_state, :notification_noticed_at
   end
 
   def subscribed_users_readable_state_options
