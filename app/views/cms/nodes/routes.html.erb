@@ -8,7 +8,7 @@
       when "new", "edit" %><%= link_to name, "?route=#{path}", target: "_self" %>
       <% when "create" %><%= link_to name, url_for(action: :new, route: path), target: "_self" %>
       <% when "update" %><%= link_to name, url_for(action: :edit, route: path, id: params[:id]), target: "_self" %>
-      <%end%>
+      <% end %>
       <% end %>
     </div>
   </article>
