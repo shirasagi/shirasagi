@@ -4,13 +4,11 @@
     <h1><%= mod[:name] %></h1>
     <div>
       <% mod[:items].each do |name, path| %>
-      <% if params[:base_action] == "new" ||  params[:base_action] == "edit" %>
-      <%= link_to name, "?route=#{path}", target: "_self" %>
-      <% elsif params[:base_action] == "create" %>
-      <%= link_to name, url_for(action: :new, route: path), target: "_self" %>
-      <% elsif params[:base_action] == "update" %>
-      <%= link_to name, url_for(action: :edit, route: path, id: params[:id]), target: "_self" %>
-      <% end %>
+        <% case params[:base_action]
+        when "new", "edit" %><%= link_to name, "?route=#{path}", target: "_self" %>
+        <% when "create" %><%= link_to name, url_for(action: :new, route: path), target: "_self" %>
+        <% when "update" %><%= link_to name, url_for(action: :edit, route: path, id: params[:id]), target: "_self" %>
+        <%end%>
       <% end %>
     </div>
   </article>
