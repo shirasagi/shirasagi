@@ -109,18 +109,20 @@ module Chorg::Model::Changeset
 
   def validate_sources_presence
     return if sources.present?
+
     case type
     when "unify"
       errors.add :base, :unify_before_blank
     when "move"
       errors.add :base, :move_before_blank
-    when "division"
+    else #"division"
       errors.add :base, :division_before_blank
     end
   end
 
   def validate_destinations_presence
     return if destinations.present?
+
     case type
     when "unify"
       errors.add :base, :unify_after_blank
@@ -128,7 +130,7 @@ module Chorg::Model::Changeset
       errors.add :base, :move_after_blank
     when "division"
       errors.add :base, :division_after_blank
-    when "add"
+    else #"add"
       errors.add :base, :add_after_blank
     end
   end
