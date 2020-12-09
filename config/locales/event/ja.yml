@@ -3,6 +3,10 @@ ja:
     page: イベントページ
     add_date: 日付フォームを追加する
     add_repeat_dates: 一括設定
+    calendar: イベントカレンダー
+    category_filter: カテゴリーフィルター
+    category_of_the_event: イベントカテゴリー
+    date_of_the_event: イベント日
     del_date: 削除
     next_month: 次の月へ
     prev_month: 前の月へ
