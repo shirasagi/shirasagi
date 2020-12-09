@@ -24,6 +24,8 @@ this.SS = (function () {
     default: "YYYY/M/D HH:mm"
   };
 
+  SS.debug = false;
+
   // $.isEmptyObject には IE11 で非互換がある。
   //
   //                            | Chrome 84 | IE 11  |
@@ -640,6 +642,12 @@ this.SS = (function () {
 
         return false;
       });
+    }
+  };
+
+  SS.debugLog = function() {
+    if (SS.debug) {
+      console.log.apply(console, arguments);
     }
   };
 
