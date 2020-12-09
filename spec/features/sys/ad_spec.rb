@@ -17,7 +17,9 @@ describe "sys_ad", type: :feature, dbscope: :example, js: true do
       within "form#item-form" do
         fill_in "item[time]", with: time
         fill_in "item[width]", with: width
-        find('a.btn', text: I18n.t('ss.buttons.upload')).click
+        wait_cbox_open do
+          find('a.btn', text: I18n.t('ss.buttons.upload')).click
+        end
       end
 
       wait_for_cbox do
