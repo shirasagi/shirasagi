@@ -19,7 +19,7 @@ describe "cms_notices", type: :feature, dbscope: :example, js: true do
 
       visit edit_path
       within "#addon-cms-agents-addons-file" do
-        open_cbox_and_wait do
+        wait_cbox_open do
           click_on I18n.t("ss.buttons.upload")
         end
       end

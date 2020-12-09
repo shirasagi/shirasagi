@@ -35,7 +35,7 @@ describe "article_pages remove_files_recursively", type: :feature, dbscope: :exa
       visit edit_path
 
       find("#addon-cms-agents-addons-release .toggle-head").click
-      select "非公開", from: "item_state"
+      select I18n.t("ss.options.state.closed"), from: "item_state"
 
       within "form#item-form" do
         click_button I18n.t('ss.buttons.save')
@@ -54,14 +54,14 @@ describe "article_pages remove_files_recursively", type: :feature, dbscope: :exa
       visit edit_path
 
       within "form#item-form" do
-        click_link "変更する"
+        wait_cbox_open do
+          click_link I18n.t("ss.links.change")
+        end
       end
 
-      wait_for_cbox
+      click_link I18n.t("cms.nodes.ads/banner")
 
-      click_link "広告バナー"
-
-      expect(page).to have_content '広告管理/広告バナー'
+      expect(page).to have_content "#{I18n.t("modules.ads")}/#{I18n.t("cms.nodes.ads/banner")}"
 
       within "form#item-form" do
         click_button I18n.t('ss.buttons.save')
@@ -80,7 +80,7 @@ describe "article_pages remove_files_recursively", type: :feature, dbscope: :exa
       visit edit_path
 
       find("#addon-cms-agents-addons-for_member_node .toggle-head").click
-      select "有効", from: "item_for_member_state"
+      select I18n.t("cms.options.member_state.enabled"), from: "item_for_member_state"
 
       within "form#item-form" do
         click_button I18n.t('ss.buttons.save')

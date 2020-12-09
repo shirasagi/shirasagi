@@ -23,15 +23,15 @@ module SS
       end
     end
 
-    HOOK_EVENT_COMPLETION = "
+    HOOK_EVENT_COMPLETION = <<~SCRIPT.freeze
       (function(promiseId, eventName) {
         var defer = $.Deferred();
         $(document).one(eventName, function() { defer.resolve(true); });
         window.SS[promiseId] = defer.promise();
       })(arguments[0], arguments[1]);
-    ".freeze
+    SCRIPT
 
-    WAIT_EVENT_COMPLETION = "
+    WAIT_EVENT_COMPLETION = <<~SCRIPT.freeze
       (function(promiseId, resolve) {
         var promise = window.SS[promiseId];
         if (!promise) {
@@ -42,21 +42,7 @@ module SS
         delete window.SS[promiseId];
         promise.done(function() { resolve(true); });
       })(arguments[0], arguments[1]);
-    ".freeze
-
-    CLOSE_COLORBOX_AND_WAIT_SCRIPT = "
-      (function(resolve) {
-        var $element = $.colorbox.element();
-        if (!$element) {
-          // a colorbox isn't opened
-          resolve(false);
-          return;
-        }
-
-        $element.colorbox({ onClosed: function() { resolve(true); } });
-        $.colorbox.close();
-      })(arguments[0]);
-    ".freeze
+    SCRIPT
 
     def wait_timeout
       Capybara.default_max_wait_time
@@ -130,11 +116,11 @@ module SS
       end
     end
 
-    def listen_and_wait_event(event_name)
+    def wait_event_to_fire(event_name)
       promise_id = "promise_#{unique_id}"
       page.execute_script(HOOK_EVENT_COMPLETION, promise_id, event_name)
 
-      # do operations which cause events
+      # do operations which fire events
       ret = yield
 
       result = page.evaluate_async_script(WAIT_EVENT_COMPLETION, promise_id)
@@ -145,17 +131,16 @@ module SS
 
     #
     # Usage:
-    #   open_cbox_and_wait do
+    #   wait_cbox_open do
     #     click_on I18n.t("ss.buttons.upload")
     #   end
     #
-    def open_cbox_and_wait(&block)
-      listen_and_wait_event("cbox_complete", &block)
+    def wait_cbox_open(&block)
+      wait_event_to_fire("cbox_complete", &block)
     end
 
-    def close_cbox_and_wait
-      ret = page.evaluate_async_script(CLOSE_COLORBOX_AND_WAIT_SCRIPT)
-      expect(ret).to be_truthy
+    def wait_cbox_close(&block)
+      wait_event_to_fire("cbox_closed", &block)
     end
 
     def colorbox_opened?
@@ -229,12 +214,12 @@ module SS
 
     #
     # Usage:
-    #   open_addon_and_wait do
+    #   wait_addon_open do
     #     first("#addon-contact-agents-addons-page .toggle-head").click
     #   end
     #
-    def open_addon_and_wait(&block)
-      listen_and_wait_event("ss:addonShown", &block)
+    def wait_addon_open(&block)
+      wait_event_to_fire("ss:addonShown", &block)
     end
   end
 end

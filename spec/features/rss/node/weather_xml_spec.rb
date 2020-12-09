@@ -88,22 +88,30 @@ describe "Rss::Node::WeatherXml", type: :feature, dbscope: :example, js: true do
       end
 
       within '.mod-rss-anpi-mail-setting-my-anpi-post' do
-        click_on I18n.t("cms.apis.nodes.index")
+        wait_cbox_open do
+          click_on I18n.t("cms.apis.nodes.index")
+        end
       end
       wait_for_cbox do
         expect(page).to have_css("span.select-item", text: member_node_my_anpi_post.name)
-        close_cbox_and_wait
+        wait_cbox_close do
+          find("#cboxClose").click
+        end
       end
       within '.mod-rss-anpi-mail-setting-my-anpi-post' do
         expect(page).to have_css(".index", text: member_node_my_anpi_post.name)
       end
 
       within '.mod-rss-anpi-mail-setting-anpi-mail' do
-        click_on I18n.t("cms.apis.nodes.index")
+        wait_cbox_open do
+          click_on I18n.t("cms.apis.nodes.index")
+        end
       end
       wait_for_cbox do
         expect(page).to have_css("span.select-item", text: ezine_node_member_page.name)
-        close_cbox_and_wait
+        wait_cbox_close do
+          find("#cboxClose").click
+        end
       end
       within '.mod-rss-anpi-mail-setting-anpi-mail' do
         expect(page).to have_css(".index", text: ezine_node_member_page.name)

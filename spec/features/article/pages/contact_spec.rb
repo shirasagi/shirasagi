@@ -15,7 +15,7 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
       visit new_path
 
       within '#addon-contact-agents-addons-page' do
-        open_addon_and_wait do
+        wait_addon_open do
           first('.toggle-head').click
         end
 
