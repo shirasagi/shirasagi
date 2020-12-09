@@ -23,15 +23,15 @@ module SS
       end
     end
 
-    HOOK_CBOX_COMPLETION = "
-      (function(promiseId) {
+    HOOK_EVENT_COMPLETION = "
+      (function(promiseId, eventName) {
         var defer = $.Deferred();
-        $(document).one('cbox_complete', function() { defer.resolve(true); });
+        $(document).one(eventName, function() { defer.resolve(true); });
         window.SS[promiseId] = defer.promise();
-      })(arguments[0]);
+      })(arguments[0], arguments[1]);
     ".freeze
 
-    WAIT_CBOX_COMPLETION = "
+    WAIT_EVENT_COMPLETION = "
       (function(promiseId, resolve) {
         var promise = window.SS[promiseId];
         if (!promise) {
@@ -130,20 +130,27 @@ module SS
       end
     end
 
+    def listen_and_wait_event(event_name)
+      promise_id = "promise_#{unique_id}"
+      page.execute_script(HOOK_EVENT_COMPLETION, promise_id, event_name)
+
+      # do operations which cause events
+      ret = yield
+
+      result = page.evaluate_async_script(WAIT_EVENT_COMPLETION, promise_id)
+      expect(result).to be_truthy
+
+      ret
+    end
+
     #
     # Usage:
     #   open_cbox_and_wait do
     #     click_on I18n.t("ss.buttons.upload")
     #   end
     #
-    def open_cbox_and_wait
-      promise_id = "promise_#{unique_id}"
-      page.execute_script(HOOK_CBOX_COMPLETION, promise_id)
-
-      yield
-
-      ret = page.evaluate_async_script(WAIT_CBOX_COMPLETION, promise_id)
-      expect(ret).to be_truthy
+    def open_cbox_and_wait(&block)
+      listen_and_wait_event("cbox_complete", &block)
     end
 
     def close_cbox_and_wait
@@ -218,6 +225,16 @@ module SS
     def disable_js_debug
       page.execute_script("SS.debug = false;")
     rescue => _e
+    end
+
+    #
+    # Usage:
+    #   open_addon_and_wait do
+    #     first("#addon-contact-agents-addons-page .toggle-head").click
+    #   end
+    #
+    def open_addon_and_wait(&block)
+      listen_and_wait_event("ss:addonShown", &block)
     end
   end
 end

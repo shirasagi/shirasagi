@@ -1,21 +1,23 @@
 require 'spec_helper'
 
-describe "article_pages", type: :feature, dbscope: :example do
+describe "article_pages", type: :feature, dbscope: :example, js: true do
   let!(:site) { cms_site }
   let!(:node) { create_once :article_node_page, filename: "docs", name: "article" }
   let!(:item) { create(:article_page, cur_node: node) }
   let!(:new_path) { new_article_page_path site.id, node }
   let!(:contact_group) { create(:contact_group, name: "contact_group") }
 
-  context "contact", js: true do
+  context "contact" do
     before { login_cms_user }
     before { site.add_to_set group_ids: contact_group.id }
 
-    it "#new" do
+    it do
       visit new_path
 
       within '#addon-contact-agents-addons-page' do
-        first('.toggle-head').click
+        open_addon_and_wait do
+          first('.toggle-head').click
+        end
 
         within '.toggle-body' do
           first('.ajax-box').click
@@ -28,9 +30,9 @@ describe "article_pages", type: :feature, dbscope: :example do
 
       within "form#item-form" do
         fill_in "item[name]", with: "sample"
-        click_button "下書き保存"
+        click_on I18n.t("ss.buttons.draft_save")
       end
-      click_button "警告を無視する"
+      click_on I18n.t("ss.buttons.ignore_alert")
 
       section = first('#addon-contact-agents-addons-page')
       expect(section).to have_text("contact_group")
