@@ -13,7 +13,10 @@ describe "syntax_checker", type: :feature, dbscope: :example, js: true do
   let!(:ss_file) { create :ss_file, site: site }
   let!(:html1) { "<img src=\"#{ss_file.url}\" />" }
   let!(:html2) { "<img alt=\"\" src=\"#{ss_file.url}\" />" }
-  let!(:html3) { "<img alt=\"#{ss_file.name}\" src=\"#{ss_file.url}\" />" }
+  let!(:html3) { "<img alt=\" \" src=\"#{ss_file.url}\" />" }
+  let!(:html4) { "<img alt=\"#{ss_file.name}\" src=\"#{ss_file.url}\" />" }
+  let!(:html5) { "<img alt=\"#{ss_file.name.upcase}\" src=\"#{ss_file.url}\" />" }
+  let!(:html6) { "<img alt=\"ファイルの内容を示すテキスト\" src=\"#{ss_file.url}\" />" }
 
   let(:edit_path) { edit_article_page_path site.id, node, item }
 
@@ -29,8 +32,10 @@ describe "syntax_checker", type: :feature, dbscope: :example, js: true do
         within "#addon-cms-agents-addons-body" do
           fill_in_ckeditor "item[html]", with: html1
           click_button I18n.t("cms.syntax_check")
-          wait_for_ajax
-          expect(page).to have_css(".errorExplanationBody", text: I18n.t("errors.messages.set_img_alt"))
+
+          # confirm syntax check header is shown to wait for ajax completion
+          expect(page).to have_css("#errorSyntaxChecker", text: I18n.t('cms.syntax_check'))
+          expect(page).to have_css("#errorSyntaxChecker", text: I18n.t("errors.messages.set_img_alt"))
         end
       end
 
@@ -40,9 +45,10 @@ describe "syntax_checker", type: :feature, dbscope: :example, js: true do
         within "#addon-cms-agents-addons-body" do
           fill_in_ckeditor "item[html]", with: html2
           click_button I18n.t("cms.syntax_check")
-        end
-        wait_for_ajax do
-          expect(page).to have_css(".errorExplanationBody", text: I18n.t("errors.messages.set_img_alt"))
+
+          # confirm syntax check header is shown to wait for ajax completion
+          expect(page).to have_css("#errorSyntaxChecker", text: I18n.t('cms.syntax_check'))
+          expect(page).to have_css("#errorSyntaxChecker", text: I18n.t("errors.messages.set_img_alt"))
         end
       end
 
@@ -52,9 +58,49 @@ describe "syntax_checker", type: :feature, dbscope: :example, js: true do
         within "#addon-cms-agents-addons-body" do
           fill_in_ckeditor "item[html]", with: html3
           click_button I18n.t("cms.syntax_check")
+
+          # confirm syntax check header is shown to wait for ajax completion
+          expect(page).to have_css("#errorSyntaxChecker", text: I18n.t('cms.syntax_check'))
+          expect(page).to have_css("#errorSyntaxChecker", text: I18n.t("errors.messages.set_img_alt"))
         end
-        wait_for_ajax do
-          expect(page).to have_css(".errorExplanationBody", text: I18n.t("errors.template.no_errors"))
+      end
+
+      it "#edit" do
+        visit edit_path
+
+        within "#addon-cms-agents-addons-body" do
+          fill_in_ckeditor "item[html]", with: html4
+          click_button I18n.t("cms.syntax_check")
+
+          # confirm syntax check header is shown to wait for ajax completion
+          expect(page).to have_css("#errorSyntaxChecker", text: I18n.t('cms.syntax_check'))
+          expect(page).to have_css("#errorSyntaxChecker", text: I18n.t("errors.messages.alt_is_included_in_filename"))
+        end
+      end
+
+      it "#edit" do
+        visit edit_path
+
+        within "#addon-cms-agents-addons-body" do
+          fill_in_ckeditor "item[html]", with: html5
+          click_button I18n.t("cms.syntax_check")
+
+          # confirm syntax check header is shown to wait for ajax completion
+          expect(page).to have_css("#errorSyntaxChecker", text: I18n.t('cms.syntax_check'))
+          expect(page).to have_css("#errorSyntaxChecker", text: I18n.t("errors.messages.alt_is_included_in_filename"))
+        end
+      end
+
+      it "#edit" do
+        visit edit_path
+
+        within "#addon-cms-agents-addons-body" do
+          fill_in_ckeditor "item[html]", with: html6
+          click_button I18n.t("cms.syntax_check")
+
+          # confirm syntax check header is shown to wait for ajax completion
+          expect(page).to have_css("#errorSyntaxChecker", text: I18n.t('cms.syntax_check'))
+          expect(page).to have_css("#errorSyntaxChecker", text: I18n.t("errors.template.no_errors"))
         end
       end
     end
@@ -75,9 +121,10 @@ describe "syntax_checker", type: :feature, dbscope: :example, js: true do
         end
         within "#addon-cms-agents-addons-form-page" do
           click_button I18n.t("cms.syntax_check")
-          wait_for_ajax
 
-          expect(page).to have_css(".errorExplanationBody", text: I18n.t("errors.messages.set_img_alt"))
+          # confirm syntax check header is shown to wait for ajax completion
+          expect(page).to have_css("#errorSyntaxChecker", text: I18n.t('cms.syntax_check'))
+          expect(page).to have_css("#errorSyntaxChecker", text: I18n.t("errors.messages.set_img_alt"))
         end
       end
 
@@ -92,8 +139,10 @@ describe "syntax_checker", type: :feature, dbscope: :example, js: true do
         end
         within "#addon-cms-agents-addons-form-page" do
           click_button I18n.t("cms.syntax_check")
-          wait_for_ajax
-          expect(page).to have_css(".errorExplanationBody", text: I18n.t("errors.messages.set_img_alt"))
+
+          # confirm syntax check header is shown to wait for ajax completion
+          expect(page).to have_css("#errorSyntaxChecker", text: I18n.t('cms.syntax_check'))
+          expect(page).to have_css("#errorSyntaxChecker", text: I18n.t("errors.messages.set_img_alt"))
         end
       end
 
@@ -108,8 +157,64 @@ describe "syntax_checker", type: :feature, dbscope: :example, js: true do
         end
         within "#addon-cms-agents-addons-form-page" do
           click_button I18n.t("cms.syntax_check")
-          wait_for_ajax
-          expect(page).to have_css(".errorExplanationBody", text: I18n.t("errors.template.no_errors"))
+
+          # confirm syntax check header is shown to wait for ajax completion
+          expect(page).to have_css("#errorSyntaxChecker", text: I18n.t('cms.syntax_check'))
+          expect(page).to have_css("#errorSyntaxChecker", text: I18n.t("errors.messages.set_img_alt"))
+        end
+      end
+
+      it "#edit" do
+        visit edit_path
+
+        within ".column-value-palette" do
+          click_on column.name
+        end
+        within ".column-value-cms-column-free" do
+          fill_in_ckeditor "item[column_values][][in_wrap][value]", with: html4
+        end
+        within "#addon-cms-agents-addons-form-page" do
+          click_button I18n.t("cms.syntax_check")
+
+          # confirm syntax check header is shown to wait for ajax completion
+          expect(page).to have_css("#errorSyntaxChecker", text: I18n.t('cms.syntax_check'))
+          expect(page).to have_css("#errorSyntaxChecker", text: I18n.t("errors.messages.alt_is_included_in_filename"))
+        end
+      end
+
+      it "#edit" do
+        visit edit_path
+
+        within ".column-value-palette" do
+          click_on column.name
+        end
+        within ".column-value-cms-column-free" do
+          fill_in_ckeditor "item[column_values][][in_wrap][value]", with: html5
+        end
+        within "#addon-cms-agents-addons-form-page" do
+          click_button I18n.t("cms.syntax_check")
+
+          # confirm syntax check header is shown to wait for ajax completion
+          expect(page).to have_css("#errorSyntaxChecker", text: I18n.t('cms.syntax_check'))
+          expect(page).to have_css("#errorSyntaxChecker", text: I18n.t("errors.messages.alt_is_included_in_filename"))
+        end
+      end
+
+      it "#edit" do
+        visit edit_path
+
+        within ".column-value-palette" do
+          click_on column.name
+        end
+        within ".column-value-cms-column-free" do
+          fill_in_ckeditor "item[column_values][][in_wrap][value]", with: html6
+        end
+        within "#addon-cms-agents-addons-form-page" do
+          click_button I18n.t("cms.syntax_check")
+
+          # confirm syntax check header is shown to wait for ajax completion
+          expect(page).to have_css("#errorSyntaxChecker", text: I18n.t('cms.syntax_check'))
+          expect(page).to have_css("#errorSyntaxChecker", text: I18n.t("errors.template.no_errors"))
         end
       end
     end
