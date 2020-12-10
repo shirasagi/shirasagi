@@ -12,17 +12,17 @@ describe "sys_conf", type: :feature, dbscope: :example do
       visit sns_mypage_path
       first('.main-navi .sys-conf a').click
       within 'nav.mod-navi' do
-        expect(page).to have_css('h2', text: 'システム設定')
-        expect(page).to have_css('h3 a', text: 'サイト')
-        expect(page).to have_css('h3 a', text: 'グループ')
-        expect(page).to have_css('h3 a', text: 'ユーザー')
-        expect(page).to have_css('h3 a', text: '権限/ロール')
-        expect(page).to have_css('h3 a', text: '認証')
-        expect(page).to have_css('h3 a', text: '最大ファイルサイズ')
-        expect(page).to have_css('h3 a', text: 'サイト複製')
-        expect(page).to have_css('h3 a', text: 'テスト')
-        expect(page).to have_css('h3 a', text: '操作履歴')
-        expect(page).to have_css('h3 a', text: 'ジョブ')
+        expect(page).to have_css('h2', text: I18n.t("sys.conf"))
+        expect(page).to have_css('h3 a', text: I18n.t("sys.site"))
+        expect(page).to have_css('h3 a', text: I18n.t("sys.group"))
+        expect(page).to have_css('h3 a', text: I18n.t("sys.user"))
+        expect(page).to have_css('h3 a', text: I18n.t("sys.role"))
+        expect(page).to have_css('h3 a', text: I18n.t("sys.auth"))
+        expect(page).to have_css('h3 a', text: I18n.t("sys.max_file_size"))
+        expect(page).to have_css('h3 a', text: I18n.t("sys.site_copy"))
+        expect(page).to have_css('h3 a', text: I18n.t("sys.diag"))
+        expect(page).to have_css('h3 a', text: I18n.t("history.log"))
+        expect(page).to have_css('h3 a', text: I18n.t("job.main"))
       end
     end
   end
@@ -38,17 +38,17 @@ describe "sys_conf", type: :feature, dbscope: :example do
       visit sns_mypage_path
       first('.main-navi .sys-conf a').click
       within 'nav.mod-navi' do
-        expect(page).to have_css('h2', text: 'システム設定')
-        expect(page).to have_no_css('h3 a', text: 'サイト')
-        expect(page).to have_css('h3 a', text: 'グループ')
-        expect(page).to have_no_css('h3 a', text: 'ユーザー')
-        expect(page).to have_no_css('h3 a', text: '権限/ロール')
-        expect(page).to have_no_css('h3 a', text: '認証')
-        expect(page).to have_no_css('h3 a', text: '最大ファイルサイズ')
-        expect(page).to have_no_css('h3 a', text: 'サイト複製')
-        expect(page).to have_no_css('h3 a', text: 'テスト')
-        expect(page).to have_no_css('h3 a', text: '操作履歴')
-        expect(page).to have_no_css('h3 a', text: 'ジョブ')
+        expect(page).to have_css('h2', text: I18n.t("sys.conf"))
+        expect(page).to have_no_css('h3 a', text: I18n.t("sys.site"))
+        expect(page).to have_css('h3 a', text: I18n.t("sys.group"))
+        expect(page).to have_no_css('h3 a', text: I18n.t("sys.user"))
+        expect(page).to have_no_css('h3 a', text: I18n.t("sys.role"))
+        expect(page).to have_no_css('h3 a', text: I18n.t("sys.auth"))
+        expect(page).to have_no_css('h3 a', text: I18n.t("sys.max_file_size"))
+        expect(page).to have_no_css('h3 a', text: I18n.t("sys.site_copy"))
+        expect(page).to have_no_css('h3 a', text: I18n.t("sys.diag"))
+        expect(page).to have_no_css('h3 a', text: I18n.t("history.log"))
+        expect(page).to have_no_css('h3 a', text: I18n.t("job.main"))
       end
     end
   end
@@ -64,17 +64,17 @@ describe "sys_conf", type: :feature, dbscope: :example do
       visit sns_mypage_path
       first('.main-navi .sys-conf a').click
       within 'nav.mod-navi' do
-        expect(page).to have_css('h2', text: 'システム設定')
-        expect(page).to have_no_css('h3 a', text: 'サイト')
-        expect(page).to have_no_css('h3 a', text: 'グループ')
-        expect(page).to have_no_css('h3 a', text: 'ユーザー')
-        expect(page).to have_css('h3 a', text: '権限/ロール')
-        expect(page).to have_no_css('h3 a', text: '認証')
-        expect(page).to have_no_css('h3 a', text: '最大ファイルサイズ')
-        expect(page).to have_no_css('h3 a', text: 'サイト複製')
-        expect(page).to have_no_css('h3 a', text: 'テスト')
-        expect(page).to have_no_css('h3 a', text: '操作履歴')
-        expect(page).to have_no_css('h3 a', text: 'ジョブ')
+        expect(page).to have_css('h2', text: I18n.t("sys.conf"))
+        expect(page).to have_no_css('h3 a', text: I18n.t("sys.site"))
+        expect(page).to have_no_css('h3 a', text: I18n.t("sys.group"))
+        expect(page).to have_no_css('h3 a', text: I18n.t("sys.user"))
+        expect(page).to have_css('h3 a', text: I18n.t("sys.role"))
+        expect(page).to have_no_css('h3 a', text: I18n.t("sys.auth"))
+        expect(page).to have_no_css('h3 a', text: I18n.t("sys.max_file_size"))
+        expect(page).to have_no_css('h3 a', text: I18n.t("sys.site_copy"))
+        expect(page).to have_no_css('h3 a', text: I18n.t("sys.diag"))
+        expect(page).to have_no_css('h3 a', text: I18n.t("history.log"))
+        expect(page).to have_no_css('h3 a', text: I18n.t("job.main"))
       end
     end
   end
@@ -90,17 +90,17 @@ describe "sys_conf", type: :feature, dbscope: :example do
       visit sns_mypage_path
       first('.main-navi .sys-conf a').click
       within 'nav.mod-navi' do
-        expect(page).to have_css('h2', text: 'システム設定')
-        expect(page).to have_css('h3 a', text: 'サイト')
-        expect(page).to have_no_css('h3 a', text: 'グループ')
-        expect(page).to have_no_css('h3 a', text: 'ユーザー')
-        expect(page).to have_no_css('h3 a', text: '権限/ロール')
-        expect(page).to have_no_css('h3 a', text: '認証')
-        expect(page).to have_no_css('h3 a', text: '最大ファイルサイズ')
-        expect(page).to have_css('h3 a', text: 'サイト複製')
-        expect(page).to have_no_css('h3 a', text: 'テスト')
-        expect(page).to have_no_css('h3 a', text: '操作履歴')
-        expect(page).to have_no_css('h3 a', text: 'ジョブ')
+        expect(page).to have_css('h2', text: I18n.t("sys.conf"))
+        expect(page).to have_css('h3 a', text: I18n.t("sys.site"))
+        expect(page).to have_no_css('h3 a', text: I18n.t("sys.group"))
+        expect(page).to have_no_css('h3 a', text: I18n.t("sys.user"))
+        expect(page).to have_no_css('h3 a', text: I18n.t("sys.role"))
+        expect(page).to have_no_css('h3 a', text: I18n.t("sys.auth"))
+        expect(page).to have_no_css('h3 a', text: I18n.t("sys.max_file_size"))
+        expect(page).to have_css('h3 a', text: I18n.t("sys.site_copy"))
+        expect(page).to have_no_css('h3 a', text: I18n.t("sys.diag"))
+        expect(page).to have_no_css('h3 a', text: I18n.t("history.log"))
+        expect(page).to have_no_css('h3 a', text: I18n.t("job.main"))
       end
     end
   end
@@ -116,16 +116,16 @@ describe "sys_conf", type: :feature, dbscope: :example do
       visit sns_mypage_path
       first('.main-navi .sys-conf a').click
       within 'nav.mod-navi' do
-        expect(page).to have_css('h2', text: 'システム設定')
-        expect(page).to have_no_css('h3 a', text: 'サイト')
-        expect(page).to have_no_css('h3 a', text: 'グループ')
-        expect(page).to have_css('h3 a', text: 'ユーザー')
-        expect(page).to have_no_css('h3 a', text: '権限/ロール')
-        expect(page).to have_css('h3 a', text: '認証')
-        expect(page).to have_no_css('h3 a', text: 'サイト複製')
-        expect(page).to have_css('h3 a', text: 'テスト')
-        expect(page).to have_css('h3 a', text: '操作履歴')
-        expect(page).to have_css('h3 a', text: 'ジョブ')
+        expect(page).to have_css('h2', text: I18n.t("sys.conf"))
+        expect(page).to have_no_css('h3 a', text: I18n.t("sys.site"))
+        expect(page).to have_no_css('h3 a', text: I18n.t("sys.group"))
+        expect(page).to have_css('h3 a', text: I18n.t("sys.user"))
+        expect(page).to have_no_css('h3 a', text: I18n.t("sys.role"))
+        expect(page).to have_css('h3 a', text: I18n.t("sys.auth"))
+        expect(page).to have_no_css('h3 a', text: I18n.t("sys.site_copy"))
+        expect(page).to have_css('h3 a', text: I18n.t("sys.diag"))
+        expect(page).to have_css('h3 a', text: I18n.t("history.log"))
+        expect(page).to have_css('h3 a', text: I18n.t("job.main"))
       end
     end
   end

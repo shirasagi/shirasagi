@@ -31,8 +31,8 @@ describe Gws::Chorg::MainRunner, dbscope: :example do
       # check for job was succeeded
       expect(Gws::Job::Log.count).to eq 1
       Gws::Job::Log.first.tap do |log|
-        expect(log.logs).to include(include('INFO -- : Started Job'))
-        expect(log.logs).to include(include('INFO -- : Completed Job'))
+        expect(log.logs).to include(/INFO -- : .* Started Job/)
+        expect(log.logs).to include(/INFO -- : .* Completed Job/)
       end
 
       g1 = Cms::Group.find_by(name: 'シラサギ市/企画政策部')

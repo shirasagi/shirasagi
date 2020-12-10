@@ -46,7 +46,7 @@ Rails.application.configure do
 
   # Logger
   config.log_formatter = ::Logger::Formatter.new
-  config.log_level = ENV['TEST_LOG_LEVEL'] || :warn
+  config.log_level = ENV['TEST_LOG_LEVEL'] || :debug
 
   # ActiveJob Queue Adapter
   config.active_job.queue_adapter = :test

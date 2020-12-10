@@ -18,8 +18,8 @@ describe Chorg::MainRunner, dbscope: :example do
       # check for job was succeeded
       expect(Job::Log.count).to eq 1
       Job::Log.first.tap do |log|
-        expect(log.logs).to include(include('INFO -- : Started Job'))
-        expect(log.logs).to include(include('INFO -- : Completed Job'))
+        expect(log.logs).to include(/INFO -- : .* Started Job/)
+        expect(log.logs).to include(/INFO -- : .* Completed Job/)
       end
 
       expect(Cms::Group.where(name: changeset.destinations.first["name"]).first).not_to be_nil
@@ -54,8 +54,8 @@ describe Chorg::MainRunner, dbscope: :example do
         # check for job was succeeded
         expect(Job::Log.count).to eq 1
         Job::Log.first.tap do |log|
-          expect(log.logs).to include(include('INFO -- : Started Job'))
-          expect(log.logs).to include(include('INFO -- : Completed Job'))
+          expect(log.logs).to include(/INFO -- : .* Started Job/)
+          expect(log.logs).to include(/INFO -- : .* Completed Job/)
         end
 
         expect(Cms::Group.where(name: group.name).first).to be_nil
@@ -112,8 +112,8 @@ describe Chorg::MainRunner, dbscope: :example do
           # check for job was succeeded
           expect(Job::Log.count).to eq 1
           Job::Log.first.tap do |log|
-            expect(log.logs).to include(include('INFO -- : Started Job'))
-            expect(log.logs).to include(include('INFO -- : Completed Job'))
+            expect(log.logs).to include(/INFO -- : .* Started Job/)
+            expect(log.logs).to include(/INFO -- : .* Completed Job/)
           end
 
           expect(Cms::Group.where(name: group.name).first).to be_nil
@@ -180,8 +180,8 @@ describe Chorg::MainRunner, dbscope: :example do
         # check for job was succeeded
         expect(Job::Log.count).to eq 1
         Job::Log.first.tap do |log|
-          expect(log.logs).to include(include('INFO -- : Started Job'))
-          expect(log.logs).to include(include('INFO -- : Completed Job'))
+          expect(log.logs).to include(/INFO -- : .* Started Job/)
+          expect(log.logs).to include(/INFO -- : .* Completed Job/)
         end
 
         expect(Cms::Group.where(name: group.name).first).to be_nil
@@ -230,8 +230,8 @@ describe Chorg::MainRunner, dbscope: :example do
           # check for job was succeeded
           expect(Job::Log.count).to eq 1
           Job::Log.first.tap do |log|
-            expect(log.logs).to include(include('INFO -- : Started Job'))
-            expect(log.logs).to include(include('INFO -- : Completed Job'))
+            expect(log.logs).to include(/INFO -- : .* Started Job/)
+            expect(log.logs).to include(/INFO -- : .* Completed Job/)
           end
 
           expect(Cms::Group.where(name: group.name).first).to be_nil
@@ -296,8 +296,8 @@ describe Chorg::MainRunner, dbscope: :example do
         # check for job was succeeded
         expect(Job::Log.count).to eq 1
         Job::Log.first.tap do |log|
-          expect(log.logs).to include(include('INFO -- : Started Job'))
-          expect(log.logs).to include(include('INFO -- : Completed Job'))
+          expect(log.logs).to include(/INFO -- : .* Started Job/)
+          expect(log.logs).to include(/INFO -- : .* Completed Job/)
         end
 
         expect(Cms::Group.where(id: group1.id).first).to be_nil
@@ -387,8 +387,8 @@ describe Chorg::MainRunner, dbscope: :example do
         # check for job was succeeded
         expect(Job::Log.count).to eq 1
         Job::Log.first.tap do |log|
-          expect(log.logs).to include(include('INFO -- : Started Job'))
-          expect(log.logs).to include(include('INFO -- : Completed Job'))
+          expect(log.logs).to include(/INFO -- : .* Started Job/)
+          expect(log.logs).to include(/INFO -- : .* Completed Job/)
         end
 
         # group1 shoud be exist because group1 is destination_group.
@@ -461,8 +461,8 @@ describe Chorg::MainRunner, dbscope: :example do
         # check for job was succeeded
         expect(Job::Log.count).to eq 1
         Job::Log.first.tap do |log|
-          expect(log.logs).to include(include('INFO -- : Started Job'))
-          expect(log.logs).to include(include('INFO -- : Completed Job'))
+          expect(log.logs).to include(/INFO -- : .* Started Job/)
+          expect(log.logs).to include(/INFO -- : .* Completed Job/)
         end
 
         expect(Cms::Group.where(id: group0.id).first).to be_nil
@@ -540,8 +540,8 @@ describe Chorg::MainRunner, dbscope: :example do
         # check for job was succeeded
         expect(Job::Log.count).to eq 1
         Job::Log.first.tap do |log|
-          expect(log.logs).to include(include('INFO -- : Started Job'))
-          expect(log.logs).to include(include('INFO -- : Completed Job'))
+          expect(log.logs).to include(/INFO -- : .* Started Job/)
+          expect(log.logs).to include(/INFO -- : .* Completed Job/)
         end
 
         expect(Cms::Group.where(id: group1.id).first).not_to be_nil
@@ -602,8 +602,8 @@ describe Chorg::MainRunner, dbscope: :example do
         # check for job was succeeded
         expect(Job::Log.count).to eq 1
         Job::Log.first.tap do |log|
-          expect(log.logs).to include(include('INFO -- : Started Job'))
-          expect(log.logs).to include(include('INFO -- : Completed Job'))
+          expect(log.logs).to include(/INFO -- : .* Started Job/)
+          expect(log.logs).to include(/INFO -- : .* Completed Job/)
         end
 
         expect(Cms::Group.unscoped.where(id: group.id).first.active?).to be_falsey
@@ -633,8 +633,8 @@ describe Chorg::MainRunner, dbscope: :example do
         # check for job was succeeded
         expect(Job::Log.count).to eq 1
         Job::Log.first.tap do |log|
-          expect(log.logs).to include(include('INFO -- : Started Job'))
-          expect(log.logs).to include(include('INFO -- : Completed Job'))
+          expect(log.logs).to include(/INFO -- : .* Started Job/)
+          expect(log.logs).to include(/INFO -- : .* Completed Job/)
         end
 
         expect(Cms::Group.unscoped.where(id: group.id).first).to be_nil
@@ -682,8 +682,8 @@ describe Chorg::MainRunner, dbscope: :example do
       # check for job was succeeded
       expect(Job::Log.count).to eq 1
       Job::Log.first.tap do |log|
-        expect(log.logs).to include(include('INFO -- : Started Job'))
-        expect(log.logs).to include(include('INFO -- : Completed Job'))
+        expect(log.logs).to include(/INFO -- : .* Started Job/)
+        expect(log.logs).to include(/INFO -- : .* Completed Job/)
       end
 
       g3 = Cms::Group.find_by(name: 'A/B/C')
@@ -767,8 +767,8 @@ describe Chorg::MainRunner, dbscope: :example do
       # check for job was succeeded
       expect(Job::Log.count).to eq 2
       Job::Log.all.each do |log|
-        expect(log.logs).to include(include('INFO -- : Started Job'))
-        expect(log.logs).to include(include('INFO -- : Completed Job'))
+        expect(log.logs).to include(/INFO -- : .* Started Job/)
+        expect(log.logs).to include(/INFO -- : .* Completed Job/)
       end
     end
   end
@@ -846,8 +846,8 @@ describe Chorg::MainRunner, dbscope: :example do
         # check for job was succeeded
         expect(Job::Log.count).to eq 1
         Job::Log.first.tap do |log|
-          expect(log.logs).to include(include('INFO -- : Started Job'))
-          expect(log.logs).to include(include('INFO -- : Completed Job'))
+          expect(log.logs).to include(/INFO -- : .* Started Job/)
+          expect(log.logs).to include(/INFO -- : .* Completed Job/)
         end
 
         group1.reload
@@ -947,8 +947,8 @@ describe Chorg::MainRunner, dbscope: :example do
         # check for job was succeeded
         expect(Job::Log.count).to eq 1
         Job::Log.first.tap do |log|
-          expect(log.logs).to include(include('INFO -- : Started Job'))
-          expect(log.logs).to include(include('INFO -- : Completed Job'))
+          expect(log.logs).to include(/INFO -- : .* Started Job/)
+          expect(log.logs).to include(/INFO -- : .* Completed Job/)
         end
 
         group1.reload
@@ -1054,8 +1054,8 @@ describe Chorg::MainRunner, dbscope: :example do
         # check for job was succeeded
         expect(Job::Log.count).to eq 1
         Job::Log.first.tap do |log|
-          expect(log.logs).to include(include('INFO -- : Started Job'))
-          expect(log.logs).to include(include('INFO -- : Completed Job'))
+          expect(log.logs).to include(/INFO -- : .* Started Job/)
+          expect(log.logs).to include(/INFO -- : .* Completed Job/)
         end
 
         group1.reload
@@ -1155,8 +1155,8 @@ describe Chorg::MainRunner, dbscope: :example do
         # check for job was succeeded
         expect(Job::Log.count).to eq 1
         Job::Log.first.tap do |log|
-          expect(log.logs).to include(include('INFO -- : Started Job'))
-          expect(log.logs).to include(include('INFO -- : Completed Job'))
+          expect(log.logs).to include(/INFO -- : .* Started Job/)
+          expect(log.logs).to include(/INFO -- : .* Completed Job/)
         end
 
         group1.reload

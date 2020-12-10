@@ -9,6 +9,12 @@
           <dt><%= @item.model.t(:name) %></dt>
           <dd><%= @item.data[:name] %></dd>
 
+          <% if @item.data.key?(:filename) %>
+            <dt><%= @item.model.t(:basename) %></dt>
+            <dd><%= ::File.basename(@item.data[:filename]) %> <%= link_to t("ss.links.change"), "#addon-basic", class: "btn btn-change-basename" %></dd>
+            <dd class="hide"><%= text_field_tag "#{f.object_name}[basename]", ::File.basename(@item.data[:filename]) %></dd>
+          <% end %>
+
           <% if @item.ref_coll =~ /cms_nodes|cms_pages|cms_parts|cms_layouts/ && @item.parent.present? %>
             <dt><%= @model.t(:parent) %></dt>
             <dd>
@@ -37,4 +43,16 @@
     <%= f.submit t('ss.buttons.restore'), class: 'btn-primary save' %>
     <%= f.button t('ss.buttons.cancel'), class: 'btn-default', type: :reset, onclick: "location.href='#{url_for(action: :show)}'; return false;" %>
   </footer>
+<% end %>
+
+<%= jquery do %>
+  var $el = $(".btn-change-basename");
+  $el.on("click", function(ev) {
+    var $parent = $el.closest("dd");
+    $parent.next("dd.hide").removeClass("hide");
+    $parent.remove();
+
+    ev.preventDefault();
+    return false;
+  });
 <% end %>

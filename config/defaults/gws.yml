@@ -63,6 +63,7 @@ production: &production
       - model: qna
 
     portlet_settings:
+      max_rows: 50
       ad:
         image_limit: 5
 
@@ -170,6 +171,10 @@ production: &production
   share:
     max_history_count: 20
 
+  readable_setting:
+    setting_range: 'select'
+    group_ids: [ "cur_group" ]
+
 test:
   <<: *production
   disable: false
@@ -178,6 +183,7 @@ test:
     disable_mail_forward: false
     max_notice_mail_address_count: 3
     max_foward_mail_address_count: 3
+  readable_setting:
 
 development:
   <<: *production

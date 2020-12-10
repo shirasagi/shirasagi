@@ -18,11 +18,14 @@ class Job::Task
 
   before_validation :set_name
 
-  # overwrite `site` scope
-  overwrite_scope :site, ->(site) { where(site_id: (site.nil? ? nil : site.id)) }
   scope :group, ->(group) { where(group_id: (group.nil? ? nil : group.id)) }
 
   class << self
+    # overwrite `site` scope
+    def site(site)
+      where(site_id: (site.nil? ? nil : site.id))
+    end
+
     def enqueue(entity)
       model = Job::Task.new(entity)
       yield model if block_given?

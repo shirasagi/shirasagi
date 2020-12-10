@@ -38,6 +38,8 @@ Rails.application.configure do
 
   config.action_mailer.perform_caching = false
 
+  config.action_mailer.delivery_method = :file
+
   # Print deprecation notices to the Rails logger.
   config.active_support.deprecation = :log
 
@@ -65,7 +67,7 @@ Rails.application.configure do
   # Logger
   # config.logger = ActiveSupport::Logger.new("#{Rails.root}/log/development.log")
   config.log_formatter = ::Logger::Formatter.new
-  config.log_level = ENV['DEVELOPMENT_LOG_LEVEL'] || :warn
+  config.log_level = ENV['DEVELOPMENT_LOG_LEVEL'] || :debug
 
   # ActiveJob Queue Adapter
   config.active_job.queue_adapter = :shirasagi

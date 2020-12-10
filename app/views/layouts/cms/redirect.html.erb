@@ -1,0 +1,23 @@
+<!doctype html>
+<html lang="ja">
+
+<%
+  # translate
+  if SS::TranslateSupport.translate?(request)
+    @redirect_link = SS::TranslateSupport.embed_translate_path(request, @redirect_link)
+  end
+
+  # preview
+  if SS::PreviewSupport.preview?(request)
+    @redirect_link = SS::PreviewSupport.embed_preview_path(request, @redirect_link)
+  end
+%>
+
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="refresh" content="0; URL=<%= @redirect_link %>">
+  <title><%= @window_name %></title>
+</head>
+<body></body>
+
+</html>

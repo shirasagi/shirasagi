@@ -5,11 +5,13 @@ class Gws::Elasticsearch::Setting::Faq
   self.model = Gws::Faq::Topic
 
   def menu_label
-    I18n.t('modules.gws/faq')
+    cur_site.menu_faq_label.presence || I18n.t('modules.gws/faq')
   end
 
   def search_types
     return [] unless cur_site.menu_faq_visible?
+    return [] unless Gws.module_usable?(:faq, cur_site, cur_user)
+
     super
   end
 

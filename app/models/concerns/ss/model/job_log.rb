@@ -54,7 +54,7 @@ module SS::Model::JobLog
 
     def search_keyword(params)
       return all if params[:keyword].blank?
-      all.keyword_in(params[:keyword], :class_name, :logs)
+      all.keyword_in(params[:keyword], :job_id, :hostname, :ip_address, :class_name)
     end
 
     def search_ymd(params)

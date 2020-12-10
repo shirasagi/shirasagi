@@ -21,8 +21,8 @@ describe Gws::Chorg::MainRunner, dbscope: :example do
       # check for job was succeeded
       expect(Gws::Job::Log.count).to eq 2
       Gws::Job::Log.all.each do |log|
-        expect(log.logs).to include(include('INFO -- : Started Job'))
-        expect(log.logs).to include(include('INFO -- : Completed Job'))
+        expect(log.logs).to include(/INFO -- : .* Started Job/)
+        expect(log.logs).to include(/INFO -- : .* Completed Job/)
       end
 
       expect(Gws::StaffRecord::Year.site(site).count).to eq 1

@@ -10,7 +10,7 @@
       <tbody>
       <% if @item.member %>
         <tr data-id="<%= @item.member_id %>">
-          <td><%= f.hidden_field "member_id", value: @item.member_id, id: nil %> <%= @item.member.long_name %></td>
+          <td><%= f.hidden_field "member_id", value: @item.member_id, id: nil %> <%= gws_public_user_long_name(@item.member.long_name) %></td>
           <td><%= link_to t("ss.buttons.delete"), "#", class: "deselect btn" %></td>
         </tr>
       <% end %>

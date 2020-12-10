@@ -2,7 +2,7 @@
   <%= form_for :s, url: '', html: { class: 'search', method: :get } do |f| %>
     <span style="margin-right: 10px;">
       <% cate = Gws::Facility::Category.site(@cur_site).readable(@cur_user, site: @cur_site).order_by(order: 1, id: 1) %>
-      <%= f.select :category, cate.pluck(:name, :id), include_blank: true %>
+      <%= f.select :category, cate.pluck(:name, :id), include_blank: t('gws/facility.facility') %>
       <%= f.select :year, @years %>
       <%= f.select :month, @months %>
       <%= f.select :day, (1..31).to_a.map { |d| ["#{d}#{t('datetime.prompts.day')}", d] } %>

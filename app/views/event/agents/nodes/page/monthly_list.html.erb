@@ -3,21 +3,21 @@
 <%== @cur_node.upper_html %>
 
 <% if @cur_node.st_categories.present? %>
-  <nav class="event-pages-filter">
+  <nav class="event-pages-filter" aria-label="<%= t("event.category_filter") %>">
     <ul>
       <li class="all">
         <%= link_to t("event.filter_all"), "#", class: "clicked", "data-id" => "all" %>
       </li>
       <% @cur_node.st_categories.order_by(order: 1).each do |cate| %>
         <li class="<%= cate.basename %>">
-          <%= link_to cate.name, "#", "data-id" => cate.id %>
+          <%= link_to cate.name, "##{cate.id}", "data-id" => cate.id, role: "button" %>
         </li>
       <% end %>
     </ul>
   </nav>
 <% end %>
 
-<nav class="event-date">
+<nav class="event-date" aria-label="<%= t("event.calendar") %>">
   <h2 class="<%= event_h1_class @month %>"><%= "#{@year}#{t_date('year')}#{@month}#{t_date('month')}" %></h2>
   <% unless @cur_node.event_display.to_s.end_with?('only') %>
     <span class="list current">

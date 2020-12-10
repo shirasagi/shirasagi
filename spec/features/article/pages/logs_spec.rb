@@ -20,8 +20,6 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
 
     it do
       visit edit_path
-      addon = first("#addon-cms-agents-addons-file")
-      addon.find('.toggle-head').click if addon.matches_css?(".body-closed")
 
       within "#addon-cms-agents-addons-file" do
         click_on I18n.t("ss.buttons.upload")
@@ -29,19 +27,25 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
 
       wait_for_cbox do
         attach_file "item[in_files][]", "#{Rails.root}/spec/fixtures/ss/file/keyvisual.jpg"
-        click_button I18n.t("ss.buttons.attach")
-        wait_for_ajax
+        click_on I18n.t("ss.buttons.attach")
       end
-      click_button I18n.t("ss.buttons.publish_save")
+      within "#addon-cms-agents-addons-file" do
+        expect(page).to have_css(".file-view", text: "keyvisual.jpg")
+      end
+      click_on I18n.t("ss.buttons.publish_save")
+      wait_for_notice I18n.t("ss.notice.saved")
 
       visit logs_path
       expect(page).to have_css('.list-item', count: 3)
 
       visit edit_path
-      wait_for_ajax do
-        find(".action-delete").click
+      within "#addon-cms-agents-addons-file" do
+        page.accept_alert do
+          click_on I18n.t("ss.buttons.delete")
+        end
       end
-      click_button I18n.t("ss.buttons.publish_save")
+      click_on I18n.t("ss.buttons.publish_save")
+      wait_for_notice I18n.t("ss.notice.saved")
 
       visit logs_path
       expect(page).to have_css('.list-item', count: 5)
@@ -54,32 +58,34 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
     it do
       visit edit_path
 
-      addon = first("#addon-cms-agents-addons-file")
-      addon.find('.toggle-head').click if addon.matches_css?(".body-closed")
-
       within "#addon-cms-agents-addons-file" do
         click_on I18n.t("ss.buttons.upload")
       end
 
       wait_for_cbox do
         attach_file "item[in_files][]", "#{Rails.root}/spec/fixtures/ss/file/keyvisual.jpg"
-        click_button I18n.t("ss.buttons.attach")
-        wait_for_ajax
+        click_on I18n.t("ss.buttons.attach")
       end
-      click_button I18n.t("ss.buttons.publish_save")
+      within "#addon-cms-agents-addons-file" do
+        expect(page).to have_css(".file-view", text: "keyvisual.jpg")
+      end
+      click_on I18n.t("ss.buttons.publish_save")
+      wait_for_notice I18n.t("ss.notice.saved")
 
       visit edit_path
-      wait_for_ajax do
-        find(".action-attach").click
+      within "#addon-cms-agents-addons-file" do
+        click_on I18n.t("sns.file_attach")
       end
-      click_button I18n.t("ss.buttons.publish_save")
+      click_on I18n.t("ss.buttons.publish_save")
+      wait_for_notice I18n.t("ss.notice.saved")
 
       visit logs_path
       expect(page).to have_css('.list-item', count: 5)
 
       visit edit_path
       fill_in_ckeditor "item[html]", with: ""
-      click_button I18n.t("ss.buttons.publish_save")
+      click_on I18n.t("ss.buttons.publish_save")
+      wait_for_notice I18n.t("ss.notice.saved")
 
       visit logs_path
       expect(page).to have_css('.list-item', count: 7)
@@ -91,8 +97,6 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
 
     it do
       visit edit_path
-      addon = first("#addon-cms-agents-addons-file")
-      addon.find('.toggle-head').click if addon.matches_css?(".body-closed")
 
       within "#addon-cms-agents-addons-file" do
         click_on I18n.t("ss.buttons.upload")
@@ -100,28 +104,32 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
 
       wait_for_cbox do
         attach_file "item[in_files][]", "#{Rails.root}/spec/fixtures/ss/file/keyvisual.jpg"
-        click_button I18n.t("ss.buttons.attach")
-        wait_for_ajax
+        click_on I18n.t("ss.buttons.attach")
       end
-      click_button I18n.t("ss.buttons.publish_save")
+      within "#addon-cms-agents-addons-file" do
+        expect(page).to have_css(".file-view", text: "keyvisual.jpg")
+      end
+      click_on I18n.t("ss.buttons.publish_save")
+      wait_for_notice I18n.t("ss.notice.saved")
 
       visit edit_path
-      wait_for_ajax do
-        find(".action-thumb").click
+      within "#addon-cms-agents-addons-file" do
+        click_on I18n.t("sns.thumb_paste")
       end
-      click_button I18n.t("ss.buttons.publish_save")
+      click_on I18n.t("ss.buttons.publish_save")
 
       wait_for_cbox do
-        find(".save").click
-        wait_for_ajax
+        click_on I18n.t("ss.buttons.ignore_alert")
       end
+      wait_for_notice I18n.t("ss.notice.saved")
 
       visit logs_path
       expect(page).to have_css('.list-item', count: 6)
 
       visit edit_path
       fill_in_ckeditor "item[html]", with: ""
-      click_button I18n.t("ss.buttons.publish_save")
+      click_on I18n.t("ss.buttons.publish_save")
+      wait_for_notice I18n.t("ss.notice.saved")
 
       visit logs_path
       expect(page).to have_css('.list-item', count: 9)
@@ -149,17 +157,16 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
       wait_for_cbox do
         attach_file "item[in_files][]", "#{Rails.root}/spec/fixtures/ss/file/keyvisual.jpg"
         click_on I18n.t('ss.buttons.attach')
-        wait_for_ajax
       end
-      click_button I18n.t("ss.buttons.publish_save")
-
-      sleep 1
+      within ".column-value-cms-column-fileupload" do
+        expect(page).to have_css(".file-view", text: "keyvisual.jpg")
+      end
+      click_on I18n.t("ss.buttons.publish_save")
       wait_for_cbox do
-        find(".save").click
-        wait_for_ajax
+        click_on I18n.t("ss.buttons.ignore_alert")
       end
+      wait_for_notice I18n.t("ss.notice.saved")
 
-      sleep 1
       visit logs_path
       expect(page).to have_css('.list-item', count: 3)
     end
@@ -185,11 +192,13 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
       wait_for_cbox do
         attach_file "item[in_files][]", "#{Rails.root}/spec/fixtures/ss/file/keyvisual.jpg"
         click_on I18n.t('ss.buttons.attach')
-        wait_for_ajax
       end
-      click_button I18n.t("ss.buttons.publish_save")
+      within ".column-value-cms-column-free" do
+        expect(page).to have_css(".file-view", text: "keyvisual.jpg")
+      end
+      click_on I18n.t("ss.buttons.publish_save")
+      wait_for_notice I18n.t("ss.notice.saved")
 
-      sleep 1
       visit logs_path
       expect(page).to have_css('.list-item', count: 3)
     end
@@ -216,34 +225,35 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
       wait_for_cbox do
         attach_file "item[in_files][]", "#{Rails.root}/spec/fixtures/ss/file/keyvisual.jpg"
         click_on I18n.t('ss.buttons.attach')
-        wait_for_ajax
       end
-      click_button I18n.t("ss.buttons.publish_save")
+      within ".column-value-cms-column-free" do
+        expect(page).to have_css(".file-view", text: "keyvisual.jpg")
+      end
+      click_on I18n.t("ss.buttons.publish_save")
+      wait_for_notice I18n.t("ss.notice.saved")
 
-      sleep 1
       visit logs_path
       expect(page).to have_css('.list-item', count: 3)
 
       visit edit_path
-      wait_for_ajax do
-        find(".btn-file-thumb-paste").click
+      within ".column-value-cms-column-free" do
+        click_on I18n.t("sns.thumb_paste")
       end
-      click_button I18n.t("ss.buttons.publish_save")
+      click_on I18n.t("ss.buttons.publish_save")
 
       wait_for_cbox do
-        find(".save").click
-        wait_for_ajax
+        click_on I18n.t("ss.buttons.ignore_alert")
       end
+      wait_for_notice I18n.t("ss.notice.saved")
 
-      sleep 1
       visit logs_path
       expect(page).to have_css('.list-item', count: 6)
 
       visit edit_path
       fill_in_ckeditor "item[column_values][][in_wrap][value]", with: ""
-      click_button I18n.t("ss.buttons.publish_save")
+      click_on I18n.t("ss.buttons.publish_save")
+      wait_for_notice I18n.t("ss.notice.saved")
 
-      sleep 1
       visit logs_path
       expect(page).to have_css('.list-item', count: 9)
     end

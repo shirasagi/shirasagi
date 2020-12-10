@@ -2,6 +2,7 @@ module Cms::Model::Node
   extend ActiveSupport::Concern
   extend SS::Translation
   include Cms::Content
+  include Cms::RedirectPage
   include Cms::Reference::Layout
   include Cms::Reference::PageLayout
   include Cms::Reference::StCategory
@@ -93,6 +94,10 @@ module Cms::Model::Node
 
   def preview_path
     site.subdir ? "#{site.subdir}/#{filename}/" : "#{filename}/"
+  end
+
+  def mobile_preview_path
+    ::File.join((site.subdir ? site.subdir : ""), site.mobile_location, filename, "/")
   end
 
   def parents

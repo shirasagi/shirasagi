@@ -1,4 +1,4 @@
-this.Gws_Schedule_View = (function () {
+this.Gws_Schedule_View = (function ($) {
   function Gws_Schedule_View() {
   }
 
@@ -25,7 +25,7 @@ this.Gws_Schedule_View = (function () {
   // Schedule tabs
 
   Gws_Schedule_View.renderTabs = function (selector) {
-    return $(selector).find('a').click(function () {
+    return $(selector).find('a').on("click", function () {
       var date, url;
       date = Gws_Schedule_View.getCalendarDate();
       if (!date) {
@@ -40,7 +40,7 @@ this.Gws_Schedule_View = (function () {
   // 4 months calendars
 
   Gws_Schedule_View.renderSideCalendars = function (selector) {
-    return $(selector).find('.fc-toolbar h2').click(function () {
+    return $(selector).find('.fc-toolbar h2').on("click", function () {
       var date, name;
       name = "gws-schedule-tool-calendars";
       date = Gws_Schedule_View.getCalendarDate();
@@ -88,19 +88,19 @@ this.Gws_Schedule_View = (function () {
     }
     $("." + name).find(".xdsoft_month, .xdsoft_year").unbind('mousedown').find("i").remove();
     $("." + name + " .xdsoft_datetimepicker").not(".controller.controller").find(".xdsoft_prev, .xdsoft_next").hide();
-    $("." + name + " .controller .xdsoft_prev").mousedown(function () {
+    $("." + name + " .controller .xdsoft_prev").on("mousedown", function () {
       var k, results;
       results = [];
       for (i = k = 1; k <= 4; i = ++k) {
-        results.push($("." + name + " .xdsoft_prev").not(this).mousedown().mouseup());
+        results.push($("." + name + " .xdsoft_prev").not(this).trigger("mousedown").trigger("mouseup"));
       }
       return results;
     });
-    return $("." + name + " .controller .xdsoft_next").mousedown(function () {
+    return $("." + name + " .controller .xdsoft_next").on("mousedown", function () {
       var k, results;
       results = [];
       for (i = k = 1; k <= 4; i = ++k) {
-        results.push($("." + name + " .xdsoft_next").not(this).mousedown().mouseup());
+        results.push($("." + name + " .xdsoft_next").not(this).trigger("mousedown").trigger("mouseup"));
       }
       return results;
     });
@@ -108,5 +108,4 @@ this.Gws_Schedule_View = (function () {
 
   return Gws_Schedule_View;
 
-})();
-
+})($jQuery1);

@@ -1,10 +1,19 @@
 <dl class="see mod-inquiry-reply">
   <dt><%= @model.t :reply_state %></dt>
   <dd><%= @item.label :reply_state %></dd>
+
   <dt><%= @model.t :reply_subject %></dt>
-  <dd><%= @item.send :reply_subject %></dd>
+  <dd><%= @item.reply_subject %></dd>
+
   <dt><%= @model.t :reply_upper_text %></dt>
-  <dd><%=br @item.send :reply_upper_text %></dd>
+  <dd><%= br @item.reply_upper_text %></dd>
+
+  <dt><%= @model.t :reply_content_state %></dt>
+  <dd><%= @item.label :reply_content_state %></dd>
+
+  <dt><%= @model.t :reply_content_static %></dt>
+  <dd><%= br @item.reply_content_static %></dd>
+
   <dt><%= @model.t :reply_lower_text %></dt>
-  <dd><%=br @item.send :reply_lower_text %></dd>
+  <dd><%= br @item.reply_lower_text %></dd>
 </dl>

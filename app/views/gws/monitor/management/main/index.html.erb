@@ -39,7 +39,7 @@
   </span>
   <% end %>
   <span class="article-state"><%= item.label(:article_state) %></span>
-  <span class="user"><%= item.contributor_name.presence || item.user_long_name %></span>
+  <span class="user"><%= gws_public_user_long_name(item.contributor_name.presence || item.user_long_name) %></span>
   <span class="categories">
     <% item.categories.compact.each do |category| %>
       <%= link_to(category.trailing_name, { category: category.id }, class: "gws-category-label", style: category_label_css(category)) %>

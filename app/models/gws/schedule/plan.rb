@@ -78,11 +78,12 @@ class Gws::Schedule::Plan
   def subscribed_users
     return Gws::User.none if new_record?
 
-    ids = member_ids
-    ids += Gws::CustomGroup.in(id: member_custom_group_ids).pluck(:member_ids).flatten
-    ids += try(:facility_approver_ids) || []
-    ids.uniq!
-    Gws::User.in(id: ids)
+    user_ids = overall_member_ids
+    if respond_to?(:facility_approver_ids)
+      facility_approver_ids.try { |ids| user_ids += ids }
+    end
+
+    Gws::User.in(id: user_ids)
   end
 
   def readable?(user, opts = {})

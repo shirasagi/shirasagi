@@ -62,6 +62,7 @@ class Gws::Schedule::PlanCsv::Exporter
   def draw_basic(drawer)
     drawer.column :id
     drawer.column :name
+    drawer.column :allday, type: :label
     drawer.column :start_at do
       drawer.body do |item|
         if item.allday?
@@ -80,7 +81,6 @@ class Gws::Schedule::PlanCsv::Exporter
         end
       end
     end
-    drawer.column :allday, type: :label
     drawer.column :category_id do
       drawer.body do |item|
         criteria = Gws::Schedule::Category.all

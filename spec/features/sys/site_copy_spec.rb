@@ -32,24 +32,22 @@ describe 'sys_site_copy', type: :feature, dbscope: :example do
         check 'item_copy_contents_editor_templates'
         check 'item_copy_contents_dictionaries'
 
-        click_on 'サイトを選択する'
+        click_on I18n.t("sys.apis.sites.index")
       end
 
       within 'table.sys-copy' do
-        choose "radio-#{site.id}"
-      end
-      within 'div.sys-copy' do
-        click_on 'サイトを設定する'
+        click_on site.name
       end
 
       within '#item-form' do
-        click_on '確認'
+        expect(page).to have_css(".ajax-selected", text: site.name)
+        click_on I18n.t("ss.buttons.confirm")
       end
 
-      click_on '実行'
+      click_on I18n.t("ss.buttons.run")
 
       expect(current_path).to eq index_path
-      expect(page).to have_css('#notice .wrap', text: 'サイト複製を開始しました。', wait: 60)
+      expect(page).to have_css('#notice .wrap', text: I18n.t("sys.site_copy/started_job"), wait: 60)
 
       expect(Sys::SiteCopyTask.count).to eq 1
       Sys::SiteCopyTask.first.tap do |task|

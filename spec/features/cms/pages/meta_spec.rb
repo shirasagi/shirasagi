@@ -18,6 +18,7 @@ describe "cms/pages", type: :feature, dbscope: :example, js: true do
         fill_in_ckeditor "item[html]", with: "<p>sample</p>"
         click_button I18n.t('ss.buttons.publish_save')
       end
+      wait_for_notice I18n.t("ss.notice.saved")
 
       item = Cms::Page.last
       expect(item.name).to eq "sample"
@@ -41,6 +42,7 @@ describe "cms/pages", type: :feature, dbscope: :example, js: true do
           check category.name
           click_button I18n.t('ss.buttons.publish_save')
         end
+        wait_for_notice I18n.t("ss.notice.saved")
 
         item = Cms::Page.last
         expect(item.name).to eq "sample"

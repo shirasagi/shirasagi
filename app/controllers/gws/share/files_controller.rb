@@ -4,12 +4,15 @@ class Gws::Share::FilesController < ApplicationController
   include Gws::FileFilter
 
   model Gws::Share::File
+
   before_action :set_item, only: [:show, :edit, :update, :delete, :destroy, :delete, :lock, :unlock, :disable]
   before_action :set_selected_items, only: [:disable_all, :download_all]
   before_action :set_categories, only: [:index]
   before_action :set_category
   before_action :set_folder
   before_action :set_tree_navi, only: [:index]
+  before_action :set_default_readable_setting, only: [:new]
+
   after_action :update_folder_file_info, only: [:create, :update]
 
   navi_view "gws/share/main/navi"
@@ -54,9 +57,17 @@ class Gws::Share::FilesController < ApplicationController
     { cur_user: @cur_user, cur_site: @cur_site }
   end
 
+  def set_default_readable_setting
+    @default_readable_setting = proc do
+      @item.readable_setting_range = "select"
+      @item.readable_group_ids = [ @cur_group.id ]
+      @item.readable_member_ids = [ @cur_user.id ]
+      @item.readable_custom_group_ids = []
+    end
+  end
+
   def pre_params
     p = super
-    p[:readable_member_ids] = [@cur_user.id]
     p[:folder_id] = params[:folder] if params[:folder]
     p[:category_ids] = [@category.id] if @category.present?
     p

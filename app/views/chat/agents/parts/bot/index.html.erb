@@ -1,3 +1,5 @@
+<% return if @chat_node.blank? %>
+
 <div id="chat-<%= @cur_part.id %>" class="chat-part">
   <%= jquery do %>
     var bot = new Chat_Bot("chat-<%= @cur_part.id %>", "<%= @preview ? cms_preview_path(@cur_site, path: File.join(@chat_node.filename, 'index.json')) : File.join(@chat_node.url, 'index.json') %>");

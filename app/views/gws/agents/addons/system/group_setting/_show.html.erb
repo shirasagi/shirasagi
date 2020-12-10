@@ -11,7 +11,7 @@
   <dd><%= @item.sender_email %></dd>
 
   <dt><%= @model.t :sender_user_id %></dt>
-  <dd><%= @item.sender_user.try(:long_name) %></dd>
+  <dd><%= gws_public_user_long_name(@item.sender_user.try(:long_name)) %></dd>
 
   <dt><%= @model.t :mail_signature %></dt>
   <dd><%= br @item.mail_signature %></dd>

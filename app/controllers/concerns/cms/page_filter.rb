@@ -39,7 +39,7 @@ module Cms::PageFilter
   def set_items
     @items = @model.site(@cur_site).node(@cur_node)
       .allow(:read, @cur_user)
-      .order_by(updated: -1)
+      .custom_order(params.dig(:s, :sort) || 'updated_desc')
   end
 
   def set_contains_urls_items

@@ -15,6 +15,9 @@ function Gws_Portal(selector, settings) {
     options['resize'] = { enabled: false };
     options['draggable'] = { enabled: false, handle: 'disable' };
   }
+  if (settings && settings['max_rows']) {
+    options['max_rows'] = settings['max_rows'];
+  }
 
   this.el = $(selector);
   this.gs = this.el.find("ul.portlets").gridster(options).data('gridster');
@@ -64,14 +67,14 @@ Gws_Portal.prototype.autoResizeItem = function(widget, height) {
 Gws_Portal.prototype.setSerializeEvent = function(selector) {
   var _this = this;
   _this.updateUrl = $(selector).data('href');
-  $(selector).click(function() {
+  $(selector).on("click", function() {
     _this.serialize();
   });
 };
 
 Gws_Portal.prototype.setResetEvent = function(selector) {
   var _this = this;
-  $(selector).click(function() {
+  $(selector).on("click", function() {
     var list = [];
     _this.el.find(".portlet-item").each(function(index) {
       list.push($(this).clone());

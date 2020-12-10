@@ -10,8 +10,8 @@ module Gws::Addon::System::GroupSetting
     field :sendmail_domains, type: SS::Extensions::Words
     field :canonical_scheme, type: String, default: 'http'
     field :canonical_domain, type: String
-    field :trash_threshold, type: Integer, default: 14
-    field :trash_threshold_unit, type: String, default: 'day'
+    field :trash_threshold, type: Integer, default: 1
+    field :trash_threshold_unit, type: String, default: 'year'
 
     permit_params :sendmail_domains, allow_email_domains: []
     permit_params :canonical_scheme, :canonical_domain, :trash_threshold, :trash_threshold_unit

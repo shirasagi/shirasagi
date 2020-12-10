@@ -45,6 +45,15 @@ class Recommend::History::Log
       # Recommend::Part::Base.site(site).present?
     end
 
+    def exclude_paths(paths)
+      return all if paths.blank?
+
+      paths = paths.select(&:present?)
+      return all if paths.blank?
+
+      all.where(path: { "$nin" => paths })
+    end
+
     def to_config(opts = {})
       h = { recommend: {} }
       site = opts[:site]

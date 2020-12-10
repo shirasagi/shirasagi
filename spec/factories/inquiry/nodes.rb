@@ -15,4 +15,11 @@ FactoryBot.define do
     reply_upper_text '以下の内容でお問い合わせを受け付けま した。'
     reply_lower_text '以上。'
   end
+
+  factory :inquiry_node_node, class: Inquiry::Node::Node, traits: [:cms_node] do
+    cur_site { cms_site }
+    route "inquiry/node"
+    upper_html "上部HTML"
+    lower_html "下部HTML"
+  end
 end

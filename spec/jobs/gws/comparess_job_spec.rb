@@ -15,16 +15,20 @@ describe Gws::CompressJob, dbscope: :example do
   let(:physical_filepath) { "#{SS::DownloadJobFile.root}/#{id_path}/#{zip.filename}" }
 
   before do
+    ActionMailer::Base.deliveries.clear
+
     Gws::CompressJob.bind(site_id: site, user_id: user).perform_now(zip.serialize)
 
     expect(Job::Log.count).to eq 1
     Job::Log.first.tap do |log|
-      expect(log.logs).to include(include("INFO -- : Started Job"))
-      expect(log.logs).to include(include("INFO -- : Completed Job"))
+      expect(log.logs).to include(/INFO -- : .* Started Job/)
+      expect(log.logs).to include(/INFO -- : .* Completed Job/)
     end
 
     # no mails are sent
     expect(ActionMailer::Base.deliveries.length).to eq 0
+
+    ActionMailer::Base.deliveries.clear
   end
 
   it do

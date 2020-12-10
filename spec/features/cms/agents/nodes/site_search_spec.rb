@@ -5,7 +5,8 @@ describe 'cms_agents_nodes_site_search', type: :feature, dbscope: :example, js: 
   let(:node) { create :article_node_page, cur_site: site }
   let(:layout) { create_cms_layout }
   let!(:site_search_node) { create :cms_node_site_search, cur_site: site, cur_node: node, layout_id: layout.id }
-  let(:name) { unique_id.to_s }
+  let(:name1) { unique_id.to_s }
+  let(:name2) { unique_id.to_s }
   let(:requests) { [] }
 
   before do
@@ -15,18 +16,33 @@ describe 'cms_agents_nodes_site_search', type: :feature, dbscope: :example, js: 
         body: {
           took: 20,
           hits: {
-            total: 1,
-            hits: [{
-              _index: "#{site.id}",
-              _type: 'cms_pages',
-              _id: "post-1",
-              _source: {
-                name: name,
-                url: "http://example.jp/#{name}",
-                updated: Time.zone.now,
-                released: Time.zone.now
+            total: 2,
+            hits: [
+              {
+                _index: "#{site.id}",
+                _type: 'cms_pages',
+                _id: "post-1",
+                _source: {
+                  name: name1,
+                  url: "http://example.jp/#{name1}",
+                  created: Time.zone.now,
+                  updated: Time.zone.now,
+                  released: Time.zone.now
+                }
+              },
+              {
+                _index: "#{site.id}",
+                _type: 'cms_pages',
+                _id: "post-2",
+                _source: {
+                  name: name2,
+                  url: "http://example.jp/#{name2}",
+                  created: Time.zone.now,
+                  updated: Time.zone.now,
+                  released: nil
+                }
               }
-            }]
+            ]
           }
         }.to_json,
         status: 200,
@@ -46,7 +62,8 @@ describe 'cms_agents_nodes_site_search', type: :feature, dbscope: :example, js: 
 
       within '.search-result' do
         expect(page).to have_css('.search-stats')
-        expect(page).to have_css('.pages .title', text: name)
+        expect(page).to have_css('.pages .title', text: name1)
+        expect(page).to have_css('.pages .title', text: name2)
       end
     end
   end

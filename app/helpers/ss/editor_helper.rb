@@ -40,25 +40,25 @@ module SS::EditorHelper
     end
   end
 
-  def html_editor(elem, opts = {})
+  def html_editor(elem, editor_opts = {}, js_opts = {})
     case SS.config.cms.html_editor
     when "ckeditor"
-      html_editor_ckeditor(elem, opts)
+      html_editor_ckeditor(elem, editor_opts, js_opts)
     when "tinymce"
-      html_editor_tinymce(elem, opts)
+      html_editor_tinymce(elem, editor_opts, js_opts)
     when "markdown"
-      html_editor_markdown(elem, opts)
+      html_editor_markdown(elem, editor_opts, js_opts)
     end
   end
 
-  def html_editor_js(elem, opts = {})
+  def html_editor_js(elem, editor_opts = {}, js_opts = {})
     case SS.config.cms.html_editor
     when "ckeditor"
-      html_editor_ckeditor_js(elem, opts)
+      html_editor_ckeditor_js(elem, editor_opts, js_opts)
     when "tinymce"
-      html_editor_tinymce_js(elem, opts)
+      html_editor_tinymce_js(elem, editor_opts, js_opts)
     when "markdown"
-      html_editor_markdown_js(elem, opts)
+      html_editor_markdown_js(elem, editor_opts, js_opts)
     end
   end
 
@@ -111,22 +111,22 @@ module SS::EditorHelper
     opts
   end
 
-  def html_editor_ckeditor(elem, opts = {})
+  def html_editor_ckeditor(elem, editor_opts = {}, js_opts = {})
     jquery do
-      html_editor_ckeditor_js(elem, opts)
+      html_editor_ckeditor_js(elem, editor_opts, js_opts)
     end
   end
 
-  def html_editor_ckeditor_js(elem, opts = {})
+  def html_editor_ckeditor_js(elem, editor_opts = {}, js_opts = {})
     SS.config.cms.ckeditor.fetch('stylesheets', []).each do |ss|
       controller.stylesheet ss
     end
     SS.config.cms.ckeditor.fetch('javascripts', []).each do |js|
       controller.javascript js
     end
-    opts = ckeditor_editor_options(opts)
+    editor_opts = ckeditor_editor_options(editor_opts)
 
-    "Cms_Editor_CKEditor.render('#{elem}', #{opts.to_json});".html_safe
+    "Cms_Editor_CKEditor.render('#{elem}', #{editor_opts.to_json}, #{js_opts.to_json});".html_safe
   end
 
   def tinymce_editor_options(opts = {})
@@ -152,20 +152,20 @@ module SS::EditorHelper
     opts
   end
 
-  def html_editor_tinymce(elem, opts = {})
+  def html_editor_tinymce(elem, editor_opts = {}, js_opts = {})
     jquery do
-      html_editor_tinymce_js(elem, opts)
+      html_editor_tinymce_js(elem, editor_opts, js_opts)
     end
   end
 
-  def html_editor_tinymce_js(elem, opts = {})
+  def html_editor_tinymce_js(elem, editor_opts = {}, js_opts = {})
     controller.javascript "/assets/js/tinymce/tinymce.min.js"
-    editor_opts = tinymce_editor_options(opts)
+    editor_opts = tinymce_editor_options(editor_opts)
 
-    "Cms_Editor_TinyMCE.render('#{elem}', #{editor_opts.to_json});".html_safe
+    "Cms_Editor_TinyMCE.render('#{elem}', #{editor_opts.to_json}, #{js_opts.to_json});".html_safe
   end
 
-  def html_editor_markdown(elem, opts = {})
+  def html_editor_markdown(elem, editor_opts = {}, js_opts = {})
   end
   alias html_editor_markdown_js html_editor_markdown
 

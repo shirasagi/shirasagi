@@ -1,4 +1,4 @@
-this.Gws_Schedule_Calendar = (function () {
+this.Gws_Schedule_Calendar = (function ($) {
   function Gws_Schedule_Calendar() {
   }
 
@@ -53,7 +53,7 @@ this.Gws_Schedule_Calendar = (function () {
       var data, wrap;
       wrap = $(this);
       data = $(this).find('.calendar-text-popup').prop('outerHTML');
-      return wrap.find('.calendar-text-link').click(function () {
+      return wrap.find('.calendar-text-link').on("click", function () {
         Gws_Popup.render($(this), $(data).show());
         return false;
       });
@@ -203,7 +203,7 @@ this.Gws_Schedule_Calendar = (function () {
           } else {
             $(".tap-menu").css("top", event.pageY - 5).css("left", event.pageX - 5).show();
           }
-          $(".tap-menu a").click(function () {
+          $(".tap-menu a").on("click", function () {
             var cal;
             if ($(this).data('view')) {
               cal = view.calendar.getCalendar();
@@ -213,7 +213,7 @@ this.Gws_Schedule_Calendar = (function () {
               return false;
             }
           });
-          return $(".tap-menu").mouseleave(function () {
+          return $(".tap-menu").on("mouseleave", function () {
             return $(".tap-menu").remove();
           });
         }
@@ -312,7 +312,7 @@ this.Gws_Schedule_Calendar = (function () {
   };
 
   Gws_Schedule_Calendar.overrideAddLink = function (selector) {
-    return $('.add-plan').click(function (ev) {
+    return $('.add-plan').on("click", function (ev) {
       var date, href, now, start, state, view;
       now = new Date;
       date = $(selector).fullCalendar('getDate');
@@ -341,5 +341,4 @@ this.Gws_Schedule_Calendar = (function () {
 
   return Gws_Schedule_Calendar;
 
-})();
-
+})($jQuery1);

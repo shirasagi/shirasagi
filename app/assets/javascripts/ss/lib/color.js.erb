@@ -10,7 +10,7 @@ this.SS_Color = (function () {
       if (sel.data('clear')) {
         btn = $("<input type='button' class='btn' value='<%= I18n.t('ss.buttons.clear') %>' />").uniqueId();
         $(sel).after(btn).after(' ');
-        return $('#' + btn.attr('id')).click(function () {
+        return $('#' + btn.attr('id')).on("click", function () {
           return $(sel).minicolors('value', {
             color: 'transparent'
           });

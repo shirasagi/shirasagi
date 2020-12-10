@@ -16,7 +16,6 @@ class Gws::Monitor::Topic
 
   field :answer_state_hash, type: Hash
   field :article_state, type: String, default: 'open'
-  field :deleted, type: DateTime
 
   field :notice_state, type: String
   field :notice_at, type: DateTime
@@ -26,7 +25,6 @@ class Gws::Monitor::Topic
   before_validation :set_answer_state_hash
   before_validation :set_notice_at
 
-  validates :deleted, datetime: true
   validates :article_state, inclusion: { in: %w(open closed) }
 
   # indexing to elasticsearch via companion object

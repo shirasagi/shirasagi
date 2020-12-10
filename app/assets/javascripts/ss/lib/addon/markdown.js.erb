@@ -30,7 +30,7 @@ this.SS_Addon_Markdown = (function () {
     $("." + this.toolbar).append("<span class='" + this.options + "'></span>");
     $("." + this.container).append("<div class='" + this.preview + " markdown-body'>preview</div>");
     this.renderForm($("." + this.type).val());
-    return $("." + this.type).change(function () {
+    return $("." + this.type).on("change", function () {
       return SS_Addon_Markdown.renderForm($(this).val());
     });
   };

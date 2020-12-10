@@ -3,6 +3,20 @@ module SS
     module Hooks
       def self.extended(obj)
         obj.after(:example) do
+          warnings = jquery_migrate_warnings
+          if warnings.present?
+            puts
+            "[JQMIGRATE] #{self.inspect}".try do |msg|
+              Rails.logger.warn msg
+              puts msg
+            end
+            warnings.each do |warning|
+              "[JQMIGRATE][WARNING] #{warning}".try do |msg|
+                Rails.logger.warn msg
+                puts msg
+              end
+            end
+          end
           wait_for_page_load
           wait_for_ajax
         end
@@ -123,6 +137,39 @@ module SS
       page.save_screenshot(filename, full: true)
       puts "screenshot: #{filename}"
     rescue
+    end
+
+    def jquery_migrate_warnings
+      page.evaluate_script("jQuery.migrateWarnings") rescue nil
+    end
+
+    def jquery_migrate_reset
+      page.execute_script("jQuery.migrateReset();")
+    end
+
+    def capture_console_logs
+      page.driver.browser.manage.logs.get(:browser).collect(&:message)
+    rescue => _e
+    end
+
+    def puts_console_logs
+      logs = capture_console_logs
+      return if logs.blank?
+
+      puts
+      puts "==== console.log (#{caller(1, 1).try(:first)}) ===="
+      puts logs
+      puts
+    end
+
+    def enable_js_debug
+      page.execute_script("SS.debug = true;")
+    rescue => _e
+    end
+
+    def disable_js_debug
+      page.execute_script("SS.debug = false;")
+    rescue => _e
     end
   end
 end

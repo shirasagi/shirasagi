@@ -70,7 +70,7 @@
 
   <%= render "ss/crud/addon", addon: { head: t("gws/discussion.members"), toggle: true } do %>
     <% @forum.overall_members.each do |member| %>
-      <p><%= member.long_name %></p>
+      <p><%= gws_public_user_long_name(member.long_name) %></p>
     <% end %>
   <% end %>
 

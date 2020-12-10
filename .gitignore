@@ -4,6 +4,7 @@
 /.bundle
 /.project
 /.ruby-version
+/.vscode
 
 /config/*.yml
 /config/after_initializers

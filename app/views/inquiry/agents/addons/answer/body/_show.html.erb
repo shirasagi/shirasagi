@@ -4,7 +4,7 @@
     <% if data.column && data.column.input_type =~ /upload_file/ %>
       <dd><%= link_to data.value, inquiry_path(params[:site], params[:cid], params[:id], data.values[0]) %></dd>
     <% else %>
-      <dd><%= br data.value %></dd>
+      <dd><%= br sanitize(data.value, tags: []) %></dd>
     <% end %>
   <% end %>
 

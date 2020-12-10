@@ -63,6 +63,9 @@ module Article::Export
         drawer.body { |item| item.form.try(:name) }
       end
       drawer.column :order
+      if respond_to?(:redirect_link_enabled?) && redirect_link_enabled?
+        drawer.column :redirect_link
+      end
     end
 
     def draw_meta(drawer)
@@ -74,7 +77,10 @@ module Article::Export
     def draw_body(drawer)
       drawer.column :html
       drawer.column :body_part do
-        drawer.body { |item| item.body_parts.map { |body| body.gsub("\t", '    ') }.join("\t") }
+        drawer.body do |item|
+          next if item.body_parts.blank?
+          item.body_parts.map { |body| body.to_s.gsub("\t", '    ') }.join("\t")
+        end
       end
     end
 

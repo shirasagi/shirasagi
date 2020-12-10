@@ -22,8 +22,8 @@ describe Cms::Role::ImportJob, dbscope: :example do
   it ".perform_now" do
     expect(Job::Log.count).to eq 1
     Job::Log.first.tap do |log|
-      expect(log.logs).to include(include('INFO -- : Started Job'))
-      expect(log.logs).to include(include('INFO -- : Completed Job'))
+      expect(log.logs).to include(/INFO -- : .* Started Job/)
+      expect(log.logs).to include(/INFO -- : .* Completed Job/)
 
       expect(Cms::Role.find(role1.id).permissions.present?).to be_truthy
       expect(Cms::Role.find(role2.id).permissions.present?).to be_truthy

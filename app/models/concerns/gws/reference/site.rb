@@ -10,8 +10,13 @@ module Gws::Reference
 
       validates :site_id, presence: true
       before_validation :set_site_id, if: ->{ @cur_site }
+    end
 
-      scope :site, ->(site) { where( site_id: site.id ) }
+    module ClassMethods
+      # define scope by class method instead of scope to be able to override by subclass
+      def site(site)
+        where( site_id: site.id )
+      end
     end
 
     private

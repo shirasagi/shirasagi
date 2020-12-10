@@ -16,6 +16,7 @@ module SS::CapybaraSupport
       options.add_preference('download.prompt_for_download', false)
       options.add_preference('download.default_directory', SS::DownloadHelpers.path)
       options.add_argument('window-size=1280,800')
+      options.add_argument('log-level=0')
       if headless != '0'
         options.add_argument('headless')
         options.add_argument('disable-gpu')
@@ -24,7 +25,9 @@ module SS::CapybaraSupport
         end
       end
 
-      Capybara::Selenium::Driver.new(app, browser: :chrome, options: options)
+      caps = Selenium::WebDriver::Remote::Capabilities.chrome("goog:loggingPrefs" => { browser: "ALL" })
+
+      Capybara::Selenium::Driver.new(app, browser: :chrome, options: options, desired_capabilities: caps)
     end
     Capybara.javascript_driver = :chrome
 

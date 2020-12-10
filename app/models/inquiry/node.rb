@@ -40,34 +40,17 @@ module Inquiry::Node
   class Node
     include Cms::Model::Node
     include Cms::Addon::NodeSetting
-    include Cms::Addon::ForMemberNode
-    include Cms::Addon::Release
     include Cms::Addon::Meta
     include Cms::Addon::NodeList
+    include Cms::Addon::ForMemberNode
+    include Cms::Addon::Release
     include Cms::Addon::GroupPermission
     include History::Addon::Backup
 
     default_scope ->{ where(route: "inquiry/node") }
 
-    def condition_hash
-      cond = []
-      cond << { filename: /^#{::Regexp.escape(filename)}\//, depth: depth + 1 }
-
-      conditions.each do |url|
-        # regex
-        if /\/\*$/.match?(url)
-          filename = url.sub(/\/\*$/, "")
-          cond << { filename: /^#{::Regexp.escape(filename)}\// }
-          next
-        end
-
-        node = Cms::Node.site(cur_site || site).filename(url).first rescue nil
-        next unless node
-
-        cond << { filename: node.filename }
-      end
-
-      { '$or' => cond }
+    def condition_hash(options = {})
+      super(options.reverse_merge(category: false))
     end
   end
 end

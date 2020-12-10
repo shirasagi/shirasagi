@@ -93,7 +93,7 @@ describe "gws_board_topics", type: :feature, dbscope: :example, js: true do
         expect(notice.text).to be_blank
         expect(notice.html).to be_blank
         expect(notice.format).to eq "text"
-        expect(notice.seen).to be_blank
+        expect(notice.user_settings).to be_blank
         expect(notice.state).to eq "public"
         expect(notice.send_date).to be_present
         expect(notice.url).to eq "/.g#{site.id}/board/-/-/topics/#{item.id}"

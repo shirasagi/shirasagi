@@ -10,7 +10,7 @@
     <div class="usage " style="width: <%= item.achievement_rate || 0 %>%"></div>
   </span>
   <% if params[:controller].end_with?("/manageables") %>
-    <span class="members"><%= truncate(item.sorted_overall_members.limit(3).map(&:long_name).join(", ")) %></span>
+    <span class="members"><%= truncate(gws_public_user_long_names(item.sorted_overall_members.limit(3).map(&:long_name)).join(", ")) %></span>
   <% end %>
   <span class="categories">
     <% item.categories.compact.each do |category| %>

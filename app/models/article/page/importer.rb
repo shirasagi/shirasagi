@@ -122,6 +122,7 @@ class Article::Page::Importer
       item.body_layout = value.present? ? Cms::BodyLayout.site(site).where(name: value).first : nil
     end
     importer.simple_column :order
+    importer.simple_column :redirect_link
     importer.simple_column :form_id do |row, item, head, value|
       item.form = value.present? ? node.st_forms.where(name: value).first : nil
     end

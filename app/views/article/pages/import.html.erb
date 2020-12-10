@@ -32,7 +32,7 @@ timer = setInterval(reload, 10000);
   <header><h2><%= t("ss.import") %></h2></header>
   <div class="main-body">
     <dl class="see">
-      <dt><%= t("ss.file") %></dt>
+      <dt><%= t("ss.file") %><%= tt('cms/csv_import_base.file') %></dt>
       <dd><%= f.file_field :file %></dd>
     </dl>
   </div>

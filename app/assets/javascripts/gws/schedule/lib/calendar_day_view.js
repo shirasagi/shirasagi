@@ -1,4 +1,4 @@
-(function() {
+(function($) {
   var FC = $.fullCalendar;
 
   var renderTitle = function(event) {
@@ -98,4 +98,4 @@
   //   },
   //   duration: { days: 1 }
   // };
-})();
+})($jQuery1);

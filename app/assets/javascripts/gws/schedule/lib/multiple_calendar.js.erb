@@ -1,4 +1,4 @@
-this.Gws_Schedule_Multiple_Calendar = (function () {
+this.Gws_Schedule_Multiple_Calendar = (function ($) {
   function Gws_Schedule_Multiple_Calendar() {
   }
 
@@ -114,29 +114,29 @@ this.Gws_Schedule_Multiple_Calendar = (function () {
     Gws_Schedule_Calendar.renderInitialize(selector, init);
     Gws_Schedule_Calendar.overrideAddLink(selector);
     controller = $(selector);
-    controller.find('.fc-today-button').click(function () {
-      return $('.calendar.multiple .fc-today-button').click();
+    controller.find('.fc-today-button').on("click", function () {
+      return $('.calendar.multiple .fc-today-button').trigger("click");
     });
-    controller.find('.fc-prev-button').click(function () {
-      return $('.calendar.multiple .fc-prev-button').click();
+    controller.find('.fc-prev-button').on("click", function () {
+      return $('.calendar.multiple .fc-prev-button').trigger("click");
     });
-    controller.find('.fc-next-button').click(function () {
-      return $('.calendar.multiple .fc-next-button').click();
+    controller.find('.fc-next-button').on("click", function () {
+      return $('.calendar.multiple .fc-next-button').trigger("click");
     });
-    controller.find('.fc-basicWeek-button').click(function () {
-      return $('.calendar.multiple .fc-basicWeek-button').click();
+    controller.find('.fc-basicWeek-button').on("click", function () {
+      return $('.calendar.multiple .fc-basicWeek-button').trigger("click");
     });
-    controller.find('.fc-timelineDay-button').click(function () {
-      return $('.calendar.multiple .fc-timelineDay-button').click();
+    controller.find('.fc-timelineDay-button').on("click", function () {
+      return $('.calendar.multiple .fc-timelineDay-button').trigger("click");
     });
-    controller.find('.fc-basicHour-button').click(function () {
-      return $('.calendar.multiple .fc-basicHour-button').click();
+    controller.find('.fc-basicHour-button').on("click", function () {
+      return $('.calendar.multiple .fc-basicHour-button').trigger("click");
     });
-    controller.find('.fc-reload-button').click(function () {
-      return $('.calendar.multiple .fc-reload-button').click();
+    controller.find('.fc-reload-button').on("click", function () {
+      return $('.calendar.multiple .fc-reload-button').trigger("click");
     });
   };
 
   return Gws_Schedule_Multiple_Calendar;
 
-})();
+})($jQuery1);

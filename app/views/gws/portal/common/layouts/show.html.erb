@@ -1,5 +1,5 @@
 <%= jquery do %>
-  var portal = new Gws_Portal(".gws-portlets");
+  var portal = new Gws_Portal(".gws-portlets", { max_rows: <%= SS.config.gws.portal.dig("portlet_settings", "max_rows") || 15 %> });
   portal.setSerializeEvent('.gws-portlets-serialize');
   portal.setResetEvent('.gws-portlets-reset');
   portal.addItems(<%== @items.to_json %>);

@@ -6,12 +6,7 @@ module Recommend::ListHelper
     h = []
     h << cur_item.upper_html.html_safe if cur_item.upper_html.present?
 
-    if cur_item.exclude_paths.present?
-      display_list = cur_item.exclude_paths.to_a
-    else
-      display_list = []
-    end
-
+    display_list = []
     displayed = 0
     @items.each do |item|
       next if display_list.index(item.path)

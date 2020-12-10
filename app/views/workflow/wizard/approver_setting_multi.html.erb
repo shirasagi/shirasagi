@@ -90,7 +90,11 @@
   <dd>
     <div class="buttons">
       <%= button_tag t("workflow.buttons.request"), { updatetype: :request, class: "update-item btn-primary" } %>
-      <%= button_tag t("workflow.buttons.cancel"), { class: "workflow-route-cancel btn-default" } %>
+      <% if local_assigns.fetch(:cancel_button, true) %>
+        <%# プレビューからの承認時、選択可能なルートが 2 個以上（複数）ある場合にのみ取り消すことができる。 %>
+        <%# それ以外では常に取り消すことができる。 %>
+        <%= button_tag t("workflow.buttons.cancel"), { class: "workflow-route-cancel btn-default" } %>
+      <% end %>
     </div>
     <div class="checkbox">
       <label>
