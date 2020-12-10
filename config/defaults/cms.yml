@@ -7,6 +7,9 @@ production: &production
   # Disable navigation
   disable_navi: false
 
+  # disable post from left bar menu
+  post_menu: false
+
   # Disable page redirect link feature
   disable_redirect_link: true
 
@@ -147,3 +150,5 @@ test:
 
 development:
   <<: *production
+  # disable post from left bar menu
+  post_menu: false
