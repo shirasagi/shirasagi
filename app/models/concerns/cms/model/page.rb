@@ -49,6 +49,10 @@ module Cms::Model::Page
     site.subdir ? "#{site.subdir}/#{filename}" : filename
   end
 
+  def mobile_preview_path
+    ::File.join((site.subdir ? site.subdir : ""), site.mobile_location, filename)
+  end
+
   def generate_file(opts = {})
     return false unless serve_static_file?
     return false unless public?

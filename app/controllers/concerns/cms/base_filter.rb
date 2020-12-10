@@ -7,7 +7,6 @@ module Cms::BaseFilter
 
     helper Cms::NodeHelper
     helper Cms::FormHelper
-    helper Cms::PathHelper
     helper Map::MapHelper
     before_action :validate_cms
     before_action :set_cms_assets
