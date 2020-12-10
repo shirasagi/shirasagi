@@ -33,9 +33,9 @@ describe Voice::SynthesisJob, dbscope: :example do
 
         expect(Job::Log.count).to eq 1
         Job::Log.first.tap do |log|
-          expect(log.logs).to include(include("INFO -- : Started Job"))
-          expect(log.logs).to include(include("INFO -- : synthesize: #{url}"))
-          expect(log.logs).to include(include("INFO -- : Completed Job"))
+          expect(log.logs).to include(/INFO -- : .* Started Job/)
+          expect(log.logs).to include(/INFO -- : .* synthesize: #{::Regexp.escape(url)}/)
+          expect(log.logs).to include(/INFO -- : .* Completed Job/)
         end
       end
     end
@@ -56,10 +56,10 @@ describe Voice::SynthesisJob, dbscope: :example do
 
         expect(Job::Log.count).to eq 1
         Job::Log.first.tap do |log|
-          expect(log.logs).to include(include("INFO -- : Started Job"))
-          expect(log.logs).to include(include("INFO -- : synthesize: #{url}"))
-          expect(log.logs).to include(include("WARN -- : OpenURI::HTTPError (400 Bad Request):"))
-          expect(log.logs).to include(include("FATAL -- : Failed Job"))
+          expect(log.logs).to include(/ INFO -- : .* Started Job/)
+          expect(log.logs).to include(/ INFO -- : .* synthesize: #{::Regexp.escape(url)}/)
+          expect(log.logs).to include(/ WARN -- : .* OpenURI::HTTPError \(400 Bad Request\):/)
+          expect(log.logs).to include(/FATAL -- : .* Failed Job/)
         end
       end
     end
@@ -80,10 +80,10 @@ describe Voice::SynthesisJob, dbscope: :example do
 
         expect(Job::Log.count).to eq 1
         Job::Log.first.tap do |log|
-          expect(log.logs).to include(include("INFO -- : Started Job"))
-          expect(log.logs).to include(include("INFO -- : synthesize: #{url}"))
-          expect(log.logs).to include(include("WARN -- : OpenURI::HTTPError (404 Not Found):"))
-          expect(log.logs).to include(include("FATAL -- : Failed Job"))
+          expect(log.logs).to include(/ INFO -- : .* Started Job/)
+          expect(log.logs).to include(/ INFO -- : .* synthesize: #{::Regexp.escape(url)}/)
+          expect(log.logs).to include(/ WARN -- : .* OpenURI::HTTPError \(404 Not Found\):/)
+          expect(log.logs).to include(/FATAL -- : .* Failed Job/)
         end
       end
     end
@@ -104,10 +104,10 @@ describe Voice::SynthesisJob, dbscope: :example do
 
         expect(Job::Log.count).to eq 1
         Job::Log.first.tap do |log|
-          expect(log.logs).to include(include("INFO -- : Started Job"))
-          expect(log.logs).to include(include("INFO -- : synthesize: #{url}"))
-          expect(log.logs).to include(include("WARN -- : OpenURI::HTTPError (500 Internal Server Error):"))
-          expect(log.logs).to include(include("FATAL -- : Failed Job"))
+          expect(log.logs).to include(/ INFO -- : .* Started Job/)
+          expect(log.logs).to include(/ INFO -- : .* synthesize: #{::Regexp.escape(url)}/)
+          expect(log.logs).to include(/ WARN -- : .* OpenURI::HTTPError \(500 Internal Server Error\):/)
+          expect(log.logs).to include(/FATAL -- : .* Failed Job/)
         end
       end
     end
@@ -129,10 +129,10 @@ describe Voice::SynthesisJob, dbscope: :example do
 
         expect(Job::Log.count).to eq 1
         Job::Log.first.tap do |log|
-          expect(log.logs).to include(include("INFO -- : Started Job"))
-          expect(log.logs).to include(include("INFO -- : synthesize: #{url}"))
-          expect(log.logs).to include(include("WARN -- : Net::OpenTimeout (execution expired):"))
-          expect(log.logs).to include(include("FATAL -- : Failed Job"))
+          expect(log.logs).to include(/ INFO -- : .* Started Job/)
+          expect(log.logs).to include(/ INFO -- : .* synthesize: #{::Regexp.escape(url)}/)
+          expect(log.logs).to include(/ WARN -- : .* Net::OpenTimeout \(execution expired\):/)
+          expect(log.logs).to include(/FATAL -- : .* Failed Job/)
         end
       end
     end
@@ -160,9 +160,9 @@ describe Voice::SynthesisJob, dbscope: :example do
 
         expect(Job::Log.count).to eq 1
         Job::Log.first.tap do |log|
-          expect(log.logs).to include(include("INFO -- : Started Job"))
-          expect(log.logs).to include(include("INFO -- : synthesize: #{url}"))
-          expect(log.logs).to include(include("INFO -- : Completed Job"))
+          expect(log.logs).to include(/INFO -- : .* Started Job/)
+          expect(log.logs).to include(/INFO -- : .* synthesize: #{::Regexp.escape(url)}/)
+          expect(log.logs).to include(/INFO -- : .* Completed Job/)
         end
       end
     end

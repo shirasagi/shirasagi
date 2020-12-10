@@ -204,7 +204,7 @@ describe "sys_password_policies", type: :feature, dbscope: :example, js: true do
       expect(page).to have_css("div#errorExplanation", text: msg)
 
       fill_password_and_save(password_contained_prohibited_chars)
-      msg = I18n.t("errors.messages.password_contains_prohibited_chars")
+      msg = I18n.t("errors.messages.password_contains_prohibited_chars", prohibited_chars: prohibited_chars.join)
       expect(page).to have_css("div#errorExplanation", text: msg)
 
       fill_password_and_save(password1)

@@ -45,7 +45,7 @@ module Sys::LinkFilter
       end
 
       if SS::User.allowed?(:edit, @cur_user)
-        links << [ t("sys.test"), sys_test_path ]
+        links << [ t("sys.diag"), sys_diag_main_path ]
         links << [ t("job.main"), job_sys_main_path ]
         links << [ t("history.log"), history_sys_logs_path ]
       end

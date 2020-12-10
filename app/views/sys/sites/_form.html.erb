@@ -47,3 +47,29 @@
     </table>
   </dd>
 </dl>
+
+<dl class="see">
+  <dt><%= @model.t :partner_site_ids %><%= @model.tt :partner_site_ids %></dt>
+  <dd>
+    <%= f.hidden_field "partner_site_ids[]", value: "", class: "hidden-ids" %>
+    <%= link_to t("sys.apis.sites.index"), sys_apis_sites_path, class: "ajax-box" %>
+  </dd>
+  <dd>
+    <table class="index ajax-selected">
+      <thead>
+      <tr>
+        <th class="name"><%= SS::Site.t :name %></th>
+        <th></th>
+      </tr>
+      </thead>
+      <tbody>
+      <% @item.partner_sites.each do |site| %>
+        <tr data-id="<%= site.id %>">
+          <td><%= f.hidden_field "partner_site_ids[]", value: site.id %> <%= site.name %></td>
+          <td><%= link_to t("ss.buttons.delete"), "#", class: "deselect btn" %></td>
+        </tr>
+      <% end %>
+      </tbody>
+    </table>
+  </dd>
+</dl>

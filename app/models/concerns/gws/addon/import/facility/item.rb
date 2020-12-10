@@ -241,7 +241,7 @@ module Gws::Addon::Import::Facility
       item.site = @cur_site
       item.user = @cur_user
       item.name = name
-      item.category = Gws::Facility::Category.where(name: category_name).first
+      item.category = Gws::Facility::Category.site(@cur_site).where(name: category_name).first
       item.order = order
       item.min_minutes_limit = min_minutes_limit
       item.max_minutes_limit = max_minutes_limit

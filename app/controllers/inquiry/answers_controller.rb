@@ -16,27 +16,27 @@ class Inquiry::AnswersController < ApplicationController
   def send_csv(items)
     require "csv"
 
-    columns = @cur_node.becomes_with_route("inquiry/form").columns.order_by(order: 1).pluck(:name)
+    columns = @cur_node.becomes_with_route("inquiry/form").columns.order_by(order: 1).to_a
     headers = %w(id state comment).map { |key| @model.t(key) }
-    headers += columns
+    headers += columns.map(&:name)
     headers += %w(source_url source_name created).map { |key| @model.t(key) }
     csv = CSV.generate do |data|
       data << headers
       items.each do |item|
         item.attributes = fix_params
-        values = item.data.map do |d|
-          if d.column.present?
-            [ d.column.try(:name), d.value ]
-          end
+
+        values = {}
+        columns.each do |column|
+          answer_data = item.data.select { |answer_data| answer_data.column_id == column.id }.first
+          values[column.id] = answer_data.value if answer_data
         end
-        values = values.compact.to_h
 
         row = []
         row << item.id
         row << (item.label :state)
         row << item.comment
-        columns.each do |col|
-          row << values[col]
+        columns.each do |column|
+          row << values[column.id]
         end
         row << item.source_full_url
         row << item.source_name
@@ -92,9 +92,12 @@ class Inquiry::AnswersController < ApplicationController
 
   def download
     raise "403" unless @cur_node.allowed?(:read, @cur_user, site: @cur_site)
+
+    @state = params.dig(:s, :state).presence || "unclosed"
     @items = @model.site(@cur_site).
       where(node_id: @cur_node.id).
       search(params[:s]).
+      state(@state).
       order_by(updated: -1)
     send_csv @items
   end

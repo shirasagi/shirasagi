@@ -4,10 +4,9 @@ module Garbage::Addon
     extend SS::Addon
 
     included do
-      field :name, type: String
       field :remark, type: String
 
-      permit_params :name, :remark
+      permit_params :remark
 
       template_variable_handler(:remark, :template_variable_handler_name)
 

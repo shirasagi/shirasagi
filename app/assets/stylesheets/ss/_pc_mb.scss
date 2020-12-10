@@ -2062,6 +2062,17 @@ footer.send {
     margin: 10px 0 28px;
   }
 }
+.map-position {
+  display: flex;
+  flex-wrap: wrap;
+  margin: 5px 0px;
+  .center-position {
+    padding-right: 10px;
+    .center-input {
+      width: 260px;
+    }
+  }
+}
 #map-canvas {
   img {
     max-width: none;

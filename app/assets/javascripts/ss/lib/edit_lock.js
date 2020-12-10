@@ -15,15 +15,7 @@ this.SS_EditLock = (function () {
     this.unlock_url = unlock_url;
     this.unloading = false;
     this.interval = 2 * 60 * 1000;
-    if ($.support.opacity) {
-      //above IE9
-      $(window).bind('beforeunload', this.releaseLock);
-    } else {
-      //below IE8
-      $('button[type="reset"]').bind('click', this.releaseLockOnCancel);
-      $('a.back-to-index').bind('click', this.releaseLockOnCancel);
-      $('a.back-to-show').bind('click', this.releaseLockOnCancel);
-    }
+    $(window).bind('beforeunload', this.releaseLock);
 
     var alreadyLocked = ($(this.selector + " .lock_until").text() !== '');
     if (alreadyLocked) {

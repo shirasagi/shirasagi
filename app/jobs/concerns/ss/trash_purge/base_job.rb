@@ -1,7 +1,7 @@
 module SS::TrashPurge::BaseJob
   extend ActiveSupport::Concern
 
-  DEFAULT_THRESHOLD_DAYS = 14
+  DEFAULT_THRESHOLD_YEARS = 1
 
   included do
     cattr_accessor :model
@@ -23,8 +23,8 @@ module SS::TrashPurge::BaseJob
 
   def parse_threshold(now, threshold)
     threshold ||= site.trash_threshold
-    return now - DEFAULT_THRESHOLD_DAYS.days if threshold.blank?
-    unit = site.trash_threshold_unit.presence || 'days'
+    return now - DEFAULT_THRESHOLD_YEARS.days if threshold.blank?
+    unit = site.trash_threshold_unit.presence || 'years'
 
     case threshold
     when Integer

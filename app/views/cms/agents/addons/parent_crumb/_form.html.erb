@@ -4,7 +4,7 @@
 %>
 <%= jquery do %>
   var blank = $(".parent-crumbs").first().text();
-  $(".parent-crumbs").mousedown(function(){
+  $(".parent-crumbs").on("mousedown", function(){
     $(this).toggleClass("pulled");
     if (!$(this).hasClass("pulled")) return true;
 
@@ -19,7 +19,7 @@
       select.append(option);
     });
 
-    select.change(function(){
+    select.on("change", function(){
       var value = select.find("option:selected").val();
       $(this).closest("dd.crumb-categories").prev("dd.crumb-urls").find("input").val(value);
     });

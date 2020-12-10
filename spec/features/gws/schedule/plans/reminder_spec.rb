@@ -107,8 +107,8 @@ describe "gws_schedule_plans", type: :feature, dbscope: :example, js: true do
         Gws::Reminder::NotificationJob.bind(site_id: site.id).perform_now
       end
       Job::Log.first.tap do |log|
-        expect(log.logs).to include(include("INFO -- : Started Job"))
-        expect(log.logs).to include(include("INFO -- : Completed Job"))
+        expect(log.logs).to include(/INFO -- : .* Started Job/)
+        expect(log.logs).to include(/INFO -- : .* Completed Job/)
       end
 
       reminder.reload
@@ -177,8 +177,8 @@ describe "gws_schedule_plans", type: :feature, dbscope: :example, js: true do
         Gws::Reminder::NotificationJob.bind(site_id: site.id).perform_now
       end
       Job::Log.first.tap do |log|
-        expect(log.logs).to include(include("INFO -- : Started Job"))
-        expect(log.logs).to include(include("INFO -- : Completed Job"))
+        expect(log.logs).to include(/INFO -- : .* Started Job/)
+        expect(log.logs).to include(/INFO -- : .* Completed Job/)
       end
 
       reminder.reload

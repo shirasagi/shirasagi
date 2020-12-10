@@ -1,7 +1,7 @@
 <%= jquery do %>
   $(function(){
     $(".simple-captcha").css("display", "none");
-    $("button").click(function(){
+    $("button").on("click", function(){
       $(".simple-captcha").toggle();
     });
   });

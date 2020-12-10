@@ -66,8 +66,8 @@ describe "gws_user_titles", type: :feature, dbscope: :example do
       expect(page).to have_css("#notice", text: I18n.t("ss.notice.started_import"))
 
       Job::Log.first.tap do |log|
-        expect(log.logs).to include(include('INFO -- : Started Job'))
-        expect(log.logs).to include(include('INFO -- : Completed Job'))
+        expect(log.logs).to include(/INFO -- : .* Started Job/)
+        expect(log.logs).to include(/INFO -- : .* Completed Job/)
       end
 
       expect(Gws::UserTitle.site(site).count).to eq 1

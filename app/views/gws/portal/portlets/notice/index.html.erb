@@ -21,7 +21,7 @@
           <div class="meta">
             <span class="datetime"><%= item.updated.strftime("%Y/%m/%d %H:%M") %></span>
             <span class="browsed"><%= t("gws/board.options.browsed_state.#{item.browsed?(@cur_user) ? 'read' : 'unread'}") %></span>
-            <span class="user"><%= item.contributor_name.presence || item.user_long_name %></span>
+            <span class="user"><%= gws_public_user_long_name(item.contributor_name.presence || item.user_long_name) %></span>
             <% if attr = item.label(:severity).presence %>
               <span class="label"><%= attr %></span>
             <% end %>

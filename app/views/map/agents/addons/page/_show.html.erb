@@ -6,11 +6,43 @@
 
 <% if map_enabled?(mypage: true) %>
 
-<%= render_map "##{addon[:id]} .map-canvas", site: @cur_site, markers: @item.map_points, map: { zoom: @item.map_zoom_level }, preview: @preview %>
+<%
+  if @item.center_setting == "designated_location" && @item.set_center_position.present?
+
+    set_center_position = @item.set_center_position
+  end
+
+  if @item.zoom_setting == "designated_level" && @item.set_zoom_level.present?
+    set_zoom_level = @item.set_zoom_level
+  end
+
+  default_zoom = SS.config.map.googlemaps_zoom_level
+%>
+
+<%= render_map "##{addon[:id]} .map-canvas", site: @cur_site, markers: @item.map_points, map: { zoom: @item.map_zoom_level, set_center_position: set_center_position, set_zoom_level: set_zoom_level, default_zoom: default_zoom }, preview: @preview %>
 
 <dl class="see mod-page">
   <div class="map-canvas" style="width: 100%; height: 320px"></div>
 </dl>
+
+<div class="map-position">
+  <div class="center-position">
+    <span><%= t("map.center_position") %></span>
+    <% if @item.center_setting == "designated_location" && @item.set_center_position %>
+      <span>[<%= @item.set_center_position %>]</span>
+    <% else %>
+      <span><%= t("map.auto") %></span>
+    <% end %>
+  </div>
+  <div class="zoom-level">
+    <span><%= t("map.zoom_level") %></span>
+    <% if @item.zoom_setting == "designated_level" && @item.set_zoom_level %>
+      <span><%= @item.set_zoom_level %></span>
+    <% else %>
+      <span><%= t("map.auto") %></span>
+    <% end %>
+  </div>
+</div>
 
 <% @item.map_points.each do |map_point| %>
   <p><%= "#{map_point[:name]} #{map_point[:loc]}" %></p>

@@ -8,11 +8,13 @@ ja:
     check_links: リンクチェック実行結果
     check_links_nodes: フォルダー
     check_links_pages: ページ
+    count_pages: ページ目
     command: コマンド
     config: 設定
     content: コンテンツ
     convert_to_cms_page: 固定ページに変換する
     editor_template: テンプレート
+    event_calendar: イベントカレンダー
     file: 共有ファイル
     generate_node: フォルダー書き出し
     generate_page: ページ書き出し
@@ -37,6 +39,7 @@ ja:
     node_config: フォルダー設定
     notice: お知らせ
     page: 固定ページ
+    pagination: ページネーション
     page_search: ページ検索
     part: パーツ
     preview: プレビュー
@@ -72,6 +75,7 @@ ja:
     inplace_edit: 編集モード
     preview_date: プレビュー日時
     translate: 自動翻訳
+    list_menu_of_monthly_page: 月別ページ一覧メニュー
     column_file_upload:
       image:
         file_label: 代替テキスト
@@ -137,6 +141,8 @@ ja:
       import_with_entry_form_is_not_supported: 次のフォームでは本文ブロックは出力されません。
       restoring_public_content_from_trash: 非公開で復元されます。復元後、内容を確認うえ、公開してください。
       restoring_share_file_from_trash: 共有ファイルに復元されます。
+      generate_locked: 書き出しを停止しました。
+      generate_unlocked: 書き出しの停止を解除しました。
     apis:
       categories:
         index: カテゴリーを選択する
@@ -363,6 +369,8 @@ ja:
     use_cms_commands: コマンドの実行
     use_cms_tools: 運用ツールの利用
     use_cms_editor_extensions: エディターの高度な利用
+    read_cms_generate_lock: 書き出し停止の閲覧
+    edit_cms_generate_lock: 書き出し停止の編集
     read_other_cms_nodes: フォルダーの閲覧（全て）
     read_private_cms_nodes: フォルダーの閲覧（所有）
     edit_other_cms_nodes: フォルダーの編集（全て）
@@ -484,6 +492,7 @@ ja:
       cms/column/layout: レイアウト
       cms/column/text_like: 制約条件
       cms/column/select_like: 選択
+      cms/redirect_link: リンクページ
 
   mongoid:
     models:
@@ -533,6 +542,8 @@ ja:
       cms/column/table: 表
     errors:
       models:
+        cms/content:
+          unsafe_numeric_filename: は、数字のみで構成されていますが、数字のみのファイル名は自由に使用できません。アルファベットを1文字以上加えてください。
         cms/model/node:
           routed_folders_under_uploader: アップローダー下に属性付きフォルダーは作成できません。アップローダーに切り替え、新規フォルダーよりフォルダーを作成してください。
         cms/column/value/youtube:
@@ -916,6 +927,8 @@ ja:
         value: テキスト
       cms/column/value/table:
         value: 表
+      cms/addon/redirect_link:
+        redirect_link: リダイレクトURL
 
   errors:
     messages:
@@ -967,6 +980,7 @@ ja:
       check_embedded_media: 動画や音声を含む場合、説明があるか確認してください。
       replace_word: 使用が好ましくない単語が含まれています。
       replace_word_validation: に使用が好ましくない単語が含まれています。
+      alt_is_included_in_filename: 代替テキストがファイル名に含まれています。
       syntax_check_detail:
         set_img_alt:
           - 画像の内容を示す代替テキストを設定してください。
@@ -1005,7 +1019,12 @@ ja:
           - オブジェクト要素が正しく読み込まれなかった場合の説明を要素内に記述してください。
         check_embedded_media:
           - 動画や音声を本文に埋め込む場合は説明を記述してください。
+        alt_is_included_in_filename:
+          - 代替テキストの一部もしくは全部がファイル名に含まれています。
+          - 一般的にファイル名をそのまま代替テキストに設定するのは好ましくないと考えられます。
+          - 設定している代替テキストが妥当かどうか確認してください。
       thums_is_not_an_image: には画像ファイルを指定してください。
+      unsupported_encoding: 対応していない文字コードです。
 
     template:
       no_errors: エラーは見つかりませんでした。
@@ -1971,6 +1990,15 @@ ja:
     cms/column/list:
       list_type:
         - 種類を選択します。
+
+    cms/addon/redirect_link:
+      redirect_link:
+        - ページを別URLにリダイレクトする際に入力します。
+
+    cms/csv_import_base:
+      file:
+        - インポートするファイルを設定します。
+        - ファイルはutf-8またはShiftJISでエンコードされている必要があります。
 
   all_content:
     page_id: ページID

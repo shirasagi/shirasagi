@@ -5,14 +5,14 @@ class Sys::Auth::OpenIdConnect::ImplicitFlowResponse
   attr_accessor :id_token
 
   attr_accessor :cur_item
-  attr_accessor :session_state
+  attr_accessor :sso_token
   attr_accessor :session_nonce
 
   validates :state, presence: true
   validates :id_token, presence: true
 
   validates :cur_item, presence: true
-  validates :session_state, presence: true
+  validates :sso_token, presence: true
   validates :session_nonce, presence: true
 
   validate :validate_state
@@ -31,9 +31,9 @@ class Sys::Auth::OpenIdConnect::ImplicitFlowResponse
   private
 
   def validate_state
-    return if state.blank? || session_state.blank?
+    return if state.blank? || sso_token.blank?
 
-    errors.add :state, :mismatch if state != session_state[:value]
-    errors.add :state, :expired if session_state[:created] + Sys::Auth::Base::READY_STATE_EXPIRES_IN < Time.zone.now.to_i
+    errors.add :state, :mismatch if state != sso_token.token
+    errors.add :state, :expired unless sso_token.available?
   end
 end

@@ -1,19 +1,6 @@
 <%= javascript_include_tag "/assets/js/jquery.colorbox.js" %>
 <%= stylesheet_link_tag "/assets/css/colorbox/colorbox.css", media: 'all' %>
 
-<%= jquery do %>
-
-  $(window).on("load", function () {
-    $(".ajax-box").on("click", function () {
-      $.colorbox({
-        html: '<%=j render(partial: "modal", locals: { search_path: "./result.html" }) %>'
-      });
-      return false;
-    });
-  });
-
-<% end %>
-
 <%= render file: "facility/agents/addons/search_result/view/upper" %>
 
 <div class="columns">
@@ -37,3 +24,14 @@
 </div>
 
 <%= paginate @items if @items.try(:current_page) %>
+
+<%= jquery do %>
+
+  $(".ajax-box").on("click", function () {
+    $.colorbox({
+      html: '<%=j render(partial: "modal", locals: { search_path: "./result.html" }) %>'
+    });
+    return false;
+  });
+
+<% end %>

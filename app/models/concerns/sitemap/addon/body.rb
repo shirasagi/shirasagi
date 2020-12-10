@@ -71,7 +71,7 @@ module Sitemap::Addon
       entries = []
       tree.flatten("/", entries)
 
-      urls = entries.map { |m| opts[:name] ? "/#{m.filename}/ ##{m.name}" : "/#{m.filename}/" }
+      urls = entries.map { |m| opts[:name] ? "#{m.url.sub(m.site.url, '/')} ##{m.name}" : m.url.sub(m.site.url, '/') }
       urls
     end
 
@@ -84,17 +84,13 @@ module Sitemap::Addon
         depth = url.scan(/[^\/]+/).size
         next if depth > sitemap_depth
 
-        if /#/.match?(url)
-          data = { url: url.sub(/\s*#.*/, ""), name: url.sub(/^.*?\s*#/, ""), depth: depth }
+        name = url.sub(/^.*?\s*#/, "") if /#/.match?(url)
+        url = url.sub(/\s*#.*/, "").strip.sub(/\/$/, "")
+        model = /(^|\/)[^\.]+$/.match?(url) ? Cms::Node : Cms::Page
+        if item = model.where(site_id: site_id).and_public.filename(url).first
+          data = { url: item.url, name: name.presence || item.name, depth: depth }
         else
-          url   = url.strip.sub(/\/$/, "")
-          model = /(^|\/)[^\.]+$/.match?(url) ? Cms::Node : Cms::Page
-
-          if item = model.where(site_id: site_id).and_public.filename(url).first
-            data = { url: item.url, name: item.name, depth: depth }
-          else
-            data = { url: url, name: url, depth: depth }
-          end
+          data = { url: url, name: name.presence || url, depth: depth }
         end
 
         if data[:depth] < sitemap_depth
@@ -120,12 +116,19 @@ module Sitemap::Addon
             url.priority 1.0
           end
 
-          urls.each do |pgae_url|
+          urls.each do |page_url|
+            page_url.sub!(/\s*#.*/, "")
+            url = page_url.strip.sub(/\/$/, "")
+            model = /(^|\/)[^\.]+$/.match?(url) ? Cms::Node : Cms::Page
+            if item = model.where(site_id: site_id).and_public.filename(url).first
+              page_url = item.url
+            end
+
             urlset.url do |url|
               priority = "0.8"
-              priority = "0.5" if pgae_url.scan("/").size > 2
+              priority = "0.5" if page_url.scan("/").size > 2
 
-              url.loc File.join(site_url, pgae_url)
+              url.loc File.join(site_url, page_url)
               url.priority priority
             end
           end

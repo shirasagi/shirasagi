@@ -23,7 +23,8 @@ this.Form_Alert = (function () {
           }
 
           $(submit).off(".form_alert");
-          $(submit).trigger("click");
+          // To protected from bubbling events within a event wraps trigger "click" with setTimeout
+          setTimeout(function() { $(submit).trigger("click"); }, 0);
         });
       };
 

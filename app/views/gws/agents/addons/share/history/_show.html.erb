@@ -10,7 +10,9 @@
         <th style="width: 80px"><%= Gws::Share::History.t :mode %></th>
         <th style="width: 140px"><%= Gws::Share::History.t :created %></th>
         <th><%= Gws::Share::History.t :user_name %></th>
-        <th><%= Gws::Share::History.t :user_tel %></th>
+        <% if @cur_site.user_profile_public?("tel") %>
+          <th><%= Gws::Share::History.t :user_tel %></th>
+        <% end %>
         <th><%= Gws::Share::History.t :uploadfile_name %></th>
         <th><%= Gws::Share::History.t :uploadfile_size %></th>
         <th><%= Gws::Share::History.t :upload %></th>
@@ -22,8 +24,10 @@
       <tr id="history-<%= history.id %>">
         <td><%= history.mode_name %></td>
         <td><%= tryb { history.created.strftime("%Y/%m/%d %H:%M") } %></td>
-        <td><%= history.user_long_name %></td>
-        <td><%= history.user_tel %></td>
+        <td><%= gws_public_user_long_name(history.user_long_name) %></td>
+        <% if @cur_site.user_profile_public?("tel") %>
+          <td><%= history.user_tel %></td>
+        <% end %>
         <td><%= history.uploadfile_name %></td>
         <td><%= history.uploadfile_size %></td>
         <td>

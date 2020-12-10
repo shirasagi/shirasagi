@@ -14,7 +14,7 @@ module Cms::Page::SequencedFilename
 
   def validate_seq_filename
     if basename.sub(/\.html$/, '').to_i > current_sequence(:id)
-      errors.add :basename, :invalid
+      errors.add :basename, :unsafe_numeric_filename
     end
   end
 

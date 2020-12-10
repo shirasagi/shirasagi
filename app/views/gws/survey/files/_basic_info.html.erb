@@ -17,7 +17,7 @@
       <% else %>
         <span class="answered"><%= @model.t :updated %>: <%= I18n.l(@item.updated) %></span>
       <% end %>
-      <span class="name"><%= @cur_form.contributor_name %></span>
+      <span class="name"><%= gws_public_user_long_name(@cur_form.contributor_name) %></span>
     </div>
 
     <h2 class="title">

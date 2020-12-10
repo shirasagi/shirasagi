@@ -41,7 +41,7 @@
     }
   };
   var changeIntervalStep = function(newItem) {
-    $(newItem).find(".interval_type").change(function() {
+    $(newItem).find(".interval_type").on("change", function() {
       setIntervalStep(this);
     });
   };

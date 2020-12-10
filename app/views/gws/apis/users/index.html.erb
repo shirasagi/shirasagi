@@ -46,14 +46,14 @@
   </thead>
   <tbody class="items">
     <% @items.each do |item| %>
-      <% data = { id: item.id, name: item.name, email: item.email_address, address: item.email, long_name: item.long_name } %>
+      <% data = { id: item.id, name: item.name, email: item.email_address, address: item.email, long_name: gws_public_user_long_name(item.long_name) } %>
       <%= content_tag("tr", class: "list-item", data: data) do %>
         <% if @multi %>
           <td class="checkbox">
             <input type="checkbox" name="ids[]" value="<%= item.id %>" />
           </td>
         <% end %>
-        <td><%= link_to item.long_name, "#", class: @multi ? "select-item" : "select-single-item" %></td>
+        <td><%= link_to gws_public_user_long_name(item.long_name), "#", class: @multi ? "select-item" : "select-single-item" %></td>
         <td><%= tryb { item.gws_main_group(@cur_site).trailing_name } %></td>
         <td><%= tryb { item.title(@cur_site).name } %></td>
       <% end %>

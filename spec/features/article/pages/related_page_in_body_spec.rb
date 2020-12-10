@@ -24,6 +24,7 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
         fill_in "item[name]", with: "sample"
         click_button I18n.t('ss.buttons.publish_save')
       end
+      wait_for_notice I18n.t("ss.notice.saved")
 
       Article::Page.where(name: 'sample').first.tap do |article_page|
         expect(article_page.html).to include(item.url)
@@ -58,6 +59,7 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
           fill_in "item[name]", with: "sample"
           click_button I18n.t('ss.buttons.publish_save')
         end
+        wait_for_notice I18n.t("ss.notice.saved")
 
         Article::Page.where(name: 'sample').first.tap do |article_page|
           expect(article_page.html).to include(item.url)

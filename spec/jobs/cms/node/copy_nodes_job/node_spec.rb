@@ -22,9 +22,9 @@ describe Cms::Node::CopyNodesJob, dbscope: :example do
       it "coped nodes and it refer original layout id ,and also child nodes" do
         expect(Job::Log.count).to eq 1
         Job::Log.first.tap do |log|
-          expect(log.logs).to include(include('INFO -- : Started Job'))
+          expect(log.logs).to include(/INFO -- : .* Started Job/)
           expect(log.logs).not_to include(include('コピーに失敗しました'))
-          expect(log.logs).to include(include('INFO -- : Completed Job'))
+          expect(log.logs).to include(/INFO -- : .* Completed Job/)
         end
 
         copied_node = Cms::Node.site(site).where(filename: /^#{target_node_name}\//, depth: 3).first
@@ -45,9 +45,9 @@ describe Cms::Node::CopyNodesJob, dbscope: :example do
       it "copied" do
         expect(Job::Log.count).to eq 1
         Job::Log.first.tap do |log|
-          expect(log.logs).to include(include('INFO -- : Started Job'))
+          expect(log.logs).to include(/INFO -- : .* Started Job/)
           expect(log.logs).not_to include(include('コピーに失敗しました'))
-          expect(log.logs).to include(include('INFO -- : Completed Job'))
+          expect(log.logs).to include(/INFO -- : .* Completed Job/)
         end
 
         copied_node = Cms::Node.site(site).where(filename: /^#{target_node_name}\//, depth: 4).first

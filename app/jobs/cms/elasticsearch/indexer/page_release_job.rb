@@ -6,7 +6,7 @@ class Cms::Elasticsearch::Indexer::PageReleaseJob < Cms::ApplicationJob
   private
 
   def index_item_id
-    item.filename
+    queue.try(:filename) || item.filename
   end
 
   def queue

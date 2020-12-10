@@ -10,6 +10,9 @@ production: &production
   # disable post from left bar menu
   post_menu: false
 
+  # Disable page redirect link feature
+  disable_redirect_link: true
+
   # enable LGWAN
   enable_lgwan: false
 
@@ -137,6 +140,10 @@ production: &production
 
   # basic_auth: [ 'user', 'pass' ]
   # basic_auth: [ "a0w1dWZFdStGR2pHOS9VTGlSRXlYQT09LS1ROFh5RVB4SXFSQjkwNjhSQzZlRTZnPT0=--3da032b7de13acb88d7d9526ef948155f27e0a4a", "NmNVNzV6L0VzWWo4TnE0REMxeFIrdz09LS1weVFrQk9DQ3I4VzNTNFRSV2hkS293PT0=--e4dcab18efa113380568af8b7558e1509522d0fc" ]
+
+  generate_lock:
+    disable: false
+    generate_lock_until: 1.hour
 
 test:
   <<: *production

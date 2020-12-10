@@ -23,6 +23,7 @@ class Job::TaskLogger < ::Logger
       @@task_logger ||= begin
         logger = new
         logger.level = ::Job::Service.config.log_level || Rails.logger.level
+        logger.formatter = Rails.logger.formatter
         Rails.logger.extend ActiveSupport::Logger.broadcast(logger)
         logger
       end

@@ -6,7 +6,7 @@
     <header>
       <div class="contributor">
         <span class="no"><%= "1." %></span>
-        <%= topic.contributor_name %>
+        <%= gws_public_user_long_name(topic.contributor_name) %>
       </div>
       <div class="datetime updated">
         <%= topic.updated.strftime("%Y/%m/%d %H:%M") %>
@@ -43,7 +43,7 @@
       <header>
         <div class="contributor">
           <span class="no"><%= "#{offset + i + 2}." %></span>
-          <%= comment.contributor_name %>
+          <%= gws_public_user_long_name(comment.contributor_name) %>
         </div>
         <div class="datetime updated">
           <%= comment.updated.strftime("%Y/%m/%d %H:%M") %>
@@ -142,7 +142,7 @@
           <%= f.hidden_field(:contributor_id) %>
           <%= f.hidden_field(:contributor_name) %>
 
-          <% show_radio_button.call('Gws::User', @cur_user.id, @cur_user.long_name, true) %>
+          <% show_radio_button.call('Gws::User', @cur_user.id, gws_public_user_long_name(@cur_user.long_name), true) %>
           <% @cur_user.groups.in_group(@cur_site).active.each do |group| %>
             <% show_radio_button.call('Gws::Group', group.id, group.section_name, false) %>
           <% end %>

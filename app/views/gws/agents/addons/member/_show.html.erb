@@ -12,5 +12,5 @@
 
 <dl class="see">
   <dt><%= @model.t :member_ids %></dt>
-  <dd><%=br @item.sorted_members.map(&:long_name) %></dd>
+  <dd><%=br gws_public_user_long_names(@item.sorted_members.map(&:long_name)) %></dd>
 </dl>

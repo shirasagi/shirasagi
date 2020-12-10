@@ -21,7 +21,7 @@ ja:
     site: サイト
     user: ユーザー
     group: グループ
-    test: テスト
+    diag: 診断
     db_tool: DBツール
     role: 権限/ロール
     menu_settings: メニュー設定

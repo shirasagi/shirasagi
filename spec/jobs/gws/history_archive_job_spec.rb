@@ -64,8 +64,8 @@ describe Gws::HistoryArchiveJob, dbscope: :example do
 
         expect(Gws::Job::Log.count).to eq 1
         Gws::Job::Log.first.tap do |log|
-          expect(log.logs).to include(include('INFO -- : Started Job'))
-          expect(log.logs).to include(include('INFO -- : Completed Job'))
+          expect(log.logs).to include(/INFO -- : .* Started Job/)
+          expect(log.logs).to include(/INFO -- : .* Completed Job/)
         end
 
         expect(Gws::HistoryArchiveFile.site(site).count).to eq 1
@@ -112,8 +112,8 @@ describe Gws::HistoryArchiveJob, dbscope: :example do
 
         expect(Gws::Job::Log.count).to eq 1
         Gws::Job::Log.first.tap do |log|
-          expect(log.logs).to include(include('INFO -- : Started Job'))
-          expect(log.logs).to include(include('INFO -- : Completed Job'))
+          expect(log.logs).to include(/INFO -- : .* Started Job/)
+          expect(log.logs).to include(/INFO -- : .* Completed Job/)
         end
 
         expect(Gws::HistoryArchiveFile.site(site).reorder(filename: 1, id: 1).count).to eq 2

@@ -98,17 +98,17 @@ this.SS_TreeUI = (function () {
     } else if (collapse_all) {
       SS_TreeUI.closeImage(this.tree.find("tbody tr img"));
     } else {
-      this.tree.find("tr[data-depth='" + root + "'] img").click();
+      this.tree.find("tr[data-depth='" + root + "'] img").trigger("click");
     }
   }
 
   SS_TreeUI.prototype.expandAll = function () {
-    return this.tree.find("tr img.toggle.closed").click();
+    return this.tree.find("tr img.toggle.closed").trigger("click");
   };
 
   SS_TreeUI.prototype.collapseAll = function () {
     return $(this.tree.find("tr img.toggle.opened").get().reverse()).each(function () {
-      return $(this).click();
+      return $(this).trigger("click");
     });
   };
 

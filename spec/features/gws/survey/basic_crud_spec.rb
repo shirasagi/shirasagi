@@ -81,8 +81,8 @@ describe "gws_survey", type: :feature, dbscope: :example, js: true do
 
       expect(Gws::Job::Log.all.where(class_name: Gws::Survey::NotificationJob.name).count).to eq 1
       Gws::Job::Log.all.first(class_name: Gws::Survey::NotificationJob.name).tap do |log|
-        expect(log.logs).to include(include("INFO -- : Started Job"))
-        expect(log.logs).to include(include("INFO -- : Completed Job"))
+        expect(log.logs).to include(/INFO -- : .* Started Job/)
+        expect(log.logs).to include(/INFO -- : .* Completed Job/)
       end
 
       expect(SS::Notification.all.count).to eq 1

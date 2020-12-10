@@ -782,6 +782,8 @@ describe 'article_pages', type: :feature, dbscope: :example, js: true do
 
         # click_on I18n.t('ss.buttons.ignore_alert')
         expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+        # wait for completion of "/.s:site/workflow:cid/wizard/:id"
+        expect(page).to have_css("#addon-workflow-agents-addons-approver", text: I18n.t("workflow.request"))
       end
     end
   end

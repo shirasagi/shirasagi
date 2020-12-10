@@ -54,6 +54,13 @@ SS_Usage.prototype.reload = function($btn) {
           }
         }
       }
+    },
+    error: function(xhr, status, error) {
+      for (var i = 0; i < SS_Usage.selectors.length; i++) {
+        var selector = SS_Usage.selectors[i];
+        var el = _this.$el.find(selector);
+        el.html(error);
+      }
     }
   });
 };

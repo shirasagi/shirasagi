@@ -5,6 +5,7 @@ Rails.application.config.session_store :mongoid_store
 Rails.application.config.session_options = begin
   options = { cookie_only: false }
   options[:key] = SS.config.ss.session["key"].presence || '_ss_session'
+  options[:same_site] = SS.config.ss.session["same_site"] if !SS.config.ss.session["same_site"].nil?
   options[:secure] = SS.config.ss.session["secure"] if !SS.config.ss.session["secure"].nil?
   options
 end

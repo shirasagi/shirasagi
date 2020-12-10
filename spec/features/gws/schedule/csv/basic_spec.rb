@@ -85,7 +85,7 @@ describe "gws_schedule_csv", type: :feature, dbscope: :example, js: true do
         let!(:plan_to_csv) do
           Gws::Schedule::Plan.create!(
             cur_site: site, cur_user: user, name: unique_id,
-            start_at: now, end_at: now + 1.hour, start_on: now.beginning_of_day, end_on: now.beginning_of_day, allday: "allday",
+            start_at: now, end_at: now + 1.hour, start_on: now.tomorrow.beginning_of_day, end_on: now.tomorrow.beginning_of_day, allday: "allday",
             category: category1, priority: priority, color: unique_id,
             member_ids: [user.id]
           )

@@ -1,6 +1,6 @@
 <%== @cur_node.upper_html %>
 
-<nav class="event-date">
+<nav class="event-date" aria-label="<%= t("event.date_of_the_event") %>">
   <h2 class="<%= event_h1_class(@month) + " " + event_dl_class(@date) %>">
     <%= time_tag(@date) do %>
       <%= "#{@year}#{t_date('year')}#{@month}#{t_date('month')}#{@day}#{t_date('day')}" %>
@@ -28,7 +28,7 @@
         <% if page.summary_html.present? %>
           <p><%= raw page.summary_html %></p>
         <% end %>
-        <nav class="categories">
+        <nav class="categories" aria-label="<%= t("event.category_of_the_event") %>">
           <ul>
             <% categories.entries.sort_by{ |c| c.order }.each do |cate| %>
               <li class="<%= cate.basename %>">

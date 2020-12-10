@@ -37,7 +37,7 @@
 
           <div class="meta">
             <span class="datetime"><%= item.updated.strftime("%Y/%m/%d %H:%M") %></span>
-            <span class="user"><%= item.contributor_name.presence || item.user_long_name %></span>
+            <span class="user"><%= gws_public_user_long_name(item.contributor_name.presence || item.user_long_name) %></span>
 
             <% answered = item.answered_at(@cur_user) %>
             <% if answered %>

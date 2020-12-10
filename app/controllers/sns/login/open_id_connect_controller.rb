@@ -28,8 +28,6 @@ class Sns::Login::OpenIdConnectController < ApplicationController
 
   def state
     @state ||= begin
-      state = SecureRandom.hex(24)
-
       @request_url ||= URI.parse(request.url)
 
       # "ref" is a path to redirect after user is successfully logged in
@@ -54,8 +52,8 @@ class Sns::Login::OpenIdConnectController < ApplicationController
       end
       login_path = login_path.to_s if login_path.present?
 
-      session['ss.sso.state'] = { value: state, created: Time.zone.now.to_i, ref: ref, login_path: login_path }
-      state
+      sso_token = SS::SsoToken.create_token!(ref: ref, login_path: login_path)
+      sso_token.token
     end
   end
 
@@ -66,10 +64,11 @@ class Sns::Login::OpenIdConnectController < ApplicationController
       raise "403"
     end
 
+    sso_token = SS::SsoToken.where(token: core_resp[:state]).first
     auth_resp = core_resp.merge(
       cur_item: @item,
       redirect_uri: @item.redirect_uri(request.protocol, request.host_with_port),
-      session_state: session.delete('ss.sso.state'))
+      sso_token: sso_token)
     token_req = Sys::Auth::OpenIdConnect::TokenRequest.new(auth_resp)
     if token_req.invalid?
       Rails.logger.warn(token_req.errors.full_messages.join("\n"))
@@ -96,9 +95,10 @@ class Sns::Login::OpenIdConnectController < ApplicationController
       return
     end
 
+    sso_token = SS::SsoToken.where(token: core_resp[:state]).first
     auth_resp = core_resp.merge(
       cur_item: @item,
-      session_state: session.delete('ss.sso.state'),
+      sso_token: sso_token,
       session_nonce: session.delete('ss.sso.nonce'))
     @resp = Sys::Auth::OpenIdConnect::ImplicitFlowResponse.new(auth_resp)
     unless @resp.valid?
@@ -144,9 +144,9 @@ class Sns::Login::OpenIdConnectController < ApplicationController
     end
 
     # "ref" is a path to redirect after user is successfully logged in
-    params[:ref] = @resp.session_state[:ref]
+    params[:ref] = @resp.sso_token.ref
     # "login_path" is a path to redirect after user is logged out
-    render_login user, nil, session: true, login_path: @resp.session_state[:login_path] || sns_login_path
+    render_login user, nil, session: true, login_path: @resp.sso_token.login_path || sns_login_path
   end
 
   if Rails.env.test?
