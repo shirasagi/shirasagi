@@ -168,7 +168,7 @@ describe "syntax_checker", type: :feature, dbscope: :example, js: true do
         visit edit_path
 
         within ".column-value-palette" do
-          click_on column.name
+          click_on column1.name
         end
         within ".column-value-cms-column-free" do
           fill_in_ckeditor "item[column_values][][in_wrap][value]", with: html4
@@ -186,7 +186,7 @@ describe "syntax_checker", type: :feature, dbscope: :example, js: true do
         visit edit_path
 
         within ".column-value-palette" do
-          click_on column.name
+          click_on column1.name
         end
         within ".column-value-cms-column-free" do
           fill_in_ckeditor "item[column_values][][in_wrap][value]", with: html5
@@ -204,7 +204,7 @@ describe "syntax_checker", type: :feature, dbscope: :example, js: true do
         visit edit_path
 
         within ".column-value-palette" do
-          click_on column.name
+          click_on column1.name
         end
         within ".column-value-cms-column-free" do
           fill_in_ckeditor "item[column_values][][in_wrap][value]", with: html6
