@@ -116,33 +116,6 @@ module SS
       end
     end
 
-    def wait_event_to_fire(event_name)
-      promise_id = "promise_#{unique_id}"
-      page.execute_script(HOOK_EVENT_COMPLETION, promise_id, event_name)
-
-      # do operations which fire events
-      ret = yield
-
-      result = page.evaluate_async_script(WAIT_EVENT_COMPLETION, promise_id)
-      expect(result).to be_truthy
-
-      ret
-    end
-
-    #
-    # Usage:
-    #   wait_cbox_open do
-    #     click_on I18n.t("ss.buttons.upload")
-    #   end
-    #
-    def wait_cbox_open(&block)
-      wait_event_to_fire("cbox_complete", &block)
-    end
-
-    def wait_cbox_close(&block)
-      wait_event_to_fire("cbox_closed", &block)
-    end
-
     def colorbox_opened?
       opacity = page.evaluate_script("$('#cboxOverlay').css('opacity')")
       opacity.nil? ? true : (opacity.to_f == 0.9)
@@ -212,9 +185,45 @@ module SS
     rescue => _e
     end
 
+    def wait_event_to_fire(event_name)
+      promise_id = "promise_#{unique_id}"
+      page.execute_script(HOOK_EVENT_COMPLETION, promise_id, event_name)
+
+      # do operations which fire events
+      ret = yield
+
+      result = page.evaluate_async_script(WAIT_EVENT_COMPLETION, promise_id)
+      expect(result).to be_truthy
+
+      ret
+    end
+
+    #
+    # Usage:
+    #   wait_cbox_open do
+    #     # do operations to open a colorbox
+    #     click_on I18n.t("ss.buttons.upload")
+    #   end
+    #
+    def wait_cbox_open(&block)
+      wait_event_to_fire("cbox_complete", &block)
+    end
+
+    #
+    # Usage:
+    #   wait_cbox_close do
+    #     # do operations to close a colorbox
+    #     click_on user.name
+    #   end
+    #
+    def wait_cbox_close(&block)
+      wait_event_to_fire("cbox_closed", &block)
+    end
+
     #
     # Usage:
     #   wait_addon_open do
+    #     # do operations to expand a addon
     #     first("#addon-contact-agents-addons-page .toggle-head").click
     #   end
     #
