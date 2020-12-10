@@ -16,7 +16,7 @@
   <%= link_to t('ss.links.view_site'), item.full_url, target: :_blank if item.public? %>
   <% if @cur_site.mobile_enabled? %>
     <%= link_to t('ss.links.pc_preview'), cms_preview_path(path: item.preview_path), target: :_blank %>
-    <%= link_to(t('ss.links.mobile_preview'), cms_mobile_preview_path(path: item.preview_path), target: :_blank) %>
+    <%= link_to(t('ss.links.mobile_preview'), cms_preview_path(path: item.mobile_preview_path), target: :_blank) %>
   <% else %>
     <%= link_to t('ss.links.preview'), cms_preview_path(path: item.preview_path), target: :_blank %>
   <% end %>

@@ -10,7 +10,7 @@
     <% if @cur_site.mobile_enabled? %>
       <%= link_to t("cms.preview_pc_page"), cms_preview_path(path: @item.preview_path), target: "_blank" %>
       |
-      <%= link_to t("cms.preview_mobile_page"), cms_mobile_preview_path(path: @item.preview_path), target: :_blank %>
+      <%= link_to t("cms.preview_mobile_page"), cms_preview_path(path: @item.mobile_preview_path), target: :_blank %>
     <% else %>
       <%= link_to t("cms.preview_page"), cms_preview_path(path: @item.preview_path), target: "_blank" %>
     <% end %>
