@@ -70,6 +70,7 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
         click_on I18n.t("ss.buttons.edit")
         fill_in "item[name]", with: "modify.jpg"
         click_button I18n.t("ss.buttons.save")
+        expect(page).to have_css(".file-view", text: "modify.jpg")
 
         wait_cbox_close do
           click_on "modify.jpg"
@@ -89,7 +90,9 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
       visit edit_path
       within "form#item-form" do
         within "#addon-cms-agents-addons-file" do
-          click_on I18n.t("sns.user_file")
+          wait_cbox_open do
+            click_on I18n.t("sns.user_file")
+          end
         end
       end
 
@@ -273,6 +276,8 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
           within ".column-value-cms-column-fileupload" do
             expect(page).to have_no_css('.column-value-files', text: 'keyvisual.jpg')
             expect(page).to have_css('.column-value-files', text: 'keyvisual.gif')
+
+            fill_in "item[column_values][][in_wrap][text]", with: ss_japanese_text
           end
         end
 
@@ -308,7 +313,6 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
 
           click_on I18n.t("ss.buttons.publish_save")
         end
-        click_on I18n.t("ss.buttons.ignore_alert")
         wait_for_notice I18n.t('ss.notice.saved')
 
         item.reload

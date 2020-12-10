@@ -27,11 +27,15 @@ describe "cms_notices", type: :feature, dbscope: :example, js: true do
       wait_for_cbox do
         attach_file "item[in_files][]", "#{Rails.root}/spec/fixtures/ss/file/keyvisual.jpg"
         click_button I18n.t("ss.buttons.save")
-        wait_for_ajax
+        expect(page).to have_css(".file-view", text: "keyvisual.jpg")
 
         attach_file "item[in_files][]", "#{Rails.root}/spec/fixtures/ss/file/keyvisual.jpg"
-        click_button I18n.t("ss.buttons.attach")
-        wait_for_ajax
+        wait_cbox_close do
+          click_button I18n.t("ss.buttons.attach")
+        end
+      end
+      within "#addon-cms-agents-addons-file" do
+        expect(page).to have_css(".file-view", text: "keyvisual.jpg")
       end
       click_on I18n.t("ss.buttons.save")
 
