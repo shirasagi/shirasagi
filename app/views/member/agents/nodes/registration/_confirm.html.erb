@@ -11,7 +11,7 @@
   <%= f.hidden_field :sends_verification_mail, value: 'yes' %>
   <% end %>
 
-  <dl class="colum name">
+  <dl class="column name">
     <dt><%= @item.class.t :name %></dt>
     <dd>
       <%= @item.name %>
@@ -19,7 +19,7 @@
     </dd>
   </dl>
 
-  <dl class="colum email">
+  <dl class="column email">
     <dt><%= @item.class.t :email %></dt>
     <dd>
       <%= @item.email %>
@@ -27,7 +27,7 @@
     </dd>
   </dl>
 
-  <dl class="colum kana">
+  <dl class="column kana">
     <dt><%= @item.class.t :kana %></dt>
     <dd>
       <%= @item.kana %>
@@ -35,7 +35,7 @@
     </dd>
   </dl>
 
-  <dl class="colum organization-name">
+  <dl class="column organization-name">
     <dt><%= @item.class.t :organization_name %></dt>
     <dd>
       <%= @item.organization_name %>
@@ -43,7 +43,7 @@
     </dd>
   </dl>
 
-  <dl class="colum job">
+  <dl class="column job">
     <dt><%= @item.class.t :job %></dt>
     <dd>
       <%= @item.job %>
@@ -51,7 +51,7 @@
     </dd>
   </dl>
 
-  <dl class="colum tel">
+  <dl class="column tel">
     <dt><%= @item.class.t :tel %></dt>
     <dd>
       <%= @item.tel %>
@@ -59,7 +59,7 @@
     </dd>
   </dl>
 
-  <dl class="colum postal-code">
+  <dl class="column postal-code">
     <dt><%= @item.class.t :postal_code %></dt>
     <dd>
       <%= @item.postal_code %>
@@ -67,7 +67,7 @@
     </dd>
   </dl>
 
-  <dl class="colum addr">
+  <dl class="column addr">
     <dt><%= @item.class.t :addr %></dt>
     <dd>
       <%= @item.addr %>
@@ -75,7 +75,7 @@
     </dd>
   </dl>
 
-  <dl class="colum sex">
+  <dl class="column sex">
     <dt><%= @item.class.t :sex %></dt>
     <dd>
       <%= @item.label :sex %>
@@ -83,7 +83,7 @@
     </dd>
   </dl>
 
-  <dl class="colum birthday">
+  <dl class="column birthday">
     <dt><%= @item.class.t :birthday %></dt>
     <dd>
       <% if @item.in_birth.present? %>
@@ -102,7 +102,7 @@
   </dl>
 
   <% if @cur_node.confirm_personal_data_state == 'enabled' %>
-  <dl class="colum personal-info">
+  <dl class="column personal-info">
     <dt><%= @item.class.t :in_confirm_personal_info %><span class="required"><%= t("ss.required_field") %></span></dt>
     <dd>
       <%= f.label(:in_confirm_personal_info) do %>
