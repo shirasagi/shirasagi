@@ -132,7 +132,7 @@ end
 ALPHABETS = ("a".."z").to_a.freeze
 
 def unique_id
-  s = ALPHABETS.sample + Random.bytes(8).unpack("H*")[0]
+  s = ALPHABETS.sample + Random.bytes(8).unpack1("H*")
   s.downcase!
   s
 end
