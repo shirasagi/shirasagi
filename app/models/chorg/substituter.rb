@@ -84,16 +84,23 @@ module Chorg::Substituter
       substituters << StringSubstituter.new(from_leaf, to_leaf, key, group_ids, opts) if from_leaf.present? && to_leaf.present?
       if from_parts.length > 1 && from_parts.length == to_parts.length
         1.upto(from_parts.length - 1) do |index|
-          from_hierarchy = to_parts[0..(index - 1)]
+          from_hierarchy = from_parts[0..(index - 1)]
           from_hierarchy << from_parts[index]
           from_hierarchy = from_hierarchy.join(opts['separator'])
           to_hierarchy = to_parts[0..index].join(opts['separator'])
-          if from_hierarchy.present? && to_hierarchy.present? && from_hierarchy != to_hierarchy
-            substituters << StringSubstituter.new(from_hierarchy, to_hierarchy, key, group_ids, opts)
-          end
+
+          next if from_hierarchy.blank? || to_hierarchy.blank?
+          next if from_hierarchy == to_hierarchy
+          next if ignore_hierarchy?(from_hierarchy) || ignore_hierarchy?(to_hierarchy)
+
+          substituters << StringSubstituter.new(from_hierarchy, to_hierarchy, key, group_ids, opts)
         end
       end
       substituters
+    end
+
+    def self.ignore_hierarchy?(hierarchy)
+      [ "http:/", "https:/" ].include?(hierarchy)
     end
   end
 
