@@ -100,6 +100,23 @@ describe Chorg::Substituter::StringSubstituter do
   end
 end
 
+describe Chorg::Substituter::ChainSubstituter, dbscope: :example do
+  let(:from_url) { "http://abc.example.jp/efg/" }
+  let(:to_url) { "https://xyz.example.jp/stu/" }
+  subject do
+    Chorg::Substituter.collect(
+      { "contact_link_url" => from_url },
+      { "contact_link_url" => to_url },
+      [1],
+      { "newly_created_group_to_site" => "add", "forced_overwrite" => true, "separator" => "/" }
+    )
+  end
+
+  it do
+    expect(subject.call("contact_link_url", from_url, 1)).to eq to_url
+  end
+end
+
 describe Chorg::Substituter do
   let(:group) { cms_group }
   context "with simple substitution" do
