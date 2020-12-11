@@ -129,11 +129,12 @@ RSpec.configure do |config|
   end
 end
 
+ALPHABETS = ("a".."z").to_a.freeze
+
 def unique_id
-  num = Time.zone.now.to_f.to_s.delete('.').to_i
-  # add random value to work with `Timecop.freeze`
-  num += rand(0xffff)
-  num.to_s(36)
+  s = ALPHABETS.sample + Random.bytes(8).unpack("H*")[0]
+  s.downcase!
+  s
 end
 
 def unique_tel
