@@ -1,5 +1,6 @@
 class Facility::Agents::Nodes::ServiceController < ApplicationController
   include Cms::NodeFilter::View
+  helper Cms::ListHelper
 
   def index
     @items = Facility::Node::Page.site(@cur_site).and_public.
