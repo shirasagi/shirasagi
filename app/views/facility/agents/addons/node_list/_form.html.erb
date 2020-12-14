@@ -1,0 +1,13 @@
+<% addon ||= local_assigns.fetch(:addon, {}) %>
+
+<dl class="see">
+  <dt><%= @model.t :conditions %><%= @model.tt :conditions %></dt>
+  <dd><%= f.text_area :conditions, value: @item.conditions.join("\n"), style: "height: 100px;" %></dd>
+</dl>
+
+<% if @model.use_new_days %>
+  <dl class="see">
+    <dt><%= @model.t :new_days %><%= @model.tt :new_days %></dt>
+    <dd class="short"><%= f.number_field :new_days %> <span class="postfix"><%= t "datetime.prompts.day" %></span></dd>
+  </dl>
+<% end %>
