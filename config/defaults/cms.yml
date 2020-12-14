@@ -150,5 +150,8 @@ test:
 
 development:
   <<: *production
+  # disable tag addon
+  tag: false
+
   # disable post from left bar menu
   post_menu: false

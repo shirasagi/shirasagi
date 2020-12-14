@@ -14,7 +14,7 @@ module Article::Node
     include Event::Addon::PageList
     include Cms::Addon::Form::Node
     include Category::Addon::Setting
-    include Cms::Addon::TagSetting
+    include Cms::Addon::TagSetting if SS.config.cms.tag
     include Cms::Addon::ForMemberNode
     include Cms::Addon::OpendataRef::Site
     include Cms::Addon::Release
