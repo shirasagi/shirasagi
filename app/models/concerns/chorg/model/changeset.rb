@@ -24,8 +24,8 @@ module Chorg::Model::Changeset
 
     validates :revision_id, presence: true
     validates :type, presence: true
-    validates :sources, presence: true, if: -> { type != TYPE_ADD }
-    validates :destinations, presence: true, if: -> { type != TYPE_DELETE }
+    validate :validate_destinations_presence, if: -> { type != TYPE_DELETE }
+    validate :validate_sources_presence, if: -> { type != TYPE_ADD }
     validate :validate_type
     validate :validate_sources, if: -> { type != TYPE_ADD }
     validate :validate_destinations, if: -> { type != TYPE_DELETE }
@@ -105,5 +105,33 @@ module Chorg::Model::Changeset
     return if sources.blank?
     copy = sources.to_a.each { |s| s['name'] ||= Cms::Group.where(id: s['id']).first.name }
     self.sources = copy
+  end
+
+  def validate_sources_presence
+    return if sources.present?
+
+    case type
+    when "unify"
+      errors.add :base, :unify_before_blank
+    when "move"
+      errors.add :base, :move_before_blank
+    else #"division"
+      errors.add :base, :division_before_blank
+    end
+  end
+
+  def validate_destinations_presence
+    return if destinations.present?
+
+    case type
+    when "unify"
+      errors.add :base, :unify_after_blank
+    when "move"
+      errors.add :base, :move_after_blank
+    when "division"
+      errors.add :base, :division_after_blank
+    else #"add"
+      errors.add :base, :add_after_blank
+    end
   end
 end
