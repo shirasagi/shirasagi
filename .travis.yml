@@ -70,11 +70,10 @@ install: # bash .travis.d/install.sh
   - ./cc-test-reporter before-build
 
 before_script: # bash .travis.d/before_script.sh
-  - bash .travis.d/exec.sh install 95-bin-deploy
+  - bash .travis.d/exec.sh before_script 05-bin-deploy
   - bash .travis.d/exec.sh before_script 10-copy-config
   - bash .travis.d/exec.sh before_script 20-fix-mecab-path
   - bash .travis.d/exec.sh before_script 30-fix-voice-path
-  - bash .travis.d/exec.sh before_script 50-update-gem
 
 #script: travis_wait 60 bash .travis.d/script.sh
 
