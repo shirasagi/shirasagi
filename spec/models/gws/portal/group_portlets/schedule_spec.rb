@@ -18,6 +18,7 @@ describe Gws::Portal::GroupPortlet, type: :model, dbscope: :example do
       let!(:user) { create(:gws_user, group_ids: gws_user.group_ids) }
 
       before do
+        portlet.schedule_member_mode = "specific"
         portlet.schedule_member_ids = [ user.id ]
         portlet.save!
       end
