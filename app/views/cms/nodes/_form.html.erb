@@ -7,8 +7,8 @@ file = "#{Rails.root}/app/views/" + @item.route.sub('/', '/agents/nodes/') + "/e
   <dd><%= f.hidden_field :route %>
     <%= @item.label :route %> &nbsp;
     <% case controller.action_name
-      when "new", "create" %><%= link_to t('ss.links.change'), routes_cms_nodes_path(base_url: url_for(action: :new, cid: params[:cid])), class: "ajax-box" %></dd>
-    <% when "edit", "update" %><%= link_to t('ss.links.change'), routes_cms_nodes_path(base_url: url_for(action: :edit, cid: params[:cid])), class: "ajax-box" %></dd>
+      when "new", "create" %><%= link_to t('ss.links.change'), routes_cms_nodes_path(base_url: url_for(action: :new)), class: "ajax-box" %></dd>
+    <% when "edit", "update" %><%= link_to t('ss.links.change'), routes_cms_nodes_path(base_url: url_for(action: :edit)), class: "ajax-box" %></dd>
     <% else %><%= link_to t('ss.links.change'), routes_cms_nodes_path, class: "ajax-box" %></dd>
     <% end %>
 
