@@ -83,6 +83,7 @@ RSpec.configure do |config|
   #     --seed 1234
   #config.order = "random"
   config.order = "order"
+  Kernel.srand config.seed
 
   config.include Rails.application.routes.url_helpers
   config.include Capybara::DSL
@@ -148,11 +149,12 @@ RSpec.configure do |config|
   end
 end
 
-def unique_id
-  num = Time.zone.now.to_f.to_s.delete('.').to_i
-  # add random value to work with `Timecop.freeze`
-  num += rand(0xffff)
-  num.to_s(36)
+ALPHABETS = ("a".."z").to_a.freeze
+
+def unique_id(size = 5)
+  s = ALPHABETS.sample + Random.bytes(size).unpack1("H*")
+  s.downcase!
+  s
 end
 
 def unique_tel
