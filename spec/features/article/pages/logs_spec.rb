@@ -22,7 +22,9 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
       visit edit_path
 
       within "#addon-cms-agents-addons-file" do
-        click_on I18n.t("ss.buttons.upload")
+        wait_cbox_open do
+          click_on I18n.t("ss.buttons.upload")
+        end
       end
 
       wait_for_cbox do
@@ -59,7 +61,9 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
       visit edit_path
 
       within "#addon-cms-agents-addons-file" do
-        click_on I18n.t("ss.buttons.upload")
+        wait_cbox_open do
+          click_on I18n.t("ss.buttons.upload")
+        end
       end
 
       wait_for_cbox do
@@ -99,7 +103,9 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
       visit edit_path
 
       within "#addon-cms-agents-addons-file" do
-        click_on I18n.t("ss.buttons.upload")
+        wait_cbox_open do
+          click_on I18n.t("ss.buttons.upload")
+        end
       end
 
       wait_for_cbox do

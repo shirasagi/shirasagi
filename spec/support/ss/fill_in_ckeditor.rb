@@ -1,4 +1,4 @@
-FILL_CKEDITOR_SCRIPT = "
+FILL_CKEDITOR_SCRIPT = <<~SCRIPT.freeze
   (function(element, text, resolve) {
     var ckeditor = CKEDITOR.instances[element.id];
     if (!ckeditor) {
@@ -9,7 +9,7 @@ FILL_CKEDITOR_SCRIPT = "
     $(element).text(text);
     ckeditor.setData(text, { callback: function() { resolve(true); } });
   })(arguments[0], arguments[1], arguments[2]);
-".freeze
+SCRIPT
 
 # CKEditor に html を設定する
 #

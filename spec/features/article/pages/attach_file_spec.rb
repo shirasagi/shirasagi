@@ -23,10 +23,16 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
       visit edit_path
 
       addon = first("#addon-cms-agents-addons-file")
-      addon.find('.toggle-head').click if addon.matches_css?(".body-closed")
+      if addon.matches_css?(".body-closed")
+        wait_addon_open do
+          addon.find('.toggle-head').click
+        end
+      end
 
       within "#addon-cms-agents-addons-file" do
-        click_on I18n.t("ss.buttons.upload")
+        wait_cbox_open do
+          click_on I18n.t("ss.buttons.upload")
+        end
       end
 
       wait_for_cbox do
@@ -49,7 +55,9 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
       visit edit_path
       within "form#item-form" do
         within "#addon-cms-agents-addons-file" do
-          click_on I18n.t("ss.buttons.upload")
+          wait_cbox_open do
+            click_on I18n.t("ss.buttons.upload")
+          end
         end
       end
 

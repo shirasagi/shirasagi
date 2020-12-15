@@ -133,7 +133,9 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
             visit edit_article_page_path(site: site, cid: node, id: item)
 
             within "#addon-cms-agents-addons-file" do
-              click_on I18n.t("ss.buttons.upload")
+              wait_cbox_open do
+                click_on I18n.t("ss.buttons.upload")
+              end
             end
             wait_for_cbox do
               within ".index" do
@@ -217,7 +219,9 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
             visit edit_article_page_path(site: site, cid: node, id: item)
             within "#addon-cms-agents-addons-form-page" do
               within ".column-value-cms-column-fileupload" do
-                click_on I18n.t("ss.buttons.upload")
+                wait_cbox_open do
+                  click_on I18n.t("ss.buttons.upload")
+                end
               end
             end
             wait_for_cbox do
@@ -241,7 +245,9 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
             visit edit_article_page_path(site: site, cid: node, id: item)
             within "#addon-cms-agents-addons-form-page" do
               within ".column-value-cms-column-free" do
-                click_on I18n.t("ss.buttons.upload")
+                wait_cbox_open do
+                  click_on I18n.t("ss.buttons.upload")
+                end
               end
             end
             wait_for_cbox do

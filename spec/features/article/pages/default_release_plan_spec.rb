@@ -28,7 +28,9 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
             fill_in "item[name]", with: "sample"
             click_on I18n.t('ss.links.input')
             fill_in "item[basename]", with: "sample"
-            find('#addon-cms-agents-addons-meta .toggle-head h2').click
+            wait_addon_open do
+              find('#addon-cms-agents-addons-meta .toggle-head h2').click
+            end
             fill_in "item[keywords]", with: "sample"
             fill_in "item[description]", with: "sample"
             click_button "公開保存"
@@ -64,7 +66,9 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
             fill_in "item[name]", with: "sample"
             click_on I18n.t('ss.links.input')
             fill_in "item[basename]", with: "sample"
-            find('#addon-cms-agents-addons-meta .toggle-head h2').click
+            wait_addon_open do
+              find('#addon-cms-agents-addons-meta .toggle-head h2').click
+            end
             fill_in "item[keywords]", with: "sample"
             fill_in "item[description]", with: "sample"
             click_button "下書き保存"
@@ -101,7 +105,9 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
             fill_in "item[name]", with: "sample"
             click_on I18n.t('ss.links.input')
             fill_in "item[basename]", with: "sample"
-            find('#addon-cms-agents-addons-meta .toggle-head h2').click
+            wait_addon_open do
+              find('#addon-cms-agents-addons-meta .toggle-head h2').click
+            end
             fill_in "item[keywords]", with: "sample"
             fill_in "item[description]", with: "sample"
             click_button "公開保存"
@@ -144,7 +150,9 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
             fill_in "item[name]", with: "sample"
             click_on I18n.t('ss.links.input')
             fill_in "item[basename]", with: "sample"
-            find('#addon-cms-agents-addons-meta .toggle-head h2').click
+            wait_addon_open do
+              find('#addon-cms-agents-addons-meta .toggle-head h2').click
+            end
             fill_in "item[keywords]", with: "sample"
             fill_in "item[description]", with: "sample"
             click_button "公開保存"

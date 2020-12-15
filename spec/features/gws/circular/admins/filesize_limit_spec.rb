@@ -31,7 +31,9 @@ describe "gws_circular_admins", type: :feature, dbscope: :example, js: true do
       # attach file
       within "form#item-form" do
         within "#addon-gws-agents-addons-file" do
-          click_on I18n.t("ss.buttons.upload")
+          wait_cbox_open do
+            click_on I18n.t("ss.buttons.upload")
+          end
         end
       end
       wait_for_cbox do
@@ -78,7 +80,9 @@ describe "gws_circular_admins", type: :feature, dbscope: :example, js: true do
       # attach file
       within "form#item-form" do
         within "#addon-gws-agents-addons-file" do
-          click_on I18n.t("ss.buttons.upload")
+          wait_cbox_open do
+            click_on I18n.t("ss.buttons.upload")
+          end
         end
       end
       wait_for_cbox do

@@ -29,7 +29,9 @@ describe "board_posts", type: :feature, dbscope: :example, js: true do
 
       visit edit_path
 
-      click_on I18n.t("ss.buttons.upload")
+      wait_cbox_open do
+        click_on I18n.t("ss.buttons.upload")
+      end
 
       wait_for_cbox do
         attach_file "item[in_files][]", "#{Rails.root}/spec/fixtures/ss/file/keyvisual.jpg"
