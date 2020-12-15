@@ -126,6 +126,26 @@ RSpec.configure do |config|
     config.ignore_hidden_elements = false
     config.default_max_wait_time = (ENV["CAPYBARA_MAX_WAIT_TIME"] || 10).to_i
   end
+
+  if travis? || ENV["rspec_retry"].present?
+    require 'rspec/retry'
+
+    config.verbose_retry = true
+    config.display_try_failure_messages = true
+    config.around :each, :js do |example|
+      example.run_with_retry retry: 3
+    end
+
+    # callback to be run between retries
+    config.retry_callback = proc do |ex|
+      # run some additional clean up task - can be filtered by example metadata
+      if ex.metadata[:js]
+        Capybara.reset!
+      end
+    end
+
+    puts "[RSpec] enabled rspec retry"
+  end
 end
 
 def unique_id
