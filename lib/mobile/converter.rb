@@ -1,10 +1,10 @@
 class Mobile::Converter < String
   @@tags = {
     remove: %w(
-      area audio canvas caption col colgroup embed iframe keygen map noscript
-      object optgroup output param progress script source track video),
+      area audio canvas caption col colgroup embed keygen map noscript
+      object optgroup output param progress script source track video style),
     strip: %w(
-      command datalist link rp rt style tbody tfoot thead),
+      command datalist link rp rt tbody tfoot thead),
     div: %w(
       article aside figure footer header nav section),
     span: %w(
@@ -21,15 +21,14 @@ class Mobile::Converter < String
     strip_convert_tags!
     gsub_convert_tags!
     gsub_img!
+    gsub_iframe!
     gsub_q!
     gsub_wbr!
     gsub_br!
   end
 
   def s_to_attr(str)
-    str.scan(/\S+?=".*?"/m).
-      map { |s| s.split(/=/).size == 2 ? s.delete('"').split(/=/, -1) : nil }.
-      compact.to_h
+    str.scan(/(\S+)?=['"](.*?)['"]/m).to_h rescue {}
   end
 
   def attr_to_s(attr)
@@ -117,6 +116,20 @@ class Mobile::Converter < String
   def gsub_br!
     self.gsub!("<br/>", "<br />")
     self.gsub!("<br>", "<br />")
+  end
+
+  def gsub_iframe!
+    self.gsub!(/<iframe(.*?)\/?>/) do |match|
+      src_attr = s_to_attr $1.to_s
+      href = src_attr["src"].to_s
+
+      if href.present?
+        cls = "tag-iframe" + ( src_attr["class"] ? " #{src_attr['class']}" : "" )
+        %(<a href="#{href}" class="#{cls}">#{href}</a>)
+      else
+        ""
+      end
+    end
   end
 
   def remove_other_namespace_tags!
