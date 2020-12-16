@@ -13,7 +13,9 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
       visit new_path
 
       within '#addon-cms-agents-addons-body' do
-        click_link I18n.t('cms.apis.related_pages.index')
+        wait_cbox_open do
+          click_link I18n.t('cms.apis.related_pages.index')
+        end
       end
 
       wait_for_cbox do
@@ -48,7 +50,9 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
         visit new_path
 
         within '#addon-cms-agents-addons-body' do
-          click_link I18n.t('cms.apis.related_pages.index')
+          wait_cbox_open do
+            click_link I18n.t('cms.apis.related_pages.index')
+          end
         end
 
         wait_for_cbox do
