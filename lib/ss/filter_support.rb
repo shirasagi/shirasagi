@@ -15,6 +15,13 @@ module SS
       false
     end
 
+    def same_site?(request, uri)
+      site = cur_site(request)
+      return false unless site
+      return false if uri.path.blank?
+      site.id == site.same_domain_site_from_path(uri.path).try(:id)
+    end
+
     def absolute_path?(_, uri)
       return false if uri.path.blank?
       uri.path.start_with?("/")
@@ -37,6 +44,7 @@ module SS
     included do
       module_function :cur_site
       module_function :same_host?
+      module_function :same_site?
       module_function :absolute_path?
       module_function :relative_path?
       module_function :fs_path?

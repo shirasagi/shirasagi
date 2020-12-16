@@ -129,7 +129,7 @@ class Cms::PreviewController < ApplicationController
     body = String.new(body)
     body.gsub!(/(href|src)=".*?"/) do |m|
       url = m.match(/.*?="(.*?)"/)[1]
-      site = site_from_url(url)
+      site = @cur_site.same_domain_site_from_path(url)
 
       if url =~ /^\/(assets|assets-dev)\//
         m
@@ -223,20 +223,6 @@ class Cms::PreviewController < ApplicationController
       chunks << convert_html_to_preview(body, mode: mode, rendered: @contents_env["ss.rendered"], desktop_pc: desktop_pc)
     end
     render html: chunks.join.html_safe, layout: false
-  end
-
-  def site_from_url(url)
-    @_sites ||= begin
-      SS::Site.all.select { |site| @cur_site.full_root_url == site.full_root_url }.
-        sort_by { |site| site.url.count("/") }.reverse
-    end
-
-    @_sites.each do |site|
-      if url =~ /^#{site.url}/
-        return site
-      end
-    end
-    return nil
   end
 
   public
