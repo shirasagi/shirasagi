@@ -135,7 +135,11 @@ this.Mobile_Size_Checker = (function () {
       if (ESCAPECHAR.indexOf(char) >= 0) {
         size++;
       } else {
-        size += ESCAPEDLEN_TABLE[encodeURI(char).length];
+        try {
+          size += ESCAPEDLEN_TABLE[encodeURI(char).length];
+        } catch (e) {
+          console.error("Mobile_Size_Checker.get_str_byte failed : " + e);
+        }
       }
     }
     return size;
