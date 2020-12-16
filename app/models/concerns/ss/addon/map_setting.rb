@@ -18,7 +18,7 @@ module SS::Addon
     end
 
     def map_api_layer_options
-      SS.config.map.layers.collect do |layer|
+      SS.config.map.layers.select { |layer| layer['name'].present? }.collect do |layer|
         [layer['name'], layer['name']]
       end
     end
