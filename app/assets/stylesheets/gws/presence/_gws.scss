@@ -74,7 +74,7 @@
       width: 25%;
     }
     th.presence-plan {
-      width:25%;
+      width: 25%;
     }
     th.presence-memo {
       width: 40%;
@@ -90,6 +90,7 @@
         overflow: hidden;
         white-space: normal;
         text-overflow: ellipsis;
+        width: calc(100% - 40px);
       }
       .presence-state, .select-presence-state {
         display: inline-block;
@@ -123,7 +124,6 @@
     .no-overflow {
       overflow: hidden;
       text-overflow: ellipsis;
-      white-space: nowrap;
     }
   }
   td:first-child .no-overflow {
