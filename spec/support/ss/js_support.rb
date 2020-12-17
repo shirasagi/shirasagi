@@ -31,6 +31,15 @@ module SS
       })(arguments[0], arguments[1]);
     SCRIPT
 
+    HOOK_CKEDITOR_EVENT_COMPLETION = <<~SCRIPT.freeze
+      (function(promiseId, selector, eventName) {
+        var ckeditor = $(selector).ckeditor().editor;
+        var defer = $.Deferred();
+        ckeditor.on(eventName, function(ev) { defer.resolve(true); ev.removeListener(); });
+        window.SS[promiseId] = defer.promise();
+      })(arguments[0], arguments[1], arguments[2]);
+    SCRIPT
+
     WAIT_EVENT_COMPLETION = <<~SCRIPT.freeze
       (function(promiseId, resolve) {
         var promise = window.SS[promiseId];
@@ -40,7 +49,7 @@ module SS
         }
 
         delete window.SS[promiseId];
-        promise.done(function() { resolve(true); });
+        promise.done(function(result) { resolve(result); });
       })(arguments[0], arguments[1]);
     SCRIPT
 
@@ -229,6 +238,26 @@ module SS
     #
     def wait_addon_open(&block)
       wait_event_to_fire("ss:addonShown", &block)
+    end
+
+    #
+    # Usage:
+    #   wait_for_ckeditor_event "item[html]", "afterInsertHtml" do
+    #     # do operations to cause "afterInsertHtml" event on "item[html]"
+    #     click_on I18n.t("sns.thumb_paste")
+    #   end
+    #
+    def wait_for_ckeditor_event(locator, event_name)
+      promise_id = "promise_#{unique_id}"
+      page.execute_script(HOOK_CKEDITOR_EVENT_COMPLETION, promise_id, "[name=\"#{locator}\"]", event_name)
+
+      # do operations which fire events
+      ret = yield
+
+      result = page.evaluate_async_script(WAIT_EVENT_COMPLETION, promise_id)
+      expect(result).to be_truthy
+
+      ret
     end
   end
 end
