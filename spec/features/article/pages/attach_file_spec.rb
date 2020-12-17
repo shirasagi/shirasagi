@@ -38,11 +38,12 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
       wait_for_cbox do
         attach_file "item[in_files][]", "#{Rails.root}/spec/fixtures/ss/file/keyvisual.jpg"
         click_button I18n.t("ss.buttons.save")
-        wait_for_ajax
+        expect(page).to have_css('.file-view', text: 'keyvisual.jpg')
 
         attach_file "item[in_files][]", "#{Rails.root}/spec/fixtures/ss/file/keyvisual.gif"
-        click_button I18n.t("ss.buttons.attach")
-        wait_for_ajax
+        wait_cbox_close do
+          click_button I18n.t("ss.buttons.attach")
+        end
       end
 
       within '#selected-files' do
@@ -64,14 +65,15 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
       wait_for_cbox do
         attach_file "item[in_files][]", "#{Rails.root}/spec/fixtures/ss/file/keyvisual.jpg"
         click_button I18n.t("ss.buttons.save")
-        wait_for_ajax
+        expect(page).to have_css('.file-view', text: 'keyvisual.jpg')
 
         click_on I18n.t("ss.buttons.edit")
         fill_in "item[name]", with: "modify.jpg"
         click_button I18n.t("ss.buttons.save")
-        wait_for_ajax
 
-        click_on "modify.jpg"
+        wait_cbox_close do
+          click_on "modify.jpg"
+        end
       end
 
       within '#selected-files' do
@@ -94,11 +96,12 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
       wait_for_cbox do
         attach_file "item[in_files][]", "#{Rails.root}/spec/fixtures/ss/file/keyvisual.jpg"
         click_button I18n.t("ss.buttons.save")
-        wait_for_ajax
+        expect(page).to have_css('.file-view', text: 'keyvisual.jpg')
 
         attach_file "item[in_files][]", "#{Rails.root}/spec/fixtures/ss/file/keyvisual.gif"
-        click_button I18n.t("ss.buttons.attach")
-        wait_for_ajax
+        wait_cbox_close do
+          click_button I18n.t("ss.buttons.attach")
+        end
       end
 
       within "form#item-form" do
@@ -130,18 +133,21 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
           visit edit_path
           within "form#item-form" do
             within "#addon-cms-agents-addons-file" do
-              click_on I18n.t("cms.file")
+              wait_cbox_open do
+                click_on I18n.t("cms.file")
+              end
             end
           end
 
           wait_for_cbox do
             attach_file "item[in_files][]", "#{Rails.root}/spec/fixtures/ss/file/keyvisual.jpg"
             click_button I18n.t("ss.buttons.save")
-            wait_for_ajax
+            expect(page).to have_css('.file-view', text: 'keyvisual.jpg')
 
             attach_file "item[in_files][]", "#{Rails.root}/spec/fixtures/ss/file/keyvisual.gif"
-            click_button I18n.t("ss.buttons.attach")
-            wait_for_ajax
+            wait_cbox_close do
+              click_button I18n.t("ss.buttons.attach")
+            end
           end
 
           within "form#item-form" do
@@ -182,20 +188,30 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
           visit edit_path
           within "form#item-form" do
             within "#addon-cms-agents-addons-file" do
-              click_on I18n.t("cms.file")
+              wait_cbox_open do
+                click_on I18n.t("cms.file")
+              end
             end
           end
 
           wait_for_cbox do
-            click_on file_name
+            wait_cbox_close do
+              click_on file_name
+            end
           end
 
           within "form#item-form" do
             within "#addon-cms-agents-addons-file" do
               within ".file-view" do
-                click_on I18n.t("sns.file_attach")
-                click_on I18n.t("sns.image_paste")
-                click_on I18n.t("sns.thumb_paste")
+                wait_for_ckeditor_event "item[html]", "afterInsertHtml" do
+                  click_on I18n.t("sns.file_attach")
+                end
+                wait_for_ckeditor_event "item[html]", "afterInsertHtml" do
+                  click_on I18n.t("sns.image_paste")
+                end
+                wait_for_ckeditor_event "item[html]", "afterInsertHtml" do
+                  click_on I18n.t("sns.thumb_paste")
+                end
               end
             end
 
@@ -239,16 +255,19 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
           click_on column1.name
         end
         within ".column-value-cms-column-fileupload" do
-          click_on I18n.t("cms.file")
+          wait_cbox_open do
+            click_on I18n.t("cms.file")
+          end
         end
         wait_for_cbox do
           attach_file "item[in_files][]", "#{Rails.root}/spec/fixtures/ss/file/keyvisual.jpg"
           click_button I18n.t("ss.buttons.save")
-          wait_for_ajax
+          expect(page).to have_css('.file-view', text: 'keyvisual.jpg')
 
           attach_file 'item[in_files][]', "#{Rails.root}/spec/fixtures/ss/file/keyvisual.gif"
-          click_on I18n.t('ss.buttons.attach')
-          wait_for_ajax
+          wait_cbox_close do
+            click_on I18n.t('ss.buttons.attach')
+          end
         end
         within "form#item-form" do
           within ".column-value-cms-column-fileupload" do
@@ -261,22 +280,31 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
           click_on column2.name
         end
         within ".column-value-cms-column-free" do
-          click_on I18n.t("cms.file")
+          wait_cbox_open do
+            click_on I18n.t("cms.file")
+          end
         end
         wait_for_cbox do
-          attach_file "item[in_files][]", "#{Rails.root}/spec/fixtures/ss/file/keyvisual.jpg"
+          attach_file 'item[in_files][]', "#{Rails.root}/spec/fixtures/ss/shirasagi.pdf"
           click_button I18n.t("ss.buttons.save")
-          wait_for_ajax
+          expect(page).to have_css('.file-view', text: 'shirasagi.pdf')
 
-          attach_file 'item[in_files][]', "#{Rails.root}/spec/fixtures/ss/file/keyvisual.gif"
-          click_on I18n.t('ss.buttons.attach')
-          wait_for_ajax
+          attach_file "item[in_files][]", "#{Rails.root}/spec/fixtures/ss/logo.png"
+          wait_cbox_close do
+            click_on I18n.t('ss.buttons.attach')
+          end
         end
         within "form#item-form" do
           within ".column-value-cms-column-free" do
-            expect(page).to have_no_css('.column-value-files', text: 'keyvisual.jpg')
-            expect(page).to have_css('.column-value-files', text: 'keyvisual.gif')
+            expect(page).to have_no_css('.column-value-files', text: 'shirasagi.pdf')
+            expect(page).to have_css('.column-value-files', text: 'logo.png')
           end
+
+          # 定型フォームに動画を添付すると Cms_Form.addSyntaxCheck を呼び出し、アクセシビリティチェックを登録する。
+          # Cms_Form.addSyntaxCheck の呼び出しが完了する前に「公開保存」をクリックしてしまうと、
+          # アクセシビリティチェックが実行されないので、警告ダイアログが表示されず、テストが失敗してしまう。
+          # そこで、苦渋だが  wait_for_ajax で Cms_Form.addSyntaxCheck の呼び出し完了を待機する。
+          wait_for_ajax
 
           click_on I18n.t("ss.buttons.publish_save")
         end
