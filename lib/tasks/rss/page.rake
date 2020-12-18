@@ -12,6 +12,6 @@ namespace :rss do
   end
 
   task pull_weather_xml: :environment do
-    Rss::ImportWeatherXmlJob.pull_all
+    Rss::ImportWeatherXmlAllJob.perform_now
   end
 end

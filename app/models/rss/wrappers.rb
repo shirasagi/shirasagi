@@ -139,6 +139,10 @@ module Rss::Wrappers
       new(rss)
     end
 
+    def count
+      @rss.items.count
+    end
+
     def each(&block)
       @rss.items.each do |item|
         yield ::Rss::Wrappers::Items::Atom.wrap(item)
@@ -155,6 +159,10 @@ module Rss::Wrappers
 
     def self.wrap(rss)
       new(rss)
+    end
+
+    def count
+      @rss.items.count
     end
 
     def each(&block)
@@ -179,6 +187,10 @@ module Rss::Wrappers
 
     def items
       @rss.items
+    end
+
+    def count
+      @rss.items.count
     end
 
     def each(&block)

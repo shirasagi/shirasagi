@@ -1,63 +1,14 @@
 require 'rss'
 
 class Rss::ImportWeatherXmlJob < Rss::ImportBase
+  include Job::SS::TaskFilter
+
+  self.task_class = Cms::Task
+  self.task_name = "rss:import_weather_xml"
+
   def initialize(*args)
     super
     set_model Rss::WeatherXmlPage
-  end
-
-  class << self
-    def pull_all
-      SS.config.rss.weather_xml["urls"].each do |url|
-        puts "pull from #{url}"
-        pull_one(url)
-      end
-    end
-
-    def pull_one(url)
-      http_client = Faraday.new(url: url) do |builder|
-        builder.request  :url_encoded
-        builder.response :logger, Rails.logger
-        builder.adapter Faraday.default_adapter
-      end
-      http_client.headers[:user_agent] += " (SHIRASAGI/#{SS.version}; PID/#{Process.pid})"
-      http_client.headers[:accept_encoding] = "gzip"
-
-      resp = http_client.get
-      return false if resp.status != 200
-
-      content_encoding = resp.headers["Content-Encoding"]
-      if content_encoding.nil?
-        body = resp.body
-      elsif content_encoding.casecmp("gzip") == 0
-        body = Zlib::GzipReader.wrap(StringIO.new(resp.body)) { |gz| gz.read }
-      end
-      return false if body.blank?
-
-      each_node do |node|
-        site = node.site
-        next if site.blank?
-
-        puts "-- import into #{node.name}(#{node.filename}) on #{site.name}(#{site.host})"
-
-        file = Rss::TempFile.create_from_post(site, body, resp.headers['Content-Type'].presence || "application/xml")
-        job = Rss::ImportWeatherXmlJob.bind(site_id: site, node_id: node)
-        job.perform_now(file.id)
-      end
-
-      true
-    end
-
-    private
-
-    def each_node
-      all_ids = Rss::Node::WeatherXml.all.and_public.pluck(:id)
-      all_ids.each_slice(20) do |ids|
-        Rss::Node::WeatherXml.all.and_public.in(id: ids).to_a.each do |node|
-          yield node
-        end
-      end
-    end
   end
 
   private
@@ -70,6 +21,8 @@ class Rss::ImportWeatherXmlJob < Rss::ImportBase
     return unless @cur_file
 
     @items = Rss::Wrappers.parse(@cur_file)
+    @task.log "found #{@items.count.to_s(:delimited)} xmls to download"
+
     @imported_pages = []
   end
 
@@ -103,21 +56,28 @@ class Rss::ImportWeatherXmlJob < Rss::ImportBase
   end
 
   def import_rss_item(*args)
-    page = super
-    return page if page.nil? || page.invalid?
+    page = nil
 
-    content = download(page.rss_link)
-    return page if content.nil?
+    elapsed = Benchmark.realtime do
+      page = super
+      return page if page.nil? || page.invalid?
 
-    page.event_id = extract_event_id(content) rescue nil
-    page.save!
-    page.save_weather_xml(content)
+      content = download(page.rss_link)
+      return page if content.nil?
 
-    if content.include?('<InfoKind>震度速報</InfoKind>')
-      process_earthquake(page)
+      page.event_id = extract_event_id(content) rescue nil
+      page.save!
+      page.save_weather_xml(content)
+
+      if content.include?('<InfoKind>震度速報</InfoKind>')
+        process_earthquake(page)
+      end
+
+      @imported_pages << page
     end
 
-    @imported_pages << page
+    @task.log "imported #{page.try(:rss_link)} in #{elapsed} seconds"
+
     page
   end
 
@@ -126,33 +86,42 @@ class Rss::ImportWeatherXmlJob < Rss::ImportBase
   end
 
   def download(url)
-    cache(url) do
-      retriable do
-        http_client = Faraday.new(url: url) do |builder|
-          builder.request  :url_encoded
-          builder.response :logger, Rails.logger
-          builder.adapter Faraday.default_adapter
+    body = nil
+    resp = nil
+
+    elapsed = Benchmark.realtime do
+      body = cache(url) do
+        Retriable.retriable(on_retry: method(:on_each_retry)) do
+          http_client = Faraday.new(url: url) do |builder|
+            builder.request  :url_encoded
+            builder.response :logger, Rails.logger
+            builder.adapter Faraday.default_adapter
+          end
+          http_client.headers[:user_agent] += " (SHIRASAGI/#{SS.version}; PID/#{Process.pid})"
+          http_client.headers[:accept_encoding] = "gzip"
+
+          resp = http_client.get
+          raise "#{resp.status}: http error" if resp.status != 200
+
+          content_encoding = resp.headers["Content-Encoding"]
+          if content_encoding.nil?
+            body = resp.body
+          elsif content_encoding.casecmp("gzip") == 0
+            body = Zlib::GzipReader.wrap(StringIO.new(resp.body)) { |gz| gz.read }
+          else
+            raise "#{content_encoding}: unsupported content encoding"
+          end
+
+          raise "empty body" if body.blank?
+
+          body.force_encoding('UTF-8')
         end
-        http_client.headers[:user_agent] += " (SHIRASAGI/#{SS.version}; PID/#{Process.pid})"
-        http_client.headers[:accept_encoding] = "gzip"
-
-        resp = http_client.get
-        raise "#{resp.status}: http error" if resp.status != 200
-
-        content_encoding = resp.headers["Content-Encoding"]
-        if content_encoding.nil?
-          body = resp.body
-        elsif content_encoding.casecmp("gzip") == 0
-          body = Zlib::GzipReader.wrap(StringIO.new(resp.body)) { |gz| gz.read }
-        else
-          raise "#{content_encoding}: unsupported content encoding"
-        end
-
-        raise "empty body" if body.blank?
-
-        body.force_encoding('UTF-8')
       end
     end
+
+    @task.log "downloaded #{url} with status #{resp.try(:status) || "(cached)"} in #{elapsed} seconds"
+
+    body
   rescue => e
     Rails.logger.warn("#{e.class} (#{e.message}):\n  #{e.backtrace.join("\n  ")}")
     nil
@@ -182,20 +151,8 @@ class Rss::ImportWeatherXmlJob < Rss::ImportBase
     data
   end
 
-  def retriable(tries = 3, timeout_sec = 10)
-    tries.times do |index|
-      try = index + 1
-
-      begin
-        return ::Timeout.timeout(timeout_sec) { yield }
-      rescue => e
-        raise if try >= tries
-
-        next_interval = 5 * try
-        Rails.logger.info("#{e.class}: '#{e.message}' - #{try} tries and #{next_interval} seconds until the next try.")
-        sleep(next_interval)
-      end
-    end
+  def on_each_retry(err, try, elapsed, interval)
+    @task.log "#{err.class}: '#{err.message}' - #{try} tries in #{elapsed} seconds and #{interval} seconds until the next try."
   end
 
   def extract_event_id(xml)
