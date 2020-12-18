@@ -231,6 +231,7 @@ class Gws::Memo::Notifier
 
   def deliver!
     cur_user.cur_site ||= cur_group
+    now = Time.zone.now
 
     url = item_to_url(item)
 
@@ -239,7 +240,7 @@ class Gws::Memo::Notifier
     message.cur_user = cur_user
     message.member_ids = to_users.pluck(:id)
 
-    message.send_date = Time.zone.now
+    message.send_date = now
 
     message.subject = subject
     if action.present?
@@ -255,10 +256,18 @@ class Gws::Memo::Notifier
     message.url ||= I18n.t("gws_notification.#{i18n_key}.text", name: item_title, text: url, default: nil)
     message.url ||= item_text
 
+    message.record_timestamps = false
+    message.created = now
+    message.updated = now
+
     message.save!
 
     mail = Gws::Memo::Mailer.notice_mail(message, to_users, item)
     mail.deliver_now if mail
+
+    # item は操作対象の copy の場合がある。copy の場合 `set(...)` を呼び出しても DB が更新されないので、
+    # 回りくどいようだが `where(id: item.id).set(...)` とする。
+    item.class.where(id: item.id).set(notification_noticed_at: now) if item.respond_to?(:notification_noticed_at)
   end
 
   private
