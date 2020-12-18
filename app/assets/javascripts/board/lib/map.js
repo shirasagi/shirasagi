@@ -47,7 +47,7 @@ this.Board_Map = (function () {
     }
     if (this.opts['marker']) {
       this.setMarker(this.opts['marker']);
-
+      this.setCenter(this.opts['marker']);
     }
     if (this.opts['popup']) {
       this.initPopup();
@@ -64,7 +64,8 @@ this.Board_Map = (function () {
           while (pos[0] > 180) {
             pos[0] -= 360;
           }
-          return _this.setMarker(pos);
+          _this.setMarker(pos);
+          _this.setCenter(pos);
         };
       })(this));
     }
@@ -126,6 +127,10 @@ this.Board_Map = (function () {
     this.popup.find('.content').html($("#marker-html-" + markerId).html());
     this.popup.show();
     return this.popupOverlay.setPosition(evt.coordinate);
+  };
+
+  Board_Map.prototype.setCenter = function (position) {
+    this.map.getView().setCenter(ol.proj.transform([position[0], position[1]], "EPSG:4326", "EPSG:3857"));
   };
 
   Board_Map.prototype.setMarker = function (position, opts) {
@@ -216,9 +221,10 @@ this.Board_Map = (function () {
     if (!navigator.geolocation) {
       return;
     }
-    return navigator.geolocation.getCurrentPosition((function (_this) {
+    navigator.geolocation.getCurrentPosition((function (_this) {
       return function (position) {
-        return _this.setMarker([position.coords.longitude, position.coords.latitude]);
+        _this.setMarker([position.coords.longitude, position.coords.latitude]);
+        _this.setCenter([position.coords.longitude, position.coords.latitude]);
       };
     })(this));
   };
@@ -226,4 +232,3 @@ this.Board_Map = (function () {
   return Board_Map;
 
 })();
-
