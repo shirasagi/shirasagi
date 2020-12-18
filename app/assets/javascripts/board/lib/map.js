@@ -131,6 +131,7 @@ this.Board_Map = (function () {
 
   Board_Map.prototype.setCenter = function (position) {
     this.map.getView().setCenter(ol.proj.transform([position[0], position[1]], "EPSG:4326", "EPSG:3857"));
+    this.map.getView().setZoom(11);
   };
 
   Board_Map.prototype.setMarker = function (position, opts) {
