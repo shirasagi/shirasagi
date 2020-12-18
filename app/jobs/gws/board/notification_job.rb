@@ -80,6 +80,10 @@ class Gws::Board::NotificationJob < Gws::ApplicationJob
     message.format = 'text'
     message.url = path
 
+    message.record_timestamps = false
+    message.created = @now
+    message.updated = @now
+
     message.save!
 
     mail = Gws::Memo::Mailer.notice_mail(message, recipients, item)

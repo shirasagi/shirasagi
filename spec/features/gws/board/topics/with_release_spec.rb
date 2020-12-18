@@ -56,6 +56,7 @@ describe "gws_board_topics", type: :feature, dbscope: :example, js: true do
       expect(item.name).to eq "name"
       expect(item.text).to eq "text"
       expect(item.notify_state).to eq "enabled"
+      expect(item.notification_noticed_at).to be_blank
       expect(item.state).to eq "public"
       expect(item.release_date).to eq release_date
       expect(item.close_date).to eq close_date
