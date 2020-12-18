@@ -32,11 +32,11 @@ describe 'article_pages', type: :feature, dbscope: :example, js: true do
         expect(page).to have_no_selector('#item_form_id', visible: true)
 
         select 'part1'
-        page.execute_script(FILL_CKEDITOR_SCRIPT, find('#item_html_part_0'), '<p>part1</p>')
+        page.evaluate_async_script(FILL_CKEDITOR_SCRIPT, find('#item_html_part_0'), '<p>part1</p>')
         select 'part2'
-        page.execute_script(FILL_CKEDITOR_SCRIPT, find('#item_html_part_1'), '<p>part2</p>')
+        page.evaluate_async_script(FILL_CKEDITOR_SCRIPT, find('#item_html_part_1'), '<p>part2</p>')
         select 'part3'
-        page.execute_script(FILL_CKEDITOR_SCRIPT, find('#item_html_part_2'), '<p>part3</p>')
+        page.evaluate_async_script(FILL_CKEDITOR_SCRIPT, find('#item_html_part_2'), '<p>part3</p>')
 
         click_on I18n.t('ss.buttons.draft_save')
       end
@@ -59,11 +59,11 @@ describe 'article_pages', type: :feature, dbscope: :example, js: true do
       click_on I18n.t('ss.links.edit')
       within 'form#item-form' do
         select 'part1'
-        page.execute_script(FILL_CKEDITOR_SCRIPT, find('#item_html_part_0'), '<p>part4</p>')
+        page.evaluate_async_script(FILL_CKEDITOR_SCRIPT, find('#item_html_part_0'), '<p>part4</p>')
         select 'part2'
-        page.execute_script(FILL_CKEDITOR_SCRIPT, find('#item_html_part_1'), '<p>part5</p>')
+        page.evaluate_async_script(FILL_CKEDITOR_SCRIPT, find('#item_html_part_1'), '<p>part5</p>')
         select 'part3'
-        page.execute_script(FILL_CKEDITOR_SCRIPT, find('#item_html_part_2'), '<p>part6</p>')
+        page.evaluate_async_script(FILL_CKEDITOR_SCRIPT, find('#item_html_part_2'), '<p>part6</p>')
 
         click_on I18n.t('ss.buttons.draft_save')
       end
