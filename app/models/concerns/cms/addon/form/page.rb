@@ -126,7 +126,7 @@ module Cms::Addon::Form::Page
     docs = attribute_was("column_values")
 
     if docs.present?
-      docs = docs.map do |doc|
+      docs = docs.select(&:present?).map do |doc|
         type = doc["_type"] || doc[:_type]
         effective_kass = type.camelize.constantize rescue Cms::Column::Value::Base
         Mongoid::Factory.build(Cms::Column::Value::Base, doc.slice(*effective_kass.fields.keys.map(&:to_s)))
