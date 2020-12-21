@@ -62,7 +62,7 @@ install: # bash .travis.d/install.sh
   - docker pull shirasagi/mail
   - docker run --name test_mail -d -p 10143:143 -p 10587:587 shirasagi/mail
   - docker ps -a
-  - curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
+  - curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-0.7.0-linux-amd64 > ./cc-test-reporter
   - chmod +x ./cc-test-reporter
   - ./cc-test-reporter before-build
 
