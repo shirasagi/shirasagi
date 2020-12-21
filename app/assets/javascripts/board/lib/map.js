@@ -47,7 +47,6 @@ this.Board_Map = (function () {
     }
     if (this.opts['marker']) {
       this.setMarker(this.opts['marker']);
-      this.setCenter(this.opts['marker']);
     }
     if (this.opts['popup']) {
       this.initPopup();
@@ -65,7 +64,6 @@ this.Board_Map = (function () {
             pos[0] -= 360;
           }
           _this.setMarker(pos);
-          _this.setCenter(pos);
         };
       })(this));
     }
@@ -131,7 +129,7 @@ this.Board_Map = (function () {
 
   Board_Map.prototype.setCenter = function (position) {
     this.map.getView().setCenter(ol.proj.transform([position[0], position[1]], "EPSG:4326", "EPSG:3857"));
-    this.map.getView().setZoom(11);
+    this.map.getView().setZoom(16);
   };
 
   Board_Map.prototype.setMarker = function (position, opts) {
@@ -233,4 +231,3 @@ this.Board_Map = (function () {
   return Board_Map;
 
 })();
-
