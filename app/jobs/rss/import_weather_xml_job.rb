@@ -2,6 +2,7 @@ require 'rss'
 
 class Rss::ImportWeatherXmlJob < Rss::ImportBase
   include Job::SS::TaskFilter
+  include Rss::Downloadable
 
   self.task_class = Cms::Task
   self.task_name = "rss:import_weather_xml"
@@ -13,15 +14,32 @@ class Rss::ImportWeatherXmlJob < Rss::ImportBase
 
   private
 
-  def before_import(file, *args)
+  def before_import(*_args)
     @weather_xml_page = nil
     super
 
-    @cur_file = Rss::TempFile.with_repl_master.where(site_id: site.id, id: file).first
-    return unless @cur_file
+    urls = SS.config.rss.weather_xml["urls"]
+    urls.map!(&:strip)
+    urls.select!(&:present?)
 
-    @items = Rss::Wrappers.parse(@cur_file)
-    @task.log "found #{@items.count.to_s(:delimited)} xmls to download"
+    rss_items = []
+    urls.each do |url|
+      rss_source = download_with_cache(url)
+      next if rss_source.blank?
+
+      rss = ::RSS::Parser.parse(rss_source, false)
+
+      case rss
+      when ::RSS::Atom::Feed
+        rss_items << ::Rss::Wrappers::Atom.wrap(rss)
+      when ::RSS::Rss
+        rss_items << ::Rss::Wrappers::Rss.wrap(rss)
+      when ::RSS::RDF
+        rss_items << ::Rss::Wrappers::RDF.wrap(rss)
+      end
+    end
+
+    @items = ::Rss::Wrappers.merge(rss_items)
 
     @imported_pages = []
   end
@@ -44,17 +62,6 @@ class Rss::ImportWeatherXmlJob < Rss::ImportBase
     remove_old_cache(threshold)
   end
 
-  def remove_old_cache(threshold)
-    data_dir = SS.config.rss.weather_xml["data_cache_dir"]
-    return if data_dir.blank?
-
-    data_dir = ::File.expand_path(data_dir, Rails.root)
-    ::Dir.glob(%w(*.xml *.xml.gz), base: data_dir).each do |file_path|
-      file_path = ::File.expand_path(file_path, data_dir)
-      ::FileUtils.rm_f(file_path) if ::File.mtime(file_path) < threshold
-    end
-  end
-
   def import_rss_item(*args)
     page = nil
 
@@ -62,7 +69,7 @@ class Rss::ImportWeatherXmlJob < Rss::ImportBase
       page = super
       return page if page.nil? || page.invalid?
 
-      content = download(page.rss_link)
+      content = download_with_cache(page.rss_link)
       return page if content.nil?
 
       page.event_id = extract_event_id(content) rescue nil
@@ -83,76 +90,6 @@ class Rss::ImportWeatherXmlJob < Rss::ImportBase
 
   # override Rss::ImportBase#remove_unimported_pages to reduce destroy call
   def remove_unimported_pages
-  end
-
-  def download(url)
-    body = nil
-    resp = nil
-
-    elapsed = Benchmark.realtime do
-      body = cache(url) do
-        Retriable.retriable(on_retry: method(:on_each_retry)) do
-          http_client = Faraday.new(url: url) do |builder|
-            builder.request  :url_encoded
-            builder.response :logger, Rails.logger
-            builder.adapter Faraday.default_adapter
-          end
-          http_client.headers[:user_agent] += " (SHIRASAGI/#{SS.version}; PID/#{Process.pid})"
-          http_client.headers[:accept_encoding] = "gzip"
-
-          resp = http_client.get
-          raise "#{resp.status}: http error" if resp.status != 200
-
-          content_encoding = resp.headers["Content-Encoding"]
-          if content_encoding.nil?
-            body = resp.body
-          elsif content_encoding.casecmp("gzip") == 0
-            body = Zlib::GzipReader.wrap(StringIO.new(resp.body)) { |gz| gz.read }
-          else
-            raise "#{content_encoding}: unsupported content encoding"
-          end
-
-          raise "empty body" if body.blank?
-
-          body.force_encoding('UTF-8')
-        end
-      end
-    end
-
-    @task.log "downloaded #{url} with status #{resp.try(:status) || "(cached)"} in #{elapsed} seconds"
-
-    body
-  rescue => e
-    Rails.logger.warn("#{e.class} (#{e.message}):\n  #{e.backtrace.join("\n  ")}")
-    nil
-  end
-
-  def cache(url)
-    data_dir = SS.config.rss.weather_xml["data_cache_dir"]
-    return yield if data_dir.blank?
-
-    data_dir = ::File.expand_path(data_dir, Rails.root)
-    ::FileUtils.mkdir_p(data_dir) unless ::Dir.exists?(data_dir)
-
-    hash = Digest::MD5.hexdigest(url)
-    file_paths = %w(xml.gz xml).map { |ext| ::File.join(data_dir, "#{hash}.#{ext}") }
-    file_path = file_paths.find { |path| ::File.exists?(path) }
-    if file_path
-      if file_path.ends_with?(".gz")
-        return ::Zlib::GzipReader.open(file_path) { |gz| gz.read }
-      else
-        return ::File.read(file_path)
-      end
-    end
-
-    data = yield
-    ::Zlib::GzipWriter.open(file_paths.first) { |gz| gz.write data.to_s }
-
-    data
-  end
-
-  def on_each_retry(err, try, elapsed, interval)
-    @task.log "#{err.class}: '#{err.message}' - #{try} tries in #{elapsed} seconds and #{interval} seconds until the next try."
   end
 
   def extract_event_id(xml)
