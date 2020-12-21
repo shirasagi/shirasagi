@@ -3,6 +3,8 @@ module Category::Node
     include Cms::Model::Node
     include Cms::Addon::ReadableSetting
 
+    class_variable_set(:@@_requires_read_permission_to_read, false)
+
     default_scope ->{ where(route: /^category\//) }
   end
 
@@ -18,6 +20,8 @@ module Category::Node
     include History::Addon::Backup
     include Category::Addon::Integration
     include Category::Addon::Split
+
+    class_variable_set(:@@_requires_read_permission_to_read, false)
 
     default_scope ->{ where(route: "category/node") }
   end
@@ -36,6 +40,8 @@ module Category::Node
     include Category::Addon::Integration
     include Category::Addon::Split
     include Cms::ChildList
+
+    class_variable_set(:@@_requires_read_permission_to_read, false)
 
     default_scope ->{ where(route: "category/page") }
   end

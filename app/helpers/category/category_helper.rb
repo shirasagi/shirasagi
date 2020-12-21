@@ -5,7 +5,10 @@ module Category::CategoryHelper
     def initialize(caller, item, cate_options)
       @caller = caller
       @item = item
+      @unreadable_categories = []
+
       cate_options ||= {}
+      @readable = cate_options[:readable].presence
       @root_and_descendants = cate_options[:root_and_descendants]
       @item_name = cate_options[:item_name] || "category_ids"
     end
@@ -32,7 +35,46 @@ module Category::CategoryHelper
     def render_cate_form0(categories, item)
       children = children(categories, item)
 
-      if children.present?
+      if @readable && item.respond_to?(:readable?) && !item.readable?(*@readable)
+        @unreadable_categories << item
+        if children.present?
+          children.each { |c| render_cate_form0 categories, c }
+        end
+      elsif children.present?
+        @caller.output_buffer << @caller.content_tag("div", class: "parent") do
+          cc = children.map { |c| children(categories, c).size }.max != 0
+          @caller.output_buffer << @caller.content_tag("label", class: "parent") do
+            @caller.output_buffer << @caller.check_box_tag("item[#{@item_name}][]", item.id, @item.send(@item_name).include?(item.id), {data: {url: item.filename}})
+            @caller.output_buffer << " "
+            @caller.output_buffer << item.name
+          end
+
+          @caller.output_buffer << @caller.content_tag("div", class: ["child", cc ? "grandchild" : nil]) do
+            children.each { |c| render_cate_form1 categories, c }
+          end
+        end
+      else
+        @caller.output_buffer << @caller.content_tag("div", class: "parent") do
+          @caller.output_buffer << @caller.content_tag("label") do
+            @caller.output_buffer << @caller.check_box_tag("item[#{@item_name}][]", item.id, @item.send(@item_name).include?(item.id), {data: {url: item.filename}})
+            @caller.output_buffer << " "
+            @caller.output_buffer << item.name
+          end
+        end
+      end
+
+      categories.delete(item)
+    end
+
+    def render_cate_form1(categories, item)
+      children = children(categories, item)
+
+      if @readable && item.respond_to?(:readable?) && !item.readable?(*@readable)
+        @unreadable_categories << item
+        if children.present?
+          children.each { |c| render_cate_form1 categories, c }
+        end
+      elsif children.present?
         cc = children.map { |c| children(categories, c).size }.max != 0
         @caller.output_buffer << @caller.content_tag("label", class: "parent") do
           @caller.output_buffer << @caller.check_box_tag("item[#{@item_name}][]", item.id, @item.send(@item_name).include?(item.id), {data: {url: item.filename}})
@@ -41,7 +83,7 @@ module Category::CategoryHelper
         end
 
         @caller.output_buffer << @caller.content_tag("div", class: ["child", cc ? "grandchild" : nil]) do
-          children.each { |c| render_cate_form0 categories, c }
+          children.each { |c| render_cate_form1 categories, c }
         end
       else
         @caller.output_buffer << @caller.content_tag("label") do
@@ -54,13 +96,30 @@ module Category::CategoryHelper
       categories.delete(item)
     end
 
+    def render_unreadable_categories
+      @caller.output_buffer << @caller.content_tag("div", class: "unreadable", style: "display:none;") do
+        @unreadable_categories.each do |item|
+          @caller.output_buffer << @caller.content_tag("label") do
+            @caller.output_buffer << @caller.check_box_tag("item[#{@item_name}][]", item.id, @item.send(@item_name).include?(item.id), {data: {url: item.filename}})
+            @caller.output_buffer << " "
+            @caller.output_buffer << item.name
+          end
+        end
+      end
+    end
+
     def render_cate_form(categories)
       loop do
         cate = categories.shift
-        return if cate.blank?
+        break if cate.blank?
+
         next if @root_and_descendants && cate.depth > 1
 
-        @caller.output_buffer << @caller.content_tag("div", class: "parent") { render_cate_form0(categories, cate) }
+        @caller.output_buffer << render_cate_form0(categories, cate)
+      end
+
+      if @unreadable_categories.present?
+        render_unreadable_categories
       end
     end
   end
