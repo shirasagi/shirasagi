@@ -66,7 +66,7 @@ module Rss::Downloadable
   end
 
   def remove_old_cache(threshold)
-    ::Dir.glob(%w(*.xml *.xml.gz), base: self.class.data_cache_dir).each do |file_path|
+    ::Dir.glob(%w(*.xml *.xml.gz *.log.gz), base: self.class.data_cache_dir).each do |file_path|
       file_path = ::File.expand_path(file_path, self.class.data_cache_dir)
       ::FileUtils.rm_f(file_path) if ::File.mtime(file_path) < threshold
     end
