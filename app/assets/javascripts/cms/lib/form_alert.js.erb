@@ -159,6 +159,21 @@ this.Form_Alert = (function () {
     }
   };
 
+  Form_Alert.snsPostConfirmation = function (form, submit) {
+    var addonName, messages, f;
+    f = $(submit).data("sns-post-confirmation");
+
+    messages = [];
+    if (f) {
+      messages = f();
+    }
+
+    addonName = "投稿連携"
+    $.each(messages, function() {
+      Form_Alert.add(addonName, null, this);
+    });
+  }
+
   Form_Alert.add = function (addon, ele, msg) {
     var base;
     (base = Form_Alert.alerts)[addon] || (base[addon] = []);

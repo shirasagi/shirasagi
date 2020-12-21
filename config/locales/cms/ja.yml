@@ -145,6 +145,9 @@ ja:
       contains_urls_exists: このページへのリンク、関連記事、添付ファイルが以下のページに含まれています。
       contains_urls_not_found: このページへのリンク、関連記事、添付ファイルが含まれているページは見つかりませんでした。
       check_accessibility_manually: "セマンティックなマークアップであるか確認してください。\nコントラスト比に問題がないか確認してください。"
+      when_publish: 公開時の注意
+      line_post_enabled: LINE連携が有効になっています。連携しない場合は、設定を解除してください。
+      twitter_post_enabled: Twitter投稿が有効になっています。連携しない場合は、設定を解除してください。
     notices:
       import_with_entry_form_is_not_supported: 次のフォームでは本文ブロックは出力されません。
       restoring_public_content_from_trash: 非公開で復元されます。復元後、内容を確認うえ、公開してください。

@@ -16,6 +16,9 @@
       <% if workflow_approver %>
         <section class="mod-workflow-approve">
           <%= render "ss/crud/addon", addon: { head: "#{t("workflow.buttons.approve")}/#{t("workflow.buttons.remand")}#{@model.tt :approve_remand}".html_safe } do %>
+            <% if @ss_mode == :cms %>
+              <%== render_sns_post_confirm rescue nil %>
+            <% end %>
             <%= text_area :remand, :comment, value: "" %>
             <% if @ss_mode == :gws && @item.workflow_approver_attachment_enabled_at?(workflow_approver[:level]) %>
               <div class="upload">
