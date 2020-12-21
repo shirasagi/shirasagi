@@ -67,10 +67,6 @@ describe "Rss::Node::WeatherXml", type: :feature, dbscope: :example, js: true do
       click_on I18n.t("cms.node_config")
 
       click_on I18n.t('ss.links.edit')
-      fill_in 'item[hub_url]', with: "http://example.jp/#{unique_id}.html"
-      fill_in 'item[topic_urls]', with: "http://example.jp/#{unique_id}.html"
-      fill_in 'item[lease_seconds]', with: 300
-      fill_in 'item[secret]', with: unique_id
       fill_in 'item[rss_max_docs]', with: 10
       select I18n.t("ss.options.state.closed"), from: 'item[page_state]'
       fill_in 'item[title_mail_text]', with: unique_id

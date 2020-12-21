@@ -1,10 +1,23 @@
+<%
+  addon ||= local_assigns.fetch(:addon, {})
+  if @model.weather_xml
+    addon[:head] = I18n.t("rss.weather_xml_page")
+  end
+%>
 <dl class="see mod-rss-import">
-  <dt><%= @model.t :rss_url %><%= @model.tt :rss_url %></dt>
-  <dd><%= f.text_field :rss_url %></dd>
+  <% unless @model.weather_xml %>
+    <dt><%= @model.t :rss_url %><%= @model.tt :rss_url %></dt>
+    <dd><%= f.text_field :rss_url %></dd>
+  <% end %>
+
   <dt><%= @model.t :rss_max_docs %><%= @model.tt :rss_max_docs %></dt>
   <dd><%= f.number_field :rss_max_docs %></dd>
-  <dt><%= @model.t :rss_refresh_method %><%= @model.tt :rss_refresh_method %></dt>
-  <dd><%= f.select :rss_refresh_method, @item.rss_refresh_method_options %></dd>
+
+  <% unless @model.weather_xml %>
+    <dt><%= @model.t :rss_refresh_method %><%= @model.tt :rss_refresh_method %></dt>
+    <dd><%= f.select :rss_refresh_method, @item.rss_refresh_method_options %></dd>
+  <% end %>
+
   <dt><%= @model.t :page_state %><%= @model.tt :page_state %></dt>
   <dd><%= f.select :page_state, @item.page_state_options, include_blank: true %></dd>
 </dl>

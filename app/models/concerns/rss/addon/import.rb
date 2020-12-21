@@ -8,11 +8,12 @@ module Rss::Addon
     RSS_REFRESH_METHODS = [ RSS_REFRESH_METHOD_AUTO, RSS_REFRESH_METHOD_MANUAL ].freeze
 
     included do
+      cattr_accessor :weather_xml, instance_accessor: false
       field :rss_url, type: String
       field :rss_max_docs, type: Integer
       field :rss_refresh_method, type: String
       field :page_state, type: String
-      permit_params :rss_url, :rss_max_docs, :rss_refresh_method
+      permit_params :rss_url, :rss_max_docs, :rss_refresh_method, :page_state
       validates :page_state, inclusion: { in: %w(public closed), allow_blank: true }
     end
 
