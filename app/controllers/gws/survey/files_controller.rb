@@ -23,10 +23,8 @@ class Gws::Survey::FilesController < ApplicationController
 
   def set_forms
     @forms ||= begin
-      criteria = Gws::Survey::Form.site(@cur_site)
-      if params[:state] != 'preview'
-        criteria = criteria.and_public
-      end
+      criteria = Gws::Survey::Form.site(@cur_site).without_deleted
+      criteria = criteria.and_public
       criteria = criteria.readable(@cur_user, site: @cur_site)
       criteria = criteria.order_by(order: 1, created: 1)
       criteria

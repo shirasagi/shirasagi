@@ -27,6 +27,7 @@ Rails.application.routes.draw do
         match :publish, on: :member, via: [:get, :post]
         match :depublish, on: :member, via: [:get, :post]
         match :copy, on: :member, via: [:get, :post]
+        get :preview, on: :member
         get :print, on: :member
         resources :columns, concerns: :deletion
         resources :files, controller: 'editable_files', only: [:index] do

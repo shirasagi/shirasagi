@@ -6,7 +6,7 @@ class Gws::Survey::EditablesController < ApplicationController
   before_action :set_category
   before_action :set_search_params
   before_action :set_items
-  before_action :set_item, only: [:show, :edit, :update, :soft_delete, :move, :publish, :depublish, :copy, :print]
+  before_action :set_item, only: [:show, :edit, :update, :soft_delete, :move, :publish, :depublish, :copy, :print, :preview]
   before_action :respond_404_if_item_is_public, only: [:edit, :update, :soft_delete, :move]
   before_action :set_selected_items, only: [:destroy_all, :soft_delete_all]
 
@@ -14,9 +14,22 @@ class Gws::Survey::EditablesController < ApplicationController
 
   navi_view "gws/survey/main/navi"
 
-  append_view_path "app/views/gws/survey/main"
-
   private
+
+  # override SS::CrudFilter#prepend_current_view_path
+  def prepend_current_view_path
+    if params[:action] == "preview"
+      prepend_view_path 'app/views/gws/survey/files'
+    else
+      super
+    end
+  end
+
+  # override Gws::CrudFilter#append_view_paths
+  def append_view_paths
+    append_view_path "app/views/gws/survey/main"
+    super
+  end
 
   def set_crumbs
     @crumbs << [@cur_site.menu_survey_label || t('modules.gws/survey'), gws_survey_main_path]
@@ -144,5 +157,18 @@ class Gws::Survey::EditablesController < ApplicationController
 
     @back = { action: :show }
     render layout: 'ss/print'
+  end
+
+  def preview
+    @cur_form = @item
+    @item = Gws::Survey::File.new
+    @item.cur_site = @cur_site
+    @item.cur_user = @cur_user
+    @item.cur_form = @cur_form
+    @item.name = t("gws/survey.file_name", form: @cur_form.name)
+
+    render_opts = { file: "gws/survey/files/edit", locals: { preview: true } }
+    render_opts[:layout] = false if request.xhr?
+    render render_opts
   end
 end
