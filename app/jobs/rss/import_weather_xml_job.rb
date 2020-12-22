@@ -14,7 +14,8 @@ class Rss::ImportWeatherXmlJob < Rss::ImportBase
 
   private
 
-  def before_import(*_args)
+  def before_import(*args)
+    @options = args.extract_options!.with_indifferent_access
     @weather_xml_page = nil
     super
 
@@ -22,9 +23,10 @@ class Rss::ImportWeatherXmlJob < Rss::ImportBase
     urls.map!(&:strip)
     urls.select!(&:present?)
 
+    updates = @options[:seed_cache] != "use"
     rss_items = []
     urls.each do |url|
-      rss_source = download_with_cache(url)
+      rss_source = download_with_cache(url, updates: updates)
       next if rss_source.blank?
 
       rss = ::RSS::Parser.parse(rss_source, false)

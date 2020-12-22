@@ -98,7 +98,6 @@ describe Rss::ImportWeatherXmlJob, dbscope: :example do
 
     it do
       expect { described_class.bind(site_id: site, node_id: node).perform_now }.to change { model.count }.from(0).to(2)
-      ::FileUtils.rm_rf(described_class.data_cache_dir)
       expect { described_class.bind(site_id: site, node_id: node).perform_now }.to change { model.count }.from(2).to(3)
 
       item = model.where(rss_link: 'http://xml.kishou.go.jp/data/afeedc52-107a-3d1d-9196-b108234d6e0f.xml').first

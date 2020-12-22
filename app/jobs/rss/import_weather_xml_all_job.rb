@@ -23,7 +23,7 @@ class Rss::ImportWeatherXmlAllJob < SS::ApplicationJob
 
       elapsed = Benchmark.realtime do
         job = Rss::ImportWeatherXmlJob.bind(site_id: site, node_id: node)
-        job.perform_now
+        job.perform_now(seed_cache: 'use')
       end
 
       @task.log "-- imported in #{elapsed} seconds"
