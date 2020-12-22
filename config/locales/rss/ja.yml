@@ -32,7 +32,6 @@ ja:
       rss/page/body: RSS情報
       rss/import: RSS取込
       rss/page/weather_xml: 気象庁防災情報XML
-      rss/pub_sub_hubbub: PubSubHubbub
       rss/anpi_mail_setting: 安否確認メール設定
 
   cms:
@@ -45,6 +44,7 @@ ja:
       rss/import_job: RSS取込
       rss/import_from_file_job: RSSファイル取込
       rss/import_weather_xml_job: 気象庁防災情報XML取込
+      rss/import_weather_xml_all_job: 気象庁防災情報XML取込（全サイト）
       rss/execute_weather_xml_filters_job: 気象庁防災情報XMLフィルター処理
 
   mongoid:
@@ -66,14 +66,6 @@ ja:
       rss/addon/page/weather_xml:
         event_id: イベントID
         weather_xml: XML
-      rss/addon/pub_sub_hubbub:
-        hub_url: Hub URL
-        callback_url: Callback URL
-        topic_urls: Topic URL
-        lease_seconds: Lease秒
-        secret: HMAC Key
-        rss_max_docs: 最大保存件数
-        page_state: ページステータス
       rss/addon/anpi_mail_setting:
         earthquake_intensity: 震度
         target_regions: 対象地域
@@ -112,26 +104,6 @@ ja:
         -
         - 「本文」は公開画面に表示されませんが、「本文」に設定した文字列は「サイト内検索」で検索することができます。
         - 取り込んだ RSS 記事を管理しやすくすることができます。
-
-    rss/addon/pub_sub_hubbub:
-      hub_url:
-        - Hub URL を指定します。
-        - 例 http://pubsubhubbub.appspot.com/subscribe
-      topic_urls:
-        - 購読する RSS の URL を指定します。
-      lease_seconds:
-        - 購読が有効な期間を秒で指定します。
-        - 設定した秒数経過すると、再度、Hub より購読確認が実施されます。
-        - この設定は Hub がサポートしている場合もあれば、サポートしていない場合もあります。
-      secret:
-        - 秘密鍵を指定します。
-        - 秘密鍵を指定すると、認証された RSS を受け取ることができるようになります。
-      rss_max_docs:
-        - 最大保存件数を設定します。
-        -
-        - RSS を取り込んだ際に記事数が「最大保存件数」を超えた場合、公開日時の古い順に記事を削除し、記事数が「最大保存件数」以下になるように調整します。
-        -
-        - 「最大保存件数」に 0 を指定すると、無制限に記事を保存します。
 
     rss/addon/anpi_mail_setting:
       earthquake_intensity:

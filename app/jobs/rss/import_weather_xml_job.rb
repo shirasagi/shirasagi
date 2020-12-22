@@ -1,79 +1,51 @@
 require 'rss'
 
 class Rss::ImportWeatherXmlJob < Rss::ImportBase
+  include Job::SS::TaskFilter
+  include Rss::Downloadable
+
+  self.task_class = Cms::Task
+  self.task_name = "rss:import_weather_xml"
+
   def initialize(*args)
     super
     set_model Rss::WeatherXmlPage
   end
 
-  class << self
-    def pull_all
-      SS.config.rss.weather_xml["urls"].each do |url|
-        puts "pull from #{url}"
-        pull_one(url)
-      end
-    end
-
-    def pull_one(url)
-      http_client = Faraday.new(url: url) do |builder|
-        builder.request  :url_encoded
-        builder.response :logger, Rails.logger
-        builder.adapter Faraday.default_adapter
-      end
-      http_client.headers[:user_agent] += " (SHIRASAGI/#{SS.version}; PID/#{Process.pid})"
-      http_client.headers[:accept_encoding] = "gzip"
-
-      resp = http_client.get
-      return false if resp.status != 200
-
-      content_encoding = resp.headers["Content-Encoding"]
-      if content_encoding.nil?
-        body = resp.body
-      elsif content_encoding.casecmp("gzip") == 0
-        body = Zlib::GzipReader.wrap(StringIO.new(resp.body)) { |gz| gz.read }
-      end
-      return false if body.blank?
-
-      each_node do |node|
-        site = node.site
-        next if site.blank?
-
-        puts "-- import into #{node.name}(#{node.filename}) on #{site.name}(#{site.host})"
-
-        file = Rss::TempFile.create_from_post(site, body, resp.headers['Content-Type'].presence || "application/xml")
-        job = Rss::ImportWeatherXmlJob.bind(site_id: site, node_id: node)
-        job.perform_now(file.id)
-      end
-
-      true
-    end
-
-    private
-
-    def each_node
-      all_ids = Rss::Node::WeatherXml.all.and_public.pluck(:id)
-      all_ids.each_slice(20) do |ids|
-        Rss::Node::WeatherXml.all.and_public.in(id: ids).to_a.each do |node|
-          yield node
-        end
-      end
-    end
-  end
-
   private
 
-  def before_import(file, *args)
+  def before_import(*args)
+    @options = args.extract_options!.with_indifferent_access
     @weather_xml_page = nil
     super
 
-    @cur_file = Rss::TempFile.with_repl_master.where(site_id: site.id, id: file).first
-    return unless @cur_file
+    updates = @options[:seed_cache] != "use"
 
-    @items = Rss::Wrappers.parse(@cur_file)
+    urls = SS.config.rss.weather_xml["urls"]
+    urls.map!(&:strip)
+    urls.select!(&:present?)
+
+    @items = Enumerator.new do |y|
+      urls.each do |url|
+        xml_text = download_with_cache(url, updates: updates)
+        next if xml_text.blank?
+
+        rss = ::Rss::Wrappers.parse_from_rss_source(xml_text)
+        next if rss.blank?
+
+        @task.log "found #{rss.count} entries to import"
+
+        rss.each do |item|
+          y << item
+        end
+      end
+    end
+
     @imported_pages = []
   end
 
   def after_import
+    save_imported_urls
     execute_weather_xml_filters
 
     super
@@ -91,111 +63,38 @@ class Rss::ImportWeatherXmlJob < Rss::ImportBase
     remove_old_cache(threshold)
   end
 
-  def remove_old_cache(threshold)
-    data_dir = SS.config.rss.weather_xml["data_cache_dir"]
-    return if data_dir.blank?
-
-    data_dir = ::File.expand_path(data_dir, Rails.root)
-    ::Dir.glob(%w(*.xml *.xml.gz), base: data_dir).each do |file_path|
-      file_path = ::File.expand_path(file_path, data_dir)
-      ::FileUtils.rm_f(file_path) if ::File.mtime(file_path) < threshold
-    end
-  end
-
-  def import_rss_item(*args)
-    page = super
-    return page if page.nil? || page.invalid?
-
-    content = download(page.rss_link)
-    return page if content.nil?
-
-    page.event_id = extract_event_id(content) rescue nil
-    page.save!
-    page.save_weather_xml(content)
-
-    if content.include?('<InfoKind>震度速報</InfoKind>')
-      process_earthquake(page)
+  def import_rss_item(rss_item)
+    if rss_imported?(rss_item.link, rss_item.released)
+      @task.log "already imported #{rss_item.link}, so ignores to import"
+      return
     end
 
-    @imported_pages << page
+    page = nil
+    elapsed = Benchmark.realtime do
+      page = super
+      return page if page.nil? || page.invalid?
+
+      content = download_with_cache(page.rss_link)
+      return page if content.nil?
+
+      page.event_id = extract_event_id(content) rescue nil
+      page.save!
+      page.save_weather_xml(content)
+
+      if content.include?('<InfoKind>震度速報</InfoKind>')
+        process_earthquake(page)
+      end
+
+      @imported_pages << page
+    end
+
+    @task.log "imported #{page.try(:rss_link)} in #{elapsed} seconds"
+
     page
   end
 
   # override Rss::ImportBase#remove_unimported_pages to reduce destroy call
   def remove_unimported_pages
-  end
-
-  def download(url)
-    cache(url) do
-      retriable do
-        http_client = Faraday.new(url: url) do |builder|
-          builder.request  :url_encoded
-          builder.response :logger, Rails.logger
-          builder.adapter Faraday.default_adapter
-        end
-        http_client.headers[:user_agent] += " (SHIRASAGI/#{SS.version}; PID/#{Process.pid})"
-        http_client.headers[:accept_encoding] = "gzip"
-
-        resp = http_client.get
-        raise "#{resp.status}: http error" if resp.status != 200
-
-        content_encoding = resp.headers["Content-Encoding"]
-        if content_encoding.nil?
-          body = resp.body
-        elsif content_encoding.casecmp("gzip") == 0
-          body = Zlib::GzipReader.wrap(StringIO.new(resp.body)) { |gz| gz.read }
-        else
-          raise "#{content_encoding}: unsupported content encoding"
-        end
-
-        raise "empty body" if body.blank?
-
-        body.force_encoding('UTF-8')
-      end
-    end
-  rescue => e
-    Rails.logger.warn("#{e.class} (#{e.message}):\n  #{e.backtrace.join("\n  ")}")
-    nil
-  end
-
-  def cache(url)
-    data_dir = SS.config.rss.weather_xml["data_cache_dir"]
-    return yield if data_dir.blank?
-
-    data_dir = ::File.expand_path(data_dir, Rails.root)
-    ::FileUtils.mkdir_p(data_dir) unless ::Dir.exists?(data_dir)
-
-    hash = Digest::MD5.hexdigest(url)
-    file_paths = %w(xml.gz xml).map { |ext| ::File.join(data_dir, "#{hash}.#{ext}") }
-    file_path = file_paths.find { |path| ::File.exists?(path) }
-    if file_path
-      if file_path.ends_with?(".gz")
-        return ::Zlib::GzipReader.open(file_path) { |gz| gz.read }
-      else
-        return ::File.read(file_path)
-      end
-    end
-
-    data = yield
-    ::Zlib::GzipWriter.open(file_paths.first) { |gz| gz.write data.to_s }
-
-    data
-  end
-
-  def retriable(tries = 3, timeout_sec = 10)
-    tries.times do |index|
-      try = index + 1
-
-      begin
-        return ::Timeout.timeout(timeout_sec) { yield }
-      rescue => e
-        raise if try >= tries
-
-        next_interval = 5 * try
-        Rails.logger.info("#{e.class}: '#{e.message}' - #{try} tries and #{next_interval} seconds until the next try.")
-        sleep(next_interval)
-      end
-    end
   end
 
   def extract_event_id(xml)
@@ -310,5 +209,43 @@ class Rss::ImportWeatherXmlJob < Rss::ImportBase
   def execute_weather_xml_filters
     return if @imported_pages.blank?
     Rss::ExecuteWeatherXmlFiltersJob.bind(site_id: site.id, node_id: node.id).perform_now(@imported_pages.map(&:id))
+  end
+
+  def rss_imported?(url, date)
+    @imported_logs ||= begin
+      logs = []
+      log_dir = ::File.join(self.class.data_cache_dir, node.id.to_s)
+      ::Dir.glob(%w(imported_*.log.gz), base: log_dir).each do |file_path|
+        file_path = ::File.expand_path(file_path, log_dir)
+        json = ::Zlib::GzipReader.open(file_path) { |gz| gz.read }
+
+        logs += JSON.parse(json)
+      end
+
+      logs.map! { |imported_url, imported_date| [ imported_url, Time.zone.parse(imported_date) ] }
+      logs
+    end
+
+    @imported_logs.find { |imported_url, imported_date| imported_url == url && imported_date.to_i == date.to_i }
+  end
+
+  def save_imported_urls
+    return if @imported_pages.blank?
+
+    urls_with_date = @imported_pages.map { |page| [ page.rss_link, page.released ] }
+
+    # いわゆる「ログ」に相当する情報なので、DB ではなくファイルに保存したい。
+    # 古い情報には意味がない。気象庁からは 24 時間以上前の情報は配信されていないみたい。
+    # data_cache_dir に保存するのが良さそうな気がする。
+
+    now = Time.zone.now
+    log_dir = ::File.join(self.class.data_cache_dir, node.id.to_s)
+    log_file = ::File.join(log_dir, "imported_#{now.to_f.to_s.sub(".", "_")}.log.gz")
+    tmp_log_file = ::File.join(log_dir, ".imported_#{now.to_f.to_s.sub(".", "_")}.log.gz")
+    ::FileUtils.mkdir_p(log_dir) unless ::Dir.exists?(log_dir)
+
+    # DISK FULL などにより不完全なファイルが作成されることを防止するために、作業ファイルに保存後、作業ファイルを移動するようにする。
+    ::Zlib::GzipWriter.open(tmp_log_file) { |gz| gz.write(urls_with_date.to_json) }
+    ::FileUtils.move(tmp_log_file, log_file, force: true)
   end
 end

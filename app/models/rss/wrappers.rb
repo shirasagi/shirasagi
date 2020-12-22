@@ -139,6 +139,10 @@ module Rss::Wrappers
       new(rss)
     end
 
+    def count
+      @rss.items.count
+    end
+
     def each(&block)
       @rss.items.each do |item|
         yield ::Rss::Wrappers::Items::Atom.wrap(item)
@@ -155,6 +159,10 @@ module Rss::Wrappers
 
     def self.wrap(rss)
       new(rss)
+    end
+
+    def count
+      @rss.items.count
     end
 
     def each(&block)
@@ -181,6 +189,10 @@ module Rss::Wrappers
       @rss.items
     end
 
+    def count
+      @rss.items.count
+    end
+
     def each(&block)
       @rss.items.each do |item|
         yield ::Rss::Wrappers::Items::RDF.wrap(item)
@@ -197,7 +209,11 @@ module Rss::Wrappers
     else
       rss_source = ::File.open(url_or_file, opts)
     end
-    rss = ::RSS::Parser.parse(rss_source, false)
+    parse_from_rss_source(rss_source)
+  end
+
+  def self.parse_from_rss_source(xml_text)
+    rss = ::RSS::Parser.parse(xml_text, false)
 
     case rss
     when ::RSS::Atom::Feed

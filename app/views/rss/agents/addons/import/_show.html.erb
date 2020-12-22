@@ -1,10 +1,23 @@
+<%
+  addon ||= local_assigns.fetch(:addon, {})
+  if @model.weather_xml
+    addon[:head] = I18n.t("rss.weather_xml_page")
+  end
+%>
 <dl class="see mod-ezine-page-body">
-  <dt><%= @model.t :rss_url %></dt>
-  <dd><%= @item.rss_url %></dd>
+  <% unless @model.weather_xml %>
+    <dt><%= @model.t :rss_url %></dt>
+    <dd><%= @item.rss_url %></dd>
+  <% end %>
+
   <dt><%= @model.t :rss_max_docs %></dt>
   <dd><%= @item.rss_max_docs %></dd>
-  <dt><%= @model.t :rss_refresh_method %></dt>
-  <dd><%= @item.label :rss_refresh_method %></dd>
+
+  <% unless @model.weather_xml %>
+    <dt><%= @model.t :rss_refresh_method %></dt>
+    <dd><%= @item.label :rss_refresh_method %></dd>
+  <% end %>
+
   <dt><%= @model.t :page_state %></dt>
   <dd><%= @item.label :page_state %></dd>
 </dl>

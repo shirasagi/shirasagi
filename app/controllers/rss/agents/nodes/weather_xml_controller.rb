@@ -1,14 +1,22 @@
 class Rss::Agents::Nodes::WeatherXmlController < ApplicationController
   include Cms::NodeFilter::View
-  include Rss::Public::PubSubHubbubFilter
   helper Cms::ListHelper
 
   model Rss::WeatherXmlPage
-  set_job_model Rss::ImportWeatherXmlJob
 
   private
 
-  def protect_csrf?
-    false
+  def pages
+    @model.site(@cur_site).and_public(@cur_date).where(@cur_node.condition_hash)
+  end
+
+  public
+
+  def index
+    @items = pages.order_by(@cur_node.sort_hash).
+      page(params[:page]).
+      per(@cur_node.limit)
+
+    render_with_pagination @items
   end
 end

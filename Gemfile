@@ -63,6 +63,7 @@ gem 'roo'
 gem 'liquid'
 gem 'http_accept_language'
 gem 'google-cloud-translate', '2.0.0'
+gem 'retriable'
 
 # OAuth
 gem 'oauth2'
