@@ -33,16 +33,19 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
       end
       within "#addon-cms-agents-addons-file" do
         expect(page).to have_css(".file-view", text: "keyvisual.jpg")
+        wait_for_ckeditor_event "item[html]", "afterInsertHtml" do
+          click_on I18n.t("sns.file_attach")
+        end
       end
       click_on I18n.t("ss.buttons.publish_save")
       wait_for_notice I18n.t("ss.notice.saved")
 
       visit logs_path
-      expect(page).to have_css('.list-item', count: 3)
+      expect(page).to have_css('.list-item', count: 4)
 
       visit edit_path
       within "#addon-cms-agents-addons-file" do
-        page.accept_alert do
+        page.accept_alert(/#{::Regexp.escape(I18n.t("ss.confirm.in_use"))}/) do
           click_on I18n.t("ss.buttons.delete")
         end
       end
@@ -50,7 +53,7 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
       wait_for_notice I18n.t("ss.notice.saved")
 
       visit logs_path
-      expect(page).to have_css('.list-item', count: 5)
+      expect(page).to have_css('.list-item', count: 6)
     end
   end
 
@@ -78,7 +81,9 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
 
       visit edit_path
       within "#addon-cms-agents-addons-file" do
-        click_on I18n.t("sns.file_attach")
+        wait_for_ckeditor_event "item[html]", "afterInsertHtml" do
+          click_on I18n.t("sns.file_attach")
+        end
       end
       click_on I18n.t("ss.buttons.publish_save")
       wait_for_notice I18n.t("ss.notice.saved")
@@ -120,7 +125,10 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
 
       visit edit_path
       within "#addon-cms-agents-addons-file" do
-        click_on I18n.t("sns.thumb_paste")
+        expect(page).to have_css(".file-view", text: "keyvisual.jpg")
+        wait_for_ckeditor_event "item[html]", "afterInsertHtml" do
+          click_on I18n.t("sns.thumb_paste")
+        end
       end
       click_on I18n.t("ss.buttons.publish_save")
 
@@ -167,6 +175,13 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
       within ".column-value-cms-column-fileupload" do
         expect(page).to have_css(".file-view", text: "keyvisual.jpg")
       end
+
+      # 定型フォームに動画を添付すると Cms_Form.addSyntaxCheck を呼び出し、アクセシビリティチェックを登録する。
+      # Cms_Form.addSyntaxCheck の呼び出しが完了する前に「公開保存」をクリックしてしまうと、
+      # アクセシビリティチェックが実行されないので、警告ダイアログが表示されず、テストが失敗してしまう。
+      # そこで、苦渋だが  wait_for_ajax で Cms_Form.addSyntaxCheck の呼び出し完了を待機する。
+      wait_for_ajax
+
       click_on I18n.t("ss.buttons.publish_save")
       wait_for_cbox do
         click_on I18n.t("ss.buttons.ignore_alert")
@@ -243,7 +258,10 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
 
       visit edit_path
       within ".column-value-cms-column-free" do
-        click_on I18n.t("sns.thumb_paste")
+        expect(page).to have_css(".file-view", text: "keyvisual.jpg")
+        wait_for_ckeditor_event "item[column_values][][in_wrap][value]", "afterInsertHtml" do
+          click_on I18n.t("sns.thumb_paste")
+        end
       end
       click_on I18n.t("ss.buttons.publish_save")
 
