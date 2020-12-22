@@ -200,28 +200,6 @@ module Rss::Wrappers
     end
   end
 
-  class Merged
-    attr_reader :items
-
-    def initialize(items)
-      @items = items
-    end
-
-    def self.wrap(items)
-      new(items)
-    end
-
-    def count
-      @items.map { |rss| rss.count }.sum
-    end
-
-    def each(&block)
-      @items.each do |rss|
-        rss.each(&block)
-      end
-    end
-  end
-
   def self.parse(url_or_file, opts = {})
     require 'open-uri'
     if url_or_file.respond_to?(:path)
@@ -231,7 +209,11 @@ module Rss::Wrappers
     else
       rss_source = ::File.open(url_or_file, opts)
     end
-    rss = ::RSS::Parser.parse(rss_source, false)
+    parse_from_rss_source(rss_source)
+  end
+
+  def self.parse_from_rss_source(xml_text)
+    rss = ::RSS::Parser.parse(xml_text, false)
 
     case rss
     when ::RSS::Atom::Feed
@@ -241,9 +223,5 @@ module Rss::Wrappers
     when ::RSS::RDF
       ::Rss::Wrappers::RDF.wrap(rss)
     end
-  end
-
-  def self.merge(items)
-    ::Rss::Wrappers::Merged.wrap(items)
   end
 end

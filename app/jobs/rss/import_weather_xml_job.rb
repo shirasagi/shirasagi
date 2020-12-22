@@ -19,29 +19,27 @@ class Rss::ImportWeatherXmlJob < Rss::ImportBase
     @weather_xml_page = nil
     super
 
+    updates = @options[:seed_cache] != "use"
+
     urls = SS.config.rss.weather_xml["urls"]
     urls.map!(&:strip)
     urls.select!(&:present?)
 
-    updates = @options[:seed_cache] != "use"
-    rss_items = []
-    urls.each do |url|
-      rss_source = download_with_cache(url, updates: updates)
-      next if rss_source.blank?
+    @items = Enumerator.new do |y|
+      urls.each do |url|
+        xml_text = download_with_cache(url, updates: updates)
+        next if xml_text.blank?
 
-      rss = ::RSS::Parser.parse(rss_source, false)
+        rss = ::Rss::Wrappers.parse_from_rss_source(xml_text)
+        next if rss.blank?
 
-      case rss
-      when ::RSS::Atom::Feed
-        rss_items << ::Rss::Wrappers::Atom.wrap(rss)
-      when ::RSS::Rss
-        rss_items << ::Rss::Wrappers::Rss.wrap(rss)
-      when ::RSS::RDF
-        rss_items << ::Rss::Wrappers::RDF.wrap(rss)
+        @task.log "found #{rss.count} entries to import"
+
+        rss.each do |item|
+          y << item
+        end
       end
     end
-
-    @items = ::Rss::Wrappers.merge(rss_items)
 
     @imported_pages = []
   end
