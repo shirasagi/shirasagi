@@ -9,7 +9,7 @@ class Rss::ImportWeatherXmlAllJob < SS::ApplicationJob
     urls = SS.config.rss.weather_xml["urls"]
     urls.map!(&:strip)
     urls.select!(&:present?)
-    @task.log "found #{urls.length} urls to import"
+    @task.log "found #{urls.length} seeds"
 
     urls.each do |url|
       download_with_cache(url, updates: true)
