@@ -50,10 +50,6 @@ env:
     - CAPYBARA_AJAX_WAIT_TIME=45
     - allow_open_jtalk=1
 
-before_install:
-  - wget http://dl.google.com/linux/chrome/deb/pool/main/g/google-chrome-stable/google-chrome-stable_76.0.3809.132-1_amd64.deb
-  - sudo dpkg -i google-chrome-stable_76.0.3809.132-1_amd64.deb
-
 install: # bash .travis.d/install.sh
   - bash .travis.d/exec.sh install 20-mecab
   - bash .travis.d/exec.sh install 21-mecab-ipadic
