@@ -39,18 +39,9 @@ module Rss::Downloadable
     ::FileUtils.mkdir_p(self.class.data_cache_dir) unless ::Dir.exists?(self.class.data_cache_dir)
 
     hash = Digest::MD5.hexdigest(url)
-    file_paths = %w(xml.gz xml).map { |ext| ::File.join(self.class.data_cache_dir, "#{hash}.#{ext}") }
 
     unless options[:updates]
-      file_path = file_paths.find { |path| ::File.exists?(path) }
-      if file_path
-        if file_path.ends_with?(".gz")
-          body = ::Zlib::GzipReader.open(file_path) { |gz| gz.read }
-        else
-          body = ::File.read(file_path)
-        end
-      end
-
+      body = find_in_cache(hash)
       if body.present?
         @task.log "found #{url} in cache"
         return body
@@ -63,9 +54,7 @@ module Rss::Downloadable
 
     @task.log "downloaded #{url} with status #{resp.try(:status)} in #{elapsed} seconds"
 
-    if resp.status == 200 && body.present?
-      ::Zlib::GzipWriter.open(file_paths.first) { |gz| gz.write(body.to_s) }
-    end
+    save_in_cache(hash, body) if resp && resp.status == 200 && body.present?
 
     body
   end
@@ -94,5 +83,26 @@ module Rss::Downloadable
     end
 
     body.strip.presence
+  end
+
+  def find_in_cache(hash)
+    file_paths = %w(xml.gz xml).map { |ext| ::File.join(self.class.data_cache_dir, "#{hash}.#{ext}") }
+    file_path = file_paths.find { |path| ::File.exists?(path) }
+    return if file_path.blank?
+
+    if file_path.ends_with?(".gz")
+      ::Zlib::GzipReader.open(file_path) { |gz| gz.read }
+    else
+      ::File.read(file_path)
+    end
+  end
+
+  def save_in_cache(hash, body)
+    file_path = ::File.join(self.class.data_cache_dir, "#{hash}.xml.gz")
+    tmp_file_path = ::File.join(self.class.data_cache_dir, ".#{hash}.xml.gz")
+
+    # DISK FULL などにより不完全なファイルが作成されることを防止するために、作業ファイルに保存後、作業ファイルを移動するようにする。
+    ::Zlib::GzipWriter.open(tmp_file_path) { |gz| gz.write(body.to_s) }
+    ::FileUtils.move(tmp_file_path, file_path, force: true)
   end
 end
