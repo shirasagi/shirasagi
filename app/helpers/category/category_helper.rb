@@ -8,7 +8,9 @@ module Category::CategoryHelper
       @unreadable_categories = []
 
       cate_options ||= {}
-      @readable = cate_options[:readable].presence
+      @readable = (cate_options[:readable_categories] != nil)
+      @readable_category_ids = cate_options[:readable_categories].map(&:id) if @readable
+
       @root_and_descendants = cate_options[:root_and_descendants]
       @item_name = cate_options[:item_name] || "category_ids"
     end
@@ -35,7 +37,7 @@ module Category::CategoryHelper
     def render_cate_form0(categories, item)
       children = children(categories, item)
 
-      if @readable && item.respond_to?(:readable?) && !item.readable?(*@readable)
+      if @readable && !@readable_category_ids.include?(item.id)
         @unreadable_categories << item
         if children.present?
           children.each { |c| render_cate_form0 categories, c }
@@ -69,7 +71,7 @@ module Category::CategoryHelper
     def render_cate_form1(categories, item)
       children = children(categories, item)
 
-      if @readable && item.respond_to?(:readable?) && !item.readable?(*@readable)
+      if @readable && !@readable_category_ids.include?(item.id)
         @unreadable_categories << item
         if children.present?
           children.each { |c| render_cate_form1 categories, c }

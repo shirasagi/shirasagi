@@ -10,10 +10,12 @@ if @cur_node && (st_categories = @cur_node.st_categories).present?
     conds << { filename: /#{::Regexp.escape(filename)}\// }
   end
   categories = Category::Node::Base.site(@cur_site).where("$and" => [{ "$or" => conds }])
-  cate_options = { readable: [@cur_user, site: @cur_site] }
+  readable_categories = categories.readable(@cur_user, site: @cur_site).to_a
+  cate_options = { readable_categories: readable_categories }
 else
   categories = Category::Node::Base.site(@cur_site)
-  cate_options = { root_and_descendants: true, readable: [@cur_user, site: @cur_site] }
+  readable_categories = categories.readable(@cur_user, site: @cur_site).to_a
+  cate_options = { root_and_descendants: true, readable_categories: readable_categories }
 end
 
 %>
