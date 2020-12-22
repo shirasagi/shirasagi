@@ -14,10 +14,16 @@ describe Rss::ImportWeatherXmlAllJob, dbscope: :example do
     WebMock.reset!
   end
 
+  before do
+    ActionMailer::Base.deliveries = []
+  end
+
+  after do
+    ActionMailer::Base.deliveries = []
+  end
+
   around do |example|
-    data_dir = SS.config.rss.weather_xml["data_cache_dir"]
-    data_dir = ::File.expand_path(data_dir, Rails.root) if data_dir.present?
-    ::FileUtils.rm_rf(data_dir) if data_dir.present?
+    ::FileUtils.rm_rf(described_class.data_cache_dir) if described_class.data_cache_dir.present?
 
     perform_enqueued_jobs do
       example.run
@@ -26,7 +32,7 @@ describe Rss::ImportWeatherXmlAllJob, dbscope: :example do
 
   context "plain xml" do
     before do
-      stub_request(:get, 'http://weather.example.jp/developer/xml/feed/other.xml').
+      @stab_seed1 = stub_request(:get, 'http://weather.example.jp/developer/xml/feed/other.xml').
         to_return(body: xml0, status: 200, headers: { 'Content-Type' => 'application/xml' })
       stub_request(:get, 'http://xml.kishou.go.jp/data/afeedc52-107a-3d1d-9196-b108234d6e0f.xml').
         to_return(body: xml1, status: 200, headers: { 'Content-Type' => 'application/xml' })
@@ -81,12 +87,14 @@ describe Rss::ImportWeatherXmlAllJob, dbscope: :example do
         expect(task.name).to eq "rss:import_weather_xml"
         expect(task.state).to eq "stop"
       end
+
+      expect(@stab_seed1).to have_been_requested.times(1)
     end
   end
 
   context "gzip-compressed xml" do
     before do
-      stub_request(:get, 'http://weather.example.jp/developer/xml/feed/other.xml').
+      @stab_seed1 = stub_request(:get, 'http://weather.example.jp/developer/xml/feed/other.xml').
         to_return(body: gzip(xml0), status: 200, headers: { 'Content-Encoding' => 'gzip', 'Content-Type' => 'application/xml' })
       stub_request(:get, 'http://xml.kishou.go.jp/data/afeedc52-107a-3d1d-9196-b108234d6e0f.xml').
         to_return(body: gzip(xml1), status: 200, headers: { 'Content-Encoding' => 'gzip', 'Content-Type' => 'application/xml' })
@@ -151,18 +159,22 @@ describe Rss::ImportWeatherXmlAllJob, dbscope: :example do
         expect(task.name).to eq "rss:import_weather_xml"
         expect(task.state).to eq "stop"
       end
+
+      expect(@stab_seed1).to have_been_requested.times(1)
     end
   end
 
   context "retry: timeout and error" do
     before do
-      stub_request(:get, 'http://weather.example.jp/developer/xml/feed/other.xml').
+      @stab_seed1 = stub_request(:get, 'http://weather.example.jp/developer/xml/feed/other.xml').
         to_timeout.
         to_raise("some error").
         to_return(body: xml0, status: 200, headers: { 'Content-Type' => 'application/xml' })
       stub_request(:get, 'http://xml.kishou.go.jp/data/afeedc52-107a-3d1d-9196-b108234d6e0f.xml').
+        to_return(status: [ 500, "Internal Server Error" ]).
         to_return(body: xml1, status: 200, headers: { 'Content-Type' => 'application/xml' })
       stub_request(:get, 'http://xml.kishou.go.jp/data/2b441518-4e79-342c-a271-7c25597f3a69.xml').
+        to_return(status: [ 400, "Bad Request" ]).
         to_return(body: xml2, status: 200, headers: { 'Content-Type' => 'application/xml' })
     end
 
@@ -213,6 +225,8 @@ describe Rss::ImportWeatherXmlAllJob, dbscope: :example do
         expect(task.name).to eq "rss:import_weather_xml"
         expect(task.state).to eq "stop"
       end
+
+      expect(@stab_seed1).to have_been_requested.times(3)
     end
   end
 end

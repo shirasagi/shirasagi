@@ -1,13 +1,15 @@
 module Rss::Downloadable
   extend ActiveSupport::Concern
 
+  class DownloadError < StandardError; end
+
   included do
     cattr_accessor :data_cache_dir, instance_accessor: false
     self.data_cache_dir = ::File.expand_path(SS.config.rss.weather_xml["data_cache_dir"], Rails.root)
   end
 
   def download(url)
-    ret = nil
+    resp = nil
 
     Retriable.retriable(on_retry: method(:on_each_retry)) do
       http_client = Faraday.new(url: url) do |builder|
@@ -18,11 +20,14 @@ module Rss::Downloadable
       http_client.headers[:user_agent] += " (SHIRASAGI/#{SS.version}; PID/#{Process.pid})"
       http_client.headers[:accept_encoding] = "gzip"
 
-      ret = http_client.get
+      resp = http_client.get
+      raise DownloadError, "got \"#{resp.reason_phrase}\"(#{resp.status}) for #{url}" unless resp.status == 200
     end
 
-    body = extract_body(ret)
-    [ ret, body ]
+    body = extract_body(resp)
+    [ resp, body ]
+  rescue DownloadError => _e
+    [ resp, nil ]
   end
 
   def download_with_cache(url, options = {})
