@@ -100,6 +100,7 @@ describe 'article_pages', type: :feature, dbscope: :example, js: true do
       end
       click_on I18n.t('ss.buttons.ignore_alert')
       expect(page).to have_no_css('#notice', text: I18n.t('ss.notice.saved'))
+      expect(page).to have_css("#workflow_route", text: I18n.t("mongoid.attributes.workflow/model/route.my_group"))
       expect(page).to have_selector('div.column-with-errors')
 
       within 'form#item-form' do
@@ -126,6 +127,7 @@ describe 'article_pages', type: :feature, dbscope: :example, js: true do
         click_on I18n.t('ss.buttons.draft_save')
       end
       expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+      expect(page).to have_css("#workflow_route", text: I18n.t("mongoid.attributes.workflow/model/route.my_group"))
       expect(page).to have_no_selector('div.column-with-errors')
 
       expect(Article::Page.all.count).to eq 1
@@ -191,6 +193,8 @@ describe 'article_pages', type: :feature, dbscope: :example, js: true do
         click_on I18n.t('ss.buttons.draft_save')
       end
       expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+      expect(page).to have_css("#workflow_route", text: I18n.t("mongoid.attributes.workflow/model/route.my_group"))
+
       expect(Article::Page.all.count).to eq 1
       Article::Page.all.first.tap do |item|
         expect(item.name).to eq name

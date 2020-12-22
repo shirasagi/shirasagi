@@ -25,8 +25,8 @@ describe "workflow_branch", type: :feature, dbscope: :example, js: true do
       fill_in "item[index_name]", with: new_index_name
       click_on I18n.t('ss.buttons.draft_save')
     end
-    wait_for_ajax
     expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+    expect(page).to have_css("#workflow_route", text: I18n.t("mongoid.attributes.workflow/model/route.my_group"))
 
     master = item.class.where(name: old_name).first
     branch = item.class.where(name: new_name).first
