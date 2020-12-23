@@ -42,6 +42,7 @@ describe "workflow_branch", type: :feature, dbscope: :example, js: true do
   def publish_branch(branch_url)
     visit branch_url
     expect(page).to have_css('.see.branch', text: I18n.t('workflow.branch_message'))
+    expect(page).to have_css("#workflow_route", text: I18n.t("mongoid.attributes.workflow/model/route.my_group"))
 
     # publish branch
     click_on I18n.t('ss.links.edit')
