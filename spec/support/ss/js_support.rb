@@ -123,11 +123,11 @@ module SS
       end
     end
 
-    def wait_for_notice(text, **options)
+    def wait_for_notice(text)
       expect(page).to have_css('#notice', text: text)
     end
 
-    def wait_for_error(text, **options)
+    def wait_for_error(text)
       expect(page).to have_css('#errorExplanation', text: text)
     end
 
