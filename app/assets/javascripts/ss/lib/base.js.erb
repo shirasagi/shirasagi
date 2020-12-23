@@ -291,12 +291,13 @@ this.SS = (function () {
   };
 
   SS.notice = function (message, opts) {
-    var notice;
-    if (opts == null) {
+    if (!opts) {
       opts = {};
     }
-    SS.clearNotice();
-    notice = $('#notice');
+
+    SS.clearNotice(message);
+
+    var notice = $('#notice');
     if (!notice.hasClass('js-notice')) {
       notice.addClass('js-notice').on("click", function () {
         return notice.slideUp('normal');
@@ -312,18 +313,24 @@ this.SS = (function () {
     SS.noticeTimeoutId = setTimeout((function () {
       return $('#notice').slideUp('normal');
     }), 1800);
+
     return SS.noticeTimeoutId;
   };
 
-  SS.clearNotice = function () {
-    var notice;
+  SS.clearNotice = function (message) {
     if (SS.noticeTimeoutId) {
       clearTimeout(SS.noticeTimeoutId);
       SS.noticeTimeoutId = null;
     }
-    notice = $('#notice');
-    notice.hide();
-    return notice.find('.wrap').html('');
+
+    var $notice = $('#notice');
+    $notice.hide();
+
+    var $wrap = $notice.find('.wrap');
+    var save = $wrap.html();
+    $wrap.html(message || '');
+
+    return save;
   };
 
   SS.formChanged = false;

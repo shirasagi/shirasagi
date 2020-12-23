@@ -17,8 +17,6 @@ module SS
               end
             end
           end
-          wait_for_page_load
-          wait_for_ajax
         end
       end
     end
@@ -65,12 +63,6 @@ module SS
       @ajax_timeout = timeout
     end
 
-    def visit(*args)
-      super
-      wait_for_page_load
-      wait_for_ajax
-    end
-
     # fill_in(locator = nil, with:, currently_with: nil, fill_options: {}, **find_options)
     def fill_in(locator = nil, with:, currently_with: nil, fill_options: {}, **find_options)
       el = super
@@ -110,19 +102,8 @@ module SS
     end
 
     def wait_for_cbox(&block)
-      wait_for_ajax
-      has_css?("#cboxLoadedContent")
-      has_css?("#cboxClose")
-      Timeout.timeout(ajax_timeout) do
-        sleep 1 until colorbox_opened?
-      end
-      if block_given?
-        within "#cboxContent" do
-          yield
-        end
-        wait_for_ajax
-        sleep 1
-      end
+      have_css("#cboxClose", text: "close")
+      within("#cboxContent", &block) if block_given?
     end
 
     def colorbox_opened?
@@ -143,14 +124,10 @@ module SS
     end
 
     def wait_for_notice(text)
-      wait_for_page_load
-      wait_for_ajax
       expect(page).to have_css('#notice', text: text)
     end
 
     def wait_for_error(text)
-      wait_for_page_load
-      wait_for_ajax
       expect(page).to have_css('#errorExplanation', text: text)
     end
 

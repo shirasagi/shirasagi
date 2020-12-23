@@ -24,6 +24,7 @@ describe "member_blogs", type: :feature, dbscope: :example, js: true do
         click_on I18n.t("ss.buttons.draft_save")
       end
       expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+      expect(page).to have_css("#workflow_route", text: I18n.t("mongoid.attributes.workflow/model/route.my_group"))
 
       visit "#{path}/#{item.id}"
       within "#addon-basic" do

@@ -29,7 +29,9 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
 
       wait_for_cbox do
         attach_file "item[in_files][]", "#{Rails.root}/spec/fixtures/ss/file/keyvisual.jpg"
-        click_on I18n.t("ss.buttons.attach")
+        wait_cbox_close do
+          click_on I18n.t("ss.buttons.attach")
+        end
       end
       within "#addon-cms-agents-addons-file" do
         expect(page).to have_css(".file-view", text: "keyvisual.jpg")
@@ -71,7 +73,9 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
 
       wait_for_cbox do
         attach_file "item[in_files][]", "#{Rails.root}/spec/fixtures/ss/file/keyvisual.jpg"
-        click_on I18n.t("ss.buttons.attach")
+        wait_cbox_close do
+          click_on I18n.t("ss.buttons.attach")
+        end
       end
       within "#addon-cms-agents-addons-file" do
         expect(page).to have_css(".file-view", text: "keyvisual.jpg")
@@ -115,7 +119,9 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
 
       wait_for_cbox do
         attach_file "item[in_files][]", "#{Rails.root}/spec/fixtures/ss/file/keyvisual.jpg"
-        click_on I18n.t("ss.buttons.attach")
+        wait_cbox_close do
+          click_on I18n.t("ss.buttons.attach")
+        end
       end
       within "#addon-cms-agents-addons-file" do
         expect(page).to have_css(".file-view", text: "keyvisual.jpg")
@@ -165,12 +171,16 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
       end
 
       within ".column-value-cms-column-fileupload" do
-        click_on I18n.t("cms.file")
+        wait_cbox_open do
+          click_on I18n.t("cms.file")
+        end
       end
 
       wait_for_cbox do
         attach_file "item[in_files][]", "#{Rails.root}/spec/fixtures/ss/file/keyvisual.jpg"
-        click_on I18n.t('ss.buttons.attach')
+        wait_cbox_close do
+          click_on I18n.t('ss.buttons.attach')
+        end
       end
       within ".column-value-cms-column-fileupload" do
         expect(page).to have_css(".file-view", text: "keyvisual.jpg")
@@ -208,11 +218,15 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
       end
 
       within ".column-value-cms-column-free" do
-        click_on I18n.t("cms.file")
+        wait_cbox_open do
+          click_on I18n.t("cms.file")
+        end
       end
       wait_for_cbox do
         attach_file "item[in_files][]", "#{Rails.root}/spec/fixtures/ss/file/keyvisual.jpg"
-        click_on I18n.t('ss.buttons.attach')
+        wait_cbox_close do
+          click_on I18n.t('ss.buttons.attach')
+        end
       end
       within ".column-value-cms-column-free" do
         expect(page).to have_css(".file-view", text: "keyvisual.jpg")
@@ -240,12 +254,16 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
       end
 
       within ".column-value-cms-column-free" do
-        click_on I18n.t("cms.file")
+        wait_cbox_open do
+          click_on I18n.t("cms.file")
+        end
       end
 
       wait_for_cbox do
         attach_file "item[in_files][]", "#{Rails.root}/spec/fixtures/ss/file/keyvisual.jpg"
-        click_on I18n.t('ss.buttons.attach')
+        wait_cbox_close do
+          click_on I18n.t('ss.buttons.attach')
+        end
       end
       within ".column-value-cms-column-free" do
         expect(page).to have_css(".file-view", text: "keyvisual.jpg")

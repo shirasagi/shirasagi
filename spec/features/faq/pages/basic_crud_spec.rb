@@ -32,6 +32,7 @@ describe "faq_pages", type: :feature, js: true do
       end
       click_on I18n.t("ss.buttons.ignore_alert")
       expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+      expect(page).to have_css("#workflow_route", text: I18n.t("mongoid.attributes.workflow/model/route.my_group"))
       expect(current_path).not_to eq new_path
       expect(page).to have_no_css("form#item-form")
     end

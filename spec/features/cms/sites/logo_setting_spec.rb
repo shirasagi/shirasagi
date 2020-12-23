@@ -12,13 +12,17 @@ describe "cms_sites", type: :feature, dbscope: :example, tmpdir: true, js: true 
       click_on I18n.t("ss.links.edit")
 
       # open addon
-      first("#addon-ss-agents-addons-logo_setting .addon-head h2").click
+      wait_addon_open do
+        first("#addon-ss-agents-addons-logo_setting .addon-head h2").click
+      end
 
       # fill form
       within "#addon-ss-agents-addons-logo_setting" do
         fill_in "item[logo_application_name]", with: logo_application_name
-        # click_on I18n.t("ss.buttons.upload")
-        first(".btn-file-upload").click
+        wait_cbox_open do
+          # click_on I18n.t("ss.buttons.upload")
+          first(".btn-file-upload").click
+        end
       end
       wait_for_cbox do
         attach_file "item[in_files][]", "#{Rails.root}/spec/fixtures/ss/file/keyvisual.jpg"
@@ -53,7 +57,9 @@ describe "cms_sites", type: :feature, dbscope: :example, tmpdir: true, js: true 
       click_on I18n.t("ss.links.edit")
 
       # open addon
-      first("#addon-ss-agents-addons-logo_setting .addon-head h2").click
+      wait_addon_open do
+        first("#addon-ss-agents-addons-logo_setting .addon-head h2").click
+      end
 
       # fill form
       within "#addon-ss-agents-addons-logo_setting" do

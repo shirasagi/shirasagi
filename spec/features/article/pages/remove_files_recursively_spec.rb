@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe "article_pages remove_files_recursively", type: :feature, dbscope: :example do
+describe "article_pages remove_files_recursively", type: :feature, dbscope: :example, js: true do
   let(:site) { cms_site }
   let(:node) {
     create_once :article_node_page, filename: "docs", name: "article", state: "public", for_member_state: "disabled"
@@ -10,7 +10,7 @@ describe "article_pages remove_files_recursively", type: :feature, dbscope: :exa
   let(:edit_path) { edit_node_conf_path site.id, node }
   let(:delete_path) { delete_node_conf_path site.id, node }
 
-  context "not changed", js: true do
+  context "not changed" do
     before { login_cms_user }
 
     it "#edit" do
@@ -21,12 +21,13 @@ describe "article_pages remove_files_recursively", type: :feature, dbscope: :exa
         fill_in "item[name]", with: "modify"
         click_button I18n.t('ss.buttons.save')
       end
+      wait_for_notice I18n.t('ss.notice.saved')
 
       expect(::File.exists?(item.path)).to be true
     end
   end
 
-  context "state changed", js: true do
+  context "state changed" do
     before { login_cms_user }
 
     it "#edit" do
@@ -42,12 +43,13 @@ describe "article_pages remove_files_recursively", type: :feature, dbscope: :exa
       within "form#item-form" do
         click_button I18n.t('ss.buttons.save')
       end
+      wait_for_notice I18n.t('ss.notice.saved')
 
       expect(::File.exists?(item.path)).to be false
     end
   end
 
-  context "route changed", js: true do
+  context "route changed" do
     before { login_cms_user }
 
     it "#edit" do
@@ -68,12 +70,13 @@ describe "article_pages remove_files_recursively", type: :feature, dbscope: :exa
       within "form#item-form" do
         click_button I18n.t('ss.buttons.save')
       end
+      wait_for_notice I18n.t('ss.notice.saved')
 
       expect(::File.exists?(item.path)).to be false
     end
   end
 
-  context "for_member_state changed", js: true do
+  context "for_member_state changed" do
     before { login_cms_user }
 
     it "#edit" do
@@ -89,6 +92,7 @@ describe "article_pages remove_files_recursively", type: :feature, dbscope: :exa
       within "form#item-form" do
         click_button I18n.t('ss.buttons.save')
       end
+      wait_for_notice I18n.t('ss.notice.saved')
 
       expect(::File.exists?(item.path)).to be false
     end
