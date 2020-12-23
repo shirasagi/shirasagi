@@ -100,7 +100,10 @@ describe 'article_pages', type: :feature, dbscope: :example, js: true do
       end
       click_on I18n.t('ss.buttons.ignore_alert')
       expect(page).to have_no_css('#notice', text: I18n.t('ss.notice.saved'))
-      expect(page).to have_css("#workflow_route", text: I18n.t("mongoid.attributes.workflow/model/route.my_group"))
+      expect(page).to have_selector('#errorExplanation ul li', count: 1)
+      msg = I18n.t("mongoid.attributes.cms/column/value/file_upload.file_id") + I18n.t("errors.messages.blank")
+      msg = I18n.t("cms.column_value_error_template", name: column8.name, error: msg)
+      expect(page).to have_selector('#errorExplanation', text: msg)
       expect(page).to have_selector('div.column-with-errors')
 
       within 'form#item-form' do
