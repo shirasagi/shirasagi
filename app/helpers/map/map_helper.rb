@@ -15,7 +15,7 @@ module Map::MapHelper
 
     api = default_map_api(opts)
 
-    if %w(openlayers open_street_map).include?(api)
+    if api == 'openlayers'
       include_openlayers_api
     else
       include_googlemaps_api(opts)
@@ -55,19 +55,11 @@ module Map::MapHelper
       # set default values
       map_options[:readonly] = true
       map_options[:markers] = markers if markers.present?
-      map_options[:layers] = SS.config.map.layers
-      map_options[:default_zoom] = SS.config.map.openlayers_zoom_level
-
-      s << 'var canvas = $("' + selector + '")[0];'
-      s << "var opts = #{map_options.to_json};"
-      s << 'var map = new Openlayers_Map(canvas, opts);'
-    when 'open_street_map'
-      include_openlayers_api
-
-      # set default values
-      map_options[:readonly] = true
-      map_options[:markers] = markers if markers.present?
-      map_options[:layers] = SS.config.map.open_street_map
+      if opts[:site].try(:map_api_layer).present?
+        map_options[:layers] = SS.config.map.layers.select { |layer| layer['name'] == opts[:site].map_api_layer }
+      else
+        map_options[:layers] = [SS.config.map.layers.first]
+      end
       map_options[:default_zoom] = SS.config.map.openlayers_zoom_level
 
       s << 'var canvas = $("' + selector + '")[0];'
@@ -91,6 +83,7 @@ module Map::MapHelper
     map_options = opts[:map] || {}
     markers = opts[:markers]
     s = []
+    s << 'SS_AddonTabs.findAddonView(".mod-map").one("ss:addonShown", function() {'
 
     case default_map_api(opts)
     when 'openlayers'
@@ -99,39 +92,24 @@ module Map::MapHelper
       # set default values
       map_options[:readonly] = true
       map_options[:center] = center.reverse if center.present?
-      map_options[:layers] = SS.config.map.layers
+      if opts[:site].try(:map_api_layer).present?
+        map_options[:layers] = SS.config.map.layers.select { |layer| layer['name'] == opts[:site].map_api_layer }
+      else
+        map_options[:layers] = [SS.config.map.layers.first]
+      end
       map_options[:max_point_form] = max_point_form if max_point_form.present?
       map_options[:markers] = markers if markers.present?
       map_options[:default_zoom] = SS.config.map.openlayers_zoom_level
 
       # 初回アドオン表示後に地図を描画しないと、クリックした際にマーカーがずれてしまう
-      s << 'SS_AddonTabs.findAddonView(".mod-map").one("ss:addonShown", function() {'
       s << '  var canvas = $("' + selector + '")[0];'
       s << "  var opts = #{map_options.to_json};"
       s << '  var map = new Openlayers_Map_Form(canvas, opts);'
-      s << '});'
-    when 'open_street_map'
-      include_openlayers_api
-
-      # set default values
-      map_options[:readonly] = true
-      map_options[:center] = center.reverse if center.present?
-      map_options[:layers] = SS.config.map.open_street_map
-      map_options[:max_point_form] = max_point_form if max_point_form.present?
-      map_options[:markers] = markers if markers.present?
-      map_options[:default_zoom] = SS.config.map.openlayers_zoom_level
-
-      s << 'SS_AddonTabs.findAddonView(".mod-map").one("ss:addonShown", function() {'
-      s << '  var canvas = $("' + selector + '")[0];'
-      s << "  var opts = #{map_options.to_json};"
-      s << '  var map = new Openlayers_Map_Form(canvas, opts);'
-      s << '});'
     else
       include_googlemaps_api(opts)
       map_options[:default_zoom] = SS.config.map.googlemaps_zoom_level
 
       # 初回アドオン表示後に地図を描画しないと、ズームが 2 に初期設定されてしまう。
-      s << 'SS_AddonTabs.findAddonView(".mod-map").one("ss:addonShown", function() {'
       s << "  Googlemaps_Map.center = #{center.to_json};" if center.present?
       s << "  Map_Form.maxPointForm = #{max_point_form.to_json};" if max_point_form.present?
       s << '  Googlemaps_Map.setForm(Map_Form);'
@@ -141,9 +119,9 @@ module Map::MapHelper
       s << '  SS_AddonTabs.findAddonView(".mod-map").on("ss:addonShown", function() {'
       s << '    Googlemaps_Map.resize();'
       s << '  });'
-      s << '});'
     end
 
+    s << '});'
     jquery { s.join("\n").html_safe }
   end
 
@@ -158,21 +136,17 @@ module Map::MapHelper
     when 'openlayers'
       include_openlayers_api
 
-      s << 'var opts = {'
-      s << '  readonly: true,'
-      s << '  center:' + center.reverse.to_json + ',' if center.present?
-      s << '  markers: ' + markers.to_json + ',' if markers.present?
-      s << '  layers: ' + SS.config.map.layers.to_json + ','
-      s << '};'
-      s << 'Openlayers_Facility_Search.render("' + selector + '", opts);'
-    when 'open_street_map'
-      include_openlayers_api
+      if opts[:site].try(:map_api_layer).present?
+        layers = SS.config.map.layers.select { |layer| layer['name'] == opts[:site].map_api_layer }
+      else
+        layers = [SS.config.map.layers.first]
+      end
 
       s << 'var opts = {'
       s << '  readonly: true,'
       s << '  center:' + center.reverse.to_json + ',' if center.present?
       s << '  markers: ' + markers.to_json + ',' if markers.present?
-      s << '  layers: ' + SS.config.map.open_street_map.to_json + ','
+      s << '  layers: ' + layers.to_json + ','
       s << '};'
       s << 'Openlayers_Facility_Search.render("' + selector + '", opts);'
     else
@@ -205,22 +179,11 @@ module Map::MapHelper
       map_options[:readonly] = true
       map_options[:center] = center.reverse if center.present?
       map_options[:markers] = markers if markers.present?
-      map_options[:layers] = SS.config.map.layers
-      map_options[:default_zoom] = SS.config.map.openlayers_zoom_level
-
-      s << 'var canvas = $("' + selector + '")[0];'
-      s << "var opts = #{map_options.to_json};"
-      s << 'var map = new Openlayers_Member_Photo_Form(canvas, opts);'
-      s << 'map.setExifLatLng("#item_in_image");'
-    when 'open_street_map'
-      include_openlayers_api
-      controller.javascript "/assets/js/exif-js.js"
-
-      # set default values
-      map_options[:readonly] = true
-      map_options[:center] = center.reverse if center.present?
-      map_options[:markers] = markers if markers.present?
-      map_options[:layers] = SS.config.map.open_street_map
+      if opts[:site].try(:map_api_layer).present?
+        map_options[:layers] = SS.config.map.layers.select { |layer| layer['name'] == opts[:site].map_api_layer }
+      else
+        map_options[:layers] = [SS.config.map.layers.first]
+      end
       map_options[:default_zoom] = SS.config.map.openlayers_zoom_level
 
       s << 'var canvas = $("' + selector + '")[0];'
