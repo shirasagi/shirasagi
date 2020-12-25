@@ -132,4 +132,22 @@ class ApplicationController < ActionController::Base
       response.headers["Expires"] = "-1"
     end
   end
+
+  def trusted_url?(url)
+    url = ::Addressable::URI.parse(url)
+
+    known_trusted_urls = []
+    if @cur_site.present?
+      known_trusted_urls << @cur_site.full_url
+    end
+
+    Sys::TrustedUrlValidator.valid_url?(url, known_trusted_urls)
+  end
+  helper_method :trusted_url?
+
+  def trusted_url!(url)
+    raise "untrusted url" unless trusted_url?(url)
+    url
+  end
+  helper_method :trusted_url!
 end
