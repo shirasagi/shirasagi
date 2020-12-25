@@ -1,4 +1,14 @@
 #!/bin/bash
+#
+# 2020/11/02 に docker pull に制限が設けられるようになり、TravisCI で次のエラーが発生するようになった。
+# "You have reached your pull rate limit."
+#
+# これを回避するためにログインしてから pull する。
+#
+# see:
+# - https://docs.docker.com/docker-hub/download-rate-limit/
+# - https://blog.travis-ci.com/docker-rate-limits
+#
 if [ -n "$DOCKER_USERNAME"]; then
   echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
 fi
