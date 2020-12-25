@@ -50,9 +50,11 @@ env:
     - CAPYBARA_AJAX_WAIT_TIME=45
     - allow_open_jtalk=1
 
-install: # bash .travis.d/install.sh
+before_install:
   - echo "$DOCKER_PASSWORD" | docker login --username "$DOCKER_USERNAME" --password-stdin
-  - bash .travis.d/exec.sh install 10-docker-pull
+  - bash .travis.d/exec.sh before_install 10-docker-pull
+
+install: # bash .travis.d/install.sh
   - bash .travis.d/exec.sh install 20-mecab
   - bash .travis.d/exec.sh install 21-mecab-ipadic
   - bash .travis.d/exec.sh install 22-mecab-ruby
