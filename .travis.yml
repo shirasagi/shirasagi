@@ -51,7 +51,8 @@ env:
     - allow_open_jtalk=1
 
 before_install:
-  - echo "$DOCKER_PASSWORD" | docker login --username "$DOCKER_USERNAME" --password-stdin
+  - echo "DOCKER_USERNAME=$DOCKER_USERNAME"
+  - docker login --username "$DOCKER_USERNAME" --password "$DOCKER_PASSWORD"
   - bash .travis.d/exec.sh before_install 10-docker-pull
 
 install: # bash .travis.d/install.sh
