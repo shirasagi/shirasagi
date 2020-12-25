@@ -71,19 +71,6 @@ module Sns::LoginFilter
     url
   end
 
-  def myself_url?(url)
-    url.scheme == @request_url.scheme && url.host == @request_url.host && url.port == @request_url.port
-  end
-
-  def trusted_url?(url)
-    return true if myself_url?(url)
-
-    trusted_urls = SS.config.sns.trusted_urls
-    return true if trusted_urls.present? && trusted_urls.include?(url)
-
-    false
-  end
-
   def back_to_url
     back_to = params[:back_to].to_s
     return default_logged_in_path if back_to.blank?

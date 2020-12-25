@@ -134,7 +134,7 @@ class ApplicationController < ActionController::Base
   end
 
   def trusted_url?(url)
-    url = ::Addressable::URI.parse(url)
+    url = ::Addressable::URI.parse(url.to_s)
 
     known_trusted_urls = []
     if @cur_site.present?
