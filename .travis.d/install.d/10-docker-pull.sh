@@ -9,8 +9,9 @@
 # - https://docs.docker.com/docker-hub/download-rate-limit/
 # - https://blog.travis-ci.com/docker-rate-limits
 #
+echo "DOCKER_USERNAME=$DOCKER_USERNAME"
 if [ -n "$DOCKER_USERNAME"]; then
-  echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
+  docker login --username "$DOCKER_USERNAME" --password "$DOCKER_PASSWORD"
 fi
 docker info
 docker pull mongo:4.2
