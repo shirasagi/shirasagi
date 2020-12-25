@@ -10,7 +10,7 @@
 # - https://blog.travis-ci.com/docker-rate-limits
 #
 echo "DOCKER_USERNAME=$DOCKER_USERNAME"
-if [ -n "$DOCKER_USERNAME"]; then
+if [ -n "$DOCKER_USERNAME" ]; then
   docker login --username "$DOCKER_USERNAME" --password "$DOCKER_PASSWORD"
 fi
 docker info
