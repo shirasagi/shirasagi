@@ -1,53 +1,87 @@
 require 'spec_helper'
 
 describe Sys::TrustedUrlValidator, type: :validator, dbscope: :example do
+  let(:request_domain) { unique_domain }
+  let(:request_path) { unique_id }
+  let(:request_url) { "#{%w(http https).sample}://#{request_domain}/#{request_path}" }
+  let(:request) { OpenStruct.new(url: request_url) }
+
+  let(:trusted1_domain) { unique_domain }
+  let(:trusted1_path) { unique_id }
+  let(:trusted1_url) { "https://#{trusted1_domain}/#{trusted1_path}" }
+  let(:trusted2_domain) { unique_domain }
+  let(:trusted2_path) { unique_id }
+  let(:trusted2_url) { "//#{trusted2_domain}/#{trusted2_path}" }
+  let(:trusted_urls) { [ trusted1_url, trusted2_url ] }
+
+  before do
+    # Rails.application.current_request = request
+    Thread.current["ss.env"] = request
+    Thread.current["ss.request"] = request
+
+    @save_trusted_urls = SS.config.cms.trusted_urls
+    SS.config.replace_value_at(:sns, :trusted_urls, trusted_urls)
+  end
+
+  after do
+    # Rails.application.current_request = nil
+    Thread.current["ss.env"] = nil
+    Thread.current["ss.request"] = nil
+
+    SS.config.replace_value_at(:sns, :trusted_urls, @save_trusted_urls)
+    described_class.send(:clear_trusted_urls)
+  end
+
   describe ".myself_url?" do
-    let(:base_url) { unique_url }
-    let(:request) { OpenStruct.new(url: base_url) }
-
-    before do
-      # Rails.application.current_request = request
-      Thread.current["ss.env"] = request
-      Thread.current["ss.request"] = request
-    end
-
-    after do
-      # Rails.application.current_request = nil
-      Thread.current["ss.env"] = nil
-      Thread.current["ss.request"] = nil
-    end
-
     it do
-      expect(described_class.myself_url?(::Addressable::URI.parse(base_url))).to be_truthy
-      expect(described_class.myself_url?(::Addressable::URI.parse("#{base_url}/aaa/bbb"))).to be_truthy
-      expect(described_class.myself_url?(::Addressable::URI.parse(unique_url))).to be_falsey
+      # full url
+      expect(described_class.myself_url?(request_url)).to be_truthy
+      expect(described_class.myself_url?("#{request_url}/aaa/bbb")).to be_truthy
+
+      # relative
+      expect(described_class.myself_url?(unique_id)).to be_truthy
+      expect(described_class.myself_url?("/#{unique_id}")).to be_truthy
+      expect(described_class.myself_url?("/#{request_path}")).to be_truthy
+      expect(described_class.myself_url?("//#{request_domain}/#{request_path}")).to be_truthy
+
+      expect(described_class.myself_url?(unique_url)).to be_falsey
+      expect(described_class.myself_url?("//#{unique_domain}/#{unique_id}")).to be_falsey
     end
   end
 
   describe ".trusted_url?" do
-    let(:trusted_url) { unique_url }
-    let(:trusted_urls) { [ trusted_url ] }
-
-    before do
-      @save = SS.config.cms.trusted_urls
-      SS.config.replace_value_at(:sns, :trusted_urls, trusted_urls)
-    end
-
-    after do
-      SS.config.replace_value_at(:sns, :trusted_urls, @save)
-    end
-
     it do
-      expect(described_class.trusted_url?(::Addressable::URI.parse(trusted_url))).to be_truthy
-      expect(described_class.trusted_url?(::Addressable::URI.parse("#{trusted_url}/aaa/bbb"))).to be_falsey
-      expect(described_class.trusted_url?(::Addressable::URI.parse(unique_url))).to be_falsey
+      # trusted1: absolute full url
+      expect(described_class.trusted_url?(trusted1_url)).to be_truthy
+      expect(described_class.trusted_url?("#{trusted1_url}/aaa/bbb")).to be_truthy
+      # missing path
+      expect(described_class.trusted_url?("https://#{trusted1_domain}/")).to be_falsey
+      # protocol mismatch
+      expect(described_class.trusted_url?("http://#{trusted1_domain}/#{trusted1_path}")).to be_falsey
+
+      # trusted2: relative url
+      expect(described_class.trusted_url?(trusted2_url)).to be_truthy
+      expect(described_class.trusted_url?("#{trusted2_url}/#{unique_id}")).to be_truthy
+      expect(described_class.trusted_url?("http://#{trusted2_domain}/#{trusted2_path}/")).to be_truthy
+      expect(described_class.trusted_url?("https://#{trusted2_domain}/#{trusted2_path}/")).to be_truthy
+
+      expect(described_class.trusted_url?(unique_url)).to be_falsey
     end
   end
 
   describe ".valid_url?" do
     it do
+      # relative: path only
       expect(described_class.valid_url?(::Addressable::URI.parse("/a/b/c"))).to be_truthy
-      expect(described_class.valid_url?(::Addressable::URI.parse("a/b/c"))).to be_falsey
+      expect(described_class.valid_url?(::Addressable::URI.parse("a/b/c"))).to be_truthy
+
+      # relative: domain + path
+      expect(described_class.valid_url?(::Addressable::URI.parse("//#{request_domain}"))).to be_truthy
+      expect(described_class.valid_url?(::Addressable::URI.parse("//#{request_domain}/"))).to be_truthy
+      expect(described_class.valid_url?(::Addressable::URI.parse("//#{request_domain}/#{unique_id}"))).to be_truthy
+      expect(described_class.valid_url?(::Addressable::URI.parse("//#{unique_domain}"))).to be_falsey
+      expect(described_class.valid_url?(::Addressable::URI.parse("//#{unique_domain}/"))).to be_falsey
+      expect(described_class.valid_url?(::Addressable::URI.parse("//#{unique_domain}#{request_path}"))).to be_falsey
     end
   end
 end

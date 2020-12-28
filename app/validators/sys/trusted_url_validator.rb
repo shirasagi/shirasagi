@@ -3,33 +3,80 @@ class Sys::TrustedUrlValidator < ActiveModel::EachValidator
     def myself_url?(url)
       return false if Rails.application.current_request.blank?
 
+      url = ensure_addressable_url(url)
       request_url = ::Addressable::URI.parse(Rails.application.current_request.url)
-      url.scheme == request_url.scheme && url.host == request_url.host && url.port == request_url.port
+
+      if url.host.present?
+        return false if url.host != request_url.host
+      end
+      if url.port.present?
+        return false if url.port != request_url.port
+      end
+
+      true
     end
 
     def trusted_url?(url, known_trusted_urls = nil)
-      url = url.to_s
+      url = ensure_addressable_url(url)
 
       if known_trusted_urls.present?
-        return true if known_trusted_urls.any? { |trusted_url| url.start_with?(trusted_url) }
+        return true if parse_urls(known_trusted_urls).any? do |trusted_url|
+          trusted_url_one?(trusted_url, url) && trusted_url.path == url.path
+        end
       end
 
-      if SS.config.sns.trusted_urls.blank?.present?
-        return true if SS.config.sns.trusted_urls.any? { |trusted_url| url.start_with?(trusted_url) }
+      if trusted_urls.any? { |trusted_url| trusted_url_one?(trusted_url, url) }
+        return true
       end
 
       false
     end
 
     def valid_url?(url, known_trusted_urls = nil)
-      if url.relative?
-        return url.path.present? && url.path[0] == "/"
-      end
-
       return true if myself_url?(url)
       return true if trusted_url?(url, known_trusted_urls)
 
       false
+    end
+
+    private
+
+    def ensure_addressable_url(url)
+      return url if url.respond_to?(:scheme)
+      ::Addressable::URI.parse(url.to_s)
+    end
+
+    def trusted_url_one?(trusted_template_url, uncertain_url)
+      if trusted_template_url.scheme.present?
+        return false if uncertain_url.scheme != trusted_template_url.scheme
+      end
+      if trusted_template_url.host.present?
+        return false if uncertain_url.host != trusted_template_url.host
+      end
+      if trusted_template_url.port.present?
+        return false if uncertain_url.port != trusted_template_url.port
+      end
+      if trusted_template_url.path.present?
+        return false unless uncertain_url.path.start_with?(trusted_template_url.path)
+      end
+
+      true
+    end
+
+    def parse_urls(sources)
+      return [] if sources.blank?
+
+      sources.uniq.sort.map do |source|
+        ensure_addressable_url(source) rescue nil
+      end.compact
+    end
+
+    def trusted_urls
+      @trusted_urls ||= parse_urls(SS.config.sns.trusted_urls)
+    end
+
+    def clear_trusted_urls
+      @trusted_urls = nil
     end
   end
 
@@ -39,7 +86,7 @@ class Sys::TrustedUrlValidator < ActiveModel::EachValidator
     known_trusted_urls = []
     if record.respond_to?(:site) && record.site.present?
       if record.site.respond_to?(:full_url) && record.site.full_url.present?
-        known_trusted_urls << record.site.full_url
+        known_trusted_urls << "//#{record.site.domain_with_subdir}"
       end
     end
 
