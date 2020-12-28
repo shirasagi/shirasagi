@@ -137,8 +137,11 @@ class ApplicationController < ActionController::Base
     url = ::Addressable::URI.parse(url.to_s)
 
     known_trusted_urls = []
-    if @cur_site.present?
-      known_trusted_urls << @cur_site.full_url
+    if @cur_site.present? && @cur_site.respond_to?(:domain_with_subdir)
+      domain_with_subdir = @cur_site.domain_with_subdir
+      if domain_with_subdir.present?
+        known_trusted_urls << "//#{domain_with_subdir}"
+      end
     end
 
     Sys::TrustedUrlValidator.valid_url?(url, known_trusted_urls)

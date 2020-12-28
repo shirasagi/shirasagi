@@ -18,11 +18,10 @@ class Sys::TrustedUrlValidator < ActiveModel::EachValidator
 
     def trusted_url?(url, known_trusted_urls = nil)
       url = ensure_addressable_url(url)
+      return true if url.scheme.blank? && url.host.blank? && url.port.blank?
 
       if known_trusted_urls.present?
-        return true if parse_urls(known_trusted_urls).any? do |trusted_url|
-          trusted_url_one?(trusted_url, url) && trusted_url.path == url.path
-        end
+        return true if parse_urls(known_trusted_urls).any? { |trusted_url| trusted_url_one?(trusted_url, url) }
       end
 
       if trusted_urls.any? { |trusted_url| trusted_url_one?(trusted_url, url) }
@@ -84,10 +83,18 @@ class Sys::TrustedUrlValidator < ActiveModel::EachValidator
     return if value.blank?
 
     known_trusted_urls = []
-    if record.respond_to?(:site) && record.site.present?
-      if record.site.respond_to?(:full_url) && record.site.full_url.present?
-        known_trusted_urls << "//#{record.site.domain_with_subdir}"
-      end
+    %i[cur_site site].each do |m|
+      next unless record.respond_to?(m)
+
+      site = record.send(m)
+      next if site.blank?
+      next unless site.respond_to?(:domain_with_subdir)
+
+      domain_with_subdir = site.domain_with_subdir
+      next if domain_with_subdir.blank?
+
+      known_trusted_urls << "//#{domain_with_subdir}"
+      break
     end
 
     url = ::Addressable::URI.parse(value)

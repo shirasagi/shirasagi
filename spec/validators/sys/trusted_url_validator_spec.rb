@@ -65,6 +65,12 @@ describe Sys::TrustedUrlValidator, type: :validator, dbscope: :example do
       expect(described_class.trusted_url?("http://#{trusted2_domain}/#{trusted2_path}/")).to be_truthy
       expect(described_class.trusted_url?("https://#{trusted2_domain}/#{trusted2_path}/")).to be_truthy
 
+      # relative path
+      expect(described_class.trusted_url?("/")).to be_truthy
+      expect(described_class.trusted_url?("/#{unique_id}")).to be_truthy
+      expect(described_class.trusted_url?("./#{unique_id}")).to be_truthy
+      expect(described_class.trusted_url?("#{unique_id}")).to be_truthy
+
       expect(described_class.trusted_url?(unique_url)).to be_falsey
     end
   end
