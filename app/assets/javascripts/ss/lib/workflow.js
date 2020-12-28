@@ -3,6 +3,7 @@ SS_Workflow = function (el, options) {
   this.options = options;
 
   var pThis = this;
+  var updateDisabled = false;
 
   this.$el.on("click", ".update-item", function (e) {
     pThis.updateItem($(this));
@@ -175,6 +176,13 @@ SS_Workflow.prototype = {
     }
     var circulations = this.collectCirculations();
     var workflow_file_ids = this.collectFileIds();
+
+    if (pThis.updateDisabled) {
+      return false;
+    }
+    pThis.updateDisabled = true;
+    $this.prop("disabled", true);
+
     $.ajax({
       type: "POST",
       url: uri,
@@ -225,6 +233,8 @@ SS_Workflow.prototype = {
         catch (ex) {
           alert(["== Error =="].concat(xhr["statusText"]).join("\n"));
         }
+        pThis.updateDisabled = false;
+        $this.prop("disabled", false);
       }
     });
   },
