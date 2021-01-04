@@ -53,7 +53,7 @@ this.Chat_Bot = (function () {
             } else {
               el.parents('.chat-part').find('.chat-items').append($('<div class="chat-item sys"></div>').append(r.response));
             }
-            el.parents('.chat-part').find('.chat-items').animate({scrollTop: el.parents('.chat-part').find('.chat-items')[0].scrollHeight});
+            el.parents('.chat-part').find('.chat-items').animate({ scrollTop: el.parents('.chat-part').find('.chat-items')[0].scrollHeight });
           }
         });
       },
@@ -76,7 +76,7 @@ this.Chat_Bot = (function () {
     }
     el.parents('.chat-part').find('.chat-text').blur();
     _this.$el.find('.chat-items').append($('<div class="chat-item user"></div>').append(text));
-    el.parents('.chat-part').find('.chat-items').animate({scrollTop: el.parents('.chat-part').find('.chat-items')[0].scrollHeight});
+    el.parents('.chat-part').find('.chat-items').animate({ scrollTop: el.parents('.chat-part').find('.chat-items')[0].scrollHeight });
     el.parents('.chat-part').find('.chat-text').val('');
     $.ajax({
       type: "GET",
@@ -113,7 +113,7 @@ this.Chat_Bot = (function () {
             } else {
               el.parents('.chat-part').find('.chat-items').append($('<div class="chat-item sys"></div>').append(r.response).append(siteSearchParagraph));
             }
-            el.parents('.chat-part').find('.chat-items').animate({scrollTop: el.parents('.chat-part').find('.chat-items')[0].scrollHeight});
+            el.parents('.chat-part').find('.chat-items').animate({ scrollTop: el.parents('.chat-part').find('.chat-items')[0].scrollHeight });
           }
         });
       },
@@ -140,7 +140,7 @@ this.Chat_Bot = (function () {
         $.each(result.results, function (i, r) {
           if (r.response) {
             el.parents('.chat-part').find('.chat-items').append($('<div class="chat-item sys"></div>').append(r.response));
-            el.parents('.chat-part').find('.chat-items').animate({scrollTop: el.parents('.chat-part').find('.chat-items')[0].scrollHeight});
+            el.parents('.chat-part').find('.chat-items').animate({ scrollTop: el.parents('.chat-part').find('.chat-items')[0].scrollHeight });
           }
         });
         setTimeout(function () {
@@ -170,7 +170,7 @@ this.Chat_Bot = (function () {
         $.each(result.results, function (i, r) {
           if (r.response) {
             el.parents('.chat-part').find('.chat-items').append($('<div class="chat-item sys"></div>').append(r.response));
-            el.parents('.chat-part').find('.chat-items').animate({scrollTop: el.parents('.chat-part').find('.chat-items')[0].scrollHeight});
+            el.parents('.chat-part').find('.chat-items').animate({ scrollTop: el.parents('.chat-part').find('.chat-items')[0].scrollHeight });
           }
         });
         setTimeout(function () {
