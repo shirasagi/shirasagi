@@ -13,10 +13,10 @@ this.Chat_Bot = (function () {
         _this.sendText($(this));
       }
     });
-    $(_this.id).find('.chat-button').on("click", function() {
+    $(_this.id).find('.chat-button').on("click", function () {
       _this.sendText($(this));
     });
-    $(_this.id).find('.chat-items').on("click", function(e) {
+    $(_this.id).find('.chat-items').on("click", function (e) {
       if ($(e.target).hasClass('chat-suggest')) {
         _this.clickSuggest = true;
         $(_this.id).find('.chat-text').val($(e.target).text());
@@ -24,7 +24,7 @@ this.Chat_Bot = (function () {
         return false;
       } else if ($(e.target).hasClass('chat-success')) {
         _this.sendSuccess($(e.target));
-      }  else if ($(e.target).hasClass('chat-retry')) {
+      } else if ($(e.target).hasClass('chat-retry')) {
         _this.sendRetry($(e.target));
       }
     });
@@ -45,17 +45,17 @@ this.Chat_Bot = (function () {
           result = $.parseJSON(res);
         }
         $.each(result.results, function (i, r) {
-          if(r.response){
-            if(r.suggests){
+          if (r.response) {
+            if (r.suggests) {
               el.parents('.chat-part').find('.chat-items').append($('<div class="chat-item sys"></div>').append(r.response));
-              r.suggests.forEach(function(suggest) {
+              r.suggests.forEach(function (suggest) {
                 var chatSuggest = $('<a class="chat-suggest"></a>').attr('href', _this.url).append(suggest);
                 el.parents('.chat-part').find('.chat-items').append($('<div class="chat-item suggest"></div>').append(chatSuggest));
               });
             } else {
               el.parents('.chat-part').find('.chat-items').append($('<div class="chat-item sys"></div>').append(r.response));
             }
-            el.parents('.chat-part').find('.chat-items').animate({ scrollTop: el.parents('.chat-part').find('.chat-items')[0].scrollHeight });
+            el.parents('.chat-part').find('.chat-items').animate({scrollTop: el.parents('.chat-part').find('.chat-items')[0].scrollHeight});
           }
         });
       },
@@ -67,12 +67,12 @@ this.Chat_Bot = (function () {
   Chat_Bot.prototype.sendText = function (el) {
     var _this = this;
     var text = el.parents('.chat-part').find('.chat-text').val();
-    if(!text){
+    if (!text) {
       return false;
     }
     el.parents('.chat-part').find('.chat-text').blur();
     $(this.id).find('.chat-items').append($('<div class="chat-item user"></div>').append(text));
-    el.parents('.chat-part').find('.chat-items').animate({ scrollTop: el.parents('.chat-part').find('.chat-items')[0].scrollHeight });
+    el.parents('.chat-part').find('.chat-items').animate({scrollTop: el.parents('.chat-part').find('.chat-items')[0].scrollHeight});
     el.parents('.chat-part').find('.chat-text').val('');
     $.ajax({
       type: "GET",
@@ -88,20 +88,20 @@ this.Chat_Bot = (function () {
           result = $.parseJSON(res);
         }
         $.each(result.results, function (i, r) {
-          if(r.response){
-            if(r.siteSearchUrl) {
+          if (r.response) {
+            if (r.siteSearchUrl) {
               var siteSearchLink = $('<a href="' + r.siteSearchUrl + '" target="_blank"></a>').append(result.siteSearchText);
               var siteSearchParagraph = $('<p class="search-result-btn"></p>').append(siteSearchLink);
             } else {
               var siteSearchParagraph = '';
             }
-            if(r.suggests){
+            if (r.suggests) {
               el.parents('.chat-part').find('.chat-items').append($('<div class="chat-item sys"></div>').append(r.response).append(siteSearchParagraph));
-              r.suggests.forEach(function(suggest) {
+              r.suggests.forEach(function (suggest) {
                 var chatSuggest = $('<a class="chat-suggest"></a>').attr('href', _this.url).append(suggest);
                 el.parents('.chat-part').find('.chat-items').append($('<div class="chat-item suggest"></div>').append(chatSuggest));
               });
-            } else if(r.question) {
+            } else if (r.question) {
               var chatSuccess = $('<button name="button" type="button" class="chat-success" data-id="' + r.id + '"></button>').append(result.chatSuccess);
               var chatRetry = $('<button name="button" type="button" class="chat-retry" data-id="' + r.id + '"></button>').append(result.chatRetry);
               var chatFinish = $('<div class="chat-finish"></div>').append(r.question).append(chatSuccess).append(chatRetry);
@@ -109,7 +109,7 @@ this.Chat_Bot = (function () {
             } else {
               el.parents('.chat-part').find('.chat-items').append($('<div class="chat-item sys"></div>').append(r.response).append(siteSearchParagraph));
             }
-            el.parents('.chat-part').find('.chat-items').animate({ scrollTop: el.parents('.chat-part').find('.chat-items')[0].scrollHeight });
+            el.parents('.chat-part').find('.chat-items').animate({scrollTop: el.parents('.chat-part').find('.chat-items')[0].scrollHeight});
           }
         });
       },
@@ -134,12 +134,14 @@ this.Chat_Bot = (function () {
           result = $.parseJSON(res);
         }
         $.each(result.results, function (i, r) {
-          if(r.response){
+          if (r.response) {
             el.parents('.chat-part').find('.chat-items').append($('<div class="chat-item sys"></div>').append(r.response));
-            el.parents('.chat-part').find('.chat-items').animate({ scrollTop: el.parents('.chat-part').find('.chat-items')[0].scrollHeight });
+            el.parents('.chat-part').find('.chat-items').animate({scrollTop: el.parents('.chat-part').find('.chat-items')[0].scrollHeight});
           }
         });
-        setTimeout(function () { _this.firstText(el.parents('.chat-part').find('.chat-items')) }, 1000)
+        setTimeout(function () {
+          _this.firstText(el.parents('.chat-part').find('.chat-items'))
+        }, 1000)
       },
       error: function (xhr, status, error) {
       }
@@ -162,12 +164,14 @@ this.Chat_Bot = (function () {
           result = $.parseJSON(res);
         }
         $.each(result.results, function (i, r) {
-          if(r.response){
+          if (r.response) {
             el.parents('.chat-part').find('.chat-items').append($('<div class="chat-item sys"></div>').append(r.response));
-            el.parents('.chat-part').find('.chat-items').animate({ scrollTop: el.parents('.chat-part').find('.chat-items')[0].scrollHeight });
+            el.parents('.chat-part').find('.chat-items').animate({scrollTop: el.parents('.chat-part').find('.chat-items')[0].scrollHeight});
           }
         });
-        setTimeout(function () { _this.firstText(el.parents('.chat-part').find('.chat-items')) }, 1000)
+        setTimeout(function () {
+          _this.firstText(el.parents('.chat-part').find('.chat-items'))
+        }, 1000)
       },
       error: function (xhr, status, error) {
       }
