@@ -1,28 +1,29 @@
 this.Chat_Bot = (function () {
-  function Chat_Bot(id, url) {
-    this.id = '#' + id;
+  function Chat_Bot(el, url) {
+    this.$el = $(el);
     this.url = url;
     this.render();
   }
 
   Chat_Bot.prototype.render = function () {
     var _this = this;
-    $(_this.id).find('.chat-text').keypress(function (ev) {
+    _this.$el.on("keypress", '.chat-text', function (ev) {
       if ((ev.which && ev.which === 13) || (ev.keyCode && ev.keyCode === 13)) {
         _this.sendText($(this));
       }
     });
-    $(_this.id).find('.chat-button').on("click", function () {
+    _this.$el.on("click", '.chat-button', function () {
       _this.sendText($(this));
     });
-    $(_this.id).find('.chat-items').on("click", function (e) {
-      if ($(e.target).hasClass('chat-suggest')) {
-        _this.sendText($(this), { text: $(e.target).text(), clickSuggest: true });
+    _this.$el.on("click", '.chat-items', function (ev) {
+      var $target = $(ev.target);
+      if ($target.hasClass('chat-suggest')) {
+        _this.sendText($(this), { text: $target.text(), clickSuggest: true });
         return false;
-      } else if ($(e.target).hasClass('chat-success')) {
-        _this.sendSuccess($(e.target));
-      } else if ($(e.target).hasClass('chat-retry')) {
-        _this.sendRetry($(e.target));
+      } else if ($target.hasClass('chat-success')) {
+        _this.sendSuccess($target);
+      } else if ($target.hasClass('chat-retry')) {
+        _this.sendRetry($target);
       }
     });
   };
@@ -74,7 +75,7 @@ this.Chat_Bot = (function () {
       return false;
     }
     el.parents('.chat-part').find('.chat-text').blur();
-    $(this.id).find('.chat-items').append($('<div class="chat-item user"></div>').append(text));
+    _this.$el.find('.chat-items').append($('<div class="chat-item user"></div>').append(text));
     el.parents('.chat-part').find('.chat-items').animate({scrollTop: el.parents('.chat-part').find('.chat-items')[0].scrollHeight});
     el.parents('.chat-part').find('.chat-text').val('');
     $.ajax({

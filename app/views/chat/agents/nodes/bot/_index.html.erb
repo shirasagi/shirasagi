@@ -16,5 +16,5 @@
 </div>
 
 <%= jquery do %>
-  var bot = new Chat_Bot("chat-<%= chat_node.id %>", "<%= @preview ? cms_preview_path(@cur_site, path: File.join(chat_node.filename, 'index.json')) : File.join(chat_node.url, 'index.json') %>");
+  var bot = new Chat_Bot("#chat-<%= chat_node.id %>", "<%= @preview ? cms_preview_path(@cur_site, path: File.join(chat_node.filename, 'index.json')) : File.join(chat_node.url, 'index.json') %>");
 <% end %>
