@@ -2,7 +2,6 @@ this.Chat_Bot = (function () {
   function Chat_Bot(id, url) {
     this.id = '#' + id;
     this.url = url;
-    this.clickSuggest = false;
     this.render();
   }
 
@@ -18,9 +17,7 @@ this.Chat_Bot = (function () {
     });
     $(_this.id).find('.chat-items').on("click", function (e) {
       if ($(e.target).hasClass('chat-suggest')) {
-        _this.clickSuggest = true;
-        $(_this.id).find('.chat-text').val($(e.target).text());
-        _this.sendText($(this));
+        _this.sendText($(this), { text: $(e.target).text(), clickSuggest: true });
         return false;
       } else if ($(e.target).hasClass('chat-success')) {
         _this.sendSuccess($(e.target));
@@ -30,14 +27,14 @@ this.Chat_Bot = (function () {
     });
   };
 
-  Chat_Bot.prototype.firstText = function (el) {
+  Chat_Bot.prototype.firstText = function (el, options) {
     var _this = this;
     $.ajax({
       type: "GET",
       url: this.url,
       cache: false,
       data: {
-        click_suggest: this.clickSuggest
+        click_suggest: options && options.clickSuggest
       },
       success: function (res, status) {
         var result = res;
@@ -64,9 +61,15 @@ this.Chat_Bot = (function () {
     });
   };
 
-  Chat_Bot.prototype.sendText = function (el) {
+  Chat_Bot.prototype.sendText = function (el, options) {
     var _this = this;
-    var text = el.parents('.chat-part').find('.chat-text').val();
+    var text;
+    if (options) {
+      text = options.text;
+    }
+    if (!text) {
+      text = el.parents('.chat-part').find('.chat-text').val();
+    }
     if (!text) {
       return false;
     }
@@ -80,7 +83,7 @@ this.Chat_Bot = (function () {
       cache: false,
       data: {
         text: text,
-        click_suggest: this.clickSuggest
+        click_suggest: options && options.clickSuggest
       },
       success: function (res, status) {
         var result = res;
