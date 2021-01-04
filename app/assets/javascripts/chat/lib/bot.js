@@ -9,75 +9,64 @@ this.Chat_Bot = (function () {
     var _this = this;
     _this.$el.on("keypress", '.chat-text', function (ev) {
       if ((ev.which && ev.which === 13) || (ev.keyCode && ev.keyCode === 13)) {
-        _this.sendText($(this));
+        _this.sendChatRequest($(this));
       }
     });
     _this.$el.on("click", '.chat-button', function () {
-      _this.sendText($(this));
+      _this.sendChatRequest($(this));
     });
     _this.$el.on("click", '.chat-items', function (ev) {
       var $target = $(ev.target);
       if ($target.hasClass('chat-suggest')) {
-        _this.sendText($(this), { text: $target.text(), clickSuggest: true });
+        _this.sendChatRequest($(this), { text: $target.text(), clickSuggest: true });
         return false;
       } else if ($target.hasClass('chat-success')) {
-        _this.sendSuccess($target);
+        _this.sendFeedback($target, 'success');
+        return false;
       } else if ($target.hasClass('chat-retry')) {
-        _this.sendRetry($target);
+        _this.sendFeedback($target, 'retry');
+        return false;
       }
     });
   };
 
-  Chat_Bot.prototype.firstText = function (el, options) {
+  Chat_Bot.prototype.fetchFirstMessagenAndSuggestions = function () {
     var _this = this;
+
     $.ajax({
       type: "GET",
       url: _this.url,
       cache: false,
-      data: {
-        click_suggest: options && options.clickSuggest
-      },
-      success: function (res, status) {
-        var result = res;
-        if (typeof res === 'string' || res instanceof String) {
-          result = $.parseJSON(res);
-        }
-        $.each(result.results, function (i, r) {
-          if (r.response) {
-            if (r.suggests) {
-              el.parents('.chat-part').find('.chat-items').append($('<div class="chat-item sys"></div>').append(r.response));
-              r.suggests.forEach(function (suggest) {
-                var chatSuggest = $('<a class="chat-suggest"></a>').attr('href', _this.url).append(suggest);
-                el.parents('.chat-part').find('.chat-items').append($('<div class="chat-item suggest"></div>').append(chatSuggest));
-              });
-            } else {
-              el.parents('.chat-part').find('.chat-items').append($('<div class="chat-item sys"></div>').append(r.response));
-            }
-            el.parents('.chat-part').find('.chat-items').animate({ scrollTop: el.parents('.chat-part').find('.chat-items')[0].scrollHeight });
-          }
-        });
+      success: function (res, _status) {
+        _this.renderChatResponse(res);
       },
       error: function (xhr, status, error) {
       }
     });
   };
 
-  Chat_Bot.prototype.sendText = function (el, options) {
+  Chat_Bot.prototype.sendChatRequest = function ($el, options) {
     var _this = this;
+
+    var $chatText = _this.$el.find('.chat-text');
+
     var text;
     if (options) {
       text = options.text;
     }
     if (!text) {
-      text = el.parents('.chat-part').find('.chat-text').val();
+      text = $chatText.val();
+      $chatText.val('');
     }
     if (!text) {
       return false;
     }
-    el.parents('.chat-part').find('.chat-text').blur();
-    _this.$el.find('.chat-items').append($('<div class="chat-item user"></div>').append(text));
-    el.parents('.chat-part').find('.chat-items').animate({ scrollTop: el.parents('.chat-part').find('.chat-items')[0].scrollHeight });
-    el.parents('.chat-part').find('.chat-text').val('');
+
+    var $chatItems = _this.$el.find('.chat-items');
+    $chatItems
+      .append($('<div class="chat-item user"></div>').append(text))
+      .animate({ scrollTop: $chatItems[0].scrollHeight });
+
     $.ajax({
       type: "GET",
       url: _this.url,
@@ -87,102 +76,95 @@ this.Chat_Bot = (function () {
         click_suggest: options && options.clickSuggest
       },
       success: function (res, status) {
-        var result = res;
-        if (typeof res === 'string' || res instanceof String) {
-          result = $.parseJSON(res);
-        }
-        $.each(result.results, function (i, r) {
-          if (r.response) {
-            if (r.siteSearchUrl) {
-              var siteSearchLink = $('<a href="' + r.siteSearchUrl + '" target="_blank"></a>').append(result.siteSearchText);
-              var siteSearchParagraph = $('<p class="search-result-btn"></p>').append(siteSearchLink);
-            } else {
-              var siteSearchParagraph = '';
-            }
-            if (r.suggests) {
-              el.parents('.chat-part').find('.chat-items').append($('<div class="chat-item sys"></div>').append(r.response).append(siteSearchParagraph));
-              r.suggests.forEach(function (suggest) {
-                var chatSuggest = $('<a class="chat-suggest"></a>').attr('href', _this.url).append(suggest);
-                el.parents('.chat-part').find('.chat-items').append($('<div class="chat-item suggest"></div>').append(chatSuggest));
-              });
-            } else if (r.question) {
-              var chatSuccess = $('<button name="button" type="button" class="chat-success" data-id="' + r.id + '"></button>').append(result.chatSuccess);
-              var chatRetry = $('<button name="button" type="button" class="chat-retry" data-id="' + r.id + '"></button>').append(result.chatRetry);
-              var chatFinish = $('<div class="chat-finish"></div>').append(r.question).append(chatSuccess).append(chatRetry);
-              el.parents('.chat-part').find('.chat-items').append($('<div class="chat-item sys"></div>').append(r.response).append(siteSearchParagraph).append(chatFinish));
-            } else {
-              el.parents('.chat-part').find('.chat-items').append($('<div class="chat-item sys"></div>').append(r.response).append(siteSearchParagraph));
-            }
-            el.parents('.chat-part').find('.chat-items').animate({ scrollTop: el.parents('.chat-part').find('.chat-items')[0].scrollHeight });
-          }
-        });
+        _this.renderChatResponse(res);
       },
       error: function (xhr, status, error) {
       }
     });
   };
 
-  Chat_Bot.prototype.sendSuccess = function (el) {
+  Chat_Bot.prototype.renderChatResponse = function (res) {
     var _this = this;
+    var $chatItems = _this.$el.find('.chat-items');
+
+    var result = res;
+    if (typeof res === 'string' || res instanceof String) {
+      result = $.parseJSON(res);
+    }
+
+    $.each(result.results, function (i, r) {
+      if (!r.response) {
+        return;
+      }
+
+      var siteSearchParagraph;
+      if (r.siteSearchUrl) {
+        var siteSearchLink = $('<a />', { href: r.siteSearchUrl, target: "_blank" }).append(result.siteSearchText);
+        siteSearchParagraph = $('<p />', { class: "search-result-btn" }).append(siteSearchLink);
+      } else {
+        siteSearchParagraph = '';
+      }
+
+      if (r.suggests) {
+        $chatItems.append($('<div class="chat-item sys"></div>').append(r.response).append(siteSearchParagraph));
+        r.suggests.forEach(function (suggest) {
+          var chatSuggest = $('<a class="chat-suggest"></a>').attr('href', _this.url).append(suggest);
+          $chatItems.append($('<div class="chat-item suggest"></div>').append(chatSuggest));
+        });
+      } else if (r.question) {
+        var chatSuccess = $('<button name="button" type="button" class="chat-success" data-id="' + r.id + '"></button>').append(result.chatSuccess);
+        var chatRetry = $('<button name="button" type="button" class="chat-retry" data-id="' + r.id + '"></button>').append(result.chatRetry);
+        var chatFinish = $('<div class="chat-finish"></div>').append(r.question).append(chatSuccess).append(chatRetry);
+        $chatItems.append($('<div class="chat-item sys"></div>').append(r.response).append(siteSearchParagraph).append(chatFinish));
+      } else {
+        $chatItems.append($('<div class="chat-item sys"></div>').append(r.response).append(siteSearchParagraph));
+      }
+    });
+
+    $chatItems.animate({ scrollTop: $chatItems[0].scrollHeight });
+  };
+
+  Chat_Bot.prototype.sendFeedback = function ($el, question) {
+    var _this = this;
+
     $.ajax({
       type: "GET",
       url: _this.url,
       cache: false,
       data: {
-        intent_id: el.attr('data-id'),
-        question: 'success'
+        intent_id: $el.data('id'),
+        question: question || 'success'
       },
-      success: function (res, status) {
-        var result = res;
-        if (typeof res === 'string' || res instanceof String) {
-          result = $.parseJSON(res);
-        }
-        $.each(result.results, function (i, r) {
-          if (r.response) {
-            el.parents('.chat-part').find('.chat-items').append($('<div class="chat-item sys"></div>').append(r.response));
-            el.parents('.chat-part').find('.chat-items').animate({ scrollTop: el.parents('.chat-part').find('.chat-items')[0].scrollHeight });
-          }
-        });
-        setTimeout(function () {
-          _this.firstText(el.parents('.chat-part').find('.chat-items'))
-        }, 1000)
+      success: function (res, _status) {
+        _this.renderFeedback(res);
       },
       error: function (xhr, status, error) {
       }
     });
   };
 
-  Chat_Bot.prototype.sendRetry = function (el) {
+  Chat_Bot.prototype.renderFeedback = function (res) {
     var _this = this;
-    $.ajax({
-      type: "GET",
-      url: _this.url,
-      cache: false,
-      data: {
-        intent_id: el.attr('data-id'),
-        question: 'retry'
-      },
-      success: function (res, status) {
-        var result = res;
-        if (typeof res === 'string' || res instanceof String) {
-          result = $.parseJSON(res);
-        }
-        $.each(result.results, function (i, r) {
-          if (r.response) {
-            el.parents('.chat-part').find('.chat-items').append($('<div class="chat-item sys"></div>').append(r.response));
-            el.parents('.chat-part').find('.chat-items').animate({ scrollTop: el.parents('.chat-part').find('.chat-items')[0].scrollHeight });
-          }
-        });
-        setTimeout(function () {
-          _this.firstText(el.parents('.chat-part').find('.chat-items'))
-        }, 1000)
-      },
-      error: function (xhr, status, error) {
+
+    var result = res;
+    if (typeof res === 'string' || res instanceof String) {
+      result = $.parseJSON(res);
+    }
+
+    var $chatItems = _this.$el.find('.chat-items');
+
+    $.each(result.results, function (i, r) {
+      if (!r.response) {
+        return;
       }
+
+      $chatItems.append($('<div class="chat-item sys"></div>').append(r.response));
     });
+
+    $chatItems.animate({ scrollTop: $chatItems[0].scrollHeight });
+    setTimeout(_this.fetchFirstMessagenAndSuggestions.bind(_this), 1000)
   };
 
   return Chat_Bot;
 
 })();
-
