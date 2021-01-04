@@ -1,9 +1,6 @@
 <% chat_node ||= @cur_node.becomes_with_route %>
 
 <div id="chat-<%= chat_node.id %>" class="chat-part">
-  <%= jquery do %>
-    var bot = new Chat_Bot("chat-<%= chat_node.id %>", "<%= @preview ? cms_preview_path(@cur_site, path: File.join(chat_node.filename, 'index.json')) : File.join(chat_node.url, 'index.json') %>");
-  <% end %>
   <div class="chat-items">
     <%= content_tag :div, @result.html_safe, class: 'chat-item sys' if @result.present? %>
     <% chat_node.becomes_with_route.first_suggest.each do |suggest| %>
@@ -17,3 +14,7 @@
     <%= button_tag t('ss.buttons.send'), type: 'button', class: 'chat-button' %>
   </div>
 </div>
+
+<%= jquery do %>
+  var bot = new Chat_Bot("chat-<%= chat_node.id %>", "<%= @preview ? cms_preview_path(@cur_site, path: File.join(chat_node.filename, 'index.json')) : File.join(chat_node.url, 'index.json') %>");
+<% end %>
