@@ -58,7 +58,6 @@ this.Chat_Bot = (function () {
             el.parents('.chat-part').find('.chat-items').animate({ scrollTop: el.parents('.chat-part').find('.chat-items')[0].scrollHeight });
           }
         });
-        el.parents('.chat-part').find('.chat-text').focus();
       },
       error: function (xhr, status, error) {
       }
@@ -113,7 +112,6 @@ this.Chat_Bot = (function () {
             el.parents('.chat-part').find('.chat-items').animate({ scrollTop: el.parents('.chat-part').find('.chat-items')[0].scrollHeight });
           }
         });
-        el.parents('.chat-part').find('.chat-text').focus();
       },
       error: function (xhr, status, error) {
       }
