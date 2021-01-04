@@ -32,7 +32,7 @@ this.Chat_Bot = (function () {
     var _this = this;
     $.ajax({
       type: "GET",
-      url: this.url,
+      url: _this.url,
       cache: false,
       data: {
         click_suggest: options && options.clickSuggest
@@ -80,7 +80,7 @@ this.Chat_Bot = (function () {
     el.parents('.chat-part').find('.chat-text').val('');
     $.ajax({
       type: "GET",
-      url: this.url,
+      url: _this.url,
       cache: false,
       data: {
         text: text,
@@ -126,7 +126,7 @@ this.Chat_Bot = (function () {
     var _this = this;
     $.ajax({
       type: "GET",
-      url: this.url,
+      url: _this.url,
       cache: false,
       data: {
         intent_id: el.attr('data-id'),
@@ -156,7 +156,7 @@ this.Chat_Bot = (function () {
     var _this = this;
     $.ajax({
       type: "GET",
-      url: this.url,
+      url: _this.url,
       cache: false,
       data: {
         intent_id: el.attr('data-id'),
