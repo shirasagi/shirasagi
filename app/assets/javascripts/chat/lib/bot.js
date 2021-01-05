@@ -28,6 +28,9 @@ this.Chat_Bot = (function () {
         return false;
       }
     });
+    _this.$el.on("click", '.chat-dismiss', function () {
+      _this.$el.trigger("ss:chatClose");
+    });
   };
 
   Chat_Bot.prototype.fetchFirstMessagenAndSuggestions = function () {

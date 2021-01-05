@@ -63,5 +63,9 @@ $(function() {
     $('.chat-open').hide();
     $('.chat-close').show();
   });
+  $('.chat-part').on("ss:chatClose", function() {
+    $('.chat-open').hide();
+    $('.chat-close').show();
+  });
 
 });
