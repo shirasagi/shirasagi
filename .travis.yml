@@ -50,24 +50,28 @@ env:
     - CAPYBARA_AJAX_WAIT_TIME=45
     - allow_open_jtalk=1
 
+before_install:
+  - if [ -n "$DOCKER_USERNAME" ]; then echo "$DOCKER_PASSWORD" | docker login --username "$DOCKER_USERNAME" --password-stdin; fi
+  - docker info
+  - docker pull mongo:4.2
+  - docker pull osixia/openldap
+  - docker pull shirasagi/mail
+  - docker run --name mongo -d -p 27017:27017 mongo:4.2
+  - docker run --name test_mail -d -p 10143:143 -p 10587:587 shirasagi/mail
+  - docker ps -a
+
 install: # bash .travis.d/install.sh
   - bash .travis.d/exec.sh install 20-mecab
   - bash .travis.d/exec.sh install 21-mecab-ipadic
-  - bash .travis.d/exec.sh install 22-mecab-ruby
   - bash .travis.d/exec.sh install 30-hts-engine
   - bash .travis.d/exec.sh install 31-open-jtalk
   - bash .travis.d/exec.sh install 90-bundle-install
-  - docker pull mongo:4.2
-  - docker run --name mongo -d -p 27017:27017 mongo:4.2
-  - docker pull osixia/openldap
-  - docker pull shirasagi/mail
-  - docker run --name test_mail -d -p 10143:143 -p 10587:587 shirasagi/mail
-  - docker ps -a
   - curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-0.7.0-linux-amd64 > ./cc-test-reporter
   - chmod +x ./cc-test-reporter
   - ./cc-test-reporter before-build
 
 before_script: # bash .travis.d/before_script.sh
+  - bash .travis.d/exec.sh before_script 03-mecab-ruby
   - bash .travis.d/exec.sh before_script 05-bin-deploy
   - bash .travis.d/exec.sh before_script 10-copy-config
   - bash .travis.d/exec.sh before_script 20-fix-mecab-path

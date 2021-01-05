@@ -25,7 +25,7 @@ cat << EOT | patch -p0
 EOT
 
 echo "ruby extconf.rb --with-mecab-dir=$HOME/.local"
-ruby extconf.rb "--with-mecab-dir=$HOME/.local"
+bundle exec ruby extconf.rb "--with-mecab-dir=$HOME/.local"
 
 echo "make"
 make
