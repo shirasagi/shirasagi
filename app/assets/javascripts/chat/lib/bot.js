@@ -2,6 +2,7 @@ this.Chat_Bot = (function () {
   function Chat_Bot(el, url) {
     this.$el = $(el);
     this.url = url;
+    this.inProgress = false;
     this.render();
   }
 
@@ -36,6 +37,12 @@ this.Chat_Bot = (function () {
   Chat_Bot.prototype.fetchFirstMessagenAndSuggestions = function () {
     var _this = this;
 
+    if (_this.inProgress) {
+      return;
+    }
+
+    _this.inProgress = true;
+
     $.ajax({
       type: "GET",
       url: _this.url,
@@ -44,12 +51,20 @@ this.Chat_Bot = (function () {
         _this.renderChatResponse(res);
       },
       error: function (xhr, status, error) {
+      },
+      complete: function(xhr, status) {
+        _this.inProgress = false;
       }
     });
   };
 
   Chat_Bot.prototype.sendChatRequest = function ($el, options) {
     var _this = this;
+    if (_this.inProgress) {
+      return;
+    }
+
+    _this.inProgress = true;
 
     var $chatText = _this.$el.find('.chat-text');
 
@@ -69,7 +84,6 @@ this.Chat_Bot = (function () {
     $chatItems
       .append($('<div class="chat-item user"></div>').append(text))
       .animate({ scrollTop: $chatItems[0].scrollHeight });
-
     $.ajax({
       type: "GET",
       url: _this.url,
@@ -82,6 +96,9 @@ this.Chat_Bot = (function () {
         _this.renderChatResponse(res);
       },
       error: function (xhr, status, error) {
+      },
+      complete: function(xhr, status) {
+        _this.inProgress = false;
       }
     });
   };
@@ -129,6 +146,11 @@ this.Chat_Bot = (function () {
 
   Chat_Bot.prototype.sendFeedback = function ($el, question) {
     var _this = this;
+    if (_this.inProgress) {
+      return;
+    }
+
+    _this.inProgress = true;
 
     $.ajax({
       type: "GET",
@@ -142,6 +164,9 @@ this.Chat_Bot = (function () {
         _this.renderFeedback(res);
       },
       error: function (xhr, status, error) {
+      },
+      complete: function(xhr, status) {
+        _this.inProgress = false;
       }
     });
   };
