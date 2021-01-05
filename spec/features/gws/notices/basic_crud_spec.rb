@@ -46,6 +46,11 @@ describe "gws_notices", type: :feature, dbscope: :example do
         end
       end
       expect(page).to have_css("#notice", text: I18n.t("ss.notice.deleted"))
+
+      # wait to list folders up to protected from spec failure
+      within "#content-navi" do
+        expect(page).to have_css(".tree-item", text: folder.name)
+      end
     end
   end
 end
