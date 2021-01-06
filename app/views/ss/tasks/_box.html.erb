@@ -17,7 +17,12 @@
 
     <% if show_current_count %>
       <dt><%= task.t :current_count %></dt>
-      <dd class="count"><%= task.current_count %> / <%= task.total_count %></dd>
+      <dd class="count">
+        <%= task.current_count %>
+        <% if task.total_count > 0 %>
+          / <%= task.total_count %>
+        <% end %>
+      </dd>
     <% end %>
 
     <dt><%= task.t :started %></dt>
@@ -39,6 +44,14 @@
 <%= jquery do %>
   var $el = $("#task-box-<%= task.id %>");
 
+  var formatCount = function(current, total) {
+    if (total && total > 0) {
+      return current.toString() + "/" + total.toString();
+    } else {
+      return current.toString();
+    }
+  };
+
   var formatTime = function(time) {
     if (! time) {
       return "";
@@ -59,7 +72,7 @@
       data: { head_logs: <%= limit %> },
       success: function (data) {
         $el.find(".state").html(data["state_label"] || "").data("state", data["state"]);
-        $el.find(".count").html(data["current_count"] + " / " + data["total_count"]);
+        $el.find(".count").html(formatCount(data["current_count"], data["total_count"]));
         $el.find(".started").html(formatTime(data["started"]));
         $el.find(".closed").html(formatTime(data["closed"]));
         $el.find(".log").val(data["head_logs"].join("\n"));
