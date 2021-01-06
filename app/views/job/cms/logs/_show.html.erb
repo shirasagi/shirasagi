@@ -1,4 +1,6 @@
 <%
+  limit = SS.config.job.head_logs || 1_000
+
   def head_file(path, n)
     open(path) do |f|
       text = ''
@@ -50,7 +52,6 @@
   <dt><%= @model.t :logs %></dt>
   <% if ::File.exists?(@item.file_path) %>
   <dd>
-    <% limit = 1000 %>
     <%= t('job.log_notice', count: limit) %>
     <%= text_area_tag :logs, head_file(@item.file_path, limit), readonly: true, style: "height: 400px" %>
     <%= link_to(t('job.download_log'), { action: :download }, { class: :btn }) %>
