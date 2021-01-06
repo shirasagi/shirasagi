@@ -9,7 +9,11 @@
 <section class="main-box task-box" id="task-box-<%= task.id %>">
   <dl class="info">
     <dt><%= task.t :state %></dt>
-    <dd class="state"><%= task.state %></dd>
+    <dd class="state" data-state="<%= task.state %>">
+      <% if task.state %>
+        <%= t("job.state.#{task.state}") %>
+      <% end %>
+    </dd>
 
     <% if show_current_count %>
       <dt><%= task.t :current_count %></dt>
@@ -35,7 +39,7 @@
 <%= jquery do %>
   var $el = $("#task-box-<%= task.id %>");
   var reload = function () {
-    var state = $el.find(".state").html();
+    var state = $el.find(".state").data("state");
     if (!state.match(/(ready|running)/)) {
       return;
     }
@@ -47,7 +51,7 @@
         var started = data["started"] + "";
         var closed = data["closed"] + "";
 
-        $el.find(".state").html(data["state"]);
+        $el.find(".state").html(data["state_label"] || "").data("state", data["state"]);
         $el.find(".count").html(data["current_count"] + " / " + data["total_count"]);
         $el.find(".started").html(started.replace(/\..*/, "").replace("T", " "));
         $el.find(".closed").html(closed.replace(/\..*/, "").replace("T", " "));
