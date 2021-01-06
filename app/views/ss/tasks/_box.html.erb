@@ -1,0 +1,65 @@
+<%
+  limit ||= SS.config.job.head_logs || 1_000
+  reload_interval ||= SS.config.job.reload_interval || 10_000
+  show_current_count = local_assigns.fetch(:show_current_count, false)
+
+  url ||= url_for(format: :json)
+%>
+
+<section class="main-box task-box" id="task-box-<%= task.id %>">
+  <dl class="info">
+    <dt><%= task.t :state %></dt>
+    <dd class="state"><%= task.state %></dd>
+
+    <% if show_current_count %>
+      <dt><%= task.t :current_count %></dt>
+      <dd class="count"><%= task.current_count %> / <%= task.total_count %></dd>
+    <% end %>
+
+    <dt><%= task.t :started %></dt>
+    <dd class="started"><%= tryb { task.started.strftime("%Y/%m/%d %H:%M:%S") } %></dd>
+
+    <dt><%= task.t :closed %></dt>
+    <dd class="closed"><%= tryb { task.closed.strftime("%Y/%m/%d %H:%M:%S") } %></dd>
+  </dl>
+
+  <div class="logs">
+    <%= t('job.log_notice', count: limit) %>
+    <textarea class="log" readonly="readonly"><%= task.head_logs(limit).join("\n") %></textarea>
+    <% if ::File.exists?(task.log_file_path) %>
+      <%= link_to(t('job.download_log'), download_job_cms_task_path(id: task), { class: "btn", target: "_blank" }) rescue nil %>
+    <% end %>
+  </div>
+</section>
+
+<%= jquery do %>
+  var $el = $("#task-box-<%= task.id %>");
+  var reload = function () {
+    var state = $el.find(".state").html();
+    if (!state.match(/(ready|running)/)) {
+      return;
+    }
+
+    $.ajax({
+      url: "<%= url %>",
+      data: { head_logs: <%= limit %> },
+      success: function (data) {
+        var started = data["started"] + "";
+        var closed = data["closed"] + "";
+
+        $el.find(".state").html(data["state"]);
+        $el.find(".count").html(data["current_count"] + " / " + data["total_count"]);
+        $el.find(".started").html(started.replace(/\..*/, "").replace("T", " "));
+        $el.find(".closed").html(closed.replace(/\..*/, "").replace("T", " "));
+        $el.find(".log").val(data["head_logs"].join("\n"));
+        if (data["state"] === "stop") {
+          $el.find(".stop-button").hide();
+          $el.find(".run-button").show();
+        }
+      }
+    });
+  };
+
+  setInterval(reload, <%= reload_interval %>);
+
+<% end %>

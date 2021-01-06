@@ -29,7 +29,9 @@ class Cms::GenerateNodesController < ApplicationController
   def index
     respond_to do |format|
       format.html { render }
-      format.json { render json: @item.to_json(methods: :head_logs) }
+      format.json do
+        render file: "ss/tasks/index", content_type: json_content_type, locals: { item: @item }
+      end
     end
   end
 end
