@@ -21,10 +21,10 @@
     <% end %>
 
     <dt><%= task.t :started %></dt>
-    <dd class="started"><%= tryb { task.started.strftime("%Y/%m/%d %H:%M:%S") } %></dd>
+    <dd class="started"><%= task.started.try { |time| content_tag(:time, I18n.l(time, format: :picker), datetime: time.utc.iso8601) } %></dd>
 
     <dt><%= task.t :closed %></dt>
-    <dd class="closed"><%= tryb { task.closed.strftime("%Y/%m/%d %H:%M:%S") } %></dd>
+    <dd class="closed"><%= task.closed.try { |time| content_tag(:time, I18n.l(time, format: :picker), datetime: time.utc.iso8601) } %></dd>
   </dl>
 
   <div class="logs">
@@ -38,6 +38,16 @@
 
 <%= jquery do %>
   var $el = $("#task-box-<%= task.id %>");
+
+  var formatTime = function(time) {
+    if (! time) {
+      return "";
+    }
+
+    time = moment(time);
+    return $("<time />", { datetime: time.toISOString() }).html(SS.formatTime(time));
+  };
+
   var reload = function () {
     var state = $el.find(".state").data("state");
     if (!state.match(/(ready|running)/)) {
@@ -48,13 +58,10 @@
       url: "<%= url %>",
       data: { head_logs: <%= limit %> },
       success: function (data) {
-        var started = data["started"] + "";
-        var closed = data["closed"] + "";
-
         $el.find(".state").html(data["state_label"] || "").data("state", data["state"]);
         $el.find(".count").html(data["current_count"] + " / " + data["total_count"]);
-        $el.find(".started").html(started.replace(/\..*/, "").replace("T", " "));
-        $el.find(".closed").html(closed.replace(/\..*/, "").replace("T", " "));
+        $el.find(".started").html(formatTime(data["started"]));
+        $el.find(".closed").html(formatTime(data["closed"]));
         $el.find(".log").val(data["head_logs"].join("\n"));
         if (data["state"] === "stop") {
           $el.find(".stop-button").hide();
