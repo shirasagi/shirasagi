@@ -13,7 +13,7 @@ class Cms::Node::GenerateNodesController < ApplicationController
   def job_bindings
     {
       site_id: @cur_site.id,
-      node_id: @cur_node.id,
+      node_id: @cur_node.id
     }
   end
 

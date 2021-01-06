@@ -12,7 +12,7 @@ class Cms::GeneratePagesController < ApplicationController
 
   def job_bindings
     {
-      site_id: @cur_site.id,
+      site_id: @cur_site.id
     }
   end
 

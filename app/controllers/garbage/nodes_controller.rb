@@ -48,7 +48,7 @@ class Garbage::NodesController < ApplicationController
     end
 
     send_data csv.encode("SJIS", invalid: :replace, undef: :replace),
-      filename: "garbage_pages_#{Time.zone.now.strftime("%Y_%m%d_%H%M")}.csv"
+              filename: "garbage_pages_#{Time.zone.now.strftime("%Y_%m%d_%H%M")}.csv"
   end
 
   public

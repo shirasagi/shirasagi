@@ -36,7 +36,7 @@ module SS::JobFilter
   end
 
   def stop
-    @item.update_attributes interrupt: "stop"
+    @item.update interrupt: "stop"
     redirect_to({ action: :index }, { notice: t("ss.tasks.interrupted") })
   end
 
