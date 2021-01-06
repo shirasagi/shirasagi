@@ -35,8 +35,15 @@
   <div class="logs">
     <%= t('job.log_notice', count: limit) %>
     <textarea class="log" readonly="readonly"><%= task.head_logs(limit).join("\n") %></textarea>
-    <% if ::File.exists?(task.log_file_path) %>
-      <%= link_to(t('job.download_log'), download_job_cms_task_path(id: task), { class: "btn", target: "_blank" }) rescue nil %>
+    <% if task.respond_to?(:log_file_path) %>
+      <%
+        if @ss_mode == :cms && @cur_site
+          download_path = download_job_cms_task_path(id: task)
+        else
+          download_path = download_job_sys_task_path(id: task)
+        end
+      %>
+      <%= link_to(t('job.download_log'), download_path, { class: "btn task-log-download-btn hide", target: "_blank" }) %>
     <% end %>
   </div>
 </section>
@@ -80,10 +87,19 @@
           $el.find(".stop-button").hide();
           $el.find(".run-button").show();
         }
+
+        if ($el.find(".log").val()) {
+          $el.find(".task-log-download-btn").removeClass("hide");
+        } else {
+          $el.find(".task-log-download-btn").addClass("hide");
+        }
       }
     });
   };
 
   setInterval(reload, <%= reload_interval %>);
 
+  if ($el.find(".log").val()) {
+    $el.find(".task-log-download-btn").removeClass("hide");
+  }
 <% end %>
