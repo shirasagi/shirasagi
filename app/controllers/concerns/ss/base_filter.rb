@@ -75,7 +75,10 @@ module SS::BaseFilter
   end
 
   def login_path_by_cookie
-    cookies[:login_path].presence || sns_login_path
+    path = cookies[:login_path].presence
+    return path if path.present? && trusted_url?(path)
+
+    sns_login_path
   end
 
   def logged_in?
@@ -107,11 +110,12 @@ module SS::BaseFilter
     respond_to do |format|
       format.html do
         login_path = login_path_by_cookie
-        ref = request.env["REQUEST_URI"]
-        if ref == login_path || params[:action] == "login"
+        ref = request.env["REQUEST_URI"].to_s
+        ref = '' if ref.present? && !trusted_url?(ref)
+        if ref.blank? || ref == login_path || params[:action] == "login"
           redirect_to login_path
         else
-          redirect_to "#{login_path}?ref=" + CGI.escape(ref.to_s)
+          redirect_to "#{login_path}?#{{ ref: ref }.to_query}"
         end
       end
       format.json { render json: :error, status: :unauthorized }
