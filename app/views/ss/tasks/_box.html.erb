@@ -1,6 +1,5 @@
 <%
   limit ||= SS.config.job.head_logs || 1_000
-  reload_interval ||= SS.config.job.reload_interval || 10_000
   show_current_count = local_assigns.fetch(:show_current_count, false)
 
   url ||= url_for(format: :json)
@@ -35,6 +34,8 @@
   <div class="logs">
     <%= t('job.log_notice', count: limit) %>
     <textarea class="log" readonly="readonly"><%= task.head_logs(limit).join("\n") %></textarea>
+  </div>
+  <div class="controller">
     <% if task.respond_to?(:log_file_path) %>
       <%
         if @ss_mode == :cms && @cur_site
@@ -45,6 +46,13 @@
       %>
       <%= link_to(t('job.download_log'), download_path, { class: "btn task-log-download-btn hide", target: "_blank" }) %>
     <% end %>
+
+    <span class="auto-reload">
+      自動更新:
+      <label><%= radio_button_tag :auto_refresh, 0, false, { id: nil } %> しない</label>
+      <label><%= radio_button_tag :auto_refresh, 1, true, { id: nil } %> する</label>
+      <%= number_field_tag :interval, SS.config.job.reload_interval || 10, id: nil, min: 1  %>秒
+    </span>
   </div>
 </section>
 
@@ -69,14 +77,10 @@
   };
 
   var reload = function () {
-    var state = $el.find(".state").data("state");
-    if (!state.match(/(ready|running)/)) {
-      return;
-    }
-
     $.ajax({
       url: "<%= url %>",
       data: { head_logs: <%= limit %> },
+      cache: false,
       success: function (data) {
         $el.find(".state").html(data["state_label"] || "").data("state", data["state"]);
         $el.find(".count").html(formatCount(data["current_count"], data["total_count"]));
@@ -97,7 +101,52 @@
     });
   };
 
-  setInterval(reload, <%= reload_interval %>);
+  var timerId;
+
+  var clearReload = function() {
+    if (! timerId) {
+      return;
+    }
+
+    clearInterval(timerId);
+    timerId = null;
+  };
+
+  var resetReload = function() {
+    clearReload();
+
+    var autoRefresh = $el.find("[name='auto_refresh']:checked").val();
+    if (autoRefresh != '1') {
+      return;
+    }
+
+    var interval = $el.find("[name='interval']").val();
+    if (! interval) {
+      return;
+    }
+
+    interval = parseInt(interval, 10);
+    if (interval <= 0) {
+      return;
+    }
+
+    timerId = setInterval(reload, interval * 1000);
+    reload();
+  };
+
+  resetReload();
+
+  $el.find("[name='auto_refresh']").on("change", resetReload);
+
+  $el.find("[name='interval']")
+    .on("keypress", function(ev) {
+      if ((ev.which && ev.which === 13) || (ev.keyCode && ev.keyCode === 13)) {
+        resetReload();
+      }
+      ev.preventDefault();
+      return false;
+    })
+    .on("change", resetReload);
 
   if ($el.find(".log").val()) {
     $el.find(".task-log-download-btn").removeClass("hide");
