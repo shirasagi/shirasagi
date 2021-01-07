@@ -6,7 +6,7 @@ module Event::Addon
 
     def sort_options
       %w(
-        name filename created updated_desc released_desc order
+        name filename created updated_desc released_desc order order_desc
         event_dates unfinished_event_dates finished_event_dates event_dates_today event_dates_tomorrow event_dates_week
         event_deadline
       ).map do |k|

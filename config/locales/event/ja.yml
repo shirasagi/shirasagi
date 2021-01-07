@@ -54,8 +54,11 @@ ja:
         title: 公開日時
         description: 公開日時の降順で並び替えます。
       order:
-        title: 指定順
+        title: 指定順（昇順）
         description: 指定順の昇順で並び替えます。
+      order_desc:
+        title: 指定順（降順）
+        description: 指定順の降順で並び替えます。
       event_dates:
         title: イベント日
         description: イベント日が設定されている項目を古い順に表示します。
