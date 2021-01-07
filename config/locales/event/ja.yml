@@ -37,21 +37,48 @@ ja:
     confirm:
       delete_date: イベント日を削除してよろしいですか？
 
+    sort_options:
+      name:
+        title: タイトル
+        description: タイトルの昇順で並び替えます。
+      filename:
+        title: ファイル名
+        description: ファイル名の昇順で並び替えます。
+      created:
+        title: 作成日時
+        description: 作成日時の昇順で並び替えます。
+      updated_desc:
+        title: 更新日時
+        description: 更新日時の降順で並び替えます。
+      released_desc:
+        title: 公開日時
+        description: 公開日時の降順で並び替えます。
+      order:
+        title: 指定順
+        description: 指定順の昇順で並び替えます。
+      event_dates:
+        title: イベント日
+        description: イベント日が設定されている項目を古い順に表示します。
+      unfinished_event_dates:
+        title: イベント日(未終了)
+        description: 本日以降のイベントが古い順に表示されます。
+      finished_event_dates:
+        title: イベント日(終了)
+        description: 本日以前のイベントが古い順に表示されます。
+      event_dates_today:
+        title: イベント日(今日)
+        description: 本日のイベントが古い順に表示されます。
+      event_dates_tomorrow:
+        title: イベント日(明日)
+        description: 明日のイベントが古い順に表示されます。
+      event_dates_week:
+        title: イベント日(一週間以内)
+        description: 一週間以内のイベントが古い順に表示されます。
+      event_deadline:
+        title: イベント日(締切日間近)
+        description: 申込み締め切り日が近い順に表示されます。
+
     options:
-      sort:
-        name: タイトル
-        filename: ファイル名
-        created: 作成日時
-        updated_1: 更新日時
-        released_1: 公開日時
-        order: 指定順
-        event_dates: イベント日
-        unfinished_event_dates: イベント日(未終了)
-        finished_event_dates: イベント日(終了)
-        event_dates_today: イベント日(今日)
-        event_dates_tomorrow: イベント日(明日)
-        event_dates_week: イベント日(一週間以内)
-        event_deadline: イベント日(締切日間近)
       event_display:
         list: リスト形式
         table: 表形式
@@ -208,16 +235,7 @@ ja:
         - イベントの連絡先を入力します。
     event/addon/page_list:
       sort:
-        - どういった順でリストの並べるかを指定します。
-        - タイトル、ファイル名、作成日時、更新日時、公開日時での並び順は昇順です。
-        - 指定順での並び順は降順です
-        - イベント日はイベント日が設定されている項目を古い順に表示します。
-        - イベント日(未終了)は本日以降のイベントが古い順に表示されます。
-        - イベント日(終了)は本日以前のイベントが古い順に表示されます。
-        - イベント日(今日)は本日のイベントが古い順に表示されます。
-        - イベント日(明日)は明日のイベントが古い順に表示されます。
-        - イベント日(一週間以内)は一週間以内のイベントが古い順に表示されます。
-        - イベント日(申込締切間近)は申込み締め切り日が近い順に表示されます。
+        - リストの並び替え方法を指定します。
       loop_html:
         - 自動生成されたリスト表示部分のHTMLを指定することが可能です。
         - |-

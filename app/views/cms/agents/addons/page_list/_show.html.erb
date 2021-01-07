@@ -6,7 +6,7 @@
   <dd><%=br @item.conditions %></dd>
 
   <dt><%= @model.t :sort %></dt>
-  <dd><%= @item.label :sort %></dd>
+  <dd><%= @item.value_setting_for(:sort).try { |setting| content_tag(:span, setting[0], title: setting[2].try { |hash| hash["data-description"] }) } %></dd>
 
   <dt><%= @model.t :limit %></dt>
   <dd><%= @item.limit %></dd>
