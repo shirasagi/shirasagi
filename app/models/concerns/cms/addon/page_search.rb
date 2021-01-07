@@ -262,7 +262,7 @@ module Cms::Addon
     def search_sort_hash
       return { filename: 1 } if search_sort.blank?
       h = {}
-      search_sort.split(" ").each_slice(2) { |k, v| h[k] = (v =~ /-1$/ ? -1 : 1) }
+      search_sort.split(" ").each_slice(2) { |k, v| h[k] = (/-1$/.match?(v) ? -1 : 1) }
       h
     end
 
@@ -331,7 +331,7 @@ module Cms::Addon
       when 'request'
         {
           workflow_state: "request",
-          workflow_user_id: @cur_user._id,
+          workflow_user_id: @cur_user._id
         }
       when 'approve'
         {
@@ -343,7 +343,7 @@ module Cms::Addon
       when 'remand'
         {
           workflow_state: "remand",
-          workflow_user_id: @cur_user._id,
+          workflow_user_id: @cur_user._id
         }
       else
         {}
