@@ -6,6 +6,8 @@ module Cms::Addon::List
     WELL_KONWN_CONDITION_HASH_OPTIONS = %i[site default_location request_dir category bind].freeze
 
     included do
+      cattr_accessor(:use_no_items_display, instance_accessor: false) { true }
+      cattr_accessor(:use_substitute_html, instance_accessor: false) { true }
       cattr_accessor(:use_new_days, instance_accessor: false) { true }
       cattr_accessor(:use_liquid, instance_accessor: false) { true }
       cattr_accessor(:default_limit, instance_accessor: false) { 20 }

@@ -17,11 +17,13 @@ module Cms::Addon
     end
 
     def related_page_sort_options
-      %w(name filename created updated_desc released_desc order event_dates unfinished_event_dates).map do |k|
+      %w(name filename created updated_desc released_desc order order_desc event_dates unfinished_event_dates).map do |k|
+        description = I18n.t("event.sort_options.#{k}.description", default: [ "cms.sort_options.#{k}.description".to_sym, nil ])
+
         [
-          I18n.t("event.sort_options.#{k}.title"),
+          I18n.t("event.sort_options.#{k}.title".to_sym, default: "cms.sort_options.#{k}.title".to_sym),
           k.sub("_desc", " -1"),
-          "data-description" => I18n.t("event.sort_options.#{k}.description", default: nil)
+          "data-description" => description
         ]
       end
     end

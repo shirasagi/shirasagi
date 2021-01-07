@@ -10,10 +10,12 @@ module Event::Addon
         event_dates unfinished_event_dates finished_event_dates event_dates_today event_dates_tomorrow event_dates_week
         event_deadline
       ).map do |k|
+        description = I18n.t("event.sort_options.#{k}.description", default: [ "cms.sort_options.#{k}.description".to_sym, nil ])
+
         [
-          I18n.t("event.sort_options.#{k}.title"),
+          I18n.t("event.sort_options.#{k}.title".to_sym, default: "cms.sort_options.#{k}.title".to_sym),
           k.sub("_desc", " -1"),
-          "data-description" => I18n.t("event.sort_options.#{k}.description", default: nil)
+          "data-description" => description
         ]
       end
     end

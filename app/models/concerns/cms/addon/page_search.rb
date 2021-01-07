@@ -14,14 +14,13 @@ module Cms::Addon
     end
 
     def search_sort_options
-      [
-        [I18n.t('cms.options.sort.filename'), 'filename'],
-        [I18n.t('cms.options.sort.name'), 'name'],
-        [I18n.t('cms.options.sort.created'), 'created'],
-        [I18n.t('cms.options.sort.updated_1'), 'updated -1'],
-        [I18n.t('cms.options.sort.released_1'), 'released -1'],
-        [I18n.t('cms.options.sort.approved_1'), 'approved -1']
-      ]
+      %w(name filename created updated_desc released_desc approved_desc).map do |k|
+        [
+          I18n.t("cms.sort_options.#{k}.title"),
+          k.sub("_desc", " -1"),
+          "data-description" => I18n.t("cms.sort_options.#{k}.description", default: nil)
+        ]
+      end
     end
 
     def search_state_options
