@@ -37,20 +37,27 @@ end
 
 if analyze_coverage?
   require 'simplecov'
-  require 'simplecov-csv'
-  require 'simplecov-html'
-  require 'simplecov_json_formatter'
 
-  SimpleCov.formatter = SimpleCov::Formatter::MultiFormatter.new([
-    SimpleCov::Formatter::CSVFormatter,
-    SimpleCov::Formatter::HTMLFormatter,
-    SimpleCov::Formatter::JSONFormatter
-  ])
   if travis?
     require 'coveralls'
     Coveralls.wear!
+
+    require 'simplecov_json_formatter'
+    formatters = [
+      Coveralls::SimpleCov::Formatter,
+      SimpleCov::Formatter::JSONFormatter
+    ]
+  else
+    require 'simplecov-csv'
+    require 'simplecov-html'
+
+    formatters = [
+      SimpleCov::Formatter::CSVFormatter,
+      SimpleCov::Formatter::HTMLFormatter
+    ]
   end
 
+  SimpleCov.formatter = SimpleCov::Formatter::MultiFormatter.new(formatters)
   SimpleCov.start do
     add_filter 'spec/'
     add_filter 'vendor/bundle'
