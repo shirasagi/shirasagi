@@ -34,10 +34,13 @@ end
 if analyze_coverage?
   require 'simplecov'
   require 'simplecov-csv'
+  require 'simplecov-html'
+  require 'simplecov-json'
 
   SimpleCov.formatter = SimpleCov::Formatter::MultiFormatter.new([
+    SimpleCov::Formatter::CSVFormatter,
     SimpleCov::Formatter::HTMLFormatter,
-    SimpleCov::Formatter::CSVFormatter
+    SimpleCov::Formatter::JSONFormatter
   ])
   if travis?
     require 'coveralls'
