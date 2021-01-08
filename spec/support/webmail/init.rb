@@ -59,7 +59,7 @@ module SS::WebmailSupport
   end
 
   def init
-    if travis?
+    if ci?
       test_by = "docker"
     else
       test_by = SS.config.webmail.test_by
@@ -76,11 +76,14 @@ module SS::WebmailSupport
 
     RSpec.configuration.extend(SS::WebmailSupport::EventHandler, imap: true)
   rescue => e
+    puts("[WebMail Spec] failed to initialize")
+    puts("#{e.class} (#{e.message}):\n  #{e.backtrace.join("\n  ")}")
     RSpec.configuration.filter_run_excluding(imap: true)
   end
 
   def init_test_by_user
     if SS.config.webmail.test_user.blank?
+      puts("[WebMail Spec] not found test user")
       RSpec.configuration.filter_run_excluding(imap: true)
     end
   end
@@ -96,9 +99,9 @@ module SS::WebmailSupport
     version = Docker.version["Version"]
     imap_port = SS::WebmailSupport.docker_imap_port = bindings["143/tcp"].first["HostPort"].to_i
 
-    puts "found docker #{version} and container '#{container_id}' listening on #{imap_port} for imap"
+    puts "[WebMail Spec] found docker #{version} and container '#{container_id}' listening on #{imap_port} for imap"
   rescue
-    puts "docker seems not to be installed or be running or have container '#{container_id}'"
+    puts "[WebMail Spec] docker seems not to be installed or be running or have container '#{container_id}'"
     RSpec.configuration.filter_run_excluding(imap: true)
   end
 

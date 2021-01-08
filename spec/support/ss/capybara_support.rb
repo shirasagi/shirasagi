@@ -20,7 +20,7 @@ module SS::CapybaraSupport
       if headless != '0'
         options.add_argument('headless')
         options.add_argument('disable-gpu')
-        if ENV.fetch('sandbox', '0') != '0' || (ENV["CI"] == "true" && ENV["TRAVIS"] == "true")
+        if ENV.fetch('sandbox', '0') != '0' || ci?
           options.add_argument('no-sandbox')
         end
       end

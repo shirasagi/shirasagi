@@ -23,12 +23,16 @@ require 'support/ss/capybara_support'
 # If you are not using ActiveRecord, you can remove this line.
 ActiveRecord::Migration.check_pending! if defined?(ActiveRecord::Migration)
 
+def ci?
+  ENV["CI"] == "true"
+end
+
 def travis?
-  ENV["CI"] == "true" && ENV["TRAVIS"] == "true"
+  ci? && ENV["TRAVIS"] == "true"
 end
 
 def analyze_coverage?
-  travis? || ENV["ANALYZE_COVERAGE"] != "disabled"
+  ci? || ENV["ANALYZE_COVERAGE"] != "disabled"
 end
 
 if analyze_coverage?
@@ -102,7 +106,7 @@ RSpec.configure do |config|
   end
 
   # fragile specs are ignored when rspec is executing in Travis CI.
-  if ENV["CI"] == "true" && ENV["TRAVIS"] == "true"
+  if ci?
     config.filter_run_excluding(fragile: true)
   end
 
@@ -131,7 +135,7 @@ RSpec.configure do |config|
     config.default_max_wait_time = (ENV["CAPYBARA_MAX_WAIT_TIME"] || 10).to_i
   end
 
-  if travis? || ENV["rspec_retry"].present?
+  if ci? || ENV["rspec_retry"].present?
     require 'rspec/retry'
 
     config.verbose_retry = true
