@@ -5,14 +5,13 @@ module Member::Addon::Photo::Search
     include Cms::Addon::List::Model
 
     def sort_options
-      [
-        [I18n.t('cms.options.sort.name'), 'name'],
-        [I18n.t('cms.options.sort.filename'), 'filename'],
-        [I18n.t('cms.options.sort.created'), 'created'],
-        [I18n.t('cms.options.sort.updated_1'), 'updated -1'],
-        [I18n.t('cms.options.sort.released_1'), 'released -1'],
-        [I18n.t('cms.options.sort.order'), 'order'],
-      ]
+      %w(name filename created updated_desc released_desc order order_desc).map do |k|
+        [
+          I18n.t("cms.sort_options.#{k}.title"),
+          k.sub("_desc", " -1"),
+          "data-description" => I18n.t("cms.sort_options.#{k}.description", default: nil)
+        ]
+      end
     end
 
     def sort_hash

@@ -214,17 +214,21 @@ module SS::Document
     end
   end
 
-  def label(name, options = {})
+  def value_setting_for(name, options = {})
     opts  = send("#{name}_options")
     opts += send("#{name}_private_options") if respond_to?("#{name}_private_options")
     value = options.key?(:value) ? options[:value] : send(name)
 
     if value.blank?
-      opts.each { |m| return m[0] if m[1].blank? }
+      opts.each { |m| return m if m[1].blank? }
     else
-      opts.each { |m| return m[0] if m[1].to_s == value.to_s }
+      opts.each { |m| return m if m[1].to_s == value.to_s }
     end
     nil
+  end
+
+  def label(name, options = {})
+    value_setting_for(name, options).try { |setting| setting[0] }
   end
 
   def validate_updated

@@ -210,18 +210,35 @@ ja:
       link_to_job_history: ジョブ実行履歴
       target_node_name: フォルダー名
       started_job: 処理を開始します。ジョブ実行履歴で結果をご確認下さい
+    sort_options:
+      name:
+        title: タイトル
+        description: タイトルの昇順で並び替えます。
+      filename:
+        title: ファイル名
+        description: ファイル名の昇順で並び替えます。
+      created:
+        title: 作成日時
+        description: 作成日時の昇順で並び替えます。
+      updated_desc:
+        title: 更新日時
+        description: 更新日時の降順で並び替えます。
+      released_desc:
+        title: 公開日時
+        description: 公開日時の降順で並び替えます。
+      approved_desc:
+        title: 承認日時
+        description: 承認日時の降順で並び替えます。
+      order:
+        title: 指定順（昇順）
+        description: 指定順の昇順で並び替えます。指定順が未設定のものは先頭に並びます。
+      order_desc:
+        title: 指定順（降順）
+        description: 指定順の降順で並び替えます。指定順が未設定のものは末尾に並びます。
     options:
       readable_setting_range:
         public: 全公開
         select: 選択範囲
-      sort:
-        name: タイトル
-        filename: ファイル名
-        created: 作成日時
-        updated_1: 更新日時
-        released_1: 公開日時
-        approved_1: 承認日時
-        order: 指定順
       parent_crumb:
         blank: カテゴリーから選択する
       node_target:
@@ -1196,9 +1213,7 @@ ja:
       condition_groups:
         - 検索条件に所属グループを含めます。
       sort:
-        - どういった順でリストを並べるかを指定します。
-        - タイトル、ファイル名、作成日時、更新日時、公開日時での並び順は昇順です。
-        - 指定順での並び順は降順です
+        - リストの並び替え方法を指定します。
       limit:
         - |-
           リストの表示件数を指定します。
@@ -1331,9 +1346,7 @@ ja:
           oshirase/event
           shisei/jinji
       sort:
-        - どういった順でリストの並べるかを指定します。
-        - タイトル、ファイル名、作成日時、更新日時、公開日時での並び順は昇順です。
-        - 指定順での並び順は降順です
+        - リストの並び替え方法を指定します。
       limit:
         - リストの表示件数を指定します。
       loop_format:
