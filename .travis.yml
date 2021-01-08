@@ -68,6 +68,7 @@ install: # bash .travis.d/install.sh
   - bash .travis.d/exec.sh install 90-bundle-install
   - curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
   - chmod +x ./cc-test-reporter
+  - ./cc-test-reporter --version
   - ./cc-test-reporter before-build
 
 before_script: # bash .travis.d/before_script.sh
@@ -92,49 +93,49 @@ jobs:
       script: true
 
     - stage: test
-      name: Features_A
+      name: "Features #1"
       script:
-        - bundle exec rspec -p 10 spec/ --pattern "spec/features/{a,b,c,d,e,f}*/**/*.rb"
+        - bundle exec ruby .travis.d/split_specs.rb -p 6 -i 0 spec/features | xargs bundle exec rspec -p 10
         - ./cc-test-reporter format-coverage -t simplecov -o codeclimate.2.json coverage/coverage.json
       workspaces:
         create:
           name: codeclimate.2.json
           paths: codeclimate.2.json
-    - name: Features_G (1)
+    - name: "Features #2"
       script:
-        - bundle exec rspec -p 10 spec/ --pattern "spec/features/{g}*/**/*_*_spec.rb"
+        - bundle exec ruby .travis.d/split_specs.rb -p 6 -i 1 spec/features | xargs bundle exec rspec -p 10
         - ./cc-test-reporter format-coverage -t simplecov -o codeclimate.3.json coverage/coverage.json
       workspaces:
         create:
           name: codeclimate.3.json
           paths: codeclimate.3.json
-    - name: Features_G (2)
+    - name: "Features #3"
       script:
-        - bundle exec rspec -p 10 spec/ --pattern "spec/features/{g}*/**/*.rb" --exclude "**/*_*_spec.rb"
+        - bundle exec ruby .travis.d/split_specs.rb -p 6 -i 2 spec/features | xargs bundle exec rspec -p 10
         - ./cc-test-reporter format-coverage -t simplecov -o codeclimate.4.json coverage/coverage.json
       workspaces:
         create:
           name: codeclimate.4.json
           paths: codeclimate.4.json
-    - name: Features_H
+    - name: "Features #4"
       script:
-        - bundle exec rspec -p 10 spec/ --pattern "spec/features/{h,i,j,k,l,m,o}*/**/*.rb"
+        - bundle exec ruby .travis.d/split_specs.rb -p 6 -i 3 spec/features | xargs bundle exec rspec -p 10
         - ./cc-test-reporter format-coverage -t simplecov -o codeclimate.5.json coverage/coverage.json
       workspaces:
         create:
           name: codeclimate.5.json
           paths: codeclimate.5.json
-    - name: Features_P
+    - name: "Features #5"
       script:
-        - bundle exec rspec -p 10 spec/ --pattern "spec/features/{p,q,r,s,u,v,w}*/**/*.rb" --exclude "**/webmail/**/*.rb"
+        - bundle exec ruby .travis.d/split_specs.rb -p 6 -i 4 spec/features | xargs bundle exec rspec -p 10
         - ./cc-test-reporter format-coverage -t simplecov -o codeclimate.6.json coverage/coverage.json
       workspaces:
         create:
           name: codeclimate.6.json
           paths: codeclimate.6.json
-    - name: Features_Webmail
+    - name: "Features #6"
       script:
-        - bundle exec rspec -p 10 spec/ --pattern "spec/features/webmail/**/*.rb"
+        - bundle exec ruby .travis.d/split_specs.rb -p 6 -i 5 spec/features | xargs bundle exec rspec -p 10
         - ./cc-test-reporter format-coverage -t simplecov -o codeclimate.7.json coverage/coverage.json
       workspaces:
         create:
@@ -148,9 +149,9 @@ jobs:
         create:
           name: codeclimate.8.json
           paths: codeclimate.8.json
-    - name: Other
+    - name: "Helpers, Jobs, Lib, Mailers, Requests and Validators"
       script:
-        - bundle exec rspec -p 10 spec/ --pattern "spec/{jobs,helpers,lib,mailers,requests,validators}/**/*.rb"
+        - bundle exec rspec -p 10 spec/ --pattern "spec/{helpers,jobs,lib,mailers,requests,validators}/**/*.rb"
         - ./cc-test-reporter format-coverage -t simplecov -o codeclimate.9.json coverage/coverage.json
       workspaces:
         create:
