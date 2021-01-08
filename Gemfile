@@ -101,7 +101,7 @@ gem 'elasticsearch'
 group :development, :test do
   gem 'dotenv-rails'
   gem 'capybara', require: false
-  gem 'coveralls', require: false
+  gem 'coveralls_reborn', require: false
   gem 'debase', require: false
   gem 'factory_bot_rails', require: false
   gem 'fuubar', require: false
