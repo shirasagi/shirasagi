@@ -66,7 +66,7 @@ install: # bash .travis.d/install.sh
   - bash .travis.d/exec.sh install 30-hts-engine
   - bash .travis.d/exec.sh install 31-open-jtalk
   - bash .travis.d/exec.sh install 90-bundle-install
-  - curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-0.7.0-linux-amd64 > ./cc-test-reporter
+  - curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
   - chmod +x ./cc-test-reporter
   - ./cc-test-reporter before-build
 
