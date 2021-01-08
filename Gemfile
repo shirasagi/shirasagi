@@ -126,6 +126,7 @@ group :development, :test do
   gem 'simplecov', require: false
   gem 'simplecov-csv', require: false
   gem 'simplecov-html', require: false
+  gem 'simplecov-json', require: false
   gem 'spring', '~> 2.0.2', require: false
   gem 'test-queue', require: false
   gem 'timecop', require: false
