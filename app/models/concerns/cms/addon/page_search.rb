@@ -14,14 +14,13 @@ module Cms::Addon
     end
 
     def search_sort_options
-      [
-        [I18n.t('cms.options.sort.filename'), 'filename'],
-        [I18n.t('cms.options.sort.name'), 'name'],
-        [I18n.t('cms.options.sort.created'), 'created'],
-        [I18n.t('cms.options.sort.updated_1'), 'updated -1'],
-        [I18n.t('cms.options.sort.released_1'), 'released -1'],
-        [I18n.t('cms.options.sort.approved_1'), 'approved -1']
-      ]
+      %w(name filename created updated_desc released_desc approved_desc).map do |k|
+        [
+          I18n.t("cms.sort_options.#{k}.title"),
+          k.sub("_desc", " -1"),
+          "data-description" => I18n.t("cms.sort_options.#{k}.description", default: nil)
+        ]
+      end
     end
 
     def search_state_options
@@ -263,7 +262,7 @@ module Cms::Addon
     def search_sort_hash
       return { filename: 1 } if search_sort.blank?
       h = {}
-      search_sort.split(" ").each_slice(2) { |k, v| h[k] = (v =~ /-1$/ ? -1 : 1) }
+      search_sort.split(" ").each_slice(2) { |k, v| h[k] = (/-1$/.match?(v) ? -1 : 1) }
       h
     end
 
@@ -332,7 +331,7 @@ module Cms::Addon
       when 'request'
         {
           workflow_state: "request",
-          workflow_user_id: @cur_user._id,
+          workflow_user_id: @cur_user._id
         }
       when 'approve'
         {
@@ -344,7 +343,7 @@ module Cms::Addon
       when 'remand'
         {
           workflow_state: "remand",
-          workflow_user_id: @cur_user._id,
+          workflow_user_id: @cur_user._id
         }
       else
         {}

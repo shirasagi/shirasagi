@@ -4,8 +4,17 @@
 <%= jquery do %>
   Cms_Editor_CodeMirror.lock('#item_loop_setting_id', '#item_loop_html');
 
-  <% if @model.use_liquid %>
   var $addon = $("<%= "##{addon[:id]}" %>");
+  $addon.find("select[name='item[sort]']").on("change", function() {
+    var $selected = $(this).find("option:selected");
+    if (!$selected[0] || !$selected.data("description")) {
+      $addon.find(".sort-description").html("").addClass("hide");
+    } else {
+      $addon.find(".sort-description").html($selected.data("description")).removeClass("hide");
+    }
+  }).trigger("change");
+
+  <% if @model.use_liquid %>
   var changeLoopFormat = function() {
     var format = $addon.find("select[name='item[loop_format]']").val();
     if (format === "liquid") {
@@ -30,7 +39,10 @@
   <dd><%= f.text_area :conditions, value: @item.conditions.join("\n"), style: "height: 100px;" %></dd>
 
   <dt><%= @model.t :sort %><%= @model.tt :sort %></dt>
-  <dd><%= f.select :sort, @item.sort_options, include_blank: " " %></dd>
+  <dd>
+    <%= f.select :sort, @item.sort_options, include_blank: " " %>
+    <span class="sort-description hide"></span>
+  </dd>
 
   <dt><%= @model.t :limit %><%= @model.tt :limit %></dt>
   <dd><%= f.number_field :limit %></dd>
@@ -52,11 +64,15 @@
   <dt><%= @model.t :lower_html %><%= @model.tt :lower_html %></dt>
   <dd><%= f.text_area :lower_html, class: :html %></dd>
 
-  <dt><%= @model.t :no_items_display_state %><%= @model.tt :no_items_display_state %></dt>
-  <dd><%= f.select :no_items_display_state, @item.no_items_display_state_options, include_blank: true %></dd>
+  <% if @model.use_no_items_display %>
+    <dt><%= @model.t :no_items_display_state %><%= @model.tt :no_items_display_state %></dt>
+    <dd><%= f.select :no_items_display_state, @item.no_items_display_state_options, include_blank: true %></dd>
+  <% end %>
 
-  <dt><%= @model.t :substitute_html %><%= @model.tt :substitute_html %></dt>
-  <dd><%= f.text_area :substitute_html, class: :html %></dd>
+  <% if @model.use_substitute_html %>
+    <dt><%= @model.t :substitute_html %><%= @model.tt :substitute_html %></dt>
+    <dd><%= f.text_area :substitute_html, class: :html %></dd>
+  <% end %>
 </dl>
 
 <% if @model.use_liquid %>

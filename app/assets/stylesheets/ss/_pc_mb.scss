@@ -3448,3 +3448,13 @@ body.ss-ajax-in-iframe {
     }
   }
 }
+
+.ss-popup {
+  text-decoration-line: underline;
+  text-decoration-style: dotted;
+  text-decoration-color: $gray3;
+
+  &:hover {
+    cursor: help;
+  }
+}

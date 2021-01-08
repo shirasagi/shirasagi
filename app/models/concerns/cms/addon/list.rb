@@ -7,6 +7,8 @@ module Cms::Addon::List
     attr_accessor :cur_main_path
 
     included do
+      cattr_accessor(:use_no_items_display, instance_accessor: false) { true }
+      cattr_accessor(:use_substitute_html, instance_accessor: false) { true }
       cattr_accessor(:use_new_days, instance_accessor: false) { true }
       cattr_accessor(:use_liquid, instance_accessor: false) { true }
 
