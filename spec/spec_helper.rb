@@ -39,7 +39,7 @@ if analyze_coverage?
   require 'simplecov'
   require 'simplecov-csv'
   require 'simplecov-html'
-  require 'simplecov-json'
+  require 'simplecov_json_formatter'
 
   SimpleCov.formatter = SimpleCov::Formatter::MultiFormatter.new([
     SimpleCov::Formatter::CSVFormatter,

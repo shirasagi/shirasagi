@@ -270,7 +270,6 @@ GEM
       railties (>= 3.2.16)
     js_cookie_rails (2.2.0)
       railties (>= 3.1)
-    json (2.5.1)
     json-jwt (1.11.0)
       activesupport (>= 4.2)
       aes_key_wrap
@@ -565,9 +564,6 @@ GEM
     simplecov-csv (0.1.3)
       simplecov
     simplecov-html (0.12.3)
-    simplecov-json (0.2.3)
-      json
-      simplecov
     simplecov_json_formatter (0.1.2)
     sparql (3.0.1)
       builder (~> 3.2)
@@ -750,7 +746,7 @@ DEPENDENCIES
   simplecov
   simplecov-csv
   simplecov-html
-  simplecov-json
+  simplecov_json_formatter
   sparql
   sparql-client
   spring (~> 2.0.2)

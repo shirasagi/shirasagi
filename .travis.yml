@@ -95,7 +95,7 @@ jobs:
       name: Features_A
       script:
         - bundle exec rspec -p 10 spec/ --pattern "spec/features/{a,b,c,d,e,f}*/**/*.rb"
-        - ./cc-test-reporter format-coverage -t simplecov -o codeclimate.2.json coverage/.resultset.json
+        - ./cc-test-reporter format-coverage -t simplecov -o codeclimate.2.json coverage/coverage.json
       workspaces:
         create:
           name: codeclimate.2.json
@@ -103,7 +103,7 @@ jobs:
     - name: Features_G (1)
       script:
         - bundle exec rspec -p 10 spec/ --pattern "spec/features/{g}*/**/*_*_spec.rb"
-        - ./cc-test-reporter format-coverage -t simplecov -o codeclimate.3.json coverage/.resultset.json
+        - ./cc-test-reporter format-coverage -t simplecov -o codeclimate.3.json coverage/coverage.json
       workspaces:
         create:
           name: codeclimate.3.json
@@ -111,7 +111,7 @@ jobs:
     - name: Features_G (2)
       script:
         - bundle exec rspec -p 10 spec/ --pattern "spec/features/{g}*/**/*.rb" --exclude "**/*_*_spec.rb"
-        - ./cc-test-reporter format-coverage -t simplecov -o codeclimate.4.json coverage/.resultset.json
+        - ./cc-test-reporter format-coverage -t simplecov -o codeclimate.4.json coverage/coverage.json
       workspaces:
         create:
           name: codeclimate.4.json
@@ -119,7 +119,7 @@ jobs:
     - name: Features_H
       script:
         - bundle exec rspec -p 10 spec/ --pattern "spec/features/{h,i,j,k,l,m,o}*/**/*.rb"
-        - ./cc-test-reporter format-coverage -t simplecov -o codeclimate.5.json coverage/.resultset.json
+        - ./cc-test-reporter format-coverage -t simplecov -o codeclimate.5.json coverage/coverage.json
       workspaces:
         create:
           name: codeclimate.5.json
@@ -127,7 +127,7 @@ jobs:
     - name: Features_P
       script:
         - bundle exec rspec -p 10 spec/ --pattern "spec/features/{p,q,r,s,u,v,w}*/**/*.rb" --exclude "**/webmail/**/*.rb"
-        - ./cc-test-reporter format-coverage -t simplecov -o codeclimate.6.json coverage/.resultset.json
+        - ./cc-test-reporter format-coverage -t simplecov -o codeclimate.6.json coverage/coverage.json
       workspaces:
         create:
           name: codeclimate.6.json
@@ -135,7 +135,7 @@ jobs:
     - name: Features_Webmail
       script:
         - bundle exec rspec -p 10 spec/ --pattern "spec/features/webmail/**/*.rb"
-        - ./cc-test-reporter format-coverage -t simplecov -o codeclimate.7.json coverage/.resultset.json
+        - ./cc-test-reporter format-coverage -t simplecov -o codeclimate.7.json coverage/coverage.json
       workspaces:
         create:
           name: codeclimate.7.json
@@ -143,7 +143,7 @@ jobs:
     - name: Models
       script:
         - bundle exec rspec -p 10 spec/ --pattern "spec/models/**/*.rb"
-        - ./cc-test-reporter format-coverage -t simplecov -o codeclimate.8.json coverage/.resultset.json
+        - ./cc-test-reporter format-coverage -t simplecov -o codeclimate.8.json coverage/coverage.json
       workspaces:
         create:
           name: codeclimate.8.json
@@ -151,7 +151,7 @@ jobs:
     - name: Other
       script:
         - bundle exec rspec -p 10 spec/ --pattern "spec/{jobs,helpers,lib,mailers,requests,validators}/**/*.rb"
-        - ./cc-test-reporter format-coverage -t simplecov -o codeclimate.9.json coverage/.resultset.json
+        - ./cc-test-reporter format-coverage -t simplecov -o codeclimate.9.json coverage/coverage.json
       workspaces:
         create:
           name: codeclimate.9.json
