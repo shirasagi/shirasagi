@@ -190,26 +190,41 @@ class Inquiry::Answer
     self.source_name = source.name
   end
 
+  def each_file_data(&block)
+    self.data.select do |data|
+      column = data.column
+      next if column.blank?
+
+      next if column.input_type != "upload_file"
+
+      yield data
+    end
+  end
+
   def update_file_data
-    self.data.each do |data|
-      unless data.values[0].blank?
-        file_id = data.values[0]
-        file = SS::File.find(file_id) rescue nil
-        unless file.nil?
-          file.model = "inquiry/answer"
-          file.update
-        end
-      end
+    each_file_data do |data|
+      file_id = data.values[0]
+      next if file_id.blank?
+
+      file = SS::File.find(file_id) rescue nil
+      next if file.blank?
+
+      file.model = "inquiry/answer"
+      file.owner_item = self
+      file.save
     end
   end
 
   def delete_file_data
-    self.data.each do |data|
-      unless data.values[0].blank?
-        file_id = data.values[0]
-        file = SS::File.find(file_id) rescue nil
-        file.destroy unless file.nil?
-      end
+    each_file_data do |data|
+      file_id = data.values[0]
+      next if file_id.blank?
+
+      file = SS::File.find(file_id) rescue nil
+      next if file.blank?
+      next if file.model != "inquiry/answer"
+
+      file.destroy
     end
   end
 end
