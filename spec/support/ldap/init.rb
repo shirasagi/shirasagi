@@ -4,7 +4,7 @@ module SS::LdapSupport
   module_function
 
   def ldap_test_enabled?
-    ENV["LDAP_TEST"] == "enable" || travis?
+    ENV["LDAP_TEST"] == "enable" || ci?
   end
 
   def ldap_test_disabled?

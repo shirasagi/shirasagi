@@ -101,7 +101,7 @@ gem 'elasticsearch'
 group :development, :test do
   gem 'dotenv-rails'
   gem 'capybara', require: false
-  gem 'coveralls', require: false
+  gem 'coveralls_reborn', require: false
   gem 'debase', require: false
   gem 'factory_bot_rails', require: false
   gem 'fuubar', require: false
@@ -126,6 +126,7 @@ group :development, :test do
   gem 'simplecov', require: false
   gem 'simplecov-csv', require: false
   gem 'simplecov-html', require: false
+  gem 'simplecov_json_formatter', require: false
   gem 'spring', '~> 2.0.2', require: false
   gem 'test-queue', require: false
   gem 'timecop', require: false
