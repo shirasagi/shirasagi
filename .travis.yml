@@ -151,7 +151,7 @@ jobs:
           paths: codeclimate.8.json
     - name: "Helpers, Jobs, Lib, Mailers, Requests and Validators"
       script:
-        - bundle exec rspec -p 10 spec/ --pattern "spec/{helpers,jobs,lib,mailers,requests,validators}/**/*.rb"
+        - bundle exec rspec -p 10 spec/{helpers,jobs,lib,mailers,requests,validators}
         - ./cc-test-reporter format-coverage -t simplecov -o codeclimate.9.json coverage/coverage.json
       workspaces:
         create:
