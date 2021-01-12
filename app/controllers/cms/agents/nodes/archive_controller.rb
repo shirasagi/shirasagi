@@ -100,11 +100,11 @@ class Cms::Agents::Nodes::ArchiveController < ApplicationController
   end
 
   def redirect_to_archive_index
-    docs_archive_path = "#{@cur_main_path[1..-1].sub('/index.html', '')}/#{Time.zone.now.strftime('%Y%m')}"
-    render_url = "#{@cur_site.full_url}#{docs_archive_path}"
+    archive_path = "#{@cur_main_path[1..-1].sub('/index.html', '')}/#{Time.zone.now.strftime('%Y%m')}"
+    render_url = "#{@cur_site.full_url}#{archive_path}"
 
     if preview_path?
-      render_url = "#{@cur_site.full_url}.s1/preview/#{docs_archive_path}"
+      render_url = "#{cms_preview_path(site: @cur_site, path: @cur_main_path[1..-1].sub('/index.html', ''))}/#{Time.zone.now.strftime('%Y%m')}"
     end
 
     redirect_to render_url
