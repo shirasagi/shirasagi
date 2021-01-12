@@ -29,6 +29,7 @@ Rails.application.routes.draw do
   concern :import do
     get :import, on: :collection
     post :import, on: :collection
+    get :download_logs, on: :collection
   end
 
   concern :command do

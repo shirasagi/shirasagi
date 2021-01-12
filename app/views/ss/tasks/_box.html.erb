@@ -38,7 +38,8 @@
   <div class="controller">
     <% if task.respond_to?(:log_file_path) %>
       <%
-        download_path = begin
+        download_path = url_for(action: "download_logs") rescue nil
+        download_path ||= begin
           if @ss_mode == :cms && @cur_site
             if Cms::Tool.allowed?(:edit, @cur_user, site: @cur_site)
               download_job_cms_task_path(id: task)

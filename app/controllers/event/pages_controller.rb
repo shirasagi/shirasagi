@@ -107,4 +107,13 @@ class Event::PagesController < ApplicationController
     job.perform_later
     redirect_to({ action: :index }, { notice: t("rss.messages.job_started") })
   end
+
+  def download_logs
+    raise "403" unless @model.allowed?(:import, @cur_user, site: @cur_site, node: @cur_node, owned: true)
+
+    set_task
+
+    send_file @task.log_file_path, type: 'text/plain', filename: "#{@task.id}.log",
+              disposition: :attachment, x_sendfile: true
+  end
 end

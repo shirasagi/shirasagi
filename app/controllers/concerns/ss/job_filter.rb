@@ -44,4 +44,12 @@ module SS::JobFilter
     @item.destroy
     redirect_to({ action: :index }, { notice: t("ss.notice.deleted") })
   end
+
+  def download_logs
+    # unable to download
+    raise "404" unless @item.respond_to?(:log_file_path)
+
+    send_file @item.log_file_path, type: 'text/plain', filename: "#{@item.id}.log",
+              disposition: :attachment, x_sendfile: true
+  end
 end
