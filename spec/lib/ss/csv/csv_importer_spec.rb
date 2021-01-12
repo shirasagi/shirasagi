@@ -6,11 +6,12 @@ describe SS::Csv::CsvImporter do
       let(:item) { Cms::Page.new }
 
       it do
-        expect(described_class.from_label(nil, item.state_options, item.state_private_options)).to be_nil
-        expect(described_class.from_label("", item.state_options, item.state_private_options)).to be_nil
-        expect(described_class.from_label("公開", item.state_options, item.state_private_options)).to eq "public"
-        expect(described_class.from_label("非公開", item.state_options, item.state_private_options)).to eq "closed"
-        expect(described_class.from_label("公開待ち", item.state_options, item.state_private_options)).to eq "ready"
+        options = [ item.state_options, item.state_private_options ]
+        expect(described_class.from_label(nil, *options)).to be_nil
+        expect(described_class.from_label("", *options)).to be_nil
+        expect(described_class.from_label(I18n.t("ss.options.state.public"), *options)).to eq "public"
+        expect(described_class.from_label(I18n.t("ss.options.state.closed"), *options)).to eq "closed"
+        expect(described_class.from_label(I18n.t("ss.options.state.ready"), *options)).to eq "ready"
       end
     end
 
@@ -20,8 +21,8 @@ describe SS::Csv::CsvImporter do
       it do
         expect(described_class.from_label(nil, item.contact_state_options)).to be_nil
         expect(described_class.from_label("", item.contact_state_options)).to be_nil
-        expect(described_class.from_label("表示", item.contact_state_options)).to eq "show"
-        expect(described_class.from_label("非表示", item.contact_state_options)).to eq "hide"
+        expect(described_class.from_label(I18n.t("ss.options.state.show"), item.contact_state_options)).to eq "show"
+        expect(described_class.from_label(I18n.t("ss.options.state.hide"), item.contact_state_options)).to eq "hide"
       end
     end
 
@@ -32,18 +33,19 @@ describe SS::Csv::CsvImporter do
         options = [ item.related_page_sort_options, item.related_page_sort_compat_options ]
         expect(described_class.from_label(nil, *options)).to be_nil
         expect(described_class.from_label("", *options)).to be_nil
-        expect(described_class.from_label("タイトル", *options)).to eq "name"
-        expect(described_class.from_label("ファイル名", *options)).to eq "filename"
-        expect(described_class.from_label("作成日時", *options)).to eq "created"
-        expect(described_class.from_label("更新日時", *options)).to eq "updated -1"
-        expect(described_class.from_label("公開日時", *options)).to eq "released -1"
-        expect(described_class.from_label("指定順（昇順）", *options)).to eq "order"
-        expect(described_class.from_label("指定順（降順）", *options)).to eq "order -1"
-        expect(described_class.from_label("イベント日", *options)).to eq "event_dates"
-        expect(described_class.from_label("イベント日(未終了)", *options)).to eq "unfinished_event_dates"
+        expect(described_class.from_label(I18n.t("cms.sort_options.name.title"), *options)).to eq "name"
+        expect(described_class.from_label(I18n.t("cms.sort_options.filename.title"), *options)).to eq "filename"
+        expect(described_class.from_label(I18n.t("cms.sort_options.created.title"), *options)).to eq "created"
+        expect(described_class.from_label(I18n.t("cms.sort_options.updated_desc.title"), *options)).to eq "updated -1"
+        expect(described_class.from_label(I18n.t("cms.sort_options.released_desc.title"), *options)).to eq "released -1"
+        expect(described_class.from_label(I18n.t("cms.sort_options.order.title"), *options)).to eq "order"
+        expect(described_class.from_label(I18n.t("cms.sort_options.order_desc.title"), *options)).to eq "order -1"
+        expect(described_class.from_label(I18n.t("event.sort_options.event_dates.title"), *options)).to eq "event_dates"
+        expect(described_class.from_label(I18n.t("event.sort_options.unfinished_event_dates.title"), *options)).to \
+          eq "unfinished_event_dates"
 
         # for compatibilities
-        expect(described_class.from_label("指定順", *options)).to eq "order"
+        expect(described_class.from_label(I18n.t("cms.compat_sort_options.order"), *options)).to eq "order"
       end
     end
   end
