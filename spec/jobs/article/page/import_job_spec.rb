@@ -39,7 +39,7 @@ describe Article::Page::ImportJob, dbscope: :example do
 
       before do
         job = Article::Page::ImportJob.bind(site_id: site, node_id: node, user_id: cms_user)
-        job.perform_now(ss_file.id)
+        expect { job.perform_now(ss_file.id) }.to output(include("import start #{ss_file.name}\n")).to_stdout
       end
 
       it do
@@ -73,7 +73,7 @@ describe Article::Page::ImportJob, dbscope: :example do
         end
 
         job = Article::Page::ImportJob.bind(site_id: site, node_id: dest_node, user_id: cms_user)
-        job.perform_now(csv_file.id)
+        expect { job.perform_now(csv_file.id) }.to output(include("import start #{csv_file.name}\n")).to_stdout
 
         Job::Log.first.tap do |log|
           expect(log.logs).to include(/INFO -- : .* Started Job/)
@@ -297,7 +297,7 @@ describe Article::Page::ImportJob, dbscope: :example do
 
       before do
         job = Article::Page::ImportJob.bind(site_id: site, node_id: node, user_id: cms_user)
-        job.perform_now(ss_file.id)
+        expect { job.perform_now(ss_file.id) }.to output(include("import start #{ss_file.name}\n")).to_stdout
       end
 
       it do
@@ -325,7 +325,7 @@ describe Article::Page::ImportJob, dbscope: :example do
 
       before do
         job = Article::Page::ImportJob.bind(site_id: site, node_id: node, user_id: cms_user)
-        job.perform_now(ss_file.id)
+        expect { job.perform_now(ss_file.id) }.to output(include("import start #{ss_file.name}\n")).to_stdout
       end
 
       it do
@@ -383,7 +383,7 @@ describe Article::Page::ImportJob, dbscope: :example do
 
       before do
         job = Article::Page::ImportJob.bind(site_id: site, node_id: node, user_id: cms_user)
-        job.perform_now(ss_file.id)
+        expect { job.perform_now(ss_file.id) }.to output(include("import start #{ss_file.name}\n")).to_stdout
       end
 
       it do
