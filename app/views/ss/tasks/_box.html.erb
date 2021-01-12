@@ -38,13 +38,21 @@
   <div class="controller">
     <% if task.respond_to?(:log_file_path) %>
       <%
-        if @ss_mode == :cms && @cur_site
-          download_path = download_job_cms_task_path(id: task)
-        else
-          download_path = download_job_sys_task_path(id: task)
+        download_path = begin
+          if @ss_mode == :cms && @cur_site
+            if Cms::Tool.allowed?(:edit, @cur_user, site: @cur_site)
+              download_job_cms_task_path(id: task)
+            end
+          else
+            if SS::User.allowed?(:edit, @cur_user)
+              download_job_sys_task_path(id: task)
+            end
+          end
         end
       %>
-      <%= link_to(t('job.download_log'), download_path, { class: "btn task-log-download-btn hide", target: "_blank" }) %>
+      <% if download_path %>
+        <%= link_to(t('job.download_log'), download_path, { class: "btn task-log-download-btn hide", target: "_blank" }) %>
+      <% end %>
     <% end %>
 
     <span class="auto-reload">
