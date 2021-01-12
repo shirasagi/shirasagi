@@ -235,6 +235,8 @@ ja:
       order_desc:
         title: 指定順（降順）
         description: 指定順の降順で並び替えます。指定順が未設定のものは末尾に並びます。
+    compat_sort_options:
+      order: 指定順
     options:
       readable_setting_range:
         public: 全公開
