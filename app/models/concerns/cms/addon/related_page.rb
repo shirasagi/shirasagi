@@ -28,6 +28,13 @@ module Cms::Addon
       end
     end
 
+    # options for compatibility
+    def related_page_sort_compat_options
+      %w(order).map do |k|
+        [ I18n.t("cms.compat_sort_options.#{k}"), k ]
+      end
+    end
+
     def related_page_sort_hash
       return { released: -1 } if related_page_sort.blank?
 

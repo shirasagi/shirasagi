@@ -39,7 +39,7 @@ describe Article::Page::ImportJob, dbscope: :example do
 
       before do
         job = Article::Page::ImportJob.bind(site_id: site, node_id: node, user_id: cms_user)
-        job.perform_now(ss_file.id)
+        expect { job.perform_now(ss_file.id) }.to output(include("import start #{ss_file.name}\n")).to_stdout
       end
 
       it do
@@ -63,7 +63,8 @@ describe Article::Page::ImportJob, dbscope: :example do
       before do
         source_page
 
-        csv_file = SS::TempFile.create_empty!(name: "#{unique_id}.csv", filename: "#{unique_id}.csv", content_type: 'text/csv') do |file|
+        filename = "#{unique_id}.csv"
+        csv_file = SS::TempFile.create_empty!(name: filename, filename: filename, content_type: 'text/csv') do |file|
           ::File.open(file.path, "wb") do |f|
             Article::Page.site(site).node(source_node).enum_csv(encoding: "UTF-8").each do |csv_row|
               f.write(csv_row)
@@ -72,7 +73,7 @@ describe Article::Page::ImportJob, dbscope: :example do
         end
 
         job = Article::Page::ImportJob.bind(site_id: site, node_id: dest_node, user_id: cms_user)
-        job.perform_now(csv_file.id)
+        expect { job.perform_now(csv_file.id) }.to output(include("import start #{csv_file.name}\n")).to_stdout
 
         Job::Log.first.tap do |log|
           expect(log.logs).to include(/INFO -- : .* Started Job/)
@@ -296,7 +297,7 @@ describe Article::Page::ImportJob, dbscope: :example do
 
       before do
         job = Article::Page::ImportJob.bind(site_id: site, node_id: node, user_id: cms_user)
-        job.perform_now(ss_file.id)
+        expect { job.perform_now(ss_file.id) }.to output(include("import start #{ss_file.name}\n")).to_stdout
       end
 
       it do
@@ -324,7 +325,7 @@ describe Article::Page::ImportJob, dbscope: :example do
 
       before do
         job = Article::Page::ImportJob.bind(site_id: site, node_id: node, user_id: cms_user)
-        job.perform_now(ss_file.id)
+        expect { job.perform_now(ss_file.id) }.to output(include("import start #{ss_file.name}\n")).to_stdout
       end
 
       it do
@@ -360,9 +361,18 @@ describe Article::Page::ImportJob, dbscope: :example do
       let!(:facility2) { create(:facility_node_category, name: "cate2", filename: "L/M") } # cate1/cate2
       let!(:facility3) { create(:facility_node_category, name: "cate3", filename: "N/O/P") } # cate1/cate2/cate3
 
-      let!(:another_cate0_1) { create(:category_node_node, cur_site: site2, name: "cate1", filename: "A") } # cate1
-      let!(:another_cate0_2) { create(:category_node_node, cur_site: site2, name: "cate2", filename: "A/B") } # cate1/cate2
-      let!(:another_cate0_3) { create(:category_node_page, cur_site: site2, name: "cate3", filename: "A/B/C") } # cate1/cate2/cate3
+      let!(:another_cate0_1) do
+        # cate1
+        create(:category_node_node, cur_site: site2, name: "cate1", filename: "A")
+      end
+      let!(:another_cate0_2) do
+        # cate1/cate2
+        create(:category_node_node, cur_site: site2, name: "cate2", filename: "A/B")
+      end
+      let!(:another_cate0_3) do
+        # cate1/cate2/cate3
+        create(:category_node_page, cur_site: site2, name: "cate3", filename: "A/B/C")
+      end
 
       let(:path) { "#{Rails.root}/spec/fixtures/article/article_import_test_3.csv" }
       let(:ss_file) do
@@ -373,7 +383,7 @@ describe Article::Page::ImportJob, dbscope: :example do
 
       before do
         job = Article::Page::ImportJob.bind(site_id: site, node_id: node, user_id: cms_user)
-        job.perform_now(ss_file.id)
+        expect { job.perform_now(ss_file.id) }.to output(include("import start #{ss_file.name}\n")).to_stdout
       end
 
       it do

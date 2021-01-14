@@ -222,8 +222,20 @@ class SS::Csv
 
   class CsvImporter
     class << self
-      def from_label(value, options, private_options = {})
-        options.to_h[value].to_s.presence || private_options.to_h[value].to_s
+      def from_label(value, main_options, *other_options_array)
+        ret = main_options.find { |v, _k, _options| v == value }
+        return ret[1] if ret # found option value in main options
+
+        return if other_options_array.blank?
+
+        other_options_array.each do |other_options|
+          next if other_options.blank?
+
+          ret = other_options.find { |v, _k, _options| v == value }
+          break if ret.present?
+        end
+
+        ret[1] if ret # found option value in other options
       end
 
       def to_array(value, delim: "\n")

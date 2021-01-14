@@ -167,7 +167,7 @@ class Article::Page::Importer
     end
     column_name = "#{model.t(:related_pages)}#{model.t(:related_page_sort)}"
     importer.simple_column :related_page_sort, name: column_name do |row, item, head, value|
-      item.related_page_sort = from_label(value, item.related_page_sort_options)
+      item.related_page_sort = from_label(value, item.related_page_sort_options, item.related_page_sort_compat_options)
     end
   end
 
