@@ -33,6 +33,7 @@ ja:
     row_num: 行目
     log_of_the_failed_category: 'error %{row_num}行目:  施設の種類『%{category}』を登録できませんでした。'
     log_of_the_failed_location: 'error %{row_num}行目:  施設の地域『%{location}』を登録できませんでした。'
+    log_of_the_failed_service: 'error %{row_num}行目:  施設の用途『%{service}』を登録できませんでした。'
     loop_html: ループHTML
     max_file_size: 最大ファイルサイズ
     max_file_size_setting: 最大ファイルサイズ設定

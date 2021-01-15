@@ -106,6 +106,7 @@ ja:
         location_ids: 施設の地域
         category_ids: 施設の種類
         group_ids: 管理グループ
+        service_ids: 施設の用途
       facility/node/search:
         search_html: 検索HTML
         map_html: 地図HTML

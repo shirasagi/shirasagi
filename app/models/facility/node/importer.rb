@@ -77,6 +77,7 @@ class Facility::Node::Importer
   def put_log_of_insert(item, row_num, row)
     put_log_of_category(item.name, row_num, row)
     put_log_of_location(item.name, row_num, row)
+    put_log_of_service(item.name, row_num, row)
 
     return put_log("add #{row_num}#{I18n.t("cms.row_num")}:  #{item.name}") if item.new_record?
 
@@ -142,6 +143,21 @@ class Facility::Node::Importer
     names.each do |location_in_csv|
       next if location_in_db.include?(location_in_csv)
       put_log(I18n.t("cms.log_of_the_failed_location", location: location_in_csv, row_num: row_num))
+    end
+  end
+
+  def put_log_of_service(item_name, row_num, row)
+    names = row[model.t(:services)].to_s.split(/\n/).map(&:strip)
+
+    facility_service = node.st_service_ids.map do |service_id|
+      Facility::Node::Service.find(service_id)
+    end.compact
+
+    service_in_db = facility_service.map(&:name)
+
+    names.each do |service_in_csv|
+      next if service_in_db.include?(service_in_csv)
+      put_log(I18n.t("cms.log_of_the_failed_service", service: service_in_csv, row_num: row_num))
     end
   end
 
