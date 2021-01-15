@@ -78,6 +78,7 @@ class Facility::Node::Importer
     put_log_of_category(item.name, row_num, row)
     put_log_of_location(item.name, row_num, row)
     put_log_of_service(item.name, row_num, row)
+    put_log_of_group(item.name, row_num, row)
 
     return put_log("add #{row_num}#{I18n.t("cms.row_num")}:  #{item.name}") if item.new_record?
 
@@ -115,7 +116,6 @@ class Facility::Node::Importer
 
   def put_log_of_category(item_name, row_num, row)
     names = row[model.t(:categories)].to_s.split(/\n/).map(&:strip)
-
     facility_category = node.st_category_ids.map do |category_id|
       Facility::Node::Category.find(category_id)
     end.compact
@@ -130,7 +130,6 @@ class Facility::Node::Importer
 
   def put_log_of_location(item_name, row_num, row)
     names = row[model.t(:locations)].to_s.split(/\n/).map(&:strip)
-
     facility_location = node.st_location_ids.map do |location_id|
       Facility::Node::Location.find(location_id)
     end.compact
@@ -145,7 +144,6 @@ class Facility::Node::Importer
 
   def put_log_of_service(item_name, row_num, row)
     names = row[model.t(:services)].to_s.split(/\n/).map(&:strip)
-
     facility_service = node.st_service_ids.map do |service_id|
       Facility::Node::Service.find(service_id)
     end.compact
@@ -155,6 +153,20 @@ class Facility::Node::Importer
     names.each do |service_in_csv|
       next if service_in_db.include?(service_in_csv)
       put_log(I18n.t("cms.log_of_the_failed_service", service: service_in_csv, row_num: row_num))
+    end
+  end
+
+  def put_log_of_group(item_name, row_num, row)
+    names = row[model.t(:groups)].to_s.split(/\n/).map(&:strip)
+    facility_group = node.group_ids.map do |group_id|
+      SS::Group.find(group_id)
+    end.compact
+
+    group_in_db = facility_group.map(&:name)
+
+    names.each do |group_in_csv|
+      next if group_in_db.include?(group_in_csv)
+      put_log(I18n.t("cms.log_of_the_failed_group", group: group_in_csv, row_num: row_num))
     end
   end
 
