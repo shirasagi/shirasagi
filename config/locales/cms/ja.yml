@@ -13,6 +13,7 @@ ja:
     config: 設定
     content: コンテンツ
     convert_to_cms_page: 固定ページに変換する
+    count_log_of_errors: 発生したエラー数は『%{number_of_errors}件』です。
     editor_template: テンプレート
     event_calendar: イベントカレンダー
     file: 共有ファイル
@@ -29,6 +30,8 @@ ja:
     link_check: リンクチェック
     form_check: 制約チェック
     list_view: リスト表示
+    row_num: 行目
+    log_of_the_failed_category: 'error %{row_num}行目:  施設の種類『%{category}』を登録できませんでした。'
     loop_html: ループHTML
     max_file_size: 最大ファイルサイズ
     max_file_size_setting: 最大ファイルサイズ設定
