@@ -84,6 +84,9 @@ class Facility::Node::Importer
 
     item.changes.each do |change_data|
       changed_field = change_data[0]
+      before_changing_data = change_data[1][0]
+      after_changing_data = change_data[1][1]
+      next if changed_field == "additional_info" && before_changing_data.nil? && after_changing_data == []
 
       field_name = "update #{row_num}#{I18n.t("cms.row_num")}:  #{I18n.t("mongoid.attributes.facility/node/page.#{changed_field}")}："
 
@@ -105,10 +108,6 @@ class Facility::Node::Importer
         after_changing_servise = change_data[1][1].map {|id| Facility::Node::Service.find(id).name }
         put_log("#{field_name}#{before_changing_servise} → #{after_changing_servise}")
       else
-        before_changing_data = change_data[1][0]
-        after_changing_data = change_data[1][1]
-        next if changed_field == "additional_info" && before_changing_data.nil? && after_changing_data == []
-
         put_log("#{field_name}#{before_changing_data} → #{after_changing_data}")
       end
     end
