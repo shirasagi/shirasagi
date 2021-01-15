@@ -84,34 +84,31 @@ class Facility::Node::Importer
     item.changes.each do |change_data|
       changed_field = change_data[0]
 
+      field_name = "update #{row_num}#{I18n.t("cms.row_num")}:  #{I18n.t("mongoid.attributes.facility/node/page.#{changed_field}")}："
+
       case changed_field
       when "category_ids"
         before_changing_category = change_data[1][0].map {|id| Facility::Node::Category.find(id).name }
         after_changing_category = change_data[1][1].map {|id| Facility::Node::Category.find(id).name }
+        put_log("#{field_name}#{before_changing_category} → #{after_changing_category}")
       when "location_ids"
         before_changing_location = change_data[1][0].map {|id| Facility::Node::Location.find(id).name }
         after_changing_location = change_data[1][1].map {|id| Facility::Node::Location.find(id).name }
+        put_log("#{field_name}#{before_changing_location} → #{after_changing_location}")
       when "group_ids"
         before_changing_group = change_data[1][0].map {|id| SS::Group.find(id).name }
         after_changing_group = change_data[1][1].map {|id| SS::Group.find(id).name }
+        put_log("#{field_name}#{before_changing_group} → #{after_changing_group}")
+      when "service_ids"
+        before_changing_servise = change_data[1][0].map {|id| Facility::Node::Service.find(id).name }
+        after_changing_servise = change_data[1][1].map {|id| Facility::Node::Service.find(id).name }
+        put_log("#{field_name}#{before_changing_servise} → #{after_changing_servise}")
       else
         before_changing_data = change_data[1][0]
         after_changing_data = change_data[1][1]
-      end
+        next if changed_field == "additional_info" && before_changing_data.nil? && after_changing_data == []
 
-      next if changed_field == "additional_info" && before_changing_data.nil? && after_changing_data == []
-
-      locale_update_field = "update #{row_num}#{I18n.t("cms.row_num")}:  #{I18n.t("mongoid.attributes.facility/node/page.#{changed_field}")}："
-
-      case changed_field
-      when "category_ids"
-        put_log("#{locale_update_field}#{before_changing_category} → #{after_changing_category}")
-      when "location_ids"
-        put_log("#{locale_update_field}#{before_changing_location} → #{after_changing_location}")
-      when "group_ids"
-        put_log("#{locale_update_field}#{before_changing_group} → #{after_changing_group}")
-      else
-        put_log("#{locale_update_field}#{before_changing_data} → #{after_changing_data}")
+        put_log("#{field_name}#{before_changing_data} → #{after_changing_data}")
       end
     end
   end
