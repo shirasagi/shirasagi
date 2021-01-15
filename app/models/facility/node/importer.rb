@@ -76,6 +76,8 @@ class Facility::Node::Importer
 
   def put_log_of_insert(item, row_num, row)
     put_log_of_category(item.name, row_num, row)
+    put_log_of_location(item.name, row_num, row)
+
     return put_log("add #{row_num}#{I18n.t("cms.row_num")}:  #{item.name}") if item.new_record?
 
     item.changes.each do |change_data|
@@ -123,7 +125,23 @@ class Facility::Node::Importer
     category_in_db = facility_category.map(&:name)
 
     names.each do |category_in_csv|
-      put_log(I18n.t("cms.log_of_the_failed_category", category: category_in_csv, row_num: row_num)) if category_in_db.exclude?(category_in_csv)
+      next if category_in_db.include?(category_in_csv)
+      put_log(I18n.t("cms.log_of_the_failed_category", category: category_in_csv, category: category_in_csv, row_num: row_num))
+    end
+  end
+
+  def put_log_of_location(item_name, row_num, row)
+    names = row[model.t(:locations)].to_s.split(/\n/).map(&:strip)
+
+    facility_location = node.st_location_ids.map do |location_id|
+      Facility::Node::Location.find(location_id)
+    end.compact
+
+    location_in_db = facility_location.map(&:name)
+
+    names.each do |location_in_csv|
+      next if location_in_db.include?(location_in_csv)
+      put_log(I18n.t("cms.log_of_the_failed_location", location: location_in_csv, row_num: row_num))
     end
   end
 
