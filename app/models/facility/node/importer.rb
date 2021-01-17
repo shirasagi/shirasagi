@@ -92,20 +92,20 @@ class Facility::Node::Importer
 
       case changed_field
       when "category_ids"
-        before_changing_category = change_data[1][0].map {|id| Facility::Node::Category.find(id).name }
-        after_changing_category = change_data[1][1].map {|id| Facility::Node::Category.find(id).name }
+        before_changing_category = before_changing_data.map {|id| Facility::Node::Category.find(id).name }
+        after_changing_category = after_changing_data.map {|id| Facility::Node::Category.find(id).name }
         put_log("#{field_name}#{before_changing_category} → #{after_changing_category}")
       when "location_ids"
-        before_changing_location = change_data[1][0].map {|id| Facility::Node::Location.find(id).name }
-        after_changing_location = change_data[1][1].map {|id| Facility::Node::Location.find(id).name }
+        before_changing_location = before_changing_data.map {|id| Facility::Node::Location.find(id).name }
+        after_changing_location = after_changing_data.map {|id| Facility::Node::Location.find(id).name }
         put_log("#{field_name}#{before_changing_location} → #{after_changing_location}")
       when "group_ids"
-        before_changing_group = change_data[1][0].map {|id| SS::Group.find(id).name }
-        after_changing_group = change_data[1][1].map {|id| SS::Group.find(id).name }
+        before_changing_group = before_changing_data.map {|id| SS::Group.find(id).name }
+        after_changing_group = after_changing_data.map {|id| SS::Group.find(id).name }
         put_log("#{field_name}#{before_changing_group} → #{after_changing_group}")
       when "service_ids"
-        before_changing_servise = change_data[1][0].map {|id| Facility::Node::Service.find(id).name }
-        after_changing_servise = change_data[1][1].map {|id| Facility::Node::Service.find(id).name }
+        before_changing_servise = before_changing_data.map {|id| Facility::Node::Service.find(id).name }
+        after_changing_servise = after_changing_data.map {|id| Facility::Node::Service.find(id).name }
         put_log("#{field_name}#{before_changing_servise} → #{after_changing_servise}")
       else
         put_log("#{field_name}#{before_changing_data} → #{after_changing_data}")
