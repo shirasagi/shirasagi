@@ -11,9 +11,10 @@ module Cms::Addon::OpendataRef::Dataset
     permit_params opendata_dataset_ids: []
 
     validates :opendata_dataset_state, inclusion: { in: %w(none public closed existance), allow_blank: true }
+    validate :validate_opendata_datasets
 
     after_generate_file { invoke_opendata_job(:create_or_update) }
-    #after_remove_file { invoke_opendata_job(:destroy) }
+    after_remove_file { invoke_opendata_job(:destroy) }
   end
 
   def opendata_dataset_state_options
@@ -52,5 +53,11 @@ module Cms::Addon::OpendataRef::Dataset
         job.perform_later(self.site.id, parent.id, self.id, action.to_s)
       end
     end
+  end
+
+  def validate_opendata_datasets
+    return if opendata_dataset_state != 'existance'
+    return if opendata_datasets.present?
+    errors.add(:opendata_dataset_ids, I18n.t("errors.messages.not_select"))
   end
 end

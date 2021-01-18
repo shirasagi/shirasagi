@@ -134,9 +134,10 @@ class Opendata::Dataset::ResourcesController < ApplicationController
 
     return if request.get?
 
-    page = @item.assoc_page
+    page = @item.assoc_page.becomes_with_route
     file = @item.assoc_file
-    @item.update_resource_with_file!(page, file, @item.license_id)
+    text = page.opendata_resources_text(file)
+    @item.update_resource_with_file!(page, file, @item.license_id, text)
     render_update true, render: { file: :sync }
   rescue => e
     @item.errors.add :base, e.message

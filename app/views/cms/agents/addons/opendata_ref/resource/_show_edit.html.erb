@@ -1,4 +1,9 @@
-<% licenses = Opendata::License.in(site_id: @cur_node.becomes_with_route.try(:opendata_site_ids)).and_public.pluck(:name, :id) %>
+<% licenses = Opendata::License.in(site_id: @cur_node.becomes_with_route.try(:opendata_site_ids)).and_public.pluck(:name, :id) if @cur_node.present? %>
+<% if @item.opendata_dataset_state == 'existance' %>
+  <%= jquery do %>
+    $("option[value='same']").text("<%= I18n.t("cms.options.opendata_resource.existance") %>");
+  <% end %>
+<% end %>
 
 <div class="see mod-cms-opendata-resource">
   <% @item.attached_files.each do |file| %>
@@ -15,39 +20,22 @@
           <%= file.name %>
         </div>
       <% end %>
-      <dl class="od-resource-file-meta">
-        <dt><%= t('cms.opendata_ref/resource.license_id') %></dt>
-        <dd>
-          <%= select_tag "item[opendata_resources][#{file.id}][license_id]", options_for_select(licenses, @item.opendata_resources_licenses(file).first.try(:id)), include_blank: t('cms.opendata_ref/resource.ref_opendata_license') %>
-        </dd>
+      <% if @cur_node.present? %>
+        <dl class="od-resource-file-meta">
+          <dt><%= t('cms.opendata_ref/resource.license_id') %></dt>
+          <dd>
+            <%= select_tag "item[opendata_resources][#{file.id}][license_id]", options_for_select(licenses, @item.opendata_resources_licenses(file).first.try(:id)), include_blank: true %>
+          </dd>
 
-        <dt><%= t('cms.opendata_ref/resource.text') %></dt>
-        <dd><%= text_area_tag "item[opendata_resources][#{file.id}][text]", @item.opendata_resources_text(file) %></dd>
+          <dt><%= t('cms.opendata_ref/resource.text') %></dt>
+          <dd><%= text_area_tag "item[opendata_resources][#{file.id}][text]", @item.opendata_resources_text(file) %></dd>
 
-        <dt><%= t('cms.opendata_ref/resource.state') %></dt>
-        <dd>
-          <%= select_tag "item[opendata_resources][#{file.id}][state]", options_for_select(@item.opendata_resource_state_options, @item.opendata_resources_state(file)), class: 'od-resource-file-state', data: { 'file-id' => file.id } %>
-
-          <%= hidden_field_tag "item[opendata_resources][#{file.id}][dataset_ids][]", "", class: "hidden-ids" %>
-          <%= link_to t("cms.apis.opendata_ref.datasets.index"), cms_apis_opendata_ref_datasets_path(single: 1), class: "ajax-box" %>
-          <table class="index ajax-selected">
-            <thead>
-            <tr>
-              <th class="name"><%= t("mongoid.models.opendata/dataset") %></th>
-              <th></th>
-            </tr>
-            </thead>
-            <tbody>
-            <% @item.opendata_resources_datasets(file).each do |dataset| %>
-                <tr data-id="<%= dataset.id %>">
-                  <td><%= hidden_field_tag "item[opendata_resources][#{file.id}][dataset_ids][]", dataset.id %> <%= dataset.name %></td>
-                  <td><%= link_to t("ss.buttons.delete"), "#", class: "deselect btn" %></td>
-                </tr>
-            <% end %>
-            </tbody>
-          </table>
-        </dd>
-      </dl>
+          <dt><%= t('cms.opendata_ref/resource.state') %></dt>
+          <dd>
+            <%= select_tag "item[opendata_resources][#{file.id}][state]", options_for_select(@item.opendata_resource_state_options, @item.opendata_resources_state(file)), class: 'od-resource-file-state', data: { 'file-id' => file.id } %>
+          </dd>
+        </dl>
+      <% end %>
       <div class="od-resource-file-operation">
         <input type="button" value="<%= t('ss.buttons.save') %>" class="btn od-resource-file-save" data-file-id="<%= file.id %>">
         <span class="od-resource-file-save-status"></span>

@@ -2,6 +2,9 @@
 <% files = value.try(:files) %>
 <% controller ||= false %>
 <% source_cleaner_conf = Cms::SourceCleanerTemplate.site(@cur_site).and_public.to_config %>
+<% opendata_assoced = @cur_node && @cur_node.becomes_with_route.try(:opendata_sites).present? %>
+<% licenses = Opendata::License.in(site_id: @cur_node.becomes_with_route.try(:opendata_site_ids)).and_public.pluck(:name, :id) if opendata_assoced %>
+<% page = @page.presence || @item %>
 <%= render 'cms/agents/columns/main/base', f: f, column: column, value: value, controller: controller do |id| %>
   <% editor_id = "#{id}-html" %>
   <%= text_area_tag("#{f.object_name}[][in_wrap][value]", value.try(:value), column.form_options.merge(id: editor_id, class: "html", style: "height: 400px;")) %>
@@ -37,6 +40,10 @@
         <%= html_editor_js "##{editor_id}", advanced: Cms::EditorExtension.allowed?(:use, @cur_user, site: @cur_site) %>
       }
     });
+
+    <% if @cur_node.blank? || page.try(:opendata_dataset_state) == 'none' %>
+      $(".od-resource-file-meta").hide();
+    <% end %>
   <% end %>
 
   <% @extra_bodies << proc do %>
@@ -100,6 +107,23 @@
               <% end %>
               <%= link_to t("ss.buttons.delete"), "#", class: "btn-file-delete" %>
             </div>
+
+            <% if opendata_assoced %>
+              <dl class="od-resource-file-meta">
+                <dt><%= t('cms.opendata_ref/resource.license_id') %></dt>
+                <dd>
+                  <%= select_tag "item[opendata_resources][#{file.id}][license_ids]", options_for_select(licenses, page.opendata_resources_licenses(file).first.try(:id)), include_blank: true %>
+                </dd>
+
+                <dt><%= t('cms.opendata_ref/resource.text') %></dt>
+                <dd><%= text_area_tag "item[opendata_resources][#{file.id}][text]", page.opendata_resources_text(file) %></dd>
+
+                <dt><%= t('cms.opendata_ref/resource.state') %></dt>
+                <dd>
+                  <%= select_tag "item[opendata_resources][#{file.id}][state]", options_for_select(page.opendata_resource_state_options, page.opendata_resources_state(file)), class: 'od-resource-file-state', data: { 'file-id' => file.id } %>
+                </dd>
+              </dl>
+            <% end %>
           </div>
         <% end %>
       <% end %>

@@ -1,4 +1,9 @@
-<% licenses = Opendata::License.in(site_id: @cur_node.becomes_with_route.try(:opendata_site_ids)).and_public.pluck(:name, :id) %>
+<% licenses = Opendata::License.in(site_id: @cur_node.becomes_with_route.try(:opendata_site_ids)).and_public.pluck(:name, :id) if @cur_node.present? %>
+<% if @item.opendata_dataset_state == 'existance' %>
+  <%= jquery do %>
+    $("option[value='same']").text("<%= I18n.t("cms.options.opendata_resource.existance") %>");
+  <% end %>
+<% end %>
 
 <div class="see mod-cms-opendata-resource">
   <% @item.attached_files.each do |file| %>
@@ -15,38 +20,22 @@
       <div class="od-resource-file-name">
         <%= file.name %>
       </div>
-      <dl class="od-resource-file-meta">
-        <dt><%= t('cms.opendata_ref/resource.license_id') %></dt>
-        <dd>
-          <%= select_tag "item[opendata_resources][#{file.id}][license_id]", options_for_select(licenses, @item.opendata_resources_licenses(file).first.try(:id)), include_blank: t('cms.opendata_ref/resource.ref_opendata_license'), disabled: true %>
-        </dd>
+      <% if @cur_node.present? %>
+        <dl class="od-resource-file-meta">
+          <dt><%= t('cms.opendata_ref/resource.license_id') %></dt>
+          <dd>
+            <%= select_tag "item[opendata_resources][#{file.id}][license_id]", options_for_select(licenses, @item.opendata_resources_licenses(file).first.try(:id)), include_blank: true, disabled: true %>
+          </dd>
 
-        <dt><%= t('cms.opendata_ref/resource.text') %></dt>
-        <dd><%= text_area_tag "item[opendata_resources][#{file.id}][text]", @item.opendata_resources_text(file), readonly: true %></dd>
+          <dt><%= t('cms.opendata_ref/resource.text') %></dt>
+          <dd><%= text_area_tag "item[opendata_resources][#{file.id}][text]", @item.opendata_resources_text(file), readonly: true %></dd>
 
-        <dt><%= t('cms.opendata_ref/resource.state') %></dt>
-        <dd>
-          <%= select_tag "item[opendata_resources][#{file.id}][state]", options_for_select(@item.opendata_resource_state_options, @item.opendata_resources_state(file)), disabled: true %>
-        </dd>
-        <% if @item.opendata_resources_state(file) == 'existance' %>
-        <dd>
-          <table class="index">
-            <thead>
-            <tr>
-              <th class="name"><%= t("mongoid.models.opendata/dataset") %></th>
-            </tr>
-            </thead>
-            <tbody>
-            <% @item.opendata_resources_datasets(file).each do |dataset| %>
-              <tr>
-                <td><%= dataset.name %></td>
-              </tr>
-            <% end %>
-            </tbody>
-          </table>
-        </dd>
-        <% end %>
-      </dl>
+          <dt><%= t('cms.opendata_ref/resource.state') %></dt>
+          <dd>
+            <%= select_tag "item[opendata_resources][#{file.id}][state]", options_for_select(@item.opendata_resource_state_options, @item.opendata_resources_state(file)), disabled: true %>
+          </dd>
+        </dl>
+      <% end %>
     </div>
   <% end %>
 </div>

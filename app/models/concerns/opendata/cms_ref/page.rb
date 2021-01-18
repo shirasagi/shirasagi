@@ -33,4 +33,10 @@ module Opendata::CmsRef::Page
       Cms::Page.find(assoc_page_id) rescue nil
     end
   end
+
+  def assoc_pages
+    if assoc_page_ids.present?
+      Cms::Page.in(id: assoc_page_ids)
+    end
+  end
 end

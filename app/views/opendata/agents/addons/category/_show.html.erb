@@ -4,10 +4,10 @@ return if @item.categories.blank?
 def name_hier(category)
   names = []
   names << category.name
-  while category.parent.present?
-    category = category.parent
-    names << category.name
-  end
+  # while category.parent.present?
+  #   category = category.parent
+  #   names << category.name
+  # end
   names.reverse.join('/')
 end
 %>
