@@ -116,11 +116,7 @@ class Facility::Node::Importer
 
   def put_log_of_category(item_name, row_num, row)
     names = row[model.t(:categories)].to_s.split(/\n/).map(&:strip)
-    facility_category = node.st_category_ids.map do |category_id|
-      Facility::Node::Category.find(category_id)
-    end
-
-    category_in_db = facility_category.map(&:name)
+    category_in_db = node.st_category_ids.map { |category_id| Facility::Node::Category.find(category_id) }.map(&:name)
 
     names.each do |category_in_csv|
       next if category_in_db.include?(category_in_csv)
@@ -130,11 +126,7 @@ class Facility::Node::Importer
 
   def put_log_of_location(item_name, row_num, row)
     names = row[model.t(:locations)].to_s.split(/\n/).map(&:strip)
-    facility_location = node.st_location_ids.map do |location_id|
-      Facility::Node::Location.find(location_id)
-    end
-
-    location_in_db = facility_location.map(&:name)
+    location_in_db = node.st_location_ids.map { |location_id| Facility::Node::Location.find(location_id) }.map(&:name)
 
     names.each do |location_in_csv|
       next if location_in_db.include?(location_in_csv)
@@ -144,11 +136,7 @@ class Facility::Node::Importer
 
   def put_log_of_service(item_name, row_num, row)
     names = row[model.t(:services)].to_s.split(/\n/).map(&:strip)
-    facility_service = node.st_service_ids.map do |service_id|
-      Facility::Node::Service.find(service_id)
-    end
-
-    service_in_db = facility_service.map(&:name)
+    service_in_db = node.st_service_ids.map { |service_id| Facility::Node::Service.find(service_id) }.map(&:name)
 
     names.each do |service_in_csv|
       next if service_in_db.include?(service_in_csv)
@@ -158,11 +146,7 @@ class Facility::Node::Importer
 
   def put_log_of_group(item_name, row_num, row)
     names = row[model.t(:groups)].to_s.split(/\n/).map(&:strip)
-    facility_group = node.group_ids.map do |group_id|
-      SS::Group.find(group_id)
-    end
-
-    group_in_db = facility_group.map(&:name)
+    group_in_db = node.group_ids.map { |group_id| SS::Group.find(group_id) }.map(&:name)
 
     names.each do |group_in_csv|
       next if group_in_db.include?(group_in_csv)
