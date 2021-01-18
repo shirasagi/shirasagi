@@ -80,6 +80,7 @@ class Facility::Node::Importer
     put_log_of_service(item.name, row_num, row)
     put_log_of_group(item.name, row_num, row)
 
+    return put_log(I18n.t("cms.log_of_the_failed_import", row_num: row_num)) if item.invalid?
     return put_log("add #{row_num}#{I18n.t("cms.row_num")}:  #{item.name}") if item.new_record?
 
     item.changes.each do |change_data|

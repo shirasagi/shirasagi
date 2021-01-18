@@ -31,6 +31,7 @@ ja:
     form_check: 制約チェック
     list_view: リスト表示
     row_num: 行目
+    log_of_the_failed_import: 'error %{row_num}行目のデータは登録できませんでした。入力内容をもう１度ご確認ください。'
     log_of_the_failed_category: 'error %{row_num}行目:  施設の種類『%{category}』を登録できませんでした。'
     log_of_the_failed_location: 'error %{row_num}行目:  施設の地域『%{location}』を登録できませんでした。'
     log_of_the_failed_service: 'error %{row_num}行目:  施設の用途『%{service}』を登録できませんでした。'
