@@ -146,14 +146,11 @@ class Facility::Node::Importer
         klass = item.fields[change_data[0]].options[:metadata][:elem_class].constantize
       end
 
-      case klass
-      when model
-        put_log("#{field_name}#{before_changing_data} → #{after_changing_data}")
-      else
-        before_changing_metadata = klass.in(id: before_changing_data).pluck(:name)
-        after_changing_metadata = klass.in(id: after_changing_data).pluck(:name)
-        put_log("#{field_name}#{before_changing_metadata} → #{after_changing_metadata}")
-      end
+      return put_log("#{field_name}#{before_changing_data} → #{after_changing_data}") if klass == model
+
+      before_changing_metadata = klass.in(id: before_changing_data).pluck(:name)
+      after_changing_metadata = klass.in(id: after_changing_data).pluck(:name)
+      put_log("#{field_name}#{before_changing_metadata} → #{after_changing_metadata}")
     end
   end
 
