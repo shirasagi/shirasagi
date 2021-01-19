@@ -13,11 +13,11 @@ class Facility::Node::Importer
 
   def import(file, opts = {})
     @task = opts[:task]
-    @count_errors = []
+    @count_errors = 0
 
     put_log("import start #{file.filename}")
     import_csv(file)
-    put_log(I18n.t("cms.count_log_of_errors", number_of_errors: @count_errors.length))
+    put_log(I18n.t("cms.count_log_of_errors", number_of_errors: @count_errors))
   end
 
   private
@@ -32,9 +32,6 @@ class Facility::Node::Importer
     else
       Rails.logger.info(message)
     end
-
-    @count_errors << message.scan("error")
-    @count_errors.delete([])
   end
 
   def import_csv(file)
@@ -44,6 +41,7 @@ class Facility::Node::Importer
       begin
         update_row(row, row_num)
       rescue => e
+        @count_errors.succ
         put_log("error #{row_num}#{I18n.t("cms.row_num")}: #{e}")
       end
     end
@@ -76,6 +74,7 @@ class Facility::Node::Importer
 
   def put_log_of_insert(item, row_num, row)
     if item.invalid?
+      @count_errors.succ
       put_log(I18n.t("cms.log_of_the_failed_import", row_num: row_num))
     elsif item.new_record?
       put_log("add #{row_num}#{I18n.t("cms.row_num")}:  #{item.name}")
@@ -97,6 +96,7 @@ class Facility::Node::Importer
 
     inputted_category.each do |category|
       next if category_in_db.include?(category)
+      @count_errors.succ
       put_log(I18n.t("cms.log_of_the_failed_category", category: category, row_num: row_num))
     end
   end
@@ -107,6 +107,7 @@ class Facility::Node::Importer
 
     inputted_location.each do |location|
       next if inputted_location.include?(location)
+      @count_errors.succ
       put_log(I18n.t("cms.log_of_the_failed_location", location: location, row_num: row_num))
     end
   end
@@ -117,6 +118,7 @@ class Facility::Node::Importer
 
     inputted_service.each do |service|
       next if service_in_db.include?(service)
+      @count_errors.succ
       put_log(I18n.t("cms.log_of_the_failed_service", service: service, row_num: row_num))
     end
   end
@@ -127,6 +129,7 @@ class Facility::Node::Importer
 
     inputted_group.each do |group|
       next if group_in_db.include?(group)
+      @count_errors.succ
       put_log(I18n.t("cms.log_of_the_failed_group", group: group, row_num: row_num))
     end
   end
