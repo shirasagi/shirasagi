@@ -115,42 +115,42 @@ class Facility::Node::Importer
   end
 
   def put_log_of_category(item_name, row_num, row)
-    names = row[model.t(:categories)].to_s.split(/\n/).map(&:strip)
+    inputted_category = row[model.t(:categories)].to_s.split(/\n/).map(&:strip)
     category_in_db = node.st_category_ids.map { |category_id| Facility::Node::Category.find(category_id) }.map(&:name)
 
-    names.each do |category_in_csv|
-      next if category_in_db.include?(category_in_csv)
-      put_log(I18n.t("cms.log_of_the_failed_category", category: category_in_csv, category: category_in_csv, row_num: row_num))
+    inputted_category.each do |category|
+      next if category_in_db.include?(category)
+      put_log(I18n.t("cms.log_of_the_failed_category", category: category, row_num: row_num))
     end
   end
 
   def put_log_of_location(item_name, row_num, row)
-    names = row[model.t(:locations)].to_s.split(/\n/).map(&:strip)
+    inputted_location = row[model.t(:locations)].to_s.split(/\n/).map(&:strip)
     location_in_db = node.st_location_ids.map { |location_id| Facility::Node::Location.find(location_id) }.map(&:name)
 
-    names.each do |location_in_csv|
-      next if location_in_db.include?(location_in_csv)
-      put_log(I18n.t("cms.log_of_the_failed_location", location: location_in_csv, row_num: row_num))
+    inputted_location.each do |location|
+      next if inputted_location.include?(location)
+      put_log(I18n.t("cms.log_of_the_failed_location", location: location, row_num: row_num))
     end
   end
 
   def put_log_of_service(item_name, row_num, row)
-    names = row[model.t(:services)].to_s.split(/\n/).map(&:strip)
+    inputted_service = row[model.t(:services)].to_s.split(/\n/).map(&:strip)
     service_in_db = node.st_service_ids.map { |service_id| Facility::Node::Service.find(service_id) }.map(&:name)
 
-    names.each do |service_in_csv|
-      next if service_in_db.include?(service_in_csv)
-      put_log(I18n.t("cms.log_of_the_failed_service", service: service_in_csv, row_num: row_num))
+    inputted_service.each do |service|
+      next if service_in_db.include?(service)
+      put_log(I18n.t("cms.log_of_the_failed_service", service: service, row_num: row_num))
     end
   end
 
   def put_log_of_group(item_name, row_num, row)
-    names = row[model.t(:groups)].to_s.split(/\n/).map(&:strip)
+    inputted_group = row[model.t(:groups)].to_s.split(/\n/).map(&:strip)
     group_in_db = node.group_ids.map { |group_id| SS::Group.find(group_id) }.map(&:name)
 
-    names.each do |group_in_csv|
-      next if group_in_db.include?(group_in_csv)
-      put_log(I18n.t("cms.log_of_the_failed_group", group: group_in_csv, row_num: row_num))
+    inputted_group.each do |group|
+      next if group_in_db.include?(group)
+      put_log(I18n.t("cms.log_of_the_failed_group", group: group, row_num: row_num))
     end
   end
 
