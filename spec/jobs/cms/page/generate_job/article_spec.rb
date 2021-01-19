@@ -1,39 +1,73 @@
 require 'spec_helper'
 
 describe Cms::Page::GenerateJob, dbscope: :example do
-  let(:site)   { cms_site }
+  let(:site) { cms_site }
+  let(:user) { cms_user }
   let(:layout) { create_cms_layout }
-  let(:node)   { create :article_node_page, cur_site: cms_site, layout_id: layout.id }
-  let(:ss_file) { create :ss_file, site: site }
-  let!(:page)  { create :article_page, cur_site: cms_site, cur_node: node, layout_id: layout.id, file_ids: [ss_file.id] }
+  let(:node) { create :article_node_page, cur_site: cms_site, layout_id: layout.id }
+
+  let!(:page1) { create :article_page, cur_site: cms_site, cur_user: user, cur_node: node, state: 'public', layout_id: layout.id, file_ids: [ss_file1.id] }
+  let!(:page2) { create :article_page, cur_site: cms_site, cur_user: user, cur_node: node, state: 'public', layout_id: layout.id }
+  let!(:form) { create(:cms_form, cur_site: site, state: 'public', sub_type: 'static') }
+  let!(:column1) do
+    create(:cms_column_file_upload, cur_site: site, cur_form: form, order: 1, file_type: "image")
+  end
+  let!(:column2) do
+    create(:cms_column_free, cur_site: site, cur_form: form, order: 2)
+  end
+
+  let!(:ss_file1) { create :ss_file, site: site, user: user, state: 'public' }
+  let!(:ss_file2) { create :ss_file, site: site, user: user,state: 'public' }
+  let!(:ss_file3) { create :ss_file, site: site, user: user,state: 'public' }
+  let!(:ss_file4) { create :ss_file, site: site, user: user,state: 'public' }
 
   before do
+    node.st_form_ids = [ form.id ]
+    node.save!
+
+    page2.form = form
+    page2.column_values = [
+      column1.value_type.new(column: column1, file_id: ss_file2.id, file_label: ss_file2.humanized_name),
+      column2.value_type.new(column: column2, value: unique_id * 2, file_ids: [ ss_file3.id, ss_file4.id ])
+    ]
+    page2.save!
+
     Cms::Task.create!(site_id: site.id, node_id: nil, name: 'cms:generate_pages', state: 'ready')
     Cms::Task.create!(site_id: site.id, node_id: node.id, name: 'cms:generate_pages', state: 'ready')
   end
 
   describe "#perform without node" do
     before do
-      Fs.rm_rf page.path
-      page.files.each { |file| Fs.rm_rf file.public_path }
+      Fs.rm_rf node.path
+
+      Fs.rm_rf page1.path
+      Fs.rm_rf ss_file1.public_path
+
+      Fs.rm_rf page2.path
+      Fs.rm_rf ss_file2.public_path
+      Fs.rm_rf ss_file3.public_path
+      Fs.rm_rf ss_file4.public_path
 
       described_class.bind(site_id: site).perform_now
     end
 
     it do
-      expect(File.exist?(page.path)).to be_truthy
-      page.files.each do |file|
-        expect(File.exist?(file.public_path)).to be_truthy
-      end
+      expect(File.exist?(page1.path)).to be_truthy
+      expect(File.exist?(ss_file1.public_path)).to be_truthy
+
+      expect(File.exist?(page2.path)).to be_truthy
+      expect(File.exist?(ss_file2.public_path)).to be_truthy
+      expect(File.exist?(ss_file3.public_path)).to be_truthy
+      expect(File.exist?(ss_file4.public_path)).to be_truthy
 
       expect(Cms::Task.count).to eq 2
       Cms::Task.where(site_id: site.id, node_id: nil, name: 'cms:generate_pages').first.tap do |task|
         expect(task.state).to eq 'stop'
         expect(task.started).not_to be_nil
         expect(task.closed).not_to be_nil
-        expect(task.total_count).to eq 1
-        expect(task.current_count).to eq 1
-        expect(task.logs).to include(include(page.filename))
+        expect(task.total_count).to eq 2
+        expect(task.current_count).to eq 2
+        expect(task.logs).to include(include(page1.filename))
         expect(task.node_id).to be_nil
         # logs are saved in a file
         expect(::File.exists?(task.log_file_path)).to be_truthy
@@ -54,17 +88,27 @@ describe Cms::Page::GenerateJob, dbscope: :example do
 
   describe "#perform with node" do
     before do
-      Fs.rm_rf page.path
-      page.files.each { |file| Fs.rm_rf file.public_path }
+      Fs.rm_rf node.path
+
+      Fs.rm_rf page1.path
+      Fs.rm_rf ss_file1.public_path
+
+      Fs.rm_rf page2.path
+      Fs.rm_rf ss_file2.public_path
+      Fs.rm_rf ss_file3.public_path
+      Fs.rm_rf ss_file4.public_path
 
       described_class.bind(site_id: site, node_id: node).perform_now
     end
 
     it do
-      expect(File.exist?(page.path)).to be_truthy
-      page.files.each do |file|
-        expect(File.exist?(file.public_path)).to be_truthy
-      end
+      expect(File.exist?(page1.path)).to be_truthy
+      expect(File.exist?(ss_file1.public_path)).to be_truthy
+
+      expect(File.exist?(page2.path)).to be_truthy
+      expect(File.exist?(ss_file2.public_path)).to be_truthy
+      expect(File.exist?(ss_file3.public_path)).to be_truthy
+      expect(File.exist?(ss_file4.public_path)).to be_truthy
 
       expect(Cms::Task.count).to eq 2
       Cms::Task.where(site_id: site.id, node_id: nil, name: 'cms:generate_pages').first.tap do |task|
@@ -74,9 +118,9 @@ describe Cms::Page::GenerateJob, dbscope: :example do
         expect(task.state).to eq 'stop'
         expect(task.started).not_to be_nil
         expect(task.closed).not_to be_nil
-        expect(task.total_count).to eq 1
-        expect(task.current_count).to eq 1
-        expect(task.logs).to include(include(page.filename))
+        expect(task.total_count).to eq 2
+        expect(task.current_count).to eq 2
+        expect(task.logs).to include(include(page1.filename))
         expect(task.node_id).to eq node.id
       end
 
