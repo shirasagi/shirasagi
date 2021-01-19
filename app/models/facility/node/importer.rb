@@ -75,42 +75,20 @@ class Facility::Node::Importer
   end
 
   def put_log_of_insert(item, row_num, row)
-    put_log_of_category(item.name, row_num, row)
-    put_log_of_location(item.name, row_num, row)
-    put_log_of_service(item.name, row_num, row)
-    put_log_of_group(item.name, row_num, row)
-
     if item.invalid?
       put_log(I18n.t("cms.log_of_the_failed_import", row_num: row_num))
     elsif item.new_record?
       put_log("add #{row_num}#{I18n.t("cms.row_num")}:  #{item.name}")
     end
 
+    put_log_of_category(item.name, row_num, row)
+    put_log_of_location(item.name, row_num, row)
+    put_log_of_service(item.name, row_num, row)
+    put_log_of_group(item.name, row_num, row)
+
     return if item.invalid? || item.new_record?
 
-    item.changes.each do |change_data|
-      changed_field = change_data[0]
-      before_changing_data = change_data[1][0]
-      after_changing_data = change_data[1][1]
-      next if changed_field == "additional_info" && before_changing_data.nil? && after_changing_data == []
-
-      field_name = "update #{row_num}#{I18n.t("cms.row_num")}:  #{I18n.t("mongoid.attributes.facility/node/page.#{changed_field}")}："
-
-      if item.fields[change_data[0]].options[:metadata].nil?
-        klass = item.fields[change_data[0]].options[:klass]
-      else
-        klass = item.fields[change_data[0]].options[:metadata][:elem_class].constantize
-      end
-
-      case klass
-      when model
-        put_log("#{field_name}#{before_changing_data} → #{after_changing_data}")
-      else
-        before_changing_metadata = klass.in(id: before_changing_data).pluck(:name)
-        after_changing_metadata = klass.in(id: after_changing_data).pluck(:name)
-        put_log("#{field_name}#{before_changing_metadata} → #{after_changing_metadata}")
-      end
-    end
+    put_log_of_update(item, row_num)
   end
 
   def put_log_of_category(item_name, row_num, row)
@@ -150,6 +128,32 @@ class Facility::Node::Importer
     inputted_group.each do |group|
       next if group_in_db.include?(group)
       put_log(I18n.t("cms.log_of_the_failed_group", group: group, row_num: row_num))
+    end
+  end
+
+  def put_log_of_update(item, row_num)
+    item.changes.each do |change_data|
+      changed_field = change_data[0]
+      before_changing_data = change_data[1][0]
+      after_changing_data = change_data[1][1]
+      next if changed_field == "additional_info" && before_changing_data.nil? && after_changing_data == []
+
+      field_name = "update #{row_num}#{I18n.t("cms.row_num")}:  #{I18n.t("mongoid.attributes.facility/node/page.#{changed_field}")}："
+
+      if item.fields[change_data[0]].options[:metadata].nil?
+        klass = item.fields[change_data[0]].options[:klass]
+      else
+        klass = item.fields[change_data[0]].options[:metadata][:elem_class].constantize
+      end
+
+      case klass
+      when model
+        put_log("#{field_name}#{before_changing_data} → #{after_changing_data}")
+      else
+        before_changing_metadata = klass.in(id: before_changing_data).pluck(:name)
+        after_changing_metadata = klass.in(id: after_changing_data).pluck(:name)
+        put_log("#{field_name}#{before_changing_metadata} → #{after_changing_metadata}")
+      end
     end
   end
 
