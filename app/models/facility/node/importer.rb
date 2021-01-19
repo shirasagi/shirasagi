@@ -80,8 +80,13 @@ class Facility::Node::Importer
     put_log_of_service(item.name, row_num, row)
     put_log_of_group(item.name, row_num, row)
 
-    return put_log(I18n.t("cms.log_of_the_failed_import", row_num: row_num)) if item.invalid?
-    return put_log("add #{row_num}#{I18n.t("cms.row_num")}:  #{item.name}") if item.new_record?
+    if item.invalid?
+      put_log(I18n.t("cms.log_of_the_failed_import", row_num: row_num))
+    elsif item.new_record?
+      put_log("add #{row_num}#{I18n.t("cms.row_num")}:  #{item.name}")
+    end
+
+    return if item.invalid? || item.new_record?
 
     item.changes.each do |change_data|
       changed_field = change_data[0]
@@ -91,25 +96,19 @@ class Facility::Node::Importer
 
       field_name = "update #{row_num}#{I18n.t("cms.row_num")}:  #{I18n.t("mongoid.attributes.facility/node/page.#{changed_field}")}："
 
-      case changed_field
-      when "category_ids"
-        before_changing_category = before_changing_data.map {|id| Facility::Node::Category.find(id).name }
-        after_changing_category = after_changing_data.map {|id| Facility::Node::Category.find(id).name }
-        put_log("#{field_name}#{before_changing_category} → #{after_changing_category}")
-      when "location_ids"
-        before_changing_location = before_changing_data.map {|id| Facility::Node::Location.find(id).name }
-        after_changing_location = after_changing_data.map {|id| Facility::Node::Location.find(id).name }
-        put_log("#{field_name}#{before_changing_location} → #{after_changing_location}")
-      when "group_ids"
-        before_changing_group = before_changing_data.map {|id| SS::Group.find(id).name }
-        after_changing_group = after_changing_data.map {|id| SS::Group.find(id).name }
-        put_log("#{field_name}#{before_changing_group} → #{after_changing_group}")
-      when "service_ids"
-        before_changing_servise = before_changing_data.map {|id| Facility::Node::Service.find(id).name }
-        after_changing_servise = after_changing_data.map {|id| Facility::Node::Service.find(id).name }
-        put_log("#{field_name}#{before_changing_servise} → #{after_changing_servise}")
+      if item.fields[change_data[0]].options[:metadata].nil?
+        klass = item.fields[change_data[0]].options[:klass]
       else
+        klass = item.fields[change_data[0]].options[:metadata][:elem_class].constantize
+      end
+
+      case klass
+      when model
         put_log("#{field_name}#{before_changing_data} → #{after_changing_data}")
+      else
+        before_changing_metadata = klass.in(id: before_changing_data).pluck(:name)
+        after_changing_metadata = klass.in(id: after_changing_data).pluck(:name)
+        put_log("#{field_name}#{before_changing_metadata} → #{after_changing_metadata}")
       end
     end
   end
