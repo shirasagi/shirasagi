@@ -6,8 +6,25 @@ describe Cms::Page::GenerateJob, dbscope: :example do
   let(:layout) { create_cms_layout }
   let(:node) { create :article_node_page, cur_site: cms_site, layout_id: layout.id }
 
-  let!(:page1) { create :article_page, cur_site: cms_site, cur_user: user, cur_node: node, state: 'public', layout_id: layout.id, file_ids: [ss_file1.id] }
-  let!(:page2) { create :article_page, cur_site: cms_site, cur_user: user, cur_node: node, state: 'public', layout_id: layout.id }
+  let!(:page1) do
+    create(:article_page,
+      cur_site: cms_site,
+      cur_user: user,
+      cur_node: node,
+      state: 'public',
+      layout_id: layout.id,
+      file_ids: [ss_file1.id]
+    )
+  end
+  let!(:page2) do
+    create(:article_page,
+      cur_site: cms_site,
+      cur_user: user,
+      cur_node: node,
+      state: 'public',
+      layout_id: layout.id
+    )
+  end
   let!(:form) { create(:cms_form, cur_site: site, state: 'public', sub_type: 'static') }
   let!(:column1) do
     create(:cms_column_file_upload, cur_site: site, cur_form: form, order: 1, file_type: "image")
@@ -17,9 +34,9 @@ describe Cms::Page::GenerateJob, dbscope: :example do
   end
 
   let!(:ss_file1) { create :ss_file, site: site, user: user, state: 'public' }
-  let!(:ss_file2) { create :ss_file, site: site, user: user,state: 'public' }
-  let!(:ss_file3) { create :ss_file, site: site, user: user,state: 'public' }
-  let!(:ss_file4) { create :ss_file, site: site, user: user,state: 'public' }
+  let!(:ss_file2) { create :ss_file, site: site, user: user, state: 'public' }
+  let!(:ss_file3) { create :ss_file, site: site, user: user, state: 'public' }
+  let!(:ss_file4) { create :ss_file, site: site, user: user, state: 'public' }
 
   before do
     node.st_form_ids = [ form.id ]
