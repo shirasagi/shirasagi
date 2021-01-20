@@ -41,7 +41,6 @@ class Facility::Node::Importer
       begin
         update_row(row, row_num)
       rescue => e
-        @count_errors.succ
         put_log("error #{row_num}#{I18n.t("cms.row_num")}: #{e}")
       end
     end
@@ -57,6 +56,7 @@ class Facility::Node::Importer
     if item.save
       name = item.name
     else
+      @count_errors += 1
       raise item.errors.full_messages.join(", ")
     end
 
@@ -74,7 +74,7 @@ class Facility::Node::Importer
 
   def put_log_of_insert(item, row_num, row)
     if item.invalid?
-      @count_errors.succ
+      @count_errors += 1
       put_log(I18n.t("cms.log_of_the_failed_import", row_num: row_num))
     elsif item.new_record?
       put_log("add #{row_num}#{I18n.t("cms.row_num")}:  #{item.name}")
@@ -92,44 +92,44 @@ class Facility::Node::Importer
 
   def put_log_of_category(item_name, row_num, row)
     inputted_category = row[model.t(:categories)].to_s.split(/\n/).map(&:strip)
-    category_in_db = node.st_category_ids.map { |category_id| Facility::Node::Category.find(category_id) }.map(&:name)
+    category_in_db = node.st_category_ids.map { |category_id| Facility::Node::Category.in(id: category_id).pluck(:name) }.flatten
 
     inputted_category.each do |category|
       next if category_in_db.include?(category)
-      @count_errors.succ
+      @count_errors += 1
       put_log(I18n.t("cms.log_of_the_failed_category", category: category, row_num: row_num))
     end
   end
 
   def put_log_of_location(item_name, row_num, row)
     inputted_location = row[model.t(:locations)].to_s.split(/\n/).map(&:strip)
-    location_in_db = node.st_location_ids.map { |location_id| Facility::Node::Location.find(location_id) }.map(&:name)
+    location_in_db = node.st_location_ids.map { |location_id| Facility::Node::Location.in(id: location_id).pluck(:name) }.flatten
 
     inputted_location.each do |location|
       next if inputted_location.include?(location)
-      @count_errors.succ
+      @count_errors += 1
       put_log(I18n.t("cms.log_of_the_failed_location", location: location, row_num: row_num))
     end
   end
 
   def put_log_of_service(item_name, row_num, row)
     inputted_service = row[model.t(:services)].to_s.split(/\n/).map(&:strip)
-    service_in_db = node.st_service_ids.map { |service_id| Facility::Node::Service.find(service_id) }.map(&:name)
+    service_in_db = node.st_service_ids.map { |service_id| Facility::Node::Service.in(id: service_id).pluck(:name) }.flatten
 
     inputted_service.each do |service|
       next if service_in_db.include?(service)
-      @count_errors.succ
+      @count_errors += 1
       put_log(I18n.t("cms.log_of_the_failed_service", service: service, row_num: row_num))
     end
   end
 
   def put_log_of_group(item_name, row_num, row)
     inputted_group = row[model.t(:groups)].to_s.split(/\n/).map(&:strip)
-    group_in_db = node.group_ids.map { |group_id| SS::Group.find(group_id) }.map(&:name)
+    group_in_db = node.group_ids.map { |group_id| SS::Group.in(id: group_id).pluck(:name) }.flatten
 
     inputted_group.each do |group|
       next if group_in_db.include?(group)
-      @count_errors.succ
+      @count_errors += 1
       put_log(I18n.t("cms.log_of_the_failed_group", group: group, row_num: row_num))
     end
   end
