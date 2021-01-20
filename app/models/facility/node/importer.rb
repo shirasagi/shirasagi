@@ -143,10 +143,10 @@ class Facility::Node::Importer
 
       field_name = "update #{row_num}#{I18n.t("cms.row_num")}:  #{I18n.t("mongoid.attributes.facility/node/page.#{changed_field}")}："
 
-      if item.fields[change_data[0]].options[:metadata].nil?
-        klass = item.fields[change_data[0]].options[:klass]
+      if item.fields[changed_field].options[:metadata].nil?
+        klass = item.fields[changed_field].options[:klass]
       else
-        klass = item.fields[change_data[0]].options[:metadata][:elem_class].constantize
+        klass = item.fields[changed_field].options[:metadata][:elem_class].constantize
       end
 
       return put_log("#{field_name}#{before_changing_data} → #{after_changing_data}") if klass == model
