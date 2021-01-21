@@ -1,5 +1,5 @@
 # Default environment
-RAILS_ENV: production
+RAILS_ENV: <%= ENV["RAILS_ENV"] || ENV["SS_ENV"] || "production" %>
 
 # enable csrf protect
 protect_csrf: true
