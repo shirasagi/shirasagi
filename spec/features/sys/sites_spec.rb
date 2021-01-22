@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe "sys_users", type: :feature, dbscope: :example do
+describe "sys_sites", type: :feature, dbscope: :example do
   describe "without auth" do
     it do
       login_ss_user
@@ -14,6 +14,7 @@ describe "sys_users", type: :feature, dbscope: :example do
     let(:name2) { "modify-#{unique_id}" }
     let(:host) { unique_id }
     let(:domain) { unique_domain }
+
     before { login_sys_user }
 
     it do
@@ -60,6 +61,67 @@ describe "sys_users", type: :feature, dbscope: :example do
       expect(page).to have_css('#notice', text: I18n.t("ss.notice.deleted"))
 
       expect(SS::Site.all.count).to eq 0
+    end
+  end
+
+  describe "search" do
+    let!(:site1) { create(:sys_site, name: unique_id, host: unique_id, domains: unique_domain) }
+    let!(:site2) { create(:sys_site, name: unique_id, host: unique_id, domains: unique_domain) }
+
+    before { login_sys_user }
+
+    context "by name" do
+      it do
+        visit sys_sites_path
+        expect(page).to have_css('.list-item', count: 2)
+        expect(page).to have_css('.list-item', text: site1.name)
+        expect(page).to have_css('.list-item', text: site2.name)
+
+        within "form.index-search" do
+          fill_in "s[keyword]", with: site1.name
+          click_on I18n.t("ss.buttons.search")
+        end
+
+        expect(page).to have_css('.list-item', count: 1)
+        expect(page).to have_css('.list-item', text: site1.name)
+        expect(page).to have_no_css('.list-item', text: site2.name)
+      end
+    end
+
+    context "by host" do
+      it do
+        visit sys_sites_path
+        expect(page).to have_css('.list-item', count: 2)
+        expect(page).to have_css('.list-item', text: site1.name)
+        expect(page).to have_css('.list-item', text: site2.name)
+
+        within "form.index-search" do
+          fill_in "s[keyword]", with: site2.host
+          click_on I18n.t("ss.buttons.search")
+        end
+
+        expect(page).to have_css('.list-item', count: 1)
+        expect(page).to have_no_css('.list-item', text: site1.name)
+        expect(page).to have_css('.list-item', text: site2.name)
+      end
+    end
+
+    context "by domains" do
+      it do
+        visit sys_sites_path
+        expect(page).to have_css('.list-item', count: 2)
+        expect(page).to have_css('.list-item', text: site1.name)
+        expect(page).to have_css('.list-item', text: site2.name)
+
+        within "form.index-search" do
+          fill_in "s[keyword]", with: site1.domains.first
+          click_on I18n.t("ss.buttons.search")
+        end
+
+        expect(page).to have_css('.list-item', count: 1)
+        expect(page).to have_css('.list-item', text: site1.name)
+        expect(page).to have_no_css('.list-item', text: site2.name)
+      end
     end
   end
 end
