@@ -6,7 +6,10 @@ class Jmaxml::Action::PublishPage < Jmaxml::Action::Base
     renderer = context.type.renderer
     page = renderer.create(page, context, self)
     page.cur_site = context.site
-    page.cur_node = publish_to
+    publish_to.try do |node|
+      page.cur_node = node
+      page.layout_id = node.page_layout_id || node.layout_id
+    end
     page.state = publish_state
     page.category_ids = category_ids
     page.save!
