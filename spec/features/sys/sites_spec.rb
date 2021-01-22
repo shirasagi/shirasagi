@@ -124,4 +124,27 @@ describe "sys_sites", type: :feature, dbscope: :example do
       end
     end
   end
+
+  describe "destroy all", js: true do
+    let!(:site1) { create(:sys_site, name: unique_id, host: unique_id, domains: unique_domain) }
+    let!(:site2) { create(:sys_site, name: unique_id, host: unique_id, domains: unique_domain) }
+
+    before { login_sys_user }
+
+    it do
+      expect(SS::Site.all.count).to eq 2
+
+      visit sys_sites_path
+
+      within ".list-head" do
+        first("[type='checkbox']").click
+        page.accept_confirm do
+          click_on I18n.t("ss.links.delete")
+        end
+      end
+      expect(page).to have_css('#notice', text: I18n.t("ss.notice.deleted"))
+
+      expect(SS::Site.all.count).to eq 0
+    end
+  end
 end
