@@ -40,6 +40,7 @@ module Rss::Node
 
     default_scope ->{ where(route: "rss/weather_xml") }
     self.weather_xml = true
+    self.default_rss_max_docs = 100
 
     after_save :purge_pages, if: ->{ @db_changes && @db_changes["rss_max_docs"] }
 
