@@ -18,23 +18,26 @@ module Fs::File
       ::FileTest.directory? path
     end
 
-    def read(path)
-      ::File.read path
-    end
-
-    def binread(path)
-      ::File.binread path
-    end
-
-    def write(path, data)
-      ::FileUtils.mkdir_p ::File.dirname(path)
-      ::File.write path, data
-    end
-
-    def binwrite(path, data)
-      ::FileUtils.mkdir_p ::File.dirname(path)
-      ::File.binwrite path, data
-    end
+    # to stop reading entire file, these methods was removed
+    # use download, upload or to_io
+    #
+    # def read(path)
+    #   ::File.read path
+    # end
+    #
+    # def binread(path)
+    #   ::File.binread path
+    # end
+    #
+    # def write(path, data)
+    #   ::FileUtils.mkdir_p ::File.dirname(path)
+    #   ::File.write path, data
+    # end
+    #
+    # def binwrite(path, data)
+    #   ::FileUtils.mkdir_p ::File.dirname(path)
+    #   ::File.binwrite path, data
+    # end
 
     def stat(path)
       ::File.stat(path)

@@ -46,25 +46,28 @@ module Fs::GridFs
       Mongoid::GridFs.find(filename: /#{::Regexp.escape(path_filter(path))}/) != nil
     end
 
-    def read(path)
-      binread(path)
-    end
-
-    def binread(path)
-      obj = get(path)
-      raise FileNotFoundError if obj.nil?
-
-      obj.data
-    end
-
-    def write(path, data)
-      binwrite(path, data)
-    end
-
-    def binwrite(path, data)
-      io = data ? StringIO.new(data) : StringIO.new
-      upload(path, io)
-    end
+    # to stop reading entire file, these methods was removed
+    # use download, upload or to_io
+    #
+    # def read(path)
+    #   binread(path)
+    # end
+    #
+    # def binread(path)
+    #   obj = get(path)
+    #   raise FileNotFoundError if obj.nil?
+    #
+    #   obj.data
+    # end
+    #
+    # def write(path, data)
+    #   binwrite(path, data)
+    # end
+    #
+    # def binwrite(path, data)
+    #   io = data ? StringIO.new(data) : StringIO.new
+    #   upload(path, io)
+    # end
 
     def stat(path)
       obj = get(path)
@@ -240,7 +243,8 @@ module Fs::GridFs
     end
 
     def cp(src, dest)
-      binwrite(dest, binread(src))
+      # binwrite(dest, binread(src))
+      upload(dest, src)
     end
   end
 end
