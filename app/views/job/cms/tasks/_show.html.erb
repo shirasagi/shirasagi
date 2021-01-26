@@ -1,3 +1,5 @@
+<% limit = SS.config.job.head_logs || 1_000 %>
+
 <%= jquery do %>
   if ($(".state").html().match(/(ready|running)/)) {
     $(".reset-state").show();
@@ -61,7 +63,6 @@
 
   <dt><%= @model.t :logs %></dt>
   <dd>
-    <% limit = 1000 %>
     <%= t('job.log_notice', count: limit) %>
     <%= text_area_tag :logs, safe_join(@item.head_logs(limit), "\n"), readonly: true, style: "height: 400px" %>
     <% if ::File.exists?(@item.log_file_path) %>

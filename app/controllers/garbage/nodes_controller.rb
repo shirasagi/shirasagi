@@ -48,7 +48,7 @@ class Garbage::NodesController < ApplicationController
     end
 
     send_data csv.encode("SJIS", invalid: :replace, undef: :replace),
-      filename: "garbage_pages_#{Time.zone.now.strftime("%Y_%m%d_%H%M")}.csv"
+              filename: "garbage_pages_#{Time.zone.now.strftime("%Y_%m%d_%H%M")}.csv"
   end
 
   public
@@ -65,7 +65,7 @@ class Garbage::NodesController < ApplicationController
     if request.get?
       respond_to do |format|
         format.html { render }
-        format.json { render json: @task.to_json(methods: :head_logs) }
+        format.json { render file: "ss/tasks/index", content_type: json_content_type, locals: { item: @task } }
       end
       return
     end
@@ -98,5 +98,14 @@ class Garbage::NodesController < ApplicationController
     else
       redirect_to({ action: :import }, { notice: I18n.t("ss.notice.started_import") })
     end
+  end
+
+  def download_logs
+    raise "403" unless @model.allowed?(:import, @cur_user, site: @cur_site, node: @cur_node, owned: true)
+
+    set_task
+
+    send_file @task.log_file_path, type: 'text/plain', filename: "#{@task.id}.log",
+              disposition: :attachment, x_sendfile: true
   end
 end

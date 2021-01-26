@@ -78,6 +78,10 @@ class ApplicationController < ActionController::Base
     end
   end
 
+  def json_content_type
+    (browser.ie? && browser.version.to_i <= 9) ? "text/plain" : "application/json"
+  end
+
   private
 
   def request_host

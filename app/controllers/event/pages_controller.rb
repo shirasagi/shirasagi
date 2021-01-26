@@ -31,7 +31,9 @@ class Event::PagesController < ApplicationController
   public
 
   def download
-    csv = @model.site(@cur_site).node(@cur_node).allow(:read, @cur_user, site: @cur_site, node: @cur_node).to_csv.encode("SJIS", invalid: :replace, undef: :replace)
+    criteria = @model.site(@cur_site).node(@cur_node)
+    criteria = criteria.allow(:read, @cur_user, site: @cur_site, node: @cur_node)
+    csv = criteria.to_csv.encode("SJIS", invalid: :replace, undef: :replace)
     filename = @model.to_s.tableize.gsub(/\//, "_")
     send_data csv, filename: "#{filename}_#{Time.zone.now.to_i}.csv"
   end
@@ -46,7 +48,7 @@ class Event::PagesController < ApplicationController
     if request.get?
       respond_to do |format|
         format.html { render }
-        format.json { render json: @task.to_json(methods: :head_logs) }
+        format.json { render file: "ss/tasks/index", content_type: json_content_type, locals: { item: @task } }
       end
       return
     end
@@ -104,5 +106,14 @@ class Event::PagesController < ApplicationController
     job = Event::Ical::ImportJob.bind(site_id: @cur_site.id, node_id: @cur_node.id, user_id: @cur_user.id)
     job.perform_later
     redirect_to({ action: :index }, { notice: t("rss.messages.job_started") })
+  end
+
+  def download_logs
+    raise "403" unless @model.allowed?(:import, @cur_user, site: @cur_site, node: @cur_node, owned: true)
+
+    set_task
+
+    send_file @task.log_file_path, type: 'text/plain', filename: "#{@task.id}.log",
+              disposition: :attachment, x_sendfile: true
   end
 end
