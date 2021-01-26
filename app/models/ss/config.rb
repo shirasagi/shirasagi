@@ -31,7 +31,7 @@ module SS::Config
 
     def method_missing(name, *args, &block)
       return load_config(name, Rails.env) if @@config.key?(name)
-      super
+      super rescue nil
     end
 
     def respond_to?(name, *args)
