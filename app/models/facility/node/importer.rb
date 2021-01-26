@@ -106,7 +106,7 @@ class Facility::Node::Importer
     location_in_db = node.st_location_ids.map { |location_id| Facility::Node::Location.in(id: location_id).pluck(:name) }.flatten
 
     inputted_location.each do |location|
-      next if inputted_location.include?(location)
+      next if location_in_db.include?(location)
       @count_errors += 1
       put_log(I18n.t("cms.log_of_the_failed_location", location: location, row_num: row_num))
     end
