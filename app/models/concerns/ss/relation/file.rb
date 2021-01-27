@@ -22,6 +22,9 @@ module SS::Relation::File
       before_save if: ->{ send("in_#{name}").present? } do
         _save_relation(name, opts)
       end
+      before_save if: ->{ changes["#{name}_id"].present? } do
+        _replace_relation(name, opts)
+      end
       before_save if: ->{ send("rm_#{name}").to_s == "1" } do
         _remove_relation(name, opts)
       end
@@ -51,6 +54,9 @@ module SS::Relation::File
       end
       after_save if: ->{ send(name).present? } do
         _update_relation_owner_item(name, opts)
+      end
+      before_save if: ->{ changes["#{name}_id"].present? } do
+        _replace_relation(name, opts)
       end
       before_save if: ->{ send("rm_#{name}").to_s == "1" } do
         _remove_relation(name, opts)
@@ -114,6 +120,11 @@ module SS::Relation::File
     file = relation_file(name, opts)
     file.save
     send("#{name}=", file)
+  end
+
+  def _replace_relation(name, _opts)
+    file = SS::File.where(id: send("#{name}_id_was")).first
+    file.destroy if file
   end
 
   def _remove_relation(name, _opts)
