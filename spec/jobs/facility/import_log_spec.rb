@@ -24,22 +24,6 @@ describe Facility::ImportJob, dbscope: :example do
   let!(:group2) { create(:cms_group, name: "観光整備係") }
   let!(:group3) { create(:cms_group, name: "特産物係") }
 
-  let!(:facility_node_page) do 
-    model.create(
-      site_id: 1,
-      permission_level: 1,
-      group_ids: [3],
-      name: "シラサギランド",
-      filename: "facilities/item1",
-      category_ids: [177, 179],
-      service_ids: [182],
-      location_ids: [172, 173],
-      route: "facility/page",
-      postcode: "〒111-1234",
-      address: "徳島市シラサギ町",
-      tel: "0537-292-5977")
-  end
-
   let!(:node) do
     create(
       :facility_node_page,
@@ -63,18 +47,50 @@ describe Facility::ImportJob, dbscope: :example do
   let!(:in_file3) { Fs::UploadedFile.create_from_file(file_path3) }
   let!(:ss_file3) { create(:ss_file, site: site, in_file: in_file3) }
 
+  let!(:facility_for_updates1) do
+    model.create(
+      site_id: 1,
+      permission_level: 1,
+      group_ids: [3],
+      name: "シラサギランド",
+      filename: "facilities/item_update1",
+      layout_id: 12,
+      category_ids: [2, 3, 4],
+      service_ids: [10, 11, 12],
+      location_ids: [6, 7, 8],
+      route: "facility/page",
+      postcode: "〒111-1234",
+      address: "徳島市シラサギ町",
+      tel: "0537-292-5977")
+  end
+
+  let!(:facility_for_updates2) do
+    model.create(
+      site_id: 1,
+      permission_level: 1,
+      group_ids: [3],
+      name: "シラサギスタジオ",
+      filename: "facilities/item_update2",
+      layout_id: 12,
+      category_ids: [2, 3, 4],
+      service_ids: [10, 11, 12],
+      location_ids: [6, 7, 8],
+      route: "facility/page",
+      postcode: "〒222-4321",
+      address: "徳島市ヒクイドリ町",
+      tel: "0537-292-5977")
+  end
 
   describe ".perform_later" do
-    context "new record" do
+    context "create Facility::Node::Page" do
       before do
         perform_enqueued_jobs do
           described_class.bind(site_id: site, node_id: node).perform_later(ss_file1.id)
         end
       end
 
-      it "succeed to save all" do
-        puts facility_node_page11
-        expect(model.all.count).to eq 12
+      it do
+        expect(model.all.count).to eq 13
         Job::Log.first do |log|
           expect(log.logs).to_not include(/error/)
           expect(log.logs).to_not include(/update/)
@@ -83,23 +99,7 @@ describe Facility::ImportJob, dbscope: :example do
       end
     end
 
-    context "update data and metadata" do
-      before do
-        perform_enqueued_jobs do
-          described_class.bind(site_id: site, node_id: node).perform_later(ss_file3.id)
-        end
-      end
-
-      it do
-        puts "カテゴリーは？？  #{node.category_ids}"
-        Job::Log.first.tap do |log|
-          facility_node_page.reload
-          expect(log.logs).to include(/update/)
-        end
-      end
-    end
-
-    context "failed to save data and metadata" do
+    context "update Facility::Node::Page" do
       before do
         perform_enqueued_jobs do
           described_class.bind(site_id: site, node_id: node).perform_later(ss_file2.id)
@@ -107,16 +107,33 @@ describe Facility::ImportJob, dbscope: :example do
       end
 
       it do
-        expect(model.all.count).to eq 10
+        expect(model.all.count).to eq 3
         Job::Log.first.tap do |log|
-          expect(log.logs).to include(/error 2行目:  施設の種類『観光する』を登録できませんでした。/)
-          expect(log.logs).to include(/error 3行目のデータは登録できませんでした。入力内容をもう１度ご確認ください。/)
-          expect(log.logs).to include(/error 3行目: 施設名を入力してください。/)
-          expect(log.logs).to include(/error 5行目:  施設の地域『スズメ市』を登録できませんでした。/)
-          expect(log.logs).to include(/error 6行目:  施設の用途『充電スポット』を登録できませんでした。/)
-          expect(log.logs).to include(/error 8行目:  管理グループ『掃除係』を登録できませんでした。/)
-          expect(log.logs).to include(/error 10行目のデータは登録できませんでした。入力内容をもう１度ご確認ください。/)
-          expect(log.logs).to include(/error 10行目: フォルダー名は不正な値です。/)
+          expect(log.logs).to include(/update 2行目:  施設名：シラサギランド → シラサギ施設1/)
+          expect(log.logs).to include(/update 2行目:  施設の種類：\["食べる", "買う", "見る・遊ぶ"\] → \["買う"\]/)
+          expect(log.logs).to include(/update 2行目:  施設の地域：\["シラサギ市", "すだち市", "子育て町"\] → \["シラサギ市"\]/)
+          expect(log.logs).to include(/update 2行目:  施設の用途：\["駐車場有", "緊急避難所", "WIFIスポット"\] → \["駐車場有", "緊急避難所"\]/)
+        end
+      end
+    end
+
+    context "failed to save Facility::Node::Page" do
+      before do
+        perform_enqueued_jobs do
+          described_class.bind(site_id: site, node_id: node).perform_later(ss_file3.id)
+        end
+      end
+
+      it do
+        expect(model.all.count).to eq 11
+        Job::Log.first.tap do |log|
+          expect(log.logs).to include(/error 2行目:  施設の種類『走る』を登録できませんでした。/)
+          expect(log.logs).to include(/error 3行目:  管理グループ『掃除係』を登録できませんでした。/)
+          expect(log.logs).to include(/error 5行目のデータは登録できませんでした。入力内容をもう１度ご確認ください。/)
+          expect(log.logs).to include(/error 5行目: 施設名を入力してください。/)
+          expect(log.logs).to include(/error 7行目: フォルダー名は不正な値です。/)
+          expect(log.logs).to include(/error 11行目:  施設の地域『子規町』を登録できませんでした。/)
+          expect(log.logs).to include(/error 11行目:  施設の用途『充電スポット』を登録できませんでした。/)
         end
       end
     end
