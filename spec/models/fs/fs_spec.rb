@@ -91,26 +91,38 @@ describe Fs do
     end
   end
 
-  # '.binread' was removed and use '.download'
-  # describe '.binread' do
-  #   it do
-  #     # full path
-  #     expect(filesystem.binread("#{Rails.root}/spec/fixtures/ss/logo.png").hash).to eq data.hash
-  #     expect(grid_fs.binread("#{Rails.root}/spec/fixtures/ss/logo.png").hash).to eq data.hash
-  #     # not exists
-  #     expect { filesystem.binread("#{Rails.root}/spec/fixtures/#{unique_id}") }.to raise_error Errno::ENOENT
-  #     expect { grid_fs.binread("#{Rails.root}/spec/fixtures/#{unique_id}") }.to raise_error ::Fs::GridFs::FileNotFoundError
-  #   end
-  #
-  #   it do
-  #     # relative path
-  #     expect(filesystem.binread("spec/fixtures/ss/logo.png").hash).to eq data.hash
-  #     expect(grid_fs.binread("spec/fixtures/ss/logo.png").hash).to eq data.hash
-  #     # not exists
-  #     expect { filesystem.binread("spec/fixtures/#{unique_id}") }.to raise_error Errno::ENOENT
-  #     expect { grid_fs.binread("spec/fixtures/#{unique_id}") }.to raise_error ::Fs::GridFs::FileNotFoundError
-  #   end
-  # end
+  describe '.read' do
+    it do
+      expect(filesystem.read("#{Rails.root}/spec/fixtures/ss/logo.png").encoding).to eq Encoding.default_internal
+      expect(grid_fs.read("#{Rails.root}/spec/fixtures/ss/logo.png").encoding).to eq Encoding.default_internal
+
+      expect(filesystem.read("#{Rails.root}/spec/fixtures/ss/logo.png")).to \
+        eq grid_fs.read("#{Rails.root}/spec/fixtures/ss/logo.png")
+    end
+  end
+
+  describe '.binread' do
+    it do
+      # full path
+      expect(filesystem.binread("#{Rails.root}/spec/fixtures/ss/logo.png").encoding).to eq Encoding::ASCII_8BIT
+      expect(grid_fs.binread("#{Rails.root}/spec/fixtures/ss/logo.png").encoding).to eq Encoding::ASCII_8BIT
+      expect(filesystem.binread("#{Rails.root}/spec/fixtures/ss/logo.png")).to \
+        eq grid_fs.binread("#{Rails.root}/spec/fixtures/ss/logo.png")
+      # not exists
+      expect { filesystem.binread("#{Rails.root}/spec/fixtures/#{unique_id}") }.to raise_error Errno::ENOENT
+      expect { grid_fs.binread("#{Rails.root}/spec/fixtures/#{unique_id}") }.to raise_error ::Fs::GridFs::FileNotFoundError
+    end
+
+    it do
+      # relative path
+      expect(filesystem.binread("spec/fixtures/ss/logo.png").encoding).to eq Encoding::ASCII_8BIT
+      expect(grid_fs.binread("spec/fixtures/ss/logo.png").encoding).to eq Encoding::ASCII_8BIT
+      expect(filesystem.binread("spec/fixtures/ss/logo.png")).to eq grid_fs.binread("spec/fixtures/ss/logo.png")
+      # not exists
+      expect { filesystem.binread("spec/fixtures/#{unique_id}") }.to raise_error Errno::ENOENT
+      expect { grid_fs.binread("spec/fixtures/#{unique_id}") }.to raise_error ::Fs::GridFs::FileNotFoundError
+    end
+  end
 
   # '.binwrite' was removed and use '.upload'
   # describe '.binwrite' do

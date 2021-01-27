@@ -38,12 +38,9 @@ class Uploader::File
     Fs.rm_rf path
   end
 
-  # to stop reading entire file, method "#read" was removed
-  # use to_io or appropriate methods
-  #
-  # def read
-  #   @binary = Fs.binread path if !directory?
-  # end
+  def read
+    @binary = Fs.binread path if !directory?
+  end
 
   def size
     Fs.size path

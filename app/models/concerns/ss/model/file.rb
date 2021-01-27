@@ -203,12 +203,9 @@ module SS::Model::File
     @resizing = (size.class == String) ? size.split(",") : size
   end
 
-  # to stop reading entire file, method "#read" was removed
-  # use to_io or appropriate methods
-  #
-  # def read
-  #   Fs.exists?(path) ? Fs.binread(path) : nil
-  # end
+  def read
+    Fs.exists?(path) ? Fs.binread(path) : nil
+  end
 
   def to_io
     Fs.exists?(path) ? Fs.to_io(path) : nil
