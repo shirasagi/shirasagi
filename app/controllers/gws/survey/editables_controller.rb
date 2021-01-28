@@ -63,7 +63,7 @@ class Gws::Survey::EditablesController < ApplicationController
   end
 
   def set_search_params
-    @s = params[:s].presence || {}
+    @s = OpenStruct.new(params[:s])
     if @folder.present?
       @s[:folder_ids] = [ @folder.id ]
       @s[:folder_ids] += @folder.folders.for_post_editor(@cur_site, @cur_user).pluck(:id)

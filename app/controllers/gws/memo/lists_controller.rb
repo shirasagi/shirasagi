@@ -28,7 +28,7 @@ class Gws::Memo::ListsController < ApplicationController
   end
 
   def set_search_params
-    @s = params[:s] || {}
+    @s = OpenStruct.new(params[:s])
     @s[:site] = @cur_site
     if @category
       @s[:category_id] = @category.id

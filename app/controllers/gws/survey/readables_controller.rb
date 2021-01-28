@@ -41,7 +41,7 @@ class Gws::Survey::ReadablesController < ApplicationController
   end
 
   def set_search_params
-    @s = OpenStruct.new(params[:s].presence)
+    @s = OpenStruct.new(params[:s])
     @s[:site] = @cur_site
     @s[:user] = @cur_user
     if @folder.present?
