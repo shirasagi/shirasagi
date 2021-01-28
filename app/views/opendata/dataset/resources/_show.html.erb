@@ -8,7 +8,7 @@
     </dd>
   <% else %>
     <dt><%= @model.t :source_url %></dt>
-    <dd><%= link_to @item.source_url, @item.source_url, target: "_blank" %></dd>
+    <dd><%= link_to @item.source_url, @item.source_url, target: "_blank", rel: "noopener" %></dd>
   <% end %>
 
   <dt><%= @model.t :name %></dt>
@@ -24,7 +24,7 @@
   <dd><%= @item.order %></dd>
 
   <dt><%= @model.t :text %></dt>
-  <dd><%= auto_link br(@item.text), html: { target: "_blank" } %></dd>
+  <dd><%= auto_link br(@item.text), html: { target: "_blank", rel: "noopener" } %></dd>
 
   <% if @item.tsv %>
   <dt><%= @model.t :tsv_id %></dt>

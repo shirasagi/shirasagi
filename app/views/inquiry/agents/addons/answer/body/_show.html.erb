@@ -24,7 +24,7 @@
 
   <% if @item.source_url.present? %>
     <dt><%= @model.t :source_url %></dt>
-    <dd><%= @item.source_content && @item.source_content.public? ? link_to(@item.source_content.full_url, @item.source_content.full_url, target: "_blank") : @item.source_url %></dd>
+    <dd><%= @item.source_content && @item.source_content.public? ? link_to(@item.source_content.full_url, @item.source_content.full_url, target: "_blank", rel: "noopener") : @item.source_url %></dd>
   <% end %>
 
   <% if @item.source_name.present? %>

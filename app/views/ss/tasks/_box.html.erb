@@ -52,7 +52,7 @@
         end
       %>
       <% if download_path %>
-        <%= link_to(t('job.download_log'), download_path, { class: "btn task-log-download-btn hide", target: "_blank" }) %>
+        <%= link_to(t('job.download_log'), download_path, { class: "btn task-log-download-btn hide", target: "_blank", rel: "noopener" }) %>
       <% end %>
     <% end %>
 

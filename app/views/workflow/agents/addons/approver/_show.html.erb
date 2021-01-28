@@ -177,7 +177,7 @@
                 <% if @ss_mode == :gws && workflow_approver[:file_ids].present? %>
                   <div class="approver-files">
                     <% SS::File.in(id: workflow_approver[:file_ids]).each do |file| %>
-                      <%= link_to file.url, { class: "approver-file", target: "_blank" } do %>
+                      <%= link_to file.url, { class: "approver-file", target: "_blank", rel: "noopener" } do %>
                         <% if file.image? %>
                           <%= image_tag(file.thumb_url, class: "thumb") %>
                         <% else %>
@@ -232,7 +232,7 @@
                     <% if @ss_mode == :gws && workflow_circulation[:file_ids].present? %>
                       <div class="approver-files">
                         <% SS::File.in(id: workflow_circulation[:file_ids]).each do |file| %>
-                          <%= link_to file.url, { class: "approver-file", target: "_blank" } do %>
+                          <%= link_to file.url, { class: "approver-file", target: "_blank", rel: "noopener" } do %>
                             <% if file.image? %>
                               <%= image_tag(file.thumb_url, class: "thumb") %>
                             <% else %>

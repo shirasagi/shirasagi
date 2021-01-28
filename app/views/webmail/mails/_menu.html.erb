@@ -54,8 +54,8 @@
         <li><%= link_to t('webmail.links.unset_seen'), { action: :unset_seen }, { class: 'update-mail unset-seen' } %></li>
         <li><%= link_to t('webmail.links.set_star'), { action: :set_star }, { class: 'update-mail set-star' } %></li>
         <li><%= link_to t('webmail.links.unset_star'), { action: :unset_star }, { class: 'update-mail unset-star' } %></li>
-        <li><%= link_to t('webmail.links.header_view'), { action: :header_view }, target: '_blank' %></li>
-        <li><%= link_to t('webmail.links.source_view'), { action: :source_view }, target: '_blank' %></li>
+        <li><%= link_to t('webmail.links.header_view'), { action: :header_view }, target: '_blank', rel: "noopener" %></li>
+        <li><%= link_to t('webmail.links.source_view'), { action: :source_view }, target: '_blank', rel: "noopener" %></li>
         <li><%= link_to t("ss.download"), { action: :download } %></li>
       </ul>
     </div>

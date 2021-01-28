@@ -5,7 +5,7 @@
     <dt><%= @model.t :twitter_auto_post %></dt>
     <dd><%= @item.label :twitter_auto_post %></dd>
     <% @item.twitter_posted.to_a.each do |posted| %>
-    <dd><a href="<%= @item.twitter_url(posted[:twitter_post_id], posted[:twitter_user_id]) %>" target="_blank"><%= @item.twitter_url(posted[:twitter_post_id], posted[:twitter_user_id]) %></a></dd>
+    <dd><a href="<%= @item.twitter_url(posted[:twitter_post_id], posted[:twitter_user_id]) %>" target="_blank" rel="noopener"><%= @item.twitter_url(posted[:twitter_post_id], posted[:twitter_user_id]) %></a></dd>
     <% end %>
     <% if @item.twitter_post_error.present? %>
     <dt class="depth-2"><%= @model.t :twitter_post_error %></dt>

@@ -18,8 +18,8 @@
   <dd><%= @item.target_regions.map { |r| r.name }.join(', ') %></dd>
 
   <dt><%= @model.t :my_anpi_post %></dt>
-  <dd><%= tryb { link_to @item.my_anpi_post.name, @item.my_anpi_post.full_url, target: :_blank } %></dd>
+  <dd><%= tryb { link_to @item.my_anpi_post.name, @item.my_anpi_post.full_url, target: :_blank, rel: "noopener" } %></dd>
 
   <dt><%= @model.t :anpi_mail %></dt>
-  <dd><%= tryb { link_to @item.anpi_mail.name, @item.anpi_mail.full_url, target: :_blank } %></dd>
+  <dd><%= tryb { link_to @item.anpi_mail.name, @item.anpi_mail.full_url, target: :_blank, rel: "noopener" } %></dd>
 </dl>

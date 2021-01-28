@@ -13,7 +13,7 @@
     <span class="downloaded-by"><%= item.label(:downloaded_by).presence || t("opendata.downloaded_by_options.single") %></span>
   <% end %>
   <span class="dataset"><%= item.dataset_name %></span>
-  <span class="url"><%= link_to item.full_url, item.full_url, target: "_blank" %></span>
+  <span class="url"><%= link_to item.full_url, item.full_url, target: "_blank", rel: "noopener" %></span>
   <span class="remote-addr"><%= item.remote_addr %></span>
   <span class="user-agent" title="<%= item.user_agent %>">
     <%= render_user_agent(item.user_agent, accept_language: request.accept_language) %>
