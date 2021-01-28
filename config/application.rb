@@ -52,6 +52,10 @@ module SS
 
     config.middleware.use Mongoid::QueryCache::Middleware
 
+    # nginx with our default settings always drops etag from upstream.
+    # so, we're no needs to calculate etag on rack's middleware.
+    config.middleware.delete Rack::ETag
+
     cattr_accessor(:private_root, instance_accessor: false) { "#{Rails.root}/private" }
 
     def call(*args, &block)
