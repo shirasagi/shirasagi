@@ -9,10 +9,6 @@ describe "translate/public_filter", type: :feature, dbscope: :example, js: true,
   let!(:lang_zh_CN) { create :translate_lang_zh_cn }
   let!(:lang_zh_TW) { create :translate_lang_zh_tw }
 
-  let!(:part) { create :translate_part_tool, cur_site: site, filename: "tool" }
-  let!(:layout) { create_cms_layout part }
-  let!(:node) { create :article_node_page, cur_site: site, layout_id: layout.id }
-
   let(:text1) { unique_id }
   let(:text2) { unique_id }
   let(:text3) { unique_id }
@@ -25,7 +21,10 @@ describe "translate/public_filter", type: :feature, dbscope: :example, js: true,
     html << "<p>#{text3}<br>#{text4}</p>"
     html.join("\n")
   end
-  let!(:item) { create :article_page, cur_site: site, cur_node: node, layout_id: layout.id, html: page_html }
+
+  let(:layout) { create_cms_layout part }
+  let(:node) { create :article_node_page, cur_site: site, layout_id: layout.id }
+  let(:item) { create :article_page, cur_site: site, cur_node: node, layout_id: layout.id, html: page_html }
 
   context "with google" do
     before do
@@ -55,30 +54,65 @@ describe "translate/public_filter", type: :feature, dbscope: :example, js: true,
       WebMock.allow_net_connect! if @net_connect_allowed
     end
 
-    it do
-      visit item.full_url
-      expect(page).to have_css("#translate-tool-1", text: I18n.t("translate.views.select_lang"))
-      expect(page).to have_css("#translate-tool-1", text: lang_en.name)
-      expect(page).to have_css("#translate-tool-1", text: lang_ko.name)
-      expect(page).to have_css("#translate-tool-1", text: lang_zh_CN.name)
-      expect(page).to have_css("#translate-tool-1", text: lang_zh_TW.name)
+    context "ajax enabled" do
+      let!(:part) { create :translate_part_tool, cur_site: site, filename: "tool", ajax_view: "enabled" }
 
-      select lang_en.name, from: "translate-tool-1"
-      expect(page).to have_css("#translate-tool-1", text: I18n.t("translate.views.show_original"))
-      expect(page).to have_css("article.body", text: "[en:#{text1}]")
-      expect(page).to have_css("article.body", text: "[en:#{text2}]")
-      expect(page).to have_css("article.body", text: "[en:#{text3}]")
-      expect(page).to have_css("article.body", text: "[en:#{text4}]")
+      it do
+        visit item.full_url
+        expect(page).to have_css("#translate-tool-1", text: I18n.t("translate.views.select_lang"))
+        expect(page).to have_css("#translate-tool-1", text: lang_en.name)
+        expect(page).to have_css("#translate-tool-1", text: lang_ko.name)
+        expect(page).to have_css("#translate-tool-1", text: lang_zh_CN.name)
+        expect(page).to have_css("#translate-tool-1", text: lang_zh_TW.name)
 
-      select lang_ko.name, from: "translate-tool-1"
-      expect(page).to have_css("#translate-tool-1", text: I18n.t("translate.views.show_original"))
-      expect(page).to have_css("article.body", text: "[ko:#{text1}]")
-      expect(page).to have_css("article.body", text: "[ko:#{text2}]")
-      expect(page).to have_css("article.body", text: "[ko:#{text3}]")
-      expect(page).to have_css("article.body", text: "[ko:#{text4}]")
+        select lang_en.name, from: "translate-tool-1"
+        expect(page).to have_css("#translate-tool-1", text: I18n.t("translate.views.show_original"))
+        expect(page).to have_css("article.body", text: "[en:#{text1}]")
+        expect(page).to have_css("article.body", text: "[en:#{text2}]")
+        expect(page).to have_css("article.body", text: "[en:#{text3}]")
+        expect(page).to have_css("article.body", text: "[en:#{text4}]")
 
-      first('#translate-tool-1 option').select_option
-      expect(page).to have_css("#translate-tool-1", text: I18n.t("translate.views.select_lang"))
+        select lang_ko.name, from: "translate-tool-1"
+        expect(page).to have_css("#translate-tool-1", text: I18n.t("translate.views.show_original"))
+        expect(page).to have_css("article.body", text: "[ko:#{text1}]")
+        expect(page).to have_css("article.body", text: "[ko:#{text2}]")
+        expect(page).to have_css("article.body", text: "[ko:#{text3}]")
+        expect(page).to have_css("article.body", text: "[ko:#{text4}]")
+
+        first('#translate-tool-1 option').select_option
+        expect(page).to have_css("#translate-tool-1", text: I18n.t("translate.views.select_lang"))
+      end
+    end
+
+    context "ajax disabled" do
+      let!(:part) { create :translate_part_tool, cur_site: site, filename: "tool", ajax_view: "disabled" }
+
+      it do
+        id_jp = 'translate-tool-1'
+        id_en = 'translate-tool-en-1'
+        visit item.full_url
+
+        expect(find("\##{id_jp}")).not_to eq nil
+        expect(find("\##{id_en}")).not_to eq nil
+        id = find("\##{id_jp}").visible? ? id_jp : id_en
+
+        select lang_en.name, from: id
+        expect(page).to have_css("\##{id}", text: I18n.t("translate.views.show_original"))
+        expect(page).to have_css("article.body", text: "[en:#{text1}]")
+        expect(page).to have_css("article.body", text: "[en:#{text2}]")
+        expect(page).to have_css("article.body", text: "[en:#{text3}]")
+        expect(page).to have_css("article.body", text: "[en:#{text4}]")
+
+        select lang_ko.name, from: id
+        expect(page).to have_css("\##{id}", text: I18n.t("translate.views.show_original"))
+        expect(page).to have_css("article.body", text: "[ko:#{text1}]")
+        expect(page).to have_css("article.body", text: "[ko:#{text2}]")
+        expect(page).to have_css("article.body", text: "[ko:#{text3}]")
+        expect(page).to have_css("article.body", text: "[ko:#{text4}]")
+
+        first("\##{id} option").select_option
+        expect(page).to have_css("\##{id}", text: I18n.t("translate.views.select_lang"))
+      end
     end
   end
 
@@ -107,30 +141,65 @@ describe "translate/public_filter", type: :feature, dbscope: :example, js: true,
       WebMock.allow_net_connect! if @net_connect_allowed
     end
 
-    it do
-      visit item.full_url
-      expect(page).to have_css("#translate-tool-1", text: I18n.t("translate.views.select_lang"))
-      expect(page).to have_css("#translate-tool-1", text: lang_en.name)
-      expect(page).to have_css("#translate-tool-1", text: lang_ko.name)
-      expect(page).to have_css("#translate-tool-1", text: lang_zh_CN.name)
-      expect(page).to have_css("#translate-tool-1", text: lang_zh_TW.name)
+    context "ajax enabled" do
+      let!(:part) { create :translate_part_tool, cur_site: site, filename: "tool", ajax_view: "enabled" }
 
-      select lang_en.name, from: "translate-tool-1"
-      expect(page).to have_css("#translate-tool-1", text: I18n.t("translate.views.show_original"))
-      expect(page).to have_css("article.body", text: "[en:#{text1}]")
-      expect(page).to have_css("article.body", text: "[en:#{text2}]")
-      expect(page).to have_css("article.body", text: "[en:#{text3}]")
-      expect(page).to have_css("article.body", text: "[en:#{text4}]")
+      it do
+        visit item.full_url
+        expect(page).to have_css("#translate-tool-1", text: I18n.t("translate.views.select_lang"))
+        expect(page).to have_css("#translate-tool-1", text: lang_en.name)
+        expect(page).to have_css("#translate-tool-1", text: lang_ko.name)
+        expect(page).to have_css("#translate-tool-1", text: lang_zh_CN.name)
+        expect(page).to have_css("#translate-tool-1", text: lang_zh_TW.name)
 
-      select lang_ko.name, from: "translate-tool-1"
-      expect(page).to have_css("#translate-tool-1", text: I18n.t("translate.views.show_original"))
-      expect(page).to have_css("article.body", text: "[ko:#{text1}]")
-      expect(page).to have_css("article.body", text: "[ko:#{text2}]")
-      expect(page).to have_css("article.body", text: "[ko:#{text3}]")
-      expect(page).to have_css("article.body", text: "[ko:#{text4}]")
+        select lang_en.name, from: "translate-tool-1"
+        expect(page).to have_css("#translate-tool-1", text: I18n.t("translate.views.show_original"))
+        expect(page).to have_css("article.body", text: "[en:#{text1}]")
+        expect(page).to have_css("article.body", text: "[en:#{text2}]")
+        expect(page).to have_css("article.body", text: "[en:#{text3}]")
+        expect(page).to have_css("article.body", text: "[en:#{text4}]")
 
-      first('#translate-tool-1 option').select_option
-      expect(page).to have_css("#translate-tool-1", text: I18n.t("translate.views.select_lang"))
+        select lang_ko.name, from: "translate-tool-1"
+        expect(page).to have_css("#translate-tool-1", text: I18n.t("translate.views.show_original"))
+        expect(page).to have_css("article.body", text: "[ko:#{text1}]")
+        expect(page).to have_css("article.body", text: "[ko:#{text2}]")
+        expect(page).to have_css("article.body", text: "[ko:#{text3}]")
+        expect(page).to have_css("article.body", text: "[ko:#{text4}]")
+
+        first('#translate-tool-1 option').select_option
+        expect(page).to have_css("#translate-tool-1", text: I18n.t("translate.views.select_lang"))
+      end
+    end
+
+    context "ajax disabled" do
+      let!(:part) { create :translate_part_tool, cur_site: site, filename: "tool", ajax_view: "disabled" }
+
+      it do
+        id_jp = 'translate-tool-1'
+        id_en = 'translate-tool-en-1'
+        visit item.full_url
+
+        expect(find("\##{id_jp}")).not_to eq nil
+        expect(find("\##{id_en}")).not_to eq nil
+        id = find("\##{id_jp}").visible? ? id_jp : id_en
+
+        select lang_en.name, from: id
+        expect(page).to have_css("\##{id}", text: I18n.t("translate.views.show_original"))
+        expect(page).to have_css("article.body", text: "[en:#{text1}]")
+        expect(page).to have_css("article.body", text: "[en:#{text2}]")
+        expect(page).to have_css("article.body", text: "[en:#{text3}]")
+        expect(page).to have_css("article.body", text: "[en:#{text4}]")
+
+        select lang_ko.name, from: id
+        expect(page).to have_css("\##{id}", text: I18n.t("translate.views.show_original"))
+        expect(page).to have_css("article.body", text: "[ko:#{text1}]")
+        expect(page).to have_css("article.body", text: "[ko:#{text2}]")
+        expect(page).to have_css("article.body", text: "[ko:#{text3}]")
+        expect(page).to have_css("article.body", text: "[ko:#{text4}]")
+
+        first("\##{id} option").select_option
+        expect(page).to have_css("\##{id}", text: I18n.t("translate.views.select_lang"))
+      end
     end
   end
 end

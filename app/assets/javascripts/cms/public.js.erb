@@ -167,6 +167,19 @@ this.SS_Translate = (function () {
     return url;
   };
 
+  SS_Translate.language = function () {
+    var lang = "ja";
+    try {
+      lang = (window.navigator.languages && window.navigator.languages[0]) ||
+        window.navigator.language ||
+        window.navigator.userLanguage ||
+        window.navigator.browserLanguage;
+    } catch (e) {
+      console.warn(e);
+    }
+    return lang.toLowerCase();
+  };
+
   SS_Translate.render = function () {
     if (SS.config["site_url"] && SS.config["translate_url"]) {
       SS_Translate.siteUrl = SS.config["site_url"];

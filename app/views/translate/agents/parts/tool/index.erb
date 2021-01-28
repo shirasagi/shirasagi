@@ -1,22 +1,32 @@
 <%
-  return "" if !@cur_site.translate_enabled?
-
   id = "translate-tool-#{@cur_part.id}"
   options = @cur_part.translate_target_options(@translate_target)
   selected = @translate_target.try(:code)
-
-  body = select_tag("lang", options_for_select(options, selected), class: "translate", id: id)
-  if @preferred_lang.present? && @cur_site.translate_source.code != @preferred_lang.code
-    converter = Translate::Converter.new(@cur_site, @cur_site.translate_source, @preferred_lang)
-    body = converter.convert(body)
-  end
-  body.sub!('class="translate"', 'class="notranslate"')
 %>
+<%
+  # source lang select
+  cls = ["translate"] + @source_lang.accept_languages
+  body = select_tag("lang", options_for_select(options, selected), class: cls.join(" "), id: id, "aria-label": t("translate.labels.translate_tool"))
+  body.sub!('class="translate', 'class="notranslate')
+%>
+<%== body %>
+<% if @en_lang %>
+<%
+  # en lang select
+  id_en = "translate-tool-en-#{@cur_part.id}"
+  cls = ["translate"] + @en_lang.accept_languages
+  body = select_tag("lang", options_for_select(options, selected), class: cls.join(" "), id: id_en, "aria-label": t("translate.labels.translate_tool"), style: "display: none;")
+  converter = Translate::Converter.new(@cur_site, @cur_site.translate_source, @en_lang)
+  body = converter.convert(body)
+  body.sub!('class="translate', 'class="notranslate')
+%>
+<%== body %>
+<% end %>
 
 <%= jquery do %>
 SS_Translate.siteUrl = "<%= @cur_site.url %>";
 SS_Translate.translateUrl = "<%= @cur_site.translate_url %>";
-$("#<%= id %>").on("change", function () {
+$("#<%= id %>,#<%= id_en %>").on("change", function () {
   var target = $(this).val();
   if (target) {
     url = SS_Kana.url(location.pathname, false);
@@ -29,5 +39,13 @@ $("#<%= id %>").on("change", function () {
     location.href = url;
   }
 });
+
+if ($("#<%= id_en %>").length) {
+  var lang = SS_Translate.language();
+  var source = <%== @source_lang.accept_languages.to_json %>;
+  if (source.indexOf(lang)) {
+    $("#<%= id %>" + "." + source[0]).hide();
+    $("#<%= id_en %>").show();
+  }
+}
 <% end %>
-<%== body %>

@@ -10,7 +10,6 @@ module Translate::Part
 
     def set_view_options
       self.mobile_view = "hide"
-      self.ajax_view = "enabled"
     end
 
     def translate_target_options(target = nil)
