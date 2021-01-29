@@ -75,5 +75,9 @@ module Fs::File
     def cmp(src, dest)
       ::FileUtils.cmp(src, dest)
     end
+
+    def upload(dst, src)
+      ::IO.copy_stream(src, dst)
+    end
   end
 end
