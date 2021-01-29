@@ -698,6 +698,7 @@ DEPENDENCIES
   levenshtein
   liquid
   mail-iso-2022-jp
+  marcel
   marked-rails
   mini_magick
   mini_racer
