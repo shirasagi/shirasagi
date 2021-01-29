@@ -121,7 +121,7 @@ module Fs::GridFs
       Mongoid::GridFs.file_model.where(filename: /^#{path}$/).map { |fs| fs.filename }
     end
 
-    def to_io(path)
+    def to_io(path, &block)
       raise NotImplementedError
     end
 

@@ -207,8 +207,8 @@ module SS::Model::File
     Fs.exists?(path) ? Fs.binread(path) : nil
   end
 
-  def to_io
-    Fs.exists?(path) ? Fs.to_io(path) : nil
+  def to_io(&block)
+    Fs.exists?(path) ? Fs.to_io(path, &block) : nil
   end
 
   def uploaded_file(&block)
