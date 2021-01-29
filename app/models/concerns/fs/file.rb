@@ -41,7 +41,7 @@ module Fs::File
     end
 
     def size(path)
-      ::File.stat(path).size
+      ::File.size(path)
     end
 
     def content_type(path, default = nil)
