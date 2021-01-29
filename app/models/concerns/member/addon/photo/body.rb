@@ -38,14 +38,18 @@ module Member::Addon::Photo
 
     def validate_in_image
       return unless in_image
-      begin
-        ext = ::File.extname(in_image.original_filename)
-        raise ext if ext !~ /\.(bmp|gif|jpe?g|png)$/i
-        Magick::Image.from_blob(in_image.read).shift
-        in_image.rewind
-      rescue
+
+      unless SS::ImageConverter.image?(in_image, name: in_image.original_filename)
+        errors.add :image_id, :invalid_file_type
+        return
+      end
+
+      ext = ::File.extname(in_image.original_filename)
+      unless %w(.bmp .gif .jpg .jpeg .png).include?(ext.to_s.downcase)
         errors.add :image_id, :invalid_file_type
       end
+    rescue
+      errors.add :image_id, :invalid_file_type
     end
 
     def update_relation_image_member
