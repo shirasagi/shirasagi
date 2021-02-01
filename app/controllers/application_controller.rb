@@ -7,6 +7,33 @@ class ApplicationController < ActionController::Base
   # before_action -> { FileUtils.touch "#{Rails.root}/Gemfile" } if Rails.env.to_s == "development"
   before_action :set_cache_buster
 
+  class CloseableChunkedBody < Rack::Chunked::Body
+    def initialize(*args)
+      super
+      @closed = false
+    end
+
+    def each(&block)
+      super
+    ensure
+      unless @closed
+        close
+        @closed = true
+      end
+    end
+
+    def close
+      return unless @body.respond_to?(:close)
+
+      if @body.method(:close).arity == 0
+        @body.close
+      else
+        # Tempfile support
+        @body.close(true)
+      end
+    end
+  end
+
   def new_agent(controller_name)
     agent = SS::Agent.new controller_name
     agent.controller.params  = params
@@ -36,12 +63,12 @@ class ApplicationController < ActionController::Base
 
     # nginx doc: Setting this to "no" will allow unbuffered responses suitable for Comet and HTTP streaming applications
     headers['X-Accel-Buffering'] = 'no'
-    headers['Cache-Control'] = 'no-cache'
+    headers['Cache-Control'] = 'no-store'
     headers['Transfer-Encoding'] = 'chunked'
     headers.delete('Content-Length')
 
     # output csv by streaming
-    self.response_body = Rack::Chunked::Body.new(enum)
+    self.response_body = CloseableChunkedBody.new(enum)
   end
 
   def send_file_headers!(options)
