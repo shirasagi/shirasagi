@@ -116,6 +116,73 @@ class SS::ImageConverter
     self
   end
 
+  # other ImageMagick / GraphicsMagick methods
+  #
+  # def rotate!(degrees)
+  #   @commands << [ :rotate, degrees ]
+  #   self
+  # end
+  #
+  # def crop!(geometry)
+  #   @commands << [ :crop, geometry ]
+  #   self
+  # end
+  #
+  # def geometry!(geometry)
+  #   @commands << [ :geometry, geometry ]
+  #   self
+  # end
+  #
+  # def format!(type)
+  #   @commands << [ :format, type ]
+  #   self
+  # end
+  #
+  # def size!(geometry)
+  #   @commands << [ :size, geometry ]
+  #   self
+  # end
+  #
+  # def wave!(amplitude)
+  #   @commands << [ :wave, amplitude ]
+  #   self
+  # end
+  #
+  # def gravity!(type)
+  #   @commands << [ :gravity, type ]
+  #   self
+  # end
+  #
+  # def pointsize!(value)
+  #   @commands << [ :pointsize, value ]
+  #   self
+  # end
+  #
+  # def implode!(factor)
+  #   @commands << [ :implode, factor ]
+  #   self
+  # end
+  #
+  # def label!(name)
+  #   @commands << [ :label, name ]
+  #   self
+  # end
+  #
+  # def label!(name)
+  #   @commands << [ :label, name ]
+  #   self
+  # end
+  #
+  # def font!(name)
+  #   @commands << [ :font, name ]
+  #   self
+  # end
+  #
+  # def evaluate!(operator, value)
+  #   @commands << [ :evaluate, operator, value ]
+  #   self
+  # end
+
   def to_io
     return @io unless image?
     return @io if @commands.blank?
