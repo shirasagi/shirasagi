@@ -27,7 +27,6 @@ gem 'js_cookie_rails'
 gem 'jquery-form-rails'
 gem 'jquery-minicolors-rails'
 gem 'jquery-rails'
-gem 'jquery-ui-rails'
 gem 'marked-rails'
 gem 'momentjs-rails'
 
