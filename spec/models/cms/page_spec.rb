@@ -88,4 +88,54 @@ describe Cms::Page do
       it { is_expected.to eq item.name }
     end
   end
+
+  describe "#redirect_link" do
+    subject { create(:cms_page, route: "article/page") }
+
+    context "when relative path is given" do
+      it do
+        subject.redirect_link = "a/b/c"
+        expect(subject).to be_valid
+      end
+    end
+
+    context "when absolute path is given" do
+      it do
+        subject.redirect_link = "/a/b/c"
+        expect(subject).to be_valid
+      end
+    end
+
+    context "when relative host url is given" do
+      it do
+        subject.redirect_link = "//#{subject.site.domain_with_subdir}/a/b/c"
+        expect(subject).to be_valid
+      end
+    end
+
+    context "when absolute url is given" do
+      it do
+        subject.redirect_link = "#{subject.site.full_url}/a/b/c"
+        expect(subject).to be_valid
+      end
+    end
+
+    context "when relative untrusted host url is given" do
+      it do
+        subject.redirect_link = "//#{unique_domain}/a/b/c"
+        expect(subject).to be_invalid
+        expect(subject.errors[:redirect_link].length).to eq 1
+        expect(subject.errors[:redirect_link]).to include(I18n.t("errors.messages.trusted_url"))
+      end
+    end
+
+    context "when absolute untrusted host url is given" do
+      it do
+        subject.redirect_link = "#{unique_url}/a/b/c"
+        expect(subject).to be_invalid
+        expect(subject.errors[:redirect_link].length).to eq 1
+        expect(subject.errors[:redirect_link]).to include(I18n.t("errors.messages.trusted_url"))
+      end
+    end
+  end
 end

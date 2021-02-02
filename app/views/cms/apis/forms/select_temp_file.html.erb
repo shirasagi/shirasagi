@@ -1,1 +1,11 @@
-<%= render "select_temp_file/#{@form}", item: @item %>
+<%
+  actual_view_path = case @form
+  when "free"
+    "select_temp_file/free"
+  when "upload"
+    "select_temp_file/upload"
+  end
+
+  return unless actual_view_path
+%>
+<%= render actual_view_path, item: @item %>

@@ -26,7 +26,13 @@ describe Member::Node::Login, type: :model, dbscope: :example do
     end
 
     context "when redirect_url is other site url" do
-      let(:node) { create :member_node_login, cur_site: site, redirect_url: unique_url }
+      let(:node) { create :member_node_login, cur_site: site }
+
+      before do
+        # bypass validations
+        node.set(redirect_url: unique_url)
+      end
+
       it do
         expect(node.redirect_full_url).to be_blank
       end
