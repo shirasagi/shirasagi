@@ -2,7 +2,6 @@
  *= require jquery.datetimepicker
  *= require jquery.multi-select
  *= require jquery.minicolors
- *= require jquery-ui/dist/jquery-ui
  *= require fullcalendar
  *= require fullcalendar-scheduler/scheduler.min.css
  *= require mdi/material-icons
@@ -12,6 +11,9 @@
  *= require tippy.js/themes/light.css
  *= require tippy.js/themes/light-border.css
  */
+
+// jquery-ui
+@import "ss/jquery_ui";
 
 // base
 @import "init";
