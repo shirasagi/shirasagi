@@ -1,1 +1,1 @@
-//= require jquery-ui
+//= require jquery-ui/dist/jquery-ui
