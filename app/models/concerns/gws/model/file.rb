@@ -170,6 +170,10 @@ module Gws::Model::File
     Fs.exists?(path) ? Fs.binread(path) : nil
   end
 
+  def to_io(&block)
+    Fs.exists?(path) ? Fs.to_io(path, &block) : nil
+  end
+
   def uploaded_file(&block)
     Fs::UploadedFile.create_from_file(self, filename: basename, content_type: content_type, fs_mode: ::Fs.mode, &block)
   end
