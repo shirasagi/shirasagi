@@ -266,8 +266,8 @@ module SS::Model::File
   end
 
   def image_dimension
+    return unless Fs.exists?(path)
     return unless image?
-    return unless ::File.exists?(path)
 
     ::FastImage.size(path) rescue nil
   end
