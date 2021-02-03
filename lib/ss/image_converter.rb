@@ -51,6 +51,8 @@ class SS::ImageConverter
 
     def mime_type_from_head(pathname_or_io, **options)
       Marcel::MimeType.for(pathname_or_io, **options)
+    rescue SystemCallError
+      nil
     end
 
     def image?(pathname_or_io, **options)
