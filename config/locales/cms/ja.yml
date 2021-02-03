@@ -668,6 +668,8 @@ ja:
         files: ファイル
         category_ids: カテゴリー
         categories: カテゴリー
+        size: 容量
+        full_url: 記事URL
       cms/model/part:
         name: パーツ名
         route: パーツ属性
@@ -2214,6 +2216,7 @@ ja:
     updated: 更新日時
     status: 公開状態
     file_size: 静的ファイル容量
+    size: 容量
 
   job:
     models:

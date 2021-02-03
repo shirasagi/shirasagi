@@ -24,6 +24,7 @@ module Cms::Model::Page
     attr_accessor :window_name
 
     field :route, type: String, default: ->{ "cms/page" }
+    field :size, type: Integer
 
     embeds_ids :categories, class_name: "Cms::Node"
 

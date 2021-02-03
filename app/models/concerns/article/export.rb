@@ -66,6 +66,8 @@ module Article::Export
       if respond_to?(:redirect_link_enabled?) && redirect_link_enabled?
         drawer.column :redirect_link
       end
+      drawer.column :size
+      drawer.column :full_url
     end
 
     def draw_meta(drawer)
