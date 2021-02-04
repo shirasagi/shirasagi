@@ -13,10 +13,11 @@ describe Fs do
     end
   end
 
-  let(:data) { ::File.binread("#{Rails.root}/spec/fixtures/ss/logo.png") }
+  let(:path) { "#{Rails.root}/spec/fixtures/ss/logo.png" }
+  let(:data_size) { ::File.size(path) }
 
   before do
-    grid_fs.binwrite("#{Rails.root}/spec/fixtures/ss/logo.png", data)
+    grid_fs.upload(path, path)
   end
 
   describe '.mode' do
@@ -90,11 +91,23 @@ describe Fs do
     end
   end
 
+  describe '.read' do
+    it do
+      expect(filesystem.read("#{Rails.root}/spec/fixtures/ss/logo.png").encoding).to eq Encoding.default_internal
+      expect(grid_fs.read("#{Rails.root}/spec/fixtures/ss/logo.png").encoding).to eq Encoding.default_internal
+
+      expect(filesystem.read("#{Rails.root}/spec/fixtures/ss/logo.png")).to \
+        eq grid_fs.read("#{Rails.root}/spec/fixtures/ss/logo.png")
+    end
+  end
+
   describe '.binread' do
     it do
       # full path
-      expect(filesystem.binread("#{Rails.root}/spec/fixtures/ss/logo.png").hash).to eq data.hash
-      expect(grid_fs.binread("#{Rails.root}/spec/fixtures/ss/logo.png").hash).to eq data.hash
+      expect(filesystem.binread("#{Rails.root}/spec/fixtures/ss/logo.png").encoding).to eq Encoding::ASCII_8BIT
+      expect(grid_fs.binread("#{Rails.root}/spec/fixtures/ss/logo.png").encoding).to eq Encoding::ASCII_8BIT
+      expect(filesystem.binread("#{Rails.root}/spec/fixtures/ss/logo.png")).to \
+        eq grid_fs.binread("#{Rails.root}/spec/fixtures/ss/logo.png")
       # not exists
       expect { filesystem.binread("#{Rails.root}/spec/fixtures/#{unique_id}") }.to raise_error Errno::ENOENT
       expect { grid_fs.binread("#{Rails.root}/spec/fixtures/#{unique_id}") }.to raise_error ::Fs::GridFs::FileNotFoundError
@@ -102,39 +115,41 @@ describe Fs do
 
     it do
       # relative path
-      expect(filesystem.binread("spec/fixtures/ss/logo.png").hash).to eq data.hash
-      expect(grid_fs.binread("spec/fixtures/ss/logo.png").hash).to eq data.hash
+      expect(filesystem.binread("spec/fixtures/ss/logo.png").encoding).to eq Encoding::ASCII_8BIT
+      expect(grid_fs.binread("spec/fixtures/ss/logo.png").encoding).to eq Encoding::ASCII_8BIT
+      expect(filesystem.binread("spec/fixtures/ss/logo.png")).to eq grid_fs.binread("spec/fixtures/ss/logo.png")
       # not exists
       expect { filesystem.binread("spec/fixtures/#{unique_id}") }.to raise_error Errno::ENOENT
       expect { grid_fs.binread("spec/fixtures/#{unique_id}") }.to raise_error ::Fs::GridFs::FileNotFoundError
     end
   end
 
-  describe '.binwrite' do
-    let(:tmp_dir) { "#{tmpdir}/spec/fs" }
-
-    before do
-      ::FileUtils.mkdir_p(tmp_dir)
-    end
-
-    it do
-      # full path
-      expect(filesystem.binwrite("#{tmpdir}/spec/fs/logo.png", data)).to eq data.length
-      expect(grid_fs.binwrite("#{tmpdir}/spec/fs/logo.png", data)).to eq data.length
-      # write nil
-      expect(filesystem.binwrite("#{tmpdir}/spec/fs/logo.png", nil)).to eq 0
-      expect(grid_fs.binwrite("#{tmpdir}/spec/fs/logo.png", nil)).to eq 0
-      # write empty
-      expect(filesystem.binwrite("#{tmpdir}/spec/fs/logo.png", '')).to eq 0
-      expect(grid_fs.binwrite("#{tmpdir}/spec/fs/logo.png", '')).to eq 0
-    end
-  end
+  # '.binwrite' was removed and use '.upload'
+  # describe '.binwrite' do
+  #   let(:tmp_dir) { "#{tmpdir}/spec/fs" }
+  #
+  #   before do
+  #     ::FileUtils.mkdir_p(tmp_dir)
+  #   end
+  #
+  #   it do
+  #     # full path
+  #     expect(filesystem.binwrite("#{tmpdir}/spec/fs/logo.png", data)).to eq data.length
+  #     expect(grid_fs.binwrite("#{tmpdir}/spec/fs/logo.png", data)).to eq data.length
+  #     # write nil
+  #     expect(filesystem.binwrite("#{tmpdir}/spec/fs/logo.png", nil)).to eq 0
+  #     expect(grid_fs.binwrite("#{tmpdir}/spec/fs/logo.png", nil)).to eq 0
+  #     # write empty
+  #     expect(filesystem.binwrite("#{tmpdir}/spec/fs/logo.png", '')).to eq 0
+  #     expect(grid_fs.binwrite("#{tmpdir}/spec/fs/logo.png", '')).to eq 0
+  #   end
+  # end
 
   describe '.size' do
     it do
       # full path
-      expect(filesystem.size("#{Rails.root}/spec/fixtures/ss/logo.png")).to eq data.length
-      expect(grid_fs.size("#{Rails.root}/spec/fixtures/ss/logo.png")).to eq data.length
+      expect(filesystem.size("#{Rails.root}/spec/fixtures/ss/logo.png")).to eq data_size
+      expect(grid_fs.size("#{Rails.root}/spec/fixtures/ss/logo.png")).to eq data_size
       # not exists
       expect { filesystem.size("#{Rails.root}/spec/fixtures/ss/#{unique_id}.png") }.to raise_error Errno::ENOENT
       expect { grid_fs.size("#{Rails.root}/spec/fixtures/ss/#{unique_id}.png") }.to raise_error ::Fs::GridFs::FileNotFoundError
@@ -142,8 +157,8 @@ describe Fs do
 
     it do
       # relative path
-      expect(filesystem.size("spec/fixtures/ss/logo.png")).to eq data.length
-      expect(grid_fs.size("spec/fixtures/ss/logo.png")).to eq data.length
+      expect(filesystem.size("spec/fixtures/ss/logo.png")).to eq data_size
+      expect(grid_fs.size("spec/fixtures/ss/logo.png")).to eq data_size
       # not exists
       expect { filesystem.size("spec/fixtures/ss/#{unique_id}.png") }.to raise_error Errno::ENOENT
       expect { grid_fs.size("spec/fixtures/ss/#{unique_id}.png") }.to raise_error ::Fs::GridFs::FileNotFoundError
@@ -183,9 +198,9 @@ describe Fs do
 
     before do
       ::FileUtils.mkdir_p(::File.dirname(tmp_file))
-      ::File.binwrite(tmp_file, data)
+      ::FileUtils.cp(path, tmp_file)
 
-      grid_fs.binwrite("#{tmpdir}/spec/fs/logo.png", data)
+      grid_fs.upload("#{tmpdir}/spec/fs/logo.png", path)
     end
 
     it do
@@ -207,9 +222,9 @@ describe Fs do
 
     before do
       ::FileUtils.mkdir_p(::File.dirname(tmp_file))
-      ::File.binwrite(tmp_file, data)
+      ::FileUtils.cp(path, tmp_file)
 
-      grid_fs.binwrite("#{tmpdir}/spec/fs/logo.png", data)
+      grid_fs.upload("#{tmpdir}/spec/fs/logo.png", path)
     end
 
     it do
@@ -235,9 +250,9 @@ describe Fs do
 
     before do
       ::FileUtils.mkdir_p(::File.dirname(tmp_file))
-      ::File.binwrite(tmp_file, data)
+      ::FileUtils.cp(path, tmp_file)
 
-      grid_fs.binwrite("#{tmpdir}/spec/fs/logo.png", data)
+      grid_fs.upload("#{tmpdir}/spec/fs/logo.png", path)
     end
 
     it do
@@ -246,6 +261,82 @@ describe Fs do
 
       expect(grid_fs.glob("#{tmpdir}/spec/fs/*")).to eq [ "#{tmpdir}/spec/fs/logo.png"[1..-1] ]
       expect(grid_fs.glob("#{tmpdir}/spec/**/*")).to eq [ "#{tmpdir}/spec/fs/logo.png"[1..-1] ]
+    end
+  end
+
+  describe '.upload' do
+    let(:file_path) { "#{Rails.root}/spec/fixtures/ss/logo.png" }
+    let(:name) { "#{Rails.root}/#{unique_id}.png" }
+
+    context "with file path" do
+      it do
+        filesystem.upload(name, file_path)
+        expect(filesystem.size(name)).to eq ::File.size(file_path)
+
+        grid_fs.upload(name, file_path)
+        expect(grid_fs.size(name)).to eq ::File.size(file_path)
+      end
+    end
+
+    context "with IO" do
+      it do
+        ::File.open(file_path, "rb") do |io|
+          filesystem.upload(name, io)
+        end
+        expect(filesystem.size(name)).to eq ::File.size(file_path)
+
+        ::File.open(file_path, "rb") do |io|
+          grid_fs.upload(name, io)
+        end
+        expect(grid_fs.size(name)).to eq ::File.size(file_path)
+      end
+    end
+  end
+
+  describe '.download' do
+    let(:file_path) { "#{tmpdir}/#{unique_id}.png" }
+
+    context "with file path" do
+      it do
+        filesystem.download("#{Rails.root}/spec/fixtures/ss/logo.png", file_path)
+        expect(::File.size(file_path)).to eq data_size
+      end
+
+      it do
+        grid_fs.download("#{Rails.root}/spec/fixtures/ss/logo.png", file_path)
+        expect(::File.size(file_path)).to eq data_size
+      end
+    end
+
+    context "with io" do
+      it do
+        ::FileUtils.rm_rf(file_path)
+        ::File.open(file_path, "wb") do |io|
+          filesystem.download("#{Rails.root}/spec/fixtures/ss/logo.png", io)
+        end
+        expect(::File.size(file_path)).to eq data_size
+      end
+
+      it do
+        ::FileUtils.rm_rf(file_path)
+        ::File.open(file_path, "wb") do |io|
+          grid_fs.download("#{Rails.root}/spec/fixtures/ss/logo.png", io)
+        end
+        expect(::File.size(file_path)).to eq data_size
+      end
+    end
+  end
+
+  describe '.cp' do
+    let(:tmp_file) { "#{tmpdir}/spec/fs/#{unique_id}.png" }
+
+    it do
+      ::FileUtils.mkdir_p(::File.dirname(tmp_file))
+      filesystem.cp(path, tmp_file)
+      expect(filesystem.size(tmp_file)).to eq ::File.size(path)
+
+      grid_fs.cp(path, tmp_file)
+      expect(grid_fs.size(tmp_file)).to eq ::File.size(path)
     end
   end
 end

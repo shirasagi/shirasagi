@@ -6,11 +6,7 @@ module Fs
       path = file.try(:path) || file.to_s
       instance = self.new(basename)
       instance.binmode
-      if fs_mode == :grid_fs
-        instance.write(::Fs.binread(path))
-      else
-        instance.write(::File.binread(path))
-      end
+      ::Fs.download(path, instance)
       instance.rewind
       instance.original_filename = filename.presence || ::File.basename(path)
       instance.content_type = content_type || ::Fs.content_type(path)

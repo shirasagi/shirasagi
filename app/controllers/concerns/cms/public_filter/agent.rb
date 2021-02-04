@@ -32,6 +32,12 @@ module Cms::PublicFilter::Agent
       updated = false if data == Fs.read(file)
     end
 
-    updated ? Fs.write(file, data) : nil
+    if updated
+      dir = ::File.dirname(file)
+      Fs.mkdir_p(dir) unless Fs.directory?(dir)
+      Fs.upload(file, StringIO.new(data))
+    end
+
+    updated
   end
 end

@@ -63,7 +63,7 @@ class Kana::Dictionary
 
         # upload user.dic
         master_file = master_dic(site_id)
-        Fs.binwrite(master_file, ::IO.binread(tmp_dic))
+        Fs.upload(master_file, tmp_dic)
       end
       nil
     end
@@ -76,7 +76,7 @@ class Kana::Dictionary
 
       Dir.mktmpdir do |dir|
         local_file = ::File.join(dir, "user.dic")
-        ::IO.binwrite(local_file, Fs.binread(master_file))
+        Fs.download(master_file, local_file)
         master_stat = Fs.stat(master_file)
         File.utime(master_stat.atime, master_stat.mtime, local_file)
         return yield local_file

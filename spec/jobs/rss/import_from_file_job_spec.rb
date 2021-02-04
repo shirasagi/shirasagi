@@ -5,11 +5,23 @@ describe Rss::ImportFromFileJob, dbscope: :example do
     let(:site) { cms_site }
     let(:filepath) { Rails.root.join(*%w(spec fixtures rss sample-rss.xml)) }
     let(:node) { create(:rss_node_page, cur_site: site, page_state: 'closed') }
-    let(:file) { Rss::TempFile.create_from_post(site, File.read(filepath), 'application/xml+rss') }
+    let(:file) do
+      content_type = 'application/xml+rss'
+      Rss::TempFile.create_empty!(site_id: site.id, filename: 'rss.xml', content_type: content_type, state: 'closed') do |file|
+        ::FileUtils.cp(filepath, file.path)
+      end
+    end
     let(:model) { Rss::Page }
 
     it do
       expect { described_class.bind(site_id: site, node_id: node).perform_now(file.id) }.to change { model.count }.from(0).to(5)
+
+      expect(Job::Log.count).to eq 1
+      Job::Log.first.tap do |log|
+        expect(log.logs).to include(/INFO -- : .* Started Job/)
+        expect(log.logs).to include(/INFO -- : .* Completed Job/)
+      end
+
       item = model.where(rss_link: 'http://example.jp/rss/1.html').first
       expect(item).not_to be_nil
       expect(item.name).to eq '記事1'

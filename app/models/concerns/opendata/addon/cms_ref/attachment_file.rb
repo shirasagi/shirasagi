@@ -37,7 +37,7 @@ module Opendata::Addon::CmsRef::AttachmentFile
 
     resource_file = self.file
 
-    ::Fs.binwrite(resource_file.path, ::Fs.binread(file.path))
+    ::Fs.cp(file.path, resource_file.path)
     resource_file.name = file.name
     resource_file.filename = file.filename
     resource_file.size = file.size

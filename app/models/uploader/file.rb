@@ -16,10 +16,14 @@ class Uploader::File
     return false unless valid?
     @binary = self.class.remove_exif(binary) if binary && exif_image?
     if saved_path && path != saved_path # persisted AND path chenged
-      Fs.binwrite(saved_path, binary) unless directory?
+      Fs.upload(saved_path, StringIO.new(binary)) unless directory?
       Fs.mv(saved_path, path)
+    elsif directory?
+      Fs.mkdir_p(path)
     else
-      directory? ? Fs.mkdir_p(path) : Fs.binwrite(path, binary)
+      dir = ::File.dirname(path)
+      Fs.mkdir_p(dir) unless Fs.directory?(dir)
+      Fs.upload(path, StringIO.new(binary))
     end
     @saved_path = @path
     compile_scss if @css
@@ -209,12 +213,12 @@ class Uploader::File
 
   def compile_scss
     path = @saved_path.sub(/(\.css)?\.scss$/, ".css")
-    Fs.binwrite path, @css
+    Fs.upload path, StringIO.new(@css)
   end
 
   def compile_coffee
     path = @saved_path.sub(/(\.js)?\.coffee$/, ".js")
-    Fs.binwrite path, @js
+    Fs.upload path, StringIO.new(@js)
   end
 
   class << self

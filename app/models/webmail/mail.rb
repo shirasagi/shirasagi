@@ -202,15 +202,15 @@ class Webmail::Mail
     return if rfc822.blank?
 
     dir = ::File.dirname(rfc822_path)
-    Fs.mkdir_p(dir) unless Fs.exists?(dir)
-    Fs.binwrite(rfc822_path, rfc822)
+    ::FileUtils.mkdir_p(dir) unless ::Dir.exists?(dir)
+    ::File.binwrite rfc822_path, rfc822
   end
 
   def read_rfc822
-    self.rfc822 = Fs.exists?(rfc822_path) ? Fs.binread(rfc822_path) : nil
+    self.rfc822 = ::File.exists?(rfc822_path) ? ::File.binread(rfc822_path) : nil
   end
 
   def destroy_rfc822
-    Fs.rm_rf(rfc822_path) if Fs.exists?(rfc822_path)
+    ::FileUtils.rm_rf(rfc822_path) if ::File.exists?(rfc822_path)
   end
 end

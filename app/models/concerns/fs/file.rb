@@ -7,15 +7,15 @@ module Fs::File
     end
 
     def exists?(path)
-      FileTest.exists? path
+      ::FileTest.exists? path
     end
 
     def file?(path)
-      FileTest.file? path
+      ::FileTest.file? path
     end
 
     def directory?(path)
-      FileTest.directory? path
+      ::FileTest.directory? path
     end
 
     def read(path)
@@ -26,15 +26,18 @@ module Fs::File
       ::File.binread path
     end
 
-    def write(path, data)
-      FileUtils.mkdir_p ::File.dirname(path)
-      ::File.write path, data
-    end
-
-    def binwrite(path, data)
-      FileUtils.mkdir_p ::File.dirname(path)
-      ::File.binwrite path, data
-    end
+    # to stop reading entire file, these methods was removed
+    # use download, upload or to_io
+    #
+    # def write(path, data)
+    #   ::FileUtils.mkdir_p ::File.dirname(path)
+    #   ::File.write path, data
+    # end
+    #
+    # def binwrite(path, data)
+    #   ::FileUtils.mkdir_p ::File.dirname(path)
+    #   ::File.binwrite path, data
+    # end
 
     def stat(path)
       ::File.stat(path)
@@ -49,23 +52,33 @@ module Fs::File
     end
 
     def mkdir_p(path)
-      FileUtils.mkdir_p path
+      ::FileUtils.mkdir_p path
     end
 
     def mv(src, dest)
-      FileUtils.mv src, dest
+      ::FileUtils.mv src, dest
     end
 
     def rm_rf(path)
-      FileUtils.rm_rf path
+      ::FileUtils.rm_rf path
     end
 
     def glob(path)
-      Dir.glob(path)
+      ::Dir.glob(path)
     end
 
+    # returns object which satisfies rack input stream specification
+    # see: https://www.rubydoc.info/github/rack/rack/file/SPEC
     def to_io(path)
       ::File.open(path, "rb")
+    end
+
+    def download(src, dst)
+      ::IO.copy_stream(src, dst)
+    end
+
+    def upload(dst, src)
+      ::IO.copy_stream(src, dst)
     end
 
     def cp(src, dest)

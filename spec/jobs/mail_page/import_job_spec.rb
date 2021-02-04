@@ -18,13 +18,13 @@ describe MailPage::ImportJob, dbscope: :example do
   let(:utf_8_eml) do
     file = "#{Rails.root}/private/files/mail_page_files/#{Time.zone.now.to_i}"
     Fs.mkdir_p "#{Rails.root}/private/files/mail_page_files"
-    Fs.binwrite file, Fs.binread("#{Rails.root}/spec/fixtures/mail_page/UTF-8.eml")
+    Fs.upload file, "#{Rails.root}/spec/fixtures/mail_page/UTF-8.eml"
     file
   end
   let(:iso_2022_jp_eml) do
     file = "#{Rails.root}/private/files/mail_page_files/#{Time.zone.now.to_i}"
     Fs.mkdir_p "#{Rails.root}/private/files/mail_page_files"
-    Fs.binwrite file, Fs.binread("#{Rails.root}/spec/fixtures/mail_page/ISO-2022-JP.eml")
+    Fs.upload file, "#{Rails.root}/spec/fixtures/mail_page/ISO-2022-JP.eml"
     file
   end
 

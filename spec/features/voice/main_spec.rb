@@ -12,7 +12,7 @@ describe "voice_main", type: :feature, dbscope: :example, http_server: true do
     # To stabilize spec, bypass open jatalk/lame/sox.
     allow(Voice::Converter).to receive(:convert).and_wrap_original do |_, *args|
       _, _, output = args
-      Fs.binwrite(output, IO.binread("#{Rails.root}/spec/fixtures/voice/voice-disabled.wav"))
+      Fs.upload(output, "#{Rails.root}/spec/fixtures/voice/voice-disabled.wav")
       true
     end
   end

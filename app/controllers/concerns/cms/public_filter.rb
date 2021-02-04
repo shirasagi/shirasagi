@@ -103,7 +103,6 @@ module Cms::PublicFilter
     css_mtime = Fs.exists?(@file) ? Fs.stat(@file).mtime : 0
     return if Fs.stat(@scss).mtime.to_i <= css_mtime.to_i
 
-    data = Fs.read(@scss)
     begin
       opts = Rails.application.config.sass
       load_paths = opts.load_paths[1..-1] || []
@@ -111,7 +110,7 @@ module Cms::PublicFilter
       load_paths << ::Fs::GridFs::CompassImporter.new(::File.dirname(@file)) if Fs.mode == :grid_fs
 
       sass = Sass::Engine.new(
-        data,
+        Fs.read(@scss),
         cache: false,
         debug_info: false,
         filename: @scss,
@@ -120,10 +119,10 @@ module Cms::PublicFilter
         style: :compressed,
         syntax: :scss
       )
-      Fs.write(@file, sass.render)
+      Fs.upload(@file, StringIO.new(sass.render))
     rescue Sass::SyntaxError => e
       Rails.logger.error(e)
-      Fs.write(@file, data)
+      Fs.upload(@file, @scss)
     end
   end
 
