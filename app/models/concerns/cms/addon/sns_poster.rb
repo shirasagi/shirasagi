@@ -11,12 +11,13 @@ module Cms::Addon
     included do
       attr_accessor :skip_sns_post
 
-      field :twitter_auto_post,   type: String
-      field :twitter_user_id,     type: String, metadata: { branch: false }
-      field :twitter_post_id,     type: String, metadata: { branch: false }
-      field :sns_auto_delete,     type: String
-      field :twitter_posted,      type: Array, default: [], metadata: { branch: false }
-      field :twitter_post_error,  type: String, metadata: { branch: false }
+      field :twitter_auto_post,      type: String
+      field :twitter_user_id,        type: String, metadata: { branch: false }
+      field :twitter_post_id,        type: String, metadata: { branch: false }
+      field :sns_auto_delete,        type: String
+      field :twitter_posted,         type: Array, default: [], metadata: { branch: false }
+      field :deleted_twitter_posted, type: Array, default: [], metadata: { branch: false }
+      field :twitter_post_error,     type: String, metadata: { branch: false }
 
       permit_params :twitter_auto_post,
                     :sns_auto_delete,
@@ -100,7 +101,13 @@ module Cms::Addon
       # URLを表示するためにスクリーンネームを取得し、DBに保存
       user_screen_id = client.user.screen_name
       self.set(twitter_post_id: twitter_id, twitter_user_id: user_screen_id)
-      self.add_to_set(twitter_posted: { twitter_post_id: twitter_id.to_s, twitter_user_id: user_screen_id })
+      self.add_to_set(
+        twitter_posted: {
+          twitter_post_id: twitter_id.to_s,
+          twitter_user_id: user_screen_id,
+          posted_at: Time.zone.now
+        }
+      )
       self.unset(:twitter_post_error)
     rescue => e
       Rails.logger.fatal("post_to_twitter failed: #{e.class} (#{e.message}):\n  #{e.backtrace.join("\n  ")}")
@@ -129,7 +136,8 @@ module Cms::Addon
       client = connect_twitter
       twitter_posted.to_a.each do |posted|
         post_id = posted[:twitter_post_id]
-        client.destroy_status(post_id) rescue nil
+        deleted_tweets = client.destroy_status(post_id) rescue nil
+        self.add_to_set(deleted_twitter_posted: posted) if deleted_tweets.present?
       end
       self.unset(:twitter_post_id, :twitter_user_id, :twitter_posted, :twitter_post_error) rescue nil
     rescue => e
