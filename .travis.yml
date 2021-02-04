@@ -163,7 +163,7 @@ jobs:
       before_script: skip
       script:
         - ls -la codeclimate.*
-        - ./cc-test-reporter sum-coverage codeclimate.*.json -p 8
+        - ./cc-test-reporter sum-coverage codeclimate.*.json -p $(ls -la codeclimate.* | wc -l)
         - ./cc-test-reporter upload-coverage -r 8447130d9db9efadd8b86604c1976a4595fd3adc290daf45674490ba949da336
       workspaces:
         use:
