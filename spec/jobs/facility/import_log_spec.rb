@@ -54,7 +54,7 @@ describe Facility::ImportJob, dbscope: :example do
       group_ids: [3],
       name: "シラサギランド",
       filename: "facilities/item_update1",
-      layout_id: 12,
+      layout_id: 1,
       category_ids: [2, 3, 4],
       service_ids: [10, 11, 12],
       location_ids: [6, 7, 8],
@@ -71,12 +71,12 @@ describe Facility::ImportJob, dbscope: :example do
       group_ids: [3],
       name: "シラサギスタジオ",
       filename: "facilities/item_update2",
-      layout_id: 12,
+      layout_id: 1,
       category_ids: [2, 3, 4],
       service_ids: [10, 11, 12],
       location_ids: [6, 7, 8],
       route: "facility/page",
-      postcode: "〒222-4321",
+      postcode: "〒123-4321",
       address: "徳島市ヒクイドリ町",
       tel: "0537-292-5977")
   end
@@ -113,6 +113,9 @@ describe Facility::ImportJob, dbscope: :example do
           expect(log.logs).to include(/update 2行目:  施設の種類：\["食べる", "買う", "見る・遊ぶ"\] → \["買う"\]/)
           expect(log.logs).to include(/update 2行目:  施設の地域：\["シラサギ市", "すだち市", "子育て町"\] → \["シラサギ市"\]/)
           expect(log.logs).to include(/update 2行目:  施設の用途：\["駐車場有", "緊急避難所", "WIFIスポット"\] → \["駐車場有", "緊急避難所"\]/)
+          expect(log.logs).to include(/update 3行目:  郵便番号：〒123-4321 → 〒222-4321/)
+          expect(log.logs).to include(/update 3行目:  施設の種類：\["食べる", "買う", "見る・遊ぶ"\] → \["食べる", "買う"\]/)
+          expect(log.logs).to include(/update 3行目:  管理グループ：\["観光整備係"\] → \["地図管理係"\]/)
         end
       end
     end
