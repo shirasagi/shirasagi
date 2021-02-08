@@ -92,7 +92,7 @@ class Facility::Node::Importer
 
   def put_log_of_category(item_name, row_num, row)
     inputted_category = row[model.t(:categories)].to_s.split(/\n/).map(&:strip)
-    category_in_db = node.st_category_ids.map { |category_id| Facility::Node::Category.in(id: category_id).pluck(:name) }.flatten
+    category_in_db =  Facility::Node::Category.in(id: node.st_category_ids).pluck(:name)
 
     inputted_category.each do |category|
       next if category_in_db.include?(category)
@@ -103,7 +103,7 @@ class Facility::Node::Importer
 
   def put_log_of_location(item_name, row_num, row)
     inputted_location = row[model.t(:locations)].to_s.split(/\n/).map(&:strip)
-    location_in_db = node.st_location_ids.map { |location_id| Facility::Node::Location.in(id: location_id).pluck(:name) }.flatten
+    location_in_db = Facility::Node::Location.in(id: node.st_location_ids).pluck(:name)
 
     inputted_location.each do |location|
       next if location_in_db.include?(location)
@@ -114,7 +114,7 @@ class Facility::Node::Importer
 
   def put_log_of_service(item_name, row_num, row)
     inputted_service = row[model.t(:services)].to_s.split(/\n/).map(&:strip)
-    service_in_db = node.st_service_ids.map { |service_id| Facility::Node::Service.in(id: service_id).pluck(:name) }.flatten
+    service_in_db = Facility::Node::Service.in(id: node.st_service_ids).pluck(:name)
 
     inputted_service.each do |service|
       next if service_in_db.include?(service)
@@ -125,7 +125,7 @@ class Facility::Node::Importer
 
   def put_log_of_group(item_name, row_num, row)
     inputted_group = row[model.t(:groups)].to_s.split(/\n/).map(&:strip)
-    group_in_db = node.group_ids.map { |group_id| SS::Group.in(id: group_id).pluck(:name) }.flatten
+    group_in_db = SS::Group.in(id: node.group_ids).pluck(:name)
 
     inputted_group.each do |group|
       next if group_in_db.include?(group)
