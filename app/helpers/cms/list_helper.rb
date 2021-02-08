@@ -14,7 +14,7 @@ module Cms::ListHelper
     ih << '{% for node in nodes %}'
     ih << '<article class="item-{{ node.css_class }} {% if node.current? %}current{% endif %}">'
     ih << '  <header>'
-    ih << '     <h2><a href="{{ node.url }}">{{ node.name }}</a></h2>'
+    ih << '     <h2><a href="{{ node.url }}">{{ node.index_name | default: node.name }}</a></h2>'
     ih << '  </header>'
     ih << '</article>'
     ih << '{% endfor %}'
