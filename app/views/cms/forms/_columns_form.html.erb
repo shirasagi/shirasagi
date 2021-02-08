@@ -1,9 +1,5 @@
 <%
-  syntax_check = true
-  syntax_check = @cur_site.syntax_check_enabled? if syntax_check
-  if @cur_node && @cur_node.respond_to?(:syntax_check_enabled?)
-    syntax_check = @cur_node.syntax_check_enabled? if syntax_check
-  end
+  syntax_check = cms_syntax_check_enabled?
 
   # be careful: @item is different instance in some cases
   if @item && @item.respond_to?(:route)
