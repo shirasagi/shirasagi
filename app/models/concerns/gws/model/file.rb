@@ -27,6 +27,7 @@ module Gws::Model::File
     permit_params :in_file, :state, :name, :filename, :resizing, :in_data_url
 
     before_validation :set_filename, if: ->{ in_file.present? }
+    before_validation :normalize_name
     before_validation :normalize_filename
 
     validates :model, presence: true
@@ -76,22 +77,18 @@ module Gws::Model::File
     "#{self.class.root}/ss_files/" + id.to_s.split(//).join("/") + "/_/#{id}"
   end
 
-  def public_path
+  def public_dir
     return if site.blank? || !site.respond_to?(:root_path)
 
-    "#{site.root_path}/fs/" + id.to_s.split(//).join("/") + "/_/#{filename}"
+    "#{site.root_path}/fs/" + id.to_s.split(//).join("/") + "/_"
+  end
+
+  def public_path
+    public_dir.try { |dir| "#{dir}/#{filename}" }
   end
 
   def url
     "/fs/" + id.to_s.split(//).join("/") + "/_/#{filename}"
-  end
-
-  def download_url
-    "/fs/" + id.to_s.split(//).join("/") + "/_/download/#{filename}"
-  end
-
-  def view_url
-    "/fs/" + id.to_s.split(//).join("/") + "/_/view/#{filename}"
   end
 
   def full_url
@@ -179,17 +176,17 @@ module Gws::Model::File
   end
 
   def generate_public_file
-    return unless site && basename.ascii_only?
+    dir = public_dir
+    return if dir.blank?
 
-    file = public_path
-    data = self.read
-    return if Fs.exists?(file) && data == Fs.read(file)
-
-    Fs.binwrite file, data
+    SS::FilePublisher.publish(self, dir)
   end
 
   def remove_public_file
-    Fs.rm_rf(public_path) if public_path
+    dir = public_dir
+    return if dir.blank?
+
+    SS::FilePublisher.depublish(self, dir)
   end
 
   private
@@ -201,9 +198,12 @@ module Gws::Model::File
     self.content_type = ::SS::MimeType.find(in_file.original_filename, in_file.content_type)
   end
 
+  def normalize_name
+    self.name = SS::FilenameUtils.convert_to_url_safe_japanese(name) if self.name.present?
+  end
+
   def normalize_filename
-    self.name     = self.name.unicode_normalize(:nfkc) if self.name.present?
-    self.filename = self.filename.unicode_normalize(:nfkc) if self.filename.present?
+    self.filename = SS::FilenameUtils.normalize(self.filename)
   end
 
   def multibyte_filename_disabled?

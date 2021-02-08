@@ -27,6 +27,16 @@ production: &production
 
   disable_permission_level: true
 
+  # how to paste file by
+  #   filename: physical name. this means paste file with only alpha-nums.
+  #   name: logical name. this means paste file with japanese text.
+  file_url_with: filename
+
+  # how to publish file by
+  #   cp: copy file
+  #   ln_s: create symbolic link
+  publish_file_with: cp
+
 test:
   <<: *production
   disable: false

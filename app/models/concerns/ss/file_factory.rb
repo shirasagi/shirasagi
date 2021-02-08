@@ -59,7 +59,6 @@ module SS::FileFactory
       item.cur_group = cur_group if respond_to?(:cur_group)
       item.in_file = file
       item.resizing = resizing
-      item.unnormalize = unnormalize
       if item.save
         self.saved_files << item
         next

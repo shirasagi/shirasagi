@@ -17,11 +17,13 @@ class Fs::FilesController < ApplicationController
 
   def set_item
     id = params[:id_path].present? ? params[:id_path].gsub(/\//, "") : params[:id]
-    path = params[:filename]
-    path << ".#{params[:format]}" if params[:format].present?
+    name_or_filename = params[:filename]
+    name_or_filename << ".#{params[:format]}" if params[:format].present?
 
-    @item = SS::File.find_by id: id, filename: path
-    @item = @item.becomes_with_model
+    item = SS::File.find(id)
+    raise "404" if item.name != name_or_filename && item.filename != name_or_filename
+
+    @item = item.becomes_with_model
     raise "404" if @item.try(:thumb?)
   end
 
@@ -34,18 +36,18 @@ class Fs::FilesController < ApplicationController
     response.headers["Last-Modified"] = CGI::rfc1123_date(@item.updated.in_time_zone)
   end
 
-  def rescue_action(e = nil)
-    if e.to_s =~ /^\d+$/
-      status = e.to_s.to_i
+  def rescue_action(error = nil)
+    if error.to_s.numeric?
+      status = error.to_s.to_i
       file = error_html_file(status)
       return ss_send_file(file, status: status, type: Fs.content_type(file), disposition: :inline)
     end
-    if e.is_a?(Mongoid::Errors::DocumentNotFound)
+    if error.is_a?(Mongoid::Errors::DocumentNotFound)
       status = 404
       file = error_html_file(status)
       return ss_send_file(file, status: status, type: Fs.content_type(file), disposition: :inline)
     end
-    raise e
+    raise error
   end
 
   def error_html_file(status)

@@ -1,0 +1,50 @@
+<%
+  url = local_assigns.fetch(:file_url, nil).try { |p| p.call(file) } || file.url
+  thumb_url = local_assigns.fetch(:file_thumb_url, nil).try { |p| p.call(file) } || file.thumb_url
+%>
+
+<div class="file-view" data-file-id="<%= file.id %>" data-name="<%= file.name %>" data-humanized-name="<%= file.humanized_name %>" data-url="<%= file.url %>" data-thumb-url="<%= file.thumb_url %>" data-extname="<%= file.extname %>">
+  <%= link_to url, class: :thumb, target: "_blank", rel: "noopener" do %>
+    <% if file.image? %>
+      <%= image_tag thumb_url, alt: file.name %>
+    <% else %>
+      <span class="ext icon-<%= file.extname %>"><%= file.extname %></span>
+    <% end %>
+    <% if local_assigns.fetch(:show_properties, true) %>
+      <div class="properties">
+        <span><%= I18n.t("sns.filename") %>: <%= file.name %></span><br>
+        <% if file.image? %>
+          <% width, height = file.image_dimension %>
+          <span><%= t("sns.w_h") %>: <%= width %> x <%= height %></span><br>
+        <% end %>
+        <span><%= t("sns.size") %>: <%= number_to_human_size(file.size) %></span><br>
+        <span><%= t("sns.datetime") %>: <%= file.updated.strftime("%Y/%m/%d %H:%M") %></span><br>
+        <% if file.user.present? %>
+          <span><%= t("sns.user") %>: <%= file.user.name %></span><br>
+        <% end %>
+      </div>
+    <% end %>
+  <% end %>
+
+  <div class="name">
+    <label>
+      <input type="hidden" name="<%= local_assigns.fetch(:name, "item[file_ids][]") %>" value="<%= file.id %>" class="file-id" />
+      <%= file.name %>
+    </label>
+    <% if block_given? %>
+      <%= yield %>
+    <% end %>
+  </div>
+  <div class="action">
+    <% if local_assigns.fetch(:show_attach, true) %>
+      <%= link_to t("sns.file_attach"), "#file-#{file.id}", class: "action-attach" %>
+      <% if file.image? %>
+        <%= link_to t("sns.image_paste"), "#file-#{file.id}", class: "action-paste" %>
+        <%= link_to t("sns.thumb_paste"), "#file-#{file.id}", class: "action-thumb" %>
+      <% end %>
+    <% end %>
+    <% if local_assigns.fetch(:show_delete, true) %>
+      <%= link_to t("ss.buttons.delete"), "#file-#{file.id}", class: "action-delete" %>
+    <% end %>
+  </div>
+</div>

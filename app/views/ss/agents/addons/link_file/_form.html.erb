@@ -1,26 +1,7 @@
-<% return if @file_addon_state == 'hide' %>
-
-<%= jquery do %>
-window.insertContent = function(cont) {
-  if ((typeof tinymce) != "undefined") {
-    tinymce.get(Cms_Form.editorId).execCommand("mceInsertContent", false, cont);
-  }
-  else if (typeof CKEDITOR != "undefined") {
-    CKEDITOR.instances[Cms_Form.editorId].insertHtml(cont);
-  }
-};
-window.deleteContent = function(id) {
-  $(".file-view").each(function() {
-    //if (id == $(this).find("input[type=checkbox]").attr("value")) {
-    //  $(this).remove();
-    //}
-    if (id == $(this).find(".file-id").attr("value")) {
-      $(this).remove();
-    }
-  });
-};
-var tempFile = new SS_Addon_TempFile($(".upload-drop-area"), <%= @cur_user.id %>);
-<% end %>
+<%
+  return if @file_addon_state == 'hide'
+  addon ||= local_assigns.fetch(:addon, {})
+%>
 
 <div class="see mod-ss-addon-file">
   <%= f.hidden_field "file_ids[]", value: "" %>
@@ -30,29 +11,17 @@ var tempFile = new SS_Addon_TempFile($(".upload-drop-area"), <%= @cur_user.id %>
 
   <div id="selected-files">
     <% @item.files.each do |file| %>
-      <div id="file-<%= file.id %>" class="file-view" data-file-id="<%= file.id %>">
-
-        <%= link_to file.url, class: :thumb, target: "_blank", rel: "noopener" do %>
-          <% if file.image? %>
-            <%= image_tag file.thumb_url, alt: file.name %>
-          <% else %>
-            <span class="ext icon-<%= file.extname %>"><%= file.extname %></span>
-          <% end %>
-        <% end %>
-
-        <div class="name">
-          <label>
-            <input type="hidden" name="item[file_ids][]" value="<%= file.id %>" class="file-id" />
-            <%= file.name %>
-          </label><br />
-          <label>URL</label>
-          <input type="text" name="item[link_urls][<%= file.id %>]" value="<%= file.link_url %>" >
-        </div>
-
-        <div class="action">
-          <%= link_to t("ss.buttons.delete"), "#", onclick: "deleteContent('#{file.id}'); return false;" %>
-        </div>
-      </div>
+      <%= render "ss/crud/ajax_files/file_view", file: file, show_properties: false, show_attach: false do %>
+        <br>
+        <label>URL</label>
+        <input type="text" name="item[link_urls][<%= file.id %>]" value="<%= file.link_url %>" >
+      <% end %>
     <% end %>
   </div>
 </div>
+
+<%= jquery do %>
+  var $el = $("#<%= addon[:id] %>");
+  var tempFile = new SS_Addon_TempFile($el.find(".upload-drop-area"), <%= @cur_user.id %>);
+  SS_FileView.renderFileView($el);
+<% end %>

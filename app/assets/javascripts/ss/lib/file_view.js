@@ -57,6 +57,28 @@ SS_FileView.listenTo = function(el, options) {
   });
 };
 
+SS_FileView.renderFileView = function($el, options) {
+  $el.on("click", ".file-view a.thumb", function(ev) {
+    SS_FileView.open(ev, options);
+  });
+  $el.on("click", ".file-view .action-attach", function(ev) {
+    // 添付貼付
+    SS_FileView.pasteFile(ev, options);
+  });
+  $el.on("click", ".file-view .action-paste", function(ev) {
+    // 画像貼付
+    SS_FileView.pasteImage(ev, options);
+  });
+  $el.on("click", ".file-view .action-thumb", function(ev) {
+    // サムネイル貼付
+    SS_FileView.pasteThumbnail(ev, options);
+  });
+  $el.on("click", ".file-view .action-delete", function(ev) {
+    // 削除
+    SS_FileView.deleteFile(ev, options);
+  });
+};
+
 SS_FileView.open = function(ev, options) {
   var $this = $(ev.currentTarget);
   if ($this.find("img").length === 0) {
@@ -87,6 +109,131 @@ SS_FileView.open = function(ev, options) {
     open: true,
     onComplete: function() { $("#ss-file-view").trigger("ss:cboxCompleted"); }
   });
+
+  ev.preventDefault();
+  return false;
+};
+
+SS_FileView.getContent = function() {
+  if ((typeof tinymce) != "undefined") {
+    return tinymce.get(Cms_Form.editorId).getContent();
+  } else if ((typeof CKEDITOR) != "undefined") {
+    return CKEDITOR.instances[Cms_Form.editorId].getData();
+  }
+
+  return null;
+}
+
+SS_FileView.insertContent = function(content) {
+  if ((typeof tinymce) != "undefined") {
+    tinymce.get(Cms_Form.editorId).execCommand("mceInsertContent", false, content);
+  } else if (typeof CKEDITOR != "undefined") {
+    CKEDITOR.instances[Cms_Form.editorId].insertHtml(content);
+  }
+};
+
+SS_FileView.pasteFile = function(ev, options) {
+  var $fileView = $(ev.currentTarget).closest(".file-view");
+  if (!$fileView[0]) {
+    return;
+  }
+
+  // link_to file.humanized_name, file.url, class: "icon-#{file.extname}"
+  var $content = $("<a/>", { href: $fileView.data("url"), class: "icon-" + $fileView.data("extname") })
+    .html($fileView.data("humanizedName"));
+
+  var insertContent;
+  if (options && options.insertContent) {
+    insertContent = options.insertContent;
+  } else {
+    insertContent = SS_FileView.insertContent;
+  }
+
+  insertContent($content.prop("outerHTML"));
+
+  ev.preventDefault();
+  return false;
+};
+
+SS_FileView.pasteImage = function(ev, options) {
+  var $fileView = $(ev.currentTarget).closest(".file-view");
+  if (!$fileView[0]) {
+    return;
+  }
+
+  // image_tag file.url, alt: file.name
+  var $content = $("<img/>", { src: $fileView.data("url"), alt: $fileView.data("name") });
+
+  var insertContent;
+  if (options && options.insertContent) {
+    insertContent = options.insertContent;
+  } else {
+    insertContent = SS_FileView.insertContent;
+  }
+
+  insertContent($content.prop("outerHTML"));
+
+  ev.preventDefault();
+  return false;
+};
+
+SS_FileView.pasteThumbnail = function(ev, options) {
+  var $fileView = $(ev.currentTarget).closest(".file-view");
+  if (!$fileView[0]) {
+    return;
+  }
+
+  // link_to(file.url, alt: file.name, class: "ajax-box") { image_tag(file.thumb_url, alt: file.name) }
+  var $img = $("<img/>", { src: $fileView.data("thumbUrl"), alt: $fileView.data("name") });
+  var $content = $("<a/>", { href: $fileView.data("url"), alt: $fileView.data("name"), class: "ajax-box" }).html($img);
+
+  var insertContent;
+  if (options && options.insertContent) {
+    insertContent = options.insertContent;
+  } else {
+    insertContent = SS_FileView.insertContent;
+  }
+
+  insertContent($content.prop("outerHTML"));
+
+  ev.preventDefault();
+  return false;
+};
+
+SS_FileView.deleteFile = function(ev, options) {
+  var $fileView = $(ev.currentTarget).closest(".file-view");
+  if (!$fileView[0]) {
+    return;
+  }
+
+  var path = $fileView.data("url").replace(/\/[^/]*$/, "/");
+
+  var getContent;
+  if (options && options.getContent) {
+    getContent = options.getContent;
+  } else {
+    getContent = SS_FileView.getContent
+  }
+
+  var data = getContent();
+  var inUse = false;
+  if (data && data.indexOf(path) > 0) {
+    inUse = true;
+  }
+  var messge;
+  if (inUse && options && options.inUseConfirmation) {
+    messge = options.inUseConfirmation;
+  } else if (options && options.confirmationOnDelete) {
+    messge = options.confirmationOnDelete;
+  }
+  if (messge) {
+    if (!confirm(messge)) {
+      ev.preventDefault();
+      return false;
+    }
+  }
+
+  $fileView.remove();
 
   ev.preventDefault();
   return false;

@@ -40,7 +40,13 @@ def save_ss_files(path, data)
   return item if item.persisted?
 
   item.in_file = file
-  item.name = data[:name] if data[:name].present?
+  if data[:name].present?
+    name = data[:name]
+    if !name.include?(".") && data[:filename].include?(".")
+      name = "#{name}#{::File.extname(data[:filename])}"
+    end
+    item.name = name
+  end
   item.cur_user = @user
   item.save
 
