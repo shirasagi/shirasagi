@@ -84,7 +84,6 @@ class Facility::Node::Importer
     put_log_of_location(item.name, row_num, row)
     put_log_of_service(item.name, row_num, row)
     put_log_of_group(item.name, row_num, row)
-    put_log_of_group(item.name, row_num, row)
 
     return if item.invalid? || item.new_record?
 
