@@ -92,7 +92,7 @@ class Facility::Node::Importer
 
   def put_log_of_category(item_name, row_num, row)
     inputted_category = row[model.t(:categories)].to_s.split(/\n/).map(&:strip)
-    category_in_db =  Facility::Node::Category.in(id: node.st_category_ids).pluck(:name)
+    category_in_db = Facility::Node::Category.in(id: node.st_category_ids).pluck(:name)
 
     inputted_category.each do |category|
       next if category_in_db.include?(category)
