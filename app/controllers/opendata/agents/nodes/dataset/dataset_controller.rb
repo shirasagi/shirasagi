@@ -10,6 +10,8 @@ class Opendata::Agents::Nodes::Dataset::DatasetController < ApplicationControlle
   before_action :set_ideas, only: [:show_ideas]
   skip_before_action :logged_in?
 
+  protect_from_forgery except: [:add_favorite]
+
   private
 
   def set_dataset
@@ -142,5 +144,33 @@ class Opendata::Agents::Nodes::Dataset::DatasetController < ApplicationControlle
       page(params[:page]).
       per(20)
     render layout: "opendata/ajax"
+  end
+
+  def show_favorite
+    @dataset = Opendata::Dataset.site(@cur_site).where(id: params[:dataset]).first
+
+    raise "404" unless @dataset
+    raise '404' if !@preview && !@dataset.public?
+
+    @cur_node.layout = nil
+    logged_in?(redirect: false)
+
+    if @cur_member
+      cond = { site_id: @cur_site.id, member_id: @cur_member.id, dataset_id: @dataset.id }
+      @favorite = Opendata::DatasetFavorite.where(cond).first
+    end
+  end
+
+  def add_favorite
+    @dataset = Opendata::Dataset.site(@cur_site).where(id: params[:dataset]).first
+
+    raise "404" unless @dataset
+    raise '404' if !@preview && !@dataset.public?
+
+    if logged_in?
+      cond = { site_id: @cur_site.id, member_id: @cur_member.id, dataset_id: @dataset.id }
+      Opendata::DatasetFavorite.find_or_create_by(cond)
+      redirect_to @dataset.url
+    end
   end
 end

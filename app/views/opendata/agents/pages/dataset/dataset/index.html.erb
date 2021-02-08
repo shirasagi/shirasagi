@@ -9,6 +9,8 @@
   if path_prefix.present? && path_prefix.end_with?('/')
     path_prefix = path_prefix[0..-2]
   end
+
+  @my_dataset_node = Opendata::Node::MyDataset.site(@cur_site).first
 %>
 <%= javascript_include_tag "opendata/public" %>
 <%= jquery do %>
@@ -36,6 +38,14 @@ $.ajax({
   }
 });
 
+//show favorite
+$.ajax({
+  url: "<%= path_prefix %><%= @cur_page.dataset_favorite_url %>",
+  success: function (data) {
+    $(".dataset-favorite").html(data);
+  }
+});
+
 //hide categorise
 $(".categories a[data-class=other]").on("click", function () {
   var type;
@@ -58,20 +68,24 @@ $("a.content").colorbox({
 });
 
 SS.renderClipboardCopy();
+
 <% end %>
 
 <header>
   <h1 class="name"><%= @cur_page.name %></h1>
 </header>
 
-<% if @cur_node.show_point? %>
-  <div class="point">
-    <div class="count">
-      <span class="label"><%= t("opendata.labels.iine") %></span>
-      <span class="number"><%= @cur_page.point %></span>
+<div class="mypage-content">
+  <% if @cur_node.show_point? %>
+    <div class="point">
+      <div class="count">
+        <span class="label"><%= t("opendata.labels.iine") %></span>
+        <span class="number"><%= @cur_page.point %></span>
+      </div>
     </div>
-  </div>
-<% end %>
+  <% end %>
+  <div class="dataset-favorite"></div>
+</div>
 
 <%
   max = 3

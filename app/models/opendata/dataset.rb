@@ -83,6 +83,10 @@ class Opendata::Dataset
     get_url(url, "/ideas/show.html")
   end
 
+  def dataset_favorite_url
+    get_url(url, "/favorite.html")
+  end
+
   def contact_present?
     return false if member_id.present?
     super

@@ -1,0 +1,20 @@
+<%
+  @search_dataset_node = Opendata::Node::SearchDataset.site(@cur_site).first
+  return if @search_dataset_node.blank?
+
+  datasets = @items.map(&:dataset)
+  max_filesize = SS.config.opendata.bulk_download_max_filesize
+%>
+<nav class="menu">
+  <% if @search_dataset_node.exceeded_bulk_download_filesize?(datasets) %>
+    <%= jquery do %>
+      $(".download-all").on("click", function () {
+        alert(<%== t("opendata.notice.mypage_bulk_download_exceeded_filesize", size: number_to_human_size(max_filesize)).to_json %>);
+        return false;
+      });
+    <% end %>
+    <%= link_to t("opendata.search_datasets.bluk_download"), "", class: "download-all" %>
+  <% else %>
+    <%= link_to t("opendata.search_datasets.bluk_download"), @search_dataset_node.bulk_download_url(datasets), class: "download-all" %>
+  <% end %>
+</nav>

@@ -33,6 +33,8 @@ ja:
       dataset_map_search_datasets: データセットを探す
       dataset_map_datasets_limit: 最大１０件までデータセットを選択できます。
       deleted: 削除済み
+      add_favorite: マイリストに登録する
+      registered_favorite: マイリストに登録済み
     search_datasets:
       index: データセットを選択する
       search: データセットを検索
@@ -58,7 +60,9 @@ ja:
       source_url: "リンクを登録する際にURLを入力してください。ファイルを設定した場合は入力の必要はありません。"
       resource_preview_error: リソースをプレビューできませんでした。
       bulk_download_exceeded_filesize: "検索結果の一括ダウンロードサイズが大きすぎます。\n一括ダウンロードのサイズは、%{size}までを想定しています。\n申し訳ありませんが、個別にダウンロードしていただくか、検索条件を変更してください。"
+      mypage_bulk_download_exceeded_filesize: "一括ダウンロードサイズが大きすぎます。\n一括ダウンロードのサイズは、%{size}までを想定しています。\n申し訳ありませんが、個別にダウンロードをお願いします。"
       recreate_rdf: "次のリソースに関連する RDF が作成されています。"
+      remove_favorite: 登録解除しました。
     export:
       subject: '[オープンデータ/データセット] エクスポートが完了しました。'
       notify_message: "ダウンロードの準備が完了しました。\n下記のURLからダウンロードしてください。\n\n%{link}"
@@ -173,6 +177,7 @@ ja:
       idea_name: アイデア名
       resource_name: リソース名
       comment_count: コメント数
+      create_datetime: 登録日時
       update_datetime: 更新日時
       executed_count: 実行回数
       downloaded_count: 合計ダウンロード数
@@ -195,6 +200,7 @@ ja:
       delete: 削除
       edit_profile: プロフィールの編集
       delete_account: アカウントの削除
+      delete_favorite_dataset: リストから削除
       downloaded: ダウンロード
       preview: プレビュー
       add_comment: コメントを投稿
@@ -213,6 +219,7 @@ ja:
       not_exist: 存在しません
       no_related_dataset: 関連データセットはありません。
       no_related_app: 関連アプリはありません。
+      no_favorite_datasets: 登録はありません。
       not_data: 該当するデータは登録されていません
       delete_comment: コメントは削除されました
       request_comment: コメントは承認待ちです
@@ -464,6 +471,7 @@ ja:
       opendata/member: メンバー
       opendata/my_profile: マイプロフィール
       opendata/my_dataset: マイデータセット
+      opendata/my_favorite_dataset: マイリストデータセット
       opendata/my_app: マイアプリ
       opendata/my_idea: マイアイデア
     parts:

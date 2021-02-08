@@ -1,0 +1,17 @@
+<% return if @cur_member.blank? %>
+<%
+  url = ::File.join(@cur_node.url, @dataset.id.to_s, "favorite.html")
+  label = @favorite ? t("opendata.links.registered_favorite") : t("opendata.links.add_favorite")
+
+  opts = {}
+  if @favorite
+    opts[:class] = "add-favorite"
+  else
+    opts[:class] = "add-favorite registered"
+    opts[:method] = "post"
+  end
+  if @preview || @favorite
+    opts[:onclick] = "return false;"
+  end
+%>
+<%= link_to(label, url, opts) %>

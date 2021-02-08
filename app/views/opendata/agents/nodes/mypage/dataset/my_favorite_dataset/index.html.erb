@@ -1,0 +1,32 @@
+<div class="opendata-datasets datasets">
+  <% if @items.present? %>
+    <%= render file: "_menu" %>
+    <table class="opendata-datasets index">
+      <tr>
+        <td class="created"><%= t("opendata.labels.create_datetime") %></td>
+        <td class="name"><%= t('opendata.labels.dataset_name') %></td>
+        <td class="remove-favorite"></td>
+      </tr>
+      <% @items.each do |item| %>
+        <% dataset = item.dataset %>
+        <tr>
+          <td class="created"><%= l(item.created, format: t("opendata.labels.updated")) %></td>
+          <td class="name">
+            <% if dataset.public? %>
+              <%= link_to dataset.name, dataset.url %>
+            <% else %>
+              <%= dataset.name %>
+            <% end %>
+          </td>
+          <td class="remove-favorite">
+            <%= link_to t("opendata.labels.delete_favorite_dataset"), ::File.join(@cur_node.url, item.id.to_s, "remove"), class: "remove-favorite", method: "post" %>
+          </td>
+        </tr>
+      <% end %>
+    </table>
+  <% else %>
+    <div class="empty"><%= t("opendata.labels.no_favorite_datasets") %></div>
+  <% end %>
+</div>
+
+<%= paginate @items if @items.try(:current_page) %>

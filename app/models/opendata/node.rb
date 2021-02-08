@@ -115,6 +115,16 @@ module Opendata::Node
     include History::Addon::Backup
 
     default_scope ->{ where(route: "opendata/search_dataset") }
+
+    def exceeded_bulk_download_filesize?(datasets)
+      datasets = datasets.select(&:zip_exists?)
+      size = datasets.map(&:zip_size).sum
+      size > SS.config.opendata.bulk_download_max_filesize
+    end
+
+    def bulk_download_url(datasets)
+      "#{url}bulk_download?#{{ ids: datasets.map(&:id) }.to_query}"
+    end
   end
 
   class DatasetMap
@@ -268,6 +278,20 @@ module Opendata::Node
     self.use_liquid = false
 
     default_scope ->{ where(route: "opendata/my_dataset") }
+  end
+
+  class MyFavoriteDataset
+    include Cms::Model::Node
+    include Cms::Addon::NodeSetting
+    include Cms::Addon::Meta
+    include Cms::Addon::PageList
+    include Cms::Addon::Release
+    include Cms::Addon::GroupPermission
+    include History::Addon::Backup
+
+    self.use_liquid = false
+
+    default_scope ->{ where(route: "opendata/my_favorite_dataset") }
   end
 
   class MyApp
