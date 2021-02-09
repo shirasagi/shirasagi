@@ -81,6 +81,7 @@ class Cms::Node
     include Cms::Addon::PageGroupList
     include ::Cms::ChildList
     include History::Addon::Backup
+    include Cms::Addon::Release
 
     def child_items
       child_pages

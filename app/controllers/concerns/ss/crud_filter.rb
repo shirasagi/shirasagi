@@ -24,10 +24,6 @@ module SS::CrudFilter
     args.empty? ? super(file: params[:action]) : super
   end
 
-  def json_content_type
-    (browser.ie? && browser.version.to_i <= 9) ? "text/plain" : "application/json"
-  end
-
   def set_item
     @item ||= begin
       item = @model.find(params[:id])

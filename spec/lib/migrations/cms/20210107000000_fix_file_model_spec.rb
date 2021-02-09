@@ -1,7 +1,7 @@
 require 'spec_helper'
-require Rails.root.join("lib/migrations/cms/20210107000000_fix_file_model.rb")
+require Rails.root.join("lib/migrations/cms/20200630000001_fix_file_model.rb")
 
-RSpec.describe SS::Migration20210107000000, dbscope: :example do
+RSpec.describe SS::Migration20200630000001, dbscope: :example do
   let!(:page) { create :cms_page }
   # 正常なページに添付されたファイル
   let!(:file1) { tmp_ss_file(contents: '0123456789', user: cms_user, owner_item: page, model: "cms/page") }

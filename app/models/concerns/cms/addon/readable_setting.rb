@@ -3,6 +3,7 @@ module Cms::Addon::ReadableSetting
   extend SS::Addon
 
   included do
+    class_variable_set(:@@_requires_read_permission_to_read, true)
 
     field :readable_setting_range, type: String, default: 'public'
     field :readable_groups_hash, type: Hash
@@ -20,6 +21,9 @@ module Cms::Addon::ReadableSetting
 
     # Allow readable settings and readable permissions.
     scope :readable, ->(user, opts = {}) {
+      if requires_read_permission_to_read?
+        return none unless self.allowed?(:read, user, opts)
+      end
       or_conds = readable_conditions(user, opts)
       where("$and" => [{ "$or" => or_conds }])
     }
@@ -34,7 +38,11 @@ module Cms::Addon::ReadableSetting
   def readable?(user, opts = {})
     opts[:site] ||= self.site
 
-    return false unless self.class.allowed?(:read, user, opts)
+    if self.class.requires_read_permission_to_read?
+      return false unless self.class.allowed?(:read, user, opts)
+    end
+
+    return true if readable_setting_range == 'public'
     return true if !readable_setting_present?
     return true if readable_group_ids.any? { |m| user.group_ids.include?(m) }
     return true if readable_member_ids.include?(user.id)
@@ -103,7 +111,6 @@ module Cms::Addon::ReadableSetting
   end
 
   module ClassMethods
-
     def readable_conditions(user, opts = {})
       or_conds = [
         { readable_setting_range: 'public' },
@@ -113,6 +120,10 @@ module Cms::Addon::ReadableSetting
         { readable_member_ids: user.id },
       ]
       or_conds
+    end
+
+    def requires_read_permission_to_read?
+      class_variable_get(:@@_requires_read_permission_to_read)
     end
   end
 end

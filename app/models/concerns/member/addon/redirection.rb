@@ -6,6 +6,7 @@ module Member::Addon
     included do
       field :redirect_url, type: String, default: "/"
       permit_params :redirect_url
+      validates :redirect_url, "sys/trusted_url" => true
     end
   end
 end

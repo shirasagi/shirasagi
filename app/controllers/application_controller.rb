@@ -78,6 +78,10 @@ class ApplicationController < ActionController::Base
     end
   end
 
+  def json_content_type
+    (browser.ie? && browser.version.to_i <= 9) ? "text/plain" : "application/json"
+  end
+
   private
 
   def request_host
@@ -128,4 +132,25 @@ class ApplicationController < ActionController::Base
       response.headers["Expires"] = "-1"
     end
   end
+
+  def trusted_url?(url)
+    url = ::Addressable::URI.parse(url.to_s)
+
+    known_trusted_urls = []
+    if @cur_site.present? && @cur_site.respond_to?(:domain_with_subdir)
+      domain_with_subdir = @cur_site.domain_with_subdir
+      if domain_with_subdir.present?
+        known_trusted_urls << "//#{domain_with_subdir}"
+      end
+    end
+
+    Sys::TrustedUrlValidator.valid_url?(url, known_trusted_urls)
+  end
+  helper_method :trusted_url?
+
+  def trusted_url!(url)
+    raise "untrusted url" unless trusted_url?(url)
+    url
+  end
+  helper_method :trusted_url!
 end

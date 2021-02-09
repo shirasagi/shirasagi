@@ -30,6 +30,7 @@ ja:
       running: 実行中
       completed: 完了
       failed: 失敗
+      ready: 実行待ち
     queue_adapter_errors:
       header: ActiveJob の設定を確認してください。
       body: 次の項目を確認してください。

@@ -1,0 +1,163 @@
+<%
+  limit ||= SS.config.job.head_logs || 1_000
+  show_current_count = local_assigns.fetch(:show_current_count, false)
+
+  url ||= url_for(format: :json)
+%>
+
+<section class="main-box task-box" id="task-box-<%= task.id %>">
+  <dl class="info">
+    <dt><%= task.t :state %></dt>
+    <dd class="state" data-state="<%= task.state %>">
+      <% if task.state %>
+        <%= t("job.state.#{task.state}") %>
+      <% end %>
+    </dd>
+
+    <% if show_current_count %>
+      <dt><%= task.t :current_count %></dt>
+      <dd class="count">
+        <%= task.current_count %>
+        <% if task.total_count > 0 %>
+          / <%= task.total_count %>
+        <% end %>
+      </dd>
+    <% end %>
+
+    <dt><%= task.t :started %></dt>
+    <dd class="started"><%= task.started.try { |time| content_tag(:time, I18n.l(time, format: :picker), datetime: time.utc.iso8601) } %></dd>
+
+    <dt><%= task.t :closed %></dt>
+    <dd class="closed"><%= task.closed.try { |time| content_tag(:time, I18n.l(time, format: :picker), datetime: time.utc.iso8601) } %></dd>
+  </dl>
+
+  <div class="logs">
+    <%= t('job.log_notice', count: limit) %>
+    <textarea class="log" readonly="readonly"><%= task.head_logs(limit).join("\n") %></textarea>
+  </div>
+  <div class="controller">
+    <% if task.respond_to?(:log_file_path) %>
+      <%
+        download_path = url_for(action: "download_logs") rescue nil
+        download_path ||= begin
+          if @ss_mode == :cms && @cur_site
+            if Cms::Tool.allowed?(:edit, @cur_user, site: @cur_site)
+              download_job_cms_task_path(id: task)
+            end
+          else
+            if SS::User.allowed?(:edit, @cur_user)
+              download_job_sys_task_path(id: task)
+            end
+          end
+        end
+      %>
+      <% if download_path %>
+        <%= link_to(t('job.download_log'), download_path, { class: "btn task-log-download-btn hide", target: "_blank" }) %>
+      <% end %>
+    <% end %>
+
+    <span class="auto-reload">
+      自動更新:
+      <label><%= radio_button_tag :auto_refresh, 0, false, { id: nil } %> しない</label>
+      <label><%= radio_button_tag :auto_refresh, 1, true, { id: nil } %> する</label>
+      <%= number_field_tag :interval, SS.config.job.reload_interval || 10, id: nil, min: 1  %>秒
+    </span>
+  </div>
+</section>
+
+<%= jquery do %>
+  var $el = $("#task-box-<%= task.id %>");
+
+  var formatCount = function(current, total) {
+    if (total && total > 0) {
+      return current.toString() + "/" + total.toString();
+    } else {
+      return current.toString();
+    }
+  };
+
+  var formatTime = function(time) {
+    if (! time) {
+      return "";
+    }
+
+    time = moment(time);
+    return $("<time />", { datetime: time.toISOString() }).html(SS.formatTime(time));
+  };
+
+  var reload = function () {
+    $.ajax({
+      url: "<%= url %>",
+      data: { head_logs: <%= limit %> },
+      cache: false,
+      success: function (data) {
+        $el.find(".state").html(data["state_label"] || "").data("state", data["state"]);
+        $el.find(".count").html(formatCount(data["current_count"], data["total_count"]));
+        $el.find(".started").html(formatTime(data["started"]));
+        $el.find(".closed").html(formatTime(data["closed"]));
+        $el.find(".log").val(data["head_logs"].join("\n"));
+        if (data["state"] === "stop") {
+          $el.find(".stop-button").hide();
+          $el.find(".run-button").show();
+        }
+
+        if ($el.find(".log").val()) {
+          $el.find(".task-log-download-btn").removeClass("hide");
+        } else {
+          $el.find(".task-log-download-btn").addClass("hide");
+        }
+      }
+    });
+  };
+
+  var timerId;
+
+  var clearReload = function() {
+    if (! timerId) {
+      return;
+    }
+
+    clearInterval(timerId);
+    timerId = null;
+  };
+
+  var resetReload = function() {
+    clearReload();
+
+    var autoRefresh = $el.find("[name='auto_refresh']:checked").val();
+    if (autoRefresh != '1') {
+      return;
+    }
+
+    var interval = $el.find("[name='interval']").val();
+    if (! interval) {
+      return;
+    }
+
+    interval = parseInt(interval, 10);
+    if (interval <= 0) {
+      return;
+    }
+
+    timerId = setInterval(reload, interval * 1000);
+    reload();
+  };
+
+  resetReload();
+
+  $el.find("[name='auto_refresh']").on("change", resetReload);
+
+  $el.find("[name='interval']")
+    .on("keypress", function(ev) {
+      if ((ev.which && ev.which === 13) || (ev.keyCode && ev.keyCode === 13)) {
+        resetReload();
+      }
+      ev.preventDefault();
+      return false;
+    })
+    .on("change", resetReload);
+
+  if ($el.find(".log").val()) {
+    $el.find(".task-log-download-btn").removeClass("hide");
+  }
+<% end %>

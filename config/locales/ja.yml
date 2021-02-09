@@ -171,6 +171,7 @@ ja:
         例）33.8957612,133.6806607
       invalid_zoom_level: |-
         は1~21の範囲で設定してください。
+      trusted_url: は信頼できるURLを入力してください。
     template:
       body: 次の項目を確認してください。
       header:
