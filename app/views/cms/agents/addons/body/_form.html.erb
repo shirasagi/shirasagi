@@ -1,5 +1,5 @@
 <%
-  source_cleaner_conf = Cms::SourceCleanerTemplate.site(@cur_site).and_public.to_config
+  source_cleaner_conf = Cms::SourceCleanerTemplate.site(@cur_site).and_public.to_config(site: @cur_site)
   replace_words_conf = Cms::WordDictionary.site(@cur_site).to_config
 
   syntax_check = cms_syntax_check_enabled?
@@ -44,6 +44,7 @@
 
     <% if source_cleaner_conf[:source_cleaner].present? %>
       Cms_Source_Cleaner.config = <%= raw source_cleaner_conf.to_json %>
+      Cms_Source_Cleaner.confirms.clean = <%== t("cms.confirm.source_clean").to_json %>;
       Cms_Source_Cleaner.render(".source-cleaner");
     <% end %>
 

@@ -144,6 +144,11 @@ Rails.application.routes.draw do
       resources :logs, only: [:index, :show, :destroy], concerns: [:deletion]
     end
 
+    namespace "source_cleaner" do
+      get "/" => redirect { |p, req| "#{req.path}/site_setting" }, as: :main
+      resource :site_setting
+    end
+
     get "check_links" => "check_links#index"
     post "check_links" => "check_links#run"
     get "generate_nodes" => "generate_nodes#index"

@@ -21,6 +21,7 @@ class Cms::Site
   include SS::Addon::Translate::SiteSetting
   include SS::Addon::PartnerSetting
   include SS::Addon::InquirySetting
+  include SS::Addon::SourceCleaner::SiteSetting
   include SS::Addon::SiteUsage
   include SS::Addon::GenerateLock
 
