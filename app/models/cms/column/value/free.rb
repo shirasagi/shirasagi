@@ -20,6 +20,18 @@ class Cms::Column::Value::Free < Cms::Column::Value::Base
     file_ids
   end
 
+  def generate_public_files
+    files.each do |file|
+      file.generate_public_file
+    end
+  end
+
+  def remove_public_files
+    files.each do |file|
+      file.remove_public_file
+    end
+  end
+
   private
 
   def validate_value
