@@ -155,8 +155,15 @@ describe Cms::Page::GenerateJob, dbscope: :example do
       SS::Config.replace_value_at(:cms, 'generate_lock', { 'disable' => false, 'options' => ['1.hour'] })
       site.set(generate_lock_until: Time.zone.now + 1.hour)
 
-      Fs.rm_rf page.path
-      page.files.each { |file| Fs.rm_rf file.public_path }
+      Fs.rm_rf node.path
+
+      Fs.rm_rf page1.path
+      Fs.rm_rf ss_file1.public_path
+
+      Fs.rm_rf page2.path
+      Fs.rm_rf ss_file2.public_path
+      Fs.rm_rf ss_file3.public_path
+      Fs.rm_rf ss_file4.public_path
 
       described_class.bind(site_id: site).perform_now
     end
@@ -166,10 +173,13 @@ describe Cms::Page::GenerateJob, dbscope: :example do
     end
 
     it do
-      expect(File.exist?(page.path)).to be_falsey
-      page.files.each do |file|
-        expect(File.exist?(file.public_path)).to be_falsey
-      end
+      expect(File.exist?(page1.path)).to be_falsey
+      expect(File.exist?(ss_file1.public_path)).to be_falsey
+
+      expect(File.exist?(page2.path)).to be_falsey
+      expect(File.exist?(ss_file2.public_path)).to be_falsey
+      expect(File.exist?(ss_file3.public_path)).to be_falsey
+      expect(File.exist?(ss_file4.public_path)).to be_falsey
 
       expect(Cms::Task.count).to eq 2
       Cms::Task.where(site_id: site.id, node_id: nil, name: 'cms:generate_pages').first.tap do |task|
@@ -178,7 +188,7 @@ describe Cms::Page::GenerateJob, dbscope: :example do
         expect(task.closed).not_to be_nil
         expect(task.total_count).to eq 0
         expect(task.current_count).to eq 0
-        expect(task.logs).not_to include(include(page.filename))
+        expect(task.logs).not_to include(include(page1.filename))
         expect(task.node_id).to be_nil
         # logs are saved in a file
         expect(::File.exists?(task.log_file_path)).to be_truthy
