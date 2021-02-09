@@ -258,7 +258,9 @@ describe Rss::ImportWeatherXmlJob, dbscope: :example do
 
     let(:trigger1) { create(:jmaxml_trigger_weather_alert) }
 
-    let(:article_node) { create(:article_node_page) }
+    let(:article_node_layout) { create_cms_layout }
+    let(:article_page_layout) { create_cms_layout }
+    let(:article_node) { create(:article_node_page, layout: article_node_layout, page_layout: article_page_layout) }
     let(:category_node) { create(:category_node_page) }
     let(:action1) { create(:jmaxml_action_publish_page, publish_to_id: article_node.id, category_ids: [ category_node.id ]) }
 
@@ -324,6 +326,8 @@ describe Rss::ImportWeatherXmlJob, dbscope: :example do
       expect(Article::Page.count).to eq 1
 
       Article::Page.first.tap do |page|
+        expect(page.parent.id).to eq article_node.id
+        expect(page.layout).to eq article_page_layout
         expect(page.name).to eq '奈良県気象警報・注意報'
         expect(page.state).to eq action1.publish_state
         expect(page.category_ids).to eq [ category_node.id ]
