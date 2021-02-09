@@ -3,7 +3,7 @@ SS_Workflow = function (el, options) {
   this.options = options;
 
   var pThis = this;
-  var updateDisabled = false;
+  pThis.updateDisabled = false;
 
   this.$el.on("click", ".update-item", function (e) {
     pThis.updateItem($(this));
