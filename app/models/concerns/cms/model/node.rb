@@ -97,7 +97,7 @@ module Cms::Model::Node
   end
 
   def mobile_preview_path
-    ::File.join((site.subdir ? site.subdir : ""), site.mobile_location, filename, "/")
+    ::File.join((site.subdir ? site.subdir : ""), site.mobile_location, filename, "/").gsub(/^\//, '')
   end
 
   def parents
