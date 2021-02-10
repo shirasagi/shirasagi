@@ -159,6 +159,9 @@ ja:
         target_host_name: サイト名
         target_host_host: ホスト名
         target_host_domains: ドメイン
+        target_host_subdir: サブディレクトリ
+        target_host_parent_id: 親サイト
+        target_host_domains_with_subdir: サブディレクトリを含めたドメイン
         source_site_id: 複製するサイト
         copy_contents: 複製する項目
       sys/mail_log:
@@ -220,6 +223,10 @@ ja:
         - 複製するサイトのホスト名を入力します。
       target_host_domains:
         - 複製するサイトのドメインを入力します。
+      target_host_subdir:
+        - 複製するサイトのサブディレクトリを入力します。
+      target_host_parent_id:
+        - 複製するサイトの親サイトを選択します。
       source_site_id:
         - 複製の元となるサイトを選択します。
       copy_contents:

@@ -14,6 +14,16 @@
     <%= @item.target_host_domains %>
     <%= f.hidden_field :target_host_domains %>
   </dd>
+  <dt><%= @model.t :target_host_subdir %></dt>
+  <dd>
+    <%= @item.target_host_subdir %>
+    <%= f.hidden_field :target_host_subdir %>
+  </dd>
+  <dt><%= @model.t :target_host_parent_id %></dt>
+  <dd>
+    <%= @item.target_host_parent.try(:name) %>
+    <%= f.hidden_field :target_host_parent_id %>
+  </dd>
   <dt><%= @model.t :source_site_id %></dt>
   <dd>
     <%= tryb { @item.source_site.name } %>

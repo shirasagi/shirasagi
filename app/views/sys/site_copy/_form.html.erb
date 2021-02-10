@@ -8,6 +8,12 @@
   <dt><%= @model.t :target_host_domains %><%= @model.tt :target_host_domains %></dt>
   <dd><%= f.text_field :target_host_domains %></dd>
 
+  <dt><%= @model.t :target_host_subdir %><%= @model.tt :target_host_subdir %></dt>
+  <dd><%= f.text_field :target_host_subdir %></dd>
+
+  <dt><%= @model.t :target_host_parent_id %><%= @model.tt :target_host_parent_id %></dt>
+  <dd><%= f.select :target_host_parent_id, options_from_collection_for_select(SS::Site.all, :id, :name), include_blank: true %></dd>
+
   <dt><%= @model.t :source_site_id %><%= @model.tt :source_site_id %></dt>
   <dd>
     <%= f.hidden_field "source_site_id", value: "", class: "hidden-ids" %>

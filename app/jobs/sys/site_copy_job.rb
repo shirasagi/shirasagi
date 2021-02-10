@@ -29,6 +29,8 @@ class Sys::SiteCopyJob < SS::ApplicationJob
       name: @task.target_host_name,
       host: @task.target_host_host,
       domains: @task.target_host_domains,
+      subdir: @task.target_host_subdir,
+      parent_id: @task.target_host_parent_id,
       max_name_length: @src_site.max_name_length
     }
     @dest_site = Cms::Site.create(dest_site_params.merge(group_ids: @src_site.group_ids))
