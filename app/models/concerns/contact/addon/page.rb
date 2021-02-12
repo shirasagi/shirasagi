@@ -11,7 +11,7 @@ module Contact::Addon
       field :contact_email, type: String
       field :contact_link_url, type: String
       field :contact_link_name, type: String
-      belongs_to :contact_group, class_name: "SS::Group"
+      belongs_to :contact_group, class_name: "Cms::Group"
 
       validates :contact_link_url, "sys/trusted_url" => true
 
