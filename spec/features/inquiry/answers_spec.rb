@@ -267,6 +267,7 @@ describe "inquiry_answers", type: :feature, dbscope: :example do
         expect(csv_lines[0][12]).to eq Inquiry::Answer.t('inquiry_page_url')
         expect(csv_lines[0][13]).to eq Inquiry::Answer.t('inquiry_page_name')
         expect(csv_lines[0][14]).to eq Inquiry::Answer.t('created')
+        expect(csv_lines[0][15]).to eq Inquiry::Answer.t('updated')
         expect(csv_lines[1][0]).to eq answer.id.to_s
         expect(csv_lines[1][1]).to eq((answer.label :state))
         expect(csv_lines[1][2]).to eq answer.comment
@@ -282,6 +283,7 @@ describe "inquiry_answers", type: :feature, dbscope: :example do
         expect(csv_lines[1][12]).to be_nil
         expect(csv_lines[1][13]).to be_nil
         expect(csv_lines[1][14]).to eq answer.created.strftime('%Y/%m/%d %H:%M')
+        expect(csv_lines[1][15]).to eq answer.updated.strftime('%Y/%m/%d %H:%M')
       end
     end
 
@@ -311,6 +313,7 @@ describe "inquiry_answers", type: :feature, dbscope: :example do
         expect(csv_lines[0][11]).to eq Inquiry::Answer.t('inquiry_page_url')
         expect(csv_lines[0][12]).to eq Inquiry::Answer.t('inquiry_page_name')
         expect(csv_lines[0][13]).to eq Inquiry::Answer.t('created')
+        expect(csv_lines[0][14]).to eq Inquiry::Answer.t('updated')
         expect(csv_lines[1][0]).to eq answer.id.to_s
         expect(csv_lines[1][1]).to eq((answer.label :state))
         expect(csv_lines[1][2]).to eq answer.comment
@@ -325,6 +328,7 @@ describe "inquiry_answers", type: :feature, dbscope: :example do
         expect(csv_lines[1][11]).to be_nil
         expect(csv_lines[1][12]).to be_nil
         expect(csv_lines[1][13]).to eq answer.created.strftime('%Y/%m/%d %H:%M')
+        expect(csv_lines[1][14]).to eq answer.updated.strftime('%Y/%m/%d %H:%M')
       end
     end
   end
