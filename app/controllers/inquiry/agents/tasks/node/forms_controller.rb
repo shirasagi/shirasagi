@@ -34,6 +34,12 @@ class Inquiry::Agents::Tasks::Node::FormsController < ApplicationController
 
   def generate
     @node.save # save for release date
+
+    if !@node.serve_static_file?
+      file = ::File.join(@node.path,"index.html")
+      File.delete(file) if File.exists?(file)
+    end
+
     if generate_inquiry_node @node
       @task.log "#{@node.url}index.html" if @task
     end
