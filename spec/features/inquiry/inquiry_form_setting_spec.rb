@@ -58,7 +58,7 @@ describe "inquiry_form", type: :feature, dbscope: :example, js: true do
     before { login_cms_user }
 
     it do
-      visit article.full_url
+      visit article.url
       expect(page).to have_no_content I18n.t("contact.view.inquiry_form")
 
       visit edit_site_path
@@ -68,8 +68,9 @@ describe "inquiry_form", type: :feature, dbscope: :example, js: true do
 
       visit edit_article_path
       click_on I18n.t("ss.buttons.publish_save")
+      expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
 
-      visit article.full_url
+      visit article.url
       expect(page).to have_content I18n.t("contact.view.inquiry_form")
 
       click_on I18n.t("contact.view.inquiry_form")
