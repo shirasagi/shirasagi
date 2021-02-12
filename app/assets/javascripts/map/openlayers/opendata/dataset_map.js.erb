@@ -22,49 +22,54 @@ this.Openlayers_Dataset_Map = (function () {
     // remove renderInBox class
     $(item).find("a").removeClass("cboxElement");
 
-    // checkbox
     $(item).find('[name="resource_id"]').each(function (idx) {
       var resource_id = $(this).val();
 
       $(this).data("map_points", Openlayers_Dataset_Map.map_points[dataset_id][resource_id]);
+
+      // checkbox
       $(this).on("click", function () {
-
-        Openlayers_Dataset_Map.map.removeMarkers();
-        Openlayers_Dataset_Map.map.removeloadedLayers();
-        $(".dataset-search .selected-item .set-markers:checked").each(function () {
-          var map_points = $(this).data("map_points");
-
-          if (map_points["points"]) {
-            Openlayers_Dataset_Map.map.renderMarkers(map_points["points"]);
-          } else if (map_points["format"] == "KML") {
-            Openlayers_Dataset_Map.map.loadLayer(map_points["url"], ol.format.KML);
-          } else if (map_points["format"] == "GEOJSON") {
-            Openlayers_Dataset_Map.map.loadLayer(map_points["url"], ol.format.GeoJSON);
-          }
-          Openlayers_Dataset_Map.map.resize();
-        });
+        Openlayers_Dataset_Map.setMarkers();
+        Openlayers_Dataset_Map.map.resize();
       });
+
+      // select marker image
+      $(this).closest("li").find(".marker-image-form .select-marker-image").on("click", function () {
+        var form = $(this).closest(".marker-image-form");
+        var images = $(form).find(".images");
+
+        $(".marker-image-form .images").hide();
+
+        images.show();
+        $("body").not(this).one("click", function (e) {
+          images.hide();
+        });
+
+        return false;
+      });
+
+      // marker images
+      $(this).closest("li").find(".marker-image-form .images .image").on("click", function () {
+        var form = $(this).closest(".marker-image-form");
+        var images = $(form).find(".images");
+        var thumb = $(form).find(".marker-thumb img");
+        var src = $(this).find('img').andSelf("img").attr("src");
+
+        form.data("src", src);
+        thumb.attr("src", src);
+        images.hide();
+
+        Openlayers_Dataset_Map.setMarkers();
+        return false;
+      });
+      $(this).closest("li").find(".marker-image-form .marker-thumb").html($('<img src="' + Openlayers_Dataset_Map.map.markerIcon + '">'));
     });
 
     // deselect button
     $(item).find(".deselect").on("click", function (e) {
       $(this).closest(".selected-item").remove();
-
-      Openlayers_Dataset_Map.map.removeMarkers();
-      Openlayers_Dataset_Map.map.removeloadedLayers();
-      $(".selected-item .set-markers:checked").each(function () {
-        var map_points = $(this).data("map_points");
-
-        if (map_points["points"]) {
-          Openlayers_Dataset_Map.map.renderMarkers(map_points["points"]);
-        } else if (map_points["format"] == "KML") {
-          Openlayers_Dataset_Map.map.loadLayer(map_points["url"], ol.format.KML);
-        } else if (map_points["format"] == "GEOJSON") {
-          Openlayers_Dataset_Map.map.loadLayer(map_points["url"], ol.format.GeoJSON);
-        }
-        Openlayers_Dataset_Map.map.resize();
-      });
-
+      Openlayers_Dataset_Map.setMarkers();
+      Openlayers_Dataset_Map.map.resize();
       return false;
     });
 
@@ -78,6 +83,29 @@ this.Openlayers_Dataset_Map = (function () {
 
     return item;
   }
+
+  Openlayers_Dataset_Map.setMarkers = function () {
+    Openlayers_Dataset_Map.map.removeMarkers();
+    Openlayers_Dataset_Map.map.removeloadedLayers();
+    $(".dataset-search .selected-item .set-markers:checked").each(function () {
+      var map_points = $(this).data("map_points");
+      var form = $(this).closest("li").find(".marker-image-form");
+
+      if (form && form.data("src")) {
+        $.each(map_points["points"], function(){
+          this["image"] = form.data("src");
+        });
+      }
+
+      if (map_points["points"]) {
+        Openlayers_Dataset_Map.map.renderMarkers(map_points["points"]);
+      } else if (map_points["format"] == "KML") {
+        Openlayers_Dataset_Map.map.loadLayer(map_points["url"], ol.format.KML);
+      } else if (map_points["format"] == "GEOJSON") {
+        Openlayers_Dataset_Map.map.loadLayer(map_points["url"], ol.format.GeoJSON);
+      }
+    });
+  };
 
   Openlayers_Dataset_Map.toggleSelectButton = function () {
     if ($(".search-ui .items input:checked").size() > 0) {
