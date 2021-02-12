@@ -31,7 +31,7 @@ module Event::Addon::Csv
             html
             schedule venue content cost related_url contact
             categories
-            event_name event_dates
+            event_name event_dates size full_url
             related_pages
             parent_crumb
             released release_date close_date
@@ -81,6 +81,8 @@ module Event::Addon::Csv
         # event
         line << item.event_name
         line << item.event_dates
+        line << item.size
+        line << item.full_url
 
         # related pages
         line << item.related_pages.pluck(:filename).join("\n")

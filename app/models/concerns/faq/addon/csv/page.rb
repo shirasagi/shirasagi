@@ -30,7 +30,7 @@ module Faq::Addon::Csv
             keywords description summary_html
             question html
             categories
-            event_name event_dates
+            event_name event_dates size full_url
             related_pages
             parent_crumb
             contact_state contact_group contact_charge contact_tel contact_fax contact_email contact_link_url contact_link_name
@@ -74,6 +74,8 @@ module Faq::Addon::Csv
         # event
         line << item.event_name
         line << item.event_dates
+        line << item.size
+        line << item.full_url
 
         # related pages
         line << item.related_pages.pluck(:filename).join("\n")
