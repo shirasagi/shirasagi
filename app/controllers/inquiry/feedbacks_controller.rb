@@ -31,7 +31,7 @@ class Inquiry::FeedbacksController < ApplicationController
     end
 
     @cur_node = @cur_node.becomes_with_route
-    raise "403" unless Inquiry::Node::Form.site(@cur_site).include?(@cur_node)
+    raise "403" if @cur_node.route != "inquiry/form"
 
     options = params[:s] || {}
     options[:site] = @cur_site
