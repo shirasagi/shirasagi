@@ -83,7 +83,7 @@ $(".download-all").on("click", function () {
       <% item.areas.sort(order: 1).each_with_index do |area, idx| %>
         <span class="area"><%= area.name %></span>
       <% end %>
-      <% item.tags.each_with_index do |tag, idx| %>
+      <% item.tags.select(&:present?).each_with_index do |tag, idx| %>
         <span class="tag"><%= tag %></span>
       <% end %>
     </div>
