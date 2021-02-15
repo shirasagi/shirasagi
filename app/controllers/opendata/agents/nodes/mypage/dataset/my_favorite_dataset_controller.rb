@@ -6,34 +6,39 @@ class Opendata::Agents::Nodes::Mypage::Dataset::MyFavoriteDatasetController < Ap
   helper Opendata::ListHelper
 
   before_action :set_model
-  before_action :set_item, only: [:remove]
+  before_action :set_favorites
 
   append_view_path "app/views/opendata/agents/nodes/mypage/dataset/my_favorite_dataset"
 
   private
 
   def set_model
-    @model = Opendata::DatasetFavorite
+    @model = Opendata::Dataset
   end
 
-  def set_item
-    @item = @model.site(@cur_site).member(@cur_member).find params[:id]
+  def set_favorites
+    @favorites = Opendata::DatasetFavorite.site(@cur_site).
+      member(@cur_member)
   end
 
   public
 
   def index
-    @items = []
-    @model.site(@cur_site).member(@cur_member).order_by(updated: -1).each do |favorite|
-      next if favorite.dataset.nil?
-      @items << favorite
-    end
-    @items = Kaminari.paginate_array(@items).page(params[:page]).per(20)
-    render
+    dataset_ids = @favorites.pluck(:dataset_id)
+
+    s = params.permit(s: [@model.search_params])[:s].presence || {}
+    sort = @model.sort_hash(s[:sort])
+
+    @items = @model.site(@cur_site).
+      in(id: dataset_ids).
+      search(s.merge(site: @cur_site)).
+      order_by(sort).
+      page(params[:page]).
+      per(20)
   end
 
   def remove
-    @item.destroy
+    @favorites.where(dataset_id: params[:id]).destroy_all
     redirect_to @cur_node.url, notice: I18n.t("opendata.notice.remove_favorite")
   end
 end
