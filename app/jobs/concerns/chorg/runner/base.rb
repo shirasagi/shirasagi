@@ -105,11 +105,11 @@ module Chorg::Runner::Base
   def entity_title(entity)
     title = ''
     if entity.respond_to?(:name)
-      title << entity.name
+      title << entity.name.to_s
     end
     if entity.respond_to?(:url)
       title << '('
-      title << entity.url
+      title << entity.url.to_s
       title << ')'
     end
     title
