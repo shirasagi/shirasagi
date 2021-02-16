@@ -7,14 +7,8 @@ SS_Tabs.render("#cms-tabs-<%= @cur_part.id %>");
   <article class="tab" id="cms-tab-<%= @cur_part.id %>-<%= idx %>">
     <header><h2><%= tab[:name] %></h2></header>
     <div class="pages">
-      <% tab[:pages].each do |item| %>
-      <article class="<%= 'new' if @cur_part.in_new_days?(item.date) %>">
-        <header>
-          <time datetime="<%= item.date.to_date %>"><%= I18n.l item.date.to_date, format: :long %></time>
-          <h3><%= link_to item.name_for_index, item.url %></h3>
-        </header>
-      </article>
-      <% end %>
+      <% @items = tab[:pages] %>
+      <%= render_page_list %>
     </div>
     <nav class="feed">
       <%= link_to t('ss.links.more'), tab[:url], class: "more" if tab[:url] %>
