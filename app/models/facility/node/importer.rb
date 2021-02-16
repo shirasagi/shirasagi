@@ -13,9 +13,11 @@ class Facility::Node::Importer
 
   def import(file, opts = {})
     @task = opts[:task]
+    @count_errors = 0
 
     put_log("import start #{file.filename}")
     import_csv(file)
+    put_log(I18n.t("cms.count_log_of_errors", number_of_errors: @count_errors))
   end
 
   private
@@ -35,37 +37,121 @@ class Facility::Node::Importer
   def import_csv(file)
     table = CSV.read(file.path, headers: true, encoding: 'SJIS:UTF-8')
     table.each_with_index do |row, i|
+      row_num = i + 2
       begin
-        name = update_row(row)
-        put_log("update #{i + 1}: #{name}")
+        update_row(row, row_num)
       rescue => e
-        put_log("error  #{i + 1}: #{e}")
+        put_log("error #{row_num}#{I18n.t("cms.row_num")}: #{e}")
       end
     end
   end
 
-  def update_row(row)
+  def update_row(row, row_num)
     filename = "#{node.filename}/#{row[model.t(:filename)]}"
     item = model.find_or_initialize_by filename: filename, site_id: site.id
     item.cur_site = site
     set_page_attributes(row, item)
+    put_log_of_insert(item, row_num, row)
 
     if item.save
       name = item.name
     else
+      @count_errors += 1
       raise item.errors.full_messages.join(", ")
     end
 
     if row[model.t(:map_points)].present?
       filename = "#{filename}/map.html"
       map = ::Facility::Map.find_or_create_by filename: filename
-      set_map_attributes(row, map)
+      set_map_attributes(row, map, row_num)
       map.site = site
       map.save
       name += " #{map.map_points.first.try(:[], "loc")}"
     end
 
     return name
+  end
+
+  def put_log_of_insert(item, row_num, row)
+    if item.invalid?
+      @count_errors += 1
+      put_log(I18n.t("cms.log_of_the_failed_import", row_num: row_num))
+    elsif item.new_record?
+      put_log("add #{row_num}#{I18n.t("cms.row_num")}:  #{item.name}")
+    end
+
+    put_log_of_category(item.name, row_num, row)
+    put_log_of_location(item.name, row_num, row)
+    put_log_of_service(item.name, row_num, row)
+    put_log_of_group(item.name, row_num, row)
+
+    return if item.invalid? || item.new_record?
+
+    put_log_of_update(item, row_num)
+  end
+
+  def put_log_of_category(item_name, row_num, row)
+    inputted_category = row[model.t(:categories)].to_s.split(/\n/).map(&:strip)
+    category_in_db = Facility::Node::Category.in(id: node.st_category_ids).pluck(:name)
+
+    inputted_category.each do |category|
+      next if category_in_db.include?(category)
+      @count_errors += 1
+      put_log(I18n.t("cms.log_of_the_failed_category", category: category, row_num: row_num))
+    end
+  end
+
+  def put_log_of_location(item_name, row_num, row)
+    inputted_location = row[model.t(:locations)].to_s.split(/\n/).map(&:strip)
+    location_in_db = Facility::Node::Location.in(id: node.st_location_ids).pluck(:name)
+
+    inputted_location.each do |location|
+      next if location_in_db.include?(location)
+      @count_errors += 1
+      put_log(I18n.t("cms.log_of_the_failed_location", location: location, row_num: row_num))
+    end
+  end
+
+  def put_log_of_service(item_name, row_num, row)
+    inputted_service = row[model.t(:services)].to_s.split(/\n/).map(&:strip)
+    service_in_db = Facility::Node::Service.in(id: node.st_service_ids).pluck(:name)
+
+    inputted_service.each do |service|
+      next if service_in_db.include?(service)
+      @count_errors += 1
+      put_log(I18n.t("cms.log_of_the_failed_service", service: service, row_num: row_num))
+    end
+  end
+
+  def put_log_of_group(item_name, row_num, row)
+    inputted_group = row[model.t(:groups)].to_s.split(/\n/).map(&:strip)
+    group_in_db = SS::Group.in(id: node.group_ids).pluck(:name)
+
+    inputted_group.each do |group|
+      next if group_in_db.include?(group)
+      @count_errors += 1
+      put_log(I18n.t("cms.log_of_the_failed_group", group: group, row_num: row_num))
+    end
+  end
+
+  def put_log_of_update(item, row_num)
+    item.changes.each do |change_data|
+      changed_field = change_data[0]
+      before_changing_data = change_data[1][0]
+      after_changing_data = change_data[1][1]
+      next if changed_field == "additional_info" && before_changing_data.nil? && after_changing_data == []
+
+      field_name = "update #{row_num}#{I18n.t("cms.row_num")}:  #{I18n.t("mongoid.attributes.facility/node/page.#{changed_field}")}："
+
+      if item.fields[changed_field].options[:metadata].nil?
+        put_log("#{field_name}#{before_changing_data} → #{after_changing_data}")
+      else
+        klass = item.fields[changed_field].options[:metadata][:elem_class].constantize
+        before_changing_metadata = klass.in(id: before_changing_data).pluck(:name)
+        after_changing_metadata = klass.in(id: after_changing_data).pluck(:name)
+        put_log("#{field_name}#{before_changing_metadata} → #{after_changing_metadata}")
+      end
+    end
   end
 
   def set_page_attributes(row, item)
@@ -88,6 +174,7 @@ class Facility::Node::Importer
   def set_page_categories(row, item)
     names = row[model.t(:categories)].to_s.split(/\n/).map(&:strip)
     ids = node.st_categories.in(name: names).map(&:id)
+
     item.category_ids = SS::Extensions::ObjectIds.new(ids)
 
     names = row[model.t(:locations)].to_s.split(/\n/).map(&:strip)
@@ -99,12 +186,20 @@ class Facility::Node::Importer
     item.service_ids = SS::Extensions::ObjectIds.new(ids)
   end
 
-  def set_map_attributes(row, item)
+  def set_map_attributes(row, item, row_num)
     points = row[model.t(:map_points)].split(/\n/).map do |loc|
       { loc: Map::Extensions::Loc.mongoize(loc) }
     end
 
     item.name = "map"
     item.map_points = Map::Extensions::Points.new(points)
+
+    return if item.new_record?
+
+    item.changes.each do |change_data|
+      before_changing_data = change_data[1][0]#[0][:loc]
+      after_changing_data = change_data[1][1]#[0][:loc]
+      put_log("update #{row_num}#{I18n.t("cms.row_num")}:  #{I18n.t("mongoid.attributes.facility/node/page.#{change_data[0]}")}：#{before_changing_data} → #{after_changing_data}")
+    end
   end
 end

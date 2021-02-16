@@ -103,7 +103,10 @@ ja:
         field: 項目名
         value: 内容
         map_points: 座標
-        groups: 管理グループ
+        location_ids: 施設の地域
+        category_ids: 施設の種類
+        group_ids: 管理グループ
+        service_ids: 施設の用途
       facility/node/search:
         search_html: 検索HTML
         map_html: 地図HTML
