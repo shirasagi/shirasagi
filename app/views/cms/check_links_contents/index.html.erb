@@ -12,7 +12,7 @@
       <td><%= link_to item.name, { action: :show, id: item }, class: "title" %></td>
       <td>
         <% if item.public? %>
-          <%= link_to item.full_url, item.full_url, target: :_blank %>
+          <%= link_to item.full_url, item.full_url, target: :_blank, rel: "noopener" %>
         <% else %>
           <%= item.name %>
         <% end %>

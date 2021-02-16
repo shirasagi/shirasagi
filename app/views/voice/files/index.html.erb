@@ -18,7 +18,7 @@
           <nav class="tap-menu">
             <%= link_to t('ss.links.show'), action: :show, id: item %>
             <%= link_to t('ss.links.delete'), action: :delete, id: item %>
-            <%= link_to t('ss.links.view_site'), item.url, target: :_blank %>
+            <%= link_to t('ss.links.view_site'), item.url, target: :_blank, rel: "noopener" %>
           </nav>
           <%= link_to item.url, action: :show, id: item %></td>
         <td><%= item.updated.strftime("%Y/%m/%d %H:%M") %></td>

@@ -1,6 +1,6 @@
 <dl class="see">
   <dt><%= @model.t :url %></dt>
-  <dd><%= link_to @item.url, @item.url, target: :_blank %></dd>
+  <dd><%= link_to @item.url, @item.url, target: :_blank, rel: "noopener" %></dd>
 
   <% if @item.exists? && @item.has_error == 0 %>
   <dt><%= @model.t :play %></dt>

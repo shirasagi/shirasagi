@@ -1,7 +1,7 @@
 <% return unless @gws_workflow_print %>
 
 <% render_file = proc do |file| %>
-  <%= link_to file.url, { class: "approver-file", target: "_blank" } do %>
+  <%= link_to file.url, { class: "approver-file", target: "_blank", rel: "noopener" } do %>
     <% if file.image? %>
       <%= image_tag(file.thumb_url, class: "thumb") %>
     <% else %>

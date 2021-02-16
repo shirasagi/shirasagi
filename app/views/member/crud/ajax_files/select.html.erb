@@ -1,5 +1,5 @@
 <div class="file-view" data-file-id="<%= @item.id %>" data-humanized-name="<%= @item.humanized_name %>">
-  <a class="thumb" href="<%= view_member_apis_temp_file_path(member: @cur_member.id, id: @item) %>" target="_blank">
+  <a class="thumb" href="<%= view_member_apis_temp_file_path(member: @cur_member.id, id: @item) %>" target="_blank" rel="noopener">
     <% if @item.image? %>
     <img src="<%= thumb_member_apis_temp_file_path(member: @cur_member.id, id: @item, _: @item.updated.to_i) %>" alt="<%= @item.basename %>" />
     <% else %>

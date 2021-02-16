@@ -58,7 +58,7 @@ $("#ajax-box .submitters a").on("click", cboxLoad);
           <header>
             <span class="dataset-no"><%= sprintf("%010d", item.id) %></span>
             <span class="dataset-name">
-              <%= link_to item.name, item.url, target: "_blank" %>
+              <%= link_to item.name, item.url, target: "_blank", rel: "noopener" %>
             </span>
             <%= button_tag t('ss.buttons.delete'), type: 'button', class: %w(btn deselect) %>
           </header>

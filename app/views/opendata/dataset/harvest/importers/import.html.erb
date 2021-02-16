@@ -7,7 +7,7 @@
     <% if Cms::Tool.allowed?(:edit, @cur_user, site: @cur_site) %>
       <dl class="see">
         <dt><%= t("job.main") %></dt>
-        <dd><%= link_to t("job.log"), job_cms_logs_path, target: "_blank" %></dd>
+        <dd><%= link_to t("job.log"), job_cms_logs_path, target: "_blank", rel: "noopener" %></dd>
       </dl>
     <% end %>
   </section>

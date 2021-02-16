@@ -30,6 +30,9 @@ class Cms::Column::Value::UrlField2 < Cms::Column::Value::Base
 
     if link_target.present?
       attrs[:target] = link_target
+      if link_target == "_blank"
+        attrs[:rel] = "noopener"
+      end
     end
 
     attrs

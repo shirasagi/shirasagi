@@ -189,7 +189,7 @@ html = []
 html << '<p><a class="icon-pdf" href="' + file_1.url + '">サンプルファイル (PDF 783KB)</a></p>'
 html << '<p>'
 [file_2, file_3, file_4, file_5, file_6].each do |file|
-  html << '<a alt="' + file.name + '" href="' + file.url + '" target="_blank">'
+  html << '<a alt="' + file.name + '" href="' + file.url + '" target="_blank" rel="noopener">'
   html << '<img alt="' + file.name + '" src="' + file.thumb_url + '" title="' + file.filename + '" />'
   html << '</a>'
 end

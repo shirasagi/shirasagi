@@ -5,7 +5,7 @@
   <dt><%= @model.t :basename %></dt>
   <dd><%= @item.send :basename %></dd>
   <dd>
-    <%= @item.public? ? link_to(@item.full_url, @item.full_url, target: "_blank") : @item.full_url %>
+    <%= @item.public? ? link_to(@item.full_url, @item.full_url, target: "_blank", rel: "noopener") : @item.full_url %>
   </dd>
 
   <% if @item.send(:layout_id).present? %>

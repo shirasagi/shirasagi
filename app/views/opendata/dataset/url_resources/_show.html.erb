@@ -23,7 +23,7 @@
   <dd><%= @item.label :crawl_update %></dd>
 
   <dt><%= @model.t :text %></dt>
-  <dd><%= auto_link br(@item.text), html: { target: "_blank" } %></dd>
+  <dd><%= auto_link br(@item.text), html: { target: "_blank", rel: "noopener" } %></dd>
 
   <% if @item.tsv_present? %>
   <dt><%= @model.t :tsv_id %></dt>

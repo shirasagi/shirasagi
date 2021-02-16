@@ -8,7 +8,7 @@
   <% end %>
 
   <dt><%= @model.t :text %></dt>
-  <dd><%= auto_link br(@item.text), html: { target: "_blank" } %></dd>
+  <dd><%= auto_link br(@item.text), html: { target: "_blank", rel: "noopener" } %></dd>
 
 </dl>
 

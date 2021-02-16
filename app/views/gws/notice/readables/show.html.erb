@@ -29,7 +29,7 @@
         <div class="files">
           <% @item.files.each do |file| %>
           <span id="file-<%= file.id %>">
-            <%= link_to file.humanized_name, file.url, class: "icon-#{file.extname}", target: '_blank' %>
+            <%= link_to file.humanized_name, file.url, class: "icon-#{file.extname}", target: '_blank', rel: "noopener" %>
           </span>
           <% end %>
         </div>

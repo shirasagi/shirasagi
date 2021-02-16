@@ -26,6 +26,6 @@
 
   <% if @cur_node.related_url.present? %>
     <dt><%= @cur_node.class.t :related_url %></dt>
-    <dd><%= link_to(@cur_node.related_url, @cur_node.related_url, target: "_blank") %></dd>
+    <dd><%= link_to(@cur_node.related_url, @cur_node.related_url, target: "_blank", rel: "noopener") %></dd>
   <% end %>
 </dl>

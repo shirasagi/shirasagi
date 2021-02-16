@@ -2,7 +2,7 @@
 
 return if @items.blank?
 wrap_id = "ads-banners-#{@items[0].id}"
-target = @cur_part.link_target.present? ? %(target="#{@cur_part.link_target}") : nil
+target = @cur_part.link_target.present? ? %(target="#{@cur_part.link_target}" rel="noopener") : nil
 
 %>
 <%= jquery do %>

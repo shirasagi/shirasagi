@@ -4,7 +4,7 @@
   <% if file.present? %>
     <div id="selected-files">
       <div class="file-view" data-file-id="<%= file.id %>">
-        <%= link_to file.url, class: :thumb, target: "_blank" do %>
+        <%= link_to file.url, class: :thumb, target: "_blank", rel: "noopener" do %>
           <% if file.image? %>
             <%= image_tag file.thumb_url, alt: file.name %>
           <% else %>
