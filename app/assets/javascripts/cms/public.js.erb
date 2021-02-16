@@ -559,13 +559,9 @@ this.SS_VoiceController = (function () {
       "        <button class=\"ss-jp-close\" role=\"button\" tabindex=\"0\">&times;</button>\n" +
       "      </div>\n" +
       "    </div>\n" +
-      "    <div class=\"jp-no-solution\">\n" +
-      "      :URL:\n" +
-      "    </div>\n" +
       "  </div>\n" +
       "</div>";
     var timestamp = (new Date).getTime();
-    var url = '<%= I18n.t("voice.messages.no_audio_solution") %>';
 
     template = template.replace(new RegExp(":TIMESTAMP:", 'g'), timestamp);
     template = template.replace(new RegExp(":URL:", 'g'), url);
