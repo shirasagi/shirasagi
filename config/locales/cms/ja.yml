@@ -62,6 +62,7 @@ ja:
     search_contents_html: HTML検索と置換
     search_contents_pages: ページ検索
     search_contents_files: ファイル一覧
+    search_contents_sitemap: サイトマップ
     show_link_to_part: パーツのリンクを表示
     site: サイト
     site_config: サイト設定
@@ -137,6 +138,7 @@ ja:
       save_as_branch: 差替保存
       ignore_alerts_and_save_as_branch: 警告を無視して差替保存
       column_add_list: リストを追加する
+      download: フォルダ容量をCSVダウンロードする
     confirm:
       delete_item: 項目を削除してよろしいですか？
       close: 非公開状態で保存しようとしています
@@ -212,6 +214,7 @@ ja:
       ruby_off: ふりがなをはずす
       back_to_contents: コンテンツへ戻る
       michecker: miChecker で確認する
+      download: フォルダ容量をCSVダウンロードする
     move_page:
       confirm: 確認
       message: '"%{source}"へのリンクが含まれるページ'
@@ -520,6 +523,7 @@ ja:
     delete_private_cms_forms: 定型フォームの削除（所有）
     delete_other_cms_forms: 定型フォームの削除（全て）
     use_cms_michecker: micheckerの利用
+    use_cms_sitemap: フォルダ容量のCSVダウンロード
 
   modules:
     cms: 標準機能
@@ -2216,6 +2220,22 @@ ja:
     updated: 更新日時
     status: 公開状態
     file_size: 静的ファイル容量
+    size: 容量
+
+  folder_size:
+    name: タイトル
+    index_name: 一覧用タイトル
+    filename: フォルダー名
+    layout: レイアウト
+    depth: フォルダ階層
+    order: 並び順
+    keywords: キーワード
+    description: 概要
+    summary_html: サマリー
+    status: ステータス
+    released: 公開日時
+    group_names: 管理グループ
+    permission_level: 権限レベル
     size: 容量
 
   job:
