@@ -47,7 +47,7 @@ describe 'article_pages', type: :feature, dbscope: :example, js: true do
   let(:column1_value1) { unique_id }
   let(:column2_value1) { "#{rand(2000..2050)}/01/01" }
   let(:column3_label1) { unique_id }
-  let(:column3_url1) { "http://#{unique_id}.example.jp/#{unique_id}/" }
+  let(:column3_url1) { "http://#{site.domain}/#{unique_id}/" }
   let(:column4_value1) { "#{unique_id}#{unique_id}\n#{unique_id}#{unique_id}#{unique_id}" }
   let(:column5_value1) { column5.select_options.sample }
   let(:column6_value1) { column6.select_options.sample }
@@ -67,7 +67,7 @@ describe 'article_pages', type: :feature, dbscope: :example, js: true do
   let(:column1_value2) { unique_id }
   let(:column2_value2) { "#{rand(2000..2050)}/01/01" }
   let(:column3_label2) { unique_id }
-  let(:column3_url2) { "http://#{unique_id}.example.jp/日本語/" }
+  let(:column3_url2) { "http://#{site.domain}/日本語/" }
   let(:column4_value2) { "#{unique_id}#{unique_id}\n#{unique_id}#{unique_id}#{unique_id}" }
   let(:column5_value2) { column5.select_options.sample }
   let(:column6_value2) { column6.select_options.sample }
