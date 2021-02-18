@@ -117,7 +117,7 @@ describe "inquiry_form", type: :feature, dbscope: :example, js: true do
       expect(answer.data.count).to eq 1
       expect(answer.data[0].value).to eq name
       expect(answer.data[0].confirm).to be_nil
-      expect(answer.group_ids).to include(group1.id, *inquiry_form.group_ids)
+      expect(answer.group_ids).to eq [ group1.id ]
 
       expect(ActionMailer::Base.deliveries.count).to eq 1
 

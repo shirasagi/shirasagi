@@ -127,13 +127,7 @@ class Inquiry::Agents::Nodes::FormController < ApplicationController
       end
     end
 
-    @answer.group_ids = @cur_node.group_ids
-    if @group
-      group_ids = []
-      group_ids << @group.id
-      group_ids += @group.parents.pluck(:id)
-      @answer.group_ids = group_ids
-    end
+    @answer.group_ids = @group ? [ @group.id ] : @cur_node.group_ids
 
     if @page
       @answer.inquiry_page_url = @page.url
