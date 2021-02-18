@@ -40,7 +40,7 @@
   <% end %>
   <% if @cur_page.contact_group.present? && @cur_site.inquiry_form.present? %>
     <% url = @cur_site.inquiry_form.url %>
-    <% url = url + "?group=#{@cur_page.contact_group.id}" + "&page=#{@cur_page.id}" %>
+    <% url = url + "?" + { group: @cur_page.contact_group.id, page: @cur_page.id }.to_query %>
     <div class="inquiry-form">
       <%= link_to t("contact.view.inquiry_form"), url %>
     </div>
