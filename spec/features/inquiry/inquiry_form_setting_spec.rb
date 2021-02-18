@@ -52,6 +52,10 @@ describe "inquiry_form", type: :feature, dbscope: :example, js: true do
 
     answer.set_data(data)
     answer.save!
+
+    group = article.contact_group
+    group.contact_email = unique_email
+    group.save!
   end
 
   context "set inquiry form" do
