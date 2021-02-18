@@ -75,17 +75,18 @@ class Inquiry::Agents::Nodes::FormController < ApplicationController
   end
 
   def set_group
-    if params[:group]
-      @group = Cms::Group.site(@cur_site).where(id: params[:group]).first
-      raise "404" if @group.blank?
-    end
+    return if params[:group].blank?
+
+    @group = Cms::Group.site(@cur_site).where(id: params[:group]).first
+    raise "404" if @group.blank?
+    raise "404" if @cur_node.notify_mail_enabled? && @group.contact_email.blank?
   end
 
   def set_page
-    if params[:page]
-      @page = Cms::Page.site(@cur_site).and_public.where(id: params[:page]).first
-      raise "404" if @page.blank?
-    end
+    return if params[:page].blank?
+
+    @page = Cms::Page.site(@cur_site).and_public.where(id: params[:page]).first
+    raise "404" if @page.blank?
   end
 
   public
