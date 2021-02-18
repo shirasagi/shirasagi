@@ -134,6 +134,8 @@ class ApplicationController < ActionController::Base
   end
 
   def trusted_url?(url)
+    return true if Sys::TrustedUrlValidator.url_type == 'any'
+
     url = ::Addressable::URI.parse(url.to_s)
 
     known_trusted_urls = []
