@@ -7,7 +7,7 @@
       <% if @cur_page.contact_group.contact_group_name.present? %>
         <%= @cur_page.contact_group.contact_group_name %>
       <% else %>
-        <%= @cur_page.contact_group.name.sub(/.*\//, "") %>
+        <%= @cur_page.contact_group.section_name %>
       <% end %>
     </p>
   <% end %>
