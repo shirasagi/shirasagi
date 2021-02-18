@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe "gws_login", type: :feature, dbscope: :example, js: true do
+describe "gws_login", type: :feature, dbscope: :example, js: true, fragile: true do
   let!(:site) { gws_site }
   let!(:user) { gws_user }
   let(:name) { unique_id }
