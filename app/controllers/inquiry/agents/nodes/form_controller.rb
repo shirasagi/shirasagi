@@ -76,14 +76,16 @@ class Inquiry::Agents::Nodes::FormController < ApplicationController
 
   def set_group
     if params[:group]
-      @group = Cms::Group.where(id: params[:group]).first
+      @group = Cms::Group.site(@cur_site).where(id: params[:group]).first
       raise "404" if @group.blank?
     end
   end
 
   def set_page
-    @page = Cms::Page.where(id: params[:page]).first if params[:page]
-    raise "404" if params[:page] && @page.blank?
+    if params[:page]
+      @page = Cms::Page.site(@cur_site).and_public.where(id: params[:page]).first
+      raise "404" if @page.blank?
+    end
   end
 
   public

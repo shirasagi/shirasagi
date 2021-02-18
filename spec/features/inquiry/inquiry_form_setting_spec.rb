@@ -116,6 +116,9 @@ describe "inquiry_form", type: :feature, dbscope: :example, js: true do
       select node.name, from: "item_inquiry_form_id"
       click_button I18n.t('ss.buttons.save')
 
+      site.reload
+      expect(site.inquiry_form_id).to eq node.id
+
       visit new_article_node_path
       find("#addon-contact-agents-addons-page").click
       expect(find("#item_contact_email").value).not_to eq cms_group.contact_email
