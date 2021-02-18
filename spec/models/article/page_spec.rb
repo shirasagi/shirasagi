@@ -685,7 +685,7 @@ describe Article::Page, dbscope: :example do
           create(
             :article_page, cur_node: node, contact_state: "show", contact_charge: unique_id,
             contact_tel: "0000", contact_fax: "9999", contact_email: "#{unique_id}@example.jp",
-            contact_link_url: "https://#{unique_id}.example.jp/", contact_link_name: unique_id,
+            contact_link_url: "/#{unique_id}/", contact_link_name: unique_id,
             contact_group: group1
           )
         end

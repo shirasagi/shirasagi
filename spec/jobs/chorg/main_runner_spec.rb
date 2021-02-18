@@ -781,7 +781,7 @@ describe Chorg::MainRunner, dbscope: :example do
           contact_email: unique_email,
           contact_tel: unique_tel,
           contact_fax: unique_tel,
-          contact_link_url: unique_url,
+          contact_link_url: "/#{unique_id}/",
           contact_link_name: unique_id
         }
       end
@@ -794,7 +794,7 @@ describe Chorg::MainRunner, dbscope: :example do
           contact_email: unique_email,
           contact_tel: unique_tel,
           contact_fax: unique_tel,
-          contact_link_url: unique_url,
+          contact_link_url: "/#{unique_id}/",
           contact_link_name: unique_id,
           ldap_dn: ""
         }
@@ -833,7 +833,7 @@ describe Chorg::MainRunner, dbscope: :example do
           contact_email: unique_email,
           contact_tel: unique_tel,
           contact_fax: unique_tel,
-          contact_link_url: unique_url,
+          contact_link_url: "/#{unique_id}/",
           contact_link_name: unique_id
         )
       end
@@ -906,7 +906,7 @@ describe Chorg::MainRunner, dbscope: :example do
           contact_email: unique_email,
           contact_tel: unique_tel,
           contact_fax: unique_tel,
-          contact_link_url: unique_url,
+          contact_link_url: "/#{unique_id}/",
           contact_link_name: unique_id,
           ldap_dn: ""
         }
@@ -934,7 +934,7 @@ describe Chorg::MainRunner, dbscope: :example do
           contact_email: unique_email,
           contact_tel: unique_tel,
           contact_fax: unique_tel,
-          contact_link_url: unique_url,
+          contact_link_url: "/#{unique_id}/",
           contact_link_name: unique_id
         )
       end
@@ -989,7 +989,7 @@ describe Chorg::MainRunner, dbscope: :example do
           contact_email: unique_email,
           contact_tel: unique_tel,
           contact_fax: unique_tel,
-          contact_link_url: unique_url,
+          contact_link_url: "/#{unique_id}/",
           contact_link_name: unique_id
         }
       end
@@ -1002,7 +1002,7 @@ describe Chorg::MainRunner, dbscope: :example do
           contact_email: unique_email,
           contact_tel: unique_tel,
           contact_fax: unique_tel,
-          contact_link_url: unique_url,
+          contact_link_url: "/#{unique_id}/",
           contact_link_name: unique_id,
           ldap_dn: ""
         }
@@ -1041,7 +1041,7 @@ describe Chorg::MainRunner, dbscope: :example do
           contact_email: unique_email,
           contact_tel: unique_tel,
           contact_fax: unique_tel,
-          contact_link_url: unique_url,
+          contact_link_url: "/#{unique_id}/",
           contact_link_name: unique_id
         )
       end
@@ -1114,7 +1114,7 @@ describe Chorg::MainRunner, dbscope: :example do
           contact_email: unique_email,
           contact_tel: unique_tel,
           contact_fax: unique_tel,
-          contact_link_url: unique_url,
+          contact_link_url: "/#{unique_id}/",
           contact_link_name: unique_id,
           ldap_dn: ""
         }
@@ -1142,7 +1142,7 @@ describe Chorg::MainRunner, dbscope: :example do
           contact_email: unique_email,
           contact_tel: unique_tel,
           contact_fax: unique_tel,
-          contact_link_url: unique_url,
+          contact_link_url: "/#{unique_id}/",
           contact_link_name: unique_id
         )
       end

@@ -12,6 +12,9 @@ module Contact::Addon
       field :contact_link_url, type: String
       field :contact_link_name, type: String
       belongs_to :contact_group, class_name: "SS::Group"
+
+      validates :contact_link_url, "sys/trusted_url" => true
+
       permit_params :contact_state, :contact_group_id, :contact_charge
       permit_params :contact_tel, :contact_fax, :contact_email
       permit_params :contact_link_url, :contact_link_name
