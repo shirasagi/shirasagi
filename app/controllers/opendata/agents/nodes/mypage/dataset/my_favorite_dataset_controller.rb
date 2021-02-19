@@ -26,7 +26,7 @@ class Opendata::Agents::Nodes::Mypage::Dataset::MyFavoriteDatasetController < Ap
   def index
     dataset_ids = @favorites.pluck(:dataset_id)
 
-    s = params.permit(s: [@model.search_params])[:s].presence || {}
+    s = params.permit(s: [:sort, :keyword])[:s].presence || {}
     sort = @model.sort_hash(s[:sort])
 
     @items = @model.site(@cur_site).
@@ -34,7 +34,7 @@ class Opendata::Agents::Nodes::Mypage::Dataset::MyFavoriteDatasetController < Ap
       search(s.merge(site: @cur_site)).
       order_by(sort).
       page(params[:page]).
-      per(20)
+      per(5)
   end
 
   def remove

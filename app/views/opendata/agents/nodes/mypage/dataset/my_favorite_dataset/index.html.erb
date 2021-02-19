@@ -1,23 +1,14 @@
 <% @s = OpenStruct.new params[:s] %>
 <div class="opendata-datasets datasets">
   <%= form_for :s, url: @cur_node.url, html: { class: "opendata-search-datasets-form", method: :get } do |f| %>
-    <dl class="keyword">
-      <dt><%= f.label(:keyword, I18n.t("opendata.labels.keyword")) %></dt>
-      <dd><%= f.text_field(:keyword) %></dd>
-    </dl>
-    <dl class="sort">
-      <dt><%= f.label(:sort, I18n.t("opendata.labels.sort")) %></dt>
-      <dd><%= f.select(:sort, Opendata::Dataset.sort_options) %></dd>
-    </dl>
-    <div class="send">
-      <%= submit_tag(t("ss.buttons.search"), name: :search) %>
-    </div>
+    <label><%= f.label(:sort, I18n.t("opendata.labels.sort")) %><label>
+    <%= f.select :sort, Opendata::Dataset.sort_options %>
+    <%= f.text_field :keyword, placeholder: t("opendata.labels.keyword") %>
+    <%= submit_tag(t("ss.buttons.search"), name: :search) %>
+    <%= render file: "_download" %>
   <% end %>
 
   <% if @items.present? %>
-    <%= paginate @items if @items.try(:current_page) %>
-
-    <%= render file: "_menu" %>
     <table class="opendata-datasets index">
       <tr>
         <td class="released"><%= @model.t :released %></td>
