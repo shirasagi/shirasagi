@@ -53,6 +53,7 @@ module Cms::PageFilter
     cond = []
     if @item.respond_to?(:url) && @item.respond_to?(:full_url)
       cond << { contains_urls: { '$in' => [ @item.url, @item.full_url ] } }
+      cond << { form_contains_urls: { '$in' => [ @item.url, @item.full_url ] } }
     end
 
     if @item.respond_to?(:files) && @item.files.present?
