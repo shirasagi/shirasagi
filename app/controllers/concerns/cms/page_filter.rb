@@ -4,8 +4,9 @@ module Cms::PageFilter
   include Cms::MicheckerFilter
 
   included do
-    before_action :set_item, only: [:show, :edit, :update, :delete, :destroy, :move, :copy, :contains_urls]
-    before_action :set_contains_urls_items, only: [:contains_urls, :edit, :delete]
+    before_action :set_item, only: [:show, :edit, :update, :delete, :destroy, :move, :copy, :contains_urls, :closed_save]
+    before_action :set_contains_urls_items, only: [:contains_urls, :edit, :closed_save, :delete]
+    before_action :check_permission, only: [:closed_save, :delete]
   end
 
   private
@@ -201,6 +202,26 @@ module Cms::PageFilter
     render
   end
 
+  def closed_save
+    raise "403" unless @item.allowed?(:edit, @cur_user, site: @cur_site, node: @cur_node)
+    raise "403" unless @item.allowed?(:release, @cur_user, site: @cur_site, node: @cur_node)
+    raise "404" unless @item.state == "public"
+    if @item.is_a?(Cms::Addon::EditLock)
+      unless @item.acquire_lock
+        redirect_to action: :lock
+        return
+      end
+    end
+
+    if request.get?
+      render
+      return
+    end
+
+    @item.state = "closed"
+    render_update @item.save
+  end
+
   def set_tag_all
     if @cur_node
       safe_params = params.permit(:tag, ids: [])
@@ -229,5 +250,14 @@ module Cms::PageFilter
     end
 
     render_update true, location: { action: :index }, render: { file: :index }
+  end
+
+  def check_permission
+    @delete_alert_flg = true
+    @edit_alert_flg = true
+    login_user = @cur_user.cms_user
+
+    @delete_alert_flg = false if login_user.cms_role_permit_any?(@cur_site, %w(delete_cms_ignore_alert)) || @contains_urls.empty?
+    @edit_alert_flg = false if login_user.cms_role_permit_any?(@cur_site, %w(edit_cms_ignore_alert)) || @contains_urls.empty?
   end
 end

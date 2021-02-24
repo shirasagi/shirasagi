@@ -43,6 +43,10 @@ Rails.application.routes.draw do
     get :contains_urls, on: :member
   end
 
+  concern :closed_save do
+    match :closed_save, on: :member, via: %i[get put]
+  end
+
   concern :tag do
     post :tag, action: :set_tag_all, on: :collection
     delete :tag, action: :reset_tag_all, on: :collection
@@ -59,7 +63,7 @@ Rails.application.routes.draw do
     get "generate" => "generate#index"
     post "generate" => "generate#run"
     resources :pages, concerns: [
-      :deletion, :copy, :move, :lock, :download_all, :import, :command, :opendata_ref, :contains_urls, :tag, :michecker
+      :deletion, :copy, :move, :lock, :download_all, :import, :command, :opendata_ref, :contains_urls, :tag, :michecker, :closed_save
     ]
   end
 

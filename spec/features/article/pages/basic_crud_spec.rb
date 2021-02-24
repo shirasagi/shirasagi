@@ -4,14 +4,20 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
   let(:site) { cms_site }
   let(:node) { create_once :article_node_page, filename: "docs", name: "article" }
   let(:item) { create(:article_page, cur_node: node) }
+  let!(:item2) { create(:article_page, cur_node: node) }
+  let!(:html) { "<p><a href=\"#{item2.url}\">関連記事リンク1</a></p>" }
+  let!(:item3) { create(:article_page, cur_node: node, html: html) }
   let(:index_path) { article_pages_path site.id, node }
   let(:new_path) { new_article_page_path site.id, node }
   let(:show_path) { article_page_path site.id, node, item }
   let(:edit_path) { edit_article_page_path site.id, node, item }
   let(:delete_path) { delete_article_page_path site.id, node, item }
+  let(:delete_path2) { delete_article_page_path site.id, node, item2 }
   let(:move_path) { move_article_page_path site.id, node, item }
   let(:copy_path) { copy_article_page_path site.id, node, item }
   let(:contains_urls_path) { contains_urls_article_page_path site.id, node, item }
+  let(:closed_save_path) { closed_save_article_page_path site.id, node, item }
+  let(:closed_save_path2) { closed_save_article_page_path site.id, node, item2 }
 
   context "basic crud" do
     before { login_cms_user }
@@ -76,18 +82,93 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
       expect(page).to have_css(".state", text: "非公開")
     end
 
-    it "#delete" do
-      visit delete_path
-      within "form" do
-        click_on I18n.t("ss.buttons.delete")
+    context "#delete" do
+      let(:user) { cms_user }
+
+      it "permited and contains_urls" do
+        visit delete_path2
+        expect(page).to have_css(".delete")
+        within "form" do
+          click_on I18n.t("ss.buttons.delete")
+        end
+        expect(page).to have_css('#notice', text: I18n.t('ss.notice.deleted'))
       end
-      expect(page).to have_css('#notice', text: I18n.t('ss.notice.deleted'))
+
+      it "permited and not contains_urls" do
+        visit delete_path
+        expect(page).to have_css(".delete")
+        within "form" do
+          click_on I18n.t("ss.buttons.delete")
+        end
+        expect(page).to have_css('#notice', text: I18n.t('ss.notice.deleted'))
+      end
+
+      it "not permited and contains_urls" do
+        role = user.cms_roles[0]
+        role.update(permissions: %w(delete_private_article_pages delete_other_article_pages))
+        visit delete_path2
+        expect(page).not_to have_css(".delete")
+        expect(page).to have_css(".addon-head", text: I18n.t('ss.confirm.contains_url_expect'))
+      end
+
+      it "not permited and not contains_urls" do
+        role = user.cms_roles[0]
+        role.update(permissions: %w(delete_private_article_pages delete_other_article_pages))
+        visit delete_path
+        expect(page).to have_css(".delete")
+        within "form" do
+          click_on I18n.t("ss.buttons.delete")
+        end
+        expect(page).to have_css('#notice', text: I18n.t('ss.notice.deleted'))
+      end
     end
 
     it "#contains_urls" do
       visit contains_urls_path
       expect(page).to have_css("#addon-basic", text: item.name)
       expect(page).to have_css(".list-head", text: I18n.t("cms.confirm.contains_urls_not_found"))
+    end
+
+    context "#private_save" do
+      let(:user) { cms_user }
+
+      it "permited and contains_urls" do
+        visit closed_save_path2
+        within "form" do
+          click_on I18n.t("ss.buttons.closed_save")
+        end
+        expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+      end
+
+      it "permited and not contains_urls" do
+        visit closed_save_path
+        within "form" do
+          click_on I18n.t("ss.buttons.closed_save")
+        end
+        expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+      end
+
+      it "not permited and contains_urls" do
+        role = user.cms_roles[0]
+        role.update(permissions: %w(
+          edit_private_article_pages edit_other_article_pages release_private_article_pages release_other_article_pages
+        ))
+        visit closed_save_path2
+        expect(page).not_to have_css('.save')
+        expect(page).to have_css(".addon-head", text: I18n.t('ss.confirm.contains_url_expect'))
+      end
+
+      it "not permited and not contains_urls" do
+        role = user.cms_roles[0]
+        role.update(permissions: %w(
+          edit_private_article_pages edit_other_article_pages release_private_article_pages release_other_article_pages
+        ))
+        visit closed_save_path
+        within "form" do
+          click_on I18n.t("ss.buttons.closed_save")
+        end
+        expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+      end
     end
   end
 
