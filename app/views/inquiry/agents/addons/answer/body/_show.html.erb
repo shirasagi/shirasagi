@@ -2,7 +2,7 @@
   <% @item.data.each do |data| %>
     <dt><%= tryb { data.column.name } || "Unknown Name" %></dt>
     <% if data.column && data.column.input_type =~ /upload_file/ %>
-      <dd><%= link_to data.value, inquiry_path(params[:site], params[:cid], params[:id], data.values[0]) %></dd>
+      <dd><%= link_to data.value, { action: :download_afile, fid: data.values[0] } %></dd>
     <% else %>
       <dd><%= br sanitize(data.value, tags: []) %></dd>
     <% end %>

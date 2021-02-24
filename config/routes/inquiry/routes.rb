@@ -16,11 +16,12 @@ Rails.application.routes.draw do
     resources :nodes, concerns: :deletion
     resources :forms, only: [:index]
     resources :columns, concerns: :deletion
-    resources :answers, concerns: [:deletion, :download], only: [:index, :show, :edit, :update, :destroy]
+    resources :answers, concerns: [:deletion, :download], only: [:index, :show, :edit, :update, :destroy] do
+      get :download_afile, on: :member, path: "/fileid/:fid/download"
+    end
     get "results" => "results#index", as: :results
     get "results/download" => "results#download", as: :results_download
     resources :feedbacks, only: [:index, :show]
-    get "answers/:id/fileid/:fid/download" => "answers#download_afile"
   end
 
   node "inquiry" do
@@ -34,6 +35,12 @@ Rails.application.routes.draw do
 
   part "inquiry" do
     get "feedback" => "public#index", cell: "parts/feedback"
+  end
+
+  namespace "inquiry", path: ".s:site/inquiry" do
+    resources :site_answers, path: "answers", concerns: :deletion, only: %i[index show edit update destroy] do
+      get :download_afile, on: :member, path: "/fileid/:fid/download"
+    end
   end
 
 end

@@ -1,10 +1,8 @@
 class Inquiry::AnswersController < ApplicationController
   include Cms::BaseFilter
   include SS::CrudFilter
+  include Inquiry::AnswersFilter
 
-  model Inquiry::Answer
-
-  append_view_path "app/views/cms/pages"
   navi_view "inquiry/main/navi"
 
   before_action :check_permission
@@ -15,10 +13,24 @@ class Inquiry::AnswersController < ApplicationController
     { cur_site: @cur_site, cur_node: @cur_node }
   end
 
+  def check_permission
+    raise "403" unless @cur_node.allowed?(:read, @cur_user, site: @cur_site)
+  end
+
+  def set_items
+    @state = params.dig(:s, :state).presence || "unclosed"
+
+    @items = @model.site(@cur_site).
+      allow(:read, @cur_user).
+      where(node_id: @cur_node.id).
+      search(params[:s]).
+      state(@state)
+  end
+
   def send_csv(items)
     require "csv"
 
-    columns = @cur_node.becomes_with_route("inquiry/form").columns.order_by(order: 1).to_a
+    # columns = @cur_node.becomes_with_route("inquiry/form").columns.order_by(order: 1).to_a
     headers = %w(id state comment).map { |key| @model.t(key) }
     headers += columns.map(&:name)
     headers += %w(source_url source_name inquiry_page_url inquiry_page_name created updated).map { |key| @model.t(key) }
@@ -52,104 +64,14 @@ class Inquiry::AnswersController < ApplicationController
     end
 
     send_data csv.encode("SJIS", invalid: :replace, undef: :replace),
-      filename: "inquiry_answers_#{Time.zone.now.to_i}.csv"
-  end
-
-  def send_afile(file)
-    filedata = []
-    filepath = file.path
-    File.open(filepath, 'rb') do |of|
-      filedata = of.read
-    end
-    if filedata.present? || !filedata.nil?
-      send_data(filedata, :filename => file.name)
-    end
-  end
-
-  def check_permission
-    raise "403" unless @cur_node.allowed?(:read, @cur_user, site: @cur_site)
+              filename: "inquiry_answers_#{Time.zone.now.to_i}.csv"
   end
 
   public
 
-  def index
-    @state = params.dig(:s, :state).presence || "unclosed"
-    if params[:s].present? && params[:s][:group].present?
-      @group = Cms::Group.site(@cur_site).active.find(params[:s][:group])
-    end
-    @groups = Cms::Group.site(@cur_site).active.tree_sort
-
-    @items = @model.site(@cur_site).
-      allow(:read, @cur_user).
-      where(node_id: @cur_node.id).
-      search(params[:s]).
-      state(@state).
-      order_by(updated: -1).
-      page(params[:page]).per(50)
-  end
-
-  def show
-    raise "403" unless @item.allowed?(:read, @cur_user, site: @cur_site)
-    render
-  end
-
-  def edit
-    raise "403" unless @item.allowed?(:edit, @cur_user, site: @cur_site)
-  end
-
-  def delete
-    raise "403" unless @item.allowed?(:delete, @cur_user, site: @cur_site)
-    render
-  end
-
-  def destroy
-    raise "403" unless @item.allowed?(:delete, @cur_user, site: @cur_site)
-    render_destroy @item.destroy
-  end
-
-  def destroy_all
-    raise "400" if @selected_items.blank?
-
-    entries = @selected_items
-    @items = []
-
-    entries.each do |item|
-      item = item.becomes_with_route rescue item
-      if item.allowed?(:delete, @cur_user, site: @cur_site, node: @cur_node)
-        next if item.destroy
-      else
-        item.errors.add :base, :auth_error
-      end
-      @items << item
-    end
-    render_destroy_all(entries.size != @items.size)
-  end
-
   def download
-    raise "403" unless @cur_node.allowed?(:read, @cur_user, site: @cur_site)
-
     @state = params.dig(:s, :state).presence || "unclosed"
-    @items = @model.site(@cur_site).
-      allow(:read, @cur_user).
-      where(node_id: @cur_node.id).
-      search(params[:s]).
-      state(@state).
-      order_by(updated: -1)
+    @items = @items.order_by(updated: -1)
     send_csv @items
-  end
-
-  def download_afile
-    raise "403" unless @cur_node.allowed?(:read, @cur_user, site: @cur_site)
-    if params[:id]
-
-      client_name = Inquiry::Answer.persistence_context.send(:client_name)
-      file = SS::File.with(client: client_name) do |model|
-        model.where(id: params[:fid].to_i).first
-      end
-      unless file.blank?
-        send_afile file
-      end
-      return
-    end
   end
 end

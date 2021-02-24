@@ -110,6 +110,7 @@ ja:
   mongoid:
     models:
       inquiry/column: 入力項目
+      inquiry/answer: 回答データ
     attributes:
       inquiry/addon/message:
         inquiry_html: 説明テキスト
