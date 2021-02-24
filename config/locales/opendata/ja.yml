@@ -42,7 +42,7 @@ ja:
       deselect: 削除
       name: データセット名
       bluk_download: 一括ダウンロード
-      download: "ダウンロード(%{size}件)"
+      download: "一括ダウンロード(%{size}件)"
     search_dataset_groups:
       index: データセットグループを選択する
       search: データセットグループを検索
