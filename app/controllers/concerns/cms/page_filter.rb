@@ -26,9 +26,11 @@ module Cms::PageFilter
       params[:layout_id] = layout_id if layout_id.present?
 
       if n.respond_to?(:st_forms) && n.st_form_ids.include?(n.st_form_default_id)
-        default_form = n.st_form_default
-        if default_form.present? && default_form.allowed?(:read, @cur_user, site: @cur_site)
-          params[:form_id] = default_form.id
+        if @model.fields.key?(:form_id)
+          default_form = n.st_form_default
+          if default_form.present? && default_form.allowed?(:read, @cur_user, site: @cur_site)
+            params[:form_id] = default_form.id
+          end
         end
       end
     end
