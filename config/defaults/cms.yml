@@ -138,6 +138,17 @@ production: &production
     class: ''
     class_categories: 'item-'
 
+  destroy_all:
+    # specify how to delete items
+    #
+    #   -1: always deletes items on the fly.
+    #    0: always deletes items in a job.
+    #    n: if item's count is above n, deletes items in a job. otherwise delete items on the fly.
+    in_job: 35
+
+  # 北海道庁: 移動後の URL 変更を有効にする
+  replace_urls_after_move: true
+
   # basic_auth: [ 'user', 'pass' ]
   # basic_auth: [ "a0w1dWZFdStGR2pHOS9VTGlSRXlYQT09LS1ROFh5RVB4SXFSQjkwNjhSQzZlRTZnPT0=--3da032b7de13acb88d7d9526ef948155f27e0a4a", "NmNVNzV6L0VzWWo4TnE0REMxeFIrdz09LS1weVFrQk9DQ3I4VzNTNFRSV2hkS293PT0=--e4dcab18efa113380568af8b7558e1509522d0fc" ]
 
@@ -157,6 +168,9 @@ production: &production
 
 test:
   <<: *production
+  destroy_all:
+    in_job: -1
+  replace_urls_after_move: false
 
 development:
   <<: *production

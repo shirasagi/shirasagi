@@ -52,7 +52,7 @@ describe "article_pages", type: :feature, dbscope: :example do
       visit move_path
       within "form" do
         fill_in "destination", with: "category/destination"
-        click_button I18n.t('ss.buttons.save')
+        click_button I18n.t('ss.buttons.move')
       end
       expect(status_code).to eq 200
       expect(current_path).to eq move_path
@@ -60,7 +60,7 @@ describe "article_pages", type: :feature, dbscope: :example do
 
       within "form" do
         fill_in "destination", with: "category/sample"
-        click_button I18n.t('ss.buttons.save')
+        click_button I18n.t('ss.buttons.move')
       end
       expect(status_code).to eq 200
       expect(current_path).to eq move_path
@@ -128,7 +128,7 @@ describe "article_pages", type: :feature, dbscope: :example do
       visit move_path
       within "form" do
         fill_in "destination", with: "category/destination"
-        click_button I18n.t('ss.buttons.save')
+        click_button I18n.t('ss.buttons.move')
       end
       expect(status_code).to eq 200
       expect(current_path).to eq move_path
@@ -136,7 +136,7 @@ describe "article_pages", type: :feature, dbscope: :example do
 
       within "form" do
         fill_in "destination", with: "category/sample"
-        click_button I18n.t('ss.buttons.save')
+        click_button I18n.t('ss.buttons.move')
       end
       expect(status_code).to eq 200
       expect(current_path).to eq move_path

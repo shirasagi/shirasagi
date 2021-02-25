@@ -10,46 +10,56 @@ module Cms::ApiFilter::Contents
     :value, :text, :link_url, :link_label, :lists
   ].freeze
 
+  ARRAY_FIELDS = [
+    :contains_urls, :value_contains_urls, :form_contains_urls
+  ].freeze
+
   private
 
   def search_html_with_string(string)
-    cond = HTML_FIELDS.map { |field| { field => /#{::Regexp.escape(string)}/ } }
-    cond << {
+    or_cond = []
+    or_cond += HTML_FIELDS.map { |field| { field => /#{::Regexp.escape(string)}/ } }
+    or_cond += ARRAY_FIELDS.map { |field| { field => /#{::Regexp.escape(string)}/ } }
+    or_cond << {
       column_values: {
         "$elemMatch" => {
           "$or"=> COLUMN_VALUES_FIELDS.map { |key| { key => { "$in" => [/#{::Regexp.escape(string)}/] } } }
         }
       }
     }
-    cond = { "$or" => cond }
+    cond = { "$or" => or_cond }
     search_html_with_condition(cond)
   end
 
   def search_html_with_url(url)
     path = "=\"#{::Regexp.escape(url)}"
-    cond = HTML_FIELDS.map { |field| { field => /#{path}/ } }
-    cond << {
+    or_cond = []
+    or_cond += HTML_FIELDS.map { |field| { field => /#{path}/ } }
+    or_cond += ARRAY_FIELDS.map { |field| { field => /\A#{::Regexp.escape(url)}/ } }
+    or_cond << {
       column_values: {
         "$elemMatch" => {
           "$or"=> COLUMN_VALUES_FIELDS.map { |key| { key => { "$in" => [/#{path}/] } } }
         }
       }
     }
-    cond = { "$or" => cond }
+    cond = { "$or" => or_cond }
     search_html_with_condition(cond)
   end
 
   def search_html_with_regexp(string)
     regexp = ::Regexp.new(string, ::Regexp::MULTILINE)
-    cond = HTML_FIELDS.map { |field| { field => regexp } }
-    cond << {
+    or_cond = []
+    or_cond += HTML_FIELDS.map { |field| { field => regexp } }
+    or_cond += ARRAY_FIELDS.map { |field| { field => regexp } }
+    or_cond << {
       column_values: {
         "$elemMatch" => {
           "$or"=> COLUMN_VALUES_FIELDS.map { |key| { key => { "$in" => [regexp] } } }
         }
       }
     }
-    cond = { "$or" => cond }
+    cond = { "$or" => or_cond }
     search_html_with_condition(cond)
   end
 

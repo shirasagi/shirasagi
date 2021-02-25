@@ -53,16 +53,16 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
       visit move_path
       within "form" do
         fill_in "destination", with: "docs/destination"
-        click_on I18n.t("ss.buttons.save")
+        click_on I18n.t("ss.buttons.move")
       end
-      expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+      expect(page).to have_css('#notice', text: I18n.t('ss.notice.moved'))
       expect(page).to have_css("form#item-form h2", text: "docs/destination.html")
 
       within "form" do
         fill_in "destination", with: "docs/sample"
-        click_on I18n.t("ss.buttons.save")
+        click_on I18n.t("ss.buttons.move")
       end
-      expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+      expect(page).to have_css('#notice', text: I18n.t('ss.notice.moved'))
       expect(page).to have_css("form#item-form h2", text: "docs/sample.html")
     end
 

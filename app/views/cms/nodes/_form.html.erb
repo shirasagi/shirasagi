@@ -18,8 +18,13 @@ file = "#{Rails.root}/app/views/" + @item.route.sub('/', '/agents/nodes/') + "/e
   <dt><%= @model.t :index_name %><%= @model.tt :title_for_index %></dt>
   <dd><%= f.text_field :index_name %></dd>
 
-  <dt><%= @model.t :basename %><%= @model.tt :foldername %></dt>
-  <dd><%= f.text_field :basename, class: "filename" %></dd>
+  <% if @item.persisted? && SS.config.cms.replace_urls_after_move %>
+    <dt><%= @model.t :basename %></dt>
+    <dd><%= @item.basename %></dd>
+  <% else %>
+    <dt><%= @model.t :basename %><%= @model.tt :foldername %></dt>
+    <dd><%= f.text_field :basename, class: "filename" %></dd>
+  <% end %>
 
   <dt><%= @model.t :layout_id %><%= @model.tt :layout_id %></dt>
   <dd><%= f.select :layout_id, ancestral_layouts(@item, @item.layout), include_blank: " " %></dd>

@@ -5,11 +5,16 @@
   <dt><%= @model.t :index_name %><%= @model.tt :title_for_index %></dt>
   <dd><%= f.text_field :index_name %></dd>
 
-  <dt><%= @model.t :basename %><%= @model.tt :filename %></dt>
-  <dd>
-    <%= link_to t('ss.links.input'), '#', onclick: '$("#article-pages-form-dd-input").toggle(); $(this).hide(); return false;' %>
-    <%= f.text_field :basename, id: "article-pages-form-dd-input", class: "filename", style: "display: none" %>
-  </dd>
+  <% if @item.persisted? && SS.config.cms.replace_urls_after_move %>
+    <dt><%= @model.t :basename %></dt>
+    <dd><%= @item.basename %></dd>
+  <% else %>
+    <dt><%= @model.t :basename %><%= @model.tt :filename %></dt>
+    <dd>
+      <%= link_to t('ss.links.input'), '#', onclick: '$("#article-pages-form-dd-input").toggle(); $(this).hide(); return false;' %>
+      <%= f.text_field :basename, id: "article-pages-form-dd-input", class: "filename", style: "display: none" %>
+    </dd>
+  <% end %>
 
   <dt><%= @model.t :layout_id %><%= @model.tt :layout_id %></dt>
   <dd><%= f.select :layout_id, ancestral_layouts(@item.parent, @item.layout), include_blank: " " %></dd>
