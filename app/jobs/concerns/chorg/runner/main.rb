@@ -9,9 +9,7 @@ module Chorg::Runner::Main
       entity.save
       true
     else
-      entity.errors.full_messages.each do |message|
-        put_error(message.to_s)
-      end
+      put_error("save failed : #{entity.class}(#{entity.id}) #{entity.errors.full_messages.join(", ")}")
       task.store_entity_errors(entity)
       false
     end
