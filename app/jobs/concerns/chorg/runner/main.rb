@@ -35,6 +35,15 @@ module Chorg::Runner::Main
       new_ids = substituter.call(:group_ids, user.group_ids, to_id)
       if old_ids != new_ids
         user.group_ids = new_ids
+
+        if user.try(:gws_main_group_ids).present?
+          user.gws_main_group_ids.each do |k, v|
+            if v == from_id
+              user.gws_main_group_ids[k] = to_id
+            end
+          end
+        end
+
         save_or_collect_errors(user)
         new_names = user.groups.pluck(:name).join(",")
         put_log("moved user's group name=#{user.name}, from=#{old_names}, to=#{new_names}")
