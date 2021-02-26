@@ -65,4 +65,47 @@
     return messages;
   });
   <% end %>
+
+  <% if params[:action] =~ /edit|delete/ && @edit_alert_flg %>
+  $(".save").attr("data-alert-msg", "<%= I18n.t('ss.confirm.contains_url_expect') %>");
+  <% else %>
+  $(".save").attr("data-alert-msg", "");
+  <% end %>
+
+  <% if @item.allowed?(:release, @cur_user, site: @cur_site) %>
+  $(".save").val("<%= t("ss.buttons.draft_save") %>");
+  $("<input />").attr("type", "submit")
+    .attr("name", "publish_save")
+    .attr("value", "<%= t("ss.buttons.publish_save") %>")
+    .attr("class", "publish_save")
+    .insertAfter("#item-form input.save");
+  <% end %>
+
+  $(".save").on("click", function(e) {
+    $("<input />").attr("type", "hidden")
+      .attr("name", "item[state]")
+      .attr("value", "closed")
+      .appendTo("#item-form");
+  });
+
+    <% if @item.state == "closed" && @item.workflow_state == "request" %>
+    $("<input />").attr("type", "hidden")
+      .attr("name", "item[workflow_cancel_request]")
+      .attr("value", true)
+      .appendTo("#item-form");
+    <% end %>
+
+  $(".publish_save").on("click", function(e) {
+    $("<input />").attr("type", "hidden")
+      .attr("name", "item[state]")
+      .attr("value", "public")
+      .appendTo("#item-form");
+    $("<input />").attr("type", "hidden")
+      .attr("name", "item[workflow_reset]")
+      .attr("value", "1")
+      .appendTo("#item-form");
+  });
+
+  Form_Save_Event.render();
+
 <% end %>

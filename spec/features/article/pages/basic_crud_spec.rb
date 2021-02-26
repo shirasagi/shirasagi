@@ -11,13 +11,12 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
   let(:new_path) { new_article_page_path site.id, node }
   let(:show_path) { article_page_path site.id, node, item }
   let(:edit_path) { edit_article_page_path site.id, node, item }
+  let(:edit_path2) { edit_article_page_path site.id, node, item2 }
   let(:delete_path) { delete_article_page_path site.id, node, item }
   let(:delete_path2) { delete_article_page_path site.id, node, item2 }
   let(:move_path) { move_article_page_path site.id, node, item }
   let(:copy_path) { copy_article_page_path site.id, node, item }
   let(:contains_urls_path) { contains_urls_article_page_path site.id, node, item }
-  let(:closed_save_path) { closed_save_article_page_path site.id, node, item }
-  let(:closed_save_path2) { closed_save_article_page_path site.id, node, item2 }
 
   context "basic crud" do
     before { login_cms_user }
@@ -129,45 +128,46 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
       expect(page).to have_css(".list-head", text: I18n.t("cms.confirm.contains_urls_not_found"))
     end
 
-    context "#private_save" do
+    context "#draft_save" do
       let(:user) { cms_user }
 
       it "permited and contains_urls" do
-        visit closed_save_path2
+        visit edit_path2
         within "form" do
-          click_on I18n.t("ss.buttons.closed_save")
+          click_on I18n.t("ss.buttons.draft_save")
         end
-        expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+        expect(page).to have_css('.save', text: I18n.t('ss.buttons.ignore_alert'))
       end
 
       it "permited and not contains_urls" do
-        visit closed_save_path
+        visit edit_path
         within "form" do
-          click_on I18n.t("ss.buttons.closed_save")
+          click_on I18n.t("ss.buttons.draft_save")
         end
-        expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+        expect(page).to have_css('.save', text: I18n.t('ss.buttons.ignore_alert'))
       end
 
       it "not permited and contains_urls" do
         role = user.cms_roles[0]
-        role.update(permissions: %w(
-          edit_private_article_pages edit_other_article_pages release_private_article_pages release_other_article_pages
-        ))
-        visit closed_save_path2
-        expect(page).not_to have_css('.save')
-        expect(page).to have_css(".addon-head", text: I18n.t('ss.confirm.contains_url_expect'))
+        role.update(permissions: %w(edit_private_article_pages edit_other_article_pages
+                                    release_private_article_pages release_other_article_pages))
+        visit edit_path2
+        within "form" do
+          click_on I18n.t("ss.buttons.draft_save")
+        end
+        expect(page).not_to have_css('.save', text: I18n.t('ss.buttons.ignore_alert'))
+        expect(page).to have_css(".errorExplanation", text: I18n.t('ss.confirm.contains_url_expect'))
       end
 
       it "not permited and not contains_urls" do
         role = user.cms_roles[0]
-        role.update(permissions: %w(
-          edit_private_article_pages edit_other_article_pages release_private_article_pages release_other_article_pages
-        ))
-        visit closed_save_path
+        role.update(permissions: %w(edit_private_article_pages edit_other_article_pages
+                                    release_private_article_pages release_other_article_pages))
+        visit edit_path
         within "form" do
-          click_on I18n.t("ss.buttons.closed_save")
+          click_on I18n.t("ss.buttons.draft_save")
         end
-        expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+        expect(page).to have_css('.save', text: I18n.t('ss.buttons.ignore_alert'))
       end
     end
   end

@@ -23,9 +23,6 @@
     <% if @item.allowed?(:edit, @cur_user, site: @cur_site, node: @cur_node) %>
       <%= link_to t('ss.links.edit'), { action: :edit, id: @item }, class: :edit %>
     <% end %>
-    <% if @item.allowed?(:edit, @cur_user, site: @cur_site, node: @cur_node) && @item.allowed?(:release, @cur_user, site: @cur_site, node: @cur_node) && @item.try(:state) == "public" %>
-      <%= link_to(t('ss.links.closed_save'), { action: :closed_save, id: @item }, class: :closed_save) rescue nil %>
-    <% end %>
     <% if @item.allowed?(:edit, @cur_user, site: @cur_site, node: @cur_node) %>
       <%= link_to(t('ss.links.copy'), { action: :copy, id: @item }, class: :copy) rescue nil %>
     <% end %>

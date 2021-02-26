@@ -4,9 +4,9 @@ module Cms::PageFilter
   include Cms::MicheckerFilter
 
   included do
-    before_action :set_item, only: [:show, :edit, :update, :delete, :destroy, :move, :copy, :contains_urls, :closed_save]
-    before_action :set_contains_urls_items, only: [:contains_urls, :edit, :closed_save, :delete]
-    before_action :check_permission, only: [:closed_save, :delete]
+    before_action :set_item, only: [:show, :edit, :update, :delete, :destroy, :move, :copy, :contains_urls]
+    before_action :set_contains_urls_items, only: [:contains_urls, :edit, :delete]
+    before_action :check_permission, only: [:edit, :delete]
   end
 
   private
@@ -200,26 +200,6 @@ module Cms::PageFilter
   def contains_urls
     raise "403" unless @item.allowed?(:read, @cur_user, site: @cur_site, node: @cur_node)
     render
-  end
-
-  def closed_save
-    raise "403" unless @item.allowed?(:edit, @cur_user, site: @cur_site, node: @cur_node)
-    raise "403" unless @item.allowed?(:release, @cur_user, site: @cur_site, node: @cur_node)
-    raise "404" unless @item.state == "public"
-    if @item.is_a?(Cms::Addon::EditLock)
-      unless @item.acquire_lock
-        redirect_to action: :lock
-        return
-      end
-    end
-
-    if request.get?
-      render
-      return
-    end
-
-    @item.state = "closed"
-    render_update @item.save
   end
 
   def set_tag_all
