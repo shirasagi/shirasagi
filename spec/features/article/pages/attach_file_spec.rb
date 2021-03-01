@@ -14,7 +14,12 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
   end
   let!(:column2) { create(:cms_column_free, cur_site: site, cur_form: form, required: "optional", order: 2) }
 
-  let!(:permissions) { Cms::Role.permission_names.select { |item| item =~ /_private_/ } }
+  let!(:permissions) do
+    permissions = Cms::Role.permission_names.select { |item| item =~ /_private_/ }
+    permissions << "delete_cms_ignore_alert"
+    permissions << "edit_cms_ignore_alert"
+    permissions
+  end
   let!(:role) { create :cms_role, name: "role", permissions: permissions, permission_level: 3, cur_site: site }
   let(:user2) { create :cms_user, uid: unique_id, name: unique_id, group_ids: [cms_group.id], cms_role_ids: [role.id] }
 

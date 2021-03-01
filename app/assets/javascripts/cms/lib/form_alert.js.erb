@@ -72,7 +72,7 @@ this.Form_Alert = (function () {
     for (var addon in ref) {
       var fields = ref[addon];
       div.append('<p>' + addon + '</p>');
-      if(alert_msg != ""){
+      if　(alert_msg)　{
         div.append("<p>" + alert_msg + "</p>");
       }
       var ul = $("<ul>").appendTo(div);
@@ -87,7 +87,7 @@ this.Form_Alert = (function () {
     // caution: below IE8, you must use document.createElement() method to create <footer>
     var footer = $(document.createElement("footer")).addClass('send');
     
-    if(alert_msg == ""){
+    if (!alert_msg) {
       footer.append('<button name="button" type="button" class="btn-primary save"><%= I18n.t("ss.buttons.ignore_alert") %></button>');
     }
     footer.append('<button name="button" type="button" class="btn-default cancel"><%= I18n.t("ss.buttons.cancel") %></button>');
