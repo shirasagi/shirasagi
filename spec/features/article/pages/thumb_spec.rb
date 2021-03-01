@@ -265,5 +265,74 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
         expect(SS::File.where(owner_item_type: 'Article::Page', owner_item_id: item.id).present?).to be_falsey
       end
     end
+
+    context 'with cms addon file' do
+      it do
+        visit edit_path
+
+        addon = first("#addon-cms-agents-addons-thumb")
+        if addon.matches_css?(".body-closed")
+          wait_addon_open do
+            addon.find('.toggle-head').click
+          end
+        end
+
+        within "#addon-cms-agents-addons-thumb" do
+          find('.dropdown-toggle').click
+          within ".dropdown-menu" do
+            wait_cbox_open do
+              click_on I18n.t("cms.file")
+            end
+          end
+        end
+
+        wait_for_cbox do
+          attach_file "item[in_files][]", "#{Rails.root}/spec/fixtures/ss/file/keyvisual.jpg"
+          wait_cbox_close do
+            click_button I18n.t("ss.buttons.attach")
+          end
+        end
+
+        within "#addon-cms-agents-addons-file" do
+          wait_cbox_open do
+            click_on I18n.t("cms.file")
+          end
+        end
+
+        wait_for_cbox do
+          attach_file "item[in_files][]", "#{Rails.root}/spec/fixtures/ss/file/keyvisual.gif"
+          wait_cbox_close do
+            click_button I18n.t("ss.buttons.attach")
+          end
+        end
+
+        within "form#item-form" do
+          within "#addon-cms-agents-addons-thumb" do
+            expect(page).to have_css('span.humanized-name', text: 'keyvisual')
+            expect(page).to have_css('span.humanized-name', text: 'JPG')
+            expect(page).to have_no_css('span.humanized-name', text: 'GIF')
+          end
+
+          within '#selected-files' do
+            expect(page).to have_no_css('.name', text: 'keyvisual.jpg')
+            expect(page).to have_css('.name', text: 'keyvisual.gif')
+          end
+
+          click_on I18n.t("ss.buttons.publish_save")
+        end
+        wait_for_notice I18n.t('ss.notice.saved')
+
+        item.reload
+        expect(item.thumb.owner_item_type).to eq item.class.name
+        expect(item.thumb.owner_item_id).to eq item.id
+        expect(item.thumb.user_id).to eq cms_user.id
+
+        expect(item.file_ids.length).to eq 1
+        attached_file = item.files.first
+        expect(attached_file.owner_item_type).to eq item.class.name
+        expect(attached_file.owner_item_id).to eq item.id
+        expect(attached_file.user_id).to eq cms_user.id
+      end
+    end
   end
 end

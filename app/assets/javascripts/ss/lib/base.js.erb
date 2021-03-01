@@ -433,7 +433,10 @@ this.SS = (function () {
       params = {
         fixed: true,
         width: "90%",
-        height: "90%"
+        height: "90%",
+        onOpen: function () {
+          $("#cboxContent").data('on-select', null);
+        }
       };
     }
 
