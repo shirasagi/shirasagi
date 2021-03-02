@@ -4,7 +4,13 @@ module Chorg::Runner::Main
   private
 
   def save_or_collect_errors(entity)
-    if entity.valid?
+    if exclude_validation_model?(entity)
+      put_log("save (skip validate) : #{entity.class}(#{entity.id})")
+      task.store_entity_changes(entity)
+      entity.save!(validate: false)
+      true
+    elsif entity.valid?
+      put_log("save : #{entity.class}(#{entity.id})")
       task.store_entity_changes(entity)
       entity.save
       true
@@ -57,6 +63,15 @@ module Chorg::Runner::Main
 
   def group_like?(entity)
     entity.class.ancestors.include?(SS::Model::Group)
+  end
+
+  def exclude_validation_model?(entity)
+    @exclude_validation_models ||= begin
+      SS.config.gws.chorg["exclude_validation_models"].map { |model| model.constantize }
+    rescue
+      []
+    end
+    @exclude_validation_models.include?(entity.class)
   end
 
   def import_user_csv

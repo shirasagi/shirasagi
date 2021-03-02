@@ -15,19 +15,31 @@ module Chorg::Runner::Test
       entity.id = next_pseudo_id
     end
 
-    if entity.valid?
+    if exclude_validation_model?(entity)
+      put_log("save (skip validate) : #{entity.class}(#{entity.id})")
+      task.store_entity_changes(entity)
+      true
+    elsif entity.valid?
+      put_log("save : #{entity.class}(#{entity.id})")
       task.store_entity_changes(entity)
       true
     else
-      entity.errors.full_messages.each do |message|
-        put_error(message.to_s)
-      end
+      put_error("save failed : #{entity.class}(#{entity.id}) #{entity.errors.full_messages.join(", ")}")
       task.store_entity_errors(entity)
       false
     end
   rescue ScriptError, StandardError => e
     Rails.logger.fatal("got error while saving #{entity.class}(id = #{entity.id})")
     raise
+  end
+
+  def exclude_validation_model?(entity)
+    @exclude_validation_models ||= begin
+      SS.config.gws.chorg["exclude_validation_models"].map { |model| model.constantize }
+    rescue
+      []
+    end
+    @exclude_validation_models.include?(entity.class)
   end
 
   def delete_entity(entity)
