@@ -2,7 +2,7 @@
   editor_opts = html_editor_options(
     advanced: Cms::EditorExtension.allowed?(:use, @cur_user, site: @cur_site)
   )
-  syntax_check = @cur_node ? (@cur_node.syntax_check_enabled? || @cur_site.syntax_check_enabled?) : @cur_site.syntax_check_enabled?
+  syntax_check = cms_syntax_check_enabled?
 %>
 <%= jquery do %>
 switch ("<%= SS.config.cms.html_editor %>"){

@@ -2,11 +2,7 @@
   source_cleaner_conf = Cms::SourceCleanerTemplate.site(@cur_site).and_public.to_config
   replace_words_conf = Cms::WordDictionary.site(@cur_site).to_config
 
-  syntax_check = true
-  syntax_check = @cur_site.syntax_check_enabled? if syntax_check
-  if @cur_node && @cur_node.respond_to?(:syntax_check_enabled?)
-    syntax_check = @cur_node.syntax_check_enabled? if syntax_check
-  end
+  syntax_check = cms_syntax_check_enabled?
 
   addon ||= local_assigns.fetch(:addon, {})
   if @item.respond_to?(:form) && @item.form.present?
