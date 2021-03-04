@@ -1,7 +1,6 @@
 class Fs::FilesController < ApplicationController
   include SS::AuthFilter
   include Member::AuthFilter
-  include Fs::FileFilter
   include Cms::PublicFilter::Site
 
   before_action :set_user
@@ -66,8 +65,26 @@ class Fs::FilesController < ApplicationController
       send_file @item.path, type: @item.content_type, filename: @item.download_filename,
                 disposition: disposition, x_sendfile: true
     else
-      send_data @item.read, type: @item.content_type, filename: @item.download_filename,
+      send_enum @item.to_io, type: @item.content_type, filename: @item.download_filename,
                 disposition: disposition
+    end
+  end
+
+  def send_thumb(file, opts = {})
+    width  = opts.delete(:width).to_i
+    height = opts.delete(:height).to_i
+
+    width  = (width  > 0) ? width  : SS::ImageConverter::DEFAULT_THUMB_WIDTH
+    height = (height > 0) ? height : SS::ImageConverter::DEFAULT_THUMB_HEIGHT
+
+    converter = SS::ImageConverter.open(file.path)
+    converter.resize_to_fit!(width, height)
+
+    send_enum converter.to_enum, opts
+    converter = nil
+  ensure
+    if converter
+      converter.close rescue nil
     end
   end
 
@@ -81,18 +98,17 @@ class Fs::FilesController < ApplicationController
     size   = params[:size]
     width  = params[:width]
     height = params[:height]
-    thumb  = @item.try(:thumb, size)
 
     if width.present? && height.present?
       set_last_modified
-      send_thumb @item.read, type: @item.content_type, filename: @item.filename,
+      send_thumb @item, type: @item.content_type, filename: @item.filename,
         disposition: :inline, width: width, height: height
-    elsif thumb
+    elsif thumb  = @item.try(:thumb, size)
       @item = thumb
       index
     else
       set_last_modified
-      send_thumb @item.read, type: @item.content_type, filename: @item.filename,
+      send_thumb @item, type: @item.content_type, filename: @item.filename,
         disposition: :inline
     end
   rescue => e

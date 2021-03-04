@@ -322,6 +322,7 @@ GEM
       mime-types-data (~> 3.2015)
     mime-types-data (3.2016.0521)
     mimemagic (0.3.5)
+    mini_magick (4.11.0)
     mini_mime (1.0.2)
     mini_portile2 (2.5.0)
     mini_racer (0.2.10)
@@ -478,7 +479,6 @@ GEM
     retriable (3.1.2)
     rexml (3.2.4)
     rly (0.2.3)
-    rmagick (2.16.0)
     romaji (0.2.4)
       rake (>= 0.8.0)
     roo (2.8.2)
@@ -698,7 +698,9 @@ DEPENDENCIES
   levenshtein
   liquid
   mail-iso-2022-jp
+  marcel
   marked-rails
+  mini_magick
   mini_racer
   momentjs-rails
   mongo_session_store!
@@ -726,7 +728,6 @@ DEPENDENCIES
   rdf-rdfxml
   rdf-turtle
   retriable
-  rmagick
   romaji
   roo
   rspec

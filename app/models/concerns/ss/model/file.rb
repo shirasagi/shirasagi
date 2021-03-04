@@ -184,11 +184,11 @@ module SS::Model::File
   end
 
   def image?
-    content_type.to_s.start_with?('image/')
+    to_io { |io| SS::ImageConverter.image?(io) }
   end
 
   def exif_image?
-    image? && filename =~ /\.(jpe?g|tiff?)$/i
+    to_io { |io| SS::ImageConverter.exif_image?(io) }
   end
 
   def viewable?
@@ -207,8 +207,8 @@ module SS::Model::File
     Fs.exists?(path) ? Fs.binread(path) : nil
   end
 
-  def to_io
-    Fs.exists?(path) ? Fs.to_io(path) : nil
+  def to_io(&block)
+    Fs.exists?(path) ? Fs.to_io(path, &block) : nil
   end
 
   def uploaded_file(&block)
@@ -266,8 +266,8 @@ module SS::Model::File
   end
 
   def image_dimension
+    return unless Fs.exists?(path)
     return unless image?
-    return unless ::File.exists?(path)
 
     ::FastImage.size(path) rescue nil
   end
@@ -279,9 +279,12 @@ module SS::Model::File
     return false if cur_width.nil? || cur_height.nil?
     return true if cur_width <= width && cur_height <= height
 
-    return false unless SS::ImageConverter.resize_to_fit(self, width, height)
+    SS::ImageConverter.open(path) do |converter|
+      converter.resize_to_fit!(width, height)
+      ::Fs.upload(path, converter.to_io)
+    end
 
-    self.update(size: ::File.size(path))
+    self.update(size: ::Fs.size(path))
     true
   end
 
@@ -331,34 +334,16 @@ module SS::Model::File
     return false if errors.present?
     return if in_file.blank?
 
-    if image?
-      list = Magick::ImageList.new
-      list.from_blob(in_file.read)
-      extract_geo_location(list) if exif_image?
-      list.each do |image|
-        if exif_image?
-          case SS.config.env.image_exif_option
-          when "auto_orient"
-            image.auto_orient!
-          when "strip"
-            image.strip!
-          end
-        end
-
-        next unless resizing
-        width, height = resizing
-        image.resize_to_fit! width, height if image.columns > width || image.rows > height
-      end
-      binary = list.to_blob
-    else
-      binary = in_file.read
-    end
-    in_file.rewind
-
     dir = ::File.dirname(path)
     Fs.mkdir_p(dir) unless Fs.exists?(dir)
-    Fs.binwrite(path, binary)
-    self.size = binary.length
+
+    SS::ImageConverter.attach(in_file, ext: ::File.extname(in_file.original_filename)) do |converter|
+      converter.apply_defaults!(resizing: resizing)
+      Fs.upload(path, converter.to_io)
+      self.geo_location = converter.geo_location
+    end
+
+    self.size = Fs.size(path)
   end
 
   def create_history_trash

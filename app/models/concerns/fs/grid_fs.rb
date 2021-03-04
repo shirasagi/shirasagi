@@ -121,12 +121,27 @@ module Fs::GridFs
       Mongoid::GridFs.file_model.where(filename: /^#{path}$/).map { |fs| fs.filename }
     end
 
-    def to_io(path)
+    def to_io(path, &block)
       raise NotImplementedError
     end
 
     def cp(src, dest)
       binwrite(dest, binread(src))
+    end
+
+    def upload(dst, src)
+      fs = get(dst)
+      fs.delete if fs
+
+      if src.respond_to?(:read)
+        fs = Mongoid::GridFs.put(src, filename: path_filter(dst))
+      else
+        fs = ::File.open(src, "rb") do |io|
+          Mongoid::GridFs.put(io, filename: path_filter(dst))
+        end
+      end
+
+      fs.length
     end
   end
 end

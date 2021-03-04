@@ -9,19 +9,22 @@ describe "gws_share_files", type: :feature, dbscope: :example, js: true do
   before { login_gws_user }
 
   def extract_image_info(filepath)
-    img = Magick::Image.read(filepath).first
+    image = MiniMagick::Image.open(filepath)
+    image_details = image.details
 
     {
-      filename: img.filename,
-      format: img.format,
-      width: img.columns,
-      height: img.rows,
-      class_type: img.class_type,
-      depth: img.depth,
-      colors: img.number_colors,
-      size: img.filesize,
-      resolution: { x: img.x_resolution, y: img.y_resolution }
+      filename: ::File.basename(filepath),
+      format: image.type,
+      width: image.width,
+      height: image.height,
+      class_type: image_details["Class"],
+      depth: image_details["Depth"],
+      # colors: img.number_colors,
+      size: image.size,
+      resolution: { x: image.height[0], y: image.height[1] }
     }
+  ensure
+    image.destroy! if image
   end
 
   context "when editing image" do

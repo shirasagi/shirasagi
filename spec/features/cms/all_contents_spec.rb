@@ -22,6 +22,7 @@ describe "cms_all_contents", type: :feature, dbscope: :example do
       visit cms_all_contents_path(site: site)
       click_on I18n.t("ss.buttons.download")
 
+      expect(page.response_headers["Cache-Control"]).to include "no-store"
       expect(page.response_headers["Transfer-Encoding"]).to eq "chunked"
       csv = ::SS::ChunkReader.new(page.html).to_a.join
       csv = csv.encode("UTF-8", "SJIS")

@@ -147,11 +147,11 @@ module Gws::Model::File
   end
 
   def image?
-    content_type.to_s.start_with?('image/')
+    to_io { |io| SS::ImageConverter.image?(io) }
   end
 
   def exif_image?
-    image? && filename =~ /\.(jpe?g|tiff?)$/i
+    to_io { |io| SS::ImageConverter.exif_image?(io) }
   end
 
   def viewable?
@@ -168,6 +168,10 @@ module Gws::Model::File
 
   def read
     Fs.exists?(path) ? Fs.binread(path) : nil
+  end
+
+  def to_io(&block)
+    Fs.exists?(path) ? Fs.to_io(path, &block) : nil
   end
 
   def uploaded_file(&block)
@@ -224,37 +228,17 @@ module Gws::Model::File
     return false if errors.present?
     return if in_file.blank?
 
-    if image?
-      list = Magick::ImageList.new
-      list.from_blob(in_file.read)
-      extract_geo_location(list) if exif_image?
-      list.each do |image|
-        if exif_image?
-          case SS.config.env.image_exif_option
-          when "auto_orient"
-            image.auto_orient!
-          when "strip"
-            image.strip!
-          end
-        end
-
-        next unless resizing
-
-        width, height = resizing
-        image.resize_to_fit! width, height if image.columns > width || image.rows > height
-      end
-      binary = list.to_blob
-    else
-      binary = in_file.read
-    end
-    in_file.rewind
-
     dir = ::File.dirname(path)
     Fs.mkdir_p(dir) unless Fs.exists?(dir)
 
     run_callbacks(:_save_file) do
-      Fs.binwrite(path, binary)
-      self.size = binary.length
+      SS::ImageConverter.attach(in_file, ext: ::File.extname(in_file.original_filename)) do |converter|
+        converter.apply_defaults!(resizing: resizing)
+        Fs.upload(path, converter.to_io)
+        self.geo_location = converter.geo_location
+      end
+
+      self.size = Fs.size(path)
     end
   end
 

@@ -106,7 +106,7 @@ module Member::AjaxFileFilter
       send_file @item.path, type: @item.content_type, filename: @item.filename,
         disposition: :inline, x_sendfile: true
     else
-      send_data @item.read, type: @item.content_type, filename: @item.filename,
+      send_enum @item.to_io, type: @item.content_type, filename: @item.filename,
         disposition: :inline
     end
   end
@@ -119,13 +119,17 @@ module Member::AjaxFileFilter
       return send_file @item.thumb.path, type: @item.content_type, filename: @item.filename, disposition: :inline
     end
 
-    require 'rmagick'
-    image = Magick::Image.from_blob(@item.read).shift
-    image = image.resize_to_fit 120, 90 if image.columns > 120 || image.rows > 90
+    converter = SS::ImageConverter.open(@item.path)
+    converter.resize_to_fit!
 
-    send_data image.to_blob, type: @item.content_type, filename: @item.filename, disposition: :inline
+    send_enum converter.to_enum, type: @item.content_type, filename: @item.filename, disposition: :inline
+    converter = nil
   rescue
     raise "500"
+  ensure
+    if converter
+      converter.close rescue nil
+    end
   end
 
   def download
@@ -136,7 +140,7 @@ module Member::AjaxFileFilter
       send_file @item.path, type: @item.content_type, filename: @item.filename,
         disposition: :attachment, x_sendfile: true
     else
-      send_data @item.read, type: @item.content_type, filename: @item.filename,
+      send_enum @item.to_io, type: @item.content_type, filename: @item.filename,
         disposition: :attachment
     end
   end

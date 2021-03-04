@@ -41,7 +41,7 @@ module Fs::File
     end
 
     def size(path)
-      ::File.stat(path).size
+      ::File.size(path)
     end
 
     def content_type(path, default = nil)
@@ -64,8 +64,8 @@ module Fs::File
       Dir.glob(path)
     end
 
-    def to_io(path)
-      ::File.open(path, "rb")
+    def to_io(path, &block)
+      ::File.open(path, "rb", &block)
     end
 
     def cp(src, dest)
@@ -74,6 +74,10 @@ module Fs::File
 
     def cmp(src, dest)
       ::FileUtils.cmp(src, dest)
+    end
+
+    def upload(dst, src)
+      ::IO.copy_stream(src, dst)
     end
   end
 end
