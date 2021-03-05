@@ -38,7 +38,7 @@ Rails.application.routes.draw do
   end
 
   namespace "inquiry", path: ".s:site/inquiry" do
-    resources :site_answers, path: "answers", concerns: :deletion, only: %i[index show edit update destroy] do
+    resources :site_answers, path: "answers", concerns: [:deletion, :download], only: %i[index show edit update destroy] do
       get :download_afile, on: :member, path: "/fileid/:fid/download"
     end
   end
