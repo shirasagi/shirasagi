@@ -138,7 +138,6 @@ ja:
       save_as_branch: 差替保存
       ignore_alerts_and_save_as_branch: 警告を無視して差替保存
       column_add_list: リストを追加する
-      download: フォルダ容量をCSVダウンロードする
     confirm:
       delete_item: 項目を削除してよろしいですか？
       close: 非公開状態で保存しようとしています

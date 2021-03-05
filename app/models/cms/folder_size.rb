@@ -21,11 +21,7 @@ class Cms::FolderSize
     def enum_csv(site)
       Enumerator.new do |y|
         y << encode_sjis(header.to_csv)
-        Cms::Node.site(site).find_each do |content|
-          content = content.becomes_with_route rescue content
-          content.site ||= site
-          @cur_site = Cms::Site.find id: content.site_id
-          @cur_node = Cms::Node.site(@cur_site).find content.id
+        Cms::Node.site(site).each do |content|
           y << encode_sjis(row(content).to_csv)
         end
       end
@@ -89,7 +85,7 @@ class Cms::FolderSize
     end
 
     def to_size(key, content)
-      Cms::Page.site(@cur_site).where(filename: /^#{::Regexp.escape(@cur_node.filename)}\//).sum(:size)
+      Cms::Page.site(content.site).where(filename: /^#{::Regexp.escape(content.filename)}\//).sum(:size)
     end
   end
 end
