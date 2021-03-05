@@ -57,10 +57,7 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
       click_on I18n.t("ss.links.edit")
 
       within "#item-form" do
-        wait_addon_open do
-          find("#addon-category-agents-addons-category .toggle-head").click
-        end
-
+        ensure_addon_opened("#addon-category-agents-addons-category")
         within "#addon-category-agents-addons-category" do
           # confirm that category_page1 is on the form, but category_page2 isn't.
           expect(page).to have_css(".child", text: category_page1.name)

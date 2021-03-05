@@ -57,9 +57,7 @@ describe "opendata_categories", type: :feature, dbscope: :example, js: true do
 
       # update
       click_on I18n.t('ss.links.edit')
-      wait_addon_open do
-        find('#addon-cms-agents-addons-meta .toggle-head h2').click
-      end
+      ensure_addon_opened("#addon-cms-agents-addons-meta")
       fill_in 'item[keywords]', with: keywords.join(' ')
       click_on I18n.t('ss.buttons.save')
       wait_for_ajax
