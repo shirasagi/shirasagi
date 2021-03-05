@@ -231,15 +231,8 @@ module SS
 
     #
     # Usage:
-    #   wait_addon_open do
-    #     # do operations to expand a addon
-    #     first("#addon-contact-agents-addons-page .toggle-head").click
-    #   end
+    #   ensure_addon_opened("#addon-contact-agents-addons-page")
     #
-    def wait_addon_open(&block)
-      wait_event_to_fire("ss:addonShown", &block)
-    end
-
     def ensure_addon_opened(addon_id)
       result = page.evaluate_async_script(ENSURE_ADDON_OPENED, addon_id)
       expect(result).to be_truthy
