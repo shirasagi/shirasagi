@@ -7,12 +7,12 @@
   <%= text_area_tag("#{f.object_name}[][in_wrap][value]", value.try(:value), column.form_options.merge(id: editor_id, class: "html", style: "height: 400px;")) %>
   <%= html_editor "##{editor_id}", advanced: Cms::EditorExtension.allowed?(:use, @cur_user, site: @cur_site) %>
 
-  <% if source_cleaner_conf[:source_cleaner].present? %>
+  <% if source_cleaner_conf[:source_cleaner].present? || source_cleaner_conf[:source_cleaner_site_setting].present? %>
     <% @buttons << :source_cleaner %>
   <% end %>
 
   <%= jquery do %>
-    <% if source_cleaner_conf[:source_cleaner].present? %>
+    <% if source_cleaner_conf[:source_cleaner].present? || source_cleaner_conf[:source_cleaner_site_setting].present? %>
       if (!Cms_Source_Cleaner.config) {
         Cms_Source_Cleaner.config = <%= raw source_cleaner_conf.to_json %>
       }
