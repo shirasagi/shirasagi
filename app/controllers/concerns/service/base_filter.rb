@@ -41,18 +41,6 @@ module Service::BaseFilter
     @javascripts << path unless @javascripts.include?(path)
   end
 
-  def jquery_migrate_mute
-    return unless Rails.env.production?
-
-    view_context.javascript_tag do
-      scripts = []
-      scripts << "if ( typeof jQuery.migrateMute === \"undefined\" ) {"
-      scripts << "  jQuery.migrateMute = true;"
-      scripts << "}"
-      scripts.join("\n").html_safe
-    end
-  end
-
   private
 
   def set_model
