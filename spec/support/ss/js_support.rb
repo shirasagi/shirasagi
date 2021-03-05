@@ -51,6 +51,29 @@ module SS
       })(arguments[0], arguments[1]);
     SCRIPT
 
+    ENSURE_ADDON_OPENED = <<~SCRIPT.freeze
+      (function(addonId, resolve) {
+        var $addon = $(addonId);
+        if (! $addon[0]) {
+          resolve(false);
+          return;
+        }
+
+        if ($addon.hasClass("hide")) {
+          resolve(false);
+          return;
+        }
+
+        if (! $addon.hasClass("body-closed")) {
+          resolve(true);
+          return;
+        }
+
+        $addon.one("ss:addonShown", function() { resolve(true); });
+        $addon.find(".toggle-head").trigger("click");
+      })(arguments[0], arguments[1]);
+    SCRIPT
+
     def wait_timeout
       Capybara.default_max_wait_time
     end
@@ -215,6 +238,12 @@ module SS
     #
     def wait_addon_open(&block)
       wait_event_to_fire("ss:addonShown", &block)
+    end
+
+    def ensure_addon_opened(addon_id)
+      result = page.evaluate_async_script(ENSURE_ADDON_OPENED, addon_id)
+      expect(result).to be_truthy
+      true
     end
 
     #
