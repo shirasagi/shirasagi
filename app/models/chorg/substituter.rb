@@ -105,6 +105,22 @@ module Chorg::Substituter
   end
 
   # @private
+  module GroupHierarchySubstituterSupport
+    def self.collect(from_value, to_value, key = nil, group_ids = nil, opts = {})
+      from_parts = from_value.split(opts['separator'])
+      to_parts = to_value.split(opts['separator'])
+      from_leaf = from_parts.last
+      to_leaf = to_parts.last
+
+      substituters = [StringSubstituter.new(from_value, to_value, key, group_ids, opts)]
+      if from_leaf.present? && to_leaf.present? && from_leaf != to_leaf
+        substituters << StringSubstituter.new(from_leaf, to_leaf, key, group_ids, opts)
+      end
+      substituters
+    end
+  end
+
+  # @private
   class ChainSubstituter
     def initialize(substituters = [], opts = {})
       @substituters = [] + substituters
@@ -127,7 +143,7 @@ module Chorg::Substituter
           @substituters << IdSubstituter.new(from_value, to_value, k, group_ids)
         elsif from_value.is_a?(String) && to_value.is_a?(String)
           if from_value.include?(@opts['separator'])
-            @substituters += HierarchySubstituterSupport.collect(from_value, to_value, k, group_ids, @opts)
+            @substituters += GroupHierarchySubstituterSupport.collect(from_value, to_value, k, group_ids, @opts)
           else
             @substituters << StringSubstituter.new(from_value, to_value, k, group_ids, @opts)
           end
