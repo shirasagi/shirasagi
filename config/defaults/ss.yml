@@ -40,6 +40,8 @@ production: &production
 test:
   <<: *production
   disable: false
+  file_url_with: filename
+  publish_file_with: cp
 
 development:
   <<: *production
