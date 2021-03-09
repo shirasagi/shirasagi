@@ -35,7 +35,7 @@ module Chorg::MongoidSupport
         entity = entity.try(:becomes_with_route) || entity
         entity = entity.try(:becomes_with_topic) || entity
         entity.try(:cur_site=, @cur_site)
-        entity.try(:cur_user=, @cur_user) if @cur_user.present?
+        entity.try(:cur_user=, (entity.try(:user) || @cur_user))
         entity.try(:allow_other_user_files)
         entity.move_changes
         yield entity
