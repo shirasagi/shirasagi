@@ -2,6 +2,9 @@ module SS
   module JsSupport
     module Hooks
       def self.extended(obj)
+        show_warning = ENV.fetch("JQMIGRATE_WARNING", nil)
+        return unless show_warning
+
         obj.after(:example) do
           warnings = jquery_migrate_warnings
           if warnings.present?

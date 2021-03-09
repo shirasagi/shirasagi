@@ -36,10 +36,6 @@ module SS::AgentFilter
     controller.javascript(path)
   end
 
-  def jquery_migrate_mute
-    controller.jquery_migrate_mute
-  end
-
   def opengraph(key, *values)
     controller.opengraph(key, *values)
   end
