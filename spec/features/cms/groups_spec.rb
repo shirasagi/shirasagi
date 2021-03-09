@@ -58,7 +58,7 @@ describe "cms_groups", type: :feature, dbscope: :example do
     before(:each) do
       tel   = "000-000-0000"
       email = "sys@example.jp"
-      link_url = "http://demo.ss-proj.org/"
+      link_url = "/"
       link_name = "http://demo.ss-proj.org/"
       g1 = create(
         :cms_group, name: "A", order: 10, contact_tel: tel, contact_fax: tel,
@@ -83,8 +83,8 @@ describe "cms_groups", type: :feature, dbscope: :example do
       expected_contact_tels = %w(1 2 3 4 5 6 7).fill("000-000-0000")
       expected_contact_faxs = %w(1 2 3 4 5 6 7).fill("000-000-0000")
       expected_contact_emails = %w(1 2 3 4 5 6 7).fill("sys@example.jp")
-      expected_contact_link_urls = %w(1 2 3 4 5 6 7).fill("http://demo.ss-proj.org/")
-      expected_contact_link_names = %w(1 2 3 4 5 6 7).fill("http://demo.ss-proj.org/")
+      expected_contact_link_urls = %w(/ /B/ /B/C/ /B/C/D/ /E/ /E/F/ /E/G/)
+      expected_contact_link_names = %w(http://demo.ss-proj.org/ B C D E F G)
 
       expect(groups.map(&:name)).to eq expected_names
       expect(groups.map(&:order)).to eq expected_orders

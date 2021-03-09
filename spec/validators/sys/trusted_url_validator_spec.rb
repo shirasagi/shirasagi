@@ -21,6 +21,7 @@ describe Sys::TrustedUrlValidator, type: :validator, dbscope: :example do
 
     @save_trusted_urls = SS.config.cms.trusted_urls
     SS.config.replace_value_at(:sns, :trusted_urls, trusted_urls)
+    described_class.send(:clear_trusted_urls)
   end
 
   after do
@@ -69,7 +70,7 @@ describe Sys::TrustedUrlValidator, type: :validator, dbscope: :example do
       expect(described_class.trusted_url?("/")).to be_truthy
       expect(described_class.trusted_url?("/#{unique_id}")).to be_truthy
       expect(described_class.trusted_url?("./#{unique_id}")).to be_truthy
-      expect(described_class.trusted_url?("#{unique_id}")).to be_truthy
+      expect(described_class.trusted_url?(unique_id)).to be_truthy
 
       expect(described_class.trusted_url?(unique_url)).to be_falsey
     end
@@ -88,6 +89,33 @@ describe Sys::TrustedUrlValidator, type: :validator, dbscope: :example do
       expect(described_class.valid_url?(::Addressable::URI.parse("//#{unique_domain}"))).to be_falsey
       expect(described_class.valid_url?(::Addressable::URI.parse("//#{unique_domain}/"))).to be_falsey
       expect(described_class.valid_url?(::Addressable::URI.parse("//#{unique_domain}#{request_path}"))).to be_falsey
+    end
+  end
+
+  describe ".valid_url? with any url allowed" do
+    before do
+      @save_url_type = SS.config.cms.url_type
+      SS.config.replace_value_at(:sns, :url_type, 'any')
+      described_class.send(:clear_trusted_urls)
+    end
+
+    after do
+      SS.config.replace_value_at(:sns, :url_type, @save_url_type)
+      described_class.send(:clear_trusted_urls)
+    end
+
+    it do
+      # relative: path only
+      expect(described_class.valid_url?(::Addressable::URI.parse("/a/b/c"))).to be_truthy
+      expect(described_class.valid_url?(::Addressable::URI.parse("a/b/c"))).to be_truthy
+
+      # relative: domain + path
+      expect(described_class.valid_url?(::Addressable::URI.parse("//#{request_domain}"))).to be_truthy
+      expect(described_class.valid_url?(::Addressable::URI.parse("//#{request_domain}/"))).to be_truthy
+      expect(described_class.valid_url?(::Addressable::URI.parse("//#{request_domain}/#{unique_id}"))).to be_truthy
+      expect(described_class.valid_url?(::Addressable::URI.parse("//#{unique_domain}"))).to be_truthy
+      expect(described_class.valid_url?(::Addressable::URI.parse("//#{unique_domain}/"))).to be_truthy
+      expect(described_class.valid_url?(::Addressable::URI.parse("//#{unique_domain}#{request_path}"))).to be_truthy
     end
   end
 end

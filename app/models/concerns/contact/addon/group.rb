@@ -9,6 +9,9 @@ module Contact::Addon
       field :contact_email, type: String
       field :contact_link_url, type: String
       field :contact_link_name, type: String
+
+      validates :contact_link_url, "sys/trusted_url" => true
+
       permit_params :contact_tel, :contact_fax, :contact_email
       permit_params :contact_link_url, :contact_link_name
     end

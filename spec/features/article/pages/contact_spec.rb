@@ -38,12 +38,12 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
       expect(page).to have_css("#workflow_route", text: I18n.t("mongoid.attributes.workflow/model/route.my_group"))
 
       section = first('#addon-contact-agents-addons-page')
-      expect(section).to have_text("contact_group")
-      expect(section).to have_text("0000000000")
-      expect(section).to have_text("1111111111")
-      expect(section).to have_text("contact@example.jp")
-      expect(section).to have_text("http://example.jp")
-      expect(section).to have_text("link_name")
+      expect(section).to have_text(contact_group.name)
+      expect(section).to have_text(contact_group.contact_tel)
+      expect(section).to have_text(contact_group.contact_fax)
+      expect(section).to have_text(contact_group.contact_email)
+      expect(section).to have_text(contact_group.contact_link_url)
+      expect(section).to have_text(contact_group.contact_link_name)
     end
   end
 end

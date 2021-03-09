@@ -32,10 +32,19 @@ class Sys::TrustedUrlValidator < ActiveModel::EachValidator
     end
 
     def valid_url?(url, known_trusted_urls = nil)
+      return true if url_type == 'any'
       return true if myself_url?(url)
       return true if trusted_url?(url, known_trusted_urls)
 
       false
+    end
+
+    def url_type
+      @url_type ||= SS.config.sns.url_type || "restricted"
+    end
+
+    def trusted_urls
+      @trusted_urls ||= parse_urls(SS.config.sns.trusted_urls)
     end
 
     private
@@ -70,16 +79,14 @@ class Sys::TrustedUrlValidator < ActiveModel::EachValidator
       end.compact
     end
 
-    def trusted_urls
-      @trusted_urls ||= parse_urls(SS.config.sns.trusted_urls)
-    end
-
     def clear_trusted_urls
+      @url_type = nil
       @trusted_urls = nil
     end
   end
 
   def validate_each(record, attribute, value)
+    return if self.class.url_type == 'any'
     return if value.blank?
 
     known_trusted_urls = []
