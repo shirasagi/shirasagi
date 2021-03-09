@@ -133,6 +133,7 @@ production: &production
       - "workflow_comment"
       - "url"
       - "/_url$/"
+      - "text"
     ids_fields:
       - "_id"
       - "id"
