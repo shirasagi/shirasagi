@@ -74,6 +74,7 @@ production: &production
       - "Gws::Circular::Category"
       - "Gws::Circular::Post"
       - "Gws::CustomGroup"
+      - "Gws::Discussion::Post"
       - "Gws::Facility::Category"
       - "Gws::Facility::Item"
       - "Gws::Faq::Category"

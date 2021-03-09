@@ -49,4 +49,14 @@ class Gws::Discussion::Post
     mail = Gws::Memo::Mailer.notice_mail(item, to_users, self)
     mail.deliver_now if mail
   end
+
+  def becomes_with_topic
+    if forum_id && topic_id
+      Gws::Discussion::Post.find(id)
+    elsif forum_id
+      Gws::Discussion::Topic.find(id)
+    else
+      Gws::Discussion::Forum.find(id)
+    end
+  end
 end
