@@ -18,11 +18,11 @@
 
   <div id="selected-files">
     <% @item.files.each do |file| %>
-      <%= render "ss/crud/ajax_files/file_view", file: file %>
+      <%= render "ss/crud/ajax_files/file_view", file: file, show_properties: false, show_attach: false %>
     <% end %>
 
     <% @item.ref_files.each do |file| %>
-      <%= render "ss/crud/ajax_files/file_view", file: file, name: "item[ref_file_ids][]" %>
+      <%= render "ss/crud/ajax_files/file_view", file: file, show_properties: false, show_attach: false, name: "item[ref_file_ids][]" %>
     <% end %>
   </div>
 </div>
