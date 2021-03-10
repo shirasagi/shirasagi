@@ -17,6 +17,15 @@ class Chorg::Runner < Cms::ApplicationJob
     end
   end
 
+  def target_site(entity)
+    site = entity.try(:site)
+    if site && site.class.include?(SS::Model::Site)
+      site
+    else
+      super
+    end
+  end
+
   def self.job_class(type)
     case type
     when MAIN then

@@ -1,0 +1,24 @@
+<dl class="see mod-chorg-entity_log">
+  <dt class="wide"><%= @entity_site["label"] %></dt>
+  <dd class="wide">
+    <table class="index">
+      <thead>
+      <tr>
+        <th><%= "対象" %></th>
+        <th><%= "更新件数" %></th>
+      </tr>
+      </thead>
+      <tbody>
+      <% @items.each do |key, item| %>
+        <%
+          model = t("mongoid.models.#{item["model"].underscore}", default: item["model"])
+        %>
+        <tr>
+          <td><%= link_to model, { action: :show_entities, entity_model: key } %></td>
+          <td><%= item["count"] %></td>
+        </tr>
+      <% end %>
+      </tbody>
+    </table>
+  </dd>
+</dl>

@@ -62,6 +62,10 @@ module Chorg::Runner::Base
     {}
   end
 
+  def target_site(entity)
+    nil
+  end
+
   def update_all
     return if substituter.empty?
     with_entity_updates(@models, substituter, models_scope) do |entity, updates|

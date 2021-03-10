@@ -19,7 +19,11 @@ Rails.application.routes.draw do
       post :interrupt, on: :member
       post :reset, on: :member
     end
-    resources :entity_logs, path: 'revisions/:rid/:type/entity_logs', only: [:index, :show]
+    resources :entity_logs, path: 'revisions/:rid/:type/entity_logs', only: [:index, :show] do
+      get :show_models, on: :collection, path: 'show_models/:entity_site'
+      get :show_entities, on: :collection, path: 'show_entities/:entity_site/:entity_model'
+      get :show_entity, on: :collection, path: 'show_entity/:entity_site/:entity_model/:entity_index'
+    end
     get 'revisions/:rid/:type/run' => 'run#confirmation'
     post 'revisions/:rid/:type/run' => 'run#run'
   end

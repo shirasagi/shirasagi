@@ -1,0 +1,35 @@
+<% def render_creates(creates) %>
+  <% return if creates.blank? %>
+  <% creates.sort_by { |k, v| k }.each do |k, v| %>
+    <tr>
+      <th style="white-space: nowrap;"><%= k %></th>
+      <td colspan="2"><%= v %></td>
+    </tr>
+  <% end %>
+<% end %>
+
+<% def render_changes(changes) %>
+  <% return if changes.blank? %>
+  <% changes.sort_by { |k, v| k }.each do |k, v| %>
+    <tr>
+      <th style="white-space: nowrap;"><%= k %></th>
+      <td><%= v[0] %></td>
+      <td><%= v[1] %></td>
+    </tr>
+  <% end %>
+<% end %>
+
+<% alias render_deletes render_creates %>
+
+<dl class="see mod-chorg-entity_log">
+  <dt class="wide"><%= @item["title"] %></dt>
+  <dd class="wide">
+    <table class="see index history-backup">
+      <tbody>
+      <% render_creates(@item['creates']) %>
+      <% render_changes(@item['changes']) %>
+      <% render_deletes(@item['deletes']) %>
+      </tbody>
+    </table>
+  </dd>
+</dl>

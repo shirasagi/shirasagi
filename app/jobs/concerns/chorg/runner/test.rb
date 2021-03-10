@@ -17,15 +17,15 @@ module Chorg::Runner::Test
 
     if exclude_validation_model?(entity)
       put_log("save (skip validate) : #{entity.class}(#{entity.id})")
-      task.store_entity_changes(entity)
+      task.store_entity_changes(entity, target_site(entity))
       true
     elsif entity.valid?
       put_log("save : #{entity.class}(#{entity.id})")
-      task.store_entity_changes(entity)
+      task.store_entity_changes(entity, target_site(entity))
       true
     else
       put_error("save failed : #{entity.class}(#{entity.id}) #{entity.errors.full_messages.join(", ")}")
-      task.store_entity_errors(entity)
+      task.store_entity_errors(entity, target_site(entity))
       false
     end
   rescue ScriptError, StandardError => e
@@ -43,7 +43,7 @@ module Chorg::Runner::Test
   end
 
   def delete_entity(entity)
-    task.store_entity_deletes(entity)
+    task.store_entity_deletes(entity, target_site(entity))
     true
   end
 

@@ -40,6 +40,10 @@ class Chorg::ResultsController < ApplicationController
     render
   end
 
+  def show_site
+
+  end
+
   def interrupt
     @item.update_attributes interrupt: 'stop'
     respond_to do |format|
