@@ -11,8 +11,8 @@ describe Ckan::Agents::Nodes::PageController, type: :feature, dbscope: :example 
 
   before do
     stub_request(:get, "#{node.ckan_url}/api/3/action/package_search?rows=10&sort=metadata_modified%20desc").
-      with(:headers => {'Accept'=>'*/*', 'Accept-Encoding'=>'gzip;q=1.0,deflate;q=0.6,identity;q=0.3', 'User-Agent'=>'Ruby'}).
-      to_return(:status => status, :body => body, :headers => {})
+      with(headers: {'Accept'=>'*/*', 'Accept-Encoding'=>'gzip;q=1.0,deflate;q=0.6,identity;q=0.3', 'User-Agent'=>'Ruby'}).
+      to_return(status: status, body: body, headers: {})
   end
 
   context 'default loop html' do
