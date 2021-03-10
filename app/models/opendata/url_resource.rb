@@ -184,10 +184,10 @@ class Opendata::UrlResource
         content_disposition = "Content-Disposition: attachment; filename= " if content_disposition.blank?
         self.filename = NKF.nkf "-w", content_disposition.match(/filename=(\"?)(.+)\1/)[2].to_s
 
-        if data.last_modified.blank?
+        if data.meta["last-modified"].blank?
           break Time.zone.now
         else
-          break data.last_modified
+          break data.meta["last-modified"].in_time_zone
         end
       end
     end
