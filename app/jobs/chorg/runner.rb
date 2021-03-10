@@ -9,7 +9,12 @@ class Chorg::Runner < Cms::ApplicationJob
   TEST = 'test'.freeze
 
   def models_scope
-    { site_id: @cur_site.id }
+    site_ids = @item.target_sites.map(&:id)
+    if site_ids.present?
+      { "site_id" => { "$in" => site_ids } }
+    else
+      {}
+    end
   end
 
   def self.job_class(type)
