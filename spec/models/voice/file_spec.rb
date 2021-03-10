@@ -1,12 +1,9 @@
 require 'spec_helper'
 
-describe Voice::File, http_server: true, dbscope: :example do
-  http.default port: 33_190
-  http.default doc_root: Rails.root.join("spec", "fixtures", "voice")
-
+describe Voice::File, dbscope: :example do
   describe '#find_or_create_by_url' do
     context "when valid site is given" do
-      random_string = rand(0x100000000).to_s(36)
+      let(:random_string) { rand(0x100000000).to_s(36) }
       let(:site) { cms_site }
       subject { described_class.find_or_create_by_url("http://#{site.domain}/" + random_string) }
 
@@ -24,7 +21,7 @@ describe Voice::File, http_server: true, dbscope: :example do
     end
 
     context "when invalid site is given" do
-      random_string = rand(0x100000000).to_s(36)
+      let(:random_string) { rand(0x100000000).to_s(36) }
       subject { described_class.find_or_create_by_url("http://invalid-site-#{random_string}/" + random_string) }
 
       it { is_expected.to be_nil }
@@ -100,7 +97,7 @@ describe Voice::File, http_server: true, dbscope: :example do
     describe "#search" do
       it do
         expect(described_class.count).to be >= 1
-        expect(described_class.search({ :has_error => 1 }).count).to be >= 1
+        expect(described_class.search({ has_error: 1 }).count).to be >= 1
       end
     end
   end
@@ -111,18 +108,18 @@ describe Voice::File, http_server: true, dbscope: :example do
     end
 
     context "when downloads page" do
-      path = "#{rand(0x100000000).to_s(36)}.html"
+      let(:path) { "#{rand(0x100000000).to_s(36)}.html" }
+      let(:url) { "http://#{voice_site.domain}/#{path}" }
+      let(:voice_file) { described_class.find_or_create_by_url(url) }
 
       before do
-        http.options real_path: "/test-001.html"
-      end
+        WebMock.reset!
 
-      subject(:voice_file) do
-        url = "http://#{voice_site.domain}/#{path}"
-        described_class.find_or_create_by_url(url)
+        headers = { "ETag" => rand(0x100000000).to_s(36), "Last-Modified" => Time.zone.now.httpdate }
+        stub_request(:get, url).
+          to_return(status: 200, body: ::File.binread("#{Rails.root}/spec/fixtures/voice/test-001.html"), headers: headers)
       end
-
-      it { is_expected.not_to be_nil }
+      after { WebMock.reset! }
 
       it "downloads page" do
         voice_file.download
@@ -133,18 +130,18 @@ describe Voice::File, http_server: true, dbscope: :example do
     end
 
     context "when server does not respond etag" do
-      path = "#{rand(0x100000000).to_s(36)}.html"
+      let(:path) { "#{rand(0x100000000).to_s(36)}.html" }
+      let(:url) { "http://#{voice_site.domain}/#{path}" }
+      let(:voice_file) { described_class.find_or_create_by_url(url) }
 
       before do
-        http.options real_path: "/test-001.html", etag: nil
-      end
+        WebMock.reset!
 
-      subject(:voice_file) do
-        url = "http://#{voice_site.domain}/#{path}?etag=nil"
-        described_class.find_or_create_by_url(url)
+        headers = { "Last-Modified" => Time.zone.now.httpdate }
+        stub_request(:get, url).
+          to_return(status: 200, body: ::File.binread("#{Rails.root}/spec/fixtures/voice/test-001.html"), headers: headers)
       end
-
-      it { is_expected.not_to be_nil }
+      after { WebMock.reset! }
 
       it "downloads page" do
         voice_file.download
@@ -155,18 +152,18 @@ describe Voice::File, http_server: true, dbscope: :example do
     end
 
     context "when server does not respond last_modified" do
-      path = "#{rand(0x100000000).to_s(36)}.html"
+      let(:path) { "#{rand(0x100000000).to_s(36)}.html" }
+      let(:url) { "http://#{voice_site.domain}/#{path}" }
+      let(:voice_file) { described_class.find_or_create_by_url(url) }
 
       before do
-        http.options real_path: "/test-001.html", last_modified: nil
-      end
+        WebMock.reset!
 
-      subject(:voice_file) do
-        url = "http://#{voice_site.domain}/#{path}?last_modified=nil"
-        described_class.find_or_create_by_url(url)
+        headers = { "ETag" => rand(0x100000000).to_s(36) }
+        stub_request(:get, url).
+          to_return(status: 200, body: ::File.binread("#{Rails.root}/spec/fixtures/voice/test-001.html"), headers: headers)
       end
-
-      it { is_expected.not_to be_nil }
+      after { WebMock.reset! }
 
       it "downloads page" do
         voice_file.download
@@ -177,18 +174,18 @@ describe Voice::File, http_server: true, dbscope: :example do
     end
 
     context "when server does not either respond etag or last_modified" do
-      path = "#{rand(0x100000000).to_s(36)}.html"
+      let(:path) { "#{rand(0x100000000).to_s(36)}.html" }
+      let(:url) { "http://#{voice_site.domain}/#{path}" }
+      let(:voice_file) { described_class.find_or_create_by_url(url) }
 
       before do
-        http.options real_path: "/test-001.html", etag: nil, last_modified: nil
-      end
+        WebMock.reset!
 
-      subject(:voice_file) do
-        url = "http://#{voice_site.domain}/#{path}?etag=nil&last_modified=nil"
-        described_class.find_or_create_by_url(url)
+        headers = {}
+        stub_request(:get, url).
+          to_return(status: 200, body: ::File.binread("#{Rails.root}/spec/fixtures/voice/test-001.html"), headers: headers)
       end
-
-      it { is_expected.not_to be_nil }
+      after { WebMock.reset! }
 
       it "downloads page" do
         voice_file.download
