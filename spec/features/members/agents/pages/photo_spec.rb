@@ -6,7 +6,7 @@ describe "member_agents_pages_photo", type: :feature, dbscope: :example do
   let(:node)   { create :member_node_photo, layout_id: layout.id, filename: "node" }
 
   context "public" do
-    let!(:item) { create :member_photo, filename: "node/item" }
+    let!(:item) { create :member_photo, :member_photo_with_map_points, filename: "node/item" }
 
     before do
       Capybara.app_host = "http://#{site.domain}"

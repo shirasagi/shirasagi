@@ -3,7 +3,7 @@ FactoryBot.define do
     route "member/photo_spot"
 
     after(:build) do |item|
-      item.member_photo_ids = [create(:member_photo).id]
+      item.member_photo_ids = [create(:member_photo, :member_photo_with_map_points).id]
     end
   end
 end
