@@ -81,7 +81,7 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
           expect(history.session_id).to be_present
           expect(history.request_id).to be_present
           expect(history.url).to eq file_url
-          expect(history.controller).to eq "article/page"
+          expect(history.controller).to eq "article/pages"
           expect(history.action).to eq "update"
           expect(history.target_id).to be_blank
           expect(history.target_class).to be_blank
@@ -95,13 +95,13 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
           expect(history.session_id).to eq histories[2].session_id
           expect(history.request_id).to eq histories[2].request_id
           expect(history.url).to eq file_url
-          expect(history.controller).to eq "article/page"
+          expect(history.controller).to eq "article/pages"
           expect(history.action).to eq "update"
           expect(history.target_id).to be_blank
           expect(history.target_class).to be_blank
           expect(history.page_url).to eq article_page_path(site: site, cid: node, id: item)
           expect(history.behavior).to eq "paste"
-          expect(history.ref_coll).to eq ":ss_files"
+          expect(history.ref_coll).to eq "ss_files"
           expect(history.filename).to be_blank
         end
         histories[4].tap do |history|
@@ -141,7 +141,7 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
           expect(history.request_id).to be_present
           expect(history.request_id).not_to eq histories[2].request_id
           expect(history.url).to eq file_url
-          expect(history.controller).to eq "article/page"
+          expect(history.controller).to eq "article/pages"
           expect(history.action).to eq "destroy"
           expect(history.target_id).to be_blank
           expect(history.target_class).to be_blank
