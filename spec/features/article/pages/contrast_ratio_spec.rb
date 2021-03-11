@@ -18,6 +18,7 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
           it do
             visit article_page_path(site: site, cid: node, id: item)
 
+            ensure_addon_opened("#addon-cms-agents-addons-file")
             within "#addon-cms-agents-addons-file" do
               expect(page).to have_css(".file-view[data-file-id='#{file1.id}']", text: file1.name)
               wait_cbox_open do
@@ -126,6 +127,7 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
           it do
             visit edit_article_page_path(site: site, cid: node, id: item)
 
+            ensure_addon_opened("#addon-cms-agents-addons-file")
             within "#addon-cms-agents-addons-file" do
               expect(page).to have_css(".file-view[data-file-id='#{file1.id}']", text: file1.name)
               wait_cbox_open do
@@ -147,6 +149,7 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
           it do
             visit edit_article_page_path(site: site, cid: node, id: item)
 
+            ensure_addon_opened("#addon-cms-agents-addons-file")
             within "#addon-cms-agents-addons-file" do
               expect(page).to have_css(".file-view[data-file-id='#{file1.id}']", text: file1.name)
               wait_cbox_open do

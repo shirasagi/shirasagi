@@ -126,6 +126,7 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
       expect(page).to have_css('.list-item', count: 4)
 
       visit edit_path
+      ensure_addon_opened "#addon-cms-agents-addons-file"
       within "#addon-cms-agents-addons-file" do
         page.accept_alert(/#{::Regexp.escape(I18n.t("ss.confirm.in_use"))}/) do
           click_on I18n.t("ss.buttons.delete")
@@ -179,6 +180,7 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
     it do
       visit edit_path
 
+      ensure_addon_opened "#addon-cms-agents-addons-file"
       within "#addon-cms-agents-addons-file" do
         wait_cbox_open do
           click_on I18n.t("ss.buttons.upload")
@@ -201,6 +203,7 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
       file_url = item.files.first.url
 
       visit edit_path
+      ensure_addon_opened "#addon-cms-agents-addons-file"
       within "#addon-cms-agents-addons-file" do
         wait_for_ckeditor_event "item[html]", "afterInsertHtml" do
           click_on I18n.t("sns.file_attach")
@@ -356,6 +359,7 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
     it do
       visit edit_path
 
+      ensure_addon_opened "#addon-cms-agents-addons-file"
       within "#addon-cms-agents-addons-file" do
         wait_cbox_open do
           click_on I18n.t("ss.buttons.upload")
@@ -375,6 +379,7 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
       wait_for_notice I18n.t("ss.notice.saved")
 
       visit edit_path
+      ensure_addon_opened "#addon-cms-agents-addons-file"
       within "#addon-cms-agents-addons-file" do
         expect(page).to have_css(".file-view", text: "keyvisual.jpg")
         wait_for_ckeditor_event "item[html]", "afterInsertHtml" do
