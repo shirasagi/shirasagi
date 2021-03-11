@@ -50,9 +50,7 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
         #
         visit article_pages_path(site, article_node)
         click_on article_page.name
-        wait_addon_open do
-          find('#addon-cms-agents-addons-opendata_ref-resource .addon-head h2').click
-        end
+        ensure_addon_opened('#addon-cms-agents-addons-opendata_ref-resource')
 
         within "div.od-resource-file[data-file-id='#{file2.id}']" do
           expect(page).to have_css('span.od-resource-file-save-status', text: '')
@@ -88,10 +86,8 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
         click_on article_page.name
         click_on I18n.t('ss.links.edit')
 
+        ensure_addon_opened('#addon-cms-agents-addons-opendata_ref-dataset')
         within '#addon-cms-agents-addons-opendata_ref-dataset' do
-          wait_addon_open do
-            find('.addon-head h2').click
-          end
           # wait for appearing select
           expect(page).to have_css('a.ajax-box', text: I18n.t('cms.apis.opendata_ref.datasets.index'))
           # choose 'item_opendata_dataset_state_public'
@@ -206,9 +202,7 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
         #
         visit article_pages_path(site, article_node)
         click_on article_page.name
-        wait_addon_open do
-          find('#addon-cms-agents-addons-opendata_ref-resource .addon-head h2').click
-        end
+        ensure_addon_opened('#addon-cms-agents-addons-opendata_ref-resource')
 
         within "div.od-resource-file[data-file-id='#{file2.id}']" do
           expect(page).to have_css('span.od-resource-file-save-status', text: '')
@@ -243,10 +237,8 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
         click_on article_page.name
         click_on I18n.t('ss.links.edit')
 
+        ensure_addon_opened('#addon-cms-agents-addons-opendata_ref-dataset')
         within '#addon-cms-agents-addons-opendata_ref-dataset' do
-          wait_addon_open do
-            find('.addon-head h2').click
-          end
           # wait for appearing select
           expect(page).to have_css('a.ajax-box', text: I18n.t('cms.apis.opendata_ref.datasets.index'))
           # choose 'item_opendata_dataset_state_public'
@@ -317,9 +309,7 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
         #
         visit article_pages_path(site, article_node)
         click_on article_page.name
-        wait_addon_open do
-          find('#addon-cms-agents-addons-opendata_ref-resource .addon-head h2').click
-        end
+        ensure_addon_opened('#addon-cms-agents-addons-opendata_ref-resource')
 
         within "div.od-resource-file[data-file-id='#{file2.id}']" do
           expect(page).to have_css('span.od-resource-file-save-status', text: '')

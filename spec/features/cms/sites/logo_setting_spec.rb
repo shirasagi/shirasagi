@@ -12,9 +12,7 @@ describe "cms_sites", type: :feature, dbscope: :example, tmpdir: true, js: true 
       click_on I18n.t("ss.links.edit")
 
       # open addon
-      wait_addon_open do
-        first("#addon-ss-agents-addons-logo_setting .addon-head h2").click
-      end
+      ensure_addon_opened("#addon-ss-agents-addons-logo_setting")
 
       # fill form
       within "#addon-ss-agents-addons-logo_setting" do
@@ -57,9 +55,7 @@ describe "cms_sites", type: :feature, dbscope: :example, tmpdir: true, js: true 
       click_on I18n.t("ss.links.edit")
 
       # open addon
-      wait_addon_open do
-        first("#addon-ss-agents-addons-logo_setting .addon-head h2").click
-      end
+      ensure_addon_opened("#addon-ss-agents-addons-logo_setting")
 
       # fill form
       within "#addon-ss-agents-addons-logo_setting" do

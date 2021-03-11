@@ -35,9 +35,7 @@ describe "article_pages remove_files_recursively", type: :feature, dbscope: :exa
 
       visit edit_path
 
-      wait_addon_open do
-        find("#addon-cms-agents-addons-release .toggle-head").click
-      end
+      ensure_addon_opened('#addon-cms-agents-addons-release')
       select I18n.t("ss.options.state.closed"), from: "item_state"
 
       within "form#item-form" do
@@ -84,9 +82,7 @@ describe "article_pages remove_files_recursively", type: :feature, dbscope: :exa
 
       visit edit_path
 
-      wait_addon_open do
-        find("#addon-cms-agents-addons-for_member_node .toggle-head").click
-      end
+      ensure_addon_opened('#addon-cms-agents-addons-for_member_node')
       select I18n.t("cms.options.member_state.enabled"), from: "item_for_member_state"
 
       within "form#item-form" do

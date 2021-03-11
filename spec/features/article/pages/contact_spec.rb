@@ -14,12 +14,9 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
     it do
       visit new_path
 
+      ensure_addon_opened('#addon-contact-agents-addons-page')
       within '#addon-contact-agents-addons-page' do
-        wait_addon_open do
-          first('.toggle-head').click
-        end
-
-        within '.toggle-body' do
+        wait_cbox_open do
           first('.ajax-box').click
         end
       end
