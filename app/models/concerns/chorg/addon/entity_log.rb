@@ -126,7 +126,6 @@ module Chorg::Addon::EntityLog
         sites[entity_site]["models"][entity_model]["items"][entity_index]["label"] = label
         sites[entity_site]["models"][entity_model]["items"][entity_index]["title"] = title
       end
-      dump(sites)
       sites
     end
   end
@@ -152,12 +151,32 @@ module Chorg::Addon::EntityLog
     %w(contact_tel contact_fax contact_email contact_link_url contact_link_name)
   end
 
+  def embedded_array_fields
+    @_embedded_array_fields ||= begin
+      SS.config.chorg.embedded_array_fields.presence || []
+    end
+  end
+
+  def embedded_array_changes(entity)
+    return {} if !entity.respond_to?(:column_values)
+
+    hash = {}
+    embedded_array_fields.each do |field_name|
+      next if !entity.respond_to?(field_name)
+
+      changes = entity.send(field_name).map(&:changes)
+      next if !changes.select(&:present?).first
+
+      hash[field_name] = changes
+    end
+    hash
+  end
+
   def store_entity_changes(entity, site)
     if entity.persisted?
       changes = entity.changes.except('_id', 'created', 'updated')
-      overwrite_fields.each do |k|
-        changes[k] ||= [entity[k], entity[k]] if entity.respond_to?(k)
-      end
+      changes = changes.merge(embedded_array_changes(entity))
+
       hash = { 'id' => entity.id.to_s, 'model' => entity.class.name, 'changes' => changes }
     else
       creates = entity.attributes.except('_id', 'created', 'updated')

@@ -29,11 +29,21 @@ module Chorg::Substituter
     def call(key, value, group_id)
       if value.is_a?(Integer)
         value == @from_value ? @first_to_value : value
-      elsif value.is_a?(Enumerable)
-        value.map { |e| e == @from_value ? @to_value : e }.flatten.uniq
+      elsif integer_array?
+        substitute_array(value)
       else
         value
       end
+    end
+
+    def integer_array?(array_value)
+      return false if !array_value.is_a?(Enumerable)
+      return false if array_value.to_a.select { |value| value && !value.is_a?(Integer) }.first
+      true
+    end
+
+    def substitute_array(array_value)
+      array_value.map { |e| e == @from_value ? @to_value : e }.flatten.uniq
     end
 
     def overwrite_field?(key, value, group_id)
@@ -57,6 +67,8 @@ module Chorg::Substituter
         @to_value
       elsif value.is_a?(String) && @from_regex != //
         value.gsub(@from_regex, @to_value)
+      elsif string_array?(value)
+        substitute_array(value)
       else
         value
       end
@@ -69,6 +81,23 @@ module Chorg::Substituter
 
     def overwrite_fields
       %w(contact_tel contact_fax contact_email contact_link_url contact_link_name)
+    end
+
+    def string_array?(array_value)
+      return false if !array_value.is_a?(Enumerable)
+      return false if array_value.to_a.select { |value| value && !value.is_a?(String) }.first
+      true
+    end
+
+    def substitute_array(array_value)
+      new_value = array_value.to_a.map do |value|
+        if value.is_a?(String) && @from_regex != //
+          value.gsub(@from_regex, @to_value)
+        else
+          value
+        end
+      end
+      array_value.class.new(new_value)
     end
   end
 

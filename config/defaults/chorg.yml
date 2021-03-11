@@ -17,9 +17,12 @@ production: &production
     - "workflow_comment"
     - "url"
     - "/_url$/"
+    - "_type"
   ids_fields:
     - "_id"
     - "id"
+  embedded_array_fields:
+    - "column_values"
   max_division: 3
   changeset_sample_csv:
     - - ""
