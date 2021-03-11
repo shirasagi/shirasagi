@@ -37,6 +37,7 @@ module Chorg::MongoidSupport
         entity.try(:cur_site=, @cur_site)
         entity.try(:cur_user=, (entity.try(:user) || @cur_user))
         entity.try(:allow_other_user_files)
+        entity.try(:skip_sns_post=, true)
         entity.move_changes
         yield entity
       end
