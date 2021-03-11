@@ -6,7 +6,13 @@ FILL_CKEDITOR_SCRIPT = <<~SCRIPT.freeze
       return;
     }
 
-    $(element).text(text);
+    if (ckeditor.status !== "ready") {
+      ckeditor.on("instanceReady", function() {
+        ckeditor.setData(text, { callback: function() { resolve(true); } });
+      });
+      return;
+    }
+
     ckeditor.setData(text, { callback: function() { resolve(true); } });
   })(arguments[0], arguments[1], arguments[2]);
 SCRIPT
