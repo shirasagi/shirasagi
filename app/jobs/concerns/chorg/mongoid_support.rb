@@ -48,6 +48,9 @@ module Chorg::MongoidSupport
         def entity.post_to_line; end
         def entity.post_to_twitter; end
 
+        entity.try(:skip_assoc_opendata=, true)
+        def invoke_opendata_job; end
+
         entity.move_changes
         yield entity
       end
