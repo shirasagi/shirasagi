@@ -43,7 +43,11 @@ module Chorg::MongoidSupport
         entity.try(:cur_site=, @cur_site)
         entity.try(:cur_user=, (entity.try(:user) || @cur_user))
         entity.try(:allow_other_user_files)
+
         entity.try(:skip_sns_post=, true)
+        def entity.post_to_line; end
+        def entity.post_to_twitter; end
+
         entity.move_changes
         yield entity
       end
