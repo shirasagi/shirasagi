@@ -59,8 +59,6 @@ module Cms::Addon
     end
 
     def twitter_post_enabled?
-      dump("twitter_post : #{skip_sns_post.present?}")
-
       return false if skip_sns_post.present?
       return false unless use_twitter_post?
       return false if respond_to?(:branch?) && branch?
