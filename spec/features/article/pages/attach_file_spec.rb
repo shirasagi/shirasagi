@@ -257,7 +257,9 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
         end
 
         within ".column-value-palette" do
-          click_on column1.name
+          wait_event_to_fire("ss:columnAdded") do
+            click_on column1.name
+          end
         end
         within ".column-value-cms-column-fileupload" do
           wait_cbox_open do
@@ -284,7 +286,9 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
         end
 
         within ".column-value-palette" do
-          click_on column2.name
+          wait_event_to_fire("ss:columnAdded") do
+            click_on column2.name
+          end
         end
         within ".column-value-cms-column-free" do
           wait_cbox_open do

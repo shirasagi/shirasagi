@@ -167,7 +167,9 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
       end
 
       within ".column-value-palette" do
-        click_on column1.name
+        wait_event_to_fire("ss:columnAdded") do
+          click_on column1.name
+        end
       end
 
       within ".column-value-cms-column-fileupload" do
@@ -185,12 +187,6 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
       within ".column-value-cms-column-fileupload" do
         expect(page).to have_css(".file-view", text: "keyvisual.jpg")
       end
-
-      # 定型フォームに動画を添付すると Cms_Form.addSyntaxCheck を呼び出し、アクセシビリティチェックを登録する。
-      # Cms_Form.addSyntaxCheck の呼び出しが完了する前に「公開保存」をクリックしてしまうと、
-      # アクセシビリティチェックが実行されないので、警告ダイアログが表示されず、テストが失敗してしまう。
-      # そこで、苦渋だが  wait_for_ajax で Cms_Form.addSyntaxCheck の呼び出し完了を待機する。
-      wait_for_ajax
 
       click_on I18n.t("ss.buttons.publish_save")
       wait_for_cbox do
@@ -214,7 +210,9 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
       end
 
       within ".column-value-palette" do
-        click_on column2.name
+        wait_event_to_fire("ss:columnAdded") do
+          click_on column2.name
+        end
       end
 
       within ".column-value-cms-column-free" do
@@ -250,7 +248,9 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
       end
 
       within ".column-value-palette" do
-        click_on column2.name
+        wait_event_to_fire("ss:columnAdded") do
+          click_on column2.name
+        end
       end
 
       within ".column-value-cms-column-free" do
