@@ -29,7 +29,7 @@ module Chorg::Substituter
     def call(key, value, group_id)
       if value.is_a?(Integer)
         value == @from_value ? @first_to_value : value
-      elsif integer_array?
+      elsif integer_array?(value)
         substitute_array(value)
       else
         value
