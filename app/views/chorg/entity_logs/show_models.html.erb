@@ -10,12 +10,9 @@
       </thead>
       <tbody>
       <% @items.each do |key, item| %>
-        <%
-          model = t("mongoid.models.#{item["model"].underscore}", default: item["model"])
-        %>
         <tr>
-          <td><%= link_to model, { action: :show_entities, entity_model: key } %></td>
-          <td><%= item["count"] %></td>
+          <td><%= link_to item["label"], { action: :show_entities, entity_model: key } %></td>
+          <td><%= "#{item["count"]}件" %></td>
         </tr>
       <% end %>
       </tbody>
