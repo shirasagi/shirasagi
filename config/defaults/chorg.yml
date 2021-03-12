@@ -17,6 +17,7 @@ production: &production
     - "workflow_comment"
     - "url"
     - "/_url$/"
+    - "contains_urls"
     - "_type"
   ids_fields:
     - "_id"

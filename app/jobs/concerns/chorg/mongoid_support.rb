@@ -117,9 +117,18 @@ module Chorg::MongoidSupport
     target_fields_cache[1]
   end
 
+  # exclude html field when cms form present
+  def skip_target_field?(entity, field_name)
+    return false if field_name != "html"
+    form = entity.try(:form)
+    form.class == Cms::Form
+  end
+
   def with_updates(entity, substituter)
     updates = {}
     target_fields(entity).each do |k, _|
+      next if skip_target_field?(entity, k)
+
       v = entity[k]
       new_value = substituter.call(k, v, entity.try(:contact_group_id))
       updates[k] = new_value if v != new_value
