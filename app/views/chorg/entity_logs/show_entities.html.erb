@@ -1,10 +1,13 @@
 <dl class="see mod-chorg-entity_log">
-  <dt class="wide"><%= @entity_site["label"] %></dt>
+  <dt class="wide">
+    <%= @entity_site["label"] %> / <%= @entity_model["label"] %>
+  </dt>
   <dd class="wide">
     <table class="index">
       <thead>
         <tr>
-          <th><%= "対象" %></th>
+          <th><%= "対象1" %></th>
+          <th><%= "対象2" %></th>
           <th><%= "タイトル" %></th>
           <th><%= "ID" %></th>
           <th><%= "操作" %></th>
@@ -12,14 +15,20 @@
       </thead>
       <tbody>
         <% @items.each do |key, item| %>
-          <%
-             model = t("mongoid.models.#{item["model"].underscore}", default: item["model"])
-          %>
           <tr>
-            <td><%= model %></td>
+            <td><%= item["model_label"] %></td>
+            <td><%= item["class_label"] %></td>
             <td><%= link_to item["title"], { action: :show_entity, entity_index: key } %></td>
             <td><%= item["id"] %></td>
-            <td><%= item["label"] %></td>
+            <td>
+              <% if item['creates'] %>
+                <%= t('chorg.views.chorg/entity_log.options.operation.creates') %>
+              <% elsif item['changes'] %>
+                <%= t('chorg.views.chorg/entity_log.options.operation.changes') %>
+              <% elsif item['deletes'] %>
+                <%= t('chorg.views.chorg/entity_log.options.operation.deletes') %>
+              <% end %>
+            </td>
           </tr>
         <% end %>
       </tbody>

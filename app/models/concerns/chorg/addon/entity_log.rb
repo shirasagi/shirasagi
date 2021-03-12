@@ -99,6 +99,7 @@ module Chorg::Addon::EntityLog
         # models
         model = item["model"]
         entity_model = model.gsub("::", "").underscore
+        label = "#{I18n.t("mongoid.models.#{model.underscore}", default: "-")}(#{item["model"]})"
 
         sites[entity_site]["models"] ||= {}
         sites[entity_site]["models"][entity_model] ||= {
@@ -111,20 +112,14 @@ module Chorg::Addon::EntityLog
         id = item["id"]
         entity_index = (i + 1).to_s
         title = item["name"] || "#{model}(#{entity_index})"
-
-        label = ""
-        if item['creates']
-          label += I18n.t('chorg.views.chorg/entity_log.options.operation.creates')
-        elsif item['changes']
-          label += I18n.t('chorg.views.chorg/entity_log.options.operation.changes')
-        elsif item['deletes']
-          label += I18n.t('chorg.views.chorg/entity_log.options.operation.deletes')
-        end
+        model_label = "#{I18n.t("mongoid.models.#{model.underscore}", default: "-")}(#{item["model"]})"
+        class_label = "#{I18n.t("mongoid.models.#{item["class"].underscore}", default: "-")}(#{item["class"]})"
 
         sites[entity_site]["models"][entity_model]["items"] ||= {}
         sites[entity_site]["models"][entity_model]["items"][entity_index] = item
-        sites[entity_site]["models"][entity_model]["items"][entity_index]["label"] = label
         sites[entity_site]["models"][entity_model]["items"][entity_index]["title"] = title
+        sites[entity_site]["models"][entity_model]["items"][entity_index]["model_label"] = model_label
+        sites[entity_site]["models"][entity_model]["items"][entity_index]["class_label"] = class_label
       end
       sites
     end
@@ -172,18 +167,22 @@ module Chorg::Addon::EntityLog
     hash
   end
 
+  def entity_model(entity)
+    (entity.try(:base_model) || entity.class).name
+  end
+
   def store_entity_changes(entity, site)
     if entity.persisted?
       changes = entity.changes.except('_id', 'created', 'updated')
       changes = changes.merge(embedded_array_changes(entity))
 
-      hash = { 'id' => entity.id.to_s, 'model' => entity.class.name, 'changes' => changes }
+      hash = { 'id' => entity.id.to_s, 'model' => entity_model(entity), 'class' => entity.class.name, 'changes' => changes }
     else
       creates = entity.attributes.except('_id', 'created', 'updated')
-      hash = { 'model' => entity.class.name, 'creates' => creates }
+      hash = { 'model' => entity_model(entity), 'class' => entity.class.name, 'creates' => creates }
     end
 
-    hash['site'] = { 'id' => site.id, 'model' => site.class.name, 'name' => site.name } if site
+    hash['site'] = { 'id' => site.id, 'model' => entity_model(site), 'class' => site.class.name, 'name' => site.name } if site
     hash["name"] = entity.try(:name)
     hash['mypage_url'] = entity.try(:private_show_path)
 
@@ -192,9 +191,9 @@ module Chorg::Addon::EntityLog
 
   def store_entity_deletes(entity, site)
     deletes = entity.attributes.except('_id', 'created', 'updated')
-    hash = { 'id' => entity.id.to_s, 'model' => entity.class.name, 'deletes' => deletes }
+    hash = { 'id' => entity.id.to_s, 'model' => entity_model(entity), 'class' => entity.class.name, 'deletes' => deletes }
 
-    hash['site'] = { 'id' => site.id, 'model' => site.class.name, 'name' => site.name } if site
+    hash['site'] = { 'id' => site.id, 'model' => entity_model(site), 'class' => site.class.name, 'name' => site.name } if site
     hash["name"] = entity.try(:name)
     hash['mypage_url'] = entity.try(:private_show_path)
 
@@ -202,9 +201,9 @@ module Chorg::Addon::EntityLog
   end
 
   def store_entity_errors(entity, site)
-    hash = { 'id' => entity.id.to_s, 'model' => entity.class.name, 'errors' => entity.errors.full_messages }
+    hash = { 'id' => entity.id.to_s, 'model' => entity_model(entity), 'class' => entity.class.name, 'errors' => entity.errors.full_messages }
 
-    hash['site'] = { 'id' => site.id, 'model' => site.class.name, 'name' => site.name } if site
+    hash['site'] = { 'id' => site.id, 'model' => entity_model(site), 'class' => site.class.name, 'name' => site.name } if site
     hash["name"] = entity.try(:name)
     hash['mypage_url'] = entity.try(:private_show_path)
 

@@ -49,7 +49,12 @@ module Chorg::MongoidSupport
         def entity.post_to_twitter; end
 
         entity.try(:skip_assoc_opendata=, true)
-        def invoke_opendata_job; end
+        def entity.invoke_opendata_job; end
+
+        entity.instance_variable_set("@base_model", model)
+        def entity.base_model
+          return @base_model
+        end
 
         entity.move_changes
         yield entity

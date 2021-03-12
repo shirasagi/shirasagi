@@ -8,19 +8,36 @@
   <% end %>
 <% end %>
 
-<% def render_changes(changes) %>
+<% def render_changes(changes, prefix = nil) %>
   <% return if changes.blank? %>
   <% changes.sort_by { |k, v| k }.each do |k, v| %>
-    <tr>
-      <th style="white-space: nowrap;"><%= k %></th>
-      <td><%= v[0] %></td>
-      <td><%= v[1] %></td>
-    </tr>
+    <% if v[0].is_a?(Hash) %>
+      <% v.each_with_index do |h, i| %>
+        <% render_changes(h, "#{k}.#{i}") %>
+      <% end %>
+    <% else %>
+      <tr>
+        <th style="white-space: nowrap;"><%= [prefix, k].compact.join(".") %></th>
+        <td><%= v[0] %></td>
+        <td><%= v[1] %></td>
+      </tr>
+    <% end %>
   <% end %>
+<% end %>
+
+<% def render_errors(errors) %>
+  <% return if errors.blank? %>
+  <tr>
+    <th style="white-space: nowrap;"><%= "error" %></th>
+    <td colspan="2"><%=br errors.join("\n") %></td>
+  </tr>
 <% end %>
 
 <% alias render_deletes render_creates %>
 
+<dl class="see mod-chorg-entity_log">
+  <dt class="wide"><%= @entity_site["label"] %> / <%= @item["class_label"] %></dt>
+</dl>
 <dl class="see mod-chorg-entity_log">
   <dt class="wide"><%= @item["title"] %></dt>
   <dd class="wide">
@@ -29,6 +46,7 @@
       <% render_creates(@item['creates']) %>
       <% render_changes(@item['changes']) %>
       <% render_deletes(@item['deletes']) %>
+      <% render_errors(@item['errors']) %>
       </tbody>
     </table>
   </dd>
