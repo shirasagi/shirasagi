@@ -36,7 +36,7 @@ module SS
       (function(promiseId, selector, eventName) {
         var ckeditor = $(selector).ckeditor().editor;
         var defer = $.Deferred();
-        ckeditor.on(eventName, function(ev) { defer.resolve(true); ev.removeListener(); });
+        ckeditor.once(eventName, function(ev) { defer.resolve(true); ev.removeListener(); });
         window.SS[promiseId] = defer.promise();
       })(arguments[0], arguments[1], arguments[2]);
     SCRIPT

@@ -7,7 +7,7 @@ FILL_CKEDITOR_SCRIPT = <<~SCRIPT.freeze
     }
 
     if (ckeditor.status !== "ready") {
-      ckeditor.on("instanceReady", function() {
+      ckeditor.once("instanceReady", function() {
         ckeditor.setData(text, { callback: function() { resolve(true); } });
       });
       return;
