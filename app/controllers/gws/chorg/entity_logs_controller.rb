@@ -68,8 +68,6 @@ class Gws::Chorg::EntityLogsController < ApplicationController
     @entity_model = @entity_site["models"][params[:entity_model]]
     raise "404" unless @entity_model
 
-    dump(@entity_model["items"])
-
     @item = @entity_model["items"][params[:entity_index]]
     raise "404" unless @item
   end
