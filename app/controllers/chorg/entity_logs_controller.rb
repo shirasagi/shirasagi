@@ -73,4 +73,10 @@ class Chorg::EntityLogsController < ApplicationController
   def show
     render
   end
+
+  def download
+    path = @cur_task.create_entity_log_sites_zip(@cur_user, request.base_url)
+    send_file path, type: SS::MimeType.find("zip", "application/zip"), filename: ::File.basename(path),
+      disposition: :attachment, x_sendfile: true
+  end
 end

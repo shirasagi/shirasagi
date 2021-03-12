@@ -138,8 +138,12 @@ module Chorg::Addon::EntityLog
     cached_entity_logs.sites
   end
 
-  def create_entity_log_sites_zip(base_url)
-    root_path = "#{Rails.root}/#{revision.name}_#{Time.zone.now.to_i}"
+  def create_entity_log_sites_zip(user, base_url)
+    output_zip = SS::DownloadJobFile.new(user, "entity_logs-#{Time.zone.now.to_i}.zip")
+    output_dir = output_zip.path.sub(::File.extname(output_zip.path), "")
+
+    root_path = ::File.join(output_dir, revision.name)
+    Fs.mkdir_p(root_path)
 
     entity_log_sites.each do |entity_site, sites|
       label = sites["label"]
@@ -155,6 +159,14 @@ module Chorg::Addon::EntityLog
         Fs.write(::File.join(path, "#{entity_model}.csv"), csv)
       end
     end
+
+    Zip::File.open(output_zip.path, Zip::File::CREATE) do |zip|
+      Dir.glob("#{root_path}/**/*").each do |file|
+        name = file.gsub("#{root_path}/", "")
+        zip.add(name.encode('cp932', invalid: :replace, undef: :replace, replace: "_"), file)
+      end
+    end
+    output_zip.path
   end
 
   def items_to_csv(items, base_url, entity_site, entity_model)
