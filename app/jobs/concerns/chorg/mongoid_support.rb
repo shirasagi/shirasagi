@@ -41,8 +41,11 @@ module Chorg::MongoidSupport
         entity = entity.try(:becomes_with_route) || entity
         entity = entity.try(:becomes_with_topic) || entity
         entity.try(:cur_site=, @cur_site)
-        entity.try(:cur_user=, (entity.try(:user) || @cur_user))
         entity.try(:allow_other_user_files)
+
+        entity_user = (entity.try(:user) || @cur_user)
+        entity_user.try(:cur_site=, @cur_site)
+        entity.try(:cur_user=, entity_user)
 
         entity.try(:skip_sns_post=, true)
         def entity.post_to_line; end
