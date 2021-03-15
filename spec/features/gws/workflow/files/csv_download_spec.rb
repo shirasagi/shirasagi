@@ -28,7 +28,8 @@ describe Gws::Workflow::FilesController, type: :feature, dbscope: :example, js: 
       it do
         visit gws_workflow_files_path(site: site, state: "all")
         click_on item1.name
-        accept_confirm do
+        expect(page).to have_css("#workflow_route", text: I18n.t("mongoid.attributes.workflow/model/route.my_group"))
+        accept_confirm(I18n.t("ss.confirm.download")) do
           click_on I18n.t("gws/workflow.links.download_comment")
         end
 
@@ -38,6 +39,9 @@ describe Gws::Workflow::FilesController, type: :feature, dbscope: :example, js: 
         expect(csv.length).to eq 1
         expect(csv[0][Gws::Workflow::File.t(:name)]).to eq item1.name
         expect(csv[0][Gws::Workflow::File.t(:html)]).to eq item1.html
+
+        # wait workflow route shown to avoid causing exceptions
+        expect(page).to have_css("#workflow_route", text: I18n.t("mongoid.attributes.workflow/model/route.my_group"))
       end
     end
 
@@ -45,7 +49,8 @@ describe Gws::Workflow::FilesController, type: :feature, dbscope: :example, js: 
       it do
         visit gws_workflow_files_path(site: site, state: "all")
         click_on item2.name
-        accept_confirm do
+        expect(page).to have_css("#workflow_route", text: I18n.t("mongoid.attributes.workflow/model/route.my_group"))
+        accept_confirm(I18n.t("ss.confirm.download")) do
           click_on I18n.t("gws/workflow.links.download_comment")
         end
 
@@ -56,6 +61,9 @@ describe Gws::Workflow::FilesController, type: :feature, dbscope: :example, js: 
         expect(csv[0][Gws::Workflow::File.t(:name)]).to eq item2.name
         expect(csv[0]["#{form.name}/#{column1.name}"]).to eq column1_value
         expect(csv[0]["#{form.name}/#{column2.name}"]).to eq file2.name
+
+        # wait workflow route shown to avoid causing exceptions
+        expect(page).to have_css("#workflow_route", text: I18n.t("mongoid.attributes.workflow/model/route.my_group"))
       end
     end
 
@@ -86,7 +94,8 @@ describe Gws::Workflow::FilesController, type: :feature, dbscope: :example, js: 
       it do
         visit gws_workflow_files_path(site: site, state: "all")
         click_on item1.name
-        accept_confirm do
+        expect(page).to have_css("#workflow_route", text: I18n.t("mongoid.attributes.workflow/model/route.my_group"))
+        accept_confirm(I18n.t("ss.confirm.download")) do
           click_on I18n.t("gws/workflow.links.download_attachment")
         end
 
@@ -96,6 +105,9 @@ describe Gws::Workflow::FilesController, type: :feature, dbscope: :example, js: 
           entries.map { |entry| entry.name }
         end
         expect(entry_names).to include(file1.download_filename)
+
+        # wait workflow route shown to avoid causing exceptions
+        expect(page).to have_css("#workflow_route", text: I18n.t("mongoid.attributes.workflow/model/route.my_group"))
       end
     end
 
@@ -103,7 +115,8 @@ describe Gws::Workflow::FilesController, type: :feature, dbscope: :example, js: 
       it do
         visit gws_workflow_files_path(site: site, state: "all")
         click_on item2.name
-        accept_confirm do
+        expect(page).to have_css("#workflow_route", text: I18n.t("mongoid.attributes.workflow/model/route.my_group"))
+        accept_confirm(I18n.t("ss.confirm.download")) do
           click_on I18n.t("gws/workflow.links.download_attachment")
         end
 
@@ -113,6 +126,9 @@ describe Gws::Workflow::FilesController, type: :feature, dbscope: :example, js: 
           entries.map { |entry| entry.name }
         end
         expect(entry_names).to include(file2.download_filename)
+
+        # wait workflow route shown to avoid causing exceptions
+        expect(page).to have_css("#workflow_route", text: I18n.t("mongoid.attributes.workflow/model/route.my_group"))
       end
     end
 
@@ -151,15 +167,17 @@ describe Gws::Workflow::FilesController, type: :feature, dbscope: :example, js: 
       it do
         visit gws_workflow_files_path(site: site, state: "all")
         click_on item1.name
-        wait_for_ajax
-        accept_confirm do
+        expect(page).to have_css("#workflow_route", text: I18n.t("mongoid.attributes.workflow/model/route.my_group"))
+        accept_confirm(I18n.t("ss.confirm.download")) do
           click_on I18n.t("gws/workflow.links.download_attachment")
         end
-        wait_for_ajax
 
         expect(page).to have_css('#notice', text: I18n.t('gws.notice.delay_download_with_message').sub(/\n.*$/, ''))
         expect(enqueued_jobs.size).to eq 1
         expect(enqueued_jobs.first[:job]).to eq Gws::CompressJob
+
+        # wait workflow route shown to avoid causing exceptions
+        expect(page).to have_css("#workflow_route", text: I18n.t("mongoid.attributes.workflow/model/route.my_group"))
       end
     end
   end
