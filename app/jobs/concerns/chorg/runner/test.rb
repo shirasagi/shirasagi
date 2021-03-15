@@ -15,12 +15,12 @@ module Chorg::Runner::Test
       entity.id = next_pseudo_id
     end
 
-    if exclude_validation_model?(entity)
-      put_log("save (skip validate) : #{entity.class}(#{entity.id})")
+    if entity.valid?
+      put_log("save : #{entity.class}(#{entity.id})")
       task.store_entity_changes(entity, target_site(entity))
       true
-    elsif entity.valid?
-      put_log("save : #{entity.class}(#{entity.id})")
+    elsif exclude_validation_model?(entity)
+      put_log("save (skip validate) : #{entity.class}(#{entity.id})")
       task.store_entity_changes(entity, target_site(entity))
       true
     else

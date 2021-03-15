@@ -4,15 +4,15 @@ module Chorg::Runner::Main
   private
 
   def save_or_collect_errors(entity)
-    if exclude_validation_model?(entity)
-      put_log("save (skip validate) : #{entity.class}(#{entity.id})")
-      task.store_entity_changes(entity, target_site(entity))
-      entity.save!(validate: false)
-      true
-    elsif entity.valid?
+    if entity.valid?
       put_log("save : #{entity.class}(#{entity.id})")
       task.store_entity_changes(entity, target_site(entity))
       entity.save
+      true
+    elsif exclude_validation_model?(entity)
+      put_log("save (skip validate) : #{entity.class}(#{entity.id})")
+      task.store_entity_changes(entity, target_site(entity))
+      entity.save!(validate: false)
       true
     else
       put_error("save failed : #{entity.class}(#{entity.id}) #{entity.errors.full_messages.join(", ")}")

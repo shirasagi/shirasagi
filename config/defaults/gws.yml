@@ -120,8 +120,6 @@ production: &production
       - "Gws::Workflow::Route"
     exclude_validation_models:
       - "Gws::Schedule::Plan"
-      - "Gws::Schedule::PlanSearch"
-      - "Gws::Schedule::Todo"
     exclude_fields:
       - "filename"
       - "state"
