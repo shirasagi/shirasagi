@@ -138,7 +138,7 @@ module Chorg::Addon::EntityLog
     cached_entity_logs.sites
   end
 
-  def create_entity_log_sites_zip(user, base_url)
+  def create_entity_log_sites_zip(site, user, base_url)
     output_zip = SS::DownloadJobFile.new(user, "entity_logs-#{Time.zone.now.to_i}.zip")
     output_dir = output_zip.path.sub(::File.extname(output_zip.path), "")
 
@@ -155,7 +155,7 @@ module Chorg::Addon::EntityLog
         path = ::File.join(root_path, label)
         Fs.mkdir_p(path)
 
-        csv = items_to_csv(items, base_url, entity_site, entity_model)
+        csv = items_to_csv(site, items, base_url, entity_site, entity_model)
         Fs.write(::File.join(path, "#{entity_model}.csv"), csv)
       end
     end
@@ -169,7 +169,7 @@ module Chorg::Addon::EntityLog
     output_zip.path
   end
 
-  def items_to_csv(items, base_url, entity_site, entity_model)
+  def items_to_csv(site, items, base_url, entity_site, entity_model)
     url_helper = Rails.application.routes.url_helpers
     rid = revision.id
     type = (name == "chorg:main_task") ? "main" : "test"

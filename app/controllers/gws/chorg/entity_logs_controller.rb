@@ -44,6 +44,10 @@ class Gws::Chorg::EntityLogsController < ApplicationController
     @items = Kaminari.paginate_array(@items).page(params[:page]).per(50)
   end
 
+  def show
+    render
+  end
+
   def show_models
     @entity_site = @cur_task.entity_log_sites[params[:entity_site]]
     raise "404" unless @entity_site
@@ -72,7 +76,9 @@ class Gws::Chorg::EntityLogsController < ApplicationController
     raise "404" unless @item
   end
 
-  def show
-    render
+  def download
+    path = @cur_task.create_entity_log_sites_zip(@cur_site, @cur_user, request.base_url)
+    send_file path, type: SS::MimeType.find("zip", "application/zip"), filename: ::File.basename(path),
+      disposition: :attachment, x_sendfile: true
   end
 end
