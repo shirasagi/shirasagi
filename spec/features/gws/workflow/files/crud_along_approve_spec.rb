@@ -30,14 +30,18 @@ describe "gws_workflow_files", type: :feature, dbscope: :example, js: true do
       end
       wait_for_cbox do
         within "article.file-view" do
-          click_on file.name
+          wait_cbox_close do
+            click_on file.name
+          end
         end
       end
       within "form#item-form" do
+        expect(page).to have_content(file.name)
         click_on I18n.t("ss.buttons.save")
       end
 
       expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+      expect(page).to have_css("#workflow_route", text: I18n.t("mongoid.attributes.workflow/model/route.my_group"))
       expect(Gws::Workflow::File.site(site).count).to eq 1
       item = Gws::Workflow::File.site(site).first
       expect(item.name).to eq item_name
@@ -56,6 +60,7 @@ describe "gws_workflow_files", type: :feature, dbscope: :example, js: true do
       end
 
       expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+      expect(page).to have_css("#workflow_route", text: I18n.t("mongoid.attributes.workflow/model/route.my_group"))
       expect(Gws::Workflow::File.site(site).count).to eq 1
       item = Gws::Workflow::File.site(site).first
       expect(item.name).to eq item_name2
