@@ -565,7 +565,6 @@ this.SS_VoiceController = (function () {
     var timestamp = (new Date).getTime();
 
     template = template.replace(new RegExp(":TIMESTAMP:", 'g'), timestamp);
-    template = template.replace(new RegExp(":URL:", 'g'), url);
     return template;
   };
 
