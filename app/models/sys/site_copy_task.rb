@@ -23,7 +23,9 @@ class Sys::SiteCopyTask
   validates :target_host_name, presence: true, length: { maximum: 40 }
   validates :target_host_host, presence: true, length: { minimum: 3, maximum: 16 }
   validate :validate_target_host_host, if: ->{ target_host_host.present? }
-  validates :target_host_domains, domain: true
+  validates :target_host_domains, presence: true, domain: true
+  validates :target_host_subdir, presence: true, if: ->{ target_host_parent.present? }
+  validates :target_host_parent_id, presence: true, if: ->{ target_host_subdir.present? }
   validate :validate_target_host_domains, if: ->{ target_host_domains.present? }
   validates :source_site_id, presence: true
 

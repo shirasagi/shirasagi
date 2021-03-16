@@ -29,7 +29,9 @@ module SS::Model::Site
     permit_params :mypage_scheme, :mypage_domain
     validates :name, presence: true, length: { maximum: 40 }
     validates :host, uniqueness: true, presence: true, length: { minimum: 3, maximum: 16 }
-    validates :domains, domain: true
+    validates :domains, presence: true, domain: true
+    validates :subdir, presence: true, if: -> { parent.present? }
+    validates :parent_id, presence: true, if: -> { subdir.present? }
 
     validate :validate_domains, if: ->{ domains.present? }
 
@@ -138,14 +140,20 @@ module SS::Model::Site
       return if src_site.host.blank?
       return if path == src_site.path
       return if Fs.exists?(path)
+      return if !Fs.exists?(src_site.path)
 
-      Fs.mkdir_p("#{SS::Application.private_root}/files/ss_sites")
-      FileUtils.rmdir("#{SS::Application.private_root}/files/ss_sites/#{id}", parents: true) if Fs.exists?("#{SS::Application.private_root}/files/ss_sites/#{id}") && Dir.empty?("#{SS::Application.private_root}/files/ss_sites/#{id}")
-      Fs.mv(src_site.path, "#{SS::Application.private_root}/files/ss_sites/#{id}") if Fs.exists?(src_site.path)
-      FileUtils.rmdir(File.dirname(src_site.path), parents: true) if Fs.exists?(File.dirname(src_site.path)) && Dir.empty?(File.dirname(src_site.path))
-      Fs.mkdir_p(File.dirname(path))
-      FileUtils.rmdir(path, parents: true) if Fs.exists?(path) && Dir.empty?(path)
-      Fs.mv("#{SS::Application.private_root}/files/ss_sites/#{id}", path) if Fs.exists?("#{SS::Application.private_root}/files/ss_sites/#{id}")
+      begin
+        Fs.mkdir_p(File.dirname(path))
+        Fs.mv(src_site.path, path)
+      rescue Errno::EINVAL
+        temp_path = src_site.path.sub(self.class.root, "#{self.class.root}/temp")
+        Fs.mkdir_p(File.dirname(temp_path))
+        Fs.mv(src_site.path, src_site.path.sub(self.class.root, "#{self.class.root}/temp"))
+        FileUtils.rmdir(File.dirname(src_site.path), parents: true) if Dir.empty?(File.dirname(src_site.path))
+        Fs.mkdir_p(File.dirname(path))
+        FileUtils.rmdir(path, parents: true) if Fs.exists?(path) && Dir.empty?(path)
+        Fs.mv(temp_path, path) if Fs.exists?(temp_path)
+      end
     end
 
     class << self
