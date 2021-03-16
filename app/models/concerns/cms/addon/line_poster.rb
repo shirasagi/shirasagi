@@ -13,6 +13,7 @@ module Cms::Addon
       field :line_post_format, type: String, metadata: { branch: false }
 
       validates :line_text_message, presence: true, if: -> { line_auto_post == "active" }
+      validate :validate_line_title, if: -> { name.present? && line_auto_post == "active" }
       validate :validate_line_text_message, if: -> { line_text_message.present? }
 
       permit_params :line_auto_post, :line_edit_auto_post, :line_text_message, :line_post_format
@@ -49,6 +50,12 @@ module Cms::Addon
     end
 
     private
+
+    def validate_line_title
+      if name.size > 40
+        errors.add :name, :too_long_with_line_title, count: 40
+      end
+    end
 
     def validate_line_text_message
       if line_text_message.index("\n")
