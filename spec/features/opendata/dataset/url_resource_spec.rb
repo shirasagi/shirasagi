@@ -21,7 +21,7 @@ describe "opendata_url_resource", dbscope: :example, js: true do
 
       headers = { "Content-Type" => "text/csv", "Content-Disposition" => "attachment; filename=\"#{filename}\"" }
       stub_request(:get, original_url).
-        to_return(status: 200, body: ::File.binread(csv_path), :headers => headers)
+        to_return(status: 200, body: ::File.binread(csv_path), headers: headers)
 
       login_cms_user
     end

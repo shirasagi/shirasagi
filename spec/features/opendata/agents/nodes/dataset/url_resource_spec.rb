@@ -1,8 +1,6 @@
 require 'spec_helper'
 
-describe "opendata_agents_nodes_url_resource", dbscope: :example, http_server: true,
-             doc_root: Rails.root.join("spec", "fixtures", "opendata") do
-
+describe "opendata_agents_nodes_url_resource", dbscope: :example do
   def create_url_resource(dataset, license, original_url)
     url_resource = dataset.url_resources.new(
       name: "test",
