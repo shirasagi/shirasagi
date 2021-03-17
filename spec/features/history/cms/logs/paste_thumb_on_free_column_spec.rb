@@ -48,6 +48,75 @@ describe "history_cms_logs", type: :feature, dbscope: :example, js: true do
       click_on I18n.t("ss.buttons.publish_save")
       wait_for_notice I18n.t("ss.notice.saved")
 
+      item.reload
+      expect(item.column_values.count).to eq 1
+      expect(item.column_values.first.files.count).to eq 1
+      file_url = item.column_values.first.files.first.url
+      thumb_file_url = file_url.sub("/_/", "/_/thumb/")
+
+      History::Log.all.reorder(created: 1, id: 1).to_a.tap do |histories|
+        histories[0].tap do |history|
+          expect(history.user_id).to eq cms_user.id
+          expect(history.session_id).to be_present
+          expect(history.request_id).to be_present
+          expect(history.url).to eq sns_login_path
+          expect(history.controller).to eq "sns/login"
+          expect(history.action).to eq "login"
+          expect(history.target_id).to be_blank
+          expect(history.target_class).to be_blank
+          expect(history.page_url).to be_blank
+          expect(history.behavior).to be_blank
+          expect(history.ref_coll).to eq "ss_users"
+          expect(history.filename).to be_blank
+        end
+        histories[1].tap do |history|
+          expect(history.user_id).to eq cms_user.id
+          expect(history.session_id).to eq histories[0].session_id
+          expect(history.request_id).to be_present
+          expect(history.request_id).not_to eq histories[0].request_id
+          expect(history.url).to eq edit_path
+          expect(history.controller).to eq "article/pages"
+          expect(history.action).to eq "login"
+          expect(history.target_id).to be_blank
+          expect(history.target_class).to be_blank
+          expect(history.page_url).to be_blank
+          expect(history.behavior).to be_blank
+          expect(history.ref_coll).to eq "ss_sites"
+          expect(history.filename).to be_blank
+        end
+        histories[2].tap do |history|
+          expect(history.user_id).to eq cms_user.id
+          expect(history.session_id).to eq histories[0].session_id
+          expect(history.request_id).to be_present
+          expect(history.request_id).not_to eq histories[1].request_id
+          expect(history.url).to eq file_url
+          expect(history.controller).to eq "article/pages"
+          expect(history.action).to eq "update"
+          expect(history.target_id).to be_blank
+          expect(history.target_class).to be_blank
+          expect(history.page_url).to eq article_page_path(site: site, cid: node, id: item)
+          expect(history.behavior).to eq "attachment"
+          expect(history.ref_coll).to eq "ss_files"
+          expect(history.filename).to be_blank
+        end
+        histories[3].tap do |history|
+          expect(history.user_id).to eq cms_user.id
+          expect(history.session_id).to eq histories[0].session_id
+          expect(history.request_id).to eq histories[2].request_id
+          expect(history.url).to eq article_page_path(site: site, cid: node, id: item)
+          expect(history.controller).to eq "article/pages"
+          expect(history.action).to eq "update"
+          expect(history.target_id).to be_blank
+          expect(history.target_class).to be_blank
+          expect(history.page_url).to be_blank
+          expect(history.behavior).to be_blank
+          expect(history.ref_coll).to eq "cms_pages"
+          expect(history.filename).to be_blank
+        end
+      end
+      expect(History::Log.all.count).to eq 4
+      expect(History::Log.where(site_id: site.id).count).to eq 3
+
       visit logs_path
       expect(page).to have_css('.list-item', count: 3)
 
@@ -65,6 +134,54 @@ describe "history_cms_logs", type: :feature, dbscope: :example, js: true do
       end
       wait_for_notice I18n.t("ss.notice.saved")
 
+      History::Log.all.reorder(created: 1, id: 1).to_a.tap do |histories|
+        histories[4].tap do |history|
+          expect(history.user_id).to eq cms_user.id
+          expect(history.session_id).to eq histories[0].session_id
+          expect(history.request_id).to be_present
+          expect(history.request_id).not_to eq histories[3].request_id
+          expect(history.url).to eq file_url
+          expect(history.controller).to eq "article/pages"
+          expect(history.action).to eq "update"
+          expect(history.target_id).to be_blank
+          expect(history.target_class).to be_blank
+          expect(history.page_url).to eq article_page_path(site: site, cid: node, id: item)
+          expect(history.behavior).to eq "paste"
+          expect(history.ref_coll).to eq "ss_files"
+          expect(history.filename).to be_blank
+        end
+        histories[5].tap do |history|
+          expect(history.user_id).to eq cms_user.id
+          expect(history.session_id).to eq histories[0].session_id
+          expect(history.request_id).to eq histories[4].request_id
+          expect(history.url).to eq thumb_file_url
+          expect(history.controller).to eq "article/pages"
+          expect(history.action).to eq "update"
+          expect(history.target_id).to be_blank
+          expect(history.target_class).to be_blank
+          expect(history.page_url).to eq article_page_path(site: site, cid: node, id: item)
+          expect(history.behavior).to eq "paste"
+          expect(history.ref_coll).to eq "ss_files"
+          expect(history.filename).to be_blank
+        end
+        histories[6].tap do |history|
+          expect(history.user_id).to eq cms_user.id
+          expect(history.session_id).to eq histories[0].session_id
+          expect(history.request_id).to eq histories[4].request_id
+          expect(history.url).to eq article_page_path(site: site, cid: node, id: item)
+          expect(history.controller).to eq "article/pages"
+          expect(history.action).to eq "update"
+          expect(history.target_id).to be_blank
+          expect(history.target_class).to be_blank
+          expect(history.page_url).to be_blank
+          expect(history.behavior).to be_blank
+          expect(history.ref_coll).to eq "cms_pages"
+          expect(history.filename).to be_blank
+        end
+      end
+      expect(History::Log.all.count).to eq 7
+      expect(History::Log.where(site_id: site.id).count).to eq 6
+
       visit logs_path
       expect(page).to have_css('.list-item', count: 6)
 
@@ -72,6 +189,56 @@ describe "history_cms_logs", type: :feature, dbscope: :example, js: true do
       fill_in_ckeditor "item[column_values][][in_wrap][value]", with: ""
       click_on I18n.t("ss.buttons.publish_save")
       wait_for_notice I18n.t("ss.notice.saved")
+
+      History::Log.all.reorder(created: 1, id: 1).to_a.tap do |histories|
+        histories[7].tap do |history|
+          expect(history.user_id).to eq cms_user.id
+          expect(history.session_id).to eq histories[0].session_id
+          expect(history.request_id).to be_present
+          expect(history.request_id).not_to eq histories[6].request_id
+          expect(history.url).to eq file_url
+          expect(history.controller).to eq "article/pages"
+          expect(history.action).to eq "destroy"
+          expect(history.target_id).to be_blank
+          expect(history.target_class).to be_blank
+          expect(history.page_url).to eq article_page_path(site: site, cid: node, id: item)
+          expect(history.behavior).to eq "paste"
+          expect(history.ref_coll).to eq "ss_files"
+          expect(history.filename).to be_blank
+        end
+        histories[8].tap do |history|
+          expect(history.user_id).to eq cms_user.id
+          expect(history.session_id).to eq histories[0].session_id
+          expect(history.request_id).to be_present
+          expect(history.request_id).not_to eq histories[3].request_id
+          expect(history.url).to eq thumb_file_url
+          expect(history.controller).to eq "article/pages"
+          expect(history.action).to eq "destroy"
+          expect(history.target_id).to be_blank
+          expect(history.target_class).to be_blank
+          expect(history.page_url).to eq article_page_path(site: site, cid: node, id: item)
+          expect(history.behavior).to eq "paste"
+          expect(history.ref_coll).to eq "ss_files"
+          expect(history.filename).to be_blank
+        end
+        histories[9].tap do |history|
+          expect(history.user_id).to eq cms_user.id
+          expect(history.session_id).to eq histories[0].session_id
+          expect(history.request_id).to be_present
+          expect(history.request_id).not_to eq histories[3].request_id
+          expect(history.url).to eq article_page_path(site: site, cid: node, id: item)
+          expect(history.controller).to eq "article/pages"
+          expect(history.action).to eq "update"
+          expect(history.target_id).to be_blank
+          expect(history.target_class).to be_blank
+          expect(history.page_url).to be_blank
+          expect(history.behavior).to be_blank
+          expect(history.ref_coll).to eq "cms_pages"
+          expect(history.filename).to be_blank
+        end
+      end
+      expect(History::Log.all.count).to eq 10
+      expect(History::Log.where(site_id: site.id).count).to eq 9
 
       visit logs_path
       expect(page).to have_css('.list-item', count: 9)
