@@ -61,6 +61,8 @@ module Opendata::Dataset::ResourceFilter
 
     if @data.blank?
       raise "404"
+    elsif @item.preview_graph_enabled?
+      graph_content
     elsif @map_markers.present?
       render file: :map_content
     else
@@ -102,6 +104,19 @@ module Opendata::Dataset::ResourceFilter
 
   def image_content
     render :image_content, layout: 'cms/ajax'
+  end
+
+  def graph_content
+    if @item.preview_graph_types.include?(params[:type])
+      @type = params[:type]
+    else
+      @type = @item.preview_graph_types.first
+    end
+    render "graph/#{@type}_content", layout: 'cms/ajax'
+  end
+
+  def pie_graph_content
+    render "graph/pie_content", layout: 'cms/ajax'
   end
 
   public
@@ -151,9 +166,9 @@ module Opendata::Dataset::ResourceFilter
     Rails.logger.error("#{e.class} (#{e.message}):\n  #{e.backtrace.join("\n  ")}")
     @error_message = I18n.t("opendata.errors.messages.resource_preview_timeout")
     render file: :error_content, layout: 'cms/ajax'
-  rescue => e
-    Rails.logger.error("#{e.class} (#{e.message}):\n  #{e.backtrace.join("\n  ")}")
-    @error_message = I18n.t("opendata.errors.messages.resource_preview_failed")
-    render file: :error_content, layout: 'cms/ajax'
+  #rescue => e
+  #  Rails.logger.error("#{e.class} (#{e.message}):\n  #{e.backtrace.join("\n  ")}")
+  #  @error_message = I18n.t("opendata.errors.messages.resource_preview_failed")
+  #  render file: :error_content, layout: 'cms/ajax'
   end
 end

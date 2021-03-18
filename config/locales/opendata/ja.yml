@@ -241,6 +241,7 @@ ja:
       external_link: 外部リンク
       list_view: 一覧表示
       map_view: 地図表示
+      graph_view: グラフ表示
       not_found_dataset: データセットがみつかりません。
       and_condition: AND条件
       convert_setting: コンバート設定
@@ -346,6 +347,10 @@ ja:
     anti_bot_method_options:
       set_nofollow: "ダウンロードやプレビューなどの <a> タグに rel=\"nofollow\" をつける"
       use_button_for_bulk_download: "一括ダウンロードに <button> タグを用いる"
+    graph_types:
+      bar: 棒グラフ
+      line: 線グラフ
+      pie: 円グラフ
 
     # Web API
     api:
@@ -439,6 +444,7 @@ ja:
       opendata/node_area: "都道府県 市区町村"
       opendata/pref_code: 地域コード
       opendata/counter_html: レイアウト
+      opendata/graph: グラフプレビュー表示
 
   cms:
     nodes:
@@ -826,6 +832,9 @@ ja:
         resource_name: リソース名
         resource_filename: リソースファイル名
         resource_format: リソースフォーマット
+      opendata/addon/graph:
+        preview_graph_state: グラフ表示
+        preview_graph_types: グラフ種別
 
   activemodel:
     models:
@@ -1085,7 +1094,11 @@ ja:
         - Bot 対策方法を選択します。
         - "&lt;a&gt; タグに rel=\"nofollow\" をつけると、Bot はリンクを辿らなくなります（ただし、紳士的な Bot のみ）。"
         - "通常の Bot ではボタンをクリックしないので、一括ダウンロードに &lt;button&gt; タグを用いるようにすると、Bot が辿らなくなります。"
-
+    opendata/addon/graph:
+      preview_graph_state:
+        - プレビューにてグラフ表示を有効にするか設定します。
+      preview_graph_types:
+        - グラフ表示する種別を選択します。
   job:
     models:
       opendata/csv2rdf_converter/job: RDF変換ジョブ

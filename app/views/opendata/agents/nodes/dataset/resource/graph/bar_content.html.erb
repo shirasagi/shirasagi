@@ -1,0 +1,122 @@
+<% return if @item.format != "CSV" %>
+
+<%
+  limit = 100
+  graph = Opendata::Graph::Bar::Csv.new(@item)
+  graph_type_options = @item.preview_graph_types.map { |type| [t("opendata.graph_types.#{type}"), type] }
+%>
+<%= javascript_include_tag "/assets/js/chartjs-plugin-colorschemes.min.js" %>
+<%= jquery do %>
+$(".resource-content .tab.list a").on("click", function() {
+  $(".resource-content .tab.list").addClass("current");
+  $(".resource-content .tab.graph").removeClass("current");
+
+  $(".resource-content .resource-list").show();
+  $(".resource-content .resource-graph").hide();
+  return false;
+});
+$(".resource-content .tab.graph a").on("click", function() {
+  $(".resource-content .tab.list").removeClass("current");
+  $(".resource-content .tab.graph").addClass("current");
+
+  $(".resource-content .resource-list").hide();
+  $(".resource-content .resource-graph").show();
+  return false;
+});
+
+var selector = $("#ajax-box canvas.graph");
+var labels = <%== graph.labels.to_json %>;
+var datasets = <%== graph.datasets.to_json %>;
+
+new Chart(selector, {
+  type: 'bar',
+  data: {
+    labels: labels,
+    datasets: datasets,
+  },
+  options: {
+    title: {
+      display: true,
+      text: <%== @item.name.to_json %>,
+      fontSize: 18
+    },
+    legend: {
+      display: true,
+      position: 'bottom',
+      onClick: function () { return false; }
+    },
+    plugins: {
+      colorschemes: {
+        scheme: 'brewer.Paired12'
+      }
+    },
+    scales: {
+      yAxes: [{
+        ticks: {
+          callback: function(label, index, labels) {
+            return label.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+          }
+        }
+      }]
+    },
+    responsive: true
+  }
+});
+
+$("#ajax-box .select-type").on("change", function() {
+  var url = "<%= request.path %>";
+  url += "?type=" + $(this).val() + "&graph=1";
+
+  $("#cboxLoadedContent").html(SS.loading);
+  $.ajax({
+    url: url,
+    type: "GET",
+    success: function (data) {
+      $("#cboxLoadedContent").html(data);
+    },
+    error: function (data, status) {
+      $("#cboxLoadedContent").html("== Error ==");
+    }
+  });
+  return false;
+});
+<% end %>
+
+<div class="resource-content">
+  <nav class="tabs">
+    <ul>
+      <li class="tab list current">
+        <a href="#"><%= t("opendata.labels.list_view") %></a>
+      </li>
+      <li class="tab graph">
+        <a href="#"><%= t("opendata.labels.graph_view") %></a>
+      </li>
+    </ul>
+  </nav>
+
+  <div class="resource-list" style="<%= params[:graph] ? "display: none;" : "" %>">
+    <table class="cells" summary="<%= @item.name %>">
+      <tbody>
+      <% @data.slice(0, limit + 1).each do |line| %>
+        <tr>
+          <% line.each do |col| %>
+            <td><%= col %></td>
+          <% end %>
+        </tr>
+      <% end %>
+      </tbody>
+    </table>
+
+    <% if @data.size > limit %>
+      <div><%= limit %><%= t("opendata.labels.count_display") %></div>
+    <% end %>
+  </div>
+
+  <div class="resource-graph" style="<%= params[:graph] ? "" : "display: none;" %>">
+    <%= select_tag(:type, options_for_select(graph_type_options, selected: @type), class: "select-type") %>
+    <div class="graph-warp" style="max-width: 1100px">
+      <canvas class="graph"></canvas>
+    </div>
+  </div>
+</div>
+
