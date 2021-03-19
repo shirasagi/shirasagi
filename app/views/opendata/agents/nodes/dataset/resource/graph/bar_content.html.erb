@@ -67,7 +67,6 @@ $("#ajax-box .select-type").on("change", function() {
   var url = "<%= request.path %>";
   url += "?type=" + $(this).val() + "&graph=1";
 
-  $("#cboxLoadedContent").html(SS.loading);
   $.ajax({
     url: url,
     type: "GET",
@@ -85,10 +84,10 @@ $("#ajax-box .select-type").on("change", function() {
 <div class="resource-content">
   <nav class="tabs">
     <ul>
-      <li class="tab list current">
+      <li class="tab list <%= params[:graph] ? "" : "current" %>">
         <a href="#"><%= t("opendata.labels.list_view") %></a>
       </li>
-      <li class="tab graph">
+      <li class="tab graph <%= params[:graph] ? "current" : "" %>">
         <a href="#"><%= t("opendata.labels.graph_view") %></a>
       </li>
     </ul>
