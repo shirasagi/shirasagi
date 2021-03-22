@@ -31,7 +31,6 @@ ja:
       harvest_import_datasets: データセットをインポートする
       harvest_destroy_datasets: 関連するデータセットを削除する
       dataset_map_search_datasets: データセットを探す
-      dataset_map_datasets_limit: 最大１０件までデータセットを選択できます。
       deleted: 削除済み
     search_datasets:
       index: データセットを選択する
@@ -59,6 +58,8 @@ ja:
       resource_preview_error: リソースをプレビューできませんでした。
       bulk_download_exceeded_filesize: "検索結果の一括ダウンロードサイズが大きすぎます。\n一括ダウンロードのサイズは、%{size}までを想定しています。\n申し訳ありませんが、個別にダウンロードしていただくか、検索条件を変更してください。"
       recreate_rdf: "次のリソースに関連する RDF が作成されています。"
+      select_datasets_limit: 最大１０件までデータセットを選択できます。
+      dataset_graph_select_resource: 「データセットを探す」よりデータセットを検索して、リソースを選択するとグラフが表示されます。
     export:
       subject: '[オープンデータ/データセット] エクスポートが完了しました。'
       notify_message: "ダウンロードの準備が完了しました。\n下記のURLからダウンロードしてください。\n\n%{link}"

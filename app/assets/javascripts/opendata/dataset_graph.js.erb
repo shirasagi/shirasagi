@@ -22,32 +22,37 @@ this.Opendata_Dataset_Graph = (function () {
 
   Opendata_Dataset_Graph.renderGraph = function (type, header) {
     var ele = $('.selected-dataset [name="resource_id"]:checked:first');
-    var url = $(ele).data("url");
-    var name = $(ele).closest("li").find(".resource-name").text();
 
-    url += "?type=" + type;
-    $.ajax({
-      url: url,
-      type: "GET",
-      dataType:"json",
-      success: function (data) {
-        var types = data["types"];
-        var datasets = data["datasets"];
-        var labels = data["labels"];
-        var headers = data["headers"];
+    if (ele.length > 0) {
+      var url = $(ele).data("url");
+      var name = $(ele).closest("li").find(".resource-name").text();
 
-        if (type == "pie") {
-          if (!header) {
-            header = 0;
+      url += "?type=" + type;
+      $.ajax({
+        url: url,
+        type: "GET",
+        dataType: "json",
+        success: function (data) {
+          var types = data["types"];
+          var datasets = data["datasets"];
+          var labels = data["labels"];
+          var headers = data["headers"];
+
+          if (type == "pie") {
+            if (!header) {
+              header = 0;
+            }
+            name += "（" + headers[header] + "）";
           }
-          name += "（" + headers[header] + "）";
+          Opendata_Dataset_Graph.graph.render(type, name, labels, datasets, {headerIndex: header});
+          Opendata_Dataset_Graph.graph.renderController(types, headers, function (type, header) {
+            Opendata_Dataset_Graph.renderGraph(type, header);
+          });
         }
-        Opendata_Dataset_Graph.graph.render(type, name, labels, datasets, { headerIndex: header });
-        Opendata_Dataset_Graph.graph.renderController(types, headers, function (type, header) {
-          Opendata_Dataset_Graph.renderGraph(type, header);
-        });
-      }
-    });
+      });
+    } else {
+      Opendata_Dataset_Graph.graph.destroy();
+    }
   };
 
   Opendata_Dataset_Graph.selectItem = function (ele) {
@@ -64,6 +69,7 @@ this.Opendata_Dataset_Graph = (function () {
       $(this).on("click", function () {
         $(this).closest('.selected-dataset').find('[name="resource_id"]').not(this).prop("checked", false);
         Opendata_Dataset_Graph.renderGraph("bar");
+        Opendata_Dataset_Graph.toggleFirstNotice();
       });
     });
 
@@ -71,6 +77,7 @@ this.Opendata_Dataset_Graph = (function () {
     $(item).find(".deselect").on("click", function (e) {
       $(this).closest(".selected-item").remove();
       Opendata_Dataset_Graph.graph.destroy();
+      Opendata_Dataset_Graph.toggleFirstNotice();
       return false;
     });
 
@@ -81,6 +88,7 @@ this.Opendata_Dataset_Graph = (function () {
     for (var i = 0; i < length; i++) {
       $(".dataset-search .selected-dataset .selected-item:first").remove();
     }
+    Opendata_Dataset_Graph.toggleFirstNotice();
 
     return item;
   }
@@ -90,6 +98,14 @@ this.Opendata_Dataset_Graph = (function () {
       $(".select-items").parent("div").show();
     } else {
       $(".select-items").parent("div").hide();
+    }
+  };
+
+  Opendata_Dataset_Graph.toggleFirstNotice = function () {
+    if ($('.selected-dataset [name="resource_id"]:checked').length > 0) {
+      $(".resource-graph .first-notice").hide();
+    } else {
+      $(".resource-graph .first-notice").show();
     }
   };
 

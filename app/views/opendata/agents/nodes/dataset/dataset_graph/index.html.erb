@@ -12,9 +12,10 @@ Opendata_Dataset_Graph.render(".resource-graph canvas.graph", ".resource-graph .
     <%= link_to t("opendata.links.dataset_map_search_datasets"), "#{@cur_node.url}search.html", id: "ajax-search" %>
   </nav>
   <section class="selected-dataset"></section>
-  <div class="datasets-limit"><%= t("opendata.links.dataset_map_datasets_limit") %></div>
+  <div class="datasets-limit"><%= t("opendata.notice.select_datasets_limit") %></div>
 </div>
 <div class="resource-graph">
+  <div class="first-notice"><%= t("opendata.notice.dataset_graph_select_resource") %></div>
   <div class="graph-controller" style="display: none;"></div>
   <div class="graph-warp">
     <canvas class="graph"></canvas>
