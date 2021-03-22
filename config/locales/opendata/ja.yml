@@ -458,6 +458,7 @@ ja:
       opendata/search_dataset_group: データセットグループ検索
       opendata/search_dataset: データセット検索
       opendata/dataset_map: データセット地図
+      opendata/dataset_graph: データセットグラフ
       opendata/sparql: SPARQL
       opendata/api: API
       opendata/app: アプリ

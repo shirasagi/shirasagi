@@ -20,6 +20,19 @@ module Opendata::Addon::Graph
     preview_graph_state == "enabled" && preview_graph_types.present?
   end
 
+  def extract_preview_graph(type)
+    return nil unless preview_graph_enabled?
+
+    case type
+    when "bar"
+      ::Opendata::Graph::Bar.new(type, self)
+    when "line"
+      ::Opendata::Graph::Bar.new(type, self)
+    when "pie"
+      ::Opendata::Graph::Pie.new(type, self)
+    end
+  end
+
   private
 
   def validate_preview_graph_types

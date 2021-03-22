@@ -10,6 +10,7 @@ module Opendata
     Cms::Node.plugin "opendata/search_dataset_group"
     Cms::Node.plugin "opendata/search_dataset"
     Cms::Node.plugin "opendata/dataset_map"
+    Cms::Node.plugin "opendata/dataset_graph"
     Cms::Node.plugin "opendata/sparql"
     Cms::Node.plugin "opendata/api"
     Cms::Node.plugin "opendata/app"

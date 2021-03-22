@@ -1,0 +1,22 @@
+<%
+  controller.javascript "/assets/js/jquery.colorbox.js"
+  controller.stylesheet "/assets/css/colorbox/colorbox.css"
+%>
+
+<%= jquery do %>
+Opendata_Dataset_Graph.render(".resource-graph canvas.graph", ".resource-graph .graph-controller");
+<% end %>
+
+<div class="dataset-search">
+  <nav class="settings">
+    <%= link_to t("opendata.links.dataset_map_search_datasets"), "#{@cur_node.url}search.html", id: "ajax-search" %>
+  </nav>
+  <section class="selected-dataset"></section>
+  <div class="datasets-limit"><%= t("opendata.links.dataset_map_datasets_limit") %></div>
+</div>
+<div class="resource-graph">
+  <div class="graph-controller" style="display: none;"></div>
+  <div class="graph-warp">
+    <canvas class="graph"></canvas>
+  </div>
+</div>

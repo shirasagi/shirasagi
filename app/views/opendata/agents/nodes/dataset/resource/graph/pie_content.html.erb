@@ -2,12 +2,11 @@
 
 <%
   limit = 100
-  graph = Opendata::Graph::Pie::Csv.new(@item)
-  graph_type_options = @item.preview_graph_types.map { |type| [t("opendata.graph_types.#{type}"), type] }
-  @header = params[:header].to_i
-  dataset = graph.datasets[@header]
+  graph = @item.extract_preview_graph("pie")
+
+  @header_index = params[:headerIndex].to_i
+  @headers = graph.headers
 %>
-<%= javascript_include_tag "/assets/js/chartjs-plugin-colorschemes.min.js" %>
 <%= jquery do %>
 $(".resource-content .tab.list a").on("click", function() {
   $(".resource-content .tab.list").addClass("current");
@@ -26,80 +25,26 @@ $(".resource-content .tab.graph a").on("click", function() {
   return false;
 });
 
-var selector = $("#ajax-box canvas.graph");
+var canvas = $("#ajax-box canvas.graph");
+var controller = $("#ajax-box .graph-controller");
+var graph = new Opendata_Graph(canvas, controller);
+
+var name = <%== "#{@item.name}（#{@headers[@header_index]}）".to_json %>;
 var labels = <%== graph.labels.to_json %>;
-var datasets = <%== [dataset].to_json %>;
+var datasets = <%== graph.datasets.to_json %>;
+graph.render("pie", name, labels, datasets, { headerIndex: <%== @header_index.to_json %> });
 
-new Chart(selector, {
-  type: 'pie',
-  data: {
-    labels: labels,
-    datasets: datasets,
-  },
-  options: {
-    title: {
-      display: true,
-      text: <%== "#{@item.name}（#{dataset[:label]}）".to_json %>,
-      fontSize: 18
-    },
-    legend: {
-      display: true,
-      position: 'bottom',
-      onClick: function () { return false; }
-    },
-    tooltips: {
-      callbacks: {
-        label: function(tooltipItem, data) {
-        label = data["labels"][tooltipItem["index"]];
-        dataset = data["datasets"][tooltipItem["datasetIndex"]];
-
-        data = dataset["data"][tooltipItem["index"]];
-        data = data.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
-
-        label = label + "（" + dataset["label"] + "）: " + data;
-        return label;
-      }
-    }
-  },
-  plugins: {
-    colorschemes: {
-      scheme: 'brewer.Paired12'
-    }
-  },
-  scales: {
-    xAxes: [{ display: false }],
-    yAxes: [{ display: false }]
-  },
-  responsive: true
-  }
-});
-
-$("#ajax-box .select-type").on("change", function() {
+var types = <%== @item.preview_graph_types.to_json %>;
+var headers = <%== @headers.to_json %>;
+graph.renderController(types, headers, function(type, headerIndex) {
   var url = "<%= request.path %>";
-  url += "?type=" + $(this).val() + "&graph=1&header=" + <%== @header %>;
+  url += "?type=" + type + "&graph=1&headerIndex=" + headerIndex;
 
-  $("#cboxLoadedContent").html(SS.loading);
+  graph.destroy();
   $.ajax({
     url: url,
     type: "GET",
       success: function (data) {
-      $("#cboxLoadedContent").html(data);
-    },
-    error: function (data, status) {
-      $("#cboxLoadedContent").html("== Error ==");
-    }
-  });
-  return false;
-});
-
-$("#ajax-box .select-pie-header").on("change", function() {
-  var url = "<%= request.path %>";
-  url += "?type=<%== @type %>&graph=1&header=" + $(this).val();
-
-  $.ajax({
-    url: url,
-    type: "GET",
-    success: function (data) {
       $("#cboxLoadedContent").html(data);
     },
     error: function (data, status) {
@@ -121,8 +66,6 @@ $("#ajax-box .select-pie-header").on("change", function() {
       </li>
     </ul>
   </nav>
-  <%= select_tag(:type, options_for_select(graph_type_options, selected: @type), class: "select-type") %>
-  <%= select_tag(:type, options_for_select(graph.headers.map.with_index { |v, i| [v, i] }, selected: @header), class: "select-pie-header") %>
 
   <div class="resource-list" style="<%= params[:graph] ? "display: none;" : "" %>">
     <table class="cells" summary="<%= @item.name %>">
@@ -143,9 +86,8 @@ $("#ajax-box .select-pie-header").on("change", function() {
   </div>
 
   <div class="resource-graph" style="<%= params[:graph] ? "" : "display: none;" %>">
-
-    <script src="https://unpkg.com/chartjs-plugin-colorschemes"></script>
-    <div class="graph-warp" style="max-width: 1000px;">
+    <div class="graph-warp">
+      <div class="graph-controller" style="display: none;"></div>
       <canvas class="graph"></canvas>
     </div>
   </div>
