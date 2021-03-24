@@ -19,7 +19,7 @@ class Opendata::Dataset::ExportJob < Cms::ApplicationJob
 
     FileUtils.rm_rf(@output_dir)
 
-    create_notify_mail
+    create_notify_message
   end
 
   def write_file(path, data)
@@ -81,11 +81,18 @@ class Opendata::Dataset::ExportJob < Cms::ApplicationJob
     end
   end
 
-  def create_notify_mail
-    args = {}
-    args[:site] = site
-    args[:t_uid] = user.id
-    args[:link] = ::File.join(@root_url, @output_zip.url)
-    Opendata::Mailer.export_datasets_mail(args).deliver_now rescue nil
+  def create_notify_message
+    link = ::File.join(@root_url, @output_zip.url)
+
+    item = SS::Notification.new
+    item.cur_group = site
+    item.cur_user = user
+    item.member_ids = [user.id]
+    item.format = "text"
+    item.send_date = Time.zone.now
+
+    item.subject = I18n.t("opendata.export.subject")
+    item.text = I18n.t("opendata.export.notify_message", link: link)
+    item.save!
   end
 end
