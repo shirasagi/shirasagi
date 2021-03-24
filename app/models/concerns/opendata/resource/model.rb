@@ -59,6 +59,12 @@ module Opendata::Resource::Model
   def relation_file(name, opts = {})
     file = super(name, opts)
     file.site_id = dataset.site.id rescue nil
+
+    if in_file
+      file.filename = file.in_file.original_filename
+      file.name = file.in_file.original_filename
+    end
+
     file
   end
 

@@ -30,8 +30,7 @@ Rails.application.routes.draw do
     get 'export_datasets' => 'dataset/export_datasets#index'
     put 'export_datasets' => 'dataset/export_datasets#export'
     get 'start_export_datasets' => 'dataset/export_datasets#start_export'
-    get 'import_datasets' => 'dataset/import_datasets#index'
-    put 'import_datasets' => 'dataset/import_datasets#import'
+    match 'import_datasets' => 'dataset/import_datasets#import', via: [:get, :put]
     resources :datasets, concerns: [:deletion, :copy, :command], module: :dataset do
 
       get "search" => "datasets/search#index", on: :collection
