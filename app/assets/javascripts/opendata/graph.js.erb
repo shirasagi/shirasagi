@@ -55,6 +55,11 @@ Opendata_Graph.prototype.drawBar = function() {
         }
       },
       scales: {
+        xAxes: [{
+          ticks: {
+            autoSkip: false
+          }
+        }],
         yAxes: [{
           ticks: {
             callback: function(label, index, labels) {
@@ -92,6 +97,11 @@ Opendata_Graph.prototype.drawLine = function() {
         }
       },
       scales: {
+        xAxes: [{
+          ticks: {
+            autoSkip: false
+          }
+        }],
         yAxes: [{
           ticks: {
             callback: function(label, index, labels) {
