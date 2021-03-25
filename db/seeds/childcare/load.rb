@@ -339,11 +339,11 @@ categories = Hash[*array.flatten]
 
 ## article
 save_node route: "article/page", filename: "docs", name: "記事", shortcut: "show",
-  layout_id: layouts["folder"].id, sort: "order", limit: 50, order: 60
+  layout_id: layouts["folder"].id, page_layout_id: layouts["docs"].id, order: 60, sort: "order", limit: 50
 
 ## faq
-save_node route: "faq/page", filename: "faq/docs", name: "よくある質問記事", shortcut: "show",
-  st_category_ids: [categories["faq"].id], layout_id: layouts["folder"].id, limit: 50, order: 110
+save_node route: "faq/page", filename: "faq/docs", name: "よくある質問記事", order: 110, shortcut: "show",
+  st_category_ids: [categories["faq"].id], layout_id: layouts["folder"].id, limit: 50
 save_node route: "faq/search", filename: "faq/search", name: "よくある質問検索",
   st_category_ids: [categories["faq"].id], layout_id: layouts["folder"].id, limit: 100
 
