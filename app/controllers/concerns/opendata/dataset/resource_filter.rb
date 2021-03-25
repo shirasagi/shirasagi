@@ -112,7 +112,12 @@ module Opendata::Dataset::ResourceFilter
     else
       @type = @item.preview_graph_types.first
     end
-    render "graph/#{@type}_content", layout: 'cms/ajax'
+
+    if @item.format != "CSV"
+      raise "404"
+    else
+      render "graph/#{@type}_content", layout: 'cms/ajax'
+    end
   end
 
   def pie_graph_content
@@ -166,9 +171,9 @@ module Opendata::Dataset::ResourceFilter
     Rails.logger.error("#{e.class} (#{e.message}):\n  #{e.backtrace.join("\n  ")}")
     @error_message = I18n.t("opendata.errors.messages.resource_preview_timeout")
     render file: :error_content, layout: 'cms/ajax'
-  #rescue => e
-  #  Rails.logger.error("#{e.class} (#{e.message}):\n  #{e.backtrace.join("\n  ")}")
-  #  @error_message = I18n.t("opendata.errors.messages.resource_preview_failed")
-  #  render file: :error_content, layout: 'cms/ajax'
+  rescue => e
+    Rails.logger.error("#{e.class} (#{e.message}):\n  #{e.backtrace.join("\n  ")}")
+    @error_message = I18n.t("opendata.errors.messages.resource_preview_failed")
+    render file: :error_content, layout: 'cms/ajax'
   end
 end
