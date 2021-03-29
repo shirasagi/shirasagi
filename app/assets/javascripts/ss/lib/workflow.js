@@ -205,6 +205,8 @@ SS_Workflow.prototype = {
       success: function (data) {
         if (data.workflow_alert) {
           alert(data.workflow_alert);
+          pThis.updateDisabled = false;
+          $this.prop("disabled", false);
           return;
         }
 
