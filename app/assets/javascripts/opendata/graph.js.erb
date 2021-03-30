@@ -62,6 +62,7 @@ Opendata_Graph.prototype.drawBar = function() {
         }],
         yAxes: [{
           ticks: {
+            beginAtZero: true,
             callback: function(label, index, labels) {
               return label.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
             }
@@ -104,6 +105,7 @@ Opendata_Graph.prototype.drawLine = function() {
         }],
         yAxes: [{
           ticks: {
+            beginAtZero: true,
             callback: function(label, index, labels) {
               return label.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
             }
