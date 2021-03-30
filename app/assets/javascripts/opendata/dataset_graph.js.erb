@@ -27,12 +27,15 @@ this.Opendata_Dataset_Graph = (function () {
       var url = $(ele).data("url");
       var name = $(ele).closest("li").find(".resource-name").text();
 
-      url += "?type=" + type;
+      if (type) {
+        url += "?type=" + type;
+      }
       $.ajax({
         url: url,
         type: "GET",
         dataType: "json",
         success: function (data) {
+          var type = data["type"];
           var types = data["types"];
           var datasets = data["datasets"];
           var labels = data["labels"];
@@ -68,7 +71,7 @@ this.Opendata_Dataset_Graph = (function () {
       // checkbox
       $(this).on("click", function () {
         $(this).closest('.selected-dataset').find('[name="resource_id"]').not(this).prop("checked", false);
-        Opendata_Dataset_Graph.renderGraph("bar");
+        Opendata_Dataset_Graph.renderGraph();
         Opendata_Dataset_Graph.toggleFirstNotice();
       });
     });

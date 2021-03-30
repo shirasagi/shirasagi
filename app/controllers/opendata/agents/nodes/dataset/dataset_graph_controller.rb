@@ -73,7 +73,7 @@ class Opendata::Agents::Nodes::Dataset::DatasetGraphController < ApplicationCont
     @item = @dataset.resources.select { |r| r.id == params[:id].to_i }.first
     raise "404" unless @item
 
-    type = params[:type].presence || "bar"
+    type = params[:type].presence || @item.preview_graph_types.first
     graph = @item.extract_preview_graph(type)
     raise "404" unless graph
 
