@@ -40,6 +40,14 @@ mime_type_map:
 #   hex - replace filename with fixed length
 multibyte_filename: underscore
 
+# unicode normalization method
+#   :nfc - 外観が変わらない正規化（機種依存文字はそのまま）。「て（U+3066）」 +「濁点（U+3099）」-->「で（U+3067）」
+#   :nfkc - 外観が変わる正規化（nfc に加え機種依存文字も非依存へ変換）。「①」 --> 「1」、「㌀」 --> 「アパート」、「～」-->「~」
+unicode_normalization_method: :nfkc
+
+# max size in bytes on comparing files for publishing a file
+max_compare_file_size: 102_400
+
 # json response datetime_format
 #   %Y/%m/%d %H:%M:%S - 2015/12/25 12:00:00
 json_datetime_format:

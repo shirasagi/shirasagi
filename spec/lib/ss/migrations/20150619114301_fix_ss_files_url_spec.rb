@@ -8,6 +8,18 @@ RSpec.describe SS::Migration20150619114301, dbscope: :example do
   let(:after_layout_html_path) { Rails.root.join("spec/fixtures/ss/migration/fix_ss_files_url/after_layout.html") }
 
   before do
+    @save_multibyte_filename = SS.config.env.multibyte_filename
+    @save_file_url_with = SS.config.ss.file_url_with
+    SS.config.replace_value_at(:env, :multibyte_filename, "underscore")
+    SS.config.replace_value_at(:ss, :file_url_with, "filename")
+  end
+
+  after do
+    SS.config.replace_value_at(:ss, :file_url_with, @save_file_url_with)
+    SS.config.replace_value_at(:env, :multibyte_filename, @save_multibyte_filename)
+  end
+
+  before do
     @before_html = ::File.open(before_html_path).read
     @before_layout_html = ::File.open(before_layout_html_path).read
     @after_html = ::File.open(after_html_path).read
@@ -21,17 +33,21 @@ RSpec.describe SS::Migration20150619114301, dbscope: :example do
 
     SS.config.replace_value_at(:env, :multibyte_filename, "underscore")
     SS::File.destroy_all
-    file = SS::File.new
-    file.in_file = Fs::UploadedFile.create_from_file("spec/fixtures/ss/logo.png")
-    file.model = "ss/file"
-    file.id = 1000
-    file.save!
-    file.set(filename: "ロゴ.png")
-    file.set(name: nil)
+    @file = SS::File.new
+    @file.in_file = Fs::UploadedFile.create_from_file("spec/fixtures/ss/logo.png")
+    @file.model = "ss/file"
+    @file.id = 1000
+    @file.save!
+    @file.set(filename: "ロゴ.png")
+    @file.set(name: nil)
   end
 
   it do
     described_class.new.change
+
+    @file.reload
+    expect(@file.filename).to eq "__.png"
+    expect(@file.name).to eq "ロゴ.png"
 
     Cms::Page.all.each do |item|
       expect(item.html).to eq(@after_html.strip)

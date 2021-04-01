@@ -9,9 +9,7 @@ class Sns::Apis::UserFilesController < ApplicationController
   private
 
   def fix_params
-    h = { cur_user: @cur_user }
-    h[:unnormalize] = true if params[:unnormalize].present?
-    h
+    { cur_user: @cur_user }
   end
 
   public

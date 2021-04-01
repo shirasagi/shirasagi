@@ -105,7 +105,7 @@ create_report_file(
   column_values: [
     @rep_form0_cols[0].serialize_value('会議室101'),
     @rep_form0_cols[1].serialize_value((@today - 7.days).strftime('%Y/%m/%d')),
-    @rep_form0_cols[2].serialize_value('15:00〜16:00'),
+    @rep_form0_cols[2].serialize_value("15:00#{I18n.t("ss.wave_dash")}16:00"),
     @rep_form0_cols[3].serialize_value("広報課　斎藤課長\n政策課　白鷺係長"),
     @rep_form0_cols[4].serialize_value("#{@site_name}プロジェクトについての会議を行った。\nかれこれしかじか"),
     @rep_form0_cols[5].serialize_value([])

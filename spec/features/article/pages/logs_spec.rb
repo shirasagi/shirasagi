@@ -105,7 +105,7 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
     end
   end
 
-  context "paste thumb file into the text log" do
+  context "paste thumb file into the text log", fragile: true do
     before { login_cms_user }
 
     it do
@@ -156,7 +156,7 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
     end
   end
 
-  context "with entry form file_upload" do
+  context "with entry form file_upload", fragile: true do
     before { login_cms_user }
 
     it do

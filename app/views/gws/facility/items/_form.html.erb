@@ -11,7 +11,7 @@
   <dt><%= @model.t :minutes_limit %><%= @model.tt :minutes_limit %></dt>
   <dd>
     <%= f.number_field :min_minutes_limit %><%= I18n.t('gws/facility.prompts.minutes') %>
-    〜
+    <%= t("ss.wave_dash") %>
     <%= f.number_field :max_minutes_limit %><%= I18n.t('gws/facility.prompts.minutes') %>
   </dd>
 
