@@ -174,8 +174,23 @@ production: &production
       dayoff: ''
     sync_available:
       disable: false
+      presence_logged_in:
+        reset:
+          - unavailable
+          - leave
+          - dayoff
+        enter: available
+      presence_logged_out:
+        reset:
+          - available
+          - leave
+          - dayoff
+        leave: unavailable
     sync_timecard:
       disable: true
+      presence_punch:
+        enter: available
+        leave: leave
 
   share:
     max_history_count: 20
