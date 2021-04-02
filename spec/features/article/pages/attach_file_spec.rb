@@ -50,6 +50,7 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
 
     it "#edit file name" do
       visit edit_path
+      ensure_addon_opened("#addon-cms-agents-addons-file")
       within "form#item-form" do
         within "#addon-cms-agents-addons-file" do
           wait_cbox_open do
@@ -84,6 +85,7 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
 
     it do
       visit edit_path
+      ensure_addon_opened("#addon-cms-agents-addons-file")
       within "form#item-form" do
         within "#addon-cms-agents-addons-file" do
           wait_cbox_open do
@@ -130,6 +132,7 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
           login_user(user2)
 
           visit edit_path
+          ensure_addon_opened("#addon-cms-agents-addons-file")
           within "form#item-form" do
             within "#addon-cms-agents-addons-file" do
               wait_cbox_open do
@@ -185,6 +188,7 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
         it do
           login_user(user2)
           visit edit_path
+          ensure_addon_opened("#addon-cms-agents-addons-file")
           within "form#item-form" do
             within "#addon-cms-agents-addons-file" do
               wait_cbox_open do

@@ -79,14 +79,14 @@ module SS
         var callback = function() {
           resolve(true);
         };
-    
+
         if (ckeditor.status !== "ready") {
           ckeditor.once("instanceReady", function() {
             ckeditor.setData(text, { callback: callback });
           });
           return;
         }
-    
+
         ckeditor.setData(text, { callback: callback });
       })(arguments[0], arguments[1], arguments[2]);
     SCRIPT
