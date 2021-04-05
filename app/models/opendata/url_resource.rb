@@ -55,6 +55,8 @@ class Opendata::UrlResource
 
     if last_modified.blank?
       last_modified = Time.zone.now
+    else
+      last_modified = last_modified.in_time_zone
     end
 
     if self.crawl_update == "none"
