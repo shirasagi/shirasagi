@@ -134,7 +134,7 @@ describe "sys_password_policies", type: :feature, dbscope: :example, js: true do
     let(:downcases) { ("a".."z").to_a }
     let(:digits) { ("0".."9").to_a }
     let(:symbols) { chars - upcases - downcases - digits }
-    let(:prohibited_chars) { chars.sample(rand(4..6)) }
+    let(:prohibited_chars) { chars.sample(rand(4..6)).join.strip.split('') }
     let!(:setting) do
       Sys::Setting.create(
         password_min_use: "enabled", password_min_length: rand(16..20),

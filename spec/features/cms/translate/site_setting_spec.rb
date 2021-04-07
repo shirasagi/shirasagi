@@ -29,24 +29,42 @@ describe "cms_translate_site_setting", type: :feature, dbscope: :example, js: tr
 
       within "form#item-form" do
         select I18n.t('ss.options.state.enabled'), from: "item[translate_state]"
-        first('[name="item[translate_source_id]"] + .ajax-box').click
+        wait_cbox_open do
+          first('[name="item[translate_source_id]"] + .ajax-box').click
+        end
       end
       wait_for_cbox do
-        click_on lang_ja.name
+        wait_cbox_close do
+          click_on lang_ja.name
+        end
       end
       within "form#item-form" do
-        first('[name="item[translate_target_ids][]"] + .ajax-box').click
+        expect(page).to have_content(lang_ja.name)
+        wait_cbox_open do
+          first('[name="item[translate_target_ids][]"] + .ajax-box').click
+        end
       end
       wait_for_cbox do
-        click_on lang_en.name
+        wait_cbox_close do
+          click_on lang_en.name
+        end
       end
       within "form#item-form" do
+        expect(page).to have_content(lang_en.name)
         select google_api, from: "item[translate_api]"
         click_button I18n.t('ss.buttons.save')
       end
+      wait_for_notice I18n.t("ss.notice.saved")
 
       expect(page).to have_css("#addon-basic dd", text: lang_ja.label)
       expect(page).to have_css("#addon-basic dd", text: lang_en.label)
+
+      site.reload
+      expect(site.translate_state).to eq "enabled"
+      expect(site.translate_source).to eq lang_ja
+      expect(site.translate_targets).to have(1).items
+      expect(site.translate_target_ids).to include(lang_en.id)
+      expect(site.translate_api).to eq "google_translation"
     end
   end
 end
