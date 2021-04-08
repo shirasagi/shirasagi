@@ -11,6 +11,7 @@ class Inquiry::Agents::Nodes::FormController < ApplicationController
   before_action :check_aggregation_state, only: :results, if: ->{ !@preview }
   before_action :set_columns, only: [:new, :confirm, :create, :sent, :results]
   before_action :set_answer, only: [:new, :confirm, :create]
+  before_action :generate_image, only: [:confirm]
 
   private
 
