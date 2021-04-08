@@ -2,7 +2,9 @@ class Inquiry::Agents::Nodes::FormController < ApplicationController
   include Cms::NodeFilter::View
   include SimpleCaptcha::ControllerHelpers
   include Cms::ForMemberFilter::Node
+  include SS::CaptchaFilter
   helper Inquiry::FormHelper
+  helper SS::CaptchaHelper
 
   before_action :check_release_state, only: [:new, :confirm, :create, :sent, :results], if: ->{ !@preview }
   before_action :check_reception_state, only: [:new, :confirm, :create, :sent], if: ->{ !@preview }
