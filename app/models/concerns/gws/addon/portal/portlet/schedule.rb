@@ -12,7 +12,7 @@ module Gws::Addon::Portal::Portlet
     end
 
     def schedule_member_mode_options
-      %w(default specific).map do |v|
+      %w(default current_user under_current_group specific).map do |v|
         [ I18n.t("gws/schedule.options.member_mode.#{v}"), v ]
       end
     end
@@ -21,8 +21,16 @@ module Gws::Addon::Portal::Portlet
       schedule_member_mode.blank? || schedule_member_mode == "default"
     end
 
+    def schedule_member_mode_current_user?
+      schedule_member_mode == "current_user"
+    end
+
+    def schedule_member_mode_under_current_group?
+      schedule_member_mode == "under_current_group"
+    end
+
     def schedule_member_mode_specific?
-      !schedule_member_mode_default?
+      schedule_member_mode == "specific"
     end
 
     def find_schedule_members(portal)
@@ -31,6 +39,15 @@ module Gws::Addon::Portal::Portlet
         return schedule_members.active.order_by_title(portal.site).compact
       end
 
+      if schedule_member_mode_current_user?
+        return portal.cur_user ? [ portal.cur_user ] : []
+      end
+
+      if schedule_member_mode_under_current_group?
+        return portal.cur_group ? Gws::User.site(portal.cur_group).active.order_by_title(portal.site).compact : []
+      end
+
+      # schedule_member_mode_default?
       if portal.try(:portal_user).present?
         [ portal.portal_user ]
       elsif portal.try(:portal_group).present?
