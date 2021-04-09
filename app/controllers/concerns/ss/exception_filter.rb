@@ -2,15 +2,15 @@ module SS::ExceptionFilter
   extend ActiveSupport::Concern
 
   def render_exception!(exception)
-    Rails.logger.fatal("#{exception.class} (#{exception.message}):\n  #{exception.backtrace.join("\n  ")}")
+    backtrace_cleaner = request.get_header("action_dispatch.backtrace_cleaner")
+    wrapper = ::ActionDispatch::ExceptionWrapper.new(backtrace_cleaner, exception)
+    log_error(request, wrapper)
 
     if exception.is_a?(Job::SizeLimitPerUserExceededError)
       render_job_size_limit(exception)
       return
     end
 
-    backtrace_cleaner = request.get_header("action_dispatch.backtrace_cleaner")
-    wrapper = ::ActionDispatch::ExceptionWrapper.new(backtrace_cleaner, exception)
     if exception.is_a?(RuntimeError) && exception.message.numeric?
       status_code = Integer(exception.message)
     else
@@ -33,6 +33,27 @@ module SS::ExceptionFilter
   rescue => e
     Rails.logger.info("#{e.class} (#{e.message}):\n  #{e.backtrace.join("\n  ")}")
     raise exception
+  end
+
+  def log_error(request, wrapper)
+    logger = request.logger || Rails.logger
+    exception = wrapper.exception
+
+    trace = wrapper.application_trace
+    trace = wrapper.framework_trace if trace.empty?
+
+    separator = "\n"
+    if logger.formatter && logger.formatter.respond_to?(:tags_text) && logger.formatter.tags_text.present?
+      separator << logger.formatter.tags_text
+    end
+
+    ActiveSupport::Deprecation.silence do
+      logger.fatal "  "
+      logger.fatal "#{exception.class} (#{exception.message}):"
+      logger.fatal exception.annoted_source_code.join(separator) if exception.respond_to?(:annoted_source_code)
+      logger.fatal "  "
+      logger.fatal trace.join(separator)
+    end
   end
 
   def render_job_size_limit(error)
