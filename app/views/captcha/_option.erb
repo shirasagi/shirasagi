@@ -1,0 +1,8 @@
+
+<% if @option == "image" %>
+  <%= image_tag "captcha.jpeg" %>
+<% elsif @option == "field" %>
+  <%= f.text_field :answer %>
+<% elsif @option == "label" %>
+  <%= I18n.t('simple_captcha.label') %>
+<% end %>

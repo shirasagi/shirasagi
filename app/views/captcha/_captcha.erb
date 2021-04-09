@@ -1,3 +1,5 @@
 <div class='simple-captcha'>
-  <div class='image'><%= image_tag "captcha.jpeg" %></div>
+  <div class='image'><%= captcha_options("image", f) %></div>
+  <div class='field'><%= captcha_options("field", f)  %></div>
+  <div class='captcha-label'><%= captcha_options("label", f)   %></div>
 </div>
