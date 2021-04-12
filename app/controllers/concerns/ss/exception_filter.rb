@@ -36,7 +36,8 @@ module SS::ExceptionFilter
   end
 
   def log_error(request, wrapper)
-    logger = request.logger || Rails.logger
+    # logger = request.logger || Rails.logger
+    logger = Rails.logger
     exception = wrapper.exception
 
     trace = wrapper.application_trace
