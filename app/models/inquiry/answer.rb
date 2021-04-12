@@ -22,7 +22,7 @@ class Inquiry::Answer
   belongs_to :node, foreign_key: :node_id, class_name: "Inquiry::Node::Form"
   embeds_many :data, class_name: "Inquiry::Answer::Data"
 
-  permit_params :id, :node_id, :remote_addr, :user_agent, :captcha, :captcha_key
+  permit_params :id, :node_id, :remote_addr, :user_agent, :captcha, :captcha_text
   permit_params :state, :comment
 
   apply_simple_captcha
@@ -32,6 +32,7 @@ class Inquiry::Answer
   before_validation :copy_contents_info
   validates :node_id, presence: true
   validate :validate_data
+  validate :validate_captcha
 
   before_save :update_file_data
   before_destroy :delete_file_data
@@ -93,6 +94,10 @@ class Inquiry::Answer
     def find_content(site, source_url)
       find_page(site, source_url) || find_node(site, source_url)
     end
+  end
+
+  def valid_with?(captcha, captcha_text)
+    captcha == captcha_text
   end
 
   def find_data(column)
@@ -173,6 +178,10 @@ class Inquiry::Answer
     columns.each do |column|
       column.validate_data(self, data.select { |d| column.id == d.column_id }.shift, in_reply)
     end
+  end
+
+  def validate_captcha
+    errors.add(:captcha, :blank) if captcha != captcha_text
   end
 
   def set_node

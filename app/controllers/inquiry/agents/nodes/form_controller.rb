@@ -11,7 +11,7 @@ class Inquiry::Agents::Nodes::FormController < ApplicationController
   before_action :check_aggregation_state, only: :results, if: ->{ !@preview }
   before_action :set_columns, only: [:new, :confirm, :create, :sent, :results]
   before_action :set_answer, only: [:new, :confirm, :create]
-  before_action :generate_image, only: [:confirm]
+  before_action :generate_image, only: [:confirm, :create]
 
   private
 
@@ -95,9 +95,9 @@ class Inquiry::Agents::Nodes::FormController < ApplicationController
     end
 
     if @cur_node.captcha_enabled?
-      @answer.captcha = params[:answer].try(:[], :captcha)
-      @answer.captcha_key = params[:answer].try(:[], :captcha_key)
-      unless @answer.valid_with_captcha?
+      @answer.captcha = params[:item].try(:[], :captcha)
+      @answer.captcha_text = params[:item].try(:[], :captcha_text)
+      unless @answer.valid_with?(@answer.captcha, @answer.captcha_text)
         render action: :confirm
         return
       end
