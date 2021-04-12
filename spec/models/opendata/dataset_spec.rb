@@ -386,7 +386,7 @@ describe Opendata::Dataset, dbscope: :example do
         contact_tel: "0000-00-00000",
         contact_fax: "0000-00-00001",
         contact_email: "test@example.jp",
-        contact_link_url: "http://example.jp",
+        contact_link_url: "/#{unique_id}/",
         contact_link_name: "test link",
         contact_group_id: 1
       }

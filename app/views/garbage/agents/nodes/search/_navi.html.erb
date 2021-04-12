@@ -15,7 +15,7 @@
     <%= t("garbage.count") %>
     <% if @items.count > 0 %>
       <span class="first"><%= @items.offset_value + 1 %></span>
-      <%= "～" %>
+      <%= I18n.t("ss.wave_dash") %>
       <span class="last">
       <%= (@items.current_page * @cur_node.limit) > @items.count ? @items.count : (@items.current_page * @cur_node.limit) %>
       </span>

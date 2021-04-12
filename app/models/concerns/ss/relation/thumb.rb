@@ -10,7 +10,7 @@ module SS::Relation::Thumb
     after_save :destroy_thumbs, if: -> { in_file || resizing }
     after_save :save_thumbs, if: -> { disable_thumb.blank? && image? }
 
-    thumb_size [120, 90]
+    thumb_size [SS::ImageConverter::DEFAULT_THUMB_WIDTH, SS::ImageConverter::DEFAULT_THUMB_HEIGHT]
   end
 
   module ClassMethods

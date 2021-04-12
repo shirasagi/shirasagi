@@ -10,7 +10,7 @@ FactoryBot.define do
     description { unique_id }
     summary_html { unique_id }
     sort { %w(name filename created updated released order).sample }
-    limit { rand(100) }
+    limit { rand(1..100) }
     upper_html { "upper-#{unique_id}" }
     loop_html { "loop-#{unique_id}" }
     lower_html { "lower-#{unique_id}" }

@@ -198,7 +198,7 @@ module SS::Model::Site
         criteria = criteria.search_text params[:name]
       end
       if params[:keyword].present?
-        criteria = criteria.keyword_in params[:keyword], :host, :name
+        criteria = criteria.keyword_in params[:keyword], :host, :name, :domains
       end
       criteria
     end

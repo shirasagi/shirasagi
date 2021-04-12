@@ -119,7 +119,7 @@ this.Chat_Bot = (function () {
 
       var siteSearchParagraph;
       if (r.siteSearchUrl) {
-        var siteSearchLink = $('<a />', { href: r.siteSearchUrl, target: "_blank" }).append(result.siteSearchText);
+        var siteSearchLink = $('<a />', { href: r.siteSearchUrl, target: "_blank", rel: "noopener" }).append(result.siteSearchText);
         siteSearchParagraph = $('<p />', { class: "search-result-btn" }).append(siteSearchLink);
       } else {
         siteSearchParagraph = '';

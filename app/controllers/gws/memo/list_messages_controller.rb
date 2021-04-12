@@ -24,7 +24,7 @@ class Gws::Memo::ListMessagesController < ApplicationController
   end
 
   def set_search_params
-    @s = params[:s] || {}
+    @s = OpenStruct.new(params[:s])
   end
 
   def fix_params

@@ -2,6 +2,7 @@ module SS::BaseFilter
   extend ActiveSupport::Concern
   include SS::AuthFilter
   include SS::LayoutFilter
+  include SS::ExceptionFilter
   include History::LogFilter
 
   included do
@@ -46,18 +47,6 @@ module SS::BaseFilter
     @javascripts << path unless @javascripts.include?(path)
   end
 
-  def jquery_migrate_mute
-    return unless Rails.env.production?
-
-    view_context.javascript_tag do
-      scripts = []
-      scripts << "if ( typeof jQuery.migrateMute === \"undefined\" ) {"
-      scripts << "  jQuery.migrateMute = true;"
-      scripts << "}"
-      scripts.join("\n").html_safe
-    end
-  end
-
   private
 
   def set_model
@@ -75,7 +64,10 @@ module SS::BaseFilter
   end
 
   def login_path_by_cookie
-    cookies[:login_path].presence || sns_login_path
+    path = cookies[:login_path].presence
+    return path if path.present? && trusted_url?(path)
+
+    sns_login_path
   end
 
   def logged_in?
@@ -107,11 +99,12 @@ module SS::BaseFilter
     respond_to do |format|
       format.html do
         login_path = login_path_by_cookie
-        ref = request.env["REQUEST_URI"]
-        if ref == login_path || params[:action] == "login"
+        ref = request.env["REQUEST_URI"].to_s
+        ref = '' if ref.present? && !trusted_url?(ref)
+        if ref.blank? || ref == login_path || params[:action] == "login"
           redirect_to login_path
         else
-          redirect_to "#{login_path}?ref=" + CGI.escape(ref.to_s)
+          redirect_to "#{login_path}?#{{ ref: ref }.to_query}"
         end
       end
       format.json { render json: :error, status: :unauthorized }
@@ -170,52 +163,5 @@ module SS::BaseFilter
 
   def rescue_action(exception)
     render_exception!(exception)
-  end
-
-  def render_exception!(exception)
-    if exception.is_a?(Job::SizeLimitPerUserExceededError)
-      render_job_size_limit(exception)
-      return
-    end
-
-    backtrace_cleaner = request.get_header("action_dispatch.backtrace_cleaner")
-    wrapper = ::ActionDispatch::ExceptionWrapper.new(backtrace_cleaner, exception)
-    if exception.is_a?(RuntimeError) && exception.message.numeric?
-      status_code = Integer(exception.message)
-    else
-      status_code = wrapper.status_code
-    end
-
-    @ss_rescue = { status: status_code }
-    @wrapper = wrapper if Rails.env.development?
-
-    if @ss_mode == :cms && !@cur_site
-      @ss_mode = nil
-    elsif @ss_mode == :gws && !@cur_site
-      @ss_mode = nil
-    end
-
-    render(
-      file: "ss/rescues/index", layout: @cur_user ? "ss/base" : "ss/login", status: status_code,
-      type: request.xhr? ? "text/plain" : "text/html", formats: request.xhr? ? :text : :html
-    )
-  rescue => e
-    Rails.logger.info("#{e.class} (#{e.message}):\n  #{e.backtrace.join("\n  ")}")
-    raise exception
-  end
-
-  def render_job_size_limit(error)
-    referer_uri = URI.parse(request.referer)
-    begin
-      if @item.present?
-        @item.errors.add(:base, error.to_s)
-        flash[:notice] = error.to_s
-        render(Rails.application.routes.recognize_path(referer_uri.path))
-      else
-        redirect_to(referer_uri.path, notice: error.to_s)
-      end
-    rescue ActionView::MissingTemplate
-      redirect_to(referer_uri.path, notice: error.to_s)
-    end
   end
 end

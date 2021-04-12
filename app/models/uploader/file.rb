@@ -72,11 +72,13 @@ class Uploader::File
   end
 
   def image?
-    content_type.to_s.start_with?('image/')
+    return SS::ImageConverter.image?(StringIO.new(@binary)) if @binary
+    ::Fs.to_io(path) { |io| SS::ImageConverter.image?(io) }
   end
 
   def exif_image?
-    image? && ext =~ /^(jpe?g|tiff?)$/i
+    return SS::ImageConverter.exif_image?(StringIO.new(@binary)) if @binary
+    ::Fs.to_io(path) { |io| SS::ImageConverter.exif_image?(io) }
   end
 
   def link
@@ -128,17 +130,16 @@ class Uploader::File
 
   class << self
     def remove_exif(binary)
-      list = Magick::ImageList.new
-      list.from_blob(binary)
-      list.each do |image|
+      SS::ImageConverter.read(binary) do |converter|
         case SS.config.env.image_exif_option
         when "auto_orient"
-          image.auto_orient!
+          converter.auto_orient!
         when "strip"
-          image.strip!
+          converter.strip!
         end
+
+        converter.to_io.read
       end
-      list.to_blob
     rescue
       # ImageMagick doesn't able to handle all image formats. There ara some formats causing unsupported handler exception.
       # Not all image formats have exif. Some formats link svg or ico haven't exif.

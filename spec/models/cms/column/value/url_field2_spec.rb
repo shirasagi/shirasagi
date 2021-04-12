@@ -5,7 +5,7 @@ describe Cms::Column::Value::UrlField2, type: :model, dbscope: :example do
     let!(:node) { create :article_node_page }
     let!(:form) { create(:cms_form, cur_site: cms_site, state: 'public', sub_type: 'static') }
     let!(:column1) { create(:cms_column_url_field2, cur_form: form, order: 1) }
-    let(:url) { "http://#{unique_id}.example.jp/#{unique_id}/" }
+    let(:url) { "/#{unique_id}/" }
     let!(:page) do
       create(
         :article_page, cur_node: node, form: form,
@@ -68,6 +68,28 @@ describe Cms::Column::Value::UrlField2, type: :model, dbscope: :example do
 
     let(:invalid_url1) { "http://#{domain} /" }
     let(:invalid_url2) { "https://#{domain} /" }
+
+    before do
+      request = OpenStruct.new(url: "http://#{domain}/#{unique_id}/")
+
+      # Rails.application.current_request = request
+      Thread.current["ss.env"] = request
+      Thread.current["ss.request"] = request
+
+      trusted_urls = [ "http://#{domain}/", "https://#{domain}/", "http://シラサギプロジェクト.jp", "https://シラサギプロジェクト.jp" ]
+      @save_trusted_urls = SS.config.cms.trusted_urls
+      SS.config.replace_value_at(:sns, :trusted_urls, trusted_urls)
+      Sys::TrustedUrlValidator.send(:clear_trusted_urls)
+    end
+
+    after do
+      # Rails.application.current_request = nil
+      Thread.current["ss.env"] = nil
+      Thread.current["ss.request"] = nil
+
+      SS.config.replace_value_at(:sns, :trusted_urls, @save_trusted_urls)
+      Sys::TrustedUrlValidator.send(:clear_trusted_urls)
+    end
 
     def build_page(url)
       build(

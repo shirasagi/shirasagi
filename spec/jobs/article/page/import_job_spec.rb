@@ -214,7 +214,7 @@ describe Article::Page::ImportJob, dbscope: :example do
             name: unique_id, index_name: unique_id, basename: "#{unique_id}.html", layout: layout, order: rand(1..100),
             contact_state: contact_state, contact_group: cms_group, contact_charge: unique_id, contact_tel: unique_id,
             contact_fax: unique_id, contact_email: "#{unique_id}@example.jp",
-            contact_link_url: "http://#{unique_id}.example.jp/", contact_link_name: unique_id
+            contact_link_url: "/#{unique_id}/", contact_link_name: unique_id
           )
         end
 

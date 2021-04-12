@@ -5,6 +5,7 @@ module Member::Addon::LoginLink
   included do
     field :login_link_url, type: String
     permit_params :login_link_url
+    validates :login_link_url, "sys/trusted_url" => true
   end
 
   def find_login_link_url

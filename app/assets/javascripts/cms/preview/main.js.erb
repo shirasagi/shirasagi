@@ -181,6 +181,14 @@ SS_Preview = (function () {
     SS_Preview.instance.bindToWorkflowCommentForm(updateType);
   };
 
+  SS_Preview.openNewWindow = function (path) {
+    var a = document.createElement("a");
+    a.href = path;
+    a.target = "_blank";
+    a.rel = "noopener";
+    a.click();
+  };
+
   SS_Preview.prototype.initialize = function(opts) {
     this.$el = $(this.el);
     this.$datePicker = this.$el.find(".ss-preview-date");
@@ -282,7 +290,8 @@ SS_Preview = (function () {
     $(document).on("click", ".ss-preview-btn-open-path", function () {
       var path = $(this).data("path");
       if (path) {
-        window.open(path, "_blank")
+        // window.open(path, "_blank")
+        SS_Preview.openNewWindow(path);
       }
     });
 
@@ -371,7 +380,8 @@ SS_Preview = (function () {
 
     var path = this.layouts[0].path;
     button.on('click', function() {
-      window.open(path, '_blank');
+      // window.open(path, '_blank');
+      SS_Preview.openNewWindow(path);
     });
   };
 
@@ -993,7 +1003,8 @@ SS_Preview = (function () {
       return;
     }
 
-    window.open(part.path, "_blank");
+    // window.open(part.path, "_blank");
+    SS_Preview.openNewWindow(part.path);
   };
 
   //

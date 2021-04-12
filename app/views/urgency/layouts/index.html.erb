@@ -26,10 +26,10 @@
             <%= link_to t('ss.links.show'), action: :show, id: item %>
             <% unless selected_layout?(item) %>
               <% if @cur_site.mobile_enabled? %>
-                <%= link_to t('ss.links.pc_preview'), cms_preview_path(path: preview_path), target: "_blank" %>
-                <%= link_to t('ss.links.mobile_preview'), cms_preview_path(path: mobile_preview_path), target: "_blank" %>
+                <%= link_to t('ss.links.pc_preview'), cms_preview_path(path: preview_path), target: "_blank", rel: "noopener" %>
+                <%= link_to t('ss.links.mobile_preview'), cms_preview_path(path: mobile_preview_path), target: "_blank", rel: "noopener" %>
               <% else %>
-                <%= link_to t('ss.links.preview'), cms_preview_path(path: layout_path), target: "_blank" %>
+                <%= link_to t('ss.links.preview'), cms_preview_path(path: layout_path), target: "_blank", rel: "noopener" %>
               <% end %>
             <% end %>
           </nav>
@@ -41,12 +41,12 @@
           <td><%= t 'urgency.selected_layout' %></td>
         <% elsif @cur_site.mobile_enabled? %>
           <td>
-            <%= link_to t('ss.links.pc'), cms_preview_path(path: preview_path), target: "_blank" %>
+            <%= link_to t('ss.links.pc'), cms_preview_path(path: preview_path), target: "_blank", rel: "noopener" %>
             |
-            <%= link_to t('ss.links.mobile'), cms_preview_path(path: mobile_preview_path), target: "_blank"  %>
+            <%= link_to t('ss.links.mobile'), cms_preview_path(path: mobile_preview_path), target: "_blank", rel: "noopener" %>
           </td>
         <% else %>
-          <td><%= link_to t('ss.links.pc'), cms_preview_path(path: preview_path), target: "_blank" %></td>
+          <td><%= link_to t('ss.links.pc'), cms_preview_path(path: preview_path), target: "_blank", rel: "noopener" %></td>
         <% end %>
       </tr>
       <% end %>

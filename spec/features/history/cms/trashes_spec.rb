@@ -17,6 +17,7 @@ describe "history_cms_trashes", type: :feature, dbscope: :example, js: true do
       visit page_path
       click_link I18n.t('ss.links.delete')
       click_button I18n.t('ss.buttons.delete')
+      wait_for_notice I18n.t('ss.notice.deleted')
       expect(page).to have_no_css('a.title', text: page_item.name)
 
       expect { page_item.reload }.to raise_error Mongoid::Errors::DocumentNotFound
@@ -36,6 +37,7 @@ describe "history_cms_trashes", type: :feature, dbscope: :example, js: true do
 
       click_link I18n.t('ss.links.delete')
       click_button I18n.t('ss.buttons.delete')
+      wait_for_notice I18n.t('ss.notice.deleted')
       expect(current_path).to eq index_path
       expect(page).to have_no_css('a.title', text: page_item.name)
 
@@ -57,6 +59,7 @@ describe "history_cms_trashes", type: :feature, dbscope: :example, js: true do
       visit page_path
       click_link I18n.t('ss.links.delete')
       click_button I18n.t('ss.buttons.delete')
+      wait_for_notice I18n.t('ss.notice.deleted')
       expect(page).to have_no_css('a.title', text: page_item.name)
 
       expect { page_item.reload }.to raise_error Mongoid::Errors::DocumentNotFound
@@ -77,6 +80,7 @@ describe "history_cms_trashes", type: :feature, dbscope: :example, js: true do
           click_button I18n.t('ss.links.delete')
         end
       end
+      wait_for_notice I18n.t('ss.notice.deleted')
       expect(current_path).to eq index_path
       expect(page).to have_no_css('a.title', text: page_item.name)
       expect(page).to have_no_css('a.title', text: file.name)
@@ -94,6 +98,7 @@ describe "history_cms_trashes", type: :feature, dbscope: :example, js: true do
 
       click_link I18n.t('ss.links.delete')
       click_button I18n.t('ss.buttons.delete')
+      wait_for_notice I18n.t('ss.notice.deleted')
       expect(page).to have_no_css('a.title', text: page_item.name)
 
       expect { page_item.reload }.to raise_error Mongoid::Errors::DocumentNotFound
@@ -113,6 +118,7 @@ describe "history_cms_trashes", type: :feature, dbscope: :example, js: true do
 
       click_link I18n.t('ss.buttons.restore')
       click_button I18n.t('ss.buttons.restore')
+      wait_for_notice I18n.t('ss.notice.restored')
       expect(current_path).to eq index_path
       expect(page).to have_no_css('a.title', text: page_item.name)
 
@@ -125,6 +131,7 @@ describe "history_cms_trashes", type: :feature, dbscope: :example, js: true do
       expect(page).to have_css('a.title', text: page_item.name)
 
       visit page_path
+      expect(page).to have_css("#workflow_route", text: I18n.t("mongoid.attributes.workflow/model/route.my_group"))
       expect(page).to have_css('div.file-view', text: file.name)
 
       expect(History::Trash.all.count).to eq 0
@@ -136,6 +143,7 @@ describe "history_cms_trashes", type: :feature, dbscope: :example, js: true do
 
       click_link I18n.t('ss.links.delete')
       click_button I18n.t('ss.buttons.delete')
+      wait_for_notice I18n.t('ss.notice.deleted')
       expect(page).to have_no_css('a.title', text: page_item.name)
 
       expect { page_item.reload }.to raise_error Mongoid::Errors::DocumentNotFound
@@ -154,6 +162,7 @@ describe "history_cms_trashes", type: :feature, dbscope: :example, js: true do
 
       click_link I18n.t('ss.buttons.restore')
       click_button I18n.t('ss.buttons.restore')
+      wait_for_notice I18n.t('ss.notice.restored')
       expect(current_path).to eq index_path
       expect(page).to have_no_css('a.title', text: file.name)
 
@@ -214,6 +223,7 @@ describe "history_cms_trashes", type: :feature, dbscope: :example, js: true do
 
       click_link I18n.t('ss.links.delete')
       click_button I18n.t('ss.buttons.delete')
+      wait_for_notice I18n.t('ss.notice.deleted')
       expect(page).to have_no_css('a.title', text: page_item.name)
 
       expect { page_item.reload }.to raise_error Mongoid::Errors::DocumentNotFound
@@ -236,6 +246,7 @@ describe "history_cms_trashes", type: :feature, dbscope: :example, js: true do
       fill_in "item[basename]", with: new_filename
 
       click_button I18n.t('ss.buttons.restore')
+      wait_for_notice I18n.t('ss.notice.restored')
       expect(current_path).to eq index_path
       expect(page).to have_no_css('a.title', text: page_item.name)
 
@@ -249,6 +260,7 @@ describe "history_cms_trashes", type: :feature, dbscope: :example, js: true do
       expect(page).to have_css('a.title', text: page_item.name)
 
       visit page_path
+      expect(page).to have_css("#workflow_route", text: I18n.t("mongoid.attributes.workflow/model/route.my_group"))
       expect(page).to have_css('div.file-view', text: file.name)
 
       expect(History::Trash.all.count).to eq 0
@@ -287,6 +299,7 @@ describe "history_cms_trashes", type: :feature, dbscope: :example, js: true do
       within "form" do
         click_on I18n.t('ss.buttons.delete')
       end
+      wait_for_notice I18n.t('ss.notice.deleted')
 
       page_item.reload
       expect(page_item.branches.count).to eq 0
@@ -301,6 +314,7 @@ describe "history_cms_trashes", type: :feature, dbscope: :example, js: true do
       within "form" do
         click_on I18n.t('ss.buttons.restore')
       end
+      wait_for_notice I18n.t('ss.notice.restored')
 
       page_item.reload
       expect(page_item.branches.count).to eq 0

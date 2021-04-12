@@ -1,4 +1,5 @@
 //= require jquery3
+//= require jquery-migrate/src/migratemute.js
 //= require jquery-migrate/dist/jquery-migrate.js
 //= require jquery_ujs
 //= require js.cookie
@@ -10,6 +11,7 @@
 //= require ss/lib/module
 //= require ss/lib/mobile
 //= require ss/lib/clipboard
+//= require ss/lib/file_view
 //= require chat/lib/bot
 //= require cms/lib/editor
 //= require ads/lib/banner
@@ -559,16 +561,11 @@ this.SS_VoiceController = (function () {
       "        <button class=\"ss-jp-close\" role=\"button\" tabindex=\"0\">&times;</button>\n" +
       "      </div>\n" +
       "    </div>\n" +
-      "    <div class=\"jp-no-solution\">\n" +
-      "      :URL:\n" +
-      "    </div>\n" +
       "  </div>\n" +
       "</div>";
     var timestamp = (new Date).getTime();
-    var url = '<%= I18n.t("voice.messages.no_audio_solution") %>';
 
     template = template.replace(new RegExp(":TIMESTAMP:", 'g'), timestamp);
-    template = template.replace(new RegExp(":URL:", 'g'), url);
     return template;
   };
 

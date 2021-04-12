@@ -1,6 +1,7 @@
 class Cms::Agents::Parts::TabsController < ApplicationController
   include Cms::PartFilter::View
   include Cms::PublicFilter::Agent
+  helper Cms::TabsHelper
 
   def index
     @tabs = []
@@ -46,7 +47,7 @@ class Cms::Agents::Parts::TabsController < ApplicationController
         if node.class.method_defined?(:condition_hash)
           pages = Cms::Page.public_list(site: site, node: node, date: @cur_date)
         else
-          pages = Cms::Page.site(site).and_public(@cur_date).where(cond).node(node)
+          pages = Cms::Page.site(site).and_public(@cur_date).node(node)
         end
       end
 

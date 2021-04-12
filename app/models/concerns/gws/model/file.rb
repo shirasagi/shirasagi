@@ -27,6 +27,7 @@ module Gws::Model::File
     permit_params :in_file, :state, :name, :filename, :resizing, :in_data_url
 
     before_validation :set_filename, if: ->{ in_file.present? }
+    before_validation :normalize_name
     before_validation :normalize_filename
 
     validates :model, presence: true
@@ -76,22 +77,18 @@ module Gws::Model::File
     "#{self.class.root}/ss_files/" + id.to_s.split(//).join("/") + "/_/#{id}"
   end
 
-  def public_path
+  def public_dir
     return if site.blank? || !site.respond_to?(:root_path)
 
-    "#{site.root_path}/fs/" + id.to_s.split(//).join("/") + "/_/#{filename}"
+    "#{site.root_path}/fs/" + id.to_s.split(//).join("/") + "/_"
+  end
+
+  def public_path
+    public_dir.try { |dir| "#{dir}/#{filename}" }
   end
 
   def url
     "/fs/" + id.to_s.split(//).join("/") + "/_/#{filename}"
-  end
-
-  def download_url
-    "/fs/" + id.to_s.split(//).join("/") + "/_/download/#{filename}"
-  end
-
-  def view_url
-    "/fs/" + id.to_s.split(//).join("/") + "/_/view/#{filename}"
   end
 
   def full_url
@@ -147,11 +144,11 @@ module Gws::Model::File
   end
 
   def image?
-    content_type.to_s.start_with?('image/')
+    to_io { |io| SS::ImageConverter.image?(io) }
   end
 
   def exif_image?
-    image? && filename =~ /\.(jpe?g|tiff?)$/i
+    to_io { |io| SS::ImageConverter.exif_image?(io) }
   end
 
   def viewable?
@@ -170,22 +167,26 @@ module Gws::Model::File
     Fs.exists?(path) ? Fs.binread(path) : nil
   end
 
+  def to_io(&block)
+    Fs.exists?(path) ? Fs.to_io(path, &block) : nil
+  end
+
   def uploaded_file(&block)
     Fs::UploadedFile.create_from_file(self, filename: basename, content_type: content_type, fs_mode: ::Fs.mode, &block)
   end
 
   def generate_public_file
-    return unless site && basename.ascii_only?
+    dir = public_dir
+    return if dir.blank?
 
-    file = public_path
-    data = self.read
-    return if Fs.exists?(file) && data == Fs.read(file)
-
-    Fs.binwrite file, data
+    SS::FilePublisher.publish(self, dir)
   end
 
   def remove_public_file
-    Fs.rm_rf(public_path) if public_path
+    dir = public_dir
+    return if dir.blank?
+
+    SS::FilePublisher.depublish(self, dir)
   end
 
   private
@@ -197,9 +198,12 @@ module Gws::Model::File
     self.content_type = ::SS::MimeType.find(in_file.original_filename, in_file.content_type)
   end
 
+  def normalize_name
+    self.name = SS::FilenameUtils.convert_to_url_safe_japanese(name) if self.name.present?
+  end
+
   def normalize_filename
-    self.name     = self.name.unicode_normalize(:nfkc) if self.name.present?
-    self.filename = self.filename.unicode_normalize(:nfkc) if self.filename.present?
+    self.filename = SS::FilenameUtils.normalize(self.filename)
   end
 
   def multibyte_filename_disabled?
@@ -224,37 +228,17 @@ module Gws::Model::File
     return false if errors.present?
     return if in_file.blank?
 
-    if image?
-      list = Magick::ImageList.new
-      list.from_blob(in_file.read)
-      extract_geo_location(list) if exif_image?
-      list.each do |image|
-        if exif_image?
-          case SS.config.env.image_exif_option
-          when "auto_orient"
-            image.auto_orient!
-          when "strip"
-            image.strip!
-          end
-        end
-
-        next unless resizing
-
-        width, height = resizing
-        image.resize_to_fit! width, height if image.columns > width || image.rows > height
-      end
-      binary = list.to_blob
-    else
-      binary = in_file.read
-    end
-    in_file.rewind
-
     dir = ::File.dirname(path)
     Fs.mkdir_p(dir) unless Fs.exists?(dir)
 
     run_callbacks(:_save_file) do
-      Fs.binwrite(path, binary)
-      self.size = binary.length
+      SS::ImageConverter.attach(in_file, ext: ::File.extname(in_file.original_filename)) do |converter|
+        converter.apply_defaults!(resizing: resizing)
+        Fs.upload(path, converter.to_io)
+        self.geo_location = converter.geo_location
+      end
+
+      self.size = Fs.size(path)
     end
   end
 

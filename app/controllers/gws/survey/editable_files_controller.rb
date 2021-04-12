@@ -39,7 +39,7 @@ class Gws::Survey::EditableFilesController < ApplicationController
   end
 
   def set_search_params
-    @s = OpenStruct.new(params[:s].presence || {})
+    @s = OpenStruct.new(params[:s])
   end
 
   def fix_params

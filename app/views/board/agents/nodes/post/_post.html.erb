@@ -30,7 +30,7 @@
       <%= mail_to item.email, item.email, class: "email" %>
     <% end %>
     <% if @cur_node.show_url? && item.poster_url.present? && item.poster_url.start_with?("http://", "https://") %>
-      <%= link_to item.poster_url, sns_redirect_path(ref: item.poster_url, back_to: @cur_node.url), class: "url external", target: "_blank" %>
+      <%= link_to item.poster_url, sns_redirect_path(ref: item.poster_url, back_to: @cur_node.url), class: "url external", target: "_blank", rel: "noopener" %>
     <% end %>
   </div>
   <nav class="action">

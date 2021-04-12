@@ -2,6 +2,9 @@ module SS
   module JsSupport
     module Hooks
       def self.extended(obj)
+        show_warning = ENV.fetch("JQMIGRATE_WARNING", nil)
+        return unless show_warning
+
         obj.after(:example) do
           warnings = jquery_migrate_warnings
           if warnings.present?
@@ -29,15 +32,6 @@ module SS
       })(arguments[0], arguments[1]);
     SCRIPT
 
-    HOOK_CKEDITOR_EVENT_COMPLETION = <<~SCRIPT.freeze
-      (function(promiseId, selector, eventName) {
-        var ckeditor = $(selector).ckeditor().editor;
-        var defer = $.Deferred();
-        ckeditor.on(eventName, function(ev) { defer.resolve(true); ev.removeListener(); });
-        window.SS[promiseId] = defer.promise();
-      })(arguments[0], arguments[1], arguments[2]);
-    SCRIPT
-
     WAIT_EVENT_COMPLETION = <<~SCRIPT.freeze
       (function(promiseId, resolve) {
         var promise = window.SS[promiseId];
@@ -49,6 +43,61 @@ module SS
         delete window.SS[promiseId];
         promise.done(function(result) { resolve(result); });
       })(arguments[0], arguments[1]);
+    SCRIPT
+
+    ENSURE_ADDON_OPENED = <<~SCRIPT.freeze
+      (function(addonId, resolve) {
+        var $addon = $(addonId);
+        if (! $addon[0]) {
+          resolve(false);
+          return;
+        }
+
+        if ($addon.hasClass("hide")) {
+          resolve(false);
+          return;
+        }
+
+        if (! $addon.hasClass("body-closed")) {
+          resolve(true);
+          return;
+        }
+
+        $addon.one("ss:addonShown", function() { resolve(true); });
+        $addon.find(".toggle-head").trigger("click");
+      })(arguments[0], arguments[1]);
+    SCRIPT
+
+    FILL_CKEDITOR_SCRIPT = <<~SCRIPT.freeze
+      (function(element, text, resolve) {
+        var ckeditor = CKEDITOR.instances[element.id];
+        if (!ckeditor) {
+          resolve(false);
+          return;
+        }
+
+        var callback = function() {
+          resolve(true);
+        };
+
+        if (ckeditor.status !== "ready") {
+          ckeditor.once("instanceReady", function() {
+            ckeditor.setData(text, { callback: callback });
+          });
+          return;
+        }
+
+        ckeditor.setData(text, { callback: callback });
+      })(arguments[0], arguments[1], arguments[2]);
+    SCRIPT
+
+    HOOK_CKEDITOR_EVENT_COMPLETION = <<~SCRIPT.freeze
+      (function(promiseId, selector, eventName) {
+        var ckeditor = $(selector).ckeditor().editor;
+        var defer = $.Deferred();
+        ckeditor.once(eventName, function(ev) { defer.resolve(true); ev.removeListener(); });
+        window.SS[promiseId] = defer.promise();
+      })(arguments[0], arguments[1], arguments[2]);
     SCRIPT
 
     def wait_timeout
@@ -208,13 +257,30 @@ module SS
 
     #
     # Usage:
-    #   wait_addon_open do
-    #     # do operations to expand a addon
-    #     first("#addon-contact-agents-addons-page .toggle-head").click
-    #   end
+    #   ensure_addon_opened("#addon-contact-agents-addons-page")
     #
-    def wait_addon_open(&block)
-      wait_event_to_fire("ss:addonShown", &block)
+    def ensure_addon_opened(addon_id)
+      result = page.evaluate_async_script(ENSURE_ADDON_OPENED, addon_id)
+      expect(result).to be_truthy
+      true
+    end
+
+    # CKEditor に html を設定する
+    #
+    # CKEditor の setData メソッドを用いて HTML を設定する。
+    # CKEditor の setData メソッドは非同期のため、HTML 設定直後にアクセシビリティのチェックや携帯データサイズチェックを実行すると、
+    # setData 完了前（つまり空）の HTML でチェックを実行していまし、正しくチェックができない場合がある。
+    #
+    # そこで、本メソッドでは setData の完了まで待機する。
+    #
+    # 参照: https://ckeditor.com/docs/ckeditor4/latest/api/CKEDITOR_editor.html#method-setData
+    def fill_in_ckeditor(locator, options = {})
+      with = options.delete(:with)
+      options[:visible] = :all
+      element = find(:fillable_field, locator, options)
+
+      ret = page.evaluate_async_script(FILL_CKEDITOR_SCRIPT, element, with)
+      expect(ret).to be_truthy
     end
 
     #

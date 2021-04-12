@@ -1,61 +1,3 @@
-<%= jquery do %>
-window.insertContent = function(cont) {
-  if ((typeof tinymce) != "undefined") {
-    tinymce.get(Cms_Form.editorId).execCommand("mceInsertContent", false, cont);
-  }
-  else if (typeof CKEDITOR != "undefined") {
-    CKEDITOR.instances[Cms_Form.editorId].insertHtml(cont);
-  }
-};
-window.deleteContent = function(id) {
-  var data, file;
-  if ((typeof tinymce) != "undefined") {
-    data = tinymce.get(Cms_Form.editorId).getContent();
-  }
-  else if ((typeof CKEDITOR) != "undefined") {
-    data = CKEDITOR.instances[Cms_Form.editorId].getData();
-  }
-  else {
-    data = null;
-  }
-  file = 'fs/' + id.split('').join('/') + '/_/';
-  $(".file-view").each(function() {
-    if (id == $(this).find(".file-id").attr("value")) {
-      if (!data) {
-        if (!confirm('<%= I18n.t('ss.confirm.in_use') %>')) {
-          return;
-        }
-        $(this).remove();
-      }
-      else if (data.indexOf(file) > 0) {
-        if (!confirm('<%= I18n.t('ss.confirm.in_use') %>')) {
-          return;
-        }
-      }
-      $(this).remove();
-    }
-  });
-};
-
-var options = {};
-<% if @cur_node %>
-options.selectUrl = function(id) {
-  return "/.s<%= @cur_site.id %>/cms/apis/node<%= @cur_node.id %>/cms/temp_files/" + id  + "/select";
-};
-options.uploadUrl = function() {
-  return "/.s<%= @cur_site.id %>/cms/apis/node<%= @cur_node.id %>/cms/temp_files.json";
-};
-<% else %>
-options.selectUrl = function(id) {
-  return "/.s<%= @cur_site.id %>/cms/apis/temp_files/" + id  + "/select";
-};
-options.uploadUrl = function() {
-  return "/.s<%= @cur_site.id %>/cms/apis/temp_files.json";
-};
-<% end %>
-var tempFile = new SS_Addon_TempFile(".upload-drop-area", <%= @cur_user.id %>, options);
-<% end %>
-
 <%
   addon ||= local_assigns.fetch(:addon, {})
   if @item.respond_to?(:form) && @item.form.present?
@@ -90,48 +32,7 @@ var tempFile = new SS_Addon_TempFile(".upload-drop-area", <%= @cur_user.id %>, o
 
     <div id="selected-files">
       <% @item.files.each do |file| %>
-        <div class="file-view" data-file-id="<%= file.id %>">
-          <%= link_to file.url, class: :thumb, target: "_blank" do %>
-            <% if file.image? %>
-              <%= image_tag file.thumb_url, alt: file.name %>
-            <% else %>
-              <span class="ext icon-<%= file.extname %>"><%= file.extname %></span>
-            <% end %>
-            <div class="properties">
-              <span><%= I18n.t("sns.filename") %>: <%= file.name %></span><br>
-              <% if file.image? %>
-                <% width, height = file.image_dimension %>
-                <span><%= t("sns.w_h") %>: <%= width %> x <%= height %></span><br>
-              <% end %>
-              <span><%= t("sns.size") %>: <%= number_to_human_size(file.size) %></span><br>
-              <span><%= t("sns.datetime") %>: <%= file.updated.strftime("%Y/%m/%d %H:%M") %></span><br>
-              <% if file.user.present? %>
-                <span><%= t("sns.user") %>: <%= file.user.name %></span><br>
-              <% end %>
-            </div>
-          <% end %>
-
-          <div class="name">
-            <label>
-              <%#= f.check_box "file_ids[]", {}, file.id %>
-              <%#= f.hidden_field "file_ids[]", {}, file.id, class: "file-id" %>
-              <input type="hidden" name="item[file_ids][]" value="<%= file.id %>" class="file-id" />
-              <%= file.name %>
-            </label><br />
-          </div>
-
-          <div class="action">
-            <% content = link_to file.humanized_name, file.url, class: "icon-#{file.extname}" %>
-            <%= link_to t("sns.file_attach"), "#", onclick: "insertContent('#{escape_javascript(content)}'); return false;", class: "action-attach" %>
-            <% if file.image? %>
-              <% content = image_tag file.url, alt: file.name %>
-              <%= link_to t("sns.image_paste"), "#", onclick: "insertContent('#{escape_javascript(content)}'); return false;", class: "action-paste" %>
-              <% content = link_to(file.url, alt: file.name, class: "ajax-box") { image_tag(file.thumb_url, alt: file.name) } %>
-              <%= link_to t("sns.thumb_paste"), "#", onclick: "insertContent('#{escape_javascript(content)}'); return false;", class: "action-thumb" %>
-            <% end %>
-            <%= link_to t("ss.buttons.delete"), "#", onclick: "deleteContent('#{file.id}'); return false;", class: "action-delete" %>
-          </div>
-        </div>
+        <%= render "ss/crud/ajax_files/file_view", file: file %>
       <% end %>
     </div>
   </dd>
@@ -139,7 +40,24 @@ var tempFile = new SS_Addon_TempFile(".upload-drop-area", <%= @cur_user.id %>, o
 
 <%= jquery do %>
   var $el = $("#<%= addon[:id] %>");
-  $el.on("click", ".file-view a.thumb", function(ev) {
-    SS_FileView.open(ev, { viewPath: "<%= view_cms_apis_content_file_path(id: ":id") %>" });
-  });
+
+  var options = {};
+  options.selectUrl = function(id) {
+    var selectUrlTemplate = "<%= @cur_node ? select_cms_apis_node_temp_file_path(id: ":id") : select_cms_apis_temp_file_path(id: ":id") %>";
+    return selectUrlTemplate.replace(":id", id);
+  };
+  options.uploadUrl = function() {
+    var uploadUrlTemplate = "<%= @cur_node ? cms_apis_node_temp_files_path(format: "json") : cms_apis_temp_files_path(format: "json") %>";
+    return uploadUrlTemplate;
+  };
+  var tempFile = new SS_Addon_TempFile($el.find(".upload-drop-area"), <%= @cur_user.id %>, options);
+
+  <%
+    file_view_options = {
+      viewPath: view_cms_apis_content_file_path(id: ":id"),
+      confirmationOnDelete: t('ss.confirm.delete'),
+      inUseConfirmation: t('ss.confirm.in_use')
+    }
+  %>
+  SS_FileView.renderFileView($el, <%== file_view_options.to_json %>);
 <% end %>

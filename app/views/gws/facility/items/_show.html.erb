@@ -14,7 +14,7 @@
     <%= @item.min_minutes_limit.to_s(:delimited) %><%= I18n.t('gws/facility.prompts.minutes') %>
     <% end %>
     <% if @item.min_minutes_limit || @item.max_minutes_limit %>
-    〜
+    <%= t("ss.wave_dash") %>
     <% end %>
     <% if @item.max_minutes_limit %>
       <%= @item.max_minutes_limit.to_s(:delimited) %><%= I18n.t('gws/facility.prompts.minutes') %>

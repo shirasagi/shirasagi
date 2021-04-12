@@ -28,9 +28,7 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
             fill_in "item[name]", with: "sample"
             click_on I18n.t('ss.links.input')
             fill_in "item[basename]", with: "sample"
-            wait_addon_open do
-              find('#addon-cms-agents-addons-meta .toggle-head h2').click
-            end
+            ensure_addon_opened('#addon-cms-agents-addons-meta')
             fill_in "item[keywords]", with: "sample"
             fill_in "item[description]", with: "sample"
             click_button I18n.t("ss.buttons.publish_save")
@@ -66,9 +64,7 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
             fill_in "item[name]", with: "sample"
             click_on I18n.t('ss.links.input')
             fill_in "item[basename]", with: "sample"
-            wait_addon_open do
-              find('#addon-cms-agents-addons-meta .toggle-head h2').click
-            end
+            ensure_addon_opened('#addon-cms-agents-addons-meta')
             fill_in "item[keywords]", with: "sample"
             fill_in "item[description]", with: "sample"
             click_button I18n.t("ss.buttons.draft_save")
@@ -107,9 +103,7 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
             fill_in "item[name]", with: "sample"
             click_on I18n.t('ss.links.input')
             fill_in "item[basename]", with: "sample"
-            wait_addon_open do
-              find('#addon-cms-agents-addons-meta .toggle-head h2').click
-            end
+            ensure_addon_opened('#addon-cms-agents-addons-meta')
             fill_in "item[keywords]", with: "sample"
             fill_in "item[description]", with: "sample"
             click_button I18n.t("ss.buttons.publish_save")
@@ -152,9 +146,7 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
             fill_in "item[name]", with: "sample"
             click_on I18n.t('ss.links.input')
             fill_in "item[basename]", with: "sample"
-            wait_addon_open do
-              find('#addon-cms-agents-addons-meta .toggle-head h2').click
-            end
+            ensure_addon_opened('#addon-cms-agents-addons-meta')
             fill_in "item[keywords]", with: "sample"
             fill_in "item[description]", with: "sample"
             click_button I18n.t("ss.buttons.publish_save")

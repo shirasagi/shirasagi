@@ -10,6 +10,7 @@ class Cms::Column::Value::UrlField2 < Cms::Column::Value::Base
   permit_values :link_url, :link_label, :link_target
 
   validate :validate_link_url
+  validates :link_url, "sys/trusted_url" => true
 
   before_validation :set_link_item, unless: ->{ @new_clone }
 
@@ -30,6 +31,9 @@ class Cms::Column::Value::UrlField2 < Cms::Column::Value::Base
 
     if link_target.present?
       attrs[:target] = link_target
+      if link_target == "_blank"
+        attrs[:rel] = "noopener"
+      end
     end
 
     attrs

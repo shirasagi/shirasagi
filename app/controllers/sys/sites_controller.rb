@@ -6,12 +6,17 @@ class Sys::SitesController < ApplicationController
 
   menu_view "sys/crud/menu"
 
+  before_action :set_search_param
   after_action :reload_nginx, only: [:create, :update, :destroy, :destroy_all]
 
   private
 
   def set_crumbs
     @crumbs << [t("sys.site"), sys_sites_path]
+  end
+
+  def set_search_param
+    @s ||= OpenStruct.new(params[:s])
   end
 
   def reload_nginx
@@ -23,6 +28,7 @@ class Sys::SitesController < ApplicationController
   def index
     raise "403" unless @model.allowed?(:read, @cur_user)
     @items = @model.allow(:read, @cur_user).
+      search(@s).
       order_by(_id: -1)
   end
 

@@ -9,7 +9,7 @@
   <dd><%=br @item.content.to_s %></dd>
 
   <dt><%= @model.t :related_url %></dt>
-  <dd><%= link_to(@item.related_url, @item.related_url, target: "_blank") if @item.related_url.present? %></dd>
+  <dd><%= link_to(@item.related_url, @item.related_url, target: "_blank", rel: "noopener") if @item.related_url.present? %></dd>
 
   <dt><%= @model.t :cost %></dt>
   <dd><%=br @item.cost.to_s %></dd>

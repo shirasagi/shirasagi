@@ -42,7 +42,7 @@ describe Event::Ical::ImportJob, dbscope: :example do
           expect(doc.summary_html).to eq doc.content
           expect(doc.venue).to eq "教育会館"
           expect(doc.contact).to eq "Python 普及委員会"
-          expect(doc.schedule).to eq "8月27日〜8月31日"
+          expect(doc.schedule).to eq "8月27日～8月31日"
           expect(doc.related_url).to eq "http://www.example.jp/sabd/"
           expect(doc.cost).to eq "2,000円"
           expect(doc.event_dates).to include("2018/08/27", "2018/08/28", "2018/08/29", "2018/08/30", "2018/08/31")

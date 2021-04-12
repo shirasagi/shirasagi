@@ -19,7 +19,7 @@
     <dd><%= @item.fax %></dd>
 
     <dt><%= @item.class.t :related_url %></dt>
-    <dd><%= link_to(@item.related_url, @item.related_url, target: "_blank") if @item.related_url.present? %></dd>
+    <dd><%= link_to(@item.related_url, @item.related_url, target: "_blank", rel: "noopener") if @item.related_url.present? %></dd>
 
     <% @item.additional_info.each do |info| %>
       <dt><%=br info[:field] %></dt>

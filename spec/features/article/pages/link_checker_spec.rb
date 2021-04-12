@@ -160,7 +160,9 @@ describe "link_checker", type: :feature, dbscope: :example, js: true do
 
         visit edit_path
         within ".column-value-palette" do
-          click_on column.name
+          wait_event_to_fire("ss:columnAdded") do
+            click_on column.name
+          end
         end
         within ".column-value-cms-column-free" do
           fill_in_ckeditor "item[column_values][][in_wrap][value]", with: html
@@ -198,7 +200,9 @@ describe "link_checker", type: :feature, dbscope: :example, js: true do
 
         visit edit_path
         within ".column-value-palette" do
-          click_on column.name
+          wait_event_to_fire("ss:columnAdded") do
+            click_on column.name
+          end
         end
         within ".column-value-cms-column-free" do
           fill_in_ckeditor "item[column_values][][in_wrap][value]", with: html

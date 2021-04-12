@@ -31,7 +31,13 @@ def save_ss_files(path, data)
   return item if item.persisted?
 
   item.in_file = file
-  item.name = data[:name] if data[:name].present?
+  if data[:name].present?
+    name = data[:name]
+    if !name.include?(".") && data[:filename].include?(".")
+      name = "#{name}#{::File.extname(data[:filename])}"
+    end
+    item.name = name
+  end
   item.cur_user = @user
   item.save
 
@@ -302,9 +308,9 @@ save_node route: "category/page", name: "妊娠中", filename: "age/pregnancy",
   layout_id: layouts["folder"].id, sort: "order", limit: 50, order: 10
 save_node route: "category/page", name: "0歳児(赤ちゃん)", filename: "age/zero",
   layout_id: layouts["folder"].id, sort: "order", limit: 50, order: 20
-save_node route: "category/page", name: "1～2歳児", filename: "age/one",
+save_node route: "category/page", name: "1#{I18n.t("ss.wave_dash")}2歳児", filename: "age/one",
   layout_id: layouts["folder"].id, sort: "order", limit: 50, order: 30
-save_node route: "category/page", name: "3～5歳児", filename: "age/three",
+save_node route: "category/page", name: "3#{I18n.t("ss.wave_dash")}5歳児", filename: "age/three",
   layout_id: layouts["folder"].id, sort: "order", limit: 50, order: 40
 save_node route: "category/page", name: "小学生から", filename: "age/primary",
   layout_id: layouts["folder"].id, sort: "order", limit: 50, order: 50

@@ -91,6 +91,11 @@ module SS
       end
     end
 
+    def current_controller
+      return if current_request.nil?
+      current_request.params[:controller]
+    end
+
     def current_path_info
       return if current_env.nil?
       current_env["PATH_INFO"]

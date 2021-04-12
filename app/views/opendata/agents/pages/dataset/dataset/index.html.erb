@@ -124,7 +124,7 @@ SS.renderClipboardCopy();
         <span class="license">
           <% label = tryb { image_tag license.file.url, alt: license.name } || license.name %>
           <% if license.related_url.present? %>
-            <%= link_to(label, license.related_url, target: "_blank", rel: @cur_site.anti_bot_set_nofollow? ? "nofollow" : nil) %>
+            <%= link_to(label, license.related_url, target: "_blank", rel: [ "noopener", @cur_site.anti_bot_set_nofollow? ? "nofollow" : nil ]) %>
           <% else %>
             <%= label %>
           <% end %>

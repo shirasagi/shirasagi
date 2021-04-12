@@ -24,13 +24,7 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
     it "#edit" do
       visit edit_path
 
-      addon = first("#addon-cms-agents-addons-file")
-      if addon.matches_css?(".body-closed")
-        wait_addon_open do
-          addon.find('.toggle-head').click
-        end
-      end
-
+      ensure_addon_opened("#addon-cms-agents-addons-file")
       within "#addon-cms-agents-addons-file" do
         wait_cbox_open do
           click_on I18n.t("ss.buttons.upload")
@@ -56,6 +50,7 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
 
     it "#edit file name" do
       visit edit_path
+      ensure_addon_opened("#addon-cms-agents-addons-file")
       within "form#item-form" do
         within "#addon-cms-agents-addons-file" do
           wait_cbox_open do
@@ -90,6 +85,7 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
 
     it do
       visit edit_path
+      ensure_addon_opened("#addon-cms-agents-addons-file")
       within "form#item-form" do
         within "#addon-cms-agents-addons-file" do
           wait_cbox_open do
@@ -136,6 +132,7 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
           login_user(user2)
 
           visit edit_path
+          ensure_addon_opened("#addon-cms-agents-addons-file")
           within "form#item-form" do
             within "#addon-cms-agents-addons-file" do
               wait_cbox_open do
@@ -191,6 +188,7 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
         it do
           login_user(user2)
           visit edit_path
+          ensure_addon_opened("#addon-cms-agents-addons-file")
           within "form#item-form" do
             within "#addon-cms-agents-addons-file" do
               wait_cbox_open do
@@ -257,7 +255,9 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
         end
 
         within ".column-value-palette" do
-          click_on column1.name
+          wait_event_to_fire("ss:columnAdded") do
+            click_on column1.name
+          end
         end
         within ".column-value-cms-column-fileupload" do
           wait_cbox_open do
@@ -284,7 +284,9 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
         end
 
         within ".column-value-palette" do
-          click_on column2.name
+          wait_event_to_fire("ss:columnAdded") do
+            click_on column2.name
+          end
         end
         within ".column-value-cms-column-free" do
           wait_cbox_open do
@@ -332,6 +334,64 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
         expect(attached_file2.owner_item_id).to eq item.id
         # other
         expect(attached_file2.user_id).to eq user2.id
+      end
+    end
+  end
+
+  context "attach file which size exceeds the limit" do
+    let(:file_path) { "#{Rails.root}/spec/fixtures/ss/file/keyvisual.jpg" }
+    let(:basename) { ::File.basename(file_path) }
+    let(:file_size_human) { ::File.size(file_path).to_s(:human_size) }
+    let!(:max) { create :ss_max_file_size, in_size_mb: 0 }
+    let(:limit_human) { max.size.to_s(:human_size) }
+
+    before do
+      login_cms_user
+    end
+
+    context "click save" do
+      it do
+        visit edit_path
+
+        ensure_addon_opened("#addon-cms-agents-addons-file")
+        within "#addon-cms-agents-addons-file" do
+          wait_cbox_open do
+            click_on I18n.t("ss.buttons.upload")
+          end
+        end
+
+        wait_for_cbox do
+          attach_file "item[in_files][]", file_path
+          alert = I18n.t("errors.messages.too_large_file", filename: basename, size: file_size_human, limit: limit_human)
+          page.accept_alert(/#{::Regexp.escape(alert)}/) do
+            click_on I18n.t("ss.buttons.save")
+          end
+
+          expect(page).to have_no_css('.file-view', text: basename)
+        end
+      end
+    end
+
+    context "click attach" do
+      it do
+        visit edit_path
+
+        ensure_addon_opened("#addon-cms-agents-addons-file")
+        within "#addon-cms-agents-addons-file" do
+          wait_cbox_open do
+            click_on I18n.t("ss.buttons.upload")
+          end
+        end
+
+        wait_for_cbox do
+          attach_file "item[in_files][]", file_path
+          alert = I18n.t("errors.messages.too_large_file", filename: basename, size: file_size_human, limit: limit_human)
+          page.accept_alert(/#{::Regexp.escape(alert)}/) do
+            click_on I18n.t("ss.buttons.attach")
+          end
+
+          expect(page).to have_no_css('.file-view', text: basename)
+        end
       end
     end
   end

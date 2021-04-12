@@ -9,8 +9,9 @@ module Rss::Addon
 
     included do
       cattr_accessor :weather_xml, instance_accessor: false
+      cattr_accessor :default_rss_max_docs, instance_accessor: false
       field :rss_url, type: String
-      field :rss_max_docs, type: Integer
+      field :rss_max_docs, type: Integer, default: ->{ self.class.default_rss_max_docs }
       field :rss_refresh_method, type: String
       field :page_state, type: String
       permit_params :rss_url, :rss_max_docs, :rss_refresh_method, :page_state

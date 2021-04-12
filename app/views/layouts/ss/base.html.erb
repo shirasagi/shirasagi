@@ -23,7 +23,6 @@
 <script src="/assets/js/html5.js"></script>
 <script src="/assets/js/selectivizr-min.js"></script>
 <![endif]-->
-<%= controller.jquery_migrate_mute %>
 <%= csrf_meta_tags %>
 </head>
 <body>
@@ -365,8 +364,8 @@
       <div class="wrap">
         <% if @ss_mode == :cms %>
         <nav class="site-navi">
-          <h2><%= link_to t("cms.view_site"), @cur_site.full_url, target: "_blank" %></h2>
-          <h2><%= link_to t("cms.preview_site"), "#{cms_preview_path}#{@cur_site.url}", target: "_blank" %></h2>
+          <h2><%= link_to t("cms.view_site"), @cur_site.full_url, target: "_blank", rel: "noopener" %></h2>
+          <h2><%= link_to t("cms.preview_site"), "#{cms_preview_path}#{@cur_site.url}", target: "_blank", rel: "noopener" %></h2>
         </nav>
         <% end %>
 

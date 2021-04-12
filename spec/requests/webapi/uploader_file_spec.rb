@@ -97,6 +97,46 @@ describe "webapi", dbscope: :example, type: :request do
       end
     end
 
+    context "upload exif image file" do
+      describe "POST /.s{site}/uploader{cid}/files/{filename}?do=new_files&format=json" do
+        before(:each) { Fs.rm_rf "#{uploader_node.path}/keyvisual.jpg" }
+        it "201" do
+          correct_upload_file_params = {
+            :item => {
+              :files => [
+                Rack::Test::UploadedFile.new("#{::Rails.root}/spec/fixtures/ss/file/keyvisual.jpg", nil, true)
+              ]
+            }
+          }
+          post upload_file_path, params: correct_upload_file_params
+          expect(response.status).to eq 201
+        end
+      end
+    end
+
+    context "upload scss file" do
+      describe "POST /.s{site}/uploader{cid}/files/{filename}?do=new_files&format=json" do
+        before(:each) do
+          Fs.rm_rf "#{uploader_node.path}/style.scss"
+          Fs.rm_rf "#{uploader_node.path}/style.css"
+        end
+
+        it "201" do
+          correct_upload_file_params = {
+            :item => {
+              :files => [
+                Rack::Test::UploadedFile.new("#{::Rails.root}/spec/fixtures/uploader/style.scss", nil, true)
+              ]
+            }
+          }
+          post upload_file_path, params: correct_upload_file_params
+          expect(response.status).to eq 201
+
+          expect(File.exists?("#{uploader_node.path}/style.css")).to be_truthy
+        end
+      end
+    end
+
     context "edit uploaded file" do
       before(:each) do
         Fs.rm_rf "#{uploader_node.path}/logo.png"

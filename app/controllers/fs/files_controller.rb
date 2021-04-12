@@ -1,7 +1,6 @@
 class Fs::FilesController < ApplicationController
   include SS::AuthFilter
   include Member::AuthFilter
-  include Fs::FileFilter
   include Cms::PublicFilter::Site
 
   before_action :set_user
@@ -18,11 +17,13 @@ class Fs::FilesController < ApplicationController
 
   def set_item
     id = params[:id_path].present? ? params[:id_path].gsub(/\//, "") : params[:id]
-    path = params[:filename]
-    path << ".#{params[:format]}" if params[:format].present?
+    name_or_filename = params[:filename]
+    name_or_filename << ".#{params[:format]}" if params[:format].present?
 
-    @item = SS::File.find_by id: id, filename: path
-    @item = @item.becomes_with_model
+    item = SS::File.find(id)
+    raise "404" if item.name != name_or_filename && item.filename != name_or_filename
+
+    @item = item.becomes_with_model
     raise "404" if @item.try(:thumb?)
   end
 
@@ -35,18 +36,18 @@ class Fs::FilesController < ApplicationController
     response.headers["Last-Modified"] = CGI::rfc1123_date(@item.updated.in_time_zone)
   end
 
-  def rescue_action(e = nil)
-    if e.to_s =~ /^\d+$/
-      status = e.to_s.to_i
+  def rescue_action(error = nil)
+    if error.to_s.numeric?
+      status = error.to_s.to_i
       file = error_html_file(status)
       return ss_send_file(file, status: status, type: Fs.content_type(file), disposition: :inline)
     end
-    if e.is_a?(Mongoid::Errors::DocumentNotFound)
+    if error.is_a?(Mongoid::Errors::DocumentNotFound)
       status = 404
       file = error_html_file(status)
       return ss_send_file(file, status: status, type: Fs.content_type(file), disposition: :inline)
     end
-    raise e
+    raise error
   end
 
   def error_html_file(status)
@@ -66,8 +67,26 @@ class Fs::FilesController < ApplicationController
       send_file @item.path, type: @item.content_type, filename: @item.download_filename,
                 disposition: disposition, x_sendfile: true
     else
-      send_data @item.read, type: @item.content_type, filename: @item.download_filename,
+      send_enum @item.to_io, type: @item.content_type, filename: @item.download_filename,
                 disposition: disposition
+    end
+  end
+
+  def send_thumb(file, opts = {})
+    width  = opts.delete(:width).to_i
+    height = opts.delete(:height).to_i
+
+    width  = (width  > 0) ? width  : SS::ImageConverter::DEFAULT_THUMB_WIDTH
+    height = (height > 0) ? height : SS::ImageConverter::DEFAULT_THUMB_HEIGHT
+
+    converter = SS::ImageConverter.open(file.path)
+    converter.resize_to_fit!(width, height)
+
+    send_enum converter.to_enum, opts
+    converter = nil
+  ensure
+    if converter
+      converter.close rescue nil
     end
   end
 
@@ -81,18 +100,17 @@ class Fs::FilesController < ApplicationController
     size   = params[:size]
     width  = params[:width]
     height = params[:height]
-    thumb  = @item.try(:thumb, size)
 
     if width.present? && height.present?
       set_last_modified
-      send_thumb @item.read, type: @item.content_type, filename: @item.filename,
+      send_thumb @item, type: @item.content_type, filename: @item.filename,
         disposition: :inline, width: width, height: height
-    elsif thumb
+    elsif thumb  = @item.try(:thumb, size)
       @item = thumb
       index
     else
       set_last_modified
-      send_thumb @item.read, type: @item.content_type, filename: @item.filename,
+      send_thumb @item, type: @item.content_type, filename: @item.filename,
         disposition: :inline
     end
   rescue => e

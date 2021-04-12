@@ -29,7 +29,7 @@
         <% @item.files.each do |file| %>
         <span id="file-<%= file.id %>" class='<%= @cur_site.qna_files_break == 'horizontal' ? 'd-inline-block mr-1' : 'd-block' %>'>
           <img src="/assets/img/gws/ic-file.png" alt="" />
-          <%= link_to file.humanized_name, file.url, class: "icon-#{file.extname}", target: '_blank' %>
+          <%= link_to file.humanized_name, file.url, class: "icon-#{file.extname}", target: '_blank', rel: "noopener" %>
         </span>
         <% end %>
       </div>
