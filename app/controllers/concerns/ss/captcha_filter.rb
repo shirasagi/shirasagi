@@ -3,7 +3,7 @@ module SS::CaptchaFilter
 
   def generate_image
     MiniMagick::Tool::Convert.new do |convert|
-      @captcha_text = sprintf("%04d", rand(10000))
+      @image_text = sprintf("%04d", rand(10000))
       convert.size "100x28"
       convert.background "white"
       convert.fill "darkblue"
@@ -12,7 +12,7 @@ module SS::CaptchaFilter
       convert.pointsize "22"
       convert.gravity "Center"
       convert.implode "0.2"
-      convert << "label:#{@captcha_text}"
+      convert << "label:#{@image_text}"
       convert << "app/assets/images/captcha.jpeg"
     end
   end

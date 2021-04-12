@@ -2,7 +2,7 @@ class Inquiry::Answer
   include SS::Document
   include SS::Reference::Site
   include Inquiry::Addon::Answer::Body
-  include SimpleCaptcha::ModelHelpers
+  include SS::CaptchaBase
 
   attr_accessor :cur_node
 
@@ -25,14 +25,11 @@ class Inquiry::Answer
   permit_params :id, :node_id, :remote_addr, :user_agent, :captcha, :captcha_text
   permit_params :state, :comment
 
-  apply_simple_captcha
-
   before_validation :set_node, if: ->{ cur_node.present? }
   before_validation :set_closed
   before_validation :copy_contents_info
   validates :node_id, presence: true
   validate :validate_data
-  validate :validate_captcha
 
   before_save :update_file_data
   before_destroy :delete_file_data
@@ -178,10 +175,6 @@ class Inquiry::Answer
     columns.each do |column|
       column.validate_data(self, data.select { |d| column.id == d.column_id }.shift, in_reply)
     end
-  end
-
-  def validate_captcha
-    errors.add(:captcha, :blank) if captcha != captcha_text
   end
 
   def set_node

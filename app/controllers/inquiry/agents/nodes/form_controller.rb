@@ -1,6 +1,5 @@
 class Inquiry::Agents::Nodes::FormController < ApplicationController
   include Cms::NodeFilter::View
-  include SimpleCaptcha::ControllerHelpers
   include Cms::ForMemberFilter::Node
   include SS::CaptchaFilter
   helper Inquiry::FormHelper
@@ -95,9 +94,9 @@ class Inquiry::Agents::Nodes::FormController < ApplicationController
     end
 
     if @cur_node.captcha_enabled?
-      @answer.captcha = params[:item].try(:[], :captcha)
-      @answer.captcha_text = params[:item].try(:[], :captcha_text)
-      unless @answer.valid_with?(@answer.captcha, @answer.captcha_text)
+      @answer.captcha_answer = params[:item].try(:[], :captcha_answer)
+      @answer.image_text = params[:item].try(:[], :image_text)
+      unless @answer.valid_with_captcha?
         render action: :confirm
         return
       end
