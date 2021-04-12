@@ -142,10 +142,7 @@ module SS::Model::Site
       return if Fs.exists?(path)
       return if !Fs.exists?(src_site.path)
 
-      begin
-        Fs.mkdir_p(File.dirname(path))
-        Fs.mv(src_site.path, path)
-      rescue Errno::EINVAL
+      if path.include?(src_site.path)
         temp_path = src_site.path.sub(self.class.root, "#{self.class.root}/temp")
         Fs.mkdir_p(File.dirname(temp_path))
         Fs.mv(src_site.path, src_site.path.sub(self.class.root, "#{self.class.root}/temp"))
@@ -153,6 +150,9 @@ module SS::Model::Site
         Fs.mkdir_p(File.dirname(path))
         FileUtils.rmdir(path, parents: true) if Fs.exists?(path) && Dir.empty?(path)
         Fs.mv(temp_path, path) if Fs.exists?(temp_path)
+      else
+        Fs.mkdir_p(File.dirname(path))
+        Fs.mv(src_site.path, path)
       end
     end
 
