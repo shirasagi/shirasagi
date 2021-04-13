@@ -7,7 +7,18 @@ module Gws::Addon::User::Presence
   end
 
   def user_presence(site)
-    @_user_presence ||= user_presences.site(site).first
+    @_user_presence ||= begin
+      item = user_presences.site(site).first
+      if item.nil?
+        item = Gws::UserPresence.new
+        item.cur_site = site
+        item.cur_user = self
+        item.save
+        item
+      else
+        item
+      end
+    end
   end
 
   def presence_title_manageable_users
@@ -50,17 +61,15 @@ module Gws::Addon::User::Presence
     enter_state = SS.config.gws.dig("presence", "sync_timecard", "presence_punch", "enter")
     leave_state = SS.config.gws.dig("presence", "sync_timecard", "presence_punch", "leave")
 
-    user_presences.each do |item|
-      next if !item.sync_timecard_enabled?
-      next if item.site_id != site.id
+    item = user_presence(site)
+    return if !item.sync_timecard_enabled?
 
-      if field_name == "enter"
-        item.state = enter_state
-        item.save
-      elsif field_name == "leave"
-        item.state = leave_state
-        item.save
-      end
+    if field_name == "enter"
+      item.state = enter_state
+      item.save
+    elsif field_name == "leave"
+      item.state = leave_state
+      item.save
     end
   end
 end
