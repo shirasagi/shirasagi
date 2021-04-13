@@ -1,6 +1,6 @@
 
 <% if @option == "image" %>
-  <%= image_tag "captcha.jpeg" %>
+  <%= image_tag "/assets/img/captcha.jpeg" %>
 <% elsif @option == "field" %>
   <%= f.text_field :captcha_answer %>
   <%= f.hidden_field :image_text, :value => @image_text %>
