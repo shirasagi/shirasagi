@@ -5,11 +5,6 @@ module SS::CaptchaBase
     attr_accessor :captcha_answer, :image_text
   end
 
-
-  def valid_with_captcha?(captcha_answer, image_text)
-    captcha_answer == image_text
-  end
-
   def valid_with_captcha?
     [valid?, is_captcha_valid?].all?
   end
@@ -23,8 +18,4 @@ module SS::CaptchaBase
       return false
     end
   end
-
-  # def validate_captcha
-  #   errors.add(:captcha, I18n.t('simple_captcha.message.default')) if captcha_answer != image_text
-  # end
 end
