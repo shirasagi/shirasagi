@@ -3,7 +3,7 @@ module Gws::Addon::User::Presence
   extend SS::Addon
 
   included do
-    has_many :user_presences, class_name: "Gws::UserPresence", dependent: :delete_all, inverse_of: :user
+    has_many :user_presences, class_name: "Gws::UserPresence", dependent: :destroy, inverse_of: :user
   end
 
   def user_presence(site)
