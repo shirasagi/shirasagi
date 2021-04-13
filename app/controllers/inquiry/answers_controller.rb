@@ -116,8 +116,4 @@ class Inquiry::AnswersController < ApplicationController
       return
     end
   end
-
-  def valid_with?(captcha, captcha_text)
-    captcha == captcha_text
-  end
 end
