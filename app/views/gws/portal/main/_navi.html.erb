@@ -67,7 +67,7 @@
   end
 %>
 
-<% if navi_links.length > 1 %>
+<% if navi_links.present? %>
   <nav class="mod-navi current-navi">
     <h2><%= link_to @cur_site.menu_portal_label || t('modules.gws/portal'), gws_portal_path, class: "icon-portal" %></h2>
 

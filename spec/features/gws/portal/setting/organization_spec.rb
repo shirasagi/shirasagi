@@ -1,34 +1,8 @@
 require 'spec_helper'
 
-describe "gws_portal_setting_users", type: :feature, dbscope: :example, js: true do
+describe "gws_portal_setting_organization", type: :feature, dbscope: :example, js: true do
   let(:site) { gws_site }
   let(:user) { gws_user }
-
-  context "with auth" do
-    before { login_gws_user }
-
-    it "#index" do
-      visit gws_portal_path(site: site)
-      expect(page).to have_no_content(I18n.t('gws/portal.user_portal'))
-
-      visit gws_portal_user_path(site: site, user: user)
-      expect(page).to have_content(I18n.t('gws/portal.user_portal'))
-
-      visit gws_portal_setting_users_path(site: site)
-      expect(page).to have_content(user.name)
-
-      # secured
-      role = user.gws_roles[0]
-      role.update(permissions: [])
-      user.clear_gws_role_permissions
-
-      visit gws_site_path(site: site)
-      expect(page).to have_no_content(I18n.t('gws/portal.user_portal'))
-
-      visit gws_portal_setting_users_path(site: site)
-      expect(page).to have_title("403")
-    end
-  end
 
   context "least required permissions to manage" do
     let!(:notice_folder) { create(:gws_notice_folder, cur_site: site) }
@@ -36,10 +10,10 @@ describe "gws_portal_setting_users", type: :feature, dbscope: :example, js: true
     let!(:schedule_plan) { create(:gws_schedule_plan, cur_site: site) }
     let(:permissions) do
       permissions = []
-      permissions << 'use_gws_portal_user_settings'
-      permissions << 'read_private_gws_portal_user_settings'
-      permissions << 'edit_private_gws_portal_user_settings'
-      permissions << 'delete_private_gws_portal_user_settings'
+      permissions << 'use_gws_portal_organization_settings'
+      permissions << 'read_other_gws_portal_group_settings'
+      permissions << 'edit_other_gws_portal_group_settings'
+      permissions << 'delete_other_gws_portal_group_settings'
       # ポータルにお知らせを表示するために必要
       permissions << 'use_gws_notice'
       permissions << 'read_private_gws_notices'
@@ -62,10 +36,10 @@ describe "gws_portal_setting_users", type: :feature, dbscope: :example, js: true
       expect(page).to have_css(".gws-notices", text: notice_post.name)
       expect(page).to have_css(".gws-portlets .portlet-model-schedule", text: schedule_plan.name)
       within ".current-navi" do
-        click_on I18n.t("gws/portal.tabs.user_portal")
+        click_on I18n.t("gws/portal.tabs.root_portal")
       end
       within ".breadcrumb" do
-        expect(page).to have_content(I18n.t('gws/portal.user_portal'))
+        expect(page).to have_content(I18n.t("gws/portal.tabs.root_portal"))
       end
       within ".current-navi" do
         expect(page).to have_content(I18n.t('gws/portal.links.arrange_portlets'))
@@ -100,7 +74,7 @@ describe "gws_portal_setting_users", type: :feature, dbscope: :example, js: true
     let!(:schedule_plan) { create(:gws_schedule_plan, cur_site: site) }
     let(:permissions) do
       permissions = []
-      permissions << 'use_gws_portal_user_settings'
+      permissions << 'use_gws_portal_organization_settings'
       # ポータルにお知らせを表示するために必要
       permissions << 'use_gws_notice'
       permissions << 'read_private_gws_notices'
@@ -123,10 +97,10 @@ describe "gws_portal_setting_users", type: :feature, dbscope: :example, js: true
       expect(page).to have_css(".gws-notices", text: notice_post.name)
       expect(page).to have_css(".gws-portlets .portlet-model-schedule", text: schedule_plan.name)
       within ".current-navi" do
-        click_on I18n.t("gws/portal.tabs.user_portal")
+        click_on I18n.t("gws/portal.tabs.root_portal")
       end
       within ".breadcrumb" do
-        expect(page).to have_content(I18n.t('gws/portal.user_portal'))
+        expect(page).to have_content(I18n.t("gws/portal.tabs.root_portal"))
       end
       within ".current-navi" do
         expect(page).to have_no_content(I18n.t('gws/portal.links.arrange_portlets'))
