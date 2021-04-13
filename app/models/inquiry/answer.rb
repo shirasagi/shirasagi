@@ -22,7 +22,7 @@ class Inquiry::Answer
   belongs_to :node, foreign_key: :node_id, class_name: "Inquiry::Node::Form"
   embeds_many :data, class_name: "Inquiry::Answer::Data"
 
-  permit_params :id, :node_id, :remote_addr, :user_agent, :captcha, :captcha_text
+  permit_params :id, :node_id, :remote_addr, :user_agent
   permit_params :state, :comment
 
   before_validation :set_node, if: ->{ cur_node.present? }

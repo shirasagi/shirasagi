@@ -3,6 +3,7 @@ module SS::CaptchaBase
 
   included do
     attr_accessor :captcha_answer, :image_text
+    permit_params :captcha_answer, :image_text
   end
 
   def valid_with_captcha?
