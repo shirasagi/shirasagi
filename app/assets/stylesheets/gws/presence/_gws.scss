@@ -85,12 +85,12 @@
     td {
       background: none;
       .group-name {
+        width: calc(100% - 60px);
         display: inline-block;
         vertical-align: middle;
         overflow: hidden;
         white-space: normal;
         text-overflow: ellipsis;
-        width: calc(100% - 60px);
       }
       .presence-state, .select-presence-state {
         display: inline-block;
