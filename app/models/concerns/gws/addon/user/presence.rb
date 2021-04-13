@@ -14,10 +14,8 @@ module Gws::Addon::User::Presence
         item.cur_site = site
         item.cur_user = self
         item.save
-        item
-      else
-        item
       end
+      item
     end
   end
 
