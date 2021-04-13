@@ -7,6 +7,7 @@ module Gws::Portal::PortalModel
 
   included do
     attr_accessor :portal_type
+    attr_accessor :cur_group
   end
 
   def my_portal?
