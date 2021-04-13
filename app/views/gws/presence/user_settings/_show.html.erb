@@ -2,9 +2,16 @@
   <dt><%= t("gws/presence.sync_state") %></dt>
   <dd></dd>
 
-  <dt class="depth-2"><%= @item.t :sync_available_state %></dt>
-  <dd><%= @item.label :sync_available_state %></dd>
+  <% if !SS.config.gws.dig("presence", "sync_available", "disable") %>
+    <dt class="depth-2"><%= @item.t :sync_available_state %></dt>
+    <dd><%= @item.label :sync_available_state %></dd>
 
-  <dt class="depth-2"><%= @item.t :sync_unavailable_state %></dt>
-  <dd><%= @item.label :sync_unavailable_state %></dd>
+    <dt class="depth-2"><%= @item.t :sync_unavailable_state %></dt>
+    <dd><%= @item.label :sync_unavailable_state %></dd>
+  <% end %>
+
+  <% if !SS.config.gws.dig("presence", "sync_timecard", "disable") %>
+    <dt class="depth-2"><%= @item.t :sync_timecard_state %></dt>
+    <dd><%= @item.label :sync_timecard_state %></dd>
+  <% end %>
 </dl>

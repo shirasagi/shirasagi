@@ -2,7 +2,7 @@ module Gws::Presence::UserHelper
   extend ActiveSupport::Concern
 
   def user_presence_state_selector(item)
-    user_presence = item.user_presence(@cur_site) || Gws::UserPresence.new
+    user_presence = item.user_presence(@cur_site)
     url = gws_presence_apis_user_path(id: item.id) + ".json"
 
     h = []

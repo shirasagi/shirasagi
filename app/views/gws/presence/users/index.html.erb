@@ -25,7 +25,7 @@
       </thead>
       <tbody>
       <% @editable_users.each do |item| %>
-        <% user_presence = item.user_presence(@cur_site) || Gws::UserPresence.new %>
+        <% user_presence = item.user_presence(@cur_site) %>
         <tr class="editable" data-id="<%= item.id %>">
           <td class="presence-state-toggle">
             <div class="no-overflow">
@@ -97,7 +97,7 @@ Gws_Presence_User_Reload.render({
       </thead>
       <tbody>
       <% @items.each do |item| %>
-        <% user_presence = item.user_presence(@cur_site) || Gws::UserPresence.new %>
+        <% user_presence = item.user_presence(@cur_site) %>
         <% if @manageable %>
           <tr class="editable" data-id="<%= item.id %>">
             <td class="presence-state-toggle">
