@@ -93,10 +93,6 @@ class Inquiry::Answer
     end
   end
 
-  def valid_with?(captcha, captcha_text)
-    captcha == captcha_text
-  end
-
   def find_data(column)
     data.select { |d| d.column_id == column.id }.first
   end
