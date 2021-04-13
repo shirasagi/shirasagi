@@ -46,6 +46,7 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
       before do
         site.domains = site2.domains
         site.subdir = unique_id
+        site.parent_id = site2.id
         site.save!
         item.reload
       end
