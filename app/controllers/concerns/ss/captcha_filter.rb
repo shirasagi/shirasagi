@@ -17,7 +17,7 @@ module SS::CaptchaFilter
       convert.gravity "Center"
       convert.implode "0.2"
       convert << "label:#{@image_text}"
-      convert << "public/assets/img/captcha.jpeg"
+      convert << "tmp/captcha.jpeg"
     end
   end
 end
