@@ -1,14 +1,16 @@
 class Inquiry::Agents::Nodes::FormController < ApplicationController
   include Cms::NodeFilter::View
-  include SimpleCaptcha::ControllerHelpers
   include Cms::ForMemberFilter::Node
+  include SS::CaptchaFilter
   helper Inquiry::FormHelper
+  helper SS::CaptchaHelper
 
   before_action :check_release_state, only: [:new, :confirm, :create, :sent, :results], if: ->{ !@preview }
   before_action :check_reception_state, only: [:new, :confirm, :create, :sent], if: ->{ !@preview }
   before_action :check_aggregation_state, only: :results, if: ->{ !@preview }
   before_action :set_columns, only: [:new, :confirm, :create, :sent, :results]
   before_action :set_answer, only: [:new, :confirm, :create]
+  before_action :generate_image, only: [:confirm, :create]
 
   private
 
@@ -92,8 +94,8 @@ class Inquiry::Agents::Nodes::FormController < ApplicationController
     end
 
     if @cur_node.captcha_enabled?
-      @answer.captcha = params[:answer].try(:[], :captcha)
-      @answer.captcha_key = params[:answer].try(:[], :captcha_key)
+      @answer.captcha_answer = params[:item].try(:[], :captcha_answer)
+      @answer.image_text = params[:item].try(:[], :image_text)
       unless @answer.valid_with_captcha?
         render action: :confirm
         return

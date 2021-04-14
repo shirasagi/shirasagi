@@ -2,7 +2,7 @@ class Inquiry::Answer
   include SS::Document
   include SS::Reference::Site
   include Inquiry::Addon::Answer::Body
-  include SimpleCaptcha::ModelHelpers
+  include SS::CaptchaBase
 
   attr_accessor :cur_node
 
@@ -22,10 +22,8 @@ class Inquiry::Answer
   belongs_to :node, foreign_key: :node_id, class_name: "Inquiry::Node::Form"
   embeds_many :data, class_name: "Inquiry::Answer::Data"
 
-  permit_params :id, :node_id, :remote_addr, :user_agent, :captcha, :captcha_key
+  permit_params :id, :node_id, :remote_addr, :user_agent
   permit_params :state, :comment
-
-  apply_simple_captcha
 
   before_validation :set_node, if: ->{ cur_node.present? }
   before_validation :set_closed
