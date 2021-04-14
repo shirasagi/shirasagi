@@ -1,6 +1,10 @@
 module SS::CaptchaFilter
   extend ActiveSupport::Concern
 
+  included do
+    helper SS::CaptchaHelper
+  end
+
   def generate_image
     MiniMagick::Tool::Convert.new do |convert|
       @image_text = sprintf("%04d", rand(10000))
