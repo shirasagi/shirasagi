@@ -11,7 +11,7 @@
   <% end %>
   <%= hidden_field_tag "#{f.object_name}[source_url]", @answer.source_url %>
   <% if @cur_node.captcha_enabled? %>
-    <%= show_captcha(f) %>
+    <%= show_captcha %>
   <% end %>
   <footer class="send">
   <%= f.submit t('inquiry.cancel'), name: :cancel %>

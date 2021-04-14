@@ -93,8 +93,8 @@ class Inquiry::Agents::Nodes::FormController < ApplicationController
     end
 
     if @cur_node.captcha_enabled?
-      @answer.captcha_answer = params[:item].try(:[], :captcha_answer)
-      @answer.image_text = params[:item].try(:[], :image_text)
+      @answer.captcha_answer = params[:answer].try(:[], :captcha_answer)
+      @answer.image_text = params[:answer].try(:[], :image_text)
       unless @answer.valid_with_captcha?
         render action: :confirm
         return
