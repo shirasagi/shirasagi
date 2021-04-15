@@ -196,74 +196,195 @@ module Cms::Addon
       validates :search_approved_close, datetime: true
     end
 
-    def search(opts = {})
-      @search ||= begin
-        cur_date = Time.zone.now
+    class Searcher
+      private_class_method :new
 
-        name           = search_name.present? ? { name: /#{::Regexp.escape(search_name)}/ } : {}
-        filename       = search_filename.present? ? { filename: /#{::Regexp.escape(search_filename)}/ } : {}
-        keyword        = build_search_keyword_criteria
-        categories     = search_category_ids.present? ? { category_ids: search_category_ids } : {}
-        groups         = search_group_ids.present? ? { group_ids: search_group_ids } : {}
-        users          = search_user_ids.present? ? { user_id: search_user_ids } : {}
-        state          = build_search_state_criteria
-        nodes          = build_search_nodes_criteria
-        routes         = build_search_routes_criteria
-        approver       = build_search_approver_criteria
-        first_released = build_search_first_released_criteria
+      HANDLERS = %i[
+        search_name search_filename search_nodes search_keyword search_categories search_groups search_routes
+        search_users search_state search_released search_updated search_approved search_approver search_first_released
+        sort
+      ].freeze
+
+      def self.build_criteria(item, opts)
+        searcher = new(item, opts)
+
+        HANDLERS.each do |m|
+          searcher.send(m)
+        end
+
+        searcher.to_criteria
+      end
+
+      def initialize(item, opts)
+        @item = item
+        @opts = opts
+        @cur_site = @item.cur_site
+        @cur_user = @item.cur_user
+        @cur_date = Time.zone.now
+        @criteria = Cms::Page.site(@cur_site).allow(:read, @cur_user)
+      end
+
+      def to_criteria
+        @criteria.search(@opts)
+      end
+
+      def search_name
+        return if @item.search_name.blank?
+
+        @criteria = @criteria.where(name: /#{::Regexp.escape(@item.search_name)}/)
+      end
+
+      def search_filename
+        return if @item.search_filename.blank?
+
+        @criteria = @criteria.where(filename: /#{::Regexp.escape(@item.search_filename)}/)
+      end
+
+      def search_nodes
+        return if @item.search_node_ids.blank?
+
+        conds = @item.search_nodes.map { |node| ::Regexp.escape("#{node.filename}/") }
+        return if conds.blank?
+
+        @criteria = @criteria.where(filename: /^#{conds.join("|")}/)
+      end
+
+      def search_keyword
+        return if @item.search_keyword.blank?
+
+        conds = PageSearch::KEYWORD_FIELDS.map { |field| { field => /#{::Regexp.escape(@item.search_keyword)}/ } }
+        @criteria = @criteria.where("$and" => [{ "$or" => conds }])
+      end
+
+      def search_categories
+        return if @item.search_category_ids.blank?
+
+        @criteria = @criteria.in(category_ids: @item.search_category_ids)
+      end
+
+      def search_groups
+        return if @item.search_group_ids.blank?
+
+        @criteria = @criteria.in(group_ids: @item.search_group_ids)
+      end
+
+      def search_routes
+        return if @item.search_routes.blank?
+
+        search_routes = @item.search_routes.dup.select(&:present?)
+        return if search_routes.blank?
+
+        @criteria = @criteria.in(route: search_routes)
+      end
+
+      def search_users
+        return if @item.search_user_ids.blank?
+
+        @criteria = @criteria.in(user_id: @item.search_user_ids)
+      end
+
+      def search_state
+        return if @item.search_state.blank?
+
+        if @item.search_state == "closing"
+          @criteria = @criteria.where("$and" => [ { :state => "public" }, { :close_date.ne => nil } ])
+        else
+          @criteria = @criteria.where(state: @item.search_state)
+        end
+      end
+
+      def search_released
+        return if @item.search_released_condition.blank?
 
         released = []
-        if search_released_condition == 'absolute'
-          released << { :released.gte => search_released_start } if search_released_start.present?
-          released << { :released.lte => search_released_close } if search_released_close.present?
-        elsif search_released_condition == 'relative'
-          released << { :released.lte => cur_date - search_released_after.days } if search_released_after.present?
+        if @item.search_released_condition == 'absolute'
+          released << { :released.gte => @item.search_released_start } if @item.search_released_start.present?
+          released << { :released.lte => @item.search_released_close } if @item.search_released_close.present?
+        elsif @item.search_released_condition == 'relative'
+          released << { :released.lte => @cur_date - @item.search_released_after.days } if @item.search_released_after.present?
         end
+        return if released.blank?
+
+        @criteria = @criteria.where("$and" => released)
+      end
+
+      def search_updated
+        return if @item.search_updated_condition.blank?
 
         updated = []
-        if search_updated_condition == 'absolute'
-          updated << { :updated.gte => search_updated_start } if search_updated_start.present?
-          updated << { :updated.lte => search_updated_close } if search_updated_close.present?
-        elsif search_updated_condition == 'relative'
-          updated << { :updated.lte => cur_date - search_updated_after.days } if search_updated_after.present?
+        if @item.search_updated_condition == 'absolute'
+          updated << { :updated.gte => @item.search_updated_start } if @item.search_updated_start.present?
+          updated << { :updated.lte => @item.search_updated_close } if @item.search_updated_close.present?
+        elsif @item.search_updated_condition == 'relative'
+          updated << { :updated.lte => @cur_date - @item.search_updated_after.days } if @item.search_updated_after.present?
         end
+        return if updated.blank?
+
+        @criteria = @criteria.where("$and" => updated)
+      end
+
+      def search_approved
+        return if @item.search_approved_condition.blank?
 
         approved = []
-        if search_approved_condition == 'absolute'
-          approved << { :approved.gte => search_approved_start } if search_approved_start.present?
-          approved << { :approved.lte => search_approved_close } if search_approved_close.present?
-        elsif search_approved_condition == 'relative'
-          approved << { :approved.lte => cur_date - search_approved_after.days } if search_approved_after.present?
+        if @item.search_approved_condition == 'absolute'
+          approved << { :approved.gte => @item.search_approved_start } if @item.search_approved_start.present?
+          approved << { :approved.lte => @item.search_approved_close } if @item.search_approved_close.present?
+        elsif @item.search_approved_condition == 'relative'
+          approved << { :approved.lte => @cur_date - @item.search_approved_after.days } if @item.search_approved_after.present?
+        end
+        return if approved.blank?
+
+        @criteria = @criteria.where("$and" => approved)
+      end
+
+      def search_approver
+        return if @item.search_approver_state.blank?
+
+        case @item.search_approver_state
+        when 'request'
+          @criteria = @criteria.where(workflow_state: "request", workflow_user_id: @cur_user.id)
+        when 'approve'
+          @criteria = @criteria.where(
+            workflow_state: "request",
+            workflow_approvers: {
+              "$elemMatch" => { "user_id" => @cur_user.id, "state" => "request" }
+            }
+          )
+        when 'remand'
+          @criteria = @criteria.where(workflow_state: "remand", workflow_user_id: @cur_user.id)
+        end
+      end
+
+      def search_first_released
+        return if @item.search_first_released.blank?
+
+        case @item.search_first_released
+        when "draft"
+          @criteria = @criteria.where(:first_released.exists => false)
+        when "published"
+          @criteria = @criteria.where(:first_released.exists => true)
+        end
+      end
+
+      def sort
+        if @item.search_sort.blank?
+          @criteria = @criteria.reorder(filename: 1)
+          return
         end
 
-        criteria = Cms::Page.site(@cur_site).
-          allow(:read, @cur_user).
-          where(name).
-          where(filename).
-          where(nodes).
-          and(keyword).
-          in(categories).
-          in(groups).
-          in(routes).
-          in(users).
-          and(state).
-          and(released).
-          and(updated).
-          and(approved).
-          and(approver).
-          and(first_released).
-          search(opts)
-
-        @search_count = criteria.count
-        criteria.order_by(search_sort_hash)
+        h = {}
+        @item.search_sort.split(" ").each_slice(2) { |k, v| h[k] = (v.ends_with?("-1") ? -1 : 1) }
+        @criteria = @criteria.reorder(h)
       end
     end
 
-    def search_sort_hash
-      return { filename: 1 } if search_sort.blank?
-      h = {}
-      search_sort.split(" ").each_slice(2) { |k, v| h[k] = (/-1$/.match?(v) ? -1 : 1) }
-      h
+    def search(opts = {})
+      @search ||= begin
+        criteria = Searcher.build_criteria(self, opts)
+        @search_count = criteria.count
+        criteria
+      end
     end
 
     def search_count
@@ -295,91 +416,14 @@ module Cms::Addon
       self.search_routes = search_routes.dup.select(&:present?)
     end
 
-    def build_search_state_criteria
-      return {} unless search_state.present?
-
-      if search_state == "closing"
-        { "$and" => [ { :state => "public" }, { :close_date.ne => nil } ] }
-      else
-        { state: search_state }
-      end
-    end
-
-    def build_search_keyword_criteria
-      if search_keyword.present?
-        { "$or" => KEYWORD_FIELDS.map { |field| { field => /#{::Regexp.escape(search_keyword)}/ } } }
-      else
-        {}
-      end
-    end
-
-    def build_search_nodes_criteria
-      if search_node_ids.present?
-        { filename: /^#{search_nodes.map { |node| ::Regexp.escape("#{node.filename}/") }.join("|")}/ }
-      else
-        {}
-      end
-    end
-
-    def build_search_routes_criteria
-      normalize_search_routes
-      search_routes.present? ? { route: search_routes } : {}
-    end
-
-    def build_search_approver_criteria
-      case search_approver_state
-      when 'request'
-        {
-          workflow_state: "request",
-          workflow_user_id: @cur_user._id
-        }
-      when 'approve'
-        {
-          workflow_state: "request",
-          workflow_approvers: {
-            "$elemMatch" => { "user_id" => @cur_user._id, "state" => "request" }
-          }
-        }
-      when 'remand'
-        {
-          workflow_state: "remand",
-          workflow_user_id: @cur_user._id
-        }
-      else
-        {}
-      end
-    end
-
-    def build_search_first_released_criteria
-      case search_first_released
-      when "draft"
-        { :first_released.exists => false }
-      when "published"
-        { :first_released.exists => true }
-      else
-        {}
-      end
-    end
-
     def encode_sjis(str)
       str.encode("SJIS", invalid: :replace, undef: :replace)
     end
 
     def category_name_tree(item)
-      id_list = item.categories.pluck(:id)
-
-      ct_list = []
-      id_list.each do |id|
-        name_list = []
-        filename_str = []
-        filename_array = Cms::Node.where(_id: id).pluck(:filename).first.split(/\//)
-        filename_array.each do |filename|
-          filename_str << filename
-          name_list << Cms::Node.where(filename: filename_str.join("/")).pluck(:name).first
-        end
-        ct_list << name_list.join("/")
+      item.categories.map do |ct|
+        Cms::Node.site(ct.site).in_path(ct.filename).reorder(depth: 1).pluck(:name).join("/")
       end
-      ct_list
     end
 
     def headers
@@ -404,8 +448,8 @@ module Cms::Addon
         item.basename,
         item.name,
         item.index_name,
-        Cms::Layout.where(_id: item.layout_id).pluck(:name).first,
-        Cms::BodyLayout.where(_id: item.body_layout_id).pluck(:name).first,
+        Cms::Layout.where(id: item.layout_id).pluck(:name).first,
+        Cms::BodyLayout.where(id: item.body_layout_id).pluck(:name).first,
         item.order,
 
         # meta
