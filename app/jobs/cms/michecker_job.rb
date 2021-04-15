@@ -86,9 +86,20 @@ class Cms::MicheckerJob < Cms::ApplicationJob
     commands << @task.low_vision_result_filepath
     commands << generate_preview_url!
 
-    pid = spawn(*commands)
+    reader, writer = ::IO.pipe
+    pid = spawn(*commands, out: writer.fileno, err: writer.fileno)
     _, status = Process.waitpid2(pid)
 
+    writer.close
+    writer = nil
+
+    Rails.logger.info "==== raw michecker output ===="
+    Rails.logger.info reader.read
+    Rails.logger.info "==== raw michecker output ===="
+
     status.exitstatus
+  ensure
+    writer.close if writer
+    reader.close if reader
   end
 end
