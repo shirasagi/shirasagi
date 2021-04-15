@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe "michecker", type: :feature, dbscope: :example do
+describe "michecker", type: :feature, dbscope: :example, js: true do
   let(:site) { cms_site }
   let(:node) { create(:cms_node, cur_site: site) }
   let(:item) { create(:cms_page, cur_site: site, cur_node: node) }
@@ -13,6 +13,8 @@ describe "michecker", type: :feature, dbscope: :example do
       visit show_path
       expect(page).to have_content(I18n.t('cms.links.michecker'))
       click_on I18n.t('cms.links.michecker')
+
+      switch_to_window(windows.last)
       expect(page).to have_text I18n.t('cms.cms/michecker.start')
     end
   end
