@@ -9,7 +9,7 @@ class Inquiry::Agents::Nodes::FormController < ApplicationController
   before_action :check_aggregation_state, only: :results, if: ->{ !@preview }
   before_action :set_columns, only: [:new, :confirm, :create, :sent, :results]
   before_action :set_answer, only: [:new, :confirm, :create]
-  before_action :generate_image, only: [:confirm, :create]
+  before_action :generate_captcha, only: [:confirm], if: ->{ @cur_node.captcha_enabled? }
 
   private
 
@@ -94,8 +94,9 @@ class Inquiry::Agents::Nodes::FormController < ApplicationController
 
     if @cur_node.captcha_enabled?
       @answer.captcha_answer = params[:answer].try(:[], :captcha_answer)
-      @answer.image_text = params[:answer].try(:[], :image_text)
+      @answer.captcha_text = SS::CaptchaBase::Captcha.find_by(captcha_key: session[:captcha_key]).captcha_text
       unless @answer.valid_with_captcha?
+        generate_captcha
         render action: :confirm
         return
       end
