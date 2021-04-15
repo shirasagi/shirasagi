@@ -27,17 +27,6 @@ module SS::CaptchaBase
     field :captcha_key, type: String
     field :captcha_text, type: String
 
-    permit_params :captcha_text, :captcha_key
-
-    class << self
-      def remove_data
-        clear_old_data(1.hour.ago)
-      end
-
-      def clear_old_data(time = 1.hour.ago)
-        return unless Time === time
-        where(:updated_at.lte => time).delete_all
-      end
-    end
+    index({ created: 1 }, { expire_after_seconds: 3600 })
   end
 end
