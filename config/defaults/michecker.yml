@@ -1,6 +1,6 @@
 production: &production
   disable: true
-  command: [ "/opt/michecker/bin/michecker" ]
+  command: [ "/opt/michecker/bin/michecker", "--no-sandbox", "--lang=ja-JP" ]
   column:
     # 重度指数名
     severityStr: true
