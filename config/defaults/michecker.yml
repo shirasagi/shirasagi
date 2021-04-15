@@ -1,5 +1,5 @@
 production: &production
-  disable: false
+  disable: true
   command: [ "/opt/michecker/bin/michecker" ]
   column:
     # 重度指数名
@@ -41,6 +41,7 @@ production: &production
 
 test:
   <<: *production
+  disable: false
 
 development:
   <<: *production
