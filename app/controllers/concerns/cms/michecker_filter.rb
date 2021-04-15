@@ -2,7 +2,9 @@ module Cms::MicheckerFilter
   extend ActiveSupport::Concern
 
   def michecker
-    raise '403' unless michecker_enabled?
+    raise '404' unless michecker_enabled?
+    raise '403' unless @cur_user.cms_role_permit_any?(@cur_site, :use_cms_michecker)
+
     set_item
     @result = Cms::Michecker::Result.site(@cur_site).and_page(@item).reorder(id: -1).first
 

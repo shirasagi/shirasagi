@@ -479,6 +479,7 @@ ja:
     edit_other_cms_forms: 定型フォームの管理（全て）
     delete_private_cms_forms: 定型フォームの削除（所有）
     delete_other_cms_forms: 定型フォームの削除（全て）
+    use_cms_michecker: micheckerの利用
 
   modules:
     cms: 標準機能
