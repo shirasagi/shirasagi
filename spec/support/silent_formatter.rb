@@ -1,3 +1,5 @@
+require "rspec/core/formatters/base_text_formatter"
+
 class SilentFormatter < RSpec::Core::Formatters::BaseTextFormatter
   RSpec::Core::Formatters.register self, :example_passed, :example_pending, :example_failed, :start_dump
 
