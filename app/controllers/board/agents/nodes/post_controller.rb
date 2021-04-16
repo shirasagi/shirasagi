@@ -74,11 +74,7 @@ class Board::Agents::Nodes::PostController < ApplicationController
   def reply
     @item = @model.new get_params
     if @cur_node.captcha_enabled?
-      unless find_captcha_data(@item).valid_with_captcha?
-        generate_captcha
-        render :new_reply
-        return
-      end
+      return if render_pre_page?(@item, :new_reply)
     end
 
     render_create @item.save, location: "#{@cur_node.url}sent", render: :new_reply

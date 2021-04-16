@@ -38,10 +38,18 @@ module SS::CaptchaFilter
     SS::CaptchaBase::Captcha.create(captcha_key: session[:captcha_key], captcha_text: @captcha_text)
   end
 
-  def find_captcha_data(obj)
+  def render_pre_page?(obj, render_opt)
+    rendered = false
+
     obj.captcha_answer = params[:answer].try(:[], :captcha_answer)
     obj.captcha_text = SS::CaptchaBase::Captcha.find_by(captcha_key: session[:captcha_key]).captcha_text
 
-    obj
+    unless obj.valid_with_captcha?
+      generate_captcha
+      render render_opt
+      rendered = true
+    end
+
+    rendered
   end
 end
