@@ -81,6 +81,9 @@ describe "inquiry_agents_nodes_form", type: :feature, dbscope: :example do
           expect(find('#item_7_2')['value']).to eq '申請について'
           expect(page).to have_no_selector('input#item_8')
         end
+        # within 'div.simple-captcha' do
+        #   fill_in "answer[captcha_answer]", with: "xxxx"
+        # end
         within 'footer.send' do
           click_button I18n.t('inquiry.submit')
         end

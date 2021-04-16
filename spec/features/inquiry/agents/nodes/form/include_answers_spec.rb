@@ -8,7 +8,7 @@ describe "inquiry_agents_nodes_form", type: :feature, dbscope: :example do
       :inquiry_node_form,
       cur_site: site,
       layout_id: layout.id,
-      inquiry_captcha: 'disabled',
+      inquiry_captcha: 'enabled',
       notice_state: 'enabled',
       notice_content: 'include_answers',
       notice_email: 'notice@example.jp',
@@ -70,9 +70,9 @@ describe "inquiry_agents_nodes_form", type: :feature, dbscope: :example do
           expect(find('#item_7_2')['value']).to eq '申請について'
           expect(find('#item_8')['value']).to eq '1'
         end
-        # within 'div.simple-captcha' do
-        #   fill_in "answer[captcha]", with: "xxxx"
-        # end
+        within 'div.simple-captcha' do
+          fill_in "answer[captcha_answer]", with: SS::CaptchaBase::Captcha.first.captcha_text
+        end
         within 'footer.send' do
           click_button I18n.t('inquiry.submit')
         end
@@ -171,6 +171,88 @@ describe "inquiry_agents_nodes_form", type: :feature, dbscope: :example do
         expect(notify_mail.body.raw_source).to include("logo.png")
       end
     end
+
+    it "fail to pass capctcha with blank" do
+      visit index_url
+      expect(status_code).to eq 200
+      within 'div.inquiry-form' do
+        within 'div.columns' do
+          fill_in "item[1]", with: "シラサギ太郎"
+          fill_in "item[2]", with: "株式会社シラサギ"
+          fill_in 'item[3]', with: 'キーワード'
+          fill_in "item[4]", with: "shirasagi@example.jp"
+          fill_in "item[4_confirm]", with: "shirasagi@example.jp"
+          choose "item_5_0"
+          select "50代", from: "item[6]"
+          check "item[7][2]"
+          attach_file "item[8]", Rails.root.join("spec", "fixtures", "ss", "logo.png").to_s
+        end
+        click_button I18n.t('inquiry.confirm')
+      end
+
+      expect(status_code).to eq 200
+      within 'div.inquiry-form' do
+        within 'div.columns' do
+          expect(find('#item_1')['value']).to eq 'シラサギ太郎'
+          expect(find('#item_2')['value']).to eq '株式会社シラサギ'
+          expect(find('#item_3')['value']).to eq 'キーワード'
+          expect(find('#item_4')['value']).to eq 'shirasagi@example.jp'
+          expect(find('#item_5')['value']).to eq '男性'
+          expect(find('#item_6')['value']).to eq '50代'
+          expect(find('#item_7_2')['value']).to eq '申請について'
+          expect(find('#item_8')['value']).to eq '1'
+        end
+        within 'div.simple-captcha' do
+          fill_in "answer[captcha_answer]", with: ""
+        end
+        within 'footer.send' do
+          click_button I18n.t('inquiry.submit')
+        end
+      end
+
+      expect(page).to have_content '画像の数字が正しくありません'
+    end
+
+    it "fail to pass capctcha with wrong number" do
+      visit index_url
+      expect(status_code).to eq 200
+      within 'div.inquiry-form' do
+        within 'div.columns' do
+          fill_in "item[1]", with: "シラサギ太郎"
+          fill_in "item[2]", with: "株式会社シラサギ"
+          fill_in 'item[3]', with: 'キーワード'
+          fill_in "item[4]", with: "shirasagi@example.jp"
+          fill_in "item[4_confirm]", with: "shirasagi@example.jp"
+          choose "item_5_0"
+          select "50代", from: "item[6]"
+          check "item[7][2]"
+          attach_file "item[8]", Rails.root.join("spec", "fixtures", "ss", "logo.png").to_s
+        end
+        click_button I18n.t('inquiry.confirm')
+      end
+
+      expect(status_code).to eq 200
+      within 'div.inquiry-form' do
+        within 'div.columns' do
+          expect(find('#item_1')['value']).to eq 'シラサギ太郎'
+          expect(find('#item_2')['value']).to eq '株式会社シラサギ'
+          expect(find('#item_3')['value']).to eq 'キーワード'
+          expect(find('#item_4')['value']).to eq 'shirasagi@example.jp'
+          expect(find('#item_5')['value']).to eq '男性'
+          expect(find('#item_6')['value']).to eq '50代'
+          expect(find('#item_7_2')['value']).to eq '申請について'
+          expect(find('#item_8')['value']).to eq '1'
+        end
+        within 'div.simple-captcha' do
+          fill_in "answer[captcha_answer]", with: "0000"
+        end
+        within 'footer.send' do
+          click_button I18n.t('inquiry.submit')
+        end
+      end
+
+      expect(page).to have_content '画像の数字が正しくありません'
+    end
   end
 
   context "when mobile site is accessed" do
@@ -210,6 +292,9 @@ describe "inquiry_agents_nodes_form", type: :feature, dbscope: :example do
           expect(find('#item_6')['value']).to eq '50代'
           expect(find('#item_7_2')['value']).to eq '申請について'
         end
+        within 'div.simple-captcha' do
+          fill_in "answer[captcha_answer]", with: SS::CaptchaBase::Captcha.first.captcha_text
+        end
         # mobile モードの場合 <footer> タグが <div> タグに置換されているはず
         within 'div.tag-footer' do
           click_button I18n.t('inquiry.submit')
@@ -241,6 +326,88 @@ describe "inquiry_agents_nodes_form", type: :feature, dbscope: :example do
       expect(answer.data[6].confirm).to be_nil
 
       expect(ActionMailer::Base.deliveries.count).to eq 2
+    end
+
+    it "fail to pass capctcha with blank" do
+      visit index_url
+      expect(status_code).to eq 200
+      within 'div.inquiry-form' do
+        within 'div.columns' do
+          fill_in "item[1]", with: "シラサギ太郎"
+          fill_in "item[2]", with: "株式会社シラサギ"
+          fill_in 'item[3]', with: 'キーワード'
+          fill_in "item[4]", with: "shirasagi@example.jp"
+          fill_in "item[4_confirm]", with: "shirasagi@example.jp"
+          choose "item_5_0"
+          select "50代", from: "item[6]"
+          check "item[7][2]"
+          attach_file "item[8]", Rails.root.join("spec", "fixtures", "ss", "logo.png").to_s
+        end
+        click_button I18n.t('inquiry.confirm')
+      end
+
+      expect(status_code).to eq 200
+      within 'div.inquiry-form' do
+        within 'div.columns' do
+          expect(find('#item_1')['value']).to eq 'シラサギ太郎'
+          expect(find('#item_2')['value']).to eq '株式会社シラサギ'
+          expect(find('#item_3')['value']).to eq 'キーワード'
+          expect(find('#item_4')['value']).to eq 'shirasagi@example.jp'
+          expect(find('#item_5')['value']).to eq '男性'
+          expect(find('#item_6')['value']).to eq '50代'
+          expect(find('#item_7_2')['value']).to eq '申請について'
+          expect(find('#item_8')['value']).to eq '1'
+        end
+        within 'div.simple-captcha' do
+          fill_in "answer[captcha_answer]", with: ""
+        end
+        within 'div.tag-footer' do
+          click_button I18n.t('inquiry.submit')
+        end
+      end
+
+      expect(page).to have_content '画像の数字が正しくありません'
+    end
+
+    it "fail to pass capctcha with wrong number" do
+      visit index_url
+      expect(status_code).to eq 200
+      within 'div.inquiry-form' do
+        within 'div.columns' do
+          fill_in "item[1]", with: "シラサギ太郎"
+          fill_in "item[2]", with: "株式会社シラサギ"
+          fill_in 'item[3]', with: 'キーワード'
+          fill_in "item[4]", with: "shirasagi@example.jp"
+          fill_in "item[4_confirm]", with: "shirasagi@example.jp"
+          choose "item_5_0"
+          select "50代", from: "item[6]"
+          check "item[7][2]"
+          attach_file "item[8]", Rails.root.join("spec", "fixtures", "ss", "logo.png").to_s
+        end
+        click_button I18n.t('inquiry.confirm')
+      end
+
+      expect(status_code).to eq 200
+      within 'div.inquiry-form' do
+        within 'div.columns' do
+          expect(find('#item_1')['value']).to eq 'シラサギ太郎'
+          expect(find('#item_2')['value']).to eq '株式会社シラサギ'
+          expect(find('#item_3')['value']).to eq 'キーワード'
+          expect(find('#item_4')['value']).to eq 'shirasagi@example.jp'
+          expect(find('#item_5')['value']).to eq '男性'
+          expect(find('#item_6')['value']).to eq '50代'
+          expect(find('#item_7_2')['value']).to eq '申請について'
+          expect(find('#item_8')['value']).to eq '1'
+        end
+        within 'div.simple-captcha' do
+          fill_in "answer[captcha_answer]", with: "0000"
+        end
+        within 'div.tag-footer' do
+          click_button I18n.t('inquiry.submit')
+        end
+      end
+
+      expect(page).to have_content '画像の数字が正しくありません'
     end
   end
 end
