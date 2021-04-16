@@ -5,7 +5,7 @@ class Board::Post
   include SS::Reference::User
   include Board::Addon::File
   include Board::Addon::PostPermission
-  # include SimpleCaptcha::ModelHelpers
+  include SS::CaptchaBase
   include Fs::FilePreviewable
 
   store_in_repl_master
@@ -14,9 +14,6 @@ class Board::Post
   field :poster_url, type: String
   field :delete_key, type: String
   permit_params :poster, :email, :poster_url, :delete_key
-
-  # apply_simple_captcha
-  permit_params :captcha, :captcha_key
 
   validates :poster, presence: true
   validates :email, email: true
@@ -27,10 +24,6 @@ class Board::Post
   validate :validate_delete_key, if: ->{ user.nil? && node.deletable_post? }
   validate :validate_banned_words, if: -> { node.banned_words.present? }
   validate :validate_deny_url, if: -> { node.deny_url? }
-
-  def valid_with_captcha?(node)
-    node.captcha_enabled? ? super() : true
-  end
 
   def validate_text
     if text.size > node.text_size_limit

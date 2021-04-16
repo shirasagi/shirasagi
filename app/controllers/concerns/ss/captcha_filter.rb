@@ -31,10 +31,17 @@ module SS::CaptchaFilter
   end
 
   def generate_image_path
-    @image_path = `base64 tmp/captcha.jpeg`
+    session[:image_path] = `base64 tmp/captcha.jpeg`
   end
 
   def create_captcha_data
     SS::CaptchaBase::Captcha.create(captcha_key: session[:captcha_key], captcha_text: @captcha_text)
+  end
+
+  def find_captcha_data(obj)
+    obj.captcha_answer = params[:answer].try(:[], :captcha_answer)
+    obj.captcha_text = SS::CaptchaBase::Captcha.find_by(captcha_key: session[:captcha_key]).captcha_text
+
+    obj
   end
 end
