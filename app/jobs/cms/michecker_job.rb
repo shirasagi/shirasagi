@@ -74,32 +74,60 @@ class Cms::MicheckerJob < Cms::ApplicationJob
     commands = Array(SS.config.michecker["command"]).compact
     return if commands.blank?
 
-    commands = commands.dup
-    commands << "--no-interactive"
-    commands << "--html-checker-output-report"
-    commands << @task.html_checker_report_filepath
-    commands << "--lowvision-output-report"
-    commands << @task.low_vision_report_filepath
-    commands << "--lowvision-source-image"
-    commands << @task.low_vision_source_filepath
-    commands << "--lowvision-output-image"
-    commands << @task.low_vision_result_filepath
-    commands << generate_preview_url!
+    ::FileUtils.rm_f @task.html_checker_report_filepath
+    ::FileUtils.rm_f @task.low_vision_report_filepath
+    ::FileUtils.rm_f @task.low_vision_source_filepath
+    ::FileUtils.rm_f @task.low_vision_result_filepath
 
-    reader, writer = ::IO.pipe
-    pid = spawn(*commands, out: writer.fileno, err: writer.fileno)
-    _, status = Process.waitpid2(pid)
+    status = ::Dir.mktmpdir("#{Rails.root}/tmp") do |dir|
+      commands = commands.dup
+      commands[0] = ::File.expand_path(commands[0], Rails.root)
+      commands << "--no-interactive"
+      commands << "--html-checker-output-report"
+      commands << Cms::Michecker::Result::HTML_CHECKER_REPORT_BASENAME
+      commands << "--lowvision-output-report"
+      commands << Cms::Michecker::Result::LOW_VISION_REPORT_BASENAME
+      commands << "--lowvision-source-image"
+      commands << Cms::Michecker::Result::LOW_VISION_SOURCE_BASENAME
+      commands << "--lowvision-output-image"
+      commands << Cms::Michecker::Result::LOW_VISION_RESULT_BASENAME
+      commands << generate_preview_url!
 
-    writer.close
-    writer = nil
+      reader, writer = ::IO.pipe
+      pid = spawn(*commands, out: writer.fileno, err: writer.fileno, chdir: dir)
+      _, status = Process.waitpid2(pid)
 
-    Rails.logger.info "==== raw michecker output ===="
-    Rails.logger.info reader.read
-    Rails.logger.info "==== raw michecker output ===="
+      writer.close
+      writer = nil
+
+      Rails.logger.info "==== raw michecker output ===="
+      Rails.logger.info reader.read
+      Rails.logger.info "==== raw michecker output ===="
+
+      save_results(dir) if status.success?
+
+      status
+    ensure
+      writer.close if writer
+      reader.close if reader
+    end
 
     status.exitstatus
-  ensure
-    writer.close if writer
-    reader.close if reader
+  end
+
+  def save_results(dir)
+    save_result "#{dir}/#{Cms::Michecker::Result::HTML_CHECKER_REPORT_BASENAME}", @task.html_checker_report_filepath
+    save_result "#{dir}/#{Cms::Michecker::Result::LOW_VISION_REPORT_BASENAME}", @task.low_vision_report_filepath
+    save_result "#{dir}/#{Cms::Michecker::Result::LOW_VISION_SOURCE_BASENAME}", @task.low_vision_source_filepath
+    save_result "#{dir}/#{Cms::Michecker::Result::LOW_VISION_RESULT_BASENAME}", @task.low_vision_result_filepath
+  end
+
+  def save_result(source_file, dest_file)
+    return unless ::File.exists?(source_file)
+
+    basedir = ::File.dirname(dest_file)
+    ::FileUtils.mkdir_p(basedir) unless ::Dir.exists?(basedir)
+
+    ::FileUtils.cp(source_file, dest_file)
   end
 end

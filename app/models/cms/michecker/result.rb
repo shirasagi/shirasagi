@@ -2,6 +2,10 @@ class Cms::Michecker::Result
   include SS::Model::Task
 
   TASK_NAME = "cms:michecker".freeze
+  HTML_CHECKER_REPORT_BASENAME = "hc_report.json".freeze
+  LOW_VISION_REPORT_BASENAME = "lv_report.json".freeze
+  LOW_VISION_SOURCE_BASENAME = "lv_source.jpeg".freeze
+  LOW_VISION_RESULT_BASENAME = "lv_result.jpeg".freeze
 
   store_in collection: "cms_michecker_results"
   store_in_repl_master
@@ -26,19 +30,19 @@ class Cms::Michecker::Result
   end
 
   def html_checker_report_filepath
-    "#{root_filepath}/hc_report.json"
+    "#{root_filepath}/#{HTML_CHECKER_REPORT_BASENAME}"
   end
 
   def low_vision_report_filepath
-    "#{root_filepath}/lv_report.json"
+    "#{root_filepath}/#{LOW_VISION_REPORT_BASENAME}"
   end
 
   def low_vision_source_filepath
-    "#{root_filepath}/lv_source.jpeg"
+    "#{root_filepath}/#{LOW_VISION_SOURCE_BASENAME}"
   end
 
   def low_vision_result_filepath
-    "#{root_filepath}/lv_result.jpeg"
+    "#{root_filepath}/#{LOW_VISION_RESULT_BASENAME}"
   end
 
   private
