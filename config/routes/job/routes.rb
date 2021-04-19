@@ -30,6 +30,9 @@ Rails.application.routes.draw do
     end
 
     resources :reservations, only: [:index, :show, :destroy], concerns: [:deletion]
+    resources :michecker_results, only: [:index, :show, :destroy], concerns: [:deletion] do
+      get :result, on: :member
+    end
   end
 
   cms "job" do
@@ -55,6 +58,9 @@ Rails.application.routes.draw do
     end
 
     resources :reservations, only: [:index, :show, :destroy], concerns: [:deletion]
+    resources :michecker_results, only: [:index, :show, :destroy], concerns: [:deletion] do
+      get :result, on: :member
+    end
   end
 
   sns "job" do

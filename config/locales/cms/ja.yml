@@ -588,7 +588,7 @@ ja:
       cms/column/youtube: YouTube埋め込み
       cms/column/free: 自由入力
       cms/column/table: 表
-      cms/michecker_task: miCheckerタスク
+      cms/michecker/result: miChecker結果
     errors:
       models:
         cms/content:
@@ -983,6 +983,16 @@ ja:
         value: 表
       cms/addon/redirect_link:
         redirect_link: リダイレクトURL
+      cms/michecker/result:
+        target_type: 種別
+        target_id: ID
+        target_class: モデル
+        michecker_last_executed_at: 最終実行日時
+        michecker_last_result: 最終実行結果
+        html_checker_report_filepath: アクセシビリティ検証結果
+        low_vision_report_filepath: 視覚化検証結果
+        low_vision_source_filepath: 視覚化検証元画像
+        low_vision_result_filepath: 視覚化検証画像
 
   activemodel:
     attributes:
