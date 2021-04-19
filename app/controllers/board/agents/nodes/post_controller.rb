@@ -8,7 +8,7 @@ class Board::Agents::Nodes::PostController < ApplicationController
   before_action :deny
   before_action :set_topic, only: [:new_reply, :reply]
   before_action :set_item, only: [:delete, :destroy]
-  before_action :generate_captcha, only: [:new_reply], if: ->{ @cur_node.captcha_enabled? }
+  before_action :generate_captcha, only: [:new_reply, :delete, :new], if: ->{ @cur_node.captcha_enabled? }
   after_action :generate, only: [:create, :reply, :destroy]
 
   private
@@ -93,9 +93,11 @@ class Board::Agents::Nodes::PostController < ApplicationController
     raise "404" unless @item.delete_key.present?
     @item.delete_key = ""
     @item.attributes = get_params
+    @item.captcha_answer = params[:answer].try(:[], :captcha_answer)
+    @item.captcha_text = SS::CaptchaBase::Captcha.find_by(captcha_key: session[:captcha_key]).captcha_text
 
-    if @item.valid_with_captcha?(@cur_node)
-      if @item.delete_key_was == @item.delete_key
+    if @cur_node.captcha_enabled?
+      if @item.delete_key_was == @item.delete_key && @item.valid_with_captcha?
         render_destroy @item.destroy, location: "#{@cur_node.url}sent", render: :delete
         return
       else
