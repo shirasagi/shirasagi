@@ -210,7 +210,7 @@ describe "inquiry_agents_nodes_form", type: :feature, dbscope: :example do
         end
       end
 
-      expect(page).to have_content '画像の数字が正しくありません'
+      expect(page).to have_content I18n.t('mongoid.attributes.inquiry/answer.captcha')
     end
 
     it "fail to pass capctcha with wrong number" do
@@ -251,7 +251,7 @@ describe "inquiry_agents_nodes_form", type: :feature, dbscope: :example do
         end
       end
 
-      expect(page).to have_content '画像の数字が正しくありません'
+      expect(page).to have_content I18n.t('mongoid.attributes.inquiry/answer.captcha')
     end
   end
 
@@ -366,7 +366,7 @@ describe "inquiry_agents_nodes_form", type: :feature, dbscope: :example do
         end
       end
 
-      expect(page).to have_content '画像の数字が正しくありません'
+      expect(page).to have_content I18n.t('mongoid.attributes.inquiry/answer.captcha')
     end
 
     it "fail to pass capctcha with wrong number" do
@@ -407,7 +407,7 @@ describe "inquiry_agents_nodes_form", type: :feature, dbscope: :example do
         end
       end
 
-      expect(page).to have_content '画像の数字が正しくありません'
+      expect(page).to have_content I18n.t('mongoid.attributes.inquiry/answer.captcha')
     end
   end
 end
