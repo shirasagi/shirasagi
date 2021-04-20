@@ -42,6 +42,7 @@ production: &production
 test:
   <<: *production
   disable: false
+  command: [ "bin/docker-michecker.sh" ]
 
 development:
   <<: *production

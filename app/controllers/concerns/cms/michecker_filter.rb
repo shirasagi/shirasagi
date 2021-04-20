@@ -22,7 +22,8 @@ module Cms::MicheckerFilter
     set_item
 
     type = @item.is_a?(Cms::Model::Page) ? "page" : "node"
-    job = Cms::MicheckerJob.bind(site_id: @cur_site, node_id: @cur_node, user_id: @cur_user).perform_later(type, @item.id.to_s)
+    job_class = Cms::MicheckerJob.bind(site_id: @cur_site, node_id: @cur_node, user_id: @cur_user)
+    job = job_class.perform_later(type, @item.id.to_s)
     json = { job_id: job.job_id, status_check_url: job_sns_apis_status_path(id: job.job_id, format: "json") }
     render json: json, status: :ok
   end
