@@ -43,6 +43,19 @@ module SS::CaptchaFilter
     SS::Captcha.create(captcha_key: session[:captcha_key], captcha_text: @captcha_text)
   end
 
+  def render_pre_page?(obj, render_opt, rendered)
+    obj.captcha_answer = params[:answer].try(:[], :captcha_answer)
+    obj.captcha_text = SS::Captcha.find_by(captcha_key: session[:captcha_key]).captcha_text
+
+    unless obj.valid_with_captcha?
+      generate_captcha
+      render render_opt
+      rendered = true
+    end
+
+    rendered
+  end
+
   def delete_tmp_dir
     FileUtils.remove_entry_secure session[:tmp_dir] rescue nil
   end

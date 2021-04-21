@@ -28,10 +28,6 @@ class Board::Post
   validate :validate_banned_words, if: -> { node.banned_words.present? }
   validate :validate_deny_url, if: -> { node.deny_url? }
 
-  def valid_with_captcha?(node)
-    node.captcha_enabled? ? super() : true
-  end
-
   def validate_text
     if text.size > node.text_size_limit
       errors.add :text, :too_long, count: node.text_size_limit

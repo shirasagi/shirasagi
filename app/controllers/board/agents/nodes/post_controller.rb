@@ -1,6 +1,7 @@
 class Board::Agents::Nodes::PostController < ApplicationController
   include Cms::NodeFilter::View
   include Cms::PublicFilter::Crud
+  include SS::CaptchaFilter
 
   model Board::Post
 
@@ -8,6 +9,7 @@ class Board::Agents::Nodes::PostController < ApplicationController
   before_action :set_topic, only: [:new_reply, :reply]
   before_action :set_item, only: [:delete, :destroy]
   after_action :generate, only: [:create, :reply, :destroy]
+  before_action :generate_captcha, only: [:new], if: ->{ @cur_node.captcha_enabled? }
 
   private
 
@@ -60,8 +62,10 @@ class Board::Agents::Nodes::PostController < ApplicationController
 
   def create
     @item = @model.new get_params
-    render_create @item.valid_with_captcha?(@cur_node) && @item.save,
-                  location: "#{@cur_node.url}sent", render: :new
+    if @cur_node.captcha_enabled?
+      return if render_pre_page?(@item, :new, false)
+    end
+    render_create @item.save, location: "#{@cur_node.url}sent", render: :new
   end
 
   def new_reply
