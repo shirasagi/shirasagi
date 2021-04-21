@@ -10,7 +10,7 @@ module SS::CaptchaFilter
     session[:tmp_dir] = Dir.mktmpdir
 
     MiniMagick::Tool::Convert.new do |convert|
-      @captcha_text = sprintf("%04d", rand(10000))
+      @captcha_text = sprintf("%04d", rand(10_000))
       convert.size "100x28"
       convert.background "white"
       convert.fill "darkblue"
@@ -31,7 +31,7 @@ module SS::CaptchaFilter
   end
 
   def generate_key
-    session[:captcha_key] = sprintf("%05d", rand(100000))
+    session[:captcha_key] = sprintf("%04d", rand(10_000))
   end
 
   def generate_image_path

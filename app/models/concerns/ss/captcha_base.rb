@@ -7,10 +7,10 @@ module SS::CaptchaBase
   end
 
   def valid_with_captcha?
-    [valid?, is_captcha_valid?].all?
+    [valid?, captcha_valid?].all?
   end
 
-  def is_captcha_valid?
+  def captcha_valid?
     if captcha_answer == captcha_text
       return true
     else
